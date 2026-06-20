@@ -87,3 +87,12 @@ If splitting after a matched helper function causes the C object's `.text` secti
 ## Reuse of Upstream Source
 
 For straightforward libultra functions that don't use `_DEBUG` code, have no local data, and just call simple helpers around struct field assignments, the upstream ultralib source often matches directly without modification. Always try the unmodified upstream source first before making changes.
+## Converting a Jump-Table Function to Per-Function GLOBAL_ASM Breaks Rodata Refs
+
+When a raw `asm` segment contains a function with a jump table, the table lives
+in a separate `.rodata` object and references the code's local `.L` labels. As a
+single raw asm segment these resolve, but converting the segment to a `c` segment
+extracts each function into its own `GLOBAL_ASM` `.s` file where those `.L`
+labels are file-local and no longer visible to the rodata object, producing
+`undefined reference to .L...` link errors. Don't convert such a segment to `c`
+unless you also handle the jump-table function's labels.
