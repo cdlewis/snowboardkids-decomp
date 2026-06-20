@@ -5,7 +5,7 @@ Record project-specific compiler behavior, matching patterns, and verified struc
 ## IDO Optimization Levels
 
 - **Most ultra IO/OS files match at `-O1`.** Audio library files (`src/ultra/audio/`) and GU math files (`src/ultra/gu/`) often require `-O2`. Some complex audio files (`reverb.c`, `env.c`, `xprintf.c`, `xldtob.c`) require direct IDO `-O3` because the asm-processor rejects `-O3` due to function reordering.
-- **IDO `-O3` reorders functions within an object.** The compiler may emit functions in a different order than the source file. When matching `-O3` objects, the ROM function order is the authoritative order, not the upstream source order.
+- **IDO `-O3` reorders functions within an object.** The compiler may emit functions in a different order than the source file. When matching `-O3` objects, the ROM function order is the authoritative order, not the upstream source order. In practice IDO `-O3` emits functions in *reverse* source order for small files, so keeping the upstream source order (e.g. a `Pull`/`Param` pair with `Pull` first) yields the ROM order (`Param` first). If a near-perfect `-O2` match differs only by saved-register (`s0`-`s7`) vs temp-register-plus-spill choice, try `-O3` + `IDO_DIRECT`: `-O3` register allocation, not a source change, is usually the cause.
 - **At `-O2`, IDO uses callee-saved registers more aggressively** and fills branch delay slots better than `-O1`. At `-O1`, the compiler uses stack slots for variables surviving across calls, producing larger frames.
 
 ## Local vs Extern Data Definitions
