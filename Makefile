@@ -103,6 +103,21 @@ $(BUILD_DIR)/src/ultra/gu/perspective.o: C_OPT = -O2
 $(BUILD_DIR)/src/ultra/io/sptask.o: C_OPT = -O2
 $(BUILD_DIR)/src/ultra/io/sptask.o: CFLAGS += -DF3DEX_GBI
 
+# Game (main segment) code was compiled with IDO -O2 -mips1: it has load-delay
+# nops and no branch-likely instructions. (Default -mips2 emits beqzl/bnezl and
+# omits load-delay nops, which does not match.) These per-object overrides are
+# scoped to converted game segments; integration may prefer flipping the global
+# C_MIPS default to -mips1 with -mips2/-mips3 overrides for libultra.
+$(BUILD_DIR)/src/5560.o: C_MIPS = -mips1
+$(BUILD_DIR)/src/6870.o: C_MIPS = -mips1
+$(BUILD_DIR)/src/7B30.o: C_MIPS = -mips1
+$(BUILD_DIR)/src/9220.o: C_MIPS = -mips1
+$(BUILD_DIR)/src/6140.o: C_MIPS = -mips1
+$(BUILD_DIR)/src/CE80.o: C_MIPS = -mips1
+$(BUILD_DIR)/src/D200.o: C_MIPS = -mips1
+$(BUILD_DIR)/src/DB70.o: C_MIPS = -mips1
+$(BUILD_DIR)/src/DF40.o: C_MIPS = -mips1
+
 $(BUILD_DIR)/src/ultra/libc/ll.o: C_OPT = -O1
 $(BUILD_DIR)/src/ultra/libc/ll.o: C_MIPS = -mips3 -32
 $(BUILD_DIR)/src/ultra/libc/xprintf.o: C_OPT = -O3
