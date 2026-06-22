@@ -4,7 +4,14 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_8004DB8C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_8004DC6C.s")
+extern void func_8004DB8C(void *);
+extern void func_80071824(void *, void (*)());
+
+void func_8004DC6C(void *arg0) {
+    *(u16*)((u8*)arg0 + 0x64) = 0;
+    func_8004DB8C(arg0);
+    func_80071824(arg0, func_8004DB8C);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_8004DCA0.s")
 
