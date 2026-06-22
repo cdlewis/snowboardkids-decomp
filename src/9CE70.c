@@ -92,7 +92,10 @@ s32 func_8009D2A0(void *arg0, s32 arg1) {
     return arg1;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D2AC.s")
+s32 func_8009D2AC(void *arg0, s32 arg1) {
+    *(u8 *)((u8 *)arg0 + 0xED) = 1;
+    return arg1;
+}
 
 s32 func_8009D2BC(void *arg0, s32 arg1) {
     *(u8 *)((u8 *)arg0 + 0xED) = 0;
