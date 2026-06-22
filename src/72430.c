@@ -41,6 +41,7 @@ void func_80072114(s32 arg0) {
 struct OSThread_s;
 
 extern void func_8009DD5C(s32 arg0, s32 arg1);
+extern void func_8009DDE4(s32 arg0);
 extern void osStartThread(struct OSThread_s *);
 extern void osStopThread(struct OSThread_s *);
 extern struct OSThread_s D_8015A6B8;
@@ -61,7 +62,9 @@ void func_800722B4(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_800728E0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80072918.s")
+void func_80072918(void) {
+    func_8009DDE4(3);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80072938.s")
 
