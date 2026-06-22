@@ -174,7 +174,17 @@ void func_80038854(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80038A54.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80038AE8.s")
+void func_80038A54(void);
+
+void func_80038AE8(void *arg0) {
+    func_80041FB4(2);
+    func_800428C8(2);
+    if (D_8010B1A2 == 0x1C) {
+        *(u16*)((char*)arg0 + 0x2A) = 0;
+        func_80071824((s32)arg0, func_80038A54);
+        func_80041DD4(2, 0x34);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80038B44.s")
 
