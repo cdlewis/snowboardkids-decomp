@@ -118,7 +118,14 @@ void func_80073858(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_800738F4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80073944.s")
+extern void func_800738F4(void);
+extern void func_8003DFD0(void);
+
+void func_80073944(void) {
+    func_8009956C(&func_800738F4, 0);
+    func_800994F4(4, &func_8003DFD0, 0x64);
+    func_80099614(2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80073988.s")
 
