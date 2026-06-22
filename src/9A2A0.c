@@ -1,6 +1,28 @@
 #include "common.h"
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/main.s")
+typedef s32 OSId;
+typedef s32 OSPri;
+
+struct OSThread_s;
+
+extern void osInitialize(void);
+extern void osCreateThread(struct OSThread_s *, OSId, void (*)(void *), void *, void *, OSPri);
+extern void osStartThread(struct OSThread_s *);
+
+extern struct OSThread_s D_801237B0;
+extern u8 D_80324480[];
+extern void func_800996FC(void *);
+
+extern u8 D_80156618;
+extern u8 D_80156619;
+extern u8 D_8015661A;
+extern u16 D_800DF140;
+
+void main(void *arg) {
+    osInitialize();
+    osCreateThread(&D_801237B0, 1, func_800996FC, arg, D_80324480, 0xA);
+    osStartThread(&D_801237B0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_800996FC.s")
 
@@ -77,9 +99,19 @@ void func_80099790(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_8009B14C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_8009B58C.s")
+void func_8009B58C(u8 a0, u8 a1, u8 a2) {
+    D_80156618 = a0;
+    D_80156619 = a1;
+    D_8015661A = a2;
+    D_800DF140 = 0x3E4;
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_8009B5C0.s")
+void func_8009B5C0(u8 a0, u8 a1, u8 a2) {
+    D_80156618 = a0;
+    D_80156619 = a1;
+    D_8015661A = a2;
+    D_800DF140 = 0x3B6;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_8009B5F4.s")
 
