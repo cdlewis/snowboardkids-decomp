@@ -26,7 +26,11 @@ extern void func_8006A80C(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_8006A74C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_8006A798.s")
+extern void func_8006A74C(void);
+
+void func_8006A798(void *arg0) {
+    func_80071824(arg0, func_8006A74C);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_8006A7BC.s")
 
