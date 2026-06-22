@@ -13,7 +13,7 @@ typedef struct {
     char pad[0x18];
     s32 unk18;
     s32 unk1C;
-    char pad20[4];
+    s32 unk20;
     s32 unk24;
 } Struct801235B8;
 
@@ -56,6 +56,13 @@ extern void func_800420FC(s32, s32, s32, s32);
 extern void func_80052394(void);
 extern void func_80002CE4(void);
 extern void func_8000262C(void);
+extern void func_80071408(void *, s32, s32);
+extern void func_80002024(void);
+extern void func_80032684(void);
+extern void func_80032934(void);
+extern void func_80032A50(void);
+extern void func_800540EC(void);
+extern void func_80054714(void);
 extern void func_80001C30(void);
 extern void func_80001C80(void);
 extern void func_800024A8(void);
@@ -90,6 +97,13 @@ extern u8 D_1467B0;
 extern u8 D_147910;
 extern u8 D_1DE360;
 extern u8 D_1E0F70;
+extern u8 D_5DB9D0;
+extern u8 D_5DCBE0;
+extern u8 D_5DFDD0;
+extern s8 D_800B3190;
+extern s8 D_800B3194;
+extern s8 D_800DEF10;
+extern u8 D_800E29C0;
 extern u8 D_800EC8B0;
 extern u8 D_8010ADFA;
 extern s8 D_8010B1F0;
@@ -251,7 +265,64 @@ void func_80001C30(void) {
     func_80099614(3);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001C80.s")
+void func_80001C80(void) {
+    D_800B3190 = 0;
+    D_800B3194 = 0;
+    func_800704F0();
+    func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+    D_800DEED4 = 0;
+    func_800437F0(&D_5DB9D0, &D_5DCBE0, 0x21);
+    func_800437F0(&D_5DCBE0, &D_5DFDD0, 0x25);
+    func_800437F0(&D_593D10, &D_598A70, 0x22);
+    func_800438EC(&D_1467B0, &D_147910, 8);
+    func_800437F0(&D_1DE360, &D_1E0F70, 9);
+    D_801235B8->unk18 = 0xFF;
+    D_801235B8->unk1C = 0;
+    D_801235B8->unk20 = 0x32;
+    D_801235B8->unk24 = 0x4B0;
+    func_80070EC0(0);
+    if (D_800E29C0 != 0) {
+        func_80071408(&func_80032A50, 0, 0x64);
+    } else {
+        func_80071408(&func_800540EC, 0, 0x64);
+    }
+    func_80071408(&func_80032934, 0, 0x64);
+    func_80071408(&func_80032684, 0, 0x64);
+    func_80071664(&func_80054714, 0, 0x64, 0);
+    func_80071664(func_80055678, 0, 0x64, 0);
+    func_8009B58C(0x20, 0x40, 0x50);
+    func_80041CF0();
+    func_80041D20(0, 0);
+    func_80041DD4(0, 0);
+    func_8004209C(0, 0x83000, 0, -0x2BF000);
+    func_800420FC(0, 0, 0x30, 0);
+    func_80041D20(1, 1);
+    func_80041DD4(1, 4);
+    func_8004209C(1, 0x564000, 0, 0x8C000);
+    func_800420FC(1, 0, 0xDD0, 0);
+    func_80041D20(2, 2);
+    func_80041DD4(2, 3);
+    func_8004209C(2, -0x5ED000, 0, 0x3C8000);
+    func_800420FC(2, 0, 0x2D0, 0);
+    func_80041D20(3, 3);
+    func_80041DD4(3, 1);
+    func_8004209C(3, -0x4C0000, 0, -0x47000);
+    func_800420FC(3, 0, 0x1B0, 0);
+    func_80041D20(4, 4);
+    func_80041DD4(4, 5);
+    func_8004209C(4, 0x6DB000, 0, 0x4E9000);
+    func_800420FC(4, 0, 0xDD0, 0);
+    func_8006D5CC();
+    func_8006D520(0, 0x1F);
+    D_800DEF14 = (s16) D_801235B8->unk18;
+    D_800DEF10 = 1;
+    func_80072138(0x4A, 0x32);
+    func_8009956C(&func_80002024, 0);
+    func_80000A40(0U);
+    func_80000A40(1U);
+    func_80000A40(2U);
+    func_80000A40(3U);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80002024.s")
 
