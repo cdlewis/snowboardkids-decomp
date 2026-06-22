@@ -8,6 +8,7 @@ extern void func_80096E3C(void);
 extern void func_80072114(s32);
 extern void func_8009956C(void *, s32);
 extern void func_8007AA50(void);
+extern void func_800403D8(void);
 
 typedef struct {
     /* 0x00 */ char pad[0x18];
@@ -104,7 +105,19 @@ void func_8003FEF4(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8004002C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_80040360.s")
+void func_80040360(void) {
+    D_800DEF14 -= 0x10;
+    if (D_800DEF14 < 0) {
+        D_800DEF14 = 0;
+        func_8009956C(func_800403D8, 0);
+    }
+    func_8008C704();
+    func_800710CC(0x63);
+    func_80096E3C();
+    func_8007115C();
+    func_8006D700();
+    D_801124B8 = 0x80;
+}
 
 void func_800403D8(void) {
     func_8008C704();
