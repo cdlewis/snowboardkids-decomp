@@ -110,7 +110,21 @@ void func_800737FC(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80077B34.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80077C4C.s")
+extern void func_8006D700(void);
+extern void func_800710CC(s32);
+extern void func_8007115C(void);
+extern void func_8007AA50(void);
+extern void func_8008C704(void);
+extern void func_80096E3C(void);
+
+void func_80077C4C(void) {
+    func_8008C704();
+    func_800710CC(0x63);
+    func_80096E3C();
+    func_8007115C();
+    func_8006D700();
+    func_8007AA50();
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80077C94.s")
 
