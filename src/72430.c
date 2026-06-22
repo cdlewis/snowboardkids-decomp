@@ -66,7 +66,9 @@ void func_80072918(void) {
     func_8009DDE4(3);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80072938.s")
+void func_80072938(void) {
+    func_8009DDE4(2);
+}
 
 extern s32 gzip_data_0000;
 
