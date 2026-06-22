@@ -69,7 +69,20 @@ void func_800567C4(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056840.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_800568C0.s")
+extern void func_80056840(void);
+
+void func_800568C0(void *arg0) {
+    func_80056348(arg0, 0x130);
+    func_8005638C(arg0, 0x20000);
+    func_800563C4(arg0, 0x100000);
+    func_80056444(arg0, 0);
+    *(s16 *)((s32)arg0 + 0x3A) = *(s16 *)((s32)arg0 + 0x3A) - 1;
+    func_800564A8(arg0);
+    if (*(s16 *)((s32)arg0 + 0x3A) == 0) {
+        *(s16 *)((s32)arg0 + 0x3A) = 0x2A;
+        func_80071824(arg0, func_80056840);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056940.s")
 
