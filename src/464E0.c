@@ -52,7 +52,15 @@ void func_8004835C(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_8004845C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_800484F0.s")
+extern s16 D_80112132;
+extern s16 D_80112134;
+
+s16 func_80042D58(s32);
+
+void func_800484F0(void) {
+    D_80112132 = func_80042D58(0x8000);
+    D_80112134 = func_80042D58(0x8000);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048524.s")
 
