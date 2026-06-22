@@ -52,7 +52,21 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_8007377C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_800737FC.s")
+extern void func_80000A40(s32);
+extern void func_80072114(s32);
+extern void func_800994F4(s32, void *, s32);
+extern void func_8009954C(s32);
+extern void func_80001C30(void);
+
+void func_800737FC(void) {
+    func_80000A40(0);
+    func_80000A40(1);
+    func_80000A40(2);
+    func_80000A40(3);
+    func_80072114(0);
+    func_800994F4(3, &func_80001C30, 0x64);
+    func_8009954C(2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80073858.s")
 
