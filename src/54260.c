@@ -16,7 +16,13 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/54260/func_80053DD8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/54260/func_80053DFC.s")
+extern void func_80042034(s32 arg0);
+extern void func_80042A00(s32 arg0);
+
+void func_80053DFC(s32 arg0) {
+    func_80042034(0);
+    func_80042A00(0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/54260/func_80053E28.s")
 
