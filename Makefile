@@ -74,7 +74,7 @@ IDO_CC      = $(IDO_ASMPROC)
 ASFLAGS      = -G 0 -I include -mips3 -mabi=32
 C_DEFINES    = -DLANGUAGE_C -D_LANGUAGE_C -D_MIPS_SZLONG=32 -DNDEBUG \
                -DCOMPILING_LIBULTRA -DBUILD_VERSION=VERSION_I
-C_MIPS       = -mips2
+C_MIPS       = -mips1
 C_OPT        = -O2
 CFLAGS       = -c $(C_MIPS) -G 0 -non_shared -fullwarn -Xcpluscomm \
                -nostdinc -Wab,-r4300_mul -woff 649,838,712,516 \
@@ -84,7 +84,9 @@ OBJCOPYFLAGS = -O binary
 RM_MDEBUG    = $(OBJCOPY) --remove-section .mdebug $@
 
 $(BUILD_DIR)/src/ultra/io/%.o: C_OPT = -O1
+$(BUILD_DIR)/src/ultra/io/%.o: C_MIPS = -mips2
 $(BUILD_DIR)/src/ultra/audio/%.o: C_OPT = -O2
+$(BUILD_DIR)/src/ultra/audio/%.o: C_MIPS = -mips2
 $(BUILD_DIR)/src/ultra/audio/env.o: C_OPT = -O3
 $(BUILD_DIR)/src/ultra/audio/env.o: IDO_CC = $(IDO_DIRECT)
 $(BUILD_DIR)/src/ultra/audio/drvrnew.o: C_OPT = -O3
@@ -96,28 +98,14 @@ $(BUILD_DIR)/src/ultra/audio/resample.o: IDO_CC = $(IDO_DIRECT)
 $(BUILD_DIR)/src/ultra/audio/auxbus.o: C_OPT = -O3
 $(BUILD_DIR)/src/ultra/audio/auxbus.o: IDO_CC = $(IDO_DIRECT)
 $(BUILD_DIR)/src/ultra/os/%.o: C_OPT = -O1
+$(BUILD_DIR)/src/ultra/os/%.o: C_MIPS = -mips2
 $(BUILD_DIR)/src/ultra/os/timerintr.o: CFLAGS += -D_FINALROM
 $(BUILD_DIR)/src/ultra/gu/%.o: C_OPT = -O2
+$(BUILD_DIR)/src/ultra/gu/%.o: C_MIPS = -mips2
 $(BUILD_DIR)/src/ultra/gu/perspective.o: C_OPT = -O2
-
 $(BUILD_DIR)/src/ultra/io/sptask.o: C_OPT = -O2
 $(BUILD_DIR)/src/ultra/io/sptask.o: CFLAGS += -DF3DEX_GBI
-
-# Game (main segment) code was compiled with IDO -O2 -mips1: it has load-delay
-# nops and no branch-likely instructions. (Default -mips2 emits beqzl/bnezl and
-# omits load-delay nops, which does not match.) These per-object overrides are
-# scoped to converted game segments; integration may prefer flipping the global
-# C_MIPS default to -mips1 with -mips2/-mips3 overrides for libultra.
-$(BUILD_DIR)/src/5560.o: C_MIPS = -mips1
-$(BUILD_DIR)/src/6870.o: C_MIPS = -mips1
-$(BUILD_DIR)/src/7B30.o: C_MIPS = -mips1
-$(BUILD_DIR)/src/9220.o: C_MIPS = -mips1
-$(BUILD_DIR)/src/6140.o: C_MIPS = -mips1
-$(BUILD_DIR)/src/CE80.o: C_MIPS = -mips1
-$(BUILD_DIR)/src/D200.o: C_MIPS = -mips1
-$(BUILD_DIR)/src/DB70.o: C_MIPS = -mips1
-$(BUILD_DIR)/src/DF40.o: C_MIPS = -mips1
-
+$(BUILD_DIR)/src/ultra/libc/%.o: C_MIPS = -mips2
 $(BUILD_DIR)/src/ultra/libc/ll.o: C_OPT = -O1
 $(BUILD_DIR)/src/ultra/libc/ll.o: C_MIPS = -mips3 -32
 $(BUILD_DIR)/src/ultra/libc/xprintf.o: C_OPT = -O3
