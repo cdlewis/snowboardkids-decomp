@@ -1,5 +1,10 @@
 #include "common.h"
 
+extern void *D_801248D4;
+extern void func_800483FC(void *, void *, s32);
+extern void func_800556B0(void);
+extern void func_80056CA0(void);
+
 extern void func_80056348(void *arg0, s32 arg1);
 extern void func_8005638C(void *arg0, s32 arg1);
 extern void func_800563C4(void *arg0, s32 arg1);
@@ -14,7 +19,9 @@ void func_80056A58(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_800556B0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80055B04.s")
+void func_80055B04(s32 arg0) {
+    func_800483FC(&D_801248D4, func_800556B0, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80055B34.s")
 
@@ -132,6 +139,8 @@ void func_80056ACC(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056CA0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_8005711C.s")
+void func_8005711C(s32 arg0) {
+    func_800483FC(&D_801248D4, func_80056CA0, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_8005714C.s")
