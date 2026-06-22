@@ -373,7 +373,7 @@ void    alSynSetFXMix(ALSynth *s, ALVoice *voice, u8 fxmix);
 void    alSynSetPriority(ALSynth *s, ALVoice *voice, s16 priority);
 s16     alSynGetPriority(ALSynth *s, ALVoice *voice);
 
-ALFxRef *alSynAllocFX(ALSynth *s, s16 bus, ALSynConfig *c, ALHeap *hp);
+ALFxRef alSynAllocFX(ALSynth *s, s16 bus, ALSynConfig *c, ALHeap *hp);
 ALFxRef alSynGetFXRef(ALSynth *s, s16 bus, s16 index);
 void    alSynFreeFX(ALSynth *s, ALFxRef *fx);
 void    alSynSetFXParam(ALSynth *s, ALFxRef fx, s16 paramID, void *param);
