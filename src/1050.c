@@ -1,7 +1,7 @@
 #include "common.h"
 
 void osRecvMesg(void *, void *, s32);
-void osSendMesg(void *, s32, s32, u16);
+void osSendMesg(void *, s32, s32);
 extern s32 D_800E4B78;
 extern s32 D_800E4BB0;
 
@@ -13,13 +13,27 @@ extern s32 D_800E4BB0;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_800009B0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000A40.s")
+void func_80000A40(u16 arg0) {
+    s32 sp1C;
+
+    sp1C = 0;
+
+    osSendMesg(&D_800E4B78, arg0 + 0x70, 1);
+    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000A8C.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000C00.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000C48.s")
+void func_80000C48(u16 arg0) {
+    s32 sp1C;
+
+    sp1C = 0;
+
+    osSendMesg(&D_800E4B78, arg0 + 0x20, 1);
+    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000C94.s")
 
@@ -28,33 +42,75 @@ void func_80000DB4(u16 arg0) {
 
     sp1C = 0;
 
-    osSendMesg(&D_800E4B78, arg0 + 0x30, 1, arg0);
+    osSendMesg(&D_800E4B78, arg0 + 0x30, 1);
     osRecvMesg(&D_800E4BB0, &sp1C, 1);
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000E00.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001010.s")
+void func_80001010(u16 arg0) {
+    s32 sp1C;
+
+    sp1C = 0;
+
+    osSendMesg(&D_800E4B78, arg0 + 0x40, 1);
+    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_8000105C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_800012CC.s")
+void func_800012CC(u16 arg0) {
+    s32 sp1C;
+
+    sp1C = 0;
+
+    osSendMesg(&D_800E4B78, arg0 + 0x50, 1);
+    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001318.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001538.s")
+void func_80001538(u16 arg0) {
+    s32 sp1C;
+
+    sp1C = 0;
+
+    osSendMesg(&D_800E4B78, arg0 + 0x60, 1);
+    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001584.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001618.s")
+void func_80001618(void) {
+    s32 sp1C;
+
+    sp1C = 0;
+
+    osSendMesg(&D_800E4B78, 0xA0, 1);
+    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_8000165C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_800016D8.s")
+void func_800016D8(u16 arg0) {
+    s32 sp1C;
+
+    sp1C = 0;
+
+    osSendMesg(&D_800E4B78, arg0 + 0xB0, 1);
+    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001724.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001858.s")
+void func_80001858(void) {
+    s32 sp1C;
+
+    sp1C = 0;
+
+    osSendMesg(&D_800E4B78, 0xC0, 1);
+    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_8000189C.s")
 
