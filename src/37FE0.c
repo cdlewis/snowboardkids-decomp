@@ -35,7 +35,13 @@ void func_800377C8(s32 arg0) {
     func_800428C8(2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80037818.s")
+void func_80037818(s32 arg0) {
+    if (func_80041FB4(2) == 1) {
+        func_80071824(arg0, (void (*)())func_800377C8);
+        func_80041DD4(2, 0x23);
+    }
+    func_800428C8(2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80037868.s")
 
