@@ -96,7 +96,27 @@ void func_8003BBBC(void *arg0) {
     func_80071824(arg0, func_8003BA64);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003BC00.s")
+typedef struct {
+    char pad[0x18];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    u8 unk1E;
+    u8 unk1F;
+} Struct8003BC00;
+
+extern char D_800E1060[];
+extern void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_80013D0C(s32, s32, void *, s32, s32);
+
+void func_8003BC00(Struct8003BC00 *arg0) {
+    char sp38[0x10];
+    if (arg0->unk1E == 1) {
+        func_8000F030(arg0->unk18, arg0->unk1A, func_80043040(D_80112172), (u16) arg0->unk1C, 0x20, 0x20, arg0->unk1F, 0);
+        sprintf(sp38, D_800E1060, arg0->unk1C);
+        func_80013D0C(0x40, -0x66, sp38, 0, 0x100);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003BC9C.s")
 
