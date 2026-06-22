@@ -2,7 +2,13 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3E9D0/func_8003DDD0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3E9D0/n_alSeqpDelete.s")
+struct ALSeqPlayer;
+
+extern void func_8003DDD0(struct ALSeqPlayer *seqp);
+
+void n_alSeqpDelete(struct ALSeqPlayer *seqp) {
+    func_8003DDD0(seqp);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3E9D0/func_8003DEC8.s")
 
