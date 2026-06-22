@@ -48,6 +48,14 @@ extern void func_800720E4(s32);
 extern void func_80002A1C(void);
 extern void func_80052E4C(void);
 extern void func_80055678(void);
+extern void func_80041CF0(void);
+extern void func_80041D20(s32, s32);
+extern void func_80041DD4(s32, s32);
+extern void func_8004209C(s32, s32, s32, s32);
+extern void func_800420FC(s32, s32, s32, s32);
+extern void func_80052394(void);
+extern void func_80002CE4(void);
+extern void func_8000262C(void);
 extern void func_80001C30(void);
 extern void func_80001C80(void);
 extern void func_800024A8(void);
@@ -90,6 +98,9 @@ extern s32 D_8010B198;
 extern s32 D_8010B19C;
 extern u8 D_80123750;
 extern u8 D_80123751;
+extern u8 D_8012482A;
+extern u8 D_8012482B;
+extern u8 D_8012482C;
 extern s32 D_801235B4;
 extern s32 D_80123778;
 
@@ -292,7 +303,30 @@ void func_800022B8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_800024A8.s")
+void func_800024A8(void) {
+    func_800704F0();
+    D_801124B8 = 0x80;
+    D_800DEED4 = 0;
+    func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+    func_800438EC(&D_1467B0, &D_147910, 8);
+    func_800437F0(&D_1DE360, &D_1E0F70, 9);
+    func_800437F0(&D_1F1A90, &D_1F2220, 0x28);
+    func_8006D5CC();
+    func_8006D520(0, 0x1F);
+    func_80070EC0(0);
+    func_80071664(func_80055678, 0, 0x64, 0);
+    D_801235B4 = 0;
+    D_8010B1F0 = 0;
+    func_80071664(&func_80052394, 0, 0x64, 0);
+    func_8009B58C(0x20, 0x40, 0x50);
+    func_80041CF0();
+    func_80041D20(4, 4);
+    func_80041DD4(4, 5);
+    func_8004209C(4, 0xFFE00000, 0, 0x509000);
+    func_800420FC(4, 0, 0x100, 0);
+    func_8009956C(func_8000262C, 0);
+    func_800720E4(7);
+}
 
 void func_8000262C(void) {
     s32 temp_v0;
@@ -384,7 +418,85 @@ void func_800028B4(void) {
     func_800720E4(7);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80002A1C.s")
+void func_80002A1C(void) {
+    s32 temp_v1;
+
+    D_800DEF14 -= 0x10;
+    if (D_800DEF14 < 0) {
+        D_800DEF14 = 0;
+        temp_v1 = D_80123778;
+        if ((temp_v1 & 0x10800) && (D_801235B4 != 0)) {
+            D_801235B4 -= 1;
+            func_80072138(0x19, 0x32);
+            temp_v1 = D_80123778;
+        }
+        if ((temp_v1 & 0x20400) && (D_801235B4 != 3)) {
+            D_801235B4 += 1;
+            func_80072138(0x19, 0x32);
+            temp_v1 = D_80123778;
+        }
+        if (temp_v1 & 0x4000) {
+            D_801235B4 = 3;
+        }
+        if (temp_v1 & 0x40100) {
+            switch (D_801235B4) {
+            case 0:
+                if (D_8012482A != 0) {
+                    D_8012482A -= 1;
+                    func_80072138(0x19, 0x32);
+                    temp_v1 = D_80123778;
+                }
+                break;
+            case 1:
+                if (D_8012482B != 1) {
+                    D_8012482B += 1;
+                    func_80072138(0x19, 0x32);
+                    temp_v1 = D_80123778;
+                }
+                break;
+            case 2:
+                if (D_8012482C != 1) {
+                    D_8012482C += 1;
+                    func_80072138(0x19, 0x32);
+                    temp_v1 = D_80123778;
+                }
+                break;
+            }
+        }
+        if (temp_v1 & 0x80200) {
+            switch (D_801235B4) {
+            case 0:
+                if (D_8012482A != 1) {
+                    D_8012482A += 1;
+                    func_80072138(0x19, 0x32);
+                    temp_v1 = D_80123778;
+                }
+                break;
+            case 1:
+                if (D_8012482B != 0) {
+                    D_8012482B -= 1;
+                    func_80072138(0x19, 0x32);
+                    temp_v1 = D_80123778;
+                }
+                break;
+            case 2:
+                if (D_8012482C != 0) {
+                    D_8012482C -= 1;
+                    func_80072138(0x19, 0x32);
+                    temp_v1 = D_80123778;
+                }
+                break;
+            }
+        }
+        if ((temp_v1 & 0xD000) && (D_801235B4 == 3)) {
+            func_80072114(0x3C);
+            func_80072138(0x18, 0x32);
+            func_8009956C(func_80002CE4, 0);
+        }
+    }
+    func_8006D780(0);
+    func_8007105C();
+}
 
 void func_80002CE4(void) {
     D_800DEF14 += 0x10;
