@@ -1,9 +1,11 @@
 #include "common.h"
 
 extern void func_80036388(void);
+extern void func_80036DAC(void);
 extern void func_800373AC(s32 *arg0);
 extern void func_80041DD4(s32 arg0, s32 arg1);
 extern s32 func_80041FB4(s32 arg0);
+extern void func_80042034(s32 arg0);
 extern void func_800428C8(s32 arg0);
 extern void func_80071824(s32 arg0, void (*arg1)(void));
 extern s32 D_8010B1C0;
@@ -60,7 +62,17 @@ void func_800363B4(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036DAC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036E58.s")
+void func_80036E58(s32 arg0);
+
+void func_80036E58(s32 arg0) {
+    func_80042034(4);
+    if (D_8010B1A2 == 4) {
+        func_80071824(arg0, func_80036DAC);
+        func_80041DD4(4, 5);
+    }
+    func_800428C8(4);
+    func_800373AC(&D_8010B1C0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036EBC.s")
 
