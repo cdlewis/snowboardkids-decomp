@@ -200,7 +200,11 @@ void func_8008F560(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_80097038.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_80097144.s")
+extern void func_80089374(void);
+
+void func_80097144(void) {
+    func_80089374();
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_80097164.s")
 
