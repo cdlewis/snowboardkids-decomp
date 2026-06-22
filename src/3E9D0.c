@@ -6,7 +6,11 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3E9D0/func_8003DEC8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3E9D0/func_8003DFB0.s")
+extern void func_8003DEC8(void);
+
+void func_8003DFB0(void) {
+    func_8003DEC8();
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3E9D0/func_8003DFD0.s")
 
