@@ -6,6 +6,7 @@ extern void func_800428C8(s32 arg0);
 extern void func_80071824(s32 arg0, void (*arg1)(void));
 
 void func_80037770(s32 arg0);
+void func_8003905C(s32 arg0);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_800373E0.s")
 
@@ -137,7 +138,13 @@ void func_80037818(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_8003905C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_800390E8.s")
+void func_800390E8(s32 arg0) {
+    if (func_80041FB4(2) == 1) {
+        func_80071824(arg0, func_8003905C);
+        func_80041DD4(2, 0);
+    }
+    func_800428C8(2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80039138.s")
 
