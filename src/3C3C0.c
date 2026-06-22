@@ -29,7 +29,20 @@ void func_8003B944(Struct8003BA64 *arg0) {
     func_8000F8AC((s16)(arg0->unk1C + 0x40), arg0->unk1E, func_80043040(D_80112172), 0x36, 0x20, 0x20, 0, arg0->unk24, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003B9F8.s")
+void func_8003B9F8(void *arg0) {
+    s32 v1 = 0x100;
+    s32 v0;
+    if (D_8010B1A2 == 0x43) {
+        v0 = *(s16 *)((s32)arg0 + 0x24);
+        if (v1 != v0) {
+            *(s16 *)((s32)arg0 + 0x24) = v0 + 0x10;
+            if (*(s16 *)((s32)arg0 + 0x24) >= 0x100) {
+                *(s16 *)((s32)arg0 + 0x24) = v1;
+            }
+        }
+        func_800483FC(&D_80124868, func_8003B944, arg0);
+    }
+}
 
 void func_8003BA64(Struct8003BA64 *arg0) {
     switch (arg0->unk26) {
