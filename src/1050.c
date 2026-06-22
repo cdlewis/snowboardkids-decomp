@@ -26,7 +26,14 @@ void func_80000A40(u16 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000C00.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000C48.s")
+void func_80000C48(u16 arg0) {
+    s32 sp1C;
+
+    sp1C = 0;
+
+    osSendMesg(&D_800E4B78, arg0 + 0x20, 1);
+    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000C94.s")
 
