@@ -69,7 +69,10 @@ s32 func_8009CD0C(void *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D138.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D148.s")
+s32 func_8009D148(void *arg0, s32 arg1) {
+    *(u8 *)((u8 *)arg0 + 0xE8) = 0;
+    return arg1;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D154.s")
 
