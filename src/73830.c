@@ -126,7 +126,13 @@ void func_80077C4C(void) {
     func_8007AA50();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80077C94.s")
+void func_80077C94(void) {
+    func_8008C704();
+    func_800710CC(0x63);
+    func_80096E3C();
+    func_8007115C();
+    func_8006D700();
+}
 
 void func_80077CD4(void) {
     func_8008C704();
