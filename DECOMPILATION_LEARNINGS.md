@@ -2,10 +2,48 @@
 
 Record project-specific compiler behavior, matching patterns, and verified struct or data-layout insights here as they are discovered.
 
+## Game Code Is `-O2 -mips1` (Not `-mips2`)
+
+- **The main/game segment was compiled with IDO `-O2 -mips1`.** Two tells in the
+  target asm prove this: (1) **load-delay `nop`s** (e.g. `lw t7,..; nop; addiu t8,t7,..`)
+  which MIPS2 would not need (it has load interlocks), and (2) **no branch-likely
+  instructions** (`beqzl`/`bnezl`/`beql`/`bnel`), which are MIPS2+ only. Compiling at
+  the project-default `-mips2` emits `beqzl` and omits the load-delay nops, so it will
+  never match game code. Add a per-object override `$(BUILD_DIR)/src/<seg>.o: C_MIPS = -mips1`
+  (integration may prefer flipping the global `C_MIPS` default to `-mips1` with
+  `-mips2`/`-mips3` overrides kept for libultra).
+- **`-O2` (not `-O1`) is still correct for the addressing pattern.** At `-O1`, IDO loads
+  a global pointer's value directly each use (`lui;lw %lo`); the target computes the
+  pointer variable's address once (`lui;addiu`) then reloads `0(reg)`, which is `-O2`.
+- **The per-function workspace `build.sh` is misleading.** It defaults to `-O1` and
+  `-mips2` and omits real Makefile flags. Use it only as a rough signal; the authoritative
+  check is building the real object (`make build/src/<seg>.o`) and `tools/asm-differ/diff.py`.
+  Note diff.py reads the target ROM at the *current build's* symbol address, so if a
+  size mismatch shifts later functions, diff.py output for them becomes misaligned/garbage —
+  fix size mismatches first.
+
+## Matching Branch Direction (IDO if/else)
+
+- For `if (cond) {A} else {B}`, IDO branches to `B` when `cond` is false and lays `A` as
+  the fall-through. So `if (x == C){A}else{B}` emits `bne x,C,B`; `if (x != C){A}else{B}`
+  emits `beq x,C,B`. Match the target's branch opcode/direction by choosing which side is
+  the fall-through. In practice these state-update functions often test `!= 0xFF` first
+  (func path as fall-through) with the simpler branch placed at the bottom.
+
+## Global Pointer Read-back After Assignment
+
+- When code assigns a global pointer then immediately uses what it points to, IDO
+  often re-reads *through the global pointer* rather than reusing the literal address.
+  E.g. the target for `D_800EC9C4 = &D_801121E0; (*it).unk2C()` keeps `&D_800EC9C4`
+  in a register and stores `&D_801121E0` to it, then reads the field via that stored
+  value — which matches the C `D_800EC9C4 = &D_801121E0; D_800EC9C4->unk2C();`
+  (access via the global pointer), NOT `D_801121E0.unk2C();` (which collapses to one
+  fewer instruction and won't match).
+
 ## IDO Optimization Levels
 
 - **Most ultra IO/OS files match at `-O1`.** Audio library files (`src/ultra/audio/`) and GU math files (`src/ultra/gu/`) often require `-O2`. Some complex audio files (`reverb.c`, `env.c`, `xprintf.c`, `xldtob.c`) require direct IDO `-O3` because the asm-processor rejects `-O3` due to function reordering.
-- **IDO `-O3` reorders functions within an object.** The compiler may emit functions in a different order than the source file. When matching `-O3` objects, the ROM function order is the authoritative order, not the upstream source order.
+- **IDO `-O3` reorders functions within an object.** The compiler may emit functions in a different order than the source file. When matching `-O3` objects, the ROM function order is the authoritative order, not the upstream source order. In practice IDO `-O3` emits functions in *reverse* source order for small files, so keeping the upstream source order (e.g. a `Pull`/`Param` pair with `Pull` first) yields the ROM order (`Param` first). If a near-perfect `-O2` match differs only by saved-register (`s0`-`s7`) vs temp-register-plus-spill choice, try `-O3` + `IDO_DIRECT`: `-O3` register allocation, not a source change, is usually the cause.
 - **At `-O2`, IDO uses callee-saved registers more aggressively** and fills branch delay slots better than `-O1`. At `-O1`, the compiler uses stack slots for variables surviving across calls, producing larger frames.
 
 ## Local vs Extern Data Definitions
@@ -87,3 +125,12 @@ If splitting after a matched helper function causes the C object's `.text` secti
 ## Reuse of Upstream Source
 
 For straightforward libultra functions that don't use `_DEBUG` code, have no local data, and just call simple helpers around struct field assignments, the upstream ultralib source often matches directly without modification. Always try the unmodified upstream source first before making changes.
+## Converting a Jump-Table Function to Per-Function GLOBAL_ASM Breaks Rodata Refs
+
+When a raw `asm` segment contains a function with a jump table, the table lives
+in a separate `.rodata` object and references the code's local `.L` labels. As a
+single raw asm segment these resolve, but converting the segment to a `c` segment
+extracts each function into its own `GLOBAL_ASM` `.s` file where those `.L`
+labels are file-local and no longer visible to the rodata object, producing
+`undefined reference to .L...` link errors. Don't convert such a segment to `c`
+unless you also handle the jump-table function's labels.
