@@ -86,7 +86,8 @@ void func_800484F0(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048D60.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048E3C.s")
+void func_80048E3C(void *arg0, void *arg1, void *arg2) {
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048E4C.s")
 
