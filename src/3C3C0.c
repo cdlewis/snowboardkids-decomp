@@ -1,7 +1,9 @@
 #include "common.h"
 
 typedef struct {
-    char pad[0x20];
+    char pad[0x1C];
+    s16 unk1C;
+    s16 unk1E;
     u16 unk20;
     u16 unk22;
     s16 unk24;
@@ -9,7 +11,10 @@ typedef struct {
 } Struct8003BA64;
 
 extern u16 D_8010B1A2;
+extern s16 D_80112172;
 extern void *D_80124868;
+extern s32 func_80043040(s16);
+extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80071824(void *arg0, void (*arg1)(void *));
 extern void func_800483FC(void *, void *, void *);
 extern void func_8003B7C0(void *arg0);
@@ -19,7 +24,10 @@ extern void func_8003BC9C(void *arg0);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003B7C0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003B944.s")
+void func_8003B944(Struct8003BA64 *arg0) {
+    func_8000F8AC(arg0->unk1C, arg0->unk1E, func_80043040(D_80112172), 0x35, 0x20, 0x20, 0, arg0->unk24, 0);
+    func_8000F8AC((s16)(arg0->unk1C + 0x40), arg0->unk1E, func_80043040(D_80112172), 0x36, 0x20, 0x20, 0, arg0->unk24, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003B9F8.s")
 
