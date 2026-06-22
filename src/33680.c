@@ -232,7 +232,16 @@ void func_80034FC8(s32 arg0) {
     func_800428C8(0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80035030.s")
+void func_80035030(s32 arg0) {
+    func_80041FB4(0);
+    if (D_8010B1A2 == 3) {
+        func_80071824(arg0, (void (*)()) func_80034FC8);
+        func_80041DD4(0, 2);
+        func_8003D218(0x55, -0x62, 0);
+        *(u16 *)(((s32)arg0) + 0x2A) = 0;
+    }
+    func_800428C8(0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/33680/func_800350A4.s")
 
