@@ -38,7 +38,7 @@ ASM_PROC="$PROJECT_ROOT/tools/asm-processor/build.py"
 
 ASFLAGS=(-G 0 -I "$PROJECT_ROOT/include" -mips3 -mabi=32)
 C_DEFINES=(-DLANGUAGE_C -D_LANGUAGE_C -D_MIPS_SZLONG=32 -DNDEBUG)
-CFLAGS=(-c "$OPT_FLAG" -mips2 -G 0 -non_shared -fullwarn -Xcpluscomm \
+CFLAGS=(-c "$OPT_FLAG" -mips1 -G 0 -non_shared -fullwarn -Xcpluscomm \
     -nostdinc -Wab,-r4300_mul -woff 649,838,712,516 \
     -I"$PROJECT_ROOT/include" "${C_DEFINES[@]}")
 

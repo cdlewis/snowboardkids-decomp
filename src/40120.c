@@ -19,7 +19,10 @@ extern Struct801235B8 *D_801235B8;
 extern u8 D_8010B1F0;
 extern s16 D_801124B8;
 extern s8 D_80121B56;
+extern s16 D_800DEF14;
+extern u8 D_80123751;
 
+extern void func_8003FF78(void);
 extern void func_80040450(void);
 extern void func_800408E4(void);
 
@@ -59,7 +62,22 @@ void func_8003FBE8(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003FE54.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003FEF4.s")
+void func_8003FEF4(void) {
+    func_8008C704();
+    func_800710CC(0x63);
+    func_80096E3C();
+    func_8007115C();
+    func_8006D700();
+    func_8007AA50();
+    D_800DEF14 += 0x10;
+    if (D_800DEF14 >= 0xFF) {
+        D_80123751 = 1;
+        {
+            void (*func_ptr)(void) = func_8003FF78;
+            func_8009956C(func_ptr, 0);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003FF78.s")
 
