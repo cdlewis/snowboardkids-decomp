@@ -122,8 +122,6 @@ void func_80001858(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001C80.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001FF4.s")
-
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80002024.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_800022B8.s")

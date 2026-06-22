@@ -247,7 +247,7 @@ elif [ "$BOOTSTRAP" = true ]; then
         fi
 
         # Generate C code using m2c with optional context
-        M2C_OUTPUT=$(m2c --target mips-gcc-c $CONTEXT_ARG "$ASM_PATH" 2>&1)
+        M2C_OUTPUT=$(m2c --target mips-ido-c $CONTEXT_ARG "$ASM_PATH" 2>&1)
         M2C_EXIT_CODE=$?
 
         if [ $M2C_EXIT_CODE -ne 0 ]; then

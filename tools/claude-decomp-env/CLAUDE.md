@@ -22,7 +22,13 @@ After `base.c` builds:
 2. Inspect `base_diff`, `target.s`, and generated object dumps.
 3. Create incremental attempts as `base_2.c`, `base_3.c`, etc.
 4. Record useful observations in `LEARNINGS.md`.
-5. Stop when a 100% match is reached or when the build script tells you to stop.
+5. If a function is nearly matching but stuck on register allocation, or if manual progress has stalled, use the `decomp-permuter` skill from the project root. Run it with a timeout and point `--source-file` at the best attempt, for example:
+
+```bash
+timeout 300s ./tools/permuter --source-file nonmatchings/<function-name>/base_N.c <function name>
+```
+
+6. Stop when a 100% match is reached or when the build script tells you to stop.
 
 ## Tools
 

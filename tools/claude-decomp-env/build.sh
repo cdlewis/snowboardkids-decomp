@@ -7,7 +7,7 @@ if [ $# -lt 1 ]; then
 fi
 
 INPUT="$(realpath "$1")"
-OPT_FLAG="${2:--O1}"
+OPT_FLAG="${2:--O2}"
 OBJECT_OUTPUT="$(realpath "${1%.c}.o")"
 ANNOTATED_OUTPUT="$(realpath "${1%.c}_annotated.s")"
 OBJECT_DUMP="${1%.c}_object_dump.s"
@@ -38,7 +38,7 @@ ASM_PROC="$PROJECT_ROOT/tools/asm-processor/build.py"
 
 ASFLAGS=(-G 0 -I "$PROJECT_ROOT/include" -mips3 -mabi=32)
 C_DEFINES=(-DLANGUAGE_C -D_LANGUAGE_C -D_MIPS_SZLONG=32 -DNDEBUG)
-CFLAGS=(-c "$OPT_FLAG" -mips2 -G 0 -non_shared -fullwarn -Xcpluscomm \
+CFLAGS=(-c "$OPT_FLAG" -mips1 -G 0 -non_shared -fullwarn -Xcpluscomm \
     -nostdinc -Wab,-r4300_mul -woff 649,838,712,516 \
     -I"$PROJECT_ROOT/include" "${C_DEFINES[@]}")
 
@@ -88,7 +88,7 @@ if [[ $1 =~ base_[0-9]+ ]] && [ -n "$MATCH_PERCENT" ]; then
     }
     END {
         since = total - best_at
-        if (since > 40) {
+        if (since > 10) {
             printf "%d %s %.1f\n", since, best_file, best
         }
     }' match_log.txt)
