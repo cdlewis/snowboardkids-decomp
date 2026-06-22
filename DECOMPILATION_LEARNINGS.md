@@ -134,3 +134,22 @@ extracts each function into its own `GLOBAL_ASM` `.s` file where those `.L`
 labels are file-local and no longer visible to the rodata object, producing
 `undefined reference to .L...` link errors. Don't convert such a segment to `c`
 unless you also handle the jump-table function's labels.
+
+## Sign-Extension Patterns and `(s32)` Casts
+
+When matching functions with sign-extension patterns in the prologue (e.g., `sll a1,a2,0x10; sra t8,a1,0x10`), try **explicit `(s32)` casts on parameters** even when the callee function takes a smaller type like `s16`.
+
+**Example:** `func_80097C18(sp58, (s32)arg2)` where `func_80097C18` is declared as `void func_80097C18(void *, s16)`
+
+The `(s32)` cast triggers IDO's specific sign-extension sequence (`sll` to upper half, `sra` back) rather than using a different register allocation. Without the cast, the compiler may use different temporary registers (`t6` instead of `a1`) and produce a non-matching prologue despite functionally equivalent code.
+
+**Key insight:** The target compiler recognized that `arg1` was not used until later in the function, so it saved `a1` early and reused the register for sign-extending `arg2`. The explicit cast tells the compiler to generate this specific pattern.
+
+## Correct Parameter Order is Critical
+
+When debugging non-matching functions, always verify the **parameter order** in function calls. A simple swap like `func_80097CF0(sp38, sp58, sp18)` vs `func_80097CF0(sp58, sp38, sp18)` can cause:
+- Functional differences that make register allocation issues irrelevant
+- Decomp-permuter inefficiency (it permutes around wrong code)
+- Misleading focus on prologue patterns rather than the actual bug
+
+**Best practice:** Verify call signatures against the target assembly before tuning register allocation or using decomp-permuter.
