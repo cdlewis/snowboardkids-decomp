@@ -25,7 +25,12 @@ void func_80011854(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/F680/func_8001185C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/F680/func_80011C18.s")
+extern void func_80071824(void *arg0, void (*arg1)(void));
+extern void func_80011C3C(void);
+
+void func_80011C18(void *arg0) {
+    func_80071824(arg0, func_80011C3C);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/F680/func_80011C3C.s")
 
