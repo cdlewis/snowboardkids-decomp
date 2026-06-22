@@ -21,4 +21,6 @@ void func_800711C8(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/71AC0/func_800716E4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/71AC0/func_80071824.s")
+void func_80071824(void *arg0, void (*arg1)(void)) {
+    *(void (**)(void))((u8 *)arg0 + 8) = arg1;
+}
