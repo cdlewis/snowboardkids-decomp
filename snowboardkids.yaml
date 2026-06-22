@@ -42,6 +42,7 @@ options:
   libultra_symbols: True
   hardware_regs: True
   gfx_ucode: f3dex2
+  disassemble_all: True
 
 segments:
   - name: header
