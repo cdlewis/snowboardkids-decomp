@@ -63,7 +63,13 @@ void func_8004DC6C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_80050340.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_80050398.s")
+extern void func_80050340(void *);
+
+void func_80050398(void *arg0) {
+    *(u16*)((u8*)arg0 + 0x1C) = 0xFFFF;
+    func_80050340(arg0);
+    func_80071824(arg0, func_80050340);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_800503D0.s")
 
