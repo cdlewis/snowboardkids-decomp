@@ -55,7 +55,14 @@ void func_80072D98(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_800734E4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_800735B4.s")
+extern void func_800086EC(void);
+extern void func_800735F8(void);
+
+void func_800735B4(void) {
+    func_8009956C(&func_800735F8, 0);
+    func_800994F4(4, &func_800086EC, 0x64);
+    func_80099614(2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_800735F8.s")
 
