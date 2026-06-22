@@ -2,6 +2,7 @@
 
 extern void func_80033C44(void);
 extern void func_80033D64(void);
+extern void func_80033504(void);
 extern void func_80034188(void);
 extern void func_80034BC4(void);
 extern s32 D_8010B1C0;
@@ -72,7 +73,13 @@ void func_80032B94(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80033504.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_800335A4.s")
+void func_800335A4(s32 arg0) {
+    func_80042034(0);
+    func_800428C8(0);
+    if (D_8010B1A2 == 0x2A) {
+        func_80071824(arg0, func_80033504);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/33680/func_800335F0.s")
 
