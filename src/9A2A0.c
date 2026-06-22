@@ -91,7 +91,44 @@ void func_80099790(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_800998E4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_80099C44.s")
+typedef struct {
+    u16 type;
+    u8 pri;
+    u8 status;
+    OSMesgQueue *retQueue;
+} OSIoMesgHdr;
+
+typedef struct {
+    OSIoMesgHdr hdr;
+    void *dramAddr;
+    u32 devAddr;
+    u32 size;
+    void *piHandle;
+} OSIoMesg;
+
+extern void osInvalDCache(void *, s32);
+extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
+extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
+
+void func_80099C44(u32 devAddr, void *dramAddr, s32 size) {
+    OSIoMesg mb;
+    OSMesg msg;
+    s32 chunk;
+
+    while (size != 0) {
+        if (size >= 0x2001) {
+            chunk = 0x2000;
+        } else {
+            chunk = size;
+        }
+        osInvalDCache(dramAddr, chunk);
+        osPiStartDma(&mb, 0, 0, devAddr, dramAddr, chunk, &D_80123FF8);
+        osRecvMesg(&D_80123FF8, &msg, 1);
+        size -= chunk;
+        devAddr += chunk;
+        dramAddr = (void *)((u8 *)dramAddr + chunk);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_80099D10.s")
 
