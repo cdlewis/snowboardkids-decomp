@@ -1,19 +1,33 @@
 #include "common.h"
 
-#pragma GLOBAL_ASM("asm/nonmatchings/43CD0/func_800430D0.s")
+extern u8 D_800D3F00[];
+extern u16 D_800D4000;
+extern u16 D_800D4004;
+extern s16 D_801235B0;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/43CD0/func_80043120.s")
+u8 func_800430D0(void) {
+    D_800D4000++;
+    if (D_801235B0 == 0) {
+        D_800D4000++;
+    }
+    D_800D4000 &= 0xFF;
+    return D_800D3F00[D_800D4000];
+}
 
-extern s16 D_800D4004;
+u8 func_80043120(void) {
+    D_800D4004++;
+    D_800D4004 &= 0xFF;
+    return D_800D3F00[D_800D4004];
+}
 
 void func_80043154(void) {
     D_800D4004 = 0;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/43CD0/func_80043160.s")
-
-extern s16 D_800D4000;
-extern s16 D_801235B0;
+u8 func_80043160(u8 *arg0) {
+    arg0[0x518]++;
+    return D_800D3F00[arg0[0x518]];
+}
 
 void func_80043184(void) {
     D_801235B0 = 0;
