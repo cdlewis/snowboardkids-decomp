@@ -15,6 +15,7 @@ void func_800374DC(void);
 void func_80037620(void);
 void func_80037708(void);
 void func_80037770(s32 arg0);
+void func_80037AA4(void);
 void func_800380F0(void);
 void func_800387D4(void);
 void func_800388C0(void);
@@ -104,7 +105,13 @@ void func_80037818(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80037AA4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80037B20.s")
+void func_80037B20(s32 arg0) {
+    func_80042034(2);
+    func_800428C8(2);
+    if (D_8010B1A2 == 0x38) {
+        func_80071824(arg0, func_80037AA4);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80037B6C.s")
 
