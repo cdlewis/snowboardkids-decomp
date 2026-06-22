@@ -1,5 +1,4 @@
-candidate_source: python3 tools/score_functions.py asm/nonmatchings --json --by-similarity
-prompt: "decompile the function: $INPUT[0]. There are several similar functions that have been matched, they might provide a useful reference: $INPUT[1]. When creating your claude environment use --id $TASK_ID. use ultrathink"
-claude_flags: --model opus
-success_command: './tools/notify.sh "$TASK_NAME matched $CANDIDATE" || true'
-timeout: 3h
+candidate_source: python3 tools/score_functions.py asm/nonmatchings --json
+prompt: "decompile the function: $INPUT. When creating your decomp environment with tools/claude use --id $TASK_ID."
+claude_command: glaude
+timeout: 30m

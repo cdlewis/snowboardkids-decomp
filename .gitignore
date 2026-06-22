@@ -20,3 +20,5 @@ report.json
 __pycache__
 ctx.c
 ctx.c.m2c
+
+task-runner/**/*.log
