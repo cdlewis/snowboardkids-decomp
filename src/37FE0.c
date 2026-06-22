@@ -70,7 +70,17 @@ void func_80037818(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80037D48.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80037E3C.s")
+void func_80037D48();                               /* extern */
+extern u16 D_8010B1A2;
+
+void func_80037E3C(s32 arg0) {
+    func_800428C8(2);
+    if (D_8010B1A2 == 0x2F) {
+        func_80071824(arg0, func_80037D48);
+        func_80041DD4(2, 0x4E);
+        func_8003C0A4(8, -0x40, 2, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80037EA0.s")
 

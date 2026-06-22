@@ -1,5 +1,17 @@
 #include "common.h"
 
+extern void func_80056348(void *arg0, s32 arg1);
+extern void func_8005638C(void *arg0, s32 arg1);
+extern void func_800563C4(void *arg0, s32 arg1);
+extern void func_80056444(void *arg0, s32 arg1);
+extern void func_800564A8(void *arg0);
+extern void func_80071824(void *arg0, void (*arg1)(void));
+extern s8 D_80122288;
+
+void func_8005663C(void);
+extern void func_8005673C(void);
+void func_80056A58(void);
+
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_800556B0.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80055B04.s")
@@ -26,18 +38,15 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_800564A8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_800565E8.s")
+void func_800565E8(void *arg0) {
+    func_80056348(arg0, 0x130);
+    func_8005638C(arg0, 0);
+    func_800563C4(arg0, 0x100000);
+    func_80056444(arg0, 0xA);
+    func_800564A8(arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_8005663C.s")
-
-extern void func_80056348(void *arg0, s32 arg1);
-extern void func_8005638C(void *arg0, s32 arg1);
-extern void func_800563C4(void *arg0, s32 arg1);
-extern void func_80056444(void *arg0, s32 arg1);
-extern void func_800564A8(void *arg0);
-extern void func_80071824(void *arg0, void (*arg1)(void));
-
-void func_8005663C(void);
 
 void func_800566C0(void *arg0) {
     func_80056348(arg0, 0x130);
@@ -52,8 +61,6 @@ void func_800566C0(void *arg0) {
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_8005673C.s")
-
-extern void func_8005673C(void);
 
 void func_800567C4(void *arg0) {
     func_80056348(arg0, 0x130);
@@ -97,11 +104,23 @@ void func_800568C0(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056998.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056A04.s")
+void func_80056A04(void *arg0) {
+    func_80056348(arg0, 0x130);
+    func_8005638C(arg0, 0);
+    func_800563C4(arg0, 0x100000);
+    func_80056444(arg0, 0x18);
+    func_800564A8(arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056A58.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056ACC.s")
+void func_80056ACC(void *arg0) {
+    func_80056348(arg0, 0x130);
+    func_800564A8(arg0);
+    if (D_80122288 == 2) {
+        func_80071824(arg0, func_80056A58);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056B1C.s")
 

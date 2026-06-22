@@ -22,7 +22,15 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/MusFxBankSetCurrent.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80072114.s")
+extern s32 D_80121850;
+extern s32 D_80121974;
+extern s32 player_bss_0048;
+
+void func_80072114(s32 arg0) {
+    D_80121850 = 2;
+    player_bss_0048 = arg0;
+    D_80121974 = -1;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80072138.s")
 
@@ -57,7 +65,11 @@ void func_800722B4(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80072938.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/myfree.s")
+extern s32 gzip_data_0000;
+
+void myfree(void) {
+    gzip_data_0000 = 0;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80072964.s")
 

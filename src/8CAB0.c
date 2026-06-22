@@ -36,7 +36,9 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_8008F514.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_8008F560.s")
+void func_8008F560(s32 arg0) {
+
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_8008F568.s")
 

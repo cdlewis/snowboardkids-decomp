@@ -38,7 +38,13 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048338.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_8004835C.s")
+s32 func_80043040(s16);                             /* extern */
+extern s16 D_80112130;
+extern s32 D_801121B8;
+
+void func_8004835C(void) {
+    D_801121B8 = func_80043040(D_80112130);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048388.s")
 

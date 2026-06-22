@@ -20,7 +20,9 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/79030/func_80079438.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/79030/func_80079750.s")
+void func_80079750(s32 arg0) {
+
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/79030/func_80079758.s")
 

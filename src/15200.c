@@ -68,4 +68,6 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/15200/func_80017168.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/15200/n_alSynFreeFX.s")
+void n_alSynFreeFX(s32 arg0) {
+
+}
