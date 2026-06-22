@@ -1,5 +1,13 @@
 #include "common.h"
 
+extern void *D_80124868;
+extern void *D_801248C8;
+extern void func_80071824(void *, void *);
+extern void func_800483FC(void *, void *, s32);
+extern void func_80057E10(void);
+extern void func_800615BC(void);
+extern void func_800640D8(void);
+
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_800572A0.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80057548.s")
@@ -36,7 +44,9 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80057E10.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80057E60.s")
+void func_80057E60(s32 arg0) {
+    func_800483FC(&D_80124868, func_80057E10, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80057E90.s")
 
@@ -290,7 +300,9 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_800615BC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_800617C8.s")
+void func_800617C8(void *arg0) {
+    func_80071824(arg0, func_800615BC);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_800617EC.s")
 
@@ -360,7 +372,9 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_800640D8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_8006426C.s")
+void func_8006426C(s32 arg0) {
+    func_800483FC(&D_801248C8, func_800640D8, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_8006429C.s")
 
