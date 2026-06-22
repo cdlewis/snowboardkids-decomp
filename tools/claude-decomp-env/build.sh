@@ -7,7 +7,7 @@ if [ $# -lt 1 ]; then
 fi
 
 INPUT="$(realpath "$1")"
-OPT_FLAG="${2:--O1}"
+OPT_FLAG="${2:--O2}"
 OBJECT_OUTPUT="$(realpath "${1%.c}.o")"
 ANNOTATED_OUTPUT="$(realpath "${1%.c}_annotated.s")"
 OBJECT_DUMP="${1%.c}_object_dump.s"
