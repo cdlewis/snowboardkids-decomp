@@ -18,6 +18,7 @@ nonmatchings
 report.json
 .idea
 __pycache__
+.venv
 ctx.c
 ctx.c.m2c
 
