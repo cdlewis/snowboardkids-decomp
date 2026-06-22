@@ -36,7 +36,21 @@ extern void func_80040450(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003FB70.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003FBE8.s")
+extern void func_8003FC60(void);
+
+void func_8003FBE8(void) {
+    func_8008C704();
+    func_800710CC(0x63);
+    func_80096E3C();
+    func_8007115C();
+    func_8006D700();
+    if (D_8010B1F0 != 0) {
+        D_801235B8->unk18 = 0;
+        func_80072114(0x20);
+        func_8009956C(&func_8003FC60, 0);
+    }
+    D_801124B8 = 0x80;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003FC60.s")
 
