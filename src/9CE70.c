@@ -34,7 +34,10 @@ s32 func_8009C43C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009CCC0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009CCFC.s")
+s32 func_8009CCFC(void *arg0, u8 *arg1) {
+    *(u8 *)((u8 *)arg0 + 0xEA) = *arg1;
+    return (s32)(arg1 + 1);
+}
 
 s32 func_8009CD0C(void *arg0, s32 arg1) {
     *(u8 *)((u8 *)arg0 + 0xEA) = 0;
