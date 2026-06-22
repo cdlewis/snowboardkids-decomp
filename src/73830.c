@@ -93,7 +93,16 @@ void func_800735B4(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80073650.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80073694.s")
+extern s8 D_8010ADFA;
+extern void func_80008D60(void);
+extern void func_800736E0(void);
+
+void func_80073694(void) {
+    D_8010ADFA = 0;
+    func_8009956C(&func_800736E0, 0);
+    func_800994F4(4, &func_80008D60, 0x64);
+    func_80099614(2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_800736E0.s")
 
