@@ -1,7 +1,7 @@
 #include "common.h"
 
 void osRecvMesg(void *, void *, s32);
-void osSendMesg(void *, s32, s32, u16);
+void osSendMesg(void *, s32, s32);
 extern s32 D_800E4B78;
 extern s32 D_800E4BB0;
 
@@ -28,7 +28,7 @@ void func_80000DB4(u16 arg0) {
 
     sp1C = 0;
 
-    osSendMesg(&D_800E4B78, arg0 + 0x30, 1, arg0);
+    osSendMesg(&D_800E4B78, arg0 + 0x30, 1);
     osRecvMesg(&D_800E4BB0, &sp1C, 1);
 }
 
@@ -46,7 +46,14 @@ void func_80000DB4(u16 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001584.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001618.s")
+void func_80001618(void) {
+    s32 sp1C;
+
+    sp1C = 0;
+
+    osSendMesg(&D_800E4B78, 0xA0, 1);
+    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_8000165C.s")
 
@@ -54,7 +61,14 @@ void func_80000DB4(u16 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001724.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001858.s")
+void func_80001858(void) {
+    s32 sp1C;
+
+    sp1C = 0;
+
+    osSendMesg(&D_800E4B78, 0xC0, 1);
+    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1050/func_8000189C.s")
 
