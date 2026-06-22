@@ -39,7 +39,20 @@ extern void func_8003FBE8(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003F6C0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003F718.s")
+void func_8003F718(void) {
+    extern void func_8006D780(s32);
+    extern void func_8007105C(void);
+    extern void func_8003F778(void);
+
+    if (D_8010B1F0 != 0) {
+        if (D_80121B5B == 0xC) {
+            func_80072114(0x3C);
+        }
+        func_8009956C(&func_8003F778, 0);
+    }
+    func_8006D780(0);
+    func_8007105C();
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003F778.s")
 
