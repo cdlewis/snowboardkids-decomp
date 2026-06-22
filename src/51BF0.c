@@ -38,7 +38,16 @@ void func_80052394(void *arg0) {
     func_80071824(arg0, func_80052364);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/51BF0/func_800523B8.s")
+void func_800523B8(s32 arg0) {
+    extern s16 D_8011213C;
+    extern s32 func_80043040(s16);
+    extern void func_80046358(s32, s32, s32, s32);
+
+    func_80046358(-0x84, -0x64, func_80043040(D_8011213C), 6);
+    func_80046358(0x74, -0x64, func_80043040(D_8011213C), 7);
+    func_80046358(-0x84, 4, func_80043040(D_8011213C), 8);
+    func_80046358(0x74, 4, func_80043040(D_8011213C), 9);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/51BF0/func_80052464.s")
 
