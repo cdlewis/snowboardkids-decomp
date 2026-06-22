@@ -1,6 +1,6 @@
 #include "common.h"
 
-extern void func_80036388(void);
+extern void func_80036388(s32 arg0);
 extern void func_80036418(void);
 extern void func_80036DAC(void);
 extern void func_800373AC(s32 *arg0);
@@ -15,7 +15,10 @@ extern u16 D_8010B1A2;
 void func_80036380(void) {
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036388.s")
+void func_80036388(s32 arg0) {
+    func_80041FB4(4);
+    func_800428C8(4);
+}
 
 void func_800363B4(s32 arg0);
 
