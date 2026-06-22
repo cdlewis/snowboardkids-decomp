@@ -6,7 +6,10 @@ extern void func_800428C8(s32 arg0);
 extern void func_80071824(s32 arg0, void (*arg1)(void));
 extern void func_8003600C(void);
 
-#pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_80035220.s")
+void func_80035220(s32 arg0) {
+    func_80041FB4(1);
+    func_800428C8(1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_8003524C.s")
 
