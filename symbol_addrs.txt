@@ -150,7 +150,6 @@ osTvType = 0x80000300;
 osRomBase = 0x80000308;
 osResetType = 0x8000030C;
 osAppNMIBuffer = 0x8000031C;
-func_80001FF4 = 0x80001FF4; // type:func
 __dummy = 0x8000415C; // type:func
 n_alSynFreeFX = 0x800171E8; // type:func
 n_alSeqpDelete = 0x8003DEA8; // type:func
