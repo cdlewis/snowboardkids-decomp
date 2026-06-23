@@ -1,6 +1,28 @@
 #include "common.h"
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/main.s")
+typedef s32 OSId;
+typedef s32 OSPri;
+
+struct OSThread_s;
+
+extern void osInitialize(void);
+extern void osCreateThread(struct OSThread_s *, OSId, void (*)(void *), void *, void *, OSPri);
+extern void osStartThread(struct OSThread_s *);
+
+extern struct OSThread_s D_801237B0;
+extern u8 D_80324480[];
+extern void func_800996FC(void *);
+
+extern u8 D_80156618;
+extern u8 D_80156619;
+extern u8 D_8015661A;
+extern u16 D_800DF140;
+
+void main(void *arg) {
+    osInitialize();
+    osCreateThread(&D_801237B0, 1, func_800996FC, arg, D_80324480, 0xA);
+    osStartThread(&D_801237B0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_800996FC.s")
 
@@ -69,7 +91,44 @@ void func_80099790(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_800998E4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_80099C44.s")
+typedef struct {
+    u16 type;
+    u8 pri;
+    u8 status;
+    OSMesgQueue *retQueue;
+} OSIoMesgHdr;
+
+typedef struct {
+    OSIoMesgHdr hdr;
+    void *dramAddr;
+    u32 devAddr;
+    u32 size;
+    void *piHandle;
+} OSIoMesg;
+
+extern void osInvalDCache(void *, s32);
+extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
+extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
+
+void func_80099C44(u32 devAddr, void *dramAddr, s32 size) {
+    OSIoMesg mb;
+    OSMesg msg;
+    s32 chunk;
+
+    while (size != 0) {
+        if (size >= 0x2001) {
+            chunk = 0x2000;
+        } else {
+            chunk = size;
+        }
+        osInvalDCache(dramAddr, chunk);
+        osPiStartDma(&mb, 0, 0, devAddr, dramAddr, chunk, &D_80123FF8);
+        osRecvMesg(&D_80123FF8, &msg, 1);
+        size -= chunk;
+        devAddr += chunk;
+        dramAddr = (void *)((u8 *)dramAddr + chunk);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_80099D10.s")
 
@@ -77,9 +136,19 @@ void func_80099790(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_8009B14C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_8009B58C.s")
+void func_8009B58C(u8 a0, u8 a1, u8 a2) {
+    D_80156618 = a0;
+    D_80156619 = a1;
+    D_8015661A = a2;
+    D_800DF140 = 0x3E4;
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_8009B5C0.s")
+void func_8009B5C0(u8 a0, u8 a1, u8 a2) {
+    D_80156618 = a0;
+    D_80156619 = a1;
+    D_8015661A = a2;
+    D_800DF140 = 0x3B6;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_8009B5F4.s")
 
