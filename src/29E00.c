@@ -1,7 +1,15 @@
 #include "common.h"
 
-extern void func_80071824(void *, void *);
+extern void func_80071824(s32 arg0, void (*arg1)(void));
 extern void func_800296D8(void);
+
+struct Struct29E00 {
+    char pad0[0x18];
+    /* 0x18 */ s16 unk18;
+    /* 0x1A */ s16 unk1A;
+};
+
+typedef struct Struct29E00 Struct29E00;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_80029200.s")
 
@@ -13,10 +21,10 @@ extern void func_800296D8(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_800296D8.s")
 
-void func_800297D8(void *arg0) {
-    *(s16 *)((s32)arg0 + 0x18) = -0x108;
-    *(s16 *)((s32)arg0 + 0x1A) = 8;
-    func_80071824(arg0, func_800296D8);
+void func_800297D8(Struct29E00 *arg0) {
+    arg0->unk18 = -0x108;
+    arg0->unk1A = 8;
+    func_80071824((s32) arg0, func_800296D8);
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_8002980C.s")
