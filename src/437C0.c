@@ -4,8 +4,38 @@ extern s32 D_801101A0[][5];
 extern void *D_801107D8[];
 extern u16 D_80110918;
 extern u8 D_80110198[];
+extern u8 D_80160480;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/437C0/func_80042BC0.s")
+typedef struct ListNode437C0 {
+    s32 pad0;
+    struct ListNode437C0 *next;
+    u8 *start;
+    s32 size;
+} ListNode437C0;
+
+extern ListNode437C0 *D_80110184;
+extern u8 *D_8011091C;
+
+void func_80042BC0(void) {
+    ListNode437C0 *node = D_80110184;
+    ListNode437C0 *next;
+
+    if (node == NULL) {
+        D_8011091C = &D_80160480;
+        return;
+    }
+    next = node->next;
+    if (next != NULL) {
+        do {
+            node = next;
+            next = next->next;
+        } while (next != NULL);
+    }
+    D_8011091C = node->start + node->size;
+}
+
+void func_80042C20(void) {
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/437C0/func_80042C28.s")
 

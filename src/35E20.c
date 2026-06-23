@@ -207,7 +207,16 @@ void func_80035D54(Struct35E20 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_80035DB4.s")
+void func_80035DB4(Struct35E20 *arg0) {
+    func_80042034(1);
+    arg0->unk18 += 0x60000;
+    func_8004209C(1, arg0->unk18, arg0->unk1C, arg0->unk20);
+    if (arg0->unk18 >= -0x580000) {
+        arg0->unk18 = -0x580000;
+        func_80071824((s32)arg0, (void (*)(void)) func_80035D54);
+    }
+    func_800428C8(1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_80035E28.s")
 
