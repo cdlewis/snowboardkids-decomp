@@ -4,7 +4,7 @@ extern void func_80036388(s32 arg0);
 extern void func_80036418(void);
 extern void func_80036B54(void);
 extern void func_80036DAC(void);
-extern void func_800373AC(s32 *arg0);
+extern void func_800373AC(s32 arg0);
 extern void func_80041DD4(s32 arg0, s32 arg1);
 extern s32 func_80041FB4(s32 arg0);
 extern void func_80042034(s32 arg0);
@@ -13,6 +13,9 @@ extern void func_80071824(s32 arg0, void (*arg1)(void));
 extern s32 D_8010B1C0;
 extern u16 D_8010B1A2;
 extern s8 D_8010B1AC;
+extern void func_800483FC(void *, void *, s32);
+extern s32 D_80124898;
+extern void func_80037070(void);
 
 void func_80036380(void) {
 }
@@ -107,4 +110,6 @@ void func_80036E58(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80037070.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_800373AC.s")
+void func_800373AC(s32 arg0) {
+    func_800483FC(&D_80124898, func_80037070, arg0);
+}
