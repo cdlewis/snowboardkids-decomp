@@ -1,5 +1,7 @@
 #include "common.h"
 
+extern s32 D_80121B98;
+
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_8007D190.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_8007D200.s")
@@ -28,7 +30,11 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_80081C44.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_80081E1C.s")
+s16 func_80081E1C(s32 arg0) {
+    int idx = arg0 * 0x1C;
+
+    return *(s16 *)((D_80121B98 + idx) + 2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_80081E40.s")
 
