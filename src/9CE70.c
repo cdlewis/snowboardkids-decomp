@@ -7,6 +7,7 @@ typedef struct Node9CE70 {
 
 extern void osSendMesg(void *, s32, s32);
 extern s32 osSetIntMask(s32);
+extern s32 osRecvMesg(void *, void *, s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009C270.s")
 
@@ -48,7 +49,15 @@ void func_8009CB44(void *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009CB98.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009CC50.s")
+void func_8009CC50(void *arg0) {
+    void *msg;
+    Node9CE70 node;
+
+    msg = 0;
+    func_8009CA60(arg0, &node, (u8 *)arg0 + 0x1FC);
+    osRecvMesg((void *)((u8 *)arg0 + 0x1FC), &msg, 1);
+    func_8009CAB4(arg0, &node);
+}
 
 s32 func_8009CCA0(void *arg0, s32 arg1) {
     *(s32 *)((u8 *)arg0 + 0x60) = 0;
