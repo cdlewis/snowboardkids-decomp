@@ -7,10 +7,17 @@ typedef struct {
     s16 unk1C;
     s8 unk1E;
     s8 unk1F;
+    s16 unk20;
+    s8 unk22;
+    s8 unk23;
+    s8 unk24;
+    s8 unk25;
+    s8 unk26;
 } Struct19DD0;
 
 extern void func_80071824(void *, void *);
 extern void func_800196CC(void);
+extern void func_80019CD8(void);
 extern void func_8001A270(void);
 extern void func_8001A704(void);
 extern void func_8001AB98(void);
@@ -40,7 +47,16 @@ void func_800197CC(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/19DD0/func_80019CD8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/19DD0/func_80019FAC.s")
+void func_80019FAC(Struct19DD0 *arg0) {
+    arg0->unk18 = 0x94;
+    arg0->unk1A = -0x48;
+    arg0->unk1C = -8;
+    *(s16 *)((s8 *)arg0 + 0x1E) = -0x74;
+    arg0->unk20 = 0;
+    arg0->unk23 = 0;
+    arg0->unk22 = 0;
+    func_80071824(arg0, func_80019CD8);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/19DD0/func_80019FFC.s")
 
