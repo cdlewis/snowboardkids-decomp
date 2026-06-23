@@ -154,6 +154,7 @@ void *func_8004864C(Block40 *arg0) {
 void func_80048E3C(void *arg0, void *arg1, void *arg2) {
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048E4C.s")
+void func_80048E4C(void *arg0, void *arg1, void *arg2, void *arg3) {
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048E60.s")
