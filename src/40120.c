@@ -29,6 +29,7 @@ extern u8 D_80121B5B;
 extern s16 D_800D3C90[];
 
 extern void func_8003FEF4(void);
+extern void func_8003F554(void);
 extern void func_8003F718(void);
 extern void func_8003FF78(void);
 extern void func_80040450(void);
@@ -40,13 +41,13 @@ extern void func_8007105C(void);
 extern void func_8006D780(s32);
 extern void func_80072260(void);
 extern void func_80045914(void);
-extern void func_8003F554(void);
-extern void func_8006D780(s32);
-extern void func_8003F718(void);
 extern u8 D_80123750;
 extern s8 D_800DEED4;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003F520.s")
+void func_8003F520(void) {
+    D_80121B5B = 1;
+    func_8009956C(func_8003F554, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003F554.s")
 
