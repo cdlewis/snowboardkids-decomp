@@ -132,7 +132,11 @@ void func_8003FEF4(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003FFD0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_80040004.s")
+extern void func_8004002C(void);
+
+void func_80040004(void) {
+    func_8009956C(&func_8004002C, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8004002C.s")
 
