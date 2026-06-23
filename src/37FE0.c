@@ -1,6 +1,7 @@
 #include "common.h"
 
 extern void func_80041DD4(s32 arg0, s32 arg1);
+extern void func_80041D20(s32 arg0, s32 arg1);
 extern s32 func_80041FB4(s32 arg0);
 extern void func_80042034(s32 arg0);
 extern void func_800428C8(s32 arg0);
@@ -593,4 +594,16 @@ void func_800393D4(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80039440.s")
+void func_80039440(void *arg0) {
+    *(s32 *)((char *)arg0 + 0x18) = 0x3248000;
+    *(s32 *)((char *)arg0 + 0x1C) = 0;
+    *(s32 *)((char *)arg0 + 0x20) = 0;
+    *(s16 *)((char *)arg0 + 0x24) = 0;
+    *(s16 *)((char *)arg0 + 0x26) = 0x400;
+    *(s16 *)((char *)arg0 + 0x28) = 0;
+    func_80041D20(2, 2);
+    func_80041DD4(2, 0x25);
+    func_8004209C(2, *(s32 *)((char *)arg0 + 0x18), *(s32 *)((char *)arg0 + 0x1C), *(s32 *)((char *)arg0 + 0x20));
+    func_800420FC(2, *(s16 *)((char *)arg0 + 0x24), *(s16 *)((char *)arg0 + 0x26), *(s16 *)((char *)arg0 + 0x28));
+    func_80071824((s32)arg0, func_800393D4);
+}
