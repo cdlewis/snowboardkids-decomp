@@ -2,8 +2,10 @@
 
 extern void func_80036388(s32 arg0);
 extern void func_80036418(void);
+extern void func_80036930(void);
 extern void func_80036B54(void);
 extern void func_80036DAC(void);
+extern void func_8003CD9C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern void func_800373AC(s32 arg0);
 extern void func_80041DD4(s32 arg0, s32 arg1);
 extern s32 func_80041FB4(s32 arg0);
@@ -65,13 +67,10 @@ void func_800364B8(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036930.s")
 
-extern void func_8003CD9C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-extern void func_80036930(void);
-
-void func_800369BC(s32 arg0) {
+void func_800369BC(void *arg0) {
     if (func_80041FB4(4) == 1) {
-        *(u16 *)(arg0 + 0x2A) = 0;
-        func_80071824(arg0, func_80036930);
+        *(u16 *)((s32)arg0 + 0x2A) = 0;
+        func_80071824((s32) arg0, func_80036930);
         func_80041DD4(4, 0xC);
         D_8010B1A2 = 0xC;
         D_8010B1AC = 0;
