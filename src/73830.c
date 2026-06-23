@@ -240,8 +240,6 @@ void func_8007377C(void) {
 extern void func_80000A40(s32);
 extern void func_80072114(s32);
 extern void func_800994F4(s32, void *, s32);
-extern void func_8009954C(s32);
-extern void func_80001C30(void);
 extern void func_8000C280(void);
 extern void func_8007389C(void);
 
