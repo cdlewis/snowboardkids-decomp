@@ -113,7 +113,7 @@ void func_80056940(void *arg0) {
     func_80056348(arg0, 0x130);
     func_800564A8(arg0);
     if (D_80122282 == 0x35) {
-        *(s16 *)((u8 *)arg0 + 0x3A) = 0x6A;
+        *(s16 *)((s32)arg0 + 0x3A) = 0x6A;
         func_80071824(arg0, func_800568C0);
     }
 }
