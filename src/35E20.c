@@ -216,6 +216,12 @@ void func_80036198(Struct35E20 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_80036218.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_800362B4.s")
+extern void func_80036218(void);
+
+void func_800362B4(s32 arg0) {
+    if (D_8010B1A2 == 9) {
+        func_80071824(arg0, func_80036218);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_800362E8.s")
