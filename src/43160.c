@@ -40,11 +40,14 @@ void func_80042A00(s32 arg0) {
 }
 
 void func_80042A58(s32 arg0, s32 arg1) {
-    void *temp = func_80043040(D_8011218A[arg0]);
+    void *sp1C;
+    void *temp_v0;
 
-    func_8004215C(temp);
-    *(s16 *)((s32)temp + 0x8) = (s16)arg1;
-    func_800483FC(&D_801248B0, func_80042574, temp);
+    temp_v0 = func_80043040(D_8011218A[arg0]);
+    sp1C = temp_v0;
+    func_8004215C(temp_v0);
+    *(s16 *)((s32)sp1C + 0x8) = (s16)arg1;
+    func_800483FC(&D_801248B0, func_80042574, sp1C);
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/43160/func_80042AB4.s")
