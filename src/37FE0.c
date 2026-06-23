@@ -39,7 +39,7 @@ void func_800380F0(void);
 void func_800387D4(void);
 void func_800388C0(void);
 void func_8003905C(void *);
-void func_80039228(void);
+void func_80039228(void *);
 void func_800392DC(void *arg0);
 
 void func_800373E0(s32 arg0) {
