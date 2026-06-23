@@ -1,5 +1,8 @@
 #include "common.h"
 
+extern s32 func_80043040(s16);
+extern s16 D_8011218A[];
+
 #pragma GLOBAL_ASM("asm/nonmatchings/41880/func_80040C80.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/41880/func_80040D94.s")
@@ -14,7 +17,9 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/41880/func_80041DD4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/41880/func_80041E60.s")
+void func_80041E60(s32 arg0) {
+    func_80043040(D_8011218A[arg0]);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/41880/func_80041E90.s")
 
