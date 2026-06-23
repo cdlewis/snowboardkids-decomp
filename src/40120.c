@@ -29,6 +29,7 @@ extern u8 D_80121B5B;
 extern s16 D_800D3C90[];
 
 extern void func_8003FEF4(void);
+extern void func_8003F718(void);
 extern void func_8003FF78(void);
 extern void func_80040450(void);
 extern void func_800408E4(void);
@@ -36,6 +37,7 @@ extern void func_8004097C(void);
 extern void func_8003FBE8(void);
 extern void func_80040B90(void);
 extern void func_8007105C(void);
+extern void func_8006D780(s32);
 extern void func_80072260(void);
 extern void func_80045914(void);
 extern void func_8003F554(void);
@@ -52,7 +54,7 @@ void func_8003F6C0(void) {
     D_800DEF14 -= 0x10;
     if (D_800DEF14 <= 0) {
         D_800DEF14 = 0;
-        func_8009956C(func_8003F718, 0);
+        func_8009956C(&func_8003F718, 0);
     }
     func_8006D780(0);
     func_8007105C();
