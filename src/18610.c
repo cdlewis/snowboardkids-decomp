@@ -1,5 +1,8 @@
 #include "common.h"
 
+extern void func_80071824(void *, void *);
+extern void func_80018C80(void);
+
 #pragma GLOBAL_ASM("asm/nonmatchings/18610/func_800171F0.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/18610/func_800177F8.s")
@@ -34,4 +37,6 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/18610/func_80018C80.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/18610/func_800191A0.s")
+void func_800191A0(void *arg0) {
+    func_80071824(arg0, func_80018C80);
+}
