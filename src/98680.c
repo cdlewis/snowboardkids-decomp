@@ -23,7 +23,14 @@ extern void func_80097CF0(void *, void *, void *);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80097FE4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/98680/func_800980D0.s")
+void func_800980D0(void *arg0, s16 arg1, s16 arg2) {
+    s16 sp38[0x10];
+    s16 sp18[0x10];
+
+    func_80097C84(sp38, arg2);
+    func_80097BAC(sp18, arg1);
+    func_80097CF0(sp38, sp18, arg0);
+}
 
 void func_80098124(void *arg0, s16 arg1, s16 arg2) {
     s16 sp38[0x10];
@@ -34,7 +41,14 @@ void func_80098124(void *arg0, s16 arg1, s16 arg2) {
     func_80097CF0(sp38, sp18, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80098174.s")
+void func_80098174(void *arg0, s16 arg1, s16 arg2) {
+    s16 sp38[0x10];
+    s16 sp18[0x10];
+
+    func_80097C84(sp38, arg2);
+    func_80097C18((s32)sp18, arg1);
+    func_80097CF0(sp38, sp18, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/98680/func_800981C8.s")
 
@@ -74,7 +88,14 @@ void func_800984CC(void *arg0, s16 arg1, s16 arg2, s16 arg3) {
     func_80097CF0(sp18, sp38, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/98680/func_8009853C.s")
+void func_8009853C(void *arg0, s16 arg1, s16 arg2) {
+    s16 sp38[0x10];
+    s16 sp18[0x10];
+
+    func_80097C18((s32)sp38, arg2);
+    func_80097BAC(sp18, arg1);
+    func_80097CF0(sp38, sp18, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80098590.s")
 
