@@ -1,4 +1,4 @@
-compiler_command = "tools/ido-recomp/linux/cc -c -O1 -mips2 -G 0 -non_shared -fullwarn -Xcpluscomm -nostdinc -Wab,-r4300_mul -woff 649,838,712,516 -Iinclude -DPERMUTER"
+compiler_command = "tools/ido-recomp/linux/cc -c -O2 -mips1 -G 0 -non_shared -fullwarn -Xcpluscomm -nostdinc -Wab,-r4300_mul -woff 649,838,712,516 -Iinclude -DPERMUTER"
 
 assembler_command = "mips-linux-gnu-as -EB -march=vr4300 -mtune=vr4300 -Iinclude -mabi=32"
 
