@@ -15,7 +15,7 @@ extern void func_800382BC(void);
 extern void func_80038B44(void *);
 extern void func_80039354(void);
 extern void func_80037B6C(void);
-extern void func_80038DD4(void);
+extern void func_80038DD4(void *);
 extern u8 D_8010B1A4;
 extern void func_800383AC(void);
 extern void func_8003857C(void);
@@ -414,11 +414,62 @@ void func_80038C2C(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80038C9C.s")
+void func_80038C9C(void *arg0) {
+    if (D_8010B1A4 == 2) {
+        func_80041FB4(2);
+        if (func_80041FB4(2) == 1) {
+            u16 *p;
+            D_8010B1A4++;
+            func_80041DD4(2, 0x2B);
+            p = (u16 *)((char *)arg0 + 0x2A);
+            (*p)++;
+            if (*p == 0x4) {
+                func_80071824((s32)arg0, func_80038C2C);
+                *p = 0;
+            }
+        }
+    }
+    func_800428C8(2);
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80038D38.s")
+void func_80038D38(void *arg0) {
+    if (D_8010B1A4 == 2) {
+        func_80041FB4(2);
+        if (func_80041FB4(2) == 1) {
+            u16 *p;
+            D_8010B1A4++;
+            func_80041DD4(2, 0x2B);
+            p = (u16 *)((char *)arg0 + 0x2A);
+            (*p)++;
+            if (*p == 0x5) {
+                func_80071824((s32)arg0, func_80038C9C);
+                *p = 0;
+            }
+        }
+    }
+    func_800428C8(2);
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80038DD4.s")
+void func_80038DD4(void *arg0) {
+    if (D_8010B1A4 == 2) {
+        if (*(s16 *)((char *)arg0 + 0x26) == 0xC01) {
+            *(s16 *)((char *)arg0 + 0x26) = 0xC00;
+            func_800420FC(2, *(s16 *)((char *)arg0 + 0x24), *(s16 *)((char *)arg0 + 0x26), *(s16 *)((char *)arg0 + 0x28));
+        }
+        if (func_80041FB4(2) == 1) {
+            u16 *p;
+            D_8010B1A4++;
+            func_80041DD4(2, 0x2B);
+            p = (u16 *)((char *)arg0 + 0x2A);
+            (*p)++;
+            if (*p == 0x3) {
+                func_80071824((s32)arg0, func_80038D38);
+                *p = 0;
+            }
+        }
+    }
+    func_800428C8(2);
+}
 
 void func_80038E90(void *arg0) {
     if (D_8010B1A4 == 2) {
