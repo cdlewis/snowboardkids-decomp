@@ -13,6 +13,8 @@ extern u8 D_2427D0;
 extern u8 D_243270;
 extern Struct801235B8 *D_801235B8;
 extern void func_80072C88(void);
+extern void func_80000A40(s32);
+extern void func_80072D04(void);
 
 void func_80072C30(void) {
     func_800437F0(&D_2427D0, &D_243270, 6);
@@ -21,7 +23,16 @@ void func_80072C30(void) {
     func_8009956C(&func_80072C88, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80072C88.s")
+void func_80072C88(void) {
+    D_801235B8->unk18 -= 1;
+    if (D_801235B8->unk18 == 0) {
+        func_80000A40(0);
+        func_80000A40(1);
+        func_80000A40(2);
+        func_80000A40(3);
+        func_8009956C(&func_80072D04, 0);
+    }
+}
 
 extern void func_80072D54(void);
 extern void func_80072D98(void);
