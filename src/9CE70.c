@@ -245,7 +245,19 @@ s32 func_8009D598(void *arg0, u8 *arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D5A8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D8B0.s")
+extern s16 D_8015A67C;
+extern s16 D_8015A67E;
+
+void func_8009D8B0(s32 arg0, s32 arg1) {
+    s32 temp_t7 = arg0 & 2;
+
+    if (arg0 & 1) {
+        D_8015A67C = arg1;
+    }
+    if (temp_t7) {
+        D_8015A67E = arg1;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D8D8.s")
 
