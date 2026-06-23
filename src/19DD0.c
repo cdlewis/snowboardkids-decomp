@@ -1,5 +1,8 @@
 #include "common.h"
 
+extern void func_80071824(void *, void *);
+extern void func_800196CC(void);
+
 #pragma GLOBAL_ASM("asm/nonmatchings/19DD0/func_800191D0.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/19DD0/func_80019314.s")
@@ -10,7 +13,11 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/19DD0/func_800196CC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/19DD0/func_800197CC.s")
+void func_800197CC(void *arg0) {
+    *(s16 *)((s32)arg0 + 0x18) = -0x108;
+    *(s16 *)((s32)arg0 + 0x1A) = 8;
+    func_80071824(arg0, func_800196CC);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/19DD0/func_80019800.s")
 
