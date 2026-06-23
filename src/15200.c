@@ -1,12 +1,20 @@
 #include "common.h"
 
 extern s32 func_80011D74(void *, s32, s16, s16);
+extern void func_80071824(void *, void *);
+extern void func_80014AA4(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/15200/func_80014600.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/15200/func_80014AA4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/15200/func_80014C7C.s")
+void func_80014C7C(void *arg0) {
+    *(s16 *)((s32)arg0 + 0x18) = -0x70;
+    *(s16 *)((s32)arg0 + 0x1A) = -0x1C;
+    *(s16 *)((s32)arg0 + 0x1C) = 0;
+    *(s8 *)((s32)arg0 + 0x1E) = 0;
+    func_80071824(arg0, func_80014AA4);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/15200/func_80014CB8.s")
 
