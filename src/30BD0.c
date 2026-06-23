@@ -4,6 +4,7 @@ extern void func_800483FC(void *, void *, s32);
 extern s32 D_80124868;
 extern s32 D_80124838;
 extern void func_80031370(void);
+extern void func_80031BA0(void);
 extern void func_80031C6C(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_8002FFD0.s")
@@ -46,7 +47,9 @@ void func_800314E0(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_80031BA0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_80031BD4.s")
+void func_80031BD4(s32 arg0) {
+    func_800483FC(&D_80124838, func_80031BA0, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_80031C04.s")
 
