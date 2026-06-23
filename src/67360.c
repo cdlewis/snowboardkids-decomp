@@ -1,5 +1,15 @@
 #include "common.h"
 
+extern s32 func_80043040(s16);
+extern s32 func_800430D0(void);
+extern void func_80045990(s32, s32, void *, void *);
+extern void func_80071824(void *, void *);
+extern void func_80097C18(void *, s16);
+extern void func_80098590(void *, void *, void *);
+extern char D_800D9BD8[];
+extern s16 D_80112168;
+extern void func_80069678(void);
+
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80066760.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_800668EC.s")
@@ -44,6 +54,17 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80069678.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80069754.s")
+void func_80069754(void *arg0) {
+    char sp28[0x20];
+
+    *(s16 *)((char *)arg0 + 0x3C) = 0xA;
+    *(s16 *)((char *)arg0 + 0x36) = func_800430D0() - 0x80;
+    *(s16 *)((char *)arg0 + 0x38) = func_800430D0() - 0x80;
+    *(s16 *)((char *)arg0 + 0x3A) = func_800430D0() - 0x80;
+    func_80097C18(sp28, *(s16 *)((char *)arg0 + 0x32));
+    func_80098590(sp28, (char *)&D_800D9BD8 + (*(u16 *)((char *)arg0 + 0x10) * 0xC), (char *)arg0 + 0x24);
+    func_80045990(func_80043040(D_80112168), 0x22, (char *)arg0 + 0x4C, (char *)arg0 + 0x48);
+    func_80071824(arg0, func_80069678);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80069808.s")
