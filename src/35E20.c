@@ -8,6 +8,7 @@ struct Struct35E20 {
     /* 0x24 */ s16 unk24;
     /* 0x26 */ s16 unk26;
     /* 0x28 */ s16 unk28;
+    /* 0x2A */ u16 unk2A;
 };
 
 typedef struct Struct35E20 Struct35E20;
@@ -29,7 +30,9 @@ extern void func_80035EA8(void);
 extern void func_8003C0A4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern void func_8004209C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern void func_8003C208(void);
+extern void func_8003D218(s32 arg0, s32 arg1, s32 arg2);
 extern void func_8003600C(void);
+extern void func_800360CC(s32 arg0);
 extern void func_80036218(void);
 extern void func_80035878(s32 arg0);
 
@@ -187,14 +190,11 @@ void func_800360CC(s32 arg0) {
 }
 
 void func_8003611C(Struct35E20 *arg0) {
-    u16 temp;
-
     func_80041FB4(1);
-    temp = (*(u16 *)((s32)arg0 + 0x2A) & 0xFFFF) + 1;
-    *(u16 *)((s32)arg0 + 0x2A) = temp;
-    if ((temp & 0xFFFF) == 0x46) {
-        *(u16 *)((s32)arg0 + 0x2A) = 0;
-        func_80071824((s32)arg0, func_800360CC);
+    arg0->unk2A += 1;
+    if (arg0->unk2A == 0x46) {
+        arg0->unk2A = 0;
+        func_80071824((s32) arg0, (void (*)(void)) func_800360CC);
         func_80041DD4(1, 0x12);
         func_8003D218(-0xB, -0x58, 1);
     }
