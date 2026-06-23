@@ -46,6 +46,7 @@ void func_8003825C(void *arg0);
 void func_80038340(void *arg0);
 void func_80038854(s32 arg0);
 void func_800389B4(void);
+void func_80038A54(void *arg0);
 void func_800380F0(void *arg0);
 void func_80038704(void *arg0);
 void func_800387D4(void *arg0);
@@ -525,9 +526,23 @@ void func_80038954(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_800389B4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80038A54.s")
+void func_80038A54(void *arg0) {
+    s32 sp1C;
+    s32 sp18;
 
-void func_80038A54(void);
+    sp18 = func_80041FB4(2);
+    func_800428C8(2);
+    if (sp18 == 1) {
+        u16 *p = (u16 *)((char *)arg0 + 0x2A);
+        (*p)++;
+        if (*p == 0x14) {
+            *p = 0;
+            func_80071824((s32)arg0, (void (*)(void))func_800389B4);
+            func_80041DD4(2, 0x35);
+            func_8003C0A4(8, -0x40, 2, 0);
+        }
+    }
+}
 
 void func_80038AE8(void *arg0) {
     func_80041FB4(2);
