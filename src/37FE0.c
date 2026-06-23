@@ -447,9 +447,31 @@ void func_800390E8(s32 arg0) {
     func_800428C8(2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80039138.s")
+void func_80039138(void *arg0) {
+    if (func_80041FB4(2) == 1) {
+        u16 *p = (u16 *)((char *)arg0 + 0x2A);
+        (*p)++;
+        if (*p == 0xF) {
+            *p = 0;
+            func_80071824((s32)arg0, (void (*)(void))func_800390E8);
+            func_80041DD4(2, 0x23);
+        }
+    }
+    func_800428C8(2);
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_800391B0.s")
+void func_800391B0(void *arg0) {
+    if (func_80041FB4(2) == 1) {
+        u16 *p = (u16 *)((char *)arg0 + 0x2A);
+        (*p)++;
+        if (*p == 0xF) {
+            *p = 0;
+            func_80071824((s32)arg0, (void (*)(void))func_80039138);
+            func_80041DD4(2, 0x22);
+        }
+    }
+    func_800428C8(2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80039228.s")
 
