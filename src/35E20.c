@@ -1,5 +1,7 @@
 #include "common.h"
 
+typedef struct Struct35E20 Struct35E20;
+
 extern void func_80041DD4(s32 arg0, s32 arg1);
 extern s32 func_80041FB4(s32 arg0);
 extern void func_80042034(s32 arg0);
@@ -8,8 +10,11 @@ extern void func_80071824(s32 arg0, void (*arg1)(void));
 extern void func_80071408(void *arg0, s32 arg1, s32 arg2);
 extern void func_8003524C(void);
 extern void func_8003556C(void);
-extern void func_80035AFC(void);
+extern void func_80035AA4(void);
+extern void func_80035AFC(Struct35E20 *);
 extern void func_80035EA8(void);
+extern void func_8003C0A4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_8004209C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern void func_8003C208(void);
 extern void func_8003600C(void);
 
@@ -78,7 +83,28 @@ void func_800356C8(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_80035AA4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_80035AFC.s")
+struct Struct35E20 {
+    char pad0[0x18];
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ s32 unk1C;
+    /* 0x20 */ s32 unk20;
+};
+
+void func_80035AFC(Struct35E20 *arg0) {
+    s32 temp_a1;
+
+    func_80041FB4(1);
+    temp_a1 = (arg0->unk18 += 0x2800);
+    if (1) {
+        func_8004209C(1, temp_a1, arg0->unk1C, arg0->unk20);
+        func_800428C8(1);
+    }
+    if (D_8010B1A2 == 0x2D) {
+        func_80071824((s32) arg0, func_80035AA4);
+        func_80041DD4(1, 0x4F);
+        func_8003C0A4(8, -0x40, 1, 0);
+    }
+}
 
 void func_80035B88(s32 arg0) {
     func_80042034(1);
