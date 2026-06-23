@@ -35,4 +35,10 @@ void func_80043060(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/437C0/func_80043094.s")
+void func_80043094(s32 arg0) {
+    u8 *temp = &D_80110198[arg0 * 0x14];
+
+    if (temp[0x11] != 0) {
+        temp[0x11] = 1;
+    }
+}
