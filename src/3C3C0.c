@@ -1,17 +1,130 @@
 #include "common.h"
 
+typedef struct {
+    char pad[0x1C];
+    s16 unk1C;
+    s16 unk1E;
+    u16 unk20;
+    u16 unk22;
+    s16 unk24;
+    u8 unk26;
+} Struct8003BA64;
+
+extern u16 D_8010B1A2;
+extern s16 D_80112172;
+extern void *D_80124868;
+extern s32 func_80043040(s16);
+extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_80071824(void *arg0, void (*arg1)(void *));
+extern void func_800483FC(void *, void *, void *);
+extern void func_8003B7C0(void *arg0);
+extern void func_8003B9F8(void *arg0);
+void func_8003BA64(Struct8003BA64 *arg0);
+extern void func_8003BC9C(void *arg0);
+
 #pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003B7C0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003B944.s")
+void func_8003B944(Struct8003BA64 *arg0) {
+    func_8000F8AC(arg0->unk1C, arg0->unk1E, func_80043040(D_80112172), 0x35, 0x20, 0x20, 0, arg0->unk24, 0);
+    func_8000F8AC((s16)(arg0->unk1C + 0x40), arg0->unk1E, func_80043040(D_80112172), 0x36, 0x20, 0x20, 0, arg0->unk24, 0);
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003B9F8.s")
+void func_8003B9F8(void *arg0) {
+    s32 v1 = 0x100;
+    s32 v0;
+    if (D_8010B1A2 == 0x43) {
+        v0 = *(s16 *)((s32)arg0 + 0x24);
+        if (v1 != v0) {
+            *(s16 *)((s32)arg0 + 0x24) = v0 + 0x10;
+            if (*(s16 *)((s32)arg0 + 0x24) >= 0x100) {
+                *(s16 *)((s32)arg0 + 0x24) = v1;
+            }
+        }
+        func_800483FC(&D_80124868, func_8003B944, arg0);
+    }
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003BA64.s")
+void func_8003BA64(Struct8003BA64 *arg0) {
+    switch (arg0->unk26) {
+    case 0:
+        arg0->unk24 += 0xA;
+        if (!(arg0->unk24 < 0x100)) {
+            arg0->unk24 = 0x100;
+            arg0->unk26 = 1;
+            arg0->unk22 = 0;
+        }
+        break;
+    case 1:
+        arg0->unk22 = arg0->unk22 + 1;
+        if (arg0->unk22 == 0x96) {
+            arg0->unk22 = 0;
+            arg0->unk26 = 2;
+        }
+        break;
+    case 2:
+        arg0->unk24 -= 0xA;
+        if (!(arg0->unk24 > 0)) {
+            arg0->unk24 = 0;
+            arg0->unk26 = 3;
+            arg0->unk20 = arg0->unk20 + 1;
+            if (arg0->unk20 == 0x19) {
+                arg0->unk20 = 0;
+                func_80071824(arg0, func_8003B9F8);
+            }
+            if (D_8010B1A2 == 0) {
+                D_8010B1A2 = 1;
+            }
+        }
+        break;
+    case 3:
+        arg0->unk22 = arg0->unk22 + 1;
+        if (!(arg0->unk22 < 0x20)) {
+            arg0->unk22 = 0;
+            arg0->unk26 = 0;
+        }
+        break;
+    }
+    func_800483FC(&D_80124868, func_8003B7C0, arg0);
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003BBBC.s")
+void func_8003BBBC(void *arg0) {
+    *(s8 *)((s32)arg0 + 0x26) = 3;
+    *(s16 *)((s32)arg0 + 0x20) = 0;
+    *(s16 *)((s32)arg0 + 0x1C) = -0x40;
+    *(s16 *)((s32)arg0 + 0x1E) = 0x10;
+    *(s16 *)((s32)arg0 + 0x24) = 0;
+    func_80071824(arg0, func_8003BA64);
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003BC00.s")
+typedef struct {
+    char pad[0x18];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    u8 unk1E;
+    u8 unk1F;
+} Struct8003BC00;
+
+extern char D_800E1060[];
+extern void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_80013D0C(s32, s32, void *, s32, s32);
+
+void func_8003BC00(Struct8003BC00 *arg0) {
+    char sp38[0x10];
+    if (arg0->unk1E == 1) {
+        func_8000F030(arg0->unk18, arg0->unk1A, func_80043040(D_80112172), (u16) arg0->unk1C, 0x20, 0x20, arg0->unk1F, 0);
+        sprintf(sp38, D_800E1060, arg0->unk1C);
+        func_80013D0C(0x40, -0x66, sp38, 0, 0x100);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003BC9C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3C3C0/func_8003BEB4.s")
+void func_8003BEB4(void *arg0) {
+    *(s16 *)((s32)arg0 + 0x18) = 0;
+    *(s16 *)((s32)arg0 + 0x1A) = 0;
+    *(s16 *)((s32)arg0 + 0x1C) = 0;
+    *(s8 *)((s32)arg0 + 0x1E) = 0;
+    *(s8 *)((s32)arg0 + 0x1F) = 0;
+    func_80071824(arg0, func_8003BC9C);
+}
