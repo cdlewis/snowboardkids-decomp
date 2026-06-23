@@ -6,7 +6,9 @@ extern void func_8007115C(void);
 extern void func_8006D700(void);
 extern void func_80096E3C(void);
 extern void func_80072114(s32);
+extern void func_8009954C(s32);
 extern void func_8009956C(void *, s32);
+extern void func_80099658(s32);
 extern void func_8007AA50(void);
 extern void func_800403D8(void);
 
@@ -215,4 +217,8 @@ void func_80040B54(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_80040BF4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_80040C44.s")
+void func_80040C44(void) {
+    D_801235B4 = 0;
+    func_80099658(3);
+    func_8009954C(4);
+}
