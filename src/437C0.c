@@ -9,7 +9,17 @@ extern u8 D_80110198[];
 
 #pragma GLOBAL_ASM("asm/nonmatchings/437C0/func_80042C28.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/437C0/func_80042CDC.s")
+void *func_80042CDC(void) {
+    void *temp_v0;
+
+    if (D_80110918 >= 0x50) {
+        return NULL;
+    }
+    temp_v0 = D_801107D8[D_80110918];
+    *(s8 *)((s32)temp_v0 + 0x11) = 1;
+    D_80110918++;
+    return temp_v0;
+}
 
 void func_80042D28(void *arg0) {
     D_80110918 = D_80110918 - 1;
