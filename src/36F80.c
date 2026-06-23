@@ -129,7 +129,16 @@ void func_80036E58(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036EBC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036F6C.s")
+extern void func_80071408(void *arg0, s32 arg1, s32 arg2);
+extern void func_80036EBC(void);
+extern void func_8003D384(void);
+
+void func_80036F6C(s32 arg0) {
+    if (D_8010B1A2 == 1) {
+        func_80071824(arg0, func_80036EBC);
+        func_80071408(&func_8003D384, 0, 0x64);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036FB4.s")
 
