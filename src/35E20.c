@@ -185,15 +185,15 @@ void func_800360CC(s32 arg0) {
     func_800428C8(1);
 }
 
-void func_8003611C(s32 arg0) {
+void func_8003611C(Struct35E20 *arg0) {
     u16 temp;
 
     func_80041FB4(1);
-    temp = (*(u16 *)((u8 *)arg0 + 0x2A) & 0xFFFF) + 1;
-    *(u16 *)((u8 *)arg0 + 0x2A) = temp;
+    temp = (*(u16 *)((s32)arg0 + 0x2A) & 0xFFFF) + 1;
+    *(u16 *)((s32)arg0 + 0x2A) = temp;
     if ((temp & 0xFFFF) == 0x46) {
-        *(u16 *)((u8 *)arg0 + 0x2A) = 0;
-        func_80071824(arg0, func_800360CC);
+        *(u16 *)((s32)arg0 + 0x2A) = 0;
+        func_80071824((s32)arg0, func_800360CC);
         func_80041DD4(1, 0x12);
         func_8003D218(-0xB, -0x58, 1);
     }
