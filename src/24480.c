@@ -28,7 +28,14 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/24480/func_800260E8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/24480/func_800263A4.s")
+extern void func_80071824(void *, void *);
+extern void func_800260E8(void);
+
+void func_800263A4(void *arg0) {
+    *(s16 *)((u8 *)arg0 + 0x18) = -0x108;
+    *(s16 *)((u8 *)arg0 + 0x1A) = 8;
+    func_80071824(arg0, func_800260E8);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/24480/func_800263D8.s")
 
@@ -40,13 +47,31 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/24480/func_800271CC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/24480/func_800273C4.s")
+extern void func_800271CC(void);
+
+void func_800273C4(void *arg0) {
+    *(s16 *)((u8 *)arg0 + 0x18) = -0x84;
+    *(s16 *)((u8 *)arg0 + 0x1A) = 0xC;
+    *(s16 *)((u8 *)arg0 + 0x1C) = 0;
+    *(s8 *)((u8 *)arg0 + 0x1E) = 0;
+    *(s8 *)((u8 *)arg0 + 0x20) = 0;
+    *(s8 *)((u8 *)arg0 + 0x1F) = 0;
+    func_80071824(arg0, func_800271CC);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/24480/func_80027408.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/24480/func_80027498.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/24480/func_800275A4.s")
+extern void func_80027498(void);
+
+void func_800275A4(void *arg0) {
+    *(s16 *)((u8 *)arg0 + 0x18) = -0x8;
+    *(s16 *)((u8 *)arg0 + 0x1A) = -0x5C;
+    *(s16 *)((u8 *)arg0 + 0x1C) = 0;
+    *(s8 *)((u8 *)arg0 + 0x1E) = 0;
+    func_80071824(arg0, func_80027498);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/24480/func_800275E0.s")
 
