@@ -16,6 +16,7 @@ extern s8 D_80122288;
 void func_8005663C(void);
 extern void func_8005673C(void);
 void func_80056A58(void);
+void func_80056B1C(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_800556B0.s")
 
@@ -131,7 +132,13 @@ void func_80056ACC(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056B1C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056B88.s")
+void func_80056B88(void *arg0) {
+    func_80056348(arg0, 0x30);
+    func_800564A8(arg0);
+    if (D_80122288 == 1) {
+        func_80071824(arg0, func_80056B1C);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056BD8.s")
 
