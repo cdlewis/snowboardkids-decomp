@@ -200,7 +200,19 @@ void func_8003611C(Struct35E20 *arg0) {
     func_800428C8(1);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_80036198.s")
+void func_80036198(Struct35E20 *arg0) {
+    s32 temp_a3;
+
+    if (func_80041FB4(1) == 0) {
+        temp_a3 = (arg0->unk20 += (s32)0xFFFA0000);
+        func_8004209C(1, arg0->unk18, arg0->unk1C, temp_a3);
+    }
+    if (D_8010B1A2 == 0xC) {
+        func_80071824((s32)arg0, func_8003611C);
+        func_80041DD4(1, 0x11);
+    }
+    func_800428C8(1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_80036218.s")
 
