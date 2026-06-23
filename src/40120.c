@@ -32,6 +32,8 @@ extern void func_80040450(void);
 extern void func_800408E4(void);
 extern void func_8004097C(void);
 extern void func_8003FBE8(void);
+extern void func_80040B90(void);
+extern void func_8007105C(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003F520.s")
 
@@ -202,7 +204,12 @@ void func_800408E4(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_80040B04.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_80040B54.s")
+void func_80040B54(void) {
+    if (D_8010B1F0 != 0) {
+        func_8009956C(&func_80040B90, 0);
+    }
+    func_8007105C();
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/40120/func_80040B90.s")
 
