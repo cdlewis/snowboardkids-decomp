@@ -1,7 +1,9 @@
 #include "common.h"
 
 extern void func_80071824(s32 arg0, void (*arg1)(void));
+extern void func_80029344(void);
 extern void func_800296D8(void);
+extern void func_80029CE4(void);
 extern void func_8002A27C(void);
 extern void func_8002A710(void);
 extern void func_8002AB24(void);
@@ -15,9 +17,12 @@ struct Struct29E00 {
     /* 0x18 */ s16 unk18;
     /* 0x1A */ s16 unk1A;
     /* 0x1C */ s16 unk1C;
-    char pad1E[2];
-    /* 0x20 */ s8 unk20;
-    /* 0x21 */ s8 unk21;
+    /* 0x1E */ s16 unk1E;
+    /* 0x20 */ s16 unk20;
+    /* 0x22 */ s16 unk22;
+    /* 0x24 */ s8 unk24;
+    /* 0x25 */ s8 unk25;
+    /* 0x26 */ s8 unk26;
 };
 
 typedef struct Struct29E00 Struct29E00;
@@ -42,7 +47,16 @@ void func_800297D8(Struct29E00 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_80029CE4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_80029FB8.s")
+void func_80029FB8(Struct29E00 *arg0) {
+    arg0->unk18 = 0x94;
+    arg0->unk1A = -0x48;
+    arg0->unk1C = -8;
+    arg0->unk1E = -0x74;
+    arg0->unk20 = 0;
+    *((s8 *)arg0 + 0x23) = 0;
+    *((s8 *)arg0 + 0x22) = 0;
+    func_80071824((s32) arg0, func_80029CE4);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_8002A008.s")
 
@@ -78,8 +92,8 @@ void func_8002AD74(Struct29E00 *arg0) {
     arg0->unk18 = -8;
     arg0->unk1A = -0x140;
     arg0->unk1C = 2;
-    arg0->unk21 = 0;
-    arg0->unk20 = 0;
+    *((s8 *)arg0 + 0x21) = 0;
+    *((s8 *)arg0 + 0x20) = 0;
     func_80071824((s32) arg0, func_8002AB24);
 }
 
