@@ -13,6 +13,7 @@ struct Struct35E20 {
 typedef struct Struct35E20 Struct35E20;
 
 extern void func_80041DD4(s32 arg0, s32 arg1);
+extern void func_8003D218(s32 arg0, s32 arg1, s32 arg2);
 extern s32 func_80041FB4(s32 arg0);
 extern void func_80042034(s32 arg0);
 extern void func_800428C8(s32 arg0);
@@ -183,7 +184,20 @@ void func_800360CC(s32 arg0) {
     func_800428C8(1);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_8003611C.s")
+void func_8003611C(s32 arg0) {
+    u16 temp;
+
+    func_80041FB4(1);
+    temp = (*(u16 *)((u8 *)arg0 + 0x2A) & 0xFFFF) + 1;
+    *(u16 *)((u8 *)arg0 + 0x2A) = temp;
+    if ((temp & 0xFFFF) == 0x46) {
+        *(u16 *)((u8 *)arg0 + 0x2A) = 0;
+        func_80071824(arg0, func_800360CC);
+        func_80041DD4(1, 0x12);
+        func_8003D218(-0xB, -0x58, 1);
+    }
+    func_800428C8(1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_80036198.s")
 
