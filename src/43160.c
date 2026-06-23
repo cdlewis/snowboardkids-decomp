@@ -25,7 +25,13 @@ void func_800428C8(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/43160/func_8004298C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/43160/func_80042A00.s")
+void func_80042A00(s32 arg0) {
+    s32 temp = func_80043040(D_8011218A[arg0]);
+
+    func_8004215C(temp);
+    *(s16 *)((u8 *)temp + 0x8) = 0;
+    func_800483FC(&D_801248B0, func_80042574, temp);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/43160/func_80042A58.s")
 
