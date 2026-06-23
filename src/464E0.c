@@ -64,7 +64,24 @@ void func_8004835C(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048388.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_800483FC.s")
+typedef struct Node800483FC {
+    struct Node800483FC *unk0;
+    void *unk4;
+    s32 unk8;
+} Node800483FC;
+
+extern void *func_80048388(s32);
+
+void func_800483FC(Node800483FC **arg0, void *arg1, s32 arg2) {
+    Node800483FC *temp_v0 = func_80048388(0xC);
+
+    if (temp_v0 != NULL) {
+        temp_v0->unk0 = *arg0;
+        temp_v0->unk4 = arg1;
+        temp_v0->unk8 = arg2;
+        *arg0 = temp_v0;
+    }
+}
 
 extern s32 D_80124830;
 extern s32 D_80124904;
@@ -147,7 +164,12 @@ void *func_8004864C(Block40 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048C90.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048CF8.s")
+void func_80048CF8(s32 *arg0, s32 *arg1) {
+    arg1[6] = (arg0[5] & 0xFFFF0000) | ((arg0[6] >> 0x10) & 0xFFFF);
+    arg1[7] = (arg0[7] & 0xFFFF0000) | 1;
+    arg1[14] = ((arg0[5] << 0x10) & 0xFFFF0000) | (arg0[6] & 0xFFFF);
+    arg1[15] = (arg0[7] << 0x10) & 0xFFFF0000;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048D60.s")
 
