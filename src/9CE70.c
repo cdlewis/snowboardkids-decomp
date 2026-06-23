@@ -187,7 +187,16 @@ s32 func_8009D2BC(void *arg0, s32 arg1) {
     return arg1;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D2C8.s")
+s32 func_8009D2C8(void *arg0, u8 *arg1) {
+    s32 ret;
+
+    ret = arg1 + 1;
+    *(u8 *)((u8 *)arg0 + 0xEE) = arg1[0];
+    if (ret) {
+    }
+    *(u8 *)((u8 *)arg0 + 0xED) = 0;
+    return ret;
+}
 
 s32 func_8009D2DC(void *arg0, u8 *arg1) {
     *(s8 *)((u8 *)arg0 + 0xF2) = (s32)(u8)*arg1 / 2;
