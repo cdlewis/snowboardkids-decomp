@@ -7,7 +7,22 @@ void func_80097C18(s16 *arg0, s16 arg1);
 extern void func_80097C84(s16 *, s16);
 extern void func_80097CF0(void *, void *, void *);
 
-#pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80097A80.s")
+typedef struct {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+    s32 unk10;
+    s32 unk14;
+    s32 unk18;
+    s32 unk1C;
+} MatCopy80097A80;
+
+extern MatCopy80097A80 D_800DEE30;
+
+void func_80097A80(MatCopy80097A80 *arg0) {
+    *arg0 = D_800DEE30;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80097AE8.s")
 
