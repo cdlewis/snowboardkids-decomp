@@ -18,9 +18,12 @@ extern s32 osRecvMesg(void *, void *, s32);
 extern Struct800A0138 D_8015C928;
 extern s32 D_8015C964;
 extern void func_8009CD18();
+extern void func_8009F604(void);
 extern s8 func_8009F4C8(u8, u8 *, void *);
 extern s32 func_8009F780(void *, s32, s32, s32, s32);
 extern void func_8009FF80(void);
+extern s32 D_8015A680;
+extern s32 *libmus_fxheader_current;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009C270.s")
 
@@ -621,7 +624,21 @@ s32 func_8009F6F4(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009F748.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009F780.s")
+s32 func_8009F780(void *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    s32 temp_v1;
+
+    func_8009F604();
+    *(s16 *)((u8 *)arg0 + 0xBE) = arg1;
+    *(s16 *)((u8 *)arg0 + 0xB0) = arg2;
+    *(s16 *)((u8 *)arg0 + 0xB2) = arg3;
+    *(s32 *)((u8 *)arg0 + 0x14) = D_8015A680;
+    D_8015A680 += 1;
+    *(s32 *)((u8 *)arg0 + 0x20) = arg4;
+    temp_v1 = libmus_fxheader_current[arg1];
+    *(s32 *)((u8 *)arg0 + 0x5C) = temp_v1;
+    *(s32 *)((u8 *)arg0 + 0x58) = temp_v1;
+    return *(s32 *)((u8 *)arg0 + 0x14);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009F810.s")
 
