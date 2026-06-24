@@ -18,6 +18,7 @@ extern s32 osRecvMesg(void *, void *, s32);
 extern Struct800A0138 D_8015C928;
 extern s32 D_8015C964;
 extern void func_8009CD18();
+extern s8 func_8009F4C8(u8, u8 *, void *);
 extern void func_8009FF80(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009C270.s")
@@ -269,7 +270,15 @@ s32 func_8009D3AC(void *arg0, u8 *arg1) {
     return (s32)(arg1 + 1);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D3BC.s")
+s32 func_8009D3BC(void *arg0, u8 *arg1) {
+    u8 temp_a0;
+
+    temp_a0 = *arg1;
+    arg1++;
+    *(s8 *)((u8 *)arg0 + 0x118) = func_8009F4C8(temp_a0, arg1, arg0);
+    *(s8 *)((u8 *)arg0 + 0x118) = *arg1 + *(s8 *)((u8 *)arg0 + 0x118);
+    return (s32)(arg1 + 1);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D40C.s")
 
