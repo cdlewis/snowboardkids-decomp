@@ -20,6 +20,9 @@ typedef struct {
 } Actor1C970B;
 
 extern void func_80071824(void *, void *);
+extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern s32 func_80043040(s16);
+extern s16 D_80112172;
 
 void func_8002172C(Actor1C970B *arg0);
 void func_800219E4(Actor1C970B *arg0);
@@ -204,7 +207,9 @@ void func_80020AA0(Actor1C970 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1C970/func_80020CEC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1C970/func_80020D88.s")
+void func_80020D88(Actor1C970 *arg0) {
+    func_8000F8AC(arg0->unk18, arg0->unk1A, func_80043040(D_80112172), 1, 0x20, 0x20, 0, *(s16 *)&arg0->unk1C, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1C970/func_80020DEC.s")
 
