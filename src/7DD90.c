@@ -2,6 +2,16 @@
 
 extern s32 D_80121B98;
 
+typedef struct Struct7DD90 {
+    char pad0[0x45E];
+    s16 unk45E;
+    char pad460[6];
+    s16 unk466;
+} Struct7DD90;
+
+extern void func_80081EF4(Struct7DD90 *);
+extern void func_80082070(Struct7DD90 *);
+
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_8007D190.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_8007D200.s")
@@ -52,8 +62,54 @@ s16 func_80081E1C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_80082E48.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_80082EC0.s")
+s32 func_80082EC0(Struct7DD90 *arg0) {
+    s32 temp_v1;
+    s32 var_t8;
+    s16 temp_v0;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_80082F44.s")
+    temp_v1 = arg0->unk466;
+    var_t8 = temp_v1 - 1;
+    if (temp_v1 == 0) {
+        temp_v0 = arg0->unk45E;
+        if (temp_v0 != 1) {
+            arg0->unk45E = temp_v0 - 1;
+            func_80081EF4(arg0);
+            if (arg0->unk45E == 1) {
+                return 1;
+            }
+            temp_v1 = arg0->unk466;
+            var_t8 = temp_v1 - 1;
+        } else {
+            return 1;
+        }
+    }
+    arg0->unk466 = var_t8;
+    return 0;
+}
+
+s32 func_80082F44(Struct7DD90 *arg0) {
+    s32 temp_v1;
+    s32 var_t8;
+    s16 temp_v0;
+
+    temp_v1 = arg0->unk466;
+    var_t8 = temp_v1 - 1;
+    if (temp_v1 == 0) {
+        temp_v0 = arg0->unk45E;
+        if (temp_v0 != 1) {
+            arg0->unk45E = temp_v0 - 1;
+            func_80082070(arg0);
+            if (arg0->unk45E == 1) {
+                return 1;
+            }
+            temp_v1 = arg0->unk466;
+            var_t8 = temp_v1 - 1;
+        } else {
+            return 1;
+        }
+    }
+    arg0->unk466 = var_t8;
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_80082FC8.s")
