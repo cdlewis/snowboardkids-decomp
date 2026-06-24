@@ -68,7 +68,8 @@ void func_80033828(Struct33680 *arg0);
 void func_80034254(Struct33680 *arg0);
 void func_800347C8(void);
 void func_800349A8(s32 arg0);
-void func_800344CC(void);
+void func_80034418(void);
+void func_800344CC(Struct33680 *arg0);
 void func_80034574(Struct33680 *arg0);
 void func_80034600(void);
 void func_80034BC4(Struct33680 *arg0);
@@ -547,7 +548,23 @@ void func_800343A0(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80034418.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_800344CC.s")
+void func_800344CC(Struct33680 *arg0) {
+    s32 var_a1;
+
+    func_80042034(0);
+    var_a1 = (arg0->unk18 += 0x40000);
+    if (var_a1 >= 0x280000) {
+        arg0->unk18 = 0x280000;
+        func_80041DD4(0, 0x20);
+        func_80071824((s32) arg0, func_80034418);
+        D_8010B1A2 = 0x15;
+        D_8010B1A8 = 1;
+        func_8003CB78(0xB, -0x4C);
+        var_a1 = arg0->unk18;
+    }
+    func_8004209C(0, var_a1, arg0->unk1C, arg0->unk20);
+    func_800428C8(0);
+}
 
 void func_80034574(Struct33680 *arg0) {
     func_80042034(0);
