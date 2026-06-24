@@ -6,6 +6,7 @@ extern void func_80045990(s32, s32, void *, void *);
 extern void func_80071824(void *, void *);
 extern void func_80097C18(void *, s16);
 extern void func_80098590(void *, void *, void *);
+extern void func_80088C80(void *, s32, s32, s32);
 extern void *func_800711D0(void *, s32, s32);
 extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, void *);
@@ -15,6 +16,18 @@ extern s16 D_80112168;
 extern u8 D_80121B56;
 extern void func_80067364(void *);
 extern void func_800674B4(void *);
+
+typedef struct {
+    char pad0[0x18];
+    /* 0x18 */ s16 unk18;
+    char pad1A[2];
+    /* 0x1C */ s32 unk1C;
+    /* 0x20 */ s32 unk20;
+    char pad24[8];
+    /* 0x2C */ s32 unk2C;
+    char pad30[0x1C];
+    /* 0x4C */ s32 unk4C;
+} Struct68BF0;
 
 typedef struct {
     char pad0[0x18];
@@ -33,6 +46,8 @@ typedef struct {
     /* 0x3C */ s16 unk3C;
 } Struct69678;
 
+extern void func_800684E4(Struct68BF0 *);
+extern void func_80068EA0(Struct68BF0 *);
 extern void func_8006935C(Struct69678 *);
 extern void func_80069678(Struct69678 *);
 
@@ -94,7 +109,29 @@ void func_8006752C(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_800684E4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80068BF0.s")
+void func_80068BF0(Struct68BF0 *arg0) {
+    s16 temp_v0;
+    s32 temp_v1;
+    Struct68BF0 *temp_s0 = arg0;
+    void *temp_s1;
+
+    if (D_80121B56 == 0) {
+        arg0->unk18--;
+        temp_v0 = arg0->unk18;
+        temp_v1 = arg0->unk20 - (temp_v0 * 0x14000);
+        arg0->unk2C = temp_v1 + 0x140000;
+        arg0->unk4C = temp_v1;
+        if (temp_v0 == 0) {
+            func_80071824(arg0, func_80068EA0);
+        }
+        temp_s1 = &temp_s0->unk1C;
+        func_80088C80(temp_s1, 0xC0000, 0x180000, 0);
+        func_80088C80(temp_s1, 0xC0000, 0x180000, 1);
+        func_80088C80(temp_s1, 0xC0000, 0x180000, 2);
+        func_80088C80(temp_s1, 0xC0000, 0x180000, 3);
+    }
+    func_800483FC(&D_801248D4, func_800684E4, temp_s0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80068CD4.s")
 
