@@ -10,8 +10,15 @@ extern void *func_800711D0(void *, s32, s32);
 extern void *func_80071408(void *, s32, s32);
 extern char D_800D9BD8[];
 extern s16 D_80112168;
+extern u8 D_80121B56;
+extern void func_80067364(void *);
 extern void func_800674B4(void *);
 extern void func_80069678(void);
+
+typedef struct Scratch674B4 {
+    char scratch[0x28];
+    s32 pad;
+} Scratch674B4;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80066760.s")
 
@@ -31,7 +38,20 @@ extern void func_80069678(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80067364.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/67360/func_800674B4.s")
+void func_800674B4(void *arg0) {
+    Scratch674B4 sp1C;
+    void *temp_a3 = arg0;
+
+    if (D_80121B56 == 0) {
+        func_80097C18(sp1C.scratch, *(s16 *)((u8 *)temp_a3 + 0x2A));
+        *(s16 *)((u8 *)temp_a3 + 0x4A) = 0x32;
+        *(s32 *)((u8 *)temp_a3 + 0x3C) = 0;
+        *(s32 *)((u8 *)temp_a3 + 0x40) = 0xB0000;
+        *(s32 *)((u8 *)temp_a3 + 0x44) = 0xFFF90000;
+        func_80098590(sp1C.scratch, (u8 *)temp_a3 + 0x3C, (u8 *)temp_a3 + 0x30);
+        func_80071824(temp_a3, func_80067364);
+    }
+}
 
 void func_8006752C(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
     void *temp = func_80071408(func_800674B4, 0, 0x64);
