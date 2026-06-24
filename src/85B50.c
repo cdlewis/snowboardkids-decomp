@@ -118,9 +118,34 @@ s32 func_8008542C(void *arg0) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/85B50/func_80085474.s")
+s32 func_80085474(void *arg0) {
+    if (*(s32 *)((u8 *)arg0 + 0x2FC) & 0x375000) {
+        return 1;
+    }
+    if (*(s16 *)((u8 *)arg0 + 0x2D4) != 0) {
+        return 1;
+    }
+    if (*(s16 *)((u8 *)arg0 + 0x320) != 0) {
+        return 1;
+    }
+    if (D_80121D50 < 0x10) {
+        D_80121D50 = 0x10;
+    }
+    return 0;
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/85B50/func_800854E8.s")
+s32 func_800854E8(void *arg0) {
+    if (*(s32 *)((u8 *)arg0 + 0x2FC) & 0x375000) {
+        return 1;
+    }
+    if (*(s16 *)((u8 *)arg0 + 0x320) != 0) {
+        return 1;
+    }
+    if (D_80121D50 < 0x11) {
+        D_80121D50 = 0x11;
+    }
+    return 0;
+}
 
 s32 func_80085544(void *arg0) {
     if (*(s32 *)((u8 *)arg0 + 0x2FC) & 0x775000) {
