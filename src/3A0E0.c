@@ -41,12 +41,16 @@ extern void func_8003969C(void);
 extern void func_8004209C(s32, s32, s32, s32);
 extern void func_8004298C(s32, s32, s32, s32);
 extern void func_800420FC(s32, s32, s32, s32);
-extern void func_8003B308(s32, s32, s32, s32, s32, s32);
+extern void func_8003B308(s32, s32, s32, u16, u16, u8);
 extern void func_80042034(s32);
 extern s32 func_80041FB4(s32);
 extern void func_800716E4(void *);
+extern void *func_80071664(void (*)(void *), s32, s32, u8);
+extern void func_8009853C(void *, s32, s32, void *);
+extern void func_8003B740(void *);
 extern u16 D_8010B1A2;
 extern s32 D_80124898;
+extern void *D_8010ADE0;
 
 void func_800394E0(s32 arg0) {
     func_80041FB4(3);
@@ -304,7 +308,20 @@ void func_8003B1F8(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_8003B264.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_8003B308.s")
+void func_8003B308(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u8 arg5) {
+    void *sp1C;
+    void *temp_v0;
+
+    temp_v0 = func_80071664((void (*)(void *))func_8003B740, 0, 0x64, arg5);
+    D_8010ADE0 = temp_v0;
+    *(s32 *)((char *)temp_v0 + 0x2C) = arg0;
+    *(s32 *)((char *)temp_v0 + 0x30) = arg1;
+    *(s32 *)((char *)temp_v0 + 0x34) = arg2;
+    sp1C = temp_v0;
+    func_8009853C((char *)temp_v0 + 0x18, 0x400, 0x400, &D_8010ADE0);
+    *(u16 *)((char *)sp1C + 0x38) = arg3;
+    *(u16 *)((char *)sp1C + 0x3A) = arg4;
+}
 
 void func_8003B39C(Struct3A0E0B *arg0) {
     s32 temp = func_8004885C(&arg0->unk18);
