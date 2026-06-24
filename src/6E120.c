@@ -35,6 +35,7 @@ extern void func_8006F048(void);
 extern void func_8006FA20(void);
 extern void func_8006FE88(void);
 extern void func_8007022C(void);
+extern void func_800704C4(void);
 extern Object6E120 D_801121E0[];
 extern Object6E120 *D_801124A0;
 extern Player6E120 D_80121D80[];
@@ -156,7 +157,17 @@ void func_8007022C(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8007031C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8007042C.s")
+void func_8007042C(void) {
+    D_801124A0->unk4 = 0x70;
+    D_801124A0->unk6 = 0;
+    D_801124A0->unk8 = 0;
+    D_801124A0->unk18 = 0;
+    D_801124A0->unk1C = 0x490000;
+    D_801124A0->unk20 = 0x900000;
+    D_801124A0->unk24 = 0x500000;
+    D_801124A0->unk2C = func_800704C4;
+    D_801124A0->unk2C();
+}
 
 void func_800704C4(void) {
     func_8006D7D4();
