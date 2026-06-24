@@ -165,7 +165,20 @@ void func_80050398(void *arg0) {
     func_80071824(arg0, func_80050340);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_800503D0.s")
+extern void *func_800711D0(void *, s32, s32);
+
+void func_800503D0(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
+    void *temp_v0;
+
+    temp_v0 = func_800711D0(func_80050398, 5, 3);
+    if (temp_v0 != NULL) {
+        *(s16 *)((u8 *)temp_v0 + 0x18) = arg0 - 8;
+        *(s16 *)((u8 *)temp_v0 + 0x1A) = arg1 - 8;
+        *(s8 *)((u8 *)temp_v0 + 0x20) = arg2;
+        *(s8 *)((u8 *)temp_v0 + 0x21) = arg3;
+        *(s8 *)((u8 *)temp_v0 + 0x22) = arg4;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_80050458.s")
 
