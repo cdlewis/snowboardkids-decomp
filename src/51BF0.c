@@ -1,12 +1,17 @@
 #include "common.h"
 
 extern void *D_80124868;
+extern u8 D_8010B1F0;
+extern u8 D_800D5598[];
 extern void func_80071824(void *, void *);
 extern void func_800483FC(void *, void *, s32);
+extern void func_800716E4(s32);
+extern void func_8001303C(s32, s32, u8 *, s32, s32, s32, s32);
 extern void func_800515F0(void);
 extern void func_80052034(void);
-extern void func_80052464(void);
-extern void func_800524D4(void);
+extern void func_800523B8(s32);
+extern void func_80052464(s32);
+extern void func_800524D4(s32);
 extern void func_80052E00(void);
 extern void func_80052E70(void);
 
@@ -49,13 +54,21 @@ void func_800523B8(s32 arg0) {
     func_80046358(0x74, 4, func_80043040(D_8011213C), 9);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/51BF0/func_80052464.s")
+void func_80052464(s32 arg0) {
+    if (D_8010B1F0 == 0) {
+        func_800483FC(&D_80124868, func_800523B8, arg0);
+        return;
+    }
+    func_800716E4(arg0);
+}
 
 void func_800524B0(void *arg0) {
     func_80071824(arg0, func_80052464);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/51BF0/func_800524D4.s")
+void func_800524D4(s32 arg0) {
+    func_8001303C(-0x78, -0x58, D_800D5598, 1, 0x100, 5, 0x28);
+}
 
 void func_80052520(s32 arg0) {
     func_800483FC(&D_80124868, func_800524D4, arg0);
