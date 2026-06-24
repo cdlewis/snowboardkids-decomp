@@ -100,7 +100,19 @@ loop:
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80072FC4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_800730EC.s")
+s32 func_800730EC(void) {
+    s16 *ptr = D_800DC490[D_80121B50];
+
+loop:
+    if (*ptr != -2) {
+        if (*ptr != -1) {
+            return 1;
+        }
+        ptr = (s16 *)((u8 *)ptr + 0x10);
+        goto loop;
+    }
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80073140.s")
 
@@ -329,7 +341,20 @@ void func_80073944(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_8007797C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80077AD4.s")
+extern void func_80077B34(void);
+extern void func_80077CD4(void);
+extern s8 D_800EC8B0;
+extern s16 D_800DEF14;
+
+void func_80077AD4(void) {
+    func_80077CD4();
+    D_800EC8B0 = 0;
+    D_800DEF14 += 7;
+    if (D_800DEF14 >= 0xFF) {
+        D_800DEF14 = 0xFF;
+        func_8009956C(&func_80077B34, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80077B34.s")
 
