@@ -43,6 +43,7 @@ extern void func_800420FC(s32, s32, s32, s32);
 extern void func_8003B308(s32, s32, s32, s32, s32, s32);
 extern void func_80042034(s32);
 extern s32 func_80041FB4(s32);
+extern void func_800716E4(void *);
 extern u16 D_8010B1A2;
 extern s32 D_80124898;
 
@@ -300,7 +301,13 @@ void func_8003B39C(Struct3A0E0B *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_8003B3E0.s")
+void func_8003B3E0(void *arg0) {
+    if (D_8010B1A2 == 0x1B) {
+        func_800716E4(arg0);
+    } else {
+        func_800483FC(&D_80124898, func_8003B39C, arg0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_8003B430.s")
 
