@@ -247,6 +247,8 @@ s32 func_8009D598(void *arg0, u8 *arg1) {
 
 extern s16 D_8015A67C;
 extern s16 D_8015A67E;
+extern s32 D_8015A658;
+extern void *D_8015A660;
 
 void func_8009D8B0(s32 arg0, s32 arg1) {
     s32 temp_t7 = arg0 & 2;
@@ -277,9 +279,60 @@ void func_8009D8B0(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009DF78.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009DFDC.s")
+s32 func_8009DFDC(s32 arg0, f32 arg1) {
+    s32 i = 0;
+    s32 matches;
+    void *entry;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009E040.s")
+    if (arg0 == 0) {
+        return 0;
+    }
+
+    entry = D_8015A660;
+    matches = 0;
+    if (D_8015A658 > 0) {
+        do {
+            i++;
+            if (arg0 == *(s32 *)((u8 *)entry + 0x14)) {
+                *(f32 *)((u8 *)entry + 0x50) = arg1;
+                matches++;
+            }
+            entry = (u8 *)entry + 0x11C;
+        } while (i < D_8015A658);
+    }
+    return matches;
+}
+
+s32 func_8009E040(s32 arg0, s32 arg1) {
+    s32 i = 0;
+    s32 matches;
+    void *entry;
+
+    if (arg0 == 0) {
+        return 0;
+    }
+
+    if (arg1 <= 0) {
+        arg1 = 1;
+    } else if (arg1 >= 0x101) {
+        arg1 = 0x100;
+    }
+
+    entry = D_8015A660;
+    matches = 0;
+    if (D_8015A658 > 0) {
+        do {
+            i++;
+            if (arg0 == *(s32 *)((u8 *)entry + 0x14)) {
+                *(s16 *)((u8 *)entry + 0xB4) = arg1;
+                matches++;
+                *(s16 *)((u8 *)entry + 0xB8) = (s32)(*(u16 *)((u8 *)entry + 0xBA) * arg1) >> 7;
+            }
+            entry = (u8 *)entry + 0x11C;
+        } while (i < D_8015A658);
+    }
+    return matches;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009E0D4.s")
 
