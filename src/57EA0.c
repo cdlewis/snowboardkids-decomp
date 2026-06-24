@@ -1028,7 +1028,21 @@ void func_800643B4(void *arg0, u16 *arg1) {
     func_80045990(func_80043040(D_8011216C), arg1[2], (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x40);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80064414.s")
+s32 func_80064414(void *arg0) {
+    s16 temp_v0;
+
+    temp_v0 = *(s16 *)((u8 *)arg0 + 0x34);
+    if (!(temp_v0 & 0x7FFF)) {
+        if (temp_v0 & 0x8000) {
+            return 1;
+        }
+        func_800643B4(arg0, *(u16 **)((u8 *)arg0 + 0x30) + 3);
+        goto block_5;
+    }
+    *(s16 *)((u8 *)arg0 + 0x34) = temp_v0 - 1;
+block_5:
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80064470.s")
 
