@@ -226,7 +226,18 @@ void func_80054A04(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/54260/func_80054A64.s")
+void func_80054A64(void *arg0) {
+    u16 temp = (*(u16 *)((u8 *)arg0 + 0x28) & 0xFFFFU) - 1;
+
+    *(u16 *)((u8 *)arg0 + 0x28) = temp;
+    temp += 0;
+    if (temp == 0) {
+        func_80071824(arg0, func_80054A04);
+    }
+    if (1) {
+    }
+    func_800483FC(D_80124878, func_8005499C, (s32)arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/54260/func_80054AC0.s")
 
