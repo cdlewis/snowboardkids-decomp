@@ -123,7 +123,12 @@ void func_8003C728(Struct3CAF0 *arg0) {
     func_80071824(arg0, func_8003C634);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003C77C.s")
+void func_8003C77C(Struct3CAF0c *arg0) {
+    s32 temp;
+
+    temp = func_80043040(D_80112172);
+    func_8000F030(arg0->unk18, arg0->unk1A, temp, (arg0->unk1C + 9) & 0xFFFF, 0x20, 0x20, 0, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003C7E4.s")
 
@@ -148,7 +153,12 @@ void func_8003CA44(Struct3CAF0 *arg0) {
     func_80071824(arg0, func_8003C93C);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003CA70.s")
+void func_8003CA70(Struct3CAF0c *arg0) {
+    s32 temp;
+
+    temp = func_80043040(D_80112172);
+    func_8000F030(arg0->unk18, arg0->unk1A, temp, (arg0->unk1C + 0x14) & 0xFFFF, 0x20, 0x20, 0, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003CAD8.s")
 
@@ -172,7 +182,12 @@ void func_8003CD70(Struct3CAF0 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003CD9C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003CE10.s")
+void func_8003CE10(Struct3CAF0c *arg0) {
+    s32 temp;
+
+    temp = func_80043040(D_80112172);
+    func_8000F030(arg0->unk18, arg0->unk1A, temp, (arg0->unk1C + 0x20) & 0xFFFF, 0x20, 0x20, 0, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003CE78.s")
 
@@ -199,7 +214,12 @@ void func_8003D03C(Struct3CAF0 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003D068.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003D0BC.s")
+void func_8003D0BC(Struct3CAF0c *arg0) {
+    s32 temp;
+
+    temp = func_80043040(D_80112172);
+    func_8000F030(arg0->unk18, arg0->unk1A, temp, (arg0->unk1C + 0x1C) & 0xFFFF, 0x20, 0x20, 0, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003D124.s")
 
