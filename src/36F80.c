@@ -148,7 +148,17 @@ void func_800369BC(void *arg0) {
     func_800428C8(4);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036A4C.s")
+void func_80036A4C(Actor36F80 *arg0) {
+    if (func_80041FB4(4) == 1) {
+        arg0->unk2A++;
+        if (arg0->unk2A == 0x14) {
+            arg0->unk2A = 0;
+            func_80071824((s32)arg0, func_800369BC);
+            func_80041DD4(4, 0xB);
+        }
+    }
+    func_800428C8(4);
+}
 
 void func_80036AC4(Actor36F80 *arg0) {
     func_80042034(4);

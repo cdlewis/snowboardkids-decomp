@@ -15,6 +15,13 @@ typedef struct {
     s32 c;
 } Vec3i;
 
+typedef struct {
+    char pad0[0x10];
+    u16 unk10;
+    char pad12[0xA];
+    s16 unk1C;
+} Struct57694;
+
 extern Vec3i D_800D6340[];
 extern Vec3i D_800D6220[];
 extern Vec3i D_800D6330[];
@@ -57,6 +64,8 @@ extern u8 D_800EC9F0[];
 extern void *D_80121B74;
 extern void func_80072138(s32, s32);
 extern void func_80048278(s32, s32, void *, s32);
+extern void *D_800E1220;
+extern void *D_800E1230;
 extern void *D_800E1368;
 extern void *D_800E136C;
 extern void *D_800E1370;
@@ -165,7 +174,15 @@ void func_80057600(void *arg0) {
     func_80071824(arg0, func_80057548);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80057694.s")
+void func_80057694(Struct57694 *arg0) {
+    if (D_80156608 == arg0->unk10) {
+        if (D_80156612 & 1) {
+            func_80048278(-0x34, arg0->unk1C, &D_800E1220, 0);
+            return;
+        }
+        func_80048278(-0x34, arg0->unk1C, &D_800E1230, 1);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80057710.s")
 
