@@ -17,6 +17,7 @@ extern s32 osSetIntMask(s32);
 extern s32 osRecvMesg(void *, void *, s32);
 extern Struct800A0138 D_8015C928;
 extern s32 D_8015C964;
+extern void func_8009CD18();
 extern void func_8009FF80(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009C270.s")
@@ -149,7 +150,18 @@ s32 func_8009D094(void *arg0, u8 *arg1) {
     return (s32)arg1;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D0E0.s")
+s32 func_8009D0E0(void *arg0, u8 *arg1) {
+    s32 var_v0;
+
+    var_v0 = arg1[0];
+    arg1 += 1;
+    if (var_v0 & 0x80) {
+        var_v0 = arg1[0] | ((0, (var_v0 & 0x7F) << 8));
+        arg1 += 1;
+    }
+    func_8009CD18(arg0, (u8 *)*(s32 *)(*(s32 *)((u8 *)arg0 + 0x54) + 0x10) + (var_v0 * 7));
+    return (s32)arg1;
+}
 
 s32 func_8009D138(void *arg0, s32 arg1) {
     *(u8 *)((u8 *)arg0 + 0xE8) = 1;
