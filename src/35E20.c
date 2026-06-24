@@ -106,7 +106,23 @@ void func_800353AC(Struct35E20 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_8003542C.s")
+void func_8003542C(Struct35E20 *arg0) {
+    s32 unused;
+    s32 sp20;
+    s32 temp_a1;
+
+    sp20 = func_80041FB4(1);
+    func_800428C8(1);
+    if (sp20 == 0) {
+        temp_a1 = (arg0->unk18 += 0x18000);
+        func_8004209C(1, temp_a1, arg0->unk1C, arg0->unk20);
+    }
+    if (D_8010B1A2 == 0x3F) {
+        arg0->unk2A = 0;
+        func_80071824((s32)arg0, (void (*)(void))func_800353AC);
+        func_80041DD4(1, 0x57);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_800354BC.s")
 
