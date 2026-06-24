@@ -98,9 +98,21 @@ void func_8004EA34(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_8005019C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_80050340.s")
+extern s32 D_80124878;
+void func_8005019C(void);
+void func_800483FC(void *, void *, void *);
+void func_800716E4(void);
 
-extern void func_80050340(void *);
+void func_80050340(void *arg0) {
+    u16 temp = (*(u16 *)((u8 *)arg0 + 0x1C)) + 1;
+
+    *(u16 *)((u8 *)arg0 + 0x1C) = (*(u16 *)((u8 *)arg0 + 0x1C)) + 1;
+    if ((((*(u16 *)((u8 *)arg0 + 0x1C)) + 1) - 1) >= 0x10) {
+        func_800716E4();
+    } else {
+        func_800483FC(&D_80124878, func_8005019C, arg0);
+    }
+}
 
 void func_80050398(void *arg0) {
     *(u16*)((u8*)arg0 + 0x1C) = 0xFFFF;
