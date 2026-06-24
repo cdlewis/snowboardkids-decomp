@@ -6,6 +6,7 @@ extern void func_80017168(void *, s32);
 extern void func_80071824(void *, void *);
 extern s32 D_80124868;
 extern s32 D_80124838;
+extern u8 D_8010AF90[];
 extern u8 D_8010AF93;
 extern s16 D_8011217C;
 extern void func_8003048C(void);
@@ -16,7 +17,9 @@ extern void func_80031294(void *);
 extern void func_80031370(void);
 extern void func_80031550(void);
 extern void func_80031F40(void);
-extern void func_80032534(void);
+extern void func_8003209C(void);
+extern void func_80032534(void *);
+extern void func_800716E4(void *);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_8002FFD0.s")
 
@@ -200,7 +203,22 @@ void func_8003205C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_8003209C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_80032534.s")
+void func_80032534(void *arg0) {
+    void *temp_a2 = arg0;
+
+    *(s16 *)((u8 *)arg0 + 0x1E) = D_8010AF90[2];
+    if (*(u8 *)((u8 *)arg0 + 0x20) < 0x10) {
+        *(u16 *)((u8 *)arg0 + 0x1C) -= 9;
+    } else {
+        *(u16 *)((u8 *)temp_a2 + 0x1C) += 9;
+    }
+    *(u8 *)((u8 *)temp_a2 + 0x20) = (*(u8 *)((u8 *)temp_a2 + 0x20) + 1) & 0x1F;
+    if (D_8010AF90[3] != 3) {
+        func_800716E4(temp_a2);
+    } else {
+        func_800483FC(&D_80124868, func_8003209C, temp_a2);
+    }
+}
 
 void func_800325D0(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x18) = -0x54;
