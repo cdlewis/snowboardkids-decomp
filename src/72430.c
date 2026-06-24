@@ -1,8 +1,26 @@
 #include "common.h"
 
+extern s16 D_80121B50;
+extern s32 D_80121850;
+extern s32 D_80121858;
+extern s32 D_8012185C;
+extern s32 D_80121974;
+extern s32 player_bss_0048;
+extern u16 D_800DBCF4[];
+
+void func_8009DE50(s32 arg0, s32 arg1);
+void func_800720E4(s32 arg0);
+
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80071830.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80071A3C.s")
+void func_80071A3C(s32 arg0) {
+    if (D_8012185C == 0) {
+        if (D_80121858 != 0) {
+            func_8009DE50(D_80121858, arg0);
+        }
+        D_8012185C = 1;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80071A8C.s")
 
@@ -21,10 +39,6 @@
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_800720E4.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/MusFxBankSetCurrent.s")
-
-extern s32 D_80121850;
-extern s32 D_80121974;
-extern s32 player_bss_0048;
 
 void func_80072114(s32 arg0) {
     D_80121850 = 2;
@@ -70,7 +84,9 @@ void func_800722B4(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80072844.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/func_800728E0.s")
+void func_800728E0(void) {
+    func_800720E4(D_800DBCF4[D_80121B50]);
+}
 
 void func_80072918(void) {
     func_8009DDE4(3);
