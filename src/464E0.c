@@ -10,7 +10,21 @@ void *func_8004597C(void *arg0, u32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80045990.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_800459D4.s")
+typedef struct {
+    s32 unk0;
+    s32 unk4;
+} Unk800459D4;
+
+void func_800459D4(u8 *arg0, u16 arg1, u16 arg2, void **arg3, void **arg4) {
+    u8 *temp_v0;
+    Unk800459D4 *temp_v1;
+
+    temp_v1 = (Unk800459D4 *)((s32)arg0 + (arg1 * 8));
+    temp_v0 = arg0 + (*(s32 *)(arg0 + 4) * 8);
+    *arg3 = (void *)(arg0 + temp_v1[1].unk0);
+    temp_v0 += 8;
+    *arg4 = (void *)((arg2 << 5) + temp_v0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80045A1C.s")
 
