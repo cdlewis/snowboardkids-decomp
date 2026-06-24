@@ -1119,7 +1119,22 @@ void func_80065144(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80065808.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80065CB8.s")
+void func_80065CB8(void *arg0) {
+    s16 temp_v1;
+    void *temp_a2;
+
+    temp_v1 = *(s16 *)((u8 *)arg0 + 0x30);
+    temp_a2 = arg0;
+    if (temp_v1 != 0) {
+        *(s32 *)((u8 *)arg0 + 0x1C) += *(s32 *)((u8 *)arg0 + 0x28);
+        *(s32 *)((u8 *)arg0 + 0x28) += 0x2000;
+        *(s16 *)((u8 *)arg0 + 0x30) = temp_v1 - 1;
+    } else {
+        func_800716E4(temp_a2);
+        return;
+    }
+    func_800483FC(&D_801248BC, func_80065808, temp_a2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80065D24.s")
 
