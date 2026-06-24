@@ -348,7 +348,37 @@ s32 func_8009DDE4(s32 arg0) {
     return matches;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009DE50.s")
+s32 func_8009DE50(s32 arg0, s32 arg1) {
+    s32 count;
+    s32 i;
+    s32 value;
+    void *entry;
+
+    value = arg0 == 0;
+    i = 0;
+    if (value) {
+        return 0;
+    }
+    if (arg1 != 0) {
+        value = arg1;
+    } else {
+        value = 1;
+    }
+    entry = D_8015A660;
+    count = 0;
+    if (D_8015A658 > 0) {
+        do {
+            i++;
+            if (arg0 == *(s32 *)((u8 *)entry + 0x14)) {
+                *(s32 *)((u8 *)entry + 0x18) = arg1;
+                *(s32 *)((u8 *)entry + 0x1C) = value;
+                count++;
+            }
+            entry = (u8 *)entry + 0x11C;
+        } while (i < D_8015A658);
+    }
+    return count;
+}
 
 s32 func_8009DEC4(s32 arg0) {
     s32 i = 0;
