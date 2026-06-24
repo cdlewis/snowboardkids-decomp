@@ -46,6 +46,7 @@ extern s32 D_80124868;
 extern s16 D_80112172;
 extern u16 D_8010B1A2;
 extern u16 D_800B9530[];
+extern u16 D_800B9538[];
 
 void func_8003BF7C(Struct3CAF0 *arg0);
 void func_8003C180(Struct3CAF0b *arg0);
@@ -231,7 +232,12 @@ void func_8003D1EC(Struct3CAF0 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003D218.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003D27C.s")
+void func_8003D27C(Struct3CAF0c *arg0) {
+    s32 temp;
+
+    temp = func_80043040(D_80112172);
+    func_8000F030(arg0->unk18, arg0->unk1A, temp, (D_800B9538[arg0->unk1C] + 0x19) & 0xFFFF, 0x20, 0x20, 0, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003D2F4.s")
 
