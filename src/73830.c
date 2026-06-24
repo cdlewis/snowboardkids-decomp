@@ -152,6 +152,8 @@ void func_8007339C(void) {
 extern void func_80073738(void);
 extern void func_80073308(void);
 extern s32 D_801235B4;
+extern s32 D_8012207C;
+extern u8 D_80121D80[];
 extern s8 D_800DEF10;
 
 void func_800733E0(void) {
@@ -407,7 +409,32 @@ void func_80077CD4(void) {
     func_8006D700();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80077D14.s")
+s32 func_80077D14(void) {
+    s32 var_v0;
+    u8 *var_a0;
+
+    if (D_800EC9C2 == 1) {
+        if (!(D_8012207C & 0x40)) {
+            return 0;
+        }
+    } else {
+        var_v0 = 0;
+        if ((s32)D_80121B55 > 0) {
+            var_a0 = D_80121D80;
+loop:
+            if (!(*(s32 *)(var_a0 + 0x2FC) & 0x40)) {
+                return 0;
+            }
+            var_v0++;
+            var_a0 += 0x60C;
+            if (var_v0 < (s32)D_80121B55) {
+                goto loop;
+            }
+        }
+    }
+    D_801235B4 |= 2;
+    return 1;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80077DA0.s")
 
