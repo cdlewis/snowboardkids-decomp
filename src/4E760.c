@@ -55,10 +55,19 @@ void func_8004E594(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_8004E960.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_8004E9D0.s")
+extern s16 D_8011216C;
+extern s32 func_80043040(s16);
+extern void func_80045990(s32, u8, void *, void *);
+extern void func_8004E960(void *);
+
+void func_8004E9D0(void *arg0) {
+    *(s16 *)((u8 *)arg0 + 0x30) = 0xF0;
+    *(s16 *)((u8 *)arg0 + 0x32) = 0x10;
+    func_80045990(func_80043040(D_8011216C), *(u8 *)((u8 *)arg0 + 0x34), (u8 *)arg0 + 0x2C, (u8 *)arg0 + 0x28);
+    func_80071824(arg0, func_8004E960);
+}
 
 extern void *func_800711D0(void *, s32, s32);
-extern void func_8004E9D0(void);
 
 void func_8004EA34(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
     void *p = func_800711D0(func_8004E9D0, 0, 2);
