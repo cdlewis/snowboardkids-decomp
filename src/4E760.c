@@ -131,7 +131,22 @@ void func_8004EA34(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_8004F68C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_8004F9CC.s")
+extern s32 D_801248C8;
+extern void func_8004F68C(void *);
+
+void func_8004F9CC(void *arg0) {
+    if (D_80121B56 == 0) {
+        *(s8 *)((u8 *)arg0 + 0x29) = *(s8 *)((u8 *)arg0 + 0x29) + 1;
+        if (*(s8 *)((u8 *)arg0 + 0x29) == 0xC) {
+            func_800716E4();
+            return;
+        }
+    }
+    if (*(s8 *)((u8 *)arg0 + 0x29) < 0) {
+        *(s8 *)((u8 *)arg0 + 0x29) = 0;
+    }
+    func_800483FC(&D_801248C8, func_8004F68C, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_8004FA44.s")
 
