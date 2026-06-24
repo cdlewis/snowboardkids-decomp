@@ -1,14 +1,21 @@
 #include "common.h"
 
 extern s32 D_80121B98;
+extern s16 D_8011215C[];
 
 typedef struct Struct7DD90 {
-    char pad0[0x45E];
+    u16 unk0;
+    char pad2[0x450];
+    s16 unk452;
+    s32 unk454;
+    s32 unk458;
+    s16 unk45C;
     s16 unk45E;
     char pad460[6];
     s16 unk466;
 } Struct7DD90;
 
+extern s32 func_80043040(s16);
 extern void func_80081EF4(Struct7DD90 *);
 extern void func_80082070(Struct7DD90 *);
 
@@ -46,7 +53,28 @@ s16 func_80081E1C(s32 arg0) {
     return *(s16 *)((D_80121B98 + idx) + 2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_80081E40.s")
+void func_80081E40(Struct7DD90 *arg0, s32 arg1) {
+    s16 *temp_a1;
+    s16 temp_v1;
+    s32 temp_v1_2;
+    s16 *sp1C;
+    s32 temp_v0;
+    Struct7DD90 *temp_a2 = arg0;
+
+    temp_v0 = func_80043040(D_8011215C[arg0->unk0]);
+    temp_a1 = (s16 *)(temp_v0 + (((u16 *)temp_v0)[arg1] * 2));
+    temp_v1 = *temp_a1;
+    temp_a2->unk45E = temp_v1;
+    temp_a2->unk45E++;
+    temp_a2->unk45C = temp_v1;
+    temp_a1 += 1;
+    sp1C = temp_a1;
+    temp_v1_2 = (s32)temp_a1 - func_80043040(D_8011215C[temp_a2->unk0]);
+    temp_a2->unk454 = temp_v1_2;
+    temp_a2->unk458 = temp_v1_2;
+    temp_a2->unk466 = 0;
+    temp_a2->unk452 = arg1;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_80081EF4.s")
 
