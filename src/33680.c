@@ -730,4 +730,16 @@ void func_80035150(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80035184.s")
+void func_80035184(Struct33680 *arg0) {
+    arg0->unk18 = 0x1900000;
+    arg0->unk1C = 0;
+    arg0->unk20 = 0;
+    arg0->unk24 = 0;
+    arg0->unk26 = 0xC00;
+    arg0->unk28 = 0;
+    func_80041D20(0, 0);
+    func_80041DD4(0, 0);
+    func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
+    func_800420FC(0, arg0->unk24, arg0->unk26, arg0->unk28);
+    func_80071824((s32) arg0, func_80035150);
+}
