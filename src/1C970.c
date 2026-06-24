@@ -7,7 +7,8 @@ typedef struct {
     /* 0x1C */ s16 unk1C;
     /* 0x1E */ u8 unk1E;
     /* 0x1F */ u8 unk1F;
-    char pad20[2];
+    /* 0x20 */ u8 unk20;
+    char pad21[1];
     /* 0x22 */ u8 unk22;
     /* 0x23 */ u8 unk23;
 } Actor1C970;
@@ -23,6 +24,7 @@ extern void func_80071824(void *, void *);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern s16 D_80112172;
+extern s16 D_80121B50;
 
 void func_8002172C(Actor1C970B *arg0);
 void func_800219E4(Actor1C970B *arg0);
@@ -201,7 +203,11 @@ void func_80020AA0(Actor1C970 *arg0) {
     func_80071824(arg0, func_80020818);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1C970/func_80020AE0.s")
+void func_80020AE0(Actor1C970 *arg0) {
+    if (arg0->unk1E < 3) {
+        func_8000F8AC(arg0->unk18, (s16)(arg0->unk1A + D_80121B50 * arg0->unk20), func_80043040(D_80112172), 0x12, 0x20, 0x20, 0, arg0->unk1C, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1C970/func_80020B70.s")
 
