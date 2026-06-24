@@ -4,8 +4,10 @@ typedef struct {
     char pad0[0x18];
     /* 0x18 */ s16 unk18;
     /* 0x1A */ s16 unk1A;
-    /* 0x1C */ s32 unk1C;
-    char pad20[4];
+    /* 0x1C */ s16 unk1C;
+    /* 0x1E */ s16 unk1E;
+    /* 0x20 */ s16 unk20;
+    /* 0x22 */ s16 unk22;
     /* 0x24 */ u8 unk24;
     char pad25[1];
     /* 0x26 */ s16 unk26;
@@ -32,6 +34,7 @@ void func_8000E5A0(ActorE3F0 *);
 void func_8000E8CC(ActorE3F0 *);
 void func_8000E99C(ActorE3F0 *);
 void func_8000E9F4(ActorE3F0 *);
+void func_8000DDA4(ActorE3F0 *);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/E3F0/func_8000D7F0.s")
 
@@ -41,7 +44,21 @@ void func_8000DD74(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/E3F0/func_8000DDA4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/E3F0/func_8000DF28.s")
+void func_8000DF28(ActorE3F0 *arg0) {
+    arg0->unk18 = -0x30;
+    arg0->unk1A = -0x30;
+    arg0->unk1C = -0x2C;
+    if (D_80121B5A != 9) {
+        arg0->unk1E = -0x1A;
+        *(s16 *)&arg0->unk24 = 0;
+    } else {
+        arg0->unk1E = -0x12;
+        *(s16 *)&arg0->unk24 = 2;
+    }
+    arg0->unk20 = 0x100;
+    arg0->unk22 = 0;
+    func_80071824(arg0, func_8000DDA4);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/E3F0/func_8000DF9C.s")
 
@@ -62,7 +79,7 @@ void func_8000E7CC(ActorE3F0 *arg0) {
     arg0->unk2A = 0;
     arg0->unk24 = 1;
     arg0->unk26 = 0;
-    arg0->unk1C = (s32)&D_800B3500[(D_80121B5A * 0x2F8) - 0x2F8];
+    *(s32 *)&arg0->unk1C = (s32)&D_800B3500[(D_80121B5A * 0x2F8) - 0x2F8];
     arg0->unk2C = 0;
     func_80071824(arg0, func_8000E5A0);
 }
@@ -77,7 +94,7 @@ void func_8000E874(ActorE3F0 *arg0) {
     arg0->unk2A = 0;
     arg0->unk24 = 1;
     arg0->unk26 = 7;
-    arg0->unk1C = (s32)D_800B4FB8;
+    *(s32 *)&arg0->unk1C = (s32)D_800B4FB8;
     arg0->unk2C = 1;
     func_80071824(arg0, func_8000E5A0);
 }
@@ -107,6 +124,6 @@ void func_8000E9F4(ActorE3F0 *arg0) {
 void func_8000EA44(ActorE3F0 *arg0) {
     arg0->unk18 = -0x48;
     arg0->unk1A = -0x48;
-    arg0->unk1C = 0x78;
+    *(s32 *)&arg0->unk1C = 0x78;
     func_80071824(arg0, func_8000E9F4);
 }
