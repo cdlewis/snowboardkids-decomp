@@ -3,6 +3,7 @@
 extern void func_800483FC(void *, void *, s32);
 extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
+extern void func_80071824(void *, void *);
 extern s32 D_80124868;
 extern s32 D_80124838;
 extern u8 D_8010AF93;
@@ -103,7 +104,26 @@ void func_80031A88(void *arg0) {
     func_800483FC(&D_80124868, func_80031550, (s32)temp_a2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_80031B24.s")
+void func_80031B24(void *arg0) {
+    s32 temp_v0 = -0x20;
+    s32 temp_v1 = -0x84;
+
+    *(s16 *)((u8 *)arg0 + 0x18) = temp_v1;
+    *(s16 *)((u8 *)arg0 + 0x1A) = temp_v0;
+    *(s16 *)((u8 *)arg0 + 0x1C) = -0x6A;
+    *(s16 *)((u8 *)arg0 + 0x1E) = temp_v0;
+    *(s16 *)((u8 *)arg0 + 0x20) = 0x2C;
+    *(s16 *)((u8 *)arg0 + 0x22) = temp_v0;
+    *(s16 *)((u8 *)arg0 + 0x24) = 0x54;
+    *(s16 *)((u8 *)arg0 + 0x26) = temp_v0;
+    *(s16 *)((u8 *)arg0 + 0x28) = 0x69;
+    *(s16 *)((u8 *)arg0 + 0x2A) = temp_v0;
+    *(s16 *)((u8 *)arg0 + 0x2C) = temp_v1;
+    *(s16 *)((u8 *)arg0 + 0x2E) = -0x1F;
+    *(s16 *)((u8 *)arg0 + 0x30) = 0x100;
+    *(s16 *)((u8 *)arg0 + 0x32) = 0;
+    func_80071824(arg0, func_80031A88);
+}
 
 void func_80031BA0(void *arg0) {
     void *temp = arg0;
