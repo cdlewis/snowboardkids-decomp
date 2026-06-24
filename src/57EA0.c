@@ -28,6 +28,7 @@ extern void *D_801248BC;
 extern void *D_801248C8;
 extern u8 D_80121B55;
 extern u8 D_80121B56;
+extern u8 D_80121B81;
 extern u8 D_80156608;
 extern s16 D_80156612;
 extern s16 D_8011216E;
@@ -662,7 +663,19 @@ void func_8005E498(void *arg0) {
     func_800483FC(&D_80124858, func_8005D9B4, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_8005E534.s")
+void func_8005E534(void *arg0) {
+    *(s16 *)((u8 *)arg0 + 0x18) = 0;
+    *(s16 *)((u8 *)arg0 + 0x20) = 0;
+    *(s16 *)((u8 *)arg0 + 0x22) = 0x12C;
+    if (D_80121B81 != 0) {
+        *(s16 *)((u8 *)arg0 + 0x1E) = 0;
+        *(volatile s16 *)((u8 *)arg0 + 0x20) = 0;
+    } else {
+        *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)&D_80121D80[0x2C0] * 3;
+        *(s16 *)((u8 *)arg0 + 0x20) = *(s8 *)&D_80121D80[0x2C3] * 10;
+    }
+    func_80071824(arg0, func_8005E498);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_8005E5B4.s")
 
