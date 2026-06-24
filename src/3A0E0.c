@@ -68,7 +68,26 @@ void func_8003950C(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_80039584.s")
+void func_80039584(void *arg0) {
+    u8 *new_var;
+    s32 sp18;
+    int new_var2;
+    u16 temp_t8;
+
+    sp18 = func_80041FB4(3);
+    func_800428C8(3);
+    new_var2 = 0x2A;
+    if (sp18 == 1) {
+        *(u16 *)((u8 *)arg0 + new_var2) = (temp_t8 = (*(u16 *)((u8 *)arg0 + 0x2A) & 0xFFFF) + 1);
+        if ((temp_t8 & 0xFFFF) == 0x14) {
+            new_var = (u8 *)arg0 + 0x2A;
+            *(u16 *)new_var = 0;
+            func_80071824((s32)arg0, (void (*)(void))func_8003950C);
+            func_80041DD4(3, 0x5A);
+            D_8010B1A2 = 0x40;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_80039610.s")
 
