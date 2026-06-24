@@ -22,11 +22,17 @@ extern void func_80038DD4(void *);
 extern void func_80038FB4(void *);
 extern u8 D_8010B1A4;
 extern void func_800383AC(void *);
-extern void func_8003857C(void);
 extern void func_80037FF8(void *);
 extern void func_800381E0(void *);
 extern u16 D_8010B1A2;
 extern u8 D_8010B1AA;
+
+typedef struct {
+    char pad0[0x18];
+    s32 unk18;
+    s32 unk1C;
+    s32 unk20;
+} Struct37FE0;
 
 void func_800373E0(s32 arg0);
 void func_8003740C(void *arg0);
@@ -49,6 +55,7 @@ void func_80038954(s32 arg0);
 void func_800389B4(void *arg0);
 void func_80038A54(void *arg0);
 void func_800380F0(void *arg0);
+void func_8003857C(Struct37FE0 *arg0);
 void func_80038704(void *arg0);
 void func_800387D4(void *arg0);
 void func_800388C0(void *arg0);
@@ -470,7 +477,23 @@ void func_80038508(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_8003857C.s")
+void func_8003857C(Struct37FE0 *arg0) {
+    s32 var_a1;
+
+    func_80042034(2);
+    var_a1 = (arg0->unk18 -= -0x28000);
+    if (var_a1 >= (s32)0xFFD00000) {
+        arg0->unk18 = 0xFFD00000;
+        func_80071824((s32)arg0, func_80038508);
+        var_a1 = arg0->unk18;
+    }
+    if ((var_a1 >= (s32)0xFFA00000) && (D_8010B1A2 == 0x21)) {
+        D_8010B1A2 = 0x22;
+        var_a1 = arg0->unk18;
+    }
+    func_8004209C(2, var_a1, arg0->unk1C, arg0->unk20);
+    func_800428C8(2);
+}
 
 void func_80038628(s32 arg0) {
     if (D_8010B1A2 == 0x21) {
