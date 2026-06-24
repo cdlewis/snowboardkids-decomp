@@ -5,6 +5,11 @@ extern void func_80018C80(void);
 extern void func_800177F8(void);
 extern void func_80017C34(void);
 extern void func_80018AA0(void);
+extern u8 D_80121B55;
+extern u8 D_80121D80[];
+extern u8 D_80112130[];
+extern s32 func_80043040(s16);
+extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/18610/func_800171F0.s")
 
@@ -65,7 +70,27 @@ void func_80018B6C(void *arg0) {
     func_80071824(arg0, func_80018AA0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/18610/func_80018BC0.s")
+void func_80018BC0(void *arg0) {
+    u8 *base;
+    s32 i;
+    u8 *player;
+    u8 *temp_s0;
+    int new_var;
+    s32 color;
+    u16 temp_v1;
+ base = arg0; i = 0; if (D_80121B55 > 0) { player = D_80121D80; do {
+            if (player[8] != 0) {
+                new_var = i * 2;
+                temp_s0 = base + new_var;
+                color = func_80043040(*(s16 *)&D_80112130[0x42]);
+                temp_v1 = *(u16 *)(temp_s0 + 0x40);
+                func_8000F030(*(s16 *)(temp_s0 + 0x18), *(s16 *)(temp_s0 + 0x20), color, 0xD, temp_v1, temp_v1, 0, 0);
+            }
+            i++;
+            player += 0x60C;
+        } while (i < D_80121B55);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/18610/func_80018C80.s")
 
