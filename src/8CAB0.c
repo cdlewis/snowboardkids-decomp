@@ -61,7 +61,12 @@ void func_8008F1CC(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_8008F3C8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_8008F514.s")
+void func_8008F514(void *arg0) {
+    if (func_80082EC0(arg0) != 0) {
+        *(s16 *)((u8 *)arg0 + 0x308) = *(s16 *)((u8 *)arg0 + 0x308) + 1;
+    }
+    *(s32 *)((u8 *)arg0 + 0x2FC) = *(s32 *)((u8 *)arg0 + 0x2FC) | 0x800;
+}
 
 void func_8008F560(s32 arg0) {
 
