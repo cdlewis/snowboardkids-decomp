@@ -1,8 +1,9 @@
 #include "common.h"
 
 typedef struct {
-    char pad[0x1A];
-    s16 unk1A;
+    char pad[0x18];
+    s16 unk18;
+    u16 unk1A;
 } Struct6A490;
 
 typedef struct {
@@ -40,7 +41,7 @@ extern s32 D_801235B4;
 extern u8 D_80156608;
 extern void func_8006C5C0(void);
 extern void func_8006C1B4(void);
-extern void func_800699F0(void);
+void func_800699F0(Struct6A490 *);
 extern void func_8006C7F4(void);
 extern void func_80069AF0(void *);
 extern void func_8006B6C8(void);
@@ -78,7 +79,19 @@ void func_80069998(void *arg0) {
     func_800483FC(&D_80124868, func_80069914, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_800699F0.s")
+void func_800699F0(Struct6A490 *arg0) {
+    Struct6A490 *temp_a2 = arg0;
+
+    if (arg0->unk18 != 0) {
+        arg0->unk18--;
+    }
+    temp_a2->unk1A--;
+    if (temp_a2->unk1A == 0) {
+        D_801235B4 &= ~1;
+        func_80071824(temp_a2, func_80069998);
+    }
+    func_800483FC(&D_80124868, func_80069914, temp_a2);
+}
 
 void func_80069A78(void *arg0) {
     (*(s16 *)((char *)arg0 + 0x18))++;
