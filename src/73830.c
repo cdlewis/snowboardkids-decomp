@@ -3,6 +3,8 @@
 typedef struct {
     char pad[0x18];
     s32 unk18;
+    char pad1C[4];
+    s32 unk20;
 } Struct801235B8;
 
 extern void func_8009956C(void *, s32);
@@ -152,6 +154,9 @@ void func_8007339C(void) {
 extern void func_80073738(void);
 extern void func_80073308(void);
 extern s32 D_801235B4;
+extern s32 D_8012207C;
+extern u8 D_80121D80[];
+extern s8 D_800DEF10;
 
 void func_800733E0(void) {
     if (D_801235B4 == 0) {
@@ -304,6 +309,11 @@ void func_800738F4(void) {
 
 extern void func_800738F4(void);
 extern void func_8003DFD0(void);
+extern void func_800728E0(void);
+extern void func_80077C4C(void);
+extern void func_800740C0(void);
+extern void func_80074960(void);
+extern s16 D_800DEF14;
 
 void func_80073944(void) {
     func_8009956C(&func_800738F4, 0);
@@ -313,11 +323,43 @@ void func_80073944(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80073988.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_800740C0.s")
+extern void func_8006D520(s32, s32);
+extern void func_800720E4(s32);
+extern void func_80074160(void);
+extern void func_80077C94(void);
+extern s16 D_801124B8;
+
+void func_800740C0(void) {
+    D_800DEF14 -= 8;
+    if (D_800DEF14 < 0) {
+        D_800DEF14 = 0;
+        D_801235B8->unk20--;
+    }
+    if (D_801235B8->unk20 == 0) {
+        func_8006D520(0, 0x1E);
+        func_800720E4(5);
+        func_8009956C(&func_80074160, 0);
+    }
+    func_80077C94();
+    D_801124B8 = 0xFF;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80074160.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_800747E8.s")
+void func_800747E8(void) {
+    if (D_800DEF14 != 0) {
+        D_800DEF14 -= 0x10;
+    }
+    if (D_800DEF14 < 0) {
+        D_800DEF14 = 0;
+    }
+    func_80077C4C();
+    if (!(D_801235B4 & 1)) {
+        D_800DEF10 = 0;
+        func_800728E0();
+        func_8009956C(func_80074960, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80074864.s")
 
@@ -344,7 +386,6 @@ void func_80073944(void) {
 extern void func_80077B34(void);
 extern void func_80077CD4(void);
 extern s8 D_800EC8B0;
-extern s16 D_800DEF14;
 
 void func_80077AD4(void) {
     func_80077CD4();
@@ -390,7 +431,32 @@ void func_80077CD4(void) {
     func_8006D700();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80077D14.s")
+s32 func_80077D14(void) {
+    s32 var_v0;
+    u8 *var_a0;
+
+    if (D_800EC9C2 == 1) {
+        if (!(D_8012207C & 0x40)) {
+            return 0;
+        }
+    } else {
+        var_v0 = 0;
+        if ((s32)D_80121B55 > 0) {
+            var_a0 = D_80121D80;
+loop:
+            if (!(*(s32 *)(var_a0 + 0x2FC) & 0x40)) {
+                return 0;
+            }
+            var_v0++;
+            var_a0 += 0x60C;
+            if (var_v0 < (s32)D_80121B55) {
+                goto loop;
+            }
+        }
+    }
+    D_801235B4 |= 2;
+    return 1;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80077DA0.s")
 
