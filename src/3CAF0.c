@@ -44,6 +44,7 @@ extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern s32 D_80124838;
 extern s32 D_80124868;
 extern s16 D_80112172;
+extern u16 D_8010B1A2;
 extern u16 D_800B9530[];
 
 void func_8003BF7C(Struct3CAF0 *arg0);
@@ -54,6 +55,7 @@ void func_8003CE78(Struct3CAF0 *arg0);
 void func_8003D2F4(Struct3CAF0 *arg0);
 void func_8003D3C0(Struct3CAF0 *arg0);
 void func_8003DB84(Struct3CAF0 *arg0);
+void func_8003DBE8(Struct3CAF0 *arg0);
 void func_8003C2EC(Struct3CAF0 *arg0);
 void func_8003C93C(Struct3CAF0 *arg0);
 void func_8003CAD8(Struct3CAF0 *arg0);
@@ -269,7 +271,13 @@ void func_8003DBB8(Struct3CAF0 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003DBE8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003DC70.s")
+void func_8003DC70(Struct3CAF0 *arg0) {
+    func_800483FC(&D_80124868, func_8003DB84, arg0);
+    if (D_8010B1A2 == 0x42) {
+        arg0->unk1C = 0;
+        func_80071824(arg0, func_8003DBE8);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003DCCC.s")
 
