@@ -9,6 +9,8 @@ typedef struct {
 } Struct8008BB5C;
 
 extern void func_8008B73C(s32, s32, s32, s32, s32, s32);
+extern void func_80097FE4(void *, s16, s16, void *);
+extern void func_80098590(void *, s32 *, s32 *);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/88200/func_80087600.s")
 
@@ -63,4 +65,17 @@ void func_8008BB5C(Struct8008BB5C *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/88200/func_8008BBB8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/88200/func_8008BE1C.s")
+void func_8008BE1C(void *arg0) {
+    s32 sp30[8];
+    s32 sp24[3];
+    s32 sp18[3];
+
+    func_80097FE4(sp30, *(s16 *)((u8 *)arg0 + 0x2EA), *(s16 *)((u8 *)arg0 + 0x2EC), arg0);
+    sp24[0] = 0;
+    sp24[1] = 0xC0000;
+    sp24[2] = 0;
+    func_80098590(sp30, sp24, sp18);
+    *(s32 *)((u8 *)arg0 + 0x290) = sp18[0] + *(s32 *)((u8 *)arg0 + 0x1C);
+    *(s32 *)((u8 *)arg0 + 0x294) = sp18[1] + *(s32 *)((u8 *)arg0 + 0x20);
+    *(s32 *)((u8 *)arg0 + 0x298) = sp18[2] + *(s32 *)((u8 *)arg0 + 0x24);
+}
