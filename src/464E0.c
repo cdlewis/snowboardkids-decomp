@@ -10,7 +10,21 @@ void *func_8004597C(void *arg0, u32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80045990.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_800459D4.s")
+typedef struct {
+    s32 unk0;
+    s32 unk4;
+} Unk800459D4;
+
+void func_800459D4(u8 *arg0, u16 arg1, u16 arg2, void **arg3, void **arg4) {
+    u8 *temp_v0;
+    Unk800459D4 *temp_v1;
+
+    temp_v1 = (Unk800459D4 *)((s32)arg0 + (arg1 * 8));
+    temp_v0 = arg0 + (*(s32 *)(arg0 + 4) * 8);
+    *arg3 = (void *)(arg0 + temp_v1[1].unk0);
+    temp_v0 += 8;
+    *arg4 = (void *)((arg2 << 5) + temp_v0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80045A1C.s")
 
@@ -162,7 +176,27 @@ void *func_8004864C(Block40 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048BBC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048C90.s")
+typedef struct {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+} Src80048C90;
+
+typedef struct {
+    s32 pad0[6];
+    s32 unk18;
+    s32 unk1C;
+    s32 pad20[6];
+    s32 unk38;
+    s32 unk3C;
+} Dst80048C90;
+
+void func_80048C90(Dst80048C90 *arg0, Src80048C90 *arg1) {
+    arg0->unk18 = (s32) ((arg1->unk0 & 0xFFFF0000) | (((s32) arg1->unk4 >> 0x10) & 0xFFFF));
+    arg0->unk1C = (s32) ((arg1->unk8 & 0xFFFF0000) | 1);
+    arg0->unk38 = (s32) (((arg1->unk0 << 0x10) & 0xFFFF0000) | (arg1->unk4 & 0xFFFF));
+    arg0->unk3C = (s32) ((arg1->unk8 << 0x10) & 0xFFFF0000);
+}
 
 void func_80048CF8(s32 *arg0, s32 *arg1) {
     arg1[6] = (arg0[5] & 0xFFFF0000) | ((arg0[6] >> 0x10) & 0xFFFF);
