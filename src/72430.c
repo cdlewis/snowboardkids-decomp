@@ -5,6 +5,8 @@ extern s32 D_80121850;
 extern s32 D_80121858;
 extern s32 D_8012185C;
 extern s32 D_80121974;
+extern s32 D_80121AF8;
+extern s32 D_80121AFC;
 extern s32 player_bss_0048;
 extern u16 D_800DBCF4[];
 
@@ -26,7 +28,18 @@ void func_80071A3C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80071B74.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80071BB0.s")
+s32 func_80071BB0(void) {
+    u32 ret;
+    s32 temp_v1;
+
+    temp_v1 = D_80121AFC;
+    ret = -1;
+    if (temp_v1 == D_80121AF8) {
+        return ret;
+    }
+    (&D_80121AFC)[(temp_v1 == D_80121AF8) * 0] = (temp_v1 + 1) & 0x3F;
+    return temp_v1;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80071BE8.s")
 
@@ -58,8 +71,6 @@ extern void osStartThread(struct OSThread_s *);
 extern void osStopThread(struct OSThread_s *);
 extern struct OSThread_s D_8015A6B8;
 extern s8 D_80121B00;
-extern s32 D_80121AF8;
-extern s32 D_80121AFC;
 
 void func_80072260(void) {
     osStopThread(&D_8015A6B8);
