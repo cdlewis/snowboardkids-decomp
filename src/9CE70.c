@@ -303,7 +303,36 @@ s32 func_8009DFDC(s32 arg0, f32 arg1) {
     return matches;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009E040.s")
+s32 func_8009E040(s32 arg0, s32 arg1) {
+    s32 i = 0;
+    s32 matches;
+    void *entry;
+
+    if (arg0 == 0) {
+        return 0;
+    }
+
+    if (arg1 <= 0) {
+        arg1 = 1;
+    } else if (arg1 >= 0x101) {
+        arg1 = 0x100;
+    }
+
+    entry = D_8015A660;
+    matches = 0;
+    if (D_8015A658 > 0) {
+        do {
+            i++;
+            if (arg0 == *(s32 *)((u8 *)entry + 0x14)) {
+                *(s16 *)((u8 *)entry + 0xB4) = arg1;
+                matches++;
+                *(s16 *)((u8 *)entry + 0xB8) = (s32)(*(u16 *)((u8 *)entry + 0xBA) * arg1) >> 7;
+            }
+            entry = (u8 *)entry + 0x11C;
+        } while (i < D_8015A658);
+    }
+    return matches;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009E0D4.s")
 
