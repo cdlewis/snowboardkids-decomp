@@ -365,7 +365,30 @@ s32 func_8009DF14(s32 arg0, s32 arg1) {
     return matches;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009DF78.s")
+s32 func_8009DF78(s32 arg0, s32 arg1) {
+    s32 i;
+    s32 matches;
+    void *entry;
+
+    if (arg0 == 0) {
+        return 0;
+    }
+
+    i = 0;
+    entry = D_8015A660;
+    matches = 0;
+    if (D_8015A658 > 0) {
+        do {
+            i++;
+            if (arg0 == *(s32 *)((u8 *)entry + 0x14)) {
+                *(s16 *)((u8 *)entry + 0xB2) = arg1;
+                matches++;
+            }
+            entry = (u8 *)entry + 0x11C;
+        } while (i < D_8015A658);
+    }
+    return matches;
+}
 
 s32 func_8009DFDC(s32 arg0, f32 arg1) {
     s32 i = 0;
