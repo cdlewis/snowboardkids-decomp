@@ -149,7 +149,32 @@ s32 func_80085290(void *arg0) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/85B50/func_800852E8.s")
+s32 func_800852E8(Actor85B50 *arg0) {
+    s32 temp_v0;
+    s32 var_v1;
+    s32 temp_t9;
+
+    temp_v0 = arg0->unk2FC;
+    if (temp_v0 & 0x43000) {
+        return 1;
+    }
+    var_v1 = D_80121D54 - arg0->unk2EC;
+    var_v1 += 0x800;
+    temp_t9 = var_v1 & 0xFFF;
+    var_v1 = (s16) temp_t9;
+    if (temp_v0 & 0x400) {
+        var_v1 = (s16) (var_v1 + 0x800);
+    }
+    var_v1 += 0x400;
+    var_v1 = (s16) (var_v1 & 0xFFF);
+    if ((D_80121D58 < 0x14000) || (var_v1 >= 0x801)) {
+        return 1;
+    }
+    if (D_80121D50 < 2) {
+        D_80121D50 = 2;
+    }
+    return 0;
+}
 
 s32 func_800853A0(void *arg0) {
     if (*(s32 *)((u8 *)arg0 + 0x2FC) & 0x43000) {
