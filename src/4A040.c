@@ -1,5 +1,29 @@
 #include "common.h"
 
+typedef struct {
+    u8 pad0[0x18];
+    s32 unk18;
+    s32 unk1C;
+    s32 unk20;
+    u8 pad24[4];
+    s32 unk28;
+    s32 unk2C;
+    s32 unk30;
+    s32 unk34;
+    s16 unk38;
+    s16 unk3A;
+    s16 unk3C;
+    s16 unk3E;
+} Obj4A040;
+
+extern s16 D_8011216C;
+
+s32 func_80043040(s16);
+void func_80045990(s32, s32, void *, void *);
+void func_8004B5F8(Obj4A040 *);
+void func_80071824(Obj4A040 *, void *);
+void *func_80071408(void *, s32, s32);
+
 #pragma GLOBAL_ASM("asm/nonmatchings/4A040/func_80049440.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4A040/func_80049664.s")
@@ -24,9 +48,27 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4A040/func_8004B5F8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/4A040/func_8004B83C.s")
+void func_8004B83C(Obj4A040 *arg0) {
+    arg0->unk38 = 0x3C;
+    arg0->unk3A = -1;
+    arg0->unk28 = 0xFFF00000;
+    arg0->unk2C = 0;
+    func_80045990(func_80043040(D_8011216C), 3, &arg0->unk30, &arg0->unk34);
+    func_8004B5F8(arg0);
+    func_80071824(arg0, func_8004B5F8);
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/4A040/func_8004B8B4.s")
+void func_8004B8B4(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
+    Obj4A040 *obj = func_80071408(func_8004B83C, 0, 0x1E);
+
+    if (obj != NULL) {
+        obj->unk18 = arg0;
+        obj->unk1C = arg1;
+        obj->unk20 = arg2;
+        obj->unk3C = arg4;
+        obj->unk3E = arg3;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4A040/func_8004B934.s")
 
