@@ -35,7 +35,9 @@ extern void *D_801248BC;
 extern void *D_801248C8;
 extern u8 D_80121B55;
 extern u8 D_80121B56;
+extern s8 D_80121B54;
 extern u8 D_80121B81;
+extern u8 D_80121D90;
 extern u8 D_80156608;
 extern s16 D_80156612;
 extern s16 D_8011216E;
@@ -104,7 +106,7 @@ extern void func_8005905C(void);
 extern void func_80059518(void *);
 extern void func_80059950(void *);
 extern void func_8005A288(void *);
-extern void func_8005E5B4(void);
+extern void func_8005E5B4(void *);
 extern void func_8005F174(void);
 extern void func_80061088(void);
 extern void func_80062F6C(void);
@@ -964,7 +966,12 @@ void func_8005E534(void *arg0) {
     func_80071824(arg0, func_8005E498);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_8005E5B4.s")
+void func_8005E5B4(void *arg0) {
+    func_80045A78(-0x68, -0x2C, func_80043040(D_8011216E), 0x4D);
+    func_80045A78(-0x42, -0xC, func_80043040(D_8011216E), D_80122289 & 0xFFFF);
+    func_80045A78(-0x22, 4, func_80043040(D_8011216E), (D_80122289 + 0x48) & 0xFFFF);
+    func_80045A78(-0x68, 6, func_80043040(D_8011216E), (D_80121D90 + 0x91) & 0xFFFF);
+}
 
 void func_8005E68C(void *arg0) {
     if (*(u16 *)((u8 *)arg0 + 0x10) != 0) {
@@ -1078,7 +1085,28 @@ void func_80060BC4(void *arg0) {
     func_80071824(arg0, func_80060914);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80060C4C.s")
+void func_80060C4C(s16 arg0) {
+    s32 var_s1;
+    s32 var_s0;
+    void *temp_v0;
+
+    var_s1 = 0;
+    var_s0 = 0;
+    if (D_80121B54 > 0) {
+        do {
+            if (arg0 != var_s0) {
+                temp_v0 = func_800711D0(func_80060BC4, 0, 0x1E);
+                if (temp_v0 != NULL) {
+                    *(s16 *)((u8 *)temp_v0 + 0x50) = arg0;
+                    *(s16 *)((u8 *)temp_v0 + 0x52) = var_s0;
+                    *(s16 *)((u8 *)temp_v0 + 0x56) = var_s1 * 3;
+                    var_s1 += 1;
+                }
+            }
+            var_s0 += 1;
+        } while (var_s0 < D_80121B54);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_80060D10.s")
 
