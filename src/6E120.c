@@ -1,11 +1,15 @@
 #include "common.h"
 
 typedef struct {
-    char pad[2];
+    char pad0[2];
     s16 unk2;
-    char pad4[4];
+    s16 unk4;
+    s16 unk6;
     s16 unk8;
-    char padA[0x1A];
+    char padA[0xE];
+    s32 unk18;
+    s32 unk1C;
+    s32 unk20;
     s32 unk24;
     s32 unk28;
     void (*unk2C)(void);
@@ -19,6 +23,7 @@ extern void func_8006EF1C(void);
 extern void func_8006F048(void);
 extern void func_8006FA20(void);
 extern void func_8006FE88(void);
+extern void func_8007022C(void);
 extern Object6E120 D_801121E0[];
 extern Object6E120 *D_801124A0;
 extern void *D_800DA880[];
@@ -114,7 +119,17 @@ void func_8006FE24(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006FE88.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_80070198.s")
+void func_80070198(void) {
+    D_801124A0->unk4 = 0;
+    D_801124A0->unk6 = 0;
+    D_801124A0->unk8 = 0;
+    D_801124A0->unk18 = 0;
+    D_801124A0->unk1C = 0x310000;
+    D_801124A0->unk20 = 0x900000;
+    D_801124A0->unk24 = 0x670000;
+    D_801124A0->unk2C = func_8007022C;
+    D_801124A0->unk2C();
+}
 
 void func_8007022C(void) {
     func_8006D7D4();
