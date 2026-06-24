@@ -38,10 +38,19 @@ typedef struct {
     /* 0x26 */ u8 unk26;
 } Struct3CAF0c;
 
+typedef struct {
+    char pad0[0x18];
+    /* 0x18 */ s16 unk18;
+    /* 0x1A */ s16 unk1A;
+    /* 0x1C */ u16 unk1C;
+    /* 0x1E */ u16 unk1E;
+} Struct3CAF0d;
+
 extern void func_80071824(void *, void *);
 extern void func_800483FC(void *, void *, void *);
 extern void func_80011D74(void *, s32, s16, s16);
 extern void func_80017168(void *, s32);
+extern void func_800716E4(void *);
 extern s32 func_80043040(s16);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern s32 D_80124838;
@@ -59,7 +68,7 @@ void func_8003C180(Struct3CAF0b *arg0);
 void func_8003C634(Struct3CAF0 *arg0);
 void func_8003C7E4(Struct3CAF0 *arg0);
 void func_8003CE78(Struct3CAF0 *arg0);
-void func_8003D2F4(Struct3CAF0 *arg0);
+void func_8003D2F4(Struct3CAF0d *arg0);
 void func_8003D3C0(Struct3CAF0 *arg0);
 void func_8003D88C(Struct3CAF0 *arg0);
 void func_8003DA98(Struct3CAF0 *arg0);
@@ -254,7 +263,23 @@ void func_8003D27C(Struct3CAF0c *arg0) {
     func_8000F030(arg0->unk18, arg0->unk1A, temp, (D_800B9538[arg0->unk1C] + 0x19) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003D2F4.s")
+void func_8003D2F4(Struct3CAF0d *arg0) {
+    Struct3CAF0d *temp_a2 = arg0;
+
+    arg0->unk1E++;
+    if (arg0->unk1E == 7) {
+        arg0->unk1E = 0;
+        arg0->unk1C = (arg0->unk1C + 1) & 3;
+    }
+    if (temp_a2->unk18 < 0x12) {
+        temp_a2->unk18++;
+    }
+    if (D_8010B1A2 == 4) {
+        func_800716E4(temp_a2);
+    } else {
+        func_800483FC(&D_80124868, func_8003D27C, temp_a2);
+    }
+}
 
 void func_8003D384(Struct3CAF0 *arg0) {
     arg0->unk18 = -0xA7;
