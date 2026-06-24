@@ -317,7 +317,15 @@ void func_8003DA24(Struct3CAF0 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003DA98.s")
+void func_8003DA98(Struct3CAF0 *arg0) {
+    func_800483FC(&D_80124838, func_8003D974, arg0);
+    if (D_8010B1A2 == 0x10) {
+        func_80071824(arg0, func_8003DA24);
+    }
+    if ((D_8010B1A2 == 0x20) || (D_8010B1A2 == 0x33)) {
+        func_80071824(arg0, func_8003D9A8);
+    }
+}
 
 void func_8003DB1C(Struct3CAF0 *arg0) {
     func_80017168((u8 *)arg0 + 0x20, func_80043040(D_8011217C));

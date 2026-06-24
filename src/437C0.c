@@ -7,10 +7,12 @@ extern u8 D_80110198[];
 extern u8 D_80160480;
 
 typedef struct ListNode437C0 {
-    s32 pad0;
+    struct ListNode437C0 *prev;
     struct ListNode437C0 *next;
     u8 *start;
     s32 size;
+    u8 index;
+    u8 used;
 } ListNode437C0;
 
 extern ListNode437C0 *D_80110184;
@@ -59,7 +61,30 @@ void func_80042D28(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/437C0/func_80042D58.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/437C0/func_80042EE4.s")
+s32 func_80042EE4(s32 arg0) {
+    ListNode437C0 *temp_a0;
+    ListNode437C0 *temp_v0;
+
+    if (arg0 == -1) {
+        return -1;
+    }
+    temp_a0 = (ListNode437C0 *)&D_80110198[arg0 * sizeof(ListNode437C0)];
+    if (temp_a0->used != 0) {
+        temp_v0 = temp_a0->next;
+        if (temp_v0 == NULL) {
+            D_8011091C -= temp_a0->size;
+            temp_v0 = temp_a0->next;
+        }
+        temp_a0->prev->next = temp_v0;
+        temp_v0 = temp_a0->next;
+        if (temp_v0 != NULL) {
+            temp_v0->prev = temp_a0->prev;
+        }
+        func_80042D28(temp_a0);
+        func_80042BC0();
+    }
+    return -1;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/437C0/func_80042FA0.s")
 
