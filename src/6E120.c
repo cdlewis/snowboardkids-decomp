@@ -22,8 +22,17 @@ extern void func_8006FE88(void);
 extern Object6E120 D_801121E0[];
 extern Object6E120 *D_801124A0;
 extern void *D_800DA880[];
+extern u8 D_80121B58;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006D520.s")
+void func_8006D520(u16 arg0, u16 arg1) {
+    Object6E120 *temp;
+
+    if (D_80121B58 == 0) {
+        temp = (Object6E120 *)((char *)D_801121E0 + (arg0 * 0xB0));
+        temp->unk2 = arg1;
+        temp->unk2C = D_800DA880[arg1];
+    }
+}
 
 void func_8006D580(u16 arg0, u16 arg1) {
     Object6E120 *temp = (Object6E120 *)((char *)D_801121E0 + (arg0 * 0xB0));
