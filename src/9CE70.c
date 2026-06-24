@@ -19,6 +19,7 @@ extern Struct800A0138 D_8015C928;
 extern s32 D_8015C964;
 extern void func_8009CD18();
 extern s8 func_8009F4C8(u8, u8 *, void *);
+extern s32 func_8009F780(void *, s32, s32, s32, s32);
 extern void func_8009FF80(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009C270.s")
@@ -302,6 +303,7 @@ extern s16 D_8015A67C;
 extern s16 D_8015A67E;
 extern s32 D_8015A658;
 extern void *D_8015A660;
+extern s32 *D_8015A670;
 
 void func_8009D8B0(s32 arg0, s32 arg1) {
     s32 temp_t7 = arg0 & 2;
@@ -316,7 +318,25 @@ void func_8009D8B0(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D8D8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009DBE4.s")
+s32 func_8009DBE4(s32 arg0) {
+    s32 i;
+    void *entry;
+    s32 value;
+
+    value = D_8015A670[arg0];
+    entry = D_8015A660;
+    i = 0;
+    if (D_8015A658 > 0) {
+        do {
+            i++;
+            if (*(s32 *)((u8 *)entry + 0x58) == 0) {
+                return func_8009F780(entry, arg0, 0x80, 0x80, value);
+            }
+            entry = (u8 *)entry + 0x11C;
+        } while (i < D_8015A658);
+    }
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009DC68.s")
 
