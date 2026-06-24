@@ -123,7 +123,29 @@ void func_80036520(Actor36F80 *arg0) {
     func_800373AC((s32)&D_8010B1C0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_800365B4.s")
+void func_800365B4(Actor36F80 *arg0) {
+    u16 temp_t6;
+    u16 temp_v0;
+
+    temp_v0 = arg0->unk2A;
+    if (temp_v0 < 0x23) {
+        temp_t6 = temp_v0 + 1;
+        arg0->unk2A = temp_t6;
+        if ((temp_t6 & 0xFFFF) == 0x23) {
+            D_8010B1A2 = 0x10;
+        }
+    } else if (D_8010B1A2 == 0x39) {
+        arg0->unk18 = 0xFCA00000;
+        func_80071824((s32)arg0, (void (*)(void))func_80036520);
+        func_80041DD4(4, 4);
+        arg0->unk26 = 0;
+        func_800420FC(4, arg0->unk24, arg0->unk26, arg0->unk28);
+        D_8010B1C0.unkC = 9;
+        D_8010B1C0.unk0 = 0xFFF20000;
+        D_8010B1C0.unk4 = 0xFFF20000;
+        D_8010B1C0.unk8 = 0xA0000;
+    }
+}
 
 void func_80036674(Actor36F80 *arg0) {
     arg0->unk18 += (s32)0xFFFE8000;
