@@ -1,5 +1,23 @@
 #include "common.h"
 
+typedef struct {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+} StructD5CC8;
+
+typedef struct {
+    char pad0[0x10];
+    u16 unk10;
+    char pad12[0x6];
+    StructD5CC8 unk18;
+    s32 unk24;
+    s32 unk28;
+    s32 unk2C;
+    char pad30[0x8];
+    s16 unk38;
+} Struct56070;
+
 extern void *D_801248D4;
 extern void func_800483FC(void *, void *, s32);
 extern void func_800556B0(void);
@@ -7,7 +25,9 @@ extern void func_80056CA0(void);
 extern s16 D_8011216A;
 extern s32 func_80043040(s16 arg0);
 extern void func_80045990(s32 arg0, s32 arg1, void *arg2, void *arg3);
-extern void func_80056070(void *arg0);
+extern StructD5CC8 D_800D5CC8[];
+void func_80055FA4(Struct56070 *arg0);
+void func_80056070(Struct56070 *arg0);
 
 extern void func_80056348(void *arg0, s32 arg1);
 extern void func_8005638C(void *arg0, s32 arg1);
@@ -38,7 +58,20 @@ void func_80055B04(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80055FA4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056070.s")
+void func_80056070(Struct56070 *arg0) {
+    StructD5CC8 *temp_t3;
+
+    arg0->unk38--;
+    if (!arg0->unk38) {
+        arg0->unk38 = 0x5A;
+        temp_t3 = &D_800D5CC8[arg0->unk10];
+        arg0->unk18 = *(&D_800D5CC8[arg0->unk10]);
+        arg0->unk24 = 0;
+        arg0->unk28 = 0;
+        arg0->unk2C = 0xFFF00000;
+        func_80071824(arg0, func_80055FA4);
+    }
+}
 
 void func_800560F4(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x38) = (*(u16 *)((u8 *)arg0 + 0x10) * 0x1E) + 0x1E;
