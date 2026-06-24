@@ -5,9 +5,19 @@ typedef struct Node9CE70 {
     void *mq;
 } Node9CE70;
 
+typedef struct Struct800A0138 {
+    u8 unk0;
+    u8 pad1[3];
+    s32 unk4;
+    s32 unk8;
+} Struct800A0138;
+
 extern void osSendMesg(void *, s32, s32);
 extern s32 osSetIntMask(s32);
 extern s32 osRecvMesg(void *, void *, s32);
+extern Struct800A0138 D_8015C928;
+extern s32 D_8015C964;
+extern void func_8009FF80(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009C270.s")
 
@@ -378,6 +388,14 @@ s32 func_8009E040(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009FF80.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_800A0138.s")
+void (*func_800A0138(Struct800A0138 **arg0))(void) {
+    if (D_8015C928.unk0 == 0) {
+        D_8015C928.unk4 = 0;
+        D_8015C928.unk8 = D_8015C964;
+        D_8015C928.unk0 = 1;
+    }
+    *arg0 = &D_8015C928;
+    return func_8009FF80;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_800A0170.s")
