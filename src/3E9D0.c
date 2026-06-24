@@ -11,7 +11,9 @@ extern void func_8005393C(void);
 extern void func_8006D780(s32);
 extern void func_8007105C(void);
 extern void func_80071664(void *, s32, s32, s32);
+extern void func_800720E4(s32);
 extern void func_8009956C(void *, s32);
+void func_8003E45C(void);
 void func_8003E5A8(void);
 
 typedef struct {
@@ -109,7 +111,19 @@ void func_8003DFB0(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3E9D0/func_8003DFD0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3E9D0/func_8003E3AC.s")
+void func_8003E3AC(void) {
+    D_801235B8->unk18--;
+    if (D_801235B8->unk18 == 0) {
+        func_800720E4(4);
+        D_801235B8->unk18 = 0x12C;
+        func_8009956C(func_8003E45C, 0);
+    }
+    func_80071664(func_8005393C, 5, 0x64, 0);
+    func_8006D780(0);
+    func_8006D780(1);
+    func_8006D780(2);
+    func_8007105C();
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3E9D0/func_8003E45C.s")
 
