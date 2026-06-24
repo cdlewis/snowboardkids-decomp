@@ -97,6 +97,7 @@ void func_80072938(void) {
 }
 
 extern s32 gzip_data_0000;
+extern void func_80072964(s32, s32, s32, s32, f32, s32, s32);
 
 void myfree(void) {
     gzip_data_0000 = 0;
@@ -104,7 +105,13 @@ void myfree(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80072964.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80072A20.s")
+void func_80072A20(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4, s16 arg5) {
+    s32 temp_a0 = arg0 << 16;
+    s32 temp_a2 = arg2 << 16;
+    s32 temp_a3 = arg3 << 16;
+
+    func_80072964(temp_a0 >> 16, arg1, temp_a2 >> 16, temp_a3 >> 16, arg4, arg5, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80072A74.s")
 
