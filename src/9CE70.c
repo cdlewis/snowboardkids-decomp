@@ -15,6 +15,10 @@ typedef struct Struct800A0138 {
 extern void osSendMesg(void *, s32, s32);
 extern s32 osSetIntMask(s32);
 extern s32 osRecvMesg(void *, void *, s32);
+extern s32 osSpTaskYielded(void *);
+extern void osWritebackDCacheAll(void);
+extern void osSpTaskLoad(void *);
+extern void osSpTaskStartGo(void *);
 extern Struct800A0138 D_8015C928;
 extern s32 D_8015C964;
 extern void func_8009CD18();
@@ -22,7 +26,10 @@ extern void func_8009F604(void);
 extern s8 func_8009F4C8(u8, u8 *, void *);
 extern s32 func_8009F780(void *, s32, s32, s32, s32);
 extern void func_8009FF80(void);
+extern s32 D_800DF154;
+extern s32 D_800DF158;
 extern s32 D_8015A680;
+extern s32 D_8015A620;
 extern s32 *libmus_fxheader_current;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009C270.s")
@@ -39,7 +46,20 @@ s32 func_8009C43C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009C6DC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009C77C.s")
+void func_8009C77C(void *arg0) {
+    if (D_800DF158 != 0) {
+        D_800DF158 = 0;
+        if (osSpTaskYielded((u8 *)*(s32 *)((u8 *)arg0 + 0x76C) + 0x10) != 0) {
+            D_800DF154 = 1;
+        } else {
+            D_800DF154 = 2;
+        }
+    }
+    D_8015A620 |= 2;
+    osWritebackDCacheAll();
+    osSpTaskLoad((u8 *)*(s32 *)((u8 *)arg0 + 0x770) + 0x10);
+    osSpTaskStartGo((u8 *)*(s32 *)((u8 *)arg0 + 0x770) + 0x10);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009C81C.s")
 
