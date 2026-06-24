@@ -5,7 +5,9 @@ typedef struct {
     s32 unk18;
     s32 unk1C;
     s32 unk20;
-    char pad24[6];
+    s16 unk24;
+    s16 unk26;
+    s16 unk28;
     u16 unk2A;
 } Actor36F80;
 
@@ -24,9 +26,11 @@ extern void func_80036E58(s32);
 extern void func_8003CD9C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern void func_800373AC(s32 arg0);
 extern void func_80041DD4(s32 arg0, s32 arg1);
+extern void func_80041D20(s32 arg0, s32 arg1);
 extern s32 func_80041FB4(s32 arg0);
 extern void func_80042034(s32 arg0);
 extern void func_8004209C(s32, s32, s32, s32);
+extern void func_800420FC(s32, s16, s16, s16);
 extern void func_800428C8(s32 arg0);
 extern void func_80071824(s32 arg0, void (*arg1)(void));
 extern s32 D_8010B1C0;
@@ -253,7 +257,25 @@ void func_80036F6C(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036FB4.s")
+void func_80036FB4(Actor36F80 *arg0) {
+    arg0->unk18 = (s32)0xFE700000;
+    arg0->unk1C = 0;
+    arg0->unk20 = 0;
+    arg0->unk24 = 0;
+    arg0->unk26 = 0x400;
+    arg0->unk28 = 0;
+    arg0->unk2A = 0;
+    func_80041D20(4, 4);
+    func_80041DD4(4, 3);
+    func_8004209C(4, arg0->unk18, arg0->unk1C, arg0->unk20);
+    func_800420FC(4, arg0->unk24, arg0->unk26, arg0->unk28);
+    *((s8 *)&D_8010B1C0 + 0xD) = 4;
+    *((s8 *)&D_8010B1C0 + 0xC) = 9;
+    *((s32 *)&D_8010B1C0 + 0) = (s32)0xFFF20000;
+    *((s32 *)&D_8010B1C0 + 1) = (s32)0xFFF20000;
+    *((s32 *)&D_8010B1C0 + 2) = 0;
+    func_80071824((s32)arg0, func_80036F6C);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80037070.s")
 
