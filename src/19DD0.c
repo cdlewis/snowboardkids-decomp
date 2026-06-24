@@ -28,10 +28,13 @@ extern void func_8001B6D8(void);
 extern void func_8001B8F0(void);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013D0C(s32, s32, char *, s32, s32);
+extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern int sprintf(char *, const char *, ...);
+extern u8 D_800B5C24[];
 extern u8 D_800EC9C2;
+extern u8 D_80121D85;
 extern s16 D_80112172;
 extern s32 D_80121D8C;
 
@@ -135,7 +138,19 @@ void func_8001B454(Struct19DD0 *arg0) {
     func_80071824(arg0, func_8001B2D8);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/19DD0/func_8001B494.s")
+void func_8001B494(Struct19DD0 *arg0) {
+    s32 temp;
+
+    if (D_800EC9C2 == 3) {
+        temp = D_800EC9C2 & 0xFF;
+        if (D_80121D85 == 5) {
+            temp = 5;
+        }
+    } else {
+        temp = D_800EC9C2 & 0xFF;
+    }
+    func_80013154(arg0->unk18, arg0->unk1A, &D_800B5C24[temp * 0x8C], 1, arg0->unk1C, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/19DD0/func_8001B520.s")
 
