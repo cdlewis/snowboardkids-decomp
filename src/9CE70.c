@@ -53,7 +53,30 @@ void func_8009CA60(void *arg0, Node9CE70 *arg1, void *arg2) {
     osSetIntMask(prev);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009CAB4.s")
+void func_8009CAB4(void *arg0, Node9CE70 *arg1) {
+    Node9CE70 *node;
+    Node9CE70 *prev;
+    s32 mask;
+
+    node = *(Node9CE70 **)((u8 *)arg0 + 0x768);
+    prev = NULL;
+    mask = osSetIntMask(1);
+    if (node != NULL) {
+        do {
+            if (node == arg1) {
+                if (prev != NULL) {
+                    prev->next = arg1->next;
+                } else {
+                    *(Node9CE70 **)((u8 *)arg0 + 0x768) = arg1->next;
+                }
+                break;
+            }
+            prev = node;
+            node = node->next;
+        } while (node != NULL);
+    }
+    osSetIntMask(mask);
+}
 
 void func_8009CB44(void *arg0, s32 arg1) {
     Node9CE70 *node = *(Node9CE70 **)((u8 *)arg0 + 0x768);
