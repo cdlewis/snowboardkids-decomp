@@ -1,10 +1,26 @@
 #include "common.h"
 
+typedef struct {
+    u8 pad0[0x18];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    u8 unk24;
+    u8 unk25;
+} Struct80017F94;
+
 extern void func_80071824(void *, void *);
 extern void func_80018C80(void);
 extern void func_800177F8(void);
 extern void func_80017C34(void);
 extern void func_80018AA0(void);
+extern void func_80017D6C(Struct80017F94 *);
+extern void func_800483FC(void *, void *, Struct80017F94 *);
+extern s8 D_8010AE52;
+extern void *D_80124868;
 extern u8 D_80121B55;
 extern u8 D_80121D80[];
 extern u8 D_80112130[];
@@ -44,7 +60,36 @@ void func_80017D08(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/18610/func_80017D6C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/18610/func_80017F94.s")
+void func_80017F94(Struct80017F94 *arg0) {
+    s16 temp_v0;
+    int new_var;
+    u8 var_v1;
+
+    var_v1 = arg0->unk24;
+    new_var = 1;
+    switch (var_v1) {
+    case 0:
+    case 3:
+        break;
+    case 1:
+        temp_v0 = arg0->unk1C;
+        arg0->unk18 = arg0->unk18 - 0x10;
+        if (temp_v0 >= arg0->unk18) {
+            arg0->unk24 = 2;
+            arg0->unk18 = temp_v0;
+        }
+        var_v1 = arg0->unk24;
+        break;
+    case 2:
+        D_8010AE52 = new_var;
+        var_v1 = arg0->unk24;
+        break;
+    }
+    if (var_v1) {
+        arg0->unk25 = (arg0->unk25 + new_var) % 20;
+    }
+    func_800483FC(&D_80124868, func_80017D6C, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/18610/func_80018060.s")
 
