@@ -69,7 +69,14 @@ void func_80069914(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_80069998.s")
+void func_80069998(void *arg0) {
+    (*(s16 *)((char *)arg0 + 0x18))++;
+    if (*(s16 *)((char *)arg0 + 0x18) == 4) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_80069914, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_800699F0.s")
 
