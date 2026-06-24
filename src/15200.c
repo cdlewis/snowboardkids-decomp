@@ -10,12 +10,13 @@ extern void func_80014EF0(void);
 extern void func_800152D0(void);
 extern void func_80015680(void);
 extern void func_80015A30(void);
-extern void func_80015BD8(void);
+extern void func_80015BD8(void *);
 extern void func_80015F4C(void);
 extern void func_80016284(void);
 extern void func_80016E40(void);
 extern void func_800170AC(void *);
 extern void func_800483FC(void *, void *, s32);
+extern void func_800716E4(void *);
 extern s16 D_8010AE38;
 extern s16 D_8010AE3A;
 extern s16 D_8010AE3C;
@@ -27,6 +28,8 @@ extern s16 D_8010AE46;
 extern s16 D_80112172;
 extern s16 D_8011217C;
 extern u8 D_80121B55;
+extern s32 D_801235B4;
+extern void *D_801235B8;
 extern s32 D_80124838;
 extern s32 D_80124868;
 
@@ -99,7 +102,29 @@ void func_80015B58(void *arg0) {
         0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/15200/func_80015BD8.s")
+void func_80015BD8(void *arg0) {
+    u16 temp_v0;
+    s16 temp_t6;
+    void *temp_a2;
+
+    temp_v0 = *(u16 *)((u8 *)arg0 + 0x1C);
+    temp_a2 = arg0;
+    if ((((((((((temp_v0 & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) != 0x100) {
+        temp_t6 = temp_v0 + 0x28;
+        *(s16 *)((u8 *)arg0 + 0x1C) = temp_t6;
+        if ((temp_t6 & 0xFFFF) >= 0x100) {
+            *(s16 *)((u8 *)arg0 + 0x1C) = 0x100;
+            *(s32 *)((u8 *)D_801235B8 + 0x1C) = 1;
+        }
+    } else if (D_801235B4 != 0) {
+        *(s16 *)((u8 *)temp_a2 + 0x18) = *(s16 *)((u8 *)temp_a2 + 0x18) - 0x20;
+    }
+    if (*(s16 *)((u8 *)temp_a2 + 0x18) < -0x90) {
+        func_800716E4(temp_a2);
+    } else {
+        func_800483FC(&D_80124868, func_80015B58, (s32)temp_a2);
+    }
+}
 
 void func_80015C84(void *arg0) {
     *(s16 *)((char *)arg0 + 0x18) = -0x68;
