@@ -1,8 +1,10 @@
 #include "common.h"
 
-extern void func_80097BAC(void *, s16);
-void func_80097C18(s32 arg0, s16 arg1);
-extern void func_80097C84(void *, s16);
+s16 func_80097AE8(s16 arg0);
+s16 func_80097B48(s16 arg0);
+extern void func_80097BAC(s16 *, s16);
+void func_80097C18(s16 *arg0, s16 arg1);
+extern void func_80097C84(s16 *, s16);
 extern void func_80097CF0(void *, void *, void *);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80097A80.s")
@@ -11,11 +13,50 @@ extern void func_80097CF0(void *, void *, void *);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80097B48.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80097BAC.s")
+void func_80097BAC(s16 *arg0, s16 arg1) {
+    s32 sine = func_80097AE8(arg1);
+    s16 cosine = func_80097B48(arg1);
 
-#pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80097C18.s")
+    arg0[0] = 0x1000;
+    arg0[1] = 0;
+    arg0[2] = 0;
+    arg0[3] = 0;
+    arg0[4] = cosine;
+    arg0[5] = sine;
+    arg0[6] = 0;
+    arg0[7] = -sine;
+    arg0[8] = cosine;
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80097C84.s")
+void func_80097C18(s16 *arg0, s16 arg1) {
+    s32 sine = func_80097AE8(arg1);
+    s16 cosine = func_80097B48(arg1);
+
+    arg0[0] = cosine;
+    arg0[1] = 0;
+    arg0[2] = -sine;
+    arg0[3] = 0;
+    arg0[4] = 0x1000;
+    arg0[5] = 0;
+    arg0[6] = sine;
+    arg0[7] = 0;
+    arg0[8] = cosine;
+}
+
+void func_80097C84(s16 *arg0, s16 arg1) {
+    s32 sine = func_80097AE8(arg1);
+    s16 cosine = func_80097B48(arg1);
+
+    arg0[0] = cosine;
+    arg0[1] = sine;
+    arg0[2] = 0;
+    arg0[3] = -sine;
+    arg0[4] = cosine;
+    arg0[5] = 0;
+    arg0[6] = 0;
+    arg0[7] = 0;
+    arg0[8] = 0x1000;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80097CF0.s")
 
