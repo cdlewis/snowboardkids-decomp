@@ -6,6 +6,15 @@ extern void func_80048278(s32, s32, char *, s32);
 extern int sprintf(char *, const char *, ...);
 extern s16 D_8011216E;
 extern s16 D_801222F6;
+extern u8 D_80121B56;
+
+typedef struct {
+    s8 unk0;
+    s8 unk1;
+    s16 unk2;
+} Timer79030;
+
+extern Timer79030 D_80121B74;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/79030/func_80078430.s")
 
@@ -60,7 +69,24 @@ void func_8007A278(s32 arg0) {
     func_80045A78(0xC, 0x2C, func_80043040(D_8011216E), 0x90);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/79030/func_8007A2B8.s")
+void func_8007A2B8(void) {
+    if (D_80121B56 == 0) {
+        D_80121B74.unk2 = D_80121B74.unk2 + 0x358;
+        if (D_80121B74.unk2 >= 0x6401) {
+            D_80121B74.unk2 = 0;
+            D_80121B74.unk1 = D_80121B74.unk1 + 1;
+            if (D_80121B74.unk1 >= 0x3C) {
+                D_80121B74.unk1 = 0;
+                D_80121B74.unk0 = D_80121B74.unk0 + 1;
+                if (D_80121B74.unk0 >= 0x63) {
+                    D_80121B74.unk2 = 0x6300;
+                    D_80121B74.unk1 = 0x3B;
+                    D_80121B74.unk0 = 0x63;
+                }
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/79030/func_8007A350.s")
 
