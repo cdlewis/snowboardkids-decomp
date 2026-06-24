@@ -31,7 +31,23 @@ typedef struct Struct29E00 Struct29E00;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_80029344.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_80029548.s")
+void func_80029548(Struct29E00 *arg0) {
+    s32 temp_v1 = -0x104;
+    long long zero;
+    s32 temp_t6 = -0x58;
+    s32 temp_t7 = 1;
+
+    arg0->unk18 = temp_v1;
+    arg0->unk1A = temp_v1;
+    arg0->unk1C = temp_v1;
+    arg0->unk1E = temp_v1;
+    arg0->unk22 = temp_t6;
+    zero = 0;
+    arg0->unk25 = zero;
+    arg0->unk26 = temp_t7;
+    arg0->unk24 = zero;
+    func_80071824((s32) arg0, func_80029344);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_80029598.s")
 
