@@ -6,8 +6,11 @@ extern void func_80045990(s32, s32, void *, void *);
 extern void func_80071824(void *, void *);
 extern void func_80097C18(void *, s16);
 extern void func_80098590(void *, void *, void *);
+extern void *func_800711D0(void *, s32, s32);
+extern void *func_80071408(void *, s32, s32);
 extern char D_800D9BD8[];
 extern s16 D_80112168;
+extern void func_800674B4(void *);
 extern void func_80069678(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80066760.s")
@@ -30,7 +33,17 @@ extern void func_80069678(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_800674B4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/67360/func_8006752C.s")
+void func_8006752C(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
+    void *temp = func_80071408(func_800674B4, 0, 0x64);
+
+    if (temp != NULL) {
+        *(s32 *)((u8 *)temp + 0x1C) = arg0;
+        *(s32 *)((u8 *)temp + 0x20) = arg1;
+        *(s32 *)((u8 *)temp + 0x24) = arg2;
+        *(s16 *)((u8 *)temp + 0x2A) = arg3;
+        *(s16 *)((u8 *)temp + 0x2C) = arg4;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_800675AC.s")
 
@@ -67,4 +80,14 @@ void func_80069754(void *arg0) {
     func_80071824(arg0, func_80069678);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80069808.s")
+void func_80069808(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
+    void *temp = func_800711D0(func_80069754, 5, 0x3B);
+
+    if (temp != NULL) {
+        *(s16 *)((u8 *)temp + 0x10) = arg4;
+        *(s32 *)((u8 *)temp + 0x18) = arg0;
+        *(s32 *)((u8 *)temp + 0x1C) = arg1;
+        *(s32 *)((u8 *)temp + 0x20) = arg2;
+        *(s16 *)((u8 *)temp + 0x32) = arg3;
+    }
+}
