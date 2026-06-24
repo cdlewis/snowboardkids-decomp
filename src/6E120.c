@@ -1,16 +1,39 @@
 #include "common.h"
 
+typedef struct {
+    char pad[2];
+    s16 unk2;
+    char pad4[0x28];
+    void (*unk2C)(void);
+    char pad30[0x70];
+    s16 unkA0;
+} Object6E120;
+
 extern void func_8006D7D4(void);
+extern void func_8006ECBC(void);
+extern void func_8006EF1C(void);
+extern void func_8006F048(void);
+extern Object6E120 D_801121E0[];
+extern Object6E120 *D_801124A0;
+extern void *D_800DA880[];
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006D520.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006D580.s")
+void func_8006D580(u16 arg0, u16 arg1) {
+    Object6E120 *temp = (Object6E120 *)((char *)D_801121E0 + (arg0 * 0xB0));
+
+    temp->unk2 = arg1;
+    temp->unk2C = D_800DA880[arg1];
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006D5CC.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006D700.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006D780.s")
+void func_8006D780(s32 arg0) {
+    D_801124A0 = (Object6E120 *)((char *)D_801121E0 + (arg0 * 0xB0));
+    D_801124A0->unk2C();
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006D7D4.s")
 
@@ -26,15 +49,25 @@ extern void func_8006D7D4(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006EC64.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006EC74.s")
+void func_8006EC74(void) {
+    D_801124A0->unk2C = func_8006ECBC;
+    D_801124A0->unk2C();
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006ECBC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006EED4.s")
+void func_8006EED4(void) {
+    D_801124A0->unk2C = func_8006EF1C;
+    D_801124A0->unk2C();
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006EF1C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006EFF4.s")
+void func_8006EFF4(void) {
+    D_801124A0->unkA0 = 0x96;
+    D_801124A0->unk2C = func_8006F048;
+    D_801124A0->unk2C();
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006F048.s")
 
