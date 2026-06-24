@@ -511,7 +511,18 @@ void func_8005B344(void *arg0) {
     func_800483FC(&D_80124858, func_8005AC44, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_8005B3EC.s")
+void func_8005B3EC(void *arg0) {
+    *(s16 *)((u8 *)arg0 + 0x1C) = 3;
+    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
+    if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
+        *(s16 *)((u8 *)arg0 + 0x1A) = 0xA;
+        func_80071824(arg0, func_8005B344);
+    }
+    func_800483FC(&D_80124868, func_8005A31C, arg0);
+    func_800483FC(&D_80124868, func_8005A4BC, arg0);
+    func_800483FC(&D_80124858, func_8005AAE4, arg0);
+    func_800483FC(&D_80124858, func_8005AC44, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_8005B49C.s")
 
@@ -595,7 +606,18 @@ void func_8005C89C(void *arg0) {
     func_800483FC(&D_80124858, func_8005C14C, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_8005C944.s")
+void func_8005C944(void *arg0) {
+    *(s16 *)((u8 *)arg0 + 0x20) = 4;
+    *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)((u8 *)arg0 + 0x1E) - 1;
+    if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
+        *(s16 *)((u8 *)arg0 + 0x1E) = 0xA;
+        func_80071824(arg0, func_8005C89C);
+    }
+    func_800483FC(&D_80124868, func_8005B8E8, arg0);
+    func_800483FC(&D_80124868, func_8005B9F8, arg0);
+    func_800483FC(&D_80124858, func_8005C03C, arg0);
+    func_800483FC(&D_80124858, func_8005C14C, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_8005C9F4.s")
 
@@ -681,7 +703,18 @@ void func_8005E064(void *arg0) {
     func_800483FC(&D_80124858, func_8005D9B4, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_8005E10C.s")
+void func_8005E10C(void *arg0) {
+    *(s16 *)((u8 *)arg0 + 0x1C) = 3;
+    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
+    if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
+        *(s16 *)((u8 *)arg0 + 0x1A) = 0xA;
+        func_80071824(arg0, func_8005E064);
+    }
+    func_800483FC(&D_80124868, func_8005CF60, arg0);
+    func_800483FC(&D_80124868, func_8005D1CC, arg0);
+    func_800483FC(&D_80124858, func_8005D860, arg0);
+    func_800483FC(&D_80124858, func_8005D9B4, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/57EA0/func_8005E1BC.s")
 
