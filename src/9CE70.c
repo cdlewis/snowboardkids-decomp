@@ -313,7 +313,31 @@ void func_8009D8B0(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009DD5C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009DDE4.s")
+s32 func_8009DDE4(s32 arg0) {
+    s32 i;
+    s32 matches;
+    void *entry;
+    volatile char flags;
+    u16 temp_a0;
+
+    i = 0;
+    entry = D_8015A660;
+    ;
+    matches = 0;
+    if (D_8015A658 > 0) {
+        do {
+            i++;
+            if (*((s32 *) ((u8 *) entry + 0x58)) != 0) {
+                temp_a0 = *((u16 *) ((u8 *) entry + 0xBE));
+                if (((temp_a0 != 0) && (arg0 & 1)) || ((((unsigned long) temp_a0) == 0) && (arg0 & 2))) {
+                    matches++;
+                }
+            }
+            entry = (u8 *) entry + 0x11C;
+        } while (i < D_8015A658);
+    }
+    return matches;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009DE50.s")
 
