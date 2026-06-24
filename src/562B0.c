@@ -13,11 +13,14 @@ extern void func_800564A8(void *arg0);
 extern void func_80071824(void *arg0, void (*arg1)(void));
 extern s8 D_80122288;
 extern s16 D_80122282;
+extern s16 D_80121B50;
 
 void func_8005663C(void);
 extern void func_8005673C(void);
+void func_80056998(void);
 void func_80056A58(void);
 void func_80056B1C(void);
+void func_80056BD8(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_800556B0.s")
 
@@ -150,7 +153,17 @@ void func_80056B88(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056BD8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056C44.s")
+void func_80056C44(void *arg0) {
+    s16 temp_v0 = D_80121B50;
+
+    if (temp_v0 == 3) {
+        func_80071824(arg0, func_80056998);
+        temp_v0 = D_80121B50;
+    }
+    if (temp_v0 == 6) {
+        func_80071824(arg0, func_80056BD8);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056CA0.s")
 
