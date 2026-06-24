@@ -180,7 +180,25 @@ void func_80095300(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_80095338.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_800955C0.s")
+typedef struct {
+    char pad0[0x18];
+    s32 unk18;
+    s32 unk1C;
+    char pad20[0x28];
+} Struct800955C0;
+
+extern Struct800955C0 D_800B9540[];
+extern s16 D_80121B50;
+
+void func_800955C0(void *arg0) {
+    if (func_80082EC0(arg0) != 0) {
+        *(s16 *)((u8 *)arg0 + 0x302) = *(s16 *)((u8 *)arg0 + 0x302) + 1;
+        *(s16 *)((u8 *)arg0 + 0x304) = 0;
+        *(s16 *)((u8 *)arg0 + 0x2EC) = *(s16 *)((u8 *)arg0 + 0x2FA);
+        *(s32 *)((u8 *)arg0 + 0x1C) = D_800B9540[D_80121B50].unk18;
+        *(s32 *)((u8 *)arg0 + 0x24) = D_800B9540[D_80121B50].unk1C;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_80095650.s")
 
