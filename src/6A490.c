@@ -81,6 +81,7 @@ extern s32 D_801248B0;
 extern s32 D_801248A4;
 extern s32 D_801248F8;
 extern void func_8006BC68(void *);
+extern void func_8006BE90(void);
 
 void func_80069890(void *arg0) {
     if (*(s16 *)((char *)arg0 + 0x18) != 0) {
@@ -251,7 +252,23 @@ void func_8006BDE4(Struct6BDE4 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_8006BE90.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_8006BFC0.s")
+void func_8006BFC0(Struct6BDE4 *arg0) {
+    Vec3i sp1C;
+    Struct6BDE4 *temp_a3 = arg0;
+
+    if (D_80121B56 == 0) {
+        arg0->unk50--;
+        func_80098590(&arg0->unk30, &temp_a3->unk18, &sp1C, temp_a3);
+        temp_a3->unk24 += sp1C.x * 2;
+        temp_a3->unk28 += sp1C.y * 2;
+        temp_a3->unk2C += sp1C.z * 2;
+        if (temp_a3->unk50 == 0) {
+            func_80071824(temp_a3, func_8006BE90);
+            temp_a3->unk50 = 0x18;
+        }
+    }
+    func_800483FC(&D_801248A4, func_8006BC68, temp_a3);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_8006C088.s")
 
