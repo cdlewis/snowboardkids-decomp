@@ -18,7 +18,9 @@ extern void func_800368BC(void *);
 extern void func_80036930(Actor36F80 *);
 extern void func_80036A4C(Actor36F80 *);
 extern void func_80036B54(void);
-extern void func_80036DAC(void);
+extern void func_80036DAC(s32);
+extern void func_80036C8C(s32);
+extern void func_80036E58(s32);
 extern void func_8003CD9C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern void func_800373AC(s32 arg0);
 extern void func_80041DD4(s32 arg0, s32 arg1);
@@ -182,9 +184,36 @@ void func_80036C8C(s32 arg0) {
     func_800373AC(&D_8010B1C0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036D08.s")
+void func_80036D08(Actor36F80 *arg0) {
+    if (func_80041FB4(4) == 1) {
+        arg0->unk2A++;
+        if (arg0->unk2A < 6) {
+            func_80041DD4(4, 6);
+        }
+    }
+    if (arg0->unk2A == 6) {
+        func_80071824((s32)arg0, func_80036C8C);
+        arg0->unk2A = 0;
+        D_8010B1AC = 1;
+        D_8010B1A2 = 7;
+    }
+    func_800428C8(4);
+    func_800373AC((s32)&D_8010B1C0);
+}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036DAC.s")
+void func_80036DAC(s32 arg0) {
+    if ((func_80041FB4(4) == 1) && (D_8010B1A2 == 4)) {
+        D_8010B1A2 = 5;
+    }
+    if (D_8010B1A2 == 6) {
+        func_80071824(arg0, func_80036D08);
+        func_80041DD4(4, 6);
+        D_8010B1AC = 0;
+        func_8003CD9C(-0x1C, -0x3A, 4, 0);
+    }
+    func_800428C8(4);
+    func_800373AC((s32)&D_8010B1C0);
+}
 
 void func_80036E58(s32 arg0);
 
@@ -198,10 +227,23 @@ void func_80036E58(s32 arg0) {
     func_800373AC(&D_8010B1C0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036EBC.s")
+void func_80036EBC(Actor36F80 *arg0) {
+    arg0->unk18 += 0x24000;
+    if (arg0->unk18 >= 0x100000) {
+        arg0->unk18 = 0x100000;
+        D_8010B1A2 = 2;
+        func_80071824((s32)arg0, func_80036E58);
+        func_8004209C(4, arg0->unk18, arg0->unk1C, arg0->unk20);
+        func_80041DD4(4, 4);
+    } else {
+        func_8004209C(4, arg0->unk18, arg0->unk1C, arg0->unk20);
+        func_80042034(4);
+    }
+    func_800428C8(4);
+    func_800373AC((s32)&D_8010B1C0);
+}
 
 extern void func_80071408(void *arg0, s32 arg1, s32 arg2);
-extern void func_80036EBC(void);
 extern void func_8003D384(void);
 
 void func_80036F6C(s32 arg0) {
