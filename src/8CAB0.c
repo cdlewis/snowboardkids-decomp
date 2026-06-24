@@ -486,7 +486,27 @@ void func_80096D04(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_80096D8C.s")
+void func_80096D8C(void *arg0) {
+    if (*(s16 *)((u8 *)arg0 + 0x304) == 0) {
+        *(s16 *)((u8 *)arg0 + 0x304) = *(s16 *)((u8 *)arg0 + 0x304) + 1;
+        *(s32 *)((u8 *)arg0 + 0x7C) = 0;
+        func_80081E40(arg0, 0x24);
+    }
+    if (func_80082EC0(arg0)) {
+        if (*(s32 *)((u8 *)arg0 + 0x7C) == 0) {
+            if (*(s16 *)((u8 *)arg0 + 0x452) == 0x25) {
+                *(s32 *)((u8 *)arg0 + 0x7C) = 0;
+                func_80081E40(arg0, 0x26);
+            } else {
+                *(s32 *)((u8 *)arg0 + 0x2FC) |= 0x8000000;
+                *(s32 *)((u8 *)arg0 + 0x7C) = 0x1E;
+                func_80081E40(arg0, 0x25);
+            }
+        } else {
+            *(s32 *)((u8 *)arg0 + 0x7C) = *(s32 *)((u8 *)arg0 + 0x7C) - 1;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/8CAB0/func_80096E3C.s")
 
