@@ -27,6 +27,7 @@ typedef struct {
     s16 unk50;
     s16 unk52;
     s16 unk54;
+    s16 unk56;
 } Struct6C51C;
 
 typedef struct {
@@ -75,7 +76,7 @@ extern void func_80098590(void *, void *, Vec3i *, void *);
 extern s16 D_80112168;
 extern s32 D_801235B4;
 extern u8 D_80156608;
-extern void func_8006C5C0(void);
+extern void func_8006C5C0(Struct6C51C *);
 extern void func_8006C1B4(void);
 void func_800699F0(Struct6A490 *);
 extern void func_8006C7F4(void);
@@ -339,7 +340,17 @@ void func_8006C51C(Struct6C51C *arg0) {
     func_800483FC(&D_801248A4, func_8006C1B4, temp_s0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_8006C5C0.s")
+void func_8006C5C0(Struct6C51C *arg0) {
+    if ((D_80121B56 == 0) && (D_801235B4 & 4)) {
+        arg0->unk54 = 0x2D;
+        D_801235B4 &= ~4;
+        func_80071824(arg0, func_8006C51C);
+        arg0->unk56 = 1;
+        func_80072A74(0x16, &D_800DA764[D_80121B50 * 0x10], 0x7F, 0x32);
+        func_80072A74(0x1B, &D_800DA764[D_80121B50 * 0x10], 0x7F, 0x32);
+    }
+    func_800483FC(&D_801248A4, func_8006C1B4, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_8006C698.s")
 
