@@ -5,6 +5,15 @@ typedef struct Node72430 {
     struct Node72430 *next;
 } Node72430;
 
+typedef struct {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+    u8 unk4;
+    u8 unk5;
+} QueueEntry72430;
+
 extern s16 D_80121B50;
 extern s32 D_80121850;
 extern s32 D_80121858;
@@ -16,11 +25,13 @@ extern Node72430 *D_80121930;
 extern Node72430 *D_80121934;
 extern s32 D_8012193C;
 extern Node72430 *D_80121940[];
+extern QueueEntry72430 D_80121978[];
 extern s32 player_bss_0048;
 extern u16 D_800DBCF4[];
 
 void func_8009DE50(s32 arg0, s32 arg1);
 void func_800720E4(s32 arg0);
+s32 func_80071B74(void);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80071830.s")
 
@@ -92,7 +103,23 @@ void func_80072114(s32 arg0) {
     D_80121974 = -1;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80072138.s")
+s32 func_80072138(s16 arg0, s16 arg1) {
+    u32 new_var;
+    s32 temp_v0 = func_80071B74();
+    QueueEntry72430 *temp_v1;
+
+    if (temp_v0 == -1) {
+        return 1;
+    }
+    temp_v1 = &D_80121978[temp_v0];
+    temp_v1->unk0 = 1;
+    temp_v1->unk1 = (new_var = arg0);
+    temp_v1->unk2 = 0xFF;
+    temp_v1->unk3 = 0x80;
+    temp_v1->unk5 = 0;
+    temp_v1->unk4 = arg1;
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_800721B8.s")
 
