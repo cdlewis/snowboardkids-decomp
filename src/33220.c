@@ -57,7 +57,20 @@ void func_80032684(Struct33220 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/33220/func_800326EC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33220/func_8003288C.s")
+void func_8003288C(Struct33220 *arg0) {
+    if (D_801235B8->unk1C != (u16)(0, arg0->unk20)) {
+        arg0->unk24 = 0x100;
+        arg0->unk22 = 0;
+        arg0->unk20 = D_801235B8->unk1C;
+    }
+    if ((s32)(u16)arg0->unk22 < 0x10) {
+        arg0->unk24 -= 9;
+    } else {
+        arg0->unk24 += 9;
+    }
+    arg0->unk22 = ((u16)arg0->unk22 + 1) & 0x1F;
+    func_800483FC(&D_80124868, func_800326EC, arg0);
+}
 
 void func_80032934(Struct33220 *arg0) {
     arg0->unk18 = -0x2C;
