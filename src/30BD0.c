@@ -1,13 +1,18 @@
 #include "common.h"
 
 extern void func_800483FC(void *, void *, s32);
+extern s32 func_80043040(s16);
+extern void func_80017168(void *, s32);
 extern s32 D_80124868;
 extern s32 D_80124838;
+extern u8 D_8010AF93;
+extern s16 D_8011217C;
 extern void func_8003048C(void);
 extern void func_80030CC4(void);
 extern void func_80031038(void);
 extern void func_80031294(void);
 extern void func_80031370(void);
+extern void func_80031550(void);
 extern void func_80031F40(void);
 extern void func_80032534(void);
 
@@ -81,7 +86,22 @@ void func_80031510(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_80031550.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_80031A88.s")
+void func_80031A88(void *arg0) {
+    void *temp_a2 = arg0;
+
+    if (D_8010AF93 == 1) {
+        if (*(u16 *)((u8 *)arg0 + 0x32) < 0x10) {
+            *(s16 *)((u8 *)arg0 + 0x30) -= 9;
+        } else {
+            *(s16 *)((u8 *)temp_a2 + 0x30) += 9;
+        }
+        *(u16 *)((u8 *)temp_a2 + 0x32) = (*(u16 *)((u8 *)temp_a2 + 0x32) + 1) & 0x1F;
+    } else {
+        *(s16 *)((u8 *)temp_a2 + 0x30) = 0x100;
+        *(s16 *)((u8 *)temp_a2 + 0x32) = 0;
+    }
+    func_800483FC(&D_80124868, func_80031550, (s32)temp_a2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_80031B24.s")
 
@@ -95,7 +115,16 @@ void func_80031BD4(s32 arg0) {
     func_800483FC(&D_80124838, func_80031BA0, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_80031C04.s")
+void func_80031C04(void *arg0) {
+    void *temp_a2 = arg0;
+
+    func_80017168((u8 *)temp_a2 + 0x1C, func_80043040(D_8011217C));
+    *(s16 *)((u8 *)temp_a2 + 0x1C) = 0x10;
+    *(s16 *)((u8 *)temp_a2 + 0x1E) = 0x10;
+    *(s16 *)((u8 *)temp_a2 + 0x18) = *(s16 *)((u8 *)temp_a2 + 0x24);
+    *(s16 *)((u8 *)temp_a2 + 0x1A) = *(s16 *)((u8 *)temp_a2 + 0x26);
+    func_80071824(temp_a2, func_80031BD4);
+}
 
 void func_80031C6C(void *arg0) {
     void *temp = arg0;
@@ -107,7 +136,16 @@ void func_80031CA0(s32 arg0) {
     func_800483FC(&D_80124838, func_80031C6C, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_80031CD0.s")
+void func_80031CD0(void *arg0) {
+    void *temp_a2 = arg0;
+
+    func_80017168((u8 *)temp_a2 + 0x1C, func_80043040(D_8011217C));
+    *(s16 *)((u8 *)temp_a2 + 0x1C) = 0x10;
+    *(s16 *)((u8 *)temp_a2 + 0x1E) = 0x20;
+    *(s16 *)((u8 *)temp_a2 + 0x18) = *(s16 *)((u8 *)temp_a2 + 0x24);
+    *(s16 *)((u8 *)temp_a2 + 0x1A) = *(s16 *)((u8 *)temp_a2 + 0x26);
+    func_80071824(temp_a2, func_80031CA0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/30BD0/func_80031D3C.s")
 
