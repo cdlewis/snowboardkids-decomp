@@ -13,7 +13,7 @@ typedef struct {
         s8 s8;
         s16 s16;
     } unk1C;
-    s8 pad1E;
+    s8 unk1E;
     s8 unk1F;
     s8 unk20;
 } Object2C160;
@@ -22,6 +22,7 @@ extern void func_8002B8B4(Object2C160 *);
 extern void func_8002BB24(Object2C160 *);
 extern void func_8002BDAC(Object2C160 *);
 extern void func_8002C18C(void);
+extern void func_8002C390(Object2C160 *);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/2C160/func_8002B560.s")
 
@@ -76,4 +77,10 @@ void func_8002C350(Object2C160 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/2C160/func_8002C390.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/2C160/func_8002C498.s")
+void func_8002C498(Object2C160 *arg0) {
+    arg0->unk18 = -0x24;
+    arg0->unk1A = -0x38;
+    arg0->unk1C.s16 = 0;
+    arg0->unk1E = 0;
+    func_80071824(arg0, func_8002C390);
+}
