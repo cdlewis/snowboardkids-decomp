@@ -19,13 +19,59 @@ typedef struct {
     s32 unk18;
 } Struct801235B8;
 
-extern Struct801235B8 *D_801235B8;
+typedef struct StructEC9C4 {
+    char pad0[4];
+    s16 unk4;
+    s16 unk6;
+    char pad8[0x10];
+    s32 unk18;
+    s32 unk1C;
+    s32 unk20;
+    s32 unk24;
+    char pad28[8];
+    char unk30[0x14];
+    s32 unk44;
+    s32 unk48;
+    s32 unk4C;
+} StructEC9C4;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3E9D0/func_8003DDD0.s")
+typedef struct StackDDD0 {
+    char sp20[0x20];
+    s32 sp40;
+    s32 sp44;
+    s32 sp48;
+    s32 sp4C;
+    s32 sp50;
+    s32 sp54;
+} StackDDD0;
+
+extern Struct801235B8 *D_801235B8;
+extern StructEC9C4 *D_800EC9C4;
+extern void func_80097FE4(void *, s16, s16);
+extern void func_8009853C(void *, s16, s16);
+extern void func_80098590(void *, s32 *, s32 *);
+
+void func_8003DDD0() {
+    StackDDD0 stack;
+    StructEC9C4 *temp;
+
+    temp = D_800EC9C4;
+    func_8009853C(temp->unk30, -temp->unk4, -temp->unk6);
+    temp = D_800EC9C4;
+    stack.sp4C = 0;
+    stack.sp50 = 0;
+    stack.sp54 = -temp->unk24;
+    func_80097FE4(stack.sp20, temp->unk4, temp->unk6);
+    func_80098590(stack.sp20, &stack.sp4C, &stack.sp40);
+    temp = D_800EC9C4;
+    temp->unk44 = stack.sp40 - temp->unk18;
+    temp = D_800EC9C4;
+    temp->unk48 = stack.sp44 - temp->unk1C;
+    temp = D_800EC9C4;
+    temp->unk4C = stack.sp48 - temp->unk20;
+}
 
 struct ALSeqPlayer;
-
-extern void func_8003DDD0(struct ALSeqPlayer *seqp);
 
 void n_alSeqpDelete(struct ALSeqPlayer *seqp) {
     func_8003DDD0(seqp);
