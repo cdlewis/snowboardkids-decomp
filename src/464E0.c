@@ -128,9 +128,9 @@ void func_800484F0(void) {
     D_80112134 = func_80042D58(0x8000);
 }
 
-extern s32 D_80123754;
-extern s32 D_801121C0;
-extern s32 D_801121BC;
+extern u32 D_80123754;
+extern u8 *D_801121C0;
+extern u8 *D_801121BC;
 
 void func_80048524(s32 arg0) {
     D_80123754 = 0;
@@ -141,7 +141,27 @@ void func_80048524(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80048594.s")
+void *func_80048594(s32 size) {
+    u8 *oldPtr = D_801121BC;
+    u8 *newPtr = ((0, oldPtr)) + ((((u32)(size + 3)) >> 2) * 4);
+    s32 new_var2;
+
+    new_var2 = newPtr - D_801121C0;
+    newPtr++;
+    newPtr--;
+
+    if (D_801121BC) {
+    }
+
+    if ((u32)(newPtr - D_801121C0) >= 0x8000) {
+        return 0;
+    }
+
+    D_801121BC = newPtr;
+    D_80123754 = new_var2;
+
+    return oldPtr;
+}
 
 extern void osWritebackDCache(void *, s32);
 
