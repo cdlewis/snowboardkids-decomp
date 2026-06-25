@@ -16,6 +16,8 @@ extern void osSendMesg(void *, s32, s32);
 extern s32 osSetIntMask(s32);
 extern s32 osRecvMesg(void *, void *, s32);
 extern s32 osSpTaskYielded(void *);
+extern void *osViGetCurrentFramebuffer(void);
+extern void *osViGetNextFramebuffer(void);
 extern void osWritebackDCacheAll(void);
 extern void osSpTaskLoad(void *);
 extern void osSpTaskStartGo(void *);
@@ -106,7 +108,21 @@ void func_8009CB44(void *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009CB98.s")
+void func_8009CB98(void *arg0, void *arg1) {
+    void *msg;
+    Node9CE70 node;
+    void *framebuffer;
+    void *queue;
+
+    msg = 0;
+    framebuffer = *(void **)((u8 *)arg1 + 0xC);
+    while ((osViGetCurrentFramebuffer() == framebuffer) || (osViGetNextFramebuffer() == framebuffer)) {
+        queue = (u8 *)arg0 + 0x1FC;
+        func_8009CA60(arg0, &node, queue);
+        osRecvMesg(queue, &msg, 1);
+        func_8009CAB4(arg0, &node);
+    }
+}
 
 void func_8009CC50(void *arg0) {
     void *msg;
