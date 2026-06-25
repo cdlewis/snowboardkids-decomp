@@ -93,9 +93,13 @@ void func_80071BE8(Node72430 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80071E80.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/func_800720E4.s")
-
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/MusFxBankSetCurrent.s")
+void func_800720E4(s32 arg0) {
+    if (arg0 != D_80121974) {
+        D_80121974 = arg0;
+        D_80121850 = 1;
+        player_bss_0048 = arg0;
+    }
+}
 
 void func_80072114(s32 arg0) {
     D_80121850 = 2;
