@@ -1,14 +1,34 @@
 #include "common.h"
 
 extern s32 D_80121B98;
+extern s32 D_80121B90;
+extern s16 D_8011215C[];
 
 typedef struct Struct7DD90 {
-    char pad0[0x45E];
+    u16 unk0;
+    char pad2[0x450];
+    s16 unk452;
+    s32 unk454;
+    s32 unk458;
+    s16 unk45C;
     s16 unk45E;
     char pad460[6];
     s16 unk466;
 } Struct7DD90;
 
+typedef struct Anim81508 {
+    char pad0[0x10];
+    s16 unk10;
+    s16 unk12;
+} Anim81508;
+
+typedef struct Coord81508 {
+    s16 x;
+    s16 y;
+    s16 z;
+} Coord81508;
+
+extern s32 func_80043040(s16);
 extern void func_80081EF4(Struct7DD90 *);
 extern void func_80082070(Struct7DD90 *);
 
@@ -34,7 +54,17 @@ extern void func_80082070(Struct7DD90 *);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_800813F8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_80081508.s")
+void func_80081508(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3, s16 *arg4) {
+    s32 *temp_v1;
+    s32 temp_v0;
+
+    temp_v0 = arg0 * 0x1C;
+    temp_v1 = &D_80121B90;
+    *arg1 = ((Coord81508 *)(*temp_v1 + (((Anim81508 *)(D_80121B98 + temp_v0))->unk10 * 6)))->x << 0x11;
+    *arg2 = ((Coord81508 *)(*temp_v1 + (((Anim81508 *)(D_80121B98 + temp_v0))->unk10 * 6)))->y << 0x11;
+    *arg3 = ((Coord81508 *)(*temp_v1 + (((Anim81508 *)(D_80121B98 + temp_v0))->unk10 * 6)))->z << 0x11;
+    *arg4 = -((Anim81508 *)(D_80121B98 + temp_v0))->unk12;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_800815D4.s")
 
@@ -46,7 +76,28 @@ s16 func_80081E1C(s32 arg0) {
     return *(s16 *)((D_80121B98 + idx) + 2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_80081E40.s")
+void func_80081E40(Struct7DD90 *arg0, s32 arg1) {
+    s16 *temp_a1;
+    s16 temp_v1;
+    s32 temp_v1_2;
+    s16 *sp1C;
+    s32 temp_v0;
+    Struct7DD90 *temp_a2 = arg0;
+
+    temp_v0 = func_80043040(D_8011215C[arg0->unk0]);
+    temp_a1 = (s16 *)(temp_v0 + (((u16 *)temp_v0)[arg1] * 2));
+    temp_v1 = *temp_a1;
+    temp_a2->unk45E = temp_v1;
+    temp_a2->unk45E++;
+    temp_a2->unk45C = temp_v1;
+    temp_a1 += 1;
+    sp1C = temp_a1;
+    temp_v1_2 = (s32)temp_a1 - func_80043040(D_8011215C[temp_a2->unk0]);
+    temp_a2->unk454 = temp_v1_2;
+    temp_a2->unk458 = temp_v1_2;
+    temp_a2->unk466 = 0;
+    temp_a2->unk452 = arg1;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_80081EF4.s")
 
