@@ -2,11 +2,15 @@
 
 extern s32 func_80043040(s16);
 extern void func_80045A78(s32, s32, s32, s32);
+extern void func_80047E88(s32, s16, s32, s32);
 extern void func_80048278(s32, s32, char *, s32);
 extern int sprintf(char *, const char *, ...);
 extern s16 D_8011216E;
+extern s16 D_80121B52;
 extern s16 D_801222F6;
+extern s8 D_80122288[];
 extern u8 D_80121B56;
+extern u8 D_80156608;
 
 typedef struct {
     s8 unk0;
@@ -59,7 +63,21 @@ void func_80079750(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/79030/func_800799DC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/79030/func_80079E48.s")
+void func_80079E48(s32 arg0) {
+    int new_var2;
+    int new_var;
+    s32 sp1C;
+    s32 temp_v0;
+    s32 var_v1;
+
+    temp_v0 = D_80156608;
+    if (0 == temp_v0) {
+        var_v1 = -0x30;
+    } else {
+        var_v1 = 0x2A;
+    } sp1C = (s16)var_v1; new_var = 0xFF; func_80047E88(0x70, (s16)var_v1, (D_80122288[new_var2 = temp_v0 * 0x60C] + 0x31) & new_var, 2); func_80047E88(0x78, *(s16 *)((u8 *)&sp1C + 2), 0x2F, 2);
+    func_80047E88(0x80, *(s16 *)((u8 *)&sp1C + 2), (D_80121B52 + 0x30) & new_var, 2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/79030/func_80079F04.s")
 

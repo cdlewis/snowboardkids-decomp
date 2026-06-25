@@ -16,7 +16,10 @@ typedef struct {
     s32 unk24;
     s32 unk28;
     void (*unk2C)(void);
-    char pad30[0x70];
+    char pad30[0x64];
+    s32 unk94;
+    s32 unk98;
+    s32 unk9C;
     s16 unkA0;
 } Object6E120;
 
@@ -32,6 +35,7 @@ extern void func_8006D8B4(Player6E120 *, s32);
 extern void func_8006ECBC(void);
 extern void func_8006EF1C(void);
 extern void func_8006F048(void);
+extern void func_8006F984(void);
 extern void func_8006FA20(void);
 extern void func_8006FE88(void);
 extern void func_8007022C(void);
@@ -40,6 +44,9 @@ extern Object6E120 D_801121E0[];
 extern Object6E120 *D_801124A0;
 extern Player6E120 D_80121D80[];
 extern void *D_800DA880[];
+extern s32 D_80121B40;
+extern s32 D_80121B44;
+extern s32 D_80121B48;
 extern u8 D_80121B58;
 
 void func_8006D520(u16 arg0, u16 arg1) {
@@ -108,7 +115,18 @@ void func_8006EFF4(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006F8AC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006F8BC.s")
+void func_8006F8BC(void) {
+    D_801124A0->unk18 = D_80121B40;
+    D_801124A0->unk94 = D_801124A0->unk18;
+    D_801124A0->unk1C = D_80121B44;
+    D_801124A0->unk98 = D_801124A0->unk1C;
+    D_801124A0->unk20 = D_80121B48;
+    D_801124A0->unk9C = D_801124A0->unk20;
+    D_801124A0->unk24 = 0;
+    D_801124A0->unk28 = 0;
+    D_801124A0->unk2C = func_8006F984;
+    D_801124A0->unk2C();
+}
 
 void func_8006F984(void) {
     D_801124A0->unkC = ((Player6E120 *)((u8 *)D_80121D80 + (D_801124A0->unk0 * 0x60C)))->unk290;
