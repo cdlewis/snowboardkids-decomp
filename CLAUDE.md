@@ -24,24 +24,80 @@ This is a matching decompilation project for Snowboard Kids (N64). The goal is t
 - `python3 tools/data-differ/data_diff.py <symbol>` or `./tools/diff-data <symbol>` compares binary data between the target ROM and compiled output for a specific data symbol.
 - `python3 tools/data-differ/data_diff.py --find-first-mismatch` scans data symbols in ROM order and shows the first mismatch. Use this after checksum failures when a data variable may be responsible.
 
-## Decompiling Assembly to C
+## Tasks
 
-First create a matching workspace:
+### Decompile Assembly to C Code
 
-```bash
+You may be given a function and asked to decompile it to C code.
+
+#### Step 1
+
+First we need to spin up a decomp environment for the function, run:
+
+```
 ./tools/claude --bootstrap-only <function name>
 ```
 
-Move to the created `nonmatchings/<function name>` directory. Use the local `build.sh`, `diff.sh`, `objdump.py`, and `map_asm_to_c.py` helpers there. Keep attempts incremental in separate files such as `base_2.c`, `base_3.c`, and so on.
+Move to the directory created by the script. This will be `nonmatchings/<function name>-<number (optional)>`.
 
-When a function matches, replace the relevant `#pragma GLOBAL_ASM("asm/nonmatchings/...")` in `src/` with real C code, update declarations in `include/` or nearby source files as needed, then run:
+Use the tools in this directory to match the function. You may need to make several attempts. Each attempt should be in a new file (`base_1.c`, `base_2.c`, ... `base_n.c`, etc).
 
-```bash
-./tools/build-and-verify.sh
+#### Step 2 (successful match, integrate changes into project)
+
+If you are able to match the function, update the C code to use it. The C code will be importing an assembly file, something along the lines of `INCLUDE_ASM/asm/nonmatchings/<function name>`. Replace this with the actual C code.
+
+- Update the rest of the project to fix any build issues.
+- If the function is defined in a header file (located in include/), this will also need to be updated. These other usages may teach you about the correct type of your function arguments or return types. DO NOT JUST MAKE EVERYTHING void\*!.
+- Make sure to search for any existing function / struct declarations in the project (under src/ and include/). We do not want duplicate or redundant declarations.
+
+Verify that the project still builds successfully by running `./tools/build-and-verify.sh`. If this check fails, the decompilation is NOT complete, even if individual functions appear to match.
+
+- If the checksum fails after your changes, use `python3 tools/asm-differ/diff.py --no-pager <function>` to check ALL functions in the modified file(s). Look for functions that access the same structs you modified. Fix any mismatches before declaring success.
+
+#### Step 3: Commit your successful match or improvement on existing partial match
+
+If you are able to get a perfect matching decompilation, commit the changes with an appropriate message describing what you matched and how.
+
+If you are unable to get a perfect match but have improved upon the previous best match (or there is no such previous match), record your best match next to the included ASM:
+
+```
+// your_function best match: XX%
+
+#pragma GLOBAL_ASM("asm/nonmatchings/segment/your_function")
+
+#ifdef NON_MATCHING
+// your non-matching function
+#endif
 ```
 
-If checksum verification fails after source changes, inspect all affected functions in the modified file, especially functions using the same structs or globals.
-Use `python3 tools/asm-differ/diff.py --no-pager <function name>` to compare each affected function against target assembly from the project root.
+Respect any pre-commit hooks that prevent you from committing your change. A failed hook indicates that you have not correctly updated the C code.
+
+You are done. Do not attempt to find the next closest match.
+
+#### When to stop
+
+**These rules are mandatory. Do not override them.**
+
+If the build script tells you to stop, you MUST stop immediately. Do not make another attempt. Report:
+- Best score and which file achieved it
+- Summary of approaches tried
+- Analysis of remaining differences
+- Whether the remaining issues seem solvable or may need a different strategy
+
+## Validation Checklist
+
+Before declaring any changes to C code complete (including decompiling functions), verify:
+
+- [ ] No pointer arithmetic with manual offset calculations
+- [ ] All struct field accesses use `->` or `.` operators
+- [ ] No `void*` parameters that should be typed structs
+- [ ] Struct sizes match the assembly access patterns
+- [ ] `./tools/build-and-verify.sh` succeeds
+
+
+### Capture Learnings
+
+Update DECOMPILATION_LEARNINGS.md with any new insights from matching functions in this project. These include compiler behavior, codegen quirks, and patterns specific to IDO 5.3.
 
 ## Matching Data
 
@@ -66,19 +122,52 @@ python3 tools/data-differ/data_diff.py <symbol>
 
 The data differ uses `symbol_addrs.txt` metadata for single-symbol diffs. Symbols need ROM and size annotations such as `rom:0x... size:0x...` for precise comparisons.
 
-## Validation Checklist
-
-- No manual pointer arithmetic for known struct fields.
-- Struct and array accesses use `->`, `.`, or indexed access where appropriate.
-- Function parameters are typed as specifically as the available context allows.
-- Struct sizes and field offsets match assembly access patterns.
-- `./tools/build-and-verify.sh` succeeds before the match is considered complete.
-
 ## Code Quality Standards
 
-Prefer existing project names, structs, typedefs, and helper macros. Before adding declarations, search `src/` and `include/` for existing definitions to avoid duplicates.
+### Avoid Pointer Arithmetic
 
-C files should be organized in this order:
+When you see pointer arithmetic patterns like `*(type*)((u8*)ptr + offset)`:
+
+1. **Identify the access pattern:**
+   - What offset is being accessed? (e.g., `0xC` means field at offset 12)
+   - Is it accessing an array element? (e.g., `arg1 * 36` means 36-byte elements)
+   - What field within the element? (e.g., `+ 0xA` means field at offset 10)
+
+2. **Create appropriate structs:**
+   - Define the element struct with correct size and field offsets
+   - Define the container struct with pointer at correct offset
+   - Use meaningful names or `unk[Offset]` naming convention
+
+3. **Verify struct sizes:**
+   - Calculate total size to ensure it matches the multiplier in pointer arithmetic
+   - Example: `arg1 * 36` means struct must be exactly 36 (0x24) bytes
+
+### Struct Modification and Extension
+
+When modifying struct definitions:
+
+- Search the entire codebase for other references to the same struct
+- Check if other functions access fields at nearby offsets
+- Verify ALL affected functions still match after struct changes
+- Example: If you add a field at offset 0x14, search for all functions accessing that struct and verify they still compile to the correct offsets
+
+### Avoid Redundant Declarations
+
+After adding your decompiled function, check for any redundant extern declarations:
+
+1. **Search for existing declarations**: For each extern function you used, search the codebase to see if it's already declared in a header file:
+   - Use `rg "void functionName" include/` to search headers
+   - Use `rg "void functionName" src/` to search source files and source-local headers
+
+2. **Remove redundant externs**: If a function is already declared in an included header file, remove your extern declaration to avoid duplication
+
+3. **Verify the build still works** after removing redundant externs
+
+Example: If you added `extern void setCallback(void *);` but `task_scheduler.h` (which is already included) declares it, remove your extern declaration.
+
+## Code Structure
+
+C files should be organized in the following way:
 
 - Macro definitions
 - Struct definitions
@@ -86,4 +175,4 @@ C files should be organized in this order:
 - Function declarations
 - Function implementations
 
-When matching code, keep source readable and maintainable. Avoid using assembly includes, hard-coded pointer offsets, or broad `void *` typing as substitutes for understanding the data layout.
+You should proactively reorganize code to preserve this structure.

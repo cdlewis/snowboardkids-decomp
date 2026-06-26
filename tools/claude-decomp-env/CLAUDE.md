@@ -4,31 +4,33 @@
 
 You are decompiling Nintendo 64 assembly code from Snowboard Kids. Your goal is to generate C code for `$functionName` that, when compiled, 100% matches the target assembly code.
 
-The project currently builds C with IDO through `tools/asm-processor`, using the same effective flags as the root Makefile: `-O1 -mips2`. Follow C89 declaration style.
+The compiler is IDO 5.3 with flags `-O2 -mips1`. We follow the C89 standard.
 
 ### Laying the Foundation
 
 Before making matching attempts, gather context for `$functionName` and make `base.c` compile.
 
-1. Explore how `$functionName` is used in `../../src`, `../../include`, and `../../asm/nonmatchings`.
-2. Write concise notes about purpose, callers, callees, relevant globals, and suspected types to `LEARNINGS.md`.
-3. Make the minimum changes necessary for `base.c` to compile. `base.c` should only include `common.h`; add any missing local declarations inline.
+MAKE THE MINIMAL SET OF CHANGES NECESSARY TO COMPILE `base.c`. This is important for getting an accurate baseline match percentage.
+
+
+Specifically, the subagent should:
+
+<subagent-instructions>
+1. Explore how $functionName is used in the codebase. Look at ../../src, ../../include as well as the unmatched code (../../asm/nonmatchings). Write a summary of what the $functionName is and how it's used to `LEARNINGS.md`.
+2. Ensure that base.c compiles successfully. Ensure that any missing types are present. base.c should only depend on "common.h". Any other missing types should be provided inline rather than via #include statements. Do not stop until base.c can be successfully built. Report status and a brief summary of your findings upon completion.
+3. Report back on its progress and findings
+</subagent-instructions>
 
 ### Build Loop
 
-After `base.c` builds:
+After `base.c` builds successfully, repeat the following steps:
 
-1. Run `./build.sh base.c` to compile and compare against `target.o`.
-2. Inspect `base_diff`, `target.s`, and generated object dumps.
-3. Create incremental attempts as `base_2.c`, `base_3.c`, etc.
-4. Record useful observations in `LEARNINGS.md`.
-5. If a function is nearly matching but stuck on register allocation, or if manual progress has stalled, use the `decomp-permuter` skill from the project root. Run it with a timeout and point `--source-file` at the best attempt, for example:
-
-```bash
-timeout 300s ./tools/permuter --source-file nonmatchings/<function-name>/base_N.c <function name>
-```
-
-6. Stop when a 100% match is reached or when the build script tells you to stop.
+1. Run `./build.sh <attempt>.c` to build and get a diff against the target assembly. A score of 100% indicates a perfect match.
+2. Inspect `base_diff`, `target.s`, and generated object dumps. Look for areas where the control flow and instructions do not match.
+3. Come up with a plan to improve the match. Consider what the original developers intended to write given the function's broader purpose.
+4. Create a new file (`base_n.c` where `n` is your attempt number) with changes you expect to improve the match. Start small and work incrementally — if you test multiple changes at once they may interact poorly.
+5. Record useful observations in `LEARNINGS.md`.
+6. Stop when a 100% match is reached, when the build script tells you to stop, or when you are unable to make progress (e.g. 40 attempts without any improvement to the match percentage).
 
 ## Tools
 
@@ -46,5 +48,68 @@ timeout 300s ./tools/permuter --source-file nonmatchings/<function-name>/base_N.
 - Do not use `GLOBAL_ASM`, `INCLUDE_ASM`, or inline assembly as a matching shortcut.
 
 ## Decompilation Strategy
+Learnings from past decompilations can be found at `DECOMPILATION_LEARNINGS.md`.
 
-Focus on the function's intended purpose, then refine control flow, stack layout, and register allocation. Literal decompiler output often contains misleading gotos, duplicated temporaries, and shifted arithmetic where the original source was simpler.
+### General Approach
+- Think about what the function is *doing* within the game. What is its purpose? Structure the code to fulfill that purpose — this is the surest path to a 100% match.
+- Focus on control flow differences over register or stack differences. Register and stack issues are easy to fix later.
+- Look for clues in how the function is called and how it calls other functions.
+
+### Cleaning Up Decompilation Artefacts
+Literal decompilation often produces artefacts. Watch for these common patterns:
+
+<artefact name="for-loops">
+m2c struggles with `for` loops. The compiler often pulls out the condition so it can bail early if it's never met. Note that the comparison operator may also change (e.g. `<` becomes `<=`).
+
+This code:
+```c
+for (i = 0; i < 10; i++) {
+    // stuff
+}
+```
+
+Often decompiles as:
+```c
+i = 0;
+if (i < 10) {
+    do {
+        // stuff
+        i++;
+    } while (i < 10);
+}
+```
+</artefact>
+
+<artefact name="gotos">
+Developers rarely, if ever, write GOTO statements but they show up often in decompilation output because many different kinds of control flow are represented as branches and jumps in assembly. Assume that GOTOs are just a decompilation artefact.
+</artefact>
+
+<artefact name="duplicated-variables">
+It's far more likely that a single variable is being reused rather than many temporary variables. Literal decompilation and permuting often produce unnecessary re-assignments that hurt the match rate.
+</artefact>
+
+<artefact name="shifts-instead-of-arithmetic">
+Arithmetic is often converted to shifts:
+- `x >> 2` → `x / 4`
+- `x << 2` → `x * 4`
+</artefact>
+
+<artefact name="false-returns">
+Explicit returns in assembly might actually be fall-through returns:
+```c
+if (condition) {
+    // main work
+} else {
+    // alternative path
+    return X;
+}
+return Y;  // fall-through from if-branch
+```
+</artefact>
+
+### Large Functions
+Don't be intimidated — these are often straightforward if approached methodically:
+
+1. Get the function to compile first, filling in missing types, undefined functions, etc.
+2. Focus on control flow. Compare `base.c` against `target.s` — m2c's generated control flow can be convoluted and misleading. Make a checklist of problems and work through them one by one.
+3. Large structs are easy. Often there are significant gaps between fields, so just focus on getting the field accesses correct.
