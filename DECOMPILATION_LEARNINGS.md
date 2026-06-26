@@ -18,6 +18,10 @@ patterns, and verified layout/linking rules.
 - When assigning a global pointer and then using it, IDO may reload through the
   global pointer rather than reuse the literal object address. Write C through
   the same global pointer path if the target does so.
+- If a value is unchanged on the false path of an `if`, a redundant reload after
+  the conditional block can be source-equivalent and may match targets where IDO
+  reloads only after the taken call path while reusing the pre-branch value
+  otherwise.
 - Explicit casts can affect sign-extension and register allocation. If the
   target sign-extends an argument with `sll`/`sra`, try making the promotion
   explicit in C, even when the callee parameter type is narrower.
