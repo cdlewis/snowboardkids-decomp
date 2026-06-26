@@ -20,7 +20,6 @@ This is a matching decompilation project for Snowboard Kids (N64). The goal is t
 - `python3 tools/asm-differ/diff.py --no-pager <function name>` compares compiled assembly against the target for a specific function.
 - `./tools/claude --bootstrap-only <function name>` creates a per-function matching workspace under `nonmatchings/`.
 - `./build.sh <file>.c` inside a generated matching workspace compiles one attempt and compares it to the target function.
-- `python3 tools/project_status.py` shows currently non-matching functions when available.
 - `python3 tools/data-differ/data_diff.py <symbol>` or `./tools/diff-data <symbol>` compares binary data between the target ROM and compiled output for a specific data symbol.
 - `python3 tools/data-differ/data_diff.py --find-first-mismatch` scans data symbols in ROM order and shows the first mismatch. Use this after checksum failures when a data variable may be responsible.
 
