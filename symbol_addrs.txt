@@ -1,6 +1,7 @@
 // Visit https://github.com/ethteck/splat/wiki/Adding-Symbols for documentation about this file
 entrypoint = 0x80000400; // type:func
 main = 0x800996A0; // type:func
+func_80011D6C = 0x80011D6C; // type:func
 osDestroyThread = 0x800AEF40; // type:func
 n_alSynRemovePlayer = 0x7003DDD0; // type:func
 osCreateMesgQueue = 0x800A0290; // type:func
