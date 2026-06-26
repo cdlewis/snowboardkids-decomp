@@ -63,6 +63,9 @@ patterns, and verified layout/linking rules.
 
 - C object `.text` sections pad to 16-byte alignment. Splitting a segment at an
   exact unaligned function end can shift following raw asm.
+- Some extracted single-function asm ranges may include an unnamed adjacent tiny
+  function. A trailing `jr $ra; nop` after an earlier return is likely a missing
+  empty function boundary, not padding.
 - If matched C is smaller than the original asm range, add or adjust asm
   segments so the remaining bytes/functions are still owned.
 - When section-end padding causes shifts, it may be better to match the full
