@@ -691,7 +691,13 @@ s32 func_8009F6F4(s32 arg0, s32 arg1) {
     return -1;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009F748.s")
+void func_8009F748(u8 *p, unsigned char c, s32 n) {
+    u8 *q = p;
+
+    while (n--) {
+        *(q++) = c;
+    }
+}
 
 s32 func_8009F780(void *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     s32 temp_v1;
