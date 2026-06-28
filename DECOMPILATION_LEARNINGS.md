@@ -112,6 +112,23 @@ patterns, and verified layout/linking rules.
   it lazily in a branch delay slot and reloads it per block. This is hard to
   force from C and is good decomp-permuter territory once control flow matches.
 
+## Register allocation via strength-reduced induction vs explicit pointer
+
+- A loop that bumps a pointer over an array (`player = base; do { f(player); player += STRIDE; } while (...)`)
+- causes IDO to hoist the shared `base` address into a callee-saved register and
+  reuse it everywhere (`move s1, s3`), forcing an extra saved register and
+  `move a0, s3` at the call. The target instead kept the base in `$a0` for a tight
+  top region (it was passed as the first arg to a call) and **reloaded it fresh**
+  into `$s1` at loop entry (`lui s1; addiu s1`).
+- The fix is to write the loop as an index-based `for` whose address is computed
+  inline: `for (i = 0; i < n; i++) { f(base + i * STRIDE); }`. IDO strength-reduces
+  `i * STRIDE` into a pointer that is initialized with a **fresh** `lui`/`addiu` of
+  `base` in the loop preheader (the `blez` delay slot), so it does not CSE with the
+  top region's `$a0`. This dropped `func_8008C704` (`src/8CAB0.c`) from 81% to 100%.
+- Takeaway: when the target reloads an array base at a loop rather than reusing a
+  hoisted saved register, prefer a strength-reduced indexed `for` loop over an
+  explicit pointer-bump `do`/`while`.
+
 ## Register allocation via redundant reloads
 
 - IDO's register allocator picks colors based on its internal temp numbering,
