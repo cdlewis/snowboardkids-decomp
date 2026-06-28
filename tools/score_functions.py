@@ -8,6 +8,7 @@ Usage:
     python3 tools/score_functions.py --exhaustive asm/
     python3 tools/score_functions.py --score-func func_800B6544_1E35F4 asm/
     python3 tools/score_functions.py --min-score 100 --max-score 200 asm/
+    python3 tools/score_functions.py --by-size asm/nonmatchings/
     python3 tools/score_functions.py --by-similarity asm/nonmatchings/
     python3 tools/score_functions.py --by-coddog-similarity asm/nonmatchings/
 """
@@ -498,6 +499,7 @@ Examples:
   python3 tools/score_functions.py --exhaustive --min-score 50 asm/
   python3 tools/score_functions.py --clean asm/
   python3 tools/score_functions.py --json asm/  # Output JSON array for task-runner.py
+  python3 tools/score_functions.py --by-size asm/nonmatchings/  # Rank by instruction count
   python3 tools/score_functions.py --by-similarity asm/nonmatchings/  # Rank by best reference
   python3 tools/score_functions.py --by-coddog-similarity asm/nonmatchings/  # Rank by coddog similarity
         """
@@ -542,6 +544,11 @@ Examples:
         '--by-similarity',
         action='store_true',
         help='Rank functions by how similar they are to existing matched functions (best reference material first)'
+    )
+    parser.add_argument(
+        '--by-size',
+        action='store_true',
+        help='Rank functions by instruction count (smallest first)'
     )
     parser.add_argument(
         '--by-coddog-similarity',
@@ -610,6 +617,9 @@ Examples:
     if not filtered_scores:
         print("Error: All functions are marked as difficult or are data sections!", file=sys.stderr)
         sys.exit(1)
+
+    if args.by_size:
+        filtered_scores.sort(key=lambda s: (s.instruction_count, s.branch_count, s.jump_count, s.label_count, s.name))
 
     # If --by-similarity, compute similarity scores and re-sort
     if args.by_similarity:
@@ -684,12 +694,14 @@ Examples:
         print(json.dumps(function_data))
         sys.exit(0)
 
-    # In exhaustive mode or by-similarity mode, list all functions
-    if args.exhaustive or args.by_similarity or args.by_coddog_similarity:
+    # In exhaustive mode or ranking modes, list all functions
+    if args.exhaustive or args.by_size or args.by_similarity or args.by_coddog_similarity:
         if args.by_coddog_similarity:
             print("ALL FUNCTIONS (sorted by coddog similarity to decompiled functions):\n")
         elif args.by_similarity:
             print("ALL FUNCTIONS (sorted by similarity to matched functions):\n")
+        elif args.by_size:
+            print("ALL FUNCTIONS (sorted by instruction count):\n")
         else:
             print("ALL FUNCTIONS (sorted by complexity):\n")
         for score in filtered_scores:
@@ -699,13 +711,15 @@ Examples:
     simplest = filtered_scores[0]
 
     # Simple mode: just print the function name if no special flags
-    if not args.exhaustive and not args.by_similarity and not args.by_coddog_similarity and args.min_score is None and args.max_score is None:
+    if not args.exhaustive and not args.by_size and not args.by_similarity and not args.by_coddog_similarity and args.min_score is None and args.max_score is None:
         print(simplest.name)
     else:
         if args.by_coddog_similarity:
             print(f"BEST REFERENCE: {simplest.name}")
         elif args.by_similarity:
             print(f"BEST REFERENCE: {simplest.name}")
+        elif args.by_size:
+            print(f"SMALLEST FUNCTION: {simplest.name}")
         else:
             print(f"SIMPLEST FUNCTION: {simplest.name}")
         print(f"{simplest}")
