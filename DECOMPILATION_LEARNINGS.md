@@ -15,6 +15,18 @@ patterns, and verified layout/linking rules.
 - If a near-perfect match differs mainly by saved-register choices versus
   temp-register-plus-spill choices, try the optimization level used by the
   surrounding object before forcing source changes.
+- IDO homes narrow (`char`/`unsigned char`/`u8`) parameters to their stack slot
+  at function entry even in a frame-less leaf: declaring a parameter as
+  `unsigned char` instead of `s32` emits a dead `sw $aN, K($sp)` of the incoming
+  register followed by an `andi` to recover the clean byte. This is the source
+  of the otherwise-mysterious dead argument-store-with-no-prologue pattern.
+  Match it by typing the parameter as the narrow type the callee semantically
+  uses, not the wider type the caller passes.
+- IDO's `-O2` memset loop idiom (unrolling with an `& 3` remainder loop) is NOT
+  triggered by a `while (n--) *p++ = c;` form — that compiles to a plain
+  single-store byte loop. The `n--` post-decrement also leaves a dead
+  `move $vN, $a2` shadow each iteration (the discarded return value of `n--`),
+  which is expected and should not be eliminated by rewriting the loop.
 - When assigning a global pointer and then using it, IDO may reload through the
   global pointer rather than reuse the literal object address. Write C through
   the same global pointer path if the target does so.
