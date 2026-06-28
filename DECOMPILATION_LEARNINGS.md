@@ -174,3 +174,28 @@ patterns, and verified layout/linking rules.
   The local `temp` is the whole difference between 79% (materialized address)
   and a 100% match. `volatile` on the global did NOT help here — only the
   register-held store value defeated the address CSE.
+
+- Register allocation for a load-vs-computed-value swap (IDO 5.3 -O2 -mips1):
+  For `func_8005638C` (a delta-clamp on a struct field), naming the loaded
+  value as a local (`s32 cur = arg0->unk24; s32 diff = arg1 - cur;`) made IDO
+  put the load in `$v0` and the diff in `$v1` — the opposite of the target
+  (load `$v1`, diff `$v0`). Writing it WITHOUT naming the load, reading the
+  field inline in the subtraction and using compound assignment, flipped the
+  allocation to the correct registers:
+  ```c
+  s32 diff = arg1 - arg0->unk24;
+  if (diff >= 0x2001) diff = 0x2000;
+  if (diff < -0x2000) diff = -0x2000;
+  arg0->unk24 += diff;
+  ```
+  IDO CSEs the two reads of `arg0->unk24` (the inline read and the one inside
+  `+=`) into a single `lw`, and promotes the named `diff` to the primary
+  register (`$v0`). Letting a struct-field read stay inline (un-named) rather
+  than hoisting it into a temp can be what picks the "right" home register.
+
+- To produce a `li $reg, imm; addu` pair instead of IDO folding `x + imm` into
+  `addiu x, imm`, keep the value in a named local that is reassigned
+  (`diff = -0x2000;`) and added later as register+register. A single final
+  store of the form `arg0->field += diff` (with `diff` conditionally clamped)
+  schedules the `addu` into the branch delay slot and emits `li + addu` for the
+  clamped path — matching the target's two-add structure exactly.

@@ -34,7 +34,6 @@ void func_80056070(Struct56070 *arg0);
 extern void func_80055C7C(void);
 
 extern void func_80056348(void *arg0, s32 arg1);
-extern void func_8005638C(void *arg0, s32 arg1);
 extern void func_800563C4(void *arg0, s32 arg1);
 extern void func_80056444(void *arg0, s32 arg1);
 extern void func_800564A8(void *arg0);
@@ -104,7 +103,17 @@ void func_800560F4(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_80056348.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_8005638C.s")
+void func_8005638C(Struct56070 *arg0, s32 arg1) {
+    s32 diff = arg1 - arg0->unk24;
+
+    if (diff >= 0x2001) {
+        diff = 0x2000;
+    }
+    if (diff < -0x2000) {
+        diff = -0x2000;
+    }
+    arg0->unk24 += diff;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/562B0/func_800563C4.s")
 
