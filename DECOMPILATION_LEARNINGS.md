@@ -82,3 +82,32 @@ patterns, and verified layout/linking rules.
   references.
 - YAML comments are hints, not proof. Verify actual function/file boundaries
   against disassembly, `symbol_addrs.txt`, and the linker map.
+
+## Functions split across subsegment boundaries
+
+- A function with no `jr $ra` before the next symbol is a **fall-through** into the
+  following code. If splat placed a `[addr, c]` subsegment boundary inside it, the
+  function is split into two `GLOBAL_ASM` stubs in two different `.c` files (e.g.
+  `func_80048E60` in `464E0.c` falling through into `func_80048E80` in `49A80.c`).
+  The "second" half is never reached via `jal` and its first instruction reuses a
+  register loaded at the end of the "first" half — the giveaway.
+- To merge them at the project level: move the subsegment boundary in
+  `snowboardkids.yaml` to the next real function start, add an explicit
+  `size:0xNNN` to the function in `symbol_addrs.txt` so splat extracts the whole
+  thing into one `asm/nonmatchings/<seg>/<func>.s`, rename the now-shifted
+  segment's `.c` (and its `asm/nonmatchings/` dir), and delete the obsolete
+  second-half stub and its `GLOBAL_ASM`. A single C function cannot span two
+  `.o` files, so the boundary move is mandatory.
+- IDO range-check idiom: a value passes when it is in a signed range
+  `[LO, HI)` written as two fail-fast gotos:
+  `if (d >= HI) goto next; if (d < LO) goto next;`. This compiles to
+  `slt at,d,HI; beqz at,next` then `slt at,d,LO; bnez at,next` — note the
+  mixed `beqz`/`bnez` polarity. A compound `if (d < HI && d >= LO)` instead
+  produces two `beqz`s and will not match. The goto form is required.
+- Hex literals above `0x7FFFFFFF` (e.g. `0xFA000001`) have type `unsigned int`
+  in C89 and would force an *unsigned* comparison (`sltu`). Cast to signed —
+  `(s32)0xFA000001` — so IDO emits the signed `slt` the target uses.
+- IDO's scheduler sometimes preloads a shared constant into a register at a
+  block's entry and reuses it across subsequent blocks, while the target loads
+  it lazily in a branch delay slot and reloads it per block. This is hard to
+  force from C and is good decomp-permuter territory once control flow matches.
