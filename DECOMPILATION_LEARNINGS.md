@@ -260,3 +260,24 @@ patterns, and verified layout/linking rules.
   of contiguous loads/stores only differs in temp-register naming, try folding
   them into one struct-typed assignment rather than chasing it with the
   permuter.
+
+- Capturing a compound-assignment result to control IDO load placement: for a
+  field that is incremented and then passed straight to a call
+  (`*(s32*)((u8*)arg0+0x18) += 0x28000; func(..., newval, ...)`), writing it as
+  a temp plus separate store (`newval = *p + k; *p = newval;`) makes IDO load
+  the field straight into the argument register (`$a1`) and add in place
+  (`addu a1,a1,at`). The original source instead captured the value of the
+  compound assignment itself — `temp = *(s32*)((u8*)arg0+0x18) += 0x28000;` —
+  which makes IDO load the old value into a scratch temp (`$t6`) and only then
+  add into `$a1`, matching the target. When a load feeding an argument differs
+  only by being in a scratch temp vs. the arg register, try assigning from the
+  `+=` expression rather than through a separate temp.
+
+- Pointer-local for a repeated byte-offset field access: accessing the same
+  offset twice (read then write of a u16 at 0x2A) as bare casts
+  (`*(u16*)((u8*)arg0+0x2A)`) makes IDO re-derive the address each time. Giving
+  it a named local first (`u8 *new_var = (u8*)arg0 + 0x2A; ... *(u16*)new_var`)
+  reproduces the target's single address-computation and its specific temp
+  register choice. This `new_var` spelling is already used by sibling callback
+  functions in 3A0E0.c (e.g. func_80039584), so reach for it when matching the
+  per-state callbacks in that file.
