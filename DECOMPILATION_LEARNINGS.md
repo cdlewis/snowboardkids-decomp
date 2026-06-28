@@ -151,3 +151,26 @@ patterns, and verified layout/linking rules.
   The double read of `0x54(arg0)` is intentional and required for the match.
   This is good decomp-permuter territory once the instruction sequence matches
   but a single base register differs.
+
+- When a global is both read (for a condition) and written in the same
+  function, IDO at -O2 will CSE the address into one materialized pointer
+  (`lui %hi; addiu %lo; lw 0(reg)` ... `sw 0(reg)`), reusing one register for
+  both accesses. The target may instead use the per-access idiom
+  (`lui %hi; lw %lo(reg)` with the value loaded into the SAME register that
+  held `%hi`, destroying the address) and a FRESH `lui %hi` for the store.
+  This happens when the stored value is NOT the literal `$zero` but a
+  register-held value: routing the constant through a named local
+  (`temp = 0; ... D_xxx = temp;`) prevents IDO from folding the store to
+  `sw $zero` and re-CSE-ing the address. For `func_8009FF40` (`src/9CE70.c`):
+  ```c
+  if ((osAiGetLength() >> 2) == 0) {
+      temp = 0;
+      if (D_800DF2A4 != temp) {
+          return;
+      }
+      D_800DF2A4 = temp;
+  }
+  ```
+  The local `temp` is the whole difference between 79% (materialized address)
+  and a 100% match. `volatile` on the global did NOT help here — only the
+  register-held store value defeated the address CSE.

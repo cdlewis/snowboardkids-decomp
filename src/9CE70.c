@@ -21,6 +21,7 @@ extern void *osViGetNextFramebuffer(void);
 extern void osWritebackDCacheAll(void);
 extern void osSpTaskLoad(void *);
 extern void osSpTaskStartGo(void *);
+extern u32 osAiGetLength(void);
 extern Struct800A0138 D_8015C928;
 extern s32 D_8015C964;
 extern void func_8009CD18();
@@ -30,6 +31,7 @@ extern s32 func_8009F780(void *, s32, s32, s32, s32);
 extern void func_8009FF80(void);
 extern s32 D_800DF154;
 extern s32 D_800DF158;
+extern s32 D_800DF2A4;
 extern s32 D_8015A680;
 extern s32 D_8015A620;
 extern s32 *libmus_fxheader_current;
@@ -713,7 +715,17 @@ s32 func_8009F780(void *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009FD74.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009FF40.s")
+void func_8009FF40(s32 arg0) {
+    s32 temp;
+
+    if ((osAiGetLength() >> 2) == 0) {
+        temp = 0;
+        if (D_800DF2A4 != temp) {
+            return;
+        }
+        D_800DF2A4 = temp;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009FF80.s")
 
