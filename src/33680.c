@@ -78,7 +78,18 @@ void func_80034D10(Struct33680 *arg0);
 void func_80032A80(void) {
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80032A88.s")
+void func_80032A88(void *arg0) {
+    Struct33680 *temp = arg0;
+
+    func_80041FB4(0);
+    func_800428C8(0);
+    if (temp->unk2A < 0x96) {
+        temp->unk2A += 1;
+        if (temp->unk2A == 0x96) {
+            D_8010B1A2 = 0x42;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80032AF0.s")
 
