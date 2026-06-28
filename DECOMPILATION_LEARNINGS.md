@@ -111,3 +111,26 @@ patterns, and verified layout/linking rules.
   block's entry and reuses it across subsequent blocks, while the target loads
   it lazily in a branch delay slot and reloads it per block. This is hard to
   force from C and is good decomp-permuter territory once control flow matches.
+
+## Register allocation via redundant reloads
+
+- IDO's register allocator picks colors based on its internal temp numbering,
+  not source variable identity. Two C expressions that are textually identical
+  (e.g. reading `arg0->unk54`) but written as separate source expressions can
+  compile to two distinct loads, and that extra load shifts the base pointer
+  into a different register (e.g. `$a2` instead of `$v1`) — matching the target
+  exactly. Reusing a single local (`temp_a2`) for both let IDO CSE the load and
+  produced a non-matching register assignment.
+- A matching assignment was only achieved when (a) the field was re-read inline
+  for the second use AND (b) the result was routed through a named intermediate
+  variable assigned before the store. The intermediate prevented the store
+  expression from being folded back into a form that re-CSE'd the reload.
+- Concretely, for `func_8009D308` (`src/9CE70.c`):
+  ```c
+  temp_a2 = *(u8 **)((s32)arg0 + 0x54);
+  phi = (s32)temp_a2 + (*(s32 **)((s32)(*(u8 **)((s32)arg0 + 0x54)) + 0x14))[*arg1];
+  *(s32 *)((s32)arg0 + 0x70) = phi;
+  ```
+  The double read of `0x54(arg0)` is intentional and required for the match.
+  This is good decomp-permuter territory once the instruction sequence matches
+  but a single base register differs.
