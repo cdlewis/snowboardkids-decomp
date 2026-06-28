@@ -211,3 +211,23 @@ patterns, and verified layout/linking rules.
   store of the form `arg0->field += diff` (with `diff` conditionally clamped)
   schedules the `addu` into the branch delay slot and emits `li + addu` for the
   clamped path — matching the target's two-add structure exactly.
+
+- IDO register allocation for a global's address: whether the base address of
+  a global (`lui $a0/%hi; addiu`) lands in `$a0` vs `$a1`, and which temp holds
+  a shifted index (`$t7` vs `$t8`), depends on how many times the source
+  touches the global. In a free-list "pop" (`func_80071C84`, counterpart to the
+  `stack[sp++] = node` push), the natural `return stack[--sp];` compiled to
+  `$a1`/`$t7` (98%) while the real ROM uses `$a0`/`$t8`. The fix was to re-read
+  the global after decrementing it and use *that* read as the array index:
+  ```c
+  count = D_8012193C;
+  if (count == 0) return NULL;
+  D_8012193C--;
+  return D_80121940[D_8012193C];   // re-read post-decrement value as index
+  ```
+  The extra (legitimate) memory read changes liveness and flips the allocator
+  to the target's registers — 100%. decomp-permuter could only reach 0
+  differences here by adding `volatile` + dead-code-after-return hacks; a clean
+  extra read of the global was the real solution. When stuck on pure
+  temp-register naming, try adding a *meaningful* extra access to the relevant
+  global/field rather than reaching for permuter artefacts.
