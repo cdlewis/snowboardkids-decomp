@@ -46,7 +46,18 @@ void func_80071A3C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80071A8C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80071B74.s")
+s32 func_80071B74(void) {
+    u32 ret;
+    s32 temp_v1;
+
+    temp_v1 = D_80121AF8;
+    ret = -1;
+    if (D_80121AFC == ((temp_v1 + 1) & 0x3F)) {
+        return ret;
+    }
+    (&D_80121AF8)[(D_80121AFC == ((temp_v1 + 1) & 0x3F)) * 0] = (temp_v1 + 1) & 0x3F;
+    return temp_v1;
+}
 
 s32 func_80071BB0(void) {
     u32 ret;
