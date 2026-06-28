@@ -315,7 +315,15 @@ s32 func_8009D2FC(s32 arg0, s32 arg1) {
     return arg1 + 2;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D308.s")
+void *func_8009D308(void *arg0, u8 *arg1) {
+    u8 *temp_a2;
+    s32 phi;
+
+    temp_a2 = *(u8 **)((s32)arg0 + 0x54);
+    phi = (s32)temp_a2 + (*(s32 **)((s32)(*(u8 **)((s32)arg0 + 0x54)) + 0x14))[*arg1];
+    *(s32 *)((s32)arg0 + 0x70) = phi;
+    return arg1 + 1;
+}
 
 s32 func_8009D330(void *arg0, s32 arg1) {
     *(s32 *)((s32)arg0 + 0x70) = 0;
