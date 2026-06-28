@@ -231,3 +231,17 @@ patterns, and verified layout/linking rules.
   extra read of the global was the real solution. When stuck on pure
   temp-register naming, try adding a *meaningful* extra access to the relevant
   global/field rather than reaching for permuter artefacts.
+
+- IDO register-allocation for a saved parameter: when a function needs to
+  preserve its `arg0` (`$a0`) across `jal` calls that clobber it, IDO either
+  stores `$a0` directly (`sw $a0; ... lw $v1`) or first copies it to `$a1`
+  (`move $a1,$a0; sw $a1; ... lw $a1`). The `move a1,a0` form appears when the
+  source declares the parameter as an untyped `void *arg0` and immediately
+  assigns it to a typed local (`Struct *temp = arg0;`) — the local gets
+  `$a1`. Declaring the parameter directly as the struct pointer instead makes
+  IDO keep it in `$v1` (via a plain `sw $a0`). For these per-state callback
+  functions (`func_80032A88` in 33680.c), the `void *arg0` + `temp = arg0`
+  pattern (matching the surrounding matched siblings) is the one that hits
+  100%, even though the struct-pointer signature is "cleaner". When only the
+  home register of a saved argument differs, check how sibling functions in the
+  same file spell their parameter.
