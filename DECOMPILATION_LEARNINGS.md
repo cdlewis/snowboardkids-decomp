@@ -245,3 +245,18 @@ patterns, and verified layout/linking rules.
   100%, even though the struct-pointer signature is "cleaner". When only the
   home register of a saved argument differs, check how sibling functions in the
   same file spell their parameter.
+
+- IDO struct-copy codegen for contiguous field groups: when three contiguous
+  4-byte fields (e.g. offsets 0x48/0x4C/0x50) are each copied from a matching
+  12-byte struct array element (`D_800D61C0[idx]`), the natural-looking
+  per-field source
+  (`*(s32*)(arg0+0x48)=temp->a; ...=temp->b; ...=temp->c;`) compiles with the
+  array-pointer temp in `$v0` and the load results spread across `$t9/$t0/$t1`.
+  The *original* source was a single struct assignment
+  `*(Vec3i*)((u8*)arg0+0x48) = D_800D61C0[*(u16*)((u8*)arg0+0x10)];`, which
+  makes IDO hold the element pointer in `$t9` and reuse `$at` for two of the
+  loads — 100%. This matches the established pattern already used elsewhere in
+  57EA0.c (`*(Vec3i*)((u8*)arg0+0x18) = D_800D6xxx[...]`). When a small block
+  of contiguous loads/stores only differs in temp-register naming, try folding
+  them into one struct-typed assignment rather than chasing it with the
+  permuter.
