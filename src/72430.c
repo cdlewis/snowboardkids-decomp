@@ -98,7 +98,16 @@ void func_80071BE8(Node72430 *arg0) {
     D_8012193C++;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80071C84.s")
+Node72430 *func_80071C84(void) {
+    s32 count;
+
+    count = D_8012193C;
+    if (count == 0) {
+        return NULL;
+    }
+    D_8012193C--;
+    return D_80121940[D_8012193C];
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/72430/func_80071CC0.s")
 
