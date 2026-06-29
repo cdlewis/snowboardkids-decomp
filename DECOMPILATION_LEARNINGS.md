@@ -379,3 +379,7 @@ compare). Takeaway: when an argument is spilling but the target keeps it in an
 `s`-register, try restructuring the expression that uses it (pre-increment/post-
 increment vs. explicit temp) — the read+write-in-one-expression form tends to
 raise the argument's live-range priority so IDO assigns it a saved register.
+
+## func_80033F5C (src/33680.c)
+
+Sibling functions in this state-machine file share an identical skeleton. func_80033F5C matched 100% on the first try by copying the already-matched func_80033EA4 and only changing the function scheduled by func_80071824 (func_80033EA4 instead of func_80033E54). When a function sits next to an already-matched near-twin, mirroring its source form is the fastest path to a match.
