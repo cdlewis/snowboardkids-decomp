@@ -519,7 +519,23 @@ void func_80033EA4(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80033F5C.s")
+void func_80033F5C(Struct33680 *arg0) {
+    if (D_8010B1A4 == 4) {
+        D_8010B1A4 = 0;
+        func_80041DD4(0, 0x2B);
+    }
+    if (D_8010B1A4 == 0) {
+        func_80041FB4(0);
+        if (func_80041FB4(0) == 1) {
+            D_8010B1A4 += 1;
+            if (++arg0->unk2A == 5) {
+                func_80071824((s32) arg0, func_80033EA4);
+                arg0->unk2A = 0;
+            }
+        }
+    }
+    func_800428C8(0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80034014.s")
 
