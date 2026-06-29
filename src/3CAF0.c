@@ -64,6 +64,7 @@ extern s16 D_8010B1A6;
 extern u16 D_8010B1D0;
 extern u16 D_800B9530[];
 extern u16 D_800B9538[];
+extern s32 D_8010ADDC;
 
 void func_8003BF7C(Struct3CAF0 *arg0);
 void func_8003C180(Struct3CAF0b *arg0);
@@ -85,6 +86,7 @@ void func_8003CAD8(Struct3CAF0 *arg0);
 void func_8003CC58(Struct3CAF0 *arg0);
 void func_8003CF98(Struct3CAF0 *arg0);
 void func_8003D124(Struct3CAF0 *arg0);
+Struct3CAF0 *func_80071408(void *, s32, s32);
 
 void func_8003BEF0(Struct3CAF0 *arg0) {
     func_8000F030(arg0->unk18 + arg0->unk1C, arg0->unk1A + arg0->unk1E, func_80043040(D_80112172), ((u16) arg0->unk20 + 0x32) & 0xFFFF, 0x20, 0x20, ((u8 *) &arg0->unk24)[1], 0);
@@ -195,7 +197,12 @@ void func_8003CB4C(Struct3CAF0 *arg0) {
     func_80071824(arg0, func_8003CAD8);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003CB78.s")
+void func_8003CB78(s16 arg0, s16 arg1) {
+    Struct3CAF0 *temp_v0 = (Struct3CAF0 *)(D_8010ADDC = (s32)func_80071408(func_8003CB4C, 0, 0x64));
+
+    temp_v0->unk18 = arg0;
+    temp_v0->unk1A = arg1;
+}
 
 void func_8003CBCC(Struct3CAF0 *arg0) {
     func_8000F030(arg0->unk18 + arg0->unk1C, arg0->unk1A + arg0->unk1E, func_80043040(D_80112172), ((u16) arg0->unk20 + 0x20) & 0xFFFF, 0x20, 0x20, ((u8 *) &arg0->unk24)[1], 0);
@@ -241,7 +248,12 @@ void func_8003D03C(Struct3CAF0 *arg0) {
     func_80071824(arg0, func_8003CF98);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003D068.s")
+void func_8003D068(s16 arg0, s16 arg1) {
+    Struct3CAF0 *temp = (Struct3CAF0 *)(D_8010ADDC = (s32)func_80071408(func_8003D03C, 0, 0x64));
+
+    temp->unk18 = arg0;
+    temp->unk1A = arg1;
+}
 
 void func_8003D0BC(Struct3CAF0c *arg0) {
     s32 temp;

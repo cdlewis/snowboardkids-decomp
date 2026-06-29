@@ -425,3 +425,24 @@ func_80039610 source form:
 Takeaway: when only register names differ in a u16 read-modify-write counter,
 reach for the permuter — and prefer the masked-load + pointer-variable form
 that the file's already-matched twins use.
+
+## func_800716A4 (src/71AC0.c)
+
+`func_800716A4` is sensitive to the signedness of the halfword field written at
+offset `0x10`. With a typed struct field declared as `u16`, IDO 5.3 scheduled
+the fourth-argument save before the call and put `move a1,t6` in the call delay
+slot. Declaring the field as `s16` produced the target order:
+
+```c
+void *t = func_800711D0(arg0, arg1 & 0xFFFF, arg2);
+if (t != NULL) {
+    obj->unk10 = arg3;
+}
+```
+
+which emits `move a1,t6` before the `jal` and uses `sw a3,0x24(sp)` in the delay
+slot. The verified source also keeps the matched compact initializer/null-check
+shape; splitting the code into separate assignment-style statements changed the
+same call setup scheduling. Takeaway: when a struct field store is a matching
+`sh` but call scheduling differs, check field signedness and small source-shape
+changes before falling back to raw pointer offsets.
