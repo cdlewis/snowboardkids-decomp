@@ -15,12 +15,16 @@ patterns, and verified layout/linking rules.
 - If a near-perfect match differs mainly by saved-register choices versus
   temp-register-plus-spill choices, try the optimization level used by the
   surrounding object before forcing source changes.
-- IDO homes narrow (`char`/`unsigned char`/`u8`) parameters to their stack slot
+- IDO homes narrow (`char`/`unsigned char`/`u8`/`s16`/`u16`) parameters to their stack slot
   at function entry even in a frame-less leaf: declaring a parameter as
   `unsigned char` instead of `s32` emits a dead `sw $aN, K($sp)` of the incoming
   register followed by an `andi` to recover the clean byte. This is the source
   of the otherwise-mysterious dead argument-store-with-no-prologue pattern.
   Match it by typing the parameter as the narrow type the callee semantically
+  uses. This also fires for `s16`/`u16`: an `s16` parameter used directly in a
+  full-width `subu` still emits a lone dead `sw $a1, 4($sp)` with no `andi`
+  recovery, because IDO only inserts the narrowing reload when the value is
+  reloaded rather than reused straight from the home register (func_80056348).
   uses, not the wider type the caller passes.
 - IDO's `-O2` memset loop idiom (unrolling with an `& 3` remainder loop) is NOT
   triggered by a `while (n--) *p++ = c;` form — that compiles to a plain
