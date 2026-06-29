@@ -26,7 +26,6 @@ extern void func_8003524C(Struct35E20 *arg0);
 extern void func_80035320(Struct35E20 *arg0);
 extern void func_800354BC(void);
 extern void func_8003556C(Struct35E20 *arg0);
-extern void func_800357E8(Struct35E20 *arg0);
 extern void func_80035990(Struct35E20 *arg0);
 extern void func_80035A2C(Struct35E20 *arg0);
 extern void func_80035AA4(Struct35E20 *arg0);
@@ -195,7 +194,21 @@ void func_800357A4(Struct35E20 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/35E20/func_800357E8.s")
+void func_800357E8(Struct35E20 *arg0) {
+    s32 var_a1;
+
+    func_80042034(1);
+    arg0->unk18 += 0xFFFB8000;
+    var_a1 = arg0->unk18;
+    if (var_a1 < (s32)0xFE700001) {
+        arg0->unk18 = -0x1900000;
+        func_80071824((s32)arg0, (void (*)(void))func_800357A4);
+        D_8010B1A2 = 0x33;
+        var_a1 = arg0->unk18;
+    }
+    func_8004209C(1, var_a1, arg0->unk1C, arg0->unk20);
+    func_800428C8(1);
+}
 
 void func_80035878(Struct35E20 *arg0) {
     if (func_80041FB4(1) == 0) {
