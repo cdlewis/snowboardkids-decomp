@@ -378,7 +378,17 @@ s32 func_8009D40C(void *arg0, u8 *arg1) {
     return (s32)(arg1 + 1);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D45C.s")
+s32 func_8009D45C(void *arg0, u8 *arg1) {
+    u8 temp_a0;
+    s8 temp_v0;
+
+    temp_a0 = *arg1;
+    arg1++;
+    temp_v0 = func_8009F4C8(temp_a0, arg1, arg0);
+    *(s8 *)((u8 *)arg0 + 0xF2) = temp_v0;
+    *(s8 *)((u8 *)arg0 + 0xF2) = *arg1 + (temp_a0 = temp_v0);
+    return (s32)(arg1 + 1);
+}
 
 s32 func_8009D4AC(void *arg0, u8 *arg1) {
     *(u8 *)((u8 *)arg0 + 0xEF) = *arg1;
