@@ -299,3 +299,28 @@ for a 100% match, both forced by the permuter and semantically harmless:
 
 So when a u8 load feeding a bitwise-OR won't take the right register, route the
 pointer through a named `u8 *new_var = ...` temp before the dereference.
+
+### func_8009D40C (9CE70.c, byte-transform-then-add event handler)
+
+Sibling of func_8009D3BC/func_8009D45C: reads a byte, calls `func_8009F4C8`,
+stores the result, then stores `result + next_byte` to a struct field (0xEF here,
+0x118 / 0xF2 in the siblings). Unlike func_8009D3BC (which re-reads the field
+from memory and so emits an `lb` reload), this target keeps the result live in a
+register (`move t6,v0`) and reuses it for the add.
+
+A clean two-temp version (`temp_v0` for the result, used in both stores) matches
+at 98.7% but IDO allocates the result to `t8` and the second byte to `t6` — the
+opposite of the target's `t6`/`t7`/`t8` sequence. The fix is to route the result
+through the byte temp inside the add expression:
+
+```c
+*(s8 *)((u8 *)arg0 + 0xEF) = *arg1 + (temp_a0 = temp_v0);
+```
+
+The inline assignment-expression `(temp_a0 = temp_v0)` makes the result value
+flow through `temp_a0`'s register home (which IDO allocated as `t6`, the first
+temp), reproducing `move t6,v0` / `lbu t7,0(a1)` / `addu t8,t6,t7` exactly. A
+separate statement (`temp_a0 = temp_v0;` on its own line) does NOT work — the
+assignment must be inlined into the RHS of the add. Same pattern as the
+func_8009CCC0 note above: when a value feeds an arithmetic op but lands in the
+wrong register, route it through a named temp inline within the expression.
