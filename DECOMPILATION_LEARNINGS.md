@@ -403,3 +403,25 @@ Two notes:
   to the `lhu/addiu/andi 0xFFFF/sh/bne` sequence (the `andi` mask is only for
   the compare; the store uses the unmasked increment). No temporary variable
   needed — the field read-modify-write form reproduces it directly.
+
+## func_8003969C (src/3A0E0.c)
+
+State-machine sibling of func_80039610/func_80039584. Matched 100% via the
+permuter after a 98.6% hand attempt. The remaining differences were pure
+register allocation in the `lhu/addiu/andi/sh/bne` counter block and the
+`unk20 += 0x80000` else-branch.
+
+Two changes flipped it to a perfect match, both mirroring the already-matched
+func_80039610 source form:
+
+- Mask the load explicitly: `(*(u16*)(... + 0x2A) & 0xFFFF) + 1` rather than
+  `*(u16*)(...) + 1`. IDO only emits the `andi t8,t7,0xffff` on the compare
+  when the source masks the *load*; an unmasked load let IDO keep the value in
+  `$v0` instead of `$t6`.
+- Store through a fresh `u16 *new_var = (u16*)(... + 0x2A)` pointer and compare
+  against an `unsigned int new_var2 = 0xFFFF` variable (not a literal). This
+  pins the exact `t6/t7/t8` (and `t8/t9/t0` in the else) register sequence.
+
+Takeaway: when only register names differ in a u16 read-modify-write counter,
+reach for the permuter — and prefer the masked-load + pointer-variable form
+that the file's already-matched twins use.
