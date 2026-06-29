@@ -3,8 +3,11 @@
 typedef struct {
     char pad[0x18];
     s32 unk18;
-    char pad1C[4];
+    s32 unk1C;
     s32 unk20;
+    char pad24[0xA];
+    u16 unk2E;
+    u16 unk30;
 } Struct3A0E0;
 
 typedef struct {
@@ -254,7 +257,19 @@ void func_8003A010(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_8003A078.s")
+void func_8003A078(Struct3A0E0 *arg0) {
+    s32 var_a1;
+
+    func_80042034(3);
+    var_a1 = arg0->unk18 += 0xFFFD8000;
+    if (var_a1 < 0x800001) {
+        arg0->unk18 = 0x800000;
+        func_80071824((s32)arg0, func_8003A010);
+        var_a1 = arg0->unk18;
+    }
+    func_8004209C(3, var_a1, arg0->unk1C, arg0->unk20);
+    func_8004298C(3, arg0->unk2E, arg0->unk30, 0xB);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_8003A108.s")
 
