@@ -281,3 +281,21 @@ patterns, and verified layout/linking rules.
   register choice. This `new_var` spelling is already used by sibling callback
   functions in 3A0E0.c (e.g. func_80039584), so reach for it when matching the
   per-state callbacks in that file.
+
+### func_8009CCC0 (variable-length sequence value reader, 9CE70.c)
+
+Reads a 1- or 2-byte value: if the first byte's high bit is set, the value is
+`((b0 & 0x7F) << 8) | b1`, else just `b0`. Stored as `u16` at `arg0 + 0xCC`;
+returns the advanced read pointer. Two register-allocation artifacts were needed
+for a 100% match, both forced by the permuter and semantically harmless:
+
+- The byte-shift must be written as `((v & 0x7F) << 1) << 7`, not `(v & 0x7F)
+  << 8`. The single `<< 8` reorders the `andi`/`sll` temp allocation; the split
+  shift reproduces the target's `andi t7,v0,0x7f` / `sll t9,t7,0x8` exactly.
+- The second byte load must go through an assigned temp:
+  `v |= *(new_var = arg1)`. A plain `v |= *arg1` allocates the load into a
+  different register. Assigning the pointer to `new_var` first forces IDO to
+  materialize the address into the same register the target uses (`lbu t0`).
+
+So when a u8 load feeding a bitwise-OR won't take the right register, route the
+pointer through a named `u8 *new_var = ...` temp before the dereference.
