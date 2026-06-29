@@ -351,3 +351,31 @@ exactly. This is the same idiom already used throughout `src/33680.c`
 (`func_80032C74`, `func_80033D0C`, `func_80033D64`, `func_800340D8`) for the
 "call `func_80041FB4`, then `func_800428C8`, then test the saved result" pattern.
 See `func_80032AF0`.
+
+## IDO s0 vs stack-spill for an argument: pre-increment ties arg0 to s0
+
+In `func_80033EA4` (src/33680.c), the argument `arg0` (a struct pointer) is used
+4 times, all deep inside nested `if`s after several calls. IDO 5.3 chose to keep
+it in callee-saved `$s0` (`move s0,a0` at the prologue, 0x20 frame, s0 saved at
+0x18(sp)). Writing the field update as a separate temp (`newval = arg0->unk2A + 1;
+arg0->unk2A = newval; if (newval == 5)`) caused IDO to instead **spill arg0 to the
+stack** (`sw a0,0x18(sp)` + reloads) — a ~15-line cascade of register/frame
+differences even though the logic was identical.
+
+The fix was the pre-increment form, which both reads and writes `arg0->unk2A` in
+one expression and is compared directly:
+
+```c
+if (++arg0->unk2A == 5) {
+    func_80071824((s32) arg0, func_80033E54);
+    arg0->unk2A = 0;
+}
+```
+
+This made IDO pin `arg0` to `$s0` and reproduce the exact target register
+allocation (including the `lhu t8 / addiu t9 / andi t0 / sh t9` sequence — note
+the store uses the unmasked increment result, and the mask is only for the
+compare). Takeaway: when an argument is spilling but the target keeps it in an
+`s`-register, try restructuring the expression that uses it (pre-increment/post-
+increment vs. explicit temp) — the read+write-in-one-expression form tends to
+raise the argument's live-range priority so IDO assigns it a saved register.
