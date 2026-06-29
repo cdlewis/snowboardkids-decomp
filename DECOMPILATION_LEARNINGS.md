@@ -383,3 +383,19 @@ raise the argument's live-range priority so IDO assigns it a saved register.
 ## func_80033F5C (src/33680.c)
 
 Sibling functions in this state-machine file share an identical skeleton. func_80033F5C matched 100% on the first try by copying the already-matched func_80033EA4 and only changing the function scheduled by func_80071824 (func_80033EA4 instead of func_80033E54). When a function sits next to an already-matched near-twin, mirroring its source form is the fastest path to a match.
+
+## func_80034AB0 (src/33680.c)
+
+Matched 100% on the first try by mirroring the sibling state-machine pattern.
+Two notes:
+
+- The asm calls `func_80071408(func_8003C870, 0, 0x64)` with **3 args**, even
+  though `$a3` still holds `arg0` at the call site. IDO simply leaves the
+  incoming `arg0` in `$a3` and never clears it; the callee only consumes
+  `$a0`-`$a2`. So do NOT pass a phantom 4th argument — the project-wide
+  signature is `void *func_80071408(void *, s32, s32)`. A stale `$a3` at a call
+  is not evidence of a 4th parameter.
+- The `u16` counter pattern `arg0->unk2A += 1; if (arg0->unk2A == N)` compiles
+  to the `lhu/addiu/andi 0xFFFF/sh/bne` sequence (the `andi` mask is only for
+  the compare; the store uses the unmasked increment). No temporary variable
+  needed — the field read-modify-write form reproduces it directly.
