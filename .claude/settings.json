@@ -6,27 +6,27 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/block-unverified-commits.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-unverified-commits.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-make-command.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-make-command.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-splat-split.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-splat-split.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-ctx-file.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-ctx-file.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-temp-file.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-temp-file.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-asm-processor-edits.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-asm-processor-edits.sh'"
           }
         ]
       },
@@ -35,11 +35,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/block-ctx-file.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-ctx-file.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-temp-file.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-temp-file.sh'"
           }
         ]
       },
@@ -48,23 +48,23 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/block-ctx-file.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-ctx-file.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-temp-file.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-temp-file.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-asm-edits.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-asm-edits.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-asm-processor-edits.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-asm-processor-edits.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-sha1-edits.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-sha1-edits.sh'"
           }
         ]
       },
@@ -73,23 +73,23 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/block-ctx-file.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-ctx-file.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-temp-file.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-temp-file.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-asm-edits.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-asm-edits.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-asm-processor-edits.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-asm-processor-edits.sh'"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/block-sha1-edits.sh"
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-sha1-edits.sh'"
           }
         ]
       }

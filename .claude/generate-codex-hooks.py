@@ -34,7 +34,11 @@ def repo_relative_command(command: str) -> str:
     `.codex -> .claude` symlink.
     """
     if command.startswith(".codex/"):
-        return ".claude/" + command[len(".codex/") :]
+        command = ".claude/" + command[len(".codex/") :]
+
+    if command.startswith(".claude/"):
+        return f"bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && {command}'"
+
     return command
 
 
