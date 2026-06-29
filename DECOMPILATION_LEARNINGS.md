@@ -324,3 +324,30 @@ separate statement (`temp_a0 = temp_v0;` on its own line) does NOT work — the
 assignment must be inlined into the RHS of the add. Same pattern as the
 func_8009CCC0 note above: when a value feeds an arithmetic op but lands in the
 wrong register, route it through a named temp inline within the expression.
+
+### `struct { s32 ret; s32 pad; }` for spilled call results (IDO stack layout)
+
+When a function spills a single `s32` local across a call (e.g. the return value
+of `func_80041FB4` held while `func_800428C8` runs), IDO 5.3 places the local at
+`0x24(sp)` — but the original target places it at `0x20(sp)`. The 4-byte
+difference is a stack-layout mismatch that costs ~0.25% even though every
+instruction otherwise matches.
+
+The fix is to declare the spilled result as a two-word local:
+
+```c
+struct {
+    s32 ret;
+    s32 pad;
+} l;
+
+l.ret = func_80041FB4(0);
+func_800428C8(0);
+if (l.ret == 1) { ... }
+```
+
+The extra `pad` member shifts IDO's local allocation so `ret` lands at `0x20(sp)`
+exactly. This is the same idiom already used throughout `src/33680.c`
+(`func_80032C74`, `func_80033D0C`, `func_80033D64`, `func_800340D8`) for the
+"call `func_80041FB4`, then `func_800428C8`, then test the saved result" pattern.
+See `func_80032AF0`.
