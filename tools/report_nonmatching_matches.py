@@ -19,6 +19,7 @@ from typing import Iterable
 
 
 MATCH_LINE_RE = re.compile(r"(?P<filename>[A-Za-z0-9_./-]+\.c)\s+(?P<percent>\d+(?:\.\d+)?)\s*%")
+ASM_LABEL_RE = re.compile(r"^\s*(?:glabel|dlabel)\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b", re.MULTILINE)
 FULL_MATCH_PERCENT = 100.0
 
 
@@ -42,7 +43,16 @@ def matched_function_names(repo_root: Path) -> set[str]:
     matchings_dir = repo_root / "asm" / "matchings"
     if not matchings_dir.is_dir():
         return set()
-    return {path.stem for path in matchings_dir.rglob("*.s")}
+
+    names: set[str] = set()
+    for path in matchings_dir.rglob("*.s"):
+        names.add(path.stem)
+        try:
+            text = path.read_text(errors="ignore")
+        except OSError:
+            continue
+        names.update(match.group("name") for match in ASM_LABEL_RE.finditer(text))
+    return names
 
 
 def parse_match_log(log_path: Path, repo_root: Path) -> Iterable[MatchResult]:
