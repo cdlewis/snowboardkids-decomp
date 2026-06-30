@@ -2,14 +2,21 @@
 
 typedef s32 OSId;
 typedef s32 OSPri;
+typedef void *OSMesg;
 
+struct OSMesgQueue_s;
 struct OSThread_s;
 
-extern void osInitialize(void);
-extern void osCreateThread(struct OSThread_s *, OSId, void (*)(void *), void *, void *, OSPri);
-extern void osStartThread(struct OSThread_s *);
+typedef struct OSMesgQueue_s OSMesgQueue;
+typedef struct OSThread_s OSThread;
 
-extern struct OSThread_s D_801237B0;
+extern void osInitialize(void);
+extern void osCreatePiManager(OSPri, OSMesgQueue *, OSMesg *, s32);
+extern void osCreateThread(OSThread *, OSId, void (*)(void *), void *, void *, OSPri);
+extern void osStartThread(OSThread *);
+extern void osSetThreadPri(OSThread *, OSPri);
+
+extern OSThread D_801237B0;
 extern u8 D_80324480[];
 extern void func_800996FC(void *);
 
@@ -24,7 +31,21 @@ void main(void *arg) {
     osStartThread(&D_801237B0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9A2A0/func_800996FC.s")
+extern OSMesgQueue D_80123CC0;
+extern OSMesg D_80123CD8[];
+extern OSThread D_80123960;
+extern u8 D_80328480[];
+extern void func_800998E4(void *);
+
+void func_800996FC(void *arg) {
+    osCreatePiManager(0x96, &D_80123CC0, D_80123CD8, 0xC8);
+    osCreateThread(&D_80123960, 2, func_800998E4, arg, D_80328480, 0xA);
+    osStartThread(&D_80123960);
+    osSetThreadPri(0, 0);
+    while (1) {
+        ;
+    }
+}
 
 extern void func_80000450(void);
 extern void func_80042C28(void);
@@ -41,7 +62,6 @@ extern void func_8009CA60(void *, void *, void *);
 extern void func_80072C30(void);
 
 typedef struct OSMesgQueue_s OSMesgQueue;
-typedef void *OSMesg;
 
 extern OSMesgQueue D_80123FF8;
 extern OSMesg D_80124010[1];
