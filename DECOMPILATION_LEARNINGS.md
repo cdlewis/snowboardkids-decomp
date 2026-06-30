@@ -508,3 +508,7 @@ sw   a3,0x24(sp)  ; delay slot
 ```
 
 Both are valid (the `move a1,t6` arg-setup and the `sw a3` spill are independent candidates for the `jal` delay slot), but IDO's delay-slot filler picks a different candidate depending on the source layout — the multi-line version fills the slot with `move`, the one-line version with `sw`. The choice is sensitive purely to whitespace/line structure, not to semantics. Its sibling `func_800716A4` (identical structure, calls `func_800711D0`) is already checked in as a one-liner and matches; writing `func_80071664` in the same one-line style yields a perfect match. When two structurally identical wrapper functions sit in the same file, prefer keeping them in the same source style.
+
+## Signed vs unsigned comparison constants > INT_MAX (IDO 5.3)
+
+When a comparison literal exceeds `INT_MAX` (e.g. `0xFF600001`), IDO 5.3 treats it as unsigned, so `var_a1 < 0xFF600001U` (with `var_a1` a signed `s32`) emits **`sltu`**. To force a **signed** `slt`, write the constant as its negative decimal/hex equivalent instead: `0xFF600001` as a signed 32-bit value is `-0x9FFFFF`, so `var_a1 < -0x9FFFFF` produces `slt`. This came up matching `func_8003A3E0` (sibling of `func_8003A078`, which uses in-range constants `0x800000`/`0x800001` and naturally emits `slt`). Note the surrounding reset store `arg0->unk18 = 0xFF600000` still emits a clean `lui t8,0xff60` even with the out-of-range literal, so only the comparison needs the signed form.
