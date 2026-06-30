@@ -606,3 +606,35 @@ Takeaways:
 - decomp-permuter confirmed the structural fix; its `& 0xFFFFFFFFFFFFFFFF` /
   `new_var` outputs were artefacts — the pre-increment + cast form is the clean
   equivalent.
+
+## Inter-function alignment nops in isolated workspace builds
+
+When matching `func_800996FC` (a `main`-like idle/thread-spawn function), the
+isolated workspace (`./build.sh base.c`) scored 97.2% with exactly one
+difference: the target had one extra trailing `nop` that mine lacked. The
+function body was otherwise byte-identical.
+
+Cause: the extra `nop` is **inter-function alignment padding**, not part of the
+function's logic. IDO pads each function so the *next* function starts on a
+16-byte boundary. `func_800996FC` ends at `0x9A38C` (not 16-aligned), so IDO
+appends one `nop` to push `func_80099790` (the following function) to
+`0x9A390` (16-aligned). In the isolated workspace there is no following
+function, so IDO never emits that pad — it's an artifact of single-function
+extraction, not of the C source.
+
+Takeaway: if a workspace diff shows *only* trailing `nop`(s) and the rest is
+identical, the source is correct. Integrate it into the real source file and run
+`./tools/build-and-verify.sh` — the real (multi-function) build emits the
+alignment pad automatically and the SHA1 will match. Don't try to force extra
+nops via C.
+
+## osCreatePiManager / idle-loop bootstrap pattern
+
+`func_800996FC` is the main-game thread entry: it creates the PI manager
+(`osCreatePiManager(0x96, cmdQ, cmdBuf, 0xC8)`), spins up the game thread on
+`func_800998E4`, starts it, drops its own priority to 0
+(`osSetThreadPri(0, 0)`), then idles forever (`while (1) { ; }`). The infinite
+loop + unreachable epilogue (`lw ra; addiu sp; jr ra`) is emitted by IDO as
+dead code after the loop — write it as a plain `while (1)` and let IDO handle
+the epilogue. `osSetThreadPri(0, 0)` uses `0` (not `NULL`) as the thread arg to
+match `move a0, zero`.
