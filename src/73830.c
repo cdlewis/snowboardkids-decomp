@@ -191,7 +191,34 @@ void func_800734A0(void) {
     func_80099614(2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_800734E4.s")
+extern void func_800735B4(void);
+extern void func_80073650(void);
+extern void func_80073694(void);
+
+void func_800734E4(void) {
+    if (D_801235B4 == 1) {
+        D_801235B4 = 0;
+        func_8009956C(&func_80073308, 0);
+        return;
+    }
+    switch (D_800EC9C2) {
+    case 0:
+    case 2:
+        func_8009956C(&func_80073738, 0);
+        return;
+    case 1:
+        func_8009956C(&func_800735B4, 0);
+        return;
+    case 3:
+        func_8009956C(&func_80073650, 0);
+        return;
+    case 4:
+        func_8009956C(&func_80073694, 0);
+        /* fallthrough */
+    default:
+        return;
+    }
+}
 
 extern void func_800086EC(void);
 extern void func_800735F8(void);
