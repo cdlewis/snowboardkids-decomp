@@ -682,3 +682,27 @@ Key codegen note: a first attempt using a named local (`var_a1 = *(...0x18) +
 giving 100%. When a sibling already matches, port its C idioms verbatim rather
 than re-deriving; named temporaries change register allocation enough to cost
 the match even when the logic is identical.
+
+`func_800354BC` (in `35E20.c`) is another member of the same callback family,
+sibling to `func_8003542C`. It branches on the `0x2A` u16 counter being `< 5`
+to pick a direction (`1` or `-1`), then adds `0x76000` to `unk18` and
+`var_v0 << 19` to `unk1C`, before the usual `func_8004209C`/`func_800428C8`
+tail and a `sp20 == 1` state transition into `func_8003542C`.
+
+Two codegen notes from matching it:
+
+- **Stack slot for the saved return value:** the target stores the
+  `func_80041FB4(1)` result at `0x20(sp)`, not `0x24(sp)`. Declaring an
+  `s32 unused;` before `s32 sp20;` (mirroring `func_8003542C`) reserves the
+  `0x24` slot and pushes `sp20` down to `0x20`. A single spilled local with no
+  `unused` lands at `0x24` and costs ~0.2%.
+
+- **Reading `unk2A` inline vs. a named temp:** a first attempt used a
+  `u16 temp_v1 = arg0->unk2A;` local read once at the top and reused for both
+  the `< 5` comparison and the `+1` store. That landed at 99.2% — the only
+  diffs were register names (`v1` vs `t0`, `t1` vs `t2`, `t2` vs `t3`). Writing
+  the comparison directly on the field (`if (arg0->unk2A < 5)`) and the store
+  as `arg0->unk2A = arg0->unk2A + 1;` (no named temp) lets IDO CSE the two
+  reads into the single `lhu $v1` the target uses, and the register allocation
+  falls into place for 100%. As with the `func_8003AFC0` note: named
+  temporaries perturb register allocation even when semantically identical.
