@@ -27,7 +27,7 @@ extern void func_800367A8(void);
 extern void func_800368BC(void *);
 extern void func_80036930(Actor36F80 *);
 extern void func_80036A4C(Actor36F80 *);
-extern void func_80036B54(void);
+extern void func_80036B54(Actor36F80 *);
 extern void func_80036DAC(s32);
 extern void func_80036C8C(s32);
 extern void func_80036E58(s32);
@@ -245,7 +245,21 @@ void func_80036AC4(Actor36F80 *arg0) {
     func_800428C8(4);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/36F80/func_80036B54.s")
+void func_80036B54(Actor36F80 *arg0) {
+    if (func_80041FB4(4) == 0) {
+        s32 var_v0 = (arg0->unk2A < 5) ? 1 : -1;
+
+        arg0->unk1C += var_v0 * 0x3E000;
+        arg0->unk18 += (s32)0xFFF60000;
+        func_8004209C(4, arg0->unk18, arg0->unk1C, arg0->unk20);
+    } else {
+        arg0->unk1C = 0x6C000;
+        func_8004209C(4, arg0->unk18, 0x6C000, arg0->unk20);
+        func_80071824((s32)arg0, (void (*)(void))func_80036AC4);
+        func_80041DD4(4, 9);
+    }
+    func_800428C8(4);
+}
 
 void func_80036C14(s32 arg0) {
     if (D_8010B1A2 < 0xA) {
