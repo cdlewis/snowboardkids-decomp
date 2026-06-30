@@ -40,7 +40,7 @@ typedef struct {
 void func_80032B94(void *arg0);
 void func_80032BF0(void *arg0);
 void func_80032C74(Struct33680 *arg0);
-void func_80032D7C(void);
+void func_80032D7C(Struct33680 *arg0);
 void func_80032F3C(void);
 void func_800342D8(s32 arg0);
 void func_80034328(void *arg0);
@@ -167,7 +167,31 @@ void func_80032CF4(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80032D7C.s")
+void func_80032D7C(Struct33680 *arg0) {
+    s32 unused;
+    s32 sp20;
+    s32 var_v0;
+
+    sp20 = func_80041FB4(0);
+    if (arg0->unk2A < 5) {
+        var_v0 = 1;
+    } else {
+        var_v0 = -1;
+    }
+    arg0->unk18 += 0x80000;
+    arg0->unk1C += var_v0 * 0x80000;
+    arg0->unk2A = arg0->unk2A + 1;
+    if (arg0->unk2A == 2) {
+        D_8010B1A2 = 0x3C;
+    }
+    func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
+    func_800428C8(0);
+    if (sp20 == 1) {
+        arg0->unk2A = 0;
+        func_80071824((s32) arg0, func_80032CF4);
+        func_80041DD4(0, 0x21);
+    }
+}
 
 void func_80032E48(Struct33680 *arg0) {
     func_80042034(0);
