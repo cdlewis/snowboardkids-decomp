@@ -828,3 +828,36 @@ func_8004209C(4, arg0->unk18, arg0->unk1C, arg0->unk20);
 100%. decomp-permuter could not improve the 99.79% version — it only emitted
 same-score `& 0xFFFF...` noise — confirming this is best solved by hand via
 the compound-assignment idiom.
+
+### func_80045990 (IDO 5.3): `short`-typed array index produces a dead `addiu`
+
+`func_80045990` is a near-twin of the already-matched `func_800459D4` in the
+same file (`src/464E0.c`): both index an 8-byte-element table at `arg0+8`,
+compute `temp_v0 = arg0 + *(s32*)(arg0+4)*8`, then `temp_v0 += 8`. The
+difference is that `func_80045990` reads its shift amount from the table
+(`lhu 0xC(temp_v1) << 5`) instead of taking it as a `u16` argument, so it has
+one fewer parameter.
+
+Two non-obvious codegen facts:
+
+1. The dummy `sw a1, 4(sp)` (no stack frame, stores into the caller's home
+   area) appears because the index parameter is `u16`, not `s32`. With a `u16`
+   parameter IDO emits `andi t6,a1,0xffff` *and* the dead `sw a1,4(sp)`; with
+   `s32` + an explicit `& 0xFFFF` it emits only the `andi`. Declaring the index
+   `u16` (matching `func_800459D4`) reproduces the store exactly.
+
+2. The function ends with a dead `addiu v1, v1, 8` (v1 holds `temp_v1`). This
+   is *not* reproducible with `temp_v1[1].field` indexing — that folds the +8
+   into the load displacement (`lw 8(v1)`, `lhu 0xc(v1)`) and emits no trailing
+   addiu. The trigger is indexing with a **`short`-typed variable**:
+   ```c
+   short idx = 1;
+   *arg2  = (void *)(arg0 + temp_v1[idx].unk0);
+   *arg3 = (void *)((temp_v1[idx].unk4 << 5) + temp_v0);
+   ```
+   IDO materializes `temp_v1 + idx*8` for the `short` index but leaves the
+   loads as `8(v1)`/`0xc(v1)`, so the pointer bump survives as a dead
+   `addiu v1,v1,8` in the delay-slot region. decomp-permuter found this; it was
+   not derivable by hand. Lesson: when a function matches except for a trailing
+   dead pointer-arithmetic instruction, try a `short`/`char`-typed index
+   variable before anything else.
