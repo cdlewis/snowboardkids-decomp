@@ -765,3 +765,16 @@ fix was to retype the function parameter to the existing `Struct3CAF0d`
 (`u16` at `0x1C`/`0x1E`) — same trick `func_8003D2F4` already uses. The
 callback is passed to `func_80071824(void *, void *)`, so changing the
 parameter type needed no cast at the call site.
+
+`func_8003C7E4` (in `3CAF0.c`) is another timer/animation-step callback in the
+`3CAF0` family (sibling: `func_8003D2F4`). Shape: `arg0->unk18++`,
+`arg0->unk1A--`, `arg0->unk1E++`; when `unk1E == 3` reset to `0` and bump
+`unk1C++;` then if `unk1C == 6` call `func_800716E4(arg0)`, else
+`func_800483FC(&D_80124868, func_8003C77C, arg0)`. Matched 100% on the first
+real attempt by mirroring `func_8003D2F4`'s style (`temp_a2 = arg0`, plain
+post-increment, plain `==`, plain `++`, no `& 0xFFFF` masks). Same as
+`func_8003CAD8`: the `lhu` loads of `unk1E`/`unk1C` require those fields to be
+`u16`, so the parameter was retyped to the existing `Struct3CAF0d` view (which
+has `u16` at `0x1C`/`0x1E` and `s16` at `0x18`/`0x1A`, matching the mixed
+`lh`/`lhu` access pattern). Note `unk18`/`unk1A` are loaded signed (`lh`) so
+they stay `s16`; only `0x1C`/`0x1E` are `u16`.
