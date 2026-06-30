@@ -512,3 +512,24 @@ Both are valid (the `move a1,t6` arg-setup and the `sw a3` spill are independent
 ## Signed vs unsigned comparison constants > INT_MAX (IDO 5.3)
 
 When a comparison literal exceeds `INT_MAX` (e.g. `0xFF600001`), IDO 5.3 treats it as unsigned, so `var_a1 < 0xFF600001U` (with `var_a1` a signed `s32`) emits **`sltu`**. To force a **signed** `slt`, write the constant as its negative decimal/hex equivalent instead: `0xFF600001` as a signed 32-bit value is `-0x9FFFFF`, so `var_a1 < -0x9FFFFF` produces `slt`. This came up matching `func_8003A3E0` (sibling of `func_8003A078`, which uses in-range constants `0x800000`/`0x800001` and naturally emits `slt`). Note the surrounding reset store `arg0->unk18 = 0xFF600000` still emits a clean `lui t8,0xff60` even with the out-of-range literal, so only the comparison needs the signed form.
+
+## Sibling allocator-init wrappers (func_8003CB78 / func_8003D218) (IDO 5.3)
+
+`func_8003D218` is a sibling of the already-matched `func_8003CB78`. Both are tiny
+init wrappers of the form:
+
+```c
+void func_8003D218(s16 arg0, s16 arg1, u8 arg2) {
+    Struct3CAF0 *temp_v0 = (Struct3CAF0 *)(D_8010ADDC = (s32)func_80071408(func_8003D1EC, 0, 0x64));
+
+    temp_v0->unk18 = arg0;
+    temp_v0->unk1A = arg1;
+    temp_v0->unk10 = arg2;
+}
+```
+
+Key observations:
+- The `D_8010ADDC = (s32)func_80071408(...)` assignment embedded inside the cast is exactly how IDO emits `sw $v0, D_8010ADDC` immediately after the `jal`, before the struct stores. Don't split it into two statements.
+- The `u8 arg2` parameter is loaded with `lbu` from the stack spill but stored to the struct field with `sh` (since the field is `s16`). `temp_v0->unk10 = arg2;` reproduces this `lbu`+`sh` pair.
+- The struct field at `0x10` (`unk10`) lives inside what was previously `pad0[0x18]` of `Struct3CAF0`. It is read back as `lhu 0x10($a0)` in the related `func_8003D124`, confirming it is a real `s16` field. Split the padding (`pad0[0x10]` + `unk10` + `pad12[6]`) rather than introducing a new struct type, so the layout and all sibling functions stay intact.
+- Pre-existing call-site `extern`s in other files (`33680.c`, `35E20.c`) declare this function as `(s32,s32,s32)`. The ROM already matches with those in place, so leave them — retyping them risks changing the callers' argument-setup codegen.
