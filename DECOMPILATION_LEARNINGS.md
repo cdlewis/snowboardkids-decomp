@@ -804,3 +804,27 @@ add-then-store-then-read-back into a compound assignment lets IDO allocate the
 result directly to the register it ends up in, fixing the temp-register order.
 The `3 ^ 0` and `goto dummy_label` the permuter emitted alongside were pure
 noise and were not kept.
+
+`func_80036B54` (in `36F80.c`) is a state callback for actor segment 4
+(sibling: `func_800388C0`). Shape: when `func_80041FB4(4) == 0`, compute
+`var_v0 = (arg0->unk2A < 5) ? 1 : -1`, then drift the fixed-point position:
+`unk1C += var_v0 * 0x3E000` and `unk18 += 0xFFF60000`, then
+`func_8004209C(4, unk18, unk1C, unk20)`. Otherwise (timed out) clamp
+`unk1C = 0x6C000`, re-call `func_8004209C`, then
+`func_80071824(arg0, func_80036AC4)` and `func_80041DD4(4, 9)`. Always ends
+with `func_800428C8(4)`.
+
+The compound-assignment pattern struck again here. A 99.79% match had a single
+register-allocation diff: the target loaded `unk18` into a temp (`t0`) and
+later did `addu a1, t0, at`, while named-temp C (`s32 new_unk18 = arg0->unk18 +
+0xFFF60000; arg0->unk18 = new_unk18; func(..., new_unk18, ...)`) loaded it
+straight into `a1`. Rewriting the if-branch as in-place mutation
+````c
+arg0->unk1C += var_v0 * 0x3E000;
+arg0->unk18 += (s32)0xFFF60000;
+func_8004209C(4, arg0->unk18, arg0->unk1C, arg0->unk20);
+````
+(letting the compiler reuse the in-register result for the call arg) matched
+100%. decomp-permuter could not improve the 99.79% version — it only emitted
+same-score `& 0xFFFF...` noise — confirming this is best solved by hand via
+the compound-assignment idiom.
