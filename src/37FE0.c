@@ -31,6 +31,10 @@ typedef struct {
     s32 unk18;
     s32 unk1C;
     s32 unk20;
+    /* 0x24 */ s16 unk24;
+    /* 0x26 */ s16 unk26;
+    /* 0x28 */ s16 unk28;
+    /* 0x2A */ u16 unk2A;
 } Struct37FE0;
 
 void func_800373E0(s32 arg0);
@@ -42,7 +46,7 @@ void func_800375A0(void *arg0);
 void func_80037708(void *arg0);
 void func_80037770(s32 arg0);
 void func_80037868(void *arg0);
-void func_800378E0(void *arg0);
+void func_800378E0(Struct37FE0 *arg0);
 void func_80037A58(s32 arg0);
 void func_80037998(void *arg0);
 void func_80037AA4(void *arg0);
@@ -211,7 +215,28 @@ void func_80037868(void *arg0) {
     func_800428C8(2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_800378E0.s")
+void func_800378E0(Struct37FE0 *arg0) {
+    s32 unused;
+    s32 sp20;
+    s32 var_v0;
+
+    sp20 = func_80041FB4(2);
+    if (arg0->unk2A < 5) {
+        var_v0 = 1;
+    } else {
+        var_v0 = -1;
+    }
+    arg0->unk18 += 0x5D000;
+    arg0->unk1C += var_v0 * 0x60000;
+    arg0->unk2A = arg0->unk2A + 1;
+    func_8004209C(2, arg0->unk18, arg0->unk1C, arg0->unk20);
+    func_800428C8(2);
+    if (sp20 == 1) {
+        arg0->unk2A = 0;
+        func_80071824((s32)arg0, func_80037868);
+        func_80041DD4(2, 0x21);
+    }
+}
 
 void func_80037998(void *arg0) {
     func_80042034(2);
