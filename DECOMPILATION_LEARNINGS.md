@@ -638,3 +638,29 @@ loop + unreachable epilogue (`lw ra; addiu sp; jr ra`) is emitted by IDO as
 dead code after the loop — write it as a plain `while (1)` and let IDO handle
 the epilogue. `osSetThreadPri(0, 0)` uses `0` (not `NULL`) as the thread arg to
 match `move a0, zero`.
+
+## Animation/state callback functions sharing a common shape (3A0E0.c)
+
+The 3A0E0.c file contains a family of per-frame entity/state callback functions
+(`func_8003A7EC`, `func_8003B074`, `func_8003B134`, etc.) that all take
+`void *arg0` (a state struct) and follow the same skeleton:
+
+1. `func_80041FB4(3)` returns a status code (saved; often compared `== 1`).
+2. Mutate fields at byte offsets 0x18/0x1C/0x20 (s32 position/velocity-ish
+   values) and 0x2A (a u16 frame counter) via raw `(u8*)arg0 + offset` casts.
+3. Branch on the counter/state, possibly calling `func_80071824` to install a
+   *new* callback (the function pointer to another func in this family),
+   setting `D_8010B1A2` (an animation/state id), and/or `func_80041DD4(3, N)`.
+4. Always finish with
+   `func_8004209C(3, *(s32*)(...0x18), *(s32*)(...0x1C), *(s32*)(...0x20))`
+   then `func_800428C8(3)`.
+
+When matching these, mirror the offset-cast style exactly — including the
+`& 0xFFFF` mask on the u16 read before `+1` (IDO loads `lhu` then `addiu` then
+`andi 0xFFFF`). For large 32-bit addends that don't fit sign-extended imm16
+(e.g. `0xFFFB8000`, `0xFFFB0000`), write the full hex literal directly in the
+`+=`; IDO emits `lui`+`ori` to materialize it. The signed `<` comparison
+against a value like `0xE00001` matches `slt` directly.
+
+`func_8003B134` matched on the first attempt using this pattern as a template
+from `func_8003A7EC`.
