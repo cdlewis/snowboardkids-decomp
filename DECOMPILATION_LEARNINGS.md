@@ -725,3 +725,14 @@ appears, prefer the plain literal (`* 0x60000`) over a hand-decomposed
 `(* 3) << 17` — the literal gives IDO freedom to match the original register
 allocation. The `s32 unused;` slot trick from `func_800354BC` was still
 needed to land `sp20` at `0x20(sp)`.
+
+`func_80034418` (in `33680.c`) is the segment-0 counterpart in this same
+callback family. Identical shape: branch `unk2A < 5` for direction, bump
+`unk18`/`unk1C`, `func_8004209C`/`func_800428C8` tail, `sp20 == 1`
+transition into `func_800343A0`. Constants: `unk18 += 0xFFF80000` (i.e.
+`-0x80000`), `unk1C += var_v0 * 0x60000`, index `0`, callback arg `0x21`.
+Same two tricks applied: plain literal `* 0x60000` (not a decomposed shift)
+and the leading `s32 unused;` to place `sp20` at `0x20(sp)` — 100% on the
+first real attempt. The `void func_80034418(void);` stub declaration was
+retyped to `Struct33680 *arg0`; the existing `func_80071824((s32) arg0,
+func_80034418)` call site needed no cast.
