@@ -569,3 +569,40 @@ Key observations:
   (`33680.c`, `35E20.c`, `37FE0.c`) were retyped from `(s32,s32,s32,s32)` to
   `(s16,s16,u8,u8)` and the ROM still matched. Retyping is safe here because all
   call sites pass integer literals.
+
+## func_800349A8 (state callback in 33680.c)
+
+Pattern: increment a `u16` counter field, then branch on the new value against
+two constants (0x19 and 2). m2c produced:
+
+```c
+u16 temp = arg0->unk2A + 1;
+arg0->unk2A = temp;
+if (temp == 0x19) { ... }
+else if (temp == 2) { ... }
+```
+
+This compiled to 99.1% but with a register mismatch: it stored the *masked*
+value (`andi v1,...; sh v1`) whereas the target stores the *raw* increment
+(`addiu t7,...; sh t7`) and masks separately into `v0` for the comparisons.
+
+Two changes together gave 100%:
+
+1. Use **pre-increment** `temp = ++arg0->unk2A;` instead of a separate
+   `+ 1` assignment. This makes IDO store the raw increment (`sh t7`) and
+   compute the masked value separately — matching the target's store/compare
+   split. (Got to 99.67%, only `v1` vs `v0` left.)
+2. Cast the first comparison to `(u32)` — `if ((u32) temp == 0x19)`. This nudges
+   the masked value into register `v0` (reused for the second comparison too)
+   instead of `v1`. The `(u32)` cast is a legitimate, semantics-preserving
+   codegen nudge, not a permuter artefact.
+
+Takeaways:
+- When a value is both stored to a narrow field and used in comparisons, prefer
+  `++field` to express "store raw, compare masked" — IDO codegens that split
+  naturally.
+- A bare `(u32)` cast on a comparison is a clean way to steer IDO's register
+  choice between `v0`/`v1` for a value used in multiple branches.
+- decomp-permuter confirmed the structural fix; its `& 0xFFFFFFFFFFFFFFFF` /
+  `new_var` outputs were artefacts — the pre-increment + cast form is the clean
+  equivalent.
