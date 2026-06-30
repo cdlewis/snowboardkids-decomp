@@ -456,3 +456,22 @@ shape; splitting the code into separate assignment-style statements changed the
 same call setup scheduling. Takeaway: when a struct field store is a matching
 `sh` but call scheduling differs, check field signedness and small source-shape
 changes before falling back to raw pointer offsets.
+
+## func_8003B074 (src/3A0E0.c)
+
+This function has two locals that must cross a `jal`: a spilled `s32` (the
+return of `func_80041FB4`) and a register-only `u16` counter temp. The function
+matched at 99.79% with only a single stack-offset difference: the spilled `s32`
+landed at `0x24(sp)` instead of the target's `0x20(sp)`.
+
+IDO 5.3 assigns local stack slots top-down in declaration order. With only the
+`s32` declared, it took the high slot (`0x24`). Declaring the `u16` temp
+*before* the `s32` made the temp take the high slot and pushed the `s32` down to
+`0x20`, matching the target — even though the temp itself is never spilled and
+stays in a register. The temp's declaration order mattered; its block scope did
+not.
+
+Takeaway: when a single spilled local is one slot too high, declaring an
+additional (even register-only) local *before* it shifts IDO's slot assignment
+down. Stack-slot placement of spilled locals is governed by declaration order,
+not just by which variables actually spill.
