@@ -664,3 +664,21 @@ against a value like `0xE00001` matches `slt` directly.
 
 `func_8003B134` matched on the first attempt using this pattern as a template
 from `func_8003A7EC`.
+
+`func_8003AFC0` is another member of this callback family, structurally
+identical to `func_8003973C` (its sibling). The only variation: it adds
+`0x48000` (instead of `0x18000`) to `unk18`, and — when `func_80041FB4(3) == 0`
+— increments the `0x2A` frame counter and, on reaching `2`, calls
+`func_8003C0A4(-0x14, -0x40, 3, 1)` before the usual `D_8010B1A2 == 0x16`
+state transition into `func_8003AF6C`.
+
+Key codegen note: a first attempt using a named local (`var_a1 = *(...0x18) +
+0x48000;`) compiled to `lw a1, 0x18(s0)` / `addu a1, a1, at` and reached only
+98.6% — every remaining diff was a *register name* (`a1` vs `t6`, `v0` vs
+`t8`, `t8` vs `t1`). Matching the sibling's exact idiom —
+`*(s32*)(...0x18) = *(s32*)(...0x18) + 0x48000;` then *reloading*
+`*(s32*)(...0x18)` inside the `func_8004209C(...)` call — drives IDO to emit
+`lw t6` / `addu a1, t6, at` and the `t1`/`t8` temporaries the target uses,
+giving 100%. When a sibling already matches, port its C idioms verbatim rather
+than re-deriving; named temporaries change register allocation enough to cost
+the match even when the logic is identical.
