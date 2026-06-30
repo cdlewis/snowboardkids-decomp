@@ -575,7 +575,25 @@ void func_8003AD40(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_8003ADC0.s")
+void func_8003ADC0(void *arg0) {
+    s32 var_a1;
+
+    func_80042034(3);
+    func_800428C8(3);
+    var_a1 = *(s32 *)((char *)arg0 + 0x18) += (s32)0xFFFD0000;
+    *(s32 *)((char *)arg0 + 0x20) = *(s32 *)((char *)arg0 + 0x20) + (s32)0xFFFF0000;
+    if (var_a1 < 0x2D0001) {
+        *(s32 *)((char *)arg0 + 0x18) = 0x2D0000;
+        *(s32 *)((char *)arg0 + 0x20) = (s32)0xFFFE0000;
+        func_80071824((s32)arg0, (void (*)(void))func_8003AD40);
+        func_80041DD4(3, 0x38);
+        D_8010B1A2 = 0x17;
+        *(s16 *)((char *)arg0 + 0x26) = 0x400;
+        func_800420FC(3, *(s16 *)((char *)arg0 + 0x24), *(s16 *)((char *)arg0 + 0x26), *(s16 *)((char *)arg0 + 0x28));
+        var_a1 = *(s32 *)((char *)arg0 + 0x18);
+    }
+    func_8004209C(3, var_a1, *(s32 *)((char *)arg0 + 0x1C), *(s32 *)((char *)arg0 + 0x20));
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_8003AE8C.s")
 
