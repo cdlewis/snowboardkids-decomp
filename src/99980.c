@@ -21,6 +21,7 @@ extern Struct801235B8_99980 *D_801235B8;
 extern Node99980 *D_8012370C;
 
 void func_80099464(s32);
+Node99980 *func_80099384(s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/99980/func_80098D80.s")
 
@@ -32,7 +33,17 @@ void func_80099464(s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/99980/func_80099464.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/99980/func_800994F4.s")
+void func_800994F4(s32 arg0, void *arg1, s32 arg2) {
+    Node99980 *temp_v0;
+
+    temp_v0 = func_80099384(arg2);
+    if (temp_v0 != NULL) {
+        temp_v0->unk15 = (u8) arg0;
+        temp_v0->unk8 = (s32) arg1;
+        temp_v0->unk14 = (u8) arg2;
+        temp_v0->unk16 = 2;
+    }
+}
 
 void func_8009954C(s32 arg0) {
     func_80099464(arg0);
