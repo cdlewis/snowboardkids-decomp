@@ -8,7 +8,23 @@ void *func_8004597C(void *arg0, u32 arg1) {
     return (void *)((u8 *)arg0 + (arg1 & 0xFFFFFF));
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_80045990.s")
+typedef struct {
+    s32 unk0;
+    u16 unk4;
+} Unk80045990;
+
+void func_80045990(u8 *arg0, u16 arg1, void **arg2, void **arg3) {
+    Unk80045990 *temp_v1;
+    u8 *temp_v0;
+    short idx;
+
+    temp_v1 = (Unk80045990 *)((s32)arg0 + (arg1 * 8));
+    temp_v0 = arg0 + (*(s32 *)(arg0 + 4) * 8);
+    idx = 1;
+    *arg2 = (void *)(arg0 + temp_v1[idx].unk0);
+    temp_v0 += 8;
+    *arg3 = (void *)((temp_v1[idx].unk4 << 5) + temp_v0);
+}
 
 typedef struct {
     s32 unk0;
