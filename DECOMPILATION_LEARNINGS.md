@@ -750,3 +750,18 @@ file's prevailing `void *arg0` + `(u8 *)` pointer-arithmetic style (matching
 `func_8003973C`/`func_80039880`). Chose the pointer-arithmetic form to stay
 consistent with the rest of `3A0E0.c`, since its existing `Struct3A0E0` has a
 different layout (`unk2E` at `0x2E`) used by other functions.
+
+`func_8003CAD8` (in `3CAF0.c`) is a short timer/animation-step callback in the
+`3CAF0` family (sibling: `func_8003D2F4`). Shape: `arg0->unk1E++`; when it hits
+`2`, reset to `0` and bump `unk1C++;` then if `unk1C == 5` call
+`func_800716E4(arg0)`, else `func_800483FC(&D_80124868, func_8003CA70, arg0)`.
+Matched 100% on the first real attempt by mirroring `func_8003D2F4`'s style
+(`temp_a2 = arg0`, plain post-increment, plain `==`, plain `++`, no `& 0xFFFF`
+masks). Key point: `unk1E++`/`unk1C == 5` need `lhu`/`andi ...,0xffff` in the
+target asm, which requires the struct fields at `0x1C`/`0x1E` to be `u16`, not
+`s16` (an `s16` field produces `lh` and drops the `andi`). The file's base
+`Struct3CAF0` keeps these as `s16` for other matched functions, so the correct
+fix was to retype the function parameter to the existing `Struct3CAF0d`
+(`u16` at `0x1C`/`0x1E`) — same trick `func_8003D2F4` already uses. The
+callback is passed to `func_80071824(void *, void *)`, so changing the
+parameter type needed no cast at the call site.
