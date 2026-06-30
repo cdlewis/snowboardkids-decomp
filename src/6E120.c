@@ -81,7 +81,11 @@ void func_8006D780(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006DDB4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006E2B4.s")
+void func_8006E2B4(void) {
+}
+
+void func_8006E2BC(void) {
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006E2C4.s")
 

@@ -96,6 +96,14 @@ patterns, and verified layout/linking rules.
 - Some extracted single-function asm ranges may include an unnamed adjacent tiny
   function. A trailing `jr $ra; nop` after an earlier return is likely a missing
   empty function boundary, not padding.
+- When a function's extracted range is exactly `jr $ra; nop; jr $ra; nop`
+  (e.g. `func_8006E2B4`, size 0x10), it is two consecutive empty functions, not
+  one. A single `void f(void){}` only emits one `jr $ra; nop` (8 bytes); IDO
+  never emits two `jr $ra` from one function (even `return; return;` folds to
+  one). Match it by defining two empty functions back-to-back in the same `.c`
+  file (the second one filling the 0x800..E2BC slot), so the segment keeps its
+  original byte length. IDO 5.3 does not fold identical empty functions, so each
+  stays a distinct `jr $ra; nop`.
 - If matched C is smaller than the original asm range, add or adjust asm
   segments so the remaining bytes/functions are still owned.
 - When section-end padding causes shifts, it may be better to match the full
