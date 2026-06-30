@@ -91,7 +91,11 @@ void func_8006E2BC(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006E534.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006EC64.s")
+void func_8006EC64(void) {
+}
+
+void func_8006EC6C(void) {
+}
 
 void func_8006EC74(void) {
     D_801124A0->unk2C = func_8006ECBC;
