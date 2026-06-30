@@ -44,6 +44,16 @@ patterns, and verified layout/linking rules.
 - Before tuning register allocation, verify function signatures and call
   argument order against the target assembly. Wrong argument order produces
   misleading register-allocation diffs and wastes permutation time.
+- Statement order drives IDO's temp-register allocation order. When a sequence
+  of independent stores each load a stack arg into a fresh temp, IDO allocates
+  temps (`$t6`, `$t7`, `$t8`, ...) in source order. A constant store (e.g.
+  `node->unk16 = 2;`) also grabs the next temp at the point it appears in
+  source. If the target allocates the constant to the *last* temp, write the
+  constant assignment *after* the arg-derived stores it should follow, even
+  though the scheduler ultimately interleaves the stores. Reordering just the
+  constant assignment fixed a pure scheduling/register diff in func_800994F4
+  (the constant store filled the final load's delay slot and landed in `$t9`
+  instead of `$t8`).
 
 ## Structs, Types, and Data Access
 
