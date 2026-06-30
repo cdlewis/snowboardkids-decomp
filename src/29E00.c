@@ -12,9 +12,11 @@ extern void func_8002B05C(void);
 extern void func_8002B1FC(void);
 extern void func_8002B424(void);
 extern void func_8000F8AC(s16, s16, s32, s32, s32, s32, s32, s32, s32);
+extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern s16 D_80112172;
 extern u8 D_80121B5E;
+extern u8 D_800B7198[];
 
 struct Struct29E00 {
     char pad0[0x18];
@@ -132,7 +134,11 @@ void func_8002AFB8(Struct29E00 *arg0) {
     func_80071824((s32) arg0, func_8002AE3C);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_8002AFF8.s")
+void func_8002AFF8(Struct29E00 *arg0) {
+    u8 *temp = &D_800B7198[D_80121B5E * 0x8C];
+
+    func_80013154(arg0->unk18, arg0->unk1A, temp, 1, arg0->unk1C, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_8002B05C.s")
 
