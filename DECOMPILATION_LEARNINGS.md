@@ -533,3 +533,39 @@ Key observations:
 - The `u8 arg2` parameter is loaded with `lbu` from the stack spill but stored to the struct field with `sh` (since the field is `s16`). `temp_v0->unk10 = arg2;` reproduces this `lbu`+`sh` pair.
 - The struct field at `0x10` (`unk10`) lives inside what was previously `pad0[0x18]` of `Struct3CAF0`. It is read back as `lhu 0x10($a0)` in the related `func_8003D124`, confirming it is a real `s16` field. Split the padding (`pad0[0x10]` + `unk10` + `pad12[6]`) rather than introducing a new struct type, so the layout and all sibling functions stay intact.
 - Pre-existing call-site `extern`s in other files (`33680.c`, `35E20.c`) declare this function as `(s32,s32,s32)`. The ROM already matches with those in place, so leave them — retyping them risks changing the callers' argument-setup codegen.
+
+## func_8003C0A4 — allocator-init wrapper with a high-byte store (IDO 5.3)
+
+`func_8003C0A4` is a sibling of the matched `func_8003C420`. Same shape
+(allocate a `Struct3CAF0` via `func_80071408`, stash the pointer in
+`D_8010ADDC`, then set a few fields), but with an extra `u8 arg3` that is
+stored to the **high byte of the `s16` at offset 0x24** (`sb $t9, 0x25($v0)`):
+
+```c
+void func_8003C0A4(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
+    Struct3CAF0 *temp_v0 = (Struct3CAF0 *)(D_8010ADDC = (s32)func_80071408(func_8003C078, 0, 0x63));
+
+    temp_v0->unk1C = arg0;
+    temp_v0->unk1E = arg1;
+    temp_v0->unk26 = arg2;
+    ((u8 *) &temp_v0->unk24)[1] = arg3;
+}
+```
+
+Key observations:
+- Offset `0x25` falls inside `unk24` (`s16` at `0x24`, i.e. bytes `0x24`/`0x25`
+  on big-endian MIPS). There is no standalone `unk25` field. The byte at `0x25`
+  is already accessed this way elsewhere in the file (e.g. `func_8003BEF0` uses
+  `((u8 *) &arg0->unk24)[1]`), so reuse that idiom rather than reshaping the
+  struct.
+- The four fields are written in increasing address order (`unk1C`, `unk1E`,
+  `unk26`, then byte `0x25`); the `sb` for `0x25` comes after the `sb` for
+  `0x26` in the target, so keep that statement order.
+- Note this differs from the `func_8003D218` sibling: there the `u8` arg is
+  stored with `sh` into a real `s16` field (`unk10`). Here `arg3` is genuinely a
+  byte poking into the middle of a wider field, so `sb`/the cast-index form is
+  correct.
+- Unlike the guidance for `func_8003D218`, the three call-site `extern`s
+  (`33680.c`, `35E20.c`, `37FE0.c`) were retyped from `(s32,s32,s32,s32)` to
+  `(s16,s16,u8,u8)` and the ROM still matched. Retyping is safe here because all
+  call sites pass integer literals.
