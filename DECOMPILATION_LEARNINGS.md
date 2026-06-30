@@ -475,3 +475,14 @@ Takeaway: when a single spilled local is one slot too high, declaring an
 additional (even register-only) local *before* it shifts IDO's slot assignment
 down. Stack-slot placement of spilled locals is governed by declaration order,
 not just by which variables actually spill.
+
+## func_80033B20 (callback timer pattern)
+
+- This is one of many sibling "timer callback" functions in `src/33680.c` (e.g. `func_80032AF0`). They share an identical skeleton: call `func_80041FB4(0)` + `func_800428C8(0)`, and on `ret == 1` increment a u16 counter field (`unk2A`); when it hits a threshold, reset to 0 and re-arm the next callback via `func_80071824`. Recognizing the sibling pattern makes these near-trivial.
+- **IDO stack-layout quirk:** storing the return value of `func_80041FB4` in a plain `s32 ret;` local placed it at `0x24(sp)`, but the target uses `0x20(sp)`. The match in the sibling functions (and the target) is achieved by declaring the local as a struct with a trailing pad:
+  ```c
+  struct { s32 ret; s32 pad; } l;
+  l.ret = func_80041FB4(0);
+  ```
+  This forces IDO 5.3 to allocate the value at `0x20(sp)`. Reuse this idiom for any of these callback functions whose target stores `v0` at `0x20(sp)`.
+- m2c reported `a0` as "unset register" because the function is invoked through a function pointer (`func_80071824((s32) arg0, func_80033B20)`), so the calling context isn't visible to it. The real signature is `void func_80033B20(Struct33680 *arg0)`.
