@@ -26,7 +26,7 @@ extern void func_8003A634(void *);
 extern void func_800483FC(void *, void *, void *);
 extern s32 func_8004885C(void *);
 extern void func_8007C130(s32, s16, s16);
-extern void func_80039A70(void);
+extern void func_80039A70(Struct3A0E0 *);
 extern void func_80039E5C(void);
 extern void func_8003B430(void);
 extern void func_80039CEC(void);
@@ -201,7 +201,24 @@ void func_80039A14(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_80039A70.s")
+void func_80039A70(Struct3A0E0 *arg0) {
+    s32 var_a1;
+    Struct3A0E0 *new_var;
+
+    func_80042034(3);
+    new_var = arg0;
+    var_a1 = (new_var->unk18 += 0xFFFB8000);
+    if (var_a1 < 0xA00001) {
+        new_var->unk18 = 0xA00000;
+        func_80071824((s32) new_var, func_80039A14);
+        var_a1 = arg0->unk18;
+    } else if ((var_a1 < 0x1300001) && (D_8010B1A2 == 0x35)) {
+        D_8010B1A2 = 0x36;
+        var_a1 = arg0->unk18;
+    }
+    func_8004209C(3, var_a1, arg0->unk1C, arg0->unk20);
+    func_8004298C(3, arg0->unk2E, arg0->unk30, 0xB);
+}
 
 void func_80039B38(Struct3A0E0 *arg0) {
     if (D_8010B1A2 == 0x35) {
