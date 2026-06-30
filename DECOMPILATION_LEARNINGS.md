@@ -869,3 +869,13 @@ Two non-obvious codegen facts:
    not derivable by hand. Lesson: when a function matches except for a trailing
    dead pointer-arithmetic instruction, try a `short`/`char`-typed index
    variable before anything else.
+
+- Two adjacent field updates (`unk18 += A; unk20 += B;`) where the first
+  result is captured into a variable reused later (`var_a1 = unk18 + A;`) can
+  land at ~98% with only temp-register naming differences (e.g. the load goes
+  straight into `a1` instead of a `t6` temp). The fix is to write the update as
+  a single `+=` assignment-expression whose value feeds the variable:
+  `var_a1 = *(s32 *)((char *)arg0 + 0x18) += (s32)0xFFFD0000;`
+  This forces IDO to load the field into a temp before the add, matching the
+  target's `lw t6; addu a1,t6,at` exactly. decomp-permuter surfaced this; it
+  was a pure register-allocation difference with identical control flow.
