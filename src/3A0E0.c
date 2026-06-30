@@ -286,7 +286,23 @@ void func_8003A078(Struct3A0E0 *arg0) {
     func_8004298C(3, arg0->unk2E, arg0->unk30, 0xB);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_8003A108.s")
+void func_8003A108(void *arg0) {
+    s32 temp_a1;
+    u8 *new_var;
+    u16 temp_t9;
+
+    func_80042034(3);
+    temp_a1 = *(s32 *)((u8 *)arg0 + 0x18) += 0x20000;
+    func_8004209C(3, temp_a1, *(s32 *)((u8 *)arg0 + 0x1C), *(s32 *)((u8 *)arg0 + 0x20));
+    new_var = (u8 *)arg0 + 0x2A;
+    temp_t9 = (*(u16 *)new_var & 0xFFFF) + 1;
+    *(u16 *)((u8 *)arg0 + 0x2A) = temp_t9;
+    if ((temp_t9 & 0xFFFF) == 0x28) {
+        *(u16 *)((u8 *)arg0 + 0x2A) = 0;
+        func_80071824((s32)arg0, func_8003A078);
+    }
+    func_8004298C(3, *(u16 *)((u8 *)arg0 + 0x2E), *(u16 *)((u8 *)arg0 + 0x30), 0xB);
+}
 
 void func_8003A190(void *arg0) {
     s32 temp_a1;
