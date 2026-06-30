@@ -72,7 +72,7 @@ void func_8003BF7C(Struct3CAF0 *arg0);
 void func_8003C180(Struct3CAF0b *arg0);
 void func_8003C634(Struct3CAF0 *arg0);
 void func_8003C7E4(Struct3CAF0 *arg0);
-void func_8003CE78(Struct3CAF0 *arg0);
+void func_8003CE78(Struct3CAF0d *arg0);
 void func_8003D2F4(Struct3CAF0d *arg0);
 void func_8003D5F8(Struct3CAF0 *arg0);
 void func_8003D580(Struct3CAF0 *arg0);
@@ -261,7 +261,23 @@ void func_8003CE10(Struct3CAF0c *arg0) {
     func_8000F030(arg0->unk18, arg0->unk1A, temp, (arg0->unk1C + 0x20) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003CE78.s")
+void func_8003CE78(Struct3CAF0d *arg0) {
+    Struct3CAF0d *temp_a2 = arg0;
+
+    arg0->unk1E++;
+    if (arg0->unk1E == 4) {
+        arg0->unk1E = 0;
+        arg0->unk1C++;
+        if (arg0->unk1C == 5) {
+            arg0->unk1C = 0;
+        }
+    }
+    if (D_8010B1A2 != 7) {
+        func_800483FC(&D_80124868, func_8003CE10, temp_a2);
+    } else {
+        func_800716E4(temp_a2);
+    }
+}
 
 void func_8003CF00(Struct3CAF0 *arg0) {
     arg0->unk18 = -0x14;
