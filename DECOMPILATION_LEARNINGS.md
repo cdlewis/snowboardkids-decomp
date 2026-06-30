@@ -736,3 +736,17 @@ and the leading `s32 unused;` to place `sp20` at `0x20(sp)` — 100% on the
 first real attempt. The `void func_80034418(void);` stub declaration was
 retyped to `Struct33680 *arg0`; the existing `func_80071824((s32) arg0,
 func_80034418)` call site needed no cast.
+
+`func_800397C4` (in `3A0E0.c`) is the segment-3 counterpart in this same
+callback family (siblings: `func_800354BC`, `func_800378E0`, `func_80034418`).
+Same shape: branch `unk2A < 5` for direction (`1`/`-1`), bump fields, then
+the `func_8004209C`/`func_800428C8` tail and a `sp20 == 1` transition into
+`func_8003973C` with callback arg `0x5D`. Constants here: `unk18 += 0x76000`,
+`unk1C += var_v0 << 19`, and uniquely this sibling also bumps `unk20 +=
+0xFFFA0000` (`-0x60000`). The leading `s32 unused;` was again required to
+place `sp20` at `0x20(sp)`. Two integration styles both matched 100%: a
+typed struct (u16 field at offset `0x2A`, so `pad24[6]` not `[0xA]`) and the
+file's prevailing `void *arg0` + `(u8 *)` pointer-arithmetic style (matching
+`func_8003973C`/`func_80039880`). Chose the pointer-arithmetic form to stay
+consistent with the rest of `3A0E0.c`, since its existing `Struct3A0E0` has a
+different layout (`unk2E` at `0x2E`) used by other functions.
