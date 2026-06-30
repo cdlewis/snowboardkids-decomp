@@ -248,10 +248,17 @@ void func_80054A64(void *arg0) {
     func_800483FC(D_80124878, func_8005499C, (s32)arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/54260/func_80054AC0.s")
+void func_80054AC0(void *arg0) {
+    *(s32 *)((u8 *)arg0 + 0x18) += *(s32 *)((u8 *)arg0 + 0x24);
+    *(s32 *)((u8 *)arg0 + 0x24) -= 4;
+    if (*(s32 *)((u8 *)arg0 + 0x24) == 0) {
+        *(s16 *)((u8 *)arg0 + 0x28) = 0x1E;
+        func_80071824(arg0, func_80054A64);
+    }
+    func_800483FC(D_80124878, func_8005499C, (s32)arg0);
+}
 
 extern s8 D_801124B0[];
-extern void func_80054AC0(void);
 
 void func_80054B2C(void *arg0) {
     if (D_801124B0[*(u16 *)((u8 *)arg0 + 0x10) * 0xB0] != 0) {
