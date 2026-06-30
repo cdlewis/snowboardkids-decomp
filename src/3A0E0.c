@@ -40,6 +40,7 @@ extern void func_80039F7C(Struct3A0E0 *);
 extern void func_8003A6A8(void *arg0);
 extern void func_8003A7EC(void *);
 extern void func_8003AC00(void);
+extern void func_8003AFC0(void);
 extern void func_8003B134(void);
 extern void func_8003A21C(void *);
 extern void func_8003A190(void *);
@@ -478,7 +479,27 @@ void func_8003AF6C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_8003AFC0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_8003B074.s")
+void func_8003B074(void *arg0) {
+    u16 temp_t0;
+    s32 sp20;
+
+    sp20 = func_80041FB4(3);
+    func_800428C8(3);
+    if (D_8010B1A2 == 0x15) {
+        *(u16 *)((u8 *)arg0 + 0x2A) = 0;
+        func_80071824((s32)arg0, func_8003AFC0);
+        *(s16 *)((char *)arg0 + 0x26) = 0x400;
+        func_800420FC(3, *(s16 *)((char *)arg0 + 0x24), *(s16 *)((char *)arg0 + 0x26), *(s16 *)((char *)arg0 + 0x28));
+        func_80041DD4(3, 0x28);
+    } else if (sp20 == 1) {
+        temp_t0 = (*(u16 *)((u8 *)arg0 + 0x2A) & 0xFFFF) + 1;
+        *(u16 *)((u8 *)arg0 + 0x2A) = temp_t0;
+        if ((temp_t0 & 0xFFFF) == 0x10) {
+            *(u16 *)((u8 *)arg0 + 0x2A) = 0;
+            func_80041DD4(3, 0x27);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_8003B134.s")
 
