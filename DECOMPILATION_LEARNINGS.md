@@ -486,3 +486,25 @@ not just by which variables actually spill.
   ```
   This forces IDO 5.3 to allocate the value at `0x20(sp)`. Reuse this idiom for any of these callback functions whose target stores `v0` at `0x20(sp)`.
 - m2c reported `a0` as "unset register" because the function is invoked through a function pointer (`func_80071824((s32) arg0, func_80033B20)`), so the calling context isn't visible to it. The real signature is `void func_80033B20(Struct33680 *arg0)`.
+
+### IDO scheduler instability w.r.t. source formatting (delay-slot fill)
+
+`func_80071664` (a thin wrapper: call `func_80071408(arg0, arg1 & 0xFFFF, arg2)`, then store `arg3` into the returned struct's `unk10`) only reaches 100% when written as a **single-line / "golfed" function body**. Written with conventional multi-line indentation, IDO 5.3 schedules the pre-`jal` block as:
+
+```
+andi t6,a1,0xffff
+sw   a3,0x24(sp)
+jal  func_80071408
+move a1,t6        ; delay slot
+```
+
+…whereas the target wants:
+
+```
+andi t6,a1,0xffff
+move a1,t6
+jal  func_80071408
+sw   a3,0x24(sp)  ; delay slot
+```
+
+Both are valid (the `move a1,t6` arg-setup and the `sw a3` spill are independent candidates for the `jal` delay slot), but IDO's delay-slot filler picks a different candidate depending on the source layout — the multi-line version fills the slot with `move`, the one-line version with `sw`. The choice is sensitive purely to whitespace/line structure, not to semantics. Its sibling `func_800716A4` (identical structure, calls `func_800711D0`) is already checked in as a one-liner and matches; writing `func_80071664` in the same one-line style yields a perfect match. When two structurally identical wrapper functions sit in the same file, prefer keeping them in the same source style.
