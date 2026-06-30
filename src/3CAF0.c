@@ -137,7 +137,13 @@ void func_8003C3F4(Struct3CAF0 *arg0) {
     func_80071824(arg0, func_8003C2EC);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003C420.s")
+void func_8003C420(s16 arg0, s16 arg1, u8 arg2) {
+    Struct3CAF0 *temp_v0 = (Struct3CAF0 *)(D_8010ADDC = (s32)func_80071408(func_8003C3F4, 0, 0x63));
+
+    temp_v0->unk1C = arg0;
+    temp_v0->unk1E = arg1;
+    temp_v0->unk26 = arg2;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003C484.s")
 
