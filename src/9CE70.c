@@ -221,7 +221,25 @@ s32 func_8009D00C(void *arg0, s32 arg1) {
     return arg1;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009D020.s")
+s32 func_8009D020(void *arg0, u8 *arg1) {
+    u8 b;
+    unsigned int new_var;
+    s16 value;
+
+    b = arg1[0];
+    arg1++;
+    if (b < 0x80) {
+        *(s16 *)((u8 *)arg0 + 0xC0) = b;
+    } else {
+        value = ((b & 0x7F) << 6) << 2;
+        *(s16 *)((u8 *)arg0 + 0xC0) = value;
+        new_var = arg1[0];
+        b = new_var;
+        *(s16 *)((u8 *)arg0 + 0xC0) = value + b;
+        arg1++;
+    }
+    return (s32)arg1;
+}
 
 s32 func_8009D064(void *arg0, s32 arg1) {
     *(u8 *)((u8 *)arg0 + 0xE6) = 1;
