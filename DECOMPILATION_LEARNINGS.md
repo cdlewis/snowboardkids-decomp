@@ -879,3 +879,36 @@ Two non-obvious codegen facts:
   This forces IDO to load the field into a temp before the add, matching the
   target's `lw t6; addu a1,t6,at` exactly. decomp-permuter surfaced this; it
   was a pure register-allocation difference with identical control flow.
+
+### func_8003CF98 (sprite/tile counter callback)
+
+- A `Struct3CAF0` callback that increments `unk1E`, and when it wraps to 1
+  resets `unk1E=0` / bumps `unk1C`. The whole function is a counter+reset plus
+  a final `if (unk1E < 0xF)` dispatch. The natural form matches 100%:
+  ```c
+  if (arg0->unk1C < 5) {
+      arg0->unk1E++;
+      if (arg0->unk1E == 1) { arg0->unk1E = 0; arg0->unk1C++; }
+  } else {
+      arg0->unk1E++;
+  }
+  if (arg0->unk1E < 0xF) { func_800483FC(...); return; }
+  func_800716E4(temp_a2); D_8010B1A2 = 3;
+  ```
+- **Key lessons:**
+  1. m2c's explicit-temp form (`temp = (u16)x+1; var = temp & 0xFFFF; ...`) and
+     a redundant `var_v0 = 0 & 0xFFFF` only reached ~93%. The 100% form lets
+     IDO CSE the masked post-increment itself: writing `(u16)` reads via the
+     field type and letting the natural `++` / `==` / `<` reuse one masked value
+     reproduces both the `andi v0,t8,0xffff` (CSE'd compare value) *and* the
+     reset-path `andi v0,zero,0xffff` (IDO does not fold `andi reg,zero,imm` —
+     a literal `0 & 0xFFFF` folds to `move`, but `(u16)` of a just-stored zero
+     stays as `andi v0,zero,0xffff`).
+  2. **`lhu` vs `lh` is determined by the struct field type, per-function.** The
+     same byte offsets 0x1C/0x1E are read as `lh` (signed) by functions typed
+     `Struct3CAF0*` (s16 fields) and as `lhu` (unsigned) by functions typed
+     `Struct3CAF0d*` (u16 fields). This function needs `lhu`, so its parameter
+     must be `Struct3CAF0d*`, not `Struct3CAF0*` — even though other callbacks
+     in the same file use the s16 struct. Casts on an s16 field give `lh`+`andi`,
+     never a clean `lhu`; pick the struct variant whose field type matches the
+     load.
