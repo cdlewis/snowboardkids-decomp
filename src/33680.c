@@ -742,7 +742,22 @@ void func_80034864(Struct33680 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80034900.s")
+void func_80034900(Struct33680 *arg0) {
+    func_80042034(0);
+    arg0->unk18 += 0x60000;
+    arg0->unk2A += 1;
+    if (arg0->unk18 >= 0x1900000) {
+        arg0->unk2A = 0;
+        arg0->unk18 = 0x1900000;
+        func_80071824((s32) arg0, func_80034864);
+        D_8010B1A8 = 1;
+    }
+    if (arg0->unk2A == 1) {
+        D_8010B1A2 = 0xE;
+    }
+    func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
+    func_800428C8(0);
+}
 
 void func_800349A8(Struct33680 *arg0) {
     u16 temp;
