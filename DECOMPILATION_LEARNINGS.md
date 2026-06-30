@@ -706,3 +706,22 @@ Two codegen notes from matching it:
   reads into the single `lhu $v1` the target uses, and the register allocation
   falls into place for 100%. As with the `func_8003AFC0` note: named
   temporaries perturb register allocation even when semantically identical.
+
+`func_800378E0` (in `37FE0.c`) is the segment-2 counterpart of
+`func_800354BC`. Same callback family: branch on the `0x2A` u16 counter
+`< 5` to pick direction (`1`/`-1`), bump `unk18` and `unk1C`, then the
+`func_8004209C`/`func_800428C8` tail and a `sp20 == 1` transition into
+`func_80037868`. Differences are just constants: `0x5D000` added to
+`unk18` (vs `0x76000`), and the `unk1C` increment.
+
+Codegen note: the target computes the `unk1C` increment as
+`sll t9,v0,2; subu t9,t9,v0; sll t9,t9,0x11` — i.e. `v0 * 3 << 17`, the
+IDO strength-reduction for `* 0x60000`. Writing the source as
+`(var_v0 * 3) << 17` reproduced the `sll`/`subu`/`sll` chain but allocated
+the final result into `t0` (target keeps it in `t9`), landing at 99.3% with
+only register-name diffs. Writing it as `var_v0 * 0x60000` instead let IDO
+pick the exact target registers for 100%. So when a multiply-by-non-power-of-2
+appears, prefer the plain literal (`* 0x60000`) over a hand-decomposed
+`(* 3) << 17` — the literal gives IDO freedom to match the original register
+allocation. The `s32 unused;` slot trick from `func_800354BC` was still
+needed to land `sp20` at `0x20(sp)`.
