@@ -1,7 +1,9 @@
 #include "common.h"
 
 typedef struct {
-    char pad0[0x18];
+    char pad0[0x10];
+    /* 0x10 */ s16 unk10;
+    /* 0x12 */ char pad12[6];
     /* 0x18 */ s16 unk18;
     /* 0x1A */ s16 unk1A;
     /* 0x1C */ s16 unk1C;
@@ -271,7 +273,13 @@ void func_8003D1EC(Struct3CAF0 *arg0) {
     func_80071824(arg0, func_8003D124);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003D218.s")
+void func_8003D218(s16 arg0, s16 arg1, u8 arg2) {
+    Struct3CAF0 *temp_v0 = (Struct3CAF0 *)(D_8010ADDC = (s32)func_80071408(func_8003D1EC, 0, 0x64));
+
+    temp_v0->unk18 = arg0;
+    temp_v0->unk1A = arg1;
+    temp_v0->unk10 = arg2;
+}
 
 void func_8003D27C(Struct3CAF0c *arg0) {
     s32 temp;
