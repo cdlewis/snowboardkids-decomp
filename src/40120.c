@@ -7,9 +7,26 @@ extern void func_8006D700(void);
 extern void func_80096E3C(void);
 extern void func_80072114(s32);
 extern void func_800437F0(void *, void *, s32);
+extern void func_800438EC(void *, void *, s32);
 extern void func_800704F0(void);
 extern void func_80070EC0(s32);
+extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
+extern void func_8006D5CC(void);
+extern void func_8006D520(s32, s32);
+extern void func_80071664(void *, s32, s32, s32);
+extern void func_800720E4(s32);
 extern void func_80071408(void *, s32, s32);
+extern void func_80055678(void);
+extern void func_80051854(void);
+
+extern u8 D_1467B0;
+extern u8 D_147910;
+extern u8 D_1DE360;
+extern u8 D_1E0F70;
+extern u8 D_1F1A90;
+extern u8 D_1F2220;
+extern u8 D_245A80;
+extern u8 D_24C8E0;
 extern void func_8009954C(s32);
 extern void func_8009956C(void *, s32);
 extern void func_80099658(s32);
@@ -35,6 +52,7 @@ extern s16 D_800D3C90[];
 
 extern void func_8003FEF4(void);
 extern void func_8003F554(void);
+extern void func_8003F6C0(void);
 extern void func_8003F718(void);
 extern void func_8003FF78(void);
 extern void func_80040450(void);
@@ -68,7 +86,27 @@ void func_8003F520(void) {
     func_8009956C(func_8003F554, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003F554.s")
+void func_8003F554(void) {
+    func_800437F0(&D_1F1A90, &D_1F2220, 0x28);
+    func_800437F0(&D_593D10, &D_598A70, 0x29);
+    func_800437F0(&D_60F1A0, &D_60F990, 0x2A);
+    func_800437F0(&D_245A80, &D_24C8E0, 0x1F);
+    func_800438EC(&D_1467B0, &D_147910, 8);
+    func_800437F0(&D_1DE360, &D_1E0F70, 9);
+    D_8010B1F0 = 0;
+    D_800DEED4 = 0;
+    D_800DEF14 = 0xFF;
+    func_800704F0();
+    D_801124B8 = 0x80;
+    func_80070EC0(0);
+    func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+    func_8006D5CC();
+    func_8006D520(0, 0x1F);
+    func_80071664(&func_80055678, 0, 0x64, 0);
+    func_80071408(&func_80051854, 0, 0x64);
+    func_8009956C(&func_8003F6C0, 0);
+    func_800720E4(7);
+}
 
 void func_8003F6C0(void) {
     D_800DEF14 -= 0x10;
