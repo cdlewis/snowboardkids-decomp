@@ -778,3 +778,29 @@ post-increment, plain `==`, plain `++`, no `& 0xFFFF` masks). Same as
 has `u16` at `0x1C`/`0x1E` and `s16` at `0x18`/`0x1A`, matching the mixed
 `lh`/`lhu` access pattern). Note `unk18`/`unk1A` are loaded signed (`lh`) so
 they stay `s16`; only `0x1C`/`0x1E` are `u16`.
+
+`func_80068DB4` (in `67360.c`) is a timer/animation-step callback (sibling:
+`func_80068BF0`). Shape: when `D_80121B56 == 0`, advance a fixed-point
+velocity: `unk60` holds the fractional accumulator; `var_v1 = (unk2C += unk60)`,
+then `unk60 += 0xFFFF0000` (subtract a whole unit from the fraction). If the
+new `unk2C < unk20` (overshot the floor), clamp `unk2C = unk20`, set
+`unk60 = 0x30000`, call `func_80071824(arg0, func_80068CD4)` to switch states,
+and reload `var_v1`. Then if `var_v1 < 0`, fire four `func_80088C80` calls on
+`&arg0->unk28` with args `(0xC0000, 0x180000, 0..3)`. Always ends with
+`func_800483FC(&D_801248D4, func_800681A4, arg0)`.
+
+m2c produced a 99.66% match with only register-numbering differences (target
+used `t9`/`t0`, mine used `t8`/`t9`). The fix was rewriting the two-line
+````c
+var_v1 = arg0->unk2C + temp_v0;
+arg0->unk2C = var_v1;
+````
+as the single compound-assignment form
+````c
+var_v1 = (arg0->unk2C += temp_v0);
+````
+This is the same family of pattern noted before: collapsing an
+add-then-store-then-read-back into a compound assignment lets IDO allocate the
+result directly to the register it ends up in, fixing the temp-register order.
+The `3 ^ 0` and `goto dummy_label` the permuter emitted alongside were pure
+noise and were not kept.

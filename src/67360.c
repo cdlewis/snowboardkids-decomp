@@ -30,6 +30,16 @@ typedef struct {
 } Struct68BF0;
 
 typedef struct {
+    char pad0[0x20];
+    /* 0x20 */ s32 unk20;
+    char pad24[4];
+    /* 0x28 */ s32 unk28;
+    /* 0x2C */ s32 unk2C;
+    char pad30[0x30];
+    /* 0x60 */ s32 unk60;
+} Struct68DB4;
+
+typedef struct {
     char pad0[0x18];
     /* 0x18 */ s32 unk18;
     /* 0x1C */ s32 unk1C;
@@ -46,6 +56,8 @@ typedef struct {
     /* 0x3C */ s16 unk3C;
 } Struct69678;
 
+extern void func_800681A4(Struct68DB4 *);
+extern void func_80068CD4(Struct68DB4 *);
 extern void func_800684E4(Struct68BF0 *);
 extern void func_80068EA0(Struct68BF0 *);
 extern void func_8006935C(Struct69678 *);
@@ -135,7 +147,33 @@ void func_80068BF0(Struct68BF0 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80068CD4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80068DB4.s")
+void func_80068DB4(Struct68DB4 *arg0) {
+    s32 temp_a2;
+    s32 temp_v0;
+    s32 var_v1;
+    void *temp_s1;
+
+    if (D_80121B56 == 0) {
+        temp_v0 = arg0->unk60;
+        temp_a2 = arg0->unk20;
+        var_v1 = (arg0->unk2C += temp_v0);
+        arg0->unk60 = temp_v0 + 0xFFFF0000;
+        if (var_v1 < temp_a2) {
+            arg0->unk2C = temp_a2;
+            arg0->unk60 = 0x30000;
+            func_80071824(arg0, func_80068CD4);
+            var_v1 = arg0->unk2C;
+        }
+        temp_s1 = &arg0->unk28;
+        if (var_v1 < 0) {
+            func_80088C80(temp_s1, 0xC0000, 0x180000, 0);
+            func_80088C80(temp_s1, 0xC0000, 0x180000, 1);
+            func_80088C80(temp_s1, 0xC0000, 0x180000, 2);
+            func_80088C80(temp_s1, 0xC0000, 0x180000, 3);
+        }
+    }
+    func_800483FC(&D_801248D4, func_800681A4, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80068EA0.s")
 
