@@ -13,10 +13,16 @@ extern void func_8002B1FC(void);
 extern void func_8002B424(void);
 extern void func_8000F8AC(s16, s16, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
+extern void func_8001BA2C(s32, s32, s32, s32);
+extern void func_80013D0C(s32, s32, char *, s32, s32);
+extern int sprintf(char *, const char *, ...);
 extern s32 func_80043040(s16);
 extern s16 D_80112172;
 extern u8 D_80121B5E;
+extern s32 D_80121D8C;
 extern u8 D_800B7198[];
+
+const char D_800E0EA0[] = "%6dG";
 
 struct Struct29E00 {
     char pad0[0x18];
@@ -164,7 +170,16 @@ void func_8002B2FC(Struct29E00 *arg0) {
     func_80071824((s32) arg0, func_8002B1FC);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_8002B338.s")
+void func_8002B338(Struct29E00 *arg0) {
+    char sp40[0x18];
+
+    if (D_80121B5E != 3) {
+        func_8001BA2C(arg0->unk18, arg0->unk1A, 0x5000, 0x4000);
+        func_8000F8AC((s16)(arg0->unk18 + 8), (s16)(arg0->unk1A + 4), func_80043040(D_80112172), 0x11, 0x20, 0x20, 0, arg0->unk1C, 0);
+        sprintf(sp40, D_800E0EA0, D_80121D8C);
+        func_80013D0C((s16)(arg0->unk18 + 0x10), (s16)(arg0->unk1A + 0x10), sp40, 0, arg0->unk1C);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/29E00/func_8002B424.s")
 
