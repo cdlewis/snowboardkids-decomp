@@ -27,7 +27,7 @@ extern void func_800483FC(void *, void *, void *);
 extern s32 func_8004885C(void *);
 extern void func_8007C130(s32, s16, s16);
 extern void func_80039A70(Struct3A0E0 *);
-extern void func_80039E5C(void);
+extern void func_80039E5C(Struct3A0E0 *);
 extern void func_8003B430(void);
 extern void func_80039CEC(void);
 extern void func_8003A46C(void);
@@ -275,7 +275,21 @@ void func_80039E08(void *arg0) {
     func_800428C8(3);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3A0E0/func_80039E5C.s")
+void func_80039E5C(Struct3A0E0 *arg0) {
+    s32 sp;
+
+    sp = func_80041FB4(3);
+    arg0->unk18 += 0xFFFD8000;
+    if ((sp == 1) && (arg0->unk18 < 0x800001)) {
+        *(u16 *)((char *)arg0 + 0x2A) = 0;
+        func_80071824((s32)arg0, (void (*)(void))func_80039E08);
+        D_8010B1A2 = 0x2D;
+    } else if ((sp == 1) && (arg0->unk18 >= 0x800001)) {
+        func_80041DD4(3, 0x4B);
+    }
+    func_8004209C(3, arg0->unk18, arg0->unk1C, arg0->unk20);
+    func_8004298C(3, arg0->unk2E, arg0->unk30, 0xB);
+}
 
 void func_80039F2C(void *arg0) {
     if (D_8010B1A2 == 0x2C) {
