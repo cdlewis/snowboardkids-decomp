@@ -990,3 +990,29 @@ This was the only difference between a 70% (a2 + stack spill) and a 100% (s0)
 match in `func_8006713C`. Compare with `func_80065764`/`func_800666B0`, which
 keep the loop counter in a register and spill `arg0` to the stack instead.
 
+
+### Don't cache a struct-field value the target keeps reloading from memory
+
+In `func_80039E5C` (a state-machine callback in `src/3A0E0.c`), the value
+`arg0->unk18` is read several times across `jal` calls. Writing it into a local
+(`var_a1 = arg0->unk18 += ...; ... var_a1 = arg0->unk18;`) caused IDO 5.3 to
+spill that local into a callee-saved register (`s1`), adding `sw/lw s1` pairs
+and a larger frame — a clear mismatch against a target that reloads
+`lw a1, 0x18(s0)` fresh before every use.
+
+The fix was to drop the local entirely and reference the field directly each
+time:
+
+```c
+arg0->unk18 += 0xFFFD8000;
+if ((sp == 1) && (arg0->unk18 < 0x800001)) { ... }
+else if ((sp == 1) && (arg0->unk18 >= 0x800001)) { ... }
+func_8004209C(3, arg0->unk18, arg0->unk1C, arg0->unk20);
+```
+
+Note the compiler still reuses the in-register sum (`t7`) for the *first*
+comparison right after the `+=`, but reloads from memory for later uses and
+after calls — matching the target exactly. If a target repeatedly loads a field
+from memory instead of holding it in a saved register, prefer direct field
+access over a caching local. Compare with the `var_a1`-style functions
+(`func_8003A324`, `func_80039F7C`) where the local *is* present in the target.
