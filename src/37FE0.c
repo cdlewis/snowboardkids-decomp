@@ -328,9 +328,30 @@ void func_80037CAC(void *arg0) {
     func_800428C8(2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/37FE0/func_80037D48.s")
+void func_80037D48(Struct37FE0 *arg0) {
+    s32 unused;
+    s32 sp20;
 
-void func_80037D48(void);
+    sp20 = func_80041FB4(2);
+    arg0->unk18 += 0xFFF00000;
+    arg0->unk2A += 1;
+    if (arg0->unk2A < 3) {
+        arg0->unk1C += 0x140000;
+    } else {
+        arg0->unk1C += 0xFFEC0000;
+    }
+    func_8004209C(2, arg0->unk18, arg0->unk1C, arg0->unk20);
+    func_800428C8(2);
+    if (sp20 == 1) {
+        arg0->unk2A = 0;
+        func_80071824((s32) arg0, func_80037CAC);
+        arg0->unk1C = 0;
+        func_8004209C(2, arg0->unk18, 0, arg0->unk20);
+        func_80041DD4(2, 0x1B);
+        D_8010B1AA = 0;
+        func_8003CD9C(0x18, -0x36, 2, 1);
+    }
+}
 
 void func_80037E3C(s32 arg0) {
     func_800428C8(2);
