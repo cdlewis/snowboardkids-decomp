@@ -78,6 +78,7 @@ void func_8003D5F8(Struct3CAF0 *arg0);
 void func_8003D580(Struct3CAF0 *arg0);
 void func_8003D4C0(Struct3CAF0 *arg0);
 void func_8003D3C0(Struct3CAF0 *arg0);
+void func_8003D7C0(Struct3CAF0 *arg0);
 void func_8003D88C(Struct3CAF0 *arg0);
 void func_8003DA98(Struct3CAF0 *arg0);
 void func_8003DB84(Struct3CAF0 *arg0);
@@ -495,7 +496,19 @@ void func_8003D720(Struct3CAF0 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003D7C0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003D88C.s")
+void func_8003D88C(Struct3CAF0 *arg0) {
+    s16 *temp_v0;
+
+    temp_v0 = &arg0->unk20;
+    func_800483FC(&D_80124838, func_8003D3C0, arg0);
+    if (D_8010B1A2 == 0x10) {
+        func_80071824(arg0, func_8003D7C0);
+        arg0->unk18 = 0x14;
+        temp_v0[0] = 0;
+        temp_v0[1] = 0x100;
+        D_8010B1A5 = 0x14;
+    }
+}
 
 void func_8003D908(Struct3CAF0 *arg0) {
     func_80017168((u8 *)arg0 + 0x20, func_80043040(D_8011217C));
