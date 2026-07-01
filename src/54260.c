@@ -9,8 +9,29 @@ extern void func_8005537C(void *);
 extern void func_80042A58(s32, s32);
 extern void func_80048278(s32, s32, void *, s32);
 extern s16 D_801235B0;
+extern u8 D_80156608;
+extern s16 D_80112184;
+extern s32 func_80043040(s16);
+extern void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
 
-#pragma GLOBAL_ASM("asm/nonmatchings/54260/func_80053660.s")
+typedef struct {
+    char pad[0x10];
+    u16 unk10;
+    char pad12[6];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    char pad1E[0xA];
+    u16 unk28;
+    s16 unk2A;
+} Struct80053660;
+
+void func_80053660(Struct80053660 *arg0) {
+    if (D_80156608 == arg0->unk10) {
+        func_8000F030((s16)(arg0->unk18 >> 4), (s16)(arg0->unk1A >> 4), func_80043040(D_80112184), (arg0->unk1C + 2) & 0xFFFF,
+                      arg0->unk28, arg0->unk28, 0, arg0->unk2A + 2);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/54260/func_800536F4.s")
 
