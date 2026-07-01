@@ -912,3 +912,34 @@ Two non-obvious codegen facts:
      in the same file use the s16 struct. Casts on an s16 field give `lh`+`andi`,
      never a clean `lhu`; pick the struct variant whose field type matches the
      load.
+
+## func_8003D88C
+
+Small `Struct3CAF0` callback. Calls `func_800483FC`, then on
+`D_8010B1A2 == 0x10` installs a callback, sets fields, and writes a flag.
+
+- **Hoisting a pointer temp before a call changes IDO's spill strategy.**
+  The body stores to `arg0->unk20` and `arg0->unk22`. Writing the natural
+  ```c
+  func_800483FC(...);
+  if (...) {
+      ...
+      s16 *t = &arg0->unk20;
+      t[0] = 0; t[1] = 0x100;
+  }
+  ```
+  makes IDO keep `arg0` in a register copy (`move a2,a0`) and use direct
+  offsets (`sh 0x20(a2)`, `sh 0x22(a2)`), which mismatches. The target
+  instead spills `arg0` to its stack home and reloads it (`sw a0,0x18(sp)` /
+  `lw t8,0x18(sp)`), then materializes the pointer (`addiu v0,t8,0x20`;
+  `sh 0(v0)`, `sh 2(v0)`).
+- **Fix: compute the pointer temp *before* the call:**
+  ```c
+  s16 *t = &arg0->unk20;   // hoisted above func_800483FC
+  func_800483FC(...);
+  if (...) { ...; t[0]=0; t[1]=0x100; ... }
+  ```
+  The address `&arg0->unk20` is invariant across the call (arg0 itself
+  isn't reassigned), so hoisting is semantics-preserving and is what
+  reproduces the spill/reload + materialized-pointer codegen. The
+  decomp-permuter found this; it's a legitimate transformation, not noise.
