@@ -19,6 +19,7 @@ typedef struct {
 } Timer79030;
 
 extern Timer79030 D_80121B74;
+extern Timer79030 D_80121B78;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/79030/func_80078430.s")
 
@@ -106,7 +107,24 @@ void func_8007A2B8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/79030/func_8007A350.s")
+void func_8007A350(void) {
+    if (D_80121B56 == 0) {
+        D_80121B78.unk2 = D_80121B78.unk2 - 0x358;
+        if (D_80121B78.unk2 < 0) {
+            D_80121B78.unk2 = 0x60F8;
+            D_80121B78.unk1 = D_80121B78.unk1 - 1;
+            if (D_80121B78.unk1 < 0) {
+                D_80121B78.unk1 = 0x3B;
+                D_80121B78.unk0 = D_80121B78.unk0 - 1;
+                if (D_80121B78.unk0 < 0) {
+                    D_80121B78.unk2 = 0;
+                    D_80121B78.unk1 = 0;
+                    D_80121B78.unk0 = 0;
+                }
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/79030/func_8007A3D8.s")
 
