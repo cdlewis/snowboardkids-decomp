@@ -1,6 +1,5 @@
 #include "common.h"
 
-extern void func_80033C44(void);
 extern void func_80033D64();
 extern void func_80033504();
 extern void func_80034BC4();
@@ -523,7 +522,26 @@ void func_80033BE0(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80033C44.s")
+void func_80033C44(Struct33680 *arg0) {
+    s32 sp24;
+    s32 sp20;
+
+    sp20 = func_80041FB4(0);
+    func_800428C8(0);
+    if (sp20 == 1) {
+        arg0->unk2A++;
+        if ((arg0->unk2A % 20) == 0) {
+            func_80041DD4(0, 0x2F);
+            if ((arg0->unk2A / 20) == 3) {
+                arg0->unk2A = 0;
+                func_80071824((s32)arg0, func_80033BE0);
+            }
+        }
+    } else {
+        arg0->unk18 += 0xFFFF0000;
+        func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
+    }
+}
 
 void func_80033D0C(s32 arg0) {
     struct {
