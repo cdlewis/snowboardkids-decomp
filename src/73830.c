@@ -525,11 +525,40 @@ loop:
 
 #pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80077DA0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/73830/func_80078078.s")
-
+extern void func_80072138(s32, s32);
 extern void func_8007105C(void);
+extern void func_80078198(void);
+extern s32 D_80123778;
+extern s16 D_80121B52;
+
+void func_80078078(void) {
+    s32 temp_v0;
+
+    D_800DEF14 -= 0x10;
+    if (D_800DEF14 < 0) {
+        D_800DEF14 = 0;
+        temp_v0 = D_80123778;
+        if ((temp_v0 & 0x20400) && (D_80121B52 != 9)) {
+            func_80072138(0x19, 0x32);
+            D_80121B52 += 1;
+            temp_v0 = D_80123778;
+        }
+        if ((temp_v0 & 0x10800) && (D_80121B52 != 1)) {
+            func_80072138(0x19, 0x32);
+            D_80121B52 -= 1;
+            temp_v0 = D_80123778;
+        }
+        if (temp_v0 & 0x9000) {
+            D_801235B4 = 1;
+            func_80072138(0x18, 0x32);
+            func_80072114(0x3C);
+            func_8009956C(func_80078198, 0);
+        }
+    }
+    func_8007105C();
+}
+
 extern void func_800781FC(void);
-extern s16 D_800DEF14;
 
 void func_80078198(void) {
     D_800DEF14 += 0x10;
