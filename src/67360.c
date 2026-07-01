@@ -1,5 +1,6 @@
 #include "common.h"
 
+extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern s32 func_800430D0(void);
 extern void func_80045990(s32, s32, void *, void *);
@@ -14,6 +15,11 @@ extern char D_800D9BD8[];
 extern s32 D_801248D4;
 extern s16 D_80112168;
 extern u8 D_80121B56;
+extern u8 D_80112130[];
+extern s16 *D_800D91E8[];
+extern s16 D_80121B50;
+extern void func_80066E10(void);
+extern void func_80067034(void *);
 extern void func_80067364(void *);
 extern void func_800674B4(void *);
 
@@ -80,7 +86,26 @@ typedef struct Scratch674B4 {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_80067034.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/67360/func_8006713C.s")
+void func_8006713C(void *arg0) {
+    void *new_var;
+    s16 *var_v0;
+
+    new_var = arg0;
+    *(s16 *)((u8 *)new_var + 0x1E) = 0;
+    var_v0 = D_800D91E8[D_80121B50];
+    if (var_v0[1] != -1) {
+        do {
+            *(s16 *)((u8 *)new_var + 0x1E) += 1;
+            var_v0 += 8;
+        } while (var_v0[1] != -1);
+    }
+    if (*(s16 *)((u8 *)new_var + 0x1E) != 0) {
+        *(s16 *)&D_80112130[0x48] = func_80042D58(*(s16 *)((u8 *)new_var + 0x1E) << 6);
+        *(s32 *)((u8 *)new_var + 0x18) = func_80043040(*(s16 *)&D_80112130[0x48]);
+        func_80067034(new_var);
+        func_80071824(new_var, func_80066E10);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/67360/func_800671F4.s")
 
