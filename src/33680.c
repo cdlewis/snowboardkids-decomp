@@ -50,7 +50,7 @@ void func_80033688(s32 arg0);
 void func_80032FF0(void *arg0);
 void func_800330EC(Struct33680 *arg0);
 void func_8003320C(Struct33680 *arg0);
-void func_8003329C(void);
+void func_8003329C(Struct33680 *arg0);
 void func_80033B20(Struct33680 *arg0);
 void func_80034AB0(Struct33680 *arg0);
 void func_800350A4(Struct33680 *arg0);
@@ -284,7 +284,33 @@ void func_8003320C(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_8003329C.s")
+void func_8003329C(Struct33680 *arg0) {
+    s32 unused;
+    s32 sp20;
+
+    sp20 = func_80041FB4(0);
+    arg0->unk18 += 0xFFF00000;
+    arg0->unk2A += 1;
+    if (arg0->unk2A < 3) {
+        arg0->unk1C += 0x140000;
+    } else {
+        arg0->unk1C += 0xFFEC0000;
+    }
+    if (arg0->unk2A == 2) {
+        D_8010B1A2 = 0x30;
+    }
+    func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
+    func_800428C8(0);
+    if (sp20 == 1) {
+        arg0->unk2A = 0;
+        func_80071824((s32) arg0, func_8003320C);
+        arg0->unk1C = 0;
+        func_8004209C(0, arg0->unk18, 0, arg0->unk20);
+        func_80041DD4(0, 0x1B);
+        D_8010B1A8 = 0;
+        func_8003CD9C(0x1C, -0x30, 0, 1);
+    }
+}
 
 void func_800333A8(void *arg0) {
     func_800428C8(0);

@@ -943,3 +943,28 @@ Small `Struct3CAF0` callback. Calls `func_800483FC`, then on
   isn't reassigned), so hoisting is semantics-preserving and is what
   reproduces the spill/reload + materialized-pointer codegen. The
   decomp-permuter found this; it's a legitimate transformation, not noise.
+
+## func_8003329C
+
+Sibling of `func_80032D7C` (same `Struct33680` callback shape). Two lessons:
+
+- **Don't introduce a `u16` temp for `field + 1` when the original reused the
+  field.** m2c produced `u16 temp = arg0->unk2A + 1; ...; arg0->unk2A = temp;
+  if (temp < 3)`. That made IDO mask the value into the temp register and
+  store the *masked* value (`sh $masked`). The target keeps the unmasked
+  `+1` (`addiu t9,t8,1`), stores it (`sh t9`), and only masks into a fresh
+  register for the comparison (`andi t0,t9,0xffff; slti at,t0,3`). Writing it
+  inline as the reference function does matches exactly:
+  ```c
+  arg0->unk2A += 1;
+  if (arg0->unk2A < 3) { ... }
+  ```
+  (The `if (arg0->unk2A == 2)` check further down re-loads from memory, so the
+  `== 2` and `< 3` tests intentionally use different value sources.)
+
+- **A dummy `s32 unused;` declaration controls the stack slot of a real
+  local.** IDO (5.3, -O2) assigns locals to *decreasing* stack offsets in
+  declaration order. With only `s32 sp20;`, it landed at `0x24(sp)`; the target
+  has it at `0x20(sp)`. Declaring `s32 unused;` *before* `s32 sp20;` (exactly
+  as the already-matched `func_80032D7C` does) pushes `sp20` down to `0x20(sp)`
+  for a 100% match. The `unused` slot occupies `0x24(sp)` and is never read.
