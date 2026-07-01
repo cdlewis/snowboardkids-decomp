@@ -968,3 +968,25 @@ Sibling of `func_80032D7C` (same `Struct33680` callback shape). Two lessons:
   has it at `0x20(sp)`. Declaring `s32 unused;` *before* `s32 sp20;` (exactly
   as the already-matched `func_80032D7C` does) pushes `sp20` down to `0x20(sp)`
   for a 100% match. The `unused` slot occupies `0x24(sp)` and is never read.
+
+## Local alias forces callee-saved register allocation (s0)
+
+When a function keeps `arg0` live across several `jal` calls AND uses it inside a
+loop, IDO 5.3 may still keep it in a caller-saved register (`a2`) and
+spill/reload it around each call (frame `-0x18`, no `s0` save). The target may
+instead keep it in callee-saved `s0` (frame `-0x20`, `sw s0`).
+
+A reliable way to force the `s0` allocation is to introduce a **local alias** of
+the argument at the top of the function and use that alias everywhere:
+
+```c
+void func(void *arg0) {
+    void *new_var = arg0;   /* local copy -> IDO colors this into s0 */
+    /* ... use new_var instead of arg0 ... */
+}
+```
+
+This was the only difference between a 70% (a2 + stack spill) and a 100% (s0)
+match in `func_8006713C`. Compare with `func_80065764`/`func_800666B0`, which
+keep the loop counter in a register and spill `arg0` to the stack instead.
+
