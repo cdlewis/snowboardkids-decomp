@@ -1104,3 +1104,24 @@ Reversing to u16 temp then s32 sp20 (mirroring sibling func_8003B074) placed
 sp20 at 0x20(sp) as in the target - a 100% match. When chasing a lone sw/lw
 stack-offset mismatch against a known-good sibling, mirror its local-variable
 declaration order exactly.
+
+## IDO 5.3: split declaration+assignment of a pointer arg hoists its `lui`
+
+For func_80021EA8, passing a computed array-pointer argument inline as
+`func(..., &D_800B6210[D_80121B50 * 0x94], ...)` produced correct code but
+emitted the base-address `lui %hi(D_800B6210)` one instruction too late vs the
+target (98.89% — only that single reordered `lui`). The pointer matched only
+when its declaration and assignment were *separate statements*:
+
+```c
+u8 *ptr;
+ptr = &D_800B6210[D_80121B50 * 0x94];
+func_80013154(arg0->unk18, arg0->unk1A, ptr, 1, arg0->unk1C, 0);
+```
+
+A combined initializer (`u8 *ptr = &D_800B6210[...];`) did NOT match — IDO
+schedules the `lui %hi` earlier only with the split form, letting the scheduler
+interleave it between the halfword loads. When chasing a single misplaced
+address-materialization `lui`, try splitting a local pointer's declaration from
+its assignment. (decomp-permuter found this directly; the manual
+combined-initializer attempt stayed at 98.89%.)
