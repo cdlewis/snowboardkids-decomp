@@ -1207,3 +1207,31 @@ The captured store to `D_80121848` makes IDO keep the loaded value live across
 the store, so it allocates a distinct temp (`t6`) for the `lui` base rather than
 reusing `s0`. When a global-pointer load's `lui` base register differs from its
 `lw` destination, try a compound `local = (global = expr)` initializer.
+
+
+## IDO 5.3: source order of struct-field stores steers temp register numbering
+
+For func_800721B8 (a sibling of the already-matched func_80072138), the body
+writes several byte fields of a QueueEntry72430 (6x u8). The compiled store
+sequence is scheduled out of source order (unk0, unk2, unk3, unk5, unk1, unk4),
+and the temp registers used for the loaded constants (1, 0x80) and reloaded
+args (arg0, arg2) are numbered t0..t3. With the stores written in offset
+order (unk0, unk2, unk3, unk5, unk1, unk4), IDO swapped two of the temp names
+(arg0 t2, 0x80 t1) versus the target (arg0 t1, 0x80 t2), giving 99.5% with
+identical control flow.
+
+Writing the field assignments in ascending field order -- specifically moving
+the unk1 (arg0) store to appear immediately after unk0 and before unk2/unk3 --
+
+    temp_v1->unk0 = 1;
+    temp_v1->unk1 = (u8)arg0;
+    temp_v1->unk2 = (u8)arg1;
+    temp_v1->unk3 = 0x80;
+    temp_v1->unk5 = 0;
+    temp_v1->unk4 = (u8)arg2;
+
+made IDO allocate the temp registers in the exact target numbering. The emitted
+store schedule is unchanged; only the source order of the assignments influenced
+register numbering. When only temp-register names differ in an otherwise
+identical sequence of struct stores, reorder the assignments in C (rather than
+reordering logic) to steer the allocator.
