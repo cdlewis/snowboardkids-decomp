@@ -1094,3 +1094,13 @@ would naturally become t7. Neither the permuter (two runs, plateaued at 20
 diffs) nor clean source variations moved it; likely sensitive to whole-function
 register pressure (the void(void) arity vs the sibling taking an extra arg may
 be why the sibling gets t6 here for free).
+
+## IDO 5.3 stack slot ordering depends on declaration order
+
+When a function has multiple stack locals (e.g. a u16 and an s32), IDO 5.3
+assigns stack home slots based on the order of declaration. For func_8003AE8C
+(frame 0x28), declaring s32 sp20 then u16 temp placed sp20 at 0x24(sp).
+Reversing to u16 temp then s32 sp20 (mirroring sibling func_8003B074) placed
+sp20 at 0x20(sp) as in the target - a 100% match. When chasing a lone sw/lw
+stack-offset mismatch against a known-good sibling, mirror its local-variable
+declaration order exactly.
