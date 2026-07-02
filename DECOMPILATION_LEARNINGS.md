@@ -1354,3 +1354,21 @@ typed view struct at the top of the body: `DstView *dst = arg0; SrcView *src =
 (SrcView*)arg1;`. The assignment is a register no-op (stays in $a0/$a1), so
 codegen is identical to a directly-typed parameter while avoiding churn across
 many callers and conflicting prototypes.
+
+## Fixed-point matrix packing (func_800486BC)
+
+A function that converts a 3x4 fixed-point source matrix (s16 cells at 0x00..0x10
+plus s32 translation words at 0x14/0x18/0x1C) into a packed display matrix (16
+s32 words) matched cleanly by declaring two view structs and writing each output
+word as a single `low | high` expression. Key points for codegen:
+
+- Source cells must be `s16` so reads emit `lh` and signed shifts emit `sra`
+  (`>> 12`, `>> 16`). Translation fields are `s32` read with `lw`.
+- `(field << 4) & 0xFFFF0000` emits `sll ...,4` + `and ...,0xFFFF0000` (lui-loaded
+  mask); `(field << 4) & 0xFFFF` emits `sll` + `andi`. `(field << 20)` and
+  `(field << 16)` emit `sll` with the matching shift amount.
+- The OR operand order in the source matters for register allocation: write the
+  low-16 part first then the high-16 part (`low | high`) to match the `or rd, low,
+  high` ordering exactly. Casting `void*` args to local typed-view structs
+  (`Src *src = arg0; Dst *dst = arg1;`) is a register no-op and matches the
+  `void*, void*` ABI used by the callers.
