@@ -16,6 +16,11 @@ typedef struct {
     u8 unk6;
 } Struct8010AF90;
 
+typedef struct {
+    s16 unk0;
+    char pad[0x1E];
+} StructAFA0;
+
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80072138(s32, s32);
 extern void func_8009956C(void *, s32);
@@ -31,11 +36,14 @@ extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_800437F0(void *, void *, s32);
 extern void func_80070EC0(s32);
 extern void func_80001618(void);
+extern void func_800016D8(u16);
 extern void func_80001858(void);
 extern void func_8000C818(void);
 extern void func_8000C924(void);
 extern void func_8000CC5C(void);
 extern void func_8000CEA0(void);
+extern void func_8000CE0C(void);
+extern void func_8003205C(void *);
 extern u8 func_800325D0;
 extern u8 func_800310EC;
 extern u8 func_80031330;
@@ -44,6 +52,7 @@ extern u8 func_80031B24;
 extern u8 func_80031C04;
 
 extern Struct8010AF90 D_8010AF90;
+extern StructAFA0 D_8010AFA0[];
 extern Struct801235B8 *D_801235B8;
 extern s8 D_800DEED4;
 extern u8 D_800EC9D8;
@@ -159,7 +168,43 @@ void func_8000CB08(void) {
     func_8007105C();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/D200/func_8000CC5C.s")
+void func_8000CC5C(void) {
+    if ((D_80123778 & 0x10800) && (D_8010AF90.unk2 != 0)) {
+        D_8010AF90.unk2 = 0;
+        func_80072138(0x19, 0x32);
+    } else if ((D_80123778 & 0x20400) && (D_8010AF90.unk2 != 1)) {
+        D_8010AF90.unk2 = 1;
+        func_80072138(0x19, 0x32);
+    }
+    if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+        func_80072138(0x18, 0x32);
+        if (D_8010AF90.unk2 == 0) {
+            func_800016D8(D_8010AF90.unk1);
+            if (D_800EC9D8 == 0) {
+                D_8010AFA0[D_8010AF90.unk1].unk0 = 0;
+                func_80001618();
+                func_80001858();
+                func_8009956C(func_8000C924, 0);
+                D_8010AF90.unk3 = 1;
+            } else {
+                func_80071408(func_8003205C, 0, 0x64);
+                D_8010AF90.unk6 = 0;
+                D_8010AF90.unk3 = 4;
+                func_8009956C(func_8000CE0C, 0);
+            }
+        } else {
+            func_8009956C(func_8000CB08, 0);
+            D_8010AF90.unk3 = 2;
+            D_8010AF90.unk2 = 0;
+        }
+    } else if (D_80123778 & 0x4000) {
+        func_80072138(0x18, 0x32);
+        func_8009956C(func_8000CB08, 0);
+        D_8010AF90.unk3 = 2;
+        D_8010AF90.unk2 = 0;
+    }
+    func_8007105C();
+}
 
 void func_8000CE0C(void) {
     s32 state;
