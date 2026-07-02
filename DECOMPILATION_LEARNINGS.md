@@ -54,6 +54,12 @@ patterns, and verified layout/linking rules.
   constant assignment fixed a pure scheduling/register diff in func_800994F4
   (the constant store filled the final load's delay slot and landed in `$t9`
   instead of `$t8`).
+- For tight pointer-walk loops with two global base addresses, IDO can schedule
+  independent `addiu %lo` materializations differently depending on the exact
+  source nesting/statement shape even when the control flow is equivalent.
+  Keeping the nested `do { ... } while (0)` and inner loop body collapsed to the
+  proven source shape fixed a pure two-instruction scheduling swap in
+  func_8006D700.
 
 ## Structs, Types, and Data Access
 
