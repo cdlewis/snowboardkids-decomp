@@ -14,10 +14,13 @@ These instructions assume you are in the root directory of the Github repo.
 Run the permuter with the `--source-file` (or `-s`) flag pointing to your best matching attempt:
 
 ```bash
-timeout 300s ./tools/permuter --source-file nonmatchings/<function-name>/base_N.c <function name>
+printf 'max permuter timeout: %ss\n' "$((NIGEL_TIMEOUT_DEADLINE_UNIX - $(date +%s) - 120))"
+timeout <seconds>s ./tools/permuter --source-file nonmatchings/<function-name>/base_N.c <function name>
 ```
 
-This will automatically create a permuter environment and run the permuter for 300 seconds. You can tweak this number to an appropriate time. If you fail to use the `timeout` command the permuter will run forever.
+This will automatically create a permuter environment and run the permuter until the specified timeout expires. `NIGEL_TIMEOUT_DEADLINE_UNIX` is the harness deadline; subtracting 120 seconds leaves at least two minutes to inspect and interpret the permuter output before the agent times out. If the calculated timeout is too small for a useful run, do not start the permuter.
+
+You can tweak the timeout to an appropriate shorter time, but always check `NIGEL_TIMEOUT_DEADLINE_UNIX` first and leave at least 120 seconds before that deadline. Use a literal numeric timeout such as `timeout 300s`; the hook checks the command before shell variables expand. If you fail to use the `timeout` command the permuter will run forever.
 
 **Requirements for source file:**
 - Must compile successfully
