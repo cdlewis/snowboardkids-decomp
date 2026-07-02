@@ -33,6 +33,36 @@ extern void *D_801235B8;
 extern s32 D_80124838;
 extern s32 D_80124868;
 
+typedef struct {
+    /* 0x00 */ u16 unk0;
+    /* 0x02 */ u16 unk2;
+    /* 0x04 */ u16 unk4;
+    /* 0x06 */ u16 unk6;
+    /* 0x08 */ u16 unk8;
+    /* 0x0A */ u16 unkA;
+    /* 0x0C */ u16 unkC;
+    /* 0x0E */ u16 unkE;
+    /* 0x10 */ u8 unk10[0x4];
+} SrcStruct_80017168;
+
+typedef struct {
+    /* 0x00 */ s16 unk0;
+    /* 0x02 */ s16 unk2;
+    /* 0x04 */ s16 unk4;
+    /* 0x06 */ s16 unk6;
+    /* 0x08 */ s16 unk8;
+    /* 0x0A */ s16 unkA;
+    /* 0x0C */ s16 unkC;
+    /* 0x0E */ s16 unkE;
+    /* 0x10 */ s16 unk10;
+    /* 0x12 */ s16 unk12;
+    /* 0x14 */ u8 *unk14;
+    /* 0x18 */ u8 *unk18;
+    /* 0x1C */ u8 *unk1C;
+    /* 0x20 */ u8 *unk20;
+    /* 0x24 */ s16 unk24;
+} DstStruct_80017168;
+
 #pragma GLOBAL_ASM("asm/nonmatchings/15200/func_80014600.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/15200/func_80014AA4.s")
@@ -238,7 +268,26 @@ void func_8001710C(void *arg0) {
     func_80071824(temp_a2, func_800170AC);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/15200/func_80017168.s")
+void func_80017168(void *arg0, s32 arg1) {
+    DstStruct_80017168 *dst = arg0;
+    SrcStruct_80017168 *src = (SrcStruct_80017168 *)arg1;
+
+    dst->unk0 = 0;
+    dst->unk2 = 0;
+    dst->unk8 = src->unk0;
+    dst->unkA = src->unk2;
+    dst->unk4 = src->unk4;
+    dst->unk6 = src->unk6;
+    dst->unkC = -0x90;
+    dst->unkE = -0x68;
+    dst->unk10 = 0x120;
+    dst->unk12 = 0xD0;
+    dst->unk18 = src->unkA + (u8 *)src;
+    dst->unk14 = src->unkE + (u8 *)src;
+    dst->unk1C = (u8 *)src + 0x10;
+    dst->unk20 = src->unkC + (u8 *)src;
+    dst->unk24 = -1;
+}
 
 void n_alSynFreeFX(s32 arg0) {
 
