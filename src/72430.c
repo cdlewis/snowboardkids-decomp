@@ -145,7 +145,29 @@ s32 func_80072138(s16 arg0, s16 arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/72430/func_800721B8.s")
+s32 func_800721B8(s16 arg0, s16 arg1, s16 arg2) {
+    s32 temp_v0;
+    QueueEntry72430 *temp_v1;
+
+    if (arg1 <= 0) {
+        return 0;
+    }
+    temp_v0 = func_80071B74();
+    if (temp_v0 == -1) {
+        return 1;
+    }
+    if (arg1 >= 0x100) {
+        arg1 = 0xFF;
+    }
+    temp_v1 = &D_80121978[temp_v0];
+    temp_v1->unk0 = 1;
+    temp_v1->unk1 = (u8)arg0;
+    temp_v1->unk2 = (u8)arg1;
+    temp_v1->unk3 = 0x80;
+    temp_v1->unk5 = 0;
+    temp_v1->unk4 = (u8)arg2;
+    return 0;
+}
 
 struct OSThread_s;
 
