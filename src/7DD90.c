@@ -1,8 +1,10 @@
 #include "common.h"
 
 extern s32 D_80121B98;
+extern s32 D_80121B94;
 extern s32 D_80121B90;
 extern s16 D_8011215C[];
+extern s16 D_80112166;
 
 typedef struct Struct7DD90 {
     u16 unk0;
@@ -32,7 +34,17 @@ extern s32 func_80043040(s16);
 extern void func_80081EF4(Struct7DD90 *);
 extern void func_80082070(Struct7DD90 *);
 
-#pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_8007D190.s")
+void func_8007D190(void) {
+    s32 ptr;
+    s32 v1;
+
+    ptr = func_80043040(D_80112166);
+    D_80121B90 = ptr + 2;
+    v1 = D_80121B90 + *(u16 *)ptr * 6;
+    D_80121B94 = v1 + 2;
+    v1 = D_80121B94 + *(u16 *)v1 * 8;
+    D_80121B98 = v1 + 2;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/7DD90/func_8007D200.s")
 
