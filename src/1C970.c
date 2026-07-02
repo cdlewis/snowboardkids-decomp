@@ -28,6 +28,7 @@ extern s32 func_80043040(s16);
 extern s16 D_80112172;
 extern s16 D_80112178;
 extern u8 D_800B6B88[];
+extern u8 D_800B6210[];
 extern s16 D_80121B50;
 
 void func_8002172C(Actor1C970B *arg0);
@@ -276,7 +277,14 @@ void func_80021E70(Actor1C970B *arg0) {
     func_80071824(arg0, func_80021C98);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1C970/func_80021EA8.s")
+void func_80021EA8(Actor1C970 *arg0) {
+    u8 *ptr;
+    ptr = &D_800B6210[D_80121B50 * 0x94];
+    func_80013154(arg0->unk18, arg0->unk1A, ptr, 1, arg0->unk1C, 0);
+    if (arg0->unk1E == 2) {
+        func_8000F030((s16)(arg0->unk18 + 0x60), (s16)(arg0->unk1A + 0x40), func_80043040(D_80112178), (((s32)arg0->unk1F >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1C970/func_80021F80.s")
 
