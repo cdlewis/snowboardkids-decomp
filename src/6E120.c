@@ -21,6 +21,7 @@ typedef struct {
     s32 unk98;
     s32 unk9C;
     s16 unkA0;
+    char padA2[0xE];
 } Object6E120;
 
 typedef struct {
@@ -47,6 +48,7 @@ extern void *D_800DA880[];
 extern s32 D_80121B40;
 extern s32 D_80121B44;
 extern s32 D_80121B48;
+extern s8 D_80121B54;
 extern u8 D_80121B58;
 
 void func_8006D520(u16 arg0, u16 arg1) {
@@ -68,7 +70,16 @@ void func_8006D580(u16 arg0, u16 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006D5CC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6E120/func_8006D700.s")
+void func_8006D700(void) {
+    Object6E120 *var_s1;
+    s32 var_s0;
+
+    var_s0 = 0;
+    if (D_80121B54 > 0)
+    {
+ do { var_s1 = D_801121E0; do { (D_801124A0 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B54); } while (0);
+    }
+}
 
 void func_8006D780(s32 arg0) {
     D_801124A0 = (Object6E120 *)((char *)D_801121E0 + (arg0 * 0xB0));
