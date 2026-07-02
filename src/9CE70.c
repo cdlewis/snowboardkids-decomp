@@ -187,7 +187,22 @@ s32 func_8009CF1C(void *arg0, u8 *arg1) {
     return (s32)ret;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9CE70/func_8009CF30.s")
+s32 func_8009CF30(void *arg0, u8 *arg1) {
+    u8 *ret;
+    u8 *temp;
+    u32 v;
+    short new_var;
+
+    new_var = arg1[0] << 8;
+    new_var = arg1[1] | ((0, new_var));
+    v = new_var;
+    ret = (temp = arg1) + 2;
+    *(u16 *)((u8 *)arg0 + 0xC2) = v;
+    *(u16 *)((u8 *)arg0 + 0xC4) = 0;
+    arg1 += 2;
+    arg1 -= 2;
+    return (s32)ret;
+}
 
 s32 func_8009CF50(void *arg0, u8 *arg1) {
     u32 temp_t8;
