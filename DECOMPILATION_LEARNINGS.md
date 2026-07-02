@@ -1095,6 +1095,38 @@ diffs) nor clean source variations moved it; likely sensitive to whole-function
 register pressure (the void(void) arity vs the sibling taking an extra arg may
 be why the sibling gets t6 here for free).
 
+## func_8007115C — sibling linked-list drain (100% via a zero-instruction hint)
+
+Same loop body as func_8007105C above, but the cursor head is read straight from
+D_80121848 (no separate D_80112784 source). With a single global, IDO refuses to
+keep the node in a callee-saved home the way the two-global init of the sibling
+does: clean formulations plateau at 92%. The natural body
+
+    s0->unk14 = 0;
+    s0 = D_80121848;
+    s0->unk8(s0);
+    s0 = D_80121848->unk4;
+    D_80121848 = s0;
+
+folds the `s0 = D_80121848` reload straight into `a0` (`lw a0,0(s1); lw t9,8(a0)`)
+instead of the target's `lw s0,0(s1); lw t9,8(s0); or a0,s0,zero`. Writing the
+body through the global (the trick that fixed the sibling) here regresses to 74%
+because IDO colors `s0` as `&D_80121848` rather than the node.
+
+The only thing that recovered the `move a0,s0` was a dead, three-operand `&&`
+condition immediately before the call:
+
+    if ((s0 && s0) && s0) {}
+
+IDO folds this to **zero instructions** (the objdump is identical to the target,
+27 instrs, nothing added) — it is purely an allocator-pinning hint that keeps
+`s0` live as a callee-saved home across the call setup. Two-operand forms
+(`if (s0 && s0)`, `if (s0)`) optimize away with no allocation effect; you need
+three `&&` operands. Unlike the func_8003DBE8 case (where the permuter hack only
+reached 95.7% *and* added real instructions), this hint reaches a true 100%
+byte match with no fabricated logic in the ROM, so it was accepted with an
+explanatory comment.
+
 ## IDO 5.3 stack slot ordering depends on declaration order
 
 When a function has multiple stack locals (e.g. a u16 and an s32), IDO 5.3
