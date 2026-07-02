@@ -6,6 +6,8 @@ typedef struct {
     s16 unk1A;
     s16 unk1C;
     s8 unk1E;
+    char pad1F[5];
+    u8 unk24;
 } Struct2D0E0;
 
 typedef struct {
@@ -28,6 +30,7 @@ extern void func_8002D9EC(void);
 extern void func_8002DCE8(void);
 extern void func_8002E9E4(void);
 extern void func_8002EC5C(void);
+extern void func_8002E5A4(Struct2D0E0 *);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
 extern void func_80013D0C(s32, s32, char *, s32, s32);
@@ -37,6 +40,7 @@ extern s32 func_80043040(s16);
 extern s32 D_800B34B0[];
 extern u8 D_800B7A14[];
 extern u8 D_80121D86;
+extern u8 D_80121D88;
 extern s16 D_8011217E;
 extern u8 D_800EC9E6;
 extern u8 D_8010AF70;
@@ -191,7 +195,35 @@ void func_8002E568(Struct2D0E0 *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/2D0E0/func_8002E5A4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/2D0E0/func_8002E6E4.s")
+void func_8002E6E4(Struct2D0E0 *arg0) {
+    s16 temp_v0;
+    u8 var_v0;
+
+    var_v0 = arg0->unk24;
+    switch (var_v0) {
+    case 0:
+        temp_v0 = arg0->unk1C;
+        arg0->unk18 -= 0x20;
+        if (temp_v0 >= arg0->unk18) {
+            arg0->unk18 = temp_v0;
+            arg0->unk24 = 1U;
+        }
+        var_v0 = arg0->unk24;
+        break;
+    case 1:
+        if (D_80121D88 == 1) {
+            arg0->unk24 = 2U;
+            var_v0 = 2 & 0xFF;
+        }
+        break;
+    }
+    var_v0 = arg0->unk24;
+    if (var_v0 == 2) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002E5A4, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/2D0E0/func_8002E798.s")
 

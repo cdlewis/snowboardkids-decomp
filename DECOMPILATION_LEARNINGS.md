@@ -1253,3 +1253,26 @@ A `void *unk30` declaration forced a value load and broke the match.
 
 This mirrors the existing `func_8003DDD0` (src/3E9D0.c), which uses
 `char unk30[0x14]` the same way — `temp->unk30` decays to `&unk30[0]`.
+
+## Reload reused switch variable before final check (func_8002E6E4)
+
+A function that switches on a state byte (`arg0->unk24`) and then, after the
+switch, tests the same state (`if (var_v0 == 2)`) can land in a different
+register than the target even when every instruction matches. m2c carries the
+case-local value of the switch variable through to the final test, so IDO parks
+the constant in one v-register and the state byte in another, mismatching the
+target (which keeps the state byte in `v0` and reuses an arg register for the
+literal).
+
+The fix: re-read the state from memory right before the final test:
+
+```c
+    switch (var_v0) { ... }
+    var_v0 = arg0->unk24;   /* <-- reload, not carried from the switch */
+    if (var_v0 == 2) { ... }
+```
+
+IDO hoists the reload so each path reads `lbu` once and the register allocation
+falls into line. This was found by decomp-permuter at a 94.5% baseline where the
+*only* diff was register names (`v0` vs `v1`, arg-reg vs `v0` for the literal) —
+a strong signal that the permuter, not hand-editing, is the right tool.
