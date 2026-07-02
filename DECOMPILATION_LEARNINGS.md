@@ -450,6 +450,23 @@ Takeaway: when only register names differ in a u16 read-modify-write counter,
 reach for the permuter — and prefer the masked-load + pointer-variable form
 that the file's already-matched twins use.
 
+## func_8003A46C (src/3A0E0.c)
+
+Same `lhu/addiu/andi/sh/bne` counter sibling as func_8003969C, but accessing
+`unk2A` through a typed struct field (`arg0->unk2A`) rather than a cast pointer.
+A 98.7% hand attempt differed only by register names: target loaded the counter
+into `$t7` while IDO reused `$v0` (free after the preceding `jal`), cascading
+`t8/t9/t0/t1` vs `t7/t8/t9/t0`.
+
+The single fix (found by the permuter) was masking the load explicitly:
+`temp_t8 = (arg0->unk2A & 0xFFFF) + 1;` instead of `arg0->unk2A + 1`. The mask
+is semantically a no-op (`lhu` already zero-extends) but it pushes IDO off the
+`$v0` reuse and onto the sequential `$t6/$t7/...` allocation — confirming the
+func_8003969C lesson holds for typed-field access, not just cast pointers.
+Also: declaring `temp_t8` before `sp20` placed the spilled `sp20` at `0x20($sp)`
+(matching the target) rather than `0x24($sp)`, since IDO reserves stack slots in
+declaration order (high offset first).
+
 ## func_800716A4 (src/71AC0.c)
 
 `func_800716A4` is sensitive to the signedness of the halfword field written at
