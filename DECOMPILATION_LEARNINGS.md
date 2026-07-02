@@ -1276,3 +1276,37 @@ IDO hoists the reload so each path reads `lbu` once and the register allocation
 falls into line. This was found by decomp-permuter at a 94.5% baseline where the
 *only* diff was register names (`v0` vs `v1`, arg-reg vs `v0` for the literal) —
 a strong signal that the permuter, not hand-editing, is the right tool.
+
+## Forcing IDO commutative-operand order with the comma operator (func_8009CF30)
+
+IDO's codegen for `or`/`add` is commutative, and the operand register order in
+the emitted instruction is not determined purely by source order. Loading two
+bytes then computing `(arg1[0] << 8) | arg1[1]` consistently emitted
+`or tX, arg1_1_reg, shift_reg` (loaded byte first), while the target wanted
+`or t1, t8, t9` (shift result first).
+
+Splitting the computation through a `short` intermediate fixed the register
+allocation but left the operand order flipped:
+
+    short new_var;
+    new_var = arg1[0] << 8;
+    new_var = arg1[1] | new_var;            /* -> or t1, t9, t8 (wrong) */
+
+Wrapping the right operand in a comma expression flips the order IDO assigns
+the operands, giving the exact target:
+
+    new_var = arg1[1] | ((0, new_var));     /* -> or t1, t8, t9 (right) */
+
+`(0, x)` is a standard decomp idiom for forcing evaluation/operand order; it
+has no runtime effect. Found via decomp-permuter from a 98.75% baseline where
+the only diff was this single commutative-operand flip.
+
+## Two-store layout: materialize return pointer before the zero store (func_8009CF30)
+
+For "read N bytes big-endian, store a u16, store 0, return ptr+N" functions
+(sibling of the matched `func_8009CF1C`), IDO wants the return pointer
+(`addiu v0, a1, N`) emitted before the stores, not in the `jr` delay slot.
+Achieved by computing the return value into a named temporary before the zero
+store, plus a trailing no-op pointer dance (`arg1 += N; arg1 -= N;`) mirroring
+`func_8009CF1C` (`arg1++; arg1--;`). The zero store then lands in the `jr`
+delay slot naturally.
