@@ -1372,3 +1372,28 @@ word as a single `low | high` expression. Key points for codegen:
   high` ordering exactly. Casting `void*` args to local typed-view structs
   (`Src *src = arg0; Dst *dst = arg1;`) is a register no-op and matches the
   `void*, void*` ABI used by the callers.
+
+## Callback counter with modulo scheduling (func_80039CEC)
+
+A timer/counter callback in the Struct3A0E0 family (`func_80039CEC`) increments
+`arg0->unk2A`, then tests `(value % 28) == 0` and `(value / 28) == 3`. The
+literal m2c output (`u16 temp = arg0->unk2A + 1; arg0->unk2A = temp;`) reached
+only ~95%: IDO materialized the masked value in a fresh temp register and
+emitted two spurious `move` instructions, and the divisor constant 28 landed in
+`a0` instead of `v1`, shifting every branch offset.
+
+Two changes produced a 100% match:
+
+- Declare the counter `s32 temp` (not `u16`). The mask `andi v0, t9, 0xffff`
+  still emits because `unk2A` is `u16`, but the wider local lets the value live
+  in `v0` directly with no shuffling.
+- Use a compound assignment so the incremented value is captured in one
+  expression: `temp = (arg0->unk2A += 1);`. This makes IDO keep the unmasked
+  sum (`t9`) for the store and the masked sum (`v0`) for both the `%` and `/`
+  divisions, eliminating the extra moves and letting the divisor constant settle
+  in `v1`.
+
+General takeaway: when a 16-bit field is incremented and both the new field
+value and a widened copy are needed, prefer `temp = (field += n)` over a
+two-statement `temp = field + n; field = temp;` to avoid spurious register
+moves.
