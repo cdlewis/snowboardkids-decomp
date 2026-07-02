@@ -20,31 +20,28 @@ void *func_80071408(void *, s32, s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/71AC0/func_80070EC0.s")
 
-// func_8007105C best match: 99.29%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/71AC0/func_8007105C.s")
-
-#ifdef NON_MATCHING
 extern Struct8007105C *D_80112784;
 
-// Iterates a linked list (head D_80112784), mirroring each node into the global
-// cursor D_80121848, clearing unk14, invoking each node's unk8 callback with a
-// pointer to itself, then advancing to unk4. The two remaining diff lines are
-// pure temp-register naming (target lui/lw use t6/t7, this emits v0/t6).
+// Mirrors the linked list head D_80112784 into the global cursor D_80121848,
+// then for each node clears unk14 and invokes its unk8 callback with a pointer
+// to itself, advancing via unk4. Assigning through the captured store
+// (`s0 = (D_80121848 = D_80112784)`) and clearing unk14 via a temp steers IDO's
+// register allocator to match the target's temp-register choice (t6/t7).
 void func_8007105C(void) {
-    Struct8007105C *s0 = D_80112784;
+    Struct8007105C *s0;
+    s32 new_var;
 
-    D_80121848 = s0;
+    s0 = (D_80121848 = D_80112784);
     if (D_80121848 != NULL) {
         do {
-            D_80121848->unk14 = 0;
+            new_var = 0;
+            D_80121848->unk14 = new_var;
             D_80121848->unk8(D_80121848);
             s0 = D_80121848->unk4;
             D_80121848 = s0;
         } while (D_80121848 != NULL);
     }
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/71AC0/func_800710CC.s")
 
