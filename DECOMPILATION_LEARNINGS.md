@@ -1068,3 +1068,29 @@ purely register allocation (`lhu t6` vs `lhu v1`) and IDO's choice to factor
 yielded to clean C. Takeaway: when a target shows an overwritten store to the
 same field, IDO's DSE may make a clean 100% match unreachable; record the best
 clean score rather than forcing artefacts.
+
+## func_8007105C — linked-list drain with a global cursor (99.29%)
+
+Walks a linked list (head D_80112784), mirroring each node into a global cursor
+D_80121848, clearing unk14, calling each node's unk8 method with a pointer to
+itself, then advancing via unk4. Sibling func_800710CC is the same loop with an
+extra unkE guard.
+
+High-value codegen insight (91% to 99.3%): writing the loop body through the
+global rather than the local copy makes IDO keep the reloaded cursor in a
+callee-saved register and emit the seemingly-redundant move a0,s0. Body:
+
+    D_80121848->unk14 = 0;
+    D_80121848->unk8(D_80121848);   // -> lw s0,0(s1); lw t9,8(s0); or a0,s0,zero
+    s0 = D_80121848->unk4;
+
+The natural s0 = D_80121848; s0->unk8(s0); lets IDO fold the reload straight
+into a0 (no move) which is more efficient but does not match.
+
+Residual 0.7% (two diff lines) is pure temp-register naming: target emits
+lui t6 / lw t7 for the two scratch loads; clean C emits v0 / t6. Root cause is
+the prologue %hi temp (t6 vs v0): if the prologue used t6 the post-call temp
+would naturally become t7. Neither the permuter (two runs, plateaued at 20
+diffs) nor clean source variations moved it; likely sensitive to whole-function
+register pressure (the void(void) arity vs the sibling taking an extra arg may
+be why the sibling gets t6 here for free).
