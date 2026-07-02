@@ -59,6 +59,7 @@ extern void func_80040450(void);
 extern void func_8004086C(void);
 extern void func_800408E4(void);
 extern void func_8004097C(void);
+extern void func_80040A48(void);
 extern void func_8003FBE8(void);
 extern void func_8003F7E4(void);
 extern void func_8003F864(void);
@@ -331,7 +332,26 @@ void func_800408E4(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8004097C.s")
+void func_8004097C(void) {
+    if (D_80123750 == 2) {
+        func_80072260();
+        func_80045914();
+        D_80123751 = 0;
+        D_800DEED4 = 0;
+        if (D_8010B1F0 == 1) {
+            if (D_80121B5A < 9) {
+                D_80121B5A += 1;
+            }
+            func_8009956C(func_80040004, 0);
+        }
+        if (D_8010B1F0 == 2) {
+            func_8009956C(func_8004002C, 0);
+        }
+        if (D_8010B1F0 == 3) {
+            func_8009956C(func_80040A48, 0);
+        }
+    }
+}
 
 void func_80040A48(void) {
     if (D_80121B5A != 9) {
