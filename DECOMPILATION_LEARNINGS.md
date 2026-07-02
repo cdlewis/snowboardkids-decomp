@@ -1310,3 +1310,22 @@ Achieved by computing the return value into a named temporary before the zero
 store, plus a trailing no-op pointer dance (`arg1 += N; arg1 -= N;`) mirroring
 `func_8009CF1C` (`arg1++; arg1--;`). The zero store then lands in the `jr`
 delay slot naturally.
+
+## Array-vs-pointer global declarations affect indirection (func_8007024C)
+
+m2c emitted `D_80121D80->unk24` for `lw t8, 0x24(v1)` where `v1 = %hi/%lo(D_80121D80)`.
+Declaring the global as `extern Player6E120 *D_80121D80` (a pointer) produced an
+extra indirection (`lw t8, 0(v1); lw t9, 0x24(t8)`) — wrong. The global must be
+declared as an **array** (`extern Player6E120 D_80121D80[]`) so the symbol address
+is the struct base and `->field` compiles to a single `lw r, off(base)`.
+
+## Viewing a shared global under a different struct via inline cast
+
+`D_80121D80` is shared across files typed as `Player6E120[]` (position fields at
+0x290+). `func_8007024C` instead reads offsets 0x1C/0x20/0x24 of player 0. Rather
+than byte-pointer arithmetic, define a small view struct
+`typedef struct { u8 pad0[0x1C]; s32 unk1C; s32 unk20; s32 unk24; } PlayerPos6E120;`
+and access via `((PlayerPos6E120 *)D_80121D80)->unk24`. The cast is a no-op at
+runtime and reproduces the exact `lw r, off(&D_80121D80)` codegen (verified 100%
+both as a local-typed direct access and as repeated inline casts; the inline-cast
+form was kept to mirror the matched sibling `func_80070198`).
