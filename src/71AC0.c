@@ -10,7 +10,40 @@ void *func_80071408(void *, s32, s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/71AC0/func_80070EC0.s")
 
+// func_8007105C best match: 99.29%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/71AC0/func_8007105C.s")
+
+#ifdef NON_MATCHING
+typedef struct Struct8007105C {
+    struct Struct8007105C *unk0;
+    struct Struct8007105C *unk4;
+    void (*unk8)(struct Struct8007105C *);
+    u8 padC[0x8];
+    s16 unk14;
+} Struct8007105C;
+
+extern Struct8007105C *D_80112784;
+extern Struct8007105C *D_80121848;
+
+// Iterates a linked list (head D_80112784), mirroring each node into the global
+// cursor D_80121848, clearing unk14, invoking each node's unk8 callback with a
+// pointer to itself, then advancing to unk4. The two remaining diff lines are
+// pure temp-register naming (target lui/lw use t6/t7, this emits v0/t6).
+void func_8007105C(void) {
+    Struct8007105C *s0 = D_80112784;
+
+    D_80121848 = s0;
+    if (D_80121848 != NULL) {
+        do {
+            D_80121848->unk14 = 0;
+            D_80121848->unk8(D_80121848);
+            s0 = D_80121848->unk4;
+            D_80121848 = s0;
+        } while (D_80121848 != NULL);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/71AC0/func_800710CC.s")
 
