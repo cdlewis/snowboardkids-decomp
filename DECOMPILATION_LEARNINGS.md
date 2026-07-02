@@ -1397,3 +1397,16 @@ General takeaway: when a 16-bit field is incremented and both the new field
 value and a widened copy are needed, prefer `temp = (field += n)` over a
 two-statement `temp = field + n; field = temp;` to avoid spurious register
 moves.
+
+## Repeated global reads vs. hoisted temp (func_8004097C)
+
+m2c hoists a repeatedly-tested global into a `u8 temp = global;` local and tests
+`temp` several times. That matched only ~74%: IDO spilled the temp to the stack
+(`sw v1,0x18(sp)` / `lw v1,0x18(sp)` around each call) and grew the frame from
+0x18 to 0x20. The target instead re-reads the global directly in each `if`.
+
+Reading the global directly each time gives the exact pattern: IDO loads the
+global once into a register and reuses it across non-call checks, but reloads it
+from memory after every call (because the callee could mutate it) — and never
+spills. So when a global is compared several times with function calls between
+the checks, prefer direct repeated reads over a hoisted temp local.
