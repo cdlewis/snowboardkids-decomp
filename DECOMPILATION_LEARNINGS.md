@@ -1235,3 +1235,21 @@ store schedule is unchanged; only the source order of the assignments influenced
 register numbering. When only temp-register names differ in an otherwise
 identical sequence of struct stores, reorder the assignments in C (rather than
 reordering logic) to steer the allocator.
+
+## Array-decay vs pointer load for struct fields (func_8006D7D4)
+
+When a struct field is passed *by address* into a helper (the assembly shows
+`addiu $aX, base, offset`), the C field must be an array/struct so it decays to
+its address, NOT a pointer (`void *`/typed pointer). If the field is declared as
+a pointer, IDO emits `lw $aX, offset(base)` (loads the stored value) instead of
+`addiu` (computes the address), dropping the match from 100%.
+
+Concrete case: `Object6E120` has a 0x64-byte region starting at 0x30. The
+function passes the start (`unk30`, offset 0x30) to one helper and an interior
+spot (`unk50`, offset 0x50) to another. Modeling both as `char` arrays
+(`char unk30[0x14]; ...; char unk50[0x44];`) and writing `obj->unk30` /
+`obj->unk50` (no `&`) yields the `addiu` address computation the target wants.
+A `void *unk30` declaration forced a value load and broke the match.
+
+This mirrors the existing `func_8003DDD0` (src/3E9D0.c), which uses
+`char unk30[0x14]` the same way — `temp->unk30` decays to `&unk30[0]`.
