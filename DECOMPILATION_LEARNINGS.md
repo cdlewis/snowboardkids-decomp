@@ -1069,31 +1069,38 @@ yielded to clean C. Takeaway: when a target shows an overwritten store to the
 same field, IDO's DSE may make a clean 100% match unreachable; record the best
 clean score rather than forcing artefacts.
 
-## func_8007105C — linked-list drain with a global cursor (99.29%)
+## func_8007105C — linked-list drain with a global cursor (100%)
 
 Walks a linked list (head D_80112784), mirroring each node into a global cursor
 D_80121848, clearing unk14, calling each node's unk8 method with a pointer to
-itself, then advancing via unk4. Sibling func_800710CC is the same loop with an
-extra unkE guard.
+itself, then advancing via unk4.
 
-High-value codegen insight (91% to 99.3%): writing the loop body through the
-global rather than the local copy makes IDO keep the reloaded cursor in a
-callee-saved register and emit the seemingly-redundant move a0,s0. Body:
+High-value codegen insight (writing the loop body through the global rather than
+the local copy makes IDO keep the reloaded cursor in a callee-saved register and
+emit the seemingly-redundant move a0,s0). Body:
 
     D_80121848->unk14 = 0;
     D_80121848->unk8(D_80121848);   // -> lw s0,0(s1); lw t9,8(s0); or a0,s0,zero
     s0 = D_80121848->unk4;
 
-The natural s0 = D_80121848; s0->unk8(s0); lets IDO fold the reload straight
-into a0 (no move) which is more efficient but does not match.
+The residual 0.7% (two diff lines) was pure temp-register naming: target emits
+lui t6 / lw t7 for the two scratch loads; clean C emitted v0 / t6. The root
+cause was the prologue %hi temp (v0 vs t6) cascading into the post-call temp
+(v0/t6 vs t6/t7). Two source-level changes (found by the decomp-permuter) steer
+IDO's allocator to the target's t6/t7 pair, both semantically harmless:
 
-Residual 0.7% (two diff lines) is pure temp-register naming: target emits
-lui t6 / lw t7 for the two scratch loads; clean C emits v0 / t6. Root cause is
-the prologue %hi temp (t6 vs v0): if the prologue used t6 the post-call temp
-would naturally become t7. Neither the permuter (two runs, plateaued at 20
-diffs) nor clean source variations moved it; likely sensitive to whole-function
-register pressure (the void(void) arity vs the sibling taking an extra arg may
-be why the sibling gets t6 here for free).
+  1. Capture the global store into the local as a single expression instead of
+     separate statements — `s0 = (D_80121848 = D_80112784);` rather than
+     `s0 = D_80112784; D_80121848 = s0;`. This makes the prologue %hi temp t6.
+  2. Clear unk14 through a named int temp rather than the literal 0 —
+     `new_var = 0; D_80121848->unk14 = new_var;` instead of
+     `D_80121848->unk14 = 0;`. The extra temp lifetime shifts the post-call
+     reload to t7.
+
+When a >95% match differs only in which t-register a scratch lui/lw pair lands
+in, try (a) fusing a store-and-assign into one expression and (b) routing a
+constant through a named local — both perturb IDO's whole-function temp
+numbering without changing behavior.
 
 ## func_8007115C — sibling linked-list drain (100% via a zero-instruction hint)
 
