@@ -1125,3 +1125,26 @@ interleave it between the halfword loads. When chasing a single misplaced
 address-materialization `lui`, try splitting a local pointer's declaration from
 its assignment. (decomp-permuter found this directly; the manual
 combined-initializer attempt stayed at 98.89%.)
+
+## IDO 5.3: reusing a just-stored global value forces the target's register reuse
+
+For func_8007D190, the target reuses a value it just stored to a global: it
+computes `t6 = ptr+2`, stores `D_80121B90 = t6`, then builds the next pointer as
+`v1 = t7*6 + t6` (reusing `t6`, not re-adding 2). Matching this required
+*referencing the stored global by name* on the next line rather than re-deriving
+the expression:
+
+```c
+D_80121B90 = ptr + 2;
+v1 = D_80121B90 + *(u16 *)ptr * 6;   /* reuses the ptr+2 the compiler kept in a reg */
+D_80121B94 = v1 + 2;
+v1 = D_80121B94 + *(u16 *)v1 * 8;    /* reuses v1+2 */
+D_80121B98 = v1 + 2;
+```
+
+Writing `v1 = ptr + 2 + ...` (re-deriving) instead made IDO emit a separate
+`addiu v1,v1,2` and dropped the match to 85%. The final `D_80121B98` also needed
+a *two-step* computation (`v1 = ...; D_80121B98 = v1 + 2;`) to get the
+`addu v1,t2,t0` + `addiu t4,v1,2` pair instead of a folded `addu t4,t2,t0`.
+Reassigning the same local across steps matches IDO's habit of reusing a single
+temp register (`v1`) through a chain of pointer arithmetic.
