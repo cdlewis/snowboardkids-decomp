@@ -1329,3 +1329,28 @@ and access via `((PlayerPos6E120 *)D_80121D80)->unk24`. The cast is a no-op at
 runtime and reproduces the exact `lw r, off(&D_80121D80)` codegen (verified 100%
 both as a local-typed direct access and as repeated inline casts; the inline-cast
 form was kept to mirror the matched sibling `func_80070198`).
+
+## Instruction scheduling depends on statement order (func_80017168)
+
+For a struct-init function that copies fields and relocates several
+`field + base` offsets to pointers, IDO -O2 keeps a computed pointer alive across
+an intervening load only when the source statements are in the right order. With
+the `+0x10` (constant-offset) store emitted between two `field+base` stores, the
+scheduler hoists the `addiu base,0x10` early and stores it late, matching the
+target register allocation (t8 kept live across the `lhu` for the next field).
+Writing the `+0x10` assignment immediately after the first `field+base` store
+instead causes the scheduler to store it immediately (different temp register and
+ordering) -- same semantics, ~78% score. The fix was purely reordering the four
+pointer assignments to `unk18, unk14, unk1C, unk20`. Also: IDO emits
+`addu r, field, base` (field operand first) from source `field + base`, not
+`base + field`.
+
+## Typed struct access from void*/s32 parameters
+
+When a function's ABI signature is `void*, s32` (e.g. because the source arg comes
+from a helper returning `s32` and the dest is an embedded sub-struct at varying
+offsets), keep that ABI-compatible prototype and cast the parameters to a local
+typed view struct at the top of the body: `DstView *dst = arg0; SrcView *src =
+(SrcView*)arg1;`. The assignment is a register no-op (stays in $a0/$a1), so
+codegen is identical to a directly-typed parameter while avoiding churn across
+many callers and conflicting prototypes.
