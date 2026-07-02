@@ -21,9 +21,13 @@ typedef struct {
 } Actor1C970B;
 
 extern void func_80071824(void *, void *);
+extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern s16 D_80112172;
+extern s16 D_80112178;
+extern u8 D_800B6B88[];
 extern s16 D_80121B50;
 
 void func_8002172C(Actor1C970B *arg0);
@@ -318,7 +322,13 @@ void func_800232F4(Actor1C970B *arg0) {
     func_80071824(arg0, func_80023198);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1C970/func_8002332C.s")
+void func_8002332C(Actor1C970 *arg0) {
+    func_8000F030(arg0->unk18, arg0->unk1A, func_80043040(D_80112172), 0x28, 0x20, 0x20, 0, 0);
+    if ((s32) arg0->unk1E > 0) {
+        func_80013154((s16) (arg0->unk18 + 4), (s16) (arg0->unk1A + 4), D_800B6B88, 1, 0x100, 0);
+        func_8000F030((s16) (arg0->unk18 + 0x64), (s16) (arg0->unk1A + 4), func_80043040(D_80112178), (u16) ((arg0->unk1F >= 8) + 5), 0x20, 0x20, 0, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/1C970/func_80023434.s")
 
