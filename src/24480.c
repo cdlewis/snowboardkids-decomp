@@ -30,6 +30,7 @@
 
 extern void func_80071824(void *, void *);
 extern void func_800483FC(void *, void *, void *);
+extern void func_800716E4(void *);
 extern void func_800260E8(void);
 extern void func_80028FF0(void);
 extern u8 D_80121B55;
@@ -121,7 +122,41 @@ void func_8002784C(Obj2784C *arg0) {
     func_800483FC(&D_80124868, func_800275E0, temp_a2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/24480/func_80027914.s")
+void func_80027914(Obj2784C *arg0) {
+    s16 var_v0;
+    s32 var_v1;
+    Obj2784C *var_v0_2;
+    s32 var_v0_3;
+
+    var_v0 = arg0->unk18;
+    if (var_v0 >= -0xE7) {
+        var_v1 = 0;
+        if ((s32)arg0->unk5C > 0) {
+            var_v0_2 = arg0;
+            do {
+                var_v0_2->unk18 -= 0x20;
+                var_v1++;
+                var_v0_2 = (Obj2784C *)((u8 *)var_v0_2 + 2);
+            } while (var_v1 < (s32)arg0->unk5C);
+            var_v0 = arg0->unk18;
+        }
+        if (var_v0 < -0xE7) {
+            arg0->unk18 = -0xE8;
+        }
+        var_v0_3 = D_801235B8->unk20;
+    } else {
+        var_v0_3 = D_801235B8->unk20;
+        if (var_v0_3 == 3) {
+            func_80071824(arg0, func_8002784C);
+            var_v0_3 = D_801235B8->unk20;
+        }
+    }
+    if (var_v0_3 == 9) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_800275E0, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/24480/func_80027A08.s")
 
