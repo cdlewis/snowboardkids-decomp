@@ -1187,3 +1187,23 @@ a *two-step* computation (`v1 = ...; D_80121B98 = v1 + 2;`) to get the
 `addu v1,t2,t0` + `addiu t4,v1,2` pair instead of a folded `addu t4,t2,t0`.
 Reassigning the same local across steps matches IDO's habit of reusing a single
 temp register (`v1`) through a chain of pointer arithmetic.
+
+## IDO 5.3: compound assignment steers the temp register for high-half loads
+
+For func_800710CC (and the sibling func_8007105C already in the tree), the
+target materializes a global pointer with a *separate* temp register:
+
+    lui  t6, %hi(D_80112784)
+    lw   s0, %lo(D_80112784)(t6)
+
+Writing `Struct *s0 = D_80112784;` instead made IDO fold the base into the
+destination: `lui s0,%hi(...); lw s0,%lo(...)(s0)` (98.6% — only temp-register
+naming differed). The fix that reached 100% was a compound assignment that
+stores through a global in the same expression:
+
+    Struct8007105C *s0 = (D_80121848 = D_80112784);
+
+The captured store to `D_80121848` makes IDO keep the loaded value live across
+the store, so it allocates a distinct temp (`t6`) for the `lui` base rather than
+reusing `s0`. When a global-pointer load's `lui` base register differs from its
+`lw` destination, try a compound `local = (global = expr)` initializer.

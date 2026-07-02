@@ -9,7 +9,9 @@ typedef struct Struct8007105C {
     struct Struct8007105C *unk0;
     struct Struct8007105C *unk4;
     void (*unk8)(struct Struct8007105C *);
-    u8 padC[0x8];
+    u8 padC[0x2];
+    u16 unkE;
+    u8 pad10[0x4];
     s16 unk14;
 } Struct8007105C;
 
@@ -43,7 +45,28 @@ void func_8007105C(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/71AC0/func_800710CC.s")
+// Like func_8007105C, mirrors the linked list head D_80112784 into the global
+// cursor D_80121848, then iterates: clearing each node's unk14 and invoking its
+// unk8 callback, advancing via unk4. Stops early when a node's unkE is less
+// than arg0. The compound assignment `s0 = (D_80121848 = D_80112784)` steers
+// IDO's register allocator to use a separate temp (t6) for the high-half load,
+// matching the target.
+void func_800710CC(s32 arg0) {
+    Struct8007105C *s0 = (D_80121848 = D_80112784);
+
+    if (s0 != NULL) {
+        do {
+            s0->unk14 = 0;
+            s0 = D_80121848;
+            if ((u16)s0->unkE < arg0) {
+                break;
+            }
+            s0->unk8(s0);
+            s0 = D_80121848->unk4;
+            D_80121848 = s0;
+        } while (s0 != NULL);
+    }
+}
 
 // Drains the global cursor list (D_80121848): for each node, clears unk14 and
 // invokes its unk8 callback with a pointer to itself, then advances via unk4.
