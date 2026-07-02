@@ -1039,3 +1039,32 @@ after calls — matching the target exactly. If a target repeatedly loads a fiel
 from memory instead of holding it in a saved register, prefer direct field
 access over a caching local. Compare with the `var_a1`-style functions
 (`func_8003A324`, `func_80039F7C`) where the local *is* present in the target.
+
+## IDO dead-store elimination blocks a redundant-store match (func_8003DBE8)
+
+Target asm contains a genuinely *dead* store sequence on one field:
+```
+lhu   t6, 0x1C(a0)
+addiu t8, t6, 1
+andi  t9, t8, 1
+sh    t8, 0x1C(a0)   ; stores the +1 value (immediately overwritten)
+...
+sh    t9, 0x1C(a0)   ; stores the &1 value (delay slot)
+```
+i.e. the source wrote `x->unk1C = x->unk1C + 1; x->unk1C &= 1;` (or the
+temp-variable equivalent). At `-O2` IDO **eliminates the first store** for any
+clean formulation:
+- temp variables (`t8 = ...+1; t9 = t8 & 1; x->unk1C = t8; x->unk1C = t9;`) →
+  DSE removes `sh t8`.
+- field ops (`x->unk1C &= 1;`) → IDO *reloads* the field (`lh` + `nop`), which
+  is worse.
+- `++x->unk1C` → loads via `lh` (signed) and reloads, also wrong.
+
+The only thing that restored the dead store was a non-clean permuter hack (a
+`char` intermediate between the two stores + empty `if(1){}` scheduling
+barriers), and even that only reached 95.7%, not 100%. The remaining gap is
+purely register allocation (`lhu t6` vs `lhu v1`) and IDO's choice to factor
+`a0+0x20` as a base for the `unk22` accesses (`2(v0)` vs `0x22(a0)`) — neither
+yielded to clean C. Takeaway: when a target shows an overwritten store to the
+same field, IDO's DSE may make a clean 100% match unreachable; record the best
+clean score rather than forcing artefacts.

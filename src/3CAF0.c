@@ -589,7 +589,29 @@ void func_8003DBB8(Struct3CAF0 *arg0) {
     func_800483FC(&D_80124868, func_8003DB84, arg0);
 }
 
+// func_8003DBE8 best match: 92.36%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/3CAF0/func_8003DBE8.s")
+
+#ifdef NON_MATCHING
+void func_8003DBE8(Struct3CAF0 *arg0) {
+    s16 temp_t8;
+    s16 temp_t9;
+
+    temp_t8 = (u16)arg0->unk1C + 1;
+    temp_t9 = temp_t8 & 1;
+    arg0->unk1C = temp_t8;
+    arg0->unk1C = temp_t9;
+    if (!(temp_t9 & 0xFFFF)) {
+        arg0->unk22 -= 1;
+        if (arg0->unk22 == 0x10) {
+            func_80071824(arg0, func_8003DBB8);
+            D_8010B1A2 = 0x43;
+        }
+    }
+    func_800483FC(&D_80124868, func_8003DB84, arg0);
+}
+#endif
 
 void func_8003DC70(Struct3CAF0 *arg0) {
     func_800483FC(&D_80124868, func_8003DB84, arg0);
