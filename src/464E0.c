@@ -224,7 +224,62 @@ void *func_8004864C(Block40 *arg0) {
     return p;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_800486BC.s")
+typedef struct {
+    /* 0x00 */ s16 unk0;
+    /* 0x02 */ s16 unk2;
+    /* 0x04 */ s16 unk4;
+    /* 0x06 */ s16 unk6;
+    /* 0x08 */ s16 unk8;
+    /* 0x0A */ s16 unkA;
+    /* 0x0C */ s16 unkC;
+    /* 0x0E */ s16 unkE;
+    /* 0x10 */ s16 unk10;
+    /* 0x12 */ char pad12[2];
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ s32 unk1C;
+} UnkSrc800486BC;
+
+typedef struct {
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ s32 unkC;
+    /* 0x10 */ s32 unk10;
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ s32 unk1C;
+    /* 0x20 */ s32 unk20;
+    /* 0x24 */ s32 unk24;
+    /* 0x28 */ s32 unk28;
+    /* 0x2C */ s32 unk2C;
+    /* 0x30 */ s32 unk30;
+    /* 0x34 */ s32 unk34;
+    /* 0x38 */ s32 unk38;
+    /* 0x3C */ s32 unk3C;
+} UnkDst800486BC;
+
+void func_800486BC(void *arg0, void *arg1) {
+    UnkSrc800486BC *src = arg0;
+    UnkDst800486BC *dst = arg1;
+
+    dst->unk0 = ((src->unk2 >> 12) & 0xFFFF) | ((src->unk0 << 4) & 0xFFFF0000);
+    dst->unk4 = (src->unk4 << 4) & 0xFFFF0000;
+    dst->unk8 = ((src->unk8 >> 12) & 0xFFFF) | ((src->unk6 << 4) & 0xFFFF0000);
+    dst->unkC = (src->unkA << 4) & 0xFFFF0000;
+    dst->unk10 = ((src->unkE >> 12) & 0xFFFF) | ((src->unkC << 4) & 0xFFFF0000);
+    dst->unk14 = (src->unk10 << 4) & 0xFFFF0000;
+    dst->unk18 = ((src->unk18 >> 16) & 0xFFFF) | (src->unk14 & 0xFFFF0000);
+    dst->unk1C = (src->unk1C & 0xFFFF0000) | 1;
+    dst->unk20 = ((src->unk2 << 4) & 0xFFFF) | ((src->unk0 << 20) & 0xFFFF0000);
+    dst->unk24 = (src->unk4 << 20) & 0xFFFF0000;
+    dst->unk28 = ((src->unk8 << 4) & 0xFFFF) | ((src->unk6 << 20) & 0xFFFF0000);
+    dst->unk2C = (src->unkA << 20) & 0xFFFF0000;
+    dst->unk30 = ((src->unkE << 4) & 0xFFFF) | ((src->unkC << 20) & 0xFFFF0000);
+    dst->unk34 = (src->unk10 << 20) & 0xFFFF0000;
+    dst->unk38 = (src->unk18 & 0xFFFF) | ((src->unk14 << 16) & 0xFFFF0000);
+    dst->unk3C = (src->unk1C << 16) & 0xFFFF0000;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/464E0/func_8004885C.s")
 
