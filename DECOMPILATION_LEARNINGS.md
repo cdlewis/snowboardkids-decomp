@@ -1458,3 +1458,22 @@ swapping the order of the two addends in the C source. The decomp-permuter
 surfaced this; a `& 0xFFFFFFFF` mask the permuter also suggested turned out to
 be unnecessary once operand order was fixed — so verify each permuter
 suggestion in isolation rather than importing the whole batch.
+
+## Statement grouping can affect independent setup scheduling (func_80018BC0)
+
+`func_80018BC0` matched only when the initial loop setup kept the original
+single-line grouping:
+
+```c
+base = arg0; i = 0; if (D_80121B55 > 0) { player = D_80121D80; do {
+```
+
+Splitting those assignments and the `if` over separate statements produced the
+same control flow and register choices, but IDO swapped two independent `addiu`
+instructions that initialized saved-register global bases. The ROM checksum
+still failed even though the function was semantically identical.
+
+Takeaway: when a diff is down to independent setup instructions being reordered,
+try restoring the original statement grouping/formatting before changing
+types or control flow. This can preserve IDO's scheduling without introducing
+dummy dependencies or extra locals.
