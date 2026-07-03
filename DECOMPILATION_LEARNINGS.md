@@ -1506,3 +1506,10 @@ loads without changing the surrounding struct layout or source logic.
   `*(s16 *)((s32)arg0 + 0x2C) = 0x16` can be replaced with `arg0->unk2A` and
   `arg0->unk2C` without affecting codegen as long as the surrounding local alias
   structure is preserved where the function previously had one.
+
+## Signed hex bounds in actor movement clamps
+
+When replacing manual offset loads with struct fields, keep explicit `(s32)`
+casts on high hex comparison bounds such as `(s32)0xFFD00000`. Without the cast,
+IDO treats the constant as unsigned and emits `sltu` instead of the target
+signed `slt`, even though the field itself is `s32`.
