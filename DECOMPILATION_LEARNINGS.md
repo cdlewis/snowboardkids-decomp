@@ -1513,3 +1513,16 @@ When replacing manual offset loads with struct fields, keep explicit `(s32)`
 casts on high hex comparison bounds such as `(s32)0xFFD00000`. Without the cast,
 IDO treats the constant as unsigned and emits `sltu` instead of the target
 signed `slt`, even though the field itself is `s32`.
+
+## Overlapping array views in main_menu_effects
+
+`func_8003C118` draws from a sliding three-point line stored across actor fields
+`0x18..0x22`: `x = linePositions[frame]` and
+`y = linePositions[frame + 3]`. A direct pair of array subscripts is cleaner but
+IDO computes the indexed address twice and lengthens the function. The matching
+shape keeps a typed actor overlay pointer advanced by
+`frame * sizeof(linePositions[0])`, then reads `linePosition->x` and
+`linePosition->offsetY`.
+
+Also keep the frame index unsigned for this view. Using the signed `frameIndex`
+field changes the target `lhu 0x24` into `lh 0x24`.
