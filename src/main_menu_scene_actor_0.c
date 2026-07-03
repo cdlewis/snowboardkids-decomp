@@ -1,13 +1,10 @@
 #include "common.h"
 
-extern void func_80033D64();
-extern void func_80033504();
-extern void func_80034BC4();
-extern void func_80034DA0(void);
 extern s32 D_8010B1C0;
 
 extern void func_800373AC(s32 *arg0);
 extern void func_8003C0A4(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
+extern void func_80041D20(s32 arg0, s32 arg1);
 extern void func_80041DD4(s32 arg0, s32 arg1);
 extern s32 func_80041FB4(s32 arg0);
 extern void func_80042034(s32 arg0);
@@ -25,6 +22,7 @@ extern void func_8003CB78(s32 arg0, s32 arg1);
 extern void func_8004209C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern void func_8003D068(s16 arg0, s16 arg1);
 extern void func_800420FC(s32 arg0, s16 arg1, s16 arg2, s16 arg3);
+extern void func_8003C420(s32 arg0, s32 arg1, s32 arg2);
 
 typedef struct {
     char pad0[0x18];
@@ -35,55 +33,57 @@ typedef struct {
     /* 0x26 */ s16 unk26;
     /* 0x28 */ s16 unk28;
     /* 0x2A */ u16 unk2A;
-} Struct33680;
+    /* 0x2C */ s16 unk2C;
+} MainMenuSceneActor;
 
-void func_80032B94(void *arg0);
-void func_80032BF0(void *arg0);
-void func_80032C74(Struct33680 *arg0);
-void func_80032D7C(Struct33680 *arg0);
+void func_80032B94(MainMenuSceneActor *arg0);
+void func_80032BF0(MainMenuSceneActor *arg0);
+void func_80032C74(MainMenuSceneActor *arg0);
+void func_80032D7C(MainMenuSceneActor *arg0);
 void func_80032F3C(void);
 void func_800342D8(s32 arg0);
-void func_80034328(void *arg0);
-void func_800346D4(Struct33680 *arg0);
+void func_80034328(MainMenuSceneActor *arg0);
+void func_800346D4(MainMenuSceneActor *arg0);
 void func_80033688(s32 arg0);
-void func_80032FF0(void *arg0);
-void func_800330EC(Struct33680 *arg0);
-void func_8003320C(Struct33680 *arg0);
-void func_8003329C(Struct33680 *arg0);
-void func_80033B20(Struct33680 *arg0);
-void func_80034AB0(Struct33680 *arg0);
-void func_800350A4(Struct33680 *arg0);
-void func_800339B8(Struct33680 *arg0);
-void func_80033DE4(void *arg0);
-void func_800340D8(void *arg0);
-void func_80033758(Struct33680 *arg0);
-void func_800338C0(Struct33680 *arg0);
-void func_80034014(Struct33680 *arg0);
-void func_80032AF0(Struct33680 *arg0);
-void func_800335F0(Struct33680 *arg0);
-void func_80034F2C(Struct33680 *arg0);
-void func_80034E60(Struct33680 *arg0);
+void func_80032FF0(MainMenuSceneActor *arg0);
+void func_800330EC(MainMenuSceneActor *arg0);
+void func_8003320C(MainMenuSceneActor *arg0);
+void func_8003329C(MainMenuSceneActor *arg0);
+void func_80033B20(MainMenuSceneActor *arg0);
+void func_80034AB0(MainMenuSceneActor *arg0);
+void func_800350A4(MainMenuSceneActor *arg0);
+void func_800339B8(MainMenuSceneActor *arg0);
+void func_80033DE4(MainMenuSceneActor *arg0);
+void func_800340D8(MainMenuSceneActor *arg0);
+void func_80033758(MainMenuSceneActor *arg0);
+void func_800338C0(MainMenuSceneActor *arg0);
+void func_80034014(MainMenuSceneActor *arg0);
+void func_80032AF0(MainMenuSceneActor *arg0);
+void func_800335F0(MainMenuSceneActor *arg0);
+void func_80034F2C(MainMenuSceneActor *arg0);
+void func_80034E60(MainMenuSceneActor *arg0);
 void func_8003D218(s32 arg0, s32 arg1, s32 arg2);
-void func_80033478(Struct33680 *arg0);
-void func_80033504(Struct33680 *arg0);
-void func_80033828(Struct33680 *arg0);
+void func_80033478(MainMenuSceneActor *arg0);
+void func_80033504(MainMenuSceneActor *arg0);
+void func_80033828(MainMenuSceneActor *arg0);
 
-void func_80034254(Struct33680 *arg0);
-void func_800347C8(Struct33680 *arg0);
-void func_800349A8(Struct33680 *arg0);
-void func_80034900(Struct33680 *arg0);
-void func_80034418(Struct33680 *arg0);
-void func_800344CC(Struct33680 *arg0);
-void func_80034574(Struct33680 *arg0);
+void func_80034254(MainMenuSceneActor *arg0);
+void func_800347C8(MainMenuSceneActor *arg0);
+void func_800349A8(MainMenuSceneActor *arg0);
+void func_80034900(MainMenuSceneActor *arg0);
+void func_80034418(MainMenuSceneActor *arg0);
+void func_800344CC(MainMenuSceneActor *arg0);
+void func_80034574(MainMenuSceneActor *arg0);
 void func_80034600(void);
-void func_80034BC4(Struct33680 *arg0);
-void func_80034D10(Struct33680 *arg0);
+void func_80034BC4(MainMenuSceneActor *arg0);
+void func_80034D10(MainMenuSceneActor *arg0);
+void func_80034DA0(void);
 
 void func_80032A80(void) {
 }
 
-void func_80032A88(void *arg0) {
-    Struct33680 *temp = arg0;
+void func_80032A88(MainMenuSceneActor *arg0) {
+    MainMenuSceneActor *temp = arg0;
 
     func_80041FB4(0);
     func_800428C8(0);
@@ -95,7 +95,7 @@ void func_80032A88(void *arg0) {
     }
 }
 
-void func_80032AF0(Struct33680 *arg0) {
+void func_80032AF0(MainMenuSceneActor *arg0) {
     struct {
         s32 ret;
         s32 pad;
@@ -116,18 +116,19 @@ void func_80032AF0(Struct33680 *arg0) {
     }
 }
 
-void func_80032B94(void *arg0) {
+void func_80032B94(MainMenuSceneActor *arg0) {
     func_80041FB4(0);
     func_800428C8(0);
     if (D_8010B1A2 == 0x40) {
-        *(u16 *)((s32)arg0 + 0x2A) = 0;
+        arg0->unk2A = 0;
         func_80071824((s32) arg0, func_80032AF0);
         func_80041DD4(0, 0x55);
     }
 }
 
-void func_80032BF0(void *arg0) {
-    Struct33680 *temp = arg0;
+void func_80032BF0(MainMenuSceneActor *arg0) {
+    MainMenuSceneActor *temp = arg0;
+
     if (func_80041FB4(0) == 1) {
         temp->unk2A += 1;
         if (temp->unk2A == 0x1E) {
@@ -140,7 +141,7 @@ void func_80032BF0(void *arg0) {
     func_800428C8(0);
 }
 
-void func_80032C74(Struct33680 *arg0) {
+void func_80032C74(MainMenuSceneActor *arg0) {
     struct { s32 ret; s32 pad; } l;
     l.ret = func_80041FB4(0);
     func_800428C8(0);
@@ -154,7 +155,7 @@ void func_80032C74(Struct33680 *arg0) {
     }
 }
 
-void func_80032CF4(Struct33680 *arg0) {
+void func_80032CF4(MainMenuSceneActor *arg0) {
     if (func_80041FB4(0) == 0) {
         arg0->unk18 += 0x18000;
         func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
@@ -167,7 +168,7 @@ void func_80032CF4(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_80032D7C(Struct33680 *arg0) {
+void func_80032D7C(MainMenuSceneActor *arg0) {
     s32 unused;
     s32 sp20;
     s32 var_v0;
@@ -193,7 +194,7 @@ void func_80032D7C(Struct33680 *arg0) {
     }
 }
 
-void func_80032E48(Struct33680 *arg0) {
+void func_80032E48(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFF70000;
     if (D_8010B1A2 == 0x3B) {
@@ -215,10 +216,11 @@ void func_80032EF0(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80032F3C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_0/func_80032F3C.s")
 
-void func_80032FF0(void *arg0) {
-    Struct33680 *temp = arg0;
+void func_80032FF0(MainMenuSceneActor *arg0) {
+    MainMenuSceneActor *temp = arg0;
+
     func_80042034(0);
     temp->unk18 += 0x24000;
     if (temp->unk18 >= 0x500000) {
@@ -229,7 +231,7 @@ void func_80032FF0(void *arg0) {
     func_800428C8(0);
 }
 
-void func_8003306C(Struct33680 *arg0) {
+void func_8003306C(MainMenuSceneActor *arg0) {
     func_80042034(0);
     func_800428C8(0);
     if (D_8010B1A2 == 0x37) {
@@ -242,9 +244,9 @@ void func_8003306C(Struct33680 *arg0) {
     }
 }
 
-void func_800330EC(Struct33680 *arg0) {
+void func_800330EC(MainMenuSceneActor *arg0) {
     s32 var_a1;
-    Struct33680 *new_var;
+    MainMenuSceneActor *new_var;
 
     func_80042034(0);
     new_var = arg0;
@@ -261,17 +263,17 @@ void func_800330EC(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_800331A8(void *arg0) {
+void func_800331A8(MainMenuSceneActor *arg0) {
     if (D_8010B1A2 == 0x34) {
         func_80071824((s32) arg0, func_800330EC);
-        *(s32 *)((s32)arg0 + 0x18) = 0x1900000;
-        *(s32 *)((s32)arg0 + 0x20) = 0;
+        arg0->unk18 = 0x1900000;
+        arg0->unk20 = 0;
         D_8010B1A8 = 0;
         func_8003CD9C(0x1C, -0x30, 0, 1);
     }
 }
 
-void func_8003320C(Struct33680 *arg0) {
+void func_8003320C(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFFB8000;
     if (arg0->unk18 < (s32)0xFE700001) {
@@ -283,7 +285,7 @@ void func_8003320C(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_8003329C(Struct33680 *arg0) {
+void func_8003329C(MainMenuSceneActor *arg0) {
     s32 unused;
     s32 sp20;
 
@@ -320,7 +322,7 @@ void func_800333A8(void *arg0) {
     }
 }
 
-void func_8003340C(Struct33680 *arg0) {
+void func_8003340C(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x2000;
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
@@ -330,7 +332,7 @@ void func_8003340C(Struct33680 *arg0) {
     }
 }
 
-void func_80033478(Struct33680 *arg0) {
+void func_80033478(MainMenuSceneActor *arg0) {
     if (func_80041FB4(0) == 0) {
         arg0->unk18 += 0xFFF60000;
     } else {
@@ -343,7 +345,7 @@ void func_80033478(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_80033504(Struct33680 *arg0) {
+void func_80033504(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFFC8000;
     if (arg0->unk18 < (s32)0xFFD00001) {
@@ -365,7 +367,7 @@ void func_800335A4(s32 arg0) {
     }
 }
 
-void func_800335F0(Struct33680 *arg0) {
+void func_800335F0(MainMenuSceneActor *arg0) {
     s32 var_a1;
 
     func_80042034(0);
@@ -389,7 +391,7 @@ void func_80033688(s32 arg0) {
     }
 }
 
-void func_800336D4(Struct33680 *arg0) {
+void func_800336D4(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFFDA000;
     if (arg0->unk18 < (s32)0xFF700001) {
@@ -400,7 +402,7 @@ void func_800336D4(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_80033758(Struct33680 *arg0) {
+void func_80033758(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x1D000;
     if (arg0->unk18 >= (s32)0xFFCE0000) {
@@ -419,7 +421,7 @@ void func_800337D4(void *arg0) {
     }
 }
 
-void func_80033828(Struct33680 *arg0) {
+void func_80033828(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFFD8000;
     if (arg0->unk18 < (s32)0xFF700001) {
@@ -434,7 +436,7 @@ void func_80033828(Struct33680 *arg0) {
 void func_800338B8(void) {
 }
 
-void func_800338C0(Struct33680 *arg0) {
+void func_800338C0(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x28000;
     arg0->unk20 += 0xFFFE0000;
@@ -447,17 +449,17 @@ void func_800338C0(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_80033958(void *arg0) {
+void func_80033958(MainMenuSceneActor *arg0) {
     func_80042034(0);
     func_800428C8(0);
-    *(u16 *)((s32)arg0 + 0x2A) += 1;
-    if (*(u16 *)((s32)arg0 + 0x2A) == 0x32) {
-        *(u16 *)((s32)arg0 + 0x2A) = 0;
+    arg0->unk2A += 1;
+    if (arg0->unk2A == 0x32) {
+        arg0->unk2A = 0;
         func_80071824((s32) arg0, func_800338C0);
     }
 }
 
-void func_800339B8(Struct33680 *arg0) {
+void func_800339B8(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x28000;
     if (arg0->unk18 >= (s32)0xFF700000) {
@@ -478,7 +480,7 @@ void func_80033A44(void *arg0) {
     }
 }
 
-void func_80033A94(Struct33680 *arg0) {
+void func_80033A94(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFFA0000;
     if (arg0->unk18 < (s32)0xFE700001) {
@@ -490,7 +492,7 @@ void func_80033A94(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_80033B20(Struct33680 *arg0) {
+void func_80033B20(MainMenuSceneActor *arg0) {
     struct {
         s32 ret;
         s32 pad;
@@ -522,7 +524,7 @@ void func_80033BE0(void *arg0) {
     }
 }
 
-void func_80033C44(Struct33680 *arg0) {
+void func_80033C44(MainMenuSceneActor *arg0) {
     s32 sp24;
     s32 sp20;
 
@@ -557,7 +559,7 @@ void func_80033D0C(s32 arg0) {
     }
 }
 
-void func_80033D64(Struct33680 *arg0) {
+void func_80033D64(MainMenuSceneActor *arg0) {
     struct {
         s32 ret;
         s32 pad;
@@ -575,11 +577,11 @@ void func_80033D64(Struct33680 *arg0) {
     }
 }
 
-void func_80033DE4(void *arg0) {
+void func_80033DE4(MainMenuSceneActor *arg0) {
     func_80041FB4(0);
     func_800428C8(0);
     if (D_8010B1A2 == 0x1B) {
-        *(u16 *)((s32)arg0 + 0x2A) = 0;
+        arg0->unk2A = 0;
         func_80071824((s32) arg0, func_80033D64);
         func_80041DD4(0, 0x2D);
         func_8003C0A4(8, -0x40, 0, 0);
@@ -594,7 +596,7 @@ void func_80033E54(void *arg0) {
     }
 }
 
-void func_80033EA4(Struct33680 *arg0) {
+void func_80033EA4(MainMenuSceneActor *arg0) {
     if (D_8010B1A4 == 4) {
         D_8010B1A4 = 0;
         func_80041DD4(0, 0x2B);
@@ -612,7 +614,7 @@ void func_80033EA4(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_80033F5C(Struct33680 *arg0) {
+void func_80033F5C(MainMenuSceneActor *arg0) {
     if (D_8010B1A4 == 4) {
         D_8010B1A4 = 0;
         func_80041DD4(0, 0x2B);
@@ -630,7 +632,7 @@ void func_80033F5C(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_80034014(Struct33680 *arg0) {
+void func_80034014(MainMenuSceneActor *arg0) {
     if (D_8010B1A4 == 4) {
         D_8010B1A4 = 0;
         func_80041DD4(0, 0x2B);
@@ -647,7 +649,7 @@ void func_80034014(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_800340D8(void *arg0) {
+void func_800340D8(MainMenuSceneActor *arg0) {
     struct {
         s32 ret;
         s32 pad;
@@ -669,7 +671,7 @@ void func_80034138(void *arg0) {
     }
 }
 
-void func_80034188(Struct33680 *arg0) {
+void func_80034188(MainMenuSceneActor *arg0) {
     func_80041FB4(0);
     func_800428C8(0);
     arg0->unk18 += 0xFFFD0000;
@@ -688,7 +690,7 @@ void func_800341FC(s32 arg0) {
     }
 }
 
-void func_80034254(Struct33680 *arg0) {
+void func_80034254(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x30000;
     if (arg0->unk18 >= 0xD0000) {
@@ -708,8 +710,9 @@ void func_800342D8(s32 arg0) {
     func_800428C8(0);
 }
 
-void func_80034328(void *arg0) {
-    Struct33680 *temp = arg0;
+void func_80034328(MainMenuSceneActor *arg0) {
+    MainMenuSceneActor *temp = arg0;
+
     if (func_80041FB4(0) == 1) {
         temp->unk2A += 1;
         if (temp->unk2A == 0xF) {
@@ -721,8 +724,9 @@ void func_80034328(void *arg0) {
     func_800428C8(0);
 }
 
-void func_800343A0(void *arg0) {
-    Struct33680 *temp = arg0;
+void func_800343A0(MainMenuSceneActor *arg0) {
+    MainMenuSceneActor *temp = arg0;
+
     if (func_80041FB4(0) == 1) {
         temp->unk2A += 1;
         if (temp->unk2A == 0xF) {
@@ -734,7 +738,7 @@ void func_800343A0(void *arg0) {
     func_800428C8(0);
 }
 
-void func_80034418(Struct33680 *arg0) {
+void func_80034418(MainMenuSceneActor *arg0) {
     s32 unused;
     s32 sp20;
     s32 var_v0;
@@ -757,7 +761,7 @@ void func_80034418(Struct33680 *arg0) {
     }
 }
 
-void func_800344CC(Struct33680 *arg0) {
+void func_800344CC(MainMenuSceneActor *arg0) {
     s32 var_a1;
 
     func_80042034(0);
@@ -775,7 +779,7 @@ void func_800344CC(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_80034574(Struct33680 *arg0) {
+void func_80034574(MainMenuSceneActor *arg0) {
     func_80042034(0);
     func_800428C8(0);
     if (arg0->unk2A < 0x10) {
@@ -789,9 +793,9 @@ void func_80034574(Struct33680 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80034600.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_0/func_80034600.s")
 
-void func_800346D4(Struct33680 *arg0) {
+void func_800346D4(MainMenuSceneActor *arg0) {
     func_80042034(0);
     func_800428C8(0);
     if (D_8010B1A5 != 0xA) {
@@ -805,8 +809,9 @@ void func_800346D4(Struct33680 *arg0) {
     }
 }
 
-void func_80034754(void *arg0) {
-    Struct33680 *temp = arg0;
+void func_80034754(MainMenuSceneActor *arg0) {
+    MainMenuSceneActor *temp = arg0;
+
     func_80042034(0);
     func_800428C8(0);
     if (D_8010B1A2 == 0x12) {
@@ -818,7 +823,7 @@ void func_80034754(void *arg0) {
     }
 }
 
-void func_800347C8(Struct33680 *arg0) {
+void func_800347C8(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x60000;
     arg0->unk2A += 1;
@@ -834,7 +839,7 @@ void func_800347C8(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_80034864(Struct33680 *arg0) {
+void func_80034864(MainMenuSceneActor *arg0) {
     if (D_8010B1A2 == 0x10) {
         arg0->unk18 = 0xFE700000;
         arg0->unk26 = 0x400;
@@ -847,7 +852,7 @@ void func_80034864(Struct33680 *arg0) {
     }
 }
 
-void func_80034900(Struct33680 *arg0) {
+void func_80034900(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x60000;
     arg0->unk2A += 1;
@@ -864,7 +869,7 @@ void func_80034900(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_800349A8(Struct33680 *arg0) {
+void func_800349A8(MainMenuSceneActor *arg0) {
     u16 temp;
 
     if (func_80041FB4(0) == 1) {
@@ -890,7 +895,7 @@ void func_80034A60(s32 arg0) {
     func_800428C8(0);
 }
 
-void func_80034AB0(Struct33680 *arg0) {
+void func_80034AB0(MainMenuSceneActor *arg0) {
     if (func_80041FB4(0) == 1) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x32) {
@@ -908,17 +913,17 @@ void func_80034AB0(Struct33680 *arg0) {
     func_800428C8(0);
 }
 
-void func_80034B60(void *arg0) {
+void func_80034B60(MainMenuSceneActor *arg0) {
     func_800428C8(0);
-    *(u16 *)((s32)arg0 + 0x2A) += 1;
-    if (*(u16 *)((s32)arg0 + 0x2A) == 0x19) {
-        *(u16 *)((s32)arg0 + 0x2A) = 0;
+    arg0->unk2A += 1;
+    if (arg0->unk2A == 0x19) {
+        arg0->unk2A = 0;
         func_80071824((s32) arg0, func_80034AB0);
         func_80041DD4(0, 0x18);
     }
 }
 
-void func_80034BC4(Struct33680 *arg0) {
+void func_80034BC4(MainMenuSceneActor *arg0) {
     if (func_80041FB4(0) == 1) {
         arg0->unk2A += 1;
         if (arg0->unk2A < 0xA) {
@@ -941,17 +946,17 @@ void func_80034C50(s32 arg0) {
     func_800373AC(&D_8010B1C0);
 }
 
-void func_80034CAC(void *arg0) {
+void func_80034CAC(MainMenuSceneActor *arg0) {
     if (D_8010B1A2 == 0xD) {
         func_80071824((s32) arg0, func_80034C50);
         func_80041DD4(0, 0x16);
-        *(s16 *)((s32)arg0 + 0x2C) = 0x16;
+        arg0->unk2C = 0x16;
     }
     func_800428C8(0);
     func_800373AC(&D_8010B1C0);
 }
 
-void func_80034D10(Struct33680 *arg0) {
+void func_80034D10(MainMenuSceneActor *arg0) {
     if (func_80041FB4(0) == 1) {
         D_8010B1A2 = 0xB;
         func_80071824((s32) arg0, func_80034CAC);
@@ -965,9 +970,9 @@ void func_80034D10(Struct33680 *arg0) {
     func_800373AC(&D_8010B1C0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/33680/func_80034DA0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_0/func_80034DA0.s")
 
-void func_80034E60(Struct33680 *arg0) {
+void func_80034E60(MainMenuSceneActor *arg0) {
     s32 temp_a1;
 
     temp_a1 = (arg0->unk18 += 0xFFFA0000);
@@ -988,7 +993,7 @@ void func_80034E60(Struct33680 *arg0) {
 }
 
 
-void func_80034F2C(Struct33680 *arg0) {
+void func_80034F2C(MainMenuSceneActor *arg0) {
     if (func_80041FB4(0) == 1) {
         if (D_8010B1A2 == 5) {
             arg0->unk2A += 1;
@@ -1015,18 +1020,18 @@ void func_80034FC8(s32 arg0) {
     func_800428C8(0);
 }
 
-void func_80035030(s32 arg0) {
+void func_80035030(MainMenuSceneActor *arg0) {
     func_80041FB4(0);
     if (D_8010B1A2 == 3) {
-        func_80071824(arg0, (void (*)()) func_80034FC8);
+        func_80071824((s32) arg0, (void (*)()) func_80034FC8);
         func_80041DD4(0, 2);
         func_8003D218(0x55, -0x62, 0);
-        *(u16 *)(((s32)arg0) + 0x2A) = 0;
+        arg0->unk2A = 0;
     }
     func_800428C8(0);
 }
 
-void func_800350A4(Struct33680 *arg0) {
+void func_800350A4(MainMenuSceneActor *arg0) {
     s32 temp_a1;
 
     temp_a1 = (arg0->unk18 += 0xFFFD8FD8);
@@ -1051,7 +1056,7 @@ void func_80035150(void *arg0) {
     }
 }
 
-void func_80035184(Struct33680 *arg0) {
+void func_80035184(MainMenuSceneActor *arg0) {
     arg0->unk18 = 0x1900000;
     arg0->unk1C = 0;
     arg0->unk20 = 0;
