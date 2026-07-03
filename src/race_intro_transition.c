@@ -1,14 +1,17 @@
 #include "common.h"
 
 typedef struct {
-    char pad[0x18];
-    s32 unk18;
-    s32 unk1C;
-    char pad20[0x4];
-    s32 unk24;
-} Struct801235B8;
+    char pad0[0x18];
+    /* 0x18 */ s32 fadeDelay;
+    /* 0x1C */ s32 fadeStep;
+    /* 0x20 */ s32 unused20;
+    /* 0x24 */ s32 startDelay;
+} RaceIntroTransitionState;
 
-extern Struct801235B8 *D_801235B8;
+typedef void (*TaskCallback)(void);
+typedef void (*ActorCallback)(void *);
+
+extern RaceIntroTransitionState *D_801235B8;
 extern s16 D_800DEF14;
 extern u8 D_800DEF10;
 extern u8 D_800BB830;
@@ -22,11 +25,11 @@ extern s32 D_80123778;
 extern void func_80045914(void);
 extern void func_800728E0(void);
 extern void func_80072260(void);
-extern void func_80071408(void *, s32, s32);
+extern void func_80071408(ActorCallback, s32, s32);
 extern void func_8009954C(s32);
-extern void func_8009956C(void *, s32);
+extern void func_8009956C(TaskCallback, s32);
 extern void func_80099658(s32);
-extern void func_800540EC(void);
+extern void func_800540EC(void *);
 extern void func_8008C704(void);
 extern void func_800710CC(s32);
 extern void func_80096E3C(void);
@@ -37,11 +40,11 @@ extern void func_80072114(s32);
 extern void func_8003EC6C(void);
 void func_8003EAF0(void);
 
-#pragma GLOBAL_ASM("asm/nonmatchings/3F200/func_8003E600.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition/func_8003E600.s")
 
 void func_8003EA78(void) {
-    D_801235B8->unk24--;
-    if (D_801235B8->unk24 == 0) {
+    D_801235B8->startDelay--;
+    if (D_801235B8->startDelay == 0) {
         func_800728E0();
         func_80071408(func_800540EC, 0, 0x64);
         func_8009956C(func_8003EAF0, 0);
@@ -49,10 +52,10 @@ void func_8003EA78(void) {
 }
 
 void func_8003EAF0(void) {
-    Struct801235B8 *v0;
-    s32 v1;
+    RaceIntroTransitionState *state;
+    s32 fadeStep;
 
-    if (D_801235B8->unk1C == 0) {
+    if (D_801235B8->fadeStep == 0) {
         D_800DEF14 -= 0x10;
         if (D_800DEF14 < 0) {
             D_800DEF14 = 0;
@@ -64,29 +67,29 @@ void func_8003EAF0(void) {
     func_8007115C();
     func_8006D700();
     func_8007AA50();
-    v0 = D_801235B8;
-    if (v0->unk18 != 0) {
-        v0->unk18 = v0->unk18 - 1;
-        v0 = D_801235B8;
-        v1 = v0->unk1C;
+    state = D_801235B8;
+    if (state->fadeDelay != 0) {
+        state->fadeDelay--;
+        state = D_801235B8;
+        fadeStep = state->fadeStep;
     } else {
-        v1 = v0->unk1C;
-        if (v1 == 0) {
-            v0->unk1C = 4;
+        fadeStep = state->fadeStep;
+        if (fadeStep == 0) {
+            state->fadeStep = 4;
             func_80072114(0x78);
-            v0 = D_801235B8;
-            v1 = v0->unk1C;
+            state = D_801235B8;
+            fadeStep = state->fadeStep;
         }
     }
-    if ((D_80123778 & 0x1000) && (v1 == 0)) {
-        v0->unk1C = 0x10;
+    if ((D_80123778 & 0x1000) && (fadeStep == 0)) {
+        state->fadeStep = 0x10;
         func_80072114(0x1E);
-        v0 = D_801235B8;
-        v1 = v0->unk1C;
+        state = D_801235B8;
+        fadeStep = state->fadeStep;
     }
-    if (v1 != 0) {
+    if (fadeStep != 0) {
         D_800DEF10 = 1;
-        D_800DEF14 += v0->unk1C;
+        D_800DEF14 += state->fadeStep;
         if (!(D_800DEF14 < 0xFF)) {
             D_800DEF14 = 0xFF;
             D_80123751 = 1;
