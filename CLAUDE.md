@@ -17,7 +17,7 @@ This is a matching decompilation project for Snowboard Kids (N64). The goal is t
 ## Tools
 
 - `./tools/build-and-verify.sh` rebuilds extracted assets/asm, builds the ROM, and verifies the SHA1 checksum.
-- `python3 tools/asm-differ/diff.py --no-pager <function name>` compares compiled assembly against the target for a specific function.
+- `python3 tools/asm-differ/diff.py --no-pager <function name>` compares compiled assembly against the target for a specific function. Note that you *must* rebuild the project manually before digging or you will potentially operate on stale data.
 - `./tools/claude --bootstrap-only <function name>` creates a per-function matching workspace under `nonmatchings/`.
 - `./build.sh <file>.c` inside a generated matching workspace compiles one attempt and compares it to the target function.
 - `python3 tools/data-differ/data_diff.py <symbol>` or `./tools/diff-data <symbol>` compares binary data between the target ROM and compiled output for a specific data symbol.
