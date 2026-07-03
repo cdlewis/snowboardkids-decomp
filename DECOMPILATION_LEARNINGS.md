@@ -44,6 +44,11 @@ patterns, and verified layout/linking rules.
 - Before tuning register allocation, verify function signatures and call
   argument order against the target assembly. Wrong argument order produces
   misleading register-allocation diffs and wastes permutation time.
+- If a target loads a symbol by taking the base of a neighboring array or table
+  and then applying a field/element offset, using the apparent field symbol
+  directly can produce a different `lui/addiu` pair and shift nearby scheduling.
+  For example, an asset id at `D_80112130 + 0x42` may need to be written as
+  `D_80112130[0x21]` rather than the equivalent named `D_80112172` symbol.
 - Statement order drives IDO's temp-register allocation order. When a sequence
   of independent stores each load a stack arg into a fresh temp, IDO allocates
   temps (`$t6`, `$t7`, `$t8`, ...) in source order. A constant store (e.g.
