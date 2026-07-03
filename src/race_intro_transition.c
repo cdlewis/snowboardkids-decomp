@@ -1,15 +1,4 @@
-#include "common.h"
-
-typedef struct {
-    char pad0[0x18];
-    /* 0x18 */ s32 fadeDelay;
-    /* 0x1C */ s32 fadeStep;
-    /* 0x20 */ s32 unused20;
-    /* 0x24 */ s32 startDelay;
-} RaceIntroTransitionState;
-
-typedef void (*TaskCallback)(void);
-typedef void (*ActorCallback)(void *);
+#include "race_intro_transition.h"
 
 extern RaceIntroTransitionState *D_801235B8;
 extern s16 D_800DEF14;

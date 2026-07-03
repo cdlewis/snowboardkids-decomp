@@ -102,7 +102,7 @@ segments:
       - [0x3CAF0, c, main_menu_effects]
       - [0x3E9D0, c, main_menu_race_setup]
       - [0x3F200, c, race_intro_transition]
-      - [0x3F900, c]
+      - [0x3F900, c, race_intro_transition_2]
       - [0x40120, c]
       - [0x41880, c]
       - [0x43160, c]
