@@ -57,6 +57,16 @@ typedef struct {
     s32 z;
 } Vec3i;
 
+typedef struct {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s16 unkC;
+    s16 unkE;
+    u16 unk10;
+    s16 unk12;
+} StructDA804;
+
 extern void func_80071824(void *, void *);
 extern void func_800483FC(void *, void *, void *);
 extern void func_800716E4(void *);
@@ -70,10 +80,13 @@ extern void func_80069E50(void);
 extern void func_80069A78(void *);
 extern void func_80069890(void *);
 extern s32 func_80043040(s16);
+extern void func_80045990(s32, s32, void *, void *);
+extern s32 func_8004597C(s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80098590(void *, void *, Vec3i *, void *);
 extern s16 D_80112168;
+extern s16 D_80112140;
 extern s32 D_801235B4;
 extern u8 D_80156608;
 extern void func_8006C5C0(Struct6C51C *);
@@ -86,6 +99,9 @@ extern Struct6B760 *func_80071408(void *, s32, s32);
 extern u8 D_80121B56;
 extern s16 D_80121B50;
 extern u8 D_800DA764[];
+extern u8 D_800DA804[];
+extern u8 D_800DA80C[];
+extern u8 D_800DA814[];
 extern s32 D_80124868;
 extern s32 D_80124878;
 extern s32 D_801248EC;
@@ -366,7 +382,25 @@ void func_8006CB50(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_8006CBBC.s")
+void func_8006CBBC(void *arg0) {
+    func_80045990(func_80043040(D_80112168),
+                  *(u16 *)&D_800DA814[*(u16 *)((char *)arg0 + 0x10) * 0x14],
+                  (char *)arg0 + 0x18, (char *)arg0 + 0x1C);
+    *(s32 *)((char *)arg0 + 0x28) =
+        func_8004597C(func_80043040(D_80112140),
+                      *(s32 *)&D_800DA80C[*(u16 *)((char *)arg0 + 0x10) * 0x14]);
+    {
+        StructDA804 *elem = (StructDA804 *)&D_800DA804[*(u16 *)((char *)arg0 + 0x10) * 0x14];
+
+        *(s16 *)((char *)arg0 + 0x2C) = elem->unkC;
+        *(s32 *)((char *)arg0 + 0x30) = elem->unk0;
+        *(s32 *)((char *)arg0 + 0x34) = elem->unk4;
+        *(s16 *)((char *)arg0 + 0x2C) = elem->unkC;
+        *(s32 *)((char *)arg0 + 0x38) = elem->unkE & 1;
+        *(s32 *)((char *)arg0 + 0x3C) = elem->unkE & 2;
+    }
+    func_80071824(arg0, func_8006CB50);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/6A490/func_8006CCC0.s")
 
