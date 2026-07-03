@@ -1410,3 +1410,28 @@ global once into a register and reuses it across non-call checks, but reloads it
 from memory after every call (because the callee could mutate it) — and never
 spills. So when a global is compared several times with function calls between
 the checks, prefer direct repeated reads over a hoisted temp local.
+
+## Reassign-to-parameter + temp for shifted return (func_80097AE8)
+
+`func_80097AE8` (sine-table lookup, `s16` arg, frameless leaf) needed two tricks
+to match IDO -O2 -mips1 codegen:
+
+1. The masked angle had to be written back into the parameter: `arg0 &= 0xFFF;`.
+   Reassigning to the `s16` parameter makes IDO keep the sign-extended value in
+   the `a0` "home" register (after the usual dead `sw a0,0(sp)` homing store),
+   reproducing `move t7,a0` / `andi` / `sra a0,...`. Using a separate local
+   (`s16 angle = arg0 & 0xFFF;`) put the value in `v1` instead and dropped the
+   `move` — wrong registers, ~84%.
+
+2. The table value's `>> 3` had to land in a temp (`t2`), with only the final
+   `s16` narrowing reaching `v0`. Returning the expression directly loads the
+   table straight into `v0` and shifts in place. The fix is to capture the
+   shifted value in a named local first, then return that local. This separates
+   the load+shift (into `v1`/`t2`) from the return narrowing (into `v0`),
+   matching `lui v1` / `lh v1` / `sra t2,v1,3` / `sll t3` / `sra v0`.
+
+General takeaway: when a return expression's intermediate computation must
+occupy a temp register distinct from `v0`, bind it to a named local and return
+that local rather than returning the expression directly. And when a narrow
+parameter is narrowed further in-place, reassign to the parameter instead of
+introducing a new local so the value stays in the argument's home register.

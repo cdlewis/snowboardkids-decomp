@@ -1,7 +1,8 @@
 #include "common.h"
 
-s16 func_80097AE8(s16 arg0);
 s16 func_80097B48(s16 arg0);
+
+extern s16 D_800B9810[];
 extern void func_80097BAC(s16 *, s16);
 void func_80097C18(s16 *arg0, s16 arg1);
 extern void func_80097C84(s16 *, s16);
@@ -24,7 +25,19 @@ void func_80097A80(MatCopy80097A80 *arg0) {
     *arg0 = D_800DEE30;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80097AE8.s")
+s16 func_80097AE8(s16 arg0) {
+    s16 temp;
+
+    arg0 &= 0xFFF;
+    if (arg0 == 0x400) {
+        return 0x1000;
+    }
+    if (arg0 == 0xC00) {
+        return -0x1000;
+    }
+    temp = D_800B9810[arg0] >> 3;
+    return temp;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80097B48.s")
 
