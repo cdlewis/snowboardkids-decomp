@@ -96,7 +96,7 @@ segments:
       - [0x33680, c, main_menu_scene_actor_0]
       - [0x35E20, c, main_menu_scene_actor_1]
       - [0x36F80, c, main_menu_scene_actor_4]
-      - [0x37FE0, c]
+      - [0x37FE0, c, main_menu_scene_actor_2]
       - [0x3A0E0, c]
       - [0x3C3C0, c]
       - [0x3CAF0, c]
