@@ -74,6 +74,11 @@ patterns, and verified layout/linking rules.
 - For known global pointer variables, distinguish between accessing the pointer
   variable and accessing the pointed-to object directly. IDO often generates
   observably different code for those two source shapes.
+- Replacing manual stride math with a typed fixed-size array can still need the
+  original local temporary shape for register allocation. Directly passing
+  `array[index]` may reorder independent loads, while assigning
+  `Element *ptr = &array[index];` and passing `*ptr` preserves typed access and
+  can keep the original register order.
 
 ## Globals, Data, and Linker Behavior
 
