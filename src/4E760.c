@@ -148,7 +148,19 @@ void func_8004F9CC(void *arg0) {
     func_800483FC(&D_801248C8, func_8004F68C, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_8004FA44.s")
+extern s32 func_800430D0(void);
+extern u8 D_80121EE8[];
+extern u8 D_80121EEC[];
+extern u8 D_80121EF0[];
+
+void func_8004FA44(void *arg0) {
+    *(s8 *)((u8 *)arg0 + 0x29) = -1;
+    *(s32 *)((u8 *)arg0 + 0x18) = *(s32 *)(&D_80121EE8[*(u16 *)((u8 *)arg0 + 0x10) * 0x60C]) + ((func_800430D0() - 0x80) << 10);
+    *(s32 *)((u8 *)arg0 + 0x1C) = *(s32 *)(&D_80121EEC[*(u16 *)((u8 *)arg0 + 0x10) * 0x60C]) + ((func_800430D0() - 0x80) << 10);
+    *(s32 *)((u8 *)arg0 + 0x20) = *(s32 *)(&D_80121EF0[*(u16 *)((u8 *)arg0 + 0x10) * 0x60C]) + ((func_800430D0() - 0x80) << 10);
+    func_8004F9CC(arg0);
+    func_80071824(arg0, func_8004F9CC);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/4E760/func_8004FB44.s")
 
