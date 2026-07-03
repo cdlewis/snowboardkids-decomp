@@ -98,7 +98,7 @@ segments:
       - [0x36F80, c, main_menu_scene_actor_4]
       - [0x37FE0, c, main_menu_scene_actor_2]
       - [0x3A0E0, c, main_menu_scene_actor_3]
-      - [0x3C3C0, c]
+      - [0x3C3C0, c, main_menu_debug_ui]
       - [0x3CAF0, c]
       - [0x3E9D0, c]
       - [0x3F200, c]
