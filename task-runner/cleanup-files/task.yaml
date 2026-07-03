@@ -1,0 +1,5 @@
+candidate_source: ls -1 src/*.c | grep -v 'ctx\.c$' | grep "^src/[0-9A-F]"
+prompt: "Clean up $INPUT. Ensure functions use proper structs/arrays/types instead of random pointer math. Consolidate structs where it makes sense.Give the file a proper name (remember to git rm the old file). Do any other cleanup you think is helpful but keep in mind all the build should remain green. Commit your work when you're done."
+claude_command: codex
+success_command: 'git add -U && git commit -m "cleaned up $CANDIDATE"'
+timeout: 30m
