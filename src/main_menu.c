@@ -1,24 +1,53 @@
 #include "common.h"
 
-typedef struct OSMesgQueue_s OSMesgQueue;
-typedef struct OSPfs_s OSPfs;
-typedef struct {
+#define OS_MESG_BLOCK 1
+
+typedef struct OSThread_s OSThread;
+typedef void *OSMesg;
+
+typedef struct OSMesgQueue_s {
+    OSThread *mtqueue;
+    OSThread *fullqueue;
+    s32 validCount;
+    s32 first;
+    s32 msgCount;
+    OSMesg *msg;
+} OSMesgQueue;
+
+typedef struct OSPfs {
+    s32 status;
+    OSMesgQueue *queue;
+    s32 channel;
+    u8 id[32];
+    u8 label[32];
+    s32 version;
+    s32 dir_size;
+    s32 inode_table;
+    s32 minode_table;
+    s32 dir_table;
+    s32 inode_start_page;
+    u8 banks;
+    u8 activebank;
+} OSPfs;
+
+typedef struct OSPfsState {
     u32 file_size;
     u32 game_code;
     u16 company_code;
     char ext_name[4];
     char game_name[16];
 } OSPfsState;
-typedef struct {
-    char pad[0x18];
-    s32 unk18;
-    s32 unk1C;
-    s32 unk20;
-    s32 unk24;
-} Struct801235B8;
 
-void osRecvMesg(void *, void *, s32);
-void osSendMesg(void *, s32, s32);
+typedef struct MainMenuState {
+    char pad[0x18];
+    s32 fade;
+    s32 selection;
+    s32 delay;
+    s32 timer;
+} MainMenuState;
+
+extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
+extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern s32 osPfsInitPak(OSMesgQueue *, OSPfs *, int);
 extern s32 osPfsFreeBlocks(OSPfs *, s32 *);
 extern s32 osPfsNumFiles(OSPfs *, s32 *, s32 *);
@@ -78,11 +107,11 @@ extern void func_8003ED00(void);
 extern void func_8003F520(void);
 extern void func_8003FFD0(void);
 extern void func_80073140(void);
-extern s32 D_800E4B78;
-extern s32 D_800E4BB0;
+extern OSMesgQueue D_800E4B78;
+extern OSMesgQueue D_800E4BB0;
 extern OSMesgQueue D_800E4BD0;
 extern OSPfs D_800E4C40;
-extern Struct801235B8 *D_801235B8;
+extern MainMenuState *D_801235B8;
 extern u8 D_800B30F0;
 extern u8 D_800B318C;
 extern u8 D_800DEED4;
@@ -91,19 +120,19 @@ extern s32 D_80123758;
 extern s16 D_800DEF14;
 extern s16 D_801124B8;
 extern s16 D_800EC8A8[];
-extern u8 D_593D10;
-extern u8 D_598A70;
-extern u8 D_1F1A90;
-extern u8 D_1F2220;
-extern u8 D_60F1A0;
-extern u8 D_60F990;
-extern u8 D_1467B0;
-extern u8 D_147910;
-extern u8 D_1DE360;
-extern u8 D_1E0F70;
-extern u8 D_5DB9D0;
-extern u8 D_5DCBE0;
-extern u8 D_5DFDD0;
+extern u8 D_593D10[];
+extern u8 D_598A70[];
+extern u8 D_1F1A90[];
+extern u8 D_1F2220[];
+extern u8 D_60F1A0[];
+extern u8 D_60F990[];
+extern u8 D_1467B0[];
+extern u8 D_147910[];
+extern u8 D_1DE360[];
+extern u8 D_1E0F70[];
+extern u8 D_5DB9D0[];
+extern u8 D_5DCBE0[];
+extern u8 D_5DFDD0[];
 extern s8 D_800B3190;
 extern u8 D_800B3194;
 extern s8 D_800DEF10;
@@ -122,29 +151,29 @@ extern u8 D_8012482C;
 extern s32 D_801235B4;
 extern s32 D_80123778;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000450.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000450.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_800005E4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_800005E4.s")
 
 void func_80000960(void) {
     if ((D_800E4BEE == 0) && (D_800B30F0 != 0)) {
-        osSendMesg(&D_800E4B78, 0x10, 1);
+        osSendMesg(&D_800E4B78, (OSMesg)0x10, OS_MESG_BLOCK);
         D_800E4BEE = 1;
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_800009B0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_800009B0.s")
 
 void func_80000A40(u16 arg0) {
-    s32 sp1C;
+    OSMesg msg;
 
-    sp1C = 0;
+    msg = NULL;
 
-    osSendMesg(&D_800E4B78, arg0 + 0x70, 1);
-    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0x70), OS_MESG_BLOCK);
+    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000A8C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000A8C.s")
 
 void func_80000C00(u16 arg0) {
     if (D_800EC8B0 != 0) {
@@ -155,67 +184,67 @@ void func_80000C00(u16 arg0) {
 }
 
 void func_80000C48(u16 arg0) {
-    s32 sp1C;
+    OSMesg msg;
 
-    sp1C = 0;
+    msg = NULL;
 
-    osSendMesg(&D_800E4B78, arg0 + 0x20, 1);
-    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0x20), OS_MESG_BLOCK);
+    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000C94.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000C94.s")
 
 void func_80000DB4(u16 arg0) {
-    s32 sp1C;
+    OSMesg msg;
 
-    sp1C = 0;
+    msg = NULL;
 
-    osSendMesg(&D_800E4B78, arg0 + 0x30, 1);
-    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0x30), OS_MESG_BLOCK);
+    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80000E00.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000E00.s")
 
 void func_80001010(u16 arg0) {
-    s32 sp1C;
+    OSMesg msg;
 
-    sp1C = 0;
+    msg = NULL;
 
-    osSendMesg(&D_800E4B78, arg0 + 0x40, 1);
-    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0x40), OS_MESG_BLOCK);
+    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_8000105C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_8000105C.s")
 
 void func_800012CC(u16 arg0) {
-    s32 sp1C;
+    OSMesg msg;
 
-    sp1C = 0;
+    msg = NULL;
 
-    osSendMesg(&D_800E4B78, arg0 + 0x50, 1);
-    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0x50), OS_MESG_BLOCK);
+    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001318.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80001318.s")
 
 void func_80001538(u16 arg0) {
-    s32 sp1C;
+    OSMesg msg;
 
-    sp1C = 0;
+    msg = NULL;
 
-    osSendMesg(&D_800E4B78, arg0 + 0x60, 1);
-    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0x60), OS_MESG_BLOCK);
+    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001584.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80001584.s")
 
 void func_80001618(void) {
-    s32 sp1C;
+    OSMesg msg;
 
-    sp1C = 0;
+    msg = NULL;
 
-    osSendMesg(&D_800E4B78, 0xA0, 1);
-    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+    osSendMesg(&D_800E4B78, (OSMesg)0xA0, OS_MESG_BLOCK);
+    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
 void func_8000165C(void) {
@@ -228,23 +257,23 @@ void func_8000165C(void) {
 }
 
 void func_800016D8(u16 arg0) {
-    s32 sp1C;
+    OSMesg msg;
 
-    sp1C = 0;
+    msg = NULL;
 
-    osSendMesg(&D_800E4B78, arg0 + 0xB0, 1);
-    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0xB0), OS_MESG_BLOCK);
+    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001724.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80001724.s")
 
 void func_80001858(void) {
-    s32 sp1C;
+    OSMesg msg;
 
-    sp1C = 0;
+    msg = NULL;
 
-    osSendMesg(&D_800E4B78, 0xC0, 1);
-    osRecvMesg(&D_800E4BB0, &sp1C, 1);
+    osSendMesg(&D_800E4B78, (OSMesg)0xC0, OS_MESG_BLOCK);
+    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
 void func_8000189C(void) {
@@ -258,9 +287,9 @@ void func_8000189C(void) {
     D_8010B19C = maxFiles - filesUsed;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001904.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80001904.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/1050/func_80001994.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80001994.s")
 
 void func_80001C30(void) {
     D_800B318C = 1;
@@ -275,15 +304,15 @@ void func_80001C80(void) {
     func_800704F0();
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     D_800DEED4 = 0;
-    func_800437F0(&D_5DB9D0, &D_5DCBE0, 0x21);
-    func_800437F0(&D_5DCBE0, &D_5DFDD0, 0x25);
-    func_800437F0(&D_593D10, &D_598A70, 0x22);
-    func_800438EC(&D_1467B0, &D_147910, 8);
-    func_800437F0(&D_1DE360, &D_1E0F70, 9);
-    D_801235B8->unk18 = 0xFF;
-    D_801235B8->unk1C = 0;
-    D_801235B8->unk20 = 0x32;
-    D_801235B8->unk24 = 0x4B0;
+    func_800437F0(D_5DB9D0, D_5DCBE0, 0x21);
+    func_800437F0(D_5DCBE0, D_5DFDD0, 0x25);
+    func_800437F0(D_593D10, D_598A70, 0x22);
+    func_800438EC(D_1467B0, D_147910, 8);
+    func_800437F0(D_1DE360, D_1E0F70, 9);
+    D_801235B8->fade = 0xFF;
+    D_801235B8->selection = 0;
+    D_801235B8->delay = 0x32;
+    D_801235B8->timer = 0x4B0;
     func_80070EC0(0);
     if (D_800E29C0 != 0) {
         func_80071408(&func_80032A50, 0, 0x64);
@@ -318,7 +347,7 @@ void func_80001C80(void) {
     func_800420FC(4, 0, 0xDD0, 0);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
-    D_800DEF14 = (s16) D_801235B8->unk18;
+    D_800DEF14 = (s16) D_801235B8->fade;
     D_800DEF10 = 1;
     func_80072138(0x4A, 0x32);
     func_8009956C(&func_80002024, 0);
@@ -335,30 +364,30 @@ void func_80002024(void) {
     s32 temp_a0;
 
     flag = 0;
-    temp_v1 = D_801235B8->unk18;
+    temp_v1 = D_801235B8->fade;
     if (temp_v1 != 0) {
-        D_801235B8->unk18 = func_80013F88((s16) temp_v1, 0x10, 0);
-        if (D_801235B8->unk18 == 0) {
+        D_801235B8->fade = func_80013F88((s16) temp_v1, 0x10, 0);
+        if (D_801235B8->fade == 0) {
             D_800DEF10 = 0;
         }
     } else {
-        if (D_801235B8->unk20 != 0) {
-            D_801235B8->unk20 -= 1;
-            if (D_801235B8->unk20 == 0) {
+        if (D_801235B8->delay != 0) {
+            D_801235B8->delay -= 1;
+            if (D_801235B8->delay == 0) {
                 func_800720E4(0);
             }
         }
         temp_a0 = D_80123778;
         if (temp_a0 & 0x10800) {
-            if (D_801235B8->unk1C != 0) {
-                D_801235B8->unk1C -= 1;
+            if (D_801235B8->selection != 0) {
+                D_801235B8->selection -= 1;
                 func_80072138(0x19, 0x32);
                 temp_a0 = D_80123778;
             }
         }
         if (temp_a0 & 0x20400) {
-            if (D_801235B8->unk1C != 2) {
-                D_801235B8->unk1C += 1;
+            if (D_801235B8->selection != 2) {
+                D_801235B8->selection += 1;
                 func_80072138(0x19, 0x32);
                 temp_a0 = D_80123778;
             }
@@ -368,8 +397,8 @@ void func_80002024(void) {
             func_80072138(1, 0x32);
         }
         if (flag == 0) {
-            D_801235B8->unk24 -= 1;
-            if (D_801235B8->unk24 == 0) {
+            D_801235B8->timer -= 1;
+            if (D_801235B8->timer == 0) {
                 flag = 1;
             }
         }
@@ -388,7 +417,7 @@ void func_80002024(void) {
     func_80042034(2);
     func_80042034(3);
     func_80042034(4);
-    if (D_801235B8->unk18 == 0xEF) {
+    if (D_801235B8->fade == 0xEF) {
         func_800428C8(0);
         func_800428C8(1);
         func_800428C8(2);
@@ -408,10 +437,10 @@ void func_800022B8(void) {
     s32 temp_v0;
     s32 temp_v1;
 
-    temp_v0 = D_801235B8->unk18;
+    temp_v0 = D_801235B8->fade;
     if (temp_v0 != 0xFF) {
-        D_801235B8->unk18 = func_80013F88((s16) temp_v0, 0x28, 1);
-        if (D_801235B8->unk18 == 0xFF) {
+        D_801235B8->fade = func_80013F88((s16) temp_v0, 0x28, 1);
+        if (D_801235B8->fade == 0xFF) {
             D_80123751 = 1;
         } else {
             func_8006D780(0);
@@ -431,8 +460,8 @@ void func_800022B8(void) {
         func_80045914();
         D_80123751 = 0;
         D_800DEED4 = 0;
-        if (D_801235B8->unk24 != 0) {
-            temp_v1 = D_801235B8->unk1C;
+        if (D_801235B8->timer != 0) {
+            temp_v1 = D_801235B8->selection;
             if (temp_v1 == 0) {
                 func_800994F4(2, func_80073140, 0x64);
                 func_8009954C(3);
@@ -457,9 +486,9 @@ void func_800024A8(void) {
     D_801124B8 = 0x80;
     D_800DEED4 = 0;
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-    func_800438EC(&D_1467B0, &D_147910, 8);
-    func_800437F0(&D_1DE360, &D_1E0F70, 9);
-    func_800437F0(&D_1F1A90, &D_1F2220, 0x28);
+    func_800438EC(D_1467B0, D_147910, 8);
+    func_800437F0(D_1DE360, D_1E0F70, 9);
+    func_800437F0(D_1F1A90, D_1F2220, 0x28);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
     func_80070EC0(0);
@@ -550,11 +579,11 @@ void func_800028B4(void) {
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     D_801124B8 = 0x80;
     D_800DEED4 = 0;
-    func_800437F0(&D_593D10, &D_598A70, 0x29);
-    func_800437F0(&D_1F1A90, &D_1F2220, 0x28);
-    func_800437F0(&D_60F1A0, &D_60F990, 0x2A);
-    func_800438EC(&D_1467B0, &D_147910, 8);
-    func_800437F0(&D_1DE360, &D_1E0F70, 9);
+    func_800437F0(D_593D10, D_598A70, 0x29);
+    func_800437F0(D_1F1A90, D_1F2220, 0x28);
+    func_800437F0(D_60F1A0, D_60F990, 0x2A);
+    func_800438EC(D_1467B0, D_147910, 8);
+    func_800437F0(D_1DE360, D_1E0F70, 9);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
     func_80070EC0(0);
