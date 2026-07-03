@@ -1435,3 +1435,26 @@ occupy a temp register distinct from `v0`, bind it to a named local and return
 that local rather than returning the expression directly. And when a narrow
 parameter is narrowed further in-place, reassign to the parameter instead of
 introducing a new local so the value stays in the argument's home register.
+
+## Operand order in `a + b` controls register allocation (func_8004FA44)
+
+`func_8004FA44` initializes three position fields (`0x18/0x1C/0x20`) each as
+`array_value + ((func_800430D0() - 0x80) << 10)`. The function calls
+`func_800430D0()` three separate times (it returns a varying/random value, so
+the result can't be reused), and reloads the `0x10` halfword index before each
+array lookup (the call could clobber it).
+
+After getting control flow and instruction selection correct, the match sat at
+~93% purely on register-allocation differences in the three add blocks. The
+winning change was purely the **operand order of the final `+`**: writing
+`array_value + shift` (array value as the first/left operand) instead of
+`shift + array_value` flipped IDO's register assignment for the `addu` operand
+pair to exactly match the target across all three blocks → 100%.
+
+Takeaway: for `+` (commutative), IDO -O2 assigns the destination/operand
+registers based on source operand order. When a match is functionally perfect
+but differs only in which temp register holds each operand of an `addu`, try
+swapping the order of the two addends in the C source. The decomp-permuter
+surfaced this; a `& 0xFFFFFFFF` mask the permuter also suggested turned out to
+be unnecessary once operand order was fixed — so verify each permuter
+suggestion in isolation rather than importing the whole batch.
