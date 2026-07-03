@@ -92,7 +92,7 @@ segments:
       - [0x2C160, c, main_menu_score_ui]
       - [0x2D0E0, c, shop_menu_ui]
       - [0x30BD0, c, controller_pak_menu_ui]
-      - [0x33220, c]
+      - [0x33220, c, main_menu_ui]
       - [0x33680, c]
       - [0x35E20, c]
       - [0x36F80, c]
