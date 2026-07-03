@@ -1482,3 +1482,11 @@ Takeaway: when a diff is down to independent setup instructions being reordered,
 try restoring the original statement grouping/formatting before changing
 types or control flow. This can preserve IDO's scheduling without introducing
 dummy dependencies or extra locals.
+
+## Struct field signedness preserves `lh` vs `lhu` (func_80032534)
+
+When replacing manual offset loads with typed struct fields, keep the field's
+signedness aligned with the target load. In `func_80032534`, modeling the
+animated scale at offset `0x1C` as `s16` changed the two target `lhu`
+instructions into `lh`. Changing only that field to `u16` restored the exact
+loads without changing the surrounding struct layout or source logic.
