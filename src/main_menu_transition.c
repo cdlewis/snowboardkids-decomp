@@ -1,16 +1,25 @@
 #include "common.h"
 
+#define MAIN_MENU_TRANSITION_FRAMES 0x10
+
+typedef struct {
+    /* 0x00 */ char pad[0x18];
+    /* 0x18 */ s32 transitionTimer;
+    /* 0x1C */ s32 unk1C;
+} MainMenuTransitionState;
+
 extern void func_8008C704(void);
 extern void func_800710CC(s32);
 extern void func_8007115C(void);
 extern void func_8006D700(void);
 extern void func_80096E3C(void);
 extern void func_80072114(s32);
-extern void func_800437F0(void *, void *, s32);
-extern void func_800438EC(void *, void *, s32);
+extern void func_800437F0(u8 *, u8 *, s32);
+extern void func_800438EC(u8 *, u8 *, s32);
 extern void func_800704F0(void);
 extern void func_80070EC0(s32);
 extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
+extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8006D5CC(void);
 extern void func_8006D520(s32, s32);
 extern void func_80071664(void *, s32, s32, s32);
@@ -19,31 +28,35 @@ extern void func_80071408(void *, s32, s32);
 extern void func_80055678(void);
 extern void func_80051854(void);
 
-extern u8 D_1467B0;
-extern u8 D_147910;
-extern u8 D_1DE360;
-extern u8 D_1E0F70;
-extern u8 D_1F1A90;
-extern u8 D_1F2220;
-extern u8 D_245A80;
-extern u8 D_24C8E0;
+extern u8 D_1467B0[];
+extern u8 D_147910[];
+extern u8 D_1DE360[];
+extern u8 D_1E0F70[];
+extern u8 D_1F1A90[];
+extern u8 D_1F2220[];
+extern u8 D_245A80[];
+extern u8 D_24C8E0[];
 extern void func_8009954C(s32);
 extern void func_8009956C(void *, s32);
 extern void func_80099658(s32);
 extern void func_8007AA50(void);
 extern void func_800403D8(void);
 extern void func_8000DF28(void *);
+extern void func_80043184(void);
+extern void func_80043950(void);
+extern void func_800440F4(void);
+extern void func_80044294(void);
+extern void func_8008BEB0(void);
+extern void func_80078430(void);
+extern void func_80051FDC(void *);
+extern void func_800524B0(void *);
+extern void func_8000E7CC(void *);
+extern void func_8000EA44(void *);
 
-typedef struct {
-    /* 0x00 */ char pad[0x18];
-    /* 0x18 */ s32 unk18;
-    /* 0x1C */ s32 unk1C;
-} Struct801235B8;
-
-extern Struct801235B8 *D_801235B8;
+extern MainMenuTransitionState *D_801235B8;
 extern u8 D_8010B1F0;
 extern s16 D_801124B8;
-extern s8 D_80121B56;
+extern u8 D_80121B56;
 extern s16 D_800DEF14;
 extern u8 D_80123751;
 extern s32 D_801235B4;
@@ -54,7 +67,9 @@ extern void func_8003FEF4(void);
 extern void func_8003F554(void);
 extern void func_8003F6C0(void);
 extern void func_8003F718(void);
+extern void func_8003F778(void);
 extern void func_8003FF78(void);
+extern void func_8003FC60(void);
 extern void func_80040450(void);
 extern void func_8004086C(void);
 extern void func_800408E4(void);
@@ -63,7 +78,9 @@ extern void func_80040A48(void);
 extern void func_8003FBE8(void);
 extern void func_8003F7E4(void);
 extern void func_8003F864(void);
+extern void func_8004002C(void);
 extern void func_80040004(void);
+extern void func_800407AC(void);
 extern void func_80040B90(void);
 extern void func_80040B54(void);
 extern void func_80040BF4(void);
@@ -76,10 +93,11 @@ extern void func_80045914(void);
 extern u8 D_80123750;
 extern s8 D_800DEED4;
 extern u8 D_80121B5A;
-extern u8 D_593D10;
-extern u8 D_598A70;
-extern u8 D_60F1A0;
-extern u8 D_60F990;
+extern u8 D_593D10[];
+extern u8 D_598A70[];
+extern u8 D_60F1A0[];
+extern u8 D_60F990[];
+extern s16 D_80122282;
 extern void func_8000E874(void);
 
 void func_8003F520(void) {
@@ -88,12 +106,12 @@ void func_8003F520(void) {
 }
 
 void func_8003F554(void) {
-    func_800437F0(&D_1F1A90, &D_1F2220, 0x28);
-    func_800437F0(&D_593D10, &D_598A70, 0x29);
-    func_800437F0(&D_60F1A0, &D_60F990, 0x2A);
-    func_800437F0(&D_245A80, &D_24C8E0, 0x1F);
-    func_800438EC(&D_1467B0, &D_147910, 8);
-    func_800437F0(&D_1DE360, &D_1E0F70, 9);
+    func_800437F0(D_1F1A90, D_1F2220, 0x28);
+    func_800437F0(D_593D10, D_598A70, 0x29);
+    func_800437F0(D_60F1A0, D_60F990, 0x2A);
+    func_800437F0(D_245A80, D_24C8E0, 0x1F);
+    func_800438EC(D_1467B0, D_147910, 8);
+    func_800437F0(D_1DE360, D_1E0F70, 9);
     D_8010B1F0 = 0;
     D_800DEED4 = 0;
     D_800DEF14 = 0xFF;
@@ -120,10 +138,6 @@ void func_8003F6C0(void) {
 }
 
 void func_8003F718(void) {
-    extern void func_8006D780(s32);
-    extern void func_8007105C(void);
-    extern void func_8003F778(void);
-
     if (D_8010B1F0 != 0) {
         if (D_80121B5B == 0xC) {
             func_80072114(0x3C);
@@ -160,7 +174,7 @@ void func_8003F7E4(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003F864.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_8003F864.s")
 
 void func_8003FB70(void) {
     D_800DEF14 -= 0x10;
@@ -176,8 +190,6 @@ void func_8003FB70(void) {
     D_801124B8 = 0x80;
 }
 
-extern void func_8003FC60(void);
-
 void func_8003FBE8(void) {
     func_8008C704();
     func_800710CC(0x63);
@@ -185,14 +197,14 @@ void func_8003FBE8(void) {
     func_8007115C();
     func_8006D700();
     if (D_8010B1F0 != 0) {
-        D_801235B8->unk18 = 0;
+        D_801235B8->transitionTimer = 0;
         func_80072114(0x20);
         func_8009956C(&func_8003FC60, 0);
     }
     D_801124B8 = 0x80;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8003FC60.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_8003FC60.s")
 
 void func_8003FE54(void) {
     D_801235B4 = 0;
@@ -202,8 +214,8 @@ void func_8003FE54(void) {
     func_8007115C();
     func_8006D700();
     func_8007AA50();
-    D_801235B8->unk18 += 1;
-    if (D_801235B8->unk18 == D_800D3C90[D_80121B5B]) {
+    D_801235B8->transitionTimer += 1;
+    if (D_801235B8->transitionTimer == D_800D3C90[D_80121B5B]) {
         func_8009956C(func_8003FEF4, 0);
         func_80072114(0x40);
     }
@@ -241,13 +253,11 @@ void func_8003FFD0(void) {
     func_8009956C(&func_80040004, 0);
 }
 
-extern void func_8004002C(void);
-
 void func_80040004(void) {
     func_8009956C(&func_8004002C, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_8004002C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_8004002C.s")
 
 void func_80040360(void) {
     D_800DEF14 -= 0x10;
@@ -270,16 +280,65 @@ void func_800403D8(void) {
     func_8007115C();
     func_8006D700();
     if (D_8010B1F0 != 0) {
-        D_801235B8->unk18 = 0;
+        D_801235B8->transitionTimer = 0;
         func_80072114(0x20);
         func_8009956C(&func_80040450, 0);
     }
     D_801124B8 = 0x80;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_80040450.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_80040450.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/40120/func_80040638.s")
+void func_80040638(void) {
+    D_801235B4 = 0;
+    func_8008C704();
+    func_800710CC(0x63);
+    func_80096E3C();
+    func_8007115C();
+    func_8006D700();
+    func_8007AA50();
+    D_801235B8->transitionTimer = 0;
+    switch (D_80121B5A) {
+        case 1:
+            if (D_80122282 == 0x50) {
+                func_8009956C(func_800407AC, 0);
+                func_80072114(0x40);
+                return;
+            }
+            break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+            if (D_80122282 == 0x9C) {
+                func_8009956C(func_800407AC, 0);
+                func_80072114(0x40);
+                return;
+            }
+            break;
+        case 6:
+            if (D_80122282 == 0xB4) {
+                func_8009956C(func_800407AC, 0);
+                func_80072114(0x40);
+                return;
+            }
+            break;
+        case 7:
+        case 8:
+            if (D_80122282 == 0x16) {
+                func_8009956C(func_800407AC, 0);
+                func_80072114(0x40);
+                return;
+            }
+            break;
+        case 9:
+            if (D_80122282 == 0x36) {
+                func_8009956C(func_800407AC, 0);
+                func_80072114(0x40);
+            }
+            break;
+    }
+}
 
 void func_800407AC(void) {
     s32 temp_v1;
@@ -292,13 +351,13 @@ void func_800407AC(void) {
     func_8007115C();
     func_8006D700();
     func_8007AA50();
-    D_801235B8->unk18 += 0x10;
-    temp_v1 = D_801235B8->unk18;
+    D_801235B8->transitionTimer += 0x10;
+    temp_v1 = D_801235B8->transitionTimer;
     if (temp_v1 == 0x80) {
         func_80071408(func_8000DF28, 0, 0x64);
         func_8009956C(func_8004086C, 0);
     }
-    temp_v1 = D_801235B8->unk18;
+    temp_v1 = D_801235B8->transitionTimer;
     D_801124B8 = temp_v1;
 }
 
@@ -358,8 +417,8 @@ void func_80040A48(void) {
         func_8009956C(func_80040C44, 0);
         return;
     }
-    func_800437F0(&D_593D10, &D_598A70, 0x29);
-    func_800437F0(&D_60F1A0, &D_60F990, 0x2A);
+    func_800437F0(D_593D10, D_598A70, 0x29);
+    func_800437F0(D_60F1A0, D_60F990, 0x2A);
     D_8010B1F0 = 0;
     D_800DEED4 = 0;
     D_800DEF14 = 0xFF;
