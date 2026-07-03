@@ -1495,3 +1495,14 @@ signedness aligned with the target load. In `func_80032534`, modeling the
 animated scale at offset `0x1C` as `s16` changed the two target `lhu`
 instructions into `lh`. Changing only that field to `u16` restored the exact
 loads without changing the surrounding struct layout or source logic.
+## main_menu_scene_actor_0 callback actor cleanup
+
+- Renaming `src/33680.c` to `src/main_menu_scene_actor_0.c` and retyping
+  `Struct33680` to `MainMenuSceneActor` can remain checksum-clean, but several
+  callbacks still need their old local alias pattern (`MainMenuSceneActor *temp =
+  arg0;`). Removing that alias from functions such as `func_80032A88` changes
+  IDO's register choice and shrinks the function by one instruction.
+- Raw stores like `*(u16 *)((s32)arg0 + 0x2A) = 0` and
+  `*(s16 *)((s32)arg0 + 0x2C) = 0x16` can be replaced with `arg0->unk2A` and
+  `arg0->unk2C` without affecting codegen as long as the surrounding local alias
+  structure is preserved where the function previously had one.
