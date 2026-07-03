@@ -39,7 +39,19 @@ s16 func_80097AE8(s16 arg0) {
     return temp;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/98680/func_80097B48.s")
+s16 func_80097B48(s16 arg0) {
+    s16 temp;
+
+    arg0 = (arg0 + 0x400) & 0xFFF;
+    if (arg0 == 0x400) {
+        return 0x1000;
+    }
+    if (arg0 == 0xC00) {
+        return -0x1000;
+    }
+    temp = D_800B9810[arg0] >> 3;
+    return temp;
+}
 
 void func_80097BAC(s16 *arg0, s16 arg1) {
     s32 sine = func_80097AE8(arg1);
