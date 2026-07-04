@@ -8,13 +8,21 @@ typedef struct {
 } CourseSelectMenuState;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[4];
+    /* 0x00 */ u8 unk0[4];
     /* 0x04 */ u8 playerOneCourseDecided;
-    /* 0x05 */ u8 pad5[3];
+    /* 0x05 */ u8 unk5[3];
     /* 0x08 */ u8 playerTwoCourseDecided;
-    /* 0x09 */ u8 pad9[0x1F];
+    /* 0x09 */ u8 unk9[7];
+    /* 0x10 */ u8 unk10[4];
+    /* 0x14 */ s16 unk14[4];
+    /* 0x1C */ s16 unk1C[4];
+    /* 0x24 */ u8 unk24[4];
     /* 0x28 */ u8 unk28;
     /* 0x29 */ u8 transitionState;
+    /* 0x2A */ s16 unk2A;
+    /* 0x2C */ s16 unk2C;
+    /* 0x2E */ u8 unk2E;
+    /* 0x2F */ u8 unk2F[9];
 } CourseSelectStatus;
 
 typedef struct ObjectA3E0 {
