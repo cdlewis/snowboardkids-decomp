@@ -246,7 +246,39 @@ void func_8001B814(PlayerSelectWidgetActor *arg0) {
     func_80013D0C((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_8001B8F0.s")
+void func_8001B8F0(PlayerSelectWidgetActor *arg0) {
+    u8 state = arg0->transition.bytes.state;
+
+    switch (state) {
+    case 0:
+        arg0->sprite.spriteIndex += 0x26;
+        if (arg0->sprite.spriteIndex >= 0x100) {
+            arg0->sprite.spriteIndex = 0x100;
+            arg0->transition.bytes.state = 1;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 1:
+        if (D_80121D88 == 1) {
+            state = arg0->transition.bytes.state = 2;
+        }
+        break;
+    case 2:
+        arg0->x += 0x20;
+        if (arg0->x >= 0xA0) {
+            arg0->transition.bytes.state = 3;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 3:
+        break;
+    }
+    if ((unsigned int)state == 3) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8001B814, arg0);
+}
 
 void func_8001B9F0(PlayerSelectWidgetActor *arg0) {
     arg0->x = 0x30;
