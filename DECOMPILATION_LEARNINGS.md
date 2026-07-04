@@ -83,6 +83,20 @@ patterns, and verified layout/linking rules.
   Keeping the nested `do { ... } while (0)` and inner loop body collapsed to the
   proven source shape fixed a pure two-instruction scheduling swap in
   func_8006D700.
+- IDO aggressively unrolls *structured* counted loops (`for`/`while`/`do-while`)
+  whose trip count is computable at runtime from two address operands: it emits
+  a `subu` (end-start) + `andi N,0x..` remainder pre-loop + an unrolled body
+  (the same `& (factor-1)` idiom as memset). This fires for clean pointer
+  reductions like `for (p = &A; p != &B; p += 4) { if (*p == -1) n++; }`. To get
+  the plain `bne p,end` do-while the original game shipped, write the loop as an
+  *unstructured* goto loop (label + `if (p != end) goto label;`); IDO's loop
+  unroller only runs on structured loops, so the goto form is left alone. This
+  is how func_8000C114 matched (its `&A`/`&B` are adjacent BSS symbol labels).
+  Note the codebase already expresses such loops in the collapsed
+  `do { ... } while (0);` form (see func_8000B690) — keep that exact shape;
+  IDO's codegen here is sensitive to source line layout even for token-identical
+  input, so a reformatted (multi-line) version can re-introduce a two-instruction
+  `addiu %lo` scheduling swap.
 
 ## Structs, Types, and Data Access
 
