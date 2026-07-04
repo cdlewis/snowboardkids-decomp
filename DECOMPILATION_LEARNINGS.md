@@ -118,6 +118,9 @@ patterns, and verified layout/linking rules.
   `asm/nonmatchings/<segment>/...` path expected by `#pragma GLOBAL_ASM`.
   Update the pragmas after changing `snowboardkids.yaml`, then rebuild from
   extraction so stale old-directory paths do not hide include failures.
+- Pure `nop` text ranges may be intentional padding between libultra objects.
+  Keep them assembly-backed when C would emit a real function prologue/return
+  sequence or different alignment filler.
 - Some extracted single-function asm ranges may include an unnamed adjacent tiny
   function. A trailing `jr $ra; nop` after an earlier return is likely a missing
   empty function boundary, not padding.
