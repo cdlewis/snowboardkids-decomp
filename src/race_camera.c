@@ -101,26 +101,19 @@ void func_8006D580(u16 arg0, u16 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006D5CC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006D700.s")
-
-#ifdef NON_MATCHING
 void func_8006D700(void) {
     RaceCamera *camera;
     s32 index;
 
     index = 0;
     if (D_80121B54 > 0) {
-        do {
-            camera = D_801121E0;
-            do {
-                (D_801124A0 = camera)->update();
-                index += 1;
-                camera += 1;
-            } while (index < D_80121B54);
-        } while (0);
+ camera = D_801121E0; do {
+            (D_801124A0 = camera)->update();
+            index += 1;
+            camera += 1;
+        } while (index < D_80121B54);
     }
 }
-#endif
 
 void func_8006D780(s32 arg0) {
     D_801124A0 = &D_801121E0[arg0];
