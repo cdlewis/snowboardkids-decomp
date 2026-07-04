@@ -72,6 +72,7 @@ void func_80020F80(CharacterSelectWidgetActor *arg0);
 void func_8002127C(CharacterSelectWidgetActor *arg0);
 void func_80021F80(CharacterSelectWidgetActor *arg0);
 void func_8002215C(CharacterSelectWidgetActor *arg0);
+void func_80022198(CharacterSelectWidgetActor *arg0);
 void func_80022274(CharacterSelectWidgetActor *arg0);
 void func_8001D7B8(CharacterSelectWidgetActor *arg0);
 void func_8001DD80(CharacterSelectWidgetActor *arg0);
@@ -572,7 +573,72 @@ void func_8002215C(CharacterSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80022198.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80022274.s")
+void func_80022274(CharacterSelectWidgetActor *arg0) {
+    u32 state = arg0->transition.bytes.state;
+
+    switch (state) {
+    case 0:
+        if (++arg0->transition.bytes.timer == 2) {
+            arg0->transition.bytes.state = 1;
+            arg0->transition.bytes.timer = 0;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 1:
+        arg0->sprite.index += 0x30;
+        if (arg0->sprite.index >= 0x100) {
+            arg0->sprite.index = 0x100;
+            arg0->transition.bytes.state = 2;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 2:
+        if ((D_80121D88 == 7) || (D_80121D88 == 1)) {
+            state = arg0->transition.bytes.state = 3;
+        }
+        break;
+    case 3:
+        arg0->x -= 0x20;
+        if (arg0->x < -0x11F) {
+            if (D_80121D88 == 7) {
+                arg0->transition.bytes.state = 7;
+            } else {
+                arg0->transition.bytes.state = 4;
+            }
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 4:
+        if (D_80121D88 == 5) {
+            state = arg0->transition.bytes.state = 5;
+        }
+        break;
+    case 5:
+        arg0->x += 0x20;
+        if (arg0->x >= -0x84) {
+            arg0->transition.bytes.state = 2;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 6:
+        if (D_80121D88 == 7) {
+            arg0->transition.bytes.state = 3;
+        }
+        if (D_80121D88 == 0) {
+            arg0->transition.bytes.state = 2;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 7:
+        state = arg0->transition.bytes.state = 8;
+        break;
+    }
+    if (state == 8) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_80022198, arg0);
+}
 
 void func_80022464(CharacterSelectWidgetActor *arg0) {
     arg0->x = -0x84;
