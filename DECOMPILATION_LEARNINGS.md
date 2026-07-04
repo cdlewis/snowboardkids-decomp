@@ -84,6 +84,11 @@ patterns, and verified layout/linking rules.
   `array[index]` may reorder independent loads, while assigning
   `Element *ptr = &array[index];` and passing `*ptr` preserves typed access and
   can keep the original register order.
+- Some globals are aliases into the middle of a larger struct array. Rewriting
+  an access through the larger base struct can be semantically cleaner but still
+  change IDO scheduling or symbol offsets; keep the alias symbol when a function
+  was originally matched through that address, and document the stride with a
+  named constant or local type where possible.
 
 ## Globals, Data, and Linker Behavior
 
