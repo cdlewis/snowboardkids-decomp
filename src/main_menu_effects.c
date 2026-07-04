@@ -122,7 +122,19 @@ void func_8003C118(MainMenuEffectActor *arg0) {
     func_8000F030(linePosition->x, linePosition->offsetY, temp, 0xF, 0x20, 0x20, 0, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003C180.s")
+void func_8003C180(MainMenuEffectActor *arg0) {
+    arg0->introTimer = (u16) arg0->introTimer + 1;
+    if ((((u16) arg0->introTimer) % 30) == 0) {
+        if (arg0->uFrameIndex < 2) {
+            arg0->uFrameIndex++;
+        }
+    }
+    if (((u16) arg0->introTimer) == 0x69) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8003C118, arg0);
+}
 
 void func_8003C208(MainMenuEffectActor *arg0) {
     arg0->linePositions[2] = -0x38;
