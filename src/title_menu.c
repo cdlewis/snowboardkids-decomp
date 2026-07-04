@@ -12,7 +12,7 @@ typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
-    /* 0x1C */ s8 state;
+    /* 0x1C */ u8 state;
 } MenuItemActor;
 
 typedef struct {
@@ -50,14 +50,17 @@ extern void func_80014AA4(void);
 extern void func_80014EF0(void);
 extern void func_800152D0(void);
 extern void func_80015680(void);
-extern void func_80015A30(void);
+extern void func_80015A30(void *);
 extern void func_80015BD8(void *);
 extern void func_80015F4C(void);
 extern void func_80016284(void);
 extern void func_80016E40(void);
 extern void func_800170AC(void *);
 extern void func_800483FC(void *, void *, s32);
+extern void func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
+extern void func_800157EC(void *);
+extern void func_80015C84(void *);
 extern s16 D_8010AE38;
 extern s16 D_8010AE3A;
 extern s16 D_8010AE3C;
@@ -166,7 +169,38 @@ void func_800157B4(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_800157EC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80015A30.s")
+void func_80015A30(void *arg0) {
+    MenuItemActor *actor = arg0;
+    s16 x;
+
+    switch (actor->state) {
+    case 0:
+        actor->x -= 0x20;
+        x = actor->x;
+        if (x == -0x50) {
+            actor->state = 1;
+            func_80071408(func_80015C84, 0, 0x63);
+            x = actor->x;
+        }
+        break;
+    case 1:
+        x = actor->x;
+        break;
+    case 2:
+        actor->x -= 0x20;
+        x = actor->x;
+        break;
+    default:
+        x = actor->x;
+        break;
+    }
+    if (x < -0x108) {
+        func_800716E4(actor);
+        D_801235B8->unk1C = 2;
+        return;
+    }
+    func_800483FC(&D_80124868, func_800157EC, (s32)actor);
+}
 
 void func_80015B20(void *arg0) {
     MenuItemActor *actor = arg0;
