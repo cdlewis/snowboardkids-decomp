@@ -20,6 +20,19 @@ typedef union MainMenuModelAnimationBank {
     s16 frameData[1];
 } MainMenuModelAnimationBank;
 
+typedef struct MainMenuModelPart {
+    s32 unk0;
+    s8 displayObjectIndex;
+    char pad5[0x1];
+    MainMenuModelVec3s rot;
+    s32 offsetX;
+    s32 offsetY;
+} MainMenuModelPart;
+
+typedef struct MainMenuModelDisplayObject {
+    char bytes[0x20];
+} MainMenuModelDisplayObject;
+
 typedef struct MainMenuSceneModel {
     s16 actorIndex;
     s16 modelIndex;
@@ -31,11 +44,12 @@ typedef struct MainMenuSceneModel {
     s16 *animationCursor;
     s16 framesRemaining;
     s16 frameDuration;
-    char poseData[0x11C];
+    MainMenuModelPart parts[14];
+    char pad130[0x4];
     MainMenuModelVec3i pos;
     MainMenuModelVec3s rot;
     s16 unk146;
-    char displayObjects[14][0x20];
+    MainMenuModelDisplayObject displayObjects[14];
 } MainMenuSceneModel;
 
 #endif
