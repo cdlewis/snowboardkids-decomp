@@ -128,7 +128,7 @@ segments:
       - [0x79030, c, race_timer_ui]
       - [0x7BE50, c, race_position_tracker]
       - [0x7CA80, c, race_position_ui]
-      - [0x7DD90, c]
+      - [0x7DD90, c, model_animation]
       - [0x83CC0, c]
       - [0x83DC0, c]
       - [0x843D0, c]
