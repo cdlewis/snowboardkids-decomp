@@ -19,7 +19,7 @@ typedef struct {
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s32 fadeTimer;
-    /* 0x1C */ u8 pad1C[4];
+    /* 0x1C */ s32 unk1C;
     /* 0x20 */ s32 countdown;
 } RaceFlowState;
 
@@ -42,6 +42,7 @@ extern u8 D_243270[];
 extern u8 D_80121B55;
 extern u8 D_80121B57;
 extern u8 D_80121B58;
+extern u8 D_80121B60;
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern u8 D_800DEED4;
@@ -74,11 +75,14 @@ extern void func_8006D700(void);
 extern void func_8007105C(void);
 extern void func_800710CC(s32);
 extern void func_8007115C(void);
+extern void func_80071664(void *, s32, s32, s32);
+extern void func_8005393C(void);
 extern void func_800720E4(s32);
 extern void func_80072114(s32);
 extern void func_80072138(s32, s32);
 extern void func_80072260(void);
 extern void func_800728E0(void);
+extern s32 func_80072938(void);
 extern void func_80070EC0(s32);
 extern void func_800733E0(void);
 extern void func_800734A0(void);
@@ -103,6 +107,7 @@ extern void func_80074160(void);
 extern void func_80074960(void);
 extern void func_80077B34(void);
 extern void func_80077C4C(void);
+extern void func_80077400(void);
 extern void func_80077C94(void);
 extern void func_80077CD4(void);
 extern void func_80077DA0(void);
@@ -421,7 +426,25 @@ void func_800747E8(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80076490.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80077324.s")
+void func_80077324(void) {
+    if (func_80072938() == 0) {
+        func_800720E4(7);
+        D_801235B8->unk1C = 0x3C;
+        D_801235B4 |= 0x20;
+    }
+    if (D_80121B60 != 0) {
+        func_80071664(&func_8005393C, 5, 0x64, D_80121B60 - 1);
+    }
+    func_80077C94();
+    if (D_801235B4 & 0x10) {
+        D_801235B8->fadeTimer -= 1;
+        if (D_801235B8->fadeTimer == 0) {
+            D_801235B8->fadeTimer = 4;
+            func_8009956C(&func_80077400, 0);
+            func_80072114(0x14);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80077400.s")
 

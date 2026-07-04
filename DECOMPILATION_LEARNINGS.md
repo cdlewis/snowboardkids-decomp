@@ -1677,3 +1677,20 @@ In `func_80062530`, the typed C matched all instructions except IDO shrank the
 stack frame from `0x48` to `0x28`. Adding an otherwise unused
 `volatile u8 padding[0x20]` local restored the target frame size without
 changing scheduling or register allocation.
+
+## Cross-translation-unit prototype mismatches on return type
+
+func_80072938 is defined as a void function in game_audio.c (it forwards to
+func_8009DDE4), but in race_flow.c the call site reads the return register
+(bnez on v0 after jal). The original game declares it inconsistently across
+translation units. C does not cross-check prototypes between TUs, so declaring
+it as returning s32 locally in race_flow.c is correct and necessary for the
+if (call() == 0) codegen; do not "fix" the definition in the other file.
+
+## Extern pointer globals are reloaded between aliased accesses
+
+For a sequence like `D_801235B8->fadeTimer -= 1; if (D_801235B8->fadeTimer == 0)`,
+IDO re-emits the lui/lw of the D_801235B8 global between the store and the
+re-read (it cannot prove the store through the pointer does not alias the
+global itself). This is expected; writing the field access naturally in C
+reproduces it.
