@@ -3,7 +3,6 @@
 #define RACE_CAMERA_COUNT 4
 #define RACE_CAMERA_STATE_SIZE 0xB0
 #define RACE_PLAYER_STATE_SIZE 0x60C
-#define RACE_PLAYER(slot) ((RacePlayerState *)D_80121D80[(slot)].bytes)
 
 typedef struct {
     /* 0x0 */ s32 x;
@@ -198,18 +197,14 @@ void func_8006F8BC(void) {
     D_801124A0->update();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006F984.s")
-
-#ifdef NON_MATCHING
 void func_8006F984(void) {
     s32 stride = RACE_PLAYER_STATE_SIZE;
 
-    D_801124A0->focus.x = RACE_PLAYER(D_801124A0->playerIndex)->cameraPos.x;
-    D_801124A0->focus.y = RACE_PLAYER(D_801124A0->playerIndex)->cameraPos.y;
-    D_801124A0->focus.z = RACE_PLAYER(D_801124A0->playerIndex)->cameraPos.z;
+    D_801124A0->focus.x = ((RacePlayerState *)((u8 *)D_80121D80 + D_801124A0->playerIndex * stride))->cameraPos.x;
+    D_801124A0->focus.y = ((RacePlayerState *)((u8 *)D_80121D80 + D_801124A0->playerIndex * stride))->cameraPos.y;
+    D_801124A0->focus.z = ((RacePlayerState *)((u8 *)D_80121D80 + D_801124A0->playerIndex * stride))->cameraPos.z;
     func_8006D8B4(D_80121D80, stride);
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006FA20.s")
 
