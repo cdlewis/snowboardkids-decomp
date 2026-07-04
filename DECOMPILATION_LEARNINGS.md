@@ -59,6 +59,24 @@ patterns, and verified layout/linking rules.
   constant assignment fixed a pure scheduling/register diff in func_800994F4
   (the constant store filled the final load's delay slot and landed in `$t9`
   instead of `$t8`).
+- A 4-case `switch` (cases 0-3 plus default) compiles to a comparison chain
+  (`beqz`/`beq` ladder), but adding an explicit empty `case 4: break;` flips IDO
+  to emit a 5-entry `.late_rodata` jump table (`sltiu $at, $v0, 5; jr`). When a
+  target's switch uses a jump table whose entry count exceeds the obvious case
+  count, look for the "extra" case being an empty body identical to default
+  (func_80023198 vs the matched func_800219E4, which lacks case 4 and uses a
+  ladder). The empty case is often the terminal state of the state machine.
+- IDO can emit a genuinely unreachable (dead) `li` after an unconditional `b`
+  when compiling a complex `||`/`&&` short-circuit with comma-operator-style
+  intermediate assignments to the same variable (e.g. the threshold-selection
+  `if ((a==2) || ((t=-0x88, a==1) && (t=-0x88, b==0))) t=-0x8A;` in
+  func_80023198). This dead `li $v0, -0x88` after `li $v0, -0x8a; b .merge` is
+  not reproducible from cleaner equivalent C (if/else chain, ternary, or
+  pre-initialized variable) — those either fold it or relocate the constant.
+  Hoisting the second global read into a local before the condition
+  (`var = D_...; ... && (... var == 0)`) reproduces the eager load but not the
+  dead instruction; treat the residual ~one-instruction dead-store diff as an
+  IDO artefact rather than chasing it.
 - For tight pointer-walk loops with two global base addresses, IDO can schedule
   independent `addiu %lo` materializations differently depending on the exact
   source nesting/statement shape even when the control flow is equivalent.
