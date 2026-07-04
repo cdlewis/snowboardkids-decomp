@@ -1,14 +1,9 @@
 #include "common.h"
+#include "game_audio.h"
 
 #define GAME_AUDIO_FREE_HANDLE_COUNT 13
 #define GAME_AUDIO_QUEUE_CAPACITY 64
 #define GAME_AUDIO_QUEUE_MASK (GAME_AUDIO_QUEUE_CAPACITY - 1)
-
-typedef struct {
-    s32 x;
-    s32 y;
-    s32 z;
-} SoundPosition;
 
 typedef struct GameAudioHandleNode {
     struct GameAudioHandleNode *prev;
