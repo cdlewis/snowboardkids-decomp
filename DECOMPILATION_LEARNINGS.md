@@ -2060,3 +2060,17 @@ convention, so extending the shop-local typedef does not conflict.
   `s16` member compiled to `lh`; using the `u16 uFrameIndex` union member
   compiled to `lhu` and matched. When a union field's load sign differs from
   the target, switch union members rather than adding casts.
+
+- **Address-taken local forces IDO to reload from stack, defeating
+  address-register CSE for globals.** In `func_80048388` (render arena bump
+  allocator), the natural source `temp = D_801121B8 + ALIGN4(size); ...
+  D_801121B8 = temp;` lets IDO CSE the global's address into one register
+  (`lui rX,%hi; addiu rX,rX,%lo`) and reuse it for both the load and the store.
+  The target instead recomputes the address twice (`lui t7,%hi; lw t7,%lo(t7)`
+  for the read, `lui at,%hi; sw ..,%lo(at)` for the write) and reloads the
+  computed value from its stack slot before the store. Writing
+  `s32 *p = &temp; ... D_801121B8 = *p;` (semantically `= temp`) marks `temp`
+  as address-taken, forcing it into the addressed-locals region and a reload on
+  every use — reproducing the target's separate `lui`/`sw` and a 100% match.
+  Same family as the address-taken-local frame trick above; here it controls
+  reload/CSE behavior rather than frame size.
