@@ -76,7 +76,7 @@ segments:
       - [0x7B30, c, character_select_transition]
       - [0x9220, c, player_count_select_menu]
       - [0x9960, c, controller_pak_delete_flow]
-      - [0xA3E0, c]
+      - [0xA3E0, c, course_select_menu]
       - [0xCE80, c]
       - [0xD200, c]
       - [0xDB70, c]

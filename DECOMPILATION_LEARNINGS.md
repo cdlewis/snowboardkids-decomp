@@ -1659,3 +1659,11 @@ The asm processor also does not process `#pragma GLOBAL_ASM` correctly when the
 pragma is hidden inside a C preprocessor conditional. Keep the pragma at top
 level, and put typed exploratory C under a separate `#ifdef NON_MATCHING` block
 below it if the default build still needs the assembly.
+
+## Statement grouping can affect independent address setup
+
+In `course_select_menu`, expanding compact object update loops into normal
+multi-line blocks kept the same instruction count but swapped independent
+`addiu` address materialization order for `D_800EC9C4` and `D_801121E0`.
+Keeping the original grouped statement shape allowed typed struct fields and
+arrays to match without returning to raw pointer math.
