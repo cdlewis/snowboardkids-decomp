@@ -1,42 +1,31 @@
 #include "common.h"
+#include "character_select_flow.h"
+#include "controller_pak_menu.h"
 
 typedef struct {
-    char pad[0x18];
-    s32 unk18;
-    s32 unk1C;
-} Struct801235B8;
+    /* 0x0 */ s8 step;
+    /* 0x1 */ char pad1[0x1];
+    /* 0x2 */ s16 timer;
+    /* 0x4 */ s16 targetState;
+    /* 0x6 */ s16 nextTimer;
+} ControllerPakDeleteFlow;
 
-extern Struct801235B8 *D_801235B8;
+typedef struct {
+    /* 0x0 */ char pad0[0x8];
+    /* 0x8 */ s8 status;
+    /* 0x9 */ char pad9[0x3];
+    /* 0xC */ s32 selectedFileInfo;
+} ControllerPakFileContext;
+
+extern CharacterSelectFlowState *D_801235B8;
+extern ControllerPakMenuState D_8010AF90;
+extern ControllerPakDeleteFlow D_8010AF60;
+extern ControllerPakFileContext D_80121D80;
 extern u8 D_80123750;
-extern s8 D_80123751;
+extern u8 D_80123751;
 extern s8 D_800DEED4;
-
-typedef struct {
-    char pad0[0x2];
-    u8 unk2;
-    u8 unk3;
-} Struct8010AF90;
-
-typedef struct {
-    s8 unk0;
-    char pad1[0x1];
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-} Struct8010AF60;
-
-typedef struct {
-    char pad0[0x8];
-    s8 unk8;
-    char pad9[0x3];
-    s32 unkC;
-} Struct80121D80;
-
-extern Struct8010AF90 D_8010AF90;
-extern Struct8010AF60 D_8010AF60;
-extern Struct80121D80 D_80121D80;
 extern u8 D_8010AF92;
-extern s8 D_8010AF93;
+extern u8 D_8010AF93;
 extern s32 D_801235B4;
 extern s32 D_80123778;
 extern s16 D_800EC9C8;
@@ -79,15 +68,15 @@ void func_80008D60(void) {
     D_800EC9C8 = 0;
     D_800EC9D0 = 0;
     D_800EC9D8 = 0;
-    D_80121D80.unk8 = 0;
+    D_80121D80.status = 0;
     D_800EC9C1 = 0;
-    D_801235B8->unk18 = 0xFF;
+    D_801235B8->fade = 0xFF;
     D_8010ADDC = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     D_8010ADE8 = 0;
-    D_800DEF14 = D_801235B8->unk18;
-    D_800EC9F4 = D_80121D80.unkC;
+    D_800DEF14 = D_801235B8->fade;
+    D_800EC9F4 = D_80121D80.selectedFileInfo;
     func_800437F0(&D_59AAA0, &D_59DFE0, 0x21);
     func_800437F0(&D_59AAA0, &D_59DFE0, 0x24);
     func_800437F0(&D_593D10, &D_598A70, 0x22);
@@ -96,23 +85,23 @@ void func_80008D60(void) {
     func_80070EC0(0);
     D_8010ADDC = func_80071408(&func_8002BA00, 0, 0x61);
     D_8010ADE8 = func_80071408(&func_8002C318, 0, 0x60);
-    D_8010AF60.unk0 = 0;
-    D_8010AF60.unk2 = 0;
-    D_8010AF60.unk4 = 0;
-    D_8010AF60.unk6 = 0;
-    D_8010AF90.unk3 = 0;
-    D_8010AF90.unk2 = 0;
+    D_8010AF60.step = 0;
+    D_8010AF60.timer = 0;
+    D_8010AF60.targetState = 0;
+    D_8010AF60.nextTimer = 0;
+    D_8010AF90.state = 0;
+    D_8010AF90.confirmChoice = 0;
     func_8009956C(func_80008F2C, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9960/func_80008F2C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_delete_flow/func_80008F2C.s")
 
 void func_800095DC(void) {
-    s32 temp_v0 = D_801235B8->unk18;
+    s32 temp_v0 = D_801235B8->fade;
     if (temp_v0 != 0xFF) {
-        D_801235B8->unk18 = func_80013F88((s16)temp_v0, 0x20, 1);
+        D_801235B8->fade = func_80013F88((s16) temp_v0, 0x20, 1);
         func_8007105C();
-        if (D_801235B8->unk18 == 0xFF) {
+        if (D_801235B8->fade == 0xFF) {
             D_80123751 = 1;
         }
     } else if (D_80123750 == 2) {
@@ -125,11 +114,11 @@ void func_800095DC(void) {
 }
 
 void func_80009690(void) {
-    if ((D_80123778 & 0x10800) && (D_8010AF90.unk2 != 0)) {
-        D_8010AF90.unk2 = 0;
+    if ((D_80123778 & 0x10800) && (D_8010AF90.confirmChoice != 0)) {
+        D_8010AF90.confirmChoice = 0;
         func_80072138(0x19, 0x32);
-    } else if ((D_80123778 & 0x20400) && (D_8010AF90.unk2 != 1)) {
-        D_8010AF90.unk2 = 1;
+    } else if ((D_80123778 & 0x20400) && (D_8010AF90.confirmChoice != 1)) {
+        D_8010AF90.confirmChoice = 1;
         func_80072138(0x19, 0x32);
     }
     if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
