@@ -161,9 +161,24 @@ void func_8004835C(void) {
     D_801121B8 = func_80043040(D_80112130);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80048388.s")
+void *func_80048388(s32 arg0) {
+    s32 *new_var2;
+    u32 new_var;
+    s32 sp1C;
+    s32 base;
+    s32 temp_a0;
 
-extern void *func_80048388(s32);
+    sp1C = D_801121B8;
+    base = func_80043040(D_80112130);
+    new_var2 = &temp_a0;
+    temp_a0 = D_801121B8 + ((((u32)(arg0 + 3)) >> 2) * 4);
+    new_var = (u32)(*new_var2 - base);
+    if (new_var >= 0x4001U) {
+        return NULL;
+    }
+    D_801121B8 = *new_var2;
+    return (void *)sp1C;
+}
 
 void func_800483FC(RenderCallbackNode **arg0, void (*arg1)(s32), s32 arg2) {
     RenderCallbackNode *temp_v0 = func_80048388(sizeof(RenderCallbackNode));
