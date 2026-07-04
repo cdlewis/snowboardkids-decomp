@@ -1,0 +1,270 @@
+#include "common.h"
+
+#define RACE_PLAYER_STATE_SIZE 0x60C
+
+typedef struct {
+    /* 0x0 */ s32 x;
+    /* 0x4 */ s32 y;
+    /* 0x8 */ s32 z;
+} Vec3i;
+
+typedef union {
+    Vec3i vec;
+    struct {
+        /* 0x18 */ s16 x;
+        /* 0x1A */ s16 y;
+        /* 0x1C */ u16 frame;
+        /* 0x1E */ u8 pad1E[2];
+        /* 0x20 */ s8 colorR;
+        /* 0x21 */ s8 colorG;
+        /* 0x22 */ s8 colorB;
+    } sprite;
+} RaceItemEffectPayload;
+
+typedef union {
+    s32 word;
+    struct {
+        /* 0x28 */ s8 unk28;
+        /* 0x29 */ s8 phase;
+        /* 0x2A */ s8 unk2A;
+        /* 0x2B */ s8 unk2B;
+    } bytes;
+} RaceItemEffectWord28;
+
+typedef union {
+    s16 halfword;
+    s8 byte;
+    u8 ubyte;
+} RaceItemEffectState;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 playerIndex;
+    /* 0x12 */ u8 pad12[6];
+    /* 0x18 */ RaceItemEffectPayload payload;
+    /* 0x24 */ s16 timer;
+    /* 0x26 */ u8 pad26[2];
+    /* 0x28 */ RaceItemEffectWord28 unk28;
+    /* 0x2C */ s32 unk2C;
+    /* 0x30 */ s16 x;
+    /* 0x32 */ s16 y;
+    /* 0x34 */ RaceItemEffectState state;
+    /* 0x36 */ s16 height;
+    /* 0x38 */ s16 width;
+    /* 0x3A */ u8 pad3A[0x64 - 0x3A];
+    /* 0x64 */ u16 unk64;
+} RaceItemEffectActor;
+
+typedef struct {
+    /* 0x000 */ Vec3i pos;
+    /* 0x00C */ u8 padC[RACE_PLAYER_STATE_SIZE - 0xC];
+} RaceItemEffectPlayerState;
+
+extern u8 *D_800D46D0[];
+extern s16 D_8011216C;
+extern s16 D_80121B50;
+extern u8 D_80121B56;
+extern RaceItemEffectPlayerState D_80121EE8[];
+extern s32 D_80124878;
+extern s32 D_801248C8;
+extern s32 D_801248E0;
+extern s32 D_801248EC;
+
+s32 func_80043040(s16);
+s32 func_800430D0(void);
+void func_80045990(s32, u8, s32 *, s32 *);
+void func_800483FC(void *, void *, void *);
+void func_8004DB8C(RaceItemEffectActor *);
+void func_8004E02C(RaceItemEffectActor *);
+void func_8004E438(RaceItemEffectActor *);
+void func_8004E604(RaceItemEffectActor *);
+void func_8004E960(RaceItemEffectActor *);
+void func_8004F68C(RaceItemEffectActor *);
+void func_8004F9CC(RaceItemEffectActor *);
+void func_8005019C(RaceItemEffectActor *);
+void func_80050340(RaceItemEffectActor *);
+void func_80050398(RaceItemEffectActor *);
+void func_800716E4(void);
+void func_80071824(RaceItemEffectActor *, void *);
+RaceItemEffectActor *func_800711D0(void *, s32, s32);
+RaceItemEffectActor *func_800716A4(void *, s32, s32, s16);
+
+u8 func_8004DB60(s32 arg0) {
+    u8 *p = D_800D46D0[D_80121B50];
+    return p[arg0];
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004DB8C.s")
+
+void func_8004DC6C(RaceItemEffectActor *arg0) {
+    arg0->unk64 = 0;
+    func_8004DB8C(arg0);
+    func_80071824(arg0, func_8004DB8C);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004DCA0.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004E02C.s")
+
+void func_8004E3BC(RaceItemEffectActor *arg0) {
+    s16 temp_v0;
+
+    if (D_80121B56 == 0) {
+        arg0->timer++;
+        if (arg0->timer == 8) {
+            func_800716E4();
+            return;
+        }
+    }
+    temp_v0 = arg0->timer;
+    if (temp_v0 < 0) {
+        arg0->timer = temp_v0 + 1;
+    }
+    func_800483FC(&D_801248E0, func_8004E02C, arg0);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004E438.s")
+
+void func_8004E518(s16 arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4) {
+    RaceItemEffectActor *p = func_800716A4(func_8004E438, 5, 0x32, arg2);
+
+    if (p != NULL) {
+        p->state.halfword = 0;
+        p->height = arg1;
+        p->width = arg0;
+        p->unk28.word = arg3;
+        p->unk2C = arg4;
+    }
+}
+
+void func_8004E594(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
+    RaceItemEffectActor *p = func_800716A4(func_8004E438, 5, 2, arg3);
+
+    if (p != NULL) {
+        p->payload.vec.x = arg0;
+        p->payload.vec.y = arg1;
+        p->payload.vec.z = arg2;
+        p->state.halfword = 1;
+    }
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004E604.s")
+
+void func_8004E960(RaceItemEffectActor *arg0) {
+    if (D_80121B56 == 0) {
+        arg0->x -= 0x30;
+        arg0->y += 3;
+        if (arg0->x < 0x21) {
+            func_800716E4();
+            return;
+        }
+    }
+    func_800483FC(&D_801248EC, func_8004E604, arg0);
+}
+
+void func_8004E9D0(RaceItemEffectActor *arg0) {
+    arg0->x = 0xF0;
+    arg0->y = 0x10;
+    func_80045990(func_80043040(D_8011216C), arg0->state.ubyte, &arg0->unk2C, &arg0->unk28.word);
+    func_80071824(arg0, func_8004E960);
+}
+
+void func_8004EA34(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
+    RaceItemEffectActor *p = func_800711D0(func_8004E9D0, 0, 2);
+
+    if (p != NULL) {
+        p->state.byte = arg3;
+        p->payload.vec.x = arg0;
+        p->payload.vec.y = arg1;
+        p->payload.vec.z = arg2;
+    }
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004EAA8.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004EE0C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004EF24.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004EFF8.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004F33C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004F3FC.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004F55C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004F68C.s")
+
+void func_8004F9CC(RaceItemEffectActor *arg0) {
+    if (D_80121B56 == 0) {
+        arg0->unk28.bytes.phase++;
+        if (arg0->unk28.bytes.phase == 0xC) {
+            func_800716E4();
+            return;
+        }
+    }
+    if (arg0->unk28.bytes.phase < 0) {
+        arg0->unk28.bytes.phase = 0;
+    }
+    func_800483FC(&D_801248C8, func_8004F68C, arg0);
+}
+
+void func_8004FA44(RaceItemEffectActor *arg0) {
+    arg0->unk28.bytes.phase = -1;
+    arg0->payload.vec.x = D_80121EE8[arg0->playerIndex].pos.x + ((func_800430D0() - 0x80) << 10);
+    arg0->payload.vec.y = D_80121EE8[arg0->playerIndex].pos.y + ((func_800430D0() - 0x80) << 10);
+    arg0->payload.vec.z = D_80121EE8[arg0->playerIndex].pos.z + ((func_800430D0() - 0x80) << 10);
+    func_8004F9CC(arg0);
+    func_80071824(arg0, func_8004F9CC);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004FB44.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004FF34.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050030.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8005019C.s")
+
+void func_80050340(RaceItemEffectActor *arg0) {
+    u16 temp = arg0->payload.sprite.frame + 1;
+
+    arg0->payload.sprite.frame++;
+    if ((((arg0->payload.sprite.frame) + 1) - 1) >= 0x10) {
+        func_800716E4();
+    } else {
+        func_800483FC(&D_80124878, func_8005019C, arg0);
+    }
+}
+
+void func_80050398(RaceItemEffectActor *arg0) {
+    arg0->payload.sprite.frame = 0xFFFF;
+    func_80050340(arg0);
+    func_80071824(arg0, func_80050340);
+}
+
+void func_800503D0(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
+    RaceItemEffectActor *temp_v0;
+
+    temp_v0 = func_800711D0(func_80050398, 5, 3);
+    if (temp_v0 != NULL) {
+        temp_v0->payload.sprite.x = arg0 - 8;
+        temp_v0->payload.sprite.y = arg1 - 8;
+        temp_v0->payload.sprite.colorR = arg2;
+        temp_v0->payload.sprite.colorG = arg3;
+        temp_v0->payload.sprite.colorB = arg4;
+    }
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050458.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050888.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_800508D0.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8005098C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050D84.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050E80.s")

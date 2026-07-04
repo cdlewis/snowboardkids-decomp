@@ -1553,3 +1553,15 @@ player base and loop counter initialization before the three range-table base
 For future matching, preserve the typed range/player structures, but focus on
 statement grouping or local lifetime changes that influence the order of those
 independent saved-register initializers.
+
+## Avoid hoisting typed strided-array pointers across calls
+
+In `func_8004FA44`, replacing repeated `D_80121EE8[playerIndex]` loads with a
+single local `RaceItemEffectPlayerState *player` was cleaner but shortened the
+function by `0x3C` bytes. IDO kept the local player pointer on the stack across
+three `func_800430D0()` calls and reused it, while the target recomputes the
+`0x60C` stride and reloads each coordinate after each call.
+
+When cleaning pointer arithmetic around large strided arrays, typed indexing can
+still match as long as each load is written independently. Avoid introducing a
+local element pointer if the target visibly recomputes the stride between calls.
