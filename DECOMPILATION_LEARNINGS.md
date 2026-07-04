@@ -1526,3 +1526,14 @@ shape keeps a typed actor overlay pointer advanced by
 
 Also keep the frame index unsigned for this view. Using the signed `frameIndex`
 field changes the target `lhu 0x24` into `lh 0x24`.
+
+## Halfword-relative animation offsets and `addu` order
+
+`func_80041DD4` reads a main-menu model animation bank whose frame offsets are
+stored as halfword offsets relative to the start of the bank. A clean union
+array expression like `&bank->frameData[bank->frameOffsets[index]]` is
+semantically right, but IDO emits the final address add as `bank + offset`.
+The target uses `offset + bank`.
+
+For checksum-clean cleanup, keep the bank typed but write the address as
+`offset * sizeof(s16) + (s32)bank` when the target operand order matters.
