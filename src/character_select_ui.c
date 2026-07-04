@@ -45,6 +45,10 @@ extern s16 D_80112172;
 extern s16 D_80112178;
 extern u8 D_800B6B88[];
 extern CharacterSelectText D_800B6210[];
+extern u8 D_800B67D8[][0x74];
+extern u8 D_800B6934[][0x60];
+extern u8 D_800B6A54[][0x70];
+extern u8 D_800B6B34[];
 extern s16 D_80121B50;
 extern void *D_8010ADE0;
 extern u8 D_80121D88;
@@ -571,7 +575,30 @@ void func_8002215C(CharacterSelectWidgetActor *arg0) {
     func_80071824(arg0, func_80021F80);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80022198.s")
+void func_80022198(CharacterSelectWidgetActor *arg0) {
+    u8 *text;
+    s32 threshold;
+    u16 idx;
+
+    if (D_80121B5E < 2) {
+        threshold = 2;
+    } else {
+        threshold = 0;
+    }
+    if (threshold >= D_80121B50) {
+        idx = (u16)D_80121B50;
+        if (D_80121B5E == 0) {
+            text = D_800B67D8[idx];
+        } else if (D_80121B5E == 1) {
+            text = D_800B6934[idx];
+        } else {
+            text = D_800B6A54[idx];
+        }
+    } else {
+        text = D_800B6B34;
+    }
+    func_80013154(arg0->x, arg0->y, text, 1, arg0->sprite.index, 0);
+}
 
 void func_80022274(CharacterSelectWidgetActor *arg0) {
     u32 state = arg0->transition.bytes.state;
