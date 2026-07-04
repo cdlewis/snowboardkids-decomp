@@ -1,4 +1,5 @@
 #include "common.h"
+#include "controller_pak_menu.h"
 
 typedef struct {
     s16 x;
@@ -61,16 +62,6 @@ typedef struct {
     s16 selectedOption;
     u8 timer;
 } ControllerPakDeletePromptActor;
-
-typedef struct {
-    u8 mainChoice;
-    u8 fileIndex;
-    u8 confirmChoice;
-    u8 state;
-    s8 pendingFileIndex;
-    u8 unk5;
-    u8 unk6;
-} ControllerPakMenuState;
 
 extern void func_800483FC(void *, void *, s32);
 extern s32 func_80043040(s16);

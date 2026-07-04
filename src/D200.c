@@ -1,20 +1,11 @@
 #include "common.h"
+#include "controller_pak_menu.h"
 
 typedef struct {
     char pad[0x18];
     s32 unk18;
     s32 unk1C;
 } Struct801235B8;
-
-typedef struct {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    u8 unk3;
-    s8 unk4;
-    u8 unk5;
-    u8 unk6;
-} Struct8010AF90;
 
 typedef struct {
     s16 unk0;
@@ -51,7 +42,7 @@ extern u8 func_80031510;
 extern u8 func_80031B24;
 extern u8 func_80031C04;
 
-extern Struct8010AF90 D_8010AF90;
+extern ControllerPakMenuState D_8010AF90;
 extern StructAFA0 D_8010AFA0[];
 extern Struct801235B8 *D_801235B8;
 extern s8 D_800DEED4;
@@ -107,11 +98,11 @@ void func_8000C600(void) {
     func_80071408(&func_80031510, 0, 0x63);
     func_80071408(&func_80031B24, 0, 0x63);
     func_80071408(&func_80031C04, 0, 0x5E);
-    D_8010AF90.unk0 = 0;
-    D_8010AF90.unk1 = 0;
-    D_8010AF90.unk2 = 0;
-    D_8010AF90.unk3 = 0;
-    D_8010AF90.unk4 = 0;
+    D_8010AF90.mainChoice = 0;
+    D_8010AF90.fileIndex = 0;
+    D_8010AF90.confirmChoice = 0;
+    D_8010AF90.state = 0;
+    D_8010AF90.pendingFileIndex = 0;
     D_8010AF90.unk5 = 0;
     func_80001618();
     func_80001858();
@@ -119,20 +110,20 @@ void func_8000C600(void) {
 }
 
 void func_8000C818(void) {
-    if ((D_80123778 & 0x40100) && (D_8010AF90.unk0 != 1)) {
-        D_8010AF90.unk0 = 1;
+    if ((D_80123778 & 0x40100) && (D_8010AF90.mainChoice != 1)) {
+        D_8010AF90.mainChoice = 1;
         func_80072138(0x19, 0x32);
-    } else if ((D_80123778 & 0x80200) && (D_8010AF90.unk0 != 0)) {
-        D_8010AF90.unk0 = 0;
+    } else if ((D_80123778 & 0x80200) && (D_8010AF90.mainChoice != 0)) {
+        D_8010AF90.mainChoice = 0;
         func_80072138(0x19, 0x32);
     }
     if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
         func_80072138(0x18, 0x32);
-        if (D_8010AF90.unk0 == 1) {
+        if (D_8010AF90.mainChoice == 1) {
             func_8009956C(func_8000CEA0, 0);
         } else {
             func_8009956C(func_8000C924, 0);
-            D_8010AF90.unk3 = 1;
+            D_8010AF90.state = 1;
             D_8010AF90.unk5 = 0;
         }
     }
@@ -142,66 +133,66 @@ void func_8000C818(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/D200/func_8000C924.s")
 
 void func_8000CB08(void) {
-    if ((D_80123778 & 0x40100) && (D_8010AF90.unk2 != 1)) {
-        D_8010AF90.unk2 = 1;
+    if ((D_80123778 & 0x40100) && (D_8010AF90.confirmChoice != 1)) {
+        D_8010AF90.confirmChoice = 1;
         func_80072138(0x19, 0x32);
-    } else if ((D_80123778 & 0x80200) && (D_8010AF90.unk2 != 0)) {
-        D_8010AF90.unk2 = 0;
+    } else if ((D_80123778 & 0x80200) && (D_8010AF90.confirmChoice != 0)) {
+        D_8010AF90.confirmChoice = 0;
         func_80072138(0x19, 0x32);
     }
     if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
         func_80072138(0x18, 0x32);
-        if (D_8010AF90.unk2 == 0) {
+        if (D_8010AF90.confirmChoice == 0) {
             func_80071408(&func_800325D0, 0, 0x64);
             func_8009956C(func_8000CC5C, 0);
-            D_8010AF90.unk3 = 3;
-            D_8010AF90.unk2 = 1;
+            D_8010AF90.state = 3;
+            D_8010AF90.confirmChoice = 1;
         } else {
             func_8009956C(func_8000C924, 0);
-            D_8010AF90.unk3 = 1;
+            D_8010AF90.state = 1;
         }
     } else if (D_80123778 & 0x4000) {
         func_80072138(0x18, 0x32);
         func_8009956C(func_8000C924, 0);
-        D_8010AF90.unk3 = 1;
+        D_8010AF90.state = 1;
     }
     func_8007105C();
 }
 
 void func_8000CC5C(void) {
-    if ((D_80123778 & 0x10800) && (D_8010AF90.unk2 != 0)) {
-        D_8010AF90.unk2 = 0;
+    if ((D_80123778 & 0x10800) && (D_8010AF90.confirmChoice != 0)) {
+        D_8010AF90.confirmChoice = 0;
         func_80072138(0x19, 0x32);
-    } else if ((D_80123778 & 0x20400) && (D_8010AF90.unk2 != 1)) {
-        D_8010AF90.unk2 = 1;
+    } else if ((D_80123778 & 0x20400) && (D_8010AF90.confirmChoice != 1)) {
+        D_8010AF90.confirmChoice = 1;
         func_80072138(0x19, 0x32);
     }
     if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
         func_80072138(0x18, 0x32);
-        if (D_8010AF90.unk2 == 0) {
-            func_800016D8(D_8010AF90.unk1);
+        if (D_8010AF90.confirmChoice == 0) {
+            func_800016D8(D_8010AF90.fileIndex);
             if (D_800EC9D8 == 0) {
-                D_8010AFA0[D_8010AF90.unk1].unk0 = 0;
+                D_8010AFA0[D_8010AF90.fileIndex].unk0 = 0;
                 func_80001618();
                 func_80001858();
                 func_8009956C(func_8000C924, 0);
-                D_8010AF90.unk3 = 1;
+                D_8010AF90.state = 1;
             } else {
                 func_80071408(func_8003205C, 0, 0x64);
                 D_8010AF90.unk6 = 0;
-                D_8010AF90.unk3 = 4;
+                D_8010AF90.state = 4;
                 func_8009956C(func_8000CE0C, 0);
             }
         } else {
             func_8009956C(func_8000CB08, 0);
-            D_8010AF90.unk3 = 2;
-            D_8010AF90.unk2 = 0;
+            D_8010AF90.state = 2;
+            D_8010AF90.confirmChoice = 0;
         }
     } else if (D_80123778 & 0x4000) {
         func_80072138(0x18, 0x32);
         func_8009956C(func_8000CB08, 0);
-        D_8010AF90.unk3 = 2;
-        D_8010AF90.unk2 = 0;
+        D_8010AF90.state = 2;
+        D_8010AF90.confirmChoice = 0;
     }
     func_8007105C();
 }
