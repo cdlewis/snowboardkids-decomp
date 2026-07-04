@@ -5,6 +5,7 @@ typedef struct ShopMenuWidgetActor ShopMenuWidgetActor;
 typedef struct {
     char pad[0x1C];
     s32 shopItemPrice;
+    s32 unk20;
 } MainMenuState;
 
 typedef u8 ShopDescriptionText[0x8C];
@@ -51,7 +52,8 @@ extern void func_800716E4(ShopMenuWidgetActor *);
 extern void func_800483FC(void *, void *, ShopMenuWidgetActor *);
 extern void func_8002C9A0(ShopMenuWidgetActor *);
 extern void func_8002C860(ShopMenuWidgetActor *);
-extern void func_8002FAB8(void);
+extern void func_8002FAB8(ShopMenuWidgetActor *);
+extern void func_8002F8DC(ShopMenuWidgetActor *);
 extern void func_8002DF40(ShopMenuWidgetActor *);
 extern void func_8002E32C(ShopMenuWidgetActor *);
 extern void func_8002E468(ShopMenuWidgetActor *);
@@ -475,7 +477,41 @@ void func_8002EFB8(ShopMenuWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002F8DC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002FAB8.s")
+void func_8002FAB8(ShopMenuWidgetActor *arg0) {
+    u8 state;
+
+    if ((D_801235B8->unk20 == 3) || (D_801235B8->unk20 == 9)) {
+        arg0->sprite.bytes.state = 2;
+    }
+    state = arg0->sprite.bytes.state;
+    switch (state) {
+    case 0:
+        arg0->x -= 0x20;
+        if (arg0->x < 5) {
+            arg0->x = 4;
+            arg0->sprite.bytes.state = 1;
+        }
+        state = arg0->sprite.bytes.state;
+        break;
+    case 1:
+        break;
+    case 2:
+        arg0->x += 0x20;
+        if (arg0->x >= 0x90) {
+            arg0->sprite.bytes.state = 3;
+        }
+        state = arg0->sprite.bytes.state;
+        break;
+    case 3:
+        state = arg0->sprite.bytes.state = 4;
+        break;
+    }
+    if ((u32)state == 4) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002F8DC, arg0);
+}
 
 void func_8002FBC8(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x90;
