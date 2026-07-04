@@ -1,10 +1,5 @@
 #include "common.h"
-
-typedef struct {
-    char pad0[0x18];
-    /* 0x18 */ s32 fade;
-    /* 0x1C */ s32 timer;
-} CharacterSelectFlowState;
+#include "character_select_flow.h"
 
 typedef s16 CharacterSelectOptionList[10];
 
