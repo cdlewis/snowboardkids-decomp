@@ -1,4 +1,5 @@
 #include "common.h"
+#include "race_input_history.h"
 
 extern void func_8008B408(void *, s32, s32);
 extern void func_8008A940(void);
@@ -19,34 +20,29 @@ extern void (*D_800DECE8[])(void *);
 extern void (*D_800DED08[])(void *);
 extern void (*D_800DED18[])(void *);
 extern void (*D_800DED30[])(void *);
-extern u8 D_80121D80[];
-extern u8 D_8012238C[];
-extern u8 D_80122998[];
-extern u8 D_80122FA4[];
 extern u8 D_80121B5F;
 extern u8 D_800EC9C2;
 extern s8 D_80121B54;
 extern u8 D_80121B56;
 extern void func_8007B250(void);
-extern void func_80084730(void *);
 extern void func_80087AFC(void);
 extern void func_80087EFC(void);
 
 void func_8008BEB0(void) {
-    *(s16 *)(D_80121D80 + 0x0) = 0;
-    *(s16 *)(D_80121D80 + 0x60C) = 1;
-    *(s16 *)(D_80121D80 + 0xC18) = 2;
-    *(s16 *)(D_80121D80 + 0x1224) = 3;
-    if (*(s8 *)(D_80121D80 + 0x13) != 0) {
+    D_80121D80[0].playerIndex = 0;
+    D_80121D80[1].playerIndex = 1;
+    D_80121D80[2].playerIndex = 2;
+    D_80121D80[3].playerIndex = 3;
+    if (D_80121D80[0].isActive != 0) {
         func_8008C098(D_80121D80);
     }
-    if (*(s8 *)(D_80121D80 + 0x61F) != 0) {
+    if (D_80121D80[1].isActive != 0) {
         func_8008C098(D_8012238C);
     }
-    if (*(s8 *)(D_80121D80 + 0xC2B) != 0) {
+    if (D_80121D80[2].isActive != 0) {
         func_8008C098(D_80122998);
     }
-    if (*(s8 *)(D_80121D80 + 0x1237) != 0) {
+    if (D_80121D80[3].isActive != 0) {
         func_8008C098(D_80122FA4);
     }
 }
@@ -58,10 +54,10 @@ void func_8008BEB0(void) {
 void func_8008C704(void) {
     s32 i;
 
-    *(s16 *)(D_80121D80 + 0x582) = 0;
-    *(s16 *)(D_80121D80 + 0xB8E) = 0;
-    *(s16 *)(D_80121D80 + 0x119A) = 0;
-    *(s16 *)(D_80121D80 + 0x17A6) = 0;
+    D_80121D80[0].unk582 = 0;
+    D_80121D80[1].unk582 = 0;
+    D_80121D80[2].unk582 = 0;
+    D_80121D80[3].unk582 = 0;
     if (D_80121B56 == 0) {
         func_80084730(D_80121D80);
         func_80084730(D_8012238C);
@@ -69,7 +65,7 @@ void func_8008C704(void) {
         func_80084730(D_80122FA4);
         func_8007B250();
         for (i = 0; i < D_80121B54; i++) {
-            func_8008C7D0(D_80121D80 + i * 0x60C);
+            func_8008C7D0(&D_80121D80[i]);
         }
         func_80087EFC();
         func_80087AFC();
