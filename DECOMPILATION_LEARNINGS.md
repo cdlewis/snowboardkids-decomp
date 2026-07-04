@@ -2042,3 +2042,21 @@ convention, so extending the shop-local typedef does not conflict.
   between a 99% match and 100% is the `addiu sp` prologue/epilogue magnitude
   and all slot offsets shift together, look for an address-taken (or
   struct-padded) local to retune the frame.
+
+- **IDO 5.3 forwards a just-stored scalar field to later reads but re-emits the
+  mask, producing a redundant `andi`.** In `func_8003C180` (main-menu effect
+  update), `arg0->introTimer` is incremented, stored, then read again in two
+  later conditions. The target emits the load/add/store once, then for each
+  later `(u16)arg0->introTimer` reference it re-derives the value from the
+  forwarded store register (`andi v0,t7,0xffff`) instead of reloading from
+  memory. Writing the source as direct inline field reads reproduces this
+  exactly; caching the value in a local makes IDO CSE the redundant `andi`
+  away and mismatches. Generalizable: when the target has a redundant-looking
+  `andi rX,rY,0xffff` after a store of `rY`, the original likely re-read the
+  field inline rather than caching it.
+
+- **Signed vs unsigned halfword field access selects `lh` vs `lhu`.** In the
+  same function the `0x24` field is a union of `s16 frameIndex` / `u16 uFrameIndex`. The target loads it with `lhu` (unsigned). Accessing it as the
+  `s16` member compiled to `lh`; using the `u16 uFrameIndex` union member
+  compiled to `lhu` and matched. When a union field's load sign differs from
+  the target, switch union members rather than adding casts.
