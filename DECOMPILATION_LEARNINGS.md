@@ -1993,3 +1993,23 @@ convention, so extending the shop-local typedef does not conflict.
   `slti`, so the field had to be `u32` here. `D_8012207C` is
   `&D_80121D80[0].flags` (player-state base + 0x2FC) reused as its own
   0x60C-stride array base.
+
+- **When a stride value is both passed to a callee and used to index an array,
+  IDO 5.3 keeps it in a single register (`a1`) only if the multiply explicitly
+  references the stride *variable*; array indexing (implicit `sizeof`) makes it
+  spill to a second register.** In `func_8006F984` (race camera update), the
+  camera focus is copied from `D_80121D80[playerIndex].state.cameraPos` (three
+  component stores) and then `func_8006D8B4(D_80121D80, stride)` is called with
+  `stride = 0x60C`. The target emits a single `li a1,0x60c` early and reuses
+  `a1` for all three `multu` (playerIndex * 0x60C) plus the call arg. Writing
+  the access as plain array indexing (`D_80121D80[idx].state.cameraPos.x`) makes
+  IDO load `0x60C` into `a2` for the `sizeof`-derived multiplies and a separate
+  `a1` for the call (96.9% match, just a2-vs-a1 renames). Writing the access as
+  explicit stride-based pointer arithmetic — `((RacePlayerState *)((u8
+  *)D_80121D80 + playerIndex * stride))->cameraPos.x` — forces the multiply to
+  use the stride variable, so IDO allocates it to `a1` throughout and matches
+  100%. The codebase genuinely threads a `stride` parameter (`func_8006D8B4`
+  takes `RacePlayerSlot*, s32 stride`), so stride-driven arithmetic is the
+  natural source here, not a decomp artefact. (decomp-permuter instead found a
+  dead `if (!D_80121D80) {}` block that also perturbs allocation to 100% —
+  rejected as a nonsensical artefact in favor of the stride variable.)
