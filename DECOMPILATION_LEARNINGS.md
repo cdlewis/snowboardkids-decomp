@@ -1949,3 +1949,18 @@ convention, so extending the shop-local typedef does not conflict.
   state = arg0->sprite.bytes.state = N; form for cases that set then test it)
   let IDO keep it in v0 for a perfect match. The u8 field reads/writes are
   unaffected; only the local type matters.
+
+- **For an `if/else` ternary-threshold over two globals, hoisting only the
+  second global into a local (not the first) reproduces IDO's exact register
+  choice.** In func_80023198 (character-select widget scroll-in state machine),
+  case 0 picks an x threshold from `(D_800EC9C2 == 2) || ((D_800EC9C2 == 1) &&
+  (D_80121B5E == 0))`. The target loads `D_800EC9C2` into v0 (inline, used once
+  per comparison) and `D_80121B5E` into v1. Writing `unk = D_80121B5E;` as a
+  hoisted local while referencing `D_800EC9C2` inline gives v0/v1 correctly
+  (99.9% in the workspace, 100% once integrated with the named jumptable).
+  Pre-loading both globals into locals pushes the second into `a0` (wrong);
+  referencing both inline defers the second load into the `&&` instead of
+  hoisting it before the first comparison. A clean `if (...) { target = -0x8A; }
+  else { target = -0x88; }` also reproduces the otherwise-mysterious unreachable
+  dead `li v0,-0x88` IDO emits after the true-branch store — no comma
+  expressions or `?:` hacks needed.
