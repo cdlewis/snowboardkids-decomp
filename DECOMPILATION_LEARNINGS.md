@@ -2013,3 +2013,17 @@ convention, so extending the shop-local typedef does not conflict.
   natural source here, not a decomp artefact. (decomp-permuter instead found a
   dead `if (!D_80121D80) {}` block that also perturbs allocation to 100% —
   rejected as a nonsensical artefact in favor of the stride variable.)
+
+- **Referencing a global directly in multiple conditions (vs. caching it in a
+  local) changes IDO 5.3's `lui` base register for the load.** In
+  `func_80022198` (character-select text draw), the global `D_80121B5E` (a `u8`
+  mode selector) is read in three conditions (`< 2`, `== 0`, `== 1`). Caching it
+  as `u8 mode = D_80121B5E;` compiled to `lui v0,%hi(...); lbu a1,%lo(...)(v0)` —
+  a separate scratch (`v0`) for the address high bits. The target instead emits
+  `lui a1,%hi(...); lbu a1,%lo(...)(a1)` — the destination register doubles as
+  the `lui` base. Referencing `D_80121B5E` directly in each condition lets IDO
+  CSE the repeated reads into a single load that lands directly in `a1`,
+  matching 100%. The value is still loaded only once (one `lbu`); the
+  difference is purely which register holds the `lui` high half. Generalizable
+  pattern: when a small global is used 2-3 times and the only diff is the `lui`
+  scratch register, drop the local and read the global inline.
