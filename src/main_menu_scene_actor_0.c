@@ -40,7 +40,7 @@ void func_80032B94(MainMenuSceneActor *arg0);
 void func_80032BF0(MainMenuSceneActor *arg0);
 void func_80032C74(MainMenuSceneActor *arg0);
 void func_80032D7C(MainMenuSceneActor *arg0);
-void func_80032F3C(void);
+void func_80032F3C(MainMenuSceneActor *arg0);
 void func_800342D8(s32 arg0);
 void func_80034328(MainMenuSceneActor *arg0);
 void func_800346D4(MainMenuSceneActor *arg0);
@@ -216,7 +216,23 @@ void func_80032EF0(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_0/func_80032F3C.s")
+void func_80032F3C(MainMenuSceneActor *arg0) {
+    func_80042034(0);
+    func_800428C8(0);
+    arg0->unk2A += 1;
+    if (D_8010B1A5 >= 3) {
+        if (arg0->unk2A % 15 == 0) {
+            D_8010B1A5--;
+            if (D_8010B1A5 == 2) {
+                arg0->unk2A = 0;
+            }
+        }
+    } else if (arg0->unk2A == 0x10) {
+        arg0->unk2A = 0;
+        func_80071824((s32) arg0, func_80032EF0);
+        D_8010B1A2 = 0x39;
+    }
+}
 
 void func_80032FF0(MainMenuSceneActor *arg0) {
     MainMenuSceneActor *temp = arg0;
