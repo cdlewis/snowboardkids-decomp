@@ -1894,3 +1894,33 @@ in shop_menu_ui.c) gained an `s32 unk20;` field at offset 0x20. The same global
 `D_801235B8` carries different file-local struct types across
 shop_menu_ui.c / main_menu_ui.c / main_menu.c — that is the existing project
 convention, so extending the shop-local typedef does not conflict.
+
+- **Constant reused between switch dispatch and a later store fixes the
+  v0/v1 split.** In `func_800152D0`, `switch (arg0->state)` over cases 0/1/2
+  plus `D_801235B4 = 1;` in case 2. IDO loads the switch expression into `v0`
+  and the case-1 comparison constant `1` into `v1` via the first branch's delay
+  slot (`beqz v0,...; li v1,1`). Because that same literal `1` is stored to
+  `D_801235B4` later, IDO keeps `v1=1` live across the whole function and
+  reuses it for the `sw`. This in turn frees `v0` mid-function so the spawned
+  child pointer (`arg0->child`) lands in `v0`, matching the target. Writing
+  `switch (arg0->state)` directly (no `u8 state = ...` local) was what produced
+  the `v0`-for-expression / `v1`-for-constant split.
+
+- **Declare a discarded-return call with its real return type to fix register
+  allocation.** `func_80072138` actually `return 0` (ends with `or v0,zero,zero`)
+  but the project declares it `void` and discards the result. With the `void`
+  prototype, IDO allocated `arg0->x` into `v0` (wrong); declaring it
+  `extern s32 func_80072138(s32, s32);` in this TU made IDO put `x` into `v1`,
+  matching the target. The callee is unaffected (defined once elsewhere); only
+  the caller's view of the return register changed. This is safe per-TU.
+
+- **Named local for a dereferenced pointer field.** `arg0->child->state = 2;`
+  written directly allocated the child pointer into a `t` register; writing
+  `child = arg0->child; child->state = 2;` (named local) landed it in `v0`,
+  matching the target. Same access, different register preference.
+
+- **Permuter found the 100% match here**, but its output used artefacts
+  (`new_var = arg0` alias, `unsigned short` return on `func_80072138`). The
+  clean hand form was: drop the alias, keep the named `child` local, and use the
+  truthful `s32` return type. Always reduce permuter output to the minimal
+  logical change before integrating.
