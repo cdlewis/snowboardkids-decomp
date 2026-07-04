@@ -481,7 +481,7 @@ Also: declaring `temp_t8` before `sp20` placed the spilled `sp20` at `0x20($sp)`
 (matching the target) rather than `0x24($sp)`, since IDO reserves stack slots in
 declaration order (high offset first).
 
-## func_800716A4 (src/71AC0.c)
+## func_800716A4 (src/effect_task_scheduler.c)
 
 `func_800716A4` is sensitive to the signedness of the halfword field written at
 offset `0x10`. With a typed struct field declared as `u16`, IDO 5.3 scheduled
@@ -501,6 +501,21 @@ shape; splitting the code into separate assignment-style statements changed the
 same call setup scheduling. Takeaway: when a struct field store is a matching
 `sh` but call scheduling differs, check field signedness and small source-shape
 changes before falling back to raw pointer offsets.
+
+## effect_task_scheduler.c pool layout
+
+The scheduler node used by the old `71AC0.c` segment is a 0x118-byte
+`EffectTask`. The first fields are a linked-list node (`prev`, `next`), callback
+pointer at offset 0x8, type/priority halfwords at 0xC/0xE, signed `unk10`,
+`callbackTimer` at 0x14, `isActive` at 0x16, and 0x40 argument slots beginning
+at 0x18. `func_80071408` clears those argument slots as a u32 array, so declaring
+them as `void *args[0x40]` keeps the stride and avoids raw offset stores.
+
+The init assembly in `func_80070EC0` also shows the allocation table is built in
+four interleaved 0x460-byte pages, where 0x460 is exactly four 0x118-byte
+`EffectTask`s. The labels around `D_80112780`/`D_80112784` and
+`D_801214D8`/`D_80121820` are split inside larger scheduler objects, so check
+neighboring BSS labels before assuming each label is a standalone allocation.
 
 ## func_8003B074 (src/3A0E0.c)
 
@@ -1215,7 +1230,7 @@ destination: `lui s0,%hi(...); lw s0,%lo(...)(s0)` (98.6% — only temp-register
 naming differed). The fix that reached 100% was a compound assignment that
 stores through a global in the same expression:
 
-    Struct8007105C *s0 = (D_80121848 = D_80112784);
+    EffectTask *s0 = (D_80121848 = D_80112784);
 
 The captured store to `D_80121848` makes IDO keep the loaded value live across
 the store, so it allocates a distinct temp (`t6`) for the `lui` base rather than
