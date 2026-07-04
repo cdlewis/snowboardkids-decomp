@@ -1939,3 +1939,13 @@ convention, so extending the shop-local typedef does not conflict.
   symbols offset by 0x2F0) points at an unrelated size change elsewhere in the
   TU list, not your function.** Verify by stashing unrelated dirty files and
   rebuilding before chasing a phantom mismatch in your own code.
+
+- **`u8` switch-dispatch locals can cause register-allocation drift (state held
+  in v1 plus an extra move v1,v0), but a 32-bit local (u32) holds v0.**
+  func_80021C98 (character-select widget scroll-out state machine, sibling of
+  func_8002B8B4) matched at 98.3% with u8 state; the only diff was the dispatch
+  variable living in v1 instead of v0 plus a leading copy that shifted every
+  branch target by 4. Changing the local to u32 (keeping the compound
+  state = arg0->sprite.bytes.state = N; form for cases that set then test it)
+  let IDO keep it in v0 for a perfect match. The u8 field reads/writes are
+  unaffected; only the local type matters.
