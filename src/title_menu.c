@@ -8,11 +8,13 @@ typedef struct {
     /* 0x1E */ s8 unk1E;
 } MenuIntroActor;
 
-typedef struct {
+typedef struct MenuItemActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
     /* 0x1C */ u8 state;
+    /* 0x1D */ u8 pad1D[3];
+    /* 0x20 */ struct MenuItemActor *child;
 } MenuItemActor;
 
 typedef struct {
@@ -48,8 +50,10 @@ extern void func_80017168(void *, s32);
 extern void func_80071824(void *, void *);
 extern void func_80014AA4(void);
 extern void func_80014EF0(void);
-extern void func_800152D0(void);
+extern void func_8001508C(void *);
+extern void func_800152D0(MenuItemActor *);
 extern void func_80015680(void);
+extern void func_800157B4(void *);
 extern void func_80015A30(void *);
 extern void func_80015BD8(void *);
 extern void func_80015F4C(void);
@@ -57,8 +61,9 @@ extern void func_80016284(void);
 extern void func_80016E40(void);
 extern void func_800170AC(void *);
 extern void func_800483FC(void *, void *, s32);
-extern void func_80071408(void *, s32, s32);
+extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
+extern s32 func_80072138(s32, s32);
 extern void func_800157EC(void *);
 extern void func_80015C84(void *);
 extern s16 D_8010AE38;
@@ -143,7 +148,41 @@ void func_80015054(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_8001508C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_800152D0.s")
+void func_800152D0(MenuItemActor *arg0) {
+    MenuItemActor *child;
+
+    switch (arg0->state) {
+    case 0:
+        arg0->x -= 0x20;
+        if (arg0->x == 0x70) {
+            arg0->child = func_80071408(func_800157B4, 0, 0x63);
+            func_80072138(1, 0x32);
+        }
+        if (arg0->x == -0x50) {
+            arg0->state = 1;
+        }
+        break;
+    case 1:
+        break;
+    case 2:
+        arg0->x -= 0x20;
+        if (arg0->x == -0x70) {
+            child = arg0->child;
+            child->state = 2;
+            if (D_80121B55 == 3) {
+                D_801235B4 = 1;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    if (arg0->x < -0x108) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8001508C, (s32)arg0);
+}
 
 void func_80015404(void *arg0) {
     MenuItemActor *actor = arg0;
