@@ -140,7 +140,7 @@ segments:
       - [0x98680, c, fixed_point_matrix]
       - [0x99980, c, input_task_scheduler]
       - [0x9A2A0, c, game_boot]
-      - [0x9CE70, c] # libmus:player_commands.c
+      - [0x9CE70, c, player_commands] # libmus:player_commands.c
       - [0xA0E90, c, ultra/os/createmesgqueue]
       - [0xA0EC0, c, ultra/os/seteventmesg]
       - [0xA0F30, c, ultra/io/controller]
