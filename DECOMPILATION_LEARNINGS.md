@@ -1670,3 +1670,10 @@ multi-line blocks kept the same instruction count but swapped independent
 `addiu` address materialization order for `D_800EC9C4` and `D_801121E0`.
 Keeping the original grouped statement shape allowed typed struct fields and
 arrays to match without returning to raw pointer math.
+
+## Volatile padding can preserve leaf-adjacent stack frames
+
+In `func_80062530`, the typed C matched all instructions except IDO shrank the
+stack frame from `0x48` to `0x28`. Adding an otherwise unused
+`volatile u8 padding[0x20]` local restored the target frame size without
+changing scheduling or register allocation.
