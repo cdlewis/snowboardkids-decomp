@@ -40,10 +40,18 @@ typedef struct {
     s32 timer;
 } MainMenuState;
 
+typedef struct {
+    char pad0[0x42];
+    /* 0x42 */ s16 menuUiTextureHandle;
+} MainMenuAssetHandles;
+
 extern MainMenuState *D_801235B8;
 extern s32 D_80124868;
+extern MainMenuAssetHandles D_80112130;
 extern s16 D_8011217A;
 extern s16 D_80112172;
+extern u8 D_800E29C0;
+extern char D_800E1050[];
 
 extern void func_800483FC(void *, void *, void *);
 extern void func_80071824(void *, void *);
@@ -51,6 +59,8 @@ extern void func_80011D74(void *, s32, s16, s16);
 extern void func_80017168(void *, s32);
 extern s32 func_80043040(s16);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
+extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_80013D0C(s32, s32, char *, s32, s32);
 
 void func_80032620(MainMenuLogoActor *arg0);
 void func_80032654(MainMenuLogoActor *arg0);
@@ -78,7 +88,30 @@ void func_80032684(MainMenuLogoActor *arg0) {
     func_80071824(arg0, func_80032654);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_ui/func_800326EC.s")
+void func_800326EC(MainMenuSelectionLabelsActor *arg0) {
+    s32 i;
+    s32 tile;
+    u16 palette;
+
+    if (D_800E29C0 != 0) {
+        for (i = 0; i < 3; i++) {
+            if (i == arg0->selectedOption) {
+                tile = ((i * 2) + 4) & 0xFFFF;
+                palette = 2;
+            } else {
+                tile = ((i * 2) + 5) & 0xFFFF;
+                palette = 3;
+            }
+            func_8000F8AC(arg0->common.x, (s16)(arg0->labelY + (i * 0x10)),
+                          func_80043040(D_80112130.menuUiTextureHandle),
+                          tile & 0xFFFF, 0x20, 0x20, 0, 0x100, palette + 1);
+        }
+    }
+
+    func_8000F030(-0x48, 0x4F, func_80043040(D_80112130.menuUiTextureHandle), 0xA, 0x20, 0x20, 0, 0);
+    func_80013D0C(0x68, -0x1A, D_800E1050, 0, 0x100);
+    func_8000F030(-0x48, 0x5A, func_80043040(D_80112130.menuUiTextureHandle), 0xB, 0x20, 0x20, 0, 0);
+}
 
 void func_8003288C(MainMenuSelectionLabelsActor *arg0) {
     if (D_801235B8->selection != (u16)(0, arg0->selectedOption)) {
