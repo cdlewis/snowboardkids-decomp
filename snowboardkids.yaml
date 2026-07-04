@@ -80,7 +80,7 @@ segments:
       - [0xCE80, c, shop_menu_flow]
       - [0xD200, c, controller_pak_menu_flow]
       - [0xDB70, c, controller_pak_message_flow]
-      - [0xDF40, c]
+      - [0xDF40, c, race_to_main_menu_transition]
       - [0xE3F0, c]
       - [0xF680, c]
       - [0x15200, c, title_menu]
