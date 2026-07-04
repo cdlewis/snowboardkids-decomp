@@ -126,7 +126,7 @@ segments:
       - [0x73830, c, race_flow]
       - [0x78E50, c, motion_debug_viewer]
       - [0x79030, c, race_timer_ui]
-      - [0x7BE50, c]
+      - [0x7BE50, c, race_position_tracker]
       - [0x7CA80, c]
       - [0x7DD90, c]
       - [0x83CC0, c]
