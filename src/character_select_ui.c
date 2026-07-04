@@ -256,7 +256,50 @@ void func_80020D88(CharacterSelectWidgetActor *arg0) {
     func_8000F8AC(arg0->x, arg0->y, func_80043040(D_80112172), 1, 0x20, 0x20, 0, arg0->sprite.index, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80020DEC.s")
+void func_80020DEC(CharacterSelectWidgetActor *arg0) {
+    u8 state = arg0->transition.bytes.state;
+
+    switch (state) {
+    case 0:
+        arg0->sprite.index += 0x26;
+        if (arg0->sprite.index >= 0x100) {
+            arg0->sprite.index = 0x100;
+            arg0->transition.bytes.state = 1;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 1:
+        if (D_80121D88 == 1) {
+            arg0->transition.bytes.state = 2;
+        }
+        if (D_80121D88 == 7) {
+            arg0->transition.bytes.state = 3;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 2:
+        if (D_80121D88 == 5) {
+            arg0->transition.bytes.state = 1;
+        }
+        if (D_80121D88 == 7) {
+            arg0->transition.bytes.state = 3;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 3:
+        arg0->x += 0x20;
+        if (arg0->x >= 0x94) {
+            arg0->transition.bytes.state = 4;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    }
+    if ((unsigned int)state == 4) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_80020D88, arg0);
+}
 
 void func_80020F44(CharacterSelectWidgetActor *arg0) {
     arg0->x = -0x8;
