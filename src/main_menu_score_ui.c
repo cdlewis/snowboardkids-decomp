@@ -4,8 +4,15 @@ typedef struct MainMenuScoreTask MainMenuScoreTask;
 
 extern void func_80071824(MainMenuScoreTask *, void *);
 extern void func_800129DC(s16, s16, u8 *, s32, s32);
+extern void *func_80071408(void *, s32, s32);
+extern void func_800716E4(void *);
+extern void func_800483FC(void *, void *, void *);
 extern u8 D_800B79AC[];
 extern s16 D_8010AF62;
+extern void *D_80124868;
+extern void *D_8010ADE0;
+extern s16 D_800EC9C8;
+extern u8 D_800EC9C1;
 
 struct MainMenuScoreTask {
     char pad[0x18];
@@ -38,10 +45,50 @@ extern void func_8002BB24(MainMenuScoreTask *);
 extern void func_8002BDAC(MainMenuScoreTask *);
 extern void func_8002C18C(MainMenuScoreTask *);
 extern void func_8002C390(MainMenuScoreTask *);
+void func_8002B560(MainMenuScoreTask *arg0);
+void func_8002BC60(MainMenuScoreTask *arg0);
+void func_8002C498(MainMenuScoreTask *arg0);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002B560.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002B8B4.s")
+void func_8002B8B4(MainMenuScoreTask *arg0) {
+    u8 state = arg0->unk1C.state;
+
+    switch (state) {
+    case 0:
+        arg0->x -= 0x20;
+        if (arg0->x < -0x43) {
+            arg0->x = -0x44;
+            arg0->unk1C.state = 1;
+            D_8010ADE0 = func_80071408(func_8002BC60, 0, 0x62);
+            func_80071408(func_8002C498, 0, 0x63);
+        }
+        state = arg0->unk1C.state;
+        break;
+    case 1:
+        if (D_800EC9C8 != 0) {
+            if (D_800EC9C1 == 0x14) {
+                state = arg0->unk1C.state = 2;
+            }
+        }
+        break;
+    case 2:
+        arg0->x -= 0x20;
+        if (arg0->x < -0x117) {
+            arg0->unk1C.state = 3;
+        }
+        state = arg0->unk1C.state;
+        break;
+    case 3:
+        break;
+    }
+    state = arg0->unk1C.state;
+    if (state == 3) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002B560, arg0);
+}
 
 void func_8002BA00(MainMenuScoreTask *arg0) {
     arg0->x = 0x90;
