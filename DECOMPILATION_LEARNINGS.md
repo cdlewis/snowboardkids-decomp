@@ -1843,3 +1843,36 @@ across the case branches itself — you do not need a per-case temp (`var_v0`)
 to reproduce the per-case loads. This mirrors the `func_80027498` lesson: a
 single post-switch read of a struct field is the shape IDO expects, even when
 the resulting asm looks like it was hand-distributed.
+
+### `func_8002FAB8` — scroll-out state machine with pre-switch global check
+
+`func_8002FAB8` (shop_menu_ui) is the same scroll-out widget family as
+`func_800196CC` (player_select_ui): state 0 slides `x` to a snap point, state 1
+is a wait, state 2 slides off-screen, state 3 transitions to the terminal
+state 4 which calls `func_800716E4`. The structural difference is a
+pre-switch check: `if (D_801235B8->unk20 == 3 || == 9) state = 2;`, then the
+state is re-read from the struct before the switch.
+
+Two codegen points worth remembering:
+
+- **Assignment-expression for u8 state propagation.** Case 3 needs the asm
+  `andi v1,t7,0xff` (zero-extend the stored u8 into the state variable). Write
+  it as `state = arg0->sprite.bytes.state = 4;` (assignment-expression), not as
+  two separate statements (`...= 4; state = 4;`). The two-statement form emits
+  `li v1,4`; the assignment-expression form emits the `andi` IDO expects. Same
+  pattern used in `func_800196CC` case 1.
+
+- **`(u32)state == N` to fix the state register.** With the pre-switch global
+  check, IDO loaded the post-switch `state` into `v0` instead of `v1` (the
+  register the target uses for the switch dispatch), leaving a v0/v1 swap
+  through the whole dispatch (3 instructions). Casting the *final* tail
+  comparison to `if ((u32)state == 4)` was the one-line fix that made IDO
+  allocate the loaded state into `v1`. A pure register-allocation difference
+  with no control-flow impact — the permuter solved it instantly, but the clean
+  hand form is just the single cast on the tail comparison.
+
+To support the `D_801235B8->unk20` access, `MainMenuState` (file-local typedef
+in shop_menu_ui.c) gained an `s32 unk20;` field at offset 0x20. The same global
+`D_801235B8` carries different file-local struct types across
+shop_menu_ui.c / main_menu_ui.c / main_menu.c — that is the existing project
+convention, so extending the shop-local typedef does not conflict.
