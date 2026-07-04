@@ -33,6 +33,10 @@ typedef struct ObjectA3E0 {
 
 extern ObjectA3E0 *D_800EC9C4;
 extern f32 D_800E0A38;
+extern s8 D_800DEED4;
+extern u8 D_800EC9F0[];
+extern s8 D_800EC9F1;
+extern s8 D_800EC9F9;
 extern s8 D_800ECA2F[];
 extern s16 D_8010AED0;
 extern s16 D_8010ADF0;
@@ -48,13 +52,20 @@ extern ObjectA3E0 D_80112340;
 extern u8 D_80121B55;
 extern u8 D_80121D86;
 extern CourseSelectMenuState *D_801235B8;
+extern s32 D_801235B4;
+extern u8 D_80123750;
+extern u8 D_80123751;
 extern void func_8000B220(void);
 extern void func_8000B7B8(void);
 extern void func_8002F854(void);
+extern s32 func_80013F88(s32, s32, s32);
+extern void func_80045914(void);
 extern void func_80070614(s32);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8007105C(void);
 extern void func_80071408(void *, s32, s32);
+extern void func_8009954C(s32);
+extern void func_80099658(s32);
 extern void func_8009956C(void *, s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_800097E0.s")
@@ -143,4 +154,27 @@ void func_8000C010(void) {
  D_8010AED0 = 0; } var_s0 = D_801121E0; do { (D_800EC9C4 = var_s0)->unk2C(); var_s0 += 1; } while (var_s0 != (&D_80112340)); func_8007105C();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000C114.s")
+void func_8000C114(void) {
+    s8 *ptr;
+    s32 count;
+
+    if (D_801235B8->fade != 0xFF) {
+        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
+        if (D_801235B8->fade == 0xFF) {
+            D_80123751 = 1;
+        } else {
+            func_8007105C();
+        }
+    } else if (D_80123750 == 2) {
+        func_80045914();
+        D_80123751 = 0;
+        do { D_800DEED4 = 0; D_801235B4 = 0; func_80099658(2); func_8009954C(4); count = 0; if (D_800ECA2F[0] == (-1)) { count = 1; } ptr = &D_800EC9F1; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
+        ptr += 4;
+        if (ptr != (&D_800EC9F9)) {
+            goto loop;
+        }
+        if (count == 0) {
+            D_800EC9F0[0x78D7] |= 4;
+        }
+    }
+}
