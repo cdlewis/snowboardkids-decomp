@@ -1630,3 +1630,16 @@ loop forms preserve size but can swap the independent `D_801124A0` and
 When cleaning this segment further, keep typed struct views, but expect local
 lifetime and statement grouping to affect register choice even when the emitted
 instruction count is unchanged.
+
+## Byte signedness can affect constant lifetime
+
+In `func_80083CFC`, typing the rider side field at `0x2DC` as `s8` caused IDO
+to reuse the later `1` halfword constant for that byte store, hoisting
+`li v1, 1` before the branch and shifting labels. The original byte-pointer
+store matched when the field was typed as `u8`, letting IDO emit a separate
+temporary for the byte assignment and load the shared halfword `1` after the
+branch merge.
+
+When replacing byte-pointer stores with struct fields, preserve observed
+signedness where possible; even a same-sized `s8`/`u8` change can perturb
+constant lifetimes.
