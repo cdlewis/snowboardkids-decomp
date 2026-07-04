@@ -1978,3 +1978,18 @@ convention, so extending the shop-local typedef does not conflict.
   else { target = -0x88; }` also reproduces the otherwise-mysterious unreachable
   dead `li v0,-0x88` IDO emits after the true-branch store — no comma
   expressions or `?:` hacks needed.
+
+- **IDO reloads a global array element after any store through an unrelated
+  pointer due to aliasing, and picks `sltiu` vs `slti` from the operand's
+  signedness, not the comparison direction.** In func_80057710 (race UI prompt
+  timer), the source reads `D_8012207C[arg0->index].flags` (a 0x60C-stride
+  per-player flag block) in two separate `if` conditions. After stores to
+  `arg0->timer` (through the actor pointer), IDO conservatively recomputes
+  `&D_8012207C[index]` *and* reloads `index` from the actor (the store may alias
+  it); on the path with no intervening store it reuses the cached flags in v0.
+  Writing the natural source (two independent `if (...flags & ...)`) reproduces
+  this exactly, with no manual temp variables. The timer thresholds against
+  `0x1E` emit `sltiu` only when the field is `u32`; a signed field yields
+  `slti`, so the field had to be `u32` here. `D_8012207C` is
+  `&D_80121D80[0].flags` (player-state base + 0x2FC) reused as its own
+  0x60C-stride array base.

@@ -144,9 +144,15 @@ typedef struct {
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x1C - 0x12];
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
+    /* 0x18 */ u32 timer;
     /* 0x1C */ s16 y;
 } RaceUiPromptActor;
+
+typedef struct {
+    /* 0x00 */ s32 flags;
+    /* 0x04 */ u8 pad4[0x608];
+} RacePlayerFlags;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x30];
@@ -169,6 +175,7 @@ extern s16 D_800D633C[];
 
 extern void *D_80124868;
 extern void *D_80124858;
+extern void *D_80124888;
 extern void *D_801248B0;
 extern void *D_801248BC;
 extern void *D_801248C8;
@@ -218,6 +225,7 @@ extern void func_80072A74(s32, void *, s32, s32);
 extern void func_80072A20(s32, void *, s32, s32, f32, s32);
 extern s32 func_8007B130(void *, void *, void *, void *);
 extern RacePlayerState D_80121D80[];
+extern RacePlayerFlags D_8012207C[];
 extern u8 D_800EC9F0[];
 extern void *D_80121B74;
 extern void func_80072138(s32, s32);
@@ -242,7 +250,7 @@ extern s32 D_801235B4;
 extern void func_80057E10(void *);
 extern void func_800615BC(void);
 extern void func_800640D8(void);
-extern void func_80057710(void);
+extern void func_80057710(RaceUiPromptActor *);
 extern void func_80057B60(RaceUiPopupActor *);
 extern void func_80057D68(RaceUiPopupActor *);
 extern void func_80058C00(void);
@@ -363,7 +371,22 @@ void func_80057694(RaceUiPromptActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80057710.s")
+void func_80057710(RaceUiPromptActor *arg0) {
+    if (D_8012207C[arg0->index].flags & 0x400) {
+        if (arg0->timer < 0x1E) {
+            arg0->timer++;
+        }
+    } else {
+        arg0->timer = 0;
+    }
+    if (D_8012207C[arg0->index].flags & 0x1040) {
+        arg0->timer = 0;
+    }
+    if (arg0->timer >= 0x1E) {
+        func_800483FC(&D_80124888, func_80057694, (s32) arg0);
+    }
+}
+
 
 void func_80057810(RaceUiPromptActor *arg0) {
     arg0->y = -0x10;
