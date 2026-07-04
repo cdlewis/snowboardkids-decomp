@@ -54,6 +54,17 @@ typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
+    /* 0x18 */ u8 pad18[0x24 - 0x18];
+    /* 0x24 */ s16 transform[0x22];
+    /* 0x68 */ s32 unk68;
+    /* 0x6C */ s16 unk6C;
+    /* 0x6E */ s16 unk6E;
+} RaceUiTransitionActor;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[6];
     /* 0x18 */ s16 timer;
     /* 0x1A */ u8 pad1A[2];
     /* 0x1C */ s32 x;
@@ -187,16 +198,19 @@ extern void func_80071824(void *, void *);
 extern void *func_800711D0(void *, s32, s32);
 extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, s32);
+extern void func_80048D60(void *);
 extern s32 func_80043040(s16);
 extern s16 func_80042D58(s32);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80045990(s32, s32, void *, void *);
+extern void func_80097BAC(s16 *, s16);
 extern void func_80097C18(void *, s32);
 extern void func_8005F448(void *);
 extern void func_8005B14C(void *);
 extern void func_8005C64C(void *);
 extern void func_8005DE6C(void *);
 extern void func_8005CB74(void *);
+extern void func_800623E8(void *);
 extern s32 func_80080CC4(s16, s32, s32);
 extern void func_800716E4(void *);
 extern void *func_800716A4(void *, s32, s32);
@@ -1449,7 +1463,19 @@ void func_8006224C(void *arg0, void *arg1, void *arg2) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800623E8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80062530.s")
+void func_80062530(RaceUiTransitionActor *arg0) {
+    s16 *transform = arg0->transform;
+    volatile u8 padding[0x20];
+
+    arg0->unk68 = 0;
+    func_80097BAC(transform, 0x400);
+    func_80048D60(transform);
+    arg0->unk6C = 1;
+    arg0->unk6E = 0xF;
+    func_80072A74(0xB, &D_80121D80[arg0->index].pos1C, 0x7F, 0x32);
+    func_800623E8(arg0);
+    func_80071824(arg0, func_800623E8);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800625D8.s")
 
