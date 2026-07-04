@@ -1924,3 +1924,18 @@ convention, so extending the shop-local typedef does not conflict.
   clean hand form was: drop the alias, keep the named `child` local, and use the
   truthful `s32` return type. Always reduce permuter output to the minimal
   logical change before integrating.
+
+- **Check for a near-identical sibling function before adding complexity.**
+  `func_80015680` was byte-for-byte identical in structure to the already-matched
+  `func_800152D0` (same scroll-out state machine), differing only in three
+  constants: the spawned child callback (`func_80015B20` vs `func_800157B4`), a
+  comparison value (`D_80121B55 == 4` vs `== 3`), and the draw callback
+  (`func_8001543C` vs `func_8001508C`). Copying the reference's exact form (typed
+  `MenuItemActor *` arg, named `child` local, no `s16 x` temp) gave an immediate
+  100% match. Earlier attempts that introduced a `s16 x` temp / `void*` arg
+  stalled at 97.7% from register-allocation drift.
+
+- **A uniform address shift in `--find-first-mismatch` (e.g. all data/code
+  symbols offset by 0x2F0) points at an unrelated size change elsewhere in the
+  TU list, not your function.** Verify by stashing unrelated dirty files and
+  rebuilding before chasing a phantom mismatch in your own code.

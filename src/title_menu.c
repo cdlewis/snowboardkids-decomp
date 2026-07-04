@@ -52,9 +52,10 @@ extern void func_80014AA4(void);
 extern void func_80014EF0(void);
 extern void func_8001508C(void *);
 extern void func_800152D0(MenuItemActor *);
-extern void func_80015680(void);
+extern void func_80015680(MenuItemActor *);
 extern void func_800157B4(void *);
 extern void func_80015A30(void *);
+extern void func_80015B20(void *);
 extern void func_80015BD8(void *);
 extern void func_80015F4C(void);
 extern void func_80016284(void);
@@ -193,9 +194,45 @@ void func_80015404(void *arg0) {
     func_80071824(arg0, func_800152D0);
 }
 
+extern void func_8001543C(void *);
+
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_8001543C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80015680.s")
+void func_80015680(MenuItemActor *arg0) {
+    MenuItemActor *child;
+
+    switch (arg0->state) {
+    case 0:
+        arg0->x -= 0x20;
+        if (arg0->x == 0x70) {
+            arg0->child = func_80071408(func_80015B20, 0, 0x63);
+            func_80072138(1, 0x32);
+        }
+        if (arg0->x == -0x50) {
+            arg0->state = 1;
+        }
+        break;
+    case 1:
+        break;
+    case 2:
+        arg0->x -= 0x20;
+        if (arg0->x == -0x70) {
+            child = arg0->child;
+            child->state = 2;
+            if (D_80121B55 == 4) {
+                D_801235B4 = 1;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    if (arg0->x < -0x108) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8001543C, (s32)arg0);
+}
 
 void func_800157B4(void *arg0) {
     MenuItemActor *actor = arg0;
