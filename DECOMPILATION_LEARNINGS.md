@@ -2074,3 +2074,14 @@ convention, so extending the shop-local typedef does not conflict.
   every use — reproducing the target's separate `lui`/`sw` and a 100% match.
   Same family as the address-taken-local frame trick above; here it controls
   reload/CSE behavior rather than frame size.
+
+- Statement ordering within an independent block can flip IDO's register
+  allocation even when the data flow is identical. In func_800601F8, the
+  `unk54 += 1` halfword store had to be placed *after* the `unk4C = temp - 0x8000`
+  store (rather than right after the `temp = unk4C` load) to reproduce the
+  target's register/scheduling choices. All statements were independent and
+  semantically reorderable — only the textual order changed — yet it took the
+  match from 93% (register-only diffs) to 100%. When the only diff between a
+  candidate and the target is temp-register naming on otherwise-identical
+  instructions, try permuting the order of independent statements before
+  reaching for the permuter.
