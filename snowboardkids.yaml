@@ -109,7 +109,7 @@ segments:
       - [0x437C0, c, memory_allocator]
       - [0x43CD0, c, asset_decompression]
       - [0x44550, c, course_asset_loader]
-      - [0x464E0, c]
+      - [0x464E0, c, render_asset_utils]
       - [0x49C00, c]
       - [0x4A040, c]
       - [0x4E760, c]

@@ -138,7 +138,7 @@ patterns, and verified layout/linking rules.
 - A function with no `jr $ra` before the next symbol is a **fall-through** into the
   following code. If splat placed a `[addr, c]` subsegment boundary inside it, the
   function is split into two `GLOBAL_ASM` stubs in two different `.c` files (e.g.
-  `func_80048E60` in `464E0.c` falling through into `func_80048E80` in `49A80.c`).
+  `func_80048E60` in `render_asset_utils.c` falling through into `func_80048E80` in `49A80.c`).
   The "second" half is never reached via `jal` and its first instruction reuses a
   register loaded at the end of the "first" half — the giveaway.
 - To merge them at the project level: move the subsegment boundary in
@@ -873,7 +873,7 @@ the compound-assignment idiom.
 ### func_80045990 (IDO 5.3): `short`-typed array index produces a dead `addiu`
 
 `func_80045990` is a near-twin of the already-matched `func_800459D4` in the
-same file (`src/464E0.c`): both index an 8-byte-element table at `arg0+8`,
+same file (`src/render_asset_utils.c`): both index an 8-byte-element table at `arg0+8`,
 compute `temp_v0 = arg0 + *(s32*)(arg0+4)*8`, then `temp_v0 += 8`. The
 difference is that `func_80045990` reads its shift amount from the table
 (`lhu 0xC(temp_v1) << 5`) instead of taking it as a `u16` argument, so it has
