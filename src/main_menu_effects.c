@@ -428,7 +428,26 @@ void func_8003D424(MainMenuEffectActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003D4C0.s")
+void func_8003D4C0(MainMenuEffectActor *arg0) {
+    s16 *temp_v0;
+    MainMenuEffectActor *temp_a2 = arg0;
+
+    temp_v0 = &arg0->angle;
+    if (*temp_v0 > 0) {
+        *temp_v0 -= D_8010B1A5;
+        D_8010B1A6 = *temp_v0;
+        if (*temp_v0 <= 0) {
+            *temp_v0 = 0x140 - *temp_v0;
+        }
+    }
+    func_800483FC(&D_80124838, func_8003D3C0, temp_a2);
+    if (D_8010B1A2 == 0x39) {
+        temp_v0 = &temp_a2->angle;
+        func_80071824(temp_a2, func_8003D424);
+        temp_a2->x = 0x28;
+        temp_v0[1] = 0x10;
+    }
+}
 
 void func_8003D580(MainMenuEffectActor *arg0) {
     s16 *temp_v0;
