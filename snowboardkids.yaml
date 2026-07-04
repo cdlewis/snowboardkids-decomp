@@ -107,7 +107,7 @@ segments:
       - [0x41880, c, main_menu_scene_model]
       - [0x43160, c, main_menu_scene_renderer]
       - [0x437C0, c, memory_allocator]
-      - [0x43CD0, c]
+      - [0x43CD0, c, asset_decompression]
       - [0x44550, c]
       - [0x464E0, c]
       - [0x49C00, c]
