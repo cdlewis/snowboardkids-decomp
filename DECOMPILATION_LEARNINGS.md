@@ -1792,3 +1792,14 @@ draw callback (`func_8002E0B0` for `func_8001B674`) and the actor type — match
 100% on the first real attempt. Lesson: when the struct field signedness/offsets
 already align with the matched twin, a body copy is sufficient; no per-case
 register tuning is needed.
+
+### func_8002E32C — another ShopMenuWidgetActor scroll-out twin
+
+`func_8002E32C` is the same scroll-out state machine as `func_8002E114` and
+`func_8001B6D8`, differing only in the draw callback passed to `func_800483FC`
+(`func_8002E250` here). Since the `ShopMenuWidgetActor` layout was already
+correct from the `func_8002E114` match, copying the body verbatim and swapping
+only the callback matched 100% on the first attempt. Lesson: the scroll-out
+state-machine family (`sprite.index += 0x26` fade-in → wait for `D_80121D88` →
+`x += 0x20` slide-out → `func_800716E4`) is now a known pattern across both
+actor types; new twins in this family are body-copy-and-swap-callback.
