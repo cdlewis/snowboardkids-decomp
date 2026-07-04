@@ -1577,3 +1577,10 @@ For small coordinate tables like `D_800D57B0`, struct or two-dimensional-array
 views can perturb IDO's temporary register choices. The checksum-clean form in
 `func_80054714` keeps the data as a typed `s16` array and indexes
 `playerIndex * 2`, then stores through typed actor halfword fields.
+
+## Adjacent BSS labels as one state view
+
+`player_select_menu` uses `D_8010AE70` as a small state struct, but
+`func_80005788` also reads the halfword at `D_8010AE70 + 4`, which is the
+adjacent `D_8010AE74` BSS label. A local struct view that includes the `+4`
+field documents the access pattern without needing manual pointer arithmetic.
