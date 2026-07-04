@@ -161,6 +161,7 @@ MusFxBankSetCurrent = 0x80072104; // type:func
 myfree = 0x80072958; // type:func
 D_800E0AB0 = 0x800E0AB0;
 D_800E0AB4 = 0x800E0AB4;
+D_8010AF18 = 0x8010AF18; // type:CourseSelectStatus size:0x38
 jtbl_800E18C0 = 0x800E18C0;
 osSyncPrintf = 0x800A3580; // type:func
 rmonPrintf = 0x800A359C; // type:func
