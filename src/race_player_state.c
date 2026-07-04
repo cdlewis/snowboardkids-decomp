@@ -1,0 +1,644 @@
+#include "common.h"
+#include "game_audio.h"
+#include "race_input_history.h"
+
+extern void func_8008C098(RaceInputPlayer *);
+extern void func_8008C7D0(RaceInputPlayer *);
+extern void func_80082664(RaceInputPlayer *, s32, s32, s32);
+extern void func_80082E48(RaceInputPlayer *);
+extern void func_80081E40(RaceInputPlayer *, s32);
+extern s32 func_80082EC0(RaceInputPlayer *);
+extern s32 func_80095F90(s32);
+
+extern void (*D_800DECD0[])(RaceInputPlayer *);
+extern void (*D_800DECD8[])(RaceInputPlayer *);
+extern void (*D_800DECE8[])(RaceInputPlayer *);
+extern void (*D_800DED08[])(RaceInputPlayer *);
+extern void (*D_800DED18[])(RaceInputPlayer *);
+extern void (*D_800DED30[])(RaceInputPlayer *);
+extern u8 D_80121B5F;
+extern u8 D_800EC9C2;
+extern s8 D_80121B54;
+extern u8 D_80121B56;
+extern void func_8007B250(void);
+extern void func_80087AFC(void);
+extern void func_80087EFC(void);
+
+void func_8008BEB0(void) {
+    D_80121D80[0].playerIndex = 0;
+    D_80121D80[1].playerIndex = 1;
+    D_80121D80[2].playerIndex = 2;
+    D_80121D80[3].playerIndex = 3;
+    if (D_80121D80[0].isActive != 0) {
+        func_8008C098(D_80121D80);
+    }
+    if (D_80121D80[1].isActive != 0) {
+        func_8008C098(D_8012238C);
+    }
+    if (D_80121D80[2].isActive != 0) {
+        func_8008C098(D_80122998);
+    }
+    if (D_80121D80[3].isActive != 0) {
+        func_8008C098(D_80122FA4);
+    }
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008BF5C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008C098.s")
+
+void func_8008C704(void) {
+    s32 i;
+
+    D_80121D80[0].unk582 = 0;
+    D_80121D80[1].unk582 = 0;
+    D_80121D80[2].unk582 = 0;
+    D_80121D80[3].unk582 = 0;
+    if (D_80121B56 == 0) {
+        func_80084730(D_80121D80);
+        func_80084730(D_8012238C);
+        func_80084730(D_80122998);
+        func_80084730(D_80122FA4);
+        func_8007B250();
+        for (i = 0; i < D_80121B54; i++) {
+            func_8008C7D0(&D_80121D80[i]);
+        }
+        func_80087EFC();
+        func_80087AFC();
+    }
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008C7D0.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008CF10.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008D09C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008DAF0.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008DC2C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008DE1C.s")
+
+void func_8008DFD0(RaceInputPlayer *player) {
+    D_800DECD0[player->updateState](player);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008E008.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008E350.s")
+
+void func_8008F1B4(RaceInputPlayer *player) {
+    player->subState = 0;
+    player->subStateTimer = 0;
+    player->subStateStep = 0;
+    player->subStateParam = 0;
+    player->unk2A0 = 0;
+}
+
+void func_8008F1CC(RaceInputPlayer *player) {
+    D_800DECD8[player->subState](player);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008F204.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008F3C8.s")
+
+void func_8008F514(RaceInputPlayer *player) {
+    if (func_80082EC0(player) != 0) {
+        player->subState++;
+    }
+    player->stateFlags |= 0x800;
+}
+
+void func_8008F560(s32 arg0) {
+
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008F568.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008F6C8.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008F82C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008F9CC.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008FB6C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008FD2C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008FEEC.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800900B0.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090274.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090470.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800905BC.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090708.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090898.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090998.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090B30.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090CD0.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090ECC.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009107C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80091250.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80091400.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800915C0.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800917BC.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800919A4.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80091AF8.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80091D40.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80091F3C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092194.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092368.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092468.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092674.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092774.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800929E4.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092B6C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092D04.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092E58.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80093144.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80093304.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800934EC.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800936D4.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800939E0.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80093E0C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094288.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094480.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009469C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094808.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009491C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094A94.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094BEC.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094DF8.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094FF4.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095164.s")
+
+void func_80095300(RaceInputPlayer *player) {
+    D_800DECE8[player->updateState](player);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095338.s")
+
+typedef struct {
+    char pad0[0x18];
+    s32 unk18;
+    s32 unk1C;
+    char pad20[0x28];
+} Struct800955C0;
+
+extern Struct800955C0 D_800B9540[];
+extern s16 D_80121B50;
+
+void func_800955C0(RaceInputPlayer *player) {
+    if (func_80082EC0(player) != 0) {
+        player->updateState++;
+        player->updateTimer = 0;
+        player->facingAngle = player->unk2FA;
+        player->posX = D_800B9540[D_80121B50].unk18;
+        player->posZ = D_800B9540[D_80121B50].unk1C;
+    }
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095650.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095804.s")
+
+void func_80095940(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        func_80081E40(player, 0x1D);
+        player->stateTimer = 0x13;
+    }
+    func_80082EC0(player);
+    player->stateTimer--;
+    if (player->stateTimer == 0) {
+        player->updateTimer = 0;
+        player->updateState++;
+    }
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800959B4.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095A88.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095BE4.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095F90.s")
+
+void func_8009617C(RaceInputPlayer *player) {
+    D_800DED08[player->updateState](player);
+    if (player->unk280 < 0xF0000) {
+        player->unk280 += 0x8000;
+    }
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800961DC.s")
+
+void func_8009652C(RaceInputPlayer *player) {
+    if (D_80121B5F != 0) {
+        player->stateTimer = 0;
+    }
+    if (player->stateTimer == 0) {
+        if (D_800EC9C2 == 0) {
+            if (player->unk509 == 0) {
+                player->updateState = 2;
+                player->updateTimer = 0;
+            } else {
+                player->updateState = 3;
+                player->updateTimer = 0;
+            }
+        } else if (D_80121B5F == 1) {
+            player->updateState = 2;
+            player->updateTimer = 0;
+        } else {
+            player->updateState = 3;
+            player->updateTimer = 0;
+        }
+    }
+    func_8008B408(player, 0, 0);
+    func_80082E48(player);
+}
+
+void func_800965E0(RaceInputPlayer *player) {
+    func_8008B408(player, 0, 0);
+    D_800DED18[player->characterId](player);
+}
+
+void func_80096630(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        player->stateTimer = 0;
+        func_80081E40(player, 0x23);
+    }
+    if (func_80082EC0(player)) {
+        if (player->animationId == 0x24) {
+            player->stateFlags |= 0x8000000;
+        }
+        if (player->stateTimer == 0) {
+            if (player->updateTimer == 1) {
+                func_8008BBB8(player, 6);
+                player->updateTimer++;
+            }
+            player->stateTimer = 0x14;
+            func_80081E40(player, 0x24);
+        } else {
+            player->stateTimer--;
+        }
+    }
+}
+
+void func_800966F4(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        player->stateTimer = 0;
+        func_80081E40(player, 0x24);
+    }
+    if (func_80082EC0(player)) {
+        if (player->animationId == 0x25) {
+            player->stateFlags |= 0x8000000;
+        }
+        if (player->stateTimer == 0) {
+            if (player->updateTimer == 1) {
+                func_8008BBB8(player, 6);
+                player->updateTimer++;
+            }
+            func_80081E40(player, 0x25);
+        } else {
+            player->stateTimer--;
+        }
+    }
+}
+
+void func_800967B0(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        player->stateTimer = 0;
+        func_80081E40(player, 0x23);
+    }
+    if (func_80082EC0(player)) {
+        if (player->animationId == 0x24) {
+            player->stateFlags |= 0x8000000;
+        }
+        if (player->stateTimer == 0) {
+            if (player->updateTimer == 1) {
+                func_8008BBB8(player, 6);
+                player->updateTimer++;
+            }
+            player->stateTimer = 0x14;
+            func_80081E40(player, 0x24);
+        } else {
+            player->stateTimer--;
+        }
+    }
+}
+
+void func_80096874(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        player->stateTimer = 0;
+        func_80081E40(player, 0x24);
+    }
+    if (func_80082EC0(player)) {
+        if (player->animationId == 0x25) {
+            player->stateFlags |= 0x8000000;
+        }
+        if (player->stateTimer == 0) {
+            if (player->updateTimer == 1) {
+                func_8008BBB8(player, 6);
+                player->updateTimer++;
+            }
+            player->stateTimer = 0;
+            func_80081E40(player, 0x25);
+        } else {
+            player->stateTimer--;
+        }
+    }
+}
+
+void func_80096934(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        player->stateTimer = 0;
+        func_80081E40(player, 0x24);
+    }
+    if (func_80082EC0(player)) {
+        if (player->animationId == 0x25) {
+            player->stateFlags |= 0x8000000;
+        }
+        if (player->stateTimer == 0) {
+            if (player->updateTimer == 1) {
+                func_8008BBB8(player, 6);
+                player->updateTimer++;
+            }
+            player->stateTimer = 0x32;
+            func_80081E40(player, 0x25);
+        } else {
+            player->stateTimer--;
+        }
+    }
+}
+
+void func_800969F8(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        func_8008BBB8(player, 6);
+        player->stateTimer = 0x1E;
+        func_80081E40(player, 0x23);
+    }
+    if (func_80082EC0(player)) {
+        player->stateFlags |= 0x8000000;
+        if (player->stateTimer == 0) {
+            player->stateTimer = 0x1E;
+            func_80081E40(player, 0x23);
+        } else {
+            player->stateTimer--;
+        }
+    }
+}
+
+void func_80096A8C(RaceInputPlayer *player) {
+    func_8008B408(player, 0, 0);
+    D_800DED30[player->characterId](player);
+}
+
+void func_80096ADC(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        player->stateTimer = 0;
+        func_80081E40(player, 0x25);
+    }
+    if (func_80082EC0(player)) {
+        if (player->stateTimer == 0) {
+            player->stateFlags |= 0x8000000;
+            player->stateTimer = 0x1E;
+            func_80081E40(player, 0x26);
+        } else {
+            player->stateTimer--;
+        }
+    }
+}
+
+void func_80096B68(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        player->stateTimer = 0;
+        func_80081E40(player, 0x26);
+    }
+    if (func_80082EC0(player)) {
+        if (player->stateTimer == 0) {
+            player->stateFlags |= 0x8000000;
+            player->stateTimer = 0x1E;
+            func_80081E40(player, 0x27);
+        } else {
+            player->stateTimer--;
+        }
+    }
+}
+
+void func_80096BF4(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        player->stateTimer = 0;
+        func_80081E40(player, 0x25);
+    }
+    if (func_80082EC0(player)) {
+        if (player->stateTimer == 0) {
+            player->stateTimer = 0;
+            player->stateFlags |= 0x8000000;
+            func_80081E40(player, 0x26);
+        } else {
+            player->stateTimer--;
+        }
+    }
+}
+
+void func_80096C7C(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        player->stateTimer = 0;
+        func_80081E40(player, 0x26);
+    }
+    if (func_80082EC0(player)) {
+        if (player->stateTimer == 0) {
+            player->stateFlags |= 0x8000000;
+            player->stateTimer = 0;
+            func_80081E40(player, 0x27);
+        } else {
+            player->stateTimer--;
+        }
+    }
+}
+
+void func_80096D04(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        player->stateTimer = 0;
+        func_80081E40(player, 0x26);
+    }
+    if (func_80082EC0(player)) {
+        if (player->stateTimer == 0) {
+            player->stateFlags |= 0x8000000;
+            player->stateTimer = 0;
+            func_80081E40(player, 0x27);
+        } else {
+            player->stateTimer--;
+        }
+    }
+}
+
+void func_80096D8C(RaceInputPlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        player->stateTimer = 0;
+        func_80081E40(player, 0x24);
+    }
+    if (func_80082EC0(player)) {
+        if (player->stateTimer == 0) {
+            if (player->animationId == 0x25) {
+                player->stateTimer = 0;
+                func_80081E40(player, 0x26);
+            } else {
+                player->stateFlags |= 0x8000000;
+                player->stateTimer = 0x1E;
+                func_80081E40(player, 0x25);
+            }
+        } else {
+            player->stateTimer--;
+        }
+    }
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80096E3C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80097038.s")
+
+extern s32 func_80089374(void);
+
+void func_80097144(void) {
+    func_80089374();
+}
+
+void func_80097164(RaceInputPlayer *player) {
+    if (player->updateState < 7) {
+        func_8008A940();
+    } else {
+        player->unk64 = 0;
+        func_8008BE1C(player);
+        player->unk58 = 0x30000;
+    }
+}
+
+void func_800971B8(RaceInputPlayer *player) {
+    if (func_80089374()) {
+        player->mode = 0x16;
+        player->updateState = 0;
+        player->updateTimer = 0;
+        player->stateFlags |= 0x200;
+    } else if (func_80095F90(player->playerIndex)) {
+        player->mode = 7;
+        player->updateState = 0;
+        player->updateTimer = 0;
+    }
+    func_80082664(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009724C.s")
+
+void func_8009759C(RaceInputPlayer *player) {
+    s32 v0 = -player->unk44 >> 13;
+    if (v0 >= 0x80) {
+        v0 = 0x7F;
+    }
+    if (v0 < 0x46) {
+        v0 = 0x46;
+    }
+    if (v0 >= 0x51) {
+        player->actionEffectLevel = 2;
+        player->actionEffectFrame = 0;
+    } else {
+        player->actionEffectLevel = 1;
+        player->actionEffectFrame = 0;
+    }
+    if (player->soundDisabled == 0) {
+        func_80072A74(0x21, (SoundPosition *)&player->posX, (s16)v0, 0x32);
+    }
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009762C.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80097744.s")
+
+void func_8009782C(RaceInputPlayer *player) {
+    if (func_80089374()) {
+        player->mode = 0x16;
+        player->updateState = 0;
+        player->updateTimer = 0;
+        player->stateFlags |= 0x200;
+    } else if (func_80095F90(player->playerIndex)) {
+        player->mode = 7;
+        player->updateState = 0;
+        player->updateTimer = 0;
+    }
+    func_80082664(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
+}
+
+void func_800978C0(RaceInputPlayer *player) {
+    if (func_80089374()) {
+        player->stateFlags |= 0x200;
+    } else {
+        player->stateFlags &= ~0x200;
+    }
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80097910.s")
+
+void func_80097A14(RaceInputPlayer *player) {
+    func_80089374();
+    if (player->updateState < 2) {
+        func_80082664(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
+    }
+}
