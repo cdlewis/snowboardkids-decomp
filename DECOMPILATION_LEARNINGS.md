@@ -1537,3 +1537,15 @@ The target uses `offset + bank`.
 
 For checksum-clean cleanup, keep the bank typed but write the address as
 `offset * sizeof(s16) + (s32)bank` when the target operand order matters.
+
+## Table setup scheduling in course asset loader
+
+`func_800440F4` can be expressed cleanly with `RomAssetRange` tables and a
+`CoursePlayerState` slice, but the best typed rewrite currently stalls at
+97.5%. The remaining diff is mostly independent setup scheduling: IDO moves the
+player base and loop counter initialization before the three range-table base
+`addiu`s, while the target initializes the range-table saved registers first.
+
+For future matching, preserve the typed range/player structures, but focus on
+statement grouping or local lifetime changes that influence the order of those
+independent saved-register initializers.
