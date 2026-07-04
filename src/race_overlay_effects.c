@@ -200,7 +200,24 @@ void func_80068BF0(RaceOverlayModelActor *arg0) {
     func_800483FC(&D_801248D4, func_800684E4, temp_s0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80068CD4.s")
+void func_80068CD4(RaceOverlayModelActor *arg0) {
+    if (D_80121B56 == 0) {
+        arg0->drawPos.y += arg0->velY;
+        arg0->velY += 0xFFFF0000;
+
+        if (arg0->drawPos.y < arg0->pos.y) {
+            arg0->drawPos.y = arg0->pos.y;
+            arg0->timer = 0x10;
+            func_80071824(arg0, func_80068BF0);
+        }
+
+        func_80088C80(&arg0->pos, 0xC0000, 0x180000, 0);
+        func_80088C80(&arg0->pos, 0xC0000, 0x180000, 1);
+        func_80088C80(&arg0->pos, 0xC0000, 0x180000, 2);
+        func_80088C80(&arg0->pos, 0xC0000, 0x180000, 3);
+    }
+    func_800483FC(&D_801248D4, func_800681A4, arg0);
+}
 
 void func_80068DB4(RaceOverlayModelActor *arg0) {
     s32 temp_a2;
