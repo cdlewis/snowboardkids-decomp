@@ -1,23 +1,5 @@
 #include "common.h"
-
-typedef struct {
-    /* 0x00 */ s8 active;
-    /* 0x01 */ u8 unk1;
-    /* 0x02 */ u8 unk2;
-    /* 0x03 */ u8 unk3;
-    /* 0x04 */ u8 unk4;
-    /* 0x05 */ u8 unk5;
-    /* 0x06 */ u8 unk6;
-    /* 0x07 */ u8 pad7;
-    /* 0x08 */ s16 unk8;
-    /* 0x0A */ u8 padA[0xA];
-    /* 0x14 */ s16 unk14;
-    /* 0x16 */ s16 unk16;
-    /* 0x18 */ u8 pad18[4];
-    /* 0x1C */ s16 unk1C;
-    /* 0x1E */ s16 unk1E;
-    /* 0x20 */ u8 pad20[0x90];
-} RacerStatus;
+#include "viewport_manager.h"
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x2FC];
@@ -77,7 +59,6 @@ extern s16 D_8011213C;
 extern s16 D_8011216E;
 extern s16 D_80112174;
 extern s16 D_80112184;
-extern RacerStatus D_801124B0[];
 extern s16 D_801235B0;
 extern RacePlayerState D_80121D80[];
 extern u8 D_80156608;

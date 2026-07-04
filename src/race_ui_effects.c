@@ -1,4 +1,5 @@
 #include "common.h"
+#include "viewport_manager.h"
 
 typedef struct {
     s32 word;
@@ -48,11 +49,6 @@ typedef struct {
     /* 0x4A */ s16 pad4A;
     /* 0x4C */ s16 rankTextHandle;
 } RaceUiAssetHandles;
-
-typedef struct {
-    /* 0x00 */ s8 active;
-    /* 0x01 */ u8 pad1[0xB0 - 1];
-} RaceOpponentState;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
@@ -226,7 +222,6 @@ extern void *D_800E14C0;
 extern void *D_800E14C4;
 extern void *D_800E14C8;
 extern RaceUiAssetEntry D_800D5FF4[];
-extern RaceOpponentState D_801124B0[];
 extern u16 D_800D6520[];
 extern s32 D_80123778;
 extern s32 D_801235B4;

@@ -120,7 +120,7 @@ segments:
       - [0x67360, c, race_overlay_effects]
       - [0x6A490, c, race_course_effects]
       - [0x6E120, c, race_camera]
-      - [0x710F0, c]
+      - [0x710F0, c, viewport_manager]
       - [0x71AC0, c]
       - [0x72430, c] # game audio wrappers around libmus APIs
       - [0x73830, c]
