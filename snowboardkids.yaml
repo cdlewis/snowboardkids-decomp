@@ -113,7 +113,7 @@ segments:
       - [0x49C00, c, fixed_point_math]
       - [0x4A040, c, race_effects]
       - [0x4E760, c, race_item_effects]
-      - [0x51BF0, c]
+      - [0x51BF0, c, main_menu_panel_ui]
       - [0x54260, c]
       - [0x562B0, c]
       - [0x57EA0, c]
