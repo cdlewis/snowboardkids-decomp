@@ -1780,3 +1780,15 @@ player-select layout (`bytes.state` as `u8`) reached 100% with no other change.
 Lesson: when a function is a known twin of an already-matched one, copy the
 struct field layout verbatim, not just the body — field signedness drives
 register allocation even when the generated loads/stores look identical.
+
+### func_8002E114 — a clean twin copy when struct layout already matches
+
+`func_8002E114` is the `ShopMenuWidgetActor` twin of `func_8001B6D8`
+(`PlayerSelectWidgetActor`), with the same scroll-out state machine. Unlike
+`func_8002C9A0`, the `ShopMenuWidgetActor` layout here already mirrored the
+player-select struct (`sprite.index` as `s16`, `transition.bytes.state` as
+`u8`), so copying the body verbatim from the matched twin — swapping only the
+draw callback (`func_8002E0B0` for `func_8001B674`) and the actor type — matched
+100% on the first real attempt. Lesson: when the struct field signedness/offsets
+already align with the matched twin, a body copy is sufficient; no per-case
+register tuning is needed.
