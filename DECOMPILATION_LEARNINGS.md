@@ -1739,3 +1739,24 @@ if (state == 4) { ... }
 IDO proves the reload is redundant (the local already equals the field on every
 path), so it emits no extra load — it only changes register allocation. This is
 purely a codegen nudge, not a logic change.
+
+### Cast variant when the trailing reload is absent (func_800196CC)
+
+func_800196CC has the same shape as func_800219E4 (u8 state machine, case 1
+reuses the literal `1`, `state = arg0->sprite.bytes.state = 2` chained
+assignment) but its target has *no* `lbu` right before the final
+`if (state == 3)` — so the redundant-reload trick above would add a load and
+mismatch. The nudge that works here is a `(unsigned int)` cast on the trailing
+comparison instead:
+
+```c
+if ((unsigned int)state == 3) { ... }
+```
+
+`state` is already zero-extended in the register from the `lbu`, so the cast
+emits no extra instruction — it only reshuffles IDO's register allocation so
+the hoisted case-1 constant `1` does not take the switch's `$v0` scratch copy
+slot. Plain `if (state == 3)` regresses to ~97.5% (missing `move $v0, $v1` in
+the switch dispatch). Reach for this when the only diff is the switch-dispatch
+register plus a missing `move $v0, $v1`, and the target lacks a trailing field
+reload.
