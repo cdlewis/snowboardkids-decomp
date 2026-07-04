@@ -32,6 +32,8 @@ typedef struct ObjectA3E0 {
 } ObjectA3E0;
 
 extern ObjectA3E0 *D_800EC9C4;
+extern f32 D_800E0A34;
+extern u16 D_800B34E0[];
 extern f32 D_800E0A38;
 extern s8 D_800DEED4;
 extern u8 D_800EC9F0[];
@@ -57,13 +59,17 @@ extern u8 D_80123750;
 extern u8 D_80123751;
 extern void func_8000B220(void);
 extern void func_8000B7B8(void);
+extern void func_8000C010(void);
 extern void func_8002F854(void);
+extern void func_8002FEF8(void);
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80045914(void);
 extern void func_80070614(s32);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
+extern void func_80070E90(s32);
 extern void func_8007105C(void);
 extern void func_80071408(void *, s32, s32);
+extern void func_80072138(s32, s32);
 extern void func_8009954C(s32);
 extern void func_80099658(s32);
 extern void func_8009956C(void *, s32);
@@ -137,7 +143,24 @@ void func_8000BBB4(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000BCA0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000BEC0.s")
+void func_8000BEC0(void) {
+    ObjectA3E0 *var_s0;
+    s8 *temp;
+
+    D_8010AF76 = 0x78;
+    func_8007066C(1, 0xE8, 0x78, 0x90, D_8010AF76, 0xA0, 0xF0, D_800E0A34);
+    func_80070E90(1);
+    temp = (s8 *) &D_800EC9F0[D_80121D86];
+    D_8010AED0 = temp[0x3F] + 1;
+    temp[0x3F] = D_800B34E0[(u8) D_8010AF73 * 7 + (u8) D_8010AF72];
+    D_8010AF18.transitionState = 6;
+    func_80071408(&func_8002FEF8, 0, 0x64);
+    func_8009956C(func_8000C010, 0); var_s0 = D_801121E0; do { D_800EC9C4 = var_s0; var_s0->unk2C();
+        var_s0 += 1;
+    } while (var_s0 != &D_80112340);
+    func_8007105C();
+    func_80072138(0x17, 0x32);
+}
 
 void func_8000C010(void) {
     ObjectA3E0 *var_s0;
