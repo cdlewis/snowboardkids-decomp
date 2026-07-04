@@ -49,11 +49,13 @@ extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
 extern void func_80071824(void *, void *);
 extern void func_80014AA4(void);
-extern void func_80014EF0(void);
+extern void func_80014EF0(MenuItemActor *);
+extern void func_80014CB8(void *);
 extern void func_8001508C(void *);
 extern void func_800152D0(MenuItemActor *);
 extern void func_80015680(MenuItemActor *);
 extern void func_800157B4(void *);
+extern void func_80015404(void *);
 extern void func_80015A30(void *);
 extern void func_80015B20(void *);
 extern void func_80015BD8(void *);
@@ -78,6 +80,7 @@ extern s16 D_8010AE46;
 extern s16 D_80112172;
 extern s16 D_8011217C;
 extern u8 D_80121B55;
+extern u8 D_800EC9C1;
 extern s32 D_801235B4;
 extern Struct801235B8 *D_801235B8;
 extern s32 D_80124838;
@@ -136,7 +139,47 @@ void func_80014C7C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80014CB8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80014EF0.s")
+void func_80014EF0(MenuItemActor *arg0) {
+    MenuItemActor *child;
+
+    switch (arg0->state) {
+    case 0:
+        arg0->x -= 0x20;
+        if (arg0->x == 0x70) {
+            arg0->child = func_80071408(func_80015404, 0, 0x63);
+            func_80072138(1, 0x32);
+        }
+        if (arg0->x == -0x50) {
+            arg0->state = 1;
+        }
+        break;
+    case 1:
+        if (D_800EC9C1 == 0x13) {
+            arg0->state = 2;
+            if (D_80121B55 == 1) {
+                D_801235B4 = 1;
+            }
+        }
+        break;
+    case 2:
+        arg0->x -= 0x20;
+        if (arg0->x == -0x70) {
+            child = arg0->child;
+            child->state = 2;
+            if (D_80121B55 == 2) {
+                D_801235B4 = 1;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    if (arg0->x < -0x108) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_80014CB8, (s32)arg0);
+}
 
 void func_80015054(void *arg0) {
     MenuItemActor *actor = arg0;
