@@ -137,7 +137,37 @@ void func_8002C350(MainMenuScoreTask *arg0) {
     func_800129DC(arg0->x, arg0->y, D_800B79AC, 1, arg0->unk1C.scale);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002C390.s")
+void func_8002C390(MainMenuScoreTask *arg0) {
+    u8 state = arg0->state.b.unk1E;
+
+    switch (state) {
+    case 0:
+        arg0->unk1C.scale += 0x26;
+        if (arg0->unk1C.scale >= 0x100) {
+            arg0->unk1C.scale = 0x100;
+            arg0->state.b.unk1E = 1;
+        }
+        state = arg0->state.b.unk1E;
+        break;
+    case 1:
+        if ((D_800EC9C8 == 5) && (D_800EC9C1 == 0x14)) {
+            state = arg0->state.b.unk1E = 2;
+        }
+        break;
+    case 2:
+        arg0->x -= 0x20;
+        if (arg0->x < -0xD7) {
+            arg0->state.b.unk1E = 4;
+        }
+        state = arg0->state.b.unk1E;
+        break;
+    }
+    if ((unsigned int)state == 4) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002C350, arg0);
+}
 
 void func_8002C498(MainMenuScoreTask *arg0) {
     arg0->x = -0x24;
