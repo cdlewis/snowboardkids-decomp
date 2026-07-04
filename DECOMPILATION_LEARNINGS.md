@@ -1643,3 +1643,15 @@ branch merge.
 When replacing byte-pointer stores with struct fields, preserve observed
 signedness where possible; even a same-sized `s8`/`u8` change can perturb
 constant lifetimes.
+
+## Renamed segments regenerate nonmatching asm paths
+
+After naming a Splat C segment, the extracted `asm/nonmatchings/<segment>/`
+directory follows the new segment name. Any remaining `#pragma GLOBAL_ASM`
+lines in the renamed C file must point at the regenerated named directory, not
+the old hex-address directory.
+
+The asm processor also does not process `#pragma GLOBAL_ASM` correctly when the
+pragma is hidden inside a C preprocessor conditional. Keep the pragma at top
+level, and put typed exploratory C under a separate `#ifdef NON_MATCHING` block
+below it if the default build still needs the assembly.
