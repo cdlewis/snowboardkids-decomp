@@ -15,7 +15,10 @@ struct ShopMenuWidgetActor {
     /* 0x1A */ s16 y;
     union {
         /* 0x1C */ s16 index;
-        /* 0x1C */ s8 state;
+        struct {
+            /* 0x1C */ u8 state;
+            /* 0x1D */ u8 pad1D;
+        } bytes;
     } sprite;
     union {
         struct {
@@ -46,7 +49,8 @@ struct ShopMenuWidgetActor {
 extern void func_80071824(ShopMenuWidgetActor *, void *);
 extern void func_800716E4(ShopMenuWidgetActor *);
 extern void func_800483FC(void *, void *, ShopMenuWidgetActor *);
-extern void func_8002C9A0(void);
+extern void func_8002C9A0(ShopMenuWidgetActor *);
+extern void func_8002C860(ShopMenuWidgetActor *);
 extern void func_8002FAB8(void);
 extern void func_8002DF40(void);
 extern void func_8002E114(void);
@@ -89,7 +93,39 @@ const char D_800E0F60[] = "%6dG";
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002C860.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002C9A0.s")
+void func_8002C9A0(ShopMenuWidgetActor *arg0) {
+    u8 state = arg0->sprite.bytes.state;
+
+    switch (state) {
+    case 0:
+        arg0->x += 0x20;
+        if (arg0->x >= -0x88) {
+            arg0->x = -0x88;
+            arg0->sprite.bytes.state = 1;
+        }
+        state = arg0->sprite.bytes.state;
+        break;
+    case 1:
+        if (D_80121D88 == 1) {
+            state = arg0->sprite.bytes.state = 2;
+        }
+        break;
+    case 2:
+        arg0->x -= 0x20;
+        if (arg0->x < -0x10D) {
+            arg0->sprite.bytes.state = 3;
+        }
+        state = arg0->sprite.bytes.state;
+        break;
+    case 3:
+        break;
+    }
+    if ((unsigned int)state == 3) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002C860, arg0);
+}
 
 void func_8002CAA0(ShopMenuWidgetActor *arg0) {
     arg0->x = -0x108;
@@ -311,7 +347,7 @@ void func_8002EFB8(ShopMenuWidgetActor *arg0) {
 void func_8002FBC8(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x90;
     arg0->y = 0x44;
-    arg0->sprite.state = 0;
+    arg0->sprite.bytes.state = 0;
     func_80071824(arg0, func_8002FAB8);
 }
 
