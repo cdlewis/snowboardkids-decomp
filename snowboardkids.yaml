@@ -122,7 +122,7 @@ segments:
       - [0x6E120, c, race_camera]
       - [0x710F0, c, viewport_manager]
       - [0x71AC0, c, effect_task_scheduler]
-      - [0x72430, c] # game audio wrappers around libmus APIs
+      - [0x72430, c, game_audio] # game audio wrappers around libmus APIs
       - [0x73830, c]
       - [0x78E50, c]
       - [0x79030, c]
@@ -327,7 +327,7 @@ segments:
       - [0xE20E0, .rodata, race_course_effects]
       - [0xE2130, rodata]
       - [0xE2150, .rodata, effect_task_scheduler]
-      - [0xE21B0, .rodata, 72430]
+      - [0xE21B0, .rodata, game_audio]
       - [0xE21E0, .rodata, 73830]
       - [0xE2300, rodata]
       - [0xE2310, .rodata, 79030]
