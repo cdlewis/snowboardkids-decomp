@@ -124,7 +124,7 @@ segments:
       - [0x71AC0, c, effect_task_scheduler]
       - [0x72430, c, game_audio] # game audio wrappers around libmus APIs
       - [0x73830, c, race_flow]
-      - [0x78E50, c]
+      - [0x78E50, c, motion_debug_viewer]
       - [0x79030, c]
       - [0x7BE50, c]
       - [0x7CA80, c]
