@@ -1596,3 +1596,17 @@ but IDO keeps that pointer in an extra saved register across calls and shrinks
 For checksum-clean cleanup, keep the main table typed and add typed 0x14-byte
 views for interior labels. This preserves the target's repeated stride
 recomputation while removing raw byte-pointer math.
+
+## Race camera strided arrays and independent base loads
+
+`race_camera` can use typed `RaceCamera` and partial `RacePlayerState` views for
+the `0xB0` camera slots and `0x60C` player slots, but two small functions are
+particularly sensitive to IDO scheduling. In `func_8006F984`, typed slot access
+causes IDO to keep the `0x60C` stride in `a2` and reload `a1` before calling
+`func_8006D8B4`; the target reuses `a1` throughout. In `func_8006D700`, clean
+loop forms preserve size but can swap the independent `D_801124A0` and
+`D_801121E0` base initializers.
+
+When cleaning this segment further, keep typed struct views, but expect local
+lifetime and statement grouping to affect register choice even when the emitted
+instruction count is unchanged.
