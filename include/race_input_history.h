@@ -5,6 +5,14 @@
 
 #define RACE_INPUT_PLAYER_COUNT 4
 
+typedef s16 Matrix4s[0x10];
+
+typedef struct {
+    /* 0x0 */ s32 x;
+    /* 0x4 */ s32 y;
+    /* 0x8 */ s32 z;
+} RaceVec3i;
+
 typedef struct {
     /* 0x000 */ u16 playerIndex;
     /* 0x002 */ char pad2[2];
@@ -18,7 +26,7 @@ typedef struct {
     /* 0x01A */ u8 actionTriggerChance;
     /* 0x01B */ u8 itemTriggerChance;
     /* 0x01C */ s32 posX;
-    /* 0x020 */ char pad20[4];
+    /* 0x020 */ s32 posY;
     /* 0x024 */ s32 posZ;
     /* 0x028 */ char pad28[0x5C];
     /* 0x084 */ u32 inputFlags;
@@ -26,11 +34,18 @@ typedef struct {
     /* 0x08C */ u32 disabledInputFlags;
     /* 0x090 */ s8 stickX;
     /* 0x091 */ s8 stickY;
-    /* 0x092 */ char pad92[0x248];
+    /* 0x092 */ char pad92[0x1FE];
+    /* 0x290 */ RaceVec3i projectedPos;
+    /* 0x29C */ char pad29C[0x3E];
     /* 0x2DA */ s16 trailEffectTimer;
-    /* 0x2DC */ char pad2DC[0x10];
+    /* 0x2DC */ char pad2DC[0xE];
+    /* 0x2EA */ s16 pitchAngle;
     /* 0x2EC */ s16 facingAngle;
-    /* 0x2EE */ char pad2EE[0xE];
+    /* 0x2EE */ s16 unk2EE;
+    /* 0x2F0 */ s16 unk2F0;
+    /* 0x2F2 */ char pad2F2[2];
+    /* 0x2F4 */ s16 unk2F4;
+    /* 0x2F6 */ char pad2F6[6];
     /* 0x2FC */ u32 stateFlags;
     /* 0x300 */ char pad300[2];
     /* 0x302 */ s16 updateState;
@@ -48,7 +63,10 @@ typedef struct {
     /* 0x51B */ char pad51B[0x11];
     /* 0x52C */ s8 actionTriggerCooldown;
     /* 0x52D */ s8 itemTriggerCooldown;
-    /* 0x52E */ char pad52E[0x54];
+    /* 0x52E */ char pad52E[0x3A];
+    /* 0x568 */ s32 unk568;
+    /* 0x56C */ s32 unk56C;
+    /* 0x570 */ char pad570[0x12];
     /* 0x582 */ s16 unk582;
     /* 0x584 */ char pad584[0x86];
     /* 0x60A */ s16 replayFrame;
