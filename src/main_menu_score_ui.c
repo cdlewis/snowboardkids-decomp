@@ -11,6 +11,7 @@ extern u8 D_800B79AC[];
 extern s16 D_8010AF62;
 extern void *D_80124868;
 extern void *D_8010ADE0;
+extern void *D_8010ADE4;
 extern s16 D_800EC9C8;
 extern u8 D_800EC9C1;
 
@@ -41,7 +42,9 @@ struct MainMenuScoreTask {
 };
 
 extern void func_8002B8B4(MainMenuScoreTask *);
+extern void func_8002BA38(MainMenuScoreTask *);
 extern void func_8002BB24(MainMenuScoreTask *);
+extern void func_8002BF54(MainMenuScoreTask *);
 extern void func_8002BDAC(MainMenuScoreTask *);
 extern void func_8002C18C(MainMenuScoreTask *);
 extern void func_8002C390(MainMenuScoreTask *);
@@ -99,7 +102,43 @@ void func_8002BA00(MainMenuScoreTask *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002BA38.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002BB24.s")
+void func_8002BB24(MainMenuScoreTask *arg0) {
+    u8 state = arg0->state.b.unk1F;
+
+    switch (state) {
+    case 0:
+        arg0->unk1C.scale += 0x26;
+        if (arg0->unk1C.scale >= 0x100) {
+            arg0->unk1C.scale = 0x100;
+            arg0->state.b.unk1F = 1;
+            D_8010ADE4 = func_80071408(func_8002BF54, 0, 0x63);
+        }
+        state = arg0->state.b.unk1F;
+        break;
+    case 1:
+        state = arg0->state.b.unk1F = 2;
+        break;
+    case 2:
+        if ((D_800EC9C8 == 5) && (D_800EC9C1 == 0x14)) {
+            state = arg0->state.b.unk1F = 3;
+        }
+        break;
+    case 3:
+        arg0->x -= 0x20;
+        if (arg0->x < -0x117) {
+            arg0->state.b.unk1F = 4;
+        }
+        state = arg0->state.b.unk1F;
+        break;
+    case 4:
+        break;
+    }
+    if ((unsigned int)state == 4) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002BA38, arg0);
+}
 
 void func_8002BC60(MainMenuScoreTask *arg0) {
     arg0->x = -0x44;
