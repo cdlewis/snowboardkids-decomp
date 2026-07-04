@@ -26,12 +26,14 @@ extern void func_800716E4(CourseSelectWidgetActor *);
 extern void func_80071824(CourseSelectWidgetActor *, void (*)(CourseSelectWidgetActor *));
 extern void func_800260E8(CourseSelectWidgetActor *);
 extern void func_800271CC(CourseSelectWidgetActor *);
+extern void func_80027408(CourseSelectWidgetActor *);
 extern void func_80027498(CourseSelectWidgetActor *);
 extern void func_800275E0(CourseSelectWidgetActor *);
 extern void func_80027AF8(CourseSelectWidgetActor *);
 extern void func_80028FF0(CourseSelectWidgetActor *);
 extern void func_800291F0(s32);
 extern u8 D_80121B55;
+extern u8 D_80121D88;
 extern CourseSelectState *D_801235B8;
 extern s32 D_80124868;
 
@@ -91,7 +93,35 @@ void func_800273C4(CourseSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80027408.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80027498.s")
+void func_80027498(CourseSelectWidgetActor *arg0) {
+    u8 state = arg0->state;
+
+    switch (state) {
+    case 0:
+        arg0->spriteIndex += 0x26;
+        if (arg0->spriteIndex >= 0x100) {
+            arg0->spriteIndex = 0x100;
+            arg0->state = 1;
+        }
+        state = arg0->state;
+        break;
+    case 1:
+        if ((D_80121D88 == 3) || (D_801235B8->screenState == 9)) {
+            state = (arg0->state = 2);
+        }
+        break;
+    case 2:
+        arg0->x += 0x20;
+        break;
+    }
+    state = arg0->state;
+    if ((state == 2) && (arg0->x >= 0x94)) {
+        func_800716E4(arg0);
+        func_800291F0(7);
+        return;
+    }
+    func_800483FC(&D_80124868, func_80027408, arg0);
+}
 
 void func_800275A4(CourseSelectWidgetActor *arg0) {
     arg0->x = -0x8;
