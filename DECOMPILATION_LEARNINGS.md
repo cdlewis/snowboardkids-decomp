@@ -2085,3 +2085,11 @@ convention, so extending the shop-local typedef does not conflict.
   candidate and the target is temp-register naming on otherwise-identical
   instructions, try permuting the order of independent statements before
   reaching for the permuter.
+
+- IDO's -O2 scheduler can also be sensitive to source line grouping in ways that
+  look like pure whitespace. In func_8000BEC0, writing the loop preamble on
+  separate lines emitted three addiu materializations in the wrong order
+  (99.46%). Joining the call, the var_s0 assignment, and the do-loop header onto
+  one line reordered the schedule to 100%. The tokens were identical; only line
+  breaks differed. When stuck on a pure instruction-reordering diff at 99%+,
+  let decomp-permuter search for the grouping the scheduler wants.
