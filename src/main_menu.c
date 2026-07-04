@@ -49,6 +49,7 @@ typedef struct MainMenuState {
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
 extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern s32 osPfsInitPak(OSMesgQueue *, OSPfs *, int);
+extern s32 osPfsRepairId(OSPfs *);
 extern s32 osPfsFreeBlocks(OSPfs *, s32 *);
 extern s32 osPfsNumFiles(OSPfs *, s32 *, s32 *);
 extern s32 osPfsFileState(OSPfs *, s32, OSPfsState *);
@@ -110,12 +111,13 @@ extern void func_80073140(void);
 extern OSMesgQueue D_800E4B78;
 extern OSMesgQueue D_800E4BB0;
 extern OSMesgQueue D_800E4BD0;
-extern OSPfs D_800E4C40;
+extern OSPfs D_800E4C40[];
 extern MainMenuState *D_801235B8;
 extern u8 D_800B30F0;
 extern u8 D_800B318C;
 extern u8 D_800DEED4;
 extern u8 D_800E4BEE;
+extern u8 D_800EC9D8;
 extern s32 D_80123758;
 extern s16 D_800DEF14;
 extern s16 D_801124B8;
@@ -236,7 +238,19 @@ void func_80001538(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80001584.s")
+void func_80001584(u16 arg0) {
+    OSPfs **sp18;
+    OSPfs *pfs;
+    s32 ret;
+
+    pfs = &D_800E4C40[arg0];
+    sp18 = &pfs;
+    osPfsInitPak(&D_800E4BD0, *sp18, arg0);
+    ret = osPfsRepairId(pfs);
+    if ((ret == 4) || (ret == 0xA)) {
+        (&D_800EC9D8)[arg0] += 1;
+    }
+}
 
 void func_80001618(void) {
     OSMesg msg;
@@ -250,9 +264,9 @@ void func_80001618(void) {
 void func_8000165C(void) {
     s32 i;
 
-    osPfsInitPak(&D_800E4BD0, &D_800E4C40, 0);
+    osPfsInitPak(&D_800E4BD0, &D_800E4C40[0], 0);
     for (i = 0; i != 0x10; i++) {
-        osPfsFileState(&D_800E4C40, i, &D_8010AF98[i]);
+        osPfsFileState(&D_800E4C40[0], i, &D_8010AF98[i]);
     }
 }
 
@@ -281,9 +295,9 @@ void func_8000189C(void) {
     s32 maxFiles;
     s32 filesUsed;
 
-    osPfsInitPak(&D_800E4BD0, &D_800E4C40, 0);
-    osPfsFreeBlocks(&D_800E4C40, &D_8010B198);
-    osPfsNumFiles(&D_800E4C40, &maxFiles, &filesUsed);
+    osPfsInitPak(&D_800E4BD0, &D_800E4C40[0], 0);
+    osPfsFreeBlocks(&D_800E4C40[0], &D_8010B198);
+    osPfsNumFiles(&D_800E4C40[0], &maxFiles, &filesUsed);
     D_8010B19C = maxFiles - filesUsed;
 }
 
