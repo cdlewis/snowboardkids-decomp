@@ -1,15 +1,10 @@
 #include "common.h"
+#include "character_select_flow.h"
 
 typedef struct {
-    char pad[0x18];
-    s32 unk18;
-    s32 unk1C;
-} Struct801235B8;
-
-typedef struct {
-    s16 unk0;
-    s8 unk2;
-} Struct8010AF50;
+    s16 alpha;
+    s8 state;
+} PlayerCountSelectMenuCursor;
 
 extern void func_800720E4(s32);
 extern void func_8009956C(void *, s32);
@@ -43,8 +38,8 @@ extern u8 D_5C5320;
 extern u8 D_5CCD40;
 extern u8 D_5D4280;
 
-extern Struct801235B8 *D_801235B8;
-extern Struct8010AF50 D_8010AF50;
+extern CharacterSelectFlowState *D_801235B8;
+extern PlayerCountSelectMenuCursor D_8010AF50;
 extern s8 D_800EC9C1;
 extern u8 D_80121D88;
 extern s32 D_8010ADDC;
@@ -64,21 +59,21 @@ void func_80008620(void) {
     D_800EC9C1 = 0;
     D_80121D88 = 0;
     D_8010ADDC = 0;
-    D_801235B8->unk18 = 1;
-    D_801235B8->unk1C = 0;
+    D_801235B8->fade = 1;
+    D_801235B8->timer = 0;
     D_8010ADF8 = 0;
     D_8010ADF0 = 0;
     if (D_80121B50 == 7) {
         D_80121B50 = 9;
     }
-    D_800DEF14 = D_801235B8->unk18;
+    D_800DEF14 = D_801235B8->fade;
     if (D_80121B5E == 3) {
         D_80121B5E = 0;
     }
     func_8009956C(&func_800088C8, 0);
     func_8007105C();
-    D_8010AF50.unk2 = 0;
-    D_8010AF50.unk0 = 0;
+    D_8010AF50.state = 0;
+    D_8010AF50.alpha = 0;
 }
 
 void func_800086EC(void) {
@@ -86,7 +81,7 @@ void func_800086EC(void) {
     func_800704F0();
     func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E09D0);
     D_800DEED4 = 0;
-    D_801235B8->unk18 = 0xFF;
+    D_801235B8->fade = 0xFF;
     func_800437F0(&D_5A1ED0, &D_5C5320, 0x21);
     func_800437F0(&D_593D10, &D_598A70, 0x22);
     func_800437F0(&D_598A70, &D_59AAA0, 0x23);
@@ -99,23 +94,23 @@ void func_800086EC(void) {
     D_800EC9C1 = 0;
     D_80121D88 = 0;
     D_8010ADDC = 0;
-    D_801235B8->unk1C = 0;
+    D_801235B8->timer = 0;
     D_8010ADF8 = 0;
     D_8010ADF0 = 0;
     if (D_80121B50 == 7) {
         D_80121B50 = 9;
     }
-    D_800DEF14 = D_801235B8->unk18;
+    D_800DEF14 = D_801235B8->fade;
     if (D_80121B5E == 3) {
         D_80121B5E = 0;
     }
     func_8009956C(func_800088C8, 0);
     func_8007105C();
-    D_8010AF50.unk2 = 0;
-    D_8010AF50.unk0 = 0;
+    D_8010AF50.state = 0;
+    D_8010AF50.alpha = 0;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/9220/func_800088C8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_menu/func_800088C8.s")
 
 void func_80008C04(void) {
     if (D_80121B5E < 3 && D_8010ADF8 == 0) {
@@ -130,9 +125,9 @@ void func_80008C04(void) {
 }
 
 void func_80008C84(void) {
-    if (D_801235B8->unk18 != 0xFF) {
-        D_801235B8->unk18 = func_80013F88((s16) D_801235B8->unk18, 0x24, 1);
-        if (D_801235B8->unk18 == 0xFF) {
+    if (D_801235B8->fade != 0xFF) {
+        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
+        if (D_801235B8->fade == 0xFF) {
             D_80123751 = 1;
         } else {
             func_8007105C();
