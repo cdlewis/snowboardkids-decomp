@@ -183,10 +183,14 @@ patterns, and verified layout/linking rules.
   inline: `for (i = 0; i < n; i++) { f(base + i * STRIDE); }`. IDO strength-reduces
   `i * STRIDE` into a pointer that is initialized with a **fresh** `lui`/`addiu` of
   `base` in the loop preheader (the `blez` delay slot), so it does not CSE with the
-  top region's `$a0`. This dropped `func_8008C704` (`src/8CAB0.c`) from 81% to 100%.
+  top region's `$a0`. This dropped `func_8008C704` (`src/race_player_state.c`) from 81% to 100%.
 - Takeaway: when the target reloads an array base at a loop rather than reusing a
   hoisted saved register, prefer a strength-reduced indexed `for` loop over an
   explicit pointer-bump `do`/`while`.
+- In `RaceInputPlayer`, the index at offset `0x0` should be `s16`, not `u16`.
+  State-transition routines such as `func_800971B8` and `func_8009782C` pass it
+  to `func_80095F90` with a signed halfword load (`lh`); declaring it unsigned
+  changes those calls to `lhu` and breaks the ROM checksum.
 
 ## Register allocation via redundant reloads
 
