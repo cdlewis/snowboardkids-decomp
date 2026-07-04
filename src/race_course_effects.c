@@ -1,0 +1,432 @@
+#include "common.h"
+
+typedef struct {
+    s32 x;
+    s32 y;
+    s32 z;
+} Vec3i;
+
+typedef struct {
+    char pad[0x18];
+    s16 step;
+    u16 timer;
+} RaceCountdownEffect;
+
+typedef struct {
+    char pad[0x10];
+    u16 playerIndex;
+} RacePlayerEffect;
+
+typedef struct {
+    char pad[0x24];
+    s32 unk24;
+    char pad28[4];
+    s32 unk2C;
+    s32 unk30;
+    char pad34[4];
+    s32 unk38;
+    s16 unk3C;
+} Struct6B760;
+
+typedef struct {
+    char pad0[0x50];
+    s16 unk50;
+    s16 unk52;
+    s16 unk54;
+    s16 unk56;
+} Struct6C51C;
+
+typedef struct {
+    char pad0[0x18];
+    Vec3i velocity;
+    Vec3i pos;
+    char unk30[0x20];
+    s16 timer;
+} RaceMovingEffect;
+
+typedef struct {
+    char pad0[0x10];
+    u16 entryIndex;
+    char pad12[6];
+    void *texture;
+    void *palette;
+    s16 rotation;
+    char pad22[2];
+    void *vertices;
+    void *baseVertices;
+    s16 vertexCount;
+    char pad2E[2];
+    s32 texturePtr;
+    s32 palettePtr;
+    s32 useAltQueue;
+    s32 unk3C;
+} RaceCourseMarkerEffect;
+
+typedef struct {
+    s32 texturePtr;
+    s32 palettePtr;
+    void *baseVerticesInput;
+    s16 vertexCount;
+    s16 flags;
+    u16 textureIndex;
+    s16 unk12;
+} CourseMarkerEntry;
+
+typedef struct {
+    void *baseVerticesInput;
+    char pad4[0x10];
+} CourseMarkerVertexResource;
+
+typedef struct {
+    u16 textureIndex;
+    char pad2[0x12];
+} CourseMarkerTextureResource;
+
+typedef struct {
+    u8 bytes[0x10];
+} SoundParams;
+
+extern void func_80071824(void *, void *);
+extern void func_800483FC(void *, void *, void *);
+extern void func_800716E4(void *);
+extern void func_80072138(s32, s32);
+extern void func_80072A74(s32, void *, s32, s32);
+extern void func_8006AF48(void);
+extern void func_8006A80C(void *);
+extern void func_80069BEC(void);
+extern void func_80069E50(void);
+extern s32 func_80043040(s16);
+extern void func_80045990(s32, s32, void *, void *);
+extern s32 func_8004597C(s32, s32);
+extern void func_80047174(s32, s32, s32, s32, s32);
+extern void func_80045A78(s32, s32, s32, s32);
+extern void func_80098590(void *, void *, Vec3i *, void *);
+extern s16 D_80112168;
+extern s16 D_80112140;
+extern s32 D_801235B4;
+extern u8 D_80156608;
+extern void func_8006C5C0(Struct6C51C *);
+extern void func_8006C1B4(void);
+void func_80069890(RaceCountdownEffect *);
+void func_80069914(RaceCountdownEffect *);
+void func_80069998(RaceCountdownEffect *);
+void func_800699F0(RaceCountdownEffect *);
+void func_80069A78(RaceCountdownEffect *);
+void func_80069AF0(RaceCountdownEffect *);
+void func_80069B60(RaceCountdownEffect *);
+extern void func_8006C7F4(void);
+extern void func_8006B6C8(void);
+extern Struct6B760 *func_80071408(void *, s32, s32);
+extern u8 D_80121B56;
+extern s16 D_80121B50;
+extern SoundParams D_800DA764[];
+extern CourseMarkerEntry D_800DA804[];
+extern CourseMarkerVertexResource D_800DA80C[];
+extern CourseMarkerTextureResource D_800DA814[];
+extern s32 D_80124868;
+extern s32 D_80124878;
+extern s32 D_801248EC;
+extern s32 D_801248B0;
+extern s32 D_801248A4;
+extern s32 D_801248F8;
+extern void func_8006BC68(void *);
+extern void func_8006BE90(void);
+extern void func_8006B7E0(void);
+
+void func_80069890(RaceCountdownEffect *arg0) {
+    if (arg0->step != 0) {
+        func_80047174(-0x34, -0xC, func_80043040(D_80112168), 0x3F, arg0->step);
+    } else {
+        func_80045A78(-0x34, -0xC, func_80043040(D_80112168), 0x3F);
+    }
+}
+
+void func_80069914(RaceCountdownEffect *arg0) {
+    if (arg0->step != 0) {
+        func_80047174(-0x20, -0xC, func_80043040(D_80112168), 0x40, arg0->step);
+    } else {
+        func_80045A78(-0x20, -0xC, func_80043040(D_80112168), 0x40);
+    }
+}
+
+void func_80069998(RaceCountdownEffect *arg0) {
+    arg0->step++;
+    if (arg0->step == 4) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_80069914, arg0);
+}
+
+void func_800699F0(RaceCountdownEffect *arg0) {
+    RaceCountdownEffect *temp_a2 = arg0;
+
+    if (arg0->step != 0) {
+        arg0->step--;
+    }
+    temp_a2->timer--;
+    if (temp_a2->timer == 0) {
+        D_801235B4 &= ~1;
+        func_80071824(temp_a2, func_80069998);
+    }
+    func_800483FC(&D_80124868, func_80069914, temp_a2);
+}
+
+void func_80069A78(RaceCountdownEffect *arg0) {
+    arg0->step++;
+    if (arg0->step == 4) {
+        func_80072138(0x4C, 0x5A);
+        arg0->timer = 0x14;
+        func_80071824(arg0, func_800699F0);
+    }
+    func_800483FC(&D_80124868, func_80069890, arg0);
+}
+
+void func_80069AF0(RaceCountdownEffect *arg0) {
+    if (arg0->step != 0) {
+        arg0->step--;
+    }
+    arg0->timer--;
+    if (arg0->timer == 0) {
+        func_80071824(arg0, func_80069A78);
+    }
+    func_800483FC(&D_80124868, func_80069890, arg0);
+}
+
+void func_80069B60(RaceCountdownEffect *arg0) {
+    if ((--arg0->timer) == 0) {
+        func_80072138(0x4B, 0x5A);
+        arg0->step = 4;
+        arg0->timer = 0x3C;
+        func_80071824(arg0, func_80069AF0);
+    }
+}
+
+void func_80069BC0(RaceCountdownEffect *arg0) {
+    arg0->timer = 0x14;
+    func_80071824(arg0, func_80069B60);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_80069BEC.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_80069E50.s")
+
+void func_8006A74C(void *arg0) {
+    func_800483FC(&D_801248A4, func_80069BEC, arg0);
+    func_800483FC(&D_801248F8, func_80069E50, arg0);
+}
+
+void func_8006A798(void *arg0) {
+    func_80071824(arg0, func_8006A74C);
+}
+
+void func_8006A7BC(RacePlayerEffect *arg0) {
+    if (D_80156608 == arg0->playerIndex) {
+        func_80045A78(-0x30, -0xC, func_80043040(D_80112168), 0x41);
+    }
+}
+
+void func_8006A80C(void *arg0) {
+    if (D_801235B4 & 8) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124878, func_8006A7BC, arg0);
+}
+
+void func_8006A85C(void *arg0) {
+    func_80072138(0x52, 0x5A);
+    func_80071824(arg0, func_8006A80C);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006A894.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006ACE8.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006AE00.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006AF48.s")
+
+void func_8006B0D8(void *arg0) {
+    func_800483FC(&D_801248B0, func_8006AF48, arg0);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B108.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B228.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B3E0.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B6C8.s")
+
+void func_8006B760(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    Struct6B760 *p = func_80071408(func_8006B6C8, 0, 0x64);
+    if (p != 0) {
+        p->unk24 = arg1;
+        p->unk2C = arg2;
+        p->unk30 = arg3;
+        p->unk38 = arg4;
+        p->unk3C = arg0;
+    }
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B7E0.s")
+
+void func_8006B988(RaceMovingEffect *arg0) {
+    Vec3i sp24;
+    s16 temp_v0;
+    s32 temp_v1;
+    RaceMovingEffect *temp_a3 = arg0;
+
+    temp_v0 = arg0->timer;
+    if (temp_v0 != 0) {
+        if (D_80121B56 == 0) {
+            temp_v1 = arg0->velocity.z;
+            arg0->timer = temp_v0 - 1;
+            if (temp_v1 >= (s32)0xFFF60001) {
+                arg0->velocity.z = temp_v1 - 0x2000;
+            }
+            func_80098590(&arg0->unk30, &temp_a3->velocity, &sp24, temp_a3);
+            temp_a3->pos.x += sp24.x;
+            temp_a3->pos.y += sp24.y;
+            temp_a3->pos.z += sp24.z;
+        }
+        func_800483FC(&D_801248A4, func_8006B7E0, temp_a3);
+        return;
+    }
+    func_800716E4(temp_a3);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BA50.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BB50.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BC68.s")
+
+void func_8006BDE4(RaceMovingEffect *arg0) {
+    Vec3i sp24;
+    s16 temp_v0;
+    RaceMovingEffect *temp_a3 = arg0;
+
+    temp_v0 = arg0->timer;
+    if (temp_v0 != 0) {
+        if (D_80121B56 == 0) {
+            arg0->timer = temp_v0 - 1;
+            func_80098590(&arg0->unk30, &temp_a3->velocity, &sp24, temp_a3);
+            temp_a3->pos.x += sp24.x;
+            temp_a3->pos.y += sp24.y;
+            temp_a3->pos.z += sp24.z;
+        }
+        func_800483FC(&D_801248A4, func_8006BC68, temp_a3);
+        return;
+    }
+    func_800716E4(temp_a3);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BE90.s")
+
+void func_8006BFC0(RaceMovingEffect *arg0) {
+    Vec3i sp1C;
+    RaceMovingEffect *temp_a3 = arg0;
+
+    if (D_80121B56 == 0) {
+        arg0->timer--;
+        func_80098590(&arg0->unk30, &temp_a3->velocity, &sp1C, temp_a3);
+        temp_a3->pos.x += sp1C.x * 2;
+        temp_a3->pos.y += sp1C.y * 2;
+        temp_a3->pos.z += sp1C.z * 2;
+        if (temp_a3->timer == 0) {
+            func_80071824(temp_a3, func_8006BE90);
+            temp_a3->timer = 0x18;
+        }
+    }
+    func_800483FC(&D_801248A4, func_8006BC68, temp_a3);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C088.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C1B4.s")
+
+void func_8006C4AC(Struct6C51C *arg0) {
+    if (D_80121B56 == 0) {
+        if (arg0->unk50 != 0) {
+            arg0->unk50 += 0x80;
+        } else {
+            arg0->unk56 = 0;
+            func_80071824(arg0, func_8006C5C0);
+        }
+    }
+    func_800483FC(&D_801248A4, func_8006C1B4, arg0);
+}
+
+void func_8006C51C(Struct6C51C *arg0) {
+    Struct6C51C *temp_s0 = arg0;
+    s16 temp_v0;
+
+    if (D_80121B56 == 0) {
+        temp_v0 = arg0->unk50;
+        if (temp_v0 != -0x400) {
+            arg0->unk50 = temp_v0 - 0x40;
+        }
+        temp_s0->unk54--;
+        if (temp_s0->unk54 == 0) {
+            func_80072A74(0x1C, &D_800DA764[D_80121B50], 0x7F, 0x32);
+            func_80071824(temp_s0, func_8006C4AC);
+        }
+    }
+    func_800483FC(&D_801248A4, func_8006C1B4, temp_s0);
+}
+
+void func_8006C5C0(Struct6C51C *arg0) {
+    if ((D_80121B56 == 0) && (D_801235B4 & 4)) {
+        arg0->unk54 = 0x2D;
+        D_801235B4 &= ~4;
+        func_80071824(arg0, func_8006C51C);
+        arg0->unk56 = 1;
+        func_80072A74(0x16, &D_800DA764[D_80121B50], 0x7F, 0x32);
+        func_80072A74(0x1B, &D_800DA764[D_80121B50], 0x7F, 0x32);
+    }
+    func_800483FC(&D_801248A4, func_8006C1B4, arg0);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C698.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C7F4.s")
+
+void func_8006CB50(RaceCourseMarkerEffect *arg0) {
+    arg0->rotation -= 0x40;
+    arg0->rotation &= 0x7FF;
+    if (arg0->useAltQueue != 0) {
+        func_800483FC(&D_801248EC, func_8006C7F4, arg0);
+    } else {
+        func_800483FC(&D_801248A4, func_8006C7F4, arg0);
+    }
+}
+
+void func_8006CBBC(RaceCourseMarkerEffect *arg0) {
+    func_80045990(func_80043040(D_80112168),
+                  D_800DA814[arg0->entryIndex].textureIndex,
+                  &arg0->texture, &arg0->palette);
+    arg0->baseVertices =
+        func_8004597C(func_80043040(D_80112140), (s32) D_800DA80C[arg0->entryIndex].baseVerticesInput);
+
+    {
+        CourseMarkerEntry *entry = &D_800DA804[arg0->entryIndex];
+
+        arg0->vertexCount = entry->vertexCount;
+        arg0->texturePtr = entry->texturePtr;
+        arg0->palettePtr = entry->palettePtr;
+        arg0->vertexCount = entry->vertexCount;
+        arg0->useAltQueue = entry->flags & 1;
+        arg0->unk3C = entry->flags & 2;
+    }
+    func_80071824(arg0, func_8006CB50);
+}
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006CCC0.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006CE68.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006D2D0.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006D384.s")
