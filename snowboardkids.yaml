@@ -74,7 +74,7 @@ segments:
       - [0x6140, c, player_select_menu]
       - [0x6870, c, character_select_flow]
       - [0x7B30, c, character_select_transition]
-      - [0x9220, c]
+      - [0x9220, c, player_count_select_menu]
       - [0x9960, c]
       - [0xA3E0, c]
       - [0xCE80, c]
