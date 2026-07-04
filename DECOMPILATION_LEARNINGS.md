@@ -1803,3 +1803,25 @@ only the callback matched 100% on the first attempt. Lesson: the scroll-out
 state-machine family (`sprite.index += 0x26` fade-in → wait for `D_80121D88` →
 `x += 0x20` slide-out → `func_800716E4`) is now a known pattern across both
 actor types; new twins in this family are body-copy-and-swap-callback.
+
+### func_80027498 — CourseSelectWidgetActor scroll-out state machine
+
+`func_80027498` is the `CourseSelectWidgetActor` member of the same scroll-out
+state-machine family as `func_8002C390` (and the shop/player-select twins):
+case 0 fades the sprite in (`spriteIndex += 0x26` up to `0x100`), case 1 waits
+for a transition trigger, case 2 slides out (`x += 0x20`). The transition
+condition here is `(D_80121D88 == 3) || (D_801235B8->screenState == 9)` (an OR
+of two conditions, compiled as short-circuit `beq`/`bne` to a shared state=2
+block), and the slide-out terminates with a paired `func_800716E4` /
+`func_800291F0(7)` call sequence.
+
+The structurally-correct body matched 96.6% with only register-allocation
+differences (`state` landing in `v0` instead of `v1`, and a `move v1,v0`
+instead of a memory reload in case 2). The permuter found the 100% fix: the
+original source does **not** reload `state = arg0->state` inside case 2.
+Instead it reloads once *after* the entire switch (`state = arg0->state;`
+immediately before the post-switch `if`). That single post-switch reload lets
+IDO keep the live `state` in `v1` and emit `lbu v1,0x1e` on the case-2 path.
+Lesson: when a `switch` updates a local from a struct field in some cases but
+not others, a single reload *after* the switch (rather than per-case) is the
+shape IDO expects, and is the difference between a `move` and a `lbu` reload.
