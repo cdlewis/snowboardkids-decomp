@@ -2027,3 +2027,18 @@ convention, so extending the shop-local typedef does not conflict.
   difference is purely which register holds the `lui` high half. Generalizable
   pattern: when a small global is used 2-3 times and the only diff is the `lui`
   scratch register, drop the local and read the global inline.
+
+- **Taking the address of an otherwise-scalar local (`&pfs`) shrinks IDO 5.3's
+  stack frame.** In `func_80001584` (controller-pak init/repair), a `pfs`
+  pointer local that is only spilled to and reloaded from one stack slot
+  produced a `0x28`-byte frame, but the target uses `0x20`; the only difference
+  was frame sizing (every slot offset shifted together). decomp-permuter found
+  that introducing `OSPfs **sp18 = &pfs;` and passing `*sp18` to the call
+  forces IDO to classify `pfs` as an address-taken local, allocating it into
+  the addressed-locals region and collapsing the frame to `0x20` (100% match).
+  This is an IDO frame-allocation quirk, not a semantic change. The codebase
+  already tolerates such layout hacks (`func_800340D8` uses a
+  `struct { s32 ret; s32 pad; } locals;` to control layout). When the only diff
+  between a 99% match and 100% is the `addiu sp` prologue/epilogue magnitude
+  and all slot offsets shift together, look for an address-taken (or
+  struct-padded) local to retune the frame.
