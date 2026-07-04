@@ -116,7 +116,7 @@ segments:
       - [0x51BF0, c, main_menu_panel_ui]
       - [0x54260, c, main_menu_overlay_effects]
       - [0x562B0, c, course_preview_camera]
-      - [0x57EA0, c]
+      - [0x57EA0, c, race_ui_effects]
       - [0x67360, c]
       - [0x6A490, c]
       - [0x6E120, c]
