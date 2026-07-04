@@ -1825,3 +1825,21 @@ IDO keep the live `state` in `v1` and emit `lbu v1,0x1e` on the case-2 path.
 Lesson: when a `switch` updates a local from a struct field in some cases but
 not others, a single reload *after* the switch (rather than per-case) is the
 shape IDO expects, and is the difference between a `move` and a `lbu` reload.
+
+### `func_8001B520` — scroll-out state machine with a side-effect global write
+
+`func_8001B520` (player_select_ui) is the same scroll-out state-machine family
+as `func_8002B05C` (case 0 fades `spriteIndex` up to `0x100`, case 1 waits for
+`D_80121D88 == 1`, case 2 slides `x -= 0x20` until `< -0xFF`). The one
+structural difference from its twin: after the switch it writes
+`D_8010AE74 = arg0->sprite.spriteIndex;` before the usual `state == 3` /
+`func_800483FC` tail.
+
+Even though the target asm shows `lh v0,0x1c(a2)` emitted inside *each* switch
+case (rather than once at the merge point), the clean source form
+`D_8010AE74 = arg0->sprite.spriteIndex;` placed *after* the switch matches
+100% on the first try. IDO distributes that single post-switch field read
+across the case branches itself — you do not need a per-case temp (`var_v0`)
+to reproduce the per-case loads. This mirrors the `func_80027498` lesson: a
+single post-switch read of a struct field is the shape IDO expects, even when
+the resulting asm looks like it was hand-distributed.
