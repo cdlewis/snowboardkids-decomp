@@ -1694,3 +1694,10 @@ IDO re-emits the lui/lw of the D_801235B8 global between the store and the
 re-read (it cannot prove the store through the pointer does not alias the
 global itself). This is expected; writing the field access naturally in C
 reproduces it.
+
+## Stack-held pointer locals can preserve repeated handle lookups
+
+In `func_800437F0`, keeping a local `s16 *` pointing into the asset handle table
+matches the target's stack spill and reload around repeated `func_80043040`
+calls. A structured view of `D_80112130` can still match cleanly as long as the
+field at offset `0x40` is represented separately from the first 0x20 handles.
