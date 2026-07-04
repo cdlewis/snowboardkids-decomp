@@ -1,0 +1,99 @@
+#include "common.h"
+
+typedef void (*InputTaskCallback)(void);
+
+#define INPUT_TASK_CALLBACK_COUNT 3
+
+typedef struct InputTask {
+    struct InputTask *prev;
+    struct InputTask *next;
+    InputTaskCallback callbacks[INPUT_TASK_CALLBACK_COUNT];
+    u8 priority;
+    u8 id;
+    u16 state;
+    u8 pad18[0x10];
+} InputTask;
+
+extern InputTask *D_801235B8;
+extern InputTask *D_8012370C;
+
+void func_80099464(s32);
+InputTask *func_80099384(s32);
+
+#pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80098D80.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80098EAC.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80099288.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80099384.s")
+
+#pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80099464.s")
+
+void func_800994F4(s32 taskId, InputTaskCallback callback, s32 priority) {
+    InputTask *task;
+
+    task = func_80099384(priority);
+    if (task != NULL) {
+        task->id = (u8) taskId;
+        task->callbacks[0] = callback;
+        task->priority = (u8) priority;
+        task->state = 2;
+    }
+}
+
+void func_8009954C(s32 taskId) {
+    func_80099464(taskId);
+}
+
+void func_8009956C(InputTaskCallback callback, s32 callbackIndex) {
+    switch (callbackIndex) {
+        case 0:
+            D_801235B8->callbacks[0] = callback;
+            return;
+        case 1:
+            D_801235B8->callbacks[1] = callback;
+            return;
+        case 2:
+            D_801235B8->callbacks[2] = callback;
+            return;
+    }
+}
+
+void func_800995C0(s32 callbackIndex) {
+    switch (callbackIndex) {
+        case 0:
+            D_801235B8->callbacks[0] = NULL;
+            return;
+        case 1:
+            D_801235B8->callbacks[1] = NULL;
+            return;
+        case 2:
+            D_801235B8->callbacks[2] = NULL;
+            return;
+    }
+}
+
+void func_80099614(s32 taskId) {
+    InputTask *task = D_8012370C;
+
+    while (task != NULL) {
+        if (taskId == task->id) {
+            task->state = 1;
+            return;
+        }
+        task = task->next;
+    }
+}
+
+void func_80099658(s32 taskId) {
+    InputTask *task = D_8012370C;
+
+    while (task != NULL) {
+        if (taskId == task->id) {
+            task->state = 2;
+            return;
+        }
+        task = task->next;
+    }
+}
