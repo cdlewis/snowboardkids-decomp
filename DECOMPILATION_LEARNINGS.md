@@ -1701,3 +1701,41 @@ In `func_800437F0`, keeping a local `s16 *` pointing into the asset handle table
 matches the target's stack spill and reload around repeated `func_80043040`
 calls. A structured view of `D_80112130` can still match cleanly as long as the
 field at offset `0x40` is represented separately from the first 0x20 handles.
+
+### Chained assignment produces `andi` truncation (func_800219E4)
+
+When the original source uses a chained assignment to update a `u8` field and a
+`u8` local from the same `int` value, IDO keeps the value in one register and
+emits an `andi reg, reg, 0xff` for the local:
+
+```c
+state = arg0->sprite.bytes.state = 2;
+```
+
+compiles to:
+
+```
+li      $t1, 2
+sb      $t1, 0x1C($a3)      # store to the u8 field
+andi    $v1, $t1, 0xff      # truncate to u8 for the local
+```
+
+A plain `arg0->sprite.bytes.state = 2; state = 2;` instead emits `li $v1, 2`,
+which mismatches. Reach for the chained-assignment form when the diff shows an
+`andi ..., 0xff` against a register that was just stored via `sb`.
+
+### Redundant reload shifts a switch value home register (func_800219E4)
+
+IDO can home the switch-controlling value in `$v1` (with a `move $v0, $v1`
+scratch copy for the later comparisons) instead of `$v0`. If the only diff is a
+`$v0`/`$v1` swap on the loaded switch value, adding a redundant reload of the
+field right before the trailing use forces `$v1` as the home register:
+
+```c
+state = arg0->sprite.bytes.state;   /* redundant: provably equal on all paths */
+if (state == 4) { ... }
+```
+
+IDO proves the reload is redundant (the local already equals the field on every
+path), so it emits no extra load — it only changes register allocation. This is
+purely a codegen nudge, not a logic change.
