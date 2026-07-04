@@ -1,18 +1,14 @@
 #include "common.h"
+#include "game_audio.h"
 #include "race_input_history.h"
 
-extern void func_8008B408(void *, s32, s32);
-extern void func_8008A940(void);
-extern void func_8008BE1C(void *);
 extern void func_8008C098(void *);
 extern void func_8008C7D0(void *);
 extern void func_80082664(void *, s32, s32, s32);
 extern void func_80082E48(void *);
 extern void func_80081E40(void *, s32);
 extern s32 func_80082EC0(void *);
-extern void func_8008BBB8(void *, s32);
 extern s32 func_80095F90(s32);
-extern void func_80072A74(s32, void *, s32, s32);
 
 extern void (*D_800DECD0[])(void *);
 extern void (*D_800DECD8[])(void *);
@@ -601,14 +597,14 @@ void func_8009759C(void *arg0) {
         v0 = 0x46;
     }
     if (v0 >= 0x51) {
-        *(s16 *)((u8 *)arg0 + 0x604) = 2;
-        *(s8 *)((u8 *)arg0 + 0x608) = 0;
+        ((RaceInputPlayer *)arg0)->actionEffectLevel = 2;
+        ((RaceInputPlayer *)arg0)->actionEffectFrame = 0;
     } else {
-        *(s16 *)((u8 *)arg0 + 0x604) = 1;
-        *(s8 *)((u8 *)arg0 + 0x608) = 0;
+        ((RaceInputPlayer *)arg0)->actionEffectLevel = 1;
+        ((RaceInputPlayer *)arg0)->actionEffectFrame = 0;
     }
-    if (*(s8 *)((u8 *)arg0 + 0x14) == 0) {
-        func_80072A74(0x21, (u8 *)arg0 + 0x1C, (s16)v0, 0x32);
+    if (((RaceInputPlayer *)arg0)->soundDisabled == 0) {
+        func_80072A74(0x21, (SoundPosition *)&((RaceInputPlayer *)arg0)->posX, (s16)v0, 0x32);
     }
 }
 
