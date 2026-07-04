@@ -17,9 +17,11 @@ typedef struct {
     /* 0x000 */ u16 playerIndex;
     /* 0x002 */ char pad2[2];
     /* 0x004 */ u8 unk4;
-    /* 0x005 */ char pad5[0xE];
+    /* 0x005 */ char pad5[0xB];
+    /* 0x010 */ u8 characterId;
+    /* 0x011 */ char pad11[2];
     /* 0x013 */ s8 isActive;
-    /* 0x014 */ char pad14[1];
+    /* 0x014 */ s8 soundDisabled;
     /* 0x015 */ s8 unk15;
     /* 0x016 */ s8 replayInputSource;
     /* 0x017 */ char pad17[3];
@@ -47,7 +49,7 @@ typedef struct {
     /* 0x2F4 */ s16 unk2F4;
     /* 0x2F6 */ char pad2F6[6];
     /* 0x2FC */ u32 stateFlags;
-    /* 0x300 */ char pad300[2];
+    /* 0x300 */ s16 mode;
     /* 0x302 */ s16 updateState;
     /* 0x304 */ s16 updateTimer;
     /* 0x306 */ char pad306[0x1A];
@@ -68,7 +70,11 @@ typedef struct {
     /* 0x56C */ s32 unk56C;
     /* 0x570 */ char pad570[0x12];
     /* 0x582 */ s16 unk582;
-    /* 0x584 */ char pad584[0x86];
+    /* 0x584 */ char pad584[0x80];
+    /* 0x604 */ s16 actionEffectLevel;
+    /* 0x606 */ char pad606[2];
+    /* 0x608 */ s8 actionEffectFrame;
+    /* 0x609 */ char pad609[1];
     /* 0x60A */ s16 replayFrame;
 } RaceInputPlayer;
 
@@ -79,5 +85,9 @@ extern RaceInputPlayer D_80122FA4[];
 
 void func_80084730(RaceInputPlayer *player);
 s32 func_80084958(RaceInputPlayer *player);
+void func_8008A940(void);
+void func_8008B408(RaceInputPlayer *player, s32 arg1, s32 arg2);
+void func_8008BBB8(RaceInputPlayer *player, s32 soundType);
+void func_8008BE1C(RaceInputPlayer *player);
 
 #endif
