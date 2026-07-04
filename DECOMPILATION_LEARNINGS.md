@@ -1584,3 +1584,15 @@ views can perturb IDO's temporary register choices. The checksum-clean form in
 `func_80005788` also reads the halfword at `D_8010AE70 + 4`, which is the
 adjacent `D_8010AE74` BSS label. A local struct view that includes the `+4`
 field documents the access pattern without needing manual pointer arithmetic.
+
+## Interior labels in strided tables
+
+`race_course_effects` has `D_800DA804` as the start of a 0x14-byte table, with
+additional labels such as `D_800DA80C` and `D_800DA814` pointing at fields
+inside the first entry. A single local `CourseMarkerEntry *entry` is cleaner,
+but IDO keeps that pointer in an extra saved register across calls and shrinks
+`func_8006CBBC`.
+
+For checksum-clean cleanup, keep the main table typed and add typed 0x14-byte
+views for interior labels. This preserves the target's repeated stride
+recomputation while removing raw byte-pointer math.
