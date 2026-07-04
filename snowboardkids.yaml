@@ -139,7 +139,7 @@ segments:
       - [0x8CAB0, c, race_player_state]
       - [0x98680, c, fixed_point_matrix]
       - [0x99980, c, input_task_scheduler]
-      - [0x9A2A0, c]
+      - [0x9A2A0, c, game_boot]
       - [0x9CE70, c] # libmus:player_commands.c
       - [0xA0E90, c, ultra/os/createmesgqueue]
       - [0xA0EC0, c, ultra/os/seteventmesg]
@@ -335,7 +335,7 @@ segments:
       - [0xE2470, .rodata, race_actor_collision]
       - [0xE24C0, .rodata, race_player_movement]
       - [0xE2510, .rodata, race_player_state]
-      - [0xE2630, .rodata, 9A2A0]
+      - [0xE2630, .rodata, game_boot]
       - [0xE2660, rodata]
       - [0xE26F0, rodata]
       - [0xE2700, rodata]
