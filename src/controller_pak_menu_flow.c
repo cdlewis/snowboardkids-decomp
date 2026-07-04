@@ -1,16 +1,6 @@
 #include "common.h"
+#include "character_select_flow.h"
 #include "controller_pak_menu.h"
-
-typedef struct {
-    char pad[0x18];
-    s32 unk18;
-    s32 unk1C;
-} Struct801235B8;
-
-typedef struct {
-    s16 unk0;
-    char pad[0x1E];
-} StructAFA0;
 
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80072138(s32, s32);
@@ -43,8 +33,8 @@ extern u8 func_80031B24;
 extern u8 func_80031C04;
 
 extern ControllerPakMenuState D_8010AF90;
-extern StructAFA0 D_8010AFA0[];
-extern Struct801235B8 *D_801235B8;
+extern ControllerPakFileEntry D_8010AFA0[];
+extern CharacterSelectFlowState *D_801235B8;
 extern s8 D_800DEED4;
 extern u8 D_800EC9D8;
 extern u8 D_8010AF93;
@@ -78,14 +68,14 @@ void func_8000C600(void) {
     func_800704F0();
     func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0A50);
     D_800DEED4 = 0;
-    D_801235B8->unk18 = 0;
-    D_801235B8->unk1C = 0;
+    D_801235B8->fade = 0;
+    D_801235B8->timer = 0;
     D_801235B4 = 0;
     D_800EC9D8 = 0;
     D_8010B198 = 0;
     D_8010B19C = 0;
     D_800EC8B0 = 0;
-    D_800DEF14 = D_801235B8->unk18;
+    D_800DEF14 = D_801235B8->fade;
     func_800437F0(&D_5DFDD0, &D_5E0350, 0x21);
     func_800437F0(&D_593D10, &D_598A70, 0x22);
     func_800437F0(&D_598A70, &D_59AAA0, 0x23);
@@ -102,8 +92,8 @@ void func_8000C600(void) {
     D_8010AF90.fileIndex = 0;
     D_8010AF90.confirmChoice = 0;
     D_8010AF90.state = 0;
-    D_8010AF90.pendingFileIndex = 0;
-    D_8010AF90.unk5 = 0;
+    D_8010AF90.visibleFileIndex = 0;
+    D_8010AF90.isEdgeScroll = 0;
     func_80001618();
     func_80001858();
     func_8009956C(func_8000C818, 0);
@@ -124,13 +114,13 @@ void func_8000C818(void) {
         } else {
             func_8009956C(func_8000C924, 0);
             D_8010AF90.state = 1;
-            D_8010AF90.unk5 = 0;
+            D_8010AF90.isEdgeScroll = 0;
         }
     }
     func_8007105C();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/D200/func_8000C924.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_flow/func_8000C924.s")
 
 void func_8000CB08(void) {
     if ((D_80123778 & 0x40100) && (D_8010AF90.confirmChoice != 1)) {
@@ -172,7 +162,7 @@ void func_8000CC5C(void) {
         if (D_8010AF90.confirmChoice == 0) {
             func_800016D8(D_8010AF90.fileIndex);
             if (D_800EC9D8 == 0) {
-                D_8010AFA0[D_8010AF90.fileIndex].unk0 = 0;
+                D_8010AFA0[D_8010AF90.fileIndex].exists = 0;
                 func_80001618();
                 func_80001858();
                 func_8009956C(func_8000C924, 0);
@@ -217,9 +207,9 @@ void func_8000CE0C(void) {
 }
 
 void func_8000CEA0(void) {
-    if (D_801235B8->unk18 != 0xFF) {
-        D_801235B8->unk18 = func_80013F88((s16) D_801235B8->unk18, 0x24, 1);
-        if (D_801235B8->unk18 == 0xFF) {
+    if (D_801235B8->fade != 0xFF) {
+        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
+        if (D_801235B8->fade == 0xFF) {
             D_80123751 = 1;
         } else {
             func_8007105C();
