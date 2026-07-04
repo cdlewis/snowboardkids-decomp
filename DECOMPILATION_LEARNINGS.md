@@ -1760,3 +1760,23 @@ slot. Plain `if (state == 3)` regresses to ~97.5% (missing `move $v0, $v1` in
 the switch dispatch). Reach for this when the only diff is the switch-dispatch
 register plus a missing `move $v0, $v1`, and the target lacks a trailing field
 reload.
+
+### func_8002C9A0 — struct field signedness decides the twin's register allocation
+
+`func_8002C9A0` is the `ShopMenuWidgetActor` twin of `func_800196CC` (identical
+state machine, identical `(unsigned int)state == 3` cast and chained
+`state = arg0->sprite.bytes.state = 2`). Copying only the function body from the
+matched twin plateaued at ~98.4% with pure temp-register diffs (case-0 constants
+`-0x88`/`1` landing in `t9`/`a0` instead of the target's `t9`/`t0`, and the case
+1/2 constant temps shifted by one). The lone cause: the existing
+`ShopMenuWidgetActor.sprite` union declared the byte as `s8 state`, whereas
+`PlayerSelectWidgetActor` uses `struct { u8 state; u8 pad1D; } bytes`.
+
+Reading an `s8` field into a `u8` local still emits `lbu` (the load matches), so
+the difference is invisible at the instruction level — only IDO's
+constant-materialization register allocation in the switch cases differs between
+the `s8`-field and `u8`-field code paths. Changing the union to mirror the
+player-select layout (`bytes.state` as `u8`) reached 100% with no other change.
+Lesson: when a function is a known twin of an already-matched one, copy the
+struct field layout verbatim, not just the body — field signedness drives
+register allocation even when the generated loads/stores look identical.
