@@ -1565,3 +1565,15 @@ three `func_800430D0()` calls and reused it, while the target recomputes the
 When cleaning pointer arithmetic around large strided arrays, typed indexing can
 still match as long as each load is written independently. Avoid introducing a
 local element pointer if the target visibly recomputes the stride between calls.
+
+## Overlapping actor fields and halfword tables
+
+`main_menu_overlay_effects` actors reuse offset `0x18` as a word, a halfword
+pair, and a byte flag in different callbacks. A union with word/halfword/byte
+views preserves the original `lw`, `lh`, `lhu`, and `sb` instruction choices
+while removing manual offset casts from the function bodies.
+
+For small coordinate tables like `D_800D57B0`, struct or two-dimensional-array
+views can perturb IDO's temporary register choices. The checksum-clean form in
+`func_80054714` keeps the data as a typed `s16` array and indexes
+`playerIndex * 2`, then stores through typed actor halfword fields.
