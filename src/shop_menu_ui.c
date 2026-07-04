@@ -54,7 +54,7 @@ extern void func_8002C860(ShopMenuWidgetActor *);
 extern void func_8002FAB8(void);
 extern void func_8002DF40(void);
 extern void func_8002E32C(ShopMenuWidgetActor *);
-extern void func_8002E468(void);
+extern void func_8002E468(ShopMenuWidgetActor *);
 extern void func_8002CFAC(void);
 extern void func_8002D558(void);
 extern void func_8002D9EC(void);
@@ -310,7 +310,39 @@ void func_8002E42C(ShopMenuWidgetActor *arg0) {
     func_80071824(arg0, func_8002E32C);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002E468.s")
+void func_8002E468(ShopMenuWidgetActor *arg0) {
+    u8 state = arg0->transition.bytes.state;
+
+    switch (state) {
+    case 0:
+        arg0->sprite.index += 0x26;
+        if (arg0->sprite.index >= 0x100) {
+            arg0->sprite.index = 0x100;
+            arg0->transition.bytes.state = 1;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 1:
+        if (D_80121D88 == 3) {
+            state = arg0->transition.bytes.state = 2;
+        }
+        break;
+    case 2:
+        arg0->x += 0x20;
+        if (arg0->x >= 0xA0) {
+            arg0->transition.bytes.state = 3;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 3:
+        break;
+    }
+    if ((unsigned int)state == 3) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002E250, arg0);
+}
 
 void func_8002E568(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x30;
