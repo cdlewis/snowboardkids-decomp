@@ -8,9 +8,14 @@ typedef struct {
     /* 0x1 */ u8 fileIndex;
     /* 0x2 */ u8 confirmChoice;
     /* 0x3 */ u8 state;
-    /* 0x4 */ s8 pendingFileIndex;
-    /* 0x5 */ u8 unk5;
+    /* 0x4 */ u8 visibleFileIndex;
+    /* 0x5 */ u8 isEdgeScroll;
     /* 0x6 */ u8 unk6;
 } ControllerPakMenuState;
+
+typedef struct {
+    /* 0x00 */ u16 exists;
+    /* 0x02 */ char pad2[0x1E];
+} ControllerPakFileEntry; /* size = 0x20 */
 
 #endif

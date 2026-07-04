@@ -78,7 +78,7 @@ segments:
       - [0x9960, c, controller_pak_delete_flow]
       - [0xA3E0, c, course_select_menu]
       - [0xCE80, c, shop_menu_flow]
-      - [0xD200, c]
+      - [0xD200, c, controller_pak_menu_flow]
       - [0xDB70, c]
       - [0xDF40, c]
       - [0xE3F0, c]
