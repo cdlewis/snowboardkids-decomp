@@ -54,6 +54,9 @@ extern void *D_80124868;
 extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
+extern u8 D_80121B55;
+extern u8 D_80121D80[];
+extern void func_80021410(void *);
 
 void func_8002172C(CharacterSelectWidgetActor *arg0);
 void func_800218A4(CharacterSelectWidgetActor *arg0);
@@ -369,7 +372,48 @@ void func_800213D4(CharacterSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80021410.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8002172C.s")
+void func_8002172C(CharacterSelectWidgetActor *arg0) {
+    u8 state = arg0->sprite.bytes.state;
+    s16 target;
+
+    switch (state) {
+    case 0:
+        if (D_80121B55 == 1) {
+            target = -0x78;
+        } else {
+            target = -0x80;
+        }
+        arg0->x += 0x20;
+        if (arg0->x >= target) {
+            arg0->x = target;
+            arg0->sprite.bytes.state = 1;
+        }
+        state = arg0->sprite.bytes.state;
+        break;
+    case 1:
+        if ((D_80121D88 == 3) || (D_80121D88 == 7)) {
+            state = arg0->sprite.bytes.state = 2;
+        }
+        break;
+    case 2:
+        arg0->x -= 0x20;
+        if (arg0->x < -0x107) {
+            arg0->sprite.bytes.state = 3;
+        }
+        state = arg0->sprite.bytes.state;
+        break;
+    case 3:
+        break;
+    }
+    if ((unsigned int)state == 3) {
+        func_800716E4(arg0);
+        if (D_80121D80[8] == 3) {
+            D_80121D80[8] = 4;
+        }
+    } else {
+        func_800483FC(&D_80124868, func_80021410, arg0);
+    }
+}
 
 void func_8002186C(CharacterSelectWidgetActor *arg0) {
     arg0->x = -0x108;
