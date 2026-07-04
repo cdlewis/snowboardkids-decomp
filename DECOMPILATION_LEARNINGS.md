@@ -109,6 +109,10 @@ patterns, and verified layout/linking rules.
 
 - C object `.text` sections pad to 16-byte alignment. Splitting a segment at an
   exact unaligned function end can shift following raw asm.
+- Renaming a Splat C segment also changes the generated
+  `asm/nonmatchings/<segment>/...` path expected by `#pragma GLOBAL_ASM`.
+  Update the pragmas after changing `snowboardkids.yaml`, then rebuild from
+  extraction so stale old-directory paths do not hide include failures.
 - Some extracted single-function asm ranges may include an unnamed adjacent tiny
   function. A trailing `jr $ra; nop` after an earlier return is likely a missing
   empty function boundary, not padding.
