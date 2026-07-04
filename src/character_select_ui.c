@@ -595,37 +595,29 @@ void func_800227A0(CharacterSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_800227D8.s")
 
-// func_80023198 best match: 93.8%
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80023198.s")
-
-#ifdef NON_MATCHING
-// Character select widget scroll-out state machine. Slides the widget in to a
-// mode-dependent x threshold (-0x88 normally, -0x8A under certain game modes),
-// waits for a transition signal, then scrolls it back off-screen. The remaining
-// ~6% diff vs. the target is IDO scheduling: an unreachable dead `li` after the
-// threshold branch and temp-register naming, neither of which clean C reproduces.
 void func_80023198(CharacterSelectWidgetActor *arg0) {
-    s16 var_v0_2;
-    u8 var_v0;
+    u8 state = arg0->sprite.bytes.state;
+    u8 unk;
+    s16 target;
 
-    var_v0 = arg0->sprite.bytes.state;
-    switch (var_v0) {
+    switch (state) {
     case 0:
-        var_v0 = D_80121B5E;
-        if ((D_800EC9C2 == 2) || ((var_v0_2 = -0x88, (D_800EC9C2 == 1)) && (var_v0_2 = -0x88, (var_v0 == 0)))) {
-            var_v0_2 = -0x8A;
+        unk = D_80121B5E;
+        if ((D_800EC9C2 == 2) || ((D_800EC9C2 == 1) && (unk == 0))) {
+            target = -0x8A;
+        } else {
+            target = -0x88;
         }
         arg0->x += 0x20;
-        if (arg0->x >= var_v0_2) {
-            arg0->x = var_v0_2;
+        if (arg0->x >= target) {
+            arg0->x = target;
             arg0->sprite.bytes.state = 1;
         }
-        var_v0 = arg0->sprite.bytes.state;
-    default:
+        state = arg0->sprite.bytes.state;
         break;
     case 1:
         if ((D_80121D88 == 3) || (D_80121D88 == 7)) {
-            var_v0 = arg0->sprite.bytes.state = 2;
+            state = arg0->sprite.bytes.state = 2;
         }
         break;
     case 2:
@@ -634,23 +626,22 @@ void func_80023198(CharacterSelectWidgetActor *arg0) {
             arg0->x = -0xF0;
             arg0->sprite.bytes.state = 3;
         }
-        var_v0 = arg0->sprite.bytes.state;
+        state = arg0->sprite.bytes.state;
         break;
     case 3:
-        var_v0 = arg0->sprite.bytes.state = 4;
+        state = arg0->sprite.bytes.state = 4;
         break;
     case 4:
         break;
     }
-    var_v0 = arg0->sprite.bytes.state;
-    if (var_v0 == 4) {
+    state = arg0->sprite.bytes.state;
+    if (state == 4) {
         func_800716E4(arg0);
         D_80121D88 = 4;
         return;
     }
     func_800483FC(&D_80124868, func_800227D8, arg0);
 }
-#endif
 
 void func_800232F4(CharacterSelectWidgetActor *arg0) {
     arg0->x = -0xF0;
