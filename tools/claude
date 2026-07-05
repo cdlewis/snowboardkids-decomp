@@ -10,6 +10,7 @@ BOOTSTRAP_ONLY=false
 ID=""
 ARG=""
 CLI="claude"
+CLI_ARGS=()
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -24,6 +25,12 @@ while [[ $# -gt 0 ]]; do
             ;;
         --glaude)
             CLI="glaude"
+            CLI_ARGS=()
+            shift
+            ;;
+        --codex)
+            CLI="codex"
+            CLI_ARGS=(--yolo)
             shift
             ;;
         --id)
@@ -68,9 +75,13 @@ create_unique_dir() {
     echo "$dir"
 }
 
+run_cli() {
+    "$CLI" "${CLI_ARGS[@]}" "$1"
+}
+
 # Check if argument is provided
 if [ -z "$ARG" ]; then
-    echo "Usage: $0 [--bootstrap] [--bootstrap-only] [--id ID] <function_name_or_path_or_scratch_id>"
+    echo "Usage: $0 [--bootstrap] [--bootstrap-only] [--glaude] [--codex] [--id ID] <function_name_or_path_or_scratch_id>"
     exit 1
 fi
 
@@ -188,7 +199,7 @@ if [ -n "$ID" ]; then
             echo "Bootstrap-only mode: directory ready at $TARGET_DIR"
         elif command -v $CLI &> /dev/null; then
             cd "$TARGET_DIR"
-            $CLI "decompile ${FUNC_NAME%.s}. the appropriate claude environment has already been created (do not re-run tools/claude --bootstrap). use ultrathink"
+            run_cli "decompile ${FUNC_NAME%.s}. the appropriate claude environment has already been created (do not re-run tools/claude --bootstrap). use ultrathink"
         else
             echo "Please navigate to: $TARGET_DIR"
         fi
@@ -291,7 +302,7 @@ if [ "$BOOTSTRAP_ONLY" = true ]; then
     echo "Bootstrap-only mode: environment ready at $created_dir"
 elif command -v $CLI &> /dev/null; then
     cd "$created_dir"
-    $CLI "decompile ${FUNC_NAME%.s}. the appropriate claude environment has already been created (do not re-run tools/claude --bootstrap). use ultrathink"
+    run_cli "decompile ${FUNC_NAME%.s}. the appropriate claude environment has already been created (do not re-run tools/claude --bootstrap). use ultrathink"
 else
     echo "Success! Please navigate to the created directory and start your decompilation work:"
     echo ""
