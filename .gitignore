@@ -23,3 +23,7 @@ ctx.c
 ctx.c.m2c
 
 task-runner/**/*.log
+
+# decomp.me PostgreSQL helper output
+tools/decompme_*.json
+decompme_exports/
