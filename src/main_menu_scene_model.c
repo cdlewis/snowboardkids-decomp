@@ -14,6 +14,18 @@ extern u8 D_608560;
 extern u8 D_215BE0;
 extern u8 D_21D9D0;
 
+typedef struct {
+    /* 0x0 */ u8 *start;
+    /* 0x4 */ u8 *end;
+} RomAssetRange;
+
+extern RomAssetRange D_800D4020[];
+extern RomAssetRange D_800D4050[];
+extern s16 D_80112130[];
+extern s16 func_80042D58(s32);
+extern void func_800438EC(s32, s32, s32);
+extern void func_80042AB4(MainMenuSceneModel *arg0);
+
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80040C80.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80040D94.s")
@@ -28,7 +40,22 @@ void func_80041CF0(void) {
     func_800437F0(&D_215BE0, &D_21D9D0, 0x3F);
 }
 
+// func_80041D20 best match: 95.34% at nonmatchings/func_80041D20-3174110973063422312/base_5.c.
+#ifdef NON_MATCHING
+void func_80041D20(s32 actorIndex, s32 modelIndex) {
+    MainMenuSceneModel *model;
+
+    func_800438EC((s32) D_800D4020[modelIndex].start, (s32) D_800D4020[modelIndex].end, actorIndex + 0x33);
+    func_800437F0(D_800D4050[modelIndex].start, D_800D4050[modelIndex].end, actorIndex + 0x39);
+    D_80112130[actorIndex + 0x2D] = func_80042D58(0x308);
+    model = func_80043040(D_80112130[actorIndex + 0x2D]);
+    model->actorIndex = actorIndex;
+    model->modelIndex = modelIndex;
+    func_80042AB4(model);
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80041D20.s")
+#endif
 
 void func_80041DD4(s32 modelIndex, s32 animationIndex) {
     MainMenuModelAnimationBank *animationBank;

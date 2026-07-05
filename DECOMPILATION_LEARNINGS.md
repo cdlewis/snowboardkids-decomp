@@ -2108,3 +2108,18 @@ convention, so extending the shop-local typedef does not conflict.
   `*(volatile unsigned int *)&D_800DF158 = ...` preserved the target's live
   address register for the yield path while leaving other direct accesses to
   the same global non-volatile.
+
+- `move $tN, $aM` at a function prologue (copying an arg register to a temp
+  before its first real use) is an IDO codegen quirk that the decomp-permuter
+  could not reproduce from any clean source. In `func_80041D20`, the target
+  emits `move $t6, $a1` then `sll $v1, $t6, 3`, while every clean C
+  reconstruction (direct array index, local pointer alias, explicit stride
+  local, typed vs s32 prototypes) compiles to `sll $v1, $a1, 3` directly.
+  The missing temp copy cascades into a systematic +1 shift of every
+  subsequent `$tN` register, scoring 95.3% despite being structurally
+  identical (zero functional instruction differences). The permuter's only
+  wins all relied on UB (reading an uninitialized local in a dead `if`,
+  `long long` type punning on the return of `func_80042D58`). When a
+  function lands at ~95% with only this kind of arg-copy plus
+  register-renaming diff, treat it as a clean partial match rather than
+  chasing the single temp-copy instruction.
