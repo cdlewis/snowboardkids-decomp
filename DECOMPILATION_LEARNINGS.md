@@ -2240,3 +2240,22 @@ convention, so extending the shop-local typedef does not conflict.
 - Sibling of the matched func_8002AB24 (player_count_select_ui) and func_8001F0B0 (character_select_ui) -- same per-state widget machine (slide on y, counter bump in state 3, bounce via transition.counter, exit slide on x). The shop variant moves the exit-position check out of the case body and into the post-switch guard (state == 5 && arg0->x >= 0x94), so its case 5 only does arg0->x += 0x20 and then must reload item.bytes.state for that guard.
 - Same redundant-load codegen quirk as func_8001F0B0: with no write to the state byte on the dispatch -> case-5 path, IDO 5.3 -O2 reuses the switch-discriminant register and emits a nop in the load slot. The documented fix (taking the field's address into a u8 *stateField local once at function entry and reading *stateField in case 5) defeats the load-elimination pass with zero runtime cost. Only the case-5 read needs the pointer; the else-branch and other case reads stay direct.
 - As with the other widget siblings, the standalone workspace shows one residual diff (jump-table symbol .rodata vs jtbl_800E0FB0), a diff-tool normalization artifact; the integrated build verifies via SHA1.
+
+## func_80020818 (character_select_ui)
+
+- Another sibling of the func_8002AB24 widget state-machine, mirrored almost
+  verbatim. The struct field twist is the same: the bounce halfword at 0x1E
+  (`transition.alpha`) must be `u16` to get `lhu` loads + signed `/2` halving,
+  while sibling functions write the overlapping `transition.bytes.state` (u8)
+  fields unaffected by the union member's signedness.
+- This variant's condition compares two globals (`D_80121B50 == D_8010AE80`)
+  instead of global-vs-constant. Operand order matters for register allocation:
+  writing `D_80121B50 == D_8010AE80` (s16 first, u16 second) yields the target's
+  `lh a1` / `lhu v1` assignment; the reverse order swaps `a1`/`v1`. Match the
+  reference function's operand order literally.
+- Same case-5 load-elimination nop quirk: fixed by taking
+  `u8 *stateField = &arg0->row.bytes.subState;` at function entry and reading
+  `*stateField` in case 5 only.
+- Standalone workspace again shows one residual diff (jump-table symbol
+  `.rodata` vs `jtbl_800E0CF4`), a diff-tool normalization artifact; the
+  integrated build verifies via SHA1.

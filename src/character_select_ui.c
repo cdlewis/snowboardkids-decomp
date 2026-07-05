@@ -16,7 +16,7 @@ typedef struct {
             /* 0x1E */ u8 state;
             /* 0x1F */ u8 timer;
         } bytes;
-        /* 0x1E */ s16 alpha;
+        /* 0x1E */ u16 alpha;
     } transition;
     union {
         struct {
@@ -50,6 +50,7 @@ extern u8 D_800B6934[][0x60];
 extern u8 D_800B6A54[][0x70];
 extern u8 D_800B6B34[];
 extern s16 D_80121B50;
+extern u16 D_8010AE80;
 extern void *D_8010ADE0;
 extern u8 D_80121D88;
 extern u8 D_800EC9C2;
@@ -97,6 +98,7 @@ void func_8001FA40(CharacterSelectWidgetActor *arg0);
 void func_8001FC94(CharacterSelectWidgetActor *arg0);
 void func_8001FF08(CharacterSelectWidgetActor *arg0);
 void func_8002015C(CharacterSelectWidgetActor *arg0);
+void func_80020624(CharacterSelectWidgetActor *arg0);
 void func_800203D0(CharacterSelectWidgetActor *arg0);
 void func_80020818(CharacterSelectWidgetActor *arg0);
 void func_80022464(CharacterSelectWidgetActor *arg0);
@@ -824,7 +826,89 @@ void func_800205E0(CharacterSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80020624.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80020818.s")
+void func_80020818(CharacterSelectWidgetActor *arg0) {
+    int state;
+    u8 *stateField = &arg0->row.bytes.subState;
+
+    if ((D_80121B50 == D_8010AE80) && (arg0->y != -0x48) && ((s32) arg0->row.bytes.subState < 6)) {
+        state = arg0->row.bytes.subState = 2;
+    } else {
+        state = (s32) arg0->row.bytes.subState;
+        if ((D_80121B50 != D_8010AE80) && (arg0->y != -0x140) && (state < 6)) {
+            state = arg0->row.bytes.subState = 1;
+        } else {
+            state = arg0->row.bytes.subState;
+            if (state < 4) {
+                state = arg0->row.bytes.subState = 3;
+            }
+        }
+    }
+
+    switch (state) {
+    case 0:
+        break;
+    case 1:
+        arg0->y -= 0x24;
+        if (arg0->y < -0x13F) {
+            arg0->y = -0x140;
+            arg0->row.bytes.subState = 3;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 2:
+        arg0->y += 0x24;
+        if (arg0->y >= -0x48) {
+            arg0->y = -0x48;
+            arg0->row.bytes.subState = 6;
+            arg0->transition.alpha = 8;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 3:
+        D_801235B4 += 1;
+        if (D_80121D88 == 1) {
+            arg0->row.bytes.subState = 4;
+        }
+        if (D_80121D88 == 7) {
+            arg0->row.bytes.subState = 5;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 4:
+        if (D_80121D88 == 5) {
+            arg0->row.bytes.subState = 3;
+        }
+        if (D_80121D88 == 7) {
+            arg0->row.bytes.subState = 5;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 5:
+        arg0->x += 0x20;
+        state = *stateField;
+        break;
+    case 6:
+        arg0->y -= arg0->transition.alpha;
+        state = arg0->row.bytes.subState = 7;
+        break;
+    case 7:
+        arg0->y += arg0->transition.alpha;
+        arg0->transition.alpha /= 2;
+        if (arg0->transition.alpha == 0) {
+            arg0->row.bytes.subState = 3;
+        } else {
+            arg0->row.bytes.subState = 6;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    }
+
+    if ((state == 5) && (arg0->x >= 0x94)) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_80020624, arg0);
+}
 
 void func_80020AA0(CharacterSelectWidgetActor *arg0) {
     arg0->x = -0x8;
