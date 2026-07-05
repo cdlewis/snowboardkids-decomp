@@ -26,6 +26,12 @@ patterns, and verified layout/linking rules.
   recovery, because IDO only inserts the narrowing reload when the value is
   reloaded rather than reused straight from the home register (func_80056348).
   uses, not the wider type the caller passes.
+- Be careful when a newly matched narrow-parameter callee sits before its callers
+  in the same translation unit. A visible `s16` prototype can change the callers'
+  argument setup even if the callee itself matches. In func_80072964, the local
+  callee matched naturally with `s16` parameters, but the neighboring wrappers
+  only matched when they saw the original promoted `s32` signature; the callee
+  then had to read the low halfword from the homed promoted arguments.
 - IDO's `-O2` memset loop idiom (unrolling with an `& 3` remainder loop) is NOT
   triggered by a `while (n--) *p++ = c;` form — that compiles to a plain
   single-store byte loop. The `n--` post-decrement also leaves a dead
@@ -122,6 +128,11 @@ patterns, and verified layout/linking rules.
   `array[index]` may reorder independent loads, while assigning
   `Element *ptr = &array[index];` and passing `*ptr` preserves typed access and
   can keep the original register order.
+- For small struct copies, prefer the aggregate assignment if the target copies
+  consecutive words through `$at` rather than independent temps. In
+  func_80072964, three scalar `s32` field assignments compiled to
+  `$t8`/`$a0`/`$t9`, while `node->pos = *pos` for a three-word
+  `SoundPosition` emitted the target `$at`/`$t9`/`$at` load-store sequence.
 - Some globals are aliases into the middle of a larger struct array. Rewriting
   an access through the larger base struct can be semantically cleaner but still
   change IDO scheduling or symbol offsets; keep the alias symbol when a function

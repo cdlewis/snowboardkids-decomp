@@ -34,6 +34,14 @@ typedef struct PositionalSoundRequest {
     f32 pitch;
 } PositionalSoundRequest;
 
+typedef union GameAudioHalfArg {
+    s32 word;
+    struct {
+        s16 unused;
+        s16 value;
+    } half;
+} GameAudioHalfArg;
+
 extern s16 D_80121B50;
 extern s32 D_80121850;
 extern s32 D_80121858;
@@ -50,6 +58,7 @@ extern s32 player_bss_0048;
 extern u16 D_800DBCF4[];
 
 void func_8009DE50(s32 arg0, s32 arg1);
+void *func_80048388(s32 arg0);
 void func_800720E4(s32 arg0);
 s32 func_80071B74(void);
 
@@ -238,7 +247,22 @@ void myfree(void) {
     gzip_data_0000 = NULL;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80072964.s")
+void func_80072964(s32 soundId, SoundPosition *pos, s32 volume, s32 priority, f32 pitch, s32 channel, s32 arg5) {
+    PositionalSoundRequest *node;
+
+    node = func_80048388(sizeof(PositionalSoundRequest));
+    if (node != NULL) {
+        node->next = gzip_data_0000;
+        node->pos = *pos;
+        node->soundId = ((GameAudioHalfArg *)&soundId)->half.value;
+        node->volume = ((GameAudioHalfArg *)&volume)->half.value;
+        node->arg5 = ((GameAudioHalfArg *)&arg5)->half.value;
+        node->priority = ((GameAudioHalfArg *)&priority)->half.value;
+        node->channel = ((GameAudioHalfArg *)&channel)->half.value;
+        node->pitch = pitch;
+        gzip_data_0000 = node;
+    }
+}
 
 void func_80072A20(s32 arg0, SoundPosition *arg1, s32 arg2, s32 arg3, f32 arg4, s16 arg5) {
     s32 temp_a0 = arg0 << 16;
