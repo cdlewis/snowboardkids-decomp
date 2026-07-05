@@ -2174,3 +2174,15 @@ convention, so extending the shop-local typedef does not conflict.
   the explicit empty `case 0:`/`case 5:`) produces a 100% match on the
   first attempt. Confirms the func_8002A27C learnings generalize across
   sibling widget callbacks in this UI module.
+
+- `func_8001A270` (player_select_ui): a near-exact clone of the already-
+  matched `func_8001A704` in the same file — same state machine, same
+  struct accesses, only the trailing `func_800483FC` callback differs
+  (`func_80019FFC` instead of `func_8001A490`). Copying the `func_8001A704`
+  body verbatim with that single substitution matches 100% (the sole
+  residual diff in the standalone workspace was the jump-table symbol
+  name `.rodata` vs `jtbl_800E0B00`, a normalization artifact; the
+  integrated build verifies via SHA1). Useful reminder: when a target
+  function has a sibling already matched in the same translation unit,
+  diffing the two target assemblies first (here they differ only in the
+  callback address) avoids re-deriving the whole control flow.
