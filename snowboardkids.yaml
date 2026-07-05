@@ -372,4 +372,26 @@ segments:
     start: 0xE35C0
     follows_vram: main
 
+  - [0x1502A0, bin]
+  - [0x152930, bin]
+  - [0x155A20, bin]
+  - [0x158D90, bin]
+  - [0x15C750, bin]
+  - [0x160360, bin]
+  - [0x163410, bin]
+  - [0x1E19C0, bin]
+  - [0x1E2380, bin]
+  - [0x1E2DE0, bin]
+  - [0x1E3FE0, bin]
+  - [0x1E4AB0, bin]
+  - [0x1E68A0, bin]
+  - [0x1E74E0, bin]
+  - [0x1F2220, bin]
+  - [0x1F7D20, bin]
+  - [0x1FE860, bin]
+  - [0x2044B0, bin]
+  - [0x20A940, bin]
+  - [0x211470, bin]
+  - [0x215BE0, bin]
+
   - [0x800000]
