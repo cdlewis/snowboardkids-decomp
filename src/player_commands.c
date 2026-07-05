@@ -106,7 +106,9 @@ typedef struct SchedulerTask {
 } SchedulerTask;
 
 typedef struct SchedulerState {
-    u8 pad0[0x1FC];
+    s32 unk0;
+    OSMesgQueue messageQueue;
+    u8 pad1C[0x1FC - 0x1C];
     OSMesgQueue framebufferQueue;
     OSMesg framebufferMsgs[16];
     u8 pad254[0x768 - 0x254];
@@ -132,10 +134,12 @@ extern void *osViGetNextFramebuffer(void);
 extern void osWritebackDCacheAll(void);
 extern void osSpTaskLoad(void *);
 extern void osSpTaskStartGo(void *);
+extern void osSpTaskYield(void);
 extern u32 osAiGetLength(void);
 extern Struct800A0138 D_8015C928;
 extern s32 D_8015C964;
 extern void func_8009CD18(PlayerCommandState *, u8 *);
+extern void func_8009C77C(SchedulerState *);
 extern void func_8009F604(void);
 extern s8 func_8009F4C8(u8, u8 *, PlayerCommandState *);
 extern s32 func_8009F780(PlayerCommandState *, s32, s32, s32, s32);
@@ -145,6 +149,7 @@ extern s32 D_800DF158;
 extern s32 D_800DF2A4;
 extern s32 D_8015A680;
 extern s32 D_8015A620;
+extern u8 D_8015A624;
 extern s32 *libmus_fxheader_current;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C270.s")
@@ -159,7 +164,22 @@ s32 func_8009C43C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C444.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C6DC.s")
+void func_8009C6DC(SchedulerState *arg0) {
+    if (D_8015A624 == 0) {
+        if (osRecvMesg(&arg0->messageQueue, (OSMesg *)&arg0->curRDPTask, 0) != -1) {
+            osWritebackDCacheAll();
+            D_8015A624 = 1;
+            D_800DF154 = 0;
+            *(volatile unsigned int *)&D_800DF158 = 0;
+            if (D_8015A620 & 1) {
+                *(volatile unsigned int *)&D_800DF158 = 1;
+                osSpTaskYield();
+            } else {
+                func_8009C77C(arg0);
+            }
+        }
+    }
+}
 
 void func_8009C77C(SchedulerState *arg0) {
     if (D_800DF158 != 0) {
