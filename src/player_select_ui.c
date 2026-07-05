@@ -37,11 +37,21 @@ typedef struct {
     /* 0x26 */ u8 playerCount;
 } PlayerSelectRowActor;
 
+typedef struct {
+    char pad0[0x18];
+    s16 unk18[5];
+    s16 unk22;
+    s8 unk24;
+    s8 unk25;
+    s8 unk26;
+} Struct1952C;
+
 typedef u8 PlayerPortrait[0x8C];
 
 extern void func_80071824(void *, void *);
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
+extern void func_80019314(void);
 extern void func_8001958C(PlayerSelectWidgetActor *);
 extern void func_800196CC(PlayerSelectWidgetActor *);
 extern void func_80019CD8(PlayerSelectWidgetActor *);
@@ -74,7 +84,18 @@ const char D_800E0AE0[] = "%6dG";
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_80019314.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_8001952C.s")
+void func_8001952C(Struct1952C *arg0) {
+    s32 i;
+
+    for (i = 0; i < 5; i++) { arg0->unk18[i] = -0x104; }
+
+    arg0->unk22 = -0x60;
+    arg0->unk25 = 0;
+    arg0->unk26 = 1;
+    arg0->unk24 = 0;
+
+    func_80071824(arg0, func_80019314);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_8001958C.s")
 
