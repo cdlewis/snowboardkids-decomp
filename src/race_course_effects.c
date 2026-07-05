@@ -18,14 +18,22 @@ typedef struct {
 } RacePlayerEffect;
 
 typedef struct {
-    char pad[0x24];
+    char pad[0x18];
+    volatile s32 unk18;
+    s32 unk1C;
+    s32 unk20;
     s32 unk24;
-    char pad28[4];
+    s32 unk28;
     s32 unk2C;
     s32 unk30;
     char pad34[4];
     s32 unk38;
     s16 unk3C;
+    s16 unk3E;
+    char pad40[0xC];
+    s16 unk4C;
+    s16 unk4E;
+    s32 unk50;
 } Struct6B760;
 
 typedef struct {
@@ -101,6 +109,8 @@ extern s32 func_8004597C(s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80098590(void *, void *, Vec3i *, void *);
+extern s16 func_8004940C(s32, s32, s32, s32);
+extern s32 func_80080CC4(s16, s32, s32);
 extern s16 D_80112168;
 extern s16 D_80112140;
 extern s32 D_801235B4;
@@ -115,7 +125,8 @@ void func_80069A78(RaceCountdownEffect *);
 void func_80069AF0(RaceCountdownEffect *);
 void func_80069B60(RaceCountdownEffect *);
 extern void func_8006C7F4(void);
-extern void func_8006B6C8(void);
+void func_8006B3E0(Struct6B760 *);
+void func_8006B6C8(Struct6B760 *);
 extern Struct6B760 *func_80071408(void *, s32, s32);
 extern u8 D_80121B56;
 extern s16 D_80121B50;
@@ -257,7 +268,39 @@ void func_8006B0D8(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B3E0.s")
 
+// func_8006B6C8 best match: 98.684% at nonmatchings/func_8006B6C8-5821324921387846781/base.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B6C8.s")
+
+#ifdef NON_MATCHING
+void func_8006B6C8(Struct6B760 *arg0) {
+    s32 temp24;
+    s32 temp28;
+    s32 temp2C;
+    s16 angle;
+    s16 temp4C;
+    s32 temp50;
+    s16 temp4E;
+
+    if (D_80121B56 == 0) {
+        angle = func_8004940C(arg0->unk24, arg0->unk2C, arg0->unk30, arg0->unk38);
+        temp24 = arg0->unk24;
+        temp28 = arg0->unk28;
+        temp2C = arg0->unk2C;
+        arg0->unk18 = temp24;
+        temp4C = 0x10;
+        temp50 = 0x10000;
+        temp4E = 0x80;
+        arg0->unk3E = angle;
+        arg0->unk4C = temp4C;
+        arg0->unk50 = temp50;
+        arg0->unk4E = temp4E;
+        arg0->unk1C = temp28;
+        arg0->unk20 = temp2C;
+        arg0->unk1C = func_80080CC4(arg0->unk3C, arg0->unk18, arg0->unk20);
+        func_80071824(arg0, func_8006B3E0);
+    }
+}
+#endif
 
 void func_8006B760(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     Struct6B760 *p = func_80071408(func_8006B6C8, 0, 0x64);

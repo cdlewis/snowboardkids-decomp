@@ -59,6 +59,12 @@ patterns, and verified layout/linking rules.
   constant assignment fixed a pure scheduling/register diff in func_800994F4
   (the constant store filled the final load's delay slot and landed in `$t9`
   instead of `$t8`).
+- For callbacks that initialize a struct field and then immediately pass that
+  field to another helper, IDO may store-forward the value instead of reloading
+  from the field. Marking just that field volatile can force the target-shaped
+  store/reload and recover the branch span/instruction count, but it may still
+  leave pure temp-register naming differences (func_8006B6C8 improved from
+  90.895% to 98.684% this way).
 - A 4-case `switch` (cases 0-3 plus default) compiles to a comparison chain
   (`beqz`/`beq` ladder), but adding an explicit empty `case 4: break;` flips IDO
   to emit a 5-entry `.late_rodata` jump table (`sltiu $at, $v0, 5; jr`). When a
