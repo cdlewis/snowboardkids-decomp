@@ -260,13 +260,24 @@ def relative_path(path: str, repo_root: Path) -> str:
         return path
 
 
+def format_local_attempt(result: MatchResult) -> str:
+    return Path(result.attempt).name
+
+
+def format_local_workspace(result: MatchResult, repo_root: Path) -> str:
+    if result.workspace is None:
+        return relative_path(result.attempt, repo_root)
+
+    return relative_path(str(result.workspace), repo_root)
+
+
 def format_scratch(scratch: ScratchResult | None) -> str:
     if scratch is None:
         return ""
 
     score_text = f"{scratch.score}/{scratch.max_score}" if scratch.max_score is not None else str(scratch.score)
     override = " override" if scratch.match_override else ""
-    return f"🐸 decomp.me: {score_text} ({scratch.percent:.3f}%{override}) https://decomp.me/scratch/{scratch.slug}"
+    return f"🐸 {scratch.percent:.3f}% ({score_text}{override}) {scratch.slug}"
 
 
 def print_rows(title: str, rows: list[ReportRow], repo_root: Path) -> None:
@@ -276,14 +287,15 @@ def print_rows(title: str, rows: list[ReportRow], repo_root: Path) -> None:
         return
 
     print(f"{'Function':<24} {'Local':>9}  {'Attempt'}")
-    print("-" * 96)
+    print("-" * 48)
     for row in rows:
-        local_attempt = relative_path(row.local.attempt, repo_root)
+        local_attempt = format_local_attempt(row.local)
         print(
             f"{row.local.function:<24} "
             f"{row.local.percent:8.3f}%  "
             f"{local_attempt}"
         )
+        print(f"{'':<24} {'':>9}   local: {format_local_workspace(row.local, repo_root)}")
         scratch_text = format_scratch(row.scratch)
         if scratch_text:
             print(f"{'':<24} {'':>9}   {scratch_text}")
