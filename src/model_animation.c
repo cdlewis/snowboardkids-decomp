@@ -41,26 +41,30 @@ typedef struct ModelAnimState {
     s16 frameTimer;
 } ModelAnimState;
 
-extern s32 D_80121B98;
-extern s32 D_80121B94;
-extern s32 D_80121B90;
+extern ModelAnimCoord *D_80121B90;
+extern ModelAnimFace *D_80121B94;
+extern ModelAnimKeyframe *D_80121B98;
+extern s32 D_80121B9C;
+extern s32 D_80121BA0;
 extern s16 D_8011215C[];
 extern s16 D_80112166;
 
 extern s32 func_80043040(s16);
 extern void func_80081EF4(ModelAnimState *);
 extern void func_80082070(ModelAnimState *);
+s16 func_80097AE8(s16 arg0);
+s16 func_80097B48(s16 arg0);
 
 void func_8007D190(void) {
     s32 ptr;
     s32 v1;
 
     ptr = func_80043040(D_80112166);
-    D_80121B90 = ptr + 2;
-    v1 = D_80121B90 + *(u16 *)ptr * 6;
-    D_80121B94 = v1 + 2;
-    v1 = D_80121B94 + *(u16 *)v1 * 8;
-    D_80121B98 = v1 + 2;
+    D_80121B90 = (ModelAnimCoord *)(ptr + 2);
+    v1 = (s32)D_80121B90 + *(u16 *)ptr * sizeof(ModelAnimCoord);
+    D_80121B94 = (ModelAnimFace *)(v1 + 2);
+    v1 = (s32)D_80121B94 + *(u16 *)v1 * sizeof(ModelAnimFace);
+    D_80121B98 = (ModelAnimKeyframe *)(v1 + 2);
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007D200.s")
@@ -81,21 +85,31 @@ void func_8007D190(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80081124.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_800813F8.s")
+u32 func_800813F8(s32 arg0, s32 arg1, s32 arg2) {
+    ModelAnimKeyframe *keyframe = &D_80121B98[arg0];
+
+    s32 deltaX = arg1 - (D_80121B90[D_80121B98[arg0].positionIndex].x << 0x11);
+    s32 deltaZ = arg2 - (D_80121B90[D_80121B98[arg0].positionIndex].z << 0x11);
+
+    D_80121B9C = func_80097AE8(D_80121B98[arg0].angle);
+    D_80121BA0 = func_80097B48(D_80121B98[arg0].angle);
+
+    return ((s64)(-D_80121B9C) * deltaX + (s64)D_80121BA0 * deltaZ) / 0x1000;
+}
 
 void func_80081508(s32 arg0, s32 *x, s32 *y, s32 *z, s16 *angle) {
-    s32 *coordTablePtr;
+    ModelAnimCoord **coordTablePtr;
     s32 keyframeOffset;
 
     keyframeOffset = arg0 * sizeof(ModelAnimKeyframe);
     coordTablePtr = &D_80121B90;
-    *x = ((ModelAnimCoord *)(*coordTablePtr +
-            (((ModelAnimKeyframe *)(D_80121B98 + keyframeOffset))->positionIndex * sizeof(ModelAnimCoord))))->x << 0x11;
-    *y = ((ModelAnimCoord *)(*coordTablePtr +
-            (((ModelAnimKeyframe *)(D_80121B98 + keyframeOffset))->positionIndex * sizeof(ModelAnimCoord))))->y << 0x11;
-    *z = ((ModelAnimCoord *)(*coordTablePtr +
-            (((ModelAnimKeyframe *)(D_80121B98 + keyframeOffset))->positionIndex * sizeof(ModelAnimCoord))))->z << 0x11;
-    *angle = -((ModelAnimKeyframe *)(D_80121B98 + keyframeOffset))->angle;
+    *x = ((ModelAnimCoord *)((s32)*coordTablePtr +
+            (((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->positionIndex * sizeof(ModelAnimCoord))))->x << 0x11;
+    *y = ((ModelAnimCoord *)((s32)*coordTablePtr +
+            (((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->positionIndex * sizeof(ModelAnimCoord))))->y << 0x11;
+    *z = ((ModelAnimCoord *)((s32)*coordTablePtr +
+            (((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->positionIndex * sizeof(ModelAnimCoord))))->z << 0x11;
+    *angle = -((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->angle;
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_800815D4.s")
@@ -103,7 +117,7 @@ void func_80081508(s32 arg0, s32 *x, s32 *y, s32 *z, s16 *angle) {
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80081C44.s")
 
 s16 func_80081E1C(s32 arg0) {
-    return ((ModelAnimKeyframe *)D_80121B98)[arg0].nextFaceIndices[1];
+    return D_80121B98[arg0].nextFaceIndices[1];
 }
 
 void func_80081E40(ModelAnimState *state, s32 animIndex) {
