@@ -27,3 +27,6 @@ task-runner/**/*.log
 # decomp.me PostgreSQL helper output
 tools/decompme_*.json
 decompme_exports/
+
+# Local decomp.me data
+tools/scratches.json
