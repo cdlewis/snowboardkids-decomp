@@ -74,7 +74,7 @@ void func_80034900(MainMenuSceneActor *arg0);
 void func_80034418(MainMenuSceneActor *arg0);
 void func_800344CC(MainMenuSceneActor *arg0);
 void func_80034574(MainMenuSceneActor *arg0);
-void func_80034600(void);
+void func_80034600(MainMenuSceneActor *arg0);
 void func_80034BC4(MainMenuSceneActor *arg0);
 void func_80034D10(MainMenuSceneActor *arg0);
 void func_80034DA0(void);
@@ -809,7 +809,22 @@ void func_80034574(MainMenuSceneActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_0/func_80034600.s")
+void func_80034600(MainMenuSceneActor *arg0) {
+    arg0->unk18 += -0x20000;
+    arg0->unk2A += 1;
+    if ((arg0->unk2A % 13) == 0) {
+        D_8010B1A5 -= 1;
+    }
+    if (arg0->unk18 < -0x9FFFFF) {
+        D_8010B1A5 = 2;
+        arg0->unk2A = 0;
+        arg0->unk18 = -0xA00000;
+        func_80071824((s32) arg0, func_80034574);
+    }
+    func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
+    func_80042034(0);
+    func_800428C8(0);
+}
 
 void func_800346D4(MainMenuSceneActor *arg0) {
     func_80042034(0);
