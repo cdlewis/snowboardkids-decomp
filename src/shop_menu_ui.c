@@ -10,6 +10,15 @@ typedef struct {
 
 typedef u8 ShopDescriptionText[0x8C];
 
+typedef struct {
+    char pad0[0x18];
+    /* 0x18 */ s16 unk18[5];
+    /* 0x22 */ s16 unk22;
+    /* 0x24 */ s8 unk24;
+    /* 0x25 */ s8 unk25;
+    /* 0x26 */ s8 unk26;
+} ShopMenuRowActor;
+
 struct ShopMenuWidgetActor {
     char pad0[0x18];
     /* 0x18 */ s16 x;
@@ -48,6 +57,7 @@ struct ShopMenuWidgetActor {
 };
 
 extern void func_80071824(ShopMenuWidgetActor *, void *);
+extern void func_8002C624(void);
 extern void func_800716E4(ShopMenuWidgetActor *);
 extern void func_800483FC(void *, void *, ShopMenuWidgetActor *);
 extern void func_8002C9A0(ShopMenuWidgetActor *);
@@ -90,7 +100,18 @@ const char D_800E0F60[] = "%6dG";
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002C624.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002C800.s")
+void func_8002C800(ShopMenuRowActor *arg0) {
+    s32 i;
+
+    for (i = 0; i < 5; i++) { arg0->unk18[i] = -0x104; }
+
+    arg0->unk22 = -0x50;
+    arg0->unk25 = 0;
+    arg0->unk26 = 1;
+    arg0->unk24 = 0;
+
+    func_80071824(arg0, func_8002C624);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002C860.s")
 
