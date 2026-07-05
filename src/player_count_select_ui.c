@@ -17,6 +17,7 @@ typedef struct {
             /* 0x1F */ u8 timer;
         } bytes;
         /* 0x1E */ s16 alpha;
+        /* 0x1E */ u16 step;
     } transition;
     union {
         struct {
@@ -55,6 +56,7 @@ extern void func_80029CE4(PlayerCountSelectWidgetActor *);
 extern void func_8002A008(PlayerCountSelectWidgetActor *);
 extern void func_8002A27C(PlayerCountSelectWidgetActor *);
 extern void func_8002A49C(PlayerCountSelectWidgetActor *);
+extern void func_8002A930(PlayerCountSelectWidgetActor *);
 extern void func_8002AB24(PlayerCountSelectWidgetActor *);
 extern void func_8002AE3C(PlayerCountSelectWidgetActor *);
 extern void func_8002B05C(PlayerCountSelectWidgetActor *);
@@ -301,7 +303,83 @@ void func_8002A8EC(PlayerCountSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_8002A930.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_8002AB24.s")
+void func_8002AB24(PlayerCountSelectWidgetActor *arg0) {
+    int state;
+
+    if ((D_80121B5E == 3) && (arg0->y != -0x48) && ((s32) arg0->widget.bytes.state < 6)) {
+        state = arg0->widget.bytes.state = 2;
+    } else {
+        state = (s32) arg0->widget.bytes.state;
+        if ((D_80121B5E != 3) && (arg0->y != -0x140) && (state < 6)) {
+            state = arg0->widget.bytes.state = 1;
+        } else {
+            state = arg0->widget.bytes.state;
+            if (state < 4) {
+                state = arg0->widget.bytes.state = 3;
+            }
+        }
+    }
+
+    switch (state) {
+    case 0:
+        break;
+    case 1:
+        arg0->y -= 0x24;
+        if (arg0->y < -0x13F) {
+            arg0->y = -0x140;
+            arg0->widget.bytes.state = 3;
+        }
+        state = arg0->widget.bytes.state;
+        break;
+    case 2:
+        arg0->y += 0x24;
+        if (arg0->y >= -0x48) {
+            arg0->y = -0x48;
+            arg0->widget.bytes.state = 6;
+            arg0->transition.step = 8;
+        }
+        state = arg0->widget.bytes.state;
+        break;
+    case 3:
+        D_801235B4 += 1;
+        if (D_80121D88 == 1) {
+            if (arg0->y == -0x140) {
+                arg0->widget.bytes.state = 5;
+            } else {
+                arg0->widget.bytes.state = 4;
+            }
+        }
+        state = arg0->widget.bytes.state;
+        break;
+    case 4:
+        arg0->x += 0x20;
+        if (arg0->x >= 0xA0) {
+            arg0->widget.bytes.state = 5;
+        }
+        state = arg0->widget.bytes.state;
+        break;
+    case 6:
+        arg0->y -= arg0->transition.step;
+        state = arg0->widget.bytes.state = 7;
+        break;
+    case 7:
+        arg0->y += arg0->transition.step;
+        arg0->transition.step /= 2;
+        if (arg0->transition.step == 0) {
+            arg0->widget.bytes.state = 3;
+        } else {
+            arg0->widget.bytes.state = 6;
+        }
+        state = arg0->widget.bytes.state;
+        break;
+    }
+
+    if (state == 5) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002A930, arg0);
+}
 
 void func_8002AD74(PlayerCountSelectWidgetActor *arg0) {
     arg0->x = -8;
