@@ -2164,3 +2164,13 @@ convention, so extending the shop-local typedef does not conflict.
   an if-else chain instead). The only residual diff in the standalone
   workspace was the jump-table symbol name (`jtbl_800E0EC0` vs `.rodata`),
   a normalization artifact — the integrated build matches the SHA1.
+
+- `func_8001A704` (player_select_ui): the player-select counterpart of
+  `func_8002A27C` (player_count_select_ui). Identical state machine, with
+  `D_800EC9C2` (u8) replacing `D_80121B5E` and `func_8001A490` replacing
+  `func_8002A008` as the trailing callback. Lifting the matched
+  `func_8002A27C` body verbatim with those two substitutions (keeping the
+  `(u16)` cast on spriteIndex, the inline field accesses, `int state`, and
+  the explicit empty `case 0:`/`case 5:`) produces a 100% match on the
+  first attempt. Confirms the func_8002A27C learnings generalize across
+  sibling widget callbacks in this UI module.
