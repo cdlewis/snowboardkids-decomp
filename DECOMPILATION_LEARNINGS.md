@@ -2134,3 +2134,15 @@ convention, so extending the shop-local typedef does not conflict.
   function lands at ~95% with only this kind of arg-copy plus
   register-renaming diff, treat it as a clean partial match rather than
   chasing the single temp-copy instruction.
+
+- `func_8002C800` (shop_menu_ui) is a near-twin of `func_8001952C`
+  (player_select_ui): both initialize a "row actor" struct (s16[5] at 0x18,
+  s16 at 0x22, s8 at 0x24/0x25/0x26) and register a callback via
+  `func_80071824`. When a sibling function in another segment already
+  matches, mirroring its structure verbatim (only changing the magic
+  constant and the callback symbol) yields a 100% match on the first try.
+  IDO -O2 unrolls the `for (i = 0; i < 5; i++)` over `unk18[i]` into the
+  `addu $v0, $a0, 2` + sequential `sh` pattern, so the natural loop form is
+  the correct source. The `void(*)(void)` callback passed to a `void *`
+  param produces a benign Warning 709, identical to the reference function —
+  leave it; it does not affect codegen or the ROM.
