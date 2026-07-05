@@ -5,7 +5,8 @@ This scans nonmatchings/**/match_log.txt and tools/scratches.json, ignores
 functions already present in asm/matchings, and reports:
 
 - functions with a logged 100% match that have not been moved to asm/matchings
-- partially matched functions, ordered by best known match percentage
+- partially matched functions, ordered by best logged match percentage
+- decomp.me scratch scores, when available, as supplemental context
 """
 
 from __future__ import annotations
@@ -30,9 +31,24 @@ FULL_MATCH_PERCENT = 100.0
 class MatchResult:
     function: str
     percent: float
-    source: str
     attempt: str
     workspace: Path | None = None
+
+
+@dataclass(frozen=True)
+class ScratchResult:
+    function: str
+    percent: float
+    score: int | float
+    max_score: int | float | None
+    slug: str
+    match_override: bool
+
+
+@dataclass(frozen=True)
+class ReportRow:
+    local: MatchResult
+    scratch: ScratchResult | None = None
 
 
 def repo_root_from_script() -> Path:
@@ -112,7 +128,6 @@ def parse_match_log(log_path: Path, repo_root: Path) -> Iterable[MatchResult]:
         yield MatchResult(
             function=function,
             percent=percent,
-            source="local",
             attempt=str(attempt),
             workspace=workspace,
         )
@@ -134,7 +149,7 @@ def scratch_match_percent(scratch: dict) -> float | None:
     return max(0.0, (max_score - score) / max_score * 100.0)
 
 
-def parse_scratch_results(scratches_path: Path, matched_functions: set[str]) -> Iterable[MatchResult]:
+def parse_scratch_results(scratches_path: Path, matched_functions: set[str]) -> Iterable[ScratchResult]:
     if not scratches_path.is_file():
         return
 
@@ -166,26 +181,33 @@ def parse_scratch_results(scratches_path: Path, matched_functions: set[str]) -> 
 
         score = scratch.get("score")
         max_score = scratch.get("max_score")
-        override = " override" if scratch.get("match_override") else ""
-        yield MatchResult(
+        yield ScratchResult(
             function=function,
             percent=percent,
-            source="decomp.me",
-            attempt=f"https://decomp.me/scratch/{slug} (score={score}/{max_score}{override})",
+            score=score,
+            max_score=max_score if isinstance(max_score, (int, float)) else None,
+            slug=str(slug),
+            match_override=bool(scratch.get("match_override")),
         )
 
 
-def is_better_result(candidate: MatchResult, current: MatchResult | None) -> bool:
+def is_better_match(candidate: MatchResult, current: MatchResult | None) -> bool:
     if current is None:
         return True
     if candidate.percent != current.percent:
         return candidate.percent > current.percent
-    if candidate.source != current.source:
-        return candidate.source == "decomp.me"
     return candidate.attempt < current.attempt
 
 
-def best_results_by_function(repo_root: Path, scratches_path: Path | None) -> dict[str, MatchResult]:
+def is_better_scratch(candidate: ScratchResult, current: ScratchResult | None) -> bool:
+    if current is None:
+        return True
+    if candidate.percent != current.percent:
+        return candidate.percent > current.percent
+    return candidate.slug < current.slug
+
+
+def best_local_results_by_function(repo_root: Path) -> dict[str, MatchResult]:
     nonmatchings_dir = repo_root / "nonmatchings"
     matched_functions = matched_function_names(repo_root)
     best_by_function: dict[str, MatchResult] = {}
@@ -197,16 +219,34 @@ def best_results_by_function(repo_root: Path, scratches_path: Path | None) -> di
 
         for result in parse_match_log(log_path, repo_root):
             best = best_by_function.get(result.function)
-            if is_better_result(result, best):
-                best_by_function[result.function] = result
-
-    if scratches_path is not None:
-        for result in parse_scratch_results(scratches_path, matched_functions):
-            best = best_by_function.get(result.function)
-            if is_better_result(result, best):
+            if is_better_match(result, best):
                 best_by_function[result.function] = result
 
     return best_by_function
+
+
+def best_scratch_results_by_function(
+    scratches_path: Path | None,
+    matched_functions: set[str],
+) -> dict[str, ScratchResult]:
+    best_by_function: dict[str, ScratchResult] = {}
+    if scratches_path is not None:
+        for result in parse_scratch_results(scratches_path, matched_functions):
+            best = best_by_function.get(result.function)
+            if is_better_scratch(result, best):
+                best_by_function[result.function] = result
+
+    return best_by_function
+
+
+def report_rows_by_function(repo_root: Path, scratches_path: Path | None) -> dict[str, ReportRow]:
+    local_results = best_local_results_by_function(repo_root)
+    scratch_results = best_scratch_results_by_function(scratches_path, matched_function_names(repo_root))
+
+    return {
+        function: ReportRow(local=local, scratch=scratch_results.get(function))
+        for function, local in local_results.items()
+    }
 
 
 def relative_path(path: str, repo_root: Path) -> str:
@@ -220,20 +260,30 @@ def relative_path(path: str, repo_root: Path) -> str:
         return path
 
 
-def print_rows(title: str, rows: list[MatchResult], repo_root: Path) -> None:
+def format_scratch(scratch: ScratchResult | None) -> str:
+    if scratch is None:
+        return ""
+
+    score_text = f"{scratch.score}/{scratch.max_score}" if scratch.max_score is not None else str(scratch.score)
+    override = " override" if scratch.match_override else ""
+    return f"🐸 {score_text} ({scratch.percent:.3f}%{override}) https://decomp.me/scratch/{scratch.slug}"
+
+
+def print_rows(title: str, rows: list[ReportRow], repo_root: Path) -> None:
     print(title)
     if not rows:
         print("  none")
         return
 
-    print(f"{'Function':<24} {'Best':>9}  {'Source':<9}  {'Attempt'}")
-    print("-" * 104)
+    print(f"{'Function':<24} {'Local':>9}  {'Attempt':<56}  {'decomp.me'}")
+    print("-" * 128)
     for row in rows:
+        local_attempt = relative_path(row.local.attempt, repo_root)
         print(
-            f"{row.function:<24} "
-            f"{row.percent:8.3f}%  "
-            f"{row.source:<9}  "
-            f"{relative_path(row.attempt, repo_root)}"
+            f"{row.local.function:<24} "
+            f"{row.local.percent:8.3f}%  "
+            f"{local_attempt:<56}  "
+            f"{format_scratch(row.scratch)}"
         )
 
 
@@ -241,7 +291,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
             "Report 100% and partial matches from nonmatchings/**/match_log.txt, "
-            "plus decomp.me scratches from tools/scratches.json, excluding functions "
+            "supplemented with decomp.me scratches from tools/scratches.json, excluding functions "
             "already in asm/matchings."
         )
     )
@@ -291,14 +341,14 @@ def main() -> int:
     if not args.no_scratches:
         scratches_path = args.scratches.resolve() if args.scratches else repo_root / "tools" / "scratches.json"
 
-    results = best_results_by_function(repo_root, scratches_path).values()
+    results = report_rows_by_function(repo_root, scratches_path).values()
     full_matches = sorted(
-        (result for result in results if result.percent >= FULL_MATCH_PERCENT),
-        key=lambda result: result.function,
+        (row for row in results if row.local.percent >= FULL_MATCH_PERCENT),
+        key=lambda row: row.local.function,
     )
     partial_matches = sorted(
-        (result for result in results if result.percent < FULL_MATCH_PERCENT),
-        key=lambda result: (-result.percent, result.function),
+        (row for row in results if row.local.percent < FULL_MATCH_PERCENT),
+        key=lambda row: (-row.local.percent, row.local.function),
     )
 
     if not args.partial_only:
