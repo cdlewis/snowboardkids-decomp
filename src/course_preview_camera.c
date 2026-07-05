@@ -55,7 +55,6 @@ extern void func_80055C7C(void);
 
 extern void func_80056348(CoursePreviewCamera *arg0, s16 arg1);
 extern void func_800563C4(CoursePreviewCamera *arg0, s32 arg1);
-extern void func_80056444(CoursePreviewCamera *arg0, s32 arg1);
 extern void func_800564A8(CoursePreviewCamera *arg0);
 extern void func_80071824(CoursePreviewCamera *arg0, CoursePreviewCameraCallback arg1);
 extern s8 D_80122288;
@@ -147,7 +146,19 @@ void func_8005638C(CoursePreviewCamera *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_800563C4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_80056444.s")
+void func_80056444(CoursePreviewCamera *arg0, s16 arg1) {
+    s16 diff = arg1 - arg0->pitchVelocity;
+
+    if (diff >= 5) {
+        diff = 4;
+    }
+    if (diff < -4) {
+        diff = -4;
+    }
+
+    arg0->pitchVelocity += diff;
+    arg0->angle.half.pitch += (((-arg0->pitchVelocity * 2) - arg0->angle.half.pitch) >> 3);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_800564A8.s")
 
