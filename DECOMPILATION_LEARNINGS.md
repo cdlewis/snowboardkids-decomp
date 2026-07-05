@@ -2234,3 +2234,9 @@ convention, so extending the shop-local typedef does not conflict.
   The winning structure reads `state` into a local once at the top of the
   `else` branch and reuses it for the `< 6` check, rather than re-reading the
   field inline — this forces `state` into `v0` and `D` into `v1`.
+
+## func_8002D9EC (shop_menu_ui)
+
+- Sibling of the matched func_8002AB24 (player_count_select_ui) and func_8001F0B0 (character_select_ui) -- same per-state widget machine (slide on y, counter bump in state 3, bounce via transition.counter, exit slide on x). The shop variant moves the exit-position check out of the case body and into the post-switch guard (state == 5 && arg0->x >= 0x94), so its case 5 only does arg0->x += 0x20 and then must reload item.bytes.state for that guard.
+- Same redundant-load codegen quirk as func_8001F0B0: with no write to the state byte on the dispatch -> case-5 path, IDO 5.3 -O2 reuses the switch-discriminant register and emits a nop in the load slot. The documented fix (taking the field's address into a u8 *stateField local once at function entry and reading *stateField in case 5) defeats the load-elimination pass with zero runtime cost. Only the case-5 read needs the pointer; the else-branch and other case reads stay direct.
+- As with the other widget siblings, the standalone workspace shows one residual diff (jump-table symbol .rodata vs jtbl_800E0FB0), a diff-tool normalization artifact; the integrated build verifies via SHA1.

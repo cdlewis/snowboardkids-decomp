@@ -70,7 +70,8 @@ extern void func_8002E468(ShopMenuWidgetActor *);
 extern void func_8002CFAC(void);
 extern void func_8002D2E4(ShopMenuWidgetActor *);
 extern void func_8002D558(ShopMenuWidgetActor *);
-extern void func_8002D9EC(void);
+extern void func_8002D778(ShopMenuWidgetActor *);
+extern void func_8002D9EC(ShopMenuWidgetActor *);
 extern void func_8002DCE8(void);
 extern void func_8002E9E4(void);
 extern void func_8002EC5C(void);
@@ -245,7 +246,78 @@ void func_8002D734(ShopMenuWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002D778.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002D9EC.s")
+void func_8002D9EC(ShopMenuWidgetActor *arg0) {
+    u8 *stateField;
+    int state;
+
+    stateField = &arg0->item.bytes.state;
+
+    if ((D_800EC9E6 == 2) && (arg0->y != -0x48) && (arg0->item.bytes.state < 6)) {
+        state = arg0->item.bytes.state = 2;
+    } else {
+        state = arg0->item.bytes.state;
+        if ((D_800EC9E6 != 2) && (arg0->y != -0x140) && (state < 6)) {
+            state = arg0->item.bytes.state = 1;
+        } else if (state < 4) {
+            state = arg0->item.bytes.state = 3;
+        }
+    }
+
+    switch (state) {
+    case 0:
+    case 4:
+        break;
+    case 1:
+        arg0->y -= 0x24;
+        if (arg0->y < -0x13F) {
+            arg0->y = -0x140;
+            arg0->item.bytes.state = 3;
+        }
+        state = arg0->item.bytes.state;
+        break;
+    case 2:
+        arg0->y += 0x24;
+        if (arg0->y >= -0x48) {
+            arg0->y = -0x48;
+            arg0->item.bytes.state = 6;
+            arg0->transition.counter = 8;
+        }
+        state = arg0->item.bytes.state;
+        break;
+    case 3:
+        D_801235B4 += 1;
+        if (D_80121D88 == 1) {
+            arg0->item.bytes.state = 5;
+        }
+        state = arg0->item.bytes.state;
+        break;
+    case 5:
+        arg0->x += 0x20;
+        state = *stateField;
+        break;
+    case 6:
+        arg0->y -= arg0->transition.counter;
+        arg0->item.bytes.state = 7;
+        state = arg0->item.bytes.state;
+        break;
+    case 7:
+        arg0->y += arg0->transition.counter;
+        arg0->transition.counter = arg0->transition.counter / 2;
+        if (arg0->transition.counter == 0) {
+            arg0->item.bytes.state = 3;
+        } else {
+            arg0->item.bytes.state = 6;
+        }
+        state = arg0->item.bytes.state;
+        break;
+    }
+
+    if ((state == 5) && (arg0->x >= 0x94)) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002D778, arg0);
+}
 
 void func_8002DC14(ShopMenuWidgetActor *arg0) {
     arg0->x = -8;
