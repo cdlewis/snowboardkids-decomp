@@ -2146,3 +2146,26 @@ convention, so extending the shop-local typedef does not conflict.
   the correct source. The `void(*)(void)` callback passed to a `void *`
   param produces a benign Warning 709, identical to the reference function —
   leave it; it does not affect codegen or the ROM.
+
+- `func_8002A27C` (player_count_select_ui): a widget state machine whose
+  top-level logic reads as an `if / else if / else` chain over
+  `(D_80121B5E >= (u16)spriteIndex) && (y != -0x48)` /
+  `(D_80121B5E < (u16)spriteIndex) && (y != -0x140)` / fall-through.
+  m2c emits a goto-laden recompute of the slt because the original factored
+  the shared else block; the clean `else if` with `&&` reproduces IDO's
+  exact branch layout (the `&&` short-circuit generates the bnez-to-else-if
+  and the redundant recompute of `slt $at, $v0, $v1` in the delay slot /
+  fall-through). Three details were needed for a perfect match:
+  (1) cast the compared s16 field with `(u16)` so IDO loads it via `lhu`
+  (without the cast it emits `lh` — a real opcode mismatch);
+  (2) inline the field access in both comparisons rather than hoisting a
+  local, so `D_80121B5E` is loaded first into `$v0` (a local declaration
+  loads spriteIndex first and swaps the v0/v1 allocation);
+  (3) declare the switch scratch as `int state`, NOT `u8 state` — the `u8`
+  type pushes the constant `3` into `$a0` and the state local into `$v1`,
+  whereas `int` leaves state in `$v0` and the constant in `$v1`, matching
+  the target. The switch needs explicit empty `case 0:` and `case 5:`
+  (both break) so IDO emits the 6-entry jump table (cases 1-4 alone produce
+  an if-else chain instead). The only residual diff in the standalone
+  workspace was the jump-table symbol name (`jtbl_800E0EC0` vs `.rodata`),
+  a normalization artifact — the integrated build matches the SHA1.
