@@ -2186,3 +2186,29 @@ convention, so extending the shop-local typedef does not conflict.
   function has a sibling already matched in the same translation unit,
   diffing the two target assemblies first (here they differ only in the
   callback address) avoids re-deriving the whole control flow.
+
+- `func_8001F0B0` (character_select_ui): sibling widget callback of the
+  matched `func_8001A270` (player_select_ui) — same per-state machine
+  (slide-in on `y`, counter increment in state 3, exit slide on `x`),
+  but with a 6-entry jumptable (states 0-5) instead of 5. State 3 splits
+  the `D_80121D88` checks into two independent `if` blocks (==1 -> 4,
+  ==7 -> 5) rather than an if/else, and there is a dedicated `case 5`
+  that does `arg0->x += 0x20` then reloads state before the post-switch
+  `state == 5 && x >= 0x94` exit check.
+
+  Notable codegen quirk: under IDO 5.3 -O2, the compiler eliminates the
+  state reload inside `case 5` (`lbu v0, 0x1e(a2)`) because nothing on
+  the dispatch -> case-5 path writes `transition.bytes.state`, so it
+  reuses the switch-discriminant register (emitting a `nop` in the load
+  slot). The target ROM keeps the reload. The reliable way to force IDO
+  to emit the redundant load is to take the field's address into a local
+  pointer (`u8 *stateField = &arg0->transition.bytes.state;`) and read
+  through it in case 5 (and the else-branch read). The aliased pointer
+  access defeats the load-elimination pass without adding runtime cost
+  (the pointer is folded away — the surrounding asm is byte-identical to
+  the direct-access version except for the kept `lbu`). The randomized
+  transformer found the same effect via an anonymous `union *new_var` plus
+  a `(long)` cast, but the plain `u8 *` is cleaner. As with
+  `func_8001A270`, the standalone workspace shows one residual diff
+  (jump-table symbol name `.rodata` vs `jtbl_800E0C7C`), which is a
+  diff-tool normalization artifact; the integrated build verifies via SHA1.
