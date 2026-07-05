@@ -28,7 +28,7 @@ patterns, and verified layout/linking rules.
   uses, not the wider type the caller passes.
 - Be careful when a newly matched narrow-parameter callee sits before its callers
   in the same translation unit. A visible `s16` prototype can change the callers'
-  argument setup even if the callee itself matches. In func_80072964, the local
+  argument setup even if the callee itself matches. In enqueuePositionalSoundRequest, the local
   callee matched naturally with `s16` parameters, but the neighboring wrappers
   only matched when they saw the original promoted `s32` signature; the callee
   then had to read the low halfword from the homed promoted arguments.
@@ -130,7 +130,7 @@ patterns, and verified layout/linking rules.
   can keep the original register order.
 - For small struct copies, prefer the aggregate assignment if the target copies
   consecutive words through `$at` rather than independent temps. In
-  func_80072964, three scalar `s32` field assignments compiled to
+  enqueuePositionalSoundRequest, three scalar `s32` field assignments compiled to
   `$t8`/`$a0`/`$t9`, while `node->pos = *pos` for a three-word
   `SoundPosition` emitted the target `$at`/`$t9`/`$at` load-store sequence.
 - Some globals are aliases into the middle of a larger struct array. Rewriting
