@@ -3,6 +3,9 @@
 /* Frame offsets are halfword-relative to the bank start; this form preserves target addu order. */
 #define MAIN_MENU_ANIMATION_FRAME_DATA(bank, index) \
     ((s16 *)(((bank)->frameOffsets[(index)] * sizeof(s16)) + (s32)(bank)))
+#define MAIN_MENU_MODEL_ASSET_RANGE_WORDS 2
+#define MAIN_MENU_MODEL_ASSET_RANGE_START(table, index) ((table)[(index) * MAIN_MENU_MODEL_ASSET_RANGE_WORDS])
+#define MAIN_MENU_MODEL_ASSET_RANGE_END(table, index) ((table)[((index) * MAIN_MENU_MODEL_ASSET_RANGE_WORDS) + 1])
 
 extern MainMenuSceneModel *func_80043040(s16);
 extern s16 D_8011218A[];
@@ -14,14 +17,18 @@ extern u8 D_608560;
 extern u8 D_215BE0;
 extern u8 D_21D9D0;
 
-typedef struct {
-    /* 0x0 */ u8 *start;
-    /* 0x4 */ u8 *end;
-} RomAssetRange;
+typedef s32 RomAssetAddress;
 
-extern RomAssetRange D_800D4020[];
-extern RomAssetRange D_800D4050[];
-extern s16 D_80112130[];
+typedef struct MainMenuModelAssetHandles {
+    u8 pad0[0x5A];
+    /* 0x5A */ s16 modelInstanceHandles[6];
+    /* 0x66 */ s16 modelAssetSlots[6];
+    /* 0x72 */ s16 animationAssetSlots[6];
+} MainMenuModelAssetHandles;
+
+extern RomAssetAddress D_800D4020[];
+extern RomAssetAddress D_800D4050[];
+extern MainMenuModelAssetHandles D_80112130;
 extern s16 func_80042D58(s32);
 extern void func_800438EC(s32, s32, s32);
 extern void func_80042AB4(MainMenuSceneModel *arg0);
@@ -40,22 +47,19 @@ void func_80041CF0(void) {
     func_800437F0(&D_215BE0, &D_21D9D0, 0x3F);
 }
 
-// func_80041D20 best match: 95.34% at nonmatchings/func_80041D20-3174110973063422312/base_5.c.
-#ifdef NON_MATCHING
 void func_80041D20(s32 actorIndex, s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    func_800438EC((s32) D_800D4020[modelIndex].start, (s32) D_800D4020[modelIndex].end, actorIndex + 0x33);
-    func_800437F0(D_800D4050[modelIndex].start, D_800D4050[modelIndex].end, actorIndex + 0x39);
-    D_80112130[actorIndex + 0x2D] = func_80042D58(0x308);
-    model = func_80043040(D_80112130[actorIndex + 0x2D]);
+    func_800438EC(MAIN_MENU_MODEL_ASSET_RANGE_START(D_800D4020, modelIndex),
+                  MAIN_MENU_MODEL_ASSET_RANGE_END(D_800D4020, modelIndex), actorIndex + 0x33);
+    func_800437F0((void *)MAIN_MENU_MODEL_ASSET_RANGE_START(D_800D4050, modelIndex),
+                  (void *)MAIN_MENU_MODEL_ASSET_RANGE_END(D_800D4050, modelIndex), actorIndex + 0x39);
+    D_80112130.modelInstanceHandles[actorIndex] = func_80042D58(sizeof(MainMenuSceneModel));
+    model = func_80043040(D_80112130.modelInstanceHandles[actorIndex]);
     model->actorIndex = actorIndex;
     model->modelIndex = modelIndex;
     func_80042AB4(model);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80041D20.s")
-#endif
 
 void func_80041DD4(s32 modelIndex, s32 animationIndex) {
     MainMenuModelAnimationBank *animationBank;
