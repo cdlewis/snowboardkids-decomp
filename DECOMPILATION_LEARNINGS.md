@@ -2093,3 +2093,12 @@ convention, so extending the shop-local typedef does not conflict.
   one line reordered the schedule to 100%. The tokens were identical; only line
   breaks differed. When stuck on a pure instruction-reordering diff at 99%+,
   let decomp-permuter search for the grouping the scheduler wants.
+
+- A narrowly-scoped volatile cast can preserve register lifetime without
+  perturbing neighboring functions. In `func_8009C6DC`, declaring
+  `D_800DF158` itself as volatile produced the desired address register reuse
+  in that function, but changed codegen in the following `func_8009C77C`.
+  Keeping the extern as `s32` and writing only the two stores as
+  `*(volatile unsigned int *)&D_800DF158 = ...` preserved the target's live
+  address register for the yield path while leaving other direct accesses to
+  the same global non-volatile.
