@@ -2212,3 +2212,25 @@ convention, so extending the shop-local typedef does not conflict.
   `func_8001A270`, the standalone workspace shows one residual diff
   (jump-table symbol name `.rodata` vs `jtbl_800E0C7C`), which is a
   diff-tool normalization artifact; the integrated build verifies via SHA1.
+
+## func_8002AB24 (player_count_select_ui)
+
+- **u16 field reads vs s16**: reading a halfword field with `lhu` (unsigned)
+  while dividing it by 2 with the signed `sra`+`bgez` rounding pattern is
+  produced by declaring the field `u16`. `u16 / 2` promotes to `int` (signed) in
+  C, so IDO emits the signed-divide-by-2 pattern even though the load is `lhu`.
+  An `s16` field would give `lh` (wrong) and a literal `u16`-local-only approach
+  still loads the field with `lh`. The field type itself must be `u16`.
+- **Same offset, two signednesses via union members**: the 0x1E halfword is
+  written as a negative literal (`= -0x74`) by one function (needs `s16` so the
+  store uses `addiu` sign-extension) but read/divided as `u16` (`lhu` + signed
+  halving) by a bounce routine. Model this with two union members at the same
+  offset (`s16 alpha; u16 step;`), not by flipping one type — flipping breaks the
+  other function. `addiu` vs `ori` for the negative literal is the tell: asm-differ
+  renders both as `li`, so it shows 0 diffs and hides the regression. A ROM
+  byte-diff (`cmp -l`) catches what asm-differ normalizes away.
+- **Top-condition register allocation (v0 vs v1)**: when D_80121B5E is live
+  across the point where `state` is also read, IDO splits them across `v0`/`v1`.
+  The winning structure reads `state` into a local once at the top of the
+  `else` branch and reuses it for the `< 6` check, rather than re-reading the
+  field inline — this forces `state` into `v0` and `D` into `v1`.
