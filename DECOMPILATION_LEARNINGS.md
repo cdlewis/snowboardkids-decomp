@@ -2120,20 +2120,15 @@ convention, so extending the shop-local typedef does not conflict.
   address register for the yield path while leaving other direct accesses to
   the same global non-volatile.
 
-- `move $tN, $aM` at a function prologue (copying an arg register to a temp
-  before its first real use) is an IDO codegen quirk that the decomp-permuter
-  could not reproduce from any clean source. In `func_80041D20`, the target
-  emits `move $t6, $a1` then `sll $v1, $t6, 3`, while every clean C
-  reconstruction (direct array index, local pointer alias, explicit stride
-  local, typed vs s32 prototypes) compiles to `sll $v1, $a1, 3` directly.
-  The missing temp copy cascades into a systematic +1 shift of every
-  subsequent `$tN` register, scoring 95.3% despite being structurally
-  identical (zero functional instruction differences). The permuter's only
-  wins all relied on UB (reading an uninitialized local in a dead `if`,
-  `long long` type punning on the return of `func_80042D58`). When a
-  function lands at ~95% with only this kind of arg-copy plus
-  register-renaming diff, treat it as a clean partial match rather than
-  chasing the single temp-copy instruction.
+- In `func_80041D20`, a semantically clean `RomAssetRange { start, end }`
+  table access compiled to the right loads but skipped the target's prologue
+  `move $t6, $a1`, causing a register-coloring cascade and a 95% score. The
+  matching source treats `D_800D4020`/`D_800D4050` as flat `RomAssetAddress`
+  word tables and indexes the start/end words with `modelIndex * 2`; this
+  makes IDO emit `move $t6, $a1` then `sll $v1, $t6, 3`. A typed overlay is
+  still useful for unrelated state: declaring `D_80112130` as a contextual
+  `MainMenuModelAssetHandles` struct lets the model handle slots be accessed
+  as fields while preserving the same codegen as raw `D_80112130[index + 0x2D]`.
 
 - `func_8002C800` (shop_menu_ui) is a near-twin of `func_8001952C`
   (player_select_ui): both initialize a "row actor" struct (s16[5] at 0x18,
