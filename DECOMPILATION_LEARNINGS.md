@@ -2275,3 +2275,14 @@ keeps the base pointer and reuses it for every `[1]` access.
 
 Seen in `func_8003DCCC` (and the sibling `func_8003DBE8`, which shares the same
 author/pattern). The decomp-permuter is the quickest way to surface this hoist.
+
+- `func_8002A710` is the same player-count select widget state machine as
+  `func_8002A27C`, with the render callback changed from `func_8002A008` to
+  `func_8002A49C` and the initializer setting the 0x1C halfword to 2 instead
+  of 1. As with `func_8002A27C`, the `state < 4` fallback belongs only in the
+  final `else` path where the actor is already at its target y-position; moving
+  it after the initial branch chain creates dead movement states and no longer
+  reflects the target assembly. The standalone workspace reaches an
+  instruction-identical 99.915% score, with the remaining diff caused by the
+  target's named `.late_rodata` jump table (`jtbl_800E0ED8`) versus IDO's
+  unnamed generated `.rodata` table.

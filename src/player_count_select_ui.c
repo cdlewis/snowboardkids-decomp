@@ -56,6 +56,7 @@ extern void func_80029CE4(PlayerCountSelectWidgetActor *);
 extern void func_8002A008(PlayerCountSelectWidgetActor *);
 extern void func_8002A27C(PlayerCountSelectWidgetActor *);
 extern void func_8002A49C(PlayerCountSelectWidgetActor *);
+extern void func_8002A710(PlayerCountSelectWidgetActor *);
 extern void func_8002A930(PlayerCountSelectWidgetActor *);
 extern void func_8002AB24(PlayerCountSelectWidgetActor *);
 extern void func_8002AE3C(PlayerCountSelectWidgetActor *);
