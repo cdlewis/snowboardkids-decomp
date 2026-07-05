@@ -28,9 +28,9 @@ typedef struct PositionalSoundRequest {
     SoundPosition pos;
     s16 soundId;
     s16 volume;
-    s16 arg5;
+    s16 minVolume;
     s16 priority;
-    s16 channel;
+    s16 mode;
     f32 pitch;
 } PositionalSoundRequest;
 
@@ -240,44 +240,45 @@ void func_80072938(void) {
     func_8009DDE4(2);
 }
 
-extern PositionalSoundRequest *gzip_data_0000;
-extern void func_80072964(s32, SoundPosition *, s32, s32, f32, s32, s32);
+extern PositionalSoundRequest *gPendingPositionalSoundRequests;
+extern void enqueuePositionalSoundRequest(s32, SoundPosition *, s32, s32, f32, s32, s32);
 
-void myfree(void) {
-    gzip_data_0000 = NULL;
+void clearPendingPositionalSoundRequests(void) {
+    gPendingPositionalSoundRequests = NULL;
 }
 
-void func_80072964(s32 soundId, SoundPosition *pos, s32 volume, s32 priority, f32 pitch, s32 channel, s32 arg5) {
+void enqueuePositionalSoundRequest(s32 soundId, SoundPosition *pos, s32 volume, s32 priority, f32 pitch, s32 mode,
+                                   s32 minVolume) {
     PositionalSoundRequest *node;
 
     node = func_80048388(sizeof(PositionalSoundRequest));
     if (node != NULL) {
-        node->next = gzip_data_0000;
+        node->next = gPendingPositionalSoundRequests;
         node->pos = *pos;
         node->soundId = ((GameAudioHalfArg *)&soundId)->half.value;
         node->volume = ((GameAudioHalfArg *)&volume)->half.value;
-        node->arg5 = ((GameAudioHalfArg *)&arg5)->half.value;
+        node->minVolume = ((GameAudioHalfArg *)&minVolume)->half.value;
         node->priority = ((GameAudioHalfArg *)&priority)->half.value;
-        node->channel = ((GameAudioHalfArg *)&channel)->half.value;
+        node->mode = ((GameAudioHalfArg *)&mode)->half.value;
         node->pitch = pitch;
-        gzip_data_0000 = node;
+        gPendingPositionalSoundRequests = node;
     }
 }
 
-void func_80072A20(s32 arg0, SoundPosition *arg1, s32 arg2, s32 arg3, f32 arg4, s16 arg5) {
+void func_80072A20(s32 arg0, SoundPosition *arg1, s32 arg2, s32 arg3, f32 arg4, s16 mode) {
     s32 temp_a0 = arg0 << 16;
     s32 temp_a2 = arg2 << 16;
     s32 temp_a3 = arg3 << 16;
 
-    func_80072964(temp_a0 >> 16, arg1, temp_a2 >> 16, temp_a3 >> 16, arg4, arg5, 0);
+    enqueuePositionalSoundRequest(temp_a0 >> 16, arg1, temp_a2 >> 16, temp_a3 >> 16, arg4, mode, 0);
 }
 
 void func_80072A74(s16 arg0, SoundPosition *arg1, s16 arg2, s16 arg3) {
-    func_80072964(arg0, arg1, arg2, arg3, 0.0f, -1, 0);
+    enqueuePositionalSoundRequest(arg0, arg1, arg2, arg3, 0.0f, -1, 0);
 }
 
-void func_80072AC8(s16 arg0, SoundPosition *arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5) {
-    func_80072964(arg0, arg1, arg2, arg3, 0.0f, arg4 + 4, arg5);
+void func_80072AC8(s16 arg0, SoundPosition *arg1, s16 arg2, s16 arg3, s16 arg4, s16 minVolume) {
+    enqueuePositionalSoundRequest(arg0, arg1, arg2, arg3, 0.0f, arg4 + 4, minVolume);
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80072B24.s")
