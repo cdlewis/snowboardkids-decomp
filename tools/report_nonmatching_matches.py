@@ -266,7 +266,7 @@ def format_scratch(scratch: ScratchResult | None) -> str:
 
     score_text = f"{scratch.score}/{scratch.max_score}" if scratch.max_score is not None else str(scratch.score)
     override = " override" if scratch.match_override else ""
-    return f"🐸 {score_text} ({scratch.percent:.3f}%{override}) https://decomp.me/scratch/{scratch.slug}"
+    return f"🐸 decomp.me: {score_text} ({scratch.percent:.3f}%{override}) https://decomp.me/scratch/{scratch.slug}"
 
 
 def print_rows(title: str, rows: list[ReportRow], repo_root: Path) -> None:
@@ -275,16 +275,18 @@ def print_rows(title: str, rows: list[ReportRow], repo_root: Path) -> None:
         print("  none")
         return
 
-    print(f"{'Function':<24} {'Local':>9}  {'Attempt':<56}  {'decomp.me'}")
-    print("-" * 128)
+    print(f"{'Function':<24} {'Local':>9}  {'Attempt'}")
+    print("-" * 96)
     for row in rows:
         local_attempt = relative_path(row.local.attempt, repo_root)
         print(
             f"{row.local.function:<24} "
             f"{row.local.percent:8.3f}%  "
-            f"{local_attempt:<56}  "
-            f"{format_scratch(row.scratch)}"
+            f"{local_attempt}"
         )
+        scratch_text = format_scratch(row.scratch)
+        if scratch_text:
+            print(f"{'':<24} {'':>9}   {scratch_text}")
 
 
 def main() -> int:
