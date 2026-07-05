@@ -20,6 +20,8 @@ from typing import Iterable
 
 MATCH_LINE_RE = re.compile(r"(?P<filename>[A-Za-z0-9_./-]+\.c)\s+(?P<percent>\d+(?:\.\d+)?)\s*%")
 ASM_LABEL_RE = re.compile(r"^\s*(?:glabel|dlabel)\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b", re.MULTILINE)
+ASM_LABEL_LINE_RE = re.compile(r"^\s*(?:glabel|dlabel)\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b")
+ASM_ADDRESS_RE = re.compile(r"/\*\s+[0-9A-Fa-f]+\s+(?P<addr>[0-9A-Fa-f]{8})\s+[0-9A-Fa-f]{8}\s+\*/")
 FULL_MATCH_PERCENT = 100.0
 
 
@@ -52,7 +54,30 @@ def matched_function_names(repo_root: Path) -> set[str]:
         except OSError:
             continue
         names.update(match.group("name") for match in ASM_LABEL_RE.finditer(text))
+        names.update(matched_function_address_aliases(text))
     return names
+
+
+def matched_function_address_aliases(text: str) -> set[str]:
+    aliases: set[str] = set()
+    awaiting_label_address = False
+
+    for line in text.splitlines():
+        if ASM_LABEL_LINE_RE.match(line):
+            awaiting_label_address = True
+            continue
+
+        if not awaiting_label_address:
+            continue
+
+        match = ASM_ADDRESS_RE.search(line)
+        if match is None:
+            continue
+
+        aliases.add(f"func_{match.group('addr').upper()}")
+        awaiting_label_address = False
+
+    return aliases
 
 
 def parse_match_log(log_path: Path, repo_root: Path) -> Iterable[MatchResult]:
