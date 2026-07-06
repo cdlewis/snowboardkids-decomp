@@ -2489,3 +2489,12 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `$at` for the contiguous word copies, while `.word` assignments shift the
   temps to `$t*`; moving the `alpha = 0xC0` store after `spriteIndex` improves
   scheduling but still leaves register-name drift.
+
+## func_8006C698 (race_course_effects)
+
+- This course effect initializer uses the same `D_800DA764[D_80121B50]`
+  0x10-byte entry as both sound parameters and a position/angle record:
+  `x/y/z` at offsets `0x0..0x8` and `angle` at `0xC`.
+- For the local vector passed to `func_80098590`, declaring the saved matrix
+  pointer before the `Vec3i` local places the vector at `sp+0x28`, matching the
+  target stack layout exactly.

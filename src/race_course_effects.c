@@ -37,7 +37,11 @@ typedef struct {
 } Struct6B760;
 
 typedef struct {
-    char pad0[0x50];
+    char pad0[0x18];
+    char mtx[0x14];
+    Vec3i basePos;
+    Vec3i pos1;
+    Vec3i pos2;
     s16 unk50;
     s16 unk52;
     s16 unk54;
@@ -105,7 +109,11 @@ typedef struct {
 } CourseMarkerTextureResource;
 
 typedef struct {
-    u8 bytes[0x10];
+    s32 x;
+    s32 y;
+    s32 z;
+    s16 angle;
+    s16 unkE;
 } SoundParams;
 
 extern void func_80071824(void *task, void (*callback)());
@@ -489,7 +497,32 @@ void func_8006C5C0(Struct6C51C *arg0) {
     func_800483FC(&D_801248A4, func_8006C1B4, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C698.s")
+void func_8006C698(Struct6C51C *arg0) {
+    void *mtx;
+    Vec3i sp28;
+
+    mtx = arg0->mtx;
+    func_80097C18(mtx, D_800DA764[D_80121B50].angle);
+    arg0->basePos.x = D_800DA764[D_80121B50].x;
+    arg0->basePos.y = D_800DA764[D_80121B50].y;
+    arg0->basePos.z = D_800DA764[D_80121B50].z;
+    sp28.x = 0x18000;
+    sp28.y = 0x120000;
+    sp28.z = -0x80000;
+    func_80098590(mtx, &sp28, &arg0->pos1);
+    arg0->pos1.x += arg0->basePos.x;
+    arg0->pos1.y += arg0->basePos.y;
+    arg0->pos1.z += arg0->basePos.z;
+    sp28.x = 0;
+    sp28.y = 0x120000;
+    sp28.z = 0x50000;
+    func_80098590(mtx, &sp28, &arg0->pos2);
+    arg0->pos2.x += arg0->basePos.x;
+    arg0->pos2.y += arg0->basePos.y;
+    arg0->pos2.z += arg0->basePos.z;
+    arg0->unk52 = 0;
+    func_80071824(arg0, func_8006C5C0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C7F4.s")
 
