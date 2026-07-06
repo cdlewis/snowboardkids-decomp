@@ -43,6 +43,21 @@ typedef struct {
     /* 0x30 */ u8 frame;
 } RectListActor;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 unk18;
+    /* 0x1A */ s16 unk1A;
+    /* 0x1C */ s16 unk1C;
+    /* 0x1E */ s16 unk1E;
+    /* 0x20 */ s16 unk20;
+    /* 0x22 */ s16 unk22;
+    /* 0x24 */ s16 unk24;
+    /* 0x26 */ s16 unk26;
+    /* 0x28 */ s16 unk28[4];
+    /* 0x30 */ u8 unk30;
+    /* 0x31 */ u8 unk31[4];
+} TitleMenuWidgetActor;
+
 extern s32 func_80011D74(void *, s32, s16, s16);
 extern void func_8000F8AC(s16, s16, s32, s32, s32, s32, s32, s32, s32);
 extern s32 func_80043040(s16);
@@ -61,6 +76,7 @@ extern void func_80015B20(void *);
 extern void func_80015BD8(void *);
 extern void func_80015F4C(void);
 extern void func_80016284(void);
+extern void func_80016948(TitleMenuWidgetActor *);
 extern void func_80016E40(void);
 extern void func_800170AC(void *);
 extern void func_800483FC(void *, void *, s32);
@@ -440,7 +456,27 @@ void func_800165F0(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016948.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016B54.s")
+void func_80016B54(TitleMenuWidgetActor *arg0) {
+    s32 i;
+    TitleMenuWidgetActor *new_var;
+
+    arg0->unk18 = -0x114;
+    arg0->unk20 = -0xA4;
+    arg0->unk1A = -0x114;
+    arg0->unk22 = 0x48;
+    arg0->unk1C = 0x90;
+    new_var = arg0;
+    new_var->unk24 = -0xA4;
+    new_var->unk1E = 0x90;
+    new_var->unk26 = 0x48;
+
+    for (i = 0; i < D_80121B55; i++) {
+        new_var->unk28[i] = 0x100;
+        new_var->unk31[i] = 0;
+    }
+
+    func_80071824(new_var, func_80016948);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016BE8.s")
 
