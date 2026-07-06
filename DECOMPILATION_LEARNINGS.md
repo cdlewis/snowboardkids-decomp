@@ -2501,6 +2501,17 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   from `$v1` and reloads it into `$a2`/`$a3`; the closest C forms either keep the
   pre-call `$v1` shape or the post-call reload shape, but not both.
 
+## func_80053C90 (main_menu_overlay_effects)
+
+- This is the same display-list setup pattern as `func_80055530`, but uses
+  texture handle `D_8011214C`, palette handle `D_80112154`, and display list
+  `D_20058A8`.
+- The best confirmed candidate reaches 99.677%. An otherwise inert empty
+  `if ((!D_80124830) && (!D_80124830)) { }` after loading the palette command
+  pointer fixes the post-call `$a2`/`$a3` reloads, but moves the initial texture
+  command cursor from target `$v1` to `$a2`, leaving a pure register-allocation
+  mismatch.
+
 ## func_8006C698 (race_course_effects)
 
 - This course effect initializer uses the same `D_800DA764[D_80121B50]`
