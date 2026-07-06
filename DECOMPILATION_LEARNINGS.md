@@ -2428,3 +2428,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `func_80025FA8` pattern exactly: four straight-line `func_8000F030` calls with
   fresh `func_80043040(handle)` loads for each tile, signed 16-bit casts only on
   the `+ 0x40` coordinate variants, and tile indices 3 through 6.
+
+## func_800218A4 (character_select_ui)
+
+- This function is the same 2x2 character-select panel draw pattern as
+  `func_80021B58`: four `func_8000F030` calls using `arg0->x`, `arg0->y`,
+  `func_80043040(D_80112172)`, 0x20 tile dimensions, and tile indices 3 through
+  6. The explicit `(s16)` casts are only needed on coordinates with the `+ 0x40`
+  offset.
