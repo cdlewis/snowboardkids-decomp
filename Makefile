@@ -72,6 +72,13 @@ IDO_CC      = $(IDO_ASMPROC)
 # Flags
 
 ASFLAGS      = -G 0 -I include -mips3 -mabi=32
+ULTRA_AS_CPPFLAGS = -D_MIPS_SZLONG=32 -DCOMPILING_LIBULTRA \
+                    -DBUILD_VERSION=VERSION_I -DBUILD_VERSION_STRING=\"2.0I\" \
+                    -D_FINALROM -DNDEBUG -non_shared
+ULTRA_AS_INCLUDES = -I$(abspath include) -I$(abspath include/compiler/ido) -I$(abspath include/PR)
+ULTRA_AS_ISA = mips2
+ULTRA_AS_OPT = -O1
+ULTRA_AS_POST =
 C_DEFINES    = -DLANGUAGE_C -D_LANGUAGE_C -D_MIPS_SZLONG=32 -DNDEBUG \
                -DCOMPILING_LIBULTRA -DBUILD_VERSION=VERSION_I
 C_MIPS       = -mips1
@@ -97,6 +104,16 @@ $(BUILD_DIR)/src/ultra/audio/resample.o: C_OPT = -O3
 $(BUILD_DIR)/src/ultra/audio/resample.o: IDO_CC = $(IDO_DIRECT)
 $(BUILD_DIR)/src/ultra/audio/auxbus.o: C_OPT = -O3
 $(BUILD_DIR)/src/ultra/audio/auxbus.o: IDO_CC = $(IDO_DIRECT)
+$(BUILD_DIR)/src/ultra/audio/load.o: C_OPT = -O3
+$(BUILD_DIR)/src/ultra/audio/load.o: IDO_CC = $(IDO_DIRECT)
+$(BUILD_DIR)/src/ultra/audio/mainbus.o: C_OPT = -O3
+$(BUILD_DIR)/src/ultra/audio/mainbus.o: IDO_CC = $(IDO_DIRECT)
+$(BUILD_DIR)/src/ultra/audio/synallocfx.o: C_OPT = -O3
+$(BUILD_DIR)/src/ultra/audio/synallocfx.o: IDO_CC = $(IDO_DIRECT)
+$(BUILD_DIR)/src/ultra/audio/synallocvoice.o: C_OPT = -O3
+$(BUILD_DIR)/src/ultra/audio/synallocvoice.o: IDO_CC = $(IDO_DIRECT)
+$(BUILD_DIR)/src/ultra/audio/synthesizer.o: C_OPT = -O3
+$(BUILD_DIR)/src/ultra/audio/synthesizer.o: IDO_CC = $(IDO_DIRECT)
 $(BUILD_DIR)/src/ultra/os/%.o: C_OPT = -O1
 $(BUILD_DIR)/src/ultra/os/%.o: C_MIPS = -mips2
 $(BUILD_DIR)/src/ultra/os/timerintr.o: CFLAGS += -D_FINALROM
@@ -106,12 +123,15 @@ $(BUILD_DIR)/src/ultra/gu/perspective.o: C_OPT = -O2
 $(BUILD_DIR)/src/ultra/io/sptask.o: C_OPT = -O2
 $(BUILD_DIR)/src/ultra/io/sptask.o: CFLAGS += -DF3DEX_GBI
 $(BUILD_DIR)/src/ultra/libc/%.o: C_MIPS = -mips2
+$(BUILD_DIR)/src/ultra/libc/%.o: ULTRA_AS_OPT = -O3
 $(BUILD_DIR)/src/ultra/libc/ll.o: C_OPT = -O1
 $(BUILD_DIR)/src/ultra/libc/ll.o: C_MIPS = -mips3 -32
 $(BUILD_DIR)/src/ultra/libc/xprintf.o: C_OPT = -O3
 $(BUILD_DIR)/src/ultra/libc/xprintf.o: IDO_CC = $(IDO_DIRECT)
 $(BUILD_DIR)/src/ultra/libc/xldtob.o: C_OPT = -O3
 $(BUILD_DIR)/src/ultra/libc/xldtob.o: IDO_CC = $(IDO_DIRECT)
+$(BUILD_DIR)/src/ultra/os/exceptasm.o: ULTRA_AS_ISA = mips3
+$(BUILD_DIR)/src/ultra/os/exceptasm.o: ULTRA_AS_POST = $(PYTHON) $(TOOLS_DIR)/set_o32abi_bit.py $@
 
 LD_SCRIPT      = $(BASENAME).ld
 LINKER_SCRIPTS = linker_scripts/hardware_regs.ld linker_scripts/libultra_syms.ld
@@ -133,6 +153,25 @@ C_O_FILES   := $(patsubst %.c,$(BUILD_DIR)/%.o,$(C_FILES))
 
 BIN_FILES   := $(foreach dir,$(BIN_DIRS),$(wildcard $(dir)/*.bin))
 BIN_O_FILES := $(patsubst %.bin,$(BUILD_DIR)/%.o,$(BIN_FILES))
+
+ULTRA_IDO_AS_FILES := \
+	src/ultra/libc/bcopy.s \
+	src/ultra/libc/bzero.s \
+	src/ultra/os/exceptasm.s \
+	src/ultra/os/getcount.s \
+	src/ultra/os/getsr.s \
+	src/ultra/os/interrupt.s \
+	src/ultra/os/invaldcache.s \
+	src/ultra/os/invalicache.s \
+	src/ultra/os/maptlbrdb.s \
+	src/ultra/os/probetlb.s \
+	src/ultra/os/setcompare.s \
+	src/ultra/os/setfpccsr.s \
+	src/ultra/os/setintmask.s \
+	src/ultra/os/setsr.s \
+	src/ultra/os/writebackdcache.s \
+	src/ultra/os/writebackdcacheall.s
+ULTRA_IDO_AS_O_FILES := $(patsubst %.s,$(BUILD_DIR)/%.o,$(ULTRA_IDO_AS_FILES))
 
 O_FILES := $(shell grep -E 'build/(asm|assets|src)/.+\.o' $(LD_SCRIPT) -o 2>/dev/null | sort | uniq)
 
@@ -156,6 +195,13 @@ extract: check
 #################
 ## COMPILATION ##
 #################
+
+$(ULTRA_IDO_AS_O_FILES): $(BUILD_DIR)/%.o: %.s
+	@mkdir -p $(dir $@)
+	$(PRINTF) "[$(GREEN)   as   $(NO_COL)]  $<\n"
+	$(V)$(TOOLS_DIR)/ido-as.sh $< $@ $(ULTRA_AS_ISA) $(ULTRA_AS_OPT)
+	$(V)$(ULTRA_AS_POST)
+	$(V)$(RM_MDEBUG)
 
 # *.s -> *.o (through C preprocessor)
 $(BUILD_DIR)/%.o: %.s

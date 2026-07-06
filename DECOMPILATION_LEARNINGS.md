@@ -2309,3 +2309,9 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   defer the index shift to the last bne delay slot, exactly matching the target.
   The sibling func_8007BCFC shows the same preserve-the-path-index-in-a-higher
   arg register pattern (or a3, a1, zero).
+
+## Libultra VERSION_I Audio
+
+- VERSION_I libultra audio C objects may require `-O3`. The local
+  asm-processor wrapper only accepts up to `-O2`, so per-object `-O3` audio
+  matches should compile through the direct local IDO driver.

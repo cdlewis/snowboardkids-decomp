@@ -11,6 +11,7 @@ options:
   asm_path: asm
   src_path: src
   build_path: build
+  hasm_in_src_path: True
   create_asm_dependencies: True
 
   ld_script_path: snowboardkids.ld
@@ -185,7 +186,7 @@ segments:
       - [0xA5AE0, c, ultra/audio/heapinit]
       - [0xA5B20, c, ultra/audio/heapalloc]
       - [0xA5B80, c, ultra/audio/synaddplayer]
-      - [0xA5BD0, hasm, ultra/audio/synallocvoice]
+      - [0xA5BD0, c, ultra/audio/synallocvoice]
       - [0xA5E00, c, ultra/audio/synstopvoice]
       - [0xA5E80, c, ultra/audio/synstartvoice]
       - [0xA5F10, c, ultra/audio/synsetfxmix]
@@ -283,7 +284,7 @@ segments:
       - [0xE0C70, .data, ultra/io/aisetnextbuf]
       - [0xE0C80, data]
       - [0xE0CA0, .data, ultra/io/siacs]
-      - [0xE0CB0, data]
+      - [0xE0CB0, .data, ultra/os/exceptasm]
       - [0xE0CD0, .data, ultra/libc/xprintf]
       - [0xE0D20, .data, ultra/io/piacs]
       - [0xE0D30, .data, ultra/io/vi]
@@ -338,10 +339,10 @@ segments:
       - [0xE2630, .rodata, game_boot]
       - [0xE2660, rodata]
       - [0xE26F0, rodata]
-      - [0xE2700, rodata]
+      - [0xE2700, .rodata, ultra/os/setintmask]
       - [0xE2780, .rodata, ultra/gu/sinf]
       - [0xE27D0, .rodata, ultra/audio/synthesizer]
-      - [0xE27E0, rodata]
+      - [0xE27E0, .rodata, ultra/os/exceptasm]
       - [0xE2830, .rodata, ultra/libc/xprintf]
       - [0xE2930, .rodata, ultra/gu/cosf]
       - [0xE2980, .rodata, ultra/io/devmgr]
