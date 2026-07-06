@@ -41,6 +41,12 @@ typedef struct {
     /* 0x36 */ s16 alpha;
 } MainMenuOverlayEffectActor;
 
+typedef struct {
+    u32 w0;
+    u32 w1;
+} MainMenuOverlayGfxCommand;
+
+extern MainMenuOverlayGfxCommand *D_80124830;
 extern void *D_80124868;
 extern u8 D_80124858[];
 extern u8 D_80124878[];
@@ -53,12 +59,17 @@ extern u8 D_800D5744[];
 extern s32 D_800D5748[];
 extern u8 D_800D57A0[];
 extern s16 D_800D57B0[];
+extern s16 D_800D57B4[];
 extern s16 D_800D5808[];
 extern s16 D_800DEF14;
+extern u32 D_800DEFF8[];
 extern s16 D_8011213C;
+extern s16 D_80112168;
+extern s16 D_8011216A;
 extern s16 D_8011216E;
 extern s16 D_80112174;
 extern s16 D_80112184;
+extern s16 D_80121B50;
 extern s16 D_801235B0;
 extern RacePlayerState D_80121D80[];
 extern u8 D_80156608;
@@ -76,7 +87,7 @@ void func_800420FC(s32, s32, s32, s32);
 void func_800428C8(s32);
 void func_80042A00(s32);
 void func_80042A58(s32, s32);
-void func_80045A78(s16, s16, s32, u8);
+void func_80045A78(s16, s16, s32, u16);
 void func_80046D68(s32, s32, s32, s32, s32);
 void func_80048278(s32, s32, void *, s32);
 void func_800483FC(void *, void *, s32);
@@ -87,7 +98,7 @@ void func_80053DFC(s32);
 void func_8005408C(MainMenuOverlayEffectActor *);
 void func_80054460(void);
 void func_80054644(MainMenuOverlayEffectActor *);
-void func_8005475C(void);
+void func_8005475C(MainMenuOverlayEffectActor *);
 void func_800548F4(MainMenuOverlayEffectActor *);
 void func_8005499C(MainMenuOverlayEffectActor *);
 void func_80054A04(MainMenuOverlayEffectActor *);
@@ -239,7 +250,14 @@ void func_80054714(MainMenuOverlayEffectActor *arg0) {
     func_80071824(arg0, func_800546E4);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_8005475C.s")
+void func_8005475C(MainMenuOverlayEffectActor *arg0) {
+    MainMenuOverlayGfxCommand *gfx;
+
+    gfx = D_80124830;
+    D_80124830 = gfx + 1;
+    /* IDO scheduling for this function depends on this block staying on one line. */
+    do { gfx->w0 = 0xE7000000; gfx->w1 = 0; gfx = D_80124830; D_80124830 = gfx + 1; gfx->w0 = 0xFC119623; gfx->w1 = 0xFF2FFFFF; gfx = D_80124830; D_80124830 = gfx + 1; gfx->w0 = 0xB900031D; gfx->w1 = 0x00504240; gfx = D_80124830; D_80124830 = gfx + 1; gfx->w0 = 0xFA000000; gfx->w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, func_80043040(D_80112168), 0x5D); func_80045A78(4, -0x10, func_80043040(D_80112168), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, func_80043040(D_8011216A), D_800D57B4[D_80121B50]); func_80045A78(4, -0xC, func_80043040(D_8011216A), D_800D57B4[D_80121B50] + 1); gfx = D_80124830; D_80124830 = gfx + 1; gfx->w0 = 0x06000000; gfx->w1 = (u32) D_800DEFF8; } while (0);
+}
 
 void func_800548F4(MainMenuOverlayEffectActor *arg0) {
     s16 v = arg0->unk18.half.hi;

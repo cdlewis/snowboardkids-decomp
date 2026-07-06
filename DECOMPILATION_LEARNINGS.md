@@ -2447,3 +2447,14 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `func_800218A4`, using `D_80112172` and tile indices 3 through 6. Keep the
   explicit `(s16)` casts on the `x + 0x40` and `y + 0x40` coordinate arguments;
   the unoffset `x` and `y` fields should be passed directly.
+
+## func_8005475C (main_menu_overlay_effects)
+
+- A two-word display-list cursor typed as a struct can match the raw
+  `D_80124830` command writes cleanly. For this function, IDO's instruction
+  scheduling depends on keeping the display-list writes and draw calls inside a
+  single-line `do { ... } while (0)` block; formatting the same block across
+  multiple lines changes the constant-load ordering and misses the target.
+- The empty `if (arg0) { }` after the first two draw calls is behaviorally inert
+  because `arg0` has already been dereferenced. It forces IDO to home and reload
+  the actor pointer in the target pattern.
