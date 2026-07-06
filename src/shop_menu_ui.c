@@ -21,39 +21,56 @@ typedef struct {
 
 struct ShopMenuWidgetActor {
     char pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ s16 y;
-    union {
-        /* 0x1C */ s16 index;
-        struct {
-            /* 0x1C */ u8 state;
-            /* 0x1D */ u8 pad1D;
-        } bytes;
-    } sprite;
     union {
         struct {
-            /* 0x1E */ u8 state;
-            /* 0x1F */ u8 timer;
-        } bytes;
-        /* 0x1E */ u16 counter;
-        /* 0x1E */ s16 alpha;
-    } transition;
+            /* 0x18 */ s16 x;
+            /* 0x1A */ s16 y;
+            union {
+                /* 0x1C */ s16 index;
+                struct {
+                    /* 0x1C */ u8 state;
+                    /* 0x1D */ u8 pad1D;
+                } bytes;
+            } sprite;
+            union {
+                struct {
+                    /* 0x1E */ u8 state;
+                    /* 0x1F */ u8 timer;
+                } bytes;
+                /* 0x1E */ u16 counter;
+                /* 0x1E */ s16 alpha;
+            } transition;
+            union {
+                struct {
+                    /* 0x20 */ u8 state;
+                    /* 0x21 */ u8 timer;
+                    /* 0x22 */ u8 subState;
+                    /* 0x23 */ u8 subTimer;
+                } bytes;
+                /* 0x20 */ s16 counter;
+                /* 0x20 */ s32 price;
+            } item;
+            union {
+                struct {
+                    /* 0x24 */ u8 state;
+                } bytes;
+                /* 0x24 */ u8 slideState;
+            } slide;
+        };
+        /* 0x18 */ s16 cursorPositions[10];
+    };
+    /* 0x2C */ s16 targetY;
+    /* 0x2E */ s16 targetX;
     union {
         struct {
-            /* 0x20 */ u8 state;
-            /* 0x21 */ u8 timer;
-            /* 0x22 */ u8 subState;
-            /* 0x23 */ u8 subTimer;
+            /* 0x30 */ s16 pulseAlpha;
+            /* 0x32 */ s16 pulseTimer;
         } bytes;
-        /* 0x20 */ s16 counter;
-        /* 0x20 */ s32 price;
-    } item;
-    union {
-        struct {
-            /* 0x24 */ u8 state;
-        } bytes;
-        /* 0x24 */ u8 slideState;
-    } slide;
+        /* 0x30 */ s32 pulse;
+    } prompt;
+    /* 0x34 */ s16 spawnTimer;
+    /* 0x36 */ s16 visibleCount;
+    /* 0x38 */ u8 state;
 };
 
 extern void func_80071824(void *task, void (*callback)());
@@ -73,6 +90,7 @@ extern void func_8002D558(ShopMenuWidgetActor *);
 extern void func_8002D778(ShopMenuWidgetActor *);
 extern void func_8002D9EC(ShopMenuWidgetActor *);
 extern void func_8002DCE8(void);
+extern void func_8002F2C8(ShopMenuWidgetActor *);
 extern void func_8002E9E4(void);
 extern void func_8002EC5C(void);
 extern void func_8002E5A4(ShopMenuWidgetActor *);
@@ -626,7 +644,22 @@ void func_8002EFB8(ShopMenuWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002F2C8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002F854.s")
+void func_8002F854(ShopMenuWidgetActor *arg0) {
+    s32 i;
+
+    for (i = 0; i < 10; i++) {
+        arg0->cursorPositions[i] = -0xFC;
+    }
+
+    arg0->targetX = -0x7C;
+    arg0->targetY = -0x5C;
+    arg0->prompt.bytes.pulseTimer = 0;
+    arg0->spawnTimer = 0;
+    arg0->visibleCount = 1;
+    arg0->prompt.bytes.pulseAlpha = 0;
+    arg0->state = 0;
+    func_80071824(arg0, func_8002F2C8);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002F8DC.s")
 
