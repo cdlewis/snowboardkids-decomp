@@ -1,5 +1,12 @@
 #include "common.h"
 #include "viewport_manager.h"
+/* gbi.h pulls in ultratypes.h, which redeclares the fixed-width types already
+ * provided by common.h. Skip it by pre-defining its include guard. gbi.h also
+ * expects _SHIFTL/_SHIFTR to be defined externally (normally by mbi.h). */
+#define _ULTRATYPES_H_
+#define _SHIFTL(v, s, w) ((unsigned int)(((unsigned int)(v) & ((0x01 << (w)) - 1)) << (s)))
+#define _SHIFTR(v, s, w) ((unsigned int)(((unsigned int)(v) >> (s)) & ((0x01 << (w)) - 1)))
+#include <PR/gbi.h>
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x2FC];
@@ -140,23 +147,18 @@ void func_80053660(MainMenuOverlayEffectActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80053B28.s")
 
 // func_80053C90 best match: 99.677% at nonmatchings/func_80053C90-2/output-20-1/source.c
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80053C90.s")
-
-#ifdef NON_MATCHING
 void func_80053C90(void *arg0) {
-    MainMenuOverlayGfxCommand *gfx;
-    MainMenuOverlayGfxCommand *textureCommand;
-    MainMenuOverlayGfxCommand *paletteCommand;
+    if (D_80156608 == 0) {
+        gDPPipeSync(D_80124830++);
 
-    if (D_80156608 == (0 & 0xFFFFFFFF)) {
-        gfx = D_80124830;
-        D_80124830 = gfx + 1;
-        gfx->w0 = 0xE7000000;
-        gfx->w1 = 0;
-        do { textureCommand = D_80124830; D_80124830 = textureCommand + 1; textureCommand->w0 = 0xBC000806; textureCommand->w1 = func_80043040(D_8011214C); paletteCommand = D_80124830; if ((!D_80124830) && (!D_80124830)) { } D_80124830 = paletteCommand + 1; paletteCommand->w0 = 0xBC000C06; paletteCommand->w1 = func_80043040(D_80112154); gfx = D_80124830; D_80124830 = gfx + 1; do { gfx->w0 = 0x01020040; gfx->w1 = (u32) D_800DEE50; gfx = D_80124830; } while (0); D_80124830 = gfx + 1; do { gfx->w0 = 0x06000000; gfx->w1 = (u32) D_20058A8; } while (0); } while (0);
+        gSPSegment(D_80124830++, 0x02, func_80043040(D_8011214C));
+        gSPSegment(D_80124830++, 0x03, func_80043040(D_80112154));
+
+        gSPMatrix(D_80124830++, D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+
+        gSPDisplayList(D_80124830++, D_20058A8);
     }
 }
-#endif
 
 void func_80053D8C(s32 arg0) {
     func_800483FC(D_801248F8, func_80053C90, arg0);
