@@ -152,7 +152,43 @@ void func_80047E38(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80047E88.s")
 
+// func_80048278 best match: 99.375% (nonmatchings/func_80048278-1404502880690620360/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80048278.s")
+
+#ifdef NON_MATCHING
+extern void func_80047E88(s16 x, s16 y, volatile s32 ch, u16 arg3);
+
+void func_80048278(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
+    s32 var_s0;
+    s32 one;
+    u8 *var_s1;
+    s32 var_s2;
+    s32 temp_s4;
+    s32 temp_t9;
+    s32 var_a2;
+
+    temp_t9 = *arg2 & 0xFFFFFFFFFFFFFFFFu;
+    var_s0 = arg0;
+    var_s1 = arg2;
+    var_s2 = arg1;
+    temp_s4 = var_s0;
+    if ((0, temp_t9) != 0) {
+        var_a2 = temp_t9 & 0xFF;
+        do {
+            if (var_a2 == 0xA) {
+                var_s0 = temp_s4;
+                var_s2 += 8;
+            } else {
+                func_80047E88(var_s0, var_s2, var_a2, arg3);
+                var_s0 += 8;
+            }
+            one = 1;
+            var_a2 = var_s1[one];
+            var_s1++;
+        } while (var_a2 != 0);
+    }
+}
+#endif
 
 extern s16 D_80112130;
 s32 func_80043040(s16);                             /* extern */

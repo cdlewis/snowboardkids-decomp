@@ -2578,3 +2578,12 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   direct `lhu` for switch dispatch without introducing casts that emit `andi`.
 - `D_800B9542` is indexed with a 0x48-byte stride here. A structured table entry
   with the leading `s16` field matches the address arithmetic cleanly.
+
+## func_80048278 (render_asset_utils)
+
+- For byte-string drawing loops, assigning the string pointer local before the
+  y-coordinate local can push the pointer into `$s1` and the y-coordinate into
+  `$s2`, matching IDO's preferred allocation for this function.
+- A word-sized volatile character parameter on the callee declaration avoids an
+  extra `andi` before `func_80047E88`, but it also flips the newline compare
+  operand order; the best candidate still has only branch/register-order drift.
