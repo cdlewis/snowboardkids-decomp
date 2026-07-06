@@ -47,6 +47,10 @@ patterns, and verified layout/linking rules.
 - Explicit casts can affect sign-extension and register allocation. If the
   target sign-extends an argument with `sll`/`sra`, try making the promotion
   explicit in C, even when the callee parameter type is narrower.
+- The common four-tile menu panel draw pattern (`func_8000F030` tile indices
+  3-6) matches when the `x + 0x40` and/or `y + 0x40` coordinates are explicitly
+  cast back to `s16`. This reproduces the target `sll`/`sra` sign-extension
+  before the draw calls (func_8001958C, func_80029598).
 - Before tuning register allocation, verify function signatures and call
   argument order against the target assembly. Wrong argument order produces
   misleading register-allocation diffs and wastes permutation time.

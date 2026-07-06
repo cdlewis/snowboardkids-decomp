@@ -1,4 +1,5 @@
 #include "common.h"
+#include "menu_rendering.h"
 
 typedef struct {
     char pad0[0x18];
@@ -50,7 +51,6 @@ extern void func_80071824(void *task, void (*callback)());
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern void func_80029344(PlayerCountSelectRowActor *);
-extern void func_80029598(PlayerCountSelectWidgetActor *);
 extern void func_800296D8(PlayerCountSelectWidgetActor *);
 extern void func_80029CE4(PlayerCountSelectWidgetActor *);
 extern void func_8002A008(PlayerCountSelectWidgetActor *);
@@ -101,7 +101,12 @@ void func_80029548(PlayerCountSelectRowActor *arg0) {
     func_80071824(arg0, func_80029344);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_80029598.s")
+void func_80029598(PlayerCountSelectWidgetActor *arg0) {
+    func_8000F030(arg0->x, arg0->y, func_80043040(D_80112172), 3, 0x20, 0x20, 0, 0);
+    func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(D_80112172), 4, 0x20, 0x20, 0, 0);
+    func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(D_80112172), 5, 0x20, 0x20, 0, 0);
+    func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(D_80112172), 6, 0x20, 0x20, 0, 0);
+}
 
 void func_800296D8(PlayerCountSelectWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
