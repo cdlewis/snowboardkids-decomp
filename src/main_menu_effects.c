@@ -624,29 +624,21 @@ void func_8003DBB8(MainMenuEffectActor *arg0) {
     func_800483FC(&D_80124868, func_8003DB84, arg0);
 }
 
-// func_8003DBE8 best match: 92.36%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003DBE8.s")
-
-#ifdef NON_MATCHING
 void func_8003DBE8(MainMenuEffectActor *arg0) {
-    s16 temp_t8;
-    s16 temp_t9;
+    s16 *temp_v0;
 
-    temp_t8 = (u16)arg0->animFrame + 1;
-    temp_t9 = temp_t8 & 1;
-    arg0->animFrame = temp_t8;
-    arg0->animFrame = temp_t9;
-    if (!(temp_t9 & 0xFFFF)) {
-        arg0->angleVelocity -= 1;
-        if (arg0->angleVelocity == 0x10) {
+    arg0->animFrame = arg0->animFrame + 1;
+    temp_v0 = &arg0->angle;
+    arg0->animFrame &= 1;
+    if (arg0->animFrame == 0) {
+        temp_v0[1] -= 1;
+        if (temp_v0[1] == 0x10) {
             func_80071824(arg0, func_8003DBB8);
             D_8010B1A2 = 0x43;
         }
     }
     func_800483FC(&D_80124868, func_8003DB84, arg0);
 }
-#endif
 
 void func_8003DC70(MainMenuEffectActor *arg0) {
     func_800483FC(&D_80124868, func_8003DB84, arg0);
