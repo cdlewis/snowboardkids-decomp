@@ -2358,3 +2358,16 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - A simple `for (i = 0; i < 10; i++)` loop over that array emitted the target's
   compact pointer-increment loop for setting every slot to `-0xFC`; no manual
   unrolling was needed.
+
+## func_8000D340 (race_to_main_menu_transition)
+
+- The transition initializer is straight-line setup code, but IDO is sensitive
+  to the small globals around `D_8010B1A8`. The target clears `D_8010B1A8` and
+  then computes `&D_8010B1A8 + 1` before clearing the next four bytes in the
+  order `+1`, `+2`, `+3`, `+0`; writing the maintainable version as named
+  globals (`D_8010B1A9` through `D_8010B1AC`) is clearer but does not preserve
+  that exact register schedule.
+- Introducing a temporary for the transition state fade read after setting
+  `D_801235B8->fade = 0xFF` made IDO keep `&D_801235B8` in `a2`, matching the
+  target's final block more closely. It can shift unrelated stack local slots,
+  so asset-size spill offsets should be rechecked after adding such temporaries.
