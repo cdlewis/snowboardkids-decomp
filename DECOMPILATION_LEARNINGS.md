@@ -52,6 +52,12 @@ patterns, and verified layout/linking rules.
   separate `u32`/`unsigned int` draw argument and branching on that widened temp
   can preserve the target stack frame while leaving the original `u16` local for
   subsequent calls (func_80030EF0).
+- For draw helpers with many stack arguments, the visible prototype can affect
+  both promotion and local placement. In func_8002BA38, declaring the alpha
+  helper parameter as `u16` prevented an extra promoted spill, while a live
+  `s32 zero = 0` local used for the zero arguments moved the `u16` alpha local
+  from `sp+0x3E` to the target `sp+0x3A` without changing the emitted zero
+  stores.
 - The common four-tile menu panel draw pattern (`func_8000F030` tile indices
   3-6) matches when the `x + 0x40` and/or `y + 0x40` coordinates are explicitly
   cast back to `s16`. This reproduces the target `sll`/`sra` sign-extension
