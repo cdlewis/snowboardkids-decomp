@@ -1,8 +1,28 @@
 #include "common.h"
 
-extern s32 D_8010B1C0;
+typedef struct {
+    char pad0[0x18];
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ s32 unk1C;
+    /* 0x20 */ s32 unk20;
+    /* 0x24 */ s16 unk24;
+    /* 0x26 */ s16 unk26;
+    /* 0x28 */ s16 unk28;
+    /* 0x2A */ u16 unk2A;
+    /* 0x2C */ s16 unk2C;
+} MainMenuSceneActor;
 
-extern void func_800373AC(s32 *arg0);
+typedef struct {
+    /* 0x00 */ s32 posX;
+    /* 0x04 */ s32 posY;
+    /* 0x08 */ s32 posZ;
+    /* 0x0C */ s8 unkC;
+    /* 0x0D */ s8 actorId;
+} MainMenuSceneActorShadow;
+
+extern MainMenuSceneActorShadow D_8010B1C0;
+
+extern void func_800373AC(MainMenuSceneActorShadow *arg0);
 extern void func_8003C0A4(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
 extern void func_80041D20(s32 arg0, s32 arg1);
 extern void func_80041DD4(s32 arg0, s32 arg1);
@@ -23,18 +43,6 @@ extern void func_8004209C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern void func_8003D068(s16 arg0, s16 arg1);
 extern void func_800420FC(s32 arg0, s16 arg1, s16 arg2, s16 arg3);
 extern void func_8003C420(s32 arg0, s32 arg1, s32 arg2);
-
-typedef struct {
-    char pad0[0x18];
-    /* 0x18 */ s32 unk18;
-    /* 0x1C */ s32 unk1C;
-    /* 0x20 */ s32 unk20;
-    /* 0x24 */ s16 unk24;
-    /* 0x26 */ s16 unk26;
-    /* 0x28 */ s16 unk28;
-    /* 0x2A */ u16 unk2A;
-    /* 0x2C */ s16 unk2C;
-} MainMenuSceneActor;
 
 void func_80032B94(MainMenuSceneActor *arg0);
 void func_80032BF0(MainMenuSceneActor *arg0);
@@ -77,7 +85,7 @@ void func_80034574(MainMenuSceneActor *arg0);
 void func_80034600(MainMenuSceneActor *arg0);
 void func_80034BC4(MainMenuSceneActor *arg0);
 void func_80034D10(MainMenuSceneActor *arg0);
-void func_80034DA0(void);
+void func_80034DA0(MainMenuSceneActor *arg0);
 
 void func_80032A80(void) {
 }
@@ -1001,7 +1009,28 @@ void func_80034D10(MainMenuSceneActor *arg0) {
     func_800373AC(&D_8010B1C0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_0/func_80034DA0.s")
+void func_80034DA0(MainMenuSceneActor *arg0) {
+    MainMenuSceneActor *temp_a2;
+
+    temp_a2 = arg0;
+    arg0->unk2A++;
+    if (arg0->unk2A == 6) {
+        D_8010B1A2 = 9;
+    }
+    if (arg0->unk2A == 0x64) {
+        D_8010B1A2 = 0xA;
+        func_80071824(temp_a2, func_80034D10);
+        func_80041DD4(0, 0xE);
+        temp_a2->unk2A = 0;
+        D_8010B1C0.actorId = 0;
+        D_8010B1C0.unkC = 0xB;
+        D_8010B1C0.posY = (s32)0xFFE80000;
+        D_8010B1A8 = 1;
+    } else {
+        func_80042034(0);
+    }
+    func_800428C8(0);
+}
 
 void func_80034E60(MainMenuSceneActor *arg0) {
     s32 temp_a1;
