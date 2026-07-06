@@ -31,210 +31,67 @@ extern u32 client_num, client_cnt, client_max, client_min;
 #   define MIN(a,b) (((a)<(b))?(a):(b))
 #endif
 
-
-void func_800A5A90(void)
-{
-}
-
-/*
-  Add 0.5 to adjust the average affect of
-  the truncation error produced by casting
-  a float to an int.
-*/
-s32 _timeToSamples(ALSynth *synth, s32 micros)
-{
-    f32 tmp = ((f32)micros) * synth->outputRate / 1000000.0 + 0.5;
-
-    return (s32)tmp & ~0xf;
-}
-
-void _freePVoice(ALSynth *drvr, PVoice *pvoice)
-{
-    alUnlink((ALLink *)pvoice);
-    alLink((ALLink *)pvoice, &drvr->pLameList);
-}
-
-void _collectPVoices(ALSynth *drvr)
-{
-    ALLink *dl;
-
-    while ((dl = drvr->pLameList.next) != 0) {
-        alUnlink(dl);
-        alLink(dl, &drvr->pFreeList);
-    }
-}
-
-void __freeParam(ALParam *param)
-{
-    ALSynth *drvr = &alGlobals->drvr;
-
-    param->next = drvr->paramList;
-    drvr->paramList = param;
-}
-
-ALParam *__allocParam(void)
-{
-    ALParam *update = 0;
-    ALSynth *drvr = &alGlobals->drvr;
-
-    if (drvr->paramList) {
-        update = drvr->paramList;
-        drvr->paramList = drvr->paramList->next;
-        update->next = 0;
-    }
-    return update;
-}
-
-void func_800A5BD0(void)
-{
-}
-
-
-
-/*
- * slAudioFrame() is called every video frame, and is based on the video
- * frame interrupt. It is assumed to be an accurate time source for the
- * clients.
- */
-#if 0
-Acmd *alAudioFrame(Acmd *cmdList, s32 *cmdLen, s16 *outBuf, s32 outLen)
-{
-    ALPlayer *volatile client;
-    ALPlayer *cl;
-    ALFilter *output;
-    ALSynth *drvr = &alGlobals->drvr;
-    s16 tmp = 0;
-    Acmd *cmdlEnd = cmdList;
-    Acmd *cmdPtr;
-    s32 nOut;
-    s16 *lOutBuf = outBuf;
-    s16 *tmpPtr = &tmp;
-    ALMicroTime delta;
-    s32 samples;
-    f64 denom;
-    f64 round;
-    f32 samplesFloat;
-    ALPlayer *volatile clientPad[6];
-
-#ifdef AUD_PROFILE
-    lastCnt[++cnt_index] = osGetCount();
-#endif
-
-    if (drvr->head == 0) {
-        *cmdLen = 0;
-        return cmdList;
-    }
-
-#ifdef AUD_PROFILE
-    lastCnt[++cnt_index] = osGetCount();
-#endif
-
-    client = 0;
-    delta = 0x7fffffff;
-    for (cl = drvr->head; cl != 0; cl = cl->next) {
-        if ((cl->samplesLeft - drvr->curSamples) < delta) {
-            client = cl;
-            delta = cl->samplesLeft - drvr->curSamples;
-        }
-    }
-    drvr->paramSamples = client->samplesLeft;
-
-    if (drvr->paramSamples - drvr->curSamples < outLen) {
-        denom = 1000000.0;
-        round = 0.5;
-        do {
-            drvr->paramSamples &= ~0xf;
-            samples = (*client->handler)(client);
-            samplesFloat = (f32)((((f32)samples) * drvr->outputRate / denom) + round);
-            client->samplesLeft += (s32)samplesFloat;
-
-            client = 0;
-            delta = 0x7fffffff;
-            for (cl = drvr->head; cl != 0; cl = cl->next) {
-                if ((cl->samplesLeft - drvr->curSamples) < delta) {
-                    client = cl;
-                    delta = cl->samplesLeft - drvr->curSamples;
-                }
-            }
-            drvr->paramSamples = client->samplesLeft;
-        } while (drvr->paramSamples - drvr->curSamples < outLen);
-    }
-
-    ((volatile ALSynth *)drvr)->paramSamples &= ~0xf;
-
-#ifdef AUD_PROFILE
-    PROFILE_AUD(client_num, client_cnt, client_max, client_min);
-#endif
-
-    while (outLen > 0) {
-        nOut = MIN(drvr->maxOutSamples, outLen);
-        cmdPtr = cmdlEnd;
-        aSegment(cmdPtr++, 0, 0);
-        output = drvr->outputFilter;
-        (*output->setParam)(output, AL_FILTER_SET_DRAM, lOutBuf);
-        cmdlEnd = (*output->handler)(output, tmpPtr, nOut, drvr->curSamples,
-                                     cmdPtr);
-
-        outLen -= nOut;
-        lOutBuf += nOut << 1;
-        drvr->curSamples += nOut;
-    }
-    *cmdLen = (s32)(cmdlEnd - cmdList);
-
-    _collectPVoices(drvr);
-
-#ifdef AUD_PROFILE
-    PROFILE_AUD(drvr_num, drvr_cnt, drvr_max, drvr_min);
-#endif
-    return cmdlEnd;
-}
-#endif
-
-#pragma GLOBAL_ASM("asm/nonmatchings/ultra/audio/synthesizer/alAudioFrame.s")
+static s32 __nextSampleTime(ALSynth *drvr, ALPlayer **client);
+static s32 _timeToSamplesNoRound(ALSynth *ALSynth, s32 micros);
 
 /***********************************************************************
  * Synthesis driver public interfaces
  ***********************************************************************/
 void alSynNew(ALSynth *drvr, ALSynConfig *c)
 {
-    s32 i;
-    ALVoice *vv;
-    PVoice *pv;
-    ALVoice *vvoices;
-    PVoice *pvoices;
-    ALHeap *hp = c->heap;
-    ALSave *save;
-    ALFilter **sources;
-    ALParam *params;
-    ALParam *paramPtr;
-
-    drvr->head = NULL;
-    drvr->numPVoices = c->maxPVoices;
-    drvr->curSamples = 0;
-    drvr->paramSamples = 0;
-    drvr->outputRate = c->outputRate;
-    drvr->maxOutSamples = AL_MAX_RSP_SAMPLES;
-    drvr->dma = (ALDMANew)c->dmaproc;
+    s32         i;
+    ALVoice     *vv;
+    PVoice      *pv;
+    ALVoice     *vvoices;
+    PVoice      *pvoices;
+    ALHeap      *hp = c->heap;
+    ALSave      *save;
+    ALFilter    *sources;
+    ALParam     *params;
+    ALParam     *paramPtr;
+    
+    drvr->head            = NULL;
+    drvr->numPVoices      = c->maxPVoices;
+    drvr->curSamples      = 0;
+    drvr->paramSamples    = 0;
+    drvr->outputRate      = c->outputRate;
+    drvr->maxOutSamples   = AL_MAX_RSP_SAMPLES;
+    drvr->dma             = (ALDMANew) c->dmaproc;
 
     save = alHeapAlloc(hp, 1, sizeof(ALSave));
     alSaveNew(save);
     drvr->outputFilter = (ALFilter *)save;
 
+    /*
+     * allocate and initialize the auxilliary effects bus. at present
+     * we only support 1 effects bus.
+     */
     drvr->auxBus = alHeapAlloc(hp, 1, sizeof(ALAuxBus));
     drvr->maxAuxBusses = 1;
     sources = alHeapAlloc(hp, c->maxPVoices, sizeof(ALFilter *));
     alAuxBusNew(drvr->auxBus, sources, c->maxPVoices);
 
+    /*
+     * allocate and initialize the main bus.
+     */
     drvr->mainBus = alHeapAlloc(hp, 1, sizeof(ALMainBus));
     sources = alHeapAlloc(hp, c->maxPVoices, sizeof(ALFilter *));
     alMainBusNew(drvr->mainBus, sources, c->maxPVoices);
 
-    if (c->fxType != AL_FX_NONE) {
+    if (c->fxType != AL_FX_NONE){
+        /*
+         * Allocate an effect and set parameters
+         */
         alSynAllocFX(drvr, 0, c, hp);
-    } else {
-        alMainBusParam(drvr->mainBus, AL_FILTER_ADD_SOURCE, &drvr->auxBus[0]);
-    }
-
+    } else
+        /*
+         * Connect the aux bus to the main bus
+         */
+    	alMainBusParam(drvr->mainBus, AL_FILTER_ADD_SOURCE, &drvr->auxBus[0]);
+    
+    /*
+     * Build the physical voice lists
+     */
     drvr->pFreeList.next = 0;
     drvr->pFreeList.prev = 0;
     drvr->pLameList.next = 0;
@@ -250,7 +107,7 @@ void alSynNew(ALSynth *drvr, ALSynConfig *c)
 
         alLoadNew(&pv->decoder, drvr->dma, hp);
         alLoadParam(&pv->decoder, AL_FILTER_SET_SOURCE, 0);
-
+    
         alResampleNew(&pv->resampler, hp);
         alResampleParam(&pv->resampler, AL_FILTER_SET_SOURCE, &pv->decoder);
 
@@ -258,18 +115,209 @@ void alSynNew(ALSynth *drvr, ALSynConfig *c)
         alEnvmixerParam(&pv->envmixer, AL_FILTER_SET_SOURCE, &pv->resampler);
 
         alAuxBusParam(drvr->auxBus, AL_FILTER_ADD_SOURCE, &pv->envmixer);
-        pv->channelKnob = (ALFilter *)&pv->envmixer;
+        
+        pv->channelKnob   = (ALFilter *)&pv->envmixer;
     }
-
+    
     alSaveParam(save, AL_FILTER_SET_SOURCE, drvr->mainBus);
 
+    /*
+     * build the parameter update list
+     */
     params = alHeapAlloc(hp, c->maxUpdates, sizeof(ALParam));
     drvr->paramList = 0;
     for (i = 0; i < c->maxUpdates; i++) {
-        paramPtr = &params[i];
+        paramPtr= &params[i];
         paramPtr->next = drvr->paramList;
         drvr->paramList = paramPtr;
     }
-
+    
     drvr->heap = hp;
 }
+
+/*
+ * slAudioFrame() is called every video frame, and is based on the video
+ * frame interrupt. It is assumed to be an accurate time source for the
+ * clients.
+ */
+Acmd *alAudioFrame(Acmd *cmdList, s32 *cmdLen, s16 *outBuf, s32 outLen)
+{
+    ALPlayer    *client;
+    ALFilter    *output;
+    ALSynth     *drvr = &alGlobals->drvr;
+    s16         tmp = 0;        /* Starting buffer in DMEM */
+    Acmd        *cmdlEnd = cmdList;
+    Acmd        *cmdPtr;
+    s32         nOut;
+    s16         *lOutBuf = outBuf;
+
+#ifdef AUD_PROFILE
+    lastCnt[++cnt_index] = osGetCount();
+#endif
+    
+    if (drvr->head == 0) {
+	*cmdLen = 0;
+        return cmdList;         /* nothing to do */
+    }    
+
+    /*
+     * run down list of clients and execute callback if needed this
+     * subframe. Here we do all the work for the frame at the
+     * start. Time offsets that occur before the next frame are
+     * executed "early".
+     */
+
+#ifdef AUD_PROFILE
+    lastCnt[++cnt_index] = osGetCount();
+#endif
+
+    /*
+     * paramSamples = time of next parameter change.
+     * curSamples = current sample time.
+     * so paramSamples - curSamples is the time until the next parameter change.
+     * if the next parameter change occurs within this frame time (outLen),
+     * then call back the client that contains the parameter change.
+     * Note, paramSamples must be rounded down to 16 sample boundary for use
+     * during the client handler.
+     */
+
+    for (drvr->paramSamples = __nextSampleTime(drvr, &client);
+	 drvr->paramSamples - drvr->curSamples < outLen;
+	 drvr->paramSamples = __nextSampleTime(drvr, &client))
+    {
+	drvr->paramSamples &= ~0xf;
+	client->samplesLeft += _timeToSamplesNoRound(drvr, (*client->handler)(client));
+    }
+
+    /* for safety's sake, always store paramSamples aligned to 16 sample boundary.
+     * this way, if an voice handler routine gets called outside the ALVoiceHandler
+     * routine (alSynAllocVoice) it will get timestamped with an aligned value and
+     * will be processed immediately next audio frame.
+     */
+    drvr->paramSamples &= ~0xf;
+
+
+#ifdef AUD_PROFILE
+    PROFILE_AUD(client_num, client_cnt, client_max, client_min);
+#endif
+
+    /*
+     * Now build the command list in small chunks
+     */
+    while (outLen > 0){
+        nOut = MIN(drvr->maxOutSamples, outLen);
+
+        /*
+         * construct the command list for each physical voice by calling
+         * the head of the filter chain.
+         */
+        cmdPtr = cmdlEnd;
+        aSegment(cmdPtr++, 0, 0);
+        output = drvr->outputFilter;
+        (*output->setParam)(output, AL_FILTER_SET_DRAM, lOutBuf);
+        cmdlEnd = (*output->handler)(output, &tmp, nOut, drvr->curSamples,
+                                     cmdPtr);
+        
+        outLen -= nOut;
+        lOutBuf += nOut<<1;     /* For Stereo */
+        drvr->curSamples += nOut;
+                
+    }
+    *cmdLen = (s32) (cmdlEnd - cmdList);
+
+    _collectPVoices(drvr); /* collect free physical voices */
+    
+#ifdef AUD_PROFILE
+    PROFILE_AUD(drvr_num, drvr_cnt, drvr_max, drvr_min);
+#endif
+    return cmdlEnd;
+}
+
+/***********************************************************************
+ * Synthesis driver private interfaces
+ ***********************************************************************/
+
+ALParam *__allocParam() 
+{
+    ALParam *update = 0;
+    ALSynth *drvr = &alGlobals->drvr;
+
+    if (drvr->paramList) {        
+        update = drvr->paramList;
+        drvr->paramList = drvr->paramList->next;
+        update->next = 0;
+    }
+    return update;
+}
+    
+void __freeParam(ALParam *param) 
+{
+    ALSynth *drvr = &alGlobals->drvr;
+    param->next = drvr->paramList;
+    drvr->paramList = param;
+}
+
+void _collectPVoices(ALSynth *drvr) 
+{
+    ALLink       *dl;
+    PVoice      *pv;
+
+    while ((dl = drvr->pLameList.next) != 0) {
+        pv = (PVoice *)dl;
+
+        /* ### remove from mixer */
+
+        alUnlink(dl);
+        alLink(dl, &drvr->pFreeList);        
+    }
+}
+
+void _freePVoice(ALSynth *drvr, PVoice *pvoice) 
+{
+    /*
+     * move the voice from the allocated list to the lame list
+     */
+    alUnlink((ALLink *)pvoice);
+    alLink((ALLink *)pvoice, &drvr->pLameList);
+}
+
+/*
+  Add 0.5 to adjust the average affect of
+  the truncation error produced by casting
+  a float to an int.
+*/
+s32 _timeToSamplesNoRound(ALSynth *synth, s32 micros)
+{
+    f32 tmp = ((f32)micros) * synth->outputRate / 1000000.0 + 0.5;
+
+    return (s32)tmp;
+}
+
+s32 _timeToSamples(ALSynth *synth, s32 micros)
+{
+    return _timeToSamplesNoRound(synth, micros) & ~0xf;
+}
+
+static s32 __nextSampleTime(ALSynth *drvr, ALPlayer **client) 
+{
+    ALMicroTime delta = 0x7fffffff;     /* max delta for s32 */
+    ALPlayer *cl;
+#if BUILD_VERSION < VERSION_J // Adjust line numbers to match assert
+#line 306
+#endif
+    assert(drvr->head);
+
+    *client = 0;
+    
+    for (cl = drvr->head; cl != 0; cl = cl->next) {
+        if ((cl->samplesLeft - drvr->curSamples) < delta) {
+            *client = cl;
+            delta = cl->samplesLeft - drvr->curSamples;
+        }
+    }
+
+    return (*client)->samplesLeft;
+}
+
+
+
