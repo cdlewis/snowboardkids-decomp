@@ -1,4 +1,5 @@
 #include "common.h"
+#include "menu_rendering.h"
 
 typedef struct {
     char pad0[0x18];
@@ -52,7 +53,6 @@ extern void func_80071824(void *task, void (*callback)());
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern void func_80019314(void);
-extern void func_8001958C(PlayerSelectWidgetActor *);
 extern void func_800196CC(PlayerSelectWidgetActor *);
 extern void func_80019CD8(PlayerSelectWidgetActor *);
 extern void func_80019FFC(PlayerSelectWidgetActor *);
@@ -66,9 +66,6 @@ extern void func_8001B2D8(PlayerSelectWidgetActor *);
 extern void func_8001B520(PlayerSelectWidgetActor *);
 extern void func_8001B6D8(PlayerSelectWidgetActor *);
 extern void func_8001B8F0(PlayerSelectWidgetActor *);
-extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
-extern void func_80013D0C(s32, s32, char *, s32, s32);
-extern void func_80013154(s32, s32, PlayerPortrait, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern int sprintf(char *, const char *, ...);
@@ -101,7 +98,12 @@ void func_8001952C(Struct1952C *arg0) {
     func_80071824(arg0, func_80019314);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_8001958C.s")
+void func_8001958C(PlayerSelectWidgetActor *arg0) {
+    func_8000F030(arg0->x, arg0->y, func_80043040(D_80112172), 3, 0x20, 0x20, 0, 0);
+    func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(D_80112172), 4, 0x20, 0x20, 0, 0);
+    func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(D_80112172), 5, 0x20, 0x20, 0, 0);
+    func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(D_80112172), 6, 0x20, 0x20, 0, 0);
+}
 
 void func_800196CC(PlayerSelectWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
