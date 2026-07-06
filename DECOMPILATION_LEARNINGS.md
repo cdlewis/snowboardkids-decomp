@@ -102,7 +102,7 @@ patterns, and verified layout/linking rules.
   source nesting/statement shape even when the control flow is equivalent.
   Keeping the nested `do { ... } while (0)` and inner loop body collapsed to the
   proven source shape fixed a pure two-instruction scheduling swap in
-  func_8006D700.
+  func_8006D700 and func_80045914.
 - IDO aggressively unrolls *structured* counted loops (`for`/`while`/`do-while`)
   whose trip count is computable at runtime from two address operands: it emits
   a `subu` (end-start) + `andi N,0x..` remainder pre-loop + an unrolled body
