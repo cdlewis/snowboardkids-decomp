@@ -2641,3 +2641,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - For adjacent `u16` alpha locals that must survive calls, keeping a local copy
   of the actor pointer and a no-op empty branch in the inactive path made IDO
   choose the target `v1`/`t0` allocation and `sp+0x3A`/`sp+0x38` halfword slots.
+
+## func_80027408 (course_select_ui)
+
+- When a `u16` tile index must survive a nested `func_80043040` call and become
+  the fourth argument to `func_8000F8AC`, an extra unused `u16` local plus a
+  promoted `u32` copy can make IDO keep the value in `$a3` and spill it at the
+  target halfword stack slot.
