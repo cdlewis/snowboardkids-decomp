@@ -78,6 +78,10 @@ patterns, and verified layout/linking rules.
   count, look for the "extra" case being an empty body identical to default
   (func_80023198 vs the matched func_800219E4, which lacks case 4 and uses a
   ladder). The empty case is often the terminal state of the state machine.
+- State-machine switches may need an explicit empty terminal case even when the
+  post-switch cleanup handles that same state. In func_80021F80, adding
+  `case 6: break;` was required to make IDO emit the target's 7-entry jump table
+  instead of a 6-entry table for cases 0-5.
 - IDO can emit a genuinely unreachable (dead) `li` after an unconditional `b`
   when compiling a complex `||`/`&&` short-circuit with comma-operator-style
   intermediate assignments to the same variable (e.g. the threshold-selection
