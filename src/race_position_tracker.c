@@ -46,13 +46,23 @@ extern s16 D_80121B50;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007BB08.s")
 
+// func_8007BCFC best match: 99.474% (nonmatchings/func_8007BCFC-1404502880690620360/base_14.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007BCFC.s")
+
 #ifdef NON_MATCHING
 s32 func_8007BCFC(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
+    s32 rankSlotCopy;
+    s32 courseIndex;
+    s32 pathIndexCopy;
+    s8 *entry;
     RacePositionPlayer *player;
+    s8 pathSample;
     s32 pathOffset;
-    s32 delta;
 
-    if (D_80121B50 == 7) {
+    courseIndex = D_80121B50;
+    entry = D_800DDE74[(courseIndex * RACE_POSITION_PLAYER_COUNT) + playerIndex];
+    pathIndexCopy = pathIndex;
+    if (courseIndex == 7) {
         if (playerIndex == 0) {
             return 0xFFF40000;
         }
@@ -67,24 +77,24 @@ s32 func_8007BCFC(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
         }
     }
 
-    player = &D_80121D80[rankSlot];
+    rankSlotCopy = rankSlot;
+    entry = D_800DDE74[(courseIndex * RACE_POSITION_PLAYER_COUNT) + playerIndex];
+    player = &D_80121D80[rankSlotCopy];
     pathOffset = player->smoothedPathOffset;
-    delta = (D_800DDE74[(D_80121B50 * RACE_POSITION_PLAYER_COUNT) + playerIndex][pathIndex] << 0x12)
-        - pathOffset;
+    pathSample = entry[pathIndexCopy];
+    pathIndex = (pathSample << 0x12) - pathOffset;
 
-    if (delta >= 0x60001) {
-        delta = 0x60000;
+    if (pathIndex >= 0x60001) {
+        pathIndex = 0x60000;
     }
-    if (delta < 0xFFFA0000) {
-        delta = 0xFFFA0000;
+    if (pathIndex < -0x60000) {
+        pathIndex = -0x60000;
     }
 
-    pathOffset += delta;
+    pathOffset += pathIndex;
     player->smoothedPathOffset = pathOffset;
     return pathOffset;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007BCFC.s")
 #endif
 
 s32 func_8007BDE4(s32 playerIndex, s32 pathIndex) {

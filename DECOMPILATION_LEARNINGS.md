@@ -2587,3 +2587,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - A word-sized volatile character parameter on the callee declaration avoids an
   extra `andi` before `func_80047E88`, but it also flips the newline compare
   operand order; the best candidate still has only branch/register-order drift.
+
+## func_8007BCFC (race_position_tracker)
+
+- The closest structured candidate reaches 99.474%. Preloading the course/path
+  table entry before copying `pathIndex` lets IDO schedule `move $a3, $a1` in
+  the initial branch delay slot while preserving the real lookup after the
+  special course early returns.
+- Naming the loaded signed path byte as an `s8` local keeps the load signed and
+  preserves the clamp structure, but IDO still chooses a temporary register for
+  the byte before shifting where the target reuses `$a1`.
