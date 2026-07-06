@@ -41,9 +41,9 @@ typedef struct PlayerCommandState {
     s32 sequencePos;
     s32 restartPos;
     s32 unk60;
-    u8 pad64[0x4];
+    s32 unk64;
     s32 unk68;
-    u8 pad6C[0x4];
+    s32 unk6C;
     s32 jumpTarget;
     u8 *returnScripts[5];
     s32 returnUnk60[5];
@@ -513,7 +513,28 @@ s32 func_8009D33C(s32 arg0, s32 arg1) {
     return arg1;
 }
 
+// func_8009D348 best match: 74.0%
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009D348.s")
+
+#ifdef NON_MATCHING
+s32 func_8009D348(PlayerCommandState *arg0, u8 *arg1) {
+    s32 temp_v0;
+    s32 temp_v1;
+    s32 temp_t7;
+
+    temp_v0 = (arg1[2] << 8) + arg1[3];
+    temp_v1 = arg1[0];
+    temp_t7 = arg1[1];
+    arg0->unk60 = arg0->unk64 + temp_v0;
+    arg0->unkC8 = 1;
+    temp_v0 = (arg1[4] << 8) + arg1[5];
+    temp_v1 = (temp_v1 << 8) + temp_t7;
+    arg0->unk68 = arg0->unk6C + temp_v0;
+    arg1 += 5;
+    arg0->unkCA = 1;
+    return arg0->restartPos + temp_v1;
+}
+#endif
 
 s32 func_8009D3AC(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unkF3 = *arg1;
