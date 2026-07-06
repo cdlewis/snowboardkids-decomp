@@ -2375,3 +2375,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `D_801235B8->fade = 0xFF` made IDO keep `&D_801235B8` in `a2`, matching the
   target's final block more closely. It can shift unrelated stack local slots,
   so asset-size spill offsets should be rechecked after adding such temporaries.
+
+## func_8003BC9C (main_menu_debug_ui)
+
+- Declaring the pressed-button global as `s32 D_80123778[]` and indexing
+  `D_80123778[0]` made IDO keep the global base address live in `v1`, matching
+  the target's repeated button checks. A scalar `s32` declaration emitted direct
+  reloads or kept the base in `a1`.
+- For the debug object `x` movement, direct `arg0->x` comparisons and updates
+  matched the target allocation better than introducing local `s16 x` temporaries
+  for both directions.
