@@ -1,4 +1,5 @@
 #include "common.h"
+#include "character_select_flow.h"
 #include "controller_pak_menu.h"
 
 typedef struct {
@@ -63,6 +64,11 @@ typedef struct {
     u8 timer;
 } ControllerPakDeletePromptActor;
 
+typedef struct {
+    u16 x;
+    u8 state;
+} ControllerPakPromptTransition;
+
 extern void func_800483FC(void *, void *, s32);
 extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
@@ -70,10 +76,12 @@ extern void func_80071824(void *task, void (*callback)());
 extern void func_80011D74(void *, s32, s16, s16);
 extern s32 D_80124868;
 extern s32 D_80124838;
+extern CharacterSelectFlowState *D_801235B8;
+extern ControllerPakPromptTransition D_8010AF80;
 extern ControllerPakMenuState D_8010AF90;
 extern u8 D_8010AF93;
 extern s16 D_8011217C;
-extern void func_8003048C(void);
+void func_8003048C(ControllerPakTitleActor *);
 extern void func_80030CC4(void);
 extern void func_80030EF0(void);
 void func_80031038(ControllerPakTitleActor *);
@@ -88,7 +96,47 @@ extern void func_800716E4(void *);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_8002FFD0.s")
 
+// func_8003048C best match: 92.821%
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_8003048C.s")
+
+#ifdef NON_MATCHING
+void func_8003048C(ControllerPakTitleActor *arg0) {
+    s32 temp_v0;
+    s32 state;
+    ControllerPakTitleActor *temp_a2 = arg0;
+
+    temp_v0 = D_8010AF80.state;
+    state = arg0->blinkState;
+    if (state != temp_v0) {
+        arg0->blinkState = temp_v0;
+        state = temp_v0 & 0xFF;
+        arg0->scale = D_8010AF80.x;
+    }
+
+    temp_v0 = state;
+    switch (temp_v0) {
+        case 1:
+            temp_a2->selectedOption = D_801235B8->timer;
+            if (temp_a2->timer < 0x10) {
+                temp_a2->scale -= 9;
+            } else {
+                temp_a2->scale += 9;
+            }
+            temp_a2->timer = (temp_a2->timer + 1) & 0x1F;
+            state = temp_a2->blinkState;
+            break;
+        case 0:
+        case 2:
+            break;
+    }
+
+    if (state == 3) {
+        func_800716E4(temp_a2);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002FFD0, (s32)temp_a2);
+}
+#endif
 
 void func_80030570(ControllerPakTitleActor *arg0) {
     arg0->common.x = -0x70;
