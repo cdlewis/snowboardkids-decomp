@@ -58,6 +58,7 @@ extern s32 func_80043040(s16);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern s32 D_80124838;
 extern s32 D_80124868;
+extern s16 D_800DEF14;
 extern s16 D_80112172;
 extern s16 D_8011217C;
 extern s16 D_8011217E;
@@ -655,7 +656,24 @@ void func_8003DC70(MainMenuEffectActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003DCCC.s")
+void func_8003DCCC(MainMenuEffectActor *arg0) {
+    s16 *temp_v0;
+
+    if (D_800DEF14 == 0) {
+        arg0->animFrame = (u16)arg0->animFrame + 1;
+        temp_v0 = &arg0->angle;
+        if ((u16)arg0->animFrame >= 0x78) {
+            if (!(((u16)arg0->animFrame) & 1)) {
+                temp_v0[1]++;
+                if (temp_v0[1] == 0x60) {
+                    arg0->animFrame = 0;
+                    func_80071824(arg0, func_8003DC70);
+                }
+            }
+        }
+    }
+    func_800483FC(&D_80124868, func_8003DB84, arg0);
+}
 
 void func_8003DD64(MainMenuEffectActor *arg0) {
     func_80017168(arg0->spriteState, func_80043040(D_8011217E));
