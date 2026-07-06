@@ -2466,3 +2466,14 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `scale` at `0x1C`, `u16 timer` at `0x1E`, and byte `selectedOption` at
   `0x20`. Reusing the delete-prompt struct swaps the timer and selected option
   loads and also changes signedness in `func_80032534`.
+
+## func_80054EC4 (main_menu_overlay_effects)
+
+- `MainMenuOverlayEffectActor` offset `0x30` is used both as a full `s32` angle
+  accumulator and as its low halfword at offset `0x32`; model it as an
+  `OverlayActorWord` union to avoid manual offset access.
+- The typed candidate reaches 99.44%. The remaining diff is pure temp-register
+  allocation in the spawned actor copy block. Whole-union assignments force
+  `$at` for the contiguous word copies, while `.word` assignments shift the
+  temps to `$t*`; moving the `alpha = 0xC0` store after `spriteIndex` improves
+  scheduling but still leaves register-name drift.

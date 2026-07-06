@@ -36,7 +36,7 @@ typedef struct {
     /* 0x2C */ u8 pad2C[2];
     /* 0x2E */ u8 unk2E;
     /* 0x2F */ u8 unk2F;
-    /* 0x30 */ s32 unk30;
+    /* 0x30 */ OverlayActorWord unk30;
     /* 0x34 */ s16 spriteIndex;
     /* 0x36 */ s16 alpha;
 } MainMenuOverlayEffectActor;
@@ -105,11 +105,13 @@ void func_80054A04(MainMenuOverlayEffectActor *);
 void func_80054A64(MainMenuOverlayEffectActor *);
 void func_80054AC0(MainMenuOverlayEffectActor *);
 void func_80054B98(void);
-void func_80054EC4(void);
+void func_80054EC4(MainMenuOverlayEffectActor *);
 void func_80055148(void);
 void func_8005537C(MainMenuOverlayEffectActor *);
 void func_80055410(void);
 void func_80055530(void);
+s32 func_80097AE8(s16);
+MainMenuOverlayEffectActor *func_80071408(void (*callback)(MainMenuOverlayEffectActor *), s32 type, s32 priority);
 void func_800716E4(void *);
 void *func_80071664(void *, s32, s32, s32);
 void func_80071824(void *task, void (*callback)());
@@ -345,11 +347,36 @@ void func_80054E70(MainMenuOverlayEffectActor *arg0) {
     func_800483FC(D_801248D4, func_80054B98, (s32)arg0);
 }
 
+// func_80054EC4 best match: 99.444%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80054EC4.s")
+
+#ifdef NON_MATCHING
+void func_80054EC4(MainMenuOverlayEffectActor *arg0) {
+    MainMenuOverlayEffectActor *actor;
+
+    arg0->unk1C.word = ((-0x400000LL * func_80097AE8((s16)(arg0->unk30.word + 0x400))) / 0x1000) + 0x700000;
+    arg0->unk20.word = ((-0x9F0000LL * arg0->unk30.word) / 0x400) + 0xEC0000;
+    arg0->spriteIndex = (0x5000LL * func_80097AE8(arg0->unk30.half.lo)) / 0x1000;
+    if (arg0->unk30.word < 0x3F0) {
+        actor = func_80071408(func_80054E70, 0, 0x65);
+        actor->unk18 = arg0->unk18;
+        actor->unk1C = arg0->unk1C;
+        actor->unk20 = arg0->unk20;
+        actor->spriteIndex = arg0->spriteIndex;
+        actor->alpha = 0xC0;
+        arg0->unk30.word += 0x10;
+    } else {
+        func_80071408(func_800550E0, 0, 0x63);
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(D_801248D4, func_80054B98, (s32)arg0);
+}
+#endif
 
 void func_8005502C(MainMenuOverlayEffectActor *arg0) {
     arg0->alpha = 0xFF;
-    arg0->unk30 = 0;
+    arg0->unk30.word = 0;
     arg0->unk18.word = 0;
     arg0->unk1C.word = 0x300000;
     arg0->unk20.word = 0xEC0000;
