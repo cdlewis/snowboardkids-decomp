@@ -1,6 +1,7 @@
 #include "common.h"
 #include "character_select_flow.h"
 #include "controller_pak_menu.h"
+#include "menu_rendering.h"
 
 typedef struct {
     s16 x;
@@ -65,6 +66,13 @@ typedef struct {
 } ControllerPakDeletePromptActor;
 
 typedef struct {
+    ControllerPakMenuActor common;
+    s16 scale;
+    u16 timer;
+    u8 selectedOption;
+} ControllerPakWindowActor;
+
+typedef struct {
     u16 x;
     u8 state;
 } ControllerPakPromptTransition;
@@ -73,7 +81,6 @@ extern void func_800483FC(void *, void *, s32);
 extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
 extern void func_80071824(void *task, void (*callback)());
-extern void func_80011D74(void *, s32, s16, s16);
 extern s32 D_80124868;
 extern s32 D_80124838;
 extern CharacterSelectFlowState *D_801235B8;
@@ -81,6 +88,8 @@ extern ControllerPakPromptTransition D_8010AF80;
 extern ControllerPakMenuState D_8010AF90;
 extern u8 D_8010AF93;
 extern s16 D_8011217C;
+extern s16 D_80112178;
+extern u8 D_800B8090[];
 void func_8003048C(ControllerPakTitleActor *);
 extern void func_80030CC4(void);
 extern void func_80030EF0(void);
@@ -89,6 +98,7 @@ extern void func_8003112C(void);
 void func_80031294(ControllerPakTitleActor *);
 extern void func_80031370(void);
 extern void func_80031550(void);
+void func_80031D3C(ControllerPakWindowActor *);
 extern void func_80031F40(void);
 extern void func_8003209C(void);
 void func_80032534(ControllerPakDeletePromptActor *);
@@ -306,7 +316,17 @@ void func_80031CD0(ControllerPakSpriteActor *arg0) {
     func_80071824(arg0, func_80031CA0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_80031D3C.s")
+void func_80031D3C(ControllerPakWindowActor *arg0) {
+    func_8000F8AC(arg0->common.x, arg0->common.y, func_80043040(D_80112178), 0, 0x20, 0x20, 0, arg0->scale, 0);
+    func_8000F8AC((s16)(arg0->common.x + 0x40), arg0->common.y, func_80043040(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
+    func_8000F8AC((s16)(arg0->common.x + 0x78), arg0->common.y, func_80043040(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
+    func_8000F8AC((s16)(arg0->common.x + 0xB0), arg0->common.y, func_80043040(D_80112178), 2, 0x20, 0x20, 0, arg0->scale, 0);
+    func_80013154((s16)(arg0->common.x + 4), (s16)(arg0->common.y + 4), D_800B8090, 0, arg0->scale, 0);
+    if (arg0->selectedOption == 1) {
+        func_8000F030((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), func_80043040(D_80112178),
+                      ((arg0->timer >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_80031F40.s")
 
