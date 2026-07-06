@@ -2531,3 +2531,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   offsets `sp+0x24` (dest), `sp+0x30` (source), and `sp+0x3C` (matrix).
 - The first source-vector zeroing must assign `y` before `x` to match the
   target store order; the second zeroing uses `x` before `y`.
+
+## func_8006EF1C (race_camera)
+
+- Direct `RacePlayerSlot` array indexing plus compound `+=` assignments matches
+  the focus smoothing update. Introducing explicit camera/player locals keeps
+  the same behavior but shifts the long-lived globals into later argument
+  registers.
+- `func_8006D8B4` must be declared old-style in this file: `func_8006F984`
+  still passes the live player base and stride, while `func_8006EF1C` calls it
+  with no explicit arguments and leaves the existing temps in `$a0/$a1`.
