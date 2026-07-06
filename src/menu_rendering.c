@@ -1,8 +1,9 @@
 #include "common.h"
-#include "menu_rendering.h"
 
 typedef struct MenuRenderTask MenuRenderTask;
 typedef struct RenderCallbackNode RenderCallbackNode;
+typedef struct MenuRenderSprite MenuRenderSprite;
+typedef struct MenuRenderSpriteActor MenuRenderSpriteActor;
 
 struct MenuRenderTask {
     /* 0x00 */ MenuRenderTask *prev;
@@ -43,8 +44,10 @@ typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
 extern void func_800483FC(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
 extern void func_80071824(void *task, void (*callback)());
+s32 func_80011D74(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
 extern RenderCallbackNode *D_80124868;
 extern u32 D_80123758;
+extern s16 D_800DEF14;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000EA80.s")
 
@@ -106,6 +109,27 @@ void func_80011D6C(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013DFC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013F88.s")
+s32 func_80013F88(value, step, increase)
+s32 value;
+s16 step;
+u8 increase;
+{
+    if (increase) {
+    } else {
+        step = step * -1;
+    }
+
+    value += step;
+    if (increase) {
+        if (value >= 0x100) {
+            value = 0xFF;
+        }
+    } else if (value < 0) {
+        value = 0;
+    }
+
+    D_800DEF14 = value;
+    return value;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013FEC.s")
