@@ -2347,3 +2347,14 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   -1; }` preserved the target branch shape and temporary-register negation.
   Simplifying it to `if (!increase) step = -step;` kept the behavior but missed
   the final register allocation.
+
+## func_8002F854 (shop_menu_ui)
+
+- Shop menu widget actors can overlay their ordinary widget fields at
+  `0x18..0x24` with a ten-element `s16` position array at `0x18..0x2A`.
+  Initializers and state transitions that walk all ten slots match cleanly when
+  this is represented as a union with `s16 cursorPositions[10]`, avoiding raw
+  pointer arithmetic while preserving the existing named field accesses.
+- A simple `for (i = 0; i < 10; i++)` loop over that array emitted the target's
+  compact pointer-increment loop for setting every slot to `-0xFC`; no manual
+  unrolling was needed.
