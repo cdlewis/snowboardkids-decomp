@@ -36,7 +36,7 @@ typedef struct {
 
 typedef u8 CharacterSelectText[0x94];
 
-extern void func_80071824(void *, void *);
+extern void func_80071824(void *task, void (*callback)());
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s32, s32, u8 *, s32, s32, s32);

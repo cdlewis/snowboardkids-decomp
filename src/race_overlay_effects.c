@@ -73,7 +73,7 @@ extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern s32 func_800430D0(void);
 extern void func_80045990(s32, s32, void *, void *);
-extern void func_80071824(void *, void *);
+extern void func_80071824(void *task, void (*callback)());
 extern void func_800716E4(void *);
 extern void func_80097C18(void *, s16);
 extern void func_80098590(void *, void *, void *);

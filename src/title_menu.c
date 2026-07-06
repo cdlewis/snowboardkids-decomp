@@ -62,7 +62,7 @@ extern s32 func_80011D74(void *, s32, s16, s16);
 extern void func_8000F8AC(s16, s16, s32, s32, s32, s32, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
-extern void func_80071824(void *, void *);
+extern void func_80071824(void *task, void (*callback)());
 extern void func_80014AA4(void);
 extern void func_80014EF0(MenuItemActor *);
 extern void func_80014CB8(void *);

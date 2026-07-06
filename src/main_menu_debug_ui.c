@@ -34,7 +34,7 @@ extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013D0C(s32, s32, void *, s32, s32);
 extern void func_800483FC(void *, void *, void *);
-extern void func_80071824(void *arg0, void *arg1);
+extern void func_80071824(void *task, void (*callback)());
 extern int sprintf(char *, const char *, ...);
 
 void func_8003B7C0(EndObjTask *arg0);

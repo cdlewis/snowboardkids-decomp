@@ -29,7 +29,7 @@ extern s32 func_80041FB4(s32 arg0);
 extern void func_800428C8(s32 arg0);
 extern void func_80042A00(s32 arg0);
 extern void func_80042920(s32 arg0, u16 arg1, u16 arg2);
-extern void func_80071824(s32 arg0, void (*arg1)(void));
+extern void func_80071824(void *task, void (*callback)());
 extern void func_80041DD4(s32 arg0, s32 arg1);
 extern void func_8003A634(MainMenuSceneActor *);
 extern void func_800483FC(void *, void *, void *);
@@ -81,7 +81,7 @@ void func_8003950C(MainMenuSceneActor *arg0) {
     func_80041FB4(3);
     func_800428C8(3);
     if (D_8010B1A2 == 0x41) {
-        func_80071824((s32)arg0, (void (*)(void))func_800394E0);
+        func_80071824(arg0, func_800394E0);
         func_80041DD4(3, 0x5B);
         arg0->rotY = 0xC00;
         func_800420FC(3, arg0->rotX, arg0->rotY, arg0->rotZ);
@@ -102,7 +102,7 @@ void func_80039584(MainMenuSceneActor *arg0) {
         if ((temp_t8 & 0xFFFF) == 0x14) {
             timerPtr = &arg0->timer;
             *timerPtr = 0;
-            func_80071824((s32)arg0, (void (*)(void))func_8003950C);
+            func_80071824(arg0, func_8003950C);
             func_80041DD4(3, 0x5A);
             D_8010B1A2 = 0x40;
         }
@@ -123,7 +123,7 @@ void func_80039610(MainMenuSceneActor *arg0) {
         if ((temp_t8 & 0xFFFF) == 0x1B) {
             timerPtr = &arg0->timer;
             *timerPtr = 0;
-            func_80071824((s32)arg0, (void (*)(void))func_80039584);
+            func_80071824(arg0, func_80039584);
             func_80041DD4(3, 0x59);
             func_8003D068(0x30, -0x5B);
         }
@@ -138,7 +138,7 @@ void func_8003969C(MainMenuSceneActor *arg0) {
         arg0->timer = temp_t7;
         if ((temp_t7 & 0xFFFF) == 0x14) {
             arg0->timer = 0;
-            func_80071824((s32)arg0, func_80039610);
+            func_80071824(arg0, func_80039610);
             func_80041DD4(3, 0x58);
         }
     } else {
@@ -155,7 +155,7 @@ void func_8003973C(MainMenuSceneActor *arg0) {
     }
     if (D_8010B1A2 == 0x3F) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, func_8003969C);
+        func_80071824(arg0, func_8003969C);
         func_80041DD4(3, 0x57);
     }
     func_800428C8(3);
@@ -180,7 +180,7 @@ void func_800397C4(MainMenuSceneActor *arg0) {
     func_800428C8(3);
     if (sp20 == 1) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, func_8003973C);
+        func_80071824(arg0, func_8003973C);
         func_80041DD4(3, 0x5D);
     }
 }
@@ -190,7 +190,7 @@ void func_80039880(MainMenuSceneActor *arg0) {
     arg0->x += 0xFFF58000;
     if (D_8010B1A2 == 0x3C) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, (void (*)(void))func_800397C4);
+        func_80071824(arg0, func_800397C4);
         func_80041DD4(3, 0x5C);
         arg0->rotY = 0xC00;
         func_800420FC(3, arg0->rotX, arg0->rotY, arg0->rotZ);
@@ -203,7 +203,7 @@ void func_80039930(MainMenuSceneActor *arg0) {
     func_80042034(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (D_8010B1A2 == 0x3A) {
-        func_80071824((s32)arg0, func_80039880);
+        func_80071824(arg0, func_80039880);
     }
 }
 
@@ -215,7 +215,7 @@ void func_8003998C(MainMenuSceneActor *arg0) {
     arg0->x = var_a1;
     if (var_a1 >= 0xE00000) {
         arg0->x = 0xE00000;
-        func_80071824((s32)arg0, func_80039930);
+        func_80071824(arg0, func_80039930);
         var_a1 = arg0->x;
     }
     func_8004209C(3, var_a1, arg0->y, arg0->z);
@@ -226,7 +226,7 @@ void func_80039A14(MainMenuSceneActor *arg0) {
     func_80042034(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (D_8010B1A2 == 0x38) {
-        func_80071824((s32)arg0, func_8003998C);
+        func_80071824(arg0, func_8003998C);
     }
 }
 
@@ -239,7 +239,7 @@ void func_80039A70(MainMenuSceneActor *arg0) {
     var_a1 = (new_var->x += 0xFFFB8000);
     if (var_a1 < 0xA00001) {
         new_var->x = 0xA00000;
-        func_80071824((s32) new_var, func_80039A14);
+        func_80071824(new_var, func_80039A14);
         var_a1 = arg0->x;
     } else if ((var_a1 < 0x1300001) && (D_8010B1A2 == 0x35)) {
         D_8010B1A2 = 0x36;
@@ -251,7 +251,7 @@ void func_80039A70(MainMenuSceneActor *arg0) {
 
 void func_80039B38(MainMenuSceneActor *arg0) {
     if (D_8010B1A2 == 0x35) {
-        func_80071824((s32)arg0, func_80039A70);
+        func_80071824(arg0, func_80039A70);
         arg0->x = 0x01900000;
         arg0->z = 0xFFF80000;
     }
@@ -263,7 +263,7 @@ void func_80039C84(MainMenuSceneActor *arg0) {
     func_80041FB4(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (D_8010B1A2 == 0x31) {
-        func_80071824((s32)arg0, func_80039B84);
+        func_80071824(arg0, func_80039B84);
         func_80041DD4(3, 0x4B);
     }
 }
@@ -279,7 +279,7 @@ void func_80039CEC(MainMenuSceneActor *arg0) {
         temp = (arg0->timer += 1);
         if ((temp % 28) == 0) {
             if ((temp / 28) == 3) {
-                func_80071824((s32)arg0, func_80039C84);
+                func_80071824(arg0, func_80039C84);
                 D_8010B1A2 = 0x2E;
             } else {
                 func_80041DD4(3, 0x4A);
@@ -294,7 +294,7 @@ void func_80039E08(MainMenuSceneActor *arg0) {
     arg0->timer++;
     if (arg0->timer == 0xF) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, func_80039CEC);
+        func_80071824(arg0, func_80039CEC);
         func_80041DD4(3, 0x4A);
     }
     func_800428C8(3);
@@ -307,7 +307,7 @@ void func_80039E5C(MainMenuSceneActor *arg0) {
     arg0->x += 0xFFFD8000;
     if ((sp == 1) && (arg0->x < 0x800001)) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, (void (*)(void))func_80039E08);
+        func_80071824(arg0, func_80039E08);
         D_8010B1A2 = 0x2D;
     } else if ((sp == 1) && (arg0->x >= 0x800001)) {
         func_80041DD4(3, 0x4B);
@@ -318,7 +318,7 @@ void func_80039E5C(MainMenuSceneActor *arg0) {
 
 void func_80039F2C(MainMenuSceneActor *arg0) {
     if (D_8010B1A2 == 0x2C) {
-        func_80071824((s32)arg0, func_80039E5C);
+        func_80071824(arg0, func_80039E5C);
         func_80041DD4(3, 0x4B);
         arg0->timer = 0;
     }
@@ -331,7 +331,7 @@ void func_80039F7C(MainMenuSceneActor *arg0) {
     var_a1 = arg0->x += 0x28000;
     if (var_a1 >= 0x1900000) {
         arg0->x = 0x1900000;
-        func_80071824((s32)arg0, func_80039F2C);
+        func_80071824(arg0, func_80039F2C);
         D_8010B1A2 = 0x28;
         var_a1 = arg0->x;
     }
@@ -345,7 +345,7 @@ void func_8003A010(MainMenuSceneActor *arg0) {
     arg0->timer++;
     if (arg0->timer == 0x41) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, func_80039F7C);
+        func_80071824(arg0, func_80039F7C);
     }
 }
 
@@ -356,7 +356,7 @@ void func_8003A078(MainMenuSceneActor *arg0) {
     var_a1 = arg0->x += 0xFFFD8000;
     if (var_a1 < 0x800001) {
         arg0->x = 0x800000;
-        func_80071824((s32)arg0, func_8003A010);
+        func_80071824(arg0, func_8003A010);
         var_a1 = arg0->x;
     }
     func_8004209C(3, var_a1, arg0->y, arg0->z);
@@ -374,7 +374,7 @@ void func_8003A108(MainMenuSceneActor *arg0) {
     arg0->timer = temp_t9;
     if ((temp_t9 & 0xFFFF) == 0x28) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, func_8003A078);
+        func_80071824(arg0, func_8003A078);
     }
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
@@ -390,7 +390,7 @@ void func_8003A190(MainMenuSceneActor *arg0) {
     arg0->timer = temp_t9;
     if ((temp_t9 & 0xFFFF) == 0x2D) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, func_8003A108);
+        func_80071824(arg0, func_8003A108);
     }
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
@@ -406,7 +406,7 @@ void func_8003A21C(MainMenuSceneActor *arg0) {
     arg0->timer = temp_t9;
     if ((temp_t9 & 0xFFFF) == 0x1E) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, func_8003A190);
+        func_80071824(arg0, func_8003A190);
     }
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
@@ -418,7 +418,7 @@ void func_8003A2A8(MainMenuSceneActor *arg0) {
         arg0->timer++;
         if (arg0->timer == 0x2D) {
             arg0->timer = 0;
-            func_80071824((s32)arg0, func_8003A21C);
+            func_80071824(arg0, func_8003A21C);
         }
     }
 }
@@ -431,7 +431,7 @@ void func_8003A324(MainMenuSceneActor *arg0) {
     if (var_a1 >= 0x800000) {
         arg0->timer = 0;
         arg0->x = 0x800000;
-        func_80071824((s32)arg0, func_8003A2A8);
+        func_80071824(arg0, func_8003A2A8);
         var_a1 = arg0->x;
     }
     if ((var_a1 >= 0x200000) && (D_8010B1A2 == 0x20)) {
@@ -449,7 +449,7 @@ void func_8003A3E0(MainMenuSceneActor *arg0) {
     var_a1 = arg0->x += 0xFFFA0000;
     if (var_a1 < -0x9FFFFF) {
         arg0->x = 0xFF600000;
-        func_80071824((s32)arg0, func_8003A324);
+        func_80071824(arg0, func_8003A324);
         var_a1 = arg0->x;
     }
     func_8004209C(3, var_a1, arg0->y, arg0->z);
@@ -477,7 +477,7 @@ void func_8003A46C(MainMenuSceneActor *arg0) {
     }
     if (D_8010B1A2 == 0x20) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, func_8003A3E0);
+        func_80071824(arg0, func_8003A3E0);
         func_80041DD4(3, 0x4B);
     }
 }
@@ -485,7 +485,7 @@ void func_8003A46C(MainMenuSceneActor *arg0) {
 void func_8003A538(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (D_8010B1A2 == 0x1D) {
-        func_80071824((s32)arg0, (void (*)(void))func_8003A46C);
+        func_80071824(arg0, func_8003A46C);
         func_80041DD4(3, 0x4A);
     }
 }
@@ -497,7 +497,7 @@ void func_8003A598(MainMenuSceneActor *arg0) {
     var_a1 = arg0->x += 0xFFFE8000;
     if (var_a1 < 0xC80001) {
         arg0->x = 0xC80000;
-        func_80071824((s32)arg0, func_8003A538);
+        func_80071824(arg0, func_8003A538);
         D_8010B1A2 = 0x1C;
         var_a1 = arg0->x;
     }
@@ -512,7 +512,7 @@ void func_8003A634(MainMenuSceneActor *arg0) {
     sp20 = func_80041FB4(3);
     func_80042920(3, arg0->textureId, arg0->paletteId);
     if (sp20 == 1) {
-        func_80071824((s32)arg0, func_8003A598);
+        func_80071824(arg0, func_8003A598);
         func_80041DD4(3, 0x49);
         arg0->x += 0xFFEC0000;
     }
@@ -525,7 +525,7 @@ void func_8003A6A8(MainMenuSceneActor *arg0) {
     sp18 = func_80041FB4(3);
     func_80042920(3, arg0->textureId, arg0->paletteId);
     if (sp18 == 1) {
-        func_80071824((s32)arg0, func_8003A634);
+        func_80071824(arg0, func_8003A634);
         func_80041DD4(3, 0x42);
     }
 }
@@ -536,14 +536,14 @@ void func_8003A70C(MainMenuSceneActor *arg0) {
     if (arg0->timer == 0x1E) {
         arg0->timer = 0;
         D_8010B1A2 = 0x1B;
-        func_80071824((s32)arg0, func_8003A6A8);
+        func_80071824(arg0, func_8003A6A8);
         func_80041DD4(3, 0x41);
     }
 }
 
 void func_8003A77C(MainMenuSceneActor *arg0) {
     if (func_80041FB4(3) == 1) {
-        func_80071824((s32)arg0, (void (*)(void))func_8003A70C);
+        func_80071824(arg0, func_8003A70C);
     } else {
         arg0->x = arg0->x + 0x40000;
         func_8004209C(3, arg0->x, arg0->y, arg0->z);
@@ -566,7 +566,7 @@ void func_8003A7EC(MainMenuSceneActor *arg0) {
     }
     if (temp_v0 == 1) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, (void (*)(void))func_8003A77C);
+        func_80071824(arg0, func_8003A77C);
         func_80041DD4(3, 0x40);
     }
     func_8004209C(3, arg0->x, arg0->y, arg0->z);
@@ -585,7 +585,7 @@ void func_8003A8A4(MainMenuSceneActor *arg0) {
     if (sp20 == 1) {
         arg0->timer = 0;
         D_8010B1A2 = 0x1A;
-        func_80071824((s32)arg0, func_8003A7EC);
+        func_80071824(arg0, func_8003A7EC);
         func_80041DD4(3, 0x3F);
     }
 }
@@ -597,7 +597,7 @@ void func_8003A8A4(MainMenuSceneActor *arg0) {
 void func_8003AC00(MainMenuSceneActor *arg0) {
     func_800428C8(3);
     if ((D_8010B1A4 == 1) || (D_8010B1A4 == 3)) {
-        func_80071824((s32)arg0, func_8003A9E0);
+        func_80071824(arg0, func_8003A9E0);
         if (D_8010B1A4 == 1) {
             arg0->rotY = 0x400;
             if (arg0->timer == 0xF) {
@@ -620,13 +620,13 @@ void func_8003ACD0(MainMenuSceneActor *arg0) {
     arg0->timer++;
     if (arg0->timer == 0xF) {
         D_8010B1A2 = 0x19;
-        func_80071824((s32)arg0, func_8003AC00);
+        func_80071824(arg0, func_8003AC00);
         func_8004209C(3, arg0->x, arg0->y, arg0->z);
     }
 }
 
 void func_8003AD40(MainMenuSceneActor *arg0) {
-    void (*new_var)(void *);
+    void (*new_var)(MainMenuSceneActor *);
     s32 sp18;
     u16 temp_t8;
 
@@ -639,7 +639,7 @@ void func_8003AD40(MainMenuSceneActor *arg0) {
             arg0->timer = 0;
             new_var = func_8003ACD0;
             D_8010B1A2 = 0x18;
-            func_80071824((s32)arg0, (void (*)(void))new_var);
+            func_80071824(arg0, new_var);
         }
     }
 }
@@ -654,7 +654,7 @@ void func_8003ADC0(MainMenuSceneActor *arg0) {
     if (var_a1 < 0x2D0001) {
         arg0->x = 0x2D0000;
         arg0->z = (s32)0xFFFE0000;
-        func_80071824((s32)arg0, (void (*)(void))func_8003AD40);
+        func_80071824(arg0, func_8003AD40);
         func_80041DD4(3, 0x38);
         D_8010B1A2 = 0x17;
         arg0->rotY = 0x400;
@@ -684,7 +684,7 @@ void func_8003AE8C(MainMenuSceneActor *arg0) {
             func_80041DD4(3, 0x37);
         } else {
             arg0->timer = 0;
-            func_80071824((s32)arg0, func_8003ADC0);
+            func_80071824(arg0, func_8003ADC0);
             func_80041DD4(3, 0xF);
             arg0->rotY = 0xC00;
             func_800420FC(3, arg0->rotX, arg0->rotY, arg0->rotZ);
@@ -695,7 +695,7 @@ void func_8003AE8C(MainMenuSceneActor *arg0) {
 void func_8003AF6C(MainMenuSceneActor *arg0) {
     if (func_80041FB4(3) == 1) {
         arg0->animTimer = 0;
-        func_80071824((s32)arg0, func_8003AE8C);
+        func_80071824(arg0, func_8003AE8C);
         func_80041DD4(3, 0x37);
     }
     func_800428C8(3);
@@ -715,7 +715,7 @@ void func_8003AFC0(MainMenuSceneActor *arg0) {
     }
     if (D_8010B1A2 == 0x16) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, func_8003AF6C);
+        func_80071824(arg0, func_8003AF6C);
         func_80041DD4(3, 0x36);
     }
     func_800428C8(3);
@@ -729,7 +729,7 @@ void func_8003B074(MainMenuSceneActor *arg0) {
     func_800428C8(3);
     if (D_8010B1A2 == 0x15) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, func_8003AFC0);
+        func_80071824(arg0, func_8003AFC0);
         arg0->rotY = 0x400;
         func_800420FC(3, arg0->rotX, arg0->rotY, arg0->rotZ);
         func_80041DD4(3, 0x28);
@@ -751,7 +751,7 @@ void func_8003B134(MainMenuSceneActor *arg0) {
     arg0->x += 0xFFFB8000;
     if (arg0->x < 0xE00001) {
         arg0->x = 0xE00000;
-        func_80071824((s32)arg0, (void (*)(void))func_8003B074);
+        func_80071824(arg0, func_8003B074);
         D_8010B1A2 = 0x14;
     } else if (temp_v0 == 1) {
         temp_t2 = (arg0->timer & 0xFFFF) + 1;
@@ -767,7 +767,7 @@ void func_8003B134(MainMenuSceneActor *arg0) {
 
 void func_8003B1F8(MainMenuSceneActor *arg0) {
     if (D_8010B1A2 == 0x13) {
-        func_80071824((s32)arg0, func_8003B134);
+        func_80071824(arg0, func_8003B134);
         func_8003B308(arg0->x + 0x48000, 0x480000, 0xFFF70000, arg0->textureId, arg0->paletteId, 2);
     }
 }
@@ -787,7 +787,7 @@ void func_8003B264(MainMenuSceneActor *arg0) {
     func_80041DD4(3, 0x27);
     func_8004209C(3, arg0->x, arg0->y, arg0->z);
     func_800420FC(3, arg0->rotX, arg0->rotY, arg0->rotZ);
-    func_80071824((s32)arg0, func_8003B1F8);
+    func_80071824(arg0, func_8003B1F8);
 }
 
 void func_8003B308(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u8 arg5) {
@@ -824,7 +824,7 @@ void func_8003B3E0(MainMenuSceneEffect *arg0) {
 
 void func_8003B6F0(MainMenuSceneEffect *arg0) {
     if (D_8010B1A2 == 0x15) {
-        func_80071824((s32)arg0, func_8003B430);
+        func_80071824(arg0, func_8003B430);
     }
     func_800483FC(&D_80124898, func_8003B39C, arg0);
 }
@@ -834,7 +834,7 @@ void func_8003B740(MainMenuSceneEffect *arg0) {
     arg0->timer++;
     if (arg0->timer == 0xA2) {
         arg0->timer = 0;
-        func_80071824((s32)arg0, (void (*)(void))func_8003B6F0);
+        func_80071824(arg0, func_8003B6F0);
     }
     func_800483FC(&D_80124898, (void *)func_8003B39C, arg0);
 }

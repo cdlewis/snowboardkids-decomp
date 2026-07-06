@@ -66,7 +66,7 @@ typedef struct {
 extern void func_800483FC(void *, void *, s32);
 extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
-extern void func_80071824(void *, void *);
+extern void func_80071824(void *task, void (*callback)());
 extern void func_80011D74(void *, s32, s16, s16);
 extern s32 D_80124868;
 extern s32 D_80124838;

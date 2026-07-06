@@ -28,7 +28,7 @@ extern void func_80042034(s32 arg0);
 extern void func_8004209C(s32, s32, s32, s32);
 extern void func_800420FC(s32, s16, s16, s16);
 extern void func_800428C8(s32 arg0);
-extern void func_80071824(MainMenuSceneActor4 *arg0, void (*arg1)(MainMenuSceneActor4 *));
+extern void func_80071824(void *task, void (*callback)());
 extern MainMenuSceneActorShadow D_8010B1C0;
 extern u16 D_8010B1A2;
 extern s8 D_8010B1AC;

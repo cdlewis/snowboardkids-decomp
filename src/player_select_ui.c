@@ -48,7 +48,7 @@ typedef struct {
 
 typedef u8 PlayerPortrait[0x8C];
 
-extern void func_80071824(void *, void *);
+extern void func_80071824(void *task, void (*callback)());
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern void func_80019314(void);

@@ -69,7 +69,7 @@ typedef struct {
     /* 0x40 */ u16 tileSize;
 } RaceHudPanelSlot;
 
-extern void func_80071824(void *, void *);
+extern void func_80071824(void *task, void (*callback)());
 extern void func_80018C80(void);
 extern void func_800177F8(void);
 extern void func_80017C34(void);
