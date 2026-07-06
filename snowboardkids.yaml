@@ -395,4 +395,6 @@ segments:
   - [0x211470, bin]
   - [0x215BE0, bin]
 
+  - [0x60F990, bin] # everything beyond this point is blank
+
   - [0x800000]
