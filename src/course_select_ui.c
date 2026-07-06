@@ -27,13 +27,14 @@ extern void func_800716E4(CourseSelectWidgetActor *);
 extern void func_80071824(void *task, void (*callback)());
 extern void func_800260E8(CourseSelectWidgetActor *);
 extern void func_800271CC(CourseSelectWidgetActor *);
-extern void func_80027408(CourseSelectWidgetActor *);
 extern void func_80027498(CourseSelectWidgetActor *);
 extern void func_800275E0(CourseSelectWidgetActor *);
 extern void func_80027AF8(CourseSelectWidgetActor *);
 extern void func_80028FF0(CourseSelectWidgetActor *);
 extern void func_800291F0(s32);
 extern s32 func_80043040(s16);
+extern u8 D_800EC9E6;
+extern s16 D_80112130[];
 extern s16 D_8011217A;
 extern u8 D_80121B55;
 extern u8 D_80121D88;
@@ -99,7 +100,26 @@ void func_800273C4(CourseSelectWidgetActor *arg0) {
     func_80071824(arg0, func_800271CC);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80027408.s")
+void func_80027408(CourseSelectWidgetActor *arg0) {
+    u16 tileIndexSpill;
+    s32 handleIndex;
+    u16 unusedPadding;
+    u16 tileIndex;
+    u32 promotedTileIndex;
+
+    if (D_800EC9E6 == 1) {
+        tileIndex = 1;
+        handleIndex = 0x27;
+    } else {
+        tileIndex = 0;
+        handleIndex = 0x21;
+    }
+
+    tileIndexSpill = tileIndex;
+    promotedTileIndex = tileIndexSpill;
+    func_8000F8AC((*arg0).coordinates[0], arg0->coordinates[1], func_80043040(D_80112130[handleIndex]),
+                  promotedTileIndex, 0x20, 0x20, 0, arg0->coordinates[2], 0);
+}
 
 void func_80027498(CourseSelectWidgetActor *arg0) {
     u8 state = arg0->state;
