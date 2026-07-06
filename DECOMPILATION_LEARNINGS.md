@@ -2324,3 +2324,14 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   redundant chain of `& 0xFFu` masks before the final `u8` cast. Simplifying the
   expression to `D_80123700 - 1` or a single mask preserves behavior but reuses
   `v1` for the byte load and misses the target's `t0`/`t1` allocation.
+
+## func_8009B5F4 (game_boot)
+
+- The target loads `D_800DF140` with `lh`, so the fade timer should be treated
+  as signed halfword in this file even though nearby setup functions only store
+  positive constants into it.
+- Returning the first display-list command pointer makes IDO keep
+  `D_80124830`'s address in `a3` and the first command pointer in `v1`, matching
+  the target's opening sequence. A void function with the same side effects
+  instead reuses `v0`/`a2` for the display-list globals and drifts further from
+  the target.
