@@ -64,9 +64,16 @@ typedef struct {
     /* 0x3C */ s32 unk3C;
 } GfxCommandDest;
 
+s32 func_80042EE4(s32);
+extern s16 D_8011213E;
+extern s16 D_801121B0;
+
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_800458E0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80045914.s")
+void func_80045914(void)
+{
+ do { s16 *handle = &D_8011213E; do { if ((*handle) != (-1)) { *handle = func_80042EE4(*handle); } handle++; } while (handle != (&D_801121B0)); } while (0);
+}
 
 void *func_8004597C(void *arg0, u32 arg1) {
     return (void *)((u8 *)arg0 + (arg1 & 0xFFFFFF));
@@ -131,7 +138,6 @@ void func_80045A1C(u8 *arg0, u16 arg1, void **arg2, void **arg3, s16 *arg4, s16 
 
 extern s32 func_80043040(s16);
 extern s16 D_8011213C;
-extern s16 D_801121B0;
 extern s16 D_801121B2;
 extern void *D_801121B4;
 
