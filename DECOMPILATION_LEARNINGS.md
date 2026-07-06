@@ -2421,3 +2421,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   temporary before reading the actor state gives the right `$v0/$v1` allocation,
   but IDO schedules the two `lbu` instructions in the opposite order from the
   target.
+
+## func_80021B58 (character_select_ui)
+
+- The character-select 2x2 panel draw helper matches the course-select
+  `func_80025FA8` pattern exactly: four straight-line `func_8000F030` calls with
+  fresh `func_80043040(handle)` loads for each tile, signed 16-bit casts only on
+  the `+ 0x40` coordinate variants, and tile indices 3 through 6.
