@@ -81,7 +81,7 @@ extern void func_80009C48(void);
 extern void func_8000B220(void);
 extern void func_8000B7B8(void);
 extern void func_8000C010(void);
-extern void func_8002F854(void);
+extern void func_8002F854();
 extern void func_8002FEF8(void);
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80045914(void);
