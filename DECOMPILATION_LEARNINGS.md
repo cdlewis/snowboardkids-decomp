@@ -2315,3 +2315,12 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - VERSION_I libultra audio C objects may require `-O3`. The local
   asm-processor wrapper only accepts up to `-O2`, so per-object `-O3` audio
   matches should compile through the direct local IDO driver.
+
+## func_80099464 (input_task_scheduler)
+
+- For the linked-list removal/free-list return path, IDO's register allocation
+  only matched when the byte counter decrement was written as
+  `(D_80123700 & 0xFFu) - 1`, and the free-list index kept an intentionally
+  redundant chain of `& 0xFFu` masks before the final `u8` cast. Simplifying the
+  expression to `D_80123700 - 1` or a single mask preserves behavior but reuses
+  `v1` for the byte load and misses the target's `t0`/`t1` allocation.
