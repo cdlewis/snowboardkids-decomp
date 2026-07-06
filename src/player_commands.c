@@ -141,13 +141,14 @@ extern s32 D_8015C964;
 extern void func_8009CD18(PlayerCommandState *, u8 *);
 extern void func_8009C77C(SchedulerState *);
 extern void func_8009F604(void);
-extern s8 func_8009F4C8(u8, u8 *, PlayerCommandState *);
+extern s32 func_8009F4C8();
 extern s32 func_8009F780(PlayerCommandState *, s32, s32, s32, s32);
 extern void func_8009FF80(void);
 extern s32 D_800DF154;
 extern s32 D_800DF158;
 extern s32 D_800DF2A4;
 extern s32 D_8015A680;
+extern s32 D_8015A684;
 extern s32 D_8015A620;
 extern u8 D_8015A624;
 extern s32 *libmus_fxheader_current;
@@ -887,7 +888,44 @@ void func_8009EEE8(PlayerCommandState *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F344.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F4C8.s")
+s32 func_8009F4C8(s32 arg0) {
+    s32 temp_v1;
+    s32 temp_v1_2;
+    s32 temp_v1_3;
+    s32 temp_v1_4;
+    s32 var_v0;
+    f32 temp_f0;
+    f32 temp_f10;
+
+    for (var_v0 = 0; var_v0 != 8;) {
+        var_v0 += 4;
+        temp_v1 = D_8015A684 & 0x48000000;
+        D_8015A684 *= 2;
+        if ((temp_v1 == 0x48000000) || (temp_v1 == 0x08000000)) {
+            D_8015A684 |= 1;
+        }
+        temp_v1_2 = D_8015A684 & 0x48000000;
+        D_8015A684 *= 2;
+        if ((temp_v1_2 == 0x48000000) || (temp_v1_2 == 0x08000000)) {
+            D_8015A684 |= 1;
+        }
+        temp_v1_3 = D_8015A684 & 0x48000000;
+        D_8015A684 *= 2;
+        if ((temp_v1_3 == 0x48000000) || (temp_v1_3 == 0x08000000)) {
+            D_8015A684 |= 1;
+        }
+        temp_v1_4 = D_8015A684 & 0x48000000;
+        D_8015A684 *= 2;
+        if ((temp_v1_4 == 0x48000000) || (temp_v1_4 == 0x08000000)) {
+            D_8015A684 |= 1;
+        }
+    }
+
+    temp_f0 = (f32)D_8015A684 / 65536.0f;
+    temp_f10 = (f32)arg0;
+    temp_f0 = temp_f0 / 65536.0f;
+    return (s32)(temp_f10 * temp_f0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F604.s")
 
