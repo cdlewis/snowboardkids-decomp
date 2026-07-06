@@ -14,6 +14,12 @@ typedef struct OSMesgQueue_s {
     OSMesg *msg;
 } OSMesgQueue;
 
+typedef struct OSContStatus {
+    u16 type;
+    u8 status;
+    u8 errno;
+} OSContStatus;
+
 typedef struct OSPfs {
     s32 status;
     OSMesgQueue *queue;
@@ -48,6 +54,11 @@ typedef struct MainMenuState {
 
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
 extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
+extern void osCreateMesgQueue(OSMesgQueue *, OSMesg *, s32);
+extern void osSetEventMesg(s32, OSMesgQueue *, OSMesg);
+extern s32 osContInit(OSMesgQueue *, u8 *, OSContStatus *);
+extern void osCreateThread(OSThread *, s32, void (*)(void *), void *, void *, s32);
+extern void osStartThread(OSThread *);
 extern s32 osPfsInitPak(OSMesgQueue *, OSPfs *, int);
 extern s32 osPfsRepairId(OSPfs *);
 extern s32 osPfsFreeBlocks(OSPfs *, s32 *);
@@ -108,16 +119,40 @@ extern void func_8003ED00(void);
 extern void func_8003F520(void);
 extern void func_8003FFD0(void);
 extern void func_80073140(void);
+extern void func_800005E4(void *);
+extern OSThread D_800E29C8;
 extern OSMesgQueue D_800E4B78;
+extern OSMesg D_800E4B90[];
 extern OSMesgQueue D_800E4BB0;
+extern OSMesg D_800E4BC8[];
 extern OSMesgQueue D_800E4BD0;
+extern OSMesg D_800E4BE8[];
+extern s16 D_800E4BEC;
 extern OSPfs D_800E4C40[];
 extern MainMenuState *D_801235B8;
 extern u8 D_800B30F0;
 extern u8 D_800B318C;
 extern u8 D_800DEED4;
 extern u8 D_800E4BEE;
+extern OSContStatus D_800E4BF0[];
+extern s16 D_800E4C18;
+extern u8 D_800E4C1A;
+extern u8 D_800E4C1B;
+extern s16 D_800E4C1E;
+extern u8 D_800E4C20;
+extern u8 D_800E4C21;
+extern s16 D_800E4C24;
+extern u8 D_800E4C26;
+extern u8 D_800E4C27;
+extern s16 D_800E4C2A;
+extern u8 D_800E4C2C;
+extern u8 D_800E4C2D;
 extern u8 D_800EC9D8;
+extern s32 D_800EC898;
+extern s32 D_800EC89C;
+extern s32 D_800EC8A0;
+extern s32 D_800EC8A4;
+extern void *D_800EC8B8;
 extern s32 D_80123758;
 extern s16 D_800DEF14;
 extern s16 D_801124B8;
@@ -153,7 +188,56 @@ extern u8 D_8012482C;
 extern s32 D_801235B4;
 extern s32 D_80123778;
 
+// func_80000450 best match: 85.817%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000450.s")
+
+#ifdef NON_MATCHING
+void func_80000450(void) {
+    s32 i;
+
+    osCreateMesgQueue(&D_800E4BD0, D_800E4BE8, 1);
+    osCreateMesgQueue(&D_800E4B78, D_800E4B90, 8);
+    osCreateMesgQueue(&D_800E4BB0, D_800E4BC8, 1);
+    osSetEventMesg(5, &D_800E4BD0, (OSMesg)1);
+    osContInit(&D_800E4BD0, &D_800B30F0, D_800E4BF0);
+
+    D_800E29C0 = 0;
+    D_800E4BEE = 0;
+
+    i = 0;
+loop:
+    if (((s32)D_800B30F0 >> i) & 1) {
+        i++;
+        D_800E29C0++;
+        if (i < 4) {
+            goto loop;
+        }
+    } else {
+        i++;
+    }
+
+    D_800E4BEC = 9;
+    D_800E4C18 = 0;
+    D_800E4C1A = 0;
+    D_800E4C1B = 0;
+    D_800EC898 = 1;
+    D_800E4C1E = 0;
+    D_800E4C20 = 0;
+    D_800E4C21 = 0;
+    D_800EC89C = 1;
+    D_800E4C24 = 0;
+    D_800E4C26 = 0;
+    D_800E4C27 = 0;
+    D_800EC8A0 = 1;
+    D_800E4C2A = 0;
+    D_800E4C2C = 0;
+    D_800E4C2D = 0;
+    D_800EC8A4 = 1;
+
+    osCreateThread(&D_800E29C8, 4, func_800005E4, D_800EC8B8, &D_800E4B78, 0x14);
+    osStartThread(&D_800E29C8);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_800005E4.s")
 

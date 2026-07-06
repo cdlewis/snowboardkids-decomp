@@ -2614,3 +2614,14 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 
 - For this function, keeping a local pointer to `D_80121B08[playerIndex]` produced identical instructions but an oversized `0x30` stack frame. Re-indexing `D_80121B08[playerIndex]` at each use let IDO create the target temporary stack slot and matched the `0x28` frame exactly.
 - The race player record position used for positional audio is at offset `0x1C`, and the player record stride is `0x60C`.
+
+## func_80000450 (main_menu)
+
+- The best functional candidate reaches 85.817%. The controller count loop
+  matches when written as a label/goto post-increment test over `D_800B30F0`;
+  structured `while` forms introduce an extra pre-test.
+- The remaining blocker is BSS-adjacent global store codegen. Scalar externs
+  emit extra `lui` instructions for labels like `D_800E4C1A`, while struct,
+  array, volatile, and constant-offset cast forms all make IDO materialize a
+  base pointer. The target reuses `$at` high halves and emits direct
+  symbol-relative stores for the controller state bytes.
