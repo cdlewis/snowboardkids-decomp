@@ -28,10 +28,23 @@ typedef struct {
     /* 0x1C */ s16 targetX;
     /* 0x1E */ s16 targetY;
     /* 0x20 */ s16 speedX;
-    /* 0x22 */ s16 speedY;
+    union {
+        /* 0x22 */ s16 speedY;
+        struct {
+            /* 0x22 */ u8 playerFlags;
+            /* 0x23 */ u8 unk23;
+        };
+    };
     /* 0x24 */ u8 state;
     /* 0x25 */ u8 timer;
+    /* 0x26 */ s16 unk26;
 } RaceHudMessageActor;
+
+typedef struct {
+    u8 pad0[0x4B];
+    /* 0x4B */ u8 flags;
+    u8 pad4C[0x78F8 - 0x4C];
+} RacePlayerState;
 
 typedef union {
     s16 target[PLAYER_COUNT];
@@ -81,6 +94,9 @@ extern void *D_80124868;
 extern u8 D_80121B55;
 extern u8 D_80121D80[];
 extern u8 D_80112130[];
+extern RacePlayerState D_800EC9F0[];
+extern u8 D_8010AE5E;
+extern u8 D_8010AE5F;
 extern s32 func_80043040(s16);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 
@@ -148,7 +164,49 @@ void func_80017F94(RaceHudMessageActor *arg0) {
     func_800483FC(&D_80124868, func_80017D6C, arg0);
 }
 
+// func_80018060 best functional match: 75.509% (base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80018060.s")
+
+#ifdef NON_MATCHING
+void func_80018060(RaceHudMessageActor *arg0) {
+    s32 i;
+    RacePlayerState *player;
+    s32 targetX;
+    u8 playerFlags;
+
+    targetX = -0x50;
+    arg0->targetX = targetX;
+    arg0->x = 0xB8;
+    arg0->y = -0x10;
+    arg0->targetY = -0x48;
+    arg0->speedX = 0x12;
+    arg0->unk26 = 0;
+    arg0->state = 0;
+    arg0->timer = 0;
+    arg0->playerFlags = 0;
+    arg0->unk23 = 0;
+
+    i = 0;
+    if (D_80121B55 > 0) {
+        player = D_800EC9F0;
+        do {
+            playerFlags = arg0->playerFlags | (player->flags & 1);
+            arg0->playerFlags = playerFlags;
+            D_8010AE5E = playerFlags;
+            D_8010AE5F = arg0->unk23;
+            i++;
+            player++;
+        } while (i < D_80121B55);
+    }
+
+    if (arg0->playerFlags == 1) {
+        arg0->targetX = -0x40;
+    } else {
+        arg0->targetX = targetX;
+    }
+    func_80071824(arg0, func_80017F94);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80018134.s")
 
