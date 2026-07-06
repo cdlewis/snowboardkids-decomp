@@ -29,12 +29,16 @@ extern u16 D_8010B1A2;
 extern s16 D_80112172;
 extern void *D_80124868;
 extern char D_800E1060[];
+extern char D_800E1070[];
+extern s32 D_80123758;
+extern s32 D_80123778[];
 extern s32 func_80043040(s16);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013D0C(s32, s32, void *, s32, s32);
 extern void func_800483FC(void *, void *, void *);
 extern void func_80071824(void *task, void (*callback)());
+extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 
 void func_8003B7C0(EndObjTask *arg0);
@@ -129,7 +133,63 @@ void func_8003BC00(DebugObjectPositionTask *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_debug_ui/func_8003BC9C.s")
+void func_8003BC9C(DebugObjectPositionTask *arg0) {
+    s16 temp_a1;
+    s16 temp_a2;
+    s16 oldY;
+
+    if (D_80123778[0] & 0x2000) {
+        if (arg0->enabled == 1) {
+            arg0->enabled = 0;
+        } else {
+            arg0->enabled = 1;
+        }
+    }
+    if (arg0->enabled == 1) {
+        temp_a2 = arg0->y;
+        temp_a1 = arg0->x;
+        oldY = temp_a2;
+        if ((D_80123758 & 0x10800) && (temp_a2 >= -0x73)) {
+            arg0->y = temp_a2 - 1;
+        }
+        if (D_80123758 & 0x20400) {
+            temp_a2 = arg0->y;
+            if (temp_a2 < 0x68) {
+                arg0->y = temp_a2 + 1;
+            }
+        }
+        if (D_80123758 & 0x80200) {
+            if (arg0->x >= -0x67) {
+                arg0->x = arg0->x - 1;
+            }
+        }
+        if (D_80123758 & 0x40100) {
+            if (arg0->x < 0x68) {
+                arg0->x = arg0->x + 1;
+            }
+        }
+        if (D_80123778[0] & 0x8000) {
+            arg0->objectId += 1;
+            if (arg0->objectId == 0x35) {
+                arg0->objectId = 0;
+            }
+        }
+        if (D_80123778[0] & 0x4000) {
+            arg0->objectId = arg0->objectId - 1;
+            if (arg0->objectId < 0) {
+                arg0->objectId = 0x34;
+            }
+        }
+        if (D_80123778[0] & 8) {
+            arg0->palette = (arg0->palette + 1) & 1;
+        }
+        temp_a2 = arg0->y;
+        if ((temp_a1 != arg0->x) || (oldY != temp_a2)) {
+            rmonPrintf(D_800E1070, arg0->x, temp_a2);
+        }
+    }
+    func_800483FC(&D_80124868, func_8003BC00, arg0);
+}
 
 void func_8003BEB4(DebugObjectPositionTask *arg0) {
     arg0->x = 0;
