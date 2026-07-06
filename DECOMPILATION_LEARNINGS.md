@@ -2395,3 +2395,17 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   move that spill from `sp+0x24` to the target's `sp+0x20`. The remaining
   mismatch is a redundant unconditional branch that only schedules
   `count = 2` in the delay slot.
+
+## func_8006BB50 (race_course_effects)
+
+- The course moving-effect initializer uses `RaceMovingEffect` offsets:
+  velocity at `0x18`, position at `0x24`, matrix scratch at `0x30`, and timer
+  at `0x50`. `CourseSpawnEntry` has 0x48-byte entries with position fields at
+  `0x20..0x28`.
+- Repeated volatile reads of `D_80121B50` are needed to get IDO to emit the
+  target's three separate `multu index, 0x48` sequences for the course-position
+  offsets. A direct `D_800B9540[D_80121B50]` typed access is cleaner but IDO
+  CSEs the entry pointer and misses the target shape.
+- Decomp-permuter improved register allocation from the clean typed candidate,
+  but its best output added an empty post-call `if` that only perturbed
+  registers. Do not carry that artefact into source.

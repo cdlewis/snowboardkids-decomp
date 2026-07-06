@@ -53,6 +53,12 @@ typedef struct {
 } RaceMovingEffect;
 
 typedef struct {
+    char pad0[0x20];
+    Vec3i pos;
+    char pad2C[0x1C];
+} CourseSpawnEntry;
+
+typedef struct {
     char pad0[0x10];
     u16 entryIndex;
     char pad12[6];
@@ -108,6 +114,7 @@ extern void func_80045990(s32, s32, void *, void *);
 extern s32 func_8004597C(s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
+extern void func_80097C18(void *, s16);
 extern void func_80098590(void *, void *, Vec3i *, void *);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
@@ -131,6 +138,8 @@ extern Struct6B760 *func_80071408(void *, s32, s32);
 extern u8 D_80121B56;
 extern s16 D_80121B50;
 extern SoundParams D_800DA764[];
+extern CourseSpawnEntry D_800B9540[];
+extern s16 D_800B9556[];
 extern CourseMarkerEntry D_800DA804[];
 extern CourseMarkerVertexResource D_800DA80C[];
 extern CourseMarkerTextureResource D_800DA814[];
@@ -342,7 +351,29 @@ void func_8006B988(RaceMovingEffect *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BA50.s")
 
+// func_8006BB50 best match: 98.261% at nonmatchings/func_8006BB50-1404502880690620360/base_6.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BB50.s")
+
+#ifdef NON_MATCHING
+void func_8006BB50(RaceMovingEffect *arg0) {
+    u32 tempIndex;
+    volatile s16 *courseIndex;
+    void *mtx;
+
+    arg0->timer = 0x46;
+    courseIndex = &D_80121B50;
+    arg0->velocity.z = 0x680000;
+    tempIndex = D_80121B50;
+    mtx = arg0->unk30;
+    func_80097C18(mtx, D_800B9556[tempIndex * 0x24] + 0x400);
+    func_80098590(mtx, &arg0->velocity, &arg0->pos, arg0);
+    arg0->velocity.z = 0xFFFE0000;
+    arg0->pos.x += ((CourseSpawnEntry *)((u8 *)D_800B9540 + ((*(volatile s16 *)&D_80121B50) * 0x48)))->pos.x;
+    arg0->pos.y += ((CourseSpawnEntry *)((u8 *)D_800B9540 + ((*(volatile s16 *)&D_80121B50) * 0x48)))->pos.y;
+    arg0->pos.z += ((CourseSpawnEntry *)((u8 *)D_800B9540 + (*courseIndex * 0x48)))->pos.z;
+    func_80071824(arg0, func_8006BA50);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BC68.s")
 
