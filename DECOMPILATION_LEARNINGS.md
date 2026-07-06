@@ -2295,3 +2295,17 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   the target's branch shape and zero return setup; simplifying to direct
   `return 0` / `return 1` control flow is likely to collapse labels and change
   scheduling.
+
+## func_8007BDE4 (race_position_tracker)
+
+- A chained `if (x == 0/1/2/3) return K;` over an argument followed by a single
+  table-lookup return can compile to slightly different IDO register allocation
+  depending on how the lookup is written. Writing the lookup as one big
+  expression causes IDO to load the table base into a t register, leaving
+  pathIndex in a1 and emitting an early shift in the first branch delay slot.
+- Hoisting the table pointer into a named local (`s8 *entry = table[idx];`)
+  makes IDO reuse a1 for the table base load (lui/lw), which forces it to
+  preserve pathIndex with an early `move a2, a1` in the first delay slot and
+  defer the index shift to the last bne delay slot, exactly matching the target.
+  The sibling func_8007BCFC shows the same preserve-the-path-index-in-a-higher
+  arg register pattern (or a3, a1, zero).

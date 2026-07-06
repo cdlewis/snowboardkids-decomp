@@ -87,8 +87,9 @@ s32 func_8007BCFC(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007BCFC.s")
 #endif
 
-#ifdef NON_MATCHING
 s32 func_8007BDE4(s32 playerIndex, s32 pathIndex) {
+    s8 *entry;
+
     if (D_80121B50 == 7) {
         if (playerIndex == 0) {
             return 0xFFF40000;
@@ -104,8 +105,6 @@ s32 func_8007BDE4(s32 playerIndex, s32 pathIndex) {
         }
     }
 
-    return D_800DDE74[(D_80121B50 * RACE_POSITION_PLAYER_COUNT) + playerIndex][pathIndex] << 0x12;
+    entry = D_800DDE74[(D_80121B50 * RACE_POSITION_PLAYER_COUNT) + playerIndex];
+    return entry[pathIndex] << 0x12;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007BDE4.s")
-#endif
