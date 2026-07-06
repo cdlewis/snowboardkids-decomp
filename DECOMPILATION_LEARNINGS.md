@@ -2625,3 +2625,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   array, volatile, and constant-offset cast forms all make IDO materialize a
   base pointer. The target reuses `$at` high halves and emits direct
   symbol-relative stores for the controller state bytes.
+
+## func_8009F4C8 (player_commands)
+
+- This RNG scale helper only consumes its first argument even though existing
+  call sites pass script/state context. Matching required an old-style
+  declaration and a one-argument definition; declaring the unused parameters made
+  IDO spill `$a0`-`$a2` to the stack.
+- For the eight RNG advances, `for (var_v0 = 0; var_v0 != 8;) { var_v0 += 4; ... }`
+  matched the initial address setup order. The equivalent `do` loop scheduled
+  `move $v0, $zero` before the `%lo(D_8015A684)` addiu.
