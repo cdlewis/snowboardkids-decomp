@@ -2560,3 +2560,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - An otherwise unused `s32` local before the `u16` tile index places the halfword
   temporary at `sp+0x3A`, matching IDO's stack layout for the two
   `func_8001061C` calls.
+
+## func_8002E9E4 (shop_menu_ui)
+
+- The closest structured candidate reaches 94.119%. The target keeps the shop
+  menu state base `D_80121D80` in `$a1` and the price decrement amount in `$a0`;
+  equivalent C forms tested so far put the state base in `$a0` and the amount in
+  `$v0`, shortening the decrement branch tree by one delay-slot pattern.
+- Actor byte `0x25` is the slide/purchase timer paired with slide state byte
+  `0x24`; modeling it on the slide union avoids using the unrelated transition
+  timer at `0x1F`.
