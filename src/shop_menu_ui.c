@@ -1,4 +1,5 @@
 #include "common.h"
+#include "menu_rendering.h"
 
 typedef struct ShopMenuWidgetActor ShopMenuWidgetActor;
 
@@ -78,7 +79,6 @@ extern void func_8002C624(void);
 extern void func_800716E4(ShopMenuWidgetActor *);
 extern void func_800483FC(void *, void *, ShopMenuWidgetActor *);
 extern void func_8002C9A0(ShopMenuWidgetActor *);
-extern void func_8002C860(ShopMenuWidgetActor *);
 extern void func_8002FAB8(ShopMenuWidgetActor *);
 extern void func_8002F8DC(ShopMenuWidgetActor *);
 extern void func_8002DF40(ShopMenuWidgetActor *);
@@ -133,7 +133,12 @@ void func_8002C800(ShopMenuRowActor *arg0) {
     func_80071824(arg0, func_8002C624);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002C860.s")
+void func_8002C860(ShopMenuWidgetActor *arg0) {
+    func_8000F030(arg0->x, arg0->y, func_80043040(D_8011217A), 3, 0x20, 0x20, 0, 0);
+    func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(D_8011217A), 4, 0x20, 0x20, 0, 0);
+    func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(D_8011217A), 5, 0x20, 0x20, 0, 0);
+    func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(D_8011217A), 6, 0x20, 0x20, 0, 0);
+}
 
 void func_8002C9A0(ShopMenuWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
