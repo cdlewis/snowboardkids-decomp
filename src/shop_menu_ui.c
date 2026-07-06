@@ -80,7 +80,6 @@ extern void func_800716E4(ShopMenuWidgetActor *);
 extern void func_800483FC(void *, void *, ShopMenuWidgetActor *);
 extern void func_8002C9A0(ShopMenuWidgetActor *);
 extern void func_8002FAB8(ShopMenuWidgetActor *);
-extern void func_8002F8DC(ShopMenuWidgetActor *);
 extern void func_8002DF40(ShopMenuWidgetActor *);
 extern void func_8002E32C(ShopMenuWidgetActor *);
 extern void func_8002E468(ShopMenuWidgetActor *);
@@ -94,6 +93,7 @@ extern void func_8002F2C8(ShopMenuWidgetActor *);
 extern void func_8002E9E4(void);
 extern void func_8002EC5C(void);
 extern void func_8002E5A4(ShopMenuWidgetActor *);
+extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s32, s32, ShopDescriptionText, s32, s32, s32);
 extern void func_80013D0C(s32, s32, char *, s32, s32);
@@ -101,13 +101,18 @@ extern void func_8001BA2C(s32, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern s32 func_80043040(s16);
 extern s32 D_800B34B0[];
+extern u16 D_800B34E0[];
+extern u16 D_800B34EC[];
 extern ShopDescriptionText D_800B7A14[];
 extern u8 D_80121D86;
 extern u8 D_80121D88;
 extern s16 D_8011217E;
+extern s16 D_8011214A;
 extern u8 D_800EC9E6;
 extern u8 D_8010AF70;
 extern u8 D_8010AF71;
+extern u8 D_8010AF72;
+extern u8 D_8010AF73;
 extern s16 D_8011217A;
 extern s32 D_80121D8C;
 extern s32 D_801235B4;
@@ -666,7 +671,22 @@ void func_8002F854(ShopMenuWidgetActor *arg0) {
     func_80071824(arg0, func_8002F2C8);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002F8DC.s")
+void func_8002F8DC(ShopMenuWidgetActor *arg0) {
+    s32 unused;
+    u16 tileIndex;
+
+    if (D_8010AF72 < 7) {
+        tileIndex = D_800B34E0[D_8010AF73 * 7 + D_8010AF72];
+    } else {
+        tileIndex = D_800B34EC[D_8010AF73 * 7];
+    }
+
+    func_8001061C(arg0->x, arg0->y, func_80043040(D_8011214A), tileIndex, 0, 0, 0x40, 0x1C, 0x20, 0x20);
+    func_8001061C((s16)(arg0->x + 0x40), arg0->y, func_80043040(D_8011214A), tileIndex, 0, 0x1C, 0x40, 0x1C, 0x20,
+                  0x20);
+    func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y - 1), func_80043040(D_8011217E), 0xA, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0x3C), (s16)(arg0->y - 1), func_80043040(D_8011217E), 0xB, 0x20, 0x20, 1, 0);
+}
 
 void func_8002FAB8(ShopMenuWidgetActor *arg0) {
     u8 state;
