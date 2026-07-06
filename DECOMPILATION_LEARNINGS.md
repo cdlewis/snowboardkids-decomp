@@ -2498,3 +2498,14 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - For the local vector passed to `func_80098590`, declaring the saved matrix
   pointer before the `Vec3i` local places the vector at `sp+0x28`, matching the
   target stack layout exactly.
+
+## func_8006D384 (race_course_effects)
+
+- `D_800DA840` is a 0x1C-byte course trigger table: signed scale halfwords at
+  offsets `0x0..0x4`, fixed-point world position at `0x8..0x10`, pitch/yaw at
+  `0x14..0x16`, and a display-list pointer word at `0x18`.
+- IDO places a 0x38-byte scratch struct at `sp+0x28`; adding an unused trailing
+  word makes the local 0x3C bytes and moves the useful fields to the target
+  offsets `sp+0x24` (dest), `sp+0x30` (source), and `sp+0x3C` (matrix).
+- The first source-vector zeroing must assign `y` before `x` to match the
+  target store order; the second zeroing uses `x` before `y`.

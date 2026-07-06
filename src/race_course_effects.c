@@ -109,6 +109,39 @@ typedef struct {
 } CourseMarkerTextureResource;
 
 typedef struct {
+    s16 scaleX;
+    s16 scaleY;
+    s16 scaleZ;
+    s16 unk6;
+    Vec3i pos;
+    s16 pitch;
+    s16 yaw;
+    s32 displayList;
+} CourseTriggerEntry;
+
+typedef struct {
+    Vec3i dest;
+    Vec3i source;
+    char mtx[0x20];
+    s32 pad38;
+} CourseTriggerScratch;
+
+typedef struct {
+    char pad0[0x10];
+    u16 entryIndex;
+    char pad12[6];
+    void *vertices;
+    Vec3i pos1;
+    Vec3i pos2;
+    s16 pitch;
+    s16 yaw;
+    s32 scaleX;
+    s32 scaleY;
+    s32 scaleZ;
+    s32 displayList;
+} RaceCourseTriggerEffect;
+
+typedef struct {
     s32 x;
     s32 y;
     s32 z;
@@ -131,6 +164,7 @@ extern s32 func_8004597C(s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80097C18(void *, s16);
+extern void func_80097FE4(void *, s16, s16);
 extern void func_80098590(void *, void *, Vec3i *);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
@@ -140,6 +174,7 @@ extern s32 D_801235B4;
 extern u8 D_80156608;
 extern void func_8006C5C0(Struct6C51C *);
 extern void func_8006C1B4(void);
+extern void func_8006D2D0(RaceCourseTriggerEffect *);
 void func_80069890(RaceCountdownEffect *);
 void func_80069914(RaceCountdownEffect *);
 void func_80069998(RaceCountdownEffect *);
@@ -160,6 +195,7 @@ extern s16 D_800B9556[];
 extern CourseMarkerEntry D_800DA804[];
 extern CourseMarkerVertexResource D_800DA80C[];
 extern CourseMarkerTextureResource D_800DA814[];
+extern CourseTriggerEntry D_800DA840[];
 extern s32 D_80124868;
 extern s32 D_80124878;
 extern s32 D_801248EC;
@@ -562,4 +598,39 @@ void func_8006CBBC(RaceCourseMarkerEffect *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006D2D0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006D384.s")
+void func_8006D384(RaceCourseTriggerEffect *arg0) {
+    CourseTriggerScratch scratch;
+    CourseTriggerEntry *entry;
+
+    entry = &D_800DA840[arg0->entryIndex];
+    arg0->pitch = entry->pitch;
+    arg0->yaw = entry->yaw;
+    arg0->scaleX = entry->scaleX << 0x10;
+    arg0->scaleY = entry->scaleY << 0x10;
+    arg0->scaleZ = entry->scaleZ << 0x10;
+    arg0->displayList = entry->displayList;
+
+    func_80097FE4(scratch.mtx, arg0->pitch, arg0->yaw);
+
+    scratch.source.y = 0;
+    scratch.source.x = 0;
+    scratch.source.z = arg0->scaleZ;
+    func_80098590(scratch.mtx, &scratch.source, &scratch.dest);
+
+    entry = &D_800DA840[arg0->entryIndex];
+    arg0->pos1.x = entry->pos.x + scratch.dest.x;
+    arg0->pos1.y = entry->pos.y + scratch.dest.y - 0x100000;
+    arg0->pos1.z = entry->pos.z + scratch.dest.z;
+
+    scratch.source.x = 0;
+    scratch.source.y = 0;
+    scratch.source.z = -arg0->scaleZ;
+    func_80098590(scratch.mtx, &scratch.source, &scratch.dest);
+
+    entry = &D_800DA840[arg0->entryIndex];
+    arg0->pos2.x = entry->pos.x + scratch.dest.x;
+    arg0->pos2.y = entry->pos.y + scratch.dest.y - 0x100000;
+    arg0->pos2.z = entry->pos.z + scratch.dest.z;
+
+    func_80071824(arg0, func_8006D2D0);
+}
