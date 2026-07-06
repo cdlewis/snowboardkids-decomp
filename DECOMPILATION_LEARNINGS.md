@@ -2335,3 +2335,15 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   the target's opening sequence. A void function with the same side effects
   instead reuses `v0`/`a2` for the display-list globals and drifts further from
   the target.
+
+## func_80013F88 (menu_rendering)
+
+- For small helper functions that narrow arguments, an old-style definition can
+  be required to reproduce IDO's argument home stores and delayed narrowing.
+  `func_80013F88` matches only when `step` is declared as `s16` and `increase`
+  as `u8` in the K&R parameter declaration; keeping a prototype in scope before
+  the definition changes the entry sequence and breaks the match.
+- Writing the decrement path as an empty `if (increase) { } else { step = step *
+  -1; }` preserved the target branch shape and temporary-register negation.
+  Simplifying it to `if (!increase) step = -step;` kept the behavior but missed
+  the final register allocation.
