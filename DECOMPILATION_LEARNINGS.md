@@ -2541,3 +2541,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - `func_8006D8B4` must be declared old-style in this file: `func_8006F984`
   still passes the live player base and stride, while `func_8006EF1C` calls it
   with no explicit arguments and leaves the existing temps in `$a0/$a1`.
+
+## func_8002F8DC (shop_menu_ui)
+
+- The course selection globals `D_8010AF72` and `D_8010AF73` need unsigned-byte
+  declarations here to produce `lbu` loads for the shop course-icon window draw.
+- An otherwise unused `s32` local before the `u16` tile index places the halfword
+  temporary at `sp+0x3A`, matching IDO's stack layout for the two
+  `func_8001061C` calls.
