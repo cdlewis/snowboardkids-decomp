@@ -47,6 +47,11 @@ patterns, and verified layout/linking rules.
 - Explicit casts can affect sign-extension and register allocation. If the
   target sign-extends an argument with `sll`/`sra`, try making the promotion
   explicit in C, even when the callee parameter type is narrower.
+- For narrow locals passed to a helper and then used in a later branch, IDO may
+  spill a promoted copy across the call and grow the stack frame. Introducing a
+  separate `u32`/`unsigned int` draw argument and branching on that widened temp
+  can preserve the target stack frame while leaving the original `u16` local for
+  subsequent calls (func_80030EF0).
 - The common four-tile menu panel draw pattern (`func_8000F030` tile indices
   3-6) matches when the `x + 0x40` and/or `y + 0x40` coordinates are explicitly
   cast back to `s16`. This reproduces the target `sll`/`sra` sign-extension
