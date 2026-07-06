@@ -34,6 +34,12 @@ typedef struct PositionalSoundRequest {
     f32 pitch;
 } PositionalSoundRequest;
 
+typedef struct RacePlayerSoundView {
+    u8 pad0[0x1C];
+    SoundPosition pos;
+    u8 pad28[0x60C - 0x28];
+} RacePlayerSoundView;
+
 typedef union GameAudioHalfArg {
     s32 word;
     struct {
@@ -56,11 +62,15 @@ extern GameAudioHandleNode *D_80121940[];
 extern GameAudioQueueEntry D_80121978[];
 extern s32 player_bss_0048;
 extern u16 D_800DBCF4[];
+extern s32 D_80121B08[];
+extern RacePlayerSoundView D_80121D80[];
 
 void func_8009DE50(s32 arg0, s32 arg1);
+s32 func_8009DC68(s32 soundId, s32 volume, s32 pan, s32 arg3, s32 priority);
 void *func_80048388(s32 arg0);
 void func_800720E4(s32 arg0);
 s32 func_80071B74(void);
+s32 func_800722F0(SoundPosition *pos, s32 volume);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80071830.s")
 
@@ -224,7 +234,21 @@ void func_800722B4(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80072518.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_8007276C.s")
+void func_8007276C(s32 soundId, s32 playerIndex, s32 volume, s32 minVolume) {
+    s32 adjustedVolume;
+
+    adjustedVolume = func_800722F0(&D_80121D80[playerIndex].pos, volume);
+    if (adjustedVolume < minVolume) {
+        adjustedVolume = minVolume;
+    }
+    if (adjustedVolume != 0) {
+        if (D_80121B08[playerIndex] != 0) {
+            func_8009DE50(D_80121B08[playerIndex], 0);
+            D_80121B08[playerIndex] = 0;
+        }
+        D_80121B08[playerIndex] = func_8009DC68(soundId, adjustedVolume, 0x80, 0, 0x5A);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80072844.s")
 

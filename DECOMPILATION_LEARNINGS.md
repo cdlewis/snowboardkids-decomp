@@ -2610,3 +2610,7 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   actor pointer. The target emits direct `lui $at`/`sb` pairs inside the loop
   while keeping the actor in `$a0`, player cursor in `$v1`, and loop counter in
   `$v0`.
+## func_8007276C audio handle restart
+
+- For this function, keeping a local pointer to `D_80121B08[playerIndex]` produced identical instructions but an oversized `0x30` stack frame. Re-indexing `D_80121B08[playerIndex]` at each use let IDO create the target temporary stack slot and matched the `0x28` frame exactly.
+- The race player record position used for positional audio is at offset `0x1C`, and the player record stride is `0x60C`.
