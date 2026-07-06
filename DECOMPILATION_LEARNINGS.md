@@ -2597,3 +2597,16 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - Naming the loaded signed path byte as an `s8` local keeps the load signed and
   preserves the clamp structure, but IDO still chooses a temporary register for
   the byte before shifting where the target reuses `$a1`.
+
+## func_80018060 (race_hud)
+
+- The best functional candidate reaches 75.509%. A typed `RacePlayerState`
+  entry with a 0x78F8 stride and byte `flags` at offset `0x4B` matches the
+  data access pattern, while `RaceHudMessageActor` needs byte views for offsets
+  `0x22/0x23` in addition to the existing `speedY` halfword.
+- The remaining blocker is global byte store codegen. C forms using scalar
+  externs, volatile externs, volatile casts, array-style externs, and address
+  casts all caused IDO to hoist `D_8010AE5E`/`D_8010AE5F` addresses or spill the
+  actor pointer. The target emits direct `lui $at`/`sb` pairs inside the loop
+  while keeping the actor in `$a0`, player cursor in `$v1`, and loop counter in
+  `$v0`.
