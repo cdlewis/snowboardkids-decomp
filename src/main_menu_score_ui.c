@@ -4,10 +4,13 @@ typedef struct MainMenuScoreTask MainMenuScoreTask;
 
 extern void func_80071824(void *task, void (*callback)());
 extern void func_800129DC(s16, s16, u8 *, s32, s32);
+extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, u16, s32);
+extern s32 func_80043040(s16);
 extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern u8 D_800B79AC[];
+extern s16 D_80112172;
 extern s16 D_8010AF62;
 extern void *D_80124868;
 extern void *D_8010ADE0;
@@ -100,7 +103,18 @@ void func_8002BA00(MainMenuScoreTask *arg0) {
     func_80071824(arg0, func_8002B8B4);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002BA38.s")
+void func_8002BA38(MainMenuScoreTask *arg0) {
+    s32 zero = 0;
+    u16 alpha;
+
+    if (D_800EC9C8 != 8) {
+        alpha = arg0->unk1C.scale;
+        func_8000F8AC((s16)(arg0->x - 2), (s16)(arg0->y + 0xC), func_80043040(D_80112172), 8, 0x20, 0x20,
+                      zero, alpha, zero);
+        func_8000F8AC((s16)(arg0->x + 0x3E), (s16)(arg0->y + 0xC), func_80043040(D_80112172), 9, 0x20,
+                      0x20, zero, alpha, zero);
+    }
+}
 
 void func_8002BB24(MainMenuScoreTask *arg0) {
     u8 state = arg0->state.b.unk1F;
