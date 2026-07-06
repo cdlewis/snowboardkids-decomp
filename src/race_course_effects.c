@@ -50,13 +50,21 @@ typedef struct {
     Vec3i pos;
     char unk30[0x20];
     s16 timer;
+    s16 unk52;
 } RaceMovingEffect;
 
 typedef struct {
-    char pad0[0x20];
+    char pad0[8];
+    Vec3i unk8;
+    char pad14[0xC];
     Vec3i pos;
     char pad2C[0x1C];
 } CourseSpawnEntry;
+
+typedef struct {
+    s16 angle;
+    char pad2[0x46];
+} CourseAngleEntry;
 
 typedef struct {
     char pad0[0x10];
@@ -115,7 +123,7 @@ extern s32 func_8004597C(s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80097C18(void *, s16);
-extern void func_80098590(void *, void *, Vec3i *, void *);
+extern void func_80098590(void *, void *, Vec3i *);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
 extern s16 D_80112168;
@@ -139,6 +147,7 @@ extern u8 D_80121B56;
 extern s16 D_80121B50;
 extern SoundParams D_800DA764[];
 extern CourseSpawnEntry D_800B9540[];
+extern CourseAngleEntry D_800B9554[];
 extern s16 D_800B9556[];
 extern CourseMarkerEntry D_800DA804[];
 extern CourseMarkerVertexResource D_800DA80C[];
@@ -338,7 +347,7 @@ void func_8006B988(RaceMovingEffect *arg0) {
             if (temp_v1 >= (s32)0xFFF60001) {
                 arg0->velocity.z = temp_v1 - 0x2000;
             }
-            func_80098590(&arg0->unk30, &temp_a3->velocity, &sp24, temp_a3);
+            func_80098590(&arg0->unk30, &temp_a3->velocity, &sp24);
             temp_a3->pos.x += sp24.x;
             temp_a3->pos.y += sp24.y;
             temp_a3->pos.z += sp24.z;
@@ -366,7 +375,7 @@ void func_8006BB50(RaceMovingEffect *arg0) {
     tempIndex = D_80121B50;
     mtx = arg0->unk30;
     func_80097C18(mtx, D_800B9556[tempIndex * 0x24] + 0x400);
-    func_80098590(mtx, &arg0->velocity, &arg0->pos, arg0);
+    func_80098590(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.z = 0xFFFE0000;
     arg0->pos.x += ((CourseSpawnEntry *)((u8 *)D_800B9540 + ((*(volatile s16 *)&D_80121B50) * 0x48)))->pos.x;
     arg0->pos.y += ((CourseSpawnEntry *)((u8 *)D_800B9540 + ((*(volatile s16 *)&D_80121B50) * 0x48)))->pos.y;
@@ -386,7 +395,7 @@ void func_8006BDE4(RaceMovingEffect *arg0) {
     if (temp_v0 != 0) {
         if (D_80121B56 == 0) {
             arg0->timer = temp_v0 - 1;
-            func_80098590(&arg0->unk30, &temp_a3->velocity, &sp24, temp_a3);
+            func_80098590(&arg0->unk30, &temp_a3->velocity, &sp24);
             temp_a3->pos.x += sp24.x;
             temp_a3->pos.y += sp24.y;
             temp_a3->pos.z += sp24.z;
@@ -405,7 +414,7 @@ void func_8006BFC0(RaceMovingEffect *arg0) {
 
     if (D_80121B56 == 0) {
         arg0->timer--;
-        func_80098590(&arg0->unk30, &temp_a3->velocity, &sp1C, temp_a3);
+        func_80098590(&arg0->unk30, &temp_a3->velocity, &sp1C);
         temp_a3->pos.x += sp1C.x * 2;
         temp_a3->pos.y += sp1C.y * 2;
         temp_a3->pos.z += sp1C.z * 2;
@@ -417,7 +426,24 @@ void func_8006BFC0(RaceMovingEffect *arg0) {
     func_800483FC(&D_801248A4, func_8006BC68, temp_a3);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C088.s")
+void func_8006C088(RaceMovingEffect *arg0) {
+    void *mtx;
+
+    arg0->timer = 0x28;
+    arg0->unk52 = D_800B9554[D_80121B50].angle;
+    arg0->velocity.x = -0x200000;
+    arg0->velocity.z = 0x400000;
+    mtx = arg0->unk30;
+    func_80097C18(mtx, arg0->unk52);
+    func_80098590(mtx, &arg0->velocity, &arg0->pos);
+    arg0->velocity.x = 0;
+    arg0->velocity.z = -0x20000;
+    arg0->pos.x += D_800B9540[D_80121B50].unk8.x;
+    arg0->pos.y += D_800B9540[D_80121B50].unk8.y + 0x40000;
+    arg0->pos.z += D_800B9540[D_80121B50].unk8.z;
+    func_80071824(arg0, func_8006BFC0);
+    func_8006BFC0(arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C1B4.s")
 

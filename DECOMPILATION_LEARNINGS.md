@@ -2414,6 +2414,18 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   but its best output added an empty post-call `if` that only perturbed
   registers. Do not carry that artefact into source.
 
+## func_8006C088 (race_course_effects)
+
+- This is another course moving-effect initializer. It also uses
+  `RaceMovingEffect.unk52` as a stored rotation/angle halfword after
+  `timer` at `0x50`.
+- `D_800B9554` should be typed as a 0x48-byte entry table with the angle at
+  offset `0x0`, not as a flat `s16[]` indexed by `course * 0x24`; the typed
+  table makes IDO reuse the `course * 0x48` byte offset register and matches the
+  target exactly.
+- `CourseSpawnEntry` has another vector at offsets `0x08..0x10`, separate from
+  the previously used position vector at `0x20..0x28`.
+
 ## func_8003048C (controller_pak_menu_ui)
 
 - `D_8010AF80` is the same small prompt transition shape used by the shop menu:
