@@ -57,7 +57,7 @@ typedef struct StackD7D4 {
     s32 sp5C;
 } StackD7D4;
 
-extern void func_8006D8B4(RacePlayerSlot *, s32);
+extern void func_8006D8B4();
 extern void func_8006ECBC(void);
 extern void func_8006EF1C(void);
 extern void func_8006F048(void);
@@ -79,6 +79,7 @@ extern s32 D_80121B40;
 extern s32 D_80121B44;
 extern s32 D_80121B48;
 extern s8 D_80121B54;
+extern u8 D_80121B56;
 extern u8 D_80121B58;
 
 void func_8006D520(u16 arg0, u16 arg1) {
@@ -166,7 +167,14 @@ void func_8006EED4(void) {
     D_801124A0->update();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006EF1C.s")
+void func_8006EF1C(void) {
+    if (D_80121B56 == 0) {
+        D_801124A0->focus.x += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
+        D_801124A0->focus.y += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
+        D_801124A0->focus.z += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
+    }
+    func_8006D8B4();
+}
 
 void func_8006EFF4(void) {
     D_801124A0->timer = 0x96;
