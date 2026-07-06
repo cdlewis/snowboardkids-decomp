@@ -2436,3 +2436,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `func_80043040(D_80112172)`, 0x20 tile dimensions, and tile indices 3 through
   6. The explicit `(s16)` casts are only needed on coordinates with the `+ 0x40`
   offset.
+
+## func_8001958C (player_select_ui)
+
+- This player-select draw helper matches the same four-call 2x2 panel pattern as
+  `func_800218A4`, using `D_80112172` and tile indices 3 through 6. Keep the
+  explicit `(s16)` casts on the `x + 0x40` and `y + 0x40` coordinate arguments;
+  the unoffset `x` and `y` fields should be passed directly.
