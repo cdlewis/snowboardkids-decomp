@@ -101,6 +101,6 @@ EffectTask *func_800716A4(void (*callback)(EffectTask *), s32 arg1, s32 arg2, s3
 
 #pragma GLOBAL_ASM("asm/nonmatchings/effect_task_scheduler/func_800716E4.s")
 
-void func_80071824(EffectTask *task, void (*callback)(EffectTask *)) {
-    task->callback = callback;
+void func_80071824(void *task, void (*callback)()) {
+    ((EffectTask *)task)->callback = (void (*)(EffectTask *))callback;
 }

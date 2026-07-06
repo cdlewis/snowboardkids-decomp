@@ -23,7 +23,7 @@ typedef struct {
 
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void func_800716E4(CourseSelectWidgetActor *);
-extern void func_80071824(CourseSelectWidgetActor *, void (*)(CourseSelectWidgetActor *));
+extern void func_80071824(void *task, void (*callback)());
 extern void func_800260E8(CourseSelectWidgetActor *);
 extern void func_800271CC(CourseSelectWidgetActor *);
 extern void func_80027408(CourseSelectWidgetActor *);

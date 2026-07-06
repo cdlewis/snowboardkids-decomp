@@ -38,7 +38,7 @@ extern s16 D_801235B0;
 extern u8 D_8012482A;
 extern u8 D_8012482B;
 
-extern void func_80071824(MenuPanelActor *, MenuPanelActorCallback);
+extern void func_80071824(void *task, void (*callback)());
 extern void func_800483FC(RenderCallbackNode **, RenderCallback, s32);
 extern void func_800716E4(MenuPanelActor *);
 extern void func_8001303C(s32, s32, u8 *, s32, s32, s32, s32);

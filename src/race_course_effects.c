@@ -94,7 +94,7 @@ typedef struct {
     u8 bytes[0x10];
 } SoundParams;
 
-extern void func_80071824(void *, void *);
+extern void func_80071824(void *task, void (*callback)());
 extern void func_800483FC(void *, void *, void *);
 extern void func_800716E4(void *);
 extern void func_80072138(s32, s32);

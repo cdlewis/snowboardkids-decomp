@@ -201,7 +201,7 @@ extern s16 D_800D6050[];
 extern Vec3i D_800D6030[];
 extern s16 *D_800D761C[];
 extern s16 *D_800D693C[];
-extern void func_80071824(void *, void *);
+extern void func_80071824(void *task, void (*callback)());
 extern void *func_800711D0(void *, s32, s32);
 extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, s32);

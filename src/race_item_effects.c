@@ -85,7 +85,7 @@ void func_8005019C(RaceItemEffectActor *);
 void func_80050340(RaceItemEffectActor *);
 void func_80050398(RaceItemEffectActor *);
 void func_800716E4(void);
-void func_80071824(RaceItemEffectActor *, void *);
+void func_80071824(void *task, void (*callback)());
 RaceItemEffectActor *func_800711D0(void *, s32, s32);
 RaceItemEffectActor *func_800716A4(void *, s32, s32, s16);
 

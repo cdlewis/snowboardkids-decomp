@@ -2,7 +2,7 @@
 
 typedef struct MainMenuScoreTask MainMenuScoreTask;
 
-extern void func_80071824(MainMenuScoreTask *, void *);
+extern void func_80071824(void *task, void (*callback)());
 extern void func_800129DC(s16, s16, u8 *, s32, s32);
 extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);

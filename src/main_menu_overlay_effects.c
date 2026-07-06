@@ -101,7 +101,7 @@ void func_80055410(void);
 void func_80055530(void);
 void func_800716E4(void *);
 void *func_80071664(void *, s32, s32, s32);
-void func_80071824(void *, void *);
+void func_80071824(void *task, void (*callback)());
 void func_80072138(s16, s32, void *);
 
 void func_80053660(MainMenuOverlayEffectActor *arg0) {

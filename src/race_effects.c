@@ -47,7 +47,7 @@ s32 func_80043040(s16);
 void func_80045990(s32, s32, void **, void **);
 void func_8004B5F8(RaceEffectActor *);
 void func_8004D018(RaceEffectActor *);
-void func_80071824(RaceEffectActor *, void *);
+void func_80071824(void *task, void (*callback)());
 void func_80072A74(s32, void *, s32, s32);
 void *func_80071408(void *, s32, s32);
 

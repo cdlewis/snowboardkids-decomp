@@ -42,7 +42,7 @@ typedef void (*MenuRenderSpriteActorCallback)(MenuRenderSpriteActor *);
 typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
 extern void func_800483FC(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
-extern void func_80071824(MenuRenderSpriteActor *task, MenuRenderSpriteActorCallback callback);
+extern void func_80071824(void *task, void (*callback)());
 extern RenderCallbackNode *D_80124868;
 extern u32 D_80123758;
 
