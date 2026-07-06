@@ -67,6 +67,8 @@ extern u32 D_800DEFF8[];
 extern s16 D_8011213C;
 extern s16 D_80112140;
 extern s16 D_80112142;
+extern s16 D_8011214C;
+extern s16 D_80112154;
 extern s16 D_80112168;
 extern s16 D_8011216A;
 extern s16 D_8011216E;
@@ -80,6 +82,7 @@ extern u8 D_800E29C0;
 extern u8 D_800E11F0[];
 extern u8 D_800E1204[];
 extern u32 D_2000E70[];
+extern u32 D_20058A8[];
 
 s32 func_80043040(s16);
 void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
@@ -96,7 +99,7 @@ void func_80046D68(s32, s32, s32, s32, s32);
 void func_80048278(s32, s32, void *, s32);
 void func_800483FC(void *, void *, s32);
 void func_80053B28(void);
-void func_80053C90(void);
+void func_80053C90(void *);
 void func_80053D8C(s32);
 void func_80053DFC(s32);
 void func_8005408C(MainMenuOverlayEffectActor *);
@@ -136,7 +139,24 @@ void func_80053660(MainMenuOverlayEffectActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80053B28.s")
 
+// func_80053C90 best match: 99.677% at nonmatchings/func_80053C90-2/output-20-1/source.c
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80053C90.s")
+
+#ifdef NON_MATCHING
+void func_80053C90(void *arg0) {
+    MainMenuOverlayGfxCommand *gfx;
+    MainMenuOverlayGfxCommand *textureCommand;
+    MainMenuOverlayGfxCommand *paletteCommand;
+
+    if (D_80156608 == (0 & 0xFFFFFFFF)) {
+        gfx = D_80124830;
+        D_80124830 = gfx + 1;
+        gfx->w0 = 0xE7000000;
+        gfx->w1 = 0;
+        do { textureCommand = D_80124830; D_80124830 = textureCommand + 1; textureCommand->w0 = 0xBC000806; textureCommand->w1 = func_80043040(D_8011214C); paletteCommand = D_80124830; if ((!D_80124830) && (!D_80124830)) { } D_80124830 = paletteCommand + 1; paletteCommand->w0 = 0xBC000C06; paletteCommand->w1 = func_80043040(D_80112154); gfx = D_80124830; D_80124830 = gfx + 1; do { gfx->w0 = 0x01020040; gfx->w1 = (u32) D_800DEE50; gfx = D_80124830; } while (0); D_80124830 = gfx + 1; do { gfx->w0 = 0x06000000; gfx->w1 = (u32) D_20058A8; } while (0); } while (0);
+    }
+}
+#endif
 
 void func_80053D8C(s32 arg0) {
     func_800483FC(D_801248F8, func_80053C90, arg0);
