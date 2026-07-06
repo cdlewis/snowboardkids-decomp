@@ -2635,3 +2635,9 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - For the eight RNG advances, `for (var_v0 = 0; var_v0 != 8;) { var_v0 += 4; ... }`
   matched the initial address setup order. The equivalent `do` loop scheduled
   `move $v0, $zero` before the `%lo(D_8015A684)` addiu.
+
+## func_8003112C (controller_pak_menu_ui)
+
+- For adjacent `u16` alpha locals that must survive calls, keeping a local copy
+  of the actor pointer and a no-op empty branch in the inactive path made IDO
+  choose the target `v1`/`t0` allocation and `sp+0x3A`/`sp+0x38` halfword slots.

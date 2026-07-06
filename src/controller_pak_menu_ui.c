@@ -86,6 +86,7 @@ extern s32 D_80124838;
 extern CharacterSelectFlowState *D_801235B8;
 extern ControllerPakPromptTransition D_8010AF80;
 extern ControllerPakMenuState D_8010AF90;
+extern u8 D_8010AF92;
 extern u8 D_8010AF93;
 extern s16 D_80112172;
 extern s16 D_8011217C;
@@ -95,7 +96,7 @@ void func_8003048C(ControllerPakTitleActor *);
 extern void func_80030CC4(void);
 void func_80030EF0(ControllerPakTitleActor *);
 void func_80031038(ControllerPakTitleActor *);
-extern void func_8003112C(void);
+void func_8003112C(ControllerPakTitleActor *);
 void func_80031294(ControllerPakTitleActor *);
 extern void func_80031370(void);
 extern void func_80031550(void);
@@ -225,7 +226,37 @@ void func_800310EC(ControllerPakTitleActor *arg0) {
     func_80071824(arg0, func_80031038);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_8003112C.s")
+void func_8003112C(ControllerPakTitleActor *arg0) {
+    ControllerPakTitleActor *actor;
+    u16 alpha;
+    u16 otherAlpha;
+
+    actor = arg0;
+
+    if (D_8010AF90.state == 2) {
+        otherAlpha = 0x80;
+        alpha = 0x80;
+        if (D_8010AF90.confirmChoice == 0) {
+            alpha = 0x100;
+        } else {
+            otherAlpha = 0x100;
+        }
+    } else {
+        alpha = 0x80;
+        otherAlpha = 0x80;
+        if (!D_8010AF92) {
+        }
+    }
+
+    func_8000F8AC(arg0->common.x, arg0->common.y, func_80043040(D_80112172), 3, 0x20, 0x20, 0, alpha, 0);
+    func_8000F8AC((s16)(actor->common.x + 0x70), actor->common.y, func_80043040(D_80112172), 4, 0x20, 0x20, 0,
+                  otherAlpha, 0);
+
+    if (D_8010AF93 == 2) {
+        func_8000F8AC((s16)(actor->common.x + (D_8010AF92 * 0x70)), actor->common.y, func_80043040(D_80112172), 5, 0x20,
+                      0x20, 0, actor->scale, 0);
+    }
+}
 
 void func_80031294(ControllerPakTitleActor *arg0) {
     switch (D_8010AF93) {
