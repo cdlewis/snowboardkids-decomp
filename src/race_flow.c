@@ -11,6 +11,16 @@ typedef struct {
 } CourseGridEntry;
 
 typedef struct {
+    /* 0x00 */ s16 unk0;
+    /* 0x02 */ u8 pad2[0x48 - 0x2];
+} CourseSelectTableEntry;
+
+typedef union {
+    s16 s;
+    u16 u;
+} SignedUnsignedShort;
+
+typedef struct {
     /* 0x000 */ u8 pad0[0x2FC];
     /* 0x2FC */ s32 flags;
     /* 0x300 */ u8 pad300[RACE_PLAYER_STATE_SIZE - 0x300];
@@ -24,6 +34,7 @@ typedef struct {
 } RaceFlowState;
 
 extern CourseGridEntry *D_800DC490[];
+extern CourseSelectTableEntry D_800B9542[];
 extern RaceFlowState *D_801235B8;
 extern RacePlayerState D_80121D80[];
 extern s32 D_801235B4;
@@ -32,7 +43,7 @@ extern s32 D_8012207C;
 extern s32 D_80123778;
 extern s16 D_80112188;
 extern s16 D_801124B8;
-extern s16 D_80121B50;
+extern SignedUnsignedShort D_80121B50;
 extern s16 D_80121B52;
 extern s16 D_800DEF14;
 extern s8 D_800DEF10;
@@ -43,12 +54,32 @@ extern u8 D_80121B55;
 extern u8 D_80121B57;
 extern u8 D_80121B58;
 extern u8 D_80121B60;
+extern u8 D_8012482A;
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern u8 D_800DEED4;
 extern u8 D_800EC9C2;
 extern u8 D_8010ADFA;
 extern u8 D_800DC4C0;
+extern u8 D_1E74E0[];
+extern u8 D_1EC0F0[];
+extern u8 D_1EC4A0[];
+extern u8 D_1EC810[];
+extern u8 D_1ECD00[];
+extern u8 D_1ED910[];
+extern u8 D_1EDC80[];
+extern u8 D_1EE060[];
+extern u8 D_1EEEA0[];
+extern u8 D_1EF1D0[];
+extern u8 D_1EF530[];
+extern u8 D_1F1A90[];
+extern u8 D_1F2220[];
+extern u8 D_593D10[];
+extern u8 D_598A70[];
+extern u8 D_59DFE0[];
+extern u8 D_59E7F0[];
+extern u8 D_60F1A0[];
+extern u8 D_60F990[];
 
 extern s16 func_80042D58(s32);
 extern void func_80000A40(s32);
@@ -66,15 +97,19 @@ extern void func_8000C280(void);
 extern void func_8000C600(void);
 extern void func_8000CF70(void);
 extern void func_8000D340(void);
+extern void func_8001710C(void *);
 extern void func_8003DFD0(void);
 extern void func_80042C20(void);
 extern void func_800437F0(void *, void *, s32);
 extern void func_80045914(void);
+extern void func_80053634(void *);
 extern void func_8006D520(s32, s32);
 extern void func_8006D700(void);
+extern void func_800704F0(void);
 extern void func_8007105C(void);
 extern void func_800710CC(s32);
 extern void func_8007115C(void);
+extern void func_80071408(void *, s32, s32);
 extern void func_80071664(void *, s32, s32, s32);
 extern void func_8005393C(void);
 extern void func_800720E4(s32);
@@ -173,7 +208,7 @@ void func_80072DDC(void) {
 }
 
 void func_80072E10(void) {
-    CourseGridEntry *entry = D_800DC490[D_80121B50];
+    CourseGridEntry *entry = D_800DC490[D_80121B50.s];
     s32 count = 0;
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
@@ -192,7 +227,7 @@ loop:
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80072FC4.s")
 
 s32 func_800730EC(void) {
-    CourseGridEntry *entry = D_800DC490[D_80121B50];
+    CourseGridEntry *entry = D_800DC490[D_80121B50.s];
 
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
@@ -544,7 +579,63 @@ loop:
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80077DA0.s")
+void func_80077DA0(void) {
+    D_80121B52 = D_800B9542[D_80121B50.s].unk0;
+    if (D_800EC9C2 != 0) {
+        func_8009956C(func_80073988, 0);
+        return;
+    }
+    if (D_80121B55 == 1) {
+        func_8009956C(func_80073988, 0);
+        return;
+    }
+    if (D_8012482A == 0) {
+        func_8009956C(func_80073988, 0);
+        return;
+    }
+    func_800704F0();
+    D_800DEED4 = 0;
+    func_800437F0(D_593D10, D_598A70, 0x29);
+    func_800437F0(D_60F1A0, D_60F990, 0x2A);
+    func_800437F0(D_59DFE0, D_59E7F0, 0x26);
+    func_800437F0(D_1F1A90, D_1F2220, 0x28);
+    switch (D_80121B50.u) {
+    case 0:
+        func_800437F0(D_1EC0F0, D_1EC4A0, 0x1D);
+        break;
+    case 1:
+        func_800437F0(D_1EC4A0, D_1EC810, 0x1D);
+        break;
+    case 2:
+        func_800437F0(D_1EC810, D_1ECD00, 0x1D);
+        break;
+    case 3:
+        func_800437F0(D_1ECD00, D_1ED910, 0x1D);
+        break;
+    case 4:
+        func_800437F0(D_1ED910, D_1EDC80, 0x1D);
+        break;
+    case 5:
+        func_800437F0(D_1EDC80, D_1EE060, 0x1D);
+        break;
+    case 6:
+        func_800437F0(D_1EE060, D_1EEEA0, 0x1D);
+        break;
+    case 8:
+        func_800437F0(D_1EEEA0, D_1EF1D0, 0x1D);
+        break;
+    case 9:
+        func_800437F0(D_1EF1D0, D_1EF530, 0x1D);
+        break;
+    }
+    func_800437F0(D_1E74E0, D_1EC0F0, 0x1C);
+    func_80070EC0(0);
+    D_801235B4 = 0;
+    func_80071664(func_80053634, 0, 0x64, 0);
+    func_80071408(func_8001710C, 0, 0x5E);
+    func_8009956C(func_80078078, 0);
+    func_800720E4(7);
+}
 
 void func_80078078(void) {
     s32 temp_v0;
