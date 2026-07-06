@@ -9,6 +9,15 @@ typedef struct {
     s32 unk20;
 } MainMenuState;
 
+typedef struct {
+    char pad0[0x6];
+    /* 0x06 */ u8 selectedShopItem;
+    char pad7[0x1];
+    /* 0x08 */ u8 shopMenuState;
+    char pad9[0x3];
+    /* 0x0C */ s32 money;
+} ShopMenuState;
+
 typedef u8 ShopDescriptionText[0x8C];
 
 typedef struct {
@@ -54,6 +63,7 @@ struct ShopMenuWidgetActor {
             union {
                 struct {
                     /* 0x24 */ u8 state;
+                    /* 0x25 */ u8 timer;
                 } bytes;
                 /* 0x24 */ u8 slideState;
             } slide;
@@ -90,7 +100,7 @@ extern void func_8002D778(ShopMenuWidgetActor *);
 extern void func_8002D9EC(ShopMenuWidgetActor *);
 extern void func_8002DCE8(void);
 extern void func_8002F2C8(ShopMenuWidgetActor *);
-extern void func_8002E9E4(void);
+extern void func_8002E9E4(ShopMenuWidgetActor *);
 extern void func_8002EC5C(void);
 extern void func_8002E5A4(ShopMenuWidgetActor *);
 extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
@@ -114,9 +124,13 @@ extern u8 D_8010AF71;
 extern u8 D_8010AF72;
 extern u8 D_8010AF73;
 extern s16 D_8011217A;
+extern ShopMenuState D_80121D80;
 extern s32 D_80121D8C;
 extern s32 D_801235B4;
 extern MainMenuState *D_801235B8;
+extern s16 D_800EC9D0;
+extern u8 D_800ECA2F[];
+extern s32 D_80123758;
 extern u8 D_80124868;
 
 const char D_800E0F60[] = "%6dG";
@@ -609,7 +623,76 @@ void func_8002E6E4(ShopMenuWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002E810.s")
 
+// func_8002E9E4 best match: 94.119% (nonmatchings/func_8002E9E4-1404502880690620360/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002E9E4.s")
+
+#ifdef NON_MATCHING
+void func_8002E9E4(ShopMenuWidgetActor *arg0) {
+    s32 amount;
+    s32 price;
+
+    switch (arg0->slide.bytes.state) {
+    case 0:
+        arg0->sprite.index += 0x26;
+        if (arg0->sprite.index >= 0x100) {
+            arg0->sprite.index = 0x100;
+            arg0->slide.bytes.state = 1;
+        }
+        break;
+    case 1:
+        arg0->item.price = D_800B34B0[D_80121D80.selectedShopItem];
+        if (D_801235B8->shopItemPrice >= 2) {
+            arg0->slide.bytes.state = 2;
+        }
+        break;
+    case 2:
+        price = arg0->item.price;
+        if ((u32)price < 100U) {
+            amount = price & 0xFFFF;
+        } else {
+            amount = 500;
+            if (D_80123758 & 0x8000) {
+                if ((u32)price < 5000U) {
+                    amount = price & 0xFFFF;
+                } else {
+                    amount = 5000;
+                }
+            }
+        }
+        arg0->item.price = price - amount;
+        D_80121D80.money -= amount;
+        if (arg0->item.price == 0) {
+            arg0->slide.bytes.state = 3;
+            D_800ECA2F[D_80121D80.selectedShopItem] = 9;
+        }
+        break;
+    case 3:
+        arg0->slide.bytes.timer++;
+        if (arg0->slide.bytes.timer >= 0x14) {
+            arg0->slide.bytes.timer = 0;
+            arg0->slide.bytes.state = 4;
+            D_801235B8->shopItemPrice += 2;
+        }
+        break;
+    case 4:
+        if (D_80121D80.shopMenuState == 3) {
+            arg0->slide.bytes.state = 5;
+        }
+        /* fallthrough */
+    case 5:
+        arg0->x += 0x20;
+        if (arg0->x >= 0x94) {
+            arg0->slide.bytes.state = 6;
+        }
+        break;
+    }
+    if (((D_800EC9D0 >= 5) && (D_800EC9D0 != 9)) || (arg0->slide.bytes.state == 6)) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002E810, arg0);
+}
+#endif
 
 void func_8002EC04(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x20;
