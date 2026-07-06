@@ -84,7 +84,33 @@ void func_80041E60(s32 modelIndex) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80041E90.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80041FB4.s")
+s32 func_80041FB4(s32 arg0) {
+    int new_var2;
+    MainMenuSceneModel *new_var;
+    MainMenuSceneModel *model;
+
+    model = func_80043040(D_8011218A[arg0]);
+    if (model->framesRemaining == 1) {
+        goto ret1_initial;
+    }
+    new_var = model;
+    new_var2 = 0 & 0xFFu;
+    model->framesRemaining--;
+    func_80041E90(model);
+    if (1 != new_var->framesRemaining) {
+        goto ret0;
+    }
+    goto ret1_after;
+
+ret1_after:
+    return 1;
+
+ret1_initial:
+    return 1;
+
+ret0:
+    return new_var2;
+}
 
 void func_80042034(s32 modelIndex) {
     MainMenuSceneModel *model;

@@ -2286,3 +2286,12 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   instruction-identical 99.915% score, with the remaining diff caused by the
   target's named `.late_rodata` jump table (`jtbl_800E0ED8`) versus IDO's
   unnamed generated `.rodata` table.
+
+## func_80041FB4 (main_menu_scene_model)
+
+- The target keeps the model pointer live across `func_80041E90` by storing it
+  to the stack, then reloads it for the post-call `framesRemaining == 1` check.
+  A deliberately separate model local plus a zero local (`0 & 0xFFu`) preserves
+  the target's branch shape and zero return setup; simplifying to direct
+  `return 0` / `return 1` control flow is likely to collapse labels and change
+  scheduling.
