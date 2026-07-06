@@ -61,9 +61,12 @@ extern u8 D_800D57A0[];
 extern s16 D_800D57B0[];
 extern s16 D_800D57B4[];
 extern s16 D_800D5808[];
+extern u32 D_800DEE50[];
 extern s16 D_800DEF14;
 extern u32 D_800DEFF8[];
 extern s16 D_8011213C;
+extern s16 D_80112140;
+extern s16 D_80112142;
 extern s16 D_80112168;
 extern s16 D_8011216A;
 extern s16 D_8011216E;
@@ -76,6 +79,7 @@ extern u8 D_80156608;
 extern u8 D_800E29C0;
 extern u8 D_800E11F0[];
 extern u8 D_800E1204[];
+extern u32 D_2000E70[];
 
 s32 func_80043040(s16);
 void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
@@ -109,7 +113,7 @@ void func_80054EC4(MainMenuOverlayEffectActor *);
 void func_80055148(void);
 void func_8005537C(MainMenuOverlayEffectActor *);
 void func_80055410(void);
-void func_80055530(void);
+void func_80055530(void *);
 s32 func_80097AE8(s16);
 MainMenuOverlayEffectActor *func_80071408(void (*callback)(MainMenuOverlayEffectActor *), s32 type, s32 priority);
 void func_800716E4(void *);
@@ -429,7 +433,24 @@ void func_800553E0(MainMenuOverlayEffectActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80055410.s")
 
+// func_80055530 best match: 99.419% at nonmatchings/func_80055530-1404502880690620360/base_16.c
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80055530.s")
+
+#ifdef NON_MATCHING
+void func_80055530(void *arg0) {
+    MainMenuOverlayGfxCommand *gfx;
+    MainMenuOverlayGfxCommand *textureCommand;
+    MainMenuOverlayGfxCommand *paletteCommand;
+
+    if (D_80156608 == 0) {
+        gfx = D_80124830;
+        D_80124830 = gfx + 1;
+        gfx->w0 = 0xE7000000;
+        gfx->w1 = 0;
+        do { textureCommand = D_80124830; D_80124830 = textureCommand + 1; textureCommand->w0 = 0xBC000806; textureCommand->w1 = func_80043040(D_80112140); paletteCommand = D_80124830; D_80124830 = paletteCommand + 1; paletteCommand->w0 = 0xBC000C06; paletteCommand->w1 = func_80043040(D_80112142); gfx = D_80124830; D_80124830 = gfx + 1; do { gfx->w0 = 0x01020040; gfx->w1 = (u32) D_800DEE50; gfx = D_80124830; } while (0); D_80124830 = gfx + 1; do { gfx->w0 = 0x06000000; gfx->w1 = (u32) D_2000E70; } while (0); } while (0);
+    }
+}
+#endif
 
 void func_8005562C(s32 arg0) {
     func_800483FC(D_801248F8, func_80055530, arg0);
