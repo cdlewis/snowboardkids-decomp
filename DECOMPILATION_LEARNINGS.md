@@ -2490,6 +2490,17 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   temps to `$t*`; moving the `alpha = 0xC0` store after `spriteIndex` improves
   scheduling but still leaves register-name drift.
 
+## func_80055530 (main_menu_overlay_effects)
+
+- The closest display-list setup candidate reaches 99.419%. Single-line
+  `do { ... } while (0)` blocks are needed around the texture/palette setup tail
+  to match IDO's constant/address load scheduling for `D_800DEE50` and
+  `D_2000E70`.
+- The remaining mismatch is register allocation around the two
+  `func_80043040` calls: the target saves the command pointer in the delay slot
+  from `$v1` and reloads it into `$a2`/`$a3`; the closest C forms either keep the
+  pre-call `$v1` shape or the post-call reload shape, but not both.
+
 ## func_8006C698 (race_course_effects)
 
 - This course effect initializer uses the same `D_800DA764[D_80121B50]`
