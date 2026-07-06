@@ -2458,3 +2458,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - The empty `if (arg0) { }` after the first two draw calls is behaviorally inert
   because `arg0` has already been dereferenced. It forces IDO to home and reload
   the actor pointer in the target pattern.
+
+## func_80031D3C (controller_pak_menu_ui)
+
+- The render actor near the controller pak delete prompt has a different
+  `0x1C..0x20` field layout than `ControllerPakDeletePromptActor`: signed
+  `scale` at `0x1C`, `u16 timer` at `0x1E`, and byte `selectedOption` at
+  `0x20`. Reusing the delete-prompt struct swaps the timer and selected option
+  loads and also changes signedness in `func_80032534`.
