@@ -2409,3 +2409,15 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - Decomp-permuter improved register allocation from the clean typed candidate,
   but its best output added an empty post-call `if` that only perturbed
   registers. Do not carry that artefact into source.
+
+## func_8003048C (controller_pak_menu_ui)
+
+- `D_8010AF80` is the same small prompt transition shape used by the shop menu:
+  a halfword `x` at offset `0x0` and byte `state` at offset `0x2`. The function
+  copies that halfword directly into the title actor's scale field when the
+  cached state changes.
+- The closest typed candidate is sensitive to load scheduling around
+  `D_8010AF80.state` and `arg0->blinkState`: assigning the global state
+  temporary before reading the actor state gives the right `$v0/$v1` allocation,
+  but IDO schedules the two `lbu` instructions in the opposite order from the
+  target.
