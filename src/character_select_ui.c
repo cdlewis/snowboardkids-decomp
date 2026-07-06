@@ -1151,7 +1151,12 @@ void func_80021B20(CharacterSelectWidgetActor *arg0) {
     func_80071824(arg0, func_800219E4);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80021B58.s")
+void func_80021B58(CharacterSelectWidgetActor *arg0) {
+    func_8000F030(arg0->x, arg0->y, func_80043040(D_80112172), 3, 0x20, 0x20, 0, 0);
+    func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(D_80112172), 4, 0x20, 0x20, 0, 0);
+    func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(D_80112172), 5, 0x20, 0x20, 0, 0);
+    func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(D_80112172), 6, 0x20, 0x20, 0, 0);
+}
 
 void func_80021C98(CharacterSelectWidgetActor *arg0) {
     u32 state = arg0->sprite.bytes.state;
