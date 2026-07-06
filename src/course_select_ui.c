@@ -1,4 +1,5 @@
 #include "common.h"
+#include "menu_rendering.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -32,6 +33,8 @@ extern void func_800275E0(CourseSelectWidgetActor *);
 extern void func_80027AF8(CourseSelectWidgetActor *);
 extern void func_80028FF0(CourseSelectWidgetActor *);
 extern void func_800291F0(s32);
+extern s32 func_80043040(s16);
+extern s16 D_8011217A;
 extern u8 D_80121B55;
 extern u8 D_80121D88;
 extern CourseSelectState *D_801235B8;
@@ -61,7 +64,12 @@ extern s32 D_80124868;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025E6C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025FA8.s")
+void func_80025FA8(CourseSelectWidgetActor *arg0) {
+    func_8000F030(arg0->x, arg0->y, func_80043040(D_8011217A), 3, 0x20, 0x20, 0, 0);
+    func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(D_8011217A), 4, 0x20, 0x20, 0, 0);
+    func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(D_8011217A), 5, 0x20, 0x20, 0, 0);
+    func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(D_8011217A), 6, 0x20, 0x20, 0, 0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800260E8.s")
 
