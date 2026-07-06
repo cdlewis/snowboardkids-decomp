@@ -15,9 +15,10 @@ typedef struct InputTask {
 } InputTask;
 
 extern InputTask *D_801235B8;
+extern u8 D_80123700;
 extern InputTask *D_8012370C;
+extern InputTask *D_80123730[];
 
-void func_80099464(s32);
 InputTask *func_80099384(s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80098D80.s")
@@ -28,7 +29,26 @@ InputTask *func_80099384(s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80099384.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80099464.s")
+void func_80099464(s32 taskId) {
+    InputTask *task;
+    InputTask *next;
+    s32 freeTaskCount;
+
+    task = D_8012370C;
+    while (task != NULL) {
+        if (taskId == task->id) {
+            task->prev->next = task->next;
+            next = task->next;
+            if (next != NULL) {
+                next->prev = task->prev;
+            }
+            freeTaskCount = (D_80123700 & 0xFFu) - 1;
+            D_80123700 = freeTaskCount;
+            D_80123730[(u8) (((((((((((freeTaskCount & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu)] = task;
+        }
+        task = task->next;
+    }
+}
 
 void func_800994F4(s32 taskId, InputTaskCallback callback, s32 priority) {
     InputTask *task;
