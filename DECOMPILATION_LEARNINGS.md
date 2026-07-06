@@ -2648,3 +2648,17 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   the fourth argument to `func_8000F8AC`, an extra unused `u16` local plus a
   promoted `u32` copy can make IDO keep the value in `$a3` and spill it at the
   target halfword stack slot.
+
+## func_80021F80 (character_select_ui)
+
+- This state-machine update hit 99.5% but wouldn't go perfect until two
+  codegen-forcing tricks were applied. (1) Fold the global-state load into the
+  comparison as `if (state != (globalState = D_8010AE88[1]))` rather than
+  hoisting the load to its own statement — this pinned the load into the branch
+  delay-slot ordering. (2) In `case 0`, write `arg0->transition.bytes.timer =
+  state * 0;` instead of `= 0;`. IDO materializes the zero via `sb zero,`
+  either way, but the multiply-by-state form reproduces the exact register
+  assignment; a literal `0` changed the chosen register for the store.
+- Operating on `arg0` directly (rather than copying it to a local `actor`
+  pointer) was sufficient here — unlike `func_8003112C`, no extra live actor
+  copy was needed to pin allocation.
