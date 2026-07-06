@@ -2385,3 +2385,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - For the debug object `x` movement, direct `arg0->x` comparisons and updates
   matched the target allocation better than introducing local `s16 x` temporaries
   for both directions.
+
+## func_8003A944 (main_menu_scene_actor_3)
+
+- The actor field at offset `0x2C` is `animTimer`, not `timer`; using the
+  existing struct field avoids manual offset access and fixes the target's
+  initial `lhu`.
+- Adding an otherwise unused local before the saved `func_80041FB4` result can
+  move that spill from `sp+0x24` to the target's `sp+0x20`. The remaining
+  mismatch is a redundant unconditional branch that only schedules
+  `count = 2` in the delay slot.

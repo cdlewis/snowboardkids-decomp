@@ -590,7 +590,34 @@ void func_8003A8A4(MainMenuSceneActor *arg0) {
     }
 }
 
+// func_8003A944 best match: 97.333%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_3/func_8003A944.s")
+
+#ifdef NON_MATCHING
+void func_8003A944(MainMenuSceneActor *arg0) {
+    s32 pad;
+    s32 sp20;
+    s32 i;
+    s32 count;
+
+    count = 1;
+    if (arg0->animTimer < 3) {
+        count = count;
+    } else {
+        count = 2;
+    }
+
+    for (i = 0; i < count; i++) {
+        sp20 = func_80041FB4(3);
+    }
+
+    func_800428C8(3);
+    if (sp20 == 1) {
+        D_8010B1A4++;
+        func_80071824(arg0, func_8003AC00);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_3/func_8003A9E0.s")
 
