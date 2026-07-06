@@ -53,7 +53,7 @@ extern u8 D_80121B5A;
 extern void func_8001303C(s32, s32, MainMenuMessageScript *, s32, s32, s32, s32);
 extern void func_800716E4(MainMenuMessageActor *);
 void func_8000DF9C(MainMenuMessageActor *);
-extern void func_80071824(MainMenuMessageActor *, void (*)(MainMenuMessageActor *));
+extern void func_80071824(void *task, void (*callback)());
 void func_8000E5A0(MainMenuMessageActor *);
 void func_8000E8CC(MainMenuMessageActor *);
 void func_8000E99C(MainMenuMessageActor *);

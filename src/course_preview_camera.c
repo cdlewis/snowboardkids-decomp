@@ -56,7 +56,7 @@ extern void func_80055C7C(void);
 extern void func_80056348(CoursePreviewCamera *arg0, s16 arg1);
 extern void func_800563C4(CoursePreviewCamera *arg0, s32 arg1);
 extern void func_800564A8(CoursePreviewCamera *arg0);
-extern void func_80071824(CoursePreviewCamera *arg0, CoursePreviewCameraCallback arg1);
+extern void func_80071824(void *task, void (*callback)());
 extern s8 D_80122288;
 extern s16 D_80122282;
 extern s16 D_80121B50;

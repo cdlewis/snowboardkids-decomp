@@ -56,7 +56,7 @@ struct ShopMenuWidgetActor {
     } slide;
 };
 
-extern void func_80071824(ShopMenuWidgetActor *, void *);
+extern void func_80071824(void *task, void (*callback)());
 extern void func_8002C624(void);
 extern void func_800716E4(ShopMenuWidgetActor *);
 extern void func_800483FC(void *, void *, ShopMenuWidgetActor *);

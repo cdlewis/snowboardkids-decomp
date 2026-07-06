@@ -9,7 +9,7 @@ extern void func_80041DD4(s32 arg0, s32 arg1);
 extern s32 func_80041FB4(s32 arg0);
 extern void func_80042034(s32 arg0);
 extern void func_800428C8(s32 arg0);
-extern void func_80071824(s32 arg0, void (*arg1)(void));
+extern void func_80071824(void *task, void (*callback)());
 extern void *func_80071408(void *arg0, s32 arg1, s32 arg2);
 extern void func_8003C870(void *arg0);
 
@@ -107,7 +107,7 @@ void func_80032AF0(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x41) {
             arg0->unk2A = 0;
-            func_80071824((s32) arg0, func_80032A88);
+            func_80071824(arg0, func_80032A88);
             func_80041DD4(0, 0x56);
             D_8010B1A2 = 0x41;
             arg0->unk26 = 0xC00;
@@ -121,7 +121,7 @@ void func_80032B94(MainMenuSceneActor *arg0) {
     func_800428C8(0);
     if (D_8010B1A2 == 0x40) {
         arg0->unk2A = 0;
-        func_80071824((s32) arg0, func_80032AF0);
+        func_80071824(arg0, func_80032AF0);
         func_80041DD4(0, 0x55);
     }
 }
@@ -133,7 +133,7 @@ void func_80032BF0(MainMenuSceneActor *arg0) {
         temp->unk2A += 1;
         if (temp->unk2A == 0x1E) {
             temp->unk2A = 0;
-            func_80071824((s32) temp, func_80032B94);
+            func_80071824(temp, func_80032B94);
             func_80041DD4(0, 0x54);
             func_8003D068(0xA, -0x64);
         }
@@ -149,7 +149,7 @@ void func_80032C74(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x14) {
             arg0->unk2A = 0;
-            func_80071824((s32) arg0, func_80032BF0);
+            func_80071824(arg0, func_80032BF0);
             func_80041DD4(0, 0x53);
         }
     }
@@ -162,7 +162,7 @@ void func_80032CF4(MainMenuSceneActor *arg0) {
     }
     if (D_8010B1A2 == 0x3F) {
         arg0->unk2A = 0;
-        func_80071824((s32) arg0, func_80032C74);
+        func_80071824(arg0, func_80032C74);
         func_80041DD4(0, 0x22);
     }
     func_800428C8(0);
@@ -189,7 +189,7 @@ void func_80032D7C(MainMenuSceneActor *arg0) {
     func_800428C8(0);
     if (sp20 == 1) {
         arg0->unk2A = 0;
-        func_80071824((s32) arg0, func_80032CF4);
+        func_80071824(arg0, func_80032CF4);
         func_80041DD4(0, 0x21);
     }
 }
@@ -198,7 +198,7 @@ void func_80032E48(MainMenuSceneActor *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFF70000;
     if (D_8010B1A2 == 0x3B) {
-        func_80071824((s32) arg0, func_80032D7C);
+        func_80071824(arg0, func_80032D7C);
         func_80041DD4(0, 0x20);
         arg0->unk26 = 0xC00;
         func_800420FC(0, arg0->unk24, arg0->unk26, arg0->unk28);
@@ -229,7 +229,7 @@ void func_80032F3C(MainMenuSceneActor *arg0) {
         }
     } else if (arg0->unk2A == 0x10) {
         arg0->unk2A = 0;
-        func_80071824((s32) arg0, func_80032EF0);
+        func_80071824(arg0, func_80032EF0);
         D_8010B1A2 = 0x39;
     }
 }
@@ -241,7 +241,7 @@ void func_80032FF0(MainMenuSceneActor *arg0) {
     temp->unk18 += 0x24000;
     if (temp->unk18 >= 0x500000) {
         temp->unk18 = 0x500000;
-        func_80071824((s32) temp, func_80032F3C);
+        func_80071824(temp, func_80032F3C);
     }
     func_8004209C(0, temp->unk18, temp->unk1C, temp->unk20);
     func_800428C8(0);
@@ -254,7 +254,7 @@ void func_8003306C(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x1E) {
             arg0->unk2A = 0;
-            func_80071824((s32) arg0, func_80032FF0);
+            func_80071824(arg0, func_80032FF0);
             D_8010B1A2 = 0x38;
         }
     }
@@ -269,7 +269,7 @@ void func_800330EC(MainMenuSceneActor *arg0) {
     var_a1 = (new_var->unk18 += -0x48000);
     if (var_a1 < -0x1FFFFF) {
         new_var->unk18 = -0x200000;
-        func_80071824((s32) new_var, func_8003306C);
+        func_80071824(new_var, func_8003306C);
         var_a1 = arg0->unk18;
     } else if ((var_a1 < 0xD00001) && (D_8010B1A2 == 0x34)) {
         D_8010B1A2 = 0x35;
@@ -281,7 +281,7 @@ void func_800330EC(MainMenuSceneActor *arg0) {
 
 void func_800331A8(MainMenuSceneActor *arg0) {
     if (D_8010B1A2 == 0x34) {
-        func_80071824((s32) arg0, func_800330EC);
+        func_80071824(arg0, func_800330EC);
         arg0->unk18 = 0x1900000;
         arg0->unk20 = 0;
         D_8010B1A8 = 0;
@@ -294,7 +294,7 @@ void func_8003320C(MainMenuSceneActor *arg0) {
     arg0->unk18 += 0xFFFB8000;
     if (arg0->unk18 < (s32)0xFE700001) {
         arg0->unk18 = 0xFE700000;
-        func_80071824((s32) arg0, func_800331A8);
+        func_80071824(arg0, func_800331A8);
         D_8010B1A8 = 1;
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
@@ -320,7 +320,7 @@ void func_8003329C(MainMenuSceneActor *arg0) {
     func_800428C8(0);
     if (sp20 == 1) {
         arg0->unk2A = 0;
-        func_80071824((s32) arg0, func_8003320C);
+        func_80071824(arg0, func_8003320C);
         arg0->unk1C = 0;
         func_8004209C(0, arg0->unk18, 0, arg0->unk20);
         func_80041DD4(0, 0x1B);
@@ -332,7 +332,7 @@ void func_8003329C(MainMenuSceneActor *arg0) {
 void func_800333A8(void *arg0) {
     func_800428C8(0);
     if (D_8010B1A2 == 0x2F) {
-        func_80071824((s32) arg0, func_8003329C);
+        func_80071824(arg0, func_8003329C);
         func_80041DD4(0, 0x4E);
         func_8003C0A4(8, -0x40, 0, 0);
     }
@@ -344,7 +344,7 @@ void func_8003340C(MainMenuSceneActor *arg0) {
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800428C8(0);
     if (D_8010B1A2 == 0x2D) {
-        func_80071824((s32) arg0, func_800333A8);
+        func_80071824(arg0, func_800333A8);
     }
 }
 
@@ -352,7 +352,7 @@ void func_80033478(MainMenuSceneActor *arg0) {
     if (func_80041FB4(0) == 0) {
         arg0->unk18 += 0xFFF60000;
     } else {
-        func_80071824((s32) arg0, func_8003340C);
+        func_80071824(arg0, func_8003340C);
         func_80041DD4(0, 0x44);
         arg0->unk20 = 0xFFFF0000;
         D_8010B1A2 = 0x2B;
@@ -366,7 +366,7 @@ void func_80033504(MainMenuSceneActor *arg0) {
     arg0->unk18 += 0xFFFC8000;
     if (arg0->unk18 < (s32)0xFFD00001) {
         arg0->unk18 = 0xFFA00000;
-        func_80071824((s32) arg0, func_80033478);
+        func_80071824(arg0, func_80033478);
         func_80041DD4(0, 0x43);
         arg0->unk2A = 0;
         D_8010B1A8 = 1;
@@ -390,7 +390,7 @@ void func_800335F0(MainMenuSceneActor *arg0) {
     var_a1 = (arg0->unk18 += 0x2D000);
     if (var_a1 >= 0x800000) {
         arg0->unk18 = 0x800000;
-        func_80071824((s32) arg0, func_800335A4);
+        func_80071824(arg0, func_800335A4);
         D_8010B1A8 = 1;
         func_8003C420(-0x10, -0x4A, 0);
         var_a1 = arg0->unk18;
@@ -412,7 +412,7 @@ void func_800336D4(MainMenuSceneActor *arg0) {
     arg0->unk18 += 0xFFFDA000;
     if (arg0->unk18 < (s32)0xFF700001) {
         arg0->unk18 = 0xFF700000;
-        func_80071824((s32) arg0, func_80033688);
+        func_80071824(arg0, func_80033688);
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800428C8(0);
@@ -423,7 +423,7 @@ void func_80033758(MainMenuSceneActor *arg0) {
     arg0->unk18 += 0x1D000;
     if (arg0->unk18 >= (s32)0xFFCE0000) {
         arg0->unk18 = 0xFFCE0000;
-        func_80071824((s32) arg0, func_800336D4);
+        func_80071824(arg0, func_800336D4);
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800428C8(0);
@@ -433,7 +433,7 @@ void func_800337D4(void *arg0) {
     func_80042034(0);
     func_800428C8(0);
     if ((D_8010B1A2 = 0x27) != 0) {
-        func_80071824((s32) arg0, func_80033758);
+        func_80071824(arg0, func_80033758);
     }
 }
 
@@ -442,7 +442,7 @@ void func_80033828(MainMenuSceneActor *arg0) {
     arg0->unk18 += 0xFFFD8000;
     if (arg0->unk18 < (s32)0xFF700001) {
         arg0->unk18 = 0xFF700000;
-        func_80071824((s32) arg0, func_800337D4);
+        func_80071824(arg0, func_800337D4);
         D_8010B1A2 = 0x26;
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
@@ -458,7 +458,7 @@ void func_800338C0(MainMenuSceneActor *arg0) {
     arg0->unk20 += 0xFFFE0000;
     if (arg0->unk18 >= (s32)0xFFC80000) {
         arg0->unk18 = 0xFFC80000;
-        func_80071824((s32) arg0, func_80033828);
+        func_80071824(arg0, func_80033828);
         D_8010B1A2 = 0x24;
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
@@ -471,7 +471,7 @@ void func_80033958(MainMenuSceneActor *arg0) {
     arg0->unk2A += 1;
     if (arg0->unk2A == 0x32) {
         arg0->unk2A = 0;
-        func_80071824((s32) arg0, func_800338C0);
+        func_80071824(arg0, func_800338C0);
     }
 }
 
@@ -481,7 +481,7 @@ void func_800339B8(MainMenuSceneActor *arg0) {
     if (arg0->unk18 >= (s32)0xFF700000) {
         arg0->unk18 = 0xFF700000;
         arg0->unk2A = 0;
-        func_80071824((s32) arg0, func_80033958);
+        func_80071824(arg0, func_80033958);
         D_8010B1A2 = 0x23;
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
@@ -490,7 +490,7 @@ void func_800339B8(MainMenuSceneActor *arg0) {
 
 void func_80033A44(void *arg0) {
     if (D_8010B1A2 == 0x22) {
-        func_80071824((s32) arg0, func_800339B8);
+        func_80071824(arg0, func_800339B8);
         D_8010B1A8 = 0;
         func_8003CD9C(0x1C, -0x30, 0, 1);
     }
@@ -501,7 +501,7 @@ void func_80033A94(MainMenuSceneActor *arg0) {
     arg0->unk18 += 0xFFFA0000;
     if (arg0->unk18 < (s32)0xFE700001) {
         arg0->unk18 = 0xFE700000;
-        func_80071824((s32) arg0, func_80033A44);
+        func_80071824(arg0, func_80033A44);
         D_8010B1A8 = 1;
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
@@ -520,7 +520,7 @@ void func_80033B20(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x14) {
             arg0->unk2A = 0;
-            func_80071824((s32) arg0, func_80033A94);
+            func_80071824(arg0, func_80033A94);
             func_80041DD4(0, 0x1B);
             arg0->unk26 = 0xC00;
             func_800420FC(0, arg0->unk24, arg0->unk26, arg0->unk28);
@@ -534,7 +534,7 @@ void func_80033B20(MainMenuSceneActor *arg0) {
 void func_80033BE0(void *arg0) {
     func_800428C8(0);
     if (D_8010B1A2 == 0x1E) {
-        func_80071824((s32) arg0, func_80033B20);
+        func_80071824(arg0, func_80033B20);
         func_80041DD4(0, 0x2D);
         func_8003C0A4(8, -0x40, 0, 0);
     }
@@ -552,7 +552,7 @@ void func_80033C44(MainMenuSceneActor *arg0) {
             func_80041DD4(0, 0x2F);
             if ((arg0->unk2A / 20) == 3) {
                 arg0->unk2A = 0;
-                func_80071824((s32)arg0, func_80033BE0);
+                func_80071824(arg0, func_80033BE0);
             }
         }
     } else {
@@ -587,7 +587,7 @@ void func_80033D64(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x1E) {
             arg0->unk2A = 0;
-            func_80071824((s32) arg0, func_80033D0C);
+            func_80071824(arg0, func_80033D0C);
             func_80041DD4(0, 0x2E);
         }
     }
@@ -598,7 +598,7 @@ void func_80033DE4(MainMenuSceneActor *arg0) {
     func_800428C8(0);
     if (D_8010B1A2 == 0x1B) {
         arg0->unk2A = 0;
-        func_80071824((s32) arg0, func_80033D64);
+        func_80071824(arg0, func_80033D64);
         func_80041DD4(0, 0x2D);
         func_8003C0A4(8, -0x40, 0, 0);
     }
@@ -607,7 +607,7 @@ void func_80033DE4(MainMenuSceneActor *arg0) {
 void func_80033E54(void *arg0) {
     func_800428C8(0);
     if (D_8010B1A2 == 0x1A) {
-        func_80071824((s32) arg0, func_80033DE4);
+        func_80071824(arg0, func_80033DE4);
         func_80041DD4(0, 0x2C);
     }
 }
@@ -622,7 +622,7 @@ void func_80033EA4(MainMenuSceneActor *arg0) {
         if (func_80041FB4(0) == 1) {
             D_8010B1A4 += 1;
             if (++arg0->unk2A == 5) {
-                func_80071824((s32) arg0, func_80033E54);
+                func_80071824(arg0, func_80033E54);
                 arg0->unk2A = 0;
             }
         }
@@ -640,7 +640,7 @@ void func_80033F5C(MainMenuSceneActor *arg0) {
         if (func_80041FB4(0) == 1) {
             D_8010B1A4 += 1;
             if (++arg0->unk2A == 5) {
-                func_80071824((s32) arg0, func_80033EA4);
+                func_80071824(arg0, func_80033EA4);
                 arg0->unk2A = 0;
             }
         }
@@ -657,7 +657,7 @@ void func_80034014(MainMenuSceneActor *arg0) {
         if (func_80041FB4(0) == 1) {
             D_8010B1A4 += 1;
             if (++arg0->unk2A == 3) {
-                func_80071824((s32) arg0, func_80033F5C);
+                func_80071824(arg0, func_80033F5C);
                 arg0->unk2A = 0;
             }
         }
@@ -675,14 +675,14 @@ void func_800340D8(MainMenuSceneActor *arg0) {
     func_800428C8(0);
     if (locals.ret == 1) {
         D_8010B1A4++;
-        func_80071824((s32) arg0, func_80034014);
+        func_80071824(arg0, func_80034014);
     }
 }
 
 void func_80034138(void *arg0) {
     func_800428C8(0);
     if (D_8010B1A2 == 0x19) {
-        func_80071824((s32) arg0, func_800340D8);
+        func_80071824(arg0, func_800340D8);
         func_80041DD4(0, 0x2A);
     }
 }
@@ -692,7 +692,7 @@ void func_80034188(MainMenuSceneActor *arg0) {
     func_800428C8(0);
     arg0->unk18 += 0xFFFD0000;
     if (D_8010B1A2 == 0x18) {
-        func_80071824((s32) arg0, func_80034138);
+        func_80071824(arg0, func_80034138);
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
 }
@@ -711,7 +711,7 @@ void func_80034254(MainMenuSceneActor *arg0) {
     arg0->unk18 += 0x30000;
     if (arg0->unk18 >= 0xD0000) {
         arg0->unk18 = 0xD0000;
-        func_80071824((s32) arg0, func_800341FC);
+        func_80071824(arg0, func_800341FC);
         func_80041DD4(0, 0x24);
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
@@ -733,7 +733,7 @@ void func_80034328(MainMenuSceneActor *arg0) {
         temp->unk2A += 1;
         if (temp->unk2A == 0xF) {
             temp->unk2A = 0;
-            func_80071824((s32) temp, func_800342D8);
+            func_80071824(temp, func_800342D8);
             func_80041DD4(0, 0x23);
         }
     }
@@ -747,7 +747,7 @@ void func_800343A0(MainMenuSceneActor *arg0) {
         temp->unk2A += 1;
         if (temp->unk2A == 0xF) {
             temp->unk2A = 0;
-            func_80071824((s32) temp, func_80034328);
+            func_80071824(temp, func_80034328);
             func_80041DD4(0, 0x22);
         }
     }
@@ -772,7 +772,7 @@ void func_80034418(MainMenuSceneActor *arg0) {
     func_800428C8(0);
     if (sp20 == 1) {
         arg0->unk2A = 0;
-        func_80071824((s32) arg0, func_800343A0);
+        func_80071824(arg0, func_800343A0);
         func_80041DD4(0, 0x21);
     }
 }
@@ -785,7 +785,7 @@ void func_800344CC(MainMenuSceneActor *arg0) {
     if (var_a1 >= 0x280000) {
         arg0->unk18 = 0x280000;
         func_80041DD4(0, 0x20);
-        func_80071824((s32) arg0, func_80034418);
+        func_80071824(arg0, func_80034418);
         D_8010B1A2 = 0x15;
         D_8010B1A8 = 1;
         func_8003CB78(0xB, -0x4C);
@@ -805,7 +805,7 @@ void func_80034574(MainMenuSceneActor *arg0) {
         }
     } else if (D_8010B1A2 == 0x14) {
         arg0->unk2A = 0;
-        func_80071824((s32) arg0, func_800344CC);
+        func_80071824(arg0, func_800344CC);
     }
 }
 
@@ -819,7 +819,7 @@ void func_80034600(MainMenuSceneActor *arg0) {
         D_8010B1A5 = 2;
         arg0->unk2A = 0;
         arg0->unk18 = -0xA00000;
-        func_80071824((s32) arg0, func_80034574);
+        func_80071824(arg0, func_80034574);
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_80042034(0);
@@ -835,7 +835,7 @@ void func_800346D4(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 1) {
             arg0->unk2A = 0;
-            func_80071824((s32) arg0, func_80034600);
+            func_80071824(arg0, func_80034600);
         }
     }
 }
@@ -849,7 +849,7 @@ void func_80034754(MainMenuSceneActor *arg0) {
         temp->unk2A += 1;
         if (temp->unk2A == 0x1E) {
             temp->unk2A = 0;
-            func_80071824((s32) temp, func_800346D4);
+            func_80071824(temp, func_800346D4);
         }
     }
 }
@@ -861,7 +861,7 @@ void func_800347C8(MainMenuSceneActor *arg0) {
     if (arg0->unk18 >= 0x300000) {
         arg0->unk2A = 0;
         arg0->unk18 = 0x300000;
-        func_80071824((s32) arg0, func_80034754);
+        func_80071824(arg0, func_80034754);
     }
     if (arg0->unk2A == 0x18) {
         D_8010B1A2 = 0x11;
@@ -876,7 +876,7 @@ void func_80034864(MainMenuSceneActor *arg0) {
         arg0->unk26 = 0x400;
         func_8004209C(0, -0x1900000, arg0->unk1C, arg0->unk20);
         func_800420FC(0, arg0->unk24, arg0->unk26, arg0->unk28);
-        func_80071824((s32) arg0, func_800347C8);
+        func_80071824(arg0, func_800347C8);
         func_80041DD4(0, 0x1B);
         D_8010B1A8 = 0;
         func_8003CD9C(-0x32, -0x30, 0, 0);
@@ -890,7 +890,7 @@ void func_80034900(MainMenuSceneActor *arg0) {
     if (arg0->unk18 >= 0x1900000) {
         arg0->unk2A = 0;
         arg0->unk18 = 0x1900000;
-        func_80071824((s32) arg0, func_80034864);
+        func_80071824(arg0, func_80034864);
         D_8010B1A8 = 1;
     }
     if (arg0->unk2A == 1) {
@@ -907,7 +907,7 @@ void func_800349A8(MainMenuSceneActor *arg0) {
         temp = ++arg0->unk2A;
         if ((u32) temp == 0x19) {
             arg0->unk2A = 0;
-            func_80071824((s32) arg0, func_80034900);
+            func_80071824(arg0, func_80034900);
             func_80041DD4(0, 0x1B);
             D_8010B1A8 = 0;
             func_8003CD9C(-0x32, -0x30, 0, 0);
@@ -931,7 +931,7 @@ void func_80034AB0(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x32) {
             arg0->unk2A = 0;
-            func_80071824((s32) arg0, func_80034A60);
+            func_80071824(arg0, func_80034A60);
             func_80041DD4(0, 0x19);
         }
     } else {
@@ -949,7 +949,7 @@ void func_80034B60(MainMenuSceneActor *arg0) {
     arg0->unk2A += 1;
     if (arg0->unk2A == 0x19) {
         arg0->unk2A = 0;
-        func_80071824((s32) arg0, func_80034AB0);
+        func_80071824(arg0, func_80034AB0);
         func_80041DD4(0, 0x18);
     }
 }
@@ -961,7 +961,7 @@ void func_80034BC4(MainMenuSceneActor *arg0) {
             func_80041DD4(0, 0x17);
         } else {
             arg0->unk2A = 0;
-            func_80071824((s32) arg0, func_80034B60);
+            func_80071824(arg0, func_80034B60);
         }
     }
     func_800428C8(0);
@@ -979,7 +979,7 @@ void func_80034C50(s32 arg0) {
 
 void func_80034CAC(MainMenuSceneActor *arg0) {
     if (D_8010B1A2 == 0xD) {
-        func_80071824((s32) arg0, func_80034C50);
+        func_80071824(arg0, func_80034C50);
         func_80041DD4(0, 0x16);
         arg0->unk2C = 0x16;
     }
@@ -990,7 +990,7 @@ void func_80034CAC(MainMenuSceneActor *arg0) {
 void func_80034D10(MainMenuSceneActor *arg0) {
     if (func_80041FB4(0) == 1) {
         D_8010B1A2 = 0xB;
-        func_80071824((s32) arg0, func_80034CAC);
+        func_80071824(arg0, func_80034CAC);
     } else {
         arg0->unk2A += 1;
         if (arg0->unk2A == 3) {
@@ -1009,7 +1009,7 @@ void func_80034E60(MainMenuSceneActor *arg0) {
     temp_a1 = (arg0->unk18 += 0xFFFA0000);
     if (temp_a1 < 0x580001) {
         arg0->unk18 = 0x580000;
-        func_80071824((s32) arg0, func_80034DA0);
+        func_80071824(arg0, func_80034DA0);
         func_80041DD4(0, 0xD);
         arg0->unk26 = 0x400;
         func_800420FC(0, arg0->unk24, arg0->unk26, arg0->unk28);
@@ -1034,7 +1034,7 @@ void func_80034F2C(MainMenuSceneActor *arg0) {
         }
         if (D_8010B1A2 == 7) {
             arg0->unk2A = 0;
-            func_80071824((s32) arg0, func_80034E60);
+            func_80071824(arg0, func_80034E60);
             func_80041DD4(0, 0);
         }
     }
@@ -1054,7 +1054,7 @@ void func_80034FC8(s32 arg0) {
 void func_80035030(MainMenuSceneActor *arg0) {
     func_80041FB4(0);
     if (D_8010B1A2 == 3) {
-        func_80071824((s32) arg0, (void (*)()) func_80034FC8);
+        func_80071824(arg0, func_80034FC8);
         func_80041DD4(0, 2);
         func_8003D218(0x55, -0x62, 0);
         arg0->unk2A = 0;
@@ -1068,7 +1068,7 @@ void func_800350A4(MainMenuSceneActor *arg0) {
     temp_a1 = (arg0->unk18 += 0xFFFD8FD8);
     if (temp_a1 < 0x900001) {
         arg0->unk18 = 0x900000;
-        func_80071824((s32) arg0, func_80035030);
+        func_80071824(arg0, func_80035030);
         func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
         func_80041DD4(0, 1);
         func_8003D068(0x50, -0x68);
@@ -1083,7 +1083,7 @@ void func_800350A4(MainMenuSceneActor *arg0) {
 
 void func_80035150(void *arg0) {
     if (D_8010B1A2 == 2) {
-        func_80071824((s32) arg0, func_800350A4);
+        func_80071824(arg0, func_800350A4);
     }
 }
 
@@ -1098,5 +1098,5 @@ void func_80035184(MainMenuSceneActor *arg0) {
     func_80041DD4(0, 0);
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800420FC(0, arg0->unk24, arg0->unk26, arg0->unk28);
-    func_80071824((s32) arg0, func_80035150);
+    func_80071824(arg0, func_80035150);
 }
