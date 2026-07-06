@@ -2259,3 +2259,19 @@ convention, so extending the shop-local typedef does not conflict.
 - Standalone workspace again shows one residual diff (jump-table symbol
   `.rodata` vs `jtbl_800E0CF4`), a diff-tool normalization artifact; the
   integrated build verifies via SHA1.
+
+## IDO 5.3: keeping a base pointer for a single struct-field access
+
+When you only access one member of a sub-struct/union (e.g. `arg0->angleVelocity`
+at offset 0x22, base `angle` at 0x20), IDO -O2 folds a local pointer like
+`s16 *t = &arg0->angle; t[1]++;` down to direct addressing (`lh 0x22(a0)`),
+producing a `nop` in the would-be delay slot.
+
+The target instead materialises the base (`addiu $v0, $a0, 0x20` then `lh 2($v0)`)
+— a pattern IDO only emits when the pointer assignment is hoisted high enough to
+have unconditional lifetime. Move the `t = &arg0->member;` assignment **out of the
+deeply-nested conditional block** and up to a block that always executes; IDO then
+keeps the base pointer and reuses it for every `[1]` access.
+
+Seen in `func_8003DCCC` (and the sibling `func_8003DBE8`, which shares the same
+author/pattern). The decomp-permuter is the quickest way to surface this hoist.
