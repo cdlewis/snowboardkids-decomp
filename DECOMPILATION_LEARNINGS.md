@@ -2570,3 +2570,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - Actor byte `0x25` is the slide/purchase timer paired with slide state byte
   `0x24`; modeling it on the slide union avoids using the unrelated transition
   timer at `0x1F`.
+
+## func_80077DA0 (race_flow)
+
+- When one global halfword needs both signed and unsigned loads in a function,
+  a local `s16`/`u16` union view can preserve `lh` for signed table indexing and
+  direct `lhu` for switch dispatch without introducing casts that emit `andi`.
+- `D_800B9542` is indexed with a 0x48-byte stride here. A structured table entry
+  with the leading `s16` field matches the address arithmetic cleanly.
