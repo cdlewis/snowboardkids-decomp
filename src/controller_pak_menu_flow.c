@@ -21,6 +21,7 @@ extern void func_800016D8(u16);
 extern void func_80001858(void);
 extern void func_8000C818(void);
 extern void func_8000C924(void);
+extern void func_8000CB08(void);
 extern void func_8000CC5C(void);
 extern void func_8000CEA0(void);
 extern void func_8000CE0C(void);
@@ -120,7 +121,54 @@ void func_8000C818(void) {
     func_8007105C();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_flow/func_8000C924.s")
+void func_8000C924(void) {
+    u8 direction = 0;
+
+    if ((D_80123778 & 0x10800) && (D_8010AF90.fileIndex != 0)) {
+        D_8010AF90.fileIndex--;
+        direction = 1;
+    } else if ((D_80123778 & 0x20400) && (D_8010AF90.fileIndex != 0xF)) {
+        D_8010AF90.fileIndex++;
+        direction = 2;
+    }
+    if (direction == 0) {
+        D_8010AF90.isEdgeScroll = 0;
+    } else {
+        func_80072138(0x19, 0x32);
+        if ((D_8010AF90.visibleFileIndex != 0) && (D_8010AF90.visibleFileIndex != 4)) {
+            D_8010AF90.isEdgeScroll = 0;
+        } else if (D_8010AF90.visibleFileIndex == 0 && direction == 2) {
+            D_8010AF90.isEdgeScroll = 0;
+        } else {
+            if ((D_8010AF90.visibleFileIndex == 4) && (direction == 1)) {
+                D_8010AF90.isEdgeScroll = 0;
+            } else {
+                D_8010AF90.isEdgeScroll = 1;
+            }
+        }
+
+        if (D_8010AF90.isEdgeScroll == 0) {
+            if (direction == 1) {
+                D_8010AF90.visibleFileIndex--;
+            } else {
+                D_8010AF90.visibleFileIndex++;
+            }
+        }
+    }
+
+    if (((D_80123778 & 0x8000) || (D_80123778 & 0x4000, ((D_80123778 & 0x1000) != 0))) &&
+        (D_80123778 & 0x4000, (D_8010AFA0[D_8010AF90.fileIndex].exists != 0))) {
+        func_80072138(0x18, 0x32);
+        func_8009956C(func_8000CB08, 0);
+        D_8010AF90.state = 2;
+        D_8010AF90.confirmChoice = 1;
+    } else if ((D_80123778 & 0x4000) != 0) {
+        func_80072138(0x18, 0x32);
+        func_8009956C(func_8000C818, 0);
+        D_8010AF90.state = 0;
+    }
+    func_8007105C();
+}
 
 void func_8000CB08(void) {
     if ((D_80123778 & 0x40100) && (D_8010AF90.confirmChoice != 1)) {
