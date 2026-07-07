@@ -11,6 +11,14 @@ typedef struct OSMesgQueue {
     OSMesg *msg;
 } OSMesgQueue;
 
+typedef struct SchedulerThread {
+    u8 pad[0x1B0];
+} SchedulerThread;
+
+typedef struct SchedulerViMode {
+    u8 pad[0x50];
+} SchedulerViMode;
+
 typedef struct SchedulerClient {
     struct SchedulerClient *next;
     OSMesgQueue *queue;
@@ -106,12 +114,24 @@ typedef struct SchedulerTask {
 } SchedulerTask;
 
 typedef struct SchedulerState {
-    s32 unk0;
+    s16 unk0;
+    s16 unk2;
     OSMesgQueue messageQueue;
-    u8 pad1C[0x1FC - 0x1C];
+    OSMesg messageMsgs[16];
+    OSMesgQueue eventQueue;
+    OSMesg eventMsgs[16];
+    OSMesgQueue retraceQueue;
+    OSMesg retraceMsgs[32];
+    OSMesgQueue queue14C;
+    OSMesg msgs164[16];
+    OSMesgQueue queue1A4;
+    OSMesg msgs1BC[16];
     OSMesgQueue framebufferQueue;
     OSMesg framebufferMsgs[16];
-    u8 pad254[0x768 - 0x254];
+    u8 pad254[4];
+    SchedulerThread thread258;
+    SchedulerThread thread408;
+    u8 pad5B8[0x768 - 0x5B8];
     SchedulerClient *clients;
     SchedulerTask *curRSPTask;
     SchedulerTask *curRDPTask;
@@ -128,7 +148,15 @@ typedef struct Struct800A0138 {
 extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern s32 osSetIntMask(s32);
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
+extern void osCreateMesgQueue(OSMesgQueue *, OSMesg *, s32);
+extern void osCreateThread(SchedulerThread *, s32, void (*)(void *), void *, void *, s32);
+extern void osCreateViManager(s32);
+extern void osSetEventMesg(s32, OSMesgQueue *, OSMesg);
+extern void osStartThread(SchedulerThread *);
 extern s32 osSpTaskYielded(void *);
+extern void osViBlack(u8);
+extern void osViSetEvent(OSMesgQueue *, OSMesg, u32);
+extern void osViSetMode(SchedulerViMode *);
 extern void *osViGetCurrentFramebuffer(void);
 extern void *osViGetNextFramebuffer(void);
 extern void osWritebackDCacheAll(void);
@@ -147,6 +175,8 @@ extern void func_8009FF80(void);
 extern s32 D_800DF154;
 extern s32 D_800DF158;
 extern s32 D_800DF2A4;
+extern SchedulerViMode D_800DF340[];
+extern u8 D_80158620[];
 extern s32 D_8015A680;
 extern s32 D_8015A684;
 extern s32 D_8015A620;
@@ -165,7 +195,48 @@ extern f64 D_800E1AC8;
 extern f64 D_800E1AD0;
 extern f64 D_800E1AD8;
 
+// func_8009C270 best match: 99.735%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C270.s")
+
+#ifdef NON_MATCHING
+void func_8009C270(SchedulerState *arg0, u8 arg1, u8 arg2) {
+    OSMesgQueue *queue1A4;
+    SchedulerThread *thread;
+
+    arg0->curRSPTask = 0;
+    arg0->curRDPTask = 0;
+    arg0->clients = 0;
+    arg0->doAudio = 1;
+    arg0->doAudio = arg0->doAudio & 0xFFFFFFFFFFFFFFFF;
+    arg0->unk0 = 1;
+    arg0->unk2 = 3;
+    D_800DF154 = 0;
+    D_800DF158 = 0;
+    D_8015A620 = 0;
+    D_8015A624 = 0;
+    osCreateMesgQueue(&arg0->retraceQueue, arg0->retraceMsgs, 0x20);
+    queue1A4 = &arg0->queue1A4;
+    osCreateMesgQueue(queue1A4, arg0->msgs1BC, 0x10);
+    osCreateMesgQueue(&arg0->eventQueue, arg0->eventMsgs, 0x10);
+    osCreateMesgQueue(&arg0->messageQueue, arg0->messageMsgs, 0x10);
+    osCreateMesgQueue(&arg0->framebufferQueue, arg0->framebufferMsgs, 0x10);
+    osCreateMesgQueue(&arg0->queue14C, arg0->msgs164, 0x10);
+    osCreateViManager(0xFE);
+    osViSetMode(&D_800DF340[arg1]);
+    osViBlack(1);
+    osViSetEvent(&arg0->retraceQueue, (OSMesg)0x29A, arg2);
+    osSetEventMesg(4, &arg0->retraceQueue, (OSMesg)0x29B);
+    osSetEventMesg(0xE, &arg0->retraceQueue, (OSMesg)0x29D);
+    osSetEventMesg(9, queue1A4, (OSMesg)0x29C);
+    thread = &arg0->thread258;
+    osCreateThread(thread, 6, func_8009C444, arg0, D_80158620, 0x78);
+    osStartThread(thread);
+    thread = &arg0->thread408;
+    osCreateThread(thread, 5, func_8009C8DC, arg0, &D_8015A620, 0x64);
+    osStartThread(thread);
+}
+#endif
 
 s32 func_8009C434(s32 arg0) {
     return arg0 + 4;
