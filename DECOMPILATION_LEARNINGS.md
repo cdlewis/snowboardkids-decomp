@@ -2738,3 +2738,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - The allocation wrapper around the `func_800486BC` command transform matches
   cleanly when it uses the same typed `GfxCommandSource`/`GfxCommandDest`
   accesses and returns the allocated destination pointer directly.
+
+## func_8004F33C (race_item_effects)
+
+- When replacing a halfword field plus explicit padding with a word-sized union
+  at the same offset, remove the old padding field. Keeping both preserves C
+  validity but silently shifts later fields and breaks every access after the
+  union.

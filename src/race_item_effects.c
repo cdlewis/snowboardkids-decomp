@@ -37,20 +37,39 @@ typedef union {
     u8 ubyte;
 } RaceItemEffectState;
 
+typedef union {
+    s32 velocityX;
+    s16 timer;
+} RaceItemEffectWord24;
+
+typedef union {
+    struct {
+        /* 0x30 */ s16 x;
+        /* 0x32 */ s16 y;
+    } screen;
+    struct {
+        /* 0x30 */ s16 drawInitialized;
+        /* 0x32 */ s16 delay;
+    } particle;
+} RaceItemEffectShorts30;
+
+typedef union {
+    s16 width;
+    s16 alpha;
+} RaceItemEffectHalf38;
+
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[6];
     /* 0x18 */ RaceItemEffectPayload payload;
-    /* 0x24 */ s16 timer;
-    /* 0x26 */ u8 pad26[2];
+    /* 0x24 */ RaceItemEffectWord24 unk24;
     /* 0x28 */ RaceItemEffectWord28 unk28;
     /* 0x2C */ s32 unk2C;
-    /* 0x30 */ s16 x;
-    /* 0x32 */ s16 y;
+    /* 0x30 */ RaceItemEffectShorts30 unk30;
     /* 0x34 */ RaceItemEffectState state;
     /* 0x36 */ s16 height;
-    /* 0x38 */ s16 width;
+    /* 0x38 */ RaceItemEffectHalf38 unk38;
     /* 0x3A */ u8 pad3A[0x64 - 0x3A];
     /* 0x64 */ u16 unk64;
 } RaceItemEffectActor;
@@ -79,12 +98,13 @@ void func_8004E02C(RaceItemEffectActor *);
 void func_8004E438(RaceItemEffectActor *);
 void func_8004E604(RaceItemEffectActor *);
 void func_8004E960(RaceItemEffectActor *);
+void func_8004EFF8(RaceItemEffectActor *);
 void func_8004F68C(RaceItemEffectActor *);
 void func_8004F9CC(RaceItemEffectActor *);
 void func_8005019C(RaceItemEffectActor *);
 void func_80050340(RaceItemEffectActor *);
 void func_80050398(RaceItemEffectActor *);
-void func_800716E4(void);
+void func_800716E4();
 void func_80071824(void *task, void (*callback)());
 RaceItemEffectActor *func_800711D0(void *, s32, s32);
 RaceItemEffectActor *func_800716A4(void *, s32, s32, s16);
@@ -110,15 +130,15 @@ void func_8004E3BC(RaceItemEffectActor *arg0) {
     s16 temp_v0;
 
     if (D_80121B56 == 0) {
-        arg0->timer++;
-        if (arg0->timer == 8) {
+        arg0->unk24.timer++;
+        if (arg0->unk24.timer == 8) {
             func_800716E4();
             return;
         }
     }
-    temp_v0 = arg0->timer;
+    temp_v0 = arg0->unk24.timer;
     if (temp_v0 < 0) {
-        arg0->timer = temp_v0 + 1;
+        arg0->unk24.timer = temp_v0 + 1;
     }
     func_800483FC(&D_801248E0, func_8004E02C, arg0);
 }
@@ -131,7 +151,7 @@ void func_8004E518(s16 arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4) {
     if (p != NULL) {
         p->state.halfword = 0;
         p->height = arg1;
-        p->width = arg0;
+        p->unk38.width = arg0;
         p->unk28.word = arg3;
         p->unk2C = arg4;
     }
@@ -152,9 +172,9 @@ void func_8004E594(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
 
 void func_8004E960(RaceItemEffectActor *arg0) {
     if (D_80121B56 == 0) {
-        arg0->x -= 0x30;
-        arg0->y += 3;
-        if (arg0->x < 0x21) {
+        arg0->unk30.screen.x -= 0x30;
+        arg0->unk30.screen.y += 3;
+        if (arg0->unk30.screen.x < 0x21) {
             func_800716E4();
             return;
         }
@@ -163,8 +183,8 @@ void func_8004E960(RaceItemEffectActor *arg0) {
 }
 
 void func_8004E9D0(RaceItemEffectActor *arg0) {
-    arg0->x = 0xF0;
-    arg0->y = 0x10;
+    arg0->unk30.screen.x = 0xF0;
+    arg0->unk30.screen.y = 0x10;
     func_80045990(func_80043040(D_8011216C), arg0->state.ubyte, &arg0->unk2C, &arg0->unk28.word);
     func_80071824(arg0, func_8004E960);
 }
@@ -188,7 +208,32 @@ void func_8004EA34(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004EFF8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004F33C.s")
+void func_8004F33C(RaceItemEffectActor *arg0) {
+    s16 temp_v0;
+
+    if (D_80121B56 == 0) {
+        temp_v0 = arg0->unk30.particle.delay;
+        if (temp_v0 != 0) {
+            arg0->unk30.particle.delay = temp_v0 - 1;
+            return;
+        }
+
+        arg0->payload.vec.x += arg0->unk24.velocityX;
+        arg0->payload.vec.y += arg0->unk28.word;
+        arg0->payload.vec.z += arg0->unk2C;
+        arg0->unk28.word -= 0x4000;
+        arg0->unk38.alpha -= 0x10;
+        if (arg0->unk38.alpha <= 0) {
+            func_800716E4(arg0);
+            return;
+        }
+    }
+
+    if (arg0->unk30.particle.drawInitialized == 0) {
+        arg0->unk30.particle.drawInitialized++;
+    }
+    func_800483FC(&D_801248EC, func_8004EFF8, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004F3FC.s")
 
