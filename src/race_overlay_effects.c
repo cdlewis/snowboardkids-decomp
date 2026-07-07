@@ -53,7 +53,7 @@ typedef struct {
     /* 0x10 */ u16 modelListIndex;
     char pad12[6];
     /* 0x18 */ GfxCommandDest *modelBuffer;
-    char pad1C[2];
+    /* 0x1C */ s16 modelIndexOffset;
     /* 0x1E */ s16 modelCount;
 } RaceModelListActor;
 
@@ -224,7 +224,7 @@ void func_800668EC(RaceModelListActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800669A0.s")
 
-// func_80066ABC best match: 96.831%
+// func_80066ABC best match: 99.061%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80066ABC.s")
 
 #ifdef NON_MATCHING
@@ -255,12 +255,12 @@ void func_80066ABC(RaceModelListActor *arg0) {
     Gfx *temp_v0_18;
     Gfx *temp_v0_19;
 
+    modelIndex = -1;
     actor = arg0;
     temp_v0 = gRegionAllocPtr++;
     temp_v0->words.w1 = (u32)D_800D9D00;
     temp_v0->words.w0 = 0x06000000;
 
-    modelIndex = -1;
     entry = D_800D91E8[D_80121B50];
     i = 0;
     if (entry->modelIndex != -1) {
@@ -288,21 +288,7 @@ void func_80066ABC(RaceModelListActor *arg0) {
 
                     temp_v0_6 = gRegionAllocPtr++;
                     temp_v0_6->words.w1 = 0;
-                    temp_v0_6->words.w0 = 0xE7000000;
-
-                    temp_v0_7 = gRegionAllocPtr++;
-                    temp_v0_7->words.w0 = 0xF5400200;
-                    temp_v0_7->words.w1 = 0x00080200;
-
-                    temp_v0_8 = gRegionAllocPtr++;
-                    temp_v0_8->words.w0 = 0xF2000000;
-                    temp_v0_8->words.w1 = 0x0003C03C;
-
-                    temp_v0_9 = gRegionAllocPtr++;
-                    temp_v0_9->words.w0 = 0xFD100000;
-                    temp_v0_9->words.w1 = (u32)sp9C;
-
-                    temp_v0_10 = gRegionAllocPtr++;
+                    temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)sp9C; temp_v0_10 = gRegionAllocPtr++;
                     temp_v0_10->words.w1 = 0;
                     temp_v0_10->words.w0 = 0xE8000000;
 
