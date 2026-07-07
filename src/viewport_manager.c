@@ -1,6 +1,69 @@
 #include "viewport_manager.h"
 
+// func_800704F0 best match: 47.671%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_800704F0.s")
+
+#ifdef NON_MATCHING
+void func_800704F0(void) {
+    ViewportState *viewport = &D_801124B0[0];
+
+    viewport->active = 0;
+    viewport->screenBoundsValid = 0;
+    viewport->unk2 = 0;
+    viewport->overlayActive = 0;
+    viewport->overlayR = 0;
+    viewport->overlayG = 0;
+    viewport->overlayB = 0;
+    viewport->overlayAlpha = 0;
+    viewport->unk14 = 0x1FF;
+    viewport->unk16 = 0;
+    viewport->unk1C = 0x1FF;
+    viewport->unk1E = 0;
+
+    viewport = &D_801124B0[1];
+    viewport->active = 0;
+    viewport->screenBoundsValid = 0;
+    viewport->unk2 = 0;
+    viewport->overlayActive = 0;
+    viewport->overlayR = 0;
+    viewport->overlayG = 0;
+    viewport->overlayB = 0;
+    viewport->overlayAlpha = 0;
+    viewport->unk14 = 0x1FF;
+    viewport->unk16 = 0;
+    viewport->unk1C = 0x1FF;
+    viewport->unk1E = 0;
+
+    viewport = &D_801124B0[2];
+    viewport->active = 0;
+    viewport->screenBoundsValid = 0;
+    viewport->unk2 = 0;
+    viewport->overlayActive = 0;
+    viewport->overlayR = 0;
+    viewport->overlayG = 0;
+    viewport->overlayB = 0;
+    viewport->overlayAlpha = 0;
+    viewport->unk14 = 0x1FF;
+    viewport->unk16 = 0;
+    viewport->unk1C = 0x1FF;
+    viewport->unk1E = 0;
+
+    viewport = &D_801124B0[3];
+    viewport->active = 0;
+    viewport->screenBoundsValid = 0;
+    viewport->unk2 = 0;
+    viewport->overlayActive = 0;
+    viewport->overlayR = 0;
+    viewport->overlayG = 0;
+    viewport->overlayB = 0;
+    viewport->overlayAlpha = 0;
+    viewport->unk14 = 0x1FF;
+    viewport->unk16 = 0;
+    viewport->unk1C = 0x1FF;
+    viewport->unk1E = 0;
+}
+#endif
 
 void func_80070614(s32 arg0) {
     ViewportState *viewport = &D_801124B0[arg0];
