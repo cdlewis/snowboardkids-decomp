@@ -330,6 +330,7 @@ reverb_rodata_0000 = 0x800E1ED0;
 reverb_rodata_0020 = 0x800E1EF0;
 player_bss_0048 = 0x80121854;
 gPendingPositionalSoundRequests = 0x80121938;
+gRegionAllocPtr = 0x80124830;
 libmus_fxheader_current = 0x8015A66C;
 __osContPifRam = 0x8015CA00;
 __osEventStateTab = 0x8015C980;

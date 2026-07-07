@@ -65,7 +65,7 @@ extern s16 D_80156612;
 extern s16 D_80112148;
 extern s16 D_8011214A;
 extern s16 D_80112130[];
-extern Gfx *D_80124830;
+extern Gfx *gRegionAllocPtr;
 extern Gfx D_800DE070[];
 extern u32 D_800DEE90[];
 extern u32 D_800DE098[RACE_POSITION_UI_PART_COUNT + 2];
@@ -99,9 +99,9 @@ extern u32 D_800DE368[RACE_POSITION_UI_TEXTURE_VARIANTS];
 
 #ifdef NON_MATCHING
 static void racePositionUiAppendGfx(u32 w0, u32 w1) {
-    Gfx *gfx = D_80124830;
+    Gfx *gfx = gRegionAllocPtr;
 
-    D_80124830 = gfx + 1;
+    gRegionAllocPtr = gfx + 1;
     gfx->words.w0 = w0;
     gfx->words.w1 = w1;
 }

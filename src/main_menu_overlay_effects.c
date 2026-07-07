@@ -41,7 +41,7 @@ typedef struct {
     /* 0x36 */ s16 alpha;
 } MainMenuOverlayEffectActor;
 
-extern Gfx *D_80124830;
+extern Gfx *gRegionAllocPtr;
 extern void *D_80124868;
 extern u8 D_80124858[];
 extern u8 D_80124878[];
@@ -137,14 +137,14 @@ void func_80053660(MainMenuOverlayEffectActor *arg0) {
 // func_80053C90 best match: 99.677% at nonmatchings/func_80053C90-2/output-20-1/source.c
 void func_80053C90(void *arg0) {
     if (D_80156608 == 0) {
-        gDPPipeSync(D_80124830++);
+        gDPPipeSync(gRegionAllocPtr++);
 
-        gSPSegment(D_80124830++, 0x02, func_80043040(D_8011214C));
-        gSPSegment(D_80124830++, 0x03, func_80043040(D_80112154));
+        gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_8011214C));
+        gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112154));
 
-        gSPMatrix(D_80124830++, D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-        gSPDisplayList(D_80124830++, D_20058A8);
+        gSPDisplayList(gRegionAllocPtr++, D_20058A8);
     }
 }
 
@@ -269,10 +269,10 @@ void func_80054714(MainMenuOverlayEffectActor *arg0) {
 void func_8005475C(MainMenuOverlayEffectActor *arg0) {
     Gfx *gfx;
 
-    gfx = D_80124830;
-    D_80124830 = gfx + 1;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = D_80124830; D_80124830 = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = D_80124830; D_80124830 = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = D_80124830; D_80124830 = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, func_80043040(D_80112168), 0x5D); func_80045A78(4, -0x10, func_80043040(D_80112168), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, func_80043040(D_8011216A), D_800D57B4[D_80121B50]); func_80045A78(4, -0xC, func_80043040(D_8011216A), D_800D57B4[D_80121B50] + 1); gfx = D_80124830; D_80124830 = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) D_800DEFF8; } while (0);
+    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, func_80043040(D_80112168), 0x5D); func_80045A78(4, -0x10, func_80043040(D_80112168), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, func_80043040(D_8011216A), D_800D57B4[D_80121B50]); func_80045A78(4, -0xC, func_80043040(D_8011216A), D_800D57B4[D_80121B50] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) D_800DEFF8; } while (0);
 }
 
 void func_800548F4(MainMenuOverlayEffectActor *arg0) {
@@ -445,14 +445,14 @@ void func_800553E0(MainMenuOverlayEffectActor *arg0) {
 
 void func_80055530(void *arg0) {
     if (D_80156608 == 0) {
-        gDPPipeSync(D_80124830++);
+        gDPPipeSync(gRegionAllocPtr++);
 
-        gSPSegment(D_80124830++, 0x02, func_80043040(D_80112140));
-        gSPSegment(D_80124830++, 0x03, func_80043040(D_80112142));
+        gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));
+        gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112142));
 
-        gSPMatrix(D_80124830++, D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-        gSPDisplayList(D_80124830++, D_2000E70);
+        gSPDisplayList(gRegionAllocPtr++, D_2000E70);
     }
 }
 

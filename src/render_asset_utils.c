@@ -233,14 +233,14 @@ void func_800483FC(RenderCallbackNode **arg0, void (*arg1)(s32), s32 arg2) {
     }
 }
 
-extern s32 D_80124830;
+extern s32 gRegionAllocPtr;
 extern s32 D_80124904;
 
 void func_8004845C(RenderCallbackNode **arg0) {
     RenderCallbackNode *s0 = *arg0;
     if (s0 != NULL) {
 loop:
-        if ((u32)((D_80124830 - D_80124904) - 0x5B8) < 0x14181U) {
+        if ((u32)((gRegionAllocPtr - D_80124904) - 0x5B8) < 0x14181U) {
             s0->callback(s0->arg);
             s0 = s0->next;
             if (s0 != NULL) {

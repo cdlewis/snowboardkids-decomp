@@ -86,7 +86,7 @@ extern OSMesgQueue D_80124018;
 extern OSMesg D_80124030[8];
 extern u8 D_801240A8[0x778];
 extern MainSchedulerClient D_80124820;
-extern Gfx *D_80124830;
+extern Gfx *gRegionAllocPtr;
 extern s8 D_8012482A;
 extern s8 D_8012482B;
 extern s8 D_8012482C;
@@ -206,16 +206,16 @@ Gfx *func_8009B5F4(void) {
     s32 denom;
     s32 scale;
 
-    gfx = D_80124830;
-    D_80124830 = gfx + 1;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
     gfx->words.w0 = 0xBC000008;
     fade = D_800DF140;
     scale = 0x1F400;
     denom = 0x3E8 - fade;
     gfx->words.w1 = ((scale / denom) << 16) | ((((-fade << 8) + scale) / denom) & 0xFFFF);
 
-    gfx2 = D_80124830;
-    D_80124830 = gfx2 + 1;
+    gfx2 = gRegionAllocPtr;
+    gRegionAllocPtr = gfx2 + 1;
     gfx2->words.w0 = 0xF8000000;
     gfx2->words.w1 = (D_80156618 << 24) | (D_80156619 << 16) | (D_8015661A << 8) | 0xFF;
 
