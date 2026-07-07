@@ -55,7 +55,9 @@ extern void *D_8010ADE0;
 extern u8 D_8010AE88[];
 extern u8 D_8010AE89;
 extern u8 D_8010AE8F;
+extern u8 D_8010ADF9;
 extern u8 D_80121D88;
+extern u8 D_800EC9DD;
 extern u8 D_800EC9C2;
 extern u8 D_80121B5E;
 extern void *D_80124868;
@@ -105,6 +107,7 @@ void func_80020624(CharacterSelectWidgetActor *arg0);
 void func_800203D0(CharacterSelectWidgetActor *arg0);
 void func_80020818(CharacterSelectWidgetActor *arg0);
 void func_80022464(CharacterSelectWidgetActor *arg0);
+void func_80020B70(CharacterSelectWidgetActor *arg0);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001BD70.s")
 
@@ -939,7 +942,40 @@ void func_80020AE0(CharacterSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80020B70.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80020CEC.s")
+void func_80020CEC(CharacterSelectWidgetActor *arg0) {
+    u8 selectedCharacterRow;
+    s16 y;
+    int mode;
+
+    mode = D_8010ADF9;
+    if (mode == 0) {
+        if (1) {}
+        selectedCharacterRow = 0x18;
+        y = -0x50;
+    } else if (mode == 1) {
+        y = -0x54;
+        selectedCharacterRow = 0x16;
+    } else if (mode == 2) {
+        selectedCharacterRow = 0x16;
+        y = -0x60;
+    } else {
+        y = -0x60;
+        selectedCharacterRow = 0x13;
+    }
+
+    if (D_800EC9DD != 0) {
+        y = -0x58;
+        selectedCharacterRow = 0x18;
+    }
+
+    arg0->x = -0x7C;
+    arg0->y = y;
+    arg0->selection.bytes.selectedCharacterRow = selectedCharacterRow;
+    arg0->sprite.index = 0;
+    arg0->transition.bytes.state = 0;
+    arg0->transition.bytes.timer = 0;
+    func_80071824(arg0, func_80020B70);
+}
 
 void func_80020D88(CharacterSelectWidgetActor *arg0) {
     func_8000F8AC(arg0->x, arg0->y, func_80043040(D_80112172), 1, 0x20, 0x20, 0, arg0->sprite.index, 0);
