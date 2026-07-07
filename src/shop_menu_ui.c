@@ -125,12 +125,13 @@ extern void func_80071824(void *task, void (*callback)());
 extern void func_8002C624(void);
 extern void func_800716E4(ShopMenuWidgetActor *);
 extern void func_800483FC(void *, void *, ShopMenuWidgetActor *);
+extern void *func_80071408(void *, s32, s32);
 extern void func_8002C9A0(ShopMenuWidgetActor *);
 extern void func_8002FAB8(ShopMenuWidgetActor *);
 extern void func_8002DF40(ShopMenuWidgetActor *);
 extern void func_8002E32C(ShopMenuWidgetActor *);
 extern void func_8002E468(ShopMenuWidgetActor *);
-extern void func_8002CFAC(void);
+extern void func_8002CFAC(ShopMenuWidgetActor *);
 extern void func_8002D2E4(ShopMenuWidgetActor *);
 extern void func_8002D558(ShopMenuWidgetActor *);
 extern void func_8002D778(ShopMenuWidgetActor *);
@@ -139,8 +140,18 @@ extern void func_8002F2C8(ShopMenuWidgetActor *);
 extern void func_8002E9E4(ShopMenuWidgetActor *);
 extern void func_8002EC5C(void);
 extern void func_8002E5A4(ShopMenuWidgetActor *);
+<<<<<<< HEAD
 extern void func_8002FC00(ShopMenuWidgetActor *);
 extern void func_8002FD70(ShopMenuWidgetActor *);
+=======
+extern void func_8002FD70(void);
+extern void func_8002CAD4(ShopMenuWidgetActor *);
+extern void func_8002DE6C(ShopMenuWidgetActor *);
+extern void func_8002E074(ShopMenuWidgetActor *);
+extern void func_8002E214(ShopMenuWidgetActor *);
+extern void func_8002E42C(ShopMenuWidgetActor *);
+extern void func_8002E798(ShopMenuWidgetActor *);
+>>>>>>> 7ecd0ec (Decompile func_8002CFAC)
 extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
@@ -160,6 +171,7 @@ extern s16 D_8011217E;
 extern s16 D_8011214A;
 extern u8 D_800EC9E6;
 extern CourseSelectStatus D_8010AF18;
+extern s32 D_8010ADDC;
 extern u8 D_8010AF40;
 extern u8 D_8010AF70;
 extern u8 D_8010AF71;
@@ -247,7 +259,83 @@ void func_8002CAA0(ShopMenuWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002CAD4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002CFAC.s")
+void func_8002CFAC(ShopMenuWidgetActor *arg0) {
+    int state;
+
+    if ((D_800EC9E6 >= (u16) arg0->item.counter) && (arg0->item.bytes.subState != 0) && (arg0->y != -0x48)) {
+        state = arg0->item.bytes.subState = 2;
+    } else {
+        state = arg0->item.bytes.subState;
+        if ((D_800EC9E6 < (u16) arg0->item.counter) && (state != 0) && (arg0->y != -0x140)) {
+            state = arg0->item.bytes.subState = 1;
+        } else {
+            state = arg0->item.bytes.subState;
+            if ((state != 0) && (state < 4)) {
+                state = arg0->item.bytes.subState = 3;
+            }
+        }
+    }
+
+    switch (state) {
+    case 0:
+        arg0->x -= 0x20;
+        if (arg0->item.bytes.subTimer == 0) {
+            func_80071408(func_8002CAA0, 0, 0x63);
+        }
+        arg0->item.bytes.subTimer++;
+        if (arg0->x < -7) {
+            arg0->x = -8;
+            arg0->item.bytes.subState = 3;
+            func_80071408(func_8002E074, 0, 0x64);
+            D_8010ADDC = (s32) func_80071408(func_8002DE6C, 0, 0x64);
+            func_80071408(func_8002E214, 0, 0x64);
+            func_80071408(func_8002E798, 0, 0x60);
+            func_80071408(func_8002E42C, 0, 0x64);
+        }
+        state = arg0->item.bytes.subState;
+        break;
+    case 1:
+        arg0->y -= 0x24;
+        if (arg0->y < -0x13F) {
+            arg0->y = -0x140;
+            arg0->item.bytes.subState = 3;
+        }
+        state = arg0->item.bytes.subState;
+        break;
+    case 2:
+        arg0->y += 0x24;
+        if (arg0->y >= -0x48) {
+            arg0->y = -0x48;
+            arg0->item.bytes.subState = 3;
+        }
+        state = arg0->item.bytes.subState;
+        break;
+    case 3:
+        D_801235B4 += 1;
+        if (D_80121D88 == 1) {
+            arg0->item.bytes.subState = 4;
+        }
+        state = arg0->item.bytes.subState;
+        break;
+    case 4:
+        arg0->x += 0x20;
+        if (arg0->x >= 0xA0) {
+            arg0->item.bytes.subState = 5;
+        }
+        state = arg0->item.bytes.subState;
+        break;
+    case 5:
+        D_80121D88 = 2;
+        state = arg0->item.bytes.subState;
+        break;
+    }
+
+    if ((state == 5) && (D_80121D88 == 2)) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002CAD4, arg0);
+}
 
 void func_8002D294(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x94;
