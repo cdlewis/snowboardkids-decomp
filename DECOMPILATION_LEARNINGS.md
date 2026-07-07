@@ -2905,3 +2905,14 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   subtracting `pathOffset` moves the shift temporary from `$t7` to target
   `$t3`. The remaining mismatch is the equivalent `entry + pathIndexCopy` /
   loaded sample register pair (`$t6`/`$t2` instead of target `$t2`/`$a1`).
+
+## func_8000DDA4 (main_menu_message_ui)
+
+- For this menu choice handler, keeping the selected choice temporaries as
+  `s32` avoids IDO sign-extension sequences from `s16` locals while preserving
+  the target unsigned `lhu`/`andi` updates.
+- An empty `do { } while (0);` after the increment-branch `selectedChoice`
+  store improves scheduling/register allocation for the best current
+  non-matching attempt. The remaining mismatch is allocation-only: decrement
+  temporaries use `$a0` instead of the target `$t8`/`$t9`, cascading later
+  temporary register names.
