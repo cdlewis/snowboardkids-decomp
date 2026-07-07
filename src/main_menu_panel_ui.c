@@ -28,12 +28,17 @@ struct MenuPanelActor {
 extern RenderCallbackNode *D_80124868;
 extern u8 D_8010B1F0;
 extern u8 D_800D4A40[];
+extern u8 D_800D54F8[];
+extern u8 D_800D5508[];
+extern u8 D_800D5518[];
+extern u8 D_800D5528[];
 extern u8 D_800D5598[];
 extern u8 D_800D55E8[];
 extern u8 D_800D5630[];
 extern u16 *D_800D5538[];
 extern u8 D_80112130[];
 extern u8 D_80121B5B;
+extern s16 D_800DEF14;
 extern s16 D_8011213C;
 extern s32 D_80123778;
 extern s32 D_801235B4;
@@ -104,7 +109,79 @@ void func_80050FF0(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80051308.s")
 
+// func_800515F0 best match: 71.684%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_800515F0.s")
+
+#ifdef NON_MATCHING
+void func_800515F0(MenuPanelActor *arg0) {
+    s32 input;
+    s32 pulse;
+    u8 current;
+    u8 next;
+
+    if ((D_800DEF14 == 0) && (D_8010B1F0 == 0)) {
+        input = D_80123778;
+        if (input & 0x10800) {
+            current = D_80121B5B;
+            next = D_800D54F8[current];
+            if (current != next) {
+                D_80121B5B = next;
+                func_80072138(0x19, MENU_PANEL_SOUND_VOLUME);
+                input = D_80123778;
+            }
+        } else if (input & 0x20400) {
+            current = D_80121B5B;
+            next = D_800D5508[current];
+            if (current != next) {
+                D_80121B5B = next;
+                func_80072138(0x19, MENU_PANEL_SOUND_VOLUME);
+                input = D_80123778;
+            }
+        } else if (input & 0x40100) {
+            current = D_80121B5B;
+            next = D_800D5528[current];
+            if (current != next) {
+                D_80121B5B = next;
+                func_80072138(0x19, MENU_PANEL_SOUND_VOLUME);
+                input = D_80123778;
+            }
+        } else if (input & 0x80200) {
+            current = D_80121B5B;
+            next = D_800D5518[current];
+            if (current != next) {
+                D_80121B5B = next;
+                func_80072138(0x19, MENU_PANEL_SOUND_VOLUME);
+                input = D_80123778;
+            }
+        }
+
+        if (input & 0xD000) {
+            D_8010B1F0 = 1;
+            if (input & 0x4000) {
+                D_80121B5B = 0xC;
+            }
+            func_80072138(MENU_PANEL_ACCEPT_SOUND, MENU_PANEL_SOUND_VOLUME);
+        }
+    }
+
+    if (D_8010B1F0 == 0) {
+        pulse = D_801235B0 & 0xF;
+        arg0->x = pulse;
+        if (pulse >= 9) {
+            pulse = 0x10 - pulse;
+            arg0->x = pulse;
+        }
+        arg0->x = (pulse << 4) + 0x7F;
+    } else if (D_801235B0 & 1) {
+        arg0->x = 0;
+    } else {
+        arg0->x = 0xFF;
+    }
+
+    func_800483FC(&D_80124868, func_80050FF0, (s32)arg0);
+    func_800483FC(&D_80124868, func_80051308, (s32)arg0);
+}
+#endif
 
 void func_80051854(MenuPanelActor *arg0) {
     func_80071824(arg0, func_800515F0);
