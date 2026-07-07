@@ -3205,3 +3205,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   switch state is enough for IDO to preserve the actor in `$a2` across callback
   calls. No manual pointer arithmetic is needed for the adjacent
   `0x20`/`0x24`/`0x28`/`0x2A`/`0x2B` actor fields.
+
+## func_8005F174 (race_ui_effects)
+
+- For small race UI actor initializers, a typed actor struct plus direct
+  `D_80121D80[arg0->playerIndex]` indexing can reproduce the target's expanded
+  `0x60C` stride math. Repeated `func_80043040(D_80112168)` calls should stay
+  inline in each `func_80045990` call rather than cached in a local.
