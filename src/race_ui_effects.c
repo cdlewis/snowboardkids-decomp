@@ -200,6 +200,11 @@ typedef struct {
 } RaceUiAlphaActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 alpha;
+} RaceUiAlpha18Actor;
+
+typedef struct {
     /* 0x00 */ s32 flags;
     /* 0x04 */ u8 pad4[0x608];
 } RacePlayerFlags;
@@ -316,6 +321,7 @@ extern void *D_800E14C0;
 extern void *D_800E14C4;
 extern void *D_800E14C8;
 extern u32 D_800DEFF8[];
+extern u32 D_800E12D4[];
 extern u32 D_800E1390[];
 extern Gfx *gRegionAllocPtr;
 extern RaceUiAssetEntry D_800D5FF4[];
@@ -350,7 +356,6 @@ extern void func_8006501C(void *);
 extern void func_80064F4C(void *);
 extern void func_80059E5C(void);
 extern void func_80059C34(void);
-extern void func_80059F6C(void);
 extern void func_8005B8E8(void);
 extern void func_8005BE68(void);
 extern void func_80061984(void);
@@ -705,7 +710,14 @@ void func_800599DC(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059E5C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059F6C.s")
+void func_80059F6C(RaceUiAlpha18Actor *arg0) {
+    Gfx *gfx;
+    s32 w0;
+    s32 w1;
+
+    /* IDO scheduling for this function depends on this block staying on one line. */
+    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x74, -0x3C, D_800E12D4, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+}
 
 void func_8005A07C(void *arg0) {
     func_800483FC(&D_80124868, func_80059E5C, arg0);
