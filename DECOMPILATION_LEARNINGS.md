@@ -70,6 +70,11 @@ patterns, and verified layout/linking rules.
   directly can produce a different `lui/addiu` pair and shift nearby scheduling.
   For example, an asset id at `D_80112130 + 0x42` may need to be written as
   `D_80112130[0x21]` rather than the equivalent named `D_80112172` symbol.
+- Split `double` constants in rodata may have labels on both 32-bit words.
+  Declaring and using the high-word label as an `f64` can still produce the
+  target linked addresses even if the disassembly spells the low-word load as
+  `D_xxxx+4` versus the explicit low-word label. In func_8009F194 this left a
+  workspace diff only in relocation names, while the final linked code matched.
 - Statement order drives IDO's temp-register allocation order. When a sequence
   of independent stores each load a stack arg into a fresh temp, IDO allocates
   temps (`$t6`, `$t7`, `$t8`, ...) in source order. A constant store (e.g.
