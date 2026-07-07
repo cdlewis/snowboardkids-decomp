@@ -1,6 +1,8 @@
 #include "common.h"
 #include "viewport_manager.h"
 
+#define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
+
 typedef struct {
     s32 word;
     u16 half;
@@ -156,37 +158,11 @@ typedef struct {
 } RaceUiTrailCopyBlock;
 
 typedef struct {
-    /* 0x00 */ s16 state;
-    /* 0x02 */ u8 pad02[0x1C - 0x02];
-    /* 0x1C */ Vec3i worldPos;
-    /* 0x28 */ RaceUiTrailCopyBlock copyBlock;
-    /* 0x48 */ u8 pad48[0x6A - 0x48];
-    /* 0x6A */ s16 spinYaw;
-} RaceUiSnowboardTrailState;
-
-typedef struct {
-    /* 0x000 */ u16 playerIndex;
-    /* 0x002 */ u8 pad002[0x58C - 0x002];
-    /* 0x58C */ RaceUiSnowboardTrailState trail;
-} RaceUiSnowboardTrailPlayer;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x30];
-    /* 0x30 */ Vec3i worldPos;
-    /* 0x3C */ u8 pad3C[4];
-    /* 0x40 */ RaceUiTrailCopyBlock copyBlock;
-    /* 0x60 */ u8 pad60[0x80 - 0x60];
-    /* 0x80 */ u16 playerIndex;
-    /* 0x82 */ u8 pad82[2];
-    /* 0x84 */ s16 spinYaw;
-} RaceUiSnowboardTrailActor;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ RaceUiEffectParticle *particles;
-    /* 0x1C */ u8 pad1C[8];
-    /* 0x24 */ s16 count;
-} RaceUiEffectParticleActor;
+    struct {
+        u32 w0;
+        u32 w1;
+    } words;
+} RaceUiDisplayCommand;
 
 typedef struct {
     /* 0x00 */ s32 unk0;
@@ -206,6 +182,45 @@ typedef struct {
     /* 0x38 */ s32 unk38;
     /* 0x3C */ s32 unk3C;
 } RaceUiGfxCommandDest;
+
+typedef struct {
+    /* 0x00 */ s16 state;
+    /* 0x02 */ u8 pad02[0x1C - 0x02];
+    /* 0x1C */ Vec3i worldPos;
+    /* 0x28 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x48 */ u8 pad48[0x6A - 0x48];
+    /* 0x6A */ s16 spinYaw;
+} RaceUiSnowboardTrailState;
+
+typedef struct {
+    /* 0x000 */ u16 playerIndex;
+    /* 0x002 */ u8 pad002[0x58C - 0x002];
+    /* 0x58C */ RaceUiSnowboardTrailState trail;
+} RaceUiSnowboardTrailPlayer;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x30];
+    /* 0x30 */ Vec3i worldPos;
+    /* 0x3C */ u8 pad3C[4];
+    /* 0x40 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x60 */ RaceUiTrailCopyBlock transformedCopyBlock;
+    /* 0x80 */ u16 playerIndex;
+    /* 0x82 */ u8 pad82[2];
+    /* 0x84 */ s16 spinYaw;
+    /* 0x86 */ u8 pad86[2];
+    /* 0x88 */ RaceUiGfxCommandDest *matrix0;
+    /* 0x8C */ RaceUiGfxCommandDest *matrix1;
+    /* 0x90 */ s16 unk90;
+    /* 0x92 */ s16 timer;
+    /* 0x94 */ u8 matrixDirty;
+} RaceUiSnowboardTrailActor;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ RaceUiEffectParticle *particles;
+    /* 0x1C */ u8 pad1C[8];
+    /* 0x24 */ s16 count;
+} RaceUiEffectParticleActor;
 
 typedef struct {
     /* 0x00 */ s16 active;
@@ -334,7 +349,10 @@ extern u8 D_80121B81;
 extern u8 D_80121D90;
 extern s32 D_80121DA4;
 extern u8 D_80156608;
+extern u8 D_80156609;
 extern s16 D_80156612;
+extern s16 D_80112144;
+extern s16 D_80112146;
 extern s16 D_8011216E;
 extern s16 D_80112168;
 extern s8 D_80122289;
@@ -351,10 +369,13 @@ extern Vec3i D_800D6030[];
 extern s16 *D_800D761C[];
 extern RaceUiGfxCommandScriptEntry *D_800D693C[];
 extern RaceUiGfxCommandDest D_800DEE50;
+extern u32 D_2002208[];
+extern u32 D_20023A8[];
 extern void func_80071824(void *task, void (*callback)());
 extern void *func_800711D0(void *, s32, s32);
 extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, s32);
+extern RaceUiGfxCommandDest *func_8004885C(RaceUiTrailCopyBlock *);
 extern void func_80048C90(RaceUiGfxCommandDest *, s32 *);
 extern void func_80048D60(void *);
 extern void osWritebackDCache(void *, s32);
@@ -1491,7 +1512,30 @@ void func_8005F298(s16 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005F2DC.s")
+void func_8005F2DC(RaceUiSnowboardTrailActor *arg0) {
+    volatile u8 pad[0x20];
+    RaceUiDisplayCommand *unused;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (arg0->matrixDirty != 0) {
+        arg0->matrixDirty = 0;
+        arg0->matrix0 = func_8004885C(&arg0->copyBlock);
+        arg0->matrix1 = func_8004885C(&arg0->transformedCopyBlock);
+    }
+
+    if (arg0->matrix0 != NULL) {
+        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, func_80043040(D_80112144));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, func_80043040(D_80112146));
+        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2002208);
+        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_20023A8);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005F448.s")
 
