@@ -76,12 +76,41 @@ void func_80011854(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8001185C.s")
 
 void func_80011C3C(MenuRenderSpriteActor *actor);
+void func_80011D44(MenuRenderSprite *sprite);
 
 void func_80011C18(MenuRenderSpriteActor *arg0) {
     func_80071824(arg0, func_80011C3C);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80011C3C.s")
+void func_80011C3C(MenuRenderSpriteActor *actor) {
+    if (D_80123758 & 8) {
+        actor->sprite.y++;
+    }
+    if (D_80123758 & 4) {
+        actor->sprite.y--;
+    }
+    if (D_80123758 & 1) {
+        actor->sprite.x++;
+    }
+    if (D_80123758 & 2) {
+        actor->sprite.x--;
+    }
+
+    if (actor->sprite.x >= 0x141) {
+        actor->sprite.x = 0;
+    }
+    if (actor->sprite.x < 0) {
+        actor->sprite.x = 0x13F;
+    }
+    if (actor->sprite.y >= 0x9C1) {
+        actor->sprite.y = 0;
+    }
+    if (actor->sprite.y < 0) {
+        actor->sprite.y = 0x9BF;
+    }
+
+    func_800483FC(&D_80124868, func_80011D44, &actor->sprite);
+}
 
 void func_80011D44(MenuRenderSprite *arg0) {
     func_80011D74(arg0, 0, 0, 0);
