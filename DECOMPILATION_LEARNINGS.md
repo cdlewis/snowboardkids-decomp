@@ -2961,3 +2961,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   local live and incrementing it by `sizeof(RaceUiGfxCommandDest)` makes IDO
   allocate the target byte-offset register even though the source uses indexed
   struct assignment.
+
+## func_80048278 (render_asset_utils)
+
+- For this text rendering loop, a signed `char` mask initialized from
+  `0xFFFFFFFFFFFFFFFFu` and used in `temp_t9 = *arg2 & mask` preserves the
+  target temporary allocation. Keeping the otherwise redundant `arg0 = arg0`
+  before loading the newline sentinel also nudges IDO to use `$t0`/`$t1` for
+  the signed argument staging before `func_80047E88`.
