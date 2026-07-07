@@ -2807,3 +2807,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   a small 0x14-byte stride struct for array indexing plus a typed overlay for
   distant fields preserves IDO's multiply-by-20 sequence while keeping named
   field accesses for the best-lap timer bytes/halfword.
+
+## func_8004FF34 (race_item_effects)
+
+- For small effect update callbacks that need the actor after an early guarded
+  update block, assigning `RaceItemFollowActor *temp_a2 = arg0` before the
+  `D_80121B56` check lets IDO keep the callback argument live in `$a2` across
+  the block and matches the final signed timer clamp/render callback sequence.
