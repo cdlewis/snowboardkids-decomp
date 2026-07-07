@@ -44,6 +44,7 @@ typedef void (*RenderCallback)(s32);
 extern void func_800483FC(RenderCallbackNode **, RenderCallback, s32);
 extern RenderCallbackNode *D_80124868;
 extern u8 D_8010B1F0;
+extern s32 D_80123778;
 extern MainMenuMessageScript D_800B3500[][0x17C];
 extern MainMenuMessageScript D_800B4FB8[];
 extern MainMenuMessageScript D_800B5038[];
@@ -52,6 +53,7 @@ extern s16 D_800B51B6[];
 extern u8 D_80121B5A;
 extern void func_8001303C(s32, s32, MainMenuMessageScript *, s32, s32, s32, s32);
 extern void func_800716E4(MainMenuMessageActor *);
+extern void func_80072138(s32, s32, MainMenuMessageActor *);
 void func_8000DF9C(MainMenuMessageActor *);
 extern void func_80071824(void *task, void (*callback)());
 void func_8000E5A0(MainMenuMessageActor *);
@@ -66,7 +68,64 @@ void func_8000DD74(s32 arg0) {
     func_800483FC(&D_80124868, (RenderCallback)func_8000DD74, arg0);
 }
 
+// func_8000DDA4 best match: 98.052%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_message_ui/func_8000DDA4.s")
+
+#ifdef NON_MATCHING
+void func_8000DDA4(MainMenuMessageActor *arg0) {
+    s32 temp_t1;
+    s32 temp_t8;
+    s32 temp_t9;
+    s32 temp_a1;
+    s32 var_a0;
+    s32 var_v0;
+
+    var_v0 = (u16)arg0->state.selectedChoice;
+    temp_a1 = var_v0;
+    if (D_80123778 & 0x10800) {
+        if (D_80121B5A != 9) {
+            temp_t8 = var_v0 - 1;
+            if (var_v0 != 0) {
+                arg0->state.selectedChoice = temp_t8;
+                var_v0 = temp_t8 & 0xFFFF;
+            }
+        } else {
+            temp_t9 = var_v0 - 1;
+            if (var_v0 != 1) {
+                arg0->state.selectedChoice = temp_t9;
+                var_v0 = temp_t9 & 0xFFFF;
+            }
+        }
+    }
+    var_a0 = var_v0;
+    if (D_80123778 & 0x20400) {
+        temp_t1 = var_v0 + 1;
+        if (var_v0 != 2) {
+            arg0->state.selectedChoice = temp_t1;
+            do {
+            } while (0);
+            var_a0 = temp_t1 & 0xFFFF;
+        }
+    }
+    if (var_a0 != temp_a1) {
+        func_80072138(0x19, 0x32, arg0);
+    }
+    if ((u16)arg0->highlightTimer < 0x10) {
+        arg0->highlightScale -= 9;
+    } else {
+        arg0->highlightScale += 9;
+    }
+    arg0->highlightTimer = ((u16)arg0->highlightTimer + 1) & 0x1F;
+    if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+        func_80072138(1, 0x32, arg0);
+        D_8010B1F0 = (u16)arg0->state.selectedChoice + 1;
+        arg0->highlightScale = 0x100;
+        arg0->highlightTimer = 0;
+        func_80071824(arg0, func_8000DD74);
+    }
+    func_800483FC(&D_80124868, (RenderCallback)func_8000D7F0, (s32)arg0);
+}
+#endif
 
 void func_8000DF28(MainMenuMessageActor *arg0) {
     arg0->x = -0x30;
