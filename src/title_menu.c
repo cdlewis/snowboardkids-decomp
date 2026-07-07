@@ -39,7 +39,11 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Rect rects[3];
+    /* 0x18 */ Rect rects[2];
+    /* 0x28 */ u16 stepLimit;
+    /* 0x2A */ u16 stepIncrement;
+    /* 0x2C */ u16 stepAccumulator;
+    /* 0x2E */ s16 unk2E;
     /* 0x30 */ u8 frame;
 } RectListActor;
 
@@ -74,7 +78,7 @@ extern void func_80015404(void *);
 extern void func_80015A30(void *);
 extern void func_80015B20(void *);
 extern void func_80015BD8(void *);
-extern void func_80015F4C(void);
+extern void func_80015F4C(RectListActor *);
 extern void func_80016284(void);
 extern void func_80016948(TitleMenuWidgetActor *);
 extern void func_80016E40(void);
@@ -397,7 +401,123 @@ void func_80015C84(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80015CBC.s")
 
+// func_80015F4C best match: 98.817% (nonmatchings/func_80015F4C-6516277587347797853/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80015F4C.s")
+
+#ifdef NON_MATCHING
+void func_80015F4C(RectListActor *arg0) {
+    u8 state;
+    s32 outer;
+    s32 i;
+    s16 delta0;
+    s16 delta1;
+    s16 *coords;
+
+    outer = D_8010AE04;
+    state = arg0->frame;
+    if (state != D_8010AE04) {
+        state = outer;
+        arg0->frame = outer;
+    }
+
+    switch (state) {
+    case 0:
+        outer = 0;
+        do {
+            i = 0;
+            coords = &arg0->rects[0].x0;
+            do {
+                if (i < 2) {
+                    delta0 = 1;
+                } else {
+                    delta0 = -1;
+                }
+                if (i & 1) {
+                    delta1 = -1;
+                } else {
+                    delta1 = 1;
+                }
+
+                coords[0] += delta0;
+
+                if (i == 0) {
+                    arg0->stepAccumulator += arg0->stepIncrement;
+                }
+                if (arg0->stepAccumulator >= arg0->stepLimit) {
+                    coords[4] += delta1;
+                    if (i == 3) {
+                        arg0->stepAccumulator -= arg0->stepLimit;
+                    }
+                }
+
+                if (i <= 0) {
+                    delta0 = 1;
+                } else {
+                    delta0 = -1;
+                }
+                if ((i + 1) & 1) {
+                    delta1 = -1;
+                } else {
+                    delta1 = 1;
+                }
+
+                coords[1] += delta0;
+
+                if (i == -1) {
+                    arg0->stepAccumulator += arg0->stepIncrement;
+                }
+                if (arg0->stepAccumulator >= arg0->stepLimit) {
+                    coords[5] += delta1;
+                    if (i == 2) {
+                        arg0->stepAccumulator -= arg0->stepLimit;
+                    }
+                }
+
+                i += 2;
+                coords += 2;
+            } while (i != 4);
+
+            outer++;
+            if (arg0->rects[0].x0 == -0x88) {
+                arg0->frame = 1;
+                break;
+            }
+        } while (outer != 0x10);
+        state = arg0->frame;
+        break;
+    case 2:
+        arg0->rects[1].y0 += 0x10;
+        arg0->rects[1].y1 += 0x10;
+        if (arg0->rects[1].y0 == 0x24) {
+            arg0->frame = 3;
+        }
+        state = arg0->frame;
+        break;
+    case 1:
+    case 3:
+    default:
+        break;
+    }
+
+    D_8010AE04 = state;
+    D_8010AE38 = arg0->rects[0].x0;
+    D_8010AE40 = arg0->rects[1].x0;
+    D_8010AE3A = arg0->rects[0].y0;
+    D_8010AE42 = arg0->rects[1].y0;
+    D_8010AE3C = arg0->rects[0].x1;
+    D_8010AE44 = arg0->rects[1].x1;
+    D_8010AE3E = arg0->rects[0].y1;
+    D_8010AE46 = arg0->rects[1].y1;
+
+    if (D_801235B4 == 0x63) {
+        func_800716E4(arg0);
+        D_801235B4 = 0;
+        return;
+    }
+
+    func_800483FC(&D_80124868, func_80015CBC, (s32)arg0);
+}
+#endif
 
 void func_8001621C(void *arg0) {
     RectListActor *actor = arg0;
@@ -410,8 +530,8 @@ void func_8001621C(void *arg0) {
     actor->rects[1].x1 = -0xA4;
     actor->rects[0].y1 = 0x90;
     actor->rects[1].y1 = 0x48;
-    actor->rects[2].x0 = 0x8C;
-    actor->rects[2].y0 = 0x44;
+    actor->stepLimit = 0x8C;
+    actor->stepIncrement = 0x44;
     actor->frame = 0;
     func_80071824(arg0, func_80015F4C);
 }
@@ -445,10 +565,10 @@ void func_800165F0(void *arg0) {
     actor->rects[1].x1 = -0xA4;
     actor->rects[0].y1 = 0x90;
     actor->rects[1].y1 = 0x48;
-    actor->rects[2].x0 = 4;
-    actor->rects[2].y0 = 0x11;
-    actor->rects[2].x1 = 2;
-    actor->rects[2].y1 = 0x27;
+    actor->stepLimit = 4;
+    actor->stepIncrement = 0x11;
+    actor->stepAccumulator = 2;
+    actor->unk2E = 0x27;
     func_80071824(arg0, func_80016560);
 }
 
