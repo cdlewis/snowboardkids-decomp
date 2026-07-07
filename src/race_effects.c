@@ -121,7 +121,37 @@ void func_8004B8B4(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004CBC4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004CF28.s")
+void func_8004CF28(RaceEffectActor *arg0) {
+    Vec3i *pos;
+    RaceEffectActor *actor;
+    s32 i;
+    s32 radius;
+    s16 spriteIndex;
+
+    spriteIndex = arg0->spriteIndex;
+    actor = arg0;
+    if (spriteIndex != 0) {
+        actor->spriteIndex = spriteIndex - 1;
+    } else {
+        func_800716E4(arg0);
+        return;
+    }
+
+    i = 0;
+    pos = &actor->pos;
+    radius = 0x30000;
+    do {
+        if (func_800891B8(pos, radius, 0x400, i)) {
+            func_80072A74(0x14, pos, 0x7F, 0x32);
+            func_8004E594(arg0->pos.x, actor->pos.y, actor->pos.z, 1);
+            func_800716E4(arg0);
+            return;
+        }
+        i++;
+    } while (i != 4);
+
+    func_800483FC(&D_801248A4, func_8004CBC4, actor);
+}
 
 void func_8004D018(RaceEffectActor *arg0) {
     Vec3i *pos;

@@ -3182,3 +3182,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   (`if (actor->timer != 0) actor->timer--;`) can match the target `lh`/`beqz`
   sequence. Copying it into a `s16` local first may emit redundant
   sign-extension instructions.
+
+## func_8004CF28 (race_effects)
+
+- For short actor callbacks with a cleanup `else` before a common loop, assigning
+  `actor = arg0` after reading the halfword countdown can make IDO keep `arg0`
+  in `$s2` and use the alias for position/update accesses. Mixing `arg0` for
+  the cleanup calls and the alias for the loop/store accesses matched the target
+  saved-register allocation.
