@@ -2782,3 +2782,15 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   frame timer after calling `func_80082070` before subtracting one. Writing the
   subtraction directly from the struct field is semantically equivalent, but IDO
   uses a different register for the final halfword store.
+
+## func_80015F4C (title_menu)
+
+- The title-menu rectangle transition uses the data at actor offsets
+  `0x28/0x2A/0x2C` as unsigned step limit, increment, and accumulator fields,
+  not as signed rectangle coordinates. Naming those fields produces the target
+  `lhu` loads and preserves the surrounding initializer codegen.
+- A clean typed `s16 *coords = &arg0->rects[0].x0` loop reaches 98.817%, but
+  IDO rebases the pointer to `arg0 + 0x18` and emits inner-loop accesses at
+  `0/8/2/0xA`. The target instead keeps the actor pointer as the sliding base
+  and accesses `0x18/0x20/0x1A/0x22`; forcing that with actor pointer casts
+  currently makes IDO keep `D_8010AE04`'s address live and worsens the match.
