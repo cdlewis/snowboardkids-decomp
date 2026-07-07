@@ -58,6 +58,11 @@ typedef union {
     s16 alpha;
 } RaceItemEffectHalf38;
 
+typedef union {
+    s16 halfword;
+    s8 byte;
+} RaceItemEffectHeight;
+
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
@@ -68,7 +73,7 @@ typedef struct {
     /* 0x2C */ s32 unk2C;
     /* 0x30 */ RaceItemEffectShorts30 unk30;
     /* 0x34 */ RaceItemEffectState state;
-    /* 0x36 */ s16 height;
+    /* 0x36 */ RaceItemEffectHeight height;
     /* 0x38 */ RaceItemEffectHalf38 unk38;
     /* 0x3A */ u8 pad3A[0x64 - 0x3A];
     /* 0x64 */ u16 unk64;
@@ -96,7 +101,10 @@ typedef struct {
     /* 0x000 */ u8 pad0[0x1C];
     /* 0x01C */ Vec3i pos1C;
     /* 0x028 */ Vec3i pos;
-    /* 0x034 */ u8 pad34[RACE_PLAYER_STATE_SIZE - 0x34];
+    /* 0x034 */ u8 pad34[0x94 - 0x34];
+    /* 0x094 */ u8 transform[0x14];
+    /* 0x0A8 */ Vec3i posA8;
+    /* 0x0B4 */ u8 padB4[RACE_PLAYER_STATE_SIZE - 0xB4];
 } RaceItemFollowPlayer;
 
 typedef struct {
@@ -126,6 +134,7 @@ void func_8004E02C(RaceItemEffectActor *);
 void func_8004E438(RaceItemEffectActor *);
 void func_8004E604(RaceItemEffectActor *);
 void func_8004E960(RaceItemEffectActor *);
+void func_8004EAA8(RaceItemEffectActor *);
 void func_8004FB44(RaceItemFollowActor *);
 void func_8004EFF8(RaceItemEffectActor *);
 void func_8004F68C(RaceItemEffectActor *);
@@ -186,7 +195,7 @@ void func_8004E438(RaceItemEffectActor *arg0) {
     arg0->unk24.timer = -1;
     if (arg0->state.halfword == 0) {
         sp58 = &D_80121D80[arg0->unk38.width];
-        func_80097C18(sp30, arg0->height);
+        func_80097C18(sp30, arg0->height.halfword);
         sp24[0] = 0;
         sp24[1] = arg0->unk28.word;
         sp24[2] = arg0->unk2C;
@@ -204,7 +213,7 @@ void func_8004E518(s16 arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4) {
 
     if (p != NULL) {
         p->state.halfword = 0;
-        p->height = arg1;
+        p->height.halfword = arg1;
         p->unk38.width = arg0;
         p->unk28.word = arg3;
         p->unk2C = arg4;
@@ -256,7 +265,27 @@ void func_8004EA34(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004EAA8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004EE0C.s")
+void func_8004EE0C(RaceItemEffectActor *arg0) {
+    RaceItemFollowPlayer *player;
+    RaceItemEffectActor *actor = arg0;
+
+    if (D_80121B56 == 0) {
+        arg0->height.byte++;
+        if (arg0->height.byte == 6) {
+            func_800716E4();
+            return;
+        }
+    }
+    if (actor->height.byte < 0) {
+        actor->height.byte = 0;
+    }
+    func_80098590(D_80121D80[actor->playerIndex].transform, &actor->unk24.velocityX, &actor->payload);
+    player = &D_80121D80[actor->playerIndex];
+    actor->payload.vec.x += player->posA8.x;
+    actor->payload.vec.y += player->posA8.y;
+    actor->payload.vec.z += player->posA8.z;
+    func_800483FC(&D_801248C8, func_8004EAA8, actor);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004EF24.s")
 
