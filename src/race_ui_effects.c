@@ -288,6 +288,30 @@ typedef struct {
     /* 0x44 */ void *palette3B;
 } RaceUiOverlayActor;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ u8 pad24[4];
+    /* 0x28 */ s16 unk28;
+    /* 0x2A */ u8 pad2A[2];
+    /* 0x2C */ void *palette0;
+    /* 0x30 */ void *palette1;
+    /* 0x34 */ void *palette2;
+    /* 0x38 */ void *palette3;
+    /* 0x3C */ void *image0;
+    /* 0x40 */ void *image1;
+    /* 0x44 */ void *image2;
+    /* 0x48 */ void *image3;
+    /* 0x4C */ s32 zOffset;
+    /* 0x50 */ s16 alpha;
+    /* 0x52 */ s16 alphaStep;
+    /* 0x54 */ s16 timer;
+    /* 0x56 */ s16 scale;
+    /* 0x58 */ u8 pad58;
+    /* 0x59 */ u8 playerIndex;
+    /* 0x5A */ u8 frame;
+} RaceUiSparkleActor;
+
 extern RaceUiSpriteInit D_800D5FF0[];
 
 extern Vec3i D_800D61C0[];
@@ -399,7 +423,8 @@ extern void func_80059518(void *);
 extern void func_80059950(void *);
 extern void func_8005A288(void *);
 extern void func_8005E5B4(void *);
-extern void func_8005F174(void);
+extern void func_8005EFFC(RaceUiSparkleActor *);
+extern void func_8005F174(RaceUiSparkleActor *);
 extern void func_80061088(void);
 extern void func_80062F6C(void);
 extern void func_80058B20(void *);
@@ -1418,12 +1443,26 @@ void func_8005E68C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005EFFC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005F174.s")
+void func_8005F174(RaceUiSparkleActor *arg0) {
+    arg0->zOffset = 0x20000;
+    arg0->alpha = 0;
+    arg0->alphaStep = 0x10;
+    arg0->frame = 0;
+    arg0->scale = 0x1000;
+    arg0->unk28 = 0;
+
+    func_80045990(func_80043040(D_80112168), 0x23, &arg0->image0, &arg0->palette0);
+    func_80045990(func_80043040(D_80112168), 0x24, &arg0->image1, &arg0->palette1);
+    func_80045990(func_80043040(D_80112168), 0x25, &arg0->image2, &arg0->palette2);
+    func_80045990(func_80043040(D_80112168), 0x26, &arg0->image3, &arg0->palette3);
+    func_80072A74(0x10, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
+    func_80071824(arg0, func_8005EFFC);
+}
 
 void func_8005F298(s16 arg0) {
-    void *temp = func_800711D0(func_8005F174, 0, 0x62);
+    RaceUiSparkleActor *temp = func_800711D0(func_8005F174, 0, 0x62);
     if (temp != NULL) {
-        *(s8 *)((u8 *)temp + 0x59) = arg0;
+        temp->playerIndex = arg0;
     }
 }
 
