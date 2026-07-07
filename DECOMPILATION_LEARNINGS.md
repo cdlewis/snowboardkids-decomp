@@ -3006,3 +3006,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   integer viewport arguments: IDO tends to hoist the `x1` calculation into
   argument registers instead of preserving the target `x2`, `x1`, `y1`, `y2`
   temporary order.
+
+## func_80098590 (fixed_point_matrix)
+
+- For fixed-point matrix-vector multiply expressions made from three signed
+  64-bit products divided by `0x1000`, IDO evaluates the second source term
+  before the first one. Writing the expression as `x-term + y-term + z-term`
+  produced the target order of `y`, then `x`, then `z` while keeping the
+  compiler's stack spill pattern for the `__ll_div` results.
