@@ -3022,3 +3022,9 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   first rotates `arg0->translation` by `arg1->rotation`, adds
   `arg1->translation`, then calls `func_80097CF0(arg0->rotation,
   arg1->rotation, arg2->rotation)`.
+
+## func_800989EC (fixed_point_matrix)
+
+- This is the translation-only variant of `func_800987A0`: it rotates
+  `arg0->translation` by `arg1->rotation` and adds `arg1->translation`, but
+  does not compose the rotation matrix with `func_80097CF0`.

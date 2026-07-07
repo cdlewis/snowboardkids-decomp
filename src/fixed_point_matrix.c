@@ -224,6 +224,19 @@ void func_800987A0(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *a
     func_80097CF0(arg0->rotation, arg1->rotation, arg2->rotation);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/fixed_point_matrix/func_800989EC.s")
+void func_800989EC(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2) {
+    arg2->translation.x = (s64)arg1->rotation[MTX_XX] * arg0->translation.x / FIXED_MATRIX_ONE +
+                           (s64)arg1->rotation[MTX_YX] * arg0->translation.y / FIXED_MATRIX_ONE +
+                           (s64)arg1->rotation[MTX_ZX] * arg0->translation.z / FIXED_MATRIX_ONE;
+    arg2->translation.y = (s64)arg1->rotation[MTX_XY] * arg0->translation.x / FIXED_MATRIX_ONE +
+                           (s64)arg1->rotation[MTX_YY] * arg0->translation.y / FIXED_MATRIX_ONE +
+                           (s64)arg1->rotation[MTX_ZY] * arg0->translation.z / FIXED_MATRIX_ONE;
+    arg2->translation.z = (s64)arg1->rotation[MTX_XZ] * arg0->translation.x / FIXED_MATRIX_ONE +
+                           (s64)arg1->rotation[MTX_YZ] * arg0->translation.y / FIXED_MATRIX_ONE +
+                           (s64)arg1->rotation[MTX_ZZ] * arg0->translation.z / FIXED_MATRIX_ONE;
+    arg2->translation.x += arg1->translation.x;
+    arg2->translation.y += arg1->translation.y;
+    arg2->translation.z += arg1->translation.z;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/fixed_point_matrix/func_80098C30.s")
