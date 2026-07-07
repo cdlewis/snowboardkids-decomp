@@ -3299,3 +3299,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   values stay in saved registers. Keeping an unused `s16` before `width`,
   `xOffset`, and `yOffset` produced the target `sp+0x4C` spill without padding
   the frame.
+
+## func_8001508C (title_menu)
+
+- The `func_800157EC` title-menu renderer pattern can be reused directly for
+  sibling menu entries: keep the same local declaration order and update only
+  the selected-player constant, text table, secondary tile mode, and trailing
+  frame loop bound.
