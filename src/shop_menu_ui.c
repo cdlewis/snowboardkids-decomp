@@ -138,7 +138,7 @@ extern void func_8002D778(ShopMenuWidgetActor *);
 extern void func_8002D9EC(ShopMenuWidgetActor *);
 extern void func_8002F2C8(ShopMenuWidgetActor *);
 extern void func_8002E9E4(ShopMenuWidgetActor *);
-extern void func_8002EC5C(void);
+extern void func_8002EC5C(ShopMenuWidgetActor *);
 extern void func_8002E5A4(ShopMenuWidgetActor *);
 extern void func_8002FC00(ShopMenuWidgetActor *);
 extern void func_8002CAD4(ShopMenuWidgetActor *);
@@ -160,10 +160,12 @@ extern s32 D_800B34B0[];
 extern u16 D_800B34E0[];
 extern u16 D_800B34EC[];
 extern ShopDescriptionText D_800B7A14[];
+extern u8 D_800B7CD0;
 extern u8 D_80121D86;
 extern u8 D_80121D88;
 extern s16 D_8011217E;
 extern s16 D_8011214A;
+extern s16 D_80112130[];
 extern u8 D_800EC9E6;
 extern CourseSelectStatus D_8010AF18;
 extern s32 D_8010ADDC;
@@ -932,7 +934,39 @@ void func_8002EC04(ShopMenuWidgetActor *arg0) {
     func_80071824(arg0, func_8002E9E4);
 }
 
+// func_8002EC5C best match: 92.575% (nonmatchings/func_8002EC5C-7387615772158234395/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002EC5C.s")
+
+#ifdef NON_MATCHING
+void func_8002EC5C(ShopMenuWidgetActor *arg0) {
+    u16 alpha;
+
+    func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130[0x24]), 0, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0x40), arg0->y, func_80043040(D_80112130[0x24]), 1, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0x78), arg0->y, func_80043040(D_80112130[0x24]), 1, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0xB0), arg0->y, func_80043040(D_80112130[0x24]), 2, 0x20, 0x20, 0, 0);
+    func_80013154((s16)(arg0->x + 0x30), (s16)(arg0->y + 4), &D_800B7CD0, 0, 0x100, 0);
+
+    alpha = 0x60;
+    if (arg0->item.price == 0) {
+        alpha = 0x100;
+    }
+
+    func_8000F8AC((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x14), func_80043040(D_80112130[0x24]), 0x17, 0x20,
+                  0x20, 0, alpha, 0);
+
+    if (alpha == 0x100) {
+        alpha = 0x60;
+    } else {
+        alpha = 0x100;
+    }
+
+    func_8000F8AC((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x24), func_80043040(D_80112130[0x24]), 0x18, 0x20,
+                  0x20, 0, alpha, 0);
+    func_8000F8AC((s16)(arg0->x + 0x50), (s16)(arg0->y + (arg0->item.price * 0x10) + 0x14),
+                  func_80043040(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->sprite.index, 0);
+}
+#endif
 
 void func_8002EF14(ShopMenuWidgetActor *arg0) {
     ShopMenuWidgetActor *temp_a2;
