@@ -2690,16 +2690,6 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `state = globalState`. This keeps the global state in `$a1` and the switch
   state in `$v1`.
 
-## func_8001B2D8 (player_select_ui)
-
-- This function shares the `func_8002AE3C` cursor state-machine shape, including
-  the five empty `if (1) {}` allocation trick after syncing the global state.
-  `D_8010AE70` is a struct-like cursor state for the initial state/nextState
-  read, but the target's final state write reloads the same byte address with
-  `lui $at`/`sb` instead of reusing the live struct base in `$a3`. A linker
-  alias (`D_8010AE70_state = D_8010AE70`) lets C write through a separate byte
-  symbol without changing bss layout, producing the target code after linking.
-
 ## func_8002DCE8 (shop_menu_ui)
 
 - This shop cursor callback shares the `func_8002AE3C` global-state sync shape,
@@ -2754,12 +2744,6 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - The allocation wrapper around the `func_800486BC` command transform matches
   cleanly when it uses the same typed `GfxCommandSource`/`GfxCommandDest`
   accesses and returns the allocated destination pointer directly.
-
-## func_80048A38 (render_asset_utils)
-
-- This command-block allocator is the zero-texture variant of `func_8004885C`.
-  Keeping the same typed field assignment order, but writing `unk18 = 0`,
-  `unk1C = 1`, `unk38 = 0`, and `unk3C = 0`, matches IDO exactly.
 
 ## func_8004F33C (race_item_effects)
 
