@@ -3073,3 +3073,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   the actor after drawing calls. The remaining mismatch is local to IDO
   constant-folding the `s16` y-coordinate sequence instead of keeping it in
   `$s0`.
+
+## func_8005F5C8 (race_ui_effects)
+
+- For a straight 0x20-byte copy between nonzero struct offsets, wrapping the
+  eight words in a small aggregate and assigning the aggregate makes IDO reuse
+  `$at`/`$t0` in the target pattern. Writing eight separate array assignments
+  emits one new temporary register per word instead.
