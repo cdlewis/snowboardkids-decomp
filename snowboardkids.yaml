@@ -273,8 +273,8 @@ segments:
       - [0xB0B70, c, ultra/audio/reverb]
       - [0xB17C0, c, ultra/audio/copy]
       - [0xB1840, c, ultra/libc/ldiv]
-      - [0xB19D0, asm, rspbootText]
-      - [0xB1AA0, asm, aspMainTextStart]
+      - { start: 0xB19D0, type: textbin, use_src_path: True, name: rsp/rspboot }
+      - { start: 0xB1AA0, type: textbin, use_src_path: True, name: rsp/aspMain }
       - [0xB1C00, data]
       - [0xDFED0, .data, ultra/os/initialize]
       - [0xDFEF0, .data, ultra/io/pimgr]
