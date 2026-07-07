@@ -18,6 +18,18 @@ typedef struct {
 } RacePlayerEffect;
 
 typedef struct {
+    char pad0[0x18];
+    void *vertices;
+} RaceCourseRenderEffect;
+
+typedef struct {
+    s16 displayListIndex;
+    s16 pad2;
+    Vec3i position;
+    s32 pad10;
+} CourseRenderEntry;
+
+typedef struct {
     char pad0[0x13];
     s8 isActive;
     char pad14[0x5F8];
@@ -155,16 +167,22 @@ typedef struct {
     s16 unkE;
 } SoundParams;
 
+typedef struct {
+    char pad0[0x14];
+    s16 courseVtxHandle;
+    s16 courseTextureHandle;
+} CourseAssetHandles;
+
 extern void func_80071824(void *task, void (*callback)());
 extern void func_800483FC(void *, void *, void *);
 extern void func_800716E4(void *);
 extern void func_80072138(s32, s32);
 extern void func_80072A74(s32, void *, s32, s32);
-extern void func_8006AF48(void);
 extern void func_8006A80C(void *);
 extern void func_80069BEC(void);
 extern void func_80069E50(void);
 extern s32 func_80043040(s16);
+extern s32 func_80049000(Vec3i *);
 extern void func_80045990(s32, s32, void *, void *);
 extern s32 func_8004597C(s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
@@ -193,9 +211,13 @@ void func_80069B60(RaceCountdownEffect *);
 extern void func_8006C7F4(void);
 void func_8006B3E0(Struct6B760 *);
 void func_8006B6C8(Struct6B760 *);
+void func_8006AF48(RaceCourseRenderEffect *);
 extern Struct6B760 *func_80071408(void *, s32, s32);
 extern u8 D_80121B56;
 extern s16 D_80121B50;
+extern CourseAssetHandles D_80112130;
+extern CourseRenderEntry *D_800DA73C[];
+extern void *D_800DA1C0[];
 extern SoundParams D_800DA764[];
 extern CourseSpawnEntry D_800B9540[];
 extern CourseAngleEntry D_800B9554[];
@@ -214,6 +236,7 @@ extern s32 D_801248EC;
 extern s32 D_801248B0;
 extern s32 D_801248A4;
 extern s32 D_801248F8;
+extern Gfx *gRegionAllocPtr;
 extern void func_8006BC68(void *);
 extern void func_8006BE90(void);
 extern void func_8006B7E0(void);
@@ -330,7 +353,48 @@ void func_8006A85C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006AE00.s")
 
+// func_8006AF48 best match: 99.900% at nonmatchings/func_8006AF48-1197934324348345530/base_14.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006AF48.s")
+
+#ifdef NON_MATCHING
+void func_8006AF48(RaceCourseRenderEffect *arg0) {
+    CourseRenderEntry *var_s4;
+    s16 temp_t5;
+    s32 var_s5;
+    s32 var_s7;
+    Gfx *temp_s0;
+    Gfx *temp_s2;
+    Gfx *temp_s3;
+
+    var_s4 = D_800DA73C[D_80121B50];
+    var_s7 = TRUE;
+    var_s5 = 0;
+    if (var_s4->displayListIndex != -1) {
+        do {
+            if (func_80049000(&var_s4->position) != 0) {
+                if (var_s7 != 0) {
+                    gDPPipeSync(gRegionAllocPtr++);
+                    temp_s2 = gRegionAllocPtr++;
+                    var_s7 = FALSE;
+                    gSPSegment(temp_s2, 0x02, func_80043040(D_80112130.courseVtxHandle));
+
+                    temp_s3 = gRegionAllocPtr++;
+                    gSPSegment(temp_s3, 0x03, func_80043040(D_80112130.courseTextureHandle));
+                }
+
+                temp_s0 = gRegionAllocPtr++;
+                gDma1p(temp_s0, 1, (u32)arg0->vertices + (var_s5 << 6), 0x40, 2);
+
+                temp_s0 = gRegionAllocPtr++;
+                gSPDisplayList(temp_s0, D_800DA1C0[var_s4->displayListIndex]);
+            }
+            temp_t5 = var_s4[1].displayListIndex;
+            var_s4++;
+            var_s5++;
+        } while (temp_t5 != -1);
+    }
+}
+#endif
 
 void func_8006B0D8(void *arg0) {
     func_800483FC(&D_801248B0, func_8006AF48, arg0);
