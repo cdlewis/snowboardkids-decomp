@@ -38,6 +38,7 @@ typedef struct {
 } CourseSelectTempVec3i;
 
 extern void func_80023A68();
+extern void func_80024380();
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void func_800716E4(CourseSelectWidgetActor *);
 extern void func_80071824(void *task, void (*callback)());
@@ -55,6 +56,8 @@ extern void func_800291F0(s32);
 extern s32 func_80043040(s16);
 extern u8 D_800EC9E6;
 extern s32 D_8010ADE8;
+extern u8 D_8010AF18;
+extern u8 D_8010AF1C;
 extern s16 D_800B70C0[][4];
 extern s16 D_80112130[];
 extern s16 D_8011217A;
@@ -123,16 +126,10 @@ void func_80024050(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024380.s")
 
-// func_80024968 best match: 99.730%
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024968.s")
-
-#ifdef NON_MATCHING
-extern u8 D_8010AF1C;
-
 void func_80024968(void *arg0) {
+    u8 *var_s1;
     CourseSelectTempVec3i sp60;
     void *actor;
-    u8 *var_s1;
     u8 *var_s2;
     u8 *var_s3;
     s16 *var_s4;
@@ -170,8 +167,7 @@ void func_80024968(void *arg0) {
         var_s2 += 0xC;
         var_s7 += 1;
         var_s5 += 2;
-        var_s3 += 1; *(var_s3 + 7) = one;
-    } while (var_s3 != &D_8010AF1C);
+ var_s3 += 1; *(var_s3 + 7) = one; } while (var_s3 != &D_8010AF1C);
 
     *(s32 *) ((u8 *) actor + 0x30) = 0;
     *(s32 *) ((u8 *) actor + 0x34) = 0;
@@ -179,7 +175,6 @@ void func_80024968(void *arg0) {
     func_8009853C((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
     func_80071824(actor, func_80024380);
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024A90.s")
 
