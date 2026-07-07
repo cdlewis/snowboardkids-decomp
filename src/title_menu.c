@@ -2,6 +2,7 @@
 
 #define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x3E])
 #define TITLE_MENU_FRAME_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x42])
+#define RACE_PLAYER_STATE_SIZE 0x60C
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -62,6 +63,13 @@ typedef struct {
 } TitleMenuWidgetActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 x;
+    /* 0x1A */ u8 pad1A[0x6];
+    /* 0x20 */ s16 y;
+} TitleMenuWidgetItemView;
+
+typedef struct {
     /* 0x00 */ u8 state;
     /* 0x01 */ u8 pad1;
     /* 0x02 */ s16 alpha;
@@ -106,6 +114,7 @@ extern u8 D_800B5458[][0x4C];
 extern u8 D_800B5A14[];
 extern s16 D_800EC9C8[];
 extern s16 D_800EC9D0[];
+extern s32 D_80121D8C;
 #endif
 extern TitleIntroTransitionState D_8010AE00;
 extern s16 D_8010AE02;
@@ -673,7 +682,49 @@ void func_80015C84(void *arg0) {
     func_80071824(arg0, func_80015BD8);
 }
 
+// func_80015CBC best match: 92.661% (nonmatchings/func_80015CBC-690418013071298896/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80015CBC.s")
+
+#ifdef NON_MATCHING
+void func_80015CBC(TitleMenuWidgetItemView *arg0) {
+    char text[0x1C];
+    s32 alpha;
+    s32 scale;
+    s32 next;
+    s32 i;
+    TitleMenuWidgetItemView *item;
+    u8 *selected;
+    u8 *textures;
+
+    textures = D_80112130;
+    selected = &D_80121B55;
+    item = arg0;
+    i = 0;
+    do {
+        alpha = 0x100;
+        if (((s32)*selected - 1) < i) {
+            alpha = 0x50;
+        }
+
+        func_8000F8AC(item->x, item->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, alpha, (i + 1) & 0xFF);
+        func_8000F8AC((s16)(item->x + 0x40), item->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, alpha, (i + 1) & 0xFF);
+        func_8000F8AC((s16)(item->x + 0x80), item->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xC, 0x20, 0x20, 0, alpha, (i + 1) & 0xFF);
+
+        next = i + 1;
+        scale = next & 0xFF;
+        sprintf(text, "%d", next);
+        func_80013D0C((s16)(item->x + 0x32), (s16)(item->y + 2), text, 0, alpha);
+        if (alpha == 0x100) {
+            sprintf(text, "%6d", *(s32 *)((u8 *)&D_80121D8C + (i * RACE_PLAYER_STATE_SIZE)));
+            func_80013D0C((s16)(item->x + 0x44), (s16)(item->y + 0x1B), text, 0, alpha);
+        } else {
+            func_8000F8AC((s16)(item->x + 2), (s16)(item->y + 0x14), func_80043040(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 0x90, 0x20, 0x20, 0, 0xF0, 0);
+        }
+        i = next;
+        item = (TitleMenuWidgetItemView *)((s16 *)item + 1);
+    } while (next != 4);
+}
+#endif
 
 // func_80015F4C best match: 98.817% (nonmatchings/func_80015F4C-6516277587347797853/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80015F4C.s")
