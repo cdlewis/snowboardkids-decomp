@@ -57,15 +57,30 @@ typedef struct {
     /* 0x4C */ s16 rankTextHandle;
 } RaceUiAssetHandles;
 
+typedef struct RaceUiGfxCommandDest RaceUiGfxCommandDest;
+
+typedef union {
+    /* 0x00 */ s32 words[8];
+    /* 0x00 */ s16 halfwords[0x10];
+} RaceUiTrailCopyBlock;
+
+typedef struct {
+    /* 0x00 */ RaceUiTrailCopyBlock source;
+    /* 0x20 */ u8 pad20[0x40 - 0x20];
+} RaceUiTransitionTransformSource;
+
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
     /* 0x18 */ u8 pad18[0x24 - 0x18];
-    /* 0x24 */ s16 transform[0x22];
+    /* 0x24 */ RaceUiTransitionTransformSource transformSource;
+    /* 0x64 */ RaceUiGfxCommandDest *matrix;
     /* 0x68 */ s32 unk68;
     /* 0x6C */ s16 unk6C;
     /* 0x6E */ s16 unk6E;
+    /* 0x70 */ u8 pad70[2];
+    /* 0x72 */ u8 matrixDirty;
 } RaceUiTransitionActor;
 
 typedef struct {
@@ -154,17 +169,13 @@ typedef struct {
 } RaceUiEffectParticle;
 
 typedef struct {
-    /* 0x00 */ s32 words[8];
-} RaceUiTrailCopyBlock;
-
-typedef struct {
     struct {
         u32 w0;
         u32 w1;
     } words;
 } RaceUiDisplayCommand;
 
-typedef struct {
+struct RaceUiGfxCommandDest {
     /* 0x00 */ s32 unk0;
     /* 0x04 */ s32 unk4;
     /* 0x08 */ s32 unk8;
@@ -181,7 +192,7 @@ typedef struct {
     /* 0x34 */ s32 unk34;
     /* 0x38 */ s32 unk38;
     /* 0x3C */ s32 unk3C;
-} RaceUiGfxCommandDest;
+};
 
 typedef struct {
     /* 0x00 */ s16 state;
@@ -423,6 +434,7 @@ extern RaceUiGfxCommandScriptEntry *D_800D693C[];
 extern RaceUiGfxCommandDest D_800DEE50;
 extern u32 D_2002208[];
 extern u32 D_20023A8[];
+extern u32 D_2002490[];
 extern u32 D_20035F8[];
 extern u32 D_200CC20[];
 extern u32 D_200CE48[];
@@ -1907,12 +1919,32 @@ void func_8006224C(void *arg0, void *arg1, void *arg2) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800622B0.s")
+void func_800622B0(RaceUiTransitionActor *arg0) {
+    volatile u8 pad[0x20];
+    RaceUiDisplayCommand *unused;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (arg0->matrixDirty != 0) {
+        arg0->matrixDirty = 0;
+        arg0->matrix = func_8004885C(&arg0->transformSource.source);
+    }
+
+    if (arg0->matrix != NULL) {
+        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, func_80043040(D_80112144));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, func_80043040(D_80112146));
+        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2002490);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800623E8.s")
 
 void func_80062530(RaceUiTransitionActor *arg0) {
-    s16 *transform = arg0->transform;
+    s16 *transform = arg0->transformSource.source.halfwords;
     volatile u8 padding[0x20];
 
     arg0->unk68 = 0;
