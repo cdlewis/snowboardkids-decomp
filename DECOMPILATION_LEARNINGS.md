@@ -2712,3 +2712,17 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   scheduling issue: IDO emits the `optionScale = 0x100` halfword store before
   the `timer = 0` store, while the target stores timer, moves the switch state,
   then stores option scale.
+
+## func_80099288 (input_task_scheduler)
+
+- The render-buffer status byte at `D_8012496E` and `D_8013CF8E` matches cleanly
+  as an array of structs with stride `0x18620` and a `status` byte at offset
+  zero from the named symbol. This avoids hardcoded pointer arithmetic while
+  preserving IDO's multiply-by-`0x18620` shift/subtract sequence.
+- Declaring `func_8009B704` as taking a `u8` keeps `D_80123752` loaded into
+  `$a0` for both the framebuffer-status index and the later call; a wider
+  prototype makes IDO keep the value in `$v0` and emit `move $a0, $v0` in the
+  call delay slot.
+- After `func_8009B704`, writing `D_800DEED0 = D_800DEED4` before decrementing
+  `D_80123750` gives IDO the target load schedule while still placing the delay
+  store in the branch delay slot.
