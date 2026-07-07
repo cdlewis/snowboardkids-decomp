@@ -217,6 +217,15 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x44 */ void *matrix;
+    /* 0x48 */ u32 *displayLists[2];
+    /* 0x50 */ u8 matrixDirty;
+} RaceUiRankParticleActor;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ RaceUiEffectParticle *particles;
     /* 0x1C */ u8 pad1C[8];
     /* 0x24 */ s16 count;
@@ -266,6 +275,11 @@ typedef struct {
     /* 0x00 */ u8 pad0[0x1A];
     /* 0x1A */ s16 alpha;
 } RaceUiAlpha1AActor;
+
+typedef struct {
+    /* 0x000 */ s8 placement;
+    /* 0x001 */ u8 pad1[0x60C - 0x001];
+} RacePlayerPlacement;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -351,10 +365,14 @@ extern s32 D_80121DA4;
 extern u8 D_80156608;
 extern u8 D_80156609;
 extern s16 D_80156612;
+extern s16 D_80112140;
+extern s16 D_80112142;
 extern s16 D_80112144;
 extern s16 D_80112146;
 extern s16 D_8011216E;
 extern s16 D_80112168;
+extern s16 D_80121B52;
+extern RacePlayerPlacement D_80122288[];
 extern s8 D_80122289;
 extern s16 D_801235B0;
 extern s16 D_8011216C;
@@ -378,6 +396,7 @@ extern void func_800483FC(void *, void *, s32);
 extern RaceUiGfxCommandDest *func_8004885C(RaceUiTrailCopyBlock *);
 extern void func_80048C90(RaceUiGfxCommandDest *, s32 *);
 extern void func_80048D60(void *);
+extern s32 func_80049000(Vec3i *);
 extern void osWritebackDCache(void *, s32);
 extern s32 func_80043040(s16);
 extern s32 func_800430D0(void);
@@ -437,7 +456,7 @@ extern s32 D_80123778;
 extern s32 D_801235B4;
 extern void func_80057E10(void *);
 extern void func_800615BC(void);
-extern void func_800640D8(void);
+extern void func_800640D8(RaceUiRankParticleActor *);
 extern void func_80057710(RaceUiPromptActor *);
 extern void func_80057B60(RaceUiPopupActor *);
 extern void func_80057D68(RaceUiPopupActor *);
@@ -1951,7 +1970,34 @@ void func_80063E70(RaceUiEffectParticleActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80063FC0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800640D8.s")
+void func_800640D8(RaceUiRankParticleActor *arg0) {
+    RaceUiDisplayCommand *unused;
+    s32 displayListIndex;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (func_80049000(&arg0->pos) != 0) {
+        if (arg0->matrixDirty != 0) {
+            arg0->matrixDirty = 0;
+            arg0->matrix = func_8004885C(&arg0->copyBlock);
+        }
+
+        if (arg0->matrix != NULL) {
+            displayListIndex = 0;
+            if (D_80121B52 <= D_80122288[D_80156608].placement + 1) {
+                displayListIndex = 1;
+            }
+
+            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, func_80043040(D_80112140));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, func_80043040(D_80112142));
+            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->displayLists[displayListIndex]);
+        }
+    }
+}
 
 void func_8006426C(s32 arg0) {
     func_800483FC(&D_801248C8, func_800640D8, arg0);
