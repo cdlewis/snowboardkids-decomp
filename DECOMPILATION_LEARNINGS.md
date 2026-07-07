@@ -3222,3 +3222,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `D_80121D80[arg0->playerIndex]` indexing can reproduce the target's expanded
   `0x60C` stride math. Repeated `func_80043040(D_80112168)` calls should stay
   inline in each `func_80045990` call rather than cached in a local.
+
+## func_8006AF48 (race_course_effects)
+
+- For display-list emitters that load segment bases, `gSPSegment` can preserve
+  the target temporary-register shape better than hand-written `words.w0/w1`
+  stores. For this function, `gDma1p(pkt, 1, ptr, 0x40, 2)` reproduces the
+  target `0x01020040` vertex-load word, while `gSPVertex` uses this header's
+  `G_VTX` value and emits `0x04300040` instead.
