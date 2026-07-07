@@ -102,6 +102,12 @@ patterns, and verified layout/linking rules.
   post-switch cleanup handles that same state. In func_80021F80, adding
   `case 6: break;` was required to make IDO emit the target's 7-entry jump table
   instead of a 6-entry table for cases 0-5.
+- For state-machine switch ladders, a no-op expression in the switch selector
+  can affect temp register choice without changing control flow. In
+  func_80026A54, `switch (state ^ 0)` kept the state in `$v1` where
+  `switch (state)` chose `$v0`. Similarly, writing the state update as
+  `state = (actor->transitionState = 4)` produced the target `sb` followed by
+  `andi` from the store temp instead of a fresh `li`.
 - IDO can emit a genuinely unreachable (dead) `li` after an unconditional `b`
   when compiling a complex `||`/`&&` short-circuit with comma-operator-style
   intermediate assignments to the same variable (e.g. the threshold-selection

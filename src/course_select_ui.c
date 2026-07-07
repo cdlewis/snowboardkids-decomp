@@ -12,6 +12,11 @@ typedef struct {
             /* 0x1F */ s8 timer;
             /* 0x20 */ s8 subState;
         };
+        struct {
+            /* 0x18 */ u8 pad18[0x10];
+            /* 0x28 */ s16 transitionOffset;
+            /* 0x2A */ u8 transitionState;
+        };
         /* 0x18 */ s16 coordinates[0x22];
     };
     /* 0x5C */ u8 itemCount;
@@ -26,6 +31,7 @@ extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSel
 extern void func_800716E4(CourseSelectWidgetActor *);
 extern void func_80071824(void *task, void (*callback)());
 extern void func_800260E8(CourseSelectWidgetActor *);
+extern void func_800263D8(CourseSelectWidgetActor *);
 extern void func_800271CC(CourseSelectWidgetActor *);
 extern void func_80027498(CourseSelectWidgetActor *);
 extern void func_800275E0(CourseSelectWidgetActor *);
@@ -82,7 +88,48 @@ void func_800263A4(CourseSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800263D8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80026A54.s")
+void func_80026A54(CourseSelectWidgetActor *arg0) {
+    s32 state = arg0->transitionState;
+
+    switch (state ^ 0) {
+    case 0:
+        arg0->transitionOffset += 0x26;
+        if (arg0->transitionOffset >= 0x100) {
+            arg0->transitionOffset = 0x100;
+            arg0->transitionState = 1;
+        }
+        state = arg0->transitionState;
+        break;
+    case 1:
+        if (D_80121D88 == 3) {
+            arg0->transitionState = 2;
+        }
+        if (D_801235B8->screenState == 9) {
+            arg0->transitionState = 4;
+        }
+        state = arg0->transitionState;
+        break;
+    case 2:
+        arg0->transitionOffset -= 0x40;
+        if (arg0->transitionOffset <= 0) {
+            arg0->transitionOffset = 0;
+            arg0->transitionState = 3;
+        }
+        state = arg0->transitionState;
+        break;
+    case 3:
+        state = (arg0->transitionState = 4);
+        break;
+    }
+
+    if (state == 4) {
+        func_800716E4(arg0);
+        func_800291F0(5);
+        return;
+    }
+
+    func_800483FC(&D_80124868, func_800263D8, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80026B88.s")
 
