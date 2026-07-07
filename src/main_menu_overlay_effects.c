@@ -41,6 +41,40 @@ typedef struct {
     /* 0x36 */ s16 alpha;
 } MainMenuOverlayEffectActor;
 
+typedef s16 FixedMatrix3s[9];
+
+typedef struct {
+    /* 0x00 */ FixedMatrix3s rotation;
+    /* 0x12 */ s16 pad12;
+    /* 0x14 */ s32 x;
+    /* 0x18 */ s32 y;
+    /* 0x1C */ s32 z;
+} GfxCommandSource;
+
+typedef struct {
+    /* 0x00 */ GfxCommandSource source;
+    /* 0x20 */ s32 pad20;
+} Func55410Scratch;
+
+typedef struct {
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ s32 unkC;
+    /* 0x10 */ s32 unk10;
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ s32 unk1C;
+    /* 0x20 */ s32 unk20;
+    /* 0x24 */ s32 unk24;
+    /* 0x28 */ s32 unk28;
+    /* 0x2C */ s32 unk2C;
+    /* 0x30 */ s32 unk30;
+    /* 0x34 */ s32 unk34;
+    /* 0x38 */ s32 unk38;
+    /* 0x3C */ s32 unk3C;
+} GfxCommandDest;
+
 extern Gfx *gRegionAllocPtr;
 extern void *D_80124868;
 extern u8 D_80124858[];
@@ -76,6 +110,7 @@ extern u8 D_80156608;
 extern u8 D_800E29C0;
 extern u8 D_800E11F0[];
 extern u8 D_800E1204[];
+extern u32 D_2000E48[];
 extern u32 D_2000E70[];
 extern u32 D_20058A8[];
 
@@ -93,6 +128,7 @@ void func_80045A78(s16, s16, s32, u16);
 void func_80046D68(s32, s32, s32, s32, s32);
 void func_80048278(s32, s32, void *, s32);
 void func_800483FC(void *, void *, s32);
+GfxCommandDest *func_8004885C(GfxCommandSource *);
 void func_80053B28(void);
 void func_80053C90(void *);
 void func_80053D8C(s32);
@@ -110,9 +146,10 @@ void func_80054B98(void);
 void func_80054EC4(MainMenuOverlayEffectActor *);
 void func_80055148(void);
 void func_8005537C(MainMenuOverlayEffectActor *);
-void func_80055410(void);
+void func_80055410(MainMenuOverlayEffectActor *);
 void func_80055530(void *);
 s32 func_80097AE8(s16);
+void func_80097C18(FixedMatrix3s, s16);
 MainMenuOverlayEffectActor *func_80071408(void (*callback)(MainMenuOverlayEffectActor *), s32 type, s32 priority);
 void func_800716E4(void *);
 void *func_80071664(void *, s32, s32, s32);
@@ -441,7 +478,28 @@ void func_800553E0(MainMenuOverlayEffectActor *arg0) {
     func_80071824(arg0, func_8005537C);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80055410.s")
+void func_80055410(MainMenuOverlayEffectActor *arg0) {
+    Func55410Scratch scratch;
+    GfxCommandDest *matrix;
+
+    if (D_80156608 == 0) {
+        func_80097C18(scratch.source.rotation, arg0->unk18.half.hi);
+        scratch.source.x = 0;
+        scratch.source.y = 0;
+        scratch.source.z = 0;
+        matrix = func_8004885C(&scratch.source);
+        if (matrix != NULL) {
+            gDPPipeSync(gRegionAllocPtr++);
+
+            gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));
+            gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112142));
+
+            gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+
+            gSPDisplayList(gRegionAllocPtr++, D_2000E48);
+        }
+    }
+}
 
 void func_80055530(void *arg0) {
     if (D_80156608 == 0) {
