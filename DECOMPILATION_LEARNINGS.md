@@ -3132,6 +3132,16 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `offset += sizeof(GfxCommandDest)` local to preserve the target saved-register
   allocation and loop scheduling.
 
+## func_80011C3C (menu_rendering)
+
+- For small menu input callbacks that test `D_80123758` several times and update
+  adjacent signed halfword fields, direct global tests like `if (D_80123758 & 8)`
+  are enough for IDO to reload the global after stores. Caching the input state
+  is unnecessary and would miss the target reload pattern.
+- Wrapping signed halfword sprite coordinates with independent `>= limit` and
+  `< 0` checks matches the target cleanly while preserving typed
+  `actor->sprite.x/y` accesses.
+
 ## func_80064D88 (race_ui_effects)
 
 - For player-relative UI projectile motion, keeping the actor argument in a
