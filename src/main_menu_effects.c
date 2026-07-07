@@ -101,7 +101,24 @@ void func_8003BEF0(MainMenuEffectActor *arg0) {
     func_8000F030(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, func_80043040(D_80112172), ((u16) arg0->angle + 0x32) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003BF7C.s")
+void func_8003BF7C(MainMenuEffectActor *arg0) {
+    MainMenuSceneModel *model;
+    s32 divisor;
+
+    model = func_80041E60(arg0->characterId); divisor = 0x24000;
+    if (0) {}
+    arg0->x = model->displayObjects[7].screenX / divisor;
+    arg0->y = -(model->displayObjects[7].screenY / divisor);
+    if ((arg0->effectTimer += 1) == 3) {
+        arg0->effectTimer = 0;
+        arg0->effectFrame++;
+    }
+    if (arg0->effectFrame == 3) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8003BEF0, arg0);
+}
 
 void func_8003C078(MainMenuEffectActor *arg0) {
     arg0->angleVelocity = 0;
