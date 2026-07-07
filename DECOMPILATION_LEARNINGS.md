@@ -2745,3 +2745,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   at the same offset, remove the old padding field. Keeping both preserves C
   validity but silently shifts later fields and breaks every access after the
   union.
+
+## func_8007031C (race_camera)
+
+- Direct `D_801124A0->field` accesses matched better than hoisting the camera
+  pointer into a local. IDO reused the loaded global pointer for adjacent
+  non-call work, then reloaded it after helper calls before later field reads.
+  For chained camera expressions with calls in the middle, keep the global
+  field accesses direct unless the target clearly preserves a local pointer.
