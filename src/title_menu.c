@@ -54,16 +54,10 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 unk18;
-    /* 0x1A */ s16 unk1A;
-    /* 0x1C */ s16 unk1C;
-    /* 0x1E */ s16 unk1E;
-    /* 0x20 */ s16 unk20;
-    /* 0x22 */ s16 unk22;
-    /* 0x24 */ s16 unk24;
-    /* 0x26 */ s16 unk26;
-    /* 0x28 */ s16 unk28[4];
-    /* 0x30 */ u8 unk30;
+    /* 0x18 */ s16 x[4];
+    /* 0x20 */ s16 y[4];
+    /* 0x28 */ s16 alpha[4];
+    /* 0x30 */ u8 frame;
     /* 0x31 */ u8 unk31[4];
 } TitleMenuWidgetActor;
 
@@ -103,6 +97,16 @@ extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern s32 func_80072138(s32, s32);
 extern void func_80015C84(void *);
+#ifdef NON_MATCHING
+extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
+extern void func_80013154(s16, s16, u8 *, s32, s32, s32);
+extern void func_80013D0C(s16, s16, u8 *, u16, u16);
+extern MenuIntroActor *D_8010ADDC;
+extern u8 D_800B5458[][0x4C];
+extern u8 D_800B5A14[];
+extern s16 D_800EC9C8[];
+extern s16 D_800EC9D0[];
+#endif
 extern TitleIntroTransitionState D_8010AE00;
 extern s16 D_8010AE02;
 extern s16 D_8010AE38;
@@ -802,7 +806,55 @@ void func_800165F0(void *arg0) {
     func_80071824(arg0, func_80016560);
 }
 
+// func_80016664 best match: 99.892% (nonmatchings/func_80016664-1197934324348345530/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016664.s")
+
+#ifdef NON_MATCHING
+void func_80016664(TitleMenuWidgetActor *arg0) {
+    volatile s32 unused;
+    MenuIntroActor *intro;
+    register TitleMenuWidgetActor *actor;
+    u8 *text;
+    s32 i;
+    s16 state;
+    s32 alpha;
+
+    actor = arg0;
+    intro = D_8010ADDC;
+    for (i = 0; i < D_80121B55; i++) {
+        state = D_800EC9C8[i];
+        if (state != 8) {
+            if (state == 5) {
+                alpha = (u16)actor->alpha[i];
+            } else {
+                alpha = 0x100;
+            }
+
+            func_8000F8AC((s16)(actor->x[i] - 2), (s16)(actor->y[i] + 0xC), func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 8,
+                          0x20, 0x20, 0, alpha, 0);
+            func_8000F8AC((s16)(actor->x[i] + 0x3E), (s16)(actor->y[i] + 0xC), func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 9,
+                          0x20, 0x20, 0, alpha, 0);
+
+            state = D_800EC9C8[i];
+            if (state == 0xA) {
+                func_80013D0C((s16)(actor->x[i] + 2), (s16)(actor->y[i] + 0x10), D_800B5A14, 7, actor->alpha[i]);
+            } else {
+                text = D_800B5458[state];
+                state = 2;
+                func_80013154((s16)(actor->x[i] + state), (s16)(actor->y[i] + 0x10), text, 1, actor->alpha[i], 0);
+            }
+
+            if ((actor->alpha[i] == 0x100) && (intro->state == 8)) {
+                state = D_800EC9C8[i];
+                if ((state == 4) || ((state >= 7) && (state != 0x12) && (D_800EC9D0[i] == 0))) {
+                    func_8000F030((s16)(actor->x[i] + 0x70), (s16)(actor->y[i] + 0x20), func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                                  (((s32)actor->frame >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
+                }
+            }
+        }
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016948.s")
 
@@ -810,18 +862,18 @@ void func_80016B54(TitleMenuWidgetActor *arg0) {
     s32 i;
     TitleMenuWidgetActor *new_var;
 
-    arg0->unk18 = -0x114;
-    arg0->unk20 = -0xA4;
-    arg0->unk1A = -0x114;
-    arg0->unk22 = 0x48;
-    arg0->unk1C = 0x90;
+    arg0->x[0] = -0x114;
+    arg0->y[0] = -0xA4;
+    arg0->x[1] = -0x114;
+    arg0->y[1] = 0x48;
+    arg0->x[2] = 0x90;
     new_var = arg0;
-    new_var->unk24 = -0xA4;
-    new_var->unk1E = 0x90;
-    new_var->unk26 = 0x48;
+    new_var->y[2] = -0xA4;
+    new_var->x[3] = 0x90;
+    new_var->y[3] = 0x48;
 
     for (i = 0; i < D_80121B55; i++) {
-        new_var->unk28[i] = 0x100;
+        new_var->alpha[i] = 0x100;
         new_var->unk31[i] = 0;
     }
 

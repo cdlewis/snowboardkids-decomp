@@ -3313,3 +3313,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `0x3000` before the price lookup can be required to reproduce IDO's `li`
   delay-slot/local layout. Keeping `temp` before the small text buffer also
   places the saved offset at the target stack slot.
+
+## func_80016664 (title_menu)
+
+- For title-menu multi-entry renderers, represent parallel halfword fields as
+  arrays (`x[4]`, `y[4]`, `alpha[4]`) to reproduce the target's two-byte offset
+  walk without manual pointer arithmetic.
+- A `volatile s32` padding local can shift the saved `D_8010ADDC` pointer from
+  `sp+0x5C` to the target `sp+0x58`. Treating the `func_8000F8AC` tile index
+  as `u16` in the matching workspace also forced the target immediate tile
+  setup for the first frame piece.
