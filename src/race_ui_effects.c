@@ -1852,7 +1852,30 @@ block_5:
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80064470.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800647E0.s")
+void func_800647E0(RaceUiProjectileActor *arg0) {
+    struct {
+        s16 mtx[0x10];
+        s32 pad;
+    } sp24;
+    RaceUiProjectileActor *actor;
+    s32 temp;
+
+    actor = arg0;
+    if (!D_80121B56) {
+        func_80097FE4(sp24.mtx, D_80121D80[actor->index].pitch, D_80121D80[actor->index].yaw);
+        func_80098590(sp24.mtx, &actor->velocity, &actor->pos);
+        actor->pos.a += D_80121D80[actor->index].pos28.a;
+        actor->pos.b += D_80121D80[actor->index].pos28.b + actor->verticalVelocity;
+        actor->pos.c += D_80121D80[actor->index].pos28.c;
+        temp = (actor->verticalVelocity += actor->verticalAcceleration);
+        actor->verticalAcceleration += 0x10000;
+        if (temp >= 0x300001) {
+            func_800716E4(actor);
+            return;
+        }
+    }
+    func_800483FC(&D_801248C8, func_80064470, actor);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80064914.s")
 

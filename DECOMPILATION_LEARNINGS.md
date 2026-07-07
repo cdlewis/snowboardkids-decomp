@@ -3127,3 +3127,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   index load and misses by one register.
 - The fixed matrix scratch for `func_80097FE4` in this path must be typed as
   `s16[0x12]` so the local lives at `sp+0x2C` in a `0x50` byte frame.
+
+## func_800647E0 (race_ui_effects)
+
+- This sibling also needs direct `D_80121D80[actor->index]` expressions for
+  both the initial pitch/yaw and later position additions; using a named
+  `player` pointer leaves one register mismatch or grows the stack frame.
+- Writing the acceleration update as
+  `temp = (actor->verticalVelocity += actor->verticalAcceleration)` keeps IDO's
+  target `$v1`/`$a0` allocation. Splitting the addition and store is logically
+  equivalent but shifts the later temporaries.
