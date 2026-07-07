@@ -49,7 +49,9 @@ typedef struct {
     /* 0x2C0 */ s16 unk2C0;
     /* 0x2C2 */ s8 pad2C2;
     /* 0x2C3 */ s8 unk2C3;
-    /* 0x2C4 */ u8 pad2C4[0x2EA - 0x2C4];
+    /* 0x2C4 */ u8 pad2C4[2];
+    /* 0x2C6 */ u16 unk2C6;
+    /* 0x2C8 */ u8 pad2C8[0x2EA - 0x2C8];
     /* 0x2EA */ s16 pitch;
     /* 0x2EC */ s16 yaw;
     /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
@@ -258,6 +260,30 @@ typedef struct {
     /* 0x48 */ u8 pad48[0x58 - 0x48];
     /* 0x58 */ u8 matrixDirty;
 } RaceUiPodiumTrailActor;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ u8 pad24[0x48 - 0x24];
+    /* 0x48 */ s32 yOffset;
+    /* 0x4C */ s32 yVelocity;
+    /* 0x50 */ s16 sourcePlayerIndex;
+    /* 0x52 */ s16 playerIndex;
+    /* 0x54 */ s16 state;
+    /* 0x56 */ s16 timer;
+    /* 0x58 */ u8 pad58;
+    /* 0x59 */ u8 playSound;
+} RaceUiPodiumTrailEffectActor;
+
+typedef struct {
+    /* 0x00 */ s16 value;
+    /* 0x02 */ u8 pad2[0x60C - 2];
+} RacePlayerS16Stride;
+
+typedef struct {
+    /* 0x00 */ u8 value;
+    /* 0x01 */ u8 pad1[0x60C - 1];
+} RacePlayerU8Stride;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
@@ -580,6 +606,8 @@ extern void func_80072A20(s32, void *, s32, s32, f32, s32);
 extern s32 func_8007B130(void *, void *, void *, void *);
 extern RacePlayerState D_80121D80[];
 extern RacePlayerFlags D_8012207C[];
+extern RacePlayerS16Stride D_80122052[];
+extern RacePlayerU8Stride D_8012229A[];
 extern u8 D_800EC9F0[];
 extern void *D_80121B74;
 extern void func_80072138(s32, s32);
@@ -2025,7 +2053,38 @@ void func_8006069C(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80060738.s")
+void func_80060738(RaceUiPodiumTrailEffectActor *arg0) {
+    RacePlayerState *player;
+    s32 yOffset;
+
+    if (D_80121B56 == 0) {
+        arg0->yVelocity += -0x10000;
+        yOffset = arg0->yOffset + arg0->yVelocity;
+        arg0->yOffset = yOffset;
+        if ((yOffset < 0x200000) && ((arg0->playSound & 0xFF) != 0)) {
+            func_80072A74(0xC, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
+            D_80121D80[arg0->playerIndex].unk2C6 |= 0x1000;
+            D_80122052[arg0->playerIndex].value = arg0->sourcePlayerIndex;
+            yOffset = arg0->yOffset;
+            arg0->playSound = 0;
+        }
+
+        if (yOffset < 0x100000) {
+            arg0->timer = 0x14;
+            arg0->yVelocity = 0x80000;
+            func_80071824(arg0, func_8006069C);
+            yOffset = arg0->yOffset;
+        }
+
+        player = &D_80121D80[arg0->playerIndex];
+        arg0->pos.a = player->pos28.a;
+        arg0->pos.b = player->pos28.b + yOffset;
+        arg0->pos.c = player->pos28.c;
+    }
+
+    D_8012229A[arg0->playerIndex].value = 1;
+    func_800483FC(&D_801248BC, func_80060544, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80060914.s")
 
