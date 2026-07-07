@@ -8,6 +8,13 @@ typedef struct {
     /* 0x8 */ s32 z;
 } Vec3i;
 
+typedef struct {
+    /* 0x0 */ s16 x;
+    /* 0x2 */ s16 y;
+} Vec2s;
+
+typedef s16 FixedMatrix3sScratch[0x10];
+
 typedef union {
     Vec3i vec;
     struct {
@@ -75,7 +82,14 @@ typedef struct {
     /* 0x34 */ RaceItemEffectState state;
     /* 0x36 */ RaceItemEffectHeight height;
     /* 0x38 */ RaceItemEffectHalf38 unk38;
-    /* 0x3A */ u8 pad3A[0x64 - 0x3A];
+    /* 0x3A */ u8 pad3A[2];
+    /* 0x3C */ void *image;
+    /* 0x40 */ void *palette;
+    /* 0x44 */ u8 pad44[9];
+    /* 0x4D */ u8 angleIndex;
+    /* 0x4E */ u8 pad4E;
+    /* 0x4F */ u8 followPlayerIndex;
+    /* 0x50 */ u8 pad50[0x64 - 0x50];
     /* 0x64 */ u16 unk64;
 } RaceItemEffectActor;
 
@@ -114,7 +128,11 @@ typedef struct {
 
 extern u8 *D_800D46D0[];
 extern u16 D_800D46F8[];
+extern Vec2s D_800D4928[];
+extern s32 D_800D4968[];
+extern s32 D_800D4974[];
 extern RaceItemEffectAssetHandles D_80112130;
+extern s16 D_80112168;
 extern s16 D_8011216C;
 extern s16 D_80121B50;
 extern u8 D_80121B56;
@@ -147,6 +165,7 @@ void func_8005098C(RaceItemFollowActor *);
 void func_800716E4();
 void func_80071824(void *task, void (*callback)());
 void func_80097C18(void *, s16);
+void func_80097FE4(FixedMatrix3sScratch, s16, s16);
 void func_80098590(void *, s32 *, RaceItemEffectPayload *);
 RaceItemEffectActor *func_800711D0(void *, s32, s32);
 RaceItemEffectActor *func_800716A4(void *, s32, s32, s16);
@@ -318,7 +337,40 @@ void func_8004F33C(RaceItemEffectActor *arg0) {
     func_800483FC(&D_801248EC, func_8004EFF8, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004F3FC.s")
+void func_8004F3FC(RaceItemEffectActor *arg0) {
+    char padTail[8];
+    volatile s32 pad0[1];
+    FixedMatrix3sScratch sp3C;
+    RaceItemEffectPayload sp30;
+    volatile s32 pad1[1];
+    RaceItemFollowPlayer *player;
+    Vec2s *angles;
+
+    arg0->unk38.width = 0xFF;
+    arg0->unk30.screen.y = func_800430D0() & 3;
+    func_80045990(func_80043040(D_80112168), D_800D46F8[arg0->playerIndex], &arg0->image, &arg0->palette);
+
+    player = &D_80121D80[arg0->followPlayerIndex];
+    arg0->payload.vec.x = player->pos.x;
+    arg0->payload.vec.y = player->pos.y;
+    arg0->payload.vec.z = player->pos.z;
+
+    angles = &D_800D4928[arg0->angleIndex & 0xFF];
+    func_80097FE4(sp3C, angles->x, angles->y);
+    func_80098590(sp3C, D_800D4968, &sp30);
+
+    arg0->payload.vec.x += sp30.vec.x;
+    arg0->payload.vec.y += sp30.vec.y;
+    arg0->payload.vec.z += sp30.vec.z;
+
+    func_80098590(sp3C, D_800D4974, (RaceItemEffectPayload *) &arg0->unk24);
+    if (arg0->playerIndex == 0) {
+        arg0->payload.vec.y += 0x60000;
+    }
+
+    func_8004F33C(arg0);
+    func_80071824(arg0, func_8004F33C);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004F55C.s")
 
