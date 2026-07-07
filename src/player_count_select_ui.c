@@ -53,11 +53,12 @@ typedef struct {
 } PlayerCountSelectMenuCursor;
 
 extern void func_80071824(void *task, void (*callback)());
+extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern void func_80029344(PlayerCountSelectRowActor *);
 extern void func_800296D8(PlayerCountSelectWidgetActor *);
-extern void func_80029CE4(PlayerCountSelectWidgetActor *);
+extern void func_8002980C(PlayerCountSelectWidgetActor *);
 extern void func_8002A008(PlayerCountSelectWidgetActor *);
 extern void func_8002A27C(PlayerCountSelectWidgetActor *);
 extern void func_8002A49C(PlayerCountSelectWidgetActor *);
@@ -65,9 +66,13 @@ extern void func_8002A710(PlayerCountSelectWidgetActor *);
 extern void func_8002A930(PlayerCountSelectWidgetActor *);
 extern void func_8002AB24(PlayerCountSelectWidgetActor *);
 extern void func_8002AE3C(PlayerCountSelectWidgetActor *);
+extern void func_8002AFB8(PlayerCountSelectWidgetActor *);
 extern void func_8002B05C(PlayerCountSelectWidgetActor *);
+extern void func_8002B15C(PlayerCountSelectWidgetActor *);
 extern void func_8002B1FC(PlayerCountSelectWidgetActor *);
+extern void func_8002B2FC(PlayerCountSelectWidgetActor *);
 extern void func_8002B424(PlayerCountSelectWidgetActor *);
+extern void func_8002B524(PlayerCountSelectWidgetActor *);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s32, s32, PlayerCountPortrait, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
@@ -77,6 +82,7 @@ extern PlayerCountPortrait D_800B7198[];
 extern s16 D_80112172;
 extern PlayerCountSelectMenuCursor D_8010AF50;
 extern u8 D_8010AF52;
+extern s32 D_8010ADDC;
 extern u8 D_80121B5E;
 extern u8 D_80121D88;
 extern s32 D_80121D8C;
@@ -156,7 +162,82 @@ void func_800297D8(PlayerCountSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_8002980C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_80029CE4.s")
+void func_80029CE4(PlayerCountSelectWidgetActor *arg0) {
+    int state;
+
+    if ((D_80121B5E >= (u16) arg0->widget.counter) && (arg0->row.bytes.subState != 0) && (arg0->y != -0x48)) {
+        state = arg0->row.bytes.subState = 2;
+    } else {
+        state = arg0->row.bytes.subState;
+        if ((D_80121B5E < (u16) arg0->widget.counter) && (state != 0) && (arg0->y != -0x140)) {
+            state = arg0->row.bytes.subState = 1;
+        } else {
+            state = arg0->row.bytes.subState;
+            if ((state != 0) && (state < 4)) {
+                state = arg0->row.bytes.subState = 3;
+            }
+        }
+    }
+
+    switch (state) {
+    case 0:
+        arg0->x -= 0x20;
+        if (arg0->row.bytes.subTimer == 0) {
+            func_80071408(func_800297D8, 0, 0x63);
+        }
+        arg0->row.bytes.subTimer++;
+        if (arg0->x < -7) {
+            arg0->x = -8;
+            arg0->row.bytes.subState = 3;
+            D_8010ADDC = (s32) func_80071408(func_8002AFB8, 0, 0x64);
+            func_80071408(func_8002B15C, 0, 0x64);
+            func_80071408(func_8002B2FC, 0, 0x64);
+            func_80071408(func_8002B524, 0, 0x64);
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 1:
+        arg0->y -= 0x24;
+        if (arg0->y < -0x13F) {
+            arg0->y = -0x140;
+            arg0->row.bytes.subState = 3;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 2:
+        arg0->y += 0x24;
+        if (arg0->y >= -0x48) {
+            arg0->y = -0x48;
+            arg0->row.bytes.subState = 3;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 3:
+        D_801235B4 += 1;
+        if (D_80121D88 == 1) {
+            arg0->row.bytes.subState = 4;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 4:
+        arg0->x += 0x20;
+        if (arg0->x >= 0xA0) {
+            arg0->row.bytes.subState = 5;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 5:
+        D_80121D88 = 2;
+        state = arg0->row.bytes.subState;
+        break;
+    }
+
+    if ((state == 5) && (D_80121D88 == 2)) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002980C, arg0);
+}
 
 void func_80029FB8(PlayerCountSelectWidgetActor *arg0) {
     arg0->x = 0x94;
