@@ -47,6 +47,11 @@ typedef struct {
 
 typedef u8 PlayerCountPortrait[0x8C];
 
+typedef struct {
+    s16 alpha;
+    s8 state;
+} PlayerCountSelectMenuCursor;
+
 extern void func_80071824(void *task, void (*callback)());
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
@@ -71,6 +76,8 @@ extern s32 func_80043040(s16);
 extern int sprintf(char *, const char *, ...);
 extern PlayerCountPortrait D_800B7198[];
 extern s16 D_80112172;
+extern PlayerCountSelectMenuCursor D_8010AF50;
+extern u8 D_8010AF52;
 extern u8 D_80121B5E;
 extern u8 D_80121D88;
 extern s32 D_80121D8C;
@@ -400,7 +407,64 @@ void func_8002ADB8(PlayerCountSelectWidgetActor *arg0) {
     func_8000F8AC(arg0->x, (s16)(arg0->y + (D_80121B5E * 0x18)), func_80043040(D_80112172), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_8002AE3C.s")
+void func_8002AE3C(PlayerCountSelectWidgetActor *arg0) {
+    u8 state;
+    u8 globalState;
+
+    state = arg0->transition.bytes.state;
+    if (state != (globalState = D_8010AF50.state)) {
+        arg0->transition.bytes.state = globalState;
+        /* Preserve IDO's state/globalState register allocation. */
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        state = globalState;
+        arg0->sprite.spriteIndex = D_8010AF50.alpha;
+    }
+
+    switch (state) {
+    case 0:
+        arg0->sprite.spriteIndex += 0x26;
+        if (arg0->sprite.spriteIndex >= 0x100) {
+            arg0->sprite.spriteIndex = 0x100;
+            arg0->transition.bytes.state = 1;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 1:
+        if ((s32) arg0->transition.bytes.timer < 0x10) {
+            arg0->sprite.spriteIndex -= 9;
+        } else {
+            arg0->sprite.spriteIndex += 9;
+        }
+        state = arg0->transition.bytes.state;
+        arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
+        break;
+    case 2:
+        if (D_80121D88 == 1) {
+            state = arg0->transition.bytes.state = 3;
+        }
+        break;
+    case 3:
+        arg0->x -= 0x20;
+        if (arg0->x < -0xEF) {
+            arg0->transition.bytes.state = 4;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 4:
+        break;
+    }
+
+    D_8010AF52 = state;
+    if (arg0->transition.bytes.state == 4) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002ADB8, arg0);
+}
 
 void func_8002AFB8(PlayerCountSelectWidgetActor *arg0) {
     arg0->x = -0x7C;
