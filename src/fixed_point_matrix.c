@@ -196,7 +196,17 @@ void func_8009853C(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
     func_80097CF0(sp38, sp18, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/fixed_point_matrix/func_80098590.s")
+void func_80098590(FixedMatrix3s arg0, Vec3i *source, Vec3i *dest) {
+    dest->x = (s64)arg0[MTX_XX] * source->x / FIXED_MATRIX_ONE +
+              (s64)arg0[MTX_YX] * source->y / FIXED_MATRIX_ONE +
+              (s64)arg0[MTX_ZX] * source->z / FIXED_MATRIX_ONE;
+    dest->y = (s64)arg0[MTX_XY] * source->x / FIXED_MATRIX_ONE +
+              (s64)arg0[MTX_YY] * source->y / FIXED_MATRIX_ONE +
+              (s64)arg0[MTX_ZY] * source->z / FIXED_MATRIX_ONE;
+    dest->z = (s64)arg0[MTX_XZ] * source->x / FIXED_MATRIX_ONE +
+              (s64)arg0[MTX_YZ] * source->y / FIXED_MATRIX_ONE +
+              (s64)arg0[MTX_ZZ] * source->z / FIXED_MATRIX_ONE;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/fixed_point_matrix/func_800987A0.s")
 
