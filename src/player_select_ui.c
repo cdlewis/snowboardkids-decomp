@@ -47,6 +47,12 @@ typedef struct {
     s8 unk26;
 } Struct1952C;
 
+typedef struct {
+    u8 state;
+    char pad1[1];
+    s16 nextState;
+} PlayerSelectCursorState;
+
 typedef u8 PlayerPortrait[0x8C];
 
 extern void func_80071824(void *task, void (*callback)());
@@ -62,7 +68,6 @@ extern void func_8001A704(PlayerSelectWidgetActor *);
 extern void func_8001A924(PlayerSelectWidgetActor *);
 extern void func_8001AB98(PlayerSelectWidgetActor *);
 extern void func_8001B02C(PlayerSelectWidgetActor *);
-extern void func_8001B2D8(PlayerSelectWidgetActor *);
 extern void func_8001B520(PlayerSelectWidgetActor *);
 extern void func_8001B6D8(PlayerSelectWidgetActor *);
 extern void func_8001B8F0(PlayerSelectWidgetActor *);
@@ -74,6 +79,8 @@ extern u8 D_800EC9C2;
 extern u8 D_80121D85;
 extern u8 D_80121D88;
 extern void *D_80124868;
+extern PlayerSelectCursorState D_8010AE70;
+extern u8 D_8010AE70_state;
 extern s16 D_8010AE74;
 extern s16 D_80112172;
 extern s32 D_80121D8C;
@@ -453,7 +460,63 @@ void func_8001B254(PlayerSelectWidgetActor *arg0) {
     func_8000F8AC(arg0->x, (s16)(arg0->y + (D_800EC9C2 * 0x14)), func_80043040(D_80112172), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_8001B2D8.s")
+void func_8001B2D8(PlayerSelectWidgetActor *arg0) {
+    u8 state;
+    u8 globalState;
+
+    state = arg0->transition.bytes.state;
+    if (state != (globalState = D_8010AE70.state)) {
+        arg0->transition.bytes.state = globalState;
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        state = globalState;
+        arg0->sprite.spriteIndex = D_8010AE70.nextState;
+    }
+
+    switch (state) {
+    case 0:
+        arg0->sprite.spriteIndex += 0x26;
+        if (arg0->sprite.spriteIndex >= 0x100) {
+            arg0->sprite.spriteIndex = 0x100;
+            arg0->transition.bytes.state = 1;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 1:
+        if ((s32) arg0->transition.bytes.timer < 0x10) {
+            arg0->sprite.spriteIndex -= 9;
+        } else {
+            arg0->sprite.spriteIndex += 9;
+        }
+        state = arg0->transition.bytes.state;
+        arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
+        break;
+    case 2:
+        if (D_80121D88 == 1) {
+            state = arg0->transition.bytes.state = 3;
+        }
+        break;
+    case 3:
+        arg0->x -= 0x20;
+        if (arg0->x < -0xEF) {
+            arg0->transition.bytes.state = 4;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 4:
+        break;
+    }
+
+    D_8010AE70_state = state;
+    if (arg0->transition.bytes.state == 4) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8001B254, arg0);
+}
 
 void func_8001B454(PlayerSelectWidgetActor *arg0) {
     arg0->x = -0x7C;
