@@ -1,5 +1,4 @@
 #include "common.h"
-#include "menu_rendering.h"
 
 typedef struct ShopMenuWidgetActor ShopMenuWidgetActor;
 
@@ -138,7 +137,9 @@ extern void func_8002EC5C(void);
 extern void func_8002E5A4(ShopMenuWidgetActor *);
 extern void func_8002FD70(void);
 extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
+extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_80013D0C(s16, s16, void *, s32, s32);
 extern void func_80013154(s32, s32, ShopDescriptionText, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
@@ -171,6 +172,9 @@ extern s32 D_80123758;
 extern u8 D_80124868;
 
 const char D_800E0F60[] = "%6dG";
+const char D_800E0F68[] = "%6dG";
+const char D_800E0F70[] = "%5dG";
+const char D_800E0F78[] = "%4dG";
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002C4E0.s")
 
@@ -717,7 +721,48 @@ void func_8002E6E4(ShopMenuWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002E798.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002E810.s")
+void func_8002E810(ShopMenuWidgetActor *arg0) {
+    s16 new_var;
+    s32 temp;
+    char sp4C[4];
+    u16 sp4A;
+    u16 sp48;
+    s32 palette;
+
+    if ((s8)D_800ECA2F[D_80121D86] == -1) {
+        new_var = 0x3000;
+        temp = D_800B34B0[D_80121D86];
+        if ((u32)temp >= 0x186A0U) {
+            sp4A = 0x4000;
+            sp48 = 0;
+            sprintf(sp4C, D_800E0F68, arg0->item.price);
+        } else if ((u32)temp >= 0x2710U) {
+            sp4A = 0x3800;
+            sp48 = 4;
+            sprintf(sp4C, D_800E0F70, arg0->item.price);
+        } else {
+            sp4A = new_var;
+            sp48 = 8;
+            sprintf(sp4C, D_800E0F78, arg0->item.price);
+        }
+
+        func_8001BA2C((s16)(arg0->x + sp48), arg0->y, sp4A, 0x2000);
+
+        if ((u32)D_80121D8C < (u32)D_800B34B0[D_80121D86]) {
+            palette = 1;
+        } else {
+            palette = 0;
+        }
+        if (arg0->slide.slideState == 2) {
+            palette = 0;
+        }
+
+        func_80013D0C((s16)(arg0->x + sp48 + 4), (s16)(arg0->y + 4), sp4C, palette & 0xFF, arg0->sprite.index);
+        return;
+    }
+
+    func_8000F8AC(arg0->x, arg0->y, func_80043040(D_8011217E), 6, 0x20, 0x20, 0, arg0->sprite.index, 0);
+}
 
 // func_8002E9E4 best match: 94.119% (nonmatchings/func_8002E9E4-1404502880690620360/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002E9E4.s")

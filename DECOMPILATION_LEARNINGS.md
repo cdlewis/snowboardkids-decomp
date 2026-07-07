@@ -3306,3 +3306,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   sibling menu entries: keep the same local declaration order and update only
   the selected-player constant, text table, secondary tile mode, and trailing
   frame loop bound.
+
+## func_8002E810 (shop_menu_ui)
+
+- For shop price render callbacks, a seemingly redundant `s16` initialized to
+  `0x3000` before the price lookup can be required to reproduce IDO's `li`
+  delay-slot/local layout. Keeping `temp` before the small text buffer also
+  places the saved offset at the target stack slot.
