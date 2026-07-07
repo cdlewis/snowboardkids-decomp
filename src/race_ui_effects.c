@@ -128,6 +128,19 @@ typedef struct {
 } RaceUiEffectActor;
 
 typedef struct {
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ s32 unk8;
+} RaceUiEffectParticle;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ RaceUiEffectParticle *particles;
+    /* 0x1C */ u8 pad1C[8];
+    /* 0x24 */ s16 count;
+} RaceUiEffectParticleActor;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
@@ -224,6 +237,7 @@ extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, s32);
 extern void func_80048D60(void *);
 extern s32 func_80043040(s16);
+extern s32 func_800430D0(void);
 extern s16 func_80042D58(s32);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80045990(s32, s32, void *, void *);
@@ -344,6 +358,7 @@ extern void func_8005E3F8(void *);
 extern void func_80064D88(void);
 extern void func_80062D34(void);
 extern s32 func_80043120(void);
+extern void func_80063A9C(void);
 extern void func_8005B61C(void *);
 extern void func_8005CC54(void *);
 extern void func_8005E33C(void *);
@@ -353,6 +368,7 @@ extern void func_80060914(void);
 extern void func_80058610(void *);
 extern void func_80058880(void *);
 extern s16 D_80121B50;
+extern void *D_801248D4;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800572A0.s")
 
@@ -1628,7 +1644,23 @@ void func_8006392C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80063A9C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80063E70.s")
+void func_80063E70(RaceUiEffectParticleActor *arg0) {
+    register RaceUiEffectParticleActor *actor;
+    register s32 i;
+
+    actor = arg0;
+    for (i = 0; i < actor->count; i++) {
+        actor->particles[i].unk0 += 0xA0000;
+        if (actor->particles[i].unk0 >= 0x1000000) {
+            actor->particles[i].unk8 = func_800430D0() << 0x10;
+            actor->particles[i].unk4 = func_800430D0() << 0x10;
+            actor->particles[i].unk0 = 0;
+        }
+        actor->particles[i].unk4 += 0xFFFD0000;
+        actor->particles[i].unk4 &= 0xFFFFFF;
+    }
+    func_800483FC(&D_801248D4, func_80063A9C, (s32)actor);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80063FC0.s")
 
