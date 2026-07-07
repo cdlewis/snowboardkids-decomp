@@ -15,6 +15,25 @@ typedef struct {
 } RaceModelEntry;
 
 typedef struct {
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ s32 unkC;
+    /* 0x10 */ s32 unk10;
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ s32 unk1C;
+    /* 0x20 */ s32 unk20;
+    /* 0x24 */ s32 unk24;
+    /* 0x28 */ s32 unk28;
+    /* 0x2C */ s32 unk2C;
+    /* 0x30 */ s32 unk30;
+    /* 0x34 */ s32 unk34;
+    /* 0x38 */ s32 unk38;
+    /* 0x3C */ s32 unk3C;
+} GfxCommandDest;
+
+typedef struct {
     /* 0x00 */ s16 modelIndex;
     char pad2[2];
     /* 0x04 */ Vec3i pos;
@@ -26,7 +45,7 @@ typedef struct {
     char pad0[0x10];
     /* 0x10 */ u16 modelListIndex;
     char pad12[6];
-    /* 0x18 */ void *modelBuffer;
+    /* 0x18 */ GfxCommandDest *modelBuffer;
     char pad1C[2];
     /* 0x1E */ s16 modelCount;
 } RaceModelListActor;
@@ -81,9 +100,11 @@ extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern s32 func_800430D0(void);
 extern void func_80045990(s32, s32, void *, void *);
+extern void func_80048C90(GfxCommandDest *, Vec3i *);
 extern s32 func_80048E60(void *);
 extern void func_80071824(void *task, void (*callback)());
 extern void func_800716E4(void *);
+extern void osWritebackDCache(void *, s32);
 extern void func_80097C18(void *, s16);
 extern void func_80098590(void *, void *, void *);
 extern void func_80088C80(void *, s32, s32, s32);
@@ -99,6 +120,7 @@ extern s16 D_80112168;
 extern u8 D_80121B56;
 extern u8 D_80112130[];
 extern RaceModelEntry *D_800D91E8[];
+extern GfxCommandDest D_800DEE50;
 extern s16 D_80121B50;
 extern void func_80066760(void *);
 extern void func_80066E10(void);
@@ -143,7 +165,35 @@ void func_800668EC(RaceModelListActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80066E10.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80067034.s")
+void func_80067034(RaceModelListActor *arg0) {
+    register RaceModelListActor *actor1;
+    register RaceModelListActor *actor2;
+    register RaceModelEntry *script;
+    register s32 i;
+    register s32 offset;
+    register s32 one;
+
+    script = D_800D91E8[D_80121B50];
+    actor1 = arg0;
+    actor2 = arg0;
+    i = 0;
+    if (actor1->modelCount > 0) {
+        register GfxCommandDest *template;
+
+        template = &D_800DEE50;
+        offset = 0;
+        one = 1;
+        do {
+            script->enabled = one;
+            actor1->modelBuffer[i] = *template;
+            func_80048C90(&actor1->modelBuffer[i], &script->transform);
+            i++;
+            offset += sizeof(GfxCommandDest);
+            script++;
+        } while (i < actor2->modelCount);
+    }
+    osWritebackDCache(actor1->modelBuffer, actor1->modelCount * sizeof(GfxCommandDest));
+}
 
 void func_8006713C(RaceModelListActor *arg0) {
     RaceModelListActor *new_var;
