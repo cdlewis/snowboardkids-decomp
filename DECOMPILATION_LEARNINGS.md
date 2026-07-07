@@ -3109,3 +3109,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - When a setup loop writes a halfword range that crosses several named actor
   fields, add a same-offset array overlay in the struct rather than using
   byte-pointer arithmetic or indexing beyond a smaller array member.
+
+## func_80067034 (race_overlay_effects)
+
+- This race overlay command-buffer initializer matches the same pattern as
+  `race_ui_effects:func_8006565C`: use two actor aliases, a typed 0x40-byte
+  destination struct assignment from `D_800DEE50`, and a separate unused
+  `offset += sizeof(GfxCommandDest)` local to preserve the target saved-register
+  allocation and loop scheduling.
