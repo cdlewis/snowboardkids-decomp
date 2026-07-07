@@ -94,7 +94,6 @@ extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
 extern void func_80071824(void *task, void (*callback)());
 extern void func_80014600(MenuIntroActor *);
-extern void func_80014AA4(MenuIntroActor *);
 extern void func_80014EF0(MenuItemActor *);
 extern void func_80014CB8(void *);
 extern void func_80015054(void *);
@@ -196,10 +195,6 @@ typedef struct {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80014600.s")
 
-// func_80014AA4 best match: 99.573%
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80014AA4.s")
-
-#ifdef NON_MATCHING
 void func_80014AA4(MenuIntroActor *arg0) {
     TitleIntroTransitionState *global;
     MenuIntroActor *actor;
@@ -208,14 +203,13 @@ void func_80014AA4(MenuIntroActor *arg0) {
     u8 state;
     s32 step;
     u32 stateCopy;
-    u8 timer;
 
     global = &D_8010AE00;
     state = arg0->state;
     globalState = global->state;
     actor = arg0;
     stateCopy = state;
-    if (stateCopy != globalState) {
+    if ((u32)stateCopy != globalState) {
         arg0->state = globalState;
         state = globalState;
         arg0->alpha = D_8010AE00.alpha;
@@ -223,11 +217,11 @@ void func_80014AA4(MenuIntroActor *arg0) {
     step = 0x10;
 
     alpha = actor->alpha;
-    if (alpha != 0x100) {
+    if ((u32)alpha != 0x100) {
         if (state == 0) {
             actor->alpha = alpha + 0x20;
             alpha = actor->alpha;
-            if (alpha == 0x100) {
+            if ((u32)alpha == 0x100) {
                 alpha = ((volatile MenuIntroActor *)actor)->alpha;
                 actor->state = 1;
             }
@@ -243,9 +237,8 @@ void func_80014AA4(MenuIntroActor *arg0) {
         switch (state) {
         case 1:
         case 6:
-            timer = actor->timer;
             alpha = ((volatile MenuIntroActor *)actor)->alpha;
-            actor->timer = ((timer + 1) & 0xFFFFu) & 0xF;
+            actor->timer = (actor->timer + 1) & 0xF;
             break;
         case 2:
             actor->y -= 0x10;
@@ -285,7 +278,6 @@ void func_80014AA4(MenuIntroActor *arg0) {
         func_800483FC(&D_80124868, func_80014600, (s32)actor);
     }
 }
-#endif
 
 void func_80014C7C(void *arg0) {
     MenuIntroActor *actor = arg0;
