@@ -1,5 +1,8 @@
 #include "common.h"
 
+#define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x3E])
+#define TITLE_MENU_FRAME_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x42])
+
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
@@ -99,7 +102,6 @@ extern void func_800483FC(void *, void *, s32);
 extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern s32 func_80072138(s32, s32);
-extern void func_800157EC(void *);
 extern void func_80015C84(void *);
 extern TitleIntroTransitionState D_8010AE00;
 extern s16 D_8010AE02;
@@ -112,6 +114,8 @@ extern s16 D_8010AE42;
 extern s16 D_8010AE44;
 extern s16 D_8010AE46;
 extern u16 D_800B5408[];
+extern u16 D_800B5444[];
+extern u8 D_80112130[];
 extern s16 D_8011216E;
 extern s16 D_80112172;
 extern s16 D_8011217C;
@@ -449,7 +453,48 @@ void func_800157B4(void *arg0) {
     func_80071824(arg0, func_80015680);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_800157EC.s")
+void func_800157EC(void *arg0) {
+    MenuItemActor *actor = arg0;
+    s16 unused;
+    s16 width;
+    s16 xOffset;
+    s16 yOffset;
+    s32 alpha;
+    s32 temp;
+    s32 i;
+
+    if (actor->state == 0) {
+        alpha = 0x100;
+        width = 0x18;
+        xOffset = 0x10;
+        yOffset = 0;
+    } else if (D_80121B55 == 4) {
+        alpha = 0x100;
+        width = 0x20;
+        xOffset = 0xC;
+        yOffset = 8;
+    } else {
+        alpha = 0x60;
+        width = 0x10;
+        xOffset = 0x14;
+        yOffset = -4;
+    }
+
+    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (D_80121B55 != 4)) {
+        func_8000F8AC(actor->x, actor->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 4);
+        if (width == 0x20) {
+            temp = width & 0xFFFF;
+            func_8000F8AC((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), func_80043040(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 3, temp, temp, 0, alpha, 0);
+        } else {
+            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), func_80043040(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 3, alpha);
+        }
+        func_800129DC((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5444, 1, alpha);
+    }
+
+    for (i = 0; i != 0x50; i += 0x14) {
+        func_8000F8AC((s16)(actor->x + i + 0x80), actor->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, alpha, 0);
+    }
+}
 
 void func_80015A30(void *arg0) {
     MenuItemActor *actor = arg0;
