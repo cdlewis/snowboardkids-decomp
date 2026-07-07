@@ -3245,3 +3245,12 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   better than manually expanding the increment into `u16` locals. A dummy unused
   `s32` before a volatile saved `func_80041FB4` result can be necessary to keep
   that saved result at the target stack slot.
+
+## func_800224A0 (character_select_ui)
+
+- In draw callbacks with alternating alpha, keeping `!(state & 1)` in a named
+  `int` local can change only the stack frame/local slot layout while preserving
+  the desired branch shape. This matched the target's alpha spill at `sp+0x3E`.
+- For halfword fields that are logically signed in the shared struct but passed
+  as an alpha value, casting the field to `u16` at the call site can force the
+  target `lhu` load without changing the struct definition.
