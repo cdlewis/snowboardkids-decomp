@@ -55,7 +55,20 @@ extern s16 D_8015660C;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000EA80.s")
 
+// func_8000F030 best match: 97.283%
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000F030.s")
+
+#ifdef NON_MATCHING
+void func_8000F0EC(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7, s32 arg8, s32 arg9);
+
+void func_8000F030(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7) {
+    volatile s32 temp_v0;
+    s32 temp_v1;
+
+    func_8000F0EC(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                  temp_v0 = (s16)(D_8015660A / 2), temp_v1 = (s16)(D_8015660C / 2));
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000F0EC.s")
 
