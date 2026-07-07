@@ -2678,3 +2678,16 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   store it back to the actor, then place the no-ops before assigning
   `state = globalState`. This keeps the global state in `$a1` and the switch
   state in `$v1`.
+
+## func_8002DCE8 (shop_menu_ui)
+
+- This shop cursor callback shares the `func_8002AE3C` global-state sync shape,
+  but also copies the global timer halfword into `transition.bytes.timer`. The
+  same five empty `if (1) {}` statements after storing `globalState` preserve
+  IDO's `$a1`/`$v1` allocation for the switch.
+- The target's final global-state write reloads the field address with
+  `lui $at`/`sb` instead of reusing the live `D_8010AF18` base in `$a3`. Writing
+  through a byte alias symbol at `D_8010AF18 + 0x28` (`D_8010AF40`) produces
+  the target instruction form. When adding such an alias inside a sized `.bss`
+  symbol, remove the parent symbol's stale `size:` metadata so the range check
+  does not report the intentional split as a mismatch.

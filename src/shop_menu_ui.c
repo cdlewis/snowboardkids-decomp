@@ -18,6 +18,35 @@ typedef struct {
     /* 0x0C */ s32 money;
 } ShopMenuState;
 
+typedef struct {
+    union {
+        struct {
+            /* 0x00 */ u8 unk0[4];
+            /* 0x04 */ u8 playerOneCourseDecided;
+            /* 0x05 */ u8 unk5[3];
+            /* 0x08 */ u8 playerTwoCourseDecided;
+            /* 0x09 */ u8 unk9[7];
+            /* 0x10 */ u8 unk10[4];
+        };
+        struct {
+            /* 0x00 */ u8 unk0Array[4];
+            /* 0x04 */ u8 unk4Array[4];
+            /* 0x08 */ u8 unk8Array[4];
+            /* 0x0C */ u8 unkCArray[4];
+            /* 0x10 */ u8 unk10Array[4];
+        };
+    };
+    /* 0x14 */ s16 unk14[4];
+    /* 0x1C */ s16 unk1C[4];
+    /* 0x24 */ u8 unk24[4];
+    /* 0x28 */ u8 unk28;
+    /* 0x29 */ u8 transitionState;
+    /* 0x2A */ s16 unk2A;
+    /* 0x2C */ s16 unk2C;
+    /* 0x2E */ u8 unk2E;
+    /* 0x2F */ u8 unk2F[9];
+} CourseSelectStatus;
+
 typedef u8 ShopDescriptionText[0x8C];
 
 typedef struct {
@@ -98,7 +127,6 @@ extern void func_8002D2E4(ShopMenuWidgetActor *);
 extern void func_8002D558(ShopMenuWidgetActor *);
 extern void func_8002D778(ShopMenuWidgetActor *);
 extern void func_8002D9EC(ShopMenuWidgetActor *);
-extern void func_8002DCE8(void);
 extern void func_8002F2C8(ShopMenuWidgetActor *);
 extern void func_8002E9E4(ShopMenuWidgetActor *);
 extern void func_8002EC5C(void);
@@ -119,6 +147,8 @@ extern u8 D_80121D88;
 extern s16 D_8011217E;
 extern s16 D_8011214A;
 extern u8 D_800EC9E6;
+extern CourseSelectStatus D_8010AF18;
+extern u8 D_8010AF40;
 extern u8 D_8010AF70;
 extern u8 D_8010AF71;
 extern u8 D_8010AF72;
@@ -376,7 +406,66 @@ void func_8002DC58(ShopMenuWidgetActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002DCE8.s")
+void func_8002DCE8(ShopMenuWidgetActor *arg0) {
+    u8 state;
+    u8 globalState;
+
+    state = arg0->transition.bytes.state;
+    if (state != (globalState = D_8010AF18.unk28)) {
+        arg0->transition.bytes.state = globalState;
+        /* Preserve IDO's state/globalState register allocation. */
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        state = globalState;
+        arg0->sprite.index = D_8010AF18.unk2A;
+        arg0->transition.bytes.timer = D_8010AF18.unk2C;
+    }
+
+    switch (state) {
+    case 0:
+        arg0->sprite.index += 0x26;
+        if (arg0->sprite.index >= 0x100) {
+            arg0->sprite.index = 0x100;
+            arg0->transition.bytes.state = 1;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 1:
+        if ((s32)arg0->transition.bytes.timer < 0x10) {
+            arg0->sprite.index -= 9;
+        } else {
+            arg0->sprite.index += 9;
+        }
+        state = arg0->transition.bytes.state;
+        arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
+        break;
+    case 2:
+        if (D_80121D88 == 1) {
+            state = arg0->transition.bytes.state = 3;
+        }
+        break;
+    case 3:
+        arg0->x -= 0x20;
+        if (arg0->x < -0xEF) {
+            arg0->transition.bytes.state = 4;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 4:
+    case 5:
+        break;
+    }
+
+    D_8010AF40 = state;
+    if (arg0->transition.bytes.state == 4) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002DC58, arg0);
+}
 
 void func_8002DE6C(ShopMenuWidgetActor *arg0) {
     arg0->x = -0x7C;
