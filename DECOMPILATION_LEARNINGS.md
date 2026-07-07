@@ -4,6 +4,18 @@ Project-specific lessons that apply when matching new functions or adding new
 source files. Keep this file focused on reusable compiler behavior, matching
 patterns, and verified layout/linking rules.
 
+## func_8009C270 scheduler init partial
+
+`func_8009C270` initializes the player command scheduler state: six message
+queues live at offsets `0x04`, `0x5C`, `0xB4`, `0x14C`, `0x1A4`, and `0x1FC`;
+the scheduler threads live at `0x258` and `0x408`; task/client globals are at
+`0x768..0x774`. A typed C version with the two scratch pointer locals and the
+permuter-discovered `doAudio = doAudio & 0xFFFFFFFFFFFFFFFF` nudge reaches
+99.735%. The remaining mismatch is only frame sizing (`0x38` generated versus
+target `0x30`), which shifts the homed `u8` argument loads by 8 bytes. Address
+taking the queue/thread locals and wrapping them in a local struct did not
+collapse the frame for this function.
+
 ## IDO Codegen Patterns
 
 - Branch direction matters. For `if (cond) { A } else { B }`, IDO usually emits
