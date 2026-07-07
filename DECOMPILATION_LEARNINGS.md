@@ -2670,3 +2670,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   global state between `$a1`/`$v1`. Five empty `if (1) {}` no-ops immediately
   after storing `globalState` back to `arg0->transition.bytes.state` preserve
   the target allocation: global state in `$a1`, current/switch state in `$v1`.
+
+## func_8002AE3C (player_count_select_ui)
+
+- The `D_8010AF50` player-count cursor uses the same five-empty-`if` allocation
+  trick as `func_80023434`: fold the global state load into the comparison,
+  store it back to the actor, then place the no-ops before assigning
+  `state = globalState`. This keeps the global state in `$a1` and the switch
+  state in `$v1`.
