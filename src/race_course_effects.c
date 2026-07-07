@@ -423,7 +423,7 @@ void func_8006B0D8(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B108.s")
 
-// func_8006B228 best match: 98.545% at nonmatchings/func_8006B228-9017456803007796287/base_10.c.
+// func_8006B228 best match: 98.636% at nonmatchings/func_8006B228-9017456803007796287/base_15.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B228.s")
 
 #ifdef NON_MATCHING
@@ -440,8 +440,6 @@ void func_8006B228(Struct6B760 *arg0) {
     }
 
     if (func_80049000(&arg0->pos) != 0) {
-        Gfx *segment3;
-
         if (arg0->displayListValid == 0) {
             arg0->displayListValid = 1;
             sine = func_80097AE8(arg0->unk40);
@@ -460,10 +458,8 @@ void func_8006B228(Struct6B760 *arg0) {
             gDPPipeSync(gRegionAllocPtr++);
             segment2 = gRegionAllocPtr++;
             gSPSegment(segment2, 0x02, func_80043040(D_80112144));
-            segment3 = gRegionAllocPtr++;
-            gSPSegment(segment3, 0x03, func_80043040(D_80112146));
-            gfx = gRegionAllocPtr++;
-            gSPMatrix(gfx, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112146));
+            gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gfx = gRegionAllocPtr++;
             gSPDisplayList(gfx, D_2001D00);
         }
