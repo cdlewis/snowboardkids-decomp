@@ -34,7 +34,9 @@ typedef struct {
     /* 0x068 */ u8 pad068[0x06C - 0x068];
     /* 0x06C */ void *trailFrontDisplayList;
     /* 0x070 */ void *trailBackDisplayList;
-    /* 0x074 */ u8 pad074[0x094 - 0x074];
+    /* 0x074 */ u8 pad074[0x076 - 0x074];
+    /* 0x076 */ u8 trailDisplayListsDirty;
+    /* 0x077 */ u8 pad077[0x094 - 0x077];
     /* 0x094 */ s16 modelTransform[10];
     /* 0x0A8 */ Vec3i velocity;
     /* 0x0B4 */ u8 pad0B4[0x2DA - 0x0B4];
@@ -59,11 +61,35 @@ extern void func_800987A0(s16 *mtx, s16 *rotation, Vec3i *scale, s16 *dest);
 extern u8 D_80121B56;
 extern s16 D_80112144;
 extern s16 D_80112146;
+extern u32 D_2002208[];
+extern u32 D_20023A8[];
 extern Gfx *gRegionAllocPtr;
 extern void *D_801248BC;
 extern u8 D_80156609;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/snowboard_trail_effects/func_800837D0.s")
+void func_800837D0(SnowboardTrailPlayer *player) {
+    Gfx *unused;
+
+    if (D_80156609 != 0) {
+        player->trailDisplayListsDirty = 1;
+    }
+
+    if (player->trailDisplayListsDirty != 0) {
+        player->trailDisplayListsDirty = 0;
+        player->trailFrontDisplayList = func_8004885C(player->trailFrontSource);
+        player->trailBackDisplayList = func_8004885C(player->trailBackSource);
+    }
+
+    if (player->trailFrontDisplayList != NULL) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112144));
+        gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112146));
+        gSPMatrix(gRegionAllocPtr++, player->trailFrontDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_2002208);
+        gSPMatrix(gRegionAllocPtr++, player->trailBackDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_20023A8);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/snowboard_trail_effects/func_8008393C.s")
 
