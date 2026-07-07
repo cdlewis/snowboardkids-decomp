@@ -76,7 +76,7 @@ typedef struct PlayerCommandState {
     u8 returnDepth;
     u8 unkED;
     u8 unkEE;
-    s8 unkEF;
+    u8 unkEF;
     u8 unkF0;
     u8 unkF1;
     s8 unkF2;
@@ -461,7 +461,21 @@ s32 func_8009D164(PlayerCommandState *arg0, s32 arg1) {
     return arg1;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009D170.s")
+s32 func_8009D170(PlayerCommandState *arg0, u8 *arg1) {
+    u8 depth;
+
+    depth = arg0->returnDepth;
+    arg0->returnUnk109[depth] = *arg1++;
+    arg0->returnScripts[depth] = arg1;
+    arg0->returnUnk60[depth] = arg0->unk60;
+    arg0->returnUnk68[depth] = arg0->unk68;
+    arg0->returnUnk10E[depth] = arg0->unkEF;
+    arg0->returnUnk113[depth] = arg0->unkF0;
+    arg0->returnUnkC8[depth] = arg0->unkC8;
+    arg0->returnUnkCA[depth] = arg0->unkCA;
+    arg0->returnDepth++;
+    return (s32)arg1;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009D1EC.s")
 
@@ -566,7 +580,7 @@ s32 func_8009D3BC(void *arg0, u8 *arg1) {
 
 s32 func_8009D40C(PlayerCommandState *arg0, u8 *arg1) {
     u8 temp_a0;
-    s8 temp_v0;
+    s32 temp_v0;
 
     temp_a0 = *arg1;
     arg1++;
