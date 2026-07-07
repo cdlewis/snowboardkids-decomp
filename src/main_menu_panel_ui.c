@@ -49,6 +49,7 @@ extern u8 D_8012482B;
 extern void func_80071824(void *task, void (*callback)());
 extern void func_800483FC(RenderCallbackNode **, RenderCallback, s32);
 extern void func_800716E4(MenuPanelActor *);
+extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8001303C(s32, s32, u8 *, s32, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern void func_80046358(s32, s32, s32, s32);
@@ -281,7 +282,45 @@ void func_80052520(s32 arg0) {
     func_800483FC(&D_80124868, func_800524D4, arg0);
 }
 
+// func_80052550 best match: 93.040%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80052550.s")
+
+#ifdef NON_MATCHING
+void func_80052550(s32 arg0) {
+    s16 edgeX;
+    s16 edgeY;
+    s32 x;
+    s32 y;
+
+    func_8000F030(-0x84, -0x64, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
+    func_8000F030(0x78, -0x64, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+
+    edgeX = -0x74;
+    do {
+        func_8000F030(edgeX, -0x64, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
+        func_8000F030(edgeX, -0x2C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
+        edgeX += 0x10;
+    } while (edgeX < 0x7C);
+
+    func_8000F030(-0x84, -0x2C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
+    func_8000F030(0x78, -0x2C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
+
+    edgeY = -0x54;
+    do {
+        func_8000F030(-0x84, edgeY, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
+        func_8000F030(0x78, edgeY, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
+        edgeY += 0x10;
+    } while (edgeY < -0x24);
+
+    for (x = -0x74; x != 0x7C; x += 0x10) {
+        for (y = -0x54; y != -0x24; y += 0x10) {
+            func_8000F030(x, y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+        }
+    }
+
+    func_8001303C(-0x76, -0x58, D_800D55E8, 0, 0x100, 5, 0x29);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80052868.s")
 
