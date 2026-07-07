@@ -236,7 +236,9 @@ typedef struct {
 } RaceUiRankParticleActor;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x24];
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 playerIndex;
+    /* 0x12 */ u8 pad12[0x24 - 0x12];
     /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
     /* 0x44 */ RaceUiGfxCommandDest *matrix;
     /* 0x48 */ u8 pad48[2];
@@ -473,6 +475,7 @@ extern u32 D_20019C0[];
 extern u32 D_2002208[];
 extern u32 D_20023A8[];
 extern u32 D_2002490[];
+extern u32 D_2003870[];
 extern u32 D_2003538[];
 extern u32 D_20035F8[];
 extern u32 D_200CC20[];
@@ -1716,7 +1719,31 @@ void func_8005F5C8(RaceUiSnowboardTrailPlayer *player) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005F6A4.s")
+void func_8005F6A4(RaceUiRankTrailActor *arg0) {
+    volatile u8 pad[0x20];
+    RacePlayerState *player;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (arg0->matrixDirty != 0) {
+        arg0->matrixDirty = 0;
+        player = &D_80121D80[arg0->playerIndex];
+        arg0->copyBlock.words[5] = player->pos28.a;
+        arg0->copyBlock.words[6] = player->pos28.b + 0x100000;
+        arg0->copyBlock.words[7] = player->pos28.c;
+        arg0->matrix = func_8004885C(&arg0->copyBlock);
+    }
+
+    if (arg0->matrix != NULL) {
+        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, func_80043040(D_80112144));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, func_80043040(D_80112146));
+        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2003870);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005F828.s")
 
