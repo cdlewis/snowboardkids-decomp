@@ -3117,3 +3117,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   destination struct assignment from `D_800DEE50`, and a separate unused
   `offset += sizeof(GfxCommandDest)` local to preserve the target saved-register
   allocation and loop scheduling.
+
+## func_80064D88 (race_ui_effects)
+
+- For player-relative UI projectile motion, keeping the actor argument in a
+  separate local alias matches the callback-style `$s0` allocation. The first
+  rotation setup needs direct `D_80121D80[actor->index].pitch/yaw` expressions
+  rather than a named `player` pointer; otherwise IDO uses `$a0` for the first
+  index load and misses by one register.
+- The fixed matrix scratch for `func_80097FE4` in this path must be typed as
+  `s16[0x12]` so the local lives at `sp+0x2C` in a `0x50` byte frame.
