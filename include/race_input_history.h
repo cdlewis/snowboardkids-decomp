@@ -72,7 +72,9 @@ typedef struct {
     /* 0x30A */ s16 subStateTimer;
     /* 0x30C */ s16 subStateStep;
     /* 0x30E */ s16 subStateParam;
-    /* 0x310 */ char pad310[0x10];
+    /* 0x310 */ char pad310[4];
+    /* 0x314 */ s32 unk314;
+    /* 0x318 */ char pad318[8];
     /* 0x320 */ s16 actionSoundTimer;
     /* 0x322 */ char pad322[0x130];
     /* 0x452 */ s16 animationId;
@@ -111,6 +113,7 @@ void func_80084730(RaceInputPlayer *player);
 s32 func_80084958(RaceInputPlayer *player);
 void func_8008A940(void);
 void func_8008B408(RaceInputPlayer *player, s32 arg1, s32 arg2);
+void func_8008B508(RaceVec3i *vec, RaceInputPlayer *player);
 void func_8008BBB8(RaceInputPlayer *player, s32 soundType);
 void func_8008BE1C(RaceInputPlayer *player);
 
