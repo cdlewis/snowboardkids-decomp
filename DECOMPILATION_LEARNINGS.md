@@ -3014,3 +3014,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   before the first one. Writing the expression as `x-term + y-term + z-term`
   produced the target order of `y`, then `x`, then `z` while keeping the
   compiler's stack spill pattern for the `__ll_div` results.
+
+## func_800987A0 (fixed_point_matrix)
+
+- The 0x20-byte fixed transform is a 3x3 fixed matrix at `0x00`, halfword
+  padding at `0x12`, and `Vec3i translation` at `0x14`. Transform composition
+  first rotates `arg0->translation` by `arg1->rotation`, adds
+  `arg1->translation`, then calls `func_80097CF0(arg0->rotation,
+  arg1->rotation, arg2->rotation)`.
