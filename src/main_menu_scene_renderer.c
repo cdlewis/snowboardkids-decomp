@@ -21,6 +21,7 @@ typedef struct MainMenuModelAssetHandles {
 } MainMenuModelAssetHandles;
 
 extern Mtx *func_8004885C(MainMenuModelDisplayObject *);
+extern void func_8007C130(Mtx *, s16, s16);
 extern Gfx *gRegionAllocPtr;
 extern u8 D_80156608;
 extern MainMenuModelAssetHandles D_80112130;
@@ -59,7 +60,47 @@ void func_80042574(MainMenuSceneModel *arg0) {
 }
 #endif
 
+// func_8004270C best match: 98.333% at nonmatchings/func_8004270C-690418013071298896/base_1.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_8004270C.s")
+
+#ifdef NON_MATCHING
+void func_8004270C(MainMenuSceneModel *arg0) {
+    MainMenuSceneModel *model;
+    MainMenuModelDisplayObject *displayObject;
+    Gfx **displayLists;
+    Mtx *matrix;
+    s32 i;
+    s32 end;
+    s32 stride;
+
+    model = arg0;
+    if (D_80156608 == (u16)model->renderFrame) {
+        matrix = func_8004885C(model->displayObjects);
+        if (matrix != NULL) {
+            func_8007C130(matrix, model->textureId, model->paletteId);
+        }
+
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112130.modelAssetSlots[(u16)model->actorIndex]));
+        gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112130.animationAssetSlots[(u16)model->actorIndex]));
+
+        i = 1;
+        displayObject = &model->displayObjects[1];
+        end = 14;
+        stride = 13;
+        displayLists = D_800D3CB0;
+        do {
+            matrix = func_8004885C(displayObject);
+            if (matrix != NULL) {
+                gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]);
+            }
+            i++;
+            displayObject++;
+        } while (i != end);
+    }
+}
+#endif
 
 void func_800428C8(s32 modelIndex) {
     MainMenuSceneModel *model;
