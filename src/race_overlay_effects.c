@@ -15,6 +15,14 @@ typedef struct {
 } RaceModelEntry;
 
 typedef struct {
+    /* 0x00 */ s16 modelIndex;
+    char pad2[2];
+    /* 0x04 */ Vec3i pos;
+    /* 0x10 */ s16 assetIndex;
+    char pad12[2];
+} RaceOverlayModelEntry;
+
+typedef struct {
     char pad0[0x10];
     /* 0x10 */ u16 modelListIndex;
     char pad12[6];
@@ -73,21 +81,26 @@ extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern s32 func_800430D0(void);
 extern void func_80045990(s32, s32, void *, void *);
+extern s32 func_80048E60(void *);
 extern void func_80071824(void *task, void (*callback)());
 extern void func_800716E4(void *);
 extern void func_80097C18(void *, s16);
 extern void func_80098590(void *, void *, void *);
 extern void func_80088C80(void *, s32, s32, s32);
+extern void func_80088294(void *, s32, s32, s32);
 extern void *func_800711D0(void *, s32, s32);
 extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, void *);
 extern Vec3i D_800D9BD8[];
+extern RaceOverlayModelEntry *D_800D7754[];
 extern s32 D_801248D4;
+extern s32 D_801248B0;
 extern s16 D_80112168;
 extern u8 D_80121B56;
 extern u8 D_80112130[];
 extern RaceModelEntry *D_800D91E8[];
 extern s16 D_80121B50;
+extern void func_80066760(void *);
 extern void func_80066E10(void);
 extern void func_80067034(RaceModelListActor *);
 extern void func_80067364(RaceThrownModelActor *);
@@ -106,7 +119,23 @@ typedef struct Scratch674B4 {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80066760.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800668EC.s")
+void func_800668EC(RaceModelListActor *arg0) {
+    RaceOverlayModelEntry *entry;
+    void *pos;
+
+    entry = D_800D7754[arg0->modelListIndex];
+    if (entry->modelIndex != -1) {
+        pos = &entry->pos;
+        do {
+            if (func_80048E60(pos) != 0) {
+                func_80088294(pos, 0x1C0000, 0x480000, 2);
+            }
+            entry++;
+            pos = &entry->pos;
+        } while (entry->modelIndex != -1);
+    }
+    func_800483FC(&D_801248B0, func_80066760, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800669A0.s")
 
