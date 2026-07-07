@@ -2977,3 +2977,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - Keeping the glyph accumulator as `long` and explicitly masking
   `((var_a2 << 3) & 0xFFFF) & 0xFFFF` makes IDO choose the target `$t4`
   temporary for the tile-X argument to `func_800137C8`.
+
+## func_8009D170 (player_commands)
+
+- For the player command return stack push, typing byte state fields as `u8`
+  matters even when they are later used as signed values elsewhere: an `s8`
+  field at offset `0xEF` makes IDO emit `lb`, while the matched save operation
+  uses `lbu` before storing into the return byte array.
