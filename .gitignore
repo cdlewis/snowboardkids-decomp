@@ -30,3 +30,6 @@ decompme_exports/
 
 # Local decomp.me data
 tools/scratches.json
+
+# Temporary worktrees
+.claude/worktrees
