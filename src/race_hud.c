@@ -1,7 +1,10 @@
 #include "common.h"
+#include "menu_rendering.h"
 
 #define PLAYER_COUNT 4
 #define PLAYER_DATA_SIZE 0x60C
+#define RACE_HUD_UNUSED_HANDLE (*(s16 *)&D_80112130[0x3E])
+#define RACE_HUD_PLAYER_FRAME_HANDLE (*(s16 *)&D_80112130[0x42])
 
 typedef struct {
     u8 pad0[8];
@@ -112,7 +115,55 @@ void func_800179D4(RaceHudBannerActor *arg0) {
     func_80071824(arg0, func_800177F8);
 }
 
+// func_80017A10 best match: 96.478% (base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80017A10.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    u8 pad0[0x18];
+    /* 0x18 */ s16 x;
+    u8 pad1A[6];
+    /* 0x20 */ s16 y;
+} RaceHudPlayerFrameActor;
+
+void func_80017A10(RaceHudPlayerFrameActor *arg0) {
+    char sp6C[0x10];
+    s32 alpha;
+    s32 i;
+    s32 playerNumber;
+    s32 flip;
+    s32 texture;
+    RaceHudPlayerFrameActor *actor;
+
+    actor = arg0;
+    i = 0;
+    do {
+        if ((D_80121B55 - 1) < i) {
+            alpha = 0x50;
+        } else {
+            alpha = 0x100;
+        }
+
+        texture = func_80043040(RACE_HUD_PLAYER_FRAME_HANDLE);
+        playerNumber = i + 1;
+        flip = playerNumber & 0xFF;
+        func_8000F8AC(actor->x, actor->y, texture, 0x23, 0x20, 0x20, 0, alpha, flip);
+        texture = func_80043040(RACE_HUD_PLAYER_FRAME_HANDLE);
+        func_8000F8AC((s16)(actor->x + 0x40), actor->y, texture, 0x24, 0x20, 0x20, 0, alpha, flip);
+        texture = func_80043040(RACE_HUD_PLAYER_FRAME_HANDLE);
+        func_8000F8AC((s16)(actor->x + 0x80), actor->y, texture, 0xC, 0x20, 0x20, 0, alpha, flip);
+        sprintf(sp6C, "%d", playerNumber);
+        func_80013D0C((s16)(actor->x + 0x32), (s16)(actor->y + 2), sp6C, 0, alpha);
+        if (alpha != 0x100) {
+            texture = func_80043040(RACE_HUD_UNUSED_HANDLE);
+            func_8000F8AC((s16)(actor->x + 2), (s16)(actor->y + 0x14), texture, 0x90, 0x20, 0x20, 0, 0xF0, 0);
+        }
+
+        i = playerNumber;
+        actor = (RaceHudPlayerFrameActor *)((u8 *)actor + 2);
+    } while (playerNumber != 4);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80017C34.s")
 
