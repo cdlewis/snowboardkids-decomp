@@ -3230,3 +3230,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   stores. For this function, `gDma1p(pkt, 1, ptr, 0x40, 2)` reproduces the
   target `0x01020040` vertex-load word, while `gSPVertex` uses this header's
   `G_VTX` value and emits `0x04300040` instead.
+
+## func_800367A8 (main_menu_scene_actor_4)
+
+- For small timer state callbacks, direct `actor->timer++` followed by comparing
+  the field can match IDO's target `lhu/addiu/andi` temporary-register sequence
+  better than manually expanding the increment into `u16` locals. A dummy unused
+  `s32` before a volatile saved `func_80041FB4` result can be necessary to keep
+  that saved result at the target stack slot.

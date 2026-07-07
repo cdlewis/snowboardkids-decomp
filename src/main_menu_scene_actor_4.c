@@ -37,6 +37,7 @@ extern s32 D_80124898;
 extern void func_80037070(void);
 extern s32 D_8010B1C4;
 extern void func_80071408(void *arg0, s32 arg1, s32 arg2);
+extern void func_8003C728(void *);
 extern void func_8003D384(void);
 
 void func_800363B4(MainMenuSceneActor4 *arg0);
@@ -189,7 +190,38 @@ void func_80036704(MainMenuSceneActor4 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_4/func_800367A8.s")
+void func_800367A8(MainMenuSceneActor4 *arg0) {
+    s32 unused;
+    volatile unsigned int sp18;
+    s32 var_v0;
+
+    sp18 = func_80041FB4(4);
+    func_800428C8(4);
+    if (sp18 == 1) {
+        arg0->timer++;
+        if (arg0->timer == 0x41) {
+            arg0->timer = 0;
+            func_80071824(arg0, func_80036704);
+            func_80041DD4(4, 0x1E);
+        }
+    } else {
+        arg0->timer++;
+        var_v0 = arg0->timer;
+        if (var_v0 == 0x1F) {
+            D_8010B1C0.actorId = 4;
+            D_8010B1C0.unkC = 0xB;
+            D_8010B1C0.posY = -0x180000;
+            var_v0 = arg0->timer;
+        }
+        if (var_v0 == 0x27) {
+            func_80071408(func_8003C728, 0, 0x64);
+            arg0->timer = 0;
+        }
+    }
+    if ((u8)D_8010B1C0.actorId == 4) {
+        func_800373AC(&D_8010B1C0);
+    }
+}
 
 void func_800368BC(MainMenuSceneActor4 *arg0) {
     u16 temp_v0 = arg0->timer;
