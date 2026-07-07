@@ -453,7 +453,37 @@ void func_8003D0BC(MainMenuEffectActor *arg0) {
     func_8000F030(arg0->x, arg0->y, temp, (arg0->animFrame + 0x1C) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
+// func_8003D124 best match: 97.653%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003D124.s")
+
+#ifdef NON_MATCHING
+void func_8003D124(MainMenuEffectActor *arg0) {
+    s32 var_v1;
+    MainMenuEffectActor *temp_a2 = arg0;
+
+    var_v1 = 0xB4;
+    if ((u16) arg0->delay == 0) {
+        var_v1 = 0x12;
+    }
+    if (arg0->animFrame < 3) {
+        arg0->animTimer++;
+        if (arg0->animTimer == 2) {
+            arg0->animTimer = 0;
+            arg0->animFrame++;
+        }
+    } else {
+        arg0->animTimer++;
+    }
+    if (arg0->animTimer < var_v1) {
+        func_800483FC(&D_80124868, func_8003D0BC, temp_a2);
+        return;
+    }
+    if (D_8010B1A2 == 3) {
+        D_8010B1A2 = 4;
+    }
+    func_800716E4(temp_a2);
+}
+#endif
 
 void func_8003D1EC(MainMenuEffectActor *arg0) {
     arg0->animFrame = 0;
