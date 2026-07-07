@@ -17,7 +17,14 @@ typedef struct {
     s32 c;
 } Vec3i;
 
+typedef s16 FixedMatrix3s[9];
 typedef s16 FixedMatrix3sScratch[0x12];
+
+typedef struct {
+    /* 0x00 */ FixedMatrix3s rotation;
+    /* 0x12 */ s16 pad12;
+    /* 0x14 */ Vec3i translation;
+} FixedTransform;
 
 typedef union {
     s32 word;
@@ -36,14 +43,18 @@ typedef struct {
     /* 0x000 */ u8 pad0[0x1C];
     /* 0x01C */ Vec3i pos1C;
     /* 0x028 */ Vec3i pos28;
-    /* 0x034 */ u8 pad34[0x2C0 - 0x34];
+    /* 0x034 */ u8 pad34[0x174 - 0x34];
+    /* 0x174 */ FixedTransform transform;
+    /* 0x194 */ u8 pad194[0x2C0 - 0x194];
     /* 0x2C0 */ s16 unk2C0;
     /* 0x2C2 */ s8 pad2C2;
     /* 0x2C3 */ s8 unk2C3;
     /* 0x2C4 */ u8 pad2C4[0x2EA - 0x2C4];
     /* 0x2EA */ s16 pitch;
     /* 0x2EC */ s16 yaw;
-    /* 0x2EE */ u8 pad2EE[0x574 - 0x2EE];
+    /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
+    /* 0x2FC */ s32 flags;
+    /* 0x300 */ u8 pad300[0x574 - 0x300];
     /* 0x574 */ s16 score;
     /* 0x576 */ s16 targetScore;
     /* 0x578 */ u8 pad578[0x60C - 0x578];
@@ -441,6 +452,15 @@ typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ u8 pad24[4];
+    /* 0x28 */ s16 angle;
+    /* 0x2A */ u8 pad2A[0x35 - 0x2A];
+    /* 0x35 */ u8 index;
+} RaceUiOrbitingSpriteActor;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ u8 pad24[4];
     /* 0x28 */ s16 unk28;
     /* 0x2A */ u8 pad2A[2];
     /* 0x2C */ void *palette0;
@@ -466,6 +486,7 @@ extern RaceUiSpriteInit D_800D5FF0[];
 extern Vec3i D_800D61C0[];
 extern Vec3i D_800D6340[];
 extern Vec3i D_800D6220[];
+extern Vec3i D_800D62A0;
 extern Vec3i D_800D6324;
 extern Vec3i D_800D6330[];
 extern Vec3i D_800D62AC[];
@@ -537,6 +558,7 @@ extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80045990(s32, s32, void *, void *);
 extern void func_80097BAC(s16 *, s16);
 extern s16 func_80097AE8(s16);
+extern s16 func_80097B48(s16);
 extern void func_80097C18(void *, s32);
 extern void func_80097FE4(FixedMatrix3sScratch, s16, s16);
 extern void func_80098174(void *, s16, s16);
@@ -547,6 +569,7 @@ extern void func_8005B14C(void *);
 extern void func_8005C64C(void *);
 extern void func_8005DE6C(void *);
 extern void func_8005CB74(void *);
+extern void func_800625D8(RaceUiOrbitingSpriteActor *);
 extern void func_800623E8(void *);
 extern s32 func_8007D200(s32, s32, s32);
 extern s32 func_80080CC4(s32, s32, s32);
@@ -615,7 +638,6 @@ extern void func_8005F174(RaceUiSparkleActor *);
 extern void func_80061088(void);
 extern void func_80062F6C(RaceUiTrailingParticleActor *);
 extern void func_80058B20(void *);
-extern void func_800628DC(void);
 extern void func_80060FA4(void *);
 extern void func_80061CA8(void);
 extern void func_800634C8(void);
@@ -2275,7 +2297,25 @@ void func_80062530(RaceUiTransitionActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800625D8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800628DC.s")
+void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
+    RacePlayerState *player;
+
+    player = &D_80121D80[arg0->index];
+    if (!(player->flags & 0x10000)) {
+        func_800716E4(arg0);
+        return;
+    }
+
+    func_80098590(player->transform.rotation, &D_800D62A0, &arg0->pos);
+    player = &D_80121D80[arg0->index];
+    arg0->pos.a += player->transform.translation.a;
+    arg0->pos.b += player->transform.translation.b + 0x80000;
+    arg0->pos.c += player->transform.translation.c;
+    arg0->angle += 0xC0;
+    arg0->pos.a -= func_80097AE8(arg0->angle) << 7;
+    arg0->pos.c += func_80097B48(arg0->angle) << 7;
+    func_800483FC(&D_801248EC, func_800625D8, (s32)arg0);
+}
 
 void func_80062A10(void *arg0) {
     func_80045990(func_80043040(D_80112168), 0x35, (u8 *)arg0 + 0x30, (u8 *)arg0 + 0x2C);
