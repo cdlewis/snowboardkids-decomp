@@ -461,7 +461,7 @@ void func_8006B0D8(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B108.s")
 
-// func_8006B228 best match: 98.636% at nonmatchings/func_8006B228-9017456803007796287/base_15.c.
+// func_8006B228 best match: 98.727% at nonmatchings/func_8006B228-8662636370764828261/base_11.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B228.s")
 
 #ifdef NON_MATCHING
@@ -492,15 +492,7 @@ void func_8006B228(Struct6B760 *arg0) {
             arg0->displayList = func_8004885C(&transform);
         }
 
-        if (arg0->displayList != NULL) {
-            gDPPipeSync(gRegionAllocPtr++);
-            segment2 = gRegionAllocPtr++;
-            gSPSegment(segment2, 0x02, func_80043040(D_80112144));
-            gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112146));
-            gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gfx = gRegionAllocPtr++;
-            gSPDisplayList(gfx, D_2001D00);
-        }
+ do { if (arg0->displayList != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) ((-65) - 3)) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) (0x02 * 4)) & ((0x01 << 16) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0x06) & ((0x01 << 8) - 1)) << 0)); _g->words.w1 = (unsigned int) func_80043040(D_80112144); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) ((-65) - 3)) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) (0x03 * 4)) & ((0x01 << 16) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0x06) & ((0x01 << 8) - 1)) << 0)); _g->words.w1 = (unsigned int) func_80043040(D_80112146); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 1) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (unsigned int) arg0->displayList; } ; gfx = gRegionAllocPtr++; { Gfx *_g = (Gfx *) gfx; _g->words.w0 = (((unsigned int) ((((unsigned int) 6) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (unsigned int) D_2001D00; } ; } } while (0);
     }
 }
 #endif
