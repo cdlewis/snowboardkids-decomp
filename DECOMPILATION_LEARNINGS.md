@@ -3045,3 +3045,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   pointer walk while avoiding manual byte-offset pointer arithmetic. Keeping a
   separate actor local initialized from `arg0` preserves the final callback
   argument in `$a3`.
+
+## func_8005C03C (race_ui_effects)
+
+- For small dynamic display-list wrappers around `gRegionAllocPtr`, IDO
+  scheduling can depend on keeping a whole command sequence in a single
+  `do { ... } while (0)` line. In this function, ordinary formatting preserved
+  behavior but reordered constant `ori` instructions; the single-line block
+  matched the target, as in `main_menu_overlay_effects:func_8005475C`.
