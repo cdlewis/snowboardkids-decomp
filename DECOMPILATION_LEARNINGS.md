@@ -3080,3 +3080,14 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   eight words in a small aggregate and assigning the aggregate makes IDO reuse
   `$at`/`$t0` in the target pattern. Writing eight separate array assignments
   emits one new temporary register per word instead.
+
+## func_80042D58 (memory_allocator)
+
+- The allocator inserts `MemoryBlock` nodes into a sentinel-headed doubly linked
+  list at `D_80110180`. Splitting the aligned-size and available-gap
+  calculations into explicit scalar temporaries is necessary for IDO to keep the
+  target `$t0`/`$t1`/`$v0` arithmetic order; a direct combined expression
+  matches the control flow but shifts almost every temporary register.
+- The remaining 99.388% mismatch is stack-slot allocation only: adding a
+  separate saved pointer for the final `func_80042BC0` call gets the desired
+  call-preserved value but grows the frame from `0x30` to `0x38`.
