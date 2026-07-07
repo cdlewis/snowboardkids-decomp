@@ -21,6 +21,10 @@ typedef struct {
     /* 0x08 */ s32 z;
 } Vec3i;
 
+typedef struct {
+    /* 0x00 */ s8 value;
+} MainMenuFlagByte;
+
 typedef void (*InputTaskCallback)(void);
 typedef void (*EffectTaskCallback)(void *);
 
@@ -75,7 +79,7 @@ extern u16 D_8010B1A2;
 extern s8 D_8010B1A4;
 extern s8 D_8010B1A5;
 extern s16 D_8010B1A6;
-extern s8 D_8010B1A8;
+extern MainMenuFlagByte D_8010B1A8;
 extern s8 D_8010B1A9;
 extern s8 D_8010B1AA;
 extern s8 D_8010B1AB;
@@ -88,12 +92,13 @@ extern RaceToMainMenuTransitionState *D_801235B8;
 extern u8 D_80123750;
 extern u8 D_80123751;
 
-// func_8000D340 best match: 93.163% at nonmatchings/func_8000D340-1404502880690620360/base_9.c.
+// func_8000D340 best match: 93.231% at nonmatchings/func_8000D340-1197934324348345530/base_6.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_to_main_menu_transition/func_8000D340.s")
 
 #ifdef NON_MATCHING
 void func_8000D340(void) {
-    s32 size;
+    s32 sp34;
+    s32 temp_v0;
     RaceToMainMenuTransitionState *state;
 
     func_8006D5CC();
@@ -111,18 +116,19 @@ void func_8000D340(void) {
     D_8010B1A4 = 0;
     D_8010B1A6 = 0;
     D_8010B1A5 = 0;
-    D_8010B1A8 = 0;
-    D_8010B1AA = 0;
-    D_8010B1AB = 0;
-    D_8010B1AC = 0;
-    D_8010B1A9 = 0;
+    D_8010B1A8.value = 0;
+    (&D_8010B1A8)[2].value = 0;
+    (&D_8010B1A8)[3].value = 0;
+    (&D_8010B1A8)[4].value = 0;
+    (&D_8010B1A8)[1].value = 0;
     func_800437F0(D_608560, D_609AA0, 0x21);
     func_800437F0(D_593D10, D_598A70, 0x22);
     func_800437F0(D_609AA0, D_60ECB0, 0x26);
     func_800437F0(D_60ECB0, D_60F1A0, 0x27);
-    size = D_1502A0 - D_14B450;
-    D_80112130[0xC] = func_80042D58(size);
-    func_80099C44(D_14B450, func_80043040(D_80112130[0xC]), size);
+    temp_v0 = D_1502A0 - D_14B450;
+    sp34 = temp_v0;
+    D_80112130[0xC] = func_80042D58(temp_v0);
+    func_80099C44(D_14B450, func_80043040(D_80112130[0xC]), sp34);
     func_800437F0(D_1EF530, D_1F1A90, 0xD);
     func_80041CC0();
     func_80070EC0(0);
