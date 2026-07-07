@@ -41,6 +41,13 @@ typedef struct ModelAnimState {
     s16 frameTimer;
 } ModelAnimState;
 
+typedef struct CourseSpawnEntry {
+    s16 pathIndex;
+    char pad2[0x3E];
+    s32 unk40;
+    s32 unk44;
+} CourseSpawnEntry;
+
 extern ModelAnimCoord *D_80121B90;
 extern ModelAnimFace *D_80121B94;
 extern ModelAnimKeyframe *D_80121B98;
@@ -48,8 +55,11 @@ extern s32 D_80121B9C;
 extern s32 D_80121BA0;
 extern s16 D_8011215C[];
 extern s16 D_80112166;
+extern s16 D_80121B50;
+extern CourseSpawnEntry D_800B9540[];
 
 extern s32 func_80043040(s16);
+extern s32 func_8007BDE4(s32, s32);
 extern void func_80081EF4(ModelAnimState *);
 extern void func_80082070(ModelAnimState *);
 s16 func_80097AE8(s16 arg0);
@@ -114,7 +124,23 @@ void func_80081508(s32 arg0, s32 *x, s32 *y, s32 *z, s16 *angle) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_800815D4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80081C44.s")
+void func_80081C44(s32 arg0, s32 *arg1, s32 *arg2, s32 arg3) {
+    s32 unused[4];
+    s32 temp_v0;
+
+    if (arg0 != D_800B9540[D_80121B50].pathIndex) {
+        D_80121B9C = func_80097AE8(D_80121B98[arg0].angle);
+        D_80121BA0 = func_80097B48(D_80121B98[arg0].angle);
+        temp_v0 = func_8007BDE4(arg3, arg0);
+        *arg1 = ((s64)D_80121BA0 * temp_v0) / 0x1000;
+        *arg2 = ((s64)D_80121B9C * temp_v0) / 0x1000;
+        *arg1 += D_80121B90[D_80121B98[arg0].positionIndex].x << 0x11;
+        *arg2 += D_80121B90[D_80121B98[arg0].positionIndex].z << 0x11;
+    } else {
+        *arg1 = D_800B9540[D_80121B50].unk40;
+        *arg2 = D_800B9540[D_80121B50].unk44;
+    }
+}
 
 s16 func_80081E1C(s32 arg0) {
     return D_80121B98[arg0].nextFaceIndices[1];

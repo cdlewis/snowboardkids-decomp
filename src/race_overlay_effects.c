@@ -288,8 +288,7 @@ void func_80066ABC(RaceModelListActor *arg0) {
 
                     temp_v0_6 = gRegionAllocPtr++;
                     temp_v0_6->words.w1 = 0;
-                    temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)sp9C; temp_v0_10 = gRegionAllocPtr++;
-                    temp_v0_10->words.w1 = 0;
+                    temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)sp9C; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0;
                     temp_v0_10->words.w0 = 0xE8000000;
 
                     temp_v0_11 = gRegionAllocPtr++;

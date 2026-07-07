@@ -12,6 +12,7 @@ extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
 extern u8 func_800430D0(void);
 extern void func_80097FE4(Matrix4s, s16, s16, RaceInputPlayer *);
 extern void func_80098590(Matrix4s, RaceVec3i *, RaceVec3i *);
+extern s32 func_80098C30(s64);
 extern s16 D_800DE84C[][2];
 extern s16 D_800DE864[][2];
 extern s16 D_800DE87C[][2];
@@ -48,7 +49,15 @@ extern s16 D_800DE8B8[];
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008B408.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008B508.s")
+void func_8008B508(RaceVec3i *vec, RaceInputPlayer *player) {
+    s32 magnitude;
+
+    magnitude = func_80098C30((s64)vec->x * vec->x + (s64)vec->z * vec->z);
+    if (player->unk314 < magnitude) {
+        vec->x = (s64)vec->x * player->unk314 / magnitude;
+        vec->z = (s64)vec->z * player->unk314 / magnitude;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008B60C.s")
 
