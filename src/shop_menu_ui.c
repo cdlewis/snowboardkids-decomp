@@ -134,7 +134,6 @@ extern void func_8002E5A4(ShopMenuWidgetActor *);
 extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s32, s32, ShopDescriptionText, s32, s32, s32);
-extern void func_80013D0C(s32, s32, char *, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern s32 func_80043040(s16);
