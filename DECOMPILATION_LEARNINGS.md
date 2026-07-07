@@ -161,6 +161,11 @@ collapse the frame for this function.
   IDO's codegen here is sensitive to source line layout even for token-identical
   input, so a reformatted (multi-line) version can re-introduce a two-instruction
   `addiu %lo` scheduling swap.
+- The same collapsed `do { ... } while (0)` source shape can matter for
+  display-list setup wrappers. In func_8005B8E8, adapting the one-line
+  `func_8005C03C` alpha blend block preserved the target's argument spill,
+  branch-delay `D_80121B74` address setup, and post-`func_80059A04` reload of
+  the actor before the closing display-list call.
 
 ## Structs, Types, and Data Access
 
