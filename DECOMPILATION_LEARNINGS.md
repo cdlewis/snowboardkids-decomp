@@ -2831,3 +2831,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   final store let IDO reload the symbol instead of keeping the packet base live.
 - In a fixed switch case, an equivalent zero expression like `(state * 0)` can
   reduce register pressure enough to recover the target compare/register order.
+
+## func_80030CC4 (controller_pak_menu_ui)
+
+- For byte-state transition functions, compact same-line statements can affect
+  IDO scheduling. Keeping `arg0->optionScale = 0x100; state = globalState;` on
+  one line, after an empty scheduling block, preserves the target's constant
+  load, byte mask, state move, and halfword store order.
