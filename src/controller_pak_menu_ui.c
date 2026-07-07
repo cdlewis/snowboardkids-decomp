@@ -174,10 +174,6 @@ void func_80030570(ControllerPakTitleActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_800305B8.s")
 
-// func_80030CC4 best match: 99.750%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_80030CC4.s")
-
-#ifdef NON_MATCHING
 void func_80030CC4(ControllerPakConfirmActor *arg0) {
     u8 state;
     u8 globalState;
@@ -186,14 +182,13 @@ void func_80030CC4(ControllerPakConfirmActor *arg0) {
     if (state != (globalState = D_8010ADD0.state)) {
         arg0->state = globalState;
         if (1) {}
-        if (1) {}
+        {}
         if (1) {}
         if (1) {}
         if (1) {}
         arg0->targetScale = D_8010ADD0.targetScale;
-        arg0->optionScale = 0x100;
-        state = globalState;
         arg0->timer = 0;
+        arg0->optionScale = 0x100; state = globalState;
     }
 
     switch (state) {
@@ -258,7 +253,6 @@ void func_80030CC4(ControllerPakConfirmActor *arg0) {
     }
     func_800483FC(&D_80124868, func_800305B8, (s32)arg0);
 }
-#endif
 
 void func_80030EA8(ControllerPakConfirmActor *arg0) {
     arg0->common.x = -0x70;
