@@ -6,4 +6,5 @@ osResetType = 0x8000030C;
 osAppNMIBuffer = 0x8000031C;
 
 D_8010AE70_state = D_8010AE70;
+D_8010AE88_state = D_8010AE88;
 D_8010AF60_state = D_8010AF60;
