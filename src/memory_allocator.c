@@ -52,7 +52,56 @@ void func_80042BC0(void) {
 void func_80042C20(void) {
 }
 
+// func_80042C28 best match: 97.727%
 #pragma GLOBAL_ASM("asm/nonmatchings/memory_allocator/func_80042C28.s")
+
+#ifdef NON_MATCHING
+extern MemoryBlock D_801101AC[];
+extern MemoryBlock D_801101C0[];
+extern MemoryBlock D_801101D4[];
+
+void func_80042C28(void) {
+    MemoryBlock **freeList = D_801107D8;
+    MemoryBlock *block0 = D_80110198;
+    MemoryBlock *block1 = D_801101AC;
+    MemoryBlock *block2 = D_801101C0;
+    MemoryBlock *block3 = D_801101D4;
+    s32 i = 0;
+    s32 next1;
+    s32 next2;
+    s32 next3;
+
+    do {
+        next1 = i + 1;
+        next2 = i + 2;
+        next3 = i + 3;
+        block0->index = i;
+        i += 4;
+        if ((i && i) && i) {
+        }
+        freeList[1] = block1;
+        freeList[2] = block2;
+        freeList[3] = block3;
+        freeList[0] = block0;
+        block0 += 4;
+        block3 += 4;
+        block2 += 4;
+        block1 += 4;
+        block0[-1].index = next3;
+        block0[-2].index = next2;
+        block0[-3].index = next1;
+        block0[-3].status = MEMORY_BLOCK_FREE;
+        block0[-2].status = MEMORY_BLOCK_FREE;
+        block0[-1].status = MEMORY_BLOCK_FREE;
+        freeList += 4;
+        block0[-4].status = MEMORY_BLOCK_FREE;
+    } while (i != MEMORY_BLOCK_COUNT);
+
+    D_80110918 = 0;
+    D_80110184 = NULL;
+    func_80042BC0();
+}
+#endif
 
 void *func_80042CDC(void) {
     MemoryBlock *block;
