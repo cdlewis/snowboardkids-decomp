@@ -55,15 +55,23 @@ typedef struct {
 } Struct6B760;
 
 typedef struct {
-    char pad0[0x18];
-    char mtx[0x14];
+    s16 rotation[9];
+    s16 pad2A;
     Vec3i basePos;
+} CourseEffectMatrixSource;
+
+typedef struct {
+    char pad0[0x18];
+    CourseEffectMatrixSource source;
     Vec3i pos1;
     Vec3i pos2;
     s16 unk50;
     s16 unk52;
     s16 unk54;
     s16 unk56;
+    void *sourceMatrix;
+    void *pos1Matrix;
+    void *pos2Matrix;
 } Struct6C51C;
 
 typedef struct {
@@ -182,6 +190,7 @@ extern void func_8006A80C(void *);
 extern void func_80069BEC(void);
 extern void func_80069E50(void);
 extern s32 func_80043040(s16);
+extern void *func_8004885C(CourseEffectMatrixSource *);
 extern s32 func_80049000(Vec3i *);
 extern void func_80045990(s32, s32, void *, void *);
 extern s32 func_8004597C(s32, s32);
@@ -189,6 +198,7 @@ extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80097C18(void *, s16);
 extern void func_80097FE4(void *, s16, s16);
+extern void func_80098174(s16 *, s16, s16);
 extern void func_80098590(void *, void *, Vec3i *);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
@@ -197,7 +207,7 @@ extern s16 D_80112140;
 extern s32 D_801235B4;
 extern u8 D_80156608;
 extern void func_8006C5C0(Struct6C51C *);
-extern void func_8006C1B4(void);
+void func_8006C1B4(Struct6C51C *);
 void func_8006CCC0(CourseEffectPlayer *, RaceCourseTriggerEffect *);
 void func_8006CE68(CourseEffectPlayer *, RaceCourseTriggerEffect *);
 void func_8006D2D0(RaceCourseTriggerEffect *);
@@ -216,6 +226,8 @@ extern Struct6B760 *func_80071408(void *, s32, s32);
 extern u8 D_80121B56;
 extern s16 D_80121B50;
 extern CourseAssetHandles D_80112130;
+extern s16 D_80112144;
+extern s16 D_80112146;
 extern CourseRenderEntry *D_800DA73C[];
 extern void *D_800DA1C0[];
 extern SoundParams D_800DA764[];
@@ -237,6 +249,10 @@ extern s32 D_801248B0;
 extern s32 D_801248A4;
 extern s32 D_801248F8;
 extern Gfx *gRegionAllocPtr;
+extern Gfx D_2001678[];
+extern Gfx D_2001730[];
+extern Gfx D_2001810[];
+extern Gfx D_20018E8[];
 extern void func_8006BC68(void *);
 extern void func_8006BE90(void);
 extern void func_8006B7E0(void);
@@ -565,7 +581,114 @@ void func_8006C088(RaceMovingEffect *arg0) {
     func_8006BFC0(arg0);
 }
 
+// func_8006C1B4 best match: 71.980% (nonmatchings/func_8006C1B4-1197934324348345530/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C1B4.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    char pad[0x28];
+    CourseEffectMatrixSource source;
+} Func6C1B4Scratch;
+
+void func_8006C1B4(Struct6C51C *arg0) {
+    Func6C1B4Scratch scratch;
+    Gfx **gfxPtr;
+    Gfx *gfx;
+    void *matrix;
+
+    if (D_80156609 != 0) {
+        arg0->sourceMatrix = NULL;
+        arg0->pos1Matrix = NULL;
+        arg0->pos2Matrix = NULL;
+    }
+
+    if (func_80049000((Vec3i *) &D_800DA764[D_80121B50]) == 0) {
+        return;
+    }
+
+    matrix = arg0->sourceMatrix;
+    if (matrix == NULL) {
+        matrix = func_8004885C(&arg0->source);
+        arg0->sourceMatrix = matrix;
+    }
+
+    if (matrix != NULL) {
+        gfxPtr = &gRegionAllocPtr;
+        gfx = *gfxPtr;
+        *gfxPtr = gfx + 1;
+        gfx->words.w0 = 0xE7000000;
+        gfx->words.w1 = 0;
+
+        gfx = *gfxPtr;
+        *gfxPtr = gfx + 1;
+        gfx->words.w0 = 0xBC000806;
+        gfx->words.w1 = func_80043040(D_80112144);
+
+        gfx = *gfxPtr;
+        *gfxPtr = gfx + 1;
+        gfx->words.w0 = 0xBC000C06;
+        gfx->words.w1 = func_80043040(D_80112146);
+
+        gfx = *gfxPtr;
+        *gfxPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32) arg0->sourceMatrix;
+
+        gfx = *gfxPtr;
+        *gfxPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = (u32) D_2001678;
+    }
+
+    matrix = arg0->pos1Matrix;
+    gfxPtr = &gRegionAllocPtr;
+    if (matrix == NULL) {
+        func_80098174(scratch.source.rotation, D_800DA764[D_80121B50].angle, arg0->unk50);
+        scratch.source.basePos = arg0->pos1;
+        matrix = func_8004885C(&scratch.source);
+        arg0->pos1Matrix = matrix;
+    }
+
+    if (matrix != NULL) {
+        gfx = *gfxPtr;
+        *gfxPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32) arg0->pos1Matrix;
+
+        gfx = *gfxPtr;
+        *gfxPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = (u32) D_2001730;
+    }
+
+    matrix = arg0->pos2Matrix;
+    if (matrix == NULL) {
+        scratch.source = arg0->source;
+        scratch.source.basePos = arg0->pos2;
+        matrix = func_8004885C(&scratch.source);
+        arg0->pos2Matrix = matrix;
+    }
+
+    if (matrix != NULL) {
+        gfx = *gfxPtr;
+        *gfxPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32) arg0->pos2Matrix;
+
+        if (arg0->unk56 == 0) {
+            gfx = *gfxPtr;
+            *gfxPtr = gfx + 1;
+            gfx->words.w1 = (u32) D_2001810;
+            gfx->words.w0 = 0x06000000;
+        } else {
+            gfx = *gfxPtr;
+            *gfxPtr = gfx + 1;
+            gfx->words.w1 = (u32) D_20018E8;
+            gfx->words.w0 = 0x06000000;
+        }
+    }
+}
+#endif
 
 void func_8006C4AC(Struct6C51C *arg0) {
     if (D_80121B56 == 0) {
@@ -613,25 +736,25 @@ void func_8006C698(Struct6C51C *arg0) {
     void *mtx;
     Vec3i sp28;
 
-    mtx = arg0->mtx;
+    mtx = arg0->source.rotation;
     func_80097C18(mtx, D_800DA764[D_80121B50].angle);
-    arg0->basePos.x = D_800DA764[D_80121B50].x;
-    arg0->basePos.y = D_800DA764[D_80121B50].y;
-    arg0->basePos.z = D_800DA764[D_80121B50].z;
+    arg0->source.basePos.x = D_800DA764[D_80121B50].x;
+    arg0->source.basePos.y = D_800DA764[D_80121B50].y;
+    arg0->source.basePos.z = D_800DA764[D_80121B50].z;
     sp28.x = 0x18000;
     sp28.y = 0x120000;
     sp28.z = -0x80000;
     func_80098590(mtx, &sp28, &arg0->pos1);
-    arg0->pos1.x += arg0->basePos.x;
-    arg0->pos1.y += arg0->basePos.y;
-    arg0->pos1.z += arg0->basePos.z;
+    arg0->pos1.x += arg0->source.basePos.x;
+    arg0->pos1.y += arg0->source.basePos.y;
+    arg0->pos1.z += arg0->source.basePos.z;
     sp28.x = 0;
     sp28.y = 0x120000;
     sp28.z = 0x50000;
     func_80098590(mtx, &sp28, &arg0->pos2);
-    arg0->pos2.x += arg0->basePos.x;
-    arg0->pos2.y += arg0->basePos.y;
-    arg0->pos2.z += arg0->basePos.z;
+    arg0->pos2.x += arg0->source.basePos.x;
+    arg0->pos2.y += arg0->source.basePos.y;
+    arg0->pos2.z += arg0->source.basePos.z;
     arg0->unk52 = 0;
     func_80071824(arg0, func_8006C5C0);
 }

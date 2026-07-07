@@ -3274,3 +3274,14 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   nonmatching blocker is register allocation: straightforward C homes the actor
   pointer at function entry, while the target keeps it in `$a3` and spills it
   only in `func_80072138` delay slots.
+
+## func_8006C1B4 (race_course_effects)
+
+- The effect actor stores a `func_8004885C` matrix source at offset `0x18`, with
+  a 3x3 `s16` rotation matrix followed by position words at offsets
+  `0x2C`/`0x30`/`0x34`. The three cached converted matrices live at
+  `0x58`/`0x5C`/`0x60`.
+- A padded local wrapper can place the temporary matrix source at the target
+  `sp+0x58` slot. The remaining nonmatching blocker is register allocation for
+  display-list writes: the target keeps `&gRegionAllocPtr` in `$s1`, while
+  straightforward C rematerializes the address through caller-saved registers.
