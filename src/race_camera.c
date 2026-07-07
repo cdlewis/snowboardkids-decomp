@@ -65,10 +65,13 @@ extern void func_8006F984(void);
 extern void func_8006FA20(void);
 extern void func_8006FE88(void);
 extern void func_8007022C(void);
-extern void func_8007031C(void);
+void func_8007031C(void);
 extern void func_800704C4(void);
 extern void func_800486BC(void *, void *);
+extern s16 func_8007D200(s32, s32, s32);
+extern s32 func_80080CC4(s16, s32, s32);
 extern void func_80097FE4(void *, s16, s16);
+extern s16 func_80097AE8(s16);
 extern void func_8009853C(void *, s16, s16);
 extern void func_80098590(void *, s32 *, s32 *);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
@@ -267,7 +270,27 @@ void func_8007024C(void) {
     D_801124A0->update();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8007031C.s")
+void func_8007031C(void) {
+    s16 angle;
+    s32 velocity;
+
+    angle = D_801124A0->timer;
+    if (angle < 0x400) {
+        D_801124A0->timer = angle + 0x10;
+        angle = D_801124A0->timer;
+    }
+    D_801124A0->unkA8 = (-func_80097AE8(angle) * 0xC00) + 0xC00000;
+
+    velocity = D_801124A0->velocity;
+    if (velocity < 0x80000) {
+        D_801124A0->velocity = velocity + 0x8000;
+        velocity = D_801124A0->velocity;
+    }
+
+    D_801124A0->pos.z += velocity;
+    D_801124A0->pos.y = func_80080CC4(func_8007D200(0, D_801124A0->pos.x, D_801124A0->pos.z), D_801124A0->pos.x, D_801124A0->pos.z) + D_801124A0->unkA8 + 0xE0000;
+    func_8006D8B4();
+}
 
 void func_8007042C(void) {
     D_801124A0->pitch = 0x70;
