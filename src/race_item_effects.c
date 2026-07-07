@@ -75,14 +75,34 @@ typedef struct {
 } RaceItemEffectActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 playerIndex;
+    /* 0x12 */ u8 pad12[6];
+    /* 0x18 */ Vec3i pos1;
+    /* 0x24 */ Vec3i pos2;
+    /* 0x30 */ Vec3i offset1;
+    /* 0x3C */ Vec3i offset2;
+    /* 0x48 */ u8 pad48[8];
+    /* 0x50 */ s8 dirty;
+    /* 0x51 */ s8 timer;
+} RaceItemFollowActor;
+
+typedef struct {
     /* 0x000 */ Vec3i pos;
     /* 0x00C */ u8 padC[RACE_PLAYER_STATE_SIZE - 0xC];
 } RaceItemEffectPlayerState;
+
+typedef struct {
+    /* 0x000 */ u8 pad0[0x28];
+    /* 0x028 */ Vec3i pos;
+    /* 0x034 */ u8 pad34[RACE_PLAYER_STATE_SIZE - 0x34];
+} RaceItemFollowPlayer;
 
 extern u8 *D_800D46D0[];
 extern s16 D_8011216C;
 extern s16 D_80121B50;
 extern u8 D_80121B56;
+extern RaceItemFollowPlayer D_80121D80[];
 extern RaceItemEffectPlayerState D_80121EE8[];
 extern s32 D_80124878;
 extern s32 D_801248C8;
@@ -98,6 +118,7 @@ void func_8004E02C(RaceItemEffectActor *);
 void func_8004E438(RaceItemEffectActor *);
 void func_8004E604(RaceItemEffectActor *);
 void func_8004E960(RaceItemEffectActor *);
+void func_8004FB44(RaceItemFollowActor *);
 void func_8004EFF8(RaceItemEffectActor *);
 void func_8004F68C(RaceItemEffectActor *);
 void func_8004F9CC(RaceItemEffectActor *);
@@ -266,7 +287,29 @@ void func_8004FA44(RaceItemEffectActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004FB44.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004FF34.s")
+void func_8004FF34(RaceItemFollowActor *arg0) {
+    RaceItemFollowPlayer *player;
+    RaceItemFollowActor *temp_a2 = arg0;
+
+    if (D_80121B56 == 0) {
+        arg0->timer++;
+        player = &D_80121D80[arg0->playerIndex];
+        arg0->pos1.x = arg0->offset1.x + player->pos.x;
+        arg0->pos1.y = arg0->offset1.y + player->pos.y;
+        arg0->pos1.z = arg0->offset1.z + player->pos.z;
+        arg0->pos2.x = arg0->offset2.x + player->pos.x;
+        arg0->pos2.y = arg0->offset2.y + player->pos.y;
+        arg0->pos2.z = arg0->offset2.z + player->pos.z;
+        if (arg0->timer == 0x18) {
+            func_800716E4();
+            return;
+        }
+    }
+    if (temp_a2->timer < 0) {
+        temp_a2->timer = 0;
+    }
+    func_800483FC(&D_801248C8, func_8004FB44, temp_a2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050030.s")
 
