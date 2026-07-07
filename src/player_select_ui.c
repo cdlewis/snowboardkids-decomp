@@ -56,11 +56,12 @@ typedef struct {
 typedef u8 PlayerPortrait[0x8C];
 
 extern void func_80071824(void *task, void (*callback)());
+extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern void func_80019314(void);
+extern void func_80019800(PlayerSelectWidgetActor *);
 extern void func_800196CC(PlayerSelectWidgetActor *);
-extern void func_80019CD8(PlayerSelectWidgetActor *);
 extern void func_80019FFC(PlayerSelectWidgetActor *);
 extern void func_8001ADB8(PlayerSelectWidgetActor *);
 extern void func_8001A490(PlayerSelectWidgetActor *);
@@ -68,9 +69,13 @@ extern void func_8001A704(PlayerSelectWidgetActor *);
 extern void func_8001A924(PlayerSelectWidgetActor *);
 extern void func_8001AB98(PlayerSelectWidgetActor *);
 extern void func_8001B02C(PlayerSelectWidgetActor *);
+extern void func_8001B454(PlayerSelectWidgetActor *);
 extern void func_8001B520(PlayerSelectWidgetActor *);
+extern void func_8001B638(PlayerSelectWidgetActor *);
 extern void func_8001B6D8(PlayerSelectWidgetActor *);
+extern void func_8001B7D8(PlayerSelectWidgetActor *);
 extern void func_8001B8F0(PlayerSelectWidgetActor *);
+extern void func_8001B9F0(PlayerSelectWidgetActor *);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern int sprintf(char *, const char *, ...);
@@ -82,6 +87,7 @@ extern void *D_80124868;
 extern PlayerSelectCursorState D_8010AE70;
 extern u8 D_8010AE70_state;
 extern s16 D_8010AE74;
+extern s32 D_8010ADDC;
 extern s16 D_80112172;
 extern s32 D_80121D8C;
 extern s32 D_801235B4;
@@ -154,7 +160,82 @@ void func_800197CC(PlayerSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_80019800.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_80019CD8.s")
+void func_80019CD8(PlayerSelectWidgetActor *arg0) {
+    int state;
+
+    if ((D_800EC9C2 >= (u16) arg0->counter) && (arg0->row.bytes.subState != 0) && (arg0->y != -0x48)) {
+        state = arg0->row.bytes.subState = 2;
+    } else {
+        state = arg0->row.bytes.subState;
+        if ((D_800EC9C2 < (u16) arg0->counter) && (state != 0) && (arg0->y != -0x140)) {
+            state = arg0->row.bytes.subState = 1;
+        } else {
+            state = arg0->row.bytes.subState;
+            if ((state != 0) && (state < 4)) {
+                state = arg0->row.bytes.subState = 3;
+            }
+        }
+    }
+
+    switch (state) {
+    case 0:
+        arg0->x -= 0x20;
+        if (arg0->row.bytes.subTimer == 0) {
+            func_80071408(func_800197CC, 0, 0x63);
+        }
+        arg0->row.bytes.subTimer++;
+        if (arg0->x < -7) {
+            arg0->x = -8;
+            arg0->row.bytes.subState = 3;
+            D_8010ADDC = (s32) func_80071408(func_8001B454, 0, 0x64);
+            func_80071408(func_8001B638, 0, 0x64);
+            func_80071408(func_8001B7D8, 0, 0x64);
+            func_80071408(func_8001B9F0, 0, 0x64);
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 1:
+        arg0->y -= 0x24;
+        if (arg0->y < -0x13F) {
+            arg0->y = -0x140;
+            arg0->row.bytes.subState = 3;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 2:
+        arg0->y += 0x24;
+        if (arg0->y >= -0x48) {
+            arg0->y = -0x48;
+            arg0->row.bytes.subState = 3;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 3:
+        D_801235B4 += 1;
+        if (D_80121D88 == 1) {
+            arg0->row.bytes.subState = 4;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 4:
+        arg0->x += 0x20;
+        if (arg0->x >= 0xA0) {
+            arg0->row.bytes.subState = 5;
+        }
+        state = arg0->row.bytes.subState;
+        break;
+    case 5:
+        D_80121D88 = 2;
+        state = arg0->row.bytes.subState;
+        break;
+    }
+
+    if ((state == 5) && (D_80121D88 == 2)) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_80019800, arg0);
+}
 
 void func_80019FAC(PlayerSelectWidgetActor *arg0) {
     arg0->x = 0x94;
