@@ -258,6 +258,15 @@ typedef struct {
 } RaceUiSpinningParticleActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x24];
+    /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x44 */ u8 pad44[0x64 - 0x44];
+    /* 0x64 */ RaceUiGfxCommandDest *matrix;
+    /* 0x68 */ u8 pad68[0x6A - 0x68];
+    /* 0x6A */ u8 matrixDirty;
+} RaceUiSingleTrailActor;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ RaceUiTrailCopyBlock transformSource;
     /* 0x38 */ Vec3i sourcePos;
@@ -435,6 +444,7 @@ extern RaceUiGfxCommandDest D_800DEE50;
 extern u32 D_2002208[];
 extern u32 D_20023A8[];
 extern u32 D_2002490[];
+extern u32 D_2003538[];
 extern u32 D_20035F8[];
 extern u32 D_200CC20[];
 extern u32 D_200CE48[];
@@ -1904,7 +1914,27 @@ void func_80061AF4(s16 arg0, void *arg1, void *arg2, s16 arg3) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80061B70.s")
+void func_80061B70(RaceUiSingleTrailActor *arg0) {
+    volatile u8 pad[0x20];
+    RaceUiDisplayCommand *unused;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (arg0->matrixDirty != 0) {
+        arg0->matrixDirty = 0;
+        arg0->matrix = func_8004885C(&arg0->copyBlock);
+    }
+
+    if (arg0->matrix != NULL) {
+        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, func_80043040(D_80112144));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, func_80043040(D_80112146));
+        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2003538);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80061CA8.s")
 
