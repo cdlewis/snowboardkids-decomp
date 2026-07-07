@@ -134,6 +134,7 @@ extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, void *);
 extern Vec3i D_800D9BD8[];
 extern RaceOverlayModelEntry *D_800D7754[];
+extern void *D_800DA1C0[];
 extern Gfx *D_800DA1F0;
 extern s32 D_801248D4;
 extern s32 D_801248B0;
@@ -151,7 +152,6 @@ extern GfxCommandDest D_800DEE50;
 extern Gfx *gRegionAllocPtr;
 extern void *D_80156614;
 extern s16 D_80121B50;
-extern void func_80066760(void *);
 extern void func_80066E10(void);
 extern void func_80067034(RaceModelListActor *);
 extern void func_80067364(RaceThrownModelActor *);
@@ -168,7 +168,41 @@ typedef struct Scratch674B4 {
     s32 pad;
 } Scratch674B4;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80066760.s")
+void func_80066760(RaceModelListActor *arg0) {
+    RaceOverlayModelEntry *var_s4;
+    s32 var_s5;
+    s32 var_s7;
+    Gfx *temp_s0;
+    Gfx *temp_s2;
+    Gfx *temp_s3;
+
+    var_s4 = D_800D7754[arg0->modelListIndex];
+    var_s7 = TRUE;
+    var_s5 = 0;
+    if (var_s4->modelIndex != -1) {
+        do {
+            if (func_80049000(&var_s4->pos) != 0) {
+                if (var_s7 != 0) {
+                    gDPPipeSync(gRegionAllocPtr++);
+                    temp_s2 = gRegionAllocPtr++;
+                    var_s7 = FALSE;
+                    gSPSegment(temp_s2, 0x02, func_80043040(*(s16 *)&D_80112130[0x14]));
+
+                    temp_s3 = gRegionAllocPtr++;
+                    gSPSegment(temp_s3, 0x03, func_80043040(*(s16 *)&D_80112130[0x16]));
+                }
+
+                temp_s0 = gRegionAllocPtr++;
+                gDma1p(temp_s0, 1, (u32)arg0->modelBuffer + (var_s5 << 6), 0x40, 2);
+
+                temp_s0 = gRegionAllocPtr++;
+                gSPDisplayList(temp_s0, D_800DA1C0[var_s4->modelIndex]);
+            }
+            var_s4++;
+            var_s5++;
+        } while (var_s4->modelIndex != -1);
+    }
+}
 
 void func_800668EC(RaceModelListActor *arg0) {
     RaceOverlayModelEntry *entry;
