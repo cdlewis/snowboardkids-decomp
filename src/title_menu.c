@@ -4,8 +4,10 @@ typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
-    /* 0x1C */ s16 unk1C;
-    /* 0x1E */ s8 unk1E;
+    /* 0x1C */ s16 alpha;
+    /* 0x1E */ u8 state;
+    /* 0x1F */ u8 timer;
+    /* 0x20 */ struct MenuItemActor *child;
 } MenuIntroActor;
 
 typedef struct MenuItemActor {
@@ -62,14 +64,22 @@ typedef struct {
     /* 0x31 */ u8 unk31[4];
 } TitleMenuWidgetActor;
 
+typedef struct {
+    /* 0x00 */ u8 state;
+    /* 0x01 */ u8 pad1;
+    /* 0x02 */ s16 alpha;
+} TitleIntroTransitionState;
+
 extern s32 func_80011D74(void *, s32, s16, s16);
 extern void func_8000F8AC(s16, s16, s32, s32, s32, s32, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
 extern void func_80071824(void *task, void (*callback)());
-extern void func_80014AA4(void);
+extern void func_80014600(MenuIntroActor *);
+extern void func_80014AA4(MenuIntroActor *);
 extern void func_80014EF0(MenuItemActor *);
 extern void func_80014CB8(void *);
+extern void func_80015054(void *);
 extern void func_8001508C(void *);
 extern void func_800152D0(MenuItemActor *);
 extern void func_80015680(MenuItemActor *);
@@ -89,6 +99,8 @@ extern void func_800716E4(void *);
 extern s32 func_80072138(s32, s32);
 extern void func_800157EC(void *);
 extern void func_80015C84(void *);
+extern TitleIntroTransitionState D_8010AE00;
+extern s16 D_8010AE02;
 extern s16 D_8010AE38;
 extern s16 D_8010AE3A;
 extern s16 D_8010AE3C;
@@ -145,15 +157,104 @@ typedef struct {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80014600.s")
 
+// func_80014AA4 best match: 99.573%
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80014AA4.s")
+
+#ifdef NON_MATCHING
+void func_80014AA4(MenuIntroActor *arg0) {
+    TitleIntroTransitionState *global;
+    MenuIntroActor *actor;
+    s32 globalState;
+    s16 alpha;
+    u8 state;
+    s32 step;
+    u32 stateCopy;
+    u8 timer;
+
+    global = &D_8010AE00;
+    state = arg0->state;
+    globalState = global->state;
+    actor = arg0;
+    stateCopy = state;
+    if (stateCopy != globalState) {
+        arg0->state = globalState;
+        state = globalState;
+        arg0->alpha = D_8010AE00.alpha;
+    }
+    step = 0x10;
+
+    alpha = actor->alpha;
+    if (alpha != 0x100) {
+        if (state == 0) {
+            actor->alpha = alpha + 0x20;
+            alpha = actor->alpha;
+            if (alpha == 0x100) {
+                alpha = ((volatile MenuIntroActor *)actor)->alpha;
+                actor->state = 1;
+            }
+        } else {
+            actor->alpha = alpha - 0x30;
+            alpha = actor->alpha;
+            if (alpha <= 0) {
+                actor->alpha = 0;
+                alpha = actor->alpha;
+            }
+        }
+    } else {
+        switch (state) {
+        case 1:
+        case 6:
+            timer = actor->timer;
+            alpha = ((volatile MenuIntroActor *)actor)->alpha;
+            actor->timer = ((timer + 1) & 0xFFFFu) & 0xF;
+            break;
+        case 2:
+            actor->y -= 0x10;
+            if (actor->y == -0x5C) {
+                actor->child = func_80071408(func_80015054, 0, 0x63);
+                func_80072138(1, 0x32);
+                actor->state = 3;
+            }
+            alpha = actor->alpha;
+            break;
+        case 3:
+            if (D_801235B8->unk1C == 2) {
+                alpha = ((volatile MenuIntroActor *)actor)->alpha;
+                actor->state = 4;
+            }
+            break;
+        case 4:
+            actor->y += step;
+            if (actor->y == -0x1C) {
+                actor->state = 5;
+            }
+            alpha = actor->alpha;
+            break;
+        case 5:
+        case 7:
+        case 8:
+            break;
+        }
+    }
+
+    if (alpha == 0) {
+        actor->state = 8;
+    }
+    D_8010AE00.state = actor->state;
+    D_8010AE02 = actor->alpha;
+    if (actor->state != 8) {
+        func_800483FC(&D_80124868, func_80014600, (s32)actor);
+    }
+}
+#endif
 
 void func_80014C7C(void *arg0) {
     MenuIntroActor *actor = arg0;
 
     actor->x = -0x70;
     actor->y = -0x1C;
-    actor->unk1C = 0;
-    actor->unk1E = 0;
+    actor->alpha = 0;
+    actor->state = 0;
     func_80071824(arg0, func_80014AA4);
 }
 

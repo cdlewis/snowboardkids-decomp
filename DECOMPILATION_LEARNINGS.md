@@ -2855,3 +2855,16 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   keep the empty `if (0) {}` barrier, then divide `displayObjects[7].screenX/Y`
   by the divisor. This preserves IDO's divide scheduling and callback argument
   register allocation.
+
+## func_80014AA4 (title_menu)
+
+- The title intro actor uses `0x1C` as an alpha/sprite halfword and `0x1E/0x1F`
+  as state/timer bytes, with a child actor pointer at `0x20`.
+- For the best non-matching attempt, IDO needed explicit volatile reloads of
+  the actor alpha before writing states `1` and `4`, and before the timer update
+  in states `1/6`. Without those reloads it reused the known alpha value and
+  missed the target `lh`.
+- Hoisting the `0x10` y-step into an `s32` local and comparing a widened copy of
+  the local state against the global state improved register allocation. The
+  remaining mismatch is equivalent branch operand ordering/register choice in
+  the prologue and timer case.
