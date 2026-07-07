@@ -239,6 +239,15 @@ typedef struct {
 } RaceUiRankParticleActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x44 */ RaceUiGfxCommandDest *matrix;
+    /* 0x48 */ u8 pad48[0x58 - 0x48];
+    /* 0x58 */ u8 matrixDirty;
+} RaceUiPodiumTrailActor;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[0x24 - 0x12];
@@ -490,6 +499,7 @@ extern RaceUiGfxCommandDest D_800DEE50;
 extern u32 D_20019C0[];
 extern u32 D_2002208[];
 extern u32 D_20023A8[];
+extern u32 D_2002660[];
 extern u32 D_2002490[];
 extern u32 D_2003870[];
 extern u32 D_2003538[];
@@ -653,7 +663,7 @@ extern void func_8005B61C(void *);
 extern void func_8005CC54(void *);
 extern void func_8005E33C(void *);
 extern void func_8005893C(void *);
-extern void func_80060544(void);
+extern void func_80060544(RaceUiPodiumTrailActor *);
 extern void func_80060914(void);
 extern void func_80058610(void *);
 extern void func_80058880(void *);
@@ -1869,7 +1879,30 @@ void func_800604CC(void *arg0, void *arg1, void *arg2, s16 arg3) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80060544.s")
+void func_80060544(RaceUiPodiumTrailActor *arg0) {
+    volatile u8 pad[0x20];
+    volatile RaceUiDisplayCommand *unused;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (arg0->matrixDirty != 0) {
+        arg0->matrixDirty = 0;
+        arg0->copyBlock.words[5] = arg0->pos.a;
+        arg0->copyBlock.words[6] = arg0->pos.b + 0x38000;
+        arg0->copyBlock.words[7] = arg0->pos.c;
+        arg0->matrix = func_8004885C(&arg0->copyBlock);
+    }
+
+    if (arg0->matrix != NULL) {
+        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, func_80043040(D_80112144));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, func_80043040(D_80112146));
+        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2002660);
+    }
+}
 
 void func_8006069C(void *arg0) {
     if (D_80121B56 == 0) {
