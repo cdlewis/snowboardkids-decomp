@@ -96,7 +96,7 @@ Before declaring any changes to C code complete (including decompiling functions
 
 ### Capture Learnings
 
-Update DECOMPILATION_LEARNINGS.md with any new insights from matching functions in this project. These include compiler behavior, codegen quirks, and patterns specific to IDO 5.3.
+If there is anything you have learnt that's generic to IDO 5.3 compiler behaviour, codegen quirks, etc (i.e. not function/file specific) try to incorporate it into DECOMPILATION_LEARNINGS.md. But maintain a high bar, we do not want this file polluted with overfitted advice about particular functions etc.
 
 ## Matching Data
 
