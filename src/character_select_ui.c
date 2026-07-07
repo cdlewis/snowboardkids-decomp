@@ -1513,7 +1513,71 @@ void func_8002332C(CharacterSelectWidgetActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80023434.s")
+void func_80023434(CharacterSelectWidgetActor *arg0) {
+    u8 state;
+    u8 globalState;
+
+    state = arg0->transition.bytes.state;
+    if (state != (globalState = D_8010AE88[1])) {
+        arg0->transition.bytes.state = globalState;
+        /* Preserve IDO's state/globalState register allocation. */
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        state = globalState;
+        arg0->transition.bytes.timer = D_8010AE88[7];
+    }
+
+    switch (state) {
+    case 0:
+        arg0->x += 0x20;
+        if (arg0->x >= -0x88) {
+            arg0->x = -0x88;
+            arg0->transition.bytes.state = 2;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 2:
+        arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0xF;
+        if (D_80121D88 == 3) {
+            arg0->transition.bytes.state = 5;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 3:
+        state = arg0->transition.bytes.state;
+        arg0->transition.bytes.timer = 0;
+        break;
+    case 4:
+        arg0->transition.bytes.timer++;
+        if ((D_80121D88 == 3) || (D_80121D88 == 7)) {
+            arg0->transition.bytes.state = 5;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 5:
+        arg0->x -= 0x20;
+        if (arg0->x < -0x107) {
+            arg0->transition.bytes.state = 6;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    }
+
+    D_8010AE89 = state;
+    D_8010AE8F = arg0->transition.bytes.timer;
+
+    if (arg0->transition.bytes.state == 6) {
+        func_800716E4(arg0);
+        D_8010ADE0 = NULL;
+        D_8010AE88[1] = 0;
+        D_8010AE88[7] = 0;
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002332C, arg0);
+}
 
 void func_800235E0(CharacterSelectWidgetActor *arg0) {
     arg0->x = -0x108;
