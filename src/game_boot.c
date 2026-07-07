@@ -197,11 +197,13 @@ void func_8009B5C0(u8 a0, u8 a1, u8 a2) {
     D_800DF140 = TITLE_FADE_TIMER;
 }
 
-// func_8009B5F4 best match: 58.191% at nonmatchings/func_8009B5F4-1404502880690620360/base_6.c.
+// func_8009B5F4 best match: 88.485% at nonmatchings/func_8009B5F4-9017456803007796287/base_19.c.
 #ifdef NON_MATCHING
 Gfx *func_8009B5F4(void) {
     Gfx *gfx;
-    Gfx *gfx2;
+    Gfx *ret;
+    Gfx *retCopy;
+    s32 negFade;
     s32 fade;
     s32 denom;
     s32 scale;
@@ -210,16 +212,21 @@ Gfx *func_8009B5F4(void) {
     gRegionAllocPtr = gfx + 1;
     gfx->words.w0 = 0xBC000008;
     fade = D_800DF140;
+    do {
+    } while (0 != 0U);
+    retCopy = gfx;
+    negFade = -fade;
     scale = 0x1F400;
     denom = 0x3E8 - fade;
-    gfx->words.w1 = ((scale / denom) << 16) | ((((-fade << 8) + scale) / denom) & 0xFFFF);
+    ret = retCopy;
+    gfx->words.w1 = (((u16)(scale / (0x3E8 - fade))) << 16) | ((((negFade << 8) + scale) / denom) & 0xFFFF);
 
-    gfx2 = gRegionAllocPtr;
-    gRegionAllocPtr = gfx2 + 1;
-    gfx2->words.w0 = 0xF8000000;
-    gfx2->words.w1 = (D_80156618 << 24) | (D_80156619 << 16) | (D_8015661A << 8) | 0xFF;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w0 = 0xF8000000;
+    gfx->words.w1 = (D_80156618 << 24) | ((D_80156619 << 8) << 8) | (D_8015661A << 8) | 0xFF;
 
-    return gfx;
+    return ret;
 }
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_8009B5F4.s")
