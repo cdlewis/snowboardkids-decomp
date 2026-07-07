@@ -63,7 +63,72 @@ extern s32 D_80124868;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024380.s")
 
+// func_80024968 best match: 99.730%
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024968.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    s32 x;
+    s32 y;
+    s32 z;
+} CourseSelectTempVec3i;
+
+extern void func_80097C18(s16 *mtx, s16 rotY);
+extern void func_8009853C(s16 *mtx, s16 arg1, s16 arg2);
+extern void func_80098590(s16 *mtx, CourseSelectTempVec3i *source, CourseSelectTempVec3i *dest);
+extern u8 D_8010AF1C;
+
+void func_80024968(void *arg0) {
+    CourseSelectTempVec3i sp60;
+    void *actor;
+    u8 *var_s1;
+    u8 *var_s2;
+    u8 *var_s3;
+    s16 *var_s4;
+    u8 *var_s5;
+    u8 *var_s6;
+    CourseSelectTempVec3i *var_s7;
+    s32 one;
+
+    var_s3 = (u8 *) &D_8010AF18;
+    actor = arg0;
+    var_s1 = arg0; var_s2 = arg0;
+    var_s4 = (s16 *) ((u8 *) arg0 + 0x3C);
+    var_s5 = arg0;
+    var_s6 = arg0;
+    var_s7 = (CourseSelectTempVec3i *) ((u8 *) arg0 + 0xBC);
+    one = 1;
+    do {
+        if (actor && actor) {
+        }
+        *(s32 *) (var_s2 + 0xBC) = 0;
+        *(s32 *) (var_s2 + 0xC0) = 0x800000;
+        *(s32 *) (var_s2 + 0xC4) = 0;
+        *(s16 *) (var_s5 + 0xEC) = 0;
+        func_80097C18(var_s4, *(s16 *) (var_s5 + 0xEC));
+        if ((arg0 && arg0) && arg0) {
+        }
+        func_80098590(var_s4, var_s7, &sp60);
+        *(s32 *) (var_s1 + 0x50) = sp60.x;
+        *(s32 *) (var_s1 + 0x54) = sp60.y;
+        *(s32 *) (var_s1 + 0x58) = sp60.z;
+        *(u8 *) (var_s6 + 0x100) = one;
+        var_s1 += 0x20;
+        var_s6 += 1;
+        var_s4 = (s16 *) ((u8 *) var_s4 + 0x20);
+        var_s2 += 0xC;
+        var_s7 += 1;
+        var_s5 += 2;
+        var_s3 += 1; *(var_s3 + 7) = one;
+    } while (var_s3 != &D_8010AF1C);
+
+    *(s32 *) ((u8 *) actor + 0x30) = 0;
+    *(s32 *) ((u8 *) actor + 0x34) = 0;
+    *(s32 *) ((u8 *) actor + 0x38) = 0;
+    func_8009853C((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
+    func_80071824(actor, func_80024380);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024A90.s")
 
