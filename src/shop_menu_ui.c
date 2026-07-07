@@ -62,55 +62,60 @@ struct ShopMenuWidgetActor {
     char pad0[0x18];
     union {
         struct {
-            /* 0x18 */ s16 x;
-            /* 0x1A */ s16 y;
-            union {
-                /* 0x1C */ s16 index;
-                struct {
-                    /* 0x1C */ u8 state;
-                    /* 0x1D */ u8 pad1D;
-                } bytes;
-            } sprite;
             union {
                 struct {
-                    /* 0x1E */ u8 state;
-                    /* 0x1F */ u8 timer;
-                } bytes;
-                /* 0x1E */ u16 counter;
-                /* 0x1E */ s16 alpha;
-            } transition;
+                    /* 0x18 */ s16 x;
+                    /* 0x1A */ s16 y;
+                    union {
+                        /* 0x1C */ s16 index;
+                        struct {
+                            /* 0x1C */ u8 state;
+                            /* 0x1D */ u8 pad1D;
+                        } bytes;
+                    } sprite;
+                    union {
+                        struct {
+                            /* 0x1E */ u8 state;
+                            /* 0x1F */ u8 timer;
+                        } bytes;
+                        /* 0x1E */ u16 counter;
+                        /* 0x1E */ s16 alpha;
+                    } transition;
+                    union {
+                        struct {
+                            /* 0x20 */ u8 state;
+                            /* 0x21 */ u8 timer;
+                            /* 0x22 */ u8 subState;
+                            /* 0x23 */ u8 subTimer;
+                        } bytes;
+                        /* 0x20 */ s16 counter;
+                        /* 0x20 */ s32 price;
+                    } item;
+                    union {
+                        struct {
+                            /* 0x24 */ u8 state;
+                            /* 0x25 */ u8 timer;
+                        } bytes;
+                        /* 0x24 */ u8 slideState;
+                    } slide;
+                };
+                /* 0x18 */ s16 cursorPositions[10];
+            };
+            /* 0x2C */ s16 targetY;
+            /* 0x2E */ s16 targetX;
             union {
                 struct {
-                    /* 0x20 */ u8 state;
-                    /* 0x21 */ u8 timer;
-                    /* 0x22 */ u8 subState;
-                    /* 0x23 */ u8 subTimer;
+                    /* 0x30 */ s16 pulseAlpha;
+                    /* 0x32 */ s16 pulseTimer;
                 } bytes;
-                /* 0x20 */ s16 counter;
-                /* 0x20 */ s32 price;
-            } item;
-            union {
-                struct {
-                    /* 0x24 */ u8 state;
-                    /* 0x25 */ u8 timer;
-                } bytes;
-                /* 0x24 */ u8 slideState;
-            } slide;
+                /* 0x30 */ s32 pulse;
+            } prompt;
+            /* 0x34 */ s16 spawnTimer;
+            /* 0x36 */ s16 visibleCount;
+            /* 0x38 */ u8 state;
         };
-        /* 0x18 */ s16 cursorPositions[10];
+        /* 0x18 */ s16 randomValues[15];
     };
-    /* 0x2C */ s16 targetY;
-    /* 0x2E */ s16 targetX;
-    union {
-        struct {
-            /* 0x30 */ s16 pulseAlpha;
-            /* 0x32 */ s16 pulseTimer;
-        } bytes;
-        /* 0x30 */ s32 pulse;
-    } prompt;
-    /* 0x34 */ s16 spawnTimer;
-    /* 0x36 */ s16 visibleCount;
-    /* 0x38 */ u8 state;
 };
 
 extern void func_80071824(void *task, void (*callback)());
@@ -131,12 +136,14 @@ extern void func_8002F2C8(ShopMenuWidgetActor *);
 extern void func_8002E9E4(ShopMenuWidgetActor *);
 extern void func_8002EC5C(void);
 extern void func_8002E5A4(ShopMenuWidgetActor *);
+extern void func_8002FD70(void);
 extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s32, s32, ShopDescriptionText, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern s32 func_80043040(s16);
+extern s32 func_800430D0(void);
 extern s32 D_800B34B0[];
 extern u16 D_800B34E0[];
 extern u16 D_800B34EC[];
@@ -152,6 +159,7 @@ extern u8 D_8010AF70;
 extern u8 D_8010AF71;
 extern u8 D_8010AF72;
 extern u8 D_8010AF73;
+extern s16 D_8010AF76;
 extern s16 D_8011217A;
 extern ShopMenuState D_80121D80;
 extern s32 D_80121D8C;
@@ -906,4 +914,18 @@ void func_8002FBC8(ShopMenuWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002FD70.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002FEF8.s")
+void func_8002FEF8(ShopMenuWidgetActor *arg0) {
+    ShopMenuWidgetActor *new_var;
+    s32 i;
+
+    arg0->x = 5;
+    arg0->y = 0x48;
+    new_var = arg0;
+    new_var->sprite.index = D_8010AF76 / 2;
+
+    for (i = 0; i < 12; i++) {
+        new_var->randomValues[i + 3] = func_800430D0() % 6;
+    }
+
+    func_80071824(new_var, func_8002FD70);
+}

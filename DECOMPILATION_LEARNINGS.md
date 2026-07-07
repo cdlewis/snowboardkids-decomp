@@ -3099,3 +3099,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `f32 aspect` prevents IDO from folding division by 16.0 into a reciprocal
   multiply. The remaining mismatch is mostly integer temporary allocation and
   scheduling around the four viewport coordinate expressions.
+
+## func_8002FEF8 (shop_menu_ui)
+
+- A local actor alias assigned after the first two halfword stores can be
+  enough to keep the actor in `$s2` through the setup callback. Using `arg0`
+  directly produced the same memory accesses but shifted the saved-register
+  allocation.
+- When a setup loop writes a halfword range that crosses several named actor
+  fields, add a same-offset array overlay in the struct rather than using
+  byte-pointer arithmetic or indexing beyond a smaller array member.
