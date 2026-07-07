@@ -2800,3 +2800,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - For the `0x40`-iteration fixed-point acceleration loop, IDO unrolls the loop
   by four. Keeping the loop natural but placing the `timer++` after the
   velocity and position updates produces the target register allocation.
+
+## func_80079394 (race_timer_ui)
+
+- For course data accessed as `D_800EC9F0 + (courseIndex * 0x14) + fieldOffset`,
+  a small 0x14-byte stride struct for array indexing plus a typed overlay for
+  distant fields preserves IDO's multiply-by-20 sequence while keeping named
+  field accesses for the best-lap timer bytes/halfword.
