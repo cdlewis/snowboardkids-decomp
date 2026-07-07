@@ -3037,3 +3037,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   folds the base-plus-one pointer differently than the target.
 - Keeping the asset copy size in a second local across `func_80042D58` and
   `func_80043040` preserves the target stack spill at `sp+0x34`.
+
+## func_80026B88 (course_select_ui)
+
+- For adjacent per-player coordinate initialization, writing through
+  `coordinates[i]` and `coordinates[i + 4]` lets IDO emit the target halfword
+  pointer walk while avoiding manual byte-offset pointer arithmetic. Keeping a
+  separate actor local initialized from `arg0` preserves the final callback
+  argument in `$a3`.
