@@ -152,6 +152,18 @@ extern s32 D_8015A684;
 extern s32 D_8015A620;
 extern u8 D_8015A624;
 extern s32 *libmus_fxheader_current;
+extern f64 D_800E1A80;
+extern f64 D_800E1A88;
+extern f64 D_800E1A90;
+extern f64 D_800E1A98;
+extern f64 D_800E1AA0;
+extern f64 D_800E1AA8;
+extern f64 D_800E1AB0;
+extern f64 D_800E1AB8;
+extern f64 D_800E1AC0;
+extern f64 D_800E1AC8;
+extern f64 D_800E1AD0;
+extern f64 D_800E1AD8;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C270.s")
 
@@ -884,7 +896,35 @@ void func_8009EEE8(PlayerCommandState *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F0C4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F194.s")
+f32 func_8009F194(f32 arg0) {
+    f32 square;
+    f32 fourth;
+
+    if (arg0 == 0.0f) {
+        return 1.0f;
+    }
+
+    if (arg0 > 0.0f) {
+        square = arg0 * arg0;
+        fourth = square * square;
+        return (f32)(((f64)arg0 * D_800E1A80) + 1.0 +
+            ((f64)square * D_800E1A88) +
+            ((f64)(square * arg0) * D_800E1A90) +
+            ((f64)fourth * D_800E1A98) +
+            ((f64)(fourth * arg0) * D_800E1AA0) +
+            ((f64)(fourth * square) * D_800E1AA8));
+    }
+
+    arg0 = -arg0;
+    square = arg0 * arg0;
+    fourth = square * square;
+    return (f32)(1.0 / (((f64)arg0 * D_800E1AB0) + 1.0 +
+        ((f64)square * D_800E1AB8) +
+        ((f64)(square * arg0) * D_800E1AC0) +
+        ((f64)fourth * D_800E1AC8) +
+        ((f64)(fourth * arg0) * D_800E1AD0) +
+        ((f64)(fourth * square) * D_800E1AD8)));
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F344.s")
 
