@@ -2868,3 +2868,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   the local state against the global state improved register allocation. The
   remaining mismatch is equivalent branch operand ordering/register choice in
   the prologue and timer case.
+
+## func_8004E438 (race_item_effects)
+
+- For the local rotation buffer/vector setup, IDO places otherwise unused stack
+  padding according to declaration order. Declaring `char pad2C[4]` before the
+  saved player pointer, then `char pad50[8]`, the 0x20-byte matrix buffer, and
+  the three-word vector matches the target `sp+0x24`, `sp+0x30`, and `sp+0x58`
+  stack slots without introducing extra stores.
