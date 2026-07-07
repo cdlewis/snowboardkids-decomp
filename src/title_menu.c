@@ -57,6 +57,17 @@ typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x[4];
     /* 0x20 */ s16 y[4];
+    /* 0x28 */ s16 topY[4];
+    /* 0x30 */ s16 slideOffset[4];
+    /* 0x38 */ u16 selection[4];
+    /* 0x40 */ u16 alpha[4];
+    /* 0x48 */ s16 alphaTimer[4];
+} TitleMenuTransitionActor;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 x[4];
+    /* 0x20 */ s16 y[4];
     /* 0x28 */ s16 alpha[4];
     /* 0x30 */ u8 frame;
     /* 0x31 */ u8 unk31[4];
@@ -109,15 +120,18 @@ extern void func_80015C84(void *);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s16, s16, u8 *, s32, s32, s32);
 extern void func_80013D0C(s16, s16, u8 *, u16, u16);
-extern MenuIntroActor *D_8010ADDC;
 extern u8 D_800B5458[][0x4C];
 extern u8 D_800B5A14[];
-extern s16 D_800EC9C8[];
-extern s16 D_800EC9D0[];
 extern s32 D_80121D8C;
 #endif
+extern MenuIntroActor *D_8010ADDC;
+extern s16 D_800EC9C8[];
+extern s16 D_800EC9D0[];
 extern TitleIntroTransitionState D_8010AE00;
 extern s16 D_8010AE02;
+extern u16 D_8010AE06[];
+extern u8 D_8010AE0E[];
+extern u16 D_8010AE12[];
 extern s16 D_8010AE38;
 extern s16 D_8010AE3A;
 extern s16 D_8010AE3C;
@@ -135,6 +149,8 @@ extern s16 D_8011216E;
 extern s16 D_80112172;
 extern s16 D_8011217C;
 extern u8 D_80121B55;
+extern u8 D_800B5A2E[];
+extern u8 D_800B5A2F[];
 extern u8 D_800EC9C1;
 extern s32 D_801235B4;
 extern Struct801235B8 *D_801235B8;
@@ -971,7 +987,59 @@ void func_80016B54(TitleMenuWidgetActor *arg0) {
     func_80071824(new_var, func_80016948);
 }
 
+// func_80016BE8 best match: 89.510% (nonmatchings/func_80016BE8-7387615772158234395/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016BE8.s")
+
+#ifdef NON_MATCHING
+void func_80016BE8(TitleMenuTransitionActor *arg0) {
+    s32 i;
+    s32 alpha;
+    s16 state;
+
+    if (D_8010ADDC->state == 8) {
+        for (i = 0; i < D_80121B55; i++) {
+            if (D_8010AE06[i] != arg0->selection[i]) {
+                arg0->selection[i] = D_8010AE06[i];
+            }
+
+            state = D_800EC9D0[i];
+            if (state != 0) {
+                if (!(state & 1)) {
+                    alpha = 0x100;
+                } else {
+                    alpha = 0x60;
+                }
+
+                func_8000F8AC(arg0->x[i], arg0->topY[i], func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                              D_800B5A2F[D_800EC9C8[i] * 2], 0x20, 0x20, 0, alpha, 0);
+
+                if (alpha == 0x100) {
+                    alpha = 0x60;
+                } else {
+                    alpha = 0x100;
+                }
+
+                func_8000F8AC(arg0->x[i], arg0->y[i], func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                              D_800B5A2E[D_800EC9C8[i] * 2], 0x20, 0x20, 0, alpha, 0);
+
+                state = D_800EC9D0[i];
+                if ((state == 3) || (state == 4)) {
+                    func_8000F8AC(arg0->x[i], (s16)(((D_800EC9D0[i] * 0x10) + arg0->y[i]) - 0x30),
+                                  func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0x12, 0x20, 0x20, 0, arg0->alpha[i],
+                                  i + 7);
+                    state = D_800EC9D0[i];
+                }
+            }
+
+            if ((state >= 5) && (arg0->slideOffset[i] == 0)) {
+                D_8010AE12[i] = arg0->selection[i];
+                D_8010AE0E[i] = 2;
+                D_800EC9D0[i] = 0;
+            }
+        }
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016E40.s")
 
