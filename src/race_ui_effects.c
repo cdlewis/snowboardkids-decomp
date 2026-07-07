@@ -49,7 +49,10 @@ typedef struct {
 } RacePlayerState;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x38];
+    /* 0x00 */ u8 pad0[0x14];
+    /* 0x14 */ s16 modelVtxHandle;
+    /* 0x16 */ s16 modelTextureHandle;
+    /* 0x18 */ u8 pad18[0x38 - 0x18];
     /* 0x38 */ s16 mainFontHandle;
     /* 0x3A */ u8 pad3A[0x48 - 0x3A];
     /* 0x48 */ s16 resultTextHandle;
@@ -328,6 +331,19 @@ typedef struct {
 } RaceUiGfxCommandActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ void *matrices;
+    /* 0x1C */ s16 count;
+} RaceUiRankTextRenderActor;
+
+typedef struct {
+    /* 0x00 */ s16 active;
+    /* 0x02 */ s16 pad2;
+    /* 0x04 */ Vec3i position;
+    /* 0x10 */ s32 pad10;
+} RaceUiRankTextRenderEntry;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
@@ -468,7 +484,7 @@ extern void *D_801248A4;
 extern void *D_801248EC;
 extern s16 D_800D6050[];
 extern Vec3i D_800D6030[];
-extern s16 *D_800D761C[];
+extern RaceUiRankTextRenderEntry *D_800D761C[];
 extern RaceUiGfxCommandScriptEntry *D_800D693C[];
 extern RaceUiGfxCommandDest D_800DEE50;
 extern u32 D_20019C0[];
@@ -2630,29 +2646,64 @@ void func_80065E90(RaceUiOverlayActor *arg0) {
     func_80071824(arg0, func_80065E0C);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80065FD8.s")
+void func_80065FD8(RaceUiRankTextRenderActor *arg0) {
+    RaceUiRankTextRenderEntry *var_s4;
+    s32 var_s6;
+    s32 var_fp;
+    Gfx *temp_s0;
+    Gfx *temp_s2;
+    Gfx *temp_s3;
+
+    var_s4 = D_800D761C[D_80121B50];
+    var_fp = TRUE;
+    var_s6 = 0;
+    if (var_s4->active != -1) {
+        do {
+            if ((var_s4->active != 0) && (func_80049000(&var_s4->position) != 0)) {
+                if (var_fp != 0) {
+                    gDPPipeSync(gRegionAllocPtr++);
+
+                    temp_s2 = gRegionAllocPtr++;
+                    var_fp = FALSE;
+                    gSPSegment(temp_s2, 0x02, func_80043040(D_80112130.modelVtxHandle));
+
+                    temp_s3 = gRegionAllocPtr++;
+                    gSPSegment(temp_s3, 0x03, func_80043040(D_80112130.modelTextureHandle));
+                }
+
+                temp_s0 = gRegionAllocPtr++;
+                gSPMatrix(temp_s0, (u32)arg0->matrices + (var_s6 << 6), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+
+                temp_s0 = gRegionAllocPtr++;
+                gSPDisplayList(temp_s0, D_20019C0);
+            }
+            var_s4++;
+            var_s6++;
+        } while (var_s4->active != -1);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80066158.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800663C8.s")
 
-void func_800666B0(void *arg0) {
-    s16 *var_v0;
+void func_800666B0(RaceUiRankTextRenderActor *arg0) {
+    RaceUiRankTextRenderEntry *var_v0;
     s32 var_v1;
 
     var_v0 = D_800D761C[D_80121B50];
     var_v1 = 0;
-    if (*var_v0 != -1) {
+    if (var_v0->active != -1) {
         do {
             var_v1++;
-            var_v0 += 0xA;
-        } while (*var_v0 != -1);
+            var_v0++;
+        } while (var_v0->active != -1);
     }
     D_801222F6 = var_v1;
-    *(s16 *)((u8 *)arg0 + 0x1C) = var_v1;
+    arg0->count = var_v1;
     if (var_v1 != 0) {
         D_80112130.rankTextHandle = func_80042D58(var_v1 << 6);
-        *(s32 *)((u8 *)arg0 + 0x18) = func_80043040(D_80112130.rankTextHandle);
+        arg0->matrices = (void *)func_80043040(D_80112130.rankTextHandle);
         func_800663C8(arg0);
         func_80071824(arg0, func_80066158);
     }
