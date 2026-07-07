@@ -72,17 +72,17 @@ void func_80042D28(MemoryBlock *block) {
     block->status = MEMORY_BLOCK_FREE;
 }
 
-// func_80042D58 best match: 99.388%
+// func_80042D58 best match: 99.898%
 #pragma GLOBAL_ASM("asm/nonmatchings/memory_allocator/func_80042D58.s")
 
 #ifdef NON_MATCHING
 extern MemoryBlock D_80110180;
 
 s16 func_80042D58(s32 arg0) {
-    MemoryBlock *temp_v0;
     MemoryBlock *temp_v1;
-    MemoryBlock *var_a1;
     u32 temp_a0;
+    MemoryBlock *var_a1;
+    MemoryBlock *temp_v0;
     u32 temp_t1;
     u32 available;
 
@@ -118,7 +118,8 @@ loop_1:
     }
 
     temp_a0 = ((u32)(arg0 + 0xF) >> 4) * 0x10;
-    if ((u32)((D_8011091C + temp_a0) - &D_80160480) >= 0x1C0001U) {
+    temp_t1 = (u32)((D_8011091C + temp_a0) - &D_80160480);
+    if (temp_t1 >= 0x1C0001U) {
         return -1;
     }
     if (var_a1 == NULL) {
