@@ -2884,3 +2884,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - Hoisting `D_800B73F0[D_800EC9C8]` into a local `u8 *text` before the
   `func_80013154` call gives the target scheduling, with the table `lui`
   placed before the actor `x/y` argument loads.
+
+## func_8007B130 (race_timer_ui)
+
+- For small leaf helpers that convert timer fields into an accumulated value
+  and then decompose a difference, IDO will reuse incoming argument registers
+  if the parameters are reassigned after their final field access. Reassigning
+  `arg0` as the return flag and `arg1` as the seconds divisor preserves the
+  target `$a0`/`$a1` register allocation.
+- Keeping the first accumulated timer value in the same `diff` variable used
+  after subtraction lets IDO reuse `$v1` across the comparison and first divide.
