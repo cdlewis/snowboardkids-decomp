@@ -94,6 +94,12 @@ typedef struct {
 } CourseSpawnEntry;
 
 typedef struct {
+    s8 type;
+    char pad1[3];
+    Vec3i pos;
+} CourseMarkerSpawnEntry;
+
+typedef struct {
     s16 angle;
     char pad2[0x46];
 } CourseAngleEntry;
@@ -206,6 +212,8 @@ extern void func_80048D60(CourseEffectMatrixSource *);
 extern s32 func_80097AE8(s16);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
+extern void func_80088294(Vec3i *, s32, s32, u16);
+extern void func_80088A1C(Vec3i *, s32, s32, s32, s32);
 extern s16 D_80112168;
 extern s16 D_80112140;
 extern s32 D_801235B4;
@@ -233,6 +241,7 @@ extern CourseAssetHandles D_80112130;
 extern s16 D_80112144;
 extern s16 D_80112146;
 extern CourseRenderEntry *D_800DA73C[];
+extern CourseMarkerSpawnEntry *D_800DA0B8[];
 extern void *D_800DA1C0[];
 extern SoundParams D_800DA764[];
 extern CourseSpawnEntry D_800B9540[];
@@ -249,6 +258,7 @@ extern CourseEffectPlayer D_80122998[];
 extern CourseEffectPlayer D_80122FA4[];
 extern s32 D_80124868;
 extern s32 D_80124878;
+extern s32 D_801248D4;
 extern s32 D_801248EC;
 extern s32 D_801248B0;
 extern s32 D_801248A4;
@@ -261,6 +271,7 @@ extern Gfx D_20018E8[];
 extern void func_8006BC68(void *);
 extern void func_8006BE90(void);
 extern void func_8006B7E0(void);
+extern void func_8006A894(void *);
 
 void func_80069890(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
@@ -370,7 +381,29 @@ void func_8006A85C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006A894.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006ACE8.s")
+void func_8006ACE8(void *arg0) {
+    CourseMarkerSpawnEntry *entry;
+    s8 type;
+
+    entry = D_800DA0B8[D_80121B50];
+    if (entry->type != -1) {
+        do {
+            switch (entry->type) {
+                case 0:
+                case 1:
+                    func_80088294(&entry->pos, 0xC0000, 0x600000, 2);
+                    break;
+                case 2:
+                    func_80088A1C(&entry->pos, 0x20000, 0x40000, 0x30000, 4);
+                    break;
+            }
+            type = entry[1].type;
+            entry++;
+        } while (entry->type != -1);
+    }
+
+    func_800483FC(&D_801248D4, func_8006A894, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006AE00.s")
 
