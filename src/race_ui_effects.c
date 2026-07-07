@@ -134,6 +134,36 @@ typedef struct {
 } RaceUiEffectParticle;
 
 typedef struct {
+    /* 0x00 */ s32 words[8];
+} RaceUiTrailCopyBlock;
+
+typedef struct {
+    /* 0x00 */ s16 state;
+    /* 0x02 */ u8 pad02[0x1C - 0x02];
+    /* 0x1C */ Vec3i worldPos;
+    /* 0x28 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x48 */ u8 pad48[0x6A - 0x48];
+    /* 0x6A */ s16 spinYaw;
+} RaceUiSnowboardTrailState;
+
+typedef struct {
+    /* 0x000 */ u16 playerIndex;
+    /* 0x002 */ u8 pad002[0x58C - 0x002];
+    /* 0x58C */ RaceUiSnowboardTrailState trail;
+} RaceUiSnowboardTrailPlayer;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x30];
+    /* 0x30 */ Vec3i worldPos;
+    /* 0x3C */ u8 pad3C[4];
+    /* 0x40 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x60 */ u8 pad60[0x80 - 0x60];
+    /* 0x80 */ u16 playerIndex;
+    /* 0x82 */ u8 pad82[2];
+    /* 0x84 */ s16 spinYaw;
+} RaceUiSnowboardTrailActor;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ RaceUiEffectParticle *particles;
     /* 0x1C */ u8 pad1C[8];
@@ -1368,7 +1398,16 @@ void func_8005F56C(void *arg0) {
     func_80071824(arg0, func_8005F448);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005F5C8.s")
+void func_8005F5C8(RaceUiSnowboardTrailPlayer *player) {
+    RaceUiSnowboardTrailActor *actor = func_800711D0(func_8005F56C, 0, 0x62);
+
+    if (actor != NULL) {
+        actor->playerIndex = player->playerIndex;
+        actor->worldPos = player->trail.worldPos;
+        actor->copyBlock = player->trail.copyBlock;
+        actor->spinYaw = player->trail.spinYaw;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005F6A4.s")
 
