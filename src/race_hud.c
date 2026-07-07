@@ -85,11 +85,22 @@ typedef struct {
     /* 0x40 */ u16 tileSize;
 } RaceHudPanelSlot;
 
+typedef struct {
+    u8 pad0[0x18];
+    /* 0x18 */ s16 x[PLAYER_COUNT];
+    /* 0x20 */ s16 y;
+    /* 0x22 */ s16 baseX;
+    /* 0x24 */ s16 scale;
+    /* 0x26 */ u8 mode;
+    /* 0x27 */ u8 timer;
+} RaceHudPlayerListActor;
+
 extern void func_80071824(void *task, void (*callback)());
 extern void func_80018C80(void);
 extern void func_800177F8(void);
 extern void func_80017C34(void);
 extern void func_80018AA0(void);
+extern void func_800182A4(RaceHudPlayerListActor *);
 extern void func_80017D6C(RaceHudMessageActor *);
 extern void func_800483FC(void *, void *, void *);
 extern s8 D_8010AE52;
@@ -101,6 +112,7 @@ extern const char D_800E0AB0[];
 extern RacePlayerState D_800EC9F0[];
 extern u8 D_8010AE5E;
 extern u8 D_8010AE5F;
+extern s8 D_8010AE64[];
 extern s32 func_80043040(s16);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 
@@ -262,7 +274,45 @@ void func_80018060(RaceHudMessageActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_800182A4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_800183DC.s")
+void func_800183DC(RaceHudPlayerListActor *arg0) {
+    RacePlayerState *player;
+    s8 *playerLayout;
+    RaceHudPlayerListActor *actor;
+    s32 i;
+    s32 playerFlags;
+
+    playerFlags = 0;
+    i = 0;
+ if ((s32)D_80121B55 > 0) { player = D_800EC9F0; do {
+            playerFlags |= player->flags;
+            i = (s32)&D_800EC9F0[D_80121B55];
+            player++;
+        } while ((u32)player < (u32)i);
+        i = 0;
+    }
+
+    if (playerFlags == 1) {
+        arg0->baseX = -0x60;
+    } else {
+        arg0->baseX = -0x70;
+    }
+
+    if ((s32)D_80121B55 > 0) {
+        playerLayout = D_8010AE64;
+        actor = arg0;
+        do {
+            actor->x[0] = (*playerLayout * 0x20) + arg0->baseX;
+            i++;
+            playerLayout++;
+            actor = (RaceHudPlayerListActor *)((u8 *)actor + 2);
+        } while (i < (s32)D_80121B55);
+    }
+
+    arg0->y = -0x18;
+    arg0->mode = 0;
+    arg0->scale = 0x100;
+    func_80071824(arg0, func_800182A4);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_800184C8.s")
 
