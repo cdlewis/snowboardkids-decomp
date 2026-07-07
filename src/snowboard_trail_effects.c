@@ -59,7 +59,7 @@ extern void func_800987A0(s16 *mtx, s16 *rotation, Vec3i *scale, s16 *dest);
 extern u8 D_80121B56;
 extern s16 D_80112144;
 extern s16 D_80112146;
-extern Gfx *D_80124830;
+extern Gfx *gRegionAllocPtr;
 extern void *D_801248BC;
 extern u8 D_80156609;
 
