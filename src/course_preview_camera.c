@@ -63,6 +63,8 @@ extern s32 func_800430D0(void);
 extern Gfx *func_8004885C(FixedTransform *arg0);
 extern s32 func_80049000(Vec3i *position);
 extern void func_80045990(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);
+extern s32 func_80097AE8(s16 arg0);
+extern s32 func_80097B48(s16 arg0);
 extern void func_80097C18(FixedMatrix3s arg0, s16 arg1);
 extern void func_800981C8(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3);
 extern void func_80098590(void *, s32 *, Vec3i *);
@@ -74,7 +76,6 @@ extern void func_80055C7C(void);
 
 extern void func_80056348(CoursePreviewCamera *arg0, s16 arg1);
 extern void func_800563C4(CoursePreviewCamera *arg0, s32 arg1);
-extern void func_800564A8(CoursePreviewCamera *arg0);
 extern void func_80071824(void *task, void (*callback)());
 extern s8 D_80122288;
 extern s16 D_80122282;
@@ -215,7 +216,23 @@ void func_80056444(CoursePreviewCamera *arg0, s16 arg1) {
     arg0->angle.half.pitch += (((-arg0->pitchVelocity * 2) - arg0->angle.half.pitch) >> 3);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_800564A8.s")
+void func_800564A8(CoursePreviewCamera *arg0) {
+    s32 sine;
+    s32 cosine;
+
+    arg0->spinVelocity += arg0->timer;
+    arg0->angle.half.yaw += arg0->pitchVelocity;
+    arg0->position.y += arg0->velocityY;
+
+    sine = func_80097AE8(arg0->angle.half.yaw);
+    cosine = func_80097B48(arg0->angle.half.yaw);
+
+    arg0->position.x += ((s64) -arg0->radius * sine) / 0x1000;
+    arg0->position.z += ((s64) -arg0->radius * cosine) / 0x1000;
+    arg0->scale = 0x80 - ((func_80097AE8(arg0->tilt + 0x400) + 0x1000) / 0x40);
+
+    func_800483FC(&D_801248D4, func_8005616C, (s32) arg0);
+}
 
 void func_800565E8(CoursePreviewCamera *arg0) {
     func_80056348(arg0, 0x130);
