@@ -98,7 +98,14 @@ typedef struct {
     /* 0x034 */ u8 pad34[RACE_PLAYER_STATE_SIZE - 0x34];
 } RaceItemFollowPlayer;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[0x38];
+    /* 0x38 */ s16 itemTextureHandle;
+} RaceItemEffectAssetHandles;
+
 extern u8 *D_800D46D0[];
+extern u16 D_800D46F8[];
+extern RaceItemEffectAssetHandles D_80112130;
 extern s16 D_8011216C;
 extern s16 D_80121B50;
 extern u8 D_80121B56;
@@ -111,7 +118,7 @@ extern s32 D_801248EC;
 
 s32 func_80043040(s16);
 s32 func_800430D0(void);
-void func_80045990(s32, u8, s32 *, s32 *);
+void func_80045990(s32, u16, void *, void *);
 void func_800483FC(void *, void *, void *);
 void func_8004DB8C(RaceItemEffectActor *);
 void func_8004E02C(RaceItemEffectActor *);
@@ -125,6 +132,7 @@ void func_8004F9CC(RaceItemEffectActor *);
 void func_8005019C(RaceItemEffectActor *);
 void func_80050340(RaceItemEffectActor *);
 void func_80050398(RaceItemEffectActor *);
+void func_80050888(RaceItemEffectActor *);
 void func_800716E4();
 void func_80071824(void *task, void (*callback)());
 RaceItemEffectActor *func_800711D0(void *, s32, s32);
@@ -349,7 +357,28 @@ void func_800503D0(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050888.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_800508D0.s")
+void func_800508D0(RaceItemEffectActor *arg0) {
+    u16 *var_s0;
+    RaceItemEffectActor *callbackActor;
+    s32 var_s1;
+    volatile short pad;
+    s32 *var_s2;
+    volatile RaceItemEffectAssetHandles *new_var2;
+    s32 *var_s3;
+    volatile RaceItemEffectAssetHandles *var_s4;
+    s32 var_s5;
+    RaceItemEffectActor *actor;
+    void (*new_var)(RaceItemEffectActor *);
+    RaceItemEffectActor *var_s6;
+
+    var_s4 = &D_80112130;
+    if (1 != 0) {
+    }
+    do { var_s0 = D_800D46F8; if (1) { } var_s6 = arg0; actor = var_s6; { } var_s1 = 0; var_s2 = &actor->payload.vec.x; var_s3 = &actor->unk28.word; if (1) { } arg0 = arg0; if (arg0 && arg0) { } var_s5 = 0x10; if (1) { } new_var = func_80050888; callbackActor = actor; do { func_80045990((0, func_80043040((new_var2 = var_s4)->itemTextureHandle)), *var_s0, var_s2, var_s3); var_s1 += 4; var_s0++; var_s2++; var_s3++; } while (var_s1 != var_s5); } while (0);
+
+    func_80050888(callbackActor);
+    func_80071824(callbackActor, new_var);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8005098C.s")
 

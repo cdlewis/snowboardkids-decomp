@@ -2814,3 +2814,12 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   update block, assigning `RaceItemFollowActor *temp_a2 = arg0` before the
   `D_80121B56` check lets IDO keep the callback argument live in `$a2` across
   the block and matches the final signed timer clamp/render callback sequence.
+
+## func_800508D0 (race_item_effects)
+
+- For short asset-table setup loops that keep two global addresses live,
+  the exact placement and compact formatting of empty allocator-steering
+  blocks can affect IDO's scheduling of `%lo` address materialization. In this
+  function, expanding the permuter's compact `do { ... } while (0)` setup moved
+  `addiu s4, %lo(D_80112130)` below the other local initializers and caused a
+  checksum mismatch, even though the logical C statements were equivalent.
