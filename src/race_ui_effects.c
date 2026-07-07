@@ -321,6 +321,10 @@ extern void *D_800E1370;
 extern void *D_800E1374;
 extern void *D_800E1378;
 extern void *D_800E14B8;
+extern void *D_800E1474;
+extern void *D_800E1484;
+extern void *D_800E1494;
+extern void *D_800E14A8;
 extern void *D_800E14BC;
 extern void *D_800E14C0;
 extern void *D_800E14C4;
@@ -1144,7 +1148,21 @@ void func_8005CDB0(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D860.s")
 
+// func_8005D9B4 best match: 88.102% (nonmatchings/func_8005D9B4-1197934324348345530/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D9B4.s")
+
+#ifdef NON_MATCHING
+void func_8005D9B4(RaceUiAlpha18Actor *arg0) {
+    Gfx *gfx;
+    s32 w0;
+    s32 w1;
+    s16 y;
+    RaceUiAlpha18Actor **arg0p = &arg0;
+
+    /* IDO scheduling for this function depends on this block staying on one line. */
+    do { if ((*arg0p)->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = ((*arg0p)->alpha & 0xFF) | (~0xFF); } func_80048278(-0xC, -0x50, &D_800E1474, 5); y = -0x28; func_80048278(-8, y, &D_800E1484, 5); y += 0x28; func_80048278(-8, y, &D_800E1494, 5); y += 0x28; func_80048278(-0xC, y, &D_800E14A8, 5); if ((*arg0p)->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+}
+#endif
 
 void func_8005DB3C(void *arg0) {
     func_80048278(0x30, -0x48, &D_800E14B8, 6);
