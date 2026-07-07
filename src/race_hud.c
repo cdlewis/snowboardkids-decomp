@@ -228,13 +228,10 @@ void func_80017F94(RaceHudMessageActor *arg0) {
     func_800483FC(&D_80124868, func_80017D6C, arg0);
 }
 
-// func_80018060 best functional match: 78.741% (base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80018060.s")
-
-#ifdef NON_MATCHING
 void func_80018060(RaceHudMessageActor *arg0) {
     s32 i;
     RacePlayerState *player;
+    RaceHudMessageActor *actor;
     s32 targetX;
 
     targetX = -0x50;
@@ -247,28 +244,28 @@ void func_80018060(RaceHudMessageActor *arg0) {
     arg0->state = 0;
     arg0->timer = 0;
     arg0->playerFlags = 0;
+    actor = arg0;
     arg0->unk23 = 0;
 
     i = 0;
     if (D_80121B55 > 0) {
         player = D_800EC9F0;
         do {
-            arg0->playerFlags = arg0->playerFlags | (player->flags & 1);
-            D_8010AE5E = arg0->playerFlags;
-            D_8010AE5F = arg0->unk23;
+            actor->playerFlags = actor->playerFlags | (player->flags & 1);
+            D_8010AE5E = actor->playerFlags;
+            D_8010AE5F = actor->unk23;
             i++;
             player++;
         } while (i < D_80121B55);
     }
 
-    if (arg0->playerFlags == 1) {
-        arg0->targetX = -0x40;
+    if (actor->playerFlags == 1) {
+        actor->targetX = -0x40;
     } else {
-        arg0->targetX = targetX;
+        actor->targetX = targetX;
     }
-    func_80071824(arg0, func_80017F94);
+    func_80071824(actor, func_80017F94);
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80018134.s")
 
