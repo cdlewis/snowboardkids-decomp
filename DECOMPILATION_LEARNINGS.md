@@ -2690,6 +2690,16 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `state = globalState`. This keeps the global state in `$a1` and the switch
   state in `$v1`.
 
+## func_8001B2D8 (player_select_ui)
+
+- This function shares the `func_8002AE3C` cursor state-machine shape, including
+  the five empty `if (1) {}` allocation trick after syncing the global state.
+  `D_8010AE70` is a struct-like cursor state for the initial state/nextState
+  read, but the target's final state write reloads the same byte address with
+  `lui $at`/`sb` instead of reusing the live struct base in `$a3`. A linker
+  alias (`D_8010AE70_state = D_8010AE70`) lets C write through a separate byte
+  symbol without changing bss layout, producing the target code after linking.
+
 ## func_8002DCE8 (shop_menu_ui)
 
 - This shop cursor callback shares the `func_8002AE3C` global-state sync shape,
