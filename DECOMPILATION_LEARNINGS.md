@@ -65,6 +65,11 @@ patterns, and verified layout/linking rules.
 - Before tuning register allocation, verify function signatures and call
   argument order against the target assembly. Wrong argument order produces
   misleading register-allocation diffs and wastes permutation time.
+- Extra live argument registers at a callsite do not always mean the callee was
+  called with those arguments in C. In func_80072844, `a2`/`a3` remain set before
+  `func_8009DF14` because they were hoisted for the alternate `func_8009DC68`
+  path; declaring and calling `func_8009DF14` with its real two-argument
+  signature was required for the target `jal` delay slot to stay `nop`.
 - If a target loads a symbol by taking the base of a neighboring array or table
   and then applying a field/element offset, using the apparent field symbol
   directly can produce a different `lui/addiu` pair and shift nearby scheduling.
