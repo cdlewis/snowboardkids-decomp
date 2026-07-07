@@ -3161,3 +3161,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - A redundant actor null-expression before the first `func_80097FE4` call is
   needed to make IDO use `$s0` rather than `$a0` for the initial player index
   load; the otherwise clean source remains a one-instruction register mismatch.
+
+## func_80050FF0 (main_menu_panel_ui)
+
+- For fixed 0x10-step panel tiling loops, signed `s16` edge loop variables make
+  IDO emit the target `slti` loop exits, but also add explicit halfword
+  truncation and shift the saved-register allocation. Plain `s32` variables keep
+  the nested fill loop clean, but IDO recognizes the exact endpoint and turns
+  the first two border loops into `bne`-against-limit forms.
+- Decomp-permuter may suggest unsigned loop variables here, but those change the
+  negative-start loop semantics even when the assembly score improves.
