@@ -1,12 +1,5 @@
 #include "common.h"
 #include "viewport_manager.h"
-/* gbi.h pulls in ultratypes.h, which redeclares the fixed-width types already
- * provided by common.h. Skip it by pre-defining its include guard. gbi.h also
- * expects _SHIFTL/_SHIFTR to be defined externally (normally by mbi.h). */
-#define _ULTRATYPES_H_
-#define _SHIFTL(v, s, w) ((unsigned int)(((unsigned int)(v) & ((0x01 << (w)) - 1)) << (s)))
-#define _SHIFTR(v, s, w) ((unsigned int)(((unsigned int)(v) >> (s)) & ((0x01 << (w)) - 1)))
-#include <PR/gbi.h>
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x2FC];
@@ -48,12 +41,7 @@ typedef struct {
     /* 0x36 */ s16 alpha;
 } MainMenuOverlayEffectActor;
 
-typedef struct {
-    u32 w0;
-    u32 w1;
-} MainMenuOverlayGfxCommand;
-
-extern MainMenuOverlayGfxCommand *D_80124830;
+extern Gfx *D_80124830;
 extern void *D_80124868;
 extern u8 D_80124858[];
 extern u8 D_80124878[];
@@ -279,12 +267,12 @@ void func_80054714(MainMenuOverlayEffectActor *arg0) {
 }
 
 void func_8005475C(MainMenuOverlayEffectActor *arg0) {
-    MainMenuOverlayGfxCommand *gfx;
+    Gfx *gfx;
 
     gfx = D_80124830;
     D_80124830 = gfx + 1;
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx->w0 = 0xE7000000; gfx->w1 = 0; gfx = D_80124830; D_80124830 = gfx + 1; gfx->w0 = 0xFC119623; gfx->w1 = 0xFF2FFFFF; gfx = D_80124830; D_80124830 = gfx + 1; gfx->w0 = 0xB900031D; gfx->w1 = 0x00504240; gfx = D_80124830; D_80124830 = gfx + 1; gfx->w0 = 0xFA000000; gfx->w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, func_80043040(D_80112168), 0x5D); func_80045A78(4, -0x10, func_80043040(D_80112168), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, func_80043040(D_8011216A), D_800D57B4[D_80121B50]); func_80045A78(4, -0xC, func_80043040(D_8011216A), D_800D57B4[D_80121B50] + 1); gfx = D_80124830; D_80124830 = gfx + 1; gfx->w0 = 0x06000000; gfx->w1 = (u32) D_800DEFF8; } while (0);
+    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = D_80124830; D_80124830 = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = D_80124830; D_80124830 = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = D_80124830; D_80124830 = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, func_80043040(D_80112168), 0x5D); func_80045A78(4, -0x10, func_80043040(D_80112168), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, func_80043040(D_8011216A), D_800D57B4[D_80121B50]); func_80045A78(4, -0xC, func_80043040(D_8011216A), D_800D57B4[D_80121B50] + 1); gfx = D_80124830; D_80124830 = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) D_800DEFF8; } while (0);
 }
 
 void func_800548F4(MainMenuOverlayEffectActor *arg0) {
@@ -460,16 +448,15 @@ void func_800553E0(MainMenuOverlayEffectActor *arg0) {
 
 #ifdef NON_MATCHING
 void func_80055530(void *arg0) {
-    MainMenuOverlayGfxCommand *gfx;
-    MainMenuOverlayGfxCommand *textureCommand;
-    MainMenuOverlayGfxCommand *paletteCommand;
-
     if (D_80156608 == 0) {
-        gfx = D_80124830;
-        D_80124830 = gfx + 1;
-        gfx->w0 = 0xE7000000;
-        gfx->w1 = 0;
-        do { textureCommand = D_80124830; D_80124830 = textureCommand + 1; textureCommand->w0 = 0xBC000806; textureCommand->w1 = func_80043040(D_80112140); paletteCommand = D_80124830; D_80124830 = paletteCommand + 1; paletteCommand->w0 = 0xBC000C06; paletteCommand->w1 = func_80043040(D_80112142); gfx = D_80124830; D_80124830 = gfx + 1; do { gfx->w0 = 0x01020040; gfx->w1 = (u32) D_800DEE50; gfx = D_80124830; } while (0); D_80124830 = gfx + 1; do { gfx->w0 = 0x06000000; gfx->w1 = (u32) D_2000E70; } while (0); } while (0);
+        gDPPipeSync(D_80124830++);
+
+        gSPSegment(D_80124830++, 0x02, func_80043040(D_80112140));
+        gSPSegment(D_80124830++, 0x03, func_80043040(D_80112142));
+
+        gSPMatrix(D_80124830++, D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+
+        gSPDisplayList(D_80124830++, D_2000E70);
     }
 }
 #endif

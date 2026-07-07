@@ -3,16 +3,13 @@
 
 #include "include_asm.h"
 
-typedef signed char s8;
-typedef signed short s16;
-typedef signed int s32;
-typedef signed long long s64;
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
-typedef float f32;
-
-#define NULL 0
+/*
+ * Pull in the libultra headers project-wide so every translation unit has the
+ * fixed-width types (ultratypes.h), the _SHIFTL/_SHIFTR macros, the Gfx
+ * display-list union, and the gSP / gDP command macros. mbi.h defines the
+ * shift macros before including gbi.h (which needs them), so the order here
+ * resolves cleanly without any per-file guards.
+ */
+#include <PR/mbi.h>
 
 #endif

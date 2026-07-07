@@ -10,11 +10,6 @@ typedef struct {
 } Vec3i;
 
 typedef struct {
-    /* 0x00 */ u32 w0;
-    /* 0x04 */ u32 w1;
-} SnowboardTrailGfx;
-
-typedef struct {
     /* 0x00 */ s16 state;
     /* 0x02 */ u8 pad02[0x04 - 0x02];
     /* 0x04 */ Vec3i localOffset;
@@ -64,7 +59,7 @@ extern void func_800987A0(s16 *mtx, s16 *rotation, Vec3i *scale, s16 *dest);
 extern u8 D_80121B56;
 extern s16 D_80112144;
 extern s16 D_80112146;
-extern SnowboardTrailGfx *D_80124830;
+extern Gfx *D_80124830;
 extern void *D_801248BC;
 extern u8 D_80156609;
 

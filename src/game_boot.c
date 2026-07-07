@@ -55,11 +55,6 @@ typedef struct {
     u8 unk0[8];
 } MainSchedulerClient;
 
-typedef struct {
-    u32 w0;
-    u32 w1;
-} BootDisplayListCommand;
-
 extern void osInitialize(void);
 extern void osCreatePiManager(OSPri, OSMesgQueue *, OSMesg *, s32);
 extern void osCreateThread(OSThread *, OSId, void (*)(void *), void *, void *, OSPri);
@@ -91,7 +86,7 @@ extern OSMesgQueue D_80124018;
 extern OSMesg D_80124030[8];
 extern u8 D_801240A8[0x778];
 extern MainSchedulerClient D_80124820;
-extern BootDisplayListCommand *D_80124830;
+extern Gfx *D_80124830;
 extern s8 D_8012482A;
 extern s8 D_8012482B;
 extern s8 D_8012482C;
@@ -204,25 +199,25 @@ void func_8009B5C0(u8 a0, u8 a1, u8 a2) {
 
 // func_8009B5F4 best match: 58.191% at nonmatchings/func_8009B5F4-1404502880690620360/base_6.c.
 #ifdef NON_MATCHING
-BootDisplayListCommand *func_8009B5F4(void) {
-    BootDisplayListCommand *gfx;
-    BootDisplayListCommand *gfx2;
+Gfx *func_8009B5F4(void) {
+    Gfx *gfx;
+    Gfx *gfx2;
     s32 fade;
     s32 denom;
     s32 scale;
 
     gfx = D_80124830;
     D_80124830 = gfx + 1;
-    gfx->w0 = 0xBC000008;
+    gfx->words.w0 = 0xBC000008;
     fade = D_800DF140;
     scale = 0x1F400;
     denom = 0x3E8 - fade;
-    gfx->w1 = ((scale / denom) << 16) | ((((-fade << 8) + scale) / denom) & 0xFFFF);
+    gfx->words.w1 = ((scale / denom) << 16) | ((((-fade << 8) + scale) / denom) & 0xFFFF);
 
     gfx2 = D_80124830;
     D_80124830 = gfx2 + 1;
-    gfx2->w0 = 0xF8000000;
-    gfx2->w1 = (D_80156618 << 24) | (D_80156619 << 16) | (D_8015661A << 8) | 0xFF;
+    gfx2->words.w0 = 0xF8000000;
+    gfx2->words.w1 = (D_80156618 << 24) | (D_80156619 << 16) | (D_8015661A << 8) | 0xFF;
 
     return gfx;
 }
