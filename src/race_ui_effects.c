@@ -406,6 +406,9 @@ extern void *D_800E14C8;
 extern u32 D_800DEFF8[];
 extern u32 D_800E12D4[];
 extern u32 D_800E1390[];
+extern void *D_800E1458;
+extern void *D_800E1460;
+extern void *D_800E1468;
 extern Gfx *gRegionAllocPtr;
 extern RaceUiAssetEntry D_800D5FF4[];
 extern u16 D_800D6520[];
@@ -464,7 +467,6 @@ extern void func_8005FBA8(void *);
 extern void func_8005FED0(void *);
 extern void func_8005CF60(void);
 extern void func_8005D558(void);
-extern void func_8005D860(void);
 extern void func_8005DB3C(void *);
 extern void func_8005D1CC(void);
 extern void func_8005D9B4(void);
@@ -1259,7 +1261,16 @@ void func_8005CDB0(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D558.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D860.s")
+void func_8005D860(RaceUiAlpha18Actor *arg0) {
+    Gfx *gfx;
+    void **new_var2;
+    s32 w0;
+    s32 w1;
+    s32 new_var;
+
+    /* IDO scheduling for this function depends on this block staying on one line. */
+    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; if (!gfx) { } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x68, -0x40, new_var2 = &D_800E1458, 6); func_80048278(-0x64, -0x1C, &D_800E1460, 5); w0 = 8; if (D_80121B81 != 0) { new_var = w0; func_80048278(-0x6C, new_var, &D_800E1468, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+}
 
 // func_8005D9B4 best match: 88.102% (nonmatchings/func_8005D9B4-1197934324348345530/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D9B4.s")
