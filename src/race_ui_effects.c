@@ -138,7 +138,9 @@ typedef struct {
     /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ Vec3i velocity;
-    /* 0x30 */ u8 pad30[0x50 - 0x30];
+    /* 0x30 */ u8 pad30[0x36 - 0x30];
+    /* 0x36 */ s16 flags;
+    /* 0x38 */ u8 pad38[0x50 - 0x38];
     /* 0x50 */ s32 verticalVelocity;
     /* 0x54 */ s32 verticalAcceleration;
 } RaceUiProjectileActor;
@@ -406,7 +408,7 @@ extern void func_80060FA4(void *);
 extern void func_80061CA8(void);
 extern void func_800634C8(void);
 extern void func_80064470(RaceUiProjectileActor *);
-extern void func_80064C68(RaceUiProjectileActor *);
+extern void func_80064B28(RaceUiProjectileActor *);
 extern void func_80057AA4(RaceUiPopupActor *);
 extern void func_80057CAC(RaceUiPopupActor *);
 extern void func_80060E7C(void *);
@@ -1881,7 +1883,29 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80064B28.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80064C68.s")
+void func_80064C68(RaceUiProjectileActor *arg0) {
+    FixedMatrix3sScratch sp2C;
+    RacePlayerState *player;
+    RaceUiProjectileActor *actor;
+
+    actor = arg0;
+    if (D_80121B56 == 0) {
+        func_80097FE4(sp2C, D_80121D80[actor->index].pitch, D_80121D80[actor->index].yaw);
+        func_80098590(sp2C, &actor->velocity, &actor->pos);
+
+        player = &D_80121D80[actor->index];
+        actor->pos.a += player->pos28.a;
+        actor->pos.b += player->pos28.b;
+        actor->pos.c += player->pos28.c;
+        func_80064414(actor);
+        if (actor->flags != 0) {
+            func_80071824(actor, func_80064B28);
+            actor->verticalAcceleration = 0x50000;
+            actor->verticalVelocity += 0x50000;
+        }
+    }
+    func_800483FC(&D_801248C8, func_80064470, actor);
+}
 
 void func_80064D88(RaceUiProjectileActor *arg0) {
     FixedMatrix3sScratch sp2C;
