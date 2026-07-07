@@ -2894,3 +2894,14 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   target `$a0`/`$a1` register allocation.
 - Keeping the first accumulated timer value in the same `diff` variable used
   after subtraction lets IDO reuse `$v1` across the comparison and first divide.
+
+## func_8007BCFC (race_position_tracker)
+
+- The best current non-matching attempt keeps a redundant early
+  `D_800DDE74[(courseIndex * 4) + playerIndex]` assignment before the course-7
+  early returns so IDO saves `pathIndex` in `$a3` rather than spilling it.
+- Splitting the path sample calculation into `pathIndex = pathSample << 0x12;`
+  followed by an empty `if (!playerIndex) {}` lifetime barrier and then
+  subtracting `pathOffset` moves the shift temporary from `$t7` to target
+  `$t3`. The remaining mismatch is the equivalent `entry + pathIndexCopy` /
+  loaded sample register pair (`$t6`/`$t2` instead of target `$t2`/`$a1`).
