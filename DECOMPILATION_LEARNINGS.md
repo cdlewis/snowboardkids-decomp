@@ -2732,3 +2732,9 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - For a 0x40-byte command block initializer, writing the computed `unk1C` field
   before clearing `unk20` lets IDO schedule the source `unk1C` load before the
   `unk20` zero store, while still emitting the target `unk1C` store afterward.
+
+## func_8004885C (render_asset_utils)
+
+- The allocation wrapper around the `func_800486BC` command transform matches
+  cleanly when it uses the same typed `GfxCommandSource`/`GfxCommandDest`
+  accesses and returns the allocated destination pointer directly.
