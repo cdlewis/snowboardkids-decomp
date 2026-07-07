@@ -45,6 +45,7 @@ extern void func_800291F0(s32);
 extern s32 func_80043040(s16);
 extern u8 D_800EC9E6;
 extern s32 D_8010ADE8;
+extern s16 D_800B70C0[][4];
 extern s16 D_80112130[];
 extern s16 D_8011217A;
 extern u8 D_80121B55;
@@ -136,7 +137,33 @@ void func_80026A54(CourseSelectWidgetActor *arg0) {
     func_800483FC(&D_80124868, func_800263D8, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80026B88.s")
+void func_80026B88(CourseSelectWidgetActor *arg0) {
+    s32 row;
+    s32 i;
+    CourseSelectWidgetActor *temp_a3;
+    s16 (*table)[4];
+
+    temp_a3 = arg0;
+    if (D_80121B55 < 3) {
+        row = D_80121B55 - 1;
+    } else {
+        row = 2;
+    }
+
+    i = 0;
+    if ((s32)D_80121B55 > 0) {
+        table = &D_800B70C0[row];
+        do {
+            temp_a3->coordinates[i] = (*table)[(i & 1) * 2] + ((i >= 2) * 0x8C);
+            temp_a3->coordinates[i + 4] = (*table)[(i & 1) * 2 + 1];
+            i++;
+        } while (i < (s32)D_80121B55);
+    }
+
+    temp_a3->transitionOffset = 0;
+    temp_a3->transitionState = 0;
+    func_80071824(temp_a3, func_80026A54);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80026C4C.s")
 
