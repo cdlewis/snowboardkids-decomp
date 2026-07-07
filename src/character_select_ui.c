@@ -36,6 +36,18 @@ typedef struct {
 
 typedef u8 CharacterSelectText[0x94];
 
+typedef union {
+    u8 bytes[8];
+    struct {
+        /* 0x00 */ u8 state;
+        /* 0x01 */ u8 otherState;
+        /* 0x02 */ u8 pad2[2];
+        /* 0x04 */ s16 spriteIndex;
+        /* 0x06 */ u8 timer;
+        /* 0x07 */ u8 otherTimer;
+    } fields;
+} CharacterSelectCursorState;
+
 extern void func_80071824(void *task, void (*callback)());
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
@@ -53,7 +65,8 @@ extern s16 D_80121B50;
 extern s32 D_8010ADDC;
 extern u16 D_8010AE80;
 extern void *D_8010ADE0;
-extern u8 D_8010AE88[];
+extern CharacterSelectCursorState D_8010AE88;
+extern u8 D_8010AE88_state;
 extern u8 D_8010AE89;
 extern u8 D_8010AE8A;
 extern u8 D_8010AE8F;
@@ -1053,7 +1066,53 @@ void func_80020AE0(CharacterSelectWidgetActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80020B70.s")
+void func_80020B70(CharacterSelectWidgetActor *arg0) {
+    u8 state;
+    u8 globalState;
+
+    state = arg0->transition.bytes.state;
+    if (state != (globalState = D_8010AE88.fields.state)) {
+        arg0->transition.bytes.state = globalState;
+        state = globalState;
+        arg0->sprite.index = D_8010AE88.fields.spriteIndex;
+        arg0->transition.bytes.timer = D_8010AE88.fields.timer;
+    }
+
+    /* Preserve IDO's state selector register allocation. */
+    switch (state ^ 0) {
+    case 0:
+        arg0->sprite.index += 0x26;
+        if (arg0->sprite.index >= 0x100) {
+            arg0->sprite.index = 0x100;
+            arg0->transition.bytes.state = 1;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 1:
+        if ((s32) arg0->transition.bytes.timer < 0x10) {
+            arg0->sprite.index -= 9;
+        } else {
+            arg0->sprite.index += 9;
+        }
+        state = arg0->transition.bytes.state;
+        arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
+        break;
+    case 2:
+        if (D_80121D88 == 1) {
+            state = arg0->transition.bytes.state = 3;
+        }
+        break;
+    case 3:
+        break;
+    }
+
+    D_8010AE88_state = state;
+    if (D_80121D88 == 7) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_80020AE0, arg0);
+}
 
 void func_80020CEC(CharacterSelectWidgetActor *arg0) {
     u8 selectedCharacterRow;
@@ -1406,10 +1465,10 @@ void func_80021F80(CharacterSelectWidgetActor *arg0) {
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = D_8010AE88[1])) {
+    if (state != (globalState = D_8010AE88.bytes[1])) {
         arg0->transition.bytes.state = globalState;
         state = globalState;
-        arg0->transition.bytes.timer = D_8010AE88[7];
+        arg0->transition.bytes.timer = D_8010AE88.bytes[7];
     }
 
     switch (state) {
@@ -1463,8 +1522,8 @@ void func_80021F80(CharacterSelectWidgetActor *arg0) {
     if (arg0->transition.bytes.state == 6) {
         func_800716E4(arg0);
         D_8010ADE0 = NULL;
-        D_8010AE88[1] = 0;
-        D_8010AE88[7] = 0;
+        D_8010AE88.bytes[1] = 0;
+        D_8010AE88.bytes[7] = 0;
         return;
     }
     func_800483FC(&D_80124868, func_80021EA8, arg0);
@@ -1703,7 +1762,7 @@ void func_80023434(CharacterSelectWidgetActor *arg0) {
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = D_8010AE88[1])) {
+    if (state != (globalState = D_8010AE88.bytes[1])) {
         arg0->transition.bytes.state = globalState;
         /* Preserve IDO's state/globalState register allocation. */
         if (1) {}
@@ -1712,7 +1771,7 @@ void func_80023434(CharacterSelectWidgetActor *arg0) {
         if (1) {}
         if (1) {}
         state = globalState;
-        arg0->transition.bytes.timer = D_8010AE88[7];
+        arg0->transition.bytes.timer = D_8010AE88.bytes[7];
     }
 
     switch (state) {
@@ -1757,8 +1816,8 @@ void func_80023434(CharacterSelectWidgetActor *arg0) {
     if (arg0->transition.bytes.state == 6) {
         func_800716E4(arg0);
         D_8010ADE0 = NULL;
-        D_8010AE88[1] = 0;
-        D_8010AE88[7] = 0;
+        D_8010AE88.bytes[1] = 0;
+        D_8010AE88.bytes[7] = 0;
         return;
     }
     func_800483FC(&D_80124868, func_8002332C, arg0);
