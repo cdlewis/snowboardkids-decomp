@@ -10,10 +10,10 @@ typedef struct {
 } MainMenuScoreTransition;
 
 typedef struct {
-    /* 0x0 */ s8 step;
+    /* 0x0 */ u8 step;
     /* 0x1 */ char pad1[0x1];
     /* 0x2 */ s16 timer;
-    /* 0x4 */ s16 targetState;
+    /* 0x4 */ u16 targetState;
     /* 0x6 */ s16 nextTimer;
 } ControllerPakDeleteFlow;
 
@@ -54,7 +54,7 @@ struct MainMenuScoreTask {
         struct {
             s8 unk1E;
             s8 unk1F;
-            s8 unk20;
+            u8 unk20;
             u8 frame;
             u16 alpha;
             u16 alphaTimer;
@@ -65,6 +65,12 @@ struct MainMenuScoreTask {
             u16 alpha;
             u16 alphaTimer;
         } w;
+        struct {
+            u16 slideOffset;
+            u16 selection;
+            u16 alpha;
+            u16 alphaTimer;
+        } wu;
     } state;
 };
 
@@ -202,20 +208,16 @@ void func_8002BC9C(MainMenuScoreTask *arg0) {
     }
 }
 
-// func_8002BDAC best match: 99.714%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002BDAC.s")
-
-#ifdef NON_MATCHING
 void func_8002BDAC(MainMenuScoreTask *arg0) {
     u8 state;
-    unsigned long globalState;
+    u8 globalState;
 
     state = arg0->state.b.unk20;
-    if (state != (globalState = D_8010AF60.state)) {
+    if (state != (globalState = D_8010AF60.step)) {
         arg0->state.b.unk20 = globalState;
         state = globalState;
-        arg0->unk1C.scale = D_8010AF60.scale;
-        arg0->state.w.slideOffset = D_8010AF60.slideOffset;
+        arg0->unk1C.scale = D_8010AF60.timer;
+        arg0->state.wu.slideOffset = D_8010AF60.targetState;
     }
 
     switch (state) {
@@ -243,7 +245,7 @@ void func_8002BDAC(MainMenuScoreTask *arg0) {
             arg0->unk1C.scale = 0;
             arg0->state.b.unk20 = 2;
             D_800EC9D0 = 0;
-            D_800EC9C8 = (u16)arg0->state.w.slideOffset;
+            D_800EC9C8 = arg0->state.wu.slideOffset;
         }
         state = arg0->state.b.unk20;
         break;
@@ -264,7 +266,6 @@ void func_8002BDAC(MainMenuScoreTask *arg0) {
     }
     func_800483FC(&D_80124868, func_8002BC9C, arg0);
 }
-#endif
 
 void func_8002BF54(MainMenuScoreTask *arg0) {
     arg0->x = -0x42;
