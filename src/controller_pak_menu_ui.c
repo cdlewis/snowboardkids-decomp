@@ -77,6 +77,15 @@ typedef struct {
     u8 state;
 } ControllerPakPromptTransition;
 
+typedef struct {
+    s16 pad0;
+    u8 state;
+    u8 pad3;
+    u16 targetScale;
+    u8 pad6[2];
+    u8 selectedOption;
+} ControllerPakConfirmTransition;
+
 extern void func_800483FC(void *, void *, s32);
 extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
@@ -85,7 +94,9 @@ extern s32 D_80124868;
 extern s32 D_80124838;
 extern CharacterSelectFlowState *D_801235B8;
 extern ControllerPakPromptTransition D_8010AF80;
+extern ControllerPakConfirmTransition D_8010ADD0;
 extern ControllerPakMenuState D_8010AF90;
+extern u8 D_8010ADD2;
 extern u8 D_8010AF92;
 extern u8 D_8010AF93;
 extern s16 D_80112172;
@@ -93,7 +104,8 @@ extern s16 D_8011217C;
 extern s16 D_80112178;
 extern u8 D_800B8090[];
 void func_8003048C(ControllerPakTitleActor *);
-extern void func_80030CC4(void);
+extern void func_800305B8(void);
+void func_80030CC4(ControllerPakConfirmActor *);
 void func_80030EF0(ControllerPakTitleActor *);
 void func_80031038(ControllerPakTitleActor *);
 void func_8003112C(ControllerPakTitleActor *);
@@ -162,7 +174,91 @@ void func_80030570(ControllerPakTitleActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_800305B8.s")
 
+// func_80030CC4 best match: 99.750%
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_80030CC4.s")
+
+#ifdef NON_MATCHING
+void func_80030CC4(ControllerPakConfirmActor *arg0) {
+    u8 state;
+    u8 globalState;
+
+    state = arg0->state;
+    if (state != (globalState = D_8010ADD0.state)) {
+        arg0->state = globalState;
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        arg0->targetScale = D_8010ADD0.targetScale;
+        arg0->optionScale = 0x100;
+        state = globalState;
+        arg0->timer = 0;
+    }
+
+    switch (state) {
+        case 0:
+            arg0->scale += 0x28;
+            if (arg0->scale >= 0x100) {
+                arg0->scale = 0x100;
+                if (D_8010ADD0.selectedOption == 1) {
+                    arg0->state = 3;
+                } else {
+                    arg0->state = 1;
+                }
+            }
+            state = arg0->state;
+            break;
+        case 1:
+            state = arg0->state;
+            arg0->timer = (arg0->timer + 1) & 0xF;
+            break;
+        case 2:
+            state = arg0->state;
+            arg0->timer = 0;
+            break;
+        case 3:
+            state = arg0->state;
+            arg0->timer = (arg0->timer + 1) & 0xF;
+            break;
+        case 4:
+            arg0->scale -= 0x28;
+            if (arg0->scale <= 0) {
+                arg0->scale = 0;
+                arg0->state = 5;
+            }
+            state = arg0->state;
+            break;
+        case 7:
+            state = arg0->state;
+            arg0->timer = 0;
+            break;
+        case 8:
+            state = arg0->state;
+            arg0->timer = (arg0->timer + 1) & 0xF;
+            break;
+        case 9:
+            if ((s32)arg0->timer < 0x10) {
+                arg0->optionScale -= 9;
+            } else {
+                arg0->optionScale += 9;
+            }
+            state = arg0->state;
+            arg0->timer = (arg0->timer + 1) & 0x1F;
+            break;
+        case 5:
+        case 6:
+            break;
+    }
+
+    D_8010ADD2 = state;
+    if (arg0->state == 5) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_800305B8, (s32)arg0);
+}
+#endif
 
 void func_80030EA8(ControllerPakConfirmActor *arg0) {
     arg0->common.x = -0x70;
