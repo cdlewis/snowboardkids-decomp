@@ -61,7 +61,7 @@ void func_80042574(MainMenuSceneModel *arg0) {
 }
 #endif
 
-// func_8004270C best match: 98.333% at nonmatchings/func_8004270C-690418013071298896/base_1.c.
+// func_8004270C best match: 98.514% at nonmatchings/func_8004270C-9017456803007796287/base_10.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_8004270C.s")
 
 #ifdef NON_MATCHING
@@ -75,7 +75,7 @@ void func_8004270C(MainMenuSceneModel *arg0) {
     s32 stride;
 
     model = arg0;
-    if (D_80156608 == (u16)model->renderFrame) {
+    if ((u16)model->renderFrame == D_80156608) {
         matrix = func_8004885C(model->displayObjects);
         if (matrix != NULL) {
             func_8007C130(matrix, model->textureId, model->paletteId);
