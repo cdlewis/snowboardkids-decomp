@@ -140,18 +140,13 @@ extern void func_8002F2C8(ShopMenuWidgetActor *);
 extern void func_8002E9E4(ShopMenuWidgetActor *);
 extern void func_8002EC5C(void);
 extern void func_8002E5A4(ShopMenuWidgetActor *);
-<<<<<<< HEAD
 extern void func_8002FC00(ShopMenuWidgetActor *);
-extern void func_8002FD70(ShopMenuWidgetActor *);
-=======
-extern void func_8002FD70(void);
 extern void func_8002CAD4(ShopMenuWidgetActor *);
 extern void func_8002DE6C(ShopMenuWidgetActor *);
 extern void func_8002E074(ShopMenuWidgetActor *);
 extern void func_8002E214(ShopMenuWidgetActor *);
 extern void func_8002E42C(ShopMenuWidgetActor *);
 extern void func_8002E798(ShopMenuWidgetActor *);
->>>>>>> 7ecd0ec (Decompile func_8002CFAC)
 extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
