@@ -50,10 +50,12 @@ extern u8 D_800B6934[][0x60];
 extern u8 D_800B6A54[][0x70];
 extern u8 D_800B6B34[];
 extern s16 D_80121B50;
+extern s32 D_8010ADDC;
 extern u16 D_8010AE80;
 extern void *D_8010ADE0;
 extern u8 D_8010AE88[];
 extern u8 D_8010AE89;
+extern u8 D_8010AE8A;
 extern u8 D_8010AE8F;
 extern u8 D_8010ADF9;
 extern u8 D_80121D88;
@@ -85,8 +87,11 @@ void func_800227D8(CharacterSelectWidgetActor *arg0);
 void func_8002262C(CharacterSelectWidgetActor *arg0);
 void func_80023434(CharacterSelectWidgetActor *arg0);
 void func_80020DEC(CharacterSelectWidgetActor *arg0);
+void func_80020CEC(CharacterSelectWidgetActor *arg0);
 void func_80020F80(CharacterSelectWidgetActor *arg0);
+void func_80020F44(CharacterSelectWidgetActor *arg0);
 void func_8002127C(CharacterSelectWidgetActor *arg0);
+void func_800213D4(CharacterSelectWidgetActor *arg0);
 void func_80021F80(CharacterSelectWidgetActor *arg0);
 void func_8002215C(CharacterSelectWidgetActor *arg0);
 void func_80022198(CharacterSelectWidgetActor *arg0);
@@ -123,7 +128,114 @@ void func_80020B70(CharacterSelectWidgetActor *arg0);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D2F0.s")
 
+// func_8001D7B8 best match: 91.357%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D7B8.s")
+
+#ifdef NON_MATCHING
+void func_8001D7B8(CharacterSelectWidgetActor *arg0) {
+    int state;
+    int stateValue;
+    s32 selectedIndex;
+    u16 spriteIndex;
+
+    selectedIndex = D_80121B50;
+    spriteIndex = (u16)arg0->sprite.index;
+    if ((selectedIndex >= (s32)spriteIndex) && (arg0->transition.bytes.state != 0) && (arg0->y != -0x48)) {
+        stateValue = 2;
+        state = stateValue & 0xFF;
+        arg0->transition.bytes.state = stateValue;
+    } else if ((selectedIndex < (s32)spriteIndex) && (arg0->transition.bytes.state != 0) && (arg0->y != -0x140)) {
+        stateValue = 1;
+        state = stateValue & 0xFF;
+        arg0->transition.bytes.state = stateValue;
+    } else {
+        state = arg0->transition.bytes.state;
+        if ((state != 0) && (state < 4)) {
+            stateValue = 3;
+            state = stateValue & 0xFF;
+            arg0->transition.bytes.state = stateValue;
+        }
+    }
+
+    if (state != D_8010AE8A) {
+        state = D_8010AE8A & 0xFF;
+        arg0->transition.bytes.state = D_8010AE8A;
+    }
+
+    switch (state) {
+    case 0:
+        arg0->x -= 0x26;
+        if (arg0->x < -7) {
+            arg0->x = -8;
+            arg0->transition.bytes.state = 3;
+            D_8010ADDC = (s32)func_80071408(func_80020CEC, 0, 0x64);
+            func_80071408(func_80020F44, 0, 0x62);
+            func_80071408(func_800213D4, 0, 0x62);
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 1:
+        arg0->y -= 0x24;
+        if (arg0->y < -0x13F) {
+            arg0->y = -0x140;
+            arg0->transition.bytes.state = 3;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 2:
+        arg0->y += 0x24;
+        if (arg0->y >= -0x48) {
+            arg0->y = -0x48;
+            arg0->transition.bytes.state = 3;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 3:
+        D_801235B4 += 1;
+        state = D_80121D80[8];
+        if (state == 1) {
+            arg0->transition.bytes.state = 4;
+            state = D_80121D88;
+        }
+        if (state == 7) {
+            arg0->transition.bytes.state = 5;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 4:
+        state = D_80121D80[8];
+        if (state == 5) {
+            arg0->transition.bytes.state = 3;
+            D_80121D80[8] = 6;
+            state = 6 & 0xFF;
+        }
+        if (state == 7) {
+            arg0->transition.bytes.state = 5;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 5:
+        arg0->x += 0x20;
+        if (arg0->x >= 0x94) {
+            arg0->transition.bytes.state = 6;
+        }
+        state = arg0->transition.bytes.state;
+        break;
+    case 6:
+        arg0->transition.bytes.state = 7;
+        D_80121D80[8] = 8;
+        state = arg0->transition.bytes.state;
+        break;
+    }
+
+    D_8010AE8A = state;
+    if (arg0->transition.bytes.state == 7) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8001D2F0, arg0);
+}
+#endif
 
 void func_8001DACC(CharacterSelectWidgetActor *arg0) {
     arg0->x = 0x96;
