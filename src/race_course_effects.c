@@ -30,6 +30,12 @@ typedef struct {
 } CourseRenderEntry;
 
 typedef struct {
+    s8 type;
+    char pad1[3];
+    Vec3i pos;
+} CourseMarkerSpawnEntry;
+
+typedef struct {
     char pad0[0x13];
     s8 isActive;
     char pad14[0x5F8];
@@ -204,6 +210,8 @@ extern void func_80045990(s32, s32, void *, void *);
 extern s32 func_8004597C(s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
+extern void func_80088294(Vec3i *, s32, s32, u16);
+extern void func_80088A1C(Vec3i *, s32, s32, s32, s32);
 extern void func_80097C18(void *, s16);
 extern void func_80097FE4(void *, s16, s16);
 extern void func_80098174(s16 *, s16, s16);
@@ -230,6 +238,7 @@ void func_800699F0(RaceCountdownEffect *);
 void func_80069A78(RaceCountdownEffect *);
 void func_80069AF0(RaceCountdownEffect *);
 void func_80069B60(RaceCountdownEffect *);
+void func_8006A894(void *);
 extern void func_8006C7F4(void);
 void func_8006B3E0(Struct6B760 *);
 void func_8006B6C8(Struct6B760 *);
@@ -240,6 +249,7 @@ extern s16 D_80121B50;
 extern CourseAssetHandles D_80112130;
 extern s16 D_80112144;
 extern s16 D_80112146;
+extern CourseMarkerSpawnEntry *D_800DA0B8[];
 extern CourseRenderEntry *D_800DA73C[];
 extern CourseMarkerSpawnEntry *D_800DA0B8[];
 extern void *D_800DA1C0[];
@@ -260,6 +270,7 @@ extern s32 D_80124868;
 extern s32 D_80124878;
 extern s32 D_801248D4;
 extern s32 D_801248EC;
+extern s32 D_801248D4;
 extern s32 D_801248B0;
 extern s32 D_801248A4;
 extern s32 D_801248F8;
