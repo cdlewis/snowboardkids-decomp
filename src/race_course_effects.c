@@ -37,9 +37,7 @@ typedef struct {
 
 typedef struct {
     char pad[0x18];
-    volatile s32 unk18;
-    s32 unk1C;
-    s32 unk20;
+    Vec3i pos;
     s32 unk24;
     s32 unk28;
     s32 unk2C;
@@ -48,7 +46,11 @@ typedef struct {
     s32 unk38;
     s16 unk3C;
     s16 unk3E;
-    char pad40[0xC];
+    s16 unk40;
+    s16 pad42;
+    s16 displayListValid;
+    s16 pad46;
+    void *displayList;
     s16 unk4C;
     s16 unk4E;
     s32 unk50;
@@ -200,6 +202,8 @@ extern void func_80097C18(void *, s16);
 extern void func_80097FE4(void *, s16, s16);
 extern void func_80098174(s16 *, s16, s16);
 extern void func_80098590(void *, void *, Vec3i *);
+extern void func_80048D60(CourseEffectMatrixSource *);
+extern s32 func_80097AE8(s16);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
 extern s16 D_80112168;
@@ -238,6 +242,7 @@ extern CourseMarkerEntry D_800DA804[];
 extern CourseMarkerVertexResource D_800DA80C[];
 extern CourseMarkerTextureResource D_800DA814[];
 extern CourseTriggerEntry D_800DA840[];
+extern Gfx D_2001D00[];
 extern CourseEffectPlayer D_80121D80[];
 extern CourseEffectPlayer D_8012238C[];
 extern CourseEffectPlayer D_80122998[];
@@ -418,7 +423,53 @@ void func_8006B0D8(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B108.s")
 
+// func_8006B228 best match: 98.545% at nonmatchings/func_8006B228-9017456803007796287/base_10.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B228.s")
+
+#ifdef NON_MATCHING
+void func_8006B228(Struct6B760 *arg0) {
+    s32 sine;
+    s32 doubleSine;
+    CourseEffectMatrixSource transform;
+    volatile s32 pad0[16];
+    Gfx *segment2;
+    Gfx *gfx;
+
+    if ((D_80156609 & 0xFF) != 0) {
+        arg0->displayListValid = 0;
+    }
+
+    if (func_80049000(&arg0->pos) != 0) {
+        Gfx *segment3;
+
+        if (arg0->displayListValid == 0) {
+            arg0->displayListValid = 1;
+            sine = func_80097AE8(arg0->unk40);
+            if (1) {
+                doubleSine = func_80097AE8((s16)(arg0->unk40 * 2));
+                func_80097C18(transform.rotation, arg0->unk3E + (sine >> 4) + 0x800);
+                transform.basePos.x = arg0->pos.x;
+                transform.basePos.y = arg0->pos.y + ((doubleSine + 0x1000) << 4) + 0xA4000;
+            }
+            transform.basePos.z = arg0->pos.z;
+            func_80048D60(&transform);
+            arg0->displayList = func_8004885C(&transform);
+        }
+
+        if (arg0->displayList != NULL) {
+            gDPPipeSync(gRegionAllocPtr++);
+            segment2 = gRegionAllocPtr++;
+            gSPSegment(segment2, 0x02, func_80043040(D_80112144));
+            segment3 = gRegionAllocPtr++;
+            gSPSegment(segment3, 0x03, func_80043040(D_80112146));
+            gfx = gRegionAllocPtr++;
+            gSPMatrix(gfx, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gfx = gRegionAllocPtr++;
+            gSPDisplayList(gfx, D_2001D00);
+        }
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B3E0.s")
 
@@ -440,7 +491,7 @@ void func_8006B6C8(Struct6B760 *arg0) {
         temp24 = arg0->unk24;
         temp28 = arg0->unk28;
         temp2C = arg0->unk2C;
-        arg0->unk18 = temp24;
+        arg0->pos.x = temp24;
         temp4C = 0x10;
         temp50 = 0x10000;
         temp4E = 0x80;
@@ -448,9 +499,9 @@ void func_8006B6C8(Struct6B760 *arg0) {
         arg0->unk4C = temp4C;
         arg0->unk50 = temp50;
         arg0->unk4E = temp4E;
-        arg0->unk1C = temp28;
-        arg0->unk20 = temp2C;
-        arg0->unk1C = func_80080CC4(arg0->unk3C, arg0->unk18, arg0->unk20);
+        arg0->pos.y = temp28;
+        arg0->pos.z = temp2C;
+        arg0->pos.y = func_80080CC4(arg0->unk3C, arg0->pos.x, arg0->pos.z);
         func_80071824(arg0, func_8006B3E0);
     }
 }
