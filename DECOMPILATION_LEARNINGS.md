@@ -3266,3 +3266,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   the alpha choice as a full `if/else` can reproduce IDO's redundant branch with
   the inactive alpha assignment in the branch delay slot. Computing the texture
   handle before `i + 1` also improved the saved-register layout.
+
+## func_800515F0 (main_menu_panel_ui)
+
+- The menu-panel navigation behavior is a table-driven cursor update followed by
+  a pulsing `x` highlight and two render callback registrations. The current
+  nonmatching blocker is register allocation: straightforward C homes the actor
+  pointer at function entry, while the target keeps it in `$a3` and spills it
+  only in `func_80072138` delay slots.
