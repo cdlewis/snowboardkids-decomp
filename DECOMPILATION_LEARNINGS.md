@@ -2698,3 +2698,12 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   an `int` local for the loaded mode preserves the target `$v0` comparisons. An
   empty `if (1) {}` in the `mode == 0` arm and assigning the `mode == 2` row
   before `y = -0x60` reproduce IDO's branch-delay scheduling exactly.
+
+## func_80030CC4 (controller_pak_menu_ui)
+
+- This confirm-prompt transition callback follows the same folded global-state
+  sync and five empty `if (1) {}` allocation pattern as `func_8002DCE8`. The
+  best non-matching form still differs in the state-change block by one store
+  scheduling issue: IDO emits the `optionScale = 0x100` halfword store before
+  the `timer = 0` store, while the target stores timer, moves the switch state,
+  then stores option scale.
