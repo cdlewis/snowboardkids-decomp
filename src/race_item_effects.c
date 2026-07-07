@@ -133,6 +133,7 @@ void func_8005019C(RaceItemEffectActor *);
 void func_80050340(RaceItemEffectActor *);
 void func_80050398(RaceItemEffectActor *);
 void func_80050888(RaceItemEffectActor *);
+void func_8005098C(RaceItemFollowActor *);
 void func_800716E4();
 void func_80071824(void *task, void (*callback)());
 RaceItemEffectActor *func_800711D0(void *, s32, s32);
@@ -382,6 +383,28 @@ void func_800508D0(RaceItemEffectActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8005098C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050D84.s")
+void func_80050D84(RaceItemFollowActor *arg0) {
+    RaceItemFollowPlayer *player;
+    RaceItemFollowActor *temp_a2 = arg0;
+
+    if (D_80121B56 == 0) {
+        arg0->timer++;
+        player = &D_80121D80[arg0->playerIndex];
+        arg0->pos1.x = arg0->offset1.x + player->pos.x;
+        arg0->pos1.y = arg0->offset1.y + player->pos.y;
+        arg0->pos1.z = arg0->offset1.z + player->pos.z;
+        arg0->pos2.x = arg0->offset2.x + player->pos.x;
+        arg0->pos2.y = arg0->offset2.y + player->pos.y;
+        arg0->pos2.z = arg0->offset2.z + player->pos.z;
+        if (arg0->timer == 0x18) {
+            func_800716E4();
+            return;
+        }
+    }
+    if (temp_a2->timer < 0) {
+        temp_a2->timer = 0;
+    }
+    func_800483FC(&D_801248C8, func_8005098C, temp_a2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050E80.s")
