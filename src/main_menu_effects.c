@@ -1,4 +1,5 @@
 #include "common.h"
+#include "main_menu_scene_model.h"
 
 typedef struct {
     char pad0[0x10];
@@ -254,7 +255,25 @@ void func_8003C8AC(MainMenuEffectActor *arg0) {
     func_8000F030(arg0->x - 0xE, arg0->y - 0x50, temp, (u16)(D_800B9530[arg0->animFrame] + 6), 0x20, 0x20, 0, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003C93C.s")
+void func_8003C93C(MainMenuEffectActor *arg0) {
+    MainMenuSceneModel *model;
+    s32 divisor;
+
+    model = func_80041E60(1); divisor = 0x24000;
+    if (0) {}
+    arg0->x = model->displayObjects[7].screenX / divisor;
+    arg0->y = -(model->displayObjects[7].screenY / divisor);
+    if ((arg0->animTimer += 1) == 3) {
+        arg0->animTimer = 0;
+        arg0->animFrame++;
+        arg0->animFrame &= 3;
+    }
+    if (D_8010B1A2 == 0x12) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8003C8AC, arg0);
+}
 
 void func_8003CA44(MainMenuEffectActor *arg0) {
     arg0->animTimer = 0;
