@@ -142,7 +142,7 @@ void func_80020B70(CharacterSelectWidgetActor *arg0);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D2F0.s")
 
-// func_8001D7B8 best match: 91.357%
+// func_8001D7B8 best match: 91.918%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D7B8.s")
 
 #ifdef NON_MATCHING
@@ -158,13 +158,13 @@ void func_8001D7B8(CharacterSelectWidgetActor *arg0) {
         stateValue = 2;
         state = stateValue & 0xFF;
         arg0->transition.bytes.state = stateValue;
-    } else if ((selectedIndex < (s32)spriteIndex) && (arg0->transition.bytes.state != 0) && (arg0->y != -0x140)) {
-        stateValue = 1;
-        state = stateValue & 0xFF;
-        arg0->transition.bytes.state = stateValue;
     } else {
         state = arg0->transition.bytes.state;
-        if ((state != 0) && (state < 4)) {
+        if ((selectedIndex < (s32)spriteIndex) && (state != 0) && (arg0->y != -0x140)) {
+            stateValue = 1;
+            state = stateValue & 0xFF;
+            arg0->transition.bytes.state = stateValue;
+        } else if ((state != 0) && (state < 4)) {
             stateValue = 3;
             state = stateValue & 0xFF;
             arg0->transition.bytes.state = stateValue;
