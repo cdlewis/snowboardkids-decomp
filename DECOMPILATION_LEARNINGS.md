@@ -3197,3 +3197,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   differently based only on physical source layout. Keeping the pointer setup
   and `do` on one line (`input = &D_80123778; do {`) made the `D_801235B4`
   address addiu schedule before the `D_80123778` addiu and matched the target.
+
+## func_80051ED4 (main_menu_panel_ui)
+
+- For compact menu-state callbacks that call `func_80071824` and then continue
+  to a common sound/render path, a plain typed actor argument plus a local `u8`
+  switch state is enough for IDO to preserve the actor in `$a2` across callback
+  calls. No manual pointer arithmetic is needed for the adjacent
+  `0x20`/`0x24`/`0x28`/`0x2A`/`0x2B` actor fields.
