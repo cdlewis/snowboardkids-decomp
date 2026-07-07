@@ -174,6 +174,14 @@ collapse the frame for this function.
 - Struct sizes and field offsets must be verified from assembly access patterns.
   A small layout mistake can shift codegen across every function that shares the
   type.
+- `RaceUiProjectileActor` has an `s16 flags` field at `0x36`. `func_800643B4`
+  copies it from the second halfword of the projectile asset script; projectile
+  update/draw functions test bits such as `0x1`, `0x4`, and `0x8`.
+- For projectile functions that transform velocity through the player matrix,
+  writing the first player-state access directly as `D_80121D80[actor->index]`
+  and then assigning `player = &D_80121D80[actor->index]` for later position
+  additions reproduces IDO's duplicated index calculation (func_80064C68 and
+  func_80064D88).
 - Use the most specific parameter and local types the surrounding code supports.
   Broad `void *` typing can hide useful offset information and produce unstable
   casts or address arithmetic.
