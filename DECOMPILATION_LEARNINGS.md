@@ -2775,3 +2775,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   arguments for players 1-3 must use the separate BSS labels (`D_8012238C`,
   `D_80122998`, `D_80122FA4`). Pure `D_80121D80[index]` calls produce equivalent
   addresses but different relocation labels.
+
+## func_80082E48 (model_animation)
+
+- For animation timer helpers, explicitly reload a `s32` local from the halfword
+  frame timer after calling `func_80082070` before subtracting one. Writing the
+  subtraction directly from the struct field is semantically equivalent, but IDO
+  uses a different register for the final halfword store.
