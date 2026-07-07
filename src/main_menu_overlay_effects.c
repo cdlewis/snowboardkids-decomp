@@ -2,7 +2,18 @@
 #include "viewport_manager.h"
 
 typedef struct {
-    /* 0x000 */ u8 pad0[0x2FC];
+    s32 a;
+    s32 b;
+    s32 c;
+} Vec3i;
+
+typedef struct {
+    /* 0x000 */ u8 pad0[0x28];
+    /* 0x028 */ Vec3i pos28;
+    /* 0x034 */ u8 pad34[0x2EA - 0x34];
+    /* 0x2EA */ s16 pitch;
+    /* 0x2EC */ s16 yaw;
+    /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
     /* 0x2FC */ s32 flags;
     /* 0x300 */ u8 pad300[0x51A - 0x300];
     /* 0x51A */ u8 unk51A;
@@ -42,6 +53,7 @@ typedef struct {
 } MainMenuOverlayEffectActor;
 
 typedef s16 FixedMatrix3s[9];
+typedef s16 FixedMatrix3sScratch[0x10];
 
 typedef struct {
     /* 0x00 */ FixedMatrix3s rotation;
@@ -80,6 +92,7 @@ extern void *D_80124868;
 extern u8 D_80124858[];
 extern u8 D_80124878[];
 extern u8 D_801248A4[];
+extern u8 D_801248BC;
 extern u8 D_801248D4[];
 extern u8 D_801248F8[];
 extern s16 D_800D5738[];
@@ -135,7 +148,9 @@ void func_80053C90(void *);
 void func_80053D8C(s32);
 void func_80053DFC(s32);
 void func_8005408C(MainMenuOverlayEffectActor *);
-void func_80054460(void);
+void func_80054130(MainMenuOverlayEffectActor *);
+void func_80054460(MainMenuOverlayEffectActor *);
+void func_800545D0(MainMenuOverlayEffectActor *);
 void func_80054644(MainMenuOverlayEffectActor *);
 void func_8005475C(MainMenuOverlayEffectActor *);
 void func_800548F4(MainMenuOverlayEffectActor *);
@@ -151,6 +166,8 @@ void func_80055410(MainMenuOverlayEffectActor *);
 void func_80055530(void *);
 s32 func_80097AE8(s16);
 void func_80097C18(FixedMatrix3s, s16);
+void func_80097FE4(FixedMatrix3sScratch, s16, s16);
+void func_80098590(FixedMatrix3sScratch, Vec3i *, Vec3i *);
 MainMenuOverlayEffectActor *func_80071408(void (*callback)(MainMenuOverlayEffectActor *), s32 type, s32 priority);
 void func_800716E4(void *);
 void *func_80071664(void *, s32, s32, s32);
@@ -325,7 +342,40 @@ void func_800540EC(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80054130.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80054460.s")
+void func_80054460(MainMenuOverlayEffectActor *arg0) {
+    FixedMatrix3sScratch sp38;
+    Vec3i sp2C;
+    RacePlayerState *player;
+    u8 temp;
+
+    player = &D_80121D80[arg0->index];
+    if (player->flags & 0x2000) {
+        func_80071824(arg0, func_800545D0);
+        return;
+    }
+
+    temp = arg0->unk2E;
+    if (temp != 5) {
+        arg0->unk2E = temp + 1;
+    } else if (player->unk51A == 0) {
+        func_80071824(arg0, func_800545D0);
+    }
+
+    sp2C.a = 0x40000;
+    sp2C.b = 0x180000;
+    sp2C.c = 0;
+
+    player = &D_80121D80[arg0->index];
+    func_80097FE4(sp38, player->pitch, player->yaw);
+    func_80098590(sp38, &sp2C, (Vec3i *) &arg0->unk18);
+
+    player = &D_80121D80[arg0->index];
+    arg0->unk18.word += player->pos28.a;
+    arg0->unk1C.word += player->pos28.b;
+    arg0->unk20.word += player->pos28.c;
+
+    func_800483FC(&D_801248BC, func_80054130, (s32)arg0);
+}
 
 void func_800545D0(MainMenuOverlayEffectActor *arg0) {
     RacePlayerState *player = &D_80121D80[arg0->index];
