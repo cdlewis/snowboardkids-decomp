@@ -554,6 +554,11 @@ extern void *D_800E1230;
 extern char D_800E12F8[];
 extern char D_800E12FC[];
 extern char D_800E1300[];
+extern void *D_800E130C;
+extern void *D_800E1320;
+extern void *D_800E1334;
+extern void *D_800E1344;
+extern void *D_800E1358;
 extern void *D_800E1368;
 extern void *D_800E136C;
 extern void *D_800E1370;
@@ -623,7 +628,7 @@ extern void func_8005A884(void);
 extern void func_8005AAE4(RaceUiAlpha18Actor *);
 extern void func_8005AE1C(void *);
 extern void func_8005A4BC(void);
-extern void func_8005AC44(void);
+extern void func_8005AC44(RaceUiCounterActor *);
 extern void func_8005B9F8(void);
 extern void func_8005C14C(void);
 extern void func_8005A0E0(void *);
@@ -1115,7 +1120,73 @@ void func_8005AAE4(RaceUiAlpha18Actor *arg0) {
 }
 #endif
 
+// func_8005AC44 best match: 99.280% (nonmatchings/func_8005AC44-690418013071298896/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005AC44.s")
+
+#ifdef NON_MATCHING
+void func_8005AC44(RaceUiCounterActor *arg0) {
+    RaceUiDisplayCommand *gfx;
+    s32 w0;
+    s32 w1;
+    s32 y;
+
+    if (arg0->alpha != 0xFF) {
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE7000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        w1 = 0xFF2FFFFF;
+        w0 = 0xFC119623;
+        gfx->words.w0 = w0;
+        gfx->words.w1 = w1;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        w1 = 0x00504240;
+        w0 = 0xB900031D;
+        gfx->words.w0 = w0;
+        gfx->words.w1 = w1;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xFA000000;
+        gfx->words.w1 = (arg0->alpha & 0xFF) | ~0xFF;
+    }
+
+    y = -0x50;
+    if (arg0->flag == 0) {
+        y = -0x3C;
+    }
+
+    if (D_80121B81 != 0) {
+        func_80048278(-8, (s16)y, &D_800E130C, 5);
+    } else {
+        func_80048278(-0xC, (s16)y, &D_800E1320, 5);
+    }
+
+    y += 0x28;
+    if (arg0->flag != 0) {
+        func_80048278(-0xC, (s16)y, &D_800E1334, 5);
+        y += 0x28;
+    }
+
+    func_80048278(-8, (s16)y, &D_800E1344, 5);
+    y += 0x28;
+    func_80048278(4, (s16)y, &D_800E1358, 5);
+
+    if (arg0->alpha != 0xFF) {
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        w1 = (s32)D_800DEFF8;
+        w0 = 0x06000000;
+        gfx->words.w0 = w0;
+        gfx->words.w1 = w1;
+    }
+}
+#endif
 
 void func_8005AE1C(void *arg0) {
     func_80048278(0x20, -0x48, &D_800E1368, 6);
