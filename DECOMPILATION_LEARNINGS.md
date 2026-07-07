@@ -3190,3 +3190,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   in `$s2` and use the alias for position/update accesses. Mixing `arg0` for
   the cleanup calls and the alias for the loop/store accesses matched the target
   saved-register allocation.
+
+## func_80059854 (race_ui_effects)
+
+- In small input-scan callbacks, IDO can schedule adjacent global address setup
+  differently based only on physical source layout. Keeping the pointer setup
+  and `do` on one line (`input = &D_80123778; do {`) made the `D_801235B4`
+  address addiu schedule before the `D_80123778` addiu and matched the target.
