@@ -374,13 +374,8 @@ void func_8006A85C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006AE00.s")
 
-// func_8006AF48 best match: 99.900% at nonmatchings/func_8006AF48-1197934324348345530/base_14.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006AF48.s")
-
-#ifdef NON_MATCHING
 void func_8006AF48(RaceCourseRenderEffect *arg0) {
     CourseRenderEntry *var_s4;
-    s16 temp_t5;
     s32 var_s5;
     s32 var_s7;
     Gfx *temp_s0;
@@ -409,13 +404,11 @@ void func_8006AF48(RaceCourseRenderEffect *arg0) {
                 temp_s0 = gRegionAllocPtr++;
                 gSPDisplayList(temp_s0, D_800DA1C0[var_s4->displayListIndex]);
             }
-            temp_t5 = var_s4[1].displayListIndex;
             var_s4++;
             var_s5++;
-        } while (temp_t5 != -1);
+        } while (var_s4->displayListIndex != -1);
     }
 }
-#endif
 
 void func_8006B0D8(void *arg0) {
     func_800483FC(&D_801248B0, func_8006AF48, arg0);
