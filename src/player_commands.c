@@ -945,11 +945,86 @@ s32 func_8009E040(s32 arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009E354.s")
 
+// func_8009E76C best match: 99.609%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009E76C.s")
+
+#ifdef NON_MATCHING
+extern void alSynSetVol(void *, void *, s16, s32);
+extern void alSynSetPan(void *, void *, s32);
+extern u8 *D_8015A65C;
+extern s32 D_8015A678;
+extern u8 D_8015A8D8;
+
+void func_8009E76C(PlayerCommandState *arg0, s32 arg1) {
+    u32 volume;
+    s32 stopping;
+    u8 pan;
+    u8 oldPan;
+
+    volume = (u32)(arg0->unkEF * arg0->unkF9 * arg0->unk108 * arg0->unkB0) >> 13;
+    if (volume >= 0x8000U) {
+        volume = 0x7FFF;
+    }
+
+    if (arg0->unkBE == 0) {
+        volume *= D_8015A67E;
+    } else {
+        volume *= D_8015A67C;
+    }
+
+    stopping = arg0->unk18;
+    volume >>= 15;
+
+    if (stopping != -1) {
+        volume = (stopping * volume) / arg0->unk1C;
+    }
+
+    if (volume != arg0->unkB6) {
+        arg0->unkB6 = volume;
+        alSynSetVol(&D_8015A8D8, D_8015A65C + (arg1 * 0x1C), (s16)volume, 0xF4240 / D_8015A678);
+    }
+
+    oldPan = arg0->unkE3;
+    pan = ((arg0->unkF2 * arg0->unkB2) >> 7) & 0x7F;
+    if (pan != oldPan) {
+        arg0->unkE3 = pan;
+        alSynSetPan(&D_8015A8D8, D_8015A65C + (arg1 * 0x1C), pan & 0xFF);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009E938.s")
 
+// func_8009EB6C best match: 89.464%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009EB6C.s")
+
+#ifdef NON_MATCHING
+void func_8009EB6C(PlayerCommandState *arg0) {
+    s32 max = 0x7FFFFFFF;
+    u16 temp_v0;
+    u8 temp_f5;
+    u8 temp_f4;
+
+    if (arg0->unkBC != 0x7FFF) {
+        temp_v0 = arg0->unkC2;
+        if (temp_v0 != 0) {
+            arg0->unk100 = arg0->unk10 + (temp_v0 << 8);
+        } else {
+            arg0->unk100 = arg0->unkC - (arg0->unkC4 << 8);
+        }
+    } else {
+        arg0->unk100 = max;
+    }
+
+    temp_f5 = arg0->unkF5;
+    temp_f4 = arg0->unkF4;
+    arg0->unkF8 = 1;
+    arg0->unkF9 = temp_f5;
+    arg0->unkFA = temp_f4;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009EBDC.s")
 

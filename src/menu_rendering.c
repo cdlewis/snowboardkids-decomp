@@ -45,10 +45,13 @@ typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 extern void func_800483FC(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
 extern void func_80071824(void *task, void (*callback)());
 s32 func_80011D74(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
+void func_800112F4(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, s32 arg6, s32 arg7);
 extern void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);
 extern RenderCallbackNode *D_80124868;
 extern u32 D_80123758;
 extern s16 D_800DEF14;
+extern s16 D_8015660A;
+extern s16 D_8015660C;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000EA80.s")
 
@@ -66,7 +69,9 @@ extern s16 D_800DEF14;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80010BCC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80011264.s")
+void func_80011264(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5) {
+    func_800112F4(arg0, arg1, arg2, arg3, arg4, arg5, D_8015660A / 2, D_8015660C / 2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_800112F4.s")
 
