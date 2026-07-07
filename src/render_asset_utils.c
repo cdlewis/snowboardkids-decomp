@@ -340,7 +340,31 @@ void func_800486BC(void *arg0, void *arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80048A38.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80048BBC.s")
+GfxCommandDest *func_80048BBC(GfxCommandDest *arg0) {
+    GfxCommandDest *dst = func_80048594(sizeof(GfxCommandDest));
+
+    if (dst == NULL) {
+        return NULL;
+    }
+
+    dst->unk0 = 0x10000;
+    dst->unk4 = 0;
+    dst->unk8 = 1;
+    dst->unkC = 0;
+    dst->unk10 = 0;
+    dst->unk14 = 0x10000;
+    dst->unk18 = ((arg0->unk18 >> 16) & 0xFFFF) | (arg0->unk14 & 0xFFFF0000);
+    dst->unk1C = (arg0->unk1C & 0xFFFF0000) | 1;
+    dst->unk20 = 0;
+    dst->unk24 = 0;
+    dst->unk28 = 0;
+    dst->unk2C = 0;
+    dst->unk30 = 0;
+    dst->unk34 = 0;
+    dst->unk38 = (arg0->unk18 & 0xFFFF) | ((arg0->unk14 << 16) & 0xFFFF0000);
+    dst->unk3C = (arg0->unk1C << 16) & 0xFFFF0000;
+    return dst;
+}
 
 void func_80048C90(GfxCommandDest *arg0, GfxCommandTriple *arg1) {
     arg0->unk18 = (s32) ((arg1->unk0 & 0xFFFF0000) | (((s32) arg1->unk4 >> 0x10) & 0xFFFF));

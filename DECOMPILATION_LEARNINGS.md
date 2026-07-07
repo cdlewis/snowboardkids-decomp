@@ -2726,3 +2726,9 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - After `func_8009B704`, writing `D_800DEED0 = D_800DEED4` before decrementing
   `D_80123750` gives IDO the target load schedule while still placing the delay
   store in the branch delay slot.
+
+## func_80048BBC (render_asset_utils)
+
+- For a 0x40-byte command block initializer, writing the computed `unk1C` field
+  before clearing `unk20` lets IDO schedule the source `unk1C` load before the
+  `unk20` zero store, while still emitting the target `unk1C` store afterward.
