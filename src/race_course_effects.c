@@ -251,7 +251,7 @@ extern void *D_800DA1C0[];
 extern SoundParams D_800DA764[];
 extern CourseSpawnEntry D_800B9540[];
 extern CourseAngleEntry D_800B9554[];
-extern s16 D_800B9556[];
+extern CourseAngleEntry D_800B9556[];
 extern CourseMarkerEntry D_800DA804[];
 extern CourseMarkerVertexResource D_800DA80C[];
 extern CourseMarkerTextureResource D_800DA814[];
@@ -592,7 +592,7 @@ void func_8006BA50(RaceMovingEffect *arg0) {
 
         if (arg0->timer == 0) {
             func_80071824(arg0, func_8006B988);
-            func_80097FE4(mtx, 0x100, D_800B9554[D_80121B50].unk2 + 0x400);
+            func_80097FE4(mtx, 0x100, D_800B9556[D_80121B50].angle + 0x400);
             arg0->timer = 0x64;
         }
     }
@@ -614,7 +614,7 @@ void func_8006BB50(RaceMovingEffect *arg0) {
     arg0->velocity.z = 0x680000;
     tempIndex = D_80121B50;
     mtx = arg0->unk30;
-    func_80097C18(mtx, D_800B9556[tempIndex * 0x24] + 0x400);
+    func_80097C18(mtx, D_800B9556[tempIndex].angle + 0x400);
     func_80098590(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.z = 0xFFFE0000;
     arg0->pos.x += ((CourseSpawnEntry *)((u8 *)D_800B9540 + ((*(volatile s16 *)&D_80121B50) * 0x48)))->pos.x;
