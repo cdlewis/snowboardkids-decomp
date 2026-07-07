@@ -18,6 +18,12 @@ typedef struct {
 } RacePlayerEffect;
 
 typedef struct {
+    char pad0[0x13];
+    s8 isActive;
+    char pad14[0x5F8];
+} CourseEffectPlayer;
+
+typedef struct {
     char pad[0x18];
     volatile s32 unk18;
     s32 unk1C;
@@ -174,7 +180,9 @@ extern s32 D_801235B4;
 extern u8 D_80156608;
 extern void func_8006C5C0(Struct6C51C *);
 extern void func_8006C1B4(void);
-extern void func_8006D2D0(RaceCourseTriggerEffect *);
+void func_8006CCC0(CourseEffectPlayer *, RaceCourseTriggerEffect *);
+void func_8006CE68(CourseEffectPlayer *, RaceCourseTriggerEffect *);
+void func_8006D2D0(RaceCourseTriggerEffect *);
 void func_80069890(RaceCountdownEffect *);
 void func_80069914(RaceCountdownEffect *);
 void func_80069998(RaceCountdownEffect *);
@@ -196,6 +204,10 @@ extern CourseMarkerEntry D_800DA804[];
 extern CourseMarkerVertexResource D_800DA80C[];
 extern CourseMarkerTextureResource D_800DA814[];
 extern CourseTriggerEntry D_800DA840[];
+extern CourseEffectPlayer D_80121D80[];
+extern CourseEffectPlayer D_8012238C[];
+extern CourseEffectPlayer D_80122998[];
+extern CourseEffectPlayer D_80122FA4[];
 extern s32 D_80124868;
 extern s32 D_80124878;
 extern s32 D_801248EC;
@@ -596,7 +608,21 @@ void func_8006CBBC(RaceCourseMarkerEffect *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006CE68.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006D2D0.s")
+void func_8006D2D0(RaceCourseTriggerEffect *arg0) {
+    if (D_80121D80[0].isActive != 0) {
+        func_8006CE68(D_80121D80, arg0);
+    }
+    if (D_80121D80[1].isActive != 0) {
+        func_8006CE68(D_8012238C, arg0);
+    }
+    if (D_80121D80[2].isActive != 0) {
+        func_8006CE68(D_80122998, arg0);
+    }
+    if (D_80121D80[3].isActive != 0) {
+        func_8006CE68(D_80122FA4, arg0);
+    }
+    func_800483FC(&D_801248A4, func_8006CCC0, arg0);
+}
 
 void func_8006D384(RaceCourseTriggerEffect *arg0) {
     CourseTriggerScratch scratch;

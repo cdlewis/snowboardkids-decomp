@@ -2761,3 +2761,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `switch (arg0->characterId)` plus `arg0->characterId = arg0->characterId + 1`
   produced the target byte reload/copy sequence, while the local-state version
   only differed by register allocation.
+
+## func_8006D2D0 (race_course_effects)
+
+- For the four player-effect records at `D_80121D80`, IDO matches the active
+  byte checks as array indexing from the first symbol, but the callback
+  arguments for players 1-3 must use the separate BSS labels (`D_8012238C`,
+  `D_80122998`, `D_80122FA4`). Pure `D_80121D80[index]` calls produce equivalent
+  addresses but different relocation labels.
