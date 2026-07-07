@@ -3053,3 +3053,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `do { ... } while (0)` line. In this function, ordinary formatting preserved
   behavior but reordered constant `ori` instructions; the single-line block
   matched the target, as in `main_menu_overlay_effects:func_8005475C`.
+
+## func_80059F6C (race_ui_effects)
+
+- The same one-line display-list wrapper pattern as `func_8005C03C` matches
+  this sibling when the actor alpha field is typed at offset `0x18`. Declare
+  display-list asset symbols that are passed by address, such as `D_800E12D4`,
+  as arrays rather than pointers; pointer declarations emit an extra `lw`.
