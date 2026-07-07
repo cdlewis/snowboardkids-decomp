@@ -362,7 +362,31 @@ GfxCommandDest *func_8004885C(GfxCommandSource *arg0) {
     return dst;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80048A38.s")
+GfxCommandDest *func_80048A38(GfxCommandSource *arg0) {
+    GfxCommandDest *dst = func_80048594(sizeof(GfxCommandDest));
+
+    if (dst == NULL) {
+        return NULL;
+    }
+
+    dst->unk0 = ((arg0->unk2 >> 12) & 0xFFFF) | ((arg0->unk0 << 4) & 0xFFFF0000);
+    dst->unk4 = (arg0->unk4 << 4) & 0xFFFF0000;
+    dst->unk8 = ((arg0->unk8 >> 12) & 0xFFFF) | ((arg0->unk6 << 4) & 0xFFFF0000);
+    dst->unkC = (arg0->unkA << 4) & 0xFFFF0000;
+    dst->unk10 = ((arg0->unkE >> 12) & 0xFFFF) | ((arg0->unkC << 4) & 0xFFFF0000);
+    dst->unk14 = (arg0->unk10 << 4) & 0xFFFF0000;
+    dst->unk18 = 0;
+    dst->unk1C = 1;
+    dst->unk20 = ((arg0->unk2 << 4) & 0xFFFF) | ((arg0->unk0 << 20) & 0xFFFF0000);
+    dst->unk24 = (arg0->unk4 << 20) & 0xFFFF0000;
+    dst->unk28 = ((arg0->unk8 << 4) & 0xFFFF) | ((arg0->unk6 << 20) & 0xFFFF0000);
+    dst->unk2C = (arg0->unkA << 20) & 0xFFFF0000;
+    dst->unk30 = ((arg0->unkE << 4) & 0xFFFF) | ((arg0->unkC << 20) & 0xFFFF0000);
+    dst->unk34 = (arg0->unk10 << 20) & 0xFFFF0000;
+    dst->unk38 = 0;
+    dst->unk3C = 0;
+    return dst;
+}
 
 GfxCommandDest *func_80048BBC(GfxCommandDest *arg0) {
     GfxCommandDest *dst = func_80048594(sizeof(GfxCommandDest));
