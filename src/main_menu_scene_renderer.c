@@ -10,7 +10,8 @@ extern void func_8004270C(MainMenuSceneModel *);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_80042560.s")
 
-// func_80042574 best match: 98.333% at nonmatchings/func_80042574-690418013071298896/base_2.c.
+// func_80042574 best source-tree match: 98.529% at nonmatchings/func_80042574-9017456803007796287/base_3.c.
+// Permuter-only best: 99.706% at nonmatchings/func_80042574-9017456803007796287/base_13.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_80042574.s")
 
 #ifdef NON_MATCHING
@@ -36,8 +37,8 @@ void func_80042574(MainMenuSceneModel *arg0) {
     s32 end;
     s32 stride;
 
-    model = arg0;
-    if (D_80156608 == (u16)model->renderFrame) {
+    if ((u16)arg0->renderFrame == D_80156608) {
+        model = arg0;
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112130.modelAssetSlots[(u16)model->actorIndex]));
         gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112130.animationAssetSlots[(u16)model->actorIndex]));
