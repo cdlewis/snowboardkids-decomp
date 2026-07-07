@@ -46,7 +46,7 @@ extern s16 D_80121B50;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007BB08.s")
 
-// func_8007BCFC best match: 99.474% (nonmatchings/func_8007BCFC-1404502880690620360/base_14.c)
+// func_8007BCFC best match: 99.649% (nonmatchings/func_8007BCFC-1197934324348345530/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007BCFC.s")
 
 #ifdef NON_MATCHING
@@ -78,11 +78,14 @@ s32 func_8007BCFC(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
     }
 
     rankSlotCopy = rankSlot;
-    entry = D_800DDE74[(courseIndex * RACE_POSITION_PLAYER_COUNT) + playerIndex];
+    entry = D_800DDE74[(2 * (2 * courseIndex)) + playerIndex];
     player = &D_80121D80[rankSlotCopy];
     pathOffset = player->smoothedPathOffset;
     pathSample = entry[pathIndexCopy];
-    pathIndex = (pathSample << 0x12) - pathOffset;
+    pathIndex = pathSample << 0x12;
+    if (!playerIndex) {
+    }
+    pathIndex = pathIndex - pathOffset;
 
     if (pathIndex >= 0x60001) {
         pathIndex = 0x60000;
