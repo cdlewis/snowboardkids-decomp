@@ -6,6 +6,15 @@ typedef struct {
     s32 z;
 } Vec3i;
 
+typedef s16 FixedMatrix3s[9];
+typedef s16 FixedMatrix3sScratch[0x10];
+
+typedef struct {
+    /* 0x00 */ FixedMatrix3s rotation;
+    /* 0x12 */ s16 pad12;
+    /* 0x14 */ Vec3i translation;
+} FixedTransform;
+
 typedef struct CoursePreviewCamera CoursePreviewCamera;
 typedef void (*CoursePreviewCameraCallback)(CoursePreviewCamera *);
 
@@ -33,8 +42,8 @@ struct CoursePreviewCamera {
     /* 0x36 */ s16 spinVelocity;
     /* 0x38 */ s16 timer;
     /* 0x3A */ s16 stateTimer;
-    /* 0x3C */ s32 displayList0;
-    /* 0x40 */ s32 displayList1;
+    /* 0x3C */ Gfx *displayList0;
+    /* 0x40 */ Gfx *displayList1;
     /* 0x44 */ s8 displayListValid;
 };
 
@@ -42,12 +51,22 @@ extern void *D_801248D4;
 extern void func_800483FC(void *, void *, s32);
 extern void func_800556B0(void);
 extern void func_80056CA0(void);
+extern s16 D_80112144;
+extern s16 D_80112146;
 extern s16 D_8011216A;
+extern u8 D_80156609;
+extern Gfx *gRegionAllocPtr;
+extern Gfx D_20028F0[];
+extern Gfx D_2002DB8[];
 extern s32 func_80043040(s16 arg0);
 extern s32 func_800430D0(void);
+extern Gfx *func_8004885C(FixedTransform *arg0);
+extern s32 func_80049000(Vec3i *position);
 extern void func_80045990(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);
-extern void func_80097C18(void *, s32);
+extern void func_80097C18(FixedMatrix3s arg0, s16 arg1);
+extern void func_800981C8(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3);
 extern void func_80098590(void *, s32 *, Vec3i *);
+extern void func_800987A0(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2);
 extern Vec3i D_800D5CC8[];
 void func_80055FA4(CoursePreviewCamera *arg0);
 void func_80056070(CoursePreviewCamera *arg0);
@@ -80,7 +99,7 @@ void func_80055B04(s32 arg0) {
 
 void func_80055FA4(CoursePreviewCamera *arg0) {
     Vec3i sp44;
-    char sp24[0x20];
+    FixedMatrix3sScratch sp24;
     CoursePreviewCamera *temp_s0 = arg0;
 
     arg0->timer--;
@@ -118,7 +137,43 @@ void func_800560F4(CoursePreviewCamera *arg0) {
     func_80071824(arg0, func_80056070);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_8005616C.s")
+void func_8005616C(CoursePreviewCamera *arg0) {
+    volatile s32 pad0[1];
+    FixedTransform sp84;
+    FixedTransform sp64;
+    FixedTransform sp44;
+    volatile s32 pad1[1];
+
+    if (D_80156609 != 0) {
+        arg0->displayListValid = 0;
+    }
+
+    if (func_80049000(&arg0->position) != 0) {
+        if (arg0->displayListValid == 0) {
+            func_80097C18(sp84.rotation, arg0->spinVelocity);
+            sp84.translation.x = 0;
+            sp84.translation.y = 0x600000;
+            sp84.translation.z = 0;
+            func_800981C8(sp64.rotation, arg0->scale, arg0->angle.half.yaw + 0x800, arg0->angle.half.pitch);
+            sp64.translation.x = arg0->position.x;
+            sp64.translation.y = arg0->position.y;
+            sp64.translation.z = arg0->position.z;
+            func_800987A0(&sp84, &sp64, &sp44);
+            arg0->displayList0 = func_8004885C(&sp64);
+            arg0->displayList1 = func_8004885C(&sp44);
+        }
+
+        if (arg0->displayList1 != NULL) {
+            gDPPipeSync(gRegionAllocPtr++);
+            gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112144));
+            gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112146));
+            gSPMatrix(gRegionAllocPtr++, arg0->displayList0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(gRegionAllocPtr++, D_20028F0);
+            gSPMatrix(gRegionAllocPtr++, arg0->displayList1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(gRegionAllocPtr++, D_2002DB8);
+        }
+    }
+}
 
 void func_80056348(CoursePreviewCamera *arg0, s16 arg1) {
     s16 diff = arg1 - arg0->timer;
