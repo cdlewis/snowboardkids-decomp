@@ -14,18 +14,58 @@ typedef struct InputTask {
     u8 pad18[0x10];
 } InputTask;
 
+typedef struct FramebufferState {
+    u8 status;
+    u8 pad[0x1861F];
+} FramebufferState;
+
+extern u8 D_800DEED0;
+extern u8 D_800DEED4;
 extern InputTask *D_801235B8;
 extern u8 D_80123700;
 extern InputTask *D_8012370C;
 extern InputTask *D_80123730[];
+extern u8 D_80123750;
+extern u8 D_80123751;
+extern u8 D_80123752;
+extern FramebufferState D_8012496E[];
 
+void func_8009B704(u8);
 InputTask *func_80099384(s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80098D80.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80098EAC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80099288.s")
+s32 func_80099288(void) {
+    u8 frameIndex;
+
+    if (D_800DEED0 == 0) {
+        if (D_80123751 == 0) {
+            frameIndex = D_80123752;
+            if (D_8012496E[frameIndex].status == 0) {
+                if ((s32) D_80123750 > 0) {
+                    func_8009B704(frameIndex);
+                    D_800DEED0 = D_800DEED4;
+                    D_80123750--;
+                    if (D_80123752 != 0) {
+                        D_80123752 = 0;
+                    } else {
+                        D_80123752 = 1;
+                    }
+                    goto return_one;
+                }
+                return 0;
+            }
+            return 0;
+        }
+        goto return_one;
+    }
+    D_800DEED0--;
+
+return_one:
+    return 1;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80099384.s")
 
