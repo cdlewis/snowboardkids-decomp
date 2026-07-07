@@ -2916,3 +2916,12 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   non-matching attempt. The remaining mismatch is allocation-only: decrement
   temporaries use `$a0` instead of the target `$t8`/`$t9`, cascading later
   temporary register names.
+
+## func_80053858 (main_menu_overlay_effects)
+
+- The actor slot at offset `0x24` needs to stay as an `OverlayActorWord`: this
+  function uses `half.hi` as a 12-bit angle, while nearby overlay effects use
+  the same slot as a full-word velocity.
+- Avoid a local copy for the angle after updating `unk24.half.hi`. IDO then
+  reloads `lh v1, 0x24(a2)` after `func_80097AE8`; a local copy spills to the
+  stack and changes the frame size from `0x18` to `0x20`.

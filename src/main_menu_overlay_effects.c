@@ -30,7 +30,7 @@ typedef struct {
     /* 0x18 */ OverlayActorWord unk18;
     /* 0x1C */ OverlayActorWord unk1C;
     /* 0x20 */ OverlayActorWord unk20;
-    /* 0x24 */ s32 velocity;
+    /* 0x24 */ OverlayActorWord unk24;
     /* 0x28 */ u16 timer;
     /* 0x2A */ s16 unk2A;
     /* 0x2C */ u8 pad2C[2];
@@ -115,6 +115,7 @@ extern u32 D_2000E70[];
 extern u32 D_20058A8[];
 
 s32 func_80043040(s16);
+s32 func_800430D0(void);
 void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
 void func_80041D20(s32, u16);
 void func_80041DD4(s32, u8);
@@ -165,7 +166,20 @@ void func_80053660(MainMenuOverlayEffectActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_800536F4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80053858.s")
+void func_80053858(MainMenuOverlayEffectActor *arg0) {
+    arg0->unk1C.half.hi = (arg0->unk1C.half.hi + 1) & 3;
+    arg0->unk18.half.lo += arg0->unk20.half.lo;
+    arg0->unk24.half.hi = (arg0->unk24.half.hi + 0x20) & 0xFFF;
+    arg0->unk18.half.hi += (func_80097AE8(arg0->unk24.half.hi) * (arg0->unk1C.half.lo + 0x30)) / 4096;
+    if ((arg0->unk24.half.hi == 0) || (arg0->unk24.half.hi == 0x800)) {
+        arg0->unk1C.half.lo = func_800430D0() & 0xF;
+    }
+    if (arg0->unk18.half.lo >= 0x6E1) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(D_80124878, func_80053660, (s32)arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_8005393C.s")
 
@@ -342,11 +356,11 @@ void func_8005499C(MainMenuOverlayEffectActor *arg0) {
 }
 
 void func_80054A04(MainMenuOverlayEffectActor *arg0) {
-    s32 temp_v0 = arg0->velocity;
+    s32 temp_v0 = arg0->unk24.word;
     s32 temp_t8 = (unsigned long long)(temp_v0 + 4);
 
     arg0->unk18.word += temp_v0;
-    arg0->velocity = temp_t8;
+    arg0->unk24.word = temp_t8;
     if (temp_t8 == 0x38) {
         func_800716E4(arg0);
     } else {
@@ -368,9 +382,9 @@ void func_80054A64(MainMenuOverlayEffectActor *arg0) {
 }
 
 void func_80054AC0(MainMenuOverlayEffectActor *arg0) {
-    arg0->unk18.word += arg0->velocity;
-    arg0->velocity -= 4;
-    if (arg0->velocity == 0) {
+    arg0->unk18.word += arg0->unk24.word;
+    arg0->unk24.word -= 4;
+    if (arg0->unk24.word == 0) {
         arg0->timer = 0x1E;
         func_80071824(arg0, func_80054A64);
     }
@@ -379,7 +393,7 @@ void func_80054AC0(MainMenuOverlayEffectActor *arg0) {
 
 void func_80054B2C(MainMenuOverlayEffectActor *arg0) {
     if (D_801124B0[arg0->index].active != 0) {
-        arg0->velocity = 0x38;
+        arg0->unk24.word = 0x38;
         arg0->unk18.word = -0x1A4;
         func_80071824(arg0, func_80054AC0);
         return;
