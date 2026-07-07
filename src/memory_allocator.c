@@ -72,7 +72,75 @@ void func_80042D28(MemoryBlock *block) {
     block->status = MEMORY_BLOCK_FREE;
 }
 
+// func_80042D58 best match: 99.388%
 #pragma GLOBAL_ASM("asm/nonmatchings/memory_allocator/func_80042D58.s")
+
+#ifdef NON_MATCHING
+extern MemoryBlock D_80110180;
+
+s16 func_80042D58(s32 arg0) {
+    MemoryBlock *temp_v0;
+    MemoryBlock *temp_v1;
+    MemoryBlock *var_a1;
+    u32 temp_a0;
+    u32 temp_t1;
+    u32 available;
+
+    var_a1 = D_80110180.next;
+    if (var_a1 != NULL) {
+loop_1:
+        temp_v1 = var_a1->next;
+        if (temp_v1 != NULL) {
+            temp_a0 = arg0 + 0xF;
+            temp_t1 = (temp_a0 >> 4) * 0x10;
+            available = (temp_v1->start - var_a1->start) - var_a1->size;
+            if (available >= temp_t1) {
+                temp_v0 = func_80042CDC();
+                if (temp_v0 == NULL) {
+                    return -1;
+                }
+                temp_v0->prev = var_a1;
+                temp_v0->next = var_a1->next;
+                temp_v1 = var_a1->next;
+                if (temp_v1 != NULL) {
+                    temp_v1->prev = temp_v0;
+                }
+                var_a1->next = temp_v0;
+                temp_v0->start = var_a1->start + var_a1->size;
+                temp_v0->size = temp_t1;
+                return temp_v0->index;
+            }
+            var_a1 = temp_v1;
+            if (temp_v1 != NULL) {
+                goto loop_1;
+            }
+        }
+    }
+
+    temp_a0 = ((u32)(arg0 + 0xF) >> 4) * 0x10;
+    if ((u32)((D_8011091C + temp_a0) - &D_80160480) >= 0x1C0001U) {
+        return -1;
+    }
+    if (var_a1 == NULL) {
+        var_a1 = &D_80110180;
+    }
+    temp_v0 = func_80042CDC();
+    if (temp_v0 == NULL) {
+        return -1;
+    }
+    temp_v0->prev = var_a1;
+    temp_v0->next = var_a1->next;
+    temp_v1 = var_a1->next;
+    if (temp_v1 != NULL) {
+        temp_v1->prev = temp_v0;
+    }
+    var_a1->next = temp_v0;
+    temp_v0->start = D_8011091C;
+    temp_v0->size = temp_a0;
+    func_80042BC0();
+    return temp_v0->index;
+}
+#endif
 
 s32 func_80042EE4(s32 arg0) {
     MemoryBlock *temp_a0;
