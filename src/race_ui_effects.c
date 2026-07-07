@@ -2,6 +2,7 @@
 #include "viewport_manager.h"
 
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
+#define SCALE_MATRIX_COMPONENT(value, scale) ((value * scale) / 0x1000)
 
 typedef struct {
     s32 word;
@@ -280,6 +281,17 @@ typedef struct {
 } RaceUiSpinningParticleActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ s16 scale;
+    /* 0x26 */ u8 pad26[2];
+    /* 0x28 */ RaceUiGfxCommandDest *matrix;
+    /* 0x2C */ s16 rotY;
+    /* 0x2E */ u8 pad2E[2];
+    /* 0x30 */ u8 matrixDirty;
+} RaceUiScaledParticleActor;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x24];
     /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
     /* 0x44 */ u8 pad44[0x64 - 0x44];
@@ -505,6 +517,7 @@ extern u32 D_2003870[];
 extern u32 D_2003538[];
 extern u32 D_20035F8[];
 extern u32 D_200CC20[];
+extern u32 D_200C910[];
 extern u32 D_200CE48[];
 extern u32 D_200CFB0[];
 extern u32 D_200D3A8[];
@@ -2288,7 +2301,38 @@ void func_80062A64(s16 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80062AF0.s")
+void func_80062AF0(RaceUiScaledParticleActor *arg0) {
+    FixedMatrix3sScratch scratch;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (func_80049000(&arg0->pos) != 0) {
+        if (arg0->matrixDirty != 0) {
+            arg0->matrixDirty = 0;
+            func_80097C18(scratch, arg0->rotY);
+            scratch[0] = SCALE_MATRIX_COMPONENT(scratch[0], arg0->scale);
+            scratch[3] = SCALE_MATRIX_COMPONENT(scratch[3], arg0->scale);
+            scratch[6] = SCALE_MATRIX_COMPONENT(scratch[6], arg0->scale);
+            scratch[2] = SCALE_MATRIX_COMPONENT(scratch[2], arg0->scale);
+            scratch[5] = SCALE_MATRIX_COMPONENT(scratch[5], arg0->scale);
+            scratch[8] = SCALE_MATRIX_COMPONENT(scratch[8], arg0->scale);
+            ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.a;
+            ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.b;
+            ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.c;
+            arg0->matrix = func_8004885C((RaceUiTrailCopyBlock *)scratch);
+        }
+
+        if (arg0->matrix != NULL) {
+            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, func_80043040(D_80112140));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, func_80043040(D_80112142));
+            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200C910);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80062D34.s")
 
