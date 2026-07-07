@@ -66,6 +66,7 @@ extern s16 D_8011217E;
 extern u16 D_8010B1A2;
 extern u8 D_8010B1A5;
 extern s16 D_8010B1A6;
+extern u8 D_8010B1A8[];
 extern u16 D_8010B1D0;
 extern u16 D_800B9530[];
 extern u16 D_800B9538[];
@@ -320,7 +321,26 @@ void func_8003CBCC(MainMenuEffectActor *arg0) {
     func_8000F030(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, func_80043040(D_80112172), ((u16) arg0->angle + 0x20) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003CC58.s")
+void func_8003CC58(MainMenuEffectActor *arg0) {
+    MainMenuSceneModel *model;
+    s32 divisor;
+
+    model = func_80041E60(arg0->characterId); divisor = 0x24000;
+    if (0) {}
+    arg0->x = model->displayObjects[7].screenX / divisor;
+    arg0->y = -(model->displayObjects[7].screenY / divisor);
+    if ((arg0->effectTimer += 1) == 4) {
+        arg0->effectTimer = 0;
+        if ((arg0->effectFrame += 1) == 5) {
+            arg0->effectFrame = 0;
+        }
+    }
+    if (D_8010B1A8[arg0->characterId] == 0) {
+        func_800483FC(&D_80124868, func_8003CBCC, arg0);
+        return;
+    }
+    func_800716E4(arg0);
+}
 
 void func_8003CD70(MainMenuEffectActor *arg0) {
     arg0->angleVelocity = 0;
