@@ -276,7 +276,6 @@ extern Gfx D_2001810[];
 extern Gfx D_20018E8[];
 extern Gfx D_2000910[];
 extern Gfx D_2003218[];
-extern void func_8006BE90(void);
 extern void func_8006B7E0(void);
 extern void func_8006A894(void *);
 
@@ -677,7 +676,36 @@ void func_8006BDE4(RaceMovingEffect *arg0) {
     func_800716E4(temp_a3);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BE90.s")
+void func_8006BE90(RaceMovingEffect *arg0) {
+    Vec3i sp2C;
+    void *velocity;
+
+    if (D_80121B56 == 0) {
+        arg0->timer--;
+        arg0->unk52 -= 0x2A;
+        func_80097C18(arg0->unk30, arg0->unk52);
+
+        velocity = &arg0->velocity;
+        func_80098590(arg0->unk30, velocity, &sp2C);
+        arg0->pos.x += sp2C.x;
+        arg0->pos.y += sp2C.y;
+        arg0->pos.z += sp2C.z;
+
+        arg0->unk52 -= 0x2A;
+        func_80097C18(arg0->unk30, arg0->unk52);
+        func_80098590(arg0->unk30, velocity, &sp2C);
+        arg0->pos.x += sp2C.x;
+        arg0->pos.y += sp2C.y;
+        arg0->pos.z += sp2C.z;
+
+        if (arg0->timer == 0) {
+            func_80071824(arg0, func_8006BDE4);
+            arg0->timer = 0x38;
+        }
+    }
+
+    func_800483FC(&D_801248A4, func_8006BC68, arg0);
+}
 
 void func_8006BFC0(RaceMovingEffect *arg0) {
     Vec3i sp1C;
