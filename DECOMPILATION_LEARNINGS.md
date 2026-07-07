@@ -3171,3 +3171,14 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   the first two border loops into `bne`-against-limit forms.
 - Decomp-permuter may suggest unsigned loop variables here, but those change the
   negative-start loop semantics even when the assembly score improves.
+
+## func_8004D018 (race_effects)
+
+- For small fixed loops that pass the counter as a signed halfword argument, keep
+  the loop variable as `s32`; IDO will sign-extend only at the call. Declaring
+  the counter as `s16` inserts truncation after every increment and shifts later
+  branch offsets.
+- When decrementing a signed halfword struct field, testing the field directly
+  (`if (actor->timer != 0) actor->timer--;`) can match the target `lh`/`beqz`
+  sequence. Copying it into a `s16` local first may emit redundant
+  sign-extension instructions.

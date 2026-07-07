@@ -40,16 +40,26 @@ typedef struct {
 
 extern s16 D_8011216C;
 extern s16 D_80112168;
+extern u8 D_80121B56;
 extern RacePlayerState D_80121D80[];
 extern RacePlayerSurfaceState D_80122282[];
+extern s32 D_801248A4;
 
 s32 func_80043040(s16);
+void func_800483FC(void *, void *, void *);
 void func_80045990(s32, s32, void **, void **);
 void func_8004B5F8(RaceEffectActor *);
+void func_8004CBC4(RaceEffectActor *);
+void func_8004CF28(RaceEffectActor *);
 void func_8004D018(RaceEffectActor *);
+void func_8004E594(s32, s32, s32, s32);
+void func_800716E4(RaceEffectActor *);
 void func_80071824(void *task, void (*callback)());
 void func_80072A74(s32, void *, s32, s32);
 void *func_80071408(void *, s32, s32);
+s16 func_8007D200(s16, s32, s32);
+s32 func_80080CC4(s16, s32, s32);
+s32 func_800891B8(Vec3i *, s32, s32, s16);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_80049440.s")
 
@@ -113,7 +123,41 @@ void func_8004B8B4(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004CF28.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004D018.s")
+void func_8004D018(RaceEffectActor *arg0) {
+    Vec3i *pos;
+    s32 i;
+    s32 accelerationY;
+    s32 groundY;
+
+    if (D_80121B56 == 0) {
+        accelerationY = arg0->accelerationY;
+        arg0->pos.y += accelerationY;
+        arg0->accelerationY = accelerationY - 0x6000;
+
+        arg0->angle = func_8007D200(arg0->angle, arg0->pos.x, arg0->pos.z);
+        groundY = func_80080CC4(arg0->angle, arg0->pos.x, arg0->pos.z);
+        if (arg0->pos.y < groundY + 0x30000) {
+            arg0->pos.y = groundY + 0x30000;
+            func_80071824(arg0, func_8004CF28);
+        }
+
+        for (i = 0; i != 4; i++) {
+            pos = &arg0->pos;
+            if ((i != arg0->playerIndex || arg0->timer == 0) && func_800891B8(pos, 0x30000, 0x400, i)) {
+                func_80072A74(0x14, pos, 0x7F, 0x32);
+                func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 1);
+                func_800716E4(arg0);
+                return;
+            }
+        }
+
+        if (arg0->timer != 0) {
+            arg0->timer--;
+        }
+    }
+
+    func_800483FC(&D_801248A4, func_8004CBC4, arg0);
+}
 
 void func_8004D184(RaceEffectActor *arg0) {
     RacePlayerState *player;
