@@ -56,6 +56,8 @@ extern void func_800291F0(s32);
 extern s32 func_80043040(s16);
 extern u8 D_800EC9E6;
 extern s32 D_8010ADE8;
+extern s8 D_8010AE64[];
+extern u8 D_8010AEB0;
 extern u8 D_8010AF18;
 extern u8 D_8010AF1C;
 extern s16 D_800B70C0[][4];
@@ -182,7 +184,44 @@ void func_80024968(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800257F0.s")
 
+// func_80025AA8 best match: 83.537% (nonmatchings/func_80025AA8-9017456803007796287/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025AA8.s")
+
+#ifdef NON_MATCHING
+void func_80025AA8(void *arg0) {
+    s32 i;
+    s32 tileIndex;
+    s32 handleIndex;
+    s32 playerCount;
+    u8 *statePtr;
+    s16 *posPtr;
+
+    if (D_8010AEB0 == 0) {
+        playerCount = D_80121B55;
+        i = 0;
+        statePtr = arg0;
+        if (playerCount > 0) {
+            do {
+                if (statePtr[0x30] < 2) {
+                    posPtr = (s16 *)((u8 *)arg0 + (i * 2));
+                    if (playerCount == 1) {
+                        tileIndex = 7;
+                        handleIndex = 0x25;
+                    } else {
+                        tileIndex = 0x13;
+                        handleIndex = 0x21;
+                    }
+                    func_8000F8AC(posPtr[0xC], (s16)(posPtr[0x10] + (statePtr[0x38] * D_8010AE64[i])),
+                                  func_80043040(D_80112130[handleIndex]), tileIndex & 0xFFFF, 0x20, 0x20, 0,
+                                  posPtr[0x14], 0);
+                }
+                i++;
+                statePtr++;
+            } while (i < D_80121B55);
+        }
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025BE4.s")
 
