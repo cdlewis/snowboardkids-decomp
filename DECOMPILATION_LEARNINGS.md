@@ -2755,6 +2755,12 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   cleanly when it uses the same typed `GfxCommandSource`/`GfxCommandDest`
   accesses and returns the allocated destination pointer directly.
 
+## func_80048A38 (render_asset_utils)
+
+- This command-block allocator is the zero-texture variant of `func_8004885C`.
+  Keeping the same typed field assignment order, but writing `unk18 = 0`,
+  `unk1C = 1`, `unk38 = 0`, and `unk3C = 0`, matches IDO exactly.
+
 ## func_8004F33C (race_item_effects)
 
 - When replacing a halfword field plus explicit padding with a word-sized union
