@@ -2984,3 +2984,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   matters even when they are later used as signed values elsewhere: an `s8`
   field at offset `0xEF` makes IDO emit `lb`, while the matched save operation
   uses `lbu` before storing into the return byte array.
+
+## func_80040450 (main_menu_transition)
+
+- For the animated `func_8007066C` viewport transition, keeping an explicit
+  `f64` denominator initialized to `0x10` prevents IDO from folding the aspect
+  ratio expression into a multiply by `0.0625`; this preserves the target
+  `div.d` by `16.0`. The remaining mismatch is register scheduling for the
+  integer viewport arguments: IDO tends to hoist the `x1` calculation into
+  argument registers instead of preserving the target `x2`, `x1`, `y1`, `y2`
+  temporary order.
