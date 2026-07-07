@@ -2753,3 +2753,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   non-call work, then reloaded it after helper calls before later field reads.
   For chained camera expressions with calls in the middle, keep the global
   field accesses direct unless the target clearly preserves a local pointer.
+
+## func_8003C634 (main_menu_effects)
+
+- For small byte-state switches, switching directly on the struct byte field can
+  match better than hoisting the state into a `u8` local. In this function,
+  `switch (arg0->characterId)` plus `arg0->characterId = arg0->characterId + 1`
+  produced the target byte reload/copy sequence, while the local-state version
+  only differed by register allocation.
