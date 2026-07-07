@@ -72,6 +72,7 @@ extern s32 D_8010ADDC;
 
 void func_8003BF7C(MainMenuEffectActor *arg0);
 void func_8003C180(MainMenuEffectActor *arg0);
+void func_8003C484(MainMenuEffectActor *arg0);
 void func_8003C634(MainMenuEffectActor *arg0);
 void func_8003C7E4(MainMenuEffectActor *arg0);
 void func_8003CE78(MainMenuEffectActor *arg0);
@@ -171,7 +172,38 @@ void func_8003C420(s16 arg0, s16 arg1, u8 arg2) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003C484.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003C634.s")
+void func_8003C634(MainMenuEffectActor *arg0) {
+    arg0->effectTimer++;
+    if (arg0->effectTimer == 3) {
+        arg0->effectTimer = 0;
+        arg0->effectFrame++;
+        switch (arg0->characterId) {
+        case 0:
+            if (arg0->effectFrame == 4) {
+                arg0->characterId = arg0->characterId + 1;
+            }
+            break;
+        case 1:
+            if (arg0->effectFrame == 8) {
+                arg0->uFrameIndex++;
+                if (arg0->uFrameIndex == 3) {
+                    arg0->characterId++;
+                } else {
+                    arg0->effectFrame = 4;
+                }
+            }
+            break;
+        case 2:
+            break;
+        }
+    }
+
+    if (arg0->effectFrame == 0xD) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8003C484, arg0);
+}
 
 void func_8003C728(MainMenuEffectActor *arg0) {
     arg0->x = -0x3D;
