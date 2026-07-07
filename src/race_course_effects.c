@@ -243,6 +243,7 @@ extern void func_8006C7F4(void);
 void func_8006B3E0(Struct6B760 *);
 void func_8006B6C8(Struct6B760 *);
 void func_8006AF48(RaceCourseRenderEffect *);
+void func_8006BC68(RaceMovingEffect *);
 extern Struct6B760 *func_80071408(void *, s32, s32);
 extern u8 D_80121B56;
 extern s16 D_80121B50;
@@ -279,7 +280,8 @@ extern Gfx D_2001678[];
 extern Gfx D_2001730[];
 extern Gfx D_2001810[];
 extern Gfx D_20018E8[];
-extern void func_8006BC68(void *);
+extern Gfx D_2000910[];
+extern Gfx D_2003218[];
 extern void func_8006BE90(void);
 extern void func_8006B7E0(void);
 extern void func_8006A894(void *);
@@ -604,7 +606,38 @@ void func_8006BB50(RaceMovingEffect *arg0) {
 }
 #endif
 
+// func_8006BC68 best match: 99.789% at nonmatchings/func_8006BC68-690418013071298896/base_6.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BC68.s")
+
+#ifdef NON_MATCHING
+void func_8006BC68(RaceMovingEffect *arg0) {
+    volatile s32 unused;
+    CourseEffectMatrixSource transform;
+    volatile s32 pad[3];
+
+    if (D_80156609 != 0) {
+        func_80097C18(&transform, arg0->unk52);
+        transform.basePos.x = arg0->pos.x;
+        transform.basePos.y = arg0->pos.y;
+        transform.basePos.z = arg0->pos.z;
+        arg0->matrix = func_8004885C(&transform);
+    }
+
+    if (func_80049000(&arg0->pos) != 0) {
+        if (arg0->matrix != NULL) {
+            gDPPipeSync(gRegionAllocPtr++);
+            gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112144));
+            gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112146));
+            gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            if (D_80121B50 != 8) {
+                gSPDisplayList(gRegionAllocPtr++, D_2000910);
+            } else {
+                gSPDisplayList(gRegionAllocPtr++, D_2003218);
+            }
+        }
+    }
+}
+#endif
 
 void func_8006BDE4(RaceMovingEffect *arg0) {
     Vec3i sp24;
