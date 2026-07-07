@@ -103,7 +103,79 @@ extern void func_8009956C(void *, s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000A214.s")
 
+// func_8000AFE8 best match: 86.106%
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000AFE8.s")
+
+#ifdef NON_MATCHING
+void func_8000AFE8(void) {
+    CourseSelectMenuState *volatile *statePtr;
+    ObjectA3E0 **currentPtr;
+    ObjectA3E0 *var_s1;
+    u8 *countPtr;
+    s32 var_s0;
+    CourseSelectMenuState *state;
+    s32 temp_v0;
+    s32 temp_v1;
+
+    statePtr = &D_801235B8;
+    state = *statePtr;
+    temp_v0 = state->timer;
+    if (temp_v0 < 2) {
+        temp_v1 = D_80123778;
+        if ((temp_v1 & 0x10800) && (temp_v0 != 0)) {
+            state->timer = temp_v0 - 1;
+            func_80072138(0x19, 0x32);
+            temp_v1 = D_80123778;
+        } else if ((temp_v1 & 0x20400) && (temp_v0 != 1)) {
+            state->timer = temp_v0 + 1;
+            func_80072138(0x19, 0x32);
+            temp_v1 = D_80123778;
+        }
+
+        if (temp_v1 & 0x8000) {
+            D_801235B4 = 1;
+            if ((*statePtr)->timer == 1) {
+                func_80072138(0x18, 0x32);
+                if (D_8010AECC == 0) {
+                    D_8010AF18.playerOneCourseDecided = 1;
+                } else {
+                    D_8010AF18.playerTwoCourseDecided = 1;
+                }
+                func_8009956C(func_8000A214, 0);
+            } else {
+                func_80072138(0x45, 0x32);
+                (*statePtr)->timer += 2;
+            }
+        } else if (temp_v1 & 0x4000) {
+            D_801235B4 = 1;
+            func_80072138(0x18, 0x32);
+            if (D_8010AECC == 0) {
+                D_8010AF18.playerOneCourseDecided = 1;
+            } else {
+                D_8010AF18.playerTwoCourseDecided = 1;
+            }
+            func_8009956C(func_8000A214, 0);
+        }
+    } else if (temp_v0 >= 4) {
+        (*statePtr)->timer = 0;
+        D_80121D88 = 9;
+        func_8009956C(func_8000A214, 0);
+    }
+
+    countPtr = &D_80121B55;
+    var_s0 = 0;
+    if (*countPtr > 0) {
+        currentPtr = &D_800EC9C4;
+        var_s1 = D_801121E0;
+        do {
+            (*currentPtr = var_s1)->unk2C();
+            var_s0 += 1;
+            var_s1 += 1;
+        } while (var_s0 < *countPtr);
+    }
+    func_8007105C();
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000B220.s")
 
