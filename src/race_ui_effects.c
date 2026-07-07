@@ -275,6 +275,17 @@ typedef struct {
 } RaceUiSingleTrailActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x38 */ Vec3i pos;
+    /* 0x44 */ RaceUiGfxCommandDest *matrix;
+    /* 0x48 */ u8 pad48[2];
+    /* 0x4A */ s16 alpha;
+    /* 0x4C */ u8 pad4C[2];
+    /* 0x4E */ u8 matrixDirty;
+} RaceUiFadingTrailActor;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x24];
     /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
     /* 0x44 */ u8 pad44[0x64 - 0x44];
@@ -1985,7 +1996,7 @@ void func_80061D90(void *arg0) {
     func_80071824(arg0, func_80061CA8);
 }
 
-void func_80061DE8(RaceUiFragmentActor *arg0) {
+void func_80061DE8(RaceUiFadingTrailActor *arg0) {
     volatile u8 pad[0x20];
     RaceUiDisplayCommand *unused;
 
@@ -1995,7 +2006,7 @@ void func_80061DE8(RaceUiFragmentActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        arg0->matrix = func_8004885C(&arg0->transformSource);
+        arg0->matrix = func_8004885C(&arg0->copyBlock);
     }
 
     if (arg0->matrix != NULL) {
