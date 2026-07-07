@@ -1,8 +1,7 @@
-Fast3DEX2 Display List Commands
+Fast3DEX Display List Commands
+The Fast3DEX display list commands are microcode that are passed to the RSP for rendering. They are all 8 bytes long.
 
-The Fast3DEX2 display list commands are microcode that are passed to the RSP for rendering. They are all 8 bytes long.
-
-Fast3DEX2 Commands
+Fast3DEX Commands
 
 00: G_SPNOOP
 
@@ -10,54 +9,91 @@ Stalls the signal processor (the RSP), and as a consequence, the RDP too. This s
 
 00 00 00 00 00 00 00 00
 
-01: G_VTX
+01: G_MTX
 
-Fills the vertex buffer with vertex information (ex. coordinates, color values). Max amount of vertices to load in F3DEX2 is 0x20 (32).
+Apply transformation matrix. Used in HUD text printing code to translate textures, as well as copious other transformations including animations.
 
-01 0[N N]0 [II] [SS SS SS SS]
+01 [PP] 00 00 [AA AA AA AA]
 
+P	Parameters
+A	Segmented address of vectors
+Parameters (can be OR'd together):
+
+0x01	projection (default: model view)
+0x02	load (default: multiply)
+0x04	push (default: no push)
+Example: Push matrix and and multiply by matrix at 0x00213DF8; Multiply by matrix at 0x00213DB8
+
+01 04 00 40 00 21 3D F8
+01 00 00 40 00 21 3D B8
+03: G_MOVEMEM
+
+Takes a block of memory from an address and puts it in the location pointed to by an index and an offset.
+
+03 [nn] [oo] [ii] [aa aa aa aa]
+
+n	(((Size in bytes of memory to be moved) » 3)+1)*8
+o	Offset from indexed base address (*8)
+i	Index into table of DMEM addresses
+a	Segmented address of memory
+i is an index into a table of addresses of DMEM. Given enumerations for i are:
+
+G_MV_MMTX = 2
+G_MV_PMTX = 6
+G_MV_VIEWPORT = 8
+G_MV_LIGHT = 10
+G_MV_POINT = 12
+G_MV_MATRIX = 14
+Note however that only VIEWPORT, LIGHT, and MATRIX are used by any of the macros given to programmers.
+
+Example: Loads diffuse RGBA from 0x0 in Segment 0x0E; loads ambient RGBA from 0x08 in Segment 0x0E
+
+03 86 00 10 0E 00 00 00
+03 88 00 10 0E 00 00 08
+04: G_VTX
+
+Fills the vertex buffer with vertex information (ex. coordinates, color values). Max amount of bytes to load in F3DEX is 0x200 (32 vertices).
+
+04 [II] [xx xx] [SS SS SS SS]
+
+xx xx = NNNN NNLL LLLL LLLL
+
+I	Where to start writing vertices inside the vertex buffer (*2)
 N	Number of vertices to write
-I	Where to start writing vertices inside the vertex buffer (start = II - N*2)
+L	Length of vertex data to write in bytes((N)*0x10-1)
 S	Segmented address to load vertices from
-Example: Load 4 vertices from 0x0E000780 and put them into the vertex buffer, starting at position 0.
+Example: Load 30 (0x1E0 / 0x10) vertices from 0x0E000780 and put them into the vertex buffer, starting at position 0.
 
-01 00 40 08 0E 00 07 80
-02: G_MODIFYVTX
+04 00 79 DF 0E 00 07 80
+06: G_DL
 
-Modifies a four-byte portion of the vertex specified.
+Signifies the start of a Display List. May be used to link data and branch the current DL.
 
-02 ww nn nn vv vv vv vv
+06 [AA] 00 00 [BB BB BB BB]
 
-w	Enumerated set of values specifying what to change
-n	Vertex buffer index of vertex to modify (*2)
-v	New value to insert
-The portion modified is specified by w, and the new value is given in v. Lighting calculations (if enabled) and position transformations are not calculated by the RSP after use of this command, so modifications modify final color and vertices.
+AA	00 = store return address, 01 = don't store (end DL after branch)
+B	Segmented Address to branch to
+Example: Loads a display list from 0xA50 in segment 0x07.
 
-The valid values for w have names as follows:
+06 00 00 00 07 00 0A 50
+AF: G_LOAD_UCODE
 
-G_MWO_POINT_RGBA = 0x10 Modifies the color of the vertex
-G_MWO_POINT_ST = 0x14 Modifies the texture coordinates
-G_MWO_POINT_XYSCREEN = 0x18 Modifies the X and Y position
-G_MWO_POINT_ZSCREEN = 0x1C Modifies the Z position (lower four nybbles of v should always be zero for this modification)
-The exact nature of these values is unclear. The SDK documentation describes them as “byte offsets”, however they don't match offsets in the vertex structure.
+Loads a new microcode executable into the RSP.
 
-03: G_CULLDL
+B4 00 00 00 [dd dd dd dd]
+AF 00 [ss ss] [tt tt tt tt]
 
-03 00 vv vv 00 00 ww ww
+d points to the start of the data section and t to the start of the text section, with s specifying the size of the data section. After loading the new microcode, the RCP is reset as appropriate.
 
-v	Vertex buffer index of first vertex for bounding volume (*0x02)
-w	Vertex buffer index of last vertex for bounding volume (*0x02)
-This command takes the vertices in the vertex buffer from vfirst through vlast as describing the volume of the object being rendered (called the “bounding value”). If the bounding volume does not intersect with the current viewing volume (aka if the bounding volume is entirely offscreen), then the display list ends, equivalent to a B8 opcode. Otherwise, the display list continues as though nothing happened (equivalent to 00, then).
+Note that d is stored in the high half of the “RDP word”, the opcode for which is shown in italics before the actual AF opcode.
 
-For F3DEX2, Each of vfirst and vlast must be in the range 0 ≤ x ≤ 31. Additionally, vfirst < vlast must be true (thus a minimum of two vertices must be specified, and range of vertices cannot be reversed). It's not specified what the behavior is when all the vertices are coplanar.
-
-04: G_BRANCH_Z
+B0: G_BRANCH_Z
 
 Tests the Z value of the vertex at a buffer index against a given z-value.
 
-E1 00 00 00 [dd dd dd dd]
+B4 00 00 00 [dd dd dd dd]
 
-04 [aa a][b bb] [zz zz zz zz]
+B0 [aa a][b bb] [zz zz zz zz]
 
 d	Address of display list to branch to
 a	Vertex buffer index of vertex to test(*5)
@@ -65,7 +101,7 @@ b	Vertex buffer index of vertex to test(*2)
 z	Z value to test against
 If the given vertex's Z value ≤ z, then the processor switches over to the display list at address d (equivalent to 06 jump with no return stored). Otherwise continues through the display list. Useful for LOD-related model processing, where several occurrences of this can be stacked to branch to progressively closer versions of the model.
 
-Note that the 04 opcode actually pulls the address of the branching display list from the high half of the “RDP word” (16 bytes used for generic value storage, as far as is known). The italicized opcode given above is set by the “basic function” listed for this opcode, immediately before the actual 04 opcode.
+Note that the B0 opcode actually pulls the address of the branching display list from the high half of the “RDP word” (16 bytes used for generic value storage, as far as is known). The italicized opcode given above is set by the “basic function” listed for this opcode, immediately before the actual B0 opcode.
 
 Although not stated in the documentation, the vertex buffer index is presumably limited to the range 0 ≤ index ≤ 31 just like other buffer indices. It's unknown why the opcode needs the index twice, and multiplied by different amounts.
 
@@ -95,25 +131,11 @@ Note that in a default setup, zmin is 0, and zmax is 0x03FF.
 
 This formula cannot be reversed for the value provided in the microcode, since the necessary information is absent. (Since the values are provided in the macro call generating this opcode, there's no guarantee any of the values match what they're “supposed” to be, e.g. near could be set to something far different from the location of the actual near clipping plane.)
 
-Note: This command works differently in F3DZEX.
-
-05: G_TRI1
-
-Renders one triangle according to the vertices inside the vertex buffer
-
-05 [AA] [BB] [CC] 00 00 00 00
-
-A	First vertex to use for the triangle (* 0x02)
-B	Second vertex to use for the triangle (* 0x02)
-C	Third vertex to use for the triangle (* 0x02)
-Example: Render a triangle using the vertex data specified at the vertex buffer positions 0, 1 (0x02 / 0x02) and 2 (0x04 / 0x02).
-
-05 00 02 04 00 00 00 00
-06: G_TRI2
+B1: G_TRI2
 
 Renders two triangles according to the vertices inside the vertex buffer
 
-06 [AA] [BB] [CC] 00 [DD] [EE] [FF]
+B1 [AA] [BB] [CC] 00 [DD] [EE] [FF]
 
 A	First vertex to use for the triangle (* 0x02)
 B	Second vertex to use for the triangle (* 0x02)
@@ -123,12 +145,49 @@ E	Fifth vertex to use for the triangle (* 0x02)
 F	Sixth vertex to use for the triangle (* 0x02)
 Example: Render a triangle using the vertex data specified at the vertex buffer positions 0, 1 (2/2) and 2 (4/2), along with a second triangle at vertex buffer positions 3 (6/2), 4 (8/2), and 5 (0x0A/2).
 
-06 00 02 04 00 06 08 0A
-07: G_QUAD
+B1 00 02 04 00 06 08 0A
+B2: G_MODIFYVTX
+
+Modifies a four-byte portion of the vertex specified.
+
+B2 ww nn nn vv vv vv vv
+
+w	Enumerated set of values specifying what to change
+n	Vertex buffer index of vertex to modify (*2)
+v	New value to insert
+The portion modified is specified by w, and the new value is given in v. Lighting calculations (if enabled) and position transformations are not calculated by the RSP after use of this command, so modifications modify final color and vertices.
+
+The valid values for w have names as follows:
+
+G_MWO_POINT_RGBA = 0x10 Modifies the color of the vertex
+G_MWO_POINT_ST = 0x14 Modifies the texture coordinates
+G_MWO_POINT_XYSCREEN = 0x18 Modifies the X and Y position
+G_MWO_POINT_ZSCREEN = 0x1C Modifies the Z position (lower four nybbles of v should always be zero for this modification)
+The exact nature of these values is unclear. The SDK documentation describes them as “byte offsets”, however they don't match offsets in the vertex structure.
+
+B3: G_RDPHALF_2
+
+This opcode sets the low half of the generic RDP word.
+
+B3 00 00 00 [LL LL LL LL]
+
+L	New value of low word
+Note: the referenced function also generates opcode B4. See the section on B4 for info on that.
+
+B4: G_RDPHALF_1
+
+This opcode sets the higher half of the generic RDP word.
+
+B4 00 00 00 [hh hh hh hh]
+
+h	New value of high word
+Note: the referenced function also generates opcode B3. See the section on B3 for info on that.
+
+B5: G_QUAD
 
 Renders one quad according to the vertices inside the vertex buffer
 
-07 [AA] [BB] [CC] 00 [DD] [EE] [FF]
+B5 [AA] [BB] [CC] 00 [DD] [EE] [FF]
 
 A	First vertex to use for the quad (*2)
 B	Second vertex to use for the quad (*2)
@@ -138,199 +197,55 @@ E	Fifth vertex to use for the quad (*2)
 F	Sixth vertex to use for the quad (*2)
 Example: Render a quad using the vertex data specified at the vertex buffer positions 0, 1 (2/2), 2 (4/2), 0, 2 (4/2) and 3 (6/2).
 
-07 00 02 04 00 00 04 06
-Note: This opcode is functionally equivalent to opcode 06. The macro for this opcode (and thus presumably also the opcode itself) is labeled as no longer supported in Oct 1999 SDK documentation.
+B5 00 02 04 00 00 04 06
+Note: It's possible this command is actually G_Line3D. Needs to be tested on hardware or LLE.
 
-D3: G_SPECIAL_3
+B6: G_CLEARGEOMETRYMODE
 
-Appears to be an explicitly reserved command.
+Disables certain geometry parameters (ex. lighting, front-/backface culling, Z-buffer).
 
-D3 ?? ?? ?? ?? ?? ?? ??
+B6 00 00 00 [AA AA AA AA]
 
-D4: G_SPECIAL_2
-
-Appears to be an explicitly reserved command.
-
-D4 ?? ?? ?? ?? ?? ?? ??
-
-D5: G_SPECIAL_1
-
-Appears to be an explicitly reserved command.
-
-D5 ?? ?? ?? ?? ?? ?? ??
-
-D6: G_DMA_IO
-
-Does a DMA between DMEM/IMEM.
-
-D6 [xx x][s ss] [rrrrrrrr]
-
-xx = fmmm mmmm mmm0 (binary)
-
-f	Chooses between read or write
-m	((Address in DMEM/IMEM)/8) & 0x3FF
-s	(Presumably) size of data to transfer (-1)
-r	DRAM address
-s bytes are presumably transferred in the process. f determines the type of transfer. Apparently:
-
-f == 0: Read from DMEM/IMEM to DRAM
-f == 1: Write DRAM to DMEM/IMEM
-The exact nature of this command is unclear, since none of this opcode's macros are documented, and the only available comment suggests this is a debugging tool only. Therefore, you should not expect to see this in production code.
-
-D7: G_TEXTURE
-
-Sets the texture scaling factor.
-
-D7 00 [xx] [nn] [ss ss] [tt tt]
-
-xx = 00LL Lddd
-
-n	Enable/Disable Tile Descriptor (2=enable, 0=disable)
-s	Scaling factor for S axis (horizontal)
-t	Scaling factor for T axis (vertical)
-L	Maximum number of mipmap levels aside from the first
-d	Tile descriptor to enable/disable
-Note that scaling factors are binary fractional values with an implied 0.; for example, a scaleS of 0x8000 means 0b0.1000_0000_0000_0000, or 0d0.5.
-
-Examples:
-
-D7 00 00 02 FF FF FF FF : Standard - at start for extremely close to 1 scaling enabled on tile desc 0.
-D7 00 00 02 80 00 80 00 : Standard - at start for 0.5 scaling enabled on tile desc 0.
-D7 00 00 02 0F 80 07 C0 : Scale for environment mapping 64x32 and enable tile desc 0.
-D7 00 00 00 FF FF FF FF : Disable tile descriptor 0 (end of DL).
-D8: G_POPMTX
-
-Pops num matrices from the stack specified by modelview matrix stack.
-
-D8380002 aaaaaaaa
-
-a	(The number of matrices to pop) * 64
-D9: G_GEOMETRYMODE
-
-Enables and disables certain geometry parameters (ex. lighting, front-/backface culling, Z-buffer).
-
-D9 [CC CC CC] [SS SS SS SS]
-
-C	~(Various parameters to clear)
-S	Various parameters to set
-Note: Parameters that are cleared have their bits inverted in the opcode. FF FF FF, for example, would disable nothing.
-
+A	Various parameters
 Parameters:
 See RSP Geometry Mode under RCP Structs.
 
-DA: G_MTX
+Examples:
 
-Apply transformation matrix. Used in HUD text printing code to translate textures, as well as copious other transformations including animations.
+B6 00 00 00 00 02 10 00 : Disable G_LIGHTING and G_CULL_FRONT
+B6 00 00 00 00 02 00 00 : Disable G_LIGHTING
+B6 00 00 00 00 00 00 00 : Disable nothing
+B6 00 00 00 00 00 22 00 : Disable G_CULL_BACK and G_SHADING_SMOOTH
+B7: G_SETGEOMETRYMODE
 
-DA 38 00 [PP] [AA AA AA AA]
+Enables certain geometry parameters (ex. lighting, front-/backface culling, Z-buffer).
 
-P	Parameters ^ G_MTX_PUSH
-A	Segmented address of vectors
-Parameters (can be OR'd together):
+B7 00 00 00 [AA AA AA AA]
 
-0x04	projection (default: model view)
-0x02	load (default: multiply)
-0x01	push (default: no push)
-Example: Push matrix and and multiply by matrix at 0x00213DF8; Multiply by matrix at 0x00213DB8
+A	Various parameters
+Parameters:
+See RSP Geometry Mode under RCP structs.
 
-DA 38 00 00 00 21 3D F8
-DA 38 00 01 00 21 3D B8
-DB: G_MOVEWORD
+Examples:
 
-Loads a new 32-bit value data to the location specified by index and offset.
-
-DB ii oo oo dd dd dd dd
-
-i	Index into DMEM pointer table(?)
-o	Offset from the indexed base address(?)
-d	New 32-bit value
-i is an index into a table of DMEM addresses. The enumerations given for this are:
-
-G_MW_MATRIX	0x00	Allows direct modification of part of the current MP (modelview * projection) matrix (which is calculated upon loading of either kind of matrix), modifying two elements' integer or fractional parts.
-G_MW_NUMLIGHT	0x02	Specifies the number of directional/diffuse lights. (The lighting system always has an ambient light.)
-G_MW_CLIP	0x04	Specifies the ratio between the clipping and scissoring boxes.
-G_MW_SEGMENT	0x06	Sets up the physical address of a segment.
-G_MW_FOG	0x08	Specifies the multiplier and offset for fog effects.
-G_MW_LIGHTCOL	0x0A	Changes the color of a light without changing the direction
-G_MW_FORCEMTX	0x0C	Tells the RCP if the MP matrix has been forcibly changed(?)
-G_MW_PERSPNORM	0x0E	Sets amount by which to scale the W axis value before dividing X, Y, and Z by it.
-The offset is, as the name suggests, an offset from the address that index resolves to. Enumerations are also provided for this value, for each of the enumerated index values. (XXX where to put them? It's a bit of a list.)
-
-DC: G_MOVEMEM
-
-Takes a block of memory from an address and puts it in the location pointed to by an index and an offset.
-
-DC [nn] [oo] [ii] [aa aa aa aa]
-
-n	(((Size in bytes of memory to be moved) » 3)+1)*8
-o	Offset from indexed base address (*8)
-i	Index into table of DMEM addresses
-a	Segmented address of memory
-i is an index into a table of addresses of DMEM. Given enumerations for i are:
-
-G_MV_MMTX = 2
-G_MV_PMTX = 6
-G_MV_VIEWPORT = 8
-G_MV_LIGHT = 10
-G_MV_POINT = 12
-G_MV_MATRIX = 14
-Note however that only VIEWPORT, LIGHT, and MATRIX are used by any of the macros given to programmers.
-
-Example: Loads diffuse RGBA from 0x0 in Segment 0x0E; loads ambient RGBA from 0x08 in Segment 0x0E
-
-DC 86 00 10 0E 00 00 00
-DC 88 00 10 0E 00 00 08
-DD: G_LOAD_UCODE
-
-Loads a new microcode executable into the RSP.
-
-E1 00 00 00 [dd dd dd dd]
-DD 00 [ss ss] [tt tt tt tt]
-
-d points to the start of the data section and t to the start of the text section, with s specifying the size of the data section. After loading the new microcode, the RCP is reset as appropriate.
-
-Note that d is stored in the high half of the “RDP word”, the opcode for which is shown in italics before the actual DD opcode.
-
-DE: G_DL
-
-Signifies the start of a Display List. May be used to link data and branch the current DL.
-
-DE [AA] 00 00 [BB BB BB BB]
-
-AA	00 = store return address, 01 = don't store (end DL after branch)
-B	Segmented Address to branch to
-Example: Loads a display list from 0xA50 in segment 0x07.
-
-DE 00 00 00 07 00 0A 50
-DF: G_ENDDL
+B7 00 00 00 00 02 10 00 : Enable G_LIGHTING and G_CULL_FRONT
+B7 00 00 00 00 02 00 00 : Enable G_LIGHTING
+B7 00 00 00 00 00 00 00 : Enable nothing
+B7 00 00 00 00 00 22 00 : Enable G_CULL_BACK and G_SHADING_SMOOTH
+B8: G_ENDDL
 
 Terminates the current Display List
 
-DF 00 00 00 00 00 00 00
+B8 00 00 00 00 00 00 00
 
-E0: G_NOOP
-
-Does nothing. Seemingly different from 00; judging by the names and position of this opcode and 00, this opcode stalls the RDP, whereas the other stalls the RSP.
-
-E0 00 00 00 00 00 00 00
-
-E1: G_RDPHALF_1
-
-This opcode sets the higher half of the generic RDP word.
-
-E1 00 00 00 [hh hh hh hh]
-
-h	New value of high word
-Note: the referenced function also generates opcode F1. See the section on F1 for info on that.
-
-E2: G_SetOtherMode_L
+B9: G_SetOtherMode_L
 
 Modifies various bits of the lower half of the RDP Other Modes word.
 
-E2 00 [ss] [nn] [dd dd dd dd]
+B9 00 [ss] [nn] [dd dd dd dd]
 
-s	32 - (Amount mode-bits are shifted by) - (Number of bits affected)
-n	(Number of mode-bits affected) - 1
+s	Amount mode-bits are shifted by, or number of LSb of mode bits to be changed
+n	Number of mode-bits affected
 d	Mode-bits
 The operation performed by the opcode can be expressed as such, assuming LO to stand for the lower word of the RDP other modes:
 
@@ -344,16 +259,16 @@ G_MDSFT_ZSRCSEL = 2
 G_MDSFT_RENDERMODE = 3
 The structure of the lower modes is provided in the RCP structs page.
 
-E3: G_SetOtherMode_H
+BA: G_SetOtherMode_H
 
 Modifies various bits of the lower half of the RDP Other Modes word.
 
-E3 00 [ss] [nn] [dd dd dd dd]
+BA 00 [ss] [nn] [dd dd dd dd]
 
-s	32 - (Amount mode-bits are shifted by) - (Number of bits affected)
-n	(Number of mode-bits affected) - 1
+s	Amount mode-bits are shifted by, or number of LSb of mode bits to be changed
+n	Number of mode-bits affected
 d	Mode-bits
-Like with E2, data is preshifted, and the opcode's procedure can be formulised in the same way (where OH stands for the high word of the other modes):
+Like with B9, data is preshifted, and the opcode's procedure can be formulised in the same way (where OH stands for the high word of the other modes):
 
 OH = OH & ~(((1 « n) - 1) « s) | d
 
@@ -374,13 +289,90 @@ G_MDSFT_COLORDITHER = 22
 G_MDSFT_PIPELINE = 23
 The structure of the higher modes is provided in the RCP structs page.
 
+BB: G_TEXTURE
+
+Sets the texture scaling factor.
+
+BB 00 [xx] [nn] [ss ss] [tt tt]
+
+xx = 00LL Lddd
+
+n	Enable/Disable Tile Descriptor (1=enable, 0=disable)
+s	Scaling factor for S axis (horizontal)
+t	Scaling factor for T axis (vertical)
+L	Maximum number of mipmap levels aside from the first
+d	Tile descriptor to enable/disable
+Note that scaling factors are binary fractional values with an implied 0.; for example, a scaleS of 0x8000 means 0b0.1000_0000_0000_0000, or 0d0.5.
+
+Examples:
+
+BB 00 00 01 FF FF FF FF : Standard - at start for extremely close to 1 scaling enabled on tile desc 0.
+BB 00 00 01 80 00 80 00 : Standard - at start for 0.5 scaling enabled on tile desc 0.
+BB 00 00 01 0F 80 07 C0 : Scale for environment mapping 64x32 and enable tile desc 0.
+BB 00 00 00 FF FF FF FF : Disable tile descriptor 0 (end of DL).
+BC: G_MOVEWORD
+
+Loads a new 32-bit value data to the location specified by index and offset.
+
+BC oo oo ii dd dd dd dd
+
+o	Offset from the indexed base address
+i	Index into DMEM pointer table
+d	New 32-bit value
+i is an index into a table of DMEM addresses. The enumerations given for this are:
+
+G_MW_MATRIX	0x00	Allows direct modification of part of the current MP (modelview * projection) matrix (which is calculated upon loading of either kind of matrix), modifying two elements' integer or fractional parts.
+G_MW_NUMLIGHT	0x02	Specifies the number of directional/diffuse lights. (The lighting system always has an ambient light.)
+G_MW_CLIP	0x04	Specifies the ratio between the clipping and scissoring boxes.
+G_MW_SEGMENT	0x06	Sets up the physical address of a segment.
+G_MW_FOG	0x08	Specifies the multiplier and offset for fog effects.
+G_MW_LIGHTCOL	0x0A	Changes the color of a light without changing the direction
+G_MW_FORCEMTX	0x0C	Tells the RCP if the MP matrix has been forcibly changed(?)
+G_MW_PERSPNORM	0x0E	Sets amount by which to scale the W axis value before dividing X, Y, and Z by it.
+The offset is, as the name suggests, an offset from the address that index resolves to. Enumerations are also provided for this value, for each of the enumerated index values. (XXX where to put them? It's a bit of a list.)
+
+BD: G_POPMTX
+
+Pops num matrices from the stack specified by modelview matrix stack.
+
+BD380002 aaaaaaaa
+
+a	The number of matrices to pop
+BE: G_CULLDL
+
+BE 00 vv vv 00 00 ww ww
+
+v	Vertex buffer index of first vertex for bounding volume (*0x02)
+w	Vertex buffer index of last vertex for bounding volume (*0x02)
+This command takes the vertices in the vertex buffer from vfirst through vlast as describing the volume of the object being rendered (called the “bounding value”). If the bounding volume does not intersect with the current viewing volume (aka if the bounding volume is entirely offscreen), then the display list ends, equivalent to a B8 opcode. Otherwise, the display list continues as though nothing happened (equivalent to 00, then).
+
+For F3DEX, Each of vfirst and vlast must be in the range 0 ≤ x ≤ 31. Additionally, vfirst < vlast must be true (thus a minimum of two vertices must be specified, and range of vertices cannot be reversed). It's not specified what the behavior is when all the vertices are coplanar.
+
+BF: G_TRI1
+
+Renders one triangle according to the vertices inside the vertex buffer
+
+BF 00 00 00 00 [AA] [BB] [CC]
+
+A	First vertex to use for the triangle (* 0x02)
+B	Second vertex to use for the triangle (* 0x02)
+C	Third vertex to use for the triangle (* 0x02)
+Example: Render a triangle using the vertex data specified at the vertex buffer positions 0, 1 (0x02 / 0x02) and 2 (0x04 / 0x02).
+
+BF 00 00 00 00 00 02 04
+C0: G_NOOP
+
+Does nothing. Seemingly different from 00; judging by the names and position of this opcode and 00, this opcode stalls the RDP, whereas the other stalls the RSP.
+
+C0 00 00 00 00 00 00 00
+
 E4: G_TEXRECT
 
 Draws a textured 2D rectangle on the screen
 
 E4 [xx x][y yy] 0[I] [XX X][Y YY]
-E1 00 00 00 [SS SS] [TT TT]
-F1 00 00 00 [DD DD] [EE EE]
+B4 00 00 00 [SS SS] [TT TT]
+B3 00 00 00 [DD DD] [EE EE]
 
 xxx	Lower-right corner X coordinate
 yyy	Lower-right corner Y coordinate
@@ -396,8 +388,8 @@ E5: G_TEXRECTFLIP
 Draws a textured 2D rectangle on the screen
 
 E5 [xx x][y yy] 0[I] [XX X][Y YY]
-E1 00 00 00 [SS SS] [TT TT]
-F1 00 00 00 [DD DD] [EE EE]
+B4 00 00 00 [SS SS] [TT TT]
+B3 00 00 00 [DD DD] [EE EE]
 
 xxx	Lower-right corner X coordinate
 yyy	Lower-right corner Y coordinate
@@ -516,9 +508,9 @@ EF [HH HH HH] [LL LL LL LL]
 
 H	Settings for other mode higher word bits
 L	Settings for other mode lower word bits
-H is similar to using E3, and L is similar to using E2.
+H is similar to using BA, and L is similar to using B9.
 
-The difference from either E3 or E2 is that this command sets all the bits in both halves of the RDP word (that is, this opcode has no way of limiting what bits are actually affected).
+The difference from either BA or B9 is that this command sets all the bits in both halves of the RDP word (that is, this opcode has no way of limiting what bits are actually affected).
 
 The RSP Geometry Mode word bits' parameters can be found under the RCP structs page.
 
@@ -531,15 +523,6 @@ F0 00 00 00 0[t] [cc c]0 00
 t	Tile descriptor to load from
 c	((colour count-1) & 0x3FF) « 2
 (Note: the count is quadrupled likely due to how palettes are stored in TMEM. Not sure where details on that would be appropriate, though.)
-
-F1: G_RDPHALF_2
-
-This opcode sets the low half of the generic RDP word.
-
-F1 00 00 00 [LL LL LL LL]
-
-L	New value of low word
-Note: the referenced function also generates opcode E1. See the section on E1 for info on that.
 
 F2: G_SETTILESIZE
 
@@ -802,4 +785,3 @@ s	Bit size of pixels in color buffer to be pointed to
 The color buffer is set to RAM location i, with a width of w. f and s are the typical image format enumerations, described in G_Settile.
 
 The location is usually some place set as the framebuffer to show (which is not handled by display lists), but oftentimes will be set to a depth buffer. This is usually done to fill (aka clear) the depth buffer in fill mode.
-
