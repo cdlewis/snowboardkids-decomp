@@ -3145,3 +3145,13 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `temp = (actor->verticalVelocity += actor->verticalAcceleration)` keeps IDO's
   target `$v1`/`$a0` allocation. Splitting the addition and store is logically
   equivalent but shifts the later temporaries.
+
+## func_80064B28 (race_ui_effects)
+
+- This projectile bounce/fall callback mirrors `func_80064D88`, but the
+  landing transition updates `verticalAcceleration` before adding it into
+  `verticalVelocity`, then plays sound `0x68`, calls `func_80064414`, and
+  switches to `func_80064914` when the velocity is non-positive.
+- A redundant actor null-expression before the first `func_80097FE4` call is
+  needed to make IDO use `$s0` rather than `$a0` for the initial player index
+  load; the otherwise clean source remains a one-instruction register mismatch.
