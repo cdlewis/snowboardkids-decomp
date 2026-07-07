@@ -6,14 +6,27 @@ typedef struct {
     /* 0x2 */ s16 fraction;
 } RaceTimer;
 
+typedef struct {
+    /* 0x00 */ char pad[0x14];
+} CourseDataStride;
+
+typedef struct {
+    /* 0x00 */ char pad[0x4E];
+    /* 0x4E */ s8 bestLapMinutes;
+    /* 0x4F */ s8 bestLapSeconds;
+    /* 0x50 */ s16 bestLapFraction;
+} CourseBestLapView;
+
 extern s32 func_80043040(s16);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80047E88(s32, s16, s32, s32);
 extern void func_80048278(s32, s32, char *, s32);
 extern int sprintf(char *, const char *, ...);
+extern CourseDataStride D_800EC9F0[];
 extern s16 D_8011216E;
 extern s16 D_80121B52;
 extern s16 D_801222F6;
+extern s16 D_80121B50;
 extern u8 D_80121B56;
 extern u8 D_80156608;
 extern RaceTimer D_80121B74;
@@ -51,7 +64,20 @@ void func_80078D3C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80079154.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80079394.s")
+const char D_800E17D8[] = "Lap Time";
+const char D_800E17E4[] = "Best Lap";
+const char D_800E17F0[] = "%2.2d'%2.2d\"%2.2d";
+
+void func_80079394(s32 arg0) {
+    char sp28[0x20];
+    CourseBestLapView *course;
+
+    func_80048278(0x48, 0x47, (char *)D_800E17D8, 5);
+    func_80048278(0x48, -0x61, (char *)D_800E17E4, 7);
+    course = (CourseBestLapView *)&D_800EC9F0[D_80121B50];
+    sprintf(sp28, D_800E17F0, course->bestLapMinutes, course->bestLapSeconds, course->bestLapFraction >> 8);
+    func_80048278(0x48, -0x58, sp28, 7);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80079438.s")
 
