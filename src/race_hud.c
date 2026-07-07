@@ -97,6 +97,7 @@ extern void *D_80124868;
 extern u8 D_80121B55;
 extern u8 D_80121D80[];
 extern u8 D_80112130[];
+extern const char D_800E0AB0[];
 extern RacePlayerState D_800EC9F0[];
 extern u8 D_8010AE5E;
 extern u8 D_8010AE5F;
@@ -115,7 +116,7 @@ void func_800179D4(RaceHudBannerActor *arg0) {
     func_80071824(arg0, func_800177F8);
 }
 
-// func_80017A10 best match: 96.478% (base_10.c)
+// func_80017A10 best match: 96.551% (base_21.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80017A10.s")
 
 #ifdef NON_MATCHING
@@ -152,7 +153,7 @@ void func_80017A10(RaceHudPlayerFrameActor *arg0) {
         func_8000F8AC((s16)(actor->x + 0x40), actor->y, texture, 0x24, 0x20, 0x20, 0, alpha, flip);
         texture = func_80043040(RACE_HUD_PLAYER_FRAME_HANDLE);
         func_8000F8AC((s16)(actor->x + 0x80), actor->y, texture, 0xC, 0x20, 0x20, 0, alpha, flip);
-        sprintf(sp6C, "%d", playerNumber);
+        sprintf(sp6C, D_800E0AB0, playerNumber);
         func_80013D0C((s16)(actor->x + 0x32), (s16)(actor->y + 2), sp6C, 0, alpha);
         if (alpha != 0x100) {
             texture = func_80043040(RACE_HUD_UNUSED_HANDLE);

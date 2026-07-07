@@ -3272,6 +3272,12 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   the alpha choice as a full `if/else` can reproduce IDO's redundant branch with
   the inactive alpha assignment in the branch delay slot. Computing the texture
   handle before `i + 1` also improved the saved-register layout.
+- The `"%d"` format string for this renderer already exists as
+  `D_800E0AB0` in `race_hud.rodata`; using that symbol improves the partial
+  match by avoiding a local `.rodata` string. The remaining miss is saved-register
+  allocation: IDO wants `D_80112130` in `s6` and `i/playerNumber` in `s3/s4`,
+  while straightforward C keeps the handle table in `s5` and makes an extra
+  preserved copy of `playerNumber`.
 
 ## func_800515F0 (main_menu_panel_ui)
 
