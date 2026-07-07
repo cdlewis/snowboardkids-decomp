@@ -90,6 +90,11 @@ patterns, and verified layout/linking rules.
   constant assignment fixed a pure scheduling/register diff in func_800994F4
   (the constant store filled the final load's delay slot and landed in `$t9`
   instead of `$t8`).
+- For flattened `s16` coordinate data that is logically grouped in fixed-width
+  rows, a two-dimensional struct field can affect address-calculation register
+  reuse. In func_80027A08, `coordinates[(i * 3) + j]` emitted equivalent code
+  with one extra temp register, while `coordinateRows[i][j]` matched the target
+  `i * 3 * sizeof(s16)` shift/subtract sequence exactly.
 - For callbacks that initialize a struct field and then immediately pass that
   field to another helper, IDO may store-forward the value instead of reloading
   from the field. Marking just that field volatile can force the target-shaped
