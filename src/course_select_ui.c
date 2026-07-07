@@ -31,9 +31,19 @@ typedef struct {
     /* 0x20 */ s32 screenState;
 } CourseSelectState;
 
+typedef struct {
+    s32 x;
+    s32 y;
+    s32 z;
+} CourseSelectTempVec3i;
+
+extern void func_80023A68();
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void func_800716E4(CourseSelectWidgetActor *);
 extern void func_80071824(void *task, void (*callback)());
+extern void func_80097C18(s16 *mtx, s16 rotY);
+extern void func_8009853C(s16 *mtx, s16 arg1, s16 arg2);
+extern void func_80098590(s16 *mtx, CourseSelectTempVec3i *source, CourseSelectTempVec3i *dest);
 extern void func_800260E8(CourseSelectWidgetActor *);
 extern void func_800263D8(CourseSelectWidgetActor *);
 extern void func_800271CC(CourseSelectWidgetActor *);
@@ -57,7 +67,57 @@ extern s32 D_80124868;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80023A68.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024050.s")
+void func_80024050(void *arg0) {
+    void *actor;
+    CourseSelectTempVec3i sp60;
+    u8 *var_s1;
+    u8 *var_s2;
+    s16 *var_s3;
+    u8 *var_s4;
+    s32 var_s5;
+    u8 *var_s6;
+    CourseSelectTempVec3i *var_s7;
+    s32 const_s8;
+
+    actor = arg0;
+    var_s1 = arg0;
+    var_s2 = arg0;
+    var_s3 = (s16 *) ((u8 *) arg0 + 0x3C);
+    var_s4 = arg0;
+    var_s5 = 0;
+    var_s6 = arg0;
+    var_s7 = (CourseSelectTempVec3i *) ((u8 *) arg0 + 0xBC);
+    const_s8 = 0xC00000;
+    do {
+        if (actor && actor) {
+        }
+        *(s32 *) (var_s2 + 0xBC) = const_s8;
+        *(s32 *) (var_s2 + (short) 0xC0) = 0;
+        *(s32 *) (var_s2 + 0xC4) = 0;
+        *(s16 *) (var_s4 + 0xEC) = 0;
+        func_80097C18(var_s3, *(s16 *) (var_s4 + 0xEC));
+        if (actor && actor) {
+        }
+        func_80098590(var_s3, var_s7, &sp60);
+        var_s5 += 2;
+        *(s32 *) (var_s1 + 0x50) = sp60.x;
+        *(s32 *) (var_s1 + 0x54) = sp60.y;
+        var_s1 += 0x20;
+        *(s32 *) (var_s1 + 0x38) = sp60.z;
+        var_s6 = var_s6 + 1;
+        var_s3 = (s16 *) ((u8 *) var_s3 + 0x20);
+        var_s2 += 0xC;
+        var_s7 += 1;
+        var_s4 += 2;
+        *(var_s6 + 0xFF) = 0;
+    } while (var_s5 != 8);
+
+    *(s32 *) ((u8 *) actor + 0x30) = 0;
+    *(s32 *) ((u8 *) actor + 0x34) = 0;
+    *(s32 *) ((u8 *) actor + 0x38) = 0;
+    func_8009853C((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
+    func_80071824(actor, func_80023A68);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024168.s")
 
@@ -67,15 +127,6 @@ extern s32 D_80124868;
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024968.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    s32 x;
-    s32 y;
-    s32 z;
-} CourseSelectTempVec3i;
-
-extern void func_80097C18(s16 *mtx, s16 rotY);
-extern void func_8009853C(s16 *mtx, s16 arg1, s16 arg2);
-extern void func_80098590(s16 *mtx, CourseSelectTempVec3i *source, CourseSelectTempVec3i *dest);
 extern u8 D_8010AF1C;
 
 void func_80024968(void *arg0) {
