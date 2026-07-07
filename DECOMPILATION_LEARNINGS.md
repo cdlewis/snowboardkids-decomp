@@ -2827,6 +2827,12 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `addiu s4, %lo(D_80112130)` below the other local initializers and caused a
   checksum mismatch, even though the logical C statements were equivalent.
 
+## func_80050D84 (race_item_effects)
+
+- The sibling update callback to `func_8004FF34` matches with the same
+  `RaceItemFollowActor *temp_a2 = arg0` pattern; only the final draw callback
+  changes from `func_8004FB44` to `func_8005098C`.
+
 ## func_8002BDAC (main_menu_score_ui)
 
 - State-packet globals may need a byte alias for the final state mirror, matching
