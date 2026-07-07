@@ -164,7 +164,47 @@ void func_80053660(MainMenuOverlayEffectActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_800536F4.s")
+void func_800536F4(MainMenuOverlayEffectActor *arg0) {
+    s16 temp_v0;
+    s16 temp_v0_2;
+    u32 var_v1;
+
+    arg0->unk1C.half.hi = (arg0->unk1C.half.hi + 1) & 3;
+    if (arg0->unk24.half.hi >= 0) {
+        temp_v0 = arg0->unk24.half.lo;
+        if (temp_v0 != 0) {
+            arg0->unk20.half.hi += 4;
+            arg0->unk24.half.lo = temp_v0 - 1;
+        } else {
+            arg0->unk20.half.hi -= 4;
+            if (arg0->unk20.half.hi == 0) {
+                arg0->unk24.half.lo = (func_800430D0() & 0x1F) + 0x10;
+                arg0->unk24.half.hi = -1;
+            }
+        }
+    } else {
+        temp_v0_2 = arg0->unk24.half.lo;
+        if (temp_v0_2 != 0) {
+            arg0->unk20.half.hi -= 4;
+            arg0->unk24.half.lo = temp_v0_2 - 1;
+        } else {
+            arg0->unk20.half.hi += 4;
+            if (arg0->unk20.half.hi == 0) {
+                arg0->unk24.half.lo = (func_800430D0() & 0x1F) + 0x10;
+                arg0->unk24.half.hi = 1;
+            }
+        }
+    }
+
+    var_v1 = arg0->unk20.half.hi;
+    arg0->unk18.half.hi += var_v1;
+    arg0->unk18.half.lo += arg0->unk20.half.lo;
+    if (arg0->unk18.half.lo >= 0x6E1) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(D_80124878, func_80053660, (s32)arg0);
+}
 
 void func_80053858(MainMenuOverlayEffectActor *arg0) {
     arg0->unk1C.half.hi = (arg0->unk1C.half.hi + 1) & 3;
