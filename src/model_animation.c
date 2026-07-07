@@ -153,7 +153,24 @@ void func_80081E40(ModelAnimState *state, s32 animIndex) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80082B58.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80082DD0.s")
+void func_80082DD0(ModelAnimState *state) {
+    s32 frameTimer;
+    s32 nextFrameTimer;
+
+    frameTimer = state->frameTimer;
+    nextFrameTimer = frameTimer - 1;
+    if (frameTimer == 0) {
+        state->framesRemaining--;
+        if (state->framesRemaining <= 0) {
+            state->framesRemaining = state->frameCount;
+            state->frameDataOffset = state->animStartOffset;
+        }
+        func_80081EF4(state);
+        frameTimer = state->frameTimer;
+        nextFrameTimer = frameTimer - 1;
+    }
+    state->frameTimer = nextFrameTimer;
+}
 
 void func_80082E48(ModelAnimState *state) {
     s32 frameTimer;

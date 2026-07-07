@@ -2782,6 +2782,9 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   frame timer after calling `func_80082070` before subtracting one. Writing the
   subtraction directly from the struct field is semantically equivalent, but IDO
   uses a different register for the final halfword store.
+- The same shape matches `func_80082DD0` with `func_80081EF4`: keep both timer
+  locals as `s32`. Narrow `s16` temporaries introduce extra `sll`/`sra`
+  sign-extension before the final halfword store.
 
 ## func_80015F4C (title_menu)
 
