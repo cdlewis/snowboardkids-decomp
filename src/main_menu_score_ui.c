@@ -2,6 +2,13 @@
 
 typedef struct MainMenuScoreTask MainMenuScoreTask;
 
+typedef struct {
+    u8 state;
+    u8 pad1;
+    s16 scale;
+    u16 slideOffset;
+} MainMenuScoreTransition;
+
 extern void func_80071824(void *task, void (*callback)());
 extern void func_800129DC(s16, s16, u8 *, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, u16, s32);
@@ -12,10 +19,13 @@ extern void func_800483FC(void *, void *, void *);
 extern u8 D_800B79AC[];
 extern s16 D_80112172;
 extern s16 D_8010AF62;
+extern MainMenuScoreTransition D_8010AF60;
+extern u8 D_8010AF60_state;
 extern void *D_80124868;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
 extern s16 D_800EC9C8;
+extern s16 D_800EC9D0;
 extern u8 D_800EC9C1;
 
 struct MainMenuScoreTask {
@@ -36,7 +46,7 @@ struct MainMenuScoreTask {
             u16 alphaTimer;
         } b;
         struct {
-            s16 slideOffset;
+            u16 slideOffset;
             u16 selection;
             u16 alpha;
             u16 alphaTimer;
@@ -47,6 +57,7 @@ struct MainMenuScoreTask {
 extern void func_8002B8B4(MainMenuScoreTask *);
 extern void func_8002BA38(MainMenuScoreTask *);
 extern void func_8002BB24(MainMenuScoreTask *);
+extern void func_8002BC9C(MainMenuScoreTask *);
 extern void func_8002BF54(MainMenuScoreTask *);
 extern void func_8002BDAC(MainMenuScoreTask *);
 extern void func_8002C18C(MainMenuScoreTask *);
@@ -164,7 +175,69 @@ void func_8002BC60(MainMenuScoreTask *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002BC9C.s")
 
+// func_8002BDAC best match: 99.714%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002BDAC.s")
+
+#ifdef NON_MATCHING
+void func_8002BDAC(MainMenuScoreTask *arg0) {
+    u8 state;
+    unsigned long globalState;
+
+    state = arg0->state.b.unk20;
+    if (state != (globalState = D_8010AF60.state)) {
+        arg0->state.b.unk20 = globalState;
+        state = globalState;
+        arg0->unk1C.scale = D_8010AF60.scale;
+        arg0->state.w.slideOffset = D_8010AF60.slideOffset;
+    }
+
+    switch (state) {
+    case 0:
+        arg0->state.b.unk20 = 1;
+        state = arg0->state.b.unk20;
+        break;
+    case 1:
+        if ((D_800EC9C8 == 5) && (D_800EC9C1 == 0x14)) {
+            arg0->state.b.unk20 = 4;
+            state = arg0->state.b.unk20;
+        }
+        break;
+    case 2:
+        arg0->unk1C.scale += 0x26;
+        if (arg0->unk1C.scale >= 0x100) {
+            arg0->unk1C.scale = 0x100;
+            arg0->state.b.unk20 = 1;
+        }
+        state = arg0->state.b.unk20;
+        break;
+    case 3:
+        arg0->unk1C.scale -= 0x26;
+        if (arg0->unk1C.scale <= (state * 0)) {
+            arg0->unk1C.scale = 0;
+            arg0->state.b.unk20 = 2;
+            D_800EC9D0 = 0;
+            D_800EC9C8 = (u16)arg0->state.w.slideOffset;
+        }
+        state = arg0->state.b.unk20;
+        break;
+    case 4:
+        arg0->x -= 0x20;
+        if (arg0->x < -0x117) {
+            arg0->state.b.unk20 = 5;
+        }
+        state = arg0->state.b.unk20;
+        break;
+    }
+
+    arg0->state.b.frame = (arg0->state.b.frame + 1) & 0xF;
+    D_8010AF60_state = state;
+    if ((u8)arg0->state.b.unk20 == 5) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002BC9C, arg0);
+}
+#endif
 
 void func_8002BF54(MainMenuScoreTask *arg0) {
     arg0->x = -0x42;

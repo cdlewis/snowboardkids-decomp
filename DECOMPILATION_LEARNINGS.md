@@ -2823,3 +2823,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   function, expanding the permuter's compact `do { ... } while (0)` setup moved
   `addiu s4, %lo(D_80112130)` below the other local initializers and caused a
   checksum mismatch, even though the logical C statements were equivalent.
+
+## func_8002BDAC (main_menu_score_ui)
+
+- State-packet globals may need a byte alias for the final state mirror, matching
+  the `D_8010AE70_state = D_8010AE70` pattern. Using `D_8010AF60_state` for the
+  final store let IDO reload the symbol instead of keeping the packet base live.
+- In a fixed switch case, an equivalent zero expression like `(state * 0)` can
+  reduce register pressure enough to recover the target compare/register order.
