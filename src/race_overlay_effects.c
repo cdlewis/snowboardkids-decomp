@@ -33,6 +33,13 @@ typedef struct {
     /* 0x3C */ s32 unk3C;
 } GfxCommandDest;
 
+typedef union {
+    /* 0x00 */ s32 words[8];
+    /* 0x00 */ s16 halfwords[0x10];
+} GfxCommandSource;
+
+typedef s16 FixedMatrix3sScratch[0x12];
+
 typedef struct {
     /* 0x00 */ s16 modelIndex;
     char pad2[2];
@@ -49,6 +56,16 @@ typedef struct {
     char pad1C[2];
     /* 0x1E */ s16 modelCount;
 } RaceModelListActor;
+
+typedef struct {
+    char pad0[0x18];
+    /* 0x18 */ GfxCommandDest *matrix;
+    /* 0x1C */ Vec3i pos;
+    /* 0x28 */ s16 pitch;
+    /* 0x2A */ s16 yaw;
+    char pad2C[2];
+    /* 0x2E */ s8 matrixDirty;
+} RaceOverlayTransformActor;
 
 typedef struct {
     char pad0[0x1C];
@@ -100,12 +117,15 @@ extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern s32 func_800430D0(void);
 extern void func_80045990(s32, s32, void *, void *);
+extern GfxCommandDest *func_8004885C(GfxCommandSource *);
 extern void func_80048C90(GfxCommandDest *, Vec3i *);
+extern s32 func_80049000(Vec3i *);
 extern s32 func_80048E60(void *);
 extern void func_80071824(void *task, void (*callback)());
 extern void func_800716E4(void *);
 extern void osWritebackDCache(void *, s32);
 extern void func_80097C18(void *, s16);
+extern void func_80097FE4(FixedMatrix3sScratch, s16, s16);
 extern void func_80098590(void *, void *, void *);
 extern void func_80088C80(void *, s32, s32, s32);
 extern void func_80088294(void *, s32, s32, s32);
@@ -114,13 +134,18 @@ extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, void *);
 extern Vec3i D_800D9BD8[];
 extern RaceOverlayModelEntry *D_800D7754[];
+extern Gfx *D_800DA1F0;
 extern s32 D_801248D4;
 extern s32 D_801248B0;
+extern s16 D_80112144;
+extern s16 D_80112146;
 extern s16 D_80112168;
+extern u8 D_80156609;
 extern u8 D_80121B56;
 extern u8 D_80112130[];
 extern RaceModelEntry *D_800D91E8[];
 extern GfxCommandDest D_800DEE50;
+extern Gfx *gRegionAllocPtr;
 extern s16 D_80121B50;
 extern void func_80066760(void *);
 extern void func_80066E10(void);
@@ -216,7 +241,32 @@ void func_8006713C(RaceModelListActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800671F4.s")
+void func_800671F4(RaceOverlayTransformActor *arg0) {
+    FixedMatrix3sScratch scratch;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (func_80049000(&arg0->pos) != 0) {
+        if (arg0->matrixDirty != 0) {
+            func_80097FE4(scratch, arg0->pitch, arg0->yaw);
+            ((GfxCommandSource *)scratch)->words[5] = arg0->pos.x;
+            ((GfxCommandSource *)scratch)->words[6] = arg0->pos.y + 0x190000;
+            ((GfxCommandSource *)scratch)->words[7] = arg0->pos.z;
+            arg0->matrix = func_8004885C((GfxCommandSource *)scratch);
+            arg0->matrixDirty = 0;
+        }
+
+        if (arg0->matrix != NULL) {
+            gDPPipeSync(gRegionAllocPtr++);
+            gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112144));
+            gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112146));
+            gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(gRegionAllocPtr++, D_800DA1F0);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80067364.s")
 
