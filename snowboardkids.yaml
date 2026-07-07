@@ -42,7 +42,7 @@ options:
   data_string_guesser_level: 2
   libultra_symbols: True
   hardware_regs: True
-  gfx_ucode: f3dex2
+  gfx_ucode: f3dex
   disassemble_all: True
 
 segments:

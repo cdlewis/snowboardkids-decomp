@@ -443,10 +443,6 @@ void func_800553E0(MainMenuOverlayEffectActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80055410.s")
 
-// func_80055530 best match: 99.419% at nonmatchings/func_80055530-1404502880690620360/base_16.c
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80055530.s")
-
-#ifdef NON_MATCHING
 void func_80055530(void *arg0) {
     if (D_80156608 == 0) {
         gDPPipeSync(D_80124830++);
@@ -459,7 +455,6 @@ void func_80055530(void *arg0) {
         gSPDisplayList(D_80124830++, D_2000E70);
     }
 }
-#endif
 
 void func_8005562C(s32 arg0) {
     func_800483FC(D_801248F8, func_80055530, arg0);
