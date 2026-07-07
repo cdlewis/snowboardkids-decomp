@@ -2969,3 +2969,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   target temporary allocation. Keeping the otherwise redundant `arg0 = arg0`
   before loading the newline sentinel also nudges IDO to use `$t0`/`$t1` for
   the signed argument staging before `func_80047E88`.
+
+## func_80013D0C (menu_rendering)
+
+- The menu text loop uses the same signed `char` mask trick as `func_80048278`
+  to keep the initial glyph load in `$t9`.
+- Keeping the glyph accumulator as `long` and explicitly masking
+  `((var_a2 << 3) & 0xFFFF) & 0xFFFF` makes IDO choose the target `$t4`
+  temporary for the tile-X argument to `func_800137C8`.
