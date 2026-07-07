@@ -87,6 +87,12 @@ collapse the frame for this function.
   directly can produce a different `lui/addiu` pair and shift nearby scheduling.
   For example, an asset id at `D_80112130 + 0x42` may need to be written as
   `D_80112130[0x21]` rather than the equivalent named `D_80112172` symbol.
+- Adjacent BSS labels can be equivalent after final linking even when the
+  workspace object diff spells the relocation differently. In func_80098D80,
+  writing the free-task end pointer as `&D_801235C0[8]` produced
+  `D_801235C0+0x140` in the workspace diff while the linked ROM still matched
+  the target address `D_80123700`. The collapsed one-line pointer loop and a
+  reusable `zero` local were needed to preserve the target scheduling.
 - Split `double` constants in rodata may have labels on both 32-bit words.
   Declaring and using the high-word label as an `f64` can still produce the
   target linked addresses even if the disassembly spells the low-word load as
