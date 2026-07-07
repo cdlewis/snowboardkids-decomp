@@ -30,7 +30,10 @@ typedef struct MainMenuModelPart {
 } MainMenuModelPart;
 
 typedef struct MainMenuModelDisplayObject {
-    char bytes[0x20];
+    char pad0[0x14];
+    s32 screenX;
+    s32 screenY;
+    char pad1C[0x4];
 } MainMenuModelDisplayObject;
 
 typedef struct MainMenuSceneModel {
@@ -51,5 +54,7 @@ typedef struct MainMenuSceneModel {
     s16 unk146;
     MainMenuModelDisplayObject displayObjects[14];
 } MainMenuSceneModel;
+
+MainMenuSceneModel *func_80041E60(s32 modelIndex);
 
 #endif

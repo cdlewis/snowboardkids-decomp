@@ -78,8 +78,8 @@ void func_80041DD4(s32 modelIndex, s32 animationIndex) {
     model->frameDuration = frameDuration;
 }
 
-void func_80041E60(s32 modelIndex) {
-    func_80043040(D_8011218A[modelIndex]);
+MainMenuSceneModel *func_80041E60(s32 modelIndex) {
+    return func_80043040(D_8011218A[modelIndex]);
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80041E90.s")
