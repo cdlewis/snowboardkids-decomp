@@ -2876,3 +2876,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   saved player pointer, then `char pad50[8]`, the 0x20-byte matrix buffer, and
   the three-word vector matches the target `sp+0x24`, `sp+0x30`, and `sp+0x58`
   stack slots without introducing extra stores.
+
+## func_8002BC9C (main_menu_score_ui)
+
+- For score-menu text rows indexed by `D_800EC9C8`, declaring the text data as
+  `u8 D_800B73F0[][0x4C]` preserves IDO's multiply-by-76 sequence.
+- Hoisting `D_800B73F0[D_800EC9C8]` into a local `u8 *text` before the
+  `func_80013154` call gives the target scheduling, with the table `lui`
+  placed before the actor `x/y` argument loads.

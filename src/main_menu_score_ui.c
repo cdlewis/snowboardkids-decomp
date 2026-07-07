@@ -11,11 +11,14 @@ typedef struct {
 
 extern void func_80071824(void *task, void (*callback)());
 extern void func_800129DC(s16, s16, u8 *, s32, s32);
+extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
+extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, u16, s32);
 extern s32 func_80043040(s16);
 extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
+extern u8 D_800B73F0[][0x4C];
 extern u8 D_800B79AC[];
 extern s16 D_80112172;
 extern s16 D_8010AF62;
@@ -173,7 +176,20 @@ void func_8002BC60(MainMenuScoreTask *arg0) {
     func_80071824(arg0, func_8002BB24);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002BC9C.s")
+void func_8002BC9C(MainMenuScoreTask *arg0) {
+    u8 *text;
+
+    if (D_800EC9C8 != 8) {
+        text = D_800B73F0[D_800EC9C8];
+        func_80013154(arg0->x, arg0->y, text, 1, arg0->unk1C.scale, 0);
+        if (((D_800EC9C8 == 4) || (D_800EC9C8 >= 7)) && (D_800EC9D0 == 0)) {
+            if (arg0->unk1C.scale == 0x100) {
+                func_8000F030((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), func_80043040(D_80112172),
+                              (((s32)arg0->state.b.frame >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
+            }
+        }
+    }
+}
 
 // func_8002BDAC best match: 99.714%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002BDAC.s")
