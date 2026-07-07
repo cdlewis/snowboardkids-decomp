@@ -1,0 +1,2 @@
+# Append-only changelog: keep both sides on conflict during rebase.
+DECOMPILATION_LEARNINGS.md merge=union

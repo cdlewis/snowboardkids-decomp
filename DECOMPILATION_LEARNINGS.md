@@ -2847,3 +2847,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   IDO scheduling. Keeping `arg0->optionScale = 0x100; state = globalState;` on
   one line, after an empty scheduling block, preserves the target's constant
   load, byte mask, state move, and halfword store order.
+## func_8003BF7C (main_menu_effects)
+
+- Main-menu model-follow effects can share the `func_8003C2EC` code shape:
+  declare a `MainMenuSceneModel *model` and `s32 divisor`, assign
+  `model = func_80041E60(arg0->characterId); divisor = 0x24000;` on one line,
+  keep the empty `if (0) {}` barrier, then divide `displayObjects[7].screenX/Y`
+  by the divisor. This preserves IDO's divide scheduling and callback argument
+  register allocation.
