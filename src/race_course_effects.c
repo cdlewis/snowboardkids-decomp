@@ -100,12 +100,6 @@ typedef struct {
 } CourseSpawnEntry;
 
 typedef struct {
-    s8 type;
-    char pad1[3];
-    Vec3i pos;
-} CourseMarkerSpawnEntry;
-
-typedef struct {
     s16 angle;
     char pad2[0x46];
 } CourseAngleEntry;
@@ -252,7 +246,6 @@ extern s16 D_80112144;
 extern s16 D_80112146;
 extern CourseMarkerSpawnEntry *D_800DA0B8[];
 extern CourseRenderEntry *D_800DA73C[];
-extern CourseMarkerSpawnEntry *D_800DA0B8[];
 extern void *D_800DA1C0[];
 extern SoundParams D_800DA764[];
 extern CourseSpawnEntry D_800B9540[];
