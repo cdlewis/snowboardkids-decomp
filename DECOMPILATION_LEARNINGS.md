@@ -153,6 +153,13 @@ collapse the frame for this function.
   Keeping the nested `do { ... } while (0)` and inner loop body collapsed to the
   proven source shape fixed a pure two-instruction scheduling swap in
   func_8006D700 and func_80045914.
+- Translucent display-list setup blocks are highly sensitive to statement
+  shape. In func_8003C484, the same `gRegionAllocPtr` sequence used by
+  `race_ui_effects.c` improved the match only when collapsed into one line with
+  explicit `w0`/`w1` locals and a nested `do { ... } while (0)` around the render
+  mode / primitive color commands. A comma-expression nudge in the first sprite
+  tile argument preserved temp-register allocation but left a residual mismatch
+  where the target computes the tile in `$a3` directly.
 - IDO aggressively unrolls *structured* counted loops (`for`/`while`/`do-while`)
   whose trip count is computable at runtime from two address operands: it emits
   a `subu` (end-start) + `andi N,0x..` remainder pre-loop + an unrolled body
