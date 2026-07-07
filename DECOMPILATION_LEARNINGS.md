@@ -3291,3 +3291,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `sp+0x58` slot. The remaining nonmatching blocker is register allocation for
   display-list writes: the target keeps `&gRegionAllocPtr` in `$s1`, while
   straightforward C rematerializes the address through caller-saved registers.
+
+## func_800157EC (title_menu)
+
+- For title menu draw callbacks based on `func_80014CB8`, the order of local
+  halfword declarations can determine the final stack-frame size even when most
+  values stay in saved registers. Keeping an unused `s16` before `width`,
+  `xOffset`, and `yOffset` produced the target `sp+0x4C` spill without padding
+  the frame.
