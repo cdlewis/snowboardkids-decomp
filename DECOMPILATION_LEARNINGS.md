@@ -2662,3 +2662,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - Operating on `arg0` directly (rather than copying it to a local `actor`
   pointer) was sufficient here — unlike `func_8003112C`, no extra live actor
   copy was needed to pin allocation.
+
+## func_80023434 (character_select_ui)
+
+- This function shares the global transition-state sync pattern from
+  `func_80021F80`, but the shorter switch made IDO swap the current state and
+  global state between `$a1`/`$v1`. Five empty `if (1) {}` no-ops immediately
+  after storing `globalState` back to `arg0->transition.bytes.state` preserve
+  the target allocation: global state in `$a1`, current/switch state in `$v1`.
