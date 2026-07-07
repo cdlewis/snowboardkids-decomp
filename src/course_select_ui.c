@@ -18,8 +18,12 @@ typedef struct {
             /* 0x2A */ u8 transitionState;
         };
         /* 0x18 */ s16 coordinates[0x22];
+        /* 0x18 */ s16 coordinateRows[4][3];
     };
-    /* 0x5C */ u8 itemCount;
+    union {
+        /* 0x5C */ u8 itemCount;
+        /* 0x5C */ u8 itemCounts[4];
+    };
 } CourseSelectWidgetActor;
 
 typedef struct {
@@ -40,6 +44,7 @@ extern void func_80028FF0(CourseSelectWidgetActor *);
 extern void func_800291F0(s32);
 extern s32 func_80043040(s16);
 extern u8 D_800EC9E6;
+extern s32 D_8010ADE8;
 extern s16 D_80112130[];
 extern s16 D_8011217A;
 extern u8 D_80121B55;
@@ -270,7 +275,39 @@ void func_80027914(CourseSelectWidgetActor *arg0) {
     func_800483FC(&D_80124868, func_800275E0, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80027A08.s")
+void func_80027A08(CourseSelectWidgetActor *arg0) {
+    s32 i;
+    s32 j;
+    CourseSelectWidgetActor *temp_a2 = arg0;
+
+    i = 0;
+    if ((s32)D_80121B55 > 0) {
+        do {
+            j = 0;
+            if ((s32)arg0->itemCounts[i] > 0) {
+                do {
+                    temp_a2->coordinateRows[i][j] -= 0x20;
+                    j++;
+                } while (j < (s32)arg0->itemCounts[i]);
+            }
+            i++;
+        } while (i < (s32)D_80121B55);
+    }
+
+    if ((D_80121B55 == 1) && (temp_a2->itemCount == 0)) {
+        func_800716E4(temp_a2);
+        return;
+    }
+
+    if (temp_a2->x < -0xDF) {
+        func_800716E4(temp_a2);
+        func_800291F0(8);
+        D_8010ADE8 = 0;
+        return;
+    }
+
+    func_800483FC(&D_80124868, func_800275E0, temp_a2);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80027AF8.s")
 
