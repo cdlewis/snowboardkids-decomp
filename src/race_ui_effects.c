@@ -164,6 +164,22 @@ typedef struct {
     /* 0x44 */ s32 assetX;
 } RaceUiScriptActor;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s32 x;
+    /* 0x1C */ s32 y;
+    /* 0x20 */ s32 z;
+    /* 0x24 */ u8 pad24[4];
+    /* 0x28 */ s32 velocity;
+    /* 0x2C */ u8 pad2C[4];
+    /* 0x30 */ s16 timer;
+    /* 0x32 */ u8 pad32[6];
+    /* 0x38 */ void *image3A;
+    /* 0x3C */ void *palette3A;
+    /* 0x40 */ void *image3B;
+    /* 0x44 */ void *palette3B;
+} RaceUiOverlayActor;
+
 extern RaceUiSpriteInit D_800D5FF0[];
 
 extern Vec3i D_800D61C0[];
@@ -184,6 +200,7 @@ extern u8 D_80121B56;
 extern s8 D_80121B54;
 extern u8 D_80121B81;
 extern u8 D_80121D90;
+extern s32 D_80121DA4;
 extern u8 D_80156608;
 extern s16 D_80156612;
 extern s16 D_8011216E;
@@ -218,7 +235,8 @@ extern void func_8005C64C(void *);
 extern void func_8005DE6C(void *);
 extern void func_8005CB74(void *);
 extern void func_800623E8(void *);
-extern s32 func_80080CC4(s16, s32, s32);
+extern s32 func_8007D200(s32, s32, s32);
+extern s32 func_80080CC4(s32, s32, s32);
 extern void func_800716E4(void *);
 extern void *func_800716A4(void *, s32, s32);
 extern void func_80072A74(s32, void *, s32, s32);
@@ -1786,7 +1804,24 @@ void func_80065E0C(void *arg0) {
     func_800483FC(&D_801248BC, func_80065808, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80065E90.s")
+void func_80065E90(RaceUiOverlayActor *arg0) {
+    s32 i;
+
+    arg0->x = 0;
+    arg0->z = D_80121DA4 + 0xFF900000;
+    arg0->velocity = 0;
+    arg0->y = func_80080CC4(func_8007D200(0, 0, arg0->z), arg0->x, arg0->z) + 0x200000;
+
+    for (i = 0; i < 0x40; i++) {
+        arg0->velocity += 0x2000;
+        arg0->y += arg0->velocity;
+        arg0->timer++;
+    }
+
+    func_80045990(func_80043040(D_8011216E), 0x3A, &arg0->palette3A, &arg0->image3A);
+    func_80045990(func_80043040(D_8011216E), 0x3B, &arg0->palette3B, &arg0->image3B);
+    func_80071824(arg0, func_80065E0C);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80065FD8.s")
 

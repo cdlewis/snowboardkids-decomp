@@ -2794,3 +2794,9 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `0/8/2/0xA`. The target instead keeps the actor pointer as the sliding base
   and accesses `0x18/0x20/0x1A/0x22`; forcing that with actor pointer casts
   currently makes IDO keep `D_8010AE04`'s address live and worsens the match.
+
+## func_80065E90 (race_ui_effects)
+
+- For the `0x40`-iteration fixed-point acceleration loop, IDO unrolls the loop
+  by four. Keeping the loop natural but placing the `timer++` after the
+  velocity and position updates produces the target register allocation.
