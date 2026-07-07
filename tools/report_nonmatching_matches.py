@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from dataclasses import dataclass
@@ -32,6 +33,7 @@ class MatchResult:
     function: str
     percent: float
     attempt: str
+    source_root: Path
     workspace: Path | None = None
 
 
@@ -53,6 +55,28 @@ class ReportRow:
 
 def repo_root_from_script() -> Path:
     return Path(__file__).resolve().parent.parent
+
+
+def default_scan_roots(repo_root: Path) -> list[Path]:
+    roots = [repo_root]
+    sbk_a_root = repo_root.parent / "sbk-a"
+    if sbk_a_root.is_dir() and sbk_a_root.resolve() != repo_root.resolve():
+        roots.append(sbk_a_root)
+    return roots
+
+
+def unique_resolved_paths(paths: Iterable[Path]) -> list[Path]:
+    roots: list[Path] = []
+    seen: set[Path] = set()
+
+    for path in paths:
+        resolved = path.resolve()
+        if resolved in seen:
+            continue
+        seen.add(resolved)
+        roots.append(resolved)
+
+    return roots
 
 
 def function_name_from_workspace(workspace: Path) -> str:
@@ -129,6 +153,7 @@ def parse_match_log(log_path: Path, repo_root: Path) -> Iterable[MatchResult]:
             function=function,
             percent=percent,
             attempt=str(attempt),
+            source_root=repo_root,
             workspace=workspace,
         )
 
@@ -207,30 +232,33 @@ def is_better_scratch(candidate: ScratchResult, current: ScratchResult | None) -
     return candidate.slug < current.slug
 
 
-def best_local_results_by_function(repo_root: Path) -> dict[str, MatchResult]:
-    nonmatchings_dir = repo_root / "nonmatchings"
-    matched_functions = matched_function_names(repo_root)
+def best_local_results_by_function(
+    scan_roots: Iterable[Path],
+    matched_functions: set[str],
+) -> dict[str, MatchResult]:
     best_by_function: dict[str, MatchResult] = {}
 
-    for log_path in sorted(nonmatchings_dir.glob("*/match_log.txt")):
-        function = function_name_from_workspace(log_path.parent)
-        if function in matched_functions:
-            continue
+    for scan_root in scan_roots:
+        nonmatchings_dir = scan_root / "nonmatchings"
+        for log_path in sorted(nonmatchings_dir.glob("*/match_log.txt")):
+            function = function_name_from_workspace(log_path.parent)
+            if function in matched_functions:
+                continue
 
-        for result in parse_match_log(log_path, repo_root):
-            best = best_by_function.get(result.function)
-            if is_better_match(result, best):
-                best_by_function[result.function] = result
+            for result in parse_match_log(log_path, scan_root):
+                best = best_by_function.get(result.function)
+                if is_better_match(result, best):
+                    best_by_function[result.function] = result
 
     return best_by_function
 
 
 def best_scratch_results_by_function(
-    scratches_path: Path | None,
+    scratches_paths: Iterable[Path],
     matched_functions: set[str],
 ) -> dict[str, ScratchResult]:
     best_by_function: dict[str, ScratchResult] = {}
-    if scratches_path is not None:
+    for scratches_path in scratches_paths:
         for result in parse_scratch_results(scratches_path, matched_functions):
             best = best_by_function.get(result.function)
             if is_better_scratch(result, best):
@@ -239,9 +267,14 @@ def best_scratch_results_by_function(
     return best_by_function
 
 
-def report_rows_by_function(repo_root: Path, scratches_path: Path | None) -> dict[str, ReportRow]:
-    local_results = best_local_results_by_function(repo_root)
-    scratch_results = best_scratch_results_by_function(scratches_path, matched_function_names(repo_root))
+def report_rows_by_function(
+    repo_root: Path,
+    scan_roots: Iterable[Path],
+    scratches_paths: Iterable[Path],
+) -> dict[str, ReportRow]:
+    matched_functions = matched_function_names(repo_root)
+    local_results = best_local_results_by_function(scan_roots, matched_functions)
+    scratch_results = best_scratch_results_by_function(scratches_paths, matched_functions)
 
     return {
         function: ReportRow(local=local, scratch=scratch_results.get(function))
@@ -257,7 +290,7 @@ def relative_path(path: str, repo_root: Path) -> str:
     try:
         return str(candidate.relative_to(repo_root))
     except ValueError:
-        return path
+        return os.path.relpath(candidate, repo_root)
 
 
 def format_local_attempt(result: MatchResult) -> str:
@@ -305,15 +338,29 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
             "Report 100% and partial matches from nonmatchings/**/match_log.txt, "
-            "supplemented with decomp.me scratches from tools/scratches.json, excluding functions "
-            "already in asm/matchings."
+            "supplemented with decomp.me scratches from tools/scratches.json. By default this scans "
+            "the current checkout and ../sbk-a when present, excluding functions already in the "
+            "current checkout's asm/matchings."
         )
     )
     parser.add_argument(
         "--repo-root",
         type=Path,
         default=repo_root_from_script(),
-        help="Repository root to scan. Defaults to the parent of this script's tools directory.",
+        help=(
+            "Primary repository root used for matched-function filtering and relative paths. "
+            "Defaults to the parent of this script's tools directory."
+        ),
+    )
+    parser.add_argument(
+        "--scan-root",
+        type=Path,
+        action="append",
+        default=[],
+        help=(
+            "Additional repository/workspace root to scan for nonmatchings/*/match_log.txt. "
+            "Can be repeated. Defaults already include --repo-root and ../sbk-a when present."
+        ),
     )
     parser.add_argument(
         "--partial-only",
@@ -329,12 +376,21 @@ def main() -> int:
         "--scratches",
         type=Path,
         default=None,
-        help="Path to decomp.me scratch JSON. Defaults to tools/scratches.json if it exists.",
+        help=(
+            "Path to decomp.me scratch JSON. Defaults to tools/scratches.json under each scan root "
+            "if it exists."
+        ),
     )
     parser.add_argument(
         "--no-scratches",
         action="store_true",
         help="Only use local nonmatchings/**/match_log.txt entries.",
+    )
+    parser.add_argument(
+        "--min-percent",
+        type=float,
+        default=0.0,
+        help="Only report local match_log entries at or above this percentage.",
     )
     args = parser.parse_args()
 
@@ -346,16 +402,39 @@ def main() -> int:
         return 2
 
     repo_root = args.repo_root.resolve()
-    nonmatchings_dir = repo_root / "nonmatchings"
-    if not nonmatchings_dir.is_dir():
-        print(f"error: {nonmatchings_dir} does not exist", file=sys.stderr)
+    default_roots = unique_resolved_paths(default_scan_roots(repo_root))
+    explicit_roots = unique_resolved_paths(args.scan_root)
+    scan_roots = unique_resolved_paths([*default_roots, *explicit_roots])
+    explicit_root_set = set(explicit_roots)
+
+    valid_scan_roots: list[Path] = []
+    for scan_root in scan_roots:
+        nonmatchings_dir = scan_root / "nonmatchings"
+        if nonmatchings_dir.is_dir():
+            valid_scan_roots.append(scan_root)
+        elif scan_root in explicit_root_set:
+            print(f"warning: skipping {scan_root}; {nonmatchings_dir} does not exist", file=sys.stderr)
+
+    if not valid_scan_roots:
+        print("error: no scan roots with a nonmatchings directory", file=sys.stderr)
         return 2
 
-    scratches_path = None
+    scratches_paths: list[Path] = []
     if not args.no_scratches:
-        scratches_path = args.scratches.resolve() if args.scratches else repo_root / "tools" / "scratches.json"
+        if args.scratches is not None:
+            scratches_paths = [args.scratches.resolve()]
+        else:
+            scratches_paths = [
+                scan_root / "tools" / "scratches.json"
+                for scan_root in valid_scan_roots
+                if (scan_root / "tools" / "scratches.json").is_file()
+            ]
 
-    results = report_rows_by_function(repo_root, scratches_path).values()
+    results = [
+        row
+        for row in report_rows_by_function(repo_root, valid_scan_roots, scratches_paths).values()
+        if row.local.percent >= args.min_percent
+    ]
     full_matches = sorted(
         (row for row in results if row.local.percent >= FULL_MATCH_PERCENT),
         key=lambda row: row.local.function,
