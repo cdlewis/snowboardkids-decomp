@@ -59,7 +59,15 @@ void func_8008B508(RaceVec3i *vec, RaceInputPlayer *player) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008B60C.s")
+void func_8008B60C(RaceVec3i *vec, RaceInputPlayer *player) {
+    s32 magnitude;
+
+    magnitude = func_80098C30((s64)vec->x * vec->x + (s64)vec->z * vec->z);
+    if ((player->unk314 / 2) < magnitude) {
+        vec->x = (s64)vec->x * (player->unk314 / 2) / magnitude;
+        vec->z = (s64)vec->z * (player->unk314 / 2) / magnitude;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008B73C.s")
 
