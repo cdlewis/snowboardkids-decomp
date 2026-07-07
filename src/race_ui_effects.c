@@ -321,6 +321,19 @@ typedef struct {
 } RaceUiScaledParticleActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ u8 pad24[4];
+    /* 0x28 */ s16 angle;
+    /* 0x2A */ u8 pad2A[2];
+    /* 0x2C */ s16 sineAngle;
+    /* 0x2E */ u8 pad2E[2];
+    /* 0x30 */ RaceUiGfxCommandDest *matrix;
+    /* 0x34 */ u8 pad34[2];
+    /* 0x36 */ u8 matrixDirty;
+} RaceUiRisingTrailActor;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x24];
     /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
     /* 0x44 */ u8 pad44[0x64 - 0x44];
@@ -2209,7 +2222,37 @@ void func_800617C8(void *arg0) {
     func_80071824(arg0, func_800615BC);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800617EC.s")
+void func_800617EC(RaceUiRisingTrailActor *arg0) {
+    volatile s32 padlow;
+    s32 sine;
+    RaceUiTrailCopyBlock sp80;
+    volatile s32 pad[0x12];
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (func_80049000(&arg0->pos) != 0) {
+        if (arg0->matrixDirty != 0) {
+            arg0->matrixDirty = 0;
+            sine = func_80097AE8(arg0->sineAngle);
+            func_80097C18(&sp80, (s16)(arg0->angle + 0x800));
+            sp80.words[5] = arg0->pos.a;
+            sp80.words[6] = arg0->pos.b + ((sine + 0x1000) << 5) + 0x10000;
+            sp80.words[7] = arg0->pos.c;
+            func_80048D60(&sp80);
+            arg0->matrix = func_8004885C(&sp80);
+        }
+
+        if (arg0->matrix != NULL) {
+            gDPPipeSync(gRegionAllocPtr++);
+            gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112144));
+            gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112146));
+            gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(gRegionAllocPtr++, D_20019C0);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80061984.s")
 
