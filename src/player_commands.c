@@ -280,7 +280,30 @@ void func_8009C77C(SchedulerState *arg0) {
     osSpTaskStartGo(&arg0->curRDPTask->list);
 }
 
+// func_8009C81C best match: 99.167%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C81C.s")
+
+#ifdef NON_MATCHING
+void func_8009C81C(SchedulerState *arg0) {
+    int new_var;
+    SchedulerTask *task;
+    OSMesg msg;
+
+    msg = (new_var = 0);
+    osWritebackDCacheAll();
+    if (D_800DF154 == 1) {
+        osSpTaskLoad(arg0->curRSPTask->list);
+        osSpTaskStartGo(arg0->curRSPTask->list);
+    } else if (D_800DF154 == 2) {
+        D_8015A620 &= ~1;
+        osSendMesg(&arg0->queue14C, &msg, 1);
+    }
+    task = arg0->curRDPTask;
+    osSendMesg(task->queue, task->msg, 1);
+    D_8015A624 = 0;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C8DC.s")
 
