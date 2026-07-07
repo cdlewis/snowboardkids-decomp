@@ -206,7 +206,47 @@ void func_8003FBE8(void) {
     D_801124B8 = 0x80;
 }
 
+// func_8003FC60 best match: 75.250% (nonmatchings/func_8003FC60-1197934324348345530/base_3.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_8003FC60.s")
+
+#ifdef NON_MATCHING
+void func_8003FC60(void) {
+    s32 timer;
+    s32 x2;
+    s32 x1;
+    s32 y1;
+    s32 y2;
+    f64 denominator = MAIN_MENU_TRANSITION_FRAMES;
+    f32 aspect;
+
+    D_801235B8->transitionTimer += 1;
+    timer = D_801235B8->transitionTimer;
+
+    x2 = timer << 2;
+    x2 -= timer;
+    x2 <<= 3;
+    x2 = (s16) ((x2 / MAIN_MENU_TRANSITION_FRAMES) + 0x108);
+
+    x1 = (s16) (((timer * 0x28) / MAIN_MENU_TRANSITION_FRAMES) + 0x50);
+    y1 = (s16) (((timer * 0x58) / MAIN_MENU_TRANSITION_FRAMES) + 0x78);
+    y2 = (s16) (((timer * 0x64) / MAIN_MENU_TRANSITION_FRAMES) + 0x8C);
+    aspect = (f32) ((((f64) timer * -0.9523809523809523) / denominator) + 2.2857142857142856);
+
+    func_8007066C(0, 0xA0, x1, x2 & 0xFFFF, y1, 0x140, y2, aspect);
+    if (D_801235B8->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
+        func_800720E4(0xF);
+        func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        D_801235B8->transitionTimer = 0;
+        func_8009956C(func_8003FE54, 0);
+    }
+    func_8008C704();
+    func_800710CC(0x63);
+    func_80096E3C();
+    func_8007115C();
+    func_8006D700();
+}
+#endif
 
 void func_8003FE54(void) {
     D_801235B4 = 0;

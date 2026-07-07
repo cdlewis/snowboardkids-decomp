@@ -3091,3 +3091,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - The remaining 99.388% mismatch is stack-slot allocation only: adding a
   separate saved pointer for the final `func_80042BC0` call gets the desired
   call-preserved value but grows the frame from `0x30` to `0x38`.
+
+## func_8003FC60 (main_menu_transition)
+
+- For viewport interpolation aspect math, assigning
+  `f64 denominator = MAIN_MENU_TRANSITION_FRAMES` and computing a separate
+  `f32 aspect` prevents IDO from folding division by 16.0 into a reciprocal
+  multiply. The remaining mismatch is mostly integer temporary allocation and
+  scheduling around the four viewport coordinate expressions.
