@@ -9,6 +9,14 @@ typedef struct {
     u16 slideOffset;
 } MainMenuScoreTransition;
 
+typedef struct {
+    /* 0x0 */ s8 step;
+    /* 0x1 */ char pad1[0x1];
+    /* 0x2 */ s16 timer;
+    /* 0x4 */ s16 targetState;
+    /* 0x6 */ s16 nextTimer;
+} ControllerPakDeleteFlow;
+
 extern void func_80071824(void *task, void (*callback)());
 extern void func_800129DC(s16, s16, u8 *, s32, s32);
 extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
@@ -19,10 +27,13 @@ extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern u8 D_800B73F0[][0x4C];
+extern u8 D_800B7986[];
+extern u8 D_800B7987[];
 extern u8 D_800B79AC[];
 extern s16 D_80112172;
 extern s16 D_8010AF62;
-extern MainMenuScoreTransition D_8010AF60;
+extern ControllerPakDeleteFlow D_8010AF60;
+extern u16 D_8010AF64;
 extern u8 D_8010AF60_state;
 extern void *D_80124868;
 extern void *D_8010ADE0;
@@ -264,7 +275,52 @@ void func_8002BF54(MainMenuScoreTask *arg0) {
     func_80071824(arg0, func_8002BDAC);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002BF9C.s")
+void func_8002BF9C(MainMenuScoreTask *arg0) {
+    u32 drawAlpha;
+    int isEvenState;
+    u16 alpha;
+    s16 state;
+
+    state = D_800EC9D0;
+    if (state != 0) {
+        isEvenState = !(state & 1);
+        if (isEvenState) {
+            alpha = 0x100;
+        } else {
+            alpha = 0x60;
+        }
+
+        drawAlpha = alpha;
+        func_8000F8AC(arg0->x, arg0->unk1C.scale, func_80043040(D_80112172), D_800B7987[D_800EC9C8 * 2], 0x20, 0x20,
+                      0, drawAlpha, 0);
+
+        if (drawAlpha == 0x100) {
+            alpha = 0x60;
+        } else {
+            alpha = 0x100;
+        }
+
+        func_8000F8AC(arg0->x, arg0->y, func_80043040(D_80112172), D_800B7986[D_800EC9C8 * 2], 0x20, 0x20, 0, alpha,
+                      0);
+
+        state = D_800EC9D0;
+        if ((state == 3) || (state == 4)) {
+            func_8000F8AC(arg0->x, (s16)(((D_800EC9D0 * 0x10) + arg0->y) - 0x30), func_80043040(D_80112172), 0x12,
+                          0x20, 0x20, 0, (u16)arg0->state.w.alpha, 7);
+            state = D_800EC9D0;
+        }
+    }
+    if ((state >= 5) && (arg0->state.w.slideOffset == 0)) {
+        D_8010AF64 = arg0->state.w.selection;
+        D_8010AF60.step = 3;
+        D_800EC9D0 = 0;
+        if (arg0->state.w.selection == 0) {
+            D_8010AF60.timer = 0x100;
+            D_8010AF60.step = 1;
+            D_800EC9C8 = arg0->state.w.selection;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002C18C.s")
 

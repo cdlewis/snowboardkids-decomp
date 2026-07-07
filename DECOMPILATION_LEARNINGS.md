@@ -70,6 +70,11 @@ collapse the frame for this function.
   `s32 zero = 0` local used for the zero arguments moved the `u16` alpha local
   from `sp+0x3E` to the target `sp+0x3A` without changing the emitted zero
   stores.
+- Similar menu draw callbacks can preserve the same IDO shape across different
+  UI files when the same temporary pattern is kept: use a widened `u32`
+  draw-alpha copy for the first sprite, keep the original `u16` alpha for the
+  second, then reload the global state before optional cursor drawing
+  (func_800224A0 and func_8002BF9C).
 - The common four-tile menu panel draw pattern (`func_8000F030` tile indices
   3-6) matches when the `x + 0x40` and/or `y + 0x40` coordinates are explicitly
   cast back to `s16`. This reproduces the target `sll`/`sra` sign-extension
