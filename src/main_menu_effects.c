@@ -57,8 +57,10 @@ extern void func_80017168(void *, s32);
 extern void func_800716E4(void *);
 extern s32 func_80043040(s16);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
+extern Gfx *gRegionAllocPtr;
 extern s32 D_80124838;
 extern s32 D_80124868;
+extern Gfx D_800DEFF8[];
 extern s16 D_800DEF14;
 extern s16 D_80112172;
 extern s16 D_8011217C;
@@ -207,7 +209,20 @@ void func_8003C420(s16 arg0, s16 arg1, u8 arg2) {
     temp_v0->characterId = arg2;
 }
 
+// func_8003C484 best match: 99.074%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003C484.s")
+
+#ifdef NON_MATCHING
+void func_8003C484(MainMenuEffectActor *arg0) {
+    Gfx *gfx;
+    Gfx *new_var;
+    s32 w0;
+    s32 w1;
+
+    /* IDO scheduling for this function depends on this block staying on one line. */
+    do { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; do { w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; new_var = gfx; new_var->words.w0 = 0xFA000000; new_var->words.w1 = -0x60; } while (0); if (arg0->effectFrame != 0) { func_8000F030(arg0->offsetX, arg0->offsetY, func_80043040(D_80112172), (((0, arg0->effectFrame)) + 0x24) & 0xFFFF, 0x30, 0x20, 0, 0); } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; if (arg0->effectFrame < 0xC) { func_8000F030(arg0->offsetX, arg0->offsetY, func_80043040(D_80112172), (arg0->effectFrame + 0x25) & 0xFFFF, 0x30, 0x20, 0, 0); } func_8000F030(arg0->x, arg0->y, func_80043040(D_80112172), 0x31, 0x20, 0x20, 0, 0); } while (0);
+}
+#endif
 
 void func_8003C634(MainMenuEffectActor *arg0) {
     arg0->effectTimer++;
