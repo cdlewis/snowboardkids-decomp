@@ -93,7 +93,8 @@ typedef struct {
 } RaceItemEffectPlayerState;
 
 typedef struct {
-    /* 0x000 */ u8 pad0[0x28];
+    /* 0x000 */ u8 pad0[0x1C];
+    /* 0x01C */ Vec3i pos1C;
     /* 0x028 */ Vec3i pos;
     /* 0x034 */ u8 pad34[RACE_PLAYER_STATE_SIZE - 0x34];
 } RaceItemFollowPlayer;
@@ -136,6 +137,8 @@ void func_80050888(RaceItemEffectActor *);
 void func_8005098C(RaceItemFollowActor *);
 void func_800716E4();
 void func_80071824(void *task, void (*callback)());
+void func_80097C18(void *, s16);
+void func_80098590(void *, s32 *, RaceItemEffectPayload *);
 RaceItemEffectActor *func_800711D0(void *, s32, s32);
 RaceItemEffectActor *func_800716A4(void *, s32, s32, s16);
 
@@ -173,7 +176,28 @@ void func_8004E3BC(RaceItemEffectActor *arg0) {
     func_800483FC(&D_801248E0, func_8004E02C, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004E438.s")
+void func_8004E438(RaceItemEffectActor *arg0) {
+    char pad2C[4];
+    RaceItemFollowPlayer *sp58;
+    char pad50[8];
+    char sp30[0x20];
+    s32 sp24[3];
+
+    arg0->unk24.timer = -1;
+    if (arg0->state.halfword == 0) {
+        sp58 = &D_80121D80[arg0->unk38.width];
+        func_80097C18(sp30, arg0->height);
+        sp24[0] = 0;
+        sp24[1] = arg0->unk28.word;
+        sp24[2] = arg0->unk2C;
+        func_80098590(sp30, sp24, &arg0->payload);
+        arg0->payload.vec.x += sp58->pos1C.x;
+        arg0->payload.vec.y += sp58->pos1C.y;
+        arg0->payload.vec.z += sp58->pos1C.z;
+    }
+    func_8004E3BC(arg0);
+    func_80071824(arg0, func_8004E3BC);
+}
 
 void func_8004E518(s16 arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4) {
     RaceItemEffectActor *p = func_800716A4(func_8004E438, 5, 0x32, arg2);
