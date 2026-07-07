@@ -384,7 +384,7 @@ typedef struct {
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ RaceUiGfxCommandDest *particles;
-    /* 0x1C */ u8 pad1C[2];
+    /* 0x1C */ s16 textureOffset;
     /* 0x1E */ s16 count;
 } RaceUiGfxCommandActor;
 
@@ -555,6 +555,9 @@ extern Vec3i D_800D6030[];
 extern RaceUiRankTextRenderEntry *D_800D761C[];
 extern RaceUiGfxCommandScriptEntry *D_800D693C[];
 extern RaceUiGfxCommandDest D_800DEE50;
+extern Gfx D_800D6968[];
+extern Gfx D_800D9D00[];
+extern Gfx D_800D9D40[];
 extern u32 D_20019C0[];
 extern u32 D_2002208[];
 extern u32 D_20023A8[];
@@ -2817,7 +2820,74 @@ void func_80065144(void *arg0) {
     func_80071824(arg0, func_800650D8);
 }
 
+// func_800651BC best match: 97.133%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800651BC.s")
+
+#ifdef NON_MATCHING
+void func_800651BC(RaceUiGfxCommandActor *arg0) {
+    RaceUiGfxCommandScriptEntry *entry;
+    s16 textureIndex;
+    s32 i;
+    register RaceUiGfxCommandActor *actor;
+    Gfx *temp_v0;
+    void *spA0;
+    void *sp9C;
+    Gfx *temp_v0_3;
+    Gfx *temp_v0_4;
+    Gfx *temp_v0_2;
+    Gfx *temp_v0_5;
+    Gfx *temp_v0_6;
+    Gfx *temp_v0_7;
+    Gfx *temp_v0_8;
+    Gfx *temp_v0_9;
+    Gfx *temp_v0_10;
+    Gfx *temp_v0_11;
+    Gfx *temp_v0_12;
+    Gfx *temp_v0_13;
+    Gfx *temp_v0_14;
+    Gfx *temp_v0_15;
+    Gfx *temp_v0_16;
+    Gfx *temp_v0_18;
+
+    actor = arg0;
+    temp_v0 = gRegionAllocPtr++;
+    temp_v0->words.w1 = (u32)D_800D9D00;
+    temp_v0->words.w0 = 0x06000000;
+
+    textureIndex = -1;
+    entry = D_800D693C[D_80121B50];
+    i = 0;
+    if (entry->sentinel != -1) {
+        do {
+            if ((entry->active != 0) && (func_80049000(&entry->command) != 0)) {
+                if (textureIndex != entry->sentinel + actor->textureOffset) {
+                    textureIndex = entry->sentinel + actor->textureOffset;
+                    func_80045990(func_80043040(D_8011216E), 0x14, &spA0, &sp9C);
+                    temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32)spA0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w1 = 0x00080200; temp_v0_7->words.w0 = 0xF5400400; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)sp9C; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w1 = 0x07000000; temp_v0_11->words.w0 = 0xF5000100; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++;
+                    temp_v0_14->words.w1 = 0;
+                    temp_v0_14->words.w0 = 0xE7000000;
+                }
+                gSPMatrix(gRegionAllocPtr++, (u32)actor->particles + (i << 6), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+
+                temp_v0_15 = gRegionAllocPtr++;
+                temp_v0_15->words.w1 = (u32)D_800D6968;
+                temp_v0_15->words.w0 = 0x0400103F;
+
+                temp_v0_16 = gRegionAllocPtr++;
+                temp_v0_16->words.w1 = 0x00060200;
+                temp_v0_16->words.w0 = 0xB1060402;
+            }
+            entry++;
+            i++;
+        } while (entry->sentinel != -1);
+    }
+
+    temp_v0_18 = gRegionAllocPtr++;
+    temp_v0_18->words.w1 = (u32)D_800D9D40;
+    temp_v0_18->words.w0 = 0x06000000;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80065508.s")
 
