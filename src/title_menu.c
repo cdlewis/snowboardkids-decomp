@@ -119,6 +119,7 @@ extern s16 D_8010AE44;
 extern s16 D_8010AE46;
 extern u16 D_800B5408[];
 extern u16 D_800B541C[];
+extern u16 D_800B5430[];
 extern u16 D_800B5444[];
 extern u8 D_80112130[];
 extern s16 D_8011216E;
@@ -450,9 +451,48 @@ void func_80015404(void *arg0) {
     func_80071824(arg0, func_800152D0);
 }
 
-extern void func_8001543C(void *);
+void func_8001543C(void *arg0) {
+    MenuItemActor *actor = arg0;
+    s16 unused;
+    s16 width;
+    s16 xOffset;
+    s16 yOffset;
+    s32 alpha;
+    s32 temp;
+    s32 i;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_8001543C.s")
+    if (actor->state == 0) {
+        alpha = 0x100;
+        width = 0x18;
+        xOffset = 0x10;
+        yOffset = 0;
+    } else if (D_80121B55 == 3) {
+        alpha = 0x100;
+        width = 0x20;
+        xOffset = 0xC;
+        yOffset = 8;
+    } else {
+        alpha = 0x60;
+        width = 0x10;
+        xOffset = 0x14;
+        yOffset = -4;
+    }
+
+    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (D_80121B55 != 3)) {
+        func_8000F8AC(actor->x, actor->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 3);
+        if (width == 0x20) {
+            temp = width & 0xFFFF;
+            func_8000F8AC((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), func_80043040(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 2, temp, temp, 0, alpha, 0);
+        } else {
+            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), func_80043040(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 2, alpha);
+        }
+        func_800129DC((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5430, 1, alpha);
+    }
+
+    for (i = 0; i != 0x3C; i += 0x14) {
+        func_8000F8AC((s16)(actor->x + i + 0x80), actor->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, alpha, 0);
+    }
+}
 
 void func_80015680(MenuItemActor *arg0) {
     MenuItemActor *child;
