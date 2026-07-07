@@ -453,7 +453,7 @@ extern void func_80065808(void);
 extern void func_80065508(void);
 extern void func_80066158(void *);
 extern void func_800663C8(void *);
-extern void func_80059854(void);
+extern void func_80059854(void *);
 extern void func_8005804C(void);
 extern void func_8005812C(void);
 extern void func_8005827C(void);
@@ -746,7 +746,28 @@ void func_80059804(void *arg0) {
     func_800483FC(&D_80124858, func_8005905C, (s32)arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059854.s")
+void func_80059854(void *arg0) {
+    s32 *input;
+    s32 i;
+    void *actor;
+
+    actor = arg0;
+    i = 0;
+    if ((s32)D_80121B55 > 0) {
+        input = &D_80123778; do {
+            if ((*input & 0x8000) && !(D_801235B4 & 0x10)) {
+                D_801235B4 |= 0x10;
+                func_80072138(0x18, 0x32);
+                func_80071824(actor, func_80059804);
+            }
+            i++;
+            input++;
+        } while (i < (s32)D_80121B55);
+    }
+    func_80059518(actor);
+    func_800483FC(&D_80124868, func_80058C00, (s32)actor);
+    func_800483FC(&D_80124858, func_8005905C, (s32)actor);
+}
 
 void func_80059950(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x18) = *(s16 *)((u8 *)arg0 + 0x18) + 0x10;
