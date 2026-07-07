@@ -226,6 +226,16 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ RaceUiGfxCommandDest *matrix0;
+    /* 0x28 */ RaceUiGfxCommandDest *matrix1;
+    /* 0x2C */ s16 rotY;
+    /* 0x2E */ s16 rotX;
+    /* 0x30 */ u8 matrixDirty;
+} RaceUiTrailingParticleActor;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ RaceUiEffectParticle *particles;
     /* 0x1C */ u8 pad1C[8];
     /* 0x24 */ s16 count;
@@ -346,6 +356,7 @@ extern RaceUiSpriteInit D_800D5FF0[];
 extern Vec3i D_800D61C0[];
 extern Vec3i D_800D6340[];
 extern Vec3i D_800D6220[];
+extern Vec3i D_800D6324;
 extern Vec3i D_800D6330[];
 extern Vec3i D_800D62AC[];
 extern s16 D_800D633C[];
@@ -389,6 +400,8 @@ extern RaceUiGfxCommandScriptEntry *D_800D693C[];
 extern RaceUiGfxCommandDest D_800DEE50;
 extern u32 D_2002208[];
 extern u32 D_20023A8[];
+extern u32 D_200CC20[];
+extern u32 D_200CE48[];
 extern void func_80071824(void *task, void (*callback)());
 extern void *func_800711D0(void *, s32, s32);
 extern void *func_80071408(void *, s32, s32);
@@ -406,6 +419,7 @@ extern void func_80045990(s32, s32, void *, void *);
 extern void func_80097BAC(s16 *, s16);
 extern void func_80097C18(void *, s32);
 extern void func_80097FE4(FixedMatrix3sScratch, s16, s16);
+extern void func_80098174(void *, s16, s16);
 extern void func_80098590(FixedMatrix3sScratch, Vec3i *, Vec3i *);
 extern void func_8005F448(void *);
 extern void func_8005B14C(void *);
@@ -469,7 +483,7 @@ extern void func_8005E5B4(void *);
 extern void func_8005EFFC(RaceUiSparkleActor *);
 extern void func_8005F174(RaceUiSparkleActor *);
 extern void func_80061088(void);
-extern void func_80062F6C(void);
+extern void func_80062F6C(RaceUiTrailingParticleActor *);
 extern void func_80058B20(void *);
 extern void func_800628DC(void);
 extern void func_80060FA4(void *);
@@ -1906,7 +1920,42 @@ void func_80062ED4(void *arg0) {
     func_80071824(arg0, func_80062D34);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80062F6C.s")
+void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
+    FixedMatrix3sScratch scratch;
+    Vec3i transformedOffset;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (func_80049000(&arg0->pos) != 0) {
+        if (arg0->matrixDirty != 0) {
+            arg0->matrixDirty = 0;
+            func_80097C18(scratch, arg0->rotY);
+            ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.a;
+            ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.b;
+            ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.c;
+            arg0->matrix0 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
+
+            func_80098590(scratch, &D_800D6324, &transformedOffset);
+            ((RaceUiTrailCopyBlock *)scratch)->words[5] += transformedOffset.a;
+            ((RaceUiTrailCopyBlock *)scratch)->words[6] += transformedOffset.b;
+            ((RaceUiTrailCopyBlock *)scratch)->words[7] += transformedOffset.c;
+            func_80098174(scratch, arg0->rotY, arg0->rotX);
+            arg0->matrix1 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
+        }
+
+        if (arg0->matrix1 != NULL) {
+            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, func_80043040(D_80112140));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, func_80043040(D_80112142));
+            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200CE48);
+            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200CC20);
+        }
+    }
+}
 
 void func_80063164(void *arg0) {
     if (D_80121B56 == 0) {
