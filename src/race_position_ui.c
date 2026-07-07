@@ -33,11 +33,6 @@ typedef struct {
 } RacePositionUiMtx;
 
 typedef struct {
-    /* 0x00 */ u32 w0;
-    /* 0x04 */ u32 w1;
-} RacePositionUiGfx;
-
-typedef struct {
     /* 0x00 */ u16 playerIndex;
     /* 0x02 */ u8 pad02[0x10 - 0x02];
     /* 0x10 */ u8 textureSet;
@@ -70,8 +65,8 @@ extern s16 D_80156612;
 extern s16 D_80112148;
 extern s16 D_8011214A;
 extern s16 D_80112130[];
-extern RacePositionUiGfx *D_80124830;
-extern RacePositionUiGfx D_800DE070[];
+extern Gfx *D_80124830;
+extern Gfx D_800DE070[];
 extern u32 D_800DEE90[];
 extern u32 D_800DE098[RACE_POSITION_UI_PART_COUNT + 2];
 extern u32 D_800DE0D4[RACE_POSITION_UI_PART_COUNT + 2];
@@ -104,11 +99,11 @@ extern u32 D_800DE368[RACE_POSITION_UI_TEXTURE_VARIANTS];
 
 #ifdef NON_MATCHING
 static void racePositionUiAppendGfx(u32 w0, u32 w1) {
-    RacePositionUiGfx *gfx = D_80124830;
+    Gfx *gfx = D_80124830;
 
     D_80124830 = gfx + 1;
-    gfx->w0 = w0;
-    gfx->w1 = w1;
+    gfx->words.w0 = w0;
+    gfx->words.w1 = w1;
 }
 
 static void racePositionUiLoadAssetTexture(void *asset, u16 textureIndex, u32 segmentAddress) {
