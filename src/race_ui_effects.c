@@ -581,7 +581,8 @@ extern void func_80059518(void *);
 extern void func_80059950(void *);
 extern void func_8005A288(void *);
 extern void func_8005E5B4(void *);
-extern void func_8005EFFC(RaceUiSparkleActor *);
+extern void func_8005E6D0(RaceUiSparkleActor *);
+extern void func_8005ECA8(RaceUiSparkleActor *);
 extern void func_8005F174(RaceUiSparkleActor *);
 extern void func_80061088(void);
 extern void func_80062F6C(RaceUiTrailingParticleActor *);
@@ -1661,7 +1662,40 @@ void func_8005E68C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005ECA8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005EFFC.s")
+void func_8005EFFC(RaceUiSparkleActor *arg0) {
+    s16 sp38[0x10];
+    Vec3i sp2C;
+    volatile u8 pad[8];
+    RacePlayerState *player;
+
+    if (D_80121B56 == 0) {
+        if (D_801235B0 & 1) {
+            arg0->frame = (arg0->frame + 1) & 3;
+        }
+
+        sp2C.a = 0;
+        sp2C.b = arg0->zOffset;
+        sp2C.c = 0;
+        player = &D_80121D80[arg0->playerIndex];
+        func_80097FE4(sp38, player->pitch, player->yaw);
+        func_80098590(sp38, &sp2C, &arg0->pos);
+
+        player = &D_80121D80[arg0->playerIndex];
+        arg0->pos.a += player->pos28.a;
+        arg0->pos.b += player->pos28.b;
+        arg0->pos.c += player->pos28.c;
+        arg0->alpha += arg0->alphaStep;
+        if (arg0->alpha >= 0x100) {
+            arg0->alpha = 0xFF;
+            arg0->alphaStep = -0x20;
+            arg0->timer = 0x14;
+            func_80071824(arg0, func_8005ECA8);
+        }
+        arg0->zOffset += 0x20000;
+    }
+
+    func_800483FC(&D_801248EC, func_8005E6D0, arg0);
+}
 
 void func_8005F174(RaceUiSparkleActor *arg0) {
     arg0->zOffset = 0x20000;
