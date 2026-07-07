@@ -3028,3 +3028,12 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - This is the translation-only variant of `func_800987A0`: it rotates
   `arg0->translation` by `arg1->rotation` and adds `arg1->translation`, but
   does not compose the rotation matrix with `func_80097CF0`.
+
+## func_8000D340 (race_to_main_menu_transition)
+
+- For the main-menu flag bytes at `D_8010B1A8`, expressing the partial match
+  as a one-byte struct scalar and using `(&D_8010B1A8)[n].value` improves IDO's
+  store grouping compared with separate global `s8` symbols, though it still
+  folds the base-plus-one pointer differently than the target.
+- Keeping the asset copy size in a second local across `func_80042D58` and
+  `func_80043040` preserves the target stack spill at `sp+0x34`.
