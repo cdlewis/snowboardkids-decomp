@@ -3259,3 +3259,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
 - For halfword fields that are logically signed in the shared struct but passed
   as an alpha value, casting the field to `u16` at the call site can force the
   target `lhu` load without changing the struct definition.
+
+## func_80017A10 (race_hud)
+
+- For HUD draw loops with an alpha default and dimmed inactive entries, spelling
+  the alpha choice as a full `if/else` can reproduce IDO's redundant branch with
+  the inactive alpha assignment in the branch delay slot. Computing the texture
+  handle before `i + 1` also improved the saved-register layout.
