@@ -101,7 +101,8 @@ typedef struct {
 
 typedef struct {
     s16 angle;
-    char pad2[0x46];
+    s16 unk2;
+    char pad4[0x44];
 } CourseAngleEntry;
 
 typedef struct {
@@ -573,7 +574,31 @@ void func_8006B988(RaceMovingEffect *arg0) {
     func_800716E4(temp_a3);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BA50.s")
+void func_8006BA50(RaceMovingEffect *arg0) {
+    Vec3i sp2C;
+    void *mtx;
+
+    if (D_80121B56 == 0) {
+        arg0->timer--;
+        if (arg0->timer < 0x13) {
+            arg0->velocity.z = 0xFFFC0000;
+        }
+
+        mtx = arg0->unk30;
+        func_80098590(mtx, &arg0->velocity, &sp2C);
+        arg0->pos.x += sp2C.x;
+        arg0->pos.y += sp2C.y;
+        arg0->pos.z += sp2C.z;
+
+        if (arg0->timer == 0) {
+            func_80071824(arg0, func_8006B988);
+            func_80097FE4(mtx, 0x100, D_800B9554[D_80121B50].unk2 + 0x400);
+            arg0->timer = 0x64;
+        }
+    }
+
+    func_800483FC(&D_801248A4, func_8006B7E0, arg0);
+}
 
 // func_8006BB50 best match: 98.261% at nonmatchings/func_8006BB50-1404502880690620360/base_6.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BB50.s")

@@ -113,6 +113,10 @@ struct ShopMenuWidgetActor {
             /* 0x36 */ s16 visibleCount;
             /* 0x38 */ u8 state;
         };
+        struct {
+            char pad18[6];
+            /* 0x1E */ u16 counters[12];
+        } sparkle;
         /* 0x18 */ s16 randomValues[15];
     };
 };
@@ -135,7 +139,8 @@ extern void func_8002F2C8(ShopMenuWidgetActor *);
 extern void func_8002E9E4(ShopMenuWidgetActor *);
 extern void func_8002EC5C(void);
 extern void func_8002E5A4(ShopMenuWidgetActor *);
-extern void func_8002FD70(void);
+extern void func_8002FC00(ShopMenuWidgetActor *);
+extern void func_8002FD70(ShopMenuWidgetActor *);
 extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
@@ -957,7 +962,26 @@ void func_8002FBC8(ShopMenuWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002FC00.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002FD70.s")
+void func_8002FD70(ShopMenuWidgetActor *arg0) {
+    s32 i;
+
+    arg0->sprite.index = D_8010AF76 / 2;
+    arg0->x++;
+    arg0->y--;
+
+    for (i = 0; i < 12; i += 4) {
+        arg0->sparkle.counters[i] = (arg0->sparkle.counters[i] + 1) % 6;
+        arg0->sparkle.counters[i + 1] = (arg0->sparkle.counters[i + 1] + 1) % 6;
+        arg0->sparkle.counters[i + 2] = (arg0->sparkle.counters[i + 2] + 1) % 6;
+        arg0->sparkle.counters[i + 3] = (arg0->sparkle.counters[i + 3] + 1) % 6;
+    }
+
+    if (arg0->sprite.index == 0) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002FC00, arg0);
+}
 
 void func_8002FEF8(ShopMenuWidgetActor *arg0) {
     ShopMenuWidgetActor *new_var;
