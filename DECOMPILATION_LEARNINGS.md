@@ -184,6 +184,12 @@ collapse the frame for this function.
   `func_8005C03C` alpha blend block preserved the target's argument spill,
   branch-delay `D_80121B74` address setup, and post-`func_80059A04` reload of
   the actor before the closing display-list call.
+- An otherwise unused `s16` local can be required to reproduce IDO's halfword
+  spill-slot placement without emitting instructions. In func_80014CB8, an
+  initialized actor pointer local created the target `0x48` frame, and one
+  unused `s16` declared before the three live halfword locals moved their
+  call-preservation spills from `0x42/0x40/0x3E` down to the target
+  `0x40/0x3E/0x3C`.
 
 ## Structs, Types, and Data Access
 
