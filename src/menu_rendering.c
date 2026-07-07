@@ -45,6 +45,7 @@ typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 extern void func_800483FC(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
 extern void func_80071824(void *task, void (*callback)());
 s32 func_80011D74(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
+extern void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);
 extern RenderCallbackNode *D_80124868;
 extern u32 D_80123758;
 extern s16 D_800DEF14;
@@ -105,7 +106,46 @@ void func_80011D6C(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_800137C8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013D0C.s")
+void func_80013D0C(s16 arg0, s16 arg1, u8 *arg2, u16 arg3, u16 arg4) {
+    s32 var_s0;
+    u8 *var_s1;
+    char mask;
+    s32 var_s2;
+    s32 temp_s3;
+    s32 temp_t9;
+    long var_v0;
+    s32 var_a2;
+    s32 newline;
+    s32 var_v1;
+
+    mask = 0xFFFFFFFFFFFFFFFFu;
+    temp_t9 = *arg2 & mask;
+    var_s0 = arg0;
+    var_s1 = arg2;
+    var_s2 = arg1;
+    temp_s3 = var_s0;
+    if ((0, temp_t9) != 0) {
+        var_v0 = temp_t9 & 0xFF;
+        newline = 0xA;
+        do {
+            var_v1 = var_v0;
+            if (newline == var_v0) {
+                var_s0 = temp_s3;
+                var_s2 += 8;
+            } else {
+                var_v0 = var_v1 - 0x20;
+                if ((u32)var_v0 < 0x40) {
+                    var_a2 = var_v0 & 7;
+                    func_800137C8(var_s0, var_s2, ((var_a2 << 3) & 0xFFFF) & 0xFFFF, var_v0 & 0x38, arg3,
+                                  arg4);
+                }
+                var_s0 += 8;
+            }
+            var_v0 = var_s1[1];
+            var_s1++;
+        } while (var_v0 != 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013DFC.s")
 
