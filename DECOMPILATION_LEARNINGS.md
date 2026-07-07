@@ -3065,3 +3065,11 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   this sibling when the actor alpha field is typed at offset `0x18`. Declare
   display-list asset symbols that are passed by address, such as `D_800E12D4`,
   as arrays rather than pointers; pointer declarations emit an extra `lw`.
+
+## func_8005D9B4 (race_ui_effects)
+
+- Taking the actor argument's address can force IDO to spill `$a0` to the
+  incoming argument stack slot, matching alpha display-list wrappers that reload
+  the actor after drawing calls. The remaining mismatch is local to IDO
+  constant-folding the `s16` y-coordinate sequence instead of keeping it in
+  `$s0`.
