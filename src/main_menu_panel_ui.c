@@ -51,7 +51,6 @@ extern void func_80072138(s16, s16);
 
 extern void func_800515F0(MenuPanelActor *);
 extern void func_80051878(s32);
-extern void func_80051ED4(MenuPanelActor *);
 extern void func_80052034(s32);
 extern void func_80052364(MenuPanelActor *);
 extern void func_800523B8(s32);
@@ -122,7 +121,42 @@ void func_80051E80(MenuPanelActor *arg0) {
     func_800483FC(&D_80124868, func_80051878, (s32) arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80051ED4.s")
+void func_80051ED4(MenuPanelActor *arg0) {
+    s16 timer;
+    u8 state;
+
+    timer = arg0->inputRepeatTimer;
+    if (timer == 0) {
+        if (arg0->selectionState == 0) {
+            arg0->selectedTile++;
+        }
+        arg0->inputRepeatTimer = MENU_PANEL_INPUT_REPEAT_FRAMES;
+    } else {
+        arg0->inputRepeatTimer = timer - 1;
+    }
+
+    if (D_80123778 & 0x9000) {
+        state = arg0->selectionState;
+        switch (state) {
+        case 0:
+            arg0->selectedTile = 0xE7;
+            break;
+        case 1:
+            D_8010B1F0 = 1;
+            func_80071824(arg0, func_80051E80);
+            break;
+        case 2:
+            arg0->selectedTile = 0;
+            arg0->selectionState = 0;
+            arg0->inputRepeatTimer = 0;
+            arg0->tileList = arg0->tileListStart;
+            break;
+        }
+        func_80072138(MENU_PANEL_ACCEPT_SOUND, MENU_PANEL_SOUND_VOLUME);
+    }
+
+    func_800483FC(&D_80124868, func_80051878, (s32)arg0);
+}
 
 void func_80051FDC(MenuPanelActor *arg0) {
     arg0->x = -0x80;
