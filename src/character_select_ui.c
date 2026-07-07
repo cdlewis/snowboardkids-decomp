@@ -59,6 +59,7 @@ extern u8 D_8010AE8A;
 extern u8 D_8010AE8F;
 extern u8 D_8010ADF9;
 extern u8 D_80121D88;
+extern s16 D_800EC9D0;
 extern u8 D_800EC9DD;
 extern u8 D_800EC9C2;
 extern u8 D_80121B5E;
@@ -1577,7 +1578,43 @@ void func_80022464(CharacterSelectWidgetActor *arg0) {
     func_80071824(arg0, func_80022274);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_800224A0.s")
+void func_800224A0(CharacterSelectWidgetActor *arg0) {
+    u32 drawAlpha;
+    int isEvenState;
+    u16 alpha;
+    s16 state;
+
+    state = D_800EC9D0;
+    if (state != 0) {
+        isEvenState = !(state & 1);
+        if (isEvenState) {
+            alpha = 0x100;
+        } else {
+            alpha = 0x60;
+        }
+
+        drawAlpha = alpha;
+        func_8000F8AC(arg0->x, arg0->sprite.index, func_80043040(D_80112178), 0x18, 0x20, 0x20, 0, drawAlpha, 0);
+
+        if (drawAlpha == 0x100) {
+            alpha = 0x60;
+        } else {
+            alpha = 0x100;
+        }
+
+        func_8000F8AC(arg0->x, arg0->y, func_80043040(D_80112178), 0x17, 0x20, 0x20, 0, alpha, 0);
+
+        state = D_800EC9D0;
+        if ((state == 3) || (state == 4)) {
+            func_8000F8AC(arg0->x, (s16)(((D_800EC9D0 * 0x10) + arg0->y) - 0x30), func_80043040(D_80112178), 0x12,
+                          0x20, 0x20, 0, (u16)arg0->selection.counter, 0);
+            state = D_800EC9D0;
+        }
+    }
+    if ((state >= 5) && (((s16)arg0->transition.alpha) == 0)) {
+        func_800716E4(arg0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8002262C.s")
 
