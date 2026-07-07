@@ -2691,3 +2691,10 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   the target instruction form. When adding such an alias inside a sized `.bss`
   symbol, remove the parent symbol's stale `size:` metadata so the range check
   does not report the intentional split as a mismatch.
+
+## func_80020CEC (character_select_ui)
+
+- For short initializer chains that derive two locals from one mode byte, using
+  an `int` local for the loaded mode preserves the target `$v0` comparisons. An
+  empty `if (1) {}` in the `mode == 0` arm and assigning the `mode == 2` row
+  before `y = -0x60` reproduce IDO's branch-delay scheduling exactly.
