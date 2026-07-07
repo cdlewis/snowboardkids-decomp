@@ -3,6 +3,7 @@
 typedef void (*InputTaskCallback)(void);
 
 #define INPUT_TASK_CALLBACK_COUNT 3
+#define INPUT_TASK_COUNT 8
 
 typedef struct InputTask {
     struct InputTask *prev;
@@ -14,6 +15,13 @@ typedef struct InputTask {
     u8 pad18[0x10];
 } InputTask;
 
+typedef struct InputTaskScheduler {
+    u8 pad0[4];
+    InputTask *activeTask;
+    u8 pad8[0xC];
+    u8 unk14;
+} InputTaskScheduler;
+
 typedef struct FramebufferState {
     u8 status;
     u8 pad[0x1861F];
@@ -21,19 +29,80 @@ typedef struct FramebufferState {
 
 extern u8 D_800DEED0;
 extern u8 D_800DEED4;
+extern s16 D_801235B0;
 extern InputTask *D_801235B8;
+extern InputTask D_801235C0[INPUT_TASK_COUNT];
 extern u8 D_80123700;
+extern InputTaskScheduler D_80123708;
 extern InputTask *D_8012370C;
 extern InputTask *D_80123730[];
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern u8 D_80123752;
+extern s32 D_80123758;
+extern s32 D_8012375C;
+extern s32 D_80123760;
+extern s32 D_80123764;
+extern s32 D_80123768;
+extern s32 D_8012376C;
+extern s32 D_80123770;
+extern s32 D_80123774;
+extern s32 D_80123778;
+extern s32 D_8012377C;
+extern s32 D_80123780;
+extern s32 D_80123784;
+extern s8 D_80123788;
+extern s8 D_80123789;
+extern s8 D_8012378A;
+extern s8 D_8012378B;
+extern s8 D_8012378C;
+extern s8 D_8012378D;
+extern s8 D_8012378E;
+extern s8 D_8012378F;
 extern FramebufferState D_8012496E[];
 
+void func_8004835C(void *, void *);
+void func_8009B0E8(void);
 void func_8009B704(u8);
 InputTask *func_80099384(s32);
 
-#pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80098D80.s")
+void func_80098D80(void) {
+    InputTask **freeTask;
+    InputTask *task;
+    s32 zero;
+
+    D_80123708.activeTask = NULL;
+    D_80123708.unk14 = 0;
+    freeTask = D_80123730; task = D_801235C0; do { *freeTask = task; task++; freeTask++; } while (task < &D_801235C0[INPUT_TASK_COUNT]);
+    D_80123700 = 0;
+    D_801235B0 = 0;
+    D_80123750 = 2;
+    D_80123751 = 0;
+    zero = 0;
+    D_80123752 = zero;
+    D_80123758 = zero;
+    D_80123768 = zero;
+    D_80123778 = 0;
+    D_80123788 = zero;
+    D_8012378C = 0;
+    D_8012375C = 0;
+    D_8012376C = zero;
+    D_8012377C = zero;
+    D_80123789 = 0;
+    D_8012378D = zero;
+    D_80123760 = zero;
+    D_80123770 = 0;
+    D_80123780 = zero;
+    D_8012378A = zero;
+    D_8012378E = 0;
+    D_80123764 = zero;
+    D_80123774 = 0;
+    D_80123784 = 0;
+    D_8012378B = zero;
+    D_8012378F = zero;
+    func_8004835C(&D_801235C0[INPUT_TASK_COUNT], &D_80123708);
+    func_8009B0E8();
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80098EAC.s")
 
