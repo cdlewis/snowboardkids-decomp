@@ -60,7 +60,7 @@ struct MainMenuScoreTask {
             u16 alphaTimer;
         } b;
         struct {
-            u16 slideOffset;
+            s16 slideOffset;
             u16 selection;
             u16 alpha;
             u16 alphaTimer;
