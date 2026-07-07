@@ -68,7 +68,7 @@ void func_8000DD74(s32 arg0) {
     func_800483FC(&D_80124868, (RenderCallback)func_8000DD74, arg0);
 }
 
-// func_8000DDA4 best match: 98.052%
+// func_8000DDA4 best match: 99.562%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_message_ui/func_8000DDA4.s")
 
 #ifdef NON_MATCHING
@@ -101,7 +101,7 @@ void func_8000DDA4(MainMenuMessageActor *arg0) {
     if (D_80123778 & 0x20400) {
         temp_t1 = var_v0 + 1;
         if (var_v0 != 2) {
-            arg0->state.selectedChoice = temp_t1;
+            arg0->state.selectedChoice = ((temp_t1 & 0xFFFFu) & 0xFFFFu) & 0xFFFFu;
             do {
             } while (0);
             var_a0 = temp_t1 & 0xFFFF;
