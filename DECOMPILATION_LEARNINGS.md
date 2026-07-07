@@ -2950,3 +2950,14 @@ author/pattern). The decomp-permuter is the quickest way to surface this hoist.
   `Vec3i pos` at offset 0x04, and `s16 assetIndex` at offset 0x10. Keeping a
   `void *pos` local initialized to `&entry->pos` and refreshed after `entry++`
   matches IDO's loop allocation for the culling/draw callback.
+
+## func_8006565C (race_ui_effects)
+
+- The `D_800D693C` result script entries used here are 0x10 bytes, with an
+  active flag at `0x00`, sentinel at `0x02`, and the three-word command payload
+  at `0x04`. Typing this entry lets both the initializer and adjacent count
+  helper use field accesses instead of raw halfword pointer arithmetic.
+- For the 0x40-byte command-block copy loop, keeping a dead-looking `offset`
+  local live and incrementing it by `sizeof(RaceUiGfxCommandDest)` makes IDO
+  allocate the target byte-offset register even though the source uses indexed
+  struct assignment.

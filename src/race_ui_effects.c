@@ -141,6 +141,38 @@ typedef struct {
 } RaceUiEffectParticleActor;
 
 typedef struct {
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ s32 unkC;
+    /* 0x10 */ s32 unk10;
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ s32 unk1C;
+    /* 0x20 */ s32 unk20;
+    /* 0x24 */ s32 unk24;
+    /* 0x28 */ s32 unk28;
+    /* 0x2C */ s32 unk2C;
+    /* 0x30 */ s32 unk30;
+    /* 0x34 */ s32 unk34;
+    /* 0x38 */ s32 unk38;
+    /* 0x3C */ s32 unk3C;
+} RaceUiGfxCommandDest;
+
+typedef struct {
+    /* 0x00 */ s16 active;
+    /* 0x02 */ s16 sentinel;
+    /* 0x04 */ s32 command[3];
+} RaceUiGfxCommandScriptEntry;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ RaceUiGfxCommandDest *particles;
+    /* 0x1C */ u8 pad1C[2];
+    /* 0x1E */ s16 count;
+} RaceUiGfxCommandActor;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
@@ -230,12 +262,15 @@ extern void *D_801248EC;
 extern s16 D_800D6050[];
 extern Vec3i D_800D6030[];
 extern s16 *D_800D761C[];
-extern s16 *D_800D693C[];
+extern RaceUiGfxCommandScriptEntry *D_800D693C[];
+extern RaceUiGfxCommandDest D_800DEE50;
 extern void func_80071824(void *task, void (*callback)());
 extern void *func_800711D0(void *, s32, s32);
 extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, s32);
+extern void func_80048C90(RaceUiGfxCommandDest *, s32 *);
 extern void func_80048D60(void *);
+extern void osWritebackDCache(void *, s32);
 extern s32 func_80043040(s16);
 extern s32 func_800430D0(void);
 extern s16 func_80042D58(s32);
@@ -342,7 +377,6 @@ extern void func_80057E90(void);
 extern void func_80058360(void);
 extern void func_80065D24(void);
 extern void func_80065808(void);
-extern void func_8006565C(void *);
 extern void func_80065508(void);
 extern void func_80066158(void *);
 extern void func_800663C8(void *);
@@ -1777,19 +1811,47 @@ void func_80065144(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80065508.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8006565C.s")
+void func_8006565C(RaceUiGfxCommandActor *arg0) {
+    register RaceUiGfxCommandActor *actor1;
+    register RaceUiGfxCommandActor *actor2;
+    register RaceUiGfxCommandScriptEntry *script;
+    register s32 i;
+    register s32 offset;
+    register s32 one;
+
+    script = D_800D693C[D_80121B50];
+    actor1 = arg0;
+    actor2 = arg0;
+    i = 0;
+    if (actor1->count > 0) {
+        register RaceUiGfxCommandDest *template;
+
+        template = &D_800DEE50;
+        offset = 0;
+        one = 1;
+        do {
+            script->active = one;
+            actor1->particles[i] = *template;
+            func_80048C90(&actor1->particles[i], script->command);
+            i++;
+            offset += sizeof(RaceUiGfxCommandDest);
+            script++;
+        } while (i < actor2->count);
+    }
+    osWritebackDCache(actor1->particles, actor1->count * sizeof(RaceUiGfxCommandDest));
+}
 
 void func_80065764(void *arg0) {
-    s16 *var_v0;
+    RaceUiGfxCommandScriptEntry *var_v0;
     s32 var_v1;
 
     var_v0 = D_800D693C[D_80121B50];
     var_v1 = 0;
-    if (var_v0[1] != -1) {
+    if (var_v0->sentinel != -1) {
         do {
             var_v1++;
-            var_v0 += 8;
-        } while (var_v0[1] != -1);
+            var_v0++;
+        } while (var_v0->sentinel != -1);
     }
     D_801222F2 = var_v1;
     *(s16 *)((u8 *)arg0 + 0x1E) = var_v1;
