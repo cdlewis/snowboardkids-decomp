@@ -74,7 +74,8 @@ typedef struct PlayerCommandState {
     u16 unkCC;
     u16 returnUnkC8[5];
     u16 returnUnkCA[5];
-    u8 padE2[0x3];
+    u8 padE2[0x2];
+    u8 unkE4;
     u8 flagE5;
     u8 flagE6;
     u8 flagE7;
@@ -159,6 +160,37 @@ typedef struct OSIoMesg {
     u8 pad[0x18];
 } OSIoMesg;
 
+typedef struct PlayerCommandInit {
+    s32 count;
+    void *unk4;
+    s32 outputRate;
+    u8 *heapBase;
+    s32 heapLen;
+    s32 unk14;
+    s32 unk18;
+    s32 unk1C;
+    s32 unk20;
+    s32 *fxHeader;
+    s32 *unk28;
+    s32 maxUpdates;
+    s32 maxFXBusses;
+    s32 unk34;
+    s32 unk38;
+    s32 unk3C;
+    s32 unk40;
+} PlayerCommandInit;
+
+typedef struct PlayerCommandSynConfig {
+    s32 maxVVoices;
+    s32 maxPVoices;
+    s32 maxUpdates;
+    s32 padC;
+    s32 dmaproc;
+    ALHeap *heap;
+    s32 outputRate;
+    u8 fxType;
+} PlayerCommandSynConfig;
+
 extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern s32 osSetIntMask(s32);
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
@@ -184,9 +216,12 @@ extern Struct800A0138 D_8015C928;
 extern ALLink *D_8015C964;
 extern void func_8009CD18(PlayerCommandState *, u8 *);
 extern void func_8009C77C(SchedulerState *);
-extern void func_8009F604(void);
+extern void func_8009F604();
 extern s32 func_8009F4C8();
 extern s32 func_8009F780(PlayerCommandState *, s32, s32, s32, s32);
+extern void func_8009F344(s32, s32);
+extern void func_8009F810(void *, s32 *, s32, s32 *, s32, s32, s32);
+extern ALMicroTime func_8009E0D4(void *);
 extern s32 func_8009FF80(s32, s32, void *);
 extern void func_8009C444(void *);
 extern void func_8009C8DC(void *);
@@ -217,6 +252,21 @@ extern f64 D_800E1AC0;
 extern f64 D_800E1AC8;
 extern f64 D_800E1AD0;
 extern f64 D_800E1AD8;
+extern ALPlayer D_8015A630;
+extern ALHeap D_8015A648;
+extern u8 *D_8015A64C;
+extern u8 *D_8015A65C;
+extern s32 D_8015A658;
+extern PlayerCommandState *D_8015A660;
+extern s32 D_8015A664;
+extern s32 D_8015A668;
+extern s32 *D_8015A670;
+extern s16 D_8015A67C;
+extern s16 D_8015A67E;
+extern s32 D_8015A678;
+extern s32 D_8015A68C;
+extern ALSynth D_8015A8D8;
+extern s32 osTvType;
 
 void func_8009C270(SchedulerState *arg0, u8 arg1, u8 arg2) {
     arg0->curRSPTask = 0;
@@ -719,13 +769,92 @@ s32 func_8009D598(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)(arg1 + 1);
 }
 
+// func_8009D5A8 best match: 95.588%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009D5A8.s")
 
-extern s16 D_8015A67C;
-extern s16 D_8015A67E;
-extern s32 D_8015A658;
-extern PlayerCommandState *D_8015A660;
-extern s32 *D_8015A670;
+#ifdef NON_MATCHING
+s32 func_8009D5A8(PlayerCommandInit *arg0) {
+    PlayerCommandInit *config;
+    s8 sp94;
+    s16 sp92;
+    s16 sp90;
+    PlayerCommandSynConfig synConfig;
+    s32 config2[3];
+    s32 i;
+    s32 stateOffset;
+    s32 voiceOffset;
+
+    config = arg0;
+    D_8015A658 = config->count;
+    D_8015A664 = config->unk1C;
+    D_8015A668 = config->unk20;
+    libmus_fxheader_current = config->fxHeader;
+    D_8015A670 = config->unk28;
+
+    if (osTvType == 0) {
+        D_8015A678 = 50;
+    } else {
+        D_8015A678 = 60;
+    }
+
+    func_8009F748(config->heapBase, 0, config->heapLen);
+    alHeapInit(&D_8015A648, config->heapBase, config->heapLen);
+
+    D_8015A65C = alHeapDBAlloc(0, 0, &D_8015A648, 1, D_8015A658 * sizeof(ALVoice));
+    D_8015A660 = alHeapDBAlloc(0, 0, &D_8015A648, 1, D_8015A658 * sizeof(PlayerCommandState));
+
+    func_8009F748(D_8015A65C, 0, D_8015A658 * sizeof(ALVoice));
+    func_8009F748(D_8015A660, 0, D_8015A658 * sizeof(PlayerCommandState));
+
+    synConfig.maxVVoices = D_8015A658;
+    synConfig.maxPVoices = D_8015A658;
+    synConfig.maxUpdates = config->maxUpdates;
+    synConfig.dmaproc = 0;
+    synConfig.heap = &D_8015A648;
+    synConfig.outputRate = 0;
+    synConfig.fxType = 2;
+
+    config2[0] = config->maxFXBusses;
+    config2[1] = config->unk38;
+    config2[2] = config->unk34;
+
+    func_8009F810(config->unk4, &synConfig.maxVVoices, config->outputRate, config2,
+                  config->unk3C, config->unk40, D_8015A678);
+    func_8009F344(config->unk14, config->unk18);
+    func_8009D8B0(3, 0x7FFF);
+
+    D_8015A68C = 0;
+    D_8015A680 = 1;
+    D_8015A684 = 0x12345678;
+
+    D_8015A630.next = 0;
+    D_8015A630.handler = func_8009E0D4;
+    D_8015A630.clientData = &D_8015A630;
+    alSynAddPlayer(&D_8015A8D8, &D_8015A630);
+
+    i = 0;
+    stateOffset = 0;
+    if (D_8015A658 > 0) {
+        voiceOffset = 0;
+        do {
+            ((PlayerCommandState *)((u8 *)D_8015A660 + stateOffset))->unkE4 = 0;
+            func_8009F604((PlayerCommandState *)((u8 *)D_8015A660 + stateOffset));
+
+            sp94 = 0;
+            sp92 = 0;
+            sp90 = config->outputRate;
+            alSynAllocVoice(&D_8015A8D8, (ALVoice *)(D_8015A65C + voiceOffset), (ALVoiceConfig *)&sp90);
+
+            i++;
+            stateOffset += sizeof(PlayerCommandState);
+            voiceOffset += sizeof(ALVoice);
+        } while (i < D_8015A658);
+    }
+
+    return D_8015A64C - D_8015A648.base;
+}
+#endif
 
 void func_8009D8B0(s32 arg0, s32 arg1) {
     s32 temp_t7 = arg0 & 2;
@@ -988,7 +1117,6 @@ extern void alSynSetVol(void *, void *, s16, s32);
 extern void alSynSetPan(void *, void *, s32);
 extern u8 *D_8015A65C;
 extern s32 D_8015A678;
-extern u8 D_8015A8D8;
 
 void func_8009E76C(PlayerCommandState *arg0, s32 arg1) {
     u32 volume;
