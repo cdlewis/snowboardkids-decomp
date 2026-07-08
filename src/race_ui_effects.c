@@ -482,6 +482,16 @@ typedef struct {
 } RaceUiPopupActor;
 
 typedef struct {
+    /* 0x0000 */ u8 pad0[0x156];
+    /* 0x0156 */ u8 resultNames[10][5][4];
+} RaceUiResultNameData;
+
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x78A0];
+    /* 0x78A0 */ u8 resultIcons[10][5];
+} RaceUiResultIconData;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
@@ -666,7 +676,7 @@ extern void osWritebackDCache(void *, s32);
 extern s32 func_80043040(s16);
 extern s32 func_800430D0(void);
 extern s16 func_80042D58(s32);
-extern void func_80045A78(s32, s32, s32, s32);
+extern void func_80045A78(s16, s16, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80045990(s32, s32, void *, void *);
 extern void func_80097BAC(s16 *, s16);
@@ -777,7 +787,7 @@ extern void func_8006501C(void *);
 extern void func_80064F4C(void *);
 extern void func_80059E5C(RaceUiAlpha1AActor *);
 extern void func_80059C34(RaceUiCourseStatsActor *);
-extern void func_8005BE68(void);
+extern void func_8005BE68(RaceUiPopupActor *);
 extern void func_80061984(RaceUiThrownTrailActor *);
 extern void func_80063220(RaceUiSpinningParticleActor *);
 extern void func_800621DC(void *);
@@ -1680,7 +1690,36 @@ void func_8005B8E8(RaceUiAlphaActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005B9F8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005BE68.s")
+void func_8005BE68(RaceUiPopupActor *arg0) {
+    s32 y;
+    s32 color;
+    s32 i;
+    s32 offset;
+
+    y = -0x50;
+    /* IDO scheduling for this function depends on this initialization staying on one line. */
+    i = 0; offset = 0; while (1) {
+        func_80045A78(-8, (s16)y, func_80043040(D_80112130.popupFontHandle), (i + 0x77) & 0xFFFF);
+        if ((i == arg0->index) && (D_80156612 & 1)) {
+            color = 0x10;
+        } else if (i < 3) {
+            color = 0xC;
+        } else {
+            color = 0xD;
+        }
+        func_80059A04(((RaceUiResultNameData *)D_800EC9F0)->resultNames[D_80121B50][i], 0x10, y, color);
+        func_80045A78(0x58, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                      ((((RaceUiResultIconData *)D_800EC9F0)->resultIcons[D_80121B50][i] & 7) + 0x51) & 0xFFFF);
+        func_80045A78(0x6C, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                      (((*((RaceUiResultIconData *)D_800EC9F0)).resultIcons[D_80121B50][i] >> 3) + 0x7C) & 0xFFFF);
+        i++;
+        offset += 4;
+        y += 0x20;
+        if (i == 5) {
+            break;
+        }
+    }
+}
 
 void func_8005C03C(RaceUiAlphaActor *arg0) {
     Gfx *gfx;
