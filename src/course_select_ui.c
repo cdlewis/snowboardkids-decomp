@@ -1,53 +1,11 @@
 #include "common.h"
 #include "menu_rendering.h"
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    union {
-        struct {
-            /* 0x18 */ s16 x;
-            /* 0x1A */ s16 y;
-            union {
-                /* 0x1C */ s16 spriteIndex;
-                /* 0x1C */ u16 alpha;
-            };
-            /* 0x1E */ s8 state;
-            /* 0x1F */ s8 timer;
-            /* 0x20 */ s8 subState;
-        };
-        struct {
-            /* 0x18 */ u8 pad18[0x10];
-            /* 0x28 */ s16 transitionOffset;
-            /* 0x2A */ u8 transitionState;
-        };
-        struct {
-            /* 0x18 */ u8 pad18_2[0x18];
-            /* 0x30 */ u8 unk30;
-            /* 0x31 */ u8 pad31[3];
-            /* 0x34 */ u8 unk34;
-            /* 0x35 */ u8 pad35[3];
-            /* 0x38 */ s8 unk38;
-        };
-        /* 0x18 */ s16 coordinates[0x22];
-        /* 0x18 */ s16 coordinateRows[4][3];
-    };
-    union {
-        /* 0x5C */ u8 itemCount;
-        /* 0x5C */ u8 itemCounts[4];
-    };
-} CourseSelectWidgetActor;
+#include "course_select_ui.h"
 
 typedef struct {
     u8 pad0[0x20];
     /* 0x20 */ s32 screenState;
 } CourseSelectState;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ s16 y;
-    /* 0x1C */ u16 playerPanelFadeAlpha[4];
-} CourseSelectPlayerPanelsActor;
 
 typedef struct {
     s32 x;
@@ -61,8 +19,6 @@ typedef struct {
     /* 0x006 */ u8 pad6[0x606];
 } CourseSelectRacePlayer;
 
-extern void func_80023A68();
-extern void func_80024380();
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern s32 func_80071408(void *, s32, s32);
 extern void func_800716E4(CourseSelectWidgetActor *);
@@ -70,18 +26,7 @@ extern void func_80071824(void *task, void (*callback)());
 extern void func_80097C18(s16 *mtx, s16 rotY);
 extern void func_8009853C(s16 *mtx, s16 arg1, s16 arg2);
 extern void func_80098590(s16 *mtx, CourseSelectTempVec3i *source, CourseSelectTempVec3i *dest);
-extern void func_80025E6C(CourseSelectWidgetActor *);
-extern void func_80026B88(CourseSelectWidgetActor *);
-extern void func_800273C4(CourseSelectWidgetActor *);
-extern void func_800275A4(CourseSelectWidgetActor *);
-extern void func_800263D8(CourseSelectWidgetActor *);
-extern void func_800271CC(CourseSelectWidgetActor *);
-extern void func_80027498(CourseSelectWidgetActor *);
-extern void func_800275E0(CourseSelectWidgetActor *);
-extern void func_80027AF8(CourseSelectWidgetActor *);
-extern void func_80028FF0(CourseSelectWidgetActor *);
 extern void func_8002E568(CourseSelectWidgetActor *);
-extern void func_800291F0(s32);
 extern s32 func_80043040(s16);
 extern u8 D_800EC9C2;
 extern u8 D_800EC9E6;
