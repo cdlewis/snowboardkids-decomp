@@ -45,6 +45,17 @@ typedef struct {
 
 typedef u8 CharacterSelectText[0x94];
 
+typedef struct {
+    /* 0x000 */ u8 pad0[0x18];
+    /* 0x018 */ s16 value;
+    /* 0x01A */ u8 pad1A[0x5F2];
+} CharacterSelectPlayerRecord;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x42];
+    /* 0x42 */ s16 textureHandle;
+} CharacterSelectAssetHandles;
+
 typedef union {
     u8 bytes[8];
     struct {
@@ -61,15 +72,21 @@ extern void func_80071824(void *task, void (*callback)());
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
+extern void func_80013D0C(s32, s32, char *, s32, s32);
 extern s32 func_80043040(s16);
+extern int sprintf(char *, const char *, ...);
+extern CharacterSelectAssetHandles D_80112130;
 extern s16 D_80112172;
 extern s16 D_80112178;
+extern s16 D_800B3420[][11];
+extern u8 D_800B61CC[];
 extern u8 D_800B6B88[];
 extern CharacterSelectText D_800B6210[];
 extern u8 D_800B67D8[][0x74];
 extern u8 D_800B6934[][0x60];
 extern u8 D_800B6A54[][0x70];
 extern u8 D_800B6B34[];
+extern s32 D_800EC9F8[];
 extern s16 D_80121B50;
 extern u8 D_80112130[];
 extern s32 D_8010ADDC;
@@ -93,8 +110,8 @@ extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern u8 D_80121B55;
 extern u8 D_80121D80[];
+extern CharacterSelectPlayerRecord D_801235B0;
 extern s32 D_801235B4;
-extern void func_80021410(void *);
 extern void func_8001DB0C(CharacterSelectWidgetActor *);
 extern void func_8001DFE4(CharacterSelectWidgetActor *);
 extern void func_8001E4AC(CharacterSelectWidgetActor *);
@@ -117,6 +134,7 @@ void func_80020F80(CharacterSelectWidgetActor *arg0);
 void func_80020F44(CharacterSelectWidgetActor *arg0);
 void func_8002127C(CharacterSelectWidgetActor *arg0);
 void func_800213D4(CharacterSelectWidgetActor *arg0);
+void func_80021410(CharacterSelectWidgetActor *arg0);
 void func_80021F80(CharacterSelectWidgetActor *arg0);
 void func_8002215C(CharacterSelectWidgetActor *arg0);
 void func_80022198(CharacterSelectWidgetActor *arg0);
@@ -1322,7 +1340,19 @@ void func_800213D4(CharacterSelectWidgetActor *arg0) {
     func_80071824(arg0, func_8002127C);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80021410.s")
+const char D_800E0B84[] = "%5d";
+const char D_800E0B88[] = "%5d";
+const char D_800E0B8C[] = "%2d";
+
+void func_80021410(CharacterSelectWidgetActor *arg0) {
+    char buf[4];
+    s16 *characterIds;
+    s32 yOffset;
+    s32 valueOffset;
+    s32 three;
+    CharacterSelectPlayerRecord *player;
+    do { characterIds = D_800B3420[D_8010ADF9]; if (D_80121B55 == 1) { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x21, 0x20, 0x20, 0, 0); func_8000F030((s16)(arg0->x + 0x30), arg0->y, func_80043040(D_80112130.textureHandle), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, D_800E0B84, D_800EC9F8[characterIds[*(&D_80121B50)]]); func_80013D0C((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, D_800E0B88, *((u16 *)(&D_800B61CC[(((*(&D_80121B50)) * three) * 2) + valueOffset]))); func_80013D0C((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x26, 0x20, 0x20, 0, 0); func_8000F030(arg0->x, (s16)(arg0->y + 0x10), func_80043040(D_80112130.textureHandle), 0x27, 0x20, 0x20, 0, 0); player = (CharacterSelectPlayerRecord *)D_80121D80; yOffset = 0; do { sprintf(buf - 0x10, D_800E0B8C, player->value); func_80013D0C((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); player++; yOffset += 8; } while (player != &D_801235B0); } } while (0);
+}
 
 void func_8002172C(CharacterSelectWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
