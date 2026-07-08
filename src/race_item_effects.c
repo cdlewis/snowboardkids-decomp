@@ -157,6 +157,7 @@ extern RaceItemGfxCommandSource D_800DEE30;
 extern RaceItemEffectAssetHandles D_80112130;
 extern s16 D_80112168;
 extern s16 D_8011216C;
+extern s16 D_8011216E;
 extern s16 D_80121B50;
 extern u8 D_80121B56;
 extern RaceItemFollowPlayer D_80121D80[];
@@ -165,6 +166,7 @@ extern s32 D_80124878;
 extern s32 D_801248C8;
 extern s32 D_801248E0;
 extern s32 D_801248EC;
+extern u8 D_80156608;
 extern u8 D_80156609;
 extern void *D_80156614;
 extern Gfx *gRegionAllocPtr;
@@ -172,6 +174,8 @@ extern Gfx *gRegionAllocPtr;
 s32 func_80043040(s16);
 s32 func_800430D0(void);
 void func_80045990(s32, u16, void *, void *);
+void func_80046D68(s16, s16, s32, s32, s32);
+void func_8004767C(s16, s16, s32, s32, s32, s32);
 void func_800483FC(void *, void *, void *);
 void *func_8004885C(RaceItemGfxCommandSource *);
 s32 func_80049000(Vec3i *);
@@ -533,7 +537,27 @@ void func_8004FF34(RaceItemFollowActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050030.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8005019C.s")
+void func_8005019C(RaceItemEffectActor *arg0) {
+    if ((u8)arg0->payload.sprite.colorR == D_80156608) {
+        if ((u8)arg0->payload.sprite.colorG == 0) {
+            if ((u8)arg0->payload.sprite.colorB == 0) {
+                func_80046D68(arg0->payload.sprite.x, arg0->payload.sprite.y, func_80043040(D_8011216E),
+                              ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF, 0x1D);
+            } else {
+                func_80046D68(arg0->payload.sprite.x, arg0->payload.sprite.y, func_80043040(D_8011216E),
+                              ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF, 0x1E);
+            }
+        } else if ((u8)arg0->payload.sprite.colorB == 0) {
+            func_8004767C((s16)(arg0->payload.sprite.x - 8), (s16)(arg0->payload.sprite.y - 8),
+                          func_80043040(D_8011216E), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
+                          0x1D, 1);
+        } else {
+            func_8004767C((s16)(arg0->payload.sprite.x - 8), (s16)(arg0->payload.sprite.y - 8),
+                          func_80043040(D_8011216E), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
+                          0x1E, 1);
+        }
+    }
+}
 
 void func_80050340(RaceItemEffectActor *arg0) {
     u16 temp = arg0->payload.sprite.frame + 1;
