@@ -123,6 +123,9 @@ extern u8 D_80156608;
 extern u8 D_800E29C0;
 extern u8 D_800E11F0[];
 extern u8 D_800E1204[];
+extern u32 D_2000000[];
+extern u32 D_20006C8[];
+extern u32 D_2000D78[];
 extern u32 D_2000E48[];
 extern u32 D_2000E70[];
 extern u32 D_20058A8[];
@@ -143,7 +146,7 @@ void func_80046D68(s32, s32, s32, s32, s32);
 void func_80048278(s32, s32, void *, s32);
 void func_800483FC(void *, void *, s32);
 GfxCommandDest *func_8004885C(GfxCommandSource *);
-void func_80053B28(void);
+void func_80053B28(MainMenuOverlayEffectActor *);
 void func_80053C90(void *);
 void func_80053D8C(s32);
 void func_80053DFC(s32);
@@ -240,7 +243,28 @@ void func_80053858(MainMenuOverlayEffectActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_8005393C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80053B28.s")
+void func_80053B28(MainMenuOverlayEffectActor *arg0) {
+    register MainMenuOverlayEffectActor *actor = arg0;
+
+    if (D_80156608 == 0) {
+        gDPPipeSync(gRegionAllocPtr++);
+
+        gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));
+        gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112142));
+
+        gSPMatrix(gRegionAllocPtr++, D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+
+        if (actor->index == 0) {
+            gSPDisplayList(gRegionAllocPtr++, D_2000000);
+        }
+        if (actor->index == 1) {
+            gSPDisplayList(gRegionAllocPtr++, D_20006C8);
+        }
+        if (actor->index == 2) {
+            gSPDisplayList(gRegionAllocPtr++, D_2000D78);
+        }
+    }
+}
 
 // func_80053C90 best match: 99.677% at nonmatchings/func_80053C90-2/output-20-1/source.c
 void func_80053C90(void *arg0) {
