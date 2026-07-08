@@ -275,7 +275,7 @@ void func_800669A0(RaceModelListActor *arg0) {
     func_80071824(arg0, func_800668EC);
 }
 
-// func_80066ABC best match: 99.061%
+// func_80066ABC best match: 99.296%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80066ABC.s")
 
 #ifdef NON_MATCHING
@@ -284,9 +284,8 @@ void func_80066ABC(RaceModelListActor *arg0) {
     s16 modelIndex;
     s32 i;
     register RaceModelListActor *actor;
-    Gfx *temp_v0;
-    void *spA0;
     void *sp9C;
+    void *spA0;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
     Gfx *temp_v0_4;
@@ -304,13 +303,10 @@ void func_80066ABC(RaceModelListActor *arg0) {
     Gfx *temp_v0_16;
     Gfx *temp_v0_17;
     Gfx *temp_v0_18;
-    Gfx *temp_v0_19;
 
     modelIndex = -1;
     actor = arg0;
-    temp_v0 = gRegionAllocPtr++;
-    temp_v0->words.w1 = (u32)D_800D9D00;
-    temp_v0->words.w0 = 0x06000000;
+    gSPDisplayList(gRegionAllocPtr++, D_800D9D00);
 
     entry = D_800D91E8[D_80121B50];
     i = 0;
@@ -375,9 +371,7 @@ void func_80066ABC(RaceModelListActor *arg0) {
         } while (entry->modelIndex != -1);
     }
 
-    temp_v0_19 = gRegionAllocPtr++;
-    temp_v0_19->words.w1 = (u32)D_800D9D40;
-    temp_v0_19->words.w0 = 0x06000000;
+    gSPDisplayList(gRegionAllocPtr++, D_800D9D40);
 }
 #endif
 
