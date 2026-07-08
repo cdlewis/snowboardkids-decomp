@@ -179,6 +179,8 @@ extern void func_8009F604(void);
 extern s32 func_8009F4C8();
 extern s32 func_8009F780(PlayerCommandState *, s32, s32, s32, s32);
 extern void func_8009FF80(void);
+extern void func_8009C444(void *);
+extern void func_8009C8DC(void *);
 extern s32 D_800DF154;
 extern s32 D_800DF158;
 extern u32 D_800DF290;
@@ -205,15 +207,7 @@ extern f64 D_800E1AC8;
 extern f64 D_800E1AD0;
 extern f64 D_800E1AD8;
 
-// func_8009C270 best match: 99.735%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C270.s")
-
-#ifdef NON_MATCHING
 void func_8009C270(SchedulerState *arg0, u8 arg1, u8 arg2) {
-    OSMesgQueue *queue1A4;
-    SchedulerThread *thread;
-
     arg0->curRSPTask = 0;
     arg0->curRDPTask = 0;
     arg0->clients = 0;
@@ -226,8 +220,7 @@ void func_8009C270(SchedulerState *arg0, u8 arg1, u8 arg2) {
     D_8015A620 = 0;
     D_8015A624 = 0;
     osCreateMesgQueue(&arg0->retraceQueue, arg0->retraceMsgs, 0x20);
-    queue1A4 = &arg0->queue1A4;
-    osCreateMesgQueue(queue1A4, arg0->msgs1BC, 0x10);
+    osCreateMesgQueue(&arg0->queue1A4, arg0->msgs1BC, 0x10);
     osCreateMesgQueue(&arg0->eventQueue, arg0->eventMsgs, 0x10);
     osCreateMesgQueue(&arg0->messageQueue, arg0->messageMsgs, 0x10);
     osCreateMesgQueue(&arg0->framebufferQueue, arg0->framebufferMsgs, 0x10);
@@ -238,15 +231,12 @@ void func_8009C270(SchedulerState *arg0, u8 arg1, u8 arg2) {
     osViSetEvent(&arg0->retraceQueue, (OSMesg)0x29A, arg2);
     osSetEventMesg(4, &arg0->retraceQueue, (OSMesg)0x29B);
     osSetEventMesg(0xE, &arg0->retraceQueue, (OSMesg)0x29D);
-    osSetEventMesg(9, queue1A4, (OSMesg)0x29C);
-    thread = &arg0->thread258;
-    osCreateThread(thread, 6, func_8009C444, arg0, D_80158620, 0x78);
-    osStartThread(thread);
-    thread = &arg0->thread408;
-    osCreateThread(thread, 5, func_8009C8DC, arg0, &D_8015A620, 0x64);
-    osStartThread(thread);
+    osSetEventMesg(9, &arg0->queue1A4, (OSMesg)0x29C);
+    osCreateThread(&arg0->thread258, 6, func_8009C444, arg0, D_80158620, 0x78);
+    osStartThread(&arg0->thread258);
+    osCreateThread(&arg0->thread408, 5, func_8009C8DC, arg0, &D_8015A620, 0x64);
+    osStartThread(&arg0->thread408);
 }
-#endif
 
 s32 func_8009C434(s32 arg0) {
     return arg0 + 4;
