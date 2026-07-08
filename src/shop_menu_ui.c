@@ -122,10 +122,10 @@ struct ShopMenuWidgetActor {
 };
 
 extern void func_80071824(void *task, void (*callback)());
-extern void func_8002C624(ShopMenuRowActor *);
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern void *func_80071408(void *, s32, s32);
+extern void func_8002C4E0(ShopMenuRowActor *);
 extern void func_8002C9A0(ShopMenuWidgetActor *);
 extern void func_8002FAB8(ShopMenuWidgetActor *);
 extern void func_8002DF40(ShopMenuWidgetActor *);
@@ -194,35 +194,40 @@ const char D_800E0F78[] = "%4dG";
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002C4E0.s")
 
-// func_8002C624 best match: 99.661%
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002C624.s")
-
-#ifdef NON_MATCHING
 void func_8002C624(ShopMenuRowActor *arg0) {
-    u8 state = arg0->unk24;
     s32 i;
-    ShopMenuRowActor *actor;
     s32 moved;
+    ShopMenuRowActor *spawnRow;
+    s32 state;
+    int stateByte;
+    ShopMenuRowActor *row;
+    ShopMenuRowActor *actor;
 
+    stateByte = arg0->unk24;
+    actor = arg0;
+    state = stateByte;
+    row = arg0;
     switch (state) {
     case 0:
         moved = 0;
-        actor = arg0;
-        for (i = 0; i < actor->unk26; i++) {
-            if (actor->unk18[i] < -0x7C) {
-                actor->unk18[i] += 0x10;
+        for (i = 0; i < row->unk26; i++) {
+            if (row->unk18[i] < -0x7C) {
+                row->unk18[i] += 0x10;
                 moved++;
-                if (actor->unk18[i] >= -0x7C) {
-                    actor->unk18[i] = -0x7C;
+                if (row->unk18[i] >= -0x7C) {
+                    row->unk18[i] = -0x7C;
                 }
             }
         }
-        actor->unk25++;
-        if (!(actor->unk25 & 1) && (actor->unk26 < 3)) {
-            arg0->unk26++;
+        row->unk25++;
+        spawnRow = row;
+        if (!(spawnRow->unk25 & 1)) {
+            if (spawnRow->unk26 < 3) {
+                spawnRow->unk26++;
+            }
         }
         if (moved == 0) {
-            arg0->unk24 = 1;
+            spawnRow->unk24 = 1;
             func_80071408(func_8002D294, 0, 0x5F);
             func_80071408(func_8002DC14, 0, 0x61);
         }
@@ -230,13 +235,11 @@ void func_8002C624(ShopMenuRowActor *arg0) {
         break;
     case 1:
         if (D_80121D88 == 1) {
-            state = arg0->unk24 = 2;
+            state = (u8) (arg0->unk24 = 2);
         }
         break;
     case 2:
         for (i = 0; i < 5; i++) {
-            if (!arg0->unk24 && !arg0->unk24) {
-            }
             arg0->unk18[i] -= 0x20;
         }
         if (arg0->unk18[0] < -0x103) {
@@ -251,9 +254,8 @@ void func_8002C624(ShopMenuRowActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002C4E0, arg0);
+    func_800483FC(&D_80124868, func_8002C4E0, actor);
 }
-#endif
 
 void func_8002C800(ShopMenuRowActor *arg0) {
     s32 i;
