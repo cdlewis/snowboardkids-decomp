@@ -15,6 +15,7 @@ extern void func_80081E40(RaceInputPlayer *, s32);
 extern s32 func_80082EC0(RaceInputPlayer *);
 extern s32 func_80095F90(s32);
 extern void func_8008BB5C(RaceInputPlayer *, s32);
+extern void func_8009724C(RaceInputPlayer *);
 extern void *func_800711D0(void *, s32, s32);
 extern s32 func_80072138(s32, s32);
 extern void func_80061034(s32, s16);
@@ -620,7 +621,45 @@ void func_8009759C(RaceInputPlayer *player) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009762C.s")
+void func_8009762C(RaceInputPlayer *player) {
+    u32 stateFlags;
+
+    if (func_80089374() == 0) {
+        stateFlags = player->stateFlags;
+        if (stateFlags & 8) {
+            player->stateFlags = stateFlags & ~8;
+        } else if (stateFlags & 0x800) {
+            player->unk2C3 = 0;
+            player->mode = 0xE;
+            player->updateState = 0;
+            player->updateTimer = 0;
+            player->stateFlags = stateFlags & ~0x200;
+            func_8008BBB8(player, 2);
+        } else {
+            player->stateFlags = stateFlags & ~0x200;
+            if (func_80095F90(player->playerIndex) != 0) {
+                player->mode = 7;
+                player->updateState = 0;
+                player->updateTimer = 0;
+                func_8009724C(player);
+                func_8009759C(player);
+            } else if (player->subState == 0) {
+                player->mode = 0;
+                player->updateState = 1;
+                player->updateTimer = 0;
+                player->unk57A = 2;
+                func_8009759C(player);
+            } else {
+                player->mode = 0;
+                player->updateState = 0;
+                player->updateTimer = 0;
+                player->unk57A = 2;
+                func_8009724C(player);
+                func_8009759C(player);
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80097744.s")
 

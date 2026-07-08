@@ -55,7 +55,9 @@ typedef struct {
     /* 0x2A0 */ s16 unk2A0;
     /* 0x2A2 */ char pad2A2[0x1E];
     /* 0x2C0 */ s16 unk2C0;
-    /* 0x2C2 */ char pad2C2[0x16];
+    /* 0x2C2 */ char pad2C2[1];
+    /* 0x2C3 */ s8 unk2C3;
+    /* 0x2C4 */ char pad2C4[0x14];
     /* 0x2D8 */ s16 unk2D8;
     /* 0x2DA */ s16 trailEffectTimer;
     /* 0x2DC */ char pad2DC[0xE];
@@ -98,7 +100,9 @@ typedef struct {
     /* 0x52E */ char pad52E[0x3A];
     /* 0x568 */ s32 unk568;
     /* 0x56C */ s32 unk56C;
-    /* 0x570 */ char pad570[0x12];
+    /* 0x570 */ char pad570[0xA];
+    /* 0x57A */ s8 unk57A;
+    /* 0x57B */ char pad57B[7];
     /* 0x582 */ s16 unk582;
     /* 0x584 */ char pad584[0x80];
     /* 0x604 */ s16 actionEffectLevel;
