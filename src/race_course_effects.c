@@ -653,14 +653,10 @@ void func_8006BB50(RaceMovingEffect *arg0) {
 }
 #endif
 
-// func_8006BC68 best match: 99.789% at nonmatchings/func_8006BC68-690418013071298896/base_6.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BC68.s")
-
-#ifdef NON_MATCHING
 void func_8006BC68(RaceMovingEffect *arg0) {
     volatile s32 unused;
     CourseEffectMatrixSource transform;
-    volatile s32 pad[3];
+    volatile s32 pad[2];
 
     if (D_80156609 != 0) {
         func_80097C18(&transform, arg0->unk52);
@@ -684,7 +680,6 @@ void func_8006BC68(RaceMovingEffect *arg0) {
         }
     }
 }
-#endif
 
 void func_8006BDE4(RaceMovingEffect *arg0) {
     Vec3i sp24;
