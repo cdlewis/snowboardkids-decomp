@@ -50,10 +50,8 @@ typedef struct ObjectA3E0 {
 } ObjectA3E0;
 
 extern ObjectA3E0 *D_800EC9C4;
-extern f32 D_800E0A34;
 extern u16 D_800B34E0[];
 extern s16 D_800EC9D0;
-extern f32 D_800E0A38;
 extern s8 D_800DEED4;
 extern u8 D_800EC9F0[];
 extern s8 D_800EC9F1;
@@ -281,7 +279,7 @@ void func_8000BEC0(void) {
     s8 *temp;
 
     D_8010AF76 = 0x78;
-    func_8007066C(1, 0xE8, 0x78, 0x90, D_8010AF76, 0xA0, 0xF0, D_800E0A34);
+    func_8007066C(1, 0xE8, 0x78, 0x90, D_8010AF76, 0xA0, 0xF0, 0.6666666865f);
     func_80070E90(1);
     temp = (s8 *) &D_800EC9F0[D_80121D86];
     D_8010AED0 = temp[0x3F] + 1;
@@ -302,7 +300,7 @@ void func_8000C010(void) {
     if (D_8010AF76 < 0) {
         D_8010AF76 = (D_8010AF76 < 0) * 0;
     }
-    func_8007066C(1, 0xE8, 0x78, 0x90, D_8010AF76, 0xA0, 0xF0, D_800E0A38);
+    func_8007066C(1, 0xE8, 0x78, 0x90, D_8010AF76, 0xA0, 0xF0, 0.6666666865f);
     if (D_8010AF76 == 0) {
         func_80070614(1);
         func_8009956C(func_8000B7B8, 0);

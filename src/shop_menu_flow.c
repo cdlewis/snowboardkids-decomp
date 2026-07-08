@@ -31,7 +31,6 @@ extern ShopMenuPromptTransition D_8010AF80;
 extern s8 D_800DEED4;
 extern s16 D_800DEF14;
 extern s32 D_801235B4;
-extern f32 D_800E0A40;
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern s32 D_80123778;
@@ -45,7 +44,7 @@ extern u8 D_60F990[];
 void func_8000C280(void) {
     func_800720E4(3);
     func_800704F0();
-    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0A40);
+    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     D_800DEED4 = 0;
     D_801235B8->fade = 0xFF;
     D_801235B8->timer = 0;

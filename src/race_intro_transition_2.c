@@ -18,8 +18,6 @@ typedef struct {
 extern RaceIntroTransitionState *D_801235B8;
 extern RaceIntroPlayer D_80121D80[];
 extern s16 D_800DEF14;
-extern f32 D_800E10C0;
-extern f32 D_800E10C4;
 extern u8 D_80123750;
 extern s8 D_800EC8B0;
 extern s8 D_800EC9C2;
@@ -168,7 +166,7 @@ void func_8003ED00(void) {
 void func_8003EF7C(void) {
     D_801235B8->startDelay--;
     if (D_801235B8->startDelay == 0) {
-        func_8007066C(0, 0xA0, 0x78, 0x120, 0, 0x140, 0xF0, D_800E10C4);
+        func_8007066C(0, 0xA0, 0x78, 0x120, 0, 0x140, 0xF0, 1.333333373f);
         D_800DEF14 = 0;
         func_800720E4(0);
         func_8009956C(func_8003F00C, 0);

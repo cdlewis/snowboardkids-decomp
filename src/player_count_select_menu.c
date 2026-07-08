@@ -25,7 +25,6 @@ void func_800088C8(void);
 void func_80008C84(void);
 extern void func_80005C70(void);
 
-extern f32 D_800E09D0;
 extern u8 D_245A80;
 extern u8 D_24C8E0;
 extern u8 D_593D10;
@@ -79,7 +78,7 @@ void func_80008620(void) {
 void func_800086EC(void) {
     func_800720E4(4);
     func_800704F0();
-    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E09D0);
+    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     D_800DEED4 = 0;
     D_801235B8->fade = 0xFF;
     func_800437F0(&D_5A1ED0, &D_5C5320, 0x21);

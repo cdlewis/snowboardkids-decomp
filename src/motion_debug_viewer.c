@@ -27,11 +27,12 @@ typedef struct {
 
 extern s16 D_801221D2;
 extern MotionDebugViewerState D_80121D80;
-extern char D_800E1700[];
 extern void sprintf(char *, const char *, ...);
 extern void func_80048278(s32, s32, char *, s32);
 extern void func_8006D520(s32, s32);
 extern void func_80082FC8(MotionDebugViewerState *);
+
+const char D_800E1700[] = "MOTION NO %3.3i";
 
 void func_80078250(void) {
     MotionDebugViewerState *state;

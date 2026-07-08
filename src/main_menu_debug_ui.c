@@ -39,8 +39,6 @@ typedef struct {
 extern u16 D_8010B1A2;
 extern s16 D_80112172;
 extern void *D_80124868;
-extern char D_800E1060[];
-extern char D_800E1070[];
 extern s32 D_80123758;
 extern s32 D_80123778[];
 extern u16 D_800B8140[][0x5A];
@@ -188,7 +186,7 @@ void func_8003BC00(DebugObjectPositionTask *arg0) {
     if (arg0->enabled == 1) {
         func_8000F030(arg0->x, arg0->y, func_80043040(D_80112172), (u16)arg0->objectId, 0x20, 0x20, arg0->palette,
                       0);
-        sprintf(sp38, D_800E1060, arg0->objectId);
+        sprintf(sp38, "ENDOBJ %2d \n", arg0->objectId);
         func_80013D0C(0x40, -0x66, sp38, 0, 0x100);
     }
 }
@@ -245,7 +243,7 @@ void func_8003BC9C(DebugObjectPositionTask *arg0) {
         }
         temp_a2 = arg0->y;
         if ((temp_a1 != arg0->x) || (oldY != temp_a2)) {
-            rmonPrintf(D_800E1070, arg0->x, temp_a2);
+            rmonPrintf("x = %d  y = %d \n", arg0->x, temp_a2);
         }
     }
     func_800483FC(&D_80124868, func_8003BC00, arg0);

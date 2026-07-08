@@ -743,14 +743,8 @@ extern void *D_80121B74;
 extern void func_80072138(s32, s32);
 extern void func_80048278(s32, s32, void *, s32);
 extern void func_80059A04(void *, s32, s32, s32);
-extern void *D_800E1220;
-extern void *D_800E1230;
-extern char D_800E1240[];
-extern char D_800E1244[];
-extern char D_800E1250[];
 extern char D_800E1258[];
 extern char D_800E12F4[];
-extern char D_800E14D0[];
 extern char D_800E12F8[];
 extern char D_800E12FC[];
 extern char D_800E1300[];
@@ -759,31 +753,23 @@ extern void *D_800E1320;
 extern void *D_800E1334;
 extern void *D_800E1344;
 extern void *D_800E1358;
-extern void *D_800E1368;
-extern void *D_800E136C;
-extern void *D_800E1370;
-extern void *D_800E1374;
-extern void *D_800E1378;
-extern void *D_800E14B8;
 extern void *D_800E1474;
 extern void *D_800E1484;
 extern void *D_800E1494;
 extern void *D_800E14A8;
-extern void *D_800E14BC;
-extern void *D_800E14C0;
-extern void *D_800E14C4;
-extern void *D_800E14C8;
 extern u32 D_800DEFF8[];
-extern u32 D_800E12D4[];
-extern u32 D_800E1390[];
-extern void *D_800E1458;
-extern void *D_800E1460;
-extern void *D_800E1468;
 extern Gfx *gRegionAllocPtr;
 extern RaceUiAssetEntry D_800D5FF4[];
 extern u16 D_800D6520[];
 extern s32 D_80123778;
 extern s32 D_801235B4;
+
+const char D_800E1220[0x10] = "Board Reverse";
+const char D_800E1230[0x10] = "Board Reverse";
+const char D_800E1240[0x4] = "%2d";
+const char D_800E1244[0xC] = "%3d";
+const char D_800E1250[0x4] = "%5d";
+
 extern void func_80057E10(void *);
 extern void func_800640D8(RaceUiRankParticleActor *);
 extern void func_80057710(RaceUiPromptActor *);
@@ -1434,6 +1420,8 @@ void func_80059E5C(RaceUiAlpha1AActor *arg0) {
     do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80059A04(&D_80121B74, -0x6C, -0x30, 0xC); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
+const char D_800E12D4[0xC] = "-Lap Time-";
+
 void func_80059F6C(RaceUiAlpha18Actor *arg0) {
     Gfx *gfx;
     s32 w0;
@@ -1681,6 +1669,12 @@ void func_8005AC44(RaceUiCounterActor *arg0) {
 }
 #endif
 
+const char D_800E1368[0x4] = "Hit";
+const char D_800E136C[0x4] = "Hit";
+const char D_800E1370[0x4] = "Hit";
+const char D_800E1374[0x4] = "Hit";
+const char D_800E1378[0x4] = "Hit";
+
 void func_8005AE1C(void *arg0) {
     func_80048278(0x20, -0x48, &D_800E1368, 6);
     func_80048278(0x20, -0x28, &D_800E136C, 6);
@@ -1890,6 +1884,8 @@ void func_8005BE68(RaceUiPopupActor *arg0) {
     }
 }
 
+const char D_800E1390[0xC] = "-Lap Time-";
+
 void func_8005C03C(RaceUiAlphaActor *arg0) {
     Gfx *gfx;
     s32 w0;
@@ -1920,17 +1916,6 @@ typedef struct {
 } RaceUiCoursePosition;
 
 extern RaceUiCoursePosition D_800DC900[];
-extern char D_800E139C[];
-extern char D_800E13A8[];
-extern char D_800E13BC[];
-extern char D_800E13C4[];
-extern char D_800E13D8[];
-extern char D_800E13E4[];
-extern char D_800E13F4[];
-extern char D_800E1408[];
-extern char D_800E1418[];
-extern char D_800E142C[];
-
 void func_8005C14C(RaceUiCourseRecordActor *arg0) {
     char buf[0x24];
     char *bufp;
@@ -2162,6 +2147,10 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D558.s")
 
+const char D_800E1458[0x8] = "-Trick-";
+const char D_800E1460[0x8] = "-Make-";
+const char D_800E1468[0xC] = "Time Out";
+
 void func_8005D860(RaceUiAlpha18Actor *arg0) {
     Gfx *gfx;
     void **new_var2;
@@ -2188,6 +2177,12 @@ void func_8005D9B4(RaceUiAlpha18Actor *arg0) {
     do { if ((*arg0p)->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = ((*arg0p)->alpha & 0xFF) | (~0xFF); } y = -0x50; func_80048278(-0xC, y, &D_800E1474, 5); y += 0x28; func_80048278(-8, y, &D_800E1484, 5); y += 0x28; func_80048278(-8, y, &D_800E1494, 5); y += 0x28; func_80048278(-0xC, y, &D_800E14A8, 5); if ((*arg0p)->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 #endif
+
+const char D_800E14B8[0x4] = "P";
+const char D_800E14BC[0x4] = "P";
+const char D_800E14C0[0x4] = "P";
+const char D_800E14C4[0x4] = "P";
+const char D_800E14C8[0x8] = "P";
 
 void func_8005DB3C(void *arg0) {
     func_80048278(0x30, -0x48, &D_800E14B8, 6);
@@ -2802,6 +2797,8 @@ void func_80060C4C(s16 arg0) {
         } while (var_s0 < D_80121B54);
     }
 }
+
+const char D_800E14D0[0x10] = "%4d";
 
 void func_80060D10(RaceUiPopupActor *arg0) {
     volatile u8 padding[0x20];

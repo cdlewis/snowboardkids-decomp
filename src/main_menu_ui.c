@@ -51,7 +51,6 @@ extern MainMenuAssetHandles D_80112130;
 extern s16 D_8011217A;
 extern s16 D_80112172;
 extern u8 D_800E29C0;
-extern char D_800E1050[];
 
 extern void func_800483FC(void *, void *, void *);
 extern void func_80071824(void *task, void (*callback)());
@@ -109,7 +108,7 @@ void func_800326EC(MainMenuSelectionLabelsActor *arg0) {
     }
 
     func_8000F030(-0x48, 0x4F, func_80043040(D_80112130.menuUiTextureHandle), 0xA, 0x20, 0x20, 0, 0);
-    func_80013D0C(0x68, -0x1A, D_800E1050, 0, 0x100);
+    func_80013D0C(0x68, -0x1A, "TM", 0, 0x100);
     func_8000F030(-0x48, 0x5A, func_80043040(D_80112130.menuUiTextureHandle), 0xB, 0x20, 0x20, 0, 0);
 }
 
