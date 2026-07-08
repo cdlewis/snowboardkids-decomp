@@ -17,20 +17,45 @@ typedef struct {
     /* 0x50 */ s16 bestLapFraction;
 } CourseBestLapView;
 
+typedef struct {
+    /* 0x00 */ char pad[0x38];
+    /* 0x38 */ s16 hudFontHandle;
+    /* 0x3A */ char pad3A[4];
+    /* 0x3E */ s16 popupFontHandle;
+} RaceTimerUiAssetHandles;
+
+typedef struct {
+    /* 0x000 */ char pad[0x512];
+    /* 0x512 */ s8 unk512;
+    /* 0x513 */ s8 unk513;
+    /* 0x514 */ s8 unk514;
+    /* 0x515 */ s8 unk515;
+    /* 0x516 */ s8 unk516;
+    /* 0x517 */ char pad517[0x51];
+    /* 0x568 */ s32 unk568;
+} RaceTimerUiState;
+
 extern s32 func_80043040(s16);
 extern void func_80045A78(s32, s32, s32, s32);
+extern void func_80046D68(s16, s16, s32, s32, s32);
+extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80047E88(s32, s16, s32, s32);
 extern void func_80048278(s32, s32, char *, s32);
 extern int sprintf(char *, const char *, ...);
 extern CourseDataStride D_800EC9F0[];
+extern RaceTimerUiAssetHandles D_80112130;
 extern s16 D_8011216E;
 extern s16 D_80121B52;
+extern s16 D_80121B72;
 extern s16 D_801222F6;
 extern s16 D_80121B50;
 extern u8 D_80121B56;
 extern u8 D_80156608;
+extern u8 D_800DC8F0[];
+extern u8 D_800DC8F8[];
 extern RaceTimer D_80121B74;
 extern RaceTimer D_80121B78;
+extern RaceTimerUiState D_80121D80;
 extern s8 D_80122288[];
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80078430.s")
@@ -85,7 +110,64 @@ void func_80079750(s32 arg0) {
 
 }
 
+// func_80079758 best match: 94.630% at nonmatchings/func_80079758-5635509610426229442/base_8.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80079758.s")
+
+#ifdef NON_MATCHING
+const char D_800E180C[] = "%5ld";
+
+void func_80079758(s32 arg0) {
+    volatile u8 padding[0x18];
+    char sp51;
+    char sp50;
+    char sp4F;
+    char sp4E;
+    char sp4D;
+    char sp4C;
+    char *digit;
+    s32 x;
+    s32 palette;
+
+    sprintf(&sp4C, D_800E180C, D_80121D80.unk568);
+
+    x = 0x50;
+    digit = &sp4C;
+    if (D_80121D80.unk568 < 100) {
+        palette = 0x10;
+    } else {
+        palette = 0xE;
+    }
+
+    do {
+        if (*digit != ' ') {
+            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), (*digit - 5) & 0xFFFF,
+                          palette & 0xFFFF);
+        }
+        digit++;
+        x += 8;
+    } while (digit != &sp51);
+
+    func_80045A78(0x78, 0x50, func_80043040(D_80112130.hudFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF);
+
+    if (D_80121D80.unk513 != 0) {
+        func_80047174(-0x20, -0x60, func_80043040(D_80112130.popupFontHandle),
+                      (D_80121D80.unk514 + D_800DC8F0[D_80121D80.unk512] - 1) & 0xFFFF, D_80121D80.unk513);
+    } else {
+        func_80045A78(-0x20, -0x60, func_80043040(D_80112130.popupFontHandle),
+                      (D_80121D80.unk514 + D_800DC8F0[D_80121D80.unk512] - 1) & 0xFFFF);
+    }
+
+    if (D_80121D80.unk516 != 0) {
+        func_80047174(0, -0x60, func_80043040(D_80112130.popupFontHandle), D_800DC8F8[D_80121D80.unk515],
+                      D_80121D80.unk516);
+    } else {
+        func_80045A78(0, -0x60, func_80043040(D_80112130.popupFontHandle), D_800DC8F8[D_80121D80.unk515]);
+    }
+
+    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x24);
+    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x29);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_800799DC.s")
 
