@@ -434,7 +434,40 @@ void func_8001DACC(CharacterSelectWidgetActor *arg0) {
     func_80071824(arg0, func_8001D7B8);
 }
 
+// func_8001DB0C best match: 97.611%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001DB0C.s")
+
+#ifdef NON_MATCHING
+void func_8001DB0C(CharacterSelectWidgetActor *arg0) {
+    s32 i;
+    s32 tile;
+    s32 offset;
+
+    i = 0; tile = 0; do {
+        func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)), func_80043040(D_80112130.textureHandle), D_800B5FC0[(u16)arg0->sprite.index][tile], 0, 0x100, 0xA0, 0x49);
+        if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }
+        i++;
+        tile++;
+    } while (i < 0x10);
+
+    tile = 0;
+    offset = 0;
+    i = 0x80;
+    do {
+        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
+                      func_80043040(D_80112130.textureHandle), D_800B5FC0[(u16)arg0->sprite.index][tile + 16], 0,
+                      0x100, 0xA0, 0x49);
+        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
+                      func_80043040(D_80112130.textureHandle), D_800B5FC0[(u16)arg0->sprite.index][tile + 18], 0,
+                      0x100, 0xA0, 0x49);
+        offset += 0x40;
+        tile++;
+    } while (offset != i);
+
+    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
+                  D_800B5FC0[(u16)arg0->sprite.index][20], 0, 0x100, 0xA0, 0x49);
+}
+#endif
 
 void func_8001DD80(CharacterSelectWidgetActor *arg0) {
     int state;
