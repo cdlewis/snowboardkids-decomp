@@ -2,12 +2,7 @@
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "viewport_manager.h"
-
-typedef struct {
-    s32 a;
-    s32 b;
-    s32 c;
-} Vec3i;
+#include "fixed_point_matrix.h"
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x28];
@@ -54,7 +49,6 @@ typedef struct {
     /* 0x36 */ s16 alpha;
 } MainMenuOverlayEffectActor;
 
-typedef s16 FixedMatrix3s[9];
 typedef s16 FixedMatrix3sScratch[0x10];
 
 typedef struct {
@@ -172,10 +166,6 @@ void func_80055148(void);
 void func_8005537C(MainMenuOverlayEffectActor *);
 void func_80055410(MainMenuOverlayEffectActor *);
 void func_80055530(void *);
-s32 func_80097AE8(s16);
-void func_80097C18(FixedMatrix3s, s16);
-void func_80097FE4(FixedMatrix3sScratch, s16, s16);
-void func_80098590(FixedMatrix3sScratch, Vec3i *, Vec3i *);
 void func_80072138(s16, s32, void *);
 
 void func_80053660(MainMenuOverlayEffectActor *arg0) {
@@ -489,18 +479,18 @@ void func_80054460(MainMenuOverlayEffectActor *arg0) {
         func_80071824(arg0, func_800545D0);
     }
 
-    sp2C.a = 0x40000;
-    sp2C.b = 0x180000;
-    sp2C.c = 0;
+    sp2C.x = 0x40000;
+    sp2C.y = 0x180000;
+    sp2C.z = 0;
 
     player = &D_80121D80[arg0->index];
     func_80097FE4(sp38, player->pitch, player->yaw);
     func_80098590(sp38, &sp2C, (Vec3i *) &arg0->unk18);
 
     player = &D_80121D80[arg0->index];
-    arg0->unk18.word += player->pos28.a;
-    arg0->unk1C.word += player->pos28.b;
-    arg0->unk20.word += player->pos28.c;
+    arg0->unk18.word += player->pos28.x;
+    arg0->unk1C.word += player->pos28.y;
+    arg0->unk20.word += player->pos28.z;
 
     func_800483FC(&D_801248BC, func_80054130, (s32)arg0);
 }

@@ -1,41 +1,10 @@
-#include "common.h"
+#include "fixed_point_matrix.h"
 
 #define FIXED_MATRIX_ONE 0x1000
 
 extern s16 D_800B9810[];
 
-typedef struct {
-    /* 0x0 */ s32 x;
-    /* 0x4 */ s32 y;
-    /* 0x8 */ s32 z;
-} Vec3i;
-
-typedef enum {
-    MTX_XX,
-    MTX_XY,
-    MTX_XZ,
-    MTX_YX,
-    MTX_YY,
-    MTX_YZ,
-    MTX_ZX,
-    MTX_ZY,
-    MTX_ZZ
-} FixedMatrixIndex;
-
-typedef s16 FixedMatrix3s[9];
 typedef s16 FixedMatrix3sScratch[0x10];
-
-typedef struct {
-    /* 0x00 */ FixedMatrix3s rotation;
-    /* 0x12 */ s16 pad12;
-    /* 0x14 */ Vec3i translation;
-} FixedTransform;
-
-s16 func_80097B48(s16 arg0);
-void func_80097BAC(FixedMatrix3s arg0, s16 arg1);
-void func_80097C18(FixedMatrix3s arg0, s16 arg1);
-void func_80097C84(FixedMatrix3s arg0, s16 arg1);
-void func_80097CF0(FixedMatrix3s arg0, FixedMatrix3s arg1, FixedMatrix3s arg2);
 
 extern FixedTransform D_800DEE30;
 

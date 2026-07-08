@@ -3,6 +3,7 @@
 #include "asset_decompression.h"
 #include "race_input_history.h"
 #include "fixed_point_math.h"
+#include "fixed_point_matrix.h"
 
 #define RACE_MODEL_BUFFER_HANDLE (*(s16 *)&D_80112130[0x48])
 
@@ -125,9 +126,6 @@ extern GfxCommandDest *func_8004885C(GfxCommandSource *);
 extern void func_80048C90(GfxCommandDest *, Vec3i *);
 extern s32 func_80048E60(void *);
 extern void osWritebackDCache(void *, s32);
-extern void func_80097C18(void *, s16);
-extern void func_80097FE4(FixedMatrix3sScratch, s16, s16);
-extern void func_80098590(void *, void *, void *);
 extern void func_80088C80(void *, s32, s32, s32);
 extern void func_80088294(void *, s32, s32, s32);
 extern s32 func_80088E98(Vec3i *, s32, s32, s16);

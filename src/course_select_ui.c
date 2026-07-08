@@ -2,6 +2,7 @@
 #include "effect_task_scheduler.h"
 #include "menu_rendering.h"
 #include "course_select_ui.h"
+#include "fixed_point_matrix.h"
 
 typedef struct {
     u8 pad0[0x20];
@@ -21,9 +22,6 @@ typedef struct {
 } CourseSelectRacePlayer;
 
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
-extern void func_80097C18(s16 *mtx, s16 rotY);
-extern void func_8009853C(s16 *mtx, s16 arg1, s16 arg2);
-extern void func_80098590(s16 *mtx, CourseSelectTempVec3i *source, CourseSelectTempVec3i *dest);
 extern void func_8002E568(CourseSelectWidgetActor *);
 extern s32 func_80043040(s16);
 extern u8 D_800EC9C2;
