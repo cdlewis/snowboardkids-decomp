@@ -250,12 +250,13 @@ typedef struct {
 } RaceUiSnowboardTrailPlayer;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x30];
+    /* 0x00 */ u8 pad0[0x24];
+    /* 0x24 */ Vec3i sourcePos;
     /* 0x30 */ Vec3i worldPos;
-    /* 0x3C */ u8 pad3C[4];
+    /* 0x3C */ s32 velocityY;
     /* 0x40 */ RaceUiTrailCopyBlock copyBlock;
     /* 0x60 */ RaceUiTrailCopyBlock transformedCopyBlock;
-    /* 0x80 */ u16 playerIndex;
+    /* 0x80 */ s16 playerIndex;
     /* 0x82 */ u8 pad82[2];
     /* 0x84 */ s16 spinYaw;
     /* 0x86 */ u8 pad86[2];
@@ -627,6 +628,7 @@ extern s16 D_80112168;
 extern s16 D_80121B52;
 extern RacePlayerPlacement D_80122288[];
 extern s8 D_80122289;
+extern RacePlayerByteField D_80121D94[];
 extern RacePlayerHalfwordField D_80122052[];
 extern RacePlayerHalfwordField D_8012265E[];
 extern RacePlayerHalfwordField D_80122C6A[];
@@ -690,7 +692,6 @@ extern void func_80098174(void *, s16, s16);
 extern void func_800983E4(FixedMatrix3sScratch, s16, s16, s16);
 extern void func_80098590(FixedMatrix3sScratch, Vec3i *, Vec3i *);
 extern void func_800987A0(FixedTransform *, FixedTransform *, FixedTransform *);
-extern void func_8005F448(void *);
 extern void func_8005B14C(void *);
 extern void func_8005C64C(void *);
 extern void func_8005DE6C(void *);
@@ -2227,7 +2228,38 @@ void func_8005F2DC(RaceUiSnowboardTrailActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005F448.s")
+void func_8005F448(RaceUiSnowboardTrailActor *arg0) {
+    FixedTransform sp30;
+    volatile u8 pad[0x10];
+    RaceUiSnowboardTrailActor *actor;
+
+    actor = arg0;
+    actor->spinYaw += 0x240;
+    if (D_80121B56 == 0) {
+        actor->worldPos.b += actor->velocityY;
+        actor->velocityY -= 0x8000;
+    }
+
+    actor->copyBlock.transform.translation.a = actor->worldPos.a;
+    actor->copyBlock.transform.translation.b = actor->worldPos.b;
+    actor->copyBlock.transform.translation.c = actor->worldPos.c;
+
+    func_80097BAC(sp30.rotation, actor->spinYaw);
+    sp30.translation.a = actor->sourcePos.a;
+    sp30.translation.b = actor->sourcePos.b;
+    sp30.translation.c = actor->sourcePos.c;
+    func_800987A0(&sp30, &actor->copyBlock.transform, &actor->transformedCopyBlock.transform);
+
+    actor->timer--;
+    if (actor->timer == 0) {
+        func_800716E4(actor);
+        return;
+    }
+
+    if (D_80121D94[actor->playerIndex].value == 0) {
+        func_800483FC(&D_801248B0, func_8005F2DC, arg0);
+    }
+}
 
 void func_8005F56C(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x90) = 1;
