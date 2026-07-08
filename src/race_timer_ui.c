@@ -186,7 +186,7 @@ void func_80079758(s32 arg0) {
 }
 #endif
 
-// func_800799DC best match: 84.806% (nonmatchings/func_800799DC-2911448260736516995/base_12.c)
+// func_800799DC best match: 84.859% (nonmatchings/func_800799DC-4033633224288138541/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_800799DC.s")
 
 #ifdef NON_MATCHING
