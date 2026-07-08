@@ -2,14 +2,9 @@
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "race_input_history.h"
+#include "fixed_point_math.h"
 
 #define RACE_MODEL_BUFFER_HANDLE (*(s16 *)&D_80112130[0x48])
-
-typedef struct {
-    /* 0x0 */ s32 x;
-    /* 0x4 */ s32 y;
-    /* 0x8 */ s32 z;
-} Vec3i;
 
 typedef struct {
     /* 0x0 */ s16 enabled;
@@ -128,7 +123,6 @@ extern void func_80045990(s32, s32, void *, void *);
 extern void func_800486BC(CourseEffectMatrixSource *, void *);
 extern GfxCommandDest *func_8004885C(GfxCommandSource *);
 extern void func_80048C90(GfxCommandDest *, Vec3i *);
-extern s32 func_80049000(Vec3i *);
 extern s32 func_80048E60(void *);
 extern void osWritebackDCache(void *, s32);
 extern void func_80097C18(void *, s16);
