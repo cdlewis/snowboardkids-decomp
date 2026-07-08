@@ -1,4 +1,5 @@
 #include "race_intro_transition.h"
+#include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "course_asset_loader.h"
@@ -57,12 +58,10 @@ extern u8 D_24C8E0;
 extern u8 D_24DBE0;
 extern void func_8006D5CC(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_800720E4(s32);
 extern void func_80078430(void);
 extern void func_8008BEB0(void);
 extern void func_8009956C(TaskCallback, s32);
 extern void func_80045914(void);
-extern void func_80072260(void);
 extern void func_80099658(s32);
 extern void func_8009954C(s32);
 extern void func_8003F00C(void);

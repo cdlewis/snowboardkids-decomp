@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 
@@ -88,14 +89,12 @@ extern void func_80099614(s32);
 extern void func_8006D780(s32);
 extern void func_80042034(s32);
 extern void func_800428C8(s32);
-extern void func_80072114(s32);
 extern void func_80072138(s32, s32);
 extern void func_800704F0(void);
 extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8006D5CC(void);
 extern void func_8006D520(s32, s32);
 extern void func_8009B58C(s32, s32, s32);
-extern void func_800720E4(s32);
 extern void func_80002A1C(void);
 extern void func_80052E4C(void);
 extern void func_80055678(void);

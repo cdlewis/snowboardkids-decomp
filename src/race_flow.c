@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "character_select_flow.h"
@@ -137,12 +138,7 @@ extern void func_8006D580(u16, u16);
 extern void func_8006D700(void);
 extern void func_800704F0(void);
 extern void func_8005393C(void);
-extern void func_800720E4(s32);
-extern void func_80072114(s32);
 extern void func_80072138(s32, s32);
-extern void func_80072260(void);
-extern void func_800728E0(void);
-extern s32 func_80072938(void);
 extern void func_800733E0(void);
 extern void func_800734A0(void);
 extern void func_80073308(void);

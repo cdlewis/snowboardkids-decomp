@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "character_select_flow.h"
@@ -8,9 +9,7 @@ typedef struct {
     s8 state;
 } PlayerCountSelectMenuCursor;
 
-extern void func_800720E4(s32);
 extern void func_8009956C(void *, s32);
-extern void func_80072114(s32);
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80045914(void);
 extern void func_80099658(s32);

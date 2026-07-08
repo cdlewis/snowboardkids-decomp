@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "fixed_point_matrix.h"
 
@@ -41,8 +42,6 @@ extern u8 D_80123751;
 extern s16 D_800DEF14;
 extern void func_8005393C(void);
 extern void func_8006D780(s32);
-extern void func_80072114(s32);
-extern void func_800720E4(s32);
 extern void func_8009956C(void *, s32);
 void func_8003E45C(void);
 void func_8003E514(void);
