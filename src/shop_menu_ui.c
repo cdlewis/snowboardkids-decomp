@@ -65,6 +65,8 @@ typedef struct {
     /* 0x02 */ s16 y;
 } ShopMenuSparkleOffset;
 
+typedef ShopMenuSparkleOffset ShopMenuSparklePattern[13];
+
 typedef struct {
     char pad0[0x18];
     /* 0x18 */ s16 unk18[5];
@@ -132,7 +134,14 @@ struct ShopMenuWidgetActor {
         };
         struct {
             char pad18[6];
-            /* 0x1E */ u16 counters[12];
+            union {
+                /* 0x1E */ u16 counters[12];
+                struct {
+                    /* 0x1E */ u16 patternIndex;
+                    /* 0x20 */ u16 tileBase;
+                    /* 0x22 */ s16 alpha;
+                };
+            };
         } sparkle;
         /* 0x18 */ s16 randomValues[15];
     };
@@ -214,6 +223,7 @@ extern ShopMenuFrameTileMap D_800B79C0[];
 extern ShopMenuSparkleOffset D_800B7E40[];
 extern ShopMenuSparkleOffset D_800B7E58[];
 extern ShopMenuSparkleOffset D_800B7E70[];
+extern ShopMenuSparklePattern D_800B7D1C[];
 extern ShopDescriptionText D_800B7A14[];
 extern u8 D_800B7CD0;
 extern u16 D_800B7D00[];
@@ -922,7 +932,42 @@ void func_8002E568(ShopMenuWidgetActor *arg0) {
     func_80071824(arg0, func_8002E468);
 }
 
+// func_8002E5A4 best match: 97.125% (nonmatchings/func_8002E5A4-3/output-230-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002E5A4.s")
+
+#ifdef NON_MATCHING
+void func_8002E5A4(ShopMenuWidgetActor *arg0) {
+    s32 tileOffset;
+    s16 y;
+    s16 alpha;
+    s16 *randomValues;
+    s32 i;
+    ShopMenuWidgetActor *actor;
+    ShopMenuSparkleOffset *entry;
+    ShopMenuSparkleOffset *offset;
+    s32 texture;
+    s32 tile;
+
+    actor = arg0;
+    i = 0;
+    if (D_800B7D1C[actor->sparkle.patternIndex][0].x != -1) {
+        tileOffset = 0;
+        do {
+            texture = func_80043040(D_80112130[0x27]);
+            randomValues = actor->randomValues;
+            alpha = actor->sparkle.alpha;
+            offset = &D_800B7D1C[actor->sparkle.patternIndex][tileOffset];
+            tile = actor->sparkle.tileBase + i;
+            entry = offset;
+            y = randomValues[1];
+            func_80011264((s16)(entry->x + randomValues[0]), (s16)(y + entry->y), texture, tile & 0xFFFF, 0,
+                          alpha & 0xFFFFFFFFFFFFFFFF);
+            tileOffset++;
+            i++;
+        } while (D_800B7D1C[actor->sparkle.patternIndex][tileOffset].x != -1);
+    }
+}
+#endif
 
 void func_8002E6E4(ShopMenuWidgetActor *arg0) {
     s16 temp_v0;
