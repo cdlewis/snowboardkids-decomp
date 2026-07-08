@@ -136,7 +136,54 @@ return_one:
     return 1;
 }
 
+// func_80099384 best match: 95.727% (nonmatchings/func_80099384-180949888360117632/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80099384.s")
+
+#ifdef NON_MATCHING
+InputTask *func_80099384(s32 priority) {
+    InputTask *task;
+    InputTask *next;
+    InputTask *prev;
+    InputTaskScheduler *scheduler;
+    u8 *clear;
+    s32 i;
+
+    if (D_80123700 >= INPUT_TASK_COUNT) {
+        return NULL;
+    }
+
+    task = D_80123730[D_80123700];
+    i = 0;
+    clear = (u8 *)task;
+    do {
+        clear[i] = 0;
+        i++;
+    } while (i != sizeof(InputTask));
+
+    D_80123700++;
+    prev = (InputTask *)&D_80123708;
+    scheduler = &D_80123708;
+    if (D_80123708.activeTask != NULL) {
+        next = scheduler->activeTask;
+        do {
+            if (next->priority < priority) {
+                break;
+            }
+            prev = next;
+            next = next->next;
+        } while (next != NULL);
+    }
+
+    task->prev = prev;
+    task->next = prev->next;
+    next = prev->next;
+    if (next != NULL) {
+        next->prev = task;
+    }
+    prev->next = task;
+    return task;
+}
+#endif
 
 void func_80099464(s32 taskId) {
     InputTask *task;
