@@ -482,7 +482,7 @@ void func_800263A4(CourseSelectWidgetActor *arg0) {
     func_80071824(arg0, func_800260E8);
 }
 
-// func_800263D8 best match: 92.057% (nonmatchings/func_800263D8-2775475442547365205/base_9.c)
+// func_800263D8 best match: 94.971% (nonmatchings/func_800263D8-1315772375853892447/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800263D8.s")
 
 #ifdef NON_MATCHING
@@ -517,16 +517,16 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                 playerWidget = (CourseSelectWidgetActor *)((u8 *)arg0 + (i * 2));
                 courseId = D_80121D80[i].pad6[0];
                 if (courseId >= 9 && courseId < 12) {
-                    courseId = (u16)courseId;
+                    xOffset = (u16)courseId;
                 } else {
-                    courseId = (u16)(courseId % 3);
+                    xOffset = (u16)(courseId % 3);
                 }
 
                 func_8000F8AC(playerWidget->coordinates[0], playerWidget->coordinates[4],
                               func_80043040(D_80112130[0x21]), frameTile, 0x20, 0x20, 0, arg0->coordinates[8], 0);
 
                 if (D_80121B55 < 3) {
-                    selectedCourseId = courseId;
+                    selectedCourseId = xOffset;
                     if (selectedCourseId >= 9) {
                         func_80013D0C((s16)(playerWidget->coordinates[0] + 0x38), playerWidget->coordinates[4],
                                       "?", 0, arg0->coordinates[8]);
@@ -584,7 +584,7 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                         }
                     }
                 } else {
-                    selectedCourseId = courseId;
+                    selectedCourseId = xOffset;
                     if (selectedCourseId >= 9) {
                         text[0] = '?';
                         text[1] = 0;
