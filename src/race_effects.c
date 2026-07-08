@@ -261,14 +261,10 @@ void func_80049CE0(RaceEffectActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_80049FB4.s")
 
-// func_8004A2F4 best match: 99.742% (nonmatchings/func_8004A2F4-5635509610426229442/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004A2F4.s")
-
-#ifdef NON_MATCHING
 void func_8004A2F4(RaceEffectActor *arg0) {
     s32 sin;
-    s32 cos;
     s32 xOffset;
+    s32 cos;
     s32 zOffset;
     s32 pushX;
     s32 pushZ;
@@ -276,11 +272,11 @@ void func_8004A2F4(RaceEffectActor *arg0) {
     s32 y;
     s16 angleDiff;
     s32 groundY;
+    s32 hitPlayer;
     s32 newX;
     s32 newY;
     s32 newZ;
     Vec3i *pos;
-    s32 hitPlayer;
     s32 i;
 
     if (D_80121B56 == 0) {
@@ -309,22 +305,21 @@ void func_8004A2F4(RaceEffectActor *arg0) {
         xOffset = ((s64)sin * arg0->velocityY) / 0x1000;
         zOffset = ((s64)cos * arg0->velocityY) / 0x1000;
 
-        prevY = y = arg0->pos.y;
-        newX = (unsigned long long)(arg0->pos.x + xOffset);
-        newY = y + arg0->accelerationY;
-        newZ = arg0->pos.z + zOffset;
-        arg0->pos.x = newX;
-        arg0->pos.y = newY;
-        arg0->pos.z = newZ;
+        y = arg0->pos.y;
+        prevY = y;
+        arg0->pos.x += xOffset;
+        arg0->pos.y = y;
+        arg0->pos.y = arg0->pos.y + arg0->accelerationY;
+        arg0->pos.z += zOffset;
 
-        arg0->startAngle = func_8007D200(arg0->startAngle, newX, newZ);
+        arg0->startAngle = func_8007D200(arg0->startAngle, arg0->pos.x, arg0->pos.z);
         groundY = func_80080CC4(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
             arg0->pos.y = groundY;
             y = groundY;
         }
-        arg0->accelerationY = (y - prevY) - 0x20000;
+        arg0->accelerationY = ((y - prevY) - 0x20000) & 0xFFFFFFFF;
 
         func_8007FF88(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
         hitPlayer = 0;
@@ -358,7 +353,6 @@ void func_8004A2F4(RaceEffectActor *arg0) {
 
     func_800483FC(&D_801248A4, func_80049FB4, arg0);
 }
-#endif
 
 void func_8004A648(RaceEffectActor *arg0) {
     volatile s32 pad0;
