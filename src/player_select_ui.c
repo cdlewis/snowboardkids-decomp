@@ -444,43 +444,40 @@ void func_8001A44C(PlayerSelectWidgetActor *arg0) {
     func_80071824(arg0, func_8001A270);
 }
 
-// func_8001A490 clean best match: 97.102%
-#pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_8001A490.s")
-
-#ifdef NON_MATCHING
 void func_8001A490(PlayerSelectWidgetActor *arg0) {
+    s32 shouldDraw;
     s32 i;
     s32 tileIndex;
     s32 offset;
-    s32 rightOffset;
 
-    i = 0;
     tileIndex = 0;
-    do {
+    shouldDraw = 1;
+    for (i = 0; i < 16; i++, tileIndex++) {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       func_80043040(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].centerTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
-        i++;
-        tileIndex++;
-    } while (i < 16);
+    }
 
-    tileIndex = 0;
+    if (shouldDraw) {
+        tileIndex = 0;
+        i = 0x80;
+    }
     offset = 0;
-    i = 0x80;
-    rightOffset = 0x80;
     do {
-        func_800112F4((s16)(arg0->x + rightOffset), (s16)(arg0->y + offset), func_80043040(D_80112130.textureHandle),
+        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), func_80043040(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
         func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
+        i = 0x80;
         offset += 0x40;
         tileIndex++;
     } while (offset != i);
+    i++;
+    i--;
 
     func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
                   D_800B5B50[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
-#endif
 
 void func_8001A704(PlayerSelectWidgetActor *arg0) {
     int state;
