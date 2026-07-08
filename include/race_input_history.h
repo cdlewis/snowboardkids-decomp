@@ -110,9 +110,15 @@ typedef struct {
     /* 0x586 */ char pad586[2];
     /* 0x588 */ f32 unk588;
     /* 0x58C */ char pad58C[0x78];
-    /* 0x604 */ s16 actionEffectLevel;
-    /* 0x606 */ char pad606[2];
-    /* 0x608 */ s8 actionEffectFrame;
+    /* 0x604 */ union {
+        s16 actionEffectLevel;
+        s16 rumbleTimer;
+    };
+    /* 0x606 */ s16 rumblePatternIndex;
+    /* 0x608 */ union {
+        s8 actionEffectFrame;
+        s8 rumblePatternId;
+    };
     /* 0x609 */ char pad609[1];
     /* 0x60A */ s16 replayFrame;
 } RaceInputPlayer;

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "controller_rumble.h"
 #include "game_audio.h"
 #include "race_input_history.h"
 
@@ -663,11 +664,11 @@ void func_8009759C(RaceInputPlayer *player) {
         v0 = 0x46;
     }
     if (v0 >= 0x51) {
-        player->actionEffectLevel = 2;
-        player->actionEffectFrame = 0;
+        player->rumbleTimer = 2;
+        player->rumblePatternId = 0;
     } else {
-        player->actionEffectLevel = 1;
-        player->actionEffectFrame = 0;
+        player->rumbleTimer = 1;
+        player->rumblePatternId = 0;
     }
     if (player->soundDisabled == 0) {
         func_80072A74(0x21, (SoundPosition *)&player->posX, (s16)v0, 0x32);
