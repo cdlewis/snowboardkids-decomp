@@ -4,6 +4,7 @@
 #include "asset_decompression.h"
 #include "game_boot.h"
 #include "input_task_scheduler.h"
+#include "main_menu_debug_ui.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -49,7 +50,6 @@ void func_8000D340(void);
 void func_8000D590(void);
 void func_8000D690(void);
 void func_8000D724(void);
-extern void func_8003BBBC(void);
 extern void func_80035184(void);
 extern void func_800362E8(void);
 extern void func_80036FB4(void);
