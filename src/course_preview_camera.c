@@ -15,6 +15,36 @@ typedef struct {
     /* 0x14 */ Vec3i translation;
 } FixedTransform;
 
+typedef struct {
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ s32 unkC;
+    /* 0x10 */ s32 unk10;
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ s32 unk1C;
+    /* 0x20 */ s32 unk20;
+    /* 0x24 */ s32 unk24;
+    /* 0x28 */ s32 unk28;
+    /* 0x2C */ s32 unk2C;
+    /* 0x30 */ s32 unk30;
+    /* 0x34 */ s32 unk34;
+    /* 0x38 */ s32 unk38;
+    /* 0x3C */ s32 unk3C;
+} GfxCommandDest;
+
+typedef struct {
+    /* 0x00 */ s8 textureIndex;
+    /* 0x01 */ u8 pad1[3];
+    /* 0x04 */ s32 command[3];
+} CoursePreviewGfxCommandEntry;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ GfxCommandDest *matrices;
+} CoursePreviewGfxCommandActor;
+
 typedef struct CoursePreviewCamera CoursePreviewCamera;
 typedef void (*CoursePreviewCameraCallback)(CoursePreviewCamera *);
 
@@ -47,13 +77,21 @@ struct CoursePreviewCamera {
     /* 0x44 */ s8 displayListValid;
 };
 
+typedef struct {
+    /* 0x00 */ u8 pad0[0x4E];
+    /* 0x4E */ s16 matrixHandle;
+} CoursePreviewAssetHandles;
+
 extern void *D_801248D4;
 extern void func_800483FC(void *, void *, s32);
 extern void func_800556B0(void);
 extern void func_80056CA0(void);
+extern s16 func_80042D58(s32);
+extern void osWritebackDCache(void *, s32);
 extern s16 D_80112144;
 extern s16 D_80112146;
 extern s16 D_8011216A;
+extern CoursePreviewAssetHandles D_80112130;
 extern u8 D_80156609;
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
@@ -70,6 +108,9 @@ extern void func_800981C8(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3);
 extern void func_80098590(void *, s32 *, Vec3i *);
 extern void func_800987A0(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2);
 extern Vec3i D_800D5CC8[];
+extern CoursePreviewGfxCommandEntry *D_800D5C6C[];
+extern GfxCommandDest D_800DEE50;
+extern void func_80048C90(GfxCommandDest *, s32 *);
 void func_80055FA4(CoursePreviewCamera *arg0);
 void func_80056070(CoursePreviewCamera *arg0);
 extern void func_80055C7C(void);
@@ -94,7 +135,41 @@ void func_80055B04(s32 arg0) {
     func_800483FC(&D_801248D4, func_800556B0, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_80055B34.s")
+void func_80055B34(CoursePreviewGfxCommandActor *arg0) {
+    CoursePreviewGfxCommandEntry *entry;
+    s32 count;
+    s32 allocSize;
+    s32 i;
+
+    entry = D_800D5C6C[D_80121B50];
+    count = 0;
+    if (entry->textureIndex != -1) {
+        do {
+            count++;
+            entry++;
+        } while (entry->textureIndex != -1);
+    }
+
+    if (count != 0) {
+        entry = D_800D5C6C[D_80121B50];
+        allocSize = count * sizeof(GfxCommandDest);
+        D_80112130.matrixHandle = func_80042D58(allocSize);
+        arg0->matrices = func_80043040(D_80112130.matrixHandle);
+
+        i = 0;
+        if (count > 0) {
+            do {
+                arg0->matrices[i] = D_800DEE50;
+                func_80048C90(&arg0->matrices[i], entry->command);
+                i++;
+                entry++;
+            } while (i != count);
+        }
+        osWritebackDCache(arg0->matrices, allocSize);
+    }
+
+    func_80071824(arg0, func_80055B04);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_80055C7C.s")
 
