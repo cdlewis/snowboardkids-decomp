@@ -501,6 +501,13 @@ typedef struct {
 } RaceUiResultIconData;
 
 typedef struct {
+    /* 0x0000 */ u8 pad0[0x7832];
+    /* 0x7832 */ u8 values[10][5];
+    /* 0x7864 */ u8 pad7864[0x7869 - 0x7864];
+    /* 0x7869 */ u8 icons[10][5];
+} RaceUiCourseValueData;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
@@ -1501,7 +1508,7 @@ void func_8005A31C(RaceUiAlpha18Actor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005A4BC.s")
 
-// func_8005A884 best match: 61.020% (nonmatchings/func_8005A884-2775475442547365205/base_5.c)
+// func_8005A884 best match: 87.770% (nonmatchings/func_8005A884-4139837607000619032/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005A884.s")
 
 #ifdef NON_MATCHING
@@ -1511,37 +1518,38 @@ void func_8005A884(RaceUiPopupActor *arg0) {
     s32 i;
     s32 color;
     s32 y;
+    s32 space;
 
     y = -0x50;
     i = 0;
+    space = ' ';
     do {
         func_80045A78(-8, (s16)y, func_80043040(D_80112130.popupFontHandle), (i + 0x77) & 0xFFFF);
 
         if ((i == arg0->index) && (D_80156612 & 1)) {
             color = 0x10;
+        } else if (i < 3) {
+            color = 0xC;
         } else {
             color = 0xD;
-            if (i < 3) {
-                color = 0xC;
-            }
         }
 
-        sprintf(buffer, D_800E12F4, D_800EC9F0[(D_80121B50 * 4) + D_80121B50 + i + 0x7832]);
+        sprintf(buffer, D_800E12F4, ((RaceUiCourseValueData *)D_800EC9F0)->values[D_80121B50][i]);
 
-        if ((u8)buffer[0] != ' ') {
+        if ((u8)buffer[0] != space) {
             func_80046D68(0x10, (s16)y, func_80043040(D_80112130.popupFontHandle),
                           (buffer[0] - 5) & 0xFFFF, color);
         }
 
-        if ((u8)buffer[1] != ' ') {
+        if ((u8)buffer[1] != space) {
             func_80046D68(0x18, (s16)y, func_80043040(D_80112130.popupFontHandle),
                           (buffer[1] - 5) & 0xFFFF, color & 0xFFFF);
         }
 
         func_80045A78(0x46, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                      ((D_800EC9F0[(D_80121B50 * 4) + D_80121B50 + i + 0x7869] & 7) + 0x51) & 0xFFFF);
+                      ((((RaceUiCourseValueData *)D_800EC9F0)->icons[D_80121B50][i] & 7) + 0x51) & 0xFFFF);
         func_80045A78(0x58, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                      ((D_800EC9F0[(D_80121B50 * 4) + D_80121B50 + i + 0x7869] >> 3) + 0x7C) & 0xFFFF);
+                      ((((RaceUiCourseValueData *)D_800EC9F0)->icons[D_80121B50][i] >> 3) + 0x7C) & 0xFFFF);
 
         i++;
         y += 0x20;
