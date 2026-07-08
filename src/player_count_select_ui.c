@@ -69,6 +69,7 @@ extern void func_80071824(void *task, void (*callback)());
 extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
+extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
 extern void func_80029200(PlayerCountSelectRowActor *);
 extern void func_800296D8(PlayerCountSelectWidgetActor *);
 extern void func_8002980C(PlayerCountSelectWidgetActor *);
@@ -333,7 +334,52 @@ void func_80029FB8(PlayerCountSelectWidgetActor *arg0) {
     func_80071824(arg0, func_80029CE4);
 }
 
+// func_8002A008 best match: 99.936%
 #pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_8002A008.s")
+
+#ifdef NON_MATCHING
+void func_8002A008(PlayerCountSelectWidgetActor *arg0) {
+    s32 i;
+    s32 tile;
+    s32 offset;
+
+    do {
+        i = 0;
+        tile = 0;
+        do {
+            if (1) {}
+            if (1) {}
+            if (1) {}
+            if (1) {}
+            func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
+                          func_80043040(D_80112130.textureHandle), D_800B70F0.center[tile], 0,
+                          0x100, 0xA0, 0x49);
+            i++;
+            if (!arg0->y) {}
+            tile++;
+        } while (i < 0x10);
+    } while ((arg0->x + 0x80) * 0);
+
+    offset = 0;
+    tile = 0;
+    i = 0x80;
+    do {
+        i = 0x80;
+        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
+                      func_80043040(D_80112130.textureHandle), D_800B70F0.right[tile], 0,
+                      0x100, 0xA0, 0x49);
+        i = 0x80;
+        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
+                      func_80043040(D_80112130.textureHandle), D_800B70F0.bottom[tile], 0,
+                      0x100, 0xA0, 0x49);
+        offset += 0x40;
+        tile++;
+    } while (offset != i);
+
+    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
+                  D_800B7196, (0, 0), 0x100, 0xA0, 0x49);
+}
+#endif
 
 void func_8002A27C(PlayerCountSelectWidgetActor *arg0) {
     int state;
