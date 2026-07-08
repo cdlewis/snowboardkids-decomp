@@ -9,6 +9,8 @@ typedef u16 MenuGlyphScript;
 
 void func_8000F030(s16 x, s16 y, s32 texture, s32 tileIndex, s32 width, s32 height, s32 palette, s32 flip);
 void func_8000F8AC(s32 x, s32 y, s32 texture, s32 tileIndex, s32 width, s32 height, s32 palette, s32 alpha, s32 flip);
+void func_8000F970(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height, u8 palette, u16 alpha, u8 flip,
+                   s32 clipLeft, s32 clipTop, s32 clipRight, s32 clipBottom);
 void func_80011C18(MenuRenderSpriteActor *actor);
 void func_80011D44(MenuRenderSprite *sprite);
 s32 func_80011D74(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);

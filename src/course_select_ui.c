@@ -92,6 +92,7 @@ extern u8 D_8010AEB0;
 extern u8 D_8010AEA0[];
 extern u8 D_8010AF18[];
 extern u8 D_8010AF1C;
+extern s16 D_800EC9D0[];
 extern u8 D_800B7040[];
 extern u8 D_800B706C[];
 extern u8 D_800B706D[];
@@ -771,7 +772,76 @@ void func_800275A4(CourseSelectWidgetActor *arg0) {
     func_80071824(arg0, func_80027498);
 }
 
+// func_800275E0 best match: 89.545% (nonmatchings/func_800275E0-1315772375853892447/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800275E0.s")
+
+#ifdef NON_MATCHING
+void func_800275E0(CourseSelectWidgetActor *arg0) {
+    s32 playerIndex;
+    s32 playerOffset;
+    s32 alpha;
+    s32 iconIndex;
+    s32 rightSideOffset;
+    s16 *state;
+    CourseSelectWidgetActor *countActor;
+    CourseSelectWidgetActor *slotActor;
+    CourseSelectWidgetActor *alphaActor;
+
+    playerIndex = 0;
+    if ((s32)D_80121B55 > 0) {
+        state = D_800EC9D0;
+        playerOffset = 0;
+        do {
+            if (*state != 0) {
+                countActor = (CourseSelectWidgetActor *)((u8 *)arg0 + playerIndex);
+                if (*state != 9) {
+                    iconIndex = countActor->itemCounts[0] - 1;
+                    rightSideOffset = playerIndex < 2;
+                    if (iconIndex >= 0) {
+                        rightSideOffset ^= 1;
+                        slotActor = (CourseSelectWidgetActor *)((u8 *)arg0 + (playerIndex * 6) + (iconIndex * 2));
+                        rightSideOffset = (((rightSideOffset * 9) * 4) - rightSideOffset) * 4;
+                        do {
+                            if (*state == 1) {
+                                alpha = 0x100;
+                            } else if ((iconIndex + 2) == *state) {
+                                alpha = 0x100;
+                            } else {
+                                alpha = 0x60;
+                            }
+                            func_8000F970(slotActor->coordinates[0], slotActor->coordinates[0xC],
+                                          func_80043040(D_80112130[0x21]), slotActor->coordinates[0x28],
+                                          0x20, 0x20, 0, alpha, 0, arg0->coordinates[0x18] - rightSideOffset,
+                                          arg0->coordinates[0x1A], arg0->coordinates[0x19],
+                                          arg0->coordinates[0x1B]);
+                            iconIndex--;
+                            slotActor = (CourseSelectWidgetActor *)((u8 *)slotActor - 2);
+                        } while (iconIndex >= 0);
+                    }
+                    if (D_8010AEB0 == 0) {
+                        if ((*state >= 2) && (*state < 5)) {
+                            slotActor = (CourseSelectWidgetActor *)((u8 *)arg0 + (playerIndex * 6));
+                            alphaActor = (CourseSelectWidgetActor *)((u8 *)arg0 + playerOffset);
+                            if ((s32)D_80121B55 == 1) {
+                                alpha = 0xF;
+                            } else {
+                                alpha = 0x1B;
+                            }
+                            func_8000F8AC(slotActor->coordinates[0],
+                                          (s16)(slotActor->coordinates[0xC] + (countActor->pad18[0x38] * (*state - 2))),
+                                          func_80043040(D_80112130[0x21]), alpha & 0xFFFF, 0x20, 0x20, 0,
+                                          alphaActor->coordinates[0x24], 0);
+                        }
+                    }
+                }
+            }
+            playerIndex++;
+            playerOffset += 2;
+            state++;
+        } while (playerIndex < (s32)D_80121B55);
+    }
+}
+#endif
 
 void func_8002784C(CourseSelectWidgetActor *arg0) {
     s32 var_v1;
