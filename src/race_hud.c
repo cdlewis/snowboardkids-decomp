@@ -49,6 +49,28 @@ typedef struct {
     u8 pad4C[0x78F8 - 0x4C];
 } RacePlayerState;
 
+typedef struct {
+    /* 0x00 */ u8 phase;
+    /* 0x01 */ u8 exitMode;
+    /* 0x02 */ u8 readyCount;
+    u8 pad3;
+    u8 pad4[4];
+    /* 0x08 */ s16 fade;
+    /* 0x0A */ s16 unkA;
+    /* 0x0C */ u8 confirmSelection;
+    /* 0x0D */ u8 unkD;
+    /* 0x0E */ u8 blockDecrease;
+    /* 0x0F */ u8 blockIncrease;
+    /* 0x10 */ u16 cursorX;
+    /* 0x12 */ u16 cursorY;
+    /* 0x14 */ s8 playerSelections[PLAYER_COUNT];
+} RaceHudCharacterSelectState;
+
+typedef struct {
+    u8 pad0[0x24];
+    /* 0x24 */ u8 playerFrameReady;
+} RaceHudPlayerFrameController;
+
 typedef union {
     s16 target[PLAYER_COUNT];
     struct {
@@ -98,13 +120,16 @@ typedef struct {
 extern void func_80071824(void *task, void (*callback)());
 extern void func_80018C80(void);
 extern void func_800177F8(void);
-extern void func_80017C34(void);
+extern void func_80017C34(RaceHudPanelActor *);
 extern void func_800184C8(void);
 extern void func_80018AA0(RaceHudPanelActor *);
 extern void func_800182A4(RaceHudPlayerListActor *);
 extern void func_80017D6C(RaceHudMessageActor *);
 extern void func_800483FC(void *, void *, void *);
 extern s8 D_8010AE52;
+extern u8 D_8010AE51;
+extern RaceHudCharacterSelectState D_8010AE50;
+extern RaceHudPlayerFrameController *D_8010ADE0;
 extern void *D_8010ADE4;
 extern void *D_80124868;
 extern u8 D_80121B55;
@@ -178,7 +203,51 @@ void func_80017A10(RaceHudPlayerFrameActor *arg0) {
 }
 #endif
 
+// func_80017C34 best match: 92.981% (nonmatchings/func_80017C34-5635509610426229442/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80017C34.s")
+
+#ifdef NON_MATCHING
+void func_80017C34(RaceHudPanelActor *arg0) {
+    u8 var_v0;
+    u8 desired;
+    u8 var_v1;
+    RaceHudPanelActor *actor;
+    RaceHudPlayerFrameController *owner;
+
+    owner = D_8010ADE0;
+    actor = arg0;
+    var_v0 = actor->targetY.mode;
+    desired = D_8010AE50.exitMode;
+    var_v1 = var_v0;
+    if (desired != var_v0) {
+        actor->targetY.mode = desired;
+        var_v0 = desired & 0xFF;
+        actor->targetX.target[0] = D_8010AE50.cursorX;
+        var_v1 = var_v0;
+        actor->targetX.target[1] = D_8010AE50.cursorY;
+    }
+
+    switch (var_v1) {
+    case 1:
+        actor->y[3] += 8;
+        actor->y[1] += 8;
+        if (actor->y[3] == 0x24) {
+            actor->targetY.mode = 2;
+            owner->playerFrameReady = 1;
+        }
+        var_v0 = actor->targetY.mode;
+        break;
+    case 0:
+    case 2:
+    case 3:
+    case 4:
+        break;
+    }
+
+    D_8010AE51 = var_v0;
+    func_800483FC(&D_80124868, func_80017A10, actor);
+}
+#endif
 
 void func_80017D08(RaceHudPanelActor *arg0) {
     arg0->x[0] = -0x88;
