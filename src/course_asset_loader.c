@@ -133,7 +133,7 @@ void func_80043950(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/course_asset_loader/func_80043950.s")
 #endif
 
-// func_800440F4 best match: 97.5% at nonmatchings/func_800440F4/base_3.c.
+// func_800440F4 best match: 98.654% at nonmatchings/func_800440F4-5635509610426229442/base_6.c.
 #ifdef NON_MATCHING
 void func_800440F4(void) {
     CoursePlayerState *player;
@@ -149,12 +149,10 @@ void func_800440F4(void) {
     func_80099C44(D_14B450, func_80043040(D_80112130[0xC]), size);
     func_800437F0(D_1EF530, D_1F1A90, 0xD);
 
-    player = D_80121D80;
     rawRanges = D_800D4020;
     textureRanges = D_800D4050;
     modelRanges = D_800D4080;
-    i = 0;
-    do {
+    for (player = D_80121D80, i = 0; i != COURSE_PLAYER_COUNT; i++, player++) {
         assetHandles = &D_80112130[i];
         if (player->isActive != 0) {
             size = rawRanges[player->courseAssetIndex].end - rawRanges[player->courseAssetIndex].start;
@@ -163,9 +161,7 @@ void func_800440F4(void) {
             func_800437F0(textureRanges[player->courseAssetIndex].start, textureRanges[player->courseAssetIndex].end, i + 0x12);
             func_800437F0(modelRanges[player->courseAssetIndex].start, modelRanges[player->courseAssetIndex].end, i + 0x16);
         }
-        i++;
-        player++;
-    } while (i != COURSE_PLAYER_COUNT);
+    }
 
     func_800437F0(D_243270, D_245A80, 0x1E);
 }
