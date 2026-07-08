@@ -18,12 +18,18 @@ typedef struct {
     /* 0x000 */ u8 pad0[0x44];
     /* 0x044 */ s32 unk44;
     /* 0x048 */ u8 pad48[0x94 - 0x48];
-    /* 0x094 */ u8 transform[0x14];
-    /* 0x0A8 */ Vec3i posA8;
+    /* 0x094 */ s16 transform[10];
+    union {
+        /* 0x0A8 */ Vec3i posA8;
+        /* 0x0A8 */ Vec3i velocity;
+    };
     /* 0x0B4 */ u8 padB4[0x1C8 - 0xB4];
     /* 0x1C8 */ Vec3i pos;
     /* 0x1D4 */ u8 pad1D4[0x2EC - 0x1D4];
-    /* 0x2EC */ s16 yaw;
+    union {
+        /* 0x2EC */ s16 yaw;
+        /* 0x2EC */ s16 unk2EC;
+    };
     /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
     /* 0x2FC */ s32 flags;
     /* 0x300 */ u8 pad300[0x502 - 0x300];
@@ -90,14 +96,15 @@ void func_800716E4(RaceEffectActor *);
 void func_80071824(void *task, void (*callback)());
 void func_80072A74(s32, void *, s32, s32);
 void *func_80071408(void *, s32, s32);
+s32 func_80098C30(s64);
 s16 func_8007D200(s16, s32, s32);
 void func_8007FF88(s16, s32, s32, s32, s32 *, s32 *);
 s32 func_80080CC4(s16, s32, s32);
 s32 func_800891B8(Vec3i *, s32, s32, s16);
 s16 func_80097AE8(s16);
 s16 func_80097B48(s16);
-void func_80098590(void *, Vec3i *, Vec3i *);
-s32 func_80098C30(s64);
+void func_80098590(s16 *, Vec3i *, void *);
+s64 __ll_mul(s64, s64);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_80049440.s")
 
@@ -214,7 +221,48 @@ void func_8004A2F4(RaceEffectActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004AC5C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004AFE4.s")
+void func_8004AFE4(RaceEffectActor *arg0) {
+    volatile s32 pad0;
+    Vec3i source;
+    s32 sp54;
+    s32 sp50;
+    s32 sp4C;
+    s32 magnitude;
+    s32 var_a0;
+    s64 product;
+
+    arg0->timer = 0xB4;
+    arg0->spriteIndex = -1;
+    arg0->velocityY = 0x170000;
+    source.z = 0;
+    source.y = 0;
+    source.x = 0x1000;
+    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = func_80098C30(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
+        arg0->accelerationY = (((s64) arg0->velocityY) * sp50) / magnitude;
+        var_a0 = -arg0->velocityY;
+    } else {
+        var_a0 = -arg0->velocityY;
+        arg0->accelerationY = var_a0;
+    }
+    arg0->accelerationY += D_80121D80[arg0->playerIndex].unk44;
+    arg0->velocityY = var_a0;
+    arg0->targetAngle = D_80121D80[arg0->playerIndex].unk2EC;
+    source.z = 0;
+    source.y = 0x280000;
+    source.x = 0x100000;
+    if (D_80121D80[arg0->playerIndex].flags & 0x400) {
+        source.x = 0xFFF00000;
+        arg0->targetAngle += 0x800;
+    }
+    func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos.x);
+    arg0->pos.x += D_80121D80[arg0->playerIndex].velocity.x;
+    arg0->pos.y += D_80121D80[arg0->playerIndex].velocity.y;
+    arg0->pos.z += D_80121D80[arg0->playerIndex].velocity.z;
+    arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
+    func_80045990(func_80043040(D_8011216C), 3, &arg0->image, &arg0->palette);
+    func_8004AC5C(arg0);
+    func_80071824(arg0, func_8004AC5C);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004B2B8.s")
 
