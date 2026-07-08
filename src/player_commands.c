@@ -854,7 +854,7 @@ s32 func_8009D598(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)(arg1 + 1);
 }
 
-// func_8009D5A8 best match: 99.871%
+// func_8009D5A8 best match: 99.923%
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009D5A8.s")
 
@@ -924,12 +924,12 @@ s32 func_8009D5A8(PlayerCommandInit *arg0) {
         voiceOffset = 0;
         do {
             ((PlayerCommandState *)((u8 *)D_8015A660 + stateOffset))->unkE4 = 0;
-            func_8009F604((PlayerCommandState *)((u8 *)D_8015A660 + stateOffset));
+            func_8009F604((PlayerCommandState *)(stateOffset + (u8 *)D_8015A660));
 
             sp94 = 0;
             sp90 = config->outputRate;
             sp92 = 0;
-            alSynAllocVoice(&D_8015A8D8, (ALVoice *)(D_8015A65C + voiceOffset), (ALVoiceConfig *)&sp90);
+            alSynAllocVoice(&D_8015A8D8, (ALVoice *)(voiceOffset + D_8015A65C), (ALVoiceConfig *)&sp90);
 
             i++;
             stateOffset += sizeof(PlayerCommandState);
