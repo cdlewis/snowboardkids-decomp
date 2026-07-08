@@ -1755,7 +1755,81 @@ void func_8005C03C(RaceUiAlphaActor *arg0) {
     do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x70, -0x40, D_800E1390, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
+// func_8005C14C best match: 77.307% (nonmatchings/func_8005C14C-2775475442547365205/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005C14C.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s8 unk18;
+    /* 0x19 */ s8 unk19;
+    /* 0x1A */ s16 unk1A;
+    /* 0x1C */ s16 alpha;
+    /* 0x1E */ u8 pad1E[0x2A - 0x1E];
+    /* 0x2A */ s16 flag;
+} RaceUiCourseRecordActor;
+
+typedef struct {
+    /* 0x00 */ s8 x;
+    /* 0x01 */ s8 y;
+    /* 0x02 */ s16 z;
+} RaceUiCoursePosition;
+
+extern RaceUiCoursePosition D_800DC900[];
+extern char D_800E139C[];
+extern char D_800E13A8[];
+extern char D_800E13BC[];
+extern char D_800E13C4[];
+extern char D_800E13D8[];
+extern char D_800E13E4[];
+extern char D_800E13F4[];
+extern char D_800E1408[];
+extern char D_800E1418[];
+extern char D_800E142C[];
+
+void func_8005C14C(RaceUiCourseRecordActor *arg0) {
+    char buf[0x24];
+    Gfx *gfx;
+    s32 w0;
+    s32 w1;
+    s32 y;
+    RaceUiCoursePosition *pos;
+
+    do {
+        if (arg0->alpha != 0xFF) {
+            gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000;
+            gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1;
+            gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1;
+            gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF);
+        }
+        if (D_80121B81 == 0) {
+            func_80048278(-0x68, -0x1F, &D_800E139C, 7);
+            pos = &D_800DC900[D_80121B50];
+            sprintf(buf, &D_800E13A8, pos->x, pos->y, pos->z >> 8);
+            func_80048278(-0x68, -0x16, buf, 7);
+            func_80048278(-0x68, -8, &D_800E13BC, 7);
+            sprintf(buf, &D_800E13C4, arg0->unk18, arg0->unk19, arg0->unk1A >> 8);
+            func_80048278(-0x6C, 1, buf, 7);
+        } else {
+            func_80048278(-0x68, -0x24, &D_800E13D8, 4);
+        }
+        func_80048278(-8, -0x50, &D_800E13E4, 5);
+        y = -0x30;
+        func_80048278(-0xC, (s16)y, &D_800E13F4, 5);
+        y += 0x20;
+        if (arg0->flag != 0) {
+            func_80048278(-0xC, (s16)y, &D_800E1408, 5);
+            y += 0x20;
+        }
+        func_80048278(-8, (s16)y, &D_800E1418, 5);
+        y += 0x20;
+        func_80048278(-0xC, (s16)y, &D_800E142C, 5);
+        if (arg0->alpha != 0xFF) {
+            gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1;
+        }
+    } while (0);
+}
+#endif
 
 void func_8005C3E4(void *arg0) {
     func_800483FC(&D_80124868, func_8005B8E8, arg0);
