@@ -23,7 +23,6 @@ extern u8 func_8001710C;
 
 void func_800088C8(void);
 void func_80008C84(void);
-extern void func_80005C70(void);
 
 extern u8 D_245A80;
 extern u8 D_24C8E0;

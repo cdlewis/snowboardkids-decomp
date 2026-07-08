@@ -13,8 +13,6 @@ extern void func_80045914(void);
 extern void func_80099658(s32);
 extern void func_8009954C(s32);
 
-void func_80006D70(void);
-void func_80006E3C(void);
 extern void func_80008620(void);
 extern void func_80005540(void);
 extern void func_8001C83C(void);
