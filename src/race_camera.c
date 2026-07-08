@@ -47,6 +47,13 @@ typedef struct {
     /* 0xAD */ u8 padAD[3];
 } RaceCamera;
 
+typedef struct {
+    /* 0x00 */ s16 playerIndex;
+    /* 0x02 */ s16 duration;
+    /* 0x04 */ Vec3i startPos;
+    /* 0x10 */ Vec3i endPos;
+} RaceCameraTransition;
+
 typedef struct StackD7D4 {
     char sp28[0x20];
     s32 sp48;
@@ -77,6 +84,7 @@ extern void func_80098590(void *, s32 *, s32 *);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
 extern RacePlayerSlot D_80121D80[];
+extern u8 D_800DAA3C[];
 extern void *D_800DA880[];
 extern s32 D_80121B40;
 extern s32 D_80121B44;
@@ -235,7 +243,44 @@ void func_8006FE24(void) {
     D_801124A0->update();
 }
 
+// func_8006FE88 best match: 88.915%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006FE88.s")
+
+#ifdef NON_MATCHING
+void func_8006FE88(void) {
+    register u8 *transitionBase;
+    register s32 stride;
+    RaceCamera *camera;
+    s32 timer;
+    s16 duration;
+
+    transitionBase = D_800DAA3C;
+    stride = sizeof(RaceCameraTransition);
+    camera = D_801124A0;
+    timer = camera->timer;
+    duration = ((RaceCameraTransition *)(transitionBase + ((u16) camera->mode * stride)))[-16].duration;
+    if (duration < timer) {
+        timer = duration;
+    }
+
+#define TRANSITION (((RaceCameraTransition *)(transitionBase + ((u16) D_801124A0->mode * stride)))[-16])
+
+    D_801124A0->pos.x = TRANSITION.startPos.x + (s32)(((s64)(TRANSITION.endPos.x - TRANSITION.startPos.x) * timer) / TRANSITION.duration);
+    D_801124A0->pos.y = TRANSITION.startPos.y + (s32)(((s64)(TRANSITION.endPos.y - TRANSITION.startPos.y) * timer) / TRANSITION.duration);
+    D_801124A0->pos.z = TRANSITION.startPos.z + (s32)(((s64)(TRANSITION.endPos.z - TRANSITION.startPos.z) * timer) / TRANSITION.duration);
+
+    D_801124A0->focus.x = D_80121D80[TRANSITION.playerIndex].state.cameraPos.x;
+    D_801124A0->focus.y = D_80121D80[TRANSITION.playerIndex].state.cameraPos.y;
+    D_801124A0->focus.z = D_80121D80[TRANSITION.playerIndex].state.cameraPos.z;
+    D_801124A0->prevPos.x = D_801124A0->pos.x;
+    D_801124A0->prevPos.y = D_801124A0->pos.y;
+    D_801124A0->prevPos.z = D_801124A0->pos.z;
+    D_801124A0->timer++;
+    func_8006D8B4();
+
+#undef TRANSITION
+}
+#endif
 
 void func_80070198(void) {
     D_801124A0->pitch = 0;
