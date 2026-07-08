@@ -12,6 +12,7 @@
 #include "game_setup_menu.h"
 #include "input_task_scheduler.h"
 #include "main_menu.h"
+#include "main_menu_overlay_effects.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
 #define COURSE_GRID_ENTRY_END -2
@@ -137,7 +138,6 @@ extern void func_8006D520(s32, s32);
 extern void func_8006D580(u16, u16);
 extern void func_8006D700(void);
 extern void func_800704F0(void);
-extern void func_8005393C(void);
 extern void func_80072138(s32, s32);
 extern void func_800733E0(void);
 extern void func_800734A0(void);
