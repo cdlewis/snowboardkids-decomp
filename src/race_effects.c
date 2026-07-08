@@ -71,7 +71,13 @@ typedef struct {
     /* 0x3A */ s16 spriteIndex;
     /* 0x3C */ s16 targetAngle;
     /* 0x3E */ s16 startAngle;
-    /* 0x40 */ s16 angle;
+    union {
+        /* 0x40 */ s16 angle;
+        /* 0x40 */ s16 *anglePtr;
+    };
+    /* 0x44 */ Vec3i prevPos;
+    /* 0x50 */ s32 radius;
+    /* 0x54 */ s8 unk54;
 } RaceEffectActor;
 
 extern s16 D_8011216C;
@@ -95,6 +101,7 @@ void func_8004C5B4(RaceEffectActor *);
 void func_8004CBC4(RaceEffectActor *);
 void func_8004CF28(RaceEffectActor *);
 void func_8004D018(RaceEffectActor *);
+void func_8004D5C0(RaceEffectActor *);
 void func_8004E594(s32, s32, s32, s32);
 void func_8004EA34(s32, s32, s32, s16);
 void func_800716E4(RaceEffectActor *);
@@ -746,27 +753,7 @@ void func_8004D184(RaceEffectActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004D5C0.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 playerIndex;
-    /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ u8 pad24[4];
-    /* 0x28 */ s32 velocityY;
-    /* 0x2C */ s32 accelerationY;
-    /* 0x30 */ void *image;
-    /* 0x34 */ void *palette;
-    /* 0x38 */ s16 timer;
-    /* 0x3A */ s16 spriteIndex;
-    /* 0x3C */ s16 targetAngle;
-    /* 0x3E */ s16 startAngle;
-    /* 0x40 */ s16 *anglePtr;
-    /* 0x44 */ Vec3i prevPos;
-    /* 0x50 */ s32 radius;
-    /* 0x54 */ s8 unk54;
-} RaceEffectChainActor;
-
-void func_8004D5C0(RaceEffectChainActor *arg0) {
+void func_8004D5C0(RaceEffectActor *arg0) {
     s32 sin;
     s32 cos;
     s32 xOffset;
@@ -833,34 +820,25 @@ void func_8004D5C0(RaceEffectChainActor *arg0) {
 }
 #endif
 
-// func_8004D880 best match: 99.890% (nonmatchings/func_8004D880-5635509610426229442/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004D880.s")
-
-#ifdef NON_MATCHING
 void func_8004D880(RaceEffectActor *arg0) {
     volatile s32 pad;
-    TransformScratch scratch;
+    Vec3i source;
+    s32 sp54;
+    s32 sp50;
+    s32 sp4C;
     s32 magnitude;
     s32 newVelocity;
+    s64 product;
 
     arg0->timer = 0x12C;
     arg0->spriteIndex = -1;
     arg0->velocityY = 0x120000;
 
-    scratch.offset.z = 0;
-    scratch.offset.y = 0;
-    scratch.offset.x = 0x1000;
-
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) {
-        scratch.offset.x = -0x1000;
-    }
-
-    func_80098590(D_80121D80[arg0->playerIndex].transform, &scratch.offset, &scratch.transformed);
-
-    magnitude = func_80098C30((s64)scratch.transformed.x * scratch.transformed.x +
-                              (s64)scratch.transformed.z * scratch.transformed.z);
-    if (magnitude != 0) {
-        arg0->accelerationY = (s64)arg0->velocityY * scratch.transformed.y / magnitude;
+    source.z = 0;
+    source.y = 0;
+    source.x = 0x1000;
+    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = func_80098C30(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
+        arg0->accelerationY = (s64)arg0->velocityY * sp50 / magnitude;
         newVelocity = -arg0->velocityY;
     } else {
         newVelocity = -arg0->velocityY;
@@ -871,16 +849,16 @@ void func_8004D880(RaceEffectActor *arg0) {
     arg0->velocityY = newVelocity;
     arg0->targetAngle = D_80121D80[arg0->playerIndex].yaw;
 
-    scratch.offset.z = 0;
-    scratch.offset.y = 0x280000;
-    scratch.offset.x = 0x100000;
+    source.z = 0;
+    source.y = 0x280000;
+    source.x = 0x100000;
 
     if (D_80121D80[arg0->playerIndex].flags & 0x400) {
-        scratch.offset.x = -0x100000;
+        source.x = -0x100000;
         arg0->targetAngle += 0x800;
     }
 
-    func_80098590(D_80121D80[arg0->playerIndex].transform, &scratch.offset, &arg0->pos);
+    func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos);
 
     arg0->pos.x += D_80121D80[arg0->playerIndex].posA8.x;
     arg0->pos.y += D_80121D80[arg0->playerIndex].posA8.y;
@@ -891,4 +869,3 @@ void func_8004D880(RaceEffectActor *arg0) {
     func_8004D5C0(arg0);
     func_80071824(arg0, func_8004D5C0);
 }
-#endif
