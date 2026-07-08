@@ -815,7 +815,7 @@ extern void func_80061984(RaceUiThrownTrailActor *);
 extern void func_80063220(RaceUiSpinningParticleActor *);
 extern void func_800621DC(void *);
 extern void func_8005A1FC(void *);
-extern void func_8005A31C(void);
+extern void func_8005A31C(RaceUiAlpha18Actor *);
 extern void func_8005A884(RaceUiPopupActor *);
 extern void func_8005AAE4(RaceUiAlpha18Actor *);
 extern void func_8005AE1C(void *);
@@ -1485,7 +1485,57 @@ void func_8005A2F0(void *arg0) {
     func_80071824(arg0, func_8005A288);
 }
 
+// func_8005A31C best match: 99.106% (nonmatchings/func_8005A31C-5684860689308541580/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005A31C.s")
+
+#ifdef NON_MATCHING
+void func_8005A31C(RaceUiAlpha18Actor *arg0) {
+    volatile s32 x;
+    char buffer[0x38];
+    Gfx *gfx;
+    RaceUiAlpha18Actor *actor;
+
+    actor = arg0;
+    if (actor->alpha != 0xFF) {
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE7000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xFC119623;
+        gfx->words.w1 = 0xFF2FFFFF;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xB900031D;
+        gfx->words.w1 = 0x00504240;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xFA000000;
+        gfx->words.w1 = (actor->alpha & 0xFF) | ~0xFF;
+    }
+
+    func_80045A78(-0x6C, -0x24, func_80043040(D_8011216E), 0x20);
+    sprintf(&buffer[16], D_800E12E0, D_801222F4);
+
+    if (buffer[16] != ' ') {
+        func_80045A78(-0x4C, -0x1C, func_80043040(D_8011216E), (buffer[16] - 5) & 0xFFFF);
+    }
+
+    x = -0x44;
+    func_80045A78(((SplitWord *)&x)->half.lo, -0x1C, func_80043040(D_8011216E), (buffer[17] - 5) & 0xFFFF);
+
+    if (actor->alpha != 0xFF) {
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = (u32)D_800DEFF8;
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005A4BC.s")
 
