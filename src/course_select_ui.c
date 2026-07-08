@@ -494,7 +494,110 @@ void func_80027A08(CourseSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800287EC.s")
 
+// func_80028B0C best match: 92.500% (nonmatchings/func_80028B0C-180949888360117632/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028B0C.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 unk18;
+    /* 0x1A */ s16 unk1A;
+    /* 0x1C */ s16 unk1C;
+    /* 0x1E */ s16 unk1E;
+    /* 0x20 */ s16 unk20;
+    /* 0x22 */ s16 unk22;
+    /* 0x24 */ s16 unk24;
+    /* 0x26 */ s16 unk26;
+    /* 0x28 */ s16 unk28;
+    /* 0x2A */ s16 unk2A;
+    /* 0x2C */ s16 unk2C;
+    /* 0x2E */ s16 unk2E;
+    /* 0x30 */ s16 unk30;
+    /* 0x32 */ s16 unk32;
+    /* 0x34 */ s16 unk34;
+    /* 0x36 */ s16 unk36;
+    /* 0x38 */ s16 unk38;
+    /* 0x3A */ s16 unk3A;
+    /* 0x3C */ s16 unk3C;
+    /* 0x3E */ s16 unk3E;
+    /* 0x40 */ s16 unk40;
+    /* 0x42 */ s16 unk42;
+    /* 0x44 */ s16 unk44;
+    /* 0x46 */ s16 unk46;
+    /* 0x48 */ s16 unk48;
+    /* 0x4A */ s16 unk4A;
+    /* 0x4C */ s16 unk4C;
+    /* 0x4E */ s16 unk4E;
+    /* 0x50 */ s16 unk50;
+    /* 0x52 */ s16 unk52;
+    /* 0x54 */ s16 unk54;
+    /* 0x56 */ s16 unk56;
+    /* 0x58 */ s16 unk58;
+    /* 0x5A */ u8 unk5A;
+    /* 0x5B */ u8 unk5B;
+    /* 0x5C */ u8 unk5C;
+    /* 0x5D */ u8 unk5D;
+} CourseSelectWidgetInitActor;
+
+void func_80028B0C(CourseSelectWidgetInitActor *arg0) {
+    if (D_80121B55 == 2) {
+        arg0->unk40 = 0xA0;
+        arg0->unk18 = 0x90;
+        arg0->unk20 = -0xC8;
+        arg0->unk1A = -0x18C;
+        arg0->unk22 = 0x6C;
+        arg0->unk28 = -0x7E;
+        arg0->unk2A = -0x7E;
+        arg0->unk32 = 1;
+        arg0->unk38 = 1;
+        arg0->unk30 = -1;
+        arg0->unk3A = -1;
+        arg0->unk42 = 0x10E;
+        arg0->unk44 = 0x10E;
+        arg0->unk4A = 0x68;
+        arg0->unk4C = 0x68;
+    } else {
+        arg0->unk18 = -0x118;
+        arg0->unk1A = -0x118;
+        arg0->unk30 = 1;
+        arg0->unk38 = 1;
+        arg0->unk32 = 1;
+        arg0->unk3C = 1;
+        arg0->unk40 = -0x128;
+        arg0->unk20 = -0xC8;
+        arg0->unk22 = 0x6C;
+        arg0->unk1C = 0x94;
+        arg0->unk24 = -0xC8;
+        arg0->unk1E = 0x94;
+        arg0->unk26 = 0x6C;
+        arg0->unk28 = -0x88;
+        arg0->unk2A = -0x88;
+        arg0->unk2C = 4;
+        arg0->unk2E = 4;
+        arg0->unk3A = -1;
+        arg0->unk34 = -1;
+        arg0->unk36 = -1;
+        arg0->unk3E = -1;
+        arg0->unk42 = 0x90;
+        arg0->unk4A = 0x68;
+        arg0->unk44 = 0x90;
+        arg0->unk4C = 0x68;
+        arg0->unk46 = 0x90;
+        arg0->unk4E = 0x68;
+        arg0->unk48 = 0x90;
+        arg0->unk50 = 0x68;
+    }
+    arg0->unk54 = 0;
+    arg0->unk5B = 0;
+    arg0->unk56 = 0;
+    arg0->unk5C = 0;
+    arg0->unk58 = 0;
+    arg0->unk5D = 0;
+    arg0->unk52 = 0;
+    arg0->unk5A = 0;
+    func_80071824(arg0, func_800287EC);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028C68.s")
 
