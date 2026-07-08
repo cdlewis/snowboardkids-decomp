@@ -52,6 +52,7 @@ void func_8000F970(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
                    s32 arg9, s32 argA, s32 argB, s32 argC);
 extern void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);
 void func_80012AE4(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 arg5);
+void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
 extern RenderCallbackNode *D_80124868;
 extern u32 D_80123758;
 extern s16 D_800DEF14;
@@ -236,7 +237,57 @@ void func_800129DC(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8001303C.s")
 
+// func_80013154 best match: 99.737%
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013154.s")
+
+#ifdef NON_MATCHING
+void func_80013154(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, volatile u16 colorMode) {
+    u16 first;
+    s32 code;
+    u16 *ptr;
+    s32 xPos;
+    s32 yPos;
+    s32 skip;
+    register s32 advance;
+    u16 xStep;
+    u16 scaleValue;
+    u16 colorModeValue;
+
+    xPos = x;
+    yPos = y;
+    if (((u8 *)&palette)[3] == 0) {
+        xStep = 0x10;
+    } else {
+        xStep = 8;
+    }
+
+    first = *script ^ 0;
+    if (0xFFFF != first) {
+        ptr = script;
+        scaleValue = scale;
+        code = first;
+        colorModeValue = colorMode;
+        do {
+            skip = 0xFFFE;
+            if (0xFFFD == (code & 0xFFFF)) {
+                xPos = x;
+                yPos += 0x10;
+            } else if (skip == (code & 0xFFFF)) {
+                xPos += xStep;
+            } else if ((code & 0xFFFF) == 0xFFFC) {
+                colorModeValue = ptr[1];
+                ptr++;
+            } else {
+                func_80013284(xPos, yPos, code & 0xFFFF, ((u8 *)&palette)[3], scaleValue, colorModeValue, 0x22);
+                xPos += (advance = xStep);
+            }
+            code = ptr[1];
+            ptr++;
+        } while (0xFFFF != (code & 0xFFFF));
+        colorMode = colorModeValue;
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013284.s")
 
