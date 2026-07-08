@@ -80,6 +80,7 @@ struct CoursePreviewCamera {
 typedef struct {
     /* 0x00 */ u8 pad0[0x4E];
     /* 0x4E */ s16 matrixHandle;
+    /* 0x50 */ s16 matrixHandle2;
 } CoursePreviewAssetHandles;
 
 extern void *D_801248D4;
@@ -109,6 +110,7 @@ extern void func_80098590(void *, s32 *, Vec3i *);
 extern void func_800987A0(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2);
 extern Vec3i D_800D5CC8[];
 extern CoursePreviewGfxCommandEntry *D_800D5C6C[];
+extern CoursePreviewGfxCommandEntry *D_800D5FC8[];
 extern GfxCommandDest D_800DEE50;
 extern void func_80048C90(GfxCommandDest *, s32 *);
 void func_80055FA4(CoursePreviewCamera *arg0);
@@ -509,4 +511,38 @@ void func_8005711C(s32 arg0) {
     func_800483FC(&D_801248D4, func_80056CA0, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_8005714C.s")
+void func_8005714C(CoursePreviewGfxCommandActor *arg0) {
+    CoursePreviewGfxCommandEntry *entry;
+    s32 count;
+    s32 allocSize;
+    s32 i;
+
+    entry = D_800D5FC8[D_80121B50];
+    count = 0;
+    if (entry->textureIndex != -1) {
+        do {
+            count++;
+            entry++;
+        } while (entry->textureIndex != -1);
+    }
+
+    if (count != 0) {
+        entry = D_800D5FC8[D_80121B50];
+        allocSize = count * sizeof(GfxCommandDest);
+        D_80112130.matrixHandle2 = func_80042D58(allocSize);
+        arg0->matrices = func_80043040(D_80112130.matrixHandle2);
+
+        i = 0;
+        if (count > 0) {
+            do {
+                arg0->matrices[i] = D_800DEE50;
+                func_80048C90(&arg0->matrices[i], entry->command);
+                i++;
+                entry++;
+            } while (i != count);
+        }
+        osWritebackDCache(arg0->matrices, allocSize);
+    }
+
+    func_80071824(arg0, func_8005711C);
+}
