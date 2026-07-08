@@ -136,6 +136,7 @@ extern void func_800177F8(RaceHudBannerActor *);
 extern void func_80017C34(RaceHudPanelActor *);
 extern void func_800184C8(void);
 extern void func_80018AA0(RaceHudPanelActor *);
+extern void func_80018134(void);
 extern void func_800182A4(RaceHudPlayerListActor *);
 extern void func_80017D6C(RaceHudMessageActor *);
 extern void func_800483FC(void *, void *, void *);
@@ -149,12 +150,12 @@ extern s32 D_801235B4;
 extern void *D_80124868;
 extern u8 D_80121B55;
 extern u8 D_80121D80[];
+extern s8 D_8010AE64[];
 extern u8 D_80112130[];
 extern const char D_800E0AB0[];
 extern RacePlayerState D_800EC9F0[];
 extern u8 D_8010AE5E;
 extern u8 D_8010AE5F;
-extern s8 D_8010AE64[];
 extern s32 func_80043040(s16);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 
@@ -417,7 +418,27 @@ void func_80018060(RaceHudMessageActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80018134.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_800182A4.s")
+void func_800182A4(RaceHudPlayerListActor *arg0) {
+    s32 i;
+    u8 mode;
+    u8 globalMode;
+    u8 *player;
+
+    globalMode = D_8010AE52;
+    mode = arg0->mode;
+    {
+        if (globalMode != mode) {
+            mode = (arg0->mode = globalMode);
+        }
+
+        if (mode != 0) {
+ do { i = 0; if (((s32) D_80121B55) > 0) { player = D_80121D80; do { if (player[5] < 5) { arg0->x[i] = (D_8010AE64[i] * 0x20) + arg0->baseX; } else if (player[5] == 5) { arg0->x[i] = arg0->baseX; } i++; player += 0x60C; } while (i < ((s32) D_80121B55)); } if (((s32) arg0->timer) < 0x10) { arg0->scale -= 9; } else { arg0->scale += 9; } arg0->timer = (arg0->timer + 1) & 0x1F; mode = arg0->mode; } while (0);
+        }
+
+        D_8010AE52 = mode;
+    }
+    func_800483FC(&D_80124868, func_80018134, arg0);
+}
 
 void func_800183DC(RaceHudPlayerListActor *arg0) {
     RacePlayerState *player;
