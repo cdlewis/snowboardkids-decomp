@@ -8,7 +8,9 @@
 typedef struct {
     /* 0x00 */ s16 status;
     /* 0x02 */ s16 courseId;
-    /* 0x04 */ u8 pad4[0x10 - 0x4];
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ s32 unkC;
 } CourseGridEntry;
 
 typedef struct {
@@ -49,6 +51,9 @@ extern u16 D_800DC5C0[];
 extern CourseSelectTableEntry D_800B9542[];
 extern RaceFlowState *D_801235B8;
 extern RacePlayerState D_80121D80[];
+extern s32 D_80121B40;
+extern s32 D_80121B44;
+extern s32 D_80121B48;
 extern s32 D_801235B4;
 extern s32 D_80123758;
 extern s32 D_8012207C;
@@ -125,6 +130,7 @@ extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s32, s32, s32, s32, s32);
 extern void func_80053634(void *);
 extern void func_8006D520(s32, s32);
+extern void func_8006D580(u16, u16);
 extern void func_8006D700(void);
 extern void func_800704F0(void);
 extern void func_8007105C(void);
@@ -139,7 +145,6 @@ extern void func_80072138(s32, s32);
 extern void func_80072260(void);
 extern void func_800728E0(void);
 extern s32 func_80072938(void);
-extern s32 func_80072FC4(void);
 extern void func_80070EC0(s32);
 extern void func_800733E0(void);
 extern void func_800734A0(void);
@@ -265,7 +270,30 @@ loop:
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80072FC4.s")
+s32 func_80072FC4(void) {
+    s32 count;
+    CourseGridEntry *entry;
+
+    entry = D_800DC490[D_80121B50.s];
+    count = 0;
+loop:
+    if (entry->status != COURSE_GRID_ENTRY_END) {
+        if (entry->status != COURSE_GRID_ENTRY_FREE) {
+            D_80121D80[0] = ((RacePlayerState *)func_80043040(D_80112188))[count];
+            *(s32 *)func_80043040(D_80112186) = entry->status;
+            entry->status = COURSE_GRID_ENTRY_FREE;
+            D_80121B40 = entry->unk4;
+            D_80121B44 = entry->unk8;
+            D_80121B48 = entry->unkC;
+            func_8006D580(0, 7);
+            return 1;
+        }
+        entry++;
+        count += 1;
+        goto loop;
+    }
+    return 0;
+}
 
 s32 func_800730EC(void) {
     CourseGridEntry *entry = D_800DC490[D_80121B50.s];
