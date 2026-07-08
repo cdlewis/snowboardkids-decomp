@@ -606,7 +606,7 @@ void func_80031B24(ControllerPakFileListActor *arg0) {
 }
 
 void func_80031BA0(ControllerPakSpriteActor *arg0) {
-    func_80011D74(&arg0->sprite, 0, arg0->common.x, arg0->common.y);
+    func_80011D74((MenuRenderSprite *)&arg0->sprite, 0, arg0->common.x, arg0->common.y);
 }
 
 void func_80031BD4(s32 arg0) {
@@ -623,7 +623,7 @@ void func_80031C04(ControllerPakSpriteActor *arg0) {
 }
 
 void func_80031C6C(ControllerPakSpriteActor *arg0) {
-    func_80011D74(&arg0->sprite, 1, arg0->common.x, arg0->common.y);
+    func_80011D74((MenuRenderSprite *)&arg0->sprite, 1, arg0->common.x, arg0->common.y);
 }
 
 void func_80031CA0(s32 arg0) {

@@ -223,7 +223,7 @@ void func_80050340(RaceItemEffectActor *);
 void func_80050398(RaceItemEffectActor *);
 void func_80050888(RaceItemEffectActor *);
 void func_8005098C(RaceItemFollowActor *);
-void func_800716E4();
+void func_800716E4(void *);
 void func_80071824(void *task, void (*callback)());
 void func_80097C18(void *, s16);
 void func_80097FE4(FixedMatrix3sScratch, s16, s16);
@@ -254,7 +254,7 @@ void func_8004E3BC(RaceItemEffectActor *arg0) {
     if (D_80121B56 == 0) {
         arg0->unk24.timer++;
         if (arg0->unk24.timer == 8) {
-            func_800716E4();
+            func_800716E4(arg0);
             return;
         }
     }
@@ -318,7 +318,7 @@ void func_8004E960(RaceItemEffectActor *arg0) {
         arg0->unk30.screen.x -= 0x30;
         arg0->unk30.screen.y += 3;
         if (arg0->unk30.screen.x < 0x21) {
-            func_800716E4();
+            func_800716E4(arg0);
             return;
         }
     }
@@ -352,7 +352,7 @@ void func_8004EE0C(RaceItemEffectActor *arg0) {
     if (D_80121B56 == 0) {
         arg0->height.byte++;
         if (arg0->height.byte == 6) {
-            func_800716E4();
+            func_800716E4(arg0);
             return;
         }
     }
@@ -479,7 +479,7 @@ void func_8004F9CC(RaceItemEffectActor *arg0) {
     if (D_80121B56 == 0) {
         arg0->unk28.bytes.phase++;
         if (arg0->unk28.bytes.phase == 0xC) {
-            func_800716E4();
+            func_800716E4(arg0);
             return;
         }
     }
@@ -577,7 +577,7 @@ void func_8004FF34(RaceItemFollowActor *arg0) {
         arg0->pos2.y = arg0->offset2.y + player->pos.y;
         arg0->pos2.z = arg0->offset2.z + player->pos.z;
         if (arg0->timer == 0x18) {
-            func_800716E4();
+            func_800716E4(arg0);
             return;
         }
     }
@@ -638,7 +638,7 @@ void func_80050340(RaceItemEffectActor *arg0) {
 
     arg0->payload.sprite.frame++;
     if ((((arg0->payload.sprite.frame) + 1) - 1) >= 0x10) {
-        func_800716E4();
+        func_800716E4(arg0);
     } else {
         func_800483FC(&D_80124878, func_8005019C, arg0);
     }
@@ -971,7 +971,7 @@ void func_80050D84(RaceItemFollowActor *arg0) {
         arg0->pos2.y = arg0->offset2.y + player->pos.y;
         arg0->pos2.z = arg0->offset2.z + player->pos.z;
         if (arg0->timer == 0x18) {
-            func_800716E4();
+            func_800716E4(arg0);
             return;
         }
     }

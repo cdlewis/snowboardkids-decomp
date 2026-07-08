@@ -1,4 +1,5 @@
 #include "PR/os_internal.h"
+#include "PR/os_libc.h"
 #include "PR/sptask.h"
 #include "PR/rcp.h"
 #include "PRinternal/osint.h"
@@ -9,6 +10,7 @@
     } (void)0
 
 extern OSTask tmp_task;
+extern void _bcopy(const void *, void *, int);
 
 static OSTask *_VirtualToPhysicalTask(OSTask *intp) {
     OSTask *tp;

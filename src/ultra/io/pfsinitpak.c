@@ -1,4 +1,5 @@
 #include "PR/os_internal.h"
+#include "PRinternal/siint.h"
 #include "PRinternal/controller.h"
 
 s32 osPfsInitPak(OSMesgQueue* queue, OSPfs* pfs, int channel) {
