@@ -137,6 +137,8 @@ extern void func_80013D0C(s16, s16, u8 *, u16, u16);
 extern u8 D_800B5458[][0x4C];
 extern u8 D_800B5A14[];
 #ifdef NON_MATCHING
+extern u8 D_800E0A80[];
+extern u8 D_800E0A84[];
 extern s32 D_80121D8C;
 #endif
 extern MenuIntroActor *D_8010ADDC;
@@ -708,7 +710,7 @@ void func_80015C84(void *arg0) {
     func_80071824(arg0, func_80015BD8);
 }
 
-// func_80015CBC best match: 92.661% (nonmatchings/func_80015CBC-690418013071298896/base_2.c)
+// func_80015CBC best match: 92.721% (nonmatchings/func_80015CBC-180949888360117632/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80015CBC.s")
 
 #ifdef NON_MATCHING
@@ -738,10 +740,10 @@ void func_80015CBC(TitleMenuWidgetItemView *arg0) {
 
         next = i + 1;
         scale = next & 0xFF;
-        sprintf(text, "%d", next);
+        sprintf(text, D_800E0A80, next);
         func_80013D0C((s16)(item->x + 0x32), (s16)(item->y + 2), text, 0, alpha);
         if (alpha == 0x100) {
-            sprintf(text, "%6d", *(s32 *)((u8 *)&D_80121D8C + (i * RACE_PLAYER_STATE_SIZE)));
+            sprintf(text, D_800E0A84, *(s32 *)((u8 *)&D_80121D8C + (i * RACE_PLAYER_STATE_SIZE)));
             func_80013D0C((s16)(item->x + 0x44), (s16)(item->y + 0x1B), text, 0, alpha);
         } else {
             func_8000F8AC((s16)(item->x + 2), (s16)(item->y + 0x14), func_80043040(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 0x90, 0x20, 0x20, 0, 0xF0, 0);
