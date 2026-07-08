@@ -1867,7 +1867,7 @@ void func_8005C03C(RaceUiAlphaActor *arg0) {
     do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x70, -0x40, D_800E1390, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
-// func_8005C14C best match: 91.193% (nonmatchings/func_8005C14C-1315772375853892447/base_13.c)
+// func_8005C14C best match: 93.873% (nonmatchings/func_8005C14C-4139837607000619032/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005C14C.s")
 
 #ifdef NON_MATCHING
@@ -1895,7 +1895,7 @@ void func_8005C14C(RaceUiCourseRecordActor *arg0) {
     s32 w0;
     s32 w1;
     s16 y;
-    volatile int new_var;
+    u32 new_var;
     RaceUiCoursePosition *pos;
 
     do {
