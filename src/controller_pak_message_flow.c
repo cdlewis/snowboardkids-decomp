@@ -25,7 +25,6 @@ extern void func_80031CD0(void);
 extern CharacterSelectFlowState *D_801235B8;
 extern s8 D_800DEED4;
 extern s16 D_800DEF14;
-extern f32 D_800E0A60;
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern u8 D_5E26E0[];
@@ -34,7 +33,7 @@ extern u8 D_5E0E40[];
 
 void func_8000CF70(void) {
     func_800704F0();
-    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0A60);
+    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     D_800DEED4 = 0;
     D_801235B8->fade = 0xFF;
     D_801235B8->timer = 0;
