@@ -776,7 +776,7 @@ extern void func_80066158(void *);
 extern void func_800663C8(void *);
 extern void func_80059854(void *);
 extern void func_8005804C(void);
-extern void func_8005812C(void);
+extern void func_8005812C(void *);
 extern void func_8005827C(void);
 extern void func_800572A0(void *);
 extern void func_80057548(RaceUiSlideActor *);
@@ -1016,7 +1016,49 @@ void func_80057E90(RaceUiAlpha18Actor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005804C.s")
 
+// func_8005812C best match: 89.607% (nonmatchings/func_8005812C-2911448260736516995/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005812C.s")
+
+#ifdef NON_MATCHING
+void func_8005812C(void *arg0) {
+    char buffer[0x14];
+    s32 zero;
+    s32 x;
+    s32 space;
+    s32 colorValue;
+    u16 color;
+    char *ptr;
+    RaceUiAssetHandles *assets;
+
+    zero = 0;
+    sprintf(buffer, D_800E1254, D_801222E8);
+    x = 0x20;
+    if (D_80122289 == 3) {
+        colorValue = 0xD;
+    } else {
+        colorValue = 0xC;
+    }
+
+    ptr = &buffer[zero];
+    assets = (RaceUiAssetHandles *)((u8 *)&D_80112130 + zero);
+    space = ' ';
+    color = colorValue;
+loop:
+    if (*ptr != '\0') {
+        if (*ptr != space) {
+            func_80046D68((s16)x, -0xF, func_80043040(assets->popupFontHandle), ((*ptr) - 5) & 0xFFFF, color);
+        }
+        x += 8;
+        ptr++;
+        goto loop;
+    }
+
+    func_80046D68((s16)x, -0xF, func_80043040(assets->popupFontHandle), 0x37, color);
+    if (D_80122289 == 3) {
+        func_80045A78(0x18, -0xB, func_80043040(assets->popupFontHandle), 0x4E);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005827C.s")
 
