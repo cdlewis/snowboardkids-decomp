@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "character_select_flow.h"
 #include "controller_pak_menu.h"
 #include "controller_pak_menu_ui.h"
@@ -23,7 +24,6 @@ typedef struct {
 extern void func_800483FC(void *, void *, s32);
 extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
-extern void func_80071824(void *task, void (*callback)());
 extern s32 D_80124868;
 extern s32 D_80124838;
 extern CharacterSelectFlowState *D_801235B8;
@@ -39,7 +39,6 @@ extern s16 D_8011217C;
 extern s16 D_80112178;
 extern u8 D_800B7E60[];
 extern u8 D_800B8090[];
-extern void func_800716E4(void *);
 
 void func_8002FFD0(ControllerPakTitleActor *arg0) {
     s32 i;

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "controller_rumble.h"
 #include "game_audio.h"
 #include "race_input_history.h"
@@ -22,7 +23,6 @@ extern s32 func_80082EC0(RaceInputPlayer *);
 extern s32 func_80095F90(s32);
 extern void func_8008BB5C(RaceInputPlayer *, s32);
 extern void func_8009724C(RaceInputPlayer *);
-extern void *func_800711D0(void *, s32, s32);
 extern s32 func_80072138(s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
 extern void func_8008393C(RaceInputPlayer *);

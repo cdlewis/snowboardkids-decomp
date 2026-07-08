@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "course_asset_loader.h"
 #include "race_input_history.h"
@@ -21,20 +22,15 @@ typedef struct {
 typedef struct MainMenuMessageActor MainMenuMessageActor;
 
 extern void func_8008C704(void);
-extern void func_800710CC(s32);
-extern void func_8007115C(void);
 extern void func_8006D700(void);
 extern void func_80096E3C(void);
 extern void func_80072114(s32);
 extern void func_800704F0(void);
-extern void func_80070EC0(s32);
 extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8006D5CC(void);
 extern void func_8006D520(s32, s32);
-extern void func_80071664(void *, s32, s32, s32);
 extern void func_800720E4(s32);
-extern void func_80071408(void *, s32, s32);
 extern void func_80055678(void);
 extern void func_80051854(void);
 
@@ -92,7 +88,6 @@ extern void func_80040B54(void);
 extern void func_80040BF4(void);
 extern void func_80040C44(void);
 extern void func_80040B04(void);
-extern void func_8007105C(void);
 extern void func_8006D780(s32);
 extern void func_80072260(void);
 extern void func_80045914(void);

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "character_select_ui.h"
 
 #define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (D_80112130.textureHandle)
@@ -39,7 +40,6 @@ typedef union {
     } fields;
 } CharacterSelectCursorState;
 
-extern void func_80071824(void *task, void (*callback)());
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_80011264(s16, s16, s32, u16, u16, u16);
@@ -86,8 +86,6 @@ extern u8 D_800EC9DD;
 extern u8 D_800EC9C2;
 extern u8 D_80121B5E;
 extern void *D_80124868;
-extern void *func_80071408(void *, s32, s32);
-extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern u8 D_80121B55;
 extern u8 D_80121D80[];

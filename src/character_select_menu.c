@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "character_select_menu.h"
 
 typedef struct {
@@ -37,7 +38,6 @@ typedef struct {
 } CharacterSelectPlayer;
 
 extern s32 func_80013F88(s32, s32, s32);
-extern void func_8007105C(void);
 extern void func_80045914(void);
 extern void func_80099658(s32);
 extern void func_8009954C(s32);

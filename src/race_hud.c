@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "menu_rendering.h"
 
 #define PLAYER_COUNT 4
@@ -130,7 +131,6 @@ typedef struct {
     /* 0x0D */ u8 unkD;
 } RaceHudSharedState;
 
-extern void func_80071824(void *task, void (*callback)());
 extern void func_800171F0(RaceHudBannerActor *);
 extern void func_80018C80(void);
 extern void func_800177F8(RaceHudBannerActor *);

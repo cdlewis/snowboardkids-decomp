@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 
 typedef struct ShopMenuWidgetActor ShopMenuWidgetActor;
@@ -143,10 +144,8 @@ struct ShopMenuWidgetActor {
     };
 };
 
-extern void func_80071824(void *task, void (*callback)());
-extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
-extern void *func_80071408(void *, s32, s32);
+extern void func_8002C4E0(ShopMenuRowActor *);
 extern void func_8002C9A0(ShopMenuWidgetActor *);
 extern void func_8002FAB8(ShopMenuWidgetActor *);
 extern void func_8002DF40(ShopMenuWidgetActor *);

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
 
@@ -112,10 +113,7 @@ void func_8004D5C0(RaceEffectActor *);
 void func_8004E594(s32, s32, s32, s32);
 void func_8004EA34(s32, s32, s32, s16);
 void func_8006224C(s32, s32, s32, u16);
-void func_800716E4(RaceEffectActor *);
-void func_80071824(void *task, void (*callback)());
 void func_80072A74(s32, void *, s32, s32);
-void *func_80071408(void *, s32, s32);
 s32 func_80098C30(s64);
 s16 func_8007D200(s16, s32, s32);
 void func_8007ECF4(s16, s32, s32, s32, s32 *, s32 *, s32 *, s32 *);

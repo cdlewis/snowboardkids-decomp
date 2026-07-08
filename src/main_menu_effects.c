@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "main_menu_scene_model.h"
 
 typedef struct {
@@ -50,11 +51,9 @@ typedef struct {
     /* 0x2A */ s16 startY;
 } MainMenuEffectActor;
 
-extern void func_80071824(void *task, void (*callback)());
 extern void func_800483FC(void *, void *, void *);
 extern void func_80011D74(void *, s32, s16, s16);
 extern void func_80017168(void *, s32);
-extern void func_800716E4(void *);
 extern s32 func_80043040(s16);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern Gfx *gRegionAllocPtr;
@@ -97,7 +96,6 @@ void func_8003CAD8(MainMenuEffectActor *arg0);
 void func_8003CC58(MainMenuEffectActor *arg0);
 void func_8003CF98(MainMenuEffectActor *arg0);
 void func_8003D124(MainMenuEffectActor *arg0);
-MainMenuEffectActor *func_80071408(void *, s32, s32);
 
 void func_8003BEF0(MainMenuEffectActor *arg0) {
     func_8000F030(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, func_80043040(D_80112172), ((u16) arg0->angle + 0x32) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);

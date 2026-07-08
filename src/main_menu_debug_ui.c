@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 
 #define END_OBJ_FADE_MAX 0x100
 #define END_OBJ_FADE_STEP 0xA
@@ -49,7 +50,6 @@ extern void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
 extern void func_80013D0C(s32, s32, void *, s32, s32);
 extern void func_800483FC(void *, void *, void *);
-extern void func_80071824(void *task, void (*callback)());
 extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 

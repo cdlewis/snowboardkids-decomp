@@ -1,6 +1,10 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "viewport_manager.h"
+
+/* Local 3-arg declaration; see note in effect_task_scheduler.h. */
+extern void *func_800716A4(void *, s32, s32);
 
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
 #define SCALE_MATRIX_COMPONENT(value, scale) ((value * scale) / 0x1000)
@@ -718,9 +722,6 @@ extern u32 D_200C7D8[];
 extern u32 D_200CE48[];
 extern u32 D_200CFB0[];
 extern u32 D_200D3A8[];
-extern void func_80071824(void *task, void (*callback)());
-extern void *func_800711D0(void *, s32, s32);
-extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, s32);
 extern RaceUiGfxCommandDest *func_8004885C(RaceUiTrailCopyBlock *);
 extern void func_80048C90(RaceUiGfxCommandDest *, s32 *);
@@ -754,8 +755,6 @@ extern void func_80088664(Vec3i *, s32, s32, s32, s32);
 extern s32 func_800891B8(Vec3i *, s32, s32, s16);
 extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
 extern int sprintf(char *, const char *, ...);
-extern void func_800716E4(void *);
-extern void *func_800716A4(void *, s32, s32);
 extern void func_80072A74(s32, void *, s32, s32);
 extern void func_80072A20(s32, void *, s32, s32, f32, s32);
 extern s32 func_8007B130(void *, void *, void *, void *);

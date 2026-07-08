@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_80003140.s")
 
@@ -13,7 +14,6 @@ typedef struct {
 } GameSetupMenuState;
 
 extern void func_800035F8(void);
-extern void func_8007105C();
 extern void func_80072138();
 extern void func_8009956C();
 extern u8 D_800E29C0;

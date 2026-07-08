@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 
 typedef struct MainMenuScoreTask MainMenuScoreTask;
 
@@ -17,14 +18,11 @@ typedef struct {
     /* 0x6 */ s16 nextTimer;
 } ControllerPakDeleteFlow;
 
-extern void func_80071824(void *task, void (*callback)());
 extern void func_800129DC(s16, s16, u8 *, s32, s32);
 extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, u16, s32);
 extern s32 func_80043040(s16);
-extern void *func_80071408(void *, s32, s32);
-extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern u8 D_800B73F0[][0x4C];
 extern u8 D_800B7986[];

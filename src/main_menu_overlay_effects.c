@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "viewport_manager.h"
 
@@ -175,10 +176,6 @@ s32 func_80097AE8(s16);
 void func_80097C18(FixedMatrix3s, s16);
 void func_80097FE4(FixedMatrix3sScratch, s16, s16);
 void func_80098590(FixedMatrix3sScratch, Vec3i *, Vec3i *);
-MainMenuOverlayEffectActor *func_80071408(void (*callback)(MainMenuOverlayEffectActor *), s32 type, s32 priority);
-void func_800716E4(void *);
-void *func_80071664(void *, s32, s32, s32);
-void func_80071824(void *task, void (*callback)());
 void func_80072138(s16, s32, void *);
 
 void func_80053660(MainMenuOverlayEffectActor *arg0) {

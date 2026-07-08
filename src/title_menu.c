@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 
 #define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x3E])
 #define TITLE_MENU_FRAME_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x42])
@@ -110,7 +111,6 @@ extern void func_80010074(s16, s16, s32, s32, s32);
 extern void func_800129DC(s16, s16, u16 *, s32, s32);
 extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
-extern void func_80071824(void *task, void (*callback)());
 extern void func_80014600(MenuIntroActor *);
 extern void func_80014EF0(MenuItemActor *);
 extern void func_80014CB8(void *);
@@ -129,8 +129,6 @@ extern void func_80016948(TitleMenuWidgetActor *);
 extern void func_80016E40(TitleMenuTransitionActor *);
 extern void func_800170AC(void *);
 extern void func_800483FC(void *, void *, s32);
-extern void *func_80071408(void *, s32, s32);
-extern void func_800716E4(void *);
 extern s32 func_80072138(s32, s32);
 extern void func_80015C84(void *);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);

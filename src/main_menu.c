@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 
 #define OS_MESG_BLOCK 1
@@ -85,7 +86,6 @@ extern void func_8009956C(void *, s32);
 extern void func_800994F4(s32, void *, s32);
 extern void func_80099614(s32);
 extern void func_8006D780(s32);
-extern void func_8007105C(void);
 extern void func_80042034(s32);
 extern void func_800428C8(s32);
 extern void func_80072114(s32);
@@ -94,8 +94,6 @@ extern void func_800704F0(void);
 extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8006D5CC(void);
 extern void func_8006D520(s32, s32);
-extern void func_80070EC0(s32);
-extern void func_80071664(void *, s32, s32, s32);
 extern void func_8009B58C(s32, s32, s32);
 extern void func_800720E4(s32);
 extern void func_80002A1C(void);
@@ -109,7 +107,6 @@ extern void func_800420FC(s32, s32, s32, s32);
 extern void func_80052394(void);
 extern void func_80002CE4(void);
 extern void func_8000262C(void);
-extern void func_80071408(void *, s32, s32);
 extern void func_80002024(void);
 extern void func_80032684(void);
 extern void func_80032934(void);

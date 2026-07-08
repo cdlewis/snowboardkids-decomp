@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 
 typedef struct {
     /* 0x00 */ char pad0[0x18];
@@ -16,7 +17,6 @@ extern void func_80041D20(s32 arg0, s32 arg1);
 extern s32 func_80041FB4(s32 arg0);
 extern void func_80042034(s32 arg0);
 extern void func_800428C8(s32 arg0);
-extern void func_80071824(void *task, void (*callback)());
 extern void func_8003C0A4(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
 extern void func_8003CB78(s32 arg0, s32 arg1);
 extern void func_8003C420(s32 arg0, s32 arg1, s32 arg2);
