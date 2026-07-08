@@ -197,7 +197,73 @@ GameAudioHandleNode *func_80071C84(void) {
     return D_80121940[D_8012193C];
 }
 
+// func_80071CC0 best match: 97.838%
 #pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80071CC0.s")
+
+#ifdef NON_MATCHING
+s32 func_80071CC0(void) {
+    GameAudioHandleNode *temp_v0;
+    GameAudioHandleNode *temp_v0_2;
+    GameAudioHandleNode *var_v1;
+    s32 var_a0;
+
+    temp_v0 = func_80071C84();
+    if (temp_v0 == NULL) {
+        if (D_80121B04 < D_80121934->priority) {
+            return 1;
+        }
+        if (D_80121934->stopRequested != 0) {
+            D_80121934->stopRequested = 0;
+            func_8009DE50(D_80121934->handle, 0);
+        }
+        return 0;
+    }
+
+    var_a0 = D_80121B01;
+    if ((var_a0 >= 0x70) || (var_a0 < 0)) {
+        D_80121B01 = 0;
+        var_a0 = 0 & 0xFF;
+    }
+
+    temp_v0->handle = func_8009DC68(var_a0, D_80121B02, D_80121B03, 0, D_80121B04);
+    temp_v0->volume = D_80121B05;
+    temp_v0->priority = D_80121B04;
+    temp_v0->stopRequested = 1;
+
+    if (D_80121930 == NULL) {
+        temp_v0->prev = D_80121930;
+        temp_v0->next = NULL;
+        D_80121930 = temp_v0;
+        D_80121934 = temp_v0;
+        return 1;
+    }
+
+    var_v1 = D_80121930;
+    if (D_80121930 != NULL) {
+        do {
+            if (temp_v0->priority >= var_v1->priority) {
+                temp_v0_2 = var_v1->prev;
+                temp_v0->next = var_v1;
+                temp_v0->prev = temp_v0_2;
+                if (temp_v0_2 == NULL) {
+                    D_80121930 = temp_v0;
+                } else {
+                    temp_v0_2->next = temp_v0;
+                }
+                var_v1->prev = temp_v0;
+                return 1;
+            }
+            var_v1 = var_v1->next;
+        } while (var_v1 != NULL);
+    }
+
+    temp_v0->next = D_80121934->next;
+    temp_v0->prev = D_80121934;
+    D_80121934->next = temp_v0;
+    D_80121934 = temp_v0;
+    return 1;
+}
+#endif
 
 void func_80071E80(void) {
     GameAudioHandleNode *node;
