@@ -2,7 +2,8 @@
 """Report logged match progress from nonmatchings/ workspaces.
 
 This scans nonmatchings/**/match_log.txt and tools/scratches.json, ignores
-functions already present in asm/matchings, and reports:
+functions already present in asm/matchings according to the selected filter
+scope, and reports:
 
 - functions with a logged 100% match that have not been moved to asm/matchings
 - partially matched functions, ordered by best logged match percentage
@@ -98,6 +99,10 @@ def matched_function_names(repo_root: Path) -> set[str]:
         names.update(match.group("name") for match in ASM_LABEL_RE.finditer(text))
         names.update(matched_function_address_aliases(text))
     return names
+
+
+def matched_function_names_by_root(repo_roots: Iterable[Path]) -> dict[Path, set[str]]:
+    return {repo_root: matched_function_names(repo_root) for repo_root in repo_roots}
 
 
 def matched_function_address_aliases(text: str) -> set[str]:
@@ -234,15 +239,20 @@ def is_better_scratch(candidate: ScratchResult, current: ScratchResult | None) -
 
 def best_local_results_by_function(
     scan_roots: Iterable[Path],
-    matched_functions: set[str],
+    primary_matched_functions: set[str],
+    matched_functions_by_root: dict[Path, set[str]],
+    filter_scope: str,
 ) -> dict[str, MatchResult]:
     best_by_function: dict[str, MatchResult] = {}
 
     for scan_root in scan_roots:
+        source_matched_functions = matched_functions_by_root.get(scan_root, set())
         nonmatchings_dir = scan_root / "nonmatchings"
         for log_path in sorted(nonmatchings_dir.glob("*/match_log.txt")):
             function = function_name_from_workspace(log_path.parent)
-            if function in matched_functions:
+            if filter_scope in {"primary", "both"} and function in primary_matched_functions:
+                continue
+            if filter_scope in {"source", "both"} and function in source_matched_functions:
                 continue
 
             for result in parse_match_log(log_path, scan_root):
@@ -271,10 +281,18 @@ def report_rows_by_function(
     repo_root: Path,
     scan_roots: Iterable[Path],
     scratches_paths: Iterable[Path],
+    filter_scope: str,
 ) -> dict[str, ReportRow]:
-    matched_functions = matched_function_names(repo_root)
-    local_results = best_local_results_by_function(scan_roots, matched_functions)
-    scratch_results = best_scratch_results_by_function(scratches_paths, matched_functions)
+    scan_roots = list(scan_roots)
+    matched_functions_by_root = matched_function_names_by_root([repo_root, *scan_roots])
+    primary_matched_functions = matched_functions_by_root.get(repo_root, set())
+    local_results = best_local_results_by_function(
+        scan_roots,
+        primary_matched_functions,
+        matched_functions_by_root,
+        filter_scope,
+    )
+    scratch_results = best_scratch_results_by_function(scratches_paths, primary_matched_functions)
 
     return {
         function: ReportRow(local=local, scratch=scratch_results.get(function))
@@ -337,10 +355,10 @@ def print_rows(title: str, rows: list[ReportRow], repo_root: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "Report 100% and partial matches from nonmatchings/**/match_log.txt, "
+            "Report full and partial matches from nonmatchings/**/match_log.txt, "
             "supplemented with decomp.me scratches from tools/scratches.json. By default this scans "
-            "the current checkout and ../sbk-a when present, excluding functions already in the "
-            "current checkout's asm/matchings."
+            "the current checkout and ../sbk-a when present, excluding functions already matched in "
+            "either the primary repo root or the scan root that produced each match_log entry."
         )
     )
     parser.add_argument(
@@ -370,7 +388,7 @@ def main() -> int:
     parser.add_argument(
         "--full-only",
         action="store_true",
-        help="Only print 100% matched functions missing from asm/matchings.",
+        help="Only print 100%% matched functions missing from asm/matchings.",
     )
     parser.add_argument(
         "--scratches",
@@ -391,6 +409,15 @@ def main() -> int:
         type=float,
         default=0.0,
         help="Only report local match_log entries at or above this percentage.",
+    )
+    parser.add_argument(
+        "--filter-scope",
+        choices=("primary", "source", "both"),
+        default="both",
+        help=(
+            "Which asm/matchings tree suppresses local match_log rows: primary uses --repo-root only; "
+            "source uses each scan root; both uses either one. Defaults to both."
+        ),
     )
     args = parser.parse_args()
 
@@ -432,7 +459,7 @@ def main() -> int:
 
     results = [
         row
-        for row in report_rows_by_function(repo_root, valid_scan_roots, scratches_paths).values()
+        for row in report_rows_by_function(repo_root, valid_scan_roots, scratches_paths, args.filter_scope).values()
         if row.local.percent >= args.min_percent
     ]
     full_matches = sorted(
@@ -445,7 +472,7 @@ def main() -> int:
     )
 
     if not args.partial_only:
-        print_rows("100% matched in match_log but missing from asm/matchings", full_matches, repo_root)
+        print_rows("100% matched in match_log but missing from primary asm/matchings", full_matches, repo_root)
     if not args.partial_only and not args.full_only:
         print()
     if not args.full_only:
