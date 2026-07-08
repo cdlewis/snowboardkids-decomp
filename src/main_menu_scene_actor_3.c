@@ -1,5 +1,8 @@
 #include "common.h"
 
+typedef s16 FixedMatrix3sScratch[0x10];
+typedef s32 MatrixWordCopy[8];
+
 typedef struct {
     char pad[0x18];
     s32 x;
@@ -15,7 +18,9 @@ typedef struct {
 } MainMenuSceneActor;
 
 typedef struct {
-    char pad[0x18];
+    char pad0[0x10];
+    u16 mode;
+    char pad12[0x6];
     char displayObject[0x14];
     s32 x;
     s32 y;
@@ -37,7 +42,7 @@ extern s32 func_8004885C(void *);
 extern void func_8007C130(s32, s16, s16);
 extern void func_80039A70(MainMenuSceneActor *);
 extern void func_80039E5C(MainMenuSceneActor *);
-extern void func_8003B430(void);
+extern void func_8003B430(MainMenuSceneEffect *);
 extern void func_80039CEC(MainMenuSceneActor *);
 extern void func_8003A46C(MainMenuSceneActor *);
 extern void func_800397C4(MainMenuSceneActor *arg0);
@@ -65,7 +70,14 @@ extern void func_80041D20(s32, s32);
 extern void func_80042034(s32);
 extern void func_800716E4(void *);
 extern void *func_80071664(void (*)(void *), s32, s32, u8);
+#ifdef NON_MATCHING
+extern void func_80097BAC();
+extern void func_80097C84();
+extern void func_80097CF0();
+extern void func_8009853C();
+#else
 extern void func_8009853C(void *, s32, s32, void *);
+#endif
 extern void func_8003B740(MainMenuSceneEffect *);
 extern u16 D_8010B1A2;
 extern u8 D_8010B1A4;
@@ -847,7 +859,75 @@ void func_8003B3E0(MainMenuSceneEffect *arg0) {
     }
 }
 
+// func_8003B430 best match: 91.989% (base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_3/func_8003B430.s")
+
+#ifdef NON_MATCHING
+void func_8003B430(MainMenuSceneEffect *arg0) {
+    FixedMatrix3sScratch sp48;
+    FixedMatrix3sScratch sp28;
+    void *sp24[1];
+    s16 temp_t7;
+    s32 timer;
+    u16 timer2;
+
+    temp_t7 = arg0->timer + 1;
+    arg0->timer = temp_t7;
+    if (arg0->mode == 1) {
+        timer = temp_t7 & 0xFFFF;
+        if (timer < 6) {
+            arg0->y = (arg0->y - (timer * 0x15000)) + 0x80000;
+        } else {
+            arg0->y = (arg0->y - (timer * 0x15000)) + 0x124000;
+        }
+        arg0->x += 0xC0000;
+    } else {
+        timer2 = arg0->timer;
+        if ((s32) timer2 < 5) {
+            arg0->y = (arg0->y - (timer2 << 0xF)) + 0x40000;
+        } else {
+            arg0->y = (arg0->y - (timer2 * 0x3800)) + 0xFFFE8800;
+        }
+        arg0->x += 0x1D000;
+    }
+
+    func_8009853C(sp48, 0x400, 0x400);
+    if (arg0->mode == 1) {
+        func_80097C84(sp28, 0x1000 - (arg0->timer << 6));
+    } else {
+        func_80097C84(sp28, 0x1000 - (arg0->timer * 0x28));
+    }
+
+    sp24[0] = &arg0->displayObject;
+    func_80097CF0(sp48, sp28, sp24[0]);
+
+    if (arg0->mode == 1) {
+        if (arg0->x >= 0x1900000) {
+            arg0->timer = 0;
+            func_80071824(arg0, func_8003B3E0);
+        }
+    } else if (arg0->timer == 0x14) {
+        arg0->timer = 0;
+        arg0->y = 0x8BD1E;
+        func_80071824(arg0, func_8003B3E0);
+        func_8009853C(sp48, 0x400, 0x400);
+        func_80097C84(sp28, 0xC00);
+        func_80097CF0(sp48, sp28, sp24[0]);
+        func_80097BAC(sp48, 0x300);
+        ((MatrixWordCopy *) sp28)[0][0] = ((MatrixWordCopy *) sp24[0])[0][0];
+        ((MatrixWordCopy *) sp28)[0][1] = ((MatrixWordCopy *) sp24[0])[0][1];
+        ((MatrixWordCopy *) sp28)[0][2] = ((MatrixWordCopy *) sp24[0])[0][2];
+        ((MatrixWordCopy *) sp28)[0][3] = ((MatrixWordCopy *) sp24[0])[0][3];
+        ((MatrixWordCopy *) sp28)[0][4] = ((MatrixWordCopy *) sp24[0])[0][4];
+        ((MatrixWordCopy *) sp28)[0][5] = ((MatrixWordCopy *) sp24[0])[0][5];
+        ((MatrixWordCopy *) sp28)[0][6] = ((MatrixWordCopy *) sp24[0])[0][6];
+        ((MatrixWordCopy *) sp28)[0][7] = ((MatrixWordCopy *) sp24[0])[0][7];
+        func_80097CF0(sp28, sp48, sp24[0]);
+    }
+
+    func_800483FC(&D_80124898, func_8003B39C, arg0);
+}
+#endif
 
 void func_8003B6F0(MainMenuSceneEffect *arg0) {
     if (D_8010B1A2 == 0x15) {
