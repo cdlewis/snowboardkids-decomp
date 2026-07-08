@@ -837,7 +837,9 @@ extern void func_80057E90(RaceUiAlpha18Actor *);
 extern void func_80058360(RaceUiAlpha18Actor *);
 extern void func_80065D24(RaceUiOverlayActor *);
 extern void func_80065808(void);
+extern void func_800651BC(RaceUiGfxCommandActor *);
 extern void func_80065508(RaceUiGfxCommandActor *);
+extern void func_80083CFC(RacePlayerState *);
 extern void func_80066158(void *);
 extern void func_800663C8(void *);
 extern void func_80059854(void *);
@@ -3838,15 +3840,10 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
 }
 #endif
 
-// func_80065508 best match: 92.859%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80065508.s")
-
-#ifdef NON_MATCHING
 void func_80065508(RaceUiGfxCommandActor *arg0) {
     RaceUiGfxCommandScriptEntry *entry;
     Vec3i *pos;
     RaceUiGfxCommandActor *actor;
-    volatile s32 timeout;
     register s32 xzSize;
     register s32 ySize;
     register s32 sentinel;
@@ -3866,7 +3863,6 @@ void func_80065508(RaceUiGfxCommandActor *arg0) {
         goto done;
     }
     xzSize = 0x70000;
-    timeout = 0xF0;
     pos = &entry->command;
 
 loop:
@@ -3877,9 +3873,11 @@ loop:
                 func_80072A74(0x18, pos, 0x7F, 0x32);
                 D_80121D80[0].unk570++;
                 if (D_80121D80[0].unk2DA != 0) {
-                    D_80121D80[0].unk2DA = timeout;
+                    D_80121D80[0].unk2DA = 0xF0;
                 } else {
                     func_80083CFC(D_80121D80);
+                }
+                if (D_80121D80[0].unk2DA) {
                 }
             }
         }
@@ -3894,7 +3892,6 @@ loop:
 done:
     func_800483FC(&D_801248D4, func_800651BC, actor);
 }
-#endif
 
 void func_8006565C(RaceUiGfxCommandActor *arg0) {
     register RaceUiGfxCommandActor *actor1;
