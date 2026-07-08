@@ -105,6 +105,7 @@ extern u8 D_8010AF93;
 extern s16 D_80112172;
 extern s16 D_8011217C;
 extern s16 D_80112178;
+extern u8 D_800B7E60[];
 extern u8 D_800B8090[];
 void func_8003048C(ControllerPakTitleActor *);
 void func_800305B8(ControllerPakConfirmActor *);
@@ -121,10 +122,6 @@ void func_8003209C(ControllerPakDeletePromptActor *);
 void func_80032534(ControllerPakDeletePromptActor *);
 extern void func_800716E4(void *);
 
-// func_8002FFD0 best match: 98.132% (nonmatchings/func_8002FFD0-5635509610426229442/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_8002FFD0.s")
-
-#ifdef NON_MATCHING
 void func_8002FFD0(ControllerPakTitleActor *arg0) {
     s32 i;
     s32 j;
@@ -154,15 +151,15 @@ loop_outer:
     } while (j != 0xE0);
     i += 0x10;
     if (i != 0x30) {
+        // IDO register allocation nudge for matching codegen.
+        if (1) {
+        }
         goto loop_outer;
     }
 
     func_80013154((s16)(arg0->common.x + 0x30), arg0->common.y, D_800B7E60, 0, 0x100, 0);
 
-    alpha = 0x60;
-    if (arg0->selectedOption == 0) {
-        alpha = 0x100;
-    }
+    alpha = (arg0->selectedOption == 0) ? 0x100 : 0x60;
 
     func_8000F8AC((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x10), func_80043040(D_80112130[0x24]), 0x17, 0x20,
                   0x20, 0, alpha, 0);
@@ -178,7 +175,6 @@ loop_outer:
     func_8000F8AC((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x10),
                   func_80043040(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
 }
-#endif
 
 // func_8003048C best match: 92.821%
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_8003048C.s")
