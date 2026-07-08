@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "course_select_menu.h"
 
 typedef struct {
@@ -90,8 +91,6 @@ extern void func_80045914(void);
 extern void func_80070614(s32);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_80070E90(s32);
-extern void func_8007105C(void);
-extern void func_80071408(void *, s32, s32);
 extern void func_80072138(s32, s32);
 extern void func_8009954C(s32);
 extern void func_80099658(s32);

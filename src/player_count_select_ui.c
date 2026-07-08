@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "menu_rendering.h"
 
 typedef struct {
@@ -80,9 +81,6 @@ typedef struct {
     /* 0x4A */ s16 frameTextureHandle;
 } PlayerCountSelectAssetHandles;
 
-extern void func_80071824(void *task, void (*callback)());
-extern void *func_80071408(void *, s32, s32);
-extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
 extern void func_800296D8(PlayerCountSelectWidgetActor *);

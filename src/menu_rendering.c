@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 
 typedef struct MenuRenderTask MenuRenderTask;
 typedef struct RenderCallbackNode RenderCallbackNode;
@@ -43,7 +44,6 @@ typedef void (*MenuRenderSpriteActorCallback)(MenuRenderSpriteActor *);
 typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
 extern void func_800483FC(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
-extern void func_80071824(void *task, void (*callback)());
 s32 func_80011D74(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
 void func_800112F4(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, s32 arg6, s32 arg7);
 void func_8000F0EC(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7, s32 arg8, s32 arg9,

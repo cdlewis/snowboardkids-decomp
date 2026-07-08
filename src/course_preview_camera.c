@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "course_preview_camera.h"
 
@@ -115,7 +116,6 @@ extern CoursePreviewGfxCommandEntry *D_800D5FC8[];
 extern GfxCommandDest D_800DEE50;
 extern void func_80048C90(GfxCommandDest *, s32 *);
 
-extern void func_80071824(void *task, void (*callback)());
 extern s8 D_80122288;
 extern s16 D_80122282;
 extern s16 D_80121B50;

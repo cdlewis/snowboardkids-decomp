@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "race_input_history.h"
 
@@ -129,8 +130,6 @@ extern GfxCommandDest *func_8004885C(GfxCommandSource *);
 extern void func_80048C90(GfxCommandDest *, Vec3i *);
 extern s32 func_80049000(Vec3i *);
 extern s32 func_80048E60(void *);
-extern void func_80071824(void *task, void (*callback)());
-extern void func_800716E4(void *);
 extern void osWritebackDCache(void *, s32);
 extern void func_80097C18(void *, s16);
 extern void func_80097FE4(FixedMatrix3sScratch, s16, s16);
@@ -139,8 +138,6 @@ extern void func_80088C80(void *, s32, s32, s32);
 extern void func_80088294(void *, s32, s32, s32);
 extern s32 func_80088E98(Vec3i *, s32, s32, s16);
 extern void func_8008BB5C(RaceInputPlayer *, s32);
-extern void *func_800711D0(void *, s32, s32);
-extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, void *);
 extern void func_80072A74(s32, void *, s32, s32);
 extern s16 func_8007D200(s16, s32, s32);

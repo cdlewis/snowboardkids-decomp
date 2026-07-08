@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 
 typedef s16 FixedMatrix3sScratch[0x10];
 typedef s32 MatrixWordCopy[8];
@@ -34,7 +35,6 @@ extern s32 func_80041FB4(s32 arg0);
 extern void func_800428C8(s32 arg0);
 extern void func_80042A00(s32 arg0);
 extern void func_80042920(s32 arg0, u16 arg1, u16 arg2);
-extern void func_80071824(void *task, void (*callback)());
 extern void func_80041DD4(s32 arg0, s32 arg1);
 extern void func_8003A634(MainMenuSceneActor *);
 extern void func_800483FC(void *, void *, void *);
@@ -68,8 +68,6 @@ extern void func_8003D068(s32, s32);
 extern void func_8003B308(s32, s32, s32, u16, u16, u8);
 extern void func_80041D20(s32, s32);
 extern void func_80042034(s32);
-extern void func_800716E4(void *);
-extern void *func_80071664(void (*)(void *), s32, s32, u8);
 #ifdef NON_MATCHING
 extern void func_80097BAC();
 extern void func_80097C84();

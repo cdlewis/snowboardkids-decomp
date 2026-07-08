@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "game_audio.h"
 
@@ -211,6 +212,8 @@ s32 func_80049000(Vec3i *);
 void func_8004DB8C(RaceItemEffectActor *);
 void func_8004E02C(RaceItemEffectActor *);
 void func_8004E438(RaceItemEffectActor *);
+/* Local 4-arg declaration; see note in effect_task_scheduler.h. */
+RaceItemEffectActor *func_800716A4(void *, s32, s32, s16);
 void func_8004E604(RaceItemEffectActor *);
 void func_8004E960(RaceItemEffectActor *);
 void func_8004EAA8(RaceItemEffectActor *);
@@ -223,13 +226,9 @@ void func_80050340(RaceItemEffectActor *);
 void func_80050398(RaceItemEffectActor *);
 void func_80050888(RaceItemEffectActor *);
 void func_8005098C(RaceItemFollowActor *);
-void func_800716E4(void *);
-void func_80071824(void *task, void (*callback)());
 void func_80097C18(void *, s16);
 void func_80097FE4(FixedMatrix3sScratch, s16, s16);
 void func_80098590(void *, s32 *, RaceItemEffectPayload *);
-RaceItemEffectActor *func_800711D0(void *, s32, s32);
-RaceItemEffectActor *func_800716A4(void *, s32, s32, s32);
 
 u8 func_8004DB60(s32 arg0) {
     u8 *p = D_800D46D0[D_80121B50];
