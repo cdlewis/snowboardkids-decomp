@@ -1,5 +1,8 @@
 #include "common.h"
 #include <PR/libaudio.h>
+#include <PR/os_ai.h>
+#include <PR/os_convert.h>
+#include <PR/ucode.h>
 
 typedef void *OSMesg;
 
@@ -191,6 +194,41 @@ typedef struct PlayerCommandSynConfig {
     u8 fxType;
 } PlayerCommandSynConfig;
 
+typedef struct AudioInfo {
+    void *buf;
+    s16 len;
+} AudioInfo;
+
+typedef struct AudioTask {
+    void *outBuf;
+    s16 outLen;
+    u8 pad6[2];
+    s32 unk8;
+    s32 unkC;
+    s32 unk10;
+    s32 unk14;
+    u32 type;
+    u32 flags;
+    void *ucodeBoot;
+    u32 ucodeBootSize;
+    void *ucode;
+    u32 ucodeSize;
+    void *ucodeData;
+    u32 ucodeDataSize;
+    void *dramStack;
+    u32 dramStackSize;
+    void *outputBuff;
+    void *outputBuffSize;
+    void *dataPtr;
+    u32 dataSize;
+    void *yieldDataPtr;
+    u32 yieldDataSize;
+    OSMesgQueue *msgQ;
+    OSMesg msg;
+    u8 pad60[8];
+    u8 unk68;
+} AudioTask;
+
 extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern s32 osSetIntMask(s32);
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
@@ -228,16 +266,23 @@ extern void func_8009C8DC(void *);
 extern f32 sinf(f32);
 extern s32 D_800DF154;
 extern s32 D_800DF158;
+extern s32 D_800DF298;
 extern u32 D_800DF290;
 extern u32 D_800DF294;
 extern s32 D_800DF2A4;
 extern SchedulerViMode D_800DF340[];
+extern u64 D_800E1F00[];
 extern u8 D_80158620[];
+extern Acmd *D_8015A6A0[];
+extern u64 D_8015A8A0[];
 extern s32 D_8015A680;
 extern s32 D_8015A684;
 extern s32 D_8015A620;
 extern u8 D_8015A624;
+extern s32 D_8015C934;
+extern s32 D_8015C938;
 extern OSMesgQueue D_8015C948;
+extern s32 D_8015C960;
 extern OSIoMesg *D_8015C968;
 extern s32 D_8015C970;
 extern s32 *libmus_fxheader_current;
@@ -1387,7 +1432,58 @@ s32 func_8009F780(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, s32 ar
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009FC0C.s")
 
+// func_8009FD74 best match: 85.904% (nonmatchings/func_8009FD74-2775475442547365205/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009FD74.s")
+
+#ifdef NON_MATCHING
+s32 func_8009FD74(AudioTask *task, AudioInfo *info) {
+    u32 outBuf;
+    s32 cmdLen;
+    Acmd *cmdListEnd;
+
+    func_800A0170();
+    outBuf = osVirtualToPhysical(task->outBuf);
+
+    if (info != NULL) {
+        osAiSetNextBuffer(info->buf, info->len * 4);
+    }
+
+    task->outLen = ((D_8015C938 - (osAiGetLength() >> 2)) + 0x68) & 0xFFF0;
+    if ((u32)task->outLen < (u32)D_8015C934) {
+        task->outLen = D_8015C934;
+    }
+
+    cmdListEnd = alAudioFrame(D_8015A6A0[D_800DF298], &cmdLen, (s16 *)outBuf, task->outLen);
+    if (cmdLen == 0) {
+        return 0;
+    }
+
+    task->unk8 = 0;
+    task->msgQ = (OSMesgQueue *)D_8015A8A0;
+    task->msg = (OSMesg)&task->unk68;
+    task->unk10 = 0;
+    task->dataPtr = D_8015A6A0[D_800DF298];
+    task->dataSize = (((s32)cmdListEnd - (s32)D_8015A6A0[D_800DF298]) >> 3) << 3;
+
+    task->type = 2;
+    task->flags = 0;
+    task->ucodeBoot = rspbootTextStart;
+    task->ucodeBootSize = (u8 *)aspMainTextStart - (u8 *)rspbootTextStart;
+    task->ucode = aspMainTextStart;
+    task->ucodeData = D_800E1F00;
+    task->ucodeDataSize = 0x800;
+    task->dramStack = NULL;
+    task->dramStackSize = 0;
+    task->outputBuff = NULL;
+    task->outputBuffSize = NULL;
+    task->yieldDataPtr = NULL;
+    task->yieldDataSize = 0;
+
+    osSendMesg(func_8009C434(D_8015C960), &task->unk8, 1);
+    D_800DF298 = D_800DF298 ^ 1;
+    return 1;
+}
+#endif
 
 void func_8009FF40(s32 arg0) {
     s32 temp;
