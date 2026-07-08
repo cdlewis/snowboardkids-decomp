@@ -20,6 +20,13 @@ typedef struct OSContStatus {
     u8 errno;
 } OSContStatus;
 
+typedef struct OSContPad {
+    u16 button;
+    s8 stick_x;
+    s8 stick_y;
+    u8 errno;
+} OSContPad;
+
 typedef struct OSPfs {
     s32 status;
     OSMesgQueue *queue;
@@ -57,8 +64,13 @@ extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern void osCreateMesgQueue(OSMesgQueue *, OSMesg *, s32);
 extern void osSetEventMesg(s32, OSMesgQueue *, OSMesg);
 extern s32 osContInit(OSMesgQueue *, u8 *, OSContStatus *);
+extern s32 osContStartReadData(OSMesgQueue *);
+extern void osContGetReadData(OSContPad *);
 extern void osCreateThread(OSThread *, s32, void (*)(void *), void *, void *, s32);
 extern void osStartThread(OSThread *);
+extern s32 osMotorInit(OSMesgQueue *, OSPfs *, s32);
+extern s32 osMotorStart(OSPfs *);
+extern s32 osMotorStop(OSPfs *);
 extern s32 osPfsInitPak(OSMesgQueue *, OSPfs *, int);
 extern s32 osPfsRepairId(OSPfs *);
 extern s32 osPfsFreeBlocks(OSPfs *, s32 *);
@@ -121,6 +133,14 @@ extern void func_8003F520(void);
 extern void func_8003FFD0(void);
 extern void func_80073140(void);
 extern void func_800005E4(void *);
+extern void func_80000C94(u16);
+extern void func_80000E00(u16);
+extern void func_8000105C(u16);
+extern void func_80001318(u16);
+extern void func_80001584(u16);
+extern void func_8000165C(void);
+extern void func_80001724(u16);
+extern void func_8000189C(void);
 extern OSThread D_800E29C8;
 extern OSMesgQueue D_800E4B78;
 extern OSMesg D_800E4B90[];
@@ -129,7 +149,9 @@ extern OSMesg D_800E4BC8[];
 extern OSMesgQueue D_800E4BD0;
 extern OSMesg D_800E4BE8[];
 extern s16 D_800E4BEC;
+extern OSContPad D_800E4C00[];
 extern OSPfs D_800E4C40[];
+extern OSPfs D_800E4DE0[];
 extern MainMenuState *D_801235B8;
 extern u8 D_800B30F0;
 extern u8 D_800B318C;
@@ -184,6 +206,7 @@ extern s8 D_8010B1F0;
 extern OSPfsState D_8010AF98[];
 extern s32 D_8010B198;
 extern s32 D_8010B19C;
+extern OSMesgQueue D_80124070;
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern u8 D_8012482A;
@@ -243,7 +266,91 @@ loop:
 }
 #endif
 
+// func_800005E4 best match: 97.063%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_800005E4.s")
+
+#ifdef NON_MATCHING
+void func_800005E4(void *arg0) {
+    OSMesg msg;
+    OSMesg siMsg;
+    s32 msgValue;
+    s32 channel;
+    s32 ret;
+
+    msg = NULL;
+    while (1) {
+        osRecvMesg(&D_800E4B78, &msg, OS_MESG_BLOCK);
+        msgValue = (s32)msg;
+        switch (msgValue & 0xF0) {
+        case 0x10:
+            osContStartReadData(&D_800E4BD0);
+            osRecvMesg(&D_800E4BD0, &siMsg, OS_MESG_BLOCK);
+            osContGetReadData(D_800E4C00);
+            osSendMesg(&D_80124070, &D_800E4BEC, 0);
+            break;
+        case 0x20:
+            func_80000C94(msgValue & 3);
+            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            break;
+        case 0x30:
+            func_80000E00(msgValue & 3);
+            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            break;
+        case 0x40:
+            func_8000105C(msgValue & 3);
+            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            break;
+        case 0x50:
+            func_80001318(msgValue & 3);
+            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            break;
+        case 0x60:
+            func_80001584(msgValue & 3);
+            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            break;
+        case 0x70:
+            channel = msgValue & 3;
+            (&D_800EC898)[channel] = osMotorInit(&D_800E4BD0, &D_800E4DE0[channel], channel);
+            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            break;
+        case 0xD0:
+            channel = msgValue & 3;
+            (&D_800EC898)[channel] = osMotorInit(&D_800E4BD0, &D_800E4DE0[channel], channel);
+            break;
+        case 0x80:
+            ret = (&D_800EC898)[msgValue & 3];
+            if ((ret != 1) && (ret != 11) && (ret != 4)) {
+                channel = msgValue & 3;
+                if (osMotorStart(&D_800E4DE0[channel]) == 4) {
+                    (&D_800EC898)[channel] = 4;
+                }
+            }
+            break;
+        case 0x90:
+            ret = (&D_800EC898)[msgValue & 3];
+            if ((ret != 1) && (ret != 11) && (ret != 4)) {
+                channel = msgValue & 3;
+                if (osMotorStop(&D_800E4DE0[channel]) == 4) {
+                    (&D_800EC898)[channel] = 4;
+                }
+            }
+            break;
+        case 0xA0:
+            func_8000165C();
+            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            break;
+        case 0xB0:
+            func_80001724(msgValue & 0xF);
+            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            break;
+        case 0xC0:
+            func_8000189C();
+            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            break;
+        }
+    }
+}
+#endif
 
 void func_80000960(void) {
     if ((D_800E4BEE == 0) && (D_800B30F0 != 0)) {
