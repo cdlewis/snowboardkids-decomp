@@ -1,11 +1,12 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
 #include "main_menu_effects.h"
+#include "main_menu_scene_actor_3.h"
 
 typedef s16 FixedMatrix3sScratch[0x10];
 typedef s32 MatrixWordCopy[8];
 
-typedef struct {
+struct MainMenuSceneActor3 {
     char pad[0x18];
     s32 x;
     s32 y;
@@ -17,9 +18,9 @@ typedef struct {
     u16 animTimer;
     u16 textureId;
     u16 paletteId;
-} MainMenuSceneActor;
+};
 
-typedef struct {
+struct MainMenuSceneEffect3 {
     char pad0[0x10];
     u16 mode;
     char pad12[0x6];
@@ -30,41 +31,19 @@ typedef struct {
     u16 textureId;
     u16 paletteId;
     u16 timer;
-} MainMenuSceneEffect;
+};
 
 extern s32 func_80041FB4(s32 arg0);
 extern void func_800428C8(s32 arg0);
 extern void func_80042A00(s32 arg0);
 extern void func_80042920(s32 arg0, u16 arg1, u16 arg2);
 extern void func_80041DD4(s32 arg0, s32 arg1);
-extern void func_8003A634(MainMenuSceneActor *);
 extern void func_800483FC(void *, void *, void *);
 extern s32 func_8004885C(void *);
 extern void func_8007C130(s32, s16, s16);
-extern void func_80039A70(MainMenuSceneActor *);
-extern void func_80039E5C(MainMenuSceneActor *);
-extern void func_8003B430(MainMenuSceneEffect *);
-extern void func_80039CEC(MainMenuSceneActor *);
-extern void func_8003A46C(MainMenuSceneActor *);
-extern void func_800397C4(MainMenuSceneActor *arg0);
-extern void func_80039880(MainMenuSceneActor *);
-extern void func_8003998C(MainMenuSceneActor *);
-extern void func_80039B84(void);
-extern void func_80039F7C(MainMenuSceneActor *);
-extern void func_8003A6A8(MainMenuSceneActor *arg0);
-extern void func_8003A7EC(MainMenuSceneActor *);
-extern void func_8003A9E0(MainMenuSceneActor *);
-extern void func_8003AC00(MainMenuSceneActor *);
-extern void func_8003AFC0(MainMenuSceneActor *arg0);
-extern void func_8003B134(MainMenuSceneActor *);
-extern void func_8003A108(MainMenuSceneActor *);
-extern void func_8003A21C(MainMenuSceneActor *);
-extern void func_8003A190(MainMenuSceneActor *);
-extern void func_8003A324(MainMenuSceneActor *);
 extern void func_8004209C(s32, s32, s32, s32);
 extern void func_8004298C(s32, s32, s32, s32);
 extern void func_800420FC(s32, s32, s32, s32);
-extern void func_8003B308(s32, s32, s32, u16, u16, u8);
 extern void func_80041D20(s32, s32);
 extern void func_80042034(s32);
 #ifdef NON_MATCHING
@@ -75,7 +54,6 @@ extern void func_8009853C();
 #else
 extern void func_8009853C(void *, s32, s32, void *);
 #endif
-extern void func_8003B740(MainMenuSceneEffect *);
 extern u16 D_8010B1A2;
 extern u8 D_8010B1A4;
 extern s32 D_80124898;
@@ -86,7 +64,7 @@ void func_800394E0(s32 arg0) {
     func_800428C8(3);
 }
 
-void func_8003950C(MainMenuSceneActor *arg0) {
+void func_8003950C(MainMenuSceneActor3 *arg0) {
     func_80041FB4(3);
     func_800428C8(3);
     if (D_8010B1A2 == 0x41) {
@@ -97,7 +75,7 @@ void func_8003950C(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_80039584(MainMenuSceneActor *arg0) {
+void func_80039584(MainMenuSceneActor3 *arg0) {
     u16 *timerPtr;
     s32 sp18;
     int unused;
@@ -118,7 +96,7 @@ void func_80039584(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_80039610(MainMenuSceneActor *arg0) {
+void func_80039610(MainMenuSceneActor3 *arg0) {
     u16 *timerPtr;
     s32 sp18;
     int unused;
@@ -139,7 +117,7 @@ void func_80039610(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003969C(MainMenuSceneActor *arg0) {
+void func_8003969C(MainMenuSceneActor3 *arg0) {
     u16 temp_t7;
 
     if (func_80041FB4(3) == 1) {
@@ -157,7 +135,7 @@ void func_8003969C(MainMenuSceneActor *arg0) {
     func_800428C8(3);
 }
 
-void func_8003973C(MainMenuSceneActor *arg0) {
+void func_8003973C(MainMenuSceneActor3 *arg0) {
     if (func_80041FB4(3) == 0) {
         arg0->x = arg0->x + 0x18000;
         func_8004209C(3, arg0->x, arg0->y, arg0->z);
@@ -170,7 +148,7 @@ void func_8003973C(MainMenuSceneActor *arg0) {
     func_800428C8(3);
 }
 
-void func_800397C4(MainMenuSceneActor *arg0) {
+void func_800397C4(MainMenuSceneActor3 *arg0) {
     s32 unused;
     s32 sp20;
     s32 var_v0;
@@ -194,7 +172,7 @@ void func_800397C4(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_80039880(MainMenuSceneActor *arg0) {
+void func_80039880(MainMenuSceneActor3 *arg0) {
     func_80042034(3);
     arg0->x += 0xFFF58000;
     if (D_8010B1A2 == 0x3C) {
@@ -208,7 +186,7 @@ void func_80039880(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_80039930(MainMenuSceneActor *arg0) {
+void func_80039930(MainMenuSceneActor3 *arg0) {
     func_80042034(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (D_8010B1A2 == 0x3A) {
@@ -216,7 +194,7 @@ void func_80039930(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003998C(MainMenuSceneActor *arg0) {
+void func_8003998C(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
     func_80042034(3);
@@ -231,7 +209,7 @@ void func_8003998C(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_80039A14(MainMenuSceneActor *arg0) {
+void func_80039A14(MainMenuSceneActor3 *arg0) {
     func_80042034(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (D_8010B1A2 == 0x38) {
@@ -239,9 +217,9 @@ void func_80039A14(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_80039A70(MainMenuSceneActor *arg0) {
+void func_80039A70(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
-    MainMenuSceneActor *new_var;
+    MainMenuSceneActor3 *new_var;
 
     func_80042034(3);
     new_var = arg0;
@@ -258,7 +236,7 @@ void func_80039A70(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_80039B38(MainMenuSceneActor *arg0) {
+void func_80039B38(MainMenuSceneActor3 *arg0) {
     if (D_8010B1A2 == 0x35) {
         func_80071824(arg0, func_80039A70);
         arg0->x = 0x01900000;
@@ -268,7 +246,7 @@ void func_80039B38(MainMenuSceneActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_3/func_80039B84.s")
 
-void func_80039C84(MainMenuSceneActor *arg0) {
+void func_80039C84(MainMenuSceneActor3 *arg0) {
     func_80041FB4(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (D_8010B1A2 == 0x31) {
@@ -277,7 +255,7 @@ void func_80039C84(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_80039CEC(MainMenuSceneActor *arg0) {
+void func_80039CEC(MainMenuSceneActor3 *arg0) {
     s32 sp;
     s32 temp;
 
@@ -299,7 +277,7 @@ void func_80039CEC(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_80039E08(MainMenuSceneActor *arg0) {
+void func_80039E08(MainMenuSceneActor3 *arg0) {
     arg0->timer++;
     if (arg0->timer == 0xF) {
         arg0->timer = 0;
@@ -309,7 +287,7 @@ void func_80039E08(MainMenuSceneActor *arg0) {
     func_800428C8(3);
 }
 
-void func_80039E5C(MainMenuSceneActor *arg0) {
+void func_80039E5C(MainMenuSceneActor3 *arg0) {
     s32 sp;
 
     sp = func_80041FB4(3);
@@ -325,7 +303,7 @@ void func_80039E5C(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_80039F2C(MainMenuSceneActor *arg0) {
+void func_80039F2C(MainMenuSceneActor3 *arg0) {
     if (D_8010B1A2 == 0x2C) {
         func_80071824(arg0, func_80039E5C);
         func_80041DD4(3, 0x4B);
@@ -333,7 +311,7 @@ void func_80039F2C(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_80039F7C(MainMenuSceneActor *arg0) {
+void func_80039F7C(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
     func_80042034(3);
@@ -348,7 +326,7 @@ void func_80039F7C(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_8003A010(MainMenuSceneActor *arg0) {
+void func_8003A010(MainMenuSceneActor3 *arg0) {
     func_80042034(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     arg0->timer++;
@@ -358,7 +336,7 @@ void func_8003A010(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003A078(MainMenuSceneActor *arg0) {
+void func_8003A078(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
     func_80042034(3);
@@ -372,7 +350,7 @@ void func_8003A078(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_8003A108(MainMenuSceneActor *arg0) {
+void func_8003A108(MainMenuSceneActor3 *arg0) {
     s32 temp_a1;
     u16 temp_t9;
 
@@ -388,7 +366,7 @@ void func_8003A108(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_8003A190(MainMenuSceneActor *arg0) {
+void func_8003A190(MainMenuSceneActor3 *arg0) {
     s32 temp_a1;
     u16 temp_t9;
 
@@ -404,7 +382,7 @@ void func_8003A190(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_8003A21C(MainMenuSceneActor *arg0) {
+void func_8003A21C(MainMenuSceneActor3 *arg0) {
     s32 temp_a1;
     u16 temp_t9;
 
@@ -420,7 +398,7 @@ void func_8003A21C(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_8003A2A8(MainMenuSceneActor *arg0) {
+void func_8003A2A8(MainMenuSceneActor3 *arg0) {
     func_80042034(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (D_8010B1A2 == 0x23) {
@@ -432,7 +410,7 @@ void func_8003A2A8(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003A324(MainMenuSceneActor *arg0) {
+void func_8003A324(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
     func_80042034(3);
@@ -451,7 +429,7 @@ void func_8003A324(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_8003A3E0(MainMenuSceneActor *arg0) {
+void func_8003A3E0(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
     func_80042034(3);
@@ -465,7 +443,7 @@ void func_8003A3E0(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_8003A46C(MainMenuSceneActor *arg0) {
+void func_8003A46C(MainMenuSceneActor3 *arg0) {
     u16 temp_t8;
     s32 sp20;
 
@@ -491,7 +469,7 @@ void func_8003A46C(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003A538(MainMenuSceneActor *arg0) {
+void func_8003A538(MainMenuSceneActor3 *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (D_8010B1A2 == 0x1D) {
         func_80071824(arg0, func_8003A46C);
@@ -499,7 +477,7 @@ void func_8003A538(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003A598(MainMenuSceneActor *arg0) {
+void func_8003A598(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
     func_80042034(3);
@@ -514,7 +492,7 @@ void func_8003A598(MainMenuSceneActor *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
-void func_8003A634(MainMenuSceneActor *arg0) {
+void func_8003A634(MainMenuSceneActor3 *arg0) {
     s32 pad;
     s32 sp20;
 
@@ -527,7 +505,7 @@ void func_8003A634(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003A6A8(MainMenuSceneActor *arg0) {
+void func_8003A6A8(MainMenuSceneActor3 *arg0) {
     s32 pad;
     s32 sp18;
 
@@ -539,7 +517,7 @@ void func_8003A6A8(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003A70C(MainMenuSceneActor *arg0) {
+void func_8003A70C(MainMenuSceneActor3 *arg0) {
     func_800428C8(3);
     arg0->timer++;
     if (arg0->timer == 0x1E) {
@@ -550,7 +528,7 @@ void func_8003A70C(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003A77C(MainMenuSceneActor *arg0) {
+void func_8003A77C(MainMenuSceneActor3 *arg0) {
     if (func_80041FB4(3) == 1) {
         func_80071824(arg0, func_8003A70C);
     } else {
@@ -560,7 +538,7 @@ void func_8003A77C(MainMenuSceneActor *arg0) {
     func_800428C8(3);
 }
 
-void func_8003A7EC(MainMenuSceneActor *arg0) {
+void func_8003A7EC(MainMenuSceneActor3 *arg0) {
     s32 temp_v0;
     u16 temp_t7;
 
@@ -582,7 +560,7 @@ void func_8003A7EC(MainMenuSceneActor *arg0) {
     func_800428C8(3);
 }
 
-void func_8003A8A4(MainMenuSceneActor *arg0) {
+void func_8003A8A4(MainMenuSceneActor3 *arg0) {
     s32 pad;
     s32 sp20;
 
@@ -603,7 +581,7 @@ void func_8003A8A4(MainMenuSceneActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_3/func_8003A944.s")
 
 #ifdef NON_MATCHING
-void func_8003A944(MainMenuSceneActor *arg0) {
+void func_8003A944(MainMenuSceneActor3 *arg0) {
     s32 pad;
     s32 sp20;
     s32 i;
@@ -632,7 +610,7 @@ void func_8003A944(MainMenuSceneActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_3/func_8003A9E0.s")
 
 #ifdef NON_MATCHING
-void func_8003A9E0(MainMenuSceneActor *arg0) {
+void func_8003A9E0(MainMenuSceneActor3 *arg0) {
     s32 var_s1;
     s32 var_s4;
     u16 temp_t8;
@@ -690,7 +668,7 @@ loop_4:
 }
 #endif
 
-void func_8003AC00(MainMenuSceneActor *arg0) {
+void func_8003AC00(MainMenuSceneActor3 *arg0) {
     func_800428C8(3);
     if ((D_8010B1A4 == 1) || (D_8010B1A4 == 3)) {
         func_80071824(arg0, func_8003A9E0);
@@ -711,7 +689,7 @@ void func_8003AC00(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003ACD0(MainMenuSceneActor *arg0) {
+void func_8003ACD0(MainMenuSceneActor3 *arg0) {
     func_800428C8(3);
     arg0->timer++;
     if (arg0->timer == 0xF) {
@@ -721,8 +699,8 @@ void func_8003ACD0(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003AD40(MainMenuSceneActor *arg0) {
-    void (*new_var)(MainMenuSceneActor *);
+void func_8003AD40(MainMenuSceneActor3 *arg0) {
+    void (*new_var)(MainMenuSceneActor3 *);
     s32 sp18;
     u16 temp_t8;
 
@@ -740,7 +718,7 @@ void func_8003AD40(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003ADC0(MainMenuSceneActor *arg0) {
+void func_8003ADC0(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
     func_80042034(3);
@@ -760,7 +738,7 @@ void func_8003ADC0(MainMenuSceneActor *arg0) {
     func_8004209C(3, var_a1, arg0->y, arg0->z);
 }
 
-void func_8003AE8C(MainMenuSceneActor *arg0) {
+void func_8003AE8C(MainMenuSceneActor3 *arg0) {
     u16 temp;
     s32 sp20;
 
@@ -788,7 +766,7 @@ void func_8003AE8C(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003AF6C(MainMenuSceneActor *arg0) {
+void func_8003AF6C(MainMenuSceneActor3 *arg0) {
     if (func_80041FB4(3) == 1) {
         arg0->animTimer = 0;
         func_80071824(arg0, func_8003AE8C);
@@ -797,7 +775,7 @@ void func_8003AF6C(MainMenuSceneActor *arg0) {
     func_800428C8(3);
 }
 
-void func_8003AFC0(MainMenuSceneActor *arg0) {
+void func_8003AFC0(MainMenuSceneActor3 *arg0) {
     u16 temp_t9;
 
     if (func_80041FB4(3) == 0) {
@@ -817,7 +795,7 @@ void func_8003AFC0(MainMenuSceneActor *arg0) {
     func_800428C8(3);
 }
 
-void func_8003B074(MainMenuSceneActor *arg0) {
+void func_8003B074(MainMenuSceneActor3 *arg0) {
     u16 temp_t0;
     s32 sp20;
 
@@ -839,7 +817,7 @@ void func_8003B074(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003B134(MainMenuSceneActor *arg0) {
+void func_8003B134(MainMenuSceneActor3 *arg0) {
     s32 temp_v0;
     u16 temp_t2;
 
@@ -861,14 +839,14 @@ void func_8003B134(MainMenuSceneActor *arg0) {
     func_800428C8(3);
 }
 
-void func_8003B1F8(MainMenuSceneActor *arg0) {
+void func_8003B1F8(MainMenuSceneActor3 *arg0) {
     if (D_8010B1A2 == 0x13) {
         func_80071824(arg0, func_8003B134);
         func_8003B308(arg0->x + 0x48000, 0x480000, 0xFFF70000, arg0->textureId, arg0->paletteId, 2);
     }
 }
 
-void func_8003B264(MainMenuSceneActor *arg0) {
+void func_8003B264(MainMenuSceneActor3 *arg0) {
     arg0->x = 0x03B48000;
     arg0->y = 0;
     arg0->z = 0;
@@ -887,8 +865,8 @@ void func_8003B264(MainMenuSceneActor *arg0) {
 }
 
 void func_8003B308(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u8 arg5) {
-    MainMenuSceneEffect *sp1C;
-    MainMenuSceneEffect *temp_v0;
+    MainMenuSceneEffect3 *sp1C;
+    MainMenuSceneEffect3 *temp_v0;
 
     temp_v0 = func_80071664((void (*)(void *))func_8003B740, 0, 0x64, arg5);
     D_8010ADE0 = temp_v0;
@@ -901,14 +879,14 @@ void func_8003B308(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u8 arg5) {
     sp1C->paletteId = arg4;
 }
 
-void func_8003B39C(MainMenuSceneEffect *arg0) {
+void func_8003B39C(MainMenuSceneEffect3 *arg0) {
     s32 temp = func_8004885C(&arg0->displayObject);
     if (temp != 0) {
         func_8007C130(temp, arg0->textureId, arg0->paletteId);
     }
 }
 
-void func_8003B3E0(MainMenuSceneEffect *arg0) {
+void func_8003B3E0(MainMenuSceneEffect3 *arg0) {
     if (D_8010B1A2 == 0x1B) {
         func_800716E4(arg0);
     } else {
@@ -920,7 +898,7 @@ void func_8003B3E0(MainMenuSceneEffect *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_3/func_8003B430.s")
 
 #ifdef NON_MATCHING
-void func_8003B430(MainMenuSceneEffect *arg0) {
+void func_8003B430(MainMenuSceneEffect3 *arg0) {
     FixedMatrix3sScratch sp48;
     FixedMatrix3sScratch sp28;
     void *sp24[1];
@@ -986,14 +964,14 @@ void func_8003B430(MainMenuSceneEffect *arg0) {
 }
 #endif
 
-void func_8003B6F0(MainMenuSceneEffect *arg0) {
+void func_8003B6F0(MainMenuSceneEffect3 *arg0) {
     if (D_8010B1A2 == 0x15) {
         func_80071824(arg0, func_8003B430);
     }
     func_800483FC(&D_80124898, func_8003B39C, arg0);
 }
 
-void func_8003B740(MainMenuSceneEffect *arg0) {
+void func_8003B740(MainMenuSceneEffect3 *arg0) {
     arg0->x = arg0->x + 0xFFFB8000;
     arg0->timer++;
     if (arg0->timer == 0xA2) {
