@@ -224,7 +224,7 @@ void func_80097C18(void *, s16);
 void func_80097FE4(FixedMatrix3sScratch, s16, s16);
 void func_80098590(void *, s32 *, RaceItemEffectPayload *);
 RaceItemEffectActor *func_800711D0(void *, s32, s32);
-RaceItemEffectActor *func_800716A4(void *, s32, s32, s16);
+RaceItemEffectActor *func_800716A4(void *, s32, s32, s32);
 
 u8 func_8004DB60(s32 arg0) {
     u8 *p = D_800D46D0[D_80121B50];
@@ -443,7 +443,30 @@ void func_8004F3FC(RaceItemEffectActor *arg0) {
     func_80071824(arg0, func_8004F33C);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004F55C.s")
+void func_8004F55C(s16 playerIndex, s16 itemIndex) {
+    RaceItemEffectActor *actor;
+    void *callback;
+    s32 itemType;
+    s32 angleIndex;
+
+    itemType = func_8004DB60(itemIndex);
+    if (itemType != 4) {
+        if (itemType == 1) {
+            func_80072A74(0x12, (SoundPosition *) &D_80121D80[playerIndex].pos1C, 0x7F, 0x32);
+        } else {
+            func_80072A74(0x11, (SoundPosition *) &D_80121D80[playerIndex].pos1C, 0x7F, 0x32);
+        }
+
+        callback = func_8004F3FC;
+        for (angleIndex = 0; angleIndex != 0x10; angleIndex++) {
+            actor = func_800716A4(callback, 5, 2, itemType);
+            if (actor != NULL) {
+                actor->followPlayerIndex = playerIndex;
+                actor->angleIndex = angleIndex;
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004F68C.s")
 
