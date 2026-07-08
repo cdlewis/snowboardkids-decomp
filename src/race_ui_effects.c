@@ -522,6 +522,8 @@ typedef struct {
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 alpha;
+    /* 0x1A */ s16 timer;
+    /* 0x1C */ s16 score;
 } RaceUiAlpha18Actor;
 
 typedef struct {
@@ -716,6 +718,7 @@ extern void *D_800E1220;
 extern void *D_800E1230;
 extern char D_800E1240[];
 extern char D_800E1244[];
+extern char D_800E1250[];
 extern char D_800E12F4[];
 extern char D_800E14D0[];
 extern char D_800E12F8[];
@@ -822,7 +825,7 @@ extern void func_80065508(RaceUiGfxCommandActor *);
 extern void func_80066158(void *);
 extern void func_800663C8(void *);
 extern void func_80059854(void *);
-extern void func_8005804C(void);
+extern void func_8005804C(RaceUiAlpha18Actor *);
 extern void func_8005812C(void *);
 extern void func_8005827C(void);
 extern void func_800572A0(void *);
@@ -1061,7 +1064,28 @@ void func_80057E90(RaceUiAlpha18Actor *arg0) {
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005804C.s")
+void func_8005804C(RaceUiAlpha18Actor *arg0) {
+    volatile u8 padding[0x18];
+    char buffer[8];
+    s32 x;
+    u8 *ptr;
+    volatile RaceUiAssetHandles *handles;
+    s32 space;
+
+    sprintf(buffer + -8, D_800E1250, arg0->score);
+    x = 0x20;
+    handles = &D_80112130;
+ ptr = (u8 *) (((s32) padding) - 0x10); if (!ptr) { } space = ' '; loop: if ((*ptr) != 0) {
+        if (space != *ptr) {
+            func_80045A78(x, -0x3F, func_80043040(handles->popupFontHandle), (*ptr - 5) & 0xFFFF);
+        }
+        x += 8;
+        ptr++;
+        goto loop;
+    }
+
+    func_80045A78(x, -0x3F, func_80043040(handles->popupFontHandle), 0x37);
+}
 
 // func_8005812C best match: 99.167% (nonmatchings/func_8005812C-2911448260736516995/base_23.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005812C.s")
