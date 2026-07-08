@@ -763,7 +763,7 @@ extern void func_8005CC54(void *);
 extern void func_8005E33C(void *);
 extern void func_8005893C(void *);
 extern void func_80060544(RaceUiPodiumTrailActor *);
-extern void func_80060914(void);
+extern void func_80060914(RaceUiPodiumTrailActor *);
 extern void func_80058610(void *);
 extern void func_80058880(void *);
 extern s16 D_80121B50;
@@ -2160,7 +2160,53 @@ void func_80060738(RaceUiPodiumTrailActor *arg0) {
     func_800483FC(&D_801248BC, func_80060544, arg0);
 }
 
+// func_80060914 best match: 77.250% (nonmatchings/func_80060914-8662636370764828261/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80060914.s")
+
+#ifdef NON_MATCHING
+void func_80060914(RaceUiPodiumTrailActor *arg0) {
+    RacePlayerState *player;
+    s16 scale;
+    s32 height;
+
+    if (arg0->timer == 0) {
+        if (D_80121B56 == 0) {
+            height = arg0->height + (arg0->velocity + 0x10000);
+            arg0->velocity += 0x10000;
+            arg0->height = height;
+            arg0->copyBlock.transform = D_800DEE30;
+            player = &D_80121D80[arg0->playerIndex];
+            arg0->pos.a = player->pos28.a;
+            arg0->pos.b = player->pos28.b + height;
+            arg0->pos.c = player->pos28.c;
+            scale = arg0->state;
+
+            arg0->copyBlock.halfwords[0] = (arg0->copyBlock.halfwords[0] * scale) / 64;
+            arg0->copyBlock.halfwords[1] = (arg0->copyBlock.halfwords[1] * scale) / 64;
+            arg0->copyBlock.halfwords[2] = (arg0->copyBlock.halfwords[2] * scale) / 64;
+            arg0->copyBlock.halfwords[3] = (arg0->copyBlock.halfwords[3] * scale) / 64;
+            arg0->copyBlock.halfwords[4] = (arg0->copyBlock.halfwords[4] * scale) / 64;
+            arg0->copyBlock.halfwords[5] = (arg0->copyBlock.halfwords[5] * scale) / 64;
+            arg0->copyBlock.halfwords[6] = (arg0->copyBlock.halfwords[6] * scale) / 64;
+            arg0->copyBlock.halfwords[7] = (arg0->copyBlock.halfwords[7] * scale) / 64;
+            arg0->copyBlock.halfwords[8] = (arg0->copyBlock.halfwords[8] * scale) / 64;
+
+            if (scale != 0x10) {
+                arg0->state = scale + 1;
+            }
+
+            if (arg0->height >= 0xA00001) {
+                arg0->velocity = -0x10000;
+                func_80071824(arg0, func_80060738);
+            }
+        }
+        D_8012229A[arg0->targetPlayerIndex].value = 1;
+        func_800483FC(&D_801248BC, func_80060544, (s32)arg0);
+    } else if (D_80121B56 == 0) {
+        arg0->timer--;
+    }
+}
+#endif
 
 void func_80060BC4(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x54) = 1;
