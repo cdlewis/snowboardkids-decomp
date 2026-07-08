@@ -56,15 +56,19 @@ extern void func_80071824(void *task, void (*callback)());
 extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
-extern void func_80029344(PlayerCountSelectRowActor *);
+extern void func_80029200(PlayerCountSelectRowActor *);
 extern void func_800296D8(PlayerCountSelectWidgetActor *);
 extern void func_8002980C(PlayerCountSelectWidgetActor *);
+extern void func_80029FB8(PlayerCountSelectWidgetActor *);
+extern void func_8002A458(PlayerCountSelectWidgetActor *);
 extern void func_8002A008(PlayerCountSelectWidgetActor *);
 extern void func_8002A27C(PlayerCountSelectWidgetActor *);
 extern void func_8002A49C(PlayerCountSelectWidgetActor *);
 extern void func_8002A710(PlayerCountSelectWidgetActor *);
+extern void func_8002A8EC(PlayerCountSelectWidgetActor *);
 extern void func_8002A930(PlayerCountSelectWidgetActor *);
 extern void func_8002AB24(PlayerCountSelectWidgetActor *);
+extern void func_8002AD74(PlayerCountSelectWidgetActor *);
 extern void func_8002AE3C(PlayerCountSelectWidgetActor *);
 extern void func_8002AFB8(PlayerCountSelectWidgetActor *);
 extern void func_8002B05C(PlayerCountSelectWidgetActor *);
@@ -93,7 +97,70 @@ const char D_800E0EA0[] = "%6dG";
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_80029200.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_80029344.s")
+void func_80029344(PlayerCountSelectRowActor *arg0) {
+    s32 i;
+    s32 moved;
+    s32 state;
+    int stateByte;
+    PlayerCountSelectRowActor *row;
+    PlayerCountSelectRowActor *actor;
+
+    stateByte = arg0->state;
+    actor = arg0;
+    state = stateByte;
+    row = arg0;
+    switch (state) {
+    case 0:
+        moved = 0;
+        for (i = 0; i < row->playerCount; i++) {
+            if (row->iconX[i] < -0x7C) {
+                row->iconX[i] += 0x10;
+                moved++;
+                if (row->iconX[i] >= -0x7C) {
+                    row->iconX[i] = -0x7C;
+                }
+            }
+        }
+
+        row->spawnTimer++;
+        if (!(row->spawnTimer & 1)) {
+            if (row->playerCount < 4) {
+                row->playerCount++;
+            }
+        }
+
+        if (moved == 0) {
+            row->state = 1;
+            func_80071408(func_80029FB8, 0, 0x5F);
+            func_80071408(func_8002A458, 0, 0x60);
+            func_80071408(func_8002A8EC, 0, 0x61);
+            func_80071408(func_8002AD74, 0, 0x63);
+        }
+        state = arg0->state;
+        break;
+    case 1:
+        if (D_80121D88 == 1) {
+            state = (u8) (arg0->state = 2);
+        }
+        break;
+    case 2:
+        for (i = 0; i < 5; i++) {
+            arg0->iconX[i] -= 0x20;
+        }
+        if (arg0->iconX[0] < -0x103) {
+            arg0->state = 3;
+        }
+        break;
+    case 3:
+        break;
+    }
+
+    if (arg0->state == 3) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_80029200, actor);
+}
 
 void func_80029548(PlayerCountSelectRowActor *arg0) {
     s32 temp_v1 = -0x104;
