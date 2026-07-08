@@ -1,4 +1,5 @@
 #include "common.h"
+#include "race_input_history.h"
 
 #define RACE_MODEL_BUFFER_HANDLE (*(s16 *)&D_80112130[0x48])
 
@@ -129,6 +130,8 @@ extern void func_80097FE4(FixedMatrix3sScratch, s16, s16);
 extern void func_80098590(void *, void *, void *);
 extern void func_80088C80(void *, s32, s32, s32);
 extern void func_80088294(void *, s32, s32, s32);
+extern s32 func_80088E98(Vec3i *, s32, s32, s16);
+extern void func_8008BB5C(RaceInputPlayer *, s32);
 extern void *func_800711D0(void *, s32, s32);
 extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, void *);
@@ -156,7 +159,9 @@ extern GfxCommandDest D_800DEE50;
 extern Gfx *gRegionAllocPtr;
 extern void *D_80156614;
 extern s16 D_80121B50;
-extern void func_80066E10(void);
+extern s16 D_801235B0;
+extern void func_80066E10(RaceModelListActor *);
+extern void func_80066ABC(RaceModelListActor *);
 extern void func_80067034(RaceModelListActor *);
 extern void func_800674B4(RaceThrownModelActor *);
 extern void func_800681A4(RaceOverlayModelActor *);
@@ -333,7 +338,76 @@ void func_80066ABC(RaceModelListActor *arg0) {
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80066E10.s")
+void func_80066E10(RaceModelListActor *arg0) {
+    RaceModelEntry *entry;
+    Vec3i *pos;
+    RaceModelListActor *actor;
+    register s32 one;
+    register s32 xzSize;
+    register s32 ySize;
+    register s32 sentinel;
+
+    entry = D_800D91E8[D_80121B50];
+    actor = arg0;
+    ySize = 1;
+    if (D_801235B0 & ySize) {
+        actor->modelIndexOffset++;
+    }
+    one = 1;
+    if (actor->modelIndexOffset >= 6) {
+        actor->modelIndexOffset = 0;
+    }
+
+    sentinel = -ySize;
+    ySize = 0xC0000;
+    if (entry->modelIndex == sentinel) {
+        goto done;
+    }
+    xzSize = 0x68000;
+    pos = &entry->transform;
+
+loop:
+    if (func_80048E60(pos) != 0) {
+        if (entry->enabled != 0) {
+            if (func_80088E98(pos, xzSize, ySize, 0) != 0) {
+                func_8008BB5C(D_80121D80, 0x64);
+                entry->enabled = 0;
+                func_80072A74(0x1A, pos, 0x7F, 0x32);
+                goto next;
+            }
+            if (func_80088E98(pos, xzSize, ySize, one) != 0) {
+                func_8008BB5C(D_8012238C, 0x64);
+                entry->enabled = 0;
+                func_80072A74(0x1A, pos, 0x7F, 0x32);
+                goto next;
+            }
+            if (func_80088E98(pos, xzSize, ySize, 2) != 0) {
+                func_8008BB5C(D_80122998, 0x64);
+                entry->enabled = 0;
+                func_80072A74(0x1A, pos, 0x7F, 0x32);
+                goto next;
+            }
+            if (func_80088E98(pos, xzSize, ySize, 3) != 0) {
+                func_8008BB5C(D_80122FA4, 0x64);
+                entry->enabled = 0;
+                func_80072A74(0x1A, pos, 0x7F, 0x32);
+                goto next;
+            }
+        }
+    } else {
+        entry->enabled = one;
+    }
+
+next:
+    entry++;
+    pos = &entry->transform;
+    if (entry->modelIndex != sentinel) {
+        goto loop;
+    }
+
+done:
+    func_800483FC(&D_801248D4, func_80066ABC, actor);
+}
 
 void func_80067034(RaceModelListActor *arg0) {
     register RaceModelListActor *actor1;
