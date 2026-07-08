@@ -209,53 +209,19 @@ void func_8007C130(void *asset, s16 dlIndex, u16 textureIndex) {
     gSPDisplayList(gRegionAllocPtr++, D_800DE098[dlIndex]);
 }
 
-// func_8007C38C best match: 91.887% (nonmatchings/func_8007C38C-2911448260736516995/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007C38C.s")
-#ifdef NON_MATCHING
-#define RACE_POSITION_UI_APPEND(cmd0, cmd1) \
-    {                                       \
-        Gfx *gfx = gRegionAllocPtr;         \
-        gRegionAllocPtr = gfx + 1;          \
-        gfx->words.w0 = (cmd0);             \
-        gfx->words.w1 = (cmd1);             \
-    }
-
-#define RACE_POSITION_UI_APPEND_REV(cmd0, cmd1) \
-    {                                           \
-        Gfx *gfx = gRegionAllocPtr;             \
-        gRegionAllocPtr = gfx + 1;              \
-        gfx->words.w1 = (cmd1);                 \
-        gfx->words.w0 = (cmd0);                 \
-    }
-
 void func_8007C38C(void *asset, s16 dlIndex, u16 textureIndex) {
     void *image;
     void *palette;
-    volatile u8 pad[0x8];
 
-    RACE_POSITION_UI_APPEND(0xE7000000, 0);
-    RACE_POSITION_UI_APPEND(0xBC000806, (u32)func_80043040(D_80112148));
-    RACE_POSITION_UI_APPEND(0x01020040, (u32)asset);
+    gDPPipeSync(gRegionAllocPtr++);
+    gSPSegment(gRegionAllocPtr++, 2, func_80043040(D_80112148));
+    gSPMatrix(gRegionAllocPtr++, (Mtx *)asset, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
     func_80045990(func_80043040(D_8011214A), textureIndex, &image, &palette);
-    RACE_POSITION_UI_APPEND(0xFD500000, (u32)image);
-    RACE_POSITION_UI_APPEND(0xF5500000, 0x07080200);
-    RACE_POSITION_UI_APPEND_REV(0xE6000000, 0);
-    RACE_POSITION_UI_APPEND(0xF3000000, 0x073FF200);
-    RACE_POSITION_UI_APPEND_REV(0xE7000000, 0);
-    RACE_POSITION_UI_APPEND_REV(0xF5400800, 0x00080200);
-    RACE_POSITION_UI_APPEND(0xF2000000, 0x000FC0FC);
-    RACE_POSITION_UI_APPEND(0xFD100000, (u32)palette);
-    RACE_POSITION_UI_APPEND_REV(0xE8000000, 0);
-    RACE_POSITION_UI_APPEND(0xF5000100, 0x07000000);
-    RACE_POSITION_UI_APPEND_REV(0xE6000000, 0);
-    RACE_POSITION_UI_APPEND(0xF0000000, 0x0703C000);
-    RACE_POSITION_UI_APPEND_REV(0xE7000000, 0);
-    RACE_POSITION_UI_APPEND(0x06000000, D_800DE0D4[dlIndex]);
-}
 
-#undef RACE_POSITION_UI_APPEND
-#undef RACE_POSITION_UI_APPEND_REV
-#endif
+    gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
+    gSPDisplayList(gRegionAllocPtr++, D_800DE0D4[dlIndex]);
+}
 
 #ifdef NON_MATCHING
 void func_8007C5E8(RacePositionUiPlayer *player) {
