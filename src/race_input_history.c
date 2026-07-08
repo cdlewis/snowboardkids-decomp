@@ -2,8 +2,19 @@
 #include "race_input_history.h"
 
 #define RACE_INPUT_HISTORY_LENGTH 0x1194
+#define RACE_INPUT_REPLAY_FRAME_COUNT 0x960
 #define INPUT_MASK_HARD_STEER_X 0xF0000
 #define INPUT_MASK_HARD_STEER_Y 0xC000
+
+typedef struct {
+    /* 0x0 */ u8 buttons;
+    /* 0x1 */ s8 stickX;
+    /* 0x2 */ s8 stickY;
+} RaceInputReplayFrame;
+
+typedef struct {
+    /* 0x0000 */ RaceInputReplayFrame inputs[RACE_INPUT_REPLAY_FRAME_COUNT];
+} RaceInputReplayHistory;
 
 typedef struct {
     /* 0x0000 */ s32 writeIndex;
@@ -17,7 +28,7 @@ typedef struct {
 
 extern s16 D_80112186;
 
-extern RaceInputHistoryBuffer *func_80043040(s16 assetId);
+extern void *func_80043040(s16 assetId);
 extern s32 func_800430D0(void);
 extern u32 D_80121E04[][0x183];
 extern s32 D_801235B4;
@@ -30,7 +41,50 @@ void func_8008409C(RaceInputPlayer *player);
 void func_8008431C(RaceInputPlayer *player);
 void func_80084510(RaceInputPlayer *player);
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_input_history/func_80083D80.s")
+void func_80083D80(RaceInputPlayer *player) {
+    RaceInputReplayHistory *history;
+    s16 frame;
+    u32 inputFlags;
+
+    history = func_80043040(D_80112186);
+    frame = player->replayFrame;
+    if (frame < RACE_INPUT_REPLAY_FRAME_COUNT) {
+        history[(u16) player->playerIndex].inputs[frame].stickX = player->stickX;
+        history[(u16) player->playerIndex].inputs[player->replayFrame].stickY = player->stickY;
+        history[(u16) player->playerIndex].inputs[player->replayFrame].buttons = 0;
+
+        inputFlags = player->inputFlags;
+        if (inputFlags & 8) {
+            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 1;
+            inputFlags = player->inputFlags;
+        }
+        if (inputFlags & 4) {
+            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 2;
+            inputFlags = player->inputFlags;
+        }
+        if (inputFlags & 1) {
+            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 8;
+            inputFlags = player->inputFlags;
+        }
+        if (inputFlags & 2) {
+            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 4;
+            inputFlags = player->inputFlags;
+        }
+        if (inputFlags & 0x8000) {
+            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 0x10;
+            inputFlags = player->inputFlags;
+        }
+        if (inputFlags & 0x4000) {
+            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 0x20;
+            inputFlags = player->inputFlags;
+        }
+        if (inputFlags & 0x2000) {
+            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 0x40;
+        }
+
+        player->replayFrame++;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_input_history/func_8008409C.s")
 
