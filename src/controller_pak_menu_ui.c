@@ -146,7 +146,7 @@ void func_80030570(ControllerPakTitleActor *arg0) {
     func_80071824(arg0, func_8003048C);
 }
 
-// func_800305B8 best match: 99.721% (nonmatchings/func_800305B8-5684860689308541580/base_15.c)
+// func_800305B8 best match: 99.732% (nonmatchings/func_800305B8-5272447827802519043/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_800305B8.s")
 
 #ifdef NON_MATCHING
@@ -165,8 +165,7 @@ void func_800305B8(ControllerPakConfirmActor *arg0) {
     s32 playerY;
     s32 yAdjust;
     s32 alpha;
-    s16 playerNumberText[5];
-    u16 textTerminator;
+    u16 playerNumberText[5];
     u8 *message;
 
     actor = arg0;
@@ -222,7 +221,7 @@ void func_800305B8(ControllerPakConfirmActor *arg0) {
             playerNumberText[1] = 7;
             playerNumberText[2] = playerIndex + 1;
             playerNumberText[3] = 0x19;
-            playerNumberText[4] = (textTerminator = -1);
+            playerNumberText[4] = 0xFFFF;
             if (playerIndex < D_80121B55) {
                 if (D_800EC8B4[playerIndex] == 1) {
                     message = D_800B8048;
