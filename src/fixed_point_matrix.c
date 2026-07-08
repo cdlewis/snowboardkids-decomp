@@ -149,7 +149,39 @@ void func_80098174(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
     func_80097CF0(sp38, sp18, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/fixed_point_matrix/func_800981C8.s")
+void func_800981C8(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
+    s32 sineX;
+    s32 cosineX;
+    s32 sineY;
+    s32 cosineY;
+    s32 sineZ;
+    s32 cosineZ;
+    s32 negSineY;
+    s32 negSineZ;
+    s32 sineZTimesSineX;
+    s32 cosineZTimesSineX;
+
+    sineX = func_80097AE8(arg1);
+    cosineX = func_80097B48(arg1);
+    sineY = func_80097AE8(arg2);
+    cosineY = func_80097B48(arg2);
+    sineZ = func_80097AE8(arg3);
+    cosineZ = func_80097B48(arg3);
+    negSineY = -sineY;
+    negSineZ = -sineZ;
+    sineZTimesSineX = (sineZ * sineX) / FIXED_MATRIX_ONE;
+
+    arg0[MTX_XX] = ((cosineZ * cosineY) + (((sineZ * sineX) / FIXED_MATRIX_ONE) * sineY)) / FIXED_MATRIX_ONE;
+    arg0[MTX_XY] = (sineZ * cosineX) / FIXED_MATRIX_ONE;
+    arg0[MTX_XZ] = ((negSineY * cosineZ) + (sineZTimesSineX * cosineY)) / FIXED_MATRIX_ONE;
+    cosineZTimesSineX = (cosineZ * sineX) / FIXED_MATRIX_ONE;
+    arg0[MTX_YX] = ((negSineZ * cosineY) + (cosineZTimesSineX * sineY)) / FIXED_MATRIX_ONE;
+    arg0[MTX_YY] = (cosineZ * cosineX) / FIXED_MATRIX_ONE;
+    arg0[MTX_YZ] = ((negSineZ * negSineY) + (cosineZTimesSineX * cosineY)) / FIXED_MATRIX_ONE;
+    arg0[MTX_ZX] = (cosineX * sineY) / FIXED_MATRIX_ONE;
+    arg0[MTX_ZY] = -sineX;
+    arg0[MTX_ZZ] = (cosineX * cosineY) / FIXED_MATRIX_ONE;
+}
 
 void func_800983E4(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     FixedMatrix3sScratch sp58;
