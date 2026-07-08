@@ -103,6 +103,9 @@ extern u8 D_800D57A0[];
 extern s16 D_800D57B0[];
 extern s16 D_800D57B4[];
 extern s16 D_800D5808[];
+extern u32 D_800D5760[];
+extern u32 D_800D6270[];
+extern GfxCommandSource D_800DEE30;
 extern u32 D_800DEE50[];
 extern s16 D_800DEF14;
 extern u32 D_800DEFF8[];
@@ -120,6 +123,8 @@ extern s16 D_80121B50;
 extern s16 D_801235B0;
 extern RacePlayerState D_80121D80[];
 extern u8 D_80156608;
+extern u8 D_80156609;
+extern GfxCommandDest *D_80156614;
 extern u8 D_800E29C0;
 extern u8 D_800E11F0[];
 extern u8 D_800E1204[];
@@ -143,6 +148,7 @@ void func_80042A00(s32);
 void func_80042A58(s32, s32);
 void func_80045A78(s16, s16, s32, u16);
 void func_80046D68(s32, s32, s32, s32, s32);
+void func_80045990(void *, u16, void **, void **);
 void func_80048278(s32, s32, void *, s32);
 void func_800483FC(void *, void *, s32);
 GfxCommandDest *func_8004885C(GfxCommandSource *);
@@ -364,7 +370,110 @@ void func_800540EC(void *arg0) {
     }
 }
 
+// func_80054130 best match: 87.250% at nonmatchings/func_80054130-2775475442547365205/base_7.c
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80054130.s")
+
+#ifdef NON_MATCHING
+void func_80054130(MainMenuOverlayEffectActor *arg0) {
+    void *spA4;
+    void *spA0;
+    volatile u8 gap[0xC];
+    GfxCommandSource sp74;
+    Gfx *gfx;
+    volatile u8 pad[0x4C];
+
+    if (D_80156609 != 0) {
+        arg0->unk2F = 1;
+    }
+
+    if (arg0->unk2F != 0) {
+        arg0->unk2F = 0;
+        sp74 = D_800DEE30;
+        sp74.x = arg0->unk18.word;
+        sp74.y = arg0->unk1C.word;
+        sp74.z = arg0->unk20.word;
+        arg0->unk24.word = (s32)func_8004885C(&sp74);
+    }
+
+    if (arg0->unk24.word != 0) {
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = (u32)D_800D6270;
+
+        func_80045990((void *)func_80043040(D_8011216C), (arg0->unk2E + 0x24) & 0xFFFF, &spA4, &spA0);
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xFD500000;
+        gfx->words.w1 = (u32)spA4;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF5500000;
+        gfx->words.w1 = 0x07080200;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE6000000;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF3000000;
+        gfx->words.w1 = 0x070FF400;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE7000000;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0x80200;
+        gfx->words.w0 = 0xF5400400;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF2000000;
+        gfx->words.w1 = 0x7C07C;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xFD100000;
+        gfx->words.w1 = (u32)spA0;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE8000000;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF5000100;
+        gfx->words.w1 = 0x07000000;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE6000000;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF0000000;
+        gfx->words.w1 = 0x0703C000;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE7000000;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = arg0->unk24.word;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01000040;
+        gfx->words.w1 = (u32)D_80156614;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = (u32)D_800D5760;
+        gfx->words.w0 = 0x0400103F;
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0x60200;
+        gfx->words.w0 = 0xB1060402;
+    }
+}
+#endif
 
 void func_80054460(MainMenuOverlayEffectActor *arg0) {
     FixedMatrix3sScratch sp38;
