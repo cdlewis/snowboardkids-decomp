@@ -27,6 +27,12 @@ typedef struct {
 } FixedTransform;
 
 typedef union {
+    /* 0x00 */ s32 words[8];
+    /* 0x00 */ s16 halfwords[0x10];
+    /* 0x00 */ FixedTransform transform;
+} RaceUiTrailCopyBlock;
+
+typedef union {
     s32 word;
     struct {
         s16 hi;
@@ -43,7 +49,9 @@ typedef struct {
     /* 0x000 */ u8 pad0[0x1C];
     /* 0x01C */ Vec3i pos1C;
     /* 0x028 */ Vec3i pos28;
-    /* 0x034 */ u8 pad34[0x174 - 0x34];
+    /* 0x034 */ u8 pad34[0x94 - 0x34];
+    /* 0x094 */ RaceUiTrailCopyBlock copyBlock94;
+    /* 0x0B4 */ u8 padB4[0x174 - 0xB4];
     /* 0x174 */ FixedTransform transform;
     /* 0x194 */ u8 pad194[0x2C0 - 0x194];
     /* 0x2C0 */ s16 unk2C0;
@@ -75,12 +83,6 @@ typedef struct {
 } RaceUiAssetHandles;
 
 typedef struct RaceUiGfxCommandDest RaceUiGfxCommandDest;
-
-typedef union {
-    /* 0x00 */ s32 words[8];
-    /* 0x00 */ s16 halfwords[0x10];
-    /* 0x00 */ FixedTransform transform;
-} RaceUiTrailCopyBlock;
 
 typedef struct {
     /* 0x00 */ RaceUiTrailCopyBlock source;
@@ -676,7 +678,6 @@ extern u16 D_800D6520[];
 extern s32 D_80123778;
 extern s32 D_801235B4;
 extern void func_80057E10(void *);
-extern void func_800615BC(void);
 extern void func_800640D8(RaceUiRankParticleActor *);
 extern void func_80057710(RaceUiPromptActor *);
 extern void func_80057B60(RaceUiPopupActor *);
@@ -2328,7 +2329,35 @@ void func_80061484(RaceUiRankTrailActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800615BC.s")
+void func_800615BC(RaceUiRankTrailActor *arg0) {
+    RacePlayerState *player;
+    s32 i;
+
+    arg0->copyBlock = (&D_80121D80[arg0->playerIndex])->copyBlock94;
+    arg0->copyBlock.halfwords[0] = arg0->copyBlock.halfwords[0] / 4;
+    arg0->copyBlock.halfwords[1] = arg0->copyBlock.halfwords[1] / 4;
+    arg0->copyBlock.halfwords[2] = arg0->copyBlock.halfwords[2] / 4;
+    arg0->copyBlock.halfwords[3] = arg0->copyBlock.halfwords[3] / 4;
+    arg0->copyBlock.halfwords[4] = arg0->copyBlock.halfwords[4] / 4;
+    arg0->copyBlock.halfwords[5] = arg0->copyBlock.halfwords[5] / 4;
+    arg0->copyBlock.halfwords[6] = arg0->copyBlock.halfwords[6] / 4;
+    arg0->copyBlock.halfwords[7] = arg0->copyBlock.halfwords[7] / 4;
+    arg0->copyBlock.halfwords[8] = arg0->copyBlock.halfwords[8] / 4;
+
+    player = &D_80121D80[arg0->playerIndex];
+    if (player->flags & 0x400000) {
+        func_800483FC(&D_801248BC, func_80061484, (s32)arg0);
+        return;
+    }
+
+    func_80072A74(0x11, &player->pos1C, 0x7F, 0x32);
+
+    for (i = 0; i < 8; i++) {
+        func_800604CC((void *)arg0->copyBlock.words[5], (void *)arg0->copyBlock.words[6], (void *)arg0->copyBlock.words[7], i);
+    }
+
+    func_800716E4(arg0);
+}
 
 void func_800617C8(void *arg0) {
     func_80071824(arg0, func_800615BC);
