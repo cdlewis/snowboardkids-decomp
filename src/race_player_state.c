@@ -2,6 +2,11 @@
 #include "game_audio.h"
 #include "race_input_history.h"
 
+typedef struct {
+    /* 0x00 */ s8 active;
+    /* 0x01 */ char pad1[0xAF];
+} Unk8011228C;
+
 extern void func_8008C098(RaceInputPlayer *);
 extern void func_8008C7D0(RaceInputPlayer *);
 extern void func_80082664(RaceInputPlayer *, s32, s32, s32);
@@ -9,6 +14,11 @@ extern void func_80082E48(RaceInputPlayer *);
 extern void func_80081E40(RaceInputPlayer *, s32);
 extern s32 func_80082EC0(RaceInputPlayer *);
 extern s32 func_80095F90(s32);
+extern void func_8008BB5C(RaceInputPlayer *, s32);
+extern void *func_800711D0(void *, s32, s32);
+extern s32 func_80072138(s32, s32);
+extern void func_80061034(s32, s16);
+extern void func_80057DD4(void *);
 
 extern void (*D_800DECD0[])(RaceInputPlayer *);
 extern void (*D_800DECD8[])(RaceInputPlayer *);
@@ -20,6 +30,8 @@ extern u8 D_80121B5F;
 extern u8 D_800EC9C2;
 extern s8 D_80121B54;
 extern u8 D_80121B56;
+extern u8 D_80121B5E;
+extern Unk8011228C D_8011228C[];
 extern void func_8007B250(void);
 extern void func_80087AFC(void);
 extern void func_80087EFC(void);
@@ -634,7 +646,32 @@ void func_800978C0(RaceInputPlayer *player) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80097910.s")
+void func_80097910(RaceInputPlayer *player) {
+    u16 playerIndex;
+
+    func_80089374();
+    if (!(player->stateFlags & 0x02000000)) {
+        player->mode = 1;
+        player->updateState = 0;
+        player->updateTimer = 0;
+        if ((D_800EC9C2 == 1) && (D_80121B5E == 2)) {
+            player->unk2C0 *= 2;
+            if (player->unk2C0 >= 0x2710) {
+                player->unk2C0 = 0x270F;
+            }
+            func_800711D0(func_80057DD4, 0, 0x64);
+            func_80072138(0x51, 0x32);
+        }
+        if (D_800EC9C2 == 0) {
+            func_8008BB5C(player, 0x12C);
+            playerIndex = player->playerIndex;
+            if (D_8011228C[playerIndex].active != 0) {
+                func_80061034(0x12C, (s16)playerIndex);
+                func_80072138(0x51, 0x32);
+            }
+        }
+    }
+}
 
 void func_80097A14(RaceInputPlayer *player) {
     func_80089374();
