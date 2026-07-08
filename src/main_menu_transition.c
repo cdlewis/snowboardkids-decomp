@@ -6,6 +6,7 @@
 #include "race_input_history.h"
 #include "input_task_scheduler.h"
 #include "main_menu_message_ui.h"
+#include "main_menu_overlay_effects.h"
 
 #define MAIN_MENU_TRANSITION_FRAMES 0x10
 
@@ -30,7 +31,6 @@ extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8006D5CC(void);
 extern void func_8006D520(s32, s32);
-extern void func_80055678(void);
 extern void func_80051854(void);
 
 extern u8 D_1467B0[];

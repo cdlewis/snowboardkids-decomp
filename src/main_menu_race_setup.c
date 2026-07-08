@@ -3,6 +3,7 @@
 #include "effect_task_scheduler.h"
 #include "fixed_point_matrix.h"
 #include "input_task_scheduler.h"
+#include "main_menu_overlay_effects.h"
 
 typedef struct {
     s32 x;
@@ -39,7 +40,6 @@ extern s8 D_800DEED4;
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern s16 D_800DEF14;
-extern void func_8005393C(void);
 extern void func_8006D780(s32);
 void func_8003E45C(void);
 void func_8003E514(void);
