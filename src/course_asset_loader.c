@@ -1,5 +1,6 @@
 #include "common.h"
 #include "asset_decompression.h"
+#include "course_asset_loader.h"
 
 #define COURSE_COUNT 10
 #define COURSE_PLAYER_COUNT 4
