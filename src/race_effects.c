@@ -92,6 +92,8 @@ extern s32 D_801248A4;
 s32 func_80043040(s16);
 void func_800483FC(void *, void *, void *);
 void func_80045990(s32, s32, void **, void **);
+s16 func_80049440(Vec3i *, s32, s16, s16, s16 *);
+void func_80049664(RaceEffectActor *);
 void func_800499A4(RaceEffectActor *);
 void func_80049FB4(RaceEffectActor *);
 void func_8004A2F4(RaceEffectActor *);
@@ -123,7 +125,91 @@ s64 __ll_mul(s64, s64);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_80049664.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_800499A4.s")
+void func_800499A4(RaceEffectActor *arg0) {
+    s32 sin;
+    s32 xOffset;
+    s32 cos;
+    s32 zOffset;
+    s32 pushX;
+    s32 pushZ;
+    s32 prevY;
+    s32 y;
+    s16 angleDiff;
+    s32 groundY;
+    Vec3i *pos;
+    s32 i;
+    volatile u8 padding[0x10];
+
+    if (D_80121B56 == 0) {
+        pos = &arg0->pos;
+        arg0->spriteIndex = func_80049440(pos, 0x1600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+
+        if (arg0->spriteIndex != -1) {
+            D_8012229A[arg0->spriteIndex].value = 1;
+            angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
+            if (angleDiff >= 0x801) {
+                angleDiff -= 0x1000;
+            }
+
+            if (angleDiff >= 0x1D) {
+                angleDiff = 0x1C;
+            }
+            if (angleDiff < -0x1C) {
+                angleDiff = -0x1C;
+            }
+
+            arg0->targetAngle += angleDiff;
+        }
+
+        sin = func_80097AE8(arg0->targetAngle);
+        cos = func_80097B48(arg0->targetAngle);
+        xOffset = ((s64)sin * arg0->velocityY) / 0x1000;
+        zOffset = ((s64)cos * arg0->velocityY) / 0x1000;
+
+        y = arg0->pos.y;
+        prevY = y;
+        arg0->pos.x += xOffset;
+        arg0->pos.y = y;
+        arg0->pos.y = arg0->pos.y + arg0->accelerationY;
+        arg0->pos.z += zOffset;
+
+        arg0->startAngle = func_8007D200(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        groundY = func_80080CC4(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
+        y = arg0->pos.y;
+        if (y < groundY) {
+            arg0->pos.y = groundY;
+            y = groundY;
+        }
+        arg0->accelerationY = (y - prevY) - 0x20000;
+
+        func_8007FF88(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
+        if (pushX != 0 || pushZ != 0) {
+            arg0->timer = 0;
+            arg0->pos.x += pushX;
+            arg0->pos.z += pushZ;
+        }
+
+        for (i = 0; i < 4; i++) {
+            if (i != arg0->playerIndex && func_800891B8(pos, 0x30000, 8, i)) {
+                D_80122052[i].value = arg0->playerIndex;
+                arg0->timer = 0;
+                i = 4;
+            }
+        }
+
+        if (arg0->timer == 0) {
+            func_80072A74(0xA, pos, 0x7F, 0x32);
+            func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
+            func_800716E4(arg0);
+            return;
+        }
+
+        arg0->timer--;
+        func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 0);
+    }
+
+    func_800483FC(&D_801248A4, func_80049664, arg0);
+}
 
 void func_80049CE0(RaceEffectActor *arg0) {
     volatile s32 pad0;
