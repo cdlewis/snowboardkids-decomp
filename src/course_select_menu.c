@@ -64,6 +64,8 @@ extern s16 D_8010ADF0;
 extern s8 D_8010ADF8;
 extern u8 D_8010AECC;
 extern CourseSelectStatus D_8010AF18;
+extern u8 D_8010AF1C;
+extern u8 D_8010AF20;
 extern s8 D_8010AF72;
 extern s8 D_8010AF73;
 extern s16 D_8010AF76;
@@ -72,6 +74,7 @@ extern ObjectA3E0 D_801121E0[];
 extern ObjectA3E0 D_80112340;
 extern u8 D_80121B55;
 extern u8 D_80121D86;
+extern u8 D_80121D88;
 extern CourseSelectSelection D_80121D80;
 extern CourseSelectMenuState *D_801235B8;
 extern s32 D_801235B4;
@@ -103,7 +106,7 @@ extern void func_8009956C(void *, s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000A214.s")
 
-// func_8000AFE8 best match: 86.106%
+// func_8000AFE8 best match: 92.901%
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000AFE8.s")
 
 #ifdef NON_MATCHING
@@ -137,9 +140,9 @@ void func_8000AFE8(void) {
             if ((*statePtr)->timer == 1) {
                 func_80072138(0x18, 0x32);
                 if (D_8010AECC == 0) {
-                    D_8010AF18.playerOneCourseDecided = 1;
+                    D_8010AF1C = 1;
                 } else {
-                    D_8010AF18.playerTwoCourseDecided = 1;
+                    D_8010AF20 = 1;
                 }
                 func_8009956C(func_8000A214, 0);
             } else {
@@ -150,9 +153,9 @@ void func_8000AFE8(void) {
             D_801235B4 = 1;
             func_80072138(0x18, 0x32);
             if (D_8010AECC == 0) {
-                D_8010AF18.playerOneCourseDecided = 1;
+                D_8010AF1C = 1;
             } else {
-                D_8010AF18.playerTwoCourseDecided = 1;
+                D_8010AF20 = 1;
             }
             func_8009956C(func_8000A214, 0);
         }
@@ -168,7 +171,8 @@ void func_8000AFE8(void) {
         currentPtr = &D_800EC9C4;
         var_s1 = D_801121E0;
         do {
-            (*currentPtr = var_s1)->unk2C();
+            D_800EC9C4 = var_s1;
+            var_s1->unk2C();
             var_s0 += 1;
             var_s1 += 1;
         } while (var_s0 < *countPtr);
