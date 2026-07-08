@@ -710,25 +710,23 @@ void func_80015C84(void *arg0) {
     func_80071824(arg0, func_80015BD8);
 }
 
-// func_80015CBC best match: 92.721% (nonmatchings/func_80015CBC-180949888360117632/base_12.c)
+// func_80015CBC best match: 96.655% (nonmatchings/func_80015CBC-4092474673963440942/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80015CBC.s")
 
 #ifdef NON_MATCHING
 void func_80015CBC(TitleMenuWidgetItemView *arg0) {
-    char text[0x1C];
+    char buf[0xC];
     s32 alpha;
-    s32 scale;
     s32 next;
     s32 i;
     TitleMenuWidgetItemView *item;
-    u8 *selected;
-    u8 *textures;
+    volatile u8 *selected;
+    u8 *text;
 
-    textures = D_80112130;
     selected = &D_80121B55;
     item = arg0;
-    i = 0;
-    do {
+    text = buf - 0x10;
+    for (i = 0; i != 4;) {
         alpha = 0x100;
         if (((s32)*selected - 1) < i) {
             alpha = 0x50;
@@ -739,7 +737,6 @@ void func_80015CBC(TitleMenuWidgetItemView *arg0) {
         func_8000F8AC((s16)(item->x + 0x80), item->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xC, 0x20, 0x20, 0, alpha, (i + 1) & 0xFF);
 
         next = i + 1;
-        scale = next & 0xFF;
         sprintf(text, D_800E0A80, next);
         func_80013D0C((s16)(item->x + 0x32), (s16)(item->y + 2), text, 0, alpha);
         if (alpha == 0x100) {
@@ -750,7 +747,7 @@ void func_80015CBC(TitleMenuWidgetItemView *arg0) {
         }
         i = next;
         item = (TitleMenuWidgetItemView *)((s16 *)item + 1);
-    } while (next != 4);
+    }
 }
 #endif
 
