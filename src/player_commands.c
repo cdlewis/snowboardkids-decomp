@@ -150,9 +150,14 @@ typedef struct Struct800A0138 {
 
 typedef struct Struct800A0170Node {
     ALLink node;
-    s32 pad8;
+    s32 addr;
     u32 counter;
+    void *buffer;
 } Struct800A0170Node;
+
+typedef struct OSIoMesg {
+    u8 pad[0x18];
+} OSIoMesg;
 
 extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern s32 osSetIntMask(s32);
@@ -173,6 +178,8 @@ extern void osSpTaskLoad(void *);
 extern void osSpTaskStartGo(void *);
 extern void osSpTaskYield(void);
 extern u32 osAiGetLength(void);
+extern u32 osVirtualToPhysical(void *);
+extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
 extern Struct800A0138 D_8015C928;
 extern ALLink *D_8015C964;
 extern void func_8009CD18(PlayerCommandState *, u8 *);
@@ -180,7 +187,7 @@ extern void func_8009C77C(SchedulerState *);
 extern void func_8009F604(void);
 extern s32 func_8009F4C8();
 extern s32 func_8009F780(PlayerCommandState *, s32, s32, s32, s32);
-extern void func_8009FF80(void);
+extern s32 func_8009FF80(s32, s32, void *);
 extern void func_8009C444(void *);
 extern void func_8009C8DC(void *);
 extern s32 D_800DF154;
@@ -195,6 +202,8 @@ extern s32 D_8015A684;
 extern s32 D_8015A620;
 extern u8 D_8015A624;
 extern OSMesgQueue D_8015C948;
+extern OSIoMesg *D_8015C968;
+extern s32 D_8015C970;
 extern s32 *libmus_fxheader_current;
 extern f64 D_800E1A80;
 extern f64 D_800E1A88;
@@ -1214,9 +1223,73 @@ void func_8009FF40(s32 arg0) {
     }
 }
 
+// func_8009FF80 best match: 86.936%
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009FF80.s")
 
-void (*func_800A0138(Struct800A0138 **arg0))(void) {
+#ifdef NON_MATCHING
+s32 func_8009FF80(s32 addr, s32 len, void *state) {
+    register ALLink *first;
+    register ALLink *node;
+    ALLink *last;
+    Struct800A0170Node *dmaNode;
+    u32 aligned;
+    u32 offset;
+    void *buffer;
+
+    last = NULL;
+    first = D_8015C928.activeList;
+    node = first;
+    if (node != NULL) {
+        s32 dmaLen = D_8015C970;
+        do {
+            dmaNode = (Struct800A0170Node *)node;
+            if ((u32)addr < (u32)dmaNode->addr) {
+                break;
+            }
+            last = node;
+            if ((dmaNode->addr + dmaLen) >= (addr + len)) {
+                dmaNode->counter = D_800DF290;
+                return osVirtualToPhysical((u8 *)dmaNode->buffer + addr - dmaNode->addr);
+            }
+            node = node->next;
+        } while (node != NULL);
+    }
+
+    node = D_8015C928.readyList;
+    if (node == NULL) {
+        return osVirtualToPhysical(first);
+    }
+
+    D_8015C928.readyList = node->next;
+    alUnlink(node);
+    if (last != NULL) {
+        alLink(node, last);
+    } else {
+        first = D_8015C928.activeList;
+        if (first != NULL) {
+            D_8015C928.activeList = node;
+            node->next = first;
+            node->prev = NULL;
+            first->prev = node;
+        } else {
+            D_8015C928.activeList = node;
+            node->next = NULL;
+            node->prev = NULL;
+        }
+    }
+
+    offset = addr & 1;
+    aligned = addr - offset;
+    dmaNode = (Struct800A0170Node *)node;
+    dmaNode->addr = aligned;
+    dmaNode->counter = D_800DF290;
+    buffer = dmaNode->buffer;
+    osPiStartDma(&D_8015C968[D_800DF294++], 0, 0, aligned, buffer, D_8015C970, &D_8015C948);
+    return osVirtualToPhysical(buffer) + offset;
+}
+#endif
+
+ALDMAproc func_800A0138(Struct800A0138 **arg0) {
     if (D_8015C928.initialized == 0) {
         D_8015C928.activeList = 0;
         D_8015C928.readyList = D_8015C964;
