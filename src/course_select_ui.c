@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "menu_rendering.h"
 #include "course_select_ui.h"
 
@@ -20,9 +21,6 @@ typedef struct {
 } CourseSelectRacePlayer;
 
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
-extern s32 func_80071408(void *, s32, s32);
-extern void func_800716E4(CourseSelectWidgetActor *);
-extern void func_80071824(void *task, void (*callback)());
 extern void func_80097C18(s16 *mtx, s16 rotY);
 extern void func_8009853C(s16 *mtx, s16 arg1, s16 arg2);
 extern void func_80098590(s16 *mtx, CourseSelectTempVec3i *source, CourseSelectTempVec3i *dest);

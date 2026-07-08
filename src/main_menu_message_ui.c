@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "menu_rendering.h"
 
 #define MAIN_MENU_MESSAGE_TEXTURE_HANDLE (D_80112130.textureHandle)
@@ -61,10 +62,8 @@ extern MainMenuMessageScript D_800B5038[];
 extern MainMenuMessageScript D_800B5050[][0x14];
 extern s16 D_800B51B6[];
 extern u8 D_80121B5A;
-extern void func_800716E4(MainMenuMessageActor *);
 extern void func_80072138(s32, s32, MainMenuMessageActor *);
 void func_8000DF9C(MainMenuMessageActor *);
-extern void func_80071824(void *task, void (*callback)());
 void func_8000E5A0(MainMenuMessageActor *);
 void func_8000E8CC(MainMenuMessageActor *);
 void func_8000E99C(MainMenuMessageActor *);

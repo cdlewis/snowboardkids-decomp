@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "character_select_flow.h"
 #include "controller_pak_menu_ui.h"
@@ -13,10 +14,7 @@ typedef void (*Callback)(void);
 extern void func_800720E4(s32);
 extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_80070EC0(s32);
-extern void func_80071408(void *, s32, s32);
 extern void func_8009956C(Callback, s32);
-extern void func_8007105C(void);
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80072138(s32, s32);
 extern void func_80045914(void);

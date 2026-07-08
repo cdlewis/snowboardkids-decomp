@@ -1,13 +1,12 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 #include "character_select_flow.h"
 #include "character_select_ui.h"
 
 typedef s16 CharacterSelectOptionList[10];
 
 extern void func_8009956C(void *, s32);
-extern void func_8007105C(void);
 extern s32 func_80013F88(s32, s32, s32);
-extern void func_80071408(void *, s32, s32);
 extern void func_80072114(s32);
 extern void func_80072138(s32, s32);
 extern void func_80045914(void);

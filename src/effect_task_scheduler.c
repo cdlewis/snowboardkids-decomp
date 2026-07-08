@@ -1,22 +1,7 @@
 #include "common.h"
-
-typedef struct EffectTask {
-    struct EffectTask *prev;
-    struct EffectTask *next;
-    void (*callback)(struct EffectTask *);
-    u16 type;
-    u16 priority;
-    s16 unk10;
-    s16 unk12;
-    s16 callbackTimer;
-    s16 isActive;
-    void *args[0x40];
-} EffectTask; // size = 0x118
+#include "effect_task_scheduler.h"
 
 extern EffectTask *D_80121848;
-
-EffectTask *func_800711D0(void (*callback)(EffectTask *), s32 type, s32 priority);
-EffectTask *func_80071408(void (*callback)(EffectTask *), s32 type, s32 priority);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/effect_task_scheduler/func_80070EC0.s")
 

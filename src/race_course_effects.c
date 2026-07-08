@@ -1,4 +1,5 @@
 #include "common.h"
+#include "effect_task_scheduler.h"
 
 typedef struct {
     s32 x;
@@ -204,9 +205,7 @@ typedef struct {
     s16 courseRenderBufferHandle;
 } CourseAssetHandles;
 
-extern void func_80071824(void *task, void (*callback)());
 extern void func_800483FC(void *, void *, void *);
-extern void func_800716E4(void *);
 extern void func_80072138(s32, s32);
 extern void func_80072A74(s32, void *, s32, s32);
 extern void osWritebackDCache(void *, s32);
@@ -261,7 +260,6 @@ void func_8006B3E0(Struct6B760 *);
 void func_8006B6C8(Struct6B760 *);
 void func_8006AF48(RaceCourseRenderEffect *);
 void func_8006BC68(RaceMovingEffect *);
-extern Struct6B760 *func_80071408(void *, s32, s32);
 extern u8 D_80121B56;
 extern s16 D_80121B50;
 extern CourseAssetHandles D_80112130;
