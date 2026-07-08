@@ -20,6 +20,14 @@ typedef struct {
             /* 0x28 */ s16 transitionOffset;
             /* 0x2A */ u8 transitionState;
         };
+        struct {
+            /* 0x18 */ u8 pad18_2[0x18];
+            /* 0x30 */ u8 unk30;
+            /* 0x31 */ u8 pad31[3];
+            /* 0x34 */ u8 unk34;
+            /* 0x35 */ u8 pad35[3];
+            /* 0x38 */ s8 unk38;
+        };
         /* 0x18 */ s16 coordinates[0x22];
         /* 0x18 */ s16 coordinateRows[4][3];
     };
@@ -46,6 +54,12 @@ typedef struct {
     s32 y;
     s32 z;
 } CourseSelectTempVec3i;
+
+typedef struct {
+    /* 0x000 */ u8 pad0[5];
+    /* 0x005 */ u8 state;
+    /* 0x006 */ u8 pad6[0x606];
+} CourseSelectRacePlayer;
 
 extern void func_80023A68();
 extern void func_80024380();
@@ -75,13 +89,17 @@ extern s32 D_8010ADDC;
 extern s32 D_8010ADE8;
 extern s8 D_8010AE64[];
 extern u8 D_8010AEB0;
+extern u8 D_8010AEA0[];
 extern u8 D_8010AF18;
 extern u8 D_8010AF1C;
 extern u8 D_800B7040[];
+extern s16 D_800B7084[][6];
+extern s16 D_800B70A8[][4];
 extern s16 D_800B70C0[][4];
 extern s16 D_80112130[];
 extern s16 D_8011217A;
 extern u8 D_80121B55;
+extern CourseSelectRacePlayer D_80121D80[];
 extern u8 D_80121D88;
 extern CourseSelectState *D_801235B8;
 extern s32 D_80124868;
@@ -243,7 +261,61 @@ void func_80025AA8(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025BE4.s")
 
+// func_80025E6C best match: 82.713% (nonmatchings/func_80025E6C-2775475442547365205/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025E6C.s")
+
+#ifdef NON_MATCHING
+void func_80025E6C(CourseSelectWidgetActor *arg0) {
+    void *new_var = arg0;
+    s32 row;
+    s32 i;
+    s32 disabled;
+    CourseSelectWidgetActor *xPtr;
+    CourseSelectWidgetActor *posPtr;
+    u8 *courseUnlocked;
+    s16 (*xyTable)[6];
+    s16 (*xTable)[4];
+
+    if (new_var && new_var) {
+    }
+
+    if (D_80121B55 < 3) {
+        row = D_80121B55 - 1;
+    } else {
+        row = 2;
+    }
+
+    i = 0;
+    if ((s32)D_80121B55 > 0) {
+        xyTable = &D_800B7084[row];
+        xTable = &D_800B70A8[row];
+        courseUnlocked = D_8010AEA0;
+        xPtr = new_var;
+        posPtr = new_var;
+        do {
+            if (*courseUnlocked++ != 0) {
+                disabled = 1;
+                if (D_80121D80[i].state == 5) {
+                    disabled = 0;
+                }
+            } else {
+                disabled = 0;
+            }
+            xPtr->unk38 = (*xyTable)[disabled];
+            posPtr->coordinates[4] = (*xyTable)[((i & 1) * 2) + disabled + 2];
+            posPtr->coordinates[8] = 0;
+            posPtr->coordinates[0] = (*xTable)[((i >= 2) * 2) + 1];
+            xPtr->unk30 = 0;
+            xPtr->unk34 = 0;
+            i++;
+            xPtr = (CourseSelectWidgetActor *)((u8 *)xPtr + 1);
+            posPtr = (CourseSelectWidgetActor *)((u8 *)posPtr + 2);
+        } while (i < (s32)D_80121B55);
+    }
+
+    func_80071824(new_var, func_80025BE4);
+}
+#endif
 
 void func_80025FA8(CourseSelectWidgetActor *arg0) {
     func_8000F030(arg0->x, arg0->y, func_80043040(D_8011217A), 3, 0x20, 0x20, 0, 0);
