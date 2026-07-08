@@ -1,4 +1,5 @@
 #include "common.h"
+#include <PR/libaudio.h>
 
 typedef void *OSMesg;
 
@@ -139,11 +140,17 @@ typedef struct SchedulerState {
 } SchedulerState;
 
 typedef struct Struct800A0138 {
-    u8 unk0;
+    u8 initialized;
     u8 pad1[3];
-    s32 unk4;
-    s32 unk8;
+    ALLink *activeList;
+    ALLink *readyList;
 } Struct800A0138;
+
+typedef struct Struct800A0170Node {
+    ALLink node;
+    s32 pad8;
+    u32 counter;
+} Struct800A0170Node;
 
 extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern s32 osSetIntMask(s32);
@@ -165,7 +172,7 @@ extern void osSpTaskStartGo(void *);
 extern void osSpTaskYield(void);
 extern u32 osAiGetLength(void);
 extern Struct800A0138 D_8015C928;
-extern s32 D_8015C964;
+extern ALLink *D_8015C964;
 extern void func_8009CD18(PlayerCommandState *, u8 *);
 extern void func_8009C77C(SchedulerState *);
 extern void func_8009F604(void);
@@ -174,6 +181,8 @@ extern s32 func_8009F780(PlayerCommandState *, s32, s32, s32, s32);
 extern void func_8009FF80(void);
 extern s32 D_800DF154;
 extern s32 D_800DF158;
+extern u32 D_800DF290;
+extern u32 D_800DF294;
 extern s32 D_800DF2A4;
 extern SchedulerViMode D_800DF340[];
 extern u8 D_80158620[];
@@ -181,6 +190,7 @@ extern s32 D_8015A680;
 extern s32 D_8015A684;
 extern s32 D_8015A620;
 extern u8 D_8015A624;
+extern OSMesgQueue D_8015C948;
 extern s32 *libmus_fxheader_current;
 extern f64 D_800E1A80;
 extern f64 D_800E1A88;
@@ -1224,13 +1234,50 @@ void func_8009FF40(s32 arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009FF80.s")
 
 void (*func_800A0138(Struct800A0138 **arg0))(void) {
-    if (D_8015C928.unk0 == 0) {
-        D_8015C928.unk4 = 0;
-        D_8015C928.unk8 = D_8015C964;
-        D_8015C928.unk0 = 1;
+    if (D_8015C928.initialized == 0) {
+        D_8015C928.activeList = 0;
+        D_8015C928.readyList = D_8015C964;
+        D_8015C928.initialized = 1;
     }
     *arg0 = &D_8015C928;
     return func_8009FF80;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_800A0170.s")
+void func_800A0170(void) {
+    OSMesg msg[2];
+    u32 i;
+    Struct800A0170Node *node;
+    Struct800A0170Node *next;
+
+    i = 0;
+    if (D_800DF294 != 0) {
+        do {
+            osRecvMesg(&D_8015C948, msg, 0);
+            i++;
+        } while (i < D_800DF294);
+    }
+
+    node = (Struct800A0170Node *)D_8015C928.activeList;
+    if (node != NULL) {
+        do {
+            next = (Struct800A0170Node *)node->node.next;
+            if ((node->counter + 1) < D_800DF290) {
+                if ((ALLink *)node == D_8015C928.activeList) {
+                    D_8015C928.activeList = &((Struct800A0170Node *)node->node.next)->node;
+                }
+                alUnlink(&node->node);
+                if (D_8015C928.readyList != NULL) {
+                    alLink(&node->node, D_8015C928.readyList);
+                } else {
+                    D_8015C928.readyList = &node->node;
+                    node->node.next = (node->node.prev = NULL);
+                }
+            }
+            node = next;
+            i = 0;
+        } while (next != NULL);
+    }
+
+    D_800DF294 = 0;
+    D_800DF290++;
+}
