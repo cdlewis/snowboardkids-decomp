@@ -1,5 +1,6 @@
 #include "common.h"
 #include "character_select_flow.h"
+#include "character_select_ui.h"
 
 typedef s16 CharacterSelectOptionList[10];
 
@@ -15,8 +16,6 @@ extern void func_8009954C(s32);
 
 extern void func_80008620(void);
 extern void func_80005540(void);
-extern void func_8001C83C(void);
-
 extern CharacterSelectFlowState *D_801235B8;
 extern s8 D_800DEED4;
 extern u8 D_80121D88;
