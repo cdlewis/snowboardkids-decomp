@@ -1,5 +1,6 @@
 #include "common.h"
 #include "asset_decompression.h"
+#include "character_select_flow.h"
 
 typedef struct {
     char pad[0x18];
@@ -28,7 +29,6 @@ extern void func_800704F0(void);
 
 void func_80005788(void);
 void func_80005B80(void);
-extern void func_800062F8(void);
 void func_8001710C(void);
 
 extern u8 D_800EC9DC;
