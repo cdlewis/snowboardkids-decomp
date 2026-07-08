@@ -16,7 +16,10 @@ typedef struct RenderCallbackNode RenderCallbackNode;
 typedef void (*RenderCallback)(s32);
 
 typedef struct MenuPanelAssetHandles {
-    /* 0x00 */ char pad0[0x3E];
+    /* 0x00 */ char pad0[0x38];
+    /* 0x38 */ s16 unk38;
+    /* 0x3A */ s16 unk3A;
+    /* 0x3C */ char pad3C[2];
     /* 0x3E */ s16 fontHandle;
     /* 0x40 */ char pad40[0x10];
     /* 0x50 */ s16 cancelHandle;
@@ -47,9 +50,13 @@ extern u8 D_800D5528[];
 extern u8 D_800D5598[];
 extern u8 D_800D55E8[];
 extern u8 D_800D5630[];
+extern u16 *D_800D5704[];
+extern s16 D_800D57B4[];
 extern u16 *D_800D5538[];
 extern MenuPanelAssetHandles D_80112130;
 extern u8 D_80121B5B;
+extern s16 D_80121B50;
+extern s16 D_80121B52;
 extern s16 D_800DEF14;
 extern s16 D_8011213C;
 extern s32 D_80123778;
@@ -57,6 +64,7 @@ extern s32 D_801235B4;
 extern s16 D_801235B0;
 extern u8 D_8012482A;
 extern u8 D_8012482B;
+extern s16 D_80156612;
 
 extern void func_800483FC(RenderCallbackNode **, RenderCallback, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
@@ -404,7 +412,78 @@ void func_80052E4C(MenuPanelActor *arg0) {
     func_80071824(arg0, func_80052E00);
 }
 
+// func_80052E70 best match: 94.691%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80052E70.s")
+
+#ifdef NON_MATCHING
+void func_80052E70(s32 arg0) {
+    s32 x;
+    s32 y;
+
+    func_8000F030(-0x84, 0x1C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
+    func_8000F030(0x78, 0x1C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+    x = -0x74;
+    do {
+        func_8000F030((s16)x, 0x1C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)x, 0x54, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
+        x += 0x10;
+    } while ((x - 0x7C) < 0);
+    func_8000F030(-0x84, 0x54, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
+    func_8000F030(0x78, 0x54, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
+    y = 0x2C;
+    do {
+        func_8000F030(-0x84, (s16)y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
+        func_8000F030(0x78, (s16)y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
+        y += 0x10;
+    } while ((y - 0x5C) < 0);
+    for (x = -0x74; x != 0x7C; x += 0x10) {
+        for (y = 0x2C; y != 0x5C; y += 0x10) {
+            func_8000F030((s16)x, (s16)y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+        }
+    }
+    func_8001303C(-0x76, 0x28, (u16 *)D_800D5630, 0, 0x100, 7, 0x29);
+    func_8000F030(-0x40, -0x30, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
+    func_8000F030(0x30, -0x30, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+    x = -0x30;
+    do {
+        func_8000F030((s16)x, -0x30, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)x, 0, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
+        x += 0x10;
+    } while ((x - 0x30) < 0);
+    y = -0x20;
+    do {
+        func_8000F030(-0x40, (s16)y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
+        func_8000F030(0x30, (s16)y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
+        y += 0x10;
+    } while ((y - 0) < 0);
+    for (x = -0x30; x != 0x30; x += 0x10) {
+        for (y = -0x20; y != 0; y += 0x10) {
+            func_8000F030((s16)x, (s16)y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+        }
+    }
+    func_8000F030(-0x40, 0, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
+    func_8000F030(0x30, 0, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
+    if (D_801235B4 == 0) {
+        if (D_80121B52 != 1) {
+            if (D_80156612 & 8) {
+                func_80045A78(-0x30, -0x2A, func_80043040(D_80112130.cancelHandle), 0xC);
+            }
+        }
+        if ((D_80121B52 != 9) && (D_80156612 & 8)) {
+            func_80045A78(-0x30, -6, func_80043040(D_80112130.cancelHandle), 0xD);
+        }
+    }
+    if ((D_801235B4 != 0) && (D_80156612 & 1)) {
+        func_8001303C(-0x30, -0x18, D_800D5704[D_80121B52], 0, 0x100, 0, 0x29);
+    } else {
+        func_8001303C(-0x30, -0x18, D_800D5704[D_80121B52], 0, 0x100, 5, 0x29);
+    }
+    func_80045A78(-0x54, -0x60, func_80043040(D_80112130.unk38), 0x5D);
+    func_80045A78(4, -0x60, func_80043040(D_80112130.unk38), 0x5E);
+    func_80045A78(-0x4C, -0x5C, func_80043040(D_80112130.unk3A), D_800D57B4[D_80121B50]);
+    func_80045A78(4, -0x5C, func_80043040(D_80112130.unk3A), (D_800D57B4[D_80121B50] + 1) & 0xFFFF);
+}
+#endif
 
 void func_80053604(MenuPanelActor *arg0) {
     func_800483FC(&D_80124868, func_80052E70, (s32) arg0);
