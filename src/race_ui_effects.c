@@ -3828,6 +3828,8 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
     Gfx *temp_v0_14;
     Gfx *temp_v0_15;
     Gfx *temp_v0_16;
+    unsigned int new_var2;
+    int new_var;
     Gfx *temp_v0_18;
 
     actor = arg0;
@@ -3844,12 +3846,17 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
                 if (textureIndex != entry->sentinel + actor->textureOffset) {
                     textureIndex = entry->sentinel + actor->textureOffset;
                     func_80045990(func_80043040(D_8011216E), 0x14, &spA0, &sp9C);
-                    temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32)spA0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w1 = 0x00080200; temp_v0_7->words.w0 = 0xF5400400; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)sp9C; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w1 = 0x07000000; temp_v0_11->words.w0 = 0xF5000100; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++;
+                    temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32)spA0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w1 = 0x00080200; temp_v0_7->words.w0 = 0xF5400400; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)sp9C; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w1 = 0x07000000; temp_v0_11->words.w0 = 0xF5000100; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = (new_var = 0xF0000000); temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++;
                     temp_v0_14->words.w1 = 0;
                     temp_v0_14->words.w0 = 0xE7000000;
                 }
                 gSPMatrix(gRegionAllocPtr++, (u32)actor->particles + (i << 6), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-                gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                {
+                    Gfx *_g = gRegionAllocPtr++;
+                    new_var2 = 0x01;
+                    _g->words.w0 = (((unsigned int)((((unsigned int)1) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int)((((unsigned int)((0x00 | 0x00) | 0x00)) & ((new_var2 << 8) - 1)) << 16))) | ((((unsigned int)(sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0);
+                    _g->words.w1 = (unsigned int)D_80156614;
+                }
 
                 temp_v0_15 = gRegionAllocPtr++;
                 temp_v0_15->words.w1 = (u32)D_800D6968;
