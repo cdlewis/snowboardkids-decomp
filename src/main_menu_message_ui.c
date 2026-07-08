@@ -214,39 +214,42 @@ void func_8000DF28(MainMenuMessageActor *arg0) {
     func_80071824(arg0, func_8000DDA4);
 }
 
-// func_8000DF9C best match: 86.570%
+// func_8000DF9C best match: 93.784%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_message_ui/func_8000DF9C.s")
 
 #ifdef NON_MATCHING
 void func_8000DF9C(MainMenuMessageActor *arg0) {
+    unsigned int new_var;
     MainMenuMessageScript glyph;
     MainMenuMessageScript *script;
+    u16 xOffset;
     s32 i;
     s32 glyphIndex;
-    s32 scriptOffset;
     s32 lineOffset;
-    u16 xOffset;
-    s32 stopped;
+    s32 scriptOffset;
+    unsigned short stopped;
     u16 token;
     u16 drawToken;
+    unsigned int pad;
 
     func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x14), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0xF8), (s16)((*arg0).y + 0x14), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
+    new_var = 0;
     do {
-        func_8000F030((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x14), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x4C), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x14), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 3, 0x20, 0x20, new_var, new_var);
+        func_8000F030((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x4C), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, new_var);
         i += 0x10;
     } while (i < 0xF0);
 
-    func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, new_var);
+    func_8000F030((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 9, 0x20, 0x20, new_var, 0);
 
-    i = 0;
+    i = new_var;
     do {
-        func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + i + 0x24), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->x + 0xF8), (s16)(arg0->y + i + 0x24), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + i + 0x24), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 5, 0x20, 0x20, new_var, 0);
+        func_8000F030((s16)(arg0->x + 0xF8), (s16)(arg0->y + i + 0x24), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 6, 0x20, 0x20, new_var, 0);
         i += 0x10;
     } while (i < 0x30);
 
@@ -254,15 +257,16 @@ void func_8000DF9C(MainMenuMessageActor *arg0) {
     glyph = 0xFFFF;
     stopped = 0;
     xOffset = 0;
-    glyphIndex = 0;
+    glyphIndex = new_var;
     if ((s32)arg0->state.script.visibleGlyphCount > 0) {
         scriptOffset = 0;
         lineOffset = 0;
         do {
+            scriptOffset += 0;
             script = (MainMenuMessageScript *)((u8 *)arg0->layout.script + scriptOffset);
-            token = script[0];
-            drawToken = token;
+            token = script[new_var];
             if ((token >= 0xFF01) && (token != 0xFFFE)) {
+                drawToken = token;
                 do {
                     if (token == 0xFFFF) {
                         arg0->scriptState = 1;
@@ -284,8 +288,12 @@ void func_8000DF9C(MainMenuMessageActor *arg0) {
                         drawToken = token;
                     } else if (token == 0xFFFB) {
                         arg0->scriptState = 2;
-                        stopped = 1;
-                        break;
+                        if (1) {
+                            do {
+                                stopped = 1;
+                                break;
+                            } while (new_var);
+                        }
                     }
                     if (drawToken < 0xFF01) {
                         break;
@@ -305,7 +313,7 @@ void func_8000DF9C(MainMenuMessageActor *arg0) {
             func_8001303C((s16)(arg0->x + xOffset), (s16)(arg0->y + lineOffset + 0x18), &glyph, 0, 0x100, (u16)arg0->glyphPalette, 0x29);
             if (stopped != 1) {
                 scriptOffset += 2;
-                xOffset = (xOffset + 0x10) & 0xFFFF;
+                xOffset = xOffset + 0x10;
             }
             glyphIndex++;
         } while (glyphIndex < (s32)arg0->state.script.visibleGlyphCount);
@@ -319,7 +327,7 @@ void func_8000DF9C(MainMenuMessageActor *arg0) {
         }
     }
 
-    if (((arg0->scriptState == 1) || (arg0->scriptState == 2)) && (D_8010B1F0 == 0)) {
+    if (((arg0->scriptState == 1) || (arg0->scriptState == 2)) && (D_8010B1F0 == new_var)) {
         func_8000F030((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), ((s32)arg0->confirmBlinkTimer >= 8) & 0xFFFF, 0x20, 0x20, 0, 0);
     }
 }
