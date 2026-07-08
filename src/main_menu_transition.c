@@ -8,6 +8,7 @@
 #include "main_menu_message_ui.h"
 #include "main_menu_overlay_effects.h"
 #include "main_menu_panel_ui.h"
+#include "main_menu_transition.h"
 
 #define MAIN_MENU_TRANSITION_FRAMES 0x10
 
@@ -42,10 +43,8 @@ extern u8 D_1F2220[];
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
 extern void func_8007AA50(void);
-extern void func_800403D8(void);
 extern void func_8008BEB0(void);
 extern void func_80078430(void);
-
 extern MainMenuTransitionState *D_801235B8;
 extern u8 D_8010B1F0;
 extern u8 D_8011228C;
@@ -66,29 +65,6 @@ extern u8 D_80121B5E;
 extern u8 D_80121B5F;
 extern s16 D_800D3C90[];
 
-extern void func_8003FEF4(void);
-extern void func_8003F554(void);
-extern void func_8003F6C0(void);
-extern void func_8003F718(void);
-extern void func_8003F778(void);
-extern void func_8003FF78(void);
-extern void func_8003FC60(void);
-extern void func_80040450(void);
-extern void func_8004086C(void);
-extern void func_800408E4(void);
-extern void func_8004097C(void);
-extern void func_80040A48(void);
-extern void func_8003FBE8(void);
-extern void func_8003F7E4(void);
-extern void func_8003F864(void);
-extern void func_8004002C(void);
-extern void func_80040004(void);
-extern void func_800407AC(void);
-extern void func_80040B90(void);
-extern void func_80040B54(void);
-extern void func_80040BF4(void);
-extern void func_80040C44(void);
-extern void func_80040B04(void);
 extern void func_8006D780(s32);
 extern void func_80045914(void);
 extern u8 D_80123750;
