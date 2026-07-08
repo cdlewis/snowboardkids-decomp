@@ -55,6 +55,15 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ Rect rects[2];
+    /* 0x28 */ s16 iconOffsetX;
+    /* 0x2A */ s16 iconOffsetY;
+    /* 0x2C */ s16 badgeOffsetX;
+    /* 0x2E */ s16 badgeOffsetY;
+} TitleMenuIconStripActor;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x[4];
     /* 0x20 */ s16 y[4];
     /* 0x28 */ s16 topY[4];
@@ -86,6 +95,13 @@ typedef struct {
     /* 0x02 */ s16 alpha;
 } TitleIntroTransitionState;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[0x34];
+    /* 0x34 */ u8 badgeIds[0x18];
+    /* 0x4C */ u8 iconCount;
+    /* 0x4D */ u8 pad4D[0x78F8 - 0x4D];
+} TitleMenuPlayerView;
+
 extern s32 func_80011D74(void *, s32, s16, s16);
 extern void func_8000F8AC(s16, s16, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80010074(s16, s16, s32, s32, s32);
@@ -106,7 +122,7 @@ extern void func_80015A30(void *);
 extern void func_80015B20(void *);
 extern void func_80015BD8(void *);
 extern void func_80015F4C(RectListActor *);
-extern void func_80016284(void);
+extern void func_80016284(TitleMenuIconStripActor *);
 extern void func_80016948(TitleMenuWidgetActor *);
 extern void func_80016E40(void);
 extern void func_800170AC(void *);
@@ -126,6 +142,8 @@ extern s32 D_80121D8C;
 extern MenuIntroActor *D_8010ADDC;
 extern s16 D_800EC9C8[];
 extern s16 D_800EC9D0[];
+extern s16 D_800B3462[];
+extern TitleMenuPlayerView D_800EC9F0[];
 extern TitleIntroTransitionState D_8010AE00;
 extern s16 D_8010AE02;
 extern u16 D_8010AE06[];
@@ -869,7 +887,98 @@ void func_8001621C(void *arg0) {
     func_80071824(arg0, func_80015F4C);
 }
 
+// func_80016284 best match: 90.000% (nonmatchings/func_80016284-180949888360117632/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016284.s")
+
+#ifdef NON_MATCHING
+void func_80016284(TitleMenuIconStripActor *arg0) {
+    volatile s32 unused;
+    s32 pad[6];
+    s32 i;
+    s32 actorOffset;
+    s16 *courseId;
+    register TitleMenuPlayerView *player;
+    register TitleMenuIconStripActor *item;
+    register s32 xOffset;
+    register s32 alpha;
+    register s32 nextJ;
+    register s16 *badgeIndex;
+    register TitleMenuPlayerView *player2;
+    s32 j;
+    s32 count;
+    s32 tile;
+
+    i = 0;
+    if ((s32)D_80121B55 > 0) {
+        courseId = D_800EC9C8;
+        actorOffset = 0;
+        do {
+            if (*courseId != 0x13) {
+                player = &D_800EC9F0[i];
+                j = 0;
+                if (player->iconCount == 3) {
+                    count = 3;
+                } else {
+                    count = player->iconCount + 1;
+                }
+                if (count > 0) {
+                    xOffset = 0;
+                    item = (TitleMenuIconStripActor *)((u8 *)arg0 + actorOffset);
+                    do {
+                        nextJ = j + 1;
+                        if ((s32)player->iconCount < nextJ) {
+                            alpha = 0x70;
+                        } else {
+                            alpha = 0x100;
+                        }
+                        func_8000F8AC((s16)(item->rects[0].x0 + arg0->iconOffsetX + xOffset),
+                                      (s16)(item->rects[1].x0 + arg0->iconOffsetY), func_80043040(D_80112172), 0x19,
+                                      0x20, 0x20, 0, alpha, 9 - j);
+                        j = nextJ;
+                        xOffset += 0x10;
+                    } while (nextJ != count);
+                    j = 0;
+                }
+
+                count = 6;
+                if (player->iconCount == 1) {
+                    count = 7;
+                } else if (player->iconCount == 2) {
+                    count = 8;
+                } else if (player->iconCount == 3) {
+                    count = 9;
+                }
+
+                if (count > 0) {
+                    player2 = &D_800EC9F0[i];
+                    badgeIndex = D_800B3462;
+                    xOffset = 0;
+                    item = (TitleMenuIconStripActor *)((u8 *)arg0 + actorOffset);
+                    do {
+                        tile = player2->badgeIds[*badgeIndex];
+                        alpha = 0x70;
+                        if (tile != 0) {
+                            alpha = 0x100;
+                            tile += 6;
+                        } else {
+                            tile = 9;
+                        }
+                        func_8000F8AC((s16)(item->rects[0].x0 + arg0->badgeOffsetX + xOffset),
+                                      (s16)(item->rects[1].x0 + arg0->badgeOffsetY), func_80043040(D_80112172),
+                                      (j + 0x1A) & 0xFFFF, 0x20, 0x20, 0, alpha, tile);
+                        j++;
+                        xOffset += 0xE;
+                        badgeIndex++;
+                    } while (j != count);
+                }
+            }
+            i++;
+            actorOffset += 2;
+            courseId++;
+        } while (i < (s32)D_80121B55);
+    }
+}
+#endif
 
 void func_80016560(void *arg0) {
     RectListActor *temp_a2;
