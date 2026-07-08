@@ -30,7 +30,8 @@ typedef struct {
     s16 displayListIndex;
     s16 pad2;
     Vec3i position;
-    s32 pad10;
+    s16 rotation;
+    s16 pad12;
 } CourseRenderEntry;
 
 typedef struct {
@@ -200,6 +201,7 @@ typedef struct {
     s16 courseTextureHandle;
     char pad18[0x2A];
     s16 markerMatrixHandle;
+    s16 courseRenderBufferHandle;
 } CourseAssetHandles;
 
 extern void func_80071824(void *task, void (*callback)());
@@ -214,6 +216,7 @@ extern void func_80069E50(void);
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern void *func_80048594(s32);
+extern void func_800486BC(void *, void *);
 extern void *func_8004885C(CourseEffectMatrixSource *);
 extern void func_80048C90(CourseRenderCommand *, Vec3i *);
 extern s32 func_80049000(Vec3i *);
@@ -231,6 +234,7 @@ extern void func_80048D60(CourseEffectMatrixSource *);
 extern s32 func_80097AE8(s16);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
+extern void osWritebackDCache(void *, s32);
 extern void func_80088294(Vec3i *, s32, s32, u16);
 extern void func_80088A1C(Vec3i *, s32, s32, s32, s32);
 extern s16 D_80112168;
@@ -560,7 +564,43 @@ void func_8006B0D8(void *arg0) {
     func_800483FC(&D_801248B0, func_8006AF48, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B108.s")
+void func_8006B108(RaceCourseRenderEffect *arg0) {
+    s32 size;
+    CourseRenderEntry *base;
+    CourseRenderEntry *entry;
+    s32 i;
+    CourseEffectMatrixSource transform;
+    s32 count;
+
+    base = D_800DA73C[D_80121B50];
+    count = 0;
+    entry = base;
+    if (base->displayListIndex != -1) {
+        do {
+            count++;
+            entry++;
+        } while (entry->displayListIndex != -1);
+    }
+
+    if (count != 0) {
+        entry = base;
+        size = count << 6;
+        D_80112130.courseRenderBufferHandle = func_80042D58(size);
+        arg0->vertices = (void *)func_80043040(D_80112130.courseRenderBufferHandle);
+
+        for (i = 0; i < count; i++) {
+            func_80097C18(&transform, entry->rotation);
+            transform.basePos.x = entry->position.x;
+            transform.basePos.y = entry->position.y;
+            transform.basePos.z = entry->position.z;
+            func_800486BC(&transform, (void *)((u32)arg0->vertices + (i << 6)));
+            entry++;
+        }
+
+        osWritebackDCache(arg0->vertices, size);
+    }
+    func_80071824(arg0, func_8006B0D8);
+}
 
 // func_8006B228 best match: 98.727% at nonmatchings/func_8006B228-8662636370764828261/base_11.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B228.s")
