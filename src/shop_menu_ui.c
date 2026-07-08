@@ -49,6 +49,13 @@ typedef struct {
 typedef u8 ShopDescriptionText[0x8C];
 
 typedef struct {
+    /* 0x00 */ u16 center[16];
+    /* 0x20 */ u16 right[2];
+    /* 0x24 */ u16 bottom[2];
+    /* 0x28 */ u16 corner;
+} ShopMenuFrameTileMap;
+
+typedef struct {
     char pad0[0x18];
     /* 0x18 */ s16 unk18[5];
     /* 0x22 */ s16 unk22;
@@ -133,7 +140,6 @@ extern void func_8002E32C(ShopMenuWidgetActor *);
 extern void func_8002E468(ShopMenuWidgetActor *);
 extern void func_8002CFAC(ShopMenuWidgetActor *);
 extern void func_8002D294(ShopMenuWidgetActor *);
-extern void func_8002D2E4(ShopMenuWidgetActor *);
 extern void func_8002D558(ShopMenuWidgetActor *);
 extern void func_8002D778(ShopMenuWidgetActor *);
 extern void func_8002D9EC(ShopMenuWidgetActor *);
@@ -150,6 +156,7 @@ extern void func_8002E214(ShopMenuWidgetActor *);
 extern void func_8002E42C(ShopMenuWidgetActor *);
 extern void func_8002E798(ShopMenuWidgetActor *);
 extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
+extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013D0C(s16, s16, void *, s32, s32);
@@ -161,6 +168,7 @@ extern s32 func_800430D0(void);
 extern s32 D_800B34B0[];
 extern u16 D_800B34E0[];
 extern u16 D_800B34EC[];
+extern ShopMenuFrameTileMap D_800B79C0[];
 extern ShopDescriptionText D_800B7A14[];
 extern u8 D_800B7CD0;
 extern u8 D_80121D86;
@@ -408,7 +416,39 @@ void func_8002D294(ShopMenuWidgetActor *arg0) {
     func_80071824(arg0, func_8002CFAC);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002D2E4.s")
+void func_8002D2E4(ShopMenuWidgetActor *arg0) {
+    s32 shouldDraw;
+    s32 i;
+    s32 tileOffset;
+    s32 offset;
+
+    tileOffset = 0;
+    shouldDraw = 1;
+    for (i = 0; i < 16; i++, tileOffset++) {
+        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), func_80043040(D_80112130[0x25]),
+                      D_800B79C0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+    }
+
+    if (shouldDraw) {
+        tileOffset = 0;
+        i = 0x80;
+    }
+    offset = 0;
+    do {
+        func_800112F4(arg0->x + 0x80, arg0->y + offset, func_80043040(D_80112130[0x25]),
+                      D_800B79C0[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+        func_800112F4(arg0->x + offset, arg0->y + 0x80, func_80043040(D_80112130[0x25]),
+                      D_800B79C0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+        i = 0x80;
+        offset += 0x40;
+        tileOffset++;
+    } while (offset != i);
+    i++;
+    i--;
+
+    func_800112F4(arg0->x + 0x80, arg0->y + 0x80, func_80043040(D_80112130[0x25]),
+                  D_800B79C0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+}
 
 void func_8002D558(ShopMenuWidgetActor *arg0) {
     int state;
