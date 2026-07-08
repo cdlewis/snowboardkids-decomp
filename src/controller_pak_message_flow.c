@@ -1,6 +1,7 @@
 #include "common.h"
 #include "asset_decompression.h"
 #include "character_select_flow.h"
+#include "controller_pak_message_flow.h"
 #include "controller_pak_menu_ui.h"
 
 typedef void (*Callback)(void);
@@ -15,12 +16,6 @@ extern s32 func_80013F88(s32, s32, s32);
 extern void func_80045914(void);
 extern void func_80099658(s32);
 extern void func_8009954C(s32);
-
-void func_8000D048(void);
-void func_8000D0D4(void);
-void func_8000D17C(void);
-void func_8000D1F4(void);
-void func_8000D280(void);
 
 extern CharacterSelectFlowState *D_801235B8;
 extern s8 D_800DEED4;
