@@ -208,7 +208,7 @@ void func_8004DB8C(RaceItemEffectActor *);
 void func_8004E02C(RaceItemEffectActor *);
 void func_8004E438(RaceItemEffectActor *);
 /* Local 4-arg declaration; see note in effect_task_scheduler.h. */
-RaceItemEffectActor *func_800716A4(void *, s32, s32, s16);
+RaceItemEffectActor *func_800716A4(void *, s32, s32, s32);
 void func_8004E604(RaceItemEffectActor *);
 void func_8004E960(RaceItemEffectActor *);
 void func_8004EAA8(RaceItemEffectActor *);
