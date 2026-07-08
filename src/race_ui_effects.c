@@ -1053,16 +1053,23 @@ void func_80057E60(s32 arg0) {
     func_800483FC(&D_80124868, func_80057E10, arg0);
 }
 
-// func_80057E90 best match: 99.892% (nonmatchings/func_80057E90-4033633224288138541/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80057E90.s")
-
-#ifdef NON_MATCHING
 void func_80057E90(RaceUiAlpha18Actor *arg0) {
-    Gfx *gfx;
-
-    do { if (D_80122289 != 0) { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; if (((!gfx) && (!gfx)) && (!gfx)) { } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } while (0); } func_80045A78(-0x68, -0x2C, func_80043040(D_8011216E), 0x4D); func_80045A78(-0x42, -0xC, func_80043040(D_8011216E), D_80122289 & 0xFFFF); func_80045A78(-0x22, 4, func_80043040(D_8011216E), (D_80122289 + 0x48) & 0xFFFF); func_80045A78(-0x68, 6, func_80043040(D_8011216E), (D_80121D90 + 0x91) & 0xFFFF); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) D_800DEFF8; } } } while (0);
+    if (D_80122289 != 0) {
+        if (arg0->alpha != 0xFF) {
+            gDPPipeSync(gRegionAllocPtr++);
+            gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+            gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+            gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+        }
+        func_80045A78(-0x68, -0x2C, func_80043040(D_8011216E), 0x4D);
+        func_80045A78(-0x42, -0xC, func_80043040(D_8011216E), D_80122289 & 0xFFFF);
+        func_80045A78(-0x22, 4, func_80043040(D_8011216E), (D_80122289 + 0x48) & 0xFFFF);
+        func_80045A78(-0x68, 6, func_80043040(D_8011216E), (D_80121D90 + 0x91) & 0xFFFF);
+        if (arg0->alpha != 0xFF) {
+            gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+        }
+    }
 }
-#endif
 
 void func_8005804C(RaceUiAlpha18Actor *arg0) {
     volatile u8 padding[0x18];
@@ -3571,17 +3578,17 @@ void func_8006429C(RaceUiRankParticleActor *actor) {
 
     switch (actor->index) {
     case 0:
-        func_80081508(1, &actor->pos.a, &actor->pos.b, &actor->pos.c, &local.angle);
+        func_80081508(1, &actor->pos.x, &actor->pos.y, &actor->pos.z, &local.angle);
         break;
     case 1:
-        func_80081508(D_800B9540[D_80121B50].pathIndex, &actor->pos.a, &actor->pos.b, &actor->pos.c, &local.angle);
+        func_80081508(D_800B9540[D_80121B50].pathIndex, &actor->pos.x, &actor->pos.y, &actor->pos.z, &local.angle);
         break;
     }
 
     func_80097C18(actor->copyBlock.halfwords, local.angle);
-    actor->copyBlock.transform.translation.a = actor->pos.a;
-    actor->copyBlock.transform.translation.b = actor->pos.b;
-    actor->copyBlock.transform.translation.c = actor->pos.c;
+    actor->copyBlock.transform.translation.x = actor->pos.x;
+    actor->copyBlock.transform.translation.y = actor->pos.y;
+    actor->copyBlock.transform.translation.z = actor->pos.z;
     actor->displayLists[0] = D_800D6400[(actor->index * 2) + (D_80121B50 * 4)];
     actor->displayLists[1] = D_800D6400[(actor->index * 2) + (D_80121B50 * 4) + 1];
     func_80071824(actor, func_8006426C);
