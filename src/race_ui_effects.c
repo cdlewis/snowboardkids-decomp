@@ -769,11 +769,6 @@ extern char D_800E12F4[];
 extern char D_800E12F8[];
 extern char D_800E12FC[];
 extern char D_800E1300[];
-extern void *D_800E130C;
-extern void *D_800E1320;
-extern void *D_800E1334;
-extern void *D_800E1344;
-extern void *D_800E1358;
 extern void *D_800E1474;
 extern void *D_800E1484;
 extern void *D_800E1494;
@@ -1573,40 +1568,20 @@ void func_8005AAE4(RaceUiAlpha18Actor *arg0) {
 }
 #endif
 
-// func_8005AC44 best match: 99.280% (nonmatchings/func_8005AC44-690418013071298896/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005AC44.s")
+const char D_800E130C[0x14] = "-Hit Prize(*1G)-";
+const char D_800E1320[0x14] = "-Hit Prize(*50G)-";
+const char D_800E1334[0x10] = "  -Perfect Hit-";
+const char D_800E1344[0x14] = "-Complete Bonus-";
+const char D_800E1358[0x10] = "-Total Money-";
 
-#ifdef NON_MATCHING
 void func_8005AC44(RaceUiCounterActor *arg0) {
-    RaceUiDisplayCommand *gfx;
-    s32 w0;
-    s32 w1;
     s32 y;
 
     if (arg0->alpha != 0xFF) {
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0;
-        gfx->words.w0 = 0xE7000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        w1 = 0xFF2FFFFF;
-        w0 = 0xFC119623;
-        gfx->words.w0 = w0;
-        gfx->words.w1 = w1;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        w1 = 0x00504240;
-        w0 = 0xB900031D;
-        gfx->words.w0 = w0;
-        gfx->words.w1 = w1;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xFA000000;
-        gfx->words.w1 = (arg0->alpha & 0xFF) | ~0xFF;
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
     }
 
     y = -0x50;
@@ -1631,15 +1606,9 @@ void func_8005AC44(RaceUiCounterActor *arg0) {
     func_80048278(4, (s16)y, &D_800E1358, 5);
 
     if (arg0->alpha != 0xFF) {
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        w1 = (s32)D_800DEFF8;
-        w0 = 0x06000000;
-        gfx->words.w0 = w0;
-        gfx->words.w1 = w1;
+        gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
     }
 }
-#endif
 
 const char D_800E1368[0x4] = "Hit";
 const char D_800E136C[0x4] = "Hit";
