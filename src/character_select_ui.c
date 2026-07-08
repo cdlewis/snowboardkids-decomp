@@ -1,5 +1,7 @@
 #include "common.h"
 
+#define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x42])
+
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
@@ -34,6 +36,13 @@ typedef struct {
     } row;
 } CharacterSelectWidgetActor;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 x[11];
+    /* 0x2E */ s16 y[13];
+    /* 0x48 */ u8 itemCount;
+} CharacterSelectMenuFrameActor;
+
 typedef u8 CharacterSelectText[0x94];
 
 typedef union {
@@ -62,6 +71,7 @@ extern u8 D_800B6934[][0x60];
 extern u8 D_800B6A54[][0x70];
 extern u8 D_800B6B34[];
 extern s16 D_80121B50;
+extern u8 D_80112130[];
 extern s32 D_8010ADDC;
 extern u16 D_8010AE80;
 extern void *D_8010ADE0;
@@ -72,6 +82,7 @@ extern u8 D_8010AE8A;
 extern u8 D_8010AE8F;
 extern u8 D_8010ADF9;
 extern u8 D_80121D88;
+extern u8 D_800EC9C1;
 extern s16 D_800EC9D0;
 extern u8 D_800EC9DD;
 extern u8 D_800EC9C2;
@@ -134,7 +145,55 @@ void func_80020B70(CharacterSelectWidgetActor *arg0);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C83C.s")
 
+// func_8001C96C best match: 94.533%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C96C.s")
+
+#ifdef NON_MATCHING
+void func_8001C96C(CharacterSelectMenuFrameActor *arg0) {
+    s32 lastArrowIndex;
+    s32 i;
+    s32 alpha;
+    u16 tile;
+
+    if (D_80121B5E < 2) {
+        lastArrowIndex = 2;
+    } else {
+        lastArrowIndex = 0;
+    }
+    i = 0;
+    lastArrowIndex += 1;
+    if (arg0->itemCount > 0) {
+        do {
+            alpha = 0;
+            if (i == 0) {
+                tile = 0x1C;
+                if (D_80121B5E == 2) {
+                    tile = 0x1D;
+                }
+                if ((i == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+                    alpha = 0xFF;
+                }
+                func_8000F030(arg0->x[i], arg0->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), tile, 0x20, 0x20, 0, alpha);
+            } else if (i == lastArrowIndex) {
+                if ((i == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+                    alpha = 0xFF;
+                }
+                func_8000F030(arg0->x[i], arg0->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x20, 0x20, 0x20, 0, alpha);
+            } else {
+                if ((i == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+                    alpha = 0xFF;
+                }
+                func_8000F030(arg0->x[i], arg0->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), (i + 0x12) & 0xFFFF, 0x20, 0x20, 0, alpha);
+            }
+
+            if (i != lastArrowIndex) {
+                func_8000F030((s16)(arg0->x[i] - 0x10), arg0->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
+            }
+            i++;
+        } while (i < arg0->itemCount);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001CC10.s")
 
