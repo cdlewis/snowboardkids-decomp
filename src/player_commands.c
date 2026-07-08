@@ -282,6 +282,7 @@ extern void func_8009FF40(s32);
 extern s32 D_800DF154;
 extern u16 D_800DF150;
 extern s32 D_800DF158;
+extern s32 D_800DF29C;
 extern s32 D_800DF298;
 extern u32 D_800DF290;
 extern u32 D_800DF294;
@@ -291,17 +292,25 @@ extern SchedulerViMode D_800DF340[];
 extern u64 D_800E1F00[];
 extern u8 D_80158620[];
 extern Acmd *D_8015A6A0[];
+extern Acmd *D_8015A6A8;
+extern Acmd *D_8015A6AC;
+extern SchedulerThread D_8015A6B8;
 extern OSMesgQueue D_8015A868;
+extern OSMesg D_8015A880[];
 extern u64 D_8015A8A0[];
+extern OSMesg D_8015A8B8[];
 extern s32 D_8015A680;
 extern s32 D_8015A684;
 extern s32 D_8015A620;
 extern u8 D_8015A624;
 extern s32 D_8015C934;
 extern s32 D_8015C938;
+extern s32 D_8015C93C;
+extern s32 D_8015C940;
 extern OSMesgQueue D_8015C948;
 extern s32 D_8015C960;
 extern OSIoMesg *D_8015C968;
+extern OSMesg *D_8015C96C;
 extern s32 D_8015C970;
 extern s32 *libmus_fxheader_current;
 extern ALPlayer D_8015A630;
@@ -319,6 +328,8 @@ extern s32 D_8015A678;
 extern s32 D_8015A68C;
 extern ALSynth D_8015A8D8;
 extern s32 osTvType;
+
+extern ALDMAproc func_800A0138(Struct800A0138 **);
 
 void func_8009C270(SchedulerState *arg0, u8 arg1, u8 arg2) {
     arg0->curRSPTask = 0;
@@ -1529,7 +1540,85 @@ s32 func_8009F780(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, s32 ar
     return arg0->id;
 }
 
+// func_8009F810 best match: 82.529% (nonmatchings/func_8009F810-4061930211835852828/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F810.s")
+
+#ifdef NON_MATCHING
+void func_8009F810(void *arg0, ALSynConfig *arg1, s32 arg2, s32 *arg3, s32 arg4, s32 arg5, s32 arg6) {
+    s32 sp44;
+    f32 temp_fv0;
+
+    D_8015C960 = (s32)arg0;
+    D_8015C970 = arg5;
+    D_8015C928.initialized = 0;
+    arg1->dmaproc = func_800A0138;
+    arg1->outputRate = osAiSetFrequency(arg3[0]);
+    D_8015C964 = alHeapDBAlloc(0, 0, arg1->heap, 1, arg4 * 0x14);
+    sp44 = arg4 * 2;
+    D_8015C968 = alHeapDBAlloc(0, 0, arg1->heap, 1, sp44 * 0x18);
+    D_8015C96C = alHeapDBAlloc(0, 0, arg1->heap, 1, sp44 * 4);
+
+    temp_fv0 = ((f32)(u32)arg3[1] * (f32)arg1->outputRate) / (f32)arg6;
+    arg6 = (s32)temp_fv0;
+    D_8015C938 = arg6;
+    if ((f32)arg6 < temp_fv0) {
+        arg6++;
+        D_8015C938 = arg6;
+    }
+    if (arg6 & 0xF) {
+        arg6 = (arg6 & ~0xF) + 0x10;
+        D_8015C938 = arg6;
+    }
+    D_8015C934 = arg6 - 0x10;
+    D_8015C93C = arg6 + 0x68;
+
+    alInit((ALGlobals *)&D_8015A8D8, arg1);
+
+    D_8015C964->prev = NULL;
+    D_8015C964->next = NULL;
+    arg4--;
+    arg6 = 0;
+    if (arg4 != 0) {
+        arg0 = 0;
+        do {
+            alLink((ALLink *)((u8 *)D_8015C964 + (s32)arg0 + 0x14),
+                   (ALLink *)((u8 *)D_8015C964 + (s32)arg0));
+            ((void **)((u8 *)D_8015C964 + (s32)arg0))[4] =
+                alHeapDBAlloc(0, 0, arg1->heap, 1, arg5);
+            arg6++;
+            arg0 = (void *)((s32)arg0 + 0x14);
+        } while (arg6 != arg4);
+    }
+    ((void **)((u8 *)D_8015C964 + (arg6 * 0x14)))[4] =
+        alHeapDBAlloc(0, 0, arg1->heap, 1, arg5);
+
+    arg0 = D_8015A6A0;
+    do {
+        *(void **)arg0 = alHeapDBAlloc(0, 0, arg1->heap, 1, arg3[2] * 8);
+        arg0 = (void *)((s32)arg0 + 4);
+    } while ((u32)arg0 < (u32)&D_8015A6A8);
+
+    D_8015C940 = arg3[2];
+    arg0 = D_8015A6A0;
+    do {
+        *(void **)((u8 *)arg0 + 8) = alHeapDBAlloc(0, 0, arg1->heap, 1, 0x70);
+        *(s16 *)((u8 *)*(void **)((u8 *)arg0 + 8) + 0x68) = 2;
+        *(void **)((u8 *)*(void **)((u8 *)arg0 + 8) + 0x6C) = *(void **)((u8 *)arg0 + 8);
+        *(void **)*(void **)((u8 *)arg0 + 8) =
+            alHeapDBAlloc(0, 0, arg1->heap, 1, D_8015C93C * 4);
+        arg0 = (void *)((s32)arg0 + 4);
+    } while (arg0 != &D_8015A6AC);
+
+    osCreateMesgQueue((OSMesgQueue *)D_8015A8A0, D_8015A8B8, 8);
+    osCreateMesgQueue(&D_8015A868, D_8015A880, 8);
+    osCreateMesgQueue(&D_8015C948, D_8015C96C, sp44);
+    if (D_800DF29C == 0) {
+        osCreateThread(&D_8015A6B8, 3, func_8009FC0C, NULL, &D_8015C928, arg2);
+    }
+    osStartThread(&D_8015A6B8);
+    D_800DF29C = 1;
+}
+#endif
 
 void func_8009FC0C(s32 arg0) {
     AudioThreadLocals locals;
