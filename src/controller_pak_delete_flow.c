@@ -1,6 +1,7 @@
 #include "common.h"
 #include "asset_decompression.h"
 #include "character_select_flow.h"
+#include "controller_pak_delete_flow.h"
 #include "controller_pak_menu.h"
 
 typedef struct {
@@ -53,7 +54,6 @@ extern void func_8007105C(void);
 extern void func_80045914(void);
 extern void func_80099658(s32);
 extern void func_8009954C(s32);
-extern void func_80008F2C(void);
 extern void func_80072138(s32, s32);
 extern void func_8009956C(void *, s32);
 extern void func_800704F0(void);
