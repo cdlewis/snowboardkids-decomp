@@ -1086,7 +1086,7 @@ void func_8005804C(RaceUiAlpha18Actor *arg0) {
     func_80045A78(x, -0x3F, func_80043040(handles->popupFontHandle), 0x37);
 }
 
-// func_8005812C best match: 99.167% (nonmatchings/func_8005812C-2911448260736516995/base_23.c)
+// func_8005812C best match: 99.881% (nonmatchings/func_8005812C-4033633224288138541/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005812C.s")
 
 #ifdef NON_MATCHING
@@ -1100,32 +1100,9 @@ void func_8005812C(void *arg0) {
     RaceUiAssetHandles *assets;
 
     i = 0;
-    sprintf(&buffer[i], D_800E1254, D_801222E8);
-    x = 0x20;
-    if (D_80122289 == 3) {
-        colorValue = 0xD;
-    } else {
-        colorValue = 0xC;
-    }
-
-    do {
-        assets = (RaceUiAssetHandles *)((u8 *)&D_80112130 + (u8)i);
-        space = ' ';
-        color = colorValue;
-        if (space) {
-        }
+    do { sprintf(&buffer[i], D_800E1254, D_801222E8); x = 0x20; if (D_80122289 == 3) { colorValue = 0xD; } else { colorValue = 0xC; } do { assets = (RaceUiAssetHandles *)((u8 *)&D_80112130 + (u8)i); space = ' '; color = colorValue; if (space) { }
 loop:
-        if (buffer[i] != '\0') {
-            if (buffer[i] != space) {
-                func_80046D68((s16)x, -0xF, func_80043040(assets->popupFontHandle), (buffer[i] - 5) & 0xFFFF, color);
-            }
-            x += 8;
-            i++;
-            goto loop;
-        }
-    } while (0);
-
-    func_80046D68((s16)x, -0xF, func_80043040(assets->popupFontHandle), 0x37, color);
+    if (buffer[i] != '\0') { if (buffer[i] != space) { func_80046D68((s16)x, -0xF, func_80043040(assets->popupFontHandle), (buffer[i] - 5) & 0xFFFF, color); } x += 8; i++; goto loop; } } while (0); func_80046D68((s16)x, -0xF, func_80043040(assets->popupFontHandle), 0x37, color); } while (0);
     if (D_80122289 == 3) {
         func_80045A78(0x18, -0xB, func_80043040(assets->popupFontHandle), 0x4E);
     }
