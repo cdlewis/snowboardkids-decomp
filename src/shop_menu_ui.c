@@ -377,7 +377,56 @@ void func_8002CAA0(ShopMenuWidgetActor *arg0) {
     func_80071824(arg0, func_8002C9A0);
 }
 
+// func_8002CAD4 best match: 97.448%
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002CAD4.s")
+
+#ifdef NON_MATCHING
+void func_8002CAD4(ShopMenuWidgetActor *arg0) {
+    s32 shouldDraw;
+    s32 i;
+    s32 tileOffset;
+    s32 offset;
+
+    tileOffset = 0;
+    shouldDraw = 1;
+    for (i = 0; i < 16; i++, tileOffset++) {
+        func_80011264((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
+                      func_80043040(D_80112130[0x27]), D_800B79C0[(u16)arg0->item.counter].center[tileOffset], 0, 0x100);
+    }
+
+    if (shouldDraw) {
+        tileOffset = 0;
+        i = 0x80;
+    }
+    offset = 0;
+    do {
+        func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), func_80043040(D_80112130[0x27]),
+                      D_800B79C0[(u16)arg0->item.counter].right[tileOffset], 0, 0x100);
+        func_80011264((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), func_80043040(D_80112130[0x27]),
+                      D_800B79C0[(u16)arg0->item.counter].bottom[tileOffset], 0, 0x100);
+        i = 0x80;
+        offset += 0x40;
+        tileOffset++;
+    } while (offset != i);
+    i++;
+    i--;
+
+    func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130[0x27]),
+                  D_800B79C0[(u16)arg0->item.counter].corner, 0, 0x100);
+
+    func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y - 4), func_80043040(D_80112130[0x25]), 0x33, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), func_80043040(D_80112130[0x25]), 0x38, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), func_80043040(D_80112130[0x25]), 0x35, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), func_80043040(D_80112130[0x25]), 0x3A, 0x20, 0x20, 0, 0);
+
+    for (offset = 0; offset != 0x80; offset += 0x10) {
+        func_8000F030((s16)(arg0->x + offset + 0xC), (s16)(arg0->y - 4), func_80043040(D_80112130[0x25]), 0x34, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)(arg0->x + offset + 0xC), (s16)(arg0->y + 0x8C), func_80043040(D_80112130[0x25]), 0x39, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + offset + 0xC), func_80043040(D_80112130[0x25]), 0x36, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y + offset + 0xC), func_80043040(D_80112130[0x25]), 0x37, 0x20, 0x20, 0, 0);
+    }
+}
+#endif
 
 void func_8002CFAC(ShopMenuWidgetActor *arg0) {
     int state;
