@@ -2,14 +2,9 @@
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "game_audio.h"
+#include "fixed_point_math.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
-
-typedef struct {
-    /* 0x0 */ s32 x;
-    /* 0x4 */ s32 y;
-    /* 0x8 */ s32 z;
-} Vec3i;
 
 typedef struct {
     /* 0x0 */ s16 x;
@@ -208,7 +203,6 @@ void func_80046D68(s16, s16, s32, s32, s32);
 void func_8004767C(s16, s16, s32, s32, s32, s32);
 void func_800483FC(void *, void *, void *);
 void *func_8004885C(RaceItemGfxCommandSource *);
-s32 func_80049000(Vec3i *);
 void func_8004DB8C(RaceItemEffectActor *);
 void func_8004E02C(RaceItemEffectActor *);
 void func_8004E438(RaceItemEffectActor *);

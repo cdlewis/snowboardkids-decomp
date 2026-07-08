@@ -2,6 +2,7 @@
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "race_input_history.h"
+#include "fixed_point_math.h"
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_triggers/func_800849E0.s")
 
@@ -10,7 +11,6 @@
 #ifdef NON_MATCHING
 typedef void (*EffectCallback)(void *);
 
-extern s32 func_8004908C(s32 deltaX, s32 deltaZ);
 extern void func_80072A74(s32 soundId, void *pos, s32 volume, s32 distance);
 
 extern void func_80049CE0(void *);
