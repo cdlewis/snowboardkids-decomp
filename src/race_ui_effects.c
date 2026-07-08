@@ -59,7 +59,9 @@ typedef struct {
     /* 0x2C3 */ s8 unk2C3;
     /* 0x2C4 */ u8 pad2C4[0x2C6 - 0x2C4];
     /* 0x2C6 */ u16 unk2C6;
-    /* 0x2C8 */ u8 pad2C8[0x2EA - 0x2C8];
+    /* 0x2C8 */ u8 pad2C8[0x2DA - 0x2C8];
+    /* 0x2DA */ s16 unk2DA;
+    /* 0x2DC */ u8 pad2DC[0x2EA - 0x2DC];
     /* 0x2EA */ s16 pitch;
     /* 0x2EC */ s16 yaw;
     /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
@@ -791,7 +793,7 @@ extern void func_80057E90(RaceUiAlpha18Actor *);
 extern void func_80058360(RaceUiAlpha18Actor *);
 extern void func_80065D24(void);
 extern void func_80065808(void);
-extern void func_80065508(void);
+extern void func_80065508(RaceUiGfxCommandActor *);
 extern void func_80066158(void *);
 extern void func_800663C8(void *);
 extern void func_80059854(void *);
@@ -3399,7 +3401,63 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
 }
 #endif
 
+// func_80065508 best match: 92.859%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80065508.s")
+
+#ifdef NON_MATCHING
+void func_80065508(RaceUiGfxCommandActor *arg0) {
+    RaceUiGfxCommandScriptEntry *entry;
+    Vec3i *pos;
+    RaceUiGfxCommandActor *actor;
+    volatile s32 timeout;
+    register s32 xzSize;
+    register s32 ySize;
+    register s32 sentinel;
+
+    entry = D_800D693C[D_80121B50];
+    actor = arg0;
+    if (D_801235B0 & 1) {
+        actor->textureOffset++;
+    }
+    if (actor->textureOffset >= 6) {
+        actor->textureOffset = 0;
+    }
+
+    sentinel = -1;
+    ySize = 0xC0000;
+    if (entry->sentinel == sentinel) {
+        goto done;
+    }
+    xzSize = 0x70000;
+    timeout = 0xF0;
+    pos = &entry->command;
+
+loop:
+    if (entry->active != 0) {
+        if (func_80048E60(pos) != 0) {
+            if (func_80088E98(pos, xzSize, ySize, 0) != 0) {
+                entry->active = 0;
+                func_80072A74(0x18, pos, 0x7F, 0x32);
+                D_80121D80[0].unk570++;
+                if (D_80121D80[0].unk2DA != 0) {
+                    D_80121D80[0].unk2DA = timeout;
+                } else {
+                    func_80083CFC(D_80121D80);
+                }
+            }
+        }
+    }
+
+    entry++;
+    pos = &entry->command;
+    if (entry->sentinel != sentinel) {
+        goto loop;
+    }
+
+done:
+    func_800483FC(&D_801248D4, func_800651BC, actor);
+}
+#endif
 
 void func_8006565C(RaceUiGfxCommandActor *arg0) {
     register RaceUiGfxCommandActor *actor1;
