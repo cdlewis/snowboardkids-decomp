@@ -693,7 +693,6 @@ extern void *D_801248A4;
 extern void *D_801248EC;
 extern s16 D_800D6050[];
 extern Vec3i D_800D6030[];
-extern RaceUiCourseSpawnEntry D_800B9540[];
 extern u32 *D_800D6400[];
 extern RaceUiRankTextRenderEntry *D_800D761C[];
 extern RaceUiGfxCommandScriptEntry *D_800D693C[];
@@ -767,7 +766,6 @@ extern void *D_80121B74;
 extern void func_80072138(s32, s32);
 extern void func_80048278(s32, s32, void *, s32);
 extern void func_80059A04(void *, s32, s32, s32);
-extern char D_800E1258[];
 extern char D_800E12F4[];
 extern char D_800E12F8[];
 extern char D_800E12FC[];
@@ -1134,6 +1132,8 @@ loop:
     }
 }
 #endif
+
+const char D_800E1258[0x4] = "%6d";
 
 void func_8005827C(void *arg0) {
     volatile u8 padding[0x18];
