@@ -33,7 +33,7 @@ typedef struct MainMenuModelDisplayObject {
     char pad0[0x14];
     s32 screenX;
     s32 screenY;
-    char pad1C[0x4];
+    s32 screenZ;
 } MainMenuModelDisplayObject;
 
 typedef struct MainMenuSceneModel {
@@ -55,6 +55,14 @@ typedef struct MainMenuSceneModel {
     MainMenuModelDisplayObject displayObjects[14];
 } MainMenuSceneModel;
 
+void func_80041CC0(void);
+void func_80041CF0(void);
+void func_80041D20(s32 actorIndex, s32 modelIndex);
+void func_80041DD4(s32 modelIndex, s32 animationIndex);
 MainMenuSceneModel *func_80041E60(s32 modelIndex);
+s32 func_80041FB4(s32 arg0);
+void func_80042034(s32 modelIndex);
+void func_8004209C(s32 modelIndex, s32 x, s32 y, s32 z);
+void func_800420FC(s32 modelIndex, s16 x, s16 y, s16 z);
 
 #endif

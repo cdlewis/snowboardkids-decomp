@@ -7,6 +7,7 @@
 #include "main_menu.h"
 #include "main_menu_overlay_effects.h"
 #include "main_menu_panel_ui.h"
+#include "main_menu_scene_model.h"
 
 #define OS_MESG_BLOCK 1
 
@@ -88,7 +89,6 @@ extern s32 osPfsDeleteFile(OSPfs *, u16, u32, u8 *, u8 *);
 extern s32 func_80013F88(s16, s32, s32);
 extern void func_80045914(void);
 extern void func_8006D780(s32);
-extern void func_80042034(s32);
 extern void func_800428C8(s32);
 extern void func_80072138(s32, s32);
 extern void func_800704F0(void);
@@ -96,11 +96,6 @@ extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8006D5CC(void);
 extern void func_8006D520(s32, s32);
 extern void func_80002A1C(void);
-extern void func_80041CF0(void);
-extern void func_80041D20(s32, s32);
-extern void func_80041DD4(s32, s32);
-extern void func_8004209C(s32, s32, s32, s32);
-extern void func_800420FC(s32, s32, s32, s32);
 extern void func_80002CE4(void);
 extern void func_8000262C(void);
 extern void func_80002024(void);

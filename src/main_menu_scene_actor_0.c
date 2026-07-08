@@ -3,6 +3,7 @@
 #include "main_menu_effects.h"
 #include "main_menu_scene_actor_0.h"
 #include "main_menu_scene_actor_4.h"
+#include "main_menu_scene_model.h"
 
 struct MainMenuSceneActor {
     char pad0[0x18];
@@ -17,19 +18,12 @@ struct MainMenuSceneActor {
 };
 
 extern MainMenuSceneActorShadow D_8010B1C0;
-
-extern void func_80041D20(s32 arg0, s32 arg1);
-extern void func_80041DD4(s32 arg0, s32 arg1);
-extern s32 func_80041FB4(s32 arg0);
-extern void func_80042034(s32 arg0);
 extern void func_800428C8(s32 arg0);
 
 extern u16 D_8010B1A2;
 extern u8 D_8010B1A4;
 extern u8 D_8010B1A5;
 extern u8 D_8010B1A8;
-extern void func_8004209C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-extern void func_800420FC(s32 arg0, s16 arg1, s16 arg2, s16 arg3);
 
 void func_80032A80(void) {
 }

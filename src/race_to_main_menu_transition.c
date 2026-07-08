@@ -12,6 +12,7 @@
 #include "main_menu_scene_actor_2.h"
 #include "main_menu_scene_actor_3.h"
 #include "main_menu_scene_actor_4.h"
+#include "main_menu_scene_model.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -41,7 +42,6 @@ typedef struct {
 typedef void (*EffectTaskCallback)(void *);
 
 extern s32 func_80013F88(s16, s32, s32);
-extern void func_80041CC0(void);
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern void func_80045914(void);

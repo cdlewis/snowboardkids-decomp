@@ -3,6 +3,7 @@
 #include "fixed_point_matrix.h"
 #include "main_menu_effects.h"
 #include "main_menu_scene_actor_4.h"
+#include "main_menu_scene_model.h"
 
 struct MainMenuSceneActor4 {
     /* 0x00 */ char pad0[0x18];
@@ -23,25 +24,6 @@ typedef struct {
     /* 0x1C */ s32 z;
 } GfxCommandSource;
 
-typedef struct {
-    /* 0x00 */ u8 pad0[0x14];
-    /* 0x14 */ s32 screenX;
-    /* 0x18 */ s32 screenY;
-    /* 0x1C */ s32 screenZ;
-} MainMenuShadowDisplayObject;
-
-typedef struct {
-    /* 0x000 */ u8 pad0[0x148];
-    /* 0x148 */ MainMenuShadowDisplayObject displayObjects[1];
-} MainMenuShadowModel;
-
-extern MainMenuShadowModel *func_80041E60(s32 arg0);
-extern void func_80041DD4(s32 arg0, s32 arg1);
-extern void func_80041D20(s32 arg0, s32 arg1);
-extern s32 func_80041FB4(s32 arg0);
-extern void func_80042034(s32 arg0);
-extern void func_8004209C(s32, s32, s32, s32);
-extern void func_800420FC(s32, s16, s16, s16);
 extern void func_800428C8(s32 arg0);
 extern s32 func_80043040(s16 arg0);
 extern void func_80045990(s32 arg0, s32 arg1, void **arg2, void **arg3);
@@ -421,8 +403,8 @@ void func_80037070(MainMenuSceneActorShadow *arg0) {
     Vec3i sp78;
     void *sp74;
     void *sp70;
-    MainMenuShadowModel *sp6C;
-    MainMenuShadowModel *model;
+    MainMenuSceneModel *sp6C;
+    MainMenuSceneModel *model;
     Gfx *gfx;
     volatile u8 pad[0x38];
 
