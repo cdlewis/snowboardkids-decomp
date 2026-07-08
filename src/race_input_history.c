@@ -19,7 +19,15 @@ extern s16 D_80112186;
 
 extern RaceInputHistoryBuffer *func_80043040(s16 assetId);
 extern s32 func_800430D0(void);
+extern u32 D_80121E04[][0x183];
+extern s32 D_801235B4;
+extern u32 D_80123758[];
+extern s8 D_80123788[];
+extern s8 D_8012378C[];
+
 void func_80083D80(RaceInputPlayer *player);
+void func_8008431C(RaceInputPlayer *player);
+void func_80084510(RaceInputPlayer *player);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_input_history/func_80083D80.s")
 
@@ -82,7 +90,60 @@ void func_8008431C(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_input_history/func_80084510.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_input_history/func_80084730.s")
+void func_80084730(RaceInputPlayer *player) {
+    u16 index;
+
+    if (!(D_801235B4 & 1) && !(player->stateFlags & 0x40)) {
+        index = player->playerIndex;
+        player->disabledInputFlags = D_80121E04[index][0];
+
+        if (player->replayInputSource == 0) {
+            player->inputFlags = D_80123758[index];
+            player->stickX = D_80123788[index];
+            player->stickY = D_8012378C[index];
+            if (player->unk15 != 0) {
+                func_8008431C(player);
+            }
+        } else {
+            func_80084510(player);
+        }
+
+        player->inputFlags &= 0xFFF0FFFF;
+        if (player->stickX >= 0x1B) {
+            player->inputFlags |= 0x40000;
+        }
+        if (player->stickX < -0x1A) {
+            player->inputFlags |= 0x80000;
+        }
+        if (player->stickY >= 0x1B) {
+            player->inputFlags |= 0x10000;
+        }
+        if (player->stickY < -0x1A) {
+            player->inputFlags |= 0x20000;
+        }
+        if (player->stickX < 8) {
+            player->inputFlags &= 0xFFFBFFFF;
+        }
+        if (player->stickX >= -7) {
+            player->inputFlags &= 0xFFF7FFFF;
+        }
+        if (player->stickY < 8) {
+            player->inputFlags &= 0xFFFEFFFF;
+        }
+        if (player->stickY >= -7) {
+            player->inputFlags &= 0xFFFDFFFF;
+        }
+
+        player->currentInputFlags = player->inputFlags & ~player->disabledInputFlags;
+        return;
+    }
+
+    player->disabledInputFlags = 0;
+    player->inputFlags = 0;
+    player->currentInputFlags = 0;
+    player->stickX = 0;
+    player->stickY = 0;
+}
 
 s32 func_80084958(RaceInputPlayer *player) {
     s32 sp18;
