@@ -1090,17 +1090,13 @@ void func_8006CBBC(RaceCourseMarkerEffect *arg0) {
     func_80071824(arg0, func_8006CB50);
 }
 
-// func_8006CCC0 best match: 99.528% at nonmatchings/func_8006CCC0-8662636370764828261/base_11.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006CCC0.s")
-
-#ifdef NON_MATCHING
 void func_8006CCC0(RaceCourseTriggerEffect *arg0) {
+    volatile s32 unused;
     CourseEffectMatrixSource transform;
     Gfx *gfx;
-    volatile s32 pad[2];
 
     if (D_80156609 != 0) {
-        CourseTriggerEntry *entry = &D_800DA840[arg0->entryIndex];
+        CourseTriggerEntry *entry = &D_800DA840[((volatile RaceCourseTriggerEffect *) arg0)->entryIndex];
 
         func_80097FE4(&transform, entry->pitch, entry->yaw);
         transform.basePos.x = D_800DA840[arg0->entryIndex].pos.x;
@@ -1110,14 +1106,39 @@ void func_8006CCC0(RaceCourseTriggerEffect *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-        gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));
-        gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112142));
-        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, arg0->displayList);
+        {
+            Gfx *_g = gRegionAllocPtr++;
+
+            _g->words.w0 = 0xE7000000;
+            _g->words.w1 = 0;
+        }
+        {
+            Gfx *_g = gRegionAllocPtr++;
+
+            _g->words.w0 = 0xBC000806;
+            _g->words.w1 = func_80043040(D_80112140);
+        }
+        {
+            Gfx *_g = gRegionAllocPtr++;
+            volatile s32 pad[2];
+
+            _g->words.w0 = 0xBC000C06;
+            _g->words.w1 = func_80043040(D_80112142);
+        }
+        {
+            Gfx *_g = gRegionAllocPtr++;
+
+            _g->words.w0 = 0x01020040;
+            _g->words.w1 = (u32) arg0->matrix;
+        }
+        {
+            Gfx *_g = gRegionAllocPtr++;
+
+            _g->words.w0 = 0x06000000;
+            _g->words.w1 = (u32) arg0->displayList;
+        }
     }
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006CE68.s")
 
