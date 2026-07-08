@@ -19,13 +19,66 @@ typedef struct {
 } ObjectTransform;
 
 extern u8 D_80156608;
+extern s16 D_800D40D0[];
 extern ObjectTransform D_801121E0[OBJECT_COUNT];
 
 s32 func_80049000(Vec3i *position);
 s32 func_8004908C(s32 deltaX, s32 deltaZ);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/fixed_point_math/func_80049000.s")
-#pragma GLOBAL_ASM("asm/nonmatchings/fixed_point_math/func_8004908C.s")
+
+s32 func_8004908C(s32 deltaX, s32 deltaZ) {
+    s16 angle;
+
+    deltaZ = -deltaZ;
+
+    if ((deltaX == 0) && (deltaZ == 0)) {
+        return 0;
+    }
+
+    if ((deltaX >= 0) && (deltaZ >= 0)) {
+        if (deltaX < deltaZ) {
+            angle = D_800D40D0[(s16) ((0x280LL * deltaX) / deltaZ)];
+            return (s16) -angle;
+        }
+        angle = 0x400 - D_800D40D0[(s16) ((0x280LL * deltaZ) / deltaX)];
+        return (s16) -angle;
+    }
+
+    if ((deltaX >= 0) && (deltaZ < 0)) {
+        deltaZ *= -1;
+        if (deltaZ < deltaX) {
+            angle = D_800D40D0[(s16) ((0x280LL * deltaZ) / deltaX)] + 0x400;
+            return (s16) -angle;
+        }
+        angle = 0x800 - D_800D40D0[(s16) ((0x280LL * deltaX) / deltaZ)];
+        return (s16) -angle;
+    }
+
+    if ((deltaX < 0) && (deltaZ < 0)) {
+        deltaX *= -1;
+        deltaZ *= -1;
+        if (deltaX < deltaZ) {
+            angle = D_800D40D0[(s16) ((0x280LL * deltaX) / deltaZ)] + 0x800;
+            return (s16) -angle;
+        }
+        angle = 0xC00 - D_800D40D0[(s16) ((0x280LL * deltaZ) / deltaX)];
+        return (s16) -angle;
+    }
+
+    angle = 0;
+    if ((deltaX < 0) && (deltaZ >= 0)) {
+        deltaX *= -1;
+        if (deltaZ < deltaX) {
+            angle = D_800D40D0[(s16) ((0x280LL * deltaZ) / deltaX)] + 0xC00;
+            return (s16) -angle;
+        }
+        angle = 0x1000 - D_800D40D0[(s16) ((0x280LL * deltaX) / deltaZ)];
+        return (s16) -angle;
+    }
+
+    return angle;
+}
 
 s32 func_8004940C(s32 fromX, s32 fromZ, s32 toX, s32 toZ) {
     return func_8004908C(toX - fromX, toZ - fromZ);
