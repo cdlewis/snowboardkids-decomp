@@ -99,6 +99,7 @@ extern u8 D_800D57A0[];
 extern s16 D_800D57B0[];
 extern s16 D_800D57B4[];
 extern s16 D_800D5808[];
+extern s16 D_800D581C[];
 extern u32 D_800D5760[];
 extern u32 D_800D6270[];
 extern GfxCommandSource D_800DEE30;
@@ -162,7 +163,7 @@ void func_80054A64(MainMenuOverlayEffectActor *);
 void func_80054AC0(MainMenuOverlayEffectActor *);
 void func_80054B98(void);
 void func_80054EC4(MainMenuOverlayEffectActor *);
-void func_80055148(void);
+void func_80055148(MainMenuOverlayEffectActor *);
 void func_8005537C(MainMenuOverlayEffectActor *);
 void func_80055410(MainMenuOverlayEffectActor *);
 void func_80055530(void *);
@@ -679,7 +680,55 @@ void func_800550E0(MainMenuOverlayEffectActor *arg0) {
     func_800483FC(D_80124878, func_80055074, arg0);
 }
 
+// func_80055148 best match: 98.582%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80055148.s")
+
+#ifdef NON_MATCHING
+void func_80055148(MainMenuOverlayEffectActor *arg0) {
+    Gfx *temp_v0;
+    Gfx *temp_v0_2;
+    Gfx *temp_v0_3;
+    Gfx *temp_v0_4;
+    Gfx *temp_v0_5;
+    u16 temp_t0;
+
+    temp_v0 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0 + 1;
+    temp_v0->words.w0 = 0xE7000000;
+    temp_v0->words.w1 = 0;
+    temp_v0_2 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_2 + 1;
+    temp_v0_2->words.w0 = 0xFC119623;
+    temp_v0_2->words.w1 = 0xFF2FFFFF;
+    temp_v0_3 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_3 + 1;
+    temp_v0_3->words.w0 = 0xB900031D;
+    temp_v0_3->words.w1 = 0x00504240;
+    temp_v0_4 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_4 + 1;
+    temp_v0_4->words.w0 = 0xFA000000;
+    temp_v0_4->words.w1 = (arg0->unk18.half.lo & 0xFF) | ~0xFF;
+    temp_t0 = arg0->index;
+    switch (temp_t0) {
+    case 0:
+        func_80045A78(-0x8C, 0x38, func_80043040(D_80112174), 1);
+        func_80046D68(-0x10, 0x38, func_80043040(D_80112174), 2, D_800D581C[D_801235B0 & 3]);
+        break;
+    case 1:
+        func_80045A78(-0x89, 0x38, func_80043040(D_80112174), 1);
+        func_80046D68(-0xD, 0x38, func_80043040(D_80112174), 3, D_800D581C[D_801235B0 & 3]);
+        break;
+    case 2:
+        func_80045A78(-0x7E, 0x38, func_80043040(D_80112174), 1);
+        func_80046D68(-2, 0x38, func_80043040(D_80112174), 4, D_800D581C[D_801235B0 & 3]);
+        break;
+    }
+    temp_v0_5 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_5 + 1;
+    temp_v0_5->words.w0 = 0x06000000;
+    temp_v0_5->words.w1 = (u32) D_800DEFF8;
+}
+#endif
 
 void func_8005537C(MainMenuOverlayEffectActor *arg0) {
     s16 v = arg0->unk18.half.hi;
