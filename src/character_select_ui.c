@@ -181,7 +181,7 @@ void func_80022464(CharacterSelectWidgetActor *arg0);
 void func_80020B70(CharacterSelectWidgetActor *arg0);
 void func_80023618(CharacterSelectTime *arg0, s32 x, s32 y, s32 alpha);
 
-// func_8001BD70 best match: 94.776%
+// func_8001BD70 best match: 95.048%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001BD70.s")
 
 #ifdef NON_MATCHING
@@ -218,7 +218,7 @@ void func_8001BD70(CharacterSelectMenuFrameActor *arg0) {
                 if ((D_8010AE80 == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
                     alpha = 0xFF;
                 }
-                if (D_80121B55 == 1) {
+                if ((D_80121B55 - 1) == 0) {
                     func_8000F030(pos[12], pos[23], func_80043040(D_80112130.textureHandle), 0x1B, 0x20, 0x20, 0, alpha);
                 } else {
                     func_8000F030(pos[12], pos[23], func_80043040(D_80112130.textureHandle), 0x1E, 0x20, 0x20, 0, alpha);
@@ -232,7 +232,7 @@ void func_8001BD70(CharacterSelectMenuFrameActor *arg0) {
 
             if (i != D_8010AE80) {
                 characterId = (s16 *)((u8 *)characterIds + characterIdOffset);
-                if ((D_80121B55 == 1) && (D_800ECA24[*characterId] != 0)) {
+                if (((D_80121B55 - 1) == 0) && (D_800ECA24[*characterId] != 0)) {
                     func_8000F030((s16)(pos[12] - 0x10), pos[23], func_80043040(D_80112130.iconTextureHandle), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0, D_800ECA24[*characterId] + 6);
                 } else {
                     func_8000F030((s16)(pos[12] - 0x10), pos[23], func_80043040(D_80112130.textureHandle), (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
