@@ -334,6 +334,18 @@ typedef struct {
 } RaceUiRisingTrailActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ s16 surface;
+    /* 0x26 */ s16 targetAngle;
+    /* 0x28 */ s16 angle;
+    /* 0x2A */ s16 angleStep;
+    /* 0x2C */ s16 spin;
+    /* 0x2E */ u8 pad2E[6];
+    /* 0x34 */ s16 soundTimer;
+} RaceUiThrownTrailActor;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x24];
     /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
     /* 0x44 */ u8 pad44[0x64 - 0x44];
@@ -671,6 +683,9 @@ extern void func_8005E5B4(void *);
 extern void func_8005E6D0(RaceUiSparkleActor *);
 extern void func_8005ECA8(RaceUiSparkleActor *);
 extern void func_8005F174(RaceUiSparkleActor *);
+extern s32 func_80048E60(Vec3i *);
+extern void func_8004B8B4(s32, s32, s32, s16, s16);
+extern void func_80088294(Vec3i *, s32, s32, s32);
 extern void func_80061088(void);
 extern void func_80062F6C(RaceUiTrailingParticleActor *);
 extern void func_80058B20(void *);
@@ -689,7 +704,7 @@ extern void func_80064F4C(void *);
 extern void func_80059E5C(RaceUiAlpha1AActor *);
 extern void func_80059C34(void);
 extern void func_8005BE68(void);
-extern void func_80061984(void);
+extern void func_80061984(RaceUiThrownTrailActor *);
 extern void func_80063220(RaceUiSpinningParticleActor *);
 extern void func_80057854(void);
 extern void func_800621DC(void *);
@@ -2254,25 +2269,52 @@ void func_800617EC(RaceUiRisingTrailActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80061984.s")
+void func_80061984(RaceUiThrownTrailActor *arg0) {
+    volatile s32 pad[4];
+    volatile s16 unused0;
+    volatile s16 unused1;
+    Vec3i *pos;
 
-void func_80061A98(void *arg0) {
-    s32 temp;
-    *(s16 *)((u8 *)arg0 + 0x34) = 0xF;
-    temp = func_80080CC4(*(s16 *)((u8 *)arg0 + 0x24), *(s32 *)((u8 *)arg0 + 0x18), *(s32 *)((u8 *)arg0 + 0x20));
-    *(s16 *)((u8 *)arg0 + 0x2A) = 8;
-    *(s32 *)((u8 *)arg0 + 0x1C) = temp;
-    *(s16 *)((u8 *)arg0 + 0x28) = *(s16 *)((u8 *)arg0 + 0x2A);
+    if (D_80121B56 == 0) {
+        pos = &arg0->pos;
+        if (func_80048E60(pos) != 0) {
+            func_80088294(pos, 0x1A0000, 0x600000, 2);
+            if (arg0->soundTimer == 0) {
+                func_80072A74(0xD, pos, 0x7F, 0x31);
+                func_8004B8B4(arg0->pos.a, arg0->pos.b + 0x700000, arg0->pos.c, arg0->surface, arg0->angle);
+                arg0->soundTimer = 0xF;
+            } else {
+                arg0->soundTimer--;
+            }
+        }
+
+        arg0->angle += arg0->angleStep;
+        if (arg0->targetAngle + 0x140 < arg0->angle) {
+            arg0->angleStep = -8;
+        }
+        if (arg0->angle < arg0->targetAngle - 0x140) {
+            arg0->angleStep = 8;
+        }
+        arg0->spin += 0x40;
+    }
+    func_800483FC(&D_801248A4, func_800617EC, (s32)arg0);
+}
+
+void func_80061A98(RaceUiThrownTrailActor *arg0) {
+    arg0->soundTimer = 0xF;
+    arg0->pos.b = func_80080CC4(arg0->surface, arg0->pos.a, arg0->pos.c);
+    arg0->angleStep = 8;
+    arg0->angle = arg0->angleStep;
     func_80071824(arg0, func_80061984);
 }
 
 void func_80061AF4(s16 arg0, void *arg1, void *arg2, s16 arg3) {
-    void *temp = func_80071408(func_80061A98, 0, 0x64);
+    RaceUiThrownTrailActor *temp = func_80071408(func_80061A98, 0, 0x64);
     if (temp != NULL) {
-        *(void **)((u8 *)temp + 0x18) = arg1;
-        *(void **)((u8 *)temp + 0x20) = arg2;
-        *(s16 *)((u8 *)temp + 0x26) = (arg3 + 0x800) & 0xFFF;
-        *(s16 *)((u8 *)temp + 0x24) = arg0;
+        temp->pos.a = (s32)arg1;
+        temp->pos.c = (s32)arg2;
+        temp->targetAngle = (arg3 + 0x800) & 0xFFF;
+        temp->surface = arg0;
     }
 }
 
