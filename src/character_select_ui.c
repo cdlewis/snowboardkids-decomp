@@ -201,25 +201,27 @@ void func_8001C96C(CharacterSelectMenuFrameActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D2F0.s")
 
-// func_8001D7B8 best match: 91.918%
+// func_8001D7B8 best match: 91.995%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D7B8.s")
 
 #ifdef NON_MATCHING
 void func_8001D7B8(CharacterSelectWidgetActor *arg0) {
     int state;
     int stateValue;
+    u16 selectedSpriteIndex;
     s32 selectedIndex;
     u16 spriteIndex;
 
     selectedIndex = D_80121B50;
     spriteIndex = (u16)arg0->sprite.index;
-    if ((selectedIndex >= (s32)spriteIndex) && (arg0->transition.bytes.state != 0) && (arg0->y != -0x48)) {
+    selectedSpriteIndex = spriteIndex;
+    if ((selectedIndex >= (s32)selectedSpriteIndex) && (arg0->transition.bytes.state != 0) && (arg0->y != -0x48)) {
         stateValue = 2;
         state = stateValue & 0xFF;
         arg0->transition.bytes.state = stateValue;
     } else {
         state = arg0->transition.bytes.state;
-        if ((selectedIndex < (s32)spriteIndex) && (state != 0) && (arg0->y != -0x140)) {
+        if ((selectedIndex < (s32)selectedSpriteIndex) && (state != 0) && (arg0->y != -0x140)) {
             stateValue = 1;
             state = stateValue & 0xFF;
             arg0->transition.bytes.state = stateValue;
