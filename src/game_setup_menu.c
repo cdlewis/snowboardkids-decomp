@@ -1,5 +1,6 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
+#include "game_setup_menu.h"
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_80003140.s")
 
