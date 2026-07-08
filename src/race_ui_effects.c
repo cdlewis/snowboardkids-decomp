@@ -76,7 +76,9 @@ typedef struct {
     /* 0x16 */ s16 modelTextureHandle;
     /* 0x18 */ u8 pad18[0x38 - 0x18];
     /* 0x38 */ s16 mainFontHandle;
-    /* 0x3A */ u8 pad3A[0x48 - 0x3A];
+    /* 0x3A */ u8 pad3A[0x3E - 0x3A];
+    /* 0x3E */ s16 popupFontHandle;
+    /* 0x40 */ u8 pad40[0x48 - 0x40];
     /* 0x48 */ s16 resultTextHandle;
     /* 0x4A */ s16 pad4A;
     /* 0x4C */ s16 rankTextHandle;
@@ -610,6 +612,7 @@ extern s32 func_80043040(s16);
 extern s32 func_800430D0(void);
 extern s16 func_80042D58(s32);
 extern void func_80045A78(s32, s32, s32, s32);
+extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80045990(s32, s32, void *, void *);
 extern void func_80097BAC(s16 *, s16);
 extern s16 func_80097AE8(s16);
@@ -630,6 +633,7 @@ extern void func_800623E8(void *);
 extern s32 func_8007D200(s32, s32, s32);
 extern s32 func_80080CC4(s32, s32, s32);
 extern void func_80088664(Vec3i *, s32, s32, s32, s32);
+extern int sprintf(char *, const char *, ...);
 extern void func_800716E4(void *);
 extern void *func_800716A4(void *, s32, s32);
 extern void func_80072A74(s32, void *, s32, s32);
@@ -644,6 +648,8 @@ extern void func_80048278(s32, s32, void *, s32);
 extern void func_80059A04(void *, s32, s32, s32);
 extern void *D_800E1220;
 extern void *D_800E1230;
+extern char D_800E1240[];
+extern char D_800E1244[];
 extern char D_800E12F8[];
 extern char D_800E12FC[];
 extern char D_800E1300[];
@@ -714,7 +720,6 @@ extern void func_80059C34(void);
 extern void func_8005BE68(void);
 extern void func_80061984(RaceUiThrownTrailActor *);
 extern void func_80063220(RaceUiSpinningParticleActor *);
-extern void func_80057854(void);
 extern void func_800621DC(void *);
 extern void func_8005A1FC(void *);
 extern void func_8005A31C(void);
@@ -832,7 +837,37 @@ void func_80057810(RaceUiPromptActor *arg0) {
     func_80071824(arg0, func_80057710);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80057854.s")
+void func_80057854(RaceUiPopupActor *arg0) {
+    volatile u8 padding[0x20];
+    char buffer[8];
+    s32 i;
+
+    if (D_80156608 == 0) {
+        func_80045A78((s16)(arg0->x - 0x3C), arg0->y.half.lo, func_80043040(D_80112130.popupFontHandle), 0x8B);
+        func_80045A78((s16)(arg0->x + 0x14), arg0->y.half.lo, func_80043040(D_80112130.popupFontHandle), 0x8E);
+        sprintf(buffer, D_800E1240, arg0->parent);
+        for (i = 0; i < 2; i++) {
+            if (buffer[i] != ' ') {
+                func_80046D68((s16)(arg0->x + (i * 8) + 4), arg0->y.half.lo,
+                              func_80043040(D_80112130.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
+            }
+        }
+
+        if (arg0->playerIndex != 0) {
+            func_80045A78((s16)(arg0->x - 0x48), (s16)(arg0->y.word + 0x12),
+                          func_80043040(D_80112130.popupFontHandle), 0x8D);
+            func_80045A78((s16)(arg0->x + 0x20), (s16)(arg0->y.word + 0x12),
+                          func_80043040(D_80112130.popupFontHandle), 0x8E);
+            sprintf(buffer, D_800E1244, 0x12C);
+            for (i = 0; i != 3; i++) {
+                if (buffer[i] != ' ') {
+                    func_80046D68((s16)(arg0->x + (i * 8) + 8), (s16)(arg0->y.word + 0x12),
+                                  func_80043040(D_80112130.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
+                }
+            }
+        }
+    }
+}
 
 void func_80057AA4(RaceUiPopupActor *arg0) {
     arg0->x += arg0->velocity;
