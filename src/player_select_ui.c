@@ -31,7 +31,7 @@ typedef struct {
 
 typedef struct {
     char pad0[0x42];
-    /* 0x42 */ s16 frameTextureHandle;
+    /* 0x42 */ s16 textureHandle;
 } PlayerSelectAssetHandles;
 
 typedef struct {
@@ -57,11 +57,6 @@ typedef struct {
     char pad1[1];
     s16 nextState;
 } PlayerSelectCursorState;
-
-typedef struct {
-    char pad0[0x42];
-    s16 textureHandle;
-} PlayerSelectAssetHandles;
 
 typedef u8 PlayerPortrait[0x8C];
 
@@ -102,7 +97,7 @@ extern void func_8001B9F0(PlayerSelectWidgetActor *);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern int sprintf(char *, const char *, ...);
-extern u16 D_800B5B50[][21];
+extern PlayerSelectFrameTiles D_800B5B50[];
 extern PlayerPortrait D_800B5C24[];
 extern u8 D_800EC9C2;
 extern u8 D_80121D85;
@@ -110,8 +105,6 @@ extern u8 D_80121D88;
 extern void *D_80124868;
 extern PlayerSelectAssetHandles D_80112130;
 extern PlayerSelectCursorState D_8010AE70;
-extern PlayerSelectAssetHandles D_80112130;
-extern PlayerSelectFrameTiles D_800B5B50[];
 extern u8 D_8010AE70_state;
 extern s16 D_8010AE74;
 extern s32 D_8010ADDC;
@@ -357,7 +350,7 @@ void func_80019FFC(PlayerSelectWidgetActor *arg0) {
     tile = 0;
     do {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex][tile], 0,
+                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex].centerTiles[tile], 0,
                       0x100, 0xA0, 0x49);
         i++;
         tile++;
@@ -368,17 +361,17 @@ void func_80019FFC(PlayerSelectWidgetActor *arg0) {
     i = 0x80;
     do {
         func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex][tile2 + 16],
+                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tile2],
                       0, 0x100, 0xA0, 0x49);
         func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex][tile2 + 18],
+                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tile2],
                       0, 0x100, 0xA0, 0x49);
         offset += 0x40;
         tile2++;
     } while (offset != i);
 
     func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
-                  D_800B5B50[(u16)arg0->sprite.spriteIndex][20], 0, 0x100, 0xA0, 0x49);
+                  D_800B5B50[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 #endif
 
@@ -466,7 +459,7 @@ void func_8001A490(PlayerSelectWidgetActor *arg0) {
     tileIndex = 0;
     do {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      func_80043040(D_80112130.frameTextureHandle),
+                      func_80043040(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].centerTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
         i++;
         tileIndex++;
@@ -477,15 +470,15 @@ void func_8001A490(PlayerSelectWidgetActor *arg0) {
     i = 0x80;
     rightOffset = 0x80;
     do {
-        func_800112F4((s16)(arg0->x + rightOffset), (s16)(arg0->y + offset), func_80043040(D_80112130.frameTextureHandle),
+        func_800112F4((s16)(arg0->x + rightOffset), (s16)(arg0->y + offset), func_80043040(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
-        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), func_80043040(D_80112130.frameTextureHandle),
+        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
         offset += 0x40;
         tileIndex++;
     } while (offset != i);
 
-    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.frameTextureHandle),
+    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
                   D_800B5B50[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 #endif
@@ -573,7 +566,7 @@ void func_8001A924(PlayerSelectWidgetActor *arg0) {
     tile = 0;
     do {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex][tile], 0,
+                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex].centerTiles[tile], 0,
                       0x100, 0xA0, 0x49);
         if (1) {
         }
@@ -594,17 +587,17 @@ void func_8001A924(PlayerSelectWidgetActor *arg0) {
     i = 0x80;
     do {
         func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex][tile + 16], 0,
+                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tile], 0,
                       0x100, 0xA0, 0x49);
         func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex][tile + 18], 0,
+                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tile], 0,
                       0x100, 0xA0, 0x49);
         offset += 0x40;
         tile++;
     } while (offset != i);
 
     func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
-                  D_800B5B50[(u16)arg0->sprite.spriteIndex][20], 0, 0x100, 0xA0, 0x49);
+                  D_800B5B50[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 #endif
 
@@ -690,7 +683,7 @@ void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
     tileIndex = 0;
     for (i = 0; (i < 16) & 0xFFFFFFFF; i++) {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      func_80043040(D_80112130.frameTextureHandle), D_800B5B50[arg0->sprite.spriteIndex].centerTiles[tileIndex],
+                      func_80043040(D_80112130.textureHandle), D_800B5B50[arg0->sprite.spriteIndex].centerTiles[tileIndex],
                       0, 0x100, 0xA0, 0x49);
         tileIndex++;
         if (1) { } if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }
@@ -699,14 +692,14 @@ void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
     tileIndex = 0;
     offset = 0;
     for (; offset != 0x80; offset += 0x40) {
-        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), func_80043040(D_80112130.frameTextureHandle),
+        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), func_80043040(D_80112130.textureHandle),
                       D_800B5B50[arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
-        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), func_80043040(D_80112130.frameTextureHandle),
+        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
                       D_800B5B50[arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
         tileIndex++;
     }
 
-    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.frameTextureHandle),
+    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
                   D_800B5B50[arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 #endif
