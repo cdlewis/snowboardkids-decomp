@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game_audio.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
 
@@ -135,7 +136,9 @@ typedef struct {
     /* 0x034 */ u8 pad34[0x94 - 0x34];
     /* 0x094 */ u8 transform[0x14];
     /* 0x0A8 */ Vec3i posA8;
-    /* 0x0B4 */ u8 padB4[RACE_PLAYER_STATE_SIZE - 0xB4];
+    /* 0x0B4 */ u8 padB4[0x2FC - 0xB4];
+    /* 0x2FC */ s32 flags2FC;
+    /* 0x300 */ u8 pad300[RACE_PLAYER_STATE_SIZE - 0x300];
 } RaceItemFollowPlayer;
 
 typedef struct {
@@ -331,7 +334,22 @@ void func_8004EE0C(RaceItemEffectActor *arg0) {
     func_800483FC(&D_801248C8, func_8004EAA8, actor);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004EF24.s")
+void func_8004EF24(RaceItemEffectActor *arg0) {
+    RaceItemFollowPlayer *player;
+
+    arg0->height.byte = -1;
+    arg0->unk2C = 0;
+    arg0->unk28.word = 0x280000;
+    arg0->unk24.velocityX = 0x400000;
+    player = &D_80121D80[arg0->playerIndex];
+    if (player->flags2FC & 0x400) {
+        arg0->unk24.velocityX = -arg0->unk24.velocityX;
+    }
+    player = &D_80121D80[arg0->playerIndex];
+    func_80072A74(9, (SoundPosition *) &player->pos1C, 0x7F, 0x32);
+    func_8004EE0C(arg0);
+    func_80071824(arg0, func_8004EE0C);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004EFF8.s")
 
