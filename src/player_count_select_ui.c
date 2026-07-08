@@ -70,7 +70,6 @@ extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
-extern void func_80029200(PlayerCountSelectRowActor *);
 extern void func_800296D8(PlayerCountSelectWidgetActor *);
 extern void func_8002980C(PlayerCountSelectWidgetActor *);
 extern void func_80029FB8(PlayerCountSelectWidgetActor *);
@@ -95,6 +94,7 @@ extern void func_80013154(s32, s32, PlayerCountPortrait, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern int sprintf(char *, const char *, ...);
+extern u8 D_800EC9C1;
 extern PlayerCountSelectFrameTileMap D_800B70F0;
 extern u16 D_800B7196;
 extern PlayerCountPortrait D_800B7198[];
@@ -103,6 +103,7 @@ extern s16 D_80112172;
 extern PlayerCountSelectMenuCursor D_8010AF50;
 extern u8 D_8010AF52;
 extern s32 D_8010ADDC;
+extern u8 D_8010ADF8;
 extern u8 D_80121B5E;
 extern u8 D_80121D88;
 extern s32 D_80121D8C;
@@ -111,7 +112,16 @@ extern void *D_80124868;
 
 const char D_800E0EA0[] = "%6dG";
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_80029200.s")
+void func_80029200(PlayerCountSelectRowActor *arg0) {
+    PlayerCountSelectRowActor *savedArg;
+    s32 i;
+    s32 alpha;
+    s32 yOffset;
+    PlayerCountSelectRowActor *row;
+
+    savedArg = arg0;
+ do { i = 0; if (arg0->playerCount > 0) { yOffset = 0; row = arg0; do { alpha = 0; if (((((D_800EC9C1 > 0) && (D_800EC9C1 < 8)) && (D_8010ADF8 == 0)) && (i == D_80121B5E)) && (D_800EC9C1 & 1)) { if ((!savedArg->playerCount) && (!savedArg->playerCount)) { } alpha = 0xFF; } func_8000F030(row->iconX[0], (s16) (arg0->iconY + yOffset), func_80043040(D_80112130.textureHandle), (i + 0xD) & 0xFFFF, 0x20, 0x20, 0, alpha); i++; yOffset += 0x18; row = (PlayerCountSelectRowActor *) (((u8 *) row) + 2); } while (i < savedArg->playerCount); } } while (0);
+}
 
 void func_80029344(PlayerCountSelectRowActor *arg0) {
     s32 i;
