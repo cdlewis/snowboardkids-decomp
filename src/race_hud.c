@@ -128,7 +128,7 @@ void func_800179D4(RaceHudBannerActor *arg0) {
     func_80071824(arg0, func_800177F8);
 }
 
-// func_80017A10 best match: 96.551% (base_21.c)
+// func_80017A10 best match: 98.362% (nonmatchings/func_80017A10-180949888360117632/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80017A10.s")
 
 #ifdef NON_MATCHING
@@ -148,9 +148,7 @@ void func_80017A10(RaceHudPlayerFrameActor *arg0) {
     s32 texture;
     RaceHudPlayerFrameActor *actor;
 
-    actor = arg0;
-    i = 0;
-    do {
+    actor = arg0; i = 0; do {
         if ((D_80121B55 - 1) < i) {
             alpha = 0x50;
         } else {
