@@ -185,6 +185,11 @@ typedef struct {
 } SoundParams;
 
 typedef struct {
+    s16 angle;
+    char pad2[0xE];
+} SoundParamAngle;
+
+typedef struct {
     char pad0[0x14];
     s16 courseVtxHandle;
     s16 courseTextureHandle;
@@ -257,6 +262,7 @@ extern CourseMarkerVertexResource D_800DA80C[];
 extern CourseMarkerTextureResource D_800DA814[];
 extern CourseTriggerEntry D_800DA840[];
 extern Gfx D_2001D00[];
+extern SoundParamAngle D_800DA770[];
 extern CourseEffectPlayer D_80121D80[];
 extern CourseEffectPlayer D_8012238C[];
 extern CourseEffectPlayer D_80122998[];
@@ -744,19 +750,13 @@ void func_8006C088(RaceMovingEffect *arg0) {
     func_8006BFC0(arg0);
 }
 
-// func_8006C1B4 best match: 71.980% (nonmatchings/func_8006C1B4-1197934324348345530/base_12.c)
+// func_8006C1B4 best match: 99.309% (nonmatchings/func_8006C1B4-180949888360117632/base_19.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C1B4.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    char pad[0x28];
-    CourseEffectMatrixSource source;
-} Func6C1B4Scratch;
-
 void func_8006C1B4(Struct6C51C *arg0) {
-    Func6C1B4Scratch scratch;
-    Gfx **gfxPtr;
-    Gfx *gfx;
+    CourseEffectMatrixSource scratch;
+    volatile s32 pad[2];
     void *matrix;
 
     if (D_80156609 != 0) {
@@ -771,83 +771,52 @@ void func_8006C1B4(Struct6C51C *arg0) {
 
     matrix = arg0->sourceMatrix;
     if (matrix == NULL) {
-        matrix = func_8004885C(&arg0->source);
-        arg0->sourceMatrix = matrix;
+        arg0->sourceMatrix = func_8004885C(&arg0->source);
+        matrix = arg0->sourceMatrix;
     }
 
     if (matrix != NULL) {
-        gfxPtr = &gRegionAllocPtr;
-        gfx = *gfxPtr;
-        *gfxPtr = gfx + 1;
-        gfx->words.w0 = 0xE7000000;
-        gfx->words.w1 = 0;
-
-        gfx = *gfxPtr;
-        *gfxPtr = gfx + 1;
-        gfx->words.w0 = 0xBC000806;
-        gfx->words.w1 = func_80043040(D_80112144);
-
-        gfx = *gfxPtr;
-        *gfxPtr = gfx + 1;
-        gfx->words.w0 = 0xBC000C06;
-        gfx->words.w1 = func_80043040(D_80112146);
-
-        gfx = *gfxPtr;
-        *gfxPtr = gfx + 1;
-        gfx->words.w0 = 0x01020040;
-        gfx->words.w1 = (u32) arg0->sourceMatrix;
-
-        gfx = *gfxPtr;
-        *gfxPtr = gfx + 1;
-        gfx->words.w0 = 0x06000000;
-        gfx->words.w1 = (u32) D_2001678;
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112144));
+        gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112146));
+        arg0++;
+        arg0--;
+        gSPMatrix(gRegionAllocPtr++, arg0->sourceMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_2001678);
     }
 
     matrix = arg0->pos1Matrix;
-    gfxPtr = &gRegionAllocPtr;
     if (matrix == NULL) {
-        func_80098174(scratch.source.rotation, D_800DA764[D_80121B50].angle, arg0->unk50);
-        scratch.source.basePos = arg0->pos1;
-        matrix = func_8004885C(&scratch.source);
-        arg0->pos1Matrix = matrix;
+        func_80098174(scratch.rotation, D_800DA770[D_80121B50].angle, arg0->unk50);
+        scratch.basePos.x = arg0->pos1.x;
+        scratch.basePos.y = arg0->pos1.y;
+        scratch.basePos.z = arg0->pos1.z;
+        arg0->pos1Matrix = func_8004885C(&scratch);
+        matrix = arg0->pos1Matrix;
     }
 
     if (matrix != NULL) {
-        gfx = *gfxPtr;
-        *gfxPtr = gfx + 1;
-        gfx->words.w0 = 0x01020040;
-        gfx->words.w1 = (u32) arg0->pos1Matrix;
-
-        gfx = *gfxPtr;
-        *gfxPtr = gfx + 1;
-        gfx->words.w0 = 0x06000000;
-        gfx->words.w1 = (u32) D_2001730;
+        gSPMatrix(gRegionAllocPtr++, arg0->pos1Matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_2001730);
     }
 
     matrix = arg0->pos2Matrix;
     if (matrix == NULL) {
-        scratch.source = arg0->source;
-        scratch.source.basePos = arg0->pos2;
-        matrix = func_8004885C(&scratch.source);
-        arg0->pos2Matrix = matrix;
+        scratch = arg0->source;
+        scratch.basePos.x = arg0->pos2.x;
+        scratch.basePos.y = arg0->pos2.y;
+        scratch.basePos.z = arg0->pos2.z;
+        arg0->pos2Matrix = func_8004885C(&scratch);
+        matrix = arg0->pos2Matrix;
     }
 
     if (matrix != NULL) {
-        gfx = *gfxPtr;
-        *gfxPtr = gfx + 1;
-        gfx->words.w0 = 0x01020040;
-        gfx->words.w1 = (u32) arg0->pos2Matrix;
+        gSPMatrix(gRegionAllocPtr++, arg0->pos2Matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
         if (arg0->unk56 == 0) {
-            gfx = *gfxPtr;
-            *gfxPtr = gfx + 1;
-            gfx->words.w1 = (u32) D_2001810;
-            gfx->words.w0 = 0x06000000;
+            gSPDisplayList(gRegionAllocPtr++, D_2001810);
         } else {
-            gfx = *gfxPtr;
-            *gfxPtr = gfx + 1;
-            gfx->words.w1 = (u32) D_20018E8;
-            gfx->words.w0 = 0x06000000;
+            gSPDisplayList(gRegionAllocPtr++, D_20018E8);
         }
     }
 }
