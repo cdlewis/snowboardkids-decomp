@@ -754,7 +754,7 @@ void func_80015CBC(TitleMenuWidgetItemView *arg0) {
 }
 #endif
 
-// func_80015F4C best match: 98.817% (nonmatchings/func_80015F4C-6516277587347797853/base_4.c)
+// func_80015F4C best match: 99.888% (nonmatchings/func_80015F4C-8662636370764828261/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80015F4C.s")
 
 #ifdef NON_MATCHING
@@ -768,7 +768,7 @@ void func_80015F4C(RectListActor *arg0) {
 
     outer = D_8010AE04;
     state = arg0->frame;
-    if (state != D_8010AE04) {
+    if (D_8010AE04 != state) {
         state = outer;
         arg0->frame = outer;
     }
@@ -791,13 +791,13 @@ void func_80015F4C(RectListActor *arg0) {
                     delta1 = 1;
                 }
 
-                coords[0] += delta0;
+                (&arg0->rects[0].x0)[i] += delta0;
 
                 if (i == 0) {
                     arg0->stepAccumulator += arg0->stepIncrement;
                 }
                 if (arg0->stepAccumulator >= arg0->stepLimit) {
-                    coords[4] += delta1;
+                    (&arg0->rects[0].x0)[i + 4] += delta1;
                     if (i == 3) {
                         arg0->stepAccumulator -= arg0->stepLimit;
                     }
@@ -814,13 +814,13 @@ void func_80015F4C(RectListActor *arg0) {
                     delta1 = 1;
                 }
 
-                coords[1] += delta0;
+                (&arg0->rects[0].x0)[i + 1] += delta0;
 
                 if (i == -1) {
                     arg0->stepAccumulator += arg0->stepIncrement;
                 }
                 if (arg0->stepAccumulator >= arg0->stepLimit) {
-                    coords[5] += delta1;
+                    (&arg0->rects[0].x0)[i + 5] += delta1;
                     if (i == 2) {
                         arg0->stepAccumulator -= arg0->stepLimit;
                     }
