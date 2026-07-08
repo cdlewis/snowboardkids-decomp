@@ -53,6 +53,12 @@ extern ModelAnimFace *D_80121B94;
 extern ModelAnimKeyframe *D_80121B98;
 extern s32 D_80121B9C;
 extern s32 D_80121BA0;
+extern s32 D_80121BA8;
+extern s32 D_80121BB0;
+extern s32 D_80121BB4;
+extern s32 D_80121BBC;
+extern s32 D_80121BC0;
+extern s32 D_80121BC8;
 extern s16 D_8011215C[];
 extern s16 D_80112166;
 extern s16 D_80121B50;
@@ -62,6 +68,7 @@ extern s32 func_80043040(s16);
 extern s32 func_8007BDE4(s32, s32);
 extern void func_80081EF4(ModelAnimState *);
 extern void func_80082070(ModelAnimState *);
+s32 func_80098C30(s64);
 s16 func_80097AE8(s16 arg0);
 s16 func_80097B48(s16 arg0);
 
@@ -87,7 +94,25 @@ void func_8007D190(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007ECF4.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007FD88.s")
+void func_8007FD88(s32 arg0) {
+    s32 temp_v1;
+    s32 temp_v0;
+    s32 length;
+    s32 temp_a1;
+
+    length = func_80098C30((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+    temp_v1 = ((s64)D_80121BBC * 0x1000) / length;
+    temp_v0 = ((s64)D_80121BB4 * 0x1000) / length;
+
+    temp_a1 = -temp_v1;
+    D_80121BB0 = ((s64)temp_a1 * D_80121BA8 + (s64)temp_v0 * D_80121BB0) / 0x1000;
+
+    if (-arg0 < D_80121BB0) {
+        D_80121BBC = -arg0 - D_80121BB0;
+        D_80121BC0 += ((s64)temp_a1 * D_80121BBC) / 0x1000;
+        D_80121BC8 += ((s64)temp_v0 * D_80121BBC) / 0x1000;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007FF88.s")
 
