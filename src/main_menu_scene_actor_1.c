@@ -3,6 +3,7 @@
 #include "main_menu_effects.h"
 #include "main_menu_scene_actor_1.h"
 #include "main_menu_scene_model.h"
+#include "main_menu_scene_renderer.h"
 
 struct MainMenuSceneActor1 {
     /* 0x00 */ char pad0[0x18];
@@ -14,8 +15,6 @@ struct MainMenuSceneActor1 {
     /* 0x28 */ s16 rotZ;
     /* 0x2A */ u16 timer;
 };
-
-extern void func_800428C8(s32 arg0);
 
 extern u16 D_8010B1A2;
 extern s8 D_8010B1A8;
