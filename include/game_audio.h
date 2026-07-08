@@ -9,6 +9,12 @@ typedef struct {
     s32 z;
 } SoundPosition;
 
+void func_80071830(void);
+void func_800720E4(s32 arg0);
+void func_80072114(s32 arg0);
+void func_80072260(void);
+void func_800728E0(void);
+s32 func_80072938(void);
 void func_80072A74(s16 soundId, SoundPosition *pos, s16 volume, s16 distance);
 void func_80072AC8(s16 soundId, SoundPosition *pos, s16 volume, s16 distance, s16 arg4, s16 priority);
 
