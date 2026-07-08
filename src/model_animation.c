@@ -88,7 +88,34 @@ void func_8007D190(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007D548.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007D87C.s")
+void func_8007D87C(s32 *arg0, s32 *arg1, s32 arg2) {
+    s32 temp5;
+    s32 temp6;
+    s32 temp2;
+    s32 temp3;
+    s32 temp1;
+    s32 temp4;
+
+    temp1 = func_80098C30((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+    temp2 = ((s64)D_80121BBC * 0x1000) / temp1;
+    temp3 = ((s64)D_80121BB4 * 0x1000) / temp1;
+
+    temp4 = ((s64)-temp2 * D_80121BA8 + (s64)temp3 * D_80121BB0) / 0x1000;
+    if (-arg2 < (D_80121BB0 = temp4)) {
+        temp5 = ((s64)temp3 * *arg0 + (s64)temp2 * *arg1) / 0x1000;
+        temp6 = ((s64)-temp2 * *arg0 + (s64)temp3 * *arg1) / 0x1000;
+        if (temp6 > 0) {
+            temp6 = -temp6;
+        }
+
+        *arg0 = ((s64)temp3 * temp5 - (s64)temp2 * temp6) / 0x1000;
+        *arg1 = ((s64)temp2 * temp5 + (s64)temp3 * temp6) / 0x1000;
+
+        D_80121BBC = -arg2 - D_80121BB0;
+        D_80121BC0 += ((s64)-temp2 * D_80121BBC) / 0x1000;
+        D_80121BC8 += ((s64)temp3 * D_80121BBC) / 0x1000;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007DC38.s")
 
