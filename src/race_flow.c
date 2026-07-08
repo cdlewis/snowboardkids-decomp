@@ -46,6 +46,7 @@ extern s32 D_8012207C;
 extern s32 D_80123778;
 extern s16 D_80112130[];
 extern s16 D_80112188;
+extern s16 D_8011216E;
 extern s16 D_801124B8;
 extern SignedUnsignedShort D_80121B50;
 extern s16 D_80121B52;
@@ -107,6 +108,8 @@ extern void func_8003DFD0(void);
 extern void func_80042C20(void);
 extern void func_800437F0(void *, void *, s32);
 extern void func_80045914(void);
+extern void func_80045A78(s32, s32, s32, s32);
+extern void func_80046D68(s32, s32, s32, s32, s32);
 extern void func_80053634(void *);
 extern void func_8006D520(s32, s32);
 extern void func_8006D700(void);
@@ -469,7 +472,26 @@ void func_800747E8(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80074864.s")
+void func_80074864(s32 arg0) {
+    s32 color;
+
+    func_80045A78(-0x14, -0x10, func_80043040(D_8011216E), 0x57);
+    color = 0x1A;
+    if (D_80121B57 == 0) {
+        color = 0x1B;
+    }
+    func_80046D68(-0x1C, 0, func_80043040(D_8011216E), 0x58, color);
+    color = 0x1A;
+    if (D_80121B57 == 1) {
+        color = 0x1B;
+    }
+    func_80046D68(-0x1C, 0xA, func_80043040(D_8011216E), 0x59, color);
+    color = 0x1A;
+    if (D_80121B57 == 2) {
+        color = 0x1B;
+    }
+    func_80046D68(-0x1C, 0x14, func_80043040(D_8011216E), 0x5A, color);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80074960.s")
 
