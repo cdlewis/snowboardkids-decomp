@@ -1,8 +1,9 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
 #include "main_menu_effects.h"
+#include "main_menu_scene_actor_0.h"
 
-typedef struct {
+struct MainMenuSceneActor {
     char pad0[0x18];
     /* 0x18 */ s32 unk18;
     /* 0x1C */ s32 unk1C;
@@ -12,7 +13,7 @@ typedef struct {
     /* 0x28 */ s16 unk28;
     /* 0x2A */ u16 unk2A;
     /* 0x2C */ s16 unk2C;
-} MainMenuSceneActor;
+};
 
 typedef struct {
     /* 0x00 */ s32 posX;
@@ -37,48 +38,6 @@ extern u8 D_8010B1A5;
 extern u8 D_8010B1A8;
 extern void func_8004209C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern void func_800420FC(s32 arg0, s16 arg1, s16 arg2, s16 arg3);
-
-void func_80032B94(MainMenuSceneActor *arg0);
-void func_80032BF0(MainMenuSceneActor *arg0);
-void func_80032C74(MainMenuSceneActor *arg0);
-void func_80032D7C(MainMenuSceneActor *arg0);
-void func_80032F3C(MainMenuSceneActor *arg0);
-void func_800342D8(s32 arg0);
-void func_80034328(MainMenuSceneActor *arg0);
-void func_800346D4(MainMenuSceneActor *arg0);
-void func_80033688(s32 arg0);
-void func_80032FF0(MainMenuSceneActor *arg0);
-void func_800330EC(MainMenuSceneActor *arg0);
-void func_8003320C(MainMenuSceneActor *arg0);
-void func_8003329C(MainMenuSceneActor *arg0);
-void func_80033B20(MainMenuSceneActor *arg0);
-void func_80034AB0(MainMenuSceneActor *arg0);
-void func_800350A4(MainMenuSceneActor *arg0);
-void func_800339B8(MainMenuSceneActor *arg0);
-void func_80033DE4(MainMenuSceneActor *arg0);
-void func_800340D8(MainMenuSceneActor *arg0);
-void func_80033758(MainMenuSceneActor *arg0);
-void func_800338C0(MainMenuSceneActor *arg0);
-void func_80034014(MainMenuSceneActor *arg0);
-void func_80032AF0(MainMenuSceneActor *arg0);
-void func_800335F0(MainMenuSceneActor *arg0);
-void func_80034F2C(MainMenuSceneActor *arg0);
-void func_80034E60(MainMenuSceneActor *arg0);
-void func_80033478(MainMenuSceneActor *arg0);
-void func_80033504(MainMenuSceneActor *arg0);
-void func_80033828(MainMenuSceneActor *arg0);
-
-void func_80034254(MainMenuSceneActor *arg0);
-void func_800347C8(MainMenuSceneActor *arg0);
-void func_800349A8(MainMenuSceneActor *arg0);
-void func_80034900(MainMenuSceneActor *arg0);
-void func_80034418(MainMenuSceneActor *arg0);
-void func_800344CC(MainMenuSceneActor *arg0);
-void func_80034574(MainMenuSceneActor *arg0);
-void func_80034600(MainMenuSceneActor *arg0);
-void func_80034BC4(MainMenuSceneActor *arg0);
-void func_80034D10(MainMenuSceneActor *arg0);
-void func_80034DA0(MainMenuSceneActor *arg0);
 
 void func_80032A80(void) {
 }
