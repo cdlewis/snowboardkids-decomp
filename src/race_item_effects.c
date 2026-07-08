@@ -461,7 +461,26 @@ void func_800503D0(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050458.s")
 
+// func_80050888 best match: 66.842%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050888.s")
+
+#ifdef NON_MATCHING
+extern s32 D_801121D0;
+extern s32 D_801121D4;
+extern s32 D_801121D8;
+extern s32 D_801121DC;
+
+void func_80050458(RaceItemEffectActor *);
+
+void func_80050888(RaceItemEffectActor *arg0) {
+    D_801121D0 = 0;
+    D_801121D4 = 0;
+    D_801121D8 = 0;
+    D_801121DC = 0;
+    func_800483FC(&D_801248E0, func_80050458, arg0);
+}
+#endif
 
 void func_800508D0(RaceItemEffectActor *arg0) {
     u16 *var_s0;
