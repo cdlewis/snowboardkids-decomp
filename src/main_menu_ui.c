@@ -1,5 +1,6 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
+#include "main_menu_ui.h"
 
 typedef struct {
     char pad0[0x18];
@@ -12,26 +13,26 @@ typedef struct {
     s16 height;
 } MainMenuUiSprite;
 
-typedef struct {
+struct MainMenuLogoActor {
     MainMenuUiActor common;
     /* 0x1C */ MainMenuUiSprite sprite;
     /* 0x20 */ char pad20[4];
     /* 0x24 */ s16 startX;
     /* 0x26 */ s16 startY;
-} MainMenuLogoActor;
+};
 
-typedef struct {
+struct MainMenuSelectionLabelsActor {
     MainMenuUiActor common;
     /* 0x1C */ s16 labelY;
     /* 0x1E */ s16 unused1E;
     /* 0x20 */ u16 selectedOption;
     /* 0x22 */ u16 pulseTimer;
     /* 0x24 */ s16 pulseScale;
-} MainMenuSelectionLabelsActor;
+};
 
-typedef struct {
+struct MainMenuSelectionArrowActor {
     MainMenuUiActor common;
-} MainMenuSelectionArrowActor;
+};
 
 typedef struct {
     char pad0[0x18];
@@ -60,15 +61,6 @@ extern s32 func_80043040(s16);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013D0C(s32, s32, char *, s32, s32);
-
-void func_80032620(MainMenuLogoActor *arg0);
-void func_80032654(MainMenuLogoActor *arg0);
-void func_8003288C(MainMenuSelectionLabelsActor *arg0);
-void func_800326EC(MainMenuSelectionLabelsActor *arg0);
-void func_80032934(MainMenuSelectionLabelsActor *arg0);
-void func_80032984(MainMenuSelectionArrowActor *arg0);
-void func_800329E0(MainMenuSelectionArrowActor *arg0);
-void func_80032A50(MainMenuSelectionArrowActor *arg0);
 
 void func_80032620(MainMenuLogoActor *arg0) {
     func_80011D74(&arg0->sprite, 1, arg0->common.x, arg0->common.y);
