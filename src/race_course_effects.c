@@ -89,6 +89,7 @@ typedef struct {
     char unk30[0x20];
     s16 timer;
     s16 unk52;
+    void *matrix;
 } RaceMovingEffect;
 
 typedef struct {
@@ -227,6 +228,7 @@ extern s16 D_80112140;
 extern s16 D_80112142;
 extern s32 D_801235B4;
 extern u8 D_80156608;
+extern u8 D_80156609;
 extern void func_8006C5C0(Struct6C51C *);
 void func_8006C1B4(Struct6C51C *);
 void func_8006CCC0(RaceCourseTriggerEffect *);
@@ -283,7 +285,8 @@ extern Gfx D_2001810[];
 extern Gfx D_20018E8[];
 extern Gfx D_2000910[];
 extern Gfx D_2003218[];
-extern void func_8006B7E0(void);
+extern void func_8006BE90(void);
+void func_8006B7E0(RaceMovingEffect *);
 extern void func_8006A894(void *);
 
 void func_80069890(RaceCountdownEffect *arg0) {
@@ -545,7 +548,35 @@ void func_8006B760(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B7E0.s")
+void func_8006B7E0(RaceMovingEffect *arg0) {
+    volatile s32 unused;
+    CourseEffectMatrixSource transform;
+    volatile s32 pad[1];
+
+    if (D_80156609 != 0) {
+        func_80097C18(&transform, D_800B9556[D_80121B50].angle + 0x400);
+        transform.basePos.x = arg0->pos.x;
+        transform.basePos.y = arg0->pos.y;
+        transform.basePos.z = arg0->pos.z;
+        arg0->matrix = func_8004885C(&transform);
+    }
+
+    if (arg0->matrix != NULL) {
+        if (func_80049000(&arg0->pos) != 0) {
+            Gfx *_g;
+
+            gDPPipeSync(gRegionAllocPtr++);
+            gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112144));
+            gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112146));
+            gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            if (D_80121B50 != 8) {
+                gSPDisplayList(gRegionAllocPtr++, D_2000910);
+            } else {
+                gSPDisplayList(gRegionAllocPtr++, D_2003218);
+            }
+        }
+    }
+}
 
 void func_8006B988(RaceMovingEffect *arg0) {
     Vec3i sp24;
