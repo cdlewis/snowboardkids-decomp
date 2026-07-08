@@ -1,5 +1,6 @@
 #include "common.h"
 #include "game_audio.h"
+#include "game_boot.h"
 
 #define BOOT_THREAD_ID 1
 #define MAIN_THREAD_ID 2
@@ -96,7 +97,6 @@ extern s8 D_8010ADFA;
 extern u8 D_80324480[];
 extern u8 D_80328480[];
 
-void func_800996FC(void *);
 extern void func_80000450(void);
 extern void func_80042C28(void);
 extern void func_800458E0(void);

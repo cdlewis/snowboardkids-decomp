@@ -1,5 +1,6 @@
 #include "asset_decompression.h"
 #include "common.h"
+#include "game_boot.h"
 
 typedef struct {
     /* 0x0 */ s16 prev;
@@ -40,7 +41,6 @@ extern s32 D_80112128;
 extern s16 func_80042D58(s32);
 extern s16 func_80042EE4(s16);
 extern s32 func_80043040(s16);
-extern void func_80099C44(u32, void *, s32);
 
 s32 func_800430D0(void) {
     D_800D4000++;
