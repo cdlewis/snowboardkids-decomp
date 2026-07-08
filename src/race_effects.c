@@ -9,9 +9,24 @@ typedef struct {
 } Vec3i;
 
 typedef struct {
-    /* 0x000 */ u8 pad0[0x1C8];
+    s32 pad;
+    Vec3i transformed;
+    Vec3i offset;
+} TransformScratch;
+
+typedef struct {
+    /* 0x000 */ u8 pad0[0x44];
+    /* 0x044 */ s32 unk44;
+    /* 0x048 */ u8 pad48[0x94 - 0x48];
+    /* 0x094 */ u8 transform[0x14];
+    /* 0x0A8 */ Vec3i posA8;
+    /* 0x0B4 */ u8 padB4[0x1C8 - 0xB4];
     /* 0x1C8 */ Vec3i pos;
-    /* 0x1D4 */ u8 pad1D4[0x502 - 0x1D4];
+    /* 0x1D4 */ u8 pad1D4[0x2EC - 0x1D4];
+    /* 0x2EC */ s16 yaw;
+    /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
+    /* 0x2FC */ s32 flags;
+    /* 0x300 */ u8 pad300[0x502 - 0x300];
     /* 0x502 */ s16 surfaceAngle;
     /* 0x504 */ u8 pad504[0x50C - 0x504];
     /* 0x50C */ s16 *unk50C;
@@ -81,6 +96,8 @@ s32 func_80080CC4(s16, s32, s32);
 s32 func_800891B8(Vec3i *, s32, s32, s16);
 s16 func_80097AE8(s16);
 s16 func_80097B48(s16);
+void func_80098590(void *, Vec3i *, Vec3i *);
+s32 func_80098C30(s64);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_80049440.s")
 
@@ -565,4 +582,62 @@ void func_8004D5C0(RaceEffectChainActor *arg0) {
 }
 #endif
 
+// func_8004D880 best match: 99.890% (nonmatchings/func_8004D880-5635509610426229442/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004D880.s")
+
+#ifdef NON_MATCHING
+void func_8004D880(RaceEffectActor *arg0) {
+    volatile s32 pad;
+    TransformScratch scratch;
+    s32 magnitude;
+    s32 newVelocity;
+
+    arg0->timer = 0x12C;
+    arg0->spriteIndex = -1;
+    arg0->velocityY = 0x120000;
+
+    scratch.offset.z = 0;
+    scratch.offset.y = 0;
+    scratch.offset.x = 0x1000;
+
+    if (D_80121D80[arg0->playerIndex].flags & 0x400) {
+        scratch.offset.x = -0x1000;
+    }
+
+    func_80098590(D_80121D80[arg0->playerIndex].transform, &scratch.offset, &scratch.transformed);
+
+    magnitude = func_80098C30((s64)scratch.transformed.x * scratch.transformed.x +
+                              (s64)scratch.transformed.z * scratch.transformed.z);
+    if (magnitude != 0) {
+        arg0->accelerationY = (s64)arg0->velocityY * scratch.transformed.y / magnitude;
+        newVelocity = -arg0->velocityY;
+    } else {
+        newVelocity = -arg0->velocityY;
+        arg0->accelerationY = newVelocity;
+    }
+
+    arg0->accelerationY += D_80121D80[arg0->playerIndex].unk44;
+    arg0->velocityY = newVelocity;
+    arg0->targetAngle = D_80121D80[arg0->playerIndex].yaw;
+
+    scratch.offset.z = 0;
+    scratch.offset.y = 0x280000;
+    scratch.offset.x = 0x100000;
+
+    if (D_80121D80[arg0->playerIndex].flags & 0x400) {
+        scratch.offset.x = -0x100000;
+        arg0->targetAngle += 0x800;
+    }
+
+    func_80098590(D_80121D80[arg0->playerIndex].transform, &scratch.offset, &arg0->pos);
+
+    arg0->pos.x += D_80121D80[arg0->playerIndex].posA8.x;
+    arg0->pos.y += D_80121D80[arg0->playerIndex].posA8.y;
+    arg0->pos.z += D_80121D80[arg0->playerIndex].posA8.z;
+    arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
+    func_80045990(func_80043040(D_8011216C), 5, &arg0->image, &arg0->palette);
+    arg0->unk54 = 0;
+    func_8004D5C0(arg0);
+    func_80071824(arg0, func_8004D5C0);
+}
+#endif
