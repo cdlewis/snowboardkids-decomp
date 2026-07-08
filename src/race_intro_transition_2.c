@@ -1,4 +1,5 @@
 #include "race_intro_transition.h"
+#include "asset_decompression.h"
 
 typedef struct {
     /* 0x000 */ s16 playerIndex;
@@ -52,7 +53,6 @@ extern u8 D_80123751;
 extern s32 D_801235B4;
 extern u8 D_24C8E0;
 extern u8 D_24DBE0;
-extern void func_800437F0(void *, void *, s32);
 extern void func_80043950(void);
 extern void func_800440F4(void);
 extern void func_80044294(void);

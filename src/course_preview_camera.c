@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 
 typedef struct {
     s32 x;
@@ -98,7 +99,6 @@ extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
 extern s32 func_80043040(s16 arg0);
-extern s32 func_800430D0(void);
 extern Gfx *func_8004885C(FixedTransform *arg0);
 extern s32 func_80049000(Vec3i *position);
 extern void func_80045990(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);

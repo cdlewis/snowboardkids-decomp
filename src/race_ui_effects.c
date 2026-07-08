@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 #include "viewport_manager.h"
 
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
@@ -727,7 +728,6 @@ extern void func_80048D60(void *);
 extern s32 func_80049000(Vec3i *);
 extern void osWritebackDCache(void *, s32);
 extern s32 func_80043040(s16);
-extern s32 func_800430D0(void);
 extern s16 func_80042D58(s32);
 extern void func_80045A78(s16, s16, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
@@ -875,7 +875,6 @@ extern void func_8005CD10(void *);
 extern void func_8005E3F8(void *);
 extern void func_80064D88(RaceUiProjectileActor *);
 extern void func_80062D34(RaceUiScaledParticleActor *);
-extern s32 func_80043120(void);
 extern void func_80063A9C(void);
 extern void func_8005B61C(void *);
 extern void func_8005CC54(void *);

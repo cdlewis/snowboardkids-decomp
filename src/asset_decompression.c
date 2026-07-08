@@ -1,3 +1,4 @@
+#include "asset_decompression.h"
 #include "common.h"
 
 typedef struct {
@@ -20,10 +21,10 @@ typedef struct {
     /* 0x40 */ s16 compressedAssetHandle;
 } AssetHandleTable;
 
-typedef struct {
+struct RandomStateObject {
     u8 pad0[0x518];
     /* 0x518 */ u8 randomIndex;
-} RandomStateObject;
+};
 
 extern u8 D_800D3F00[];
 extern u16 D_800D4000;
@@ -39,10 +40,9 @@ extern s32 D_80112128;
 extern s16 func_80042D58(s32);
 extern s16 func_80042EE4(s16);
 extern s32 func_80043040(s16);
-extern void func_800433D8(u8, s32, s32, s32);
 extern void func_80099C44(u32, void *, s32);
 
-u8 func_800430D0(void) {
+s32 func_800430D0(void) {
     D_800D4000++;
     if (D_801235B0 == 0) {
         D_800D4000++;
@@ -51,7 +51,7 @@ u8 func_800430D0(void) {
     return D_800D3F00[D_800D4000];
 }
 
-u8 func_80043120(void) {
+s32 func_80043120(void) {
     D_800D4004++;
     D_800D4004 &= 0xFF;
     return D_800D3F00[D_800D4004];
@@ -161,14 +161,14 @@ void func_8004331C(s16 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/asset_decompression/func_800433D8.s")
 
-void func_800437F0(s32 arg0, s32 arg1, s32 arg2) {
+void func_800437F0(void *arg0, void *arg1, s32 arg2) {
     s16 *sp28;
     s32 sp30;
 
-    func_80099C44(arg0, &D_80110920, 8);
+    func_80099C44((u32)arg0, &D_80110920, 8);
     D_80112130.assetHandles[arg2] = func_80042D58(D_80110920.compressedSize);
-    D_80112130.compressedAssetHandle = func_80042D58(arg1 - arg0);
-    func_80099C44(arg0, (void *)func_80043040(D_80112130.compressedAssetHandle), arg1 - arg0);
+    D_80112130.compressedAssetHandle = func_80042D58((s32)arg1 - (s32)arg0);
+    func_80099C44((u32)arg0, (void *)func_80043040(D_80112130.compressedAssetHandle), (s32)arg1 - (s32)arg0);
     sp30 = func_80043040(D_80112130.compressedAssetHandle) + 5;
     sp28 = &D_80112130.assetHandles[arg2];
     func_800433D8(D_80110920.flags, sp30, func_80043040(*sp28), D_80110920.compressedSize);
@@ -176,11 +176,11 @@ void func_800437F0(s32 arg0, s32 arg1, s32 arg2) {
     D_80112130.compressedAssetHandle = func_80042EE4(D_80112130.compressedAssetHandle);
 }
 
-void func_800438EC(s32 arg0, s32 arg1, s32 arg2) {
-    s32 temp_a0 = arg1 - arg0;
+void func_800438EC(void *arg0, void *arg1, s32 arg2) {
+    s32 temp_a0 = (s32)arg1 - (s32)arg0;
     s16 *temp_v1;
 
     temp_v1 = &D_80112130.assetHandles[arg2];
     *temp_v1 = func_80042D58(temp_a0);
-    func_80099C44(arg0, (void *)func_80043040(*temp_v1), temp_a0);
+    func_80099C44((u32)arg0, (void *)func_80043040(*temp_v1), temp_a0);
 }

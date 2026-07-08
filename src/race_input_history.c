@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 #include "race_input_history.h"
 
 #define RACE_INPUT_HISTORY_LENGTH 0x1194
@@ -29,7 +30,6 @@ typedef struct {
 extern s16 D_80112186;
 
 extern void *func_80043040(s16 assetId);
-extern s32 func_800430D0(void);
 extern u32 D_80121E04[][0x183];
 extern s32 D_801235B4;
 extern u32 D_80123758[];
