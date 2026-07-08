@@ -678,7 +678,7 @@ void func_8001AD74(PlayerSelectWidgetActor *arg0) {
     func_80071824(arg0, func_8001AB98);
 }
 
-// func_8001ADB8 best match: 95.312%
+// func_8001ADB8 best match: 99.713%
 #pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_8001ADB8.s")
 
 #ifdef NON_MATCHING
@@ -688,11 +688,12 @@ void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
     s32 offset;
 
     tileIndex = 0;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; (i < 16) & 0xFFFFFFFF; i++) {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       func_80043040(D_80112130.frameTextureHandle), D_800B5B50[arg0->sprite.spriteIndex].centerTiles[tileIndex],
                       0, 0x100, 0xA0, 0x49);
         tileIndex++;
+        if (1) { } if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }
     }
 
     tileIndex = 0;
