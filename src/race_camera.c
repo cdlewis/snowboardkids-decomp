@@ -37,7 +37,8 @@ typedef struct {
     /* 0x2C */ void (*update)(void);
     /* 0x30 */ u8 rotationMatrix[0x14];
     /* 0x44 */ Vec3i transformOffset;
-    /* 0x50 */ u8 transform[0x44];
+    /* 0x50 */ u8 transform[0x42];
+    /* 0x92 */ s16 unk92;
     /* 0x94 */ Vec3i prevPos;
     /* 0xA0 */ s16 timer;
     /* 0xA2 */ u8 padA2[2];
@@ -79,6 +80,8 @@ extern s16 func_8007D200(s32, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
 extern void func_80097FE4(void *, s16, s16);
 extern s16 func_80097AE8(s16);
+extern s16 func_80097B48(s16);
+extern s32 func_80098C30(s64);
 extern void func_8009853C(void *, s16, s16);
 extern void func_80098590(void *, s32 *, s32 *);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
@@ -195,7 +198,40 @@ void func_8006EFF4(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006F048.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006F5B0.s")
+void func_8006F5B0(void) {
+    s32 unused[3];
+    s32 dz;
+    s32 unused2;
+    s32 dist;
+    s32 sine;
+    s32 cosine;
+    s32 dx;
+
+    if (D_80121B56 == 0) {
+        D_801124A0->focus.x += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
+        D_801124A0->focus.y += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
+        D_801124A0->focus.z += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
+
+        dx = D_801124A0->pos.x - D_801124A0->focus.x;
+        dz = D_801124A0->pos.z - D_801124A0->focus.z;
+        dist = func_80098C30((s64)dx * dx + (s64)dz * dz);
+        dist = ((0x400000 - dist) >> 4) + dist;
+
+        D_801124A0->unk92 += 8;
+        sine = func_80097AE8(D_801124A0->unk92);
+        cosine = func_80097B48(D_801124A0->unk92);
+
+        D_801124A0->pos.x = (((s64)sine * -dist) / 0x1000) + D_801124A0->focus.x;
+        D_801124A0->pos.z = (((s64)cosine * -dist) / 0x1000) + D_801124A0->focus.z;
+        D_801124A0->pos.y += ((D_801124A0->focus.y - D_801124A0->pos.y) + 0x100000) >> 4;
+        D_801124A0->unk28 += (0x960000 - D_801124A0->unk28) >> 1;
+    }
+
+    D_801124A0->prevPos.x = D_80121D80[D_801124A0->playerIndex].state.pos.x;
+    D_801124A0->prevPos.y = D_80121D80[D_801124A0->playerIndex].state.pos.y;
+    D_801124A0->prevPos.z = D_80121D80[D_801124A0->playerIndex].state.pos.z;
+    func_8006D8B4();
+}
 
 void func_8006F8AC(void) {
 }
