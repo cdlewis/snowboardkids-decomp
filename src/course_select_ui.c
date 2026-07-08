@@ -35,6 +35,13 @@ typedef struct {
 } CourseSelectState;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 x;
+    /* 0x1A */ s16 y;
+    /* 0x1C */ u16 playerPanelFadeAlpha[4];
+} CourseSelectPlayerPanelsActor;
+
+typedef struct {
     s32 x;
     s32 y;
     s32 z;
@@ -70,6 +77,7 @@ extern s8 D_8010AE64[];
 extern u8 D_8010AEB0;
 extern u8 D_8010AF18;
 extern u8 D_8010AF1C;
+extern u8 D_800B7040[];
 extern s16 D_800B70C0[][4];
 extern s16 D_80112130[];
 extern s16 D_8011217A;
@@ -683,51 +691,50 @@ void func_80028B0C(CourseSelectWidgetInitActor *arg0) {
 }
 #endif
 
-// func_80028C68 best match: 99.956% (nonmatchings/func_80028C68-5635509610426229442/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028C68.s")
-
-#ifdef NON_MATCHING
-void func_80028C68(CourseSelectWidgetActor *arg0) {
-    s32 temp_lo;
-    s32 temp_s1;
-    s32 temp_s2;
+void func_80028C68(CourseSelectPlayerPanelsActor *actor) {
     s32 i;
     s32 playerCount;
-    CourseSelectWidgetActor *alphaPtr;
+    s32 xOffset;
+    s32 yOffset;
+    s32 two;
+    u32 rightEdgeTile;
 
     playerCount = D_80121B55;
-    i = 0; if (playerCount > 0) { alphaPtr = arg0; do {
-            if (alphaPtr->alpha != 0) {
-                if (playerCount == 2) {
-                    temp_s1 = i * 0x64;
-                    func_8000F8AC(arg0->x, (s16)(arg0->y + temp_s1), func_80043040(D_80112130[0x24]), 0, 0x20,
-                                  0x20, 0, alphaPtr->alpha, 0);
-                    func_8000F8AC((s16)(arg0->x + 0x40), (s16)(arg0->y + temp_s1),
-                                  func_80043040(D_80112130[0x24]), 1, 0x20, 0x20, 0, alphaPtr->alpha, 0);
-                    func_8000F8AC((s16)(arg0->x + 0x78), (s16)(arg0->y + temp_s1),
-                                  func_80043040(D_80112130[0x24]), 1, 0x20, 0x20, 0, alphaPtr->alpha, 0);
-                    func_8000F8AC((s16)(arg0->x + 0xB0), (s16)(arg0->y + temp_s1),
-                                  func_80043040(D_80112130[0x24]), 2, 0x20, 0x20, 0, alphaPtr->alpha, 0);
-                    func_80013154((s16)(arg0->x + 0x2E), (s16)(arg0->y + temp_s1 + 0xC), D_800B7040, 0,
-                                  alphaPtr->alpha, 0);
-                } else {
-                    temp_lo = (i >= 2) * 0x8C;
-                    temp_s2 = (i & 1) * 0x64;
-                    func_8000F8AC((s16)(arg0->x + temp_lo), (s16)(arg0->y + temp_s2),
-                                  func_80043040(D_80112130[0x24]), 8, 0x20, 0x20, 0, alphaPtr->alpha, 0);
-                    func_8000F8AC((s16)(arg0->x + temp_lo + 0x40), (s16)(arg0->y + temp_s2),
-                                  func_80043040(D_80112130[0x24]), 9, 0x20, 0x20, 0, alphaPtr->alpha, 0);
-                    func_80013154((s16)(arg0->x + temp_lo + 0x24), (s16)(arg0->y + temp_s2 + 3), D_800B7040, 1,
-                                  alphaPtr->alpha, 0);
-                }
+    two = 2;
+    rightEdgeTile = 2;
+    for (i = 0; i < playerCount; i++) {
+        if (actor->playerPanelFadeAlpha[i] != 0) {
+            if (two == playerCount) {
+                yOffset = i * 0x64;
+                func_8000F8AC(actor->x, (s16)(actor->y + yOffset), func_80043040(D_80112130[0x24]), 0, 0x20,
+                              0x20, 0, actor->playerPanelFadeAlpha[i], 0);
+                func_8000F8AC((s16)(actor->x + 0x40), (s16)(actor->y + yOffset),
+                              func_80043040(D_80112130[0x24]), 1, 0x20, 0x20, 0,
+                              actor->playerPanelFadeAlpha[i], 0);
+                func_8000F8AC((s16)(actor->x + 0x78), (s16)(actor->y + yOffset),
+                              func_80043040(D_80112130[0x24]), 1, 0x20, 0x20, 0,
+                              actor->playerPanelFadeAlpha[i], 0);
+                func_8000F8AC((s16)(actor->x + 0xB0), (s16)(actor->y + yOffset),
+                              func_80043040(D_80112130[0x24]), rightEdgeTile, 0x20, 0x20, 0,
+                              actor->playerPanelFadeAlpha[i], 0);
+                func_80013154((s16)(actor->x + 0x2E), (s16)(actor->y + yOffset + 0xC), D_800B7040, 0,
+                              actor->playerPanelFadeAlpha[i], 0);
+            } else {
+                xOffset = (i >= 2) * 0x8C;
+                yOffset = (i & 1) * 0x64;
+                func_8000F8AC((s16)(actor->x + xOffset), (s16)(actor->y + yOffset),
+                              func_80043040(D_80112130[0x24]), 8, 0x20, 0x20, 0,
+                              actor->playerPanelFadeAlpha[i], 0);
+                func_8000F8AC((s16)(actor->x + xOffset + 0x40), (s16)(actor->y + yOffset),
+                              func_80043040(D_80112130[0x24]), 9, 0x20, 0x20, 0,
+                              actor->playerPanelFadeAlpha[i], 0);
+                func_80013154((s16)(actor->x + xOffset + 0x24), (s16)(actor->y + yOffset + 3), D_800B7040, 1,
+                              actor->playerPanelFadeAlpha[i], 0);
             }
-            playerCount = D_80121B55;
-            i++;
-            alphaPtr = (CourseSelectWidgetActor *)((u8 *)alphaPtr + sizeof(u16));
-        } while (i < playerCount);
+        }
+        playerCount = D_80121B55;
     }
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028FF0.s")
 
