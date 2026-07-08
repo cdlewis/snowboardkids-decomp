@@ -981,4 +981,26 @@ void func_80050D84(RaceItemFollowActor *arg0) {
     func_800483FC(&D_801248C8, func_8005098C, temp_a2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050E80.s")
+void func_80050E80(RaceItemFollowActor *arg0) {
+    RaceItemFollowPlayer *player;
+
+    arg0->timer = -1;
+    player = &D_80121D80[arg0->playerIndex];
+    if (player->flags2FC & 0x400) {
+        arg0->offset1.x = player->unk4A0.x - player->pos.x;
+        arg0->offset1.y = player->unk4A0.y - player->pos.y;
+        arg0->offset1.z = player->unk4A0.z - player->pos.z;
+        arg0->offset2.x = player->unk4B8.x - player->pos.x;
+        arg0->offset2.y = player->unk4B8.y - player->pos.y;
+        arg0->offset2.z = player->unk4B8.z - player->pos.z;
+    } else {
+        arg0->offset1.x = player->unk4AC.x - player->pos.x;
+        arg0->offset1.y = player->unk4AC.y - player->pos.y;
+        arg0->offset1.z = player->unk4AC.z - player->pos.z;
+        arg0->offset2.x = player->unk4C4.x - player->pos.x;
+        arg0->offset2.y = player->unk4C4.y - player->pos.y;
+        arg0->offset2.z = player->unk4C4.z - player->pos.z;
+    }
+    func_80050D84(arg0);
+    func_80071824(arg0, func_80050D84);
+}
