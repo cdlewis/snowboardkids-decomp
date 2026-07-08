@@ -1,4 +1,5 @@
 #include "common.h"
+#include "course_select_menu.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
