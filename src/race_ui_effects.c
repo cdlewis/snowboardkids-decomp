@@ -64,7 +64,9 @@ typedef struct {
     /* 0x2EC */ s16 yaw;
     /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
     /* 0x2FC */ s32 flags;
-    /* 0x300 */ u8 pad300[0x574 - 0x300];
+    /* 0x300 */ u8 pad300[0x570 - 0x300];
+    /* 0x570 */ s16 unk570;
+    /* 0x572 */ s16 unk572;
     /* 0x574 */ s16 score;
     /* 0x576 */ s16 targetScore;
     /* 0x578 */ u8 pad578[0x60C - 0x578];
@@ -131,6 +133,20 @@ typedef struct {
     /* 0x22 */ s16 target;
     /* 0x24 */ s16 flag;
 } RaceUiCounterActor;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s8 row;
+    /* 0x19 */ s8 column;
+    /* 0x1A */ u8 pad1A[2];
+    /* 0x1C */ s16 alpha;
+    /* 0x1E */ u8 pad1E[4];
+    /* 0x22 */ s16 leftValue;
+    /* 0x24 */ s16 bonus;
+    /* 0x26 */ s16 leftTarget;
+    /* 0x28 */ s16 rightValue;
+    /* 0x2A */ s16 flag;
+} RaceUiDualCounterActor;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
@@ -560,6 +576,7 @@ extern Vec3i D_800D6324;
 extern Vec3i D_800D6330[];
 extern Vec3i D_800D62AC[];
 extern s16 D_800D633C[];
+extern s32 D_800DC900[];
 
 extern void *D_80124868;
 extern void *D_80124858;
@@ -595,6 +612,7 @@ extern s16 D_8011216C;
 extern RaceUiAssetHandles D_80112130;
 extern s16 D_801222F6;
 extern s16 D_801222F2;
+extern s16 D_801222F0;
 extern void *D_80124878;
 extern void *D_801248A4;
 extern void *D_801248EC;
@@ -1759,7 +1777,31 @@ void func_8005CDB0(void *arg0) {
     func_800483FC(&D_80124858, func_8005C14C, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005CE4C.s")
+void func_8005CE4C(RaceUiDualCounterActor *arg0) {
+    s16 temp_v0;
+
+    arg0->alpha = 0;
+    arg0->flag = 0;
+    arg0->bonus = 0;
+    arg0->leftTarget = 0x12C;
+    if (D_80121B50 == 9) {
+        arg0->leftTarget = 0x64;
+    }
+    func_8007B130(&D_800DC900[D_80121B50], &D_80121B74, &arg0->row, arg0);
+    if (D_80121B81 != 0) {
+        arg0->leftValue = 0;
+        temp_v0 = D_801222F0;
+    } else {
+        arg0->leftValue = ((arg0->row * 0x3C) + arg0->column) * 0x14;
+        if (D_80121D80[0].unk572 == (temp_v0 = D_80121D80[0].unk570)) {
+            arg0->flag = 1;
+            arg0->bonus = 0x12C;
+            temp_v0 = D_801222F0;
+        }
+    }
+    arg0->rightValue = temp_v0 * 0xA;
+    func_80071824(arg0, func_8005CDB0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005CF60.s")
 
