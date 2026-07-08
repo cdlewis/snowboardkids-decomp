@@ -39,6 +39,11 @@ typedef struct {
     /* 0x20 */ s32 countdown;
 } RaceFlowState;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[0x8];
+    /* 0x08 */ s8 unk8;
+} Unk80043040;
+
 extern CourseGridEntry *D_800DC490[];
 extern u16 D_800DC5C0[];
 extern CourseSelectTableEntry D_800B9542[];
@@ -49,6 +54,7 @@ extern s32 D_80123758;
 extern s32 D_8012207C;
 extern s32 D_80123778;
 extern s16 D_80112130[];
+extern s16 D_80112186;
 extern s16 D_80112188;
 extern s16 D_8011216E;
 extern s16 D_801124B8;
@@ -63,6 +69,7 @@ extern u8 D_80121B55;
 extern u8 D_80121B57;
 extern u8 D_80121B58;
 extern u8 D_80121B60;
+extern s8 D_80121B61;
 extern u8 D_8012482A;
 extern u8 D_80123750;
 extern u8 D_80123751;
@@ -110,6 +117,7 @@ extern void func_8000CF70(void);
 extern void func_8000D340(void);
 extern void func_8001710C(void *);
 extern void func_8003DFD0(void);
+extern s32 func_80040D94(void);
 extern void func_80042C20(void);
 extern void func_800437F0(void *, void *, s32);
 extern void func_80045914(void);
@@ -158,6 +166,7 @@ extern void func_80077AD4(void);
 extern void func_80077B34(void);
 extern void func_80077C4C(void);
 extern void func_80077400(void);
+extern void func_80077554(void);
 extern void func_80077C94(void);
 extern void func_80077CD4(void);
 extern void func_80077DA0(void);
@@ -532,7 +541,32 @@ void func_80077324(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80077400.s")
+void func_80077400(void) {
+    D_800DEED4 = 0;
+    if (D_80121B60 != 0) {
+        func_80071664(func_8005393C, 5, 0x64, D_80121B60 - 1);
+    }
+    func_80077C94();
+    D_800EC8B0 = 0;
+    D_800DEF14 += 0x10;
+    if (D_800DEF14 >= 0xFF) {
+        D_800DEF14 = 0xFF;
+        D_801235B8->fadeTimer -= 1;
+        if (D_801235B8->fadeTimer == 0) {
+            func_80072260();
+            if ((D_800EC9C2 == 2) && (((Unk80043040 *)func_80043040(D_80112186))->unk8 != 0) && (D_80121B61 != 0) &&
+                (func_80040D94() != 0)) {
+                D_80121B61 = -1;
+            }
+            if (D_800EC9C2 == 2) {
+                func_8009956C(&func_80077554, 0);
+            } else {
+                D_80123751 = 1;
+                func_8009956C(func_80077B34, 0);
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80077554.s")
 
