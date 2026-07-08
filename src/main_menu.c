@@ -153,7 +153,10 @@ extern s32 D_800EC898;
 extern s32 D_800EC89C;
 extern s32 D_800EC8A0;
 extern s32 D_800EC8A4;
+extern u8 D_800EC8B4[];
 extern void *D_800EC8B8;
+extern s16 D_800EC9C8[];
+extern u8 D_800EC9E0[];
 extern s32 D_80123758;
 extern s16 D_800DEF14;
 extern s16 D_801124B8;
@@ -279,7 +282,39 @@ void func_80000C48(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
+// func_80000C94 best match: 94.507%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000C94.s")
+
+#ifdef NON_MATCHING
+void func_80000C94(u16 arg0) {
+    s32 ret;
+
+    ret = osPfsInitPak(&D_800E4BD0, &D_800E4C40[arg0], arg0);
+    if (ret == 2) {
+        ret = osPfsInitPak(&D_800E4BD0, &D_800E4C40[arg0], arg0);
+    }
+
+    if (ret == 0) {
+        D_800EC9C8[arg0] = ret + 1;
+    }
+
+    if ((ret == 1) || (ret == 11)) {
+        D_800EC9C8[arg0] = 10;
+    }
+
+    if (ret == 10) {
+        if (D_800EC8B4[arg0] == 1) {
+            D_800EC9C8[arg0] = 16;
+        } else {
+            D_800EC9C8[arg0] = 7;
+        }
+    }
+
+    if (ret != 0) {
+        D_800EC9E0[arg0]++;
+    }
+}
+#endif
 
 void func_80000DB4(u16 arg0) {
     OSMesg msg;
