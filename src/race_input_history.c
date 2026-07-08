@@ -27,6 +27,7 @@ typedef struct {
     /* 0x2335 */ u8 buttons[RACE_INPUT_HISTORY_LENGTH];
 } RaceInputHistoryBuffer;
 
+extern s16 D_8011213E;
 extern s16 D_80112186;
 
 extern void *func_80043040(s16 assetId);
@@ -210,7 +211,7 @@ void func_8008431C(RaceInputPlayer *player) {
     history->lastWriteIndex = index;
 }
 
-// func_80084510 best match: 96.541%
+// func_80084510 best match: 98.763% (base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_input_history/func_80084510.s")
 
 #ifdef NON_MATCHING
@@ -243,9 +244,11 @@ void func_80084510(RaceInputPlayer *player) {
     if (index < RACE_INPUT_HISTORY_LENGTH) {
         player->stickX = history->stickX[index];
         player->stickY = history->stickY[history->writeIndex];
+        goto dummy_label;
+dummy_label:
         player->inputFlags = 0;
 
-        buttons = history->buttons[history->writeIndex];
+        buttons = history->buttons[history->writeIndex] ^ 0;
         if (buttons & 1) {
             player->inputFlags = 8;
             buttons = history->buttons[history->writeIndex];
