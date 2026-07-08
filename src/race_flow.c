@@ -4,6 +4,7 @@
 #include "character_select_menu.h"
 #include "character_select_transition.h"
 #include "controller_pak_delete_flow.h"
+#include "controller_pak_message_flow.h"
 #include "controller_pak_menu_flow.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
@@ -120,7 +121,6 @@ extern void func_800055EC(void);
 extern void func_800086EC(void);
 extern void func_800097E0(void);
 extern void func_8000C280(void);
-extern void func_8000CF70(void);
 extern void func_8000D340(void);
 extern void func_8001710C(void *);
 extern void func_8003DFD0(void);
