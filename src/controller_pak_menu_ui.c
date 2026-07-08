@@ -1,78 +1,10 @@
 #include "common.h"
 #include "character_select_flow.h"
 #include "controller_pak_menu.h"
+#include "controller_pak_menu_ui.h"
 #include "menu_rendering.h"
 
 #define CONTROLLER_PAK_DELETE_PANEL_HANDLE (D_80112130[0x29])
-
-typedef struct {
-    s16 x;
-    s16 y;
-} Vec2s;
-
-typedef struct {
-    char pad[0x18];
-    s16 x;
-    s16 y;
-} ControllerPakMenuActor;
-
-typedef struct {
-    ControllerPakMenuActor common;
-    s16 scale;
-    u16 timer;
-    s32 selectedOption;
-    u8 blinkState;
-} ControllerPakTitleActor;
-
-typedef struct {
-    ControllerPakMenuActor common;
-    s16 scale;
-    s16 optionScale;
-    u16 timer;
-    u8 state;
-    u8 selectedOption;
-    s16 targetScale;
-} ControllerPakConfirmActor;
-
-typedef struct {
-    char pad[0x18];
-    Vec2s positions[6];
-    s16 cursorScale;
-    u16 cursorTimer;
-} ControllerPakFileListActor;
-
-typedef struct {
-    ControllerPakMenuActor common;
-    s16 x2;
-    s16 y2;
-} ControllerPakTwoPointActor;
-
-typedef struct {
-    s16 x;
-    s16 y;
-    u8 unk4[4];
-} ControllerPakSprite;
-
-typedef struct {
-    ControllerPakMenuActor common;
-    ControllerPakSprite sprite;
-    s16 startX;
-    s16 startY;
-} ControllerPakSpriteActor;
-
-typedef struct {
-    ControllerPakMenuActor common;
-    u16 scale;
-    u16 selectedOption;
-    u8 timer;
-} ControllerPakDeletePromptActor;
-
-typedef struct {
-    ControllerPakMenuActor common;
-    s16 scale;
-    u16 timer;
-    u8 selectedOption;
-} ControllerPakWindowActor;
 
 typedef struct {
     u16 x;
@@ -107,19 +39,6 @@ extern s16 D_8011217C;
 extern s16 D_80112178;
 extern u8 D_800B7E60[];
 extern u8 D_800B8090[];
-void func_8003048C(ControllerPakTitleActor *);
-void func_800305B8(ControllerPakConfirmActor *);
-void func_80030CC4(ControllerPakConfirmActor *);
-void func_80030EF0(ControllerPakTitleActor *);
-void func_80031038(ControllerPakTitleActor *);
-void func_8003112C(ControllerPakTitleActor *);
-void func_80031294(ControllerPakTitleActor *);
-extern void func_80031370(void);
-extern void func_80031550(void);
-void func_80031D3C(ControllerPakWindowActor *);
-extern void func_80031F40(void);
-void func_8003209C(ControllerPakDeletePromptActor *);
-void func_80032534(ControllerPakDeletePromptActor *);
 extern void func_800716E4(void *);
 
 void func_8002FFD0(ControllerPakTitleActor *arg0) {

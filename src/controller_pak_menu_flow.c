@@ -3,6 +3,7 @@
 #include "character_select_flow.h"
 #include "controller_pak_menu.h"
 #include "controller_pak_menu_flow.h"
+#include "controller_pak_menu_ui.h"
 
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80072138(s32, s32);
@@ -20,13 +21,6 @@ extern void func_80070EC0(s32);
 extern void func_80001618(void);
 extern void func_800016D8(u16);
 extern void func_80001858(void);
-extern void func_8003205C(void *);
-extern u8 func_800325D0;
-extern u8 func_800310EC;
-extern u8 func_80031330;
-extern u8 func_80031510;
-extern u8 func_80031B24;
-extern u8 func_80031C04;
 
 extern ControllerPakMenuState D_8010AF90;
 extern ControllerPakFileEntry D_8010AFA0[];
