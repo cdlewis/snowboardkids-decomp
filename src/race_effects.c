@@ -88,6 +88,7 @@ void func_800483FC(void *, void *, void *);
 void func_80045990(s32, s32, void **, void **);
 void func_800499A4(RaceEffectActor *);
 void func_80049FB4(RaceEffectActor *);
+void func_8004A2F4(RaceEffectActor *);
 void func_8004B2B8(RaceEffectActor *);
 void func_8004B5F8(RaceEffectActor *);
 void func_8004C5B4(RaceEffectActor *);
@@ -260,7 +261,48 @@ void func_8004A2F4(RaceEffectActor *arg0) {
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004A648.s")
+void func_8004A648(RaceEffectActor *arg0) {
+    volatile s32 pad0;
+    Vec3i source;
+    s32 sp54;
+    s32 sp50;
+    s32 sp4C;
+    s32 magnitude;
+    s32 var_a0;
+    s64 product;
+
+    arg0->timer = 0x12C;
+    arg0->spriteIndex = -1;
+    arg0->velocityY = 0x150000;
+    source.z = 0;
+    source.y = 0;
+    source.x = 0x1000;
+    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = func_80098C30(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
+        arg0->accelerationY = (((s64) arg0->velocityY) * sp50) / magnitude;
+        var_a0 = -arg0->velocityY;
+    } else {
+        var_a0 = -arg0->velocityY;
+        arg0->accelerationY = var_a0;
+    }
+    arg0->accelerationY += D_80121D80[arg0->playerIndex].unk44;
+    arg0->velocityY = var_a0;
+    arg0->targetAngle = D_80121D80[arg0->playerIndex].unk2EC;
+    source.z = 0;
+    source.y = 0x280000;
+    source.x = 0x100000;
+    if (D_80121D80[arg0->playerIndex].flags & 0x400) {
+        source.x = 0xFFF00000;
+        arg0->targetAngle += 0x800;
+    }
+    func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos.x);
+    arg0->pos.x += D_80121D80[arg0->playerIndex].velocity.x;
+    arg0->pos.y += D_80121D80[arg0->playerIndex].velocity.y;
+    arg0->pos.z += D_80121D80[arg0->playerIndex].velocity.z;
+    arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
+    func_80045990(func_80043040(D_8011216C), 2, &arg0->image, &arg0->palette);
+    func_8004A2F4(arg0);
+    func_80071824(arg0, func_8004A2F4);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004A91C.s")
 
