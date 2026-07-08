@@ -96,6 +96,7 @@ extern CharacterSelectFlowState *D_801235B8;
 extern ControllerPakPromptTransition D_8010AF80;
 extern ControllerPakConfirmTransition D_8010ADD0;
 extern ControllerPakMenuState D_8010AF90;
+extern s16 D_80112130[];
 extern u8 D_8010ADD2;
 extern u8 D_8010AF92;
 extern u8 D_8010AF93;
@@ -118,7 +119,64 @@ extern void func_8003209C(void);
 void func_80032534(ControllerPakDeletePromptActor *);
 extern void func_800716E4(void *);
 
+// func_8002FFD0 best match: 98.132% (nonmatchings/func_8002FFD0-5635509610426229442/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_8002FFD0.s")
+
+#ifdef NON_MATCHING
+void func_8002FFD0(ControllerPakTitleActor *arg0) {
+    s32 i;
+    s32 j;
+    s32 alpha;
+
+    func_8000F030((s16)(arg0->common.x - 4), (s16)(arg0->common.y - 4), func_80043040(D_80112130[0x29]), 2, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y - 4), func_80043040(D_80112130[0x29]), 4, 0x20, 0x20, 0, 0);
+
+    i = 0;
+    do {
+        func_8000F030((s16)(arg0->common.x + i), (s16)(arg0->common.y - 4), func_80043040(D_80112130[0x29]), 3, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)(arg0->common.x + i), (s16)(arg0->common.y + 0x24), func_80043040(D_80112130[0x29]), 8, 0x20, 0x20, 0, 0);
+        i += 0x10;
+    } while (i < 0xE0);
+
+    func_8000F030((s16)(arg0->common.x - 4), (s16)(arg0->common.y + 0x24), func_80043040(D_80112130[0x29]), 7, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), func_80043040(D_80112130[0x29]), 9, 0x20, 0x20, 0, 0);
+
+    i = 0;
+loop_outer:
+    func_8000F030((s16)(arg0->common.x - 4), (s16)(arg0->common.y + i), func_80043040(D_80112130[0x29]), 5, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + i), func_80043040(D_80112130[0x29]), 6, 0x20, 0x20, 0, 0);
+    j = 0;
+    do {
+        func_8000F030((s16)(arg0->common.x + j), (s16)(arg0->common.y + i), func_80043040(D_80112130[0x29]), 0xB, 0x20, 0x20, 0, 0);
+        j += 0x10;
+    } while (j != 0xE0);
+    i += 0x10;
+    if (i != 0x30) {
+        goto loop_outer;
+    }
+
+    func_80013154((s16)(arg0->common.x + 0x30), arg0->common.y, D_800B7E60, 0, 0x100, 0);
+
+    alpha = 0x60;
+    if (arg0->selectedOption == 0) {
+        alpha = 0x100;
+    }
+
+    func_8000F8AC((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x10), func_80043040(D_80112130[0x24]), 0x17, 0x20,
+                  0x20, 0, alpha, 0);
+
+    if (alpha == 0x100) {
+        alpha = 0x60;
+    } else {
+        alpha = 0x100;
+    }
+
+    func_8000F8AC((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x20), func_80043040(D_80112130[0x24]), 0x18, 0x20,
+                  0x20, 0, alpha, 0);
+    func_8000F8AC((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x10),
+                  func_80043040(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
+}
+#endif
 
 // func_8003048C best match: 92.821%
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_8003048C.s")
