@@ -136,7 +136,7 @@ extern void func_800177F8(RaceHudBannerActor *);
 extern void func_80017C34(RaceHudPanelActor *);
 extern void func_800184C8(void);
 extern void func_80018AA0(RaceHudPanelActor *);
-extern void func_80018134(void);
+extern void func_80018134(RaceHudPlayerListActor *);
 extern void func_800182A4(RaceHudPlayerListActor *);
 extern void func_80017D6C(RaceHudMessageActor *);
 extern void func_800483FC(void *, void *, void *);
@@ -149,13 +149,15 @@ extern s16 D_8010AE58;
 extern s32 D_801235B4;
 extern void *D_80124868;
 extern u8 D_80121B55;
-extern u8 D_80121D80[];
+extern RacePlayer D_80121D80[];
 extern s8 D_8010AE64[];
 extern u8 D_80112130[];
 extern const char D_800E0AB0[];
 extern RacePlayerState D_800EC9F0[];
 extern u8 D_8010AE5E;
 extern u8 D_8010AE5F;
+extern u16 D_800B5B30[];
+extern s16 D_80112172;
 extern s32 func_80043040(s16);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 
@@ -416,7 +418,18 @@ void func_80018060(RaceHudMessageActor *arg0) {
     func_80071824(actor, func_80017F94);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80018134.s")
+void func_80018134(RaceHudPlayerListActor *arg0) {
+    s32 i;
+    s32 j;
+    s32 evenMatch;
+    s32 oddMatch;
+    u16 alpha;
+    u16 *tiles;
+    RacePlayer *player;
+    RaceHudPlayerListActor *actorX;
+
+ do { if (arg0->mode != 0) { i = 0; if (((s32) D_80121B55) > 0) { player = D_80121D80; tiles = D_800B5B30; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) D_80121B55) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) D_80121B55)); } func_8000F8AC(actorX->x[0], arg0->y, func_80043040(D_80112172), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (RaceHudPlayerListActor *) (((u8 *) actorX) + 2); } while (i < ((s32) D_80121B55)); } } } while (0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_800182A4.s")
 
@@ -435,7 +448,7 @@ void func_800182A4(RaceHudPlayerListActor *arg0) {
         }
 
         if (mode != 0) {
- do { i = 0; if (((s32) D_80121B55) > 0) { player = D_80121D80; do { if (player[5] < 5) { arg0->x[i] = (D_8010AE64[i] * 0x20) + arg0->baseX; } else if (player[5] == 5) { arg0->x[i] = arg0->baseX; } i++; player += 0x60C; } while (i < ((s32) D_80121B55)); } if (((s32) arg0->timer) < 0x10) { arg0->scale -= 9; } else { arg0->scale += 9; } arg0->timer = (arg0->timer + 1) & 0x1F; mode = arg0->mode; } while (0);
+ do { i = 0; if (((s32) D_80121B55) > 0) { player = (u8 *)D_80121D80; do { if (player[5] < 5) { arg0->x[i] = (D_8010AE64[i] * 0x20) + arg0->baseX; } else if (player[5] == 5) { arg0->x[i] = arg0->baseX; } i++; player += 0x60C; } while (i < ((s32) D_80121B55)); } if (((s32) arg0->timer) < 0x10) { arg0->scale -= 9; } else { arg0->scale += 9; } arg0->timer = (arg0->timer + 1) & 0x1F; mode = arg0->mode; } while (0);
         }
 
         D_8010AE52 = mode;
@@ -495,7 +508,7 @@ void func_80018AA0(RaceHudPanelActor *arg0) {
     u8 *timer;
 
     srcBase = D_8010ADE4;
-    player = D_80121D80; for (i = 0, src = srcBase, dst = (u8 *)arg0; i != PLAYER_COUNT; i++, dst += 2) {
+    player = (u8 *)D_80121D80; for (i = 0, src = srcBase, dst = (u8 *)arg0; i != PLAYER_COUNT; i++, dst += 2) {
         *(s16 *)(dst + 0x18) = *(s16 *)(src + 0x18);
         src += 2;
         *(s16 *)(dst + 0x20) = *(s16 *)(src + 0x1E);
@@ -530,7 +543,7 @@ void func_80018BC0(void *arg0) {
     s32 color;
     u16 temp_v1;
 
- base = arg0; i = 0; if (D_80121B55 > 0) { player = D_80121D80; do {
+ base = arg0; i = 0; if (D_80121B55 > 0) { player = (u8 *)D_80121D80; do {
             if (player[8] != 0) {
                 new_var = i * 2;
                 temp_s0 = base + new_var;
