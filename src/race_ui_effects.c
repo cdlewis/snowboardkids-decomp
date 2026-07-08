@@ -627,6 +627,7 @@ extern s16 D_80112146;
 extern s16 D_8011216E;
 extern s16 D_80112168;
 extern s16 D_80121B52;
+extern s32 D_80121D8C;
 extern RacePlayerPlacement D_80122288[];
 extern s8 D_80122289;
 extern RacePlayerByteField D_80121D94[];
@@ -721,6 +722,7 @@ extern void *D_800E1230;
 extern char D_800E1240[];
 extern char D_800E1244[];
 extern char D_800E1250[];
+extern char D_800E1258[];
 extern char D_800E12F4[];
 extern char D_800E14D0[];
 extern char D_800E12F8[];
@@ -829,7 +831,7 @@ extern void func_800663C8(void *);
 extern void func_80059854(void *);
 extern void func_8005804C(RaceUiAlpha18Actor *);
 extern void func_8005812C(void *);
-extern void func_8005827C(void);
+extern void func_8005827C(void *);
 extern void func_800572A0(void *);
 extern void func_80057548(RaceUiSlideActor *);
 extern void func_8005B6F8(void *);
@@ -1135,7 +1137,28 @@ loop:
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005827C.s")
+void func_8005827C(void *arg0) {
+    volatile u8 padding[0x18];
+    char buffer[8];
+    s32 x;
+    u8 *ptr;
+    volatile RaceUiAssetHandles *handles;
+    s32 space;
+
+    sprintf(buffer + -8, D_800E1258, D_80121D8C);
+    x = 0x18;
+    handles = &D_80112130;
+ ptr = (u8 *) (((s32) padding) - 0x10); if (!ptr) { } space = ' '; loop: if ((*ptr) != 0) {
+        if (space != *ptr) {
+            func_80045A78(x, 0x21, func_80043040(handles->popupFontHandle), (*ptr - 5) & 0xFFFF);
+        }
+        x += 8;
+        ptr++;
+        goto loop;
+    }
+
+    func_80045A78(x, 0x21, func_80043040(handles->popupFontHandle), 0x37);
+}
 
 // func_80058360 best match: 99.747% (nonmatchings/func_80058360-9017456803007796287/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80058360.s")
