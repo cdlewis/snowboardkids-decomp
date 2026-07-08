@@ -418,6 +418,9 @@ void func_80018060(RaceHudMessageActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80018134.s")
 
+#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_800182A4.s")
+
+#ifdef NON_MATCHING
 void func_800182A4(RaceHudPlayerListActor *arg0) {
     s32 i;
     u8 mode;
@@ -439,6 +442,7 @@ void func_800182A4(RaceHudPlayerListActor *arg0) {
     }
     func_800483FC(&D_80124868, func_80018134, arg0);
 }
+#endif
 
 void func_800183DC(RaceHudPlayerListActor *arg0) {
     RacePlayerState *player;
