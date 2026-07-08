@@ -60,6 +60,7 @@ extern s32 D_8012185C;
 extern s32 D_80121974;
 extern s32 D_80121AF8;
 extern s32 D_80121AFC;
+extern s32 D_80121B18;
 extern s32 D_80121B30;
 extern GameAudioHandleNode *D_80121930;
 extern GameAudioHandleNode *D_80121934;
@@ -72,17 +73,28 @@ extern s32 player_bss_0048;
 extern u16 D_800DBCF4[];
 extern s32 D_80121B08[];
 extern RacePlayerSoundView D_80121D80[];
+extern u8 D_80121B00;
+extern u8 D_80121B01;
+extern u8 D_80121B02;
+extern u8 D_80121B03;
+extern u8 D_80121B04;
+extern u8 D_80121B05;
+extern s8 D_8015A6B8;
 
 void func_80099C44(s32 arg0, s32 arg1, s32 arg2);
 void func_8009D8B0(s32 arg0, s32 arg1);
 void func_8009DE50(s32 arg0, s32 arg1);
+void osStartThread(void *);
+void osStopThread(void *);
 s32 func_8009D8D8(s32 arg0);
+s32 func_8009DEC4(s32 arg0);
 s32 func_8009DF14(s32 arg0, s32 arg1);
 s32 func_8009DC68(s32 soundId, s32 volume, s32 pan, s32 arg3, s32 priority);
 s32 func_80043040(s16 arg0);
 void *func_80048388(s32 arg0);
 void func_800720E4(s32 arg0);
 s32 func_80071B74(void);
+s32 func_80071CC0(void);
 s32 func_800722F0(SoundPosition *pos, s32 volume);
 void func_80072518(s16 soundId, s32 mode, s16 volume, f32 pitch);
 
@@ -187,7 +199,77 @@ GameAudioHandleNode *func_80071C84(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80071CC0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80071E80.s")
+void func_80071E80(void) {
+    GameAudioHandleNode *node;
+    s32 *left;
+    s32 *right;
+    GameAudioQueueEntry *entry;
+    s32 index;
+
+    osStopThread(&D_8015A6B8);
+
+    node = D_80121930;
+    while (node != NULL) {
+        if (node->handle == 0) {
+            func_80071BE8(node);
+            goto next_node;
+        } else {
+            if (func_8009DEC4(node->handle) == 0) {
+                func_80071BE8(node);
+            }
+        }
+    next_node:
+        node = node->next;
+    }
+
+    right = &D_80121B18, left = D_80121B08;
+    do {
+        if ((*right != 0) && (func_8009DEC4(*right) == 0)) {
+            *right = 0;
+        }
+        if ((*left != 0) && (func_8009DEC4(*left) == 0)) {
+            *left = 0;
+        }
+        right++;
+    } while (&D_80121B18 > ++left);
+
+    if ((D_80121B30 != 0) && (func_8009DEC4(D_80121B30) == 0)) {
+        D_80121B30 = 0;
+    }
+
+    if (D_80121B00 == 0) {
+        index = func_80071BB0();
+        if (index != -1) {
+            entry = &D_80121978[index];
+            D_80121B00 = entry->type;
+            D_80121B01 = entry->soundId;
+            D_80121B02 = entry->volume;
+            D_80121B03 = entry->pan;
+            D_80121B04 = entry->priority;
+            D_80121B05 = entry->unk5;
+        }
+    }
+
+    if ((D_80121B00 == 1) && (func_80071CC0() != 0)) {
+        D_80121B00 = 0;
+    }
+
+    if ((D_80121858 != 0) && (func_8009DEC4(D_80121858) == 0)) {
+        D_80121858 = 0;
+        D_80121974 = -1;
+    }
+
+    if ((D_80121850 == 1) && (func_80071A8C(player_bss_0048) == 0)) {
+        D_80121850 = 0;
+    }
+
+    if (D_80121850 == 2) {
+        func_80071A3C(player_bss_0048);
+        D_80121850 = 0;
+    }
+
+    osStartThread(&D_8015A6B8);
+}
 
 void func_800720E4(s32 arg0) {
     if (arg0 != D_80121974) {
@@ -246,11 +328,6 @@ s32 func_800721B8(s16 arg0, s16 arg1, s16 arg2) {
 
 extern void func_8009DD5C(s32 arg0, s32 arg1);
 extern void func_8009DDE4(s32 arg0);
-extern void osStartThread(void *);
-extern void osStopThread(void *);
-extern s8 D_8015A6B8;
-extern s8 D_80121B00;
-
 void func_80072260(void) {
     osStopThread(&D_8015A6B8);
     D_80121B00 = 0;
