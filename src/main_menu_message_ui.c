@@ -1,6 +1,9 @@
 #include "common.h"
+#include "menu_rendering.h"
 
-typedef s16 MainMenuMessageScript;
+#define MAIN_MENU_MESSAGE_TEXTURE_HANDLE (D_80112130.textureHandle)
+
+typedef MenuGlyphScript MainMenuMessageScript;
 
 typedef struct MainMenuMessageActor {
     /* 0x00 */ struct MainMenuMessageActor *prev;
@@ -38,11 +41,18 @@ typedef struct MainMenuMessageActor {
     /* 0x2C */ u8 returnToSummary;
 } MainMenuMessageActor;
 
+typedef struct MainMenuMessageAssetHandles {
+    /* 0x00 */ char pad0[0x54];
+    /* 0x54 */ s16 textureHandle;
+} MainMenuMessageAssetHandles;
+
 typedef struct RenderCallbackNode RenderCallbackNode;
 typedef void (*RenderCallback)(s32);
 
 extern void func_800483FC(RenderCallbackNode **, RenderCallback, s32);
+extern s32 func_80043040(s16);
 extern RenderCallbackNode *D_80124868;
+extern MainMenuMessageAssetHandles D_80112130;
 extern u8 D_8010B1F0;
 extern s32 D_80123778;
 extern MainMenuMessageScript D_800B3500[][0x17C];
@@ -51,7 +61,6 @@ extern MainMenuMessageScript D_800B5038[];
 extern MainMenuMessageScript D_800B5050[][0x14];
 extern s16 D_800B51B6[];
 extern u8 D_80121B5A;
-extern void func_8001303C(s32, s32, MainMenuMessageScript *, s32, s32, s32, s32);
 extern void func_800716E4(MainMenuMessageActor *);
 extern void func_80072138(s32, s32, MainMenuMessageActor *);
 void func_8000DF9C(MainMenuMessageActor *);
@@ -62,7 +71,69 @@ void func_8000E99C(MainMenuMessageActor *);
 void func_8000E9F4(MainMenuMessageActor *);
 void func_8000DDA4(MainMenuMessageActor *);
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_message_ui/func_8000D7F0.s")
+void func_8000D7F0(MainMenuMessageActor *arg0) {
+    s32 i;
+    s32 j;
+    s32 alpha;
+    s32 limit;
+    s32 selected;
+
+    func_8000F030(arg0->x, arg0->y, func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0x50), arg0->y, func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+
+    i = 0;
+    do {
+        func_8000F030((s16)(arg0->x + i + 0x10), arg0->y, func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)(arg0->x + i + 0x10), (s16)(arg0->y + 0x40), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
+        i += 0x10;
+    } while (i < 0x40);
+
+    func_8000F030(arg0->x, (s16)(arg0->y + 0x40), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x40), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
+
+    i = 0;
+    limit = 0x40;
+    do {
+        func_8000F030(arg0->x, (s16)(arg0->y + i + 0x10), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)(arg0->x + 0x50), (s16)(arg0->y + i + 0x10), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
+        j = 0;
+        do {
+            func_8000F030((s16)(arg0->x + j + 0x10), (s16)(arg0->y + i + 0x10), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+            j += 0x10;
+        } while (j != limit);
+        i += 0x10;
+    } while (i < 0x30);
+
+    func_8000F030((s16)(arg0->x + 8), (s16)(arg0->y + 4), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 0x15, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0x44), (s16)(arg0->y + 4), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), (D_80121B5A + 0xB) & 0xFFFF, 0x20, 0x20, 0, 0);
+
+    if (D_80121B5A != 9) {
+        j = 0;
+        i = 0;
+        do {
+            alpha = (j == (u16)arg0->state.selectedChoice) ? 0x100 : 0x60;
+            func_8000F8AC((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x18), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), (j + 0x16) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
+            j++;
+            i += 0x10;
+        } while (j != 3);
+    } else {
+        j = 0;
+        i = 0;
+        do {
+            alpha = ((j + 1) == (u16)arg0->state.selectedChoice) ? 0x100 : 0x60;
+            func_8000F8AC((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x20), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), (j + 0x17) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
+            j++;
+            i += 0x10;
+        } while (j != 2);
+    }
+
+    if (D_80121B5A != 9) {
+        selected = (u16)arg0->state.selectedChoice;
+    } else {
+        selected = (u16)arg0->state.selectedChoice - 1;
+    }
+    func_8000F8AC(arg0->layout.textOffset.x, (s16)(arg0->layout.textOffset.y + (selected * 0x10)), func_80043040(MAIN_MENU_MESSAGE_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, arg0->highlightScale, 0);
+}
 
 void func_8000DD74(s32 arg0) {
     func_800483FC(&D_80124868, (RenderCallback)func_8000DD74, arg0);
