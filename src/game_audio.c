@@ -387,7 +387,7 @@ void func_80072918(void) {
     func_8009DDE4(3);
 }
 
-void func_80072938(void) {
+s32 func_80072938(void) {
     func_8009DDE4(2);
 }
 
