@@ -267,7 +267,7 @@ extern Struct800A0138 D_8015C928;
 extern ALLink *D_8015C964;
 extern void func_8009CD18(PlayerCommandState *, u8 *);
 extern void func_8009C77C(SchedulerState *);
-extern void func_8009F604();
+extern void func_8009F604(PlayerCommandState *);
 extern s32 func_8009F4C8();
 extern s32 func_8009F780(PlayerCommandState *, s32, s32, s32, s32);
 extern void func_8009F344(s32, s32);
@@ -1463,7 +1463,7 @@ void func_8009F748(u8 *p, unsigned char c, s32 n) {
 s32 func_8009F780(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     s32 temp_v1;
 
-    func_8009F604();
+    func_8009F604(arg0);
     arg0->soundId = arg1;
     arg0->unkB0 = arg2;
     arg0->unkB2 = arg3;
@@ -1501,7 +1501,7 @@ void func_8009FC0C(s32 arg0) {
             break;
         }
     } while (done == 0);
-    alClose(&D_8015A8D8);
+    alClose((ALGlobals *)&D_8015A8D8);
 }
 
 // func_8009FD74 best match: 99.826% (nonmatchings/func_8009FD74-2775475442547365205/base_27.c)
