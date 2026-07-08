@@ -42,6 +42,12 @@ typedef union {
 typedef s16 FixedMatrix3sScratch[0x12];
 
 typedef struct {
+    s16 rotation[9];
+    s16 pad2A;
+    Vec3i basePos;
+} CourseEffectMatrixSource;
+
+typedef struct {
     /* 0x00 */ s16 modelIndex;
     char pad2[2];
     /* 0x04 */ Vec3i pos;
@@ -118,6 +124,7 @@ extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern s32 func_800430D0(void);
 extern void func_80045990(s32, s32, void *, void *);
+extern void func_800486BC(CourseEffectMatrixSource *, void *);
 extern GfxCommandDest *func_8004885C(GfxCommandSource *);
 extern void func_80048C90(GfxCommandDest *, Vec3i *);
 extern s32 func_80049000(Vec3i *);
@@ -230,7 +237,43 @@ void func_800668EC(RaceModelListActor *arg0) {
     func_800483FC(&D_801248B0, func_80066760, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800669A0.s")
+void func_800669A0(RaceModelListActor *arg0) {
+    s32 size;
+    RaceOverlayModelEntry *base;
+    RaceOverlayModelEntry *entry;
+    s32 i;
+    CourseEffectMatrixSource transform;
+    s32 count;
+
+    base = D_800D7754[arg0->modelListIndex];
+    count = 0;
+    entry = base;
+    if (base->modelIndex != -1) {
+        do {
+            count++;
+            entry++;
+        } while (entry->modelIndex != -1);
+    }
+
+    if (count != 0) {
+        entry = base;
+        size = count << 6;
+        *(s16 *)&D_80112130[0x46] = func_80042D58(size);
+        arg0->modelBuffer = (void *)func_80043040(*(s16 *)&D_80112130[0x46]);
+
+        for (i = 0; i < count; i++) {
+            func_80097C18(&transform, entry->assetIndex);
+            transform.basePos.x = entry->pos.x;
+            transform.basePos.y = entry->pos.y;
+            transform.basePos.z = entry->pos.z;
+            func_800486BC(&transform, (void *)((u32)arg0->modelBuffer + (i << 6)));
+            entry++;
+        }
+
+        osWritebackDCache(arg0->modelBuffer, size);
+    }
+    func_80071824(arg0, func_800668EC);
+}
 
 // func_80066ABC best match: 99.061%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80066ABC.s")
