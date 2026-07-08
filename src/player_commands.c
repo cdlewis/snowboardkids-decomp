@@ -1472,19 +1472,23 @@ void func_8009FC0C(s32 arg0) {
     alClose(&D_8015A8D8);
 }
 
-// func_8009FD74 best match: 85.904% (nonmatchings/func_8009FD74-2775475442547365205/base_4.c)
+// func_8009FD74 best match: 99.826% (nonmatchings/func_8009FD74-2775475442547365205/base_27.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009FD74.s")
 
 #ifdef NON_MATCHING
 s32 func_8009FD74(AudioTask *task, AudioInfo *info) {
+    AudioTask *task2;
+    AudioTask *task3;
     u32 outBuf;
-    s32 cmdLen;
+    s32 cmdLen[4];
     Acmd *cmdListEnd;
 
     func_800A0170();
     outBuf = osVirtualToPhysical(task->outBuf);
 
     if (info != NULL) {
+        if (!aspMainTextStart) {
+        }
         osAiSetNextBuffer(info->buf, info->len * 4);
     }
 
@@ -1493,34 +1497,36 @@ s32 func_8009FD74(AudioTask *task, AudioInfo *info) {
         task->outLen = D_8015C934;
     }
 
-    cmdListEnd = alAudioFrame(D_8015A6A0[D_800DF298], &cmdLen, (s16 *)outBuf, task->outLen);
-    if (cmdLen == 0) {
+    cmdListEnd = alAudioFrame(D_8015A6A0[D_800DF298], &cmdLen[2], (s16 *)outBuf, task->outLen);
+    if (cmdLen[2] == 0) {
         return 0;
     }
 
-    task->unk8 = 0;
-    task->msgQ = (OSMesgQueue *)D_8015A8A0;
-    task->msg = (OSMesg)&task->unk68;
-    task->unk10 = 0;
-    task->dataPtr = D_8015A6A0[D_800DF298];
-    task->dataSize = (((s32)cmdListEnd - (s32)D_8015A6A0[D_800DF298]) >> 3) << 3;
+    task3 = task;
+    task3->unk8 = 0;
+    task3->msgQ = (OSMesgQueue *)D_8015A8A0;
+    task3->msg = (OSMesg)&task3->unk68;
+    task3->unk10 = 0;
+    task3->dataPtr = D_8015A6A0[D_800DF298];
+    task3->dataSize = (((s32)cmdListEnd - (s32)D_8015A6A0[D_800DF298]) >> 3) << 3;
 
-    task->type = 2;
-    task->flags = 0;
-    task->ucodeBoot = rspbootTextStart;
-    task->ucodeBootSize = (u8 *)aspMainTextStart - (u8 *)rspbootTextStart;
-    task->ucode = aspMainTextStart;
-    task->ucodeData = D_800E1F00;
-    task->ucodeDataSize = 0x800;
-    task->dramStack = NULL;
-    task->dramStackSize = 0;
-    task->outputBuff = NULL;
-    task->outputBuffSize = NULL;
-    task->yieldDataPtr = NULL;
-    task->yieldDataSize = 0;
+    task3->type = 2;
+    task3->ucodeBoot = rspbootTextStart;
+    task2 = task3;
+    task2->ucodeBootSize = (u8 *)aspMainTextStart - (u8 *)rspbootTextStart;
+    task3->flags = 0;
+    task3->ucode = aspMainTextStart;
+    task3->ucodeData = D_800E1F00;
+    task3->ucodeDataSize = 0x800;
+    task3->dramStack = NULL;
+    task3->dramStackSize = 0;
+    task3->outputBuff = NULL;
+    task3->outputBuffSize = NULL;
+    task3->yieldDataPtr = NULL;
+    task3->yieldDataSize = 0;
 
-    osSendMesg(func_8009C434(D_8015C960), &task->unk8, 1);
-    D_800DF298 = D_800DF298 ^ 1;
+    osSendMesg(func_8009C434(D_8015C960), &task3->unk8, 1);
+    D_800DF298 ^= 1;
     return 1;
 }
 #endif
