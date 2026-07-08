@@ -83,20 +83,20 @@ extern void func_80052E00(MenuPanelActor *);
 extern void func_80052E70(s32);
 extern void func_80053604(MenuPanelActor *);
 
-// func_80050FF0 best match: 93.040%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80050FF0.s")
-
-#ifdef NON_MATCHING
 void func_80050FF0(s32 arg0) {
-    s16 edgeX;
-    s16 edgeY;
-    s32 x;
+    s32 edgeX;
+    s32 edgeY;
     s32 y;
+    s32 yOrigin;
+    s32 xOrigin;
+
+    xOrigin = -0x74;
+    yOrigin = 0x54;
 
     func_8000F030(-0x84, -0x64, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
     func_8000F030(0x78, -0x64, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
 
-    edgeX = -0x74;
+    edgeX = xOrigin;
     do {
         func_8000F030(edgeX, -0x64, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
         func_8000F030(edgeX, -0x3C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
@@ -106,22 +106,24 @@ void func_80050FF0(s32 arg0) {
     func_8000F030(-0x84, -0x3C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
     func_8000F030(0x78, -0x3C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
 
-    edgeY = -0x54;
+    edgeY = -yOrigin;
     do {
         func_8000F030(-0x84, edgeY, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
         func_8000F030(0x78, edgeY, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
         edgeY += 0x10;
     } while (edgeY < -0x34);
 
-    for (x = -0x74; x != 0x7C; x += 0x10) {
-        for (y = -0x54; y != -0x34; y += 0x10) {
-            func_8000F030(x, y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+    if (yOrigin) {
+    }
+
+    for (edgeX = xOrigin; edgeX != 0x7C; edgeX += 0x10) {
+        for (y = -yOrigin; y != -0x34; y += 0x10) {
+            func_8000F030(edgeX, y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
         }
     }
 
     func_8001303C(-0x68, -0x58, D_800D4A40, 0, 0x100, 5, 0x29);
 }
-#endif
 
 void func_80051308(MenuPanelActor *arg0) {
     s32 alpha;
