@@ -374,6 +374,19 @@ typedef struct {
 } RaceUiFadingTrailActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 playerIndex;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
+    /* 0x18 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x38 */ Vec3i pos;
+    /* 0x44 */ RaceUiGfxCommandDest *matrix;
+    /* 0x48 */ s16 angle;
+    /* 0x4A */ s16 alpha;
+    /* 0x4C */ s16 scale;
+    /* 0x4E */ u8 matrixDirty;
+} RaceUiFadingImpactActor;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x24];
     /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
     /* 0x44 */ u8 pad44[0x64 - 0x44];
@@ -573,6 +586,9 @@ extern s16 D_80121B52;
 extern RacePlayerPlacement D_80122288[];
 extern s8 D_80122289;
 extern RacePlayerHalfwordField D_80122052[];
+extern RacePlayerHalfwordField D_8012265E[];
+extern RacePlayerHalfwordField D_80122C6A[];
+extern RacePlayerHalfwordField D_80123276[];
 extern RacePlayerByteField D_8012229A[];
 extern s16 D_801235B0;
 extern s16 D_8011216C;
@@ -638,6 +654,7 @@ extern void func_800623E8(void *);
 extern s32 func_8007D200(s32, s32, s32);
 extern s32 func_80080CC4(s32, s32, s32);
 extern void func_80088664(Vec3i *, s32, s32, s32, s32);
+extern s32 func_800891B8(Vec3i *, s32, s32, s16);
 extern int sprintf(char *, const char *, ...);
 extern void func_800716E4(void *);
 extern void *func_800716A4(void *, s32, s32);
@@ -736,7 +753,7 @@ extern void func_8005AC44(RaceUiCounterActor *);
 extern void func_8005B9F8(void);
 extern void func_8005C14C(void);
 extern void func_8005A0E0(void *);
-extern void func_80061F38(void);
+extern void func_80061F38(RaceUiFadingImpactActor *);
 extern void func_8005F828(RaceUiRankTrailActor *);
 extern void func_80060454(void *, void *, void *, s16);
 extern void func_8005FBA8(void *);
@@ -2592,7 +2609,62 @@ void func_80061DE8(RaceUiFadingTrailActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80061F38.s")
+void func_80061F38(RaceUiFadingImpactActor *arg0) {
+    volatile u8 pad[0x28];
+    s16 scale;
+    Vec3i *sp24;
+    s32 sp2C;
+    RaceUiFadingImpactActor *new_var;
+
+    if (D_80121B56 == 0) {
+        arg0->angle += 0x100;
+        func_80097C18(&arg0->copyBlock, arg0->angle);
+
+        scale = arg0->scale;
+        arg0->copyBlock.halfwords[0] = (arg0->copyBlock.halfwords[0] * scale) / 64;
+        arg0->copyBlock.halfwords[1] = (arg0->copyBlock.halfwords[1] * scale) / 64;
+        arg0->copyBlock.halfwords[2] = (arg0->copyBlock.halfwords[2] * scale) / 64;
+        new_var = arg0;
+        arg0->copyBlock.halfwords[3] = (arg0->copyBlock.halfwords[3] * scale) / 64;
+        new_var->copyBlock.halfwords[4] = (new_var->copyBlock.halfwords[4] * scale) / 64;
+        arg0->copyBlock.halfwords[5] = (new_var->copyBlock.halfwords[5] * scale) / 64;
+        new_var->copyBlock.halfwords[6] = (new_var->copyBlock.halfwords[6] * scale) / 64;
+        arg0->copyBlock.halfwords[7] = (arg0->copyBlock.halfwords[7] * scale) / 64;
+        new_var->copyBlock.halfwords[8] = (arg0->copyBlock.halfwords[8] * scale) / 64;
+
+        if (scale != 0x34) {
+            new_var->scale = scale + 4;
+            scale = new_var->scale;
+        }
+
+        if (scale >= 0x21) {
+            arg0->alpha -= 0x10;
+        }
+
+        if (arg0->alpha >= 0x71) {
+            sp24 = &arg0->pos;
+            sp2C = (new_var->scale * 0x480000) / 64;
+            if (func_800891B8(sp24, sp2C, 0x80, 0) != 0) {
+                D_80122052[0].value = new_var->playerIndex;
+            }
+            if (func_800891B8(sp24, sp2C, 0x80, 1) != 0) {
+                D_8012265E[0].value = new_var->playerIndex;
+            }
+            if (func_800891B8(sp24, sp2C, 0x80, 2) != 0) {
+                D_80122C6A[0].value = arg0->playerIndex;
+            }
+            if (func_800891B8(sp24, sp2C, 0x80, 3) != 0) {
+                D_80123276[0].value = arg0->playerIndex;
+            }
+        }
+    }
+
+    if (arg0->alpha <= 0) {
+        func_800716E4(arg0);
+    } else {
+        func_800483FC(&D_801248EC, func_80061DE8, (s32)arg0);
+    }
+}
 
 void func_800621DC(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x4C) = 4;
