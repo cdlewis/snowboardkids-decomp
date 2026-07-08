@@ -326,7 +326,7 @@ void func_800179D4(RaceHudBannerActor *arg0) {
     func_80071824(arg0, func_800177F8);
 }
 
-// func_80017A10 best match: 98.362% (nonmatchings/func_80017A10-180949888360117632/base_5.c)
+// func_80017A10 best match: 99.232% (nonmatchings/func_80017A10-4033633224288138541/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80017A10.s")
 
 #ifdef NON_MATCHING
@@ -338,14 +338,16 @@ typedef struct {
 } RaceHudPlayerFrameActor;
 
 void func_80017A10(RaceHudPlayerFrameActor *arg0) {
-    char sp6C[0x10];
+    char buf[0x10];
+    u8 *sp6C;
+    s32 flip;
     s32 alpha;
     s32 i;
     s32 playerNumber;
-    s32 flip;
     s32 texture;
     RaceHudPlayerFrameActor *actor;
 
+    sp6C = buf - 0xC;
     actor = arg0; i = 0; do {
         if ((D_80121B55 - 1) < i) {
             alpha = 0x50;
@@ -360,12 +362,13 @@ void func_80017A10(RaceHudPlayerFrameActor *arg0) {
         texture = func_80043040(RACE_HUD_PLAYER_FRAME_HANDLE);
         func_8000F8AC((s16)(actor->x + 0x40), actor->y, texture, 0x24, 0x20, 0x20, 0, alpha, flip);
         texture = func_80043040(RACE_HUD_PLAYER_FRAME_HANDLE);
+        i = 2;
         func_8000F8AC((s16)(actor->x + 0x80), actor->y, texture, 0xC, 0x20, 0x20, 0, alpha, flip);
         sprintf(sp6C, D_800E0AB0, playerNumber);
         func_80013D0C((s16)(actor->x + 0x32), (s16)(actor->y + 2), sp6C, 0, alpha);
         if (alpha != 0x100) {
             texture = func_80043040(RACE_HUD_UNUSED_HANDLE);
-            func_8000F8AC((s16)(actor->x + 2), (s16)(actor->y + 0x14), texture, 0x90, 0x20, 0x20, 0, 0xF0, 0);
+            func_8000F8AC((s16)(actor->x + i), (s16)(actor->y + 0x14), texture, 0x90, 0x20, 0x20, 0, 0xF0, 0);
         }
 
         i = playerNumber;
