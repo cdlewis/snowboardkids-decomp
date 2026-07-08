@@ -202,7 +202,7 @@ extern void func_800716E4(void *);
 extern void func_80072138(s32, s32);
 extern void func_80072A74(s32, void *, s32, s32);
 extern void func_8006A80C(void *);
-extern void func_80069BEC(void);
+extern void func_80069BEC(void *);
 extern void func_80069E50(void);
 extern s32 func_80043040(s16);
 extern void *func_8004885C(CourseEffectMatrixSource *);
@@ -270,6 +270,7 @@ extern CourseEffectPlayer D_80121D80[];
 extern CourseEffectPlayer D_8012238C[];
 extern CourseEffectPlayer D_80122998[];
 extern CourseEffectPlayer D_80122FA4[];
+extern u32 D_800DEE50[];
 extern s32 D_80124868;
 extern s32 D_80124878;
 extern s32 D_801248D4;
@@ -285,6 +286,16 @@ extern Gfx D_2001810[];
 extern Gfx D_20018E8[];
 extern Gfx D_2000910[];
 extern Gfx D_2003218[];
+extern Gfx D_20057D8[];
+extern Gfx D_2006430[];
+extern Gfx D_20067B0[];
+extern Gfx D_2008628[];
+extern Gfx D_2008900[];
+extern Gfx D_2008E30[];
+extern Gfx D_200B400[];
+extern Gfx D_200B7B8[];
+extern Gfx D_200BD48[];
+extern Gfx D_200C060[];
 void func_8006BE90(RaceMovingEffect *);
 void func_8006B7E0(RaceMovingEffect *);
 extern void func_8006A894(void *);
@@ -363,7 +374,49 @@ void func_80069BC0(RaceCountdownEffect *arg0) {
     func_80071824(arg0, func_80069B60);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_80069BEC.s")
+void func_80069BEC(void *arg0) {
+    volatile u8 pad[0x30];
+
+    gDPPipeSync(gRegionAllocPtr++);
+
+    gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));
+    gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112142));
+
+    gSPMatrix(gRegionAllocPtr++, D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+
+    switch (*(u16 *)&D_80121B50) {
+        case 0:
+            gSPDisplayList(gRegionAllocPtr++, D_2008900);
+            break;
+        case 1:
+            gSPDisplayList(gRegionAllocPtr++, D_2008E30);
+            break;
+        case 2:
+            gSPDisplayList(gRegionAllocPtr++, D_2008628);
+            break;
+        case 3:
+            gSPDisplayList(gRegionAllocPtr++, D_200B400);
+            break;
+        case 4:
+            gSPDisplayList(gRegionAllocPtr++, D_200BD48);
+            break;
+        case 5:
+            gSPDisplayList(gRegionAllocPtr++, D_200C060);
+            break;
+        case 6:
+            gSPDisplayList(gRegionAllocPtr++, D_200B7B8);
+            break;
+        case 7:
+            gSPDisplayList(gRegionAllocPtr++, D_2006430);
+            break;
+        case 8:
+            gSPDisplayList(gRegionAllocPtr++, D_20067B0);
+            break;
+        case 9:
+            gSPDisplayList(gRegionAllocPtr++, D_20057D8);
+            break;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_80069E50.s")
 
