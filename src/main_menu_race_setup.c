@@ -1,16 +1,11 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
+#include "fixed_point_matrix.h"
 
 typedef struct {
     s32 x;
     s32 y;
 } Vec2i;
-
-typedef struct {
-    s32 x;
-    s32 y;
-    s32 z;
-} Vec3i;
 
 typedef s16 Matrix4s[0x10];
 
@@ -56,9 +51,6 @@ void func_8003E5A8(void);
 extern MainMenuRaceSetupState *D_801235B8;
 extern MainMenuRaceSetupObject *D_800EC9C4;
 extern Vec2i D_8010B1B0;
-extern void func_80097FE4(void *, s16, s16);
-extern void func_8009853C(void *, s16, s16);
-extern void func_80098590(void *, s32 *, s32 *);
 
 void func_8003DDD0() {
     TransformScratch scratch;

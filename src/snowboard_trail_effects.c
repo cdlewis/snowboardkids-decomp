@@ -1,13 +1,8 @@
 #include "common.h"
+#include "fixed_point_matrix.h"
 
 #define SNOWBOARD_TRAIL_TIMER 0xF0
 #define SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD 0x400
-
-typedef struct {
-    /* 0x00 */ s32 x;
-    /* 0x04 */ s32 y;
-    /* 0x08 */ s32 z;
-} Vec3i;
 
 typedef struct {
     /* 0x00 */ s16 state;
@@ -52,11 +47,6 @@ extern void *func_80043040(s16 assetId);
 extern void func_800483FC(void *queue, void (*callback)(SnowboardTrailPlayer *), SnowboardTrailState *trail);
 extern void *func_8004885C(u8 *source);
 extern void func_8005F5C8(SnowboardTrailPlayer *player);
-extern void func_80097BAC(s16 *mtx, s16 rotY);
-extern void func_80097C18(s16 *mtx, s16 rotY);
-extern void func_80097CF0(s16 *mtx, s16 *source, s16 *dest);
-extern void func_80098590(s16 *mtx, Vec3i *source, Vec3i *dest);
-extern void func_800987A0(s16 *mtx, s16 *rotation, Vec3i *scale, s16 *dest);
 
 extern u8 D_80121B56;
 extern s16 D_80112144;

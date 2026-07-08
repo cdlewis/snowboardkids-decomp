@@ -1,6 +1,7 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
 #include "fixed_point_math.h"
+#include "fixed_point_matrix.h"
 
 typedef struct {
     char pad[0x18];
@@ -219,12 +220,7 @@ extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80088294(Vec3i *, s32, s32, u16);
 extern void func_80088A1C(Vec3i *, s32, s32, s32, s32);
-extern void func_80097C18(void *, s16);
-extern void func_80097FE4(void *, s16, s16);
-extern void func_80098174(s16 *, s16, s16);
-extern void func_80098590(void *, void *, Vec3i *);
 extern void func_80048D60(CourseEffectMatrixSource *);
-extern s32 func_80097AE8(s16);
 extern s32 func_80080CC4(s16, s32, s32);
 extern void osWritebackDCache(void *, s32);
 extern void func_80088294(Vec3i *, s32, s32, u16);
