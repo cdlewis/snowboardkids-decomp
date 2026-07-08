@@ -409,7 +409,7 @@ void func_8009C81C(SchedulerState *arg0) {
     D_8015A624 = 0;
 }
 
-// func_8009C8DC best match: 92.350% (nonmatchings/func_8009C8DC-4033633224288138541/base_10.c)
+// func_8009C8DC best match: 95.000% (nonmatchings/func_8009C8DC-4061930211835852828/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C8DC.s")
 
 #ifdef NON_MATCHING
@@ -426,11 +426,7 @@ void func_8009C8DC(SchedulerState *arg0) {
     void *framebuffer;
 
     locals.msg = NULL;
-    locals.queue1A4 = &arg0->queue1A4;
-loop:
-    do {
-        osRecvMesg(&arg0->eventQueue, (OSMesg *)&arg0->curRSPTask, 1);
-        func_8009CB98(arg0, arg0->curRSPTask);
+    locals.queue1A4 = &arg0->queue1A4; loop: do { osRecvMesg(&arg0->eventQueue, (OSMesg *) (&arg0->curRSPTask), 1); func_8009CB98(arg0, arg0->curRSPTask);
         osSendMesg(&arg0->retraceQueue, (OSMesg)1, 1);
         osRecvMesg(&arg0->queue14C, &locals.msg, 1);
         osRecvMesg(locals.queue1A4, &locals.msg, 1);
@@ -442,6 +438,8 @@ loop:
     osSendMesg(task->queue, task->msg, 1);
     if (((D_800DF150 - retrace) & 0xFFF) >= 0x801) {
         do {
+            if ((retrace && retrace) && retrace) {
+            }
             func_8009CC50(arg0);
         } while (((D_800DF150 - retrace) & 0xFFF) >= 0x801);
     }
