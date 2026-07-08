@@ -2,6 +2,7 @@
 #include "effect_task_scheduler.h"
 #include "main_menu_effects.h"
 #include "main_menu_scene_actor_0.h"
+#include "main_menu_scene_actor_4.h"
 
 struct MainMenuSceneActor {
     char pad0[0x18];
@@ -15,17 +16,8 @@ struct MainMenuSceneActor {
     /* 0x2C */ s16 unk2C;
 };
 
-typedef struct {
-    /* 0x00 */ s32 posX;
-    /* 0x04 */ s32 posY;
-    /* 0x08 */ s32 posZ;
-    /* 0x0C */ s8 unkC;
-    /* 0x0D */ s8 actorId;
-} MainMenuSceneActorShadow;
-
 extern MainMenuSceneActorShadow D_8010B1C0;
 
-extern void func_800373AC(MainMenuSceneActorShadow *arg0);
 extern void func_80041D20(s32 arg0, s32 arg1);
 extern void func_80041DD4(s32 arg0, s32 arg1);
 extern s32 func_80041FB4(s32 arg0);
