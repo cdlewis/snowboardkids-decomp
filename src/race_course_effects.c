@@ -118,8 +118,8 @@ typedef struct {
     void *palette;
     s16 rotation;
     char pad22[2];
-    void *vertices;
-    void *baseVertices;
+    Vtx *vertices;
+    Vtx *baseVertices;
     s16 vertexCount;
     char pad2E[2];
     s32 texturePtr;
@@ -213,6 +213,7 @@ extern void func_80069BEC(void *);
 extern void func_80069E50(void);
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
+extern void *func_80048594(s32);
 extern void *func_8004885C(CourseEffectMatrixSource *);
 extern void func_80048C90(CourseRenderCommand *, Vec3i *);
 extern s32 func_80049000(Vec3i *);
@@ -251,7 +252,7 @@ void func_80069A78(RaceCountdownEffect *);
 void func_80069AF0(RaceCountdownEffect *);
 void func_80069B60(RaceCountdownEffect *);
 void func_8006A894(void *);
-extern void func_8006C7F4(void);
+extern void func_8006C7F4(RaceCourseMarkerEffect *);
 void func_8006B3E0(Struct6B760 *);
 void func_8006B6C8(Struct6B760 *);
 void func_8006AF48(RaceCourseRenderEffect *);
@@ -1006,7 +1007,58 @@ void func_8006C698(Struct6C51C *arg0) {
     func_80071824(arg0, func_8006C5C0);
 }
 
+// func_8006C7F4 best match: 96.706% at nonmatchings/func_8006C7F4-2911448260736516995/base_10.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C7F4.s")
+
+#ifdef NON_MATCHING
+void func_8006C7F4(RaceCourseMarkerEffect *arg0) {
+    Gfx *gfx;
+    s32 i;
+    s16 vertexCount;
+    volatile u8 pad[0x10];
+
+    if (D_80156609 != 0) {
+        arg0->vertices = func_80048594(arg0->vertexCount * sizeof(Vtx));
+        if (arg0->vertices != NULL) {
+            i = 0;
+            if (arg0->vertexCount > 0) {
+                do {
+                    arg0->vertices[i] = arg0->baseVertices[i];
+                    arg0->vertices[i].v.tc[1] += arg0->rotation;
+                    arg0->vertices[i].v.tc[1] = arg0->vertices[i].v.tc[1];
+                    i++;
+                } while ((i < arg0->vertexCount) != 0);
+            }
+        }
+    }
+
+    if (arg0->vertices != NULL) {
+        gfx = gRegionAllocPtr++;
+        gfx->words.w0 = 0xE7000000;
+        vertexCount = (unsigned int) ((((unsigned int) ((((1 << 11) + MAX(1, 0x20 / 16)) - 1) / MAX(1, 0x20 / 16))) & ((0x01 << 12) - 1)) << 0);
+        gfx->words.w1 = 0;
+        gfx = gRegionAllocPtr++;
+        gfx->words.w0 = 0xBC000806;
+        gfx->words.w1 = func_80043040(D_80112140);
+        gfx = gRegionAllocPtr++;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32) D_800DEE50;
+        gfx = gRegionAllocPtr++;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = (u32) arg0->texturePtr;
+        gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->texture, G_IM_FMT_CI, 0x20, 0x40,
+                               0, G_TX_WRAP, G_TX_WRAP, 5, 6, G_TX_NOLOD, G_TX_NOLOD);
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette);
+        gfx = gRegionAllocPtr++;
+        vertexCount = arg0->vertexCount;
+        gfx->words.w0 = (((vertexCount << 0xA) | ((vertexCount << 4) - 1)) & 0xFFFF) | 0x04000000;
+        gfx->words.w1 = (u32) arg0->vertices;
+        gfx = gRegionAllocPtr++;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = (u32) arg0->palettePtr;
+    }
+}
+#endif
 
 void func_8006CB50(RaceCourseMarkerEffect *arg0) {
     arg0->rotation -= 0x40;
@@ -1023,7 +1075,7 @@ void func_8006CBBC(RaceCourseMarkerEffect *arg0) {
                   D_800DA814[arg0->entryIndex].textureIndex,
                   &arg0->texture, &arg0->palette);
     arg0->baseVertices =
-        func_8004597C(func_80043040(D_80112140), (s32) D_800DA80C[arg0->entryIndex].baseVerticesInput);
+        (Vtx *) func_8004597C(func_80043040(D_80112140), (s32) D_800DA80C[arg0->entryIndex].baseVerticesInput);
 
     {
         CourseMarkerEntry *entry = &D_800DA804[arg0->entryIndex];
