@@ -314,13 +314,16 @@ tile_selected:
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D254.s")
 
-// func_8001D2F0 best match: 94.245%
+// func_8001D2F0 best match: 97.609%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D2F0.s")
 
 #ifdef NON_MATCHING
 void func_8001D2F0(CharacterSelectWidgetActor *arg0) {
+    volatile s32 padTop[2];
     volatile u16 frameIndex;
+    volatile s32 padAfter[2];
     CharacterSelectFrameTileMap *savedFrame;
+    volatile s32 padBefore[2];
     register CharacterSelectFrameTileMap *tileMap;
     register s32 i;
     register s32 offset;
@@ -328,14 +331,17 @@ void func_8001D2F0(CharacterSelectWidgetActor *arg0) {
 
     actor = arg0;
     if ((D_800EC9C2 == 1) && (D_80121B5E == 2)) {
-        frameIndex = 9;
+        do {
+            frameIndex = 9;
+        } while (0);
     } else {
         frameIndex = actor->sprite.index;
     }
 
-    tileMap = &D_800B5FC0[frameIndex];
-    savedFrame = tileMap;
-    i = 0;
+    savedFrame = (tileMap = &D_800B5FC0[frameIndex]);
+    i = (offset = 0);
+    if (arg0 == 0) {
+    }
     do {
         func_80011264((s16)(actor->x + ((i & 3) << 5)), (s16)(actor->y + ((i / 4) << 5)),
                       func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), tileMap->center[0], 0, 0x100);
@@ -344,7 +350,6 @@ void func_8001D2F0(CharacterSelectWidgetActor *arg0) {
     } while (i < 0x10);
 
     tileMap = savedFrame;
-    offset = 0;
     do {
         func_80011264((s16)(actor->x + 0x80), (s16)(actor->y + offset),
                       func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), tileMap->right[0], 0, 0x100);
