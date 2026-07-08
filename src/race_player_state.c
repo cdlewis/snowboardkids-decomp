@@ -7,6 +7,11 @@ typedef struct {
     /* 0x01 */ char pad1[0xAF];
 } Unk8011228C;
 
+typedef struct {
+    /* 0x000 */ SoundPosition pos;
+    /* 0x00C */ char padC[0x600];
+} RacePlayerSoundPosition;
+
 extern void func_8008C098(RaceInputPlayer *);
 extern void func_8008C7D0(RaceInputPlayer *);
 extern void func_80082664(RaceInputPlayer *, s32, s32, s32);
@@ -18,8 +23,15 @@ extern void func_8008BB5C(RaceInputPlayer *, s32);
 extern void func_8009724C(RaceInputPlayer *);
 extern void *func_800711D0(void *, s32, s32);
 extern s32 func_80072138(s32, s32);
+extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
+extern void func_8008393C(RaceInputPlayer *);
 extern void func_80061034(s32, s16);
 extern void func_80057DD4(void *);
+extern void func_8007BE80(void *);
+extern void func_8007C5E8(void *);
+extern void func_8007CBC0(void *);
+extern void func_80097038(RaceInputPlayer *);
+extern void func_800483FC(void *, void (*)(void *), void *);
 
 extern void (*D_800DECD0[])(RaceInputPlayer *);
 extern void (*D_800DECD8[])(RaceInputPlayer *);
@@ -36,6 +48,10 @@ extern Unk8011228C D_8011228C[];
 extern void func_8007B250(void);
 extern void func_80087AFC(void);
 extern void func_80087EFC(void);
+extern RacePlayerSoundPosition D_80121D9C[];
+extern RacePlayerSoundPosition D_80121DA8[];
+extern void *D_801248C8;
+extern void *D_801248EC;
 
 void func_8008BEB0(void) {
     D_80121D80[0].playerIndex = 0;
@@ -565,7 +581,44 @@ void func_80096D8C(RaceInputPlayer *player) {
     }
 }
 
+// func_80096E3C best match: 97.539% (nonmatchings/func_80096E3C-1315772375853892447/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80096E3C.s")
+
+#ifdef NON_MATCHING
+void func_80096E3C(void) {
+    RaceInputPlayer *player;
+    RacePlayerSoundPosition *soundPos;
+    RacePlayerSoundPosition *nextSoundPos;
+    s8 *playerCountPtr;
+    s32 i;
+    s8 playerCount;
+
+    if (D_80121B56 == 0) {
+        playerCountPtr = &D_80121B54;
+        i = 0;
+        if (*playerCountPtr > 0) {
+            player = D_80121D80;
+            do { func_80097038(player); i++; player++; } while (i < *playerCountPtr); } nextSoundPos = D_80121DA8; } playerCountPtr = &D_80121B54; playerCount = *playerCountPtr; i = 0; if (playerCount > 0) { player = D_80121D80; do { func_8008393C(player); playerCount = *playerCountPtr; i++; player++; } while (i < playerCount); i = 0; } if (playerCount > 0) { nextSoundPos = D_80121DA8; soundPos = D_80121D9C; player = D_80121D80; do { if (player->soundDisabled == 0) { func_80072A20(player->unk584, &soundPos->pos, player->unk582, 0x46, player->unk588, i);
+            } else {
+                func_80072A20(player->unk584, &soundPos->pos, 0, 0x46, player->unk588, i);
+            }
+
+            nextSoundPos->pos = soundPos->pos;
+            player->unk2C = player->unk64 + player->unk2C - player->unk58 + 0xA000;
+            if (player->soundDisabled == 0) {
+                func_800483FC(&D_801248C8, func_8007C5E8, player);
+                func_800483FC(&D_801248EC, func_8007BE80, player);
+            } else {
+                func_800483FC(&D_801248EC, func_8007CBC0, player);
+            }
+            i++;
+            player++;
+            soundPos++;
+            nextSoundPos++;
+        } while (i < *playerCountPtr);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80097038.s")
 

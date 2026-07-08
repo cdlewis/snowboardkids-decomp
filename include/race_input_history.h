@@ -32,7 +32,9 @@ typedef struct {
     /* 0x01C */ s32 posX;
     /* 0x020 */ s32 posY;
     /* 0x024 */ s32 posZ;
-    /* 0x028 */ char pad28[0x1C];
+    /* 0x028 */ char pad28[4];
+    /* 0x02C */ s32 unk2C;
+    /* 0x030 */ char pad30[0x14];
     /* 0x044 */ s32 unk44;
     /* 0x048 */ char pad48[0x10];
     /* 0x058 */ s32 unk58;
@@ -104,7 +106,10 @@ typedef struct {
     /* 0x57A */ s8 unk57A;
     /* 0x57B */ char pad57B[7];
     /* 0x582 */ s16 unk582;
-    /* 0x584 */ char pad584[0x80];
+    /* 0x584 */ s16 unk584;
+    /* 0x586 */ char pad586[2];
+    /* 0x588 */ f32 unk588;
+    /* 0x58C */ char pad58C[0x78];
     /* 0x604 */ s16 actionEffectLevel;
     /* 0x606 */ char pad606[2];
     /* 0x608 */ s8 actionEffectFrame;
