@@ -54,6 +54,8 @@ typedef struct {
 typedef struct {
     /* 0x00 */ u8 pad0[0x42];
     /* 0x42 */ s16 textureHandle;
+    /* 0x44 */ u8 pad44[4];
+    /* 0x48 */ s16 iconTextureHandle;
 } CharacterSelectAssetHandles;
 
 typedef union {
@@ -69,6 +71,7 @@ typedef union {
 } CharacterSelectCursorState;
 
 extern void func_80071824(void *task, void (*callback)());
+extern void func_8001BA2C(s32, s32, s32, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
@@ -79,6 +82,8 @@ extern CharacterSelectAssetHandles D_80112130;
 extern s16 D_80112172;
 extern s16 D_80112178;
 extern s16 D_800B3420[][11];
+extern u16 D_800B61AC[];
+extern u8 D_800B61C0[];
 extern u8 D_800B61CC[];
 extern u8 D_800B6B88[];
 extern CharacterSelectText D_800B6210[];
@@ -1285,7 +1290,49 @@ void func_80020F44(CharacterSelectWidgetActor *arg0) {
     func_80071824(arg0, func_80020DEC);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80020F80.s")
+const char D_800E0B80[] = "%4d";
+
+void func_80020F80(CharacterSelectWidgetActor *arg0) {
+    char pad[8];
+    char buf[4];
+    s32 temp_v0;
+    s32 xOffset;
+    s32 i;
+    s32 var_t8;
+
+    if (D_80121B50 != D_8010AE80) {
+        func_8001BA2C(arg0->x, arg0->y, 0x3800, 0x5800);
+        func_8000F8AC((s16)(arg0->x + 4), (s16)(arg0->y + 4), func_80043040(D_80112130.textureHandle),
+                      0x23, 0x20, 0x20, 0, arg0->sprite.index, 0);
+        sprintf(buf - 4, D_800E0B80, D_800B61AC[D_80121B50]);
+        func_80013D0C((s16)(arg0->x + 8), (s16)(arg0->y + 0xC), buf - 4, 0, arg0->sprite.index);
+        func_8000F8AC((s16)(arg0->x + 0x28), (s16)(arg0->y + 0xC), func_80043040(D_80112130.textureHandle),
+                      0x24, 0x20, 0x20, 0, arg0->sprite.index, 0);
+        func_8000F8AC(arg0->x, (s16)(arg0->y + 0x14), func_80043040(D_80112130.textureHandle), 0x25, 0x20,
+                      0x20, 0, arg0->sprite.index, 0);
+
+        temp_v0 = D_800B61C0[D_80121B50];
+        xOffset = 0;
+        i = 0;
+        var_t8 = temp_v0 & 1;
+        if ((temp_v0 / 2) > 0) {
+            do {
+                func_8000F8AC((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x1C),
+                              func_80043040(D_80112130.iconTextureHandle), 0x25, 0x20, 0x20, 0,
+                              arg0->sprite.index, 0);
+                i++;
+                temp_v0 = D_800B61C0[D_80121B50];
+                xOffset += 0xC;
+            } while (i < (temp_v0 / 2));
+        }
+        var_t8 = temp_v0 & 1;
+        if (var_t8 != 0) {
+            func_8000F8AC((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x1C),
+                          func_80043040(D_80112130.iconTextureHandle), 0x26, 0x20, 0x20, 0, arg0->sprite.index,
+                          0);
+        }
+    }
+}
 
 void func_8002127C(CharacterSelectWidgetActor *arg0) {
     u8 state = arg0->transition.bytes.state;
