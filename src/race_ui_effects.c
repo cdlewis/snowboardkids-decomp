@@ -1299,7 +1299,7 @@ void func_800599DC(void *arg0) {
     func_80071824(arg0, func_80059950);
 }
 
-// func_80059A04 best match: 92.593% (nonmatchings/func_80059A04-5684860689308541580/base_16.c)
+// func_80059A04 best match: 96.300% (nonmatchings/func_80059A04-5272447827802519043/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059A04.s")
 
 #ifdef NON_MATCHING
@@ -1308,7 +1308,7 @@ void func_80059A04(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
     RaceUiPackedTime *record;
     s32 x;
     s16 y;
-    u16 color;
+    unsigned int color;
     char *ptr;
     char *end;
 
@@ -1318,9 +1318,7 @@ void func_80059A04(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
     y = arg2;
     color = arg3;
     end = &buffer[-0xE];
-    ptr = buffer - 0x10;
-    do {
-        func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+    ptr = buffer - 0x10; do { func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
         ptr++;
         x += 8;
     } while (ptr < end);
@@ -1343,8 +1341,10 @@ void func_80059A04(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
     end = &buffer[-0xE];
     do {
         func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
-        ptr++;
-        x += 8;
+        do {
+            ptr++;
+            x += 8;
+        } while (0);
     } while (ptr != end);
 }
 #endif
