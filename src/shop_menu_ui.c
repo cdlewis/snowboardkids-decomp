@@ -56,6 +56,11 @@ typedef struct {
 } ShopMenuFrameTileMap;
 
 typedef struct {
+    /* 0x00 */ s16 x;
+    /* 0x02 */ s16 y;
+} ShopMenuSparkleOffset;
+
+typedef struct {
     char pad0[0x18];
     /* 0x18 */ s16 unk18[5];
     /* 0x22 */ s16 unk22;
@@ -148,7 +153,6 @@ extern void func_8002F2C8(ShopMenuWidgetActor *);
 extern void func_8002E9E4(ShopMenuWidgetActor *);
 extern void func_8002EC5C(ShopMenuWidgetActor *);
 extern void func_8002E5A4(ShopMenuWidgetActor *);
-extern void func_8002FC00(ShopMenuWidgetActor *);
 extern void func_8002CAD4(ShopMenuWidgetActor *);
 extern void func_8002DE6C(ShopMenuWidgetActor *);
 extern void func_8002E074(ShopMenuWidgetActor *);
@@ -170,6 +174,9 @@ extern s32 D_800B34B0[];
 extern u16 D_800B34E0[];
 extern u16 D_800B34EC[];
 extern ShopMenuFrameTileMap D_800B79C0[];
+extern ShopMenuSparkleOffset D_800B7E40[];
+extern ShopMenuSparkleOffset D_800B7E58[];
+extern ShopMenuSparkleOffset D_800B7E70[];
 extern ShopDescriptionText D_800B7A14[];
 extern u8 D_800B7CD0;
 extern u16 D_800B7D00[];
@@ -1237,7 +1244,25 @@ void func_8002FBC8(ShopMenuWidgetActor *arg0) {
     func_80071824(arg0, func_8002FAB8);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002FC00.s")
+void func_8002FC00(ShopMenuWidgetActor *arg0) {
+    ShopMenuSparkleOffset *offset;
+    ShopMenuWidgetActor *actor;
+    ShopMenuWidgetActor *counterActor;
+
+    actor = arg0; offset = D_800B7E40; counterActor = arg0; do {
+        if (offset < D_800B7E58) {
+            func_8000F030((s16)(offset->x + actor->x), (s16)(offset->y + actor->sprite.index - 8),
+                          func_80043040(D_80112130[0x1C]), (counterActor->transition.counter + 0x39) & 0xFFFF,
+                          0x20, 0x20, 0, 0);
+        } else {
+            func_8000F030((s16)(offset[-6].x + actor->y), (s16)((offset[-6].y + actor->sprite.index) * -1 - 8),
+                          func_80043040(D_80112130[0x1C]), (counterActor->transition.counter + 0x39) & 0xFFFF,
+                          0x20, 0x20, 0, 0);
+        }
+        offset++;
+        counterActor = (ShopMenuWidgetActor *)&counterActor->pad0[2];
+    } while (offset != D_800B7E70);
+}
 
 void func_8002FD70(ShopMenuWidgetActor *arg0) {
     s32 i;
