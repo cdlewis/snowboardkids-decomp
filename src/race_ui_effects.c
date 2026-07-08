@@ -507,6 +507,16 @@ typedef struct {
 } RaceUiCourseStatsActor;
 
 typedef struct {
+    /* 0x0000 */ u8 pad0[0x4E];
+    /* 0x004E */ u8 courseStatsNames[10][5][4];
+} RaceUiCourseStatsNameData;
+
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x77FB];
+    /* 0x77FB */ u8 courseStatsIcons[10][5];
+} RaceUiCourseStatsIconData;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x1C];
     /* 0x1C */ s16 alpha;
 } RaceUiAlphaActor;
@@ -1319,10 +1329,6 @@ void func_800599DC(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059A04.s")
 
-// func_80059C34 best match: 96.775% at nonmatchings/func_80059C34-5635509610426229442/base_9.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059C34.s")
-
-#ifdef NON_MATCHING
 void func_80059C34(RaceUiCourseStatsActor *arg0) {
     s32 y;
     s32 row;
@@ -1331,29 +1337,29 @@ void func_80059C34(RaceUiCourseStatsActor *arg0) {
 
     actor = arg0;
     y = -0x50;
-    row = 0;
-    offset = 0;
-    do {
+    for (row = 0, offset = 0; row != 5; row++, offset += 4, y += 0x20) {
         func_80045A78(-8, (s16)y, func_80043040(D_80112130.popupFontHandle), (row + 0x77) & 0xFFFF);
         if ((row == actor->index) && (D_80156612 & 1)) {
-            func_80059A04(D_800EC9F0 + (((D_80121B50 << 2) + D_80121B50) << 2) + offset + 0x4E, 0x10, y, 0x10);
+            func_80059A04(((RaceUiCourseStatsNameData *)D_800EC9F0)->courseStatsNames[D_80121B50][row],
+                          0x10, y, 0x10);
         } else if (row < 3) {
-            func_80059A04(D_800EC9F0 + (((D_80121B50 << 2) + D_80121B50) << 2) + offset + 0x4E, 0x10, y, 0xC);
+            func_80059A04(((RaceUiCourseStatsNameData *)D_800EC9F0)->courseStatsNames[D_80121B50][row],
+                          0x10, y, 0xC);
         } else {
-            func_80059A04(D_800EC9F0 + (((D_80121B50 << 2) + D_80121B50) << 2) + offset + 0x4E, 0x10, y, 0xD);
+            func_80059A04(((RaceUiCourseStatsNameData *)D_800EC9F0)->courseStatsNames[D_80121B50][row],
+                          0x10, y, 0xD);
         }
 
         func_80045A78(0x58, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                      ((D_800EC9F0[((D_80121B50 << 2) + D_80121B50) + row + 0x77FB] & 7) + 0x51) & 0xFFFF);
+                      ((((RaceUiCourseStatsIconData *)D_800EC9F0)->courseStatsIcons[D_80121B50][row] & 7) +
+                       0x51) &
+                          0xFFFF);
         func_80045A78(0x6C, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                      (((D_800EC9F0[((D_80121B50 << 2) + D_80121B50) + row + 0x77FB] >> 3) + 0x7C) & 0xFFFF));
-
-        row++;
-        offset += 4;
-        y += 0x20;
-    } while (row != 5);
+                      (((*((RaceUiCourseStatsIconData *)D_800EC9F0)).courseStatsIcons[D_80121B50][row] >> 3) +
+                       0x7C) &
+                          0xFFFF);
+    }
 }
-#endif
 
 void func_80059E5C(RaceUiAlpha1AActor *arg0) {
     Gfx *gfx;
