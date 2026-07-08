@@ -10,6 +10,7 @@
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
 #include "main_menu_transition.h"
+#include "main_menu_ui.h"
 
 #define OS_MESG_BLOCK 1
 
@@ -100,9 +101,6 @@ extern void func_80002A1C(void);
 extern void func_80002CE4(void);
 extern void func_8000262C(void);
 extern void func_80002024(void);
-extern void func_80032684(void);
-extern void func_80032934(void);
-extern void func_80032A50(void);
 extern void func_8003E600(void);
 extern void func_8003ED00(void);
 extern void func_80073140(void);
