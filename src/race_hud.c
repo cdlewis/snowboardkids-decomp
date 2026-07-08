@@ -520,6 +520,7 @@ void func_80018134(RaceHudPlayerListActor *arg0) {
  do { if (arg0->mode != 0) { i = 0; if (((s32) D_80121B55) > 0) { player = D_80121D80; tiles = D_800B5B30; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) D_80121B55) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) D_80121B55)); } func_8000F8AC(actorX->x[0], arg0->y, func_80043040(D_80112172), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (RaceHudPlayerListActor *) (((u8 *) actorX) + 2); } while (i < ((s32) D_80121B55)); } } } while (0);
 }
 
+// func_800182A4 best match: 99.740% (nonmatchings/func_800182A4-1315772375853892447/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_800182A4.s")
 
 #ifdef NON_MATCHING
@@ -528,20 +529,41 @@ void func_800182A4(RaceHudPlayerListActor *arg0) {
     u8 mode;
     u8 globalMode;
     u8 *player;
+    s8 *layout;
 
     globalMode = D_8010AE52;
     mode = arg0->mode;
-    {
-        if (globalMode != mode) {
-            mode = (arg0->mode = globalMode);
-        }
 
-        if (mode != 0) {
- do { i = 0; if (((s32) D_80121B55) > 0) { player = (u8 *)D_80121D80; do { if (player[5] < 5) { arg0->x[i] = (D_8010AE64[i] * 0x20) + arg0->baseX; } else if (player[5] == 5) { arg0->x[i] = arg0->baseX; } i++; player += 0x60C; } while (i < ((s32) D_80121B55)); } if (((s32) arg0->timer) < 0x10) { arg0->scale -= 9; } else { arg0->scale += 9; } arg0->timer = (arg0->timer + 1) & 0x1F; mode = arg0->mode; } while (0);
-        }
-
-        D_8010AE52 = mode;
+    if (globalMode != mode) {
+        mode = (arg0->mode = globalMode);
     }
+
+    if (mode != 0) {
+        i = 0;
+        if ((s32)D_80121B55 > 0) {
+            layout = D_8010AE64;
+            player = D_80121D80;
+            do {
+                if (player[5] < 5) {
+                    arg0->x[i] = (layout[i] * 0x20) + arg0->baseX;
+                } else if (player[5] == 5) {
+                    arg0->x[i] = arg0->baseX;
+                }
+                i++;
+                player += 0x60C;
+            } while (i < (s32)D_80121B55);
+        }
+
+        if ((s32)arg0->timer < 0x10) {
+            arg0->scale -= 9;
+        } else {
+            arg0->scale += 9;
+        }
+        arg0->timer = (arg0->timer + 1) & 0x1F;
+        mode = (((((((((arg0->mode & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF;
+    }
+
+    *(u8 *)0x8010AE52 = mode;
     func_800483FC(&D_80124868, func_80018134, arg0);
 }
 #endif
