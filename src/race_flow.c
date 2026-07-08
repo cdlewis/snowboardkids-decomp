@@ -13,6 +13,7 @@
 #include "input_task_scheduler.h"
 #include "main_menu.h"
 #include "main_menu_overlay_effects.h"
+#include "main_menu_panel_ui.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
 #define COURSE_GRID_ENTRY_END -2
@@ -133,7 +134,6 @@ extern void func_80045914(void);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s32, s32, s32, s32, s32);
 extern void func_800483FC(void *, void (*)(s32), s32);
-extern void func_80053634(void *);
 extern void func_8006D520(s32, s32);
 extern void func_8006D580(u16, u16);
 extern void func_8006D700(void);
