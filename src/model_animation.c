@@ -43,7 +43,8 @@ typedef struct ModelAnimState {
 
 typedef struct CourseSpawnEntry {
     s16 pathIndex;
-    char pad2[0x3E];
+    char pad2[0x3C];
+    s16 keyframeCount;
     s32 unk40;
     s32 unk44;
 } CourseSpawnEntry;
@@ -62,6 +63,7 @@ extern s32 D_80121BC8;
 extern s16 D_8011215C[];
 extern s16 D_80112166;
 extern s16 D_80121B50;
+extern s16 D_800B957E;
 extern CourseSpawnEntry D_800B9540[];
 
 extern s32 func_80043040(s16);
@@ -86,7 +88,74 @@ void func_8007D190(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007D200.s")
 
+// func_8007D548 best match: 95.902% (base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007D548.s")
+
+#ifdef NON_MATCHING
+s32 func_8007D548(s32 x, s32 z) {
+    s32 index;
+    s32 keyframeOffset;
+
+    index = 0;
+    if (*(s16 *)((u8 *)&D_800B957E + D_80121B50 * sizeof(CourseSpawnEntry)) >= 0) {
+        keyframeOffset = 0;
+        do {
+            ModelAnimKeyframe *keyframe;
+            ModelAnimCoord *coord0;
+            ModelAnimCoord *coord1;
+            ModelAnimCoord *coord2;
+            ModelAnimCoord *coord3;
+            s32 outside;
+            s32 x0;
+            s32 x1;
+            s32 z0;
+            s32 x2;
+            s32 x3;
+            s32 z1;
+            s32 z2;
+            s32 z3;
+
+            keyframe = (ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset);
+            outside = FALSE;
+            coord0 = &D_80121B90[keyframe->coordIndices[0]];
+            coord1 = &D_80121B90[keyframe->coordIndices[1]];
+            coord2 = &D_80121B90[keyframe->coordIndices[2]];
+            coord3 = &D_80121B90[keyframe->coordIndices[3]];
+
+            x0 = coord0->x << 0x11;
+            x1 = coord1->x << 0x11;
+            coord2 = &D_80121B90[keyframe->coordIndices[2]];
+            z0 = coord0->z << 0x11;
+            x2 = coord2->x << 0x11;
+            x3 = coord3->x << 0x11;
+            z1 = coord1->z << 0x11;
+            z2 = coord2->z << 0x11;
+            z3 = coord3->z << 0x11;
+
+            if ((s64)(x0 - x1) * (z - z1) - (s64)(z0 - z1) * (x - x1) < 0) {
+                outside = TRUE;
+            }
+            if ((s64)(x3 - x2) * (z - z2) - (s64)(z3 - z2) * (x - x2) < 0) {
+                outside = TRUE;
+            }
+            if ((s64)(x2 - x0) * (z - z0) - (s64)(z2 - z0) * (x - x0) < 0) {
+                outside = TRUE;
+            }
+            if ((s64)(x1 - x3) * (z - z3) - (s64)(z1 - z3) * (x - x3) < 0) {
+                outside = TRUE;
+            }
+
+            if (outside == FALSE) {
+                return index;
+            }
+            index++;
+            keyframeOffset += sizeof(ModelAnimKeyframe);
+        } while (index <= *(s16 *)((u8 *)&D_800B957E + D_80121B50 * sizeof(CourseSpawnEntry)));
+    }
+
+    return 0;
+}
+#endif
 
 void func_8007D87C(s32 *arg0, s32 *arg1, s32 arg2) {
     s32 temp5;
