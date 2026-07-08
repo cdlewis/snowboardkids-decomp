@@ -90,7 +90,7 @@ extern s32 D_8010ADE8;
 extern s8 D_8010AE64[];
 extern u8 D_8010AEB0;
 extern u8 D_8010AEA0[];
-extern u8 D_8010AF18;
+extern u8 D_8010AF18[];
 extern u8 D_8010AF1C;
 extern u8 D_800B7040[];
 extern u8 D_800B706C[];
@@ -263,7 +263,80 @@ void func_80025AA8(void *arg0) {
 }
 #endif
 
+// func_80025BE4 best match: 99.568% (nonmatchings/func_80025BE4-5684860689308541580/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025BE4.s")
+
+#ifdef NON_MATCHING
+void func_80025BE4(CourseSelectWidgetActor *arg0) {
+    register CourseSelectWidgetActor *actor;
+    s32 i;
+    CourseSelectWidgetActor *statePtr;
+    CourseSelectRacePlayer *player;
+    u8 state;
+
+    actor = arg0;
+    i = 0;
+    if ((s32) D_80121B55 > 0) {
+        statePtr = actor;
+        do {
+            if ((D_801235B4 != 0) && (D_800EC9C2 != 3)) {
+                statePtr->unk30 = 4;
+            }
+            state = statePtr->unk30;
+            switch (state) {
+            case 0:
+                actor->coordinates[i + 8] += 0x26;
+                if (actor->coordinates[i + 8] >= 0x100) {
+                    actor->coordinates[i + 8] = 0x100;
+                    statePtr->unk30 = 1;
+                }
+                state = statePtr->unk30;
+                break;
+            case 1:
+                player = &D_80121D80[i];
+                if (statePtr->unk34 < 0x10) {
+                    actor->coordinates[i + 8] -= 9;
+                } else {
+                    actor->coordinates[i + 8] += 9;
+                }
+                statePtr->unk34 = (statePtr->unk34 + 1) & 0x1F;
+                if ((player->pad6[2] == 1) || (D_80121D80[0].pad6[2] == 3)) {
+                    statePtr->unk30 = 2;
+                }
+                state = statePtr->unk30;
+                break;
+            case 2:
+                player = &D_80121D80[i];
+                if (player->pad6[2] == 3) {
+                    statePtr->unk30 = 4;
+                }
+                if (player->pad6[2] == 0) {
+                    statePtr->unk30 = 1;
+                    actor->coordinates[i + 8] = 0x100;
+                    statePtr->unk34 = 0;
+                }
+                if (D_801235B8->screenState == 9) {
+                    statePtr->unk30 = 4;
+                }
+                state = statePtr->unk30;
+                break;
+            case 3:
+            case 4:
+                break;
+            }
+            i++;
+            statePtr = (CourseSelectWidgetActor *) ((u8 *) statePtr + 1);
+            D_8010AF18[i - 1] = state;
+        } while (i < (s32) D_80121B55);
+    }
+
+    if (actor->unk30 == 4) {
+        func_800716E4(actor);
+    } else {
+        func_800483FC(&D_80124868, func_80025AA8, actor);
+    }
+}
+#endif
 
 // func_80025E6C best match: 82.713% (nonmatchings/func_80025E6C-2775475442547365205/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025E6C.s")
