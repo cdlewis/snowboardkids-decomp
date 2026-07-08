@@ -1,5 +1,6 @@
 #include "common.h"
 #include "character_select_flow.h"
+#include "character_select_transition.h"
 
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_8007105C(void);
