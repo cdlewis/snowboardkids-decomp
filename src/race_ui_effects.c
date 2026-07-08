@@ -706,6 +706,7 @@ extern void *D_800E1220;
 extern void *D_800E1230;
 extern char D_800E1240[];
 extern char D_800E1244[];
+extern char D_800E12F4[];
 extern char D_800E14D0[];
 extern char D_800E12F8[];
 extern char D_800E12FC[];
@@ -782,7 +783,7 @@ extern void func_80063220(RaceUiSpinningParticleActor *);
 extern void func_800621DC(void *);
 extern void func_8005A1FC(void *);
 extern void func_8005A31C(void);
-extern void func_8005A884(void);
+extern void func_8005A884(RaceUiPopupActor *);
 extern void func_8005AAE4(RaceUiAlpha18Actor *);
 extern void func_8005AE1C(void *);
 extern void func_8005A4BC(void);
@@ -1369,7 +1370,53 @@ void func_8005A2F0(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005A4BC.s")
 
+// func_8005A884 best match: 61.020% (nonmatchings/func_8005A884-2775475442547365205/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005A884.s")
+
+#ifdef NON_MATCHING
+void func_8005A884(RaceUiPopupActor *arg0) {
+    volatile u8 padding[0x20];
+    char buffer[8];
+    s32 i;
+    s32 color;
+    s32 y;
+
+    y = -0x50;
+    i = 0;
+    do {
+        func_80045A78(-8, (s16)y, func_80043040(D_80112130.popupFontHandle), (i + 0x77) & 0xFFFF);
+
+        if ((i == arg0->index) && (D_80156612 & 1)) {
+            color = 0x10;
+        } else {
+            color = 0xD;
+            if (i < 3) {
+                color = 0xC;
+            }
+        }
+
+        sprintf(buffer, D_800E12F4, D_800EC9F0[(D_80121B50 * 4) + D_80121B50 + i + 0x7832]);
+
+        if ((u8)buffer[0] != ' ') {
+            func_80046D68(0x10, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                          (buffer[0] - 5) & 0xFFFF, color);
+        }
+
+        if ((u8)buffer[1] != ' ') {
+            func_80046D68(0x18, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                          (buffer[1] - 5) & 0xFFFF, color & 0xFFFF);
+        }
+
+        func_80045A78(0x46, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                      ((D_800EC9F0[(D_80121B50 * 4) + D_80121B50 + i + 0x7869] & 7) + 0x51) & 0xFFFF);
+        func_80045A78(0x58, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                      ((D_800EC9F0[(D_80121B50 * 4) + D_80121B50 + i + 0x7869] >> 3) + 0x7C) & 0xFFFF);
+
+        i++;
+        y += 0x20;
+    } while (i != 5);
+}
+#endif
 
 // func_8005AAE4 best match: 98.977% (nonmatchings/func_8005AAE4-9017456803007796287/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005AAE4.s")
