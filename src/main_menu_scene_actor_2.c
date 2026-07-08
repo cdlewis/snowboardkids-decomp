@@ -2,6 +2,7 @@
 #include "effect_task_scheduler.h"
 #include "main_menu_effects.h"
 #include "main_menu_scene_actor_2.h"
+#include "main_menu_scene_actor_3.h"
 
 struct MainMenuSceneActor2 {
     /* 0x00 */ char pad0[0x18];
@@ -21,7 +22,6 @@ extern void func_80042034(s32 arg0);
 extern void func_800428C8(s32 arg0);
 extern void func_8004209C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern void func_800420FC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-extern void func_8003B308(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
 extern u8 D_8010B1A4;
 extern u16 D_8010B1A2;
 extern u8 D_8010B1AA;

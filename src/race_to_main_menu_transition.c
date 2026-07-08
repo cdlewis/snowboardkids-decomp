@@ -10,6 +10,7 @@
 #include "main_menu_scene_actor_0.h"
 #include "main_menu_scene_actor_1.h"
 #include "main_menu_scene_actor_2.h"
+#include "main_menu_scene_actor_3.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -52,7 +53,6 @@ void func_8000D590(void);
 void func_8000D690(void);
 void func_8000D724(void);
 extern void func_80036FB4(void);
-extern void func_8003B264(void);
 
 extern u8 D_14B450[];
 extern u8 D_1502A0[];
