@@ -364,6 +364,11 @@ and control flow already match and only register *names* differ.
 - **Verify function signatures and call argument order against the target
   assembly *before* tuning register allocation.** Wrong argument order
   produces misleading register-allocation diffs and wastes permutation time.
+- **Use explicit `else` assignments when IDO keeps a final branch.** In small
+  value-selection blocks such as `default; if (cond) override;`, IDO may
+  collapse the override into fall-through. Rewriting as `if (cond) override;
+  else default;` can preserve the target's explicit branch and delay-slot
+  assignment without changing semantics.
 - **After a successful match, check the whole modified file, not just the
   matched function** — functions accessing the same structs can break when a
   struct layout changes. Run `./tools/build-and-verify.sh`; if the checksum
