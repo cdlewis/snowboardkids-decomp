@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "menu_rendering.h"
 #include "course_select_ui.h"
@@ -24,7 +25,6 @@ typedef struct {
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void func_80025AA8(CourseSelectWidgetActor *);
 extern void func_8002E568(CourseSelectWidgetActor *);
-extern s32 func_80043040(s16);
 extern u8 D_800EC9C2;
 extern u8 D_800EC9E6;
 extern s32 D_8010ADDC;

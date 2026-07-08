@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 
 #define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x3E])
@@ -111,7 +112,6 @@ extern s32 func_80011D74(void *, s32, s16, s16);
 extern void func_8000F8AC(s16, s16, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80010074(s16, s16, s32, s32, s32);
 extern void func_800129DC(s16, s16, u16 *, s32, s32);
-extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
 extern void func_80014600(MenuIntroActor *);
 extern void func_80014EF0(MenuItemActor *);

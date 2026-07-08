@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "asset_decompression.h"
 #include "course_asset_loader.h"
 #include "game_boot.h"
@@ -81,9 +82,6 @@ extern u8 D_245A80[];
 extern u8 D_5DAF30[];
 extern u8 D_5DB9D0[];
 
-extern s16 func_80042D58(s32);
-extern s32 func_80043040(s16);
-extern void func_80043060(s32);
 extern void func_8007D190(void);
 
 #ifdef NON_MATCHING

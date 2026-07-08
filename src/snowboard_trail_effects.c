@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "fixed_point_matrix.h"
 
 #define SNOWBOARD_TRAIL_TIMER 0xF0
@@ -43,7 +44,6 @@ typedef struct {
     /* 0x58C */ SnowboardTrailState trail;
 } SnowboardTrailPlayer;
 
-extern void *func_80043040(s16 assetId);
 extern void func_800483FC(void *queue, void (*callback)(SnowboardTrailPlayer *), SnowboardTrailState *trail);
 extern void *func_8004885C(u8 *source);
 extern void func_8005F5C8(SnowboardTrailPlayer *player);

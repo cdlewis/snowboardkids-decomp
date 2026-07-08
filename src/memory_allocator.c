@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 
 #define MEMORY_BLOCK_COUNT 0x50
 

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "main_menu_score_ui.h"
 
@@ -21,7 +22,6 @@ extern void func_800129DC(s16, s16, u8 *, s32, s32);
 extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, u16, s32);
-extern s32 func_80043040(s16);
 extern void func_800483FC(void *, void *, void *);
 extern u8 D_800B73F0[][0x4C];
 extern u8 D_800B7986[];

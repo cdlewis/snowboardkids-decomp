@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "game_audio.h"
 #include "game_boot.h"
 
@@ -90,7 +91,6 @@ s32 func_8009D8D8(s32 arg0);
 s32 func_8009DEC4(s32 arg0);
 s32 func_8009DF14(s32 arg0, s32 arg1);
 s32 func_8009DC68(s32 soundId, s32 volume, s32 pan, s32 arg3, s32 priority);
-s32 func_80043040(s16 arg0);
 void *func_80048388(s32 arg0);
 void func_800720E4(s32 arg0);
 s32 func_80071B74(void);

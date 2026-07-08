@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "game_audio.h"
@@ -203,7 +204,6 @@ extern u8 D_80156609;
 extern void *D_80156614;
 extern Gfx *gRegionAllocPtr;
 
-s32 func_80043040(s16);
 void func_800459D4(u8 *, u16, u16, void **, void **);
 void func_80045990(s32, u16, void *, void *);
 void func_80046D68(s16, s16, s32, s32, s32);

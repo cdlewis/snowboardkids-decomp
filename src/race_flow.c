@@ -1,6 +1,7 @@
 #include "common.h"
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
+#include "memory_allocator.h"
 #include "asset_decompression.h"
 #include "character_select_flow.h"
 #include "character_select_menu.h"
@@ -120,8 +121,6 @@ extern u8 D_59E7F0[];
 extern u8 D_60F1A0[];
 extern u8 D_60F990[];
 
-extern s16 func_80042D58(s32);
-extern s32 *func_80043040(s16);
 extern void func_800055EC(void);
 extern void func_800086EC(void);
 extern void func_8000C280(void);
@@ -129,7 +128,6 @@ extern void func_8000D340(void);
 extern void func_8001710C(void *);
 extern void func_8003DFD0(void);
 extern s32 func_80040D94(void);
-extern void func_80042C20(void);
 extern void func_80045914(void);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s32, s32, s32, s32, s32);
@@ -249,7 +247,7 @@ void func_80072E98(void) {
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
         if ((entry->status == COURSE_GRID_ENTRY_FREE) && (entry->courseId == D_80121D80[0].courseId)) {
-            s32 *status = func_80043040(D_80112130[0x2B]);
+            s32 *status = (s32 *)func_80043040(D_80112130[0x2B]);
             if (*status < 0x1194) {
                 entry->status = *status;
                 ((RacePlayerState *) func_80043040(D_80112130[0x2C]))[i] = D_80121D80[0];

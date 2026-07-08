@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
@@ -208,8 +209,6 @@ extern void osWritebackDCache(void *, s32);
 extern void func_8006A80C(void *);
 extern void func_80069BEC(void *);
 extern void func_80069E50(void);
-extern s16 func_80042D58(s32);
-extern s32 func_80043040(s16);
 extern void *func_80048594(s32);
 extern void func_800486BC(void *, void *);
 extern void *func_8004885C(CourseEffectMatrixSource *);
