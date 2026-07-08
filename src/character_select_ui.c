@@ -19,6 +19,7 @@ typedef struct {
             /* 0x1F */ u8 timer;
         } bytes;
         /* 0x1E */ u16 alpha;
+        /* 0x1E */ s16 signedAlpha;
     } transition;
     union {
         struct {
@@ -2194,7 +2195,43 @@ void func_800224A0(CharacterSelectWidgetActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8002262C.s")
+void func_8002262C(CharacterSelectWidgetActor *arg0) {
+    s32 step;
+
+    if ((D_800EC9D0 != 0) && (D_800EC9D0 != 3) && (D_800EC9D0 != 4)) {
+        step = ((D_800EC9D0 < 5) ? 1 : -1) * 8;
+        arg0->transition.signedAlpha += step;
+
+        if (arg0->transition.signedAlpha == 0x20) {
+            D_800EC9D0 += 2;
+            arg0->row.value = 0;
+            arg0->selection.counter = 0x100;
+        }
+
+        if (step == 8) {
+            if (arg0->transition.signedAlpha < 0x18) {
+                arg0->y += 8;
+            }
+            arg0->sprite.index += 8;
+        } else {
+            if (arg0->transition.signedAlpha < 0x10) {
+                arg0->y -= 8;
+            }
+            arg0->sprite.index -= 8;
+        }
+    }
+
+    if ((D_800EC9D0 == 3) || (D_800EC9D0 == 4)) {
+        if ((u16)arg0->row.value < 0x10) {
+            arg0->selection.counter = (u16)arg0->selection.counter - 9;
+        } else {
+            arg0->selection.counter = (u16)arg0->selection.counter + 9;
+        }
+        arg0->row.value = ((u16)arg0->row.value + 1) & 0x1F;
+    }
+
+    func_800483FC(&D_80124868, func_800224A0, arg0);
+}
 
 void func_800227A0(CharacterSelectWidgetActor *arg0) {
     arg0->x = -0x74;
