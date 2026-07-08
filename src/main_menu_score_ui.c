@@ -101,21 +101,20 @@ void func_8002B560(MainMenuScoreTask *arg0);
 void func_8002BC60(MainMenuScoreTask *arg0);
 void func_8002C498(MainMenuScoreTask *arg0);
 
-// func_8002B560 best match: 98.638% (nonmatchings/func_8002B560-2911448260736516995/base_8.c)
+// func_8002B560 best match: 98.756% (nonmatchings/func_8002B560-4033633224288138541/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002B560.s")
 
 #ifdef NON_MATCHING
 const char D_800E0F30[] = "%6d";
 
 void func_8002B560(MainMenuScoreTask *arg0) {
-    char pad[0x18];
-    char text[8];
     s16 *new_var;
     s16 *badgeIndex;
     s32 xOffset;
     s32 tile;
     s32 alpha;
     s32 i;
+    char text[8];
     s32 next;
     s32 count;
 
