@@ -2,6 +2,7 @@
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
+#include "game_boot.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -46,7 +47,6 @@ extern void func_80070860(s32, s32, s32, s32, s32, s32, s32, f32, s32, s32);
 extern void func_80099658(s32);
 extern void func_8009954C(s32);
 extern void func_8009956C(InputTaskCallback, s32);
-extern void func_80099C44(u8 *, s32, s32);
 
 void func_8000D340(void);
 void func_8000D590(void);

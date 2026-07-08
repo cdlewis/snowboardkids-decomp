@@ -1,6 +1,7 @@
 #include "common.h"
 #include "asset_decompression.h"
 #include "course_asset_loader.h"
+#include "game_boot.h"
 
 #define COURSE_COUNT 10
 #define COURSE_PLAYER_COUNT 4
@@ -84,7 +85,6 @@ extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern void func_80043060(s32);
 extern void func_8007D190(void);
-extern void func_80099C44(u8 *, s32, s32);
 
 #ifdef NON_MATCHING
 static CourseAssetGroup sCourseAssets[COURSE_COUNT] = {
