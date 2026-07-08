@@ -61,6 +61,7 @@ typedef struct {
 
 typedef union {
     /* 0x00 */ PlayerCountSelectFrameTileMap entries[3];
+    /* 0x00 */ PlayerCountSelectFrameTileMap frames[3];
     struct {
         /* 0x00 */ u8 pad0[0x7E];
         /* 0x7E */ PlayerCountSelectFrameTileMap selected;
@@ -356,52 +357,40 @@ void func_80029FB8(PlayerCountSelectWidgetActor *arg0) {
     func_80071824(arg0, func_80029CE4);
 }
 
-// func_8002A008 best match: 99.936%
-#pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_8002A008.s")
-
-#ifdef NON_MATCHING
 void func_8002A008(PlayerCountSelectWidgetActor *arg0) {
+    s32 shouldDraw;
     s32 i;
-    s32 tile;
+    s32 tileOffset;
     s32 offset;
 
-    do {
-        i = 0;
-        tile = 0;
-        do {
-            if (1) {}
-            if (1) {}
-            if (1) {}
-            if (1) {}
-            func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                          func_80043040(D_80112130.frameTextureHandle), D_800B70F0.padded.selected.center[tile], 0,
-                          0x100, 0xA0, 0x49);
-            i++;
-            if (!arg0->y) {}
-            tile++;
-        } while (i < 0x10);
-    } while ((arg0->x + 0x80) * 0);
+    tileOffset = 0;
+    shouldDraw = 1;
+    for (i = 0; i < 16; i++, tileOffset++) {
+        func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
+                      func_80043040(D_80112130.frameTextureHandle),
+                      D_800B70F0.frames[(u16)arg0->sprite.spriteIndex].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+    }
 
+    if (shouldDraw) {
+        tileOffset = 0;
+        i = 0x80;
+    }
     offset = 0;
-    tile = 0;
-    i = 0x80;
     do {
+        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), func_80043040(D_80112130.frameTextureHandle),
+                      D_800B70F0.frames[(u16)arg0->sprite.spriteIndex].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), func_80043040(D_80112130.frameTextureHandle),
+                      D_800B70F0.frames[(u16)arg0->sprite.spriteIndex].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
-        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      func_80043040(D_80112130.frameTextureHandle), D_800B70F0.padded.selected.right[tile], 0,
-                      0x100, 0xA0, 0x49);
-        i = 0x80;
-        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      func_80043040(D_80112130.frameTextureHandle), D_800B70F0.padded.selected.bottom[tile], 0,
-                      0x100, 0xA0, 0x49);
         offset += 0x40;
-        tile++;
+        tileOffset++;
     } while (offset != i);
+    i++;
+    i--;
 
-    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
-                  D_800B7196, (0, 0), 0x100, 0xA0, 0x49);
+    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.frameTextureHandle),
+                  D_800B70F0.frames[(u16)arg0->sprite.spriteIndex].corner, 0, 0x100, 0xA0, 0x49);
 }
-#endif
 
 void func_8002A27C(PlayerCountSelectWidgetActor *arg0) {
     int state;
