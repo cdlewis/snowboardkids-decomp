@@ -1,6 +1,7 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
 #include "course_select_menu.h"
+#include "input_task_scheduler.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -92,9 +93,6 @@ extern void func_80070614(s32);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_80070E90(s32);
 extern void func_80072138(s32, s32);
-extern void func_8009954C(s32);
-extern void func_80099658(s32);
-extern void func_8009956C(void *, s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_800097E0.s")
 

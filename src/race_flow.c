@@ -10,6 +10,7 @@
 #include "controller_pak_menu_flow.h"
 #include "course_select_menu.h"
 #include "game_setup_menu.h"
+#include "input_task_scheduler.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
 #define COURSE_GRID_ENTRY_END -2
@@ -175,10 +176,6 @@ extern void func_800781FC(void);
 extern void func_8007AA50(void);
 extern void func_8008C704(void);
 extern void func_80096E3C(void);
-extern void func_800994F4(s32, void *, s32);
-extern void func_8009954C(s32);
-extern void func_8009956C(void *, s32);
-extern void func_80099614(s32);
 
 void func_80072C88(void);
 void func_80072D04(void);

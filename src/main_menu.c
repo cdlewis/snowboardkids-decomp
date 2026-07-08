@@ -3,6 +3,7 @@
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "game_boot.h"
+#include "input_task_scheduler.h"
 
 #define OS_MESG_BLOCK 1
 
@@ -83,10 +84,6 @@ extern s32 osPfsFileState(OSPfs *, s32, OSPfsState *);
 extern s32 osPfsDeleteFile(OSPfs *, u16, u32, u8 *, u8 *);
 extern s32 func_80013F88(s16, s32, s32);
 extern void func_80045914(void);
-extern void func_8009954C(s32);
-extern void func_8009956C(void *, s32);
-extern void func_800994F4(s32, void *, s32);
-extern void func_80099614(s32);
 extern void func_8006D780(s32);
 extern void func_80042034(s32);
 extern void func_800428C8(s32);

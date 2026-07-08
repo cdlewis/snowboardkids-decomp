@@ -1,6 +1,7 @@
 #include "common.h"
 #include "game_audio.h"
 #include "game_boot.h"
+#include "input_task_scheduler.h"
 
 #define BOOT_THREAD_ID 1
 #define MAIN_THREAD_ID 2
@@ -104,8 +105,6 @@ extern void func_80048338(void);
 extern void func_800484F0(void);
 extern void func_800704F0(void);
 extern void func_80072C30(void);
-extern void func_80098D80(void);
-extern void func_800994F4(s32, void (*)(void), s32);
 extern void func_800998E4(void *);
 extern void func_8009B14C(void);
 extern void func_8009C270(void *, s32, s32);

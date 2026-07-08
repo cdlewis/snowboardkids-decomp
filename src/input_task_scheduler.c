@@ -1,6 +1,5 @@
 #include "common.h"
-
-typedef void (*InputTaskCallback)(void);
+#include "input_task_scheduler.h"
 
 #define INPUT_TASK_CALLBACK_COUNT 3
 #define INPUT_TASK_COUNT 8

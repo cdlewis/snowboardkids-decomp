@@ -4,6 +4,7 @@
 #include "asset_decompression.h"
 #include "course_asset_loader.h"
 #include "race_input_history.h"
+#include "input_task_scheduler.h"
 
 #define MAIN_MENU_TRANSITION_FRAMES 0x10
 
@@ -41,9 +42,6 @@ extern u8 D_1F1A90[];
 extern u8 D_1F2220[];
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
-extern void func_8009954C(s32);
-extern void func_8009956C(void *, s32);
-extern void func_80099658(s32);
 extern void func_8007AA50(void);
 extern void func_800403D8(void);
 extern void func_8000DF28(MainMenuMessageActor *);
