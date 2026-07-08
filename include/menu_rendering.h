@@ -12,7 +12,7 @@ void func_8000F8AC(s32 x, s32 y, s32 texture, s32 tileIndex, s32 width, s32 heig
 void func_80011C18(MenuRenderSpriteActor *actor);
 void func_80011D44(MenuRenderSprite *sprite);
 s32 func_80011D74(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
-void func_800129DC(s16 x, s16 y, u16 *script, s32 palette, s32 scale);
+void func_800129DC(s16 x, s16 y, u16 *script, s32 palette, u16 scale);
 void func_8001303C(s32 x, s32 y, MenuGlyphScript *script, s32 palette, s32 scale, s32 red, s32 blue);
 void func_80013154(s32 x, s32 y, u8 *text, s32 palette, s32 scale, s32 colorMode);
 void func_80013D0C(s16 x, s16 y, u8 *text, u16 palette, u16 scale);
