@@ -93,6 +93,8 @@ typedef struct {
     /* 0x00 */ u8 state;
     /* 0x01 */ u8 pad1;
     /* 0x02 */ s16 alpha;
+    /* 0x04 */ u8 pad4[2];
+    /* 0x06 */ u16 selection[4];
 } TitleIntroTransitionState;
 
 typedef struct {
@@ -124,7 +126,7 @@ extern void func_80015BD8(void *);
 extern void func_80015F4C(RectListActor *);
 extern void func_80016284(TitleMenuIconStripActor *);
 extern void func_80016948(TitleMenuWidgetActor *);
-extern void func_80016E40(void);
+extern void func_80016E40(TitleMenuTransitionActor *);
 extern void func_800170AC(void *);
 extern void func_800483FC(void *, void *, s32);
 extern void *func_80071408(void *, s32, s32);
@@ -1139,7 +1141,75 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
 }
 #endif
 
+// func_80016E40 best match: 97.350% (nonmatchings/func_80016E40-1315772375853892447/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016E40.s")
+
+#ifdef NON_MATCHING
+void func_80016E40(TitleMenuTransitionActor *arg0) {
+    TitleMenuTransitionActor *actor;
+    u8 *count;
+    s32 i;
+    s32 step;
+    s32 stepAmount;
+    s16 state;
+
+    count = &D_80121B55;
+    actor = arg0;
+    i = 0;
+    if (*count > 0) {
+        do {
+            if (D_8010AE00.selection[i] != actor->selection[i]) {
+                actor->selection[i] = D_8010AE00.selection[i];
+            }
+
+            state = D_800EC9D0[i];
+            if ((state != 0) && (state != 3) && (state != 4)) {
+                if (state < 5) {
+                    step = 1;
+                } else {
+                    step = -1;
+                }
+
+                stepAmount = step * 8;
+                actor->slideOffset[i] += stepAmount;
+                state = actor->slideOffset[i];
+                if (state == 0x20) {
+                    D_800EC9D0[i] += 2;
+                    actor->alphaTimer[i] = 0;
+                    actor->alpha[i] = 0x100;
+                    state = actor->slideOffset[i];
+                }
+
+                if (stepAmount == 8) {
+                    if (state < 0x18) {
+                        actor->y[i] += 8;
+                    }
+                    actor->topY[i] += 8;
+                    state = D_800EC9D0[i];
+                } else {
+                    if (state < 0x10) {
+                        actor->y[i] -= 8;
+                    }
+                    actor->topY[i] -= 8;
+                    state = D_800EC9D0[i];
+                }
+            }
+
+            if ((state == 3) || (state == 4)) {
+                if ((s32)actor->alphaTimer[i] < 0x10) {
+                    actor->alpha[i] -= 9;
+                } else {
+                    actor->alpha[i] += 9;
+                }
+                actor->alphaTimer[i] = (actor->alphaTimer[i] + 1) & 0x1F;
+            }
+            i++;
+        } while (i < *count);
+    }
+
+    func_800483FC(&D_80124868, func_80016BE8, (s32)arg0);
+}
+#endif
 
 void func_80017014(void *arg0) {
     RectListActor *actor = arg0;
