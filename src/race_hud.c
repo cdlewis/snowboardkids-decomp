@@ -117,9 +117,22 @@ typedef struct {
     /* 0x27 */ u8 timer;
 } RaceHudPlayerListActor;
 
+typedef struct {
+    /* 0x00 */ u8 phase;
+    /* 0x01 */ u8 exitMode;
+    /* 0x02 */ u8 readyCount;
+    /* 0x03 */ u8 pad3;
+    u8 pad4[4];
+    /* 0x08 */ s16 fade;
+    /* 0x0A */ s16 unkA;
+    /* 0x0C */ u8 confirmSelection;
+    /* 0x0D */ u8 unkD;
+} RaceHudSharedState;
+
 extern void func_80071824(void *task, void (*callback)());
+extern void func_800171F0(RaceHudBannerActor *);
 extern void func_80018C80(void);
-extern void func_800177F8(void);
+extern void func_800177F8(RaceHudBannerActor *);
 extern void func_80017C34(RaceHudPanelActor *);
 extern void func_800184C8(void);
 extern void func_80018AA0(RaceHudPanelActor *);
@@ -131,6 +144,8 @@ extern u8 D_8010AE51;
 extern RaceHudCharacterSelectState D_8010AE50;
 extern RaceHudPlayerFrameController *D_8010ADE0;
 extern void *D_8010ADE4;
+extern s16 D_8010AE58;
+extern s32 D_801235B4;
 extern void *D_80124868;
 extern u8 D_80121B55;
 extern u8 D_80121D80[];
@@ -145,7 +160,71 @@ extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_800171F0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_800177F8.s")
+void func_800177F8(RaceHudBannerActor *arg0) {
+    s16 alpha;
+    s32 state;
+    RaceHudBannerActor *actor;
+
+    actor = arg0;
+    if (D_8010AE50.phase != arg0->state) {
+        arg0->state = D_8010AE50.phase;
+        arg0->alpha = D_8010AE50.fade;
+        arg0->bounceTimer = D_8010AE50.unkD;
+        arg0->unk1E = D_8010AE50.unkA;
+    }
+
+    if (D_8010AE50.confirmSelection != actor->mode) {
+        actor->mode = D_8010AE50.confirmSelection;
+    }
+
+    alpha = actor->alpha;
+    state = actor->state;
+    if ((0x100 != (alpha ^ 0)) && (state != 0)) {
+        if ((state == 4) || (state == 1)) {
+            actor->alpha = alpha + 0x30;
+            if (actor->alpha >= 0x100) {
+                actor->alpha = 0x100;
+            }
+        } else {
+            actor->alpha = alpha - 0x30;
+            if (actor->alpha <= 0) {
+                actor->alpha = 0;
+            }
+        }
+    } else {
+        switch (state) {
+        case 0:
+        case 3:
+            break;
+        case 1:
+            actor->frame = (actor->frame + 1) & 0xF;
+            break;
+        case 2:
+            actor->alpha = alpha - 0x25;
+            if (actor->alpha <= 0) {
+                actor->alpha = 0;
+            }
+            actor->state = 3;
+            D_8010AE50.exitMode = 1;
+            D_801235B4 = 0x63;
+            break;
+        case 4:
+            if (actor->bounceTimer < 0x10) {
+                actor->unk1E -= 9;
+            } else {
+                actor->unk1E += 9;
+            }
+            actor->bounceTimer = (actor->bounceTimer + 1) & 0x1F;
+            break;
+        }
+    }
+
+    D_8010AE50.phase = actor->state;
+    D_8010AE58 = actor->alpha;
+    if (actor->state != 8) {
+        func_800483FC(&D_80124868, func_800171F0, actor);
+    }
+}
 
 void func_800179D4(RaceHudBannerActor *arg0) {
     arg0->x = -0x70;
