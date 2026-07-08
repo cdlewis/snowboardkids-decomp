@@ -3,6 +3,7 @@
 #include "asset_decompression.h"
 #include "game_audio.h"
 #include "fixed_point_math.h"
+#include "fixed_point_matrix.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
 
@@ -220,9 +221,6 @@ void func_80050340(RaceItemEffectActor *);
 void func_80050398(RaceItemEffectActor *);
 void func_80050888(RaceItemEffectActor *);
 void func_8005098C(RaceItemFollowActor *);
-void func_80097C18(void *, s16);
-void func_80097FE4(FixedMatrix3sScratch, s16, s16);
-void func_80098590(void *, s32 *, RaceItemEffectPayload *);
 
 u8 func_8004DB60(s32 arg0) {
     u8 *p = D_800D46D0[D_80121B50];

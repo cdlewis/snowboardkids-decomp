@@ -1,14 +1,9 @@
 #include "common.h"
+#include "fixed_point_matrix.h"
 
 #define RACE_CAMERA_COUNT 4
 #define RACE_CAMERA_STATE_SIZE 0xB0
 #define RACE_PLAYER_STATE_SIZE 0x60C
-
-typedef struct {
-    /* 0x0 */ s32 x;
-    /* 0x4 */ s32 y;
-    /* 0x8 */ s32 z;
-} Vec3i;
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x1C];
@@ -84,12 +79,6 @@ extern void func_800704C4(void);
 extern void func_800486BC(void *, void *);
 extern s16 func_8007D200(s32, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
-extern void func_80097FE4(void *, s16, s16);
-extern s16 func_80097AE8(s16);
-extern s16 func_80097B48(s16);
-extern s32 func_80098C30(s64);
-extern void func_8009853C(void *, s16, s16);
-extern void func_80098590(void *, s32 *, s32 *);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
 extern RacePlayerSlot D_80121D80[];

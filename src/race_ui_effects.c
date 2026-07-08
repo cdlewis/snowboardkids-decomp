@@ -3,6 +3,7 @@
 #include "asset_decompression.h"
 #include "viewport_manager.h"
 #include "fixed_point_math.h"
+#include "fixed_point_matrix.h"
 
 /* Local 3-arg declaration; see note in effect_task_scheduler.h. */
 extern void *func_800716A4(void *, s32, s32);
@@ -17,14 +18,7 @@ typedef struct {
     u8 b7;
 } RaceUiSpriteInit;
 
-typedef s16 FixedMatrix3s[9];
 typedef s16 FixedMatrix3sScratch[0x12];
-
-typedef struct {
-    /* 0x00 */ FixedMatrix3s rotation;
-    /* 0x12 */ s16 pad12;
-    /* 0x14 */ Vec3i translation;
-} FixedTransform;
 
 typedef union {
     /* 0x00 */ s32 words[8];
@@ -727,15 +721,6 @@ extern s16 func_80042D58(s32);
 extern void func_80045A78(s16, s16, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80045990(s32, s32, void *, void *);
-extern void func_80097BAC(s16 *, s16);
-extern s16 func_80097AE8(s16);
-extern s16 func_80097B48(s16);
-extern void func_80097C18(void *, s32);
-extern void func_80097FE4(FixedMatrix3sScratch, s16, s16);
-extern void func_80098174(void *, s16, s16);
-extern void func_800983E4(FixedMatrix3sScratch, s16, s16, s16);
-extern void func_80098590(FixedMatrix3sScratch, Vec3i *, Vec3i *);
-extern void func_800987A0(FixedTransform *, FixedTransform *, FixedTransform *);
 extern void func_8005B14C(void *);
 extern void func_8005C64C(void *);
 extern void func_8005DE6C(void *);

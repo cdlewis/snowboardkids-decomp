@@ -3,15 +3,9 @@
 #include "asset_decompression.h"
 #include "course_preview_camera.h"
 #include "fixed_point_math.h"
+#include "fixed_point_matrix.h"
 
-typedef s16 FixedMatrix3s[9];
 typedef s16 FixedMatrix3sScratch[0x10];
-
-typedef struct {
-    /* 0x00 */ FixedMatrix3s rotation;
-    /* 0x12 */ s16 pad12;
-    /* 0x14 */ Vec3i translation;
-} FixedTransform;
 
 typedef struct {
     /* 0x00 */ s32 unk0;
@@ -98,12 +92,6 @@ extern Gfx D_2002DB8[];
 extern s32 func_80043040(s16 arg0);
 extern Gfx *func_8004885C(FixedTransform *arg0);
 extern void func_80045990(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);
-extern s32 func_80097AE8(s16 arg0);
-extern s32 func_80097B48(s16 arg0);
-extern void func_80097C18(FixedMatrix3s arg0, s16 arg1);
-extern void func_800981C8(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3);
-extern void func_80098590(void *, s32 *, Vec3i *);
-extern void func_800987A0(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2);
 extern Vec3i D_800D5CC8[];
 extern CoursePreviewGfxCommandEntry *D_800D5C6C[];
 extern CoursePreviewGfxCommandEntry *D_800D5FC8[];
@@ -169,7 +157,7 @@ void func_80055FA4(CoursePreviewCamera *arg0) {
         func_80071824(arg0, func_80056070);
     }
     func_80097C18(sp24, 0x6D0);
-    func_80098590(sp24, &temp_s0->velocityY, &sp44);
+    func_80098590(sp24, (Vec3i *)&temp_s0->velocityY, &sp44);
     temp_s0->position.x += sp44.x;
     temp_s0->position.y += sp44.y;
     temp_s0->position.z += sp44.z;
