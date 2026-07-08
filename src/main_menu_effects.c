@@ -1,8 +1,9 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
+#include "main_menu_effects.h"
 #include "main_menu_scene_model.h"
 
-typedef struct {
+struct MainMenuEffectActor {
     char pad0[0x10];
     /* 0x10 */ s16 delay;
     /* 0x12 */ char pad12[6];
@@ -49,7 +50,7 @@ typedef struct {
     };
     /* 0x28 */ s16 startX;
     /* 0x2A */ s16 startY;
-} MainMenuEffectActor;
+};
 
 extern void func_800483FC(void *, void *, void *);
 extern void func_80011D74(void *, s32, s16, s16);

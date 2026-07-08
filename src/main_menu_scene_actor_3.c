@@ -1,5 +1,6 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
+#include "main_menu_effects.h"
 
 typedef s16 FixedMatrix3sScratch[0x10];
 typedef s32 MatrixWordCopy[8];
@@ -61,10 +62,8 @@ extern void func_8003A21C(MainMenuSceneActor *);
 extern void func_8003A190(MainMenuSceneActor *);
 extern void func_8003A324(MainMenuSceneActor *);
 extern void func_8004209C(s32, s32, s32, s32);
-extern void func_8003C0A4(s16, s16, u8, u8);
 extern void func_8004298C(s32, s32, s32, s32);
 extern void func_800420FC(s32, s32, s32, s32);
-extern void func_8003D068(s32, s32);
 extern void func_8003B308(s32, s32, s32, u16, u16, u8);
 extern void func_80041D20(s32, s32);
 extern void func_80042034(s32);

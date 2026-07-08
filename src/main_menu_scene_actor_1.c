@@ -1,5 +1,6 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
+#include "main_menu_effects.h"
 
 typedef struct {
     /* 0x00 */ char pad0[0x18];
@@ -14,17 +15,11 @@ typedef struct {
 
 extern void func_80041DD4(s32 arg0, s32 arg1);
 extern void func_80041D20(s32 arg0, s32 arg1);
-extern void func_8003D218(s32 arg0, s32 arg1, s32 arg2);
 extern s32 func_80041FB4(s32 arg0);
 extern void func_80042034(s32 arg0);
 extern void func_800428C8(s32 arg0);
 extern void func_800420FC(s32 arg0, s16 arg1, s16 arg2, s16 arg3);
-extern void func_8003C0A4(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
 extern void func_8004209C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-extern void func_8003C208(void);
-extern void func_8003D068(s32 arg0, s32 arg1);
-extern void func_8003CA44(void);
-extern void func_8003CD9C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 
 extern u16 D_8010B1A2;
 extern s8 D_8010B1A8;
