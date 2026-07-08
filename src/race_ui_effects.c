@@ -672,6 +672,7 @@ extern void *D_800E1220;
 extern void *D_800E1230;
 extern char D_800E1240[];
 extern char D_800E1244[];
+extern char D_800E14D0[];
 extern char D_800E12F8[];
 extern char D_800E12FC[];
 extern char D_800E1300[];
@@ -734,7 +735,7 @@ extern void func_80064B28(RaceUiProjectileActor *);
 extern void func_80057AA4(RaceUiPopupActor *);
 extern void func_80057CAC(RaceUiPopupActor *);
 extern void func_80060E7C(void *);
-extern void func_80060D10(void);
+extern void func_80060D10(RaceUiPopupActor *);
 extern void func_8006501C(void *);
 extern void func_80064F4C(void *);
 extern void func_80059E5C(RaceUiAlpha1AActor *);
@@ -2334,7 +2335,24 @@ void func_80060C4C(s16 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80060D10.s")
+void func_80060D10(RaceUiPopupActor *arg0) {
+    volatile u8 padding[0x20];
+    char buffer[8];
+    s32 i;
+
+    if (D_80156608 == arg0->playerIndex) {
+        func_80045A78((s16)(arg0->x - 0x34), (s16)(arg0->y.word - 8), func_80043040(D_80112130.popupFontHandle), 0x8B);
+        sprintf(buffer, D_800E14D0, arg0->parent);
+        for (i = 0; i != 4; i++) {
+            if (buffer[i] != ' ') {
+                func_80046D68((s16)(arg0->x + (i * 8) + 4), (s16)(arg0->y.word - 8),
+                              func_80043040(D_80112130.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
+            }
+        }
+        func_80046D68((s16)(arg0->x + (i * 8) + 4), (s16)(arg0->y.word - 8),
+                      func_80043040(D_80112130.popupFontHandle), 0x37, 0xE);
+    }
+}
 
 void func_80060E7C(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x1C) += *(s32 *)((u8 *)arg0 + 0x28);
