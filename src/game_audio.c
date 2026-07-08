@@ -197,7 +197,7 @@ GameAudioHandleNode *func_80071C84(void) {
     return D_80121940[D_8012193C];
 }
 
-// func_80071CC0 best match: 97.838%
+// func_80071CC0 best match: 98.108%
 #pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80071CC0.s")
 
 #ifdef NON_MATCHING
@@ -233,8 +233,7 @@ s32 func_80071CC0(void) {
     if (D_80121930 == NULL) {
         temp_v0->prev = D_80121930;
         temp_v0->next = NULL;
-        D_80121930 = temp_v0;
-        D_80121934 = temp_v0;
+        D_80121930 = (D_80121934 = temp_v0);
         return 1;
     }
 
