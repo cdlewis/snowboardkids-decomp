@@ -70,13 +70,13 @@ typedef struct {
 typedef struct {
     char pad0[0x1C];
     /* 0x1C */ Vec3i pos;
-    char pad28[2];
+    /* 0x28 */ s16 pitch;
     /* 0x2A */ s16 modelIndex;
     /* 0x2C */ s16 unk2C;
     char pad2E[2];
     /* 0x30 */ Vec3i transformedPos;
     /* 0x3C */ Vec3i velocity;
-    char pad48[2];
+    /* 0x48 */ s16 bounceCount;
     /* 0x4A */ s16 timer;
 } RaceThrownModelActor;
 
@@ -132,6 +132,10 @@ extern void func_80088294(void *, s32, s32, s32);
 extern void *func_800711D0(void *, s32, s32);
 extern void *func_80071408(void *, s32, s32);
 extern void func_800483FC(void *, void *, void *);
+extern void func_80072A74(s32, void *, s32, s32);
+extern s16 func_8007D200(s16, s32, s32);
+extern s32 func_80080CC4(s16, s32, s32);
+extern void func_80089000(void *, s32, s32);
 extern Vec3i D_800D9BD8[];
 extern RaceOverlayModelEntry *D_800D7754[];
 extern void *D_800DA1C0[];
@@ -154,7 +158,6 @@ extern void *D_80156614;
 extern s16 D_80121B50;
 extern void func_80066E10(void);
 extern void func_80067034(RaceModelListActor *);
-extern void func_80067364(RaceThrownModelActor *);
 extern void func_800674B4(RaceThrownModelActor *);
 extern void func_800681A4(RaceOverlayModelActor *);
 extern void func_80068CD4(RaceOverlayModelActor *);
@@ -410,7 +413,47 @@ void func_800671F4(RaceOverlayTransformActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80067364.s")
+void func_80067364(RaceThrownModelActor *arg0) {
+    Vec3i *pos;
+    s32 groundY;
+    s32 velocityY;
+    s16 timer;
+
+    if (D_80121B56 == 0) {
+        arg0->pos.x += arg0->transformedPos.x;
+        velocityY = arg0->transformedPos.y;
+        timer = arg0->timer;
+        arg0->pos.y += velocityY;
+        arg0->pos.z += arg0->transformedPos.z;
+        arg0->transformedPos.y = velocityY - 0x5000;
+        arg0->pitch -= 0x20;
+
+        if (timer == 0) {
+            arg0->unk2C = func_8007D200(arg0->unk2C, arg0->pos.x, arg0->pos.z);
+            groundY = func_80080CC4(arg0->unk2C, arg0->pos.x, arg0->pos.z);
+            pos = &arg0->pos;
+            if (arg0->pos.y < groundY) {
+                func_80072A74(0x20, pos, 0x7F, 0x32);
+                arg0->pos.y = groundY;
+                arg0->transformedPos.y = arg0->velocity.y / 2;
+                arg0->bounceCount++;
+            }
+
+            if (arg0->transformedPos.y <= 0) {
+                func_80089000(pos, 0x170000, 0x20);
+            }
+        } else {
+            arg0->timer = timer - 1;
+        }
+    }
+
+    if (arg0->bounceCount == 2) {
+        func_800716E4(arg0);
+        return;
+    }
+
+    func_800483FC(&D_801248B0, func_800671F4, arg0);
+}
 
 void func_800674B4(RaceThrownModelActor *arg0) {
     Scratch674B4 sp1C;
