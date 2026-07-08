@@ -53,7 +53,9 @@ typedef struct {
     /* 0x290 */ RaceVec3i projectedPos;
     /* 0x29C */ char pad29C[4];
     /* 0x2A0 */ s16 unk2A0;
-    /* 0x2A2 */ char pad2A2[0x36];
+    /* 0x2A2 */ char pad2A2[0x1E];
+    /* 0x2C0 */ s16 unk2C0;
+    /* 0x2C2 */ char pad2C2[0x16];
     /* 0x2D8 */ s16 unk2D8;
     /* 0x2DA */ s16 trailEffectTimer;
     /* 0x2DC */ char pad2DC[0xE];
