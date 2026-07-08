@@ -1,6 +1,6 @@
 #include "common.h"
 
-#define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x42])
+#define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (D_80112130.textureHandle)
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -93,7 +93,6 @@ extern u8 D_800B6A54[][0x70];
 extern u8 D_800B6B34[];
 extern s32 D_800EC9F8[];
 extern s16 D_80121B50;
-extern u8 D_80112130[];
 extern s32 D_8010ADDC;
 extern u16 D_8010AE80;
 extern void *D_8010ADE0;
