@@ -72,7 +72,66 @@ void func_80043184(void) {
     func_80043154();
 }
 
+// func_800431B0 best match: 86.433%
 #pragma GLOBAL_ASM("asm/nonmatchings/asset_decompression/func_800431B0.s")
+
+#ifdef NON_MATCHING
+extern HuffmanNode D_8011092C[];
+
+void func_800431B0(s16 arg0) {
+    HuffmanNode *node;
+    HuffmanNode *curNode;
+    s16 cur;
+    s16 oldHead;
+    s16 next;
+    s16 *count;
+    s16 end = -1;
+
+    count = &D_800D4018;
+    cur = D_800D4010;
+    *count += 1;
+    if (cur == end) {
+        oldHead = D_800D4014;
+        D_800D4010 = arg0;
+        D_800D4014 = arg0;
+        node = &D_80110928[arg0];
+        node->next = cur;
+        node->prev = oldHead;
+        return;
+    }
+
+    if (cur >= 0) {
+        do {
+            curNode = &D_80110928[cur];
+            if (curNode->weight < D_8011092C[arg0].prev) {
+                break;
+            }
+            cur = curNode->prev;
+        } while (cur >= 0);
+    }
+
+    node = &D_80110928[arg0];
+    if (cur == end) {
+        next = D_800D4014;
+        D_80110928[next].prev = arg0;
+        node->prev = end;
+        D_800D4014 = arg0;
+        node->next = next;
+        return;
+    }
+
+    node->prev = cur;
+    curNode = &D_80110928[cur];
+    node->next = curNode->next;
+    curNode->next = arg0;
+    next = node->next;
+    if (end == next) {
+        D_800D4010 = arg0;
+        return;
+    }
+    D_80110928[next].prev = arg0;
+}
+#endif
 
 void func_8004331C(s16 arg0) {
     HuffmanNode *node;
