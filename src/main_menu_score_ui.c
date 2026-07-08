@@ -1,7 +1,6 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
-
-typedef struct MainMenuScoreTask MainMenuScoreTask;
+#include "main_menu_score_ui.h"
 
 typedef struct {
     u8 state;
@@ -87,17 +86,6 @@ struct MainMenuScoreTask {
         } wu;
     } state;
 };
-
-extern void func_8002B8B4(MainMenuScoreTask *);
-extern void func_8002BA38(MainMenuScoreTask *);
-extern void func_8002BB24(MainMenuScoreTask *);
-extern void func_8002BC9C(MainMenuScoreTask *);
-extern void func_8002BF54(MainMenuScoreTask *);
-extern void func_8002BDAC(MainMenuScoreTask *);
-extern void func_8002C390(MainMenuScoreTask *);
-void func_8002B560(MainMenuScoreTask *arg0);
-void func_8002BC60(MainMenuScoreTask *arg0);
-void func_8002C498(MainMenuScoreTask *arg0);
 
 // func_8002B560 best match: 98.756% (nonmatchings/func_8002B560-4033633224288138541/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002B560.s")
