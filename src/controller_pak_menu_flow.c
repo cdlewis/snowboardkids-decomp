@@ -2,6 +2,7 @@
 #include "asset_decompression.h"
 #include "character_select_flow.h"
 #include "controller_pak_menu.h"
+#include "controller_pak_menu_flow.h"
 
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80072138(s32, s32);
@@ -19,12 +20,6 @@ extern void func_80070EC0(s32);
 extern void func_80001618(void);
 extern void func_800016D8(u16);
 extern void func_80001858(void);
-extern void func_8000C818(void);
-extern void func_8000C924(void);
-extern void func_8000CB08(void);
-extern void func_8000CC5C(void);
-extern void func_8000CEA0(void);
-extern void func_8000CE0C(void);
 extern void func_8003205C(void *);
 extern u8 func_800325D0;
 extern u8 func_800310EC;
