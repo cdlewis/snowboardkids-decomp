@@ -1,4 +1,5 @@
 #include "main_menu_scene_model.h"
+#include "main_menu_scene_renderer.h"
 
 extern MainMenuSceneModel *func_80043040(s16);
 extern void func_8004215C(MainMenuSceneModel *);

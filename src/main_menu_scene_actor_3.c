@@ -3,6 +3,7 @@
 #include "main_menu_effects.h"
 #include "main_menu_scene_actor_3.h"
 #include "main_menu_scene_model.h"
+#include "main_menu_scene_renderer.h"
 
 typedef s16 FixedMatrix3sScratch[0x10];
 typedef s32 MatrixWordCopy[8];
@@ -34,13 +35,9 @@ struct MainMenuSceneEffect3 {
     u16 timer;
 };
 
-extern void func_800428C8(s32 arg0);
-extern void func_80042A00(s32 arg0);
-extern void func_80042920(s32 arg0, u16 arg1, u16 arg2);
 extern void func_800483FC(void *, void *, void *);
 extern s32 func_8004885C(void *);
 extern void func_8007C130(s32, s16, s16);
-extern void func_8004298C(s32, s32, s32, s32);
 #ifdef NON_MATCHING
 extern void func_80097BAC();
 extern void func_80097C84();

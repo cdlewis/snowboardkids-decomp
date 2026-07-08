@@ -4,6 +4,7 @@
 #include "main_menu_scene_actor_2.h"
 #include "main_menu_scene_actor_3.h"
 #include "main_menu_scene_model.h"
+#include "main_menu_scene_renderer.h"
 
 struct MainMenuSceneActor2 {
     /* 0x00 */ char pad0[0x18];
@@ -16,7 +17,6 @@ struct MainMenuSceneActor2 {
     /* 0x2A */ u16 timer;
 };
 
-extern void func_800428C8(s32 arg0);
 extern u8 D_8010B1A4;
 extern u16 D_8010B1A2;
 extern u8 D_8010B1AA;

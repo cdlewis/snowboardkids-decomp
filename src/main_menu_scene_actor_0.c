@@ -4,6 +4,7 @@
 #include "main_menu_scene_actor_0.h"
 #include "main_menu_scene_actor_4.h"
 #include "main_menu_scene_model.h"
+#include "main_menu_scene_renderer.h"
 
 struct MainMenuSceneActor {
     char pad0[0x18];
@@ -18,7 +19,6 @@ struct MainMenuSceneActor {
 };
 
 extern MainMenuSceneActorShadow D_8010B1C0;
-extern void func_800428C8(s32 arg0);
 
 extern u16 D_8010B1A2;
 extern u8 D_8010B1A4;

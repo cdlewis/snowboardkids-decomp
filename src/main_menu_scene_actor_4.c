@@ -4,6 +4,7 @@
 #include "main_menu_effects.h"
 #include "main_menu_scene_actor_4.h"
 #include "main_menu_scene_model.h"
+#include "main_menu_scene_renderer.h"
 
 struct MainMenuSceneActor4 {
     /* 0x00 */ char pad0[0x18];
@@ -24,7 +25,6 @@ typedef struct {
     /* 0x1C */ s32 z;
 } GfxCommandSource;
 
-extern void func_800428C8(s32 arg0);
 extern s32 func_80043040(s16 arg0);
 extern void func_80045990(s32 arg0, s32 arg1, void **arg2, void **arg3);
 extern Mtx *func_8004885C(GfxCommandSource *arg0);
