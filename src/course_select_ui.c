@@ -338,59 +338,58 @@ void func_80025BE4(CourseSelectWidgetActor *arg0) {
 }
 #endif
 
-// func_80025E6C best match: 82.713% (nonmatchings/func_80025E6C-2775475442547365205/base_4.c)
+// func_80025E6C best match: 85.650% (nonmatchings/func_80025E6C-1315772375853892447/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025E6C.s")
 
 #ifdef NON_MATCHING
 void func_80025E6C(CourseSelectWidgetActor *arg0) {
-    void *new_var = arg0;
-    s32 row;
+    CourseSelectWidgetActor *actor = arg0;
+    s32 idx;
     s32 i;
-    s32 disabled;
-    CourseSelectWidgetActor *xPtr;
-    CourseSelectWidgetActor *posPtr;
     u8 *courseUnlocked;
     s16 (*xyTable)[6];
     s16 (*xTable)[4];
+    u8 *bytePtr;
+    s16 *posPtr;
 
-    if (new_var && new_var) {
+    if (actor && actor) {
     }
 
     if (D_80121B55 < 3) {
-        row = D_80121B55 - 1;
+        idx = D_80121B55 - 1;
     } else {
-        row = 2;
+        idx = 2;
     }
 
     i = 0;
     if ((s32)D_80121B55 > 0) {
-        xyTable = &D_800B7084[row];
-        xTable = &D_800B70A8[row];
+        xyTable = &D_800B7084[idx];
+        xTable = &D_800B70A8[idx];
         courseUnlocked = D_8010AEA0;
-        xPtr = new_var;
-        posPtr = new_var;
+        bytePtr = (u8 *)actor;
+        posPtr = (s16 *)actor;
         do {
             if (*courseUnlocked++ != 0) {
-                disabled = 1;
+                idx = 1;
                 if (D_80121D80[i].state == 5) {
-                    disabled = 0;
+                    idx = 0;
                 }
             } else {
-                disabled = 0;
+                idx = 0;
             }
-            xPtr->unk38 = (*xyTable)[disabled];
-            posPtr->coordinates[4] = (*xyTable)[((i & 1) * 2) + disabled + 2];
-            posPtr->coordinates[8] = 0;
-            posPtr->coordinates[0] = (*xTable)[((i >= 2) * 2) + 1];
-            xPtr->unk30 = 0;
-            xPtr->unk34 = 0;
+            bytePtr[0x38] = (*xyTable)[idx];
+            posPtr[0x10] = (*xyTable)[((i & 1) * 2) + idx + 2];
+            posPtr[0x14] = 0;
+            posPtr[0xC] = (*xTable)[((i >= 2) * 2) + 1];
+            bytePtr[0x30] = 0;
+            bytePtr[0x34] = 0;
             i++;
-            xPtr = (CourseSelectWidgetActor *)((u8 *)xPtr + 1);
-            posPtr = (CourseSelectWidgetActor *)((u8 *)posPtr + 2);
+            bytePtr++;
+            posPtr = (s16 *)((u8 *)posPtr + 2);
         } while (i < (s32)D_80121B55);
     }
 
-    func_80071824(new_var, func_80025BE4);
+    func_80071824(actor, func_80025BE4);
 }
 #endif
 
