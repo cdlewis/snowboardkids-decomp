@@ -538,7 +538,8 @@ typedef struct {
     /* 0x28 */ s32 velocity;
     /* 0x2C */ u8 pad2C[4];
     /* 0x30 */ s16 timer;
-    /* 0x32 */ u8 pad32[6];
+    /* 0x32 */ s16 assetTimer;
+    /* 0x34 */ u8 pad34[0x38 - 0x34];
     /* 0x38 */ void *image3A;
     /* 0x3C */ void *palette3A;
     /* 0x40 */ void *image3B;
@@ -804,7 +805,7 @@ extern void func_800602BC(void *);
 extern void func_800589F4(void *);
 extern void func_80057E90(RaceUiAlpha18Actor *);
 extern void func_80058360(RaceUiAlpha18Actor *);
-extern void func_80065D24(void);
+extern void func_80065D24(RaceUiOverlayActor *);
 extern void func_80065808(void);
 extern void func_80065508(RaceUiGfxCommandActor *);
 extern void func_80066158(void *);
@@ -3595,7 +3596,38 @@ void func_80065CB8(void *arg0) {
     func_800483FC(&D_801248BC, func_80065808, temp_a2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80065D24.s")
+void func_80065D24(RaceUiOverlayActor *arg0) {
+    s16 temp_v0;
+    s32 temp_v0_2;
+    s32 temp_a1;
+    void *temp_v0_3;
+    RaceUiOverlayActor *temp_s0;
+
+    temp_v0 = arg0->timer;
+    temp_s0 = arg0;
+    if (temp_v0 == 0) {
+        if (arg0->assetTimer == 0) {
+            func_80072A74(9, &temp_s0->x, 0x7F, 0x32);
+        }
+        temp_v0_3 = func_80043040(D_8011216E);
+        temp_a1 = temp_s0->assetTimer;
+        temp_a1 = (temp_a1 >> 1) + 0x3B;
+        temp_a1 = (u16)temp_a1;
+        func_80045990(temp_v0_3, temp_a1, &temp_s0->palette3B, &temp_s0->image3B);
+        temp_s0->assetTimer++;
+        if (temp_s0->assetTimer >= 0xB) {
+            temp_s0->timer = 0x3C;
+            func_80071824(temp_s0, func_80065CB8);
+        }
+    } else {
+        temp_s0->timer = temp_v0 - 1;
+    }
+
+    temp_v0_2 = temp_s0->velocity;
+    temp_s0->y += temp_v0_2;
+    temp_s0->velocity = temp_v0_2 + 0xC00;
+    func_800483FC(&D_801248BC, func_80065808, temp_s0);
+}
 
 void func_80065E0C(void *arg0) {
     s16 v1 = *(s16 *)((u8 *)arg0 + 0x30);
