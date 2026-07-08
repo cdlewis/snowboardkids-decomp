@@ -38,6 +38,7 @@ extern s16 D_80112172;
 extern s16 D_8011217C;
 extern s16 D_80112178;
 extern u8 D_800B7E60[];
+extern u8 D_800B8070[];
 extern u8 D_800B8090[];
 
 void func_8002FFD0(ControllerPakTitleActor *arg0) {
@@ -579,10 +580,6 @@ void func_8003205C(ControllerPakDeletePromptActor *arg0) {
     func_80071824(arg0, func_80031F40);
 }
 
-// func_8003209C best match: 91.922% (nonmatchings/func_8003209C-4033633224288138541/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_8003209C.s")
-
-#ifdef NON_MATCHING
 void func_8003209C(ControllerPakDeletePromptActor *arg0) {
     s32 i;
     s32 j;
@@ -604,25 +601,26 @@ void func_8003209C(ControllerPakDeletePromptActor *arg0) {
 
     i = 0;
     limit = 0x80;
+loop_outer:
+    func_8000F030(arg0->common.x, (s16)(arg0->common.y + i + 0x10), func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 5, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->common.x + 0x90), (s16)(arg0->common.y + i + 0x10), func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 6, 0x20, 0x20, 0, 0);
+
+    j = 0;
     do {
-        func_8000F030(arg0->common.x, (s16)(arg0->common.y + i + 0x10), func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 5, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->common.x + 0x90), (s16)(arg0->common.y + i + 0x10), func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 6, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)(arg0->common.x + j + 0x10), (s16)(arg0->common.y + i + 0x10), func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+        j += 0x10;
+    } while (j != limit);
 
-        j = 0;
-        do {
-            func_8000F030((s16)(arg0->common.x + j + 0x10), (s16)(arg0->common.y + i + 0x10), func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 0xB, 0x20, 0x20, 0, 0);
-            j += 0x10;
-        } while (j != limit);
-
-        i += 0x10;
-    } while (i != 0x20);
+    i += 0x10;
+    if (i != 0x20) {
+        if (1) {
+        }
+        goto loop_outer;
+    }
 
     func_80013154((s16)(arg0->common.x + 0x1C), (s16)(arg0->common.y + 4), D_800B8070, 1, 0x100, 0);
 
-    alpha = 0x60;
-    if (arg0->selectedOption == 0) {
-        alpha = 0x100;
-    }
+    alpha = (arg0->selectedOption == 0) ? 0x100 : 0x60;
 
     func_8000F8AC((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x18), func_80043040(D_80112130[0x24]), 0x17, 0x20, 0x20, 0, alpha, 0);
 
@@ -635,7 +633,6 @@ void func_8003209C(ControllerPakDeletePromptActor *arg0) {
     func_8000F8AC((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x28), func_80043040(D_80112130[0x24]), 0x18, 0x20, 0x20, 0, alpha, 0);
     func_8000F8AC((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x18), func_80043040(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
 }
-#endif
 
 void func_80032534(ControllerPakDeletePromptActor *arg0) {
     arg0->selectedOption = D_8010AF90.confirmChoice;
