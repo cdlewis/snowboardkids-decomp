@@ -616,8 +616,30 @@ typedef struct {
     /* 0x5A */ u8 frame;
 } RaceUiSparkleActor;
 
+typedef struct {
+    /* 0x00 */ s16 pathIndex;
+    /* 0x02 */ u8 pad2[0x48 - 0x2];
+} CourseSpawnEntry;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
+    /* 0x18 */ s32 x;
+    /* 0x1C */ s32 y;
+    /* 0x20 */ s32 z;
+    /* 0x24 */ u8 pad24[0x4C - 0x24];
+    /* 0x4C */ s16 angle;
+    /* 0x4E */ u8 pad4E[0x50 - 0x4E];
+    /* 0x50 */ void *image0;
+    /* 0x54 */ void *image1;
+    /* 0x58 */ void *palette0;
+    /* 0x5C */ void *palette1;
+} RaceUiCourseSpriteActor;
+
 extern RaceUiSpriteInit D_800D5FF0[];
 
+extern CourseSpawnEntry D_800B9540[];
 extern Vec3i D_800D61C0[];
 extern Vec3i D_800D6340[];
 extern Vec3i D_800D6220[];
@@ -647,6 +669,7 @@ extern s16 D_80112140;
 extern s16 D_80112142;
 extern s16 D_80112144;
 extern s16 D_80112146;
+extern s16 D_8011216A;
 extern s16 D_8011216E;
 extern s16 D_80112168;
 extern s16 D_80121B52;
@@ -727,6 +750,7 @@ extern void func_800625D8(RaceUiOrbitingSpriteActor *);
 extern void func_800623E8(void *);
 extern s32 func_8007D200(s32, s32, s32);
 extern s32 func_80080CC4(s32, s32, s32);
+extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
 extern void func_80088664(Vec3i *, s32, s32, s32, s32);
 extern s32 func_800891B8(Vec3i *, s32, s32, s16);
 extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
@@ -3465,7 +3489,26 @@ void func_8006392C(void *arg0) {
     func_800483FC(&D_801248C8, func_800634C8, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80063980.s")
+void func_80063980(RaceUiCourseSpriteActor *actor) {
+    s32 unused;
+    s16 angle;
+
+    switch (actor->index) {
+        case 0:
+            func_80081508(0, &actor->x, &actor->y, &actor->z, &angle);
+            func_80045990(func_80043040(D_8011216A), 0, &actor->image0, &actor->palette0);
+            actor->image1 = actor->image0;
+            actor->palette1 = actor->palette0;
+            break;
+        case 1:
+            func_80081508(D_800B9540[D_80121B50].pathIndex, &actor->x, &actor->y, &actor->z, &angle);
+            func_80045990(func_80043040(D_8011216A), 1, &actor->image0, &actor->palette0);
+            func_80045990(func_80043040(D_8011216A), 2, &actor->image1, &actor->palette1);
+            break;
+    }
+    unused = 0;
+    func_80071824(actor, func_8006392C);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80063A9C.s")
 
