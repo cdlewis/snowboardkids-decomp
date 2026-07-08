@@ -40,6 +40,10 @@ typedef struct RacePlayerSoundView {
     u8 pad28[0x60C - 0x28];
 } RacePlayerSoundView;
 
+typedef struct AudioRomRange {
+    s32 words[2];
+} AudioRomRange;
+
 typedef union GameAudioHalfArg {
     s32 word;
     struct {
@@ -48,6 +52,7 @@ typedef union GameAudioHalfArg {
     } half;
 } GameAudioHalfArg;
 
+extern s16 D_8011213A;
 extern s16 D_80121B50;
 extern s32 D_80121850;
 extern s32 D_80121858;
@@ -61,14 +66,20 @@ extern GameAudioHandleNode *D_80121934;
 extern s32 D_8012193C;
 extern GameAudioHandleNode *D_80121940[];
 extern GameAudioQueueEntry D_80121978[];
+extern AudioRomRange D_800DBC5C[];
+extern AudioRomRange D_800DBCAC[];
 extern s32 player_bss_0048;
 extern u16 D_800DBCF4[];
 extern s32 D_80121B08[];
 extern RacePlayerSoundView D_80121D80[];
 
+void func_80099C44(s32 arg0, s32 arg1, s32 arg2);
+void func_8009D8B0(s32 arg0, s32 arg1);
 void func_8009DE50(s32 arg0, s32 arg1);
+s32 func_8009D8D8(s32 arg0);
 s32 func_8009DF14(s32 arg0, s32 arg1);
 s32 func_8009DC68(s32 soundId, s32 volume, s32 pan, s32 arg3, s32 priority);
+s32 func_80043040(s16 arg0);
 void *func_80048388(s32 arg0);
 void func_800720E4(s32 arg0);
 s32 func_80071B74(void);
@@ -85,7 +96,29 @@ void func_80071A3C(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80071A8C.s")
+s32 func_80071A8C(s32 arg0) {
+    s32 size;
+    AudioRomRange *range;
+
+    if (D_80121858 == 0) {
+        range = (AudioRomRange *)((arg0 * 2) + (s32 *)D_800DBC5C);
+        size = range->words[1] - range->words[0];
+        func_80099C44(range->words[0], func_80043040(D_8011213A), size);
+        if ((D_80121858 = func_8009D8D8(func_80043040(D_8011213A))) != 0) {
+            D_80121974 = arg0;
+            if (range == D_800DBCAC) {
+                func_8009D8B0(2, 0x7FFF);
+            } else {
+                func_8009D8B0(2, 0x60FF);
+            }
+            D_8012185C = 0;
+            return 0;
+        }
+    } else {
+        func_80071A3C(4);
+    }
+    return 1;
+}
 
 s32 func_80071B74(void) {
     u32 ret;
