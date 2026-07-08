@@ -183,6 +183,11 @@ default: all
 
 all: dirs $(TARGET).z64 verify
 
+# Build the ROM without SHA1 verification (useful while a build is non-matching).
+# The N64 CRC is still applied in the .z64 step, so the result is a bootable ROM.
+nonmatching: dirs $(TARGET).z64
+	$(PRINTF) "[$(YELLOW) nonmatch $(NO_COL)]  Built $(TARGET).z64 (SHA1 verification skipped)\n"
+
 dirs:
 	@mkdir -p $(BUILD_DIR)/asm/data
 	@mkdir -p $(BUILD_DIR)/assets
@@ -269,4 +274,4 @@ clean:
 
 ### Settings
 .SECONDARY:
-.PHONY: all clean default extract verify check
+.PHONY: all clean default extract nonmatching verify check
