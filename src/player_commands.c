@@ -68,7 +68,7 @@ typedef struct PlayerCommandState {
     s16 unkC0;
     u16 unkC2;
     u16 unkC4;
-    u8 padC6[0x2];
+    u16 unkC6;
     u16 unkC8;
     u16 unkCA;
     u16 unkCC;
@@ -225,6 +225,7 @@ extern ALMicroTime func_8009E0D4(void *);
 extern s32 func_8009FF80(s32, s32, void *);
 extern void func_8009C444(void *);
 extern void func_8009C8DC(void *);
+extern f32 sinf(f32);
 extern s32 D_800DF154;
 extern s32 D_800DF158;
 extern u32 D_800DF290;
@@ -240,6 +241,7 @@ extern OSMesgQueue D_8015C948;
 extern OSIoMesg *D_8015C968;
 extern s32 D_8015C970;
 extern s32 *libmus_fxheader_current;
+extern f64 D_800E1A78;
 extern f64 D_800E1A80;
 extern f64 D_800E1A88;
 extern f64 D_800E1A90;
@@ -1212,7 +1214,20 @@ void func_8009EEE8(PlayerCommandState *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009EF44.s")
+void func_8009EF44(PlayerCommandState *arg0) {
+    s32 temp_v1;
+    register f32 temp_fv1;
+    u8 temp_v0;
+
+    temp_v0 = arg0->unkE9;
+    if (temp_v0 != 0) {
+        temp_v1 = arg0->unkC6 - arg0->unk105;
+        if (temp_v1 > 0) {
+            temp_fv1 = sinf((f32)((f64)((temp_v1 / (f32)temp_v0) * ((float)2.0)) * D_800E1A78)) * arg0->unk44;
+            arg0->unk48 = temp_fv1;
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009EFF4.s")
 
