@@ -1046,12 +1046,12 @@ void func_8002EC04(ShopMenuWidgetActor *arg0) {
     func_80071824(arg0, func_8002E9E4);
 }
 
-// func_8002EC5C best match: 92.575% (nonmatchings/func_8002EC5C-7387615772158234395/base_2.c)
+// func_8002EC5C best match: 93.580% (nonmatchings/func_8002EC5C-2775475442547365205/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002EC5C.s")
 
 #ifdef NON_MATCHING
 void func_8002EC5C(ShopMenuWidgetActor *arg0) {
-    u16 alpha;
+    s32 alpha;
 
     func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130[0x24]), 0, 0x20, 0x20, 0, 0);
     func_8000F030((s16)(arg0->x + 0x40), arg0->y, func_80043040(D_80112130[0x24]), 1, 0x20, 0x20, 0, 0);
