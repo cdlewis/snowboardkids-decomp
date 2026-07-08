@@ -19,12 +19,14 @@ typedef struct {
     /* 0x004 */ u8 unk4;
     /* 0x005 */ char pad5[0xB];
     /* 0x010 */ u8 characterId;
-    /* 0x011 */ char pad11[2];
+    /* 0x011 */ u8 unk11;
+    /* 0x012 */ u8 unk12;
     /* 0x013 */ s8 isActive;
     /* 0x014 */ s8 soundDisabled;
     /* 0x015 */ s8 unk15;
     /* 0x016 */ s8 replayInputSource;
-    /* 0x017 */ char pad17[3];
+    /* 0x017 */ u8 unk17;
+    /* 0x018 */ char pad18[2];
     /* 0x01A */ u8 actionTriggerChance;
     /* 0x01B */ u8 itemTriggerChance;
     /* 0x01C */ s32 posX;

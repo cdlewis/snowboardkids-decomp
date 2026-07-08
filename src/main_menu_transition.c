@@ -1,4 +1,5 @@
 #include "common.h"
+#include "race_input_history.h"
 
 #define MAIN_MENU_TRANSITION_FRAMES 0x10
 
@@ -7,6 +8,13 @@ typedef struct {
     /* 0x18 */ s32 transitionTimer;
     /* 0x1C */ s32 unk1C;
 } MainMenuTransitionState;
+
+typedef struct {
+    /* 0x0 */ u8 courseIndex;
+    /* 0x1 */ u8 pad1[3];
+    /* 0x4 */ u8 *romStart;
+    /* 0x8 */ u8 *romEnd;
+} MainMenuCourseAsset;
 
 typedef struct MainMenuMessageActor MainMenuMessageActor;
 
@@ -95,6 +103,8 @@ extern void func_80045914(void);
 extern u8 D_80123750;
 extern s8 D_800DEED4;
 extern u8 D_80121B5A;
+extern MainMenuCourseAsset D_800D3C00[];
+extern f32 D_800E10D4;
 extern u8 D_593D10[];
 extern u8 D_598A70[];
 extern u8 D_60F1A0[];
@@ -176,7 +186,96 @@ void func_8003F7E4(void) {
     }
 }
 
+// func_8003F864 best match: 94.795% (nonmatchings/func_8003F864-8662636370764828261/base_5.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_8003F864.s")
+
+#ifdef NON_MATCHING
+void func_8003F864(void) {
+    RaceInputPlayer *players;
+    MainMenuCourseAsset *courseAsset;
+
+    D_80121B50 = D_800D3C00[D_80121B5B].courseIndex;
+    D_80121B56 = 0;
+    D_80121B58 = 0;
+    D_80121B5F = 0;
+    D_80121B59 = 0;
+    D_80121B5A = 0;
+    D_800EC9C2 = 0;
+    D_80121B5E = 0;
+    func_80043184();
+
+    players = D_80121D80;
+    players[0].unk4 = 0;
+    players[1].unk4 = 0;
+    players[2].unk4 = 0;
+    players[3].unk4 = 0;
+    players[0].characterId = 0;
+    players[1].characterId = 1;
+    players[2].characterId = 2;
+    players[3].characterId = 3;
+    players[0].unk11 = 0;
+    players[1].unk11 = 0;
+    players[2].unk11 = 0;
+    players[3].unk11 = 0;
+    players[0].unk12 = 3;
+    players[1].unk12 = 5;
+    players[2].unk12 = 6;
+    players[3].unk12 = 7;
+    players[0].unk17 = 0;
+    players[1].unk17 = 1;
+    players[2].unk17 = 2;
+    players[3].unk17 = 3;
+    D_80121B55 = 4;
+    players[0].isActive = 1;
+    players[1].isActive = 1;
+    players[2].isActive = 1;
+    players[3].isActive = 1;
+    D_80121B54 = 4;
+    D_80121B52 = 5;
+    D_80121B5C = 0x64;
+    func_80070EC0(1);
+
+    players[0].unk15 = 0;
+    players[0].soundDisabled = 0;
+    players[0].replayInputSource = 5;
+    players[1].unk15 = 0;
+    players[1].soundDisabled = 0;
+    players[1].replayInputSource = 5;
+    players[2].unk15 = 0;
+    players[2].soundDisabled = 0;
+    players[2].replayInputSource = 5;
+    players[3].unk15 = 0;
+    players[3].soundDisabled = 0;
+    players[3].replayInputSource = 5;
+
+    courseAsset = &D_800D3C00[D_80121B5B];
+    func_800437F0(courseAsset->romStart, courseAsset->romEnd, 0x2B);
+    func_80043950();
+    func_800440F4();
+    func_8006D5CC();
+    func_800704F0();
+    D_800DEED4 = 0;
+    func_8008BEB0();
+    D_80121B55 = 1;
+    func_80078430();
+    D_80121B55 = 4;
+    func_8007066C(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, D_800E10D4);
+    D_8011228C = 1;
+    D_800DEED4 = 0;
+    func_80044294();
+    D_800DEF14 = 0xFF;
+    D_800EC8B0 = 0;
+    D_801235B4 = 1;
+    func_800437F0(D_593D10, D_598A70, 0x29);
+    func_800437F0(D_60F1A0, D_60F990, 0x2A);
+    D_8010B1F0 = 0;
+    func_80071408(func_80051FDC, 0, 0x64);
+    func_80071408(func_800524B0, 0, 0x64);
+    func_8009956C(func_8003FB70, 0);
+    func_800720E4(7);
+}
+#endif
 
 void func_8003FB70(void) {
     D_800DEF14 -= 0x10;
