@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "course_preview_camera.h"
@@ -79,7 +80,6 @@ extern void *D_801248D4;
 extern void func_800483FC(void *, void *, s32);
 extern void func_800556B0(void);
 extern void func_80056CA0(void);
-extern s16 func_80042D58(s32);
 extern void osWritebackDCache(void *, s32);
 extern s16 D_80112144;
 extern s16 D_80112146;
@@ -89,7 +89,6 @@ extern u8 D_80156609;
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
-extern s32 func_80043040(s16 arg0);
 extern Gfx *func_8004885C(FixedTransform *arg0);
 extern void func_80045990(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);
 extern Vec3i D_800D5CC8[];

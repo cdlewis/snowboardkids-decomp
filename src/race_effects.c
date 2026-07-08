@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
@@ -90,7 +91,6 @@ extern RacePlayerSurfaceState D_80122282[];
 extern RacePlayerByteField D_8012229A[];
 extern s32 D_801248A4;
 
-s32 func_80043040(s16);
 s16 func_8004908C(s32, s32);
 void func_800483FC(void *, void *, void *);
 s16 func_80049440(Vec3i *, s32, s16, s16, s16 *);

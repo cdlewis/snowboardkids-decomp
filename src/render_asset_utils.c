@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 
 typedef struct {
     /* 0x0 */ s32 unk0;
@@ -64,7 +65,6 @@ typedef struct {
     /* 0x3C */ s32 unk3C;
 } GfxCommandDest;
 
-s32 func_80042EE4(s32);
 extern s16 D_8011213E;
 extern s16 D_801121B0;
 
@@ -136,7 +136,6 @@ void func_80045A1C(u8 *arg0, u16 arg1, void **arg2, void **arg3, s16 *arg4, s16 
 
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80047B84.s")
 
-extern s32 func_80043040(s16);
 extern s16 D_8011213C;
 extern s16 D_801121B2;
 extern void *D_801121B4;
@@ -189,9 +188,7 @@ void func_80048278(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
 }
 
 extern s16 D_80112130;
-s32 func_80043040(s16);                             /* extern */
 extern s32 D_801121B8;
-s16 func_80042D58(s32);
 
 void func_80048338(void) {
     D_80112130 = func_80042D58(0x4000);

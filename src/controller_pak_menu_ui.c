@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "character_select_flow.h"
 #include "controller_pak_menu.h"
@@ -22,7 +23,6 @@ typedef struct {
 } ControllerPakConfirmTransition;
 
 extern void func_800483FC(void *, void *, s32);
-extern s32 func_80043040(s16);
 extern void func_80017168(void *, s32);
 extern s32 D_80124868;
 extern s32 D_80124838;

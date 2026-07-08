@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "race_input_history.h"
@@ -118,8 +119,6 @@ typedef struct {
     /* 0x4C */ void *palette;
 } RaceParticleActor;
 
-extern s16 func_80042D58(s32);
-extern s32 func_80043040(s16);
 extern void func_80045990(s32, s32, void *, void *);
 extern void func_800486BC(CourseEffectMatrixSource *, void *);
 extern GfxCommandDest *func_8004885C(GfxCommandSource *);

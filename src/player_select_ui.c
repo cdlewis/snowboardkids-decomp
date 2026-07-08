@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "menu_rendering.h"
 
@@ -91,7 +92,6 @@ extern void func_8001B7D8(PlayerSelectWidgetActor *);
 extern void func_8001B8F0(PlayerSelectWidgetActor *);
 extern void func_8001B9F0(PlayerSelectWidgetActor *);
 extern void func_8001BA2C(s32, s32, s32, s32);
-extern s32 func_80043040(s16);
 extern int sprintf(char *, const char *, ...);
 extern PlayerSelectFrameTiles D_800B5B50[];
 extern PlayerPortrait D_800B5C24[];

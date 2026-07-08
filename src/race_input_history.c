@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "asset_decompression.h"
 #include "race_input_history.h"
 
@@ -30,7 +31,6 @@ typedef struct {
 extern s16 D_8011213E;
 extern s16 D_80112186;
 
-extern void *func_80043040(s16 assetId);
 extern u32 D_80121E04[][0x183];
 extern s32 D_801235B4;
 extern u32 D_80123758[];
@@ -47,7 +47,7 @@ void func_80083D80(RaceInputPlayer *player) {
     s16 frame;
     u32 inputFlags;
 
-    history = func_80043040(D_80112186);
+    history = (RaceInputReplayHistory *)func_80043040(D_80112186);
     frame = player->replayFrame;
     if (frame < RACE_INPUT_REPLAY_FRAME_COUNT) {
         history[(u16) player->playerIndex].inputs[frame].stickX = player->stickX;
@@ -172,7 +172,7 @@ void func_8008431C(RaceInputPlayer *player) {
         return;
     }
 
-    history = func_80043040(D_80112186);
+    history = (RaceInputHistoryBuffer *)func_80043040(D_80112186);
     index = history->writeIndex;
     if (index >= RACE_INPUT_HISTORY_LENGTH) {
         history->enabled = 0;
@@ -234,12 +234,12 @@ void func_80084510(RaceInputPlayer *player) {
     }
 
     if (replayInputSource == 1) {
-        history = func_80043040(D_8011213E);
+        history = (RaceInputHistoryBuffer *)func_80043040(D_8011213E);
         replayInputSource = player->replayInputSource;
     }
 
     if (replayInputSource == 2) {
-        history = func_80043040(D_80112186);
+        history = (RaceInputHistoryBuffer *)func_80043040(D_80112186);
     }
 
     if (history->enabled == 0) {

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "fixed_point_matrix.h"
 
 typedef struct ModelAnimCoord {
@@ -68,7 +69,6 @@ extern s16 D_80121B50;
 extern s16 D_800B957E;
 extern CourseSpawnEntry D_800B9540[];
 
-extern s32 func_80043040(s16);
 extern s32 func_8007BDE4(s32, s32);
 extern void func_80081EF4(ModelAnimState *);
 extern void func_80082070(ModelAnimState *);

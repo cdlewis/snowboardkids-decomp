@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "viewport_manager.h"
@@ -133,7 +134,6 @@ extern u32 D_2000E48[];
 extern u32 D_2000E70[];
 extern u32 D_20058A8[];
 
-s32 func_80043040(s16);
 void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
 void func_80045A78(s16, s16, s32, u16);
 void func_80046D68(s32, s32, s32, s32, s32);

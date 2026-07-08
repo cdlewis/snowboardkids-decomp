@@ -1,4 +1,5 @@
 #include "main_menu_scene_model.h"
+#include "memory_allocator.h"
 #include "asset_decompression.h"
 
 /* Frame offsets are halfword-relative to the bank start; this form preserves target addu order. */
@@ -8,7 +9,6 @@
 #define MAIN_MENU_MODEL_ASSET_RANGE_START(table, index) ((table)[(index) * MAIN_MENU_MODEL_ASSET_RANGE_WORDS])
 #define MAIN_MENU_MODEL_ASSET_RANGE_END(table, index) ((table)[((index) * MAIN_MENU_MODEL_ASSET_RANGE_WORDS) + 1])
 
-extern MainMenuSceneModel *func_80043040(s16);
 extern s16 D_8011218A[];
 extern s16 D_801121AE;
 extern void func_80041E90(MainMenuSceneModel *arg0);
@@ -29,7 +29,6 @@ typedef struct MainMenuModelAssetHandles {
 extern RomAssetAddress D_800D4020[];
 extern RomAssetAddress D_800D4050[];
 extern MainMenuModelAssetHandles D_80112130;
-extern s16 func_80042D58(s32);
 extern void func_80042AB4(MainMenuSceneModel *arg0);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80040C80.s")
@@ -54,7 +53,7 @@ void func_80041D20(s32 actorIndex, s32 modelIndex) {
     func_800437F0((void *)MAIN_MENU_MODEL_ASSET_RANGE_START(D_800D4050, modelIndex),
                   (void *)MAIN_MENU_MODEL_ASSET_RANGE_END(D_800D4050, modelIndex), actorIndex + 0x39);
     D_80112130.modelInstanceHandles[actorIndex] = func_80042D58(sizeof(MainMenuSceneModel));
-    model = func_80043040(D_80112130.modelInstanceHandles[actorIndex]);
+    model = (MainMenuSceneModel *)func_80043040(D_80112130.modelInstanceHandles[actorIndex]);
     model->actorIndex = actorIndex;
     model->modelIndex = modelIndex;
     func_80042AB4(model);
@@ -68,7 +67,7 @@ void func_80041DD4(s32 modelIndex, s32 animationIndex) {
 
     animationBank = (MainMenuModelAnimationBank *)func_80043040(D_801121AE);
     frameData = MAIN_MENU_ANIMATION_FRAME_DATA(animationBank, animationIndex);
-    model = func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
     frameDuration = *frameData++;
     model->framesRemaining = frameDuration;
     model->animationStart = frameData;
@@ -78,7 +77,7 @@ void func_80041DD4(s32 modelIndex, s32 animationIndex) {
 }
 
 MainMenuSceneModel *func_80041E60(s32 modelIndex) {
-    return func_80043040(D_8011218A[modelIndex]);
+    return (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80041E90.s")
@@ -88,7 +87,7 @@ s32 func_80041FB4(s32 arg0) {
     MainMenuSceneModel *new_var;
     MainMenuSceneModel *model;
 
-    model = func_80043040(D_8011218A[arg0]);
+    model = (MainMenuSceneModel *)func_80043040(D_8011218A[arg0]);
     if (model->framesRemaining == 1) {
         goto ret1_initial;
     }
@@ -114,7 +113,7 @@ ret0:
 void func_80042034(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
     model->framesRemaining--;
     if (model->framesRemaining <= 0) {
         model->framesRemaining = model->frameDuration;
@@ -126,7 +125,7 @@ void func_80042034(s32 modelIndex) {
 void func_8004209C(s32 modelIndex, s32 x, s32 y, s32 z) {
     MainMenuSceneModel *model;
 
-    model = func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
     model->pos.x = x;
     model->pos.y = y;
     model->pos.z = z;
@@ -135,7 +134,7 @@ void func_8004209C(s32 modelIndex, s32 x, s32 y, s32 z) {
 void func_800420FC(s32 modelIndex, s16 x, s16 y, s16 z) {
     MainMenuSceneModel *model;
 
-    model = func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
     model->rot.x = x;
     model->rot.y = y;
     model->rot.z = z;

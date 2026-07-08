@@ -1,5 +1,6 @@
 #include "asset_decompression.h"
 #include "common.h"
+#include "memory_allocator.h"
 #include "game_boot.h"
 
 typedef struct {
@@ -38,9 +39,6 @@ extern CompressedAssetHeader D_80110920;
 extern HuffmanNode D_80110928[];
 extern AssetHandleTable D_80112130;
 extern s32 D_80112128;
-extern s16 func_80042D58(s32);
-extern s16 func_80042EE4(s16);
-extern s32 func_80043040(s16);
 
 s32 func_800430D0(void) {
     D_800D4000++;

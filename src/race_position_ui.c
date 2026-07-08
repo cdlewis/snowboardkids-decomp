@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "fixed_point_math.h"
 
 #define RACE_POSITION_UI_PART_COUNT 13
@@ -49,7 +50,6 @@ typedef struct {
     /* 0x530 */ void *partVtx[RACE_POSITION_UI_PLAYER_PART_CAPACITY];
 } RacePositionUiPlayer;
 
-extern void *func_80043040(s16 assetId);
 extern void *func_80048594(s32 size);
 extern s32 func_8004885C(void *source);
 extern void func_80045990(void *asset, u16 index, void **image, void **palette);
@@ -107,7 +107,7 @@ static void racePositionUiLoadAssetTexture(void *asset, u16 textureIndex, u32 se
     racePositionUiAppendGfx(0xE7000000, 0);
     racePositionUiAppendGfx(0xBC000806, (u32)func_80043040(D_80112148));
     racePositionUiAppendGfx(0x01020040, (u32)asset);
-    func_80045990(func_80043040(D_8011214A), textureIndex, &image, &palette);
+    func_80045990((void *)func_80043040(D_8011214A), textureIndex, &image, &palette);
     racePositionUiAppendGfx(0xFD500000, (u32)image);
     racePositionUiAppendGfx(0xF5500000, 0x07080200);
     racePositionUiAppendGfx(0xE6000000, 0);
@@ -196,7 +196,7 @@ void func_8007C130(void *asset, s16 dlIndex, u16 textureIndex) {
     gSPSegment(gRegionAllocPtr++, 2, func_80043040(D_80112148));
     gSPMatrix(gRegionAllocPtr++, (Mtx *)asset, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-    func_80045990(func_80043040(D_8011214A), textureIndex, &image, &palette);
+    func_80045990((void *)func_80043040(D_8011214A), textureIndex, &image, &palette);
 
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
@@ -210,7 +210,7 @@ void func_8007C38C(void *asset, s16 dlIndex, u16 textureIndex) {
     gDPPipeSync(gRegionAllocPtr++);
     gSPSegment(gRegionAllocPtr++, 2, func_80043040(D_80112148));
     gSPMatrix(gRegionAllocPtr++, (Mtx *)asset, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    func_80045990(func_80043040(D_8011214A), textureIndex, &image, &palette);
+    func_80045990((void *)func_80043040(D_8011214A), textureIndex, &image, &palette);
 
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);

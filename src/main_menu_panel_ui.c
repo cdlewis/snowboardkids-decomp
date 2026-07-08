@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "main_menu_panel_ui.h"
 
@@ -68,8 +69,7 @@ extern s16 D_80156612;
 
 extern void func_800483FC(RenderCallbackNode **, RenderCallback, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
-extern void func_8001303C(s16, s16, u16 *, s32, u16, u16, u16);
-extern s32 func_80043040(s16);
+extern void func_8001303C(s32, s32, u8 *, s32, s32, s32, s32);
 extern void func_80045A78(s16, s16, s32, u16);
 extern void func_80045E84(s16, s16, s32, s32);
 extern void func_80046358(s32, s32, s32, s32);

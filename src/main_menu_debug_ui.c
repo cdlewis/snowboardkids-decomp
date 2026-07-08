@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "main_menu_debug_ui.h"
 
@@ -45,7 +46,6 @@ extern s32 D_80123758;
 extern s32 D_80123778[];
 extern u16 D_800B8140[][0x5A];
 extern EndObjTextLayout D_800B92D4[];
-extern s32 func_80043040(s16);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s32, s32, u8 *, s32, s32, s32);

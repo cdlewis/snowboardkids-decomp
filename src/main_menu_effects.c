@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "main_menu_effects.h"
 #include "main_menu_scene_model.h"
@@ -55,7 +56,6 @@ struct MainMenuEffectActor {
 extern void func_800483FC(void *, void *, void *);
 extern void func_80011D74(void *, s32, s16, s16);
 extern void func_80017168(void *, s32);
-extern s32 func_80043040(s16);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern Gfx *gRegionAllocPtr;
 extern s32 D_80124838;

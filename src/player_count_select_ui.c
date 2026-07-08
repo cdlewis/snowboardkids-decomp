@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "menu_rendering.h"
 
@@ -105,7 +106,6 @@ extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80011264(s16, s16, s32, u16, u16, u16);
 extern void func_80013154(s32, s32, PlayerCountPortrait, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
-extern s32 func_80043040(s16);
 extern int sprintf(char *, const char *, ...);
 extern u8 D_800EC9C1;
 extern PlayerCountSelectFrameTileMapTable D_800B70F0;
