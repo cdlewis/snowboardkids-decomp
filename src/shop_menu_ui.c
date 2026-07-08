@@ -1,4 +1,9 @@
-#include "common.h"
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned long u32;
+typedef signed char s8;
+typedef short s16;
+typedef long s32;
 
 typedef struct ShopMenuWidgetActor ShopMenuWidgetActor;
 
@@ -137,7 +142,6 @@ extern void func_80071824(void *task, void (*callback)());
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
 extern void *func_80071408(void *, s32, s32);
-extern void func_8002C4E0(ShopMenuRowActor *);
 extern void func_8002C9A0(ShopMenuWidgetActor *);
 extern void func_8002FAB8(ShopMenuWidgetActor *);
 extern void func_8002DF40(ShopMenuWidgetActor *);
@@ -162,13 +166,46 @@ extern void func_8002E798(ShopMenuWidgetActor *);
 extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
 extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
+extern s32 func_80043040(s16);
+extern s16 D_80112130[];
+extern u8 D_800EC9E6;
+extern u8 D_800EC9C1;
+extern u8 D_8010ADF8;
+
+void func_8002C4E0(ShopMenuRowActor *arg0) {
+    ShopMenuRowActor *sp54;
+    ShopMenuRowActor *var_s3;
+    s32 var_s0;
+    s32 var_s1;
+    s32 var_s2;
+
+    sp54 = arg0;
+    var_s0 = 0;
+    do {
+        if (arg0->unk26 > 0) {
+            var_s2 = 0; var_s3 = arg0; do { var_s1 = 0;
+                if ((D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_8010ADF8 == 0) && (var_s0 == D_800EC9E6) &&
+                    (D_800EC9C1 & 1)) {
+                    var_s1 = 0xFF;
+                }
+                func_8000F030(var_s3->unk18[0], (s16)(arg0->unk22 + var_s2), func_80043040(D_80112130[0x27]),
+                              (var_s0 + 2) & 0xFFFF, 0x20, 0x20, 0, var_s1);
+                if (1) {
+                }
+                var_s0 += 1;
+                var_s2 += 0x1C;
+                var_s3 = (ShopMenuRowActor *)((s16 *)var_s3 + 1);
+            } while (var_s0 < sp54->unk26);
+        }
+    } while (0);
+}
+
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_800129DC(s16, s16, u16 *, s32, s32);
 extern void func_80013D0C(s16, s16, void *, s32, s32);
 extern void func_80013154(s32, s32, ShopDescriptionText, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
-extern s32 func_80043040(s16);
 extern s32 func_800430D0(void);
 extern s32 D_800B34B0[];
 extern u16 D_800B34E0[];
@@ -184,8 +221,6 @@ extern u8 D_80121D86;
 extern u8 D_80121D88;
 extern s16 D_8011217E;
 extern s16 D_8011214A;
-extern s16 D_80112130[];
-extern u8 D_800EC9E6;
 extern CourseSelectStatus D_8010AF18;
 extern s32 D_8010ADDC;
 extern u8 D_8010AF40;
@@ -208,8 +243,6 @@ const char D_800E0F60[] = "%6dG";
 const char D_800E0F68[] = "%6dG";
 const char D_800E0F70[] = "%5dG";
 const char D_800E0F78[] = "%4dG";
-
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002C4E0.s")
 
 void func_8002C624(ShopMenuRowActor *arg0) {
     s32 i;
