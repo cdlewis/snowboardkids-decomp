@@ -1,5 +1,6 @@
 #include "common.h"
 #include "asset_decompression.h"
+#include "course_preview_camera.h"
 
 typedef struct {
     s32 x;
@@ -41,10 +42,10 @@ typedef struct {
     /* 0x04 */ s32 command[3];
 } CoursePreviewGfxCommandEntry;
 
-typedef struct {
+struct CoursePreviewGfxCommandActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ GfxCommandDest *matrices;
-} CoursePreviewGfxCommandActor;
+};
 
 typedef struct CoursePreviewCamera CoursePreviewCamera;
 typedef void (*CoursePreviewCameraCallback)(CoursePreviewCamera *);
@@ -113,23 +114,11 @@ extern CoursePreviewGfxCommandEntry *D_800D5C6C[];
 extern CoursePreviewGfxCommandEntry *D_800D5FC8[];
 extern GfxCommandDest D_800DEE50;
 extern void func_80048C90(GfxCommandDest *, s32 *);
-void func_80055FA4(CoursePreviewCamera *arg0);
-void func_80056070(CoursePreviewCamera *arg0);
-extern void func_80055C7C(void);
 
-extern void func_80056348(CoursePreviewCamera *arg0, s16 arg1);
-extern void func_800563C4(CoursePreviewCamera *arg0, s32 arg1);
 extern void func_80071824(void *task, void (*callback)());
 extern s8 D_80122288;
 extern s16 D_80122282;
 extern s16 D_80121B50;
-
-void func_8005663C(CoursePreviewCamera *);
-void func_8005673C(CoursePreviewCamera *);
-void func_80056998(CoursePreviewCamera *);
-void func_80056A58(CoursePreviewCamera *);
-void func_80056B1C(CoursePreviewCamera *);
-void func_80056BD8(CoursePreviewCamera *);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_800556B0.s")
 
