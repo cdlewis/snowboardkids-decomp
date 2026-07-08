@@ -99,11 +99,13 @@ extern void func_80071824(void *task, void (*callback)());
 extern void func_80018C80(void);
 extern void func_800177F8(void);
 extern void func_80017C34(void);
-extern void func_80018AA0(u8 *);
+extern void func_800184C8(void);
+extern void func_80018AA0(RaceHudPanelActor *);
 extern void func_800182A4(RaceHudPlayerListActor *);
 extern void func_80017D6C(RaceHudMessageActor *);
 extern void func_800483FC(void *, void *, void *);
 extern s8 D_8010AE52;
+extern void *D_8010ADE4;
 extern void *D_80124868;
 extern u8 D_80121B55;
 extern u8 D_80121D80[];
@@ -311,24 +313,21 @@ void func_800183DC(RaceHudPlayerListActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_800184C8.s")
 
-// func_80018AA0 best match: 98.627% (base_23.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80018AA0.s")
-
-#ifdef NON_MATCHING
-void func_80018AA0(u8 *arg0) {
+void func_80018AA0(RaceHudPanelActor *arg0) {
     s32 i;
     u8 *src;
+    void *srcBase;
     u8 *dst;
     u8 *player;
     u8 *timer;
 
-    player = D_80121D80;
-    for (i = 0, src = D_8010ADE4, dst = arg0; i != PLAYER_COUNT; i++, dst += 2) {
+    srcBase = D_8010ADE4;
+    player = D_80121D80; for (i = 0, src = srcBase, dst = (u8 *)arg0; i != PLAYER_COUNT; i++, dst += 2) {
         *(s16 *)(dst + 0x18) = *(s16 *)(src + 0x18);
         src += 2;
         *(s16 *)(dst + 0x20) = *(s16 *)(src + 0x1E);
         player += PLAYER_DATA_SIZE;
-        timer = arg0;
+        timer = (u8 *)arg0;
         timer += i;
         if (player[-0x604] == 0) {
             timer[0x2C] = (timer[0x2C] + 1) % 20;
@@ -336,7 +335,6 @@ void func_80018AA0(u8 *arg0) {
     }
     func_800483FC(&D_80124868, func_800184C8, arg0);
 }
-#endif
 
 void func_80018B6C(RaceHudPanelActor *arg0) {
     arg0->x[0] = -0x88;
