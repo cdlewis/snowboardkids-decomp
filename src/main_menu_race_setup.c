@@ -4,6 +4,7 @@
 #include "fixed_point_matrix.h"
 #include "input_task_scheduler.h"
 #include "main_menu_overlay_effects.h"
+#include "main_menu_race_setup.h"
 
 typedef struct {
     s32 x;
@@ -41,9 +42,6 @@ extern u8 D_80123750;
 extern u8 D_80123751;
 extern s16 D_800DEF14;
 extern void func_8006D780(s32);
-void func_8003E45C(void);
-void func_8003E514(void);
-void func_8003E5A8(void);
 
 extern MainMenuRaceSetupState *D_801235B8;
 extern MainMenuRaceSetupObject *D_800EC9C4;
@@ -68,8 +66,6 @@ void func_8003DDD0() {
     obj = D_800EC9C4;
     obj->cameraDelta.z = scratch.worldPos.z - obj->pos.z;
 }
-
-struct ALSeqPlayer;
 
 void n_alSeqpDelete(struct ALSeqPlayer *seqp) {
     func_8003DDD0(seqp);
