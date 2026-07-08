@@ -5,6 +5,7 @@
 #include "course_asset_loader.h"
 #include "race_input_history.h"
 #include "input_task_scheduler.h"
+#include "main_menu_message_ui.h"
 
 #define MAIN_MENU_TRANSITION_FRAMES 0x10
 
@@ -20,8 +21,6 @@ typedef struct {
     /* 0x4 */ u8 *romStart;
     /* 0x8 */ u8 *romEnd;
 } MainMenuCourseAsset;
-
-typedef struct MainMenuMessageActor MainMenuMessageActor;
 
 extern void func_8008C704(void);
 extern void func_8006D700(void);
@@ -44,13 +43,10 @@ extern u8 D_245A80[];
 extern u8 D_24C8E0[];
 extern void func_8007AA50(void);
 extern void func_800403D8(void);
-extern void func_8000DF28(MainMenuMessageActor *);
 extern void func_8008BEB0(void);
 extern void func_80078430(void);
 extern void func_80051FDC(void *);
 extern void func_800524B0(void *);
-extern void func_8000E7CC(MainMenuMessageActor *);
-extern void func_8000EA44(MainMenuMessageActor *);
 
 extern MainMenuTransitionState *D_801235B8;
 extern u8 D_8010B1F0;
@@ -97,7 +93,6 @@ extern u8 D_598A70[];
 extern u8 D_60F1A0[];
 extern u8 D_60F990[];
 extern s16 D_80122282;
-extern void func_8000E874(MainMenuMessageActor *);
 
 void func_8003F520(void) {
     D_80121B5B = 1;

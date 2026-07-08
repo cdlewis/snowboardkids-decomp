@@ -1,12 +1,13 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
+#include "main_menu_message_ui.h"
 #include "menu_rendering.h"
 
 #define MAIN_MENU_MESSAGE_TEXTURE_HANDLE (D_80112130.textureHandle)
 
 typedef MenuGlyphScript MainMenuMessageScript;
 
-typedef struct MainMenuMessageActor {
+struct MainMenuMessageActor {
     /* 0x00 */ struct MainMenuMessageActor *prev;
     /* 0x04 */ struct MainMenuMessageActor *next;
     /* 0x08 */ void (*callback)(struct MainMenuMessageActor *);
@@ -40,7 +41,7 @@ typedef struct MainMenuMessageActor {
     /* 0x2A */ u8 scriptState;
     /* 0x2B */ u8 confirmBlinkTimer;
     /* 0x2C */ u8 returnToSummary;
-} MainMenuMessageActor;
+};
 
 typedef struct MainMenuMessageAssetHandles {
     /* 0x00 */ char pad0[0x54];
