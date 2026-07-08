@@ -110,69 +110,69 @@ void func_80050FF0(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80051308.s")
 
-// func_800515F0 best match: 71.684%
+// func_800515F0 best match: 75.664%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_800515F0.s")
 
 #ifdef NON_MATCHING
 void func_800515F0(MenuPanelActor *arg0) {
-    s32 input;
-    s32 pulse;
-    u8 current;
-    u8 next;
+    s32 temp_t8;
+    s32 temp_v1;
+    s32 var_v0;
+    u8 temp_a2;
+    u8 temp_a2_2;
+    u8 temp_a2_3;
+    u8 temp_a2_4;
 
     if ((D_800DEF14 == 0) && (D_8010B1F0 == 0)) {
-        input = D_80123778;
-        if (input & 0x10800) {
-            current = D_80121B5B;
-            next = D_800D54F8[current];
-            if (current != next) {
-                D_80121B5B = next;
-                func_80072138(0x19, MENU_PANEL_SOUND_VOLUME);
-                input = D_80123778;
+        temp_v1 = D_80123778;
+        if (temp_v1 & 0x10800) {
+            temp_a2 = D_800D54F8[D_80121B5B];
+            if (D_80121B5B != temp_a2) {
+                D_80121B5B = temp_a2;
+                func_80072138(0x19, 0x32);
+                temp_v1 = D_80123778;
             }
-        } else if (input & 0x20400) {
-            current = D_80121B5B;
-            next = D_800D5508[current];
-            if (current != next) {
-                D_80121B5B = next;
-                func_80072138(0x19, MENU_PANEL_SOUND_VOLUME);
-                input = D_80123778;
+        } else if (temp_v1 & 0x20400) {
+            temp_a2_2 = D_800D5508[D_80121B5B];
+            if (D_80121B5B != temp_a2_2) {
+                D_80121B5B = temp_a2_2;
+                func_80072138(0x19, 0x32);
+                temp_v1 = D_80123778;
             }
-        } else if (input & 0x40100) {
-            current = D_80121B5B;
-            next = D_800D5528[current];
-            if (current != next) {
-                D_80121B5B = next;
-                func_80072138(0x19, MENU_PANEL_SOUND_VOLUME);
-                input = D_80123778;
+        } else if (temp_v1 & 0x40100) {
+            temp_a2_3 = D_800D5528[D_80121B5B];
+            if (D_80121B5B != temp_a2_3) {
+                D_80121B5B = temp_a2_3;
+                func_80072138(0x19, 0x32);
+                temp_v1 = D_80123778;
             }
-        } else if (input & 0x80200) {
-            current = D_80121B5B;
-            next = D_800D5518[current];
-            if (current != next) {
-                D_80121B5B = next;
-                func_80072138(0x19, MENU_PANEL_SOUND_VOLUME);
-                input = D_80123778;
+        } else if (temp_v1 & 0x80200) {
+            temp_a2_4 = D_800D5518[D_80121B5B];
+            if (D_80121B5B != temp_a2_4) {
+                D_80121B5B = temp_a2_4;
+                func_80072138(0x19, 0x32);
+                temp_v1 = D_80123778;
             }
         }
 
-        if (input & 0xD000) {
+        if (temp_v1 & 0xD000) {
             D_8010B1F0 = 1;
-            if (input & 0x4000) {
+            if (temp_v1 & 0x4000) {
                 D_80121B5B = 0xC;
             }
-            func_80072138(MENU_PANEL_ACCEPT_SOUND, MENU_PANEL_SOUND_VOLUME);
+            func_80072138(0x18, 0x32);
         }
     }
 
     if (D_8010B1F0 == 0) {
-        pulse = D_801235B0 & 0xF;
-        arg0->x = pulse;
-        if (pulse >= 9) {
-            pulse = 0x10 - pulse;
-            arg0->x = pulse;
+        temp_t8 = D_801235B0 & 0xF;
+        arg0->x = temp_t8;
+        var_v0 = temp_t8;
+        if (temp_t8 >= 9) {
+            var_v0 = 0x10 - temp_t8;
+            arg0->x = var_v0;
         }
-        arg0->x = (pulse << 4) + 0x7F;
+        arg0->x = (var_v0 * 0x10) + 0x7F;
     } else if (D_801235B0 & 1) {
         arg0->x = 0;
     } else {
