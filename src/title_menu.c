@@ -115,12 +115,12 @@ extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern s32 func_80072138(s32, s32);
 extern void func_80015C84(void *);
-#ifdef NON_MATCHING
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s16, s16, u8 *, s32, s32, s32);
 extern void func_80013D0C(s16, s16, u8 *, u16, u16);
 extern u8 D_800B5458[][0x4C];
 extern u8 D_800B5A14[];
+#ifdef NON_MATCHING
 extern s32 D_80121D8C;
 #endif
 extern MenuIntroActor *D_8010ADDC;
@@ -905,15 +905,12 @@ void func_800165F0(void *arg0) {
     func_80071824(arg0, func_80016560);
 }
 
-// func_80016664 best match: 99.892% (nonmatchings/func_80016664-1197934324348345530/base_13.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016664.s")
-
-#ifdef NON_MATCHING
 void func_80016664(TitleMenuWidgetActor *arg0) {
     volatile s32 unused;
     MenuIntroActor *intro;
     register TitleMenuWidgetActor *actor;
     u8 *text;
+    u32 tile;
     s32 i;
     s16 state;
     s32 alpha;
@@ -922,14 +919,15 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
     intro = D_8010ADDC;
     for (i = 0; i < D_80121B55; i++) {
         state = D_800EC9C8[i];
-        if (state != 8) {
-            if (state == 5) {
+        if (D_800EC9C8[i] != 8) {
+            if (D_800EC9C8[i] == 5) {
                 alpha = (u16)actor->alpha[i];
             } else {
                 alpha = 0x100;
             }
 
-            func_8000F8AC((s16)(actor->x[i] - 2), (s16)(actor->y[i] + 0xC), func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 8,
+            tile = 8;
+            func_8000F8AC((s16)(actor->x[i] - 2), (s16)(actor->y[i] + 0xC), func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), tile,
                           0x20, 0x20, 0, alpha, 0);
             func_8000F8AC((s16)(actor->x[i] + 0x3E), (s16)(actor->y[i] + 0xC), func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 9,
                           0x20, 0x20, 0, alpha, 0);
@@ -953,7 +951,6 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
         }
     }
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016948.s")
 
