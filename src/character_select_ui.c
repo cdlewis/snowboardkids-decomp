@@ -52,11 +52,19 @@ typedef struct {
 } CharacterSelectPlayerRecord;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x42];
+    /* 0x00 */ u8 pad0[0x3E];
+    /* 0x3E */ s16 popupFontHandle;
+    /* 0x40 */ u8 pad40[2];
     /* 0x42 */ s16 textureHandle;
     /* 0x44 */ u8 pad44[4];
     /* 0x48 */ s16 iconTextureHandle;
 } CharacterSelectAssetHandles;
+
+typedef struct {
+    /* 0x00 */ s8 minutes;
+    /* 0x01 */ s8 seconds;
+    /* 0x02 */ s16 centiseconds;
+} CharacterSelectTime;
 
 typedef struct {
     /* 0x00 */ u16 center[16];
@@ -86,6 +94,7 @@ extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
 extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
 extern void func_80013D0C(s32, s32, char *, s32, s32);
 extern s32 func_80043040(s16);
+extern void func_80046D68(s16, s16, s32, u16, s32);
 extern int sprintf(char *, const char *, ...);
 extern CharacterSelectAssetHandles D_80112130;
 extern s16 D_80112172;
@@ -169,6 +178,7 @@ void func_800203D0(CharacterSelectWidgetActor *arg0);
 void func_80020818(CharacterSelectWidgetActor *arg0);
 void func_80022464(CharacterSelectWidgetActor *arg0);
 void func_80020B70(CharacterSelectWidgetActor *arg0);
+void func_80023618(CharacterSelectTime *arg0, s32 x, s32 y, s32 alpha);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001BD70.s")
 
@@ -2235,4 +2245,57 @@ void func_800235E0(CharacterSelectWidgetActor *arg0) {
     func_80071824(arg0, func_80023434);
 }
 
+// func_80023618 best match: 80.294%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80023618.s")
+
+#ifdef NON_MATCHING
+void func_80023618(CharacterSelectTime *arg0, s32 x, s32 y, s32 alpha) {
+    char buffer[8];
+    volatile u8 padding[0x48];
+    char *it;
+    char *end;
+    s32 drawY;
+    s32 drawAlpha;
+
+    sprintf(buffer, "%2.2d", arg0->minutes);
+    drawY = (s16)y;
+    drawAlpha = alpha & 0xFFFF;
+    it = buffer;
+    end = buffer + 2;
+    do {
+        func_80046D68((s16)x, drawY, func_80043040(D_80112130.popupFontHandle), ((u8)*it - 5) & 0xFFFF,
+                      drawAlpha);
+        it++;
+        x += 8;
+    } while ((u32)it < (u32)end);
+    func_80046D68((s16)x, drawY, func_80043040(D_80112130.popupFontHandle), 0x36, drawAlpha);
+
+    if ((D_800EC9C2 == 2) || ((D_800EC9C2 == 1) && (D_80121B5E == 0))) {
+        x += 6;
+    } else {
+        x += 8;
+    }
+
+    sprintf(buffer, "%2.2d", arg0->seconds);
+    it = buffer;
+    end = buffer + 2;
+    do {
+        func_80046D68((s16)x, drawY, func_80043040(D_80112130.popupFontHandle), ((u8)*it - 5) & 0xFFFF,
+                      drawAlpha);
+        it++;
+        x += 8;
+    } while ((u32)it < (u32)end);
+    func_80046D68((s16)x, drawY, func_80043040(D_80112130.popupFontHandle), 0x35, drawAlpha);
+
+    x += 8;
+    sprintf(buffer, "%2.2d", arg0->centiseconds >> 8);
+    it = buffer;
+    end = buffer + 2;
+    do {
+        func_80046D68((s16)x, drawY, func_80043040(D_80112130.popupFontHandle), ((u8)*it - 5) & 0xFFFF,
+                      drawAlpha);
+        it++;
+        x += 8;
+    } while (it != end);
+}
+#endif
