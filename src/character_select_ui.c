@@ -103,6 +103,8 @@ extern s16 D_80112178;
 extern s16 D_800B3420[][11];
 extern CharacterSelectFrameTileMap D_800B5FC0[];
 extern u16 D_800B618C;
+extern s16 D_800B3478[];
+extern s16 D_800B3480[];
 extern u16 D_800B61AC[];
 extern u8 D_800B61C0[];
 extern u8 D_800B61CC[];
@@ -112,6 +114,7 @@ extern u8 D_800B67D8[][0x74];
 extern u8 D_800B6934[][0x60];
 extern u8 D_800B6A54[][0x70];
 extern u8 D_800B6B34[];
+extern u8 D_800ECA24[];
 extern s32 D_800EC9F8[];
 extern s16 D_80121B50;
 extern s32 D_8010ADDC;
@@ -181,7 +184,70 @@ void func_80022464(CharacterSelectWidgetActor *arg0);
 void func_80020B70(CharacterSelectWidgetActor *arg0);
 void func_80023618(CharacterSelectTime *arg0, s32 x, s32 y, s32 alpha);
 
+// func_8001BD70 best match: 94.776%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001BD70.s")
+
+#ifdef NON_MATCHING
+void func_8001BD70(CharacterSelectMenuFrameActor *arg0) {
+    CharacterSelectMenuFrameActor *base;
+    s16 *characterIds;
+    s16 *characterId;
+    s16 *pos;
+    s32 i;
+    s32 alpha;
+    s32 characterIdOffset;
+
+    base = arg0;
+    if ((D_800EC9C2 == 0) || (D_800EC9C2 == 2)) {
+        characterIds = D_800B3420[D_8010ADF9];
+    } else if (D_80121B5E >= 3) {
+        characterIds = D_800B3478;
+    } else {
+        characterIds = D_800B3480;
+    }
+
+    i = 0;
+    characterIdOffset = 0;
+    if (base->itemCount > 0) {
+        pos = (s16 *)base;
+        do {
+            alpha = 0;
+            if (i == 0) {
+                if ((i == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+                    alpha = 0xFF;
+                }
+                func_8000F030(pos[12], pos[23], func_80043040(D_80112130.textureHandle), 0x1C, 0x20, 0x20, 0, alpha);
+            } else if (i == D_8010AE80) {
+                if ((D_8010AE80 == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+                    alpha = 0xFF;
+                }
+                if (D_80121B55 == 1) {
+                    func_8000F030(pos[12], pos[23], func_80043040(D_80112130.textureHandle), 0x1B, 0x20, 0x20, 0, alpha);
+                } else {
+                    func_8000F030(pos[12], pos[23], func_80043040(D_80112130.textureHandle), 0x1E, 0x20, 0x20, 0, alpha);
+                }
+            } else {
+                if ((i == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+                    alpha = 0xFF;
+                }
+                func_8000F030(pos[12], pos[23], func_80043040(D_80112130.textureHandle), (i + 0x12) & 0xFFFF, 0x20, 0x20, 0, alpha);
+            }
+
+            if (i != D_8010AE80) {
+                characterId = (s16 *)((u8 *)characterIds + characterIdOffset);
+                if ((D_80121B55 == 1) && (D_800ECA24[*characterId] != 0)) {
+                    func_8000F030((s16)(pos[12] - 0x10), pos[23], func_80043040(D_80112130.iconTextureHandle), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0, D_800ECA24[*characterId] + 6);
+                } else {
+                    func_8000F030((s16)(pos[12] - 0x10), pos[23], func_80043040(D_80112130.textureHandle), (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
+                }
+            }
+            i++;
+            characterIdOffset += 2;
+            pos++;
+        } while (i < base->itemCount);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C158.s")
 
