@@ -79,6 +79,7 @@ typedef struct RaceUiGfxCommandDest RaceUiGfxCommandDest;
 typedef union {
     /* 0x00 */ s32 words[8];
     /* 0x00 */ s16 halfwords[0x10];
+    /* 0x00 */ FixedTransform transform;
 } RaceUiTrailCopyBlock;
 
 typedef struct {
@@ -346,11 +347,13 @@ typedef struct {
 } RaceUiThrownTrailActor;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x24];
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 playerIndex;
+    /* 0x12 */ u8 pad12[0x24 - 0x12];
     /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
-    /* 0x44 */ u8 pad44[0x64 - 0x44];
+    /* 0x44 */ FixedTransform sourceTransform;
     /* 0x64 */ RaceUiGfxCommandDest *matrix;
-    /* 0x68 */ u8 pad68[0x6A - 0x68];
+    /* 0x68 */ s16 timer;
     /* 0x6A */ u8 matrixDirty;
 } RaceUiSingleTrailActor;
 
@@ -612,6 +615,7 @@ extern void func_80097FE4(FixedMatrix3sScratch, s16, s16);
 extern void func_80098174(void *, s16, s16);
 extern void func_800983E4(FixedMatrix3sScratch, s16, s16, s16);
 extern void func_80098590(FixedMatrix3sScratch, Vec3i *, Vec3i *);
+extern void func_800987A0(FixedTransform *, FixedTransform *, FixedTransform *);
 extern void func_8005F448(void *);
 extern void func_8005B14C(void *);
 extern void func_8005C64C(void *);
@@ -690,7 +694,7 @@ extern void func_80061088(void);
 extern void func_80062F6C(RaceUiTrailingParticleActor *);
 extern void func_80058B20(void *);
 extern void func_80060FA4(void *);
-extern void func_80061CA8(void);
+extern void func_80061CA8(RaceUiSingleTrailActor *);
 extern void func_800634C8(void);
 extern void func_80064470(RaceUiProjectileActor *);
 extern void func_80064914(RaceUiProjectileActor *);
@@ -2340,7 +2344,23 @@ void func_80061B70(RaceUiSingleTrailActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80061CA8.s")
+void func_80061CA8(RaceUiSingleTrailActor *arg0) {
+    func_800987A0(&arg0->sourceTransform, &D_80121D80[arg0->playerIndex].transform, &arg0->copyBlock.transform);
+
+    if (D_80121B56 == 0) {
+        arg0->timer--;
+        if (!(D_8012207C[arg0->playerIndex].flags & 0x2000)) {
+            arg0->timer = 0;
+        }
+    }
+
+    if (arg0->timer == 0) {
+        func_800716E4(arg0);
+        return;
+    }
+
+    func_800483FC(&D_801248BC, func_80061B70, (s32)arg0);
+}
 
 void func_80061D90(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x68) = 0x3C;
