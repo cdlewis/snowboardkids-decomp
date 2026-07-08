@@ -806,16 +806,16 @@ s32 func_8009D598(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)(arg1 + 1);
 }
 
-// func_8009D5A8 best match: 95.588%
+// func_8009D5A8 best match: 99.871%
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009D5A8.s")
 
 #ifdef NON_MATCHING
 s32 func_8009D5A8(PlayerCommandInit *arg0) {
     PlayerCommandInit *config;
-    s8 sp94;
-    s16 sp92;
+    volatile s16 sp92;
     s16 sp90;
+    volatile s8 sp94;
     PlayerCommandSynConfig synConfig;
     s32 config2[3];
     s32 i;
@@ -848,9 +848,9 @@ s32 func_8009D5A8(PlayerCommandInit *arg0) {
     synConfig.maxPVoices = D_8015A658;
     synConfig.maxUpdates = config->maxUpdates;
     synConfig.dmaproc = 0;
-    synConfig.heap = &D_8015A648;
-    synConfig.outputRate = 0;
     synConfig.fxType = 2;
+    synConfig.outputRate = 0;
+    synConfig.heap = &D_8015A648;
 
     config2[0] = config->maxFXBusses;
     config2[1] = config->unk38;
@@ -879,8 +879,8 @@ s32 func_8009D5A8(PlayerCommandInit *arg0) {
             func_8009F604((PlayerCommandState *)((u8 *)D_8015A660 + stateOffset));
 
             sp94 = 0;
-            sp92 = 0;
             sp90 = config->outputRate;
+            sp92 = 0;
             alSynAllocVoice(&D_8015A8D8, (ALVoice *)(D_8015A65C + voiceOffset), (ALVoiceConfig *)&sp90);
 
             i++;
