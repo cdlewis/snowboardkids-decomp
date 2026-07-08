@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 
@@ -170,7 +171,6 @@ extern void func_8002E798(ShopMenuWidgetActor *);
 extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
 extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
-extern s32 func_80043040(s16);
 extern s16 D_80112130[];
 extern u8 D_800EC9E6;
 extern u8 D_800EC9C1;
@@ -210,7 +210,6 @@ extern void func_80013D0C(s16, s16, void *, s32, s32);
 extern void func_80013154(s32, s32, ShopDescriptionText, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
-extern s32 func_80043040(s16);
 extern s32 D_800B34B0[];
 extern u16 D_800B34E0[];
 extern u16 D_800B34EC[];

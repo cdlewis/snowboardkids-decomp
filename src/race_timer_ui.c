@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 
 typedef struct {
     /* 0x0 */ s8 minutes;
@@ -60,7 +61,6 @@ typedef struct {
     /* 0x004 */ u8 pad4[0x60C - 0x004];
 } RaceTimerUiS32Stride;
 
-extern s32 func_80043040(s16);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "main_menu_message_ui.h"
 #include "menu_rendering.h"
@@ -52,7 +53,6 @@ typedef struct RenderCallbackNode RenderCallbackNode;
 typedef void (*RenderCallback)(s32);
 
 extern void func_800483FC(RenderCallbackNode **, RenderCallback, s32);
-extern s32 func_80043040(s16);
 extern RenderCallbackNode *D_80124868;
 extern MainMenuMessageAssetHandles D_80112130;
 extern u8 D_8010B1F0;

@@ -3,6 +3,7 @@
 #include "game_boot.h"
 #include "input_task_scheduler.h"
 #include "main_menu.h"
+#include "memory_allocator.h"
 
 #define BOOT_THREAD_ID 1
 #define MAIN_THREAD_ID 2
@@ -99,7 +100,6 @@ extern s8 D_8010ADFA;
 extern u8 D_80324480[];
 extern u8 D_80328480[];
 
-extern void func_80042C28(void);
 extern void func_800458E0(void);
 extern void func_80048338(void);
 extern void func_800484F0(void);

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "menu_rendering.h"
 
@@ -159,7 +160,6 @@ extern u8 D_8010AE5E;
 extern u8 D_8010AE5F;
 extern u16 D_800B5B30[];
 extern s16 D_80112172;
-extern s32 func_80043040(s16);
 
 void func_800171F0(RaceHudBannerActor *arg0) {
     s32 i;

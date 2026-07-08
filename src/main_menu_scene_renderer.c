@@ -1,7 +1,7 @@
 #include "main_menu_scene_model.h"
+#include "memory_allocator.h"
 #include "main_menu_scene_renderer.h"
 
-extern MainMenuSceneModel *func_80043040(s16);
 extern void func_8004215C(MainMenuSceneModel *);
 extern void func_800483FC(void *, void (*)(MainMenuSceneModel *), MainMenuSceneModel *);
 extern s16 D_8011218A[];
@@ -61,7 +61,7 @@ void func_8004270C(MainMenuSceneModel *arg0) {
 void func_800428C8(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = 0;
     func_800483FC(&D_801248B0, func_80042574, model);
@@ -70,7 +70,7 @@ void func_800428C8(s32 modelIndex) {
 void func_80042920(s32 modelIndex, s32 textureId, s32 paletteId) {
     MainMenuSceneModel *model;
 
-    model = func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = 0;
     model->textureId = (s16)textureId;
@@ -81,7 +81,7 @@ void func_80042920(s32 modelIndex, s32 textureId, s32 paletteId) {
 void func_8004298C(s32 modelIndex, s32 textureId, s32 paletteId, s32 arg3) {
     MainMenuSceneModel *model;
 
-    model = func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = 0;
     model->textureId = (s16)textureId;
@@ -92,7 +92,7 @@ void func_8004298C(s32 modelIndex, s32 textureId, s32 paletteId, s32 arg3) {
 void func_80042A00(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = 0;
     func_800483FC(&D_801248B0, func_80042574, model);
@@ -101,7 +101,7 @@ void func_80042A00(s32 modelIndex) {
 void func_80042A58(s32 modelIndex, s32 renderFrame) {
     MainMenuSceneModel *model;
 
-    model = func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = (s16)renderFrame;
     func_800483FC(&D_801248B0, func_80042574, model);
