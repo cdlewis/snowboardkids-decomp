@@ -5,6 +5,7 @@
 #define PLAYER_DATA_SIZE 0x60C
 #define RACE_HUD_UNUSED_HANDLE (*(s16 *)&D_80112130[0x3E])
 #define RACE_HUD_PLAYER_FRAME_HANDLE (*(s16 *)&D_80112130[0x42])
+#define RACE_HUD_BANNER_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x52])
 
 typedef struct {
     u8 pad0[8];
@@ -152,6 +153,7 @@ extern u8 D_80121B55;
 extern RacePlayer D_80121D80[];
 extern s8 D_8010AE64[];
 extern u8 D_80112130[];
+extern u8 D_800B5A70[];
 extern const char D_800E0AB0[];
 extern RacePlayerState D_800EC9F0[];
 extern u8 D_8010AE5E;
@@ -159,9 +161,96 @@ extern u8 D_8010AE5F;
 extern u16 D_800B5B30[];
 extern s16 D_80112172;
 extern s32 func_80043040(s16);
-extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 
+// func_800171F0 best match: 99.425% (nonmatchings/func_800171F0-1315772375853892447/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_800171F0.s")
+
+#ifdef NON_MATCHING
+void func_800171F0(RaceHudBannerActor *arg0) {
+    s32 i;
+    s32 j;
+    unsigned int alpha;
+    s32 selected;
+    s32 limit;
+    RaceHudBannerActor *actor;
+
+    actor = arg0;
+    if (actor->state != 3) {
+        func_8000F8AC((s16)(actor->x - 4), (s16)(actor->y - 4), func_80043040(RACE_HUD_BANNER_TEXTURE_HANDLE), 2, 0x20,
+                      0x20, 0, actor->alpha, 0);
+        func_8000F8AC((s16)(actor->x + 0xD4), (s16)(actor->y - 4), func_80043040(RACE_HUD_BANNER_TEXTURE_HANDLE),
+                      4, 0x20, 0x20, 0, actor->alpha, 0);
+        i = 0;
+        do {
+            func_8000F8AC((s16)(actor->x + i), (s16)(actor->y - 4), func_80043040(RACE_HUD_BANNER_TEXTURE_HANDLE),
+                          3, 0x20, 0x20, 0, actor->alpha, 0);
+            func_8000F8AC((s16)(actor->x + i), (s16)(actor->y + 0x24), func_80043040(RACE_HUD_BANNER_TEXTURE_HANDLE),
+                          8, 0x20, 0x20, 0, actor->alpha, 0);
+            i += 0x10;
+        } while (i < 0xE0);
+        func_8000F8AC((s16)(actor->x - 4), (s16)(actor->y + 0x24), func_80043040(RACE_HUD_BANNER_TEXTURE_HANDLE),
+                      7, 0x20, 0x20, 0, actor->alpha, 0);
+        func_8000F8AC((s16)(actor->x + 0xD4), (s16)(actor->y + 0x24),
+                      func_80043040(RACE_HUD_BANNER_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, actor->alpha, 0);
+        i = (actor->state == 4) * 0;
+        limit = 0xE0;
+        do {
+            func_8000F8AC((s16)(actor->x - 4), (s16)(actor->y + i), func_80043040(RACE_HUD_BANNER_TEXTURE_HANDLE),
+                          5, 0x20, 0x20, 0, actor->alpha, 0);
+            func_8000F8AC((s16)(actor->x + 0xD4), (s16)(actor->y + i), func_80043040(RACE_HUD_BANNER_TEXTURE_HANDLE),
+                          6, 0x20, 0x20, 0, actor->alpha, 0);
+            j = 0;
+            do {
+                func_8000F8AC((s16)(actor->x + j), (s16)(actor->y + i),
+                              func_80043040(RACE_HUD_BANNER_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, actor->alpha, 0);
+                j += 0x10;
+            } while (j != limit);
+            i += 0x10;
+        } while (i <= 0x2F);
+        if (actor->state < 3) {
+            selected = 0;
+        } else {
+            selected = 1;
+        }
+        func_80013154(actor->x, actor->y, &D_800B5A70[selected * 0x38], 0, actor->alpha, 0);
+        if (actor->state == 4) {
+            if (actor->alpha != 0x100) {
+                alpha = actor->alpha & 0xFFFF;
+            } else {
+                alpha = 0x100;
+                if (actor->mode != 0) {
+                    alpha = 0x60;
+                }
+            }
+            func_8000F8AC((s16)(actor->x + 0x4C), (s16)(actor->y + 0x10),
+                          func_80043040(RACE_HUD_PLAYER_FRAME_HANDLE), 0x17, 0x20, 0x20, 0, alpha, 0);
+            if (actor->alpha < 0x60) {
+                alpha = actor->alpha & 0xFFFF;
+            } else {
+                alpha = 0x60;
+                if (actor->mode != 0) {
+                    alpha = 0x100;
+                }
+            }
+            func_8000F8AC((s16)(actor->x + 0x4C), (s16)(actor->y + 0x20),
+                          func_80043040(RACE_HUD_PLAYER_FRAME_HANDLE), 0x18, 0x20, 0x20, 0, alpha, 0);
+            if (actor->alpha != 0x100) {
+                alpha = actor->alpha & 0xFFFF;
+                ;
+            } else {
+                alpha = (u16)actor->unk1E;
+            }
+            func_8000F8AC((s16)(actor->x + 0x4C), (s16)((actor->y + (actor->mode * 0x10)) + 0x10),
+                          func_80043040(RACE_HUD_PLAYER_FRAME_HANDLE), 0x12, 0x20, 0x20, 0, alpha, 0);
+        }
+        if (actor->state == 1) {
+            func_8000F030((s16)(actor->x + 0xD0), (s16)(actor->y + 0x20),
+                          func_80043040(RACE_HUD_PLAYER_FRAME_HANDLE), ((actor->frame >= 8) + 5) & 0xFFFF, 0x20,
+                          0x20, 0, 0);
+        }
+    }
+}
+#endif
 
 void func_800177F8(RaceHudBannerActor *arg0) {
     s16 alpha;
