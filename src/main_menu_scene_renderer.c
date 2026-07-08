@@ -40,7 +40,7 @@ void func_80042574(MainMenuSceneModel *arg0) {
 }
 #endif
 
-// func_8004270C best match: 98.514% at nonmatchings/func_8004270C-9017456803007796287/base_10.c.
+// func_8004270C best match: 99.595% at nonmatchings/func_8004270C-4139837607000619032/base.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_8004270C.s")
 
 #ifdef NON_MATCHING
@@ -53,32 +53,7 @@ void func_8004270C(MainMenuSceneModel *arg0) {
     s32 end;
     s32 stride;
 
-    model = arg0;
-    if ((u16)model->renderFrame == D_80156608) {
-        matrix = func_8004885C(model->displayObjects);
-        if (matrix != NULL) {
-            func_8007C130(matrix, model->textureId, model->paletteId);
-        }
-
-        gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112130.modelAssetSlots[(u16)model->actorIndex]));
-        gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112130.animationAssetSlots[(u16)model->actorIndex]));
-
-        i = 1;
-        displayObject = &model->displayObjects[1];
-        end = 14;
-        stride = 13;
-        displayLists = D_800D3CB0;
-        do {
-            matrix = func_8004885C(displayObject);
-            if (matrix != NULL) {
-                gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-                gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]);
-            }
-            i++;
-            displayObject++;
-        } while (i != end);
-    }
+    do { if ((u16)arg0->renderFrame == D_80156608) { matrix = func_8004885C(arg0->displayObjects); model = arg0; if (matrix != NULL) { func_8007C130(matrix, model->textureId, model->paletteId); } gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = D_800D3CB0; do { matrix = func_8004885C(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
 }
 #endif
 
