@@ -512,6 +512,12 @@ typedef struct {
 } RaceUiCourseStatsNameData;
 
 typedef struct {
+    /* 0x0 */ s8 first;
+    /* 0x1 */ s8 second;
+    /* 0x2 */ s16 third;
+} RaceUiPackedTime;
+
+typedef struct {
     /* 0x0000 */ u8 pad0[0x77FB];
     /* 0x77FB */ u8 courseStatsIcons[10][5];
 } RaceUiCourseStatsIconData;
@@ -1327,7 +1333,55 @@ void func_800599DC(void *arg0) {
     func_80071824(arg0, func_80059950);
 }
 
+// func_80059A04 best match: 92.593% (nonmatchings/func_80059A04-5684860689308541580/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059A04.s")
+
+#ifdef NON_MATCHING
+void func_80059A04(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
+    char buffer[0x58];
+    RaceUiPackedTime *record;
+    s32 x;
+    s16 y;
+    u16 color;
+    char *ptr;
+    char *end;
+
+    record = arg0;
+    x = arg1;
+    sprintf(buffer - 0x10, D_800E12BC, record->first);
+    y = arg2;
+    color = arg3;
+    end = &buffer[-0xE];
+    ptr = buffer - 0x10;
+    do {
+        func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+        ptr++;
+        x += 8;
+    } while (ptr < end);
+
+    func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), 0x36, color);
+    x += 8;
+    sprintf(buffer - 0x10, D_800E12C4, record->second);
+    ptr = buffer - 0x10;
+    end = &buffer[-0xE];
+    do {
+        func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+        ptr++;
+        x += 8;
+    } while (ptr < end);
+
+    func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), 0x35, color);
+    x += 8;
+    sprintf(buffer - 0x10, D_800E12CC, record->third >> 8);
+    ptr = buffer - 0x10;
+    end = &buffer[-0xE];
+    do {
+        func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+        ptr++;
+        x += 8;
+    } while (ptr != end);
+}
+#endif
 
 void func_80059C34(RaceUiCourseStatsActor *arg0) {
     s32 y;
