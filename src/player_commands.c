@@ -112,6 +112,8 @@ typedef struct SchedulerTask {
     u32 flags;
     void *framebuffer;
     u8 list[0x40];
+    OSMesgQueue *queue;
+    OSMesg msg;
 } SchedulerTask;
 
 typedef struct SchedulerState {
@@ -280,17 +282,10 @@ void func_8009C77C(SchedulerState *arg0) {
     osSpTaskStartGo(&arg0->curRDPTask->list);
 }
 
-// func_8009C81C best match: 99.167%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C81C.s")
-
-#ifdef NON_MATCHING
 void func_8009C81C(SchedulerState *arg0) {
-    int new_var;
-    SchedulerTask *task;
     OSMesg msg;
 
-    msg = (new_var = 0);
+    msg = 0;
     osWritebackDCacheAll();
     if (D_800DF154 == 1) {
         osSpTaskLoad(arg0->curRSPTask->list);
@@ -299,11 +294,9 @@ void func_8009C81C(SchedulerState *arg0) {
         D_8015A620 &= ~1;
         osSendMesg(&arg0->queue14C, &msg, 1);
     }
-    task = arg0->curRDPTask;
-    osSendMesg(task->queue, task->msg, 1);
+    osSendMesg(arg0->curRDPTask->queue, arg0->curRDPTask->msg, 1);
     D_8015A624 = 0;
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C8DC.s")
 
