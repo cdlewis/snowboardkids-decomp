@@ -332,29 +332,31 @@ void func_8006FE24(void) {
     D_801124A0->update();
 }
 
-// func_8006FE88 best match: 88.915%
+// func_8006FE88 best match: 96.811%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006FE88.s")
 
 #ifdef NON_MATCHING
 void func_8006FE88(void) {
-    register u8 *transitionBase;
     register s32 stride;
+    register s32 transitionBase;
+    RaceCameraTransition *transition;
     RaceCamera *camera;
-    s32 timer;
+    s16 timer;
     s16 duration;
 
-    transitionBase = D_800DAA3C;
+    transitionBase = (s32) D_800DAA3C;
     stride = sizeof(RaceCameraTransition);
     camera = D_801124A0;
     timer = camera->timer;
-    duration = ((RaceCameraTransition *)(transitionBase + ((u16) camera->mode * stride)))[-16].duration;
+    transition = (RaceCameraTransition *)((u8 *)transitionBase + ((u16) camera->mode * stride));
+    duration = transition[-16].duration;
     if (duration < timer) {
         timer = duration;
     }
 
-#define TRANSITION (((RaceCameraTransition *)(transitionBase + ((u16) D_801124A0->mode * stride)))[-16])
+#define TRANSITION (((RaceCameraTransition *)((u8 *)transitionBase + ((u16) D_801124A0->mode * stride)))[-16])
 
-    D_801124A0->pos.x = TRANSITION.startPos.x + (s32)(((s64)(TRANSITION.endPos.x - TRANSITION.startPos.x) * timer) / TRANSITION.duration);
+    D_801124A0->pos.x = TRANSITION.startPos.x + (s32)(((s64)(transition[-16].endPos.x - transition[-16].startPos.x) * timer) / TRANSITION.duration);
     D_801124A0->pos.y = TRANSITION.startPos.y + (s32)(((s64)(TRANSITION.endPos.y - TRANSITION.startPos.y) * timer) / TRANSITION.duration);
     D_801124A0->pos.z = TRANSITION.startPos.z + (s32)(((s64)(TRANSITION.endPos.z - TRANSITION.startPos.z) * timer) / TRANSITION.duration);
 
