@@ -354,40 +354,52 @@ void func_80052520(s32 arg0) {
     func_800483FC(&D_80124868, func_800524D4, arg0);
 }
 
-// func_80052550 best match: 93.040%
+// func_80052550 best match: 99.318%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80052550.s")
 
 #ifdef NON_MATCHING
 void func_80052550(s32 arg0) {
-    s16 edgeX;
-    s16 edgeY;
+    long edgeX;
+    long edgeY;
     s32 x;
+    int new_var;
     s32 y;
 
     func_8000F030(-0x84, -0x64, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
     func_8000F030(0x78, -0x64, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
 
     edgeX = -0x74;
+    if (D_80112130.textureHandle) {
+    }
+
     do {
-        func_8000F030(edgeX, -0x64, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
-        func_8000F030(edgeX, -0x2C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
+        x = edgeX;
+        func_8000F030(x, -0x64, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
+        func_8000F030(x, -0x2C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
         edgeX += 0x10;
     } while (edgeX < 0x7C);
 
     func_8000F030(-0x84, -0x2C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
-    func_8000F030(0x78, -0x2C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
+    func_8000F030((0, 0x78), -0x2C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
 
     edgeY = -0x54;
+    if (!D_80112130.textureHandle) {
+    }
+
     do {
         func_8000F030(-0x84, edgeY, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
         func_8000F030(0x78, edgeY, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
-        edgeY += 0x10;
+        edgeY = edgeY + 0x10;
     } while (edgeY < -0x24);
 
-    for (x = -0x74; x != 0x7C; x += 0x10) {
+    new_var = -0x74;
+    for (x = new_var; x != 0x7C; x += 0x10) {
         for (y = -0x54; y != -0x24; y += 0x10) {
             func_8000F030(x, y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
         }
+    }
+
+    if (D_80112130.textureHandle) {
     }
 
     func_8001303C(-0x76, -0x58, D_800D55E8, 0, 0x100, 5, 0x29);
