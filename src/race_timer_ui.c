@@ -274,7 +274,31 @@ void func_80079E48(s32 arg0) {
     func_80047E88(0x80, *(s16 *)((u8 *)&sp1C + 2), (D_80121B52 + 0x30) & new_var, 2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80079F04.s")
+void func_80079F04(s32 arg0) {
+    RaceTimerUiPlayer *player;
+    s32 texture;
+
+    func_80047174(0x38, 0x24, func_80043040(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF, 1);
+
+    texture = func_80043040(D_80112130.popupFontHandle);
+    player = &D_80121D80[D_80156608];
+    func_80047174(-0x18, -0x38, texture,
+                  (D_800DC8F0[D_80121D80[D_80156608].tensDigitTile] + D_80121D80[D_80156608].tensDigitOffset - 1) & 0xFFFF,
+                  player->tensDigitPalette + 1);
+
+    texture = func_80043040(D_80112130.popupFontHandle);
+    player = &D_80121D80[D_80156608];
+    func_80047174(-8, -0x38, texture, D_800DC8F8[player->onesDigitTile], player->onesDigitPalette + 1);
+
+    texture = func_80043040(D_80112130.popupFontHandle);
+    func_80047174(-0x4C, 0x18, texture, D_80122289[D_80156608].value & 0xFFFF, 1);
+
+    if (D_80156608 < 2) {
+        func_80045A78(-0x44, -0x30, func_80043040(D_80112130.popupFontHandle), 0x1A);
+        return;
+    }
+    func_80045A78(0x14, -0x30, func_80043040(D_80112130.popupFontHandle), 0x1A);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_8007A108.s")
 
