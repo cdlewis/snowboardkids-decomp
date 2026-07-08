@@ -124,6 +124,7 @@ typedef struct SchedulerTask {
     u8 list[0x40];
     OSMesgQueue *queue;
     OSMesg msg;
+    s16 retrace;
 } SchedulerTask;
 
 typedef struct SchedulerState {
@@ -279,6 +280,7 @@ extern f32 sinf(f32);
 extern s32 func_8009FD74(AudioTask *, AudioInfo *);
 extern void func_8009FF40(s32);
 extern s32 D_800DF154;
+extern u16 D_800DF150;
 extern s32 D_800DF158;
 extern s32 D_800DF298;
 extern u32 D_800DF290;
@@ -407,7 +409,50 @@ void func_8009C81C(SchedulerState *arg0) {
     D_8015A624 = 0;
 }
 
+// func_8009C8DC best match: 92.350% (nonmatchings/func_8009C8DC-4033633224288138541/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C8DC.s")
+
+#ifdef NON_MATCHING
+typedef struct SchedulerSwapLocals {
+    OSMesgQueue *queue1A4;
+    u8 pad4[0x1C];
+    OSMesg msg;
+} SchedulerSwapLocals;
+
+void func_8009C8DC(SchedulerState *arg0) {
+    SchedulerSwapLocals locals;
+    SchedulerTask *task;
+    s16 retrace;
+    void *framebuffer;
+
+    locals.msg = NULL;
+    locals.queue1A4 = &arg0->queue1A4;
+loop:
+    do {
+        osRecvMesg(&arg0->eventQueue, (OSMesg *)&arg0->curRSPTask, 1);
+        func_8009CB98(arg0, arg0->curRSPTask);
+        osSendMesg(&arg0->retraceQueue, (OSMesg)1, 1);
+        osRecvMesg(&arg0->queue14C, &locals.msg, 1);
+        osRecvMesg(locals.queue1A4, &locals.msg, 1);
+        task = arg0->curRSPTask;
+    } while (!(task->flags & 0x40));
+
+    framebuffer = task->framebuffer;
+    retrace = task->retrace;
+    osSendMesg(task->queue, task->msg, 1);
+    if (((D_800DF150 - retrace) & 0xFFF) >= 0x801) {
+        do {
+            func_8009CC50(arg0);
+        } while (((D_800DF150 - retrace) & 0xFFF) >= 0x801);
+    }
+    if (arg0->doAudio != 0) {
+        osViBlack(0);
+        arg0->doAudio = 0;
+    }
+    osViSwapBuffer(framebuffer);
+    goto loop;
+}
+#endif
 
 void func_8009CA60(SchedulerState *arg0, SchedulerClient *arg1, OSMesgQueue *arg2) {
     s32 prev = osSetIntMask(1);
