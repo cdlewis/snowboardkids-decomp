@@ -51,6 +51,7 @@ void func_8000F0EC(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
 void func_8000F970(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8,
                    s32 arg9, s32 argA, s32 argB, s32 argC);
 extern void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);
+void func_80012AE4(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 arg5);
 extern RenderCallbackNode *D_80124868;
 extern u32 D_80123758;
 extern s16 D_800DEF14;
@@ -142,7 +143,52 @@ void func_80011D6C(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80011D74.s")
 
+// func_800128C8 best match: 97.826%
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_800128C8.s")
+
+#ifdef NON_MATCHING
+void func_800128C8(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u16 arg5) {
+    s32 first;
+    s32 code;
+    u16 *ptr;
+    s32 xPos;
+    s32 yPos;
+    register s32 advance;
+    u16 xStep;
+    u16 scaleValue;
+    u16 arg5Value;
+
+    xPos = x;
+    yPos = y;
+    if (((u8 *)&palette)[3] == 0) {
+        xStep = 0x10;
+    } else {
+        xStep = 8;
+    }
+
+    first = *script;
+    if (first != 0xFFFF) {
+        ptr = script;
+        scaleValue = scale;
+        arg5Value = arg5;
+        code = first & 0xFFFF;
+        do {
+            if (code == 0xFFFD) {
+                xPos = x;
+                yPos += 0x10;
+            } else {
+                advance = xStep;
+                if (code != 0xFFFE) {
+                    func_80012AE4(xPos, yPos, code, ((u8 *)&palette)[3], scaleValue, arg5Value);
+                }
+                xPos += advance;
+            }
+            code = ptr[1];
+            ptr++;
+        } while (code != 0xFFFF);
+    }
+}
+#endif
 
 // func_800129DC best match: 90.833%
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_800129DC.s")
