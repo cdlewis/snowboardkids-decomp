@@ -438,7 +438,8 @@ typedef struct {
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ RaceUiEffectParticle *particles;
-    /* 0x1C */ u8 pad1C[8];
+    /* 0x1C */ void *unk1C;
+    /* 0x20 */ void *unk20;
     /* 0x24 */ s16 count;
 } RaceUiEffectParticleActor;
 
@@ -3380,7 +3381,27 @@ void func_80063E70(RaceUiEffectParticleActor *arg0) {
     func_800483FC(&D_801248D4, func_80063A9C, (s32)actor);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80063FC0.s")
+void func_80063FC0(RaceUiEffectParticleActor *actor) {
+    s32 i;
+
+    if (D_80121B55 != 0) {
+        actor->count = 0xF;
+    } else {
+        actor->count = 0x3C;
+    }
+
+    func_80045990(func_80043040(D_80112130.mainFontHandle), 0x42, &actor->unk20, &actor->unk1C);
+    D_80112130.pad4A = func_80042D58(actor->count * sizeof(RaceUiEffectParticle));
+    actor->particles = (RaceUiEffectParticle *)func_80043040(D_80112130.pad4A);
+
+    for (i = 0; i < actor->count; i++) {
+        actor->particles[i].unk0 = func_800430D0() << 0x10;
+        actor->particles[i].unk4 = func_800430D0() << 0x10;
+        actor->particles[i].unk8 = func_800430D0() << 0x10;
+    }
+
+    func_80071824(actor, func_80063E70);
+}
 
 void func_800640D8(RaceUiRankParticleActor *arg0) {
     RaceUiDisplayCommand *unused;
