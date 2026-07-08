@@ -228,7 +228,7 @@ void func_80030570(ControllerPakTitleActor *arg0) {
     func_80071824(arg0, func_8003048C);
 }
 
-// func_800305B8 best match: 98.723% (nonmatchings/func_800305B8-5635509610426229442/base_6.c)
+// func_800305B8 best match: 99.721% (nonmatchings/func_800305B8-5684860689308541580/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_800305B8.s")
 
 #ifdef NON_MATCHING
@@ -240,12 +240,15 @@ extern u8 D_800B8030[];
 extern u8 D_800B8048[];
 
 void func_800305B8(ControllerPakConfirmActor *arg0) {
-    s16 playerNumberText[5];
     register ControllerPakConfirmActor *actor;
     s32 i;
     s32 j;
+    s32 playerIndex;
+    s32 playerY;
     s32 yAdjust;
     s32 alpha;
+    s16 playerNumberText[5];
+    u16 textTerminator;
     u8 *message;
 
     actor = arg0;
@@ -286,21 +289,24 @@ void func_800305B8(ControllerPakConfirmActor *arg0) {
             func_8000F8AC((s16)(actor->common.x + j), (s16)(actor->common.y + i), func_80043040(D_80112130[0x29]), 0xB,
                           0x20, 0x20, 0, actor->scale, 0);
             j += 0x10;
+            // IDO register allocation nudge for matching codegen.
+            if (((!actor) && (!actor)) && (!actor)) {
+            }
         } while (j != 0xE0);
         i += 0x10;
     } while (i < 0x30);
 
     if (actor->state == 8) {
-        i = 0;
-        j = 0;
+        playerIndex = 0;
+        playerY = 0;
         do {
             playerNumberText[0] = -4;
             playerNumberText[1] = 7;
-            playerNumberText[2] = i + 1;
+            playerNumberText[2] = playerIndex + 1;
             playerNumberText[3] = 0x19;
-            playerNumberText[4] = -1;
-            if (i < D_80121B55) {
-                if (D_800EC8B4[i] == 1) {
+            playerNumberText[4] = (textTerminator = -1);
+            if (playerIndex < D_80121B55) {
+                if (D_800EC8B4[playerIndex] == 1) {
                     message = D_800B8048;
                 } else {
                     message = D_800B8018;
@@ -310,12 +316,13 @@ void func_800305B8(ControllerPakConfirmActor *arg0) {
                 message = D_800B8030;
                 alpha = 0x60;
             }
-            func_80013154((s16)(actor->common.x + 0x10), (s16)(actor->common.y - yAdjust + j), (u8 *)playerNumberText, 0,
-                          alpha, 0);
-            func_80013154((s16)(actor->common.x + 0x40), (s16)(actor->common.y - yAdjust + j), message, 0, alpha, 0);
-            i++;
-            j += 0x10;
-        } while (i != 4);
+            func_80013154((s16)(actor->common.x + 0x10), (s16)(actor->common.y - yAdjust + playerY),
+                          (u8 *)playerNumberText, 0, alpha, 0);
+            func_80013154((s16)(actor->common.x + 0x40), (s16)(actor->common.y - yAdjust + playerY), message, 0, alpha,
+                          0);
+            playerIndex++;
+            playerY += 0x10;
+        } while (playerIndex != 4);
     } else {
         func_80013154(actor->common.x, actor->common.y, &D_800B7E78[actor->targetScale * 0x68], 0, actor->scale, 0);
     }
