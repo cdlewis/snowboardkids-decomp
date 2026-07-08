@@ -28,6 +28,12 @@ typedef struct SchedulerClient {
     OSMesgQueue *queue;
 } SchedulerClient;
 
+typedef struct AudioThreadLocals {
+    SchedulerClient client;
+    OSMesg msg;
+    s32 pad;
+} AudioThreadLocals;
+
 typedef struct PlayerCommandData {
     u8 pad0[0x10];
     u8 *commands;
@@ -199,6 +205,12 @@ typedef struct AudioInfo {
     s16 len;
 } AudioInfo;
 
+typedef struct AudioFrameMessage {
+    s16 type;
+    s16 unk2;
+    AudioInfo *info;
+} AudioFrameMessage;
+
 typedef struct AudioTask {
     void *outBuf;
     s16 outLen;
@@ -264,16 +276,20 @@ extern s32 func_8009FF80(s32, s32, void *);
 extern void func_8009C444(void *);
 extern void func_8009C8DC(void *);
 extern f32 sinf(f32);
+extern s32 func_8009FD74(AudioTask *, AudioInfo *);
+extern void func_8009FF40(s32);
 extern s32 D_800DF154;
 extern s32 D_800DF158;
 extern s32 D_800DF298;
 extern u32 D_800DF290;
 extern u32 D_800DF294;
+extern AudioInfo *D_800DF2A0;
 extern s32 D_800DF2A4;
 extern SchedulerViMode D_800DF340[];
 extern u64 D_800E1F00[];
 extern u8 D_80158620[];
 extern Acmd *D_8015A6A0[];
+extern OSMesgQueue D_8015A868;
 extern u64 D_8015A8A0[];
 extern s32 D_8015A680;
 extern s32 D_8015A684;
@@ -1430,7 +1446,31 @@ s32 func_8009F780(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, s32 ar
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F810.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009FC0C.s")
+void func_8009FC0C(s32 arg0) {
+    AudioThreadLocals locals;
+    u32 done;
+
+    done = 0;
+    func_8009CA60((SchedulerState *)D_8015C960, &locals.client, &D_8015A868);
+    do {
+        osRecvMesg(&D_8015A868, &locals.msg, 1);
+        switch (((AudioFrameMessage *)locals.msg)->type) {
+        case 3:
+            break;
+        case 1:
+            if (func_8009FD74((AudioTask *)D_8015A6A0[(D_800DF290 % 3) + 2], D_800DF2A0) != 0) {
+                osRecvMesg((OSMesgQueue *)D_8015A8A0, &locals.msg, 1);
+                func_8009FF40((s32)((AudioFrameMessage *)locals.msg)->info);
+                D_800DF2A0 = ((AudioFrameMessage *)locals.msg)->info;
+            }
+            break;
+        case 10:
+            done = 1;
+            break;
+        }
+    } while (done == 0);
+    alClose(&D_8015A8D8);
+}
 
 // func_8009FD74 best match: 85.904% (nonmatchings/func_8009FD74-2775475442547365205/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009FD74.s")
