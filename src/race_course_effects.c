@@ -165,7 +165,7 @@ typedef struct {
     char pad0[0x10];
     u16 entryIndex;
     char pad12[6];
-    void *vertices;
+    void *matrix;
     Vec3i pos1;
     Vec3i pos2;
     s16 pitch;
@@ -224,11 +224,12 @@ extern void func_80088294(Vec3i *, s32, s32, u16);
 extern void func_80088A1C(Vec3i *, s32, s32, s32, s32);
 extern s16 D_80112168;
 extern s16 D_80112140;
+extern s16 D_80112142;
 extern s32 D_801235B4;
 extern u8 D_80156608;
 extern void func_8006C5C0(Struct6C51C *);
 void func_8006C1B4(Struct6C51C *);
-void func_8006CCC0(CourseEffectPlayer *, RaceCourseTriggerEffect *);
+void func_8006CCC0(RaceCourseTriggerEffect *);
 void func_8006CE68(CourseEffectPlayer *, RaceCourseTriggerEffect *);
 void func_8006D2D0(RaceCourseTriggerEffect *);
 void func_80069890(RaceCountdownEffect *);
@@ -915,7 +916,34 @@ void func_8006CBBC(RaceCourseMarkerEffect *arg0) {
     func_80071824(arg0, func_8006CB50);
 }
 
+// func_8006CCC0 best match: 99.528% at nonmatchings/func_8006CCC0-8662636370764828261/base_11.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006CCC0.s")
+
+#ifdef NON_MATCHING
+void func_8006CCC0(RaceCourseTriggerEffect *arg0) {
+    CourseEffectMatrixSource transform;
+    Gfx *gfx;
+    volatile s32 pad[2];
+
+    if (D_80156609 != 0) {
+        CourseTriggerEntry *entry = &D_800DA840[arg0->entryIndex];
+
+        func_80097FE4(&transform, entry->pitch, entry->yaw);
+        transform.basePos.x = D_800DA840[arg0->entryIndex].pos.x;
+        transform.basePos.y = D_800DA840[arg0->entryIndex].pos.y;
+        transform.basePos.z = D_800DA840[arg0->entryIndex].pos.z;
+        arg0->matrix = func_8004885C(&transform);
+    }
+
+    if (arg0->matrix != NULL) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));
+        gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112142));
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, arg0->displayList);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006CE68.s")
 
