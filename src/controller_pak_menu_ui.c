@@ -105,7 +105,7 @@ extern s16 D_8011217C;
 extern s16 D_80112178;
 extern u8 D_800B8090[];
 void func_8003048C(ControllerPakTitleActor *);
-extern void func_800305B8(void);
+void func_800305B8(ControllerPakConfirmActor *);
 void func_80030CC4(ControllerPakConfirmActor *);
 void func_80030EF0(ControllerPakTitleActor *);
 void func_80031038(ControllerPakTitleActor *);
@@ -230,7 +230,122 @@ void func_80030570(ControllerPakTitleActor *arg0) {
     func_80071824(arg0, func_8003048C);
 }
 
+// func_800305B8 best match: 98.723% (nonmatchings/func_800305B8-5635509610426229442/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_800305B8.s")
+
+#ifdef NON_MATCHING
+extern u8 D_80121B55;
+extern u8 D_800EC8B4[];
+extern u8 D_800B7E78[];
+extern u8 D_800B8018[];
+extern u8 D_800B8030[];
+extern u8 D_800B8048[];
+
+void func_800305B8(ControllerPakConfirmActor *arg0) {
+    s16 playerNumberText[5];
+    register ControllerPakConfirmActor *actor;
+    s32 i;
+    s32 j;
+    s32 yAdjust;
+    s32 alpha;
+    u8 *message;
+
+    actor = arg0;
+
+    if (actor->state == 8) {
+        yAdjust = 8;
+    } else {
+        yAdjust = 0;
+    }
+
+    func_8000F8AC((s16)(actor->common.x - 4), (s16)(actor->common.y - yAdjust - 4), func_80043040(D_80112130[0x29]), 2,
+                  0x20, 0x20, 0, actor->scale, 0);
+    func_8000F8AC((s16)(actor->common.x + 0xD4), (s16)(actor->common.y - yAdjust - 4), func_80043040(D_80112130[0x29]),
+                  4, 0x20, 0x20, 0, actor->scale, 0);
+
+    i = 0;
+    do {
+        func_8000F8AC((s16)(actor->common.x + i), (s16)(actor->common.y - yAdjust - 4), func_80043040(D_80112130[0x29]),
+                      3, 0x20, 0x20, 0, actor->scale, 0);
+        func_8000F8AC((s16)(actor->common.x + i), (s16)(actor->common.y + yAdjust + 0x24), func_80043040(D_80112130[0x29]),
+                      8, 0x20, 0x20, 0, actor->scale, 0);
+        i += 0x10;
+    } while (i < 0xE0);
+
+    func_8000F8AC((s16)(actor->common.x - 4), (s16)(actor->common.y + yAdjust + 0x24), func_80043040(D_80112130[0x29]),
+                  7, 0x20, 0x20, 0, actor->scale, 0);
+    func_8000F8AC((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + yAdjust + 0x24), func_80043040(D_80112130[0x29]),
+                  9, 0x20, 0x20, 0, actor->scale, 0);
+
+    i = 0;
+    do {
+        func_8000F8AC((s16)(actor->common.x - 4), (s16)(actor->common.y + i), func_80043040(D_80112130[0x29]), 5, 0x20,
+                      0x20, 0, actor->scale, 0);
+        func_8000F8AC((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + i), func_80043040(D_80112130[0x29]), 6, 0x20,
+                      0x20, 0, actor->scale, 0);
+        j = 0;
+        do {
+            func_8000F8AC((s16)(actor->common.x + j), (s16)(actor->common.y + i), func_80043040(D_80112130[0x29]), 0xB,
+                          0x20, 0x20, 0, actor->scale, 0);
+            j += 0x10;
+        } while (j != 0xE0);
+        i += 0x10;
+    } while (i < 0x30);
+
+    if (actor->state == 8) {
+        i = 0;
+        j = 0;
+        do {
+            playerNumberText[0] = -4;
+            playerNumberText[1] = 7;
+            playerNumberText[2] = i + 1;
+            playerNumberText[3] = 0x19;
+            playerNumberText[4] = -1;
+            if (i < D_80121B55) {
+                if (D_800EC8B4[i] == 1) {
+                    message = D_800B8048;
+                } else {
+                    message = D_800B8018;
+                }
+                alpha = (u16)actor->scale;
+            } else {
+                message = D_800B8030;
+                alpha = 0x60;
+            }
+            func_80013154((s16)(actor->common.x + 0x10), (s16)(actor->common.y - yAdjust + j), (u8 *)playerNumberText, 0,
+                          alpha, 0);
+            func_80013154((s16)(actor->common.x + 0x40), (s16)(actor->common.y - yAdjust + j), message, 0, alpha, 0);
+            i++;
+            j += 0x10;
+        } while (i != 4);
+    } else {
+        func_80013154(actor->common.x, actor->common.y, &D_800B7E78[actor->targetScale * 0x68], 0, actor->scale, 0);
+    }
+
+    if (actor->state == 9) {
+        alpha = 0x60;
+        if (D_8010ADD0.unk9 == 0) {
+            alpha = 0x100;
+        }
+        func_8000F8AC((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x10), func_80043040(D_80112130[0x21]),
+                      0x17, 0x20, 0x20, 0, alpha, 0);
+        if (alpha == 0x100) {
+            alpha = 0x60;
+        } else {
+            alpha = 0x100;
+        }
+        func_8000F8AC((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x20), func_80043040(D_80112130[0x21]),
+                      0x18, 0x20, 0x20, 0, alpha, 0);
+        func_8000F8AC((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + (D_8010ADD0.unk9 * 0x10) + 0x10),
+                      func_80043040(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, actor->optionScale, 0);
+    }
+
+    if ((actor->state == 1) || (actor->state == 3) || (actor->state == 8)) {
+        func_8000F030((s16)(actor->common.x + 0xD0), (s16)(actor->common.y + yAdjust + 0x20), func_80043040(D_80112130[0x21]),
+                      ((actor->timer >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
+    }
+}
+#endif
 
 void func_80030CC4(ControllerPakConfirmActor *arg0) {
     u8 state;
