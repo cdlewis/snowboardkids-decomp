@@ -96,6 +96,8 @@ typedef struct {
     /* 0x02 */ s16 alpha;
     /* 0x04 */ u8 pad4[2];
     /* 0x06 */ u16 selection[4];
+    /* 0x0E */ u8 padE[4];
+    /* 0x12 */ u16 nextSelection[4];
 } TitleIntroTransitionState;
 
 typedef struct {
@@ -1085,7 +1087,7 @@ void func_80016B54(TitleMenuWidgetActor *arg0) {
     func_80071824(new_var, func_80016948);
 }
 
-// func_80016BE8 best match: 89.510% (nonmatchings/func_80016BE8-7387615772158234395/base_6.c)
+// func_80016BE8 best match: 94.563% (nonmatchings/func_80016BE8-4061930211835852828/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016BE8.s")
 
 #ifdef NON_MATCHING
@@ -1096,8 +1098,8 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
 
     if (D_8010ADDC->state == 8) {
         for (i = 0; i < D_80121B55; i++) {
-            if (D_8010AE06[i] != arg0->selection[i]) {
-                arg0->selection[i] = D_8010AE06[i];
+            if (D_8010AE00.selection[i] != arg0->selection[i]) {
+                arg0->selection[i] = D_8010AE00.selection[i];
             }
 
             state = D_800EC9D0[i];
@@ -1130,7 +1132,7 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
             }
 
             if ((state >= 5) && (arg0->slideOffset[i] == 0)) {
-                D_8010AE12[i] = arg0->selection[i];
+                D_8010AE00.nextSelection[i] = arg0->selection[i];
                 D_8010AE0E[i] = 2;
                 D_800EC9D0[i] = 0;
             }
