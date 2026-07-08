@@ -22,7 +22,10 @@ typedef union {
 } SignedUnsignedShort;
 
 typedef struct {
-    /* 0x000 */ u8 pad0[0x2FC];
+    /* 0x000 */ u8 pad0[0x15];
+    /* 0x015 */ u8 unk15;
+    /* 0x016 */ u8 unk16;
+    /* 0x017 */ u8 pad17[0x2FC - 0x17];
     /* 0x2FC */ s32 flags;
     /* 0x300 */ u8 pad300[0x502 - 0x300];
     /* 0x502 */ s16 courseId;
@@ -37,6 +40,7 @@ typedef struct {
 } RaceFlowState;
 
 extern CourseGridEntry *D_800DC490[];
+extern u16 D_800DC5C0[];
 extern CourseSelectTableEntry D_800B9542[];
 extern RaceFlowState *D_801235B8;
 extern RacePlayerState D_80121D80[];
@@ -66,6 +70,7 @@ extern u8 D_800DEED4;
 extern u8 D_800EC9C2;
 extern u8 D_8010ADFA;
 extern u8 D_800DC4C0;
+extern u8 D_80121B56;
 extern u8 D_1E74E0[];
 extern u8 D_1EC0F0[];
 extern u8 D_1EC4A0[];
@@ -126,6 +131,7 @@ extern void func_80072138(s32, s32);
 extern void func_80072260(void);
 extern void func_800728E0(void);
 extern s32 func_80072938(void);
+extern s32 func_80072FC4(void);
 extern void func_80070EC0(s32);
 extern void func_800733E0(void);
 extern void func_800734A0(void);
@@ -148,6 +154,7 @@ extern void func_80073988(void);
 extern void func_800740C0(void);
 extern void func_80074160(void);
 extern void func_80074960(void);
+extern void func_80077AD4(void);
 extern void func_80077B34(void);
 extern void func_80077C4C(void);
 extern void func_80077400(void);
@@ -529,7 +536,38 @@ void func_80077324(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80077554.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_8007797C.s")
+void func_8007797C(void) {
+    void *sp18;
+
+    if (D_801235B8->fadeTimer == D_800DC5C0[D_801235B8->unk1C]) {
+        if (func_80072FC4() != 0) {
+            if (D_801235B8->unk1C != 0xB) {
+                D_801235B8->unk1C++;
+                D_80121D80[0].unk16 = 2;
+                D_80121D80[0].unk15 = 0;
+                D_801124B8 = 0;
+            } else {
+                func_80072114(0x48);
+                func_8009956C(func_80077AD4, 0);
+            }
+        } else {
+            func_80072114(0x48);
+            func_8009956C(func_80077AD4, 0);
+        }
+    }
+    if (D_801235B8->fadeTimer == 1) {
+        D_800DEF14 = 0;
+    }
+    if (D_80121B56 == 0) {
+        D_801235B8->fadeTimer++;
+    }
+    func_80077CD4();
+    if (D_80123778 & 0x1000) {
+        sp18 = func_80077AD4;
+        func_80072114(0x48);
+        func_8009956C(sp18, 0);
+    }
+}
 
 void func_80077AD4(void) {
     func_80077CD4();
