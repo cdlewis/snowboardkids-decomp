@@ -26,6 +26,7 @@ extern s8 D_80123788[];
 extern s8 D_8012378C[];
 
 void func_80083D80(RaceInputPlayer *player);
+void func_8008409C(RaceInputPlayer *player);
 void func_8008431C(RaceInputPlayer *player);
 void func_80084510(RaceInputPlayer *player);
 
@@ -88,7 +89,74 @@ void func_8008431C(RaceInputPlayer *player) {
     history->lastWriteIndex = index;
 }
 
+// func_80084510 best match: 96.541%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_input_history/func_80084510.s")
+
+#ifdef NON_MATCHING
+void func_80084510(RaceInputPlayer *player) {
+    RaceInputHistoryBuffer *history;
+    s32 index;
+    s8 replayInputSource;
+    u8 buttons;
+
+    replayInputSource = player->replayInputSource;
+    if (replayInputSource == 5) {
+        func_8008409C(player);
+        return;
+    }
+
+    if (replayInputSource == 1) {
+        history = func_80043040(D_8011213E);
+        replayInputSource = player->replayInputSource;
+    }
+
+    if (replayInputSource == 2) {
+        history = func_80043040(D_80112186);
+    }
+
+    if (history->enabled == 0) {
+        return;
+    }
+
+    index = history->writeIndex;
+    if (index < RACE_INPUT_HISTORY_LENGTH) {
+        player->stickX = history->stickX[index];
+        player->stickY = history->stickY[history->writeIndex];
+        player->inputFlags = 0;
+
+        buttons = history->buttons[history->writeIndex];
+        if (buttons & 1) {
+            player->inputFlags = 8;
+            buttons = history->buttons[history->writeIndex];
+        }
+        if (buttons & 2) {
+            player->inputFlags |= 4;
+            buttons = history->buttons[history->writeIndex];
+        }
+        if (buttons & 8) {
+            player->inputFlags |= 1;
+            buttons = history->buttons[history->writeIndex];
+        }
+        if (buttons & 4) {
+            player->inputFlags |= 2;
+            buttons = history->buttons[history->writeIndex];
+        }
+        if (buttons & 0x10) {
+            player->inputFlags |= 0x8000;
+            buttons = history->buttons[history->writeIndex];
+        }
+        if (buttons & 0x20) {
+            player->inputFlags |= 0x4000;
+            buttons = history->buttons[history->writeIndex];
+        }
+        if (buttons & 0x40) {
+            player->inputFlags |= 0x2000;
+        }
+
+        history->writeIndex++;
+    }
+}
+#endif
 
 void func_80084730(RaceInputPlayer *player) {
     u16 index;
