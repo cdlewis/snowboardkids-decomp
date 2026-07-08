@@ -2,12 +2,7 @@
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "course_preview_camera.h"
-
-typedef struct {
-    s32 x;
-    s32 y;
-    s32 z;
-} Vec3i;
+#include "fixed_point_math.h"
 
 typedef s16 FixedMatrix3s[9];
 typedef s16 FixedMatrix3sScratch[0x10];
@@ -102,7 +97,6 @@ extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
 extern s32 func_80043040(s16 arg0);
 extern Gfx *func_8004885C(FixedTransform *arg0);
-extern s32 func_80049000(Vec3i *position);
 extern void func_80045990(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);
 extern s32 func_80097AE8(s16 arg0);
 extern s32 func_80097B48(s16 arg0);

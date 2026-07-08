@@ -1,14 +1,9 @@
 #include "common.h"
+#include "fixed_point_math.h"
 
 #define OBJECT_COUNT 3
 #define OBJECT_CULL_RANGE 0xBA00000
 #define NEG_OBJECT_CULL_RANGE (-OBJECT_CULL_RANGE + 1)
-
-typedef struct {
-    s32 x;
-    s32 y;
-    s32 z;
-} Vec3i;
 
 typedef struct {
     u8 pad0[0x44];
@@ -21,9 +16,6 @@ typedef struct {
 extern u8 D_80156608;
 extern s16 D_800D40D0[];
 extern ObjectTransform D_801121E0[OBJECT_COUNT];
-
-s32 func_80049000(Vec3i *position);
-s32 func_8004908C(s32 deltaX, s32 deltaZ);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/fixed_point_math/func_80049000.s")
 

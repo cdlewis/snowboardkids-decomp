@@ -1,4 +1,5 @@
 #include "common.h"
+#include "fixed_point_math.h"
 
 #define RACE_POSITION_UI_PART_COUNT 13
 #define RACE_POSITION_UI_TEXTURE_VARIANTS 6
@@ -8,12 +9,6 @@
 #define RACE_POSITION_UI_FLAG_SHADOW 0x80
 #define RACE_POSITION_UI_FLAG_MARKER_READY 0x100
 #define RACE_POSITION_UI_FLAG_HIDE_MESHES 0x800000
-
-typedef struct {
-    /* 0x00 */ s32 x;
-    /* 0x04 */ s32 y;
-    /* 0x08 */ s32 z;
-} RacePositionUiPoint;
 
 typedef struct {
     /* 0x00 */ s16 x;
@@ -47,7 +42,7 @@ typedef struct {
     /* 0x322 */ u8 pad322[0x450 - 0x322];
     /* 0x450 */ s16 partCount;
     /* 0x452 */ u8 pad452[0x468 - 0x452];
-    /* 0x468 */ RacePositionUiPoint markerPoints[RACE_POSITION_UI_PLAYER_COUNT];
+    /* 0x468 */ Vec3i markerPoints[RACE_POSITION_UI_PLAYER_COUNT];
     /* 0x498 */ RacePositionUiVtx *markerVtx;
     /* 0x49C */ RacePositionUiMtx *markerMtx;
     /* 0x4A0 */ u8 pad4A0[0x530 - 0x4A0];
@@ -57,7 +52,6 @@ typedef struct {
 extern void *func_80043040(s16 assetId);
 extern void *func_80048594(s32 size);
 extern s32 func_8004885C(void *source);
-extern s32 func_80049000(RacePositionUiPoint *points);
 extern void func_80045990(void *asset, u16 index, void **image, void **palette);
 
 extern u8 D_80156609;

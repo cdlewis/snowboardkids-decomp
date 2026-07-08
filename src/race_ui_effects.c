@@ -2,6 +2,7 @@
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "viewport_manager.h"
+#include "fixed_point_math.h"
 
 /* Local 3-arg declaration; see note in effect_task_scheduler.h. */
 extern void *func_800716A4(void *, s32, s32);
@@ -15,12 +16,6 @@ typedef struct {
     u8 b6;
     u8 b7;
 } RaceUiSpriteInit;
-
-typedef struct {
-    s32 a;
-    s32 b;
-    s32 c;
-} Vec3i;
 
 typedef s16 FixedMatrix3s[9];
 typedef s16 FixedMatrix3sScratch[0x12];
@@ -726,7 +721,6 @@ extern void func_800483FC(void *, void *, s32);
 extern RaceUiGfxCommandDest *func_8004885C(RaceUiTrailCopyBlock *);
 extern void func_80048C90(RaceUiGfxCommandDest *, s32 *);
 extern void func_80048D60(void *);
-extern s32 func_80049000(Vec3i *);
 extern void osWritebackDCache(void *, s32);
 extern s32 func_80043040(s16);
 extern s16 func_80042D58(s32);
@@ -2357,17 +2351,17 @@ void func_8005EFFC(RaceUiSparkleActor *arg0) {
             arg0->frame = (arg0->frame + 1) & 3;
         }
 
-        sp2C.a = 0;
-        sp2C.b = arg0->zOffset;
-        sp2C.c = 0;
+        sp2C.x = 0;
+        sp2C.y = arg0->zOffset;
+        sp2C.z = 0;
         player = &D_80121D80[arg0->playerIndex];
         func_80097FE4(sp38, player->pitch, player->yaw);
         func_80098590(sp38, &sp2C, &arg0->pos);
 
         player = &D_80121D80[arg0->playerIndex];
-        arg0->pos.a += player->pos28.a;
-        arg0->pos.b += player->pos28.b;
-        arg0->pos.c += player->pos28.c;
+        arg0->pos.x += player->pos28.x;
+        arg0->pos.y += player->pos28.y;
+        arg0->pos.z += player->pos28.z;
         arg0->alpha += arg0->alphaStep;
         if (arg0->alpha >= 0x100) {
             arg0->alpha = 0xFF;
@@ -2437,18 +2431,18 @@ void func_8005F448(RaceUiSnowboardTrailActor *arg0) {
     actor = arg0;
     actor->spinYaw += 0x240;
     if (D_80121B56 == 0) {
-        actor->worldPos.b += actor->velocityY;
+        actor->worldPos.y += actor->velocityY;
         actor->velocityY -= 0x8000;
     }
 
-    actor->copyBlock.transform.translation.a = actor->worldPos.a;
-    actor->copyBlock.transform.translation.b = actor->worldPos.b;
-    actor->copyBlock.transform.translation.c = actor->worldPos.c;
+    actor->copyBlock.transform.translation.x = actor->worldPos.x;
+    actor->copyBlock.transform.translation.y = actor->worldPos.y;
+    actor->copyBlock.transform.translation.z = actor->worldPos.z;
 
     func_80097BAC(sp30.rotation, actor->spinYaw);
-    sp30.translation.a = actor->sourcePos.a;
-    sp30.translation.b = actor->sourcePos.b;
-    sp30.translation.c = actor->sourcePos.c;
+    sp30.translation.x = actor->sourcePos.x;
+    sp30.translation.y = actor->sourcePos.y;
+    sp30.translation.z = actor->sourcePos.z;
     func_800987A0(&sp30, &actor->copyBlock.transform, &actor->transformedCopyBlock.transform);
 
     actor->timer--;
@@ -2495,9 +2489,9 @@ void func_8005F6A4(RaceUiRankTrailActor *arg0) {
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
         player = &D_80121D80[arg0->playerIndex];
-        arg0->copyBlock.words[5] = player->pos28.a;
-        arg0->copyBlock.words[6] = player->pos28.b + 0x100000;
-        arg0->copyBlock.words[7] = player->pos28.c;
+        arg0->copyBlock.words[5] = player->pos28.x;
+        arg0->copyBlock.words[6] = player->pos28.y + 0x100000;
+        arg0->copyBlock.words[7] = player->pos28.z;
         arg0->matrix = func_8004885C(&arg0->copyBlock);
     }
 
@@ -2517,9 +2511,9 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
 
     arg0->copyBlock.transform = D_800DEE30;
     player = &D_80121D80[arg0->playerIndex];
-    arg0->pos.a = player->pos28.a;
-    arg0->pos.b = player->pos28.b;
-    arg0->pos.c = player->pos28.c;
+    arg0->pos.x = player->pos28.x;
+    arg0->pos.y = player->pos28.y;
+    arg0->pos.z = player->pos28.z;
 
     for (i = 0; i < 4; i++) {
         if (i != arg0->playerIndex) {
@@ -2548,7 +2542,7 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
     }
 
     for (i = 0; i < 8; i++) {
-        func_80060454((void *)arg0->pos.a, (void *)arg0->pos.b, (void *)arg0->pos.c, i);
+        func_80060454((void *)arg0->pos.x, (void *)arg0->pos.y, (void *)arg0->pos.z, i);
     }
 
     func_80072A74(0x15, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
@@ -2637,9 +2631,9 @@ void func_80060544(RaceUiPodiumTrailActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        arg0->copyBlock.words[5] = arg0->pos.a;
-        arg0->copyBlock.words[6] = arg0->pos.b + 0x38000;
-        arg0->copyBlock.words[7] = arg0->pos.c;
+        arg0->copyBlock.words[5] = arg0->pos.x;
+        arg0->copyBlock.words[6] = arg0->pos.y + 0x38000;
+        arg0->copyBlock.words[7] = arg0->pos.z;
         arg0->matrix = func_8004885C(&arg0->copyBlock);
     }
 
@@ -2691,9 +2685,9 @@ void func_80060738(RaceUiPodiumTrailActor *arg0) {
         }
 
         player = &D_80121D80[arg0->targetPlayerIndex];
-        arg0->pos.a = player->pos28.a;
-        arg0->pos.b = player->pos28.b + height;
-        arg0->pos.c = player->pos28.c;
+        arg0->pos.x = player->pos28.x;
+        arg0->pos.y = player->pos28.y + height;
+        arg0->pos.z = player->pos28.z;
     }
 
     D_8012229A[arg0->targetPlayerIndex].value = 1;
@@ -2718,9 +2712,9 @@ void func_80060914(RaceUiPodiumTrailActor *arg0) {
             arg0->copyBlock.transform = D_800DEE30;
             playerIndex = arg0->playerIndex;
             player = &D_80121D80[playerIndex];
-            arg0->pos.a = player->pos28.a;
-            arg0->pos.b = player->pos28.b + height;
-            arg0->pos.c = player->pos28.c;
+            arg0->pos.x = player->pos28.x;
+            arg0->pos.y = player->pos28.y + height;
+            arg0->pos.z = player->pos28.z;
             scale = arg0->state;
 
             arg0->copyBlock.halfwords[0] = (arg0->copyBlock.halfwords[0] * scale) / 64;
@@ -2874,9 +2868,9 @@ void func_80061088(RaceUiTripleParticleActor *arg0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             func_80097C18(spAC.halfwords, arg0->rotY);
-            spAC.words[5] = arg0->pos.a;
-            spAC.words[6] = arg0->pos.b;
-            spAC.words[7] = arg0->pos.c;
+            spAC.words[5] = arg0->pos.x;
+            spAC.words[6] = arg0->pos.y;
+            spAC.words[7] = arg0->pos.z;
 
             sp24 = spAC;
             sp6C = sp24;
@@ -2988,9 +2982,9 @@ void func_800617EC(RaceUiRisingTrailActor *arg0) {
             arg0->matrixDirty = 0;
             sine = func_80097AE8(arg0->sineAngle);
             func_80097C18(&sp80, (s16)(arg0->angle + 0x800));
-            sp80.words[5] = arg0->pos.a;
-            sp80.words[6] = arg0->pos.b + ((sine + 0x1000) << 5) + 0x10000;
-            sp80.words[7] = arg0->pos.c;
+            sp80.words[5] = arg0->pos.x;
+            sp80.words[6] = arg0->pos.y + ((sine + 0x1000) << 5) + 0x10000;
+            sp80.words[7] = arg0->pos.z;
             func_80048D60(&sp80);
             arg0->matrix = func_8004885C(&sp80);
         }
@@ -3017,7 +3011,7 @@ void func_80061984(RaceUiThrownTrailActor *arg0) {
             func_80088294(pos, 0x1A0000, 0x600000, 2);
             if (arg0->soundTimer == 0) {
                 func_80072A74(0xD, pos, 0x7F, 0x31);
-                func_8004B8B4(arg0->pos.a, arg0->pos.b + 0x700000, arg0->pos.c, arg0->surface, arg0->angle);
+                func_8004B8B4(arg0->pos.x, arg0->pos.y + 0x700000, arg0->pos.z, arg0->surface, arg0->angle);
                 arg0->soundTimer = 0xF;
             } else {
                 arg0->soundTimer--;
@@ -3038,7 +3032,7 @@ void func_80061984(RaceUiThrownTrailActor *arg0) {
 
 void func_80061A98(RaceUiThrownTrailActor *arg0) {
     arg0->soundTimer = 0xF;
-    arg0->pos.b = func_80080CC4(arg0->surface, arg0->pos.a, arg0->pos.c);
+    arg0->pos.y = func_80080CC4(arg0->surface, arg0->pos.x, arg0->pos.z);
     arg0->angleStep = 8;
     arg0->angle = arg0->angleStep;
     func_80071824(arg0, func_80061984);
@@ -3047,8 +3041,8 @@ void func_80061A98(RaceUiThrownTrailActor *arg0) {
 void func_80061AF4(s16 arg0, void *arg1, void *arg2, s16 arg3) {
     RaceUiThrownTrailActor *temp = func_80071408(func_80061A98, 0, 0x64);
     if (temp != NULL) {
-        temp->pos.a = (s32)arg1;
-        temp->pos.c = (s32)arg2;
+        temp->pos.x = (s32)arg1;
+        temp->pos.z = (s32)arg2;
         temp->targetAngle = (arg3 + 0x800) & 0xFFF;
         temp->surface = arg0;
     }
@@ -3254,12 +3248,12 @@ void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
 
     func_80098590(player->transform.rotation, &D_800D62A0, &arg0->pos);
     player = &D_80121D80[arg0->index];
-    arg0->pos.a += player->transform.translation.a;
-    arg0->pos.b += player->transform.translation.b + 0x80000;
-    arg0->pos.c += player->transform.translation.c;
+    arg0->pos.x += player->transform.translation.x;
+    arg0->pos.y += player->transform.translation.y + 0x80000;
+    arg0->pos.z += player->transform.translation.z;
     arg0->angle += 0xC0;
-    arg0->pos.a -= func_80097AE8(arg0->angle) << 7;
-    arg0->pos.c += func_80097B48(arg0->angle) << 7;
+    arg0->pos.x -= func_80097AE8(arg0->angle) << 7;
+    arg0->pos.z += func_80097B48(arg0->angle) << 7;
     func_800483FC(&D_801248EC, func_800625D8, (s32)arg0);
 }
 
@@ -3304,9 +3298,9 @@ void func_80062AF0(RaceUiScaledParticleActor *arg0) {
             scratch[2] = SCALE_MATRIX_COMPONENT(scratch[2], arg0->scale);
             scratch[5] = SCALE_MATRIX_COMPONENT(scratch[5], arg0->scale);
             scratch[8] = SCALE_MATRIX_COMPONENT(scratch[8], arg0->scale);
-            ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.a;
-            ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.b;
-            ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.c;
+            ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.x;
+            ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.y;
+            ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.z;
             arg0->matrix = func_8004885C((RaceUiTrailCopyBlock *)scratch);
         }
 
@@ -3385,15 +3379,15 @@ void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             func_80097C18(scratch, arg0->rotY);
-            ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.a;
-            ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.b;
-            ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.c;
+            ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.x;
+            ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.y;
+            ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.z;
             arg0->matrix0 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
 
             func_80098590(scratch, &D_800D6324, &transformedOffset);
-            ((RaceUiTrailCopyBlock *)scratch)->words[5] += transformedOffset.a;
-            ((RaceUiTrailCopyBlock *)scratch)->words[6] += transformedOffset.b;
-            ((RaceUiTrailCopyBlock *)scratch)->words[7] += transformedOffset.c;
+            ((RaceUiTrailCopyBlock *)scratch)->words[5] += transformedOffset.x;
+            ((RaceUiTrailCopyBlock *)scratch)->words[6] += transformedOffset.y;
+            ((RaceUiTrailCopyBlock *)scratch)->words[7] += transformedOffset.z;
             func_80098174(scratch, arg0->rotY, arg0->rotX);
             arg0->matrix1 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
         }
@@ -3440,9 +3434,9 @@ void func_80063220(RaceUiSpinningParticleActor *arg0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             func_80097C18(scratch, arg0->rotY);
-            ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.a;
-            ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.b;
-            ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.c;
+            ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.x;
+            ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.y;
+            ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.z;
             arg0->matrix0 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
 
             ((RaceUiTrailCopyBlock *)scratch)->words[6] += 0x01000000;
@@ -3645,9 +3639,9 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
     if (!D_80121B56) {
         func_80097FE4(sp24.mtx, D_80121D80[actor->index].pitch, D_80121D80[actor->index].yaw);
         func_80098590(sp24.mtx, &actor->velocity, &actor->pos);
-        actor->pos.a += D_80121D80[actor->index].pos28.a;
-        actor->pos.b += D_80121D80[actor->index].pos28.b + actor->verticalVelocity;
-        actor->pos.c += D_80121D80[actor->index].pos28.c;
+        actor->pos.x += D_80121D80[actor->index].pos28.x;
+        actor->pos.y += D_80121D80[actor->index].pos28.y + actor->verticalVelocity;
+        actor->pos.z += D_80121D80[actor->index].pos28.z;
         temp = (actor->verticalVelocity += actor->verticalAcceleration);
         actor->verticalAcceleration += 0x10000;
         if (temp >= 0x300001) {
@@ -3676,9 +3670,9 @@ void func_80064B28(RaceUiProjectileActor *arg0) {
         func_80098590(sp2C, &actor->velocity, &actor->pos);
 
         player = &D_80121D80[actor->index];
-        actor->pos.a += player->pos28.a;
-        actor->pos.b += player->pos28.b + actor->verticalVelocity;
-        actor->pos.c += player->pos28.c;
+        actor->pos.x += player->pos28.x;
+        actor->pos.y += player->pos28.y + actor->verticalVelocity;
+        actor->pos.z += player->pos28.z;
         actor->verticalAcceleration += 0xFFFF0000;
         actor->verticalVelocity += actor->verticalAcceleration;
         if (actor->verticalVelocity <= 0) {
@@ -3702,9 +3696,9 @@ void func_80064C68(RaceUiProjectileActor *arg0) {
         func_80098590(sp2C, &actor->velocity, &actor->pos);
 
         player = &D_80121D80[actor->index];
-        actor->pos.a += player->pos28.a;
-        actor->pos.b += player->pos28.b;
-        actor->pos.c += player->pos28.c;
+        actor->pos.x += player->pos28.x;
+        actor->pos.y += player->pos28.y;
+        actor->pos.z += player->pos28.z;
         func_80064414(actor);
         if (actor->flags != 0) {
             func_80071824(actor, func_80064B28);
@@ -3726,9 +3720,9 @@ void func_80064D88(RaceUiProjectileActor *arg0) {
         func_80098590(sp2C, &actor->velocity, &actor->pos);
 
         player = &D_80121D80[actor->index];
-        actor->pos.a += player->pos28.a;
-        actor->pos.b += player->pos28.b + actor->verticalVelocity;
-        actor->pos.c += player->pos28.c;
+        actor->pos.x += player->pos28.x;
+        actor->pos.y += player->pos28.y + actor->verticalVelocity;
+        actor->pos.z += player->pos28.z;
         actor->verticalVelocity += actor->verticalAcceleration;
         actor->verticalAcceleration += 0xFFFF0000;
         if (actor->verticalVelocity <= 0) {
