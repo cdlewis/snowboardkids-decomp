@@ -683,7 +683,7 @@ void func_80028B0C(CourseSelectWidgetInitActor *arg0) {
 }
 #endif
 
-// func_80028C68 best match: 96.513% (nonmatchings/func_80028C68-8662636370764828261/base_5.c)
+// func_80028C68 best match: 99.956% (nonmatchings/func_80028C68-5635509610426229442/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028C68.s")
 
 #ifdef NON_MATCHING
@@ -696,10 +696,7 @@ void func_80028C68(CourseSelectWidgetActor *arg0) {
     CourseSelectWidgetActor *alphaPtr;
 
     playerCount = D_80121B55;
-    i = 0;
-    if (playerCount > 0) {
-        alphaPtr = arg0;
-        do {
+    i = 0; if (playerCount > 0) { alphaPtr = arg0; do {
             if (alphaPtr->alpha != 0) {
                 if (playerCount == 2) {
                     temp_s1 = i * 0x64;
@@ -723,8 +720,8 @@ void func_80028C68(CourseSelectWidgetActor *arg0) {
                     func_80013154((s16)(arg0->x + temp_lo + 0x24), (s16)(arg0->y + temp_s2 + 3), D_800B7040, 1,
                                   alphaPtr->alpha, 0);
                 }
-                playerCount = D_80121B55;
             }
+            playerCount = D_80121B55;
             i++;
             alphaPtr = (CourseSelectWidgetActor *)((u8 *)alphaPtr + sizeof(u16));
         } while (i < playerCount);
