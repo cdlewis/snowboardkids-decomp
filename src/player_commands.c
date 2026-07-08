@@ -302,19 +302,6 @@ extern s32 D_8015C960;
 extern OSIoMesg *D_8015C968;
 extern s32 D_8015C970;
 extern s32 *libmus_fxheader_current;
-extern f64 D_800E1A78;
-extern f64 D_800E1A80;
-extern f64 D_800E1A88;
-extern f64 D_800E1A90;
-extern f64 D_800E1A98;
-extern f64 D_800E1AA0;
-extern f64 D_800E1AA8;
-extern f64 D_800E1AB0;
-extern f64 D_800E1AB8;
-extern f64 D_800E1AC0;
-extern f64 D_800E1AC8;
-extern f64 D_800E1AD0;
-extern f64 D_800E1AD8;
 extern ALPlayer D_8015A630;
 extern ALHeap D_8015A648;
 extern u8 *D_8015A64C;
@@ -1319,7 +1306,7 @@ void func_8009EF44(PlayerCommandState *arg0) {
     if (temp_v0 != 0) {
         temp_v1 = arg0->unkC6 - arg0->unk105;
         if (temp_v1 > 0) {
-            temp_fv1 = sinf((f32)((f64)((temp_v1 / (f32)temp_v0) * ((float)2.0)) * D_800E1A78)) * arg0->unk44;
+            temp_fv1 = sinf((f32)((f64)((temp_v1 / (f32)temp_v0) * ((float)2.0)) * 3.1415926000000001)) * arg0->unk44;
             arg0->unk48 = temp_fv1;
         }
     }
@@ -1340,23 +1327,23 @@ f32 func_8009F194(f32 arg0) {
     if (arg0 > 0.0f) {
         square = arg0 * arg0;
         fourth = square * square;
-        return (f32)(((f64)arg0 * D_800E1A80) + 1.0 +
-            ((f64)square * D_800E1A88) +
-            ((f64)(square * arg0) * D_800E1A90) +
-            ((f64)fourth * D_800E1A98) +
-            ((f64)(fourth * arg0) * D_800E1AA0) +
-            ((f64)(fourth * square) * D_800E1AA8));
+        return (f32)(((f64)arg0 * 0.69314718055994495) + 1.0 +
+            ((f64)square * 0.240226506959101) +
+            ((f64)(square * arg0) * 0.055504108664821597) +
+            ((f64)fourth * 0.0096181291076284803) +
+            ((f64)(fourth * arg0) * 0.00133335581464284) +
+            ((f64)(fourth * square) * 0.00015403530393381601));
     }
 
     arg0 = -arg0;
     square = arg0 * arg0;
     fourth = square * square;
-    return (f32)(1.0 / (((f64)arg0 * D_800E1AB0) + 1.0 +
-        ((f64)square * D_800E1AB8) +
-        ((f64)(square * arg0) * D_800E1AC0) +
-        ((f64)fourth * D_800E1AC8) +
-        ((f64)(fourth * arg0) * D_800E1AD0) +
-        ((f64)(fourth * square) * D_800E1AD8)));
+    return (f32)(1.0 / (((f64)arg0 * 0.69314718055994495) + 1.0 +
+        ((f64)square * 0.240226506959101) +
+        ((f64)(square * arg0) * 0.055504108664821597) +
+        ((f64)fourth * 0.0096181291076284803) +
+        ((f64)(fourth * arg0) * 0.00133335581464284) +
+        ((f64)(fourth * square) * 0.00015403530393381601)));
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F344.s")

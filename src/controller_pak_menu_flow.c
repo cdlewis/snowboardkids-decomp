@@ -49,7 +49,6 @@ extern s8 D_800EC8B0;
 extern s32 D_8010B198;
 extern s32 D_8010B19C;
 extern s32 D_801235B4;
-extern f32 D_800E0A50;
 extern u8 D_593D10;
 extern u8 D_598A70;
 extern u8 D_59AAA0;
@@ -67,7 +66,7 @@ void func_8000C600(void) {
         return;
     }
     func_800704F0();
-    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0A50);
+    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     D_800DEED4 = 0;
     D_801235B8->fade = 0;
     D_801235B8->timer = 0;
