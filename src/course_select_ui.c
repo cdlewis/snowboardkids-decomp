@@ -22,6 +22,7 @@ typedef struct {
 } CourseSelectRacePlayer;
 
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
+extern void func_80025AA8(CourseSelectWidgetActor *);
 extern void func_8002E568(CourseSelectWidgetActor *);
 extern s32 func_80043040(s16);
 extern u8 D_800EC9C2;
@@ -47,6 +48,7 @@ extern s16 D_8011217A;
 extern u8 D_80121B55;
 extern CourseSelectRacePlayer D_80121D80[];
 extern u8 D_80121D88;
+extern s32 D_801235B4;
 extern CourseSelectState *D_801235B8;
 extern s32 D_80124868;
 
@@ -205,10 +207,6 @@ void func_80025AA8(void *arg0) {
 }
 #endif
 
-// func_80025BE4 best match: 99.568% (nonmatchings/func_80025BE4-5684860689308541580/base_13.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025BE4.s")
-
-#ifdef NON_MATCHING
 void func_80025BE4(CourseSelectWidgetActor *arg0) {
     register CourseSelectWidgetActor *actor;
     s32 i;
@@ -219,11 +217,7 @@ void func_80025BE4(CourseSelectWidgetActor *arg0) {
     actor = arg0;
     i = 0;
     if ((s32) D_80121B55 > 0) {
-        statePtr = actor;
-        do {
-            if ((D_801235B4 != 0) && (D_800EC9C2 != 3)) {
-                statePtr->unk30 = 4;
-            }
+        statePtr = actor; do { if ((D_801235B4 != 0) && (D_800EC9C2 != 3)) { statePtr->unk30 = 4; }
             state = statePtr->unk30;
             switch (state) {
             case 0:
@@ -278,7 +272,6 @@ void func_80025BE4(CourseSelectWidgetActor *arg0) {
         func_800483FC(&D_80124868, func_80025AA8, actor);
     }
 }
-#endif
 
 // func_80025E6C best match: 85.650% (nonmatchings/func_80025E6C-1315772375853892447/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025E6C.s")
