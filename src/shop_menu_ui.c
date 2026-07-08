@@ -372,7 +372,7 @@ void func_8002CAA0(ShopMenuWidgetActor *arg0) {
     func_80071824(arg0, func_8002C9A0);
 }
 
-// func_8002CAD4 best match: 97.448%
+// func_8002CAD4 best match: 97.629% (nonmatchings/func_8002CAD4-4061930211835852828/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002CAD4.s")
 
 #ifdef NON_MATCHING
@@ -397,9 +397,9 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
     do {
         func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), func_80043040(D_80112130[0x27]),
                       D_800B79C0[(u16)arg0->item.counter].right[tileOffset], 0, 0x100);
+        i = 0x80;
         func_80011264((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), func_80043040(D_80112130[0x27]),
                       D_800B79C0[(u16)arg0->item.counter].bottom[tileOffset], 0, 0x100);
-        i = 0x80;
         offset += 0x40;
         tileOffset++;
     } while (offset != i);
