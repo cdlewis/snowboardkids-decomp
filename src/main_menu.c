@@ -4,6 +4,7 @@
 #include "asset_decompression.h"
 #include "game_boot.h"
 #include "input_task_scheduler.h"
+#include "main_menu.h"
 
 #define OS_MESG_BLOCK 1
 
@@ -110,29 +111,11 @@ extern void func_80032A50(void);
 extern void func_800540EC(void);
 extern void func_80054714(void);
 extern void func_80042A00(s32);
-extern s32 func_80002DA0(void);
-extern void func_800022B8(void);
-extern void func_80001C30(void);
-extern void func_80001C80(void);
-extern void func_800024A8(void);
-extern void func_80002794(void);
-extern void func_80002810(void);
-extern void func_800028B4(void);
-extern void func_80002D50(void);
 extern void func_8003E600(void);
 extern void func_8003ED00(void);
 extern void func_8003F520(void);
 extern void func_8003FFD0(void);
 extern void func_80073140(void);
-extern void func_800005E4(void *);
-extern void func_80000C94(u16);
-extern void func_80000E00(u16);
-extern void func_8000105C(u16);
-extern void func_80001318(u16);
-extern void func_80001584(u16);
-extern void func_8000165C(void);
-extern void func_80001724(u16);
-extern void func_8000189C(void);
 extern OSThread D_800E29C8;
 extern OSMesgQueue D_800E4B78;
 extern OSMesg D_800E4B90[];

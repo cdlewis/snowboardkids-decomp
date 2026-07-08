@@ -1,4 +1,5 @@
 #include "controller_rumble.h"
+#include "main_menu.h"
 
 #define RUMBLE_PATTERN_WRAP_MASK 0xF
 #define RUMBLE_PATTERN_FAST 2
@@ -10,7 +11,6 @@ extern ControllerRumblePattern D_800DE550;
 extern ControllerRumblePattern D_800DE560;
 extern ControllerRumblePattern D_800DE570;
 extern ControllerRumblePattern D_800DE578;
-extern void func_80000C00(u16);
 
 void func_800830C0(RaceInputPlayer *arg0) {
     s32 patternId;

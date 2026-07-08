@@ -6,17 +6,14 @@
 #include "controller_pak_menu_flow.h"
 #include "controller_pak_menu_ui.h"
 #include "input_task_scheduler.h"
+#include "main_menu.h"
 
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80072138(s32, s32);
 extern void func_80045914(void);
 
-extern void func_80000C48(s32);
 extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_80001618(void);
-extern void func_800016D8(u16);
-extern void func_80001858(void);
 
 extern ControllerPakMenuState D_8010AF90;
 extern ControllerPakFileEntry D_8010AFA0[];
