@@ -1,0 +1,5 @@
+candidate_source: ls -1 src/*.c
+prompt: "Examine the functions defined in $INPUT. If they are not already declared in a header file, create a new header file (under include/file_name.h) and declare them there. Ensure the header file has proper include guards and is named appropriately. Update the source file to include this new header. Update callers to use the new header. Commit your changes when you're done."
+claude_command: codex
+success_command: 'git add -A && git commit -m "Added header for $CANDIDATE"'
+timeout: 30m
