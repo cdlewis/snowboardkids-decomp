@@ -6,6 +6,7 @@
 #include "input_task_scheduler.h"
 #include "main_menu.h"
 #include "main_menu_overlay_effects.h"
+#include "main_menu_panel_ui.h"
 
 #define OS_MESG_BLOCK 1
 
@@ -95,13 +96,11 @@ extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8006D5CC(void);
 extern void func_8006D520(s32, s32);
 extern void func_80002A1C(void);
-extern void func_80052E4C(void);
 extern void func_80041CF0(void);
 extern void func_80041D20(s32, s32);
 extern void func_80041DD4(s32, s32);
 extern void func_8004209C(s32, s32, s32, s32);
 extern void func_800420FC(s32, s32, s32, s32);
-extern void func_80052394(void);
 extern void func_80002CE4(void);
 extern void func_8000262C(void);
 extern void func_80002024(void);

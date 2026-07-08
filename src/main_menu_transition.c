@@ -7,6 +7,7 @@
 #include "input_task_scheduler.h"
 #include "main_menu_message_ui.h"
 #include "main_menu_overlay_effects.h"
+#include "main_menu_panel_ui.h"
 
 #define MAIN_MENU_TRANSITION_FRAMES 0x10
 
@@ -31,7 +32,6 @@ extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8006D5CC(void);
 extern void func_8006D520(s32, s32);
-extern void func_80051854(void);
 
 extern u8 D_1467B0[];
 extern u8 D_147910[];
@@ -45,8 +45,6 @@ extern void func_8007AA50(void);
 extern void func_800403D8(void);
 extern void func_8008BEB0(void);
 extern void func_80078430(void);
-extern void func_80051FDC(void *);
-extern void func_800524B0(void *);
 
 extern MainMenuTransitionState *D_801235B8;
 extern u8 D_8010B1F0;

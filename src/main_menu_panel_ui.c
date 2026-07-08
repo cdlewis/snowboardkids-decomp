@@ -1,5 +1,6 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
+#include "main_menu_panel_ui.h"
 
 #define MENU_PANEL_SCROLL_STEP 0x10
 #define MENU_PANEL_SCROLL_LIMIT 0x79
@@ -9,7 +10,6 @@
 #define MENU_PANEL_SOUND_VOLUME 0x32
 #define MENU_PANEL_TEXTURE_HANDLE (D_80112130.textureHandle)
 
-typedef struct MenuPanelActor MenuPanelActor;
 typedef void (*MenuPanelActorCallback)(MenuPanelActor *);
 
 typedef struct RenderCallbackNode RenderCallbackNode;
@@ -76,18 +76,6 @@ extern void func_80046358(s32, s32, s32, s32);
 extern void func_80046748(s16, s16, s32, s32, s32, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80072138(s16, s16);
-
-extern void func_800515F0(MenuPanelActor *);
-extern void func_80051878(s32);
-extern void func_80052034(s32);
-extern void func_80052364(MenuPanelActor *);
-extern void func_800523B8(s32);
-extern void func_80052464(MenuPanelActor *);
-extern void func_800524D4(s32);
-extern void func_80052868(s32);
-extern void func_80052E00(MenuPanelActor *);
-extern void func_80052E70(s32);
-extern void func_80053604(MenuPanelActor *);
 
 void func_80050FF0(s32 arg0) {
     s32 edgeX;
