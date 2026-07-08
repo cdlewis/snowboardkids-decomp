@@ -464,7 +464,42 @@ s32 func_8009CD0C(PlayerCommandState *arg0, s32 arg1) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009CD18.s")
 
+// func_8009CE3C best match: 98.929% (nonmatchings/func_8009CE3C-2911448260736516995/base_21.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009CE3C.s")
+
+#ifdef NON_MATCHING
+s32 func_8009CE3C(PlayerCommandState *arg0, u8 *arg1) {
+    s32 i;
+    PlayerCommandState *entry;
+    s32 value;
+    s32 scaled;
+
+    value = (*arg1 * 0x6000) / 120 / D_8015A678;
+    scaled = 7;
+    scaled = (arg0->unkB4 * value) >> scaled;
+    arg1++;
+    if (arg0->soundId != 0) {
+        arg0->unkB8 = value;
+        do {
+        } while (0);
+        return (s32)arg1;
+    }
+
+    i = 0;
+    entry = D_8015A660;
+    if (D_8015A658 > 0) {
+        do {
+            i++;
+            if (entry->data == arg0->data) {
+                entry->unkBA = value;
+                entry->unkB8 = scaled;
+            }
+            entry++;
+        } while (i < D_8015A658);
+    }
+    return (s32)arg1;
+}
+#endif
 
 s32 func_8009CF1C(PlayerCommandState *arg0, u8 *arg1) {
     u8 *ret;
