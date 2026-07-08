@@ -2,6 +2,7 @@
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "fixed_point_matrix.h"
+#include "input_task_scheduler.h"
 
 typedef struct {
     s32 x;
@@ -34,15 +35,12 @@ typedef struct {
 } TransformScratch;
 
 extern void func_80045914(void);
-extern void func_80099658(s32);
-extern void func_8009954C(s32);
 extern s8 D_800DEED4;
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern s16 D_800DEF14;
 extern void func_8005393C(void);
 extern void func_8006D780(s32);
-extern void func_8009956C(void *, s32);
 void func_8003E45C(void);
 void func_8003E514(void);
 void func_8003E5A8(void);
