@@ -10,8 +10,7 @@ extern void func_8004270C(MainMenuSceneModel *);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_80042560.s")
 
-// func_80042574 best source-tree match: 98.529% at nonmatchings/func_80042574-9017456803007796287/base_3.c.
-// Permuter-only best: 99.706% at nonmatchings/func_80042574-9017456803007796287/base_13.c.
+// func_80042574 best source-tree match: 99.706% at nonmatchings/func_80042574-4139837607000619032/base_6.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_80042574.s")
 
 #ifdef NON_MATCHING
@@ -37,27 +36,7 @@ void func_80042574(MainMenuSceneModel *arg0) {
     s32 end;
     s32 stride;
 
-    if ((u16)arg0->renderFrame == D_80156608) {
-        model = arg0;
-        gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112130.modelAssetSlots[(u16)model->actorIndex]));
-        gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112130.animationAssetSlots[(u16)model->actorIndex]));
-
-        i = 1;
-        displayObject = &model->displayObjects[1];
-        end = 14;
-        stride = 13;
-        displayLists = D_800D3CB0;
-        do {
-            matrix = func_8004885C(displayObject);
-            if (matrix != NULL) {
-                gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-                gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]);
-            }
-            i++;
-            displayObject++;
-        } while (i != end);
-    }
+ do { if ((u16)arg0->renderFrame == D_80156608) { model = arg0; gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = D_800D3CB0; do { matrix = func_8004885C(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
 }
 #endif
 
