@@ -241,7 +241,7 @@ loop:
 }
 #endif
 
-// func_800005E4 best match: 97.063%
+// func_800005E4 best match: 99.215%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_800005E4.s")
 
 #ifdef NON_MATCHING
@@ -250,10 +250,9 @@ void func_800005E4(void *arg0) {
     OSMesg siMsg;
     s32 msgValue;
     s32 channel;
-    s32 ret;
 
     msg = NULL;
-    while (1) {
+    while (((1 & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF) {
         osRecvMesg(&D_800E4B78, &msg, OS_MESG_BLOCK);
         msgValue = (s32)msg;
         switch (msgValue & 0xF0) {
@@ -293,8 +292,8 @@ void func_800005E4(void *arg0) {
             (&D_800EC898)[channel] = osMotorInit(&D_800E4BD0, &D_800E4DE0[channel], channel);
             break;
         case 0x80:
-            ret = (&D_800EC898)[msgValue & 3];
-            if ((ret != 1) && (ret != 11) && (ret != 4)) {
+            if (((&D_800EC898)[msgValue & 3] != 1) && ((&D_800EC898)[msgValue & 3] != 11) &&
+                ((&D_800EC898)[msgValue & 3] != 4)) {
                 channel = msgValue & 3;
                 if (osMotorStart(&D_800E4DE0[channel]) == 4) {
                     (&D_800EC898)[channel] = 4;
@@ -302,8 +301,8 @@ void func_800005E4(void *arg0) {
             }
             break;
         case 0x90:
-            ret = (&D_800EC898)[msgValue & 3];
-            if ((ret != 1) && (ret != 11) && (ret != 4)) {
+            if (((&D_800EC898)[msgValue & 3] != 1) && ((&D_800EC898)[msgValue & 3] != 11) &&
+                ((&D_800EC898)[msgValue & 3] != 4)) {
                 channel = msgValue & 3;
                 if (osMotorStop(&D_800E4DE0[channel]) == 4) {
                     (&D_800EC898)[channel] = 4;
