@@ -168,35 +168,45 @@ void func_80024968(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800257F0.s")
 
-// func_80025AA8 best match: 83.537% (nonmatchings/func_80025AA8-9017456803007796287/base_5.c)
+// func_80025AA8 best match: 97.722% (nonmatchings/func_80025AA8-4061930211835852828/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025AA8.s")
 
 #ifdef NON_MATCHING
-void func_80025AA8(void *arg0) {
+void func_80025AA8(u8 *arg0) {
+    u8 *actor;
     s32 i;
-    s32 tileIndex;
-    s32 handleIndex;
-    s32 playerCount;
     u8 *statePtr;
     s16 *posPtr;
+    s8 *directionPtr;
+    s16 *handles;
+    s8 direction;
+    s32 tileIndex;
+    s32 handleIndex;
+    s32 one;
+    s32 playerCount;
 
+    actor = arg0;
     if (D_8010AEB0 == 0) {
         playerCount = D_80121B55;
         i = 0;
-        statePtr = arg0;
         if (playerCount > 0) {
+            statePtr = arg0;
+            handles = D_80112130;
+            one = 1;
             do {
+                directionPtr = &D_8010AE64[i];
                 if (statePtr[0x30] < 2) {
-                    posPtr = (s16 *)((u8 *)arg0 + (i * 2));
-                    if (playerCount == 1) {
+                    posPtr = (s16 *)(actor + (i * 2));
+                    if (one == D_80121B55) {
                         tileIndex = 7;
                         handleIndex = 0x25;
                     } else {
                         tileIndex = 0x13;
                         handleIndex = 0x21;
                     }
-                    func_8000F8AC(posPtr[0xC], (s16)(posPtr[0x10] + (statePtr[0x38] * D_8010AE64[i])),
-                                  func_80043040(D_80112130[handleIndex]), tileIndex & 0xFFFF, 0x20, 0x20, 0,
+                    func_8000F8AC(posPtr[0xC],
+                                  (s16)(posPtr[0x10] + (statePtr[0x38] * (direction = *directionPtr))),
+                                  func_80043040(handles[handleIndex]), tileIndex & 0xFFFF, 0x20, 0x20, 0,
                                   posPtr[0x14], 0);
                 }
                 i++;
