@@ -93,9 +93,13 @@ extern u8 D_8010AEA0[];
 extern u8 D_8010AF18;
 extern u8 D_8010AF1C;
 extern u8 D_800B7040[];
+extern u8 D_800B706C[];
+extern u8 D_800B706D[];
+extern u8 D_800B706E[];
 extern s16 D_800B7084[][6];
 extern s16 D_800B70A8[][4];
 extern s16 D_800B70C0[][4];
+extern s16 D_800B70D8[][2];
 extern s16 D_80112130[];
 extern s16 D_8011217A;
 extern u8 D_80121B55;
@@ -406,7 +410,150 @@ void func_800263A4(CourseSelectWidgetActor *arg0) {
     func_80071824(arg0, func_800260E8);
 }
 
+// func_800263D8 best match: 92.057% (nonmatchings/func_800263D8-2775475442547365205/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800263D8.s")
+
+#ifdef NON_MATCHING
+extern int sprintf(u8 *, u8 *, ...);
+
+void func_800263D8(CourseSelectWidgetActor *arg0) {
+    volatile u16 frameTile;
+    u8 text[2];
+    s32 playerCount;
+    s32 i;
+    s32 courseId;
+    s32 selectedCourseId;
+    s32 j;
+    s32 xOffset;
+    s32 positionColumn;
+    s32 bottomRow;
+    u8 *ratings;
+    CourseSelectWidgetActor *playerWidget;
+
+    playerCount = D_80121B55;
+    if (playerCount < 3) {
+        frameTile = 0x10;
+    } else {
+        frameTile = 0x11;
+    }
+
+    i = 0;
+    if (playerCount > 0) {
+        do {
+            if ((playerCount >= 2 || D_80121D80[i].pad6[2] == 0) &&
+                (playerCount >= 2 || (playerCount == 1 && D_8010AF46 == 0))) {
+                playerWidget = (CourseSelectWidgetActor *)((u8 *)arg0 + (i * 2));
+                courseId = D_80121D80[i].pad6[0];
+                if (courseId >= 9 && courseId < 12) {
+                    courseId = (u16)courseId;
+                } else {
+                    courseId = (u16)(courseId % 3);
+                }
+
+                func_8000F8AC(playerWidget->coordinates[0], playerWidget->coordinates[4],
+                              func_80043040(D_80112130[0x21]), frameTile, 0x20, 0x20, 0, arg0->coordinates[8], 0);
+
+                if (D_80121B55 < 3) {
+                    selectedCourseId = courseId;
+                    if (selectedCourseId >= 9) {
+                        func_80013D0C((s16)(playerWidget->coordinates[0] + 0x38), playerWidget->coordinates[4],
+                                      "?", 0, arg0->coordinates[8]);
+                    } else {
+                        ratings = &D_800B706C[selectedCourseId * 3];
+                        j = 0;
+                        if (ratings[0] > 0) {
+                            xOffset = 0;
+                            do {
+                                func_8000F8AC((s16)(playerWidget->coordinates[0] + xOffset + 0x38),
+                                              (s16)(playerWidget->coordinates[4] - 2),
+                                              func_80043040(D_80112130[0x24]), 0x25, 0x20, 0x20, 0,
+                                              arg0->coordinates[8], 0);
+                                j++;
+                                xOffset += 0xC;
+                            } while (j < ratings[0]);
+                        }
+                    }
+
+                    if (selectedCourseId >= 9) {
+                        func_80013D0C((s16)(playerWidget->coordinates[0] + 0x38),
+                                      (s16)(playerWidget->coordinates[4] + 0xC), "?", 0, arg0->coordinates[8]);
+                    } else {
+                        ratings = &D_800B706C[selectedCourseId * 3];
+                        j = 0;
+                        if (ratings[1] > 0) {
+                            xOffset = 0;
+                            do {
+                                func_8000F8AC((s16)(playerWidget->coordinates[0] + xOffset + 0x38),
+                                              (s16)(playerWidget->coordinates[4] + 0xA),
+                                              func_80043040(D_80112130[0x24]), 0x25, 0x20, 0x20, 0,
+                                              arg0->coordinates[8], 0);
+                                j++;
+                                xOffset += 0xC;
+                            } while (j < ratings[1]);
+                        }
+                    }
+
+                    if (selectedCourseId >= 9) {
+                        func_80013D0C((s16)(playerWidget->coordinates[0] + 0x38),
+                                      (s16)(playerWidget->coordinates[4] + 0x18), "?", 0, arg0->coordinates[8]);
+                    } else {
+                        ratings = &D_800B706C[selectedCourseId * 3];
+                        j = 0;
+                        if (ratings[2] > 0) {
+                            xOffset = 0;
+                            do {
+                                func_8000F8AC((s16)(playerWidget->coordinates[0] + xOffset + 0x38),
+                                              (s16)(playerWidget->coordinates[4] + 0x16),
+                                              func_80043040(D_80112130[0x24]), 0x25, 0x20, 0x20, 0,
+                                              arg0->coordinates[8], 0);
+                                j++;
+                                xOffset += 0xC;
+                            } while (j < ratings[2]);
+                        }
+                    }
+                } else {
+                    selectedCourseId = courseId;
+                    if (selectedCourseId >= 9) {
+                        text[0] = '?';
+                        text[1] = 0;
+                    }
+                    if (selectedCourseId < 9) {
+                        sprintf(text, "%d", D_800B706C[selectedCourseId * 3]);
+                    }
+                    func_80013D0C((s16)(playerWidget->coordinates[0] + 0x34), playerWidget->coordinates[4], text, 0,
+                                  arg0->coordinates[8]);
+
+                    if (selectedCourseId < 9) {
+                        sprintf(text, "%d", D_800B706D[selectedCourseId * 3]);
+                    }
+                    func_80013D0C((s16)(playerWidget->coordinates[0] + 0x34),
+                                  (s16)(playerWidget->coordinates[4] + 8), text, 0, arg0->coordinates[8]);
+
+                    if (selectedCourseId < 9) {
+                        sprintf(text, "%d", D_800B706E[selectedCourseId * 3]);
+                    }
+                    func_80013D0C((s16)(playerWidget->coordinates[0] + 0x34),
+                                  (s16)(playerWidget->coordinates[4] + 0x10), text, 0, arg0->coordinates[8]);
+                }
+
+                playerCount = D_80121B55;
+                if (playerCount >= 2) {
+                    positionColumn = 1;
+                    if (playerCount == 2) {
+                        positionColumn = 0;
+                    }
+                    bottomRow = i >= 2;
+                    func_8000F8AC((s16)(D_800B70D8[positionColumn * 2 + (i & 1)][0] + (bottomRow * 0x8C)),
+                                  D_800B70D8[positionColumn * 2 + (i & 1)][1],
+                                  func_80043040(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, arg0->coordinates[8], 0);
+                    playerCount = D_80121B55;
+                }
+            }
+            i++;
+        } while (i < playerCount);
+    }
+}
+#endif
 
 void func_80026A54(CourseSelectWidgetActor *arg0) {
     s32 state = arg0->transitionState;
