@@ -4,6 +4,7 @@
 #include "viewport_manager.h"
 #include "fixed_point_matrix.h"
 #include "main_menu_overlay_effects.h"
+#include "main_menu_scene_model.h"
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x28];
@@ -133,11 +134,6 @@ extern u32 D_20058A8[];
 
 s32 func_80043040(s16);
 void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
-void func_80041D20(s32, u16);
-void func_80041DD4(s32, u8);
-void func_80042034(s32);
-void func_8004209C(s32, s32, s32, s32);
-void func_800420FC(s32, s32, s32, s32);
 void func_800428C8(s32);
 void func_80042A00(s32);
 void func_80042A58(s32, s32);
