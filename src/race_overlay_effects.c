@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 #include "race_input_history.h"
 
 #define RACE_MODEL_BUFFER_HANDLE (*(s16 *)&D_80112130[0x48])
@@ -122,7 +123,6 @@ typedef struct {
 
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
-extern s32 func_800430D0(void);
 extern void func_80045990(s32, s32, void *, void *);
 extern void func_800486BC(CourseEffectMatrixSource *, void *);
 extern GfxCommandDest *func_8004885C(GfxCommandSource *);

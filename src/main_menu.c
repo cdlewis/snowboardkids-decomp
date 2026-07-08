@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 
 #define OS_MESG_BLOCK 1
 
@@ -91,8 +92,6 @@ extern void func_80072114(s32);
 extern void func_80072138(s32, s32);
 extern void func_800704F0(void);
 extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_800437F0(void *, void *, s32);
-extern void func_800438EC(void *, void *, s32);
 extern void func_8006D5CC(void);
 extern void func_8006D520(s32, s32);
 extern void func_80070EC0(s32);

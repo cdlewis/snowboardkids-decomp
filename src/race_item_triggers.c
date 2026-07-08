@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 #include "race_input_history.h"
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_triggers/func_800849E0.s")
@@ -9,7 +10,6 @@
 typedef void (*EffectCallback)(void *);
 
 extern s32 func_8004908C(s32 deltaX, s32 deltaZ);
-extern s32 func_800430D0(void);
 extern void *func_800716A4(EffectCallback callback, s32 arg1, s32 arg2, s32 arg3);
 extern void func_80072A74(s32 soundId, void *pos, s32 volume, s32 distance);
 

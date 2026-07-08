@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
 #define COURSE_GRID_ENTRY_END -2
@@ -126,7 +127,6 @@ extern void func_8001710C(void *);
 extern void func_8003DFD0(void);
 extern s32 func_80040D94(void);
 extern void func_80042C20(void);
-extern void func_800437F0(void *, void *, s32);
 extern void func_80045914(void);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s32, s32, s32, s32, s32);

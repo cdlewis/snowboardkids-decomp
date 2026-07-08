@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 #include "viewport_manager.h"
 
 typedef struct {
@@ -134,7 +135,6 @@ extern u32 D_2000E70[];
 extern u32 D_20058A8[];
 
 s32 func_80043040(s16);
-s32 func_800430D0(void);
 void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
 void func_80041D20(s32, u16);
 void func_80041DD4(s32, u8);

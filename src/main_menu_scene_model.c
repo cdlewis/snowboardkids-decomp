@@ -1,4 +1,5 @@
 #include "main_menu_scene_model.h"
+#include "asset_decompression.h"
 
 /* Frame offsets are halfword-relative to the bank start; this form preserves target addu order. */
 #define MAIN_MENU_ANIMATION_FRAME_DATA(bank, index) \
@@ -11,7 +12,6 @@ extern MainMenuSceneModel *func_80043040(s16);
 extern s16 D_8011218A[];
 extern s16 D_801121AE;
 extern void func_80041E90(MainMenuSceneModel *arg0);
-extern void func_800437F0(void *, void *, s32);
 extern u8 D_5E34A0;
 extern u8 D_608560;
 extern u8 D_215BE0;
@@ -30,7 +30,6 @@ extern RomAssetAddress D_800D4020[];
 extern RomAssetAddress D_800D4050[];
 extern MainMenuModelAssetHandles D_80112130;
 extern s16 func_80042D58(s32);
-extern void func_800438EC(s32, s32, s32);
 extern void func_80042AB4(MainMenuSceneModel *arg0);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80040C80.s")

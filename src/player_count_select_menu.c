@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 #include "character_select_flow.h"
 
 typedef struct {
@@ -16,7 +17,6 @@ extern void func_80099658(s32);
 extern void func_8009954C(s32);
 extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_800437F0(void *, void *, s32);
 extern void func_80070EC0(s32);
 extern void func_80071408(void *, s32, s32);
 extern u8 func_8001710C;
