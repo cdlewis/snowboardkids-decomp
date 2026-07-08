@@ -194,13 +194,20 @@ void func_8007BE80(RacePositionUiPlayer *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007BE80.s")
 #endif
 
-#ifdef NON_MATCHING
 void func_8007C130(void *asset, s16 dlIndex, u16 textureIndex) {
-    racePositionUiLoadAssetTexture(asset, textureIndex, D_800DE098[dlIndex]);
+    void *image;
+    void *palette;
+
+    gDPPipeSync(gRegionAllocPtr++);
+    gSPSegment(gRegionAllocPtr++, 2, func_80043040(D_80112148));
+    gSPMatrix(gRegionAllocPtr++, (Mtx *)asset, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+
+    func_80045990(func_80043040(D_8011214A), textureIndex, &image, &palette);
+
+    gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
+    gSPDisplayList(gRegionAllocPtr++, D_800DE098[dlIndex]);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007C130.s")
-#endif
 
 #ifdef NON_MATCHING
 void func_8007C38C(void *asset, s16 dlIndex, u16 textureIndex) {
