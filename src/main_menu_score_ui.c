@@ -43,6 +43,21 @@ extern s16 D_800EC9C8;
 extern s16 D_800EC9D0;
 extern u8 D_800EC9C1;
 
+#ifdef NON_MATCHING
+#define MAIN_MENU_SCORE_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x42])
+
+typedef struct {
+    char pad[0x34];
+    u8 badgeIds[0x18];
+    u8 iconCount;
+} MainMenuScorePlayerView;
+
+extern s16 D_800B3462[];
+extern MainMenuScorePlayerView D_800EC9F0;
+extern u8 D_80112130[];
+extern s32 D_80121D8C;
+#endif
+
 struct MainMenuScoreTask {
     char pad[0x18];
     s16 x;
@@ -86,7 +101,98 @@ void func_8002B560(MainMenuScoreTask *arg0);
 void func_8002BC60(MainMenuScoreTask *arg0);
 void func_8002C498(MainMenuScoreTask *arg0);
 
+// func_8002B560 best match: 98.638% (nonmatchings/func_8002B560-2911448260736516995/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002B560.s")
+
+#ifdef NON_MATCHING
+const char D_800E0F30[] = "%6d";
+
+void func_8002B560(MainMenuScoreTask *arg0) {
+    char pad[0x18];
+    char text[8];
+    s16 *new_var;
+    s16 *badgeIndex;
+    s32 xOffset;
+    s32 tile;
+    s32 alpha;
+    s32 i;
+    s32 next;
+    s32 count;
+
+    func_8000F030(arg0->x, arg0->y, func_80043040(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0x40), arg0->y, func_80043040(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0xB, 0x20,
+                  0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0x80), arg0->y, func_80043040(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0xC, 0x20,
+                  0x20, 0, 0);
+
+    text[0] = '1';
+    text[1] = 0;
+    func_80013D0C((s16)(arg0->x + 0x32), (s16)((unsigned long)(arg0->y + 2)), text, 0, 0x100);
+
+    sprintf(text, D_800E0F30, D_80121D8C);
+    func_80013D0C((s16)(arg0->x + 0x44), (s16)(arg0->y + 0x1B), text, 0, 0x100);
+
+    count = D_800EC9F0.iconCount + 1;
+    if (D_800EC9F0.iconCount == 3) {
+        count = 3;
+    }
+
+    i = 0;
+    if (count > 0) {
+        xOffset = 0;
+        do {
+            next = 1;
+            next = i + next;
+            alpha = 0x100;
+            if (D_800EC9F0.iconCount < next) {
+                alpha = 0x70;
+            }
+
+            func_8000F8AC((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x11),
+                          func_80043040(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0x19, 0x20, 0x20, 0, alpha, 9 - i);
+            i = next;
+            xOffset += 0x10;
+        } while (next != count);
+        i = 0;
+    }
+
+    count = 6;
+    if (D_800EC9F0.iconCount == 1) {
+        count = 7;
+    } else if (D_800EC9F0.iconCount == 2) {
+        count = 8;
+    } else {
+        if (D_800EC9F0.iconCount == 3) {
+            count = 9;
+        }
+        i = 0;
+    }
+
+    if (count > 0) {
+        xOffset = 0;
+        new_var = D_800B3462;
+        badgeIndex = new_var;
+        do {
+            tile = D_800EC9F0.badgeIds[*badgeIndex];
+            alpha = 0x70;
+            if (tile != 0) {
+                alpha = 0x100;
+                tile += 6;
+            } else {
+                tile = 9;
+                if ((!i) && (!i)) {
+                }
+            }
+            func_8000F8AC((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x27),
+                          func_80043040(MAIN_MENU_SCORE_TEXTURE_HANDLE), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0,
+                          alpha, tile);
+            i++;
+            xOffset += 0xE;
+            badgeIndex++;
+        } while (i != count);
+    }
+}
+#endif
 
 void func_8002B8B4(MainMenuScoreTask *arg0) {
     u8 state = arg0->unk1C.state;
