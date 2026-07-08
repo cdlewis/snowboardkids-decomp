@@ -167,52 +167,59 @@ void func_80020B70(CharacterSelectWidgetActor *arg0);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C83C.s")
 
-// func_8001C96C best match: 94.533%
+// func_8001C96C best match: 99.556%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C96C.s")
 
 #ifdef NON_MATCHING
 void func_8001C96C(CharacterSelectMenuFrameActor *arg0) {
+    register CharacterSelectMenuFrameActor *actor;
+    s32 arrowBase;
     s32 lastArrowIndex;
     s32 i;
     s32 alpha;
     u16 tile;
 
+    actor = arg0;
     if (D_80121B5E < 2) {
-        lastArrowIndex = 2;
+        arrowBase = 2;
     } else {
-        lastArrowIndex = 0;
+        arrowBase = 0;
     }
     i = 0;
-    lastArrowIndex += 1;
-    if (arg0->itemCount > 0) {
+    lastArrowIndex = arrowBase + 1;
+    if (actor->itemCount > 0) {
         do {
             alpha = 0;
             if (i == 0) {
-                tile = 0x1C;
                 if (D_80121B5E == 2) {
-                    tile = 0x1D;
+                    goto use_alt_tile;
                 }
+                tile = 0x1C;
+                goto tile_selected;
+use_alt_tile:
+                tile = 0x1D;
+tile_selected:
                 if ((i == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
                     alpha = 0xFF;
                 }
-                func_8000F030(arg0->x[i], arg0->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), tile, 0x20, 0x20, 0, alpha);
+                func_8000F030(actor->x[i], actor->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), tile, 0x20, 0x20, 0, alpha);
             } else if (i == lastArrowIndex) {
                 if ((i == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
                     alpha = 0xFF;
                 }
-                func_8000F030(arg0->x[i], arg0->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x20, 0x20, 0x20, 0, alpha);
+                func_8000F030(actor->x[i], actor->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x20, 0x20, 0x20, 0, alpha);
             } else {
                 if ((i == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
                     alpha = 0xFF;
                 }
-                func_8000F030(arg0->x[i], arg0->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), (i + 0x12) & 0xFFFF, 0x20, 0x20, 0, alpha);
+                func_8000F030(actor->x[i], actor->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), (i + 0x12) & 0xFFFF, 0x20, 0x20, 0, alpha);
             }
 
             if (i != lastArrowIndex) {
-                func_8000F030((s16)(arg0->x[i] - 0x10), arg0->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
+                func_8000F030((s16)(actor->x[i] - 0x10), actor->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
             }
             i++;
-        } while (i < arg0->itemCount);
+        } while (i < actor->itemCount);
     }
 }
 #endif
