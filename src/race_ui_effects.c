@@ -268,13 +268,20 @@ typedef struct {
 } RaceUiSnowboardTrailActor;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
     /* 0x44 */ void *matrix;
     /* 0x48 */ u32 *displayLists[2];
     /* 0x50 */ u8 matrixDirty;
 } RaceUiRankParticleActor;
+
+typedef struct {
+    /* 0x00 */ s16 pathIndex;
+    /* 0x02 */ u8 pad2[0x48 - 0x02];
+} RaceUiCourseSpawnEntry;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -663,6 +670,8 @@ extern void *D_801248A4;
 extern void *D_801248EC;
 extern s16 D_800D6050[];
 extern Vec3i D_800D6030[];
+extern RaceUiCourseSpawnEntry D_800B9540[];
+extern u32 *D_800D6400[];
 extern RaceUiRankTextRenderEntry *D_800D761C[];
 extern RaceUiGfxCommandScriptEntry *D_800D693C[];
 extern FixedTransform D_800DEE30;
@@ -720,6 +729,7 @@ extern s32 func_8007D200(s32, s32, s32);
 extern s32 func_80080CC4(s32, s32, s32);
 extern void func_80088664(Vec3i *, s32, s32, s32, s32);
 extern s32 func_800891B8(Vec3i *, s32, s32, s16);
+extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
 extern int sprintf(char *, const char *, ...);
 extern void func_800716E4(void *);
 extern void *func_800716A4(void *, s32, s32);
@@ -3569,7 +3579,30 @@ void func_8006426C(s32 arg0) {
     func_800483FC(&D_801248C8, func_800640D8, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8006429C.s")
+void func_8006429C(RaceUiRankParticleActor *actor) {
+    struct {
+        s16 pad;
+        s16 angle;
+        s32 unused;
+    } local;
+
+    switch (actor->index) {
+    case 0:
+        func_80081508(1, &actor->pos.a, &actor->pos.b, &actor->pos.c, &local.angle);
+        break;
+    case 1:
+        func_80081508(D_800B9540[D_80121B50].pathIndex, &actor->pos.a, &actor->pos.b, &actor->pos.c, &local.angle);
+        break;
+    }
+
+    func_80097C18(actor->copyBlock.halfwords, local.angle);
+    actor->copyBlock.transform.translation.a = actor->pos.a;
+    actor->copyBlock.transform.translation.b = actor->pos.b;
+    actor->copyBlock.transform.translation.c = actor->pos.c;
+    actor->displayLists[0] = D_800D6400[(actor->index * 2) + (D_80121B50 * 4)];
+    actor->displayLists[1] = D_800D6400[(actor->index * 2) + (D_80121B50 * 4) + 1];
+    func_80071824(actor, func_8006426C);
+}
 
 void func_800643B4(void *arg0, u16 *arg1) {
     *(u16 **)((u8 *)arg0 + 0x30) = arg1;
