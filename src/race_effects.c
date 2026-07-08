@@ -399,7 +399,7 @@ void func_8004A648(RaceEffectActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004A91C.s")
 
-// func_8004AC5C best match: 99.779% (nonmatchings/func_8004AC5C-1315772375853892447/base_1.c)
+// func_8004AC5C best match: 99.823% (nonmatchings/func_8004AC5C-2/output-226-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004AC5C.s")
 
 #ifdef NON_MATCHING
@@ -446,7 +446,7 @@ void func_8004AC5C(RaceEffectActor *arg0) {
 
         prevY = arg0->pos.y;
         arg0->pos.x += xOffset;
-        arg0->pos.y = prevY + arg0->accelerationY;
+        arg0->pos.y = prevY + (arg0->accelerationY & 0xFFFFFFFFu);
         arg0->pos.z += zOffset;
 
         arg0->startAngle = func_8007D200(arg0->startAngle, arg0->pos.x, arg0->pos.z);
