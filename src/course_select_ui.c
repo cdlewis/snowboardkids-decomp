@@ -40,21 +40,28 @@ typedef struct {
 extern void func_80023A68();
 extern void func_80024380();
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
+extern s32 func_80071408(void *, s32, s32);
 extern void func_800716E4(CourseSelectWidgetActor *);
 extern void func_80071824(void *task, void (*callback)());
 extern void func_80097C18(s16 *mtx, s16 rotY);
 extern void func_8009853C(s16 *mtx, s16 arg1, s16 arg2);
 extern void func_80098590(s16 *mtx, CourseSelectTempVec3i *source, CourseSelectTempVec3i *dest);
-extern void func_800260E8(CourseSelectWidgetActor *);
+extern void func_80025E6C(CourseSelectWidgetActor *);
+extern void func_80026B88(CourseSelectWidgetActor *);
+extern void func_800273C4(CourseSelectWidgetActor *);
+extern void func_800275A4(CourseSelectWidgetActor *);
 extern void func_800263D8(CourseSelectWidgetActor *);
 extern void func_800271CC(CourseSelectWidgetActor *);
 extern void func_80027498(CourseSelectWidgetActor *);
 extern void func_800275E0(CourseSelectWidgetActor *);
 extern void func_80027AF8(CourseSelectWidgetActor *);
 extern void func_80028FF0(CourseSelectWidgetActor *);
+extern void func_8002E568(CourseSelectWidgetActor *);
 extern void func_800291F0(s32);
 extern s32 func_80043040(s16);
+extern u8 D_800EC9C2;
 extern u8 D_800EC9E6;
+extern s32 D_8010ADDC;
 extern s32 D_8010ADE8;
 extern s8 D_8010AE64[];
 extern u8 D_8010AEB0;
@@ -234,7 +241,81 @@ void func_80025FA8(CourseSelectWidgetActor *arg0) {
     func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(D_8011217A), 6, 0x20, 0x20, 0, 0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800260E8.s")
+void func_800260E8(CourseSelectWidgetActor *arg0) {
+    s32 screenState;
+    s32 forceState;
+
+    forceState = 3;
+    screenState = D_801235B8->screenState;
+    if (screenState == 1) {
+        arg0->pad18[4] = 2;
+        screenState = D_801235B8->screenState;
+    }
+    if ((forceState == screenState) && (arg0->pad18[4] < 5)) {
+        arg0->pad18[4] = 5;
+    }
+
+    switch (arg0->pad18[4]) {
+    case 0:
+        arg0->x += 0x20;
+        if (arg0->x >= -0x88) {
+            arg0->x = -0x88;
+            arg0->pad18[4] = 1;
+            D_8010ADDC = func_80071408(func_80025E6C, 0, 0x64);
+            func_80071408(func_800275A4, 0, 0x63);
+            func_80071408(func_800273C4, 0, 0x61);
+            func_80071408(func_80026B88, 0, 0x64);
+            if ((D_800EC9C2 == 3) && (D_800EC9E6 == 0)) {
+                func_80071408(func_8002E568, 0, 0x63);
+            }
+        }
+        break;
+    case 1:
+        if (D_80121D88 == 3) {
+            arg0->pad18[4] = 2;
+        }
+        break;
+    case 2:
+        arg0->x -= 0x20;
+        if (arg0->x < -0x10D) {
+            if (D_801235B8->screenState != 0) {
+                arg0->pad18[4] = 4;
+                D_801235B8->screenState = 2;
+            } else {
+                arg0->pad18[4] = 3;
+            }
+        }
+        break;
+    case 4:
+        if (D_801235B8->screenState == 9) {
+            arg0->pad18[4] = 3;
+        }
+        break;
+    case 5:
+        arg0->x += 0x20;
+        if (arg0->x >= -0x88) {
+            arg0->x = -0x88;
+            arg0->pad18[4] = 6;
+        }
+        break;
+    case 6:
+        D_801235B8->screenState = 4;
+        arg0->pad18[4] = 7;
+        break;
+    case 7:
+        D_801235B8->screenState = 5;
+        arg0->pad18[4] = 1;
+        break;
+    }
+
+    if (arg0->pad18[4] == 3) {
+        func_800716E4(arg0);
+        func_800291F0(4);
+        return;
+    }
+
+    func_800483FC(&D_80124868, func_80025FA8, arg0);
+}
 
 void func_800263A4(CourseSelectWidgetActor *arg0) {
     arg0->x = -0x108;
