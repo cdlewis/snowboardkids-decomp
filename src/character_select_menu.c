@@ -1,4 +1,5 @@
 #include "common.h"
+#include "character_select_menu.h"
 
 typedef struct {
     char pad[0x18];
