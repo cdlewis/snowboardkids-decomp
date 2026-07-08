@@ -338,7 +338,7 @@ typedef struct {
     /* 0x26 */ u8 pad26[2];
     /* 0x28 */ RaceUiGfxCommandDest *matrix;
     /* 0x2C */ s16 rotY;
-    /* 0x2E */ u8 pad2E[2];
+    /* 0x2E */ s16 rotYStep;
     /* 0x30 */ u8 matrixDirty;
 } RaceUiScaledParticleActor;
 
@@ -741,6 +741,8 @@ extern void func_8005F174(RaceUiSparkleActor *);
 extern s32 func_80048E60(Vec3i *);
 extern void func_8004B8B4(s32, s32, s32, s16, s16);
 extern void func_80088294(Vec3i *, s32, s32, s32);
+extern void func_80088C80(Vec3i *, s32, s32, s32);
+extern s32 func_80088E98(Vec3i *, s32, s32, s32);
 extern void func_80061088(void);
 extern void func_80062F6C(RaceUiTrailingParticleActor *);
 extern void func_80058B20(void *);
@@ -802,7 +804,7 @@ extern void func_8005B6F8(void *);
 extern void func_8005CD10(void *);
 extern void func_8005E3F8(void *);
 extern void func_80064D88(RaceUiProjectileActor *);
-extern void func_80062D34(void);
+extern void func_80062D34(RaceUiScaledParticleActor *);
 extern s32 func_80043120(void);
 extern void func_80063A9C(void);
 extern void func_8005B61C(void *);
@@ -2905,17 +2907,56 @@ void func_80062AF0(RaceUiScaledParticleActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80062D34.s")
+void func_80062D34(RaceUiScaledParticleActor *arg0) {
+    RaceUiScaledParticleActor *actor;
+    Vec3i *pos;
+    s16 scale;
 
-void func_80062ED4(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x2C) = func_80043120() << 4;
-    if (func_80043120() & 1) {
-        *(s16 *)((u8 *)arg0 + 0x2E) = 0x40;
-    } else {
-        *(s16 *)((u8 *)arg0 + 0x2E) = -0x40;
+    actor = arg0;
+    if (D_80121B56 == 0) {
+        pos = &actor->pos;
+        if (func_80048E60(pos) != 0) {
+            actor->rotY += actor->rotYStep;
+
+            if (func_80088E98(pos, 0x200000, 0xF0000, 0) != 0) {
+                actor->scale = 0x1800;
+                func_80072A74(0x67, pos, 0x7F, 0x32);
+                func_80088C80(pos, 0x2C0000, 0xF0000, 0);
+            }
+            if (func_80088E98(pos, 0x200000, 0xF0000, 1) != 0) {
+                actor->scale = 0x1800;
+                func_80072A74(0x67, pos, 0x7F, 0x32);
+                func_80088C80(pos, 0x2C0000, 0xF0000, 1);
+            }
+            if (func_80088E98(pos, 0x200000, 0xF0000, 2) != 0) {
+                actor->scale = 0x1800;
+                func_80072A74(0x67, pos, 0x7F, 0x32);
+                func_80088C80(pos, 0x2C0000, 0xF0000, 2);
+            }
+            if (func_80088E98(pos, 0x200000, 0xF0000, 3) != 0) {
+                actor->scale = 0x1800;
+                func_80072A74(0x67, pos, 0x7F, 0x32);
+                func_80088C80(pos, 0x2C0000, 0xF0000, 3);
+            }
+
+            scale = actor->scale;
+            if (scale != 0x1000) {
+                actor->scale = scale - 0x100;
+            }
+        }
     }
-    *(s16 *)((u8 *)arg0 + 0x24) = 0x1000;
-    *(Vec3i *)((u8 *)arg0 + 0x18) = D_800D62AC[*(u16 *)((u8 *)arg0 + 0x10)];
+    func_800483FC(&D_801248BC, func_80062AF0, actor);
+}
+
+void func_80062ED4(RaceUiScaledParticleActor *arg0) {
+    arg0->rotY = func_80043120() << 4;
+    if (func_80043120() & 1) {
+        arg0->rotYStep = 0x40;
+    } else {
+        arg0->rotYStep = -0x40;
+    }
+    arg0->scale = 0x1000;
+    arg0->pos = D_800D62AC[*(u16 *)((u8 *)arg0 + 0x10)];
     func_80071824(arg0, func_80062D34);
 }
 
