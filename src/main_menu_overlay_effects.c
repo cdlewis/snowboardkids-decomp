@@ -3,6 +3,7 @@
 #include "asset_decompression.h"
 #include "viewport_manager.h"
 #include "fixed_point_matrix.h"
+#include "main_menu_overlay_effects.h"
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x28];
@@ -31,7 +32,7 @@ typedef union {
     } byte;
 } OverlayActorWord;
 
-typedef struct {
+struct MainMenuOverlayEffectActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
@@ -47,7 +48,7 @@ typedef struct {
     /* 0x30 */ OverlayActorWord unk30;
     /* 0x34 */ s16 spriteIndex;
     /* 0x36 */ s16 alpha;
-} MainMenuOverlayEffectActor;
+};
 
 typedef s16 FixedMatrix3sScratch[0x10];
 
