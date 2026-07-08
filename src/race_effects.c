@@ -840,17 +840,16 @@ void func_8004C5B4(RaceEffectActor *arg0) {
     func_800483FC(&D_801248A4, func_8004C274, arg0);
 }
 
-// func_8004C8F0 best match: 99.890%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004C8F0.s")
-
-#ifdef NON_MATCHING
 void func_8004C8F0(RaceEffectActor *arg0) {
     Vec3i *new_var;
     Vec3i sp58;
-    Vec3i sp4C;
+    s32 sp54;
+    s32 sp50;
+    s32 sp4C;
     s32 magnitude;
     s32 velocityY;
     RaceEffectActor *actor;
+    s64 product;
 
     arg0->timer = 0x12C;
     arg0->spriteIndex = -1;
@@ -860,25 +859,11 @@ void func_8004C8F0(RaceEffectActor *arg0) {
 
     if (D_80121D80[arg0->playerIndex].flags & 0x400) {
         sp58.x = -0x1000;
+        if (1) {
+        }
     }
 
-    actor = arg0;
-    func_80098590(D_80121D80[arg0->playerIndex].transform, &sp58, &sp4C);
-    magnitude = func_80098C30((s64)sp4C.x * sp4C.x + (s64)sp4C.z * sp4C.z);
-
-    if (magnitude != 0) {
-        actor->accelerationY = (s64)actor->velocityY * sp4C.y / magnitude;
-        velocityY = -actor->velocityY;
-    } else {
-        velocityY = -actor->velocityY;
-        actor->accelerationY = velocityY;
-    }
-
-    actor->accelerationY += D_80121D80[actor->playerIndex].unk44;
-    actor->velocityY = velocityY;
-    actor->targetAngle = D_80121D80[actor->playerIndex].yaw;
-
-    sp58.z = D_80121D80[actor->playerIndex].yaw * 0;
+    actor = arg0; func_80098590(D_80121D80[arg0->playerIndex].transform, &sp58, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = func_80098C30(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * sp50 / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += D_80121D80[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = D_80121D80[actor->playerIndex].yaw; sp58.z = 0;
     new_var = &sp58;
     sp58.y = 0x280000;
     sp58.x = 0x100000;
@@ -897,7 +882,6 @@ void func_8004C8F0(RaceEffectActor *arg0) {
     func_8004C5B4(actor);
     func_80071824(actor, func_8004C5B4);
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004CBC4.s")
 
