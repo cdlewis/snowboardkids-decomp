@@ -91,6 +91,7 @@ extern s16 D_80112172;
 extern s16 D_80112178;
 extern s16 D_800B3420[][11];
 extern CharacterSelectFrameTileMap D_800B5FC0[];
+extern u16 D_800B618C;
 extern u16 D_800B61AC[];
 extern u8 D_800B61C0[];
 extern u8 D_800B61CC[];
@@ -1154,7 +1155,33 @@ void func_800205E0(CharacterSelectWidgetActor *arg0) {
     func_80071824(arg0, func_800203D0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80020624.s")
+void func_80020624(CharacterSelectWidgetActor *arg0) {
+    s32 i;
+    s32 tileOffset;
+    s32 offset;
+
+    tileOffset = 0;
+    for (i = 0; i < 16; i++, tileOffset++) {
+        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                      D_800B5FC0[10].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+    }
+
+    tileOffset = 0; offset = 0; i = 0x80; do {
+        func_800112F4(arg0->x + 0x80, arg0->y + offset, func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                      D_800B5FC0[10].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+        func_800112F4(arg0->x + offset, arg0->y + 0x80, func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                      D_800B5FC0[10].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+        i = 0x80;
+        offset += 0x40;
+        tileOffset++;
+    } while (offset != i);
+
+    i++;
+    i--;
+
+    func_800112F4(arg0->x + 0x80, arg0->y + 0x80, func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                  D_800B618C, 0, 0x100, 0xA0, 0x49);
+}
 
 void func_80020818(CharacterSelectWidgetActor *arg0) {
     int state;
