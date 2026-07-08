@@ -131,7 +131,6 @@ typedef struct {
     /* 0x0D */ u8 unkD;
 } RaceHudSharedState;
 
-extern void func_800171F0(RaceHudBannerActor *);
 extern void func_80018C80(void);
 extern void func_800177F8(RaceHudBannerActor *);
 extern void func_80017C34(RaceHudPanelActor *);
@@ -162,10 +161,6 @@ extern u16 D_800B5B30[];
 extern s16 D_80112172;
 extern s32 func_80043040(s16);
 
-// func_800171F0 best match: 99.425% (nonmatchings/func_800171F0-1315772375853892447/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_800171F0.s")
-
-#ifdef NON_MATCHING
 void func_800171F0(RaceHudBannerActor *arg0) {
     s32 i;
     s32 j;
@@ -217,9 +212,10 @@ void func_800171F0(RaceHudBannerActor *arg0) {
             if (actor->alpha != 0x100) {
                 alpha = actor->alpha & 0xFFFF;
             } else {
-                alpha = 0x100;
                 if (actor->mode != 0) {
                     alpha = 0x60;
+                } else {
+                    alpha = 0x100;
                 }
             }
             func_8000F8AC((s16)(actor->x + 0x4C), (s16)(actor->y + 0x10),
@@ -227,9 +223,10 @@ void func_800171F0(RaceHudBannerActor *arg0) {
             if (actor->alpha < 0x60) {
                 alpha = actor->alpha & 0xFFFF;
             } else {
-                alpha = 0x60;
                 if (actor->mode != 0) {
                     alpha = 0x100;
+                } else {
+                    alpha = 0x60;
                 }
             }
             func_8000F8AC((s16)(actor->x + 0x4C), (s16)(actor->y + 0x20),
@@ -250,7 +247,6 @@ void func_800171F0(RaceHudBannerActor *arg0) {
         }
     }
 }
-#endif
 
 void func_800177F8(RaceHudBannerActor *arg0) {
     s16 alpha;
