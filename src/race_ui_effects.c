@@ -2161,22 +2161,24 @@ void func_80060738(RaceUiPodiumTrailActor *arg0) {
     func_800483FC(&D_801248BC, func_80060544, arg0);
 }
 
-// func_80060914 best match: 77.250% (nonmatchings/func_80060914-8662636370764828261/base_3.c)
+// func_80060914 best match: 83.297% (nonmatchings/func_80060914-8662636370764828261/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80060914.s")
 
 #ifdef NON_MATCHING
 void func_80060914(RaceUiPodiumTrailActor *arg0) {
     RacePlayerState *player;
+    s16 playerIndex;
     s16 scale;
     s32 height;
 
     if (arg0->timer == 0) {
         if (D_80121B56 == 0) {
-            height = arg0->height + (arg0->velocity + 0x10000);
             arg0->velocity += 0x10000;
-            arg0->height = height;
+            arg0->height += arg0->velocity;
+            height = arg0->height;
             arg0->copyBlock.transform = D_800DEE30;
-            player = &D_80121D80[arg0->playerIndex];
+            playerIndex = arg0->playerIndex;
+            player = &D_80121D80[playerIndex];
             arg0->pos.a = player->pos28.a;
             arg0->pos.b = player->pos28.b + height;
             arg0->pos.c = player->pos28.c;
