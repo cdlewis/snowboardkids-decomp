@@ -5,6 +5,7 @@
 #include "game_boot.h"
 #include "input_task_scheduler.h"
 #include "main_menu_debug_ui.h"
+#include "main_menu_effects.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -34,9 +35,6 @@ typedef struct {
 typedef void (*EffectTaskCallback)(void *);
 
 extern s32 func_80013F88(s16, s32, s32);
-extern void func_8003D908(void *);
-extern void func_8003DB1C(void *);
-extern void func_8003DD64(void *);
 extern void func_8003DFB0(void);
 extern void func_80041CC0(void);
 extern s16 func_80042D58(s32);

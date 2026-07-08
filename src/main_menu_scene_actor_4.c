@@ -1,5 +1,6 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
+#include "main_menu_effects.h"
 
 typedef struct {
     /* 0x00 */ char pad0[0x18];
@@ -20,7 +21,6 @@ typedef struct {
     /* 0x0D */ s8 actorId;
 } MainMenuSceneActorShadow;
 
-extern void func_8003CD9C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 extern void func_800373AC(MainMenuSceneActorShadow *arg0);
 extern void func_80041DD4(s32 arg0, s32 arg1);
 extern void func_80041D20(s32 arg0, s32 arg1);
@@ -36,8 +36,6 @@ extern void func_800483FC(void *, void *, void *);
 extern s32 D_80124898;
 extern void func_80037070(void);
 extern s32 D_8010B1C4;
-extern void func_8003C728(void *);
-extern void func_8003D384(void);
 
 void func_800363B4(MainMenuSceneActor4 *arg0);
 void func_80036418(MainMenuSceneActor4 *arg0);
