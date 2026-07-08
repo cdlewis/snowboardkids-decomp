@@ -52,9 +52,9 @@ typedef struct {
     char pad0[0x18];
     /* 0x18 */ s16 unk18[5];
     /* 0x22 */ s16 unk22;
-    /* 0x24 */ s8 unk24;
-    /* 0x25 */ s8 unk25;
-    /* 0x26 */ s8 unk26;
+    /* 0x24 */ u8 unk24;
+    /* 0x25 */ u8 unk25;
+    /* 0x26 */ u8 unk26;
 } ShopMenuRowActor;
 
 struct ShopMenuWidgetActor {
@@ -122,9 +122,9 @@ struct ShopMenuWidgetActor {
 };
 
 extern void func_80071824(void *task, void (*callback)());
-extern void func_8002C624(void);
-extern void func_800716E4(ShopMenuWidgetActor *);
-extern void func_800483FC(void *, void *, ShopMenuWidgetActor *);
+extern void func_8002C624(ShopMenuRowActor *);
+extern void func_800716E4(void *);
+extern void func_800483FC(void *, void *, void *);
 extern void *func_80071408(void *, s32, s32);
 extern void func_8002C9A0(ShopMenuWidgetActor *);
 extern void func_8002FAB8(ShopMenuWidgetActor *);
@@ -132,10 +132,12 @@ extern void func_8002DF40(ShopMenuWidgetActor *);
 extern void func_8002E32C(ShopMenuWidgetActor *);
 extern void func_8002E468(ShopMenuWidgetActor *);
 extern void func_8002CFAC(ShopMenuWidgetActor *);
+extern void func_8002D294(ShopMenuWidgetActor *);
 extern void func_8002D2E4(ShopMenuWidgetActor *);
 extern void func_8002D558(ShopMenuWidgetActor *);
 extern void func_8002D778(ShopMenuWidgetActor *);
 extern void func_8002D9EC(ShopMenuWidgetActor *);
+extern void func_8002DC14(ShopMenuWidgetActor *);
 extern void func_8002F2C8(ShopMenuWidgetActor *);
 extern void func_8002E9E4(ShopMenuWidgetActor *);
 extern void func_8002EC5C(ShopMenuWidgetActor *);
@@ -192,7 +194,66 @@ const char D_800E0F78[] = "%4dG";
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002C4E0.s")
 
+// func_8002C624 best match: 99.661%
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002C624.s")
+
+#ifdef NON_MATCHING
+void func_8002C624(ShopMenuRowActor *arg0) {
+    u8 state = arg0->unk24;
+    s32 i;
+    ShopMenuRowActor *actor;
+    s32 moved;
+
+    switch (state) {
+    case 0:
+        moved = 0;
+        actor = arg0;
+        for (i = 0; i < actor->unk26; i++) {
+            if (actor->unk18[i] < -0x7C) {
+                actor->unk18[i] += 0x10;
+                moved++;
+                if (actor->unk18[i] >= -0x7C) {
+                    actor->unk18[i] = -0x7C;
+                }
+            }
+        }
+        actor->unk25++;
+        if (!(actor->unk25 & 1) && (actor->unk26 < 3)) {
+            arg0->unk26++;
+        }
+        if (moved == 0) {
+            arg0->unk24 = 1;
+            func_80071408(func_8002D294, 0, 0x5F);
+            func_80071408(func_8002DC14, 0, 0x61);
+        }
+        state = arg0->unk24;
+        break;
+    case 1:
+        if (D_80121D88 == 1) {
+            state = arg0->unk24 = 2;
+        }
+        break;
+    case 2:
+        for (i = 0; i < 5; i++) {
+            if (!arg0->unk24 && !arg0->unk24) {
+            }
+            arg0->unk18[i] -= 0x20;
+        }
+        if (arg0->unk18[0] < -0x103) {
+            arg0->unk24 = 3;
+        }
+        break;
+    case 3:
+        break;
+    }
+
+    if (arg0->unk24 == 3) {
+        func_800716E4(arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002C4E0, arg0);
+}
+#endif
 
 void func_8002C800(ShopMenuRowActor *arg0) {
     s32 i;
