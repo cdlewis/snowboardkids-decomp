@@ -7,7 +7,8 @@
 
 typedef struct {
     /* 0x00 */ s16 status;
-    /* 0x02 */ u8 pad2[0x10 - 0x2];
+    /* 0x02 */ s16 courseId;
+    /* 0x04 */ u8 pad4[0x10 - 0x4];
 } CourseGridEntry;
 
 typedef struct {
@@ -23,7 +24,9 @@ typedef union {
 typedef struct {
     /* 0x000 */ u8 pad0[0x2FC];
     /* 0x2FC */ s32 flags;
-    /* 0x300 */ u8 pad300[RACE_PLAYER_STATE_SIZE - 0x300];
+    /* 0x300 */ u8 pad300[0x502 - 0x300];
+    /* 0x502 */ s16 courseId;
+    /* 0x504 */ u8 pad504[RACE_PLAYER_STATE_SIZE - 0x504];
 } RacePlayerState;
 
 typedef struct {
@@ -41,6 +44,7 @@ extern s32 D_801235B4;
 extern s32 D_80123758;
 extern s32 D_8012207C;
 extern s32 D_80123778;
+extern s16 D_80112130[];
 extern s16 D_80112188;
 extern s16 D_801124B8;
 extern SignedUnsignedShort D_80121B50;
@@ -82,6 +86,7 @@ extern u8 D_60F1A0[];
 extern u8 D_60F990[];
 
 extern s16 func_80042D58(s32);
+extern s32 *func_80043040(s16);
 extern void func_80000A40(s32);
 extern void func_80001C30(void);
 extern void func_80003140(void);
@@ -222,7 +227,24 @@ loop:
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80072E98.s")
+void func_80072E98(void) {
+    CourseGridEntry *entry = D_800DC490[D_80121B50.s];
+    s32 i = 0;
+
+loop:
+    if (entry->status != COURSE_GRID_ENTRY_END) {
+        if ((entry->status == COURSE_GRID_ENTRY_FREE) && (entry->courseId == D_80121D80[0].courseId)) {
+            s32 *status = func_80043040(D_80112130[0x2B]);
+            if (*status < 0x1194) {
+                entry->status = *status;
+                ((RacePlayerState *) func_80043040(D_80112130[0x2C]))[i] = D_80121D80[0];
+            }
+        }
+        entry++;
+        i++;
+        goto loop;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80072FC4.s")
 
