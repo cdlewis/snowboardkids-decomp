@@ -1,5 +1,6 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
+#include "main_menu_debug_ui.h"
 
 #define END_OBJ_FADE_MAX 0x100
 #define END_OBJ_FADE_STEP 0xA
@@ -7,7 +8,7 @@
 #define END_OBJ_VISIBLE_FRAMES 0x96
 #define END_OBJ_HOLD_CYCLES 0x19
 
-typedef struct {
+struct EndObjTask {
     /* 0x00 */ char pad[0x1C];
     /* 0x1C */ s16 x;
     /* 0x1E */ s16 y;
@@ -15,16 +16,16 @@ typedef struct {
     /* 0x22 */ u16 timer;
     /* 0x24 */ s16 alpha;
     /* 0x26 */ u8 state;
-} EndObjTask;
+};
 
-typedef struct {
+struct DebugObjectPositionTask {
     /* 0x00 */ char pad[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
     /* 0x1C */ s16 objectId;
     /* 0x1E */ u8 enabled;
     /* 0x1F */ u8 palette;
-} DebugObjectPositionTask;
+};
 
 typedef struct {
     /* 0x00 */ s16 x;
