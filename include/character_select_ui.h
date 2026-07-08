@@ -9,6 +9,7 @@ typedef struct CharacterSelectWidgetActor {
     /* 0x1A */ s16 y;
     /* 0x1C */ union {
         /* 0x1C */ s16 index;
+        /* 0x1C */ u16 unsignedIndex;
         struct {
             /* 0x1C */ u8 state;
             /* 0x1D */ u8 pad1D;
