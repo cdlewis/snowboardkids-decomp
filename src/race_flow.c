@@ -1,6 +1,7 @@
 #include "common.h"
 #include "asset_decompression.h"
 #include "character_select_flow.h"
+#include "character_select_menu.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
 #define COURSE_GRID_ENTRY_END -2
@@ -112,7 +113,6 @@ extern s32 *func_80043040(s16);
 extern void func_80000A40(s32);
 extern void func_80001C30(void);
 extern void func_80003140(void);
-extern void func_80004960(void);
 extern void func_800055EC(void);
 extern void func_80006F30(void);
 extern void func_800086EC(void);
