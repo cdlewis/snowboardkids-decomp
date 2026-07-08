@@ -5,6 +5,7 @@
 #include "controller_pak_delete_flow.h"
 #include "controller_pak_menu.h"
 #include "input_task_scheduler.h"
+#include "main_menu_score_ui.h"
 
 typedef struct {
     /* 0x0 */ s8 step;
@@ -48,8 +49,6 @@ extern u8 D_59AAA0;
 extern u8 D_59DFE0;
 extern u8 D_60F1A0;
 extern u8 D_60F990;
-extern u8 func_8002BA00;
-extern u8 func_8002C318;
 
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80045914(void);
