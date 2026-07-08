@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 #include "game_audio.h"
 #include "race_input_history.h"
 
@@ -9,7 +10,6 @@ typedef struct {
 } TransformScratch;
 
 extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
-extern u8 func_800430D0(void);
 extern void func_80097FE4(Matrix4s, s16, s16, RaceInputPlayer *);
 extern void func_80098590(Matrix4s, RaceVec3i *, RaceVec3i *);
 extern s32 func_80098C30(s64);

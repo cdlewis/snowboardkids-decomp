@@ -1,9 +1,5 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned long u32;
-typedef signed char s8;
-typedef short s16;
-typedef long s32;
+#include "common.h"
+#include "asset_decompression.h"
 
 typedef struct ShopMenuWidgetActor ShopMenuWidgetActor;
 
@@ -215,7 +211,7 @@ extern void func_80013D0C(s16, s16, void *, s32, s32);
 extern void func_80013154(s32, s32, ShopDescriptionText, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
-extern s32 func_800430D0(void);
+extern s32 func_80043040(s16);
 extern s32 D_800B34B0[];
 extern u16 D_800B34E0[];
 extern u16 D_800B34EC[];

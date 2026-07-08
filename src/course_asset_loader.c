@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 
 #define COURSE_COUNT 10
 #define COURSE_PLAYER_COUNT 4
@@ -81,7 +82,6 @@ extern u8 D_5DB9D0[];
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern void func_80043060(s32);
-extern void func_800437F0(u8 *, u8 *, s32);
 extern void func_8007D190(void);
 extern void func_80099C44(u8 *, s32, s32);
 

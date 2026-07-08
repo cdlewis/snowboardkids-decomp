@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 #include "race_input_history.h"
 
 #define MAIN_MENU_TRANSITION_FRAMES 0x10
@@ -24,8 +25,6 @@ extern void func_8007115C(void);
 extern void func_8006D700(void);
 extern void func_80096E3C(void);
 extern void func_80072114(s32);
-extern void func_800437F0(u8 *, u8 *, s32);
-extern void func_800438EC(u8 *, u8 *, s32);
 extern void func_800704F0(void);
 extern void func_80070EC0(s32);
 extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
@@ -52,7 +51,6 @@ extern void func_80099658(s32);
 extern void func_8007AA50(void);
 extern void func_800403D8(void);
 extern void func_8000DF28(MainMenuMessageActor *);
-extern void func_80043184(void);
 extern void func_80043950(void);
 extern void func_800440F4(void);
 extern void func_80044294(void);
