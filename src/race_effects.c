@@ -97,6 +97,7 @@ void func_80049FB4(RaceEffectActor *);
 void func_8004A2F4(RaceEffectActor *);
 void func_8004B2B8(RaceEffectActor *);
 void func_8004B5F8(RaceEffectActor *);
+void func_8004BC74(RaceEffectActor *);
 void func_8004C5B4(RaceEffectActor *);
 void func_8004CBC4(RaceEffectActor *);
 void func_8004CF28(RaceEffectActor *);
@@ -449,17 +450,16 @@ void func_8004B8B4(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004BC74.s")
 
-// func_8004BFA0 best match: 99.890%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004BFA0.s")
-
-#ifdef NON_MATCHING
 void func_8004BFA0(RaceEffectActor *arg0) {
-    Vec3i *new_var;
+    volatile s32 pad0;
     Vec3i sp58;
-    Vec3i sp4C;
+    s32 sp54;
+    s32 sp50;
+    s32 sp4C;
     s32 magnitude;
     s32 velocityY;
     RaceEffectActor *actor;
+    s64 product;
 
     arg0->timer = 0x12C;
     arg0->spriteIndex = -1;
@@ -473,24 +473,7 @@ void func_8004BFA0(RaceEffectActor *arg0) {
         }
     }
 
-    actor = arg0;
-    func_80098590(D_80121D80[arg0->playerIndex].transform, &sp58, &sp4C);
-    magnitude = func_80098C30((s64)sp4C.x * sp4C.x + (s64)sp4C.z * sp4C.z);
-
-    if (magnitude != 0) {
-        actor->accelerationY = (s64)actor->velocityY * sp4C.y / magnitude;
-        velocityY = -actor->velocityY;
-    } else {
-        velocityY = -actor->velocityY;
-        actor->accelerationY = velocityY;
-    }
-
-    actor->accelerationY += D_80121D80[actor->playerIndex].unk44;
-    actor->velocityY = velocityY;
-    actor->targetAngle = D_80121D80[actor->playerIndex].yaw;
-
-    sp58.z = D_80121D80[actor->playerIndex].yaw * 0;
-    new_var = &sp58;
+    actor = arg0; func_80098590(D_80121D80[arg0->playerIndex].transform, &sp58, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = func_80098C30(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * sp50 / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += D_80121D80[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = D_80121D80[actor->playerIndex].yaw; sp58.z = 0; sp58.x = 0xFFF00000;
     sp58.y = 0x280000;
     sp58.x = 0x100000;
 
@@ -499,8 +482,8 @@ void func_8004BFA0(RaceEffectActor *arg0) {
         actor->targetAngle += 0x800;
     }
 
-    func_80098590(D_80121D80[actor->playerIndex].transform, new_var, &actor->pos);
-    actor->pos.x += D_80121D80[actor->playerIndex].posA8.x;
+    func_80098590(D_80121D80[actor->playerIndex].transform, &sp58, &actor->pos);
+    actor->pos.x += ((0, D_80121D80))[actor->playerIndex].posA8.x;
     actor->pos.y += D_80121D80[actor->playerIndex].posA8.y;
     actor->pos.z += D_80121D80[actor->playerIndex].posA8.z;
     actor->startAngle = D_80121D80[actor->playerIndex].surfaceAngle;
@@ -508,7 +491,6 @@ void func_8004BFA0(RaceEffectActor *arg0) {
     func_8004BC74(actor);
     func_80071824(actor, func_8004BC74);
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004C274.s")
 
