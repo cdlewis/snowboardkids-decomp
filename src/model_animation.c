@@ -87,17 +87,15 @@ void func_8007D190(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007D200.s")
 
-// func_8007D548 best match: 95.902% (base_7.c)
+// func_8007D548 best match: 96.293% (base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007D548.s")
 
 #ifdef NON_MATCHING
 s32 func_8007D548(s32 x, s32 z) {
     s32 index;
-    s32 keyframeOffset;
 
     index = 0;
     if (*(s16 *)((u8 *)&D_800B957E + D_80121B50 * sizeof(CourseSpawnEntry)) >= 0) {
-        keyframeOffset = 0;
         do {
             ModelAnimKeyframe *keyframe;
             ModelAnimCoord *coord0;
@@ -114,7 +112,7 @@ s32 func_8007D548(s32 x, s32 z) {
             s32 z2;
             s32 z3;
 
-            keyframe = (ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset);
+            keyframe = &D_80121B98[index];
             outside = FALSE;
             coord0 = &D_80121B90[keyframe->coordIndices[0]];
             coord1 = &D_80121B90[keyframe->coordIndices[1]];
@@ -148,7 +146,6 @@ s32 func_8007D548(s32 x, s32 z) {
                 return index;
             }
             index++;
-            keyframeOffset += sizeof(ModelAnimKeyframe);
         } while (index <= *(s16 *)((u8 *)&D_800B957E + D_80121B50 * sizeof(CourseSpawnEntry)));
     }
 
