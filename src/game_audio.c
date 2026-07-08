@@ -1,5 +1,6 @@
 #include "common.h"
 #include "game_audio.h"
+#include "game_boot.h"
 
 #define GAME_AUDIO_FREE_HANDLE_COUNT 13
 #define GAME_AUDIO_QUEUE_CAPACITY 64
@@ -81,7 +82,6 @@ extern u8 D_80121B04;
 extern u8 D_80121B05;
 extern s8 D_8015A6B8;
 
-void func_80099C44(s32 arg0, s32 arg1, s32 arg2);
 void func_8009D8B0(s32 arg0, s32 arg1);
 void func_8009DE50(s32 arg0, s32 arg1);
 void osStartThread(void *);
