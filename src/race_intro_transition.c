@@ -1,6 +1,7 @@
 #include "race_intro_transition.h"
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
+#include "input_task_scheduler.h"
 
 extern RaceIntroTransitionState *D_801235B8;
 extern s16 D_800DEF14;
@@ -14,9 +15,6 @@ extern u8 D_80123751;
 extern u8 D_80123750;
 extern s32 D_80123778;
 extern void func_80045914(void);
-extern void func_8009954C(s32);
-extern void func_8009956C(TaskCallback, s32);
-extern void func_80099658(s32);
 extern void func_800540EC(void *);
 extern void func_8008C704(void);
 extern void func_80096E3C(void);

@@ -5,13 +5,11 @@
 #include "controller_pak_menu.h"
 #include "controller_pak_menu_flow.h"
 #include "controller_pak_menu_ui.h"
+#include "input_task_scheduler.h"
 
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80072138(s32, s32);
-extern void func_8009956C(void *, s32);
 extern void func_80045914(void);
-extern void func_80099658(s32);
-extern void func_8009954C(s32);
 
 extern void func_80000C48(s32);
 extern void func_800704F0(void);
