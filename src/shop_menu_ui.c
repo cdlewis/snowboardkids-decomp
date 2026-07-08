@@ -159,6 +159,7 @@ extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
 extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_800129DC(s16, s16, u16 *, s32, s32);
 extern void func_80013D0C(s16, s16, void *, s32, s32);
 extern void func_80013154(s32, s32, ShopDescriptionText, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
@@ -171,6 +172,7 @@ extern u16 D_800B34EC[];
 extern ShopMenuFrameTileMap D_800B79C0[];
 extern ShopDescriptionText D_800B7A14[];
 extern u8 D_800B7CD0;
+extern u16 D_800B7D00[];
 extern u8 D_80121D86;
 extern u8 D_80121D88;
 extern s16 D_8011217E;
@@ -1099,7 +1101,62 @@ void func_8002EFB8(ShopMenuWidgetActor *arg0) {
     func_80071824(arg0, func_8002EF14);
 }
 
+// func_8002EFFC best match: 86.994% (nonmatchings/func_8002EFFC-5635509610426229442/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002EFFC.s")
+
+#ifdef NON_MATCHING
+void func_8002EFFC(ShopMenuWidgetActor *arg0) {
+    volatile s32 unused;
+    u16 script[3];
+    u16 *tiles;
+    s32 i;
+    s32 yOffset;
+    s16 *cursor;
+    s32 value;
+    s16 cursorX;
+
+    tiles = D_800B7D00;
+    cursor = (s16 *)arg0;
+    yOffset = 0;
+    for (i = 0; i < 7; i++) {
+        func_8000F030(cursor[12], (s16)(arg0->targetY + yOffset), func_80043040(D_80112130[0x27]),
+                      tiles[D_8010AF73 * 7], 0x20, 0x20, 0, 0);
+
+        value = (D_8010AF73 * 7) + i + 1;
+        script[0] = value / 10;
+        if (script[0] == 0) {
+            script[0] = -2;
+        }
+        script[2] = -1;
+        script[1] = value % 10;
+        func_800129DC((s16)(cursor[12] - 0x12), (s16)(arg0->targetY + yOffset), script, 1, 0x100);
+
+        yOffset += 0x13;
+        tiles++;
+        cursor++;
+    }
+
+    cursor = &((s16 *)arg0)[7];
+    yOffset = 0x85;
+    for (i = 7; i != 10; i++) {
+        func_8000F030(cursor[12], (s16)(arg0->targetY + yOffset), func_80043040(D_80112130[0x27]), i, 0x20,
+                      0x20, 0, 0);
+
+        yOffset += 0x13;
+        cursor++;
+    }
+
+    if ((arg0->state != 0) && (D_8010AF74 == 0)) {
+        if (arg0->state < 5) {
+            cursorX = arg0->targetX;
+        } else {
+            cursorX = arg0->cursorPositions[0];
+        }
+        func_8000F8AC(cursorX, (s16)(arg0->targetY + (D_8010AF72 * 0x13)), func_80043040(D_80112130[0x25]),
+                      0x12, 0x20, 0x20, 0, arg0->prompt.bytes.pulseAlpha, 0);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002F2C8.s")
 
