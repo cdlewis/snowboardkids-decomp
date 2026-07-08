@@ -71,7 +71,6 @@ typedef struct {
 extern void func_800483FC(void *, void *, void *);
 extern void func_80011264(s16, s16, s32, u16, u16, u16);
 extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
-extern void func_800191D0(PlayerSelectRowActor *);
 extern void func_80019800(PlayerSelectWidgetActor *);
 extern void func_800196CC(PlayerSelectWidgetActor *);
 extern void func_80019FAC(PlayerSelectWidgetActor *);
@@ -96,6 +95,7 @@ extern s32 func_80043040(s16);
 extern int sprintf(char *, const char *, ...);
 extern PlayerSelectFrameTiles D_800B5B50[];
 extern PlayerPortrait D_800B5C24[];
+extern u8 D_800EC9C1;
 extern u8 D_800EC9C2;
 extern u8 D_80121D85;
 extern u8 D_80121D88;
@@ -105,13 +105,26 @@ extern PlayerSelectCursorState D_8010AE70;
 extern u8 D_8010AE70_state;
 extern s16 D_8010AE74;
 extern s32 D_8010ADDC;
+extern u8 D_8010ADF8;
 extern s16 D_80112172;
 extern s32 D_80121D8C;
 extern s32 D_801235B4;
 
 const char D_800E0AE0[] = "%6dG";
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_800191D0.s")
+void func_800191D0(PlayerSelectRowActor *arg0) {
+    PlayerSelectRowActor *sp54;
+    PlayerSelectRowActor *var_s3;
+    s32 var_s0;
+    s32 var_s1;
+    s32 var_s2;
+
+    sp54 = arg0;
+    var_s0 = 0;
+    if ((s32)arg0->playerCount > 0) {
+        do { var_s2 = 0; var_s3 = arg0; do { var_s1 = 0; if (((((D_800EC9C1 != 0) && (((s32)D_800EC9C1) < 8)) && (D_8010ADF8 == 0)) && (var_s0 == D_800EC9C2)) && (D_800EC9C1 & 1)) { var_s1 = 0xFF; } func_8000F030(var_s3->iconX[0], (s16)(arg0->iconY + var_s2), func_80043040(D_80112130.textureHandle), (var_s0 + 8) & 0xFFFF, 0x20, 0x20, 0, var_s1); var_s0 += 1; var_s2 += 0x14; var_s3 = (PlayerSelectRowActor *)((u8 *)var_s3 + 2); if (arg0->playerCount) {} } while (var_s0 < ((s32)sp54->playerCount)); } while (0);
+    }
+}
 
 void func_80019314(PlayerSelectRowActor *arg0) {
     s32 i;
