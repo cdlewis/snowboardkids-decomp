@@ -60,6 +60,13 @@ typedef struct {
 
 typedef u8 PlayerPortrait[0x8C];
 
+typedef struct {
+    /* 0x00 */ u16 centerTiles[16];
+    /* 0x20 */ u16 rightEdgeTiles[2];
+    /* 0x24 */ u16 bottomEdgeTiles[2];
+    /* 0x28 */ u16 cornerTile;
+} PlayerSelectFrameTiles;
+
 extern void func_80071824(void *task, void (*callback)());
 extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
@@ -98,6 +105,7 @@ extern u8 D_80121D88;
 extern void *D_80124868;
 extern PlayerSelectAssetHandles D_80112130;
 extern PlayerSelectCursorState D_8010AE70;
+extern PlayerSelectFrameTiles D_800B5B50[];
 extern u8 D_8010AE70_state;
 extern s16 D_8010AE74;
 extern s32 D_8010ADDC;
@@ -628,7 +636,37 @@ void func_8001AD74(PlayerSelectWidgetActor *arg0) {
     func_80071824(arg0, func_8001AB98);
 }
 
+// func_8001ADB8 best match: 95.312%
 #pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_8001ADB8.s")
+
+#ifdef NON_MATCHING
+void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
+    s32 i;
+    s32 tileIndex;
+    s32 offset;
+
+    tileIndex = 0;
+    for (i = 0; i < 16; i++) {
+        func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
+                      func_80043040(D_80112130[0x21]), D_800B5B50[arg0->sprite.spriteIndex].centerTiles[tileIndex],
+                      0, 0x100, 0xA0, 0x49);
+        tileIndex++;
+    }
+
+    tileIndex = 0;
+    offset = 0;
+    for (; offset != 0x80; offset += 0x40) {
+        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), func_80043040(D_80112130[0x21]),
+                      D_800B5B50[arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
+        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), func_80043040(D_80112130[0x21]),
+                      D_800B5B50[arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
+        tileIndex++;
+    }
+
+    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130[0x21]),
+                  D_800B5B50[arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
+}
+#endif
 
 void func_8001B02C(PlayerSelectWidgetActor *arg0) {
     int state;
