@@ -84,6 +84,7 @@ void *func_80048388(s32 arg0);
 void func_800720E4(s32 arg0);
 s32 func_80071B74(void);
 s32 func_800722F0(SoundPosition *pos, s32 volume);
+void func_80072518(s16 soundId, s32 mode, s16 volume, f32 pitch);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80071830.s")
 
@@ -354,4 +355,40 @@ void func_80072AC8(s16 arg0, SoundPosition *arg1, s16 arg2, s16 arg3, s16 arg4, 
     enqueuePositionalSoundRequest(arg0, arg1, arg2, arg3, 0.0f, arg4 + 4, minVolume);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80072B24.s")
+void func_80072B24(void) {
+    PositionalSoundRequest *node;
+    s16 mode;
+
+    osStopThread(&D_8015A6B8);
+    node = gPendingPositionalSoundRequests;
+
+    while (node != NULL) {
+        mode = node->mode;
+        switch (mode) {
+            case -1:
+                func_800721B8(node->soundId, func_800722F0(&node->pos, node->volume), node->priority);
+                break;
+
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                func_80072518(node->soundId, mode, node->volume, node->pitch);
+                break;
+
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                func_8007276C(node->soundId, mode - 4, node->volume, node->minVolume);
+                break;
+
+            case 10:
+                func_80072844(node->soundId, &node->pos, node->volume);
+                break;
+        }
+        node = node->next;
+    }
+
+    osStartThread(&D_8015A6B8);
+}
