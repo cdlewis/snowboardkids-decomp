@@ -294,7 +294,7 @@ void func_8004B8B4(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004C274.s")
 
-// func_8004C5B4 best match: 95.368% (nonmatchings/func_8004C5B4-5635509610426229442/base_6.c)
+// func_8004C5B4 best match: 99.879% (nonmatchings/func_8004C5B4-5635509610426229442/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_8004C5B4.s")
 
 #ifdef NON_MATCHING
@@ -307,10 +307,10 @@ void func_8004C5B4(RaceEffectActor *arg0) {
     s32 pushZ;
     volatile s32 prevY;
     s32 y;
-    s32 groundY;
-    volatile u8 padding[16];
-    Vec3i *pos;
     s16 angleDiff;
+    s32 groundY;
+    volatile u8 padding[4];
+    Vec3i *pos;
     s32 i;
 
     if (D_80121B56 == 0) {
@@ -339,9 +339,9 @@ void func_8004C5B4(RaceEffectActor *arg0) {
         xOffset = ((s64)sin * arg0->velocityY) / 0x1000;
         zOffset = ((s64)cos * arg0->velocityY) / 0x1000;
 
-        prevY = arg0->pos.y;
+        arg0->pos.y = (prevY = arg0->pos.y);
         arg0->pos.x += xOffset;
-        arg0->pos.y = prevY + arg0->accelerationY;
+        arg0->pos.y = arg0->pos.y + arg0->accelerationY;
         arg0->pos.z += zOffset;
 
         arg0->startAngle = func_8007D200(arg0->startAngle, arg0->pos.x, arg0->pos.z);
