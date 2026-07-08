@@ -449,6 +449,11 @@ typedef struct {
 } RaceUiPromptActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+} RaceUiCourseStatsActor;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x1C];
     /* 0x1C */ s16 alpha;
 } RaceUiAlphaActor;
@@ -716,7 +721,7 @@ extern void func_80060D10(void);
 extern void func_8006501C(void *);
 extern void func_80064F4C(void *);
 extern void func_80059E5C(RaceUiAlpha1AActor *);
-extern void func_80059C34(void);
+extern void func_80059C34(RaceUiCourseStatsActor *);
 extern void func_8005BE68(void);
 extern void func_80061984(RaceUiThrownTrailActor *);
 extern void func_80063220(RaceUiSpinningParticleActor *);
@@ -1156,7 +1161,41 @@ void func_800599DC(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059A04.s")
 
+// func_80059C34 best match: 96.775% at nonmatchings/func_80059C34-5635509610426229442/base_9.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059C34.s")
+
+#ifdef NON_MATCHING
+void func_80059C34(RaceUiCourseStatsActor *arg0) {
+    s32 y;
+    s32 row;
+    s32 offset;
+    RaceUiCourseStatsActor *actor;
+
+    actor = arg0;
+    y = -0x50;
+    row = 0;
+    offset = 0;
+    do {
+        func_80045A78(-8, (s16)y, func_80043040(D_80112130.popupFontHandle), (row + 0x77) & 0xFFFF);
+        if ((row == actor->index) && (D_80156612 & 1)) {
+            func_80059A04(D_800EC9F0 + (((D_80121B50 << 2) + D_80121B50) << 2) + offset + 0x4E, 0x10, y, 0x10);
+        } else if (row < 3) {
+            func_80059A04(D_800EC9F0 + (((D_80121B50 << 2) + D_80121B50) << 2) + offset + 0x4E, 0x10, y, 0xC);
+        } else {
+            func_80059A04(D_800EC9F0 + (((D_80121B50 << 2) + D_80121B50) << 2) + offset + 0x4E, 0x10, y, 0xD);
+        }
+
+        func_80045A78(0x58, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                      ((D_800EC9F0[((D_80121B50 << 2) + D_80121B50) + row + 0x77FB] & 7) + 0x51) & 0xFFFF);
+        func_80045A78(0x6C, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                      (((D_800EC9F0[((D_80121B50 << 2) + D_80121B50) + row + 0x77FB] >> 3) + 0x7C) & 0xFFFF));
+
+        row++;
+        offset += 4;
+        y += 0x20;
+    } while (row != 5);
+}
+#endif
 
 void func_80059E5C(RaceUiAlpha1AActor *arg0) {
     Gfx *gfx;
