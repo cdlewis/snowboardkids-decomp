@@ -285,7 +285,7 @@ extern Gfx D_2001810[];
 extern Gfx D_20018E8[];
 extern Gfx D_2000910[];
 extern Gfx D_2003218[];
-extern void func_8006BE90(void);
+void func_8006BE90(RaceMovingEffect *);
 void func_8006B7E0(RaceMovingEffect *);
 extern void func_8006A894(void *);
 
