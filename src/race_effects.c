@@ -98,6 +98,7 @@ void func_80049664(RaceEffectActor *);
 void func_800499A4(RaceEffectActor *);
 void func_80049FB4(RaceEffectActor *);
 void func_8004A2F4(RaceEffectActor *);
+void func_8004AC5C(RaceEffectActor *);
 void func_8004B2B8(RaceEffectActor *);
 void func_8004AC5C(RaceEffectActor *);
 void func_8004B5F8(RaceEffectActor *);
