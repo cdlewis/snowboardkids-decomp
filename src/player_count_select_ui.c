@@ -52,6 +52,19 @@ typedef struct {
     s8 state;
 } PlayerCountSelectMenuCursor;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[0x7E];
+    /* 0x7E */ u16 center[16];
+    /* 0x9E */ u16 right[2];
+    /* 0xA2 */ u16 bottom[2];
+    /* 0xA6 */ u16 corner;
+} PlayerCountSelectFrameTileMap;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x42];
+    /* 0x42 */ s16 textureHandle;
+} PlayerCountSelectAssetHandles;
+
 extern void func_80071824(void *task, void (*callback)());
 extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
@@ -66,7 +79,6 @@ extern void func_8002A27C(PlayerCountSelectWidgetActor *);
 extern void func_8002A49C(PlayerCountSelectWidgetActor *);
 extern void func_8002A710(PlayerCountSelectWidgetActor *);
 extern void func_8002A8EC(PlayerCountSelectWidgetActor *);
-extern void func_8002A930(PlayerCountSelectWidgetActor *);
 extern void func_8002AB24(PlayerCountSelectWidgetActor *);
 extern void func_8002AD74(PlayerCountSelectWidgetActor *);
 extern void func_8002AE3C(PlayerCountSelectWidgetActor *);
@@ -77,12 +89,16 @@ extern void func_8002B1FC(PlayerCountSelectWidgetActor *);
 extern void func_8002B2FC(PlayerCountSelectWidgetActor *);
 extern void func_8002B424(PlayerCountSelectWidgetActor *);
 extern void func_8002B524(PlayerCountSelectWidgetActor *);
+extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s32, s32, PlayerCountPortrait, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern int sprintf(char *, const char *, ...);
+extern PlayerCountSelectFrameTileMap D_800B70F0;
+extern u16 D_800B7196;
 extern PlayerCountPortrait D_800B7198[];
+extern PlayerCountSelectAssetHandles D_80112130;
 extern s16 D_80112172;
 extern PlayerCountSelectMenuCursor D_8010AF50;
 extern u8 D_8010AF52;
@@ -461,7 +477,36 @@ void func_8002A8EC(PlayerCountSelectWidgetActor *arg0) {
     func_80071824(arg0, func_8002A710);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_8002A930.s")
+void func_8002A930(PlayerCountSelectWidgetActor *arg0) {
+    PlayerCountSelectFrameTileMap *tileMap;
+    s32 i;
+    s32 tileOffset;
+    s32 offset;
+
+    tileMap = &D_800B70F0;
+    tileOffset = 0;
+    for (i = 0; i < 16; i++, tileOffset++) {
+        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), func_80043040(D_80112130.textureHandle),
+                      tileMap->center[tileOffset], 0, 0x100, 0xA0, 0x49);
+    }
+
+    tileMap = &D_800B70F0;
+    tileOffset = 0;
+    offset = 0; i = 0x80; do {
+        func_800112F4(arg0->x + 0x80, arg0->y + offset, func_80043040(D_80112130.textureHandle),
+                      tileMap->right[tileOffset], 0, 0x100, 0xA0, 0x49);
+        func_800112F4(arg0->x + offset, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
+                      tileMap->bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+        i = 0x80;
+        offset += 0x40;
+        tileOffset++;
+    } while (offset != i);
+    i++;
+    i--;
+
+    func_800112F4(arg0->x + 0x80, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
+                  D_800B7196, 0, 0x100, 0xA0, 0x49);
+}
 
 void func_8002AB24(PlayerCountSelectWidgetActor *arg0) {
     int state;
