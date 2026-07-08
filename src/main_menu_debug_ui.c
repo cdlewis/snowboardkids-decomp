@@ -25,6 +25,17 @@ typedef struct {
     /* 0x1F */ u8 palette;
 } DebugObjectPositionTask;
 
+typedef struct {
+    /* 0x00 */ s16 x;
+    /* 0x02 */ s16 y;
+} EndObjTextPosition;
+
+typedef struct {
+    /* 0x00 */ s16 count;
+    /* 0x02 */ EndObjTextPosition positions[5];
+    /* 0x16 */ s16 pad;
+} EndObjTextLayout;
+
 extern u16 D_8010B1A2;
 extern s16 D_80112172;
 extern void *D_80124868;
@@ -32,9 +43,12 @@ extern char D_800E1060[];
 extern char D_800E1070[];
 extern s32 D_80123758;
 extern s32 D_80123778[];
+extern u16 D_800B8140[][0x5A];
+extern EndObjTextLayout D_800B92D4[];
 extern s32 func_80043040(s16);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_8000F030(s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
 extern void func_80013D0C(s32, s32, void *, s32, s32);
 extern void func_800483FC(void *, void *, void *);
 extern void func_80071824(void *task, void (*callback)());
@@ -46,7 +60,53 @@ void func_8003B9F8(EndObjTask *arg0);
 void func_8003BA64(EndObjTask *arg0);
 void func_8003BC9C(DebugObjectPositionTask *arg0);
 
+// func_8003B7C0 best match: 82.541%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_debug_ui/func_8003B7C0.s")
+
+#ifdef NON_MATCHING
+void func_8003B7C0(EndObjTask *arg0) {
+    s16 count;
+    s32 i;
+    s32 scriptIndex;
+    s32 lineLength;
+    s32 layoutOffset;
+    s16 x;
+    s16 y;
+    u16 glyph;
+    volatile u16 colorMode;
+    u16 text[0x1E];
+    u16 pad[0xE];
+    EndObjTextLayout *layout;
+
+    layout = &D_800B92D4[arg0->cycleCount];
+    count = layout->count;
+    i = 0;
+    if (count > 0) {
+        scriptIndex = 0;
+        layoutOffset = 0;
+        do {
+            layout = &D_800B92D4[arg0->cycleCount];
+            glyph = D_800B8140[arg0->cycleCount][scriptIndex];
+            x = *(s16 *)((u8 *)layout->positions + layoutOffset);
+            y = *(s16 *)((u8 *)layout->positions + layoutOffset + 2);
+            lineLength = 0;
+            if (glyph != 0xFFFF) {
+                do {
+                    text[lineLength] = glyph;
+                    scriptIndex++;
+                    glyph = D_800B8140[arg0->cycleCount][scriptIndex];
+                    lineLength++;
+                } while (glyph != 0xFFFF);
+            }
+            text[lineLength] = 0xFFFF;
+            scriptIndex++;
+            func_80013154((s16)x, y, (u8 *)text, 0, arg0->alpha, colorMode);
+            i++;
+            layoutOffset += 4;
+        } while (i != count);
+    }
+}
+#endif
 
 void func_8003B944(EndObjTask *arg0) {
     func_8000F8AC(arg0->x, arg0->y, func_80043040(D_80112172), 0x35, 0x20, 0x20, 0, arg0->alpha, 0);
