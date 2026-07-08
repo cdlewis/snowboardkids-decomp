@@ -6,13 +6,22 @@
 #define MENU_PANEL_INPUT_REPEAT_FRAMES 4
 #define MENU_PANEL_ACCEPT_SOUND 0x18
 #define MENU_PANEL_SOUND_VOLUME 0x32
-#define MENU_PANEL_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x54])
+#define MENU_PANEL_TEXTURE_HANDLE (D_80112130.textureHandle)
 
 typedef struct MenuPanelActor MenuPanelActor;
 typedef void (*MenuPanelActorCallback)(MenuPanelActor *);
 
 typedef struct RenderCallbackNode RenderCallbackNode;
 typedef void (*RenderCallback)(s32);
+
+typedef struct MenuPanelAssetHandles {
+    /* 0x00 */ char pad0[0x3E];
+    /* 0x3E */ s16 fontHandle;
+    /* 0x40 */ char pad40[0x10];
+    /* 0x50 */ s16 cancelHandle;
+    /* 0x52 */ char pad52[2];
+    /* 0x54 */ s16 textureHandle;
+} MenuPanelAssetHandles;
 
 struct MenuPanelActor {
     /* 0x00 */ char pad0[0x18];
@@ -28,6 +37,8 @@ struct MenuPanelActor {
 extern RenderCallbackNode *D_80124868;
 extern u8 D_8010B1F0;
 extern u8 D_800D4A40[];
+extern u8 D_800D54E8[];
+extern u8 D_800D54F0[];
 extern u8 D_800D54F8[];
 extern u8 D_800D5508[];
 extern u8 D_800D5518[];
@@ -36,7 +47,7 @@ extern u8 D_800D5598[];
 extern u8 D_800D55E8[];
 extern u8 D_800D5630[];
 extern u16 *D_800D5538[];
-extern u8 D_80112130[];
+extern MenuPanelAssetHandles D_80112130;
 extern u8 D_80121B5B;
 extern s16 D_800DEF14;
 extern s16 D_8011213C;
@@ -52,7 +63,11 @@ extern void func_800716E4(MenuPanelActor *);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8001303C(s32, s32, u8 *, s32, s32, s32, s32);
 extern s32 func_80043040(s16);
+extern void func_80045A78(s16, s16, s32, u16);
+extern void func_80045E84(s16, s16, s32, s32);
 extern void func_80046358(s32, s32, s32, s32);
+extern void func_80046748(s16, s16, s32, s32, s32, s32, s32);
+extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80072138(s16, s16);
 
 extern void func_800515F0(MenuPanelActor *);
@@ -108,7 +123,62 @@ void func_80050FF0(s32 arg0) {
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80051308.s")
+void func_80051308(MenuPanelActor *arg0) {
+    s32 alpha;
+    s32 i;
+    s32 next;
+    s32 x;
+    u8 *tile;
+
+    if (arg0) {
+    }
+
+    x = -0x6E;
+    tile = D_800D54E8; i = 0; do {
+        next = i + 1;
+        alpha = 0;
+        if (next == D_80121B5B) {
+            alpha = arg0->x;
+        }
+
+        func_80046748((s16)(x + 0xA), -0x16, 0x22, 0x22, 0x40, alpha / 4, 0);
+        func_80046748((s16)(x + 4), -0x1C, 0x22, 0x22, 0xFF, alpha, 0);
+        func_80045A78((s16)(x + 5), -0x1B, func_80043040(D_80112130.fontHandle), *tile);
+        i = next;
+        tile++;
+        x += 0x2C;
+    } while (next < 5);
+
+    x = -0x84;
+    tile = D_800D54F0;
+    i = 0;
+    do {
+        alpha = 0;
+        if ((i + 6) == D_80121B5B) {
+            alpha = arg0->x;
+        }
+
+        func_80046748((s16)(x + 0xA), 0x1E, 0x22, 0x22, 0, alpha / 4, 0x40);
+        func_80046748((s16)(x + 4), 0x18, 0x22, 0x22, arg0->x * 0, alpha, 0xFF);
+        func_80045A78((s16)(x + 5), 0x19, func_80043040(D_80112130.fontHandle), *tile);
+        i++;
+        tile++;
+        x += 0x2C;
+    } while (i != 6);
+
+    if (D_80121B5B == 0xC) {
+        if (arg0->x != 0) {
+            func_80045A78(-0x30, 0x4D, func_80043040(D_80112130.cancelHandle), 2);
+            func_80045E84(-0x30, 0x4D, func_80043040(D_80112130.cancelHandle), 3);
+            return;
+        }
+        func_80046D68(-0x30, 0x4D, func_80043040(D_80112130.cancelHandle), 2, 1);
+        func_80045E84(-0x30, 0x4D, func_80043040(D_80112130.cancelHandle), 3);
+        return;
+    }
+
+    func_80046D68(-0x30, 0x4D, func_80043040(D_80112130.cancelHandle), 2, 1);
+}
 
 // func_800515F0 best match: 75.664%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_800515F0.s")
