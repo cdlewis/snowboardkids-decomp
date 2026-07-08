@@ -2,8 +2,9 @@
 #include "effect_task_scheduler.h"
 #include "fixed_point_matrix.h"
 #include "main_menu_effects.h"
+#include "main_menu_scene_actor_4.h"
 
-typedef struct {
+struct MainMenuSceneActor4 {
     /* 0x00 */ char pad0[0x18];
     /* 0x18 */ s32 posX;
     /* 0x1C */ s32 posY;
@@ -12,15 +13,7 @@ typedef struct {
     /* 0x26 */ s16 rotY;
     /* 0x28 */ s16 rotZ;
     /* 0x2A */ u16 timer;
-} MainMenuSceneActor4;
-
-typedef struct {
-    /* 0x00 */ s32 posX;
-    /* 0x04 */ s32 posY;
-    /* 0x08 */ s32 posZ;
-    /* 0x0C */ s8 unkC;
-    /* 0x0D */ s8 actorId;
-} MainMenuSceneActorShadow;
+};
 
 typedef struct {
     /* 0x00 */ FixedMatrix3s rotation;
@@ -42,7 +35,6 @@ typedef struct {
     /* 0x148 */ MainMenuShadowDisplayObject displayObjects[1];
 } MainMenuShadowModel;
 
-extern void func_800373AC(MainMenuSceneActorShadow *arg0);
 extern MainMenuShadowModel *func_80041E60(s32 arg0);
 extern void func_80041DD4(s32 arg0, s32 arg1);
 extern void func_80041D20(s32 arg0, s32 arg1);
@@ -66,28 +58,6 @@ extern Vtx D_800B8100[];
 extern s16 D_80112172;
 extern void func_80037070(MainMenuSceneActorShadow *arg0);
 extern s32 D_8010B1C4;
-
-void func_800363B4(MainMenuSceneActor4 *arg0);
-void func_80036418(MainMenuSceneActor4 *arg0);
-void func_800364B8(MainMenuSceneActor4 *arg0);
-void func_80036520(MainMenuSceneActor4 *arg0);
-void func_800365B4(MainMenuSceneActor4 *arg0);
-void func_80036674(MainMenuSceneActor4 *arg0);
-void func_80036704(MainMenuSceneActor4 *arg0);
-void func_800367A8(MainMenuSceneActor4 *arg0);
-void func_800368BC(MainMenuSceneActor4 *arg0);
-void func_80036930(MainMenuSceneActor4 *arg0);
-void func_800369BC(MainMenuSceneActor4 *arg0);
-void func_80036A4C(MainMenuSceneActor4 *arg0);
-void func_80036AC4(MainMenuSceneActor4 *arg0);
-void func_80036B54(MainMenuSceneActor4 *arg0);
-void func_80036C14(MainMenuSceneActor4 *arg0);
-void func_80036C8C(MainMenuSceneActor4 *arg0);
-void func_80036D08(MainMenuSceneActor4 *arg0);
-void func_80036DAC(MainMenuSceneActor4 *arg0);
-void func_80036E58(MainMenuSceneActor4 *arg0);
-void func_80036EBC(MainMenuSceneActor4 *arg0);
-void func_80036F6C(MainMenuSceneActor4 *arg0);
 
 void func_80036380(void) {
 }
