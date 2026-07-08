@@ -64,6 +64,7 @@ extern s32 osPfsRepairId(OSPfs *);
 extern s32 osPfsFreeBlocks(OSPfs *, s32 *);
 extern s32 osPfsNumFiles(OSPfs *, s32 *, s32 *);
 extern s32 osPfsFileState(OSPfs *, s32, OSPfsState *);
+extern s32 osPfsDeleteFile(OSPfs *, u16, u32, u8 *, u8 *);
 extern s32 func_80013F88(s16, s32, s32);
 extern void func_80045914(void);
 extern void func_8009954C(s32);
@@ -363,7 +364,48 @@ void func_800016D8(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
+// func_80001724 best match: 86.636%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80001724.s")
+
+#ifdef NON_MATCHING
+void func_80001724(u16 arg0) {
+    OSPfsState *state;
+    u16 companyCode;
+    u32 gameCode;
+    s32 unused;
+    u8 gameName[16];
+    u8 extName[4];
+    u8 *src;
+    u8 *dst;
+    s32 i;
+
+    osPfsInitPak(&D_800E4BD0, D_800E4C40, 0);
+
+    state = &D_8010AF98[arg0];
+    companyCode = state->company_code;
+    gameCode = state->game_code;
+
+    src = (u8 *)state->game_name;
+    dst = gameName;
+    do {
+        *dst++ = *src++;
+    } while (dst < gameName + 16);
+
+    src = (u8 *)state->ext_name;
+    dst = extName;
+    do {
+        *dst++ = *src++;
+    } while (dst < extName + 4);
+
+    for (i = 0; i != 3; i++) {
+        if (osPfsDeleteFile(D_800E4C40, companyCode, gameCode, gameName, extName) == 0) {
+            D_800EC9D8 = 0;
+            return;
+        }
+        D_800EC9D8++;
+    }
+}
+#endif
 
 void func_80001858(void) {
     OSMesg msg;
