@@ -140,7 +140,6 @@ extern u8 D_80121B55;
 extern u8 D_80121D80[];
 extern CharacterSelectPlayerRecord D_801235B0;
 extern s32 D_801235B4;
-extern void func_8001DB0C(CharacterSelectWidgetActor *);
 extern void func_8001E4AC(CharacterSelectWidgetActor *);
 
 void func_8002172C(CharacterSelectWidgetActor *arg0);
@@ -504,42 +503,25 @@ void func_8001DACC(CharacterSelectWidgetActor *arg0) {
     func_80071824(arg0, func_8001D7B8);
 }
 
-// func_8001DB0C best match: 98.185%
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001DB0C.s")
-
-#ifdef NON_MATCHING
 void func_8001DB0C(CharacterSelectWidgetActor *arg0) {
+    s32 shouldDraw;
     s32 i;
     s32 tileOffset;
     s32 offset;
 
-    do {
-        i = 0;
-        tileOffset = 0;
-        do {
-            func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                          func_80043040(D_80112130.textureHandle),
-                          D_800B5FC0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
-            if (1) {
-            }
-            i++;
-            i--;
-            if (1) {
-            }
-            if (1) {
-            }
-            if (1) {
-            }
-            if (1) {
-            }
-            i++;
-            tileOffset++;
-        } while (i < 0x10);
+    tileOffset = 0;
+    shouldDraw = 1;
+    for (i = 0; i < 16; i++, tileOffset++) {
+        func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
+                      func_80043040(D_80112130.textureHandle),
+                      D_800B5FC0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+    }
 
+    if (shouldDraw) {
         tileOffset = 0;
-        offset = 0;
         i = 0x80;
-    } while (0);
+    }
+    offset = 0;
     do {
         func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
                       func_80043040(D_80112130.textureHandle),
@@ -547,14 +529,16 @@ void func_8001DB0C(CharacterSelectWidgetActor *arg0) {
         func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
                       func_80043040(D_80112130.textureHandle),
                       D_800B5FC0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+        i = 0x80;
         offset += 0x40;
         tileOffset++;
     } while (offset != i);
+    i++;
+    i--;
 
     func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
                   D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
-#endif
 
 void func_8001DD80(CharacterSelectWidgetActor *arg0) {
     int state;
