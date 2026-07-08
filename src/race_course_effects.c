@@ -18,8 +18,12 @@ typedef struct {
 } RacePlayerEffect;
 
 typedef struct {
+    s32 words[0x10];
+} CourseRenderCommand;
+
+typedef struct {
     char pad0[0x18];
-    void *vertices;
+    CourseRenderCommand *vertices;
 } RaceCourseRenderEffect;
 
 typedef struct {
@@ -194,6 +198,8 @@ typedef struct {
     char pad0[0x14];
     s16 courseVtxHandle;
     s16 courseTextureHandle;
+    char pad18[0x2A];
+    s16 markerMatrixHandle;
 } CourseAssetHandles;
 
 extern void func_80071824(void *task, void (*callback)());
@@ -201,11 +207,14 @@ extern void func_800483FC(void *, void *, void *);
 extern void func_800716E4(void *);
 extern void func_80072138(s32, s32);
 extern void func_80072A74(s32, void *, s32, s32);
+extern void osWritebackDCache(void *, s32);
 extern void func_8006A80C(void *);
 extern void func_80069BEC(void *);
 extern void func_80069E50(void);
+extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern void *func_8004885C(CourseEffectMatrixSource *);
+extern void func_80048C90(CourseRenderCommand *, Vec3i *);
 extern s32 func_80049000(Vec3i *);
 extern void func_80045990(s32, s32, void *, void *);
 extern s32 func_8004597C(s32, s32);
@@ -270,7 +279,7 @@ extern CourseEffectPlayer D_80121D80[];
 extern CourseEffectPlayer D_8012238C[];
 extern CourseEffectPlayer D_80122998[];
 extern CourseEffectPlayer D_80122FA4[];
-extern u32 D_800DEE50[];
+extern CourseRenderCommand D_800DEE50[];
 extern s32 D_80124868;
 extern s32 D_80124878;
 extern s32 D_801248D4;
@@ -474,7 +483,41 @@ void func_8006ACE8(void *arg0) {
     func_800483FC(&D_801248D4, func_8006A894, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006AE00.s")
+void func_8006AE00(RaceCourseRenderEffect *arg0) {
+    CourseMarkerSpawnEntry *entry;
+    s32 count;
+    s32 allocSize;
+    s32 i;
+
+    entry = D_800DA0B8[D_80121B50];
+    count = 0;
+    if (entry->type != -1) {
+        do {
+            count++;
+            entry++;
+        } while (entry->type != -1);
+    }
+
+    if (count != 0) {
+        entry = D_800DA0B8[D_80121B50];
+        allocSize = count * sizeof(CourseRenderCommand);
+        D_80112130.markerMatrixHandle = func_80042D58(allocSize);
+        arg0->vertices = func_80043040(D_80112130.markerMatrixHandle);
+
+        i = 0;
+        if (count > 0) {
+            do {
+                arg0->vertices[i] = D_800DEE50[0];
+                func_80048C90(&arg0->vertices[i], &entry->pos);
+                i++;
+                entry++;
+            } while (i != count);
+        }
+        osWritebackDCache(arg0->vertices, allocSize);
+    }
+
+    func_80071824(arg0, func_8006ACE8);
+}
 
 void func_8006AF48(RaceCourseRenderEffect *arg0) {
     CourseRenderEntry *var_s4;
