@@ -86,7 +86,74 @@ void func_80083D80(RaceInputPlayer *player) {
     }
 }
 
+// func_8008409C best match: 66.719% (base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_input_history/func_8008409C.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    /* 0x0000 */ s8 bytes[0x1C20];
+} RaceReplayInputHistoryPlayer;
+
+#define PLAYER_INDEX(player) (*(volatile u16 *)&(player)->playerIndex)
+
+void func_8008409C(RaceInputPlayer *player) {
+    RaceReplayInputHistoryPlayer *history;
+    s16 replayFrame;
+    u8 buttons;
+    s32 replayOffset;
+
+    history = (RaceReplayInputHistoryPlayer *) func_80043040(D_80112186);
+    replayFrame = player->replayFrame;
+    if (replayFrame < 0x960) {
+        replayOffset = (replayFrame * 4) - replayFrame;
+        player->stickX = history[player->playerIndex].bytes[replayOffset + 1];
+        player->inputFlags = 0;
+        player->stickY = history[player->playerIndex].bytes[replayOffset + 2];
+        buttons = (u8) history[player->playerIndex].bytes[replayOffset];
+        if (buttons & 1) {
+            player->inputFlags = 8;
+            replayFrame = player->replayFrame;
+            buttons = (u8) history[PLAYER_INDEX(player)].bytes[(replayFrame * 4) - replayFrame];
+        }
+        if (buttons & 2) {
+            player->inputFlags |= 4;
+            replayFrame = player->replayFrame;
+            buttons = (u8) history[PLAYER_INDEX(player)].bytes[(replayFrame * 4) - replayFrame];
+        }
+        if (buttons & 8) {
+            player->inputFlags |= 1;
+            replayFrame = player->replayFrame;
+            buttons = (u8) history[PLAYER_INDEX(player)].bytes[(replayFrame * 4) - replayFrame];
+        }
+        if (buttons & 4) {
+            player->inputFlags |= 2;
+            replayFrame = player->replayFrame;
+            buttons = (u8) history[PLAYER_INDEX(player)].bytes[(replayFrame * 4) - replayFrame];
+        }
+        if (buttons & 0x10) {
+            player->inputFlags |= 0x8000;
+            replayFrame = player->replayFrame;
+            buttons = (u8) history[PLAYER_INDEX(player)].bytes[(replayFrame * 4) - replayFrame];
+        }
+        if (buttons & 0x20) {
+            player->inputFlags |= 0x4000;
+            replayFrame = player->replayFrame;
+            buttons = (u8) history[PLAYER_INDEX(player)].bytes[(replayFrame * 4) - replayFrame];
+        }
+        if (buttons & 0x40) {
+            player->inputFlags |= 0x2000;
+        }
+        player->replayFrame++;
+        return;
+    }
+
+    player->stickX = 0;
+    player->stickY = 0;
+    player->inputFlags = 0;
+}
+
+#undef PLAYER_INDEX
+#endif
 
 void func_8008431C(RaceInputPlayer *player) {
     RaceInputHistoryBuffer *history;
