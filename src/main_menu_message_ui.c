@@ -225,7 +225,90 @@ void func_8000E548(MainMenuMessageActor *arg0) {
     }
 }
 
+// func_8000E5A0 best match: 99.775%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_message_ui/func_8000E5A0.s")
+
+#ifdef NON_MATCHING
+void func_8000E5A0(MainMenuMessageActor *arg0) {
+    MainMenuMessageScript *scan;
+    MainMenuMessageScript *script;
+    MainMenuMessageScript *next;
+    s32 keepScanning;
+    u16 token;
+    u16 marker;
+
+    switch (arg0->scriptState) {
+    case 0:
+        keepScanning = 1;
+        if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+            scan = arg0->layout.script;
+            arg0->state.script.visibleGlyphCount = 0;
+            do {
+                token = *scan;
+                if (token < 0xFF00) {
+                    scan++;
+                    arg0->state.script.visibleGlyphCount++;
+                } else {
+                    if (token == 0xFFFD) {
+                        scan++;
+                    }
+                    if (token == 0xFFFE) {
+                        scan++;
+                        arg0->state.script.visibleGlyphCount++;
+                    }
+                    if (token == 0xFFFC) {
+                        scan += 2;
+                    }
+                    if (token == 0xFFFB) {
+                        keepScanning = 0;
+                    }
+                    if (token == 0xFFFF) {
+                        keepScanning = 0;
+                    }
+                }
+            } while (keepScanning);
+        }
+        break;
+    case 1:
+        arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
+        if ((0x8000 & D_80123778) || (D_80123778 & 0x1000)) {
+            func_80072138(1, 0x32, arg0);
+            arg0->confirmBlinkTimer = 0;
+            D_8010B1F0 = 1;
+            if (arg0->returnToSummary == 0) {
+                func_80071824(arg0, func_8000E548);
+            } else {
+                func_80071824(arg0, func_8000E844);
+            }
+        }
+        break;
+    case 2:
+        arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
+        if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+            func_80072138(1, 0x32, arg0);
+            script = arg0->layout.script;
+            if (*script != 0xFFFB) {
+                do {
+                    next = script + 1;
+                    arg0->layout.script = next;
+                    script = next;
+                    marker = (*script) & 0xFFFF;
+                    script++;
+                    script--;
+                } while (marker != 0xFFFB);
+            }
+            arg0->layout.script = script + 1;
+            arg0->scriptState = 0;
+            arg0->state.script.visibleGlyphCount = 1;
+            arg0->glyphTimer = 0;
+            arg0->confirmBlinkTimer = 0;
+        }
+        break;
+    }
+
+    func_800483FC(&D_80124868, (RenderCallback)func_8000DF9C, (s32)arg0);
+}
+#endif
 
 void func_8000E7CC(MainMenuMessageActor *arg0) {
     arg0->x = -0x80;
