@@ -281,10 +281,11 @@ typedef struct {
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
-    /* 0x12 */ u8 pad12[0x24 - 0x12];
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
+    /* 0x18 */ Vec3i pos;
     /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
     /* 0x44 */ RaceUiGfxCommandDest *matrix;
-    /* 0x48 */ u8 pad48[2];
+    /* 0x48 */ s16 scale;
     /* 0x4A */ u8 matrixDirty;
 } RaceUiRankTrailActor;
 
@@ -576,6 +577,7 @@ extern s16 D_800D6050[];
 extern Vec3i D_800D6030[];
 extern RaceUiRankTextRenderEntry *D_800D761C[];
 extern RaceUiGfxCommandScriptEntry *D_800D693C[];
+extern FixedTransform D_800DEE30;
 extern RaceUiGfxCommandDest D_800DEE50;
 extern Gfx D_800D6968[];
 extern Gfx D_800D9D00[];
@@ -625,6 +627,7 @@ extern void func_800625D8(RaceUiOrbitingSpriteActor *);
 extern void func_800623E8(void *);
 extern s32 func_8007D200(s32, s32, s32);
 extern s32 func_80080CC4(s32, s32, s32);
+extern void func_80088664(Vec3i *, s32, s32, s32, s32);
 extern void func_800716E4(void *);
 extern void *func_800716A4(void *, s32, s32);
 extern void func_80072A74(s32, void *, s32, s32);
@@ -723,7 +726,8 @@ extern void func_8005B9F8(void);
 extern void func_8005C14C(void);
 extern void func_8005A0E0(void *);
 extern void func_80061F38(void);
-extern void func_8005F828(void);
+extern void func_8005F828(RaceUiRankTrailActor *);
+extern void func_80060454(void *, void *, void *, s16);
 extern void func_8005FBA8(void *);
 extern void func_8005FED0(void *);
 extern void func_8005CF60(void);
@@ -1966,11 +1970,54 @@ void func_8005F6A4(RaceUiRankTrailActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005F828.s")
+void func_8005F828(RaceUiRankTrailActor *arg0) {
+    RacePlayerState *player;
+    s16 scale;
+    s32 i;
 
-void func_8005FB30(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x48) = 2;
-    func_80072A74(0xF, &D_80121D80[*(u16 *)((u8 *)arg0 + 0x10)].pos1C, 0x7F, 0x32);
+    arg0->copyBlock.transform = D_800DEE30;
+    player = &D_80121D80[arg0->playerIndex];
+    arg0->pos.a = player->pos28.a;
+    arg0->pos.b = player->pos28.b;
+    arg0->pos.c = player->pos28.c;
+
+    for (i = 0; i < 4; i++) {
+        if (i != arg0->playerIndex) {
+            func_80088664(&arg0->pos, 0xE0000, 0xB0000, 2, i);
+        }
+    }
+
+    scale = arg0->scale;
+    arg0->copyBlock.halfwords[0] = (arg0->copyBlock.halfwords[0] * scale) / 64;
+    arg0->copyBlock.halfwords[1] = (arg0->copyBlock.halfwords[1] * scale) / 64;
+    arg0->copyBlock.halfwords[2] = (arg0->copyBlock.halfwords[2] * scale) / 64;
+    arg0->copyBlock.halfwords[3] = (arg0->copyBlock.halfwords[3] * scale) / 64;
+    arg0->copyBlock.halfwords[4] = (arg0->copyBlock.halfwords[4] * scale) / 64;
+    arg0->copyBlock.halfwords[5] = (arg0->copyBlock.halfwords[5] * scale) / 64;
+    arg0->copyBlock.halfwords[6] = (arg0->copyBlock.halfwords[6] * scale) / 64;
+    arg0->copyBlock.halfwords[7] = (arg0->copyBlock.halfwords[7] * scale) / 64;
+    arg0->copyBlock.halfwords[8] = (arg0->copyBlock.halfwords[8] * scale) / 64;
+
+    if (scale != 0x10) {
+        arg0->scale = scale + 2;
+    }
+
+    if (D_8012207C[arg0->playerIndex].flags & 0x100000) {
+        func_800483FC(&D_801248EC, func_8005F6A4, (s32)arg0);
+        return;
+    }
+
+    for (i = 0; i < 8; i++) {
+        func_80060454((void *)arg0->pos.a, (void *)arg0->pos.b, (void *)arg0->pos.c, i);
+    }
+
+    func_80072A74(0x15, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
+    func_800716E4(arg0);
+}
+
+void func_8005FB30(RaceUiRankTrailActor *arg0) {
+    arg0->scale = 2;
+    func_80072A74(0xF, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
     func_80071824(arg0, func_8005F828);
 }
 
