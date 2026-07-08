@@ -34,6 +34,7 @@ extern s16 D_80112172;
 extern s16 D_8010AF62;
 extern ControllerPakDeleteFlow D_8010AF60;
 extern u16 D_8010AF64;
+extern u16 D_8010AF66;
 extern u8 D_8010AF60_state;
 extern void *D_80124868;
 extern void *D_8010ADE0;
@@ -80,7 +81,6 @@ extern void func_8002BB24(MainMenuScoreTask *);
 extern void func_8002BC9C(MainMenuScoreTask *);
 extern void func_8002BF54(MainMenuScoreTask *);
 extern void func_8002BDAC(MainMenuScoreTask *);
-extern void func_8002C18C(MainMenuScoreTask *);
 extern void func_8002C390(MainMenuScoreTask *);
 void func_8002B560(MainMenuScoreTask *arg0);
 void func_8002BC60(MainMenuScoreTask *arg0);
@@ -323,7 +323,48 @@ void func_8002BF9C(MainMenuScoreTask *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002C18C.s")
+void func_8002C18C(MainMenuScoreTask *arg0) {
+    s32 temp_a0;
+    s32 var_v1;
+
+    if (D_8010AF66 != arg0->state.w.selection) {
+        arg0->state.w.selection = D_8010AF66;
+    }
+    if ((D_800EC9D0 != 0) && (D_800EC9D0 != 3) && (D_800EC9D0 != 4)) {
+        if (D_800EC9D0 < 5) {
+            var_v1 = 1;
+        } else {
+            var_v1 = -1;
+        }
+        temp_a0 = var_v1 * 8;
+        arg0->state.w.slideOffset += temp_a0;
+        if (arg0->state.w.slideOffset == 0x20) {
+            D_800EC9D0 += 2;
+            arg0->state.b.alphaTimer = 0;
+            arg0->state.b.alpha = 0x100;
+        }
+        if (temp_a0 == 8) {
+            if (arg0->state.w.slideOffset < 0x18) {
+                arg0->y += 8;
+            }
+            arg0->unk1C.scale += 8;
+        } else {
+            if (arg0->state.w.slideOffset < 0x10) {
+                arg0->y -= 8;
+            }
+            arg0->unk1C.scale -= 8;
+        }
+    }
+    if ((D_800EC9D0 == 3) || (D_800EC9D0 == 4)) {
+        if ((s32)arg0->state.b.alphaTimer < 0x10) {
+            arg0->state.b.alpha -= 9;
+        } else {
+            arg0->state.b.alpha += 9;
+        }
+        arg0->state.b.alphaTimer = (arg0->state.b.alphaTimer + 1) & 0x1F;
+    }
+    func_800483FC(&D_80124868, func_8002BF9C, arg0);
+}
 
 void func_8002C318(MainMenuScoreTask *arg0) {
     arg0->x = -0x28;
