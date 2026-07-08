@@ -144,7 +144,7 @@ void func_80011D6C(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80011D74.s")
 
-// func_800128C8 best match: 97.826%
+// func_800128C8 best match: 99.130%
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_800128C8.s")
 
 #ifdef NON_MATCHING
@@ -154,9 +154,10 @@ void func_800128C8(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u
     u16 *ptr;
     s32 xPos;
     s32 yPos;
-    register s32 advance;
+    u16 next;
     u16 xStep;
     u16 scaleValue;
+    register s32 advance;
     u16 arg5Value;
 
     xPos = x;
@@ -167,7 +168,7 @@ void func_800128C8(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u
         xStep = 8;
     }
 
-    first = *script;
+    first = *script & 0xFFFF;
     if (first != 0xFFFF) {
         ptr = script;
         scaleValue = scale;
@@ -184,7 +185,8 @@ void func_800128C8(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u
                 }
                 xPos += advance;
             }
-            code = ptr[1];
+            next = ptr[1];
+            code = next;
             ptr++;
         } while (code != 0xFFFF);
     }
