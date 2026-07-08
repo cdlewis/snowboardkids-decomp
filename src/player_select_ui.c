@@ -53,12 +53,18 @@ typedef struct {
     s16 nextState;
 } PlayerSelectCursorState;
 
+typedef struct {
+    char pad0[0x42];
+    s16 textureHandle;
+} PlayerSelectAssetHandles;
+
 typedef u8 PlayerPortrait[0x8C];
 
 extern void func_80071824(void *task, void (*callback)());
 extern void *func_80071408(void *, s32, s32);
 extern void func_800716E4(void *);
 extern void func_800483FC(void *, void *, void *);
+extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
 extern void func_800191D0(PlayerSelectRowActor *);
 extern void func_80019800(PlayerSelectWidgetActor *);
 extern void func_800196CC(PlayerSelectWidgetActor *);
@@ -84,11 +90,13 @@ extern void func_8001B9F0(PlayerSelectWidgetActor *);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern s32 func_80043040(s16);
 extern int sprintf(char *, const char *, ...);
+extern u16 D_800B5B50[][21];
 extern PlayerPortrait D_800B5C24[];
 extern u8 D_800EC9C2;
 extern u8 D_80121D85;
 extern u8 D_80121D88;
 extern void *D_80124868;
+extern PlayerSelectAssetHandles D_80112130;
 extern PlayerSelectCursorState D_8010AE70;
 extern u8 D_8010AE70_state;
 extern s16 D_8010AE74;
@@ -465,7 +473,53 @@ void func_8001A8E0(PlayerSelectWidgetActor *arg0) {
     func_80071824(arg0, func_8001A704);
 }
 
+// func_8001A924 best match: 97.930%
 #pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_8001A924.s")
+
+#ifdef NON_MATCHING
+void func_8001A924(PlayerSelectWidgetActor *arg0) {
+    s32 i;
+    s32 tile;
+    s32 offset;
+
+    i = 0;
+    tile = 0;
+    do {
+        func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
+                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex][tile], 0,
+                      0x100, 0xA0, 0x49);
+        if (1) {
+        }
+        if (1) {
+        }
+        if (1) {
+        }
+        if (1) {
+        }
+        if (1) {
+        }
+        i++;
+        tile++;
+    } while (i < 0x10);
+
+    tile = 0;
+    offset = 0;
+    i = 0x80;
+    do {
+        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
+                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex][tile + 16], 0,
+                      0x100, 0xA0, 0x49);
+        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
+                      func_80043040(D_80112130.textureHandle), D_800B5B50[(u16)arg0->sprite.spriteIndex][tile + 18], 0,
+                      0x100, 0xA0, 0x49);
+        offset += 0x40;
+        tile++;
+    } while (offset != i);
+
+    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
+                  D_800B5B50[(u16)arg0->sprite.spriteIndex][20], 0, 0x100, 0xA0, 0x49);
+}
+#endif
 
 void func_8001AB98(PlayerSelectWidgetActor *arg0) {
     int state;
