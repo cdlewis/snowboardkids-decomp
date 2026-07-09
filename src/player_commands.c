@@ -377,20 +377,22 @@ s32 func_8009C43C(s32 arg0) {
     return arg0 + 0x5C;
 }
 
-// func_8009C444 best match: 97.048% (nonmatchings/func_8009C444-6688367443449623229/base_13.c)
+// func_8009C444 best match: 98.072% (nonmatchings/func_8009C444-2127290767680699791/base_9.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C444.s")
 
 #ifdef NON_MATCHING
 void func_8009C444(SchedulerState *arg0) {
-    OSMesg msg;
     OSMesgQueue *queue;
-    s32 pendingAudio;
     s32 started;
     s32 delayedStart;
+    s32 pendingAudio;
     short nextFrame;
+    OSMesg msg;
 
-    pendingAudio = (delayedStart = (started = 0));
+    started = 0;
+    delayedStart = 0;
+    pendingAudio = 0;
     msg = NULL;
     D_800DF15C = 0;
     queue = &arg0->retraceQueue;
@@ -403,9 +405,9 @@ loop:
             D_800DF150 = nextFrame;
             D_800DF150 = nextFrame;
             D_800DF150 = D_800DF150 & 0xFFF;
-            if ((started == 0) || (D_800DF15C < 0x16)) {
+            if ((started == 0) || (D_800DF15C < ((0, 0x16)))) {
                 func_8009C6DC(arg0);
-                pendingAudio = 0;
+                pendingAudio = pendingAudio * 0;
                 if (D_8015A624 != 0) {
                     pendingAudio = 1;
                 } else {
@@ -449,7 +451,7 @@ loop:
                 osWritebackDCacheAll();
                 D_8015A620 |= 1;
                 osSpTaskLoad(&arg0->curRSPTask->list);
-                osSpTaskStartGo(&arg0->curRSPTask->list);
+                osSpTaskStartGo(&(*arg0).curRSPTask->list);
             } else {
                 delayedStart = 1;
             }
