@@ -854,7 +854,34 @@ s32 func_8009D170(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)arg1;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009D1EC.s")
+s32 func_8009D1EC(PlayerCommandState *arg0, s32 arg1) {
+    s32 depth;
+    u8 *countPtr;
+    u8 count;
+    u8 nextCount;
+
+    depth = arg0->returnDepth - 1;
+    countPtr = &arg0->returnUnk109[depth];
+    count = *countPtr;
+    nextCount = count - 1;
+    if (count != 0xFF) {
+        *countPtr = nextCount;
+        if ((nextCount & 0xFF) == 0) {
+            arg0->returnDepth = depth;
+            depth = -1;
+        }
+    }
+    if (depth >= 0) {
+        arg1 = (s32)arg0->returnScripts[depth];
+        arg0->unk60 = arg0->returnUnk60[depth];
+        arg0->unk68 = arg0->returnUnk68[depth];
+        arg0->unkEF = arg0->returnUnk10E[depth];
+        arg0->unkF0 = arg0->returnUnk113[depth];
+        arg0->unkC8 = arg0->returnUnkC8[depth];
+        arg0->unkCA = arg0->returnUnkCA[depth];
+    }
+    return arg1;
+}
 
 s32 func_8009D27C(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unk119 = arg1[0];
