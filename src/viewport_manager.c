@@ -1,12 +1,12 @@
 #include "viewport_manager.h"
 
-// func_800704F0 best match: 47.671%
+// func_800704F0 best match: 50.342%
 
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_800704F0.s")
 
 #ifdef NON_MATCHING
 void func_800704F0(void) {
-    ViewportState *viewport = &D_801124B0[0];
+    volatile ViewportState *viewport = &D_801124B0[0];
 
     viewport->active = 0;
     viewport->screenBoundsValid = 0;
