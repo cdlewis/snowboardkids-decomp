@@ -569,7 +569,58 @@ void func_80031D3C(ControllerPakWindowActor *arg0) {
     }
 }
 
+// func_80031F40 best match: 84.757% (nonmatchings/func_80031F40-4839787584499344943/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_80031F40.s")
+
+#ifdef NON_MATCHING
+void func_80031F40(ControllerPakDeletePromptActor *arg0) {
+    u8 globalState;
+    u8 state;
+    u8 switchState;
+
+    globalState = D_8010AF96;
+    state = arg0->timer;
+    switchState = state;
+    if (state != globalState) {
+        state = globalState;
+        switchState = globalState;
+        arg0->timer = globalState;
+    }
+
+    switch (switchState) {
+    case 0:
+        arg0->scale = (s16)arg0->scale + 0x28;
+        if ((s16)arg0->scale >= 0x100) {
+            arg0->scale = 0x100;
+            arg0->timer = 1;
+        }
+        state = arg0->timer;
+        break;
+    case 1:
+        state = arg0->timer;
+        arg0->selectedOption = (arg0->selectedOption + 1) & 0xF;
+        break;
+    case 2:
+        arg0->scale = (s16)arg0->scale - 0x28;
+        if ((s16)arg0->scale <= 0) {
+            arg0->scale = 0;
+            arg0->timer = 3;
+        }
+        state = arg0->timer;
+        break;
+    case 3:
+        break;
+    }
+
+    D_8010AF96 = state;
+    if (arg0->timer == 3) {
+        func_800716E4((EffectTask *)arg0);
+        return;
+    }
+
+    func_800483FC(&D_80124868, func_80031D3C, (s32)arg0);
+}
+#endif
 
 void func_8003205C(ControllerPakDeletePromptActor *arg0) {
     arg0->common.x = -0x70;
