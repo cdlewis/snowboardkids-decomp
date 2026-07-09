@@ -236,11 +236,12 @@ void func_80039B38(MainMenuSceneActor3 *arg0) {
     }
 }
 
-// func_80039B84 best match: 94.785%
+// func_80039B84 best match: 99.453%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_3/func_80039B84.s")
 
 #ifdef NON_MATCHING
 void func_80039B84(MainMenuSceneActor3 *arg0) {
+    s32 new_var;
     s32 temp_t7;
     s32 var_a1;
     s32 temp_v0;
@@ -248,12 +249,13 @@ void func_80039B84(MainMenuSceneActor3 *arg0) {
     func_80042034(3);
     temp_t7 = arg0->x + -0x48000;
     arg0->x = temp_t7;
+    var_a1 = temp_t7;
     if ((temp_t7 < -0x400000) != 0) {
-        var_a1 = temp_t7;
         goto block_1;
     }
     var_a1 = temp_t7;
     arg0->z += -0x48000;
+    var_a1 = arg0->x;
     goto block_2;
 
 block_1:
@@ -273,8 +275,9 @@ block_2:
         D_8010B1A2 = 0x32;
         var_a1 = arg0->x;
     }
+    new_var = 0xB;
     func_8004209C(3, var_a1, temp_t7 = arg0->y, arg0->z);
-    func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
+    func_8004298C(3, arg0->textureId, arg0->paletteId, new_var);
 }
 #endif
 
