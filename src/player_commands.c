@@ -1357,7 +1357,62 @@ void func_8009EF44(PlayerCommandState *arg0) {
     }
 }
 
+// func_8009EFF4 best match: 98.137%
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009EFF4.s")
+
+#ifdef NON_MATCHING
+void func_8009EFF4(PlayerCommandState *arg0) {
+    u16 temp_c8;
+    s32 one = 1;
+    register u8 *temp_v1;
+    register u8 temp_v0;
+    register u8 *temp_t1;
+    short temp_s16;
+    register u8 temp_v0_2;
+    register u8 *temp_t3;
+    register u16 temp_t6;
+    register u16 temp_t9;
+    register u16 temp_t0;
+
+    if ((u32)arg0->unk4 < (u32)arg0->unk0) {
+        do {
+            temp_t9 = (temp_c8 = arg0->unkC8) - one;
+            arg0->unk4 = arg0->unk4 + 0x100;
+            arg0->unkC8 = temp_t9;
+            temp_t0 = (temp_t9 ^ (temp_v0 = 0)) & 0xFFFF;
+            if (temp_t0 == 0) {
+                temp_v1 = (u8 *)arg0->unk60;
+                temp_v0 = *temp_v1;
+                temp_t1 = temp_v1 + one;
+                arg0->unk60 = (s32)temp_t1;
+                if ((s32)temp_v0 >= 0x80) {
+                    temp_t6 = temp_v0 & 0x7F;
+                    arg0->unkEF = temp_t6;
+                    temp_v0_2 = *temp_t1;
+                    do {
+                        ;
+                        temp_t3 = temp_t1 + one;
+                        arg0->unk60 = (s32)temp_t3;
+                    } while (0);
+                    temp_t0 = one;
+                    if ((s32)temp_v0_2 >= 0x80) {
+                        temp_s16 = (temp_v0_2 & 0x7F) << 8;
+                        temp_t6 = temp_s16;
+                        arg0->unkC8 = temp_t6;
+                        arg0->unkC8 = temp_t6 + *temp_t3 + 2;
+                        arg0->unk60 = (s32)(temp_t3 + temp_t0);
+                    } else {
+                        arg0->unkC8 = temp_v0_2 + 2;
+                    }
+                } else {
+                    arg0->unkEF = temp_v0;
+                    arg0->unkC8 = one;
+                }
+            }
+        } while ((u32)arg0->unk4 < (u32)arg0->unk0);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F0C4.s")
 
