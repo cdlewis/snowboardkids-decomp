@@ -63,6 +63,12 @@ typedef struct {
     /* 0x02 */ s16 y;
 } ShopMenuSparkleOffset;
 
+typedef struct {
+    /* 0x00 */ s16 x;
+    /* 0x02 */ s16 y;
+    /* 0x04 */ s16 tileBase;
+} ShopMenuCursorIconInit;
+
 typedef ShopMenuSparkleOffset ShopMenuSparklePattern[13];
 
 typedef struct {
@@ -214,6 +220,7 @@ extern s32 D_800B34B0[];
 extern u16 D_800B34E0[];
 extern u16 D_800B34EC[];
 extern ShopMenuFrameTileMap D_800B79C0[];
+extern ShopMenuCursorIconInit D_800B7E20[];
 extern ShopMenuSparkleOffset D_800B7E40[];
 extern ShopMenuSparkleOffset D_800B7E58[];
 extern ShopMenuSparkleOffset D_800B7E70[];
@@ -223,6 +230,7 @@ extern u8 D_800B7CD0;
 extern u16 D_800B7D00[];
 extern u8 D_80121D86;
 extern u8 D_80121D88;
+extern u8 D_80121D85;
 extern s16 D_8011217E;
 extern s16 D_8011214A;
 extern CourseSelectStatus D_8010AF18;
@@ -1074,7 +1082,26 @@ void func_8002E6E4(ShopMenuWidgetActor *arg0) {
     func_800483FC(&D_80124868, func_8002E5A4, arg0);
 }
 
+// func_8002E798 best match: 95.172% (nonmatchings/func_8002E798-786318006044585456/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002E798.s")
+
+#ifdef NON_MATCHING
+void func_8002E798(ShopMenuWidgetActor *arg0) {
+    s32 index;
+    ShopMenuCursorIconInit *entry;
+
+    index = D_80121D85;
+    entry = &D_800B7E20[index & 0xFFFF];
+    arg0->sparkle.patternIndex = index;
+    arg0->sprite.index = entry->x;
+    arg0->x = 0x94;
+    arg0->y = entry->y;
+    arg0->sparkle.tileBase = entry->tileBase;
+    arg0->sparkle.alpha = 0x100;
+    arg0->slide.slideState = 0;
+    func_80071824(arg0, func_8002E6E4);
+}
+#endif
 
 void func_8002E810(ShopMenuWidgetActor *arg0) {
     s16 new_var;
