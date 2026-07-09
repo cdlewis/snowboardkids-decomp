@@ -774,7 +774,7 @@ void func_80015C84(void *arg0) {
     func_80071824(arg0, func_80015BD8);
 }
 
-// func_80015CBC best match: 97.122% (nonmatchings/func_80015CBC-1315772375853892447/base_14.c)
+// func_80015CBC best match: 97.244% (nonmatchings/func_80015CBC-6276316234415602851/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80015CBC.s")
 
 #ifdef NON_MATCHING
@@ -797,7 +797,8 @@ void func_80015CBC(TitleMenuWidgetItemView *arg0) {
             alpha = 0x50;
         }
 
-        func_8000F8AC(item->x, item->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, alpha, (i + 1) & 0xFF);
+        func_8000F8AC(item->x, item->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xA, 0x20, 0x20,
+                      (i * RACE_PLAYER_STATE_SIZE) * 0, alpha, (i + 1) & 0xFF);
         next = i + 1;
         func_8000F8AC((s16)(item->x + 0x40), item->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, alpha, next & 0xFF);
         func_8000F8AC((s16)(item->x + 0x80), item->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xC, 0x20, 0x20, 0, alpha, next & 0xFF);
