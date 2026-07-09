@@ -675,7 +675,7 @@ void func_800550E0(MainMenuOverlayEffectActor *arg0) {
     func_800483FC(D_80124878, func_80055074, arg0);
 }
 
-// func_80055148 best match: 98.582%
+// func_80055148 best match: 99.220%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80055148.s")
 
 #ifdef NON_MATCHING
@@ -696,9 +696,7 @@ void func_80055148(MainMenuOverlayEffectActor *arg0) {
     temp_v0_2->words.w0 = 0xFC119623;
     temp_v0_2->words.w1 = 0xFF2FFFFF;
     temp_v0_3 = gRegionAllocPtr;
-    gRegionAllocPtr = temp_v0_3 + 1;
-    temp_v0_3->words.w0 = 0xB900031D;
-    temp_v0_3->words.w1 = 0x00504240;
+    gRegionAllocPtr = temp_v0_3 + 1; temp_v0_3->words.w0 = 0xB900031D; temp_v0_3->words.w1 = 0x00504240;
     temp_v0_4 = gRegionAllocPtr;
     gRegionAllocPtr = temp_v0_4 + 1;
     temp_v0_4->words.w0 = 0xFA000000;
@@ -717,11 +715,7 @@ void func_80055148(MainMenuOverlayEffectActor *arg0) {
         func_80045A78(-0x7E, 0x38, func_80043040(D_80112174), 1);
         func_80046D68(-2, 0x38, func_80043040(D_80112174), 4, D_800D581C[D_801235B0 & 3]);
         break;
-    }
-    temp_v0_5 = gRegionAllocPtr;
-    gRegionAllocPtr = temp_v0_5 + 1;
-    temp_v0_5->words.w0 = 0x06000000;
-    temp_v0_5->words.w1 = (u32) D_800DEFF8;
+    } temp_v0_5 = gRegionAllocPtr; gRegionAllocPtr = temp_v0_5 + 1; temp_v0_5->words.w0 = 0x06000000; temp_v0_5->words.w1 = (u32) D_800DEFF8;
 }
 #endif
 
