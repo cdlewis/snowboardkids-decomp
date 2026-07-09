@@ -90,7 +90,8 @@ typedef struct {
     /* 0x2A0 */ s16 unk2A0;
     /* 0x2A2 */ s16 unk2A2;
     /* 0x2A4 */ s16 unk2A4;
-    /* 0x2A6 */ char pad2A6[0x1A];
+    /* 0x2A6 */ s16 unk2A6;
+    /* 0x2A8 */ char pad2A8[0x18];
     /* 0x2C0 */ s16 unk2C0;
     /* 0x2C2 */ char pad2C2[1];
     /* 0x2C3 */ s8 unk2C3;
@@ -135,7 +136,9 @@ typedef struct {
     /* 0x513 */ char pad513[1];
     /* 0x514 */ s8 itemEffectCount;
     /* 0x515 */ s8 actionEffectType;
-    /* 0x516 */ char pad516[4];
+    /* 0x516 */ char pad516[1];
+    /* 0x517 */ s8 unk517;
+    /* 0x518 */ char pad518[2];
     /* 0x51A */ u8 actionEffectEnabled;
     /* 0x51B */ char pad51B[0x11];
     /* 0x52C */ s8 actionTriggerCooldown;
