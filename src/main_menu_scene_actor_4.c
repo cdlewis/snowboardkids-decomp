@@ -1,5 +1,6 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
+#include "fixed_point_matrix.h"
 #include "main_menu_effects.h"
 
 typedef struct {
@@ -21,7 +22,28 @@ typedef struct {
     /* 0x0D */ s8 actorId;
 } MainMenuSceneActorShadow;
 
+typedef struct {
+    /* 0x00 */ FixedMatrix3s rotation;
+    /* 0x12 */ s16 pad12;
+    /* 0x14 */ s32 x;
+    /* 0x18 */ s32 y;
+    /* 0x1C */ s32 z;
+} GfxCommandSource;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x14];
+    /* 0x14 */ s32 screenX;
+    /* 0x18 */ s32 screenY;
+    /* 0x1C */ s32 screenZ;
+} MainMenuShadowDisplayObject;
+
+typedef struct {
+    /* 0x000 */ u8 pad0[0x148];
+    /* 0x148 */ MainMenuShadowDisplayObject displayObjects[1];
+} MainMenuShadowModel;
+
 extern void func_800373AC(MainMenuSceneActorShadow *arg0);
+extern MainMenuShadowModel *func_80041E60(s32 arg0);
 extern void func_80041DD4(s32 arg0, s32 arg1);
 extern void func_80041D20(s32 arg0, s32 arg1);
 extern s32 func_80041FB4(s32 arg0);
@@ -29,12 +51,20 @@ extern void func_80042034(s32 arg0);
 extern void func_8004209C(s32, s32, s32, s32);
 extern void func_800420FC(s32, s16, s16, s16);
 extern void func_800428C8(s32 arg0);
+extern s32 func_80043040(s16 arg0);
+extern void func_80045990(s32 arg0, s32 arg1, void **arg2, void **arg3);
+extern Mtx *func_8004885C(GfxCommandSource *arg0);
 extern MainMenuSceneActorShadow D_8010B1C0;
 extern u16 D_8010B1A2;
 extern s8 D_8010B1AC;
 extern void func_800483FC(void *, void *, void *);
 extern s32 D_80124898;
-extern void func_80037070(void);
+extern Gfx *gRegionAllocPtr;
+extern GfxCommandSource D_800DEE30;
+extern u32 D_800D6270[];
+extern Vtx D_800B8100[];
+extern s16 D_80112172;
+extern void func_80037070(MainMenuSceneActorShadow *arg0);
 extern s32 D_8010B1C4;
 
 void func_800363B4(MainMenuSceneActor4 *arg0);
@@ -408,7 +438,114 @@ void func_80036FB4(MainMenuSceneActor4 *arg0) {
     func_80071824(arg0, func_80036F6C);
 }
 
+// func_80037070 best match: 74.234% at nonmatchings/func_80037070-4061930211835852828/base_4.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_4/func_80037070.s")
+
+#ifdef NON_MATCHING
+void func_80037070(MainMenuSceneActorShadow *arg0) {
+    void *spB0;
+    s32 spAC;
+    s32 spA8;
+    GfxCommandSource sp94;
+    Vec3i sp84;
+    Vec3i sp78;
+    void *sp74;
+    void *sp70;
+    MainMenuShadowModel *sp6C;
+    MainMenuShadowModel *model;
+    Gfx *gfx;
+    volatile u8 pad[0x38];
+
+    model = func_80041E60(arg0->actorId);
+    sp84.x = arg0->posX;
+    sp84.y = arg0->posY;
+    sp84.z = arg0->posZ;
+    func_80098590(model->displayObjects[arg0->unkC].pad0, &sp84, &sp78);
+    sp6C = model;
+    sp94 = D_800DEE30;
+    spA8 = sp6C->displayObjects[arg0->unkC].screenX + sp78.x;
+    spAC = sp6C->displayObjects[arg0->unkC].screenY + sp78.y;
+    spB0 = (void *)sp6C->displayObjects[arg0->unkC].screenZ;
+
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w0 = 0x06000000;
+    gfx->words.w1 = (u32)D_800D6270;
+
+    func_80045990(func_80043040(D_80112172), 0x31, &sp74, &sp70);
+
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w0 = 0xFD100000;
+    gfx->words.w1 = (u32)sp70;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w1 = 0;
+    gfx->words.w0 = 0xE8000000;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w1 = 0x07000000;
+    gfx->words.w0 = 0xF5000100;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w1 = 0;
+    gfx->words.w0 = 0xE6000000;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w0 = 0xF0000000;
+    gfx->words.w1 = 0x0703C000;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w1 = 0;
+    gfx->words.w0 = 0xE7000000;
+
+    sp94.x = spA8;
+    sp94.y = spAC;
+    sp94.z = (s32)spB0;
+
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w0 = 0x01020040;
+    gfx->words.w1 = (u32)func_8004885C(&sp94);
+
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w0 = 0xFD500000;
+    gfx->words.w1 = (u32)sp74;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w0 = 0xF5500000;
+    gfx->words.w1 = 0x07080200;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w1 = 0;
+    gfx->words.w0 = 0xE6000000;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w0 = 0xF3000000;
+    gfx->words.w1 = 0x0703F800;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w1 = 0;
+    gfx->words.w0 = 0xE7000000;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w1 = 0x80200;
+    gfx->words.w0 = 0xF5400200;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w0 = 0xF2000000;
+    gfx->words.w1 = 0x3C03C;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w1 = (u32)D_800B8100;
+    gfx->words.w0 = 0x0400103F;
+    gfx = gRegionAllocPtr;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w1 = 0x60200;
+    gfx->words.w0 = 0xB1060402;
+}
+#endif
 
 void func_800373AC(MainMenuSceneActorShadow *arg0) {
     func_800483FC(&D_80124898, func_80037070, arg0);
