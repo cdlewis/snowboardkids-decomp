@@ -56,11 +56,7 @@ extern u8 D_80121D80[];
 extern u8 D_80121D88;
 extern u8 D_80121B55;
 extern u8 D_80121B5E;
-#ifndef NON_MATCHING
 extern s16 D_80121B50;
-#else
-extern volatile s16 D_80121B50;
-#endif
 extern CharacterSelectOptionList *D_8010AE90;
 extern s32 D_8010ADDC;
 extern s32 D_8010ADE0;
@@ -76,7 +72,6 @@ extern volatile u16 D_8010ADF0;
 extern u16 D_8010AE80;
 extern CharacterSelectCursorState D_8010AE88;
 extern u8 D_8010AE89;
-extern u16 D_8010AE8C;
 extern u8 D_8010ADF8;
 extern u8 D_8010ADF9;
 extern u8 D_800EC9C1;
@@ -201,7 +196,7 @@ loop_24:
 }
 #endif
 
-// func_800066CC best match: 72.358% (nonmatchings/func_800066CC-6688367443449623229/base_4.c)
+// func_800066CC best match: 72.688% (nonmatchings/func_800066CC-2785870559185086986/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_flow/func_800066CC.s")
 
 #ifdef NON_MATCHING
@@ -287,10 +282,10 @@ void func_800066CC(void) {
                         if ((*D_8010AE90)[D_80121B50] != -1) {
                             D_800EC9C1 = 1;
                             D_8010AE88.fields.state = 2;
-                            D_8010AE8C = 0x100;
+                            D_8010AE88.fields.spriteIndex = 0x100;
                         } else {
                             D_8010AE88.fields.state = 2;
-                            D_8010AE8C = 0x100;
+                            D_8010AE88.fields.spriteIndex = 0x100;
                             D_80121D88 = 7;
                             func_8009956C(&func_80006D70, 0);
                             func_80072114(8);
@@ -298,7 +293,7 @@ void func_800066CC(void) {
                     } else if ((temp_input & 0x4000) && (D_801235B4 == (D_8010AE80 + 1))) {
                         func_80072138(1, 0x32);
                         D_8010AE88.fields.state = 2;
-                        D_8010AE8C = 0x100;
+                        D_8010AE88.fields.spriteIndex = 0x100;
                         D_80121D88 = 7;
                         func_8009956C(&func_80006D70, 0);
                         func_80072114(8);
