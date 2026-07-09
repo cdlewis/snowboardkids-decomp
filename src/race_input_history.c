@@ -87,7 +87,7 @@ void func_80083D80(RaceInputPlayer *player) {
     }
 }
 
-// func_8008409C best match: 86.789% (base_5.c)
+// func_8008409C best match: 90.346% (base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_input_history/func_8008409C.s")
 
 #ifdef NON_MATCHING
@@ -149,8 +149,9 @@ void func_8008409C(RaceInputPlayer *player) {
         }
         if (buttons & 0x40) {
             player->inputFlags |= 0x2000;
+            replayFrame = player->replayFrame;
         }
-        player->replayFrame++;
+        player->replayFrame = replayFrame + 1;
         return;
     }
 
