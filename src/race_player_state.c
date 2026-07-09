@@ -879,14 +879,15 @@ void func_80090998(RaceInputPlayer *player) {
     }
 }
 
-// func_80090B30 best match: 98.990% (nonmatchings/func_80090B30-3426750233777855594/base_11.c)
+// func_80090B30 best match: 99.760% (nonmatchings/func_80090B30-3426750233777855594/base_17.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090B30.s")
 
 #ifdef NON_MATCHING
 void func_80090B30(RaceInputPlayer *player) {
     s32 yVel;
-    s32 timer;
+    RaceInputPlayer *player2;
+    s32 stateTimer;
     u32 stateFlags;
 
     if (player->updateState == 0) {
@@ -899,35 +900,37 @@ void func_80090B30(RaceInputPlayer *player) {
     }
 
     func_80082EC0(player);
+    player2 = player;
     func_8008B408(player, player->unk254, 0);
     player->velocity.y -= player->unk264;
-    func_8008B508(&player->velocity, player);
+    func_8008B508(&player2->velocity, player2);
 
-    yVel = player->velocity.y;
+    yVel = player2->velocity.y;
     player->posX += player->velocity.x;
     player->posY += yVel;
-    player->posZ += player->velocity.z;
-    timer = player->stateTimer;
-    player->unk6C = timer * 4;
-    player->unk74 = yVel;
+    player2->posZ += player->velocity.z;
+    stateTimer = player2->stateTimer;
+    player->unk6C = stateTimer * 4;
+    player2->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8((s16) timer) * -0x4000) / 0x1000;
+        player2->unk6E = (func_80097AE8((s16) stateTimer) * -0x4000) / 0x1000;
     } else {
-        player->unk6E = (func_80097AE8((s16) timer) << 14) / 0x1000;
+        player2->unk6E = (func_80097AE8((s16) stateTimer) << 14) / 0x1000;
     }
 
-    player->stateTimer += 0x15;
-    if (player->stateTimer >= 0x401) {
-        player->stateTimer = 0x400;
+    stateTimer = (unsigned long long) (player2->stateTimer + 0x15);
+    player2->stateTimer = stateTimer;
+    if (stateTimer >= 0x401) {
+        player->stateTimer = (stateTimer = 0x400);
+        stateTimer = player2->stateTimer;
     }
 
-    timer = player->stateTimer;
     stateFlags = player->stateFlags | 2;
-    player->stateFlags = stateFlags;
-    if (timer < 0x3D0) {
-        player->stateFlags = stateFlags | 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+    player2->stateFlags = stateFlags;
+    if (stateTimer < 0x3D0) {
+        player2->stateFlags = stateFlags | 0x800;
+        if ((player2->soundDisabled == 0) && (D_801235B0 & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
