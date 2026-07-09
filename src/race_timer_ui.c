@@ -72,6 +72,7 @@ extern void func_800483FC(void *, void *, s32);
 extern void func_8007A3D8(void);
 extern void func_80087600(s32, s32 *, s32 *);
 extern int sprintf(char *, const char *, ...);
+extern u8 D_800DC8F9;
 extern RaceTimerCourseSpawnEntry D_800B9540[];
 extern u8 D_800DC8F0[];
 extern u8 D_800DC8F8[];
@@ -92,6 +93,7 @@ extern RaceTimer D_80121B74;
 extern s8 D_80121B75;
 extern s16 D_80121B76;
 extern RaceTimer D_80121B78;
+extern u8 D_80121B81;
 extern s8 D_80122288[];
 extern RaceTimerUiPlayer D_80121D80[];
 extern RaceTimerUiS8Stride D_80122289[];
@@ -99,6 +101,7 @@ extern RaceTimerUiS8Stride D_80122293[];
 extern RaceTimerUiS8Stride D_80122295[];
 extern RaceTimerUiS8Stride D_80122296[];
 extern RaceTimerUiS32Stride D_801222E8[];
+extern s16 D_801222F0;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80078430.s")
 
@@ -125,7 +128,71 @@ void func_80078D3C(s32 arg0) {
     func_80048278(0x70, -0x48, sp18, 6);
 }
 
+// func_80078D9C best match: 94.006% at nonmatchings/func_80078D9C-6688367443449623229/base_2.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80078D9C.s")
+
+#ifdef NON_MATCHING
+const char D_800E1770[] = "%2.2d";
+const char D_800E1778[] = "%2.2d";
+const char D_800E1780[] = "%2.2d";
+const char D_800E1788[] = "%d";
+
+void func_80078D9C(s32 arg0) {
+    char buffer[0xC];
+    s32 x;
+    char *digit;
+    char *end;
+    s32 endValue;
+
+    sprintf(buffer, D_800E1770, D_80121B74.minutes);
+    x = 0x48;
+    end = &buffer[2];
+    digit = buffer;
+    do {
+        func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        digit++;
+        x += 8;
+    } while ((u32)digit < (u32)end);
+
+    x += 8;
+    sprintf(buffer, D_800E1778, D_80121B75);
+    digit = buffer;
+    end = &buffer[2];
+    endValue = (u32)end;
+    do {
+        func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        digit++;
+        x += 8;
+    } while ((u32)digit < endValue);
+
+    x += 8;
+    sprintf(end = buffer, D_800E1780, D_80121B76 >> 8);
+    digit = end;
+    end = &buffer[2];
+    do {
+        func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        digit++;
+        x += 8;
+    } while (digit != end);
+
+    func_80045A78(0x58, 0x50, func_80043040(D_80112130.popupFontHandle), 0x36);
+    func_80045A78(0x70, 0x50, func_80043040(D_80112130.popupFontHandle), 0x35);
+
+    if (D_80121B81 != 0) {
+        func_80045A78(0x48, 0x54, func_80043040(D_80112130.popupFontHandle), 0x4F);
+    }
+
+    func_80045A78(-0x88, -0x60, func_80043040(D_80112130.popupFontHandle), D_800DC8F9);
+    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x24);
+    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x25);
+
+    sprintf(buffer, D_800E1788, D_801222F0);
+    func_80045A78(-0x60, -0x50, func_80043040(D_80112130.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
+    if (buffer[1] != 0) {
+        func_80045A78(-0x58, -0x50, func_80043040(D_80112130.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
+    }
+}
+#endif
 
 const char D_800E178C[] = "Lap Time";
 const char D_800E1798[] = "Target Time";
