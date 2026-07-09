@@ -47,7 +47,9 @@ typedef struct {
     /* 0x058 */ s32 unk58;
     /* 0x05C */ char pad5C[8];
     /* 0x064 */ s32 unk64;
-    /* 0x068 */ char pad68[0xC];
+    /* 0x068 */ char pad68[4];
+    /* 0x06C */ s16 unk6C;
+    /* 0x06E */ char pad6E[6];
     /* 0x074 */ s32 unk74;
     /* 0x078 */ char pad78[4];
     /* 0x07C */ s32 stateTimer;
