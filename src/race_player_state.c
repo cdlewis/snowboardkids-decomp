@@ -236,7 +236,37 @@ void func_80090898(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092468.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092674.s")
+void func_80092674(RaceInputPlayer *player) {
+    s16 updateState;
+    s32 yVel;
+
+    updateState = player->updateState;
+    if (updateState == 0) {
+        player->updateState = updateState + 1;
+        func_80081E40(player, 0x28);
+        player->stateTimer = 0;
+        player->stateFlags |= 0x200;
+        func_8008F1B4(player);
+        player->updateTimer = 0;
+    }
+
+    func_8008B408(player, player->unk254, 0);
+    player->unk40.y -= player->unk264;
+    func_8008B508(&player->unk40, player);
+
+    yVel = player->unk40.y;
+    player->posX += player->unk40.x;
+    player->posY += yVel;
+    player->posZ += player->unk40.z;
+    player->unk74 = yVel;
+
+    if (func_80082EC0(player) == 0) {
+        player->stateFlags |= 0x800;
+        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092774.s")
 
