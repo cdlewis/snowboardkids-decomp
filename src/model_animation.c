@@ -208,7 +208,7 @@ void func_8007FD88(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007FF88.s")
 
-// func_80080CC4 best match: 71.346% (base_1.c)
+// func_80080CC4 best match: 72.239% (base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80080CC4.s")
 
 #ifdef NON_MATCHING
@@ -220,6 +220,7 @@ s32 func_80080CC4(s32 arg0, s32 arg1, s32 arg2) {
     ModelAnimCoord *coord0;
     ModelAnimCoord *coord1;
     ModelAnimCoord *coord2;
+    ModelAnimCoord *coords;
     s64 lhs;
     s64 rhs;
     s16 x20;
@@ -241,13 +242,15 @@ s32 func_80080CC4(s32 arg0, s32 arg1, s32 arg2) {
         do {
             face = (ModelAnimFace *)((s32)D_80121B94 + faceOffset);
             if (face->unk7 == 0) {
-                coord0 = &D_80121B90[face->coord0];
-                lhs = (s64)((D_80121B90[face->coord1].x << 0x11) - (coord0->x << 0x11)) *
+                coords = D_80121B90;
+                coord0 = (ModelAnimCoord *)((s32)coords + face->coord0 * sizeof(ModelAnimCoord));
+                lhs = (s64)((coords[face->coord1].x << 0x11) - (coord0->x << 0x11)) *
                     (arg2 - (coord0->z << 0x11));
 
                 face = (ModelAnimFace *)((s32)D_80121B94 + faceOffset);
-                coord0 = &D_80121B90[face->coord0];
-                rhs = (s64)((D_80121B90[face->coord1].z << 0x11) - (coord0->z << 0x11)) *
+                coords = D_80121B90;
+                coord0 = (ModelAnimCoord *)((s32)coords + face->coord0 * sizeof(ModelAnimCoord));
+                rhs = (s64)((coords[face->coord1].z << 0x11) - (coord0->z << 0x11)) *
                     (arg1 - (coord0->x << 0x11));
 
                 if (lhs - rhs < 0) {
@@ -257,20 +260,23 @@ s32 func_80080CC4(s32 arg0, s32 arg1, s32 arg2) {
                 face = (ModelAnimFace *)((s32)D_80121B94 + faceOffset);
             }
 
-            coord1 = &D_80121B90[face->coord1];
-            lhs = (s64)((D_80121B90[face->coord2].x << 0x11) - (coord1->x << 0x11)) *
+            coords = D_80121B90;
+            coord1 = (ModelAnimCoord *)((s32)coords + face->coord1 * sizeof(ModelAnimCoord));
+            lhs = (s64)((coords[face->coord2].x << 0x11) - (coord1->x << 0x11)) *
                 (arg2 - (coord1->z << 0x11));
 
             face = (ModelAnimFace *)((s32)D_80121B94 + faceOffset);
-            coord1 = &D_80121B90[face->coord1];
-            rhs = (s64)((D_80121B90[face->coord2].z << 0x11) - (coord1->z << 0x11)) *
+            coords = D_80121B90;
+            coord1 = (ModelAnimCoord *)((s32)coords + face->coord1 * sizeof(ModelAnimCoord));
+            rhs = (s64)((coords[face->coord2].z << 0x11) - (coord1->z << 0x11)) *
                 (arg1 - (coord1->x << 0x11));
 
             if (lhs - rhs >= 0) {
                 face = (ModelAnimFace *)((s32)D_80121B94 + faceOffset);
-                coord0 = &D_80121B90[face->coord0];
-                coord1 = &D_80121B90[face->coord1];
-                coord2 = &D_80121B90[face->coord2];
+                coords = D_80121B90;
+                coord2 = (ModelAnimCoord *)((s32)coords + face->coord2 * sizeof(ModelAnimCoord));
+                coord0 = (ModelAnimCoord *)((s32)coords + face->coord0 * sizeof(ModelAnimCoord));
+                coord1 = (ModelAnimCoord *)((s32)coords + face->coord1 * sizeof(ModelAnimCoord));
 
                 x20 = coord2->x - coord0->x;
                 z20 = coord2->z - coord0->z;
