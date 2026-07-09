@@ -608,11 +608,12 @@ void func_800681A4(RaceOverlayModelActor *arg0) {
     }
 }
 
-// func_800684E4 best match: 99.468% (base_10.c)
+// func_800684E4 best match: 99.579% (base_22.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800684E4.s")
 
 #ifdef NON_MATCHING
 void func_800684E4(RaceOverlayModelActor *arg0) {
+    Gfx *temp_v0;
     GfxCommandSource spF4;
     Gfx *temp_t1;
     Gfx *temp_v0_18;
@@ -642,7 +643,7 @@ void func_800684E4(RaceOverlayModelActor *arg0) {
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette0);
                 gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-                gSPVertex(gRegionAllocPtr++, D_800D92D8, 4, 0);
+                gDma1p(gRegionAllocPtr++, G_VTX, D_800D92D8, 0x103F, 0);
                 temp_v0_18 = gRegionAllocPtr++;
                 temp_v0_18->words.w1 = 0x60200;
                 temp_v0_18->words.w0 = 0xB1060402;
@@ -651,7 +652,7 @@ void func_800684E4(RaceOverlayModelActor *arg0) {
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette1);
                 gSPMatrix(gRegionAllocPtr++, arg0->rotationDisplayList,
                           G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-                gSPVertex(gRegionAllocPtr++, D_800D9358, 20, 0);
+                gDma1p(gRegionAllocPtr++, G_VTX, D_800D9358, 0x513F, 0);
                 temp_t1 = gRegionAllocPtr++;
                 temp_t1->words.w0 = 0xB1060402;
                 temp_t1->words.w1 = 0x60200;
