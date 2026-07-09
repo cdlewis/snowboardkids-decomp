@@ -75,9 +75,13 @@ typedef struct {
     /* 0x091 */ s8 stickY;
     /* 0x092 */ char pad92[0x1C2];
     /* 0x254 */ s32 unk254;
-    /* 0x258 */ char pad258[0xC];
+    /* 0x258 */ char pad258[8];
+    /* 0x260 */ s32 unk260;
     /* 0x264 */ s32 unk264;
-    /* 0x268 */ char pad268[0x18];
+    /* 0x268 */ char pad268[0xC];
+    /* 0x274 */ s32 unk274;
+    /* 0x278 */ s32 unk278;
+    /* 0x27C */ s32 unk27C;
     /* 0x280 */ s32 unk280;
     /* 0x284 */ s32 unk284;
     /* 0x288 */ char pad288[8];
