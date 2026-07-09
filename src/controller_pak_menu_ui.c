@@ -34,6 +34,8 @@ extern s16 D_80112130[];
 extern u8 D_8010ADD2;
 extern u8 D_8010AF92;
 extern u8 D_8010AF93;
+extern s32 D_8010B198;
+extern s32 D_8010B19C;
 extern s16 D_80112172;
 extern s16 D_8011217C;
 extern s16 D_80112178;
@@ -469,7 +471,53 @@ void func_80031330(ControllerPakTitleActor *arg0) {
     func_80071824(arg0, func_80031294);
 }
 
+// func_80031370 best match: 85.330% (nonmatchings/func_80031370-6182772958467082306/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_80031370.s")
+
+#ifdef NON_MATCHING
+void func_80031370(ControllerPakTwoPointActor *arg0) {
+    char before[4];
+    u16 text[4];
+    char after[8];
+    s32 value;
+    u16 *digit;
+    s32 remainder;
+
+    digit = text;
+    do {
+        digit++;
+        digit[-1] = 0xFFFE;
+    } while (digit < text + 4);
+
+    value = D_8010B19C;
+    digit = &text[1];
+    do {
+        remainder = value % 10;
+        value = value / 10;
+        digit--;
+        digit[1] = remainder;
+    } while (value != 0);
+    text[2] = 0xFFFF;
+    func_80013154(arg0->common.x, arg0->common.y, (u8 *)text, 1, 0x100, 8);
+
+    digit = text;
+    do {
+        digit++;
+        digit[-1] = 0xFFFE;
+    } while (digit < text + 4);
+
+    value = D_8010B198 / 0x100;
+    digit = &text[2];
+    do {
+        remainder = value % 10;
+        value = value / 10;
+        digit--;
+        digit[1] = remainder;
+    } while (value != 0);
+    text[3] = 0xFFFF;
+    func_80013154(arg0->x2, arg0->y2, (u8 *)text, 1, 0x100, 8);
+}
+#endif
 
 void func_800314E0(s32 arg0) {
     func_800483FC(&D_80124868, func_80031370, arg0);
