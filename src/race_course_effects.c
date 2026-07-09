@@ -453,7 +453,64 @@ void func_8006A85C(void *arg0) {
     func_80071824(arg0, func_8006A80C);
 }
 
+// func_8006A894 best match: 99.549%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006A894.s")
+
+#ifdef NON_MATCHING
+extern void func_80045A1C(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
+extern Vtx D_800D9C40[];
+extern Gfx D_800D9D00[];
+extern Gfx D_800D9D40[];
+extern u32 D_80156614;
+
+void func_8006A894(RaceCourseRenderEffect *arg0) {
+    volatile u8 pad[8];
+    u32 image;
+    u32 palette;
+    s16 width;
+    s16 height;
+    CourseMarkerSpawnEntry *entry;
+    Gfx *vertexCmd;
+    Gfx *triCmd;
+    s16 textureIndex;
+    s32 i;
+    s8 nextType;
+
+    textureIndex = -1;
+    gSPDisplayList(gRegionAllocPtr++, D_800D9D00);
+    entry = D_800DA0B8[D_80121B50];
+    i = 0;
+    if (entry->type != -1) {
+        do {
+            if (func_80049000(&entry->pos) != 0) {
+                if (entry->type != textureIndex) {
+                    textureIndex = entry->type;
+                    func_80045A1C((u8 *)func_80043040((s32)D_80112168), textureIndex & 0xFFFF,
+                                  &image, &palette, &width, &height);
+                    gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0,
+                                            G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
+                                            G_TX_NOLOD, G_TX_NOLOD);
+                    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
+                }
+                gSPMatrix(gRegionAllocPtr++, &arg0->vertices[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                vertexCmd = gRegionAllocPtr;
+                gRegionAllocPtr = vertexCmd + 1;
+                vertexCmd->words.w0 = 0x0400103F;
+                vertexCmd->words.w1 = (u32)&D_800D9C40[entry->type * 4];
+                triCmd = gRegionAllocPtr;
+                gRegionAllocPtr = triCmd + 1;
+                triCmd->words.w1 = 0x60200;
+                triCmd->words.w0 = 0xB1060402;
+            }
+            nextType = entry[1].type;
+            entry++;
+            i++;
+        } while (-1 != nextType);
+    }
+    gSPDisplayList(gRegionAllocPtr++, D_800D9D40);
+}
+#endif
 
 void func_8006ACE8(void *arg0) {
     CourseMarkerSpawnEntry *entry;
