@@ -197,6 +197,7 @@ extern Vec2s D_800D4928[];
 extern u32 D_800D49C0[];
 extern s32 D_800D4968[];
 extern s32 D_800D4974[];
+extern u32 D_800D4980[];
 extern u32 D_800D6270[];
 extern Gfx D_800D9D00[];
 extern Gfx D_800D9D40[];
@@ -757,17 +758,10 @@ void func_8004F55C(s16 playerIndex, s16 itemIndex) {
     }
 }
 
-// func_8004F68C best match: 94.341% (nonmatchings/func_8004F68C-2785870559185086986/base_8.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004F68C.s")
-
-#ifdef NON_MATCHING
 void func_8004F68C(RaceItemEffectActor *arg0) {
     RaceItemGfxCommandSource sp78;
     void *sp74;
     void *sp70;
-    Gfx *gfx;
-    volatile u8 pad[0x10];
 
     if (D_80156609 != 0) {
         arg0->unk28.bytes.unk28 = 1;
@@ -785,41 +779,30 @@ void func_8004F68C(RaceItemEffectActor *arg0) {
 
         if (arg0->unk24.velocityX != 0) {
             func_80045990(func_80043040(D_80112168),
-                          (((s8)arg0->unk28.bytes.phase >> 1) + 0x2F) & 0xFFFF,
+                          ((s8)arg0->unk28.bytes.phase >> 1) + 0x2F,
                           &sp74, &sp70);
 
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0x06000000;
-            gfx->words.w1 = (u32)D_800D6270;
-
-            gDPLoadTextureBlock_4b(gRegionAllocPtr++, sp74, G_IM_FMT_CI, 0x20, 0x20, 0, G_TX_CLAMP,
-                                   G_TX_CLAMP, 0, 0, 0, 0);
-            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, sp70);
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0x01020040;
-            gfx->words.w1 = arg0->unk24.velocityX;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0x01000040;
-            gfx->words.w1 = (u32)D_80156614;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = (u32)D_800D4980;
-            gfx->words.w0 = 0x0400103F;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0x60200;
-            gfx->words.w0 = 0xB1060402;
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)D_800D6270);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)sp74);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x070FF400);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5400400, 0x80200);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x7C07C);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)sp70);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, arg0->unk24.velocityX);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, D_80156614);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)D_800D4980);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
         }
     }
 }
-#endif
 
 void func_8004F9CC(RaceItemEffectActor *arg0) {
     if (D_80121B56 == 0) {
