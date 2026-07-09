@@ -229,13 +229,12 @@ loop:
 }
 #endif
 
-// func_800005E4 best match: 99.215%
+// func_800005E4 best match: 99.484%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_800005E4.s")
 
 #ifdef NON_MATCHING
 void func_800005E4(void *arg0) {
     OSMesg msg;
-    OSMesg siMsg;
     s32 msgValue;
     s32 channel;
 
@@ -246,7 +245,7 @@ void func_800005E4(void *arg0) {
         switch (msgValue & 0xF0) {
         case 0x10:
             osContStartReadData(&D_800E4BD0);
-            osRecvMesg(&D_800E4BD0, &siMsg, OS_MESG_BLOCK);
+            osRecvMesg(&D_800E4BD0, &arg0, OS_MESG_BLOCK);
             osContGetReadData(D_800E4C00);
             osSendMesg(&D_80124070, &D_800E4BEC, 0);
             break;
