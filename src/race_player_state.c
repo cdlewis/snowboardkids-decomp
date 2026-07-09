@@ -60,6 +60,7 @@ extern void func_800617C8(void *);
 extern void func_80050030(void *);
 extern void *func_800716A4(void *, s32, s32, s32);
 extern void func_80050E80(void *);
+extern void func_80062530(void *);
 extern s16 func_80097AE8(s16);
 
 extern void (*D_800DECD0[])(RaceInputPlayer *);
@@ -2694,7 +2695,55 @@ void func_80094DF8(RaceInputPlayer *player) {
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094FF4.s")
+void func_80094FF4(RaceInputPlayer *player) {
+    s16 updateState;
+    s16 updateTimer;
+    u32 stateFlags;
+
+    updateState = player->updateState;
+    if (updateState == 0) {
+        player->updateState = updateState + 1;
+        func_80081E40(player, 0x13);
+        player->stateFlags &= 0xFE0C1FFB;
+        player->stateFlags |= 0x822204;
+        player->pitchAngle = 0;
+        player->unk60 = 0;
+        player->unk40.y = 0x80000;
+        player->updateTimer = 0;
+        player->actionEffectLevel = 4;
+        player->actionEffectFrame = 0;
+    }
+
+    func_8008B408(player, 0, 0);
+    if (player->unk40.y > 0) {
+        player->unk40.y -= 0x7000;
+    } else {
+        updateTimer = player->updateTimer;
+        if (updateTimer == 0) {
+            player->updateTimer = updateTimer + 1;
+            func_800716A4(func_80062530, 0, 3, (u16) player->playerIndex);
+        }
+        player->facingAngle += 0x40;
+        player->unk40.y -= 0x800;
+    }
+
+    player->unk40.x -= player->unk40.x >> 6;
+    player->unk40.z -= player->unk40.z >> 6;
+    player->posX += player->unk40.x;
+    player->posY += player->unk40.y;
+    player->posZ += player->unk40.z;
+
+    func_80082EC0(player);
+    if (player->unk40.y < 0) {
+        stateFlags = player->stateFlags;
+        if (!(stateFlags & 1)) {
+            player->mode = 8;
+            player->updateState = 0;
+            player->updateTimer = 0;
+            player->stateFlags = stateFlags & ~0x200;
+        }
+    }
+}
 
 // func_80095164 best match: 99.466%
 
