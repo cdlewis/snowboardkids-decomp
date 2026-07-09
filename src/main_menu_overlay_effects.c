@@ -102,10 +102,12 @@ extern s32 D_800D5748[];
 extern u8 D_800D57A0[];
 extern s16 D_800D57B0[];
 extern s16 D_800D57B4[];
+extern u32 D_800D57C8[];
 extern s16 D_800D5808[];
 extern s16 D_800D581C[];
 extern u32 D_800D5760[];
 extern u32 D_800D6270[];
+extern u32 D_800D60E0[];
 extern GfxCommandSource D_800DEE30;
 extern u32 D_800DEE50[];
 extern s16 D_800DEF14;
@@ -156,7 +158,7 @@ void func_8005499C(MainMenuOverlayEffectActor *);
 void func_80054A04(MainMenuOverlayEffectActor *);
 void func_80054A64(MainMenuOverlayEffectActor *);
 void func_80054AC0(MainMenuOverlayEffectActor *);
-void func_80054B98(void);
+void func_80054B98(MainMenuOverlayEffectActor *);
 void func_80054EC4(MainMenuOverlayEffectActor *);
 void func_80055148(MainMenuOverlayEffectActor *);
 void func_8005537C(MainMenuOverlayEffectActor *);
@@ -605,7 +607,81 @@ void func_80054B2C(MainMenuOverlayEffectActor *arg0) {
     func_800716E4(arg0);
 }
 
+// func_80054B98 best match: 82.495% at nonmatchings/func_80054B98-3236181511606361864/base_4.c
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80054B98.s")
+
+#ifdef NON_MATCHING
+void func_80054B98(MainMenuOverlayEffectActor *arg0) {
+    void *image;
+    void *palette;
+    GfxCommandSource transform;
+    volatile u8 pad[0x40];
+    GfxCommandDest *matrix;
+    Gfx *gfx;
+
+    if (D_80156608 == 2) {
+        func_80045990((void *) func_80043040(D_80112174), 0, &image, &palette);
+        func_80097C84(transform.rotation, arg0->spriteIndex);
+        transform.x = arg0->unk18.word;
+        transform.y = arg0->unk1C.word;
+        transform.z = arg0->unk20.word;
+        matrix = func_8004885C(&transform);
+        if (matrix != NULL) {
+            gSPDisplayList(gRegionAllocPtr++, D_800D60E0);
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xFA000000;
+            gfx->words.w1 = (arg0->alpha & 0xFF) | ~0xFF;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xFD48006B;
+            gfx->words.w1 = (u32) image;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xF5481C00;
+            gfx->words.w1 = 0x07080200;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w1 = 0;
+            gfx->words.w0 = 0xE6000000;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xF4000000;
+            gfx->words.w1 = 0x071B0040;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w1 = 0;
+            gfx->words.w0 = 0xE7000000;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xF5401C00;
+            gfx->words.w1 = 0x00080200;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xF2000000;
+            gfx->words.w1 = 0x00360040;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xFD100000;
+            gfx->words.w1 = (u32) palette;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w1 = 0;
+            gfx->words.w0 = 0xE8000000;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xF5000100;
+            gfx->words.w1 = 0x07000000;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w1 = 0;
+            gfx->words.w0 = 0xE6000000;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xF0000000;
+            gfx->words.w1 = 0x0703C000;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w1 = 0;
+            gfx->words.w0 = 0xE7000000;
+            gSPMatrix(gRegionAllocPtr++, (Mtx *) matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPMatrix(gRegionAllocPtr++, (Mtx *) D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0x0400103F;
+            gfx->words.w1 = (u32) D_800D57C8;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xB1060402;
+            gfx->words.w1 = 0x00060200;
+        }
+    }
+}
+#endif
 
 void func_80054E70(MainMenuOverlayEffectActor *arg0) {
     arg0->alpha -= 0x20;
