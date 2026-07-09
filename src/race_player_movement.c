@@ -10,8 +10,11 @@ typedef struct {
 } TransformScratch;
 
 extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
+extern s32 func_8004940C(s32, s32, s32, s32);
 extern void func_80097FE4(Matrix4s, s16, s16, RaceInputPlayer *);
 extern void func_80098590(Matrix4s, RaceVec3i *, RaceVec3i *);
+extern s16 func_80097AE8(s16);
+extern s16 func_80097B48(s16);
 extern s32 func_80098C30(s64);
 extern s16 D_800DE84C[];
 extern s16 D_800DE864[];
@@ -33,7 +36,70 @@ extern s16 D_800DE8B8[];
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088664.s")
 
+// func_80088A1C best match: 98.333% (nonmatchings/func_80088A1C-6182772958467082306/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088A1C.s")
+
+#ifdef NON_MATCHING
+void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
+    volatile u8 pad[8];
+    RaceInputPlayer *player;
+    s32 yDiff;
+    s32 magnitude;
+    s32 xDiff;
+    s32 zDiff;
+    s32 yLimit;
+    s32 xzLimit;
+    s16 angle;
+    s32 sine;
+    s32 cosine;
+    s32 overlap;
+    s32 pushX;
+    s32 pushZ;
+
+    player = D_80121D80;
+    do {
+        if (player->isActive != 0) {
+            yLimit = ySize;
+            yDiff = pos->y - player->unk5C;
+            if (yDiff < 0) {
+                yDiff = -yDiff;
+            } else {
+                yLimit = player->unk284;
+            }
+
+            if (yDiff <= yLimit) {
+                xDiff = pos->x - player->posX;
+                xzLimit = player->unk280 + xzSize;
+                if (xDiff < 0) {
+                    xDiff = -xDiff;
+                }
+                if (xDiff < xzLimit) {
+                    zDiff = pos->z - player->posZ;
+                    if (zDiff < 0) {
+                        zDiff = -zDiff;
+                    }
+                    if ((zDiff < xzLimit) &&
+                        ((magnitude = func_80098C30((s64)xDiff * xDiff + (s64)zDiff * zDiff)) < xzLimit)) {
+                        if (player->unk29C < arg3) {
+                            angle = func_8004940C(pos->x, pos->z, player->posX, player->posZ);
+                            sine = func_80097AE8(angle);
+                            cosine = func_80097B48(angle);
+                            overlap = xzLimit - magnitude;
+                            pushX = (s64)-sine * -overlap / 0x1000;
+                            pushZ = (s64)cosine * -overlap / 0x1000;
+                            player->posX -= pushX;
+                            player->posZ += pushZ;
+                        } else {
+                            player->unk2C6 |= arg4;
+                        }
+                    }
+                }
+            }
+        }
+        player++;
+    } while (player != &D_801235B0);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088C80.s")
 
