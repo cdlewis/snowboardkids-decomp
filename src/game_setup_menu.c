@@ -216,6 +216,152 @@ block_25:
 void __dummy(void) {
 }
 
+// func_80004164 best match: 87.420% (nonmatchings/func_80004164-3236181511606361864/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_80004164.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    /* 0x0 */ s16 pad0;
+    /* 0x2 */ u8 state;
+    /* 0x3 */ u8 pad3;
+    /* 0x4 */ u16 targetScale;
+    /* 0x6 */ u16 timer;
+    /* 0x8 */ u8 selectedOption;
+    /* 0x9 */ u8 confirmSelection;
+} ControllerPakConfirmTransition;
+
+extern ControllerPakConfirmTransition D_8010ADD0;
+extern u8 D_8010ADD9;
+extern void func_80000A40(u16 arg0);
+extern void func_80004960(void);
+
+void func_80004164(void) {
+    s32 connectedCount;
+    s32 i;
+    u8 state;
+
+    state = D_8010ADD0.state;
+    switch (state) {
+        case 1:
+            if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+                func_80072138(1, 0x32);
+                D_8010ADD0.state = 2;
+                D_8010ADD0.targetScale = 1;
+                state = 2;
+            }
+            break;
+        case 2:
+            D_8010ADFA = 0;
+            i = 0;
+            if ((s32)D_80121B55 > 0) {
+                do {
+                    func_80000A40(i);
+                    if (((&D_800EC898)[i] != 1) && ((&D_800EC898)[i] != 0xB) && ((&D_800EC898)[i] != 4)) {
+                        (&D_800EC8B4)[i] = 1;
+                        D_8010ADFA |= 1 << i;
+                    } else {
+                        (&D_800EC8B4)[i] = 0;
+                    }
+                    i++;
+                } while (i < (s32)D_80121B55);
+            }
+            D_8010ADD0.state = 7;
+            D_8010ADD0.timer = 0x11;
+            state = 7;
+            break;
+        case 3:
+            if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+                func_80072138(1, 0x32);
+                D_8010ADD0.state = 4;
+                state = 4;
+            }
+            break;
+        case 6:
+            connectedCount = 0;
+            D_8010ADFA = 0;
+            i = 0;
+            if ((s32)D_80121B55 > 0) {
+                do {
+                    func_80000A40(i);
+                    if (((&D_800EC898)[i] != 1) && ((&D_800EC898)[i] != 0xB) && ((&D_800EC898)[i] != 4)) {
+                        D_8010ADFA |= 1 << i;
+                        (&D_800EC8B4)[i] = 1;
+                        connectedCount++;
+                    } else {
+                        (&D_800EC8B4)[i] = 0;
+                    }
+                    i++;
+                } while (i < (s32)D_80121B55);
+            }
+            if (connectedCount == D_80121B55) {
+                D_8010ADD0.selectedOption = 1;
+                D_8010ADD0.targetScale = 2;
+            } else {
+                D_8010ADD0.selectedOption = 0;
+                D_8010ADD0.targetScale = 0;
+            }
+            D_8010ADD0.state = 0;
+            state = 0;
+            break;
+        case 7:
+            D_8010ADD0.timer--;
+            if (D_8010ADD0.timer == 0) {
+                D_8010ADD0.state = 8;
+                D_8010ADD0.targetScale = 2;
+                state = 8;
+            }
+            break;
+        case 8:
+            if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+                func_80072138(1, 0x32);
+                D_8010ADD0.state = 9;
+                D_8010ADD0.targetScale = 3;
+                D_8010ADD0.confirmSelection = 1;
+                state = 9;
+            }
+            break;
+        case 9:
+            if ((D_80123778 & 0x10800) && (D_8010ADD0.confirmSelection != 0)) {
+                D_8010ADD0.confirmSelection--;
+                func_80072138(0x19, 0x32);
+            } else if (D_80123778 & 0x20400) {
+                if (D_8010ADD0.confirmSelection != 1) {
+                    D_8010ADD0.confirmSelection++;
+                    func_80072138(0x19, 0x32);
+                }
+            }
+            if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+                func_80072138(1, 0x32);
+                if (D_8010ADD9 == 1) {
+                    D_8010ADD0.state = 1;
+                    D_8010ADD0.targetScale = 0;
+                } else {
+                    connectedCount = 0;
+                    i = 0;
+                    if ((s32)D_80121B55 > 0) {
+                        do {
+                            if ((&D_800EC8B4)[i] == 1) {
+                                connectedCount++;
+                            }
+                            i++;
+                        } while (i < (s32)D_80121B55);
+                    }
+                    if (connectedCount > 0) {
+                        D_8010ADD0.state = 3;
+                        D_8010ADD0.targetScale = 2;
+                    } else {
+                        D_8010ADD0.state = 4;
+                    }
+                }
+            }
+            state = D_8010ADD0.state;
+            break;
+    }
+    if (state == 5) {
+        func_8009956C(func_80004960, 0);
+    }
+    func_8007105C();
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_800045D8.s")
