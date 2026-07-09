@@ -1,7 +1,9 @@
 #include "common.h"
+#include "asset_decompression.h"
 #include "effect_task_scheduler.h"
 #include "controller_rumble.h"
 #include "game_audio.h"
+#include "fixed_point_math.h"
 #include "race_input_history.h"
 #include "fixed_point_matrix.h"
 
@@ -18,10 +20,12 @@ typedef struct {
 extern void func_8008C098(RaceInputPlayer *);
 extern void func_8008C7D0(RaceInputPlayer *);
 extern void func_80082664(RaceInputPlayer *, s32, s32, s32);
+extern void func_80082DD0(RaceInputPlayer *);
 extern void func_80082E48(RaceInputPlayer *);
 extern void func_80081E40(RaceInputPlayer *, s32);
 extern s32 func_80082EC0(RaceInputPlayer *);
 extern s32 func_80095F90(s32);
+extern void func_8008BB20(RaceInputPlayer *, s32, s32, s32, s32);
 extern void func_8008BB5C(RaceInputPlayer *, s32);
 extern void func_8009724C(RaceInputPlayer *);
 extern s32 func_80072138(s32, s32);
@@ -1437,7 +1441,65 @@ void func_80092D04(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094FF4.s")
 
+// func_80095164 best match: 99.466%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095164.s")
+
+#ifdef NON_MATCHING
+void func_80095164(RaceInputPlayer *player) {
+    s16 updateState;
+    s32 velocityX;
+    s32 velocityZ;
+    s32 stateTimer;
+    u32 stateFlags;
+    s16 nextState;
+
+    updateState = player->updateState;
+    nextState = updateState + 1;
+    if (updateState == 0) {
+        player->updateState = nextState;
+        player->stateFlags &= 0xFE0C1FFB;
+        player->stateFlags |= 0x01006000;
+        func_80081E40(player, 0x12);
+        player->stateTimer = 0x1E;
+        player->stateTimer += func_800430D0() >> 4;
+        player->unk60 = 0;
+    }
+    func_80082DD0(player);
+    func_8008B408(player, 0x10000, 0);
+    player->velocity.y += 0xFFFF6000;
+    func_8008B508(&player->velocity, player);
+    stateFlags = player->stateFlags;
+    if ((stateFlags & 1) == 0) {
+        player->stateFlags = stateFlags & ~0x200;
+        func_8008BB20(player, 0, 0, 0, 0);
+        player->stateFlags &= ~0x200;
+        player->unk582 = 0x100;
+        player->unk584 = 8;
+        player->unk588 = 0.0f;
+    } else {
+        player->stateFlags = stateFlags | 0x200;
+    }
+    velocityX = player->velocity.x;
+    player->posX += velocityX;
+    player->posY += player->velocity.y;
+    velocityZ = player->velocity.z;
+    player->posZ += velocityZ;
+    player->facingAngle = func_8004908C(velocityX, velocityZ);
+    if (player->stateFlags & 0x400) {
+        player->facingAngle += 0x800;
+    }
+    stateTimer = player->stateTimer - 1;
+    player->stateTimer = stateTimer;
+    if (stateTimer == 0) {
+        player->mode = 0xC;
+        player->updateState = 0;
+        player->updateTimer = 0;
+    }
+    player->actionEffectLevel = 4;
+    player->actionEffectFrame = 2;
+}
+#endif
 
 void func_80095300(RaceInputPlayer *player) {
     D_800DECE8[player->updateState](player);
