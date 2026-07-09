@@ -83,6 +83,8 @@ typedef struct {
     /* 0x28 */ s16 alpha[4];
     /* 0x30 */ u8 frame;
     /* 0x31 */ u8 unk31[4];
+    /* 0x35 */ u8 pad35;
+    /* 0x36 */ u16 unk36[4];
 } TitleMenuWidgetActor;
 
 typedef struct {
@@ -144,6 +146,7 @@ extern u8 D_800E0A84[];
 extern s32 D_80121D8C;
 #endif
 extern MenuIntroActor *D_8010ADDC;
+extern TitleMenuWidgetItemView *D_8010ADE0;
 extern s16 D_800EC9C8[];
 extern s16 D_800EC9D0[];
 extern s16 D_800B3462[];
@@ -1126,7 +1129,80 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
     }
 }
 
+// func_80016948 best match: 90.557% (nonmatchings/func_80016948-6688367443449623229/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016948.s")
+
+#ifdef NON_MATCHING
+void func_80016948(TitleMenuWidgetActor *arg0) {
+    register TitleMenuWidgetActor *actor;
+    s32 i;
+    s32 sum;
+    TitleIntroTransitionState *global;
+    TitleMenuWidgetItemView *view;
+    u8 state;
+
+    view = D_8010ADE0;
+    actor = arg0;
+    i = 0;
+    if ((s32) D_80121B55 > 0) {
+        global = &D_8010AE00;
+        do {
+            actor->x[i] = view->x;
+            actor->y[i] = view->y;
+
+            state = global->padE[i];
+            if (state != actor->unk31[i]) {
+                actor->unk31[i] = state;
+                actor->unk36[i] = global->nextSelection[i];
+            }
+
+            state = actor->unk31[i];
+            switch (state) {
+            case 1:
+                actor->alpha[i] += 0x26;
+                if (actor->alpha[i] >= 0x100) {
+                    actor->alpha[i] = 0x100;
+                    actor->unk31[i] = 0;
+                }
+                state = actor->unk31[i];
+                break;
+            case 2:
+                actor->alpha[i] -= 0x26;
+                if (actor->alpha[i] <= 0) {
+                    actor->alpha[i] = 0;
+                    actor->unk31[i] = 1;
+                    D_800EC9C8[i] = actor->unk36[i];
+                }
+                state = actor->unk31[i];
+                break;
+            case 0:
+            case 3:
+                break;
+            }
+
+            i++;
+            view = (TitleMenuWidgetItemView *) ((u8 *) view + 2);
+            global->padE[i - 1] = state;
+        } while (i < (s32) D_80121B55);
+    }
+
+    actor->frame = (actor->frame + 1) & 0xF;
+    sum = 0;
+    i = 0;
+    if ((s32) D_80121B55 > 0) {
+        do {
+            sum += actor->unk31[i];
+            i++;
+        } while (i < (s32) D_80121B55);
+    }
+
+    if (sum == (D_80121B55 * 3)) {
+        func_800716E4((EffectTask *) actor);
+    } else {
+        func_800483FC(&D_80124868, func_80016664, (s32) actor);
+    }
+}
+#endif
 
 void func_80016B54(TitleMenuWidgetActor *arg0) {
     s32 i;
