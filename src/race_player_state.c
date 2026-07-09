@@ -2735,7 +2735,73 @@ void func_800959B4(RaceInputPlayer *player) {
     func_80082EC0(player);
 }
 
+// func_80095A88 best match: 97.552% (base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095A88.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    /* 0x00 */ char pad0[0xAC];
+    /* 0xAC */ s8 active;
+    /* 0xAD */ char padAD[3];
+} Unk801121E0;
+
+typedef struct {
+    /* 0x00 */ FixedMatrix3s matrix;
+    /* 0x12 */ char pad12[0xE];
+    /* 0x20 */ Vec3i transformed;
+    /* 0x2C */ Vec3i source;
+} PlayerTransformScratch80095A88;
+
+extern Unk801121E0 D_801121E0[];
+
+void func_80095A88(RaceInputPlayer *player) {
+    s16 updateTimer;
+    s32 stateTimer;
+    PlayerTransformScratch80095A88 scratch;
+    Unk801121E0 *object;
+
+    updateTimer = player->updateTimer;
+    if (updateTimer == 0) {
+        player->updateTimer = updateTimer + 1;
+        player->stateTimer = 0x64;
+    }
+
+    if (player->unk80 > 0) {
+        if (player->unk80 < 0xA0000) {
+            player->unk80 += 0x2000;
+        }
+        func_80097FE4(scratch.matrix, -0x100, player->facingAngle);
+    } else {
+        if (player->unk80 >= -0x9FFFF) {
+            player->unk80 -= 0x2000;
+        }
+        func_80097FE4(scratch.matrix, 0x100, player->facingAngle);
+    }
+
+    scratch.source.x = 0;
+    scratch.source.y = 0;
+    scratch.source.z = player->unk80;
+    func_80098590(scratch.matrix, &scratch.source, &scratch.transformed);
+    player->posX += scratch.transformed.x;
+    player->posY += scratch.transformed.y;
+    player->posZ += scratch.transformed.z;
+
+    stateTimer = player->stateTimer;
+    stateTimer = (player->stateTimer = stateTimer - 1) & 0xFFFFFFFFFFFFFFFF;
+    if (stateTimer == 0) {
+        player->updateTimer = 0;
+        player->updateState++;
+    }
+
+    if (stateTimer < 0x3C) {
+        player->stateFlags |= 0x80000;
+        object = &D_801121E0[(u16) player->playerIndex];
+        if (object->active != 0) {
+            object->active = 2;
+        }
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095BE4.s")
 
