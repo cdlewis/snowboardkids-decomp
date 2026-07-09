@@ -30,12 +30,20 @@ extern s8 D_800DEED4;
 extern u8 D_80121D80[];
 extern u8 D_80121D88;
 extern u8 D_80121B55;
+#ifndef NON_MATCHING
 extern s16 D_80121B50;
+#else
+extern volatile s16 D_80121B50;
+#endif
 extern CharacterSelectOptionList *D_8010AE90;
 extern s32 D_801235B4;
 extern s32 D_80123758;
 extern s32 D_80123778;
+#ifndef NON_MATCHING
 extern u16 D_8010ADF0;
+#else
+extern volatile u16 D_8010ADF0;
+#endif
 extern u16 D_8010AE80;
 extern CharacterSelectCursorState D_8010AE88;
 extern u8 D_8010AE89;
@@ -53,7 +61,7 @@ extern u8 D_80123751;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_flow/func_800062F8.s")
 
-// func_800066CC best match: 70.727% (nonmatchings/func_800066CC-2911448260736516995/base_1.c)
+// func_800066CC best match: 72.358% (nonmatchings/func_800066CC-6688367443449623229/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_flow/func_800066CC.s")
 
 #ifdef NON_MATCHING
@@ -62,6 +70,7 @@ void func_800066CC(void) {
     s32 pressed;
     s32 previousSelection;
     s32 heldInput;
+    s32 selection;
     u16 repeatTimer;
 
     if (D_801235B8->fade != 0) {
@@ -73,7 +82,8 @@ void func_800066CC(void) {
         if (D_80121D88 == 0) {
             if (D_800EC9C1 == 0) {
                 if (D_8010AE88.fields.state == 1) {
-                    previousSelection = D_80121B50;
+                    selection = D_80121B50;
+                    previousSelection = (s16) selection;
                     temp_input = D_80123758;
                     pressed = temp_input & 0x10800;
                     if ((pressed == 0) && ((temp_input & 0x20400) == 0)) {
@@ -87,8 +97,9 @@ void func_800066CC(void) {
                             if (repeatTimer == 0) {
                                 repeatTimer++;
                             }
-                            if (D_80121B50 > 0) {
-                                D_80121B50--;
+                            if (selection > 0) {
+                                D_80121B50 = selection - 1;
+                                selection = D_80121B50;
                             }
                             D_8010ADF0 = repeatTimer;
                         } else if (((heldInput & 0x20400) != 0) ||
@@ -98,8 +109,9 @@ void func_800066CC(void) {
                             if (repeatTimer == 0) {
                                 D_8010ADF0 = repeatTimer + 1;
                             }
-                            if ((*D_8010AE90)[D_80121B50] != -1) {
-                                D_80121B50++;
+                            if ((*D_8010AE90)[selection] != -1) {
+                                D_80121B50 = selection + 1;
+                                selection = D_80121B50;
                             }
                         } else {
                             D_8010ADF0 = repeatTimer;
@@ -108,8 +120,9 @@ void func_800066CC(void) {
                         if (repeatTimer == 0) {
                             repeatTimer++;
                         }
-                        if (D_80121B50 > 0) {
-                            D_80121B50--;
+                        if (selection > 0) {
+                            D_80121B50 = selection - 1;
+                            selection = D_80121B50;
                         }
                         D_8010ADF0 = repeatTimer;
                     }
@@ -123,7 +136,7 @@ void func_800066CC(void) {
                         }
                     }
 
-                    if (previousSelection != D_80121B50) {
+                    if (previousSelection != selection) {
                         func_80072138(0x19, 0x32);
                     }
 
