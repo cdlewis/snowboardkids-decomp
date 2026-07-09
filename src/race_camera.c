@@ -355,7 +355,7 @@ void func_8006FE24(void) {
     D_801124A0->update();
 }
 
-// func_8006FE88 best match: 99.490%
+// func_8006FE88 best match: 99.949%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006FE88.s")
 
 #ifdef NON_MATCHING
@@ -363,18 +363,16 @@ void func_8006FE88(void) {
     register s32 stride;
     register s32 transitionBase;
     RaceCameraTransition *transition;
-    RaceCamera *camera;
     s16 timer;
     s16 duration;
 
     transitionBase = (s32) D_800DAA3C;
     stride = sizeof(RaceCameraTransition);
-    camera = D_801124A0;
-    timer = camera->timer;
-    transition = (RaceCameraTransition *)((u8 *)transitionBase + ((u16) camera->mode * stride));
+    timer = D_801124A0->timer;
+    transition = (RaceCameraTransition *)((u8 *)transitionBase + ((u16) D_801124A0->mode * stride));
     duration = transition[-16].duration;
     if (duration < timer) {
-        timer = duration;
+        do { timer = duration; do { } while (0); } while (0);
     }
 
 #define TRANSITION (((RaceCameraTransition *)((u8 *)transitionBase + ((u16) D_801124A0->mode * stride)))[-16])
