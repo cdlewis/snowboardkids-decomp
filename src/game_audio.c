@@ -518,7 +518,70 @@ void func_800722B4(void) {
     osStartThread(&D_8015A6B8);
 }
 
+// func_800722F0 best match: 99.710%
 #pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_800722F0.s")
+
+#ifdef NON_MATCHING
+typedef struct AudioCamera {
+    u8 pad0[0x94];
+    SoundPosition prevPos;
+    u8 padA0[0xAC - 0xA0];
+    s8 initialized;
+    u8 padAD[3];
+} AudioCamera;
+
+extern AudioCamera D_801121E0[];
+extern AudioCamera D_801124A0[];
+s16 func_80097AE8(s16 arg0);
+s32 func_80098C30(s64 arg0);
+
+s32 func_800722F0(SoundPosition *pos, s32 volume) {
+    volatile u8 pad[8];
+    AudioCamera *camera;
+    s32 distance;
+    s32 dx;
+    s32 dy;
+    s32 dz;
+    s32 attenuation;
+    s32 adjustedVolume;
+
+    distance = 0x4000000;
+    if (volume <= 0) {
+        return 0;
+    }
+
+    if (volume >= 0x80) {
+        volume = 0x7F;
+    }
+
+    camera = D_801121E0;
+    do {
+        if (camera->initialized == 1) {
+            dx = camera->prevPos.x - pos->x;
+            if ((dx >= -0x4000000) && (dx < 0x4000001)) {
+                dy = camera->prevPos.y - pos->y;
+                if ((dy >= -0x4000000) && (dy < 0x4000001)) {
+                    dz = camera->prevPos.z - pos->z;
+                    if ((dz >= -0x4000000) && (dz < 0x4000001)) {
+                        adjustedVolume = func_80098C30((s64)dx * dx + (s64)dy * dy + (s64)dz * dz);
+                        if (adjustedVolume < distance) {
+                            distance = adjustedVolume;
+                        }
+                    }
+                }
+            }
+        }
+        camera++;
+    } while (camera != D_801124A0);
+
+    attenuation = 0x1000 - func_80097AE8(distance / 0x10000);
+    adjustedVolume = (volume * attenuation) / 0x1000;
+    if (adjustedVolume < 0) {
+        adjustedVolume = 0;
+    }
+    return adjustedVolume;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80072518.s")
 
