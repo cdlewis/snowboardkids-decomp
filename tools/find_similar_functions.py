@@ -67,9 +67,10 @@ JUMP_PATTERN = re.compile(r'\b(jal|j)\b')
 JAL_PATTERN = re.compile(r'\bjal\s+(\S+)')
 STACK_PATTERN = re.compile(r'addiu\s+\$sp,\s*\$sp,\s*-0x([0-9A-Fa-f]+)')
 MEMORY_ACCESS_PATTERN = re.compile(r'(-?0x[0-9A-Fa-f]+|-?\d+)\s*\(\s*\$\w+\s*\)')
+SOURCE_SUFFIX_PATTERN = re.compile(r'^(?P<name>\S+)(?:\s+\([^)]+\))?$')
 
 # Cache settings
-CACHE_VERSION = 1
+CACHE_VERSION = 2
 DEFAULT_TOP_N = 20
 CACHE_DIR = ".cache"
 CACHE_FILE = os.path.join(CACHE_DIR, "similar_functions_cache.json")
@@ -428,6 +429,30 @@ def calculate_similarity(query: ParsedFunction, candidate: ParsedFunction) -> Si
     )
 
 
+def normalize_function_name(func_name: str) -> str:
+    """Remove coddog source suffixes like 'func_80000000 (../repo)'."""
+    match = SOURCE_SUFFIX_PATTERN.match(func_name.strip())
+    return match.group('name') if match else func_name.strip()
+
+
+def dedupe_similarity_results(results: List[SimilarityResult]) -> List[SimilarityResult]:
+    """Keep only the highest-scoring result for each function name."""
+    sorted_results = sorted(
+        results,
+        key=lambda r: (-r.total_score, r.function.name, r.function.file_path)
+    )
+    best_results = []
+    seen_names = set()
+
+    for result in sorted_results:
+        if result.function.name in seen_names:
+            continue
+        seen_names.add(result.function.name)
+        best_results.append(result)
+
+    return best_results
+
+
 def find_similar_functions(query: ParsedFunction, candidates: List[ParsedFunction],
                           top_n: int = 10, threshold: float = 0.0) -> List[SimilarityResult]:
     """Find the most similar functions to the query."""
@@ -441,10 +466,7 @@ def find_similar_functions(query: ParsedFunction, candidates: List[ParsedFunctio
         if result.total_score >= threshold:
             results.append(result)
 
-    # Sort by total score descending, then by name for tie-breaking (deterministic)
-    results.sort(key=lambda r: (-r.total_score, r.function.name))
-
-    return results[:top_n]
+    return dedupe_similarity_results(results)[:top_n]
 
 
 def get_c_source_for_function(func_name: str, project_root: str) -> Optional[str]:
@@ -468,7 +490,7 @@ def get_c_source_for_function(func_name: str, project_root: str) -> Optional[str
 
 def parse_coddog_output(output: str) -> List[Tuple[float, str]]:
     """Parse coddog output and return list of (percentage, function_name) tuples."""
-    results = []
+    best_by_name = {}
     for line in output.split('\n'):
         line = line.strip()
         # Skip error messages and empty lines
@@ -482,8 +504,12 @@ def parse_coddog_output(output: str) -> List[Tuple[float, str]]:
             # Remove "(decompiled)" suffix if present
             if func_name.endswith(' (decompiled)'):
                 func_name = func_name[:-13].strip()
-            results.append((percentage, func_name))
+            func_name = normalize_function_name(func_name)
+            current = best_by_name.get(func_name)
+            if current is None or percentage > current:
+                best_by_name[func_name] = percentage
     # Already sorted by coddog, but ensure descending order
+    results = [(percentage, func_name) for func_name, percentage in best_by_name.items()]
     results.sort(key=lambda x: -x[0])
     return results
 
@@ -606,12 +632,20 @@ def get_cached_similar_functions(
     if not cached:
         return None
 
-    # Build a name -> ParsedFunction mapping
-    func_map = {f.name: f for f in candidates}
+    # Build mappings for both current and older cache entries.
+    func_map = {(f.name, f.file_path): f for f in candidates}
+    name_map = {}
+    for func in candidates:
+        name_map.setdefault(func.name, func)
 
     results = []
-    for entry in cached[:top_n]:
-        other_func = func_map.get(entry['name'])
+    for entry in cached:
+        other_func = None
+        file_path = entry.get('file_path')
+        if file_path:
+            other_func = func_map.get((entry['name'], file_path))
+        if other_func is None:
+            other_func = name_map.get(entry['name'])
         if other_func:
             results.append(SimilarityResult(
                 function=other_func,
@@ -622,7 +656,7 @@ def get_cached_similar_functions(
                 structural_score=entry['structural']
             ))
 
-    return results
+    return dedupe_similarity_results(results)[:top_n]
 
 
 def build_similarity_cache(
@@ -637,7 +671,6 @@ def build_similarity_cache(
     print(f"Building similarity cache for {len(candidates)} functions...", file=sys.stderr)
 
     func_similarities = {}
-    func_map = {f.name: f for f in candidates}
 
     for i, query in enumerate(candidates):
         if (i + 1) % 100 == 0:
@@ -652,6 +685,7 @@ def build_similarity_cache(
             result = calculate_similarity(query, candidate)
             results.append({
                 'name': candidate.name,
+                'file_path': candidate.file_path,
                 'score': result.total_score,
                 'instruction': result.instruction_score,
                 'control_flow': result.control_flow_score,
@@ -659,9 +693,17 @@ def build_similarity_cache(
                 'structural': result.structural_score,
             })
 
-        # Sort by total score descending and keep top N
-        results.sort(key=lambda r: (-r['score'], r['name']))
-        func_similarities[query.name] = results[:top_n]
+        # Sort by total score descending, keep only the best entry per name,
+        # and store enough identity to reconstruct the exact selected function.
+        results.sort(key=lambda r: (-r['score'], r['name'], r['file_path']))
+        best_results = []
+        seen_names = set()
+        for result in results:
+            if result['name'] in seen_names:
+                continue
+            seen_names.add(result['name'])
+            best_results.append(result)
+        func_similarities[query.name] = best_results[:top_n]
 
     print(f"  Done: {len(candidates)} functions processed", file=sys.stderr)
 
