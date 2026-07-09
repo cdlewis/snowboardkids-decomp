@@ -97,7 +97,8 @@ typedef struct {
     /* 0x2C4 */ char pad2C4[0x14];
     /* 0x2D8 */ s16 unk2D8;
     /* 0x2DA */ s16 trailEffectTimer;
-    /* 0x2DC */ char pad2DC[4];
+    /* 0x2DC */ char pad2DC[2];
+    /* 0x2DE */ s16 unk2DE;
     /* 0x2E0 */ s32 unk2E0;
     /* 0x2E4 */ s32 unk2E4;
     /* 0x2E8 */ char pad2E8[2];
@@ -124,7 +125,9 @@ typedef struct {
     /* 0x320 */ s16 actionSoundTimer;
     /* 0x322 */ char pad322[0x130];
     /* 0x452 */ s16 animationId;
-    /* 0x454 */ char pad454[0xB5];
+    /* 0x454 */ char pad454[0xAE];
+    /* 0x502 */ s16 unk502;
+    /* 0x504 */ char pad504[5];
     /* 0x509 */ s8 unk509;
     /* 0x50A */ char pad50A[6];
     /* 0x510 */ s16 shieldEffectTimer;
