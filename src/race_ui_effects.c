@@ -3517,16 +3517,11 @@ void func_80061034(void *arg0, s16 arg1) {
     }
 }
 
-// func_80061088 best match: 99.885%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80061088.s")
-
-#ifdef NON_MATCHING
 void func_80061088(RaceUiTripleParticleActor *arg0) {
     s16 unused;
     RaceUiTrailCopyBlock spAC;
     RaceUiTrailCopyBlock sp8C;
     RaceUiTrailCopyBlock sp6C;
-    RaceUiTrailCopyBlock sp24;
     s32 sine;
 
     if (D_80156609 != 0) {
@@ -3541,9 +3536,7 @@ void func_80061088(RaceUiTripleParticleActor *arg0) {
             spAC.words[6] = arg0->pos.y;
             spAC.words[7] = arg0->pos.z;
 
-            sp24 = spAC;
-            sp6C = sp24;
-            sp8C = sp24;
+            sp8C = sp6C = spAC;
 
             sine = func_80097AE8((s16)(arg0->rotY << 4)) << 7;
             sp8C.words[6] = (sp8C.words[6] - sine) + 0x80000;
@@ -3567,7 +3560,6 @@ void func_80061088(RaceUiTripleParticleActor *arg0) {
         }
     }
 }
-#endif
 
 void func_800613EC(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x30) = *(s16 *)((u8 *)arg0 + 0x30) + 4;
