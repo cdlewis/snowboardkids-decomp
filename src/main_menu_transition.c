@@ -50,12 +50,22 @@ extern void func_800524B0(void *);
 
 extern MainMenuTransitionState *D_801235B8;
 extern u8 D_8010B1F0;
+extern u8 D_8011228C;
 extern s16 D_801124B8;
+extern s16 D_80121B50;
+extern s16 D_80121B52;
+extern s8 D_80121B54;
+extern u8 D_80121B55;
 extern u8 D_80121B56;
 extern s16 D_800DEF14;
 extern u8 D_80123751;
 extern s32 D_801235B4;
+extern u8 D_80121B58;
+extern u8 D_80121B59;
 extern u8 D_80121B5B;
+extern s16 D_80121B5C;
+extern u8 D_80121B5E;
+extern u8 D_80121B5F;
 extern s16 D_800D3C90[];
 
 extern void func_8003FEF4(void);
@@ -86,6 +96,20 @@ extern void func_80045914(void);
 extern u8 D_80123750;
 extern s8 D_800DEED4;
 extern u8 D_80121B5A;
+extern u8 D_800EC8B0;
+extern u8 D_800EC9C2;
+extern u8 D_80121D94;
+extern u8 D_80121D95;
+extern u8 D_80121D96;
+extern u8 D_801223A0;
+extern u8 D_801223A1;
+extern u8 D_801223A2;
+extern u8 D_801229AC;
+extern u8 D_801229AD;
+extern u8 D_801229AE;
+extern u8 D_80122FB8;
+extern u8 D_80122FB9;
+extern u8 D_80122FBA;
 extern MainMenuCourseAsset D_800D3C00[];
 extern f32 D_800E10D4;
 extern u8 D_593D10[];
@@ -380,7 +404,120 @@ void func_80040004(void) {
     func_8009956C(&func_8004002C, 0);
 }
 
+// func_8004002C best match: 93.838% (nonmatchings/func_8004002C-4139837607000619032/base_10.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_8004002C.s")
+
+#ifdef NON_MATCHING
+void func_8004002C(void) {
+
+    switch (D_80121B5A) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+            D_80121B50 = 0;
+            break;
+        default:
+            D_80121B50 = 9;
+            break;
+    }
+
+    D_80121B56 = 0;
+    D_80121B58 = 0;
+    D_80121B5F = 0;
+    D_80121B59 = 0;
+    D_80121B5B = 0;
+    D_800EC9C2 = 0;
+    D_80121B5E = 0;
+
+    D_80121D80[0].unk4 = 0;
+    D_80121D80[1].unk4 = 1;
+    D_80121D80[2].unk4 = 1;
+    D_80121D80[3].unk4 = 1;
+    D_80121D80[0].characterId = 0;
+    D_80121D80[1].characterId = 1;
+    D_80121D80[2].characterId = 2;
+    D_80121D80[3].characterId = 3;
+    D_80121D80[0].unk11 = 0;
+    D_80121D80[1].unk11 = 0;
+    D_80121D80[2].unk11 = 0;
+    D_80121D80[3].unk11 = 0;
+    D_80121D80[0].unk12 = 3;
+    D_80121D80[1].unk12 = 5;
+    D_80121D80[2].unk12 = 6;
+    D_80121D80[3].unk12 = 7;
+    D_80121D80[0].unk17 = 0;
+    D_80121D80[1].unk17 = 1;
+    D_80121D80[2].unk17 = 2;
+    D_80121D80[3].unk17 = 3;
+    D_80121B55 = 1;
+
+    switch (D_80121B5A) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 9:
+            D_80121D80[0].isActive = 1;
+            D_80121D80[1].isActive = 0;
+            D_80121D80[2].isActive = 0;
+            D_80121D80[3].isActive = 0;
+            D_80121B54 = 1;
+            break;
+        default:
+            D_80121D80[0].isActive = 1;
+            D_80121D80[1].isActive = 1;
+            D_80121D80[2].isActive = 1;
+            D_80121D80[3].isActive = 1;
+            D_80121B54 = 4;
+            break;
+    }
+
+    D_80121B52 = 5;
+    D_80121B5C = 0x64;
+    func_80070EC0(1);
+    D_80121D95 = 0;
+    D_80121D96 = 0;
+    D_80121D94 = 0;
+    D_801223A1 = 0;
+    D_801223A2 = 0;
+    D_801223A0 = 0;
+    D_801229AD = 0;
+    D_801229AE = 0;
+    D_801229AC = 0;
+    D_80122FB9 = 0;
+    D_80122FBA = 0;
+    D_80122FB8 = 0;
+    func_80043950();
+    func_800440F4();
+    func_8006D5CC();
+    func_800704F0();
+    D_8011228C = 1;
+    D_800DEED4 = 0;
+    func_8008BEB0();
+    func_80078430();
+    func_8007066C(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
+    D_8011228C = 1;
+    D_800DEED4 = 0;
+    func_80044294();
+    D_800DEF14 = 0xFF;
+    D_800EC8B0 = 0;
+    D_801235B4 = 1;
+    func_800437F0(D_593D10, D_598A70, 0x29);
+    func_800437F0(D_60F1A0, D_60F990, 0x2A);
+    D_8010B1F0 = 0;
+    func_80071408(func_8000E7CC, 0, 0x64);
+    func_80071408(func_8000EA44, 0, 0x63);
+    func_80071408(func_800524B0, 0, 0x64);
+    func_8009956C(func_80040360, 0);
+    func_800720E4(7);
+}
+#endif
 
 void func_80040360(void) {
     D_800DEF14 -= 0x10;
