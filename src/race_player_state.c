@@ -270,7 +270,77 @@ void func_80090898(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090B30.s")
 
+// func_80090CD0 best match: 99.646%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090CD0.s")
+
+#ifdef NON_MATCHING
+void func_80090CD0(RaceInputPlayer *player) {
+    s16 updateTimer;
+    u16 tilt;
+    s32 yVel;
+    s32 timer;
+    u32 stateFlags;
+
+    if (player->updateState == 0) {
+        func_80081E40(player, 4);
+        player->updateState++;
+        player->stateFlags |= 0x200;
+        player->stateTimer = 0;
+        func_8008F1B4(player);
+        func_80081E40(player, 0x17);
+        player->updateTimer = 0;
+    }
+
+    func_80082EC0(player);
+    func_8008B408(player, player->unk254, 0);
+    player->unk40.y -= player->unk264;
+    func_8008B508(&player->unk40, player);
+
+    yVel = player->unk40.y;
+    player->posX += player->unk40.x;
+    player->posY += yVel;
+    player->posZ += player->unk40.z;
+    player->unk74 = yVel;
+
+    if (player->stateFlags & 0x400) {
+        player->unk6E = (func_80097AE8(player->stateTimer) * -0x2000) / 4096;
+    } else {
+        tilt = (func_80097AE8(player->stateTimer) * 0x2000) / 4096;
+        player->unk6E = tilt;
+    }
+
+    player->updateTimer++;
+    updateTimer = player->updateTimer;
+    player->stateTimer += 0x16;
+    if (updateTimer == 8) {
+        func_80081E40(player, 0x18);
+        updateTimer = player->updateTimer;
+    }
+    if (updateTimer == 0xF) {
+        func_80081E40(player, 0x19);
+        updateTimer = player->updateTimer;
+    }
+    if (updateTimer == 0x1E) {
+        func_80081E40(player, 0x1A);
+    }
+
+    timer = player->stateTimer;
+    if (timer >= 0x401) {
+        timer = 0x400;
+        player->stateTimer = 0x400;
+    }
+
+    stateFlags = player->stateFlags | 2;
+    timer = player->stateTimer;
+    player->stateFlags = stateFlags;
+    if (timer < 0x3D0) {
+        player->stateFlags = stateFlags | 0x800;
+        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+        }
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090ECC.s")
 
