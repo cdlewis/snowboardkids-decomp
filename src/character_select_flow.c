@@ -7,6 +7,18 @@
 
 typedef s16 CharacterSelectOptionList[10];
 
+typedef union {
+    u8 bytes[8];
+    struct {
+        /* 0x00 */ u8 state;
+        /* 0x01 */ u8 otherState;
+        /* 0x02 */ u8 pad2[2];
+        /* 0x04 */ s16 spriteIndex;
+        /* 0x06 */ u8 timer;
+        /* 0x07 */ u8 otherTimer;
+    } fields;
+} CharacterSelectCursorState;
+
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80072138(s32, s32);
 extern void func_80045914(void);
@@ -15,6 +27,7 @@ extern void func_80008620(void);
 extern void func_80005540(void);
 extern CharacterSelectFlowState *D_801235B8;
 extern s8 D_800DEED4;
+extern u8 D_80121D80[];
 extern u8 D_80121D88;
 extern u8 D_80121B55;
 extern s16 D_80121B50;
@@ -24,11 +37,12 @@ extern s32 D_80123758;
 extern s32 D_80123778;
 extern u16 D_8010ADF0;
 extern u16 D_8010AE80;
-extern u8 D_8010AE88;
+extern CharacterSelectCursorState D_8010AE88;
 extern u8 D_8010AE89;
 extern u16 D_8010AE8C;
 extern u8 D_8010ADF8;
 extern u8 D_800EC9C1;
+extern s16 D_800EC9D0;
 extern u8 D_800EC9DD;
 extern u8 D_80123750;
 extern u8 D_80123751;
@@ -58,7 +72,7 @@ void func_800066CC(void) {
     } else {
         if (D_80121D88 == 0) {
             if (D_800EC9C1 == 0) {
-                if (D_8010AE88 == 1) {
+                if (D_8010AE88.fields.state == 1) {
                     previousSelection = D_80121B50;
                     temp_input = D_80123758;
                     pressed = temp_input & 0x10800;
@@ -119,10 +133,10 @@ void func_800066CC(void) {
                         func_80072138(1, 0x32);
                         if ((*D_8010AE90)[D_80121B50] != -1) {
                             D_800EC9C1 = 1;
-                            D_8010AE88 = 2;
+                            D_8010AE88.fields.state = 2;
                             D_8010AE8C = 0x100;
                         } else {
-                            D_8010AE88 = 2;
+                            D_8010AE88.fields.state = 2;
                             D_8010AE8C = 0x100;
                             D_80121D88 = 7;
                             func_8009956C(&func_80006D70, 0);
@@ -130,7 +144,7 @@ void func_800066CC(void) {
                         }
                     } else if ((temp_input & 0x4000) && (D_801235B4 == (D_8010AE80 + 1))) {
                         func_80072138(1, 0x32);
-                        D_8010AE88 = 2;
+                        D_8010AE88.fields.state = 2;
                         D_8010AE8C = 0x100;
                         D_80121D88 = 7;
                         func_8009956C(&func_80006D70, 0);
@@ -162,7 +176,76 @@ void func_800066CC(void) {
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_flow/func_80006AE8.s")
+void func_80006AE8(void) {
+    s32 input;
+    int state;
+
+    state = D_80121D80[8];
+    if (state < 3) {
+        switch (D_8010AE88.fields.otherState) {
+        case 2:
+            input = D_80123778;
+            if (input & 0x4000) {
+                D_80121D80[8] = 3;
+                func_80072138(1, 0x32);
+            } else if ((input & 0x8000) || (input & 0x1000)) {
+                func_80072138(1, 0x32);
+                D_800EC9D0 = 1;
+                D_8010AE88.fields.otherState = 3;
+                func_80071408(func_800227A0, 0, 0x61);
+            }
+            break;
+        case 3:
+            if (D_800EC9D0 >= 3) {
+                input = D_80123778;
+                if ((input & 0x10800) && (D_800EC9D0 != 3)) {
+                    D_800EC9D0--;
+                    func_80072138(0x19, 0x32);
+                    input = D_80123778;
+                } else if ((input & 0x20400) && (D_800EC9D0 != 4)) {
+                    D_800EC9D0++;
+                    func_80072138(0x19, 0x32);
+                    input = D_80123778;
+                }
+
+                if ((input & 0x8000) || (input & 0x1000)) {
+                    func_80072138(0x18, 0x32);
+                    D_800EC9D0 += 2;
+                    D_8010AE88.fields.otherState = 4;
+                } else if (input & 0x4000) {
+                    func_80072138(1, 0x32);
+                    D_800EC9D0 = 6;
+                    D_8010AE88.fields.otherState = 4;
+                }
+            }
+            break;
+        case 4:
+            if (D_8010AE88.fields.otherTimer == 4) {
+                if (D_800EC9D0 == 6) {
+                    D_80121D80[8] = 3;
+                } else {
+                    D_80121D80[8] = 7;
+                }
+                D_800EC9D0 = 0;
+            }
+            break;
+        }
+    } else {
+        if (state == 6) {
+            D_80121D80[8] = 0;
+            D_800EC9C1 = 0;
+            func_8009956C(func_800066CC, 0);
+            D_8010AE88.fields.state = 1;
+            D_8010AE88.fields.spriteIndex = 0x100;
+            D_8010AE88.fields.timer = 0;
+            state = D_80121D88;
+        }
+        if (state == 8) {
+            func_8009956C(func_80006E3C, 0);
+        }
+    }
+    func_8007105C();
+}
 
 void func_80006D70(void) {
     if (D_80121D88 == 8) {
