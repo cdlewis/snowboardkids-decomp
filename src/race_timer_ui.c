@@ -37,7 +37,10 @@ typedef struct {
 } RaceTimerUiAssetHandles;
 
 typedef struct {
-    /* 0x000 */ u8 pad0[0x512];
+    /* 0x000 */ u8 pad0[0x508];
+    /* 0x508 */ s8 lapDigit;
+    /* 0x509 */ s8 iconTile;
+    /* 0x50A */ u8 pad50A[0x512 - 0x50A];
     /* 0x512 */ s8 tensDigitTile;
     /* 0x513 */ s8 tensDigitPalette;
     /* 0x514 */ s8 tensDigitOffset;
@@ -286,7 +289,66 @@ void func_80079394(s32 arg0) {
     func_80048278(0x48, -0x58, sp28, 7);
 }
 
+// func_80079438 best match: 95.528% at nonmatchings/func_80079438-3236181511606361864/base_5.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80079438.s")
+
+#ifdef NON_MATCHING
+const char D_800E1804[] = "%5ld";
+
+void func_80079438(s32 arg0) {
+    volatile u8 padding[0x18];
+    char end;
+    char buffer[5];
+    s32 x;
+    s32 palette;
+    char *digit;
+    volatile RaceTimerUiPlayer *player;
+
+    player = &D_80121D80[0];
+    sprintf(buffer, D_800E1804, player->timerValue);
+
+    x = 0x50;
+    digit = buffer;
+    if (player->timerValue < 100) {
+        palette = 0x10;
+    } else {
+        palette = 0xE;
+    }
+
+    do {
+        if (*digit != ' ') {
+            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), (*digit - 5) & 0xFFFF,
+                          palette & 0xFFFF);
+        }
+        digit++;
+        x += 8;
+    } while (digit != &end);
+
+    func_80045A78(0x78, 0x50, func_80043040(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF);
+
+    if (player->tensDigitPalette != 0) {
+        func_80047174(-0x20, -0x60, func_80043040(D_80112130.popupFontHandle),
+                      (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF,
+                      player->tensDigitPalette);
+    } else {
+        func_80045A78(-0x20, -0x60, func_80043040(D_80112130.popupFontHandle),
+                      (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF);
+    }
+
+    if (player->onesDigitPalette != 0) {
+        func_80047174(0, -0x60, func_80043040(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile],
+                      player->onesDigitPalette);
+    } else {
+        func_80045A78(0, -0x60, func_80043040(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile]);
+    }
+
+    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), player->iconTile & 0xFFFF);
+    func_80045A78(-0x88, -0x60, func_80043040(D_80112130.popupFontHandle), 0x39);
+    func_80046D68(-0x68, -0x60, func_80043040(D_80112130.popupFontHandle), (player->lapDigit + 0x2C) & 0xFFFF, 0xE);
+    func_80045A78(-0x5C, -0x60, func_80043040(D_80112130.popupFontHandle), 0x38);
+    func_80046D68(-0x50, -0x60, func_80043040(D_80112130.popupFontHandle), (D_80121B52 + 0x2B) & 0xFFFF, 0xE);
+}
+#endif
 
 void func_80079750(s32 arg0) {
 
