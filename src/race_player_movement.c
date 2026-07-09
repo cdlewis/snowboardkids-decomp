@@ -16,6 +16,7 @@ extern void func_80098590(Matrix4s, RaceVec3i *, RaceVec3i *);
 extern s16 func_80097AE8(s16);
 extern s16 func_80097B48(s16);
 extern s32 func_80098C30(s64);
+extern RaceInputPlayer D_801235B0;
 extern s16 D_800DE84C[];
 extern s16 D_800DE864[];
 extern s16 D_800DE87C[];
@@ -154,7 +155,49 @@ s32 func_80088E98(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
 }
 #endif
 
+// func_80089000 best match: 99.818% (nonmatchings/func_80089000-6182772958467082306/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80089000.s")
+
+#ifdef NON_MATCHING
+void func_80089000(RaceVec3i *pos, s32 xzSize, s16 flag) {
+    volatile u8 pad[16];
+    RaceInputPlayer *player;
+    RaceInputPlayer *end;
+    s32 radius;
+    s32 dx;
+    s32 dy;
+    s32 dz;
+
+    end = &D_801235B0;
+    player = D_80121D80;
+    do {
+        if (player->isActive != 0) {
+            dx = player->posX - pos->x;
+            radius = player->unk280 + xzSize;
+            if (dx < 0) {
+                dx = -dx;
+            }
+            if (dx < radius) {
+                dy = (player->unk280 + player->unk5C) - pos->y;
+                if (dy < 0) {
+                    dy = -dy;
+                }
+                if (dy < radius) {
+                    dz = player->posZ - pos->z;
+                    if (dz < 0) {
+                        dz = -dz;
+                    }
+                    if ((dz < radius) &&
+                        (func_80098C30((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
+                        player->unk2C6 |= flag;
+                    }
+                }
+            }
+        }
+        player++;
+    } while (player != end);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_800891B8.s")
 
