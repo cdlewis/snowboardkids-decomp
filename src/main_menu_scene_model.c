@@ -35,7 +35,139 @@ extern void func_80042AB4(MainMenuSceneModel *arg0);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80040D94.s")
 
+// func_80041A20 best match: 48.898% (nonmatchings/func_80041A20-3236181511606361864/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80041A20.s")
+
+#ifdef NON_MATCHING
+extern u16 D_800ECC24;
+extern u16 D_800ECC28;
+extern u16 D_800ECC2C;
+extern u16 D_800ECC30;
+extern u16 D_800ECC34;
+extern u16 D_800ECC38;
+extern u16 D_800ECC3C;
+extern u16 D_800ECC40;
+extern u16 D_800ECC44;
+extern u16 D_800ECC46;
+extern u8 D_8010B200[];
+extern s16 D_8011213E;
+extern u16 D_80121B50;
+
+void func_80041A20(void) {
+    u16 *srcBase = &D_800ECC46;
+    u16 *src = srcBase;
+    u8 *dst;
+    u8 *model;
+    s32 outPos = 0;
+    s32 count;
+    s32 copied;
+    u16 code;
+    s32 length;
+    s32 offset;
+    s32 remainder;
+
+    switch (D_80121B50) {
+    case 0:
+        src = (u16 *)((u8 *)srcBase + (D_800ECC24 * 2));
+        break;
+    case 1:
+        src = (u16 *)((u8 *)srcBase + (D_800ECC28 * 2));
+        break;
+    case 2:
+        src = (u16 *)((u8 *)srcBase + (D_800ECC2C * 2));
+        break;
+    case 3:
+        src = (u16 *)((u8 *)srcBase + (D_800ECC30 * 2));
+        break;
+    case 4:
+        src = (u16 *)((u8 *)srcBase + (D_800ECC34 * 2));
+        break;
+    case 5:
+        src = (u16 *)((u8 *)srcBase + (D_800ECC38 * 2));
+        break;
+    case 6:
+        src = (u16 *)((u8 *)srcBase + (D_800ECC3C * 2));
+        break;
+    case 8:
+        src = (u16 *)((u8 *)srcBase + (D_800ECC40 * 2));
+        break;
+    case 9:
+        src = (u16 *)((u8 *)srcBase + (D_800ECC44 * 2));
+        break;
+    }
+
+    dst = D_8010B200;
+    count = *src++;
+    while (outPos < count) {
+        copied = 0;
+        code = *src;
+        length = (code >> 10) & 0x3F;
+        if (length == 0) {
+            dst[outPos] = code;
+            outPos++;
+            src++;
+        } else {
+            offset = outPos - (code & 0x3FF);
+            if (length > 0) {
+                remainder = length & 3;
+                if (remainder != 0) {
+                    u8 *copy = offset + dst;
+                    do {
+                        dst[outPos] = copy[0];
+                        copied++;
+                        outPos++;
+                        copy++;
+                    } while (remainder != copied);
+                    if (copied == length) {
+                        src++;
+                        continue;
+                    }
+                }
+                {
+                    u8 *copy = offset + copied + dst;
+                    do {
+                        dst[outPos] = copy[0];
+                        outPos++;
+                        dst[outPos] = copy[1];
+                        outPos++;
+                        dst[outPos] = copy[2];
+                        outPos++;
+                        dst[outPos] = copy[3];
+                        copied += 4;
+                        outPos++;
+                        copy += 4;
+                    } while (copied != length);
+                }
+            }
+            src++;
+        }
+    }
+
+    model = (u8 *)func_80043040(D_8011213E);
+    *(s32 *)&model[0] = 0;
+    *(s32 *)&model[4] = *(s16 *)&dst[0];
+    model[8] = 1;
+    model[9] = D_80121B50;
+    model[10] = *(s8 *)&dst[2];
+    model[12] = 0;
+    model[11] = *(s8 *)&dst[3];
+
+    if (*(s16 *)&dst[0] > 0) {
+        s32 i = 0;
+        u8 *read = D_8010B200;
+        u8 *write = model;
+
+        do {
+            i++;
+            write[0xD] = *(s8 *)&read[4];
+            write[0x11A1] = *(s8 *)&read[5];
+            read += 3;
+            write++;
+            write[0x2334] = read[3];
+        } while (i < *(s32 *)&model[4]);
+    }
+}
+#endif
 
 void func_80041CC0(void) {
     func_800437F0(&D_5E34A0, &D_608560, 0x3F);
