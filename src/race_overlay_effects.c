@@ -169,6 +169,7 @@ extern u8 D_80121B5A;
 extern u8 D_80112130[];
 extern RaceModelEntry *D_800D91E8[];
 extern u32 D_800D9210[];
+extern Vtx D_800D92D8[];
 extern Gfx D_800D9D00[];
 extern Gfx D_800D9D40[];
 extern GfxCommandDest D_800DEE50;
@@ -715,7 +716,71 @@ void func_800691C8(RaceOverlayModelActor *arg0) {
     func_80071824(arg0, func_80068EA0);
 }
 
+// func_8006935C best match: 99.849% (30 differences)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_8006935C.s")
+
+#ifdef NON_MATCHING
+void func_8006935C(RaceParticleActor *arg0) {
+    volatile s32 pad;
+    CourseEffectMatrixSource transform;
+    Gfx *temp_v0;
+    Gfx *temp_v0_10;
+    Gfx *temp_v0_11;
+    Gfx *temp_v0_12;
+    Gfx *temp_v0_13;
+    Gfx *temp_v0_14;
+    Gfx *temp_v0_15;
+    Gfx *temp_v0_16;
+    Gfx *temp_v0_17;
+    Gfx *temp_v0_18;
+    Gfx *temp_v0_19;
+    Gfx *temp_v0_2;
+    Gfx *temp_v0_3;
+    Gfx *temp_v0_4;
+    Gfx *temp_v0_5;
+    Gfx *temp_v0_6;
+    Gfx *temp_v0_7;
+    Gfx *temp_v0_8;
+    Gfx *temp_v0_9;
+    Gfx *var_v0;
+
+    if (D_80156609 != 0) {
+        arg0->transformDirty = 1;
+    }
+    if (func_80049000(&arg0->pos) != 0) {
+        if (arg0->transformDirty != 0) {
+            arg0->transformDirty = 0;
+            func_80097DA4(transform.rotation, arg0->rotX, arg0->rotY, arg0->rotZ);
+            transform.basePos.x = arg0->pos.x;
+            transform.basePos.y = arg0->pos.y;
+            transform.basePos.z = arg0->pos.z;
+            arg0->displayList = func_8004885C((GfxCommandSource *)&transform);
+        }
+        if (arg0->displayList != NULL) {
+            temp_v0 = gRegionAllocPtr++;
+            temp_v0->words.w1 = (u32)D_800D9D00;
+            temp_v0->words.w0 = 0x06000000;
+            temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32)arg0->palette; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w1 = 0x00080200; temp_v0_7->words.w0 = 0xF5400400; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)arg0->image; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32)arg0->displayList; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x0400103F; temp_v0_16->words.w1 = (u32)&D_800D92D8[((((u16)arg0->spawnOffsetIndex) >> 1) * 4) + 8]; if (arg0->spawnOffsetIndex & 1) { temp_v0_17 = gRegionAllocPtr++;
+                temp_v0_17->words.w1 = 0x604;
+                temp_v0_17->words.w0 = 0xBF000000;
+                var_v0 = gRegionAllocPtr++;
+                var_v0->words.w1 = 0x406;
+                var_v0->words.w0 = 0xBF000000;
+            } else {
+                temp_v0_18 = gRegionAllocPtr++;
+                temp_v0_18->words.w1 = 0x402;
+                temp_v0_18->words.w0 = 0xBF000000;
+                var_v0 = gRegionAllocPtr++;
+                var_v0->words.w1 = 0x204;
+                var_v0->words.w0 = 0xBF000000;
+            }
+            temp_v0_19 = gRegionAllocPtr++;
+            temp_v0_19->words.w1 = (u32)D_800D9D40;
+            temp_v0_19->words.w0 = 0x06000000;
+        }
+    }
+}
+#endif
 
 void func_80069678(RaceParticleActor *arg0) {
     s32 temp_v0;
