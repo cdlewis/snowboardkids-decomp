@@ -87,6 +87,8 @@ extern u8 D_80156608;
 extern s32 D_80124868;
 extern s32 D_80124878;
 extern RaceTimer D_80121B74;
+extern s8 D_80121B75;
+extern s16 D_80121B76;
 extern RaceTimer D_80121B78;
 extern s8 D_80122288[];
 extern RaceTimerUiPlayer D_80121D80[];
@@ -145,10 +147,6 @@ void func_80079068(s32 arg0) {
     func_80048278(-0x68, -0x48, sp28, 6);
 }
 
-// func_80079154 best match: 99.792% at nonmatchings/func_80079154-5272447827802519043/base_8.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80079154.s")
-
-#ifdef NON_MATCHING
 const char D_800E17C0[] = "%2.2d";
 const char D_800E17C8[] = "%2.2d";
 const char D_800E17D0[] = "%2.2d";
@@ -162,8 +160,10 @@ void func_80079154(s32 arg0) {
 
     sprintf(buffer, D_800E17C0, D_80121B74.minutes);
     x = 0x48;
-    end = &buffer[2];
+    if (x && D_80112130.popupFontHandle) {
+    }
     digit = buffer;
+    end = &buffer[2];
     do {
         func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
@@ -171,7 +171,7 @@ void func_80079154(s32 arg0) {
     } while ((u32)digit < (u32)end);
 
     x += 8;
-    sprintf(buffer, D_800E17C8, D_80121B74.seconds);
+    sprintf(buffer, D_800E17C8, D_80121B75);
     digit = buffer;
     end = &buffer[2];
     endValue = (u32)end;
@@ -182,7 +182,7 @@ void func_80079154(s32 arg0) {
     } while ((u32)digit < endValue);
 
     x += 8;
-    sprintf(end = buffer, D_800E17D0, D_80121B74.fraction >> 8);
+    sprintf(end = buffer, D_800E17D0, D_80121B76 >> 8);
     digit = end;
     end = &buffer[2];
     do {
@@ -201,7 +201,6 @@ void func_80079154(s32 arg0) {
     func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x24);
     func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x2A);
 }
-#endif
 
 const char D_800E17D8[] = "Lap Time";
 const char D_800E17E4[] = "Best Lap";
