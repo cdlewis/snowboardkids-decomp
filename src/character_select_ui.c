@@ -2417,21 +2417,24 @@ void func_800235E0(CharacterSelectWidgetActor *arg0) {
     func_80071824(arg0, func_80023434);
 }
 
-// func_80023618 best match: 80.294%
+// func_80023618 best match: 81.667%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80023618.s")
 
 #ifdef NON_MATCHING
 void func_80023618(CharacterSelectTime *arg0, s32 x, s32 y, s32 alpha) {
     char buffer[8];
-    volatile u8 padding[0x48];
     char *it;
     char *end;
+    s32 tempY;
+    s32 tempAlpha;
     s32 drawY;
     s32 drawAlpha;
 
+    tempY = y;
+    tempAlpha = alpha;
     sprintf(buffer, "%2.2d", arg0->minutes);
-    drawY = (s16)y;
-    drawAlpha = alpha & 0xFFFF;
+    drawY = (s16)tempY;
+    drawAlpha = tempAlpha & 0xFFFF;
     it = buffer;
     end = buffer + 2;
     do {
