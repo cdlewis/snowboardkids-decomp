@@ -716,13 +716,9 @@ void func_80092674(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092B6C.s")
 
-// func_80092D04 best match: 97.686%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092D04.s")
-
-#ifdef NON_MATCHING
 void func_80092D04(RaceInputPlayer *player) {
-    s32 timer;
     s32 yVel;
+    s32 timer;
 
     if (player->updateState == 0) {
         func_80081E40(player, 4);
@@ -743,15 +739,14 @@ void func_80092D04(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
 
-    player->unk6C = (func_80097AE8(player->stateTimer) * -0x5000) / 4096;
+    player->unk6C = (func_80097AE8(player->stateTimer) * -0x5000) / 0x1000;
 
-    timer = player->stateTimer + 0x14;
-    player->stateTimer = timer;
-    if (timer >= 0x401) {
-        timer = 0x400;
-        player->stateTimer = timer;
+    player->stateTimer += 0x14;
+    if (player->stateTimer >= 0x401) {
+        player->stateTimer = 0x400;
     }
 
+    timer = player->stateTimer;
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
@@ -760,7 +755,6 @@ void func_80092D04(RaceInputPlayer *player) {
         }
     }
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092E58.s")
 
