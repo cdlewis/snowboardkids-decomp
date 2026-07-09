@@ -165,7 +165,7 @@ extern void func_80072138(s32, s32);
 extern void func_80099C44(void *, void *, s32);
 extern void n_alSeqpDelete(void);
 
-// func_800097E0 best match: 98.511%
+// func_800097E0 best match: 98.706%
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_800097E0.s")
 
 #ifdef NON_MATCHING
@@ -178,7 +178,8 @@ void func_800097E0(void) {
     u8 *unlockedCourse;
     u8 *otherCourse;
     ObjectA3E0 *obj;
-    u8 savedUnlocks;
+    void (*nextCallback)(void);
+    s32 savedUnlocks;
 
     func_800720E4(3);
     func_8006D5CC();
@@ -215,6 +216,7 @@ void func_800097E0(void) {
     func_80099C44(D_14B450, (void *)func_80043040(D_80112130[0xC]), size);
     func_800437F0(D_1EF530, D_1F1A90, 0xD);
     func_800437F0(D_1E74E0, D_1EC0F0, 0x1C);
+    nextCallback = func_80009C48;
     func_80070EC0(0);
     func_80071408(func_8001710C, 0, 0x5E);
 
@@ -264,7 +266,7 @@ void func_800097E0(void) {
         D_800EC9E6 = 0;
     }
 
-    func_8009956C(func_80009C48, 0);
+    func_8009956C(nextCallback, 0);
     func_8007105C();
 
     D_8010AF18.unk0Array[zero] = zero;
