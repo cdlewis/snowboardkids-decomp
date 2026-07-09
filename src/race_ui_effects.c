@@ -114,12 +114,11 @@ typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ s16 timer;
-    /* 0x1A */ u8 pad1A[2];
-    /* 0x1C */ s32 x;
+    /* 0x18 */ void *image;
+    /* 0x1C */ void *palette;
     /* 0x20 */ s16 angle;
     /* 0x22 */ u8 pad22[2];
-    /* 0x24 */ s32 value;
+    /* 0x24 */ Gfx *displayList;
     /* 0x28 */ s32 velocity;
     /* 0x2C */ s32 soundIndex;
 } RaceUiSlideActor;
@@ -859,7 +858,6 @@ extern void func_80059854(void *);
 extern void func_8005804C(RaceUiAlpha18Actor *);
 extern void func_8005812C(void *);
 extern void func_8005827C(void *);
-extern void func_800572A0(void *);
 extern void func_80057548(RaceUiSlideActor *);
 extern void func_8005B6F8(void *);
 extern void func_8005CD10(void *);
@@ -879,7 +877,24 @@ extern s16 D_80121B50;
 extern s16 D_801222F4;
 extern void *D_801248D4;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800572A0.s")
+void func_800572A0(RaceUiSlideActor *arg0) {
+    volatile u8 pad[8];
+    Gfx *gfx;
+
+    gDPPipeSync(gRegionAllocPtr++);
+    gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));
+    gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112142));
+    gSPMatrix(gRegionAllocPtr++, &D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image, G_IM_FMT_CI, 0x20, 0x40, 0, G_TX_WRAP, G_TX_WRAP,
+                           5, 6, G_TX_NOLOD, G_TX_NOLOD);
+
+    gfx = gRegionAllocPtr++;
+    gfx->words.w0 = ((arg0->angle * 4) & 0xFFF) | 0xF2000000;
+    gfx->words.w1 = ((arg0->angle + 0x40) << 2) & 0xFFF;
+
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette);
+    gSPDisplayList(gRegionAllocPtr++, arg0->displayList);
+}
 
 void func_80057548(RaceUiSlideActor *arg0) {
     s32 temp_v0;
@@ -899,8 +914,8 @@ void func_80057548(RaceUiSlideActor *arg0) {
 
 void func_80057600(RaceUiSlideActor *arg0) {
     arg0->angle = 0;
-    func_80045990(func_80043040(D_80112168), D_800D5FF4[arg0->index].assetId, &arg0->timer, &arg0->x);
-    arg0->value = D_800D5FF0[arg0->index].word;
+    func_80045990(func_80043040(D_80112168), D_800D5FF4[arg0->index].assetId, &arg0->image, &arg0->palette);
+    arg0->displayList = (Gfx *) D_800D5FF0[arg0->index].word;
     arg0->velocity = D_800D5FF0[arg0->index].b6;
     arg0->soundIndex = D_800D5FF0[arg0->index].b7;
     func_80071824(arg0, func_80057548);
