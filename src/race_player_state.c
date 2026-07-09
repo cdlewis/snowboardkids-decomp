@@ -2671,7 +2671,36 @@ void func_80095940(RaceInputPlayer *player) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800959B4.s")
+void func_800959B4(RaceInputPlayer *player) {
+    s16 updateTimer;
+    s32 scratch[14];
+
+    updateTimer = player->updateTimer;
+    if (updateTimer == 0) {
+        player->updateTimer = updateTimer + 1;
+        player->stateTimer = 0x13;
+        if (player->stateFlags & 0x400) {
+            player->unk80 = 0x40000;
+        } else {
+            player->unk80 = -0x40000;
+        }
+    }
+
+    func_80097C18((s16 *)&scratch[1], player->facingAngle);
+    scratch[12] = 0;
+    scratch[13] = 0;
+    scratch[14] = player->unk80;
+    func_80098590((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
+    player->posX += scratch[9];
+    player->posZ += scratch[11];
+
+    player->stateTimer--;
+    if (player->stateTimer == 0) {
+        player->updateTimer = 0;
+        player->updateState++;
+    }
+    func_80082EC0(player);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095A88.s")
 
