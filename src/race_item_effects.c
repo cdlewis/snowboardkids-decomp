@@ -369,24 +369,43 @@ void func_8004EA34(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
     }
 }
 
-// func_8004EAA8 best match: 81.327%
+// func_8004EAA8 best match: 98.677%
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004EAA8.s")
 
 #ifdef NON_MATCHING
 void func_8004EAA8(RaceItemEffectActor *arg0) {
+    RaceItemEffectActor *actor;
     RaceItemGfxCommandSource sp80;
     void *sp7C;
     void *sp78;
-    Gfx *gfx;
-    volatile s32 pad[0x14];
+    Gfx *temp_v0_2;
+    Gfx *temp_v0_3;
+    Gfx *temp_v0_4;
+    Gfx *temp_v0_5;
+    Gfx *temp_v0_6;
+    Gfx *temp_v0_7;
+    Gfx *temp_v0_8;
+    Gfx *temp_v0_9;
+    Gfx *temp_v0_10;
+    Gfx *temp_v0_11;
+    Gfx *temp_v0_12;
+    Gfx *temp_v0_13;
+    Gfx *temp_v0_14;
+    Gfx *temp_v0_15;
+    Gfx *temp_v0_16;
+    Gfx *temp_v0_17;
+    Gfx *temp_v0_18;
+    Gfx *temp_v0_19;
+    void *matrix;
+    volatile s32 pad[2];
 
     if (D_80156609 != 0) {
         arg0->state.bytes.matrixDirty = 1;
     }
 
     if (func_80049000(&arg0->payload.vec) != 0) {
-        if (arg0->state.bytes.matrixDirty != 0) {
+        if ((s8)arg0->state.bytes.matrixDirty != 0) {
             arg0->state.bytes.matrixDirty = 0;
             sp80 = D_800DEE30;
             sp80.x = arg0->payload.vec.x;
@@ -395,106 +414,77 @@ void func_8004EAA8(RaceItemEffectActor *arg0) {
             arg0->unk30.matrix = func_8004885C(&sp80);
         }
 
-        if (arg0->unk30.matrix != NULL) {
-            func_80045990(func_80043040(D_80112168),
-                          (((s8)arg0->height.byte >> 1) + 0x36) & 0xFFFF,
-                          &sp7C, &sp78);
+        do {
+            matrix = arg0->unk30.matrix;
+            if (matrix != NULL) {
+                func_80045990(func_80043040(D_80112168),
+                              (((s8)arg0->height.byte >> 1) + 0x36) & 0xFFFF,
+                              &sp7C, &sp78);
 
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = (u32)D_800D9D00;
-            gfx->words.w0 = 0x06000000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xFD500000;
-            gfx->words.w1 = (u32)sp7C;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF5500000;
-            gfx->words.w1 = 0x07080200;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE6000000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF3000000;
-            gfx->words.w1 = 0x0703F800;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE7000000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0x80200;
-            gfx->words.w0 = 0xF5400200;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF2000000;
-            gfx->words.w1 = 0x3C03C;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xFD100000;
-            gfx->words.w1 = (u32)sp78;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE8000000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF5000100;
-            gfx->words.w1 = 0x07000000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE6000000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF0000000;
-            gfx->words.w1 = 0x0703C000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE7000000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0x01020040;
-            gfx->words.w1 = (u32)arg0->unk30.matrix;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0x01000040;
-            gfx->words.w1 = (u32)D_80156614;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = (u32)D_800D48A8;
-            gfx->words.w0 = 0x0400103F;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0x60200;
-            gfx->words.w0 = 0xB1060402;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = (u32)D_800D9D40;
-            gfx->words.w0 = 0x06000000;
-        }
+                do {
+                    actor = arg0;
+                    temp_v0_2 = gRegionAllocPtr++;
+                    temp_v0_2->words.w1 = (u32)D_800D9D00;
+                    temp_v0_2->words.w0 = 0x06000000;
+                    temp_v0_3 = gRegionAllocPtr++;
+                    temp_v0_3->words.w0 = 0xFD500000;
+                    do {
+                        temp_v0_3->words.w1 = (u32)sp7C;
+                        temp_v0_4 = gRegionAllocPtr++;
+                        temp_v0_4->words.w0 = 0xF5500000;
+                        temp_v0_4->words.w1 = 0x07080200;
+                        temp_v0_5 = gRegionAllocPtr++;
+                        temp_v0_5->words.w0 = 0xE6000000;
+                        temp_v0_5->words.w1 = 0;
+                        temp_v0_6 = gRegionAllocPtr++;
+                        temp_v0_6->words.w0 = 0xF3000000;
+                        temp_v0_6->words.w1 = 0x0703F800;
+                        temp_v0_7 = gRegionAllocPtr++;
+                        temp_v0_7->words.w0 = 0xE7000000;
+                        temp_v0_7->words.w1 = 0;
+                        temp_v0_8 = gRegionAllocPtr++;
+                        temp_v0_8->words.w0 = 0xF5400200;
+                        temp_v0_8->words.w1 = 0x80200;
+                        temp_v0_9 = gRegionAllocPtr++;
+                        temp_v0_9->words.w0 = 0xF2000000;
+                        temp_v0_9->words.w1 = 0x3C03C;
+                        temp_v0_10 = gRegionAllocPtr++;
+                        temp_v0_10->words.w0 = 0xFD100000;
+                        temp_v0_10->words.w1 = (u32)sp78;
+                        temp_v0_11 = gRegionAllocPtr++;
+                        temp_v0_11->words.w0 = 0xE8000000;
+                        temp_v0_11->words.w1 = 0;
+                        temp_v0_12 = gRegionAllocPtr++;
+                        temp_v0_12->words.w0 = 0xF5000100;
+                        temp_v0_12->words.w1 = 0x07000000;
+                        temp_v0_13 = gRegionAllocPtr++;
+                        temp_v0_13->words.w0 = 0xE6000000;
+                        temp_v0_13->words.w1 = 0;
+                        temp_v0_14 = gRegionAllocPtr++;
+                        temp_v0_14->words.w0 = 0xF0000000;
+                        temp_v0_14->words.w1 = 0x0703C000;
+                        temp_v0_15 = gRegionAllocPtr++;
+                        temp_v0_15->words.w0 = 0xE7000000;
+                        temp_v0_15->words.w1 = 0;
+                        temp_v0_16 = gRegionAllocPtr++;
+                        temp_v0_16->words.w0 = 0x01020040;
+                        temp_v0_16->words.w1 = (u32)actor->unk30.matrix;
+                        temp_v0_17 = gRegionAllocPtr++;
+                        temp_v0_17->words.w0 = 0x01000040;
+                        temp_v0_17->words.w1 = (u32)D_80156614;
+                        temp_v0_18 = gRegionAllocPtr++;
+                        temp_v0_18->words.w0 = 0x0400103F;
+                        temp_v0_18->words.w1 = (u32)D_800D48A8;
+                        temp_v0_19 = gRegionAllocPtr++;
+                        temp_v0_19->words.w0 = 0xB1060402;
+                        temp_v0_19->words.w1 = 0x60200;
+                    } while (0);
+                    temp_v0_2 = gRegionAllocPtr++;
+                    temp_v0_2->words.w1 = (u32)D_800D9D40;
+                    temp_v0_2->words.w0 = 0x06000000;
+                } while (0);
+            }
+        } while (0);
     }
 }
 #endif
