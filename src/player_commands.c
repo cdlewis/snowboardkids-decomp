@@ -1455,7 +1455,70 @@ f32 func_8009F194(f32 arg0) {
         ((f64)(fourth * square) * 0.00015403530393381601)));
 }
 
+// func_8009F344 best match: 99.845%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F344.s")
+
+#ifdef NON_MATCHING
+typedef struct PlayerCommandBank {
+    u8 pad0[0x10];
+    s32 count;
+    s32 offsets[1];
+} PlayerCommandBank;
+
+typedef struct PlayerCommandRelocEntry {
+    s32 unk0;
+    u8 pad4[4];
+    u8 unk8;
+    u8 relocated;
+    u8 padA[2];
+    s32 unkC;
+    s32 unk10;
+} PlayerCommandRelocEntry;
+
+extern u8 *D_8015A674;
+extern s32 D_8015A688;
+extern PlayerCommandBank *D_8015A690;
+
+void func_8009F344(PlayerCommandBank *arg0, s32 arg1) {
+    s32 count;
+    s32 i;
+    s32 offset;
+    PlayerCommandRelocEntry *entry;
+
+    D_8015A690 = arg0;
+    count = arg0->count;
+    D_8015A688 = ((count & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF;
+    D_8015A674 = alHeapDBAlloc(0, 0, &D_8015A648, 1, count * 4);
+
+    i = 0;
+    if (D_8015A688 > 0) {
+        offset = 0;
+        do {
+            *(PlayerCommandRelocEntry **)(D_8015A674 + offset) =
+                (PlayerCommandRelocEntry *)(*(s32 *)((u8 *)D_8015A690 + offset + 0x14) + (s32)D_8015A690);
+            entry = *(PlayerCommandRelocEntry **)(D_8015A674 + offset);
+            if (entry->relocated == 0) {
+                do {
+                    entry->unk0 += arg1;
+                    (*(PlayerCommandRelocEntry **)(D_8015A674 + offset))->relocated = 1;
+                    entry = *(PlayerCommandRelocEntry **)(D_8015A674 + offset);
+                } while (0);
+                if (entry->unkC != 0) {
+                    entry->unkC += (s32)D_8015A690;
+                    entry = *(PlayerCommandRelocEntry **)(D_8015A674 + offset);
+                }
+                if (entry->unk8 == 0) {
+                    entry->unk10 += (s32)arg0;
+                }
+            }
+            i++;
+            offset += 4;
+        } while (i < D_8015A688);
+    }
+    osWritebackDCacheAll();
+}
+#endif
 
 s32 func_8009F4C8(s32 arg0) {
     s32 temp_v1;
