@@ -690,23 +690,17 @@ typedef struct {
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ u8 pad24[4];
+    /* 0x24 */ RaceUiGfxCommandDest *matrix;
     /* 0x28 */ s16 unk28;
     /* 0x2A */ u8 pad2A[2];
-    /* 0x2C */ void *palette0;
-    /* 0x30 */ void *palette1;
-    /* 0x34 */ void *palette2;
-    /* 0x38 */ void *palette3;
-    /* 0x3C */ void *image0;
-    /* 0x40 */ void *image1;
-    /* 0x44 */ void *image2;
-    /* 0x48 */ void *image3;
+    /* 0x2C */ void *palettes[4];
+    /* 0x3C */ void *images[4];
     /* 0x4C */ s32 zOffset;
     /* 0x50 */ s16 alpha;
     /* 0x52 */ s16 alphaStep;
     /* 0x54 */ s16 timer;
     /* 0x56 */ s16 scale;
-    /* 0x58 */ u8 pad58;
+    /* 0x58 */ u8 matrixDirty;
     /* 0x59 */ u8 playerIndex;
     /* 0x5A */ u8 frame;
 } RaceUiSparkleActor;
@@ -874,6 +868,8 @@ extern const char D_800E1474[];
 extern const char D_800E1484[];
 extern const char D_800E1494[];
 extern const char D_800E14A8[];
+extern Gfx D_800D60A0[];
+extern Gfx D_800D60E0[];
 extern Gfx D_800D6120[];
 extern Gfx D_800D6190[];
 extern u32 D_800DEFF8[];
@@ -2774,7 +2770,43 @@ void func_8005E68C(void *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005E6D0.s")
+void func_8005E6D0(RaceUiSparkleActor *arg0) {
+    RaceUiSparkleActor *arg1;
+    s32 i;
+    s32 j;
+    RaceUiTrailCopyBlock sp6C;
+
+    arg1 = arg0;
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (arg1->matrixDirty != 0) {
+        arg1->matrixDirty = 0;
+        sp6C.transform = D_800DEE30;
+        for (i = 0; i < 3; i++) {
+            for (j = 0; j < 3; j++) {
+                sp6C.halfwords[(i * 3) + j] = (sp6C.halfwords[(i * 3) + j] * arg1->scale) / 0x1000;
+            }
+        }
+        sp6C.transform.translation.x = arg1->pos.x;
+        sp6C.transform.translation.y = arg1->pos.y;
+        sp6C.transform.translation.z = arg1->pos.z;
+        arg1->matrix = func_8004885C(&sp6C);
+    }
+
+    if (arg1->matrix != NULL) {
+        gSPDisplayList(gRegionAllocPtr++, D_800D60E0);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg1->alpha);
+        gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg1->images[arg1->frame], G_IM_FMT_CI, 0x20, 0x20,
+                               0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, G_TX_NOLOD, G_TX_NOLOD);
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg1->palettes[arg1->frame]);
+        gSPMatrix(gRegionAllocPtr++, arg1->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+        RACE_UI_GSP_VERTEX_F3DEX(gRegionAllocPtr++, D_800D60A0, 4, 0);
+        RACE_UI_GSP1QUADRANGLE_F3DEX(gRegionAllocPtr++, 2, 1, 0, 3, 3);
+    }
+}
 
 void func_8005EA4C(RaceUiSparkleActor *arg0) {
     RaceUiSparkleTransformScratch stack;
@@ -2874,10 +2906,10 @@ void func_8005F174(RaceUiSparkleActor *arg0) {
     arg0->scale = 0x1000;
     arg0->unk28 = 0;
 
-    func_80045990(func_80043040(D_80112168), 0x23, &arg0->image0, &arg0->palette0);
-    func_80045990(func_80043040(D_80112168), 0x24, &arg0->image1, &arg0->palette1);
-    func_80045990(func_80043040(D_80112168), 0x25, &arg0->image2, &arg0->palette2);
-    func_80045990(func_80043040(D_80112168), 0x26, &arg0->image3, &arg0->palette3);
+    func_80045990(func_80043040(D_80112168), 0x23, &arg0->images[0], &arg0->palettes[0]);
+    func_80045990(func_80043040(D_80112168), 0x24, &arg0->images[1], &arg0->palettes[1]);
+    func_80045990(func_80043040(D_80112168), 0x25, &arg0->images[2], &arg0->palettes[2]);
+    func_80045990(func_80043040(D_80112168), 0x26, &arg0->images[3], &arg0->palettes[3]);
     func_80072A74(0x10, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
     func_80071824(arg0, func_8005EFFC);
 }
