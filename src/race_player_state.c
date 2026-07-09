@@ -69,11 +69,13 @@ extern void (*D_800DECE8[])(RaceInputPlayer *);
 extern void (*D_800DED08[])(RaceInputPlayer *);
 extern void (*D_800DED18[])(RaceInputPlayer *);
 extern void (*D_800DED30[])(RaceInputPlayer *);
+extern Struct800955C0 D_800B9540[];
 extern u8 D_80121B5F;
 extern u8 D_800EC9C2;
 extern s8 D_80121B54;
 extern u8 D_80121B56;
 extern u8 D_80121B5E;
+extern s16 D_80121B50;
 extern s16 D_801235B0;
 extern Unk8011228C D_8011228C[];
 extern void func_8007B250(void);
@@ -2432,7 +2434,71 @@ void func_80093304(RaceInputPlayer *player) {
 }
 #endif
 
+// func_800934EC best match: 99.262%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800934EC.s")
+
+#ifdef NON_MATCHING
+void func_800934EC(RaceInputPlayer *player) {
+    Struct800955C0 *spawn;
+    s16 updateState;
+    s16 targetAngle;
+    s32 tooLow;
+    s16 angleDiff;
+
+    updateState = player->updateState;
+    if (updateState == 0) {
+        player->updateState = updateState + 1;
+        if (player->stateFlags & 0x10000) {
+            func_80081E40(player, 0x11);
+        } else {
+            func_80081E40(player, 0x10);
+        }
+        player->stateFlags &= 0xFE0C1FFB;
+        player->stateFlags &= ~0x200;
+        player->stateFlags |= 0xA000;
+        player->unk60 = 0x40000;
+    }
+
+    if (player->stateFlags & 1) {
+        player->stateFlags |= 0x200;
+    } else {
+        player->stateFlags &= ~0x200;
+    }
+
+    spawn = &D_800B9540[D_80121B50];
+    if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
+        targetAngle = func_8004940C(player->posX, player->posZ, spawn->unk40, spawn->unk44);
+        if (player->stateFlags & 0x400) {
+            targetAngle += 0x800;
+        }
+
+        angleDiff = (targetAngle - player->facingAngle) & 0xFFF;
+        if ((targetAngle - player->facingAngle) >= 0x801) {
+            angleDiff -= 0x1000;
+        }
+        if (angleDiff >= 0x67) {
+            angleDiff = 0x66;
+        }
+        tooLow = angleDiff < -0x66;
+        if (tooLow) {
+            angleDiff = -0x66;
+        }
+        player->facingAngle += angleDiff;
+    }
+
+    func_8008B408(player, 0, 0);
+    player->unk40.y -= 0xA000;
+    player->posY += player->unk40.y;
+
+    if (func_80082EC0(player) != 0) {
+        player->stateFlags &= 0xFE0C1FFB;
+        player->mode = 0;
+        player->updateState = 0;
+        player->updateTimer = 0;
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800936D4.s")
 
