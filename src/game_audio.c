@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 #include "memory_allocator.h"
 #include "game_audio.h"
 #include "game_boot.h"
@@ -46,6 +47,35 @@ typedef struct AudioRomRange {
     s32 words[2];
 } AudioRomRange;
 
+typedef struct PlayerCommandInit {
+    s32 count;
+    void *unk4;
+    s32 outputRate;
+    u8 *heapBase;
+    s32 heapLen;
+    s32 unk14;
+    s32 unk18;
+    s32 unk1C;
+    s32 unk20;
+    s32 *fxHeader;
+    s32 *unk28;
+    s32 maxUpdates;
+    s32 maxFXBusses;
+    s32 unk34;
+    s32 unk38;
+    s32 unk3C;
+    s32 unk40;
+} PlayerCommandInit;
+
+typedef struct AudioAssetHandles {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+} AudioAssetHandles;
+
 typedef union GameAudioHalfArg {
     s32 word;
     struct {
@@ -54,16 +84,36 @@ typedef union GameAudioHalfArg {
     } half;
 } GameAudioHalfArg;
 
+extern AudioAssetHandles D_80112130;
+extern s16 D_80112136;
+extern s16 D_80112138;
 extern s16 D_8011213A;
 extern s16 D_80121B50;
+extern u8 D_275A90[];
+extern u8 D_27E290[];
+extern s32 D_800DABB0[];
+extern s32 D_800DACAC[];
+extern s32 D_800DB8FC[];
+extern s32 D_800DBAAC[];
 extern s32 D_80121850;
 extern s32 D_80121858;
 extern s32 D_8012185C;
 extern s32 D_80121974;
 extern s32 D_80121AF8;
 extern s32 D_80121AFC;
+extern s32 D_80121B0C;
+extern s32 D_80121B10;
+extern s32 D_80121B14;
 extern s32 D_80121B18;
+extern s32 D_80121B1C;
+extern s32 D_80121B20;
+extern s32 D_80121B24;
+extern s16 D_80121B28;
+extern s16 D_80121B2A;
+extern s16 D_80121B2C;
+extern s16 D_80121B2E;
 extern s32 D_80121B30;
+extern GameAudioHandleNode D_80121860[];
 extern GameAudioHandleNode *D_80121930;
 extern GameAudioHandleNode *D_80121934;
 extern s32 D_8012193C;
@@ -82,7 +132,9 @@ extern u8 D_80121B03;
 extern u8 D_80121B04;
 extern u8 D_80121B05;
 extern s8 D_8015A6B8;
+extern u8 D_801240A8[];
 
+s32 func_8009D5A8(PlayerCommandInit *arg0);
 void func_8009D8B0(s32 arg0, s32 arg1);
 void func_8009DE50(s32 arg0, s32 arg1);
 void osStartThread(void *);
@@ -98,7 +150,65 @@ s32 func_80071CC0(void);
 s32 func_800722F0(SoundPosition *pos, s32 volume);
 void func_80072518(s16 soundId, s32 mode, s16 volume, f32 pitch);
 
-#pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80071830.s")
+void func_80071830(void) {
+    PlayerCommandInit init;
+    void *nullPtr;
+    s32 pad0;
+    s32 pad1;
+    GameAudioHandleNode **freeList;
+    GameAudioHandleNode *node;
+
+    D_80121850 = 0;
+    player_bss_0048 = 0;
+    D_8012185C = 1;
+    nullPtr = NULL;
+    D_80121858 = 0;
+    D_80121974 = -1;
+
+    do { freeList = D_80121940; node = D_80121860; do { *freeList = node; node++; freeList++; } while (node < (GameAudioHandleNode *)&D_80121930); D_8012193C = 13; D_80121B00 = 0; } while (0);
+
+    D_80121AF8 = 0;
+    D_80121AFC = 0;
+    D_80121930 = nullPtr;
+    D_80121934 = nullPtr;
+    D_80121B08[0] = 0;
+    D_80121B18 = 0;
+    D_80121B28 = 0;
+    D_80121B0C = 0;
+    D_80121B1C = 0;
+    D_80121B2A = 0;
+    D_80121B10 = 0;
+    D_80121B20 = 0;
+    D_80121B2C = 0;
+    D_80121B14 = 0;
+    D_80121B24 = 0;
+    D_80121B2E = 0;
+    D_80121B30 = 0;
+
+    D_80112136 = func_80042D58(0x80000);
+    func_800437F0(D_275A90, D_27E290, 4);
+    D_80112130.unkA = func_80042D58(0x10000);
+
+    init.count = 0x18;
+    init.unk4 = D_801240A8;
+    init.outputRate = 0x6E;
+    init.heapBase = (u8 *)func_80043040(D_80112130.unk6);
+    init.heapLen = 0x80000;
+    init.unk14 = func_80043040(D_80112138);
+    init.unk18 = D_27E290;
+    init.unk1C = D_800DABB0;
+    init.unk20 = D_800DACAC;
+    init.fxHeader = D_800DB8FC;
+    init.unk28 = D_800DBAAC;
+    init.maxUpdates = 0x100;
+    init.maxFXBusses = 0x5622;
+    init.unk34 = 0x2000;
+    init.unk38 = 1;
+    init.unk3C = 0x20;
+    init.unk40 = 0x1000;
+    func_8009D5A8(&init);
+    func_8009D8B0(1, 0x7FFF);
+}
 
 void func_80071A3C(s32 arg0) {
     if (D_8012185C == 0) {
