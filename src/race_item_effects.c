@@ -308,7 +308,130 @@ void func_8004E594(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
     }
 }
 
+// func_8004E604 best match: 81.164%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004E604.s")
+
+#ifdef NON_MATCHING
+void func_8004E604(RaceItemEffectActor *arg0) {
+    RaceItemGfxCommandSource sp64;
+    volatile u8 pad[0x48];
+    Gfx *gfx;
+
+    if (D_80156609 != 0) {
+        arg0->state.bytes.matrixDirty = 1;
+    }
+
+    if (arg0->state.bytes.matrixDirty != 0) {
+        arg0->state.bytes.matrixDirty = 0;
+        sp64 = D_800DEE30;
+        sp64.unk0 = arg0->unk30.screen.y << 8;
+        sp64.unk8 = arg0->unk30.screen.y << 8;
+        sp64.unk10 = arg0->unk30.screen.y << 8;
+        sp64.x = arg0->payload.vec.x;
+        sp64.y = arg0->payload.vec.y;
+        sp64.z = arg0->payload.vec.z;
+        arg0->unk24.velocityX = (s32)func_8004885C(&sp64);
+    }
+
+    if (arg0->unk24.velocityX != 0) {
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = (u32)D_800D4878;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xFA000000;
+        gfx->words.w1 = (arg0->unk30.screen.x & 0xFF) | ~0xFF;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xFD500000;
+        gfx->words.w1 = arg0->unk2C;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF5500000;
+        gfx->words.w1 = 0x07080200;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE6000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF3000000;
+        gfx->words.w1 = 0x0703F800;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE7000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0x80200;
+        gfx->words.w0 = 0xF5400200;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF2000000;
+        gfx->words.w1 = 0x3C03C;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xFD100000;
+        gfx->words.w1 = arg0->unk28.word;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE8000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF5000100;
+        gfx->words.w1 = 0x07000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE6000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF0000000;
+        gfx->words.w1 = 0x0703C000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE7000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = arg0->unk24.velocityX;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01000040;
+        gfx->words.w1 = (u32)D_80156614;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = (u32)D_800D45E0;
+        gfx->words.w0 = 0x0400103F;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0x60200;
+        gfx->words.w0 = 0xB1060402;
+    }
+}
+#endif
 
 void func_8004E960(RaceItemEffectActor *arg0) {
     if (D_80121B56 == 0) {
