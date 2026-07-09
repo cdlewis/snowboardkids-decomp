@@ -37,7 +37,56 @@ extern s16 D_800DE8B8[];
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088C80.s")
 
+// func_80088E98 best match: 99.719% (nonmatchings/func_80088E98-6688367443449623229/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088E98.s")
+
+#ifdef NON_MATCHING
+s32 func_80088E98(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
+    RaceInputPlayer *player;
+    s32 yDiff;
+    s32 newLimit;
+    s32 yLimit;
+    s32 zDiff;
+    s32 xDiff;
+    s32 xzLimit;
+    s16 result;
+    volatile s32 stackPad[4];
+
+    player = &D_80121D80[playerIndex];
+    result = 0;
+    if (player->isActive == 0) {
+        return 0;
+    }
+
+    yDiff = pos->y - player->unk5C;
+    yLimit = ySize;
+    if (yDiff < 0) {
+        yDiff = -yDiff;
+    } else {
+        yLimit = player->unk284;
+    }
+
+    if (yDiff < yLimit) {
+        newLimit = player->unk280 + xzSize;
+        xDiff = pos->x - player->posX;
+        xzLimit = newLimit;
+        if (xDiff <= -1) {
+            xDiff = -xDiff;
+        }
+        if (xDiff < xzLimit) {
+            zDiff = pos->z - player->posZ;
+            if (zDiff < 0) {
+                zDiff = -zDiff;
+            }
+            if ((zDiff < xzLimit) && (func_80098C30((s64)xDiff * xDiff + (s64)zDiff * zDiff) < xzLimit)) {
+                result = 1;
+            }
+        }
+    }
+
+    return result;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80089000.s")
 
