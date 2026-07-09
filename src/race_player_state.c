@@ -2581,7 +2581,79 @@ void func_800955C0(RaceInputPlayer *player) {
     }
 }
 
+// func_80095650 best match: 98.807% (nonmatchings/func_80095650-2127290767680699791/base_8.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095650.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    /* 0x00 */ FixedMatrix3s matrix;
+    /* 0x12 */ char pad12[0xE];
+    /* 0x20 */ Vec3i transformed;
+    /* 0x2C */ Vec3i source;
+} PlayerTransformScratch;
+
+extern void func_8006BB50(void *);
+
+void func_80095650(RaceInputPlayer *player) {
+    s16 updateTimer;
+    s32 stateTimer;
+    PlayerTransformScratch scratch;
+    s32 yVel;
+
+    updateTimer = player->updateTimer;
+    if (updateTimer == 0) {
+        player->updateTimer = updateTimer + 1;
+        player->unk40.y = 0x30000;
+        player->stateTimer = 0x1E;
+        func_80081E40(player, 4);
+        if (player->stateFlags & 0x400) {
+            player->unk80 = 0x20000;
+        } else {
+            player->unk80 = -0x20000;
+        }
+    }
+
+    func_80097C18(scratch.matrix, player->facingAngle);
+    scratch.source.x = 0;
+    scratch.source.y = 0;
+    scratch.source.z = player->unk80;
+    func_80098590(scratch.matrix, &scratch.source, &scratch.transformed);
+    player->posX += scratch.transformed.x;
+    player->posZ += scratch.transformed.z;
+
+    func_80097C18(scratch.matrix, player->facingAngle);
+    scratch.source.x = 0;
+    scratch.source.y = 0;
+    scratch.source.z = player->unk80;
+    func_80098590(scratch.matrix, &scratch.source, &scratch.transformed);
+    player->posX += scratch.transformed.x;
+    yVel = player->unk40.y - 0x7000;
+    player->posZ += scratch.transformed.z;
+    player->unk40.y = yVel;
+    player->posY += yVel;
+
+    if ((yVel < 0) && !(player->stateFlags & 1)) {
+        if (player->animationId != 1) {
+            func_80081E40(player, 1);
+        }
+        func_80082DD0(player);
+        func_8008CF10(player);
+    } else {
+        func_80082EC0(player);
+    }
+
+    stateTimer = ((unsigned long long) player->stateTimer) - 1;
+    player->stateTimer = stateTimer;
+    if (stateTimer == 0) {
+        player->updateState++;
+        player->updateTimer = 0;
+        player->stateTimer = 0x20;
+        func_80071408(func_8006BB50, 0, 0x64);
+        player->stateFlags &= ~0x20;
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095804.s")
 
