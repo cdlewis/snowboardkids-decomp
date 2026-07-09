@@ -4,6 +4,8 @@
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
 
+#define COURSE_INDEX_RELOAD (*(volatile s16 *)&D_80121B50)
+
 typedef struct {
     char pad[0x18];
     s16 step;
@@ -752,29 +754,20 @@ void func_8006BA50(RaceMovingEffect *arg0) {
     func_800483FC(&D_801248A4, func_8006B7E0, arg0);
 }
 
-// func_8006BB50 best match: 98.261% at nonmatchings/func_8006BB50-1404502880690620360/base_6.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006BB50.s")
-
-#ifdef NON_MATCHING
 void func_8006BB50(RaceMovingEffect *arg0) {
-    u32 tempIndex;
-    volatile s16 *courseIndex;
     void *mtx;
 
     arg0->timer = 0x46;
-    courseIndex = &D_80121B50;
     arg0->velocity.z = 0x680000;
-    tempIndex = D_80121B50;
     mtx = arg0->unk30;
-    func_80097C18(mtx, D_800B9556[tempIndex].angle + 0x400);
+    func_80097C18(mtx, D_800B9556[D_80121B50].angle + 0x400);
     func_80098590(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.z = 0xFFFE0000;
-    arg0->pos.x += ((CourseSpawnEntry *)((u8 *)D_800B9540 + ((*(volatile s16 *)&D_80121B50) * 0x48)))->pos.x;
-    arg0->pos.y += ((CourseSpawnEntry *)((u8 *)D_800B9540 + ((*(volatile s16 *)&D_80121B50) * 0x48)))->pos.y;
-    arg0->pos.z += ((CourseSpawnEntry *)((u8 *)D_800B9540 + (*courseIndex * 0x48)))->pos.z;
+    arg0->pos.x += D_800B9540[COURSE_INDEX_RELOAD].pos.x;
+    arg0->pos.y += D_800B9540[COURSE_INDEX_RELOAD].pos.y;
+    arg0->pos.z += D_800B9540[COURSE_INDEX_RELOAD].pos.z;
     func_80071824(arg0, func_8006BA50);
 }
-#endif
 
 void func_8006BC68(RaceMovingEffect *arg0) {
     volatile s32 unused;
