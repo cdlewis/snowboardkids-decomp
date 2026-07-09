@@ -4,6 +4,7 @@
 
 #define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x3E])
 #define TITLE_MENU_FRAME_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x42])
+#define TITLE_MENU_BANNER_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x52])
 #define RACE_PLAYER_STATE_SIZE 0x60C
 
 typedef struct {
@@ -113,7 +114,6 @@ extern void func_8000F8AC(s16, s16, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80010074(s16, s16, s32, s32, s32);
 extern void func_800129DC(s16, s16, u16 *, s32, s32);
 extern void func_80017168(void *, s32);
-extern void func_80014600(MenuIntroActor *);
 extern void func_80014EF0(MenuItemActor *);
 extern void func_80014CB8(void *);
 extern void func_80015054(void *);
@@ -165,6 +165,7 @@ extern u16 D_800B5408[];
 extern u16 D_800B541C[];
 extern u16 D_800B5430[];
 extern u16 D_800B5444[];
+extern u8 D_800B5200[];
 extern u8 D_80112130[];
 extern s16 D_8011216E;
 extern s16 D_80112172;
@@ -215,7 +216,68 @@ typedef struct {
     /* 0x1C */ DstStruct_80017168 sprite;
 } SpriteActor;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80014600.s")
+void func_80014600(MenuIntroActor *arg0) {
+    s32 i;
+    s32 j;
+    s32 selected;
+    s32 limit;
+    MenuIntroActor *actor;
+
+    actor = arg0;
+    func_8000F8AC((s16)(actor->x - 4), (s16)(actor->y - 4), func_80043040(TITLE_MENU_BANNER_TEXTURE_HANDLE), 2,
+                  0x20, 0x20, 0, actor->alpha, 0);
+    func_8000F8AC((s16)(actor->x + 0xD4), (s16)(actor->y - 4), func_80043040(TITLE_MENU_BANNER_TEXTURE_HANDLE), 4,
+                  0x20, 0x20, 0, actor->alpha, 0);
+    i = 0;
+    do {
+        func_8000F8AC((s16)(actor->x + i), (s16)(actor->y - 4), func_80043040(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+                      3, 0x20, 0x20, 0, actor->alpha, 0);
+        func_8000F8AC((s16)(actor->x + i), (s16)(actor->y + 0x24), func_80043040(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+                      8, 0x20, 0x20, 0, actor->alpha, 0);
+        i += 0x10;
+    } while (i < 0xE0);
+    func_8000F8AC((s16)(actor->x - 4), (s16)(actor->y + 0x24), func_80043040(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+                  7, 0x20, 0x20, 0, actor->alpha, 0);
+    func_8000F8AC((s16)(actor->x + 0xD4), (s16)(actor->y + 0x24),
+                  func_80043040(TITLE_MENU_BANNER_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, actor->alpha, 0);
+    i = (actor->state == 4) * 0;
+    limit = 0xE0;
+    do {
+        func_8000F8AC((s16)(actor->x - 4), (s16)(actor->y + i), func_80043040(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+                      5, 0x20, 0x20, 0, actor->alpha, 0);
+        func_8000F8AC((s16)(actor->x + 0xD4), (s16)(actor->y + i), func_80043040(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+                      6, 0x20, 0x20, 0, actor->alpha, 0);
+        j = 0;
+        do {
+            func_8000F8AC((s16)(actor->x + j), (s16)(actor->y + i),
+                          func_80043040(TITLE_MENU_BANNER_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, actor->alpha, 0);
+            j += 0x10;
+        } while (j != limit);
+        i += 0x10;
+    } while (i <= 0x2F);
+
+    if (actor->state < 3) {
+        selected = 0;
+    } else {
+        selected = actor->state - 2;
+        if (actor->state < 5) {
+            if (D_80121B55 == 1) {
+                selected = 1;
+            } else {
+                selected = 2;
+            }
+        } else if (selected >= 5) {
+            selected = 4;
+        }
+    }
+    func_80013154(actor->x, actor->y, &D_800B5200[selected * 0x68], 0, actor->alpha, 0);
+
+    if ((actor->state == 1) || (actor->state == 6)) {
+        func_8000F030((s16)(actor->x + 0xD0), (s16)(actor->y + 0x20),
+                      func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), ((actor->timer >= 8) + 5) & 0xFFFF,
+                      0x20, 0x20, 0, 0);
+    }
+}
 
 void func_80014AA4(MenuIntroActor *arg0) {
     TitleIntroTransitionState *global;
