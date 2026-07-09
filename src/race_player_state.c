@@ -2386,7 +2386,88 @@ void func_80093304(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80093E0C.s")
 
+// func_80094288 best match: 89.460%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094288.s")
+
+#ifdef NON_MATCHING
+void func_80094288(RaceInputPlayer *player) {
+    s16 updateState;
+    s16 nextState;
+    s32 yVel;
+    s32 velocityX;
+    s32 velocityZ;
+    s32 posY;
+    s32 stateTimer;
+    u32 stateFlags;
+
+    updateState = player->updateState;
+    nextState = updateState + 1;
+    if (updateState == 0) {
+        player->stateFlags &= ~0x200;
+        player->stateFlags &= 0xFE0C1FFB;
+        player->updateState = nextState;
+        player->stateFlags |= 0x01006000;
+        if (player->animationId != 0x12) {
+            func_80081E40(player, 0x12);
+        }
+        player->stateTimer = 0x1E;
+        player->unk60 = 0;
+    }
+    func_80082DD0(player);
+    func_8008B408(player, player->unk254, 0);
+    player->velocity.y += 0xFFFF6000;
+    player->unk314 = 0x80000;
+    func_8008B508(&player->velocity, player);
+    stateFlags = player->stateFlags;
+    if ((stateFlags & 1) == 0) {
+        func_8008BB20(player, 0, 0, 0, 0);
+        player->unk582 = 0x100;
+        player->unk584 = 8;
+        player->unk588 = 0.0f;
+        stateFlags = player->stateFlags;
+    }
+    if (stateFlags & 1) {
+        player->stateFlags = stateFlags | 0x200;
+    } else {
+        player->stateFlags = stateFlags & ~0x200;
+    }
+    yVel = player->velocity.y;
+    velocityX = player->velocity.x;
+    velocityZ = player->velocity.z;
+    posY = player->posY + yVel;
+    player->posY = posY;
+    player->unk74 = 0;
+    player->posX += velocityX;
+    player->posY = posY + yVel;
+    player->posZ += velocityZ;
+    player->facingAngle = func_8004908C(velocityX, velocityZ);
+    if (player->stateFlags & 0x400) {
+        player->facingAngle += 0x800;
+    }
+    if (player->unk330 != 3) {
+        stateTimer = player->stateTimer - 1;
+        player->stateTimer = stateTimer;
+        if (stateTimer == 0) {
+            stateFlags = player->stateFlags & 0xFE0C1FFB;
+            player->stateFlags = stateFlags;
+            if (stateFlags & 1) {
+                player->mode = 1;
+                player->updateState = 0;
+                player->updateTimer = 0;
+            } else {
+                player->mode = 0;
+                player->updateState = 0;
+                player->updateTimer = 0;
+            }
+        }
+    } else {
+        player->stateTimer = 0x1E;
+    }
+    player->actionEffectLevel = 4;
+    player->actionEffectFrame = 2;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094480.s")
 
