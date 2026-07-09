@@ -11,7 +11,6 @@
 
 extern s16 D_8011218A[];
 extern s16 D_801121AE;
-extern void func_80041E90(MainMenuSceneModel *arg0);
 extern u8 D_5E34A0;
 extern u8 D_608560;
 extern u8 D_215BE0;
@@ -25,6 +24,14 @@ typedef struct MainMenuModelAssetHandles {
     /* 0x66 */ s16 modelAssetSlots[6];
     /* 0x72 */ s16 animationAssetSlots[6];
 } MainMenuModelAssetHandles;
+
+typedef struct MainMenuAnimationWritePart {
+    s32 word0;
+    s32 word4;
+    s32 word8;
+    s32 wordC;
+    s32 word10;
+} MainMenuAnimationWritePart;
 
 extern RomAssetAddress D_800D4020[];
 extern RomAssetAddress D_800D4050[];
@@ -212,7 +219,33 @@ MainMenuSceneModel *func_80041E60(s32 modelIndex) {
     return (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80041E90.s")
+void func_80041E90(MainMenuSceneModel *model) {
+    s16 *cursor;
+    s32 i;
+    MainMenuAnimationWritePart *writePart;
+    MainMenuModelPart *part;
+
+    cursor = model->animationCursor;
+    i = 0;
+    writePart = (MainMenuAnimationWritePart *)model;
+    do {
+        i++;
+        writePart[1].word10 = cursor[0] << 11;
+        writePart[2].word0 = cursor[1] << 11;
+        writePart[2].word4 = cursor[2] << 11;
+        writePart++;
+        cursor += 3;
+    } while (i < 14);
+
+    for (i = 0; i < 14; i++) {
+        part = &model->parts[i];
+        part->rot.x = *cursor++;
+        part->rot.y = *cursor++;
+        part->rot.z = *cursor++;
+    }
+
+    model->animationCursor = cursor;
+}
 
 s32 func_80041FB4(s32 arg0) {
     int new_var2;
