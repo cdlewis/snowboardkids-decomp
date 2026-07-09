@@ -87,7 +87,7 @@ struct MainMenuScoreTask {
     } state;
 };
 
-// func_8002B560 best match: 98.756% (nonmatchings/func_8002B560-4033633224288138541/base_10.c)
+// func_8002B560 best match: 99.235% (nonmatchings/func_8002B560-6688367443449623229/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002B560.s")
 
 #ifdef NON_MATCHING
@@ -117,9 +117,10 @@ void func_8002B560(MainMenuScoreTask *arg0) {
     sprintf(text, D_800E0F30, D_80121D8C);
     func_80013D0C((s16)(arg0->x + 0x44), (s16)(arg0->y + 0x1B), text, 0, 0x100);
 
-    count = D_800EC9F0.iconCount + 1;
     if (D_800EC9F0.iconCount == 3) {
         count = 3;
+    } else {
+        count = D_800EC9F0.iconCount + 1;
     }
 
     i = 0;
