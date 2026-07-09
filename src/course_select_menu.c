@@ -47,30 +47,92 @@ typedef struct {
 } CourseSelectSelection;
 
 typedef struct ObjectA3E0 {
-    /* 0x00 */ u8 pad0[0x2C];
+    /* 0x00 */ u8 pad0[0x24];
+    /* 0x24 */ s32 unk24;
+    /* 0x28 */ u8 pad28[4];
     /* 0x2C */ void (*unk2C)(void);
     /* 0x30 */ u8 pad30[0x80];
 } ObjectA3E0;
 
+extern u8 D_14B450[];
+extern u8 D_1502A0[];
+extern u8 D_1E74E0[];
+extern u8 D_1EC0F0[];
+extern u8 D_1EF530[];
+extern u8 D_1F1A90[];
+extern u8 D_593D10[];
+extern u8 D_598A70[];
+extern u8 D_59AAA0[];
+extern u8 D_59DFE0[];
+extern u8 D_59E7F0[];
+extern u8 D_5A1ED0[];
+extern u8 D_5C5320[];
+extern u8 D_5CBA80[];
+extern u8 D_5CCD40[];
+extern u8 D_5D4280[];
+extern u8 D_5DAF30[];
 extern ObjectA3E0 *D_800EC9C4;
 extern u16 D_800B34E0[];
+extern s16 D_800DEF14;
 extern s16 D_800EC9D0;
 extern s8 D_800DEED4;
+extern s8 D_800EC9C0;
+extern s8 D_800EC9C1;
+extern u8 D_800EC9E6;
 extern u8 D_800EC9F0[];
 extern s8 D_800EC9F1;
 extern s8 D_800EC9F9;
 extern s8 D_800ECA2F[];
+extern s32 D_8010ADDC;
+extern s8 D_8010AE64;
+extern u8 D_8010AEA0[];
+extern s8 D_8010AEA4;
+extern s8 D_8010AEA8;
+extern u8 D_8010AEAC[];
+extern s8 D_8010AEB0;
 extern s16 D_8010AED0;
 extern s16 D_8010ADF0;
 extern s8 D_8010ADF8;
 extern u8 D_8010AECC;
 extern CourseSelectStatus D_8010AF18;
+extern u8 D_8010AF19;
+extern u8 D_8010AF1A;
+extern u8 D_8010AF1B;
 extern u8 D_8010AF1C;
+extern u8 D_8010AF1D;
+extern u8 D_8010AF1E;
+extern u8 D_8010AF1F;
 extern u8 D_8010AF20;
+extern u8 D_8010AF21;
+extern u8 D_8010AF22;
+extern u8 D_8010AF23;
+extern u8 D_8010AF24;
+extern u8 D_8010AF25;
+extern u8 D_8010AF26;
+extern u8 D_8010AF27;
+extern u8 D_8010AF28;
+extern u8 D_8010AF29;
+extern u8 D_8010AF2A;
+extern u8 D_8010AF2B;
+extern s16 D_8010AF2C;
+extern s16 D_8010AF2E;
+extern s16 D_8010AF30;
+extern s16 D_8010AF32;
+extern s16 D_8010AF34;
+extern s16 D_8010AF36;
+extern s16 D_8010AF38;
+extern s16 D_8010AF3A;
+extern u8 D_8010AF3C;
+extern u8 D_8010AF3D;
+extern u8 D_8010AF3E;
+extern u8 D_8010AF3F;
+extern s8 D_8010AF70;
+extern s8 D_8010AF71;
 extern s8 D_8010AF72;
 extern s8 D_8010AF73;
 extern s16 D_8010AF76;
 extern s8 D_8010AF74;
+extern s16 D_80112130[];
 extern ObjectA3E0 D_801121E0[];
 extern ObjectA3E0 D_80112340;
 extern u8 D_80121B55;
@@ -85,16 +147,166 @@ extern void func_80009C48(void);
 extern void func_8000B220(void);
 extern void func_8000B7B8(void);
 extern void func_8000C010(void);
+extern void func_8001710C(EffectTask *);
 extern void func_8002F854();
 extern void func_8002FEF8(void);
 extern s32 func_80013F88(s32, s32, s32);
+extern s16 func_80042D58(s32);
+extern s32 func_80043040(s16);
+extern void func_800437F0(void *, void *, s32);
 extern void func_80045914(void);
+extern void func_8006D5CC(void);
+extern void func_800704F0(void);
 extern void func_80070614(s32);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_80070E90(s32);
+extern void func_800720E4(s32);
 extern void func_80072138(s32, s32);
+extern void func_80099C44(void *, void *, s32);
+extern void n_alSeqpDelete(void);
 
+// func_800097E0 best match: 98.511%
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_800097E0.s")
+
+#ifdef NON_MATCHING
+void func_800097E0(void) {
+    u32 size;
+    s32 i;
+    s32 zero;
+    s32 mask;
+    s32 shiftedMask;
+    u8 *unlockedCourse;
+    u8 *otherCourse;
+    ObjectA3E0 *obj;
+    u8 savedUnlocks;
+
+    func_800720E4(3);
+    func_8006D5CC();
+    func_800704F0();
+    func_8007066C(0, 0xE8, 0x78, 0x90, 0xD0, 0xA0, 0xF0, 0.6666666865f);
+
+    obj = D_801121E0;
+    unlockedCourse = D_8010AEA0;
+    otherCourse = D_8010AEAC;
+    do {
+        otherCourse++;
+        obj++;
+        unlockedCourse++;
+        obj[-1].unk2C = n_alSeqpDelete;
+        obj[-1].unk24 = 0xA40000;
+        if ((D_5C5320 && D_5C5320) && D_5C5320) {
+        }
+        unlockedCourse[-1] = 0;
+        otherCourse[-1] = 0;
+    } while (otherCourse < D_8010AEAC + 4);
+
+    D_800DEED4 = 0;
+    D_801235B8->fade = 0xFF;
+    func_800437F0(D_5CBA80, D_5CCD40, 0x21);
+    func_800437F0(D_593D10, D_598A70, 0x22);
+    func_800437F0(D_598A70, D_59AAA0, 0x23);
+    func_800437F0(D_59AAA0, D_59DFE0, 0x24);
+    func_800437F0(D_5A1ED0, D_5C5320, 0x25);
+    func_800437F0(D_59DFE0, D_59E7F0, 0x26);
+    func_800437F0(D_5D4280, D_5DAF30, 0x27);
+
+    size = D_1502A0 - D_14B450;
+    D_80112130[0xC] = func_80042D58(size);
+    func_80099C44(D_14B450, (void *)func_80043040(D_80112130[0xC]), size);
+    func_800437F0(D_1EF530, D_1F1A90, 0xD);
+    func_800437F0(D_1E74E0, D_1EC0F0, 0x1C);
+    func_80070EC0(0);
+    func_80071408(func_8001710C, 0, 0x5E);
+
+    D_800EC9C1 = 0;
+    D_800EC9C0 = 0;
+    D_8010AF74 = 0;
+    D_80121D80.unk8 = 0;
+    D_80121D80.unk6 = 0;
+    D_8010AE64 = 0;
+    D_8010ADDC = 0;
+    D_801235B8->timer = 0;
+    D_8010ADF8 = 0;
+    D_8010AF70 = 0;
+    D_8010AF71 = 0;
+    D_8010AF72 = 0;
+    D_8010AF73 = 0;
+    zero = 0;
+    D_8010AED0 = zero;
+    D_8010AEA8 = zero;
+    D_8010AEA4 = zero;
+    D_8010AEB0 = 0;
+    D_800EC9D0 = 0;
+    D_8010AECC = 0;
+    D_8010ADF0 = 0;
+
+    D_800DEF14 = D_801235B8->fade;
+    mask = 1;
+    i = 0;
+    do {
+        savedUnlocks = D_800EC9F0[0x78D7];
+        i++;
+        if (savedUnlocks & mask) {
+            shiftedMask = mask;
+            if (1) {
+                shiftedMask = shiftedMask << 3;
+                if (!(savedUnlocks & shiftedMask)) {
+                    D_8010AF71 = 1;
+                    D_8010AF70 = 1;
+                    D_800EC9F0[0x78D7] = savedUnlocks | shiftedMask;
+                }
+            }
+        }
+        mask <<= 1;
+    } while (i < 3);
+
+    if (D_800EC9E6 == 2) {
+        D_800EC9E6 = 0;
+    }
+
+    func_8009956C(func_80009C48, 0);
+    func_8007105C();
+
+    D_8010AF18.unk0Array[zero] = zero;
+    D_8010AF1C = zero;
+    D_8010AF20 = 0;
+    D_8010AF24 = 0;
+    D_8010AF28 = 0;
+    D_8010AF2C = 0;
+    D_8010AF34 = zero;
+    D_8010AF3C = 0;
+    D_8010AF19 = 0;
+    D_8010AF1D = 0;
+    D_8010AF21 = zero;
+    D_8010AF25 = 0;
+    D_8010AF29 = 0;
+    D_8010AF2E = zero;
+    D_8010AF36 = zero;
+    D_8010AF3D = 0;
+    D_8010AF1A = 0;
+    D_8010AF1E = 0;
+    D_8010AF22 = 0;
+    D_8010AF26 = zero;
+    i = 0;
+    D_8010AF2A = i;
+    D_8010AF30 = i;
+    D_8010AF38 = zero;
+    D_8010AF3E = zero;
+    D_8010AF1B = i;
+    D_8010AF1F = i;
+    D_8010AF23 = i;
+    D_8010AF27 = i;
+    D_8010AF2B = i;
+    D_8010AF32 = i;
+    D_8010AF3A = i;
+    D_8010AF3F = i;
+    D_8010AF18.transitionState = i;
+    D_8010AF18.unk28 = i;
+    D_8010AF18.unk2A = i;
+    D_8010AF18.unk2C = i;
+    D_8010AF18.unk2E = i;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_80009C48.s")
 
