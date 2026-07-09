@@ -84,7 +84,68 @@ void func_80070614(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_8007066C.s")
 
+// func_80070860 best match: 90.168%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_80070860.s")
+
+#ifdef NON_MATCHING
+extern void guPerspective(ViewportMtx *, u16 *, f32, s32, f32, f32, f32);
+
+void func_80070860(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, s32 arg7, s16 arg8, s32 arg9) {
+    ViewportState *viewport;
+    s32 halfHeight;
+    s32 halfWidth;
+    f32 fovy;
+
+    viewport = &D_801124B0[arg0];
+    viewport->viewportTranslateX = arg1 * 4;
+    viewport->active = 1;
+    viewport->viewportTranslateY = arg2 * 4;
+    viewport->viewportScaleX = arg5 * 2;
+    viewport->viewportScaleY = arg6 * 2;
+
+    halfWidth = arg3 / 2;
+    viewport->right = halfWidth + arg1;
+    viewport->left = arg1 - halfWidth;
+    halfHeight = arg4 / 2;
+    viewport->top = arg2 - halfHeight;
+    viewport->bottom = halfHeight + arg2;
+    viewport->right = viewport->right;
+    viewport->screenBoundsValid = 1;
+    viewport->left = viewport->left;
+    viewport->top = viewport->top;
+    viewport->bottom = viewport->bottom;
+
+    if (viewport->right < 0) {
+        viewport->screenBoundsValid = 0;
+    }
+    if (viewport->bottom < 0) {
+        viewport->screenBoundsValid = 0;
+    }
+    if (viewport->left >= 0x140) {
+        viewport->screenBoundsValid = 0;
+    }
+    if (viewport->top >= 0xF0) {
+        viewport->screenBoundsValid = 0;
+    }
+    if (viewport->left < 0) {
+        viewport->left = 0;
+    }
+    if (viewport->top < 0) {
+        viewport->top = 0;
+    }
+    if (viewport->right >= 0x140) {
+        viewport->right = 0x13F;
+    }
+    if (viewport->bottom >= 0xF0) {
+        viewport->bottom = 0xEF;
+    }
+
+    fovy = (f32) arg8;
+    guPerspective(&viewport->projection, &viewport->perspectiveNorm, fovy, arg7, 10.0f, (f32) arg9, 0.5f);
+    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, fovy, arg7, 10.0f, 15000.0f, 0.5f);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_80070A70.s")
 
