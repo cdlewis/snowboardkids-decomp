@@ -42,8 +42,12 @@ typedef struct CharacterSelectWidgetActor {
 typedef struct CharacterSelectMenuFrameActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x[11];
-    /* 0x2E */ s16 y[13];
+    /* 0x2E */ s16 y[11];
+    /* 0x44 */ s16 baseY;
+    /* 0x46 */ u8 state;
+    /* 0x47 */ u8 timer;
     /* 0x48 */ u8 itemCount;
+    /* 0x49 */ u8 itemSpacing;
 } CharacterSelectMenuFrameActor;
 
 typedef struct CharacterSelectTime {
