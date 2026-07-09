@@ -562,11 +562,26 @@ typedef struct {
 } RacePlayerPlacement;
 
 typedef struct {
+    /* 0x000 */ s16 value;
+    /* 0x002 */ u8 pad2[0x60C - 0x002];
+} RacePlayerValue;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 alpha;
     /* 0x1A */ s16 timer;
     /* 0x1C */ s16 score;
 } RaceUiAlpha18Actor;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 alpha;
+    /* 0x1A */ u8 pad1A[2];
+    /* 0x1C */ s8 player0;
+    /* 0x1D */ s8 player1;
+    /* 0x1E */ s8 player2;
+    /* 0x1F */ s8 player3;
+} RaceUiResultsBannerActor;
 
 typedef struct {
     /* 0x00 */ s32 flags;
@@ -769,6 +784,7 @@ extern void func_80072A74(s32, void *, s32, s32);
 extern void func_80072A20(s32, void *, s32, s32, f32, s32);
 extern s32 func_8007B130(void *, void *, void *, void *);
 extern RacePlayerState D_80121D80[];
+extern RacePlayerValue D_80121D98[];
 extern s16 D_8012206C[][0x306];
 extern RacePlayerFlags D_8012207C[];
 extern u8 D_800EC9F0[];
@@ -777,6 +793,18 @@ extern void func_80072138(s32, s32);
 extern void func_80048278(s32, s32, void *, s32);
 extern void func_80059A04(void *, s32, s32, s32);
 extern char D_800E12F4[];
+extern char D_800E128C[];
+extern char D_800E1290[];
+extern char D_800E1294[];
+extern char D_800E1298[];
+extern char D_800E129C[];
+extern char D_800E12A0[];
+extern char D_800E12A4[];
+extern char D_800E12A8[];
+extern char D_800E12AC[];
+extern char D_800E12B0[];
+extern char D_800E12B4[];
+extern char D_800E12B8[];
 extern const char D_800E1474[];
 extern const char D_800E1484[];
 extern const char D_800E1494[];
@@ -802,7 +830,7 @@ extern void func_80057710(RaceUiPromptActor *);
 extern void func_80057B60(RaceUiPopupActor *);
 extern void func_80057D68(RaceUiPopupActor *);
 extern void func_80058C00(void);
-extern void func_8005905C(void);
+extern void func_8005905C(void *);
 extern void func_80059518(void *);
 extern void func_80059950(void *);
 extern void func_8005A288(void *);
@@ -1294,7 +1322,91 @@ void func_80058BAC(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80058C00.s")
 
+// func_8005905C best match: 79.683% (nonmatchings/func_8005905C-6276316234415602851/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005905C.s")
+
+#ifdef NON_MATCHING
+void func_8005905C(void *arg0) {
+    char buffer[0x58];
+    RacePlayerState *player;
+    s8 playerIndex;
+    RaceUiResultsBannerActor *actor;
+    char *text;
+
+    actor = arg0;
+    text = buffer;
+    if (actor->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, actor->alpha);
+    }
+
+    playerIndex = actor->player0;
+    if (playerIndex != -1) {
+        sprintf(text, D_800E128C, D_80121D98[playerIndex].value);
+        if (D_80156612 & 1) {
+            func_80048278(-0x20, -0x38, text, 6);
+        } else {
+            func_80048278(-0x20, -0x38, text, 0);
+        }
+
+        player = &D_80121D80[actor->player0];
+        if (player->pad002[2] == 0) {
+            sprintf(text, D_800E1290, player->playerIndex + 1);
+            func_80048278(-0x30, -0x48, text, 5);
+        } else {
+            func_80048278(-0x30, -0x48, D_800E1294, 4);
+        }
+    }
+
+    playerIndex = actor->player1;
+    if (playerIndex != -1) {
+        sprintf(text, D_800E1298, D_80121D98[playerIndex].value);
+        func_80048278(0x70, -0x18, text, 6);
+
+        player = &D_80121D80[actor->player1];
+        if (player->pad002[2] == 0) {
+            sprintf(text, D_800E129C, player->playerIndex + 1);
+            func_80048278(0x60, -0x28, text, 5);
+        } else {
+            func_80048278(0x60, -0x28, D_800E12A0, 4);
+        }
+    }
+
+    playerIndex = actor->player2;
+    if (playerIndex != -1) {
+        sprintf(text, D_800E12A4, D_80121D98[playerIndex].value);
+        func_80048278(-0x20, 8, text, 6);
+
+        player = &D_80121D80[actor->player2];
+        if (player->pad002[2] == 0) {
+            sprintf(text, D_800E12A8, player->playerIndex + 1);
+            func_80048278(-0x30, -8, text, 5);
+        } else {
+            func_80048278(-0x30, -8, D_800E12AC, 4);
+        }
+    }
+
+    playerIndex = actor->player3;
+    if (playerIndex != -1) {
+        sprintf(text, D_800E12B0, D_80121D98[playerIndex].value);
+        func_80048278(0x70, 0x28, text, 6);
+
+        player = &D_80121D80[actor->player3];
+        if (player->pad002[2] == 0) {
+            sprintf(text, D_800E12B4, player->playerIndex + 1);
+            func_80048278(0x60, 0x18, text, 5);
+        } else {
+            func_80048278(0x60, 0x18, D_800E12B8, 4);
+        }
+    }
+
+    if (actor->alpha != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059518.s")
 
