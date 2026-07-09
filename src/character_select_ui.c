@@ -29,6 +29,11 @@ typedef struct {
     /* 0x28 */ u16 corner;
 } CharacterSelectFrameTileMap;
 
+typedef struct {
+    /* 0x00 */ u16 corner;
+    /* 0x02 */ u8 pad2[0x28];
+} CharacterSelectFrameCornerTileMap;
+
 typedef union {
     u8 bytes[8];
     struct {
@@ -55,6 +60,7 @@ extern s16 D_80112172;
 extern s16 D_80112178;
 extern s16 D_800B3420[][11];
 extern CharacterSelectFrameTileMap D_800B5FC0[];
+extern CharacterSelectFrameCornerTileMap D_800B5FE8[];
 extern u16 D_800B618C;
 extern s16 D_800B3478[];
 extern s16 D_800B3480[];
@@ -270,7 +276,7 @@ void func_8001D254(CharacterSelectMenuFrameActor *arg0) {
 }
 #endif
 
-// func_8001D2F0 best match: 98.831% (nonmatchings/func_8001D2F0-5272447827802519043/base_18.c)
+// func_8001D2F0 best match: 98.863% (nonmatchings/func_8001D2F0-3836525038718587862/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D2F0.s")
 
 #ifdef NON_MATCHING
@@ -292,7 +298,7 @@ void func_8001D2F0(CharacterSelectWidgetActor *arg0) {
             frameIndex = 9;
         } while (0);
     } else {
- frameIndex = actor->sprite.unsignedIndex; } savedFrame = (tileMap = &D_800B5FC0[frameIndex]); i = (offset = 0); if (arg0 == 0) { } do { func_80011264((s16) (actor->x + ((i & 3) << 5)), (s16) (actor->y + ((i / 4) << 5)), func_80043040(D_80112130.textureHandle), tileMap->center[0], 0, 0x100); i += 1; tileMap = (CharacterSelectFrameTileMap *) (((u16 *) tileMap) + 1); } while (i < 0x10); tileMap = savedFrame; yOffset = offset; do { func_80011264((s16) (actor->x + 0x80), (s16) (actor->y + yOffset), func_80043040(D_80112130.textureHandle), tileMap->right[0], 0, 0x100); func_80011264((s16) (actor->x + offset), (s16) (actor->y + 0x80), func_80043040(D_80112130.textureHandle), tileMap->bottom[0], 0, 0x100); offset += 0x40; tileMap = (CharacterSelectFrameTileMap *) (((u16 *) tileMap) + 1); } while (offset < 0x80); func_80011264((s16) (actor->x + 0x80), (s16) (actor->y + 0x80), func_80043040(D_80112130.textureHandle), D_800B5FC0[frameIndex].corner, 0, 0x100);
+ frameIndex = actor->sprite.unsignedIndex; } savedFrame = (tileMap = &D_800B5FC0[frameIndex]); i = (offset = 0); if (arg0 == 0) { } do { func_80011264((s16) (actor->x + ((i & 3) << 5)), (s16) (actor->y + ((i / 4) << 5)), func_80043040(D_80112130.textureHandle), tileMap->center[0], 0, 0x100); i += 1; tileMap = (CharacterSelectFrameTileMap *) (((u16 *) tileMap) + 1); } while (i < 0x10); tileMap = savedFrame; yOffset = offset; do { func_80011264((s16) (actor->x + 0x80), (s16) (actor->y + yOffset), func_80043040(D_80112130.textureHandle), tileMap->right[0], 0, 0x100); func_80011264((s16) (actor->x + offset), (s16) (actor->y + 0x80), func_80043040(D_80112130.textureHandle), tileMap->bottom[0], 0, 0x100); offset += 0x40; tileMap = (CharacterSelectFrameTileMap *) (((u16 *) tileMap) + 1); } while (offset < 0x80); func_80011264((s16) (actor->x + 0x80), (s16) (actor->y + 0x80), func_80043040(D_80112130.textureHandle), D_800B5FE8[frameIndex].corner, 0, 0x100);
 
     func_8000F030((s16)(actor->x - 4), (s16)(actor->y - 4), func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x33,
                   0x20, 0x20, 0, 0);
