@@ -765,10 +765,10 @@ extern void func_80072138(s32, s32);
 extern void func_80048278(s32, s32, void *, s32);
 extern void func_80059A04(void *, s32, s32, s32);
 extern char D_800E12F4[];
-extern void *D_800E1474;
-extern void *D_800E1484;
-extern void *D_800E1494;
-extern void *D_800E14A8;
+extern const char D_800E1474[];
+extern const char D_800E1484[];
+extern const char D_800E1494[];
+extern const char D_800E14A8[];
 extern u32 D_800DEFF8[];
 extern Gfx *gRegionAllocPtr;
 extern RaceUiAssetEntry D_800D5FF4[];
@@ -842,7 +842,7 @@ extern void func_8005CF60(void);
 extern void func_8005D558(void);
 extern void func_8005DB3C(void *);
 extern void func_8005D1CC(void);
-extern void func_8005D9B4(void);
+extern void func_8005D9B4(RaceUiAlpha18Actor *);
 extern void func_800601F8(void *);
 extern void func_800602BC(void *);
 extern void func_800589F4(void *);
@@ -2087,6 +2087,10 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
 const char D_800E1458[0x8] = "-Trick-";
 const char D_800E1460[0x8] = "-Make-";
 const char D_800E1468[0xC] = "Time Out";
+const char D_800E1474[0x10] = "  -Trick Prize-";
+const char D_800E1484[0x10] = "  -Make Bonus-";
+const char D_800E1494[0x14] = "-Complete Bonus-";
+const char D_800E14A8[0x10] = "  -Total Money-";
 
 void func_8005D860(RaceUiAlpha18Actor *arg0) {
     Gfx *gfx;
@@ -2099,10 +2103,6 @@ void func_8005D860(RaceUiAlpha18Actor *arg0) {
     do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; if (!gfx) { } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x68, -0x40, new_var2 = &D_800E1458, 6); func_80048278(-0x64, -0x1C, &D_800E1460, 5); w0 = 8; if (D_80121B81 != 0) { new_var = w0; func_80048278(-0x6C, new_var, &D_800E1468, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
-// func_8005D9B4 best match: 99.796% (nonmatchings/func_8005D9B4-4139837607000619032/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D9B4.s")
-
-#ifdef NON_MATCHING
 void func_8005D9B4(RaceUiAlpha18Actor *arg0) {
     Gfx *gfx;
     s32 w0;
@@ -2111,9 +2111,34 @@ void func_8005D9B4(RaceUiAlpha18Actor *arg0) {
     RaceUiAlpha18Actor **arg0p = &arg0;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if ((*arg0p)->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = ((*arg0p)->alpha & 0xFF) | (~0xFF); } y = -0x50; func_80048278(-0xC, (s16)y, &D_800E1474, 5); y += 0x28; func_80048278(-8, (s16)y, &D_800E1484, 5); y += 0x28; func_80048278(-8, (s16)y, &D_800E1494, 5); y += 0x28; func_80048278(-0xC, (s16)y, &D_800E14A8, 5); if ((*arg0p)->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; ; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { if ((*arg0p)->alpha != 0xFF) {
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE7000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        w1 = 0xFF2FFFFF;
+        w0 = 0xFC119623;
+        gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000;
+        gfx->words.w1 = ((*arg0p)->alpha & 0xFF) | ~0xFF;
+    }
+
+    y = -0x50;
+    func_80048278(-0xC, (s16)y, &D_800E1474, 5);
+    y += 0x28;
+    func_80048278(-8, (s16)y, &D_800E1484, 5);
+    y += 0x28;
+    func_80048278(-8, (s16)y, &D_800E1494, 5);
+    y += 0x28;
+    func_80048278(-0xC, (s16)y, &D_800E14A8, 5);
+
+    if ((*arg0p)->alpha != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+    }
+    } while (0);
 }
-#endif
 
 const char D_800E14B8[0x4] = "P";
 const char D_800E14BC[0x4] = "P";
