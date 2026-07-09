@@ -1,12 +1,12 @@
 #include "common.h"
+#include "asset_decompression.h"
 #include "effect_task_scheduler.h"
+#include "game_audio.h"
 #include "game_setup_menu.h"
 #include "input_task_scheduler.h"
 
+// func_80003140 best match: 98.611% (nonmatchings/func_80003140-5743805732885129799/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_80003140.s")
-
-// func_8000337C best match: 87.296% (nonmatchings/func_8000337C-2775475442547365205/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_8000337C.s")
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -15,16 +15,126 @@ typedef struct {
     /* 0x1C */ s32 timer;
 } GameSetupMenuState;
 
+typedef struct {
+    /* 0x0 */ s8 state;
+    /* 0x1 */ s8 unk1;
+    /* 0x2 */ s16 unk2;
+    /* 0x4 */ s8 unk4;
+} GameSetupMenuSubState;
+
+extern void func_80014C7C(EffectTask *task);
 extern void func_800035F8(void);
+extern void func_800704F0(void);
+extern void func_8007066C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, f32 arg7);
 extern void func_80072138();
+extern f32 D_800E0900;
 extern u8 D_800E29C0;
+extern s8 D_800DEED4;
+extern s16 D_800DEF14;
+extern s8 D_800EC8B0;
+extern s8 D_800EC8B4;
+extern s8 D_800EC8B5;
+extern s8 D_800EC8B6;
+extern s8 D_800EC8B7;
 extern u8 D_800EC9C1;
+extern s8 D_800EC9E5;
+extern s8 D_800EC9E6;
+extern EffectTask *D_8010ADDC;
 extern u16 D_8010ADF0;
-extern u8 D_8010AE00[];
+extern s8 D_8010ADF9;
+extern GameSetupMenuSubState D_8010AE00;
+extern s16 D_8010AE06;
+extern s16 D_8010AE08;
+extern s16 D_8010AE0A;
+extern s16 D_8010AE0C;
+extern s8 D_8010AE0E;
+extern s8 D_8010AE0F;
+extern s8 D_8010AE10;
+extern s8 D_8010AE11;
+extern s16 D_8010AE12;
+extern s16 D_8010AE14;
+extern s16 D_8010AE16;
+extern s16 D_8010AE18;
+extern s16 D_80121B50;
 extern u8 D_80121B55;
+extern s8 D_80121D86;
+extern s8 D_80122392;
+extern s8 D_8012299E;
+extern s8 D_80122FAA;
 extern GameSetupMenuState *D_801235B8;
+extern s32 D_801235B4;
 extern s32 D_80123758;
 extern s32 D_80123778;
+extern u8 D_245A80;
+extern u8 D_24C8E0;
+extern u8 D_593D10;
+extern u8 D_598A70;
+extern u8 D_59AAA0;
+extern u8 D_59DFE0;
+extern u8 D_60F1A0;
+extern u8 D_60F990;
+
+void func_80003140(void) {
+    func_800720E4(1);
+    func_800704F0();
+    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0900);
+
+    D_800DEED4 = 0;
+    D_801235B8->fade = 0;
+    D_801235B8->timer = 0;
+    D_800EC9C1 = 0;
+    D_800EC9E5 = 1;
+    D_800EC9E6 = 0;
+    D_8010ADF9 = 0;
+    D_800EC8B0 = 0;
+    D_80121B50 = 9;
+    D_801235B4 = 0;
+    D_8010ADF0 = 0;
+    D_80121B55 = 1;
+    D_800DEF14 = D_801235B8->fade;
+
+    func_800437F0(&D_59AAA0, &D_59DFE0, 0x21);
+    func_800437F0(&D_245A80, &D_24C8E0, 0x1F);
+    func_800437F0(&D_593D10, &D_598A70, 0x22);
+    func_800437F0(&D_598A70, &D_59AAA0, 0x23);
+    func_800437F0(&D_60F1A0, &D_60F990, 0x29);
+
+    func_80070EC0(0);
+    D_8010ADDC = func_80071408(func_80014C7C, 0, 0x64);
+
+    D_8010AE00.state = 0;
+    D_8010AE00.unk1 = 0;
+    D_8010AE00.unk2 = 0;
+    D_8010AE00.unk4 = 0;
+    D_800EC8B4 = 0;
+    D_8010AE06 = 0;
+    D_8010AE0E = 0;
+    D_8010AE12 = 0;
+    D_80121D86 = 0;
+    D_800EC8B5 = 0;
+    D_8010AE08 = 0;
+    D_8010AE0F = 0;
+    D_8010AE14 = 0;
+    D_80122392 = 0;
+    D_800EC8B6 = 0;
+    D_8010AE0A = 0;
+    D_8010AE10 = 0;
+    D_8010AE16 = 0;
+    D_8012299E = 0;
+    D_800EC8B7 = 0;
+    D_8010AE0C = 0;
+    D_8010AE11 = 0;
+    D_8010AE18 = 0;
+    D_80122FAA = 0;
+
+    func_8009956C(func_8000337C, 0);
+}
+#endif
+
+// func_8000337C best match: 87.296% (nonmatchings/func_8000337C-2775475442547365205/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_8000337C.s")
+
+#ifdef NON_MATCHING
 
 void func_8000337C(void) {
     s32 sp18;
@@ -36,10 +146,10 @@ void func_8000337C(void) {
     s32 one;
 
     one = 1;
-    if ((D_8010AE00[0] == one) && ((D_80123778 & 0x8000) || (D_80123778 & 0x1000))) {
+    if ((D_8010AE00.state == one) && ((D_80123778 & 0x8000) || (D_80123778 & 0x1000))) {
         func_80072138((s16) (one & 0xFFFFFFFF), 0x32);
-        D_8010AE00[0] = 2;
-        D_8010AE00[1] = 0;
+        D_8010AE00.state = 2;
+        D_8010AE00.unk1 = 0;
         one = 1;
     }
     if (D_801235B8->timer == one) {
@@ -88,7 +198,7 @@ block_25:
             D_800EC9C1 += 1;
         }
     }
-    if (D_8010AE00[0] == 5) {
+    if (D_8010AE00.state == 5) {
         func_8009956C(func_800035F8, 0);
         D_801235B8->fade = 0;
         D_800EC9C1 = 0;
