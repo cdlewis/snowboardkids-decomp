@@ -2387,27 +2387,24 @@ void func_80093304(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80093E0C.s")
 
-// func_80094288 best match: 89.460%
+// func_80094288 best match: 94.992%
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094288.s")
 
 #ifdef NON_MATCHING
 void func_80094288(RaceInputPlayer *player) {
     s16 updateState;
-    s16 nextState;
     s32 yVel;
     s32 velocityX;
     s32 velocityZ;
-    s32 posY;
     s32 stateTimer;
     u32 stateFlags;
 
     updateState = player->updateState;
-    nextState = updateState + 1;
     if (updateState == 0) {
+        player->updateState = updateState + 1;
         player->stateFlags &= ~0x200;
         player->stateFlags &= 0xFE0C1FFB;
-        player->updateState = nextState;
         player->stateFlags |= 0x01006000;
         if (player->animationId != 0x12) {
             func_80081E40(player, 0x12);
@@ -2436,11 +2433,10 @@ void func_80094288(RaceInputPlayer *player) {
     yVel = player->velocity.y;
     velocityX = player->velocity.x;
     velocityZ = player->velocity.z;
-    posY = player->posY + yVel;
-    player->posY = posY;
+    player->posY += yVel;
     player->unk74 = 0;
     player->posX += velocityX;
-    player->posY = posY + yVel;
+    player->posY += yVel;
     player->posZ += velocityZ;
     player->facingAngle = func_8004908C(velocityX, velocityZ);
     if (player->stateFlags & 0x400) {
