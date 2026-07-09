@@ -34,13 +34,22 @@ typedef struct {
     /* 0x024 */ s32 posZ;
     /* 0x028 */ char pad28[4];
     /* 0x02C */ s32 unk2C;
-    /* 0x030 */ char pad30[0x14];
-    /* 0x044 */ s32 unk44;
-    /* 0x048 */ char pad48[0x10];
+    /* 0x030 */ char pad30[0x10];
+    /* 0x040 */ union {
+        RaceVec3i unk40;
+        struct {
+            s32 unk40_x;
+            s32 unk44;
+            s32 unk48;
+        };
+    };
+    /* 0x04C */ char pad4C[0xC];
     /* 0x058 */ s32 unk58;
     /* 0x05C */ char pad5C[8];
     /* 0x064 */ s32 unk64;
-    /* 0x068 */ char pad68[0x14];
+    /* 0x068 */ char pad68[0xC];
+    /* 0x074 */ s32 unk74;
+    /* 0x078 */ char pad78[4];
     /* 0x07C */ s32 stateTimer;
     /* 0x080 */ char pad80[4];
     /* 0x084 */ u32 inputFlags;
@@ -48,7 +57,11 @@ typedef struct {
     /* 0x08C */ u32 disabledInputFlags;
     /* 0x090 */ s8 stickX;
     /* 0x091 */ s8 stickY;
-    /* 0x092 */ char pad92[0x1EE];
+    /* 0x092 */ char pad92[0x1C2];
+    /* 0x254 */ s32 unk254;
+    /* 0x258 */ char pad258[0xC];
+    /* 0x264 */ s32 unk264;
+    /* 0x268 */ char pad268[0x18];
     /* 0x280 */ s32 unk280;
     /* 0x284 */ s32 unk284;
     /* 0x288 */ char pad288[8];

@@ -33,6 +33,8 @@ extern void func_8007C5E8(void *);
 extern void func_8007CBC0(void *);
 extern void func_80097038(RaceInputPlayer *);
 extern void func_800483FC(void *, void (*)(void *), void *);
+extern void *func_800716A4(void *, s32, s32, s32);
+extern void func_80050E80(void *);
 
 extern void (*D_800DECD0[])(RaceInputPlayer *);
 extern void (*D_800DECD8[])(RaceInputPlayer *);
@@ -45,6 +47,7 @@ extern u8 D_800EC9C2;
 extern s8 D_80121B54;
 extern u8 D_80121B56;
 extern u8 D_80121B5E;
+extern s16 D_801235B0;
 extern Unk8011228C D_8011228C[];
 extern void func_8007B250(void);
 extern void func_80087AFC(void);
@@ -169,7 +172,37 @@ void func_8008F560(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090708.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090898.s")
+void func_80090898(RaceInputPlayer *player) {
+    s16 updateState;
+    s32 yVel;
+
+    updateState = player->updateState;
+    if (updateState == 0) {
+        player->updateState = updateState + 1;
+        func_80081E40(player, 0x28);
+        player->stateTimer = 0;
+        player->stateFlags |= 0x200;
+        func_8008F1B4(player);
+        player->updateTimer = 0;
+    }
+
+    func_8008B408(player, player->unk254, 0);
+    player->unk40.y -= player->unk264;
+    func_8008B508(&player->unk40, player);
+
+    yVel = player->unk40.y;
+    player->posX += player->unk40.x;
+    player->posY += yVel;
+    player->posZ += player->unk40.z;
+    player->unk74 = yVel;
+
+    if (func_80082EC0(player) == 0) {
+        player->stateFlags |= 0x800;
+        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090998.s")
 
