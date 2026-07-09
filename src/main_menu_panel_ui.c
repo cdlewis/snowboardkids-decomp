@@ -42,7 +42,9 @@ struct MenuPanelActor {
 extern RenderCallbackNode *D_80124868;
 extern u8 D_8010B1F0;
 extern u8 D_800D4A40[];
+extern u8 D_800D54E7[];
 extern u8 D_800D54E8[];
+extern u8 D_800D54EA[];
 extern u8 D_800D54F0[];
 extern u8 D_800D54F8[];
 extern u8 D_800D5508[];
@@ -54,6 +56,7 @@ extern u8 D_800D5630[];
 extern u16 *D_800D5704[];
 extern s16 D_800D57B4[];
 extern u16 *D_800D5538[];
+extern u16 *D_800D5568[];
 extern MenuPanelAssetHandles D_80112130;
 extern u8 D_80121B5B;
 extern s16 D_80121B50;
@@ -254,7 +257,125 @@ void func_80051854(MenuPanelActor *arg0) {
     func_80071824(arg0, func_800515F0);
 }
 
+// func_80051878 best match: 89.057%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80051878.s")
+
+#ifdef NON_MATCHING
+void func_80051878(MenuPanelActor *arg0) {
+    s32 i;
+
+    func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), func_80043040(D_80112130.textureHandle),
+                  2, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x14), func_80043040(D_80112130.textureHandle),
+                  4, 0x20, 0x20, 0, 0);
+
+    i = 0;
+    do {
+        func_8000F030((s16)((arg0->x + i) + 0xC), (s16)(arg0->y + 0x14),
+                      func_80043040(D_80112130.textureHandle), 3, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)((arg0->x + i) + 0xC), (s16)(arg0->y + 0x4C),
+                      func_80043040(D_80112130.textureHandle), 8, 0x20, 0x20, 0, 0);
+        i += 0x10;
+    } while (i < 0xF0);
+
+    func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), func_80043040(D_80112130.textureHandle),
+                  7, 0x20, 0x20, 0, 0);
+    func_8000F030((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), func_80043040(D_80112130.textureHandle),
+                  9, 0x20, 0x20, 0, 0);
+
+    i = 0;
+    do {
+        func_8000F030((s16)(arg0->x - 4), (s16)((arg0->y + i) + 0x24),
+                      func_80043040(D_80112130.textureHandle), 5, 0x20, 0x20, 0, 0);
+        func_8000F030((s16)(arg0->x + 0xF8), (s16)((arg0->y + i) + 0x24),
+                      func_80043040(D_80112130.textureHandle), 6, 0x20, 0x20, 0, 0);
+        i += 0x10;
+    } while (i < 0x30);
+
+    {
+        u16 glyphText[2];
+        u16 glyph;
+        s32 visibleIndex;
+        s32 streamIndex;
+        s32 lineX;
+        u16 lineY;
+        s32 color;
+
+        glyphText[1] = 0xFFFF;
+        visibleIndex = 0;
+        streamIndex = 0;
+        lineX = 0;
+        i = 7;
+        lineY = 0;
+        color = i;
+
+        while (visibleIndex != arg0->selectedTile) {
+            glyph = arg0->tileList[streamIndex++];
+            glyphText[0] = glyph;
+
+            switch (glyph) {
+            case 0xFFFF:
+                arg0->selectionState = 1;
+                visibleIndex = arg0->selectedTile;
+                break;
+
+            case 0xFFFD:
+                lineY = (lineY + 0x10) & 0xFFFF;
+                lineX = 0;
+                break;
+
+            case 0xFFFB:
+                arg0->selectionState = 2;
+                arg0->tileListStart = &arg0->tileList[streamIndex];
+                visibleIndex = arg0->selectedTile;
+                break;
+
+            case 0xFFFC:
+                color = arg0->tileList[streamIndex++];
+                break;
+
+            default:
+                func_8001303C((s16)(arg0->x + lineX), (s16)((arg0->y + lineY) + 0x18), (u8 *)glyphText, 0,
+                              0x100, color, 0x29);
+                lineX = (lineX + 0x10) & 0xFFFF;
+                visibleIndex++;
+                break;
+            }
+        }
+
+        if ((arg0->selectionState != 0) && (D_8010B1F0 == 0)) {
+            func_8000F030((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48),
+                          func_80043040(D_80112130.textureHandle), (D_801235B0 >> 4) & 1, 0x20, 0x20, 0,
+                          0);
+        }
+    }
+
+    {
+        s32 count;
+        u16 *text;
+
+        count = 0;
+        text = D_800D5568[D_80121B5B];
+        if (D_800D5568[D_80121B5B][0] != 0xFFFF) {
+            do {
+                count++;
+            } while (text[count] != 0xFFFF);
+        }
+
+        func_8001303C((s16)(-((count * 0x10) / 2)), (s16)((-0x48) - arg0->y),
+                      (u8 *)D_800D5568[D_80121B5B], 0, 0x100, 4, 0x29);
+    }
+
+    if (D_80121B5B < 6) {
+        func_80045A78(-0x10, (s16)((-0x30) - arg0->y), func_80043040(D_80112130.fontHandle),
+                      D_800D54E7[D_80121B5B]);
+        return;
+    }
+
+    func_80045A78(-0x10, (s16)((-0x30) - arg0->y), func_80043040(D_80112130.fontHandle),
+                  D_800D54EA[D_80121B5B]);
+}
+#endif
 
 void func_80051E80(MenuPanelActor *arg0) {
     arg0->y += MENU_PANEL_SCROLL_STEP;
