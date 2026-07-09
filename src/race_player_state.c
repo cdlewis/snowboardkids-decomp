@@ -267,7 +267,49 @@ void func_8008FB6C(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008FEEC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800900B0.s")
+void func_800900B0(RaceInputPlayer *player) {
+    s32 yVel;
+    s32 timer;
+
+    if (player->updateState == 0) {
+        func_80081E40(player, 4);
+        player->updateState++;
+        player->stateFlags |= 0x200;
+        player->stateTimer = 0;
+        func_8008F1B4(player);
+    }
+    if (player->subState == 0) {
+        func_80082EC0(player);
+    }
+    func_8008F1CC(player);
+    func_8008B408(player, player->unk254, 0);
+    player->unk40.y -= player->unk264;
+    func_8008B508(&player->unk40, player);
+    yVel = player->unk40.y;
+    player->posX += player->unk40.x;
+    player->posY += yVel;
+    player->posZ += player->unk40.z;
+    player->unk74 = yVel;
+    player->unk6C = (s16) ((s32) (func_80097AE8(player->stateTimerLow) * -0x1000) / 0x1000);
+    if (player->stateFlags & 0x400) {
+        player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) * -0x1000) / 0x1000);
+    } else {
+        player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) << 12) / 0x1000);
+    }
+
+    player->stateTimer += 0x1A;
+    if (player->stateTimer >= 0x401) {
+        player->stateTimer = 0x400;
+    }
+    timer = player->stateTimer;
+    player->stateFlags |= 2;
+    if (timer < 0x3D0) {
+        player->stateFlags |= 0x800;
+        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+            func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090274.s")
 
