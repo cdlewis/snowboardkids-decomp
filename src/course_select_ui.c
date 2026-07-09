@@ -417,7 +417,7 @@ void func_800263A4(CourseSelectWidgetActor *arg0) {
     func_80071824(arg0, func_800260E8);
 }
 
-// func_800263D8 best match: 94.971% (nonmatchings/func_800263D8-1315772375853892447/base_13.c)
+// func_800263D8 best match: 98.209% (nonmatchings/func_800263D8-4139837607000619032/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800263D8.s")
 
 #ifdef NON_MATCHING
@@ -451,6 +451,8 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                 (playerCount >= 2 || (playerCount == 1 && D_8010AF46 == 0))) {
                 playerWidget = (CourseSelectWidgetActor *)((u8 *)arg0 + (i * 2));
                 courseId = D_80121D80[i].pad6[0];
+                if (!playerCount) {
+                }
                 if (courseId >= 9 && courseId < 12) {
                     xOffset = (u16)courseId;
                 } else {
@@ -468,7 +470,7 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                     } else {
                         ratings = &D_800B706C[selectedCourseId * 3];
                         j = 0;
-                        if (ratings[0] > 0) {
+                        if (ratings[0] > ((0, 0))) {
                             xOffset = 0;
                             do {
                                 func_8000F8AC((s16)(playerWidget->coordinates[0] + xOffset + 0x38),
@@ -486,6 +488,10 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                                       (s16)(playerWidget->coordinates[4] + 0xC), "?", 0, arg0->coordinates[8]);
                     } else {
                         ratings = &D_800B706C[selectedCourseId * 3];
+                        if (1) {
+                        }
+                        if (1) {
+                        }
                         j = 0;
                         if (ratings[1] > 0) {
                             xOffset = 0;
@@ -524,8 +530,13 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                         text[0] = '?';
                         text[1] = 0;
                     }
+                    xOffset++;
+                    xOffset--;
                     if (selectedCourseId < 9) {
+                        playerWidget = playerWidget;
                         sprintf(text, "%d", D_800B706C[selectedCourseId * 3]);
+                        do {
+                        } while (0);
                     }
                     func_80013D0C((s16)(playerWidget->coordinates[0] + 0x34), playerWidget->coordinates[4], text, 0,
                                   arg0->coordinates[8]);
@@ -536,7 +547,7 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                     func_80013D0C((s16)(playerWidget->coordinates[0] + 0x34),
                                   (s16)(playerWidget->coordinates[4] + 8), text, 0, arg0->coordinates[8]);
 
-                    if (selectedCourseId < 9) {
+                    if (9 > selectedCourseId) {
                         sprintf(text, "%d", D_800B706E[selectedCourseId * 3]);
                     }
                     func_80013D0C((s16)(playerWidget->coordinates[0] + 0x34),
