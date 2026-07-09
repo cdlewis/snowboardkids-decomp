@@ -53,7 +53,8 @@ typedef struct {
     /* 0x2C3 */ s8 unk2C3;
     /* 0x2C4 */ u8 pad2C4[0x2C6 - 0x2C4];
     /* 0x2C6 */ u16 unk2C6;
-    /* 0x2C8 */ u8 pad2C8[0x2DA - 0x2C8];
+    /* 0x2C8 */ u8 pad2C8[0x2D8 - 0x2C8];
+    /* 0x2D8 */ s16 unk2D8;
     /* 0x2DA */ s16 unk2DA;
     /* 0x2DC */ u8 pad2DC[0x2EA - 0x2DC];
     /* 0x2EA */ s16 pitch;
@@ -611,6 +612,13 @@ typedef struct {
 } RaceUiSparkleActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad30[4];
+    /* 0x04 */ Vec3i vec;
+    /* 0x10 */ FixedMatrix3s matrix;
+    /* 0x22 */ u8 pad52[0xC];
+} RaceUiSparkleTransformScratch;
+
+typedef struct {
     /* 0x00 */ s16 pathIndex;
     /* 0x02 */ u8 pad2[0x48 - 0x2];
 } CourseSpawnEntry;
@@ -738,6 +746,7 @@ extern void func_80072A74(s32, void *, s32, s32);
 extern void func_80072A20(s32, void *, s32, s32, f32, s32);
 extern s32 func_8007B130(void *, void *, void *, void *);
 extern RacePlayerState D_80121D80[];
+extern s16 D_8012206C[][0x306];
 extern RacePlayerFlags D_8012207C[];
 extern u8 D_800EC9F0[];
 extern void *D_80121B74;
@@ -760,6 +769,7 @@ extern void *D_800E14A8;
 extern u32 D_800DEFF8[];
 extern Gfx *gRegionAllocPtr;
 extern RaceUiAssetEntry D_800D5FF4[];
+extern Vec3i D_800D6110;
 extern u16 D_800D6520[];
 extern s32 D_80123778;
 extern s32 D_801235B4;
@@ -2306,7 +2316,58 @@ void func_8005E68C(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005E6D0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005EA4C.s")
+void func_8005EA4C(RaceUiSparkleActor *arg0) {
+    RaceUiSparkleTransformScratch stack;
+    RacePlayerState *player;
+    s16 timer;
+    s32 angle;
+
+    if (D_80121B56 == 0) {
+        arg0->scale += 0x100;
+        if (arg0->scale >= 0x1001) {
+            arg0->scale = 0x1000;
+        }
+        if (D_801235B0 & 1) {
+            arg0->frame = (arg0->frame + 1) & 3;
+        }
+
+        timer = arg0->timer;
+        if (timer != 0) {
+            arg0->timer = timer - 1;
+            arg0->alpha += arg0->alphaStep;
+            if (arg0->alpha >= 0xE0) {
+                arg0->alphaStep = -0x10;
+            }
+            if (arg0->alpha < 0x41) {
+                arg0->alphaStep = 0x10;
+            }
+        } else {
+            arg0->alpha -= 0x10;
+            if (arg0->alpha <= 0) {
+                player = &D_80121D80[arg0->playerIndex];
+                player->unk2D8--;
+                func_800716E4((EffectTask *) arg0);
+                return;
+            }
+        }
+
+        arg0->unk28 += 0x60;
+        angle = arg0->unk28 - D_8012206C[arg0->playerIndex][0];
+        func_80097C18(stack.matrix, angle);
+        func_80098590(stack.matrix, &D_800D6110, &stack.vec);
+
+        player = &D_80121D80[arg0->playerIndex];
+        func_80097FE4(stack.matrix, player->pitch, player->yaw);
+        func_80098590(stack.matrix, &stack.vec, &arg0->pos);
+
+        player = &D_80121D80[arg0->playerIndex];
+        arg0->pos.x += player->pos28.x;
+        arg0->pos.y += player->pos28.y;
+        arg0->pos.z += player->pos28.z;
+    }
+
+    func_800483FC(&D_801248EC, func_8005E6D0, (s32) arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005ECA8.s")
 
