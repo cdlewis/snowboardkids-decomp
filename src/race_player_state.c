@@ -198,7 +198,49 @@ void func_8008F204(RaceInputPlayer *player) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008F3C8.s")
+void func_8008F3C8(RaceInputPlayer *player) {
+    s16 inputMask;
+
+    if (!(player->inputFlags & player->subStateTimer)) {
+        player->subStateStep = 1;
+    }
+    if (func_80082EC0(player) != 0) {
+        if (player->subStateStep != 0) {
+            player->subState++;
+            if (player->stateFlags & 0x400) {
+                inputMask = player->subStateTimer;
+                if (inputMask & 1) {
+                    func_80081E40(player, 0x18);
+                    inputMask = player->subStateTimer;
+                }
+                if (inputMask & 2) {
+                    func_80081E40(player, 0x16);
+                    inputMask = player->subStateTimer;
+                }
+            } else {
+                inputMask = player->subStateTimer;
+                if (inputMask & 1) {
+                    func_80081E40(player, 0x16);
+                    inputMask = player->subStateTimer;
+                }
+                if (inputMask & 2) {
+                    func_80081E40(player, 0x18);
+                    inputMask = player->subStateTimer;
+                }
+            }
+            if (inputMask & 8) {
+                func_80081E40(player, 0x1A);
+                inputMask = player->subStateTimer;
+            }
+            if (inputMask & 4) {
+                func_80081E40(player, 0x1C);
+            }
+        } else {
+            player->unk2A4++;
+        }
+    }
+    player->stateFlags |= 0x800;
+}
 
 void func_8008F514(RaceInputPlayer *player) {
     if (func_80082EC0(player) != 0) {
