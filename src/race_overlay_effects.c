@@ -655,66 +655,18 @@ void func_800681A4(RaceOverlayModelActor *arg0) {
     }
 }
 
-// func_800684E4 best match: 71.224% (base_3.c)
+// func_800684E4 best match: 99.468% (base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800684E4.s")
 
 #ifdef NON_MATCHING
 void func_800684E4(RaceOverlayModelActor *arg0) {
     GfxCommandSource spF4;
-    Gfx *spA8;
-    Gfx *sp84;
     Gfx *temp_t1;
-    Gfx *temp_v0;
-    Gfx *temp_v0_10;
-    Gfx *temp_v0_11;
-    Gfx *temp_v0_12;
-    Gfx *temp_v0_13;
-    Gfx *temp_v0_14;
-    Gfx *temp_v0_15;
-    Gfx *temp_v0_16;
-    Gfx *temp_v0_17;
     Gfx *temp_v0_18;
-    Gfx *temp_v0_19;
-    Gfx *temp_v0_20;
-    Gfx *temp_v0_21;
-    Gfx *temp_v0_22;
-    Gfx *temp_v0_23;
-    Gfx *temp_v0_24;
-    Gfx *temp_v0_25;
-    Gfx *temp_v0_26;
-    Gfx *temp_v0_27;
-    Gfx *temp_v0_28;
-    Gfx *temp_v0_29;
-    Gfx *temp_v0_2;
-    Gfx *temp_v0_30;
-    Gfx *temp_v0_31;
-    Gfx *temp_v0_32;
-    Gfx *temp_v0_33;
     Gfx *temp_v0_34;
     Gfx *temp_v0_35;
     Gfx *temp_v0_36;
-    Gfx *temp_v0_37;
-    Gfx *temp_v0_38;
-    Gfx *temp_v0_39;
-    Gfx *temp_v0_3;
-    Gfx *temp_v0_40;
-    Gfx *temp_v0_41;
-    Gfx *temp_v0_42;
-    Gfx *temp_v0_43;
-    Gfx *temp_v0_44;
-    Gfx *temp_v0_45;
-    Gfx *temp_v0_46;
-    Gfx *temp_v0_47;
-    Gfx *temp_v0_48;
-    Gfx *temp_v0_49;
-    Gfx *temp_v0_4;
     Gfx *temp_v0_50;
-    Gfx *temp_v0_51;
-    Gfx *temp_v0_5;
-    Gfx *temp_v0_6;
-    Gfx *temp_v0_7;
-    Gfx *temp_v0_8;
-    Gfx *temp_v0_9;
 
     if (D_80156609 != 0) {
         arg0->matrixDirty = 1;
@@ -731,107 +683,22 @@ void func_800684E4(RaceOverlayModelActor *arg0) {
         }
         if (arg0->displayList != NULL) {
             if (arg0->rotationDisplayList != NULL) {
-                temp_v0 = gRegionAllocPtr++;
-                temp_v0->words.w0 = 0x06000000;
-                temp_v0->words.w1 = (u32) D_800D9D00;
-                temp_v0_2 = gRegionAllocPtr++;
-                temp_v0_2->words.w0 = 0xFD500000;
-                temp_v0_2->words.w1 = (u32) arg0->image0;
-                temp_v0_3 = gRegionAllocPtr++;
-                temp_v0_3->words.w0 = 0xF5500000;
-                temp_v0_3->words.w1 = 0x07080200;
-                temp_v0_4 = gRegionAllocPtr++;
-                temp_v0_4->words.w1 = 0;
-                temp_v0_4->words.w0 = 0xE6000000;
-                temp_v0_5 = gRegionAllocPtr++;
-                temp_v0_5->words.w0 = 0xF3000000;
-                temp_v0_5->words.w1 = 0x070FF400;
-                temp_v0_6 = gRegionAllocPtr++;
-                temp_v0_6->words.w1 = 0;
-                temp_v0_6->words.w0 = 0xE7000000;
-                temp_v0_7 = gRegionAllocPtr++;
-                temp_v0_7->words.w1 = 0x80200;
-                temp_v0_7->words.w0 = 0xF5400400;
-                temp_v0_8 = gRegionAllocPtr++;
-                temp_v0_8->words.w0 = 0xF2000000;
-                temp_v0_8->words.w1 = 0x7C07C;
-                temp_v0_9 = gRegionAllocPtr++;
-                temp_v0_9->words.w0 = 0xFD100000;
-                temp_v0_9->words.w1 = (u32) arg0->palette0;
-                temp_v0_10 = gRegionAllocPtr++;
-                temp_v0_10->words.w1 = 0;
-                temp_v0_10->words.w0 = 0xE8000000;
-                temp_v0_11 = gRegionAllocPtr++;
-                temp_v0_11->words.w0 = 0xF5000100;
-                temp_v0_11->words.w1 = 0x07000000;
-                temp_v0_12 = gRegionAllocPtr++;
-                temp_v0_12->words.w1 = 0;
-                temp_v0_12->words.w0 = 0xE6000000;
-                temp_v0_13 = gRegionAllocPtr++;
-                temp_v0_13->words.w0 = 0xF0000000;
-                temp_v0_13->words.w1 = 0x0703C000;
-                temp_v0_14 = gRegionAllocPtr++;
-                temp_v0_14->words.w1 = 0;
-                temp_v0_14->words.w0 = 0xE7000000;
-                temp_v0_15 = gRegionAllocPtr++;
-                temp_v0_15->words.w0 = 0x01020040;
-                temp_v0_15->words.w1 = (u32) arg0->displayList;
-                temp_v0_16 = gRegionAllocPtr++;
-                temp_v0_16->words.w0 = 0x01000040;
-                temp_v0_16->words.w1 = (u32) D_80156614;
-                temp_v0_17 = gRegionAllocPtr++;
-                temp_v0_17->words.w1 = (u32) D_800D92D8;
-                temp_v0_17->words.w0 = 0x0400103F;
+                gSPDisplayList(gRegionAllocPtr++, D_800D9D00);
+                gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image0, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
+                                        G_TX_CLAMP, 0, 0, 0, 0);
+                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette0);
+                gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gSPVertex(gRegionAllocPtr++, D_800D92D8, 4, 0);
                 temp_v0_18 = gRegionAllocPtr++;
                 temp_v0_18->words.w1 = 0x60200;
                 temp_v0_18->words.w0 = 0xB1060402;
-                temp_v0_19 = gRegionAllocPtr++;
-                spA8 = temp_v0_19;
-                temp_v0_19->words.w0 = 0xFD500000;
-                temp_v0_19->words.w1 = (u32) arg0->image1;
-                temp_v0_20 = gRegionAllocPtr++;
-                temp_v0_20->words.w1 = 0x07080200;
-                temp_v0_20->words.w0 = 0xF5500000;
-                temp_v0_21 = gRegionAllocPtr++;
-                temp_v0_21->words.w1 = 0;
-                temp_v0_21->words.w0 = 0xE6000000;
-                temp_v0_22 = gRegionAllocPtr++;
-                temp_v0_22->words.w0 = 0xF3000000;
-                temp_v0_22->words.w1 = 0x070FF400;
-                temp_v0_23 = gRegionAllocPtr++;
-                temp_v0_23->words.w1 = 0;
-                temp_v0_23->words.w0 = 0xE7000000;
-                temp_v0_24 = gRegionAllocPtr++;
-                temp_v0_24->words.w1 = 0x80200;
-                temp_v0_24->words.w0 = 0xF5400400;
-                temp_v0_25 = gRegionAllocPtr++;
-                temp_v0_25->words.w0 = 0xF2000000;
-                temp_v0_25->words.w1 = 0x7C07C;
-                temp_v0_26 = gRegionAllocPtr++;
-                temp_v0_26->words.w0 = 0xFD100000;
-                temp_v0_26->words.w1 = (u32) arg0->palette1;
-                temp_v0_27 = gRegionAllocPtr++;
-                temp_v0_27->words.w1 = 0;
-                temp_v0_27->words.w0 = 0xE8000000;
-                temp_v0_28 = gRegionAllocPtr++;
-                temp_v0_28->words.w0 = 0xF5000100;
-                sp84 = temp_v0_28;
-                temp_v0_28->words.w1 = 0x07000000;
-                temp_v0_29 = gRegionAllocPtr++;
-                temp_v0_29->words.w1 = 0;
-                temp_v0_29->words.w0 = 0xE6000000;
-                temp_v0_30 = gRegionAllocPtr++;
-                temp_v0_30->words.w0 = 0xF0000000;
-                temp_v0_30->words.w1 = 0x0703C000;
-                temp_v0_31 = gRegionAllocPtr++;
-                temp_v0_31->words.w1 = 0;
-                temp_v0_31->words.w0 = 0xE7000000;
-                temp_v0_32 = gRegionAllocPtr++;
-                temp_v0_32->words.w0 = 0x01020040;
-                temp_v0_32->words.w1 = (u32) arg0->rotationDisplayList;
-                temp_v0_33 = gRegionAllocPtr++;
-                temp_v0_33->words.w1 = (u32) &D_800D9358;
-                temp_v0_33->words.w0 = 0x0400513F;
+                gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image1, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
+                                        G_TX_CLAMP, 0, 0, 0, 0);
+                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette1);
+                gSPMatrix(gRegionAllocPtr++, arg0->rotationDisplayList,
+                          G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPVertex(gRegionAllocPtr++, D_800D9358, 20, 0);
                 temp_t1 = gRegionAllocPtr++;
                 temp_t1->words.w0 = 0xB1060402;
                 temp_t1->words.w1 = 0x60200;
@@ -844,51 +711,13 @@ void func_800684E4(RaceOverlayModelActor *arg0) {
                 temp_v0_36 = gRegionAllocPtr++;
                 temp_v0_36->words.w1 = 0x1E1A18;
                 temp_v0_36->words.w0 = 0xB11E1C1A;
-                temp_v0_37 = gRegionAllocPtr++;
-                temp_v0_37->words.w0 = 0xFD500000;
-                temp_v0_37->words.w1 = (u32) arg0->image2;
-                temp_v0_38 = gRegionAllocPtr++;
-                temp_v0_38->words.w0 = 0xF5500000;
-                temp_v0_38->words.w1 = 0x07080200;
-                temp_v0_39 = gRegionAllocPtr++;
-                temp_v0_39->words.w1 = 0;
-                temp_v0_39->words.w0 = 0xE6000000;
-                temp_v0_40 = gRegionAllocPtr++;
-                temp_v0_40->words.w0 = 0xF3000000;
-                temp_v0_40->words.w1 = 0x070FF400;
-                temp_v0_41 = gRegionAllocPtr++;
-                temp_v0_41->words.w1 = 0;
-                temp_v0_41->words.w0 = 0xE7000000;
-                temp_v0_42 = gRegionAllocPtr++;
-                temp_v0_42->words.w1 = 0x80200;
-                temp_v0_42->words.w0 = 0xF5400400;
-                temp_v0_43 = gRegionAllocPtr++;
-                temp_v0_43->words.w0 = 0xF2000000;
-                temp_v0_43->words.w1 = 0x7C07C;
-                temp_v0_44 = gRegionAllocPtr++;
-                temp_v0_44->words.w0 = 0xFD100000;
-                temp_v0_44->words.w1 = (u32) arg0->palette2;
-                temp_v0_45 = gRegionAllocPtr++;
-                temp_v0_45->words.w1 = 0;
-                temp_v0_45->words.w0 = 0xE8000000;
-                temp_v0_46 = gRegionAllocPtr++;
-                temp_v0_46->words.w0 = 0xF5000100;
-                temp_v0_46->words.w1 = 0x07000000;
-                temp_v0_47 = gRegionAllocPtr++;
-                temp_v0_47->words.w1 = 0;
-                temp_v0_47->words.w0 = 0xE6000000;
-                temp_v0_48 = gRegionAllocPtr++;
-                temp_v0_48->words.w0 = 0xF0000000;
-                temp_v0_48->words.w1 = 0x0703C000;
-                temp_v0_49 = gRegionAllocPtr++;
-                temp_v0_49->words.w1 = 0;
-                temp_v0_49->words.w0 = 0xE7000000;
+                gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image2, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
+                                        G_TX_CLAMP, 0, 0, 0, 0);
+                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette2);
                 temp_v0_50 = gRegionAllocPtr++;
                 temp_v0_50->words.w1 = 0x262220;
                 temp_v0_50->words.w0 = 0xB1262422;
-                temp_v0_51 = gRegionAllocPtr++;
-                temp_v0_51->words.w0 = 0x06000000;
-                temp_v0_51->words.w1 = (u32) D_800D9D40;
+                gSPDisplayList(gRegionAllocPtr++, D_800D9D40);
             }
         }
     }
