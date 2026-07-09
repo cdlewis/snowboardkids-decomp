@@ -74,7 +74,7 @@ extern s32 D_80121B48;
 extern s32 D_801235B4;
 extern s32 D_80123758;
 extern s32 D_8012207C;
-extern s32 D_80123778;
+extern s32 D_80123778[];
 extern void *D_80124868;
 extern s16 D_80112130[];
 extern s16 D_80112186;
@@ -526,38 +526,32 @@ void func_80074864(s32 arg0) {
     func_80046D68(-0x1C, 0x14, func_80043040(D_8011216E), 0x5A, color);
 }
 
-// func_80074960 best match: 99.869% (base_25.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80074960.s")
-
-#ifdef NON_MATCHING
 void func_80074960(void) {
     RacePlayerState *player;
     s32 opened;
     s32 i;
     s32 input;
     s32 selection;
-    u8 confirmSelection;
     s32 valueTwo;
 
-    opened = 0; i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (D_80121B56 == 0)) && ((&D_80123778)[i] & 0x1000)) { D_80121B57 = 0; D_80121B56 = 1; opened = 1; func_80072138(1, 0x32); func_80000A40(0); func_80000A40(1); func_80000A40(2); func_80000A40(3); } i++; player++; } while (i < D_80121B55); } valueTwo = 2; if ((D_80121B56 != 0) && (opened == 0)) { i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = (&D_80123778)[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; func_80072138(1, 0x32); input = (&D_80123778)[i]; }
+    opened = 0; i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (D_80121B56 == 0)) && (D_80123778[i] & 0x1000)) { D_80121B57 = 0; D_80121B56 = 1; opened = 1; func_80072138(1, 0x32); func_80000A40(0); func_80000A40(1); func_80000A40(2); func_80000A40(3); } i++; player++; } while (i < D_80121B55); } valueTwo = 2; if ((D_80121B56 != 0) && (opened == 0)) { i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = D_80123778[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; func_80072138(1, 0x32); input = D_80123778[i]; }
                     }
                     if (input & 0x20400) {
                         selection = D_80121B57;
-                        if (selection != valueTwo) {
+                        if (valueTwo != selection) {
                             D_80121B57 = selection + 1;
                             func_80072138(1, 0x32);
-                            input = (&D_80123778)[i];
+                            input = D_80123778[i];
                         }
                     }
                     if (input & 0x1000) {
-                        confirmSelection = D_80121B57;
-                        if (confirmSelection == 0) {
+                        input = D_80121B57;
+                        if (input == 0) {
                             D_80121B56 = 0;
                             func_80072138(1, 0x32);
-                            confirmSelection = D_80121B57;
+                            input = D_80121B57;
                         }
-                        if (confirmSelection == 1) {
+                        if (input == 1) {
                             D_800EC8B0 = 0;
                             D_80121B56 = 0;
                             D_80123751 = 1;
@@ -565,7 +559,7 @@ void func_80074960(void) {
                             func_8009956C(func_80077B34, 0);
                             return;
                         }
-                        if (confirmSelection == valueTwo) {
+                        if (valueTwo == input) {
                             D_800EC8B0 = 0;
                             D_80121B56 = 0;
                             D_80123751 = 1;
@@ -592,7 +586,6 @@ void func_80074960(void) {
         func_8009956C(func_80074C5C, 0);
     }
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80074C5C.s")
 
@@ -679,7 +672,7 @@ void func_8007797C(void) {
         D_801235B8->fadeTimer++;
     }
     func_80077CD4();
-    if (D_80123778 & 0x1000) {
+    if (D_80123778[0] & 0x1000) {
         sp18 = func_80077AD4;
         func_80072114(0x48);
         func_8009956C(sp18, 0);
@@ -842,16 +835,16 @@ void func_80078078(void) {
     D_800DEF14 -= 0x10;
     if (D_800DEF14 < 0) {
         D_800DEF14 = 0;
-        temp_v0 = D_80123778;
+        temp_v0 = D_80123778[0];
         if ((temp_v0 & 0x20400) && (D_80121B52 != 9)) {
             func_80072138(0x19, 0x32);
             D_80121B52 += 1;
-            temp_v0 = D_80123778;
+            temp_v0 = D_80123778[0];
         }
         if ((temp_v0 & 0x10800) && (D_80121B52 != 1)) {
             func_80072138(0x19, 0x32);
             D_80121B52 -= 1;
-            temp_v0 = D_80123778;
+            temp_v0 = D_80123778[0];
         }
         if (temp_v0 & 0x9000) {
             D_801235B4 = 1;
