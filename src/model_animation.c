@@ -27,7 +27,7 @@ typedef struct ModelAnimKeyframe {
     s16 coordIndices[4];
     s16 positionIndex;
     s16 angle;
-    s16 unk14[4];
+    u16 unk14[4];
 } ModelAnimKeyframe;
 
 typedef struct ModelAnimState {
@@ -208,7 +208,7 @@ void func_8007FD88(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007FF88.s")
 
-// func_80080CC4 best match: 72.239% (base_1.c)
+// func_80080CC4 best match: 82.954% (base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80080CC4.s")
 
 #ifdef NON_MATCHING
@@ -291,8 +291,8 @@ s32 func_80080CC4(s32 arg0, s32 arg1, s32 arg2) {
                 numeratorB = (x20 * y10) - (y20 * x10);
                 denominator = (z20 * x10) - (x20 * z10);
 
-                return ((-(s64)numeratorA * xDelta) - ((s64)numeratorB * zDelta)) / denominator
-                    + (coord0->y << 0x11);
+                return (-((s64)numeratorA * xDelta) - ((s64)numeratorB * zDelta)) / denominator
+                    + (D_80121B90[((ModelAnimFace *)((s32)D_80121B94 + faceOffset))->coord0].y << 0x11);
             }
 
 next:
