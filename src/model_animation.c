@@ -46,7 +46,10 @@ typedef struct ModelAnimState {
 
 typedef struct CourseSpawnEntry {
     s16 pathIndex;
-    char pad2[0x3C];
+    char pad2[0x36];
+    s16 unk38;
+    s16 unk3A;
+    char pad3C[2];
     s16 keyframeCount;
     s32 unk40;
     s32 unk44;
@@ -391,7 +394,68 @@ void func_80081508(s32 arg0, s32 *x, s32 *y, s32 *z, s16 *angle) {
     *angle = -((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->angle;
 }
 
+// func_800815D4 best match: 93.956% (base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_800815D4.s")
+
+#ifdef NON_MATCHING
+void func_800815D4(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s32 *arg4, s32 arg5, s32 arg6) {
+    s32 keyframeOffset;
+    s32 deltaX;
+    s32 deltaZ;
+    s32 projected;
+    s32 distance;
+    s16 pathIndex;
+    s32 nextKeyframeOffset;
+    ModelAnimCoord *coord;
+
+    if (arg0 != D_800B9540[D_80121B50].pathIndex) {
+        keyframeOffset = arg0 * sizeof(ModelAnimKeyframe);
+        D_80121B9C = func_80097AE8(((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->angle);
+        D_80121BA0 = func_80097B48(((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->angle);
+
+        coord = &D_80121B90[((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->positionIndex];
+        deltaX = arg1 - (coord->x << 0x11);
+        deltaZ = arg2 - (coord->z << 0x11);
+        projected = ((s64)-D_80121B9C * deltaX + (s64)D_80121BA0 * deltaZ) / 0x1000;
+
+        if ((arg0 >= D_800B9540[D_80121B50].unk38) && (D_800B9540[D_80121B50].unk3A >= arg0)) {
+            distance = projected + 0xC00000;
+            *arg3 = ((s64)-D_80121B9C * distance) / 0x1000;
+            *arg4 = ((s64)D_80121BA0 * distance) / 0x1000;
+        } else if ((D_80121B50 == 3) && ((arg0 == 0x11D) || (arg0 == 0x11E))) {
+            distance = projected + 0xC00000;
+            *arg3 = ((s64)-D_80121B9C * distance) / 0x1000;
+            *arg4 = ((s64)D_80121BA0 * distance) / 0x1000;
+        } else {
+            distance = projected + 0xFF400000;
+            *arg3 = ((s64)-D_80121B9C * distance) / 0x1000;
+            *arg4 = ((s64)D_80121BA0 * distance) / 0x1000;
+        }
+
+        *arg3 += D_80121B90[((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->positionIndex].x << 0x11;
+        *arg4 += D_80121B90[((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->positionIndex].z << 0x11;
+
+        pathIndex = func_8007D200(arg0, *arg3, *arg4);
+        D_80121B9C = func_80097AE8(D_80121B98[pathIndex].angle);
+        nextKeyframeOffset = pathIndex * sizeof(ModelAnimKeyframe);
+        D_80121BA0 = func_80097B48(((ModelAnimKeyframe *)((s32)D_80121B98 + nextKeyframeOffset))->angle);
+
+        coord = &D_80121B90[((ModelAnimKeyframe *)((s32)D_80121B98 + nextKeyframeOffset))->positionIndex];
+        deltaZ = *arg4 - (coord->z << 0x11);
+        deltaX = *arg3 - (coord->x << 0x11);
+        distance = func_8007BCFC(arg5, pathIndex, arg6, coord);
+        projected = ((s64)-D_80121B9C * deltaX + (s64)D_80121BA0 * deltaZ) / 0x1000;
+
+        *arg3 = ((s64)D_80121BA0 * distance + (s64)-D_80121B9C * projected) / 0x1000;
+        *arg4 = ((s64)D_80121B9C * distance + (s64)D_80121BA0 * projected) / 0x1000;
+        *arg3 += D_80121B90[((ModelAnimKeyframe *)((s32)D_80121B98 + nextKeyframeOffset))->positionIndex].x << 0x11;
+        *arg4 += D_80121B90[((ModelAnimKeyframe *)((s32)D_80121B98 + nextKeyframeOffset))->positionIndex].z << 0x11;
+    } else {
+        *arg3 = D_800B9540[D_80121B50].unk18;
+        *arg4 = D_800B9540[D_80121B50].unk1C;
+    }
+}
+#endif
 
 void func_80081C44(s32 arg0, s32 *arg1, s32 *arg2, s32 arg3) {
     s32 unused[4];
