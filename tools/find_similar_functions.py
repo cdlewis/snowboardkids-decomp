@@ -439,15 +439,21 @@ def dedupe_similarity_results(results: List[SimilarityResult]) -> List[Similarit
     """Keep only the highest-scoring result for each function name."""
     sorted_results = sorted(
         results,
-        key=lambda r: (-r.total_score, r.function.name, r.function.file_path)
+        key=lambda r: (
+            -r.total_score,
+            normalize_function_name(r.function.name) != r.function.name,
+            r.function.name,
+            r.function.file_path,
+        )
     )
     best_results = []
     seen_names = set()
 
     for result in sorted_results:
-        if result.function.name in seen_names:
+        func_name = normalize_function_name(result.function.name)
+        if func_name in seen_names:
             continue
-        seen_names.add(result.function.name)
+        seen_names.add(func_name)
         best_results.append(result)
 
     return best_results

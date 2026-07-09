@@ -171,10 +171,20 @@ def find_similar_cross_worktree(query, candidates, calculate_similarity, candida
 
     results.sort(key=lambda r: (
         -r.total_score,
+        candidate_label_cache[r.function.file_path] != r.function.name,
         candidate_label_cache[r.function.file_path],
         r.function.name,
     ))
-    return results[:top_n]
+
+    deduped_results = []
+    seen_names = set()
+    for result in results:
+        if result.function.name in seen_names:
+            continue
+        seen_names.add(result.function.name)
+        deduped_results.append(result)
+
+    return deduped_results[:top_n]
 
 
 def get_coddog_similarity(func_name: str) -> Optional[Tuple[str, float]]:
