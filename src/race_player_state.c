@@ -39,6 +39,7 @@ extern void func_8007CBC0(void *);
 extern void func_80097038(RaceInputPlayer *);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void func_8004FA44(void *);
+extern void func_8005FB30(void *);
 extern void func_80050030(void *);
 extern void *func_800716A4(void *, s32, s32, s32);
 extern void func_80050E80(void *);
@@ -1980,7 +1981,62 @@ void func_80094808(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009491C.s")
 
+// func_80094A94 best match: 99.884%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094A94.s")
+
+#ifdef NON_MATCHING
+void func_80094A94(RaceInputPlayer *player) {
+    s16 updateState;
+    s16 nextState;
+    s32 timer;
+    u32 stateFlags;
+
+    updateState = player->updateState;
+    nextState = updateState + 1;
+    if (updateState == 0) {
+        player->updateState = nextState;
+        player->stateFlags &= 0xFE0C1FFB;
+        player->stateFlags |= 0x102000;
+        func_80081E40(player, 0xE);
+        player->stateTimer = 0x5A;
+        player->unk60 = 0;
+        func_80082DD0(player);
+        player->unk40.y = 0;
+        func_800716A4(func_8005FB30, 0, 0x64, (u16) player->playerIndex);
+        timer = player->stateTimer;
+        player->stateTimer = timer - ((player->stateTimer * player->unk509) / 8);
+        player->actionEffectLevel = 4;
+        player->actionEffectFrame = 0;
+    }
+
+    stateFlags = player->stateFlags;
+    if (!(stateFlags & 1)) {
+        player->stateFlags = stateFlags & ~0x200;
+    } else {
+        player->stateFlags = stateFlags | 0x200;
+    }
+
+    func_8008B408(player, 0, 0);
+    player->unk40.y -= 0xA000;
+    player->posY += player->unk40.y;
+
+    timer = (player->stateTimer - func_80084958(player) - 1) & 0xFFFFFFFFFFFFFFFFu;
+    player->stateTimer = timer;
+    if (timer < 0) {
+        player->stateTimer = 0;
+        timer = 0;
+    }
+
+    if (timer == 0) {
+        player->mode = 4;
+        player->updateState = 0;
+        player->updateTimer = 0;
+        player->unk2E0 = 0;
+        player->unk2E4 = 0;
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094BEC.s")
 

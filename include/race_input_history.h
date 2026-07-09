@@ -93,7 +93,10 @@ typedef struct {
     /* 0x2C4 */ char pad2C4[0x14];
     /* 0x2D8 */ s16 unk2D8;
     /* 0x2DA */ s16 trailEffectTimer;
-    /* 0x2DC */ char pad2DC[0xE];
+    /* 0x2DC */ char pad2DC[4];
+    /* 0x2E0 */ s32 unk2E0;
+    /* 0x2E4 */ s32 unk2E4;
+    /* 0x2E8 */ char pad2E8[2];
     /* 0x2EA */ s16 pitchAngle;
     /* 0x2EC */ s16 facingAngle;
     /* 0x2EE */ s16 unk2EE;
