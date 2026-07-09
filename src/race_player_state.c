@@ -888,7 +888,73 @@ void func_800905BC(RaceInputPlayer *player) {
     }
 }
 
+// func_80090708 best match: 99.900%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090708.s")
+
+#ifdef NON_MATCHING
+void func_80090708(RaceInputPlayer *player) {
+    s16 updateTimer;
+    RaceInputPlayer *playerAlias;
+    s32 allBitsSet;
+    u64 clampValue;
+    s32 yVel;
+    void (*soundFunc)(void *);
+    s32 timer;
+
+    if (player->updateState == 0) {
+        func_80081E40(player, 4);
+        player->updateState++;
+        player->stateFlags |= 0x200;
+        player->stateTimer = 0;
+        func_8008F1B4(player);
+        player->updateTimer = 0;
+    }
+
+    func_80082EC0(player);
+    func_8008B408(player, player->unk254, 0);
+
+    updateTimer = player->updateTimer;
+    if (updateTimer < 8) {
+        player->pitchAngle = -updateTimer << 7;
+    }
+    if (updateTimer >= 0x23) {
+        player->pitchAngle = (-(-updateTimer) << 6) - 0xC80;
+    }
+    if (updateTimer < 0x32) {
+        player->updateTimer = updateTimer + 1;
+    }
+
+    player->velocity.y -= player->unk264;
+    func_8008B508(&player->velocity, player);
+
+    yVel = player->velocity.y;
+    player->posX += player->velocity.x;
+    player->posY += yVel;
+    soundFunc = func_80050E80;
+    playerAlias = player;
+    player->posZ += player->velocity.z;
+    playerAlias->unk74 = yVel;
+
+    playerAlias->unk6E = (((0, func_80097AE8(player->unk7E))) << 14) / 0x1000;
+
+    timer = playerAlias->stateTimer + 0x14;
+    playerAlias->stateTimer = timer;
+    allBitsSet = 0xFFFFFFFFFFFFFFFF;
+    if (timer >= 0x401) {
+        clampValue = 0x400;
+        player->stateTimer = (timer = clampValue) & 0xFFFFFFFFFFFFFFFFu;
+    }
+
+    (*playerAlias).stateFlags |= 2;
+    if (timer < 0x3D0) {
+        playerAlias->stateFlags |= 0x800 & allBitsSet;
+        if ((playerAlias->soundDisabled == 0) && (D_801235B0 & 1)) {
+            func_800716A4(soundFunc, 5, 2, (u16) player->playerIndex);
+        }
+    }
+}
+#endif
 
 void func_80090898(RaceInputPlayer *player) {
     s16 updateState;
