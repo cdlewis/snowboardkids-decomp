@@ -270,16 +270,9 @@ void func_80090898(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090B30.s")
 
-// func_80090CD0 best match: 99.646%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090CD0.s")
-
-#ifdef NON_MATCHING
 void func_80090CD0(RaceInputPlayer *player) {
-    s16 updateTimer;
-    u16 tilt;
     s32 yVel;
     s32 timer;
-    u32 stateFlags;
 
     if (player->updateState == 0) {
         func_80081E40(player, 4);
@@ -303,44 +296,38 @@ void func_80090CD0(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8(player->stateTimer) * -0x2000) / 4096;
+        player->unk6E = (func_80097AE8(player->stateTimerLow) * -0x2000) / 4096;
     } else {
-        tilt = (func_80097AE8(player->stateTimer) * 0x2000) / 4096;
-        player->unk6E = tilt;
+        player->unk6E = (func_80097AE8(player->stateTimerLow) * 0x2000) / 4096;
     }
 
-    player->updateTimer++;
-    updateTimer = player->updateTimer;
     player->stateTimer += 0x16;
-    if (updateTimer == 8) {
+    player->updateTimer++;
+    if (player->updateTimer == 8) {
         func_80081E40(player, 0x18);
-        updateTimer = player->updateTimer;
     }
-    if (updateTimer == 0xF) {
+    if (player->updateTimer == 0xF) {
         func_80081E40(player, 0x19);
-        updateTimer = player->updateTimer;
     }
-    if (updateTimer == 0x1E) {
+    if (player->updateTimer == 0x1E) {
         func_80081E40(player, 0x1A);
     }
 
     timer = player->stateTimer;
     if (timer >= 0x401) {
         timer = 0x400;
-        player->stateTimer = 0x400;
+        player->stateTimer = timer;
     }
 
-    stateFlags = player->stateFlags | 2;
     timer = player->stateTimer;
-    player->stateFlags = stateFlags;
+    player->stateFlags |= 2;
     if (timer < 0x3D0) {
-        player->stateFlags = stateFlags | 0x800;
+        player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090ECC.s")
 
