@@ -2735,7 +2735,7 @@ void func_800959B4(RaceInputPlayer *player) {
     func_80082EC0(player);
 }
 
-// func_80095A88 best match: 97.552% (base_15.c)
+// func_80095A88 best match: 99.483% (base_23.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095A88.s")
 
 #ifdef NON_MATCHING
@@ -2756,9 +2756,10 @@ extern Unk801121E0 D_801121E0[];
 
 void func_80095A88(RaceInputPlayer *player) {
     s16 updateTimer;
+    int new_var;
+    Unk801121E0 *object;
     s32 stateTimer;
     PlayerTransformScratch80095A88 scratch;
-    Unk801121E0 *object;
 
     updateTimer = player->updateTimer;
     if (updateTimer == 0) {
@@ -2770,19 +2771,20 @@ void func_80095A88(RaceInputPlayer *player) {
         if (player->unk80 < 0xA0000) {
             player->unk80 += 0x2000;
         }
-        func_80097FE4(scratch.matrix, -0x100, player->facingAngle);
+        new_var = -0x100;
+        func_80097FE4(scratch.matrix, new_var, player->facingAngle);
     } else {
         if (player->unk80 >= -0x9FFFF) {
             player->unk80 -= 0x2000;
         }
-        func_80097FE4(scratch.matrix, 0x100, player->facingAngle);
+        func_80097FE4(scratch.matrix, 0x100, ((0, player))->facingAngle);
     }
 
     scratch.source.x = 0;
     scratch.source.y = 0;
     scratch.source.z = player->unk80;
     func_80098590(scratch.matrix, &scratch.source, &scratch.transformed);
-    player->posX += scratch.transformed.x;
+    player->posX = player->posX + scratch.transformed.x;
     player->posY += scratch.transformed.y;
     player->posZ += scratch.transformed.z;
 
@@ -2791,6 +2793,7 @@ void func_80095A88(RaceInputPlayer *player) {
     if (stateTimer == 0) {
         player->updateTimer = 0;
         player->updateState++;
+        stateTimer = player->stateTimer;
     }
 
     if (stateTimer < 0x3C) {
