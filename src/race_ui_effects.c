@@ -537,6 +537,16 @@ typedef struct {
 } RaceUiCourseStatsIconData;
 
 typedef struct {
+    /* 0x0000 */ u8 pad0[0x7756];
+    /* 0x7756 */ u16 values[10][5];
+} RaceUiTrickValueData;
+
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x77C4];
+    /* 0x77C4 */ u8 icons[10][5];
+} RaceUiTrickIconData;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x1C];
     /* 0x1C */ s16 alpha;
 } RaceUiAlphaActor;
@@ -2099,7 +2109,63 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D1CC.s")
 
+// func_8005D558 best match: 96.287% (nonmatchings/func_8005D558-3836525038718587862/base_9.c, permuter artifact)
+// Clean source below: 95.113% (nonmatchings/func_8005D558-3836525038718587862/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D558.s")
+
+#ifdef NON_MATCHING
+const char D_800E1454[0x4] = "%4d";
+
+void func_8005D558(RaceUiCourseStatsActor *arg0) {
+    volatile u8 padding[0x20];
+    char buffer[8];
+    s32 i;
+    s32 color;
+    s32 y;
+    s32 space;
+
+    y = -0x50;
+    i = 0;
+    space = ' ';
+    do {
+        func_80045A78(-8, (s16)y, func_80043040(D_80112130.popupFontHandle), (i + 0x77) & 0xFFFF);
+        if ((i == arg0->index) && (D_80156612 & 1)) {
+            color = 0x10;
+        } else if (i < 3) {
+            color = 0xC;
+        } else {
+            color = 0xD;
+        }
+
+        sprintf(buffer, D_800E1454, ((RaceUiTrickValueData *)D_800EC9F0)->values[D_80121B50][i]);
+
+        if ((u8)buffer[0] != space) {
+            func_80046D68(0x10, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                          (buffer[0] - 5) & 0xFFFF, color);
+        }
+        if ((u8)buffer[1] != space) {
+            func_80046D68(0x18, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                          (buffer[1] - 5) & 0xFFFF, color & 0xFFFF);
+        }
+        if ((u8)buffer[2] != space) {
+            func_80046D68(0x20, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                          (buffer[2] - 5) & 0xFFFF, color & 0xFFFF);
+        }
+        if ((u8)buffer[3] != space) {
+            func_80046D68(0x28, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                          (buffer[3] - 5) & 0xFFFF, color & 0xFFFF);
+        }
+
+        func_80045A78(0x40, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                      ((((RaceUiTrickIconData *)D_800EC9F0)->icons[D_80121B50][i] & 7) + 0x51) & 0xFFFF);
+        func_80045A78(0x54, (s16)y, func_80043040(D_80112130.popupFontHandle),
+                      ((((RaceUiTrickIconData *)D_800EC9F0)->icons[D_80121B50][i] >> 3) + 0x7C) & 0xFFFF);
+
+        i++;
+        y += 0x20;
+    } while (i != 5);
+}
+#endif
 
 const char D_800E1458[0x8] = "-Trick-";
 const char D_800E1460[0x8] = "-Make-";
