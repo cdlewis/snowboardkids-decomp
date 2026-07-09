@@ -757,7 +757,7 @@ void func_8004F55C(s16 playerIndex, s16 itemIndex) {
     }
 }
 
-// func_8004F68C best match: 88.788%
+// func_8004F68C best match: 94.341% (nonmatchings/func_8004F68C-2785870559185086986/base_8.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004F68C.s")
 
@@ -767,7 +767,7 @@ void func_8004F68C(RaceItemEffectActor *arg0) {
     void *sp74;
     void *sp70;
     Gfx *gfx;
-    volatile u8 pad[0x48];
+    volatile u8 pad[0x10];
 
     if (D_80156609 != 0) {
         arg0->unk28.bytes.unk28 = 1;
@@ -793,70 +793,9 @@ void func_8004F68C(RaceItemEffectActor *arg0) {
             gfx->words.w0 = 0x06000000;
             gfx->words.w1 = (u32)D_800D6270;
 
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xFD500000;
-            gfx->words.w1 = (u32)sp74;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF5500000;
-            gfx->words.w1 = 0x07080200;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE6000000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF3000000;
-            gfx->words.w1 = 0x070FF400;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE7000000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0x80200;
-            gfx->words.w0 = 0xF5400400;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF2000000;
-            gfx->words.w1 = 0x7C07C;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xFD100000;
-            gfx->words.w1 = (u32)sp70;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE8000000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF5000100;
-            gfx->words.w1 = 0x07000000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE6000000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF0000000;
-            gfx->words.w1 = 0x0703C000;
-
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE7000000;
+            gDPLoadTextureBlock_4b(gRegionAllocPtr++, sp74, G_IM_FMT_CI, 0x20, 0x20, 0, G_TX_CLAMP,
+                                   G_TX_CLAMP, 0, 0, 0, 0);
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, sp70);
 
             gfx = gRegionAllocPtr;
             gRegionAllocPtr = gfx + 1;
