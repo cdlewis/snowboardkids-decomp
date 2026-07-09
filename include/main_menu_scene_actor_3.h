@@ -19,7 +19,7 @@ void func_8003998C(MainMenuSceneActor3 *arg0);
 void func_80039A14(MainMenuSceneActor3 *arg0);
 void func_80039A70(MainMenuSceneActor3 *arg0);
 void func_80039B38(MainMenuSceneActor3 *arg0);
-void func_80039B84(void);
+void func_80039B84(MainMenuSceneActor3 *arg0);
 void func_80039C84(MainMenuSceneActor3 *arg0);
 void func_80039CEC(MainMenuSceneActor3 *arg0);
 void func_80039E08(MainMenuSceneActor3 *arg0);
