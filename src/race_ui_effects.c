@@ -922,7 +922,6 @@ extern void func_800589F4(void *);
 extern void func_80057E90(RaceUiAlpha18Actor *);
 extern void func_80058360(RaceUiAlpha18Actor *);
 extern void func_80065D24(RaceUiOverlayActor *);
-extern void func_80065808(RaceUiOverlayActor *);
 extern void func_800651BC(RaceUiGfxCommandActor *);
 extern void func_80065508(RaceUiGfxCommandActor *);
 extern void func_80083CFC(RacePlayerState *);
@@ -4327,10 +4326,6 @@ void func_80065764(void *arg0) {
     }
 }
 
-// func_80065808 best match: 98.328%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80065808.s")
-
-#ifdef NON_MATCHING
 void func_80065808(RaceUiOverlayActor *arg0) {
     volatile u8 pad2[0xC];
     RaceUiTrailCopyBlock sp9C;
@@ -4380,110 +4375,10 @@ void func_80065808(RaceUiOverlayActor *arg0) {
             arg0->matrix = func_8004885C(&sp9C);
         }
         do {
-            if (arg0->matrix != NULL) {
-                temp_v0 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0->words.w0 = 0x06000000;
-                temp_v0->words.w1 = (u32)D_800D6270;
-                temp_v0_2 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_2->words.w0 = 0xFD480017;
-                temp_v0_2->words.w1 = (u32)arg0->palette3A;
-                temp_v0_3 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_3->words.w1 = 0x07080200;
-                temp_v0_3->words.w0 = 0xF5480600;
-                temp_v0_4 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_4->words.w1 = 0;
-                temp_v0_4->words.w0 = 0xE6000000;
-                temp_v0_5 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_5->words.w0 = 0xF4000000;
-                temp_v0_5->words.w1 = 0x070600A0;
-                temp_v0_6 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_6->words.w1 = 0;
-                temp_v0_6->words.w0 = 0xE7000000;
-                temp_v0_7 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_7->words.w1 = 0x00080200;
-                temp_v0_7->words.w0 = 0xF5400600;
-                temp_v0_8 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_8->words.w0 = 0xF2000000;
-                temp_v0_8->words.w1 = 0x000C00A0;
-                temp_v0_9 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_9->words.w0 = 0xFD100000;
-                temp_v0_9->words.w1 = (u32)arg0->image3A;
-                temp_v0_10 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_10->words.w1 = 0;
-                temp_v0_10->words.w0 = 0xE8000000;
-                temp_v0_11 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_11->words.w0 = 0xF5000100;
-                temp_v0_11->words.w1 = 0x07000000;
-                temp_v0_12 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_12->words.w1 = 0;
-                temp_v0_12->words.w0 = 0xE6000000;
-                temp_v0_13 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_13->words.w0 = 0xF0000000;
-                temp_v0_13->words.w1 = 0x0703C000;
-                temp_v0_14 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_14->words.w1 = 0;
-                temp_v0_14->words.w0 = 0xE7000000;
-                temp_v0_15 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_15->words.w0 = 0x01020040;
-                temp_v0_15->words.w1 = (u32)arg0->matrix;
-                temp_v0_16 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_16->words.w0 = 0x01000040;
-                temp_v0_16->words.w1 = D_80156614;
-                temp_v0_17 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_17->words.w1 = (u32)D_800D69A8;
-                temp_v0_17->words.w0 = 0x0400207F;
-                temp_v0_18 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_18->words.w1 = 0x00060200;
-                temp_v0_18->words.w0 = 0xB1060402;
-                temp_v0_19 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_19->words.w0 = 0xFD480017;
-                temp_v0_19->words.w1 = (u32)arg0->palette3B;
-                temp_v0_20 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_20->words.w1 = 0x07080200;
-                temp_v0_20->words.w0 = 0xF5480600;
-                temp_v0_21 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_21->words.w1 = 0;
-                temp_v0_21->words.w0 = 0xE6000000;
-                temp_v0_22 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_22->words.w0 = 0xF4000000;
-                temp_v0_22->words.w1 = 0x070600A0;
-                temp_v0_23 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                if (((!arg0) && (!arg0)) && (!arg0)) {
-                }
-                temp_v0_23->words.w1 = 0;
-                temp_v0_23->words.w0 = 0xE7000000;
-                temp_v0_24 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_24->words.w1 = 0x00080200;
-                temp_v0_24->words.w0 = 0xF5400600;
-                temp_v0_25 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_25->words.w0 = 0xF2000000;
-                temp_v0_25->words.w1 = 0x000C00A0;
-                temp_v0_26 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_26->words.w0 = 0xFD100000;
-                temp_v0_26->words.w1 = (u32)arg0->image3B;
-                temp_v0_27 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_27->words.w1 = 0;
-                temp_v0_27->words.w0 = 0xE8000000;
-                temp_v0_28 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_28->words.w0 = 0xF5000100;
-                temp_v0_28->words.w1 = 0x07000000;
-                temp_v0_29 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_29->words.w1 = 0;
-                temp_v0_29->words.w0 = 0xE6000000;
-                temp_v0_30 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_30->words.w0 = 0xF0000000;
-                temp_v0_30->words.w1 = 0x0703C000;
-                temp_v0_31 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_31->words.w1 = 0;
-                temp_v0_31->words.w0 = 0xE7000000;
-                temp_v0_32 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
-                temp_v0_32->words.w1 = 0x000E0A08;
-                temp_v0_32->words.w0 = 0xB10E0C0A;
-            }
+ do { if (arg0->matrix != NULL) { temp_v0 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) D_800D6270; temp_v0_2 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_2->words.w0 = 0xFD480017; temp_v0_2->words.w1 = (u32) arg0->palette3A; temp_v0_3 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_3->words.w0 = 0xF5480600; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_5->words.w0 = 0xF4000000; temp_v0_5->words.w1 = 0x070600A0; temp_v0_6 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_7->words.w0 = 0xF5400600; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x000C00A0; temp_v0_9 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->image3A; temp_v0_10 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->matrix; temp_v0_16 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = D_80156614; temp_v0_17 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_17->words.w0 = 0x0400207F; temp_v0_17->words.w1 = (u32) D_800D69A8; temp_v0_18 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; temp_v0_19 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_19->words.w0 = 0xFD480017; temp_v0_19->words.w1 = (u32) arg0->palette3B; temp_v0_20 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_20->words.w0 = 0xF5480600; temp_v0_20->words.w1 = 0x07080200; temp_v0_21 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_21->words.w1 = 0; temp_v0_21->words.w0 = 0xE6000000; temp_v0_22 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_22->words.w0 = 0xF4000000; temp_v0_22->words.w1 = 0x070600A0; temp_v0_23 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_23->words.w1 = 0; temp_v0_23->words.w0 = 0xE7000000; temp_v0_24 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_24->words.w0 = 0xF5400600; temp_v0_24->words.w1 = 0x00080200; temp_v0_25 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_25->words.w0 = 0xF2000000; temp_v0_25->words.w1 = 0x000C00A0; temp_v0_26 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_26->words.w0 = 0xFD100000; temp_v0_26->words.w1 = (u32) arg0->image3B; temp_v0_27 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_27->words.w1 = 0; temp_v0_27->words.w0 = 0xE8000000; temp_v0_28 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_28->words.w0 = 0xF5000100; temp_v0_28->words.w1 = 0x07000000; temp_v0_29 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_29->words.w1 = 0; temp_v0_29->words.w0 = 0xE6000000; temp_v0_30 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_30->words.w0 = 0xF0000000; temp_v0_30->words.w1 = 0x0703C000; temp_v0_31 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_31->words.w1 = 0; temp_v0_31->words.w0 = 0xE7000000; temp_v0_32 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_32->words.w0 = 0xB10E0C0A; temp_v0_32->words.w1 = 0x000E0A08; } } while (0);
         } while (0);
     } while (0);
 }
-#endif
 
 void func_80065CB8(void *arg0) {
     s16 temp_v1;
