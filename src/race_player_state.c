@@ -3023,7 +3023,46 @@ void func_80095650(RaceInputPlayer *player) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095804.s")
+void func_80095804(RaceInputPlayer *player) {
+    s32 scratch[15];
+
+    player->facingAngle += 0x10;
+    if (player->unk80 > 0) {
+        player->unk80 -= 0x820;
+    } else {
+        player->unk80 += 0x820;
+    }
+
+    func_80097C18((s16 *)&scratch[1], player->facingAngle);
+    scratch[12] = 0;
+    scratch[13] = 0;
+    scratch[14] = player->unk80;
+    func_80098590((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
+    player->posX += scratch[9];
+    player->posZ += scratch[11];
+
+    player->facingAngle += 0x10;
+    if (player->unk80 > 0) {
+        player->unk80 -= 0x820;
+    } else {
+        player->unk80 += 0x820;
+    }
+
+    func_80097C18((s16 *)&scratch[1], player->facingAngle);
+    scratch[12] = 0;
+    scratch[13] = 0;
+    scratch[14] = player->unk80;
+    func_80098590((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
+    player->posX += scratch[9];
+    player->posZ += scratch[11];
+
+    func_80082EC0(player);
+    func_8008CF10(player);
+    if (--player->stateTimer == 0) {
+        player->updateTimer = 0;
+        player->updateState++;
+    }
+}
 
 void func_80095940(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
