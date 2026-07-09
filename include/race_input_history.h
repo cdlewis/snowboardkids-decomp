@@ -133,7 +133,7 @@ s32 func_80084958(RaceInputPlayer *player);
 void func_8008A940(void);
 void func_8008B408(RaceInputPlayer *player, s32 arg1, s32 arg2);
 void func_8008B508(RaceVec3i *vec, RaceInputPlayer *player);
-void func_8008BBB8(RaceInputPlayer *player, s32 soundType);
+void func_8008BBB8(RaceInputPlayer *player, s16 soundType);
 void func_8008BE1C(RaceInputPlayer *player);
 
 #endif
