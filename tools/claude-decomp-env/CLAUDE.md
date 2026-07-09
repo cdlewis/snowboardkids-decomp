@@ -113,3 +113,7 @@ Don't be intimidated — these are often straightforward if approached methodica
 1. Get the function to compile first, filling in missing types, undefined functions, etc.
 2. Focus on control flow. Compare `base.c` against `target.s` — m2c's generated control flow can be convoluted and misleading. Make a checklist of problems and work through them one by one.
 3. Large structs are easy. Often there are significant gaps between fields, so just focus on getting the field accesses correct.
+
+### Graphics Microcode (F3Dex)
+
+gRegionAllocPtr is indicative of dynamic display list construction. Use the decompile-microcode skill to help match these functions. *Never* engage in manual manipulation of gRegionAllocPtr. *Always* use gbi.h macros. Using the permuter is usually a bad idea since it can't see through the gbi.h macros.
