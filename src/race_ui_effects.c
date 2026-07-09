@@ -86,7 +86,9 @@ typedef struct {
     /* 0x2EC */ s16 yaw;
     /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
     /* 0x2FC */ s32 flags;
-    /* 0x300 */ u8 pad300[0x568 - 0x300];
+    /* 0x300 */ u8 pad300[0x509 - 0x300];
+    /* 0x509 */ s8 mode;
+    /* 0x50A */ u8 pad50A[0x568 - 0x50A];
     /* 0x568 */ s32 unk568;
     /* 0x56C */ u8 pad56C[0x570 - 0x56C];
     /* 0x570 */ s16 unk570;
@@ -984,7 +986,6 @@ extern void func_8005E33C(void *);
 extern void func_8005893C(void *);
 extern void func_80060544(RaceUiPodiumTrailActor *);
 extern void func_80060914(RaceUiPodiumTrailActor *);
-extern void func_80058610(void *);
 extern void func_80058880(void *);
 extern s16 D_80121B50;
 extern s16 D_801222F4;
@@ -1323,7 +1324,80 @@ void func_80058538(void *arg0) {
     func_800483FC(&D_80124858, func_80058360, (s32)arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80058610.s")
+void func_80058610(RaceUiAlpha18Actor *arg0) {
+    s32 unused;
+    s32 shouldPlaySound;
+    s32 value;
+    RacePlayerState *player;
+
+    shouldPlaySound = 0;
+    value = arg0->score;
+    if (value != 0) {
+        shouldPlaySound = 1;
+    }
+    player = (RacePlayerState *) (s32) D_80121D80;
+    if (value >= 9) {
+        player->unk00C += 8;
+        arg0->score -= 8;
+    } else {
+        D_80121D8C = player->unk00C + value;
+        arg0->score = 0;
+    }
+
+    if (player->mode != 3) {
+        value = player->unk568;
+        if (value != 0) {
+            shouldPlaySound = 1;
+        }
+        if (value >= 9) {
+            player->unk00C += 8;
+            player->unk568 = value - 8;
+        } else {
+            player->unk568 = 0;
+            player->unk00C += value;
+        }
+    }
+
+    if (D_80123778 & 0x8000) {
+        D_80121D8C = player->unk00C + arg0->score;
+        if (player->mode != 3) {
+            player->unk00C += player->unk568;
+            player->unk568 = 0;
+        }
+        arg0->score = 0;
+    }
+
+    if (player->unk00C >= 1000000) {
+        player->unk00C = 999999;
+    }
+
+    if (player->mode != 3) {
+        if ((arg0->score == 0) && (player->unk568 == 0)) {
+            func_80072138(2, 0x32);
+            func_80071824(arg0, func_80058538);
+        }
+    } else if (arg0->score == 0) {
+        shouldPlaySound = 0;
+        func_80072138(2, 0x32);
+        func_80071824(arg0, func_80058538);
+    }
+
+    if (shouldPlaySound != 0) {
+        s16 timer = arg0->timer;
+        if (timer == 0) {
+            arg0->timer = 2;
+            func_80072138(0x1A, 0x32);
+        } else {
+            arg0->timer = timer - 1;
+        }
+    }
+
+    func_800483FC(&D_80124868, func_80057E90, (s32)arg0);
+    func_800483FC(&D_80124868, func_8005804C, (s32)arg0);
+    func_800483FC(&D_80124868, func_8005812C, (s32)arg0);
+    func_800483FC(&D_80124868, func_8005827C, (s32)arg0);
+    func_800483FC(&D_80124858, func_80058360, (s32)arg0);
+}
 
 void func_80058880(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
