@@ -412,21 +412,21 @@ void func_8000B690(void) {
     func_8007105C();
 }
 
-// func_8000B7B8 best match: 66.332% (base_3.c)
+// func_8000B7B8 best match: 68.617% (nonmatchings/func_8000B7B8-2127290767680699791/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000B7B8.s")
 
 #ifdef NON_MATCHING
 void func_8000B7B8(void) {
     s32 sp24;
     ObjectA3E0 *var_s0;
-    s16 temp_t2;
-    s16 temp_t3_2;
-    s16 temp_t7;
+    s32 temp_t2;
+    s32 temp_t3_2;
+    s32 temp_t7;
     s32 temp_a2;
     s32 temp_v0;
     s32 var_v0;
-    s8 temp_t3;
-    s8 temp_t8;
+    s32 temp_t3;
+    s32 temp_t8;
     u16 var_v1;
     u8 temp_a0;
     u8 temp_t1;
