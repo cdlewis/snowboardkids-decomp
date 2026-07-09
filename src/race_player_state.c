@@ -29,6 +29,7 @@ typedef struct {
 
 extern void func_8008C098(RaceInputPlayer *);
 extern void func_8008C7D0(RaceInputPlayer *);
+extern void func_8008CF10(RaceInputPlayer *);
 extern void func_80082664(RaceInputPlayer *, s32, s32, s32);
 extern void func_80082DD0(RaceInputPlayer *);
 extern void func_80082E48(RaceInputPlayer *);
@@ -134,7 +135,47 @@ void func_8008C704(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008D09C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008DAF0.s")
+void func_8008DAF0(RaceInputPlayer *player) {
+    s16 updateState;
+
+    updateState = player->updateState;
+    if (updateState == 0) {
+        player->updateState = updateState + 1;
+        player->stateFlags &= ~0x200;
+        player->stateTimer = 0;
+        player->unk80 = 0;
+        player->subState = 0;
+        player->subStateTimer = 0;
+        player->unk2FA = 0;
+        player->unk528 = 0;
+        func_80081E40(player, 0x1E);
+    }
+
+    player->unk40.y -= player->unk260;
+    player->facingAngle = player->unk332;
+    player->pitchAngle = player->unk334;
+    if (player->stateFlags & 0x400) {
+        player->facingAngle += 0x800;
+        player->pitchAngle = -(player->pitchAngle & 0xFFF);
+    }
+
+    func_8008B408(player, 0, 0);
+    func_8008B508(&player->unk40, player);
+    player->posX += player->unk40.x;
+    player->posY += player->unk40.y;
+    player->posZ += player->unk40.z;
+
+    if (func_80082EC0(player) != 0) {
+        func_80081E40(player, 0x1F);
+        func_80082EC0(player);
+    }
+
+    player->unk578 = 6;
+    func_8008CF10(player);
+    if (player->unk517 != 0) {
+        func_8008BBB8(player, 5);
+    }
+}
 
 void func_8008DC2C(RaceInputPlayer *player) {
     s32 unused;
