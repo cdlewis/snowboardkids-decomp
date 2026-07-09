@@ -3,6 +3,7 @@
 #include "controller_rumble.h"
 #include "game_audio.h"
 #include "race_input_history.h"
+#include "fixed_point_matrix.h"
 
 typedef struct {
     /* 0x00 */ s8 active;
@@ -365,7 +366,51 @@ void func_80092674(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092B6C.s")
 
+// func_80092D04 best match: 97.686%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092D04.s")
+
+#ifdef NON_MATCHING
+void func_80092D04(RaceInputPlayer *player) {
+    s32 timer;
+    s32 yVel;
+
+    if (player->updateState == 0) {
+        func_80081E40(player, 4);
+        player->updateState++;
+        player->stateFlags |= 0x200;
+        player->stateTimer = 0;
+        func_8008F1B4(player);
+    }
+
+    func_80082EC0(player);
+    func_8008B408(player, player->unk254, 0);
+    player->unk40.y -= player->unk264;
+    func_8008B508(&player->unk40, player);
+
+    yVel = player->unk40.y;
+    player->posX += player->unk40.x;
+    player->posY += yVel;
+    player->posZ += player->unk40.z;
+    player->unk74 = yVel;
+
+    player->unk6C = (func_80097AE8(player->stateTimer) * -0x5000) / 4096;
+
+    timer = player->stateTimer + 0x14;
+    player->stateTimer = timer;
+    if (timer >= 0x401) {
+        timer = 0x400;
+        player->stateTimer = timer;
+    }
+
+    player->stateFlags |= 2;
+    if (timer < 0x3D0) {
+        player->stateFlags |= 0x800;
+        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+        }
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092E58.s")
 
