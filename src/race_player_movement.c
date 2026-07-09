@@ -13,9 +13,9 @@ extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
 extern void func_80097FE4(Matrix4s, s16, s16, RaceInputPlayer *);
 extern void func_80098590(Matrix4s, RaceVec3i *, RaceVec3i *);
 extern s32 func_80098C30(s64);
-extern s16 D_800DE84C[][2];
-extern s16 D_800DE864[][2];
-extern s16 D_800DE87C[][2];
+extern s16 D_800DE84C[];
+extern s16 D_800DE864[];
+extern s16 D_800DE87C[];
 extern s16 D_800DE894[];
 extern s16 D_800DE8A0[];
 extern s16 D_800DE8AC[];
@@ -88,50 +88,44 @@ void func_8008BB5C(RaceInputPlayer *arg0, s32 arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008BBB8.s")
-
-#ifdef NON_MATCHING
-void func_8008BBB8(RaceInputPlayer *player, s32 soundType) {
-    s16 playerIndex;
-    s16 soundTypeShort = soundType;
-
-    if (player->soundDisabled != 0 || soundTypeShort >= 8U) {
-        return;
-    }
-
-    playerIndex = player->playerIndex;
-    switch (soundTypeShort) {
+void func_8008BBB8(RaceInputPlayer *player, s16 soundType) {
+    if (player->soundDisabled == 0) {
+        switch (soundType) {
         case 0:
-            func_80072AC8(D_800DE84C[player->characterId][func_800430D0() & 1],
-                          (SoundPosition *)&player->posX, 0x7F, 0x5A, playerIndex, 0);
-            break;
+            func_80072AC8(D_800DE84C[(func_800430D0() & 1) + (player->characterId * 2)],
+                          (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
+            return;
         case 1:
-            func_80072AC8(D_800DE864[player->characterId][func_800430D0() & 1],
-                          (SoundPosition *)&player->posX, 0x7F, 0x5A, playerIndex, 0);
-            break;
+            func_80072AC8(D_800DE864[(func_800430D0() & 1) + (player->characterId * 2)],
+                          (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
+            return;
         case 2:
-            func_80072AC8(D_800DE87C[player->characterId][func_800430D0() & 1],
-                          (SoundPosition *)&player->posX, 0x7F, 0x5A, playerIndex, 0);
-            break;
+            func_80072AC8(D_800DE87C[(func_800430D0() & 1) + (player->characterId * 2)],
+                          (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
+            return;
         case 3:
-            func_80072AC8(D_800DE87C[player->characterId][func_800430D0() & 1],
-                          (SoundPosition *)&player->posX, 0x7F, 0x5A, playerIndex, 0x60);
-            break;
+            func_80072AC8(D_800DE87C[(func_800430D0() & 1) + (player->characterId * 2)],
+                          (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0x60);
+            return;
         case 4:
-            func_80072AC8(D_800DE894[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A, playerIndex, 0);
-            break;
+            func_80072AC8(D_800DE894[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+                          (u16)player->playerIndex, 0);
+            return;
         case 5:
-            func_80072AC8(D_800DE8A0[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A, playerIndex, 0);
-            break;
+            func_80072AC8(D_800DE8A0[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+                          (u16)player->playerIndex, 0);
+            return;
         case 6:
-            func_80072AC8(D_800DE8AC[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A, playerIndex, 0);
-            break;
+            func_80072AC8(D_800DE8AC[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+                          (u16)player->playerIndex, 0);
+            return;
         case 7:
-            func_80072AC8(D_800DE8B8[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A, playerIndex, 0);
+            func_80072AC8(D_800DE8B8[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+                          (u16)player->playerIndex, 0);
             break;
+        }
     }
 }
-#endif
 
 void func_8008BE1C(RaceInputPlayer *arg0) {
     TransformScratch scratch;
