@@ -115,7 +115,63 @@ void func_80078D3C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80079068.s")
 
+// func_80079154 best match: 99.792% at nonmatchings/func_80079154-5272447827802519043/base_8.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80079154.s")
+
+#ifdef NON_MATCHING
+const char D_800E17C0[] = "%2.2d";
+const char D_800E17C8[] = "%2.2d";
+const char D_800E17D0[] = "%2.2d";
+
+void func_80079154(s32 arg0) {
+    char buffer[0xC];
+    s32 x;
+    char *digit;
+    char *end;
+    s32 endValue;
+
+    sprintf(buffer, D_800E17C0, D_80121B74.minutes);
+    x = 0x48;
+    end = &buffer[2];
+    digit = buffer;
+    do {
+        func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        digit++;
+        x += 8;
+    } while ((u32)digit < (u32)end);
+
+    x += 8;
+    sprintf(buffer, D_800E17C8, D_80121B74.seconds);
+    digit = buffer;
+    end = &buffer[2];
+    endValue = (u32)end;
+    do {
+        func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        digit++;
+        x += 8;
+    } while ((u32)digit < endValue);
+
+    x += 8;
+    sprintf(end = buffer, D_800E17D0, D_80121B74.fraction >> 8);
+    digit = end;
+    end = &buffer[2];
+    do {
+        func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        digit++;
+        x += 8;
+    } while (digit != end);
+
+    func_80045A78(0x58, 0x50, func_80043040(D_80112130.popupFontHandle), 0x36);
+    func_80045A78(0x70, 0x50, func_80043040(D_80112130.popupFontHandle), 0x35);
+
+    if (D_80121D80[0].onesDigitTile != 0) {
+        func_80045A78(-0x10, -0x60, func_80043040(D_80112130.popupFontHandle), D_800DC8F8[D_80121D80[0].onesDigitTile]);
+    }
+
+    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x24);
+    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x2A);
+}
+#endif
 
 const char D_800E17D8[] = "Lap Time";
 const char D_800E17E4[] = "Best Lap";
