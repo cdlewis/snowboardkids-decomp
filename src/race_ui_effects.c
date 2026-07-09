@@ -11,6 +11,25 @@ extern void *func_800716A4(void *, s32, s32);
 
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
 #define SCALE_MATRIX_COMPONENT(value, scale) ((value * scale) / 0x1000)
+#define RACE_UI_SP_TRIANGLE_WORD(v0, v1, v2) (_SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
+#define RACE_UI_SP_QUADRANGLE_WORD0(v0, v1, v2, v3, flag) \
+    (((flag) == 0) ? RACE_UI_SP_TRIANGLE_WORD(v0, v1, v2) : \
+     ((flag) == 1) ? RACE_UI_SP_TRIANGLE_WORD(v1, v2, v3) : \
+     ((flag) == 2) ? RACE_UI_SP_TRIANGLE_WORD(v2, v3, v0) : \
+                     RACE_UI_SP_TRIANGLE_WORD(v3, v0, v1))
+#define RACE_UI_SP_QUADRANGLE_WORD1(v0, v1, v2, v3, flag) \
+    (((flag) == 0) ? RACE_UI_SP_TRIANGLE_WORD(v0, v2, v3) : \
+     ((flag) == 1) ? RACE_UI_SP_TRIANGLE_WORD(v1, v3, v0) : \
+     ((flag) == 2) ? RACE_UI_SP_TRIANGLE_WORD(v2, v0, v1) : \
+                     RACE_UI_SP_TRIANGLE_WORD(v3, v1, v2))
+#define RACE_UI_GSP_VERTEX_F3DEX(pkt, v, n, v0) \
+    gDma1p((pkt), G_VTX, (v), ((n) << 10) | (sizeof(Vtx) * (n) - 1), (v0) * 2)
+#define RACE_UI_GSP1QUADRANGLE_F3DEX(pkt, v0, v1, v2, v3, flag) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = _SHIFTL(0xB1, 24, 8) | RACE_UI_SP_QUADRANGLE_WORD0(v0, v1, v2, v3, flag); \
+    _g->words.w1 = RACE_UI_SP_QUADRANGLE_WORD1(v0, v1, v2, v3, flag); \
+}
 
 typedef struct {
     s32 word;
@@ -318,6 +337,17 @@ typedef struct {
     /* 0x48 */ s16 scale;
     /* 0x4A */ u8 matrixDirty;
 } RaceUiRankTrailActor;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ RaceUiGfxCommandDest *matrix;
+    /* 0x28 */ void *palettes[4];
+    /* 0x38 */ void *images[4];
+    /* 0x48 */ Vec3i velocity;
+    /* 0x54 */ s16 frame;
+    /* 0x56 */ u8 matrixDirty;
+} RaceUiAnimatedTextActor;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -738,6 +768,8 @@ extern RaceUiRankTextRenderEntry *D_800D761C[];
 extern RaceUiGfxCommandScriptEntry *D_800D693C[];
 extern FixedTransform D_800DEE30;
 extern RaceUiGfxCommandDest D_800DEE50;
+extern Gfx D_800D6120[];
+extern Gfx D_800D6160[];
 extern Gfx D_800D6968[];
 extern u32 D_800D6270[];
 extern u32 D_800D69A8[];
@@ -877,7 +909,7 @@ extern void func_8005A0E0(void *);
 extern void func_80061F38(RaceUiFadingImpactActor *);
 extern void func_8005F828(RaceUiRankTrailActor *);
 extern void func_80060454(void *, void *, void *, s16);
-extern void func_8005FBA8(void *);
+extern void func_8005FBA8(RaceUiAnimatedTextActor *);
 extern void func_8005FED0(void *);
 extern void func_8005CF60(void);
 extern void func_8005D558(void);
@@ -2789,7 +2821,34 @@ void func_8005FB30(RaceUiRankTrailActor *arg0) {
     func_80071824(arg0, func_8005F828);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005FBA8.s")
+void func_8005FBA8(RaceUiAnimatedTextActor *arg0) {
+    volatile u8 padding[4];
+    RaceUiTrailCopyBlock sp64;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (arg0->matrixDirty != 0) {
+        arg0->matrixDirty = 0;
+        sp64.transform = D_800DEE30;
+        sp64.transform.translation.x = arg0->pos.x;
+        sp64.transform.translation.y = arg0->pos.y;
+        sp64.transform.translation.z = arg0->pos.z;
+        arg0->matrix = func_8004885C(&sp64);
+    }
+
+    if (arg0->matrix != NULL) {
+        gSPDisplayList(gRegionAllocPtr++, D_800D6160);
+        gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->images[arg0->frame >> 2], G_IM_FMT_CI, 0x20, 0x20,
+                               0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, G_TX_NOLOD, G_TX_NOLOD);
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palettes[arg0->frame >> 2]);
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+        RACE_UI_GSP_VERTEX_F3DEX(gRegionAllocPtr++, D_800D6120, 4, 0);
+        RACE_UI_GSP1QUADRANGLE_F3DEX(gRegionAllocPtr++, 2, 1, 0, 3, 3);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005FED0.s")
 
