@@ -851,7 +851,8 @@ extern void func_80045A78(s16, s16, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80045990(s32, s32, void *, void *);
 extern void func_8005B14C(RaceUiCounterActor *);
-extern void func_8005DE6C(void *);
+extern void func_8005C64C(RaceUiDualCounterActor *);
+extern void func_8005DE6C(RaceUiCourseStatsActor *);
 extern void func_8005CB74(void *);
 extern void func_800623E8(void *);
 extern s32 func_8007D200(s32, s32, s32);
@@ -2740,7 +2741,53 @@ void func_8005DD88(void *arg0) {
     func_800483FC(&D_80124858, func_8005D9B4, (s32)arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005DE6C.s")
+void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
+    s16 value;
+
+    if (arg0->timer == 0) {
+        arg0->timer = 2;
+        func_80072138(0x1A, 0x32);
+    } else {
+        arg0->timer--;
+    }
+
+    value = arg0->pendingFirstValue;
+    if ((value >= 8) && !(D_80123778 & 0x8000)) {
+        value = 8;
+    }
+    /* IDO register allocation depends on this always-zero index. */
+    D_80121D80[D_80123778 * 0].unk00C += value;
+    arg0->pendingFirstValue -= value;
+
+    value = arg0->pendingSecondValue;
+    if ((value >= 8) && !(D_80123778 & 0x8000)) {
+        value = 8;
+    }
+    D_80121D80[0].unk00C += value;
+    arg0->pendingSecondValue -= value;
+
+    value = arg0->pendingThirdValue;
+    if ((value >= 8) && !(D_80123778 & 0x8000)) {
+        value = 8;
+    }
+    D_80121D80[0].unk00C += value;
+    arg0->pendingThirdValue -= value;
+
+    if (D_80121D80[0].unk00C >= 0xF4240) {
+        D_80121D80[0].unk00C = 0xF423F;
+    }
+
+    if ((arg0->pendingFirstValue == 0) && (arg0->pendingSecondValue == 0) && (arg0->pendingThirdValue == 0)) {
+        func_80072138(2, 0x32);
+        arg0->timer = 0x14;
+        func_80071824(arg0, func_8005DD88);
+    }
+
+    func_800483FC(&D_80124868, func_8005CF60, (s32)arg0);
+    func_800483FC(&D_80124868, func_8005D1CC, (s32)arg0);
+    func_800483FC(&D_80124858, func_8005D860, (s32)arg0);
+    func_800483FC(&D_80124858, func_8005D9B4, (s32)arg0);
+}
 
 void func_8005E064(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1C) = 3;
