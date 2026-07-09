@@ -55,6 +55,12 @@ typedef struct {
 } RaceOverlayModelEntry;
 
 typedef struct {
+    /* 0x00 */ Vec3i pos;
+    /* 0x0C */ s16 rotation;
+    /* 0x0E */ s16 variant;
+} RaceOverlayEffectSpawn;
+
+typedef struct {
     char pad0[0x10];
     /* 0x10 */ u16 modelListIndex;
     char pad12[6];
@@ -87,15 +93,28 @@ typedef struct {
 } RaceThrownModelActor;
 
 typedef struct {
-    char pad0[0x18];
+    char pad0[0x10];
+    /* 0x10 */ u16 spawnIndex;
+    char pad12[6];
     /* 0x18 */ s16 timer;
     char pad1A[2];
     /* 0x1C */ Vec3i pos;
     /* 0x28 */ Vec3i drawPos;
-    char pad34[0x18];
-    /* 0x4C */ s32 unk4C;
-    char pad50[0x10];
+    /* 0x34 */ FixedMatrix3s rotationMatrix;
+    char pad46[2];
+    /* 0x48 */ Vec3i spawnPos;
+    /* 0x54 */ void *displayList;
+    char pad58[8];
     /* 0x60 */ s32 velY;
+    /* 0x64 */ void *image0;
+    /* 0x68 */ void *palette0;
+    char pad6C[8];
+    /* 0x74 */ void *image1;
+    /* 0x78 */ void *palette1;
+    /* 0x7C */ void *image2;
+    /* 0x80 */ void *palette2;
+    /* 0x84 */ s16 rotation;
+    /* 0x86 */ s16 variant;
 } RaceOverlayModelActor;
 
 typedef struct {
@@ -134,6 +153,7 @@ extern void func_80072A74(s32, void *, s32, s32);
 extern s16 func_8007D200(s16, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
 extern void func_80089000(void *, s32, s32);
+extern RaceOverlayEffectSpawn D_800D9518[];
 extern Vec3i D_800D9BD8[];
 extern RaceOverlayModelEntry *D_800D7754[];
 extern void *D_800DA1C0[];
@@ -145,6 +165,7 @@ extern s16 D_80112146;
 extern s16 D_80112168;
 extern u8 D_80156609;
 extern u8 D_80121B56;
+extern u8 D_80121B5A;
 extern u8 D_80112130[];
 extern RaceModelEntry *D_800D91E8[];
 extern u32 D_800D9210[];
@@ -600,7 +621,7 @@ void func_80068BF0(RaceOverlayModelActor *arg0) {
         temp_v0 = arg0->timer;
         temp_v1 = arg0->pos.y - (temp_v0 * 0x14000);
         arg0->drawPos.y = temp_v1 + 0x140000;
-        arg0->unk4C = temp_v1;
+        arg0->spawnPos.y = temp_v1;
         if (temp_v0 == 0) {
             func_80071824(arg0, func_80068EA0);
         }
@@ -662,7 +683,37 @@ void func_80068DB4(RaceOverlayModelActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80068EA0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800691C8.s")
+void func_800691C8(RaceOverlayModelActor *arg0) {
+    RaceOverlayEffectSpawn *entry = &D_800D9518[arg0->spawnIndex];
+
+    arg0->pos.x = entry->pos.x;
+    arg0->pos.y = entry->pos.y;
+    arg0->pos.z = entry->pos.z;
+    arg0->rotation = entry->rotation;
+    arg0->variant = entry->variant;
+    if (D_80121B5A == 7) {
+        arg0->variant = 1;
+    }
+    if (D_80121B5A == 8) {
+        arg0->variant = 0;
+    }
+
+    arg0->drawPos = arg0->pos;
+    arg0->drawPos.y += 0x140000;
+    func_80097C18(arg0->rotationMatrix, arg0->rotation);
+
+    arg0->spawnPos.x = arg0->pos.x;
+    arg0->spawnPos.y = arg0->pos.y;
+    arg0->spawnPos.z = arg0->pos.z;
+    func_80045990(func_80043040(D_80112168), 0x1E, &arg0->image0, &arg0->palette0);
+    if (arg0->variant == 0) {
+        func_80045990(func_80043040(D_80112168), 0x20, &arg0->image1, &arg0->palette1);
+    } else {
+        func_80045990(func_80043040(D_80112168), 0x21, &arg0->image1, &arg0->palette1);
+    }
+    func_80045990(func_80043040(D_80112168), 0x22, &arg0->image2, &arg0->palette2);
+    func_80071824(arg0, func_80068EA0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_8006935C.s")
 
