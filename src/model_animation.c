@@ -208,7 +208,96 @@ void func_8007FD88(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007FF88.s")
 
+// func_80080CC4 best match: 71.346% (base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80080CC4.s")
+
+#ifdef NON_MATCHING
+s32 func_80080CC4(s32 arg0, s32 arg1, s32 arg2) {
+    s32 keyframeOffset;
+    s32 faceIndex;
+    s32 faceOffset;
+    ModelAnimFace *face;
+    ModelAnimCoord *coord0;
+    ModelAnimCoord *coord1;
+    ModelAnimCoord *coord2;
+    s64 lhs;
+    s64 rhs;
+    s16 x20;
+    s16 z20;
+    s16 y20;
+    s16 x10;
+    s16 z10;
+    s16 y10;
+    s32 xDelta;
+    s32 zDelta;
+    s32 numeratorA;
+    s32 numeratorB;
+    s32 denominator;
+
+    keyframeOffset = arg0 * sizeof(ModelAnimKeyframe);
+    faceIndex = ((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->unk14[0];
+    if (faceIndex < ((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->unk14[1]) {
+        faceOffset = faceIndex * sizeof(ModelAnimFace);
+        do {
+            face = (ModelAnimFace *)((s32)D_80121B94 + faceOffset);
+            if (face->unk7 == 0) {
+                coord0 = &D_80121B90[face->coord0];
+                lhs = (s64)((D_80121B90[face->coord1].x << 0x11) - (coord0->x << 0x11)) *
+                    (arg2 - (coord0->z << 0x11));
+
+                face = (ModelAnimFace *)((s32)D_80121B94 + faceOffset);
+                coord0 = &D_80121B90[face->coord0];
+                rhs = (s64)((D_80121B90[face->coord1].z << 0x11) - (coord0->z << 0x11)) *
+                    (arg1 - (coord0->x << 0x11));
+
+                if (lhs - rhs < 0) {
+                    goto next;
+                }
+
+                face = (ModelAnimFace *)((s32)D_80121B94 + faceOffset);
+            }
+
+            coord1 = &D_80121B90[face->coord1];
+            lhs = (s64)((D_80121B90[face->coord2].x << 0x11) - (coord1->x << 0x11)) *
+                (arg2 - (coord1->z << 0x11));
+
+            face = (ModelAnimFace *)((s32)D_80121B94 + faceOffset);
+            coord1 = &D_80121B90[face->coord1];
+            rhs = (s64)((D_80121B90[face->coord2].z << 0x11) - (coord1->z << 0x11)) *
+                (arg1 - (coord1->x << 0x11));
+
+            if (lhs - rhs >= 0) {
+                face = (ModelAnimFace *)((s32)D_80121B94 + faceOffset);
+                coord0 = &D_80121B90[face->coord0];
+                coord1 = &D_80121B90[face->coord1];
+                coord2 = &D_80121B90[face->coord2];
+
+                x20 = coord2->x - coord0->x;
+                z20 = coord2->z - coord0->z;
+                y20 = coord2->y - coord0->y;
+                x10 = coord1->x - coord0->x;
+                z10 = coord1->z - coord0->z;
+                y10 = coord1->y - coord0->y;
+                xDelta = arg1 - (coord0->x << 0x11);
+                zDelta = arg2 - (coord0->z << 0x11);
+
+                numeratorA = (y20 * z10) - (z20 * y10);
+                numeratorB = (x20 * y10) - (y20 * x10);
+                denominator = (z20 * x10) - (x20 * z10);
+
+                return ((-(s64)numeratorA * xDelta) - ((s64)numeratorB * zDelta)) / denominator
+                    + (coord0->y << 0x11);
+            }
+
+next:
+            faceIndex++;
+            faceOffset += sizeof(ModelAnimFace);
+        } while (faceIndex < ((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->unk14[1]);
+    }
+
+    return 0xC0000000;
+}
+#endif
 
 // func_80081124 best match: 93.812% (base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80081124.s")
