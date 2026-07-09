@@ -481,6 +481,12 @@ typedef struct {
 } RaceUiEffectParticleActor;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x44];
+    /* 0x44 */ Vec3i transformOffset;
+    /* 0x50 */ u8 pad50[0xB0 - 0x50];
+} RaceUiCameraTransformSource;
+
+typedef struct {
     /* 0x00 */ s16 active;
     /* 0x02 */ s16 sentinel;
     /* 0x04 */ s32 command[3];
@@ -768,10 +774,12 @@ extern RaceUiRankTextRenderEntry *D_800D761C[];
 extern RaceUiGfxCommandScriptEntry *D_800D693C[];
 extern FixedTransform D_800DEE30;
 extern RaceUiGfxCommandDest D_800DEE50;
+extern RaceUiCameraTransformSource D_801121E0[];
 extern Gfx D_800D6120[];
 extern Gfx D_800D6160[];
 extern Gfx D_800D6968[];
 extern u32 D_800D6270[];
+extern u32 D_800D63D0[];
 extern u32 D_800D69A8[];
 extern Gfx D_800D9D00[];
 extern Gfx D_800D9D40[];
@@ -3794,7 +3802,108 @@ void func_80063980(RaceUiCourseSpriteActor *actor) {
     func_80071824(actor, func_8006392C);
 }
 
+// func_80063A9C best match: 59.355%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80063A9C.s")
+
+#ifdef NON_MATCHING
+void func_80063A9C(RaceUiEffectParticleActor *arg0) {
+    RaceUiTrailCopyBlock spA0;
+    volatile u8 pad[0x20];
+    RaceUiGfxCommandDest *matrix;
+    RaceUiCameraTransformSource *camera;
+    s32 negX;
+    s32 negY;
+    s32 negZ;
+    s32 maskedNegX;
+    s32 maskedNegY;
+    s32 maskedNegZ;
+    s32 i;
+    s32 mask;
+    RaceUiEffectParticle *particle;
+    Gfx *gfx;
+
+    gfx = gRegionAllocPtr++;
+    gfx->words.w0 = 0xFD500000;
+    gfx->words.w1 = (u32)arg0->unk20;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w0 = 0xF5500000;
+    gfx->words.w1 = 0x07080200;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w1 = 0;
+    gfx->words.w0 = 0xE6000000;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w0 = 0xF3000000;
+    gfx->words.w1 = 0x070FF400;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w1 = 0;
+    gfx->words.w0 = 0xE7000000;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w0 = 0xF5400400;
+    gfx->words.w1 = 0x00080200;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w0 = 0xF2000000;
+    gfx->words.w1 = 0x0007C07C;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w0 = 0xFD100000;
+    gfx->words.w1 = (u32)arg0->unk1C;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w1 = 0;
+    gfx->words.w0 = 0xE8000000;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w0 = 0xF5000100;
+    gfx->words.w1 = 0x07000000;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w1 = 0;
+    gfx->words.w0 = 0xE6000000;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w0 = 0xF0000000;
+    gfx->words.w1 = 0x0703C000;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w1 = 0;
+    gfx->words.w0 = 0xE7000000;
+    gfx = gRegionAllocPtr++;
+    gfx->words.w0 = 0x06000000;
+    gfx->words.w1 = (u32)D_800D6270;
+
+    spA0.transform = D_800DEE30;
+
+    camera = &D_801121E0[D_80156608];
+    negX = -camera->transformOffset.x;
+    negY = -camera->transformOffset.y;
+    negZ = -camera->transformOffset.z;
+
+    i = 0;
+    if (arg0->count > 0) {
+        mask = 0xFFFFFF;
+        maskedNegX = negX & mask;
+        maskedNegY = negY & mask;
+        maskedNegZ = negZ & mask;
+        particle = arg0->particles;
+        do {
+            spA0.transform.translation.x = ((particle->unk0 - maskedNegX) & mask) + negX + 0xFF800000;
+            spA0.transform.translation.y = ((particle->unk4 - maskedNegY) & mask) + negY + 0xFF800000;
+            spA0.transform.translation.z = ((particle->unk8 - maskedNegZ) & mask) + negZ + 0xFF800000;
+            matrix = func_8004885C(&spA0);
+            if (matrix != NULL) {
+                gfx = gRegionAllocPtr++;
+                gfx->words.w0 = 0x01020040;
+                gfx->words.w1 = (u32)matrix;
+                gfx = gRegionAllocPtr++;
+                gfx->words.w0 = 0x01000040;
+                gfx->words.w1 = D_80156614;
+                gfx = gRegionAllocPtr++;
+                gfx->words.w0 = 0x04000C2F;
+                gfx->words.w1 = (u32)D_800D63D0;
+                gfx = gRegionAllocPtr++;
+                gfx->words.w0 = 0xBF000000;
+                gfx->words.w1 = 0x402;
+            }
+            i++;
+            particle++;
+        } while (i < arg0->count);
+    }
+}
+#endif
 
 void func_80063E70(RaceUiEffectParticleActor *arg0) {
     register RaceUiEffectParticleActor *actor;
