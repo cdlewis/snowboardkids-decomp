@@ -18,6 +18,11 @@ typedef struct {
 } CourseBestLapView;
 
 typedef struct {
+    /* 0x00 */ s16 pathIndex;
+    /* 0x02 */ u8 pad2[0x48 - 0x02];
+} RaceTimerCourseSpawnEntry;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x38];
     /* 0x38 */ s16 mainFontHandle;
     /* 0x3A */ u8 pad3A[0x3E - 0x3A];
@@ -31,7 +36,9 @@ typedef struct {
     /* 0x514 */ s8 tensDigitOffset;
     /* 0x515 */ s8 onesDigitTile;
     /* 0x516 */ s8 onesDigitPalette;
-    /* 0x517 */ u8 pad517[0x60C - 0x517];
+    /* 0x517 */ u8 pad517[0x57E - 0x517];
+    /* 0x57E */ s16 raceProgress;
+    /* 0x580 */ u8 pad580[0x60C - 0x580];
 } RaceTimerUiPlayer;
 
 typedef struct {
@@ -50,7 +57,11 @@ extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80047E88(s32, s16, s32, s32);
 extern void func_80048278(s32, s32, char *, s32);
+extern void func_800483FC(void *, void *, s32);
+extern void func_8007A3D8(void);
+extern void func_80087600(s32, s32 *, s32 *);
 extern int sprintf(char *, const char *, ...);
+extern RaceTimerCourseSpawnEntry D_800B9540[];
 extern u8 D_800DC8F0[];
 extern u8 D_800DC8F8[];
 extern CourseDataStride D_800EC9F0[];
@@ -58,10 +69,13 @@ extern RaceTimerUiAssetHandles D_80112130;
 extern s16 D_8011216E;
 extern s16 D_80121B52;
 extern s16 D_80121B72;
+extern s16 D_80121B70;
 extern s16 D_801222F6;
 extern s16 D_80121B50;
 extern u8 D_80121B56;
 extern u8 D_80156608;
+extern s32 D_80124868;
+extern s32 D_80124878;
 extern RaceTimer D_80121B74;
 extern RaceTimer D_80121B78;
 extern s8 D_80122288[];
@@ -346,7 +360,29 @@ void func_8007A350(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_8007A3D8.s")
 
+// func_8007A8EC best match: 98.371% at nonmatchings/func_8007A8EC-5272447827802519043/base_13.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_8007A8EC.s")
+
+#ifdef NON_MATCHING
+void func_8007A8EC(void) {
+    u8 pad[4];
+    s32 sp50;
+    s32 sp4C;
+    RaceTimerUiPlayer *player;
+    s32 shiftedProgress;
+    s16 pathIndex;
+    s32 i;
+    s32 progress;
+
+    do { player = D_80121D80; i = 0; do { func_80087600(i, &sp50, &sp4C); progress = sp50; i++; if (progress < 0) { progress = 0; } shiftedProgress = progress << 7; pathIndex = D_800B9540[D_80121B50].pathIndex; sp50 = progress; player->raceProgress = shiftedProgress / (pathIndex * 8); if (player->raceProgress >= 0x81) { player->raceProgress = 0x80; } player++; } while (i != 4); } while (0);
+
+    if (D_80121B70 == 0) {
+        func_800483FC(&D_80124878, func_8007A3D8, 0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8007A3D8, 0);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_8007AA50.s")
 
