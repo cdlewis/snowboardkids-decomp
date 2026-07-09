@@ -49,7 +49,9 @@ typedef struct {
     /* 0x064 */ s32 unk64;
     /* 0x068 */ char pad68[4];
     /* 0x06C */ s16 unk6C;
-    /* 0x06E */ char pad6E[6];
+    /* 0x06E */ s16 unk6E;
+    /* 0x070 */ s16 unk70;
+    /* 0x072 */ char pad72[2];
     /* 0x074 */ s32 unk74;
     /* 0x078 */ char pad78[4];
     /* 0x07C */ s32 stateTimer;
@@ -92,7 +94,7 @@ typedef struct {
     /* 0x300 */ s16 mode;
     /* 0x302 */ s16 updateState;
     /* 0x304 */ s16 updateTimer;
-    /* 0x306 */ char pad306[2];
+    /* 0x306 */ s16 unk306;
     /* 0x308 */ s16 subState;
     /* 0x30A */ s16 subStateTimer;
     /* 0x30C */ s16 subStateStep;
