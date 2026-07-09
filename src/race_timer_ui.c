@@ -43,7 +43,9 @@ typedef struct {
     /* 0x514 */ s8 tensDigitOffset;
     /* 0x515 */ s8 onesDigitTile;
     /* 0x516 */ s8 onesDigitPalette;
-    /* 0x517 */ u8 pad517[0x570 - 0x517];
+    /* 0x517 */ u8 pad517[0x568 - 0x517];
+    /* 0x568 */ s32 timerValue;
+    /* 0x56C */ u8 pad56C[0x570 - 0x56C];
     /* 0x570 */ s16 score;
     /* 0x572 */ s16 targetScore;
     /* 0x574 */ u8 pad574[0x57E - 0x574];
@@ -223,7 +225,7 @@ void func_80079750(s32 arg0) {
 
 }
 
-// func_80079758 best match: 94.630% at nonmatchings/func_80079758-5635509610426229442/base_8.c.
+// func_80079758 best match: 99.255% at nonmatchings/func_80079758-3836525038718587862/base_11.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80079758.s")
 
 #ifdef NON_MATCHING
@@ -231,23 +233,19 @@ const char D_800E180C[] = "%5ld";
 
 void func_80079758(s32 arg0) {
     volatile u8 padding[0x18];
-    char sp51;
-    char sp50;
-    char sp4F;
-    char sp4E;
-    char sp4D;
-    char sp4C;
+    char end;
+    char buffer[5];
     char *digit;
     s32 x;
     s32 palette;
     RaceTimerUiPlayer *player;
 
     player = &D_80121D80[0];
-    sprintf(&sp4C, D_800E180C, D_801222E8[0].value);
+    sprintf(buffer, D_800E180C, D_80121D80[0].timerValue);
 
     x = 0x50;
-    digit = &sp4C;
-    if (D_801222E8[0].value < 100) {
+    digit = buffer;
+    if (D_80121D80[0].timerValue < 100) {
         palette = 0x10;
     } else {
         palette = 0xE;
@@ -260,9 +258,11 @@ void func_80079758(s32 arg0) {
         }
         digit++;
         x += 8;
-    } while (digit != &sp51);
+    } while (digit != &end);
 
     func_80045A78(0x78, 0x50, func_80043040(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF);
+    if (((!buffer) && (!buffer)) && (!buffer)) {
+    }
 
     if (player->tensDigitPalette != 0) {
         func_80047174(-0x20, -0x60, func_80043040(D_80112130.popupFontHandle),
