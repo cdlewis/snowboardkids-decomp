@@ -25,6 +25,14 @@ from dataclasses import dataclass
 from typing import List, Tuple, Optional
 
 
+SIMILARITY_WORKTREE_NAMES = (
+    'snowboardkids-decomp',
+    'sbk-a',
+    'sbk-b',
+    'sbk-c',
+)
+
+
 def decompilation_difficulty_score(instructions, branches, jumps, labels):
     # Standardization parameters (from training)
     means = [34.27065527065527, 1.6666666666666667, 3.1880341880341883, 1.98005698005698]
@@ -95,6 +103,78 @@ class FunctionScore:
             else:
                 base += f" | (similar: {', '.join(self.similar_to)}, score: {self.similarity_score:.2f})"
         return base
+
+
+def get_similarity_worktrees(project_root: str) -> List[Path]:
+    """Return active repo plus selected sibling worktrees with matchings asm."""
+    worktrees = []
+    seen = set()
+    root = Path(project_root).resolve()
+    candidates = [root]
+    candidates.extend(root.parent / name for name in SIMILARITY_WORKTREE_NAMES)
+
+    for candidate in candidates:
+        resolved = candidate.resolve()
+        if resolved in seen:
+            continue
+        if (resolved / 'asm' / 'matchings').is_dir():
+            worktrees.append(resolved)
+            seen.add(resolved)
+
+    return worktrees
+
+
+def worktree_label_for_function(function, project_root: str, worktrees: List[Path]) -> str:
+    """Format a similarity result name, annotating only non-active worktrees."""
+    active_root = Path(project_root).resolve()
+    function_path = Path(function.file_path).resolve()
+
+    for worktree in worktrees:
+        try:
+            function_path.relative_to(worktree)
+        except ValueError:
+            continue
+
+        if worktree == active_root:
+            return function.name
+        return f"{function.name} ({os.path.relpath(worktree, active_root)})"
+
+    return function.name
+
+
+def build_similarity_metadata(candidates, project_root: str, worktrees: List[Path]):
+    """Precompute path and label metadata for similarity candidates."""
+    path_cache = {}
+    label_cache = {}
+
+    for candidate in candidates:
+        path_cache[candidate.file_path] = Path(candidate.file_path).resolve()
+        label_cache[candidate.file_path] = worktree_label_for_function(candidate, project_root, worktrees)
+
+    return path_cache, label_cache
+
+
+def find_similar_cross_worktree(query, candidates, calculate_similarity, candidate_path_cache,
+                                candidate_label_cache, top_n: int,
+                                threshold: float = 0.0):
+    """Find similar functions, excluding only the exact same parsed asm file."""
+    results = []
+    query_path = Path(query.file_path).resolve()
+
+    for candidate in candidates:
+        if candidate_path_cache[candidate.file_path] == query_path:
+            continue
+
+        result = calculate_similarity(query, candidate)
+        if result.total_score >= threshold:
+            results.append(result)
+
+    results.sort(key=lambda r: (
+        -r.total_score,
+        candidate_label_cache[r.function.file_path],
+        r.function.name,
+    ))
+    return results[:top_n]
 
 
 def get_coddog_similarity(func_name: str) -> Optional[Tuple[str, float]]:
@@ -625,15 +705,23 @@ Examples:
     if args.by_similarity:
         try:
             from find_similar_functions import (
-                get_matchings_index, get_project_root, find_function,
-                find_similar_functions as find_similar, ParsedFunction,
-                parse_function_content, parse_asm_file
+                get_project_root, build_function_index,
+                calculate_similarity, parse_asm_file
             )
 
             project_root = get_project_root()
             print("Building similarity index...", file=sys.stderr)
-            matchings_index = get_matchings_index(project_root)
-            print(f"Indexed {len(matchings_index)} matched functions", file=sys.stderr)
+            similarity_worktrees = get_similarity_worktrees(project_root)
+            matchings_index = []
+            for worktree in similarity_worktrees:
+                matchings_index.extend(build_function_index(str(worktree / 'asm' / 'matchings')))
+            worktree_list = ', '.join(os.path.relpath(worktree, project_root) for worktree in similarity_worktrees)
+            print(f"Indexed {len(matchings_index)} matched functions from {worktree_list}", file=sys.stderr)
+            candidate_path_cache, candidate_label_cache = build_similarity_metadata(
+                matchings_index,
+                project_root,
+                similarity_worktrees
+            )
 
             # For each function, find best match and store similarity
             print("Computing similarities...", file=sys.stderr)
@@ -647,9 +735,20 @@ Examples:
                         break
 
                 if query:
-                    results = find_similar(query, matchings_index, top_n=args.top_n, threshold=0.0)
+                    results = find_similar_cross_worktree(
+                        query,
+                        matchings_index,
+                        calculate_similarity,
+                        candidate_path_cache,
+                        candidate_label_cache,
+                        top_n=args.top_n,
+                        threshold=0.0
+                    )
                     if results:
-                        func_score.similar_to = [r.function.name for r in results]
+                        func_score.similar_to = [
+                            candidate_label_cache[r.function.file_path]
+                            for r in results
+                        ]
                         func_score.similarity_score = results[0].total_score
 
             # Sort by similarity score (highest first - best reference material)
