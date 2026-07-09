@@ -10,7 +10,11 @@ typedef struct {
     /* 0x01C */ Vec3i pos;
     /* 0x028 */ u8 pad28[0x290 - 0x28];
     /* 0x290 */ Vec3i cameraPos;
-    /* 0x29C */ u8 pad29C[RACE_PLAYER_STATE_SIZE - 0x29C];
+    /* 0x29C */ u8 pad29C[0x2EC - 0x29C];
+    /* 0x2EC */ s16 yaw;
+    /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
+    /* 0x2FC */ u32 flags2FC;
+    /* 0x300 */ u8 pad300[RACE_PLAYER_STATE_SIZE - 0x300];
 } RacePlayerState;
 
 typedef union {
@@ -67,6 +71,7 @@ typedef struct StackD7D4 {
 } StackD7D4;
 
 extern void func_8006D8B4();
+void func_8006E534(void);
 extern void func_8006ECBC(void);
 extern void func_8006EF1C(void);
 extern void func_8006F048(void);
@@ -156,7 +161,36 @@ void func_8006E2B4(void) {
 void func_8006E2BC(void) {
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006E2C4.s")
+void func_8006E2C4(void) {
+    s16 matrix[0x10];
+    Vec3i offset;
+    Vec3i transformedOffset;
+    RacePlayerSlot *player;
+
+    offset.y = 0;
+    offset.x = 0;
+    offset.z = 0x400000;
+    player = &D_80121D80[D_801124A0->playerIndex];
+    if (player->state.flags2FC & 0x400) {
+        offset.z = 0xFFC00000;
+        player = (RacePlayerSlot *) ((u8 *) D_80121D80 + (D_801124A0->playerIndex * RACE_PLAYER_STATE_SIZE));
+    }
+    func_80097C18(matrix, player->state.yaw);
+    func_80098590(matrix, &offset, &transformedOffset);
+    D_801124A0->focus.x = D_80121D80[D_801124A0->playerIndex].state.cameraPos.x;
+    D_801124A0->focus.y = D_80121D80[D_801124A0->playerIndex].state.cameraPos.y;
+    D_801124A0->focus.z = D_80121D80[D_801124A0->playerIndex].state.cameraPos.z;
+    D_801124A0->pos.x = D_80121D80[D_801124A0->playerIndex].state.cameraPos.x + transformedOffset.x;
+    D_801124A0->pos.y = D_80121D80[D_801124A0->playerIndex].state.cameraPos.y + transformedOffset.y;
+    D_801124A0->pos.z = D_80121D80[D_801124A0->playerIndex].state.cameraPos.z + transformedOffset.z;
+    D_801124A0->prevPos.x = D_80121D80[D_801124A0->playerIndex].state.pos.x;
+    D_801124A0->prevPos.y = D_80121D80[D_801124A0->playerIndex].state.pos.y;
+    D_801124A0->prevPos.z = D_80121D80[D_801124A0->playerIndex].state.pos.z;
+    D_801124A0->distance = 0;
+    D_801124A0->unk28 = 0x012C0000;
+    D_801124A0->update = func_8006E534;
+    D_801124A0->update();
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006E534.s")
 
