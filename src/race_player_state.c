@@ -237,7 +237,60 @@ void func_8008DC2C(RaceInputPlayer *player) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008DE1C.s")
+void func_8008DE1C(RaceInputPlayer *player) {
+    s32 unused;
+    s32 targetX;
+    s32 targetZ;
+    s16 angleDiff;
+    s32 yVel;
+
+    if (player->updateState == 0) {
+        player->updateState++;
+        player->stateFlags |= 0x208;
+        player->unk60 = 0;
+        player->unk80 = 0;
+        func_8008F1B4(player);
+        player->unk2A6 = 0;
+    }
+
+    if (player->subState == 0) {
+        func_800849E0(player);
+        if (player->unk4 == 0) {
+            if (player->stickX > 0) {
+                player->facingAngle -= 0x18;
+            }
+            if (player->stickX < 0) {
+                player->facingAngle += 0x18;
+            }
+        } else {
+            func_800815D4(player->unk502, unused = player->posX, player->posZ, &targetX, &targetZ,
+                          (s8) player->unk17, (u16) player->playerIndex);
+            angleDiff = (func_8004940C(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
+            if (angleDiff >= 0x801) {
+                angleDiff -= 0x1000;
+            }
+            if (angleDiff >= 0x19) {
+                angleDiff = 0x18;
+            }
+            if (angleDiff < -0x18) {
+                angleDiff = -0x18;
+            }
+            player->facingAngle += angleDiff;
+        }
+    }
+
+    func_8008F1CC(player);
+    player->unk40.y -= player->unk264;
+    func_8008B508(&player->unk40, player);
+    yVel = player->unk40.y;
+    player->posX += player->unk40.x;
+    player->posY += yVel;
+    player->posZ += player->unk40.z;
+    player->unk74 = yVel;
+    if (player->unk517 != 0) {
+        func_8008BBB8(player, 5);
+    }
+}
 
 void func_8008DFD0(RaceInputPlayer *player) {
     D_800DECD0[player->updateState](player);
