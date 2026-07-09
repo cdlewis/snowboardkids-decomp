@@ -400,44 +400,47 @@ void func_80052E4C(MenuPanelActor *arg0) {
     func_80071824(arg0, func_80052E00);
 }
 
-// func_80052E70 best match: 94.691%
+// func_80052E70 best match: 98.631%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80052E70.s")
 
 #ifdef NON_MATCHING
 void func_80052E70(s32 arg0) {
     s32 x;
+    s16 xStart;
     s32 y;
+
+    xStart = 0x74;
 
     func_8000F030(-0x84, 0x1C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
     func_8000F030(0x78, 0x1C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
-    x = -0x74;
+    x = -xStart;
     do {
         func_8000F030((s16)x, 0x1C, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
         func_8000F030((s16)x, 0x54, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
         x += 0x10;
-    } while ((x - 0x7C) < 0);
+    } while (x < 0x7C);
     func_8000F030(-0x84, 0x54, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
     func_8000F030(0x78, 0x54, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
     y = 0x2C;
     do {
         func_8000F030(-0x84, (s16)y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
         func_8000F030(0x78, (s16)y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
-        y += 0x10;
-    } while ((y - 0x5C) < 0);
-    for (x = -0x74; x != 0x7C; x += 0x10) {
+        y = (((((((s16)(y + 0x10)) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu;
+    } while (y < 0x5C);
+    for (x = -0x74; x < 0x7C; x += 0x10) {
         for (y = 0x2C; y != 0x5C; y += 0x10) {
             func_8000F030((s16)x, (s16)y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
         }
     }
-    func_8001303C(-0x76, 0x28, (u16 *)D_800D5630, 0, 0x100, 7, 0x29);
+    func_8001303C(-0x76, 0x28, D_800D5630, 0, 0x100, 7, 0x29);
     func_8000F030(-0x40, -0x30, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
     func_8000F030(0x30, -0x30, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
     x = -0x30;
     do {
         func_8000F030((s16)x, -0x30, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
         func_8000F030((s16)x, 0, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
-        x += 0x10;
-    } while ((x - 0x30) < 0);
+        x = (s16)(x + 0x10);
+    } while (x < 0x30);
     y = -0x20;
     do {
         func_8000F030(-0x40, (s16)y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
@@ -469,7 +472,7 @@ void func_80052E70(s32 arg0) {
     func_80045A78(-0x54, -0x60, func_80043040(D_80112130.unk38), 0x5D);
     func_80045A78(4, -0x60, func_80043040(D_80112130.unk38), 0x5E);
     func_80045A78(-0x4C, -0x5C, func_80043040(D_80112130.unk3A), D_800D57B4[D_80121B50]);
-    func_80045A78(4, -0x5C, func_80043040(D_80112130.unk3A), (D_800D57B4[D_80121B50] + 1) & 0xFFFF);
+    func_80045A78(4, -0x5C, func_80043040(D_80112130.unk3A), D_800D57B4[D_80121B50] + 1);
 }
 #endif
 
