@@ -1,6 +1,13 @@
 #include "common.h"
 #include "memory_allocator.h"
 
+#define FONT_GFX_CMD(pkt, cmd0, cmd1) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = (cmd0); \
+    _g->words.w1 = (cmd1); \
+}
+
 typedef struct {
     /* 0x0 */ s32 unk0;
     /* 0x4 */ s32 entryCount;
@@ -13,6 +20,14 @@ typedef struct {
     /* 0x6 */ u8 width;
     /* 0x7 */ u8 height;
 } AssetTableEntry;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[8];
+    /* 0x08 */ s32 imageOffset;
+    /* 0x0C */ u8 padC[2];
+    /* 0x0E */ u8 width;
+    /* 0x0F */ u8 height;
+} FontTexture;
 
 typedef struct RenderCallbackNode {
     struct RenderCallbackNode *next;
@@ -149,9 +164,78 @@ void func_80047E38(void) {
     D_801121B0 = -1;
 }
 
+// func_80047E88 best match: 97.351% (nonmatchings/func_80047E88-2785870559185086986/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80047E88.s")
 
+#ifdef NON_MATCHING
+void func_80047E88(s16 x, s16 y, s32 ch, u16 arg3) {
+    volatile char pad[0x48];
+    volatile s32 *chPtr;
+    s32 chByte;
+    s32 tile;
+    FontTexture *font;
+
+    chByte = ch & 0xFF;
+    chPtr = &ch;
+    if ((chByte >= 'a') && (chByte < '{')) {
+        tile = chByte - 0x40;
+
+        if (D_801121B2 != 0) {
+            font = (FontTexture *)func_80043040(D_8011213C);
+
+            FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                         (u32)(font->imageOffset + (u8 *)font));
+            FONT_GFX_CMD(gRegionAllocPtr++, (((((font->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5480000,
+                         0x07080200);
+            FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                         (((font->width * 2) & 0xFFF) << 12) | 0x07000000 | ((font->height * 4) & 0xFFF));
+            FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            FONT_GFX_CMD(gRegionAllocPtr++, (((((font->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5400000,
+                         0x00080200);
+            FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                         (((font->width * 4) & 0xFFF) << 12) | ((font->height * 4) & 0xFFF));
+
+            D_801121B2 = 0;
+            D_801121B0 = -1;
+            tile = chByte - 0x40;
+        }
+
+        func_80047B84(x, y, ((tile & 7) * 8) & 0xFFFF, tile & 0x38, arg3);
+        return;
+    }
+
+    tile = chByte - 0x20;
+    if (D_801121B2 != 0) {
+        font = (FontTexture *)func_80043040(D_8011213C);
+
+        FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                     (u32)(font->imageOffset + (u8 *)font));
+        FONT_GFX_CMD(gRegionAllocPtr++, (((((font->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5480000,
+                     0x07080200);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                     (((font->width * 2) & 0xFFF) << 12) | 0x07000000 | ((font->height * 4) & 0xFFF));
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+        FONT_GFX_CMD(gRegionAllocPtr++, (((((font->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5400000,
+                     0x00080200);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                     (((font->width * 4) & 0xFFF) << 12) | ((font->height * 4) & 0xFFF));
+
+        D_801121B2 = 0;
+        D_801121B0 = -1;
+        tile = chByte - 0x20;
+    }
+
+    if ((u32)tile < 0x40) {
+        func_80047B84(x, y, ((tile & 7) * 8) & 0xFFFF, tile & 0x38, arg3);
+    }
+}
+#endif
+
+#ifndef NON_MATCHING
 extern void func_80047E88(s16 x, s16 y, volatile s32 ch, u16 arg3);
+#endif
 
 void func_80048278(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
     s32 var_s0;
