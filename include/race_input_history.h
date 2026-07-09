@@ -126,7 +126,9 @@ typedef struct {
     /* 0x314 */ s32 unk314;
     /* 0x318 */ char pad318[8];
     /* 0x320 */ s16 actionSoundTimer;
-    /* 0x322 */ char pad322[0x10];
+    /* 0x322 */ char pad322[0xE];
+    /* 0x330 */ s8 unk330;
+    /* 0x331 */ char pad331[1];
     /* 0x332 */ s16 unk332;
     /* 0x334 */ s16 unk334;
     /* 0x336 */ char pad336[0x11C];
