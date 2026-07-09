@@ -1026,13 +1026,15 @@ void func_800503D0(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     }
 }
 
-// func_80050458 best match: 84.422%
+// func_80050458 best match: 84.496%
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050458.s")
 
 #ifdef NON_MATCHING
 void func_80050458(RaceItemTextureActor *arg0) {
+    volatile s32 upperPad;
     RaceItemGfxCommandSource sp94;
+    volatile u8 pad[0x40];
     s32 i;
     RaceItemDrawNode **head;
     RaceItemDrawNode *node;
