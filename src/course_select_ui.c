@@ -22,6 +22,47 @@ typedef struct {
     /* 0x006 */ u8 pad6[0x606];
 } CourseSelectRacePlayer;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 unk18;
+    /* 0x1A */ s16 unk1A;
+    /* 0x1C */ s16 unk1C;
+    /* 0x1E */ s16 unk1E;
+    /* 0x20 */ s16 unk20;
+    /* 0x22 */ s16 unk22;
+    /* 0x24 */ s16 unk24;
+    /* 0x26 */ s16 unk26;
+    /* 0x28 */ s16 unk28;
+    /* 0x2A */ s16 unk2A;
+    /* 0x2C */ s16 unk2C;
+    /* 0x2E */ s16 unk2E;
+    /* 0x30 */ s16 unk30;
+    /* 0x32 */ s16 unk32;
+    /* 0x34 */ s16 unk34;
+    /* 0x36 */ s16 unk36;
+    /* 0x38 */ s16 unk38;
+    /* 0x3A */ s16 unk3A;
+    /* 0x3C */ s16 unk3C;
+    /* 0x3E */ s16 unk3E;
+    /* 0x40 */ s16 unk40;
+    /* 0x42 */ s16 unk42;
+    /* 0x44 */ s16 unk44;
+    /* 0x46 */ s16 unk46;
+    /* 0x48 */ s16 unk48;
+    /* 0x4A */ s16 unk4A;
+    /* 0x4C */ s16 unk4C;
+    /* 0x4E */ s16 unk4E;
+    /* 0x50 */ s16 unk50;
+    /* 0x52 */ s16 unk52;
+    /* 0x54 */ s16 unk54;
+    /* 0x56 */ s16 unk56;
+    /* 0x58 */ s16 unk58;
+    /* 0x5A */ u8 unk5A;
+    /* 0x5B */ u8 unk5B;
+    /* 0x5C */ u8 unk5C;
+    /* 0x5D */ u8 unk5D;
+} CourseSelectWidgetInitActor;
+
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void func_80025AA8(CourseSelectWidgetActor *);
 extern void func_8002E568(CourseSelectWidgetActor *);
@@ -898,7 +939,122 @@ void func_80027A08(CourseSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028194.s")
 
+// func_80028354 best match: 95.650% (nonmatchings/func_80028354-3836525038718587862/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028354.s")
+
+#ifdef NON_MATCHING
+extern int sprintf(u8 *, u8 *, ...);
+
+void func_80028354(CourseSelectWidgetInitActor *actor) {
+    volatile s32 savedIndex;
+    s32 count;
+    u8 text[4];
+    s32 nextIndex;
+    s32 offset;
+    s32 j;
+    s32 middleCount;
+    s32 edgeOffset;
+    s32 tile;
+    s32 alpha;
+    s32 i;
+    CourseSelectWidgetInitActor *cur;
+
+    if (D_80121B55 == 2) {
+        count = 2;
+    } else {
+        count = 4;
+    }
+
+    i = 0;
+    cur = actor;
+    if (count > 0) {
+        do {
+            j = 0;
+            alpha = 0x100;
+            if (i == D_80121B55) {
+                alpha = 0xC0;
+            }
+            if (i == 0) {
+                tile = 2;
+            } else {
+                tile = (i + 5) & 0xFF;
+            }
+
+            savedIndex = i;
+            func_8000F8AC(cur->unk18, cur->unk20, func_80043040(D_80112130[0x21]), 0x22, 0x20, 0x20, 0,
+                          alpha, tile);
+
+            if (D_80121B55 == 2) {
+                middleCount = 0xB;
+            } else {
+                middleCount = 3;
+            }
+            edgeOffset = 0x38;
+            if (middleCount > 0) {
+                do {
+                    func_8000F8AC((s16)(cur->unk18 + edgeOffset), cur->unk20, func_80043040(D_80112130[0x21]),
+                                  0x23, 0x20, 0x20, 0, alpha, tile);
+                    j++;
+                    edgeOffset += 0x10;
+                } while (j != middleCount);
+            }
+
+            func_8000F8AC((s16)(cur->unk18 + edgeOffset), cur->unk20, func_80043040(D_80112130[0x21]), 0x24,
+                          0x20, 0x20, 0, alpha, tile);
+
+            offset = 0;
+            if (D_80121B55 == 2) {
+                if (1) {
+                    edgeOffset = 0xF8;
+                }
+            } else {
+                edgeOffset = 0x78;
+            }
+            do {
+                func_8000F8AC(cur->unk18, (s16)(cur->unk20 + offset + 0x10), func_80043040(D_80112130[0x21]),
+                              0x25, 0x20, 0x20, 0, alpha, tile);
+                func_8000F8AC((s16)(cur->unk18 + edgeOffset), (s16)(cur->unk20 + offset + 0x10),
+                              func_80043040(D_80112130[0x21]), 0x26, 0x20, 0x20, 0, alpha, tile);
+                offset += 0x10;
+            } while (offset < 0x40);
+
+            func_8000F8AC(cur->unk18, (s16)(cur->unk20 + 0x50), func_80043040(D_80112130[0x21]), 0x27, 0x20,
+                          0x20, 0, alpha, tile);
+
+            if (D_80121B55 == 2) {
+                middleCount = 0xE;
+            } else {
+                middleCount = 6;
+            }
+            j = 0;
+            if (middleCount > 0) {
+                offset = 0;
+                do {
+                    func_8000F8AC((s16)(cur->unk18 + offset + 0x10), (s16)(cur->unk20 + 0x50),
+                                  func_80043040(D_80112130[0x21]), 0x28, 0x20, 0x20, 0, alpha, tile);
+                    j++;
+                    offset += 0x10;
+                } while (j != middleCount);
+            }
+
+            func_8000F8AC((s16)(cur->unk18 + edgeOffset - 8), (s16)(cur->unk20 + 0x50),
+                          func_80043040(D_80112130[0x21]), 0x29, 0x20, 0x20, 0, alpha, tile);
+
+            nextIndex = savedIndex + 1;
+            sprintf(text, "%d", nextIndex);
+            func_80013D0C((s16)(cur->unk18 + 0x34), (s16)(cur->unk20 + 2), text, 0, alpha);
+
+            if (alpha == 0xC0) {
+                func_8000F8AC((s16)(cur->unk18 + 2), (s16)(cur->unk20 + 0x24),
+                              func_80043040(D_80112130[0x1F]), 0x90, 0x20, 0x20, 0, 0xF0, 0);
+            }
+            i = nextIndex;
+            cur = (CourseSelectWidgetInitActor *)((u8 *)cur + sizeof(s16));
+            savedIndex = nextIndex;
+        } while (nextIndex != count);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800287EC.s")
 
@@ -906,47 +1062,6 @@ void func_80027A08(CourseSelectWidgetActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028B0C.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 unk18;
-    /* 0x1A */ s16 unk1A;
-    /* 0x1C */ s16 unk1C;
-    /* 0x1E */ s16 unk1E;
-    /* 0x20 */ s16 unk20;
-    /* 0x22 */ s16 unk22;
-    /* 0x24 */ s16 unk24;
-    /* 0x26 */ s16 unk26;
-    /* 0x28 */ s16 unk28;
-    /* 0x2A */ s16 unk2A;
-    /* 0x2C */ s16 unk2C;
-    /* 0x2E */ s16 unk2E;
-    /* 0x30 */ s16 unk30;
-    /* 0x32 */ s16 unk32;
-    /* 0x34 */ s16 unk34;
-    /* 0x36 */ s16 unk36;
-    /* 0x38 */ s16 unk38;
-    /* 0x3A */ s16 unk3A;
-    /* 0x3C */ s16 unk3C;
-    /* 0x3E */ s16 unk3E;
-    /* 0x40 */ s16 unk40;
-    /* 0x42 */ s16 unk42;
-    /* 0x44 */ s16 unk44;
-    /* 0x46 */ s16 unk46;
-    /* 0x48 */ s16 unk48;
-    /* 0x4A */ s16 unk4A;
-    /* 0x4C */ s16 unk4C;
-    /* 0x4E */ s16 unk4E;
-    /* 0x50 */ s16 unk50;
-    /* 0x52 */ s16 unk52;
-    /* 0x54 */ s16 unk54;
-    /* 0x56 */ s16 unk56;
-    /* 0x58 */ s16 unk58;
-    /* 0x5A */ u8 unk5A;
-    /* 0x5B */ u8 unk5B;
-    /* 0x5C */ u8 unk5C;
-    /* 0x5D */ u8 unk5D;
-} CourseSelectWidgetInitActor;
-
 void func_80028B0C(CourseSelectWidgetInitActor *arg0) {
     if (D_80121B55 == 2) {
         arg0->unk40 = 0xA0;
