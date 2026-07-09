@@ -2222,7 +2222,63 @@ void func_80094808(RaceInputPlayer *player) {
     }
 }
 
+// func_8009491C best match: 94.894%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009491C.s")
+
+#ifdef NON_MATCHING
+void func_8009491C(RaceInputPlayer *player) {
+    s16 updateState;
+    s32 velocityX;
+    s32 velocityZ;
+    s32 stateTimer;
+    u32 stateFlags;
+    s16 nextState;
+
+    updateState = player->updateState;
+    nextState = updateState + 1;
+    if (updateState == 0) {
+        player->stateFlags &= 0xFE0C1FFB;
+        player->updateState = nextState;
+        player->stateFlags |= 0x01006000;
+        func_80081E40(player, 0x12);
+        player->stateTimer = 0xF;
+        player->unk60 = 0;
+    }
+    func_80082DD0(player);
+    func_8008B408(player, 0x10000, 0);
+    player->velocity.y += 0xFFFF6000;
+    func_8008B508(&player->velocity, player);
+    stateFlags = player->stateFlags;
+    if ((stateFlags & 1) == 0) {
+        player->stateFlags = stateFlags & ~0x200;
+        func_8008BB20(player, 0, 0, 0, 0);
+        player->unk582 = 0x100;
+        player->unk584 = 8;
+        player->unk588 = 0.0f;
+    } else {
+        player->stateFlags = stateFlags | 0x200;
+    }
+    velocityX = player->velocity.x;
+    player->posX += velocityX;
+    player->posY += player->velocity.y;
+    velocityZ = player->velocity.z;
+    player->posZ += velocityZ;
+    player->facingAngle = func_8004908C(velocityX, velocityZ);
+    if (player->stateFlags & 0x400) {
+        player->facingAngle += 0x800;
+    }
+    stateTimer = player->stateTimer - 1;
+    player->stateTimer = stateTimer;
+    if (stateTimer == 0) {
+        player->mode = 0xC;
+        player->updateState = 0;
+        player->updateTimer = 0;
+    }
+    player->actionEffectLevel = 4;
+    player->actionEffectFrame = 2;
+}
+#endif
 
 // func_80094A94 best match: 99.884%
 
