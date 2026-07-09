@@ -718,9 +718,9 @@ void func_800917BC(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk70 = (func_80097AE8(player->unk7E) * 0x3000) / 0x1000;
+        player->unk70 = (func_80097AE8(player->stateTimerLow) * 0x3000) / 0x1000;
     } else {
-        player->unk70 = (func_80097AE8(player->unk7E) * -0x3000) / 0x1000;
+        player->unk70 = (func_80097AE8(player->stateTimerLow) * -0x3000) / 0x1000;
     }
 
     player->stateTimer += 0x16;
@@ -803,7 +803,97 @@ void func_800919A4(RaceInputPlayer *player) {
 }
 #endif
 
+// func_80091AF8 best match: 98.707%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80091AF8.s")
+
+#ifdef NON_MATCHING
+void func_80091AF8(RaceInputPlayer *player) {
+    s16 updateState;
+    s16 updateTimer;
+    s16 tilt;
+    s16 *updateTimerPtr;
+    s32 yVel;
+    s32 timer;
+    u32 stateFlags;
+
+    updateState = player->updateState;
+    if (updateState == 0) {
+        player->updateState = updateState + 1;
+        func_80081E40(player, 0x23);
+        player->stateTimer = 0;
+        player->stateFlags |= 0x200;
+        func_8008F1B4(player);
+        player->updateTimer = 0;
+        player->unk306 = 0;
+    }
+
+    func_80082EC0(player);
+    func_8008B408(player, player->unk254, 0);
+    player->unk40.y -= player->unk264;
+    func_8008B508(&player->unk40, player);
+
+    yVel = player->unk40.y;
+    player->posX += player->unk40.x;
+    updateTimerPtr = &player->updateTimer;
+    player->posY += yVel;
+    player->posZ += player->unk40.z;
+    player->unk74 = yVel;
+
+    if (player->stateFlags & 0x400) {
+        player->unk70 = (func_80097AE8(player->stateTimerLow) * -0x2000) / 4096;
+    } else {
+        player->unk70 = (func_80097AE8(player->stateTimerLow) << 0xD) / 4096;
+    }
+
+    player->updateTimer++;
+    updateTimer = player->updateTimer;
+    player->stateTimer += 0x16;
+    if (updateTimer == 0xC) {
+        func_80081E40(player, 0x15);
+        updateTimer = *updateTimerPtr;
+    }
+
+    if (updateTimer == 0x1E) {
+        func_80081E40(player, 0x16);
+        updateTimer = player->updateTimer;
+    }
+
+    if ((updateTimer >= 9) && (updateTimer < 0x14)) {
+        tilt = player->unk306;
+        if (tilt != -0x400) {
+            player->unk306 = tilt - 0x80;
+            updateTimer = player->updateTimer;
+        }
+    }
+
+    tilt = player->unk306;
+    if ((updateTimer >= 0x1F) && (tilt != 0)) {
+        player->unk306 = tilt + 0x80;
+        tilt = player->unk306;
+    }
+
+    if (player->stateFlags & 0x400) {
+        player->unk6E = -tilt;
+    } else {
+        player->unk6E = tilt;
+    }
+
+    timer = player->stateTimer;
+    if (timer >= 0x401) {
+        timer = 0x400;
+        player->stateTimer = timer;
+    }
+
+    stateFlags = player->stateFlags | 2;
+    player->stateFlags = stateFlags;
+    if (timer < 0x3D0) {
+        player->stateFlags = stateFlags | 0x800;
+        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+        }
+    }
+}
+#endif
 
 void func_80091D40(RaceInputPlayer *player) {
     s16 updateTimer;
@@ -1058,9 +1148,9 @@ void func_800929E4(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->unk7E) * -0x2000) / 4096);
+        player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) * -0x2000) / 4096);
     } else {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->unk7E) << 0xD) / 4096);
+        player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) << 0xD) / 4096);
     }
 
     stateTimer = (player->stateTimer & 0xFFFFFFFFFFFFFFFF) + 0x16;
