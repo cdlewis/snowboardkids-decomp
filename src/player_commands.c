@@ -48,7 +48,8 @@ typedef struct PlayerCommandState {
     s32 unk20;
     u8 pad24[0x8];
     f32 unk2C;
-    u8 pad30[0x8];
+    f32 unk30;
+    f32 unk34;
     f32 unk38;
     u8 pad3C[0x8];
     f32 unk44;
@@ -266,7 +267,7 @@ extern u32 osVirtualToPhysical(void *);
 extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
 extern Struct800A0138 D_8015C928;
 extern ALLink *D_8015C964;
-extern void func_8009CD18(PlayerCommandState *, u8 *);
+extern s32 func_8009CD18(PlayerCommandState *, u8 *);
 extern void func_8009C77C(SchedulerState *);
 extern void func_8009F604(PlayerCommandState *);
 extern s32 func_8009F4C8();
@@ -658,7 +659,43 @@ s32 func_8009CD0C(PlayerCommandState *arg0, s32 arg1) {
     return arg1;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009CD18.s")
+s32 func_8009CD18(PlayerCommandState *arg0, u8 *arg1) {
+    u32 value;
+
+    value = *arg1++;
+    if (value == 0) {
+        value = 1;
+    }
+    arg0->padF4[0] = value;
+    arg0->padF4[1] = arg1[0];
+    value = arg1[1];
+    arg1 += 2;
+    if (value == 0) {
+        value = 1;
+    }
+    arg0->padF4[7] = value;
+    arg0->unk30 = (f32)(1.0 / (f64)(f32)value);
+
+    arg1 += 2;
+    arg0->padF4[2] = arg1[-2];
+    value = arg1[-1];
+    if (value == 0) {
+        value = 1;
+    }
+    arg0->padF4[8] = value;
+    arg0->unk34 = (f32)(1.0 / (f64)(f32)value);
+
+    arg1 += 2;
+    arg0->padF4[3] = arg1[-2];
+    value = arg1[-1];
+    if (value == 0) {
+        value = 1;
+    }
+    arg0->unkFD = value;
+    arg0->unk38 = (f32)(1.0 / (f64)(f32)value);
+
+    return (s32)arg1;
+}
 
 // func_8009CE3C best match: 98.929% (nonmatchings/func_8009CE3C-2911448260736516995/base_21.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009CE3C.s")
