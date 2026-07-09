@@ -38,6 +38,7 @@ extern void func_8007C5E8(void *);
 extern void func_8007CBC0(void *);
 extern void func_80097038(RaceInputPlayer *);
 extern void func_800483FC(void *, void (*)(void *), void *);
+extern void func_8004FA44(void *);
 extern void func_80050030(void *);
 extern void *func_800716A4(void *, s32, s32, s32);
 extern void func_80050E80(void *);
@@ -1935,7 +1936,47 @@ void func_80092D04(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009469C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094808.s")
+void func_80094808(RaceInputPlayer *player) {
+    s16 updateState;
+    s32 timer;
+
+    updateState = player->updateState;
+    if (updateState == 0) {
+        player->updateState = updateState + 1;
+        func_80081E40(player, 0x12);
+        player->stateFlags &= 0xFE0C1FFB;
+        player->stateFlags |= 0x6204;
+        player->pitchAngle = 0;
+        func_8008B408(player, 0, 0);
+        player->unk60 = 0;
+        player->unk40.y = 0x80000;
+        player->stateTimer = 0x14;
+    }
+
+    if (D_801235B0 & 1) {
+        func_800716A4(func_8004FA44, 5, 2, (u16) player->playerIndex);
+    }
+
+    player->unk40.y -= 0x7000;
+    player->posY += player->unk40.y;
+    func_80082DD0(player);
+
+    timer = player->stateTimer;
+    if (timer == 0) {
+        if (!(player->stateFlags & 1)) {
+            player->mode = 0xC;
+            player->updateState = 0;
+            player->updateTimer = 0;
+        }
+    } else {
+        player->stateTimer = timer - 1;
+    }
+
+    if (player->unk40.y > 0) {
+        player->actionEffectLevel = 2;
+        player->actionEffectFrame = 3;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009491C.s")
 
