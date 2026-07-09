@@ -378,7 +378,7 @@ void func_80040004(void) {
     func_8009956C(&func_8004002C, 0);
 }
 
-// func_8004002C best match: 93.838% (nonmatchings/func_8004002C-4139837607000619032/base_10.c)
+// func_8004002C best match: 97.201% (nonmatchings/func_8004002C-6276316234415602851/base_10.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_8004002C.s")
 
@@ -411,17 +411,19 @@ void func_8004002C(void) {
     D_80121D80[1].unk4 = 1;
     D_80121D80[2].unk4 = 1;
     D_80121D80[3].unk4 = 1;
-    D_80121D80[0].characterId = 0;
+    D_80121D80[0].characterId = (D_80121D80[0].unk11 = 0);
     D_80121D80[1].characterId = 1;
     D_80121D80[2].characterId = 2;
     D_80121D80[3].characterId = 3;
-    D_80121D80[0].unk11 = 0;
     D_80121D80[1].unk11 = 0;
     D_80121D80[2].unk11 = 0;
     D_80121D80[3].unk11 = 0;
     D_80121D80[0].unk12 = 3;
+    D_80121D80[0].isActive = 1;
     D_80121D80[1].unk12 = 5;
     D_80121D80[2].unk12 = 6;
+    if (!D_80121B5A) {
+    }
     D_80121D80[3].unk12 = 7;
     D_80121D80[0].unk17 = 0;
     D_80121D80[1].unk17 = 1;
