@@ -62,6 +62,10 @@ typedef struct {
             s16 stateTimerHigh;
             s16 stateTimerLow;
         };
+        struct {
+            s16 unk7C;
+            s16 unk7E;
+        };
     };
     /* 0x080 */ char pad80[4];
     /* 0x084 */ u32 inputFlags;

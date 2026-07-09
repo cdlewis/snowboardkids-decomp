@@ -3,9 +3,9 @@
 #include "effect_task_scheduler.h"
 #include "controller_rumble.h"
 #include "game_audio.h"
+#include "fixed_point_matrix.h"
 #include "fixed_point_math.h"
 #include "race_input_history.h"
-#include "fixed_point_matrix.h"
 
 typedef struct {
     /* 0x00 */ s8 active;
@@ -40,7 +40,6 @@ extern void func_80097038(RaceInputPlayer *);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void func_80050030(void *);
 extern void *func_800716A4(void *, s32, s32, s32);
-extern void func_80050030(void *);
 extern void func_80050E80(void *);
 extern s16 func_80097AE8(s16);
 
@@ -516,7 +515,56 @@ void func_80090274(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090470.s")
 
+// func_800905BC best match: 99.337%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800905BC.s")
+
+#ifdef NON_MATCHING
+void func_800905BC(RaceInputPlayer *player) {
+    s32 yVel;
+    u32 flagTemp;
+    s32 stateTimer;
+    u32 stateFlags;
+
+    if (player->updateState == 0) {
+        func_80081E40(player, 4);
+        player->updateState++;
+        player->stateFlags |= 0x200;
+        player->stateTimer = 0;
+        func_8008F1B4(player);
+        player->updateTimer = 0;
+    }
+
+    func_80082EC0(player);
+    func_8008B408(player, player->unk254, 0);
+    player->velocity.y -= player->unk264;
+    func_8008B508(&player->velocity, player);
+
+    yVel = player->velocity.y;
+    player->posX += player->velocity.x;
+    player->posY += yVel;
+    player->posZ += player->velocity.z;
+    player->unk74 = yVel;
+
+    player->unk70 = (func_80097AE8(player->unk7E) << 13) / 0x1000;
+    stateTimer = player->stateTimer + 0x14;
+    player->stateTimer = stateTimer;
+    if (stateTimer >= 0x401) {
+        player->stateTimer = 0x400;
+    }
+
+    stateFlags = player->stateFlags | 2;
+    player->stateFlags = stateFlags;
+    yVel = stateTimer < 0x3D0;
+    if (yVel) {
+        flagTemp = stateFlags;
+        player->stateFlags = flagTemp | (0x800 & 0xFFFFFFFFFFFFFFFF);
+        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+        }
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090708.s")
 
