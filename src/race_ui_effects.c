@@ -1132,6 +1132,9 @@ loop:
 #endif
 
 const char D_800E1258[0x4] = "%6d";
+const char D_800E125C[0x10] = "-Rank Prize-";
+const char D_800E126C[0x10] = "  -Get Coin-";
+const char D_800E127C[0x10] = "-Total Money-";
 
 void func_8005827C(void *arg0) {
     volatile u8 padding[0x18];
@@ -1156,21 +1159,20 @@ void func_8005827C(void *arg0) {
     func_80045A78(x, 0x21, func_80043040(handles->popupFontHandle), 0x37);
 }
 
-// func_80058360 best match: 99.747% (nonmatchings/func_80058360-9017456803007796287/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80058360.s")
-
-#ifdef NON_MATCHING
 void func_80058360(RaceUiAlpha18Actor *arg0) {
-    Gfx *gfx;
-    s32 w0;
-    Gfx *new_var2;
-    s32 new_var;
-    s32 w1;
-
-    /* IDO scheduling for this function depends on this block staying on one line. */
-    do { do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = 1 + gfx; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; new_var = 0xB900031D; w1 = 0x00504240; w0 = new_var; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = (new_var2 = gRegionAllocPtr); gRegionAllocPtr = new_var2 + 1; new_var2->words.w0 = 0xFA000000; new_var2->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(8, -(0x48 ^ 0), &D_800E125C, 5); func_80048278(0, -0x18, &D_800E126C, 5); func_80048278(4, 0x18, &D_800E127C, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0); } while (0);
+    if (arg0->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+    }
+    func_80048278(8, -0x48, &D_800E125C, 5);
+    func_80048278(0, -0x18, &D_800E126C, 5);
+    func_80048278(4, 0x18, &D_800E127C, 5);
+    if (arg0->alpha != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+    }
 }
-#endif
 
 void func_800584A0(void *arg0) {
     func_800483FC(&D_80124868, func_80057E90, arg0);
