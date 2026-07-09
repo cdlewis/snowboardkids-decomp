@@ -529,6 +529,15 @@ typedef struct {
     /* 0x10 */ s32 pad10;
 } RaceUiRankTextRenderEntry;
 
+typedef struct RaceUiRankTrigger {
+    /* 0x00 */ struct RaceUiRankTrigger *next;
+    /* 0x04 */ s32 x;
+    /* 0x08 */ s32 y;
+    /* 0x0C */ s32 z;
+    /* 0x10 */ s32 radius;
+    /* 0x14 */ s8 triggered;
+} RaceUiRankTrigger;
+
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
@@ -784,6 +793,7 @@ extern RaceUiAssetHandles D_80112130;
 extern s16 D_801222F6;
 extern s16 D_801222F2;
 extern s16 D_801222F0;
+extern RaceUiRankTrigger *D_8012228C;
 extern void *D_80124878;
 extern void *D_801248A4;
 extern void *D_801248EC;
@@ -956,7 +966,6 @@ extern void func_80065D24(RaceUiOverlayActor *);
 extern void func_800651BC(RaceUiGfxCommandActor *);
 extern void func_80065508(RaceUiGfxCommandActor *);
 extern void func_80083CFC(RacePlayerState *);
-extern void func_80066158(void *);
 extern void func_800663C8(void *);
 extern void func_80059854(void *);
 extern void func_8005804C(RaceUiAlpha18Actor *);
@@ -4922,7 +4931,57 @@ void func_80065FD8(RaceUiRankTextRenderActor *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80066158.s")
+void func_80066158(void *arg0) {
+    volatile u8 pad[8];
+    RaceUiRankTextRenderEntry *entry;
+    RaceUiRankTrigger *trigger;
+    s32 radius;
+    s32 dx;
+    s32 dy;
+    s32 dz;
+    s32 i;
+
+    entry = D_800D761C[D_80121B50];
+    if (entry->active != -1) {
+        do {
+            if (entry->active != 0) {
+                func_80088294(&entry->position, 0xE0000, 0x100000, 2);
+                trigger = D_8012228C;
+                if (trigger != NULL) {
+                    do {
+                        if (trigger->triggered == 0) {
+                            radius = trigger->radius + 0xE0000;
+                            dx = trigger->x - entry->position.x;
+                            if ((dx < radius) && (-radius < dx)) {
+                                dy = (trigger->y - entry->position.y) + 0xFFF20000;
+                                if ((dy < radius) && (-radius < dy)) {
+                                    dz = trigger->z - entry->position.z;
+                                    if ((dz < radius) && (-radius < dz) &&
+                                        (func_80098C30((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
+                                        trigger->triggered = 1;
+                                        i = 0;
+                                        do {
+                                            func_800604CC((void *)entry->position.x, (void *)(entry->position.y + 0x70000),
+                                                          (void *)entry->position.z, i);
+                                            i++;
+                                        } while (i != 8);
+                                        entry->active = 0;
+                                        D_801222F4++;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        trigger = trigger->next;
+                    } while (trigger != NULL);
+                }
+            }
+            entry++;
+        } while (entry->active != -1);
+    }
+
+    func_800483FC(&D_801248B0, func_80065FD8, arg0);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800663C8.s")
 
