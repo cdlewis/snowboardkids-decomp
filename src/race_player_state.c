@@ -2581,25 +2581,17 @@ void func_800955C0(RaceInputPlayer *player) {
     }
 }
 
-// func_80095650 best match: 98.807% (nonmatchings/func_80095650-2127290767680699791/base_8.c)
+// func_80095650 best match: 99.679% (nonmatchings/func_80095650-2127290767680699791/base_23.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095650.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    /* 0x00 */ FixedMatrix3s matrix;
-    /* 0x12 */ char pad12[0xE];
-    /* 0x20 */ Vec3i transformed;
-    /* 0x2C */ Vec3i source;
-} PlayerTransformScratch;
-
-extern void func_8006BB50(void *);
-
 void func_80095650(RaceInputPlayer *player) {
     s16 updateTimer;
     s32 stateTimer;
-    PlayerTransformScratch scratch;
-    s32 yVel;
+    s32 scratch[15];
+
+    extern void func_8006BB50(EffectTask *);
 
     updateTimer = player->updateTimer;
     if (updateTimer == 0) {
@@ -2614,26 +2606,25 @@ void func_80095650(RaceInputPlayer *player) {
         }
     }
 
-    func_80097C18(scratch.matrix, player->facingAngle);
-    scratch.source.x = 0;
-    scratch.source.y = 0;
-    scratch.source.z = player->unk80;
-    func_80098590(scratch.matrix, &scratch.source, &scratch.transformed);
-    player->posX += scratch.transformed.x;
-    player->posZ += scratch.transformed.z;
+    func_80097C18((s16 *)&scratch[1], player->facingAngle);
+    scratch[12] = 0;
+    scratch[13] = 0;
+    scratch[14] = player->unk80;
+    func_80098590((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
+    player->posX += scratch[9];
+    player->posZ += scratch[11];
 
-    func_80097C18(scratch.matrix, player->facingAngle);
-    scratch.source.x = 0;
-    scratch.source.y = 0;
-    scratch.source.z = player->unk80;
-    func_80098590(scratch.matrix, &scratch.source, &scratch.transformed);
-    player->posX += scratch.transformed.x;
-    yVel = player->unk40.y - 0x7000;
-    player->posZ += scratch.transformed.z;
-    player->unk40.y = yVel;
-    player->posY += yVel;
+    func_80097C18((s16 *)&scratch[1], player->facingAngle);
+    scratch[12] = 0;
+    scratch[13] = 0;
+    scratch[14] = player->unk80;
+    func_80098590((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
+    player->posX += scratch[9];
+    player->posZ += scratch[11];
+    player->unk40.y -= 0x7000;
+    player->posY += player->unk40.y;
 
-    if ((yVel < 0) && !(player->stateFlags & 1)) {
+    if ((player->unk40.y < 0) && !(player->stateFlags & 1)) {
         if (player->animationId != 1) {
             func_80081E40(player, 1);
         }
@@ -2643,7 +2634,8 @@ void func_80095650(RaceInputPlayer *player) {
         func_80082EC0(player);
     }
 
-    stateTimer = ((unsigned long long) player->stateTimer) - 1;
+    stateTimer = (unsigned long long) player->stateTimer;
+    stateTimer = stateTimer - 1;
     player->stateTimer = stateTimer;
     if (stateTimer == 0) {
         player->updateState++;
