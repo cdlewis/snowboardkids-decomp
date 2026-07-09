@@ -1792,7 +1792,7 @@ void func_800929E4(RaceInputPlayer *player) {
 }
 #endif
 
-// func_80092B6C best match: 97.745% (nonmatchings/func_80092B6C-6688367443449623229/base_6.c)
+// func_80092B6C best match: 99.804% (nonmatchings/func_80092B6C-6688367443449623229/base_24.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092B6C.s")
 
@@ -1829,13 +1829,15 @@ void func_80092B6C(RaceInputPlayer *player) {
 
     stateTimer = (unsigned long long) (player->stateTimer + 0x14);
     player->stateTimer = stateTimer;
+    yVel = 2;
     if (stateTimer >= 0x401) {
-        player->stateTimer = stateTimer = 0x400;
+        stateTimer = (stateTimer & 0) + 0x400;
+        player->stateTimer = stateTimer;
     }
 
-    stateFlags = player->stateFlags | 2;
+    stateFlags = player->stateFlags | yVel;
     player->stateFlags = stateFlags;
-    if (stateTimer < 0x3D0) {
+    if ((stateTimer < 0x3D0) != 0) {
         player->stateFlags = stateFlags | 0x800;
         if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
