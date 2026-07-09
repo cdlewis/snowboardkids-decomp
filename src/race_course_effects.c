@@ -1051,7 +1051,7 @@ void func_8006C088(RaceMovingEffect *arg0) {
     func_8006BFC0(arg0);
 }
 
-// func_8006C1B4 best match: 99.309% (nonmatchings/func_8006C1B4-180949888360117632/base_19.c)
+// func_8006C1B4 best match: 99.414% (nonmatchings/func_8006C1B4-6182772958467082306/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C1B4.s")
 
 #ifdef NON_MATCHING
@@ -1059,6 +1059,8 @@ void func_8006C1B4(Struct6C51C *arg0) {
     CourseEffectMatrixSource scratch;
     volatile s32 pad[2];
     void *matrix;
+    Gfx *segment1;
+    Gfx *segment2;
 
     if (D_80156609 != 0) {
         arg0->sourceMatrix = NULL;
@@ -1078,8 +1080,12 @@ void func_8006C1B4(Struct6C51C *arg0) {
 
     if (matrix != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112144));
-        gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112146));
+        segment1 = gRegionAllocPtr++;
+        segment1->words.w0 = 0xBC000806;
+        segment1->words.w1 = func_80043040(D_80112144);
+        segment2 = gRegionAllocPtr++;
+        segment2->words.w0 = 0xBC000C06;
+        segment2->words.w1 = func_80043040(D_80112146);
         arg0++;
         arg0--;
         gSPMatrix(gRegionAllocPtr++, arg0->sourceMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
