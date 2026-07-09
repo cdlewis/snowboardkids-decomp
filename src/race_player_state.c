@@ -2784,16 +2784,10 @@ void func_80094FF4(RaceInputPlayer *player) {
     }
 }
 
-// func_80095164 best match: 99.466%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095164.s")
-
-#ifdef NON_MATCHING
 void func_80095164(RaceInputPlayer *player) {
     s16 updateState;
     s32 velocityX;
     s32 velocityZ;
-    s32 stateTimer;
     u32 stateFlags;
     s16 nextState;
 
@@ -2832,9 +2826,7 @@ void func_80095164(RaceInputPlayer *player) {
     if (player->stateFlags & 0x400) {
         player->facingAngle += 0x800;
     }
-    stateTimer = player->stateTimer - 1;
-    player->stateTimer = stateTimer;
-    if (stateTimer == 0) {
+    if (--player->stateTimer == 0) {
         player->mode = 0xC;
         player->updateState = 0;
         player->updateTimer = 0;
@@ -2842,7 +2834,6 @@ void func_80095164(RaceInputPlayer *player) {
     player->actionEffectLevel = 4;
     player->actionEffectFrame = 2;
 }
-#endif
 
 void func_80095300(RaceInputPlayer *player) {
     D_800DECE8[player->updateState](player);
