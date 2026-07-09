@@ -165,7 +165,63 @@ void func_8001BD70(CharacterSelectMenuFrameActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C158.s")
 
+// func_8001C83C best match: 96.776% (nonmatchings/func_8001C83C-3836525038718587862/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C83C.s")
+
+#ifdef NON_MATCHING
+void func_8001C83C(CharacterSelectMenuFrameActor *arg0) {
+    u8 spacing;
+    s16 baseY;
+    s32 i;
+    int mode;
+    unsigned int limit;
+
+    mode = D_8010ADF9;
+    if (mode == 0) {
+        if (1) {}
+        spacing = 0x18;
+        baseY = -0x50;
+    } else if (mode == 1) {
+        baseY = -0x54;
+        spacing = 0x16;
+    } else if (mode == 2) {
+        spacing = 0x16;
+        baseY = -0x60;
+    } else {
+        baseY = -0x60;
+        spacing = 0x13;
+    }
+
+    arg0->baseY = baseY;
+    arg0->itemSpacing = spacing;
+    arg0->y[1] = baseY + spacing;
+    arg0->y[2] = baseY + (spacing * 2);
+    arg0->x[0] = -0x104;
+    arg0->x[1] = -0x104;
+    arg0->x[2] = -0x104;
+    arg0->x[2] = -0x104;
+    limit = 0xB;
+    arg0->y[0] = baseY;
+
+    i = 3;
+    do {
+        arg0->x[i + 1] = -0x104;
+        arg0->x[i + 2] = -0x104;
+        arg0->x[i + 3] = -0x104;
+        arg0->x[i] = -0x104;
+        arg0->y[i] = baseY + (i * spacing);
+        arg0->y[i + 1] = baseY + ((i + 1) * spacing);
+        arg0->y[i + 2] = baseY + ((i + 2) * spacing);
+        arg0->y[i + 3] = baseY + ((i + 3) * spacing);
+        i += 4;
+    } while (i != limit);
+
+    arg0->timer = 0;
+    arg0->itemCount = 1;
+    arg0->state = 0;
+    func_80071824(arg0, func_8001C158);
+}
+#endif
 
 // func_8001C96C best match: 99.556%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C96C.s")
