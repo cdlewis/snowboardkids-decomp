@@ -26,6 +26,7 @@ MATCH_LINE_RE = re.compile(r"(?P<filename>[A-Za-z0-9_./-]+\.c)\s+(?P<percent>\d+
 ASM_LABEL_RE = re.compile(r"^\s*(?:glabel|dlabel)\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b", re.MULTILINE)
 ASM_LABEL_LINE_RE = re.compile(r"^\s*(?:glabel|dlabel)\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b")
 ASM_ADDRESS_RE = re.compile(r"/\*\s+[0-9A-Fa-f]+\s+(?P<addr>[0-9A-Fa-f]{8})\s+[0-9A-Fa-f]{8}\s+\*/")
+GFX_REGION_ALLOC_PTR_RE = re.compile(r"\bg(?:fx)?RegionAllocPtr\b", re.IGNORECASE)
 FULL_MATCH_PERCENT = 100.0
 
 
@@ -52,6 +53,7 @@ class ScratchResult:
 class ReportRow:
     local: MatchResult
     scratch: ScratchResult | None = None
+    uses_gfx_region_alloc_ptr: bool = False
 
 
 def repo_root_from_script() -> Path:
@@ -60,9 +62,10 @@ def repo_root_from_script() -> Path:
 
 def default_scan_roots(repo_root: Path) -> list[Path]:
     roots = [repo_root]
-    sbk_a_root = repo_root.parent / "sbk-a"
-    if sbk_a_root.is_dir() and sbk_a_root.resolve() != repo_root.resolve():
-        roots.append(sbk_a_root)
+    for sibling in ("sbk-a", "sbk-b", "sbk-c"):
+        sibling_root = repo_root.parent / sibling
+        if sibling_root.is_dir() and sibling_root.resolve() != repo_root.resolve():
+            roots.append(sibling_root)
     return roots
 
 
@@ -295,9 +298,28 @@ def report_rows_by_function(
     scratch_results = best_scratch_results_by_function(scratches_paths, primary_matched_functions)
 
     return {
-        function: ReportRow(local=local, scratch=scratch_results.get(function))
+        function: ReportRow(
+            local=local,
+            scratch=scratch_results.get(function),
+            uses_gfx_region_alloc_ptr=uses_gfx_region_alloc_ptr(local),
+        )
         for function, local in local_results.items()
     }
+
+
+def path_contains_gfx_region_alloc_ptr(path: Path) -> bool:
+    try:
+        return GFX_REGION_ALLOC_PTR_RE.search(path.read_text(errors="ignore")) is not None
+    except OSError:
+        return False
+
+
+def uses_gfx_region_alloc_ptr(result: MatchResult) -> bool:
+    paths = [Path(result.attempt)]
+    if result.workspace is not None:
+        paths.append(result.workspace / "target.s")
+
+    return any(path_contains_gfx_region_alloc_ptr(path) for path in paths)
 
 
 def relative_path(path: str, repo_root: Path) -> str:
@@ -341,8 +363,10 @@ def print_rows(title: str, rows: list[ReportRow], repo_root: Path) -> None:
     print("-" * 48)
     for row in rows:
         local_attempt = format_local_attempt(row.local)
+        marker = " ✨" if row.uses_gfx_region_alloc_ptr else ""
+        function = f"{row.local.function}{marker}"
         print(
-            f"{row.local.function:<24} "
+            f"{function:<24} "
             f"{row.local.percent:8.3f}%  "
             f"{local_attempt}"
         )
