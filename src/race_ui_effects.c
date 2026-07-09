@@ -40,7 +40,10 @@ typedef struct {
 } RaceUiAssetEntry;
 
 typedef struct {
-    /* 0x000 */ u8 pad0[0x1C];
+    /* 0x000 */ u16 playerIndex;
+    /* 0x002 */ u8 pad002[0x13 - 0x02];
+    /* 0x013 */ s8 isActive;
+    /* 0x014 */ u8 pad014[0x1C - 0x14];
     /* 0x01C */ Vec3i pos1C;
     /* 0x028 */ Vec3i pos28;
     /* 0x034 */ u8 pad34[0x94 - 0x34];
@@ -61,7 +64,9 @@ typedef struct {
     /* 0x2EC */ s16 yaw;
     /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
     /* 0x2FC */ s32 flags;
-    /* 0x300 */ u8 pad300[0x570 - 0x300];
+    /* 0x300 */ u8 pad300[0x568 - 0x300];
+    /* 0x568 */ s32 unk568;
+    /* 0x56C */ u8 pad56C[0x570 - 0x56C];
     /* 0x570 */ s16 unk570;
     /* 0x572 */ s16 unk572;
     /* 0x574 */ s16 score;
@@ -799,6 +804,7 @@ extern void func_8004B8B4(s32, s32, s32, s16, s16);
 extern void func_80088294(Vec3i *, s32, s32, s32);
 extern void func_80088C80(Vec3i *, s32, s32, s32);
 extern s32 func_80088E98(Vec3i *, s32, s32, s32);
+extern void func_8008BB5C(RacePlayerState *, s32);
 extern void func_80061088(RaceUiTripleParticleActor *);
 extern void func_80062F6C(RaceUiTrailingParticleActor *);
 extern void func_80058B20(void *);
@@ -3683,7 +3689,61 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
     func_800483FC(&D_801248C8, func_80064470, actor);
 }
 
+// func_80064914 best match: 96.414% (nonmatchings/func_80064914-5272447827802519043/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80064914.s")
+
+#ifdef NON_MATCHING
+void func_80064914(RaceUiProjectileActor *arg0) {
+    FixedMatrix3sScratch sp44;
+    RacePlayerState *player;
+    RacePlayerState *otherPlayer;
+    s32 value;
+    s32 amount;
+    s16 flags;
+
+    if (D_80121B56 == 0) {
+        player = &D_80121D80[arg0->index];
+        func_80097FE4(sp44, D_80121D80[arg0->index].pitch, D_80121D80[arg0->index].yaw);
+        func_80098590(sp44, &arg0->velocity, &arg0->pos);
+
+        player = &D_80121D80[arg0->index];
+        arg0->pos.x += player->pos28.x;
+        arg0->pos.y += player->pos28.y;
+        arg0->pos.z += player->pos28.z;
+        func_80064414(arg0);
+
+        otherPlayer = D_80121D80;
+        do {
+            if ((otherPlayer->isActive != 0) && (otherPlayer->playerIndex != arg0->index)) {
+                value = otherPlayer->unk568;
+                amount = value;
+                if (value >= 0xA6) {
+                    amount = 0xA6;
+                }
+                otherPlayer->unk568 = value - amount;
+                func_8008BB5C(&D_80121D80[arg0->index], amount);
+            }
+            otherPlayer++;
+        } while (otherPlayer != (RacePlayerState *)&D_801235B0);
+
+        flags = arg0->flags;
+        amount = flags & 1;
+        if (flags & 8) {
+            func_80072A74(0x69, &D_80121D80[arg0->index].pos28, 0x7F, 0x32);
+            arg0->flags &= ~8;
+            amount = (arg0->flags & 1) & 0xFFFF;
+        }
+        if (amount != 0) {
+            arg0->verticalAcceleration = 0;
+            arg0->verticalVelocity = 0;
+            func_80072A74(0x6A, &D_80121D80[arg0->index].pos28, 0x7F, 0x32);
+            func_80071824(arg0, func_800647E0);
+        }
+    }
+
+    func_800483FC(&D_801248C8, func_80064470, arg0);
+}
+#endif
 
 void func_80064B28(RaceUiProjectileActor *arg0) {
     FixedMatrix3sScratch sp2C;
