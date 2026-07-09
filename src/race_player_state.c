@@ -879,14 +879,14 @@ void func_80090998(RaceInputPlayer *player) {
     }
 }
 
-// func_80090B30 best match: 97.788% (nonmatchings/func_80090B30-6688367443449623229/base_8.c)
+// func_80090B30 best match: 98.990% (nonmatchings/func_80090B30-3426750233777855594/base_11.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090B30.s")
 
 #ifdef NON_MATCHING
 void func_80090B30(RaceInputPlayer *player) {
     s32 yVel;
-    s32 stateTimer;
+    s32 timer;
     u32 stateFlags;
 
     if (player->updateState == 0) {
@@ -907,25 +907,25 @@ void func_80090B30(RaceInputPlayer *player) {
     player->posX += player->velocity.x;
     player->posY += yVel;
     player->posZ += player->velocity.z;
-    stateTimer = player->stateTimer;
-    player->unk6C = stateTimer * 4;
+    timer = player->stateTimer;
+    player->unk6C = timer * 4;
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8((s16) stateTimer) * -0x4000) / 0x1000;
+        player->unk6E = (func_80097AE8((s16) timer) * -0x4000) / 0x1000;
     } else {
-        player->unk6E = (func_80097AE8((s16) stateTimer) << 14) / 0x1000;
+        player->unk6E = (func_80097AE8((s16) timer) << 14) / 0x1000;
     }
 
-    stateTimer = (unsigned long long) (player->stateTimer + 0x15);
-    player->stateTimer = stateTimer;
-    if (stateTimer >= 0x401) {
-        player->stateTimer = stateTimer = 0x400;
+    player->stateTimer += 0x15;
+    if (player->stateTimer >= 0x401) {
+        player->stateTimer = 0x400;
     }
 
+    timer = player->stateTimer;
     stateFlags = player->stateFlags | 2;
     player->stateFlags = stateFlags;
-    if (stateTimer < 0x3D0) {
+    if (timer < 0x3D0) {
         player->stateFlags = stateFlags | 0x800;
         if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
