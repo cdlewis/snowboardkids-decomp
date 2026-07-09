@@ -277,7 +277,11 @@ extern void func_8009F748(u8 *, unsigned char, s32);
 extern void func_8009F810(void *, s32 *, s32, s32 *, s32, s32, s32);
 extern ALMicroTime func_8009E0D4(void *);
 extern s32 func_8009FF80(s32, s32, void *);
+#ifndef NON_MATCHING
 extern void func_8009C444(void *);
+#else
+void func_8009C444(SchedulerState *);
+#endif
 extern void func_8009C8DC(void *);
 extern f32 sinf(f32);
 extern s32 func_8009FD74(AudioTask *, AudioInfo *);
@@ -373,7 +377,92 @@ s32 func_8009C43C(s32 arg0) {
     return arg0 + 0x5C;
 }
 
+// func_8009C444 best match: 97.048% (nonmatchings/func_8009C444-6688367443449623229/base_13.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C444.s")
+
+#ifdef NON_MATCHING
+void func_8009C444(SchedulerState *arg0) {
+    OSMesg msg;
+    OSMesgQueue *queue;
+    s32 pendingAudio;
+    s32 started;
+    s32 delayedStart;
+    short nextFrame;
+
+    pendingAudio = (delayedStart = (started = 0));
+    msg = NULL;
+    D_800DF15C = 0;
+    queue = &arg0->retraceQueue;
+
+loop:
+    osRecvMesg(queue, &msg, 1);
+    switch ((s32)msg) {
+        case 0x29A:
+            nextFrame = D_800DF150 + 1;
+            D_800DF150 = nextFrame;
+            D_800DF150 = nextFrame;
+            D_800DF150 = D_800DF150 & 0xFFF;
+            if ((started == 0) || (D_800DF15C < 0x16)) {
+                func_8009C6DC(arg0);
+                pendingAudio = 0;
+                if (D_8015A624 != 0) {
+                    pendingAudio = 1;
+                } else {
+                    func_8009CB44(arg0, (s32)arg0);
+                }
+            } else {
+                osViBlack(1);
+            }
+            if ((started != 0) && (D_800DF15C < 0x16)) {
+                D_800DF15C += 1;
+            }
+            break;
+
+        case 0x29B:
+            if (D_8015A620 & 2) {
+                D_8015A620 &= ~2;
+                func_8009C81C(arg0);
+                if (pendingAudio != 0) {
+                    pendingAudio = 0;
+                    func_8009CB44(arg0, (s32)arg0);
+                }
+                if (delayedStart != 0) {
+                    delayedStart = 0;
+                    osWritebackDCacheAll();
+                    D_8015A620 |= 1;
+                    osSpTaskLoad(&arg0->curRSPTask->list);
+                    osSpTaskStartGo(&arg0->curRSPTask->list);
+                }
+            } else if (D_8015A620 & 1) {
+                if (D_800DF158 != 0) {
+                    func_8009C77C(arg0);
+                } else {
+                    D_8015A620 &= ~1;
+                    osSendMesg(&arg0->queue14C, (OSMesg)arg0, 1);
+                }
+            }
+            break;
+
+        case 1:
+            if (D_8015A624 == 0) {
+                osWritebackDCacheAll();
+                D_8015A620 |= 1;
+                osSpTaskLoad(&arg0->curRSPTask->list);
+                osSpTaskStartGo(&arg0->curRSPTask->list);
+            } else {
+                delayedStart = 1;
+            }
+            break;
+
+        case 0x29D:
+            started = 1;
+            func_8009CB44(arg0, (s32)((u8 *)arg0 + 2));
+            break;
+    }
+    goto loop;
+}
+#endif
 
 void func_8009C6DC(SchedulerState *arg0) {
     if (D_8015A624 == 0) {
