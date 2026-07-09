@@ -35,7 +35,7 @@ void func_80056B1C(CoursePreviewCamera *arg0);
 void func_80056B88(CoursePreviewCamera *arg0);
 void func_80056BD8(CoursePreviewCamera *arg0);
 void func_80056C44(CoursePreviewCamera *arg0);
-void func_80056CA0(void);
+void func_80056CA0(CoursePreviewGfxCommandActor *arg0);
 void func_8005711C(s32 arg0);
 void func_8005714C(CoursePreviewGfxCommandActor *arg0);
 
