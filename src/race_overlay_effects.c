@@ -47,6 +47,11 @@ typedef struct {
 } CourseEffectMatrixSource;
 
 typedef struct {
+    /* 0x00 */ FixedTransform source;
+    /* 0x20 */ s32 pad20;
+} RaceOverlayMatrixScratch;
+
+typedef struct {
     /* 0x00 */ s16 modelIndex;
     char pad2[2];
     /* 0x04 */ Vec3i pos;
@@ -97,7 +102,7 @@ typedef struct {
     /* 0x10 */ u16 spawnIndex;
     char pad12[6];
     /* 0x18 */ s16 timer;
-    char pad1A[2];
+    /* 0x1A */ s16 matrixDirty;
     /* 0x1C */ Vec3i pos;
     /* 0x28 */ Vec3i drawPos;
     /* 0x34 */ FixedMatrix3s rotationMatrix;
@@ -140,7 +145,7 @@ typedef struct {
 
 extern void func_80045990(s32, s32, void *, void *);
 extern void func_800486BC(CourseEffectMatrixSource *, void *);
-extern GfxCommandDest *func_8004885C(GfxCommandSource *);
+extern GfxCommandDest *func_8004885C(void *);
 extern void func_80048C90(GfxCommandDest *, Vec3i *);
 extern s32 func_80048E60(void *);
 extern void osWritebackDCache(void *, s32);
@@ -173,6 +178,7 @@ extern Vtx D_800D92D8[];
 extern Gfx D_800D9D00[];
 extern Gfx D_800D9D40[];
 extern GfxCommandDest D_800DEE50;
+extern FixedTransform D_800DEE30;
 extern Gfx *gRegionAllocPtr;
 extern void *D_80156614;
 extern s16 D_80121B50;
@@ -607,7 +613,44 @@ void func_8006752C(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80067830.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800681A4.s")
+void func_800681A4(RaceOverlayModelActor *arg0) {
+    RaceOverlayMatrixScratch sp64;
+    Gfx *temp_v0;
+    Gfx *temp_v0_2;
+    Gfx *temp_v0_3;
+    Gfx *temp_v0_4;
+    Gfx *temp_v0_5;
+    Gfx *temp_v0_6;
+    Gfx *temp_v0_7;
+    Gfx *temp_v0_8;
+    Gfx *temp_v0_9;
+    Gfx *temp_v0_10;
+    Gfx *temp_v0_11;
+    Gfx *temp_v0_12;
+    Gfx *temp_v0_13;
+    Gfx *temp_v0_14;
+    Gfx *temp_v0_15;
+    Gfx *temp_v0_16;
+    Gfx *temp_v0_17;
+    Gfx *temp_v0_18;
+    Gfx *temp_v0_19;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (func_80049000(&arg0->pos) != 0) {
+        if (arg0->matrixDirty != 0) {
+            arg0->matrixDirty = 0;
+            sp64.source = D_800DEE30;
+            sp64.source.translation.x = arg0->drawPos.x;
+            sp64.source.translation.y = arg0->drawPos.y;
+            sp64.source.translation.z = arg0->drawPos.z;
+            arg0->displayList = func_8004885C(&sp64.source);
+        }
+        do { if (arg0->displayList != NULL) { temp_v0 = gRegionAllocPtr++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) D_800D9D00; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette0; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->displayList; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = (u32) D_80156614; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400207F; temp_v0_17->words.w1 = (u32) D_800D92D8; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; temp_v0_19 = gRegionAllocPtr++; temp_v0_19->words.w0 = 0x06000000; temp_v0_19->words.w1 = (u32) D_800D9D40; } } while (0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800684E4.s")
 
