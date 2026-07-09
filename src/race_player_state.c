@@ -2472,7 +2472,46 @@ void func_80094288(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094480.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009469C.s")
+void func_8009469C(RaceInputPlayer *player) {
+    s16 updateState;
+    s32 tempX;
+    s32 tempZ;
+
+    updateState = player->updateState;
+    if (updateState == 0) {
+        player->updateState = updateState + 1;
+        func_80081E40(player, 0x13);
+        player->stateFlags &= 0xFE0C1FFB;
+        player->stateFlags |= 0x22200;
+        player->pitchAngle = 0;
+        func_8008B408(player, 0, 0);
+        player->unk60 = 0;
+        player->actionEffectLevel = 3;
+        player->actionEffectFrame = 0;
+    }
+
+    player->unk314 = 0x60000;
+    func_8008B508(&player->unk40, player);
+    player->unk40.y -= player->unk264;
+    if (!(player->stateFlags & 1)) {
+        func_8008BB20(player, 0, 0x4000, 0x4000, 0x4000);
+    } else {
+        tempX = player->unk40.x;
+        tempZ = player->unk40.z;
+        player->unk40.x = tempX - (tempX / 16);
+        player->unk40.z = tempZ - (tempZ / 16);
+    }
+
+    player->posX += player->unk40.x;
+    player->posY += player->unk40.y;
+    player->posZ += player->unk40.z;
+
+    if ((func_80082EC0(player) != 0) && !(player->stateFlags & 1)) {
+        player->mode = 0xC;
+        player->updateState = 0;
+        player->updateTimer = 0;
+    }
+}
 
 void func_80094808(RaceInputPlayer *player) {
     s16 updateState;
