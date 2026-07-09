@@ -664,9 +664,12 @@ typedef struct {
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ u8 pad24[4];
+    /* 0x24 */ RaceUiGfxCommandDest *matrix;
     /* 0x28 */ s16 angle;
-    /* 0x2A */ u8 pad2A[0x35 - 0x2A];
+    /* 0x2A */ u8 pad2A[2];
+    /* 0x2C */ void *palette;
+    /* 0x30 */ void *image;
+    /* 0x34 */ u8 matrixDirty;
     /* 0x35 */ u8 index;
 } RaceUiOrbitingSpriteActor;
 
@@ -787,6 +790,7 @@ extern RaceUiCameraTransformSource D_801121E0[];
 extern Gfx D_800D6120[];
 extern Gfx D_800D6160[];
 extern Gfx D_800D6968[];
+extern u32 D_800D6230[];
 extern u32 D_800D6270[];
 extern u32 D_800D63D0[];
 extern u32 D_800D69A8[];
@@ -819,7 +823,6 @@ extern void func_80045990(s32, s32, void *, void *);
 extern void func_8005B14C(RaceUiCounterActor *);
 extern void func_8005DE6C(void *);
 extern void func_8005CB74(void *);
-extern void func_800625D8(RaceUiOrbitingSpriteActor *);
 extern void func_800623E8(void *);
 extern s32 func_8007D200(s32, s32, s32);
 extern s32 func_80080CC4(s32, s32, s32);
@@ -3734,7 +3737,43 @@ void func_80062530(RaceUiTransitionActor *arg0) {
     func_80071824(arg0, func_800623E8);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800625D8.s")
+void func_800625D8(RaceUiOrbitingSpriteActor *arg0) {
+    volatile u8 padding[4];
+    RaceUiTrailCopyBlock sp64;
+    Gfx *temp_v0;
+    Gfx *temp_v0_2;
+    Gfx *temp_v0_3;
+    Gfx *temp_v0_4;
+    Gfx *temp_v0_5;
+    Gfx *temp_v0_6;
+    Gfx *temp_v0_7;
+    Gfx *temp_v0_8;
+    Gfx *temp_v0_9;
+    Gfx *temp_v0_10;
+    Gfx *temp_v0_11;
+    Gfx *temp_v0_12;
+    Gfx *temp_v0_13;
+    Gfx *temp_v0_14;
+    Gfx *temp_v0_15;
+    Gfx *temp_v0_16;
+    Gfx *temp_v0_17;
+    Gfx *temp_v0_18;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (arg0->matrixDirty != 0) {
+        arg0->matrixDirty = 0;
+        sp64.transform = D_800DEE30;
+        sp64.transform.translation.x = arg0->pos.x;
+        sp64.transform.translation.y = arg0->pos.y;
+        sp64.transform.translation.z = arg0->pos.z;
+        arg0->matrix = func_8004885C(&sp64);
+    }
+
+ do { if (arg0->matrix != NULL) { temp_v0 = gRegionAllocPtr++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) D_800D6270; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x0703F800; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->matrix; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = D_80156614; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400103F; temp_v0_17->words.w1 = (u32) D_800D6230; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; } } while (0);
+}
 
 void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
     RacePlayerState *player;
