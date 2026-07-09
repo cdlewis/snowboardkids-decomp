@@ -9,7 +9,13 @@ extern s32 D_801248B0;
 extern void func_80042574(MainMenuSceneModel *);
 extern void func_8004270C(MainMenuSceneModel *);
 
+// func_80042560 best match: 25.000% at nonmatchings/func_80042560-4839787584499344943/base_1.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_80042560.s")
+
+#ifdef NON_MATCHING
+void func_80042560(void) {
+}
+#endif
 
 // func_80042574 best source-tree match: 99.706% at nonmatchings/func_80042574-4139837607000619032/base_6.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_80042574.s")
