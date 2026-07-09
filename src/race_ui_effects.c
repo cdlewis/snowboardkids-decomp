@@ -61,7 +61,9 @@ typedef struct {
 
 typedef struct {
     /* 0x000 */ u16 playerIndex;
-    /* 0x002 */ u8 pad002[0x13 - 0x02];
+    /* 0x002 */ u8 pad002[0x0C - 0x02];
+    /* 0x00C */ s32 unk00C;
+    /* 0x010 */ u8 pad010[0x13 - 0x10];
     /* 0x013 */ s8 isActive;
     /* 0x014 */ u8 pad014[0x1C - 0x14];
     /* 0x01C */ Vec3i pos1C;
@@ -161,7 +163,8 @@ typedef struct {
     /* 0x19 */ s8 column;
     /* 0x1A */ u8 pad1A[2];
     /* 0x1C */ s16 alpha;
-    /* 0x1E */ u8 pad1E[4];
+    /* 0x1E */ s16 timer;
+    /* 0x20 */ s16 state;
     /* 0x22 */ s16 leftValue;
     /* 0x24 */ s16 bonus;
     /* 0x26 */ s16 leftTarget;
@@ -808,7 +811,6 @@ extern void func_80045A78(s16, s16, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80045990(s32, s32, void *, void *);
 extern void func_8005B14C(void *);
-extern void func_8005C64C(void *);
 extern void func_8005DE6C(void *);
 extern void func_8005CB74(void *);
 extern void func_800625D8(RaceUiOrbitingSpriteActor *);
@@ -2123,7 +2125,60 @@ void func_8005C568(void *arg0) {
     func_800483FC(&D_80124858, func_8005C14C, (s32)arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005C64C.s")
+void func_8005C64C(RaceUiDualCounterActor *arg0) {
+    s16 value;
+
+    if (arg0->timer == 0) {
+        arg0->timer = 2;
+        func_80072138(0x1A, 0x32);
+    } else {
+        arg0->timer--;
+    }
+
+    value = arg0->leftValue;
+    if ((value >= 8) && !(D_80123778 & 0x8000)) {
+        value = 8;
+    }
+    /* IDO register allocation depends on this always-zero index. */
+    D_80121D80[D_80123778 * 0].unk00C += value;
+    arg0->leftValue -= value;
+
+    value = arg0->rightValue;
+    if ((value >= 8) && !(D_80123778 & 0x8000)) {
+        value = 8;
+    }
+    D_80121D80[0].unk00C += value;
+    arg0->rightValue -= value;
+
+    value = arg0->bonus;
+    if ((value >= 8) && !(D_80123778 & 0x8000)) {
+        value = 8;
+    }
+    D_80121D80[0].unk00C += value;
+    arg0->bonus -= value;
+
+    value = arg0->leftTarget;
+    if ((value >= 8) && !(D_80123778 & 0x8000)) {
+        value = 8;
+    }
+    D_80121D80[0].unk00C += value;
+    arg0->leftTarget -= value;
+
+    if (D_80121D80[0].unk00C >= 0xF4240) {
+        D_80121D80[0].unk00C = 0xF423F;
+    }
+
+    if ((arg0->rightValue == 0) && (arg0->leftValue == 0) && (arg0->bonus == 0) && (arg0->leftTarget == 0)) {
+        func_80072138(2, 0x32);
+        arg0->timer = 0x14;
+        func_80071824(arg0, func_8005C568);
+    }
+
+    func_800483FC(&D_80124868, func_8005B8E8, (s32)arg0);
+    func_800483FC(&D_80124868, func_8005B9F8, (s32)arg0);
+    func_800483FC(&D_80124858, func_8005C03C, (s32)arg0);
+    func_800483FC(&D_80124858, func_8005C14C, (s32)arg0);
+}
 
 void func_8005C89C(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x20) = 4;
