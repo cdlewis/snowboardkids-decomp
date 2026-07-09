@@ -435,9 +435,9 @@ void func_80090274(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8(player->unk7E) * -0x2000) / 4096;
+        player->unk6E = (func_80097AE8(player->stateTimerLow) * -0x2000) / 4096;
     } else {
-        player->unk6E = (func_80097AE8(player->unk7E) * 0x2000) / 4096;
+        player->unk6E = (func_80097AE8(player->stateTimerLow) * 0x2000) / 4096;
     }
 
     player->stateTimer += 0x16;
@@ -1107,15 +1107,10 @@ void func_80091F3C(RaceInputPlayer *player) {
 }
 #endif
 
-// func_80092194 best match: 99.359%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092194.s")
-
-#ifdef NON_MATCHING
 void func_80092194(RaceInputPlayer *player) {
     s32 yVel;
     s32 stateTimer;
-    u32 stateFlags;
-    long long clampedTimer;
+    s32 timer;
 
     if (player->updateState == 0) {
         func_80081E40(player, 4);
@@ -1144,30 +1139,25 @@ void func_80092194(RaceInputPlayer *player) {
         player->unk6E = (func_80097AE8(player->stateTimerLow) * 0x3000) / 0x1000;
     }
 
+    player->stateTimer += 0x16;
     player->updateTimer++;
-    stateTimer = (player->stateTimer & 0xFFFFFFFFFFFFFFFF) + 0x16;
-    player->stateTimer = stateTimer;
     if (player->updateTimer == 0x1E) {
         func_80081E40(player, 0x1C);
     }
 
-    stateTimer = player->stateTimer;
-    if (stateTimer >= 0x401) {
-        clampedTimer = 0x400;
-        stateTimer = clampedTimer;
-        player->stateTimer = stateTimer;
+    if (player->stateTimer >= 0x401) {
+        player->stateTimer = 0x400;
     }
 
-    stateFlags = player->stateFlags | 2;
-    player->stateFlags = stateFlags;
-    if (stateTimer < 0x3D0) {
-        player->stateFlags = stateFlags | 0x800;
+    timer = player->stateTimer;
+    player->stateFlags |= 2;
+    if (timer < 0x3D0) {
+        player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
-#endif
 
 void func_80092368(RaceInputPlayer *player) {
     s16 updateState;
@@ -1228,9 +1218,9 @@ void func_80092468(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8(player->unk7E) * -0x1800) / 4096;
+        player->unk6E = (func_80097AE8(player->stateTimerLow) * -0x1800) / 4096;
     } else {
-        player->unk6E = ((func_80097AE8(player->unk7E) * 6) * 1024) / 4096;
+        player->unk6E = ((func_80097AE8(player->stateTimerLow) * 6) * 1024) / 4096;
     }
 
     player->stateTimer += 0x16;
