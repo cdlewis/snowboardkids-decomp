@@ -66,7 +66,7 @@ typedef union {
     u8 ubyte;
     struct {
         /* 0x34 */ s8 byte0;
-        /* 0x35 */ s8 matrixDirty;
+        /* 0x35 */ u8 matrixDirty;
     } bytes;
 } RaceItemEffectState;
 
@@ -181,6 +181,8 @@ typedef struct {
 
 extern u8 *D_800D46D0[];
 extern u16 D_800D46F8[];
+extern Gfx D_800D45E0[];
+extern Gfx D_800D4878[];
 extern u32 D_800D48A8[];
 extern u32 D_800D4A00[];
 extern Vec2s D_800D4928[];
@@ -314,130 +316,28 @@ void func_8004E594(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
     }
 }
 
-// func_8004E604 best match: 81.164%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004E604.s")
-
-#ifdef NON_MATCHING
-void func_8004E604(RaceItemEffectActor *arg0) {
-    RaceItemGfxCommandSource sp64;
-    volatile u8 pad[0x48];
-    Gfx *gfx;
-
-    if (D_80156609 != 0) {
-        arg0->state.bytes.matrixDirty = 1;
-    }
-
-    if (arg0->state.bytes.matrixDirty != 0) {
-        arg0->state.bytes.matrixDirty = 0;
-        sp64 = D_800DEE30;
-        sp64.unk0 = arg0->unk30.screen.y << 8;
-        sp64.unk8 = arg0->unk30.screen.y << 8;
-        sp64.unk10 = arg0->unk30.screen.y << 8;
-        sp64.x = arg0->payload.vec.x;
-        sp64.y = arg0->payload.vec.y;
-        sp64.z = arg0->payload.vec.z;
-        arg0->unk24.velocityX = (s32)func_8004885C(&sp64);
-    }
-
-    if (arg0->unk24.velocityX != 0) {
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0x06000000;
-        gfx->words.w1 = (u32)D_800D4878;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xFA000000;
-        gfx->words.w1 = (arg0->unk30.screen.x & 0xFF) | ~0xFF;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xFD500000;
-        gfx->words.w1 = arg0->unk2C;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xF5500000;
-        gfx->words.w1 = 0x07080200;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0;
-        gfx->words.w0 = 0xE6000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xF3000000;
-        gfx->words.w1 = 0x0703F800;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0;
-        gfx->words.w0 = 0xE7000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0x80200;
-        gfx->words.w0 = 0xF5400200;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xF2000000;
-        gfx->words.w1 = 0x3C03C;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xFD100000;
-        gfx->words.w1 = arg0->unk28.word;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0;
-        gfx->words.w0 = 0xE8000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xF5000100;
-        gfx->words.w1 = 0x07000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0;
-        gfx->words.w0 = 0xE6000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xF0000000;
-        gfx->words.w1 = 0x0703C000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0;
-        gfx->words.w0 = 0xE7000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0x01020040;
-        gfx->words.w1 = arg0->unk24.velocityX;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0x01000040;
-        gfx->words.w1 = (u32)D_80156614;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = (u32)D_800D45E0;
-        gfx->words.w0 = 0x0400103F;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0x60200;
-        gfx->words.w0 = 0xB1060402;
-    }
+void func_8004E604(RaceItemEffectActor *arg0)
+{
+  volatile s32 pad84;
+  RaceItemGfxCommandSource sp64;
+  if (D_80156609 != 0)
+  {
+    arg0->state.bytes.matrixDirty = 1;
+  }
+  if (arg0->state.bytes.matrixDirty != 0)
+  {
+    arg0->state.bytes.matrixDirty = 0;
+    sp64 = D_800DEE30;
+    sp64.unk0 = arg0->unk30.screen.y << 8;
+    sp64.unk8 = arg0->unk30.screen.y << 8;
+    sp64.unk10 = arg0->unk30.screen.y << 8;
+    sp64.x = arg0->payload.vec.x;
+    sp64.y = arg0->payload.vec.y;
+    sp64.z = arg0->payload.vec.z;
+    arg0->unk24.velocityX = (s32)func_8004885C(&sp64);
+  }
+ do { if (arg0->unk24.velocityX != 0) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 6) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (unsigned int) D_800D4878; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xfa) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 8) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 8) - 1)) << 0)); _g->words.w1 = ((((unsigned int) ((((unsigned int) 0xFF) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0xFF) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) 0xFF) & ((0x01 << 8) - 1)) << 8))) | ((unsigned int) ((((unsigned int) arg0->unk30.screen.x) & ((0x01 << 8) - 1)) << 0)); } ; { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) arg0->unk2C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf3) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) MIN((((0x10 * 0x10) + 3) >> 2) - 1, 2047)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((((1 << 11) + MAX(1, 0x10 / 16)) - 1) / MAX(1, 0x10 / 16))) & ((0x01 << 12) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (((0x10 >> 1) + 7) >> 3)) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf2) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((0x10 - 1) << 2)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((0x10 - 1) << 2)) & ((0x01 << 12) - 1)) << 0)); } } ; { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) arg0->unk28.word; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe8) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) (256 + ((0 & 0xf) * 16))) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xf0) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 15) & ((0x01 << 10) - 1)) << 14)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 1) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (unsigned int) ((Mtx *) arg0->unk24.velocityX); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 1) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((0x00 | 0x00) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (unsigned int) D_80156614; } ; { Gfx *_g = gRegionAllocPtr++; _g->words.w0 = 0x0400103F; _g->words.w1 = (u32) D_800D45E0; } { Gfx *_g = gRegionAllocPtr++; _g->words.w0 = 0xB1060402; _g->words.w1 = 0x60200; } } } while (0);
 }
-#endif
 
 void func_8004E960(RaceItemEffectActor *arg0) {
     if (D_80121B56 == 0) {
