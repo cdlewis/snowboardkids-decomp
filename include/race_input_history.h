@@ -54,7 +54,13 @@ typedef struct {
     /* 0x072 */ char pad72[2];
     /* 0x074 */ s32 unk74;
     /* 0x078 */ char pad78[4];
-    /* 0x07C */ s32 stateTimer;
+    /* 0x07C */ union {
+        s32 stateTimer;
+        struct {
+            s16 stateTimerHigh;
+            s16 stateTimerLow;
+        };
+    };
     /* 0x080 */ char pad80[4];
     /* 0x084 */ u32 inputFlags;
     /* 0x088 */ u32 currentInputFlags;
