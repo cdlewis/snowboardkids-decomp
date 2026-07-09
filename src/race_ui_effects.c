@@ -593,11 +593,12 @@ typedef struct {
     /* 0x2C */ u8 pad2C[4];
     /* 0x30 */ s16 timer;
     /* 0x32 */ s16 assetTimer;
-    /* 0x34 */ u8 pad34[0x38 - 0x34];
+    /* 0x34 */ RaceUiGfxCommandDest *matrix;
     /* 0x38 */ void *image3A;
     /* 0x3C */ void *palette3A;
     /* 0x40 */ void *image3B;
     /* 0x44 */ void *palette3B;
+    /* 0x48 */ u8 matrixDirty;
 } RaceUiOverlayActor;
 
 typedef struct {
@@ -723,6 +724,8 @@ extern RaceUiGfxCommandScriptEntry *D_800D693C[];
 extern FixedTransform D_800DEE30;
 extern RaceUiGfxCommandDest D_800DEE50;
 extern Gfx D_800D6968[];
+extern u32 D_800D6270[];
+extern u32 D_800D69A8[];
 extern Gfx D_800D9D00[];
 extern Gfx D_800D9D40[];
 extern u32 D_20019C0[];
@@ -785,6 +788,7 @@ extern Vec3i D_800D6110;
 extern u16 D_800D6520[];
 extern s32 D_80123778;
 extern s32 D_801235B4;
+extern u32 D_80156614;
 
 const char D_800E1220[0x10] = "Board Reverse";
 const char D_800E1230[0x10] = "Board Reverse";
@@ -858,7 +862,7 @@ extern void func_800589F4(void *);
 extern void func_80057E90(RaceUiAlpha18Actor *);
 extern void func_80058360(RaceUiAlpha18Actor *);
 extern void func_80065D24(RaceUiOverlayActor *);
-extern void func_80065808(void);
+extern void func_80065808(RaceUiOverlayActor *);
 extern void func_800651BC(RaceUiGfxCommandActor *);
 extern void func_80065508(RaceUiGfxCommandActor *);
 extern void func_80083CFC(RacePlayerState *);
@@ -4152,7 +4156,163 @@ void func_80065764(void *arg0) {
     }
 }
 
+// func_80065808 best match: 98.328%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80065808.s")
+
+#ifdef NON_MATCHING
+void func_80065808(RaceUiOverlayActor *arg0) {
+    volatile u8 pad2[0xC];
+    RaceUiTrailCopyBlock sp9C;
+    RaceUiDisplayCommand *temp_v0;
+    RaceUiDisplayCommand *temp_v0_2;
+    RaceUiDisplayCommand *temp_v0_3;
+    RaceUiDisplayCommand *temp_v0_4;
+    RaceUiDisplayCommand *temp_v0_5;
+    RaceUiDisplayCommand *temp_v0_6;
+    RaceUiDisplayCommand *temp_v0_7;
+    RaceUiDisplayCommand *temp_v0_8;
+    RaceUiDisplayCommand *temp_v0_9;
+    RaceUiDisplayCommand *temp_v0_10;
+    RaceUiDisplayCommand *temp_v0_11;
+    RaceUiDisplayCommand *temp_v0_12;
+    RaceUiDisplayCommand *temp_v0_13;
+    RaceUiDisplayCommand *temp_v0_14;
+    RaceUiDisplayCommand *temp_v0_15;
+    RaceUiDisplayCommand *temp_v0_16;
+    RaceUiDisplayCommand *temp_v0_17;
+    RaceUiDisplayCommand *temp_v0_18;
+    RaceUiDisplayCommand *temp_v0_19;
+    RaceUiDisplayCommand *temp_v0_20;
+    RaceUiDisplayCommand *temp_v0_21;
+    RaceUiDisplayCommand *temp_v0_22;
+    RaceUiDisplayCommand *temp_v0_23;
+    RaceUiDisplayCommand *temp_v0_24;
+    RaceUiDisplayCommand *temp_v0_25;
+    RaceUiDisplayCommand *temp_v0_26;
+    RaceUiDisplayCommand *temp_v0_27;
+    RaceUiDisplayCommand *temp_v0_28;
+    RaceUiDisplayCommand *temp_v0_29;
+    RaceUiDisplayCommand *temp_v0_30;
+    RaceUiDisplayCommand *temp_v0_31;
+    RaceUiDisplayCommand *temp_v0_32;
+
+    do {
+        if (D_80156609 != 0) {
+            arg0->matrixDirty = 1;
+        }
+        if (arg0->matrixDirty != 0) {
+            arg0->matrixDirty = 0;
+            sp9C.transform = D_800DEE30;
+            sp9C.words[5] = arg0->x;
+            sp9C.words[6] = arg0->y;
+            sp9C.words[7] = arg0->z;
+            arg0->matrix = func_8004885C(&sp9C);
+        }
+        do {
+            if (arg0->matrix != NULL) {
+                temp_v0 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0->words.w0 = 0x06000000;
+                temp_v0->words.w1 = (u32)D_800D6270;
+                temp_v0_2 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_2->words.w0 = 0xFD480017;
+                temp_v0_2->words.w1 = (u32)arg0->palette3A;
+                temp_v0_3 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_3->words.w1 = 0x07080200;
+                temp_v0_3->words.w0 = 0xF5480600;
+                temp_v0_4 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_4->words.w1 = 0;
+                temp_v0_4->words.w0 = 0xE6000000;
+                temp_v0_5 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_5->words.w0 = 0xF4000000;
+                temp_v0_5->words.w1 = 0x070600A0;
+                temp_v0_6 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_6->words.w1 = 0;
+                temp_v0_6->words.w0 = 0xE7000000;
+                temp_v0_7 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_7->words.w1 = 0x00080200;
+                temp_v0_7->words.w0 = 0xF5400600;
+                temp_v0_8 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_8->words.w0 = 0xF2000000;
+                temp_v0_8->words.w1 = 0x000C00A0;
+                temp_v0_9 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_9->words.w0 = 0xFD100000;
+                temp_v0_9->words.w1 = (u32)arg0->image3A;
+                temp_v0_10 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_10->words.w1 = 0;
+                temp_v0_10->words.w0 = 0xE8000000;
+                temp_v0_11 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_11->words.w0 = 0xF5000100;
+                temp_v0_11->words.w1 = 0x07000000;
+                temp_v0_12 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_12->words.w1 = 0;
+                temp_v0_12->words.w0 = 0xE6000000;
+                temp_v0_13 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_13->words.w0 = 0xF0000000;
+                temp_v0_13->words.w1 = 0x0703C000;
+                temp_v0_14 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_14->words.w1 = 0;
+                temp_v0_14->words.w0 = 0xE7000000;
+                temp_v0_15 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_15->words.w0 = 0x01020040;
+                temp_v0_15->words.w1 = (u32)arg0->matrix;
+                temp_v0_16 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_16->words.w0 = 0x01000040;
+                temp_v0_16->words.w1 = D_80156614;
+                temp_v0_17 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_17->words.w1 = (u32)D_800D69A8;
+                temp_v0_17->words.w0 = 0x0400207F;
+                temp_v0_18 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_18->words.w1 = 0x00060200;
+                temp_v0_18->words.w0 = 0xB1060402;
+                temp_v0_19 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_19->words.w0 = 0xFD480017;
+                temp_v0_19->words.w1 = (u32)arg0->palette3B;
+                temp_v0_20 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_20->words.w1 = 0x07080200;
+                temp_v0_20->words.w0 = 0xF5480600;
+                temp_v0_21 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_21->words.w1 = 0;
+                temp_v0_21->words.w0 = 0xE6000000;
+                temp_v0_22 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_22->words.w0 = 0xF4000000;
+                temp_v0_22->words.w1 = 0x070600A0;
+                temp_v0_23 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                if (((!arg0) && (!arg0)) && (!arg0)) {
+                }
+                temp_v0_23->words.w1 = 0;
+                temp_v0_23->words.w0 = 0xE7000000;
+                temp_v0_24 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_24->words.w1 = 0x00080200;
+                temp_v0_24->words.w0 = 0xF5400600;
+                temp_v0_25 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_25->words.w0 = 0xF2000000;
+                temp_v0_25->words.w1 = 0x000C00A0;
+                temp_v0_26 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_26->words.w0 = 0xFD100000;
+                temp_v0_26->words.w1 = (u32)arg0->image3B;
+                temp_v0_27 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_27->words.w1 = 0;
+                temp_v0_27->words.w0 = 0xE8000000;
+                temp_v0_28 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_28->words.w0 = 0xF5000100;
+                temp_v0_28->words.w1 = 0x07000000;
+                temp_v0_29 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_29->words.w1 = 0;
+                temp_v0_29->words.w0 = 0xE6000000;
+                temp_v0_30 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_30->words.w0 = 0xF0000000;
+                temp_v0_30->words.w1 = 0x0703C000;
+                temp_v0_31 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_31->words.w1 = 0;
+                temp_v0_31->words.w0 = 0xE7000000;
+                temp_v0_32 = RACE_UI_TRAIL_GFX_ALLOC_PTR++;
+                temp_v0_32->words.w1 = 0x000E0A08;
+                temp_v0_32->words.w0 = 0xB10E0C0A;
+            }
+        } while (0);
+    } while (0);
+}
+#endif
 
 void func_80065CB8(void *arg0) {
     s16 temp_v1;
