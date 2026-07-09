@@ -1,6 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
+#include "asset_decompression.h"
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
 
@@ -215,6 +216,7 @@ extern void *func_80048594(s32);
 extern void func_800486BC(void *, void *);
 extern void *func_8004885C(CourseEffectMatrixSource *);
 extern void func_80048C90(CourseRenderCommand *, Vec3i *);
+extern s32 func_80048E60(Vec3i *);
 extern void func_80045990(s32, s32, void *, void *);
 extern s32 func_8004597C(s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
@@ -222,6 +224,7 @@ extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80088294(Vec3i *, s32, s32, u16);
 extern void func_80088A1C(Vec3i *, s32, s32, s32, s32);
 extern void func_80048D60(CourseEffectMatrixSource *);
+extern s16 func_8007D200(s16, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
 extern void osWritebackDCache(void *, s32);
 extern void func_80088294(Vec3i *, s32, s32, u16);
@@ -639,7 +642,100 @@ void func_8006B228(Struct6B760 *arg0) {
 }
 #endif
 
+// func_8006B3E0 best match: 97.016% at nonmatchings/func_8006B3E0-3836525038718587862/base_6.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B3E0.s")
+
+#ifdef NON_MATCHING
+void func_8006B3E0(Struct6B760 *arg0) {
+    Vec3i *pos;
+    s16 temp_a1;
+    s16 temp_t2;
+    s16 temp_v0;
+    s16 rand;
+    s32 targetAngle;
+    s32 var_v1;
+    s32 dx;
+    s32 dz;
+
+    if (D_80121B56 == 0) {
+        pos = &arg0->pos;
+        if (func_80048E60(pos) != 0) {
+            if (arg0->pad42 != 0) {
+                targetAngle = func_8004940C(arg0->pos.x, arg0->pos.z, arg0->unk24, arg0->unk2C);
+            } else {
+                targetAngle = func_8004940C(arg0->pos.x, arg0->pos.z, arg0->unk30, arg0->unk38);
+            }
+            temp_a1 = arg0->unk3E;
+            temp_t2 = (targetAngle - temp_a1) & 0xFFF;
+            var_v1 = temp_t2;
+            if (temp_t2 >= 0x801) {
+                var_v1 = (s16)(temp_t2 - 0x1000);
+            }
+            temp_v0 = arg0->unk4C;
+            if (temp_v0 < var_v1) {
+                var_v1 = (s16)(s32)temp_v0;
+            }
+            if (var_v1 < -temp_v0) {
+                var_v1 = (s16)-temp_v0;
+            }
+            arg0->unk3E = temp_a1 + var_v1;
+            arg0->pos.x += func_80097AE8(arg0->unk3E) * ((s32)-arg0->unk50 / 4096);
+            dz = arg0->pos.z + (func_80097B48(arg0->unk3E) * ((s32)-arg0->unk50 / 4096));
+            arg0->pos.z = dz;
+            arg0->unk3C = func_8007D200(arg0->unk3C, arg0->pos.x, dz);
+            arg0->pos.y = func_80080CC4(arg0->unk3C, arg0->pos.x, arg0->pos.z);
+            if (arg0->pad42 != 0) {
+                dx = arg0->pos.x - arg0->unk24;
+                dz = arg0->pos.z - arg0->unk2C;
+                if (dx < 0) {
+                    dx = -dx;
+                }
+                if (dz < 0) {
+                    dz = -dz;
+                }
+                if (dx < 0x30000) {
+                    if (dz < 0x30000) {
+                        arg0->pad42 = 0;
+                    }
+                }
+            } else {
+                dx = arg0->pos.x - arg0->unk30;
+                dz = arg0->pos.z - arg0->unk38;
+                if (dx < 0) {
+                    dx = -dx;
+                }
+                if (dz < 0) {
+                    dz = -dz;
+                }
+                if ((dx < 0x30000) && (dz < 0x30000)) {
+                    arg0->pad42 = 1;
+                }
+            }
+            func_80088A1C(pos, 0x40000, 0x50000, 0x30000, 4);
+            arg0->unk40 += arg0->unk4E;
+            if (arg0->unk40 == 0) {
+                rand = func_80043120() & 3;
+                if (rand == 1) {
+                    arg0->unk50 = 0x10000;
+                    arg0->unk4E = 0x80;
+                    arg0->unk4C = 0x10;
+                }
+                if (rand == 2) {
+                    arg0->unk50 = 0x20000;
+                    arg0->unk4E = 0x100;
+                    arg0->unk4C = 0x20;
+                }
+                if (rand == 3) {
+                    arg0->unk50 = 0x40000;
+                    arg0->unk4E = 0x200;
+                    arg0->unk4C = 0x40;
+                }
+            }
+        }
+    }
+    func_800483FC(&D_801248A4, func_8006B228, arg0);
+}
+#endif
 
 // func_8006B6C8 best match: 98.684% at nonmatchings/func_8006B6C8-5821324921387846781/base.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B6C8.s")
