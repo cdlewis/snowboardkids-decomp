@@ -665,7 +665,40 @@ void func_80074C5C(void) {
 }
 #endif
 
+// func_80074F50 best match: 36.475%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80074F50.s")
+
+#ifdef NON_MATCHING
+extern void func_8007066C(f32, s32, s32, s32, s32, s32, s32, f32);
+extern void func_80070A70(f32, s32, s32, s32, s32, s32, s32, f32);
+
+void func_80074F50(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6,
+                  f32 arg7, s32 arg8, s32 arg9, s32 arg10, s32 arg11, s32 arg12, s32 arg13,
+                  f32 arg14) {
+    volatile s32 sp2C;
+    volatile s32 sp28;
+    f32 temp_fv0;
+    s32 temp_t0;
+    s32 temp_t1;
+    s32 temp_t2;
+    s32 temp_t3;
+    s32 temp_v0;
+
+    temp_v0 = D_801235B8->fadeTimer;
+    sp2C = (((arg8 - arg1) * temp_v0) / 15) + arg1;
+    sp28 = (((arg9 - arg2) * temp_v0) / 15) + arg2;
+    temp_t0 = (((arg10 - arg3) * temp_v0) / 15) + arg3;
+    temp_t1 = (((arg11 - arg4) * temp_v0) / 15) + arg4;
+    temp_t2 = (((arg12 - arg5) * temp_v0) / 15) + arg5;
+    temp_fv0 = (((arg14 - arg7) * (f32) temp_v0) / 15.0f) + arg7;
+    temp_t3 = (((arg13 - arg6) * temp_v0) / 15) + arg6;
+    if (D_80121B50.s != 6) {
+        func_8007066C(arg7, sp2C, sp28, temp_t0 & 0xFFFF, temp_t1, temp_t2, temp_t3, temp_fv0);
+    } else {
+        func_80070A70(arg7, sp2C, sp28, temp_t0 & 0xFFFF, temp_t1, temp_t2, temp_t3, temp_fv0);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_800751C4.s")
 
