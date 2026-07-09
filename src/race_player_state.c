@@ -133,7 +133,68 @@ void func_8008F1CC(RaceInputPlayer *player) {
     D_800DECD8[player->subState](player);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008F204.s")
+void func_8008F204(RaceInputPlayer *player) {
+    s16 inputMask;
+
+    player->subStateTimer = 0;
+    player->subStateStep = 0;
+    player->unk2A2 = 0;
+    player->unk2A4 = 0;
+    if (player->unk4 == 0) {
+        if (player->currentInputFlags & 1) {
+            player->subStateTimer = 1;
+            player->unk2A2 = 1;
+        }
+        if (player->currentInputFlags & 2) {
+            player->subStateTimer = 2;
+            player->unk2A2 = 3;
+        }
+        if (player->currentInputFlags & 8) {
+            player->subStateTimer = 8;
+            player->unk2A2 = 7;
+        }
+        if (player->currentInputFlags & 4) {
+            player->subStateTimer = 4;
+            player->unk2A2 = 5;
+        }
+        if (player->subStateTimer != 0) {
+            if (player->unk2A0 < 6) {
+                player->unk2A2++;
+            }
+            player->subState++;
+            if (player->stateFlags & 0x400) {
+                inputMask = player->subStateTimer;
+                if (inputMask & 1) {
+                    func_80081E40(player, 0x17);
+                    inputMask = player->subStateTimer;
+                }
+                if (inputMask & 2) {
+                    func_80081E40(player, 0x15);
+                    inputMask = player->subStateTimer;
+                }
+            } else {
+                inputMask = player->subStateTimer;
+                if (inputMask & 1) {
+                    func_80081E40(player, 0x15);
+                    inputMask = player->subStateTimer;
+                }
+                if (inputMask & 2) {
+                    func_80081E40(player, 0x17);
+                    inputMask = player->subStateTimer;
+                }
+            }
+            if (inputMask & 8) {
+                func_80081E40(player, 0x19);
+                inputMask = player->subStateTimer;
+            }
+            if (inputMask & 4) {
+                func_80081E40(player, 0x1B);
+            }
+            player->stateFlags |= 0x800;
+        }
+        player->unk2A0++;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008F3C8.s")
 

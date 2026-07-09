@@ -68,7 +68,9 @@ typedef struct {
     /* 0x290 */ RaceVec3i projectedPos;
     /* 0x29C */ char pad29C[4];
     /* 0x2A0 */ s16 unk2A0;
-    /* 0x2A2 */ char pad2A2[0x1E];
+    /* 0x2A2 */ s16 unk2A2;
+    /* 0x2A4 */ s16 unk2A4;
+    /* 0x2A6 */ char pad2A6[0x1A];
     /* 0x2C0 */ s16 unk2C0;
     /* 0x2C2 */ char pad2C2[1];
     /* 0x2C3 */ s8 unk2C3;
