@@ -4708,7 +4708,7 @@ void func_80065144(void *arg0) {
     func_80071824(arg0, func_800650D8);
 }
 
-// func_800651BC best match: 97.133%
+// func_800651BC best match: 353 asm-differ differences
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800651BC.s")
 
 #ifdef NON_MATCHING
@@ -4717,7 +4717,6 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
     s16 textureIndex;
     s32 i;
     register RaceUiGfxCommandActor *actor;
-    Gfx *temp_v0;
     void *spA0;
     void *sp9C;
     Gfx *temp_v0_3;
@@ -4737,12 +4736,9 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
     Gfx *temp_v0_16;
     unsigned int new_var2;
     int new_var;
-    Gfx *temp_v0_18;
 
     actor = arg0;
-    temp_v0 = gRegionAllocPtr++;
-    temp_v0->words.w1 = (u32)D_800D9D00;
-    temp_v0->words.w0 = 0x06000000;
+    gSPDisplayList(gRegionAllocPtr++, D_800D9D00);
 
     textureIndex = -1;
     entry = D_800D693C[D_80121B50];
@@ -4753,7 +4749,33 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
                 if (textureIndex != entry->sentinel + actor->textureOffset) {
                     textureIndex = entry->sentinel + actor->textureOffset;
                     func_80045990(func_80043040(D_8011216E), 0x14, &spA0, &sp9C);
-                    temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32)spA0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w1 = 0x00080200; temp_v0_7->words.w0 = 0xF5400400; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)sp9C; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w1 = 0x07000000; temp_v0_11->words.w0 = 0xF5000100; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = (new_var = 0xF0000000); temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++;
+                    temp_v0_2 = gRegionAllocPtr++;
+                    temp_v0_2->words.w0 = 0xFD500000;
+                    temp_v0_2->words.w1 = (u32)spA0;
+                    temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200;
+                    temp_v0_4 = gRegionAllocPtr++;
+                    temp_v0_4->words.w1 = 0;
+                    temp_v0_4->words.w0 = 0xE6000000;
+                    temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400;
+                    temp_v0_6 = gRegionAllocPtr++;
+                    temp_v0_6->words.w1 = 0;
+                    temp_v0_6->words.w0 = 0xE7000000;
+                    temp_v0_7 = gRegionAllocPtr++;
+                    temp_v0_7->words.w1 = 0x00080200;
+                    temp_v0_7->words.w0 = 0xF5400400;
+                    temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C;
+                    temp_v0_9 = gRegionAllocPtr++;
+                    temp_v0_9->words.w0 = 0xFD100000;
+                    temp_v0_9->words.w1 = (u32)sp9C;
+                    temp_v0_10 = gRegionAllocPtr++;
+                    temp_v0_10->words.w1 = 0;
+                    temp_v0_10->words.w0 = 0xE8000000;
+                    temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w1 = 0x07000000; temp_v0_11->words.w0 = 0xF5000100;
+                    temp_v0_12 = gRegionAllocPtr++;
+                    temp_v0_12->words.w1 = 0;
+                    temp_v0_12->words.w0 = 0xE6000000;
+                    temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = (new_var = 0xF0000000); temp_v0_13->words.w1 = 0x0703C000;
+                    temp_v0_14 = gRegionAllocPtr++;
                     temp_v0_14->words.w1 = 0;
                     temp_v0_14->words.w0 = 0xE7000000;
                 }
@@ -4778,9 +4800,7 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
         } while (entry->sentinel != -1);
     }
 
-    temp_v0_18 = gRegionAllocPtr++;
-    temp_v0_18->words.w1 = (u32)D_800D9D40;
-    temp_v0_18->words.w0 = 0x06000000;
+    gSPDisplayList(gRegionAllocPtr++, D_800D9D40);
 }
 #endif
 
