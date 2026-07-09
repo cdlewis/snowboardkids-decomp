@@ -641,67 +641,63 @@ void func_8003A944(MainMenuSceneActor3 *arg0) {
 }
 #endif
 
-// func_8003A9E0 best match: 75.401%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_3/func_8003A9E0.s")
-
-#ifdef NON_MATCHING
 void func_8003A9E0(MainMenuSceneActor3 *arg0) {
     s32 var_s1;
     s32 var_s4;
     u16 temp_t8;
 
-    var_s4 = 1;
-    if ((s32) arg0->animTimer >= 3) {
+    if (arg0->animTimer >= 3) {
         var_s4 = 2;
+    } else {
+        var_s4 = 1;
     }
     var_s1 = 0;
     if (var_s4 > 0) {
-loop_4:
-        func_80041FB4(3);
-        func_800428C8(3);
-        temp_t8 = arg0->timer + 1;
-        arg0->timer = temp_t8;
-        if ((temp_t8 & 0xFFFF) < 5) {
-            if ((D_8010B1A4 == 1) || (D_8010B1A4 == 5)) {
-                arg0->x = (s32) (arg0->x + 0x100000);
-            } else {
-                arg0->x = (s32) (arg0->x + 0xFFF00000);
-            }
-            if ((s32) arg0->timer < 3) {
-                arg0->y = (s32) (arg0->y + 0x90000);
-            } else {
-                arg0->y = (s32) (arg0->y + 0xFFF70000);
-            }
-            func_8004209C(3, arg0->x, arg0->y, arg0->z);
-            var_s1 += 1;
-            if ((arg0->animTimer == 0xD) && (D_8010B1A4 == 1) && (arg0->timer == 3)) {
-                D_8010B1A4 = 5;
-            }
-            if (var_s1 != var_s4) {
-                goto loop_4;
-            }
-        } else {
-            arg0->timer = 0U;
-            arg0->y = 0;
-            func_8004209C(3, arg0->x, 0, arg0->z);
-            func_80071824(arg0, func_8003A944);
-            if ((D_8010B1A4 == 1) || (D_8010B1A4 == 5)) {
-                func_80041DD4(3, 0x3A);
-            } else {
-                func_80041DD4(3, 0x3C);
-                arg0->animTimer = (u16) (arg0->animTimer + 1);
-            }
-            if (arg0->animTimer == 0xD) {
-                if (D_8010B1A4 == 5) {
-                    func_80071824(arg0, func_8003A8A4);
-                    func_80041DD4(3, 0x3E);
-                    arg0->animTimer = 0U;
+        do {
+            func_80041FB4(3);
+            func_800428C8(3);
+            temp_t8 = (arg0->timer & 0xFFFF) + 1;
+            arg0->timer = temp_t8;
+            if ((temp_t8 & 0xFFFF) < 5) {
+                if ((D_8010B1A4 == 1) || (D_8010B1A4 == 5)) {
+                    arg0->x = (s32) (arg0->x + 0x100000);
+                } else {
+                    arg0->x = (s32) (arg0->x + 0xFFF00000);
                 }
+                if ((s32) arg0->timer < 3) {
+                    arg0->y = (s32) (arg0->y + 0x90000);
+                } else {
+                    arg0->y = (s32) (arg0->y + 0xFFF70000);
+                }
+                func_8004209C(3, arg0->x, arg0->y, arg0->z);
+                var_s1 += 1;
+                if ((arg0->animTimer == 0xD) && (D_8010B1A4 == 1) && (arg0->timer == 3)) {
+                    D_8010B1A4 = 5;
+                }
+                continue;
+            } else {
+                arg0->timer = 0U;
+                arg0->y = 0;
+                func_8004209C(3, arg0->x, 0, arg0->z);
+                func_80071824(arg0, func_8003A944);
+                if ((D_8010B1A4 == 1) || (D_8010B1A4 == 5)) {
+                    func_80041DD4(3, 0x3A);
+                } else {
+                    func_80041DD4(3, 0x3C);
+                    arg0->animTimer = (u16) (arg0->animTimer + 1);
+                }
+                if (arg0->animTimer == 0xD) {
+                    if (D_8010B1A4 == 5) {
+                        func_80071824(arg0, func_8003A8A4);
+                        func_80041DD4(3, 0x3E);
+                        arg0->animTimer = 0U;
+                    }
+                }
+                return;
             }
-        }
+        } while (var_s1 != var_s4);
     }
 }
-#endif
 
 void func_8003AC00(MainMenuSceneActor3 *arg0) {
     func_800428C8(3);

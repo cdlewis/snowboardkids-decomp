@@ -44,7 +44,7 @@ void func_8003A77C(MainMenuSceneActor3 *arg0);
 void func_8003A7EC(MainMenuSceneActor3 *arg0);
 void func_8003A8A4(MainMenuSceneActor3 *arg0);
 void func_8003A944(MainMenuSceneActor3 *arg0);
-void func_8003A9E0(void *arg0);
+void func_8003A9E0(MainMenuSceneActor3 *arg0);
 void func_8003AC00(MainMenuSceneActor3 *arg0);
 void func_8003ACD0(MainMenuSceneActor3 *arg0);
 void func_8003AD40(MainMenuSceneActor3 *arg0);
