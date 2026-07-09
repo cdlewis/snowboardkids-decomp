@@ -11,6 +11,12 @@ typedef struct {
 } CourseDataStride;
 
 typedef struct {
+    /* 0x00 */ s8 x;
+    /* 0x01 */ s8 y;
+    /* 0x02 */ s16 z;
+} RaceUiCoursePosition;
+
+typedef struct {
     /* 0x00 */ char pad[0x4E];
     /* 0x4E */ s8 bestLapMinutes;
     /* 0x4F */ s8 bestLapSeconds;
@@ -36,7 +42,10 @@ typedef struct {
     /* 0x514 */ s8 tensDigitOffset;
     /* 0x515 */ s8 onesDigitTile;
     /* 0x516 */ s8 onesDigitPalette;
-    /* 0x517 */ u8 pad517[0x57E - 0x517];
+    /* 0x517 */ u8 pad517[0x570 - 0x517];
+    /* 0x570 */ s16 score;
+    /* 0x572 */ s16 targetScore;
+    /* 0x574 */ u8 pad574[0x57E - 0x574];
     /* 0x57E */ s16 raceProgress;
     /* 0x580 */ u8 pad580[0x60C - 0x580];
 } RaceTimerUiPlayer;
@@ -64,6 +73,7 @@ extern int sprintf(char *, const char *, ...);
 extern RaceTimerCourseSpawnEntry D_800B9540[];
 extern u8 D_800DC8F0[];
 extern u8 D_800DC8F8[];
+extern RaceUiCoursePosition D_800DC900[];
 extern CourseDataStride D_800EC9F0[];
 extern RaceTimerUiAssetHandles D_80112130;
 extern s16 D_8011216E;
@@ -113,7 +123,27 @@ void func_80078D3C(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80078D9C.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80079068.s")
+const char D_800E178C[] = "Lap Time";
+const char D_800E1798[] = "Target Time";
+const char D_800E17A4[] = "%2.2d'%2.2d\"%2.2d";
+const char D_800E17B8[] = "*%d/%d";
+
+void func_80079068(s32 arg0) {
+    char sp28[0x20];
+    RaceUiCoursePosition *pos;
+
+    func_80048278(0x48, 0x47, (char *)D_800E178C, 5);
+    func_80048278(0x32, -0x60, (char *)D_800E1798, 7);
+    pos = &D_800DC900[D_80121B50];
+    sprintf(sp28, D_800E17A4, pos->x, pos->y, pos->z >> 8);
+    func_80048278(0x48, -0x57, sp28, 7);
+    sprintf(sp28, D_800E17B8, D_80121D80[0].score, D_80121D80[0].targetScore);
+    sp28[1] = ' ';
+    if (sp28[2] != '/') {
+        sp28[2] = ' ';
+    }
+    func_80048278(-0x68, -0x48, sp28, 6);
+}
 
 // func_80079154 best match: 99.792% at nonmatchings/func_80079154-5272447827802519043/base_8.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80079154.s")
