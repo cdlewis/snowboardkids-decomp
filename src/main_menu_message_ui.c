@@ -214,7 +214,7 @@ void func_8000DF28(MainMenuMessageActor *arg0) {
     func_80071824(arg0, func_8000DDA4);
 }
 
-// func_8000DF9C best match: 93.784%
+// func_8000DF9C best match: 94.562%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_message_ui/func_8000DF9C.s")
 
 #ifdef NON_MATCHING
@@ -270,6 +270,8 @@ void func_8000DF9C(MainMenuMessageActor *arg0) {
                 do {
                     if (token == 0xFFFF) {
                         arg0->scriptState = 1;
+                        drawToken++;
+                        drawToken--;
                         stopped = 1;
                         break;
                     }
