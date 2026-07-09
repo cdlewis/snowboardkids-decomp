@@ -97,6 +97,14 @@ typedef union {
     s8 byte;
 } RaceItemEffectHeight;
 
+typedef union {
+    void *matrix;
+    struct {
+        /* 0x34 */ RaceItemEffectState state;
+        /* 0x36 */ RaceItemEffectHeight height;
+    } shorts;
+} RaceItemEffectWord34;
+
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
@@ -106,8 +114,7 @@ typedef struct {
     /* 0x28 */ RaceItemEffectWord28 unk28;
     /* 0x2C */ s32 unk2C;
     /* 0x30 */ RaceItemEffectShorts30 unk30;
-    /* 0x34 */ RaceItemEffectState state;
-    /* 0x36 */ RaceItemEffectHeight height;
+    /* 0x34 */ RaceItemEffectWord34 unk34;
     /* 0x38 */ RaceItemEffectHalf38 unk38;
     /* 0x3A */ u8 pad3A[2];
     /* 0x3C */ void *image;
@@ -184,6 +191,7 @@ extern u16 D_800D46F8[];
 extern Gfx D_800D45E0[];
 extern Gfx D_800D4878[];
 extern u32 D_800D48A8[];
+extern Gfx D_800D48E8[];
 extern u32 D_800D4A00[];
 extern Vec2s D_800D4928[];
 extern u32 D_800D49C0[];
@@ -278,9 +286,9 @@ void func_8004E438(RaceItemEffectActor *arg0) {
     s32 sp24[3];
 
     arg0->unk24.timer = -1;
-    if (arg0->state.halfword == 0) {
+    if (arg0->unk34.shorts.state.halfword == 0) {
         sp58 = &D_80121D80[arg0->unk38.width];
-        func_80097C18(sp30, arg0->height.halfword);
+        func_80097C18(sp30, arg0->unk34.shorts.height.halfword);
         sp24[0] = 0;
         sp24[1] = arg0->unk28.word;
         sp24[2] = arg0->unk2C;
@@ -297,8 +305,8 @@ void func_8004E518(s16 arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4) {
     RaceItemEffectActor *p = func_800716A4(func_8004E438, 5, 0x32, arg2);
 
     if (p != NULL) {
-        p->state.halfword = 0;
-        p->height.halfword = arg1;
+        p->unk34.shorts.state.halfword = 0;
+        p->unk34.shorts.height.halfword = arg1;
         p->unk38.width = arg0;
         p->unk28.word = arg3;
         p->unk2C = arg4;
@@ -312,32 +320,134 @@ void func_8004E594(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
         p->payload.vec.x = arg0;
         p->payload.vec.y = arg1;
         p->payload.vec.z = arg2;
-        p->state.halfword = 1;
+        p->unk34.shorts.state.halfword = 1;
     }
 }
 
-void func_8004E604(RaceItemEffectActor *arg0)
-{
-  volatile s32 pad84;
-  RaceItemGfxCommandSource sp64;
-  if (D_80156609 != 0)
-  {
-    arg0->state.bytes.matrixDirty = 1;
-  }
-  if (arg0->state.bytes.matrixDirty != 0)
-  {
-    arg0->state.bytes.matrixDirty = 0;
-    sp64 = D_800DEE30;
-    sp64.unk0 = arg0->unk30.screen.y << 8;
-    sp64.unk8 = arg0->unk30.screen.y << 8;
-    sp64.unk10 = arg0->unk30.screen.y << 8;
-    sp64.x = arg0->payload.vec.x;
-    sp64.y = arg0->payload.vec.y;
-    sp64.z = arg0->payload.vec.z;
-    arg0->unk24.velocityX = (s32)func_8004885C(&sp64);
-  }
- do { if (arg0->unk24.velocityX != 0) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 6) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (unsigned int) D_800D4878; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xfa) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 8) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 8) - 1)) << 0)); _g->words.w1 = ((((unsigned int) ((((unsigned int) 0xFF) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0xFF) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) 0xFF) & ((0x01 << 8) - 1)) << 8))) | ((unsigned int) ((((unsigned int) arg0->unk30.screen.x) & ((0x01 << 8) - 1)) << 0)); } ; { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) arg0->unk2C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf3) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) MIN((((0x10 * 0x10) + 3) >> 2) - 1, 2047)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((((1 << 11) + MAX(1, 0x10 / 16)) - 1) / MAX(1, 0x10 / 16))) & ((0x01 << 12) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (((0x10 >> 1) + 7) >> 3)) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf2) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((0x10 - 1) << 2)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((0x10 - 1) << 2)) & ((0x01 << 12) - 1)) << 0)); } } ; { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) arg0->unk28.word; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe8) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) (256 + ((0 & 0xf) * 16))) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xf0) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 15) & ((0x01 << 10) - 1)) << 14)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 1) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (unsigned int) ((Mtx *) arg0->unk24.velocityX); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 1) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((0x00 | 0x00) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((unsigned int) ((((unsigned int) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (unsigned int) D_80156614; } ; { Gfx *_g = gRegionAllocPtr++; _g->words.w0 = 0x0400103F; _g->words.w1 = (u32) D_800D45E0; } { Gfx *_g = gRegionAllocPtr++; _g->words.w0 = 0xB1060402; _g->words.w1 = 0x60200; } } } while (0);
+// func_8004E604 best match: 81.164%
+
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004E604.s")
+
+#ifdef NON_MATCHING
+void func_8004E604(RaceItemEffectActor *arg0) {
+    RaceItemGfxCommandSource sp64;
+    volatile u8 pad[0x48];
+    Gfx *gfx;
+
+    if (D_80156609 != 0) {
+        arg0->unk34.shorts.state.bytes.matrixDirty = 1;
+    }
+
+    if (arg0->unk34.shorts.state.bytes.matrixDirty != 0) {
+        arg0->unk34.shorts.state.bytes.matrixDirty = 0;
+        sp64 = D_800DEE30;
+        sp64.unk0 = arg0->unk30.screen.y << 8;
+        sp64.unk8 = arg0->unk30.screen.y << 8;
+        sp64.unk10 = arg0->unk30.screen.y << 8;
+        sp64.x = arg0->payload.vec.x;
+        sp64.y = arg0->payload.vec.y;
+        sp64.z = arg0->payload.vec.z;
+        arg0->unk24.velocityX = (s32)func_8004885C(&sp64);
+    }
+
+    if (arg0->unk24.velocityX != 0) {
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = (u32)D_800D4878;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xFA000000;
+        gfx->words.w1 = (arg0->unk30.screen.x & 0xFF) | ~0xFF;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xFD500000;
+        gfx->words.w1 = arg0->unk2C;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF5500000;
+        gfx->words.w1 = 0x07080200;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE6000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF3000000;
+        gfx->words.w1 = 0x0703F800;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE7000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0x80200;
+        gfx->words.w0 = 0xF5400200;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF2000000;
+        gfx->words.w1 = 0x3C03C;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xFD100000;
+        gfx->words.w1 = arg0->unk28.word;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE8000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF5000100;
+        gfx->words.w1 = 0x07000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE6000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0xF0000000;
+        gfx->words.w1 = 0x0703C000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE7000000;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = arg0->unk24.velocityX;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01000040;
+        gfx->words.w1 = (u32)D_80156614;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = (u32)D_800D45E0;
+        gfx->words.w0 = 0x0400103F;
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0x60200;
+        gfx->words.w0 = 0xB1060402;
+    }
 }
+#endif
 
 void func_8004E960(RaceItemEffectActor *arg0) {
     if (D_80121B56 == 0) {
@@ -354,7 +464,7 @@ void func_8004E960(RaceItemEffectActor *arg0) {
 void func_8004E9D0(RaceItemEffectActor *arg0) {
     arg0->unk30.screen.x = 0xF0;
     arg0->unk30.screen.y = 0x10;
-    func_80045990(func_80043040(D_8011216C), arg0->state.ubyte, &arg0->unk2C, &arg0->unk28.word);
+    func_80045990(func_80043040(D_8011216C), arg0->unk34.shorts.state.ubyte, &arg0->unk2C, &arg0->unk28.word);
     func_80071824(arg0, func_8004E960);
 }
 
@@ -362,7 +472,7 @@ void func_8004EA34(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
     RaceItemEffectActor *p = func_800711D0(func_8004E9D0, 0, 2);
 
     if (p != NULL) {
-        p->state.byte = arg3;
+        p->unk34.shorts.state.byte = arg3;
         p->payload.vec.x = arg0;
         p->payload.vec.y = arg1;
         p->payload.vec.z = arg2;
@@ -399,12 +509,12 @@ void func_8004EAA8(RaceItemEffectActor *arg0) {
     volatile s32 pad[2];
 
     if (D_80156609 != 0) {
-        arg0->state.bytes.matrixDirty = 1;
+        arg0->unk34.shorts.state.bytes.matrixDirty = 1;
     }
 
     if (func_80049000(&arg0->payload.vec) != 0) {
-        if ((s8)arg0->state.bytes.matrixDirty != 0) {
-            arg0->state.bytes.matrixDirty = 0;
+        if (arg0->unk34.shorts.state.bytes.matrixDirty != 0) {
+            arg0->unk34.shorts.state.bytes.matrixDirty = 0;
             sp80 = D_800DEE30;
             sp80.x = arg0->payload.vec.x;
             sp80.y = arg0->payload.vec.y;
@@ -415,7 +525,7 @@ void func_8004EAA8(RaceItemEffectActor *arg0) {
         do {
             if (arg0->unk30.matrix != NULL) {
                 func_80045990(func_80043040(D_80112168),
-                              (u16)(((s8)arg0->height.byte >> 1) + 0x36),
+                              (u16)(((s8)arg0->unk34.shorts.height.byte >> 1) + 0x36),
                               &sp7C, &sp78);
 
                 do {
@@ -488,14 +598,14 @@ void func_8004EE0C(RaceItemEffectActor *arg0) {
     RaceItemEffectActor *actor = arg0;
 
     if (D_80121B56 == 0) {
-        arg0->height.byte++;
-        if (arg0->height.byte == 6) {
+        arg0->unk34.shorts.height.byte++;
+        if (arg0->unk34.shorts.height.byte == 6) {
             func_800716E4(arg0);
             return;
         }
     }
-    if (actor->height.byte < 0) {
-        actor->height.byte = 0;
+    if (actor->unk34.shorts.height.byte < 0) {
+        actor->unk34.shorts.height.byte = 0;
     }
     func_80098590(D_80121D80[actor->playerIndex].transform, &actor->unk24.velocityX, &actor->payload);
     player = &D_80121D80[actor->playerIndex];
@@ -508,7 +618,7 @@ void func_8004EE0C(RaceItemEffectActor *arg0) {
 void func_8004EF24(RaceItemEffectActor *arg0) {
     RaceItemFollowPlayer *player;
 
-    arg0->height.byte = -1;
+    arg0->unk34.shorts.height.byte = -1;
     arg0->unk2C = 0;
     arg0->unk28.word = 0x280000;
     arg0->unk24.velocityX = 0x400000;
@@ -522,7 +632,43 @@ void func_8004EF24(RaceItemEffectActor *arg0) {
     func_80071824(arg0, func_8004EE0C);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004EFF8.s")
+void func_8004EFF8(RaceItemEffectActor *arg0) {
+    volatile s32 pad0;
+    RaceItemGfxCommandSource sp74;
+    volatile u8 padding[0x14];
+    Gfx *temp_v0_2;
+    Gfx *temp_v0_3;
+    Gfx *temp_v0_4;
+    Gfx *temp_v0_5;
+    Gfx *temp_v0_6;
+    Gfx *temp_v0_7;
+    Gfx *temp_v0_8;
+    Gfx *temp_v0_9;
+    Gfx *temp_v0_10;
+    Gfx *temp_v0_11;
+    Gfx *temp_v0_12;
+    Gfx *temp_v0_13;
+    Gfx *temp_v0_14;
+    Gfx *temp_v0_17;
+    Gfx *temp_v0_18;
+
+    if (D_80156609 != 0) {
+        arg0->pad4E = 1;
+    }
+
+    if (func_80049000(&arg0->payload.vec) != 0) {
+        if (arg0->pad4E != 0) {
+            arg0->pad4E = 0;
+            sp74 = D_800DEE30;
+            sp74.x = arg0->payload.vec.x;
+            sp74.y = arg0->payload.vec.y;
+            sp74.z = arg0->payload.vec.z;
+            arg0->unk34.matrix = func_8004885C(&sp74);
+        }
+
+        do { if (arg0->unk34.matrix != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) D_800D4878; } ; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFA000000; temp_v0_2->words.w1 = (arg0->unk38.width & 0xFF) | ~0xFF; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xFD500000; temp_v0_3->words.w1 = (u32) arg0->image; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w0 = 0xF5500000; temp_v0_4->words.w1 = 0x07080200; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w1 = 0; temp_v0_5->words.w0 = 0xE6000000; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w0 = 0xF3000000; temp_v0_6->words.w1 = 0x0703F800; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w1 = 0; temp_v0_7->words.w0 = 0xE7000000; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF5400200; temp_v0_8->words.w1 = 0x00080200; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xF2000000; temp_v0_9->words.w1 = 0x0003C03C; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w0 = 0xFD100000; temp_v0_10->words.w1 = (u32) arg0->palette; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w1 = 0; temp_v0_11->words.w0 = 0xE8000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w0 = 0xF5000100; temp_v0_12->words.w1 = 0x07000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w1 = 0; temp_v0_13->words.w0 = 0xE6000000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w0 = 0xF0000000; temp_v0_14->words.w1 = 0x0703C000; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w1 = 0; temp_v0_17->words.w0 = 0xE7000000; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) arg0->unk34.matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x00) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) D_80156614; } ; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0x0400103F; temp_v0_18->words.w1 = (u32) D_800D48E8; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xB1060402; temp_v0_2->words.w1 = 0x00060200; } } while (0);
+    }
+}
 
 void func_8004F33C(RaceItemEffectActor *arg0) {
     s16 temp_v0;
