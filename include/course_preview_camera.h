@@ -9,7 +9,7 @@ typedef struct CoursePreviewGfxCommandActor CoursePreviewGfxCommandActor;
 void func_800556B0(void);
 void func_80055B04(s32 arg0);
 void func_80055B34(CoursePreviewGfxCommandActor *arg0);
-void func_80055C7C(void);
+void func_80055C7C(CoursePreviewCamera *arg0);
 void func_80055FA4(CoursePreviewCamera *arg0);
 void func_80056070(CoursePreviewCamera *arg0);
 void func_800560F4(CoursePreviewCamera *arg0);

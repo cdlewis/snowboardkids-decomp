@@ -59,10 +59,18 @@ struct CoursePreviewCamera {
     /* 0x24 */ s32 velocityY;
     /* 0x28 */ s32 radius;
     /* 0x2C */ PackedAngles angle;
-    /* 0x30 */ s16 scale;
-    /* 0x32 */ s16 tilt;
-    /* 0x34 */ s16 pitchVelocity;
-    /* 0x36 */ s16 spinVelocity;
+    union {
+        struct {
+            /* 0x30 */ s16 scale;
+            /* 0x32 */ s16 tilt;
+            /* 0x34 */ s16 pitchVelocity;
+            /* 0x36 */ s16 spinVelocity;
+        };
+        struct {
+            /* 0x30 */ u32 image;
+            /* 0x34 */ u32 palette;
+        };
+    };
     /* 0x38 */ s16 timer;
     /* 0x3A */ s16 stateTimer;
     /* 0x3C */ Gfx *displayList0;
@@ -96,9 +104,11 @@ extern CoursePreviewGfxCommandEntry *D_800D5C6C[];
 extern CoursePreviewGfxCommandEntry *D_800D5FC8[];
 extern u16 D_800D5D30[];
 extern Gfx D_800D5CF0[];
+extern Gfx D_800D5C88[];
 extern Gfx D_800D9D00[];
 extern Gfx D_800D9D40[];
 extern GfxCommandDest D_800DEE50;
+extern FixedTransform D_800DEE30;
 extern void func_80048C90(GfxCommandDest *, s32 *);
 extern void func_80045A1C(u8 *, u16, u32 *, u32 *, s16 *, s16 *);
 
@@ -150,7 +160,107 @@ void func_80055B34(CoursePreviewGfxCommandActor *arg0) {
     func_80071824(arg0, func_80055B04);
 }
 
+// func_80055C7C best match: 98.168% (nonmatchings/func_80055C7C-2785870559185086986/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_80055C7C.s")
+
+#ifdef NON_MATCHING
+void func_80055C7C(CoursePreviewCamera *arg0) {
+    FixedTransform sp70;
+    Gfx *temp_v0;
+    Gfx *temp_v0_2;
+    Gfx *temp_v0_3;
+    Gfx *temp_v0_4;
+    Gfx *temp_v0_5;
+    Gfx *temp_v0_6;
+    Gfx *temp_v0_7;
+    Gfx *temp_v0_8;
+    Gfx *temp_v0_9;
+    Gfx *temp_v0_10;
+    Gfx *temp_v0_11;
+    Gfx *temp_v0_12;
+    Gfx *temp_v0_13;
+    Gfx *temp_v0_14;
+    Gfx *temp_v0_15;
+    Gfx *temp_v0_16;
+    Gfx *temp_v0_17;
+    Gfx *temp_v0_18;
+    Gfx *temp_v0_19;
+
+    if (D_80156609 != 0) {
+        arg0->displayListValid = 1;
+    }
+
+    if (func_80049000(&arg0->position) != 0) {
+        if (arg0->displayListValid != 0) {
+            sp70 = D_800DEE30;
+            sp70.translation.x = arg0->position.x;
+            sp70.translation.y = arg0->position.y;
+            sp70.translation.z = arg0->position.z;
+            arg0->displayList0 = func_8004885C(&sp70);
+        }
+
+        if (arg0->displayList0 != NULL) {
+            temp_v0 = gRegionAllocPtr++;
+            temp_v0->words.w1 = (u32)D_800D9D00;
+            temp_v0->words.w0 = 0x06000000;
+            temp_v0_2 = gRegionAllocPtr++;
+            temp_v0_2->words.w0 = 0xFD500000;
+            temp_v0_2->words.w1 = arg0->image;
+            temp_v0_3 = gRegionAllocPtr++;
+            temp_v0_3->words.w0 = 0xF5500000;
+            temp_v0_3->words.w1 = 0x07080200;
+            temp_v0_4 = gRegionAllocPtr++;
+            temp_v0_4->words.w1 = 0;
+            temp_v0_4->words.w0 = 0xE6000000;
+            temp_v0_5 = gRegionAllocPtr++;
+            temp_v0_5->words.w0 = 0xF3000000;
+            temp_v0_5->words.w1 = 0x070FF400;
+            temp_v0_6 = gRegionAllocPtr++;
+            temp_v0_6->words.w1 = 0;
+            temp_v0_6->words.w0 = 0xE7000000;
+            temp_v0_7 = gRegionAllocPtr++;
+            temp_v0_7->words.w1 = 0x00080200;
+            temp_v0_7->words.w0 = 0xF5400400;
+            temp_v0_8 = gRegionAllocPtr++;
+            temp_v0_8->words.w0 = 0xF2000000;
+            temp_v0_8->words.w1 = 0x0007C07C;
+            temp_v0_9 = gRegionAllocPtr++;
+            temp_v0_9->words.w0 = 0xFD100000;
+            temp_v0_9->words.w1 = arg0->palette;
+            temp_v0_10 = gRegionAllocPtr++;
+            temp_v0_10->words.w1 = 0;
+            temp_v0_10->words.w0 = 0xE8000000;
+            temp_v0_11 = gRegionAllocPtr++;
+            temp_v0_11->words.w0 = 0xF5000100;
+            temp_v0_11->words.w1 = 0x07000000;
+            temp_v0_12 = gRegionAllocPtr++;
+            temp_v0_12->words.w1 = 0;
+            temp_v0_12->words.w0 = 0xE6000000;
+            temp_v0_13 = gRegionAllocPtr++;
+            temp_v0_13->words.w0 = 0xF0000000;
+            temp_v0_13->words.w1 = 0x0703C000;
+            temp_v0_14 = gRegionAllocPtr++;
+            temp_v0_14->words.w1 = 0;
+            temp_v0_14->words.w0 = 0xE7000000;
+            temp_v0_15 = gRegionAllocPtr++;
+            temp_v0_15->words.w0 = 0x01020040;
+            temp_v0_15->words.w1 = (u32)arg0->displayList0;
+            temp_v0_16 = gRegionAllocPtr++;
+            temp_v0_16->words.w0 = 0x01000040;
+            temp_v0_16->words.w1 = D_80156614;
+            temp_v0_17 = gRegionAllocPtr++;
+            temp_v0_17->words.w1 = (u32)D_800D5C88;
+            temp_v0_17->words.w0 = 0x0400103F;
+            temp_v0_18 = gRegionAllocPtr++;
+            temp_v0_18->words.w1 = 0x00060200;
+            temp_v0_18->words.w0 = 0xB1060402;
+            temp_v0_19 = gRegionAllocPtr++;
+            temp_v0_19->words.w1 = (u32)D_800D9D40;
+            temp_v0_19->words.w0 = 0x06000000;
+        }
+    }
+}
+#endif
 
 void func_80055FA4(CoursePreviewCamera *arg0) {
     Vec3i sp44;
