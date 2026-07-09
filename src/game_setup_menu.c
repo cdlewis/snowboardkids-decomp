@@ -16,10 +16,10 @@ typedef struct {
 } GameSetupMenuState;
 
 typedef struct {
-    /* 0x0 */ s8 state;
-    /* 0x1 */ s8 unk1;
+    /* 0x0 */ u8 state;
+    /* 0x1 */ u8 unk1;
     /* 0x2 */ s16 unk2;
-    /* 0x4 */ s8 unk4;
+    /* 0x4 */ u8 unk4;
 } GameSetupMenuSubState;
 
 extern void func_80014C7C(EffectTask *task);
@@ -131,7 +131,7 @@ void func_80003140(void) {
 }
 #endif
 
-// func_8000337C best match: 87.296% (nonmatchings/func_8000337C-2775475442547365205/base_5.c)
+// func_8000337C best match: 88.068% (nonmatchings/func_8000337C-6276316234415602851/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_8000337C.s")
 
 #ifdef NON_MATCHING
@@ -140,9 +140,10 @@ void func_8000337C(void) {
     s32 sp18;
     s32 temp_a3;
     s32 temp_v0;
-    u16 *var_a2;
+    register u16 *var_a2;
     u16 temp_t6;
     u16 temp_v0_2;
+    u8 temp_v1;
     s32 one;
 
     one = 1;
@@ -153,7 +154,8 @@ void func_8000337C(void) {
         one = 1;
     }
     if (D_801235B8->timer == one) {
-        if (D_800EC9C1 == 0) {
+        temp_v1 = D_800EC9C1;
+        if (temp_v1 == 0) {
             temp_a3 = D_80123778;
             temp_v0 = D_80123758 & 0x10800;
             if ((temp_v0 == 0) && !(D_80123758 & 0x20400)) {
@@ -194,8 +196,8 @@ block_25:
                 D_800EC9C1 = 1;
                 func_80072138(0x18, 0x32, var_a2, temp_a3);
             }
-        } else if (D_800EC9C1 < 0x13) {
-            D_800EC9C1 += 1;
+        } else if (temp_v1 < 0x13) {
+            D_800EC9C1 = temp_v1 + 1;
         }
     }
     if (D_8010AE00.state == 5) {
