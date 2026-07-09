@@ -3024,7 +3024,7 @@ void func_80096D8C(RaceInputPlayer *player) {
     }
 }
 
-// func_80096E3C best match: 97.539% (nonmatchings/func_80096E3C-1315772375853892447/base_13.c)
+// func_80096E3C best match: 99.055% (nonmatchings/func_80096E3C-6182772958467082306/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80096E3C.s")
 
 #ifdef NON_MATCHING
@@ -3032,16 +3032,33 @@ void func_80096E3C(void) {
     RaceInputPlayer *player;
     RacePlayerSoundPosition *soundPos;
     RacePlayerSoundPosition *nextSoundPos;
-    s8 *playerCountPtr;
     s32 i;
-    s8 playerCount;
 
     if (D_80121B56 == 0) {
-        playerCountPtr = &D_80121B54;
         i = 0;
-        if (*playerCountPtr > 0) {
-            player = D_80121D80;
-            do { func_80097038(player); i++; player++; } while (i < *playerCountPtr); } nextSoundPos = D_80121DA8; } playerCountPtr = &D_80121B54; playerCount = *playerCountPtr; i = 0; if (playerCount > 0) { player = D_80121D80; do { func_8008393C(player); playerCount = *playerCountPtr; i++; player++; } while (i < playerCount); i = 0; } if (playerCount > 0) { nextSoundPos = D_80121DA8; soundPos = D_80121D9C; player = D_80121D80; do { if (player->soundDisabled == 0) { func_80072A20(player->unk584, &soundPos->pos, player->unk582, 0x46, player->unk588, i);
+        if (D_80121B54 > 0) {
+            do {
+                do {
+                    func_80097038(&D_80121D80[i]);
+                } while (0);
+                i++;
+            } while (i < D_80121B54);
+        }
+    }
+
+    i = 0;
+    if (D_80121B54 > 0) {
+        do {
+            func_8008393C(&D_80121D80[i]);
+            i++;
+        } while (i < D_80121B54);
+        i = 0;
+    }
+
+    if (D_80121B54 > 0) {
+        player = D_80121D80; soundPos = D_80121D9C; nextSoundPos = D_80121DA8; do {
+            if (player->soundDisabled == 0) {
+                func_80072A20(player->unk584, &soundPos->pos, player->unk582, 0x46, player->unk588, i);
             } else {
                 func_80072A20(player->unk584, &soundPos->pos, 0, 0x46, player->unk588, i);
             }
@@ -3058,7 +3075,7 @@ void func_80096E3C(void) {
             player++;
             soundPos++;
             nextSoundPos++;
-        } while (i < *playerCountPtr);
+        } while (i < D_80121B54);
     }
 }
 #endif
