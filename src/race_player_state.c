@@ -17,6 +17,16 @@ typedef struct {
     /* 0x00C */ char padC[0x600];
 } RacePlayerSoundPosition;
 
+typedef struct {
+    s16 unk0;
+    char pad2[0x16];
+    s32 unk18;
+    s32 unk1C;
+    char pad20[0x20];
+    s32 unk40;
+    s32 unk44;
+} Struct800955C0;
+
 extern void func_8008C098(RaceInputPlayer *);
 extern void func_8008C7D0(RaceInputPlayer *);
 extern void func_80082664(RaceInputPlayer *, s32, s32, s32);
@@ -67,6 +77,8 @@ extern RacePlayerSoundPosition D_80121D9C[];
 extern RacePlayerSoundPosition D_80121DA8[];
 extern void *D_801248C8;
 extern void *D_801248EC;
+extern Struct800955C0 D_800B9540[];
+extern s16 D_80121B50;
 
 void func_8008BEB0(void) {
     D_80121D80[0].playerIndex = 0;
@@ -1919,7 +1931,113 @@ void func_80092D04(RaceInputPlayer *player) {
     }
 }
 
+// func_80092E58 best match: 98.797% (nonmatchings/func_80092E58-3236181511606361864/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092E58.s")
+
+#ifdef NON_MATCHING
+void func_80092E58(RaceInputPlayer *player) {
+    RaceInputPlayer *playerAlias;
+    Struct800955C0 *spawn;
+    s16 updateState;
+    s16 targetAngle;
+    s16 angleDiff;
+    s32 clamped;
+    s32 tempX;
+    s32 tempZ;
+
+    updateState = player->updateState;
+    if (updateState == 0) {
+        player->updateState = updateState + 1;
+        player->stateFlags &= 0xFE0C1FFB;
+        player->stateFlags |= 0x2000;
+        if (((player->unk2DE - player->facingAngle) & 0xFFF) < 0x800) {
+            func_80081E40(player, 7);
+        } else {
+            func_80081E40(player, 6);
+        }
+        player->actionEffectLevel = 3;
+        player->actionEffectFrame = 0;
+        player->unk40.x = player->unk2E0;
+        player->unk40.z = player->unk2E4;
+    }
+
+    func_8008B408(player, 0x10000, 0);
+    playerAlias = player;
+    player->unk314 = 0x60000;
+    if (!(playerAlias->stateFlags & 1)) {
+        playerAlias->stateFlags &= ~0x200;
+        playerAlias->unk40.y -= 0xA000;
+        func_8008BB20(player, 0, (unsigned long long) 0x2000, 0x2000, 0x2000);
+    } else {
+        playerAlias->stateFlags |= 0x200;
+        player->unk40.y -= 0x7000;
+        func_8008B508(&player->unk40, player);
+
+        tempX = playerAlias->unk40.x;
+        clamped = tempX;
+        if (clamped >= 0x2001) {
+            clamped = 0x2000;
+        }
+        updateState = -0x2000;
+        if (clamped < -0x2000) {
+            clamped = updateState;
+        }
+        player->unk40.x = tempX - clamped;
+
+        tempZ = playerAlias->unk40.z;
+        clamped = tempZ;
+        if (clamped >= 0x2001) {
+            clamped = 0x2000;
+        }
+        if (clamped < updateState) {
+            clamped = updateState;
+        }
+        player->unk40.z = tempZ - clamped;
+    }
+
+    playerAlias->posX += playerAlias->unk40.x;
+    playerAlias->posY += player->unk40.y;
+    playerAlias->posZ += playerAlias->unk40.z;
+
+    spawn = &D_800B9540[D_80121B50];
+    clamped = spawn->unk0;
+    if ((playerAlias->unk502 == clamped) && !(playerAlias->stateFlags & 0x40)) {
+        targetAngle = func_8004940C(playerAlias->posX, player->posZ, spawn->unk40, spawn->unk44);
+        if (playerAlias->stateFlags & 0x400) {
+            targetAngle += 0x800;
+        }
+
+        angleDiff = (targetAngle - player->facingAngle) & 0xFFF;
+        if (angleDiff >= 0x801) {
+            angleDiff -= 0x1000;
+        }
+        if (angleDiff >= 0x97) {
+            angleDiff = 0x96;
+        }
+        if (angleDiff < -0x96) {
+            angleDiff = -0x96;
+        }
+        playerAlias->facingAngle += angleDiff;
+    }
+
+    if (!(player->stateFlags & 1)) {
+        func_8008CF10(player);
+    }
+
+    if (func_80082EC0(player) != 0) {
+        playerAlias->stateFlags &= 0xFE0C1FFB;
+        if (playerAlias->stateFlags & 0x200) {
+            player->mode = 1;
+            playerAlias->updateState = 0;
+            player->updateTimer = 0;
+        } else {
+            playerAlias->mode = 0;
+            playerAlias->updateState = 0;
+            playerAlias->updateTimer = 0;
+        }
+    }
+}
+#endif
 
 void func_80093144(RaceInputPlayer *player) {
     s16 updateState;
@@ -2222,16 +2340,6 @@ void func_80095300(RaceInputPlayer *player) {
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095338.s")
-
-typedef struct {
-    char pad0[0x18];
-    s32 unk18;
-    s32 unk1C;
-    char pad20[0x28];
-} Struct800955C0;
-
-extern Struct800955C0 D_800B9540[];
-extern s16 D_80121B50;
 
 void func_800955C0(RaceInputPlayer *player) {
     if (func_80082EC0(player) != 0) {
