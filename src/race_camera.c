@@ -77,7 +77,7 @@ extern void func_8006EF1C(void);
 extern void func_8006F048(void);
 extern void func_8006F984(void);
 extern void func_8006FA20(void);
-extern void func_8006FE88(void);
+void func_8006FE88(void);
 extern void func_8007022C(void);
 void func_8007031C(void);
 extern void func_800704C4(void);
@@ -355,7 +355,7 @@ void func_8006FE24(void) {
     D_801124A0->update();
 }
 
-// func_8006FE88 best match: 96.811%
+// func_8006FE88 best match: 99.490%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006FE88.s")
 
 #ifdef NON_MATCHING
@@ -379,9 +379,9 @@ void func_8006FE88(void) {
 
 #define TRANSITION (((RaceCameraTransition *)((u8 *)transitionBase + ((u16) D_801124A0->mode * stride)))[-16])
 
-    D_801124A0->pos.x = TRANSITION.startPos.x + (s32)(((s64)(transition[-16].endPos.x - transition[-16].startPos.x) * timer) / TRANSITION.duration);
-    D_801124A0->pos.y = TRANSITION.startPos.y + (s32)(((s64)(TRANSITION.endPos.y - TRANSITION.startPos.y) * timer) / TRANSITION.duration);
-    D_801124A0->pos.z = TRANSITION.startPos.z + (s32)(((s64)(TRANSITION.endPos.z - TRANSITION.startPos.z) * timer) / TRANSITION.duration);
+    D_801124A0->pos.x = (((s64)(transition[-16].endPos.x - transition[-16].startPos.x) * timer) / TRANSITION.duration) + TRANSITION.startPos.x;
+    D_801124A0->pos.y = (((s64)(TRANSITION.endPos.y - TRANSITION.startPos.y) * timer) / TRANSITION.duration) + TRANSITION.startPos.y;
+    D_801124A0->pos.z = (((s64)(TRANSITION.endPos.z - TRANSITION.startPos.z) * timer) / TRANSITION.duration) + TRANSITION.startPos.z;
 
     D_801124A0->focus.x = D_80121D80[TRANSITION.playerIndex].state.cameraPos.x;
     D_801124A0->focus.y = D_80121D80[TRANSITION.playerIndex].state.cameraPos.y;
