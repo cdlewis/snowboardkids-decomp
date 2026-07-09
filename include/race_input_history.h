@@ -37,6 +37,7 @@ typedef struct {
     /* 0x030 */ char pad30[0x10];
     /* 0x040 */ union {
         RaceVec3i unk40;
+        RaceVec3i velocity;
         struct {
             s32 unk40_x;
             s32 unk44;
