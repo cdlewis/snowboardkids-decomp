@@ -59,7 +59,7 @@ void func_8003B9F8(EndObjTask *arg0);
 void func_8003BA64(EndObjTask *arg0);
 void func_8003BC9C(DebugObjectPositionTask *arg0);
 
-// func_8003B7C0 best match: 91.464%
+// func_8003B7C0 best match: 93.371%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_debug_ui/func_8003B7C0.s")
 
 #ifdef NON_MATCHING
@@ -71,10 +71,10 @@ void func_8003B7C0(EndObjTask *arg0) {
     s32 layoutOffset;
     register s32 x;
     s32 y;
-    u16 glyph;
     u16 text[0x1A];
     u16 pad[12];
     volatile u16 colorMode;
+    u16 glyph;
     EndObjTextLayout *layout;
 
     layout = &D_800B92D4[arg0->cycleCount];
@@ -89,13 +89,13 @@ void func_8003B7C0(EndObjTask *arg0) {
             x = *(s16 *)((u8 *)layout + layoutOffset + 2);
             y = *(s16 *)((u8 *)layout + layoutOffset + 4);
             lineLength = 0;
-            if (glyph != 0xFFFF) {
+            if (D_800B8140[arg0->cycleCount][scriptIndex] != 0xFFFF) {
                 do {
-                    text[lineLength] = glyph;
+                    text[lineLength] = D_800B8140[arg0->cycleCount][scriptIndex];
                     scriptIndex++;
                     glyph = D_800B8140[arg0->cycleCount][scriptIndex];
                     lineLength++;
-                } while (glyph != 0xFFFF);
+                } while (D_800B8140[arg0->cycleCount][scriptIndex] != 0xFFFF);
             }
             text[lineLength] = 0xFFFF;
             scriptIndex++;
