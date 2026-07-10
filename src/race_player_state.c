@@ -83,6 +83,8 @@ extern s32 func_800832CC(RaceInputPlayer *);
 extern s32 func_80082F44(RaceInputPlayer *);
 extern void func_80082B58(RaceInputPlayer *, s32, s32, s32);
 extern void func_800815D4(s16, s32, s32, s32 *, s32 *, s32, s32);
+extern void func_8006D520(u16, u16);
+extern void func_80082B58(RaceInputPlayer *, s32, s16, s32);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void func_8004FA44(void *);
 extern void func_8005FB30(void *);
@@ -4379,7 +4381,120 @@ void func_8009617C(RaceInputPlayer *player) {
     }
 }
 
+// func_800961DC best match: 89.346% (nonmatchings/func_800961DC-2225551288923588688/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800961DC.s")
+
+#ifdef NON_MATCHING
+void func_800961DC(RaceInputPlayer *player) {
+    s16 updateTimer;
+    s16 facingAngle;
+    s16 targetAngle;
+    s16 angleDiff;
+    s16 roll;
+    s32 stateFlags;
+
+    updateTimer = player->updateTimer;
+    if (updateTimer == 0) {
+        player->updateTimer = updateTimer + 1;
+        player->subState = 0;
+        func_8006D520(player->playerIndex, 5);
+        if (player->unk29C >= 0x20001) {
+            player->unk306 = 1;
+            player->unk31E = func_8004908C(player->unk40.x, player->unk40.z);
+            stateFlags = player->stateFlags & 0x400;
+            if (stateFlags != 0) {
+                stateFlags = player->stateFlags & 0x400;
+                player->unk31E += 0x800;
+            }
+
+            if ((s16) ((player->unk31E - player->facingAngle) & 0x800) < 0x800) {
+                player->unk31C = 0;
+                if (stateFlags != 0) {
+                    player->unk31C = 1;
+                }
+                player->unk31E -= 0x400;
+            } else {
+                player->unk31C = 1;
+                if (stateFlags != 0) {
+                    player->unk31C = 0;
+                }
+                player->unk31E += 0x400;
+            }
+            player->stateTimer = 0;
+        } else {
+            player->unk306 = 0;
+            func_80081E40(player, 1);
+        }
+    }
+
+    if (player->unk306 != 0) {
+        facingAngle = player->facingAngle;
+        targetAngle = (player->unk31E - facingAngle) & 0xFFF;
+        angleDiff = targetAngle;
+        if (targetAngle >= 0x801) {
+            angleDiff = targetAngle - 0x1000;
+        }
+        if (angleDiff >= 0x41) {
+            angleDiff = 0x40;
+        }
+        if (angleDiff < -0x40) {
+            angleDiff = -0x40;
+        }
+        player->facingAngle = facingAngle + angleDiff;
+
+        if (player->unk31C != 0) {
+            player->stateTimer = 0x1F;
+        } else {
+            player->stateTimer = -0x1F;
+        }
+
+        player->unk2F8 = 0x3F;
+        angleDiff = func_8008B408(player, player->unk29C, player->stateTimerLow) - player->unk2FA;
+        roll = player->unk2FA;
+        if (angleDiff >= 0x31) {
+            angleDiff = 0x30;
+        }
+        if (angleDiff < -0x30) {
+            angleDiff = -0x30;
+        }
+        player->unk2FA = roll + angleDiff;
+
+        roll = player->unk2FA;
+        if (roll == 0) {
+            if (player->animationId != 1) {
+                func_80081E40(player, 1);
+            }
+            func_80082E48(player);
+        } else if (roll >= 0) {
+            func_80081E40(player, 3);
+            func_80082B58(player, 3, player->unk2FA, 0x118);
+        } else {
+            func_80081E40(player, 2);
+            func_80082B58(player, 2, -player->unk2FA, 0x118);
+        }
+    } else {
+        func_8008B408(player, 0, 0);
+        func_80082E48(player);
+    }
+
+    player->unk40.y -= player->unk260;
+    func_8008BB20(player, 0, 0x6000, 0x6000, 0x6000);
+    player->posX += player->unk40.x;
+    player->posY += player->unk40.y;
+    player->posZ += player->unk40.z;
+    func_8008CF10(player);
+
+    if ((player->unk40.x == 0) && (player->unk40.z == 0) && !(player->stateFlags & 1)) {
+        if (player->soundDisabled == 0) {
+            player->updateState++;
+            player->stateTimer = 0x1E;
+            if (player->animationId != 1) {
+                func_80081E40(player, 1);
+            }
+        }
+    }
+}
+#endif
 
 void func_8009652C(RaceInputPlayer *player) {
     if (D_80121B5F != 0) {

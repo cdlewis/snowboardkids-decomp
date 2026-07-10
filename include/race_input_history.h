@@ -144,7 +144,9 @@ typedef struct {
     /* 0x30E */ s16 subStateParam;
     /* 0x310 */ s32 unk310;
     /* 0x314 */ s32 unk314;
-    /* 0x318 */ char pad318[8];
+    /* 0x318 */ char pad318[4];
+    /* 0x31C */ s16 unk31C;
+    /* 0x31E */ s16 unk31E;
     /* 0x320 */ s16 actionSoundTimer;
     /* 0x322 */ char pad322[0xE];
     /* 0x330 */ s8 unk330;
