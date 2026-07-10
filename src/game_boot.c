@@ -293,7 +293,7 @@ void func_80099790(void) {
     D_8010ADFA = 0;
 }
 
-// func_800998E4 best match: 82.639% at nonmatchings/func_800998E4-2785870559185086986/base_4.c.
+// func_800998E4 best match: 85.880% at nonmatchings/func_800998E4-7273315160691878794/base_12.c.
 #ifdef NON_MATCHING
 void func_800998E4(void *arg0) {
     OSMesg msg;
@@ -329,11 +329,11 @@ loop_1:
             break;
         case 5:
             D_80123750 += 1;
-            D_8012496E &= 0xFE;
+            D_8012496E &= 0xFFFE;
             break;
         case 6:
             D_80123750 += 1;
-            D_8013CF8E &= 0xFE;
+            D_8013CF8E &= 0xFFFE;
             break;
         case 3:
             *(volatile s32 *)&done = 1;
@@ -369,6 +369,7 @@ loop_1:
     func_80000A8C(1);
     func_80000A8C(2);
     func_80000A8C(3);
+    type = 1;
 loop_16:
     do {
 loop_17:
@@ -377,7 +378,7 @@ loop_17:
                 goto loop_17;
             }
         }
-    } while (*(s16 *)msg != 1);
+    } while (*(s16 *)msg != type);
     func_80000A40(0);
     func_80000A40(1);
     func_80000A40(2);
