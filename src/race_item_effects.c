@@ -987,7 +987,7 @@ void func_800503D0(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     }
 }
 
-// func_80050458 best match: 84.496%
+// func_80050458 best match: 93.675% (nonmatchings/func_80050458-4923837976568703863/base_6.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050458.s")
 
@@ -1024,57 +1024,10 @@ void func_80050458(RaceItemTextureActor *arg0) {
     do {
         node = *head;
         if (node != NULL) {
-            gfx = gRegionAllocPtr++;
-            gfx->words.w0 = 0xFD500000;
-            gfx->words.w1 = (u32)arg0->images[i];
-
-            gfx = gRegionAllocPtr++;
-            gfx->words.w1 = 0x07080200;
-            gfx->words.w0 = 0xF5500000;
-
-            gfx = gRegionAllocPtr++;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE6000000;
-
-            gfx = gRegionAllocPtr++;
-            gfx->words.w0 = 0xF3000000;
-            gfx->words.w1 = 0x0703F800;
-
-            gfx = gRegionAllocPtr++;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE7000000;
-
-            gfx = gRegionAllocPtr++;
-            gfx->words.w1 = 0x00080200;
-            gfx->words.w0 = 0xF5400200;
-
-            gfx = gRegionAllocPtr++;
-            gfx->words.w0 = 0xF2000000;
-            gfx->words.w1 = 0x0003C03C;
-
-            gfx = gRegionAllocPtr++;
-            gfx->words.w0 = 0xFD100000;
-            gfx->words.w1 = (u32)arg0->palettes[i];
-
-            gfx = gRegionAllocPtr++;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE8000000;
-
-            gfx = gRegionAllocPtr++;
-            gfx->words.w0 = 0xF5000100;
-            gfx->words.w1 = 0x07000000;
-
-            gfx = gRegionAllocPtr++;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE6000000;
-
-            gfx = gRegionAllocPtr++;
-            gfx->words.w0 = 0xF0000000;
-            gfx->words.w1 = 0x0703C000;
-
-            gfx = gRegionAllocPtr++;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE7000000;
+            gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->images[i], G_IM_FMT_CI, 16, 16, 0,
+                                   G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 0, 0,
+                                   G_TX_NOLOD, G_TX_NOLOD);
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palettes[i]);
         }
         if (node != NULL) {
             do {
@@ -1100,8 +1053,8 @@ void func_80050458(RaceItemTextureActor *arg0) {
                     gfx->words.w1 = node->displayList;
 
                     gfx = gRegionAllocPtr++;
-                    gfx->words.w1 = 0x00060200;
                     gfx->words.w0 = 0xB1060402;
+                    gfx->words.w1 = 0x00060200;
                 }
                 node = node->next;
             } while (node != NULL);
