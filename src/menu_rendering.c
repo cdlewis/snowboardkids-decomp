@@ -5,6 +5,8 @@ typedef struct MenuRenderTask MenuRenderTask;
 typedef struct RenderCallbackNode RenderCallbackNode;
 typedef struct MenuRenderSprite MenuRenderSprite;
 typedef struct MenuRenderSpriteActor MenuRenderSpriteActor;
+typedef struct MenuRenderAssetTableHeader MenuRenderAssetTableHeader;
+typedef struct MenuRenderAssetTableEntry MenuRenderAssetTableEntry;
 
 struct MenuRenderTask {
     /* 0x00 */ MenuRenderTask *prev;
@@ -40,6 +42,18 @@ struct MenuRenderSpriteActor {
     /* 0x18 */ MenuRenderSprite sprite;
 };
 
+struct MenuRenderAssetTableHeader {
+    /* 0x0 */ s32 unk0;
+    /* 0x4 */ s32 entryCount;
+};
+
+struct MenuRenderAssetTableEntry {
+    /* 0x0 */ s32 imageOffset;
+    /* 0x4 */ u16 textureIndex;
+    /* 0x6 */ u8 width;
+    /* 0x7 */ u8 height;
+};
+
 typedef void (*MenuRenderSpriteActorCallback)(MenuRenderSpriteActor *);
 typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
@@ -59,7 +73,96 @@ extern s16 D_800DEF14;
 extern s16 D_8015660A;
 extern s16 D_8015660C;
 
+// func_8000EA80 best match: 78.118% (nonmatchings/func_8000EA80-4923837976568703863/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000EA80.s")
+
+#ifdef NON_MATCHING
+#define MENU_RENDER_EMIT_GFX(cmd0, cmd1) \
+    gfx = gRegionAllocPtr;               \
+    gRegionAllocPtr = gfx + 1;           \
+    gfx->words.w0 = (cmd0);              \
+    gfx->words.w1 = (cmd1)
+
+extern Gfx *gRegionAllocPtr;
+extern s16 D_8015660E;
+extern s16 D_80156610;
+
+void func_8000EA80(s16 x, s16 y, MenuRenderAssetTableHeader *table, u16 entryIndex, u16 scaleX, u16 scaleY,
+                   u8 startS, u8 startT, u8 width, u8 height) {
+    MenuRenderAssetTableEntry *entry;
+    MenuRenderAssetTableHeader *tableBase;
+    u8 *paletteBase;
+    Gfx *gfx;
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 s;
+    s32 t;
+    s32 clipLeft;
+    s32 clipTop;
+    s16 clipRight;
+    s16 clipBottom;
+    volatile u8 pad[0x38];
+
+    tableBase = table;
+    paletteBase = (u8 *)tableBase + 8 + (tableBase->entryCount * sizeof(MenuRenderAssetTableEntry));
+    x0 = (x + D_8015660E) * 4;
+    y0 = (y + D_80156610) * 4;
+    x1 = x0 + (((width * scaleX) * 4) >> 5);
+    y1 = y0 + (((height * scaleY) * 4) >> 5);
+    s = startS << 5;
+    t = startT << 5;
+
+    clipTop = (D_80156610 - (D_8015660C / 2)) * 4;
+    clipBottom = (D_80156610 + (D_8015660C / 2)) * 4;
+    clipLeft = (D_8015660E - (D_8015660A / 2)) * 4;
+    clipRight = (D_8015660E + (D_8015660A / 2)) * 4;
+
+    if ((x0 < clipRight) && (y0 < clipBottom) && (x1 >= clipLeft) && (y1 >= clipTop)) {
+        if (x0 < clipLeft) {
+            s += (((clipLeft - x0) * 8) << 5) / scaleX;
+            x0 = clipLeft;
+        }
+        if (y0 < clipTop) {
+            t += (((clipTop - y0) * 8) << 5) / scaleY;
+            y0 = clipTop;
+        }
+        if (x1 >= clipRight) {
+            x1 = clipRight - 4;
+        }
+        if (y1 >= clipBottom) {
+            y1 = clipBottom - 4;
+        }
+
+        entry = (MenuRenderAssetTableEntry *)((u8 *)tableBase + 8 + (entryIndex * sizeof(MenuRenderAssetTableEntry)));
+
+        MENU_RENDER_EMIT_GFX((((entry->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                             entry->imageOffset + (u8 *)tableBase + 0x80000000);
+        MENU_RENDER_EMIT_GFX(((((entry->width + 1) >> 1) + 7) >> 3 & 0x1FF) << 9 | 0xF5480000,
+                             0x07080200);
+        MENU_RENDER_EMIT_GFX(0xE6000000, 0);
+        MENU_RENDER_EMIT_GFX(0xF4000000,
+                             (((entry->width * 2) & 0xFFF) << 12) | 0x07000000 | ((entry->height * 4) & 0xFFF));
+        MENU_RENDER_EMIT_GFX(0xE7000000, 0);
+        MENU_RENDER_EMIT_GFX(((((entry->width + 1) >> 1) + 7) >> 3 & 0x1FF) << 9 | 0xF5400000,
+                             0x00080200);
+        MENU_RENDER_EMIT_GFX(0xF2000000, (((entry->width * 4) & 0xFFF) << 12) | ((entry->height * 4) & 0xFFF));
+        MENU_RENDER_EMIT_GFX(0xFD100000, &paletteBase[entry->textureIndex * 0x20] + 0x80000000);
+        MENU_RENDER_EMIT_GFX(0xE8000000, 0);
+        MENU_RENDER_EMIT_GFX(0xF5000100, 0x07000000);
+        MENU_RENDER_EMIT_GFX(0xE6000000, 0);
+        MENU_RENDER_EMIT_GFX(0xF0000000, 0x0703C000);
+        MENU_RENDER_EMIT_GFX(0xE7000000, 0);
+        MENU_RENDER_EMIT_GFX((((x1) & 0xFFF) << 12) | 0xE4000000 | ((y1) & 0xFFF),
+                             (((x0) & 0xFFF) << 12) | ((y0) & 0xFFF));
+        MENU_RENDER_EMIT_GFX(0xB4000000, (s << 16) | (t & 0xFFFF));
+        MENU_RENDER_EMIT_GFX(0xB3000000, ((0x8000 / scaleX) << 16) | ((0x8000 / scaleY) & 0xFFFF));
+    }
+}
+
+#undef MENU_RENDER_EMIT_GFX
+#endif
 
 void func_8000F030(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7) {
     s32 temp_v0;
