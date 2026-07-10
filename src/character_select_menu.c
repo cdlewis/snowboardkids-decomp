@@ -208,6 +208,7 @@ loop_1:
 }
 #endif
 
+// func_80004CC8 best match: 52.734% (nonmatchings/func_80004CC8-7273315160691878794/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_menu/func_80004CC8.s")
 
 // func_80005290 best match: 85.264%
