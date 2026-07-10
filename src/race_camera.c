@@ -4,6 +4,7 @@
 #define RACE_CAMERA_COUNT 4
 #define RACE_CAMERA_STATE_SIZE 0xB0
 #define RACE_PLAYER_STATE_SIZE 0x60C
+#define FIXED_MUL(a, b) (((a) * (b)) / 0x1000)
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x1C];
@@ -151,7 +152,85 @@ void func_8006D7D4(void) {
     func_800486BC(stack.sp28, D_801124A0->transform);
 }
 
+// func_8006D8B4 best match: 92.028% (nonmatchings/func_8006D8B4-8207005055717715604/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006D8B4.s")
+
+#ifdef NON_MATCHING
+void func_8006D8B4(void) {
+    s32 dx;
+    s32 dy;
+    s32 dz;
+    s32 xzDist;
+    s32 dist;
+    s32 temp;
+    FixedTransform pitchMtx;
+    FixedTransform yawMtx;
+    s32 pad[4];
+    FixedMatrix3s resultMtx;
+    s32 i;
+    s32 j;
+
+    func_80097A80(&pitchMtx);
+    func_80097A80(&yawMtx);
+    pad[0] = pad[0];
+
+    dy = (D_801124A0->pos.y - D_801124A0->focus.y) + 0x40000;
+    dx = D_801124A0->pos.x - D_801124A0->focus.x;
+    dz = D_801124A0->pos.z - D_801124A0->focus.z;
+
+    xzDist = func_80098C30((s64)dx * dx + (s64)dz * dz);
+    dist = func_80098C30((s64)xzDist * xzDist + (s64)dy * dy);
+
+    D_801124A0->pitch = func_8004940C(0, 0, xzDist, -dy);
+    if (dist != 0) {
+        temp = ((s64)dy * 0x1000) / dist;
+        pitchMtx.rotation[MTX_YY] = ((s64)xzDist * 0x1000) / dist;
+        pitchMtx.rotation[MTX_ZY] = -temp;
+        pitchMtx.rotation[MTX_ZZ] = pitchMtx.rotation[MTX_YY];
+        pitchMtx.rotation[MTX_YZ] = temp;
+    }
+
+    D_801124A0->yaw = -func_8004940C(0, 0, dx, dz);
+    if (xzDist != 0) {
+        temp = ((s64)dx * 0x1000) / xzDist;
+        yawMtx.rotation[MTX_XX] = ((s64)dz * 0x1000) / xzDist;
+        yawMtx.rotation[MTX_ZX] = -temp;
+        yawMtx.rotation[MTX_ZZ] = yawMtx.rotation[MTX_XX];
+        yawMtx.rotation[MTX_XZ] = temp;
+    }
+
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            D_801124A0->rotationMatrix[(i * 3) + j] =
+                FIXED_MUL(pitchMtx.rotation[j], yawMtx.rotation[i * 3]) +
+                FIXED_MUL(pitchMtx.rotation[j + 3], yawMtx.rotation[(i * 3) + 1]) +
+                FIXED_MUL(pitchMtx.rotation[j + 6], yawMtx.rotation[(i * 3) + 2]);
+        }
+    }
+
+    pitchMtx.rotation[MTX_YZ] *= -1;
+    pitchMtx.rotation[MTX_ZY] *= -1;
+    yawMtx.rotation[MTX_XZ] *= -1;
+    yawMtx.rotation[MTX_ZX] *= -1;
+
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            resultMtx[(i * 3) + j] =
+                FIXED_MUL(yawMtx.rotation[j], pitchMtx.rotation[i * 3]) +
+                FIXED_MUL(yawMtx.rotation[j + 3], pitchMtx.rotation[(i * 3) + 1]) +
+                FIXED_MUL(yawMtx.rotation[j + 6], pitchMtx.rotation[(i * 3) + 2]);
+        }
+    }
+
+    D_801124A0->transformOffset.x =
+        -((((s64)resultMtx[MTX_YX] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
+    D_801124A0->transformOffset.y =
+        -((((s64)resultMtx[MTX_YY] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
+    D_801124A0->transformOffset.z =
+        -((((s64)resultMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
+    func_800486BC(resultMtx, D_801124A0->transform);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006DDB4.s")
 
