@@ -50,7 +50,6 @@ typedef struct {
 
 extern void func_8008C098(RaceInputPlayer *);
 extern void func_8008C7D0(RaceInputPlayer *);
-extern void func_8008CF10(RaceInputPlayer *);
 extern void func_80082664(RaceInputPlayer *, s32, s32, s32);
 extern void func_80082DD0(RaceInputPlayer *);
 extern void func_80082E48(RaceInputPlayer *);
@@ -91,6 +90,7 @@ extern void func_80062530(void *);
 extern s16 func_80097AE8(s16);
 extern void func_800545D0(EffectTask *);
 extern void func_80057810(void *);
+extern s32 func_8004DB60(s8);
 
 extern void (*D_800DECD0[])(RaceInputPlayer *);
 extern void (*D_800DECD8[])(RaceInputPlayer *);
@@ -429,7 +429,56 @@ void func_8008C704(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008C7D0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008CF10.s")
+void func_8008CF10(RaceInputPlayer *player) {
+    s16 angleDiff;
+    s32 itemType;
+    s32 deltaX;
+    s32 deltaZ;
+
+    deltaX = player->posX - player->unk34.x;
+    deltaZ = player->posZ - player->unk34.z;
+    angleDiff = (func_8004908C(deltaX, deltaZ) - player->facingAngle) & 0xFFF;
+    if (angleDiff >= 0x801) {
+        angleDiff = 0x1000 - angleDiff;
+    }
+    if (angleDiff >= 0x401) {
+        angleDiff = 0x800 - angleDiff;
+    }
+
+    player->unk588 = (f32) ((f64) (f32) -angleDiff / 171.0);
+    player->unk582 = player->unk29C >> 0xC;
+    if (player->unk582 >= 0x80) {
+        player->unk582 = 0x7F;
+    }
+
+    itemType = func_8004DB60(player->unk330);
+    player->unk584 = 3;
+    if (itemType == 1) {
+        player->unk584 = 0x1E;
+        player->unk582 = 0x7F;
+        player->unk588 = 0.0f;
+    }
+    if (itemType == 2) {
+        player->unk584 = 4;
+    }
+    if (3 == itemType) {
+        player->unk584 = 5;
+    }
+    if (4 == itemType) {
+        player->unk584 = 4;
+        if (player->unk330 == 0xD) {
+            player->unk584 = 6;
+            if (player->unk582 >= 0x51) {
+                player->actionEffectLevel = 2;
+                player->actionEffectFrame = 1;
+            }
+        }
+        player->unk588 = 0.0f;
+    }
+    if (player->stateFlags & 0x2000000) {
+        player->unk584 = 4;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008D09C.s")
 
