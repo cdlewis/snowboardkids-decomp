@@ -129,6 +129,19 @@ typedef struct {
     /* 0x3C */ s32 unk3C;
 } GfxCommandDest;
 
+typedef struct RenderCallbackNode {
+    struct RenderCallbackNode *next;
+    void (*callback)(s32);
+    s32 arg;
+} RenderCallbackNode;
+
+typedef struct {
+    RenderCallbackNode entry0;
+    RenderCallbackNode entry1;
+    RenderCallbackNode entry2;
+    RenderCallbackNode entry3;
+} CallbackQueueGroup;
+
 extern void osInitialize(void);
 extern void osCreatePiManager(OSPri, OSMesgQueue *, OSMesg *, s32);
 extern void osCreateThread(OSThread *, OSId, void (*)(void *), void *, void *, OSPri);
@@ -168,6 +181,14 @@ extern Gfx *gRegionAllocPtr;
 extern s8 D_8012482A;
 extern s8 D_8012482B;
 extern s8 D_8012482C;
+extern RenderCallbackNode *D_80124838;
+extern RenderCallbackNode *D_80124848;
+extern RenderCallbackNode *D_80124858;
+extern RenderCallbackNode *D_80124868;
+extern RenderCallbackNode *D_80124878;
+extern RenderCallbackNode *D_80124888;
+extern RenderCallbackNode *D_80124898;
+extern RenderCallbackNode *D_801248F8;
 extern u8 D_80123750;
 extern u8 D_8012496E;
 extern s8 D_800EC8B0;
@@ -394,7 +415,24 @@ void func_80099C44(u32 devAddr, void *dramAddr, s32 size) {
 // func_80099D10 best match: 11.115% (nonmatchings/func_80099D10-8207005055717715604/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_80099D10.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_8009B0E8.s")
+void func_8009B0E8(void) {
+    u32 end;
+    CallbackQueueGroup *group;
+
+    D_80124858 = NULL;
+    D_80124888 = NULL;
+    do { end = (u32)&D_801248F8; group = (CallbackQueueGroup *)&D_80124898; loop: group++; group[-1].entry0.next = NULL; group[-1].entry1.next = NULL; } while (0);
+    group[-1].entry2.next = NULL;
+    group[-1].entry3.next = NULL;
+    if ((u32)group != end) {
+        goto loop;
+    }
+    D_801248F8 = NULL;
+    D_80124838 = NULL;
+    D_80124848 = NULL;
+    D_80124878 = NULL;
+    D_80124868 = NULL;
+}
 
 void func_8009B14C(void) {
     D_80124908.msgType = 5;
