@@ -1982,10 +1982,6 @@ void func_80092774(RaceInputPlayer *player) {
 }
 #endif
 
-// func_800929E4 best match: 99.745%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800929E4.s")
-
-#ifdef NON_MATCHING
 void func_800929E4(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
