@@ -38,7 +38,100 @@ extern RomAssetAddress D_800D4050[];
 extern MainMenuModelAssetHandles D_80112130;
 extern void func_80042AB4(MainMenuSceneModel *arg0);
 
+// func_80040C80 best match: 94.789% (nonmatchings/func_80040C80-2225551288923588688/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80040C80.s")
+
+#ifdef NON_MATCHING
+s32 func_80040C80(u8 *src, s32 srcLen, s16 *dst) {
+    s16 *out;
+    s32 srcPos;
+    s32 outCount;
+    s32 remaining;
+    s32 bestDistance;
+    s32 bestLength;
+    s32 distance;
+    s32 maxLength;
+    s32 searchPos;
+    s32 length;
+    s32 count;
+    u8 *cur;
+    u8 *prev;
+
+    srcPos = 0;
+    *dst = srcLen;
+    outCount = 1;
+    remaining = srcLen;
+    bestDistance = 0;
+    bestLength = 0;
+    distance = 1;
+    out = dst + 1;
+
+loop:
+    maxLength = remaining;
+    if (remaining >= 0x40) {
+        maxLength = 0x3F;
+    }
+
+    searchPos = srcPos - 1;
+search_loop:
+    if (searchPos < 0) {
+        goto search_done;
+    }
+
+    length = 0;
+    if (maxLength > 0) {
+        count = 0;
+        cur = src + srcPos;
+        prev = searchPos + src;
+match_loop:
+        count++;
+        if (*cur++ != *prev) {
+            goto compare_best;
+        }
+        prev++;
+        length++;
+        if (count != maxLength) {
+            goto match_loop;
+        }
+    }
+
+compare_best:
+    if (bestLength < length) {
+        bestDistance = distance;
+        bestLength = length;
+    }
+
+    distance++;
+    searchPos--;
+    if (distance < 0x400) {
+        goto search_loop;
+    }
+
+search_done:
+    distance = 1;
+    if (bestLength <= 0) {
+        *out++ = src[srcPos];
+        outCount++;
+        srcPos++;
+    } else {
+        *out++ = (bestLength << 10) | bestDistance;
+        outCount++;
+        srcPos += bestLength;
+    }
+
+    if (srcLen != srcPos) {
+        remaining = srcLen - srcPos;
+        if (outCount >= 0x1000) {
+            return -1;
+        }
+        bestDistance = 0;
+        distance = 1;
+        bestLength = 0;
+        goto loop;
+    }
+    return outCount;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80040D94.s")
 
