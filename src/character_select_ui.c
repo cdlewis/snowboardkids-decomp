@@ -461,7 +461,213 @@ tile_selected:
 }
 #endif
 
+// func_8001CC10 best match: 84.118% (nonmatchings/func_8001CC10-7273315160691878794/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001CC10.s")
+
+#ifdef NON_MATCHING
+void func_8001CC10(CharacterSelectMenuFrameActor *arg0) {
+    s32 movedCount;
+    s32 visibleCount;
+    volatile s32 state6Count;
+    s32 i;
+    s32 remainder;
+    s32 selected;
+    s32 modeOffset;
+    s32 targetY;
+    u8 nextItemCount;
+    CharacterSelectMenuFrameActor *actor;
+    CharacterSelectMenuFrameActor *actorCopy;
+
+    actorCopy = arg0;
+
+    if (D_80121B5E < 2) {
+        modeOffset = 2;
+    } else {
+        modeOffset = 0;
+    }
+
+    switch (arg0->state) {
+    case 0:
+        movedCount = 0;
+        i = 0;
+        if (arg0->itemCount > 0) {
+            actor = arg0;
+            do {
+                if (actor->x[0] < -0x7C) {
+                    actor->x[0] += 0x10;
+                    movedCount++;
+                    if (actor->x[0] >= -0x7C) {
+                        actor->x[0] = -0x7C;
+                    }
+                }
+                i++;
+                actor = (CharacterSelectMenuFrameActor *)((s16 *)actor + 1);
+            } while (i < actorCopy->itemCount);
+        }
+
+        arg0->timer++;
+        if ((arg0->timer & 1) == 0) {
+            visibleCount = modeOffset + 2;
+            if (arg0->itemCount < visibleCount) {
+                nextItemCount = arg0->itemCount + 1;
+                arg0->itemCount = nextItemCount;
+                if (visibleCount == nextItemCount) {
+                    D_8010ADE4 = func_80071408(func_8001DACC, 0, 0x59);
+                    if (D_80121B5E < 2) {
+                        func_80071408(func_8001DFA0, 0, 0x5A);
+                        func_80071408(func_8001E468, 0, 0x5B);
+                    }
+                    func_80071408(func_80020AA0, 0, 0x5C);
+                    func_80071408(func_80021E70, 0, 0x62);
+                }
+            }
+        }
+
+        if (movedCount == 0) {
+            arg0->state = 1;
+        }
+        break;
+
+    case 1:
+        if (D_80121D88 == 7) {
+            arg0->state = 7;
+        }
+        if (D_80121D88 == 1) {
+            arg0->state = 2;
+        }
+        break;
+
+    case 2:
+        i = 0;
+        if (arg0->itemCount > 0) {
+            do {
+                if (i != D_80121B50) {
+                    arg0->x[i] -= 0x20;
+                }
+                i++;
+            } while (i < actorCopy->itemCount);
+        }
+
+        if (D_80121B50 != 0) {
+            if (arg0->x[0] < -0x103) {
+                arg0->state = 3;
+            }
+        } else if (arg0->x[1] < -0x103) {
+            arg0->state = 3;
+        }
+        break;
+
+    case 3:
+        arg0->y[D_80121B50] -= arg0->itemSpacing;
+        if (arg0->y[D_80121B50] < -0x57) {
+            arg0->y[D_80121B50] = -0x58;
+            arg0->state = 4;
+            func_80071408(func_800232F4, 0, 0x62);
+            D_8010ADE0 = func_80071408(func_800235E0, 0, 0x63);
+        }
+        break;
+
+    case 4:
+        if (D_80121D88 == 4) {
+            arg0->state = 5;
+        }
+        if (D_80121D88 == 7) {
+            arg0->state = 10;
+        }
+        break;
+
+    case 5:
+        arg0->y[D_80121B50] += arg0->itemSpacing;
+        targetY = arg0->baseY + (D_80121B50 * arg0->itemSpacing);
+        if (arg0->y[D_80121B50] >= targetY) {
+            arg0->y[D_80121B50] = targetY;
+            arg0->state = 6;
+        }
+        break;
+
+    case 6:
+        state6Count = modeOffset + 2;
+        i = 0;
+        if (state6Count > 0) {
+            remainder = state6Count & 3;
+            if (remainder != 0) {
+                do {
+                    if (i != D_80121B50) {
+                        arg0->x[i] += 0x20;
+                    }
+                    i++;
+                } while (remainder != i);
+                if (i == state6Count) {
+                    goto state_6_done;
+                }
+            }
+            do {
+                selected = D_80121B50;
+                if (i != selected) {
+                    arg0->x[i] += 0x20;
+                    selected = D_80121B50;
+                }
+                if (i + 1 != selected) {
+                    arg0->x[i + 1] += 0x20;
+                    selected = D_80121B50;
+                }
+                if (i + 2 != selected) {
+                    arg0->x[i + 2] += 0x20;
+                    selected = D_80121B50;
+                }
+                if (i + 3 != selected) {
+                    arg0->x[i + 3] += 0x20;
+                }
+                i += 4;
+            } while (i != state6Count);
+        }
+state_6_done:
+        if (D_80121B50 != 0) {
+            if (arg0->x[0] >= -0x7C) {
+                arg0->state = 1;
+            }
+        } else if (arg0->x[1] >= -0x7C) {
+            arg0->state = 1;
+        }
+        if (arg0->state == 1) {
+            D_80121D88 = 5;
+        }
+        break;
+
+    case 7:
+        i = 0;
+        actor = arg0;
+        if (arg0->itemCount > 0) {
+            do {
+                i++;
+                actor->x[0] -= 0x20;
+                actor = (CharacterSelectMenuFrameActor *)((s16 *)actor + 1);
+            } while (i < arg0->itemCount);
+        }
+        if (arg0->x[0] < -0x103) {
+            arg0->state = 8;
+        }
+        break;
+
+    case 8:
+        arg0->state = 9;
+        break;
+
+    case 10:
+        arg0->x[D_80121B50] -= 0x20;
+        if (arg0->x[D_80121B50] < -0x103) {
+            arg0->state = 8;
+        }
+        break;
+    }
+
+    if (arg0->state == 9) {
+        func_800716E4((EffectTask *)arg0);
+    } else {
+        func_800483FC(&D_80124868, func_8001C96C, arg0);
+    }
+}
+#endif
 
 // func_8001D254 best match: 52.632% (nonmatchings/func_8001D254-786318006044585456/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D254.s")
