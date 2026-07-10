@@ -20,6 +20,9 @@
 #define COURSE_GRID_ENTRY_END -2
 #define RACE_PLAYER_STATE_SIZE 0x60C
 #define RACE_PLAYER_READY_FLAG 0x40
+#ifdef NON_MATCHING
+#define RACE_PLAYER_RESULT_VALUE(index) (*(s8 *)((u8 *)D_80121D80 + ((((((((index) << 2) - (index)) << 5) + (index)) << 2) - (index)) << 2) + 0x509))
+#endif
 
 typedef struct {
     /* 0x00 */ s16 status;
@@ -86,6 +89,10 @@ extern s16 D_80121B52;
 extern s16 D_800DEF14;
 extern s8 D_800DEF10;
 extern s8 D_800EC8B0;
+#ifdef NON_MATCHING
+extern u8 D_8011228C;
+extern u8 D_8011233C;
+#endif
 extern u8 D_2427D0[];
 extern u8 D_243270[];
 extern u8 D_80121B55;
@@ -587,7 +594,76 @@ void func_80074960(void) {
     }
 }
 
+// func_80074C5C best match: 88.931% (nonmatchings/func_80074C5C-3236181511606361864/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80074C5C.s")
+
+#ifdef NON_MATCHING
+void func_80074C5C(void) {
+    s32 bestPlayer;
+    s8 value;
+
+    D_80121B57 = 0;
+    func_80077C4C();
+    D_801235B8->fadeTimer--;
+    if (D_801235B8->fadeTimer == 0) {
+        D_801235B4 |= 8;
+        switch (D_80121B55) {
+        case 3:
+            D_801235B8->unk1C = 0;
+            bestPlayer = D_801235B8->unk1C;
+            value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
+            if (RACE_PLAYER_RESULT_VALUE(1) < value) {
+                D_801235B8->unk1C = 1;
+                bestPlayer = D_801235B8->unk1C;
+                value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
+            }
+            if (RACE_PLAYER_RESULT_VALUE(2) < value) {
+                D_801235B8->unk1C = 2;
+                bestPlayer = D_801235B8->unk1C;
+            }
+            D_801235B8->unk1C = bestPlayer + 2;
+            func_8009956C(func_800751C4, 0);
+            break;
+        case 4:
+            D_801235B8->unk1C = 0;
+            bestPlayer = D_801235B8->unk1C;
+            value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
+            if (RACE_PLAYER_RESULT_VALUE(1) < value) {
+                D_801235B8->unk1C = 1;
+                bestPlayer = D_801235B8->unk1C;
+                value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
+            }
+            if (RACE_PLAYER_RESULT_VALUE(2) < value) {
+                D_801235B8->unk1C = 2;
+                bestPlayer = D_801235B8->unk1C;
+                value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
+            }
+            if (RACE_PLAYER_RESULT_VALUE(3) < value) {
+                D_801235B8->unk1C = 3;
+                bestPlayer = D_801235B8->unk1C;
+            }
+            D_801235B8->unk1C = bestPlayer + 5;
+            func_8009956C(func_800751C4, 0);
+            break;
+        case 2:
+            if (RACE_PLAYER_RESULT_VALUE(0) < RACE_PLAYER_RESULT_VALUE(1)) {
+                D_801235B8->unk1C = 0;
+                D_8011233C = 0;
+            } else {
+                D_801235B8->unk1C = 1;
+                D_8011228C = 0;
+            }
+            D_801235B8->fadeTimer = 0;
+            func_8009956C(func_800751C4, 0);
+            break;
+        case 1:
+            D_801235B8->fadeTimer = 0;
+            func_8009956C(func_80076054, 0);
+            break;
+        }
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80074F50.s")
 
