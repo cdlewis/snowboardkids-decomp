@@ -964,7 +964,7 @@ extern void func_8005F828(RaceUiRankTrailActor *);
 extern void func_80060454(void *, void *, void *, s16);
 extern void func_8005FBA8(RaceUiAnimatedTextActor *);
 extern void func_8005FED0(RaceUiTextParticleActor *);
-extern void func_8005CF60(void);
+extern void func_8005CF60(RaceUiDualCounterActor *);
 extern void func_8005D558(void);
 extern void func_8005DB3C(void *);
 extern void func_8005D1CC(RaceUiCourseStatsActor *);
@@ -2476,7 +2476,83 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
     func_80071824(arg0, func_8005CDB0);
 }
 
+// func_8005CF60 best match: 87.613% (nonmatchings/func_8005CF60-4923837976568703863/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005CF60.s")
+
+#ifdef NON_MATCHING
+const char D_800E143C[4] = "%d";
+const char D_800E1440[4] = "%d";
+
+void func_8005CF60(RaceUiDualCounterActor *arg0) {
+    char buffer[0x2C];
+    char *ptr;
+    s32 x;
+
+    if (arg0->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+    }
+
+    sprintf(buffer, D_800E143C, D_80122040);
+    x = -0x50;
+    if (D_80122040 >= 10) {
+        x = -0x54;
+    }
+    ptr = buffer;
+    if (D_80122040 >= 100) {
+        x = -0x58;
+    }
+    if (D_80122040 >= 1000) {
+        x = -0x5C;
+    }
+
+loop1:
+    if (*ptr != '\0') {
+        goto body1;
+    }
+    goto done1;
+
+body1:
+    if (*ptr != ' ') {
+        func_80045A78(x, -0x37, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+    }
+    ptr++;
+    x += 8;
+    goto loop1;
+
+done1:
+    x = -0x50;
+    sprintf(buffer, D_800E1440, D_80122043);
+    ptr = buffer;
+    if (D_80122043 >= 10) {
+        x = -0x54;
+    }
+
+loop2:
+    if (*ptr != '\0') {
+        goto body2;
+    }
+    goto done2;
+
+body2:
+    if (*ptr != ' ') {
+        func_80046D68(x, -0x13, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF, 0xE);
+    }
+    ptr++;
+    x += 8;
+    goto loop2;
+
+done2:
+    if (arg0->alpha != 0xFF) {
+        Gfx *gfx = gRegionAllocPtr++;
+
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = (u32)D_800DEFF8;
+    }
+}
+#endif
 
 // func_8005D1CC best match: 84.991% (nonmatchings/func_8005D1CC-3236181511606361864/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D1CC.s")
