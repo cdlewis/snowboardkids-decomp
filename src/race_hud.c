@@ -817,7 +817,7 @@ void func_80018BC0(void *arg0) {
     }
 }
 
-// func_80018C80 best match: 81.771% (nonmatchings/func_80018C80-8207005055717715604/base_5.c)
+// func_80018C80 best match: 85.622% (nonmatchings/func_80018C80-8207005055717715604/base_17.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80018C80.s")
 
 #ifdef NON_MATCHING
@@ -828,12 +828,14 @@ void func_80018C80(RaceHudPanelActor *arg0) {
     RaceHudPanelActor *actor;
     RaceHudPanelActor *actor2;
     s32 i;
-    u8 state;
-    s16 offsetX;
+    s32 state;
+    s32 offsetX;
     s16 direction;
     s32 j;
     s32 moveX;
     s32 moveY;
+    s16 tempX;
+    s16 tempY;
 
     base = arg0;
     actor2 = arg0;
@@ -862,8 +864,10 @@ void func_80018C80(RaceHudPanelActor *arg0) {
                     offsetX = 0x50;
                 }
 
-                base->targetX.target[i] = (slots->x[i] + 0x38) - offsetX;
-                base->targetY.target[i] = slots->y[i] + 0x20;
+                tempX = slots->x[i] + 0x38;
+                tempY = slots->y[i];
+                base->targetX.target[i] = tempX - offsetX;
+                base->targetY.target[i] = tempY + 0x20;
                 base->xDirection[i] = 1;
                 if (base->targetX.target[i] < 0) {
                     base->xDirection[i] = -1;
@@ -886,7 +890,7 @@ void func_80018C80(RaceHudPanelActor *arg0) {
                 base->tileSize[i] = 1;
                 base->timer[i] = 0;
                 actor->state[0] = 2;
-                state = 2;
+                state = actor->state[0];
                 break;
             case 2:
                 j = 0;
