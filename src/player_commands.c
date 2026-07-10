@@ -1107,12 +1107,10 @@ s32 func_8009D598(PlayerCommandState *arg0, u8 *arg1) {
 }
 
 s32 func_8009D5A8(PlayerCommandInit *arg0) {
-    ALVoiceConfig voiceConfig;
+    ALVoiceConfig vc;
     PlayerCommandSynConfig synConfig;
     s32 config2[3];
     s32 i;
-    unsigned int stateOffset;
-    s32 voiceOffset;
 
     D_8015A658 = arg0->count;
     D_8015A664 = arg0->unk1C;
@@ -1161,21 +1159,13 @@ s32 func_8009D5A8(PlayerCommandInit *arg0) {
     D_8015A630.clientData = &D_8015A630;
     alSynAddPlayer(&D_8015A8D8, &D_8015A630);
 
-    if (D_8015A658 > 0) {
-        i = 0;
-        stateOffset = 0;
-        voiceOffset = 0;
-        do {
-            ((PlayerCommandState *)((u8 *)D_8015A660 + stateOffset))->unkE4 = 0;
-            func_8009F604((PlayerCommandState *)(stateOffset + (s32)D_8015A660));
-            voiceConfig.unityPitch = 0;
-            voiceConfig.priority = arg0->outputRate;
-            voiceConfig.fxBus = 0;
-            alSynAllocVoice(&D_8015A8D8, (ALVoice *)(voiceOffset + D_8015A65C), &voiceConfig);
-            i++;
-            stateOffset += sizeof(PlayerCommandState);
-            voiceOffset += sizeof(ALVoice);
-        } while (i < D_8015A658);
+    for (i = 0; i < D_8015A658; i++) {
+        D_8015A660[i].unkE4 = 0;
+        func_8009F604(&D_8015A660[i]);
+        vc.unityPitch = 0;
+        vc.priority = arg0->outputRate;
+        vc.fxBus = 0;
+        alSynAllocVoice(&D_8015A8D8, &D_8015A65C[i * 0x1C], &vc);
     }
 
     return D_8015A64C - D_8015A648.base;
