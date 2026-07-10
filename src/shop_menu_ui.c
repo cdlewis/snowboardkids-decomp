@@ -174,6 +174,7 @@ extern void func_8002E074(ShopMenuWidgetActor *);
 extern void func_8002E214(ShopMenuWidgetActor *);
 extern void func_8002E42C(ShopMenuWidgetActor *);
 extern void func_8002E798(ShopMenuWidgetActor *);
+extern void func_8002FBC8(ShopMenuWidgetActor *);
 extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
 extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
@@ -1345,7 +1346,204 @@ void func_8002EFFC(ShopMenuWidgetActor *arg0) {
 }
 #endif
 
+// func_8002F2C8 best match: 79.014% (nonmatchings/func_8002F2C8-7273315160691878794/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002F2C8.s")
+
+#ifdef NON_MATCHING
+void func_8002F2C8(ShopMenuWidgetActor *arg0) {
+    s32 i;
+    s32 moved;
+    u8 globalState;
+    u8 state;
+    u8 nextState;
+    ShopMenuWidgetActor *actor;
+    ShopMenuWidgetActor *shifted;
+    s16 *pos;
+    s16 target;
+    u16 count;
+
+    actor = arg0;
+    globalState = D_8010AF41;
+    nextState = arg0->state;
+    state = nextState;
+    if (nextState != globalState) {
+        nextState = globalState & 0xFF;
+        state = nextState;
+        arg0->state = globalState;
+    }
+
+    if (((D_801235B8->unk20 == 3) || (D_801235B8->unk20 == 9)) && (state < 5)) {
+        arg0->state = 5;
+        nextState = 5 & 0xFF;
+        state = nextState;
+        arg0->prompt.bytes.pulseAlpha = 0x100;
+    }
+
+    switch (state) {
+    case 0:
+        moved = 0;
+        for (i = 0; i < (u16)arg0->visibleCount; i++) {
+            if (arg0->randomValues[i] < arg0->targetX) {
+                arg0->randomValues[i] += 0x10;
+                moved++;
+                if (arg0->randomValues[i] >= arg0->targetX) {
+                    arg0->randomValues[i] = arg0->targetX;
+                }
+            }
+        }
+        arg0->spawnTimer++;
+        if (!(arg0->spawnTimer & 1)) {
+            count = arg0->visibleCount;
+            if ((s32)count < 10) {
+                arg0->visibleCount = count + 1;
+                if ((u16)arg0->visibleCount == 10) {
+                    func_80071408(func_8002FBC8, 0, 0x63);
+                }
+            }
+        }
+        if (moved == 0) {
+            arg0->state = 1;
+        }
+        nextState = arg0->state;
+        state = nextState;
+        break;
+    case 1:
+        arg0->prompt.bytes.pulseAlpha += 0x26;
+        if (arg0->prompt.bytes.pulseAlpha >= 0x100) {
+            arg0->prompt.bytes.pulseAlpha = 0x100;
+            arg0->state = 2;
+        }
+        nextState = arg0->state;
+        state = nextState;
+        break;
+    case 3:
+        shifted = (ShopMenuWidgetActor *)((s16 *)arg0 + 3);
+        arg0->randomValues[0] -= 0x20;
+        if (arg0->randomValues[0] < -0x117) {
+            arg0->randomValues[0] = -0x118;
+        }
+        arg0->randomValues[1] -= 0x20;
+        if (arg0->randomValues[1] < -0x117) {
+            arg0->randomValues[1] = -0x118;
+        }
+        arg0->randomValues[2] -= 0x20;
+        if (arg0->randomValues[2] < -0x117) {
+            arg0->randomValues[2] = -0x118;
+        }
+        shifted->randomValues[0] -= 0x20;
+        if (shifted->randomValues[0] < -0x117) {
+            shifted->randomValues[0] = -0x118;
+        }
+        shifted->randomValues[1] -= 0x20;
+        if (shifted->randomValues[1] < -0x117) {
+            shifted->randomValues[1] = -0x118;
+        }
+        shifted->randomValues[2] -= 0x20;
+        if (shifted->randomValues[2] < -0x117) {
+            shifted->randomValues[2] = -0x118;
+        }
+        shifted->randomValues[3] -= 0x20;
+        if (shifted->randomValues[3] < -0x117) {
+            shifted->randomValues[3] = -0x118;
+        }
+        if (arg0->randomValues[0] == -0x118) {
+            arg0->state = 4;
+            D_8010AF73 = (D_8010AF73 + 1) % 2;
+        }
+        nextState = arg0->state;
+        state = nextState;
+        break;
+    case 4:
+        shifted = (ShopMenuWidgetActor *)((s16 *)arg0 + 3);
+        target = arg0->targetX;
+        arg0->randomValues[0] += 0x20;
+        if (arg0->randomValues[0] >= target) {
+            arg0->randomValues[0] = target;
+        }
+        arg0->randomValues[1] += 0x20;
+        target = arg0->targetX;
+        if (arg0->randomValues[1] >= target) {
+            arg0->randomValues[1] = target;
+        }
+        arg0->randomValues[2] += 0x20;
+        target = arg0->targetX;
+        if (arg0->randomValues[2] >= target) {
+            arg0->randomValues[2] = target;
+        }
+        shifted->randomValues[0] += 0x20;
+        target = arg0->targetX;
+        if (shifted->randomValues[0] >= target) {
+            shifted->randomValues[0] = target;
+        }
+        shifted->randomValues[1] += 0x20;
+        target = arg0->targetX;
+        if (shifted->randomValues[1] >= target) {
+            shifted->randomValues[1] = target;
+        }
+        shifted->randomValues[2] += 0x20;
+        target = arg0->targetX;
+        if (shifted->randomValues[2] >= target) {
+            shifted->randomValues[2] = target;
+        }
+        shifted->randomValues[3] += 0x20;
+        target = arg0->targetX;
+        if (shifted->randomValues[3] >= target) {
+            shifted->randomValues[3] = target;
+        }
+        if (arg0->targetX == arg0->randomValues[0]) {
+            arg0->state = 2;
+        }
+        nextState = arg0->state;
+        state = nextState;
+        break;
+    case 5:
+        arg0->randomValues[1] -= 0x20;
+        arg0->randomValues[0] -= 0x20;
+        pos = &arg0->randomValues[2];
+        i = 2;
+        do {
+            pos[3] -= 0x20;
+            pos[2] -= 0x20;
+            pos[1] -= 0x20;
+            pos[0] -= 0x20;
+            i += 4;
+            pos += 4;
+        } while (i != 10);
+        if (arg0->randomValues[0] < -0x117) {
+            arg0->state = 7;
+        }
+        nextState = arg0->state;
+        state = nextState;
+        break;
+    case 6:
+        arg0->prompt.bytes.pulseAlpha = 0x100;
+        arg0->prompt.bytes.pulseTimer = 0;
+        nextState = arg0->state;
+        state = nextState;
+        break;
+    case 7:
+        break;
+    }
+
+    if ((state >= 2) && (state < 5)) {
+        if ((s32)(u16)arg0->prompt.bytes.pulseTimer < 0x10) {
+            arg0->prompt.bytes.pulseAlpha -= 9;
+        } else {
+            arg0->prompt.bytes.pulseAlpha += 9;
+        }
+        arg0->prompt.bytes.pulseTimer = (arg0->prompt.bytes.pulseTimer + 1) & 0x1F;
+        nextState = arg0->state;
+        state = nextState;
+    }
+
+    D_8010AF41 = nextState;
+    if (arg0->state == 7) {
+        func_800716E4((EffectTask *)arg0);
+        return;
+    }
+    func_800483FC(&D_80124868, func_8002EFFC, actor);
+}
+#endif
 
 void func_8002F854(ShopMenuWidgetActor *arg0) {
     s32 i;
