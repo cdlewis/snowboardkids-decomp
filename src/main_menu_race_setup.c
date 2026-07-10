@@ -19,6 +19,20 @@ typedef struct {
 } MainMenuRaceSetupState;
 
 typedef struct {
+    u8 pad0[0x35];
+    u8 unk35;
+    u8 unk36;
+    u8 unk37;
+    u8 unk38;
+    u8 unk39;
+    u8 unk3A;
+    u8 pad3B[2];
+    u8 unk3D;
+    u8 pad3E[0xE];
+    u8 unk4C;
+} RaceSetupSaveData;
+
+typedef struct {
     char pad0[0x4];
     s16 pitch;
     s16 yaw;
@@ -95,7 +109,135 @@ void func_8003DFB0(void) {
     func_8003DEC8();
 }
 
+// func_8003DFD0 best match: 83.044% (nonmatchings/func_8003DFD0-4923837976568703863/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_setup/func_8003DFD0.s")
+
+#ifdef NON_MATCHING
+extern void func_80041CF0();
+extern void func_800437F0(void *, void *, s32);
+extern void func_800438EC(void *, void *, s32);
+extern void func_80053DD8(EffectTask *);
+extern void func_80053EBC(EffectTask *);
+extern void func_80054044(s32, s32);
+extern void func_8005502C(EffectTask *);
+extern void func_800553E0(EffectTask *);
+extern void func_8006D580(s32, s32);
+extern void func_8006D5CC(void);
+extern void func_800704F0(void);
+extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
+extern void func_80070E90(s32);
+extern void func_80070EC0(s32);
+extern void func_80071408(void (*)(EffectTask *), s32, s32);
+extern u8 D_13F3B0[];
+extern u8 D_145380[];
+extern u8 D_1467B0[];
+extern u8 D_1D3070[];
+extern u8 D_1D82B0[];
+extern u8 D_1DCED0[];
+extern u8 D_1DE360[];
+extern u8 D_1E0F70[];
+extern u8 D_1E19C0[];
+extern u8 D_5DAF30[];
+extern u8 D_5DB9D0[];
+extern u8 D_800BB810[];
+extern u8 D_800BB811[];
+extern u8 D_800BB812[];
+extern u8 D_800BB813[];
+extern s8 D_800DC4C0;
+extern u8 D_800EC9C2;
+extern RaceSetupSaveData D_800EC9F0;
+extern u8 D_800ECA24;
+extern u8 D_80121B55;
+extern u8 D_80121D90;
+
+void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
+    RaceSetupSaveData *save;
+    s32 transition;
+    s32 effectArg;
+    s32 allReady;
+    u8 state;
+
+    transition = 0;
+    if (D_800EC9C2 == 0) {
+        arg0 = 1;
+        if (D_80121B55 == 1) {
+            save = &D_800EC9F0;
+            state = save->unk4C;
+            if ((state == 2) && (save->unk3A == 1)) {
+                save->unk4C = 3;
+                D_800DC4C0 = 1;
+                state = save->unk4C;
+                transition = 3;
+            }
+            if ((state == 1) && (save->unk39 == 1)) {
+                transition = 2;
+                save->unk4C = 2;
+                state = 2;
+            }
+            if (state == 0) {
+                if (save->unk3D == 1) {
+                    allReady = 1;
+                    if (D_800ECA24 != 1) {
+                        allReady = 0;
+                    }
+                    if (save->unk35 != 1) {
+                        allReady = 0;
+                    }
+                    if (save->unk36 != 1) {
+                        allReady = 0;
+                    }
+                    if (save->unk37 != 1) {
+                        allReady = 0;
+                    }
+                    if (save->unk38 != 1) {
+                        allReady = 0;
+                    }
+                    if (allReady != 0) {
+                        transition = 1;
+                        save->unk4C = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    if (transition == 0) {
+        func_80099658(2);
+        func_8009954C(4);
+        return;
+    }
+
+    func_80041CF0(1, save, transition);
+    func_800437F0(D_5DAF30, D_5DB9D0, 0x2A);
+    func_800437F0(D_1E0F70, D_1E19C0, 0x22);
+    func_800438EC(D_145380, D_1467B0, 8);
+    func_800437F0(D_1DCED0, D_1DE360, 9);
+    func_800438EC(D_13F3B0, D_145380, 0xE);
+    func_800437F0(D_1D3070, D_1D82B0, 0x12);
+    func_80070EC0(2);
+    func_8006D5CC();
+    func_8006D580(0, 0x1D);
+    func_8006D580(1, 0x1D);
+    func_8006D580(2, 0x1D);
+    func_800704F0();
+    func_8007066C(0, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
+    func_8007066C(1, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
+    func_8007066C(2, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
+    func_80070E90(2);
+    D_800DEF14 = 0xFF;
+    D_801235B8->fade = 5;
+    effectArg = transition - 1;
+    func_80071664(func_80053DD8, 0, 0x64, effectArg);
+    func_80071408(func_8005502C, 0, 0x64);
+    func_80071664(func_800553E0, 0, 0x64, effectArg);
+    func_80071664(func_80053EBC, 0, 0x64, D_80121D90);
+    func_80054044(1, D_800BB810[D_80121D90 * 4]);
+    func_80054044(2, D_800BB811[D_80121D90 * 4]);
+    func_80054044(3, D_800BB812[D_80121D90 * 4]);
+    func_80054044(4, D_800BB813[D_80121D90 * 4]);
+    func_8009956C(func_8003E3AC, 0);
+}
+#endif
 
 void func_8003E3AC(void) {
     D_801235B8->fade--;
