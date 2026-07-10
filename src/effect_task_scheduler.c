@@ -2,6 +2,15 @@
 #include "effect_task_scheduler.h"
 
 extern EffectTask *D_80121848;
+extern EffectTask *D_801214D8[];
+extern u16 D_80121838;
+extern u16 D_8012183A;
+extern u16 D_8012183C;
+extern u16 D_8012183E;
+extern u16 D_80121840;
+extern u16 D_80121842;
+extern u16 D_80121844;
+extern u16 D_80121846;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/effect_task_scheduler/func_80070EC0.s")
 
@@ -84,7 +93,53 @@ EffectTask *func_80071664(void (*callback)(EffectTask *), s32 arg1, s32 arg2, s3
 
 EffectTask *func_800716A4(void (*callback)(EffectTask *), s32 arg1, s32 arg2, s32 arg3){ EffectTask *t=func_800711D0(callback,arg1&0xFFFF,arg2); if(t!=NULL){t->unk10=arg3;} return t;}
 
-#pragma GLOBAL_ASM("asm/nonmatchings/effect_task_scheduler/func_800716E4.s")
+void func_800716E4(EffectTask *task) {
+    EffectTask *next;
+    u16 *counter;
+    unsigned char type;
+
+    task->isActive = 0;
+    task->prev->next = task->next;
+    next = task->next;
+    if (next != NULL) {
+        next->prev = task->prev;
+    }
+
+    D_801214D8[D_80121838] = task;
+    D_80121838++;
+
+    type = task->type & 0xFF;
+    switch (type) {
+    case 0:
+        counter = &D_8012183A;
+        (*counter)++;
+        return;
+    case 1:
+        counter = &D_80121840;
+        (*counter)++;
+        return;
+    case 2:
+        counter = &D_80121842;
+        (*counter)++;
+        return;
+    case 3:
+        counter = &D_80121844;
+        (*counter)++;
+        return;
+    case 4:
+        counter = &D_80121846;
+        (*counter)++;
+        return;
+    case 5:
+        counter = &D_8012183E;
+        (*counter)++;
+        return;
+    case 6:
+        counter = &D_8012183C;
+        (*counter)++;
+        return;
+    }
+}
 
 void func_80071824(void *task, void (*callback)()) {
     ((EffectTask *)task)->callback = (void (*)(EffectTask *))callback;
