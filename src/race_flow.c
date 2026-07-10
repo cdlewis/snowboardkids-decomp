@@ -43,14 +43,49 @@ typedef union {
 } SignedUnsignedShort;
 
 typedef struct {
+    /* 0x0 */ u8 unk0;
+    /* 0x1 */ u8 unk1;
+    /* 0x2 */ s16 unk2;
+} RaceFlowInitEntry;
+
+typedef struct {
+    /* 0x0 */ s16 unk0;
+    /* 0x2 */ s16 pad2;
+} RaceFlowResultEntry;
+
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x4];
+    /* 0x0004 */ s32 unk4[12];
+    /* 0x0034 */ u8 pad34[0x4E - 0x34];
+    /* 0x004E */ RaceFlowInitEntry unk4E[11][5];
+    /* 0x012A */ RaceFlowInitEntry unk12A[11];
+    /* 0x0156 */ RaceFlowInitEntry unk156[11][5];
+    /* 0x0232 */ RaceFlowResultEntry unk232[9];
+    /* 0x0256 */ u8 pad256[0x7756 - 0x256];
+    /* 0x7756 */ s16 unk7756[11][5];
+    /* 0x77C4 */ u8 unk77C4[11][5];
+    /* 0x77FB */ u8 unk77FB[11][5];
+    /* 0x7832 */ u8 unk7832[11][5];
+    /* 0x7869 */ u8 unk7869[11][5];
+    /* 0x78A0 */ u8 unk78A0[11][5];
+} RaceFlowInitScratch;
+
+typedef struct {
     /* 0x000 */ u8 pad0[0x04];
     /* 0x004 */ u8 unk4;
-    /* 0x005 */ u8 pad5[0x13 - 0x5];
+    /* 0x005 */ u8 unk5;
+    /* 0x006 */ u8 unk6;
+    /* 0x007 */ u8 unk7;
+    /* 0x008 */ u8 pad8[0xC - 0x8];
+    /* 0x00C */ s32 unkC;
+    /* 0x010 */ u8 pad10[0x13 - 0x10];
     /* 0x013 */ u8 unk13;
     /* 0x014 */ s8 unk14;
     /* 0x015 */ u8 unk15;
     /* 0x016 */ u8 unk16;
-    /* 0x017 */ u8 pad17[0x2FC - 0x17];
+    /* 0x017 */ u8 pad17[0x18 - 0x17];
+    /* 0x018 */ s16 unk18;
+    /* 0x01A */ u8 pad1A[0x2FC - 0x1A];
     /* 0x2FC */ s32 flags;
     /* 0x300 */ u8 pad300[0x502 - 0x300];
     /* 0x502 */ s16 courseId;
@@ -76,6 +111,8 @@ typedef struct {
     /* 0x08 */ s8 unk8;
 } Unk80043040;
 
+void func_800732C4(void);
+
 extern CourseGridEntry *D_800DC490[];
 extern u16 D_800DC5C0[];
 extern CourseSelectTableEntry D_800B9542[];
@@ -99,6 +136,8 @@ extern s16 D_80121B52;
 extern s16 D_800DEF14;
 extern s8 D_800DEF10;
 extern s8 D_800EC8B0;
+extern RaceFlowInitScratch D_800EC9F0;
+extern u8 D_80121B5E;
 #ifdef NON_MATCHING
 extern u8 D_8011228C;
 extern u8 D_8011233C;
@@ -343,7 +382,69 @@ loop:
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80073140.s")
+void func_80073140(void) {
+    s32 course;
+    s32 one;
+    s32 player;
+
+    for (course = 0; course < 11; course++) {
+        one = 1;
+        for (player = 0; player < 5; player++) {
+            D_800EC9F0.unk4E[course][player].unk0 = 3;
+            D_800EC9F0.unk4E[course][player].unk1 = 0x3B;
+            D_800EC9F0.unk4E[course][player].unk2 = 0;
+            D_800EC9F0.unk156[course][player].unk0 = 3;
+            D_800EC9F0.unk156[course][player].unk1 = 0;
+            D_800EC9F0.unk156[course][player].unk2 = 0;
+            D_800EC9F0.unk77FB[course][player] = player;
+            D_800EC9F0.unk7832[course][player] = 0;
+            D_800EC9F0.unk7869[course][player] = player;
+            D_800EC9F0.unk78A0[course][player] = player;
+            D_800EC9F0.unk7756[course][player] = 0;
+            D_800EC9F0.unk77C4[course][player] = player;
+        }
+        D_800EC9F0.unk12A[course].unk0 = one;
+        D_800EC9F0.unk12A[course].unk1 = 0x18;
+        D_800EC9F0.unk12A[course].unk2 = 0;
+        D_800EC9F0.unk4[course + 1] = 0;
+    }
+
+    D_800EC9F0.unk232[0].unk0 = 0;
+    D_800EC9F0.unk232[1].unk0 = 0;
+    D_800EC9F0.unk232[2].unk0 = 0;
+    D_800EC9F0.unk232[3].unk0 = 0;
+    D_800EC9F0.unk232[4].unk0 = 0;
+    D_800EC9F0.unk232[5].unk0 = (u8)0;
+    D_800EC9F0.unk232[6].unk0 = 0;
+    D_800EC9F0.unk232[7].unk0 = 0;
+    D_800EC9F0.unk232[8].unk0 = 0;
+    D_80121B55 = 1;
+    D_80121B5E = 0;
+    D_80121D80[0].unk5 = 0;
+    D_80121D80[1].unk5 = 0;
+    D_80121D80[2].unk5 = 0;
+    D_80121D80[3].unk5 = 0;
+    D_80121D80[0].unk6 = 0;
+    D_80121D80[1].unk6 = 0;
+    D_80121D80[2].unk6 = 0;
+    D_80121D80[3].unk6 = 0;
+    D_80121D80[0].unk7 = 0;
+    D_80121D80[1].unk7 = 0;
+    D_80121D80[2].unk7 = 0;
+    D_80121D80[3].unk7 = 0;
+    D_80121D80[0].unkC = 0;
+    D_80121D80[1].unkC = 0;
+    D_80121D80[2].unkC = 0;
+    D_80121D80[3].unkC = 0;
+    D_80121D80[0].unk18 = 0;
+    D_80121D80[1].unk18 = 0;
+    D_80121D80[2].unk18 = 0;
+    D_80121D80[3].unk18 = 0;
+    D_80121B50.s = 0;
+    D_800EC9C2 = 0;
+    D_80121B58 = 0;
+    func_8009956C(func_800732C4, 0);
+}
 
 void func_800732C4(void) {
     func_8009956C(&func_8007334C, 0);
