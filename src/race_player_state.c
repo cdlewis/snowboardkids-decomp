@@ -40,6 +40,14 @@ typedef struct {
     s32 unk44;
 } Struct800955C0;
 
+typedef struct {
+    s32 x;
+    s32 y;
+    s32 z;
+    s16 unkC;
+    s16 angle;
+} CourseStartPosition;
+
 extern void func_8008C098(RaceInputPlayer *);
 extern void func_8008C7D0(RaceInputPlayer *);
 extern void func_8008CF10(RaceInputPlayer *);
@@ -81,6 +89,8 @@ extern void *func_800716A4(void *, s32, s32, s32);
 extern void func_80050E80(void *);
 extern void func_80062530(void *);
 extern s16 func_80097AE8(s16);
+extern void func_800545D0(EffectTask *);
+extern void func_80057810(void *);
 
 extern void (*D_800DECD0[])(RaceInputPlayer *);
 extern void (*D_800DECD8[])(RaceInputPlayer *);
@@ -89,6 +99,7 @@ extern void (*D_800DED08[])(RaceInputPlayer *);
 extern void (*D_800DED18[])(RaceInputPlayer *);
 extern void (*D_800DED30[])(RaceInputPlayer *);
 extern void (*D_800DED48[])(RaceInputPlayer *);
+extern CourseStartPosition D_800DE918[][4];
 extern PlayerTuningRow D_800DC5E0[];
 extern PlayerTuningRow D_800DC6F0[];
 extern PlayerTuningRow D_800DC770[];
@@ -100,6 +111,8 @@ extern s8 D_80121B54;
 extern u8 D_80121B56;
 extern u8 D_80121B5E;
 extern u8 D_80121B59;
+extern u8 D_80121B58;
+extern u8 D_80121B5A;
 extern u8 D_80121B5B;
 extern s16 D_80121B50;
 extern s32 D_801235B4;
@@ -173,7 +186,222 @@ void func_8008BF5C(RaceInputPlayer *arg0) {
 }
 #endif
 
+// func_8008C098 best match: 82.068% (base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008C098.s")
+
+#ifdef NON_MATCHING
+void func_8008C098(RaceInputPlayer *player) {
+    RaceVec3i *pos;
+    RaceVec3i *unk34;
+    CourseStartPosition *start;
+    u32 size;
+    u32 i;
+    char *clearPtr;
+    s32 groundY;
+
+    size = ((s32)player * 0) + 0x5F0;
+    i = 0;
+    pos = &player->pos;
+    if (size != 0) {
+        clearPtr = (char *)pos;
+        do {
+            i++;
+            *clearPtr = 0;
+            clearPtr++;
+        } while (i < size);
+    }
+    player->unk588 = 0.0f;
+    func_80082FC8(player);
+    func_80081E40(player, 1);
+    if (D_80121B54 == 4) {
+        switch (player->playerIndexU16) {
+        case 0:
+            player->posX = -0xC0000;
+            break;
+        case 1:
+            player->posX = 0xC0000;
+            break;
+        case 2:
+            player->posX = -0x240000;
+            break;
+        case 3:
+            player->posX = 0x240000;
+            break;
+        }
+    }
+    player->posZ = -0x200000;
+    unk34 = &player->unk34;
+    unk34->x = pos->x;
+    unk34->y = pos->y;
+    unk34->z = pos->z;
+    player->unk60 = 0x40000;
+    player->unk280 = 0x80000;
+    player->unk284 = 0xE0000;
+    func_8008BF5C(player);
+    if (player->unk4 != 0) {
+        player->unk274 = 0x10000;
+    }
+    if ((player->unk4 != 0) && (player->characterId == 5)) {
+        player->unk274 = 0xC0000;
+    }
+    if (D_800EC9C2 == 2) {
+        player->actionEffectType = 1;
+    }
+    if (player->unk4 == 0) {
+        player->unk519 = 6;
+    }
+    if ((D_800EC9C2 == 1) && (D_80121B5E == 1)) {
+        player->shieldEffectTimer = 0xA;
+    }
+    if (D_80121B50 == 9) {
+        player->posZ = -0xBD0000;
+    }
+    player->unk68 = 0xC0000;
+    if ((player->unk4 == 0) && (player->soundDisabled == 0) && (D_80121B58 == 0) &&
+        (player->unk27C != player->unk278)) {
+        func_800716A4(func_80057810, 0, 0x64, player->playerIndexU16);
+    }
+    if (D_80121B59 == 1) {
+        if (player->playerIndexU16 == 0) {
+            player->itemEffectType = 3;
+        } else {
+            player->itemEffectType = 5;
+        }
+        player->itemEffectCount = 3;
+        player->actionEffectType = 1;
+    }
+    switch (D_80121B5A) {
+    case 1:
+        player->facingAngle = 0x57E;
+        player->posX = 0xDB870B2D;
+        player->posZ = 0xE72C26D8;
+        player->unk502 = 0x34;
+        break;
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        player->facingAngle = 0xFD5;
+        player->posX = 0xAE2B01F4;
+        player->posZ = 0xD6C4D18A;
+        player->unk502 = 0x96;
+        break;
+    case 6:
+        player->facingAngle = 0x993;
+        player->posX = 0xC183C5F9;
+        player->posZ = 0xCE51B844;
+        player->unk502 = 0xAE;
+        break;
+    case 7:
+    case 8:
+        switch (player->playerIndexU16) {
+        case 0:
+            player->facingAngle = 0xF7D;
+            player->posX = 0x8FC2BA;
+            player->posZ = 0xFC4A83D8;
+            player->unk502 = 4;
+            break;
+        case 2:
+            player->facingAngle = 0x102;
+            player->posX = 0x012FA8E0;
+            player->posZ = 0xF9850FD2;
+            player->unk502 = 8;
+            break;
+        case 3:
+            player->facingAngle = 0x8F;
+            player->posX = 0xC2C658;
+            player->posZ = 0xFA155B82;
+            player->unk502 = 7;
+            break;
+        case 1:
+            player->facingAngle = 0x8F;
+            player->posX = 0x017C2FC4;
+            player->posZ = 0xFA1B250E;
+            player->unk502 = 7;
+            break;
+        }
+        break;
+    case 9:
+        player->facingAngle = 0x235;
+        player->posX = 0xFEAFF7CD;
+        player->posZ = 0xF62C899D;
+        player->unk502 = 0xE;
+        break;
+    }
+    switch (D_80121B5B) {
+    case 1:
+        player->itemEffectType = 1;
+        player->itemEffectCount = 3;
+        break;
+    case 2:
+        player->itemEffectType = 2;
+        player->itemEffectCount = 3;
+        break;
+    case 3:
+        player->itemEffectType = 3;
+        player->itemEffectCount = 3;
+        break;
+    case 4:
+        player->itemEffectType = 4;
+        player->itemEffectCount = 3;
+        break;
+    case 5:
+        player->itemEffectType = 5;
+        player->itemEffectCount = 3;
+        break;
+    case 6:
+        player->actionEffectType = 1;
+        break;
+    case 7:
+        player->actionEffectType = 2;
+        break;
+    case 8:
+        player->actionEffectType = 3;
+        break;
+    case 9:
+        player->actionEffectType = 4;
+        break;
+    case 10:
+        player->actionEffectType = 5;
+        if (player->playerIndexU16 != 0) {
+            player->unk568 = 0x1388;
+        }
+        break;
+    case 11:
+        player->actionEffectType = 6;
+        if (player->playerIndexU16 == 2) {
+            player->actionEffectType = 3;
+        }
+        player->itemEffectType = 1;
+        player->itemEffectCount = 3;
+        break;
+    }
+    if (D_80121B5B != 0) {
+        start = &D_800DE918[D_80121B5B - 1][player->playerIndexU16];
+        pos->x = start->x;
+        pos->y = start->y;
+        pos->z = start->z;
+        player->facingAngle = start->angle;
+        player->unk502 = start->unkC;
+    }
+    player->unk502 = func_8007D200(player->unk502, player->posX, player->posZ);
+    groundY = func_80080CC4(player->unk502, player->posX, player->posZ);
+    player->posY = groundY;
+    if (D_80121B59 == 0) {
+        player->posY = groundY + 0x40000;
+    }
+    unk34->x = pos->x;
+    unk34->y = pos->y;
+    unk34->z = pos->z;
+    player->unk518 = func_800430D0();
+    func_8006D520(player->playerIndexU16, 1);
+    if (D_80121B59 == 0) {
+        if (D_800EC9C2 == 0) {
+            func_80071664(func_800545D0, 0, 1, player->playerIndexU16);
+        }
+    }
+}
+#endif
 
 void func_8008C704(void) {
     s32 i;
