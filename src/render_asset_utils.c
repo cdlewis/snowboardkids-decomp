@@ -310,7 +310,171 @@ void func_80045A78(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
 }
 #endif
 
+// func_80045E84 best match: 76.854% (nonmatchings/func_80045E84-2225551288923588688/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80045E84.s")
+
+#ifdef NON_MATCHING
+extern s32 gRegionAllocPtr;
+extern u32 D_800DEFF8[];
+extern s16 D_801235B0;
+extern s16 D_8015660A;
+extern s16 D_8015660C;
+extern s16 D_8015660E;
+extern s16 D_80156610;
+
+void func_80045E84(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
+    volatile u8 pad[0x18];
+    u8 *volatile sp24;
+    volatile s32 sp18;
+    volatile s32 sp14;
+    volatile s32 sp10;
+    volatile s32 spC;
+    s32 temp_a0;
+    s32 temp_a3;
+    s32 temp_t1;
+    s32 temp_t2;
+    s32 temp_t6;
+    s32 temp_t7;
+    s32 temp_t8;
+    s32 temp_t8_2;
+    Gfx *temp_gfx;
+    s32 var_a0;
+    s32 var_a0_2;
+    register s32 var_s0;
+    s32 var_t5;
+    AssetTableEntry *temp_t4;
+    AssetTableEntry *temp_t4_2;
+
+    temp_t4 = (AssetTableEntry *)((u8 *)arg2 + ((arg3 & 0xFFFF) * sizeof(AssetTableEntry)));
+    sp24 = (u8 *)arg2 + (arg2->entryCount * sizeof(AssetTableEntry)) + sizeof(AssetTableEntry);
+    var_t5 = arg0 + D_8015660E;
+    var_s0 = arg1 + D_80156610;
+    temp_t4_2 = temp_t4 + 1;
+    sp14 = temp_t4_2->height + var_s0;
+    sp10 = 0;
+    spC = 0;
+    temp_t2 = temp_t4_2->width + var_t5;
+    temp_t7 = D_8015660A / 2;
+    temp_t1 = D_8015660E + temp_t7;
+    if (var_t5 < temp_t1) {
+        temp_a3 = D_8015660E - temp_t7;
+        temp_t8 = D_8015660C / 2;
+        temp_a0 = D_80156610 + temp_t8;
+        if (var_s0 < temp_a0) {
+            sp18 = temp_t2;
+            if (temp_t2 >= temp_a3) {
+                s32 temp_v0 = D_80156610 - temp_t8;
+                if (sp14 >= temp_v0) {
+                    if (var_t5 < temp_a3) {
+                        sp10 = temp_a3 - var_t5;
+                        var_t5 = temp_a3;
+                    }
+                    if (var_s0 < temp_v0) {
+                        spC = temp_v0 - var_s0;
+                        var_s0 = temp_v0;
+                    }
+                    if (sp18 >= temp_t1) {
+                        sp18 = temp_t1;
+                    }
+                    if (sp14 >= temp_a0) {
+                        sp14 = temp_a0;
+                    }
+                    temp_t8_2 = D_801235B0 & 0x1F;
+                    var_a0 = temp_t8_2;
+                    if (temp_t8_2 >= 0x11) {
+                        var_a0 = 0x20 - temp_t8_2;
+                    }
+                    temp_t6 = var_a0 * 0x10;
+                    var_a0_2 = temp_t6;
+                    if (temp_t6 >= 0x100) {
+                        var_a0_2 = 0xFF;
+                    }
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w1 = 0;
+                    temp_gfx->words.w0 = 0xE7000000;
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w1 = 0xFF2FFFFF;
+                    temp_gfx->words.w0 = 0xFC119623;
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w0 = 0xFA000000;
+                    temp_gfx->words.w1 = (((var_a0_2 & 0xFF) << 8) | 0xFFFF0000 | 0xFF);
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w0 = ((((s32)temp_t4_2->width >> 1) - 1) & 0xFFF) | 0xFD480000;
+                    temp_gfx->words.w1 = (u32)((u8 *)arg2 + temp_t4_2->imageOffset);
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w0 = (((((s32)(((s32)(temp_t4_2->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5480000);
+                    temp_gfx->words.w1 = 0x07080200;
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w1 = 0;
+                    temp_gfx->words.w0 = 0xE6000000;
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w0 = 0xF4000000;
+                    temp_gfx->words.w1 = (((temp_t4_2->width * 2) & 0xFFF) << 12) | 0x07000000 | ((temp_t4_2->height * 4) & 0xFFF);
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w1 = 0;
+                    temp_gfx->words.w0 = 0xE7000000;
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w0 = (((((s32)(((s32)(temp_t4_2->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000);
+                    temp_gfx->words.w1 = 0x00080200;
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w0 = 0xF2000000;
+                    temp_gfx->words.w1 = (((temp_t4_2->width * 4) & 0xFFF) << 12) | ((temp_t4_2->height * 4) & 0xFFF);
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w0 = 0xFD100000;
+                    temp_gfx->words.w1 = (u32)((temp_t4_2->textureIndex << 5) + sp24);
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w1 = 0;
+                    temp_gfx->words.w0 = 0xE8000000;
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w1 = 0x07000000;
+                    temp_gfx->words.w0 = 0xF5000100;
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w1 = 0;
+                    temp_gfx->words.w0 = 0xE6000000;
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w0 = 0xF0000000;
+                    temp_gfx->words.w1 = 0x0703C000;
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w1 = 0;
+                    temp_gfx->words.w0 = 0xE7000000;
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w0 = (((sp18 * 4) & 0xFFF) << 12) | 0xE4000000 | ((sp14 * 4) & 0xFFF);
+                    temp_gfx->words.w1 = (((var_t5 * 4) & 0xFFF) << 12) | ((var_s0 * 4) & 0xFFF);
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w0 = 0xB4000000;
+                    temp_gfx->words.w1 = (sp10 << 21) | ((spC << 5) & 0xFFFF);
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w0 = 0xB3000000;
+                    temp_gfx->words.w1 = 0x04000400;
+                    temp_gfx = (Gfx *)gRegionAllocPtr;
+                    gRegionAllocPtr = (s32)(temp_gfx + 1);
+                    temp_gfx->words.w0 = 0x06000000;
+                    temp_gfx->words.w1 = (u32)D_800DEFF8;
+                }
+            }
+        }
+    }
+}
+#endif
 
 // func_80046358 best match: 88.099% (nonmatchings/func_80046358-8207005055717715604/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80046358.s")
