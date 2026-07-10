@@ -177,7 +177,105 @@ EffectTask *func_800711D0(void (*callback)(EffectTask *), s32 type, s32 priority
 }
 #endif
 
+// func_80071408 best match: 96.233%
 #pragma GLOBAL_ASM("asm/nonmatchings/effect_task_scheduler/func_80071408.s")
+
+#ifdef NON_MATCHING
+EffectTask *func_80071408(void (*callback)(EffectTask *), u16 type, s32 priority) {
+    EffectTask *task;
+    EffectTask *prev;
+    EffectTask *next;
+    EffectTask *sentinel;
+    s32 index;
+    u32 i;
+
+    switch (type & 0xFF) {
+    case 0:
+        if (D_8012183A == 0) {
+            return NULL;
+        }
+        D_8012183A--;
+        break;
+    case 1:
+        if (D_80121840 == 0) {
+            return NULL;
+        }
+        D_80121840--;
+        break;
+    case 2:
+        if (D_80121842 == 0) {
+            return NULL;
+        }
+        D_80121842--;
+        break;
+    case 3:
+        if (D_80121844 == 0) {
+            return NULL;
+        }
+        D_80121844--;
+        break;
+    case 4:
+        if (D_80121846 == 0) {
+            return NULL;
+        }
+        D_80121846--;
+        break;
+    case 5:
+        if (D_8012183E == 0) {
+            return NULL;
+        }
+        D_8012183E--;
+        break;
+    case 6:
+        if (D_8012183C == 0) {
+            return NULL;
+        }
+        D_8012183C--;
+        break;
+    default:
+        return NULL;
+    }
+
+    if ((D_80121838 & 0xFFFFu) == 0) {
+        return NULL;
+    }
+    index = D_80121838 - 1;
+    sentinel = &D_80112780;
+    prev = sentinel;
+    D_80121838 = index;
+    task = D_801214D8[index & 0xFFFF];
+    if (prev->next != NULL) {
+        next = sentinel->next;
+        do {
+            if ((u16) next->priority < priority) {
+                break;
+            }
+            prev = next;
+            next = next->next;
+        } while (next != NULL);
+    }
+
+    task->prev = prev;
+    task->next = prev->next;
+    next = prev->next;
+    if (next != NULL) {
+        next->prev = task;
+    }
+    prev->next = task;
+    task->callback = callback;
+    task->type = type;
+    task->priority = priority;
+    task->isActive = 1;
+
+    i = 0;
+    do {
+        task->args[i] = NULL;
+        i = (i + 1) & 0xFFFF;
+    } while (i < 0x40U);
+
+    return task;
+}
+#endif
 
 EffectTask *func_80071664(void (*callback)(EffectTask *), s32 arg1, s32 arg2, s32 arg3){ EffectTask *t=func_80071408(callback,arg1&0xFFFF,arg2); if(t!=NULL){t->unk10=arg3;} return t;}
 
