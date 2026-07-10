@@ -505,24 +505,25 @@ void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
     } while (player != &D_801235B0);
 }
 
-// func_80088C80 best match: 99.440% (nonmatchings/func_80088C80-7273315160691878794/base_7.c)
+// func_80088C80 best match: 99.776% (nonmatchings/func_80088C80-7273315160691878794/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088C80.s")
 
 #ifdef NON_MATCHING
 void func_80088C80(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
     RaceInputPlayer *player;
     s32 temp;
+    s32 xzLimit;
     s32 xDiff;
     s32 yLimit;
-    s32 xzLimit;
     s32 sine;
-    s16 angle;
     s32 cosine;
     s32 pushX;
     s32 pushZ;
 
     player = &D_80121D80[playerIndex];
     if (player->isActive != 0) {
+        s16 angle;
+
         yLimit = ySize;
         temp = pos->y - player->unk5C;
         if (temp < 0) {
