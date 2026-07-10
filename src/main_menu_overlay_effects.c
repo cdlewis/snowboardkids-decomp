@@ -42,6 +42,12 @@ typedef union {
     } byte;
 } OverlayActorWord;
 
+typedef struct {
+    /* 0x00 */ OverlayActorWord x;
+    /* 0x04 */ OverlayActorWord y;
+    /* 0x08 */ OverlayActorWord z;
+} OverlayActorTransform;
+
 struct MainMenuOverlayEffectActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
@@ -168,6 +174,7 @@ void func_80054A64(MainMenuOverlayEffectActor *);
 void func_80054AC0(MainMenuOverlayEffectActor *);
 void func_80054B98(MainMenuOverlayEffectActor *);
 void func_80054EC4(MainMenuOverlayEffectActor *);
+void func_800550E0(MainMenuOverlayEffectActor *);
 void func_80055148(MainMenuOverlayEffectActor *);
 void func_8005537C(MainMenuOverlayEffectActor *);
 void func_80055410(MainMenuOverlayEffectActor *);
@@ -662,10 +669,6 @@ void func_80054E70(MainMenuOverlayEffectActor *arg0) {
     func_800483FC(D_801248D4, func_80054B98, (s32)arg0);
 }
 
-// func_80054EC4 best match: 99.444%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80054EC4.s")
-
-#ifdef NON_MATCHING
 void func_80054EC4(MainMenuOverlayEffectActor *arg0) {
     MainMenuOverlayEffectActor *actor;
 
@@ -674,9 +677,7 @@ void func_80054EC4(MainMenuOverlayEffectActor *arg0) {
     arg0->spriteIndex = (0x5000LL * func_80097AE8(arg0->unk30.half.lo)) / 0x1000;
     if (arg0->unk30.word < 0x3F0) {
         actor = func_80071408(func_80054E70, 0, 0x65);
-        actor->unk18 = arg0->unk18;
-        actor->unk1C = arg0->unk1C;
-        actor->unk20 = arg0->unk20;
+        *(OverlayActorTransform *)&actor->unk18 = *(OverlayActorTransform *)&arg0->unk18;
         actor->spriteIndex = arg0->spriteIndex;
         actor->alpha = 0xC0;
         arg0->unk30.word += 0x10;
@@ -687,7 +688,6 @@ void func_80054EC4(MainMenuOverlayEffectActor *arg0) {
     }
     func_800483FC(D_801248D4, func_80054B98, (s32)arg0);
 }
-#endif
 
 void func_8005502C(MainMenuOverlayEffectActor *arg0) {
     arg0->alpha = 0xFF;
