@@ -300,6 +300,7 @@ void func_800035F8(void) {
 }
 #endif
 
+// func_80003798 best match: 60.810% (nonmatchings/func_80003798-7273315160691878794/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_80003798.s")
 
 void __dummy(void) {
