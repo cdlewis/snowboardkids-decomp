@@ -48,7 +48,7 @@ typedef struct {
 
 void func_80023A68(void *arg0);
 void func_80024050(void *arg0);
-void func_80024380(void);
+void func_80024380(void *arg0);
 void func_80024968(void *arg0);
 void func_80025BE4(CourseSelectWidgetActor *arg0);
 void func_80025E6C(CourseSelectWidgetActor *arg0);
