@@ -7,6 +7,7 @@ typedef struct CharacterSelectFlowState {
     char pad0[0x18];
     /* 0x18 */ s32 fade;
     /* 0x1C */ s32 timer;
+    /* 0x20 */ s32 unk20;
 } CharacterSelectFlowState;
 
 void func_80005C70(void);
