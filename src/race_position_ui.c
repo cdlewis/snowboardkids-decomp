@@ -138,34 +138,49 @@ static void racePositionUiDrawParts(RacePositionUiPlayer *player, u32 *textures[
 }
 
 void func_8007BE80(RacePositionUiPlayer *player) {
-    s32 i;
+    s32 posOffset;
+    u8 vtxOffset;
+    s32 vtxFlagOffset;
+    s32 endOffset;
+    u8 *point;
+    RacePositionUiVtx *vtx;
 
     if (D_80156609 != 0) {
         player->flags &= ~RACE_POSITION_UI_FLAG_MARKER_READY;
-        player->markerVtx = func_80048594(sizeof(RacePositionUiVtx) * RACE_POSITION_UI_PLAYER_COUNT);
+        player->markerVtx = func_80048594(0x40);
         if (player->markerVtx == NULL) {
             return;
         }
 
-        for (i = 0; i < RACE_POSITION_UI_PLAYER_COUNT; i++) {
-            player->markerVtx[i].x = (player->markerPoints[i].x - player->markerPoints[0].x) >> 14;
-            player->markerVtx[i].y = (player->markerPoints[i].y - player->markerPoints[0].y) >> 14;
-            player->markerVtx[i].z = (player->markerPoints[i].z - player->markerPoints[0].z) >> 14;
-            player->markerVtx[i].flag = 0;
-            player->markerVtx[i].r = 0;
-            player->markerVtx[i].g = 0;
-            player->markerVtx[i].b = 0;
-            player->markerVtx[i].a = 0x30;
-        }
+        vtxOffset = 0;
+        posOffset = 0;
+        point = (u8 *) player;
+        endOffset = 0x30;
+        do {
+            ((RacePositionUiVtx *) ((u8 *) player->markerVtx + vtxOffset))->x =
+                (((RacePositionUiPlayer *) point)->markerPoints[0].x - player->markerPoints[0].x) >> 14;
+            ((RacePositionUiVtx *) ((u8 *) player->markerVtx + vtxOffset))->y =
+                (((RacePositionUiPlayer *) point)->markerPoints[0].y - player->markerPoints[0].y) >> 14;
+            ((RacePositionUiVtx *) ((u8 *) player->markerVtx + vtxOffset))->z =
+                (((RacePositionUiPlayer *) point)->markerPoints[0].z - player->markerPoints[0].z) >> 14;
+            posOffset += sizeof(Vec3i);
+            vtxFlagOffset = vtxOffset;
+            ((RacePositionUiVtx *) ((u8 *) player->markerVtx + vtxFlagOffset))->flag = 0;
+            point += sizeof(Vec3i);
+            ((RacePositionUiVtx *) ((u8 *) player->markerVtx + vtxOffset))->r = 0;
+            ((RacePositionUiVtx *) ((u8 *) player->markerVtx + vtxOffset))->g = 0;
+            ((RacePositionUiVtx *) ((u8 *) player->markerVtx + vtxOffset))->b = 0;
+            vtx = (RacePositionUiVtx *) ((u8 *) player->markerVtx + vtxOffset);
+            vtxOffset += sizeof(RacePositionUiVtx);
+            vtx->a = 0x30;
+        } while (posOffset != endOffset);
 
-        player->markerMtx = func_80048594(sizeof(RacePositionUiMtx));
+        player->markerMtx = func_80048594(0x100);
         if (player->markerMtx == NULL) {
             return;
         }
 
-        for (i = 0; i < 16; i++) {
-            player->markerMtx->words[i] = D_800DEE90[i];
-        }
+        *player->markerMtx = *(RacePositionUiMtx *) D_800DEE90;
 
         player->markerMtx->words[6] = (player->markerPoints[0].x & 0xFFFF0000)
             | (((player->markerPoints[0].y + 0xA000) >> 16) & 0xFFFF);
@@ -185,6 +200,7 @@ void func_8007BE80(RacePositionUiPlayer *player) {
     }
 }
 #else
+// func_8007BE80 best match: 97.84% (base_8.c, 376 differences)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007BE80.s")
 #endif
 
