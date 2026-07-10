@@ -871,13 +871,13 @@ void func_80077400(void) {
     }
 }
 
-// func_80077554 best match: 99.389%
+// func_80077554 best match: 99.464%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80077554.s")
 
 #ifdef NON_MATCHING
 void func_80077554(void) {
-    s32 asset;
     s32 one;
+    s32 asset;
 
     D_80121B56 = 0;
     D_80121B58 = 1;
