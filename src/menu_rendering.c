@@ -1,5 +1,13 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
+#include "memory_allocator.h"
+
+#define FONT_GFX_CMD(pkt, cmd0, cmd1) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = (cmd0); \
+    _g->words.w1 = (cmd1); \
+}
 
 typedef struct MenuRenderTask MenuRenderTask;
 typedef struct RenderCallbackNode RenderCallbackNode;
@@ -7,6 +15,9 @@ typedef struct MenuRenderSprite MenuRenderSprite;
 typedef struct MenuRenderSpriteActor MenuRenderSpriteActor;
 typedef struct MenuRenderAssetTableHeader MenuRenderAssetTableHeader;
 typedef struct MenuRenderAssetTableEntry MenuRenderAssetTableEntry;
+typedef struct FontAssetHeader FontAssetHeader;
+typedef struct FontTexture FontTexture;
+typedef struct FontAsset FontAsset;
 
 struct MenuRenderTask {
     /* 0x00 */ MenuRenderTask *prev;
@@ -54,6 +65,23 @@ struct MenuRenderAssetTableEntry {
     /* 0x7 */ u8 height;
 };
 
+struct FontAssetHeader {
+    /* 0x0 */ s32 unk0;
+    /* 0x4 */ s32 entryCount;
+};
+
+struct FontTexture {
+    /* 0x0 */ u32 imageOffset;
+    /* 0x4 */ u16 paletteIndex;
+    /* 0x6 */ u8 width;
+    /* 0x7 */ u8 height;
+};
+
+struct FontAsset {
+    /* 0x0 */ FontAssetHeader header;
+    /* 0x8 */ FontTexture textures[1];
+};
+
 typedef void (*MenuRenderSpriteActorCallback)(MenuRenderSpriteActor *);
 typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
@@ -68,10 +96,15 @@ extern void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 s
 void func_80012AE4(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 arg5);
 void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
 extern RenderCallbackNode *D_80124868;
+extern Gfx *gRegionAllocPtr;
 extern u32 D_80123758;
 extern s16 D_800DEF14;
+extern s16 D_8011213C;
 extern s16 D_8015660A;
 extern s16 D_8015660C;
+extern s16 D_8015660E;
+extern s16 D_80156610;
+extern void *func_80048594(s32 size);
 
 // func_8000EA80 best match: 78.118% (nonmatchings/func_8000EA80-4923837976568703863/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000EA80.s")
@@ -490,7 +523,123 @@ void func_80013154(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, v
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013284.s")
 
+// func_800137C8 best match: 73.956% (nonmatchings/func_800137C8-2225551288923588688/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_800137C8.s")
+
+#ifdef NON_MATCHING
+void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale) {
+    FontAsset *asset;
+    FontTexture *font;
+    u16 *paletteBase;
+    u16 *palettePtr;
+    u16 *dst;
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 left;
+    s32 top;
+    s32 right;
+    s32 bottom;
+    s32 halfW;
+    s32 halfH;
+    s32 clipS;
+    s32 clipT;
+    s32 offset;
+    u16 color;
+    s32 red;
+    s32 green;
+    s32 blue;
+    s32 scaleValue;
+    s16 paletteValue;
+
+    asset = (FontAsset *)func_80043040(D_8011213C);
+    paletteBase = (u16 *)&asset->textures[asset->header.entryCount];
+    font = &asset->textures[0];
+    x0 = x + D_8015660E;
+    y0 = y + D_80156610;
+    x1 = x0 + 8;
+    y1 = y0 + 8;
+    clipS = 0;
+    clipT = 0;
+    paletteValue = *(s16 *)((u8 *)asset + 0xC);
+
+    halfW = D_8015660A / 2;
+    right = D_8015660E + halfW;
+    if (x0 < right) {
+        left = D_8015660E - halfW;
+        halfH = D_8015660C / 2;
+        bottom = D_80156610 + halfH;
+        if (y0 < bottom && x1 >= left) {
+            top = D_80156610 - halfH;
+            if (y1 >= top) {
+                if (x0 < left) {
+                    clipS = left - x0;
+                    x0 = left;
+                }
+                if (y0 < top) {
+                    clipT = top - y0;
+                    y0 = top;
+                }
+                if (x1 >= right) {
+                    x1 = right - 1;
+                }
+                if (y1 >= bottom) {
+                    y1 = bottom - 1;
+                }
+
+                clipS += tileX;
+                clipT += (u16)tileY;
+                if (paletteValue != palette) {
+                    paletteValue = palette;
+                }
+
+                dst = func_80048594(0x20);
+                palettePtr = &paletteBase[paletteValue * 16];
+                scaleValue = scale;
+                offset = 0;
+                do {
+                    color = *(u16 *)((u8 *)palettePtr + offset);
+                    offset += 2;
+                    *dst = color;
+                    if (color & 1) {
+                        red = (((color >> 11) & 0x1F) * scaleValue) / 256;
+                        green = (((color >> 6) & 0x1F) * scaleValue) / 256;
+                        blue = (((color >> 1) & 0x1F) * scaleValue) / 256;
+                        *dst = (red << 11) | (green << 6) | (blue << 1) | 1;
+                    }
+                    dst++;
+                } while (offset != 0x20);
+
+                FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                             (u32)(font->imageOffset + (u8 *)asset));
+                FONT_GFX_CMD(gRegionAllocPtr++,
+                             ((((((s32)(font->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5480000,
+                             0x07080200);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                             (((font->width * 2) & 0xFFF) << 12) | 0x07000000 | ((font->height * 4) & 0xFFF));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++,
+                             ((((((s32)(font->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000,
+                             0x00080200);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                             (((font->width * 4) & 0xFFF) << 12) | ((font->height * 4) & 0xFFF));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(dst - 16));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++, (((x1 * 4) & 0xFFF) << 12) | 0xE4000000 | ((y1 * 4) & 0xFFF),
+                             (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, (clipS << 21) | ((clipT << 5) & 0xFFFF));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
+            }
+        }
+    }
+}
+#endif
 
 void func_80013D0C(s16 arg0, s16 arg1, u8 *arg2, u16 arg3, u16 arg4) {
     s32 var_s0;
