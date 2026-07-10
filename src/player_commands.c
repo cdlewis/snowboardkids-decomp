@@ -41,7 +41,10 @@ typedef struct PlayerCommandData {
 } PlayerCommandData;
 
 typedef struct PlayerCommandState {
-    u8 pad0[0x14];
+    u32 unk0;
+    u8 pad4[0x8];
+    u32 unkC;
+    u32 unk10;
     s32 id;
     s32 fadeTarget;
     s32 fadeTime;
@@ -51,7 +54,8 @@ typedef struct PlayerCommandState {
     f32 unk30;
     f32 unk34;
     f32 unk38;
-    u8 pad3C[0x8];
+    u8 pad3C[0x4];
+    f32 unk40;
     f32 unk44;
     f32 unk48;
     u8 pad4C[0x4];
@@ -70,10 +74,10 @@ typedef struct PlayerCommandState {
     s16 unkB0;
     s16 unkB2;
     s16 unkB4;
-    u8 padB6[0x2];
+    s16 unkB6;
     s16 unkB8;
     u16 unkBA;
-    u8 padBC[0x2];
+    u16 unkBC;
     u16 soundId;
     s16 unkC0;
     u16 unkC2;
@@ -271,6 +275,14 @@ extern s32 func_8009CD18(PlayerCommandState *, u8 *);
 extern void func_8009C77C(SchedulerState *);
 extern void func_8009F604(PlayerCommandState *);
 extern s32 func_8009F4C8();
+extern void func_8009E354(PlayerCommandState *, s32);
+extern void func_8009E76C(PlayerCommandState *, s32);
+extern void func_8009E938(PlayerCommandState *, s32);
+extern void func_8009EBDC(PlayerCommandState *);
+extern void func_8009EEE8(PlayerCommandState *);
+extern void func_8009EF44(PlayerCommandState *);
+extern void func_8009EFF4(PlayerCommandState *);
+extern void func_8009F0C4(PlayerCommandState *);
 extern s32 func_8009F780(PlayerCommandState *, s32, s32, s32, s32);
 extern void func_8009F344(s32, s32);
 extern void func_8009D8B0(s32, s32);
@@ -1389,7 +1401,80 @@ s32 func_8009E040(s32 arg0, s32 arg1) {
     return matches;
 }
 
+// func_8009E0D4 best match: 91.170%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009E0D4.s")
+
+#ifdef NON_MATCHING
+ALMicroTime func_8009E0D4(void *arg0) {
+    PlayerCommandState *entry;
+    u8 **voiceBasePtr;
+    s32 count;
+    s32 i;
+    s32 fadeTarget;
+    u32 temp;
+
+    i = 0;
+    count = D_8015A658;
+    entry = D_8015A660;
+    if (count > 0) {
+        voiceBasePtr = &D_8015A65C;
+        do {
+            if (entry->sequencePos != 0) {
+                entry->unk0 += (u16)entry->unkB8;
+
+                if ((entry->unkBC != 0x7FFF) && (entry->unkC < entry->unk0) && (entry->sequencePos != 0)) {
+                    do {
+                        func_8009E354(entry, i);
+                    } while ((entry->unkC < entry->unk0) && (entry->sequencePos != 0));
+                }
+
+                if (entry->sequencePos != 0) {
+                    if (entry->unk60 != 0) {
+                        func_8009EFF4(entry);
+                    }
+                    if (entry->unk68 != 0) {
+                        func_8009F0C4(entry);
+                    }
+
+                    fadeTarget = entry->fadeTarget;
+                    if (fadeTarget != -1) {
+                        fadeTarget--;
+                        entry->fadeTarget = fadeTarget;
+                        if (fadeTarget == -1) {
+                            entry->sequencePos = func_8009CCA0(entry, 0);
+                            if (entry->unkE4 != 0) {
+                                entry->unkE4 = 0;
+                                alSynStopVoice(&D_8015A8D8, (ALVoice *)((i * 0x1C) + *voiceBasePtr));
+                            }
+                        }
+                    }
+
+                    if (entry->unkE4 != 0) {
+                        func_8009EBDC(entry);
+                        func_8009EF44(entry);
+                        func_8009EEE8(entry);
+                        func_8009E938(entry, i);
+                        func_8009E76C(entry, i);
+                    }
+
+                    temp = (entry->unk0 - entry->unk10) >> 8;
+                    entry->unkC6 = temp;
+                    entry->unk40 = (f32)(temp & 0xFFFF);
+                    count = D_8015A658;
+                } else {
+                    count = D_8015A658;
+                }
+            }
+            i++;
+            entry++;
+        } while (i < count);
+    }
+
+    D_8015A68C++;
+    return 0xF4240 / D_8015A678;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009E354.s")
 
