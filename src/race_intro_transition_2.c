@@ -20,9 +20,19 @@ typedef struct {
     /* 0x017 */ char pad17[0x5F5];
 } RaceIntroPlayer;
 
+typedef struct {
+    u8 bytes[0x60C];
+} RaceInputRecord;
+
 extern RaceIntroTransitionState *D_801235B8;
 extern RaceIntroPlayer D_80121D80[];
 extern s16 D_800DEF14;
+extern s8 D_800DEF10;
+extern f32 D_800E10C8;
+extern s16 D_800BB890[];
+extern s16 D_800BB8B0[];
+extern u8 D_800BB8DC[];
+extern u8 D_800BB8F4[];
 extern u8 D_80123750;
 extern s8 D_800EC8B0;
 extern s8 D_800EC9C2;
@@ -41,12 +51,15 @@ extern u8 D_80121B5A;
 extern u8 D_80121B5B;
 extern s16 D_80121B5C;
 extern u8 D_80121B5F;
+extern RaceInputRecord D_8012238C[];
 extern s8 D_80121D94;
 extern s8 D_80121D95;
 extern s8 D_80121D96;
+extern RaceInputRecord D_80122998[];
 extern s8 D_801223A0;
 extern s8 D_801223A1;
 extern s8 D_801223A2;
+extern RaceInputRecord D_80122FA4[];
 extern s8 D_801229AC;
 extern s8 D_801229AD;
 extern s8 D_801229AE;
@@ -58,11 +71,21 @@ extern s32 D_801235B4;
 extern u8 D_24C8E0;
 extern u8 D_24DBE0;
 extern void func_8006D5CC(void);
+extern void func_8006D520(u16, u16);
+extern void func_8006D700(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
+extern void func_800710CC(s32);
+extern void func_8007115C(void);
+extern void func_80072114(s32);
 extern void func_80078430(void);
 extern void func_8008BEB0(void);
+extern void func_8008C704(void);
+extern void func_80096E3C(void);
 extern void func_80045914(void);
 extern void func_8003F00C(void);
+extern void func_800540EC(void *);
+
+#define COURSE_REPLAY_OFFSET(course) ((((((((course) << 2) - (course)) << 5) + (course)) << 2) - (course)) << 2)
 
 // func_8003ED00 best match: 99.874% (nonmatchings/func_8003ED00-5635509610426229442/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition_2/func_8003ED00.s")
@@ -168,7 +191,143 @@ void func_8003EF7C(void) {
     }
 }
 
+// func_8003F00C best match: 87.815% (nonmatchings/func_8003F00C-8207005055717715604/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition_2/func_8003F00C.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    u8 b0;
+    u8 b1;
+    u8 b2;
+    u8 b3;
+} FourBytes;
+
+void func_8003F00C(void) {
+    RaceIntroTransitionState *state;
+    s32 prevOpen;
+    s32 i;
+    s32 fadeStep;
+    s32 temp;
+    s32 offset;
+    u8 *dst;
+    u8 *src;
+    u8 value;
+    FourBytes *fourDst;
+
+    prevOpen = D_80121B56;
+    func_8007066C(0, 0xA0, 0x78, 0x120, D_8010B1E0, 0x140, 0xF0, D_800E10C8);
+
+    temp = D_8010B1E0;
+    if (temp != 0xB0) {
+        temp += 0x10;
+        D_8010B1E0 = temp;
+        if ((temp & 0xFF) == 0xB0) {
+            func_80071408(func_800540EC, 0, 0x64);
+        }
+    }
+
+    state = D_801235B8;
+    fadeStep = state->fadeStep;
+    if (fadeStep == D_800BB890[state->courseSegment]) {
+        i = 0;
+        do {
+            dst = (u8 *)D_80121D80 + i;
+            offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+            src = D_800BB8F4 + offset + i;
+            value = *src;
+            i++;
+            *dst = value;
+        } while ((u32)i < 0x60C);
+
+        i = 0;
+        do {
+            dst = (u8 *)D_8012238C + i;
+            offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+            src = D_800BB8F4 + offset + 0x60C0 + i;
+            value = *src;
+            i++;
+            *dst = value;
+        } while ((u32)i < 0x60C);
+
+        i = 0;
+        do {
+            dst = (u8 *)D_80122998 + i;
+            offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+            src = D_800BB8F4 + offset + 0xC180 + i;
+            value = *src;
+            i++;
+            *dst = value;
+        } while ((u32)i < 0x60C);
+
+        i = 0;
+copy_player3:
+        fourDst = (FourBytes *)((u8 *)D_80122FA4 + i);
+        offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+        fourDst->b0 = D_800BB8F4[offset + 0x12240 + i];
+        offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+        fourDst->b1 = D_800BB8F4[offset + 0x12241 + i];
+        offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+        fourDst->b2 = D_800BB8F4[offset + 0x12242 + i];
+        offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+        fourDst->b3 = D_800BB8F4[offset + 0x12243 + i];
+        i += 4;
+        if (i != 0x60C) {
+            goto copy_player3;
+        }
+
+        D_801235B8->courseSegment++;
+        state = D_801235B8;
+        fadeStep = state->fadeStep;
+    }
+
+    temp = state->startDelay;
+    if (fadeStep == D_800BB8B0[temp]) {
+        func_8006D520(0, D_800BB8DC[temp]);
+        D_801235B8->startDelay++;
+        D_80121B56 = 1;
+    }
+
+    func_8008C704();
+    func_800710CC(0x63);
+    func_80096E3C();
+    func_8007115C();
+    D_80121B56 = prevOpen;
+    func_8006D700();
+
+    D_801235B8->fadeStep++;
+    state = D_801235B8;
+    temp = state->fadeDelay;
+    if (temp != 0) {
+        state->fadeDelay = temp - 1;
+    }
+
+    if (D_80123778 & 0x1000) {
+        if (D_8010B1E1 == 0) {
+            D_8010B1E1 = 0x10;
+        }
+        func_80072114(0x20);
+    }
+
+    if (D_801235B8->fadeDelay < 0x41) {
+        if (D_8010B1E1 == 0) {
+            D_8010B1E1 = 4;
+        }
+        func_80072114(0x82);
+    }
+
+    temp = D_8010B1E1;
+    if (temp != 0) {
+        D_800DEF10 = 1;
+        D_800DEF14 += temp;
+    }
+
+    if (D_800DEF14 >= 0xFF) {
+        D_800DEF14 = 0xFF;
+        D_80123751 = 1;
+        func_8009956C(func_8003F4B4, 0);
+    }
+}
+#endif
 
 void func_8003F4B4(void) {
     if (D_80123750 == 2) {
