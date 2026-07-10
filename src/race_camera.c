@@ -355,44 +355,33 @@ void func_8006FE24(void) {
     D_801124A0->update();
 }
 
-// func_8006FE88 best match: 99.949%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006FE88.s")
-
-#ifdef NON_MATCHING
 void func_8006FE88(void) {
     register s32 stride;
-    register s32 transitionBase;
     RaceCameraTransition *transition;
     s16 timer;
     s16 duration;
 
-    transitionBase = (s32) D_800DAA3C;
     stride = sizeof(RaceCameraTransition);
     timer = D_801124A0->timer;
-    transition = (RaceCameraTransition *)((u8 *)transitionBase + ((u16) D_801124A0->mode * stride));
+    transition = (RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride));
     duration = transition[-16].duration;
     if (duration < timer) {
         do { timer = duration; do { } while (0); } while (0);
     }
 
-#define TRANSITION (((RaceCameraTransition *)((u8 *)transitionBase + ((u16) D_801124A0->mode * stride)))[-16])
+    D_801124A0->pos.x = (((s64)(transition[-16].endPos.x - transition[-16].startPos.x) * timer) / ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].duration) + ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].startPos.x;
+    D_801124A0->pos.y = (((s64)(((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].endPos.y - ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].startPos.y) * timer) / ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].duration) + ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].startPos.y;
+    D_801124A0->pos.z = (((s64)(((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].endPos.z - ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].startPos.z) * timer) / ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].duration) + ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].startPos.z;
 
-    D_801124A0->pos.x = (((s64)(transition[-16].endPos.x - transition[-16].startPos.x) * timer) / TRANSITION.duration) + TRANSITION.startPos.x;
-    D_801124A0->pos.y = (((s64)(TRANSITION.endPos.y - TRANSITION.startPos.y) * timer) / TRANSITION.duration) + TRANSITION.startPos.y;
-    D_801124A0->pos.z = (((s64)(TRANSITION.endPos.z - TRANSITION.startPos.z) * timer) / TRANSITION.duration) + TRANSITION.startPos.z;
-
-    D_801124A0->focus.x = D_80121D80[TRANSITION.playerIndex].state.cameraPos.x;
-    D_801124A0->focus.y = D_80121D80[TRANSITION.playerIndex].state.cameraPos.y;
-    D_801124A0->focus.z = D_80121D80[TRANSITION.playerIndex].state.cameraPos.z;
+    D_801124A0->focus.x = D_80121D80[((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].playerIndex].state.cameraPos.x;
+    D_801124A0->focus.y = D_80121D80[((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].playerIndex].state.cameraPos.y;
+    D_801124A0->focus.z = D_80121D80[((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].playerIndex].state.cameraPos.z;
     D_801124A0->prevPos.x = D_801124A0->pos.x;
     D_801124A0->prevPos.y = D_801124A0->pos.y;
     D_801124A0->prevPos.z = D_801124A0->pos.z;
     D_801124A0->timer++;
     func_8006D8B4();
-
-#undef TRANSITION
 }
-#endif
 
 void func_80070198(void) {
     D_801124A0->pitch = 0;
