@@ -334,15 +334,33 @@ void func_8004E594(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
     }
 }
 
-// func_8004E604 best match: 81.164%
+// func_8004E604 best match: 97.710%
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004E604.s")
 
 #ifdef NON_MATCHING
 void func_8004E604(RaceItemEffectActor *arg0) {
+    volatile u8 padding[4];
     RaceItemGfxCommandSource sp64;
-    volatile u8 pad[0x48];
-    Gfx *gfx;
+    Gfx *temp_v0;
+    Gfx *temp_v0_2;
+    Gfx *temp_v0_3;
+    Gfx *temp_v0_4;
+    Gfx *temp_v0_5;
+    Gfx *temp_v0_6;
+    Gfx *temp_v0_7;
+    Gfx *temp_v0_8;
+    Gfx *temp_v0_9;
+    Gfx *temp_v0_10;
+    Gfx *temp_v0_11;
+    Gfx *temp_v0_12;
+    Gfx *temp_v0_13;
+    Gfx *temp_v0_14;
+    Gfx *temp_v0_15;
+    Gfx *temp_v0_16;
+    Gfx *temp_v0_17;
+    Gfx *temp_v0_18;
+    Gfx *temp_v0_19;
 
     if (D_80156609 != 0) {
         arg0->unk34.shorts.state.bytes.matrixDirty = 1;
@@ -361,100 +379,63 @@ void func_8004E604(RaceItemEffectActor *arg0) {
     }
 
     if (arg0->unk24.velocityX != 0) {
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0x06000000;
-        gfx->words.w1 = (u32)D_800D4878;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xFA000000;
-        gfx->words.w1 = (arg0->unk30.screen.x & 0xFF) | ~0xFF;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xFD500000;
-        gfx->words.w1 = arg0->unk2C;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xF5500000;
-        gfx->words.w1 = 0x07080200;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0;
-        gfx->words.w0 = 0xE6000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xF3000000;
-        gfx->words.w1 = 0x0703F800;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0;
-        gfx->words.w0 = 0xE7000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0x80200;
-        gfx->words.w0 = 0xF5400200;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xF2000000;
-        gfx->words.w1 = 0x3C03C;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xFD100000;
-        gfx->words.w1 = arg0->unk28.word;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0;
-        gfx->words.w0 = 0xE8000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xF5000100;
-        gfx->words.w1 = 0x07000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0;
-        gfx->words.w0 = 0xE6000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0xF0000000;
-        gfx->words.w1 = 0x0703C000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0;
-        gfx->words.w0 = 0xE7000000;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0x01020040;
-        gfx->words.w1 = arg0->unk24.velocityX;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w0 = 0x01000040;
-        gfx->words.w1 = (u32)D_80156614;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = (u32)D_800D45E0;
-        gfx->words.w0 = 0x0400103F;
-
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0x60200;
-        gfx->words.w0 = 0xB1060402;
+        temp_v0 = gRegionAllocPtr++;
+        temp_v0->words.w0 = 0x06000000;
+        temp_v0->words.w1 = (u32)D_800D4878;
+        temp_v0_2 = gRegionAllocPtr++;
+        temp_v0_2->words.w0 = 0xFA000000;
+        temp_v0_2->words.w1 = (arg0->unk30.screen.x & 0xFF) | ~0xFF;
+        temp_v0_3 = gRegionAllocPtr++;
+        temp_v0_3->words.w0 = 0xFD500000;
+        temp_v0_3->words.w1 = (u32)arg0->unk2C;
+        temp_v0_4 = gRegionAllocPtr++;
+        temp_v0_4->words.w1 = 0x07080200;
+        temp_v0_4->words.w0 = 0xF5500000;
+        temp_v0_5 = gRegionAllocPtr++;
+        temp_v0_5->words.w1 = 0;
+        temp_v0_5->words.w0 = 0xE6000000;
+        temp_v0_6 = gRegionAllocPtr++;
+        temp_v0_6->words.w1 = 0x0703F800;
+        temp_v0_6->words.w0 = 0xF3000000;
+        temp_v0_7 = gRegionAllocPtr++;
+        temp_v0_7->words.w1 = 0;
+        temp_v0_7->words.w0 = 0xE7000000;
+        temp_v0_8 = gRegionAllocPtr++;
+        temp_v0_8->words.w1 = 0x00080200;
+        temp_v0_8->words.w0 = 0xF5400200;
+        temp_v0_9 = gRegionAllocPtr++;
+        temp_v0_9->words.w1 = 0x0003C03C;
+        temp_v0_9->words.w0 = 0xF2000000;
+        temp_v0_10 = gRegionAllocPtr++;
+        temp_v0_10->words.w0 = 0xFD100000;
+        temp_v0_10->words.w1 = (u32)arg0->unk28.word;
+        temp_v0_11 = gRegionAllocPtr++;
+        temp_v0_11->words.w1 = 0;
+        temp_v0_11->words.w0 = 0xE8000000;
+        temp_v0_12 = gRegionAllocPtr++;
+        temp_v0_12->words.w1 = 0x07000000;
+        temp_v0_12->words.w0 = 0xF5000100;
+        temp_v0_13 = gRegionAllocPtr++;
+        temp_v0_13->words.w1 = 0;
+        temp_v0_13->words.w0 = 0xE6000000;
+        temp_v0_14 = gRegionAllocPtr++;
+        temp_v0_14->words.w1 = 0x0703C000;
+        temp_v0_14->words.w0 = 0xF0000000;
+        temp_v0_15 = gRegionAllocPtr++;
+        temp_v0_15->words.w1 = 0;
+        temp_v0_15->words.w0 = 0xE7000000;
+        temp_v0_16 = gRegionAllocPtr++;
+        temp_v0_16->words.w0 = 0x01020040;
+        temp_v0_16->words.w1 = (u32)arg0->unk24.velocityX;
+        temp_v0_17 = gRegionAllocPtr++;
+        temp_v0_17->words.w0 = 0x01000040;
+        temp_v0_17->words.w1 = (u32)D_80156614;
+        temp_v0_18 = gRegionAllocPtr++;
+        temp_v0_18->words.w1 = (u32)D_800D45E0;
+        temp_v0_18->words.w0 = 0x0400103F;
+        temp_v0_19 = gRegionAllocPtr++;
+        temp_v0_19->words.w1 = 0x00060200;
+        temp_v0_19->words.w0 = 0xB1060402;
     }
 }
 #endif
