@@ -896,7 +896,7 @@ void func_80026B88(CourseSelectWidgetActor *arg0) {
     func_80071824(temp_a3, func_80026A54);
 }
 
-// func_80026C4C best match: 84.077% (nonmatchings/func_80026C4C-4923837976568703863/base_scope_pad.c)
+// func_80026C4C best match: 86.127% (nonmatchings/func_80026C4C-4923837976568703863/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80026C4C.s")
 
 #ifdef NON_MATCHING
@@ -925,7 +925,7 @@ extern u8 D_8010AF07[];
 void func_80026C4C(CourseSelectWidgetActor *arg0) {
     CourseSelectSelection26C4C *selection;
     CourseSelectStatus26C4C *status;
-    u8 *text;
+    u8 *volatile text;
     s16 buffer[8];
     s32 value;
     s32 courseId;
@@ -981,7 +981,7 @@ void func_80026C4C(CourseSelectWidgetActor *arg0) {
         func_80013154(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
 
         if ((D_800EC9C2 == 3) && ((selection->mode == 1) || (selection->mode == 2))) {
-            if ((D_8010AE64[0] != 3) || (D_800F42C7 & 7)) {
+            if ((D_8010AE64[0] != 3) || !(D_800F42C7 & 7)) {
                 buffer[0] = -4;
                 buffer[1] = 6;
                 buffer[2] = selectedIndex;
