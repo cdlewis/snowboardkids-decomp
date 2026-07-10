@@ -38,7 +38,13 @@ typedef struct {
 } RaceTimerUiAssetHandles;
 
 typedef struct {
-    /* 0x000 */ u8 pad0[0x508];
+    /* 0x000 */ u8 pad0[0x10];
+    /* 0x010 */ u8 iconGroup;
+    /* 0x011 */ u8 pad11[0x2D8 - 0x11];
+    /* 0x2D8 */ s16 unk2D8;
+    /* 0x2DA */ u8 pad2DA[0x2FC - 0x2DA];
+    /* 0x2FC */ s32 unk2FC;
+    /* 0x300 */ u8 pad300[0x508 - 0x300];
     /* 0x508 */ s8 lapDigit;
     /* 0x509 */ s8 iconTile;
     /* 0x50A */ u8 pad50A[0x512 - 0x50A];
@@ -54,7 +60,8 @@ typedef struct {
     /* 0x572 */ s16 targetScore;
     /* 0x574 */ u8 pad574[0x57E - 0x574];
     /* 0x57E */ s16 raceProgress;
-    /* 0x580 */ u8 pad580[0x60C - 0x580];
+    /* 0x580 */ s8 flashFrame;
+    /* 0x581 */ u8 pad581[0x60C - 0x581];
 } RaceTimerUiPlayer;
 
 typedef struct {
@@ -73,7 +80,7 @@ extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80047E88(s32, s16, s32, s32);
 extern void func_80048278(s32, s32, char *, s32);
 extern void func_800483FC(void *, void *, s32);
-extern void func_8007A3D8(void);
+extern void func_8007A3D8(s32);
 extern void func_80087600(s32, s32 *, s32 *);
 extern int sprintf(char *, const char *, ...);
 extern u8 D_245A80[];
@@ -85,6 +92,8 @@ extern u8 D_800EC9C2;
 extern RaceTimerCourseSpawnEntry D_800B9540[];
 extern u8 D_800DC8F0[];
 extern u8 D_800DC8F8[];
+extern u16 D_800DC954[];
+extern u16 D_800DC99C[];
 extern RaceUiCoursePosition D_800DC900[];
 extern CourseDataStride D_800EC9F0[];
 extern RaceTimerUiAssetHandles D_80112130;
@@ -856,7 +865,134 @@ void func_8007A350(void) {
     }
 }
 
+// func_8007A3D8 best match: 50.818% at nonmatchings/func_8007A3D8-2225551288923588688/base_3.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_8007A3D8.s")
+
+#ifdef NON_MATCHING
+void func_8007A3D8(s32 arg0) {
+    s16 yBase;
+    s16 xBase;
+    s32 order[4];
+    s32 previous;
+    s32 index;
+    s32 *slot;
+    s32 *scan;
+    s32 temp;
+    s8 bestTile;
+    RaceTimerUiPlayer *player;
+    s16 x;
+    u8 iconGroup;
+
+    order[0] = 0;
+    order[1] = 1;
+    order[2] = 2;
+    order[3] = 3;
+
+    previous = 0;
+    index = 1;
+    do {
+        if (index < 4) {
+            slot = &order[previous];
+            if ((4 - index) & 1) {
+                scan = &order[index];
+                temp = *scan;
+                if (D_80121D80[temp].iconTile < D_80121D80[*slot].iconTile) {
+                    *scan = *slot;
+                    *slot = temp;
+                }
+                index++;
+                if (index == 4) {
+                    goto sort_next;
+                }
+            }
+
+            scan = &order[index];
+            do {
+                temp = *scan;
+                bestTile = D_80121D80[*slot].iconTile;
+                if (D_80121D80[temp].iconTile < bestTile) {
+                    *scan = *slot;
+                    *slot = temp;
+                    bestTile = D_80121D80[*slot].iconTile;
+                }
+
+                temp = scan[1];
+                if (D_80121D80[temp].iconTile < bestTile) {
+                    scan[1] = *slot;
+                    *slot = temp;
+                }
+                scan += 2;
+            } while (scan != &order[4]);
+        }
+sort_next:
+        previous = index;
+        index++;
+    } while (previous < 3);
+
+    if (D_80121B70 == 0) {
+        yBase = -0x56;
+        xBase = 0x78;
+    }
+    if (D_80121B70 == 1) {
+        xBase = 0x78;
+        yBase = -0x48;
+    }
+    if ((D_80121B70 == 2) || (D_80121B70 == 3)) {
+        xBase = -8;
+        yBase = -0x48;
+    }
+
+    func_80045A78((s16)(xBase + 4), (s16)(yBase + 4), func_80043040(D_80112130.popupFontHandle), 0x50);
+
+    slot = &order[3];
+    do {
+        player = &D_80121D80[*slot];
+        x = xBase - 8;
+
+        temp = player->unk2FC & 0x200000;
+        if ((temp != 0) || (player->flashFrame != 0)) {
+            player->flashFrame++;
+            temp = player->unk2FC & 0x200000;
+        }
+        if ((temp != 0) && (player->flashFrame >= 5)) {
+            player->flashFrame = 4;
+        }
+        if (player->flashFrame >= 6) {
+            player->flashFrame = 0;
+        }
+
+        if (player->flashFrame != 0) {
+            if (player->unk2D8 != 0) {
+                player = &D_80121D80[*slot];
+                iconGroup = player->iconGroup;
+                func_80046D68(x, (s16)(player->raceProgress + yBase),
+                              func_80043040(D_80112130.popupFontHandle),
+                              D_800DC954[player->flashFrame + (iconGroup * 6)],
+                              D_800DC99C[iconGroup]);
+            } else {
+                player = &D_80121D80[*slot];
+                func_80045A78(x, (s16)(player->raceProgress + yBase),
+                              func_80043040(D_80112130.popupFontHandle),
+                              D_800DC954[player->flashFrame + (player->iconGroup * 6)]);
+            }
+        } else if (player->unk2D8 != 0) {
+            player = &D_80121D80[*slot];
+            iconGroup = player->iconGroup;
+            func_80046D68(xBase, (s16)(player->raceProgress + yBase),
+                          func_80043040(D_80112130.popupFontHandle),
+                          D_800DC954[player->flashFrame + (iconGroup * 6)],
+                          D_800DC99C[iconGroup]);
+        } else {
+            player = &D_80121D80[*slot];
+            func_80045A78(xBase, (s16)(player->raceProgress + yBase),
+                          func_80043040(D_80112130.popupFontHandle),
+                          D_800DC954[player->flashFrame + (player->iconGroup * 6)]);
+        }
+
+        slot--;
+    } while ((u32)slot >= (u32)&order[0]);
+}
+#endif
 
 // func_8007A8EC best match: 98.371% at nonmatchings/func_8007A8EC-5272447827802519043/base_13.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_8007A8EC.s")
