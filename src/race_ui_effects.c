@@ -642,6 +642,11 @@ typedef struct {
 } RacePlayerPlacement;
 
 typedef struct {
+    /* 0x000 */ u8 placement;
+    /* 0x001 */ u8 pad1[0x60C - 0x001];
+} RacePlayerUnsignedPlacement;
+
+typedef struct {
     /* 0x000 */ s16 value;
     /* 0x002 */ u8 pad2[0x60C - 0x002];
 } RacePlayerValue;
@@ -779,7 +784,7 @@ extern u8 D_80121B55;
 extern u8 D_80121B56;
 extern s8 D_80121B54;
 extern u8 D_80121B81;
-extern u8 D_80121D90;
+extern RacePlayerUnsignedPlacement D_80121D90[];
 extern s32 D_80121DA4;
 extern u8 D_80156608;
 extern u8 D_80156609;
@@ -917,7 +922,7 @@ extern void func_800640D8(RaceUiRankParticleActor *);
 extern void func_80057710(RaceUiPromptActor *);
 extern void func_80057B60(RaceUiPopupActor *);
 extern void func_80057D68(RaceUiPopupActor *);
-extern void func_80058C00(void);
+extern void func_80058C00(RaceUiResultsBannerActor *);
 extern void func_8005905C(void *);
 extern void func_80059518(void *);
 extern void func_80059950(void *);
@@ -1225,7 +1230,7 @@ void func_80057E90(RaceUiAlpha18Actor *arg0) {
         func_80045A78(-0x68, -0x2C, func_80043040(D_8011216E), 0x4D);
         func_80045A78(-0x42, -0xC, func_80043040(D_8011216E), D_80122289 & 0xFFFF);
         func_80045A78(-0x22, 4, func_80043040(D_8011216E), (D_80122289 + 0x48) & 0xFFFF);
-        func_80045A78(-0x68, 6, func_80043040(D_8011216E), (D_80121D90 + 0x91) & 0xFFFF);
+        func_80045A78(-0x68, 6, func_80043040(D_8011216E), (D_80121D90[0].placement + 0x91) & 0xFFFF);
         if (arg0->alpha != 0xFF) {
             gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
         }
@@ -1483,7 +1488,50 @@ void func_80058BAC(void *arg0) {
     func_80071824(arg0, func_80058B20);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80058C00.s")
+void func_80058C00(RaceUiResultsBannerActor *arg0) {
+    if (arg0->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+    }
+
+    if (arg0->player0 != -1) {
+        func_80045A78(-0x88, -0x50, func_80043040(D_80112130.popupFontHandle), 0);
+        func_80045A78(-0x68, -0x40, func_80043040(D_80112130.popupFontHandle), 0x48);
+        func_80046970(-0x54, -0x50, func_80043040(D_80112130.popupFontHandle),
+                      (D_80121D90[arg0->player0].placement + 0x41) & 0xFFFF);
+        func_80045A78(-0x30, -0x40, func_80043040(D_80112130.popupFontHandle), 0x4C);
+    }
+
+    if (arg0->player1 != -1) {
+        func_80045A78(8, -0x30, func_80043040(D_80112130.popupFontHandle), 1);
+        func_80045A78(0x28, -0x20, func_80043040(D_80112130.popupFontHandle), 0x49);
+        func_80046970(0x3C, -0x30, func_80043040(D_80112130.popupFontHandle),
+                      (D_80121D90[arg0->player1].placement + 0x41) & 0xFFFF);
+        func_80045A78(0x60, -0x20, func_80043040(D_80112130.popupFontHandle), 0x4C);
+    }
+
+    if (arg0->player2 != -1) {
+        func_80045A78(-0x88, -0x10, func_80043040(D_80112130.popupFontHandle), 2);
+        func_80045A78(-0x68, 0, func_80043040(D_80112130.popupFontHandle), 0x4A);
+        func_80046970(-0x54, -0x10, func_80043040(D_80112130.popupFontHandle),
+                      (D_80121D90[arg0->player2].placement + 0x41) & 0xFFFF);
+        func_80045A78(-0x30, 0, func_80043040(D_80112130.popupFontHandle), 0x4C);
+    }
+
+    if (arg0->player3 != -1) {
+        func_80045A78(8, 0x10, func_80043040(D_80112130.popupFontHandle), 3);
+        func_80045A78(0x28, 0x20, func_80043040(D_80112130.popupFontHandle), 0x4B);
+        func_80046970(0x3C, 0x10, func_80043040(D_80112130.popupFontHandle),
+                      (D_80121D90[arg0->player3].placement + 0x41) & 0xFFFF);
+        func_80045A78(0x60, 0x20, func_80043040(D_80112130.popupFontHandle), 0x4C);
+    }
+
+    if (arg0->alpha != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+    }
+}
 
 // func_8005905C best match: 99.488% (nonmatchings/func_8005905C-2785870559185086986/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005905C.s")
@@ -3237,7 +3285,7 @@ void func_8005E5B4(void *arg0) {
     func_80045A78(-0x68, -0x2C, func_80043040(D_8011216E), 0x4D);
     func_80045A78(-0x42, -0xC, func_80043040(D_8011216E), D_80122289 & 0xFFFF);
     func_80045A78(-0x22, 4, func_80043040(D_8011216E), (D_80122289 + 0x48) & 0xFFFF);
-    func_80045A78(-0x68, 6, func_80043040(D_8011216E), (D_80121D90 + 0x91) & 0xFFFF);
+    func_80045A78(-0x68, 6, func_80043040(D_8011216E), (D_80121D90[0].placement + 0x91) & 0xFFFF);
 }
 
 void func_8005E68C(void *arg0) {
