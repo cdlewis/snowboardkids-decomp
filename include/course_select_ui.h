@@ -46,7 +46,7 @@ typedef struct {
     /* 0x1C */ u16 playerPanelFadeAlpha[4];
 } CourseSelectPlayerPanelsActor;
 
-void func_80023A68(void);
+void func_80023A68(void *arg0);
 void func_80024050(void *arg0);
 void func_80024380(void);
 void func_80024968(void *arg0);
