@@ -1,5 +1,6 @@
 #include "common.h"
 #include "asset_decompression.h"
+#include "fixed_point_matrix.h"
 #include "memory_allocator.h"
 #include "game_audio.h"
 #include "game_boot.h"
@@ -42,6 +43,14 @@ typedef struct RacePlayerSoundView {
     SoundPosition pos;
     u8 pad28[0x60C - 0x28];
 } RacePlayerSoundView;
+
+typedef struct AudioCamera {
+    u8 pad0[0x94];
+    SoundPosition prevPos;
+    u8 padA0[0xAC - 0xA0];
+    s8 initialized;
+    u8 padAD[3];
+} AudioCamera;
 
 typedef struct AudioRomRange {
     s32 words[2];
@@ -123,6 +132,8 @@ extern AudioRomRange D_800DBC5C[];
 extern AudioRomRange D_800DBCAC[];
 extern s32 player_bss_0048;
 extern u16 D_800DBCF4[];
+extern AudioCamera D_801121E0[];
+extern AudioCamera D_801124A0[];
 extern s32 D_80121B08[];
 extern RacePlayerSoundView D_80121D80[];
 extern u8 D_80121B00;
@@ -518,25 +529,7 @@ void func_800722B4(void) {
     osStartThread(&D_8015A6B8);
 }
 
-// func_800722F0 best match: 99.710%
-#pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_800722F0.s")
-
-#ifdef NON_MATCHING
-typedef struct AudioCamera {
-    u8 pad0[0x94];
-    SoundPosition prevPos;
-    u8 padA0[0xAC - 0xA0];
-    s8 initialized;
-    u8 padAD[3];
-} AudioCamera;
-
-extern AudioCamera D_801121E0[];
-extern AudioCamera D_801124A0[];
-s16 func_80097AE8(s16 arg0);
-s32 func_80098C30(s64 arg0);
-
 s32 func_800722F0(SoundPosition *pos, s32 volume) {
-    volatile u8 pad[8];
     AudioCamera *camera;
     s32 distance;
     s32 dx;
@@ -560,7 +553,7 @@ s32 func_800722F0(SoundPosition *pos, s32 volume) {
             dx = camera->prevPos.x - pos->x;
             if ((dx >= -0x4000000) && (dx < 0x4000001)) {
                 dy = camera->prevPos.y - pos->y;
-                if ((dy >= -0x4000000) && (dy < 0x4000001)) {
+                if (((camera->prevPos.y - pos->y) >= -0x4000000) && (dy < 0x4000001)) {
                     dz = camera->prevPos.z - pos->z;
                     if ((dz >= -0x4000000) && (dz < 0x4000001)) {
                         adjustedVolume = func_80098C30((s64)dx * dx + (s64)dy * dy + (s64)dz * dz);
@@ -581,7 +574,6 @@ s32 func_800722F0(SoundPosition *pos, s32 volume) {
     }
     return adjustedVolume;
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80072518.s")
 
