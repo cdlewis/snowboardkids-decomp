@@ -400,7 +400,7 @@ void func_80078D3C(s32 arg0) {
     func_80048278(0x70, -0x48, sp18, 6);
 }
 
-// func_80078D9C best match: 94.006% at nonmatchings/func_80078D9C-6688367443449623229/base_2.c.
+// func_80078D9C best match: 94.116% at nonmatchings/func_80078D9C-2127290767680699791/base_3.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80078D9C.s")
 
 #ifdef NON_MATCHING
@@ -418,6 +418,8 @@ void func_80078D9C(s32 arg0) {
 
     sprintf(buffer, D_800E1770, D_80121B74.minutes);
     x = 0x48;
+    if (x && D_80112130.popupFontHandle) {
+    }
     end = &buffer[2];
     digit = buffer;
     do {
