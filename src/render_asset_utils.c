@@ -1083,7 +1083,114 @@ void func_80047174(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4)
 #undef RENDER_EMIT_GFX
 #endif
 
+// func_8004767C best match: 74.481% (nonmatchings/func_8004767C-7273315160691878794/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_8004767C.s")
+
+#ifdef NON_MATCHING
+void func_8004767C(s16 x, s16 y, AssetTable *asset, u16 entryIndex, u16 paletteIndex, u16 scale) {
+    u8 *paletteBase;
+    AssetTableEntry *entry;
+    AssetTableEntry *entry2;
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 clipS;
+    s32 clipT;
+    s32 viewHalfWidth;
+    s32 viewHalfHeight;
+    s32 maxX;
+    s32 maxY;
+    s32 minX;
+    s32 minY;
+    s32 width;
+    s32 height;
+    s32 drawWidth;
+    s32 drawHeight;
+    s32 dsdx;
+    Gfx *gfx;
+
+    if ((s32)scale >= 0) {
+        paletteBase = (u8 *)asset + (asset->entryCount * sizeof(AssetTableEntry)) + sizeof(AssetTableEntry);
+        entry = (AssetTableEntry *)((u8 *)asset + (entryIndex * sizeof(AssetTableEntry)));
+        entry2 = entry + 1;
+        width = entry2->width;
+        height = entry2->height;
+        drawWidth = width >> scale;
+        drawHeight = height >> scale;
+
+        x0 = x + D_8015660E + ((width - drawWidth) / 2);
+        y0 = y + D_80156610 + ((height - drawHeight) / 2);
+        x1 = x0 + drawWidth;
+        y1 = y0 + drawHeight;
+        clipS = 0;
+        clipT = 0;
+
+        viewHalfWidth = D_8015660A / 2;
+        maxX = D_8015660E + viewHalfWidth;
+        if (x0 < maxX) {
+            viewHalfHeight = D_8015660C / 2;
+            maxY = D_80156610 + viewHalfHeight;
+            if (y0 < maxY) {
+                minX = D_8015660E - viewHalfWidth;
+                if (x1 >= minX) {
+                    minY = D_80156610 - viewHalfHeight;
+                    if (y1 >= minY) {
+                        if (x0 < minX) {
+                            clipS = minX - x0;
+                            x0 = minX;
+                        }
+                        if (y0 < minY) {
+                            clipT = minY - y0;
+                            y0 = minY;
+                        }
+                        if (x1 >= maxX) {
+                            x1 = maxX;
+                        }
+                        if (y1 >= maxY) {
+                            y1 = maxY;
+                        }
+
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0x3000);
+                        FONT_GFX_CMD(gRegionAllocPtr++, (((entry2->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                                     (u32)((u8 *)asset + entry2->imageOffset));
+                        FONT_GFX_CMD(gRegionAllocPtr++, (((((entry2->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5480000,
+                                     0x07080200);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                                     (((entry2->width * 2) & 0xFFF) << 12) | 0x07000000 | ((entry2->height * 4) & 0xFFF));
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, (((((entry2->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5400000,
+                                     0x00080200);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                                     (((entry2->width * 4) & 0xFFF) << 12) | ((entry2->height * 4) & 0xFFF));
+
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(paletteBase + (paletteIndex << 5)));
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+                        gfx = gRegionAllocPtr++;
+                        gfx->words.w0 = 0xE7000000;
+                        gfx->words.w1 = 0;
+
+                        FONT_GFX_CMD(gRegionAllocPtr++, (((x1 * 4) & 0xFFF) << 12) | 0xE4000000 | ((y1 * 4) & 0xFFF),
+                                     (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF));
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000,
+                                     (((clipS << 5) + 0x10) << 16) | (((clipT << 5) + 0x10) & 0xFFFF));
+                        dsdx = (1 << (scale + 10)) & 0xFFFF;
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, (dsdx << 16) | dsdx);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                    }
+                }
+            }
+        }
+    }
+}
+#endif
 
 // func_80047B84 best match: 87.572% (nonmatchings/func_80047B84-7273315160691878794/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80047B84.s")
