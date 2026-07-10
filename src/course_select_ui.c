@@ -64,13 +64,19 @@ typedef struct {
 } CourseSelectWidgetInitActor;
 
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
+extern void func_80023880(void *);
 extern void func_80025AA8(CourseSelectWidgetActor *);
 extern void func_8002E568(CourseSelectWidgetActor *);
+extern s8 D_800EC9C0;
 extern u8 D_800EC9C2;
 extern u8 D_800EC9E6;
+extern s32 D_8010ADE0;
 extern s32 D_8010ADDC;
 extern s32 D_8010ADE8;
 extern s8 D_8010AE64[];
+extern u8 D_8010AECC[];
+extern s32 D_8010AEE8[];
+extern u8 D_8010AEFB[];
 extern u8 D_8010AEB0;
 extern u8 D_8010AEA0[];
 extern u8 D_8010AF18[];
@@ -92,10 +98,205 @@ extern u8 D_80121D88;
 extern s32 D_801235B4;
 extern CourseSelectState *D_801235B8;
 extern s32 D_80124868;
+extern s32 D_80124898;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80023880.s")
 
+// func_80023A68 best match: 76.253% (nonmatchings/func_80023A68-4923837976568703863/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80023A68.s")
+
+#ifdef NON_MATCHING
+void func_80023A68(void *arg0) {
+    CourseSelectTempVec3i sp78;
+    s32 sp64;
+    CourseSelectTempVec3i *sp40;
+    s16 *sp44;
+    void *actor;
+    u8 *var_s1;
+    u8 *var_s2;
+    u8 *var_s3;
+    u8 *var_s6;
+    u8 *var_s7;
+    s32 i;
+    s32 statusHalfIndex;
+    u8 state;
+    s32 step;
+    s32 *targetVelocity;
+    CourseSelectRacePlayer *player;
+
+    actor = arg0;
+    i = 0;
+    if ((s32)D_80121B55 > 0) {
+        var_s6 = D_8010AF18;
+        sp44 = (s16 *)((u8 *)arg0 + 0x3C);
+        sp40 = (CourseSelectTempVec3i *)((u8 *)arg0 + 0xBC);
+        statusHalfIndex = 0;
+        var_s1 = arg0;
+        var_s2 = arg0;
+        var_s3 = arg0;
+        var_s7 = arg0;
+        do {
+            if (var_s6[4] != var_s1[0x100]) {
+                var_s1[0x100] = var_s6[4];
+                var_s1[0xFC] = var_s6[0xC];
+                *(s16 *)(var_s2 + 0xEC) = *(u16 *)(D_8010AF18 + statusHalfIndex + 0x14);
+                var_s6[0xC] = 0;
+                *(s16 *)(D_8010AF18 + statusHalfIndex + 0x14) = 0;
+            }
+
+            state = var_s1[0x100];
+            if (D_801235B4 != 0) {
+                if ((s32)state < 5) {
+                    var_s1[0x100] = 4;
+                    *(s16 *)(var_s2 + 0xEC) = 0;
+                    state = var_s1[0x100];
+                }
+            }
+
+            if (state < 10) {
+                switch (state) {
+                case 0:
+                    *(s32 *)(var_s3 + 0xBC) += -0x200000;
+                    if (*(s32 *)(var_s3 + 0xBC) <= 0) {
+                        *(s32 *)(var_s3 + 0xBC) = 0;
+                        var_s1[0x100] = 1;
+                    }
+                    state = var_s1[0x100];
+                    break;
+                case 1:
+                    if (D_8010AECC[i] & 1) {
+                        targetVelocity = &D_8010AEE8[i];
+                        player = &D_80121D80[i];
+                        if (*targetVelocity < 0) {
+                            if ((s32)player->pad6[0xB] >= 9) {
+                                *(s16 *)(var_s2 + 0xF4) = 2;
+                            } else {
+                                *(s16 *)(var_s2 + 0xF4) = (player->pad6[0] % 3) - 1;
+                            }
+                        } else {
+                            *(s16 *)(var_s2 + 0xF4) = (player->pad6[0] % 3) + 1;
+                        }
+                        if (*(s16 *)(var_s2 + 0xF4) < 0) {
+                            *(s16 *)(var_s2 + 0xF4) = 2;
+                        }
+                        if (*(s16 *)(var_s2 + 0xF4) == 3) {
+                            *(s16 *)(var_s2 + 0xF4) = D_8010AEFB[i * 4];
+                        }
+                        if (*(s16 *)(var_s2 + 0xF4) == 8) {
+                            *(s16 *)(var_s2 + 0xF4) = 2;
+                        }
+                        if (D_8010AECC[i] == 3) {
+                            *(s32 *)(var_s3 + 0xC0) = -*targetVelocity;
+                        }
+                        var_s1[0x100] = 2;
+                        state = 2;
+                    } else if (D_801235B8->screenState == 9) {
+                        var_s1[0x100] = 8;
+                        state = 8;
+                    }
+                    break;
+                case 2:
+                    targetVelocity = &D_8010AEE8[i];
+                    step = 0x200000;
+                    if (*targetVelocity < 0) {
+                        step = -0x200000;
+                    }
+                    *(s32 *)(var_s3 + 0xC0) += step;
+                    if (*targetVelocity == step) {
+                        var_s1[0x100] = 1;
+                    }
+                    state = var_s1[0x100];
+                    break;
+                case 3:
+                    var_s1[0xFC]++;
+                    if (D_800EC9C0 != 0) {
+                        D_800EC9C0 = 1;
+                    }
+                    if (var_s1[0xFC] == 0xF) {
+                        var_s1[0xFC] = 0;
+                        var_s1[0x100] = 4;
+                        if (D_80121B55 == 1) {
+                            D_80121D80[0].pad6[2] = 3;
+                            D_800EC9C0 = 0x10;
+                        }
+                    }
+                    state = var_s1[0x100];
+                    break;
+                case 4:
+                    if (D_80121D80[i].pad6[2] == 3) {
+                        var_s1[0x100] = 5;
+                        state = 5;
+                    }
+                    break;
+                case 5:
+                    *(s32 *)(var_s3 + 0xBC) += 0x200000;
+                    if (*(s32 *)(var_s3 + 0xBC) == 0x1000000) {
+                        var_s1[0x100] = 6;
+                    }
+                    state = var_s1[0x100];
+                    break;
+                case 6:
+                    D_80121D80[i].pad6[2] = 4;
+                    if ((i == 2) && (D_80121B55 == 3)) {
+                        D_80121D80[3].pad6[2] = 4;
+                    }
+                    state = var_s1[0x100];
+                    break;
+                case 7:
+                    if (D_80121D80[i].pad6[2] == 3) {
+                        var_s1[0x100] = 5;
+                        state = 5;
+                    } else if (D_801235B8->screenState == 9) {
+                        var_s1[0x100] = 8;
+                        state = 8;
+                    }
+                    break;
+                case 8:
+                    *(s32 *)(var_s3 + 0xBC) += 0x200000;
+                    if (*(s32 *)(var_s3 + 0xBC) == 0xC00000) {
+                        var_s1[0x100] = 9;
+                    }
+                    state = var_s1[0x100];
+                    break;
+                case 9:
+                    break;
+                }
+            }
+
+            if (state != 0) {
+                if ((s32)state < 3) {
+                    *(s16 *)(var_s2 + 0xEC) += 0x20;
+                    *(s16 *)(var_s2 + 0xEC) &= 0xFFF;
+                }
+            }
+            sp64 = statusHalfIndex;
+            func_80097C18(sp44, *(s16 *)(var_s2 + 0xEC));
+            func_80098590(sp44, sp40, &sp78);
+            *(s32 *)(var_s7 + 0x50) = sp78.x;
+            *(s32 *)(var_s7 + 0x54) = sp78.y;
+            *(s32 *)(var_s7 + 0x58) = sp78.z;
+            i++;
+            var_s6[4] = var_s1[0x100];
+            sp40++;
+            sp44 = (s16 *)((u8 *)sp44 + 0x20);
+            var_s6++;
+            var_s1++;
+            var_s2 += 2;
+            var_s3 += 0xC;
+            var_s7 += 0x20;
+            statusHalfIndex = sp64 + 2;
+        } while (i < (s32)D_80121B55);
+    }
+
+    if ((D_80121D80[0].pad6[2] == 4) || (((u8 *)actor)[0x100] == 9)) {
+        func_800716E4(actor);
+        func_800291F0(1);
+        D_8010ADE0 = 0;
+    } else {
+        func_800483FC(&D_80124898, (void (*)(CourseSelectWidgetActor *))func_80023880, actor);
+    }
+}
+#endif
 
 void func_80024050(void *arg0) {
     void *actor;
