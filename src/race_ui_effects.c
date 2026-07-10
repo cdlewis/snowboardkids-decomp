@@ -1845,7 +1845,106 @@ void func_8005A31C(RaceUiAlpha18Actor *arg0) {
     }
 }
 
+// func_8005A4BC best match: 54.798% (nonmatchings/func_8005A4BC-7273315160691878794/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005A4BC.s")
+
+#ifdef NON_MATCHING
+const char D_800E12E4[0x4] = "%5d";
+const char D_800E12E8[0x4] = "%5d";
+const char D_800E12EC[0x4] = "%5d";
+const char D_800E12F0[0x4] = "%6d";
+
+void func_8005A4BC(RaceUiCounterActor *arg0) {
+    volatile u8 pad[4];
+    SplitWord y;
+    char buffer[0x24];
+    char *ptr;
+    s32 x;
+    s16 rowY;
+    s16 visibleRows;
+
+    y.word = -0x47;
+    if (arg0->flag == 0) {
+        y.word = -0x33;
+    }
+    visibleRows = arg0->state;
+    x = 0x20;
+    if (visibleRows >= 0) {
+        sprintf(buffer, D_800E12E4, arg0->value);
+        rowY = y.half.lo;
+        ptr = buffer;
+loop1:
+        if (*ptr != 0) {
+            if (*ptr != ' ') {
+                func_80045A78((s16)x, rowY, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+            }
+            x += 8;
+            ptr++;
+            goto loop1;
+        }
+        func_80045A78((s16)x, rowY, func_80043040(D_80112130.popupFontHandle), 0x37);
+        y.word += 0x28;
+        visibleRows = arg0->state;
+    }
+
+    if (visibleRows > 0) {
+        x = 0x20;
+        if (arg0->flag != 0) {
+            sprintf(buffer, D_800E12E8, arg0->bonus);
+            rowY = y.half.lo;
+            ptr = buffer;
+loop2:
+            if (*ptr != 0) {
+                if (*ptr != ' ') {
+                    func_80045A78((s16)x, rowY, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+                }
+                x += 8;
+                ptr++;
+                goto loop2;
+            }
+            func_80045A78((s16)x, rowY, func_80043040(D_80112130.popupFontHandle), 0x37);
+            y.word += 0x28;
+            visibleRows = arg0->state;
+        }
+    }
+
+    if (visibleRows >= 2) {
+        x = 0x20;
+        sprintf(buffer, D_800E12EC, arg0->target);
+        rowY = y.half.lo;
+        ptr = buffer;
+loop3:
+        if (*ptr != 0) {
+            if (*ptr != ' ') {
+                func_80045A78((s16)x, rowY, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+            }
+            x += 8;
+            ptr++;
+            goto loop3;
+        }
+        func_80045A78((s16)x, rowY, func_80043040(D_80112130.popupFontHandle), 0x37);
+        y.word += 0x28;
+        visibleRows = arg0->state;
+    }
+
+    if (visibleRows >= 3) {
+        x = 0x18;
+        sprintf(buffer, D_800E12F0, D_80121D8C);
+        rowY = y.half.lo;
+        ptr = buffer;
+loop4:
+        if (*ptr != 0) {
+            if (*ptr != ' ') {
+                func_80045A78((s16)x, rowY, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+            }
+            x += 8;
+            ptr++;
+            goto loop4;
+        }
+        func_80045A78((s16)x, rowY, func_80043040(D_80112130.popupFontHandle), 0x37);
+    }
+}
+#endif
 
 // func_8005A884 best match: 87.770% (nonmatchings/func_8005A884-4139837607000619032/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005A884.s")
