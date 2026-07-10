@@ -1566,7 +1566,47 @@ void func_8005905C(void *arg0) {
 }
 #endif
 
+// func_80059518 best match: 89.968% (nonmatchings/func_80059518-2225551288923588688/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059518.s")
+
+#ifdef NON_MATCHING
+void func_80059518(void *arg0) {
+    RaceUiResultsBannerActor *actor;
+    s8 *players;
+    s32 i;
+    s32 j;
+    s8 temp;
+
+    actor = arg0;
+    players = &actor->player0;
+    for (i = 0; i < 4; i++) {
+        players[i] = i;
+    }
+
+    for (i = 0; i < 3; i++) {
+        for (j = i + 1; j < 4; j++) {
+            if (D_80121D80[players[j]].mode < D_80121D80[players[i]].mode) {
+                temp = players[j];
+                players[j] = players[i];
+                players[i] = temp;
+            }
+        }
+    }
+
+    if (!(D_80121D80[players[0]].flags & 0x40)) {
+        players[0] = -1;
+    }
+    if (!(D_80121D80[players[1]].flags & 0x40)) {
+        players[1] = -1;
+    }
+    if (!(D_80121D80[players[2]].flags & 0x40)) {
+        players[2] = -1;
+    }
+    if (!(D_80121D80[players[3]].flags & 0x40)) {
+        players[3] = -1;
+    }
+}
+#endif
 
 void func_80059804(void *arg0) {
     func_80059518(arg0);
