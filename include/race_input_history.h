@@ -130,7 +130,7 @@ typedef struct {
     /* 0x2F0 */ s16 unk2F0;
     /* 0x2F2 */ char pad2F2[2];
     /* 0x2F4 */ s16 unk2F4;
-    /* 0x2F6 */ char pad2F6[2];
+    /* 0x2F6 */ s16 unk2F6;
     /* 0x2F8 */ s16 unk2F8;
     /* 0x2FA */ s16 unk2FA;
     /* 0x2FC */ u32 stateFlags;
