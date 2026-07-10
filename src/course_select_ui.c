@@ -102,7 +102,7 @@ extern s32 D_80124898;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80023880.s")
 
-// func_80023A68 best match: 76.253% (nonmatchings/func_80023A68-4923837976568703863/base_2.c)
+// func_80023A68 best match: 76.748% (nonmatchings/func_80023A68-4923837976568703863/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80023A68.s")
 
 #ifdef NON_MATCHING
@@ -153,9 +153,8 @@ void func_80023A68(void *arg0) {
                 }
             }
 
-            if (state < 10) {
-                switch (state) {
-                case 0:
+            switch (state) {
+            case 0:
                     *(s32 *)(var_s3 + 0xBC) += -0x200000;
                     if (*(s32 *)(var_s3 + 0xBC) <= 0) {
                         *(s32 *)(var_s3 + 0xBC) = 0;
@@ -163,7 +162,7 @@ void func_80023A68(void *arg0) {
                     }
                     state = var_s1[0x100];
                     break;
-                case 1:
+            case 1:
                     if (D_8010AECC[i] & 1) {
                         targetVelocity = &D_8010AEE8[i];
                         player = &D_80121D80[i];
@@ -195,7 +194,7 @@ void func_80023A68(void *arg0) {
                         state = 8;
                     }
                     break;
-                case 2:
+            case 2:
                     targetVelocity = &D_8010AEE8[i];
                     step = 0x200000;
                     if (*targetVelocity < 0) {
@@ -207,7 +206,7 @@ void func_80023A68(void *arg0) {
                     }
                     state = var_s1[0x100];
                     break;
-                case 3:
+            case 3:
                     var_s1[0xFC]++;
                     if (D_800EC9C0 != 0) {
                         D_800EC9C0 = 1;
@@ -222,27 +221,27 @@ void func_80023A68(void *arg0) {
                     }
                     state = var_s1[0x100];
                     break;
-                case 4:
+            case 4:
                     if (D_80121D80[i].pad6[2] == 3) {
                         var_s1[0x100] = 5;
                         state = 5;
                     }
                     break;
-                case 5:
+            case 5:
                     *(s32 *)(var_s3 + 0xBC) += 0x200000;
                     if (*(s32 *)(var_s3 + 0xBC) == 0x1000000) {
                         var_s1[0x100] = 6;
                     }
                     state = var_s1[0x100];
                     break;
-                case 6:
+            case 6:
                     D_80121D80[i].pad6[2] = 4;
                     if ((i == 2) && (D_80121B55 == 3)) {
                         D_80121D80[3].pad6[2] = 4;
                     }
                     state = var_s1[0x100];
                     break;
-                case 7:
+            case 7:
                     if (D_80121D80[i].pad6[2] == 3) {
                         var_s1[0x100] = 5;
                         state = 5;
@@ -251,16 +250,17 @@ void func_80023A68(void *arg0) {
                         state = 8;
                     }
                     break;
-                case 8:
+            case 8:
                     *(s32 *)(var_s3 + 0xBC) += 0x200000;
                     if (*(s32 *)(var_s3 + 0xBC) == 0xC00000) {
                         var_s1[0x100] = 9;
                     }
                     state = var_s1[0x100];
                     break;
-                case 9:
+            case 9:
                     break;
-                }
+            default:
+                break;
             }
 
             if (state != 0) {
