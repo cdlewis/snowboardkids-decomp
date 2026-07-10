@@ -1283,7 +1283,87 @@ void func_80027A08(CourseSelectWidgetActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80027AF8.s")
 
+// func_80028194 best match: 83.366% (nonmatchings/func_80028194-2225551288923588688/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028194.s")
+
+#ifdef NON_MATCHING
+void func_80028194(CourseSelectWidgetActor *arg0) {
+    s32 var_a0;
+    s32 var_t0;
+    s32 var_t5;
+    s32 var_v1;
+    u8 *var_t1;
+    u8 *var_t2;
+    u8 *var_t3;
+    u8 *var_v0;
+    s16 *temp_s1;
+    s16 *temp_ra;
+    s32 temp_s6;
+    s32 temp_s4;
+    s32 temp_s3;
+    s32 temp_s2;
+    s32 temp_a3;
+
+    if ((s32)D_80121B55 < 3) {
+        var_t5 = D_80121B55 - 1;
+    } else {
+        var_t5 = 2;
+    }
+    var_t0 = 0;
+    if ((s32)D_80121B55 > 0) {
+        temp_ra = D_800B70A8[var_t5];
+        temp_s1 = D_800B7084[var_t5];
+        var_t1 = (u8 *)arg0;
+        var_t2 = (u8 *)arg0;
+        var_t3 = (u8 *)arg0;
+        temp_s6 = 0xC;
+        temp_s4 = 1;
+        temp_s3 = 0x100;
+        temp_s2 = 0xC;
+        temp_a3 = 3;
+        do {
+            var_v1 = 0;
+            if ((s32)D_80121B55 >= 3) {
+                var_t1[0x50] = temp_s2;
+            } else {
+                var_t1[0x50] = *(s16 *)((u8 *)D_800B7084 + (var_t5 * temp_s6));
+            }
+            var_t1[0x5C] = 0;
+            *(s16 *)(var_t3 + 0x60) = temp_s3;
+            if (D_80121B55 == temp_s4) {
+                var_a0 = 8;
+            } else {
+                var_a0 = 4;
+            }
+            var_v0 = var_t2;
+loop:
+            var_v1 += 1;
+            *(s16 *)(var_v0 + 0x18) = temp_ra[((var_t0 >= 2) * 2) + 1] + var_a0;
+            var_v0 += 2;
+            *(s16 *)(var_v0 + 0x2E) = temp_s1[((var_t0 & 1) * 2) + 2];
+            if (var_v1 != temp_a3) {
+                goto loop;
+            }
+            var_t0 += 1;
+            var_t1 += 1;
+            var_t2 += 6;
+            var_t3 += 2;
+        } while (var_t0 < (s32)D_80121B55);
+    }
+
+    *(s16 *)((u8 *)arg0 + 0x4A) = 0xA0;
+    *(s16 *)((u8 *)arg0 + 0x4C) = 0x78;
+    *(s16 *)((u8 *)arg0 + 0x4E) = 0x78;
+    if (D_80121B55 == 1) {
+        *(s16 *)((u8 *)arg0 + 0x48) = 0xA0;
+    } else if (D_80121B55 == 2) {
+        *(s16 *)((u8 *)arg0 + 0x48) = 0x7E;
+    } else {
+        *(s16 *)((u8 *)arg0 + 0x48) = 0x88;
+    }
+    func_80071824(arg0, func_80027AF8);
+}
+#endif
 
 // func_80028354 best match: 95.650% (nonmatchings/func_80028354-3836525038718587862/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028354.s")
