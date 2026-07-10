@@ -2581,15 +2581,10 @@ void func_800955C0(RaceInputPlayer *player) {
     }
 }
 
-// func_80095650 best match: 99.679% (nonmatchings/func_80095650-2127290767680699791/base_23.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095650.s")
-
-#ifdef NON_MATCHING
 void func_80095650(RaceInputPlayer *player) {
     s16 updateTimer;
-    s32 stateTimer;
-    s32 scratch[15];
+    s32 unused;
+    s32 scratch[14];
 
     extern void func_8006BB50(EffectTask *);
 
@@ -2606,21 +2601,21 @@ void func_80095650(RaceInputPlayer *player) {
         }
     }
 
-    func_80097C18((s16 *)&scratch[1], player->facingAngle);
-    scratch[12] = 0;
+    func_80097C18((s16 *)&scratch[2], player->facingAngle);
     scratch[13] = 0;
-    scratch[14] = player->unk80;
-    func_80098590((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
-    player->posX += scratch[9];
-    player->posZ += scratch[11];
+    scratch[14] = 0;
+    scratch[15] = player->unk80;
+    func_80098590((s16 *)&scratch[2], (Vec3i *)&scratch[13], (Vec3i *)&scratch[10]);
+    player->posX += scratch[10];
+    player->posZ += scratch[12];
 
-    func_80097C18((s16 *)&scratch[1], player->facingAngle);
-    scratch[12] = 0;
+    func_80097C18((s16 *)&scratch[2], player->facingAngle);
     scratch[13] = 0;
-    scratch[14] = player->unk80;
-    func_80098590((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
-    player->posX += scratch[9];
-    player->posZ += scratch[11];
+    scratch[14] = 0;
+    scratch[15] = player->unk80;
+    func_80098590((s16 *)&scratch[2], (Vec3i *)&scratch[13], (Vec3i *)&scratch[10]);
+    player->posX += scratch[10];
+    player->posZ += scratch[12];
     player->unk40.y -= 0x7000;
     player->posY += player->unk40.y;
 
@@ -2634,10 +2629,7 @@ void func_80095650(RaceInputPlayer *player) {
         func_80082EC0(player);
     }
 
-    stateTimer = (unsigned long long) player->stateTimer;
-    stateTimer = stateTimer - 1;
-    player->stateTimer = stateTimer;
-    if (stateTimer == 0) {
+    if (--player->stateTimer == 0) {
         player->updateState++;
         player->updateTimer = 0;
         player->stateTimer = 0x20;
@@ -2645,7 +2637,6 @@ void func_80095650(RaceInputPlayer *player) {
         player->stateFlags &= ~0x20;
     }
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095804.s")
 
