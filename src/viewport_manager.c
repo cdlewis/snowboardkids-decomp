@@ -82,7 +82,71 @@ void func_80070614(s32 arg0) {
     viewport->unk1E = 0;
 }
 
+// func_8007066C best match: 88.911%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_8007066C.s")
+
+#ifdef NON_MATCHING
+extern void guPerspective(ViewportMtx *, u16 *, f32, s32, f32, f32, f32);
+
+void func_8007066C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u16 arg4, u16 arg5, u16 arg6, s32 arg7) {
+    ViewportState *viewport;
+    s32 halfHeight;
+    s32 halfWidth;
+    f32 fovy;
+    s32 *arg3Ptr;
+
+    viewport = &D_801124B0[arg0];
+    viewport->viewportTranslateX = arg1 * 4;
+    viewport->active = 1;
+    viewport->viewportTranslateY = arg2 * 4;
+    viewport->viewportScaleX = arg5 * 2;
+    viewport->viewportScaleY = arg6 * 2;
+
+    arg3Ptr = &arg3;
+    arg3 = *arg3Ptr & 0xFFFF;
+    halfWidth = arg3 / 2;
+    viewport->right = halfWidth + arg1;
+    viewport->left = arg1 - halfWidth;
+    halfHeight = arg4 / 2;
+    viewport->top = arg2 - halfHeight;
+    viewport->bottom = halfHeight + arg2;
+    viewport->right = viewport->right;
+    viewport->screenBoundsValid = 1;
+    viewport->left = viewport->left;
+    viewport->top = viewport->top;
+    viewport->bottom = viewport->bottom;
+
+    if (viewport->right < 0) {
+        viewport->screenBoundsValid = 0;
+    }
+    if (viewport->bottom < 0) {
+        viewport->screenBoundsValid = 0;
+    }
+    if (viewport->left >= 0x140) {
+        viewport->screenBoundsValid = 0;
+    }
+    if (viewport->top >= 0xF0) {
+        viewport->screenBoundsValid = 0;
+    }
+    if (viewport->left < 0) {
+        viewport->left = 0;
+    }
+    if (viewport->top < 0) {
+        viewport->top = 0;
+    }
+    if (viewport->right >= 0x140) {
+        viewport->right = 0x13F;
+    }
+    if (viewport->bottom >= 0xF0) {
+        viewport->bottom = 0xEF;
+    }
+
+    fovy = 70.0f;
+    guPerspective(&viewport->projection, &viewport->perspectiveNorm, fovy, arg7, 10.0f, 2800.0f, 0.5f);
+    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, fovy, arg7, 10.0f, 15000.0f, 0.5f);
+}
+#endif
 
 // func_80070860 best match: 90.168%
 
