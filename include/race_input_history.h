@@ -17,6 +17,7 @@ typedef struct {
     /* 0x000 */ union {
         s16 playerIndex;
         u16 playerIndexU16;
+        u16 playerIndexU;
     };
     /* 0x002 */ char pad2[2];
     /* 0x004 */ u8 unk4;
