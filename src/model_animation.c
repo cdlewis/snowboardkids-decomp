@@ -36,9 +36,29 @@ typedef struct ModelAnimRotation {
     s32 z;
 } ModelAnimRotation;
 
+typedef struct ModelAnimStateJoint {
+    s32 unk0;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    s32 unkC;
+    s32 unk10;
+} ModelAnimStateJoint;
+
 typedef struct ModelAnimState {
     u16 modelId;
-    char pad2[0x450];
+    char pad2[0x332];
+    ModelAnimStateJoint joints[12];
+    char pad424[6];
+    s16 unk42A;
+    s16 unk42C;
+    s16 unk42E;
+    char pad430[0xE];
+    s16 unk43E;
+    s16 unk440;
+    s16 unk442;
+    char pad444[0xE];
     s16 animIndex;
     s32 animStartOffset;
     s32 frameDataOffset;
@@ -691,7 +711,65 @@ void func_80081E40(ModelAnimState *state, s32 animIndex) {
     temp_a2->animIndex = animIndex;
 }
 
+// func_80081EF4 best match: 99.309% (base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80081EF4.s")
+
+#ifdef NON_MATCHING
+void func_80081EF4(ModelAnimState *state) {
+    s16 *frameData;
+    ModelAnimState *cursor;
+    s32 i;
+    s32 base;
+    s16 value0;
+    s16 value1;
+    s16 angle;
+
+    base = func_80043040(D_8011215C[state->modelId]);
+    state->frameTimerReset = 1;
+    frameData = (s16 *)(base + state->frameDataOffset);
+    state->frameTimer = state->frameTimerReset;
+
+    cursor = state;
+    for (i = 0; i < 2; i++) {
+        cursor->joints[0].unkC = frameData[0] << 14;
+        cursor->joints[0].unk10 = frameData[1] << 14;
+        cursor = (ModelAnimState *)((s32)cursor + sizeof(ModelAnimStateJoint));
+        cursor->joints[0].unk0 = frameData[2] << 14;
+        frameData += 3;
+    }
+
+    cursor = state;
+    for (i = 0; i != sizeof(ModelAnimStateJoint) * 12; i += sizeof(ModelAnimStateJoint)) {
+        value0 = frameData[0];
+        value1 = frameData[1];
+        frameData += 2;
+        cursor->joints[0].unk6 = (value0 >> 4) & 0xFF0;
+        cursor->joints[0].unk8 = (value0 << 4) & 0xFF0;
+        cursor->joints[0].unkA = (value1 >> 4) & 0xFF0;
+        if (value1 & 1) {
+            cursor->joints[0].unk6 += 8;
+        }
+        if (value1 & 2) {
+            cursor->joints[0].unk8 += 8;
+        }
+        if (value1 & 4) {
+            cursor->joints[0].unkA += 8;
+        }
+        cursor = (ModelAnimState *)((s32)cursor + sizeof(ModelAnimStateJoint));
+    }
+
+    state->frameDataOffset = (s32)frameData - func_80043040(D_8011215C[state->modelId]);
+    angle = state->joints[0].unk6;
+    state->unk43E = angle;
+    state->unk42A = angle;
+    angle = state->joints[0].unk8;
+    state->unk440 = angle;
+    state->unk42C = angle;
+    angle = state->joints[0].unkA;
+    state->unk442 = angle;
+    state->unk42E = angle;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80082070.s")
 
