@@ -92,6 +92,8 @@ extern s16 D_8011216E;
 extern s16 D_80121B52;
 extern s16 D_80121B72;
 extern s16 D_80121B70;
+extern s16 D_80122040;
+extern s8 D_80122043;
 extern s16 D_801222F6;
 extern s16 D_801222F4;
 extern s16 D_80121B50;
@@ -162,7 +164,114 @@ void func_80078430(void) {
     D_80121B81 = 0;
 }
 
+// func_80078568 best match: 98.459% at nonmatchings/func_80078568-2225551288923588688/base_8.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80078568.s")
+
+#ifdef NON_MATCHING
+const char D_800E1710[] = "%2.2d";
+const char D_800E1718[] = "%2.2d";
+const char D_800E1720[] = "%2.2d";
+const char D_800E1728[] = "%4d";
+const char D_800E172C[] = "%2d";
+
+void func_80078568(s32 arg0) {
+    char buffer[4];
+    s32 x;
+    char *digit;
+    s32 palette;
+    s32 finalPalette;
+    s32 i;
+
+    palette = 0xC;
+    if ((D_80121B78.minutes == 0) && (D_80121B78.seconds < 10) && (D_80156612 & 1)) {
+        palette = 0x10;
+    }
+
+    {
+        char *end;
+
+        sprintf(buffer, D_800E1710, D_80121B78.minutes);
+        finalPalette = palette & 0xFFFF;
+        x = 0x40;
+        digit = buffer;
+        end = &buffer[2];
+        do {
+            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle),
+                          ((u8)*digit - 5) & 0xFFFF, finalPalette);
+            digit++;
+            x += 8;
+        } while ((u32)digit < (u32)end);
+
+        x += 8;
+        sprintf(buffer, D_800E1718, D_80121B79);
+        digit = buffer;
+        end = &buffer[2];
+        do {
+            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle),
+                          ((u8)*digit - 5) & 0xFFFF, finalPalette);
+            digit++;
+            x += 8;
+        } while ((u32)digit < (u32)end);
+
+        x += 8;
+        sprintf(buffer, D_800E1720, D_80121B7A >> 8);
+        digit = buffer;
+        end = &buffer[2];
+        do {
+            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle),
+                          ((u8)*digit - 5) & 0xFFFF, finalPalette);
+            digit++;
+            x += 8;
+        } while ((u32)digit < (u32)end);
+    }
+
+    func_80046D68(0x50, 0x50, func_80043040(D_80112130.popupFontHandle), 0x36, finalPalette);
+    func_80046D68(0x68, 0x50, func_80043040(D_80112130.popupFontHandle), 0x35, finalPalette);
+
+    if (D_80122043 < 10) {
+        x = -0x90;
+        i = 0;
+        if (D_80122043 > 0) {
+            do {
+                func_80047174((s16)x, -0x68, func_80043040(D_80112130.popupFontHandle), 0x26, 1);
+                i++;
+                x += 8;
+            } while (i < D_80122043);
+        }
+    } else {
+        func_80045A78(-0x84, -0x60, func_80043040(D_80112130.popupFontHandle), 0x26);
+    }
+
+    {
+        char *end;
+
+        sprintf(buffer, D_800E1728, D_80122040);
+        x = 0x64;
+        digit = buffer;
+        end = &buffer[4];
+        do {
+            if ((u8)*digit != ' ') {
+                func_80045A78((s16)x, -0x58, func_80043040(D_80112130.popupFontHandle),
+                              ((u8)*digit - 5) & 0xFFFF);
+            }
+            digit++;
+            x += 8;
+        } while (digit != end);
+    }
+
+    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x27);
+    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x28);
+    if (D_80121B81 != 0) {
+        func_80045A78(0x40, 0x54, func_80043040(D_80112130.popupFontHandle), 0x4F);
+    }
+
+    if (D_80122043 >= 10) {
+        sprintf(buffer, D_800E172C, D_80122043);
+        func_80045A78(-0x64, -0x59, func_80043040(D_80112130.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
+        func_80045A78(-0x5C, -0x59, func_80043040(D_80112130.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
+    }
+}
+#endif
 
 const char D_800E1730[] = "Point";
 const char D_800E1738[] = "Time Limit";
