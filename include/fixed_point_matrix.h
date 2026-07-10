@@ -37,6 +37,7 @@ s16 func_80097B48(s16 arg0);
 void func_80097BAC(FixedMatrix3s arg0, s16 arg1);
 void func_80097C18(FixedMatrix3s arg0, s16 arg1);
 void func_80097C84(FixedMatrix3s arg0, s16 arg1);
+void func_80048D60(FixedMatrix3s arg0);
 void func_80097CF0(FixedMatrix3s arg0, FixedMatrix3s arg1, FixedMatrix3s arg2);
 void func_80097DA4(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3);
 void func_80097FE4(FixedMatrix3s arg0, s16 arg1, s16 arg2);
