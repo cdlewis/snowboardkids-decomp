@@ -54,16 +54,17 @@ typedef struct PlayerCommandState {
     s32 fadeTarget;
     s32 fadeTime;
     s32 unk20;
-    u8 pad24[0x8];
+    f32 unk24;
+    f32 unk28;
     f32 unk2C;
     f32 unk30;
     f32 unk34;
     f32 unk38;
-    u8 pad3C[0x4];
+    f32 unk3C;
     f32 unk40;
     f32 unk44;
     f32 unk48;
-    u8 pad4C[0x4];
+    f32 unk4C;
     f32 unk50;
     PlayerCommandData *data;
     s32 sequencePos;
@@ -93,7 +94,8 @@ typedef struct PlayerCommandState {
     u16 unkCC;
     u16 returnUnkC8[5];
     u16 returnUnkCA[5];
-    u8 padE2[0x2];
+    u8 unkE2;
+    u8 unkE3;
     u8 unkE4;
     u8 flagE5;
     u8 flagE6;
@@ -112,11 +114,14 @@ typedef struct PlayerCommandState {
     u8 unkF3;
     u8 padF4[0x9];
     s8 unkFD;
-    u8 padFE[0x7];
+    u8 unkFE;
+    u8 unkFF;
+    u32 unk100;
+    u8 unk104;
     u8 unk105;
     u8 unk106;
     u8 unk107;
-    u8 pad108;
+    u8 unk108;
     u8 returnUnk109[5];
     u8 returnUnk10E[5];
     u8 returnUnk113[5];
@@ -1666,7 +1671,131 @@ ALMicroTime func_8009E0D4(void *arg0) {
 }
 #endif
 
+// func_8009E354 best match: 88.397%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009E354.s")
+
+#ifdef NON_MATCHING
+typedef u8 *(*PlayerCommandHandler)(PlayerCommandState *, u8 *, u8);
+
+extern PlayerCommandHandler D_800DF160[];
+extern u8 D_800DF204[];
+extern u8 *D_8015A674;
+extern s32 D_8015A688;
+
+void func_8009E354(PlayerCommandState *arg0, s32 arg1) {
+    u8 *seq;
+    u8 cmd;
+    u32 duration;
+    s32 soundIndex;
+
+    seq = arg0->sequencePos;
+    if (seq != NULL) {
+        cmd = seq[0];
+        while (cmd >= 0x80) {
+            seq = D_800DF160[cmd & 0x7F](arg0, seq + 1, cmd);
+            if (seq == NULL) {
+                break;
+            }
+            cmd = seq[0];
+        }
+    }
+    arg0->sequencePos = (s32)seq;
+
+    if (seq != NULL) {
+        arg0->unk3C = arg0->unk4C;
+        arg0->sequencePos = (s32)(seq + 1);
+        arg0->unkFE = *seq;
+
+        if (arg0->unkED != 0) {
+            arg0->unk108 = D_800DF204[((u8 *)arg0->sequencePos)[0]];
+            arg0->sequencePos++;
+        } else {
+            arg0->unk108 = D_800DF204[arg0->unkEE];
+        }
+
+        duration = arg0->unkC0;
+        if (duration != 0) {
+            arg0->unkBC = duration;
+            arg0->unk28 = (f32)(duration & 0xFFFF);
+        }
+
+        if ((arg0->flagE6 != 0) || (duration == 0)) {
+            arg0->flagE6 = 0;
+            cmd = *(u8 *)arg0->sequencePos;
+            arg0->sequencePos++;
+            if (cmd < 0x80) {
+                arg0->unkBC = cmd;
+                arg0->unk28 = (f32)cmd;
+            } else {
+                duration = (cmd & 0x7F) << 8;
+                arg0->unkBC = duration;
+                duration += *(u8 *)arg0->sequencePos;
+                arg0->sequencePos++;
+                arg0->unkBC = duration;
+                arg0->unk28 = (f32)(duration & 0xFFFF);
+            }
+        }
+
+        duration = arg0->unkC;
+        arg0->unkC += arg0->unkBC << 8;
+        arg0->unkC6 = 0;
+        arg0->unk11A = 0;
+        arg0->unk10 = duration;
+        arg0->unk40 = 0.0f;
+        arg0->unk107 = arg0->unk106;
+
+        if (arg0->unkFE != 0) {
+            if (arg0->jumpTarget != 0) {
+                u8 *entry = (u8 *)arg0->jumpTarget + (arg0->unkFE * 4);
+
+                arg0->unkCC = entry[-0x30];
+                arg0->unkF2 = entry[-0x2E] / 2;
+                func_8009CD18(arg0, arg0->data->commands + (entry[-0x2F] * 7));
+                arg0->unkFE = entry[-0x2D];
+            }
+
+            soundIndex = arg0->unkCC;
+            if (D_8015A688 <= soundIndex) {
+                soundIndex = 0;
+            }
+
+            if (arg0->flagE5 == 0) {
+                if (arg0->unkE4 != 0) {
+                    alSynStopVoice(&D_8015A8D8, (ALVoice *)(D_8015A65C + (arg1 * 0x1C)));
+                }
+                arg0->unkE4 = 1;
+                arg0->unkB6 = 0xFFFF;
+                arg0->unkE3 = 0xFF;
+                alSynStartVoice(&D_8015A8D8, (ALVoice *)(D_8015A65C + (arg1 * 0x1C)),
+                                *(ALWaveTable **)(D_8015A674 + (soundIndex * 4)));
+            }
+
+            arg0->unkFF = ((u8 *)D_8015A664)[soundIndex] + arg0->unkFE - 5;
+            if (arg0->flagE8 == 0) {
+                arg0->padF4[4] = 0;
+                arg0->padF4[5] = arg0->padF4[1];
+                func_8009EB6C(arg0);
+            }
+            func_8009E938(arg0, arg1);
+            func_8009E76C(arg0, arg1);
+            cmd = arg0->unkF3;
+            if (arg0->unkE2 != cmd) {
+                arg0->unkE2 = cmd;
+                alSynSetFXMix(&D_8015A8D8, (ALVoice *)(D_8015A65C + (arg1 * 0x1C)), cmd);
+            }
+        } else if (arg0->padF4[4] < 4) {
+            arg0->padF4[4] = 4;
+            arg0->padF4[6] = 1;
+            arg0->unk100 = arg0->unk0;
+            arg0->unk104 = arg0->padF4[5];
+        }
+    } else if (arg0->unkE4 != 0) {
+        arg0->unkE4 = 0;
+        alSynStopVoice(&D_8015A8D8, (ALVoice *)(D_8015A65C + (arg1 * 0x1C)));
+    }
+}
+#endif
 
 void func_8009E76C(PlayerCommandState *arg0, s32 arg1) {
     u32 volume;
@@ -1674,7 +1803,7 @@ void func_8009E76C(PlayerCommandState *arg0, s32 arg1) {
     int pan;
     u8 oldPan;
 
-    volume = (u32)(arg0->padF4[5] * (*arg0).unkEF * arg0->pad108 * arg0->unkB0) >> 13;
+    volume = (u32)(arg0->padF4[5] * (*arg0).unkEF * arg0->unk108 * arg0->unkB0) >> 13;
     if (volume >= 0x8000U) {
         volume = 0x7FFF;
     }
@@ -1697,11 +1826,11 @@ void func_8009E76C(PlayerCommandState *arg0, s32 arg1) {
         alSynSetVol(&D_8015A8D8, (ALVoice *)(D_8015A65C + (14 * (2 * arg1))), (s16)volume, 0xF4240 / D_8015A678);
     }
 
-    stopping = arg0->padE2[1];
+    stopping = arg0->unkE3;
     oldPan = stopping;
     pan = (((*(u8 *)&arg0->unkF2) * arg0->unkB2) >> 7) & 0x7F;
     if (pan != oldPan) {
-        arg0->padE2[1] = pan;
+        arg0->unkE3 = pan;
         alSynSetPan(&D_8015A8D8, (ALVoice *)(D_8015A65C + (arg1 * 0x1C)), pan & 0xFF);
     }
 }
@@ -1722,7 +1851,7 @@ void func_8009E938(PlayerCommandState *arg0, s32 arg1) {
     s32 bend;
     u8 slideTime;
 
-    bend = arg0->padFE[1];
+    bend = arg0->unkFF;
     if (bend & 0x80) {
         pitch = -0x100 - -(s32)bend;
     } else {
