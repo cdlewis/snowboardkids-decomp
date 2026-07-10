@@ -67,6 +67,14 @@ typedef struct {
 
 typedef struct {
     char pad0[0x10];
+    /* 0x10 */ u16 spawnIndex;
+    char pad12[6];
+    /* 0x18 */ s16 timer;
+    /* 0x1A */ s8 lastVariant;
+} RaceOverlaySpawnActor;
+
+typedef struct {
+    char pad0[0x10];
     /* 0x10 */ u16 modelListIndex;
     char pad12[6];
     /* 0x18 */ GfxCommandDest *modelBuffer;
@@ -162,6 +170,7 @@ extern void func_80089000(void *, s32, s32);
 extern u8 D_800D9498[][0x10];
 extern u8 D_800D94D8[][0x10];
 extern RaceOverlayEffectSpawn D_800D9518[];
+extern RaceOverlayEffectSpawn *D_800D92D0[];
 extern Vec3i D_800D9BD8[];
 extern RaceOverlayModelEntry *D_800D7754[];
 extern void *D_800DA1C0[];
@@ -174,6 +183,19 @@ extern s16 D_80112168;
 extern u8 D_80156609;
 extern u8 D_80121B56;
 extern u8 D_80121B5A;
+extern u8 D_800EC9C2;
+extern s8 D_80121D93;
+extern s32 D_80121D9C;
+extern s32 D_80121DA4;
+extern s8 D_8012239F;
+extern s32 D_801223A8;
+extern s32 D_801223B0;
+extern s8 D_801229AB;
+extern s32 D_801229B4;
+extern s32 D_801229BC;
+extern s8 D_80122FB7;
+extern s32 D_80122FC0;
+extern s32 D_80122FC8;
 extern u8 D_80112130[];
 extern RaceModelEntry *D_800D91E8[];
 extern u32 D_800D9210[];
@@ -558,7 +580,95 @@ void func_8006752C(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
     }
 }
 
+// func_800675AC best match: 87.877% (nonmatchings/func_800675AC-7273315160691878794/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800675AC.s")
+
+#ifdef NON_MATCHING
+#define SPAWN_RANGE_MAX 0x14000000
+#define SPAWN_RANGE_MIN -0x13FFFFFF
+
+void func_800675AC(RaceOverlaySpawnActor *arg0) {
+    volatile s32 forceStack;
+    RaceOverlayEffectSpawn *savedEntry;
+    RaceThrownModelActor *spawned;
+    RaceOverlayEffectSpawn *entry;
+    s32 found;
+    s32 diffX;
+    s32 diffZ;
+    s32 rand;
+    s32 prev;
+
+    if (D_80121B56 == 0) {
+        if (arg0->timer == 0) {
+            arg0->timer = 0x20;
+            entry = D_800D92D0[arg0->spawnIndex];
+            found = FALSE;
+            if (D_800EC9C2 != 2) {
+                if (D_80121D93 != 0) {
+                    diffZ = D_80121D9C - entry->pos.x;
+                    if ((diffZ < SPAWN_RANGE_MAX) && (diffZ >= SPAWN_RANGE_MIN)) {
+                        diffX = D_80121DA4 - entry->pos.z;
+                        if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) {
+                            found = TRUE;
+                        }
+                    }
+                }
+                if (D_8012239F != 0) {
+                    diffX = D_801223A8 - entry->pos.x;
+                    diffZ = D_801223B0 - entry->pos.z;
+                    if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
+                        (diffZ >= SPAWN_RANGE_MIN)) {
+                        found = TRUE;
+                    }
+                }
+                if (D_801229AB != 0) {
+                    diffX = D_801229B4 - entry->pos.x;
+                    diffZ = D_801229BC - entry->pos.z;
+                    if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
+                        (diffZ >= SPAWN_RANGE_MIN)) {
+                        found = TRUE;
+                    }
+                }
+                if (D_80122FB7 != 0) {
+                    diffX = D_80122FC0 - entry->pos.x;
+                    diffZ = D_80122FC8 - entry->pos.z;
+                    if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
+                        (diffZ >= SPAWN_RANGE_MIN)) {
+                        found = TRUE;
+                    }
+                }
+            } else {
+                found = TRUE;
+            }
+
+            if (found != 0) {
+                savedEntry = entry;
+                spawned = func_80071408((void (*)(EffectTask *)) func_800674B4, 0, 0x64);
+                entry = savedEntry;
+                if (spawned != NULL) {
+                    prev = arg0->lastVariant;
+                    rand = func_80043120() & 3;
+                    if (rand == prev) {
+                        rand = (prev + 1) & 3;
+                    }
+                    arg0->lastVariant = rand;
+                    entry = &entry[rand];
+                    spawned->pos.x = entry->pos.x;
+                    spawned->pos.y = entry->pos.y;
+                    spawned->pos.z = entry->pos.z;
+                    spawned->modelIndex = entry->rotation;
+                    spawned->unk2C = entry->variant;
+                }
+            }
+        } else {
+            arg0->timer--;
+        }
+    }
+}
+
+#undef SPAWN_RANGE_MAX
+#undef SPAWN_RANGE_MIN
+#endif
 
 // func_80067830 best match: display-list command stream matched, remaining differences are stack/local layout.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80067830.s")
