@@ -43,7 +43,10 @@ typedef union {
 } SignedUnsignedShort;
 
 typedef struct {
-    /* 0x000 */ u8 pad0[0x14];
+    /* 0x000 */ u8 pad0[0x04];
+    /* 0x004 */ u8 unk4;
+    /* 0x005 */ u8 pad5[0x13 - 0x5];
+    /* 0x013 */ u8 unk13;
     /* 0x014 */ s8 unk14;
     /* 0x015 */ u8 unk15;
     /* 0x016 */ u8 unk16;
@@ -62,7 +65,8 @@ typedef struct {
 } RaceFlowState;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x8];
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ u8 pad4[0x8 - 0x4];
     /* 0x08 */ s8 unk8;
 } Unk80043040;
 
@@ -92,6 +96,23 @@ extern s8 D_800EC8B0;
 #ifdef NON_MATCHING
 extern u8 D_8011228C;
 extern u8 D_8011233C;
+extern f32 D_800E16CC;
+extern f32 D_800E16D0;
+extern u8 D_59AAA0[];
+extern s16 D_80121B5C;
+extern u8 D_80121B5F;
+extern u8 D_80121D94;
+extern u8 D_80121D95;
+extern u8 D_80121D96;
+extern u8 D_801223A0;
+extern u8 D_801223A1;
+extern u8 D_801223A2;
+extern u8 D_801229AC;
+extern u8 D_801229AD;
+extern u8 D_801229AE;
+extern u8 D_80122FB8;
+extern u8 D_80122FB9;
+extern u8 D_80122FBA;
 #endif
 extern u8 D_2427D0[];
 extern u8 D_243270[];
@@ -135,10 +156,13 @@ extern void func_8000D340(void);
 extern void func_8001710C(void *);
 extern void func_8003DFD0(void);
 extern s32 func_80040D94(void);
+extern void func_80044294(void);
 extern void func_80045914(void);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s32, s32, s32, s32, s32);
+extern void func_80057E60(EffectTask *);
 extern void func_800483FC(void *, void (*)(s32), s32);
+extern void func_8006D5CC(void);
 extern void func_8006D520(s32, s32);
 extern void func_8006D580(u16, u16);
 extern void func_8006D700(void);
@@ -168,6 +192,7 @@ extern void func_80074960(void);
 extern void func_80074C5C(void);
 extern void func_80077AD4(void);
 extern void func_80077B34(void);
+extern void func_80078430(void);
 extern void func_80077C4C(void);
 extern void func_80077400(void);
 extern void func_80077554(void);
@@ -178,6 +203,7 @@ extern void func_80078078(void);
 extern void func_80078198(void);
 extern void func_800781FC(void);
 extern void func_8007AA50(void);
+extern void func_8008BEB0(void);
 extern void func_8008C704(void);
 extern void func_80096E3C(void);
 
@@ -669,8 +695,8 @@ void func_80074C5C(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80074F50.s")
 
 #ifdef NON_MATCHING
-extern void func_8007066C(f32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_80070A70(f32, s32, s32, s32, s32, s32, s32, f32);
+extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
+extern void func_80070A70(s32, s32, s32, s32, s32, s32, s32, f32);
 
 void func_80074F50(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6,
                   f32 arg7, s32 arg8, s32 arg9, s32 arg10, s32 arg11, s32 arg12, s32 arg13,
@@ -753,7 +779,110 @@ void func_80077400(void) {
     }
 }
 
+// func_80077554 best match: 99.389%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80077554.s")
+
+#ifdef NON_MATCHING
+void func_80077554(void) {
+    s32 asset;
+    s32 one;
+
+    D_80121B56 = 0;
+    D_80121B58 = 1;
+    D_80121B5F = 0;
+    asset = func_80043040(D_80112130[0x2B]);
+    if (((Unk80043040 *)asset)->unk8 == 0) {
+        D_80123751 = 1;
+        func_8009956C(func_80077B34, 0);
+        return;
+    }
+    if (func_800730EC() == 0) {
+        D_80123751 = 1;
+        func_8009956C(func_80077B34, 0);
+        return;
+    }
+    ((Unk80043040 *)asset)->unk0 = 0;
+    if (D_80112130[0x21] != -1) {
+        D_80112130[0x21] = func_80042EE4(D_80112130[0x21]);
+    }
+    if (D_80112130[0x22] != -1) {
+        D_80112130[0x22] = func_80042EE4(D_80112130[0x22]);
+    }
+    if (D_80112130[0x23] != -1) {
+        D_80112130[0x23] = func_80042EE4(D_80112130[0x23]);
+    }
+    if (D_80112130[0x24] != -1) {
+        D_80112130[0x24] = func_80042EE4(D_80112130[0x24]);
+    }
+    if (D_80112130[0x25] != -1) {
+        D_80112130[0x25] = func_80042EE4(D_80112130[0x25]);
+    }
+    if (D_80112130[0x26] != -1) {
+        D_80112130[0x26] = func_80042EE4(D_80112130[0x26]);
+    }
+    if (D_80112130[0x27] != -1) {
+        D_80112130[0x27] = func_80042EE4(D_80112130[0x27]);
+    }
+    if (D_80112130[0x28] != -1) {
+        D_80112130[0x28] = func_80042EE4(D_80112130[0x28]);
+    }
+    if (D_80112130[0x1F] != -1) {
+        D_80112130[0x1F] = func_80042EE4(D_80112130[0x1F]);
+    }
+    ((Unk80043040 *)asset)->unk0 = 0;
+    one = 1;
+    D_80121D80[0].unk4 = 0;
+    D_80121D80[1].unk4 = one;
+    D_80121D80[2].unk4 = one;
+    D_80121D80[3].unk4 = one;
+    D_80121D80[0].unk13 = one;
+    D_80121D80[1].unk13 = 0;
+    D_80121D80[2].unk13 = 0;
+    D_80121D80[3].unk13 = 0;
+    D_80121B54 = 1;
+    *(u16 *)&D_80121B52 = 1;
+    D_80121B5C = 0x64;
+    func_80070EC0(2);
+    D_80121D95 = 0;
+    D_80121D96 = 0;
+    D_80121D94 = 0;
+    D_801223A1 = 0;
+    D_801223A2 = 0;
+    D_801223A0 = 0;
+    D_801229AD = 0;
+    D_801229AE = 0;
+    D_801229AC = 0;
+    D_80122FB9 = 0;
+    D_80122FBA = 0;
+    D_80122FB8 = 0;
+    D_80121D80[0].unk16 = 2;
+    D_801235B4 = 0;
+    func_8006D5CC();
+    func_800704F0();
+    if (D_80121B50.s != 6) {
+        func_8007066C(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, D_800E16CC);
+    } else {
+        func_80070A70(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, D_800E16D0);
+    }
+    func_800437F0(D_598A70, D_59AAA0, 0x29);
+    D_8011228C = 1;
+    D_800DEED4 = 0;
+    func_80043154();
+    func_8008BEB0();
+    func_80078430();
+    func_80044294();
+    D_800DEF14 = 0xFF;
+    func_80042C20();
+    func_800720E4(0);
+    D_801235B8->fadeTimer = 0;
+    D_801235B8->unk1C = 0;
+    func_80071408(func_80057E60, 6, 0x64);
+    if (D_80121B61 == -1) {
+        func_80071408((void (*)(EffectTask *))func_80052520, 6, 0x64);
+    }
+    func_8009956C(func_8007797C, 0);
+}
+#endif
 
 void func_8007797C(void) {
     void *sp18;
