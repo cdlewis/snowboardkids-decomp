@@ -101,15 +101,15 @@ extern void func_80001538(u16);
 extern void func_800325D0(EffectTask *);
 #endif
 
-// func_80008F2C best match: 95.542% (base_perm1442.c)
+// func_80008F2C best match: 95.588% (base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_delete_flow/func_80008F2C.s")
 
 #ifdef NON_MATCHING
 void func_80008F2C(void)
 {
-  s32 sp24;
-  int new_var;
   s32 sp1C;
+  int new_var;
+  s32 sp24;
   s16 var_v0;
   s32 temp_t0;
   s32 temp_v0;
