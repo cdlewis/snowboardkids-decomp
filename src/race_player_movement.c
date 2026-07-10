@@ -20,6 +20,13 @@ typedef struct {
     char pad1[0xAF];
 } Unk8011228C;
 
+typedef struct {
+    s8 order0;
+    s8 order1;
+    s8 order2;
+    s8 order3;
+} PlayerOrder;
+
 extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
 extern s32 func_8004940C(s32, s32, s32, s32);
 extern void func_80097FE4(Matrix4s, s16, s16, RaceInputPlayer *);
@@ -27,7 +34,12 @@ extern void func_80098590(Matrix4s, RaceVec3i *, RaceVec3i *);
 extern s16 func_80097AE8(s16);
 extern s16 func_80097B48(s16);
 extern s32 func_80098C30(s64);
+extern void func_80087600(s32, s32 *, s32 *);
+extern u8 D_800EC9C2;
+extern s8 D_80121B54;
+extern s8 D_80121D70[];
 extern RaceInputPlayer D_801235B0;
+extern s32 D_801235B4;
 extern s16 D_800DE84C[];
 extern s16 D_800DE864[];
 extern s16 D_800DE87C[];
@@ -45,7 +57,137 @@ void func_8006A85C(EffectTask *task);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80087600.s")
 
+// func_80087AFC best match: 82.773% (nonmatchings/func_80087AFC-4923837976568703863/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80087AFC.s")
+
+#ifdef NON_MATCHING
+void func_80087AFC(void) {
+    PlayerOrder order;
+    s32 primary[4];
+    s32 secondary[4];
+    RaceInputPlayer *player;
+    RaceInputPlayer *player2;
+    RaceInputPlayer *base;
+    s8 *orderI;
+    s8 *orderJ;
+    s8 *orderEnd;
+    s8 *rankPtr;
+    s32 playerCount;
+    s32 lastPair;
+    s32 i;
+    s32 j;
+    s8 right;
+    s8 left;
+
+    if (D_800EC9C2 != 2) {
+        if (D_801235B4 & 1) {
+            D_80121D70[0] = 0;
+            D_80121D70[1] = 1;
+            D_80121D70[2] = 2;
+            D_80121D70[3] = 3;
+            return;
+        }
+
+        playerCount = D_80121B54;
+        order.order0 = 0;
+        order.order1 = 1;
+        order.order2 = 2;
+        order.order3 = 3;
+        i = 0;
+        if (playerCount > 0) {
+            player = D_80121D80;
+            do {
+                func_80087600(i, &primary[i], &secondary[i]);
+                i++;
+                if ((s32)(player->stateFlags << 5) < 0) {
+                    primary[i - 1] += player->unk57C;
+                }
+                player++;
+            } while (i < D_80121B54);
+            i = 0;
+        }
+
+        lastPair = playerCount - 1;
+        if (lastPair > 0) {
+            base = D_80121D80;
+            do {
+                j = i + 1;
+                if (j < playerCount) {
+                    orderJ = &(&order.order0)[j];
+                    orderI = &(&order.order0)[i];
+                    orderEnd = &(&order.order0)[playerCount];
+                    do {
+                        right = orderJ[0];
+                        left = orderI[0];
+                        player = &base[right];
+                        player2 = &base[left];
+                        if (player->unk509 < player2->unk509) {
+                            orderI[0] = right;
+                            orderJ[0] = left;
+                        }
+                        orderJ++;
+                    } while (orderJ < orderEnd);
+                }
+                j = i + 1;
+                i = j;
+            } while (j < lastPair);
+            i = 0;
+        }
+
+        base = D_80121D80;
+        if (lastPair > 0) {
+            do {
+                j = i + 1;
+                if (j < playerCount) {
+                    orderI = &(&order.order0)[i];
+                    do {
+                        left = orderI[0];
+                        orderJ = &(&order.order0)[j];
+                        player = &base[left];
+                        if (!(player->stateFlags & 0x40)) {
+                            right = orderJ[0];
+                            player2 = &base[right];
+                            if (!(player2->stateFlags & 0x40)) {
+                                if (player->unk508 < player2->unk508) {
+                                    orderI[0] = right;
+                                    orderJ[0] = left;
+                                } else if (player->unk508 == player2->unk508) {
+                                    if (primary[left] < primary[right]) {
+                                        orderI[0] = right;
+                                        orderJ[0] = left;
+                                    } else if ((primary[left] == primary[right]) &&
+                                            (secondary[left] < secondary[right])) {
+                                        orderI[0] = right;
+                                        orderJ[0] = left;
+                                    }
+                                }
+                            }
+                        }
+                        j++;
+                    } while (j < playerCount);
+                }
+                j = i + 1;
+                i = j;
+            } while (j < lastPair);
+            i = 0;
+        }
+
+        if (playerCount > 0) {
+            rankPtr = D_80121D70;
+            orderI = &order.order0;
+            do {
+                right = orderI[0];
+                orderI++;
+                rankPtr++;
+                player = &base[right];
+                player->unk509 = i;
+                i++;
+                rankPtr[-1] = player->playerIndex;
+            } while (i < playerCount);
+        }
+    }
+}
+#endif
 
 void func_80087E14(RaceInputPlayer *player) {
     EffectTask *task;
