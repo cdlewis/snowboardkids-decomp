@@ -159,6 +159,8 @@ extern void func_80072A74(s32, void *, s32, s32);
 extern s16 func_8007D200(s16, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
 extern void func_80089000(void *, s32, s32);
+extern u8 D_800D9498[][0x10];
+extern u8 D_800D94D8[][0x10];
 extern RaceOverlayEffectSpawn D_800D9518[];
 extern Vec3i D_800D9BD8[];
 extern RaceOverlayModelEntry *D_800D7754[];
@@ -749,7 +751,87 @@ void func_80068DB4(RaceOverlayModelActor *arg0) {
     func_800483FC(&D_801248D4, func_800681A4, arg0);
 }
 
+// func_80068EA0 best match: 99.901%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80068EA0.s")
+
+#ifdef NON_MATCHING
+void func_80068EA0(RaceOverlayModelActor *arg0) {
+    RaceInputPlayer *player;
+    Vec3i *pos;
+    s32 found;
+    s32 i;
+    s32 maxPlayers;
+
+    if (D_80121B56 == 0) {
+        found = 0;
+        i = 0;
+        pos = &arg0->pos;
+        maxPlayers = 4;
+
+loop:
+        if (func_80088E98(pos, 0xBF000, 0x170000, i) == 0) {
+            goto next;
+        }
+
+        player = &D_80121D80[i];
+        found = 1;
+        if ((player->unk568 < 0x64) && (player->unk4 == 0)) {
+            goto next;
+        }
+
+        arg0->velY = 0x60000;
+        if (player->unk568 >= 0x64) {
+            player->unk568 -= 0x64;
+        } else {
+            player->unk568 = 0;
+        }
+
+        if (arg0->variant == 0) {
+            player->itemEffectType = D_800D9498[player->unk509][func_80043160((RandomStateObject *)player) & 0xF];
+            if (D_80121B5A != 0) {
+                player->itemEffectType = 1;
+            }
+            player->itemEffectCount = 3;
+            player->pad513[0] = maxPlayers;
+        } else {
+            player->actionEffectType = D_800D94D8[player->unk509][func_80043160((RandomStateObject *)player) & 0xF];
+            if (D_80121B5A != 0) {
+                player->actionEffectType = 1;
+            }
+            if ((D_80121B50 == 8) && (player->unk4 != 0) && (player->actionEffectType == maxPlayers)) {
+                if (func_800430D0() != 0) {
+                    player->actionEffectType = 6;
+                }
+            }
+            player->pad516[0] = maxPlayers;
+        }
+
+        func_80071824(arg0, func_80068DB4);
+        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 0);
+        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 1);
+        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 2);
+        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 3);
+        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 4);
+        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 5);
+        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 6);
+        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 7);
+        func_80072A74(0x1F, pos, 0x7F, 0x32);
+        goto done;
+
+next:
+        i++;
+        if (i != maxPlayers) {
+            goto loop;
+        }
+        if (found != 0) {
+            func_80088294(pos, 0xBF000, 0x170000, 0x800);
+        }
+    }
+
+done:
+    func_800483FC(&D_801248D4, func_80067830, arg0);
+}
+#endif
 
 void func_800691C8(RaceOverlayModelActor *arg0) {
     RaceOverlayEffectSpawn *entry = &D_800D9518[arg0->spawnIndex];
