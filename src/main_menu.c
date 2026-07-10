@@ -63,6 +63,18 @@ typedef struct OSPfsState {
     char game_name[16];
 } OSPfsState;
 
+typedef struct SaveFileIdentity {
+    s32 size;
+    u32 gameCode;
+    u16 companyCode;
+} SaveFileIdentity;
+
+typedef struct SaveSlotBytes {
+    s32 checksum;
+    u8 bytes[0x78DC];
+    u8 tail[0x18];
+} SaveSlotBytes;
+
 typedef struct MainMenuState {
     char pad[0x18];
     s32 fade;
@@ -89,6 +101,9 @@ extern s32 osPfsFreeBlocks(OSPfs *, s32 *);
 extern s32 osPfsNumFiles(OSPfs *, s32 *, s32 *);
 extern s32 osPfsFileState(OSPfs *, s32, OSPfsState *);
 extern s32 osPfsDeleteFile(OSPfs *, u16, u32, u8 *, u8 *);
+extern s32 osPfsFindFile(OSPfs *, u16, u32, u8 *, u8 *, s32 *);
+extern s32 osPfsAllocateFile(OSPfs *, u16, u32, u8 *, u8 *, int, s32 *);
+extern s32 osPfsReadWriteFile(OSPfs *, s32, u8, int, int, u8 *);
 extern s32 func_80013F88(s16, s32, s32);
 extern void func_80045914(void);
 extern void func_8006D780(s32);
@@ -113,10 +128,17 @@ extern OSMesgQueue D_800E4BD0;
 extern OSMesg D_800E4BE8[];
 extern s16 D_800E4BEC;
 extern OSContPad D_800E4C00[];
+extern s32 D_800E4C30[];
 extern OSPfs D_800E4C40[];
 extern OSPfs D_800E4DE0[];
+extern SaveFileIdentity D_800E4F80;
+extern u8 D_800E4F8A[];
+extern u8 D_800E4F8E[];
 extern MainMenuState *D_801235B8;
 extern u8 D_800B30F0;
+extern u8 D_800B30F4[];
+extern u8 D_800B3104[];
+extern u8 D_800B3108[];
 extern u8 D_800B318C;
 extern u8 D_800DEED4;
 extern u8 D_800E4BEE;
@@ -142,6 +164,7 @@ extern u8 D_800EC8B4[];
 extern void *D_800EC8B8;
 extern s16 D_800EC9C8[];
 extern u8 D_800EC9E0[];
+extern SaveSlotBytes D_800EC9F0[];
 extern s32 D_80123758;
 extern s16 D_800DEF14;
 extern s16 D_801124B8;
@@ -415,7 +438,80 @@ void func_800012CC(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
+// func_80001318 best match: 69.772%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80001318.s")
+
+#ifdef NON_MATCHING
+void func_80001318(u16 arg0) {
+    OSPfs * volatile pfs;
+    s32 * volatile fileNo;
+    s32 channel;
+    u8 *src;
+    u8 *dst;
+    u8 *end;
+    SaveSlotBytes *save;
+    u8 *bytes;
+    s32 checksum;
+    s32 offset;
+
+    channel = arg0 & 0xFFFF;
+    D_800E4F80.size = 0x7900;
+    D_800E4F80.gameCode = 'NSKE';
+    D_800E4F80.companyCode = 'EB';
+
+    src = D_800B3104;
+    dst = (u8 *)&D_800E4F80;
+    end = D_800B3108;
+copy_ext:
+    dst[10] = *src;
+    src++;
+    dst++;
+    if (src < end) {
+        goto copy_ext;
+    }
+
+    src = D_800B30F4;
+    dst = (u8 *)&D_800E4F80;
+    end = D_800B3104;
+copy_name:
+    dst[14] = *src;
+    src++;
+    dst++;
+    if (src < end) {
+        goto copy_name;
+    }
+
+    pfs = &D_800E4C40[channel];
+    osPfsInitPak(&D_800E4BD0, pfs, channel);
+
+    fileNo = &D_800E4C30[channel];
+    if (osPfsFindFile(pfs, D_800E4F80.companyCode, D_800E4F80.gameCode, D_800E4F8E, D_800E4F8A, fileNo) == 5) {
+        osPfsAllocateFile(pfs, D_800E4F80.companyCode, D_800E4F80.gameCode, D_800E4F8E, D_800E4F8A, 0x7900, fileNo);
+    }
+
+    save = &D_800EC9F0[channel];
+    checksum = 0;
+    bytes = save->bytes;
+    offset = 4;
+checksum_loop:
+    checksum += bytes[0];
+    checksum += bytes[1];
+    checksum += bytes[2];
+    checksum += bytes[3];
+    offset += 4;
+    bytes += 4;
+    if (offset != 0x78E0) {
+        goto checksum_loop;
+    }
+
+    save->checksum = checksum;
+    if (osPfsReadWriteFile(pfs, *fileNo, 1, 0, 0x78E0, (u8 *)save) == 0) {
+        (&D_800EC9D8)[channel] = 0;
+        return;
+    }
+    (&D_800EC9D8)[channel]++;
+}
+#endif
 
 void func_80001538(u16 arg0) {
     OSMesg msg;
