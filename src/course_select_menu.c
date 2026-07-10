@@ -129,6 +129,7 @@ extern u8 D_8010AF3C;
 extern u8 D_8010AF3D;
 extern u8 D_8010AF3E;
 extern u8 D_8010AF3F;
+extern u8 D_8010AF46;
 extern s8 D_8010AF70;
 extern s8 D_8010AF71;
 extern s8 D_8010AF72;
@@ -153,6 +154,7 @@ extern void func_8000C010(void);
 extern void func_8001710C(EffectTask *);
 extern void func_800257F0(EffectTask *);
 extern void func_80028194(EffectTask *);
+extern void func_8002C800(EffectTask *);
 extern void func_8002F854();
 extern void func_8002FEF8(void);
 extern s32 func_80013F88(s32, s32, s32);
@@ -166,6 +168,7 @@ extern void func_80070614(s32);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_80070E90(s32);
 extern void func_800720E4(s32);
+extern void func_80072114(s32);
 extern void func_80072138(s32, s32);
 extern void func_80099C44(void *, void *, s32);
 extern void n_alSeqpDelete(void);
@@ -315,7 +318,128 @@ void func_800097E0(void) {
 }
 #endif
 
+// func_80009C48 best match: 76.508% (nonmatchings/func_80009C48-7273315160691878794/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_80009C48.s")
+
+#ifdef NON_MATCHING
+void func_80009C48(void) {
+    s32 input;
+    s32 pressed;
+    s32 leftPressed;
+    s32 held;
+    u16 repeat;
+    u8 selection;
+    u8 oldSelection;
+    u8 transition;
+
+    if (D_801235B8->fade != 0) {
+        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 0);
+        if (D_801235B8->fade == 0) {
+            func_80071408(func_8002C800, 0, 0x63);
+            if (D_8010AF70 == 0) {
+                func_80072138(0x44, 0x32);
+            }
+        }
+    } else {
+        transition = D_800EC9C1;
+        if (transition == 0) {
+            if ((D_80121D88 == 0) && (D_8010AF18.unk28 == 1)) {
+                selection = D_800EC9E6;
+                oldSelection = selection;
+                pressed = D_80123758;
+                leftPressed = pressed & 0x10800;
+                if ((leftPressed == 0) && !(pressed & 0x20400)) {
+                    D_8010ADF0 = 0;
+                }
+                held = D_80123778;
+                if ((held & 0x10800) || ((leftPressed != 0) && ((repeat = D_8010ADF0) >= 0xB) && ((repeat % 3) == 0))) {
+                    repeat = D_8010ADF0;
+                    if (repeat == 0) {
+                        repeat += 1;
+                        D_8010ADF0 = repeat;
+                    }
+                    if ((s32) selection > 0) {
+                        selection -= 1;
+                        D_800EC9E6 = selection;
+                    }
+                } else {
+                    repeat = D_8010ADF0;
+                    if ((held & 0x20400) || ((pressed & 0x20400) && ((s32) repeat >= 0xB) && ((repeat % 3) == 0))) {
+                        if (repeat == 0) {
+                            repeat += 1;
+                            D_8010ADF0 = repeat;
+                        }
+                        if ((s32) selection < 2) {
+                            selection += 1;
+                            D_800EC9E6 = selection;
+                        }
+                    }
+                }
+                if (repeat != 0) {
+                    repeat += 1;
+                    D_8010ADF0 = repeat;
+                    if (repeat == 0xFFFF) {
+                        D_8010ADF0 = 0xC;
+                    }
+                }
+                if (selection != oldSelection) {
+                    func_80072138(0x19, 0x32);
+                    if (D_8010AF70 == 0) {
+                        D_8010AF70 = 1;
+                    }
+                    if (D_8010AF71 == 1) {
+                        D_8010AF71 = 0;
+                    }
+                }
+                input = D_80123778;
+                if (((input & 0x1000) || (input & 0x8000)) && (D_801235B4 == 2)) {
+                    D_800EC9C1 = 1;
+                    D_8010AF18.unk28 = 2;
+                    D_8010AF18.unk2A = 0x100;
+                    if ((s32) D_800EC9E6 < 2) {
+                        D_8010ADF8 = 0;
+                        func_80072138(0x18, 0x32);
+                    } else {
+                        D_8010ADF8 = 1;
+                        func_80072138(0x46, 0x32);
+                    }
+                    transition = D_800EC9C1;
+                } else {
+                    transition = D_800EC9C1;
+                    if ((input & 0x4000) && (D_801235B4 == 2) && (transition == 0)) {
+                        D_800EC9C1 = 1;
+                        D_8010AF18.unk28 = 2;
+                        D_8010AF18.unk2A = 0x100;
+                        D_8010ADF8 = 1;
+                        func_80072138(0x46, 0x32);
+                        transition = D_800EC9C1;
+                    }
+                }
+            }
+        } else {
+            transition += 1;
+            D_800EC9C1 = transition;
+        }
+        if (transition == 8) {
+            D_80121D88 = 1;
+            D_800EC9C1 = transition + 1;
+        }
+        if (D_80121D88 == 2) {
+            D_800EC9C1 = 0;
+            if (D_8010ADF8 == 0) {
+                func_8009956C(func_8000A048, 0);
+            } else {
+                func_8009956C(func_8000C114, 0);
+                func_80072114(8);
+                D_8010ADF8 = 0;
+                D_8010AF46 = 0;
+            }
+        }
+    }
+    D_801235B4 = 0;
+    func_8007105C();
+}
+#endif
 
 // func_8000A048 best match: 86.471%
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000A048.s")
