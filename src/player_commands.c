@@ -1526,7 +1526,62 @@ void func_8009E76C(PlayerCommandState *arg0, s32 arg1) {
 }
 #endif
 
+// func_8009E938 best match: 95.714%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009E938.s")
+
+#ifdef NON_MATCHING
+extern void alSynSetPitch(void *, void *, f32);
+
+void func_8009E938(PlayerCommandState *arg0, s32 arg1) {
+    register f32 pitch;
+    f32 basePitch;
+    f32 slidePitch;
+    f32 pitchRatio;
+    f32 flagPitch;
+    s32 bend;
+    u8 slideTime;
+
+    bend = arg0->padFE[1];
+    if (bend & 0x80) {
+        pitch = -0x100 - -(s32)bend;
+    } else {
+        pitch = bend;
+    }
+
+    slideTime = arg0->unkEA;
+    if ((slideTime != (0, 0)) && (slideTime >= arg0->unkC6)) {
+        basePitch = arg0->unk3C;
+        slidePitch = (pitch - basePitch) / (f32)slideTime;
+        slidePitch *= arg0->unk40;
+        pitch = slidePitch + basePitch;
+    }
+
+    flagPitch = (f32)arg0->unk118 * (f32)(1 - arg0->flagE7);
+    arg0->unk4C = pitch;
+    arg0->flagE7 = 0;
+    pitch += arg0->unk48 + flagPitch + arg0->unk2C + (f32)arg0->unk11A + ((f32 *)D_8015A668)[arg0->unkCC];
+    pitch = (f32)((f64)pitch + ((f64)(f32)arg0->unkF1 * 0.015625 * ((f64)(f32)arg0->unkF0 - 64.0)));
+    if (1) {}
+    if (1) {}
+    if (1) {}
+    if (1) {}
+    pitch += arg0->unk50;
+
+    if (pitch != arg0->unk24) {
+        arg0->unk24 = pitch;
+        pitchRatio = func_8009F194((f32)((f64)pitch * 0.083333333333333329));
+        if (pitchRatio < 0.0f) {
+            pitchRatio = 0.0f;
+        }
+        if (pitchRatio > 2.0) {
+            pitchRatio = 2.0f;
+            arg0->unk108 = 0;
+        }
+        alSynSetPitch(&D_8015A8D8, D_8015A65C + (arg1 * 0x1C), pitchRatio);
+    }
+}
+#endif
 
 // func_8009EB6C best match: 89.464%
 
