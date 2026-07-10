@@ -235,10 +235,6 @@ void func_8007C38C(void *asset, s16 dlIndex, u16 textureIndex) {
 
 #ifdef NON_MATCHING
 void func_8007C5E8(RacePositionUiPlayer *player) {
-    static u32 *textures[RACE_POSITION_UI_PART_COUNT] = {
-        D_800DE110, D_800DE128, D_800DE140, D_800DE158, D_800DE170, D_800DE188, D_800DE1A0,
-        D_800DE1B8, D_800DE1D0, D_800DE1E8, D_800DE200, D_800DE218, D_800DE230,
-    };
     s32 i;
 
     if (D_80156609 != 0) {
@@ -264,10 +260,40 @@ void func_8007C5E8(RacePositionUiPlayer *player) {
     }
 
     if ((player->flags & RACE_POSITION_UI_FLAG_HIDE_MESHES) == 0) {
-        racePositionUiDrawParts(player, textures);
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 2, func_80043040(D_80112130[player->playerIndex + 0xE]));
+        gSPSegment(gRegionAllocPtr++, 3, func_80043040(D_80112130[player->playerIndex + 0x12]));
+
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE110[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[2], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE128[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[3], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE140[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[4], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE158[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[5], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE170[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[6], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE188[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[7], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE1A0[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[8], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE1B8[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[9], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE1D0[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[10], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE1E8[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[11], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE200[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[12], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE218[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[13], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_800DE230[player->textureSet]);
     }
 }
 #else
+// func_8007C5E8 best match: 97.901%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007C5E8.s")
 #endif
 
