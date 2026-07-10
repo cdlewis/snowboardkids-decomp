@@ -1853,7 +1853,7 @@ void func_8009E76C(PlayerCommandState *arg0, s32 arg1) {
     int pan;
     u8 oldPan;
 
-    volume = (u32)(arg0->padF4[5] * (*arg0).unkEF * arg0->unk108 * arg0->unkB0) >> 13;
+    volume = (u32)(arg0->unkF9 * (*arg0).unkEF * arg0->unk108 * arg0->unkB0) >> 13;
     if (volume >= 0x8000U) {
         volume = 0x7FFF;
     }

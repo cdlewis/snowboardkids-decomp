@@ -87,7 +87,6 @@ extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
 extern s32 func_80080CC4(s32, s32, s32);
 extern void func_8006D520(u16, u16);
 extern void func_8004F55C(s16, s16);
-extern void func_80082B58(RaceInputPlayer *, s32, s16, s32);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void func_8004FA44(void *);
 extern void func_8005FB30(void *);
@@ -153,7 +152,6 @@ extern void *D_801248EC;
 extern Struct800955C0 D_800B9540[];
 extern s16 D_801124B8[];
 extern s16 D_80121B50;
-extern Unk801124B8 D_801124B8[];
 
 void func_8008BEB0(void) {
     D_80121D80[0].playerIndex = 0;

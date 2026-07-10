@@ -157,7 +157,6 @@ extern s16 D_800E4C2A;
 extern u8 D_800E4C2C;
 extern u8 D_800E4C2D;
 extern s32 D_800E4C30[];
-extern OSPfsState D_800E4F80;
 extern u8 D_800E4F8A[];
 extern u8 D_800E4F8E[];
 extern u8 D_800EC9D8;
