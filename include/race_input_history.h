@@ -14,7 +14,10 @@ typedef struct {
 } RaceVec3i;
 
 typedef struct {
-    /* 0x000 */ s16 playerIndex;
+    /* 0x000 */ union {
+        s16 playerIndex;
+        u16 playerIndexU16;
+    };
     /* 0x002 */ char pad2[2];
     /* 0x004 */ u8 unk4;
     /* 0x005 */ char pad5[0xB];
@@ -149,7 +152,8 @@ typedef struct {
     /* 0x500 */ u8 unk500;
     /* 0x501 */ char pad501[1];
     /* 0x502 */ s16 unk502;
-    /* 0x504 */ char pad504[5];
+    /* 0x504 */ char pad504[4];
+    /* 0x508 */ s8 unk508;
     /* 0x509 */ s8 unk509;
     /* 0x50A */ char pad50A[6];
     /* 0x510 */ s16 shieldEffectTimer;
@@ -203,5 +207,6 @@ u32 func_8008B408(RaceInputPlayer *player, s32 arg1, s32 arg2);
 void func_8008B508(RaceVec3i *vec, RaceInputPlayer *player);
 void func_8008BBB8(RaceInputPlayer *player, s16 soundType);
 void func_8008BE1C(RaceInputPlayer *player);
+void func_80087E14(RaceInputPlayer *player);
 
 #endif
