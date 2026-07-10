@@ -887,7 +887,7 @@ void func_80074C5C(void) {
 }
 #endif
 
-// func_80074F50 best match: 36.475%
+// func_80074F50 best match: 60.289%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80074F50.s")
 
 #ifdef NON_MATCHING
@@ -899,11 +899,11 @@ void func_80074F50(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
                   f32 arg14) {
     volatile s32 sp2C;
     volatile s32 sp28;
-    f32 temp_fv0;
-    s32 temp_t0;
-    s32 temp_t1;
-    s32 temp_t2;
-    s32 temp_t3;
+    volatile f32 temp_fv0;
+    volatile s32 temp_t0;
+    volatile s32 temp_t1;
+    volatile s32 temp_t2;
+    volatile s32 temp_t3;
     s32 temp_v0;
 
     temp_v0 = D_801235B8->fadeTimer;
