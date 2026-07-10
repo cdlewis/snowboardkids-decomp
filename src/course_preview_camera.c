@@ -418,7 +418,26 @@ void func_8005638C(CoursePreviewCamera *arg0, s32 arg1) {
     arg0->velocityY += diff;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_800563C4.s")
+void func_800563C4(CoursePreviewCamera *arg0, s32 arg1) {
+    s32 diff = arg1 - arg0->radius;
+
+    if (diff >= 0x2001) {
+        diff = 0x2000;
+    }
+    if (diff < -0x2000) {
+        diff = -0x2000;
+    }
+    if (diff >= 0 && arg0->radius != 0) {
+        if (arg0->tilt < 0x800) {
+            arg0->tilt += 0x28;
+        }
+    } else {
+        if (arg0->tilt != 0) {
+            arg0->tilt -= 0x28;
+        }
+    }
+    arg0->radius += diff;
+}
 
 void func_80056444(CoursePreviewCamera *arg0, s16 arg1) {
     s16 diff = arg1 - arg0->pitchVelocity;
