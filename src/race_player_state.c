@@ -20,6 +20,18 @@ typedef struct {
 
 typedef struct {
     s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+    s16 unk10;
+} PlayerTuningRow;
+
+typedef struct {
+    s16 unk0;
     char pad2[0x16];
     s32 unk18;
     s32 unk1C;
@@ -77,12 +89,18 @@ extern void (*D_800DED08[])(RaceInputPlayer *);
 extern void (*D_800DED18[])(RaceInputPlayer *);
 extern void (*D_800DED30[])(RaceInputPlayer *);
 extern void (*D_800DED48[])(RaceInputPlayer *);
+extern PlayerTuningRow D_800DC5E0[];
+extern PlayerTuningRow D_800DC6F0[];
+extern PlayerTuningRow D_800DC770[];
+extern PlayerTuningRow D_800DC880[];
 extern Struct800955C0 D_800B9540[];
 extern u8 D_80121B5F;
 extern u8 D_800EC9C2;
 extern s8 D_80121B54;
 extern u8 D_80121B56;
 extern u8 D_80121B5E;
+extern u8 D_80121B59;
+extern u8 D_80121B5B;
 extern s16 D_80121B50;
 extern s32 D_801235B4;
 extern s16 D_801235B0;
@@ -116,7 +134,44 @@ void func_8008BEB0(void) {
     }
 }
 
+// func_8008BF5C best match: 99.241%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008BF5C.s")
+
+#ifdef NON_MATCHING
+void func_8008BF5C(RaceInputPlayer *arg0) {
+    RaceInputPlayer *player;
+    PlayerTuningRow *var_v0;
+    s32 new_var;
+    PlayerTuningRow *var_v1;
+    PlayerTuningRow *temp_a1;
+    PlayerTuningRow *temp_a2;
+    s32 temp_t5;
+
+    player = arg0;
+    var_v0 = D_800DC6F0;
+    if ((D_80121B59 != 0) || (var_v1 = var_v0, D_80121B5B != 0)) {
+        var_v0 = D_800DC770;
+        var_v1 = D_800DC880;
+    } else {
+        var_v0 = D_800DC5E0;
+    }
+    temp_a1 = (PlayerTuningRow *)((u8 *)var_v1 + (player->characterId * sizeof(PlayerTuningRow)));
+    temp_a2 = (PlayerTuningRow *)((u8 *)var_v0 + (player->unk11 * sizeof(PlayerTuningRow)));
+    if (1) {
+        temp_t5 = ((temp_a1->unk0 + temp_a2->unk0) << 3) << 5;
+        player->unk25C = temp_t5;
+        player->unk314 = temp_t5;
+        player->unk260 = (temp_a1->unk2 + temp_a2->unk2) << 4;
+        player->unk264 = (new_var = (((temp_a1->unk4 + temp_a2->unk4) << 2) << 1) << 1);
+        player->unk268 = temp_a1->unk6 + temp_a2->unk6;
+    }
+    player->unk274 = (temp_a1->unk8 + temp_a2->unk8) << 4;
+    player->unk26C = (temp_a1->unkA + temp_a2->unkA) << 4;
+    player->unk270 = (temp_a1->unkC + temp_a2->unkC) << 4;
+    player->unk278 = (temp_a1->unkE + temp_a2->unkE) << 4;
+    player->unk27C = (temp_a1->unk10 + temp_a2->unk10) << 4;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008C098.s")
 
