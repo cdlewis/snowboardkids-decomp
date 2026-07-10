@@ -4,7 +4,6 @@
 #include "course_asset_loader.h"
 #include "game_boot.h"
 
-#define COURSE_COUNT 10
 #define COURSE_PLAYER_COUNT 4
 #define COURSE_PLAYER_STRIDE 0x60C
 
@@ -12,13 +11,6 @@ typedef struct {
     /* 0x0 */ u8 *start;
     /* 0x4 */ u8 *end;
 } RomAssetRange;
-
-typedef struct {
-    /* 0x0 */ RomAssetRange courseGeometry;
-    /* 0x8 */ RomAssetRange courseModel;
-    /* 0x10 */ RomAssetRange courseTexture;
-    /* 0x18 */ RomAssetRange courseAnimation;
-} CourseAssetGroup;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
@@ -31,7 +23,7 @@ typedef struct {
 extern s16 D_80112130[];
 extern s16 D_80112140;
 extern s16 D_80112144;
-extern s16 D_80121B50;
+extern u16 D_80121B50;
 extern CoursePlayerState D_80121D80[];
 extern RomAssetRange D_800D4020[];
 extern RomAssetRange D_800D4050[];
@@ -64,6 +56,15 @@ extern u8 D_1D3070[];
 extern u8 D_1D82B0[];
 extern u8 D_1DCED0[];
 extern u8 D_1E74E0[];
+extern u8 D_1EC0F0[];
+extern u8 D_1EC4A0[];
+extern u8 D_1EC810[];
+extern u8 D_1ECD00[];
+extern u8 D_1ED910[];
+extern u8 D_1EDC80[];
+extern u8 D_1EE060[];
+extern u8 D_1EEEA0[];
+extern u8 D_1EF1D0[];
 extern u8 D_1EF530[];
 extern u8 D_1F1A90[];
 extern u8 D_21D9D0[];
@@ -85,47 +86,118 @@ extern u8 D_5DB9D0[];
 extern void func_8007D190(void);
 
 #ifdef NON_MATCHING
-static CourseAssetGroup sCourseAssets[COURSE_COUNT] = {
-    { { D_E35C0, D_EC9A0 }, { D_163410, D_171480 }, { D_21D9D0, D_222500 }, { NULL, NULL } },
-    { { D_EC9A0, D_F6160 }, { D_171480, D_17D220 }, { D_222500, D_2274A0 }, { NULL, NULL } },
-    { { D_F6160, D_FEDA0 }, { D_17D220, D_186910 }, { D_2274A0, D_22AE50 }, { NULL, NULL } },
-    { { D_FEDA0, D_10AAB0 }, { D_186910, D_197490 }, { D_22AE50, D_2308E0 }, { NULL, NULL } },
-    { { D_10AAB0, D_118670 }, { D_197490, D_1A5620 }, { D_2308E0, D_2349E0 }, { NULL, NULL } },
-    { { D_118670, D_125C90 }, { D_1A5620, D_1B3160 }, { D_2349E0, D_23A7D0 }, { NULL, NULL } },
-    { { D_125C90, D_131A90 }, { D_1B3160, D_1C24B0 }, { D_23A7D0, D_23E9D0 }, { NULL, NULL } },
-    { { D_131A90, D_1384B0 }, { D_1C24B0, D_1C9630 }, { D_23E9D0, D_23FCC0 }, { NULL, NULL } },
-    { { D_1384B0, D_13F3B0 }, { D_1C9630, D_1D3070 }, { D_23FCC0, D_241160 }, { NULL, NULL } },
-    { { D_13F3B0, D_145380 }, { D_1D3070, D_1D82B0 }, { D_241160, D_2427D0 }, { NULL, NULL } },
-};
-
-static void loadRawCourseAsset(RomAssetRange *range) {
-    s32 size;
-
-    size = range->end - range->start;
-    D_80112140 = func_80042D58(size);
-    func_80043060(D_80112140);
-    func_80099C44(range->start, func_80043040(D_80112140), size);
-}
-
-// func_80043950 best match: not matched, typed rewrite documents the asset table structure.
+// func_80043950 best match: 63.023% at nonmatchings/func_80043950-2225551288923588688/base_4.c.
 void func_80043950(void) {
-    CourseAssetGroup *courseAssets;
     s32 size;
 
-    if ((u16)D_80121B50 < COURSE_COUNT) {
-        courseAssets = &sCourseAssets[D_80121B50];
-        loadRawCourseAsset(&courseAssets->courseGeometry);
-        func_800437F0(courseAssets->courseModel.start, courseAssets->courseModel.end, 9);
-        func_800437F0(courseAssets->courseTexture.start, courseAssets->courseTexture.end, 0x1B);
+    switch (D_80121B50) {
+    case 0:
+        size = D_EC9A0 - D_E35C0;
+        D_80112140 = func_80042D58(size);
+        func_80043060(D_80112140);
+        func_80099C44(D_E35C0, func_80043040(D_80112140), size);
+        func_800437F0(D_163410, D_171480, 9);
+        func_800437F0(D_21D9D0, D_222500, 0x1B);
         func_8007D190();
+        func_800437F0(D_1EC0F0, D_1EC4A0, 0x1D);
+        break;
+    case 1:
+        size = D_F6160 - D_EC9A0;
+        D_80112140 = func_80042D58(size);
+        func_80043060(D_80112140);
+        func_80099C44(D_EC9A0, func_80043040(D_80112140), size);
+        func_800437F0(D_171480, D_17D220, 9);
+        func_800437F0(D_222500, D_2274A0, 0x1B);
+        func_8007D190();
+        func_800437F0(D_1EC4A0, D_1EC810, 0x1D);
+        break;
+    case 2:
+        size = D_FEDA0 - D_F6160;
+        D_80112140 = func_80042D58(size);
+        func_80043060(D_80112140);
+        func_80099C44(D_F6160, func_80043040(D_80112140), size);
+        func_800437F0(D_17D220, D_186910, 9);
+        func_800437F0(D_2274A0, D_22AE50, 0x1B);
+        func_8007D190();
+        func_800437F0(D_1EC810, D_1ECD00, 0x1D);
+        break;
+    case 3:
+        size = D_10AAB0 - D_FEDA0;
+        D_80112130[8] = func_80042D58(size);
+        func_80043060(D_80112130[8]);
+        func_80099C44(D_FEDA0, func_80043040(D_80112140), size);
+        func_800437F0(D_186910, D_197490, 9);
+        func_800437F0(D_22AE50, D_2308E0, 0x1B);
+        func_8007D190();
+        func_800437F0(D_1ECD00, D_1ED910, 0x1D);
+        break;
+    case 4:
+        size = D_118670 - D_10AAB0;
+        D_80112130[8] = func_80042D58(size);
+        func_80043060(D_80112130[8]);
+        func_80099C44(D_10AAB0, func_80043040(D_80112140), size);
+        func_800437F0(D_197490, D_1A5620, 9);
+        func_800437F0(D_2308E0, D_2349E0, 0x1B);
+        func_8007D190();
+        func_800437F0(D_1ED910, D_1EDC80, 0x1D);
+        break;
+    case 5:
+        size = D_125C90 - D_118670;
+        D_80112130[8] = func_80042D58(size);
+        func_80043060(D_80112130[8]);
+        func_80099C44(D_118670, func_80043040(D_80112140), size);
+        func_800437F0(D_1A5620, D_1B3160, 9);
+        func_800437F0(D_2349E0, D_23A7D0, 0x1B);
+        func_8007D190();
+        func_800437F0(D_1EDC80, D_1EE060, 0x1D);
+        break;
+    case 6:
+        size = D_131A90 - D_125C90;
+        D_80112130[8] = func_80042D58(size);
+        func_80043060(D_80112130[8]);
+        func_80099C44(D_125C90, func_80043040(D_80112140), size);
+        func_800437F0(D_1B3160, D_1C24B0, 9);
+        func_800437F0(D_23A7D0, D_23E9D0, 0x1B);
+        func_8007D190();
+        func_800437F0(D_1EE060, D_1EEEA0, 0x1D);
+        break;
+    case 7:
+        size = D_1384B0 - D_131A90;
+        D_80112130[8] = func_80042D58(size);
+        func_80043060(D_80112130[8]);
+        func_80099C44(D_131A90, func_80043040(D_80112140), size);
+        func_800437F0(D_1C24B0, D_1C9630, 9);
+        func_800437F0(D_23E9D0, D_23FCC0, 0x1B);
+        func_8007D190();
+        break;
+    case 8:
+        size = D_13F3B0 - D_1384B0;
+        D_80112130[8] = func_80042D58(size);
+        func_80043060(D_80112130[8]);
+        func_80099C44(D_1384B0, func_80043040(D_80112140), size);
+        func_800437F0(D_1C9630, D_1D3070, 9);
+        func_800437F0(D_23FCC0, D_241160, 0x1B);
+        func_8007D190();
+        func_800437F0(D_1EEEA0, D_1EF1D0, 0x1D);
+        break;
+    case 9:
+        size = D_145380 - D_13F3B0;
+        D_80112130[8] = func_80042D58(size);
+        func_80043060(D_80112130[8]);
+        func_80099C44(D_13F3B0, func_80043040(D_80112140), size);
+        func_800437F0(D_1D3070, D_1D82B0, 9);
+        func_800437F0(D_241160, D_2427D0, 0x1B);
+        func_8007D190();
+        func_800437F0(D_1EF1D0, D_1EF530, 0x1D);
+        break;
     }
 
     size = D_14B450 - D_147910;
-    D_80112144 = func_80042D58(size);
-    func_80043060(D_80112144);
+    D_80112130[10] = func_80042D58(size);
+    func_80043060(D_80112130[10]);
     func_80099C44(D_147910, func_80043040(D_80112144), size);
     func_800437F0(D_1D82B0, D_1DCED0, 0xB);
-    func_800437F0(D_1E74E0, D_1EF530, 0x1C);
+    func_800437F0(D_1E74E0, D_1EC0F0, 0x1C);
     func_800437F0(D_5DAF30, D_5DB9D0, 0x2A);
 }
 #else
