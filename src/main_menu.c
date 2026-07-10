@@ -427,7 +427,98 @@ void func_80001010(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
+// func_8000105C best match: 85.904%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_8000105C.s")
+
+#ifdef NON_MATCHING
+void func_8000105C(u16 arg0) {
+    s32 ret;
+    u16 badChecksum;
+    OSPfs *pfs;
+    s32 channel;
+    s32 savedChannel;
+    s32 *fileNo;
+    SaveSlotBytes *save;
+    u8 *src;
+    u8 *dst;
+    u8 *end;
+    u8 *bytes;
+    s32 checksum;
+    s32 offset;
+
+    channel = arg0 & 0xFFFF;
+    savedChannel = channel;
+    pfs = &D_800E4C40[channel];
+    badChecksum = 0;
+    osPfsInitPak(&D_800E4BD0, pfs, channel);
+
+    D_800E4F80.gameCode = 'NSKE';
+    D_800E4F80.companyCode = 'EB';
+
+    src = D_800B3104;
+    dst = (u8 *)&D_800E4F80;
+    end = D_800B3108;
+copy_ext:
+    dst[10] = *src;
+    src++;
+    dst++;
+    if (src < end) {
+        goto copy_ext;
+    }
+
+    src = D_800B30F4;
+    dst = (u8 *)&D_800E4F80;
+    end = D_800B3104;
+copy_name:
+    dst[14] = *src;
+    src++;
+    dst++;
+    if (src < end) {
+        goto copy_name;
+    }
+
+    fileNo = &D_800E4C30[channel];
+    osPfsFindFile(pfs, D_800E4F80.companyCode, D_800E4F80.gameCode, D_800E4F8E, D_800E4F8A, fileNo);
+
+    save = &D_800EC9F0[channel];
+    ret = osPfsReadWriteFile(pfs, *fileNo, 0, 0, 0x78E0, (u8 *)save);
+    if (ret == 0) {
+        checksum = 0;
+        bytes = save->bytes;
+        offset = 4;
+checksum_loop:
+        checksum += bytes[0];
+        checksum += bytes[1];
+        checksum += bytes[2];
+        checksum += bytes[3];
+        offset += 4;
+        bytes += 4;
+        if (offset != 0x78E0) {
+            goto checksum_loop;
+        }
+        if (checksum != save->checksum) {
+            badChecksum = 1;
+        }
+
+        if (badChecksum == 0) {
+            if (func_80001904(savedChannel) == 0) {
+                (&D_800EC9D8)[channel] = 0;
+            }
+        } else {
+            (&D_800EC9D8)[channel]++;
+        }
+    } else {
+        (&D_800EC9D8)[channel]++;
+    }
+
+    if ((ret != 0) || ((&D_800EC9D8)[channel] != 0)) {
+        if ((&D_800EC9D8)[channel] != 3) {
+            return;
+        }
+    }
+    D_800EC9E0[channel]++;
+}
+#endif
 
 void func_800012CC(u16 arg0) {
     OSMesg msg;
