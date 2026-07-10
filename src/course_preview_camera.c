@@ -86,7 +86,6 @@ typedef struct {
 
 extern void *D_801248D4;
 extern void func_800483FC(void *, void *, s32);
-extern void func_800556B0(void);
 extern void osWritebackDCache(void *, s32);
 extern s16 D_80112144;
 extern s16 D_80112146;
@@ -100,6 +99,7 @@ extern Gfx D_2002DB8[];
 extern Gfx *func_8004885C(FixedTransform *arg0);
 extern void func_80045990(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);
 extern Vec3i D_800D5CC8[];
+extern GfxCommandDest *D_800D5C50[];
 extern CoursePreviewGfxCommandEntry *D_800D5C6C[];
 extern CoursePreviewGfxCommandEntry *D_800D5FC8[];
 extern u16 D_800D5D30[];
@@ -118,7 +118,61 @@ extern s16 D_80121B50;
 extern s16 D_801235B0;
 extern u32 D_80156614;
 
+// func_800556B0 best match: 99.170% (nonmatchings/func_800556B0-4923837976568703863/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_800556B0.s")
+
+#ifdef NON_MATCHING
+void func_800556B0(CoursePreviewGfxCommandActor *arg0) {
+    u32 image;
+    u32 palette;
+    s16 width;
+    s16 height;
+    volatile u8 pad[0x10];
+    CoursePreviewGfxCommandEntry *entry;
+    GfxCommandDest *vertices;
+    Gfx *gfx;
+    s16 textureIndex;
+    s32 i;
+    s8 nextTextureIndex;
+
+    gSPDisplayList(gRegionAllocPtr++, D_800D9D00);
+    entry = D_800D5C6C[D_80121B50];
+    vertices = D_800D5C50[D_80121B50];
+    textureIndex = -1;
+    i = 0;
+
+    if (entry->textureIndex != -1) {
+        do {
+            if (func_80049000(entry->command) != 0) {
+                if (textureIndex != entry->textureIndex) {
+                    textureIndex = entry->textureIndex;
+                    func_80045A1C((u8 *)func_80043040((s32)D_8011216A), (u16)textureIndex, &image, &palette,
+                                  &width, &height);
+                    gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0, G_TX_CLAMP,
+                                            G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
+                }
+
+                gSPMatrix(gRegionAllocPtr++, &arg0->matrices[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gfx = gRegionAllocPtr;
+                gRegionAllocPtr = gfx + 1;
+                gfx->words.w0 = 0x0400103F;
+                gfx->words.w1 = (u32)&vertices[entry->textureIndex];
+                gfx = gRegionAllocPtr;
+                gRegionAllocPtr = gfx + 1;
+                gfx->words.w0 = 0xB1060402;
+                gfx->words.w1 = 0x60200;
+            }
+            nextTextureIndex = entry[1].textureIndex;
+            entry++;
+            i++;
+        } while (nextTextureIndex != -1);
+    }
+
+    gSPDisplayList(gRegionAllocPtr++, D_800D9D40);
+}
+#endif
 
 void func_80055B04(s32 arg0) {
     func_800483FC(&D_801248D4, func_800556B0, arg0);
