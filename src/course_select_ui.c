@@ -1403,7 +1403,7 @@ void func_80028354(CourseSelectWidgetInitActor *actor) {
 }
 #endif
 
-// func_800287EC best match: 76.720% (nonmatchings/func_800287EC-8207005055717715604/base_4.c)
+// func_800287EC best match: 82.540% (nonmatchings/func_800287EC-8207005055717715604/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800287EC.s")
 
 #ifdef NON_MATCHING
@@ -1423,14 +1423,17 @@ typedef struct {
 
 void func_800287EC(CourseSelectWidgetActor *arg0) {
     volatile u8 pad[0x20];
-    CourseSelectWidgetTransitionActor *actor = (CourseSelectWidgetTransitionActor *)arg0;
+    CourseSelectWidgetTransitionActor *actor;
     s32 i;
     s32 count;
     s32 next;
     s32 step;
     u8 *statePtr;
+    u8 *modePtr;
 
-    if (D_80121B55 == 2) {
+    actor = (CourseSelectWidgetTransitionActor *)arg0;
+    modePtr = &D_80121B55;
+    if (*modePtr == 2) {
         count = 2;
     } else {
         count = 4;
@@ -1484,8 +1487,8 @@ void func_800287EC(CourseSelectWidgetActor *arg0) {
                         }
                         step++;
                         if (count == next) {
-                            if (((D_80121B55 == 2) && (actor->x[0] >= actor->exitTargetX[0])) ||
-                                ((D_80121B55 >= 3) && (actor->exitTargetX[0] >= actor->x[0]))) {
+                            if (((*modePtr == 2) && (actor->x[0] >= actor->exitTargetX[0])) ||
+                                ((*modePtr >= 3) && (actor->exitTargetX[0] >= actor->x[0]))) {
                                 s32 j = 0;
                                 if (count > 0) {
                                     do {
