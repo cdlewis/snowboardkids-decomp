@@ -32,6 +32,7 @@ extern void func_80072138(s32, s32);
 extern void func_80045914(void);
 extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
+extern void func_8001710C(EffectTask *);
 
 extern void func_80008620(void);
 extern void func_80005540(void);
@@ -44,6 +45,8 @@ extern u8 D_59DFE0[];
 extern u8 D_59E7F0[];
 extern u8 D_5A1ED0[];
 extern u8 D_5C5320[];
+extern u8 D_5CCD40[];
+extern u8 D_5D4280[];
 extern CharacterSelectCourseUnlockList D_800B3420[];
 extern s16 D_800B3478[];
 extern s16 D_800B3480[];
@@ -75,6 +78,7 @@ extern u8 D_8010AE89;
 extern u8 D_8010ADF8;
 extern u8 D_8010ADF9;
 extern u8 D_800EC9C1;
+extern u8 D_800EC9C2;
 extern s16 D_800EC9D0;
 extern u8 D_800EC9DD;
 extern u8 D_80123750;
@@ -82,7 +86,119 @@ extern u8 D_80123751;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_flow/func_80005C70.s")
 
+// func_80005F18 best match: 84.441% (nonmatchings/func_80005F18-8207005055717715604/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_flow/func_80005F18.s")
+
+#ifdef NON_MATCHING
+void func_80005F18(void) {
+    s32 sp2C;
+    s16 *var_v0_2;
+    s16 *var_v1_2;
+    s32 var_v1;
+    s32 var_v0_3;
+    u8 temp_v1;
+    CharacterSelectSaveData *var_v0;
+    CharacterSelectSaveData *temp_a0;
+
+    func_800720E4(2);
+    func_800704F0();
+    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
+    D_800DEED4 = 0;
+    func_800437F0(D_5A1ED0, D_5C5320, 0x21);
+    func_800437F0(D_593D10, D_598A70, 0x22);
+    func_800437F0(D_598A70, D_59AAA0, 0x23);
+    func_800437F0(D_59AAA0, D_59DFE0, 0x24);
+    func_800437F0(D_59DFE0, D_59E7F0, 0x26);
+    func_800437F0(D_245A80, D_24C8E0, 0x1F);
+    func_80070EC0(0);
+    func_80071408(func_8001710C, 0, 0x5E);
+
+    if (D_800EC9C2 == 1) {
+        func_800437F0(D_5CCD40, D_5D4280, 0x25);
+        func_80071408((void (*)(EffectTask *)) func_8001D254, 0, 0x63);
+        D_801235B8->fade = 0;
+    } else {
+        D_801235B8->fade = 0xFF;
+    }
+
+    D_801235B8->timer = 0;
+    D_800EC9C1 = 0;
+    D_8010ADF8 = 0;
+    D_801235B4 = 0;
+    D_80121D88 = 0;
+    D_8010ADF0 = 0;
+    D_800EC9D0 = 0;
+    D_800DEF14 = D_801235B8->fade;
+    var_v1 = 0;
+    if (D_80121B55 > 0) {
+        var_v0 = D_800EC9F0;
+        temp_a0 = &D_800EC9F0[D_80121B55];
+        do {
+            temp_v1 = var_v0->highestCourse;
+            var_v0 += 1;
+            if (D_8010ADF9 < temp_v1) {
+                D_8010ADF9 = temp_v1;
+            }
+        } while (var_v0 < temp_a0);
+    }
+
+    D_8010ADDC = 0;
+    D_8010ADE0 = 0;
+    D_8010ADE4 = 0;
+    sp2C = var_v1;
+    func_8009956C(func_800066CC, 0);
+    var_v1 = sp2C;
+    if (D_800EC9DD == 1) {
+        if (D_80121B5E < 2) {
+            D_8010AE90 = (CharacterSelectOptionList *) D_800B3478;
+            if ((D_80121B50 != 9) && (D_80121B50 != 0) && (D_80121B50 != 1)) {
+                D_80121B50 = 9;
+            }
+        } else {
+            D_8010AE90 = (CharacterSelectOptionList *) D_800B3480;
+            D_80121B50 = 7;
+        }
+    } else {
+        D_8010AE90 = (CharacterSelectOptionList *) D_800B3420[D_8010ADF9];
+        if (D_80121B50 == -1) {
+            D_80121B50 = 9;
+        }
+    }
+
+    var_v0_2 = *D_8010AE90;
+loop_20:
+    if (D_80121B50 == *var_v0_2) {
+        D_80121B50 = var_v1;
+    } else {
+        var_v1 += 1;
+        var_v0_2 += 1;
+        if (var_v1 != 0xA) {
+            goto loop_20;
+        }
+    }
+
+    D_8010AE80 = 0;
+    var_v0_3 = 0;
+    var_v1_2 = *D_8010AE90;
+loop_24:
+    var_v0_3 += 2;
+    if (*var_v1_2 != -1) {
+        var_v1_2 += 1;
+        D_8010AE80 += 1;
+        if (var_v0_3 != 0x14) {
+            goto loop_24;
+        }
+    }
+
+    D_8010AE88.bytes[0] = 0;
+    D_8010AE88.bytes[1] = 0;
+    D_8010AE88.bytes[2] = 0;
+    D_8010AE88.fields.spriteIndex = 0;
+    D_8010AE88.bytes[6] = 0;
+    D_8010AE88.bytes[7] = 0;
+    func_8007105C();
+}
+#endif
 
 // func_800062F8 best match: 83.266% (nonmatchings/func_800062F8-2127290767680699791/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_flow/func_800062F8.s")
