@@ -65,6 +65,7 @@ s32 func_80041FB4(s32 arg0);
 void func_80042034(s32 modelIndex);
 void func_8004209C(s32 modelIndex, s32 x, s32 y, s32 z);
 void func_800420FC(s32 modelIndex, s16 x, s16 y, s16 z);
+void func_8004215C(MainMenuSceneModel *model);
 void func_80042AB4(MainMenuSceneModel *model);
 
 #endif

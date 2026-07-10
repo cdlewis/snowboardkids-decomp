@@ -2,7 +2,6 @@
 #include "memory_allocator.h"
 #include "main_menu_scene_renderer.h"
 
-extern void func_8004215C(MainMenuSceneModel *);
 extern void func_800483FC(void *, void (*)(MainMenuSceneModel *), MainMenuSceneModel *);
 extern s16 D_8011218A[];
 extern s32 D_801248B0;

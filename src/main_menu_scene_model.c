@@ -1,10 +1,12 @@
 #include "main_menu_scene_model.h"
 #include "memory_allocator.h"
 #include "asset_decompression.h"
+#include "fixed_point_matrix.h"
 
 /* Frame offsets are halfword-relative to the bank start; this form preserves target addu order. */
 #define MAIN_MENU_ANIMATION_FRAME_DATA(bank, index) \
     ((s16 *)(((bank)->frameOffsets[(index)] * sizeof(s16)) + (s32)(bank)))
+#define FIXED_MATRIX_ONE 0x1000
 #define MAIN_MENU_MODEL_ASSET_RANGE_WORDS 2
 #define MAIN_MENU_MODEL_ASSET_RANGE_START(table, index) ((table)[(index) * MAIN_MENU_MODEL_ASSET_RANGE_WORDS])
 #define MAIN_MENU_MODEL_ASSET_RANGE_END(table, index) ((table)[((index) * MAIN_MENU_MODEL_ASSET_RANGE_WORDS) + 1])
@@ -397,4 +399,114 @@ void func_800420FC(s32 modelIndex, s16 x, s16 y, s16 z) {
     model->rot.z = z;
 }
 
+// func_8004215C best match: 83.677% (nonmatchings/func_8004215C-7273315160691878794/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_8004215C.s")
+
+#ifdef NON_MATCHING
+void func_8004215C(MainMenuSceneModel *model) {
+    s16 partMatrices[14][16];
+    s16 rootMatrix[16];
+    MainMenuModelPart *part;
+    u8 *partCursor;
+    s16 (*partMatrix)[16];
+    s16 (*partMatrixEnd)[16];
+    s32 sineX;
+    s32 cosineX;
+    s32 sineY;
+    s32 cosineY;
+    s32 sineZ;
+    s32 cosineZ;
+    s32 negSineY;
+    s32 negSineZ;
+    s32 sineXTimesSineY;
+    s32 cosineXTimesSineY;
+    s16 *combinedMatrixBase;
+    s16 *combinedMatrix;
+    s16 *localMatrix;
+    s16 *rootMatrixRow;
+    s32 rowOffset;
+    s32 localIndex;
+    s16 *localAxis;
+    s16 *combinedAxis;
+    s16 *rootAxis;
+    s32 dot;
+
+    partCursor = (u8 *)model;
+    partMatrix = partMatrices;
+    partMatrixEnd = &partMatrices[14];
+    do {
+        sineX = func_80097AE8(*(s16 *)(partCursor + 0x1E));
+        cosineX = func_80097B48(*(s16 *)(partCursor + 0x1E));
+        sineY = func_80097AE8(*(s16 *)(partCursor + 0x20));
+        cosineY = func_80097B48(*(s16 *)(partCursor + 0x20));
+        sineZ = func_80097AE8(*(s16 *)(partCursor + 0x22));
+        cosineZ = func_80097B48(*(s16 *)(partCursor + 0x22));
+        negSineY = -sineY;
+        negSineZ = -sineZ;
+
+        (*partMatrix)[0] = (cosineY * cosineZ) / FIXED_MATRIX_ONE;
+        (*partMatrix)[1] = (cosineY * sineZ) / FIXED_MATRIX_ONE;
+        sineXTimesSineY = (sineX * sineY) / FIXED_MATRIX_ONE;
+        (*partMatrix)[2] = negSineY;
+        (*partMatrix)[3] = ((sineXTimesSineY * cosineZ) / FIXED_MATRIX_ONE) + ((cosineX * negSineZ) / FIXED_MATRIX_ONE);
+        (*partMatrix)[4] = ((sineXTimesSineY * sineZ) / FIXED_MATRIX_ONE) + ((cosineX * cosineZ) / FIXED_MATRIX_ONE);
+        (*partMatrix)[5] = (sineX * cosineY) / FIXED_MATRIX_ONE;
+        cosineXTimesSineY = (cosineX * sineY) / FIXED_MATRIX_ONE;
+        (*partMatrix)[6] = ((cosineXTimesSineY * cosineZ) / FIXED_MATRIX_ONE) + ((sineX * sineZ) / FIXED_MATRIX_ONE);
+        (*partMatrix)[7] = ((cosineXTimesSineY * sineZ) / FIXED_MATRIX_ONE) + (((-sineX) * cosineZ) / FIXED_MATRIX_ONE);
+        (*partMatrix)[8] = (cosineX * cosineY) / FIXED_MATRIX_ONE;
+        partMatrix++;
+        partCursor += 0x14;
+    } while (partMatrix != partMatrixEnd);
+
+    func_800981C8(rootMatrix, model->rot.x, model->rot.y, model->rot.z);
+    *(s32 *)&rootMatrix[10] = model->pos.x;
+    *(s32 *)&rootMatrix[12] = model->pos.y;
+    *(s32 *)&rootMatrix[14] = model->pos.z;
+
+    partMatrix = partMatrices;
+    combinedMatrixBase = &model->unk146;
+    do {
+        combinedMatrix = combinedMatrixBase;
+        rowOffset = 0;
+        localMatrix = *partMatrix;
+        do {
+            rootMatrixRow = rootMatrix;
+            do {
+                dot = (rootMatrixRow[6] * localMatrix[2]) + (rootMatrixRow[0] * localMatrix[0]) +
+                      (rootMatrixRow[2] * localMatrix[1]);
+                *combinedMatrix++ = dot / FIXED_MATRIX_ONE;
+                rootMatrixRow++;
+            } while (rootMatrixRow != &rootMatrix[3]);
+            rowOffset += 6;
+            localMatrix += 3;
+        } while (rowOffset != 0x12);
+        partMatrix++;
+        combinedMatrixBase += 0x10;
+    } while (partMatrix < partMatrixEnd);
+
+    part = model->parts;
+    partCursor = (u8 *)model;
+    combinedMatrixBase = &model->unk146;
+    localIndex = 0;
+    do {
+        rootAxis = &rootMatrix[10];
+        localAxis = rootMatrix;
+        combinedAxis = combinedMatrixBase;
+        do {
+            dot = (((s64)localAxis[3] * *(s32 *)(partCursor + 0x28)) +
+                   ((s64)localAxis[0] * *(s32 *)(partCursor + 0x24)) +
+                   ((s64)localAxis[6] * *(s32 *)(partCursor + 0x2C))) / FIXED_MATRIX_ONE;
+            *(s32 *)&combinedAxis[11] = dot;
+            *(s32 *)&combinedAxis[11] += *(s32 *)rootAxis;
+            rootAxis += 2;
+            localAxis++;
+            combinedAxis += 2;
+        } while (rootAxis != &rootMatrix[16]);
+        localIndex += 0x14;
+        combinedMatrixBase += 0x10;
+        partCursor += 0x14;
+        part++;
+    } while (localIndex != 0x118);
+}
+#endif
