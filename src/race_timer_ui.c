@@ -27,7 +27,9 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ s16 pathIndex;
-    /* 0x02 */ u8 pad2[0x48 - 0x02];
+    /* 0x02 */ u8 pad2[0x3C - 0x02];
+    /* 0x3C */ s16 finishLinePathIndex;
+    /* 0x3E */ u8 pad3E[0x48 - 0x3E];
 } RaceTimerCourseSpawnEntry;
 
 typedef struct {
@@ -81,6 +83,9 @@ extern void func_80047E88(s32, s16, s32, s32);
 extern void func_80048278(s32, s32, char *, s32);
 extern void func_800483FC(void *, void *, s32);
 extern void func_8007A3D8(s32);
+extern void func_800503D0(s32, s32, s16, s16, s16);
+extern void func_80065144(void);
+extern void func_80071408(void *, s32, s32);
 extern void func_80087600(s32, s32 *, s32 *);
 extern int sprintf(char *, const char *, ...);
 extern u8 D_245A80[];
@@ -132,6 +137,8 @@ extern s16 D_80122290;
 extern s16 D_801222F0;
 extern s8 D_80121B79;
 extern s16 D_80121B7A;
+
+s32 func_8007B130(RaceTimer *arg0, RaceTimer *arg1, RaceTimer *arg2);
 
 void func_80078430(void) {
     func_800437F0(D_245A80, D_24C8E0, 0x1F);
@@ -1020,7 +1027,168 @@ void func_8007A8EC(void) {
 }
 #endif
 
+// func_8007AA50 best match: 92.779% at nonmatchings/func_8007AA50-7273315160691878794/base_3.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_8007AA50.s")
+
+#ifdef NON_MATCHING
+void func_8007AA50(void) {
+    s32 sp40;
+    s32 sp3C;
+    RaceTimer sp38;
+    RaceTimerUiPlayer *player;
+    s16 i;
+
+    D_80121B72++;
+    if (D_80121B72 >= 12) {
+        D_80121B72 = 0;
+    }
+
+    switch ((u16)D_80121B70) {
+    case 0:
+        player = D_80121D80;
+        if (player->tensDigitPalette != 0) {
+            if (player->tensDigitPalette == 4) {
+                func_800503D0(-0x20, -0x60, 0, 0, 0);
+            }
+            player->tensDigitPalette--;
+        }
+        if (player->onesDigitPalette != 0) {
+            if (player->onesDigitPalette == 4) {
+                func_800503D0(0, -0x60, 0, 0, 1);
+            }
+            player->onesDigitPalette--;
+        }
+        func_800483FC(&D_80124878, func_80079438, 0);
+        func_800483FC(&D_80124888, func_80079750, 0);
+        func_8007A8EC();
+        return;
+    case 1:
+        player = D_80121D80;
+        i = 0;
+        do {
+            if (player->tensDigitPalette != 0) {
+                if (player->tensDigitPalette == 4) {
+                    func_800503D0(-0x88, -0x30, i, 0, 0);
+                }
+                player->tensDigitPalette--;
+            }
+            if (player->onesDigitPalette != 0) {
+                if (player->onesDigitPalette == 4) {
+                    func_800503D0(-0x68, -0x30, i, 0, 1);
+                }
+                player->onesDigitPalette--;
+            }
+            i++;
+            player++;
+        } while (i != 2);
+        func_800483FC(&D_80124878, func_800799DC, 0);
+        func_800483FC(&D_80124888, func_80079E48, 0);
+        func_8007A8EC();
+        return;
+    case 3:
+        player = D_80121D80;
+        if (player[3].tensDigitPalette != 0) {
+            if (player[3].tensDigitPalette == 4) {
+                func_800503D0(-0x10, -0x30, 3, 1, 0);
+            }
+            player[3].tensDigitPalette--;
+        }
+        if (player[3].onesDigitPalette != 0) {
+            if (player[3].onesDigitPalette == 4) {
+                func_800503D0(0, -0x30, 3, 1, 1);
+            }
+            player[3].onesDigitPalette--;
+        }
+    case 2:
+        player = D_80121D80;
+        i = 0;
+        do {
+            if (player->tensDigitPalette != 0) {
+                if (player->tensDigitPalette == 4) {
+                    func_800503D0(-0x10, -0x30, i, 1, 0);
+                }
+                player->tensDigitPalette--;
+            }
+            if (player->onesDigitPalette != 0) {
+                if (player->onesDigitPalette == 4) {
+                    func_800503D0(0, -0x30, i, 1, 1);
+                }
+                player->onesDigitPalette--;
+            }
+            i++;
+            player++;
+        } while (i != 3);
+        func_800483FC(&D_80124878, func_80079F04, 0);
+        func_800483FC(&D_80124888, func_8007A108, 0);
+        func_8007A8EC();
+        if (D_80121B70 == 2) {
+            func_800483FC(&D_80124868, func_8007A278, 0);
+        }
+        return;
+    case 4:
+        if (!(D_801235B4 & 3)) {
+            func_8007A2B8();
+            if (D_80121B80 == 0) {
+                func_80087600(0, &sp40, &sp3C);
+                if ((D_800B9540[D_80121B50].finishLinePathIndex * 8) < sp40) {
+                    D_80121B7C = *(s32 *)&D_80121B74;
+                    D_80121B80 = 1;
+                    func_80071408(func_80065144, 0, 0);
+                }
+            }
+        }
+        func_800483FC(&D_80124878, func_80079154, 0);
+        func_800483FC(&D_80124888, func_80079394, 0);
+        return;
+    case 5:
+        if (!(D_801235B4 & 3)) {
+            func_8007A2B8();
+        }
+        if (func_8007B130((RaceTimer *)&D_800DC900[D_80121B50], &D_80121B74, &sp38) != 0) {
+            D_80121B81 = 1;
+        }
+        func_800483FC(&D_80124878, func_80078D9C, 0);
+        func_800483FC(&D_80124888, func_80079068, 0);
+        return;
+    case 6:
+        if (!(D_801235B4 & 3)) {
+            func_8007A350();
+        }
+        if ((D_80121B78.minutes == 0) && (D_80121B78.seconds == 0) && (D_80121B78.fraction == 0)) {
+            D_80121B81 = 1;
+        }
+        func_800483FC(&D_80124878, func_800789C0, 0);
+        func_800483FC(&D_80124888, func_80078D3C, 0);
+        return;
+    case 7:
+        if (!(D_801235B4 & 3)) {
+            func_8007A350();
+        }
+        if ((D_80121B78.minutes == 0) && (D_80121B78.seconds == 0) && (D_80121B78.fraction == 0)) {
+            D_80121B81 = 1;
+        }
+        func_800483FC(&D_80124878, func_80078568, 0);
+        func_800483FC(&D_80124888, func_80078974, 0);
+        return;
+    case 8:
+        player = D_80121D80;
+        if (player->tensDigitPalette != 0) {
+            if (player->tensDigitPalette == 4) {
+                func_800503D0(-0x20, -0x60, 0, 0, 0);
+            }
+            player->tensDigitPalette--;
+        }
+        if (player->onesDigitPalette != 0) {
+            if (player->onesDigitPalette == 4) {
+                func_800503D0(0, -0x60, 0, 0, 1);
+            }
+            player->onesDigitPalette--;
+        }
+        func_800483FC(&D_80124878, func_80079758, 0);
+        return;
+    }
+}
+#endif
 
 s32 func_8007B130(RaceTimer *arg0, RaceTimer *arg1, RaceTimer *arg2) {
     s32 total1;
