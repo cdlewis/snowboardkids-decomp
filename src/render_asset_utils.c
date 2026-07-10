@@ -82,6 +82,11 @@ typedef struct {
 
 extern s16 D_8011213E;
 extern s16 D_801121B0;
+extern s16 D_8015660A;
+extern s16 D_8015660C;
+extern s16 D_8015660E;
+extern s16 D_80156610;
+extern s32 gRegionAllocPtr;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_800458E0.s")
 
@@ -141,7 +146,146 @@ void func_80045A1C(u8 *arg0, u16 arg1, void **arg2, void **arg3, s16 *arg4, s16 
 
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80046748.s")
 
+// func_80046970 best match: 74.764% (nonmatchings/func_80046970-4923837976568703863/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80046970.s")
+
+#ifdef NON_MATCHING
+void func_80046970(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
+    u8 *sp2C;
+    s32 sp18;
+    s32 sp14;
+    s32 temp_a1;
+    s32 temp_a3;
+    s32 temp_t1;
+    s32 temp_t6;
+    s32 temp_t7;
+    Gfx *temp_v0_2;
+    Gfx *temp_v0_3;
+    Gfx *temp_v0_4;
+    Gfx *temp_v0_5;
+    Gfx *temp_v0_6;
+    Gfx *temp_v0_7;
+    Gfx *temp_v0_8;
+    Gfx *temp_v0_9;
+    Gfx *temp_v0_10;
+    Gfx *temp_v0_11;
+    Gfx *temp_v0_12;
+    Gfx *temp_v0_13;
+    Gfx *temp_v0_14;
+    Gfx *temp_v0_15;
+    Gfx *temp_v0_16;
+    Gfx *temp_v0_17;
+    s32 var_at;
+    s32 var_s0;
+    s32 var_s1;
+    s32 var_s2;
+    s32 var_t5;
+    AssetTableEntry *temp_t2;
+    AssetTableEntry *temp_t2_2;
+
+    sp2C = (u8 *)arg2 + (arg2->entryCount * sizeof(AssetTableEntry)) + 8;
+    temp_t2 = (AssetTableEntry *)((u8 *)arg2 + ((arg3 & 0xFFFF) * sizeof(AssetTableEntry)));
+    var_t5 = arg0 + D_8015660E;
+    var_s0 = arg1 + D_80156610;
+    temp_t2_2 = temp_t2 + 1;
+    sp18 = 0;
+    sp14 = 0;
+    var_s1 = temp_t2_2->width + var_t5;
+    var_s2 = temp_t2_2->height + var_s0;
+    temp_t6 = D_8015660A / 2;
+    temp_t1 = D_8015660E + temp_t6;
+    if (var_t5 < temp_t1) {
+        temp_a3 = D_8015660E - temp_t6;
+        temp_t7 = D_8015660C / 2;
+        temp_a1 = D_80156610 + temp_t7;
+        if (var_s0 < temp_a1) {
+            temp_v0_2 = (Gfx *)(D_80156610 - temp_t7);
+            if ((var_s1 >= temp_a3) && (var_s2 >= (s32)temp_v0_2)) {
+                if (var_t5 < temp_a3) {
+                    sp18 = temp_a3 - var_t5;
+                    var_t5 = temp_a3;
+                }
+                if (var_s0 < (s32)temp_v0_2) {
+                    sp14 = (s32)temp_v0_2 - var_s0;
+                    var_s0 = (s32)temp_v0_2;
+                }
+                var_at = var_s2 < temp_a1;
+                if (var_s1 >= temp_t1) {
+                    var_s1 = temp_t1;
+                    var_at = var_s2 < temp_a1;
+                }
+                if (var_at == 0) {
+                    var_s2 = temp_a1;
+                }
+                temp_v0_2 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_2 + 1);
+                temp_v0_2->words.w0 = ((temp_t2_2->width - 1) & 0xFFF) | 0xFD480000;
+                temp_v0_2->words.w1 = temp_t2_2->imageOffset + (s32)arg2;
+                temp_v0_3 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_3 + 1);
+                temp_v0_3->words.w0 = ((((s32)(temp_t2_2->width + 8) >> 3) & 0x1FF) << 9) | 0xF5480000;
+                temp_v0_3->words.w1 = 0x07080200;
+                temp_v0_4 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_4 + 1);
+                temp_v0_4->words.w1 = 0;
+                temp_v0_4->words.w0 = 0xE6000000;
+                temp_v0_5 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_5 + 1);
+                temp_v0_5->words.w0 = 0xF4000000;
+                temp_v0_5->words.w1 = (((temp_t2_2->width * 4) & 0xFFF) << 12) | 0x07000000 | ((temp_t2_2->height * 4) & 0xFFF);
+                temp_v0_6 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_6 + 1);
+                temp_v0_6->words.w1 = 0;
+                temp_v0_6->words.w0 = 0xE7000000;
+                temp_v0_7 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_7 + 1);
+                temp_v0_7->words.w0 = ((((s32)(temp_t2_2->width + 8) >> 3) & 0x1FF) << 9) | 0xF5480000;
+                temp_v0_7->words.w1 = 0x80200;
+                temp_v0_8 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_8 + 1);
+                temp_v0_8->words.w0 = 0xF2000000;
+                temp_v0_8->words.w1 = (((temp_t2_2->width * 4) & 0xFFF) << 12) | ((temp_t2_2->height * 4) & 0xFFF);
+                temp_v0_9 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_9 + 1);
+                temp_v0_9->words.w0 = 0xFD100000;
+                temp_v0_9->words.w1 = (temp_t2_2->textureIndex << 5) + (s32)sp2C;
+                temp_v0_10 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_10 + 1);
+                temp_v0_10->words.w1 = 0;
+                temp_v0_10->words.w0 = 0xE8000000;
+                temp_v0_11 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_11 + 1);
+                temp_v0_11->words.w1 = 0x07000000;
+                temp_v0_11->words.w0 = 0xF5000100;
+                temp_v0_12 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_12 + 1);
+                temp_v0_12->words.w1 = 0;
+                temp_v0_12->words.w0 = 0xE6000000;
+                temp_v0_13 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_13 + 1);
+                temp_v0_13->words.w0 = 0xF0000000;
+                temp_v0_13->words.w1 = 0x073FC000;
+                temp_v0_14 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_14 + 1);
+                temp_v0_14->words.w1 = 0;
+                temp_v0_14->words.w0 = 0xE7000000;
+                temp_v0_15 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_15 + 1);
+                temp_v0_15->words.w0 = (((var_s1 * 4) & 0xFFF) << 12) | 0xE4000000 | ((var_s2 * 4) & 0xFFF);
+                temp_v0_15->words.w1 = (((var_t5 * 4) & 0xFFF) << 12) | ((var_s0 * 4) & 0xFFF);
+                temp_v0_16 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_16 + 1);
+                temp_v0_16->words.w0 = 0xB4000000;
+                temp_v0_16->words.w1 = (sp18 << 21) | ((sp14 << 5) & 0xFFFF);
+                temp_v0_17 = (Gfx *)gRegionAllocPtr;
+                gRegionAllocPtr = (s32)(temp_v0_17 + 1);
+                temp_v0_17->words.w0 = 0xB3000000;
+                temp_v0_17->words.w1 = 0x04000400;
+            }
+        }
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80046D68.s")
 
