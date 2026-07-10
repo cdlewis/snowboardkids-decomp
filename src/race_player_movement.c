@@ -391,10 +391,6 @@ s32 func_80088E98(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
 }
 #endif
 
-// func_80089000 best match: 99.818% (nonmatchings/func_80089000-6182772958467082306/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80089000.s")
-
-#ifdef NON_MATCHING
 void func_80089000(RaceVec3i *pos, s32 xzSize, s16 flag) {
     volatile u8 pad[16];
     RaceInputPlayer *player;
@@ -404,10 +400,9 @@ void func_80089000(RaceVec3i *pos, s32 xzSize, s16 flag) {
     s32 dy;
     s32 dz;
 
-    end = &D_801235B0;
-    player = D_80121D80;
+    end = &D_801235B0; player = D_80121D80;
     do {
-        if (player->isActive != 0) {
+        if ((player->isActive & 0xFFFFFFFF) != 0) {
             dx = player->posX - pos->x;
             radius = player->unk280 + xzSize;
             if (dx < 0) {
@@ -433,7 +428,6 @@ void func_80089000(RaceVec3i *pos, s32 xzSize, s16 flag) {
         player++;
     } while (player != end);
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_800891B8.s")
 
