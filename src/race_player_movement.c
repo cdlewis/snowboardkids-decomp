@@ -212,12 +212,8 @@ void func_80087E14(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088664.s")
 
-// func_80088A1C best match: 99.673% (nonmatchings/func_80088A1C-8207005055717715604/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088A1C.s")
-
-#ifdef NON_MATCHING
 void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
-    volatile u8 pad[24];
+    volatile u8 pad[16];
     RaceInputPlayer *player;
     s32 temp;
     s32 xDiff;
@@ -241,8 +237,8 @@ void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
             }
 
             if (temp <= yLimit) {
-                xDiff = pos->x - player->posX;
                 xzLimit = player->unk280 + xzSize;
+                xDiff = pos->x - player->posX;
                 if (xDiff < 0) {
                     xDiff = -xDiff;
                 }
@@ -252,7 +248,8 @@ void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
                         temp = -temp;
                     }
                     if ((temp < xzLimit) &&
-                        ((temp = func_80098C30((s64)xDiff * xDiff + (s64)temp * temp)) < xzLimit)) {
+                        ((temp = func_80098C30((s64)((0, xDiff)) * xDiff +
+                                               (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
                         if (player->unk29C < arg3) {
                             angle = func_8004940C(pos->x, pos->z, player->posX, player->posZ);
                             sine = func_80097AE8(angle);
@@ -272,7 +269,6 @@ void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
         player++;
     } while (player != &D_801235B0);
 }
-#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088C80.s")
 
