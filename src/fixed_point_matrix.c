@@ -313,4 +313,24 @@ void func_800989EC(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *a
     arg2->translation.z += arg1->translation.z;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/fixed_point_matrix/func_80098C30.s")
+s32 func_80098C30(s64 arg0) {
+    u64 pad;
+    u64 bit;
+    u64 root;
+    s32 shift;
+
+    root = (bit = 0);
+    shift = 0x3E;
+    do {
+        bit += bit;
+        root += root;
+        if (((u64)arg0 >> shift) > bit) {
+            bit++;
+            arg0 -= bit << shift;
+            bit++;
+            root++;
+        }
+        shift -= 2;
+    } while (shift >= 0);
+    return root;
+}
