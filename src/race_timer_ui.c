@@ -164,7 +164,7 @@ void func_80078430(void) {
     D_80121B81 = 0;
 }
 
-// func_80078568 best match: 98.459% at nonmatchings/func_80078568-2225551288923588688/base_8.c.
+// func_80078568 best match: 98.869% at nonmatchings/func_80078568-2225551288923588688/base_17.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80078568.s")
 
 #ifdef NON_MATCHING
@@ -206,6 +206,7 @@ void func_80078568(s32 arg0) {
         sprintf(buffer, D_800E1718, D_80121B79);
         digit = buffer;
         end = &buffer[2];
+        end += 0;
         do {
             func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle),
                           ((u8)*digit - 5) & 0xFFFF, finalPalette);
