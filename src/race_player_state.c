@@ -48,6 +48,11 @@ typedef struct {
     s16 angle;
 } CourseStartPosition;
 
+typedef struct {
+    /* 0x00 */ s16 unk0;
+    /* 0x02 */ char pad2[0xAE];
+} Unk801124B8;
+
 extern void func_8008C098(RaceInputPlayer *);
 extern void func_8008C7D0(RaceInputPlayer *);
 extern void func_80082664(RaceInputPlayer *, s32, s32, s32);
@@ -130,6 +135,7 @@ extern void *D_801248C8;
 extern void *D_801248EC;
 extern Struct800955C0 D_800B9540[];
 extern s16 D_80121B50;
+extern Unk801124B8 D_801124B8[];
 
 void func_8008BEB0(void) {
     D_80121D80[0].playerIndex = 0;
@@ -2935,7 +2941,109 @@ void func_800934EC(RaceInputPlayer *player) {
 }
 #endif
 
+// func_800936D4 best match: 91.015% (base_3.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800936D4.s")
+
+#ifdef NON_MATCHING
+extern void func_8004F55C(s16 playerIndex, s16 itemIndex);
+extern void func_8006D520(u16 arg0, u16 arg1);
+extern s32 func_80080CC4(s16, s32, s32);
+extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
+extern s32 func_800860A0(RaceInputPlayer *);
+
+void func_800936D4(RaceInputPlayer *player) {
+    s16 updateState;
+    s16 updateTimer;
+    s32 *pos;
+    s32 yVel;
+    s32 timer;
+    u32 stateFlags;
+
+    updateState = player->updateState;
+    if (updateState == 0) {
+        stateFlags = player->stateFlags & 0xFE0C1FFB;
+        player->stateFlags = stateFlags;
+        player->updateState = updateState + 1;
+        player->stateTimer = 0x3C;
+        player->stateFlags = stateFlags | 0x42000;
+        player->updateTimer = 0;
+        func_8006D520(player->playerIndex, 4);
+        player->unk60 = 0;
+        player->unk2E8 = player->unk502;
+        if (player->soundDisabled == 0) {
+            func_8004F55C(player->playerIndex, player->unk330);
+        }
+        timer = player->stateTimer;
+        player->actionEffectLevel = 2;
+        player->actionEffectFrame = 0;
+        player->stateTimer = timer - ((timer * player->unk509) / 8);
+        func_80081E40(player, 0x20);
+    }
+
+    updateTimer = player->updateTimer;
+    switch (updateTimer) {
+    case 0:
+        yVel = player->stateTimer - 1;
+        player->stateTimer = yVel;
+        if (yVel == 0) {
+            player->updateTimer++;
+        }
+        if (func_80082EC0(player) != 0) {
+            func_80081E40(player, 0x21);
+        }
+        break;
+    case 1:
+        if (func_80082EC0(player) != 0) {
+            func_80081E40(player, 0x21);
+        }
+        player->stateFlags |= 0x80000;
+        pos = &player->posX;
+        if (D_801124B8[(u16) player->playerIndex].unk0 == 0xFF) {
+            player->updateTimer++;
+            player->unk74 = 0;
+            player->unk502 = player->unk2E8;
+            do {
+                func_80081508(player->unk502, pos, &player->posY, &player->posZ, &player->facingAngle);
+                if (func_800860A0(player) == 0) {
+                    player->unk502--;
+                } else {
+                    break;
+                }
+            } while (1);
+            player->posY = func_80080CC4(player->unk502, player->posX, player->posZ);
+            player->unk34.x = pos[0];
+            player->unk34.y = pos[1];
+            player->unk34.z = pos[2];
+            player->velocity.x = 0;
+            player->velocity.y = 0;
+            player->velocity.z = 0;
+            player->stateFlags &= ~0x400;
+            player->unk2EE = 0;
+            func_8008B408(player, 0, 0);
+            func_80081E40(player, 1);
+            func_80082EC0(player);
+            func_8006D520((u16) player->playerIndex, 1);
+            player->unk60 = 0x40000;
+        }
+        break;
+    case 2:
+        player->stateFlags &= 0xFFF7FFFF;
+        if (D_801124B8[(u16) player->playerIndex].unk0 == 0) {
+            player->mode = 0;
+            player->updateState = 0;
+            player->updateTimer = 0;
+            player->stateFlags = 0;
+        }
+        func_80082EC0(player);
+        break;
+    }
+
+    yVel = player->velocity.y - player->unk260;
+    player->velocity.y = yVel;
+    player->posY += yVel;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800939E0.s")
 

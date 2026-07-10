@@ -123,7 +123,7 @@ typedef struct {
     /* 0x2DE */ s16 unk2DE;
     /* 0x2E0 */ s32 unk2E0;
     /* 0x2E4 */ s32 unk2E4;
-    /* 0x2E8 */ char pad2E8[2];
+    /* 0x2E8 */ s16 unk2E8;
     /* 0x2EA */ s16 pitchAngle;
     /* 0x2EC */ s16 facingAngle;
     /* 0x2EE */ s16 unk2EE;
