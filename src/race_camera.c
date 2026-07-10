@@ -3,6 +3,9 @@
 
 #define RACE_CAMERA_COUNT 4
 #define RACE_CAMERA_STATE_SIZE 0xB0
+#define RACE_CAMERA_ANGLE_MASK 0xFFF
+#define RACE_CAMERA_ROTATION_TRANSITION_STRIDE 0x24
+#define RACE_CAMERA_ROTATION_TRANSITION ((RaceCameraRotationTransition *)((u8 *)D_800DA91C + ((u16)D_801124A0->mode * stride)))
 #define RACE_PLAYER_STATE_SIZE 0x60C
 #define FIXED_MUL(a, b) (((a) * (b)) / 0x1000)
 
@@ -61,6 +64,17 @@ typedef struct {
     /* 0x10 */ Vec3i endPos;
 } RaceCameraTransition;
 
+typedef struct {
+    /* 0x00 */ s16 duration;
+    /* 0x02 */ s16 pad2;
+    /* 0x04 */ Vec3i startPos;
+    /* 0x10 */ s16 startPitch;
+    /* 0x12 */ s16 startYaw;
+    /* 0x14 */ Vec3i endPos;
+    /* 0x20 */ s16 endPitch;
+    /* 0x22 */ s16 endYaw;
+} RaceCameraRotationTransition;
+
 typedef struct StackD7D4 {
     char sp28[0x20];
     s32 sp48;
@@ -89,6 +103,7 @@ extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
 extern RacePlayerSlot D_80121D80[];
 extern CourseSpawnEntry D_800B9540[];
+extern u8 D_800DA91C[];
 extern u8 D_800DAA3C[];
 extern void *D_800DA880[];
 extern s32 D_80121B40;
@@ -437,7 +452,41 @@ void func_8006F984(void) {
     func_8006D8B4(D_80121D80, stride);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006FA20.s")
+void func_8006FA20(void) {
+    register s32 stride;
+    register s16 timer;
+    register s16 diff;
+
+    stride = RACE_CAMERA_ROTATION_TRANSITION_STRIDE;
+    timer = D_801124A0->timer;
+    if (RACE_CAMERA_ROTATION_TRANSITION[-8].duration < timer) {
+        timer = RACE_CAMERA_ROTATION_TRANSITION[-8].duration;
+    }
+
+    D_801124A0->pos.x = (((s64)(RACE_CAMERA_ROTATION_TRANSITION[-8].endPos.x - RACE_CAMERA_ROTATION_TRANSITION[-8].startPos.x) * timer) / ((RaceCameraRotationTransition *)((u8 *)D_800DA91C + ((u16) D_801124A0->mode * stride)))[-8].duration) + ((RaceCameraRotationTransition *)((u8 *)D_800DA91C + ((u16) D_801124A0->mode * stride)))[-8].startPos.x;
+    D_801124A0->pos.y = (((s64)(((RaceCameraRotationTransition *)((u8 *)D_800DA91C + ((u16) D_801124A0->mode * stride)))[-8].endPos.y - ((RaceCameraRotationTransition *)((u8 *)D_800DA91C + ((u16) D_801124A0->mode * stride)))[-8].startPos.y) * timer) / ((RaceCameraRotationTransition *)((u8 *)D_800DA91C + ((u16) D_801124A0->mode * stride)))[-8].duration) + ((RaceCameraRotationTransition *)((u8 *)D_800DA91C + ((u16) D_801124A0->mode * stride)))[-8].startPos.y;
+    D_801124A0->pos.z = (((s64)(((RaceCameraRotationTransition *)((u8 *)D_800DA91C + ((u16) D_801124A0->mode * stride)))[-8].endPos.z - ((RaceCameraRotationTransition *)((u8 *)D_800DA91C + ((u16) D_801124A0->mode * stride)))[-8].startPos.z) * timer) / ((RaceCameraRotationTransition *)((u8 *)D_800DA91C + ((u16) D_801124A0->mode * stride)))[-8].duration) + ((RaceCameraRotationTransition *)((u8 *)D_800DA91C + ((u16) D_801124A0->mode * stride)))[-8].startPos.z;
+
+    diff = (RACE_CAMERA_ROTATION_TRANSITION[-8].endPitch - RACE_CAMERA_ROTATION_TRANSITION[-8].startPitch) & RACE_CAMERA_ANGLE_MASK;
+    if (diff >= 0x801) {
+        diff -= 0x1000;
+    }
+    diff = (diff * timer) / RACE_CAMERA_ROTATION_TRANSITION[-8].duration;
+    D_801124A0->pitch = RACE_CAMERA_ROTATION_TRANSITION[-8].startPitch + (s16)diff;
+
+    diff = (RACE_CAMERA_ROTATION_TRANSITION[-8].endYaw - RACE_CAMERA_ROTATION_TRANSITION[-8].startYaw) & RACE_CAMERA_ANGLE_MASK;
+    if (diff >= 0x801) {
+        diff -= 0x1000;
+    }
+    diff = (diff * timer) / RACE_CAMERA_ROTATION_TRANSITION[-8].duration;
+    D_801124A0->yaw = RACE_CAMERA_ROTATION_TRANSITION[-8].startYaw + diff;
+
+    D_801124A0->prevPos.x = D_801124A0->pos.x;
+    D_801124A0->prevPos.y = D_801124A0->pos.y;
+    D_801124A0->prevPos.z = D_801124A0->pos.z;
+    D_801124A0->timer++;
+    func_8006D7D4();
+}
 
 void func_8006FDC0(void) {
     D_801124A0->roll = 0;
