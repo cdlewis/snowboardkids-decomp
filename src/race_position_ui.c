@@ -255,7 +255,7 @@ void func_8007C5E8(RacePositionUiPlayer *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007C5E8.s")
 #endif
 
-// func_8007CBC0 best match: 88.073%
+// func_8007CBC0 best match: 88.342%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007CBC0.s")
 
 #ifdef NON_MATCHING
@@ -272,8 +272,8 @@ void func_8007CBC0(RacePositionUiPlayer *player) {
     countPlayer = player;
     if (D_80156609 != 0) {
         player->flags |= RACE_POSITION_UI_FLAG_SHADOW;
+        i = 0;
         if (player->partCount > 0) {
-            i = 0;
             partVtxPlayer = player;
             partSource = player->partSources;
             do {
