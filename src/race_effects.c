@@ -29,9 +29,17 @@ typedef struct {
 } TransformScratch;
 
 typedef struct {
-    /* 0x000 */ u8 pad0[0x44];
+    /* 0x000 */ u8 pad0[0x13];
+    /* 0x013 */ s8 isActive;
+    /* 0x014 */ u8 pad14[0x1C - 0x14];
+    /* 0x01C */ s32 posX;
+    /* 0x020 */ s32 posY;
+    /* 0x024 */ s32 posZ;
+    /* 0x028 */ u8 pad28[0x44 - 0x28];
     /* 0x044 */ s32 unk44;
-    /* 0x048 */ u8 pad48[0x94 - 0x48];
+    /* 0x048 */ u8 pad48[0x5C - 0x48];
+    /* 0x05C */ s32 unk5C;
+    /* 0x060 */ u8 pad60[0x94 - 0x60];
     /* 0x094 */ FixedMatrix3s transform;
     union {
         /* 0x0A8 */ Vec3i posA8;
@@ -46,7 +54,9 @@ typedef struct {
     };
     /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
     /* 0x2FC */ s32 flags;
-    /* 0x300 */ u8 pad300[0x502 - 0x300];
+    /* 0x300 */ u8 pad300[0x320 - 0x300];
+    /* 0x320 */ s16 actionSoundTimer;
+    /* 0x322 */ u8 pad322[0x502 - 0x322];
     /* 0x502 */ s16 surfaceAngle;
     /* 0x504 */ u8 pad504[0x50C - 0x504];
     /* 0x50C */ s16 *unk50C;
@@ -119,9 +129,10 @@ extern s32 D_801248A4;
 
 s16 func_8004908C(s32, s32);
 s32 func_80049000(Vec3i *);
+s32 func_8004940C(s32, s32, s32, s32);
 Mtx *func_8004885C(RaceEffectMatrixSource *);
 void func_800483FC(void *, void *, void *);
-s16 func_80049440(Vec3i *, s32, s16, s16, s16 *);
+s32 func_80049440(Vec3i *, s32, s16, s16, s16 *);
 void func_80045990(s32, s32, void **, void **);
 void func_80049664(RaceEffectActor *);
 void func_800499A4(RaceEffectActor *);
@@ -154,7 +165,61 @@ s16 func_80097B48(s16);
 void func_80098590(s16 *, Vec3i *, void *);
 s64 __ll_mul(s64, s64);
 
+// func_80049440 best match: 99.927% (nonmatchings/func_80049440-7273315160691878794/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_effects/func_80049440.s")
+
+#ifdef NON_MATCHING
+s32 func_80049440(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle) {
+    RacePlayerState *player;
+    s32 closest;
+    s32 dx;
+    s32 dz;
+    s32 dist;
+    s32 i;
+    s32 hit;
+    s16 playerAngle;
+
+    closest = radius + 0x1000;
+    hit = -1;
+    i = 0;
+    do {
+        if (playerIndex != i) {
+            player = &D_80121D80[i];
+            if ((player->actionSoundTimer == 0) && !(player->flags & 0x402000) && (player->isActive != 0)) {
+                dx = player->posX - pos->x;
+                if (dx < 0) {
+                    dx = -dx;
+                }
+                if (dx < radius) {
+                    dist = player->unk5C - pos->y;
+                    if (dist < 0) {
+                        dist = -dist;
+                    }
+                    if (dist < radius) {
+                        dz = player->posZ - pos->z;
+                        if (dz < 0) {
+                            dz = -dz;
+                        }
+                        if (dz < radius) {
+                            playerAngle = func_8004940C(pos->x, pos->z, player->posX, player->posZ);
+                            if ((s16)((playerAngle - angle + 0x380) & 0xFFF) < 0x700) {
+                                dist = func_80098C30((s64)dx * dx + (s64)dz * dz);
+                                if ((dist < radius) && (dist < closest)) {
+                                    hit = i;
+                                    closest = dist;
+                                    *outAngle = playerAngle;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        i++;
+    } while (i != 4);
+    return hit;
+}
+#endif
 
 void func_80049664(RaceEffectActor *arg0) {
     RaceEffectMatrixScratch sp6C;
