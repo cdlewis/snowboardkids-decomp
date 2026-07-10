@@ -31,10 +31,15 @@ typedef struct {
 } PlayerTuningRow;
 
 typedef struct {
-    s16 unk0;
-    char pad2[0x16];
-    s32 unk18;
-    s32 unk1C;
+    /* 0x00 */ s16 unk0;
+    /* 0x02 */ char pad2[2];
+    /* 0x04 */ s16 unk4;
+    /* 0x06 */ char pad6[2];
+    /* 0x08 */ RaceVec3i unk8;
+    /* 0x14 */ s16 unk14;
+    /* 0x16 */ char pad16[2];
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ s32 unk1C;
     char pad20[0x20];
     s32 unk40;
     s32 unk44;
@@ -126,6 +131,7 @@ extern PlayerTuningRow D_800DC6F0[];
 extern PlayerTuningRow D_800DC770[];
 extern PlayerTuningRow D_800DC880[];
 extern Struct800955C0 D_800B9540[];
+extern CourseAngleEntry D_800B9554[];
 extern CourseAngleEntry D_800B9556[];
 extern u8 D_80121B5F;
 extern u8 D_80121B5B;
@@ -149,6 +155,7 @@ extern s8 D_801229AB;
 extern s32 D_80122C94;
 extern s8 D_80122FB7;
 extern s32 D_801232A0;
+extern s16 D_80121B52;
 extern s16 D_801235B0;
 extern s32 D_801235B4;
 extern Unk8011228C D_8011228C[];
@@ -4669,7 +4676,11 @@ void func_800959B4(RaceInputPlayer *player) {
 }
 
 typedef struct {
-    /* 0x00 */ char pad0[0xAC];
+    /* 0x00 */ char pad0[0x94];
+    /* 0x94 */ s32 unk94;
+    /* 0x98 */ s32 unk98;
+    /* 0x9C */ s32 unk9C;
+    /* 0xA0 */ char padA0[0xC];
     /* 0xAC */ s8 active;
     /* 0xAD */ char padAD[3];
 } Unk801121E0;
@@ -4730,7 +4741,96 @@ void func_80095A88(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095BE4.s")
 
+// func_80095BE4 best match: 84.515% (nonmatchings/func_80095BE4-7273315160691878794/base_1.c)
+#ifdef NON_MATCHING
+extern void func_8006C088(EffectTask *);
+extern void func_80054B2C(EffectTask *);
+extern s32 func_800813F8(s32, s32, s32);
+
+void func_80095BE4(RaceInputPlayer *player) {
+    FixedMatrix3s matrix;
+    Vec3i transformed;
+    Vec3i source;
+    Vec3i *pos;
+    s32 nextX;
+    s32 nextZ;
+    s32 timer;
+    s8 slideLevel;
+
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        source.x = -0x200000;
+        source.y = 0;
+        source.z = 0x400000;
+        func_80097C18(matrix, D_800B9554[D_80121B50].angle);
+        pos = (Vec3i *) &player->posX;
+        func_80098590(matrix, &source, pos);
+        player->posX += D_800B9540[D_80121B50].unk8.x;
+        player->posY += D_800B9540[D_80121B50].unk8.y + 0x80000;
+        player->posZ += D_800B9540[D_80121B50].unk8.z;
+        player->unk508++;
+        player->unk502 = D_800B9540[D_80121B50].unk4;
+        player->unk34.x = pos->x;
+        player->unk34.y = pos->y;
+        player->stateTimer = 0x28;
+        player->unk34.z = pos->z;
+        player->stateFlags &= 0xFBFFFBFF;
+        player->facingAngle = D_800B9540[D_80121B50].unk14;
+        player->unk504 = -func_800813F8(player->unk502, player->posX, player->posZ);
+        func_8006D520(player->playerIndex, 1);
+        D_801121E0[player->playerIndex].unk94 = player->posX;
+        D_801121E0[player->playerIndex].unk98 = player->posY;
+        D_801121E0[player->playerIndex].unk9C = player->posZ;
+        func_80071408(func_8006C088, 0, 0x64);
+        if (player->unk508 >= (D_80121B52 - 1)) {
+            func_800716A4(func_80054B2C, 0, 0x64, player->playerIndex);
+        }
+    }
+
+    player->stateFlags &= ~0x80000;
+    source.x = 0;
+    source.y = 0;
+    source.z = -0x40000;
+    func_80097C18(matrix, D_800B9554[D_80121B50].angle);
+    func_80098590(matrix, &source, &transformed);
+    nextX = player->posX + transformed.x;
+    player->posX = nextX;
+    nextZ = player->posZ + transformed.z;
+    timer = player->stateTimer - 1;
+    player->posZ = nextZ;
+    player->stateTimer = timer;
+
+    if (timer == 0) {
+        player->mode = 1;
+        player->updateState = 0;
+        player->updateTimer = 0;
+        player->stateFlags = 0;
+
+        if (player->unk509 == 1) {
+            player->posX = nextX + player->unk40.x;
+            player->posZ = nextZ + player->unk40.z;
+        }
+
+        slideLevel = player->unk509;
+        if (slideLevel == 2) {
+            player->posX += player->unk40.x * 2;
+            player->posZ += player->unk40.z * 2;
+        }
+
+        if (slideLevel == 3) {
+            player->posX += player->unk40.x * 4;
+            player->posZ += player->unk40.z * 4;
+        }
+
+        if (D_801121E0[player->playerIndex].active != 0) {
+            D_801121E0[player->playerIndex].active = 1;
+        }
+    }
+}
+#endif
+
 // func_80095F90 best match: 99.836% (nonmatchings/func_80095F90-2225551288923588688/base_16.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095F90.s")
 
 #ifdef NON_MATCHING
