@@ -44,6 +44,24 @@ typedef struct ModelAnimState {
     s16 frameTimer;
 } ModelAnimState;
 
+typedef struct ModelAnimInitState {
+    u8 pad0[0x10];
+    u8 modelId;
+    u8 pad11[0x314];
+    u8 parentPartId;
+    u8 pad326[6];
+    s32 x;
+    s32 y;
+    s32 z;
+    u8 partId;
+    u8 pad339;
+    s16 unk33A;
+    s16 unk33C;
+    s16 unk33E;
+    u8 pad340[0x110];
+    s16 partCount;
+} ModelAnimInitState;
+
 typedef struct CourseSpawnEntry {
     s16 pathIndex;
     char pad2[0x36];
@@ -71,6 +89,10 @@ extern s16 D_80112166;
 extern s16 D_80121B50;
 extern s16 D_800B957E;
 extern CourseSpawnEntry D_800B9540[];
+extern u8 D_800DE380[];
+extern u8 *D_800DE3A8[];
+extern u8 *D_800DE3C4[];
+extern ModelAnimCoord *D_800DE530[];
 
 extern s32 func_8007BDE4(s32, s32);
 extern void func_80081EF4(ModelAnimState *);
@@ -603,4 +625,54 @@ s32 func_80082F44(ModelAnimState *state) {
     return 0;
 }
 
+// func_80082FC8 best match: 98.000% (base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80082FC8.s")
+
+#ifdef NON_MATCHING
+void func_80082FC8(ModelAnimInitState *state) {
+    s32 tableOffset;
+    s32 i;
+    u8 *parentIds;
+    u8 *partIds;
+    u8 modelId;
+    ModelAnimInitState *part;
+    ModelAnimCoord *coords;
+
+    modelId = state->modelId;
+    tableOffset = modelId * 4;
+    state->partCount = D_800DE380[modelId];
+    partIds = D_800DE3A8[modelId];
+    parentIds = D_800DE3C4[modelId];
+    i = 0;
+    if (state->partCount > 0) {
+        part = state;
+        do {
+            part->partId = *partIds;
+            i++;
+            part = (ModelAnimInitState *)((u8 *)part + 0x14);
+            part->parentPartId = *parentIds;
+            partIds++;
+            parentIds++;
+        } while (i < state->partCount);
+        modelId = state->modelId;
+        i = 0;
+        tableOffset = modelId * 4;
+    }
+
+    coords = *(ModelAnimCoord **)((u8 *)D_800DE530 + tableOffset);
+    if (state->partCount > 0) {
+        part = state;
+        do {
+            part->unk33E = 0;
+            part->unk33C = part->unk33E;
+            i++;
+            part->unk33A = part->unk33E;
+            part = (ModelAnimInitState *)((u8 *)part + 0x14);
+            part->x = coords->x << 0xE;
+            part->y = coords->y << 0xE;
+            part->z = coords->z << 0xE;
+            coords++;
+        } while (i < state->partCount);
+    }
+}
+#endif
