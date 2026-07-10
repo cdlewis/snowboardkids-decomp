@@ -79,6 +79,7 @@ extern s16 D_80121B50;
 extern s32 D_8010ADDC;
 extern u16 D_8010AE80;
 extern void *D_8010ADE0;
+extern void *D_8010ADE4;
 extern CharacterSelectCursorState D_8010AE88;
 extern u8 D_8010AE88_state;
 extern u8 D_8010AE89;
@@ -163,7 +164,187 @@ void func_8001BD70(CharacterSelectMenuFrameActor *arg0) {
 }
 #endif
 
+// func_8001C158 best match: 99.352% (nonmatchings/func_8001C158-4923837976568703863/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C158.s")
+
+#ifdef NON_MATCHING
+void func_8001C158(CharacterSelectMenuFrameActor *arg0) {
+    s32 anyMoving;
+    s32 i;
+    s32 limit;
+    s32 targetY;
+    void (*finalCallback)(EffectTask *);
+    CharacterSelectMenuFrameActor *base;
+    CharacterSelectMenuFrameActor *ptr;
+    s16 *x;
+
+    base = arg0;
+    switch (arg0->state) {
+    case 0:
+        anyMoving = 0;
+        i = 0;
+        if (base->itemCount > 0) {
+            ptr = arg0;
+            do {
+                if (ptr->x[0] < -0x7C) {
+                    ptr->x[0] += 0x10;
+                    anyMoving++;
+                    if (ptr->x[0] >= -0x7C) {
+                        ptr->x[0] = -0x7C;
+                    }
+                }
+                i++;
+                ptr = (CharacterSelectMenuFrameActor *)((s16 *)ptr + 1);
+            } while (i < base->itemCount);
+        }
+
+        arg0->timer++;
+        if (!(arg0->timer & 1)) {
+            if (arg0->itemCount < (D_8010AE80 + 1)) {
+                arg0->itemCount++;
+                if (arg0->itemCount == (D_8010AE80 + 1)) {
+                    D_8010ADE4 = func_80071408((void (*)(EffectTask *))func_8001DACC, 0, 0x58);
+                    func_80071408((void (*)(EffectTask *))func_8001DFA0, 0, 0x59);
+                    func_80071408((void (*)(EffectTask *))func_8001E468, 0, 0x5A);
+                    finalCallback = (void (*)(EffectTask *))func_80020AA0;
+                    func_80071408((void (*)(EffectTask *))func_8001E930, 0, 0x5B);
+                    func_80071408((void (*)(EffectTask *))func_8001EDF8, 0, 0x5C);
+                    func_80071408((void (*)(EffectTask *))func_8001F2C0, 0, 0x5D);
+                    if (D_8010ADF9 != 0) {
+                        func_80071408((void (*)(EffectTask *))func_8001F788, 0, 0x5E);
+                        if (D_8010ADF9 >= 2) {
+                            func_80071408((void (*)(EffectTask *))func_8001FC50, 0, 0x5F);
+                            if (D_8010ADF9 >= 3) {
+                                func_80071408((void (*)(EffectTask *))func_80020118, 0, 0x60);
+                            }
+                        }
+                    }
+                    func_80071408(finalCallback, 0, 0x61);
+                }
+            }
+        }
+        if (anyMoving == 0) {
+            arg0->state = 1;
+        }
+        break;
+    case 1:
+        if (D_80121D88 == 1) {
+            arg0->state = 2;
+        }
+        if (D_80121D88 == 7) {
+            arg0->state = 7;
+        }
+        break;
+    case 2:
+        if (D_80121B50 != 0) {
+            arg0->x[0] -= 0x20;
+        }
+        if (D_80121B50 != 1) {
+            arg0->x[1] -= 0x20;
+        }
+        if (D_80121B50 != 2) {
+            arg0->x[2] -= 0x20;
+        }
+        i = 3;
+        do {
+            x = (s16 *)arg0;
+            if (i != D_80121B50) {
+                x[i + 12] -= 0x20;
+            }
+            if ((i + 1) != D_80121B50) {
+                x[i + 13] -= 0x20;
+            }
+            if ((i + 2) != D_80121B50) {
+                x[i + 14] -= 0x20;
+            }
+            if ((i + 3) != D_80121B50) {
+                x[i + 15] -= 0x20;
+            }
+            i += 4;
+        } while (i != 0xB);
+
+        if (D_80121B50 != 0) {
+            if (arg0->x[0] < -0x103) {
+                arg0->state = 3;
+            }
+        } else if (arg0->x[1] < -0x103) {
+            arg0->state = 3;
+        }
+        break;
+    case 3:
+        arg0->y[D_80121B50] -= arg0->itemSpacing;
+        if (arg0->y[D_80121B50] < -0x5F) {
+            arg0->y[D_80121B50] = -0x60;
+            arg0->state = 4;
+            if (D_800EC9C2 == 2) {
+                D_8010ADE0 = func_80071408((void (*)(EffectTask *))func_800235E0, 0, 0x62);
+                func_80071408((void (*)(EffectTask *))func_800232F4, 0, 0x63);
+            } else {
+                func_80071408((void (*)(EffectTask *))func_8002186C, 0, 0x61);
+                func_80071408((void (*)(EffectTask *))func_80021B20, 0, 0x62);
+            }
+        }
+        break;
+    case 4:
+        if (D_80121D88 == 4) {
+            arg0->state = 5;
+        }
+        if (D_80121D88 == 7) {
+            arg0->state = 7;
+        }
+        break;
+    case 5:
+        arg0->y[D_80121B50] += arg0->itemSpacing;
+        targetY = (D_80121B50 * arg0->itemSpacing) + arg0->baseY;
+        if (arg0->y[D_80121B50] >= targetY) {
+            arg0->y[D_80121B50] = targetY;
+            arg0->state = 6;
+        }
+        break;
+    case 6:
+        limit = D_8010AE80 + 1;
+        i = 0;
+        if (limit > 0) {
+            do {
+                if (i != D_80121B50) {
+                    arg0->x[i] += 0x20;
+                    limit = D_8010AE80 + 1;
+                }
+                i++;
+            } while (i < (D_8010AE80 + 1));
+        }
+        if (D_80121B50 != 0) {
+            if (arg0->x[0] >= -0x7C) {
+                arg0->state = 1;
+            }
+        } else if (arg0->x[1] >= -0x7C) {
+            arg0->state = 1;
+        }
+        if (arg0->state == 1) {
+            D_80121D88 = 5;
+        }
+        break;
+    case 7:
+        i = 0;
+        if ((D_8010AE80 + 1) > 0) {
+            ptr = arg0;
+            do {
+                i++;
+                ptr->x[0] -= 0x20;
+                ptr = (CharacterSelectMenuFrameActor *)((s16 *)ptr + 1);
+            } while (i < (D_8010AE80 + 1));
+        }
+        break;
+    }
+
+    if ((arg0->state == 7) && (arg0->x[0] < -0x103)) {
+        func_800716E4((EffectTask *)arg0);
+        return;
+    }
+
+    func_800483FC(&D_80124868, func_8001BD70, arg0);
+}
+#endif
 
 // func_8001C83C best match: 96.776% (nonmatchings/func_8001C83C-3836525038718587862/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C83C.s")
