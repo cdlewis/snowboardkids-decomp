@@ -293,21 +293,29 @@ void func_80099790(void) {
     D_8010ADFA = 0;
 }
 
-// func_800998E4 best match: 85.880% at nonmatchings/func_800998E4-7273315160691878794/base_12.c.
+// func_800998E4 best match: 87.659% at nonmatchings/func_800998E4-7273315160691878794/base_18.c.
 #ifdef NON_MATCHING
 void func_800998E4(void *arg0) {
     OSMesg msg;
     s32 done;
     s16 type;
     s32 initialized;
+    OSMesgQueue *queue18;
+    OSMesgQueue *queue70;
+    OSMesgQueue *queue50;
+    u8 *counter;
 
     msg = NULL;
     initialized = 0;
-    done = 0;
     func_80099790();
+    done = 0;
+    queue18 = &D_80124018;
+    queue70 = &D_80124070;
+    queue50 = &D_80124050;
+    counter = &D_80123750;
 loop_1:
     do {
-        if ((osRecvMesg(&D_80124018, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(&D_80124070, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(&D_80124050, &msg, OS_MESG_NOBLOCK) != 0)) {
+        if ((osRecvMesg(queue18, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue70, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue50, &msg, OS_MESG_NOBLOCK) != 0)) {
             goto loop_1;
         }
         type = *(s16 *)msg;
@@ -328,11 +336,11 @@ loop_1:
             }
             break;
         case 5:
-            D_80123750 += 1;
+            *counter += 1;
             D_8012496E &= 0xFFFE;
             break;
         case 6:
-            D_80123750 += 1;
+            *counter += 1;
             D_8013CF8E &= 0xFFFE;
             break;
         case 3:
@@ -373,8 +381,8 @@ loop_1:
 loop_16:
     do {
 loop_17:
-        if ((osRecvMesg(&D_80124018, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(&D_80124070, &msg, OS_MESG_NOBLOCK) != 0)) {
-            if (osRecvMesg(&D_80124050, &msg, OS_MESG_NOBLOCK) != 0) {
+        if ((osRecvMesg(queue18, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue70, &msg, OS_MESG_NOBLOCK) != 0)) {
+            if (osRecvMesg(queue50, &msg, OS_MESG_NOBLOCK) != 0) {
                 goto loop_17;
             }
         }
