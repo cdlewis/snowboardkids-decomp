@@ -3162,7 +3162,92 @@ void func_80094A94(RaceInputPlayer *player) {
 }
 #endif
 
+// func_80094BEC best match: 95.076% (nonmatchings/func_80094BEC-8207005055717715604/base_2.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094BEC.s")
+
+#ifdef NON_MATCHING
+void func_80094BEC(RaceInputPlayer *player) {
+    s16 temp_v1_2;
+    s16 temp_v0;
+    s16 temp_2d6;
+    s32 timer;
+    s32 ret;
+    u32 stateFlags;
+
+    player->unk2EE = 0;
+    func_8008B408(player, 0, 0);
+    player->unk40.y += 0xFFFF6000;
+    player->posY += player->unk40.y;
+
+    stateFlags = player->stateFlags;
+    if (!(stateFlags & 1)) {
+        player->stateFlags = stateFlags & ~0x200;
+    } else {
+        player->stateFlags = stateFlags | 0x200;
+    }
+
+    temp_v1_2 = player->updateState;
+    temp_v0 = temp_v1_2;
+    switch (temp_v0) {
+    case 0:
+        player->stateFlags &= 0xFE0C1FFB;
+        player->updateState = temp_v1_2 + 1;
+        player->stateFlags |= 0x1202000;
+        player->unk2D6 = 1;
+        func_80081E40(player, 1);
+        player->stateTimer = 0x5A;
+        player->unk60 = 0;
+        func_80082DD0(player);
+        timer = player->stateTimer;
+        player->unk40.y = 0;
+        player->actionEffectLevel = 6;
+        player->actionEffectFrame = 0;
+        player->stateTimer = timer - ((timer * player->unk509) / 8);
+        /* fallthrough */
+    case 1:
+        temp_2d6 = player->unk2D6;
+        if (temp_2d6 != 1) {
+            player->unk2D6 = temp_2d6 - 1;
+        }
+
+        ret = func_80084958(player);
+        if (ret != 0) {
+            player->unk2D6 = 3;
+        }
+
+        timer = player->stateTimer - ret - 1;
+        player->stateTimer = timer;
+        if (timer < 0) {
+            player->stateTimer = 0;
+            timer = 0;
+        }
+
+        if (timer == 0) {
+            player->unk2D6 = 1;
+            player->updateState += 1;
+        }
+        break;
+    case 2:
+        player->unk2D6 += 1;
+        if (player->unk2D6 == 7) {
+            player->unk2D6 = 2;
+            player->updateState += 1;
+        }
+        break;
+    case 3:
+        player->unk2D6 += 1;
+        if (player->unk2D6 == 8) {
+            player->stateFlags &= 0xFE0C1FFB;
+            player->mode = 0;
+            player->updateState = 0;
+            player->updateTimer = 0;
+            player->unk2D4 = 0x3C;
+        }
+        break;
+    }
+}
+#endif
 
 // func_80094DF8 best match: 99.921% (nonmatchings/func_80094DF8-4923837976568703863/base_14.c)
 
