@@ -111,6 +111,7 @@ void func_8000F970(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
 extern void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);
 void func_80012AE4(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 arg5);
 void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
+extern Gfx D_800DEFF8[];
 extern RenderCallbackNode *D_80124868;
 extern Gfx *gRegionAllocPtr;
 extern s16 D_80112130[];
@@ -1126,4 +1127,121 @@ u8 increase;
     return value;
 }
 
+// func_80013FEC best match: 82.448% (nonmatchings/func_80013FEC-7273315160691878794/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013FEC.s")
+
+#ifdef NON_MATCHING
+void func_80013FEC(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex0, u16 imageIndex1, u8 alpha) {
+    MenuFontAssetEntry *entry0;
+    MenuFontAssetEntry *entry1;
+    s32 minX;
+    s32 maxX;
+    s32 minY;
+    s32 maxY;
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 drawX0;
+    s32 drawY0;
+    s32 drawX1;
+    s32 drawY1;
+    s32 clipS;
+    s32 clipT;
+    u8 *paletteBase;
+    s32 halfWidth;
+    s32 halfHeight;
+
+    entry0 = &table->entries[imageIndex0];
+    entry1 = &table->entries[imageIndex1];
+    paletteBase = (u8 *)&table->entries[table->entryCount];
+
+    x0 = x + D_8015660E;
+    y0 = y + D_80156610;
+    x1 = x0 + entry0->width;
+    y1 = y0 + entry0->height;
+
+    clipS = 0;
+    clipT = 0;
+    halfWidth = D_8015660A / 2;
+    maxX = D_8015660E + halfWidth;
+    if (x0 < maxX) {
+        halfHeight = D_8015660C / 2;
+        maxY = D_80156610 + halfHeight;
+        if (y0 < maxY) {
+            minX = D_8015660E - halfWidth;
+            if (x1 >= minX) {
+                minY = D_80156610 - halfHeight;
+                if (y1 >= minY) {
+                    if (x0 < minX) {
+                        clipS = minX - x0;
+                        x0 = minX;
+                    }
+                    if (y0 < minY) {
+                        clipT = minY - y0;
+                        y0 = minY;
+                    }
+                    if (x1 >= maxX) {
+                        x1 = maxX - 1;
+                    }
+                    if (y1 >= maxY) {
+                        y1 = maxY - 1;
+                    }
+                    drawX0 = x0;
+                    drawY0 = y0;
+                    drawX1 = x1;
+                    drawY1 = y1;
+
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xBA001402, 0x00100000);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xBA001001, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFA000000, alpha);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFC2527FF, 0x1FFC9238);
+
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD080000 | ((entry0->width - 1) & 0xFFF),
+                                 (u32)((u8 *)table + entry0->imageOffset));
+                    FONT_GFX_CMD(gRegionAllocPtr++, ((((entry0->width + 8) >> 3) & 0x1FF) << 9) | 0xF5080000,
+                                 0x07000000);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                                 0x07000000 | (((entry0->width << 2) & 0xFFF) << 12) |
+                                     ((entry0->height << 2) & 0xFFF));
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, ((((entry0->width + 8) >> 3) & 0x1FF) << 9) | 0xF5080000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                                 (((entry0->width << 2) & 0xFFF) << 12) | ((entry0->height << 2) & 0xFFF));
+
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD080000 | ((entry1->width - 1) & 0xFFF),
+                                 (u32)((u8 *)table + entry1->imageOffset));
+                    FONT_GFX_CMD(gRegionAllocPtr++, ((((entry1->width + 8) >> 3) & 0x1FF) << 9) | 0xF5080100,
+                                 0x07000000);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                                 0x07000000 | (((entry1->width << 2) & 0xFFF) << 12) |
+                                     ((entry1->height << 2) & 0xFFF));
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, ((((entry1->width + 8) >> 3) & 0x1FF) << 9) | 0xF5080100,
+                                 0x01000000);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                                 0x01000000 | (((entry1->width << 2) & 0xFFF) << 12) |
+                                     ((entry1->height << 2) & 0xFFF));
+
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(paletteBase + (entry1->textureIndex << 5)));
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x073FC000);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE4000000 | (((drawX1 << 2) & 0xFFF) << 12) |
+                                                    ((drawY1 << 2) & 0xFFF),
+                                 (((drawX0 << 2) & 0xFFF) << 12) | ((drawY0 << 2) & 0xFFF));
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000,
+                                 ((clipS << 21) & 0xFFFF0000) | ((clipT << 5) & 0xFFFF));
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)D_800DEFF8);
+                }
+            }
+        }
+    }
+}
+#endif
