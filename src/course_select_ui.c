@@ -369,7 +369,187 @@ void func_80024050(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024168.s")
 
+// func_80024380 best match: 83.285% (nonmatchings/func_80024380-2225551288923588688/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024380.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    /* 0x000 */ u8 pad0[0x3C];
+    /* 0x03C */ s16 matrix[0x10];
+    /* 0x05C */ u8 pad5C[0x60];
+    /* 0x0BC */ CourseSelectTempVec3i vecs[4];
+    /* 0x0EC */ u16 angle[4];
+    /* 0x0F4 */ s16 targetCourse[4];
+    /* 0x0FC */ u8 timer[4];
+    /* 0x100 */ u8 state[4];
+} CourseSelectAnimatedActor;
+
+extern u8 D_800EC9C0;
+extern s32 D_8010ADE4;
+extern u8 D_8010AECC[];
+extern s32 D_8010AEE8[];
+extern u8 D_8010AEFB[];
+extern s32 D_80124898;
+
+void func_80024380(void *arg0) {
+    CourseSelectTempVec3i sp78;
+    CourseSelectAnimatedActor *actor;
+    CourseSelectRacePlayer *player;
+    s32 i;
+    s32 move;
+    s32 offset;
+    u8 state;
+
+    actor = arg0;
+    i = 0;
+    if ((s32)D_80121B55 > 0) {
+        offset = 0;
+        do {
+            state = D_8010AF18[8 + i];
+            if (state != actor->state[i]) {
+                actor->state[i] = state;
+                actor->timer[i] = D_8010AF18[0x10 + i];
+                actor->angle[i] = *(u16 *)&D_8010AF18[offset + 0x1C];
+                D_8010AF18[0x10 + i] = 0;
+                *(s16 *)&D_8010AF18[offset + 0x1C] = 0;
+                state = actor->state[i];
+            }
+
+            if (D_801235B4 != 0 && state < 5) {
+                actor->state[i] = 4;
+                actor->angle[i] = 0;
+                state = actor->state[i];
+            }
+
+            switch (state) {
+            case 0:
+                break;
+            case 1:
+                if (D_8010AECC[i] & 1) {
+                    player = &D_80121D80[i];
+                    if (D_8010AEE8[i] < 0) {
+                        if ((s32)((u8 *)player)[0x11] >= 9) {
+                            actor->targetCourse[i] = 2;
+                        } else {
+                            actor->targetCourse[i] = ((u8 *)player)[6] % 3 - 1;
+                        }
+                    } else {
+                        actor->targetCourse[i] = ((u8 *)player)[6] % 3 + 1;
+                    }
+                    if (actor->targetCourse[i] < 0) {
+                        actor->targetCourse[i] = 2;
+                    }
+                    if (actor->targetCourse[i] == 3) {
+                        actor->targetCourse[i] = D_8010AEFB[i * 4];
+                    }
+                    if (actor->targetCourse[i] == 8) {
+                        actor->targetCourse[i] = 2;
+                    }
+                    if (D_8010AECC[i] == 1) {
+                        actor->vecs[i].y = -D_8010AEE8[i];
+                    }
+                    actor->state[i] = 2;
+                    state = 2;
+                } else if (D_801235B8->screenState == 9) {
+                    actor->state[i] = 8;
+                    state = 8;
+                }
+                break;
+            case 2:
+                move = 0x200000;
+                if (D_8010AEE8[i] < 0) {
+                    move = -0x200000;
+                }
+                actor->vecs[i].y += move;
+                D_8010AEE8[i] -= move;
+                if (D_8010AEE8[i] == 0) {
+                    actor->state[i] = 1;
+                    D_8010AECC[i]++;
+                    D_8010AECC[i] &= 3;
+                }
+                state = actor->state[i];
+                break;
+            case 3:
+                actor->timer[i]++;
+                if (D_800EC9C0 != 0) {
+                    D_800EC9C0 = 1;
+                }
+                if (actor->timer[i] == 0xF) {
+                    actor->timer[i] = 0;
+                    actor->state[i] = 4;
+                    if (D_80121B55 == 1) {
+                        ((u8 *)&D_80121D80[0])[8] = 3;
+                        D_800EC9C0 = 0x10;
+                    }
+                }
+                state = actor->state[i];
+                break;
+            case 4:
+                if (((u8 *)&D_80121D80[i])[8] == 3) {
+                    actor->state[i] = 5;
+                    state = 5;
+                }
+                break;
+            case 5:
+                actor->vecs[i].x += 0x200000;
+                if (actor->vecs[i].x == 0x1000000) {
+                    actor->state[i] = 6;
+                }
+                state = actor->state[i];
+                break;
+            case 6:
+                ((u8 *)&D_80121D80[i])[8] = 4;
+                if (i == 2 && D_80121B55 == 3) {
+                    ((u8 *)&D_80121D80[3])[8] = 4;
+                }
+                state = actor->state[i];
+                break;
+            case 7:
+                if (((u8 *)&D_80121D80[i])[8] == 3) {
+                    actor->state[i] = 5;
+                    state = 5;
+                } else if (D_801235B8->screenState == 9) {
+                    actor->state[i] = 8;
+                    state = 8;
+                }
+                break;
+            case 8:
+                actor->vecs[i].x += 0x200000;
+                if (actor->vecs[i].x == 0xC00000) {
+                    actor->state[i] = 9;
+                    D_801235B8->screenState = 0xB;
+                }
+                state = actor->state[i];
+                break;
+            case 9:
+                break;
+            }
+
+            if ((s32)state < 3) {
+                u16 angle = actor->angle[i] + 0x20;
+                actor->angle[i] = angle;
+                actor->angle[i] = angle & 0xFFF;
+            }
+            func_80097C18(&actor->matrix[i * 0x10], (s16)actor->angle[i]);
+            func_80098590(&actor->matrix[i * 0x10], &actor->vecs[i], &sp78);
+            *(s32 *)((u8 *)actor + (i * 0x20) + 0x50) = sp78.x;
+            *(s32 *)((u8 *)actor + (i * 0x20) + 0x54) = sp78.y;
+            *(s32 *)((u8 *)actor + (i * 0x20) + 0x58) = sp78.z;
+            D_8010AF18[8 + i] = actor->state[i];
+            i++;
+            offset += 2;
+        } while (i < (s32)D_80121B55);
+    }
+
+    if (((u8 *)&D_80121D80[0])[8] == 4 || actor->state[0] == 9) {
+        func_800716E4(actor);
+        func_800291F0(2);
+        D_8010ADE4 = 0;
+    } else {
+        func_800483FC(&D_80124898, func_80024168, actor);
+    }
+}
+#endif
 
 void func_80024968(void *arg0) {
     u8 *var_s1;
