@@ -97,6 +97,7 @@ extern s32 osMotorStart(OSPfs *);
 extern s32 osMotorStop(OSPfs *);
 extern s32 osPfsInitPak(OSMesgQueue *, OSPfs *, int);
 extern s32 osPfsRepairId(OSPfs *);
+extern s32 osPfsFindFile(OSPfs *, u16, u32, u8 *, u8 *, s32 *);
 extern s32 osPfsFreeBlocks(OSPfs *, s32 *);
 extern s32 osPfsNumFiles(OSPfs *, s32 *, s32 *);
 extern s32 osPfsFileState(OSPfs *, s32, OSPfsState *);
@@ -155,6 +156,10 @@ extern u8 D_800E4C27;
 extern s16 D_800E4C2A;
 extern u8 D_800E4C2C;
 extern u8 D_800E4C2D;
+extern s32 D_800E4C30[];
+extern OSPfsState D_800E4F80;
+extern u8 D_800E4F8A[];
+extern u8 D_800E4F8E[];
 extern u8 D_800EC9D8;
 extern s32 D_800EC898;
 extern s32 D_800EC89C;
@@ -200,6 +205,9 @@ extern u8 D_8012482B;
 extern u8 D_8012482C;
 extern s32 D_801235B4;
 extern s32 D_80123778;
+extern u8 D_800B30F4[];
+extern u8 D_800B3104[];
+extern u8 D_800B3108[];
 
 // func_80000450 best match: 85.817%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000450.s")
@@ -416,7 +424,76 @@ void func_80000DB4(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
+// func_80000E00 best match: 81.386%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000E00.s")
+
+#ifdef NON_MATCHING
+void func_80000E00(u16 arg0) {
+    s32 ret;
+    s32 maxFiles;
+    s32 filesUsed;
+    s32 freeBytes;
+    OSPfs *pfs;
+    u8 *src;
+    u8 *dst;
+    u8 byte0;
+    u8 byte1;
+    u8 byte2;
+    u8 byte3;
+
+    D_800E4F80.file_size = 0x7900;
+    D_800E4F80.game_code = 0x4E534B45;
+    D_800E4F80.company_code = 0x4542;
+
+    src = D_800B3104;
+    dst = (u8 *) &D_800E4F80;
+    do {
+        byte0 = *src;
+        src++;
+        dst++;
+        dst[9] = byte0;
+    } while (src < D_800B3108);
+
+    src = D_800B30F4;
+    dst = (u8 *) &D_800E4F80;
+    do {
+        byte0 = *src++;
+        byte1 = *src++;
+        byte2 = *src++;
+        byte3 = *src++;
+        dst += 4;
+        dst[0xA] = byte0;
+        dst[0xB] = byte1;
+        dst[0xC] = byte2;
+        dst[0xD] = byte3;
+    } while (src != D_800B3104);
+
+    pfs = &D_800E4C40[arg0];
+    osPfsInitPak(&D_800E4BD0, pfs, arg0);
+
+    ret = osPfsFindFile(pfs, D_800E4F80.company_code, D_800E4F80.game_code, D_800E4F8E, D_800E4F8A,
+                        &D_800E4C30[arg0]);
+    if (ret == 0) {
+        D_800EC9C8[arg0] = 2;
+    } else {
+        osPfsNumFiles(pfs, &maxFiles, &filesUsed);
+        if (filesUsed == 0x10) {
+            D_800EC9C8[arg0] = 0xC;
+        } else {
+            osPfsFreeBlocks(pfs, &freeBytes);
+            if ((freeBytes / 256) < 0x79) {
+                D_800EC9C8[arg0] = 0xB;
+            } else if (ret == 5) {
+                D_800EC9C8[arg0] = 9;
+            }
+        }
+    }
+
+    if (ret != 0) {
+        D_800EC9E0[arg0]++;
+    }
+}
+#endif
 
 void func_80001010(u16 arg0) {
     OSMesg msg;
