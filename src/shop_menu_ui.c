@@ -1346,7 +1346,7 @@ void func_8002EFFC(ShopMenuWidgetActor *arg0) {
 }
 #endif
 
-// func_8002F2C8 best match: 79.014% (nonmatchings/func_8002F2C8-7273315160691878794/base_4.c)
+// func_8002F2C8 best match: 79.777% (nonmatchings/func_8002F2C8-7273315160691878794/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002F2C8.s")
 
 #ifdef NON_MATCHING
@@ -1358,8 +1358,8 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
     u8 nextState;
     ShopMenuWidgetActor *actor;
     ShopMenuWidgetActor *shifted;
-    s16 *pos;
     s16 target;
+    s16 temp;
     u16 count;
 
     actor = arg0;
@@ -1417,12 +1417,12 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
         state = nextState;
         break;
     case 3:
-        shifted = (ShopMenuWidgetActor *)((s16 *)arg0 + 3);
         arg0->randomValues[0] -= 0x20;
         if (arg0->randomValues[0] < -0x117) {
             arg0->randomValues[0] = -0x118;
         }
         arg0->randomValues[1] -= 0x20;
+        shifted = (ShopMenuWidgetActor *)((s16 *)arg0 + 3);
         if (arg0->randomValues[1] < -0x117) {
             arg0->randomValues[1] = -0x118;
         }
@@ -1454,7 +1454,6 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
         state = nextState;
         break;
     case 4:
-        shifted = (ShopMenuWidgetActor *)((s16 *)arg0 + 3);
         target = arg0->targetX;
         arg0->randomValues[0] += 0x20;
         if (arg0->randomValues[0] >= target) {
@@ -1462,6 +1461,7 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
         }
         arg0->randomValues[1] += 0x20;
         target = arg0->targetX;
+        shifted = (ShopMenuWidgetActor *)((s16 *)arg0 + 3);
         if (arg0->randomValues[1] >= target) {
             arg0->randomValues[1] = target;
         }
@@ -1499,15 +1499,16 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
     case 5:
         arg0->randomValues[1] -= 0x20;
         arg0->randomValues[0] -= 0x20;
-        pos = &arg0->randomValues[2];
+        shifted = (ShopMenuWidgetActor *)((char *)arg0 + 4);
         i = 2;
         do {
-            pos[3] -= 0x20;
-            pos[2] -= 0x20;
-            pos[1] -= 0x20;
-            pos[0] -= 0x20;
+            temp = shifted->randomValues[0] - 0x20;
+            shifted->randomValues[3] -= 0x20;
+            shifted->randomValues[2] -= 0x20;
+            shifted->randomValues[1] -= 0x20;
             i += 4;
-            pos += 4;
+            shifted = (ShopMenuWidgetActor *)((char *)shifted + 8);
+            shifted->randomValues[-4] = temp;
         } while (i != 10);
         if (arg0->randomValues[0] < -0x117) {
             arg0->state = 7;
