@@ -104,6 +104,8 @@ extern RaceCamera *D_801124A0;
 extern RacePlayerSlot D_80121D80[];
 extern CourseSpawnEntry D_800B9540[];
 extern u8 D_800DA91C[];
+extern s16 D_800DA900[];
+extern u8 D_800DA914[];
 extern u8 D_800DAA3C[];
 extern void *D_800DA880[];
 extern s32 D_80121B40;
@@ -113,6 +115,7 @@ extern s16 D_80121B50;
 extern s8 D_80121B54;
 extern u8 D_80121B56;
 extern u8 D_80121B58;
+extern s32 D_801235B4;
 
 void func_8006D520(u16 arg0, u16 arg1) {
     RaceCamera *temp;
@@ -387,7 +390,136 @@ void func_8006EFF4(void) {
     D_801124A0->update();
 }
 
+// func_8006F048 best match: 77.167% (nonmatchings/func_8006F048-2225551288923588688/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006F048.s")
+
+#ifdef NON_MATCHING
+void func_8006F048(void) {
+    RaceCamera *camera;
+    RacePlayerSlot *player;
+    RacePlayerSlot *otherPlayer;
+    RacePlayerSlot *players;
+    s8 *playerCount;
+    s32 stride;
+    s32 otherStride;
+    s32 i;
+    s32 blockedAngles;
+    s32 dx;
+    s32 dz;
+    s64 distSq;
+    s32 dist;
+    s32 sine;
+    s32 cosine;
+    s16 targetYaw;
+    s16 yaw;
+    s16 diff;
+    u8 *angleOrder;
+
+    if (D_80121B56 == 0) {
+        stride = RACE_PLAYER_STATE_SIZE;
+        players = D_80121D80;
+        playerCount = &D_80121B54;
+        camera = D_801124A0;
+        player = (RacePlayerSlot *)((u8 *)players + (camera->playerIndex * stride));
+
+        camera->focus.x += (player->state.cameraPos.x - camera->focus.x) >> 1;
+        camera = D_801124A0;
+        player = (RacePlayerSlot *)((u8 *)players + (camera->playerIndex * stride));
+        camera->focus.y += (player->state.cameraPos.y - camera->focus.y) >> 1;
+        camera = D_801124A0;
+        player = (RacePlayerSlot *)((u8 *)players + (camera->playerIndex * stride));
+        camera->focus.z += (player->state.cameraPos.z - camera->focus.z) >> 1;
+
+        camera = D_801124A0;
+        player = (RacePlayerSlot *)((u8 *)players + (camera->playerIndex * stride));
+        targetYaw = player->state.yaw - 0x300;
+        blockedAngles = 0;
+        i = 0;
+
+        if (*playerCount > 0) {
+            otherStride = RACE_PLAYER_STATE_SIZE;
+            do {
+                if (i != camera->playerIndex) {
+                    player = (RacePlayerSlot *)((u8 *)players + (camera->playerIndex * stride));
+                    otherPlayer = (RacePlayerSlot *)((u8 *)players + (i * otherStride));
+                    dx = player->state.pos.x - otherPlayer->state.pos.x;
+                    dz = player->state.pos.z - otherPlayer->state.pos.z;
+                    distSq = (s64)dx * dx + (s64)dz * dz;
+
+                    if (distSq < 0xE1100000000LL) {
+                        if (distSq < 0xE1000000000LL) {
+                            blockedAngles |= 1 << (s16)((((func_8004908C(dx, dz) + 0x800) - targetYaw) + 0x100) & 0xFFF) >> 9;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                i++;
+                camera = D_801124A0;
+            } while (i < *playerCount);
+            i = 0;
+        }
+
+        angleOrder = D_800DA914;
+        while ((blockedAngles & (1 << *angleOrder)) != 0) {
+            i++;
+            angleOrder++;
+            if (i == 8) {
+                break;
+            }
+        }
+
+        yaw = targetYaw + D_800DA900[i];
+        yaw = (s16)yaw;
+        camera = D_801124A0;
+        sine = func_8004940C(camera->focus.x, camera->focus.z, camera->pos.x, camera->pos.z);
+        diff = (yaw - sine) & 0xFFF;
+        if (diff >= 0x801) {
+            diff -= 0x1000;
+        }
+        if (diff >= 0x21) {
+            diff = 0x20;
+        }
+        if (diff < -0x20) {
+            diff = -0x20;
+        }
+        yaw = diff + sine;
+        D_801124A0->unk92 = yaw;
+
+        camera = D_801124A0;
+        dx = camera->pos.x - camera->focus.x;
+        dz = camera->pos.z - camera->focus.z;
+        dist = func_80098C30((s64)dx * dx + (s64)dz * dz);
+        dist = ((0x300000 - dist) >> 1) + dist;
+
+        sine = func_80097AE8(yaw);
+        cosine = func_80097B48(yaw);
+        D_801124A0->pos.x = (((s64)sine * -dist) / 0x1000) + D_801124A0->focus.x;
+        D_801124A0->pos.z = (((s64)cosine * -dist) / 0x1000) + D_801124A0->focus.z;
+
+        camera = D_801124A0;
+        camera->pos.y += (camera->focus.y - camera->pos.y) >> 1;
+
+        camera = D_801124A0;
+        camera->unk28 += (0x960000 - camera->unk28) >> 1;
+
+        if (D_801235B4 & 0x20) {
+            D_801124A0->update = func_8006F5B0;
+        }
+    }
+
+    camera = D_801124A0;
+    player = &D_80121D80[camera->playerIndex];
+    camera->prevPos.x = player->state.pos.x;
+    camera = D_801124A0;
+    player = &D_80121D80[camera->playerIndex];
+    camera->prevPos.y = player->state.pos.y;
+    camera = D_801124A0;
+    player = &D_80121D80[camera->playerIndex];
+    camera->prevPos.z = player->state.pos.z;
+    func_8006D8B4();
+}
+#endif
 
 void func_8006F5B0(void) {
     s32 unused[3];
