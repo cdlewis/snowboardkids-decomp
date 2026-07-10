@@ -32,12 +32,18 @@ typedef struct {
     /* 0x018 */ char pad18[2];
     /* 0x01A */ u8 actionTriggerChance;
     /* 0x01B */ u8 itemTriggerChance;
-    /* 0x01C */ s32 posX;
-    /* 0x020 */ s32 posY;
-    /* 0x024 */ s32 posZ;
+    /* 0x01C */ union {
+        RaceVec3i pos;
+        struct {
+            s32 posX;
+            s32 posY;
+            s32 posZ;
+        };
+    };
     /* 0x028 */ char pad28[4];
     /* 0x02C */ s32 unk2C;
-    /* 0x030 */ char pad30[0x10];
+    /* 0x030 */ char pad30[4];
+    /* 0x034 */ RaceVec3i unk34;
     /* 0x040 */ union {
         RaceVec3i unk40;
         RaceVec3i velocity;
@@ -52,7 +58,7 @@ typedef struct {
     /* 0x05C */ s32 unk5C;
     /* 0x060 */ s32 unk60;
     /* 0x064 */ s32 unk64;
-    /* 0x068 */ char pad68[4];
+    /* 0x068 */ s32 unk68;
     /* 0x06C */ s16 unk6C;
     /* 0x06E */ s16 unk6E;
     /* 0x070 */ s16 unk70;
@@ -166,7 +172,8 @@ typedef struct {
     /* 0x515 */ s8 actionEffectType;
     /* 0x516 */ char pad516[1];
     /* 0x517 */ s8 unk517;
-    /* 0x518 */ char pad518[2];
+    /* 0x518 */ s8 unk518;
+    /* 0x519 */ s8 unk519;
     /* 0x51A */ u8 actionEffectEnabled;
     /* 0x51B */ char pad51B[0xD];
     /* 0x528 */ s8 unk528;
