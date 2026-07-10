@@ -239,11 +239,12 @@ void func_8007B250(void) {
 #undef RANK_NEAR_LIMIT
 #endif
 
-// func_8007BB08 best match: 99.120% (nonmatchings/func_8007BB08-2785870559185086986/base_3.c)
+// func_8007BB08 best match: 99.480% (nonmatchings/func_8007BB08-7273315160691878794/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007BB08.s")
 
 #ifdef NON_MATCHING
 void func_8007BB08(RacePositionPlayer *player) {
+    s64 product;
     s32 x;
     s32 y;
     s32 z;
@@ -254,7 +255,6 @@ void func_8007BB08(RacePositionPlayer *player) {
     s32 eventMask;
     s32 sine;
     s32 cosine;
-    s64 product;
 
     if (player->flags & 0x1000) {
         player->checkpointEventMask = 0;
