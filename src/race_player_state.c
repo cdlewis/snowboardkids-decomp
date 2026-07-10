@@ -108,6 +108,7 @@ extern s16 func_80097AE8(s16);
 extern void func_800545D0(EffectTask *);
 extern void func_80057810(void *);
 extern s32 func_8004DB60(s8);
+extern s32 func_800860A0(RaceInputPlayer *);
 
 extern void (*D_800DECD0[])(RaceInputPlayer *);
 extern void (*D_800DECD8[])(RaceInputPlayer *);
@@ -161,6 +162,7 @@ extern void *D_801248EC;
 extern Struct800955C0 D_800B9540[];
 extern s16 D_801124B8[];
 extern s16 D_80121B50;
+extern Unk801124B8 D_801124B8[];
 
 void func_8008BEB0(void) {
     D_80121D80[0].playerIndex = 0;
@@ -3629,7 +3631,126 @@ void func_800936D4(RaceInputPlayer *player) {
 }
 #endif
 
+// func_800939E0 best match: 91.209% (nonmatchings/func_800939E0-7273315160691878794/base_7.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800939E0.s")
+
+#ifdef NON_MATCHING
+void func_800939E0(RaceInputPlayer *player) {
+    s32 *sp38;
+    s32 *sp34;
+    s32 *sp30;
+    s16 *sp2C;
+    s16 updateState;
+    s32 yVel;
+    u32 stateFlags;
+
+    updateState = player->updateState;
+    yVel = player->unk40.y - player->unk260;
+    player->unk40.y = yVel;
+    player->posY += yVel;
+
+    switch (updateState) {
+        case 0:
+            stateFlags = player->stateFlags & 0xFE0C1FFB;
+            player->stateFlags = stateFlags;
+            player->updateState = updateState + 1;
+            player->stateFlags = stateFlags | 0x42000;
+            func_80081E40(player, 0xE);
+            func_80082EC0(player);
+            player->unk80 = player->unk502 + 2;
+            func_8006D520(player->playerIndex, 4);
+            player->unk60 = 0;
+            if (player->soundDisabled == 0) {
+                func_8004F55C(player->playerIndex, player->unk330);
+            }
+            player->actionEffectLevel = 2;
+            player->actionEffectFrame = 0;
+            player->unk2E8 = player->unk502;
+            /* fallthrough */
+        case 1:
+            if (func_80082EC0(player) != 0) {
+                player->updateState++;
+                func_80081E40(player, 0xF);
+            }
+            func_8008B408(player, player->unk254, 0);
+            player->unk314 = 0x20000;
+            func_8008BB20(player, 0, 0x2000, 0x2000, 0x2000);
+            player->posX += player->unk40.x;
+            player->posY += player->unk40.y;
+            player->posZ += player->unk40.z;
+            break;
+        default:
+            break;
+        case 2:
+            if (func_80082EC0(player) != 0) {
+                player->updateState++;
+                player->stateTimer = 0x3C - ((player->unk509 * 0x3C) / 8);
+                func_80081E40(player, 0x20);
+            }
+            func_8008B408(player, player->unk254, 0);
+            player->unk314 = 0x20000;
+            func_8008BB20(player, 0, 0x2000, 0x2000, 0x2000);
+            player->posX += player->unk40.x;
+            player->posY += player->unk40.y;
+            player->posZ += player->unk40.z;
+            break;
+        case 3:
+            player->stateTimer--;
+            if (func_80082EC0(player) != 0) {
+                func_80081E40(player, 0x21);
+            }
+            if (player->stateTimer == 0) {
+                player->updateState++;
+            }
+            break;
+        case 4:
+            if (func_80082EC0(player) != 0) {
+                func_80081E40(player, 0x21);
+            }
+            player->stateFlags |= 0x80000;
+            if (D_801124B8[(u16) player->playerIndex].unk0 == 0xFF) {
+                player->updateState++;
+                player->unk502 = player->unk2E8;
+                sp38 = &player->posX;
+                sp34 = &player->posY;
+                sp30 = &player->posZ;
+                sp2C = &player->facingAngle;
+loop:
+                func_80081508(player->unk502, sp38, sp34, sp30, sp2C);
+                if (func_800860A0(player) == 0) {
+                    player->unk502--;
+                    goto loop;
+                }
+                player->posY = func_80080CC4(player->unk502, player->posX, player->posZ);
+                player->unk34.x = sp38[0];
+                player->unk34.y = sp38[1];
+                player->unk34.z = sp38[2];
+                player->unk40.x = 0;
+                player->unk40.y = 0;
+                player->unk40.z = 0;
+                player->stateFlags &= ~0x400;
+                player->unk2EE = 0;
+                func_8008B408(player, 0, 0);
+                func_80081E40(player, 1);
+                func_80082EC0(player);
+                func_8006D520(player->playerIndex, 1);
+                player->unk60 = 0x40000;
+            }
+            break;
+        case 5:
+            player->stateFlags &= 0xFFF7FFFF;
+            if (D_801124B8[(u16) player->playerIndex].unk0 == 0) {
+                player->mode = 0;
+                player->updateState = 0;
+                player->updateTimer = 0;
+                func_80082EC0(player);
+                player->stateFlags = 0;
+            }
+            break;
+    }
+}
+#endif
 
 // func_80093E0C best match: 93.871% (base_3.c)
 
