@@ -107,9 +107,9 @@ typedef struct {
     /* 0x2A6 */ s16 unk2A6;
     /* 0x2A8 */ char pad2A8[0x18];
     /* 0x2C0 */ s16 unk2C0;
-    /* 0x2C2 */ char pad2C2[1];
+    /* 0x2C2 */ s8 unk2C2;
     /* 0x2C3 */ s8 unk2C3;
-    /* 0x2C4 */ char pad2C4[2];
+    /* 0x2C4 */ u16 unk2C4;
     /* 0x2C6 */ u16 unk2C6;
     /* 0x2C8 */ char pad2C8[0x10];
     /* 0x2D8 */ s16 unk2D8;
@@ -186,7 +186,8 @@ typedef struct {
     /* 0x570 */ char pad570[8];
     /* 0x578 */ s16 unk578;
     /* 0x57A */ s8 unk57A;
-    /* 0x57B */ char pad57B[7];
+    /* 0x57B */ s8 unk57B;
+    /* 0x57C */ char pad57C[6];
     /* 0x582 */ s16 unk582;
     /* 0x584 */ s16 unk584;
     /* 0x586 */ char pad586[2];

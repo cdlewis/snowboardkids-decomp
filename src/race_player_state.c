@@ -64,12 +64,12 @@ extern s32 func_80095F90(s32);
 extern void func_8008BB20(RaceInputPlayer *, s32, s32, s32, s32);
 extern void func_8008BB5C(RaceInputPlayer *, s32);
 extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
-extern void func_8009724C(RaceInputPlayer *);
 extern s32 func_80072138(s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
 extern void func_8008393C(RaceInputPlayer *);
 extern void func_80086170(RaceInputPlayer *);
 extern void func_80061034(s32, s16);
+extern void func_80057C08(s32, s16);
 extern void func_80057DD4(void *);
 extern void func_8007BE80(void *);
 extern void func_8007C5E8(void *);
@@ -100,6 +100,9 @@ extern void (*D_800DED18[])(RaceInputPlayer *);
 extern void (*D_800DED30[])(RaceInputPlayer *);
 extern void (*D_800DED48[])(RaceInputPlayer *);
 extern CourseStartPosition D_800DE918[][4];
+extern u16 D_800DE8D0;
+extern u16 D_800DE8F0;
+extern u16 D_800DE904;
 extern PlayerTuningRow D_800DC5E0[];
 extern PlayerTuningRow D_800DC6F0[];
 extern PlayerTuningRow D_800DC770[];
@@ -3946,7 +3949,141 @@ void func_800971B8(RaceInputPlayer *player) {
     func_80082664(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
 }
 
+// func_8009724C best match: 74.373%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009724C.s")
+
+#ifdef NON_MATCHING
+void func_8009724C(RaceInputPlayer *arg0) {
+    s32 sp2C;
+    s32 sp24;
+    s16 temp_v0;
+    s16 var_v0;
+    s16 var_v1;
+    s32 var_a0;
+    s32 var_a3_2;
+    s32 var_at;
+    s32 var_at_2;
+    s32 var_s0;
+    s32 var_v1_2;
+    s32 var_v1_3;
+    s32 var_v1_4;
+    u16 temp_v0_2;
+    s32 var_a3;
+
+    var_v0 = arg0->unk2A6;
+    var_a3 = 0;
+    var_s0 = 0;
+    if (var_v0 >= 9) {
+        var_v0 = arg0->unk2A6;
+        arg0->unk57B = 1;
+    }
+    if ((var_v0 != 0) && (arg0->unk2A2 != 0)) {
+        var_v0 = arg0->unk2A6;
+        arg0->unk57B = 1;
+    }
+    if (var_v0 != 0) {
+        var_a3 = *(&D_800DE8D0 + var_v0);
+        var_s0 = 0x28;
+        if (var_v0 < 9) {
+            var_s0 = 0xA;
+        }
+        var_v1 = var_v0;
+        if (var_v0 >= 0xA) {
+            var_v1 = 9;
+        }
+        arg0->unk2C4 |= 1 << var_v1;
+    }
+    temp_v0 = arg0->unk2A2;
+    if (temp_v0 != 0) {
+        if (arg0->unk2A6 != 0) {
+            var_a3_2 = var_a3 + *(&D_800DE904 + temp_v0);
+            if (temp_v0 & 1) {
+                var_s0 += 5;
+            } else {
+                var_s0 += 0xA;
+            }
+        } else {
+            var_s0 += 1;
+            var_a3_2 = var_a3 + *(&D_800DE8F0 + temp_v0);
+        }
+        var_a3 = var_a3_2 + arg0->unk2A4;
+    }
+    if ((var_a3 != 0) && (D_800EC9C2 == 0) && (D_80121B59 == 0)) {
+        sp24 = (s32)var_a3;
+        func_8008BB5C(arg0, (s32)var_a3);
+        temp_v0_2 = (u16)arg0->playerIndex;
+        if (D_8011228C[temp_v0_2].active != 0) {
+            sp24 = (s32)var_a3;
+            func_80061034((s32)var_a3, (s16)temp_v0_2);
+            var_v1_2 = 0x4D;
+            if ((s32)var_a3 >= 0x64) {
+                var_v1_2 = 0x4E;
+            }
+            if ((s32)var_a3 >= 0x78) {
+                var_v1_2 = 0x4F;
+            }
+            var_at = (s32)var_a3 < 0x12C;
+            if ((s32)var_a3 >= 0xC8) {
+                var_v1_2 = 0x51;
+                var_at = (s32)var_a3 < 0x12C;
+            }
+            var_a0 = var_v1_2 << 0x10;
+            if (var_at == 0) {
+                var_a0 = 0x50 << 0x10;
+            }
+            func_80072138(var_a0 >> 0x10, 0x5A);
+        }
+    }
+    if (D_800EC9C2 == 1) {
+        if (D_80121B5E == 2) {
+            if (var_s0 != 0) {
+                var_v1_3 = 0x4D;
+                if (var_s0 >= 0x2710) {
+                    var_s0 = 0x270F;
+                }
+                arg0->unk2C3 += 1;
+                arg0->unk2C0 += var_s0;
+                if (arg0->unk2C3 >= 0x64) {
+                    arg0->unk2C3 = 0x63;
+                }
+                var_at_2 = var_s0 < 0xA;
+                if (arg0->unk2C2 < arg0->unk2C3) {
+                    arg0->unk2C2 = arg0->unk2C3;
+                    var_at_2 = var_s0 < 0xA;
+                }
+                if (var_at_2 == 0) {
+                    var_v1_3 = 0x4E;
+                }
+                if (var_s0 >= 0xF) {
+                    var_v1_3 = 0x4F;
+                }
+                if (var_s0 >= 0x14) {
+                    var_v1_3 = 0x51;
+                }
+                if (var_s0 >= 0x28) {
+                    var_v1_3 = 0x50;
+                }
+                if (arg0->unk2C4 == 0x3FE) {
+                    arg0->unk2C4 = 0x3FF;
+                    arg0->unk2C0 += 0x12C;
+                    sp2C = 0x51;
+                    func_80057C08(var_s0, 1);
+                    var_v1_4 = 0x51;
+                } else {
+                    sp2C = var_v1_3;
+                    func_80057C08(var_s0, 0);
+                    var_v1_4 = var_v1_3;
+                }
+                arg0 = arg0;
+                func_80072138((s32)(s16)var_v1_4, 0x5A);
+                if (arg0->unk2C0 >= 0x2710) {
+                    arg0->unk2C0 = 0x270F;
+                }
+            }
+        }
+    }
+}
+#endif
 
 void func_8009759C(RaceInputPlayer *player) {
     s32 v0 = -player->unk44 >> 13;
