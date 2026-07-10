@@ -8,7 +8,11 @@
 #define RACE_ACTOR_COLLISION_HALF_TURN 0x800
 
 typedef struct {
-    char pad0[0x2D4];
+    char pad0[0x1C];
+    s32 unk1C;
+    char pad20[4];
+    s32 unk24;
+    char pad28[0x2AC];
     s16 unk2D4;
     char pad2D6[0x16];
     s16 yaw;
@@ -16,11 +20,15 @@ typedef struct {
     s32 collisionFlags;
     char pad300[0x20];
     s16 unk320;
+    char pad322[0x1E0];
+    s16 unk502;
 } RaceActorCollision;
 
 extern s32 D_80121D50;
 extern s32 D_80121D54;
 extern s32 D_80121D58;
+
+s32 func_80081124(s16, s32, s32, RaceActorCollision *);
 
 s32 func_80084F50(RaceActorCollision *arg0) {
     s32 temp_v0;
@@ -288,6 +296,35 @@ s32 func_8008561C(RaceActorCollision *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_actor_collision/func_80085664.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_actor_collision/func_800860A0.s")
+s32 func_800860A0(RaceActorCollision *arg0) {
+    s32 temp_v0;
+
+    temp_v0 = func_80081124(arg0->unk502, arg0->unk1C, arg0->unk24, arg0);
+    if (temp_v0 == 3) {
+        return 0;
+    }
+    if (temp_v0 == 6) {
+        return 0;
+    }
+    if (temp_v0 == 7) {
+        return 0;
+    }
+    if (temp_v0 == 8) {
+        return 0;
+    }
+    if (temp_v0 == 0xC) {
+        return 0;
+    }
+    if (temp_v0 == 0xE) {
+        return 0;
+    }
+    if (temp_v0 == 0xF) {
+        return 0;
+    }
+    if (temp_v0 == 0x10) {
+        return 0;
+    }
+    return 1;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_actor_collision/func_80086170.s")
