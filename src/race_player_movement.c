@@ -215,7 +215,93 @@ void func_80087E14(RaceInputPlayer *player) {
     }
 }
 
+// func_80087EFC best match: 96.174% (nonmatchings/func_80087EFC-2225551288923588688/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80087EFC.s")
+
+#ifdef NON_MATCHING
+void func_80087EFC(void) {
+    RaceInputPlayer *playerA;
+    RaceInputPlayer *playerB;
+    s32 i;
+    s32 j;
+    s32 nextI;
+    s32 temp;
+    s32 xDiff;
+    s32 yLimit;
+    s32 radius;
+    s16 angle;
+    s32 sine;
+    s32 cosine;
+    s32 pushX;
+    s32 pushZ;
+
+    i = 0;
+    do {
+        j = i + 1;
+        nextI = j;
+        if (j < 4) {
+            playerA = &D_80121D80[i];
+            do {
+                if (playerA->isActive != 0) {
+                    playerB = &D_80121D80[j];
+                    if ((playerB->isActive != 0) && (playerA->soundDisabled == 0) &&
+                        (playerB->soundDisabled == 0) && !(playerA->stateFlags & 0x200000) &&
+                        !(playerB->stateFlags & 0x200000)) {
+                        temp = playerA->unk5C - playerB->unk5C;
+                        if (temp < 0) {
+                            yLimit = playerA->unk284;
+                            temp = -temp;
+                        } else {
+                            yLimit = playerB->unk284;
+                        }
+
+                        if (temp <= yLimit) {
+                            xDiff = playerA->posX - playerB->posX;
+                            radius = playerB->unk280 + playerA->unk280;
+                            if (xDiff < 0) {
+                                xDiff = -xDiff;
+                            }
+                            if (xDiff < radius) {
+                                temp = playerA->posZ - playerB->posZ;
+                                if (temp < 0) {
+                                    temp *= -1;
+                                }
+                                if ((temp < radius) &&
+                                    ((temp = func_80098C30((s64)((0, xDiff)) * xDiff +
+                                                           (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < radius)) {
+                                    temp = ((radius - temp) * -1) / 2;
+                                    angle = func_8004940C(playerA->posX, playerA->posZ,
+                                                          playerB->posX, playerB->posZ);
+                                    sine = func_80097AE8(angle);
+                                    cosine = func_80097B48(angle);
+                                    pushX = (s64)-sine * temp / 0x1000;
+                                    pushZ = (s64)cosine * temp / 0x1000;
+                                    if (playerA->stateFlags & 0x1000) {
+                                        if (!(playerB->stateFlags & 0x1000)) {
+                                            playerB->posX -= pushX * 2;
+                                            playerB->posZ += pushZ * 2;
+                                        }
+                                    } else if (playerB->stateFlags & 0x1000) {
+                                        playerA->posX += pushX * 2;
+                                        playerA->posZ -= pushZ * 2;
+                                    } else {
+                                        playerA->posX += pushX;
+                                        playerA->posZ -= pushZ;
+                                        playerB->posX -= pushX;
+                                        playerB->posZ += pushZ;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                j++;
+            } while (j != 4);
+        }
+        i = nextI;
+    } while (i != 3);
+}
+#endif
 
 // func_80088294 best match: 97.245% (nonmatchings/func_80088294-8207005055717715604/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088294.s")
