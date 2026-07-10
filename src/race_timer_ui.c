@@ -119,6 +119,8 @@ extern RaceTimerUiS8Stride D_80122296[];
 extern RaceTimerUiS32Stride D_801222E8[];
 extern s16 D_80122290;
 extern s16 D_801222F0;
+extern s8 D_80121B79;
+extern s16 D_80121B7A;
 
 void func_80078430(void) {
     func_800437F0(D_245A80, D_24C8E0, 0x1F);
@@ -170,7 +172,7 @@ void func_80078974(s32 arg0) {
     func_80048278(0x38, 0x47, (char *)D_800E1738, 5);
 }
 
-// func_800789C0 best match: 91.605% at nonmatchings/func_800789C0-2225551288923588688/base_8.c.
+// func_800789C0 best match: 92.076% at nonmatchings/func_800789C0-2225551288923588688/base_14.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_800789C0.s")
 
 #ifdef NON_MATCHING
@@ -181,9 +183,9 @@ const char D_800E175C[] = "%2d";
 
 void func_800789C0(s32 arg0) {
     char buffer[0xC];
-    s32 palette;
     s32 x;
     char *digit;
+    s32 palette;
     s32 i;
 
     palette = 0xC;
@@ -191,51 +193,64 @@ void func_800789C0(s32 arg0) {
         palette = 0x10;
     }
 
-    sprintf(buffer, D_800E1744, D_80121B78.minutes);
-    x = 0x40;
-    digit = buffer;
-    do {
-        func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
-                      palette & 0xFFFF);
-        digit++;
-        x += 8;
-    } while ((u32)digit < (u32)&buffer[2]);
+    {
+        char *end;
 
-    x += 8;
-    sprintf(buffer, D_800E174C, D_80121B78.seconds);
-    digit = buffer;
-    do {
-        func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
-                      palette & 0xFFFF);
-        digit++;
-        x += 8;
-    } while ((u32)digit < (u32)&buffer[2]);
+        sprintf(buffer, D_800E1744, D_80121B78.minutes);
+        x = 0x40;
+        digit = buffer;
+        end = &buffer[2];
+        do {
+            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
+                          palette & 0xFFFF);
+            digit++;
+            x += 8;
+        } while ((u32)digit < (u32)end);
 
-    x += 8;
-    sprintf(buffer, D_800E1754, D_80121B78.fraction >> 8);
-    digit = buffer;
-    do {
-        func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
-                      palette & 0xFFFF);
-        digit++;
         x += 8;
-    } while ((u32)digit < (u32)&buffer[2]);
+        sprintf(buffer, D_800E174C, D_80121B79);
+        digit = buffer;
+        end = &buffer[2];
+        do {
+            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
+                          palette & 0xFFFF);
+            digit++;
+            x += 8;
+        } while ((u32)digit < (u32)end);
 
-    func_80046D68(0x50, 0x50, func_80043040(D_80112130.popupFontHandle), 0x36, palette & 0xFFFF);
-    func_80046D68(0x68, 0x50, func_80043040(D_80112130.popupFontHandle), 0x35, palette & 0xFFFF);
+        x += 8;
+        sprintf(buffer, D_800E1754, D_80121B7A >> 8);
+        digit = buffer;
+        end = &buffer[2];
+        do {
+            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
+                          palette & 0xFFFF);
+            digit++;
+            x += 8;
+        } while ((u32)digit < (u32)end);
+
+        func_80046D68(0x50, 0x50, func_80043040(D_80112130.popupFontHandle), 0x36, palette & 0xFFFF);
+        func_80046D68(0x68, 0x50, func_80043040(D_80112130.popupFontHandle), 0x35, palette & 0xFFFF);
+    }
+
     func_80045A78(0x68, -0x60, func_80043040(D_80112130.popupFontHandle), 0x20);
 
-    sprintf(buffer, D_800E175C, D_801222F4);
-    x = 0;
-    digit = buffer;
-    do {
-        if ((u8)*digit != ' ') {
-            func_80045A78((s16)(x + 0x60), -0x50, func_80043040(D_80112130.popupFontHandle),
-                          ((u8)*digit - 5) & 0xFFFF);
-        }
-        digit++;
-        x += 8;
-    } while ((u32)digit < (u32)&buffer[2]);
+    {
+        char *end;
+
+        sprintf(buffer, D_800E175C, D_801222F4);
+        x = 0;
+        digit = buffer;
+        end = &buffer[2];
+        do {
+            if ((u8)*digit != ' ') {
+                func_80045A78((s16)(x + 0x60), -0x50, func_80043040(D_80112130.popupFontHandle),
+                              ((u8)*digit - 5) & 0xFFFF);
+            }
+            digit++;
+            x += 8;
+        } while ((u32)digit < (u32)end);
+    }
 
     x = 0;
     i = 0;
