@@ -19,8 +19,26 @@ typedef struct {
 typedef struct {
     /* 0x000 */ u8 pad0[5];
     /* 0x005 */ u8 state;
-    /* 0x006 */ u8 pad6[0x606];
+    union {
+        /* 0x006 */ u8 courseIndex;
+        /* 0x006 */ u8 pad6[0x606];
+    };
 } CourseSelectRacePlayer;
+
+typedef struct {
+    /* 0x0 */ u8 pad0;
+    /* 0x1 */ u8 courseIndex;
+} CourseSelectWidgetPlayerSlot;
+
+typedef struct {
+    /* 0x000 */ u8 pad0[0x18];
+    /* 0x018 */ s32 matrix;
+    /* 0x01C */ FixedTransform sourceTransform;
+    /* 0x03C */ FixedTransform playerTransforms[4];
+    /* 0x0BC */ u8 padBC[0x38];
+    /* 0x0F4 */ CourseSelectWidgetPlayerSlot playerSlots[4];
+    /* 0x0FC */ u8 playerFlags[4];
+} CourseSelectCoursePreviewActor;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -76,9 +94,12 @@ typedef struct {
 
 extern void func_8000F0EC(s16, s16, s32, u16, u16, u16, u8, u8, s32, s32, s32, s32);
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
-extern void func_80023880(void *);
+extern void func_80023880(CourseSelectCoursePreviewActor *);
+extern s32 func_8004885C(FixedTransform *);
 extern void func_80025AA8(CourseSelectWidgetActor *);
 extern void func_8002E568(CourseSelectWidgetActor *);
+extern void func_8007C130(s32, s16, s16);
+extern s8 D_800ECA2F[][0x78F8];
 extern s8 D_800EC9C0;
 extern u8 D_800EC9C2;
 extern u8 D_800EC9E6;
@@ -88,6 +109,7 @@ extern EffectTask *D_8010ADE4;
 extern s32 D_8010ADE8;
 extern s8 D_8010AE64[];
 extern u8 D_8010AECC[];
+extern u16 D_8010AED0;
 extern s32 D_8010AEE8[];
 extern u8 D_8010AEFB[];
 extern u8 D_8010AEA4[];
@@ -111,13 +133,74 @@ extern s16 D_8011217A;
 extern s16 D_8011217E;
 extern u8 D_80121B55;
 extern CourseSelectRacePlayer D_80121D80[];
+extern u8 D_80121D86[][sizeof(CourseSelectRacePlayer)];
 extern u8 D_80121D88;
 extern s32 D_801235B4;
 extern CourseSelectState *D_801235B8;
 extern s32 D_80124868;
 extern s32 D_80124898;
+extern u8 D_80156608;
 
+// func_80023880 best match: 97.975%
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80023880.s")
+
+#ifdef NON_MATCHING
+void func_80023880(CourseSelectCoursePreviewActor *arg0) {
+    FixedTransform sp30;
+    u8 sp2F;
+    unsigned char sp2E;
+    CourseSelectRacePlayer *temp_v0_3;
+    s32 temp_v0_4;
+    s8 temp_v0_2;
+    int temp_v0;
+    u8 temp_v1;
+    u8 var_a3;
+    u8 var_t0;
+    u8 var_v1;
+
+    if ((D_8010AED0 != 0) && (D_80156608 == 1)) {
+        var_t0 = 0;
+    } else {
+        var_t0 = D_80156608;
+    }
+    temp_v1 = D_8010AECC[var_t0];
+    if ((D_8010AECC[var_t0] == 0) || (D_8010AECC[var_t0] & 1)) {
+        temp_v0 = arg0->playerFlags[var_t0];
+        if ((temp_v0 == 0) || (temp_v0 & 1)) {
+            if (D_8010AECC[var_t0] == 1) {
+                var_a3 = arg0->playerSlots[var_t0].courseIndex;
+            } else {
+                var_a3 = D_80121D86[var_t0][0];
+            }
+            temp_v0_2 = D_800ECA2F[var_t0][var_a3];
+            if (temp_v0_2 == -1) {
+                var_v1 = 9;
+            } else {
+                var_v1 = temp_v0_2 & ((unsigned long long) 0xFF);
+            }
+            if ((D_8010AED0 != 0) && (D_80156608 == 1)) {
+                var_v1 = D_8010AED0 - 1;
+            }
+            temp_v0_3 = &D_80121D80[(long long) D_80156608];
+            if (temp_v0_3->state == 5) {
+                var_v1 = 0;
+                var_a3 = ((var_a3 % 3) + 0xC) & 0xFF;
+            }
+            if (temp_v0_3->courseIndex >= 9) {
+                var_v1 = 0;
+            }
+            sp2E = var_v1;
+            sp2F = var_a3;
+            func_800987A0(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
+            temp_v0_4 = func_8004885C(&sp30);
+            arg0->matrix = temp_v0_4;
+            if (temp_v0_4 != 0) {
+                func_8007C130(temp_v0_4 ^ 0, (s16) sp2F, (s16) sp2E);
+            }
+        }
+    }
+}
+#endif
 
 // func_80023A68 best match: 76.748% (nonmatchings/func_80023A68-4923837976568703863/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80023A68.s")
