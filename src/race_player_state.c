@@ -44,6 +44,8 @@ extern void func_8009724C(RaceInputPlayer *);
 extern s32 func_80072138(s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
 extern void func_8008393C(RaceInputPlayer *);
+extern void func_80086170(RaceInputPlayer *);
+extern void func_80087E14(RaceInputPlayer *);
 extern void func_80061034(s32, s16);
 extern void func_80057DD4(void *);
 extern void func_8007BE80(void *);
@@ -58,6 +60,7 @@ extern void func_8004FA44(void *);
 extern void func_8005FB30(void *);
 extern void func_800617C8(void *);
 extern void func_80050030(void *);
+extern void func_8004DCA0(RaceVec3i *, RaceVec3i *, RaceVec3i *, RaceVec3i *, s32, s32);
 extern void *func_800716A4(void *, s32, s32, s32);
 extern void func_80050E80(void *);
 extern void func_80062530(void *);
@@ -69,6 +72,7 @@ extern void (*D_800DECE8[])(RaceInputPlayer *);
 extern void (*D_800DED08[])(RaceInputPlayer *);
 extern void (*D_800DED18[])(RaceInputPlayer *);
 extern void (*D_800DED30[])(RaceInputPlayer *);
+extern void (*D_800DED48[])(RaceInputPlayer *);
 extern Struct800955C0 D_800B9540[];
 extern u8 D_80121B5F;
 extern u8 D_800EC9C2;
@@ -76,6 +80,7 @@ extern s8 D_80121B54;
 extern u8 D_80121B56;
 extern u8 D_80121B5E;
 extern s16 D_80121B50;
+extern s32 D_801235B4;
 extern s16 D_801235B0;
 extern Unk8011228C D_8011228C[];
 extern void func_8007B250(void);
@@ -3514,7 +3519,24 @@ void func_80096E3C(void) {
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80097038.s")
+void func_80097038(RaceInputPlayer *player) {
+    unsigned long long random;
+
+    D_800DED48[player->mode](player);
+    if (!(D_801235B4 & 1) && !(player->stateFlags & 0x41000) && (player->soundDisabled == 0)) {
+        if (player->unk500 & 3) {
+            random = func_800430D0();
+            func_8004DCA0(&player->unk4A0, &player->unk4AC, &player->unk4D0, &player->unk4DC, random, player->unk330);
+        }
+        if (player->unk500 & 0xC) {
+            random = func_800430D0();
+            func_8004DCA0(&player->unk4B8, &player->unk4C4, &player->unk4E8, &player->unk4F4, random, player->unk330);
+        }
+    }
+    func_80087E14(player);
+    func_80086170(player);
+    func_800830C0(player);
+}
 
 extern s32 func_80089374(void);
 

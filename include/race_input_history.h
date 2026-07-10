@@ -133,7 +133,17 @@ typedef struct {
     /* 0x334 */ s16 unk334;
     /* 0x336 */ char pad336[0x11C];
     /* 0x452 */ s16 animationId;
-    /* 0x454 */ char pad454[0xAE];
+    /* 0x454 */ char pad454[0x4C];
+    /* 0x4A0 */ RaceVec3i unk4A0;
+    /* 0x4AC */ RaceVec3i unk4AC;
+    /* 0x4B8 */ RaceVec3i unk4B8;
+    /* 0x4C4 */ RaceVec3i unk4C4;
+    /* 0x4D0 */ RaceVec3i unk4D0;
+    /* 0x4DC */ RaceVec3i unk4DC;
+    /* 0x4E8 */ RaceVec3i unk4E8;
+    /* 0x4F4 */ RaceVec3i unk4F4;
+    /* 0x500 */ u8 unk500;
+    /* 0x501 */ char pad501[1];
     /* 0x502 */ s16 unk502;
     /* 0x504 */ char pad504[5];
     /* 0x509 */ s8 unk509;
