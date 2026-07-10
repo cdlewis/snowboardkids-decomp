@@ -3821,7 +3821,81 @@ void func_80094288(RaceInputPlayer *player) {
 }
 #endif
 
+// func_80094480 best match: 99.667% (nonmatchings/func_80094480-7273315160691878794/base_7.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094480.s")
+
+#ifdef NON_MATCHING
+void func_80094480(RaceInputPlayer *player) {
+    s16 updateState;
+    s32 stateTimer;
+    u32 stateFlags;
+    s32 grounded;
+
+    updateState = player->updateState;
+    if (updateState == 0) {
+        player->updateState = updateState + 1;
+        func_80081E40(player, 0x14);
+        player->stateFlags &= 0xFE0C1FFB;
+        player->stateFlags &= ~0x200;
+        player->stateFlags |= 0x1022000;
+        player->unk60 = 0;
+        player->unk80 = 0;
+        player->stateTimer = 0x1E - ((player->unk509 * 0x1E) / 8);
+        player->actionEffectLevel = 1;
+        player->actionEffectFrame = 0;
+    }
+
+    func_8008B408(player, 0, 0);
+    player->unk40.y += 0xFFFF6000;
+    grounded = player->stateFlags & 1;
+    if (grounded == 0) {
+        func_8008BB20(player, 0, 0x6000, 0x6000, 0x6000);
+        grounded = player->stateFlags & 1;
+    }
+
+    player->posX += player->unk40.x;
+    player->posY += player->unk40.y;
+    player->posZ += player->unk40.z;
+
+    if (grounded == 0) {
+        func_8008CF10(player);
+        if ((player->unk584 != 6) && (player->unk584 != 0x1E)) {
+            player->unk588 = -6.0f;
+        }
+    }
+
+    stateFlags = player->stateFlags;
+    if (!(stateFlags & 1)) {
+        stateTimer = player->stateTimer - func_80084958(player) - 1;
+        player->stateTimer = (((((stateTimer & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) &
+                               0xFFFFFFFFFFFFFFFFu) &
+                              0xFFFFFFFFFFFFFFFFu) &
+                             0xFFFFFFFFFFFFFFFFu;
+        if (stateTimer < 0) {
+            player->stateTimer = 0;
+        }
+        if (func_80082EC0(player)) {
+            player->stateFlags &= ~0x200;
+            if (player->stateTimer == 0) {
+                player->mode = 8;
+                player->updateState = 0;
+                player->updateTimer = 0;
+            }
+        }
+    } else {
+        player->stateFlags = stateFlags | 0x200;
+        func_80081E40(player, 0x14);
+        func_80082EC0(player);
+        player->stateTimer = 0x1E;
+        player->unk80 = 7;
+        if (!(player->stateFlags & 1)) {
+            player->actionEffectLevel = 1;
+            player->actionEffectFrame = 0;
+        }
+    }
+}
+#endif
 
 void func_8009469C(RaceInputPlayer *player) {
     s16 updateState;
