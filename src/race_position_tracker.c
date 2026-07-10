@@ -42,9 +42,71 @@ extern RacePositionCheckpointEvent *D_800DE030[];
 extern s8 *D_800DDE74[];
 extern s16 D_80121B50;
 
+extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
+extern s16 func_80097AE8(s16);
+extern s16 func_80097B48(s16);
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007B250.s")
 
+// func_8007BB08 best match: 99.120% (nonmatchings/func_8007BB08-2785870559185086986/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007BB08.s")
+
+#ifdef NON_MATCHING
+void func_8007BB08(RacePositionPlayer *player) {
+    s32 x;
+    s32 y;
+    s32 z;
+    s16 angle;
+    RacePositionCheckpointEvent *event;
+    s32 eventIndex;
+    s16 pathFrame;
+    s32 eventMask;
+    s32 sine;
+    s32 cosine;
+    s64 product;
+
+    if (player->flags & 0x1000) {
+        player->checkpointEventMask = 0;
+    }
+
+    player->checkpointHit = 0;
+    event = D_800DE030[D_80121B50];
+    eventIndex = 0;
+
+    for (;;) {
+        pathFrame = event->pathFrame;
+        if (pathFrame == -1) {
+            break;
+        }
+
+        eventMask = 1 << eventIndex;
+
+        if (!(player->checkpointEventMask & eventMask) && (player->pathFrame <= pathFrame) &&
+                (player->pathFrame > pathFrame - 3)) {
+            func_80081508(pathFrame, &x, &y, &z, &angle);
+
+            x = player->posX - x;
+            y = player->posY - y;
+            z = player->posZ - z;
+
+            sine = func_80097AE8(-angle);
+            cosine = func_80097B48(-angle);
+            product = -(s64)sine * x;
+            z = (product + (s64)cosine * z) / 0x1000;
+
+            if (z < 0x600000 && z > 0) {
+                player->checkpointEventMask |= eventMask;
+                player->checkpointHit = 1;
+                player->checkpointEventId = event->eventId;
+                break;
+            }
+        }
+
+        eventIndex++;
+        event++;
+    }
+}
+#endif
 
 // func_8007BCFC best match: 99.649% (nonmatchings/func_8007BCFC-1197934324348345530/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007BCFC.s")
