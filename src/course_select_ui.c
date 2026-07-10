@@ -1644,6 +1644,7 @@ void func_80027A08(CourseSelectWidgetActor *arg0) {
     func_800483FC(&D_80124868, func_800275E0, temp_a2);
 }
 
+// func_80027AF8 best match: 90.349% (nonmatchings/func_80027AF8-7273315160691878794/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80027AF8.s")
 
 // func_80028194 best match: 83.366% (nonmatchings/func_80028194-2225551288923588688/base_5.c)
