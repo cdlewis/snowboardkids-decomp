@@ -1224,6 +1224,7 @@ void func_80076054(void) {
 }
 #endif
 
+// func_80076490 best match: 88.124% at nonmatchings/func_80076490-7273315160691878794/base_6.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80076490.s")
 
 void func_80077324(void) {
