@@ -6,6 +6,13 @@
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
 
+#define COURSE_PREVIEW_GFX_CMD(pkt, cmd0, cmd1) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = (cmd0); \
+    _g->words.w1 = (cmd1); \
+}
+
 typedef s16 FixedMatrix3sScratch[0x10];
 
 typedef struct {
@@ -74,7 +81,10 @@ struct CoursePreviewCamera {
     /* 0x38 */ s16 timer;
     /* 0x3A */ s16 stateTimer;
     /* 0x3C */ Gfx *displayList0;
-    /* 0x40 */ Gfx *displayList1;
+    union {
+        /* 0x40 */ Gfx *displayList1;
+        /* 0x40 */ s8 displayList0Valid;
+    };
     /* 0x44 */ s8 displayListValid;
 };
 
@@ -214,38 +224,15 @@ void func_80055B34(CoursePreviewGfxCommandActor *arg0) {
     func_80071824(arg0, func_80055B04);
 }
 
-// func_80055C7C best match: 98.168% (nonmatchings/func_80055C7C-2785870559185086986/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_80055C7C.s")
-
-#ifdef NON_MATCHING
 void func_80055C7C(CoursePreviewCamera *arg0) {
     FixedTransform sp70;
-    Gfx *temp_v0;
-    Gfx *temp_v0_2;
-    Gfx *temp_v0_3;
-    Gfx *temp_v0_4;
-    Gfx *temp_v0_5;
-    Gfx *temp_v0_6;
-    Gfx *temp_v0_7;
-    Gfx *temp_v0_8;
-    Gfx *temp_v0_9;
-    Gfx *temp_v0_10;
-    Gfx *temp_v0_11;
-    Gfx *temp_v0_12;
-    Gfx *temp_v0_13;
-    Gfx *temp_v0_14;
-    Gfx *temp_v0_15;
-    Gfx *temp_v0_16;
-    Gfx *temp_v0_17;
-    Gfx *temp_v0_18;
-    Gfx *temp_v0_19;
 
     if (D_80156609 != 0) {
-        arg0->displayListValid = 1;
+        arg0->displayList0Valid = 1;
     }
 
     if (func_80049000(&arg0->position) != 0) {
-        if (arg0->displayListValid != 0) {
+        if (arg0->displayList0Valid != 0) {
             sp70 = D_800DEE30;
             sp70.translation.x = arg0->position.x;
             sp70.translation.y = arg0->position.y;
@@ -254,67 +241,28 @@ void func_80055C7C(CoursePreviewCamera *arg0) {
         }
 
         if (arg0->displayList0 != NULL) {
-            temp_v0 = gRegionAllocPtr++;
-            temp_v0->words.w1 = (u32)D_800D9D00;
-            temp_v0->words.w0 = 0x06000000;
-            temp_v0_2 = gRegionAllocPtr++;
-            temp_v0_2->words.w0 = 0xFD500000;
-            temp_v0_2->words.w1 = arg0->image;
-            temp_v0_3 = gRegionAllocPtr++;
-            temp_v0_3->words.w0 = 0xF5500000;
-            temp_v0_3->words.w1 = 0x07080200;
-            temp_v0_4 = gRegionAllocPtr++;
-            temp_v0_4->words.w1 = 0;
-            temp_v0_4->words.w0 = 0xE6000000;
-            temp_v0_5 = gRegionAllocPtr++;
-            temp_v0_5->words.w0 = 0xF3000000;
-            temp_v0_5->words.w1 = 0x070FF400;
-            temp_v0_6 = gRegionAllocPtr++;
-            temp_v0_6->words.w1 = 0;
-            temp_v0_6->words.w0 = 0xE7000000;
-            temp_v0_7 = gRegionAllocPtr++;
-            temp_v0_7->words.w1 = 0x00080200;
-            temp_v0_7->words.w0 = 0xF5400400;
-            temp_v0_8 = gRegionAllocPtr++;
-            temp_v0_8->words.w0 = 0xF2000000;
-            temp_v0_8->words.w1 = 0x0007C07C;
-            temp_v0_9 = gRegionAllocPtr++;
-            temp_v0_9->words.w0 = 0xFD100000;
-            temp_v0_9->words.w1 = arg0->palette;
-            temp_v0_10 = gRegionAllocPtr++;
-            temp_v0_10->words.w1 = 0;
-            temp_v0_10->words.w0 = 0xE8000000;
-            temp_v0_11 = gRegionAllocPtr++;
-            temp_v0_11->words.w0 = 0xF5000100;
-            temp_v0_11->words.w1 = 0x07000000;
-            temp_v0_12 = gRegionAllocPtr++;
-            temp_v0_12->words.w1 = 0;
-            temp_v0_12->words.w0 = 0xE6000000;
-            temp_v0_13 = gRegionAllocPtr++;
-            temp_v0_13->words.w0 = 0xF0000000;
-            temp_v0_13->words.w1 = 0x0703C000;
-            temp_v0_14 = gRegionAllocPtr++;
-            temp_v0_14->words.w1 = 0;
-            temp_v0_14->words.w0 = 0xE7000000;
-            temp_v0_15 = gRegionAllocPtr++;
-            temp_v0_15->words.w0 = 0x01020040;
-            temp_v0_15->words.w1 = (u32)arg0->displayList0;
-            temp_v0_16 = gRegionAllocPtr++;
-            temp_v0_16->words.w0 = 0x01000040;
-            temp_v0_16->words.w1 = D_80156614;
-            temp_v0_17 = gRegionAllocPtr++;
-            temp_v0_17->words.w1 = (u32)D_800D5C88;
-            temp_v0_17->words.w0 = 0x0400103F;
-            temp_v0_18 = gRegionAllocPtr++;
-            temp_v0_18->words.w1 = 0x00060200;
-            temp_v0_18->words.w0 = 0xB1060402;
-            temp_v0_19 = gRegionAllocPtr++;
-            temp_v0_19->words.w1 = (u32)D_800D9D40;
-            temp_v0_19->words.w0 = 0x06000000;
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)D_800D9D00);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xFD500000, arg0->image);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x070FF400);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF5400400, 0x00080200);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x0007C07C);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xFD100000, arg0->palette);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->displayList0);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x01000040, D_80156614);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)D_800D5C88);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x00060200);
+            COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)D_800D9D40);
         }
     }
 }
-#endif
 
 void func_80055FA4(CoursePreviewCamera *arg0) {
     Vec3i sp44;
