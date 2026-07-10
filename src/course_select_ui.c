@@ -693,7 +693,86 @@ void func_80024A90(CourseSelectIconListActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024E98.s")
 
+// func_800257F0 best match: 62.914% (nonmatchings/func_800257F0-7273315160691878794/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800257F0.s")
+
+#ifdef NON_MATCHING
+void func_800257F0(u8 *arg0) {
+    s16 *xyTable;
+    s32 temp_lo;
+    s32 enabled;
+    s32 i;
+    u8 *unlockPtr;
+    u8 *bytePtr;
+    u8 *stride10Ptr;
+    s16 *halfPtr;
+    u8 *rowPtr;
+    s16 *xPair;
+    s32 layoutIndex;
+
+    if ((s32) D_80121B55 < 3) {
+        layoutIndex = D_80121B55 - 1;
+    } else {
+        layoutIndex = 2;
+    }
+    i = 0;
+    if ((s32) D_80121B55 > 0) {
+        unlockPtr = D_8010AEA0;
+        xyTable = D_800B7084[layoutIndex];
+        bytePtr = arg0;
+        stride10Ptr = arg0;
+        halfPtr = (s16 *) arg0;
+        rowPtr = arg0;
+        do {
+            if (*unlockPtr != 0) {
+                enabled = 1;
+                if (D_80121D80[i].state == 5) {
+                    enabled = 0;
+                }
+            } else {
+                enabled = 0;
+            }
+            bytePtr[0x9C] = xyTable[enabled];
+            halfPtr[0x34] = xyTable[((i & 1) * 2) + enabled + 2];
+            halfPtr[0x44] = xyTable[((i & 1) * 2) + 2];
+            xPair = &D_800B70A8[layoutIndex][(i >= 2) * 2];
+            halfPtr[0x40] = xPair[1];
+            halfPtr[0x3C] = xPair[0];
+            ((s16 *) arg0)[0x52] = 0x78;
+            ((s16 *) arg0)[0x51] = 0xA0;
+            ((s16 *) arg0)[0x53] = 0x78;
+            if (D_80121B55 == 1) {
+                ((s16 *) arg0)[0x50] = 0xA0;
+            } else if (D_80121B55 == 2) {
+                ((s16 *) arg0)[0x50] = 0x7E;
+            } else {
+                ((s16 *) arg0)[0x50] = 0x88;
+            }
+            ((s16 *) rowPtr)[0xC] = halfPtr[0x3C];
+            ((s16 *) rowPtr)[0x20] = halfPtr[0x34];
+            ((s16 *) (stride10Ptr + 2))[0xC] = halfPtr[0x3C];
+            temp_lo = bytePtr[0x9C];
+            stride10Ptr += 0xA;
+            unlockPtr++;
+            bytePtr++;
+            halfPtr = (s16 *) ((u8 *) halfPtr + 2);
+            rowPtr += 0xA;
+            i++;
+            ((s16 *) (stride10Ptr - 8))[0x20] = temp_lo + halfPtr[0x33];
+            ((s16 *) (stride10Ptr - 8))[0xD] = halfPtr[0x3B];
+            ((s16 *) (stride10Ptr - 8))[0x21] = (bytePtr[0x9B] * 2) + halfPtr[0x33];
+            ((s16 *) (stride10Ptr - 8))[0xE] = halfPtr[0x3B];
+            ((s16 *) (stride10Ptr - 8))[0x22] = (bytePtr[0x9B] * 3) + halfPtr[0x33];
+            ((s16 *) (stride10Ptr - 8))[0xF] = halfPtr[0x3B];
+            ((s16 *) (stride10Ptr - 8))[0x23] = (bytePtr[0x9B] * 4) + halfPtr[0x33];
+            bytePtr[0x93] = 0;
+            bytePtr[0x97] = 1;
+            bytePtr[0x8F] = 0;
+        } while (i < (s32) D_80121B55);
+    }
+    func_80071824(arg0, func_80024E98);
+}
+#endif
 
 // func_80025AA8 best match: 97.722% (nonmatchings/func_80025AA8-4061930211835852828/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025AA8.s")
