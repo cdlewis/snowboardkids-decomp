@@ -141,7 +141,7 @@ typedef struct {
     /* 0x30A */ s16 subStateTimer;
     /* 0x30C */ s16 subStateStep;
     /* 0x30E */ s16 subStateParam;
-    /* 0x310 */ char pad310[4];
+    /* 0x310 */ s32 unk310;
     /* 0x314 */ s32 unk314;
     /* 0x318 */ char pad318[8];
     /* 0x320 */ s16 actionSoundTimer;
@@ -179,7 +179,9 @@ typedef struct {
     /* 0x518 */ s8 unk518;
     /* 0x519 */ s8 unk519;
     /* 0x51A */ u8 actionEffectEnabled;
-    /* 0x51B */ char pad51B[0xD];
+    /* 0x51B */ char pad51B[0xA];
+    /* 0x525 */ s8 unk525;
+    /* 0x526 */ char pad526[2];
     /* 0x528 */ s8 unk528;
     /* 0x529 */ char pad529[3];
     /* 0x52C */ s8 actionTriggerCooldown;

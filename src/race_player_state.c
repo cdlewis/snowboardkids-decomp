@@ -81,6 +81,8 @@ extern void func_8007CBC0(void *);
 extern void func_80097038(RaceInputPlayer *);
 extern void func_8008F1B4(RaceInputPlayer *);
 extern void func_8008F1CC(RaceInputPlayer *);
+extern s32 func_800832CC(RaceInputPlayer *);
+extern s32 func_80082F44(RaceInputPlayer *);
 extern void func_800815D4(s16, s32, s32, s32 *, s32 *, s32, s32);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void func_8004FA44(void *);
@@ -117,6 +119,7 @@ extern u8 D_80121B5F;
 extern u8 D_800EC9C2;
 extern s8 D_80121B54;
 extern u8 D_80121B56;
+extern u8 D_80121B59;
 extern u8 D_80121B5E;
 extern u8 D_80121B59;
 extern u8 D_80121B58;
@@ -748,7 +751,275 @@ void func_8008E008(RaceInputPlayer *player) {
     }
 }
 
+// func_8008E350 best match: 97.041% (nonmatchings/func_8008E350-2/output-2593-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008E350.s")
+
+#ifdef NON_MATCHING
+#define HANDLE_SURFACE_CUE(modeValue, effectValue, soundType)                         \
+    if (player->soundDisabled == 0) {                                                 \
+        func_80072A74(0x17, (SoundPosition *)&player->posX, 0x7F, 0x32);              \
+        func_8008BBB8(player, soundType);                                             \
+    }                                                                                 \
+    flags = player->stateFlags | 0x800;                                               \
+    player->mode = modeValue;                                                         \
+    player->unk2A6 = effectValue;                                                     \
+    player->stateFlags = flags
+
+void func_8008E350(RaceInputPlayer *player) {
+    s32 lean = 0;
+    s32 rotation;
+    Struct800955C0 *spawn;
+    s32 surfaceCue;
+    u32 flags;
+    s8 turnTimer;
+
+    if (player->unk4 == 0) {
+        spawn = &D_800B9540[D_80121B50];
+        if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
+            surfaceCue = (s16)(((func_8004940C(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
+                                  player->facingAngle) +
+                                 0x400) &
+                                0xFFF);
+            if (surfaceCue < 0x800) {
+                if (player->stateFlags & 0x400) {
+                    player->stateFlags &= ~0x400;
+                    player->unk93 = 6 - player->unk93;
+                }
+            } else if (!(player->stateFlags & 0x400)) {
+                player->stateFlags |= 0x400;
+                player->unk93 = 6 - player->unk93;
+            }
+        } else {
+            if (player->unk254 < -0x8000) {
+                if (player->stateFlags & 0x400) {
+                    player->stateFlags &= ~0x400;
+                    player->unk93 = 6 - player->unk93;
+                }
+            }
+            if (player->unk254 >= 0x8001) {
+                if (!(player->stateFlags & 0x400)) {
+                    player->stateFlags |= 0x400;
+                    player->unk93 = 6 - player->unk93;
+                }
+            }
+        }
+
+        if (D_80121B59 == 0) {
+            if (player->unk336 < 0x5A) {
+                player->unk336++;
+            }
+        }
+    }
+
+    turnTimer = player->unk93;
+    if (turnTimer != 0) {
+        player->unk93 = turnTimer - 1;
+        func_80081E40(player, player->unk93 + 8);
+    } else {
+        if (player->animationId != 5) {
+            func_80081E40(player, 5);
+        }
+    }
+
+    if (player->stateFlags & 0x10) {
+        if (player->unk4 == 0) {
+            if (!(player->inputFlags & 0x8000)) {
+                player->stateFlags &= ~0x10;
+            }
+        } else {
+            player->stateFlags &= ~0x10;
+            if (player->unk525 != 0) {
+                player->stateTimer = 0x46000;
+            }
+        }
+
+        if (player->stateFlags & 0x10) {
+            if (player->stateTimer < 0x46000) {
+                player->stateTimer += 0x2000;
+            }
+        }
+    }
+
+    func_800849E0(player);
+    func_8008B408(player, player->unk254, 0);
+    player->unk40.y -= player->unk260;
+
+    rotation = 0;
+    if (player->trailEffectTimer != 0) {
+        rotation = -0x8000;
+        if (player->unk2DC != 0) {
+            rotation = 0x8000;
+        }
+    }
+
+    if (!(player->stateFlags & 0x10)) {
+        if (player->stateFlags & 0x400) {
+            lean = 0x30000;
+            if (player->unk519 != 0) {
+                rotation = 0x100000;
+            }
+            if (player->unk336 >= 0x3C) {
+                player->unk310 += 0x50000;
+                player->unk314 += 0x50000;
+                rotation += 0x50000;
+                func_8008BBB8(player, 0);
+            }
+        } else {
+            lean = -0x30000;
+            if (player->unk519 != 0) {
+                rotation = -0x100000;
+            }
+            if (player->unk336 >= 0x3C) {
+                player->unk310 += 0x50000;
+                player->unk314 += 0x50000;
+                rotation -= 0x50000;
+                func_8008BBB8(player, 0);
+            }
+        }
+    }
+
+    func_8008B73C(player, lean, rotation, player->unk274, player->unk278, player->unk27C);
+    surfaceCue = func_800832CC(player);
+    if (!(player->stateFlags & 0x10)) {
+        if (player->stateTimer < 0x46000) {
+            surfaceCue = 0;
+        }
+        if (surfaceCue >= 9) {
+            player->stateTimer = 0x50000;
+        }
+        player->unk2A2 = 0;
+        switch (surfaceCue) {
+            case 1:
+                HANDLE_SURFACE_CUE(0xD, 1, 0);
+                break;
+            case 2:
+                HANDLE_SURFACE_CUE(0xF, 2, 0);
+                break;
+            case 3:
+                HANDLE_SURFACE_CUE(0x10, 3, 0);
+                break;
+            case 4:
+                HANDLE_SURFACE_CUE(0x11, 4, 0);
+                break;
+            case 5:
+                HANDLE_SURFACE_CUE(0x12, 5, 1);
+                break;
+            case 6:
+                HANDLE_SURFACE_CUE(0x13, 6, 1);
+                break;
+            case 7:
+                HANDLE_SURFACE_CUE(0x14, 7, 1);
+                break;
+            case 8:
+                HANDLE_SURFACE_CUE(0x15, 8, 1);
+                break;
+            case 9:
+                HANDLE_SURFACE_CUE(0x1F, 0xB, 1);
+                break;
+            case 10:
+                HANDLE_SURFACE_CUE(0x20, 0xB, 1);
+                break;
+            case 11:
+                HANDLE_SURFACE_CUE(0x21, 0xC, 1);
+                break;
+            case 12:
+                HANDLE_SURFACE_CUE(0x22, 0xD, 1);
+                break;
+            case 13:
+                HANDLE_SURFACE_CUE(0x23, 0xA, 1);
+                break;
+            case 14:
+                HANDLE_SURFACE_CUE(0x24, 0xC, 1);
+                break;
+            case 15:
+                HANDLE_SURFACE_CUE(0x25, 0xB, 1);
+                break;
+            case 16:
+                HANDLE_SURFACE_CUE(0x26, 0xD, 1);
+                break;
+            case 17:
+                HANDLE_SURFACE_CUE(0x27, 0xE, 1);
+                break;
+            case 18:
+                HANDLE_SURFACE_CUE(0x29, 9, 1);
+                break;
+            case 19:
+                HANDLE_SURFACE_CUE(0x2A, 0xA, 1);
+                break;
+            case 20:
+                HANDLE_SURFACE_CUE(0x2B, 0xC, 1);
+                break;
+            case 21:
+                HANDLE_SURFACE_CUE(0x2C, 9, 1);
+                break;
+            case 22:
+                HANDLE_SURFACE_CUE(0x2D, 0xA, 1);
+                break;
+            case 23:
+                HANDLE_SURFACE_CUE(0x2E, 0xE, 1);
+                break;
+            case 24:
+                HANDLE_SURFACE_CUE(0x2F, 9, 1);
+                break;
+            case 25:
+                HANDLE_SURFACE_CUE(0x30, 0xB, 1);
+                break;
+            case 26:
+                HANDLE_SURFACE_CUE(0x31, 0xD, 1);
+                break;
+            case 27:
+                HANDLE_SURFACE_CUE(0x32, 9, 1);
+                break;
+            case 28:
+                HANDLE_SURFACE_CUE(0x33, 0xA, 1);
+                break;
+            case 29:
+                HANDLE_SURFACE_CUE(0x34, 0xC, 1);
+                break;
+            case 30:
+                HANDLE_SURFACE_CUE(0x35, 0xA, 1);
+                break;
+            case 31:
+                HANDLE_SURFACE_CUE(0x36, 0xC, 1);
+                break;
+            case 32:
+                HANDLE_SURFACE_CUE(0x37, 9, 1);
+                break;
+            case 33:
+                HANDLE_SURFACE_CUE(0x38, 0xA, 1);
+                break;
+            case 34:
+                HANDLE_SURFACE_CUE(0x39, 0xD, 1);
+                break;
+            default:
+                player->mode = 1;
+                player->unk2A6 = 0;
+                break;
+        }
+
+        player->unk40.y += player->stateTimer;
+        player->posY += 0x60000;
+        player->unk74 = player->unk40.y;
+        player->stateFlags |= 0x208;
+        player->updateState = 0;
+        player->updateTimer = 0;
+        func_80081E40(player, 4);
+    } else {
+        func_800832CC(player);
+    }
+
+    player->posX += player->unk40.x;
+    player->posY += player->unk40.y;
+    player->posZ += player->unk40.z;
+    func_80082F44(player);
+    func_8008CF10(player);
+    if (player->unk517 != 0) {
+        func_8008BBB8(player, 5);
+    }
+}
+
+#undef HANDLE_SURFACE_CUE
+#endif
 
 void func_8008F1B4(RaceInputPlayer *player) {
     player->subState = 0;
