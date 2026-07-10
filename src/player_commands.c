@@ -47,7 +47,8 @@ typedef struct PlayerCommandData {
 
 typedef struct PlayerCommandState {
     u32 unk0;
-    u8 pad4[0x8];
+    u32 unk4;
+    u8 pad8[0x4];
     u32 unkC;
     u32 unk10;
     s32 id;
@@ -112,7 +113,15 @@ typedef struct PlayerCommandState {
     u8 unkF1;
     s8 unkF2;
     u8 unkF3;
-    u8 padF4[0x9];
+    u8 unkF4;
+    u8 unkF5;
+    u8 unkF6;
+    u8 unkF7;
+    u8 unkF8;
+    u8 unkF9;
+    u8 unkFA;
+    u8 unkFB;
+    u8 unkFC;
     s8 unkFD;
     u8 unkFE;
     u8 unkFF;
@@ -690,27 +699,27 @@ s32 func_8009CD18(PlayerCommandState *arg0, u8 *arg1) {
     if (value == 0) {
         value = 1;
     }
-    arg0->padF4[0] = value;
-    arg0->padF4[1] = arg1[0];
+    arg0->unkF4 = value;
+    arg0->unkF5 = arg1[0];
     value = arg1[1];
     arg1 += 2;
     if (value == 0) {
         value = 1;
     }
-    arg0->padF4[7] = value;
+    arg0->unkFB = value;
     arg0->unk30 = (f32)(1.0 / (f64)(f32)value);
 
     arg1 += 2;
-    arg0->padF4[2] = arg1[-2];
+    arg0->unkF6 = arg1[-2];
     value = arg1[-1];
     if (value == 0) {
         value = 1;
     }
-    arg0->padF4[8] = value;
+    arg0->unkFC = value;
     arg0->unk34 = (f32)(1.0 / (f64)(f32)value);
 
     arg1 += 2;
-    arg0->padF4[3] = arg1[-2];
+    arg0->unkF7 = arg1[-2];
     value = arg1[-1];
     if (value == 0) {
         value = 1;
@@ -1956,7 +1965,72 @@ void func_8009EB6C(PlayerCommandState *arg0) {
 }
 #endif
 
+// func_8009EBDC best match: 90.768% (nonmatchings/func_8009EBDC-2225551288923588688/base_3.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009EBDC.s")
+
+#ifdef NON_MATCHING
+void func_8009EBDC(PlayerCommandState *arg0) {
+    u8 state;
+    s32 tick;
+    u8 rate;
+    u32 step;
+    u8 value;
+    f32 temp;
+
+    state = arg0->unkF8;
+    if (state != 0) {
+        if (((u32)arg0->unk0 >= (u32)arg0->unk100) && (state < 4)) {
+            arg0->unkF8 = 4;
+            arg0->unkFA = 1;
+            arg0->unk104 = arg0->unkF9;
+        }
+        tick = arg0->unkFA - 1;
+        arg0->unkFA = tick;
+        if ((tick & 0xFF) != 0) {
+            return;
+        }
+        rate = arg0->unkF4;
+        state = arg0->unkF8;
+        arg0->unkFA = rate;
+        switch (state) {
+            case 1:
+                step = ((u32)(arg0->unk0 - arg0->unk10) >> 8) / rate;
+                if (step < arg0->unkFB) {
+                    value = arg0->unkF5;
+                    arg0->unkF9 = (s32)((f32)value + ((arg0->unkF6 - value) * arg0->unk30 * (f32)step));
+                    return;
+                }
+                arg0->unkF8 = state + 1;
+                arg0->unkF9 = arg0->unkF6;
+                return;
+            case 2:
+                step = (((u32)(arg0->unk0 - arg0->unk10) >> 8) - arg0->unkFB) / rate;
+                if (step < arg0->unkFC) {
+                    value = arg0->unkF6;
+                    arg0->unkF9 = (s32)((f32)value + ((arg0->unkF7 - value) * arg0->unk34 * (f32)step));
+                    return;
+                }
+                arg0->unkF8 = state + 1;
+                arg0->unkF9 = arg0->unkF7;
+                return;
+            case 3:
+                return;
+            case 4:
+                step = ((u32)(arg0->unk0 - arg0->unk100) >> 8) / rate;
+                if (step < arg0->unkFD) {
+                    value = arg0->unk104;
+                    temp = value;
+                    arg0->unkF9 = (s32)(temp - (temp * arg0->unk38 * (f32)step));
+                    return;
+                }
+                arg0->unkF8 = state + 1;
+                arg0->unkF9 = 0;
+                break;
+        }
+    }
+}
+#endif
 
 void func_8009EEE8(PlayerCommandState *arg0) {
     u8 temp_t7;
