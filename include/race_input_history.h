@@ -177,7 +177,7 @@ typedef struct {
     /* 0x500 */ u8 unk500;
     /* 0x501 */ char pad501[1];
     /* 0x502 */ s16 unk502;
-    /* 0x504 */ char pad504[4];
+    /* 0x504 */ s32 unk504;
     /* 0x508 */ s8 unk508;
     /* 0x509 */ s8 unk509;
     /* 0x50A */ char pad50A[6];
