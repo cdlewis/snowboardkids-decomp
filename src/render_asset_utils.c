@@ -413,7 +413,114 @@ void func_80046D68(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3, u16 arg4) {
 }
 #endif
 
+// func_80047174 best match: 73.385% (nonmatchings/func_80047174-4923837976568703863/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80047174.s")
+
+#ifdef NON_MATCHING
+#define RENDER_EMIT_GFX(cmd0, cmd1)       \
+    do {                                  \
+        Gfx *gfx = (Gfx *)gRegionAllocPtr; \
+        gRegionAllocPtr = (s32)(gfx + 1); \
+        gfx->words.w0 = (cmd0);           \
+        gfx->words.w1 = (cmd1);           \
+    } while (0)
+
+void func_80047174(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4)
+{
+    u8 *paletteBase;
+    s32 right;
+    s32 bottom;
+    s32 s;
+    s32 t;
+    s32 halfWidth;
+    s32 halfHeight;
+    s32 clipRight;
+    s32 clipBottom;
+    s32 clipLeft;
+    s32 clipTop;
+    s32 scaledWidth;
+    s32 scaledHeight;
+    s32 x;
+    s32 y;
+    s32 value;
+    AssetTableEntry *entry;
+
+    if ((s32)arg4 >= 0) {
+        paletteBase = (u8 *)arg2 + (arg2->entryCount * sizeof(AssetTableEntry)) + 8;
+        entry = (AssetTableEntry *)((u8 *)arg2 + (arg3 * sizeof(AssetTableEntry))) + 1;
+        scaledWidth = entry->width >> arg4;
+        scaledHeight = entry->height >> arg4;
+        x = arg0 + D_8015660E + ((entry->width - scaledWidth) / 2);
+        y = arg1 + D_80156610 + ((entry->height - scaledHeight) / 2);
+        right = scaledWidth + x;
+        bottom = scaledHeight + y;
+        s = 0;
+        t = 0;
+
+        halfWidth = D_8015660A / 2;
+        clipRight = D_8015660E + halfWidth;
+        if (x < clipRight) {
+            halfHeight = D_8015660C / 2;
+            clipBottom = D_80156610 + halfHeight;
+            if (y < clipBottom) {
+                clipLeft = D_8015660E - halfWidth;
+                if (right >= clipLeft) {
+                    clipTop = D_80156610 - halfHeight;
+                    if (bottom >= clipTop) {
+                        if (x < clipLeft) {
+                            s = clipLeft - x;
+                            x = clipLeft;
+                        }
+                        if (y < clipTop) {
+                            t = clipTop - y;
+                            y = clipTop;
+                        }
+                        if (right >= clipRight) {
+                            right = clipRight;
+                        }
+                        if (bottom >= clipBottom) {
+                            bottom = clipBottom;
+                        }
+
+                        RENDER_EMIT_GFX(0xE7000000, 0);
+                        RENDER_EMIT_GFX(0xBA000C02, 0x3000);
+                        RENDER_EMIT_GFX((((entry->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                                        entry->imageOffset + (s32)arg2);
+                        RENDER_EMIT_GFX(((((entry->width + 1) >> 1) + 7) >> 3 & 0x1FF) << 9 | 0xF5480000,
+                                        0x07080200);
+                        RENDER_EMIT_GFX(0xE6000000, 0);
+                        RENDER_EMIT_GFX(0xF4000000,
+                                        (((entry->width * 2) & 0xFFF) << 12) | 0x07000000 |
+                                            ((entry->height * 4) & 0xFFF));
+                        RENDER_EMIT_GFX(0xE7000000, 0);
+                        RENDER_EMIT_GFX(((((entry->width + 1) >> 1) + 7) >> 3 & 0x1FF) << 9 | 0xF5400000,
+                                        0x00080200);
+                        RENDER_EMIT_GFX(0xF2000000,
+                                        (((entry->width * 4) & 0xFFF) << 12) | ((entry->height * 4) & 0xFFF));
+                        RENDER_EMIT_GFX(0xFD100000, (entry->textureIndex << 5) + (s32)paletteBase);
+                        RENDER_EMIT_GFX(0xE8000000, 0);
+                        RENDER_EMIT_GFX(0xF5000100, 0x07000000);
+                        RENDER_EMIT_GFX(0xE6000000, 0);
+                        RENDER_EMIT_GFX(0xF0000000, 0x0703C000);
+                        RENDER_EMIT_GFX(0xE7000000, 0);
+                        RENDER_EMIT_GFX((((right * 4) & 0xFFF) << 12) | 0xE4000000 | ((bottom * 4) & 0xFFF),
+                                        (((x * 4) & 0xFFF) << 12) | ((y * 4) & 0xFFF));
+                        RENDER_EMIT_GFX(0xB4000000,
+                                        (((s << 5) + 0x10) << 16) | (((t << 5) + 0x10) & 0xFFFF));
+                        value = (1 << (arg4 + 10)) & 0xFFFF;
+                        RENDER_EMIT_GFX(0xB3000000, (value << 16) | value);
+                        RENDER_EMIT_GFX(0xE7000000, 0);
+                        RENDER_EMIT_GFX(0xBA000C02, 0);
+                        RENDER_EMIT_GFX(0xE7000000, 0);
+                    }
+                }
+            }
+        }
+    }
+}
+
+#undef RENDER_EMIT_GFX
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_8004767C.s")
 
