@@ -240,7 +240,145 @@ void func_8007FD88(s32 arg0) {
     }
 }
 
+// func_8007FF88 best match: 68.874% (base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007FF88.s")
+
+#ifdef NON_MATCHING
+void func_8007FF88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5) {
+    ModelAnimKeyframe *keyframe;
+    s32 keyframeOffset;
+    s32 x0;
+    s32 x1;
+    s32 x2;
+    s32 x3;
+    s32 z0;
+    s32 z1;
+    s32 z2;
+    s32 z3;
+    s32 length;
+    s32 nx;
+    s32 nz;
+    s32 along;
+    s32 side;
+    s32 edgeLength;
+    s32 deltaX;
+    s32 deltaZ;
+    s32 dist;
+    u16 flags;
+
+    keyframe = &D_80121B98[arg0];
+    x0 = D_80121B90[keyframe->coordIndices[0]].x << 0x11;
+    x1 = D_80121B90[keyframe->coordIndices[1]].x << 0x11;
+    x2 = D_80121B90[keyframe->coordIndices[2]].x << 0x11;
+    x3 = D_80121B90[keyframe->coordIndices[3]].x << 0x11;
+    z0 = D_80121B90[keyframe->coordIndices[0]].z << 0x11;
+    z1 = D_80121B90[keyframe->coordIndices[1]].z << 0x11;
+    z2 = D_80121B90[keyframe->coordIndices[2]].z << 0x11;
+    z3 = D_80121B90[keyframe->coordIndices[3]].z << 0x11;
+
+    D_80121BC0 = arg1;
+    D_80121BC8 = arg2;
+    keyframeOffset = arg0 * sizeof(ModelAnimKeyframe);
+
+    if (keyframe->nextFaceIndices[0] < 0) {
+        D_80121BB4 = x1 - x0;
+        D_80121BBC = z1 - z0;
+        D_80121BA8 = arg1 - x0;
+        D_80121BB0 = arg2 - z0;
+        func_8007FD88(arg3);
+        keyframe = (ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset);
+    }
+
+    if (keyframe->nextFaceIndices[1] < 0) {
+        D_80121BB4 = x2 - x3;
+        D_80121BBC = z2 - z3;
+        D_80121BA8 = D_80121BC0 - x3;
+        D_80121BB0 = D_80121BC8 - z3;
+        func_8007FD88(arg3);
+        keyframe = (ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset);
+    }
+
+    if (keyframe->unk4[0] < 0) {
+        D_80121BB4 = x3 - x1;
+        D_80121BBC = z3 - z1;
+        D_80121BA8 = D_80121BC0 - x1;
+        D_80121BB0 = D_80121BC8 - z1;
+
+        length = func_80098C30((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+        nx = ((s64)D_80121BBC * 0x1000) / length;
+        nz = ((s64)D_80121BB4 * 0x1000) / length;
+        along = ((s64)nz * D_80121BA8 + (s64)nx * D_80121BB0) / 0x1000;
+        side = ((s64)-nx * D_80121BA8 + (s64)nz * D_80121BB0) / 0x1000;
+        edgeLength = ((s64)nz * D_80121BB4 + (s64)nx * D_80121BBC) / 0x1000;
+        flags = ((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->unk14[3];
+
+        if ((flags & 2) && (along < 0)) {
+            deltaX = D_80121BC0 - x1;
+            deltaZ = D_80121BC8 - z1;
+            dist = func_80098C30((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
+            if (dist < arg3) {
+                D_80121BC0 = (((s64)deltaX * arg3) / dist) + x1;
+                D_80121BC8 = (((s64)deltaZ * arg3) / dist) + z1;
+            }
+            keyframe = (ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset);
+        } else if ((flags & 8) && (edgeLength < along)) {
+            deltaX = D_80121BC0 - x3;
+            deltaZ = D_80121BC8 - z3;
+            dist = func_80098C30((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
+            if (dist < arg3) {
+                D_80121BC0 = (((s64)deltaX * arg3) / dist) + x3;
+                D_80121BC8 = (((s64)deltaZ * arg3) / dist) + z3;
+            }
+            keyframe = (ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset);
+        } else if (-arg3 < side) {
+            D_80121BBC = -arg3 - side;
+            D_80121BC0 += ((s64)-nx * D_80121BBC) / 0x1000;
+            D_80121BC8 += ((s64)nz * D_80121BBC) / 0x1000;
+            keyframe = (ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset);
+        }
+    }
+
+    if (keyframe->unk4[1] < 0) {
+        D_80121BB4 = x0 - x2;
+        D_80121BBC = z0 - z2;
+        D_80121BA8 = D_80121BC0 - x2;
+        D_80121BB0 = D_80121BC8 - z2;
+
+        length = func_80098C30((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+        nx = ((s64)D_80121BBC * 0x1000) / length;
+        nz = ((s64)D_80121BB4 * 0x1000) / length;
+        along = ((s64)nz * D_80121BA8 + (s64)nx * D_80121BB0) / 0x1000;
+        side = ((s64)-nx * D_80121BA8 + (s64)nz * D_80121BB0) / 0x1000;
+        edgeLength = ((s64)nz * D_80121BB4 + (s64)nx * D_80121BBC) / 0x1000;
+        flags = ((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->unk14[3];
+
+        if ((flags & 4) && (along < 0)) {
+            deltaX = D_80121BC0 - x2;
+            deltaZ = D_80121BC8 - z2;
+            dist = func_80098C30((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
+            if (dist < arg3) {
+                D_80121BC0 = (((s64)deltaX * arg3) / dist) + x2;
+                D_80121BC8 = (((s64)deltaZ * arg3) / dist) + z2;
+            }
+        } else if ((flags & 1) && (edgeLength < along)) {
+            deltaX = D_80121BC0 - x0;
+            deltaZ = D_80121BC8 - z0;
+            dist = func_80098C30((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
+            if (dist < arg3) {
+                D_80121BC0 = (((s64)deltaX * arg3) / dist) + x0;
+                D_80121BC8 = (((s64)deltaZ * arg3) / dist) + z0;
+            }
+        } else if (-arg3 < side) {
+            D_80121BBC = -arg3 - side;
+            D_80121BC0 += ((s64)-nx * D_80121BBC) / 0x1000;
+            D_80121BC8 += ((s64)nz * D_80121BBC) / 0x1000;
+        }
+    }
+
+    *arg4 = D_80121BC0 - arg1;
+    *arg5 = D_80121BC8 - arg2;
+}
+#endif
 
 // func_80080CC4 best match: 82.954% (base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80080CC4.s")
