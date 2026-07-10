@@ -391,6 +391,7 @@ void func_80099C44(u32 devAddr, void *dramAddr, s32 size) {
     }
 }
 
+// func_80099D10 best match: 11.115% (nonmatchings/func_80099D10-8207005055717715604/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_80099D10.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_8009B0E8.s")
