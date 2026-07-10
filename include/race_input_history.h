@@ -82,11 +82,11 @@ typedef struct {
     /* 0x08C */ u32 disabledInputFlags;
     /* 0x090 */ s8 stickX;
     /* 0x091 */ s8 stickY;
-    /* 0x092 */ char pad92[1];
+    /* 0x092 */ s8 unk92;
     /* 0x093 */ s8 unk93;
     /* 0x094 */ char pad94[0x1C0];
     /* 0x254 */ s32 unk254;
-    /* 0x258 */ char pad258[4];
+    /* 0x258 */ s32 unk258;
     /* 0x25C */ s32 unk25C;
     /* 0x260 */ s32 unk260;
     /* 0x264 */ s32 unk264;
@@ -130,7 +130,8 @@ typedef struct {
     /* 0x2F0 */ s16 unk2F0;
     /* 0x2F2 */ char pad2F2[2];
     /* 0x2F4 */ s16 unk2F4;
-    /* 0x2F6 */ char pad2F6[4];
+    /* 0x2F6 */ char pad2F6[2];
+    /* 0x2F8 */ s16 unk2F8;
     /* 0x2FA */ s16 unk2FA;
     /* 0x2FC */ u32 stateFlags;
     /* 0x300 */ s16 mode;
@@ -188,7 +189,8 @@ typedef struct {
     /* 0x518 */ s8 unk518;
     /* 0x519 */ s8 unk519;
     /* 0x51A */ u8 actionEffectEnabled;
-    /* 0x51B */ char pad51B[0xA];
+    /* 0x51B */ char pad51B[9];
+    /* 0x524 */ s8 unk524;
     /* 0x525 */ s8 unk525;
     /* 0x526 */ char pad526[2];
     /* 0x528 */ s8 unk528;
