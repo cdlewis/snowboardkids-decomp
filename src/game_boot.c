@@ -69,6 +69,7 @@ extern void osSetThreadPri(OSThread *, OSPri);
 extern void osInvalDCache(void *, s32);
 extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
+extern void osViBlack(u8);
 
 extern s32 osTvType;
 
@@ -76,6 +77,7 @@ extern u8 D_80156618;
 extern u8 D_80156619;
 extern u8 D_8015661A;
 extern s16 D_800DF140;
+extern u16 D_800DF150;
 
 extern OSThread D_801237B0;
 extern OSMesgQueue D_80123CC0;
@@ -91,12 +93,16 @@ extern OSMesgQueue D_80124018;
 extern OSMesg D_80124030[8];
 extern u8 D_801240A8[0x778];
 extern MainSchedulerClient D_80124820;
+extern u16 D_80124828;
 extern Gfx *gRegionAllocPtr;
 extern s8 D_8012482A;
 extern s8 D_8012482B;
 extern s8 D_8012482C;
+extern u8 D_80123750;
+extern u8 D_8012496E;
 extern s8 D_800EC8B0;
 extern s8 D_8010ADFA;
+extern u8 D_8013CF8E;
 extern u8 D_80324480[];
 extern u8 D_80328480[];
 
@@ -104,7 +110,10 @@ extern void func_800458E0(void);
 extern void func_80048338(void);
 extern void func_800484F0(void);
 extern void func_800704F0(void);
+extern void func_80071E80(void);
+extern void func_800722B4(void);
 extern void func_80072C30(void);
+extern void func_80098EAC(void);
 extern void func_800998E4(void *);
 extern void func_8009B14C(void);
 extern void func_8009C270(void *, s32, s32);
@@ -154,7 +163,104 @@ void func_80099790(void) {
     D_8010ADFA = 0;
 }
 
+// func_800998E4 best match: 82.639% at nonmatchings/func_800998E4-2785870559185086986/base_4.c.
+#ifdef NON_MATCHING
+void func_800998E4(void *arg0) {
+    OSMesg msg;
+    s32 done;
+    s16 type;
+    s32 initialized;
+
+    msg = NULL;
+    initialized = 0;
+    done = 0;
+    func_80099790();
+loop_1:
+    do {
+        if ((osRecvMesg(&D_80124018, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(&D_80124070, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(&D_80124050, &msg, OS_MESG_NOBLOCK) != 0)) {
+            goto loop_1;
+        }
+        type = *(s16 *)msg;
+        switch (type) {
+        case 1:
+            D_80124828 = D_800DF150;
+            if (initialized == 0) {
+                initialized = 1;
+                func_80098EAC();
+                func_80071E80();
+                func_80000A8C(0);
+                func_80000A8C(1);
+                func_80000A8C(2);
+                func_80000A8C(3);
+                func_80000960();
+            } else {
+                initialized = 0;
+            }
+            break;
+        case 5:
+            D_80123750 += 1;
+            D_8012496E &= 0xFE;
+            break;
+        case 6:
+            D_80123750 += 1;
+            D_8013CF8E &= 0xFE;
+            break;
+        case 3:
+            *(volatile s32 *)&done = 1;
+            break;
+        case 9:
+            func_800009B0();
+            break;
+        }
+    } while (*(volatile s32 *)&done == 0);
+    func_800722B4();
+    osViBlack(1);
+    func_80000A40(0);
+    func_80000A40(1);
+    func_80000A40(2);
+    func_80000A40(3);
+    func_80000A8C(0);
+    func_80000A8C(1);
+    func_80000A8C(2);
+    func_80000A8C(3);
+    func_80000A40(0);
+    func_80000A40(1);
+    func_80000A40(2);
+    func_80000A40(3);
+    func_80000A8C(0);
+    func_80000A8C(1);
+    func_80000A8C(2);
+    func_80000A8C(3);
+    func_80000A40(0);
+    func_80000A40(1);
+    func_80000A40(2);
+    func_80000A40(3);
+    func_80000A8C(0);
+    func_80000A8C(1);
+    func_80000A8C(2);
+    func_80000A8C(3);
+loop_16:
+    do {
+loop_17:
+        if ((osRecvMesg(&D_80124018, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(&D_80124070, &msg, OS_MESG_NOBLOCK) != 0)) {
+            if (osRecvMesg(&D_80124050, &msg, OS_MESG_NOBLOCK) != 0) {
+                goto loop_17;
+            }
+        }
+    } while (*(s16 *)msg != 1);
+    func_80000A40(0);
+    func_80000A40(1);
+    func_80000A40(2);
+    func_80000A40(3);
+    func_80000A8C(0);
+    func_80000A8C(1);
+    func_80000A8C(2);
+    func_80000A8C(3);
+    goto loop_16;
+}
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_800998E4.s")
+#endif
 
 void func_80099C44(u32 devAddr, void *dramAddr, s32 size) {
     OSIoMesg mb;
