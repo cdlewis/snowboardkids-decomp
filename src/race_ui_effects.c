@@ -2476,7 +2476,7 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
     func_80071824(arg0, func_8005CDB0);
 }
 
-// func_8005CF60 best match: 87.613% (nonmatchings/func_8005CF60-4923837976568703863/base_5.c)
+// func_8005CF60 best match: 90.077% (nonmatchings/func_8005CF60-4923837976568703863/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005CF60.s")
 
 #ifdef NON_MATCHING
@@ -2485,15 +2485,14 @@ const char D_800E1440[4] = "%d";
 
 void func_8005CF60(RaceUiDualCounterActor *arg0) {
     char buffer[0x2C];
+    volatile u8 padding[0x10];
     char *ptr;
+    Gfx *gfx;
+    s32 w0;
+    s32 w1;
     s32 x;
 
-    if (arg0->alpha != 0xFF) {
-        gDPPipeSync(gRegionAllocPtr++);
-        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
-        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
-        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
-    }
+    if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); }
 
     sprintf(buffer, D_800E143C, D_80122040);
     x = -0x50;
@@ -2545,12 +2544,7 @@ body2:
     goto loop2;
 
 done2:
-    if (arg0->alpha != 0xFF) {
-        Gfx *gfx = gRegionAllocPtr++;
-
-        gfx->words.w0 = 0x06000000;
-        gfx->words.w1 = (u32)D_800DEFF8;
-    }
+    if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; }
 }
 #endif
 
