@@ -511,29 +511,18 @@ void func_80052550(s32 arg0) {
     func_8001303C(-0x76, -0x58, D_800D55E8, 0, 0x100, 5, 0x29);
 }
 
-// func_80052868 best match: 99.595%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80052868.s")
-
-#ifdef NON_MATCHING
 void func_80052868(s32 arg0) {
     s32 var_v0;
     s32 sp28;
-    s32 temp_t7;
-    s32 temp_t8;
-    s32 temp_t9;
-    s32 temp_v0;
-    s32 temp_v0_2;
-    s32 temp_v0_3;
 
     var_v0 = 1;
+    sp28 = var_v0;
     if (D_801235B4 == 0) {
         var_v0 = 2;
+        sp28 = var_v0;
     }
-    sp28 = var_v0;
-    temp_v0 = func_80043040(D_80112130.cancelHandle);
-    temp_t7 = sp28;
+    func_80046D68(-0x78, -0x10, func_80043040(D_80112130.cancelHandle), 4, sp28);
     sp28 = 1;
-    func_80046D68(-0x78, -0x10, temp_v0, 4, temp_t7);
     if (D_8012482A == 1) {
         func_80046D68(0x10, -0x10, func_80043040(D_80112130.cancelHandle), 7, 2);
         func_80046D68(0x48, -0x10, func_80043040(D_80112130.cancelHandle), 8, 1);
@@ -554,10 +543,8 @@ void func_80052868(s32 arg0) {
     if (D_801235B4 == 1) {
         sp28 = 2;
     }
-    temp_v0_2 = func_80043040(D_80112130.cancelHandle);
-    temp_t8 = sp28;
+    func_80046D68(-0x78, 8, func_80043040(D_80112130.cancelHandle), 5, sp28);
     sp28 = 1;
-    func_80046D68(-0x78, 8, temp_v0_2, 5, temp_t8);
     if (D_8012482B == 0) {
         func_80046D68(0x10, 8, func_80043040(D_80112130.cancelHandle), 9, 2);
         func_80046D68(0x48, 8, func_80043040(D_80112130.cancelHandle), 0xA, 1);
@@ -578,10 +565,8 @@ void func_80052868(s32 arg0) {
     if (D_801235B4 == 2) {
         sp28 = 2;
     }
-    temp_v0_3 = func_80043040(D_80112130.cancelHandle);
-    temp_t9 = sp28;
+    func_80046D68(-0x78, 0x20, func_80043040(D_80112130.cancelHandle), 6, sp28);
     sp28 = 1;
-    func_80046D68(-0x78, 0x20, temp_v0_3, 6, temp_t9);
     if (D_8012482C == 0) {
         func_80046D68(0x10, 0x20, func_80043040(D_80112130.cancelHandle), 9, 2);
         func_80046D68(0x48, 0x20, func_80043040(D_80112130.cancelHandle), 0xA, 1);
@@ -604,7 +589,6 @@ void func_80052868(s32 arg0) {
     }
     func_80046D68(-0x68, 0x48, func_80043040(D_80112130.cancelHandle), 2, sp28);
 }
-#endif
 
 void func_80052E00(MenuPanelActor *arg0) {
     func_800483FC(&D_80124868, func_80052550, (s32) arg0);
