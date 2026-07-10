@@ -90,6 +90,9 @@ extern s8 D_8010AEA4;
 extern s8 D_8010AEA8;
 extern u8 D_8010AEAC[];
 extern s8 D_8010AEB0;
+extern u8 D_8010AEF8[];
+extern u8 D_8010AEFB[];
+extern u8 D_8010AF08[];
 extern s16 D_8010AED0;
 extern s16 D_8010ADF0;
 extern s8 D_8010ADF8;
@@ -148,6 +151,8 @@ extern void func_8000B220(void);
 extern void func_8000B7B8(void);
 extern void func_8000C010(void);
 extern void func_8001710C(EffectTask *);
+extern void func_800257F0(EffectTask *);
+extern void func_80028194(EffectTask *);
 extern void func_8002F854();
 extern void func_8002FEF8(void);
 extern s32 func_80013F88(s32, s32, s32);
@@ -312,7 +317,94 @@ void func_800097E0(void) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_80009C48.s")
 
+// func_8000A048 best match: 86.471%
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000A048.s")
+
+#ifdef NON_MATCHING
+void func_8000A048(void) {
+    u8 courseFlags;
+    s32 var_a0;
+    s32 var_a2;
+    s32 var_a2_2;
+    u8 *var_v1;
+    u8 *var_v1_2;
+    s8 var_v0;
+    s8 var_v0_2;
+    s8 var_v0_3;
+    u8 var_v0_4;
+
+    D_80121D88 = 0;
+    D_8010AEA0[0] = 0;
+    D_800EC9C1 = 0;
+    D_8010ADF0 = 0;
+    func_80071408(func_800257F0, 0, 0x63);
+    D_8010ADE8 = func_80071408(func_80028194, 0, 0x61);
+    courseFlags = D_800F42C7;
+    if (courseFlags & 7) {
+        D_8010AEA0[0] = 1;
+    }
+
+    var_v1 = D_8010AEF8;
+    var_v0 = 0;
+    do {
+        *var_v1 = var_v0;
+        var_v0 += 1;
+        var_v1 += 1;
+    } while (var_v0 < 3);
+
+    if (D_8010AEA0[0] == 1) {
+        var_a2 = 1;
+        var_v0_2 = 9;
+loop_6:
+        if (courseFlags & var_a2) {
+            D_8010AEFB[0] = var_v0_2;
+        } else {
+            var_v0_2 += 1;
+            var_a2 *= 2;
+            if (var_v0_2 < 0xC) {
+                goto loop_6;
+            }
+        }
+        var_v0_3 = 9;
+        var_a0 = 1;
+        var_v1_2 = D_8010AF08;
+        do {
+            *var_v1_2 = 0;
+            if (courseFlags & var_a0) {
+                *var_v1_2 = var_v0_3;
+                var_v1_2 += 1;
+            }
+            var_v0_3 += 1;
+            var_a0 *= 2;
+        } while (var_v0_3 != 0xC);
+    } else {
+        D_8010AEFB[0] = 0;
+    }
+
+    if (((s32) D_80121D80.unk6 >= 9) && ((s32) D_80121D80.unk6 < 0xC)) {
+        var_v0_4 = D_8010AF46;
+        var_a2_2 = 3;
+    } else {
+        var_v0_4 = D_8010AF18.unk2E;
+        var_a2_2 = 0;
+        if (var_v0_4 == 1) {
+            D_8010AF18.unk2E = 0;
+            var_v0_4 = 0;
+        } else {
+            var_a2_2 = (s32) D_80121D80.unk6 % 3;
+        }
+    }
+
+    D_8010AE64 = var_a2_2;
+    if (var_v0_4 == 1) {
+        var_a2_2--;
+    }
+
+    D_80121D80.unk6 = D_8010AEF8[var_a2_2];
+    func_8009956C(func_8000A214, 0);
+    func_8007105C();
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000A214.s")
 
