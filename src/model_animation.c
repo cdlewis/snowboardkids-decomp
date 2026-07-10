@@ -36,6 +36,13 @@ typedef struct ModelAnimRotation {
     s32 z;
 } ModelAnimRotation;
 
+typedef struct ModelAnimFrameCursor {
+    char pad0[0x33A];
+    s16 x;
+    s16 y;
+    s16 z;
+} ModelAnimFrameCursor;
+
 typedef struct ModelAnimStateJoint {
     s32 unk0;
     s16 unk4;
@@ -125,7 +132,6 @@ extern ModelAnimCoord *D_800DE530[];
 
 extern s32 func_8007BDE4(s32, s32);
 extern void func_80081EF4(ModelAnimState *);
-extern void func_80082070(ModelAnimState *);
 
 void func_8007D190(void) {
     s32 ptr;
@@ -926,7 +932,45 @@ void func_80081EF4(ModelAnimState *state) {
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80082070.s")
+void func_80082070(ModelAnimState *state) {
+    s16 *data;
+    s32 base;
+    ModelAnimFrameCursor *cursor;
+    s32 one;
+    s32 offset;
+
+    base = func_80043040(D_8011215C[state->modelId]);
+    data = (s16 *)(((one = base) + state->frameDataOffset) + 0x24);
+    state->frameTimerReset = 1;
+    offset = 0x78;
+    cursor = (ModelAnimFrameCursor *)((u8 *)state + 0x78);
+    state->frameTimer = state->frameTimerReset;
+    one = 1;
+
+    do {
+        s16 packed0 = data[0];
+        s16 packed1 = data[one];
+
+        data += 2;
+        cursor->x = (packed0 >> 4) & 0xFF0;
+        cursor->y = (packed0 << 4) & 0xFF0;
+        cursor->z = (packed1 >> 4) & 0xFF0;
+
+        if (packed1 & one) {
+            cursor->x += 8;
+        }
+        if (packed1 & 2) {
+            cursor->y += 8;
+        }
+        offset += 0x14;
+        if (packed1 & 4) {
+            cursor->z += 8;
+        }
+        cursor = (ModelAnimFrameCursor *)((u8 *)cursor + 0x14);
+    } while (offset != 0xF0);
+
+    state->frameDataOffset = (s32)data - func_80043040(D_8011215C[state->modelId]);
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80082184.s")
 
