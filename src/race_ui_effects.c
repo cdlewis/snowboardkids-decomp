@@ -4395,46 +4395,46 @@ void func_800631B0(void *arg0) {
     func_80071824(arg0, func_80063164);
 }
 
-// func_80063220 best match: 99.758%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80063220.s")
-
-#ifdef NON_MATCHING
 void func_80063220(RaceUiSpinningParticleActor *arg0) {
     FixedMatrix3sScratch scratch;
-    s16 temp;
-    volatile u8 padding[8];
+    s32 temp2;
+    s32 pad;
+    s32 pad2;
+    SplitWord temp;
 
     if (D_80156609 != 0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
-        if (arg0->matrixDirty != 0) {
-            arg0->matrixDirty = 0;
-            func_80097C18(scratch, arg0->rotY);
-            ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.x;
-            ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.y;
-            ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.z;
-            arg0->matrix0 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
+    if (func_80049000(&arg0->pos) == 0) {
+        return;
+    }
 
-            ((RaceUiTrailCopyBlock *)scratch)->words[6] += 0x01000000;
-            temp = func_80097AE8(arg0->rotX) >> 5;
-            func_800983E4(scratch, temp, arg0->rotZ, func_80097AE8(arg0->rotX2) >> 5);
-            arg0->matrix1 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
-        }
+    if (arg0->matrixDirty != 0) {
+        arg0->matrixDirty = 0;
+        func_80097C18(scratch, arg0->rotY);
+        ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.x;
+        ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.y;
+        ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.z;
+        arg0->matrix0 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
 
-        if (arg0->matrix1 != NULL) {
-            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, func_80043040(D_80112140));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, func_80043040(D_80112142));
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200D3A8);
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200CFB0);
-        }
+        ((RaceUiTrailCopyBlock *)scratch)->words[6] += 0x01000000;
+        temp.half.lo = func_80097AE8(arg0->rotX) >> 5;
+        temp2 = func_80097AE8(arg0->rotX2) >> 5;
+        func_800983E4(scratch, temp.half.lo, arg0->rotZ, temp2);
+        arg0->matrix1 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
+    }
+
+    if (arg0->matrix1 != NULL) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));
+        gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112142));
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_200D3A8);
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, D_200CFB0);
     }
 }
-#endif
 
 void func_80063410(void *arg0) {
     if (D_80121B56 == 0) {
