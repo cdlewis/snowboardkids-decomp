@@ -21,6 +21,12 @@
 #define OS_MESG_BLOCK 1
 #define OS_READ 0
 #define OS_TV_NTSC 1
+#define BOOT_GFX_CMD(cmd0, cmd1) \
+{ \
+    Gfx *_g = gRegionAllocPtr++; \
+    _g->words.w0 = (cmd0); \
+    _g->words.w1 = (u32)(cmd1); \
+}
 
 typedef s32 OSId;
 typedef s32 OSPri;
@@ -59,6 +65,38 @@ typedef struct {
 typedef struct {
     u8 unk0[8];
 } MainSchedulerClient;
+
+typedef struct {
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ s32 pad4;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ void *unkC;
+    /* 0x10 */ s32 unk10;
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ void *unk18;
+    /* 0x1C */ s32 unk1C;
+    /* 0x20 */ void *unk20;
+    /* 0x24 */ s32 pad24;
+    /* 0x28 */ void *unk28;
+    /* 0x2C */ s32 unk2C;
+    /* 0x30 */ void *unk30;
+    /* 0x34 */ s32 unk34;
+    /* 0x38 */ void *unk38;
+    /* 0x3C */ void *unk3C;
+    /* 0x40 */ void *unk40;
+    /* 0x44 */ s32 unk44;
+    /* 0x48 */ void *unk48;
+    /* 0x4C */ s32 unk4C;
+    /* 0x50 */ void *unk50;
+    /* 0x54 */ void *unk54;
+    /* 0x58 */ s16 unk58;
+    /* 0x5A */ u8 pad5A[6];
+    /* 0x60 */ void *unk60;
+    /* 0x64 */ u8 msg[2];
+    /* 0x66 */ u8 unk66;
+    /* 0x67 */ u8 pad67;
+    /* 0x68 */ Gfx dlStart[1];
+} SchedulerTask;
 
 extern void osInitialize(void);
 extern void osCreatePiManager(OSPri, OSMesgQueue *, OSMesg *, s32);
@@ -103,6 +141,21 @@ extern u8 D_8012496E;
 extern s8 D_800EC8B0;
 extern s8 D_8010ADFA;
 extern u8 D_8013CF8E;
+extern s32 D_800DF144;
+extern Gfx *D_80124904;
+extern u8 D_80124834;
+extern u8 D_80124908[];
+extern u8 D_80155548[];
+extern u8 D_369000[];
+extern u8 D_800B1CC0[];
+extern u8 D_800E21C0[];
+extern u8 D_80360000[];
+extern u8 D_80368000[];
+extern u8 D_80368C00[];
+extern u8 D_80369000[];
+extern u8 D_8038E800[];
+extern u8 aspMainTextStart[];
+extern u8 rspbootTextStart[];
 extern u8 D_80324480[];
 extern u8 D_80328480[];
 
@@ -113,6 +166,10 @@ extern void func_800704F0(void);
 extern void func_80071E80(void);
 extern void func_800722B4(void);
 extern void func_80072C30(void);
+extern void func_80048524(s32);
+extern void func_80099D10(u8);
+extern void *func_8009C43C(void *, void *);
+extern s32 osSendMesg(void *, void *, s32);
 extern void func_80098EAC(void);
 extern void func_800998E4(void *);
 extern void func_8009B14C(void);
@@ -337,4 +394,175 @@ Gfx *func_8009B5F4(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_8009B5F4.s")
 #endif
 
+// func_8009B704 best match: 80.089% at nonmatchings/func_8009B704-8207005055717715604/base_5.c.
+#ifdef NON_MATCHING
+void func_8009B704(u8 arg0) {
+    SchedulerTask *task;
+    SchedulerTask *nextTask;
+    s32 colorIndex;
+    s32 bufferIndex;
+    s32 nextColorIndex;
+    s32 textSize;
+    void *dramStack;
+    u8 nextBufferIndex;
+    s32 one;
+    s32 allBits;
+
+    colorIndex = D_80124834 + 1;
+    colorIndex &= 0xFF;
+    bufferIndex = arg0 & 0xFF;
+    D_80124834 = colorIndex;
+    if (colorIndex >= 3) {
+        D_80124834 = 0;
+        colorIndex = 0;
+    }
+
+    one = 1;
+    allBits = 0xFFFF;
+    task = (SchedulerTask *)(D_80124908 + bufferIndex * 0x18620);
+    task->unk60 = D_8038E800 + colorIndex * 0x25800;
+    func_80048524(bufferIndex);
+
+    gRegionAllocPtr = (Gfx *)((u8 *)task + 0x620);
+    D_80124904 = task->dlStart;
+
+    BOOT_GFX_CMD(0xBC000006, 0);
+    BOOT_GFX_CMD(0xED000000, 0x5003C0);
+    BOOT_GFX_CMD(0xB6000000, 0x33205);
+    BOOT_GFX_CMD(0xBC000404, one);
+    BOOT_GFX_CMD(0xBC000C04, one);
+    BOOT_GFX_CMD(0xBC001404, allBits);
+    BOOT_GFX_CMD(0xBC001C04, allBits);
+    BOOT_GFX_CMD(0xBA001701, 0);
+    BOOT_GFX_CMD(0xFD10013F, D_369000);
+
+    if (D_800DF144 != 0) {
+        D_800DF144 = 0;
+        BOOT_GFX_CMD(0xBA001402, 0x300000);
+        BOOT_GFX_CMD(0xB900031D, 0);
+        BOOT_GFX_CMD(0xFF10013F, D_80369000);
+        BOOT_GFX_CMD(0xF7000000, 0xFFFCFFFC);
+        BOOT_GFX_CMD(0xF64FC3BC, 0);
+        BOOT_GFX_CMD(0xFE000000, D_80369000);
+        BOOT_GFX_CMD(0xE7000000, 0);
+        BOOT_GFX_CMD(0xFF10013F, task->unk60);
+        BOOT_GFX_CMD(0xF7000000, 0x10001);
+        BOOT_GFX_CMD(0xF64FC3BC, 0);
+        BOOT_GFX_CMD(0xFB000000, 0);
+        BOOT_GFX_CMD(0xFA000000, 0);
+        BOOT_GFX_CMD(0xF9000000, 0);
+        BOOT_GFX_CMD(0xF8000000, 0);
+        BOOT_GFX_CMD(0xF7000000, 0);
+        BOOT_GFX_CMD(0xEE000000, 0);
+        BOOT_GFX_CMD(0xEC000000, 0);
+        BOOT_GFX_CMD(0xEB000000, 0);
+        BOOT_GFX_CMD(0xEA000000, 0);
+        BOOT_GFX_CMD(0xBA000801, 0);
+        BOOT_GFX_CMD(0xC0000000, 0);
+        BOOT_GFX_CMD(0xF2000000, 0);
+        BOOT_GFX_CMD(0xF2000000, 0x01000000);
+        BOOT_GFX_CMD(0xF2000000, 0x02000000);
+        BOOT_GFX_CMD(0xF2000000, 0x03000000);
+        BOOT_GFX_CMD(0xF2000000, 0x04000000);
+        BOOT_GFX_CMD(0xF2000000, 0x05000000);
+        BOOT_GFX_CMD(0xF2000000, 0x06000000);
+        BOOT_GFX_CMD(0xF2000000, 0x07000000);
+        BOOT_GFX_CMD(0xF5000000, 0);
+        BOOT_GFX_CMD(0xF5000000, 0x01000000);
+        BOOT_GFX_CMD(0xF5000000, 0x02000000);
+        BOOT_GFX_CMD(0xF5000000, 0x03000000);
+        BOOT_GFX_CMD(0xF5000000, 0x04000000);
+        BOOT_GFX_CMD(0xF5000000, 0x05000000);
+        BOOT_GFX_CMD(0xF5000000, 0x06000000);
+        BOOT_GFX_CMD(0xF5000000, 0x07000000);
+    } else {
+        BOOT_GFX_CMD(0xFE000000, D_80369000);
+        BOOT_GFX_CMD(0xFF10013F, task->unk60);
+    }
+
+    BOOT_GFX_CMD(0xB9000002, 0);
+    func_80099D10(arg0);
+    BOOT_GFX_CMD(0xE9000000, 0);
+    BOOT_GFX_CMD(0xB8000000, 0);
+
+    task->unk40 = (u8 *)D_80124904 + 0x5B8;
+    task->unk44 = ((((u8 *)gRegionAllocPtr - (u8 *)D_80124904) - 0x5B8) >> 3) * 8;
+    task->unk20 = D_800B1CC0;
+    task->unk10 = 1;
+    textSize = aspMainTextStart - rspbootTextStart;
+    task->unk34 = 0x400;
+    dramStack = D_80360000 + 0x8000;
+    task->unk28 = D_800E21C0;
+    task->unk2C = 0x800;
+    task->unk30 = D_80368C00;
+    task->unk3C = dramStack;
+    task->unk4C = 0xC00;
+    task->unk48 = D_80368000;
+    task->unk8 = 0x40;
+    task->unk14 = 0;
+    task->unk18 = rspbootTextStart;
+    task->unk1C = textSize;
+    task->unk38 = D_80360000;
+    task->unk0 = 0;
+    task->unk50 = &D_80124018;
+    task->unk54 = task->msg;
+    task->unkC = task->unk60;
+    task->unk58 = (D_80124828 + 3) & 0xFFF;
+    task->unk66 |= 1;
+    osSendMesg(func_8009C43C(D_801240A8, task), task, 1);
+
+    nextColorIndex = D_80124834 + 1;
+    nextBufferIndex = (bufferIndex + 1) & 1;
+    if (nextColorIndex >= 3) {
+        nextColorIndex = 0;
+    }
+
+    nextTask = (SchedulerTask *)(D_80155548 + nextBufferIndex * 0x860);
+    gRegionAllocPtr = (Gfx *)&nextTask->unk60;
+    BOOT_GFX_CMD(0xBC000006, 0);
+    BOOT_GFX_CMD(0xED000000, 0x5003C0);
+    BOOT_GFX_CMD(0xB6000000, 0x33205);
+    BOOT_GFX_CMD(0xBC000404, one);
+    BOOT_GFX_CMD(0xBC000C04, one);
+    BOOT_GFX_CMD(0xBC001404, allBits);
+    BOOT_GFX_CMD(0xBC001C04, allBits);
+    BOOT_GFX_CMD(0xBA001701, 0);
+    BOOT_GFX_CMD(0xFD10013F, D_369000);
+    BOOT_GFX_CMD(0xBA001402, 0x300000);
+    BOOT_GFX_CMD(0xB900031D, 0);
+    BOOT_GFX_CMD(0xFF10013F, D_80369000);
+    BOOT_GFX_CMD(0xF7000000, 0xFFFCFFFC);
+    BOOT_GFX_CMD(0xF64FC3BC, 0);
+    BOOT_GFX_CMD(0xFE000000, D_80369000);
+    BOOT_GFX_CMD(0xE7000000, 0);
+    nextTask->unkC = D_8038E800 + nextColorIndex * 0x25800;
+    BOOT_GFX_CMD(0xFF10013F, nextTask->unkC);
+    BOOT_GFX_CMD(0xF7000000, 0x10001);
+    BOOT_GFX_CMD(0xF64FC3BC, 0);
+    BOOT_GFX_CMD(0xE9000000, 0);
+    BOOT_GFX_CMD(0xB8000000, 0);
+
+    nextTask->unk40 = &nextTask->unk60;
+    nextTask->unk44 = ((((u8 *)gRegionAllocPtr - (u8 *)nextTask) - 0x60) >> 3) * 8;
+    nextTask->unk10 = 1;
+    nextTask->unk18 = rspbootTextStart;
+    nextTask->unk28 = D_800E21C0;
+    nextTask->unk1C = textSize;
+    nextTask->unk20 = D_800B1CC0;
+    nextTask->unk2C = 0x800;
+    nextTask->unk30 = D_80368C00;
+    nextTask->unk34 = 0x400;
+    nextTask->unk38 = D_80360000;
+    nextTask->unk48 = D_80368000;
+    nextTask->unk4C = 0xC00;
+    nextTask->unk0 = 0;
+    nextTask->unk8 = 0;
+    nextTask->unk50 = &D_80124018;
+    nextTask->unk54 = 0;
+    nextTask->unk3C = dramStack;
+    osSendMesg(func_8009C43C(D_801240A8, nextTask), nextTask, 1);
+}
+
+#else
 #pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_8009B704.s")
+#endif
