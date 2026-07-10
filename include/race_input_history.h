@@ -80,10 +80,13 @@ typedef struct {
     /* 0x093 */ s8 unk93;
     /* 0x094 */ char pad94[0x1C0];
     /* 0x254 */ s32 unk254;
-    /* 0x258 */ char pad258[8];
+    /* 0x258 */ char pad258[4];
+    /* 0x25C */ s32 unk25C;
     /* 0x260 */ s32 unk260;
     /* 0x264 */ s32 unk264;
-    /* 0x268 */ char pad268[0xC];
+    /* 0x268 */ s32 unk268;
+    /* 0x26C */ s32 unk26C;
+    /* 0x270 */ s32 unk270;
     /* 0x274 */ s32 unk274;
     /* 0x278 */ s32 unk278;
     /* 0x27C */ s32 unk27C;
