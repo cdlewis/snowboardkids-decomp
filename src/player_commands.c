@@ -1381,7 +1381,41 @@ s32 func_8009DBE4(s32 arg0) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009DC68.s")
+s32 func_8009DC68(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    s32 i;
+    PlayerCommandState *entry;
+
+    if (arg4 == -1) {
+        arg4 = D_8015A670[arg0];
+    }
+
+    if (arg3 != 0) {
+        entry = D_8015A660;
+        i = 0;
+        if (D_8015A658 > 0) {
+            do {
+                i++;
+                if (arg0 == entry->soundId) {
+                    return func_8009F780(entry, arg0, arg1, arg2, arg4);
+                }
+                entry++;
+            } while (i < D_8015A658);
+        }
+    }
+
+    entry = D_8015A660;
+    i = 0;
+    if (D_8015A658 > 0) {
+        do {
+            i++;
+            if (entry->sequencePos == 0) {
+                return func_8009F780(entry, arg0, arg1, arg2, arg4);
+            }
+            entry++;
+        } while (i < D_8015A658);
+    }
+    return 0;
+}
 
 void func_8009DD5C(s32 arg0, s32 arg1) {
     s32 i;
