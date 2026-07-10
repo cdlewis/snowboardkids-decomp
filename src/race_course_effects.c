@@ -205,13 +205,24 @@ typedef struct {
     s16 courseRenderBufferHandle;
 } CourseAssetHandles;
 
+typedef struct {
+    char pad0[0x44];
+    Vec3i transformOffset;
+    char pad50[0x60];
+} RaceCamera;
+
+typedef struct {
+    char pad0[0x44];
+    void *matrix;
+} RaceCourseBackdropEffect;
+
 extern void func_800483FC(void *, void *, void *);
 extern void func_80072138(s32, s32);
 extern void func_80072A74(s32, void *, s32, s32);
 extern void osWritebackDCache(void *, s32);
 extern void func_8006A80C(void *);
 extern void func_80069BEC(void *);
-extern void func_80069E50(void);
+void func_80069E50(RaceCourseBackdropEffect *);
 extern void *func_80048594(s32);
 extern void func_800486BC(void *, void *);
 extern void *func_8004885C(CourseEffectMatrixSource *);
@@ -258,6 +269,7 @@ extern s16 D_80121B50;
 extern CourseAssetHandles D_80112130;
 extern s16 D_80112144;
 extern s16 D_80112146;
+extern RaceCamera D_801121E0[];
 extern CourseMarkerSpawnEntry *D_800DA0B8[];
 extern CourseRenderEntry *D_800DA73C[];
 extern void *D_800DA1C0[];
@@ -296,11 +308,22 @@ extern Gfx D_2006430[];
 extern Gfx D_20067B0[];
 extern Gfx D_2008628[];
 extern Gfx D_2008900[];
+extern Gfx D_20089E0[];
+extern Gfx D_2008D50[];
 extern Gfx D_2008E30[];
+extern Gfx D_2008F80[];
 extern Gfx D_200B400[];
+extern Gfx D_200B4E0[];
 extern Gfx D_200B7B8[];
+extern Gfx D_200B8C8[];
 extern Gfx D_200BD48[];
+extern Gfx D_200BF40[];
 extern Gfx D_200C060[];
+extern Gfx D_200C238[];
+extern Gfx D_200C7A8[];
+extern Gfx D_2006548[];
+extern Gfx D_2006880[];
+extern Gfx D_20058A8[];
 void func_8006BE90(RaceMovingEffect *);
 void func_8006B7E0(RaceMovingEffect *);
 extern void func_8006A894(void *);
@@ -423,7 +446,93 @@ void func_80069BEC(void *arg0) {
     }
 }
 
+// func_80069E50 best match: 52.371% (base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_80069E50.s")
+
+#ifdef NON_MATCHING
+#define EMIT_COURSE_BACKDROP(list)                             \
+    do {                                                       \
+        Gfx **region = &gRegionAllocPtr;                       \
+        CourseAssetHandles *handles = &D_80112130;             \
+        gfx = *region;                                         \
+        *region = gfx + 1;                                     \
+        gfx->words.w0 = 0xE7000000;                            \
+        gfx->words.w1 = 0;                                     \
+        gfx = *region;                                         \
+        *region = gfx + 1;                                     \
+        gfx->words.w0 = 0xBC000806;                            \
+        gfx->words.w1 = (u32)func_80043040(handles->courseVtxHandle);    \
+        gfx = *region;                                         \
+        *region = gfx + 1;                                     \
+        gfx->words.w0 = 0xBC000C06;                            \
+        gfx->words.w1 = (u32)func_80043040(handles->courseTextureHandle); \
+        gfx = *region;                                         \
+        *region = gfx + 1;                                     \
+        gfx->words.w0 = 0x01020040;                            \
+        gfx->words.w1 = (u32)temp_s3->matrix;                  \
+        gfx = *region;                                         \
+        *region = gfx + 1;                                     \
+        gfx->words.w1 = (u32)(list);                           \
+        gfx->words.w0 = 0x06000000;                            \
+    } while (0)
+
+void func_80069E50(RaceCourseBackdropEffect *arg0) {
+    CourseEffectMatrixSource sp100;
+    RaceCamera *camera;
+    RaceCourseBackdropEffect *temp_s3;
+    Gfx *gfx;
+    volatile u8 pad[0xD0];
+
+    temp_s3 = arg0;
+    sp100 = D_800DEE30;
+    camera = &D_801121E0[D_80156608];
+    sp100.basePos.x = -camera->transformOffset.x;
+    sp100.basePos.y = -camera->transformOffset.y;
+    sp100.basePos.z = -camera->transformOffset.z;
+
+    temp_s3->matrix = func_8004885C(&sp100);
+    if (temp_s3->matrix != NULL) {
+        switch ((u16)D_80121B50) {
+            case 0:
+                EMIT_COURSE_BACKDROP(D_20089E0);
+                gfx = gRegionAllocPtr++;
+                gfx->words.w1 = (u32)D_2008D50;
+                gfx->words.w0 = 0x06000000;
+                break;
+            case 1:
+                EMIT_COURSE_BACKDROP(D_2008F80);
+                break;
+            case 2:
+                EMIT_COURSE_BACKDROP(D_2008790);
+                break;
+            case 3:
+                EMIT_COURSE_BACKDROP(D_200B4E0);
+                break;
+            case 4:
+                EMIT_COURSE_BACKDROP(D_200BF40);
+                break;
+            case 5:
+                EMIT_COURSE_BACKDROP(D_200C238);
+                gfx = gRegionAllocPtr++;
+                gfx->words.w1 = (u32)D_200C7A8;
+                gfx->words.w0 = 0x06000000;
+                break;
+            case 6:
+                EMIT_COURSE_BACKDROP(D_200B8C8);
+                break;
+            case 7:
+                EMIT_COURSE_BACKDROP(D_2006548);
+                break;
+            case 8:
+                EMIT_COURSE_BACKDROP(D_2006880);
+                break;
+            case 9:
+                EMIT_COURSE_BACKDROP(D_20058A8);
+                break;
+        }
+    }
+}
+#endif
 
 void func_8006A74C(void *arg0) {
     func_800483FC(&D_801248A4, func_80069BEC, arg0);
