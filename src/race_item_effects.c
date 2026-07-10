@@ -124,7 +124,9 @@ typedef struct {
     /* 0x4E */ u8 pad4E;
     /* 0x4F */ u8 followPlayerIndex;
     /* 0x50 */ u8 pad50[0x64 - 0x50];
-    /* 0x64 */ u16 unk64;
+    /* 0x64 */ s16 unk64;
+    /* 0x66 */ u8 pad66[2];
+    /* 0x68 */ u8 *unk68;
 } RaceItemEffectActor;
 
 typedef struct {
@@ -187,6 +189,7 @@ typedef struct {
 } RaceItemEffectAssetHandles;
 
 extern u8 *D_800D46D0[];
+extern u8 D_800D4708[];
 extern u16 D_800D46F8[];
 extern Gfx D_800D45E0[];
 extern u32 D_800D4830[];
@@ -252,7 +255,55 @@ u8 func_8004DB60(s32 arg0) {
     return p[arg0];
 }
 
+// func_8004DB8C best match: 70.982% (nonmatchings/func_8004DB8C-2225551288923588688/base_4.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004DB8C.s")
+
+#ifdef NON_MATCHING
+void func_8004DB8C(RaceItemEffectActor *arg0) {
+    RaceItemDrawNode **drawList;
+    u8 *cursor;
+    RaceItemEffectPayload *payload;
+    s16 state;
+    s32 i;
+    u16 playerIndex;
+
+    if (D_80121B56 == 0) {
+        arg0->unk64 = arg0->unk64 + 1;
+        if (arg0->unk64 == 5) {
+            func_800716E4(arg0);
+            return;
+        }
+    }
+
+    state = arg0->unk64;
+    i = 0;
+    if (state == 0) {
+        arg0->unk64 = state + 1;
+    }
+
+    playerIndex = arg0->playerIndex;
+    cursor = (u8 *)arg0;
+    if (playerIndex >= 4) {
+        playerIndex = 0;
+    }
+
+    drawList = &D_801121D0.heads[playerIndex];
+    payload = &arg0->payload;
+
+loop:
+    *(RaceItemDrawNode **)(cursor + 0x3C) = *drawList;
+    *drawList = (RaceItemDrawNode *)(cursor + 0x3C);
+    *(RaceItemEffectPayload **)(cursor + 0x40) = payload;
+    i++;
+    payload += 1;
+    cursor += 0x14;
+    *(u8 **)(cursor + 0x30) = &D_800D4708[arg0->unk68[arg0->unk64 - 1] * 0x10];
+    if (i != 2) {
+        goto loop;
+    }
+}
+#endif
 
 void func_8004DC6C(RaceItemEffectActor *arg0) {
     arg0->unk64 = 0;
