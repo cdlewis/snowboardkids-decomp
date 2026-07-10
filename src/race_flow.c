@@ -18,6 +18,8 @@
 
 #define COURSE_GRID_ENTRY_FREE -1
 #define COURSE_GRID_ENTRY_END -2
+#define COURSE_TIME_MINUTE 0x177000
+#define COURSE_TIME_SECOND 0x6400
 #define RACE_PLAYER_STATE_SIZE 0x60C
 #define RACE_PLAYER_READY_FLAG 0x40
 #ifdef NON_MATCHING
@@ -36,6 +38,12 @@ typedef struct {
     /* 0x00 */ s16 unk0;
     /* 0x02 */ u8 pad2[0x48 - 0x2];
 } CourseSelectTableEntry;
+
+typedef struct {
+    /* 0x00 */ s8 minutes;
+    /* 0x01 */ s8 seconds;
+    /* 0x02 */ s16 fraction;
+} RaceTime;
 
 typedef union {
     s16 s;
@@ -71,6 +79,23 @@ typedef struct {
 } RaceFlowInitScratch;
 
 typedef struct {
+    /* 0x0000 */ u8 pad0[0x4E];
+    /* 0x004E */ RaceTime timeTrial[5];
+    /* 0x0062 */ u8 pad62[0x156 - 0x62];
+    /* 0x0156 */ RaceTime raceTimes[5];
+} TimeCourseView;
+
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x7756];
+    /* 0x7756 */ u16 values[5];
+} TrickCourseView;
+
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x7832];
+    /* 0x7832 */ u8 values[5];
+} ScoreCourseView;
+
+typedef struct {
     /* 0x000 */ u8 pad0[0x04];
     /* 0x004 */ u8 unk4;
     /* 0x005 */ u8 unk5;
@@ -89,7 +114,9 @@ typedef struct {
     /* 0x2FC */ s32 flags;
     /* 0x300 */ u8 pad300[0x502 - 0x300];
     /* 0x502 */ s16 courseId;
-    /* 0x504 */ u8 pad504[RACE_PLAYER_STATE_SIZE - 0x504];
+    /* 0x504 */ u8 pad504[0x509 - 0x504];
+    /* 0x509 */ s8 result;
+    /* 0x50A */ u8 pad50A[RACE_PLAYER_STATE_SIZE - 0x50A];
 } RacePlayerState;
 
 typedef struct {
@@ -164,8 +191,12 @@ extern u8 D_243270[];
 extern u8 D_80121B55;
 extern u8 D_80121B57;
 extern u8 D_80121B58;
+extern u8 D_80121B5E;
+extern s8 D_80121B5F;
 extern u8 D_80121B60;
 extern s8 D_80121B61;
+extern RaceTime D_80121B74;
+extern u8 D_80121B81;
 extern u8 D_8012482A;
 extern u8 D_80123750;
 extern u8 D_80123751;
@@ -194,6 +225,8 @@ extern u8 D_59DFE0[];
 extern u8 D_59E7F0[];
 extern u8 D_60F1A0[];
 extern u8 D_60F990[];
+extern s16 D_80122040;
+extern s16 D_801222F4;
 
 extern void func_800055EC(void);
 extern void func_800086EC(void);
@@ -211,6 +244,7 @@ extern void func_80065E90(EffectTask *);
 extern void func_80069BC0(EffectTask *);
 extern void func_800483FC(void *, void (*)(s32), s32);
 extern void func_8006D5CC(void);
+extern void func_8005E68C(void *);
 extern void func_8006D520(s32, s32);
 extern void func_8006D580(u16, u16);
 extern void func_8006D700(void);
@@ -1037,7 +1071,158 @@ void func_800751C4(void) {
     }
 }
 
+// func_80076054 best match: 81.749% (nonmatchings/func_80076054-7273315160691878794/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80076054.s")
+
+#ifdef NON_MATCHING
+void func_80076054(void) {
+    RacePlayerState *player;
+    TimeCourseView *timeCourse;
+    TrickCourseView *trickCourse;
+    ScoreCourseView *scoreCourse;
+    RaceTime *time;
+    u16 *trickScore;
+    u8 *scoreValue;
+    s32 i;
+    s32 index;
+    s32 currentTime;
+    s32 recordTime;
+    s32 courseOffset;
+
+    D_800DC4C0 = 0;
+    D_800DEED4 = 0;
+    D_80121B60 = 0;
+    D_80121B61 = 0;
+
+    switch (D_800EC9C2) {
+    case 0:
+        D_80121B5F = 1;
+        i = 0;
+        if (D_80121B55 > 0) {
+            player = D_80121D80;
+            do {
+                if (player->result == 0) {
+                    D_80121B60 = i + 1;
+                }
+                i++;
+                player++;
+            } while (i < D_80121B55);
+        }
+        break;
+
+    case 2:
+        currentTime = (D_80121B74.seconds * COURSE_TIME_SECOND) + D_80121B74.fraction + (D_80121B74.minutes * COURSE_TIME_MINUTE);
+        courseOffset = (D_80121B50.s << 2) + D_80121B50.s;
+        courseOffset <<= 2;
+        timeCourse = (TimeCourseView *)((u8 *)&D_800EC9F0 + courseOffset);
+        index = 0;
+        time = timeCourse->timeTrial;
+        do {
+            recordTime = (time->minutes * COURSE_TIME_MINUTE) + time->fraction + (time->seconds * COURSE_TIME_SECOND);
+            if (currentTime < recordTime) {
+                break;
+            }
+            index += 4;
+            time++;
+        } while (index != 0x14);
+        if (index < 0x14) {
+            D_80121B5F = 1;
+            D_80121B60 = 1;
+            if (index == 0) {
+                D_80121B61 = 1;
+            }
+        } else {
+            D_80121B5F = 2;
+        }
+        break;
+
+    case 1:
+        if (D_80121B5E != 0) {
+            i = 0;
+            if (D_80121B5E != 1) {
+                if (D_80121B5E == 2) {
+                    courseOffset = (D_80121B50.s << 2) + D_80121B50.s;
+                    courseOffset <<= 1;
+                    trickCourse = (TrickCourseView *)((u8 *)&D_800EC9F0 + courseOffset);
+                    trickScore = trickCourse->values;
+                    do {
+                        if (*trickScore < D_80122040) {
+                            break;
+                        }
+                        i++;
+                        trickScore++;
+                    } while (i < 5);
+                    if (D_80121B81 != 0) {
+                        i = 5;
+                    }
+                    if (i < 5) {
+                        D_80121B5F = 1;
+                        D_80121B60 = 1;
+                    } else {
+                        D_80121B5F = 2;
+                    }
+                }
+            } else {
+                courseOffset = (D_80121B50.s << 2) + D_80121B50.s;
+                scoreCourse = (ScoreCourseView *)((u8 *)&D_800EC9F0 + courseOffset);
+                scoreValue = scoreCourse->values;
+                do {
+                    if (*scoreValue < D_801222F4) {
+                        break;
+                    }
+                    i++;
+                    scoreValue++;
+                } while (i < 5);
+                if (D_80121B81 != 0) {
+                    i = 5;
+                }
+                if (i < 5) {
+                    D_80121B5F = 1;
+                    D_80121B60 = 1;
+                } else {
+                    D_80121B5F = 2;
+                }
+            }
+        } else {
+            currentTime = (D_80121B74.seconds * COURSE_TIME_SECOND) + D_80121B74.fraction + (D_80121B74.minutes * COURSE_TIME_MINUTE);
+            courseOffset = (D_80121B50.s << 2) + D_80121B50.s;
+            courseOffset <<= 2;
+            timeCourse = (TimeCourseView *)((u8 *)&D_800EC9F0 + courseOffset);
+            i = 0;
+            time = timeCourse->raceTimes;
+            do {
+                recordTime = (time->minutes * COURSE_TIME_MINUTE) + time->fraction + (time->seconds * COURSE_TIME_SECOND);
+                if (currentTime < recordTime) {
+                    break;
+                }
+                i++;
+                time++;
+            } while (i < 5);
+            if (D_80121B81 != 0) {
+                i = 5;
+            }
+            if (i < 5) {
+                D_80121B5F = 1;
+                D_80121B60 = 1;
+            } else {
+                D_80121B5F = 2;
+            }
+        }
+        break;
+    }
+
+    D_801235B8->unk1C = 0x3C;
+    func_8009956C(func_80076490, 0);
+    if (D_80121B60 != 0) {
+        func_800720E4(6);
+        if ((D_80121B55 == 1) && (D_800EC9C2 == 0)) {
+            func_80071664(func_8005E68C, 6, 0x64, 0xA9);
+        }
+        func_80071664(func_8005393C, 5, 0x64, D_80121B60 - 1);
+    }
+    func_80077C94();
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80076490.s")
 
