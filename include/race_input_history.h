@@ -111,7 +111,9 @@ typedef struct {
     /* 0x2C3 */ s8 unk2C3;
     /* 0x2C4 */ u16 unk2C4;
     /* 0x2C6 */ u16 unk2C6;
-    /* 0x2C8 */ char pad2C8[0x10];
+    /* 0x2C8 */ s32 unk2C8;
+    /* 0x2CC */ s32 unk2CC;
+    /* 0x2D0 */ char pad2D0[8];
     /* 0x2D8 */ s16 unk2D8;
     /* 0x2DA */ s16 trailEffectTimer;
     /* 0x2DC */ u8 unk2DC;
