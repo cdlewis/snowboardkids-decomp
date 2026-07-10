@@ -956,7 +956,7 @@ extern void func_8005AAE4(RaceUiAlpha18Actor *);
 extern void func_8005AE1C(void *);
 extern void func_8005A4BC(void);
 extern void func_8005AC44(RaceUiCounterActor *);
-extern void func_8005B9F8(void);
+extern void func_8005B9F8(RaceUiDualCounterActor *);
 extern void func_8005C14C(void);
 extern void func_8005A0E0(void *);
 extern void func_80061F38(RaceUiFadingImpactActor *);
@@ -2133,7 +2133,125 @@ void func_8005B8E8(RaceUiAlphaActor *arg0) {
     do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80059A04(&D_80121B74, -0x68, -0x37, 0xC); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
+// func_8005B9F8 best match: 84.602% at nonmatchings/func_8005B9F8-4923837976568703863/base_6.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005B9F8.s")
+
+#ifdef NON_MATCHING
+const char D_800E137C[] = "%5d";
+const char D_800E1380[] = "%5d";
+const char D_800E1384[] = "%5d";
+const char D_800E1388[] = "%5d";
+const char D_800E138C[] = "%6d";
+
+void func_8005B9F8(RaceUiDualCounterActor *arg0) {
+    char buf[0x28];
+    SplitWord y;
+    char *ptr;
+    s32 x;
+    s16 tempY;
+
+    y.word = -0x47;
+    x = 0x20;
+    if (arg0->state >= 0) {
+        sprintf(buf, D_800E137C, arg0->leftValue);
+        ptr = buf;
+        while (1) {
+            if (*ptr == 0) {
+                break;
+            }
+            if (*ptr != ' ') {
+                func_80045A78((s16)x, -0x47, func_80043040(D_80112130.popupFontHandle),
+                              (((u8)*ptr) - 5) & 0xFFFF);
+            }
+            x += 8;
+            ptr++;
+        }
+        func_80045A78((s16)x, -0x47, func_80043040(D_80112130.popupFontHandle), 0x37);
+        y.word = -0x27;
+    }
+
+    if (arg0->state > 0) {
+        x = 0x20;
+        sprintf(buf, D_800E1380, arg0->rightValue);
+        tempY = y.half.lo;
+        ptr = buf;
+        while (1) {
+            if (*ptr == 0) {
+                break;
+            }
+            if (*ptr != ' ') {
+                func_80045A78((s16)x, tempY, func_80043040(D_80112130.popupFontHandle),
+                              (((u8)*ptr) - 5) & 0xFFFF);
+            }
+            x += 8;
+            ptr++;
+        }
+        func_80045A78((s16)x, tempY, func_80043040(D_80112130.popupFontHandle), 0x37);
+        y.word += 0x20;
+    }
+
+    if (arg0->state >= 2) {
+        x = 0x20;
+        if (arg0->flag != 0) {
+            sprintf(buf, D_800E1384, arg0->bonus);
+            tempY = y.half.lo;
+            ptr = buf;
+            while (1) {
+                if (*ptr == 0) {
+                    break;
+                }
+                if (*ptr != ' ') {
+                    func_80045A78((s16)x, tempY, func_80043040(D_80112130.popupFontHandle),
+                                  (((u8)*ptr) - 5) & 0xFFFF);
+                }
+                x += 8;
+                ptr++;
+            }
+            func_80045A78((s16)x, tempY, func_80043040(D_80112130.popupFontHandle), 0x37);
+            y.word += 0x20;
+        }
+    }
+
+    if (arg0->state >= 3) {
+        x = 0x20;
+        sprintf(buf, D_800E1388, arg0->leftTarget);
+        tempY = y.half.lo;
+        ptr = buf;
+        while (1) {
+            if (*ptr == 0) {
+                break;
+            }
+            if (*ptr != ' ') {
+                func_80045A78((s16)x, tempY, func_80043040(D_80112130.popupFontHandle),
+                              (((u8)*ptr) - 5) & 0xFFFF);
+            }
+            x += 8;
+            ptr++;
+        }
+        func_80045A78((s16)x, tempY, func_80043040(D_80112130.popupFontHandle), 0x37);
+        y.word += 0x20;
+    }
+
+    if (arg0->state >= 4) {
+        x = 0x18;
+        sprintf(buf, D_800E138C, D_80121D8C);
+        tempY = y.half.lo;
+        ptr = buf;
+        while (1) {
+            if (*ptr == 0) {
+                break;
+            }
+            if (*ptr != ' ') {
+                func_80045A78((s16)x, tempY, func_80043040(D_80112130.popupFontHandle),
+                              (((u8)*ptr) - 5) & 0xFFFF);
+            }
+            x += 8;
+            ptr++;
+        }
+        func_80045A78((s16)x, tempY, func_80043040(D_80112130.popupFontHandle), 0x37);
+    }
+}
+#endif
 
 void func_8005BE68(RaceUiPopupActor *arg0) {
     s32 y;
