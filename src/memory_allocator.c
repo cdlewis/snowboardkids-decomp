@@ -132,6 +132,10 @@ s16 func_80042D58(s32 size) {
 
     alignedSize = ((u32)(size + 0xF) >> 4) * 0x10;
 
+    /*
+     * First try to allocate inside a gap between two existing blocks.
+     * D_80110180 is the sentinel/list head.
+     */
     node = D_80110180.next;
     while (node != NULL) {
         if (node->next == NULL) {
@@ -161,6 +165,7 @@ s16 func_80042D58(s32 size) {
         node = node->next;
     }
 
+    /* No suitable gap was found, so append at the current heap end. */
     available = (D_8011091C + alignedSize) - &D_80160480;
     if (available > 0x1C0000) {
         return -1;
