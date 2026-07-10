@@ -774,6 +774,7 @@ void func_80024A90(CourseSelectIconListActor *arg0) {
 }
 #endif
 
+// func_80024E98 best match: 78.897% (nonmatchings/func_80024E98-7273315160691878794/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024E98.s")
 
 // func_800257F0 best match: 62.914% (nonmatchings/func_800257F0-7273315160691878794/base_1.c)
