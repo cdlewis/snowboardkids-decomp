@@ -18,6 +18,8 @@ typedef struct MenuRenderAssetTableEntry MenuRenderAssetTableEntry;
 typedef struct FontAssetHeader FontAssetHeader;
 typedef struct FontTexture FontTexture;
 typedef struct FontAsset FontAsset;
+typedef struct MenuFontAssetEntry MenuFontAssetEntry;
+typedef struct MenuFontAssetTable MenuFontAssetTable;
 
 struct MenuRenderTask {
     /* 0x00 */ MenuRenderTask *prev;
@@ -65,6 +67,13 @@ struct MenuRenderAssetTableEntry {
     /* 0x7 */ u8 height;
 };
 
+struct MenuFontAssetEntry {
+    /* 0x0 */ s32 imageOffset;
+    /* 0x4 */ u16 textureIndex;
+    /* 0x6 */ u8 width;
+    /* 0x7 */ u8 height;
+};
+
 struct FontAssetHeader {
     /* 0x0 */ s32 unk0;
     /* 0x4 */ s32 entryCount;
@@ -82,10 +91,17 @@ struct FontAsset {
     /* 0x8 */ FontTexture textures[1];
 };
 
+struct MenuFontAssetTable {
+    /* 0x0 */ s32 unk0;
+    /* 0x4 */ s32 entryCount;
+    /* 0x8 */ MenuFontAssetEntry entries[1];
+};
+
 typedef void (*MenuRenderSpriteActorCallback)(MenuRenderSpriteActor *);
 typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
 extern void func_800483FC(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
+extern void *func_80048594(s32 size);
 s32 func_80011D74(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
 void func_800112F4(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, s32 arg6, s32 arg7);
 void func_8000F0EC(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7, s32 arg8, s32 arg9,
@@ -97,6 +113,8 @@ void func_80012AE4(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 arg5);
 void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
 extern RenderCallbackNode *D_80124868;
 extern Gfx *gRegionAllocPtr;
+extern s16 D_80112130[];
+extern s16 D_80112132[];
 extern u32 D_80123758;
 extern Gfx D_800DEFF8[];
 extern s16 D_800B51F0[][2];
@@ -106,7 +124,6 @@ extern s16 D_8015660A;
 extern s16 D_8015660C;
 extern s16 D_8015660E;
 extern s16 D_80156610;
-extern void *func_80048594(s32 size);
 
 // func_8000EA80 best match: 78.118% (nonmatchings/func_8000EA80-4923837976568703863/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000EA80.s")
@@ -771,7 +788,123 @@ void func_80013154(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, v
 }
 #endif
 
+// func_80013284 best match: 72.443% (nonmatchings/func_80013284-7273315160691878794/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013284.s")
+
+#ifdef NON_MATCHING
+void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale, u16 paletteIndex, s32 fontBank) {
+    MenuFontAssetTable *font;
+    s32 glyphWidth;
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 viewHalfWidth;
+    s32 viewHalfHeight;
+    s32 minX;
+    s32 maxX;
+    s32 minY;
+    s32 maxY;
+    s32 clipS;
+    s32 clipT;
+    s32 drawX0;
+    s32 drawY0;
+    s32 drawX1;
+    s32 drawY1;
+    u16 *srcPalette;
+    u16 *dstPalette;
+    MenuFontAssetEntry *entry;
+    s32 i;
+    u16 color;
+    s32 red;
+    s32 green;
+    s32 blue;
+    s32 line;
+
+    if (palette == 0) {
+        font = (MenuFontAssetTable *)func_80043040(D_80112130[(u16)fontBank]);
+        glyphWidth = 0x10;
+    } else {
+        font = (MenuFontAssetTable *)func_80043040(D_80112132[(u16)fontBank]);
+        glyphWidth = 8;
+    }
+
+    x0 = x + D_8015660E;
+    y0 = y + D_80156610;
+    x1 = x0 + glyphWidth;
+    y1 = y0 + 0x10;
+    clipS = 0;
+    clipT = 0;
+
+    viewHalfWidth = D_8015660A / 2;
+    maxX = D_8015660E + viewHalfWidth;
+    if (x0 < maxX) {
+        minX = D_8015660E - viewHalfWidth;
+        viewHalfHeight = D_8015660C / 2;
+        maxY = D_80156610 + viewHalfHeight;
+        if ((y0 < maxY) && (x1 >= minX)) {
+            minY = D_80156610 - viewHalfHeight;
+            if (y1 >= minY) {
+                if (x0 < minX) {
+                    clipS = minX - x0;
+                    x0 = minX;
+                }
+                if (y0 < minY) {
+                    clipT = minY - y0;
+                    y0 = minY;
+                }
+                if (x1 >= maxX) {
+                    x1 = maxX - 1;
+                }
+                if (y1 >= maxY) {
+                    y1 = maxY - 1;
+                }
+                drawX0 = x0;
+                drawY0 = y0;
+                drawX1 = x1;
+                drawY1 = y1;
+
+                dstPalette = func_80048594(0x20);
+                srcPalette = (u16 *)(&font->entries[font->entryCount]) + ((u16)paletteIndex * 0x10);
+                for (i = 0; i != 0x10; i++) {
+                    color = srcPalette[i];
+                    dstPalette[i] = color;
+                    if (color & 1) {
+                        red = (((color >> 11) & 0x1F) * paletteScale) / 0x100;
+                        green = (((color >> 6) & 0x1F) * paletteScale) / 0x100;
+                        blue = (((color >> 1) & 0x1F) * paletteScale) / 0x100;
+                        dstPalette[i] = (red << 11) | (green << 6) | (blue << 1) | 1;
+                    }
+                }
+
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)dstPalette);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+
+                entry = &font->entries[glyph];
+                FONT_GFX_CMD(gRegionAllocPtr++, (((entry->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                             (u32)((u8 *)font + entry->imageOffset));
+                line = ((((entry->width + 1) >> 1) + 7) >> 3) & 0x1FF;
+                FONT_GFX_CMD(gRegionAllocPtr++, (line << 9) | 0xF5480000, 0x07080200);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                             (((entry->width * 2) & 0xFFF) << 12) | 0x07000000 | ((entry->height * 4) & 0xFFF));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++, (line << 9) | 0xF5400000, 0x00080200);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                             (((entry->width * 4) & 0xFFF) << 12) | ((entry->height * 4) & 0xFFF));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE4000000 | (((drawX1 * 4) & 0xFFF) << 12) | ((drawY1 * 4) & 0xFFF),
+                             (((drawX0 * 4) & 0xFFF) << 12) | ((drawY0 * 4) & 0xFFF));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, ((clipS << 21) & 0xFFFF0000) | ((clipT << 5) & 0xFFFF));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
+            }
+        }
+    }
+}
+#endif
 
 // func_800137C8 best match: 73.956% (nonmatchings/func_800137C8-2225551288923588688/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_800137C8.s")
