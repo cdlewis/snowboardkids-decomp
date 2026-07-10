@@ -302,7 +302,69 @@ void func_80010074(s16 x, s16 y, FontAsset *asset, u16 index, s32 alpha) {
 }
 #endif
 
+// func_8001061C best match: 82.830% (nonmatchings/func_8001061C-2225551288923588688/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8001061C.s")
+
+#ifdef NON_MATCHING
+void func_8001061C(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u8 srcY, u8 width, u8 height, u16 scaleX,
+                   u16 scaleY) {
+    FontTexture *texture;
+    u8 *paletteBase;
+    s32 left;
+    s32 top;
+    s32 right;
+    s32 bottom;
+    s16 maxY;
+    s16 maxX;
+    s32 minY;
+    s32 minX;
+    s32 texS;
+    s32 texT;
+    s32 halfY;
+    s32 halfX;
+
+    texture = &asset->textures[index];
+    paletteBase = (u8 *)asset + (asset->header.entryCount * sizeof(FontTexture)) + 8;
+    left = (x + D_8015660E) << 2;
+    top = (y + D_80156610) << 2;
+    right = (((width * scaleX) << 2) >> 5) + left;
+    bottom = (((height * scaleY) << 2) >> 5) + top;
+    texS = srcX << 5;
+    texT = srcY << 5;
+
+    halfY = D_8015660C / 2;
+    minY = (s16)((D_80156610 - halfY) << 2);
+    maxY = (D_80156610 + halfY) << 2;
+    halfX = D_8015660A / 2;
+    minX = (s16)((D_8015660E - halfX) << 2);
+    maxX = (D_8015660E + halfX) << 2;
+
+    if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
+        if (left < minX) {
+            texS += (((minX - left) << 8) / scaleX);
+            left = minX;
+        }
+        if (top < minY) {
+            texT += (((minY - top) << 8) / scaleY);
+            top = minY;
+        }
+        if (right >= maxX) {
+            right = maxX - 4;
+        }
+        if (bottom >= maxY) {
+            bottom = maxY - 4;
+        }
+
+        gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)((u32)asset + texture->imageOffset + 0x80000000), G_IM_FMT_CI,
+                              texture->width, texture->height, 0, 0, texture->width, texture->height, 0, G_TX_WRAP,
+                              G_TX_WRAP, 0, 0, 0, 0);
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
+                          (u8 *)((u32)paletteBase + (texture->paletteIndex * 0x20) + 0x80000000));
+        gSPTextureRectangle(gRegionAllocPtr++, left, top, right, bottom, 0, texS, texT, 0x8000 / scaleX,
+                            0x8000 / scaleY);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80010BCC.s")
 
