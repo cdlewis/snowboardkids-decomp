@@ -113,55 +113,70 @@ void func_80042A58(s32 modelIndex, s32 renderFrame) {
     func_800483FC(&D_801248B0, func_80042574, model);
 }
 
-// func_80042AB4 best match: 93.231% at nonmatchings/func_80042AB4-2127290767680699791/base_8.c.
+// func_80042AB4 best match: 99.077% at nonmatchings/func_80042AB4-2225551288923588688/base_10.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_80042AB4.s")
 
 #ifdef NON_MATCHING
+typedef struct MainMenuInitPartPair {
+    s32 word0;
+    s32 word4;
+    char pad8[0x2];
+    s16 halfA;
+    s16 halfC;
+    s16 halfE;
+    s32 word10;
+    s32 word14;
+    s32 word18;
+    s16 half1C;
+    s16 half1E;
+    s16 half20;
+    s16 half22;
+    s32 word24;
+} MainMenuInitPartPair;
+
 extern s16 *D_800D3EE4[];
 
 void func_80042AB4(MainMenuSceneModel *model) {
     s16 *cursor;
     s32 i;
+    s32 end;
     s16 zero;
-    u8 *writePart;
+    volatile MainMenuInitPartPair *writePart;
 
-    *(s8 *)((u8 *)model + 0x1C) = -1;
-    *(s8 *)((u8 *)model + 0x30) = -1;
-    *(s8 *)((u8 *)model + 0x44) = 1;
-    *(s8 *)((u8 *)model + 0x58) = 2;
-    *(s8 *)((u8 *)model + 0x6C) = 1;
-    *(s8 *)((u8 *)model + 0x80) = 4;
-    *(s8 *)((u8 *)model + 0x94) = 1;
-    *(s8 *)((u8 *)model + 0xA8) = 6;
-    *(s8 *)((u8 *)model + 0xBC) = 6;
-    *(s8 *)((u8 *)model + 0xD0) = 8;
-    *(s8 *)((u8 *)model + 0xE4) = 6;
-    *(s8 *)((u8 *)model + 0xF8) = 10;
-    *(s8 *)((u8 *)model + 0x10C) = 3;
-    *(s8 *)((u8 *)model + 0x120) = 5;
+    model->parts[0].displayObjectIndex = -1;
+    model->parts[1].displayObjectIndex = -1;
+    model->parts[2].displayObjectIndex = 1;
+    model->parts[3].displayObjectIndex = 2;
+    model->parts[4].displayObjectIndex = 1;
+    model->parts[5].displayObjectIndex = 4;
+    model->parts[6].displayObjectIndex = 1;
+    model->parts[7].displayObjectIndex = 6;
+    model->parts[8].displayObjectIndex = 6;
+    model->parts[9].displayObjectIndex = 8;
+    model->parts[10].displayObjectIndex = 6;
+    model->parts[11].displayObjectIndex = 10;
+    model->parts[12].displayObjectIndex = 3;
+    model->parts[13].displayObjectIndex = 5;
 
     cursor = D_800D3EE4[model->modelIndex];
-    i = 0;
-    writePart = (u8 *)model;
-loop:
-    *(s16 *)(writePart + 0x22) = 0;
-    zero = *(s16 *)(writePart + 0x22);
+    end = 14; i = 0; writePart = (MainMenuInitPartPair *)model; loop: writePart->half22 = 0;
+    zero = writePart->half22;
     i += 2;
-    *(s16 *)(writePart + 0x20) = zero;
-    *(s16 *)(writePart + 0x1E) = zero;
-    *(s32 *)(writePart + 0x24) = cursor[0] << 16;
+    writePart->half20 = zero;
+    writePart->half1E = zero;
+    writePart->word24 = cursor[0] << 16;
     cursor += 6;
-    writePart += 0x28;
-    *(s32 *)(writePart + 0x0) = cursor[-5] << 16;
-    *(s16 *)(writePart + 0xE) = 0;
-    zero = *(s16 *)(writePart + 0xE);
-    *(s32 *)(writePart + 0x4) = cursor[-4] << 16;
-    *(s16 *)(writePart + 0xC) = zero;
-    *(s16 *)(writePart + 0xA) = zero;
-    *(s32 *)(writePart + 0x10) = cursor[-3] << 16;
-    *(s32 *)(writePart + 0x14) = cursor[-2] << 16;
-    *(s32 *)(writePart + 0x18) = cursor[-1] << 16;
-    if (i != 14) {
+    writePart++;
+    writePart->word0 = cursor[-5] << 16;
+    writePart->halfE = 0;
+    zero = writePart->halfE;
+    writePart->word4 = cursor[-4] << 16;
+    writePart->halfC = zero;
+    writePart->halfA = zero;
+    writePart->word10 = cursor[-3] << 16;
+    writePart->word14 = cursor[-2] << 16;
+    writePart->word18 = cursor[-1] << 16;
+    if (i != end) {
         goto loop;
     }
 }
