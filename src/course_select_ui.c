@@ -63,6 +63,18 @@ typedef struct {
     /* 0x5D */ u8 unk5D;
 } CourseSelectWidgetInitActor;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 coordinates[0x40];
+    /* 0x98 */ u8 itemCounts[4];
+    /* 0x9C */ u8 pad9C[4];
+    /* 0xA0 */ s16 clipLeft;
+    /* 0xA2 */ s16 clipRight;
+    /* 0xA4 */ s16 clipTop;
+    /* 0xA6 */ s16 clipBottom;
+} CourseSelectIconListActor;
+
+extern void func_8000F0EC(s16, s16, s32, u16, u16, u16, u8, u8, s32, s32, s32, s32);
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void func_80023880(void *);
 extern void func_80025AA8(CourseSelectWidgetActor *);
@@ -78,8 +90,10 @@ extern s8 D_8010AE64[];
 extern u8 D_8010AECC[];
 extern s32 D_8010AEE8[];
 extern u8 D_8010AEFB[];
+extern u8 D_8010AEA4[];
 extern u8 D_8010AEB0;
 extern u8 D_8010AEA0[];
+extern u8 D_8010AF46;
 extern u8 D_8010AF18[];
 extern u8 D_8010AF1C;
 extern s16 D_800EC9D0[];
@@ -92,7 +106,9 @@ extern s16 D_800B70A8[][4];
 extern s16 D_800B70C0[][4];
 extern s16 D_800B70D8[][2];
 extern s16 D_80112130[];
+extern s16 D_80112172;
 extern s16 D_8011217A;
+extern s16 D_8011217E;
 extern u8 D_80121B55;
 extern CourseSelectRacePlayer D_80121D80[];
 extern u8 D_80121D88;
@@ -405,7 +421,95 @@ void func_80024968(void *arg0) {
     func_80071824(actor, func_80024380);
 }
 
+// func_80024A90 best match: 90.174% (nonmatchings/func_80024A90-2225551288923588688/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024A90.s")
+
+#ifdef NON_MATCHING
+void func_80024A90(CourseSelectIconListActor *arg0) {
+    CourseSelectIconListActor *sp8C;
+    CourseSelectIconListActor *sp74;
+    u8 *sp60;
+    s32 i;
+    s32 j;
+    s32 alpha;
+    s32 tileIndex;
+    s32 clipOffset;
+    s32 courseId;
+    s32 selectedCourse;
+    CourseSelectRacePlayer *player;
+    s16 *position;
+
+    sp8C = arg0;
+    i = 0;
+    if ((s32)D_80121B55 > 0) {
+        sp60 = (u8 *)arg0;
+        do {
+            j = 0;
+            if (sp60[0x98] > 0) {
+                sp74 = (CourseSelectIconListActor *)((u8 *)sp8C + i);
+                do {
+                    if (j < (sp60[0x98] - 1)) {
+                        position = &arg0->coordinates[(i * 5) + j];
+                        player = &D_80121D80[i];
+                        alpha = 0;
+                        clipOffset = (i >= 2) * 0x8C;
+                        if (D_80121B55 == 1) {
+                            if (player->state != 5) {
+                                tileIndex = (j + 1) & 0xFFFF;
+                            } else {
+                                tileIndex = (j + 6) & 0xFFFF;
+                            }
+                        } else if (player->state != 5) {
+                            tileIndex = (j + 0x14) & 0xFFFF;
+                        } else {
+                            tileIndex = (j + 0x18) & 0xFFFF;
+                        }
+
+                        selectedCourse = D_8010AEA4[i];
+                        if ((selectedCourse > 0) && (selectedCourse < 8)) {
+                            courseId = player->pad6[0];
+                            if (courseId >= 9) {
+                                if ((j == 3) && (selectedCourse & 1)) {
+                                    alpha = 0xFF;
+                                }
+                            } else if ((j == (courseId % 3)) && (selectedCourse & 1)) {
+                                alpha = 0xFF;
+                            }
+                        }
+
+                        func_8000F0EC(position[0], position[20], func_80043040(D_80112172),
+                                      tileIndex & 0xFFFF, 0x20, 0x20, 0, alpha,
+                                      arg0->clipLeft - clipOffset, arg0->clipTop, arg0->clipRight,
+                                      arg0->clipBottom);
+                    } else if (D_80121B55 == 1) {
+                        alpha = 0;
+                        selectedCourse = D_8010AEA4[i];
+                        position = &arg0->coordinates[(i * 5) + j];
+                        clipOffset = (i >= 2) * 0x88;
+                        if ((selectedCourse > 0) && (selectedCourse < 8) && (D_8010AF46 == 1) &&
+                            (selectedCourse & 1)) {
+                            alpha = 0xFF;
+                        }
+
+                        if (D_800EC9C2 == 3) {
+                            func_8000F0EC(position[0], position[20], func_80043040(D_8011217E), 5, 0x20,
+                                          0x20, 0, alpha, arg0->clipLeft - clipOffset, arg0->clipTop,
+                                          arg0->clipRight, arg0->clipBottom);
+                        } else {
+                            func_8000F0EC(position[0], position[20], func_80043040(D_80112172), 5, 0x20,
+                                          0x20, 0, alpha, arg0->clipLeft - clipOffset, arg0->clipTop,
+                                          arg0->clipRight, arg0->clipBottom);
+                        }
+                    }
+                    j++;
+                } while (j < sp74->itemCounts[0]);
+            }
+            i++;
+            sp60++;
+        } while (i < (s32)D_80121B55);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024E98.s")
 
