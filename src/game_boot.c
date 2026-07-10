@@ -293,13 +293,13 @@ void func_80099790(void) {
     D_8010ADFA = 0;
 }
 
-// func_800998E4 best match: 87.659% at nonmatchings/func_800998E4-7273315160691878794/base_18.c.
+// func_800998E4 best match: 87.864% at nonmatchings/func_800998E4-7273315160691878794/base_21.c.
 #ifdef NON_MATCHING
 void func_800998E4(void *arg0) {
     OSMesg msg;
     s32 done;
-    s16 type;
     s32 initialized;
+    s32 finalType;
     OSMesgQueue *queue18;
     OSMesgQueue *queue70;
     OSMesgQueue *queue50;
@@ -318,8 +318,7 @@ loop_1:
         if ((osRecvMesg(queue18, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue70, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue50, &msg, OS_MESG_NOBLOCK) != 0)) {
             goto loop_1;
         }
-        type = *(s16 *)msg;
-        switch (type) {
+        switch (*(s16 *)msg) {
         case 1:
             D_80124828 = D_800DF150;
             if (initialized == 0) {
@@ -377,7 +376,7 @@ loop_1:
     func_80000A8C(1);
     func_80000A8C(2);
     func_80000A8C(3);
-    type = 1;
+    finalType = 1;
 loop_16:
     do {
 loop_17:
@@ -386,7 +385,7 @@ loop_17:
                 goto loop_17;
             }
         }
-    } while (*(s16 *)msg != type);
+    } while (*(s16 *)msg != finalType);
     func_80000A40(0);
     func_80000A40(1);
     func_80000A40(2);
