@@ -27,6 +27,11 @@ typedef struct {
     s8 order3;
 } PlayerOrder;
 
+typedef struct {
+    s32 pad[3];
+    s32 speed;
+} MovementSpeedScratch;
+
 extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
 extern s32 func_8004940C(s32, s32, s32, s32);
 extern s16 func_8004908C(s32, s32);
@@ -36,6 +41,8 @@ extern void func_80097C84(Matrix4s, s16);
 extern void func_80097CF0(Matrix4s, Matrix4s, Matrix4s);
 extern void func_80097DA4(Matrix4s, s16, s16, s16);
 extern void func_80097FE4(Matrix4s, s16, s16, RaceInputPlayer *);
+extern void func_800980D0(Matrix4s, s16, s16);
+extern void func_80098124(Matrix4s, s16, s16);
 extern void func_800981C8(Matrix4s, s16, s16, s16);
 extern void func_80098458(Matrix4s, s16, s16, s16);
 extern void func_80098590(Matrix4s, RaceVec3i *, RaceVec3i *);
@@ -844,7 +851,98 @@ void func_8008B60C(RaceVec3i *vec, RaceInputPlayer *player) {
     }
 }
 
+// func_8008B73C best match: 99.739% (nonmatchings/func_8008B73C-2225551288923588688/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008B73C.s")
+
+#ifdef NON_MATCHING
+void func_8008B73C(RaceInputPlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+    volatile s32 pad[8];
+    TransformScratch scratch;
+    MovementSpeedScratch speedScratch;
+    s32 sin;
+    s32 cos;
+    s32 useHalfLimit;
+
+    sin = func_80097AE8(-player->facingAngle);
+    cos = func_80097B48(-player->facingAngle);
+
+    scratch.localPos.x = ((s64)player->unk40.x * cos + (s64)player->unk40.z * sin) / 0x1000;
+    scratch.localPos.z = ((s64)player->unk40.x * -sin + (s64)player->unk40.z * cos) / 0x1000;
+    scratch.localPos.y = player->unk40.y;
+
+    func_80098124(scratch.rotationMtx, -player->unk2F0, -player->unk2F4);
+    func_80098590(scratch.rotationMtx, &scratch.localPos, &scratch.worldPos);
+
+    if (arg1 > 0) {
+        if (scratch.worldPos.z < 0x30000) {
+            scratch.worldPos.z += arg1;
+        }
+    } else if (scratch.worldPos.z >= -0x2FFFF) {
+        scratch.worldPos.z += arg1;
+    }
+
+    scratch.worldPos.z += arg2;
+    useHalfLimit = 0;
+    if (scratch.worldPos.y < 0) {
+        scratch.worldPos.y = 0;
+    }
+
+    if (scratch.worldPos.z < 0) {
+        speedScratch.speed = arg4;
+    } else {
+        speedScratch.speed = arg5;
+        if (arg4 != speedScratch.speed) {
+            useHalfLimit = 1;
+        }
+    }
+
+    if (useHalfLimit != 0) {
+        func_8008B60C(&scratch.worldPos, player);
+    } else {
+        func_8008B508(&scratch.worldPos, player);
+    }
+
+    if (scratch.worldPos.z >= 0) {
+        if (speedScratch.speed < scratch.worldPos.z) {
+            scratch.worldPos.z -= speedScratch.speed;
+        } else {
+            scratch.worldPos.z = 0;
+        }
+    } else if (scratch.worldPos.z < -speedScratch.speed) {
+        scratch.worldPos.z += speedScratch.speed;
+    } else {
+        scratch.worldPos.z = 0;
+    }
+
+    if (scratch.worldPos.x >= 0) {
+        if (arg3 < scratch.worldPos.x) {
+            scratch.worldPos.x -= arg3;
+        } else {
+            scratch.worldPos.x = 0;
+        }
+    } else if (scratch.worldPos.x < -arg3) {
+        scratch.worldPos.x += arg3;
+    } else {
+        scratch.worldPos.x = 0;
+    }
+
+    player->unk258 = scratch.worldPos.x;
+    player->unk254 = scratch.worldPos.z;
+
+    func_800980D0(scratch.rotationMtx, player->unk2F0, player->unk2F4);
+    func_80098590(scratch.rotationMtx, &scratch.worldPos, &scratch.localPos);
+
+    player->unk74 = scratch.localPos.y + 0x1000;
+    scratch.localPos.y = (scratch.localPos.y + player->unk40.y) - scratch.localPos.y;
+
+    sin = func_80097AE8(player->facingAngle);
+    cos = func_80097B48(player->facingAngle);
+
+    player->unk40.x = ((s64)scratch.localPos.x * cos + (s64)scratch.localPos.z * sin) / 0x1000;
+    player->unk40.z = ((s64)scratch.localPos.x * -sin + (s64)scratch.localPos.z * cos) / 0x1000;
+    player->unk40.y = scratch.localPos.y;
+}
+#endif
 
 void func_8008BB20(RaceInputPlayer *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     func_8008B73C(arg0, arg1, 0, arg2, arg3, arg4);
