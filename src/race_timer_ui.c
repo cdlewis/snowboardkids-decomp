@@ -1027,14 +1027,14 @@ void func_8007A8EC(void) {
 }
 #endif
 
-// func_8007AA50 best match: 92.779% at nonmatchings/func_8007AA50-7273315160691878794/base_3.c.
+// func_8007AA50 best match: 93.254% at nonmatchings/func_8007AA50-7273315160691878794/base_17.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_8007AA50.s")
 
 #ifdef NON_MATCHING
 void func_8007AA50(void) {
+    RaceTimer sp38;
     s32 sp40;
     s32 sp3C;
-    RaceTimer sp38;
     RaceTimerUiPlayer *player;
     s16 i;
 
@@ -1121,7 +1121,7 @@ void func_8007AA50(void) {
         func_800483FC(&D_80124878, func_80079F04, 0);
         func_800483FC(&D_80124888, func_8007A108, 0);
         func_8007A8EC();
-        if (D_80121B70 == 2) {
+        if ((s16)D_80121B70 == 2) {
             func_800483FC(&D_80124868, func_8007A278, 0);
         }
         return;
