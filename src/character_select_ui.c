@@ -2508,7 +2508,149 @@ void func_800227A0(CharacterSelectWidgetActor *arg0) {
     func_80071824(arg0, func_8002262C);
 }
 
+// func_800227D8 best match: 90.478% (nonmatchings/func_800227D8-2225551288923588688/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_800227D8.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x4E];
+    /* 0x004E */ u8 courseStatsNames[10][5][4];
+} CharacterSelectCourseStatsNameData;
+
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x156];
+    /* 0x0156 */ u8 resultNames[10][5][4];
+} CharacterSelectResultNameData;
+
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x7756];
+    /* 0x7756 */ u16 trickValues[10][5];
+} CharacterSelectStatsData;
+
+extern u8 D_800EC9F0[];
+extern u8 D_800F41EB[];
+extern u8 D_800F4222[];
+extern u8 D_800F4259[];
+extern u8 D_800F4290[];
+
+void func_800227D8(CharacterSelectWidgetActor *arg0) {
+    volatile u8 padding[0x40];
+    s16 *courseIds;
+    u16 sp72;
+    u16 sp70;
+    volatile u8 color;
+    u8 *trickIcon;
+    s16 *selectedCoursePtr;
+    s32 quotient;
+    s32 var_s1;
+    s32 var_s4;
+    s32 var_s4_2;
+    s32 var_s5;
+    s32 var_s7;
+    u16 var_s0;
+
+    if (D_800EC9C2 == 2) {
+        courseIds = D_800B3420[D_8010ADF9];
+    } else if ((s32)D_80121B5E < 2) {
+        courseIds = D_800B3478;
+    } else {
+        courseIds = D_800B3480;
+    }
+
+    var_s7 = 0;
+    var_s5 = 0;
+    do {
+        if (var_s7 < 3) {
+            color = 6;
+        } else {
+            color = 4;
+        }
+
+        func_8000F030(arg0->x, (s16)(arg0->y + var_s5), func_80043040(D_80112130.popupFontHandle),
+                      (var_s7 + 0x77) & 0xFFFF, 0x20, 0x20, 0, 0);
+
+        if (D_80121B55 == 1) {
+            if (D_800EC9C2 != 2) {
+                if (D_80121B5E == 0) {
+                    if (var_s7 < 3) {
+                        color = 0xC;
+                    } else {
+                        color = 0xD;
+                    }
+                    func_80023618((CharacterSelectTime *)((CharacterSelectResultNameData *)D_800EC9F0)->resultNames[courseIds[D_80121B50]][var_s7],
+                                  arg0->x + 0x14, arg0->y + var_s5, color);
+                    func_8000F030((s16)(arg0->x + 0x54), (s16)(arg0->y + var_s5),
+                                  func_80043040(D_80112130.popupFontHandle),
+                                  ((D_800F4290[(courseIds[D_80121B50] * 5) + var_s7] & 7) + 0x51) & 0xFFFF, 0x20, 0x20, 0, 0);
+                    func_8000F030((s16)(arg0->x + 0x65), (s16)(arg0->y + var_s5),
+                                  func_80043040(D_80112130.popupFontHandle),
+                                  ((D_800F4290[(courseIds[D_80121B50] * 5) + var_s7] >> 3) + 0x7C) & 0xFFFF, 0x20, 0x20, 0, 0);
+                } else if (D_80121B5E == 1) {
+                    if (var_s7 < 3) {
+                        var_s4 = 0xC;
+                    } else {
+                        var_s4 = 0xD;
+                    }
+                    selectedCoursePtr = &courseIds[D_80121B50];
+                    quotient = D_800F4222[((*selectedCoursePtr * 5) + var_s7)] / 10;
+                    sp70 = quotient;
+                    if (sp70 != 0) {
+                        func_8000F030((s16)(arg0->x + 0x18), (s16)(arg0->y + var_s5),
+                                      func_80043040(D_80112130.popupFontHandle), (sp70 + 0x2B) & 0xFFFF, 0x20, 0x20, 0,
+                                      var_s4 + 1);
+                        selectedCoursePtr = &courseIds[D_80121B50];
+                    }
+                    sp72 = D_800F4222[((*selectedCoursePtr * 5) + var_s7)] % 10;
+                    func_8000F030((s16)(arg0->x + 0x20), (s16)(arg0->y + var_s5), func_80043040(D_80112130.popupFontHandle),
+                                  (sp72 + 0x2B) & 0xFFFF, 0x20, 0x20, 0, (var_s4 + 1) & 0xFF);
+                    func_80013D0C((s16)(arg0->x + 0x28), (s16)(arg0->y + var_s5 + 8), "HIT", color, 0x100);
+                    func_8000F030((s16)(arg0->x + 0x48), (s16)(arg0->y + var_s5),
+                                  func_80043040(D_80112130.popupFontHandle),
+                                  ((D_800F4259[(courseIds[D_80121B50] * 5) + var_s7] & 7) + 0x51) & 0xFFFF, 0x20, 0x20, 0, 0);
+                    func_8000F030((s16)(arg0->x + 0x60), (s16)(arg0->y + var_s5),
+                                  func_80043040(D_80112130.popupFontHandle),
+                                  ((D_800F4259[(courseIds[D_80121B50] * 5) + var_s7] >> 3) + 0x7C) & 0xFFFF, 0x20, 0x20, 0, 0);
+                } else {
+                    trickIcon = &D_800EC9F0[var_s7];
+                    if (var_s7 < 3) {
+                        var_s4_2 = 0xC;
+                    } else {
+                        var_s4_2 = 0xD;
+                    }
+                    var_s0 = ((CharacterSelectStatsData *)D_800EC9F0)->trickValues[0][var_s7];
+                    var_s1 = 0;
+                    do {
+                        func_8000F030((s16)((arg0->x - var_s1) + 0x38), (s16)(arg0->y + var_s5),
+                                      func_80043040(D_80112130.popupFontHandle), ((var_s0 % 10) + 0x2B) & 0xFFFF, 0x20, 0x20, 0,
+                                      (var_s4_2 + 1) & 0xFF);
+                        var_s1 += 8;
+                        var_s0 = var_s0 / 10;
+                    } while (var_s0 != 0);
+                    func_80013D0C((s16)(arg0->x + 0x40), (s16)(arg0->y + var_s5 + 8), "P", color, 0x100);
+                    func_8000F030((s16)(arg0->x + 0x4C), (s16)(arg0->y + var_s5), func_80043040(D_80112130.popupFontHandle),
+                                  ((trickIcon[0x77E7] & 7) + 0x51) & 0xFFFF, 0x20, 0x20, 0, 0);
+                    func_8000F030((s16)(arg0->x + 0x60), (s16)(arg0->y + var_s5), func_80043040(D_80112130.popupFontHandle),
+                                  ((trickIcon[0x77E7] >> 3) + 0x7C) & 0xFFFF, 0x20, 0x20, 0, 0);
+                }
+            } else {
+                if (var_s7 < 3) {
+                    color = 0xC;
+                } else {
+                    color = 0xD;
+                }
+                func_80023618((CharacterSelectTime *)((CharacterSelectCourseStatsNameData *)D_800EC9F0)->courseStatsNames[courseIds[D_80121B50]][var_s7],
+                              arg0->x + 0x14, arg0->y + var_s5, color);
+                func_8000F030((s16)(arg0->x + 0x54), (s16)(arg0->y + var_s5), func_80043040(D_80112130.popupFontHandle),
+                              ((D_800F41EB[(courseIds[D_80121B50] * 5) + var_s7] & 7) + 0x51) & 0xFFFF, 0x20, 0x20, 0, 0);
+                func_8000F030((s16)(arg0->x + 0x65), (s16)(arg0->y + var_s5), func_80043040(D_80112130.popupFontHandle),
+                              ((D_800F41EB[(courseIds[D_80121B50] * 5) + var_s7] >> 3) + 0x7C) & 0xFFFF, 0x20, 0x20, 0, 0);
+            }
+        }
+        var_s7++;
+        var_s5 += 0x14;
+    } while (var_s7 != 5);
+}
+#endif
 
 void func_80023198(CharacterSelectWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
