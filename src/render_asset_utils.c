@@ -96,6 +96,7 @@ extern s32 D_80112358;
 extern s32 D_80112360;
 extern s32 D_80112408;
 extern s32 D_80112410;
+extern s16 D_80112130;
 extern s16 D_8011213E;
 extern s16 D_801121B0;
 extern s16 D_8015660A;
@@ -108,7 +109,39 @@ extern s8 D_80112560;
 extern s8 D_80112610;
 extern s8 D_801126C0;
 
+// func_800458E0 best match: 97.917%
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_800458E0.s")
+
+#ifdef NON_MATCHING
+void func_800458E0(void)
+{
+    s16 **new_var;
+    s16 *end;
+    s16 *handle;
+    s16 *new_var2;
+
+    end = &D_801121B0;
+    do {
+        ;
+        if (1) {
+            handle = &D_80112130;
+        }
+        end = (new_var2 = &D_801121B0);
+        do {
+            *handle++ = -1;
+            new_var2 = &D_801121B0;
+            *handle++ = -((0, 1));
+            *handle++ = -1;
+            if (!end) {
+            }
+dummy_label_220868:
+            ;
+            *handle++ = -1;
+            end = new_var2;
+        } while (*(&handle) != end);
+    } while (0 != 0);
+}
+#endif
 
 void func_80045914(void)
 {
@@ -1173,7 +1206,6 @@ void func_80048278(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
     }
 }
 
-extern s16 D_80112130;
 extern s32 D_801121B8;
 
 void func_80048338(void) {
