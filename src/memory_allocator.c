@@ -127,18 +127,19 @@ extern MemoryBlock D_80110180;
 s16 func_80042D58(s32 size) {
     MemoryBlock *node;
     MemoryBlock *newBlock;
-    MemoryBlock *next;
     u32 available;
+    u32 alignedSize;
+
+    alignedSize = ((u32)(size + 0xF) >> 4) * 0x10;
 
     node = D_80110180.next;
     while (node != NULL) {
-        next = node->next;
-        if (next == NULL) {
+        if (node->next == NULL) {
             break;
         }
 
-        available = (next->start - node->start) - node->size;
-        if (available >= (((u32)(size + 0xF) >> 4) * 0x10)) {
+        available = (node->next->start - node->start) - node->size;
+        if (available >= alignedSize) {
             newBlock = func_80042CDC();
             if (newBlock == NULL) {
                 return -1;
@@ -146,43 +147,48 @@ s16 func_80042D58(s32 size) {
 
             newBlock->prev = node;
             newBlock->next = node->next;
-
-            next = node->next;
-            if (next != NULL) {
-                next->prev = newBlock;
+            if (node->next != NULL) {
+                node->next->prev = newBlock;
             }
             node->next = newBlock;
 
             newBlock->start = node->start + node->size;
-            newBlock->size = ((u32)(size + 0xF) >> 4) * 0x10;
+            newBlock->size = alignedSize;
 
             return newBlock->index;
         }
 
-        node = next;
+        node = node->next;
     }
 
-    available = ((u32)D_8011091C + (((u32)(size + 0xF) >> 4) * 0x10)) - (u32)&D_80160480;
-    if (available >= 0x1C0001U) {
+    available = (D_8011091C + alignedSize) - &D_80160480;
+    if (available > 0x1C0000) {
         return -1;
     }
+
     if (node == NULL) {
         node = &D_80110180;
     }
+
     newBlock = func_80042CDC();
     if (newBlock == NULL) {
         return -1;
     }
+
     newBlock->prev = node;
     newBlock->next = node->next;
-    next = node->next;
-    if (next != NULL) {
-        next->prev = newBlock;
+
+    if (node->next != NULL) {
+        node->next->prev = newBlock;
     }
+
     node->next = newBlock;
+
     newBlock->start = D_8011091C;
-    newBlock->size = ((u32)(size + 0xF) >> 4) * 0x10;
+    newBlock->size = alignedSize;
+
     func_80042BC0();
+
     return newBlock->index;
 }
 
