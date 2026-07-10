@@ -110,7 +110,7 @@ typedef struct {
     /* 0x48 */ Vec3i spawnPos;
     /* 0x54 */ void *displayList;
     /* 0x58 */ void *rotationDisplayList;
-    char pad5C[4];
+    /* 0x5C */ void *scaleDisplayList;
     /* 0x60 */ s32 velY;
     /* 0x64 */ void *image0;
     /* 0x68 */ void *palette0;
@@ -181,6 +181,8 @@ extern Vtx D_800D92D8[];
 extern Vtx D_800D9358[];
 extern Gfx D_800D9D00[];
 extern Gfx D_800D9D40[];
+extern Gfx D_2003A38[];
+extern Gfx D_2003AB8[];
 extern FixedTransform D_800DEE30;
 extern GfxCommandDest D_800DEE50;
 extern FixedTransform D_800DEE30;
@@ -558,7 +560,105 @@ void func_8006752C(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800675AC.s")
 
+// func_80067830 best match: display-list command stream matched, remaining differences are stack/local layout.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80067830.s")
+
+#ifdef NON_MATCHING
+void func_80067830(RaceOverlayModelActor *arg0) {
+    GfxCommandSource spF4;
+    Gfx *sp10C;
+    Gfx *sp108;
+    Gfx *spB0;
+    Gfx *spAC;
+    Gfx *sp8C;
+    Gfx *temp_v0;
+    Gfx *temp_t1;
+
+    if (D_80156609 != 0) {
+        arg0->matrixDirty = 1;
+    }
+
+    if (func_80049000(&arg0->pos) != 0) {
+        if (arg0->matrixDirty != 0) {
+            arg0->matrixDirty = 0;
+            spF4 = *(GfxCommandSource *)&D_800DEE30;
+            spF4.words[5] = arg0->drawPos.x;
+            spF4.words[6] = arg0->drawPos.y;
+            spF4.words[7] = arg0->drawPos.z;
+            arg0->displayList = func_8004885C(&spF4);
+            arg0->rotationDisplayList = func_8004885C((GfxCommandSource *) arg0->rotationMatrix);
+            spF4 = *(GfxCommandSource *) arg0->rotationMatrix;
+            spF4.halfwords[0] /= 2;
+            spF4.halfwords[1] /= 2;
+            spF4.halfwords[2] /= 2;
+            spF4.halfwords[3] /= 2;
+            spF4.halfwords[4] /= 2;
+            spF4.halfwords[5] /= 2;
+            spF4.halfwords[6] /= 2;
+            spF4.halfwords[7] /= 2;
+            spF4.halfwords[8] /= 2;
+            spF4.words[6] += (func_80097AE8((s16)((D_801235B0 << 7) & 0xFFF)) << 7) + 0x300000;
+            arg0->scaleDisplayList = func_8004885C(&spF4);
+        }
+
+        if (arg0->scaleDisplayList != NULL) {
+            gDPPipeSync(gRegionAllocPtr++);
+            temp_v0 = gRegionAllocPtr++;
+            temp_v0->words.w0 = 0xBC000806;
+            sp10C = temp_v0;
+            sp10C->words.w1 = func_80043040(D_80112144);
+            temp_v0 = gRegionAllocPtr++;
+            temp_v0->words.w0 = 0xBC000C06;
+            sp108 = temp_v0;
+            sp108->words.w1 = func_80043040(D_80112146);
+            gSPMatrix(gRegionAllocPtr++, arg0->scaleDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            if (arg0->variant == 0) {
+                gSPDisplayList(gRegionAllocPtr++, D_2003A38);
+            } else {
+                gSPDisplayList(gRegionAllocPtr++, D_2003AB8);
+            }
+            gSPDisplayList(gRegionAllocPtr++, D_800D9D00);
+            gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image0, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
+                                    G_TX_CLAMP, 0, 0, 0, 0);
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette0);
+            gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+            gDma1p(gRegionAllocPtr++, G_VTX, D_800D92D8, 0x103F, 0);
+            temp_v0 = gRegionAllocPtr++;
+            temp_v0->words.w1 = 0x60200;
+            temp_v0->words.w0 = 0xB1060402;
+            gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image1, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
+                                    G_TX_CLAMP, 0, 0, 0, 0);
+            spAC = gRegionAllocPtr;
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette1);
+            sp8C = gRegionAllocPtr;
+            gSPMatrix(gRegionAllocPtr++, arg0->rotationDisplayList,
+                      G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gDma1p(gRegionAllocPtr++, G_VTX, D_800D9358, 0x513F, 0);
+            temp_t1 = gRegionAllocPtr++;
+            temp_t1->words.w0 = 0xB1060402;
+            temp_t1->words.w1 = 0x60200;
+            temp_v0 = gRegionAllocPtr++;
+            temp_v0->words.w1 = 0xE0A08;
+            temp_v0->words.w0 = 0xB10E0C0A;
+            temp_v0 = gRegionAllocPtr++;
+            temp_v0->words.w1 = 0x161210;
+            temp_v0->words.w0 = 0xB1161412;
+            temp_v0 = gRegionAllocPtr++;
+            temp_v0->words.w1 = 0x1E1A18;
+            temp_v0->words.w0 = 0xB11E1C1A;
+            spB0 = gRegionAllocPtr;
+            gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image2, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
+                                    G_TX_CLAMP, 0, 0, 0, 0);
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette2);
+            temp_v0 = gRegionAllocPtr++;
+            temp_v0->words.w1 = 0x262220;
+            temp_v0->words.w0 = 0xB1262422;
+            gSPDisplayList(gRegionAllocPtr++, D_800D9D40);
+        }
+    }
+}
+#endif
 
 void func_800681A4(RaceOverlayModelActor *arg0) {
     RaceOverlayMatrixScratch sp64;
