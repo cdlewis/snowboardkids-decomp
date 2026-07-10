@@ -14,7 +14,9 @@ typedef struct {
     /* 0x000 */ s16 playerIndex;
     /* 0x002 */ u8 pad2[2];
     /* 0x004 */ u8 isActive;
-    /* 0x005 */ u8 pad5[0x1C - 0x5];
+    /* 0x005 */ u8 pad5[0x10 - 0x5];
+    /* 0x010 */ u8 state;
+    /* 0x011 */ u8 pad11[0x1C - 0x11];
     /* 0x01C */ s32 posX;
     /* 0x020 */ s32 posY;
     /* 0x024 */ s32 posZ;
@@ -32,21 +34,210 @@ typedef struct {
     /* 0x527 */ s8 checkpointEventId;
     /* 0x528 */ u8 pad528;
     /* 0x529 */ u8 displayRank;
-    /* 0x52A */ u8 pad52A;
+    /* 0x52A */ u8 rankArrow;
     /* 0x52B */ u8 rankChangeTimer;
     /* 0x52C */ u8 pad52C[RACE_POSITION_PLAYER_SIZE - 0x52C];
 } RacePositionPlayer;
 
 extern RacePositionPlayer D_80121D80[RACE_POSITION_PLAYER_COUNT];
+extern RacePositionPlayer D_801235B0;
 extern RacePositionCheckpointEvent *D_800DE030[];
 extern s8 *D_800DDE74[];
+extern u8 D_800DE058[];
+extern u8 D_800DE05C[];
+extern u8 D_800DE060[];
+extern u8 D_800DE064[];
+extern u8 D_800EC9C2;
+extern u8 D_80121B55;
 extern s16 D_80121B50;
 
 extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
 extern s16 func_80097AE8(s16);
 extern s16 func_80097B48(s16);
 
+// func_8007B250 best match: 29.699% (nonmatchings/func_8007B250-8207005055717715604/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007B250.s")
+
+#ifdef NON_MATCHING
+#define RANK_NEAR_LIMIT 0x3800000
+#define RANK_NEAR_NEG_LIMIT ((s32)0xFC800001)
+
+#define ASSIGN_DISPLAY_RANKS(pattern) \
+    rankIndex = 0; \
+    player = &D_80121D80[order[0]]; \
+    if (player->isActive != 0) { \
+        player->rankChangeTimer = 0; \
+        player->displayRank = (pattern)[rankIndex]; \
+        rankIndex++; \
+    } \
+    player = &D_80121D80[order[1]]; \
+    if (player->isActive != 0) { \
+        player->rankChangeTimer = 0; \
+        player->displayRank = (pattern)[rankIndex]; \
+        rankIndex++; \
+    } \
+    player = &D_80121D80[order[2]]; \
+    if (player->isActive != 0) { \
+        player->rankChangeTimer = 0; \
+        player->displayRank = (pattern)[rankIndex]; \
+        rankIndex++; \
+    } \
+    player = &D_80121D80[order[3]]; \
+    if (player->isActive != 0) { \
+        player->rankChangeTimer = 0; \
+        player->displayRank = (pattern)[rankIndex]; \
+    }
+
+void func_8007B250(void) {
+    s32 order[4];
+    s32 i;
+    s32 j;
+    s32 temp;
+    s32 rankIndex;
+    s32 mode;
+    RacePositionPlayer *player;
+    RacePositionPlayer *other;
+    s32 dx;
+    s32 dz;
+    s8 rank;
+
+    if (D_800EC9C2 != 0) {
+        return;
+    }
+
+    order[0] = 0;
+    order[1] = 1;
+    order[2] = 2;
+    order[3] = 3;
+
+    for (i = 0; i < 3; i++) {
+        for (j = i + 1; j < 4; j++) {
+            if (D_80121D80[order[j]].raceRank < D_80121D80[order[i]].raceRank) {
+                temp = order[i];
+                order[i] = order[j];
+                order[j] = temp;
+            }
+        }
+    }
+
+    mode = D_80121B55;
+
+    switch (mode) {
+    case 1:
+        rank = D_80121D80[0].raceRank;
+        if (rank == 0) {
+            ASSIGN_DISPLAY_RANKS(D_800DE058);
+        }
+        if (rank == 1) {
+            ASSIGN_DISPLAY_RANKS(D_800DE05C);
+        }
+        if (rank == 2) {
+            ASSIGN_DISPLAY_RANKS(D_800DE060);
+        }
+        if (rank == 3) {
+            ASSIGN_DISPLAY_RANKS(D_800DE064);
+        }
+        break;
+    case 2:
+        if (!(D_80121D80[1].raceRank < D_80121D80[0].raceRank)) {
+            if (D_80121D80[1].raceRank == 3) {
+                if (D_80121D80[3].raceRank >= D_80121D80[2].raceRank) {
+                    D_80121D80[2].displayRank = 2;
+                    D_80121D80[3].displayRank = 1;
+                } else {
+                    D_80121D80[2].displayRank = 1;
+                    D_80121D80[3].displayRank = 2;
+                }
+            } else if (D_80121D80[3].raceRank >= D_80121D80[2].raceRank) {
+                D_80121D80[2].displayRank = 1;
+                D_80121D80[3].displayRank = 2;
+            } else {
+                D_80121D80[2].displayRank = 2;
+                D_80121D80[3].displayRank = 1;
+            }
+            D_80121D80[2].rankChangeTimer = 1;
+            D_80121D80[3].rankChangeTimer = 1;
+        } else {
+            if (D_80121D80[0].raceRank == 3) {
+                if (D_80121D80[3].raceRank >= D_80121D80[2].raceRank) {
+                    D_80121D80[2].displayRank = 2;
+                    D_80121D80[3].displayRank = 1;
+                } else {
+                    D_80121D80[2].displayRank = 1;
+                    D_80121D80[3].displayRank = 2;
+                }
+            } else if (D_80121D80[3].raceRank >= D_80121D80[2].raceRank) {
+                D_80121D80[2].displayRank = 1;
+                D_80121D80[3].displayRank = 2;
+            } else {
+                D_80121D80[2].displayRank = 2;
+                D_80121D80[3].displayRank = 1;
+            }
+            D_80121D80[2].rankChangeTimer = 0;
+            D_80121D80[3].rankChangeTimer = 0;
+        }
+        break;
+    case 3:
+        D_80121D80[3].rankChangeTimer = 0;
+        D_80121D80[3].displayRank = 1;
+        rank = D_80121D80[(s8)D_80121D80[3].rankChangeTimer].raceRank;
+        if (rank < D_80121D80[1].raceRank) {
+            D_80121D80[3].rankChangeTimer = 1;
+            rank = D_80121D80[(s8)D_80121D80[3].rankChangeTimer].raceRank;
+        }
+        if (rank < D_80121D80[2].raceRank) {
+            D_80121D80[3].rankChangeTimer = 2;
+        }
+        break;
+    }
+
+    player = D_80121D80;
+    do {
+        if (player->isActive != 0) {
+            rank = player->displayRank;
+            switch (rank) {
+            case 0:
+                player->rankArrow = 0;
+                break;
+            case 1:
+                player->rankArrow = 0;
+                other = &D_80121D80[(s8)player->rankChangeTimer];
+                dx = other->posX - player->posX;
+                dz = other->posZ - player->posZ;
+                if ((dx >= RANK_NEAR_LIMIT) || (dx < RANK_NEAR_NEG_LIMIT) || (dz >= RANK_NEAR_LIMIT) ||
+                        (dz < RANK_NEAR_NEG_LIMIT)) {
+                    if (other->raceRank < player->raceRank) {
+                        player->rankArrow = 1;
+                    } else {
+                        player->rankArrow = 2;
+                    }
+                }
+                break;
+            case 2:
+                if (mode == 1) {
+                    if (D_80121D80[0].raceRank < player->raceRank) {
+                        player->rankArrow = 0;
+                    } else {
+                        player->rankArrow = 3;
+                    }
+                } else {
+                    player->rankArrow = 3;
+                }
+                break;
+            }
+
+            if (player->state == 5) {
+                player->rankArrow = 0;
+            }
+        }
+        player++;
+    } while (player != &D_801235B0);
+}
+
+#undef ASSIGN_DISPLAY_RANKS
+#undef RANK_NEAR_NEG_LIMIT
+#undef RANK_NEAR_LIMIT
+#endif
 
 // func_8007BB08 best match: 99.120% (nonmatchings/func_8007BB08-2785870559185086986/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007BB08.s")
