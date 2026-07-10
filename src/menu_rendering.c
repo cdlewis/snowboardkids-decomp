@@ -125,6 +125,8 @@ extern s16 D_8015660A;
 extern s16 D_8015660C;
 extern s16 D_8015660E;
 extern s16 D_80156610;
+extern u16 D_800B51D0[];
+extern s16 D_800B51F0[][2];
 
 // func_8000EA80 best match: 78.118% (nonmatchings/func_8000EA80-4923837976568703863/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000EA80.s")
@@ -225,7 +227,142 @@ void func_8000F030(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
                   temp_v0 = (s16)(D_8015660A / 2), temp_v1 = (s16)(D_8015660C / 2), temp_v0, temp_v1);
 }
 
+// func_8000F0EC best match: 57.528% (nonmatchings/func_8000F0EC-7273315160691878794/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000F0EC.s")
+
+#ifdef NON_MATCHING
+void func_8000F0EC(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 width, u16 height, u8 flip, u8 paletteIndex,
+                   s32 left, s32 top, s32 right, s32 bottom) {
+    MenuFontAssetEntry *entry;
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 minX;
+    s32 minY;
+    s32 maxX;
+    s32 maxY;
+    s32 drawX0;
+    s32 drawY0;
+    s32 drawX1;
+    s32 drawY1;
+    s32 dsdx;
+    s32 dtdy;
+    s32 line;
+    s16 flipS;
+    s16 flipT;
+    s32 palette;
+    u16 *paletteBase;
+    Gfx *gfx;
+
+    paletteBase = (u16 *)&table->entries[table->entryCount];
+
+    if ((width >= 0x201) || (width <= 0) || (height >= 0x201) || (height <= 0)) {
+        return;
+    }
+
+    flipS = D_800B51F0[flip & 3][0];
+    flipT = D_800B51F0[flip & 3][1];
+    entry = &table->entries[imageIndex];
+
+    x0 = (x + D_8015660E) << 2;
+    y0 = (y + D_80156610) << 2;
+    x1 = x0 + ((width * entry->width) << 2 >> 5);
+    y1 = y0 + ((height * entry->height) << 2 >> 5);
+    dsdx = 0;
+    dtdy = 0;
+
+    if (flipS == -1) {
+        dsdx = (entry->width - 1) << 5;
+    }
+    if (flipT == -1) {
+        dtdy = (entry->height - 1) << 5;
+    }
+
+    minY = D_80156610 - (s16)top;
+    minX = D_8015660E - (s16)left;
+    maxY = D_80156610 + (s16)bottom;
+    maxX = D_8015660E + (s16)right;
+
+    if (minX < D_8015660E - (D_8015660A / 2)) {
+        minX = D_8015660E - (D_8015660A / 2);
+    }
+    if (maxX > D_8015660E + (D_8015660A / 2)) {
+        maxX = D_8015660E + (D_8015660A / 2);
+    }
+    if (minY < D_80156610 - (D_8015660C / 2)) {
+        minY = D_80156610 - (D_8015660C / 2);
+    }
+    if (maxY > D_80156610 + (D_8015660C / 2)) {
+        maxY = D_80156610 + (D_8015660C / 2);
+    }
+
+    drawX0 = minX << 2;
+    drawY0 = minY << 2;
+    drawX1 = maxX << 2;
+    drawY1 = maxY << 2;
+
+    if ((x0 >= drawX1) || (y0 >= drawY1) || (x1 < drawX0) || (y1 < drawY0)) {
+        return;
+    }
+
+    if (x0 < drawX0) {
+        dsdx = ((drawX0 - x0) << 8) / width;
+        if (flipS == -1) {
+            dsdx = ((entry->width - 1) << 5) - dsdx;
+        }
+        x0 = drawX0;
+    }
+    if (y0 < drawY0) {
+        dtdy = ((drawY0 - y0) << 8) / height;
+        if (flipT == -1) {
+            dtdy = ((entry->height - 1) << 5) - dtdy;
+        }
+        y0 = drawY0;
+    }
+    if (x1 >= drawX1) {
+        x1 = drawX1 - 4;
+    }
+    if (y1 >= drawY1) {
+        y1 = drawY1 - 4;
+    }
+
+    if (paletteIndex == 0) {
+        palette = entry->textureIndex;
+    } else {
+        palette = (u16)(paletteIndex - 1);
+    }
+
+    FONT_GFX_CMD(gRegionAllocPtr++, (((entry->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                 (u32)((u8 *)table + entry->imageOffset));
+    line = ((((entry->width + 1) >> 1) + 7) >> 3) & 0x1FF;
+    FONT_GFX_CMD(gRegionAllocPtr++, (line << 9) | 0xF5480000, 0x07080200);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                 0x07000000 | (((entry->width << 1) & 0xFFF) << 12) | ((entry->height << 2) & 0xFFF));
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+    FONT_GFX_CMD(gRegionAllocPtr++, (line << 9) | 0xF5400000, 0x00080200);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000, (((entry->width << 2) & 0xFFF) << 12) | ((entry->height << 2) & 0xFFF));
+
+    if (palette != 0xFE) {
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(paletteBase + (palette << 4)));
+    } else {
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)D_800B51D0);
+    }
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xE4000000 | ((x1 & 0xFFF) << 12) | (y1 & 0xFFF),
+                 ((x0 & 0xFFF) << 12) | (y0 & 0xFFF));
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, ((dsdx & 0xFFFF) << 16) | (dtdy & 0xFFFF));
+    gfx = gRegionAllocPtr++;
+    gfx->words.w0 = 0xB3000000;
+    gfx->words.w1 = ((u16)(((0x8000 / width) & 0xFFFF) * flipS) << 16) | (u16)(((0x8000 / height) & 0xFFFF) * flipT);
+}
+#endif
 
 void func_8000F8AC(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8) {
     s32 temp_v0;
