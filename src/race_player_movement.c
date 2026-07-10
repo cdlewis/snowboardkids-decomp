@@ -71,7 +71,120 @@ extern u8 D_80121B58;
 
 void func_8006A85C(EffectTask *task);
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80087600.s")
+void func_80087600(s32 arg0, s32 *arg1, s32 *arg2) {
+    RaceInputPlayer *player;
+    s32 temp;
+
+    player = &D_80121D80[arg0];
+    *arg1 = player->unk502 * 8;
+    *arg2 = player->unk504;
+
+    switch (D_80121B50) {
+    case 0:
+        temp = *arg1;
+        if (temp >= 0x580) {
+            *arg1 = 0x598 - temp;
+            *arg2 = -*arg2;
+            return;
+        }
+        break;
+    case 1:
+        temp = *arg1;
+        if (temp >= 0x4A8) {
+            *arg1 = 0x4A8 - temp;
+            *arg2 = -*arg2;
+            return;
+        }
+        break;
+    case 2:
+        temp = *arg1;
+        if ((temp >= 0x490) && (temp < 0x4B9)) {
+            *arg1 = 0x490 - temp;
+            *arg2 = -*arg2;
+            return;
+        }
+        if ((temp >= 0x4C0) && (temp < 0x4D1)) {
+            *arg1 = ((temp * 0x38) - 0x10A00) / 0x10 + 0x80;
+            return;
+        }
+        if ((temp >= 0x4D8) && (temp < 0x5C1)) {
+            *arg1 = ((temp * 0x120) - 0x57300) / 0xE8 + 0x188;
+            return;
+        }
+        if ((temp >= 0x5C8) && (temp < 0x621)) {
+            *arg1 = ((temp * 0x58) - 0x1FCC0) / 0x58 + 0x290;
+            return;
+        }
+        break;
+    case 3:
+        temp = *arg1;
+        if ((temp >= 0x628) && (temp < 0x649)) {
+            *arg1 = 0x628 - temp;
+            *arg2 = -*arg2;
+            return;
+        }
+        if ((temp >= 0x650) && (temp < 0x7D1)) {
+            *arg1 = ((temp * 0x138) - 0x7B180) / 0x180 + 0x60;
+            return;
+        }
+        if ((temp >= 0x7D8) && (temp < 0x8E1)) {
+            *arg1 = ((temp * 0xB8) - 0x5A340) / 0x108 + 0x2F0;
+            return;
+        }
+        if ((temp >= 0x8E8) && (temp < 0x921)) {
+            *arg1 = ((temp * 0x68) - 0x39E40) / 0x38 + 0x520;
+            return;
+        }
+        break;
+    case 4:
+        temp = *arg1;
+        if ((temp >= 0x618) && (temp < 0x641)) {
+            *arg1 = 0x618 - temp;
+            *arg2 = -*arg2;
+            temp = *arg1;
+        }
+        if ((temp >= 0x648) && (temp < 0x699)) {
+            *arg1 = ((temp * 0x70) - 0x2BF80) / 0x50 + 0x380;
+            return;
+        }
+        break;
+    case 5:
+        temp = *arg1;
+        if ((temp >= 0x6D0) && (temp < 0x6F9)) {
+            *arg1 = 0x6F8 - temp;
+            *arg2 = -*arg2;
+            temp = *arg1;
+        }
+        if ((temp >= 0x700) && (temp < 0x7E9)) {
+            *arg1 = ((temp * 0xD0) - 0x5B000) / 0xE8 + 0x1A0;
+            return;
+        }
+        if ((temp >= 0x7F0) && (temp < 0xA01)) {
+            *arg1 = ((temp * 0x280) - 0x13D800) / 0x210 + 0x2C8;
+            return;
+        }
+        if ((temp >= 0xA08) && (temp < 0xA39)) {
+            *arg1 = ((temp * 0x48) - 0x2D240) / 0x30 + 0x550;
+            return;
+        }
+        break;
+    case 6:
+        temp = *arg1;
+        if ((temp >= 0x7B8) && (temp < 0x7E1)) {
+            *arg1 = 0x7F8 - temp;
+            *arg2 = -*arg2;
+            return;
+        }
+        break;
+    case 8:
+        temp = *arg1;
+        if ((temp >= 0x1F0) && (temp < 0x219)) {
+            *arg1 = 0x1F0 - temp;
+            *arg2 = -*arg2;
+        }
+        break;
+    }
+}
 
 // func_80087AFC best match: 82.773% (nonmatchings/func_80087AFC-4923837976568703863/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80087AFC.s")
