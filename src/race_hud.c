@@ -11,7 +11,10 @@
 
 typedef struct {
     u8 pad0[5];
-    /* 0x05 */ u8 characterId;
+    /* 0x05 */ union {
+        u8 characterId;
+        u8 playerIndex;
+    };
     u8 pad6[2];
     u8 isActive;
     u8 pad9[PLAYER_DATA_SIZE - 9];
@@ -458,7 +461,86 @@ void func_80017D08(RaceHudPanelActor *arg0) {
     func_80071824(arg0, func_80017C34);
 }
 
+// func_80017D6C best match: 84.174% (nonmatchings/func_80017D6C-7273315160691878794/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80017D6C.s")
+
+#ifdef NON_MATCHING
+void func_80017D6C(RaceHudMessageActor *arg0) {
+    RacePlayer *player;
+    s32 i;
+    s32 j;
+    s32 xOffset;
+    u16 tile;
+    s32 alpha;
+    u8 textureIndex;
+
+    i = 0;
+    if (arg0->state != 0) {
+        xOffset = 0;
+        do {
+            alpha = 0x100;
+            j = 0;
+            if (D_80121B55 > 0) {
+                player = D_80121D80;
+loop_4:
+                j++;
+                if ((i == player->playerIndex) && (player->isActive != 0)) {
+                    tile = (i + 0x41) & 0xFFFF;
+                    alpha = 0x60;
+                    textureIndex = 0x1F;
+                } else {
+                    player++;
+                    if (j < D_80121B55) {
+                        goto loop_4;
+                    }
+                }
+            }
+            if (alpha != 0x60) {
+                textureIndex = 0x21;
+                if (arg0->timer < 0xA) {
+                    tile = (i + 0x37) & 0xFFFF;
+                } else {
+                    tile = (i + 0x3D) & 0xFFFF;
+                }
+            }
+            func_80011264((s16)(arg0->x + xOffset), arg0->y,
+                          func_80043040(*(s16 *)&D_80112130[textureIndex * 2]), tile, 0, alpha);
+            i++;
+            xOffset += 0x20;
+        } while (i < 5);
+
+        if (arg0->playerFlags != 0) {
+            alpha = 0x100;
+            j = 0;
+            if (D_80121B55 > 0) {
+                player = D_80121D80;
+loop_17:
+                j++;
+                if ((player->playerIndex == 5) && (player->isActive != 0)) {
+                    alpha = 0x60;
+                    tile = 0x46;
+                    textureIndex = 0x1F;
+                } else {
+                    player++;
+                    if (j < D_80121B55) {
+                        goto loop_17;
+                    }
+                }
+            }
+            if (alpha != 0x60) {
+                textureIndex = 0x21;
+                if (arg0->timer < 0xA) {
+                    tile = 0x3C;
+                } else {
+                    tile = 0x42;
+                }
+            }
+            func_80011264((s16)(arg0->x - 0x20), arg0->y,
+                          func_80043040(*(s16 *)&D_80112130[textureIndex * 2]), tile, 0, alpha);
+        }
+    }
+}
+#endif
 
 void func_80017F94(RaceHudMessageActor *arg0) {
     s16 temp_v0;
