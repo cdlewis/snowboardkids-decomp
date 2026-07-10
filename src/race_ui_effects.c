@@ -4247,13 +4247,13 @@ void func_80063980(RaceUiCourseSpriteActor *actor) {
     func_80071824(actor, func_8006392C);
 }
 
-// func_80063A9C best match: 59.355%
+// func_80063A9C best match: 83.012% (nonmatchings/func_80063A9C-4923837976568703863/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80063A9C.s")
 
 #ifdef NON_MATCHING
 void func_80063A9C(RaceUiEffectParticleActor *arg0) {
     RaceUiTrailCopyBlock spA0;
-    volatile u8 pad[0x20];
+    volatile u8 pad[0x18];
     RaceUiGfxCommandDest *matrix;
     RaceUiCameraTransformSource *camera;
     s32 negX;
@@ -4264,7 +4264,8 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
     s32 maskedNegZ;
     s32 i;
     s32 mask;
-    RaceUiEffectParticle *particle;
+    RaceUiEffectParticleActor *actor;
+    RaceUiEffectParticleActor *actor2;
     Gfx *gfx;
 
     gfx = gRegionAllocPtr++;
@@ -4312,22 +4313,23 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
 
     spA0.transform = D_800DEE30;
 
+    actor = arg0;
+    actor2 = arg0;
     camera = &D_801121E0[D_80156608];
     negX = -camera->transformOffset.x;
     negY = -camera->transformOffset.y;
     negZ = -camera->transformOffset.z;
 
     i = 0;
-    if (arg0->count > 0) {
+    if (actor->count > 0) {
         mask = 0xFFFFFF;
         maskedNegX = negX & mask;
         maskedNegY = negY & mask;
         maskedNegZ = negZ & mask;
-        particle = arg0->particles;
         do {
-            spA0.transform.translation.x = ((particle->unk0 - maskedNegX) & mask) + negX + 0xFF800000;
-            spA0.transform.translation.y = ((particle->unk4 - maskedNegY) & mask) + negY + 0xFF800000;
-            spA0.transform.translation.z = ((particle->unk8 - maskedNegZ) & mask) + negZ + 0xFF800000;
+            spA0.transform.translation.x = ((actor->particles[i].unk0 - maskedNegX) & mask) + negX + 0xFF800000;
+            spA0.transform.translation.y = ((actor->particles[i].unk4 - maskedNegY) & mask) + negY + 0xFF800000;
+            spA0.transform.translation.z = ((actor->particles[i].unk8 - maskedNegZ) & mask) + negZ + 0xFF800000;
             matrix = func_8004885C(&spA0);
             if (matrix != NULL) {
                 gfx = gRegionAllocPtr++;
@@ -4344,8 +4346,7 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
                 gfx->words.w1 = 0x402;
             }
             i++;
-            particle++;
-        } while (i < arg0->count);
+        } while (i < actor2->count);
     }
 }
 #endif
