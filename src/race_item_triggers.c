@@ -4,6 +4,7 @@
 #include "race_input_history.h"
 #include "fixed_point_math.h"
 
+// func_800849E0 best match: 98.406% (nonmatchings/func_800849E0-7273315160691878794/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_triggers/func_800849E0.s")
 
 typedef void (*EffectCallback)(void *);
@@ -23,12 +24,12 @@ extern void func_80060C4C(s16 playerIndex);
 extern void func_80064EAC(void *);
 extern void *func_800716A4(void *, s32, s32, s32);
 extern void func_80083CFC(RaceInputPlayer *player);
+extern RaceInputPlayer D_801235B0;
 
 #ifdef NON_MATCHING
 void func_800849E0(RaceInputPlayer *player) {
     s32 trigger;
     RaceInputPlayer *otherPlayer;
-    s32 i;
     s32 deltaX;
     s32 deltaZ;
     s32 angle;
@@ -50,7 +51,8 @@ void func_800849E0(RaceInputPlayer *player) {
 
         if ((trigger != 0) && (player->itemEffectCount != 0)) {
             trigger = 0;
-            for (i = 0, otherPlayer = D_80121D80; otherPlayer != D_80122FA4 + 1; i++, otherPlayer++) {
+            otherPlayer = D_80121D80;
+            do {
                 if (otherPlayer->unk4 == 0) {
                     deltaX = otherPlayer->posX - player->posX;
                     deltaZ = otherPlayer->posZ - player->posZ;
@@ -63,39 +65,40 @@ void func_800849E0(RaceInputPlayer *player) {
                         }
                     }
                 }
-            }
+                otherPlayer++;
+            } while (otherPlayer != &D_801235B0);
         }
     }
 
     if (trigger != 0) {
         if (player->itemEffectCount != 0) {
             if (player->itemEffectType == 1) {
-                if (func_800716A4(func_80049CE0, (u16) (player->playerIndex + 1), 0x3C, player->playerIndex) != NULL) {
-                    func_800716A4(func_8004EF24, 5, 4, player->playerIndex);
+                if (func_800716A4(func_80049CE0, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                    func_800716A4(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 2) {
-                if (func_800716A4(func_8004C8F0, (u16) (player->playerIndex + 1), 0x3C, player->playerIndex) != NULL) {
-                    func_800716A4(func_8004EF24, 5, 4, player->playerIndex);
+                if (func_800716A4(func_8004C8F0, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                    func_800716A4(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 3) {
-                if (func_800716A4(func_8004A648, (u16) (player->playerIndex + 1), 0x3C, player->playerIndex) != NULL) {
-                    func_800716A4(func_8004EF24, 5, 4, player->playerIndex);
+                if (func_800716A4(func_8004A648, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                    func_800716A4(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 4) {
-                if (func_800716A4(func_8004AFE4, (u16) (player->playerIndex + 1), 0x3C, player->playerIndex) != NULL) {
-                    func_800716A4(func_8004EF24, 5, 4, player->playerIndex);
+                if (func_800716A4(func_8004AFE4, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                    func_800716A4(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 5) {
-                if (func_800716A4(func_8004BFA0, (u16) (player->playerIndex + 1), 0x3C, player->playerIndex) != NULL) {
-                    func_800716A4(func_8004EF24, 5, 4, player->playerIndex);
+                if (func_800716A4(func_8004BFA0, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                    func_800716A4(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
@@ -105,8 +108,8 @@ void func_800849E0(RaceInputPlayer *player) {
         }
 
         if (player->shieldEffectTimer != 0) {
-            if (func_800716A4(func_8004D880, (u16) (player->playerIndex + 1), 0x3C, player->playerIndex) != NULL) {
-                func_800716A4(func_8004EF24, 5, 4, player->playerIndex);
+            if (func_800716A4(func_8004D880, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                func_800716A4(func_8004EF24, 5, 4, player->playerIndexU);
                 player->shieldEffectTimer--;
             }
         }
