@@ -23,7 +23,6 @@ typedef struct {
 } GameSetupMenuSubState;
 
 extern void func_80014C7C(EffectTask *task);
-extern void func_800035F8(void);
 extern void func_800704F0(void);
 extern void func_8007066C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, f32 arg7);
 extern void func_80072138();
@@ -209,7 +208,97 @@ block_25:
 }
 #endif
 
+// func_800035F8 best match: 90.019% (nonmatchings/func_800035F8-2225551288923588688/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_800035F8.s")
+
+#ifdef NON_MATCHING
+extern s16 D_800B31B8;
+extern s16 D_800B31BA;
+extern s16 D_800B31BC;
+extern s16 D_800B31BE;
+extern s16 D_800B31C0;
+extern s16 D_800B31C2;
+extern s16 D_800B31C4;
+extern s16 D_800B31C6;
+extern s16 D_800EC9C8;
+extern s16 D_800EC9D0;
+extern u8 D_800EC9D8;
+extern u8 D_800EC9E0;
+extern u8 D_800EC9E4;
+extern s32 D_8010ADE0;
+extern s32 D_8010ADE4;
+extern s32 D_8010ADE8;
+extern s16 D_8010AE38;
+extern s16 D_8010AE3A;
+extern s16 D_8010AE3C;
+extern s16 D_8010AE3E;
+extern s16 D_8010AE40;
+extern s16 D_8010AE42;
+extern s16 D_8010AE44;
+extern s16 D_8010AE46;
+extern u8 D_80121D80;
+
+void func_800035F8(void) {
+    s16 *var_v1;
+    s16 *var_a0;
+    u8 *var_a1;
+    u8 *var_v0;
+    u8 *player;
+    s32 i;
+    u8 count;
+
+    var_v0 = &D_800EC9E0;
+    var_a1 = &D_800EC9D8;
+    var_a0 = &D_800EC9D0;
+    var_v1 = &D_800EC9C8;
+    do {
+        var_v0++;
+        var_v1++;
+        var_a0++;
+        var_a1++;
+        var_v1[-1] = 0;
+        var_a0[-1] = 0;
+        var_a1[-1] = 0;
+        var_v0[-1] = 0;
+    } while (var_v0 < &D_800EC9E4);
+
+    count = D_800E29C0;
+    D_800EC9E4 = 0;
+    i = 0;
+    if (count > 0) {
+        player = &D_80121D80;
+        do {
+            player += 0x60C;
+            player[-0x604] = 0;
+        } while (player < (&D_80121D80 + (count * 0x60C)));
+        i = 0;
+    }
+
+    do {
+        func_800045D8(i);
+        i++;
+    } while (i < 4);
+
+    D_8010ADE0 = 0;
+    D_8010ADE4 = 0;
+    D_8010ADE8 = 0;
+    D_800EC9C1 = 0;
+    D_801235B4 = 0;
+    D_800EC8B0 = 0;
+
+    D_8010AE38 = D_800B31B8;
+    D_8010AE40 = D_800B31BA;
+    D_8010AE3A = D_800B31BC;
+    D_8010AE42 = D_800B31BE;
+    D_8010AE3C = D_800B31C0;
+    D_8010AE44 = D_800B31C2;
+    D_8010AE3E = D_800B31C4;
+    D_8010AE46 = D_800B31C6;
+
+    func_8009956C(func_80003798, 0);
+    func_8007105C();
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_80003798.s")
 
