@@ -1214,7 +1214,12 @@ void func_80057E90(RaceUiAlpha18Actor *arg0) {
             gDPPipeSync(gRegionAllocPtr++);
             gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
             gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
-            gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+            {
+                Gfx *gfx = gRegionAllocPtr++;
+
+                gfx->words.w0 = 0xFA000000;
+                gfx->words.w1 = (arg0->alpha & 0xFF) | ~0xFF;
+            }
         }
         func_80045A78(-0x68, -0x2C, func_80043040(D_8011216E), 0x4D);
         func_80045A78(-0x42, -0xC, func_80043040(D_8011216E), D_80122289 & 0xFFFF);
