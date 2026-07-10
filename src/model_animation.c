@@ -236,6 +236,7 @@ void func_8007D87C(s32 *arg0, s32 *arg1, s32 arg2) {
     }
 }
 
+// func_8007DC38 best match: 52.431% (base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007DC38.s")
 
 // func_8007ECF4 best match: 53.740% (base_1.c)
