@@ -62,7 +62,7 @@ extern void func_80081E40(RaceInputPlayer *, s32);
 extern s32 func_80082EC0(RaceInputPlayer *);
 extern void func_80083298(RaceInputPlayer *);
 extern void func_800849E0(RaceInputPlayer *);
-extern s32 func_80095F90(s32);
+extern s32 func_80095F90(s16);
 extern void func_8008BB20(RaceInputPlayer *, s32, s32, s32, s32);
 extern void func_8008BB5C(RaceInputPlayer *, s32);
 extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
@@ -132,6 +132,15 @@ extern u8 D_80121B5A;
 extern u8 D_80121B5B;
 extern s16 D_80121B50;
 extern s32 D_801235B4;
+extern s16 D_80121B5C;
+extern s8 D_80121D93;
+extern s32 D_8012207C;
+extern s8 D_8012239F;
+extern s32 D_80122688;
+extern s8 D_801229AB;
+extern s32 D_80122C94;
+extern s8 D_80122FB7;
+extern s32 D_801232A0;
 extern s16 D_801235B0;
 extern Unk8011228C D_8011228C[];
 extern void func_8007B250(void);
@@ -4487,7 +4496,66 @@ void func_80095A88(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095BE4.s")
 
+// func_80095F90 best match: 99.836% (nonmatchings/func_80095F90-2225551288923588688/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095F90.s")
+
+#ifdef NON_MATCHING
+s32 func_80095F90(s16 arg0) {
+    RaceInputPlayer *temp_v0;
+    Struct800955C0 *temp_a1;
+    s32 var_a0;
+    s32 var_a0_2;
+    RaceInputPlayer *new_var;
+    u32 temp_v1;
+
+    temp_v0 = &D_80121D80[arg0];
+    temp_v1 = temp_v0->stateFlags;
+    if (temp_v1 & 0x40) {
+        return 0;
+    }
+
+    new_var = D_80121D80;
+    if (((D_80121D93 != 0) && (arg0 != (u16) new_var->playerIndex)) && (D_8012207C & 0x20)) {
+        return 0;
+    }
+    if (((D_8012239F != 0) && (arg0 != (u16) D_8012238C->playerIndex)) && (D_80122688 & 0x20)) {
+        return 0;
+    }
+    if (((D_801229AB != 0) && (arg0 != (u16) D_80122998->playerIndex)) && (D_80122C94 & 0x20)) {
+        var_a0_2 = 0;
+        return var_a0_2;
+    }
+    if (((D_80122FB7 != 0) && (arg0 != (u16) D_80122FA4->playerIndex)) && (D_801232A0 & 0x20)) {
+        return 0;
+    }
+
+    temp_a1 = &D_800B9540[D_80121B50];
+    var_a0 = temp_v0->posX - temp_a1->unk18;
+    if (var_a0 < 0) {
+        var_a0 = -var_a0;
+    }
+    if (var_a0 >= 0x180001) {
+        return 0;
+    }
+
+    var_a0_2 = temp_v0->posZ - temp_a1->unk1C;
+    if (var_a0_2 < 0) {
+        var_a0_2 = -var_a0_2;
+    }
+    if (var_a0_2 >= 0x180001) {
+        return 0;
+    }
+
+    var_a0_2 = D_80121B5C;
+    var_a0 = 0x04001020;
+    temp_v0->stateFlags = temp_v1 | var_a0;
+    (&D_80121D80[arg0])->unk57C = var_a0_2;
+    if (var_a0_2 != 0) {
+        D_80121B5C = var_a0_2 - 1;
+    }
+    return 1;
+}
+#endif
 
 void func_8009617C(RaceInputPlayer *player) {
     D_800DED08[player->updateState](player);
