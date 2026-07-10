@@ -217,7 +217,90 @@ void func_8000F8AC(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000F970.s")
 
+// func_80010074 best match: 76.801% (nonmatchings/func_80010074-2225551288923588688/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80010074.s")
+
+#ifdef NON_MATCHING
+void func_80010074(s16 x, s16 y, FontAsset *asset, u16 index, s32 alpha) {
+    FontTexture *texture;
+    u8 *paletteBase;
+    u16 *srcPalette;
+    u16 *palette;
+    u16 color;
+    s32 i;
+    s32 left;
+    s32 top;
+    s32 right;
+    s32 bottom;
+    s32 minX;
+    s32 minY;
+    s32 maxX;
+    s32 maxY;
+    s32 srcX;
+    s32 srcY;
+    s32 red;
+    s32 green;
+    s32 blue;
+
+    texture = &asset->textures[index];
+    paletteBase = (u8 *)asset + 8 + (asset->header.entryCount * sizeof(FontTexture));
+    left = x + D_8015660E;
+    top = y + D_80156610;
+    right = left + (texture->width >> 1);
+    bottom = top + (texture->height >> 1);
+    srcX = 0;
+    srcY = 0;
+
+    maxX = D_8015660E + (D_8015660A / 2);
+    minX = D_8015660E - (D_8015660A / 2);
+    if (left < maxX) {
+        maxY = D_80156610 + (D_8015660C / 2);
+        minY = D_80156610 - (D_8015660C / 2);
+        if ((top < maxY) && (right >= minX) && (bottom >= minY)) {
+            if (left < minX) {
+                srcX = minX - left;
+                left = minX;
+            }
+            if (top < minY) {
+                srcY = minY - top;
+                top = minY;
+            }
+            if (right >= maxX) {
+                right = maxX;
+            }
+            if (bottom >= maxY) {
+                bottom = maxY;
+            }
+
+            gDPPipeSync(gRegionAllocPtr++);
+            FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0x3000);
+
+            srcPalette = (u16 *)(paletteBase + (texture->paletteIndex * 0x20));
+            palette = func_80048594(0x20);
+            for (i = 0; i != 0x10; i++) {
+                color = srcPalette[i];
+                palette[i] = color;
+                if (color & 1) {
+                    red = ((color >> 11) & 0x1F) * (u16)alpha;
+                    green = ((color >> 6) & 0x1F) * (u16)alpha;
+                    blue = ((color >> 1) & 0x1F) * (u16)alpha;
+                    palette[i] = ((red >> 8) << 11) | ((green >> 8) << 6) | ((blue >> 8) << 1) | 1;
+                }
+            }
+
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
+            gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)asset + texture->imageOffset, G_IM_FMT_CI, texture->width,
+                                  texture->height, 0, 0, texture->width, texture->height, 0, G_TX_WRAP, G_TX_WRAP, 0, 0,
+                                  0, 0);
+            gSPTextureRectangle(gRegionAllocPtr++, left << 2, top << 2, right << 2, bottom << 2, 0,
+                                (srcX << 5) + 0x10, (srcY << 5) + 0x10, 0x800, 0x800);
+            gDPPipeSync(gRegionAllocPtr++);
+            FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0);
+            gDPPipeSync(gRegionAllocPtr++);
+        }
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8001061C.s")
 
