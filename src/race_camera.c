@@ -37,7 +37,7 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ u16 playerIndex;
-    /* 0x02 */ s16 mode;
+    /* 0x02 */ u16 mode;
     /* 0x04 */ s16 pitch;
     /* 0x06 */ s16 yaw;
     /* 0x08 */ s16 roll;
@@ -110,7 +110,7 @@ extern CourseSpawnEntry D_800B9540[];
 extern u8 D_800DA91C[];
 extern s16 D_800DA900[];
 extern u8 D_800DA914[];
-extern u8 D_800DAA3C[];
+extern RaceCameraTransition D_800DAA3C[];
 extern void *D_800DA880[];
 extern s32 D_80121B40;
 extern s32 D_80121B44;
@@ -721,26 +721,23 @@ void func_8006FE24(void) {
 }
 
 void func_8006FE88(void) {
-    register s32 stride;
-    RaceCameraTransition *transition;
     s16 timer;
     s16 duration;
 
-    stride = sizeof(RaceCameraTransition);
     timer = D_801124A0->timer;
-    transition = (RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride));
-    duration = transition[-16].duration;
+
+    duration = D_800DAA3C[D_801124A0->mode - 16].duration;
     if (duration < timer) {
-        do { timer = duration; do { } while (0); } while (0);
+        timer = duration;
     }
 
-    D_801124A0->pos.x = (((s64)(transition[-16].endPos.x - transition[-16].startPos.x) * timer) / ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].duration) + ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].startPos.x;
-    D_801124A0->pos.y = (((s64)(((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].endPos.y - ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].startPos.y) * timer) / ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].duration) + ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].startPos.y;
-    D_801124A0->pos.z = (((s64)(((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].endPos.z - ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].startPos.z) * timer) / ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].duration) + ((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].startPos.z;
+    D_801124A0->pos.x = (((s64)(D_800DAA3C[D_801124A0->mode - 16].endPos.x - D_800DAA3C[D_801124A0->mode - 16].startPos.x) * timer) / D_800DAA3C[D_801124A0->mode - 16].duration) + D_800DAA3C[D_801124A0->mode - 16].startPos.x;
+    D_801124A0->pos.y = (((s64)(D_800DAA3C[D_801124A0->mode - 16].endPos.y - D_800DAA3C[D_801124A0->mode - 16].startPos.y) * timer) / D_800DAA3C[D_801124A0->mode - 16].duration) + D_800DAA3C[D_801124A0->mode - 16].startPos.y;
+    D_801124A0->pos.z = (((s64)(D_800DAA3C[D_801124A0->mode - 16].endPos.z - D_800DAA3C[D_801124A0->mode - 16].startPos.z) * timer) / D_800DAA3C[D_801124A0->mode - 16].duration) + D_800DAA3C[D_801124A0->mode - 16].startPos.z;
 
-    D_801124A0->focus.x = D_80121D80[((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].playerIndex].state.cameraPos.x;
-    D_801124A0->focus.y = D_80121D80[((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].playerIndex].state.cameraPos.y;
-    D_801124A0->focus.z = D_80121D80[((RaceCameraTransition *)((u8 *)D_800DAA3C + ((u16) D_801124A0->mode * stride)))[-16].playerIndex].state.cameraPos.z;
+    D_801124A0->focus.x = D_80121D80[D_800DAA3C[D_801124A0->mode - 16].playerIndex].state.cameraPos.x;
+    D_801124A0->focus.y = D_80121D80[D_800DAA3C[D_801124A0->mode - 16].playerIndex].state.cameraPos.y;
+    D_801124A0->focus.z = D_80121D80[D_800DAA3C[D_801124A0->mode - 16].playerIndex].state.cameraPos.z;
     D_801124A0->prevPos.x = D_801124A0->pos.x;
     D_801124A0->prevPos.y = D_801124A0->pos.y;
     D_801124A0->prevPos.z = D_801124A0->pos.z;
