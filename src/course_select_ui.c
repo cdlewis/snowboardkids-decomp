@@ -896,7 +896,151 @@ void func_80026B88(CourseSelectWidgetActor *arg0) {
     func_80071824(temp_a3, func_80026A54);
 }
 
+// func_80026C4C best match: 84.077% (nonmatchings/func_80026C4C-4923837976568703863/base_scope_pad.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80026C4C.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    /* 0x00 */ u8 pad0[6];
+    /* 0x06 */ u8 courseId;
+    /* 0x07 */ u8 unk7;
+    /* 0x08 */ u8 mode;
+} CourseSelectSelection26C4C;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x2C];
+    /* 0x2C */ u16 unk2C;
+    /* 0x2E */ u8 unk2E;
+} CourseSelectStatus26C4C;
+
+extern u32 D_800B34B0[];
+extern u8 D_800B6BE4[];
+extern u8 D_800B6DD0[];
+extern u8 D_800B6DFC[];
+extern u8 D_800B6EBC[];
+extern u8 D_800B6FDC[];
+extern u8 D_800F42C7;
+extern u8 D_8010AF07[];
+
+void func_80026C4C(CourseSelectWidgetActor *arg0) {
+    CourseSelectSelection26C4C *selection;
+    CourseSelectStatus26C4C *status;
+    u8 *text;
+    s16 buffer[8];
+    s32 value;
+    s32 courseId;
+    s32 digitCount;
+    s32 courseIndex;
+    u32 price;
+    s16 *digits;
+
+    status = (CourseSelectStatus26C4C *)D_8010AF18;
+    selection = (CourseSelectSelection26C4C *)D_80121D80;
+
+    if (status->unk2C == 0) {
+        volatile s32 padSelected;
+        u16 selectedIndex;
+
+        if ((D_8010AEA8 == 0) && ((selection->mode == 0) || (selection->mode == 3) || (selection->mode == 9))) {
+            if (status->unk2E == 1) {
+                value = 3;
+            } else if (status->unk2E == 2) {
+                value = 4;
+            } else if ((selection->courseId >= 9) && (selection->courseId < 12)) {
+                value = 5;
+            } else {
+                value = selection->courseId % 3;
+            }
+            text = D_800B6BE4 + (value * 0x46);
+        } else {
+            if ((D_800EC9D0[0] < 2) || (D_800EC9D0[0] == 9)) {
+                selectedIndex = 1;
+            } else if (D_800EC9D0[0] < 5) {
+                selectedIndex = D_800EC9D0[0] - 1;
+            }
+
+            if ((D_800EC9D0[0] >= 5) && (D_800EC9D0[0] != 9)) {
+                arg0->subState = 1;
+            }
+
+            if (arg0->subState == 0) {
+                arg0->timer = selectedIndex;
+            } else {
+                selectedIndex = arg0->timer;
+            }
+
+            if ((D_800EC9C2 == 3) && (selection->courseId < 9)) {
+                text = D_800B6DFC + ((selection->courseId % 3) * 0x30);
+            } else if ((selection->courseId >= 9) && (selection->courseId < 12)) {
+                text = D_800B6EBC + ((D_8010AF07[selectedIndex] % 3) * 0x60);
+            } else {
+                text = D_800B6DD0;
+            }
+        }
+
+        func_80013154(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
+
+        if ((D_800EC9C2 == 3) && ((selection->mode == 1) || (selection->mode == 2))) {
+            if ((D_8010AE64[0] != 3) || (D_800F42C7 & 7)) {
+                buffer[0] = -4;
+                buffer[1] = 6;
+                buffer[2] = selectedIndex;
+                buffer[3] = -1;
+                func_80013154((s16)(arg0->x + 0x48), (s16)(arg0->y + 0x10), (u8 *)buffer, 1, arg0->spriteIndex, 0);
+            }
+
+            if (D_800EC9E6 == 0) {
+                buffer[0] = -4;
+                buffer[1] = 6;
+                if ((selectedIndex >= 2) || (selection->courseId >= 9)) {
+                    if (selection->courseId >= 9) {
+                        courseIndex = D_8010AF07[selectedIndex];
+                    } else {
+                        courseIndex = ((selection->courseId % 3) + (selectedIndex * 3)) - 3;
+                    }
+
+                    price = D_800B34B0[courseIndex];
+                    if (price < 10000) {
+                        digitCount = 5;
+                    } else if (price < 100000) {
+                        digitCount = 6;
+                    } else {
+                        digitCount = 7;
+                    }
+
+                    if (price != 0) {
+                        digits = &buffer[digitCount];
+                        do {
+                            digits -= 1;
+                            digits[1] = price % 10;
+                            price /= 10;
+                        } while (price != 0);
+                    }
+
+                    digits = &buffer[digitCount];
+                    digits[1] = 0x10;
+                    digits[2] = -1;
+                    if (selection->courseId >= 9) {
+                    }
+                } else {
+                    digitCount = 3;
+                    buffer[2] = 0x2B;
+                    digits = &buffer[digitCount];
+                    digits[0] = 0x2B;
+                    digits[1] = 0x2B;
+                    digits[2] = 0x2B;
+                    digits[3] = 0x2B;
+                    buffer[7] = -1;
+                }
+                func_80013154((s16)(arg0->x + 0x20), (s16)(arg0->y + 0x20), (u8 *)buffer, 1, arg0->spriteIndex, 0);
+            }
+        }
+    } else {
+        text = D_800B6FDC + ((status->unk2C * 0x32) - 0x32);
+        func_80013154(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
+    }
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800271CC.s")
 
