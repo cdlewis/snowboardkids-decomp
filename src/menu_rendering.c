@@ -682,7 +682,43 @@ void func_80013D0C(s16 arg0, s16 arg1, u8 *arg2, u16 arg3, u16 arg4) {
     }
 }
 
+// func_80013DFC best match: 70.220%
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013DFC.s")
+
+#ifdef NON_MATCHING
+void func_80013DFC(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b) {
+    Gfx *gfx;
+    s32 color;
+    extern u32 D_800DEFF8[];
+
+    if (x0 >= 0 && x0 < 321 && x1 >= 0 && x1 < 321 && y0 >= 0 && y0 < 241 && y1 >= 0 && y1 < 241) {
+        gfx = gRegionAllocPtr++;
+        gfx->words.w0 = 0xE7000000;
+        gfx->words.w1 = 0;
+
+        gfx = gRegionAllocPtr++;
+        gfx->words.w0 = 0xBA001402;
+        gfx->words.w1 = 0x00300000;
+
+        gfx = gRegionAllocPtr++;
+        gfx->words.w0 = 0xB900031D;
+        gfx->words.w1 = 0;
+
+        gfx = gRegionAllocPtr++;
+        gfx->words.w0 = 0xF7000000;
+        color = (((r << 8) & 0xF800) | ((g << 3) & 0x7C0) | ((b >> 2) & 0x3E)) | 1;
+        gfx->words.w1 = (color << 16) | color;
+
+        gfx = gRegionAllocPtr++;
+        gfx->words.w0 = 0xF6000000 | ((x1 & 0x3FF) << 14) | ((y1 & 0x3FF) << 2);
+        gfx->words.w1 = ((x0 & 0x3FF) << 14) | ((y0 & 0x3FF) << 2);
+
+        gfx = gRegionAllocPtr++;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = (u32)D_800DEFF8;
+    }
+}
+#endif
 
 s32 func_80013F88(value, step, increase)
 s32 value;
