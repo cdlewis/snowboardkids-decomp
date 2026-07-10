@@ -49,7 +49,6 @@ extern s32 func_80072138(s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
 extern void func_8008393C(RaceInputPlayer *);
 extern void func_80086170(RaceInputPlayer *);
-extern void func_80087E14(RaceInputPlayer *);
 extern void func_80061034(s32, s16);
 extern void func_80057DD4(void *);
 extern void func_8007BE80(void *);
