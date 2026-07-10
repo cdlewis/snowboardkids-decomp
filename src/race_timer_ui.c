@@ -577,7 +577,31 @@ void func_80079F04(s32 arg0) {
     func_80045A78(0x14, -0x30, func_80043040(D_80112130.popupFontHandle), 0x1A);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_8007A108.s")
+const char D_800E181C[] = "%5ld";
+
+void func_8007A108(s32 arg0) {
+    s32 x;
+    s32 palette;
+    char buffer[0x20];
+
+    sprintf(buffer, D_800E181C, D_801222E8[D_80156608].value);
+    if (D_801222E8[D_80156608].value < 0x64) {
+        palette = 1;
+    } else {
+        palette = 2;
+    }
+    func_80048278(0x14, 0x28, buffer, palette & 0xFFFF);
+
+    if (D_80156608 < 2) {
+        x = -0x2C;
+    } else {
+        x = 0x2C;
+    }
+
+    func_80047E88((s16)x, -0x30, (((RaceTimerUiS8Stride *)D_80122288)[D_80156608].value + 0x31) & 0xFF, 2);
+    func_80047E88((s16)(x + 8), -0x30, 0x2F, 2);
+    func_80047E88((s16)(x + 0x10), -0x30, (D_80121B52 + 0x30) & 0xFF, 2);
+}
 
 void func_8007A278(s32 arg0) {
     func_80045A78(0xC, 0x2C, func_80043040(D_8011216E), 0x90);
