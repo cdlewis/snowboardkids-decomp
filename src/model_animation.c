@@ -1050,7 +1050,133 @@ void func_80082070(ModelAnimState *state) {
     state->frameDataOffset = (s32)data - func_80043040(D_8011215C[state->modelId]);
 }
 
+// func_80082184 best match: 59.342% (base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80082184.s")
+
+#ifdef NON_MATCHING
+extern s32 D_80121BD0[];
+extern s32 D_80121C00[];
+extern s32 D_80121D50;
+
+void func_80082184(ModelAnimState *state, s32 animIndex, s32 frameTimer, s32 frameTimerReset) {
+    s16 *data;
+    s32 base;
+    s32 count;
+    s32 offset;
+    s32 *rotFrame;
+    s32 *rot;
+    s32 *posFrame;
+    s32 *pos;
+    ModelAnimState *cursor;
+    s32 start;
+    s32 delta;
+    s32 x;
+    s32 y;
+    s32 z;
+    s16 packed0;
+    s16 packed1;
+
+    base = func_80043040(D_8011215C[state->modelId]);
+    data = (s16 *)(base + (((u16 *)base)[animIndex] * 2) + 2);
+
+    rotFrame = D_80121BD0;
+    posFrame = D_80121C00;
+    do {
+        count = 0;
+        rot = rotFrame;
+loop_rot:
+        rot[0] = data[0] << 14;
+        rot[1] = data[1] << 14;
+        rot[2] = data[2] << 14;
+        count++;
+        rot += 3;
+        data += 3;
+        if (count < 2) {
+            goto loop_rot;
+        }
+
+        offset = 0;
+        pos = posFrame;
+loop_pos:
+        packed0 = data[0];
+        packed1 = data[1];
+        x = (packed0 >> 4) & 0xFF0;
+        y = (packed0 << 4) & 0xFF0;
+        z = (packed1 >> 4) & 0xFF0;
+        data += 2;
+        pos[0] = x;
+        pos[1] = y;
+        pos[2] = z;
+        if (packed1 & 1) {
+            pos[0] = x + 8;
+        }
+        if (packed1 & 2) {
+            pos[1] = y + 8;
+        }
+        offset += 0xC;
+        if (packed1 & 4) {
+            pos[2] = z + 8;
+        }
+        pos += 3;
+        if (offset < 0x90) {
+            goto loop_pos;
+        }
+
+        posFrame += 0x2A;
+        rotFrame += 6;
+    } while ((u32)posFrame < (u32)&D_80121D50);
+
+    pos = D_80121C00;
+    count = 0;
+    cursor = state;
+    do {
+        start = pos[0];
+        delta = (pos[0x2A] - start) & 0xFFF;
+        if (delta >= 0x801) {
+            delta -= 0x1000;
+        }
+        cursor->frameCursor.x = start + ((delta * frameTimer) / frameTimerReset);
+
+        start = pos[1];
+        delta = (pos[0x2B] - start) & 0xFFF;
+        if (delta >= 0x801) {
+            delta -= 0x1000;
+        }
+        cursor->frameCursor.y = start + ((delta * frameTimer) / frameTimerReset);
+
+        start = pos[2];
+        delta = (pos[0x2C] - start) & 0xFFF;
+        if (delta >= 0x801) {
+            delta -= 0x1000;
+        }
+        count++;
+        pos += 3;
+        cursor = (ModelAnimState *)((u8 *)cursor + 0x14);
+        *(s16 *)((u8 *)cursor + 0x32A) = start + ((delta * frameTimer) / frameTimerReset);
+    } while (count != 12);
+
+    *(s32 *)((u8 *)state + 0x340) =
+        D_80121BD0[0] + (((D_80121BD0[6] - D_80121BD0[0]) * frameTimer) / frameTimerReset);
+    *(s32 *)((u8 *)state + 0x344) =
+        D_80121BD0[1] + (((D_80121BD0[7] - D_80121BD0[1]) * frameTimer) / frameTimerReset);
+    *(s32 *)((u8 *)state + 0x348) =
+        D_80121BD0[2] + (((D_80121BD0[8] - D_80121BD0[2]) * frameTimer) / frameTimerReset);
+    *(s32 *)((u8 *)state + 0x354) =
+        D_80121BD0[3] + (((D_80121BD0[9] - D_80121BD0[3]) * frameTimer) / frameTimerReset);
+    *(s32 *)((u8 *)state + 0x358) =
+        D_80121BD0[4] + (((D_80121BD0[10] - D_80121BD0[4]) * frameTimer) / frameTimerReset);
+
+    *(s16 *)((u8 *)state + 0x42A) = state->frameCursor.x;
+    *(s16 *)((u8 *)state + 0x43E) = state->frameCursor.x;
+    *(s16 *)((u8 *)state + 0x440) = state->frameCursor.y;
+    *(s16 *)((u8 *)state + 0x42C) = state->frameCursor.y;
+    *(s16 *)((u8 *)state + 0x442) = state->frameCursor.z;
+    *(s16 *)((u8 *)state + 0x42E) = state->frameCursor.z;
+
+    *(s32 *)((u8 *)state + 0x35C) =
+        D_80121BD0[5] + (((D_80121BD0[11] - D_80121BD0[5]) * frameTimer) / frameTimerReset);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80082664.s")
 
