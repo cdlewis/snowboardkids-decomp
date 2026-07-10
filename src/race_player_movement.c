@@ -884,7 +884,51 @@ void func_8008A940(RaceInputPlayer *player) {
 }
 #endif
 
+// func_8008B408 best match: 90.364% (nonmatchings/func_8008B408-7273315160691878794/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008B408.s")
+
+#ifdef NON_MATCHING
+void func_8008B408(RaceInputPlayer *player, s32 arg1, s16 arg2) {
+    s16 temp_v0;
+    s32 scale;
+    s32 temp;
+
+    if (arg1 < 0) {
+        arg1 = -arg1;
+    }
+
+    temp_v0 = player->unk2F6;
+    arg2 = (arg2 * 0x10) - temp_v0;
+    scale = arg1 << 3;
+    if (arg2 >= 0x81) {
+        arg2 = 0x80;
+    }
+    scale += arg1;
+    if (arg2 < -0x80) {
+        arg2 = -0x80;
+    }
+    player->unk2F6 = temp_v0 + arg2;
+
+    arg2 = player->unk2F6 * player->unk2F8 / 0x3F;
+    scale <<= 2;
+    scale -= arg1;
+    scale <<= 3;
+    scale -= arg1;
+    if (arg1 >= 0x40001) {
+        scale = 0x117;
+    } else {
+        temp = scale >> 18;
+        if (scale < 0) {
+            temp = (scale + 0x3FFFF) >> 18;
+        }
+        scale = (s16)temp;
+    }
+
+    arg1 = player->unk2EE;
+    temp_v0 = arg2 * scale / 0x1F0;
+    player->unk2EE = arg1 + ((temp_v0 - arg1) >> 2);
+}
+#endif
 
 void func_8008B508(RaceVec3i *vec, RaceInputPlayer *player) {
     s32 magnitude;
