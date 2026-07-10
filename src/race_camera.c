@@ -116,7 +116,28 @@ void func_8006D580(u16 arg0, u16 arg1) {
     temp->update = D_800DA880[arg1];
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006D5CC.s")
+void func_8006D5CC(void) {
+    RaceCamera *camera;
+
+    func_8006D520(0, 0);
+    camera = D_801121E0;
+    camera->initialized = 0;
+    camera->pitch = 0;
+    camera->yaw = 0;
+    camera->roll = 0;
+    camera->pos.x = 0;
+    camera->pos.y = 0;
+    camera->pos.z = 0;
+    camera->distance = 0;
+    camera->unk28 = 0;
+    D_801121E0[1] = D_801121E0[0];
+    D_801121E0[2] = D_801121E0[0];
+    D_801121E0[3] = D_801121E0[0];
+    D_801121E0[0].playerIndex = 0;
+    D_801121E0[1].playerIndex = 1;
+    D_801121E0[2].playerIndex = 2;
+    D_801121E0[3].playerIndex = 3;
+}
 
 void func_8006D700(void) {
     RaceCamera *camera;
