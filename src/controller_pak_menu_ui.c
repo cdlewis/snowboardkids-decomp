@@ -533,7 +533,172 @@ void func_80031510(ControllerPakTwoPointActor *arg0) {
     func_80071824(arg0, func_800314E0);
 }
 
+// func_80031550 best match: 90.458%
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_80031550.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    /* 0x00 */ u32 file_size;
+    /* 0x04 */ u32 game_code;
+    /* 0x08 */ u16 company_code;
+    /* 0x0A */ char ext_name[4];
+    /* 0x0E */ char game_name[16];
+} ControllerPakPfsState;
+
+extern ControllerPakPfsState D_8010AF98[];
+extern u8 D_8010AF94;
+
+void func_80031550(ControllerPakFileListActor *arg0) {
+    ControllerPakPfsState *fileState;
+    u16 textB0[4];
+    u16 fileNameText[19];
+    u16 text7C[5];
+    u16 *digit;
+    u16 *out;
+    u8 *name;
+    s32 value;
+    s32 rowY;
+    u16 fileIndex;
+    s32 alpha;
+    u8 state;
+    s32 indexXOffset;
+    s32 i;
+    s32 insertIndex;
+    s32 ch;
+    s32 ten;
+
+    if (D_8010AF90.visibleFileIndex == 0) {
+        fileIndex = D_8010AF90.fileIndex;
+    } else if (D_8010AF90.visibleFileIndex == 4) {
+        fileIndex = D_8010AF90.fileIndex - 4;
+    } else {
+        fileIndex = D_8010AF90.fileIndex - D_8010AF90.visibleFileIndex;
+    }
+
+    ten = 10;
+    rowY = 0;
+    do {
+        state = D_8010AF90.state;
+        alpha = 0xE0;
+        indexXOffset = 0;
+        if ((s32)state <= 0) {
+        } else {
+            alpha = 0xE0;
+            if (D_8010AF90.fileIndex == fileIndex) {
+                alpha = 0x100;
+            }
+        }
+
+        if (fileIndex < 9) {
+            textB0[0] = 0xFFFE;
+            indexXOffset = -4;
+        } else {
+            textB0[0] = 1;
+        }
+        textB0[2] = 0xFFFF;
+        textB0[1] = (fileIndex + 1) % ten;
+        func_80013154((s16)(arg0->positions[0].x + indexXOffset), (s16)(arg0->positions[0].y + rowY), (u8 *)textB0, 1, alpha, 8);
+
+        fileState = &D_8010AF98[fileIndex];
+        i = D_8010AF94 * 0;
+        if (fileState->company_code != 0) {
+            insertIndex = 0;
+            name = fileState->game_name;
+            out = fileNameText;
+            do {
+                ch = *name++;
+                if ((ch == 0) && (insertIndex == 0)) {
+                    insertIndex = i;
+                }
+                i++;
+                if (ch < 0x10) {
+                    *out = 0xFFFE;
+                } else {
+                    *out = ch - 0x10;
+                }
+                out++;
+            } while (i < 0x10);
+
+            ch = fileState->ext_name[0];
+            fileNameText[16] = 0xFFFE;
+            fileNameText[17] = 0xFFFE;
+            if (ch != 0) {
+                if (insertIndex == 0) {
+                    insertIndex = 0x10;
+                }
+                fileNameText[insertIndex] = 0x2C;
+                fileNameText[insertIndex + 1] = ch - 0x10;
+            }
+            fileNameText[18] = 0xFFFF;
+            func_80013154(arg0->positions[1].x, (s16)(arg0->positions[1].y + rowY), (u8 *)fileNameText, 1, alpha, 8);
+
+            out = text7C;
+            i = 0x18;
+            do {
+                ch = (fileState->game_code >> i) & 0xFF;
+                if ((ch < 0x30) || (ch >= 0x5B)) {
+                    *out = 0xFFFE;
+                } else if (ch >= 0x41) {
+                    *out = ch - 0x37;
+                } else if (ch >= 0x3A) {
+                    *out = 0xFFFE;
+                } else {
+                    *out = ch - 0x30;
+                }
+                out++;
+                i -= 8;
+            } while (out < &text7C[4]);
+            text7C[4] = 0xFFFF;
+            func_80013154(arg0->positions[2].x, (s16)(arg0->positions[2].y + rowY), (u8 *)text7C, 1, alpha, 8);
+
+            out = text7C;
+            i = 8;
+            do {
+                ch = (fileState->company_code >> i) & 0xFF;
+                if ((ch < 0x30) || (ch >= 0x5B)) {
+                    *out = 0xFFFE;
+                } else if (ch >= 0x41) {
+                    *out = ch - 0x37;
+                } else if (ch >= 0x3A) {
+                    *out = 0xFFFE;
+                } else {
+                    *out = ch - 0x30;
+                }
+                i -= 8;
+                out++;
+            } while ((i ^ 0) >= -7);
+            text7C[2] = 0xFFFF;
+            func_80013154(arg0->positions[3].x, (s16)(arg0->positions[3].y + rowY), (u8 *)text7C, 1, alpha, 8);
+
+            digit = textB0;
+            do {
+                digit++;
+                digit[-1] = 0xFFFE;
+            } while ((digit - 1) < (&textB0[3] - 1));
+
+            value = fileState->file_size >> 8;
+            digit = &textB0[2];
+            do {
+                digit--;
+                digit[1] = value % ten;
+                value = value / ten;
+            } while (value != 0);
+            textB0[3] = 0xFFFF;
+            func_80013154(arg0->positions[4].x, (s16)(arg0->positions[4].y + rowY), (u8 *)textB0, 1, alpha, 8);
+        }
+
+        rowY += 0x10;
+        fileIndex++;
+    } while (rowY != 0x50);
+
+    if (D_8010AF93 != 0) {
+        func_8000F8AC(arg0->positions[5].x, (s16)(arg0->positions[5].y + (D_8010AF94 * 0x10)), func_80043040(D_80112130[0x21]), 6,
+                      0x20, 0x20, 0, arg0->cursorScale, 0);
+        func_8000F8AC((s16)(arg0->positions[5].x + 0x80), (s16)(arg0->positions[5].y + (D_8010AF94 * 0x10)),
+                      func_80043040(D_80112130[0x21]), 7, 0x20, 0x20, 0, arg0->cursorScale, 0);
+    }
+}
+#endif
 
 void func_80031A88(ControllerPakFileListActor *arg0) {
     if (D_8010AF93 == 1) {
