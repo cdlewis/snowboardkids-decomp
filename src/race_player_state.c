@@ -4440,7 +4440,7 @@ void func_80097144(void) {
 
 void func_80097164(RaceInputPlayer *player) {
     if (player->updateState < 7) {
-        func_8008A940();
+        func_8008A940(player);
     } else {
         player->unk64 = 0;
         func_8008BE1C(player);

@@ -29,7 +29,15 @@ typedef struct {
 
 extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
 extern s32 func_8004940C(s32, s32, s32, s32);
+extern s16 func_8004908C(s32, s32);
+extern void func_80097BAC(Matrix4s, s16);
+extern void func_80097C18(Matrix4s, s16);
+extern void func_80097C84(Matrix4s, s16);
+extern void func_80097CF0(Matrix4s, Matrix4s, Matrix4s);
+extern void func_80097DA4(Matrix4s, s16, s16, s16);
 extern void func_80097FE4(Matrix4s, s16, s16, RaceInputPlayer *);
+extern void func_800981C8(Matrix4s, s16, s16, s16);
+extern void func_80098458(Matrix4s, s16, s16, s16);
 extern void func_80098590(Matrix4s, RaceVec3i *, RaceVec3i *);
 extern s16 func_80097AE8(s16);
 extern s16 func_80097B48(s16);
@@ -40,6 +48,7 @@ extern s8 D_80121B54;
 extern s8 D_80121D70[];
 extern RaceInputPlayer D_801235B0;
 extern s32 D_801235B4;
+extern RaceVec3i D_800DE7B0[];
 extern s16 D_800DE84C[];
 extern s16 D_800DE864[];
 extern s16 D_800DE87C[];
@@ -473,7 +482,194 @@ s32 func_800891B8(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80089374.s")
 
+// func_8008A940 best match: 76.152% (nonmatchings/func_8008A940-8207005055717715604/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008A940.s")
+
+#ifdef NON_MATCHING
+void func_8008A940(RaceInputPlayer *player) {
+    volatile u8 pad[16];
+    Matrix4s mtx;
+    Matrix4s tiltMtx;
+    Matrix4s baseMtx;
+    Matrix4s effectMtx;
+    RaceVec3i points[6];
+    s32 heightDiffs[6];
+    s32 groundHeights[6];
+    s32 transformedX;
+    s32 transformedY;
+    s32 transformedZ;
+    s32 frontMidGround;
+    s32 backMidGround;
+    s32 baseY;
+    s32 pitchSpan;
+    s32 rollSpan;
+    s32 frontHeightDiff;
+    s32 backHeightDiff;
+    s32 sideHeightDiff;
+    s16 i;
+    s32 terrainId;
+    s32 stateFlags;
+    RaceInputPlayer *temp_s2;
+    RaceVec3i *point;
+
+    temp_s2 = player;
+    temp_s2->unk500 = 0;
+    terrainId = temp_s2->unk502;
+
+    func_80097C84(mtx, temp_s2->unk2EE);
+    func_80098590(mtx, &D_800DE7F8, points);
+    pitchSpan = points[0].x;
+
+    func_80097BAC(mtx, temp_s2->pitchAngle);
+    func_80098590(mtx, &D_800DE810, points);
+    rollSpan = points[0].z;
+
+    baseY = temp_s2->posY - 0x30000;
+    func_80097FE4(mtx, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2);
+
+    i = 0;
+    do {
+        point = &points[i];
+        func_80098590(mtx, &D_800DE7B0[i + 2], point);
+        point->x += temp_s2->posX;
+        point->y += baseY;
+        point->z += temp_s2->posZ;
+        groundHeights[i] = func_80080CC4(terrainId, point->x, point->z);
+        heightDiffs[i] = groundHeights[i] - point->y;
+        if (heightDiffs[i] < 0) {
+            groundHeights[i] = point->y;
+        }
+        i++;
+    } while (i < 6);
+
+    frontMidGround = (s64)(groundHeights[0] + groundHeights[2]) / 2;
+    backMidGround = (s64)(groundHeights[1] + groundHeights[3]) / 2;
+
+    frontHeightDiff = heightDiffs[0];
+    if (frontHeightDiff < heightDiffs[1]) {
+        frontHeightDiff = heightDiffs[1];
+        groundHeights[0] = groundHeights[1];
+        points[0].y = points[1].y;
+    }
+    if (heightDiffs[2] < heightDiffs[3]) {
+        heightDiffs[2] = heightDiffs[3];
+        groundHeights[2] = groundHeights[3];
+        points[2].y = points[3].y;
+    }
+    if (heightDiffs[4] < heightDiffs[5]) {
+        heightDiffs[4] = heightDiffs[5];
+        groundHeights[4] = groundHeights[5];
+    }
+
+    if ((frontHeightDiff >= 0) && (heightDiffs[2] >= 0)) {
+        heightDiffs[0] = frontHeightDiff;
+        if (!(temp_s2->stateFlags & 4)) {
+            temp_s2->pitchAngle = func_8004908C(-(groundHeights[0] - groundHeights[2]), -rollSpan * 2);
+        }
+        baseY = (s64)(groundHeights[2] + groundHeights[0]) / 2;
+    } else {
+        heightDiffs[0] = frontHeightDiff;
+        if (frontHeightDiff >= 0) {
+            if (!(temp_s2->stateFlags & 4)) {
+                temp_s2->pitchAngle = func_8004908C(-(groundHeights[0] - groundHeights[4]), -rollSpan);
+            }
+            baseY = groundHeights[4];
+        } else if (heightDiffs[2] >= 0) {
+            if (!(temp_s2->stateFlags & 4)) {
+                temp_s2->pitchAngle = func_8004908C(-(groundHeights[4] - groundHeights[2]), -rollSpan);
+            }
+            baseY = groundHeights[4];
+        }
+    }
+
+    temp_s2->unk2F0 = func_8004908C(-(points[0].y - points[2].y), -rollSpan * 2);
+    temp_s2->unk2F4 = func_8004908C(-(frontMidGround - backMidGround), -pitchSpan * 2);
+    temp_s2->unk64 = 0;
+
+    func_800981C8(mtx, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2->unk2EE);
+    i = 0;
+    do {
+        point = &points[i];
+        func_80098590(mtx, &D_800DE7B0[i + 2], point);
+        point->x += temp_s2->posX;
+        point->z += temp_s2->posZ;
+        point->y += baseY + temp_s2->unk64;
+        groundHeights[i] = func_80080CC4(terrainId, point->x, point->z);
+        if (point->y < groundHeights[i]) {
+            temp_s2->unk64 += groundHeights[i] - point->y;
+        }
+        i++;
+    } while (i < 4);
+
+    if (temp_s2->posY < baseY + 0x30000) {
+        temp_s2->posY = baseY + 0x2FFFF;
+        temp_s2->unk58 = 0x2FFFF;
+    } else {
+        temp_s2->posY = baseY + 0x30000;
+        temp_s2->unk58 = 0x30000;
+    }
+
+    transformedX = (s64)mtx[3] * temp_s2->unk68 / 0x1000;
+    transformedY = (s64)mtx[4] * temp_s2->unk68 / 0x1000;
+    transformedZ = (s64)mtx[5] * temp_s2->unk68 / 0x1000;
+
+    if (temp_s2->stateFlags & 0x400) {
+        func_80098458(effectMtx, temp_s2->unk6C, -temp_s2->unk6E, -temp_s2->unk70);
+        func_80097CF0(effectMtx, mtx, baseMtx);
+    } else {
+        func_80098458(effectMtx, temp_s2->unk6C, temp_s2->unk6E, temp_s2->unk70);
+        func_80097C18(baseMtx, 0x800);
+        func_80097CF0(baseMtx, mtx, tiltMtx);
+        func_80097CF0(effectMtx, tiltMtx, baseMtx);
+    }
+
+    stateFlags = temp_s2->stateFlags;
+    if (stateFlags & 0x400) {
+        sideHeightDiff = ((s64)baseMtx[3] * (temp_s2->unk344 - temp_s2->unk68) +
+                          (s64)-baseMtx[0] * temp_s2->unk340 + (s64)baseMtx[6] * temp_s2->unk348) /
+                         0x1000;
+        ((s64)baseMtx[4] * (temp_s2->unk344 - temp_s2->unk68) + (s64)-baseMtx[1] * temp_s2->unk340 +
+         (s64)baseMtx[7] * temp_s2->unk348) /
+            0x1000;
+        backHeightDiff = ((s64)baseMtx[5] * (temp_s2->unk344 - temp_s2->unk68) +
+                          (s64)-baseMtx[2] * temp_s2->unk340 + (s64)baseMtx[8] * temp_s2->unk348) /
+                         0x1000;
+        func_80097DA4(tiltMtx, temp_s2->unk33A, -temp_s2->unk33C, -temp_s2->unk33E);
+    } else {
+        sideHeightDiff = ((s64)baseMtx[3] * (temp_s2->unk344 - temp_s2->unk68) +
+                          (s64)baseMtx[0] * temp_s2->unk340 + (s64)baseMtx[6] * temp_s2->unk348) /
+                         0x1000;
+        ((s64)baseMtx[4] * (temp_s2->unk344 - temp_s2->unk68) + (s64)baseMtx[1] * temp_s2->unk340 +
+         (s64)baseMtx[7] * temp_s2->unk348) /
+            0x1000;
+        backHeightDiff = ((s64)baseMtx[5] * (temp_s2->unk344 - temp_s2->unk68) +
+                          (s64)baseMtx[2] * temp_s2->unk340 + (s64)baseMtx[8] * temp_s2->unk348) /
+                         0x1000;
+        func_80097DA4(tiltMtx, temp_s2->unk33A, temp_s2->unk33C, temp_s2->unk33E);
+    }
+
+    sideHeightDiff += temp_s2->posX + transformedX;
+    backHeightDiff += temp_s2->posZ + transformedZ;
+    func_80097CF0(tiltMtx, baseMtx, mtx);
+
+    i = 0;
+    do {
+        func_80098590(mtx, &D_800DE7B0[i + 9], &temp_s2->markerPoints[i]);
+        temp_s2->markerPoints[i].x += sideHeightDiff;
+        temp_s2->markerPoints[i].z += backHeightDiff;
+        temp_s2->markerPoints[i].y =
+            func_80080CC4(terrainId, temp_s2->markerPoints[i].x, temp_s2->markerPoints[i].z);
+        i++;
+    } while (i < 4);
+
+    func_8008BE1C(temp_s2);
+    if (temp_s2->unk58 == 0x30000) {
+        temp_s2->stateFlags |= 1;
+        return;
+    }
+    temp_s2->stateFlags &= ~1;
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008B408.s")
 
