@@ -72,6 +72,8 @@ extern u8 D_800EC9C2;
 extern u8 D_800EC9E6;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADDC;
+extern EffectTask *D_8010ADE0;
+extern EffectTask *D_8010ADE4;
 extern s32 D_8010ADE8;
 extern s8 D_8010AE64[];
 extern u8 D_8010AECC[];
@@ -1401,7 +1403,110 @@ void func_80028354(CourseSelectWidgetInitActor *actor) {
 }
 #endif
 
+// func_800287EC best match: 76.720% (nonmatchings/func_800287EC-8207005055717715604/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800287EC.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 x[4];
+    /* 0x20 */ s16 y[4];
+    /* 0x28 */ s16 targetX[4];
+    /* 0x30 */ s16 deltaX[4];
+    /* 0x38 */ s16 deltaY[4];
+    /* 0x40 */ s16 exitTargetX[1];
+    /* 0x42 */ u16 period[4];
+    /* 0x4A */ u16 speed[4];
+    /* 0x52 */ u16 timer[4];
+    /* 0x5A */ u8 state[4];
+} CourseSelectWidgetTransitionActor;
+
+void func_800287EC(CourseSelectWidgetActor *arg0) {
+    volatile u8 pad[0x20];
+    CourseSelectWidgetTransitionActor *actor = (CourseSelectWidgetTransitionActor *)arg0;
+    s32 i;
+    s32 count;
+    s32 next;
+    s32 step;
+    u8 *statePtr;
+
+    if (D_80121B55 == 2) {
+        count = 2;
+    } else {
+        count = 4;
+    }
+
+    i = 0;
+    if (count > 0) {
+        statePtr = actor->state;
+        do {
+            next = i + 1;
+            switch (statePtr[0]) {
+                case 0:
+                    step = 0;
+                    do {
+                        u16 timer = actor->timer[i] + actor->speed[i];
+                        u16 period = actor->period[i];
+                        actor->x[i] += actor->deltaX[i];
+                        actor->timer[i] = timer;
+                        if (timer >= period) {
+                            actor->y[i] += actor->deltaY[i];
+                            actor->timer[i] = timer - period;
+                        }
+                        step++;
+                        if (actor->x[i] == actor->targetX[i]) {
+                            statePtr[0] = 1;
+                            if (count == next) {
+                                D_8010ADE0 = func_80071408((void (*)(EffectTask *))func_80024050, 0, 0x62);
+                                D_8010ADE4 = func_80071408((void (*)(EffectTask *))func_80024968, 0, 0x62);
+                                func_80071408(func_800257F0, 0, 0x62);
+                            }
+                            break;
+                        }
+                    } while (step != 0x18);
+                    break;
+                case 1:
+                    if (*(&D_80121D88 + (i * sizeof(CourseSelectRacePlayer))) == 4) {
+                        statePtr[0] = 2;
+                        actor->timer[i] = 0;
+                    }
+                    break;
+                case 2:
+                    step = 0;
+                    do {
+                        u16 timer = actor->timer[i] + actor->speed[i];
+                        u16 period = actor->period[i];
+                        actor->x[i] -= actor->deltaX[i];
+                        actor->timer[i] = timer;
+                        if (timer >= period) {
+                            actor->y[i] -= actor->deltaY[i];
+                            actor->timer[i] = timer - period;
+                        }
+                        step++;
+                        if (count == next) {
+                            if (((D_80121B55 == 2) && (actor->x[0] >= actor->exitTargetX[0])) ||
+                                ((D_80121B55 >= 3) && (actor->exitTargetX[0] >= actor->x[0]))) {
+                                s32 j = 0;
+                                if (count > 0) {
+                                    do {
+                                        actor->state[j] = 3;
+                                        j++;
+                                    } while (j != count);
+                                }
+                                break;
+                            }
+                        }
+                    } while (step != 0x18);
+                    break;
+            }
+            i = next;
+            statePtr++;
+        } while (next != count);
+    }
+
+    func_800483FC(&D_80124868, func_80028354, arg0);
+}
+#endif
 
 // func_80028B0C best match: 92.500% (nonmatchings/func_80028B0C-180949888360117632/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028B0C.s")
