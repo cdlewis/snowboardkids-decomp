@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_decompression.h"
 #include "memory_allocator.h"
 
 typedef struct {
@@ -75,7 +76,12 @@ extern void func_800483FC(void *, void *, s32);
 extern void func_8007A3D8(void);
 extern void func_80087600(s32, s32 *, s32 *);
 extern int sprintf(char *, const char *, ...);
+extern u8 D_245A80[];
+extern u8 D_24C8E0[];
+extern RaceTimer D_800DC928[];
+extern RaceTimer D_800DC950;
 extern u8 D_800DC8F9;
+extern u8 D_800EC9C2;
 extern RaceTimerCourseSpawnEntry D_800B9540[];
 extern u8 D_800DC8F0[];
 extern u8 D_800DC8F8[];
@@ -88,7 +94,11 @@ extern s16 D_80121B72;
 extern s16 D_80121B70;
 extern s16 D_801222F6;
 extern s16 D_80121B50;
+extern u8 D_80121B55;
 extern u8 D_80121B56;
+extern u8 D_80121B5A;
+extern u8 D_80121B5B;
+extern u8 D_80121B5E;
 extern u8 D_80156608;
 extern s32 D_80124868;
 extern s32 D_80124878;
@@ -96,6 +106,7 @@ extern RaceTimer D_80121B74;
 extern s8 D_80121B75;
 extern s16 D_80121B76;
 extern RaceTimer D_80121B78;
+extern u8 D_80121B80;
 extern u8 D_80121B81;
 extern s8 D_80122288[];
 extern RaceTimerUiPlayer D_80121D80[];
@@ -106,7 +117,45 @@ extern RaceTimerUiS8Stride D_80122296[];
 extern RaceTimerUiS32Stride D_801222E8[];
 extern s16 D_801222F0;
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80078430.s")
+void func_80078430(void) {
+    func_800437F0(D_245A80, D_24C8E0, 0x1F);
+    D_80121B70 = -1;
+    D_80121B72 = 0;
+
+    if (D_80121B55 == 1) {
+        if (D_800EC9C2 == 0) {
+            D_80121B70 = 0;
+        }
+        if (D_800EC9C2 == 2) {
+            D_80121B70 = 4;
+        }
+        if (D_800EC9C2 == 1) {
+            if (D_80121B5E == 0) {
+                D_80121B70 = 5;
+            }
+            if (D_80121B5E == 1) {
+                D_80121B70 = 6;
+                D_80121B78 = D_800DC928[D_80121B50];
+            }
+            if (D_80121B5E == 2) {
+                D_80121B70 = 7;
+                D_80121B78 = D_800DC950;
+            }
+        }
+    } else {
+        D_80121B70 = D_80121B55 - 1;
+    }
+
+    if ((D_80121B5A != 0) || (D_80121B5B != 0)) {
+        D_80121B70 = 8;
+    }
+
+    D_80121B74.minutes = 0;
+    D_80121B74.seconds = 0;
+    D_80121B74.fraction = 0;
+    D_80121B80 = 0;
+    D_80121B81 = 0;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_80078568.s")
 
