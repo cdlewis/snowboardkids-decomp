@@ -300,8 +300,384 @@ void func_800035F8(void) {
 }
 #endif
 
-// func_80003798 best match: 60.810% (nonmatchings/func_80003798-7273315160691878794/base_1.c)
+// func_80003798 best match: 72.707% (nonmatchings/func_80003798-7273315160691878794/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_80003798.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    u8 state;
+    u8 unk1;
+    s16 unk2;
+    u8 unk4;
+    u8 pad5;
+    s16 unk6[4];
+    u8 unkE[4];
+    s16 unk12[4];
+} GameSetupSubState03798;
+
+typedef struct {
+    u8 pad0[0x8];
+    u8 unk8;
+    u8 pad9[0x3];
+    s32 unkC;
+    u8 pad10[0x558];
+    s32 unk568;
+    u8 pad56C[0xA0];
+} GameSetupPlayerState03798;
+
+typedef struct {
+    u8 pad0[0x4];
+    s32 unk4;
+    u8 pad8[0x44];
+    u8 unk4C;
+    u8 pad4D[0x78AB];
+} GameSetupSavePlayer03798;
+
+typedef struct {
+    u8 pad0[2];
+    u8 state;
+    u8 pad3;
+    s16 targetScale;
+    s16 timer;
+    u8 selectedOption;
+} ControllerPakConfirmTransition03798;
+
+extern void func_80000C48();
+extern void func_80000DB4();
+extern void func_80001010();
+extern void func_80001538();
+extern void func_8001621C(EffectTask *);
+extern void func_800165F0(EffectTask *);
+extern void func_80016B54(EffectTask *);
+extern void func_80017014(EffectTask *);
+extern void func_80030EA8(EffectTask *);
+
+extern u8 D_800B3199[];
+extern s16 D_800EC9C8[];
+extern s16 D_800EC9D0[];
+extern u8 D_800EC9D8[];
+extern u8 D_800EC9E0[];
+extern u8 D_800EC9E4;
+extern GameSetupSavePlayer03798 D_800EC9F0[];
+extern ControllerPakConfirmTransition03798 D_8010ADD0;
+extern EffectTask *D_8010ADE0;
+extern EffectTask *D_8010ADE4;
+extern EffectTask *D_8010ADE8;
+extern GameSetupPlayerState03798 D_80121D80[];
+
+#define D_8010AE00_03798 (*(GameSetupSubState03798 *)&D_8010AE00)
+#define D_800EC8B4_03798 (&D_800EC8B4)
+#define D_80123778_03798 (&D_80123778)
+
+void func_80003798(void) {
+    s32 allReady = 0;
+    s16 allPresent = 0;
+    EffectTask *task = D_8010ADE0;
+    EffectTask *transitionTask = D_8010ADE8;
+    s32 i;
+    u8 *present;
+
+    if ((D_8010AE00_03798.unk4 == 1) && (D_8010AE00_03798.state == 5)) {
+        D_8010AE00_03798.state = 6;
+    }
+
+    if ((task == NULL) || (D_8010AE00_03798.unk4 != 0)) {
+        if ((D_8010AE00_03798.state >= 6) && (D_8010AE00_03798.state < 8)) {
+            if (D_8010AE00_03798.state == 6) {
+                s32 input = D_80123778_03798[0];
+                if ((input & 0x8000) || (input & 0x1000)) {
+                    func_80072138(1, 0x32);
+                    D_8010AE00_03798.state = 7;
+                    D_8010AE00_03798.unk2 = 0xFF;
+                    D_8010AE00_03798.unk1 = 0;
+                }
+            }
+        } else {
+            allReady = 1;
+            allPresent = 1;
+            i = 0;
+            if (D_80121B55 > 0) {
+                present = D_800EC9E0;
+                do {
+                    u8 presentValue = *present;
+
+                    if (presentValue != 1) {
+                        GameSetupPlayerState03798 *player = &D_80121D80[i];
+                        s32 stateIndex;
+                        s16 *choice;
+                        s16 choiceValue;
+                        s32 input;
+
+                        if ((transitionTask == NULL) || (D_8010AE00_03798.unkE[i] == 0)) {
+                            stateIndex = i * 2;
+                            choice = &D_800EC9D0[i];
+                            choiceValue = *choice;
+                            if (choiceValue != 0) {
+                                stateIndex = 6;
+                            } else {
+                                stateIndex = D_800EC9C8[i];
+                            }
+
+                            switch (stateIndex) {
+                                case 0: {
+                                    s32 pakState;
+                                    u16 playerIndex = i;
+
+                                    D_800EC8B4_03798[i] = 0;
+                                    func_80000A40(playerIndex, D_80121B55, choiceValue);
+                                    pakState = D_800EC898[i];
+                                    if ((pakState != 1) && (pakState != 0xB) && (pakState != 4)) {
+                                        D_800EC8B4_03798[i] = 1;
+                                    } else {
+                                        D_800EC8B4_03798[i] = 0;
+                                    }
+                                    func_80000C48(playerIndex);
+                                    break;
+                                }
+
+                                case 1:
+                                    func_80000DB4((u16)i, D_80121B55, choiceValue);
+                                    break;
+
+                                case 2: {
+                                    u8 result;
+
+                                    func_80001010((u16)i, D_80121B55, choiceValue);
+                                    result = D_800EC9D8[i];
+                                    if (result == 0) {
+                                        player->unk568 = 0;
+                                        player->unkC = D_800EC9F0[i].unk4;
+                                        D_800EC9C8[i] = 8;
+                                        *choice = 1;
+                                    } else if (result == 3) {
+                                        if (transitionTask != NULL) {
+                                            D_8010AE00_03798.unkE[i] = 2;
+                                            D_8010AE00_03798.unk12[i] = 0xD;
+                                        } else {
+                                            D_800EC9C8[i] = 0xD;
+                                        }
+                                        D_800EC9D8[i] = 0;
+                                    }
+                                    break;
+                                }
+
+                                case 3: {
+                                    u8 result;
+
+                                    func_80001538((u16)i, D_80121B55, choiceValue);
+                                    result = D_800EC9D8[i];
+                                    if (result == 0) {
+                                        if (transitionTask != NULL) {
+                                            D_8010AE00_03798.unkE[i] = 2;
+                                            D_8010AE00_03798.unk12[i] = 0xF;
+                                        } else {
+                                            D_800EC9C8[i] = 0xF;
+                                        }
+                                    } else if (result == 3) {
+                                        if (transitionTask != NULL) {
+                                            D_8010AE00_03798.unkE[i] = 2;
+                                            D_8010AE00_03798.unk12[i] = 0xE;
+                                        } else {
+                                            D_800EC9C8[i] = 0xE;
+                                        }
+                                        D_800EC9D8[i] = 0;
+                                    }
+                                    break;
+                                }
+
+                                case 4:
+                                    input = D_80123778_03798[i];
+                                    if ((input & 0x8000) || (input & 0x1000)) {
+                                        func_80072138(1, 0x32);
+                                        if (transitionTask != NULL) {
+                                            D_8010AE00_03798.unkE[i] = 2;
+                                            D_8010AE00_03798.unk12[i] = 0;
+                                        } else {
+                                            D_800EC9C8[i] = 0;
+                                        }
+                                    }
+                                    break;
+
+                                case 5:
+                                    if (player->unk8 == 0) {
+                                        player->unk8 = 1;
+                                    }
+                                    break;
+
+                                case 6:
+                                    if ((choiceValue == 3) || (choiceValue == 4)) {
+                                        input = D_80123778_03798[i];
+                                        if ((input & 0x10800) && (choiceValue != 3)) {
+                                            *choice = choiceValue - 1;
+                                            func_80072138(0x19, 0x32);
+                                            input = D_80123778_03798[i];
+                                        }
+                                        if (input & 0x20400) {
+                                            choiceValue = *choice;
+                                            if (choiceValue != 4) {
+                                                *choice = choiceValue + 1;
+                                                func_80072138(0x19, 0x32);
+                                                input = D_80123778_03798[i];
+                                            }
+                                        }
+                                        if ((input & 0x8000) || (input & 0x1000)) {
+                                            s16 state = D_800EC9C8[i];
+
+                                            func_80072138(1, 0x32);
+                                            if (*choice == 4) {
+                                                if (state == 8) {
+                                                    GameSetupSavePlayer03798 *save = &D_800EC9F0[i];
+
+                                                    func_800045D8(i);
+                                                    D_8010AE00_03798.unk6[i] = 5;
+                                                    player->unkC = save->unk4;
+                                                } else if (state == 7) {
+                                                    D_8010AE00_03798.unk6[i] = 3;
+                                                } else {
+                                                    D_8010AE00_03798.unk6[i] = 4;
+                                                }
+                                            } else {
+                                                if (state == 8) {
+                                                    D_8010AE00_03798.unk6[i] = 0x12;
+                                                } else if (state == 7) {
+                                                    D_8010AE00_03798.unk6[i] = 4;
+                                                } else {
+                                                    GameSetupSavePlayer03798 *save = &D_800EC9F0[i];
+
+                                                    D_8010AE00_03798.unk6[i] = 5;
+                                                    func_800045D8(i);
+                                                    player->unkC = save->unk4;
+                                                }
+                                            }
+                                            *choice += 2;
+                                        }
+                                    }
+                                    break;
+
+                                case 7:
+                                case 8:
+                                case 9:
+                                case 10:
+                                case 11:
+                                case 12:
+                                case 13:
+                                case 16:
+                                    input = D_80123778_03798[i];
+                                    if ((input & 0x8000) || (input & 0x1000)) {
+                                        func_80072138(1, 0x32);
+                                        *choice = D_800B3199[D_800EC9C8[i]];
+                                    }
+                                    break;
+
+                                case 14:
+                                case 15:
+                                    input = D_80123778_03798[i];
+                                    if ((input & 0x8000) || (input & 0x1000)) {
+                                        func_80072138(1, 0x32);
+                                        if (D_800EC9C8[i] == 0xE) {
+                                            if (transitionTask != NULL) {
+                                                D_8010AE00_03798.unkE[i] = 2;
+                                                D_8010AE00_03798.unk12[i] = 0x11;
+                                            } else {
+                                                D_800EC9C8[i] = 7;
+                                            }
+                                        } else if (transitionTask != NULL) {
+                                            D_8010AE00_03798.unkE[i] = 2;
+                                            D_8010AE00_03798.unk12[i] = 0;
+                                        } else {
+                                            D_800EC9C8[i] = 0;
+                                        }
+                                    }
+                                    break;
+
+                                case 17:
+                                    input = D_80123778_03798[i];
+                                    if ((input & 0x8000) || (input & 0x1000)) {
+                                        func_80072138(1, 0x32);
+                                        D_8010AE00_03798.unkE[i] = 2;
+                                        D_8010AE00_03798.unk12[i] = 0;
+                                    }
+                                    break;
+
+                                case 18:
+                                    if (player->unk8 == 0) {
+                                        player->unk8 = 1;
+                                    }
+                                    break;
+                            }
+                        }
+                        allReady &= player->unk8;
+                    }
+
+                    i++;
+                    present++;
+                    allPresent &= presentValue;
+                } while (i < D_80121B55);
+            }
+        }
+    }
+
+    if (allPresent != 0) {
+        if (task == NULL) {
+            D_800EC9E4++;
+            if (D_800EC9E4 >= 5) {
+                u8 *ptr;
+                u8 *end;
+
+                D_800EC9E4 = 0;
+                D_8010ADE8 = func_80071408(func_80016B54, 0, 0x63);
+                func_80071408(func_800165F0, 0, 0x63);
+                D_8010ADE0 = func_80071408(func_8001621C, 0, 0x63);
+                D_8010ADE4 = func_80071408(func_80017014, 0, 0x63);
+                if (D_80121B55 > 0) {
+                    ptr = D_800EC9E0;
+                    end = &D_800EC9E0[D_80121B55];
+                    do {
+                        *ptr += 1;
+                        ptr++;
+                    } while (ptr < end);
+                }
+            }
+        }
+    }
+
+    if (allReady != 0) {
+        D_800EC9C1++;
+        if (D_800EC9C1 == 0xF) {
+            GameSetupSubState03798 *subState;
+            GameSetupSavePlayer03798 *save;
+            GameSetupSavePlayer03798 *end;
+
+            func_8009956C(func_80004164, 0);
+            func_80071408(func_80030EA8, 0, 0x64);
+            D_8010ADD0.state = 6;
+            D_8010ADD0.selectedOption = 0;
+            D_8010ADD0.targetScale = 2;
+            if (D_80121B55 > 0) {
+                subState = &D_8010AE00_03798;
+                save = D_800EC9F0;
+                end = &D_800EC9F0[D_80121B55];
+                do {
+                    u8 value = save->unk4C;
+
+                    subState->unkE[0] = 3;
+                    if (D_8010ADF9 < value) {
+                        D_8010ADF9 = value;
+                    }
+                    save++;
+                    subState = (GameSetupSubState03798 *)((u8 *)subState + 1);
+                } while (save < end);
+            }
+        }
+    }
+
+    func_8007105C();
+}
+
+#undef D_8010AE00_03798
+#undef D_800EC8B4_03798
+#undef D_80123778_03798
+#endif
 
 void __dummy(void) {
 }
