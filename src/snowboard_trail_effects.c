@@ -4,6 +4,7 @@
 
 #define SNOWBOARD_TRAIL_TIMER 0xF0
 #define SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD 0x400
+#define SNOWBOARD_TRAIL_FLAG_CANCEL 0x3040
 
 typedef struct {
     /* 0x00 */ s16 state;
@@ -81,7 +82,96 @@ void func_800837D0(SnowboardTrailPlayer *player) {
     }
 }
 
+// func_8008393C best match: 96.425%
 #pragma GLOBAL_ASM("asm/nonmatchings/snowboard_trail_effects/func_8008393C.s")
+
+#ifdef NON_MATCHING
+void func_8008393C(SnowboardTrailPlayer *player) {
+    FixedTransform scratch;
+    SnowboardTrailState *trail;
+    FixedMatrix3s *playerTransform;
+    FixedMatrix3s *rotation;
+    s16 scaleStep;
+
+    if (player->trail.state == 0) {
+        return;
+    }
+
+    trail = &player->trail;
+    if (player->trail.state == 1) {
+        trail->spinYaw += 0x240;
+        playerTransform = (FixedMatrix3s *)player->modelTransform;
+        func_80098590(*playerTransform, &trail->localOffset, &trail->worldPos);
+        trail->worldPos.x += player->velocity.x;
+        trail->worldPos.y += player->velocity.y;
+        trail->worldPos.z += player->velocity.z;
+        func_80097C18(scratch.rotation, trail->modelYaw);
+        rotation = (FixedMatrix3s *)trail->rotation;
+        func_80097CF0(scratch.rotation, *playerTransform, *rotation);
+        scaleStep = trail->scaleStep;
+        trail->drawPos.x = trail->worldPos.x;
+        trail->drawPos.z = trail->worldPos.z;
+        trail->drawPos.y = trail->worldPos.y;
+        trail->rotation[0] = (trail->rotation[0] * scaleStep) / 16;
+        trail->rotation[1] = (trail->rotation[1] * scaleStep) / 16;
+        trail->rotation[2] = (trail->rotation[2] * scaleStep) / 16;
+        trail->rotation[3] = (trail->rotation[3] * scaleStep) / 16;
+        trail->rotation[4] = (trail->rotation[4] * scaleStep) / 16;
+        trail->rotation[5] = (trail->rotation[5] * scaleStep) / 16;
+        trail->rotation[6] = (trail->rotation[6] * scaleStep) / 16;
+        trail->rotation[7] = (trail->rotation[7] * scaleStep) / 16;
+        trail->rotation[8] = (trail->rotation[8] * scaleStep) / 16;
+        func_80097BAC(scratch.rotation, trail->spinYaw);
+        scratch.translation.x = trail->scale.x;
+        scratch.translation.y = trail->scale.y;
+        scratch.translation.z = trail->scale.z;
+        func_800987A0(&scratch, (FixedTransform *)rotation, (FixedTransform *)trail->transform);
+        if (D_80121B56 == 0) {
+            trail->scaleStep++;
+        }
+        if (trail->scaleStep == 0x10) {
+            trail->state = 2;
+        }
+        if (player->disabled == 0) {
+            func_800483FC(&D_801248BC, func_800837D0, trail);
+        }
+    } else if (player->trail.state == 2) {
+        trail->spinYaw += 0x240;
+        playerTransform = (FixedMatrix3s *)player->modelTransform;
+        func_80098590(*playerTransform, &trail->localOffset, &trail->worldPos);
+        trail->worldPos.x += player->velocity.x;
+        trail->worldPos.y += player->velocity.y;
+        trail->worldPos.z += player->velocity.z;
+        func_80097C18(scratch.rotation, trail->modelYaw);
+        rotation = (FixedMatrix3s *)trail->rotation;
+        func_80097CF0(scratch.rotation, *playerTransform, *rotation);
+        trail->drawPos.x = trail->worldPos.x;
+        trail->drawPos.y = trail->worldPos.y;
+        trail->drawPos.z = trail->worldPos.z;
+        func_80097BAC(scratch.rotation, trail->spinYaw);
+        scratch.translation.x = trail->scale.x;
+        scratch.translation.y = trail->scale.y;
+        scratch.translation.z = trail->scale.z;
+        func_800987A0(&scratch, (FixedTransform *)rotation, (FixedTransform *)trail->transform);
+        if (player->flags & SNOWBOARD_TRAIL_FLAG_CANCEL) {
+            player->trailTimer = 0;
+        }
+        if (D_80121B56 == 0) {
+            if (player->trailTimer != 0) {
+                player->trailTimer--;
+            }
+        }
+        if (player->trailTimer == 0) {
+            trail->state = 0;
+            func_8005F5C8(player);
+            return;
+        }
+        if (player->disabled == 0) {
+            func_800483FC(&D_801248BC, func_800837D0, trail);
+        }
+    }
+}
+#endif
 
 void func_80083CFC(SnowboardTrailPlayer *player) {
     SnowboardTrailState *trail = &player->trail;
