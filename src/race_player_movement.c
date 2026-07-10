@@ -429,7 +429,47 @@ void func_80089000(RaceVec3i *pos, s32 xzSize, s16 flag) {
     } while (player != end);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_800891B8.s")
+s32 func_800891B8(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex) {
+    volatile u8 pad[8];
+    s32 radius;
+    s32 dx;
+    s32 dy;
+    s32 dz;
+    RaceInputPlayer *player;
+
+    player = &D_80121D80[playerIndex];
+    if (player->isActive == 0) {
+        return 0;
+    }
+    if (player->actionSoundTimer != 0) {
+        return 0;
+    }
+
+    dx = player->posX - pos->x;
+    radius = player->unk280 + xzSize;
+    if (dx < 0) {
+        dx = -dx;
+    }
+    if (dx < radius) {
+        dy = (player->unk280 + player->unk5C) - pos->y;
+        if (dy < 0) {
+            dy = -dy;
+        }
+        if (dy < radius) {
+            dz = player->posZ - pos->z;
+            if (dz < 0) {
+                dz = -dz;
+            }
+            if ((dz < radius) &&
+                (func_80098C30((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
+                player->unk2C6 |= flag;
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80089374.s")
 
