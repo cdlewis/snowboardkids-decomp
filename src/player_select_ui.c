@@ -104,9 +104,13 @@ extern PlayerSelectAssetHandles D_80112130;
 extern PlayerSelectCursorState D_8010AE70;
 extern u8 D_8010AE70_state;
 extern s16 D_8010AE74;
+extern u32 D_800B5F80[];
+extern Gfx D_800DEFF8[];
 extern s32 D_8010ADDC;
 extern u8 D_8010ADF8;
 extern s16 D_80112172;
+extern s16 D_8015660E;
+extern s16 D_80156610;
 extern s32 D_80121D8C;
 extern s32 D_801235B4;
 
@@ -1046,4 +1050,105 @@ void func_8001B9F0(PlayerSelectWidgetActor *arg0) {
     func_80071824(arg0, func_8001B8F0);
 }
 
+// func_8001BA2C best match: 66.290% at nonmatchings/func_8001BA2C-8207005055717715604/base_2.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_8001BA2C.s")
+
+#ifdef NON_MATCHING
+void func_8001BA2C(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    Gfx *sp10;
+    Gfx *spC;
+    Gfx *sp8;
+    Gfx *sp4;
+    Gfx *temp_v0;
+    Gfx *temp_v0_2;
+    Gfx *temp_v0_3;
+    Gfx *temp_v0_4;
+    Gfx *temp_v0_5;
+    Gfx *temp_v0_6;
+    Gfx *temp_v0_7;
+    Gfx *temp_v0_8;
+    Gfx *temp_v0_9;
+    Gfx *temp_v0_10;
+    Gfx *temp_v0_11;
+    Gfx *temp_v0_12;
+    Gfx *temp_v0_13;
+    Gfx *temp_v0_14;
+    Gfx *temp_v0_15;
+    Gfx *temp_v0_16;
+    s32 temp_t6;
+    s32 temp_t9;
+
+    temp_v0 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0 + 1;
+    temp_v0->words.w0 = 0xE7000000;
+    temp_v0->words.w1 = 0;
+    temp_v0_2 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_2 + 1;
+    temp_v0_2->words.w0 = 0xBA000E02;
+    temp_v0_2->words.w1 = 0;
+    temp_v0_3 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_3 + 1;
+    temp_v0_3->words.w1 = -0x805;
+    temp_v0_3->words.w0 = 0xFC11FE23;
+    temp_v0_4 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_4 + 1;
+    temp_v0_4->words.w1 = 0x504240;
+    temp_v0_4->words.w0 = 0xB900031D;
+    temp_v0_5 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_5 + 1;
+    temp_v0_5->words.w1 = (s32) D_800B5F80;
+    temp_v0_5->words.w0 = 0xFD880007;
+    temp_v0_6 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_6 + 1;
+    temp_v0_6->words.w1 = 0x07080200;
+    temp_v0_6->words.w0 = 0xF5880200;
+    temp_v0_7 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_7 + 1;
+    sp10 = temp_v0_7;
+    temp_v0_7->words.w1 = 0;
+    temp_v0_7->words.w0 = 0xE6000000;
+    temp_v0_8 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_8 + 1;
+    spC = temp_v0_8;
+    temp_v0_8->words.w0 = 0xF4000000;
+    temp_v0_8->words.w1 = 0x07020020;
+    temp_v0_9 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_9 + 1;
+    sp8 = temp_v0_9;
+    temp_v0_9->words.w0 = 0xE7000000;
+    sp8->words.w1 = 0;
+    temp_v0_10 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_10 + 1;
+    sp4 = temp_v0_10;
+    temp_v0_10->words.w0 = 0xF5800200;
+    sp4->words.w1 = 0x80200;
+    temp_v0_11 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_11 + 1;
+    temp_v0_11->words.w0 = 0xF2000000;
+    temp_v0_11->words.w1 = 0x40020;
+    temp_v0_12 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_12 + 1;
+    temp_v0_12->words.w0 = 0xFA000000;
+    temp_v0_12->words.w1 = 0x64;
+    temp_v0_13 = gRegionAllocPtr;
+    temp_t6 = ((s16)arg0 + D_8015660E) * 4;
+    temp_t9 = ((s16)arg1 + D_80156610) * 4;
+    gRegionAllocPtr = temp_v0_13 + 1;
+    temp_v0_13->words.w0 =
+        (((((s32)((u16)arg2 * 0x10 * 4) / 4096) + temp_t6) & 0xFFF) << 0xC) | 0xE4000000 |
+        ((((s32)((u16)arg3 * 8 * 4) / 4096) + temp_t9) & 0xFFF);
+    temp_v0_13->words.w1 = (s32)(((temp_t6 & 0xFFF) << 0xC) | (temp_t9 & 0xFFF));
+    temp_v0_14 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_14 + 1;
+    temp_v0_14->words.w1 = 0;
+    temp_v0_14->words.w0 = 0xB4000000;
+    temp_v0_15 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_15 + 1;
+    temp_v0_15->words.w0 = 0xB3000000;
+    temp_v0_15->words.w1 = (s32)(((0x400000 / (s32)(u16)arg2) << 0x10) | ((0x400000 / (s32)(u16)arg3) & 0xFFFF));
+    temp_v0_16 = gRegionAllocPtr;
+    gRegionAllocPtr = temp_v0_16 + 1;
+    temp_v0_16->words.w0 = 0x06000000;
+    temp_v0_16->words.w1 = (s32)D_800DEFF8;
+}
+#endif
