@@ -83,6 +83,7 @@ extern void func_8008F1B4(RaceInputPlayer *);
 extern void func_8008F1CC(RaceInputPlayer *);
 extern s32 func_800832CC(RaceInputPlayer *);
 extern s32 func_80082F44(RaceInputPlayer *);
+extern void func_80082B58(RaceInputPlayer *, s32, s32, s32);
 extern void func_800815D4(s16, s32, s32, s32 *, s32 *, s32, s32);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void func_8004FA44(void *);
@@ -116,6 +117,7 @@ extern PlayerTuningRow D_800DC770[];
 extern PlayerTuningRow D_800DC880[];
 extern Struct800955C0 D_800B9540[];
 extern u8 D_80121B5F;
+extern u8 D_80121B5B;
 extern u8 D_800EC9C2;
 extern s8 D_80121B54;
 extern u8 D_80121B56;
@@ -489,7 +491,305 @@ void func_8008CF10(RaceInputPlayer *player) {
     }
 }
 
+// func_8008D09C best match: 95.508% (nonmatchings/func_8008D09C-8207005055717715604/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008D09C.s")
+
+#ifdef NON_MATCHING
+void func_8008D09C(RaceInputPlayer *player) {
+    s32 targetX;
+    s32 targetZ;
+    s32 speed;
+    s32 lean;
+    s16 turn;
+    s16 quickTurn;
+    Struct800955C0 *spawn;
+    s32 surfaceCue;
+    s32 turnTarget;
+    s32 turnDelta;
+    s32 rotation;
+    s32 bankRate;
+    s32 interpolated;
+    s16 steerAngle;
+
+    if (player->updateState == 0) {
+        player->updateState++;
+        player->stateFlags &= ~0x200;
+        player->unk92 = 0;
+        player->unk93 = 0;
+        player->subState = 0;
+        player->subStateTimer = 0;
+        player->unk2FA = 0;
+        player->unk528 = 0;
+        player->unk258 = 0;
+        if (player->unk57B != 0) {
+            func_8008BBB8(player, 7);
+            func_80081E40(player, 0x22);
+        }
+    }
+
+    if (player->unk57A != 0) {
+        player->unk92 = 6;
+    }
+    if (player->unk60 == 0) {
+        player->unk60 = 0x40000;
+    }
+
+    player->unk40.y -= player->unk260;
+    speed = player->unk254;
+    if (speed > 0) {
+        if (speed < 0x4000) {
+            speed = 0x4000;
+        }
+    } else if (speed >= -0x3FFF) {
+        speed = -0x4000;
+    }
+
+    if (player->unk4 != 0) {
+        func_800815D4(player->unk502, player->posX, player->posZ, &targetX, &targetZ, (s8) player->unk17,
+                      (u16) player->playerIndex);
+        turn = (func_8004940C(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
+        if (turn >= 0x801) {
+            turn -= 0x1000;
+        }
+        if (turn >= 0x101) {
+            turn = 0x100;
+        }
+        if (turn < -0x100) {
+            turn = -0x100;
+        }
+
+        quickTurn = turn >> 2;
+        turn = (turn + 1) >> 1;
+        if (turn >= 0x20) {
+            turn = 0x1F;
+        }
+        if (turn < -0x1F) {
+            turn = -0x1F;
+        }
+
+        turn = (turn - player->unk528) & 0xFFF;
+        if (turn >= 0x801) {
+            turn -= 0x1000;
+        }
+        if (turn >= 3) {
+            turn = 2;
+        }
+        if (turn < -2) {
+            turn = -2;
+        }
+        player->unk528 += turn;
+        turn = player->unk528;
+        if (turn == 1) {
+            turn = 0;
+        }
+        if (turn == -1) {
+            turn = 0;
+        }
+        player->unk2F8 = 0x3F;
+    } else {
+        turn = -player->stickX;
+        player->unk2F8 = 0x20 - player->stickY;
+        if (player->unk2F8 < 0x1F) {
+            player->unk2F8 = 0x1F;
+        }
+    }
+
+    lean = speed;
+    if (player->unk254 > 0) {
+        lean = -speed;
+        turn = -turn;
+    }
+
+    if (player->unk4 == 0) {
+        spawn = &D_800B9540[D_80121B50];
+        if ((player->unk502 == spawn->unk0) && !(player->stateFlags & 0x40)) {
+            surfaceCue = (s16)(((func_8004940C(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
+                                  player->facingAngle) +
+                                 0x400) &
+                                0xFFF);
+            if (surfaceCue < 0x800) {
+                if (player->stateFlags & 0x400) {
+                    player->unk92 = 0;
+                    player->stateFlags &= ~0x400;
+                    player->unk93 = 6 - player->unk93;
+                }
+            } else if (!(player->stateFlags & 0x400)) {
+                player->unk92 = 0;
+                player->stateFlags |= 0x400;
+                player->unk93 = 6 - player->unk93;
+            }
+        } else {
+            if (player->unk254 < -0x8000) {
+                if (player->stateFlags & 0x400) {
+                    if (player->unk92 >= 6) {
+                        player->unk92 = 0;
+                        player->stateFlags &= ~0x400;
+                        player->unk93 = 6 - player->unk93;
+                    } else {
+                        player->unk92++;
+                    }
+                }
+            }
+            if (player->unk254 >= 0x8001) {
+                if (!(player->stateFlags & 0x400)) {
+                    if (player->unk92 >= 6) {
+                        player->unk92 = 0;
+                        player->stateFlags |= 0x400;
+                        player->unk93 = 6 - player->unk93;
+                    } else {
+                        player->unk92++;
+                    }
+                }
+            }
+        }
+    }
+
+    if (!(D_801235B4 & 1)) {
+        turnTarget = func_8008B408(player, lean, turn);
+        if (player->unk93 == 0) {
+            turnDelta = turnTarget - player->unk2FA;
+            if (turnDelta >= 0x31) {
+                turnDelta = 0x30;
+            }
+            if (turnDelta < -0x30) {
+                turnDelta = -0x30;
+            }
+            player->unk2FA += turnDelta;
+            if (player->unk2FA == 0) {
+                if (player->animationId == 0x22) {
+                    if (func_80082F44(player) != 0) {
+                        func_80081E40(player, 1);
+                    }
+                } else {
+                    if (player->animationId != 1) {
+                        func_80081E40(player, 1);
+                    }
+                    func_80082E48(player);
+                }
+            } else if (player->unk2FA >= 0) {
+                func_80081E40(player, 3);
+                func_80082B58(player, 3, player->unk2FA, 0x118);
+            } else {
+                func_80081E40(player, 2);
+                func_80082B58(player, 2, -player->unk2FA, 0x118);
+            }
+        } else {
+            turnDelta = -player->unk2FA;
+            player->unk93--;
+            if (turnDelta >= 0x31) {
+                turnDelta = 0x30;
+            }
+            if (turnDelta < -0x30) {
+                turnDelta = -0x30;
+            }
+            player->unk2FA += turnDelta;
+            func_80081E40(player, player->unk93 + 8);
+            func_80082F44(player);
+        }
+
+        if (player->unk4 == 0) {
+            steerAngle = 0;
+            bankRate = (-turn * 0x10 * player->unk268) / 0x100;
+            interpolated = (((player->unk270 - player->unk26C) * (0x3F - player->unk2F8)) / 0x20) + player->unk26C;
+            if (bankRate != 0) {
+                s64 temp = ((s64) interpolated * ((lean - 0xFF) / 0x100));
+                temp = (temp * ((lean - 0xFF) / 0x100)) / bankRate;
+                if (temp != 0) {
+                    if (temp > 0) {
+                        temp += 0xC0000;
+                    }
+                    if (temp < 0) {
+                        temp += 0xFFFFFFFFFFF40000LL;
+                    }
+                    if (temp > 0x10000000LL) {
+                        temp = 0x10000000LL;
+                    }
+                    if (temp < -0x10000000LL) {
+                        temp = -0x10000000LL;
+                    }
+                    steerAngle = func_8004940C((s32) temp, 0, 0, speed);
+                    if (temp > 0) {
+                        steerAngle -= 0x400;
+                    }
+                    if (temp < 0) {
+                        steerAngle -= 0xC00;
+                    }
+                    steerAngle &= 0xFFF;
+                }
+            }
+
+            if (steerAngle < 0x801) {
+                if (steerAngle >= 0x81) {
+                    steerAngle = 0x80;
+                }
+            } else if (steerAngle < 0xF80) {
+                steerAngle = 0xF80;
+            }
+            player->facingAngle += steerAngle;
+        } else {
+            player->facingAngle += quickTurn;
+        }
+
+        rotation = 0;
+        if (player->trailEffectTimer != 0) {
+            rotation = -0x8000;
+            if (player->unk2DC != 0) {
+                rotation = 0x8000;
+            }
+        }
+        if ((D_80121B5B != 0) && (player->unk519 == 6)) {
+            rotation = -0x60000;
+        }
+        func_8008B73C(player, 0, rotation, player->unk274, player->unk278, player->unk27C);
+
+        if (player->unk57A == 0) {
+            if (player->unk4 == 0) {
+                if (player->inputFlags & 0x8000) {
+                    player->mode = 2;
+                    player->updateState = 0;
+                    player->updateTimer = 0;
+                }
+            } else if (player->unk524 != 0) {
+                player->mode = 2;
+                player->updateState = 0;
+                player->updateTimer = 0;
+                player->unk525 = 1;
+            } else if ((player->unk29C < 0x30000) || (player->unk254 >= (s32) 0xFFFD0001)) {
+                player->mode = 2;
+                player->updateState = 0;
+                player->updateTimer = 0;
+                player->unk525 = 0;
+            }
+            func_800849E0(player);
+            func_80084D74(player);
+        } else {
+            player->unk57A--;
+            player->unk92 = 6;
+        }
+
+        if (player->stateFlags & 0x2000000) {
+            player->mode = 0x1D;
+            player->updateState = 0;
+            player->updateTimer = 0;
+        }
+        if (player->stateFlags & 0x40) {
+            player->mode = 0x1E;
+            player->updateState = 0;
+            player->updateTimer = 0;
+        }
+    } else {
+        func_80082E48(player);
+    }
+
+    player->posX += player->unk40.x;
+    player->posY += player->unk40.y;
+    player->posZ += player->unk40.z;
+    func_8008CF10(player);
+    if (player->unk517 != 0) {
+        func_8008BBB8(player, 5);
+    }
+}
+#endif
 
 void func_8008DAF0(RaceInputPlayer *player) {
     s16 updateState;
