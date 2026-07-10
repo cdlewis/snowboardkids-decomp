@@ -1477,7 +1477,7 @@ void func_80058BAC(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80058C00.s")
 
-// func_8005905C best match: 79.683% (nonmatchings/func_8005905C-6276316234415602851/base_9.c)
+// func_8005905C best match: 99.488% (nonmatchings/func_8005905C-2785870559185086986/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005905C.s")
 
 #ifdef NON_MATCHING
@@ -1489,7 +1489,8 @@ void func_8005905C(void *arg0) {
     char *text;
 
     actor = arg0;
-    text = buffer;
+    text = buffer - 0x10;
+    if (!actor) {}
     if (actor->alpha != 0xFF) {
         gDPPipeSync(gRegionAllocPtr++);
         gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
