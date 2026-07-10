@@ -2778,7 +2778,7 @@ void func_80094A94(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094BEC.s")
 
-// func_80094DF8 best match: 98.189% (nonmatchings/func_80094DF8-3236181511606361864/base_3.c)
+// func_80094DF8 best match: 99.921% (nonmatchings/func_80094DF8-4923837976568703863/base_14.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094DF8.s")
 
@@ -2800,9 +2800,10 @@ void func_80094DF8(RaceInputPlayer *player) {
         func_80082DD0(player);
         func_800716A4(func_800617C8, 0, 0x3C, (u16) player->playerIndex);
         stateTimer = player->stateTimer;
+        player->stateTimer = stateTimer;
+        player->stateTimer = player->stateTimer - ((stateTimer * player->unk509) / 8);
         player->actionEffectLevel = 4;
         player->actionEffectFrame = 0;
-        player->stateTimer = stateTimer - ((stateTimer * player->unk509) / 8);
     }
 
     stateFlags = player->stateFlags;
@@ -2826,7 +2827,8 @@ void func_80094DF8(RaceInputPlayer *player) {
 
     if (stateTimer == 0) {
         stateFlags = player->stateFlags;
-        if (!(stateFlags & 0x200)) {
+        updateState = stateFlags;
+        if (!(updateState & 0x200)) {
             player->stateFlags = stateFlags & 0xFE0C1FFB;
             player->mode = 0;
             player->updateState = 0;
