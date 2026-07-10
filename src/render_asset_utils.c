@@ -448,7 +448,65 @@ void func_80046358(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
 }
 #endif
 
+// func_80046748 best match: 89.835% (nonmatchings/func_80046748-8207005055717715604/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80046748.s")
+
+#ifdef NON_MATCHING
+extern Gfx D_800DEFF8[];
+
+void func_80046748(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green, u8 blue) {
+    s32 rightClip;
+    s32 bottomClip;
+    s32 leftClip;
+    s32 topClip;
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 halfWidth;
+    s32 halfHeight;
+    s32 color;
+
+    x0 = x + D_8015660E;
+    y0 = y + D_80156610;
+    x1 = width + x0;
+    y1 = height + y0;
+
+    halfWidth = D_8015660A / 2;
+    rightClip = D_8015660E + halfWidth;
+    if (x0 < rightClip) {
+        halfHeight = D_8015660C / 2;
+        bottomClip = D_80156610 + halfHeight;
+        leftClip = D_8015660E - halfWidth;
+        if (y0 < bottomClip) {
+            topClip = D_80156610 - halfHeight;
+            if ((x1 >= leftClip) && (y1 >= topClip)) {
+                if (x0 < leftClip) {
+                    x0 = leftClip;
+                }
+                if (y0 < topClip) {
+                    y0 = topClip;
+                }
+                if (x1 >= rightClip) {
+                    x1 = rightClip;
+                }
+                if (y1 >= bottomClip) {
+                    y1 = bottomClip;
+                }
+
+                color = ((red << 8) & 0xF800) | ((green << 3) & 0x7C0) | ((blue >> 2) & 0x3E) | 1;
+
+                gDPPipeSync(gRegionAllocPtr++);
+                gDPSetCycleType(gRegionAllocPtr++, G_CYC_FILL);
+                gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
+                gDPSetFillColor(gRegionAllocPtr++, (color << 16) | color);
+                gDPFillRectangle(gRegionAllocPtr++, x0, y0, x1 - 1, y1 - 1);
+                gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+            }
+        }
+    }
+}
+#endif
 
 // func_80046970 best match: 74.764% (nonmatchings/func_80046970-4923837976568703863/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80046970.s")
