@@ -80,6 +80,21 @@ typedef struct {
     /* 0x3C */ s32 unk3C;
 } GfxCommandDest;
 
+typedef struct {
+    s32 x;
+    s32 y;
+    s32 z;
+} Vec3i;
+
+extern u8 D_800EC9C2;
+extern s32 D_801121F8;
+extern s32 D_80112200;
+extern s32 D_801122A8;
+extern s32 D_801122B0;
+extern s32 D_80112358;
+extern s32 D_80112360;
+extern s32 D_80112408;
+extern s32 D_80112410;
 extern s16 D_8011213E;
 extern s16 D_801121B0;
 extern s16 D_8015660A;
@@ -87,6 +102,10 @@ extern s16 D_8015660C;
 extern s16 D_8015660E;
 extern s16 D_80156610;
 extern s32 gRegionAllocPtr;
+extern s8 D_801124B0;
+extern s8 D_80112560;
+extern s8 D_80112610;
+extern s8 D_801126C0;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_800458E0.s")
 
@@ -890,4 +909,66 @@ void func_80048E3C(void *arg0, void *arg1, void *arg2) {
 void func_80048E4C(void *arg0, void *arg1, void *arg2, void *arg3) {
 }
 
+// func_80048E60 best match: 99.126%
+
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80048E60.s")
+
+#ifdef NON_MATCHING
+s32 func_80048E60(Vec3i *pos) {
+    Vec3i *posAlias;
+    s32 tempZ;
+    s32 *zPtr;
+    s32 diffX;
+    s32 temp;
+    s32 lowerCheck;
+    s32 lower;
+    s32 diffZ;
+
+    if (D_800EC9C2 == 2) {
+        return 1;
+    }
+
+    if (D_801124B0 != 0) {
+        diffX = D_801121F8;
+        diffX = diffX - pos->x;
+        if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001)) {
+            zPtr = &pos->z;
+            tempZ = D_80112200;
+            diffZ = tempZ - *zPtr;
+            if ((diffZ < 0x6000000) && (diffZ >= (s32)0xFA000001)) {
+                return 1;
+            }
+        }
+    }
+
+    posAlias = pos;
+    if (D_80112560 != 0) {
+        diffX = D_801122A8 - pos->x;
+        temp = D_801122B0;
+        diffZ = temp - posAlias->z;
+        lowerCheck = diffX >= (s32)0xFA000001;
+        if ((diffX < 0x6000000) && lowerCheck && (diffZ < 0x6000000) && (diffZ >= (s32)0xFA000001)) {
+            return 1;
+        }
+    }
+
+    if (D_80112610 != 0) {
+        diffX = D_80112358 - posAlias->x;
+        diffZ = D_80112360 - pos->z;
+        if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001) && (diffZ < 0x6000000) && (diffZ >= (s32)0xFA000001)) {
+            return 1;
+        }
+    }
+
+    if (D_801126C0 != 0) {
+        diffX = D_80112408 - posAlias->x;
+        diffZ = D_80112410 - posAlias->z;
+        lower = 0xFA000001;
+        if ((diffX < 0x6000000) && (diffX >= lower) && (diffZ < 0x6000000) && (diffZ >= lower)) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+#endif
