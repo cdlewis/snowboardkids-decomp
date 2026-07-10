@@ -73,7 +73,9 @@ typedef struct {
     /* 0x08C */ u32 disabledInputFlags;
     /* 0x090 */ s8 stickX;
     /* 0x091 */ s8 stickY;
-    /* 0x092 */ char pad92[0x1C2];
+    /* 0x092 */ char pad92[1];
+    /* 0x093 */ s8 unk93;
+    /* 0x094 */ char pad94[0x1C0];
     /* 0x254 */ s32 unk254;
     /* 0x258 */ char pad258[8];
     /* 0x260 */ s32 unk260;
@@ -100,7 +102,8 @@ typedef struct {
     /* 0x2C8 */ char pad2C8[0x10];
     /* 0x2D8 */ s16 unk2D8;
     /* 0x2DA */ s16 trailEffectTimer;
-    /* 0x2DC */ char pad2DC[2];
+    /* 0x2DC */ u8 unk2DC;
+    /* 0x2DD */ char pad2DD[1];
     /* 0x2DE */ s16 unk2DE;
     /* 0x2E0 */ s32 unk2E0;
     /* 0x2E4 */ s32 unk2E4;
@@ -131,7 +134,8 @@ typedef struct {
     /* 0x331 */ char pad331[1];
     /* 0x332 */ s16 unk332;
     /* 0x334 */ s16 unk334;
-    /* 0x336 */ char pad336[0x11C];
+    /* 0x336 */ s16 unk336;
+    /* 0x338 */ char pad338[0x11A];
     /* 0x452 */ s16 animationId;
     /* 0x454 */ char pad454[0x4C];
     /* 0x4A0 */ RaceVec3i unk4A0;

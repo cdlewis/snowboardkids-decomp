@@ -34,8 +34,11 @@ extern void func_8008CF10(RaceInputPlayer *);
 extern void func_80082664(RaceInputPlayer *, s32, s32, s32);
 extern void func_80082DD0(RaceInputPlayer *);
 extern void func_80082E48(RaceInputPlayer *);
+extern void func_80082F44(RaceInputPlayer *);
 extern void func_80081E40(RaceInputPlayer *, s32);
 extern s32 func_80082EC0(RaceInputPlayer *);
+extern void func_80083298(RaceInputPlayer *);
+extern void func_800832CC(RaceInputPlayer *);
 extern void func_800849E0(RaceInputPlayer *);
 extern s32 func_80095F90(s32);
 extern void func_8008BB20(RaceInputPlayer *, s32, s32, s32, s32);
@@ -305,7 +308,105 @@ void func_8008DFD0(RaceInputPlayer *player) {
     D_800DECD0[player->updateState](player);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008E008.s")
+void func_8008E008(RaceInputPlayer *player) {
+    Struct800955C0 *spawn;
+    s16 updateTimer;
+    s32 velocityY;
+    s32 rotation;
+    s8 turnTimer;
+
+    updateTimer = player->updateTimer;
+    if (updateTimer == 0) {
+        player->updateTimer = updateTimer + 1;
+        player->stateTimer = 0x40000;
+        player->stateFlags |= 0x10;
+        func_80081E40(player, 5);
+        func_80083298(player);
+        player->unk60 = 0x40000;
+        player->unk2A6 = 0;
+        player->unk93 = 0;
+        player->unk336 = 0;
+    }
+
+    if (player->unk4 == 0) {
+        spawn = &D_800B9540[D_80121B50];
+        if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
+            velocityY = (s16) (((func_8004940C(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
+                                  player->facingAngle) +
+                                 0x400) &
+                                0xFFF);
+            if (velocityY < 0x800) {
+                if (player->stateFlags & 0x400) {
+                    player->stateFlags &= ~0x400;
+                    player->unk93 = 6 - player->unk93;
+                }
+            } else if (!(player->stateFlags & 0x400)) {
+                player->stateFlags |= 0x400;
+                player->unk93 = 6 - player->unk93;
+            }
+        } else {
+            if (player->unk254 < -0x8000) {
+                if (player->stateFlags & 0x400) {
+                    player->stateFlags &= ~0x400;
+                    player->unk93 = 6 - player->unk93;
+                }
+            }
+            if (player->unk254 >= 0x8001) {
+                if (!(player->stateFlags & 0x400)) {
+                    player->stateFlags |= 0x400;
+                    player->unk93 = 6 - player->unk93;
+                }
+            }
+        }
+    }
+
+    turnTimer = player->unk93;
+    if (turnTimer != 0) {
+        player->unk93 = turnTimer - 1;
+        func_80081E40(player, player->unk93 + 8);
+    } else if (player->animationId != 5) {
+        func_80081E40(player, 5);
+    }
+
+    func_800849E0(player);
+    func_80082F44(player);
+
+    velocityY = player->unk60;
+    if (velocityY != 0) {
+        if (velocityY < 0x20000) {
+            player->unk60 = 0;
+        } else {
+            player->unk60 = velocityY - 0x20000;
+        }
+    } else {
+        player->updateState++;
+    }
+
+    if ((player->unk4 == 0) && !(player->inputFlags & 0x8000)) {
+        player->stateFlags &= ~0x10;
+    }
+
+    func_8008B408(player, player->unk254, 0);
+    player->unk40.y -= player->unk260;
+
+    rotation = 0;
+    if (player->trailEffectTimer != 0) {
+        rotation = -0x8000;
+        if (player->unk2DC != 0) {
+            rotation = 0x8000;
+        }
+    }
+
+    func_8008B73C(player, 0, rotation, player->unk274, player->unk278, player->unk27C);
+    player->posX += player->unk40.x;
+    player->posY += player->unk40.y;
+    player->posZ += player->unk40.z;
+    func_800832CC(player);
+    func_8008CF10(player);
+    if (player->unk517 != 0) {
+        func_8008BBB8(player, 5);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008E350.s")
 
