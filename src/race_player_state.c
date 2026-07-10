@@ -105,7 +105,6 @@ extern void func_8005FB30(void *);
 extern void func_800617C8(void *);
 extern void func_80050030(void *);
 extern void func_8004DCA0(RaceVec3i *, RaceVec3i *, RaceVec3i *, RaceVec3i *, s32, s32);
-extern volatile s16 func_8004940C(s32, s32, s32, s32);
 extern void *func_800716A4(void *, s32, s32, s32);
 extern void func_80050E80(void *);
 extern void func_80062530(void *);
@@ -167,7 +166,6 @@ extern RacePlayerSoundPosition D_80121DA8[];
 extern void *D_801248C8;
 extern void *D_801248EC;
 extern Struct800955C0 D_800B9540[];
-extern s16 D_801124B8[];
 extern s16 D_80121B50;
 extern Unk801124B8 D_801124B8[];
 
