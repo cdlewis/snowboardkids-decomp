@@ -17,7 +17,20 @@ extern u8 D_80156608;
 extern s16 D_800D40D0[];
 extern ObjectTransform D_801121E0[OBJECT_COUNT];
 
-#pragma GLOBAL_ASM("asm/nonmatchings/fixed_point_math/func_80049000.s")
+s32 func_80049000(Vec3i *position) {
+    s32 deltaX;
+    s32 deltaZ;
+
+    deltaX = -D_801121E0[D_80156608].offsetX - position->x;
+    deltaZ = -D_801121E0[D_80156608].offsetZ - position->z;
+
+    if ((deltaX < OBJECT_CULL_RANGE) && (deltaX >= NEG_OBJECT_CULL_RANGE) && (deltaZ < OBJECT_CULL_RANGE)) {
+        if (deltaZ >= NEG_OBJECT_CULL_RANGE) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 s32 func_8004908C(s32 deltaX, s32 deltaZ) {
     s16 angle;
