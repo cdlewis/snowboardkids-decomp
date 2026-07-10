@@ -26,8 +26,17 @@ typedef struct FramebufferState {
     u8 pad[0x1861F];
 } FramebufferState;
 
+typedef struct ControllerInputState {
+    u16 buttons;
+    s8 stickX;
+    s8 stickY;
+    u8 pad4[2];
+} ControllerInputState;
+
+extern s8 D_800DEED8;
 extern u8 D_800DEED0;
 extern u8 D_800DEED4;
+extern ControllerInputState D_800E4C18;
 extern s16 D_801235B0;
 extern InputTask *D_801235B8;
 extern InputTask D_801235C0[INPUT_TASK_COUNT];
@@ -58,12 +67,21 @@ extern s8 D_8012378C;
 extern s8 D_8012378D;
 extern s8 D_8012378E;
 extern s8 D_8012378F;
+extern s32 D_80123790;
+extern u8 D_801237A0;
 extern FramebufferState D_8012496E[];
 
+#ifdef NON_MATCHING
+void func_8004835C();
+#else
 void func_8004835C(void *, void *);
+#endif
 void func_8009B0E8(void);
 void func_8009B704(u8);
+void clearPendingPositionalSoundRequests(void);
 InputTask *func_80099384(s32);
+s32 func_80099288(void);
+void func_80072B24(void);
 
 void func_80098D80(void) {
     InputTask **freeTask;
@@ -103,7 +121,179 @@ void func_80098D80(void) {
     func_8009B0E8();
 }
 
+// func_80098EAC best match: 92.403% (nonmatchings/func_80098EAC-7273315160691878794/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80098EAC.s")
+
+#ifdef NON_MATCHING
+void func_80098EAC(void) {
+    s32 *previousInput;
+    s32 *input;
+    ControllerInputState *controller;
+    s8 *stickXOut;
+    s8 *stickYOut;
+    s32 *newInput;
+    u8 *repeatTimer;
+    s32 *repeatInput;
+    InputTask *task;
+    InputTask *nextTask;
+    InputTaskCallback callback;
+    s32 oldInput;
+    s32 currentInput;
+    s32 stickXTooHigh;
+    s8 stickX;
+    s8 stickY;
+    s32 timer;
+
+    D_801235B0 = (D_801235B0 + 1) & 0xFFF;
+    func_8004835C();
+    func_8009B0E8();
+    clearPendingPositionalSoundRequests();
+
+    previousInput = &D_80123768;
+    input = &D_80123758;
+    controller = &D_800E4C18;
+    stickXOut = &D_80123788;
+    stickYOut = &D_8012378C;
+    newInput = &D_80123778;
+    repeatTimer = &D_801237A0;
+    repeatInput = &D_80123790;
+
+    do {
+        stickXTooHigh = controller->stickX >= 0x2E;
+        oldInput = *input;
+        currentInput = oldInput & 0xFFFF0000;
+        *input = currentInput;
+        *input = currentInput | controller->buttons;
+        *previousInput = oldInput;
+
+        if (stickXTooHigh) {
+            controller->stickX = 0x2D;
+        }
+        if (controller->stickX < -0x2D) {
+            controller->stickX = -0x2D;
+        }
+
+        stickY = controller->stickY;
+        if (stickY >= 0x2E) {
+            controller->stickY = 0x2D;
+            stickY = controller->stickY;
+        }
+        if (stickY < -0x2D) {
+            controller->stickY = -0x2D;
+            stickY = controller->stickY;
+        }
+
+        stickX = controller->stickX;
+        controller++;
+        if (stickX >= 0) {
+            *stickXOut = *(&D_800DEED8 + stickX);
+        } else {
+            *stickXOut = -*(&D_800DEED8 - stickX);
+        }
+
+        if (stickY >= 0) {
+            *stickYOut = *(&D_800DEED8 + stickY);
+        } else {
+            *stickYOut = -*(&D_800DEED8 - stickY);
+        }
+
+        stickX = *stickXOut;
+        stickXOut++;
+        if (stickX >= 0x1B) {
+            *input |= 0x40000;
+        }
+        if (stickX < -0x1A) {
+            *input |= 0x80000;
+        }
+
+        stickY = *stickYOut;
+        stickYOut++;
+        if (stickY >= 0x1B) {
+            *input |= 0x10000;
+        }
+        if (stickY < -0x1A) {
+            *input |= 0x20000;
+        }
+        if (stickX < 8) {
+            *input &= 0xFFFBFFFF;
+        }
+        if (stickX >= -7) {
+            *input &= 0xFFF7FFFF;
+        }
+        if (stickY < 8) {
+            *input &= 0xFFFEFFFF;
+        }
+        if (stickY >= -7) {
+            *input &= 0xFFFDFFFF;
+        }
+
+        currentInput = *input;
+        *newInput = ~*previousInput & currentInput;
+        if (currentInput == 0) {
+            *repeatTimer = 0;
+            *repeatInput = currentInput;
+        } else {
+            timer = *repeatTimer;
+            if (timer >= 9) {
+                *repeatInput = currentInput;
+            } else {
+                *repeatTimer = timer + 1;
+                *repeatInput = *newInput;
+            }
+        }
+
+        repeatInput++;
+        previousInput++;
+        input++;
+        newInput++;
+        repeatTimer++;
+    } while (repeatInput != (s32 *)&D_801237A0);
+
+    task = D_8012370C;
+    D_801235B8 = task;
+    if (task != NULL) {
+        do {
+            if (task->state == 2) {
+                task->state = 0;
+                task = D_801235B8;
+            }
+            nextTask = task->next;
+            D_801235B8 = nextTask;
+            task = nextTask;
+        } while (nextTask != NULL);
+        D_801235B8 = D_8012370C;
+    }
+
+    task = D_801235B8;
+    if (task != NULL) {
+        do {
+            if (task->state == 0) {
+                callback = task->callbacks[0];
+                if (callback != NULL) {
+                    callback();
+                    task = D_801235B8;
+                }
+                callback = task->callbacks[1];
+                if (callback != NULL) {
+                    callback();
+                    task = D_801235B8;
+                }
+                callback = task->callbacks[2];
+                if (callback != NULL) {
+                    callback();
+                    task = D_801235B8;
+                }
+            }
+            nextTask = task->next;
+            D_801235B8 = nextTask;
+            task = nextTask;
+        } while (nextTask != NULL);
+    }
+
+    func_80099288();
+    func_80072B24();
+}
+#endif
 
 s32 func_80099288(void) {
     u8 frameIndex;
