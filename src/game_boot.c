@@ -98,6 +98,37 @@ typedef struct {
     /* 0x68 */ Gfx dlStart[1];
 } SchedulerTask;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[0x60];
+    /* 0x60 */ void *framebuffer;
+    /* 0x64 */ s16 msgType;
+} BootTaskHeader;
+
+typedef struct {
+    /* 0x000 */ u8 pad0[0x680];
+    /* 0x680 */ void *framebuffer;
+    /* 0x684 */ s16 msgType;
+} BootTaskHeader2;
+
+typedef struct {
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ s32 unkC;
+    /* 0x10 */ s32 unk10;
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ s32 unk1C;
+    /* 0x20 */ s32 unk20;
+    /* 0x24 */ s32 unk24;
+    /* 0x28 */ s32 unk28;
+    /* 0x2C */ s32 unk2C;
+    /* 0x30 */ s32 unk30;
+    /* 0x34 */ s32 unk34;
+    /* 0x38 */ s32 unk38;
+    /* 0x3C */ s32 unk3C;
+} GfxCommandDest;
+
 extern void osInitialize(void);
 extern void osCreatePiManager(OSPri, OSMesgQueue *, OSMesg *, s32);
 extern void osCreateThread(OSThread *, OSId, void (*)(void *), void *, void *, OSPri);
@@ -108,6 +139,7 @@ extern void osInvalDCache(void *, s32);
 extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
 extern void osViBlack(u8);
+extern void osViSetSpecialFeatures(u32);
 
 extern s32 osTvType;
 
@@ -142,9 +174,10 @@ extern s8 D_800EC8B0;
 extern s8 D_8010ADFA;
 extern u8 D_8013CF8E;
 extern s32 D_800DF144;
+extern s8 D_800DEF10;
 extern Gfx *D_80124904;
 extern u8 D_80124834;
-extern u8 D_80124908[];
+extern BootTaskHeader D_80124908;
 extern u8 D_80155548[];
 extern u8 D_369000[];
 extern u8 D_800B1CC0[];
@@ -154,10 +187,29 @@ extern u8 D_80368000[];
 extern u8 D_80368C00[];
 extern u8 D_80369000[];
 extern u8 D_8038E800[];
+extern u8 D_803B4000[];
 extern u8 aspMainTextStart[];
 extern u8 rspbootTextStart[];
 extern u8 D_80324480[];
 extern u8 D_80328480[];
+extern BootTaskHeader2 D_8013C908;
+extern GfxCommandDest D_800DEE50;
+extern GfxCommandDest D_80124C28;
+extern GfxCommandDest D_80124C68;
+extern GfxCommandDest D_80124CA8;
+extern GfxCommandDest D_80124CE8;
+extern GfxCommandDest D_80124D28;
+extern GfxCommandDest D_80124D68;
+extern GfxCommandDest D_80124DA8;
+extern GfxCommandDest D_80124DE8;
+extern GfxCommandDest D_8013D248;
+extern GfxCommandDest D_8013D288;
+extern GfxCommandDest D_8013D2C8;
+extern GfxCommandDest D_8013D308;
+extern GfxCommandDest D_8013D348;
+extern GfxCommandDest D_8013D388;
+extern GfxCommandDest D_8013D3C8;
+extern GfxCommandDest D_8013D408;
 
 extern void func_800458E0(void);
 extern void func_80048338(void);
@@ -343,7 +395,35 @@ void func_80099C44(u32 devAddr, void *dramAddr, s32 size) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_8009B0E8.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_8009B14C.s")
+void func_8009B14C(void) {
+    D_80124908.msgType = 5;
+    D_80124908.framebuffer = D_8038E800;
+    D_8013C908.msgType = 6;
+    if (1) {
+        D_8013C908.framebuffer = D_803B4000;
+    }
+    osViSetSpecialFeatures(0x6A);
+    D_8012496E = 0;
+    D_8013CF8E = 0;
+    D_80124834 = 0;
+    D_80124C28 = D_800DEE50;
+    D_80124C68 = D_800DEE50;
+    D_80124CA8 = D_800DEE50;
+    D_80124CE8 = D_800DEE50;
+    D_80124D28 = D_800DEE50;
+    D_80124D68 = D_800DEE50;
+    D_80124DA8 = D_800DEE50;
+    D_80124DE8 = D_800DEE50;
+    D_8013D248 = D_800DEE50;
+    D_8013D288 = D_800DEE50;
+    D_8013D2C8 = D_800DEE50;
+    D_8013D308 = D_800DEE50;
+    D_8013D348 = D_800DEE50;
+    D_8013D388 = D_800DEE50;
+    D_8013D3C8 = D_800DEE50;
+    D_8013D408 = D_800DEE50;
+    D_800DEF10 = 0;
+}
 
 void func_8009B58C(u8 a0, u8 a1, u8 a2) {
     D_80156618 = a0;
@@ -419,7 +499,7 @@ void func_8009B704(u8 arg0) {
 
     one = 1;
     allBits = 0xFFFF;
-    task = (SchedulerTask *)(D_80124908 + bufferIndex * 0x18620);
+    task = (SchedulerTask *)((u8 *)&D_80124908 + bufferIndex * 0x18620);
     task->unk60 = D_8038E800 + colorIndex * 0x25800;
     func_80048524(bufferIndex);
 
