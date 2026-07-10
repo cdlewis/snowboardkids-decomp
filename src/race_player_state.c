@@ -83,7 +83,10 @@ extern s32 func_800832CC(RaceInputPlayer *);
 extern s32 func_80082F44(RaceInputPlayer *);
 extern void func_80082B58(RaceInputPlayer *, s32, s32, s32);
 extern void func_800815D4(s16, s32, s32, s32 *, s32 *, s32, s32);
+extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
+extern s32 func_80080CC4(s32, s32, s32);
 extern void func_8006D520(u16, u16);
+extern void func_8004F55C(s16, s16);
 extern void func_80082B58(RaceInputPlayer *, s32, s16, s32);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void func_8004FA44(void *);
@@ -139,6 +142,7 @@ extern RacePlayerSoundPosition D_80121DA8[];
 extern void *D_801248C8;
 extern void *D_801248EC;
 extern Struct800955C0 D_800B9540[];
+extern s16 D_801124B8[];
 extern s16 D_80121B50;
 extern Unk801124B8 D_801124B8[];
 
@@ -3618,7 +3622,118 @@ void func_800936D4(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800939E0.s")
 
+// func_80093E0C best match: 93.871% (base_3.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80093E0C.s")
+
+#ifdef NON_MATCHING
+void func_80093E0C(RaceInputPlayer *player) {
+    s16 sine;
+    s16 cosine;
+    s16 updateState;
+    s32 *posX;
+    s32 *posZ;
+
+    updateState = player->updateState;
+    player->unk40.y -= player->unk260;
+    player->posY += player->unk40.y;
+
+    switch (updateState) {
+    case 0:
+        player->stateFlags &= 0xFE0C1FFB;
+        player->updateState = updateState + 1;
+        player->stateFlags |= 0x42000;
+        func_80081E40(player, 0xE);
+        func_80082EC0(player);
+        player->unk80 = player->unk502 + 2;
+        func_8006D520((u16)player->playerIndex, 4);
+        player->unk60 = 0;
+        if (player->soundDisabled == 0) {
+            func_8004F55C(player->playerIndex, player->unk330);
+        }
+        player->actionEffectLevel = 2;
+        player->actionEffectFrame = 0;
+        player->unk2E8 = player->unk502;
+        /* fallthrough */
+    case 1:
+        if (func_80082EC0(player) != 0) {
+            player->updateState++;
+            func_80081E40(player, 0xF);
+        }
+        func_8008B408(player, player->unk254, 0);
+        player->unk314 = 0x20000;
+        func_8008BB20(player, 0, 0x2000, 0x2000, 0x2000);
+        player->posX += player->unk40.x;
+        player->posY += player->unk40.y;
+        player->posZ += player->unk40.z;
+        break;
+    case 2:
+        if (func_80082EC0(player) != 0) {
+            player->updateState++;
+            player->stateTimer = 0x3C - ((player->unk509 * 0x3C) / 8);
+            func_80081E40(player, 0x20);
+        }
+        func_8008B408(player, player->unk254, 0);
+        player->unk314 = 0x20000;
+        func_8008BB20(player, 0, 0x2000, 0x2000, 0x2000);
+        player->posX += player->unk40.x;
+        player->posY += player->unk40.y;
+        player->posZ += player->unk40.z;
+        break;
+    case 3:
+        if (func_80082EC0(player) != 0) {
+            func_80081E40(player, 0x21);
+        }
+        player->stateTimer--;
+        if (player->stateTimer == 0) {
+            player->updateState++;
+        }
+        break;
+    case 4:
+        if (func_80082EC0(player) != 0) {
+            func_80081E40(player, 0x21);
+        }
+        player->stateFlags |= 0x80000;
+        posX = &player->posX;
+        if (D_801124B8[(u16)player->playerIndex * 0x58] == 0xFF) {
+            player->updateState++;
+            player->unk502 = player->unk2E8;
+            posZ = &player->posZ;
+            func_80081508(player->unk80, posX, &player->posY, posZ, &player->facingAngle);
+            player->posY = func_80080CC4(player->unk502, player->posX, player->posZ);
+            sine = func_80097AE8(player->facingAngle);
+            cosine = func_80097B48(player->facingAngle);
+            *posX += ((s64)sine * -0x240000) / 0x1000;
+            *posZ += ((s64)cosine * -0x240000) / 0x1000;
+            player->unk34.x = posX[0];
+            player->unk34.y = posX[1];
+            player->unk40.x = 0;
+            player->unk34.z = posX[2];
+            player->unk40.y = 0;
+            player->unk40.z = 0;
+            player->unk74 = 0;
+            player->stateFlags &= ~0x400;
+            player->unk2EE = 0;
+            func_8008B408(player, 0, 0);
+            func_80081E40(player, 1);
+            func_80082EC0(player);
+            func_8006D520((u16)player->playerIndex, 1);
+            player->unk60 = 0x40000;
+        }
+        break;
+    case 5:
+        player->stateFlags &= 0xFFF7FFFF;
+        if (D_801124B8[(u16)player->playerIndex * 0x58] == 0) {
+            player->mode = 0;
+            player->updateState = 0;
+            player->updateTimer = 0;
+            func_80082EC0(player);
+            player->stateFlags = 0;
+        }
+        break;
+    }
+}
+#endif
 
 // func_80094288 best match: 94.992%
 
