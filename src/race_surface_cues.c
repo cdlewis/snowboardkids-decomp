@@ -17,7 +17,48 @@ typedef struct {
     /* 0x527 */ s8 overrideMask;
 } RaceSurfaceCueActor;
 
+typedef struct {
+    /* 0x0 */ s16 surfaceType;
+    /* 0x2 */ s16 cueValue;
+} RaceSurfaceCue;
+
+// func_800831C0 best match: 81.509% (base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_surface_cues/func_800831C0.s")
+
+#ifdef NON_MATCHING
+s32 func_800831C0(RaceSurfaceCue *cues, RaceSurfaceCueActor *actor, s16 cueIndex) {
+    s16 state;
+    s16 step;
+    u32 surfaceType;
+
+    state = actor->cueState[cueIndex];
+    surfaceType = (actor->surfaceFlags & 0xF0000) >> 0x10;
+    switch (state) {
+    case 0:
+        step = actor->cueStep[cueIndex];
+        if (surfaceType != cues[step].surfaceType) {
+            actor->cueStep[cueIndex] = 0;
+            return 0;
+        }
+        if (cues[step].cueValue != 0) {
+            return cues[step].cueValue;
+        }
+        actor->cueState[cueIndex] = state + 1;
+    case 1:
+        step = actor->cueStep[cueIndex];
+        if (surfaceType == cues[step].surfaceType) {
+            return 0;
+        }
+        if (surfaceType == 0) {
+            return 0;
+        }
+        actor->cueState[cueIndex] = 0;
+        actor->cueStep[cueIndex] = step + 1;
+    default:
+        return 0;
+    }
+}
+#endif
 
 void func_80083298(RaceSurfaceCueActor *actor) {
     actor->cueState[0] = 0;
