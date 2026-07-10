@@ -1,5 +1,6 @@
 #include "common.h"
 #include "asset_decompression.h"
+#include "effect_task_scheduler.h"
 #include "game_audio.h"
 #include "race_input_history.h"
 
@@ -8,6 +9,16 @@ typedef struct {
     RaceVec3i localPos;
     Matrix4s rotationMtx;
 } TransformScratch;
+
+typedef struct {
+    s16 unk0;
+    char pad2[0x46];
+} RaceCourseStartEntry;
+
+typedef struct {
+    s8 active;
+    char pad1[0xAF];
+} Unk8011228C;
 
 extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
 extern s32 func_8004940C(s32, s32, s32, s32);
@@ -24,12 +35,34 @@ extern s16 D_800DE894[];
 extern s16 D_800DE8A0[];
 extern s16 D_800DE8AC[];
 extern s16 D_800DE8B8[];
+extern RaceCourseStartEntry D_800B9540[];
+extern Unk8011228C D_8011228C[];
+extern s16 D_80121B50;
+extern s16 D_80121B52;
+extern u8 D_80121B58;
+
+void func_8006A85C(EffectTask *task);
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80087600.s")
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80087AFC.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80087E14.s")
+void func_80087E14(RaceInputPlayer *player) {
+    EffectTask *task;
+    u32 flags;
+
+    flags = player->stateFlags;
+    if (!(flags & 0x40) && (player->unk508 >= (D_80121B52 - 1)) &&
+            (player->unk502 == D_800B9540[D_80121B50].unk0) && !(flags & 0x1000)) {
+        player->stateFlags = flags | 0x40;
+        if ((D_80121B58 == 0) && (D_8011228C[player->playerIndexU16].active != 0)) {
+            task = func_80071408(func_8006A85C, 6, 0x64);
+            if (task != NULL) {
+                task->unk10 = player->playerIndexU16;
+            }
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80087EFC.s")
 
