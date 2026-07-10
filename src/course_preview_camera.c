@@ -110,7 +110,7 @@ extern Gfx D_800D9D40[];
 extern GfxCommandDest D_800DEE50;
 extern FixedTransform D_800DEE30;
 extern void func_80048C90(GfxCommandDest *, s32 *);
-extern void func_80045A1C(u8 *, u16, u32 *, u32 *, s16 *, s16 *);
+extern void func_80045A1C(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 
 extern s8 D_80122288;
 extern s16 D_80122282;
@@ -646,11 +646,12 @@ void func_80056C44(CoursePreviewCamera *arg0) {
     }
 }
 
-// func_80056CA0 best match: 95.121%
+// func_80056CA0 best match: 99.373% (nonmatchings/func_80056CA0-8207005055717715604/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_80056CA0.s")
 
 #ifdef NON_MATCHING
 void func_80056CA0(CoursePreviewGfxCommandActor *arg0) {
+    volatile s32 pad[2];
     u32 spC0;
     u32 spBC;
     s16 spBA;
