@@ -45,6 +45,13 @@ typedef struct PlayerCommandData {
     s32 *jumpTable;
 } PlayerCommandData;
 
+typedef struct PlayerCommandClearBlock {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+} PlayerCommandClearBlock;
+
 typedef struct PlayerCommandState {
     u32 unk0;
     u32 unk4;
@@ -2317,7 +2324,51 @@ s32 func_8009F4C8(s32 arg0) {
     return (s32)(temp_f10 * temp_f0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F604.s")
+void func_8009F604(PlayerCommandState *arg0) {
+    u8 temp_v0;
+    PlayerCommandClearBlock *var_v1;
+    s32 var_a1;
+    u16 temp_t9;
+
+    temp_v0 = arg0->unkE4;
+    arg0->sequencePos = 0;
+
+    var_v1 = (PlayerCommandClearBlock *)arg0;
+    var_a1 = 0;
+loop:
+    var_a1 += 4;
+    var_v1->unk1 = 0;
+    var_v1->unk2 = 0;
+    var_v1->unk3 = 0;
+    var_v1++;
+    var_v1[-1].unk0 = 0;
+    if (var_a1 != sizeof(PlayerCommandState)) {
+        goto loop;
+    }
+
+    arg0->unkB6 = 0xFFFF;
+    arg0->unkE2 = 0xFF;
+    arg0->unkE3 = 0xFF;
+    arg0->unk24 = 99.9f;
+    temp_t9 = 0x6000 / D_8015A678;
+    arg0->unkBC = 1;
+    arg0->unkED = 0;
+    arg0->unkEE = 0x7F;
+    arg0->unkEF = 0x7F;
+    arg0->unkF0 = 0x40;
+    arg0->unkF1 = 2;
+    *(u8 *)&arg0->unkF2 = 0x40;
+    arg0->unkC8 = 1;
+    arg0->unkCA = 1;
+    arg0->fadeTarget = -1;
+    arg0->unkB0 = 0x80;
+    arg0->unkBA = temp_t9;
+    arg0->unkB8 = temp_t9;
+    arg0->unkB2 = 0x80;
+    arg0->unkB4 = 0x80;
+    arg0->unkE4 = temp_v0;
+    arg0->soundId = 0;
+}
 
 s32 func_8009F6F4(s32 arg0, s32 arg1) {
     s32 i;
