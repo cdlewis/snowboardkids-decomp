@@ -1,6 +1,7 @@
 #include "fixed_point_matrix.h"
 
 #define FIXED_MATRIX_ONE 0x1000
+#define FIXED_MATRIX_ROWS(matrix) ((s16(*)[3])(matrix))
 
 extern s16 D_800B9810[];
 
@@ -85,7 +86,22 @@ void func_80097C84(FixedMatrix3s arg0, s16 arg1) {
     arg0[MTX_ZZ] = FIXED_MATRIX_ONE;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/fixed_point_matrix/func_80097CF0.s")
+void func_80097CF0(FixedMatrix3s arg0, FixedMatrix3s arg1, FixedMatrix3s arg2) {
+    s32 i;
+    s32 j;
+
+    i = 0;
+    do {
+        j = 0;
+        do {
+            FIXED_MATRIX_ROWS(arg2)[i][j] = ((FIXED_MATRIX_ROWS(arg0)[i][0] * FIXED_MATRIX_ROWS(arg1)[0][j]) / FIXED_MATRIX_ONE) +
+                                           ((FIXED_MATRIX_ROWS(arg0)[i][1] * FIXED_MATRIX_ROWS(arg1)[1][j]) / FIXED_MATRIX_ONE) +
+                                           ((FIXED_MATRIX_ROWS(arg0)[i][2] * FIXED_MATRIX_ROWS(arg1)[2][j]) / FIXED_MATRIX_ONE);
+            j++;
+        } while (j != 3);
+        i++;
+    } while (i != 3);
+}
 
 void func_80097DA4(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     s32 sineX;
