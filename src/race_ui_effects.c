@@ -537,7 +537,8 @@ typedef struct {
     /* 0x00 */ s16 active;
     /* 0x02 */ s16 pad2;
     /* 0x04 */ Vec3i position;
-    /* 0x10 */ s32 pad10;
+    /* 0x10 */ s16 angle;
+    /* 0x12 */ u8 pad12[2];
 } RaceUiRankTextRenderEntry;
 
 typedef struct RaceUiRankTrigger {
@@ -930,6 +931,7 @@ extern void func_80088294(Vec3i *, s32, s32, s32);
 extern void func_80088C80(Vec3i *, s32, s32, s32);
 extern s32 func_80088E98(Vec3i *, s32, s32, s32);
 extern void func_8008BB5C(RacePlayerState *, s32);
+extern void func_800486BC(void *, void *);
 extern void func_80061088(RaceUiTripleParticleActor *);
 extern void func_80062F6C(RaceUiTrailingParticleActor *);
 extern void func_80058B20(void *);
@@ -978,7 +980,7 @@ extern void func_80065D24(RaceUiOverlayActor *);
 extern void func_800651BC(RaceUiGfxCommandActor *);
 extern void func_80065508(RaceUiGfxCommandActor *);
 extern void func_80083CFC(RacePlayerState *);
-extern void func_800663C8(void *);
+extern void func_800663C8(RaceUiRankTextRenderActor *);
 extern void func_80059854(void *);
 extern void func_8005804C(RaceUiAlpha18Actor *);
 extern void func_8005812C(void *);
@@ -5367,7 +5369,47 @@ void func_80066158(void *arg0) {
     func_800483FC(&D_801248B0, func_80065FD8, arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800663C8.s")
+void func_800663C8(RaceUiRankTextRenderActor *arg0) {
+    s16 scratch[0x10];
+    RaceUiRankTextRenderEntry *entry;
+    RaceUiRankTextRenderActor *actor1;
+    RaceUiRankTextRenderActor *actor2;
+    s32 i;
+    s32 active;
+    s16 count;
+
+    actor1 = arg0;
+    actor2 = arg0;
+    entry = D_800D761C[D_80121B50];
+    count = actor1->count;
+    i = 0;
+    if (count > 0) {
+        active = 1;
+        do {
+            func_80097C18(scratch, entry->angle);
+            scratch[0] = scratch[0] / 12;
+            scratch[1] = scratch[1] / 12;
+            scratch[2] = scratch[2] / 12;
+            if ((!i) && (!i)) {
+            }
+            scratch[3] = scratch[3] / 12;
+            scratch[4] = scratch[4] / 12;
+            scratch[5] = scratch[5] / 12;
+            scratch[6] = scratch[6] / 12;
+            scratch[7] = scratch[7] / 12;
+            scratch[8] = scratch[8] / 12;
+            ((Vec3i *)&scratch[10])->x = entry->position.x;
+            ((Vec3i *)&scratch[10])->y = entry->position.y;
+            ((Vec3i *)&scratch[10])->z = entry->position.z;
+            func_800486BC(scratch, (void *)((u32)actor1->matrices + (i << 6)));
+            entry->active = active;
+            i++;
+            entry++;
+        } while (i < actor2->count);
+        count = actor1->count;
+    }
+    osWritebackDCache(actor1->matrices, count << 6);
+}
 
 void func_800666B0(RaceUiRankTextRenderActor *arg0) {
     RaceUiRankTextRenderEntry *var_v0;
