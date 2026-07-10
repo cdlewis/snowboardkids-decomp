@@ -3,8 +3,9 @@
 #include "effect_task_scheduler.h"
 #include "controller_rumble.h"
 #include "game_audio.h"
+#define func_8004940C func_8004940C_s32
 #include "fixed_point_matrix.h"
-#include "fixed_point_math.h"
+#undef func_8004940C
 #include "race_input_history.h"
 
 typedef struct {
@@ -61,6 +62,7 @@ extern void func_8005FB30(void *);
 extern void func_800617C8(void *);
 extern void func_80050030(void *);
 extern void func_8004DCA0(RaceVec3i *, RaceVec3i *, RaceVec3i *, RaceVec3i *, s32, s32);
+extern volatile s16 func_8004940C(s32, s32, s32, s32);
 extern void *func_800716A4(void *, s32, s32, s32);
 extern void func_80050E80(void *);
 extern void func_80062530(void *);
@@ -2213,15 +2215,10 @@ void func_80092D04(RaceInputPlayer *player) {
     }
 }
 
-// func_80092E58 best match: 98.797% (nonmatchings/func_80092E58-3236181511606361864/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092E58.s")
-
-#ifdef NON_MATCHING
 void func_80092E58(RaceInputPlayer *player) {
     RaceInputPlayer *playerAlias;
     Struct800955C0 *spawn;
     s16 updateState;
-    s16 targetAngle;
     s16 angleDiff;
     s32 clamped;
     s32 tempX;
@@ -2237,10 +2234,10 @@ void func_80092E58(RaceInputPlayer *player) {
         } else {
             func_80081E40(player, 6);
         }
-        player->actionEffectLevel = 3;
-        player->actionEffectFrame = 0;
         player->unk40.x = player->unk2E0;
         player->unk40.z = player->unk2E4;
+        player->actionEffectLevel = 3;
+        player->actionEffectFrame = 0;
     }
 
     func_8008B408(player, 0x10000, 0);
@@ -2282,14 +2279,13 @@ void func_80092E58(RaceInputPlayer *player) {
     playerAlias->posZ += playerAlias->unk40.z;
 
     spawn = &D_800B9540[D_80121B50];
-    clamped = spawn->unk0;
-    if ((playerAlias->unk502 == clamped) && !(playerAlias->stateFlags & 0x40)) {
-        targetAngle = func_8004940C(playerAlias->posX, player->posZ, spawn->unk40, spawn->unk44);
+    if ((spawn->unk0 == playerAlias->unk502) && !(playerAlias->stateFlags & 0x40)) {
+        angleDiff = func_8004940C(playerAlias->posX, player->posZ, spawn->unk40, spawn->unk44);
         if (playerAlias->stateFlags & 0x400) {
-            targetAngle += 0x800;
+            angleDiff += 0x800;
         }
 
-        angleDiff = (targetAngle - player->facingAngle) & 0xFFF;
+        angleDiff = (angleDiff - player->facingAngle) & 0xFFF;
         if (angleDiff >= 0x801) {
             angleDiff -= 0x1000;
         }
@@ -2319,7 +2315,6 @@ void func_80092E58(RaceInputPlayer *player) {
         }
     }
 }
-#endif
 
 void func_80093144(RaceInputPlayer *player) {
     s16 updateState;
