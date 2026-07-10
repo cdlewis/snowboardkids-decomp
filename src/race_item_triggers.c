@@ -6,9 +6,6 @@
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_triggers/func_800849E0.s")
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_triggers/func_80084D74.s")
-
-#ifdef NON_MATCHING
 typedef void (*EffectCallback)(void *);
 
 extern void func_80072A74(s32 soundId, void *pos, s32 volume, s32 distance);
@@ -24,8 +21,10 @@ extern void func_8004EF24(void *);
 extern void func_8005F298(s16 playerIndex);
 extern void func_80060C4C(s16 playerIndex);
 extern void func_80064EAC(void *);
+extern void *func_800716A4(void *, s32, s32, s32);
 extern void func_80083CFC(RaceInputPlayer *player);
 
+#ifdef NON_MATCHING
 void func_800849E0(RaceInputPlayer *player) {
     s32 trigger;
     RaceInputPlayer *otherPlayer;
@@ -113,6 +112,7 @@ void func_800849E0(RaceInputPlayer *player) {
         }
     }
 }
+#endif
 
 void func_80084D74(RaceInputPlayer *player) {
     s32 trigger;
@@ -137,6 +137,8 @@ void func_80084D74(RaceInputPlayer *player) {
             trigger = 0;
             if (player->actionEffectEnabled != 0) {
                 trigger = 1;
+            } else {
+                trigger = 0;
             }
         }
     }
@@ -163,14 +165,14 @@ void func_80084D74(RaceInputPlayer *player) {
             }
 
             if (type == 4) {
-                func_800716A4(func_8004D184, 0, 0x3C, player->playerIndex);
+                func_800716A4(func_8004D184, 0, 0x3C, (u16) player->playerIndex);
                 player->actionEffectType = 0;
                 type = player->actionEffectType;
             }
 
             if (type == 5) {
                 if (player->unk4 == 0) {
-                    func_800716A4(func_80064EAC, 0, 3, player->playerIndex);
+                    func_800716A4(func_80064EAC, 0, 3, (u16) player->playerIndex);
                 }
                 player->actionEffectType = 0;
                 type = player->actionEffectType;
@@ -184,4 +186,3 @@ void func_80084D74(RaceInputPlayer *player) {
         }
     }
 }
-#endif
