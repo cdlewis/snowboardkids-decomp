@@ -188,10 +188,21 @@ typedef struct {
     /* 0x38 */ s16 itemTextureHandle;
 } RaceItemEffectAssetHandles;
 
+typedef union {
+    s64 value;
+    struct {
+        /* 0x0 */ s32 high;
+        /* 0x4 */ u32 low;
+    } word;
+} LongLongParts;
+
 extern u8 *D_800D46D0[];
 extern u8 D_800D4708[];
 extern u16 D_800D46F8[];
 extern Gfx D_800D45E0[];
+extern u8 D_800D4808[];
+extern u8 D_800D4814[];
+extern u8 D_800D4820[];
 extern u32 D_800D4830[];
 extern s16 D_800D4870[];
 extern Gfx D_800D4878[];
@@ -311,7 +322,79 @@ void func_8004DC6C(RaceItemEffectActor *arg0) {
     func_80071824(arg0, func_8004DB8C);
 }
 
+// func_8004DCA0 best match: 86.674% (nonmatchings/func_8004DCA0-2225551288923588688/base_6.c)
+
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004DCA0.s")
+
+#ifdef NON_MATCHING
+void func_8004DCA0(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *arg3, s16 arg4) {
+    LongLongParts total;
+    s64 distY;
+    s64 distX;
+    s64 distZ;
+    volatile s32 high;
+    s32 midAX;
+    s32 midAY;
+    s32 midAZ;
+    s32 midBX;
+    s32 midBY;
+    s32 midBZ;
+    s32 dx;
+    s32 i;
+    s32 random;
+    RaceItemEffectActor *actor;
+    u8 *cursor;
+    s16 itemType;
+
+    itemType = func_8004DB60(arg4);
+    if (itemType != 4) {
+        midAX = ((arg0->x - arg1->x) / 2) + arg1->x;
+        midAY = ((arg0->y - arg1->y) / 2) + arg1->y;
+        midAZ = ((arg0->z - arg1->z) / 2) + arg1->z;
+        midBX = ((arg2->x - arg3->x) / 2) + arg3->x;
+        midBY = ((arg2->y - arg3->y) / 2) + arg3->y;
+        midBZ = ((arg2->z - arg3->z) / 2) + arg3->z;
+
+        dx = midAY - midBY;
+        distY = (s64) dx * dx;
+        dx = midAX - midBX;
+        distX = (s64) dx * dx;
+        dx = midAZ - midBZ;
+        distZ = (s64) dx * dx;
+        total.value = distZ + distX + distY;
+        high = total.word.high;
+
+        if (high > 0) {
+            if (high < 2) {}
+            actor = func_800716A4(func_8004DC6C, 5, 0x32, itemType);
+            if (actor != NULL) {
+                actor->unk68 = D_800D4820;
+                if (high < 0x65) {
+                    if (high >= 0x64) {
+                    } else {
+                        actor->unk68 = D_800D4814;
+                    }
+                }
+                if (high < 0x25) {
+                    if (high >= 0x24) {
+                    } else {
+                        actor->unk68 = D_800D4808;
+                    }
+                }
+
+                cursor = (u8 *) actor;
+                for (i = 0; i != 2; i++) {
+                    random = func_800430D0() & 0xF;
+                    cursor += 0xC;
+                    *(s32 *)(cursor + 0xC) = (((arg0->x - arg1->x) * random) / 15) + arg1->x;
+                    *(s32 *)(cursor + 0x10) = (((arg0->y - arg1->y) * random) / 15) + arg1->y;
+                    *(s32 *)(cursor + 0x14) = (((arg0->z - arg1->z) * random) / 15) + arg1->z;
+                }
+            }
+        }
+    }
+}
+#endif
 
 void func_8004E02C(RaceItemEffectActor *arg0) {
     RaceItemGfxCommandSource sp88;
