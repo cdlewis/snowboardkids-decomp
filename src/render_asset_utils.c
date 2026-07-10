@@ -1,5 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
+#include "fixed_point_matrix.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
 { \
@@ -1408,7 +1409,17 @@ void func_80048CF8(GfxCommandBlock *arg0, GfxCommandBlock *arg1) {
     arg1->words[15] = (arg0->words[7] << 0x10) & 0xFFFF0000;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80048D60.s")
+void func_80048D60(FixedMatrix3s arg0) {
+    arg0[0] = arg0[0] / 4;
+    arg0[1] = arg0[1] / 4;
+    arg0[2] = arg0[2] / 4;
+    arg0[3] = arg0[3] / 4;
+    arg0[4] = arg0[4] / 4;
+    arg0[5] = arg0[5] / 4;
+    arg0[6] = arg0[6] / 4;
+    arg0[7] = arg0[7] / 4;
+    arg0[8] = arg0[8] / 4;
+}
 
 void func_80048E3C(void *arg0, void *arg1, void *arg2) {
 }
