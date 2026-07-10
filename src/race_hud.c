@@ -116,6 +116,17 @@ typedef struct {
 typedef struct {
     u8 pad0[0x18];
     /* 0x18 */ s16 x[PLAYER_COUNT];
+    /* 0x20 */ s16 y[PLAYER_COUNT];
+    /* 0x28 */ u16 frameLimit;
+    /* 0x2A */ u16 frameStep;
+    /* 0x2C */ u16 frameCounter;
+    u8 pad2E[2];
+    /* 0x30 */ u8 mode;
+} RaceHudPanelTransitionActor;
+
+typedef struct {
+    u8 pad0[0x18];
+    /* 0x18 */ s16 x[PLAYER_COUNT];
     /* 0x20 */ s16 y;
     /* 0x22 */ s16 baseX;
     /* 0x24 */ s16 scale;
@@ -140,7 +151,7 @@ typedef struct {
     /* 0x26 */ u8 unk26;
 } RaceHudPanelController;
 
-extern void func_80018C80(void);
+extern void func_80018C80(RaceHudPanelActor *);
 extern void func_800177F8(RaceHudBannerActor *);
 extern void func_80017C34(RaceHudPanelActor *);
 extern void func_800184C8(void);
@@ -160,6 +171,7 @@ extern s32 D_801235B4;
 extern void *D_80124868;
 extern u8 D_80121B55;
 extern RacePlayer D_80121D80[];
+extern u8 D_80121D85[];
 extern s8 D_8010AE64[];
 extern u8 D_80112130[];
 extern u8 D_800B5A70[];
@@ -805,7 +817,170 @@ void func_80018BC0(void *arg0) {
     }
 }
 
+// func_80018C80 best match: 81.771% (nonmatchings/func_80018C80-8207005055717715604/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80018C80.s")
+
+#ifdef NON_MATCHING
+void func_80018C80(RaceHudPanelActor *arg0) {
+    RaceHudPanelTransitionActor *slots;
+    u8 *stateMirror;
+    RaceHudPanelActor *base;
+    RaceHudPanelActor *actor;
+    RaceHudPanelActor *actor2;
+    s32 i;
+    u8 state;
+    s16 offsetX;
+    s16 direction;
+    s32 j;
+    s32 moveX;
+    s32 moveY;
+
+    base = arg0;
+    actor2 = arg0;
+    slots = D_8010ADE4;
+    i = 0;
+    if ((s32)D_80121B55 > 0) {
+        stateMirror = (u8 *)&D_8010AE50;
+        actor = base;
+        do {
+            state = actor->state[0];
+            if (stateMirror[3] != state) {
+                state = stateMirror[3];
+                actor->state[0] = state;
+            }
+
+            switch (state) {
+            case 0:
+                break;
+            case 1:
+                state = D_80121D85[i * PLAYER_DATA_SIZE];
+                if ((s32)state < 5) {
+                    offsetX = (state * 0x20) - 0x40;
+                } else if (state == 5) {
+                    offsetX = -0x70;
+                } else {
+                    offsetX = 0x50;
+                }
+
+                base->targetX.target[i] = (slots->x[i] + 0x38) - offsetX;
+                base->targetY.target[i] = slots->y[i] + 0x20;
+                base->xDirection[i] = 1;
+                if (base->targetX.target[i] < 0) {
+                    base->xDirection[i] = -1;
+                    base->targetX.target[i] = base->targetX.target[i] * -1;
+                }
+                if (base->targetY.target[i] < 0) {
+                    base->targetY.target[i] = base->targetY.target[i] * -1;
+                }
+
+                actor->axis[0] = 0;
+                actor->divisor[0] = base->targetX.target[i] / 0x20;
+                base->stepCount[i] = base->targetX.target[i] / 4;
+                if (base->targetX.target[i] < base->targetY.target[i]) {
+                    actor->axis[0] = 1;
+                    actor->divisor[0] = base->targetY.target[i] / 0x20;
+                    base->stepCount[i] = base->targetY.target[i] / 4;
+                }
+                base->x[i] = offsetX;
+                base->y[i] = -8;
+                base->tileSize[i] = 1;
+                base->timer[i] = 0;
+                actor->state[0] = 2;
+                state = 2;
+                break;
+            case 2:
+                j = 0;
+                if (i & 1) {
+                    direction = 1;
+                } else {
+                    direction = -1;
+                }
+                if (base->stepCount[i] > 0) {
+                    do {
+                        if (actor->axis[0] != 0) {
+                            base->y[i] += direction;
+                            base->accumulator[i] += base->targetX.target[i];
+                            if (base->accumulator[i] >= base->targetY.target[i]) {
+                                base->accumulator[i] -= base->targetY.target[i];
+                                base->x[i] += base->xDirection[i];
+                            }
+                        } else {
+                            base->x[i] += base->xDirection[i];
+                            base->accumulator[i] += base->targetY.target[i];
+                            if (base->accumulator[i] >= base->targetX.target[i]) {
+                                base->accumulator[i] -= base->targetX.target[i];
+                                base->y[i] += direction;
+                            }
+                        }
+                        base->timer[i]++;
+                        if ((base->timer[i] % actor->divisor[0]) == 0) {
+                            base->tileSize[i]++;
+                        }
+                        if (base->tileSize[i] >= 0x21) {
+                            base->tileSize[i] = 0x20;
+                        }
+                        if ((base->x[i] == slots->x[i] + 0x38) && (base->y[i] == slots->y[i] + 0x18)) {
+                            actor->state[0] = 3;
+                            base->tileSize[i] = 0x20;
+                            state = actor->state[0];
+                            goto next_player;
+                        }
+                        j++;
+                    } while (j < base->stepCount[i]);
+                }
+                break;
+            case 3:
+                break;
+            default:
+                break;
+            }
+
+next_player:
+            i++;
+            stateMirror++;
+            actor = (RaceHudPanelActor *)((u8 *)actor + 1);
+            stateMirror[2] = state;
+        } while (i < (s32)D_80121B55);
+    }
+
+    if (slots->mode == 3) {
+        j = 0;
+        do {
+            for (i = 0; i != PLAYER_COUNT; i++) {
+                if (i < 2) {
+                    moveX = -1;
+                } else {
+                    moveX = 1;
+                }
+                if (i & 1) {
+                    moveY = 1;
+                } else {
+                    moveY = -1;
+                }
+                slots->x[i] += moveX;
+                if (i == 0) {
+                    slots->frameCounter += slots->frameStep;
+                }
+                if (slots->frameCounter >= slots->frameLimit) {
+                    slots->y[i] += moveY;
+                    if (i == 3) {
+                        slots->frameCounter -= slots->frameLimit;
+                    }
+                }
+                actor2->x[i] = slots->x[i] + 0x38;
+                actor2->y[i] = slots->y[i] + 0x18;
+            }
+            j++;
+            if (slots->x[0] == -0x114) {
+                slots->mode = 4;
+                break;
+            }
+        } while (j != 0x10);
+    }
+
+    func_800483FC(&D_80124868, func_80018BC0, base);
+}
+#endif
 
 void func_800191A0(RaceHudPanelActor *arg0) {
     func_80071824(arg0, func_80018C80);
