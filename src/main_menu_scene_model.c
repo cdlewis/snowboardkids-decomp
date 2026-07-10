@@ -36,7 +36,6 @@ typedef struct MainMenuAnimationWritePart {
 extern RomAssetAddress D_800D4020[];
 extern RomAssetAddress D_800D4050[];
 extern MainMenuModelAssetHandles D_80112130;
-extern void func_80042AB4(MainMenuSceneModel *arg0);
 
 // func_80040C80 best match: 94.789% (nonmatchings/func_80040C80-2225551288923588688/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80040C80.s")
