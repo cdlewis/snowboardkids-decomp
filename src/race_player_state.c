@@ -67,6 +67,7 @@ extern void func_8008BB20(RaceInputPlayer *, s32, s32, s32, s32);
 extern void func_8008BB5C(RaceInputPlayer *, s32);
 extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
 extern s32 func_80072138(s32, s32);
+extern s16 func_8004940C(s32, s32, s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
 extern void func_8008393C(RaceInputPlayer *);
 extern void func_80086170(RaceInputPlayer *);
@@ -3457,17 +3458,11 @@ void func_80093304(RaceInputPlayer *player) {
 }
 #endif
 
-// func_800934EC best match: 99.262%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800934EC.s")
-
-#ifdef NON_MATCHING
 void func_800934EC(RaceInputPlayer *player) {
     Struct800955C0 *spawn;
     s16 updateState;
     s16 targetAngle;
-    s32 tooLow;
-    s16 angleDiff;
+    s16 facingAngle;
 
     updateState = player->updateState;
     if (updateState == 0) {
@@ -3477,9 +3472,9 @@ void func_800934EC(RaceInputPlayer *player) {
         } else {
             func_80081E40(player, 0x10);
         }
-        player->stateFlags &= 0xFE0C1FFB;
-        player->stateFlags &= ~0x200;
-        player->stateFlags |= 0xA000;
+        player->stateFlags = player->stateFlags & 0xFE0C1FFB;
+        player->stateFlags = player->stateFlags & ~0x200;
+        player->stateFlags = player->stateFlags | 0xA000;
         player->unk60 = 0x40000;
     }
 
@@ -3496,18 +3491,18 @@ void func_800934EC(RaceInputPlayer *player) {
             targetAngle += 0x800;
         }
 
-        angleDiff = (targetAngle - player->facingAngle) & 0xFFF;
-        if ((targetAngle - player->facingAngle) >= 0x801) {
-            angleDiff -= 0x1000;
+        facingAngle = player->facingAngle;
+        targetAngle = (targetAngle - facingAngle) & 0xFFF;
+        if (targetAngle >= 0x801) {
+            targetAngle -= 0x1000;
         }
-        if (angleDiff >= 0x67) {
-            angleDiff = 0x66;
+        if (targetAngle >= 0x67) {
+            targetAngle = 0x66;
         }
-        tooLow = angleDiff < -0x66;
-        if (tooLow) {
-            angleDiff = -0x66;
+        if (targetAngle < -0x66) {
+            targetAngle = -0x66;
         }
-        player->facingAngle += angleDiff;
+        player->facingAngle = facingAngle + targetAngle;
     }
 
     func_8008B408(player, 0, 0);
@@ -3521,7 +3516,6 @@ void func_800934EC(RaceInputPlayer *player) {
         player->updateTimer = 0;
     }
 }
-#endif
 
 // func_800936D4 best match: 91.015% (base_3.c)
 
