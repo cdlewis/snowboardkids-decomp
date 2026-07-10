@@ -113,4 +113,56 @@ void func_80042A58(s32 modelIndex, s32 renderFrame) {
     func_800483FC(&D_801248B0, func_80042574, model);
 }
 
+// func_80042AB4 best match: 93.231% at nonmatchings/func_80042AB4-2127290767680699791/base_8.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_80042AB4.s")
+
+#ifdef NON_MATCHING
+extern s16 *D_800D3EE4[];
+
+void func_80042AB4(MainMenuSceneModel *model) {
+    s16 *cursor;
+    s32 i;
+    s16 zero;
+    u8 *writePart;
+
+    *(s8 *)((u8 *)model + 0x1C) = -1;
+    *(s8 *)((u8 *)model + 0x30) = -1;
+    *(s8 *)((u8 *)model + 0x44) = 1;
+    *(s8 *)((u8 *)model + 0x58) = 2;
+    *(s8 *)((u8 *)model + 0x6C) = 1;
+    *(s8 *)((u8 *)model + 0x80) = 4;
+    *(s8 *)((u8 *)model + 0x94) = 1;
+    *(s8 *)((u8 *)model + 0xA8) = 6;
+    *(s8 *)((u8 *)model + 0xBC) = 6;
+    *(s8 *)((u8 *)model + 0xD0) = 8;
+    *(s8 *)((u8 *)model + 0xE4) = 6;
+    *(s8 *)((u8 *)model + 0xF8) = 10;
+    *(s8 *)((u8 *)model + 0x10C) = 3;
+    *(s8 *)((u8 *)model + 0x120) = 5;
+
+    cursor = D_800D3EE4[model->modelIndex];
+    i = 0;
+    writePart = (u8 *)model;
+loop:
+    *(s16 *)(writePart + 0x22) = 0;
+    zero = *(s16 *)(writePart + 0x22);
+    i += 2;
+    *(s16 *)(writePart + 0x20) = zero;
+    *(s16 *)(writePart + 0x1E) = zero;
+    *(s32 *)(writePart + 0x24) = cursor[0] << 16;
+    cursor += 6;
+    writePart += 0x28;
+    *(s32 *)(writePart + 0x0) = cursor[-5] << 16;
+    *(s16 *)(writePart + 0xE) = 0;
+    zero = *(s16 *)(writePart + 0xE);
+    *(s32 *)(writePart + 0x4) = cursor[-4] << 16;
+    *(s16 *)(writePart + 0xC) = zero;
+    *(s16 *)(writePart + 0xA) = zero;
+    *(s32 *)(writePart + 0x10) = cursor[-3] << 16;
+    *(s32 *)(writePart + 0x14) = cursor[-2] << 16;
+    *(s32 *)(writePart + 0x18) = cursor[-1] << 16;
+    if (i != 14) {
+        goto loop;
+    }
+}
+#endif
