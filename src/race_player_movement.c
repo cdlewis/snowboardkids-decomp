@@ -208,7 +208,75 @@ void func_80087E14(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80087EFC.s")
 
+// func_80088294 best match: 97.245% (nonmatchings/func_80088294-8207005055717715604/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088294.s")
+
+#ifdef NON_MATCHING
+void func_80088294(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
+    volatile u8 pad[8];
+    RaceInputPlayer *player;
+    s32 temp;
+    s32 xDiff;
+    s32 yLimit;
+    s32 xzLimit;
+    s32 pushX;
+    s32 pushZ;
+    s32 localX;
+    s32 localZ;
+    s16 angle;
+    s32 sine;
+    s32 cosine;
+
+    player = D_80121D80;
+    do {
+        if (player->isActive != 0) {
+            yLimit = ySize;
+            temp = pos->y - player->unk5C;
+            if (temp < 0) {
+                temp = -temp;
+            } else {
+                yLimit = player->unk284;
+            }
+
+            if (temp <= yLimit) {
+                xzLimit = player->unk280 + xzSize;
+                xDiff = pos->x - player->posX;
+                if (xDiff < 0) {
+                    xDiff = -xDiff;
+                }
+                if (xDiff < xzLimit) {
+                    temp = pos->z - player->posZ;
+                    if (temp < 0) {
+                        temp = -temp;
+                    }
+                    if ((temp < xzLimit) &&
+                        ((temp = func_80098C30((s64)((0, xDiff)) * xDiff +
+                                               (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
+                        angle = func_8004940C(pos->x, pos->z, player->posX, player->posZ);
+                        sine = func_80097AE8(angle);
+                        cosine = func_80097B48(angle);
+                        temp = xzLimit - temp;
+                        pushX = (s64)-sine * -temp / 0x1000;
+                        pushZ = (s64)cosine * -temp / 0x1000;
+                        player->posX -= pushX;
+                        player->posZ += pushZ;
+
+                        localX = ((s64)cosine * player->unk2C8 - (s64)sine * player->unk2CC) / 0x1000;
+                        localZ = ((s64)sine * player->unk2C8 + (s64)cosine * player->unk2CC) / 0x1000;
+                        if (localZ > 0) {
+                            localZ = -localZ;
+                        }
+                        player->unk2C8 = ((s64)cosine * localX + (s64)sine * localZ) / 0x1000;
+                        player->unk2CC = ((s64)-sine * localX + (s64)cosine * localZ) / 0x1000;
+                        player->unk2C6 |= flag;
+                    }
+                }
+            }
+        }
+        player++;
+    } while (player != &D_801235B0);
+}
+#endif
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088664.s")
 
