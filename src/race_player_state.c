@@ -467,6 +467,7 @@ void func_8008C704(void) {
     }
 }
 
+// func_8008C7D0 best match: 91.734% (nonmatchings/func_8008C7D0-7273315160691878794/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008C7D0.s")
 
 void func_8008CF10(RaceInputPlayer *player) {
