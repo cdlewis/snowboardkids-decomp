@@ -30,6 +30,12 @@ typedef struct ModelAnimKeyframe {
     u16 unk14[4];
 } ModelAnimKeyframe;
 
+typedef struct ModelAnimRotation {
+    s32 x;
+    s32 y;
+    s32 z;
+} ModelAnimRotation;
+
 typedef struct ModelAnimState {
     u16 modelId;
     char pad2[0x450];
@@ -84,6 +90,9 @@ extern s32 D_80121BB4;
 extern s32 D_80121BBC;
 extern s32 D_80121BC0;
 extern s32 D_80121BC8;
+extern ModelAnimRotation D_80121C00[];
+extern s32 D_80121C48[];
+extern s32 D_80121D50;
 extern s16 D_8011215C[];
 extern s16 D_80112166;
 extern s16 D_80121B50;
@@ -535,7 +544,102 @@ void func_80081E40(ModelAnimState *state, s32 animIndex) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80082664.s")
 
+// func_80082B58 best match: 98.133% (base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80082B58.s")
+
+#ifdef NON_MATCHING
+void func_80082B58(ModelAnimState *state, s32 animIndex, s32 timer, s32 duration) {
+    s32 frameBase;
+    s16 *packed;
+    ModelAnimRotation *row;
+    ModelAnimRotation *out;
+    ModelAnimRotation *end;
+    s32 *interp;
+    ModelAnimRotation *outAlias;
+    void *joint;
+    s32 i;
+    s16 xy;
+    s16 shiftedX;
+    s16 zAndFlags;
+    s32 jointStride;
+    s32 x;
+    u16 frameOffset;
+    s32 y;
+    s32 z;
+    s32 delta;
+
+    frameBase = func_80043040(D_8011215C[state->modelId]);
+    frameOffset = ((u16 *)frameBase)[animIndex];
+    packed = (s16 *)(frameBase + (frameOffset * 2));
+    packed++;
+    packed = (s16 *)((u8 *)packed + 0x24);
+
+    row = D_80121C00;
+    end = (ModelAnimRotation *)&D_80121D50;
+    do {
+        i = 0x48;
+        out = row + 6;
+        do {
+            xy = packed[0];
+            zAndFlags = packed[1];
+            shiftedX = xy >> 4;
+            x = shiftedX & 0xFF0;
+            y = (xy << 4) & 0xFF0;
+            z = (zAndFlags >> 4) & 0xFF0;
+            packed += 2;
+            out->x = x;
+            out->y = y;
+            out->z = z;
+            if (zAndFlags & 1) {
+                out->x = x + 8;
+            }
+            if ((zAndFlags & 2) & 0xFFFF) {
+                out->y += 8;
+            }
+            i += 0xC;
+            outAlias = out;
+            if (zAndFlags & 4) {
+                outAlias->z += 8;
+            }
+            out++;
+        } while (i < 0x90);
+        row += 14;
+        packed = (s16 *)((u8 *)packed + 0x24);
+    } while (row < end);
+
+    interp = D_80121C48;
+    i = 6;
+    joint = (u8 *)state + 0x78;
+loop:
+    x = interp[0];
+    jointStride = 0x14;
+    delta = (interp[42] - x) & 0xFFF;
+    if (delta >= 0x801) {
+        delta -= 0x1000;
+    }
+    *(s16 *)((u8 *)joint + 0x33A) = x + ((delta * timer) / duration);
+
+    y = interp[1];
+    delta = (interp[43] - y) & 0xFFF;
+    if (delta >= 0x801) {
+        delta -= 0x1000;
+    }
+    *(s16 *)((u8 *)joint + 0x33C) = y + ((delta * timer) / duration);
+
+    z = interp[2];
+    delta = (interp[44] - z) & 0xFFF;
+    if (delta >= 0x801) {
+        delta -= 0x1000;
+    }
+    i++;
+    interp += 3;
+    joint = (u8 *)joint + jointStride;
+    *(s16 *)((u8 *)joint + 0x32A) = z + ((delta * timer) / duration);
+    if (i != 12) {
+        goto loop;
+    }
+}
+#endif
 
 void func_80082DD0(ModelAnimState *state) {
     s32 frameTimer;
