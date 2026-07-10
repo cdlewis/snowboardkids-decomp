@@ -4,10 +4,13 @@
 #define RACE_CAMERA_COUNT 4
 #define RACE_CAMERA_STATE_SIZE 0xB0
 #define RACE_CAMERA_ANGLE_MASK 0xFFF
+#define RACE_CAMERA_FP_ONE 0x1000
 #define RACE_CAMERA_ROTATION_TRANSITION_STRIDE 0x24
 #define RACE_CAMERA_ROTATION_TRANSITION ((RaceCameraRotationTransition *)((u8 *)D_800DA91C + ((u16)D_801124A0->mode * stride)))
 #define RACE_PLAYER_STATE_SIZE 0x60C
 #define FIXED_MUL(a, b) (((a) * (b)) / 0x1000)
+#define RACE_CAMERA_FP_DOT(a, b, c, d, e, f) \
+    (((a) * (b)) / RACE_CAMERA_FP_ONE + ((c) * (d)) / RACE_CAMERA_FP_ONE + ((e) * (f)) / RACE_CAMERA_FP_ONE)
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x1C];
@@ -44,7 +47,8 @@ typedef struct {
     /* 0x24 */ s32 distance;
     /* 0x28 */ s32 unk28;
     /* 0x2C */ void (*update)(void);
-    /* 0x30 */ u8 rotationMatrix[0x14];
+    /* 0x30 */ FixedMatrix3s rotationMatrix;
+    /* 0x42 */ s16 pad42;
     /* 0x44 */ Vec3i transformOffset;
     /* 0x50 */ u8 transform[0x42];
     /* 0x92 */ s16 unk92;
@@ -271,7 +275,87 @@ void func_8006D8B4(void) {
 }
 #endif
 
+// func_8006DDB4 best match: 92.325% (base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006DDB4.s")
+
+#ifdef NON_MATCHING
+void func_8006DDB4(void) {
+    s32 dx;
+    s32 dy;
+    s32 dz;
+    s32 xzLen;
+    s32 fullLen;
+    s32 sinPitch;
+    s32 cosPitch;
+    s32 sinYaw;
+    s32 cosYaw;
+    s32 padBefore[4];
+    FixedTransform pitchMtx;
+    FixedTransform yawMtx;
+    FixedMatrix3s transformMtx;
+    s32 padAfter[4];
+    s32 row;
+    s32 col;
+
+    func_80097A80(&pitchMtx);
+    func_80097A80(&yawMtx);
+
+    dy = (D_801124A0->pos.y - D_801124A0->focus.y) + 0x40000;
+    dx = D_801124A0->pos.x - D_801124A0->focus.x;
+    dz = D_801124A0->pos.z - D_801124A0->focus.z;
+
+    xzLen = func_80098C30((s64)dx * dx + (s64)dz * dz);
+    fullLen = func_80098C30((s64)xzLen * xzLen + (s64)dy * dy);
+
+    D_801124A0->pitch = func_8004940C(0, 0, xzLen, -dy);
+    if (fullLen != 0) {
+        sinPitch = ((s64)dy * RACE_CAMERA_FP_ONE) / fullLen;
+        cosPitch = ((s64)xzLen * RACE_CAMERA_FP_ONE) / fullLen;
+        pitchMtx.rotation[MTX_YY] = cosPitch;
+        pitchMtx.rotation[MTX_ZY] = -sinPitch;
+        pitchMtx.rotation[MTX_ZZ] = cosPitch;
+        pitchMtx.rotation[MTX_YZ] = sinPitch;
+    }
+
+    D_801124A0->yaw = -func_8004940C(0, 0, dx, dz);
+    if (xzLen != 0) {
+        sinYaw = ((s64)dx * RACE_CAMERA_FP_ONE) / xzLen;
+        cosYaw = ((s64)dz * RACE_CAMERA_FP_ONE) / xzLen;
+        yawMtx.rotation[MTX_XX] = cosYaw;
+        yawMtx.rotation[MTX_ZX] = -sinYaw;
+        yawMtx.rotation[MTX_ZZ] = cosYaw;
+        yawMtx.rotation[MTX_XZ] = sinYaw;
+    }
+
+    for (row = 0; row < 3; row++) {
+        for (col = 0; col < 3; col++) {
+            D_801124A0->rotationMatrix[row * 3 + col] =
+                RACE_CAMERA_FP_DOT(yawMtx.rotation[row * 3 + 0], pitchMtx.rotation[col + 0],
+                                   yawMtx.rotation[row * 3 + 1], pitchMtx.rotation[col + 3],
+                                   yawMtx.rotation[row * 3 + 2], pitchMtx.rotation[col + 6]);
+        }
+    }
+
+    pitchMtx.rotation[MTX_YZ] *= -1;
+    pitchMtx.rotation[MTX_ZY] *= -1;
+    yawMtx.rotation[MTX_XZ] *= -1;
+    yawMtx.rotation[MTX_ZX] *= -1;
+
+    for (row = 0; row < 3; row++) {
+        for (col = 0; col < 3; col++) {
+            transformMtx[row * 3 + col] =
+                RACE_CAMERA_FP_DOT(pitchMtx.rotation[row * 3 + 0], yawMtx.rotation[col + 0],
+                                   pitchMtx.rotation[row * 3 + 1], yawMtx.rotation[col + 3],
+                                   pitchMtx.rotation[row * 3 + 2], yawMtx.rotation[col + 6]);
+        }
+    }
+
+    D_801124A0->transformOffset.x = -((((s64)transformMtx[MTX_XZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
+    D_801124A0->transformOffset.y = -((((s64)transformMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
+    D_801124A0->transformOffset.z = -((((s64)transformMtx[MTX_ZZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
+    func_800486BC(transformMtx, D_801124A0->transform);
+}
+#endif
 
 void func_8006E2B4(void) {
 }
