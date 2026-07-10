@@ -81,12 +81,6 @@ typedef struct {
     /* 0x3C */ s32 unk3C;
 } GfxCommandDest;
 
-typedef struct {
-    s32 x;
-    s32 y;
-    s32 z;
-} Vec3i;
-
 extern u8 D_800EC9C2;
 extern s32 D_801121F8;
 extern s32 D_80112200;
