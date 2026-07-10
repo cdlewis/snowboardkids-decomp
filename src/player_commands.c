@@ -1,5 +1,7 @@
 #include "common.h"
+#define alSynSetPan alSynSetPan_u8
 #include <PR/libaudio.h>
+#undef alSynSetPan
 #include <PR/os_ai.h>
 #include <PR/os_convert.h>
 #include <PR/ucode.h>
@@ -77,7 +79,7 @@ typedef struct PlayerCommandState {
     s16 unkB0;
     s16 unkB2;
     s16 unkB4;
-    s16 unkB6;
+    u16 unkB6;
     s16 unkB8;
     u16 unkBA;
     u16 unkBC;
@@ -272,6 +274,7 @@ extern void osSpTaskYield(void);
 extern u32 osAiGetLength(void);
 extern u32 osVirtualToPhysical(void *);
 extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
+extern void alSynSetPan(ALSynth *, ALVoice *, s32);
 extern Struct800A0138 D_8015C928;
 extern ALLink *D_8015C964;
 extern s32 func_8009CD18(PlayerCommandState *, u8 *);
@@ -346,8 +349,8 @@ extern PlayerCommandState *D_8015A660;
 extern s32 D_8015A664;
 extern s32 D_8015A668;
 extern s32 *D_8015A670;
-extern s16 D_8015A67C;
-extern s16 D_8015A67E;
+extern u16 D_8015A67C;
+extern u16 D_8015A67E;
 extern s32 D_8015A678;
 extern s32 D_8015A68C;
 extern ALSynth D_8015A8D8;
@@ -1665,53 +1668,43 @@ ALMicroTime func_8009E0D4(void *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009E354.s")
 
-// func_8009E76C best match: 99.609%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009E76C.s")
-
-#ifdef NON_MATCHING
-extern void alSynSetVol(void *, void *, s16, s32);
-extern void alSynSetPan(void *, void *, s32);
-extern u8 *D_8015A65C;
-extern s32 D_8015A678;
-
 void func_8009E76C(PlayerCommandState *arg0, s32 arg1) {
     u32 volume;
     s32 stopping;
-    u8 pan;
+    int pan;
     u8 oldPan;
 
-    volume = (u32)(arg0->unkEF * arg0->unkF9 * arg0->unk108 * arg0->unkB0) >> 13;
+    volume = (u32)(arg0->padF4[5] * (*arg0).unkEF * arg0->pad108 * arg0->unkB0) >> 13;
     if (volume >= 0x8000U) {
         volume = 0x7FFF;
     }
 
-    if (arg0->unkBE == 0) {
+    if (arg0->soundId == 0) {
         volume *= D_8015A67E;
     } else {
         volume *= D_8015A67C;
     }
 
-    stopping = arg0->unk18;
+    stopping = arg0->fadeTarget;
     volume >>= 15;
 
     if (stopping != -1) {
-        volume = (stopping * volume) / arg0->unk1C;
+        volume = (stopping * volume) / arg0->fadeTime;
     }
 
     if (volume != arg0->unkB6) {
         arg0->unkB6 = volume;
-        alSynSetVol(&D_8015A8D8, D_8015A65C + (arg1 * 0x1C), (s16)volume, 0xF4240 / D_8015A678);
+        alSynSetVol(&D_8015A8D8, (ALVoice *)(D_8015A65C + (14 * (2 * arg1))), (s16)volume, 0xF4240 / D_8015A678);
     }
 
-    oldPan = arg0->unkE3;
-    pan = ((arg0->unkF2 * arg0->unkB2) >> 7) & 0x7F;
+    stopping = arg0->padE2[1];
+    oldPan = stopping;
+    pan = (((*(u8 *)&arg0->unkF2) * arg0->unkB2) >> 7) & 0x7F;
     if (pan != oldPan) {
-        arg0->unkE3 = pan;
-        alSynSetPan(&D_8015A8D8, D_8015A65C + (arg1 * 0x1C), pan & 0xFF);
+        arg0->padE2[1] = pan;
+        alSynSetPan(&D_8015A8D8, (ALVoice *)(D_8015A65C + (arg1 * 0x1C)), pan & 0xFF);
     }
 }
-#endif
 
 // func_8009E938 best match: 95.714%
 
