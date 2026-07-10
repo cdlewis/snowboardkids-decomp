@@ -98,6 +98,7 @@ extern s16 D_80112136;
 extern s16 D_80112138;
 extern s16 D_8011213A;
 extern s16 D_80121B50;
+extern u8 D_80121B59;
 extern u8 D_275A90[];
 extern u8 D_27E290[];
 extern s32 D_800DABB0[];
@@ -153,13 +154,18 @@ void osStopThread(void *);
 s32 func_8009D8D8(s32 arg0);
 s32 func_8009DEC4(s32 arg0);
 s32 func_8009DF14(s32 arg0, s32 arg1);
+s32 func_8009DFDC(s32 arg0, f32 arg1);
 s32 func_8009DC68(s32 soundId, s32 volume, s32 pan, s32 arg3, s32 priority);
 void *func_80048388(s32 arg0);
 void func_800720E4(s32 arg0);
 s32 func_80071B74(void);
 s32 func_80071CC0(void);
 s32 func_800722F0(SoundPosition *pos, s32 volume);
+#ifdef NON_MATCHING
+void func_80072518(s32 soundId, s32 mode, s32 volume, f32 pitch);
+#else
 void func_80072518(s16 soundId, s32 mode, s16 volume, f32 pitch);
+#endif
 
 void func_80071830(void) {
     PlayerCommandInit init;
@@ -575,7 +581,67 @@ s32 func_800722F0(SoundPosition *pos, s32 volume) {
     return adjustedVolume;
 }
 
+// func_80072518 best match: 99.291% (nonmatchings/func_80072518-7273315160691878794/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/game_audio/func_80072518.s")
+
+#ifdef NON_MATCHING
+void func_80072518(s32 soundId, s32 mode, s32 volume, f32 pitch) {
+    s32 adjustedVolume;
+    s32 *handle;
+    s32 activeCameras;
+
+    if ((f64)pitch > 6.0) {
+        pitch = 6.0f;
+    }
+    if ((f64)pitch < -6.0) {
+        pitch = -6.0f;
+    }
+
+    adjustedVolume = func_800722F0(&D_80121D80[mode].pos, volume);
+
+    activeCameras = 0;
+    if (D_801121E0[0].initialized != 0) {
+        activeCameras = 1;
+    }
+    if (D_801121E0[1].initialized != 0) {
+        activeCameras += 1;
+    }
+    if (D_801121E0[2].initialized != 0) {
+        activeCameras += 1;
+    }
+    if (D_801121E0[3].initialized != 0) {
+        activeCameras += 1;
+    }
+    if (D_80121B59 != 0) {
+        activeCameras = 4;
+    }
+
+    handle = (&D_80121B18) + mode;
+    adjustedVolume = adjustedVolume - ((((activeCameras * 10) - 1) * adjustedVolume) / 100);
+
+    if (adjustedVolume == 0) {
+        handle = (&D_80121B18) + mode;
+        if (*handle != 0) {
+            func_8009DE50(*handle, 0);
+            *handle = 0;
+        }
+    } else {
+        if ((*handle != 0) && (soundId != *(&D_80121B28 + mode))) {
+            func_8009DE50(*handle, 0);
+            *handle = 0;
+        }
+
+        if (*handle == 0) {
+            *(&D_80121B28 + mode) = soundId;
+            *handle = func_8009DC68(soundId, adjustedVolume, 0x80, 0, 0x46);
+            func_8009DFDC(*handle, pitch);
+        } else {
+            func_8009DF14(*handle, adjustedVolume);
+            func_8009DFDC(*handle, pitch);
+        }
+    }
+}
+#endif
 
 void func_8007276C(s32 soundId, s32 playerIndex, s32 volume, s32 minVolume) {
     s32 adjustedVolume;
