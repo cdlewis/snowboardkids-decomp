@@ -145,7 +145,85 @@ void func_8007D190(void) {
     D_80121B98 = (ModelAnimKeyframe *)(v1 + 2);
 }
 
+// func_8007D200 best match: 87.524% (base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007D200.s")
+
+#ifdef NON_MATCHING
+s32 func_8007D200(s32 index, s32 x, s32 z) {
+    ModelAnimKeyframe *keyframes;
+    ModelAnimKeyframe *keyframe;
+    ModelAnimCoord *coords;
+    ModelAnimCoord *coord0;
+    ModelAnimCoord *coord1;
+    ModelAnimCoord *coord2;
+    ModelAnimCoord *coord3;
+    s32 offset;
+    s32 x0;
+    s32 x1;
+    s32 x2;
+    s32 x3;
+    s32 z0;
+    s32 z1;
+    s32 z2;
+    s32 z3;
+    s16 next;
+
+    keyframes = D_80121B98;
+
+loop:
+    offset = index * sizeof(ModelAnimKeyframe);
+    keyframe = (ModelAnimKeyframe *)((s32)keyframes + offset);
+    coords = D_80121B90;
+    coord0 = (ModelAnimCoord *)((s32)coords + keyframe->coordIndices[0] * sizeof(ModelAnimCoord));
+    coord1 = (ModelAnimCoord *)((s32)coords + keyframe->coordIndices[1] * sizeof(ModelAnimCoord));
+    coord2 = (ModelAnimCoord *)((s32)coords + keyframe->coordIndices[2] * sizeof(ModelAnimCoord));
+    coord3 = (ModelAnimCoord *)((s32)coords + keyframe->coordIndices[3] * sizeof(ModelAnimCoord));
+
+    x0 = coord0->x << 0x11;
+    x1 = coord1->x << 0x11;
+    z0 = coord0->z << 0x11;
+    z1 = coord1->z << 0x11;
+    x2 = coord2->x << 0x11;
+    z2 = coord2->z << 0x11;
+    x3 = coord3->x << 0x11;
+    z3 = coord3->z << 0x11;
+
+    if ((s64)(x0 - x1) * (z - z1) - (s64)(z0 - z1) * (x - x1) < 0) {
+        keyframes = D_80121B98;
+        next = ((ModelAnimKeyframe *)((s32)keyframes + offset))->nextFaceIndices[0];
+        if (next >= 0) {
+            index = next;
+            goto loop;
+        }
+    }
+    if ((s64)(x3 - x2) * (z - z2) - (s64)(z3 - z2) * (x - x2) < 0) {
+        keyframes = D_80121B98;
+        next = ((ModelAnimKeyframe *)((s32)keyframes + offset))->nextFaceIndices[1];
+        if (next >= 0) {
+            index = next;
+            goto loop;
+        }
+    }
+    if ((s64)(x2 - x0) * (z - z0) - (s64)(z2 - z0) * (x - x0) < 0) {
+        keyframes = D_80121B98;
+        next = ((ModelAnimKeyframe *)((s32)keyframes + offset))->unk4[1];
+        if (next >= 0) {
+            index = next;
+            goto loop;
+        }
+    }
+    if ((s64)(x1 - x3) * (z - z3) - (s64)(z1 - z3) * (x - x3) < 0) {
+        keyframes = D_80121B98;
+        next = ((ModelAnimKeyframe *)((s32)keyframes + offset))->unk4[0];
+        if (next >= 0) {
+            index = next;
+            goto loop;
+        }
+    }
+
+    return index;
+}
+#endif
 
 // func_8007D548 best match: 96.293% (base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007D548.s")
