@@ -238,7 +238,161 @@ void func_8007D87C(s32 *arg0, s32 *arg1, s32 arg2) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007DC38.s")
 
+// func_8007ECF4 best match: 53.740% (base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_8007ECF4.s")
+
+#ifdef NON_MATCHING
+static void func_8007ECF4_clamp_to_endpoint(s32 pointX, s32 pointZ, s32 radius) {
+    s32 dx;
+    s32 dz;
+    s32 distance;
+
+    dx = D_80121BC0 - pointX;
+    dz = D_80121BC8 - pointZ;
+    distance = func_80098C30((s64)dx * dx + (s64)dz * dz);
+
+    if (distance < radius) {
+        D_80121BC0 = ((s64)dx * radius) / distance + pointX;
+        D_80121BC8 = ((s64)dz * radius) / distance + pointZ;
+    }
+}
+
+static void func_8007ECF4_push_from_edge(s32 radius, s32 *velocityX, s32 *velocityZ) {
+    s32 length;
+    s32 normalX;
+    s32 tangentX;
+    s32 tangentZ;
+    s32 alongEdge;
+    s32 distanceFromEdge;
+    s32 projectedVelocityX;
+    s32 projectedVelocityZ;
+
+    length = func_80098C30((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+    normalX = ((s64)D_80121BBC * 0x1000) / length;
+    tangentX = ((s64)D_80121BB4 * 0x1000) / length;
+    tangentZ = -normalX;
+
+    alongEdge = ((s64)tangentX * D_80121BA8 + (s64)normalX * D_80121BB0) / 0x1000;
+    distanceFromEdge = ((s64)tangentZ * D_80121BA8 + (s64)tangentX * D_80121BB0) / 0x1000;
+
+    if (-radius < distanceFromEdge) {
+        projectedVelocityX = ((s64)tangentX * *velocityX + (s64)normalX * *velocityZ) / 0x1000;
+        projectedVelocityZ = ((s64)tangentZ * *velocityX + (s64)tangentX * *velocityZ) / 0x1000;
+        if (projectedVelocityZ > 0) {
+            projectedVelocityZ = -projectedVelocityZ;
+        }
+
+        *velocityX = ((s64)tangentX * projectedVelocityX - (s64)normalX * projectedVelocityZ) / 0x1000;
+        *velocityZ = ((s64)normalX * projectedVelocityX + (s64)tangentX * projectedVelocityZ) / 0x1000;
+
+        D_80121BBC = -radius - distanceFromEdge;
+        D_80121BC0 += ((s64)tangentZ * D_80121BBC) / 0x1000;
+        D_80121BC8 += ((s64)tangentX * D_80121BBC) / 0x1000;
+    }
+}
+
+void func_8007ECF4(s16 arg0, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ, s32 *velocityX,
+                  s32 *velocityZ) {
+    ModelAnimKeyframe *keyframe;
+    ModelAnimCoord *coord0;
+    ModelAnimCoord *coord1;
+    ModelAnimCoord *coord2;
+    ModelAnimCoord *coord3;
+    s32 x0;
+    s32 x1;
+    s32 x2;
+    s32 x3;
+    s32 z0;
+    s32 z1;
+    s32 z2;
+    s32 z3;
+    s32 length;
+    s32 normalX;
+    s32 tangentX;
+    s32 alongEdge;
+
+    keyframe = &D_80121B98[arg0];
+    coord0 = &D_80121B90[keyframe->coordIndices[0]];
+    coord1 = &D_80121B90[keyframe->coordIndices[1]];
+    coord2 = &D_80121B90[keyframe->coordIndices[2]];
+    coord3 = &D_80121B90[keyframe->coordIndices[3]];
+
+    x0 = coord0->x << 0x11;
+    x1 = coord1->x << 0x11;
+    x2 = coord2->x << 0x11;
+    x3 = coord3->x << 0x11;
+    z0 = coord0->z << 0x11;
+    z1 = coord1->z << 0x11;
+    z2 = coord2->z << 0x11;
+    z3 = coord3->z << 0x11;
+
+    D_80121BC0 = x;
+    D_80121BC8 = z;
+
+    if (keyframe->nextFaceIndices[0] < 0) {
+        D_80121BB4 = x1 - x0;
+        D_80121BBC = z1 - z0;
+        D_80121BA8 = x - x0;
+        D_80121BB0 = z - z0;
+        func_8007D87C(velocityX, velocityZ, radius);
+        keyframe = &D_80121B98[arg0];
+    }
+
+    if (keyframe->nextFaceIndices[1] < 0) {
+        D_80121BB4 = x2 - x3;
+        D_80121BBC = z2 - z3;
+        D_80121BA8 = D_80121BC0 - x3;
+        D_80121BB0 = D_80121BC8 - z3;
+        func_8007D87C(velocityX, velocityZ, radius);
+        keyframe = &D_80121B98[arg0];
+    }
+
+    if (keyframe->unk4[0] < 0) {
+        D_80121BB4 = x3 - x1;
+        D_80121BBC = z3 - z1;
+        D_80121BA8 = D_80121BC0 - x1;
+        D_80121BB0 = D_80121BC8 - z1;
+
+        length = func_80098C30((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+        normalX = ((s64)D_80121BBC * 0x1000) / length;
+        tangentX = ((s64)D_80121BB4 * 0x1000) / length;
+        alongEdge = ((s64)tangentX * D_80121BA8 + (s64)normalX * D_80121BB0) / 0x1000;
+
+        if ((keyframe->unk14[3] & 2) && (alongEdge < 0)) {
+            func_8007ECF4_clamp_to_endpoint(x1, z1, radius);
+        } else if ((keyframe->unk14[3] & 8) && (length < alongEdge)) {
+            func_8007ECF4_clamp_to_endpoint(x3, z3, radius);
+        } else {
+            func_8007ECF4_push_from_edge(radius, velocityX, velocityZ);
+        }
+
+        keyframe = &D_80121B98[arg0];
+    }
+
+    if (keyframe->unk4[1] < 0) {
+        D_80121BB4 = x0 - x2;
+        D_80121BBC = z0 - z2;
+        D_80121BA8 = D_80121BC0 - x2;
+        D_80121BB0 = D_80121BC8 - z2;
+
+        length = func_80098C30((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+        normalX = ((s64)D_80121BBC * 0x1000) / length;
+        tangentX = ((s64)D_80121BB4 * 0x1000) / length;
+        alongEdge = ((s64)tangentX * D_80121BA8 + (s64)normalX * D_80121BB0) / 0x1000;
+
+        if ((keyframe->unk14[3] & 4) && (alongEdge < 0)) {
+            func_8007ECF4_clamp_to_endpoint(x2, z2, radius);
+        } else if ((keyframe->unk14[3] & 1) && (length < alongEdge)) {
+            func_8007ECF4_clamp_to_endpoint(x0, z0, radius);
+        } else {
+            func_8007ECF4_push_from_edge(radius, velocityX, velocityZ);
+        }
+    }
+
+    *pushX = D_80121BC0 - x;
+    *pushZ = D_80121BC8 - z;
+}
+#endif
 
 void func_8007FD88(s32 arg0) {
     s32 temp_v1;
