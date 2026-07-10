@@ -70,7 +70,6 @@ extern void func_8002E568(CourseSelectWidgetActor *);
 extern s8 D_800EC9C0;
 extern u8 D_800EC9C2;
 extern u8 D_800EC9E6;
-extern s32 D_8010ADE0;
 extern s32 D_8010ADDC;
 extern EffectTask *D_8010ADE0;
 extern EffectTask *D_8010ADE4;
