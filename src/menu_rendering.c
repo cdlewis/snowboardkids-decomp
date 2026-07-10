@@ -96,7 +96,64 @@ void func_80011264(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5) {
 void func_80011854(void) {
 }
 
+// func_8001185C best match: 91.874% (nonmatchings/func_8001185C-4923837976568703863/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8001185C.s")
+
+#ifdef NON_MATCHING
+extern s16 D_8011214A;
+extern s16 D_8015660E;
+extern s16 D_80156610;
+extern Gfx *gRegionAllocPtr;
+extern s32 func_80043040(s32 arg0);
+
+void func_8001185C(s16 x, s16 y, s32 arg2, u16 assetId, u16 width, u16 height) {
+    volatile u8 pad[0x10];
+    void *image;
+    void *palette;
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s16 clipX0;
+    s16 clipY0;
+    s16 clipX1;
+    s16 clipY1;
+
+    if ((width < 0x201) && (width > 0) && (height < 0x201) && (height > 0)) {
+        x0 = (x + D_8015660E) * 4;
+        y0 = (y + D_80156610) * 4;
+        x1 = x0 + (width * 8);
+        y1 = y0 + (height * 8);
+
+        clipY0 = (D_80156610 - (D_8015660C / 2)) * 4;
+        clipY1 = (D_80156610 + (D_8015660C / 2)) * 4;
+        clipX0 = (D_8015660E - (D_8015660A / 2)) * 4;
+        clipX1 = (D_8015660E + (D_8015660A / 2)) * 4;
+
+        if ((x0 < clipX1) && (y0 < clipY1) && (x1 >= clipX0) && (y1 >= clipY0)) {
+            if (x0 < clipX0) {
+                x0 = clipX0;
+            }
+            if (y0 < clipY0) {
+                y0 = clipY0;
+            }
+            if (x1 >= clipX1) {
+                x1 = clipX1 - 4;
+            }
+            if (y1 >= clipY1) {
+                y1 = clipY1 - 4;
+            }
+
+            func_80045990((void *)func_80043040(D_8011214A), assetId, &image, &palette);
+
+            gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP,
+                                    G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
+            gSPTextureRectangle(gRegionAllocPtr++, x0, y0, x1, y1, G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
+        }
+    }
+}
+#endif
 
 void func_80011C3C(MenuRenderSpriteActor *actor);
 void func_80011D44(MenuRenderSprite *sprite);
