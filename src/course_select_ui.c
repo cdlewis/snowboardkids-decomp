@@ -450,7 +450,66 @@ void func_80024050(void *arg0) {
     func_80071824(actor, func_80023A68);
 }
 
+// func_80024168 best match: 94.265% (nonmatchings/func_80024168-7273315160691878794/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024168.s")
+
+#ifdef NON_MATCHING
+void func_80024168(CourseSelectCoursePreviewActor *arg0) {
+    FixedTransform sp30;
+    u8 sp2F;
+    u8 sp2E;
+    CourseSelectRacePlayer *temp_v0_3;
+    s32 temp_v0_4;
+    s8 temp_v0_2;
+    int temp_v0;
+    u8 temp_v1;
+    u8 var_a3;
+    u8 var_t0;
+    u8 var_v1;
+
+    if ((D_8010AED0 != 0) && (D_80156608 == 1)) {
+        var_t0 = 0;
+    } else {
+        var_t0 = D_80156608;
+    }
+    temp_v1 = D_8010AECC[var_t0];
+    if ((D_8010AECC[var_t0] == 2) || (D_8010AECC[var_t0] & 1)) {
+        temp_v0 = arg0->playerFlags[var_t0];
+        if ((temp_v0 == 0) || (temp_v0 & 1)) {
+            if (D_8010AECC[var_t0] == 3) {
+                var_a3 = arg0->playerSlots[var_t0].courseIndex;
+            } else {
+                var_a3 = D_80121D86[var_t0][0];
+            }
+            temp_v0_2 = D_800ECA2F[var_t0][var_a3];
+            if (temp_v0_2 == -1) {
+                var_v1 = 9;
+            } else {
+                var_v1 = temp_v0_2 & 0xFF;
+            }
+            if ((D_8010AED0 != 0) && (D_80156608 == 1)) {
+                var_v1 = D_8010AED0 - 1;
+            }
+            temp_v0_3 = &D_80121D80[D_80156608];
+            if (temp_v0_3->state == 5) {
+                var_v1 = 0;
+                var_a3 = ((var_a3 % 3) + 0xC) & 0xFF;
+            }
+            if (temp_v0_3->courseIndex >= 9) {
+                var_v1 = 0;
+            }
+            sp2E = var_v1;
+            sp2F = var_a3;
+            func_800987A0(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
+            temp_v0_4 = func_8004885C(&sp30);
+            arg0->matrix = temp_v0_4;
+            if (temp_v0_4 != 0) {
+                func_8007C130(temp_v0_4, (s16) sp2F, (s16) sp2E);
+            }
+        }
+    }
+}
+#endif
 
 // func_80024380 best match: 83.285% (nonmatchings/func_80024380-2225551288923588688/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024380.s")
