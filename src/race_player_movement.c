@@ -505,7 +505,61 @@ void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
     } while (player != &D_801235B0);
 }
 
+// func_80088C80 best match: 99.440% (nonmatchings/func_80088C80-7273315160691878794/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088C80.s")
+
+#ifdef NON_MATCHING
+void func_80088C80(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
+    RaceInputPlayer *player;
+    s32 temp;
+    s32 xDiff;
+    s32 yLimit;
+    s32 xzLimit;
+    s32 sine;
+    s16 angle;
+    s32 cosine;
+    s32 pushX;
+    s32 pushZ;
+
+    player = &D_80121D80[playerIndex];
+    if (player->isActive != 0) {
+        yLimit = ySize;
+        temp = pos->y - player->unk5C;
+        if (temp < 0) {
+            temp = -temp;
+        } else {
+            yLimit = player->unk284;
+        }
+
+        if (temp <= yLimit) {
+            xzLimit = player->unk280 + xzSize;
+            xDiff = pos->x - player->posX;
+            if (xDiff < 0) {
+                xDiff = -xDiff;
+            }
+            if (xDiff < xzLimit) {
+                volatile u8 pad[8];
+                temp = pos->z - player->posZ;
+                if (temp < 0) {
+                    temp = -temp;
+                }
+                if ((temp < xzLimit) &&
+                    ((temp = func_80098C30((s64)((0, xDiff)) * xDiff +
+                                           (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
+                    angle = func_8004940C(pos->x, pos->z, player->posX, player->posZ);
+                    sine = func_80097AE8(angle);
+                    cosine = func_80097B48(angle);
+                    temp = xzLimit - temp;
+                    pushX = (s64)-sine * -temp / 0x1000;
+                    pushZ = (s64)cosine * -temp / 0x1000;
+                    player->posX -= pushX;
+                    (&D_80121D80[playerIndex])->posZ += pushZ;
+                }
+            }
+        }
+    }
+}
+#endif
 
 // func_80088E98 best match: 99.719% (nonmatchings/func_80088E98-6688367443449623229/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088E98.s")
