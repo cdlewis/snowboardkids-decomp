@@ -557,6 +557,12 @@ typedef struct {
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[0x1A - 0x12];
+    /* 0x1A */ s16 timer;
+    /* 0x1C */ s16 visibleRows;
+    /* 0x1E */ s16 pendingFirstValue;
+    /* 0x20 */ s16 pendingSecondValue;
+    /* 0x22 */ s16 pendingThirdValue;
 } RaceUiCourseStatsActor;
 
 typedef struct {
@@ -924,7 +930,7 @@ extern void func_8005FED0(void *);
 extern void func_8005CF60(void);
 extern void func_8005D558(void);
 extern void func_8005DB3C(void *);
-extern void func_8005D1CC(void);
+extern void func_8005D1CC(RaceUiCourseStatsActor *);
 extern void func_8005D9B4(RaceUiAlpha18Actor *);
 extern void func_800601F8(void *);
 extern void func_800602BC(void *);
@@ -2363,7 +2369,99 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005CF60.s")
 
+// func_8005D1CC best match: 84.991% (nonmatchings/func_8005D1CC-3236181511606361864/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D1CC.s")
+
+#ifdef NON_MATCHING
+const char D_800E1444[0x4] = "%5d";
+const char D_800E1448[0x4] = "%5d";
+const char D_800E144C[0x4] = "%5d";
+const char D_800E1450[0x4] = "%6d";
+
+void func_8005D1CC(RaceUiCourseStatsActor *arg0) {
+    SplitWord y;
+    char buffer[0x28];
+    char *ptr;
+    s32 x;
+    s16 rowY;
+    s16 visibleRows;
+
+    y.word = -0x47;
+    visibleRows = arg0->visibleRows;
+    x = 0x20;
+    if (visibleRows >= 0) {
+        sprintf(buffer, D_800E1444, arg0->pendingFirstValue);
+        ptr = buffer;
+loop1:
+        if (*ptr != 0) {
+            if (*ptr != ' ') {
+                func_80045A78(x, -0x47, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+            }
+            x += 8;
+            ptr++;
+            goto loop1;
+        }
+        func_80045A78(x, -0x47, func_80043040(D_80112130.popupFontHandle), 0x37);
+        y.word = -0x1F;
+        visibleRows = arg0->visibleRows;
+    }
+
+    if (visibleRows > 0) {
+        x = 0x20;
+        sprintf(buffer, D_800E1448, arg0->pendingSecondValue);
+        rowY = y.half.lo;
+        ptr = buffer;
+loop2:
+        if (*ptr != 0) {
+            if (*ptr != ' ') {
+                func_80045A78(x, rowY, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+            }
+            x += 8;
+            ptr++;
+            goto loop2;
+        }
+        func_80045A78(x, rowY, func_80043040(D_80112130.popupFontHandle), 0x37);
+        y.word += 0x28;
+        visibleRows = arg0->visibleRows;
+    }
+
+    if (visibleRows >= 2) {
+        x = 0x20;
+        sprintf(buffer, D_800E144C, arg0->pendingThirdValue);
+        rowY = y.half.lo;
+        ptr = buffer;
+loop3:
+        if (*ptr != 0) {
+            if (*ptr != ' ') {
+                func_80045A78(x, rowY, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+            }
+            x += 8;
+            ptr++;
+            goto loop3;
+        }
+        func_80045A78(x, rowY, func_80043040(D_80112130.popupFontHandle), 0x37);
+        y.word += 0x28;
+        visibleRows = arg0->visibleRows;
+    }
+
+    if (visibleRows >= 3) {
+        x = 0x18;
+        sprintf(buffer, D_800E1450, D_80121D8C);
+        rowY = y.half.lo;
+        ptr = buffer;
+loop4:
+        if (*ptr != 0) {
+            if (*ptr != ' ') {
+                func_80045A78(x, rowY, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+            }
+            x += 8;
+            ptr++;
+            goto loop4;
+        }
+        func_80045A78(x, rowY, func_80043040(D_80112130.popupFontHandle), 0x37);
+    }
+}
+#endif
 
 // func_8005D558 best match: 96.287% (nonmatchings/func_8005D558-3836525038718587862/base_9.c, permuter artifact)
 // Clean source below: 95.113% (nonmatchings/func_8005D558-3836525038718587862/base_1.c)
