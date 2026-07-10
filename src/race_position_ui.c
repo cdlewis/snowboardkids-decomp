@@ -9,7 +9,7 @@
 
 #define RACE_POSITION_UI_FLAG_SHADOW 0x80
 #define RACE_POSITION_UI_FLAG_MARKER_READY 0x100
-#define RACE_POSITION_UI_FLAG_HIDE_MESHES 0x800000
+#define RACE_POSITION_UI_FLAG_HIDE_MESHES 0x400000
 
 typedef struct {
     /* 0x00 */ s16 x;
@@ -255,22 +255,36 @@ void func_8007C5E8(RacePositionUiPlayer *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007C5E8.s")
 #endif
 
+// func_8007CBC0 best match: 88.073%
+#pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007CBC0.s")
+
 #ifdef NON_MATCHING
 void func_8007CBC0(RacePositionUiPlayer *player) {
-    static u32 *textures[RACE_POSITION_UI_PART_COUNT] = {
-        D_800DE248, D_800DE260, D_800DE278, D_800DE290, D_800DE2A8, D_800DE2C0, D_800DE2D8,
-        D_800DE2F0, D_800DE308, D_800DE320, D_800DE338, D_800DE350, D_800DE368,
-    };
+    Gfx *gfx;
+    Gfx *gfx2;
+    Gfx *gfx3;
+    RacePositionUiPlayer *countPlayer;
+    RacePositionUiPlayer *partVtxPlayer;
+    u8 (*partSource)[0x20];
     s32 i;
     s32 alphaPulse;
 
+    countPlayer = player;
     if (D_80156609 != 0) {
         player->flags |= RACE_POSITION_UI_FLAG_SHADOW;
-        for (i = 0; i < player->partCount; i++) {
-            player->partVtx[i] = func_8004885C(player->partSources[i]);
-            if (player->partVtx[i] == NULL) {
-                player->flags &= ~RACE_POSITION_UI_FLAG_SHADOW;
-            }
+        if (player->partCount > 0) {
+            i = 0;
+            partVtxPlayer = player;
+            partSource = player->partSources;
+            do {
+                partVtxPlayer->partVtx[0] = func_8004885C(partSource);
+                if (partVtxPlayer->partVtx[0] == NULL) {
+                    player->flags &= ~RACE_POSITION_UI_FLAG_SHADOW;
+                }
+                i++;
+                partVtxPlayer = (RacePositionUiPlayer *)((void **)partVtxPlayer + 1);
+                partSource++;
+            } while (i < countPlayer->partCount);
         }
     }
 
@@ -282,14 +296,146 @@ void func_8007CBC0(RacePositionUiPlayer *player) {
     if (alphaPulse >= 0x10) {
         alphaPulse = 0x1F - alphaPulse;
     }
-    racePositionUiAppendGfx(0xFA000000, ((alphaPulse * 4) + 0x26) & 0xFF);
+    gfx = gRegionAllocPtr;
+    alphaPulse = (alphaPulse * 4) + 0x26;
+    gRegionAllocPtr = gfx + 1;
+    gfx->words.w0 = 0xFA000000;
+    gfx->words.w1 = alphaPulse & 0xFF;
 
     func_8007C38C(player->partVtx[0], player->texHeaderIndex, player->textureVariant);
 
     if ((player->flags & RACE_POSITION_UI_FLAG_HIDE_MESHES) == 0) {
-        racePositionUiDrawParts(player, textures);
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w1 = 0;
+        gfx->words.w0 = 0xE7000000;
+
+        gfx2 = gRegionAllocPtr;
+        gRegionAllocPtr = gfx2 + 1;
+        gfx2->words.w0 = 0xBC000806;
+        gfx2->words.w1 = (u32)func_80043040(D_80112130[player->playerIndex + 0xE]);
+
+        gfx3 = gRegionAllocPtr;
+        gRegionAllocPtr = gfx3 + 1;
+        gfx3->words.w0 = 0xBC000C06;
+        gfx3->words.w1 = (u32)func_80043040(D_80112130[player->playerIndex + 0x12]);
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[1];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE248[player->textureSet];
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[2];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE260[player->textureSet];
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[3];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE278[player->textureSet];
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[4];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE290[player->textureSet];
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[5];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE2A8[player->textureSet];
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[6];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE2C0[player->textureSet];
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[7];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE2D8[player->textureSet];
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[8];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE2F0[player->textureSet];
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[9];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE308[player->textureSet];
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[10];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE320[player->textureSet];
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[11];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE338[player->textureSet];
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[12];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE350[player->textureSet];
+
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x01020040;
+        gfx->words.w1 = (u32)player->partVtx[13];
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        gfx->words.w0 = 0x06000000;
+        gfx->words.w1 = D_800DE368[player->textureSet];
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007CBC0.s")
 #endif
