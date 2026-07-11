@@ -245,7 +245,55 @@ void func_80053858(MainMenuOverlayEffectActor *arg0) {
     func_800483FC(D_80124878, func_80053660, (s32)arg0);
 }
 
+// func_8005393C best match: 98.862%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_8005393C.s")
+
+#ifdef NON_MATCHING
+void func_8005393C(MainMenuOverlayEffectActor *arg0) {
+    s32 temp_v1;
+
+    temp_v1 = func_800430D0() & 1;
+    switch (temp_v1) {                              /* irregular */
+    case 0:
+        arg0->unk18.half.hi = (func_800430D0() - 0x80) << 4;
+        arg0->unk18.half.lo = -0x780;
+        arg0->unk1C.half.lo = func_800430D0() & 0xF;
+        arg0->unk24.half.hi = func_800430D0() * 0x10;
+        if (func_800430D0() & 1) {
+            arg0->timer = 0x20;
+            arg0->unk20.half.lo = ((unsigned long long) (func_800430D0() & 7)) + 0x40;
+        } else {
+            arg0->timer = 0x1B;
+            arg0->unk20.half.lo = (func_800430D0() & 7) + 0x20;
+        }
+        arg0->unk2A = (s16) (func_800430D0() % 5);
+        func_80071824(arg0, func_80053858);
+        return;
+    case 1:
+        arg0->unk18.half.hi = (func_800430D0() - 0x80) << 4;
+        arg0->unk18.half.lo = -0x780;
+        arg0->unk1C.half.lo = (func_800430D0() & 0x1F) - 0xF;
+        arg0->unk24.half.hi = func_800430D0() * 0x10;
+        if (func_800430D0() & 1) {
+            arg0->timer = 0x20;
+            arg0->unk20.half.lo = (func_800430D0() & 7) + 0x3C;
+        } else {
+            arg0->timer = 0x1B;
+            arg0->unk20.half.lo = (func_800430D0() & 7) + 0x22;
+        }
+        arg0->unk2A = (s16) (func_800430D0() % 5);
+        arg0->unk24.half.hi = (func_800430D0() & 1) - 1;
+        if (arg0->unk24.half.hi > 0) {
+            arg0->unk20.half.hi = (func_800430D0() * 8) & 0xF;
+        } else {
+            arg0->unk20.half.hi = (func_800430D0() * -8) & 0xF;
+        }
+        arg0->unk24.half.lo = func_800430D0() & 0xF;
+        func_80071824(arg0, func_800536F4);
+        return;
+    }
+}
+#endif
 
 void func_80053B28(MainMenuOverlayEffectActor *arg0) {
     register MainMenuOverlayEffectActor *actor = arg0;
