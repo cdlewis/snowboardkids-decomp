@@ -1,5 +1,5 @@
-#ifndef MAIN_MENU_MODE_SELECT_FLOW_H
-#define MAIN_MENU_MODE_SELECT_FLOW_H
+#ifndef MAIN_MENU_MODE_FLOW_H
+#define MAIN_MENU_MODE_FLOW_H
 
 #include "common.h"
 
@@ -32,6 +32,6 @@ void fadeInTrainingCourseEndingDialog(void);
 void waitForTrainingCourseEndingDialog(void);
 void fadeOutTrainingCourseEndingDialog(void);
 void exitTrainingCourseEndingDialog(void);
-void returnToMainMenuFromModeSelectFlow(void);
+void returnToMainMenuFromModeFlow(void);
 
 #endif
