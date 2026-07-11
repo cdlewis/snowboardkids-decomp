@@ -4,6 +4,7 @@
 #include "input_task_scheduler.h"
 #include "main_menu.h"
 #include "memory_allocator.h"
+#include "race_flow.h"
 
 #define BOOT_THREAD_ID 1
 #define MAIN_THREAD_ID 2
@@ -211,7 +212,6 @@ extern void func_800484F0(void);
 extern void func_800704F0(void);
 extern void func_80071E80(void);
 extern void func_800722B4(void);
-extern void func_80072C30(void);
 extern void func_80048524(s32);
 extern void func_80099D10(u8);
 extern s32 osSendMesg(void *, void *, s32);
