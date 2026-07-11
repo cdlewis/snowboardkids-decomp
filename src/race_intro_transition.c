@@ -85,7 +85,7 @@ extern u8 D_80123751;
 extern u8 D_80123750;
 extern s32 D_80123778;
 extern void func_80045914(void);
-// func_8003E600 best match: 56.497% (nonmatchings/func_8003E600-7273315160691878794/base.c)
+// func_8003E600 best match: 65.668% (nonmatchings/func_8003E600-731940616440357983/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition/func_8003E600.s")
 
 #ifdef NON_MATCHING
@@ -123,8 +123,8 @@ void func_8003E600(void) {
     players[1].characterId = courseEntry->player1Character;
     players[2].characterId = courseEntry->player2Character;
     players[3].characterId = courseEntry->player3Character;
-    one = 1;
     if (D_800EC9C2 == 0) {
+        one = 1;
         players[0].isActive = one;
         players[1].isActive = one;
         players[2].isActive = one;
@@ -132,6 +132,7 @@ void func_8003E600(void) {
         D_80121B54 = 4;
         D_80121B55 = 4;
     } else {
+        one = 1;
         players[0].isActive = one;
         players[1].isActive = 0;
         players[2].isActive = 0;
