@@ -414,7 +414,7 @@ void func_8008C098(RaceInputPlayer *player) {
     unk34->y = pos->y;
     unk34->z = pos->z;
     player->randomIndex = randomNextMain();
-    func_8006D520(player->playerIndexU16, 1);
+    setRaceCameraMode(player->playerIndexU16, 1);
     if (D_80121B59 == 0) {
         if (gRaceSplitscreenMode == 0) {
             createCallbackTaskWithUserId(waitForRaceStartPlayerEffect, 0, 1, player->playerIndexU16);
@@ -3519,7 +3519,7 @@ void func_800936D4(RaceInputPlayer *player) {
         player->stateTimer = 0x3C;
         player->stateFlags = stateFlags | 0x42000;
         player->updateTimer = 0;
-        func_8006D520(player->playerIndex, 4);
+        setRaceCameraMode(player->playerIndex, 4);
         player->unk60 = 0;
         player->unk2E8 = player->unk502;
         if (player->soundDisabled == 0) {
@@ -3574,7 +3574,7 @@ void func_800936D4(RaceInputPlayer *player) {
             func_8008B408(player, 0, 0);
             func_80081E40(player, 1);
             func_80082EC0(player);
-            func_8006D520((u16) player->playerIndex, 1);
+            setRaceCameraMode((u16) player->playerIndex, 1);
             player->unk60 = 0x40000;
         }
         break;
@@ -3624,7 +3624,7 @@ void func_800939E0(RaceInputPlayer *player) {
             func_80081E40(player, 0xE);
             func_80082EC0(player);
             player->unk80 = player->unk502 + 2;
-            func_8006D520(player->playerIndex, 4);
+            setRaceCameraMode(player->playerIndex, 4);
             player->unk60 = 0;
             if (player->soundDisabled == 0) {
                 func_8004F55C(player->playerIndex, player->unk330);
@@ -3699,7 +3699,7 @@ loop:
                 func_8008B408(player, 0, 0);
                 func_80081E40(player, 1);
                 func_80082EC0(player);
-                func_8006D520(player->playerIndex, 1);
+                setRaceCameraMode(player->playerIndex, 1);
                 player->unk60 = 0x40000;
             }
             break;
@@ -3741,7 +3741,7 @@ void func_80093E0C(RaceInputPlayer *player) {
         func_80081E40(player, 0xE);
         func_80082EC0(player);
         player->unk80 = player->unk502 + 2;
-        func_8006D520((u16)player->playerIndex, 4);
+        setRaceCameraMode((u16)player->playerIndex, 4);
         player->unk60 = 0;
         if (player->soundDisabled == 0) {
             func_8004F55C(player->playerIndex, player->unk330);
@@ -3812,7 +3812,7 @@ void func_80093E0C(RaceInputPlayer *player) {
             func_8008B408(player, 0, 0);
             func_80081E40(player, 1);
             func_80082EC0(player);
-            func_8006D520((u16)player->playerIndex, 1);
+            setRaceCameraMode((u16)player->playerIndex, 1);
             player->unk60 = 0x40000;
         }
         break;
@@ -4471,7 +4471,7 @@ void func_80095338(RaceInputPlayer *player) {
         player->updateTimer = 0;
         player->stateTimer = 0;
         func_80081E40(player, 5);
-        func_8006D520((u16) player->playerIndex, 3);
+        setRaceCameraMode((u16) player->playerIndex, 3);
     }
 }
 #endif
@@ -4725,7 +4725,7 @@ void func_80095BE4(RaceInputPlayer *player) {
         player->stateFlags &= 0xFBFFFBFF;
         player->facingAngle = D_800B9540[gRaceCourseIndex].unk14;
         player->unk504 = -func_800813F8(player->unk502, player->posX, player->posZ);
-        func_8006D520(player->playerIndex, 1);
+        setRaceCameraMode(player->playerIndex, 1);
         D_801121E0[player->playerIndex].unk94 = player->posX;
         D_801121E0[player->playerIndex].unk98 = player->posY;
         D_801121E0[player->playerIndex].unk9C = player->posZ;
@@ -4862,7 +4862,7 @@ void func_800961DC(RaceInputPlayer *player) {
     if (updateTimer == 0) {
         player->updateTimer = updateTimer + 1;
         player->subState = 0;
-        func_8006D520(player->playerIndex, 5);
+        setRaceCameraMode(player->playerIndex, 5);
         if (player->unk29C >= 0x20001) {
             player->unk306 = 1;
             player->unk31E = calculateAngleFromDeltaXZ(player->unk40.x, player->unk40.z);

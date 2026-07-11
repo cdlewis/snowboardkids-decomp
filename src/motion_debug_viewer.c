@@ -45,7 +45,7 @@ void func_80078250(void) {
     MotionDebugViewerState *state;
     s16 temp_v0;
 
-    func_8006D520(0, 2);
+    setRaceCameraMode(0, 2);
     state = &D_80121D80;
     state->frame = 0;
     temp_v0 = state->frame;

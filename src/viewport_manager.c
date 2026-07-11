@@ -277,15 +277,15 @@ void func_80070A70(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
 }
 #endif
 
-// func_80070C64 best match: 90.016%
+// configureMenuViewport best match: 90.016%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_80070C64.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/configureMenuViewport.s")
 
 #ifdef NON_MATCHING
 extern f32 D_800E153C;
 extern f32 D_800E1540;
 
-void func_80070C64(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
+void configureMenuViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
     ViewportState *viewport;
     ViewportState *savedViewport;
     s32 halfHeight;

@@ -125,7 +125,7 @@ void initRaceCharacterSelectMenu(void) {
     if (gRaceSplitscreenMode == 1) {
         requestMusicSequenceBank(2);
     }
-    func_8006D5CC();
+    resetRaceCameras();
     resetAllViewports();
 
     switch (gPlayerCount) {

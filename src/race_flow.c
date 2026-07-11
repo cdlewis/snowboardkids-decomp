@@ -349,7 +349,7 @@ loop:
             D_80121B40 = entry->unk4;
             D_80121B44 = entry->unk8;
             D_80121B48 = entry->unkC;
-            func_8006D580(0, 7);
+            setRaceCameraModeForced(0, 7);
             return 1;
         }
         entry++;
@@ -373,7 +373,7 @@ loop:
     return 0;
 }
 
-void func_80073140(void) {
+void initNewGameSaveData(void) {
     s32 course;
     s32 one;
     s32 player;
@@ -617,7 +617,7 @@ void func_800740C0(void) {
         gCurrentGameTask->countdown--;
     }
     if (gCurrentGameTask->countdown == 0) {
-        func_8006D520(0, 0x1E);
+        setRaceCameraMode(0, 0x1E);
         requestMusicSequenceBank(5);
         setCurrentGameTaskCallback(&func_80074160, 0);
     }
@@ -635,7 +635,7 @@ void func_80074160(void) {
         gMenuFadeOverlayActive = 1;
         gMenuFadeAlpha += 0x16;
         if (gMenuFadeAlpha >= 0x100) {
-            func_8006D520(0, 1);
+            setRaceCameraMode(0, 1);
             gMenuFadeAlpha = 0xFF;
             createCallbackTask(func_80069BC0, 6, 0x64);
             createCallbackTask((void (*)(CallbackTask *))func_80065E90, 6, 0x64);
@@ -1571,7 +1571,7 @@ void func_80077554(void) {
     D_80122FB8 = 0;
     D_80121D80[0].unk16 = 2;
     gMenuFlowState = 0;
-    func_8006D5CC();
+    resetRaceCameras();
     resetAllViewports();
     if (gRaceCourseIndex.s != 6) {
         configureViewport(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, D_800E16CC);
@@ -1676,7 +1676,7 @@ void func_80077C4C(void) {
     updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
     updateRemainingCallbackTasks();
-    func_8006D700();
+    updateRaceCameras();
     func_8007AA50();
 }
 
@@ -1685,7 +1685,7 @@ void func_80077C94(void) {
     updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
     updateRemainingCallbackTasks();
-    func_8006D700();
+    updateRaceCameras();
 }
 
 void func_80077CD4(void) {
@@ -1693,7 +1693,7 @@ void func_80077CD4(void) {
     updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
     updateRemainingCallbackTasks();
-    func_8006D700();
+    updateRaceCameras();
 }
 
 s32 func_80077D14(void) {

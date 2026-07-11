@@ -83,11 +83,11 @@ extern void releaseMenuAssetHandles(void);
 
 #define COURSE_REPLAY_OFFSET(course) ((((((((course) << 2) - (course)) << 5) + (course)) << 2) - (course)) << 2)
 
-// func_8003ED00 best match: 99.874% (nonmatchings/func_8003ED00-5635509610426229442/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition_2/func_8003ED00.s")
+// initTitleDemoRaceIntro best match: 99.874% (nonmatchings/initTitleDemoRaceIntro-5635509610426229442/base_2.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition_2/initTitleDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
-void func_8003ED00(void) {
+void initTitleDemoRaceIntro(void) {
     RaceIntroPlayer *players;
     register s32 one = 1;
     s32 active = 1;
@@ -157,7 +157,7 @@ void func_8003ED00(void) {
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
     gMenuFlowState = 0;
-    func_8006D5CC();
+    resetRaceCameras();
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xB0, 0x140, 0xF0, D_800E10C0);
     D_8011228C = 1;
@@ -278,7 +278,7 @@ copy_player3:
 
     temp = state->startDelay;
     if (fadeStep == D_800BB8B0[temp]) {
-        func_8006D520(0, D_800BB8DC[temp]);
+        setRaceCameraMode(0, D_800BB8DC[temp]);
         gCurrentGameTask->startDelay++;
         gRaceUpdatePaused = 1;
     }
@@ -288,7 +288,7 @@ copy_player3:
     func_80096E3C();
     updateRemainingCallbackTasks();
     gRaceUpdatePaused = prevOpen;
-    func_8006D700();
+    updateRaceCameras();
 
     gCurrentGameTask->fadeStep++;
     state = gCurrentGameTask;

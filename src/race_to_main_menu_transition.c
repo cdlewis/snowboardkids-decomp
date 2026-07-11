@@ -88,7 +88,7 @@ void func_8000D340(void) {
     s32 temp_v0;
     RaceToMainMenuTransitionState *state;
 
-    func_8006D5CC();
+    resetRaceCameras();
     D_801121E0.update = updateMenuCameraObjectFromTargetOffset;
     D_801121E0.depth = 0x5D24000;
     D_801121E0.yaw = 0xFC0;

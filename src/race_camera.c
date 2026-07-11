@@ -110,7 +110,7 @@ extern u8 gRaceUpdatePaused;
 extern u8 D_80121B58;
 extern s32 gMenuFlowState;
 
-void func_8006D520(u16 arg0, u16 arg1) {
+void setRaceCameraMode(u16 arg0, u16 arg1) {
     RaceCamera *temp;
 
     if (D_80121B58 == 0) {
@@ -120,17 +120,17 @@ void func_8006D520(u16 arg0, u16 arg1) {
     }
 }
 
-void func_8006D580(u16 arg0, u16 arg1) {
+void setRaceCameraModeForced(u16 arg0, u16 arg1) {
     RaceCamera *temp = &D_801121E0[arg0];
 
     temp->mode = arg1;
     temp->update = D_800DA880[arg1];
 }
 
-void func_8006D5CC(void) {
+void resetRaceCameras(void) {
     RaceCamera *camera;
 
-    func_8006D520(0, 0);
+    setRaceCameraMode(0, 0);
     camera = D_801121E0;
     camera->initialized = 0;
     camera->pitch = 0;
@@ -150,7 +150,7 @@ void func_8006D5CC(void) {
     D_801121E0[3].playerIndex = 3;
 }
 
-void func_8006D700(void) {
+void updateRaceCameras(void) {
     RaceCamera *camera;
     s32 index;
 
@@ -164,7 +164,7 @@ void func_8006D700(void) {
     }
 }
 
-void func_8006D780(s32 arg0) {
+void updateRaceCamera(s32 arg0) {
     D_801124A0 = &D_801121E0[arg0];
     D_801124A0->update();
 }

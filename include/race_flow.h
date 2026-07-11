@@ -13,7 +13,7 @@ void func_80072E10(void);
 void func_80072E98(void);
 s32 func_80072FC4(void);
 s32 func_800730EC(void);
-void func_80073140(void);
+void initNewGameSaveData(void);
 void func_800732C4(void);
 void func_80073308(void);
 void func_8007334C(void);
