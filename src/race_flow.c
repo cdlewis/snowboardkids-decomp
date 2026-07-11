@@ -166,9 +166,9 @@ extern u16 D_800DC5C0[];
 extern CourseSelectTableEntry D_800B9542[];
 extern RaceFlowState *gCurrentGameTask;
 extern RacePlayerState D_80121D80[];
-extern s32 D_80121B40;
-extern s32 D_80121B44;
-extern s32 D_80121B48;
+extern s32 gRaceCameraReplayStartX;
+extern s32 gRaceCameraReplayStartY;
+extern s32 gRaceCameraReplayStartZ;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 D_8012207C;
@@ -212,7 +212,7 @@ extern u8 D_2427D0[];
 extern u8 D_243270[];
 extern u8 gPlayerCount;
 extern u8 D_80121B57;
-extern u8 D_80121B58;
+extern u8 gRaceCameraModeChangeDisabled;
 extern u8 gRaceTypeSelection;
 extern s8 D_80121B5F;
 extern u8 D_80121B60;
@@ -346,9 +346,9 @@ loop:
             D_80121D80[0] = ((RacePlayerState *)getRelocatableHeapBlockBase(D_80112188))[count];
             *(s32 *)getRelocatableHeapBlockBase(D_80112186) = entry->status;
             entry->status = COURSE_GRID_ENTRY_FREE;
-            D_80121B40 = entry->unk4;
-            D_80121B44 = entry->unk8;
-            D_80121B48 = entry->unkC;
+            gRaceCameraReplayStartX = entry->unk4;
+            gRaceCameraReplayStartY = entry->unk8;
+            gRaceCameraReplayStartZ = entry->unkC;
             setRaceCameraModeForced(0, 7);
             return 1;
         }
@@ -433,7 +433,7 @@ void initNewGameSaveData(void) {
     D_80121D80[3].unk18 = 0;
     gRaceCourseIndex.s = 0;
     gRaceSplitscreenMode = 0;
-    D_80121B58 = 0;
+    gRaceCameraModeChangeDisabled = 0;
     setCurrentGameTaskCallback(func_800732C4, 0);
 }
 
@@ -1502,7 +1502,7 @@ void func_80077554(void) {
     s32 asset;
 
     gRaceUpdatePaused = 0;
-    D_80121B58 = 1;
+    gRaceCameraModeChangeDisabled = 1;
     D_80121B5F = 0;
     asset = getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     if (((Unk80043040 *)asset)->unk8 == 0) {
@@ -1645,7 +1645,7 @@ void func_80077B34(void) {
     gFramebufferSwapHold = 1;
     if (gPendingFramebufferSwapCount == 2) {
         gRaceRumbleEnabled = 0;
-        D_80121B58 = 0;
+        gRaceCameraModeChangeDisabled = 0;
         updateRelocatableHeap();
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;

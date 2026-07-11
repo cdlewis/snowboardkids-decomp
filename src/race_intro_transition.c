@@ -62,7 +62,7 @@ extern u8 D_8011228C;
 extern u8 D_80121B54;
 extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
-extern s8 D_80121B58;
+extern u8 gRaceCameraModeChangeDisabled;
 extern u8 D_80121B59;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
@@ -97,7 +97,7 @@ void initCourseDemoRaceIntro(void) {
     courseEntry = &D_800BB834[D_800BB830];
     gRaceCourseIndex = courseEntry->courseIndex;
     gRaceUpdatePaused = 0;
-    D_80121B58 = 0;
+    gRaceCameraModeChangeDisabled = 0;
     D_80121B5F = 0;
     D_80121B59 = 0;
     gTrainingCourseLesson = 0;
@@ -264,7 +264,7 @@ void func_8003EC6C(void) {
             D_800BB830 = 0;
         }
         gRaceRumbleEnabled = 0;
-        D_80121B58 = 0;
+        gRaceCameraModeChangeDisabled = 0;
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;

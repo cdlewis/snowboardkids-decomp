@@ -68,7 +68,7 @@ extern RaceCourseStartEntry gRaceCourseStartEntries[];
 extern Unk8011228C D_8011228C[];
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
-extern u8 D_80121B58;
+extern u8 gRaceCameraModeChangeDisabled;
 
 void func_80087600(s32 arg0, s32 *arg1, s32 *arg2) {
     RaceInputPlayer *player;
@@ -325,7 +325,7 @@ void func_80087E14(RaceInputPlayer *player) {
     if (!(flags & 0x40) && (player->unk508 >= (gRaceLapCount - 1)) &&
             (player->unk502 == gRaceCourseStartEntries[gRaceCourseIndex].unk0) && !(flags & 0x1000)) {
         player->stateFlags = flags | 0x40;
-        if ((D_80121B58 == 0) && (D_8011228C[player->playerIndexU16].active != 0)) {
+        if ((gRaceCameraModeChangeDisabled == 0) && (D_8011228C[player->playerIndexU16].active != 0)) {
             task = createCallbackTask(func_8006A85C, 6, 0x64);
             if (task != NULL) {
                 task->userId = player->playerIndexU16;

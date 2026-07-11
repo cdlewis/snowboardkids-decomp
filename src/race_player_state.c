@@ -122,7 +122,7 @@ extern u8 gRaceUpdatePaused;
 extern u8 D_80121B59;
 extern u8 gRaceTypeSelection;
 extern u8 D_80121B59;
-extern u8 D_80121B58;
+extern u8 gRaceCameraModeChangeDisabled;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern s16 gRaceCourseIndex;
@@ -277,7 +277,7 @@ void func_8008C098(RaceInputPlayer *player) {
         player->posZ = -0xBD0000;
     }
     player->unk68 = 0xC0000;
-    if ((player->unk4 == 0) && (player->soundDisabled == 0) && (D_80121B58 == 0) &&
+    if ((player->unk4 == 0) && (player->soundDisabled == 0) && (gRaceCameraModeChangeDisabled == 0) &&
         (player->unk27C != player->unk278)) {
         createCallbackTaskWithUserIdPreservingArgs(func_80057810, 0, 0x64, player->playerIndexU16);
     }

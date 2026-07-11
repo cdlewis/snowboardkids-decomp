@@ -50,7 +50,7 @@ extern u8 gRaceUpdatePaused;
 extern s16 gMenuFadeAlpha;
 extern u8 gFramebufferSwapHold;
 extern s32 gMenuFlowState;
-extern u8 D_80121B58;
+extern u8 gRaceCameraModeChangeDisabled;
 extern u8 D_80121B59;
 extern u8 gMainMenuModeSelection;
 extern s16 D_80121B5C;
@@ -169,7 +169,7 @@ void initMainMenuModePreviewRace(void) {
 
     gRaceCourseIndex = gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection].courseIndex;
     gRaceUpdatePaused = 0;
-    D_80121B58 = 0;
+    gRaceCameraModeChangeDisabled = 0;
     D_80121B5F = 0;
     D_80121B59 = 0;
     gTrainingCourseLesson = 0;
@@ -393,7 +393,7 @@ void initTrainingCourseRace(void) {
     }
 
     gRaceUpdatePaused = 0;
-    D_80121B58 = 0;
+    gRaceCameraModeChangeDisabled = 0;
     D_80121B5F = 0;
     D_80121B59 = 0;
     gMainMenuModeSelection = 0;
