@@ -612,21 +612,16 @@ void func_8003A8A4(MainMenuSceneActor3 *arg0) {
     }
 }
 
-// func_8003A944 best match: 97.333%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_actor_3/func_8003A944.s")
-
-#ifdef NON_MATCHING
 void func_8003A944(MainMenuSceneActor3 *arg0) {
     s32 pad;
     s32 sp20;
     s32 i;
     s32 count;
 
-    count = 1;
-    if (arg0->animTimer < 3) {
-        count = count;
-    } else {
+    if (arg0->animTimer >= 3) {
         count = 2;
+    } else {
+        count = 1;
     }
 
     for (i = 0; i < count; i++) {
@@ -639,7 +634,6 @@ void func_8003A944(MainMenuSceneActor3 *arg0) {
         func_80071824(arg0, func_8003AC00);
     }
 }
-#endif
 
 void func_8003A9E0(MainMenuSceneActor3 *arg0) {
     s32 var_s1;
