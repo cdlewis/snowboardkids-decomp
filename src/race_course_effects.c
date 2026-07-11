@@ -1,4 +1,5 @@
 #include "common.h"
+#include "race_course_effects.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
@@ -8,13 +9,13 @@
 
 #define COURSE_INDEX_RELOAD (*(volatile s16 *)&D_80121B50)
 
-typedef struct {
+typedef struct RaceCountdownEffect {
     char pad[0x18];
     s16 step;
     u16 timer;
 } RaceCountdownEffect;
 
-typedef struct {
+typedef struct RacePlayerEffect {
     char pad[0x10];
     u16 playerIndex;
 } RacePlayerEffect;
@@ -23,7 +24,7 @@ typedef struct {
     s32 words[0x10];
 } CourseRenderCommand;
 
-typedef struct {
+typedef struct RaceCourseRenderEffect {
     char pad0[0x18];
     CourseRenderCommand *vertices;
 } RaceCourseRenderEffect;
@@ -42,7 +43,7 @@ typedef struct {
     Vec3i pos;
 } CourseMarkerSpawnEntry;
 
-typedef struct {
+typedef struct CourseEffectPlayer {
     /* 0x000 */ s16 unk0;
     /* 0x002 */ char pad2[0x11];
     /* 0x013 */ s8 isActive;
@@ -64,7 +65,7 @@ typedef struct {
     /* 0x57A */ char pad57A[0x92];
 } CourseEffectPlayer;
 
-typedef struct {
+typedef struct Struct6B760 {
     char pad[0x18];
     Vec3i pos;
     s32 unk24;
@@ -91,7 +92,7 @@ typedef struct {
     Vec3i basePos;
 } CourseEffectMatrixSource;
 
-typedef struct {
+typedef struct Struct6C51C {
     char pad0[0x18];
     CourseEffectMatrixSource source;
     Vec3i pos1;
@@ -105,7 +106,7 @@ typedef struct {
     void *pos2Matrix;
 } Struct6C51C;
 
-typedef struct {
+typedef struct RaceMovingEffect {
     char pad0[0x18];
     Vec3i velocity;
     Vec3i pos;
@@ -129,7 +130,7 @@ typedef struct {
     char pad4[0x44];
 } CourseAngleEntry;
 
-typedef struct {
+typedef struct RaceCourseMarkerEffect {
     char pad0[0x10];
     u16 entryIndex;
     char pad12[6];
@@ -185,7 +186,7 @@ typedef struct {
     s32 pad38;
 } CourseTriggerScratch;
 
-typedef struct {
+typedef struct RaceCourseTriggerEffect {
     char pad0[0x10];
     u16 entryIndex;
     char pad12[6];
@@ -228,7 +229,7 @@ typedef struct {
     char pad50[0x60];
 } RaceCamera;
 
-typedef struct {
+typedef struct RaceCourseBackdropEffect {
     char pad0[0x44];
     void *matrix;
 } RaceCourseBackdropEffect;
@@ -237,9 +238,6 @@ extern void func_800483FC(void *, void *, void *);
 extern void func_80072138(s32, s32);
 extern void func_80072A74(s32, void *, s32, s32);
 extern void osWritebackDCache(void *, s32);
-extern void func_8006A80C(void *);
-extern void func_80069BEC(void *);
-void func_80069E50(RaceCourseBackdropEffect *);
 extern void *func_80048594(s32);
 extern void func_800486BC(void *, void *);
 extern void *func_8004885C(CourseEffectMatrixSource *);
@@ -260,24 +258,6 @@ extern s16 D_80112142;
 extern s32 D_801235B4;
 extern u8 D_80156608;
 extern u8 D_80156609;
-extern void func_8006C5C0(Struct6C51C *);
-void func_8006C1B4(Struct6C51C *);
-void func_8006CCC0(RaceCourseTriggerEffect *);
-void func_8006CE68(CourseEffectPlayer *, RaceCourseTriggerEffect *);
-void func_8006D2D0(RaceCourseTriggerEffect *);
-void func_80069890(RaceCountdownEffect *);
-void func_80069914(RaceCountdownEffect *);
-void func_80069998(RaceCountdownEffect *);
-void func_800699F0(RaceCountdownEffect *);
-void func_80069A78(RaceCountdownEffect *);
-void func_80069AF0(RaceCountdownEffect *);
-void func_80069B60(RaceCountdownEffect *);
-void func_8006A894(void *);
-extern void func_8006C7F4(RaceCourseMarkerEffect *);
-void func_8006B3E0(Struct6B760 *);
-void func_8006B6C8(Struct6B760 *);
-void func_8006AF48(RaceCourseRenderEffect *);
-void func_8006BC68(RaceMovingEffect *);
 extern u8 D_80121B56;
 extern s16 D_80121B50;
 extern CourseAssetHandles D_80112130;
@@ -338,10 +318,6 @@ extern Gfx D_200C7A8[];
 extern Gfx D_2006548[];
 extern Gfx D_2006880[];
 extern Gfx D_20058A8[];
-void func_8006BE90(RaceMovingEffect *);
-void func_8006B7E0(RaceMovingEffect *);
-extern void func_8006A894(void *);
-
 void func_80069890(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
         func_80047174(-0x34, -0xC, func_80043040(D_80112168), 0x3F, arg0->step);

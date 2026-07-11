@@ -5,6 +5,7 @@
 #include "effect_task_scheduler.h"
 #include "game_boot.h"
 #include "model_animation.h"
+#include "race_course_effects.h"
 
 #define COURSE_PLAYER_COUNT 4
 #define COURSE_PLAYER_STRIDE 0x60C
@@ -114,13 +115,6 @@ extern void func_800669A0();
 extern void func_8006713C();
 extern void func_800675AC();
 extern void func_800691C8();
-extern void func_8006A798();
-extern void func_8006AE00();
-extern void func_8006B108();
-extern void func_8006B760(s16, s32, s32, s32, s32);
-extern void func_8006C698();
-extern void func_8006CBBC();
-extern void func_8006D384();
 
 #ifdef NON_MATCHING
 // func_80043950 best match: 63.023% at nonmatchings/func_80043950-2225551288923588688/base_4.c.

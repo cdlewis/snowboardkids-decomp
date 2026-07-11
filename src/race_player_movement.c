@@ -3,6 +3,7 @@
 #include "effect_task_scheduler.h"
 #include "game_audio.h"
 #include "model_animation.h"
+#include "race_course_effects.h"
 #include "race_input_history.h"
 
 typedef struct {
@@ -69,8 +70,6 @@ extern Unk8011228C D_8011228C[];
 extern s16 D_80121B50;
 extern s16 D_80121B52;
 extern u8 D_80121B58;
-
-void func_8006A85C(EffectTask *task);
 
 void func_80087600(s32 arg0, s32 *arg1, s32 *arg2) {
     RaceInputPlayer *player;

@@ -5,6 +5,7 @@
 #include "game_audio.h"
 #include "model_animation.h"
 #include "race_camera.h"
+#include "race_course_effects.h"
 #include "race_actor_collision.h"
 #define func_8004940C func_8004940C_s32
 #include "fixed_point_matrix.h"
@@ -4534,8 +4535,6 @@ void func_80095650(RaceInputPlayer *player) {
     s32 unused;
     s32 scratch[14];
 
-    extern void func_8006BB50(EffectTask *);
-
     updateTimer = player->updateTimer;
     if (updateTimer == 0) {
         player->updateTimer = updateTimer + 1;
@@ -4740,7 +4739,6 @@ void func_80095A88(RaceInputPlayer *player) {
 
 // func_80095BE4 best match: 84.515% (nonmatchings/func_80095BE4-7273315160691878794/base_1.c)
 #ifdef NON_MATCHING
-extern void func_8006C088(EffectTask *);
 extern void func_80054B2C(EffectTask *);
 
 void func_80095BE4(RaceInputPlayer *player) {
