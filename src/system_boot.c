@@ -1,7 +1,7 @@
 #include "common.h"
 #include "sound_manager.h"
 #include "system_boot.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "main_menu.h"
 #include "memory_allocator.h"
 #include "race_flow.h"
@@ -213,7 +213,7 @@ extern void func_800484F0(void);
 extern void func_80048524(s32);
 extern void appendViewportDisplayLists(u8);
 extern s32 osSendMesg(void *, void *, s32);
-extern void func_80098EAC(void);
+extern void updateGameTaskScheduler(void);
 extern void gameThreadMain(void *);
 extern void initVideoTaskState(void);
 
@@ -248,12 +248,12 @@ void initGameSystems(void) {
     func_800458E0();
     func_80048338();
     func_800484F0();
-    initInputTaskScheduler();
+    initGameTaskScheduler();
     initVideoTaskState();
     func_80000450();
     resetAllViewports();
     initSoundManager();
-    createInputTask(0, func_80072C30, STARTUP_CALLBACK_PRIORITY);
+    createGameTask(0, func_80072C30, STARTUP_CALLBACK_PRIORITY);
     D_8012482A = 0;
     D_8012482B = 0;
     D_8012482C = 0;
@@ -291,7 +291,7 @@ loop_1:
             D_80124828 = gRetraceCounter;
             if (initialized == 0) {
                 initialized = 1;
-                func_80098EAC();
+                updateGameTaskScheduler();
                 updateSoundManager();
                 func_80000A8C(0);
                 func_80000A8C(1);

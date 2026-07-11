@@ -3,7 +3,7 @@
 #include "callback_task_scheduler.h"
 #include "character_select_course_menu.h"
 #include "race_character_select_menu.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "menu_rendering.h"
 #include "race_camera.h"
 #include "sound_manager.h"
@@ -13,7 +13,7 @@
 
 extern void releaseMenuAssetHandles(void);
 
-extern CharacterSelectFlowState *gCurrentInputTask;
+extern CharacterSelectFlowState *gCurrentGameTask;
 extern s8 gFramebufferSwapDelay;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
@@ -170,8 +170,8 @@ void initRaceCharacterSelectMenu(void) {
     D_800EC9E5 = 0;
     D_8010AEA8 = 0;
     D_8010AEB0 = 0;
-    gCurrentInputTask->fade = 0xFF;
-    gMenuFadeAlpha = gCurrentInputTask->fade;
+    gCurrentGameTask->fade = 0xFF;
+    gMenuFadeAlpha = gCurrentGameTask->fade;
 
     loadCompressedRomAsset(D_5CBA80, D_5CCD40, 0x21);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
@@ -195,9 +195,9 @@ void initRaceCharacterSelectMenu(void) {
     D_801235B4 = 0;
     D_8010AED0 = 0;
     D_800EC9E6 = 0;
-    gCurrentInputTask->timer = 0;
-    gCurrentInputTask->unk20 = 0;
-    setCurrentInputTaskCallback(updateRaceCharacterSelectMenu, 0);
+    gCurrentGameTask->timer = 0;
+    gCurrentGameTask->unk20 = 0;
+    setCurrentGameTaskCallback(updateRaceCharacterSelectMenu, 0);
 
     for (i = 0; &D_80121D80[i] < &gFrameCounter; i++) {
         D_80121D80[i].mode = 0;
@@ -330,7 +330,6 @@ extern void initCourseSelectExtraCourseIconList(CallbackTask *);
 extern void initCourseSelectPlayerPanels(CallbackTask *);
 extern void initCourseSelectCompletePanels(CallbackTask *);
 extern s32 enqueueSoundEffect(s16, s16);
-extern void setCurrentInputTaskCallback(void (*)(void), s32);
 
 extern void *D_8010ADE8;
 extern u8 D_8010AF06[];
@@ -367,9 +366,9 @@ void updateRaceCharacterSelectMenu(void) {
     RaceCharacterSelectObject *obj;
 
     readyCount = 0;
-    if (gCurrentInputTask->fade != 0) {
-        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 0);
-        if (gCurrentInputTask->fade == 0) {
+    if (gCurrentGameTask->fade != 0) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
+        if (gCurrentGameTask->fade == 0) {
             if (gPlayerCount == 1) {
                 createCallbackTask(initCourseSelectCourseIconList, 0, 0x63);
             } else {
@@ -631,7 +630,7 @@ void updateRaceCharacterSelectMenu(void) {
     }
 
     if (D_800EC9C0 == 0x19) {
-        setCurrentInputTaskCallback(fadeOutRaceCharacterSelectMenu, 0);
+        setCurrentGameTaskCallback(fadeOutRaceCharacterSelectMenu, 0);
         if (D_801235B4 == 0) {
             requestMusicSequenceStop(8);
         }
@@ -649,9 +648,9 @@ void updateRaceCharacterSelectMenu(void) {
 #endif
 
 void fadeOutRaceCharacterSelectMenu(void) {
-    if (gCurrentInputTask->fade != 0xFF) {
-        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 1);
-        if (gCurrentInputTask->fade == 0xFF) {
+    if (gCurrentGameTask->fade != 0xFF) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 1);
+        if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();
@@ -661,8 +660,8 @@ void fadeOutRaceCharacterSelectMenu(void) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
-            resumeInputTask(2);
-            removeInputTask(4);
+            resumeGameTask(2);
+            removeGameTask(4);
         }
     }
 }

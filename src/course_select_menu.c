@@ -3,7 +3,7 @@
 #include "race_camera.h"
 #include "callback_task_scheduler.h"
 #include "course_select_menu.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "menu_rendering.h"
 #include "shop_menu_ui.h"
 #include "system_boot.h"
@@ -151,7 +151,7 @@ extern u8 D_80121D86;
 extern s8 D_80121D87;
 extern u8 D_80121D88;
 extern CourseSelectSelection D_80121D80;
-extern CourseSelectMenuState *gCurrentInputTask;
+extern CourseSelectMenuState *gCurrentGameTask;
 extern s32 D_801235B4;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
@@ -204,7 +204,7 @@ void initCourseSelectMenu(void) {
     } while (otherCourse < D_8010AEAC + 4);
 
     gFramebufferSwapDelay = 0;
-    gCurrentInputTask->fade = 0xFF;
+    gCurrentGameTask->fade = 0xFF;
     loadCompressedRomAsset(D_5CBA80, D_5CCD40, 0x21);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
     loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
@@ -229,7 +229,7 @@ void initCourseSelectMenu(void) {
     D_80121D80.unk6 = 0;
     D_8010AE64 = 0;
     D_8010ADDC = 0;
-    gCurrentInputTask->timer = 0;
+    gCurrentGameTask->timer = 0;
     D_8010ADF8 = 0;
     D_8010AF70 = 0;
     D_8010AF71 = 0;
@@ -244,7 +244,7 @@ void initCourseSelectMenu(void) {
     D_8010AECC = 0;
     D_8010ADF0 = 0;
 
-    gMenuFadeAlpha = gCurrentInputTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->fade;
     mask = 1;
     i = 0;
     do {
@@ -268,7 +268,7 @@ void initCourseSelectMenu(void) {
         D_800EC9E6 = 0;
     }
 
-    setCurrentInputTaskCallback(nextCallback, 0);
+    setCurrentGameTaskCallback(nextCallback, 0);
     updateCallbackTasks();
 
     gCourseSelectStatus.unk0Array[zero] = zero;
@@ -326,9 +326,9 @@ void updateCourseSelectModeMenu(void) {
     u8 oldSelection;
     u8 transition;
 
-    if (gCurrentInputTask->fade != 0) {
-        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 0);
-        if (gCurrentInputTask->fade == 0) {
+    if (gCurrentGameTask->fade != 0) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
+        if (gCurrentGameTask->fade == 0) {
             createCallbackTask(func_8002C800, 0, 0x63);
             if (D_8010AF70 == 0) {
                 enqueueSoundEffect(0x44, 0x32);
@@ -421,9 +421,9 @@ void updateCourseSelectModeMenu(void) {
         if (D_80121D88 == 2) {
             D_800EC9C1 = 0;
             if (D_8010ADF8 == 0) {
-                setCurrentInputTaskCallback(initCourseSelectCourseList, 0);
+                setCurrentGameTaskCallback(initCourseSelectCourseList, 0);
             } else {
-                setCurrentInputTaskCallback(exitCourseSelectMenu, 0);
+                setCurrentGameTaskCallback(exitCourseSelectMenu, 0);
                 requestMusicSequenceStop(8);
                 D_8010ADF8 = 0;
                 D_8010AF46 = 0;
@@ -519,7 +519,7 @@ loop_6:
     }
 
     D_80121D80.unk6 = D_8010AEF8[var_a2_2];
-    setCurrentInputTaskCallback(updateCourseSelectCourseList, 0);
+    setCurrentGameTaskCallback(updateCourseSelectCourseList, 0);
     updateCallbackTasks();
 }
 #endif
@@ -720,8 +720,8 @@ block_17:
             }
             if ((D_80121D88 == 1) && (D_800EC9E6 == 1)) {
                 sp44 = var_a3_2;
-                setCurrentInputTaskCallback(updateCourseSelectUnlockCourseList, 0);
-                gCurrentInputTask->screenState = 0;
+                setCurrentGameTaskCallback(updateCourseSelectUnlockCourseList, 0);
+                gCurrentGameTask->screenState = 0;
             }
         } else {
             if (temp_a0 == 9) {
@@ -817,9 +817,9 @@ block_17:
             }
         }
         if ((D_8010AF1C == 7) || (D_8010AF20 == 7)) {
-            gCurrentInputTask->timer = 0;
+            gCurrentGameTask->timer = 0;
             sp44 = var_a3_2;
-            setCurrentInputTaskCallback(updateCourseSelectPurchasePrompt, 0);
+            setCurrentGameTaskCallback(updateCourseSelectPurchasePrompt, 0);
             createCallbackTask(func_8002EFB8, 0, 0x64);
         }
         var_v0_3 = (u8) D_800EC9C0;
@@ -834,10 +834,10 @@ block_17:
     }
     if (var_v0_3 == 0x1B) {
         temp_v0_3 = &D_80121D80 + sp44;
-        gCurrentInputTask->fade = 1;
+        gCurrentGameTask->fade = 1;
         D_80121D88 = 0;
         sp18 = temp_v0_3;
-        setCurrentInputTaskCallback(updateCourseSelectModeMenu, 0);
+        setCurrentGameTaskCallback(updateCourseSelectModeMenu, 0);
         temp_v0_3->pad0[6] = D_8010AEF8[D_8010AE64];
         if (D_801235B4 == 1) {
             D_80121D86 = 0;
@@ -913,33 +913,33 @@ void updateCourseSelectPurchasePrompt(void) {
     s32 *new_var2;
     u8 new_var;
 
-    temp_v0 = gCurrentInputTask->timer;
+    temp_v0 = gCurrentGameTask->timer;
     new_var2 = &gPlayerInputPressed;
     if (temp_v0 < 2) {
         temp_v1 = *new_var2;
         if ((temp_v1 & 0x10800) && (temp_v0 != 0)) {
-            gCurrentInputTask->timer = temp_v0 - 1;
+            gCurrentGameTask->timer = temp_v0 - 1;
             enqueueSoundEffect(0x19, 0x32);
             temp_v1 = gPlayerInputPressed;
         } else if ((temp_v1 & 0x20400) && (temp_v0 != 1)) {
-            gCurrentInputTask->timer = temp_v0 + 1;
+            gCurrentGameTask->timer = temp_v0 + 1;
             enqueueSoundEffect(0x19, 0x32);
             temp_v1 = gPlayerInputPressed;
         }
 
         if (temp_v1 & 0x8000) {
             D_801235B4 = 1;
-            if (gCurrentInputTask->timer == 1) {
+            if (gCurrentGameTask->timer == 1) {
                 enqueueSoundEffect(0x18, 0x32);
                 if (D_8010AECC == 0) {
                     D_8010AF1C = 1;
                 } else {
                     D_8010AF20 = 1;
                 }
-                setCurrentInputTaskCallback(updateCourseSelectCourseList, 0);
+                setCurrentGameTaskCallback(updateCourseSelectCourseList, 0);
             } else {
                 enqueueSoundEffect(0x45, 0x32);
-                gCurrentInputTask->timer += 2;
+                gCurrentGameTask->timer += 2;
             }
         } else if (temp_v1 & 0x4000) {
             D_801235B4 = 1;
@@ -949,12 +949,12 @@ void updateCourseSelectPurchasePrompt(void) {
             } else {
                 D_8010AF20 = 1;
             }
-            setCurrentInputTaskCallback(updateCourseSelectCourseList, 0);
+            setCurrentGameTaskCallback(updateCourseSelectCourseList, 0);
         }
     } else if (temp_v0 > (4 - 1)) {
-        gCurrentInputTask->timer = 0;
+        gCurrentGameTask->timer = 0;
         D_80121D88 = 9;
-        setCurrentInputTaskCallback(updateCourseSelectCourseList, 0);
+        setCurrentGameTaskCallback(updateCourseSelectCourseList, 0);
     }
 
     var_s0 = 0;
@@ -1097,13 +1097,13 @@ after_row_change:
 
 outside_menu_rows:
     if (D_800EC9D0 == 0) {
-        setCurrentInputTaskCallback(updateCourseSelectCourseList, 0);
+        setCurrentGameTaskCallback(updateCourseSelectCourseList, 0);
     }
 
 after_input:
     if ((gCourseSelectStatus.unk4Array[0] == 7) || (gCourseSelectStatus.unk8Array[0] == 7)) {
-        gCurrentInputTask->screenState = 1;
-        setCurrentInputTaskCallback(initCourseSelectCourseDetailsMenu, 0);
+        gCurrentGameTask->screenState = 1;
+        setCurrentGameTaskCallback(initCourseSelectCourseDetailsMenu, 0);
     }
     i = 0;
     if ((s32) gPlayerCount > 0) {
@@ -1126,14 +1126,14 @@ void initCourseSelectCourseDetailsMenu(void) {
     s32 var_s0;
     s8 temp_v0;
 
-    if (gCurrentInputTask->screenState == 2) {
+    if (gCurrentGameTask->screenState == 2) {
         createCallbackTask(func_8002F854, 0, 0x63);
         temp_v0 = D_800ECA2F[D_80121D86];
         D_8010AF72 = temp_v0 % 7;
         D_8010AF73 = temp_v0 / 7;
         D_8010ADF0 = 0;
         D_8010ADF8 = 0;
-        setCurrentInputTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
+        setCurrentGameTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
     }
 
  do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
@@ -1233,16 +1233,16 @@ block_16:
                     D_8010AF74 = 1;
                 }
                 D_8010ADF8 = 0;
-                setCurrentInputTaskCallback(waitCourseSelectRecordsClose, 0);
+                setCurrentGameTaskCallback(waitCourseSelectRecordsClose, 0);
             } else if ((temp_a0 == 8) || ((u8) D_8010ADF8 == 2)) {
-                setCurrentInputTaskCallback(returnToCourseSelectUnlockCourseList, 0);
+                setCurrentGameTaskCallback(returnToCourseSelectUnlockCourseList, 0);
                 D_8010ADF8 = 0;
-                gCurrentInputTask->screenState = 3;
+                gCurrentGameTask->screenState = 3;
             } else if (temp_a0 == 9) {
-                setCurrentInputTaskCallback(returnToCourseSelectModeMenu, 0);
-                gCurrentInputTask->screenState = 9;
+                setCurrentGameTaskCallback(returnToCourseSelectModeMenu, 0);
+                gCurrentGameTask->screenState = 9;
             } else {
-                setCurrentInputTaskCallback(initCourseSelectPreview, 0);
+                setCurrentGameTaskCallback(initCourseSelectPreview, 0);
             }
         }
     }
@@ -1268,7 +1268,7 @@ void waitCourseSelectRecordsClose(void) {
     if (gCourseSelectStatus.transitionState == 2) {
         D_8010ADF0 = 0;
         D_8010AF74 = 0;
-        setCurrentInputTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
+        setCurrentGameTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
     }
 
  do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
@@ -1279,16 +1279,16 @@ void returnToCourseSelectUnlockCourseList(void) {
     ObjectA3E0 *var_s1;
     s32 var_s0;
 
-    if (gCurrentInputTask->screenState == 5) {
+    if (gCurrentGameTask->screenState == 5) {
         if (D_8010AECC == 0) {
             gCourseSelectStatus.playerOneCourseDecided = 1;
         } else {
             gCourseSelectStatus.playerTwoCourseDecided = 1;
         }
         gCourseSelectStatus.transitionState = 0;
-        gCurrentInputTask->screenState = 0;
+        gCurrentGameTask->screenState = 0;
         D_8010ADF0 = 0;
-        setCurrentInputTaskCallback(updateCourseSelectUnlockCourseList, 0);
+        setCurrentGameTaskCallback(updateCourseSelectUnlockCourseList, 0);
     }
 
  do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
@@ -1300,11 +1300,11 @@ void returnToCourseSelectModeMenu(void) {
     s32 var_s0;
     s32 i;
 
-    if (gCurrentInputTask->screenState == 0xB) {
-        setCurrentInputTaskCallback(updateCourseSelectModeMenu, 0);
-        gCurrentInputTask->fade = 1;
-        gCurrentInputTask->timer = 0;
-        gCurrentInputTask->screenState = 0;
+    if (gCurrentGameTask->screenState == 0xB) {
+        setCurrentGameTaskCallback(updateCourseSelectModeMenu, 0);
+        gCurrentGameTask->fade = 1;
+        gCurrentGameTask->timer = 0;
+        gCurrentGameTask->screenState = 0;
         D_80121D80.unk8 = 0;
         D_80121D80.unk6 = D_80121D80.unk6 % 3;
         D_800EC9D0 = 0;
@@ -1345,7 +1345,7 @@ void initCourseSelectPreview(void) {
     temp[0x3F] = D_800B34E0[(u8) D_8010AF73 * 7 + (u8) D_8010AF72];
     gCourseSelectStatus.transitionState = 6;
     createCallbackTask(&func_8002FEF8, 0, 0x64);
-    setCurrentInputTaskCallback(updateCourseSelectPreviewClose, 0); var_s0 = D_801121E0; do { D_800EC9C4 = var_s0; var_s0->unk2C();
+    setCurrentGameTaskCallback(updateCourseSelectPreviewClose, 0); var_s0 = D_801121E0; do { D_800EC9C4 = var_s0; var_s0->unk2C();
         var_s0 += 1;
     } while (var_s0 != &D_80112340);
     updateCallbackTasks();
@@ -1362,7 +1362,7 @@ void updateCourseSelectPreviewClose(void) {
     configureViewport(1, 0xE8, 0x78, 0x90, D_8010AF76, 0xA0, 0xF0, 0.6666666865f);
     if (D_8010AF76 == 0) {
         func_80070614(1);
-        setCurrentInputTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
+        setCurrentGameTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
         gCourseSelectStatus.transitionState = 2;
  D_8010AED0 = 0; } var_s0 = D_801121E0; do { (D_800EC9C4 = var_s0)->unk2C(); var_s0 += 1; } while (var_s0 != (&D_80112340)); updateCallbackTasks();
 }
@@ -1371,9 +1371,9 @@ void exitCourseSelectMenu(void) {
     s8 *ptr;
     s32 count;
 
-    if (gCurrentInputTask->fade != 0xFF) {
-        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 1);
-        if (gCurrentInputTask->fade == 0xFF) {
+    if (gCurrentGameTask->fade != 0xFF) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 1);
+        if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();
@@ -1381,7 +1381,7 @@ void exitCourseSelectMenu(void) {
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        do { gFramebufferSwapDelay = 0; D_801235B4 = 0; resumeInputTask(2); removeInputTask(4); count = 0; if (D_800ECA2F[0] == (-1)) { count = 1; } ptr = &D_800EC9F1; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
+        do { gFramebufferSwapDelay = 0; D_801235B4 = 0; resumeGameTask(2); removeGameTask(4); count = 0; if (D_800ECA2F[0] == (-1)) { count = 1; } ptr = &D_800EC9F1; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
         ptr += 4;
         if (ptr != (&D_800EC9F9)) {
             goto loop;

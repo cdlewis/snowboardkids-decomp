@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "race_scene_loader.h"
 #include "race_input_history.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "main_menu_message_ui.h"
 #include "main_menu_overlay_effects.h"
 #include "main_menu_panel_ui.h"
@@ -38,7 +38,7 @@ extern u8 D_1F1A90[];
 extern u8 D_1F2220[];
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
-extern MainMenuTransitionState *gCurrentInputTask;
+extern MainMenuTransitionState *gCurrentGameTask;
 extern u8 D_8010B1F0;
 extern u8 D_8011228C;
 extern s16 D_801124B8;
@@ -86,7 +86,7 @@ extern s16 D_80122282;
 
 void func_8003F520(void) {
     D_80121B5B = 1;
-    setCurrentInputTaskCallback(func_8003F554, 0);
+    setCurrentGameTaskCallback(func_8003F554, 0);
 }
 
 void func_8003F554(void) {
@@ -107,7 +107,7 @@ void func_8003F554(void) {
     func_8006D520(0, 0x1F);
     createCallbackTaskWithUserId(&func_80055678, 0, 0x64, 0);
     createCallbackTask(&func_80051854, 0, 0x64);
-    setCurrentInputTaskCallback(&func_8003F6C0, 0);
+    setCurrentGameTaskCallback(&func_8003F6C0, 0);
     requestMusicSequenceBank(7);
 }
 
@@ -115,7 +115,7 @@ void func_8003F6C0(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha <= 0) {
         gMenuFadeAlpha = 0;
-        setCurrentInputTaskCallback(&func_8003F718, 0);
+        setCurrentGameTaskCallback(&func_8003F718, 0);
     }
     func_8006D780(0);
     updateCallbackTasks();
@@ -126,7 +126,7 @@ void func_8003F718(void) {
         if (D_80121B5B == 0xC) {
             requestMusicSequenceStop(0x3C);
         }
-        setCurrentInputTaskCallback(&func_8003F778, 0);
+        setCurrentGameTaskCallback(&func_8003F778, 0);
     }
     func_8006D780(0);
     updateCallbackTasks();
@@ -137,7 +137,7 @@ void func_8003F778(void) {
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentInputTaskCallback(&func_8003F7E4, 0);
+        setCurrentGameTaskCallback(&func_8003F7E4, 0);
     }
     func_8006D780(0);
     updateCallbackTasks();
@@ -149,11 +149,11 @@ void func_8003F7E4(void) {
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
         if (D_80121B5B != 0xC) {
-            setCurrentInputTaskCallback(&func_8003F864, 0);
+            setCurrentGameTaskCallback(&func_8003F864, 0);
         } else {
             D_801235B4 = 0;
-            resumeInputTask(3);
-            removeInputTask(4);
+            resumeGameTask(3);
+            removeGameTask(4);
         }
     }
 }
@@ -244,7 +244,7 @@ void func_8003F864(void) {
     D_8010B1F0 = 0;
     createCallbackTask(func_80051FDC, 0, 0x64);
     createCallbackTask(func_800524B0, 0, 0x64);
-    setCurrentInputTaskCallback(func_8003FB70, 0);
+    setCurrentGameTaskCallback(func_8003FB70, 0);
     requestMusicSequenceBank(7);
 }
 #endif
@@ -253,7 +253,7 @@ void func_8003FB70(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
-        setCurrentInputTaskCallback(&func_8003FBE8, 0);
+        setCurrentGameTaskCallback(&func_8003FBE8, 0);
     }
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
@@ -270,9 +270,9 @@ void func_8003FBE8(void) {
     updateRemainingCallbackTasks();
     func_8006D700();
     if (D_8010B1F0 != 0) {
-        gCurrentInputTask->transitionTimer = 0;
+        gCurrentGameTask->transitionTimer = 0;
         requestMusicSequenceStop(0x20);
-        setCurrentInputTaskCallback(&func_8003FC60, 0);
+        setCurrentGameTaskCallback(&func_8003FC60, 0);
     }
     D_801124B8 = 0x80;
 }
@@ -291,8 +291,8 @@ void func_8003FC60(void) {
     f64 denominator = MAIN_MENU_TRANSITION_FRAMES;
     f32 aspect;
 
-    gCurrentInputTask->transitionTimer += 1;
-    timer = gCurrentInputTask->transitionTimer;
+    gCurrentGameTask->transitionTimer += 1;
+    timer = gCurrentGameTask->transitionTimer;
 
     x2 = timer << 2;
     x2 -= timer;
@@ -305,11 +305,11 @@ void func_8003FC60(void) {
     aspect = (f32) ((((f64) timer * -0.9523809523809523) / denominator) + 2.2857142857142856);
 
     configureViewport(0, 0xA0, x1, x2 & 0xFFFF, y1, 0x140, y2, aspect);
-    if (gCurrentInputTask->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
+    if (gCurrentGameTask->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
         requestMusicSequenceBank(0xF);
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        gCurrentInputTask->transitionTimer = 0;
-        setCurrentInputTaskCallback(func_8003FE54, 0);
+        gCurrentGameTask->transitionTimer = 0;
+        setCurrentGameTaskCallback(func_8003FE54, 0);
     }
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
@@ -327,9 +327,9 @@ void func_8003FE54(void) {
     updateRemainingCallbackTasks();
     func_8006D700();
     func_8007AA50();
-    gCurrentInputTask->transitionTimer += 1;
-    if (gCurrentInputTask->transitionTimer == D_800D3C90[D_80121B5B]) {
-        setCurrentInputTaskCallback(func_8003FEF4, 0);
+    gCurrentGameTask->transitionTimer += 1;
+    if (gCurrentGameTask->transitionTimer == D_800D3C90[D_80121B5B]) {
+        setCurrentGameTaskCallback(func_8003FEF4, 0);
         requestMusicSequenceStop(0x40);
     }
 }
@@ -346,7 +346,7 @@ void func_8003FEF4(void) {
         gFramebufferSwapHold = 1;
         {
             void (*func_ptr)(void) = func_8003FF78;
-            setCurrentInputTaskCallback(func_ptr, 0);
+            setCurrentGameTaskCallback(func_ptr, 0);
         }
     }
 }
@@ -357,17 +357,17 @@ void func_8003FF78(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        setCurrentInputTaskCallback(&func_8003F554, 0);
+        setCurrentGameTaskCallback(&func_8003F554, 0);
     }
 }
 
 void func_8003FFD0(void) {
     D_80121B5A = 1;
-    setCurrentInputTaskCallback(&func_80040004, 0);
+    setCurrentGameTaskCallback(&func_80040004, 0);
 }
 
 void func_80040004(void) {
-    setCurrentInputTaskCallback(&func_8004002C, 0);
+    setCurrentGameTaskCallback(&func_8004002C, 0);
 }
 
 // func_8004002C best match: 98.186% (nonmatchings/func_8004002C-6061209858023118177/base.c)
@@ -484,7 +484,7 @@ void func_8004002C(void) {
     createCallbackTask(func_8000E7CC, 0, 0x64);
     createCallbackTask(func_8000EA44, 0, 0x63);
     createCallbackTask(func_800524B0, 0, 0x64);
-    setCurrentInputTaskCallback(func_80040360, 0);
+    setCurrentGameTaskCallback(func_80040360, 0);
     requestMusicSequenceBank(7);
 }
 #endif
@@ -493,7 +493,7 @@ void func_80040360(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
-        setCurrentInputTaskCallback(func_800403D8, 0);
+        setCurrentGameTaskCallback(func_800403D8, 0);
     }
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
@@ -510,9 +510,9 @@ void func_800403D8(void) {
     updateRemainingCallbackTasks();
     func_8006D700();
     if (D_8010B1F0 != 0) {
-        gCurrentInputTask->transitionTimer = 0;
+        gCurrentGameTask->transitionTimer = 0;
         requestMusicSequenceStop(0x20);
-        setCurrentInputTaskCallback(&func_80040450, 0);
+        setCurrentGameTaskCallback(&func_80040450, 0);
     }
     D_801124B8 = 0x80;
 }
@@ -531,8 +531,8 @@ void func_80040450(void) {
     f64 denominator = MAIN_MENU_TRANSITION_FRAMES;
     f32 aspect;
 
-    gCurrentInputTask->transitionTimer += 1;
-    timer = gCurrentInputTask->transitionTimer;
+    gCurrentGameTask->transitionTimer += 1;
+    timer = gCurrentGameTask->transitionTimer;
 
     x2 = timer << 2;
     x2 -= timer;
@@ -545,10 +545,10 @@ void func_80040450(void) {
     aspect = (f32) ((((f64) timer * -0.9523809523809523) / denominator) + 2.2857142857142856);
 
     configureViewport(0, 0xA0, x1, x2 & 0xFFFF, y1, 0x140, y2, aspect);
-    if (gCurrentInputTask->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
+    if (gCurrentGameTask->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
         requestMusicSequenceBank(0xF);
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        setCurrentInputTaskCallback(func_80040638, 0);
+        setCurrentGameTaskCallback(func_80040638, 0);
     }
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
@@ -566,11 +566,11 @@ void func_80040638(void) {
     updateRemainingCallbackTasks();
     func_8006D700();
     func_8007AA50();
-    gCurrentInputTask->transitionTimer = 0;
+    gCurrentGameTask->transitionTimer = 0;
     switch (D_80121B5A) {
         case 1:
             if (D_80122282 == 0x50) {
-                setCurrentInputTaskCallback(func_800407AC, 0);
+                setCurrentGameTaskCallback(func_800407AC, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
@@ -580,14 +580,14 @@ void func_80040638(void) {
         case 4:
         case 5:
             if (D_80122282 == 0x9C) {
-                setCurrentInputTaskCallback(func_800407AC, 0);
+                setCurrentGameTaskCallback(func_800407AC, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 6:
             if (D_80122282 == 0xB4) {
-                setCurrentInputTaskCallback(func_800407AC, 0);
+                setCurrentGameTaskCallback(func_800407AC, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
@@ -595,14 +595,14 @@ void func_80040638(void) {
         case 7:
         case 8:
             if (D_80122282 == 0x16) {
-                setCurrentInputTaskCallback(func_800407AC, 0);
+                setCurrentGameTaskCallback(func_800407AC, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 9:
             if (D_80122282 == 0x36) {
-                setCurrentInputTaskCallback(func_800407AC, 0);
+                setCurrentGameTaskCallback(func_800407AC, 0);
                 requestMusicSequenceStop(0x40);
             }
             break;
@@ -620,13 +620,13 @@ void func_800407AC(void) {
     updateRemainingCallbackTasks();
     func_8006D700();
     func_8007AA50();
-    gCurrentInputTask->transitionTimer += 0x10;
-    temp_v1 = gCurrentInputTask->transitionTimer;
+    gCurrentGameTask->transitionTimer += 0x10;
+    temp_v1 = gCurrentGameTask->transitionTimer;
     if (temp_v1 == 0x80) {
         createCallbackTask(func_8000DF28, 0, 0x64);
-        setCurrentInputTaskCallback(func_8004086C, 0);
+        setCurrentGameTaskCallback(func_8004086C, 0);
     }
-    temp_v1 = gCurrentInputTask->transitionTimer;
+    temp_v1 = gCurrentGameTask->transitionTimer;
     D_801124B8 = temp_v1;
 }
 
@@ -640,7 +640,7 @@ void func_8004086C(void) {
     func_8007AA50();
     D_801124B8 = 0x80;
     if (D_8010B1F0 != 0) {
-        setCurrentInputTaskCallback(&func_800408E4, 0);
+        setCurrentGameTaskCallback(&func_800408E4, 0);
     }
 }
 
@@ -656,7 +656,7 @@ void func_800408E4(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gFramebufferSwapHold = 1;
-        setCurrentInputTaskCallback(&func_8004097C, 0);
+        setCurrentGameTaskCallback(&func_8004097C, 0);
     }
 }
 
@@ -670,20 +670,20 @@ void func_8004097C(void) {
             if (D_80121B5A < 9) {
                 D_80121B5A += 1;
             }
-            setCurrentInputTaskCallback(func_80040004, 0);
+            setCurrentGameTaskCallback(func_80040004, 0);
         }
         if (D_8010B1F0 == 2) {
-            setCurrentInputTaskCallback(func_8004002C, 0);
+            setCurrentGameTaskCallback(func_8004002C, 0);
         }
         if (D_8010B1F0 == 3) {
-            setCurrentInputTaskCallback(func_80040A48, 0);
+            setCurrentGameTaskCallback(func_80040A48, 0);
         }
     }
 }
 
 void func_80040A48(void) {
     if (D_80121B5A != 9) {
-        setCurrentInputTaskCallback(func_80040C44, 0);
+        setCurrentGameTaskCallback(func_80040C44, 0);
         return;
     }
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
@@ -694,21 +694,21 @@ void func_80040A48(void) {
     resetAllViewports();
     initCallbackTaskScheduler(0);
     createCallbackTask(&func_8000E874, 0, 0x64);
-    setCurrentInputTaskCallback(func_80040B04, 0);
+    setCurrentGameTaskCallback(func_80040B04, 0);
 }
 
 void func_80040B04(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha <= 0) {
         gMenuFadeAlpha = 0;
-        setCurrentInputTaskCallback(&func_80040B54, 0);
+        setCurrentGameTaskCallback(&func_80040B54, 0);
     }
     updateCallbackTasks();
 }
 
 void func_80040B54(void) {
     if (D_8010B1F0 != 0) {
-        setCurrentInputTaskCallback(&func_80040B90, 0);
+        setCurrentGameTaskCallback(&func_80040B90, 0);
     }
     updateCallbackTasks();
 }
@@ -718,7 +718,7 @@ void func_80040B90(void) {
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentInputTaskCallback(&func_80040BF4, 0);
+        setCurrentGameTaskCallback(&func_80040BF4, 0);
     }
     updateCallbackTasks();
 }
@@ -728,12 +728,12 @@ void func_80040BF4(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        setCurrentInputTaskCallback(&func_80040C44, 0);
+        setCurrentGameTaskCallback(&func_80040C44, 0);
     }
 }
 
 void func_80040C44(void) {
     D_801235B4 = 0;
-    resumeInputTask(3);
-    removeInputTask(4);
+    resumeGameTask(3);
+    removeGameTask(4);
 }

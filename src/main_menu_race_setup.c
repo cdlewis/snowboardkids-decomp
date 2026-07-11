@@ -3,7 +3,7 @@
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "fixed_point_math.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "main_menu_overlay_effects.h"
 #include "race_camera.h"
 #include "main_menu_race_setup.h"
@@ -59,7 +59,7 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
 
-extern MainMenuRaceSetupState *gCurrentInputTask;
+extern MainMenuRaceSetupState *gCurrentGameTask;
 extern MainMenuRaceSetupObject *D_800EC9C4;
 extern Vec2i D_8010B1B0;
 
@@ -197,8 +197,8 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     }
 
     if (transition == 0) {
-        resumeInputTask(2);
-        removeInputTask(4);
+        resumeGameTask(2);
+        removeGameTask(4);
         return;
     }
 
@@ -220,7 +220,7 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     configureViewport(2, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
     func_80070E90(2);
     gMenuFadeAlpha = 0xFF;
-    gCurrentInputTask->fade = 5;
+    gCurrentGameTask->fade = 5;
     effectArg = transition - 1;
     createCallbackTaskWithUserId(func_80053DD8, 0, 0x64, effectArg);
     createCallbackTask(func_8005502C, 0, 0x64);
@@ -230,16 +230,16 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     func_80054044(2, D_800BB811[D_80121D90 * 4]);
     func_80054044(3, D_800BB812[D_80121D90 * 4]);
     func_80054044(4, D_800BB813[D_80121D90 * 4]);
-    setCurrentInputTaskCallback(func_8003E3AC, 0);
+    setCurrentGameTaskCallback(func_8003E3AC, 0);
 }
 #endif
 
 void func_8003E3AC(void) {
-    gCurrentInputTask->fade--;
-    if (gCurrentInputTask->fade == 0) {
+    gCurrentGameTask->fade--;
+    if (gCurrentGameTask->fade == 0) {
         requestMusicSequenceBank(4);
-        gCurrentInputTask->fade = 0x12C;
-        setCurrentInputTaskCallback(func_8003E45C, 0);
+        gCurrentGameTask->fade = 0x12C;
+        setCurrentGameTaskCallback(func_8003E45C, 0);
     }
     createCallbackTaskWithUserId(func_8005393C, 5, 0x64, 0);
     func_8006D780(0);
@@ -256,12 +256,12 @@ void func_8003E45C(void) {
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
     }
-    state = &gCurrentInputTask;
+    state = &gCurrentGameTask;
     currentState = *state;
     currentState->fade -= 1;
     if ((*state)->fade == 0) {
         requestMusicSequenceStop(0x7E);
-        setCurrentInputTaskCallback(func_8003E514, 0);
+        setCurrentGameTaskCallback(func_8003E514, 0);
     }
     createCallbackTaskWithUserId(func_8005393C, 5, 0x64, 0);
     func_8006D780(0);
@@ -272,9 +272,9 @@ void func_8003E45C(void) {
 void func_8003E514(void) {
     gMenuFadeAlpha += 4;
     if (gMenuFadeAlpha >= 0xFF) {
-        gCurrentInputTask->fade = 0xFF;
+        gCurrentGameTask->fade = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentInputTaskCallback(func_8003E5A8, 0);
+        setCurrentGameTaskCallback(func_8003E5A8, 0);
     }
     createCallbackTaskWithUserId(func_8005393C, 5, 0x64, 0);
     func_8006D780(0);
@@ -287,7 +287,7 @@ void func_8003E5A8(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        resumeInputTask(2);
-        removeInputTask(4);
+        resumeGameTask(2);
+        removeGameTask(4);
     }
 }

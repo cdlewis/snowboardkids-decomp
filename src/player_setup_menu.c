@@ -3,7 +3,7 @@
 #include "callback_task_scheduler.h"
 #include "sound_manager.h"
 #include "player_setup_menu.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "title_menu.h"
 #include "viewport_manager.h"
 
@@ -59,7 +59,7 @@ extern s8 D_80121D86;
 extern s8 D_80122392;
 extern s8 D_8012299E;
 extern s8 D_80122FAA;
-extern PlayerSetupMenuState *gCurrentInputTask;
+extern PlayerSetupMenuState *gCurrentGameTask;
 extern s32 D_801235B4;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
@@ -78,8 +78,8 @@ void initPlayerSetupMenu(void) {
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0900);
 
     gFramebufferSwapDelay = 0;
-    gCurrentInputTask->fade = 0;
-    gCurrentInputTask->timer = 0;
+    gCurrentGameTask->fade = 0;
+    gCurrentGameTask->timer = 0;
     D_800EC9C1 = 0;
     D_800EC9E5 = 1;
     D_800EC9E6 = 0;
@@ -89,7 +89,7 @@ void initPlayerSetupMenu(void) {
     D_801235B4 = 0;
     D_8010ADF0 = 0;
     gPlayerCount = 1;
-    gMenuFadeAlpha = gCurrentInputTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->fade;
 
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x21);
     loadCompressedRomAsset(&D_245A80, &D_24C8E0, 0x1F);
@@ -125,7 +125,7 @@ void initPlayerSetupMenu(void) {
     D_8010AE18 = 0;
     D_80122FAA = 0;
 
-    setCurrentInputTaskCallback(updatePlayerSetupPlayerCountMenu, 0);
+    setCurrentGameTaskCallback(updatePlayerSetupPlayerCountMenu, 0);
 }
 #endif
 
@@ -151,7 +151,7 @@ void updatePlayerSetupPlayerCountMenu(void) {
         D_8010AE00.unk1 = 0;
         one = 1;
     }
-    if (gCurrentInputTask->timer == one) {
+    if (gCurrentGameTask->timer == one) {
         temp_v1 = D_800EC9C1;
         if (temp_v1 == 0) {
             temp_a3 = gPlayerInputPressed;
@@ -199,8 +199,8 @@ block_25:
         }
     }
     if (D_8010AE00.state == 5) {
-        setCurrentInputTaskCallback(initPlayerSaveSetupMenu, 0);
-        gCurrentInputTask->fade = 0;
+        setCurrentGameTaskCallback(initPlayerSaveSetupMenu, 0);
+        gCurrentGameTask->fade = 0;
         D_800EC9C1 = 0;
     }
     updateCallbackTasks();
@@ -294,7 +294,7 @@ void initPlayerSaveSetupMenu(void) {
     D_8010AE3E = D_800B31C4;
     D_8010AE46 = D_800B31C6;
 
-    setCurrentInputTaskCallback(updatePlayerSaveSetupMenu, 0);
+    setCurrentGameTaskCallback(updatePlayerSaveSetupMenu, 0);
     updateCallbackTasks();
 }
 #endif
@@ -643,7 +643,7 @@ void updatePlayerSaveSetupMenu(void) {
             PlayerSetupSavePlayer03798 *save;
             PlayerSetupSavePlayer03798 *end;
 
-            setCurrentInputTaskCallback(updatePlayerSetupRumblePrompt, 0);
+            setCurrentGameTaskCallback(updatePlayerSetupRumblePrompt, 0);
             createCallbackTask(initControllerPakRumbleCheckPrompt, 0, 0x64);
             gControllerPakRumbleCheckPromptTransition.state = 6;
             gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
@@ -818,7 +818,7 @@ void updatePlayerSetupRumblePrompt(void) {
             break;
     }
     if (state == 5) {
-        setCurrentInputTaskCallback(initCharacterSelectMenu, 0);
+        setCurrentGameTaskCallback(initCharacterSelectMenu, 0);
     }
     updateCallbackTasks();
 }

@@ -1,26 +1,26 @@
 #include "common.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "system_boot.h"
 
-#define INPUT_TASK_CALLBACK_COUNT 3
-#define INPUT_TASK_COUNT 8
+#define GAME_TASK_CALLBACK_COUNT 3
+#define GAME_TASK_COUNT 8
 
-typedef struct InputTask {
-    struct InputTask *prev;
-    struct InputTask *next;
-    InputTaskCallback callbacks[INPUT_TASK_CALLBACK_COUNT];
+typedef struct GameTask {
+    struct GameTask *prev;
+    struct GameTask *next;
+    GameTaskCallback callbacks[GAME_TASK_CALLBACK_COUNT];
     u8 priority;
     u8 id;
     u16 state;
     u8 pad18[0x10];
-} InputTask;
+} GameTask;
 
-typedef struct InputTaskScheduler {
+typedef struct GameTaskScheduler {
     u8 pad0[4];
-    InputTask *activeTask;
+    GameTask *activeTask;
     u8 pad8[0xC];
     u8 unk14;
-} InputTaskScheduler;
+} GameTaskScheduler;
 
 typedef struct FramebufferState {
     u8 status;
@@ -34,42 +34,42 @@ typedef struct ControllerInputState {
     u8 pad4[2];
 } ControllerInputState;
 
-extern s8 D_800DEED8;
+extern s8 gAnalogStickResponseCurve;
 extern u8 gFramebufferSwapDelayTimer;
 extern u8 gFramebufferSwapDelay;
-extern ControllerInputState D_800E4C18;
+extern ControllerInputState gControllerInputState;
 extern s16 gFrameCounter;
-extern InputTask *gCurrentInputTask;
-extern InputTask D_801235C0[INPUT_TASK_COUNT];
-extern u8 D_80123700;
-extern InputTaskScheduler D_80123708;
-extern InputTask *D_8012370C;
-extern InputTask *D_80123730[];
+extern GameTask *gCurrentGameTask;
+extern GameTask gGameTaskPool[GAME_TASK_COUNT];
+extern u8 gGameTaskCount;
+extern GameTaskScheduler gGameTaskScheduler;
+extern GameTask *gActiveGameTaskListHead;
+extern GameTask *gFreeGameTaskStack[];
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern u8 D_80123752;
+extern u8 gNextFramebufferRenderTaskIndex;
 extern s32 gPlayerInputHeld;
-extern s32 D_8012375C;
-extern s32 D_80123760;
-extern s32 D_80123764;
-extern s32 D_80123768;
-extern s32 D_8012376C;
-extern s32 D_80123770;
-extern s32 D_80123774;
+extern s32 gPlayer2InputHeld;
+extern s32 gPlayer3InputHeld;
+extern s32 gPlayer4InputHeld;
+extern s32 gPlayerInputPrevious;
+extern s32 gPlayer2InputPrevious;
+extern s32 gPlayer3InputPrevious;
+extern s32 gPlayer4InputPrevious;
 extern s32 gPlayerInputPressed;
-extern s32 D_8012377C;
-extern s32 D_80123780;
-extern s32 D_80123784;
-extern s8 D_80123788;
-extern s8 D_80123789;
-extern s8 D_8012378A;
-extern s8 D_8012378B;
-extern s8 D_8012378C;
-extern s8 D_8012378D;
-extern s8 D_8012378E;
-extern s8 D_8012378F;
-extern s32 D_80123790;
-extern u8 D_801237A0;
+extern s32 gPlayer2InputPressed;
+extern s32 gPlayer3InputPressed;
+extern s32 gPlayer4InputPressed;
+extern s8 gPlayerStickX;
+extern s8 gPlayer2StickX;
+extern s8 gPlayer3StickX;
+extern s8 gPlayer4StickX;
+extern s8 gPlayerStickY;
+extern s8 gPlayer2StickY;
+extern s8 gPlayer3StickY;
+extern s8 gPlayer4StickY;
+extern s32 gPlayerInputRepeat;
+extern u8 gPlayerInputRepeatTimer;
 extern FramebufferState D_8012496E[];
 
 #ifdef NON_MATCHING
@@ -78,53 +78,53 @@ void func_8004835C();
 void func_8004835C(void *, void *);
 #endif
 void clearPendingPositionalSoundRequests(void);
-InputTask *func_80099384(s32);
-s32 func_80099288(void);
+GameTask *allocateGameTask(s32);
+s32 updateFramebufferRenderScheduler(void);
 void playPendingPositionalSoundRequests(void);
 
-void initInputTaskScheduler(void) {
-    InputTask **freeTask;
-    InputTask *task;
+void initGameTaskScheduler(void) {
+    GameTask **freeTask;
+    GameTask *task;
     s32 zero;
 
-    D_80123708.activeTask = NULL;
-    D_80123708.unk14 = 0;
-    freeTask = D_80123730; task = D_801235C0; do { *freeTask = task; task++; freeTask++; } while (task < &D_801235C0[INPUT_TASK_COUNT]);
-    D_80123700 = 0;
+    gGameTaskScheduler.activeTask = NULL;
+    gGameTaskScheduler.unk14 = 0;
+    freeTask = gFreeGameTaskStack; task = gGameTaskPool; do { *freeTask = task; task++; freeTask++; } while (task < &gGameTaskPool[GAME_TASK_COUNT]);
+    gGameTaskCount = 0;
     gFrameCounter = 0;
     gPendingFramebufferSwapCount = 2;
     gFramebufferSwapHold = 0;
     zero = 0;
-    D_80123752 = zero;
+    gNextFramebufferRenderTaskIndex = zero;
     gPlayerInputHeld = zero;
-    D_80123768 = zero;
+    gPlayerInputPrevious = zero;
     gPlayerInputPressed = 0;
-    D_80123788 = zero;
-    D_8012378C = 0;
-    D_8012375C = 0;
-    D_8012376C = zero;
-    D_8012377C = zero;
-    D_80123789 = 0;
-    D_8012378D = zero;
-    D_80123760 = zero;
-    D_80123770 = 0;
-    D_80123780 = zero;
-    D_8012378A = zero;
-    D_8012378E = 0;
-    D_80123764 = zero;
-    D_80123774 = 0;
-    D_80123784 = 0;
-    D_8012378B = zero;
-    D_8012378F = zero;
-    func_8004835C(&D_801235C0[INPUT_TASK_COUNT], &D_80123708);
+    gPlayerStickX = zero;
+    gPlayerStickY = 0;
+    gPlayer2InputHeld = 0;
+    gPlayer2InputPrevious = zero;
+    gPlayer2InputPressed = zero;
+    gPlayer2StickX = 0;
+    gPlayer2StickY = zero;
+    gPlayer3InputHeld = zero;
+    gPlayer3InputPrevious = 0;
+    gPlayer3InputPressed = zero;
+    gPlayer3StickX = zero;
+    gPlayer3StickY = 0;
+    gPlayer4InputHeld = zero;
+    gPlayer4InputPrevious = 0;
+    gPlayer4InputPressed = 0;
+    gPlayer4StickX = zero;
+    gPlayer4StickY = zero;
+    func_8004835C(&gGameTaskPool[GAME_TASK_COUNT], &gGameTaskScheduler);
     resetRenderCallbackQueues();
 }
 
-// func_80098EAC best match: 92.403% (nonmatchings/func_80098EAC-7273315160691878794/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80098EAC.s")
+// updateGameTaskScheduler best match: 92.403% (nonmatchings/updateGameTaskScheduler-7273315160691878794/base_11.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/game_task_scheduler/updateGameTaskScheduler.s")
 
 #ifdef NON_MATCHING
-void func_80098EAC(void) {
+void updateGameTaskScheduler(void) {
     s32 *previousInput;
     s32 *input;
     ControllerInputState *controller;
@@ -133,9 +133,9 @@ void func_80098EAC(void) {
     s32 *newInput;
     u8 *repeatTimer;
     s32 *repeatInput;
-    InputTask *task;
-    InputTask *nextTask;
-    InputTaskCallback callback;
+    GameTask *task;
+    GameTask *nextTask;
+    GameTaskCallback callback;
     s32 oldInput;
     s32 currentInput;
     s32 stickXTooHigh;
@@ -148,14 +148,14 @@ void func_80098EAC(void) {
     resetRenderCallbackQueues();
     clearPendingPositionalSoundRequests();
 
-    previousInput = &D_80123768;
+    previousInput = &gPlayerInputPrevious;
     input = &gPlayerInputHeld;
-    controller = &D_800E4C18;
-    stickXOut = &D_80123788;
-    stickYOut = &D_8012378C;
+    controller = &gControllerInputState;
+    stickXOut = &gPlayerStickX;
+    stickYOut = &gPlayerStickY;
     newInput = &gPlayerInputPressed;
-    repeatTimer = &D_801237A0;
-    repeatInput = &D_80123790;
+    repeatTimer = &gPlayerInputRepeatTimer;
+    repeatInput = &gPlayerInputRepeat;
 
     do {
         stickXTooHigh = controller->stickX >= 0x2E;
@@ -185,15 +185,15 @@ void func_80098EAC(void) {
         stickX = controller->stickX;
         controller++;
         if (stickX >= 0) {
-            *stickXOut = *(&D_800DEED8 + stickX);
+            *stickXOut = *(&gAnalogStickResponseCurve + stickX);
         } else {
-            *stickXOut = -*(&D_800DEED8 - stickX);
+            *stickXOut = -*(&gAnalogStickResponseCurve - stickX);
         }
 
         if (stickY >= 0) {
-            *stickYOut = *(&D_800DEED8 + stickY);
+            *stickYOut = *(&gAnalogStickResponseCurve + stickY);
         } else {
-            *stickYOut = -*(&D_800DEED8 - stickY);
+            *stickYOut = -*(&gAnalogStickResponseCurve - stickY);
         }
 
         stickX = *stickXOut;
@@ -246,69 +246,69 @@ void func_80098EAC(void) {
         input++;
         newInput++;
         repeatTimer++;
-    } while (repeatInput != (s32 *)&D_801237A0);
+    } while (repeatInput != (s32 *)&gPlayerInputRepeatTimer);
 
-    task = D_8012370C;
-    gCurrentInputTask = task;
+    task = gActiveGameTaskListHead;
+    gCurrentGameTask = task;
     if (task != NULL) {
         do {
             if (task->state == 2) {
                 task->state = 0;
-                task = gCurrentInputTask;
+                task = gCurrentGameTask;
             }
             nextTask = task->next;
-            gCurrentInputTask = nextTask;
+            gCurrentGameTask = nextTask;
             task = nextTask;
         } while (nextTask != NULL);
-        gCurrentInputTask = D_8012370C;
+        gCurrentGameTask = gActiveGameTaskListHead;
     }
 
-    task = gCurrentInputTask;
+    task = gCurrentGameTask;
     if (task != NULL) {
         do {
             if (task->state == 0) {
                 callback = task->callbacks[0];
                 if (callback != NULL) {
                     callback();
-                    task = gCurrentInputTask;
+                    task = gCurrentGameTask;
                 }
                 callback = task->callbacks[1];
                 if (callback != NULL) {
                     callback();
-                    task = gCurrentInputTask;
+                    task = gCurrentGameTask;
                 }
                 callback = task->callbacks[2];
                 if (callback != NULL) {
                     callback();
-                    task = gCurrentInputTask;
+                    task = gCurrentGameTask;
                 }
             }
             nextTask = task->next;
-            gCurrentInputTask = nextTask;
+            gCurrentGameTask = nextTask;
             task = nextTask;
         } while (nextTask != NULL);
     }
 
-    func_80099288();
+    updateFramebufferRenderScheduler();
     playPendingPositionalSoundRequests();
 }
 #endif
 
-s32 func_80099288(void) {
+s32 updateFramebufferRenderScheduler(void) {
     u8 frameIndex;
 
     if (gFramebufferSwapDelayTimer == 0) {
         if (gFramebufferSwapHold == 0) {
-            frameIndex = D_80123752;
+            frameIndex = gNextFramebufferRenderTaskIndex;
             if (D_8012496E[frameIndex].status == 0) {
                 if ((s32) gPendingFramebufferSwapCount > 0) {
                     submitFramebufferRenderTask(frameIndex);
                     gFramebufferSwapDelayTimer = gFramebufferSwapDelay;
                     gPendingFramebufferSwapCount--;
-                    if (D_80123752 != 0) {
-                        D_80123752 = 0;
+                    if (gNextFramebufferRenderTaskIndex != 0) {
+                        gNextFramebufferRenderTaskIndex = 0;
                     } else {
-                        D_80123752 = 1;
+                        gNextFramebufferRenderTaskIndex = 1;
                     }
                     goto return_one;
                 }
@@ -324,34 +324,34 @@ return_one:
     return 1;
 }
 
-// func_80099384 best match: 95.727% (nonmatchings/func_80099384-180949888360117632/base_16.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80099384.s")
+// allocateGameTask best match: 95.727% (nonmatchings/allocateGameTask-180949888360117632/base_16.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/game_task_scheduler/allocateGameTask.s")
 
 #ifdef NON_MATCHING
-InputTask *func_80099384(s32 priority) {
-    InputTask *task;
-    InputTask *next;
-    InputTask *prev;
-    InputTaskScheduler *scheduler;
+GameTask *allocateGameTask(s32 priority) {
+    GameTask *task;
+    GameTask *next;
+    GameTask *prev;
+    GameTaskScheduler *scheduler;
     u8 *clear;
     s32 i;
 
-    if (D_80123700 >= INPUT_TASK_COUNT) {
+    if (gGameTaskCount >= GAME_TASK_COUNT) {
         return NULL;
     }
 
-    task = D_80123730[D_80123700];
+    task = gFreeGameTaskStack[gGameTaskCount];
     i = 0;
     clear = (u8 *)task;
     do {
         clear[i] = 0;
         i++;
-    } while (i != sizeof(InputTask));
+    } while (i != sizeof(GameTask));
 
-    D_80123700++;
-    prev = (InputTask *)&D_80123708;
-    scheduler = &D_80123708;
-    if (D_80123708.activeTask != NULL) {
+    gGameTaskCount++;
+    prev = (GameTask *)&gGameTaskScheduler;
+    scheduler = &gGameTaskScheduler;
+    if (gGameTaskScheduler.activeTask != NULL) {
         next = scheduler->activeTask;
         do {
             if (next->priority < priority) {
@@ -373,12 +373,12 @@ InputTask *func_80099384(s32 priority) {
 }
 #endif
 
-void unlinkInputTask(s32 taskId) {
-    InputTask *task;
-    InputTask *next;
+void unlinkGameTask(s32 taskId) {
+    GameTask *task;
+    GameTask *next;
     s32 freeTaskCount;
 
-    task = D_8012370C;
+    task = gActiveGameTaskListHead;
     while (task != NULL) {
         if (taskId == task->id) {
             task->prev->next = task->next;
@@ -386,18 +386,18 @@ void unlinkInputTask(s32 taskId) {
             if (next != NULL) {
                 next->prev = task->prev;
             }
-            freeTaskCount = (D_80123700 & 0xFFu) - 1;
-            D_80123700 = freeTaskCount;
-            D_80123730[(u8) (((((((((((freeTaskCount & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu)] = task;
+            freeTaskCount = (gGameTaskCount & 0xFFu) - 1;
+            gGameTaskCount = freeTaskCount;
+            gFreeGameTaskStack[(u8) (((((((((((freeTaskCount & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu)] = task;
         }
         task = task->next;
     }
 }
 
-void createInputTask(s32 taskId, InputTaskCallback callback, s32 priority) {
-    InputTask *task;
+void createGameTask(s32 taskId, GameTaskCallback callback, s32 priority) {
+    GameTask *task;
 
-    task = func_80099384(priority);
+    task = allocateGameTask(priority);
     if (task != NULL) {
         task->id = (u8) taskId;
         task->callbacks[0] = callback;
@@ -406,40 +406,40 @@ void createInputTask(s32 taskId, InputTaskCallback callback, s32 priority) {
     }
 }
 
-void removeInputTask(s32 taskId) {
-    unlinkInputTask(taskId);
+void removeGameTask(s32 taskId) {
+    unlinkGameTask(taskId);
 }
 
-void setCurrentInputTaskCallback(InputTaskCallback callback, s32 callbackIndex) {
+void setCurrentGameTaskCallback(GameTaskCallback callback, s32 callbackIndex) {
     switch (callbackIndex) {
         case 0:
-            gCurrentInputTask->callbacks[0] = callback;
+            gCurrentGameTask->callbacks[0] = callback;
             return;
         case 1:
-            gCurrentInputTask->callbacks[1] = callback;
+            gCurrentGameTask->callbacks[1] = callback;
             return;
         case 2:
-            gCurrentInputTask->callbacks[2] = callback;
+            gCurrentGameTask->callbacks[2] = callback;
             return;
     }
 }
 
-void clearCurrentInputTaskCallback(s32 callbackIndex) {
+void clearCurrentGameTaskCallback(s32 callbackIndex) {
     switch (callbackIndex) {
         case 0:
-            gCurrentInputTask->callbacks[0] = NULL;
+            gCurrentGameTask->callbacks[0] = NULL;
             return;
         case 1:
-            gCurrentInputTask->callbacks[1] = NULL;
+            gCurrentGameTask->callbacks[1] = NULL;
             return;
         case 2:
-            gCurrentInputTask->callbacks[2] = NULL;
+            gCurrentGameTask->callbacks[2] = NULL;
             return;
     }
 }
 
-void suspendInputTask(s32 taskId) {
-    InputTask *task = D_8012370C;
+void suspendGameTask(s32 taskId) {
+    GameTask *task = gActiveGameTaskListHead;
 
     while (task != NULL) {
         if (taskId == task->id) {
@@ -450,8 +450,8 @@ void suspendInputTask(s32 taskId) {
     }
 }
 
-void resumeInputTask(s32 taskId) {
-    InputTask *task = D_8012370C;
+void resumeGameTask(s32 taskId) {
+    GameTask *task = gActiveGameTaskListHead;
 
     while (task != NULL) {
         if (taskId == task->id) {

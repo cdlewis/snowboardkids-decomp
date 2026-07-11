@@ -4,7 +4,7 @@
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "system_boot.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "race_camera.h"
 #include "main_menu_debug_ui.h"
 #include "main_menu_effects.h"
@@ -75,7 +75,7 @@ extern Vec3i D_8010B1B0;
 extern s16 D_80112130[];
 extern MainMenuRaceSetupObject D_801121E0;
 extern MainMenuRaceSetupObject *D_800EC9C4;
-extern RaceToMainMenuTransitionState *gCurrentInputTask;
+extern RaceToMainMenuTransitionState *gCurrentGameTask;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
@@ -122,22 +122,22 @@ void func_8000D340(void) {
     createCallbackTask(func_8003D908, 0, 0x64);
     createCallbackTask(func_8003DD64, 0, 0x64);
     createCallbackTask(func_8003DB1C, 0, 0x64);
-    gCurrentInputTask->fade = 0xFF;
-    state = gCurrentInputTask;
+    gCurrentGameTask->fade = 0xFF;
+    state = gCurrentGameTask;
     gMenuFadeAlpha = state->fade;
-    gCurrentInputTask->timer = 5;
-    setCurrentInputTaskCallback(func_8000D590, 0);
+    gCurrentGameTask->timer = 5;
+    setCurrentGameTaskCallback(func_8000D590, 0);
 }
 #endif
 
 void func_8000D590(void) {
-    if (gCurrentInputTask->timer != 0) {
-        gCurrentInputTask->timer--;
+    if (gCurrentGameTask->timer != 0) {
+        gCurrentGameTask->timer--;
     } else {
-        if (gCurrentInputTask->fade != 0) {
-            gCurrentInputTask->fade = stepMenuFadeAlpha(gCurrentInputTask->fade, 0x10, 0);
+        if (gCurrentGameTask->fade != 0) {
+            gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 0);
         } else {
-            setCurrentInputTaskCallback(func_8000D690, 0);
+            setCurrentGameTaskCallback(func_8000D690, 0);
             createCallbackTask((CallbackTaskCallback) func_8003BBBC, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80035184, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_800362E8, 0, 0x64);
@@ -152,10 +152,10 @@ void func_8000D590(void) {
 
 void func_8000D690(void) {
     if (D_8010B1A2 == 0x43) {
-        gCurrentInputTask->timer++;
-        if (gCurrentInputTask->timer == 0x12C) {
-            gCurrentInputTask->timer = 0;
-            setCurrentInputTaskCallback(func_8000D724, 0);
+        gCurrentGameTask->timer++;
+        if (gCurrentGameTask->timer == 0x12C) {
+            gCurrentGameTask->timer = 0;
+            setCurrentGameTaskCallback(func_8000D724, 0);
         }
     }
     updateCallbackTasks();
@@ -164,9 +164,9 @@ void func_8000D690(void) {
 }
 
 void func_8000D724(void) {
-    if (gCurrentInputTask->fade != 0xFF) {
-        gCurrentInputTask->fade = stepMenuFadeAlpha(gCurrentInputTask->fade, 0x10, 1);
-        if (gCurrentInputTask->fade == 0xFF) {
+    if (gCurrentGameTask->fade != 0xFF) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 1);
+        if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();
@@ -176,8 +176,8 @@ void func_8000D724(void) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
-            resumeInputTask(2);
-            removeInputTask(4);
+            resumeGameTask(2);
+            removeGameTask(4);
         }
     }
 }

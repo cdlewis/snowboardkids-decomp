@@ -27,7 +27,7 @@ typedef struct {
 extern void func_800483FC(void *, void *, s32);
 extern s32 D_80124868;
 extern s32 D_80124838;
-extern CharacterSelectFlowState *gCurrentInputTask;
+extern CharacterSelectFlowState *gCurrentGameTask;
 extern ControllerPakPromptTransition gControllerPakContinuePromptTransition;
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern ControllerPakMenuState gControllerPakMenuState;
@@ -120,7 +120,7 @@ void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     temp_v0 = state;
     switch (temp_v0) {
         case 1:
-            temp_a2->selectedOption = gCurrentInputTask->timer;
+            temp_a2->selectedOption = gCurrentGameTask->timer;
             if (temp_a2->timer < 0x10) {
                 temp_a2->scale -= 9;
             } else {

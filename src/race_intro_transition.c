@@ -3,7 +3,7 @@
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_scene_loader.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "main_menu_overlay_effects.h"
 #include "race_camera.h"
 #include "race_player_state.h"
@@ -44,7 +44,7 @@ typedef struct {
     /* 0xAD */ char padAD[3];
 } RaceIntroCamera;
 
-extern RaceIntroTransitionState *gCurrentInputTask;
+extern RaceIntroTransitionState *gCurrentGameTask;
 extern RaceIntroCamera D_801121E0[];
 extern RaceIntroPlayer D_80121D80[];
 extern RaceIntroCourseEntry D_800BB834[];
@@ -192,22 +192,22 @@ void func_8003E600(void) {
         gPlayerCount = 4;
     }
     initRaceCourseEffects();
-    setCurrentInputTaskCallback(func_8003EA78, 0);
+    setCurrentGameTaskCallback(func_8003EA78, 0);
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
-    gCurrentInputTask->fadeDelay = 0x384;
-    gCurrentInputTask->fadeStep = 0;
-    gCurrentInputTask->courseSegment = 0;
-    gCurrentInputTask->startDelay = 0x14;
+    gCurrentGameTask->fadeDelay = 0x384;
+    gCurrentGameTask->fadeStep = 0;
+    gCurrentGameTask->courseSegment = 0;
+    gCurrentGameTask->startDelay = 0x14;
 }
 #endif
 
 void func_8003EA78(void) {
-    gCurrentInputTask->startDelay--;
-    if (gCurrentInputTask->startDelay == 0) {
+    gCurrentGameTask->startDelay--;
+    if (gCurrentGameTask->startDelay == 0) {
         requestCourseMusicSequence();
         createCallbackTask(func_800540EC, 0, 0x64);
-        setCurrentInputTaskCallback(func_8003EAF0, 0);
+        setCurrentGameTaskCallback(func_8003EAF0, 0);
     }
 }
 
@@ -215,7 +215,7 @@ void func_8003EAF0(void) {
     RaceIntroTransitionState *state;
     s32 fadeStep;
 
-    if (gCurrentInputTask->fadeStep == 0) {
+    if (gCurrentGameTask->fadeStep == 0) {
         gMenuFadeAlpha -= 0x10;
         if (gMenuFadeAlpha < 0) {
             gMenuFadeAlpha = 0;
@@ -227,24 +227,24 @@ void func_8003EAF0(void) {
     updateRemainingCallbackTasks();
     func_8006D700();
     func_8007AA50();
-    state = gCurrentInputTask;
+    state = gCurrentGameTask;
     if (state->fadeDelay != 0) {
         state->fadeDelay--;
-        state = gCurrentInputTask;
+        state = gCurrentGameTask;
         fadeStep = state->fadeStep;
     } else {
         fadeStep = state->fadeStep;
         if (fadeStep == 0) {
             state->fadeStep = 4;
             requestMusicSequenceStop(0x78);
-            state = gCurrentInputTask;
+            state = gCurrentGameTask;
             fadeStep = state->fadeStep;
         }
     }
     if ((gPlayerInputPressed & 0x1000) && (fadeStep == 0)) {
         state->fadeStep = 0x10;
         requestMusicSequenceStop(0x1E);
-        state = gCurrentInputTask;
+        state = gCurrentGameTask;
         fadeStep = state->fadeStep;
     }
     if (fadeStep != 0) {
@@ -253,7 +253,7 @@ void func_8003EAF0(void) {
         if (!(gMenuFadeAlpha < 0xFF)) {
             gMenuFadeAlpha = 0xFF;
             gFramebufferSwapHold = 1;
-            setCurrentInputTaskCallback(func_8003EC6C, 0);
+            setCurrentGameTaskCallback(func_8003EC6C, 0);
         }
     }
 }
@@ -270,7 +270,7 @@ void func_8003EC6C(void) {
         gFramebufferSwapDelay = 0;
         stopSoundEffects();
         D_801235B4 = 0;
-        resumeInputTask(3);
-        removeInputTask(4);
+        resumeGameTask(3);
+        removeGameTask(4);
     }
 }
