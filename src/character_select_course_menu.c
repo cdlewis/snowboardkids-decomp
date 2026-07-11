@@ -3,7 +3,7 @@
 #include "effect_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
-#include "character_select_ui.h"
+#include "character_select_course_ui.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
 #include "player_count_select_menu.h"
@@ -98,7 +98,7 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
 
     D_801235B8->fade = 0;
     func_800720E4(2);
-    func_80071408((void (*)(EffectTask *)) func_8001D254, 0, 0x63);
+    func_80071408((void (*)(EffectTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
     D_801235B8->timer = 0;
     D_800EC9C1 = 0;
     D_8010ADF8 = 0;
@@ -207,7 +207,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
 
     if (D_800EC9C2 == 1) {
         loadCompressedRomAsset(D_5CCD40, D_5D4280, 0x25);
-        func_80071408((void (*)(EffectTask *)) func_8001D254, 0, 0x63);
+        func_80071408((void (*)(EffectTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
         D_801235B8->fade = 0;
     } else {
         D_801235B8->fade = 0xFF;
@@ -322,7 +322,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
         D_801235B8->fade = 0xFF;
     } else {
         D_801235B8->fade = 0;
-        func_80071408(func_8001C83C, 0, 0x63);
+        func_80071408(initCharacterSelectUnlockedCourseList, 0, 0x63);
     }
 
     D_801235B8->timer = 0;
@@ -419,7 +419,7 @@ void updateCharacterSelectCourseMenu(void) {
     if (D_801235B8->fade != 0) {
         D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 0);
         if (D_801235B8->fade == 0) {
-            func_80071408(&func_8001C83C, 0, 0x63);
+            func_80071408(&initCharacterSelectUnlockedCourseList, 0, 0x63);
         }
     } else {
         if (D_80121D88 == 0) {
@@ -548,7 +548,7 @@ void updateCharacterSelectCourseSubmenu(void) {
                 func_80072138(1, 0x32);
                 D_800EC9D0 = 1;
                 gCharacterSelectCourseCursorState.fields.otherState = 3;
-                func_80071408(func_800227A0, 0, 0x61);
+                func_80071408(initCharacterSelectCourseConfirmCursor, 0, 0x61);
             }
             break;
         case 3:
