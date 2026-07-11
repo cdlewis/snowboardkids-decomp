@@ -122,7 +122,7 @@ extern void func_80054044(s32, s32);
 extern void func_8005502C(EffectTask *);
 extern void func_800553E0(EffectTask *);
 extern void func_80070EC0(s32);
-extern void func_80071408(void (*)(EffectTask *), s32, s32);
+extern void createEffectTask(void (*)(EffectTask *), s32, s32);
 extern u8 D_13F3B0[];
 extern u8 D_145380[];
 extern u8 D_1467B0[];
@@ -223,7 +223,7 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     D_801235B8->fade = 5;
     effectArg = transition - 1;
     func_80071664(func_80053DD8, 0, 0x64, effectArg);
-    func_80071408(func_8005502C, 0, 0x64);
+    createEffectTask(func_8005502C, 0, 0x64);
     func_80071664(func_800553E0, 0, 0x64, effectArg);
     func_80071664(func_80053EBC, 0, 0x64, D_80121D90);
     func_80054044(1, D_800BB810[D_80121D90 * 4]);
@@ -245,7 +245,7 @@ void func_8003E3AC(void) {
     func_8006D780(0);
     func_8006D780(1);
     func_8006D780(2);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_8003E45C(void) {
@@ -266,7 +266,7 @@ void func_8003E45C(void) {
     func_80071664(func_8005393C, 5, 0x64, 0);
     func_8006D780(0);
     func_8006D780(1);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_8003E514(void) {
@@ -279,7 +279,7 @@ void func_8003E514(void) {
     func_80071664(func_8005393C, 5, 0x64, 0);
     func_8006D780(0);
     func_8006D780(1);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_8003E5A8(void) {

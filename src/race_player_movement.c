@@ -326,7 +326,7 @@ void func_80087E14(RaceInputPlayer *player) {
             (player->unk502 == D_800B9540[D_80121B50].unk0) && !(flags & 0x1000)) {
         player->stateFlags = flags | 0x40;
         if ((D_80121B58 == 0) && (D_8011228C[player->playerIndexU16].active != 0)) {
-            task = func_80071408(func_8006A85C, 6, 0x64);
+            task = createEffectTask(func_8006A85C, 6, 0x64);
             if (task != NULL) {
                 task->unk10 = player->playerIndexU16;
             }

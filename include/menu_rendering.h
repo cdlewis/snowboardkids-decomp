@@ -38,7 +38,7 @@ void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode
 void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);
 void func_80013D0C(s16 x, s16 y, u8 *text, u16 palette, u16 scale);
 void func_80013DFC(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b);
-s32 func_80013F88(s32 value, s16 step, u8 increase);
+s32 stepMenuFadeAlpha(s32 value, s16 step, u8 increase);
 void func_80013FEC(s16 x, s16 y, s32 texture, u16 imageIndex0, u16 imageIndex1, u8 alpha);
 #elif defined(MENU_RENDERING_BROAD_PROTOTYPES)
 void func_8000EA80(s16 x, s16 y, s32 texture, s32 tileIndex, s32 scaleX, s32 scaleY, s32 startS, s32 startT,
@@ -76,9 +76,9 @@ void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);
 void func_80013D0C(s16 x, s16 y, u8 *text, s32 palette, s32 scale);
 void func_80013DFC(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b);
 #ifdef MENU_RENDERING_S16_STEP_PROTOTYPE
-s32 func_80013F88(s16 value, s32 step, s32 increase);
+s32 stepMenuFadeAlpha(s16 value, s32 step, s32 increase);
 #else
-s32 func_80013F88(s32 value, s32 step, s32 increase);
+s32 stepMenuFadeAlpha(s32 value, s32 step, s32 increase);
 #endif
 void func_80013FEC(s16 x, s16 y, s32 texture, s32 imageIndex0, s32 imageIndex1, s32 alpha);
 #else
@@ -113,9 +113,9 @@ void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);
 void func_80013D0C(s16 x, s16 y, u8 *text, u16 palette, u16 scale);
 void func_80013DFC(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b);
 #ifdef MENU_RENDERING_S16_STEP_PROTOTYPE
-s32 func_80013F88(s16 value, s32 step, s32 increase);
+s32 stepMenuFadeAlpha(s16 value, s32 step, s32 increase);
 #else
-s32 func_80013F88(s32 value, s32 step, s32 increase);
+s32 stepMenuFadeAlpha(s32 value, s32 step, s32 increase);
 #endif
 void func_80013FEC(s16 x, s16 y, s32 texture, u16 imageIndex0, u16 imageIndex1, u8 alpha);
 #endif

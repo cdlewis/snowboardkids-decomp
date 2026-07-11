@@ -67,7 +67,7 @@ void func_80005540(void) {
     func_8009956C(func_80005788, 0);
     D_8010AE70.state = 0;
     D_8010AE70.nextState = 0;
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_800055EC(void) {
@@ -85,7 +85,7 @@ void func_800055EC(void) {
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
     loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
     func_80070EC0(0);
-    func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
+    createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
     D_800EC9C1 = 0;
     D_80121D88 = 0;
     D_8010ADDC = 0;
@@ -96,7 +96,7 @@ void func_800055EC(void) {
     func_8009956C(func_80005788, 0);
     D_8010AE70.state = 0;
     D_8010AE70.nextState = 0;
-    func_8007105C();
+    updateEffectTasks();
 }
 
 // func_80005788 best match: 98.535% (nonmatchings/func_80005788-7273315160691878794/base_15.c)
@@ -115,9 +115,9 @@ void func_80005788(void) {
     u8 waitTimer;
 
     if (D_801235B8->fade != 0) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 0);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 0);
         if (D_801235B8->fade == 0) {
-            func_80071408(func_8001952C, 0, 0x63);
+            createEffectTask(func_8001952C, 0, 0x63);
         }
     } else {
         if ((D_8010AE70.confirmState == 0x100) && (D_80121D88 == 0)) {
@@ -215,7 +215,7 @@ void func_80005788(void) {
         }
     }
     D_801235B4 = 0;
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -229,16 +229,16 @@ void func_80005B14(void) {
     } else {
         func_8009956C(func_80005B80, 0);
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_80005B80(void) {
     if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            func_8007105C();
+            updateEffectTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

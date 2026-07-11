@@ -190,7 +190,7 @@ void func_80014AA4(MenuIntroActor *arg0) {
         case 2:
             actor->y -= 0x10;
             if (actor->y == -0x5C) {
-                actor->child = func_80071408(func_80015054, 0, 0x63);
+                actor->child = createEffectTask(func_80015054, 0, 0x63);
                 enqueueSoundEffect(1, 0x32);
                 actor->state = 3;
             }
@@ -283,7 +283,7 @@ void func_80014EF0(MenuItemActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->x == 0x70) {
-            arg0->child = func_80071408(func_80015404, 0, 0x63);
+            arg0->child = createEffectTask(func_80015404, 0, 0x63);
             enqueueSoundEffect(1, 0x32);
         }
         if (arg0->x == -0x50) {
@@ -377,7 +377,7 @@ void func_800152D0(MenuItemActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->x == 0x70) {
-            arg0->child = func_80071408(func_800157B4, 0, 0x63);
+            arg0->child = createEffectTask(func_800157B4, 0, 0x63);
             enqueueSoundEffect(1, 0x32);
         }
         if (arg0->x == -0x50) {
@@ -465,7 +465,7 @@ void func_80015680(MenuItemActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->x == 0x70) {
-            arg0->child = func_80071408(func_80015B20, 0, 0x63);
+            arg0->child = createEffectTask(func_80015B20, 0, 0x63);
             enqueueSoundEffect(1, 0x32);
         }
         if (arg0->x == -0x50) {
@@ -556,7 +556,7 @@ void func_80015A30(MenuItemActor *arg0) {
         x = actor->x;
         if (x == -0x50) {
             actor->state = 1;
-            func_80071408(func_80015C84, 0, 0x63);
+            createEffectTask(func_80015C84, 0, 0x63);
             x = actor->x;
         }
         break;

@@ -1086,12 +1086,12 @@ void func_800260E8(CourseSelectWidgetActor *arg0) {
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->pad18[4] = 1;
-            D_8010ADDC = func_80071408(func_80025E6C, 0, 0x64);
-            func_80071408(func_800275A4, 0, 0x63);
-            func_80071408(func_800273C4, 0, 0x61);
-            func_80071408(func_80026B88, 0, 0x64);
+            D_8010ADDC = createEffectTask(func_80025E6C, 0, 0x64);
+            createEffectTask(func_800275A4, 0, 0x63);
+            createEffectTask(func_800273C4, 0, 0x61);
+            createEffectTask(func_80026B88, 0, 0x64);
             if ((D_800EC9C2 == 3) && (D_800EC9E6 == 0)) {
-                func_80071408(func_8002E568, 0, 0x63);
+                createEffectTask(func_8002E568, 0, 0x63);
             }
         }
         break;
@@ -2086,9 +2086,9 @@ void func_800287EC(CourseSelectWidgetActor *arg0) {
                         if (actor->x[i] == actor->targetX[i]) {
                             statePtr[0] = 1;
                             if (count == next) {
-                                D_8010ADE0 = func_80071408((void (*)(EffectTask *))func_80024050, 0, 0x62);
-                                D_8010ADE4 = func_80071408((void (*)(EffectTask *))func_80024968, 0, 0x62);
-                                func_80071408(func_800257F0, 0, 0x62);
+                                D_8010ADE0 = createEffectTask((void (*)(EffectTask *))func_80024050, 0, 0x62);
+                                D_8010ADE4 = createEffectTask((void (*)(EffectTask *))func_80024968, 0, 0x62);
+                                createEffectTask(func_800257F0, 0, 0x62);
                             }
                             break;
                         }

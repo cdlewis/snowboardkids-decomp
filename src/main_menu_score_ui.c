@@ -188,8 +188,8 @@ void func_8002B8B4(MainMenuScoreTask *arg0) {
         if (arg0->x < -0x43) {
             arg0->x = -0x44;
             arg0->unk1C.state = 1;
-            D_8010ADE0 = func_80071408(func_8002BC60, 0, 0x62);
-            func_80071408(func_8002C498, 0, 0x63);
+            D_8010ADE0 = createEffectTask(func_8002BC60, 0, 0x62);
+            createEffectTask(func_8002C498, 0, 0x63);
         }
         state = arg0->unk1C.state;
         break;
@@ -247,7 +247,7 @@ void func_8002BB24(MainMenuScoreTask *arg0) {
         if (arg0->unk1C.scale >= 0x100) {
             arg0->unk1C.scale = 0x100;
             arg0->state.b.unk1F = 1;
-            D_8010ADE4 = func_80071408(func_8002BF54, 0, 0x63);
+            D_8010ADE4 = createEffectTask(func_8002BF54, 0, 0x63);
         }
         state = arg0->state.b.unk1F;
         break;

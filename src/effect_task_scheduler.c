@@ -21,7 +21,7 @@ extern EffectTask *D_80112784;
 // pointer to itself, advancing via next. Assigning through the captured store
 // (`s0 = (D_80121848 = D_80112784)`) and clearing callbackTimer via a temp
 // steers IDO's register allocator to match the target's temp-register choice.
-void func_8007105C(void) {
+void updateEffectTasks(void) {
     EffectTask *s0;
     s32 new_var;
 
@@ -37,7 +37,7 @@ void func_8007105C(void) {
     }
 }
 
-// Like func_8007105C, mirrors the linked list head D_80112784 into the global
+// Like updateEffectTasks, mirrors the linked list head D_80112784 into the global
 // cursor D_80121848, then iterates: clearing each node's callbackTimer and
 // invoking its callback, advancing via next. Stops early when a node's priority
 // is less than arg0. The compound assignment `s0 = (D_80121848 = D_80112784)`
@@ -180,11 +180,11 @@ EffectTask *func_800711D0(void (*callback)(EffectTask *), u16 type, s32 priority
 }
 #endif
 
-// func_80071408 best match: 97.533%
-#pragma GLOBAL_ASM("asm/nonmatchings/effect_task_scheduler/func_80071408.s")
+// createEffectTask best match: 97.533%
+#pragma GLOBAL_ASM("asm/nonmatchings/effect_task_scheduler/createEffectTask.s")
 
 #ifdef NON_MATCHING
-EffectTask *func_80071408(void (*callback)(EffectTask *), u16 type, s32 priority)
+EffectTask *createEffectTask(void (*callback)(EffectTask *), u16 type, s32 priority)
 {
     EffectTask *task;
     EffectTask *prev;
@@ -267,7 +267,7 @@ EffectTask *func_80071408(void (*callback)(EffectTask *), u16 type, s32 priority
 }
 #endif
 
-EffectTask *func_80071664(void (*callback)(EffectTask *), s32 arg1, s32 arg2, s32 arg3){ EffectTask *t=func_80071408(callback,arg1&0xFFFF,arg2); if(t!=NULL){t->unk10=arg3;} return t;}
+EffectTask *func_80071664(void (*callback)(EffectTask *), s32 arg1, s32 arg2, s32 arg3){ EffectTask *t=createEffectTask(callback,arg1&0xFFFF,arg2); if(t!=NULL){t->unk10=arg3;} return t;}
 
 EffectTask *func_800716A4(void (*callback)(EffectTask *), s32 arg1, s32 arg2, s32 arg3){ EffectTask *t=func_800711D0(callback,arg1&0xFFFF,arg2); if(t!=NULL){t->unk10=arg3;} return t;}
 

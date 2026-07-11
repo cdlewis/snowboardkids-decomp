@@ -106,7 +106,7 @@ void func_8003F554(void) {
     func_8006D5CC();
     func_8006D520(0, 0x1F);
     func_80071664(&func_80055678, 0, 0x64, 0);
-    func_80071408(&func_80051854, 0, 0x64);
+    createEffectTask(&func_80051854, 0, 0x64);
     func_8009956C(&func_8003F6C0, 0);
     func_800720E4(7);
 }
@@ -118,7 +118,7 @@ void func_8003F6C0(void) {
         func_8009956C(&func_8003F718, 0);
     }
     func_8006D780(0);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_8003F718(void) {
@@ -129,7 +129,7 @@ void func_8003F718(void) {
         func_8009956C(&func_8003F778, 0);
     }
     func_8006D780(0);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_8003F778(void) {
@@ -140,7 +140,7 @@ void func_8003F778(void) {
         func_8009956C(&func_8003F7E4, 0);
     }
     func_8006D780(0);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_8003F7E4(void) {
@@ -242,8 +242,8 @@ void func_8003F864(void) {
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     D_8010B1F0 = 0;
-    func_80071408(func_80051FDC, 0, 0x64);
-    func_80071408(func_800524B0, 0, 0x64);
+    createEffectTask(func_80051FDC, 0, 0x64);
+    createEffectTask(func_800524B0, 0, 0x64);
     func_8009956C(func_8003FB70, 0);
     func_800720E4(7);
 }
@@ -481,9 +481,9 @@ void func_8004002C(void) {
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     D_8010B1F0 = 0;
-    func_80071408(func_8000E7CC, 0, 0x64);
-    func_80071408(func_8000EA44, 0, 0x63);
-    func_80071408(func_800524B0, 0, 0x64);
+    createEffectTask(func_8000E7CC, 0, 0x64);
+    createEffectTask(func_8000EA44, 0, 0x63);
+    createEffectTask(func_800524B0, 0, 0x64);
     func_8009956C(func_80040360, 0);
     func_800720E4(7);
 }
@@ -623,7 +623,7 @@ void func_800407AC(void) {
     D_801235B8->transitionTimer += 0x10;
     temp_v1 = D_801235B8->transitionTimer;
     if (temp_v1 == 0x80) {
-        func_80071408(func_8000DF28, 0, 0x64);
+        createEffectTask(func_8000DF28, 0, 0x64);
         func_8009956C(func_8004086C, 0);
     }
     temp_v1 = D_801235B8->transitionTimer;
@@ -693,7 +693,7 @@ void func_80040A48(void) {
     gMenuFadeAlpha = 0xFF;
     func_800704F0();
     func_80070EC0(0);
-    func_80071408(&func_8000E874, 0, 0x64);
+    createEffectTask(&func_8000E874, 0, 0x64);
     func_8009956C(func_80040B04, 0);
 }
 
@@ -703,14 +703,14 @@ void func_80040B04(void) {
         gMenuFadeAlpha = 0;
         func_8009956C(&func_80040B54, 0);
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_80040B54(void) {
     if (D_8010B1F0 != 0) {
         func_8009956C(&func_80040B90, 0);
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_80040B90(void) {
@@ -720,7 +720,7 @@ void func_80040B90(void) {
         gFramebufferSwapHold = 1;
         func_8009956C(&func_80040BF4, 0);
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_80040BF4(void) {

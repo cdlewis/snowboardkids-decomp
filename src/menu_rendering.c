@@ -1615,7 +1615,7 @@ void func_80013DFC(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b) {
 }
 #endif
 
-s32 func_80013F88(value, step, increase)
+s32 stepMenuFadeAlpha(value, step, increase)
 s32 value;
 s16 step;
 u8 increase;

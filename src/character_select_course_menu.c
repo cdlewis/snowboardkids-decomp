@@ -98,7 +98,7 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
 
     D_801235B8->fade = 0;
     func_800720E4(2);
-    func_80071408((void (*)(EffectTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
+    createEffectTask((void (*)(EffectTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
     D_801235B8->timer = 0;
     D_800EC9C1 = 0;
     D_8010ADF8 = 0;
@@ -125,7 +125,7 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
     D_8010ADE4 = 0;
     sp1C = var_v1;
     func_8009956C(updateCharacterSelectCourseMenu, 0);
-    func_8007105C();
+    updateEffectTasks();
     var_v1 = sp1C;
     if (D_800EC9DD == 1) {
         if (D_80121B5E < 2) {
@@ -203,11 +203,11 @@ void initCharacterSelectCourseMenuFromRace(void) {
     loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
     func_80070EC0(0);
-    func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
+    createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
 
     if (D_800EC9C2 == 1) {
         loadCompressedRomAsset(D_5CCD40, D_5D4280, 0x25);
-        func_80071408((void (*)(EffectTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
+        createEffectTask((void (*)(EffectTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
         D_801235B8->fade = 0;
     } else {
         D_801235B8->fade = 0xFF;
@@ -288,7 +288,7 @@ loop_24:
     gCharacterSelectCourseCursorState.fields.spriteIndex = 0;
     gCharacterSelectCourseCursorState.bytes[6] = 0;
     gCharacterSelectCourseCursorState.bytes[7] = 0;
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -318,11 +318,11 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
         loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
         loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
         func_80070EC0(0);
-        func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
+        createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
         D_801235B8->fade = 0xFF;
     } else {
         D_801235B8->fade = 0;
-        func_80071408(initCharacterSelectUnlockedCourseList, 0, 0x63);
+        createEffectTask(initCharacterSelectUnlockedCourseList, 0, 0x63);
     }
 
     D_801235B8->timer = 0;
@@ -400,7 +400,7 @@ loop_24:
     gCharacterSelectCourseCursorState.fields.spriteIndex = 0;
     gCharacterSelectCourseCursorState.bytes[6] = 0;
     gCharacterSelectCourseCursorState.bytes[7] = 0;
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -417,9 +417,9 @@ void updateCharacterSelectCourseMenu(void) {
     u16 repeatTimer;
 
     if (D_801235B8->fade != 0) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 0);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 0);
         if (D_801235B8->fade == 0) {
-            func_80071408(&initCharacterSelectUnlockedCourseList, 0, 0x63);
+            createEffectTask(&initCharacterSelectUnlockedCourseList, 0, 0x63);
         }
     } else {
         if (D_80121D88 == 0) {
@@ -528,7 +528,7 @@ void updateCharacterSelectCourseMenu(void) {
     }
 
     D_801235B4 = 0;
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -548,7 +548,7 @@ void updateCharacterSelectCourseSubmenu(void) {
                 enqueueSoundEffect(1, 0x32);
                 D_800EC9D0 = 1;
                 gCharacterSelectCourseCursorState.fields.otherState = 3;
-                func_80071408(initCharacterSelectCourseConfirmCursor, 0, 0x61);
+                createEffectTask(initCharacterSelectCourseConfirmCursor, 0, 0x61);
             }
             break;
         case 3:
@@ -600,7 +600,7 @@ void updateCharacterSelectCourseSubmenu(void) {
             func_8009956C(fadeOutCharacterSelectCourseMenu, 0);
         }
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void handleCharacterSelectCourseSelection(void) {
@@ -619,16 +619,16 @@ void handleCharacterSelectCourseSelection(void) {
             D_801235B4 = 0;
         }
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void fadeOutCharacterSelectCourseMenu(void) {
     if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            func_8007105C();
+            updateEffectTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

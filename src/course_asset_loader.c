@@ -272,15 +272,15 @@ void func_80044294(void) {
     }
     switch ((u16) D_80121B50) {
     case 0:
-        func_80071408(&func_8006A798, 0, 0x64);
-        func_80071408(&func_8006B108, 0, 0x64);
-        func_80071408(&func_8006C698, 0, 0x64);
+        createEffectTask(&func_8006A798, 0, 0x64);
+        createEffectTask(&func_8006B108, 0, 0x64);
+        createEffectTask(&func_8006C698, 0, 0x64);
         func_80071664(&func_8006429C, 0, 0x64, 0);
         func_80071664(&func_8006429C, 0, 0x64, 1);
         func_80071664(&func_8006CBBC, 0, 0x64, 0);
         if ((D_800EC9C2 == 0) && (D_80121B59 == 0) && (D_80121B5A == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                func_80071408(&func_8006713C, 0, 0x64);
+                createEffectTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
                 func_80071664(&func_800691C8, 0, 0x64, 0);
@@ -299,10 +299,10 @@ void func_80044294(void) {
         }
         if (D_800EC9C2 == 1) {
             if (D_80121B5E == 0) {
-                func_80071408(&func_80065764, 0, 0x64);
+                createEffectTask(&func_80065764, 0, 0x64);
             }
             if (D_80121B5E == 1) {
-                func_80071408(&func_800666B0, 0, 1);
+                createEffectTask(&func_800666B0, 0, 1);
             }
         }
         if (D_800EC9C2 == 1) {
@@ -311,13 +311,13 @@ void func_80044294(void) {
             }
         } else {
 block_24:
-            func_80071408(&func_8006AE00, 0, 0x64);
+            createEffectTask(&func_8006AE00, 0, 0x64);
         }
         func_8009B58C(0x80U, 0xC0U, 0xFFU);
         break;
     case 1:
-        func_80071408(&func_8006A798, 0, 0x64);
-        func_80071408(&func_8006AE00, 0, 0x64);
+        createEffectTask(&func_8006A798, 0, 0x64);
+        createEffectTask(&func_8006AE00, 0, 0x64);
         func_8006B760(0x17, 0xF682AF46, 0xEB74F202, 0xF82BAF46, 0xEA17F202);
         func_8006B760(0x17, 0xF7062F46, 0xE897F202, 0xF5C82F46, 0xEA58F202);
         func_8006B760(0x17, 0xF45B2F46, 0xE876F202, 0xF6502F46, 0xE7927202);
@@ -327,18 +327,18 @@ block_24:
         func_8006B760(0x17, 0xF50D1255, 0xE7032BEC, 0xF2E89861, 0xE70079E8);
         func_8006B760(0x17, 0xF3EFF851, 0xE8BCCFE0, 0xF5650CCB, 0xE9A4FC34);
         func_8006B760(0x17, 0xF6BEB9D1, 0xEA69C4DE, 0xF6F1B095, 0xEBF8B05E);
-        func_80071408(&func_8006B108, 0, 0x64);
+        createEffectTask(&func_8006B108, 0, 0x64);
         func_80071664(&func_80057600, 0, 0x64, 6);
         func_80071664(&func_80057600, 0, 0x64, 7);
         func_80071664(&func_8006D384, 0, 0x64, 0);
         func_80071664(&func_800669A0, 0, 0x64, 0);
-        func_80071408(&func_8006C698, 0, 0x64);
+        createEffectTask(&func_8006C698, 0, 0x64);
         func_80071664(&func_800675AC, 0, 0x64, 0);
         func_80071664(&func_800675AC, 0, 0x64, 1);
         func_80071664(&func_8006429C, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                func_80071408(&func_8006713C, 0, 0x64);
+                createEffectTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
                 func_80071664(&func_800691C8, 0, 0x64, 6);
@@ -358,24 +358,24 @@ block_24:
         }
         if (D_800EC9C2 == 1) {
             if (D_80121B5E == 0) {
-                func_80071408(&func_80065764, 0, 0x64);
+                createEffectTask(&func_80065764, 0, 0x64);
             }
             if (D_80121B5E == 1) {
-                func_80071408(&func_800666B0, 0, 1);
+                createEffectTask(&func_800666B0, 0, 1);
             }
         }
         func_8009B58C(0xFFU, 0x80U, 0U);
         break;
     case 2:
-        func_80071408(&func_8006A798, 0, 0x64);
-        func_80071408(&func_8006B108, 0, 0x64);
-        func_80071408(&func_8006C698, 0, 0x64);
+        createEffectTask(&func_8006A798, 0, 0x64);
+        createEffectTask(&func_8006B108, 0, 0x64);
+        createEffectTask(&func_8006C698, 0, 0x64);
         func_80071664(&func_80057600, 0, 0x64, 2);
         func_80071664(&func_80063980, 0, 0x64, 0);
         func_80071664(&func_80063980, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                func_80071408(&func_8006713C, 0, 0x64);
+                createEffectTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
                 func_80071664(&func_800691C8, 0, 0x64, 0xE);
@@ -394,16 +394,16 @@ block_24:
         func_8009B58C(0U, 0U, 0x32U);
         break;
     case 3:
-        func_80071408(&func_8006A798, 0, 0x64);
-        func_80071408(&func_8006B108, 0, 0x64);
-        func_80071408(&func_8006C698, 0, 0x64);
+        createEffectTask(&func_8006A798, 0, 0x64);
+        createEffectTask(&func_8006B108, 0, 0x64);
+        createEffectTask(&func_8006C698, 0, 0x64);
         func_80071664(&func_8006CBBC, 0, 0x64, 1);
         func_80071664(&func_8006CBBC, 0, 0x64, 2);
         func_80071664(&func_8006429C, 0, 0x64, 1);
-        func_80071408(&func_80055B34, 0, 0x64);
+        createEffectTask(&func_80055B34, 0, 0x64);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                func_80071408(&func_8006713C, 0, 0x64);
+                createEffectTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
                 func_80071664(&func_800691C8, 0, 0x64, 0x15);
@@ -425,14 +425,14 @@ block_24:
             }
         }
         if (D_80121B55 == 1) {
-            func_80071408(&func_80056C44, 0, 0x64);
+            createEffectTask(&func_80056C44, 0, 0x64);
         }
         func_8009B58C(0x82U, 0xAFU, 0xFFU);
         break;
     case 4:
-        func_80071408(&func_8006A798, 0, 0x64);
-        func_80071408(&func_8006B108, 0, 0x64);
-        func_80071408(&func_8006C698, 0, 0x64);
+        createEffectTask(&func_8006A798, 0, 0x64);
+        createEffectTask(&func_8006B108, 0, 0x64);
+        createEffectTask(&func_8006C698, 0, 0x64);
         func_80071664(&func_80061428, 0, 0x64, 0);
         func_80071664(&func_800631B0, 0, 0x64, 0);
         func_80071664(&func_80063470, 0, 0x64, 0);
@@ -441,7 +441,7 @@ block_24:
         func_80071664(&func_8006429C, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                func_80071408(&func_8006713C, 0, 0x64);
+                createEffectTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
                 func_80071664(&func_800691C8, 0, 0x64, 0x1E);
@@ -471,15 +471,15 @@ block_24:
         func_8009B58C(0U, 0U, 0x40U);
         break;
     case 5:
-        func_80071408(&func_8006A798, 0, 0x64);
+        createEffectTask(&func_8006A798, 0, 0x64);
         func_80071664(&func_80057600, 0, 0x64, 0);
         func_80071664(&func_80057600, 0, 0x64, 1);
-        func_80071408(&func_8006B108, 0, 0x64);
+        createEffectTask(&func_8006B108, 0, 0x64);
         func_80071664(&func_8006429C, 0, 0x64, 1);
-        func_80071408(&func_8006C698, 0, 0x64);
+        createEffectTask(&func_8006C698, 0, 0x64);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                func_80071408(&func_8006713C, 0, 0x64);
+                createEffectTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
                 func_80071664(&func_800691C8, 0, 0x64, 0x27);
@@ -503,18 +503,18 @@ block_24:
         func_8009B58C(0xF0U, 0xE6U, 0xBEU);
         break;
     case 6:
-        func_80071408(&func_8006A798, 0, 0x64);
-        func_80071408(&func_80063FC0, 0, 1);
-        func_80071408(&func_8006B108, 0, 0x64);
-        func_80071408(&func_8006C698, 0, 0x64);
-        func_80071408(&func_80055B34, 0, 0x64);
+        createEffectTask(&func_8006A798, 0, 0x64);
+        createEffectTask(&func_80063FC0, 0, 1);
+        createEffectTask(&func_8006B108, 0, 0x64);
+        createEffectTask(&func_8006C698, 0, 0x64);
+        createEffectTask(&func_80055B34, 0, 0x64);
         func_80071664(&func_800560F4, 0, 0x64, 0);
         func_80071664(&func_800560F4, 0, 0x64, 1);
         func_80071664(&func_800560F4, 0, 0x64, 2);
         func_80071664(&func_8006429C, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                func_80071408(&func_8006713C, 0, 0x64);
+                createEffectTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
                 func_80071664(&func_800691C8, 0, 0x64, 0x2F);
@@ -532,25 +532,25 @@ block_24:
             }
         }
         if (D_80121B55 == 1) {
-            func_80071408(&func_80056C44, 0, 0x64);
+            createEffectTask(&func_80056C44, 0, 0x64);
         }
         func_8009B5C0(0xFFU, 0xFFU, 0xFFU);
         break;
     case 7:
-        func_80071408(&func_8006A798, 0, 0x64);
+        createEffectTask(&func_8006A798, 0, 0x64);
         func_80071664(&func_80057600, 0, 0x64, 3);
         func_80071664(&func_8006D384, 0, 0x64, 1);
-        func_80071408(&func_8006B108, 0, 0x64);
+        createEffectTask(&func_8006B108, 0, 0x64);
         func_8009B58C(0xFFU, 0xFFU, 0xFFU);
         break;
     case 8:
-        func_80071408(&func_8006A798, 0, 0x64);
-        func_80071408(&func_8006B108, 0, 0x64);
-        func_80071408(&func_8006C698, 0, 0x64);
+        createEffectTask(&func_8006A798, 0, 0x64);
+        createEffectTask(&func_8006B108, 0, 0x64);
+        createEffectTask(&func_8006C698, 0, 0x64);
         func_80071664(&func_8006429C, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                func_80071408(&func_8006713C, 0, 0x64);
+                createEffectTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
                 func_80071664(&func_800691C8, 0, 0x64, 0x46);
@@ -564,14 +564,14 @@ block_24:
         func_8009B58C(0xFFU, 0xFFU, 0xFFU);
         break;
     case 9:
-        func_80071408(&func_8006A798, 0, 0x64);
-        func_80071408(&func_8006B108, 0, 0x64);
-        func_80071408(&func_8006C698, 0, 0x64);
-        func_80071408(&func_8005714C, 0, 0x64);
+        createEffectTask(&func_8006A798, 0, 0x64);
+        createEffectTask(&func_8006B108, 0, 0x64);
+        createEffectTask(&func_8006C698, 0, 0x64);
+        createEffectTask(&func_8005714C, 0, 0x64);
         func_80071664(&func_8006429C, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0) && ((D_80121B5A == 0) || (D_80121B5A == 7) || (D_80121B5A == 8))) {
             if (sp2C != 0) {
-                func_80071408(&func_8006713C, 0, 0x64);
+                createEffectTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
                 func_80071664(&func_800691C8, 0, 0x64, 0x37);
@@ -584,14 +584,14 @@ block_24:
         }
         if (D_800EC9C2 == 1) {
             if (D_80121B5E == 0) {
-                func_80071408(&func_80065764, 0, 0x64);
+                createEffectTask(&func_80065764, 0, 0x64);
             }
             if (D_80121B5E == 1) {
-                func_80071408(&func_800666B0, 0, 1);
+                createEffectTask(&func_800666B0, 0, 1);
             }
         }
         func_8009B58C(0x20U, 0x40U, 0x50U);
         break;
     }
-    func_80071408(&func_800508D0, 5, 0x6E);
+    createEffectTask(&func_800508D0, 5, 0x6E);
 }

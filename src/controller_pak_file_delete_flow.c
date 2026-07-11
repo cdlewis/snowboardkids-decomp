@@ -35,7 +35,7 @@ extern u8 D_59AAA0;
 extern u8 D_59DFE0;
 extern u8 D_5DFDD0;
 extern u8 D_5E0350;
-extern u8 gControllerPakReplaySaveNoticeSecondPageStart;
+extern u8 gControllerPakReplaySaveMessageSecondPageStart;
 extern u8 D_60F1A0;
 extern u8 D_60F990;
 
@@ -60,14 +60,14 @@ void initControllerPakFileDeleteFlow(void) {
     loadCompressedRomAsset(&D_593D10, &D_598A70, 0x22);
     loadCompressedRomAsset(&D_598A70, &D_59AAA0, 0x23);
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x24);
-    loadCompressedRomAsset(&D_5E0350, &gControllerPakReplaySaveNoticeSecondPageStart, 0x26);
+    loadCompressedRomAsset(&D_5E0350, &gControllerPakReplaySaveMessageSecondPageStart, 0x26);
     loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
     func_80070EC0(0);
-    func_80071408(&initControllerPakFileDeleteMainOptions, 0, 0x63);
-    func_80071408(&initControllerPakFileDeleteConfirmOptions, 0, 0x63);
-    func_80071408(&initControllerPakFileDeleteFreeSpaceInfo, 0, 0x63);
-    func_80071408(&initControllerPakFileDeleteFileList, 0, 0x63);
-    func_80071408(&initControllerPakFileDeleteIcon, 0, 0x5E);
+    createEffectTask(&initControllerPakFileDeleteMainOptions, 0, 0x63);
+    createEffectTask(&initControllerPakFileDeleteConfirmOptions, 0, 0x63);
+    createEffectTask(&initControllerPakFileDeleteFreeSpaceInfo, 0, 0x63);
+    createEffectTask(&initControllerPakFileDeleteFileList, 0, 0x63);
+    createEffectTask(&initControllerPakFileDeleteIcon, 0, 0x5E);
     gControllerPakMenuState.mainChoice = 0;
     gControllerPakMenuState.fileIndex = 0;
     gControllerPakMenuState.confirmChoice = 0;
@@ -97,7 +97,7 @@ void updateControllerPakFileDeleteMainOptions(void) {
             gControllerPakMenuState.isEdgeScroll = 0;
         }
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void updateControllerPakFileDeleteFileList(void) {
@@ -146,7 +146,7 @@ void updateControllerPakFileDeleteFileList(void) {
         func_8009956C(updateControllerPakFileDeleteMainOptions, 0);
         gControllerPakMenuState.state = 0;
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void updateControllerPakFileDeleteConfirm(void) {
@@ -160,7 +160,7 @@ void updateControllerPakFileDeleteConfirm(void) {
     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
-            func_80071408(&initControllerPakDeleteConfirmPrompt, 0, 0x64);
+            createEffectTask(&initControllerPakDeleteConfirmPrompt, 0, 0x64);
             func_8009956C(updateControllerPakFileDeletePrompt, 0);
             gControllerPakMenuState.state = 3;
             gControllerPakMenuState.confirmChoice = 1;
@@ -173,7 +173,7 @@ void updateControllerPakFileDeleteConfirm(void) {
         func_8009956C(updateControllerPakFileDeleteFileList, 0);
         gControllerPakMenuState.state = 1;
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void updateControllerPakFileDeletePrompt(void) {
@@ -195,7 +195,7 @@ void updateControllerPakFileDeletePrompt(void) {
                 func_8009956C(updateControllerPakFileDeleteFileList, 0);
                 gControllerPakMenuState.state = 1;
             } else {
-                func_80071408(initControllerPakFileDeleteErrorPrompt, 0, 0x64);
+                createEffectTask(initControllerPakFileDeleteErrorPrompt, 0, 0x64);
                 gControllerPakMenuState.unk6 = 0;
                 gControllerPakMenuState.state = 4;
                 func_8009956C(updateControllerPakFileDeleteErrorPrompt, 0);
@@ -211,7 +211,7 @@ void updateControllerPakFileDeletePrompt(void) {
         gControllerPakMenuState.state = 2;
         gControllerPakMenuState.confirmChoice = 0;
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void updateControllerPakFileDeleteErrorPrompt(void) {
@@ -230,16 +230,16 @@ void updateControllerPakFileDeleteErrorPrompt(void) {
         func_8009956C(&updateControllerPakFileDeleteFileList, 0);
         gControllerPakMenuCursorState = 1;
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void fadeOutControllerPakFileDeleteFlow(void) {
     if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            func_8007105C();
+            updateEffectTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

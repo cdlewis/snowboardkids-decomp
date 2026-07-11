@@ -119,9 +119,9 @@ void func_8000D340(void) {
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     func_80041CC0();
     func_80070EC0(0);
-    func_80071408(func_8003D908, 0, 0x64);
-    func_80071408(func_8003DD64, 0, 0x64);
-    func_80071408(func_8003DB1C, 0, 0x64);
+    createEffectTask(func_8003D908, 0, 0x64);
+    createEffectTask(func_8003DD64, 0, 0x64);
+    createEffectTask(func_8003DB1C, 0, 0x64);
     D_801235B8->fade = 0xFF;
     state = D_801235B8;
     gMenuFadeAlpha = state->fade;
@@ -135,19 +135,19 @@ void func_8000D590(void) {
         D_801235B8->timer--;
     } else {
         if (D_801235B8->fade != 0) {
-            D_801235B8->fade = func_80013F88(D_801235B8->fade, 0x10, 0);
+            D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0x10, 0);
         } else {
             func_8009956C(func_8000D690, 0);
-            func_80071408((EffectTaskCallback) func_8003BBBC, 0, 0x64);
-            func_80071408((EffectTaskCallback) func_80035184, 0, 0x64);
-            func_80071408((EffectTaskCallback) func_800362E8, 0, 0x64);
-            func_80071408((EffectTaskCallback) func_80036FB4, 0, 0x64);
-            func_80071408((EffectTaskCallback) func_80039440, 0, 0x64);
-            func_80071408((EffectTaskCallback) func_8003B264, 0, 0x64);
+            createEffectTask((EffectTaskCallback) func_8003BBBC, 0, 0x64);
+            createEffectTask((EffectTaskCallback) func_80035184, 0, 0x64);
+            createEffectTask((EffectTaskCallback) func_800362E8, 0, 0x64);
+            createEffectTask((EffectTaskCallback) func_80036FB4, 0, 0x64);
+            createEffectTask((EffectTaskCallback) func_80039440, 0, 0x64);
+            createEffectTask((EffectTaskCallback) func_8003B264, 0, 0x64);
             func_800720E4(0xA);
         }
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_8000D690(void) {
@@ -158,18 +158,18 @@ void func_8000D690(void) {
             func_8009956C(func_8000D724, 0);
         }
     }
-    func_8007105C();
+    updateEffectTasks();
     D_800EC9C4 = &D_801121E0;
     D_800EC9C4->update();
 }
 
 void func_8000D724(void) {
     if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = func_80013F88(D_801235B8->fade, 0x10, 1);
+        D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0x10, 1);
         if (D_801235B8->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            func_8007105C();
+            updateEffectTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

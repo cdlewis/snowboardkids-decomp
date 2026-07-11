@@ -942,7 +942,7 @@ void func_8006B6C8(Struct6B760 *arg0) {
 #endif
 
 void func_8006B760(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
-    Struct6B760 *p = func_80071408(func_8006B6C8, 0, 0x64);
+    Struct6B760 *p = createEffectTask(func_8006B6C8, 0, 0x64);
     if (p != 0) {
         p->unk24 = arg1;
         p->unk2C = arg2;

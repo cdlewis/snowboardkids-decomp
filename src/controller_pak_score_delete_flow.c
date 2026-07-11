@@ -76,8 +76,8 @@ void initControllerPakScoreDeleteFlow(void) {
     loadCompressedRomAsset(&D_598A70, &D_59AAA0, 0x23);
     loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
     func_80070EC0(0);
-    D_8010ADDC = func_80071408(&func_8002BA00, 0, 0x61);
-    D_8010ADE8 = func_80071408(&func_8002C318, 0, 0x60);
+    D_8010ADDC = createEffectTask(&func_8002BA00, 0, 0x61);
+    D_8010ADE8 = createEffectTask(&func_8002C318, 0, 0x60);
     gControllerPakScoreDeleteFlow.step = 0;
     gControllerPakScoreDeleteFlow.timer = 0;
     gControllerPakScoreDeleteFlow.targetState = 0;
@@ -118,12 +118,12 @@ void updateControllerPakScoreDeleteFlow(void)
   temp_t0 = D_8010ADE4;
   if (temp_v0 != 0)
   {
-    D_801235B8->fade = func_80013F88((s32) ((s16) temp_v0), 0x24, 0);
+    D_801235B8->fade = stepMenuFadeAlpha((s32) ((s16) temp_v0), 0x24, 0);
     if (D_801235B8->fade == 0)
     {
       gControllerPakMenuState.state = 3;
       gControllerPakMenuState.confirmChoice = 1;
-      func_80071408(initControllerPakDeleteConfirmPrompt, 0, 0x64);
+      createEffectTask(initControllerPakDeleteConfirmPrompt, 0, 0x64);
       func_8009956C(updateControllerPakScoreDeleteConfirm, 0);
     }
   }
@@ -413,15 +413,15 @@ void updateControllerPakScoreDeleteFlow(void)
   {
  D_800EC9C1 = 1; } if (((u8) D_800EC9C1) == 0x23) { func_8009956C(fadeOutControllerPakScoreDeleteFlow, 0);
   }
-  func_8007105C();
+  updateEffectTasks();
 }
 #endif
 
 void fadeOutControllerPakScoreDeleteFlow(void) {
     s32 temp_v0 = D_801235B8->fade;
     if (temp_v0 != 0xFF) {
-        D_801235B8->fade = func_80013F88((s16) temp_v0, 0x20, 1);
-        func_8007105C();
+        D_801235B8->fade = stepMenuFadeAlpha((s16) temp_v0, 0x20, 1);
+        updateEffectTasks();
         if (D_801235B8->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         }
@@ -456,5 +456,5 @@ void updateControllerPakScoreDeleteConfirm(void) {
         D_801235B4 = 1;
         func_8009956C(fadeOutControllerPakScoreDeleteFlow, 0);
     }
-    func_8007105C();
+    updateEffectTasks();
 }

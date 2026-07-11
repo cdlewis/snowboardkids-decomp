@@ -973,12 +973,12 @@ void func_80001C80(void) {
     D_801235B8->timer = 0x4B0;
     func_80070EC0(0);
     if (D_800E29C0 != 0) {
-        func_80071408(&func_80032A50, 0, 0x64);
+        createEffectTask(&func_80032A50, 0, 0x64);
     } else {
-        func_80071408(&func_800540EC, 0, 0x64);
+        createEffectTask(&func_800540EC, 0, 0x64);
     }
-    func_80071408(&func_80032934, 0, 0x64);
-    func_80071408(&func_80032684, 0, 0x64);
+    createEffectTask(&func_80032934, 0, 0x64);
+    createEffectTask(&func_80032684, 0, 0x64);
     func_80071664(&func_80054714, 0, 0x64, 0);
     func_80071664(func_80055678, 0, 0x64, 0);
     func_8009B58C(0x20, 0x40, 0x50);
@@ -1024,7 +1024,7 @@ void func_80002024(void) {
     flag = 0;
     temp_v1 = D_801235B8->fade;
     if (temp_v1 != 0) {
-        D_801235B8->fade = func_80013F88((s16) temp_v1, 0x10, 0);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) temp_v1, 0x10, 0);
         if (D_801235B8->fade == 0) {
             D_800DEF10 = 0;
         }
@@ -1088,7 +1088,7 @@ void func_80002024(void) {
         func_80042A00(3);
         func_800428C8(4);
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_800022B8(void) {
@@ -1097,7 +1097,7 @@ void func_800022B8(void) {
 
     temp_v0 = D_801235B8->fade;
     if (temp_v0 != 0xFF) {
-        D_801235B8->fade = func_80013F88((s16) temp_v0, 0x28, 1);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) temp_v0, 0x28, 1);
         if (D_801235B8->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
@@ -1112,7 +1112,7 @@ void func_800022B8(void) {
             func_800428C8(2);
             func_800428C8(3);
             func_800428C8(4);
-            func_8007105C();
+            updateEffectTasks();
         }
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
@@ -1198,7 +1198,7 @@ void func_8000262C(void) {
     func_8006D780(0);
     func_80042034(4);
     func_800428C8(4);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_80002794(void) {
@@ -1211,7 +1211,7 @@ void func_80002794(void) {
     func_8006D780(0);
     func_80042034(4);
     func_800428C8(4);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_80002810(void) {
@@ -1331,7 +1331,7 @@ void func_80002A1C(void) {
         }
     }
     func_8006D780(0);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_80002CE4(void) {
@@ -1342,7 +1342,7 @@ void func_80002CE4(void) {
         func_8009956C(func_80002D50, 0);
     }
     func_8006D780(0);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_80002D50(void) {

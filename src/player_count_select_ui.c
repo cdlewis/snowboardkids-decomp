@@ -106,10 +106,10 @@ void func_80029344(PlayerCountSelectRowActor *arg0) {
 
         if (moved == 0) {
             row->state = 1;
-            func_80071408(func_80029FB8, 0, 0x5F);
-            func_80071408(func_8002A458, 0, 0x60);
-            func_80071408(func_8002A8EC, 0, 0x61);
-            func_80071408(func_8002AD74, 0, 0x63);
+            createEffectTask(func_80029FB8, 0, 0x5F);
+            createEffectTask(func_8002A458, 0, 0x60);
+            createEffectTask(func_8002A8EC, 0, 0x61);
+            createEffectTask(func_8002AD74, 0, 0x63);
         }
         state = arg0->state;
         break;
@@ -287,16 +287,16 @@ void func_80029CE4(PlayerCountSelectWidgetActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->row.bytes.subTimer == 0) {
-            func_80071408(func_800297D8, 0, 0x63);
+            createEffectTask(func_800297D8, 0, 0x63);
         }
         arg0->row.bytes.subTimer++;
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->row.bytes.subState = 3;
-            D_8010ADDC = (s32) func_80071408(func_8002AFB8, 0, 0x64);
-            func_80071408(func_8002B15C, 0, 0x64);
-            func_80071408(func_8002B2FC, 0, 0x64);
-            func_80071408(func_8002B524, 0, 0x64);
+            D_8010ADDC = (s32) createEffectTask(func_8002AFB8, 0, 0x64);
+            createEffectTask(func_8002B15C, 0, 0x64);
+            createEffectTask(func_8002B2FC, 0, 0x64);
+            createEffectTask(func_8002B524, 0, 0x64);
         }
         state = arg0->row.bytes.subState;
         break;

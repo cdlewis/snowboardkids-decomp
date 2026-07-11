@@ -1,0 +1,11 @@
+#ifndef CONTROLLER_PAK_REPLAY_SAVE_MESSAGE_FLOW_H
+#define CONTROLLER_PAK_REPLAY_SAVE_MESSAGE_FLOW_H
+
+void initControllerPakReplaySaveMessageFlow(void);
+void fadeInControllerPakReplaySaveMessageFirstPage(void);
+void fadeOutControllerPakReplaySaveMessageFirstPage(void);
+void waitBeforeControllerPakReplaySaveMessageSecondPage(void);
+void fadeInControllerPakReplaySaveMessageSecondPage(void);
+void fadeOutControllerPakReplaySaveMessageFlow(void);
+
+#endif

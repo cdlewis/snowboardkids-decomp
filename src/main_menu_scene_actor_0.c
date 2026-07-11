@@ -884,7 +884,7 @@ void func_80034AB0(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x23) {
             arg0->unk2A = 0;
-            func_80071408(func_8003C870, 0, 0x64);
+            createEffectTask(func_8003C870, 0, 0x64);
         }
     }
     func_800428C8(0);

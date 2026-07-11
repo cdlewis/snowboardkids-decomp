@@ -218,7 +218,7 @@ void func_8003F00C(void) {
         temp += 0x10;
         D_8010B1E0 = temp;
         if ((temp & 0xFF) == 0xB0) {
-            func_80071408(func_800540EC, 0, 0x64);
+            createEffectTask(func_800540EC, 0, 0x64);
         }
     }
 

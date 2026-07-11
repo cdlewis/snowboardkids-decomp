@@ -565,7 +565,7 @@ void func_800674B4(RaceThrownModelActor *arg0) {
 }
 
 void func_8006752C(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
-    RaceThrownModelActor *temp = func_80071408(func_800674B4, 0, 0x64);
+    RaceThrownModelActor *temp = createEffectTask(func_800674B4, 0, 0x64);
 
     if (temp != NULL) {
         temp->pos.x = arg0;
@@ -641,7 +641,7 @@ void func_800675AC(RaceOverlaySpawnActor *arg0) {
             }
 
             if (found != 0) {
-                spawned = func_80071408(func_800674B4, 0, 0x64);
+                spawned = createEffectTask(func_800674B4, 0, 0x64);
                 if (spawned != NULL) {
                     savedSpawned = spawned;
                     entry = (savedEntry = entry);

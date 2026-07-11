@@ -287,7 +287,7 @@ void func_80035B88(MainMenuSceneActor1 *arg0) {
     if (D_8010B1A2 == 0x2B) {
         func_80071824(arg0, func_80035AFC);
         func_80041DD4(1, 0x4D);
-        func_80071408(&func_8003C208, 0, 0x64);
+        createEffectTask(&func_8003C208, 0, 0x64);
     }
 }
 
@@ -385,7 +385,7 @@ void func_80035F80(MainMenuSceneActor1 *arg0) {
             arg0->timer = 0;
             func_80071824(arg0, func_80035F28);
             func_80041DD4(1, 0x15);
-            func_80071408(&func_8003CA44, 0, 0x64);
+            createEffectTask(&func_8003CA44, 0, 0x64);
         }
     }
     func_800428C8(1);

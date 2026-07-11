@@ -128,7 +128,7 @@ void func_8003C078(MainMenuEffectActor *arg0) {
 }
 
 void func_8003C0A4(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)func_80071408(func_8003C078, 0, 0x63));
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createEffectTask(func_8003C078, 0, 0x63));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
@@ -201,7 +201,7 @@ void func_8003C3F4(MainMenuEffectActor *arg0) {
 }
 
 void func_8003C420(s16 arg0, s16 arg1, u8 arg2) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)func_80071408(func_8003C3F4, 0, 0x63));
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createEffectTask(func_8003C3F4, 0, 0x63));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
@@ -360,7 +360,7 @@ void func_8003CB4C(MainMenuEffectActor *arg0) {
 }
 
 void func_8003CB78(s16 arg0, s16 arg1) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)func_80071408(func_8003CB4C, 0, 0x64));
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createEffectTask(func_8003CB4C, 0, 0x64));
 
     temp_v0->x = arg0;
     temp_v0->y = arg1;
@@ -398,7 +398,7 @@ void func_8003CD70(MainMenuEffectActor *arg0) {
 }
 
 void func_8003CD9C(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)func_80071408(func_8003CD70, 0, 0x64));
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createEffectTask(func_8003CD70, 0, 0x64));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
@@ -471,7 +471,7 @@ void func_8003D03C(MainMenuEffectActor *arg0) {
 }
 
 void func_8003D068(s16 arg0, s16 arg1) {
-    MainMenuEffectActor *temp = (MainMenuEffectActor *)(D_8010ADDC = (s32)func_80071408(func_8003D03C, 0, 0x64));
+    MainMenuEffectActor *temp = (MainMenuEffectActor *)(D_8010ADDC = (s32)createEffectTask(func_8003D03C, 0, 0x64));
 
     temp->x = arg0;
     temp->y = arg1;
@@ -523,7 +523,7 @@ void func_8003D1EC(MainMenuEffectActor *arg0) {
 }
 
 void func_8003D218(s16 arg0, s16 arg1, u8 arg2) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)func_80071408(func_8003D1EC, 0, 0x64));
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createEffectTask(func_8003D1EC, 0, 0x64));
 
     temp_v0->x = arg0;
     temp_v0->y = arg1;

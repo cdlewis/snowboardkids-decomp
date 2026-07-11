@@ -676,13 +676,13 @@ void func_80054EC4(MainMenuOverlayEffectActor *arg0) {
     arg0->unk20.word = ((-0x9F0000LL * arg0->unk30.word) / 0x400) + 0xEC0000;
     arg0->spriteIndex = (0x5000LL * func_80097AE8(arg0->unk30.half.lo)) / 0x1000;
     if (arg0->unk30.word < 0x3F0) {
-        actor = func_80071408(func_80054E70, 0, 0x65);
+        actor = createEffectTask(func_80054E70, 0, 0x65);
         *(OverlayActorTransform *)&actor->unk18 = *(OverlayActorTransform *)&arg0->unk18;
         actor->spriteIndex = arg0->spriteIndex;
         actor->alpha = 0xC0;
         arg0->unk30.word += 0x10;
     } else {
-        func_80071408(func_800550E0, 0, 0x63);
+        createEffectTask(func_800550E0, 0, 0x63);
         func_800716E4(arg0);
         return;
     }

@@ -47,22 +47,22 @@ void func_8000C280(void) {
     loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x29);
     func_80070EC0(0);
-    func_80071408(initControllerPakContinuePrompt, 0, 0x64);
+    createEffectTask(initControllerPakContinuePrompt, 0, 0x64);
     gMenuFadeAlpha = D_801235B8->fade;
     func_8009956C(func_8000C3C8, 0);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_flow/func_8000C3C8.s")
 
 void func_8000C52C(void) {
     if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
             gFramebufferSwapHold = 1;
             gControllerPakContinuePromptTransition.state = 3;
         } else {
-            func_8007105C();
+            updateEffectTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {
