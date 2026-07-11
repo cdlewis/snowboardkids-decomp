@@ -3,7 +3,7 @@
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
-#include "fixed_point_math.h"
+#include "spatial_math.h"
 #include "fixed_point_matrix.h"
 #include "model_animation.h"
 #include "race_player_movement.h"
@@ -253,7 +253,7 @@ extern s16 D_80112168;
 extern s16 D_80112140;
 extern s16 D_80112142;
 extern s32 D_801235B4;
-extern u8 D_80156608;
+extern u8 gCurrentViewportIndex;
 extern u8 D_80156609;
 extern void func_8006C5C0(Struct6C51C *);
 void func_8006C1B4(Struct6C51C *);
@@ -489,7 +489,7 @@ void func_80069E50(RaceCourseBackdropEffect *arg0) {
 
     temp_s3 = arg0;
     sp100 = gIdentityFixedTransform;
-    camera = &D_801121E0[D_80156608];
+    camera = &D_801121E0[gCurrentViewportIndex];
     sp100.basePos.x = -camera->transformOffset.x;
     sp100.basePos.y = -camera->transformOffset.y;
     sp100.basePos.z = -camera->transformOffset.z;
@@ -548,7 +548,7 @@ void func_8006A798(void *arg0) {
 }
 
 void func_8006A7BC(RacePlayerEffect *arg0) {
-    if (D_80156608 == arg0->playerIndex) {
+    if (gCurrentViewportIndex == arg0->playerIndex) {
         func_80045A78(-0x30, -0xC, func_80043040(D_80112168), 0x41);
     }
 }
@@ -593,7 +593,7 @@ void func_8006A894(RaceCourseRenderEffect *arg0) {
     i = 0;
     if (entry->type != -1) {
         do {
-            if (func_80049000(&entry->pos) != 0) {
+            if (isPositionNearCurrentViewport(&entry->pos) != 0) {
                 if (entry->type != textureIndex) {
                     textureIndex = entry->type;
                     func_80045A1C((u8 *)func_80043040((s32)D_80112168), textureIndex & 0xFFFF,
@@ -698,7 +698,7 @@ void func_8006AF48(RaceCourseRenderEffect *arg0) {
     var_s5 = 0;
     if (var_s4->displayListIndex != -1) {
         do {
-            if (func_80049000(&var_s4->position) != 0) {
+            if (isPositionNearCurrentViewport(&var_s4->position) != 0) {
                 if (var_s7 != 0) {
                     gDPPipeSync(gRegionAllocPtr++);
                     temp_s2 = gRegionAllocPtr++;
@@ -777,7 +777,7 @@ void func_8006B228(Struct6B760 *arg0) {
         arg0->displayListValid = 0;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->displayListValid == 0) {
             arg0->displayListValid = 1;
             sine = func_80097AE8(arg0->unk40);
@@ -831,9 +831,9 @@ void func_8006B3E0(Struct6B760 *arg0) {
         pos = &arg0->pos;
         if (func_80048E60(pos) != 0) {
             if (arg0->pad42 != 0) {
-                targetAngle = func_8004940C(arg0->pos.x, arg0->pos.z, arg0->unk24, arg0->unk2C);
+                targetAngle = calculateAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->unk24, arg0->unk2C);
             } else {
-                targetAngle = func_8004940C(arg0->pos.x, arg0->pos.z, arg0->unk30, arg0->unk38);
+                targetAngle = calculateAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->unk30, arg0->unk38);
             }
             temp_a1 = arg0->unk3E;
             temp_t2 = (targetAngle - temp_a1) & 0xFFF;
@@ -921,7 +921,7 @@ void func_8006B6C8(Struct6B760 *arg0) {
     s16 temp4E;
 
     if (gRaceUpdatePaused == 0) {
-        angle = func_8004940C(arg0->unk24, arg0->unk2C, arg0->unk30, arg0->unk38);
+        angle = calculateAngleBetweenXZPoints(arg0->unk24, arg0->unk2C, arg0->unk30, arg0->unk38);
         temp24 = arg0->unk24;
         temp28 = arg0->unk28;
         temp2C = arg0->unk2C;
@@ -966,7 +966,7 @@ void func_8006B7E0(RaceMovingEffect *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-        if (func_80049000(&arg0->pos) != 0) {
+        if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
             Gfx *_g;
 
             gDPPipeSync(gRegionAllocPtr++);
@@ -1061,7 +1061,7 @@ void func_8006BC68(RaceMovingEffect *arg0) {
         arg0->matrix = func_8004885C(&transform);
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
             gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112144));
@@ -1181,7 +1181,7 @@ void func_8006C1B4(Struct6C51C *arg0) {
         arg0->pos2Matrix = NULL;
     }
 
-    if (func_80049000((Vec3i *) &D_800DA764[D_80121B50]) == 0) {
+    if (isPositionNearCurrentViewport((Vec3i *) &D_800DA764[D_80121B50]) == 0) {
         return;
     }
 

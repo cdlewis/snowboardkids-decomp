@@ -1,7 +1,7 @@
 #ifndef RACE_EFFECTS_H
 #define RACE_EFFECTS_H
 
-#include "fixed_point_math.h"
+#include "spatial_math.h"
 
 typedef struct RaceEffectActor RaceEffectActor;
 

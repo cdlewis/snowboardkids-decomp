@@ -148,7 +148,7 @@ extern s32 D_801235B4;
 extern CourseSelectState *gCurrentInputTask;
 extern s32 D_80124868;
 extern s32 D_80124898;
-extern u8 D_80156608;
+extern u8 gCurrentViewportIndex;
 
 // drawCourseSelectPreviewModel best match: 97.975%
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectPreviewModel.s")
@@ -167,10 +167,10 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
     u8 var_t0;
     u8 var_v1;
 
-    if ((D_8010AED0 != 0) && (D_80156608 == 1)) {
+    if ((D_8010AED0 != 0) && (gCurrentViewportIndex == 1)) {
         var_t0 = 0;
     } else {
-        var_t0 = D_80156608;
+        var_t0 = gCurrentViewportIndex;
     }
     temp_v1 = D_8010AECC[var_t0];
     if ((D_8010AECC[var_t0] == 0) || (D_8010AECC[var_t0] & 1)) {
@@ -187,10 +187,10 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             } else {
                 var_v1 = temp_v0_2 & ((unsigned long long) 0xFF);
             }
-            if ((D_8010AED0 != 0) && (D_80156608 == 1)) {
+            if ((D_8010AED0 != 0) && (gCurrentViewportIndex == 1)) {
                 var_v1 = D_8010AED0 - 1;
             }
-            temp_v0_3 = &D_80121D80[(long long) D_80156608];
+            temp_v0_3 = &D_80121D80[(long long) gCurrentViewportIndex];
             if (temp_v0_3->state == 5) {
                 var_v1 = 0;
                 var_a3 = ((var_a3 % 3) + 0xC) & 0xFF;
@@ -444,10 +444,10 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
     u8 var_t0;
     u8 var_v1;
 
-    if ((D_8010AED0 != 0) && (D_80156608 == 1)) {
+    if ((D_8010AED0 != 0) && (gCurrentViewportIndex == 1)) {
         var_t0 = 0;
     } else {
-        var_t0 = D_80156608;
+        var_t0 = gCurrentViewportIndex;
     }
     temp_v1 = D_8010AECC[var_t0];
     if ((D_8010AECC[var_t0] == 2) || (D_8010AECC[var_t0] & 1)) {
@@ -464,10 +464,10 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             } else {
                 var_v1 = temp_v0_2 & 0xFF;
             }
-            if ((D_8010AED0 != 0) && (D_80156608 == 1)) {
+            if ((D_8010AED0 != 0) && (gCurrentViewportIndex == 1)) {
                 var_v1 = D_8010AED0 - 1;
             }
-            temp_v0_3 = &D_80121D80[D_80156608];
+            temp_v0_3 = &D_80121D80[gCurrentViewportIndex];
             if (temp_v0_3->state == 5) {
                 var_v1 = 0;
                 var_a3 = ((var_a3 % 3) + 0xC) & 0xFF;

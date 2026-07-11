@@ -214,7 +214,7 @@ void func_8006D8B4(void) {
     xzDist = func_80098C30((s64)dx * dx + (s64)dz * dz);
     dist = func_80098C30((s64)xzDist * xzDist + (s64)dy * dy);
 
-    D_801124A0->pitch = func_8004940C(0, 0, xzDist, -dy);
+    D_801124A0->pitch = calculateAngleBetweenXZPoints(0, 0, xzDist, -dy);
     if (dist != 0) {
         sine = ((s64)dy * 0x1000) / dist;
         cosine = ((s64)xzDist * 0x1000) / dist;
@@ -224,7 +224,7 @@ void func_8006D8B4(void) {
         pitchMtx.rotation[MTX_YZ] = sine;
     }
 
-    D_801124A0->yaw = -func_8004940C(0, 0, dx, dz);
+    D_801124A0->yaw = -calculateAngleBetweenXZPoints(0, 0, dx, dz);
     if (xzDist != 0) {
         sine = ((s64)dx * 0x1000) / xzDist;
         cosine = ((s64)dz * 0x1000) / xzDist;
@@ -299,7 +299,7 @@ void func_8006DDB4(void) {
     xzLen = func_80098C30((s64)dx * dx + (s64)dz * dz);
     fullLen = func_80098C30((s64)xzLen * xzLen + (s64)dy * dy);
 
-    D_801124A0->pitch = func_8004940C(0, 0, xzLen, -dy);
+    D_801124A0->pitch = calculateAngleBetweenXZPoints(0, 0, xzLen, -dy);
     if (fullLen != 0) {
         sinPitch = ((s64)dy * RACE_CAMERA_FP_ONE) / fullLen;
         cosPitch = ((s64)xzLen * RACE_CAMERA_FP_ONE) / fullLen;
@@ -309,7 +309,7 @@ void func_8006DDB4(void) {
         pitchMtx.rotation[MTX_YZ] = sinPitch;
     }
 
-    D_801124A0->yaw = -func_8004940C(0, 0, dx, dz);
+    D_801124A0->yaw = -calculateAngleBetweenXZPoints(0, 0, dx, dz);
     if (xzLen != 0) {
         sinYaw = ((s64)dx * RACE_CAMERA_FP_ONE) / xzLen;
         cosYaw = ((s64)dz * RACE_CAMERA_FP_ONE) / xzLen;
@@ -471,6 +471,7 @@ void func_8006EFF4(void) {
 
 #ifdef NON_MATCHING
 void func_8006F048(void) {
+    RaceCamera *camera;
     RacePlayerSlot *player;
     RacePlayerSlot *otherPlayer;
     RacePlayerSlot *players;
@@ -519,7 +520,7 @@ void func_8006F048(void) {
 
                     if (distSq < 0xE1000000000LL) {
                         if (distSq < 0xE0F00000000LL) {
-                            blockedAngles |= 1 << (s16)((((func_8004908C(dx, dz) + 0x800) - targetYaw) + 0x100) & 0xFFF) >> 9;
+                            blockedAngles |= 1 << (s16)((((calculateAngleFromDeltaXZ(dx, dz) + 0x800) - targetYaw) + 0x100) & 0xFFF) >> 9;
                         } else {
                             break;
                         }
@@ -541,7 +542,8 @@ void func_8006F048(void) {
 
         yaw = targetYaw + D_800DA900[i];
         yaw = (s16)yaw;
-        sine = func_8004940C(D_801124A0->focus.x, D_801124A0->focus.z, D_801124A0->pos.x, D_801124A0->pos.z);
+        camera = D_801124A0;
+        sine = calculateAngleBetweenXZPoints(camera->focus.x, camera->focus.z, camera->pos.x, camera->pos.z);
         diff = (yaw - sine) & 0xFFF;
         if (diff >= 0x801) {
             diff -= 0x1000;

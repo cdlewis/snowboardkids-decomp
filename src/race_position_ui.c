@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "fixed_point_math.h"
+#include "spatial_math.h"
 #include "race_position_ui.h"
 
 #define RACE_POSITION_UI_PART_COUNT 13
@@ -192,7 +192,7 @@ void func_8007BE80(RacePositionUiPlayer *player) {
         player->flags |= RACE_POSITION_UI_FLAG_MARKER_READY;
     }
 
-    if (func_80049000(player->markerPoints) != 0 && (player->flags & RACE_POSITION_UI_FLAG_MARKER_READY) != 0) {
+    if (isPositionNearCurrentViewport(player->markerPoints) != 0 && (player->flags & RACE_POSITION_UI_FLAG_MARKER_READY) != 0) {
         racePositionUiAppendGfx(0x06000000, (u32)D_800DE070);
         racePositionUiAppendGfx(0x01020040, (u32)player->markerMtx);
         racePositionUiAppendGfx(0x0400103F, (u32)player->markerVtx);

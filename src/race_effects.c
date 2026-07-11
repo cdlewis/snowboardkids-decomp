@@ -172,7 +172,7 @@ s32 func_80049440(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAn
                             dz = -dz;
                         }
                         if (dz < radius) {
-                            playerAngle = func_8004940C(pos->x, pos->z, player->posX, player->posZ);
+                            playerAngle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                             if ((s16)((playerAngle - angle + 0x380) & 0xFFF) < 0x700) {
                                 dist = func_80098C30((s64)dx * dx + (s64)dz * dz);
                                 if ((dist < radius) && (dist < closest)) {
@@ -215,7 +215,7 @@ void func_80049664(RaceEffectActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp6C.source = gIdentityFixedTransform;
@@ -381,7 +381,7 @@ void func_80049FB4(RaceEffectActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp64.source = gIdentityFixedTransform;
@@ -553,7 +553,7 @@ void func_8004A91C(RaceEffectActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp64.source = gIdentityFixedTransform;
@@ -631,7 +631,7 @@ void func_8004AC5C(RaceEffectActor *arg0) {
             arg0->accelerationY = 0;
             arg0->pos.x += pushX;
             arg0->pos.z += pushZ;
-            arg0->targetAngle = func_8004908C(xOffset, zOffset);
+            arg0->targetAngle = calculateAngleFromDeltaXZ(xOffset, zOffset);
             func_80072A74(0x11, pos, 0x7F, 0x32);
         }
 
@@ -723,7 +723,7 @@ void func_8004B2B8(RaceEffectActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp64.source = gIdentityFixedTransform;
@@ -844,7 +844,7 @@ void func_8004B934(RaceEffectActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp64.source = gIdentityFixedTransform;
@@ -1010,7 +1010,7 @@ void func_8004C274(RaceEffectActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp64.source = gIdentityFixedTransform;
@@ -1179,7 +1179,7 @@ void func_8004CBC4(RaceEffectActor *arg0) {
         return;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixFlags.matrixDirty2 != 0) {
             arg0->matrixFlags.matrixDirty2 = 0;
             sp64.source = gIdentityFixedTransform;
@@ -1301,7 +1301,7 @@ void func_8004D280(RaceEffectActor *arg0) {
         arg0->matrixDirty2 = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty2 != 0) {
             arg0->matrixDirty2 = 0;
             sp64.source = gIdentityFixedTransform;

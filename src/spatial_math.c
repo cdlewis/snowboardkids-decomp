@@ -1,5 +1,5 @@
 #include "common.h"
-#include "fixed_point_math.h"
+#include "spatial_math.h"
 
 #define OBJECT_COUNT 3
 #define OBJECT_CULL_RANGE 0xBA00000
@@ -13,16 +13,16 @@ typedef struct {
     u8 pad50[0x60];
 } ObjectTransform;
 
-extern u8 D_80156608;
-extern s16 D_800D40D0[];
+extern u8 gCurrentViewportIndex;
+extern s16 gArctanAngleTable[];
 extern ObjectTransform D_801121E0[OBJECT_COUNT];
 
-s32 func_80049000(Vec3i *position) {
+s32 isPositionNearCurrentViewport(Vec3i *position) {
     s32 deltaX;
     s32 deltaZ;
 
-    deltaX = -D_801121E0[D_80156608].offsetX - position->x;
-    deltaZ = -D_801121E0[D_80156608].offsetZ - position->z;
+    deltaX = -D_801121E0[gCurrentViewportIndex].offsetX - position->x;
+    deltaZ = -D_801121E0[gCurrentViewportIndex].offsetZ - position->z;
 
     if ((deltaX < OBJECT_CULL_RANGE) && (deltaX >= NEG_OBJECT_CULL_RANGE) && (deltaZ < OBJECT_CULL_RANGE)) {
         if (deltaZ >= NEG_OBJECT_CULL_RANGE) {
@@ -32,7 +32,7 @@ s32 func_80049000(Vec3i *position) {
     return 0;
 }
 
-s32 func_8004908C(s32 deltaX, s32 deltaZ) {
+s32 calculateAngleFromDeltaXZ(s32 deltaX, s32 deltaZ) {
     s16 angle;
 
     deltaZ = -deltaZ;
@@ -43,20 +43,20 @@ s32 func_8004908C(s32 deltaX, s32 deltaZ) {
 
     if ((deltaX >= 0) && (deltaZ >= 0)) {
         if (deltaX < deltaZ) {
-            angle = D_800D40D0[(s16) ((0x280LL * deltaX) / deltaZ)];
+            angle = gArctanAngleTable[(s16) ((0x280LL * deltaX) / deltaZ)];
             return (s16) -angle;
         }
-        angle = 0x400 - D_800D40D0[(s16) ((0x280LL * deltaZ) / deltaX)];
+        angle = 0x400 - gArctanAngleTable[(s16) ((0x280LL * deltaZ) / deltaX)];
         return (s16) -angle;
     }
 
     if ((deltaX >= 0) && (deltaZ < 0)) {
         deltaZ *= -1;
         if (deltaZ < deltaX) {
-            angle = D_800D40D0[(s16) ((0x280LL * deltaZ) / deltaX)] + 0x400;
+            angle = gArctanAngleTable[(s16) ((0x280LL * deltaZ) / deltaX)] + 0x400;
             return (s16) -angle;
         }
-        angle = 0x800 - D_800D40D0[(s16) ((0x280LL * deltaX) / deltaZ)];
+        angle = 0x800 - gArctanAngleTable[(s16) ((0x280LL * deltaX) / deltaZ)];
         return (s16) -angle;
     }
 
@@ -64,10 +64,10 @@ s32 func_8004908C(s32 deltaX, s32 deltaZ) {
         deltaX *= -1;
         deltaZ *= -1;
         if (deltaX < deltaZ) {
-            angle = D_800D40D0[(s16) ((0x280LL * deltaX) / deltaZ)] + 0x800;
+            angle = gArctanAngleTable[(s16) ((0x280LL * deltaX) / deltaZ)] + 0x800;
             return (s16) -angle;
         }
-        angle = 0xC00 - D_800D40D0[(s16) ((0x280LL * deltaZ) / deltaX)];
+        angle = 0xC00 - gArctanAngleTable[(s16) ((0x280LL * deltaZ) / deltaX)];
         return (s16) -angle;
     }
 
@@ -75,16 +75,16 @@ s32 func_8004908C(s32 deltaX, s32 deltaZ) {
     if ((deltaX < 0) && (deltaZ >= 0)) {
         deltaX *= -1;
         if (deltaZ < deltaX) {
-            angle = D_800D40D0[(s16) ((0x280LL * deltaZ) / deltaX)] + 0xC00;
+            angle = gArctanAngleTable[(s16) ((0x280LL * deltaZ) / deltaX)] + 0xC00;
             return (s16) -angle;
         }
-        angle = 0x1000 - D_800D40D0[(s16) ((0x280LL * deltaX) / deltaZ)];
+        angle = 0x1000 - gArctanAngleTable[(s16) ((0x280LL * deltaX) / deltaZ)];
         return (s16) -angle;
     }
 
     return angle;
 }
 
-s32 func_8004940C(s32 fromX, s32 fromZ, s32 toX, s32 toZ) {
-    return func_8004908C(toX - fromX, toZ - fromZ);
+s32 calculateAngleBetweenXZPoints(s32 fromX, s32 fromZ, s32 toX, s32 toZ) {
+    return calculateAngleFromDeltaXZ(toX - fromX, toZ - fromZ);
 }

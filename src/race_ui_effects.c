@@ -6,7 +6,7 @@
 #include "asset_manager.h"
 #include "race_item_hit_flags.h"
 #include "viewport_manager.h"
-#include "fixed_point_math.h"
+#include "spatial_math.h"
 #include "fixed_point_matrix.h"
 #include "model_animation.h"
 #include "race_effects.h"
@@ -793,7 +793,7 @@ extern s8 gRacePlayerCount;
 extern u8 D_80121B81;
 extern RacePlayerUnsignedPlacement D_80121D90[];
 extern s32 D_80121DA4;
-extern u8 D_80156608;
+extern u8 gCurrentViewportIndex;
 extern u8 D_80156609;
 extern s16 D_80156612;
 extern s16 D_80112140;
@@ -962,7 +962,7 @@ void func_80057600(RaceUiSlideActor *arg0) {
 }
 
 void func_80057694(RaceUiPromptActor *arg0) {
-    if (D_80156608 == arg0->index) {
+    if (gCurrentViewportIndex == arg0->index) {
         if (D_80156612 & 1) {
             func_80048278(-0x34, arg0->y, &D_800E1220, 0);
             return;
@@ -1001,7 +1001,7 @@ void func_80057854(RaceUiPopupActor *arg0) {
     char buffer[8];
     s32 i;
 
-    if (D_80156608 == 0) {
+    if (gCurrentViewportIndex == 0) {
         func_80045A78((s16)(arg0->x - 0x3C), arg0->y.half.lo, func_80043040(D_80112130.popupFontHandle), 0x8B);
         func_80045A78((s16)(arg0->x + 0x14), arg0->y.half.lo, func_80043040(D_80112130.popupFontHandle), 0x8E);
         sprintf(buffer, D_800E1240, arg0->parent);
@@ -1072,7 +1072,7 @@ void func_80057C08(void *arg0, s16 arg1) {
 }
 
 void func_80057C5C(RaceUiPopupActor *arg0) {
-    if (D_80156608 == 0) {
+    if (gCurrentViewportIndex == 0) {
         func_80045A78(-0x3C, arg0->y.half.lo, func_80043040(D_8011216E), 0x8F);
     }
 }
@@ -3803,7 +3803,7 @@ void func_80060D10(RaceUiPopupActor *arg0) {
     char buffer[8];
     s32 i;
 
-    if (D_80156608 == arg0->playerIndex) {
+    if (gCurrentViewportIndex == arg0->playerIndex) {
         func_80045A78((s16)(arg0->x - 0x34), (s16)(arg0->y.word - 8), func_80043040(D_80112130.popupFontHandle), 0x8B);
         sprintf(buffer, D_800E14D0, arg0->parent);
         for (i = 0; i != 4; i++) {
@@ -3879,7 +3879,7 @@ void func_80061088(RaceUiTripleParticleActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             func_80097C18(spAC.halfwords, arg0->rotY);
@@ -3989,7 +3989,7 @@ void func_800617EC(RaceUiRisingTrailActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sine = func_80097AE8(arg0->sineAngle);
@@ -4336,7 +4336,7 @@ void func_80062AF0(RaceUiScaledParticleActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             func_80097C18(scratch, arg0->rotY);
@@ -4423,7 +4423,7 @@ void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             func_80097C18(scratch, arg0->rotY);
@@ -4476,7 +4476,7 @@ void func_80063220(RaceUiSpinningParticleActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) == 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) == 0) {
         return;
     }
 
@@ -4532,7 +4532,7 @@ void func_800634C8(RaceUiCourseSpriteActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000((Vec3i *)&arg0->x) != 0) {
+    if (isPositionNearCurrentViewport((Vec3i *)&arg0->x) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             arg0->vertices = func_80048594(0x40);
@@ -4550,7 +4550,7 @@ void func_800634C8(RaceUiCourseSpriteActor *arg0) {
 
         if (arg0->vertices != NULL) {
             imageIndex = 0;
-            if ((D_80122288[D_80156608].placement + 1) >= D_80121B52) {
+            if ((D_80122288[gCurrentViewportIndex].placement + 1) >= D_80121B52) {
                 imageIndex = 1;
             }
 
@@ -4667,7 +4667,7 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
 
     actor = arg0;
     actor2 = arg0;
-    camera = &D_801121E0[D_80156608];
+    camera = &D_801121E0[gCurrentViewportIndex];
     negX = -camera->transformOffset.x;
     negY = -camera->transformOffset.y;
     negZ = -camera->transformOffset.z;
@@ -4752,7 +4752,7 @@ void func_800640D8(RaceUiRankParticleActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             arg0->matrix = func_8004885C(&arg0->copyBlock);
@@ -4760,7 +4760,7 @@ void func_800640D8(RaceUiRankParticleActor *arg0) {
 
         if (arg0->matrix != NULL) {
             displayListIndex = 0;
-            if (D_80121B52 <= D_80122288[D_80156608].placement + 1) {
+            if (D_80121B52 <= D_80122288[gCurrentViewportIndex].placement + 1) {
                 displayListIndex = 1;
             }
 
@@ -5053,7 +5053,7 @@ void func_80064F4C(void *arg0) {
     void *temp_s0;
 
     temp_s0 = arg0;
-    if (D_80156608 == 0) {
+    if (gCurrentViewportIndex == 0) {
         if (*(s8 *)((u8 *)arg0 + 0x30) != 0) {
             func_80045A78((s16)(*(s32 *)((u8 *)temp_s0 + 0x1C) - 0x66), *(s16 *)((u8 *)temp_s0 + 0x22), func_80043040(D_8011216E), 0x98);
             func_80059A04((u8 *)temp_s0 + 0x2C, *(s32 *)((u8 *)temp_s0 + 0x1C) + 0x26, *(s32 *)((u8 *)temp_s0 + 0x20), 0xC);
@@ -5140,7 +5140,7 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
     i = 0;
     if (entry->sentinel != -1) {
         do {
-            if ((entry->active != 0) && (func_80049000(&entry->command) != 0)) {
+            if ((entry->active != 0) && (isPositionNearCurrentViewport(&entry->command) != 0)) {
                 if (textureIndex != entry->sentinel + actor->textureOffset) {
                     textureIndex = entry->sentinel + actor->textureOffset;
                     func_80045990(func_80043040(D_8011216E), 0x14, &spA0, &sp9C);
@@ -5454,7 +5454,7 @@ void func_80065FD8(RaceUiRankTextRenderActor *arg0) {
     var_s6 = 0;
     if (var_s4->active != -1) {
         do {
-            if ((var_s4->active != 0) && (func_80049000(&var_s4->position) != 0)) {
+            if ((var_s4->active != 0) && (isPositionNearCurrentViewport(&var_s4->position) != 0)) {
                 if (var_fp != 0) {
                     gDPPipeSync(gRegionAllocPtr++);
 

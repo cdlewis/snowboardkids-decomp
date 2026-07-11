@@ -5,7 +5,7 @@
 #include "asset_manager.h"
 #include "race_input_history.h"
 #include "race_player_movement.h"
-#include "fixed_point_math.h"
+#include "spatial_math.h"
 #include "fixed_point_matrix.h"
 #include "model_animation.h"
 
@@ -237,7 +237,7 @@ void func_80066760(RaceModelListActor *arg0) {
     var_s5 = 0;
     if (var_s4->modelIndex != -1) {
         do {
-            if (func_80049000(&var_s4->pos) != 0) {
+            if (isPositionNearCurrentViewport(&var_s4->pos) != 0) {
                 if (var_s7 != 0) {
                     gDPPipeSync(gRegionAllocPtr++);
                     temp_s2 = gRegionAllocPtr++;
@@ -333,7 +333,7 @@ void func_80066ABC(RaceModelListActor *arg0) {
     i = 0;
     if (entry->modelIndex != -1) {
         do {
-            if ((entry->enabled != 0) && (func_80049000(&entry->transform) != 0)) {
+            if ((entry->enabled != 0) && (isPositionNearCurrentViewport(&entry->transform) != 0)) {
                 if (modelIndex != entry->modelIndex + actor->modelIndexOffset) {
                     modelIndex = entry->modelIndex + actor->modelIndexOffset;
                     func_80045990(func_80043040(D_80112168), (modelIndex + 4) & 0xFFFF, &spA0, &sp9C);
@@ -487,7 +487,7 @@ void func_800671F4(RaceOverlayTransformActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             func_80097FE4(scratch, arg0->pitch, arg0->yaw);
             ((GfxCommandSource *)scratch)->words[5] = arg0->pos.x;
@@ -688,7 +688,7 @@ void func_80067830(RaceOverlayModelActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             spF4 = *(GfxCommandSource *)&gIdentityFixedTransform;
@@ -796,7 +796,7 @@ void func_800681A4(RaceOverlayModelActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp64.source = gIdentityFixedTransform;
@@ -826,7 +826,7 @@ void func_800684E4(RaceOverlayModelActor *arg0) {
     if (D_80156609 != 0) {
         arg0->matrixDirty = 1;
     }
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             spF4 = *(GfxCommandSource *)&gIdentityFixedTransform;
@@ -1091,7 +1091,7 @@ void func_8006935C(RaceParticleActor *arg0) {
     if (D_80156609 != 0) {
         arg0->transformDirty = 1;
     }
-    if (func_80049000(&arg0->pos) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->transformDirty != 0) {
             arg0->transformDirty = 0;
             func_80097DA4(transform.rotation, arg0->rotX, arg0->rotY, arg0->rotZ);

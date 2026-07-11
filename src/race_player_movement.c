@@ -35,8 +35,8 @@ typedef struct {
     s32 speed;
 } MovementSpeedScratch;
 
-extern s32 func_8004940C(s32, s32, s32, s32);
-extern s16 func_8004908C(s32, s32);
+extern s32 calculateAngleBetweenXZPoints(s32, s32, s32, s32);
+extern s16 calculateAngleFromDeltaXZ(s32, s32);
 extern void func_80097BAC(Matrix4s, s16);
 extern void func_80097C18(Matrix4s, s16);
 extern void func_80097C84(Matrix4s, s16);
@@ -389,7 +389,7 @@ void func_80087EFC(void) {
                                     ((temp = func_80098C30((s64)((0, xDiff)) * xDiff +
                                                            (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < radius)) {
                                     temp = ((radius - temp) * -1) / 2;
-                                    angle = func_8004940C(playerA->posX, playerA->posZ,
+                                    angle = calculateAngleBetweenXZPoints(playerA->posX, playerA->posZ,
                                                           playerB->posX, playerB->posZ);
                                     sine = func_80097AE8(angle);
                                     cosine = func_80097B48(angle);
@@ -466,7 +466,7 @@ void func_80088294(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
                     if ((temp < xzLimit) &&
                         ((temp = func_80098C30((s64)((0, xDiff)) * xDiff +
                                                (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
-                        angle = func_8004940C(pos->x, pos->z, player->posX, player->posZ);
+                        angle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                         sine = func_80097AE8(angle);
                         cosine = func_80097B48(angle);
                         temp = xzLimit - temp;
@@ -535,7 +535,7 @@ void func_80088664(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIn
                 if ((temp < xzLimit) &&
                     ((temp = func_80098C30((s64)((0, xDiff)) * xDiff +
                                            (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
-                    angle = func_8004940C(pos->x, pos->z, player->posX, player->posZ);
+                    angle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                     sine = func_80097AE8(angle);
                     cosine = func_80097B48(angle);
                     temp = xzLimit - temp;
@@ -598,7 +598,7 @@ void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
                         ((temp = func_80098C30((s64)((0, xDiff)) * xDiff +
                                                (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
                         if (player->unk29C < arg3) {
-                            angle = func_8004940C(pos->x, pos->z, player->posX, player->posZ);
+                            angle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                             sine = func_80097AE8(angle);
                             cosine = func_80097B48(angle);
                             temp = xzLimit - temp;
@@ -659,7 +659,7 @@ void func_80088C80(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
                 if ((temp < xzLimit) &&
                     ((temp = func_80098C30((s64)((0, xDiff)) * xDiff +
                                            (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
-                    angle = func_8004940C(pos->x, pos->z, player->posX, player->posZ);
+                    angle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                     sine = func_80097AE8(angle);
                     cosine = func_80097B48(angle);
                     temp = xzLimit - temp;
@@ -891,26 +891,26 @@ void func_8008A940(RaceInputPlayer *player) {
     if ((frontHeightDiff >= 0) && (heightDiffs[2] >= 0)) {
         heightDiffs[0] = frontHeightDiff;
         if (!(temp_s2->stateFlags & 4)) {
-            temp_s2->pitchAngle = func_8004908C(-(groundHeights[0] - groundHeights[2]), -rollSpan * 2);
+            temp_s2->pitchAngle = calculateAngleFromDeltaXZ(-(groundHeights[0] - groundHeights[2]), -rollSpan * 2);
         }
         baseY = (s64)(groundHeights[2] + groundHeights[0]) / 2;
     } else {
         heightDiffs[0] = frontHeightDiff;
         if (frontHeightDiff >= 0) {
             if (!(temp_s2->stateFlags & 4)) {
-                temp_s2->pitchAngle = func_8004908C(-(groundHeights[0] - groundHeights[4]), -rollSpan);
+                temp_s2->pitchAngle = calculateAngleFromDeltaXZ(-(groundHeights[0] - groundHeights[4]), -rollSpan);
             }
             baseY = groundHeights[4];
         } else if (heightDiffs[2] >= 0) {
             if (!(temp_s2->stateFlags & 4)) {
-                temp_s2->pitchAngle = func_8004908C(-(groundHeights[4] - groundHeights[2]), -rollSpan);
+                temp_s2->pitchAngle = calculateAngleFromDeltaXZ(-(groundHeights[4] - groundHeights[2]), -rollSpan);
             }
             baseY = groundHeights[4];
         }
     }
 
-    temp_s2->unk2F0 = func_8004908C(-(points[0].y - points[2].y), -rollSpan * 2);
-    temp_s2->unk2F4 = func_8004908C(-(frontMidGround - backMidGround), -pitchSpan * 2);
+    temp_s2->unk2F0 = calculateAngleFromDeltaXZ(-(points[0].y - points[2].y), -rollSpan * 2);
+    temp_s2->unk2F4 = calculateAngleFromDeltaXZ(-(frontMidGround - backMidGround), -pitchSpan * 2);
     temp_s2->unk64 = 0;
 
     func_800981C8(mtx, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2->unk2EE);
