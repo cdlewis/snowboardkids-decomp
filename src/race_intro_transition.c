@@ -89,8 +89,6 @@ extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8007AA50(void);
 extern void func_80078430(void);
 extern void func_8008BEB0(void);
-extern void func_8003EC6C(void);
-void func_8003EAF0(void);
 
 // func_8003E600 best match: 56.497% (nonmatchings/func_8003E600-7273315160691878794/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition/func_8003E600.s")

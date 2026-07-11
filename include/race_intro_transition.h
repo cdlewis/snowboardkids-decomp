@@ -14,4 +14,9 @@ typedef struct {
     /* 0x24 */ s32 startDelay;
 } RaceIntroTransitionState;
 
+void func_8003E600(void);
+void func_8003EA78(void);
+void func_8003EAF0(void);
+void func_8003EC6C(void);
+
 #endif
