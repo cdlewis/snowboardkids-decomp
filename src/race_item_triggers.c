@@ -3,7 +3,7 @@
 #include "asset_manager.h"
 #include "race_input_history.h"
 #include "spatial_math.h"
-#include "race_effects.h"
+#include "race_item_projectiles.h"
 #include "race_item_effects.h"
 #include "race_item_triggers.h"
 #include "snowboard_trail_effects.h"
@@ -68,31 +68,31 @@ void updateItemUseTrigger(RaceInputPlayer *player) {
     if (trigger != 0) {
         if (player->itemEffectCount != 0) {
             if (player->itemEffectType == 1) {
-                if (createCallbackTaskWithUserIdPreservingArgs(func_80049CE0, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(initRaceItemProjectileType1, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 2) {
-                if (createCallbackTaskWithUserIdPreservingArgs(func_8004C8F0, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(initRaceItemProjectileType2, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 3) {
-                if (createCallbackTaskWithUserIdPreservingArgs(func_8004A648, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(initRaceItemProjectileType3, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 4) {
-                if (createCallbackTaskWithUserIdPreservingArgs(func_8004AFE4, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(initRaceItemProjectileType4, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 5) {
-                if (createCallbackTaskWithUserIdPreservingArgs(func_8004BFA0, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(initRaceItemProjectileType5, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
@@ -103,7 +103,7 @@ void updateItemUseTrigger(RaceInputPlayer *player) {
         }
 
         if (player->shieldEffectTimer != 0) {
-            if (createCallbackTaskWithUserIdPreservingArgs(func_8004D880, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+            if (createCallbackTaskWithUserIdPreservingArgs(initShieldProjectile, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
                 createCallbackTaskWithUserIdPreservingArgs(func_8004EF24, 5, 4, player->playerIndexU);
                 player->shieldEffectTimer--;
             }
@@ -164,7 +164,7 @@ void updateActionUseTrigger(RaceInputPlayer *player) {
             }
 
             if (type == 4) {
-                createCallbackTaskWithUserIdPreservingArgs(func_8004D184, 0, 0x3C, (u16) player->playerIndex);
+                createCallbackTaskWithUserIdPreservingArgs(initFallingActionProjectile, 0, 0x3C, (u16) player->playerIndex);
                 player->actionEffectType = 0;
                 type = player->actionEffectType;
             }

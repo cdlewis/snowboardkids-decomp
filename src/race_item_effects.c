@@ -200,7 +200,7 @@ typedef union {
 extern u8 *D_800D46D0[];
 extern u8 D_800D4708[];
 extern u16 D_800D46F8[];
-extern Gfx D_800D45E0[];
+extern Gfx gRaceItemProjectileQuadVertices[];
 extern u8 D_800D4808[];
 extern u8 D_800D4814[];
 extern u8 D_800D4820[];
@@ -222,8 +222,8 @@ extern RaceItemGfxCommandSource gIdentityFixedTransform;
 extern RaceItemEffectAssetHandles gAssetHandles;
 extern RaceItemDrawLists D_801121D0;
 extern RaceItemDrawLists D_801121E0;
-extern s16 D_80112168;
-extern s16 D_8011216C;
+extern s16 gRaceCommonSpriteAssetHandle;
+extern s16 gRaceItemSpriteAssetHandle;
 extern s16 D_8011216E;
 extern s16 gRaceCourseIndex;
 extern u8 gRaceUpdatePaused;
@@ -392,7 +392,7 @@ void func_8004E02C(RaceItemEffectActor *arg0) {
     void *sp80;
     s32 frame;
 
- do { if (gRenderMatricesDirty) { sp88 = gIdentityFixedTransform; sp88.x = arg0->payload.vec.x; sp88.y = arg0->payload.vec.y; sp88.z = arg0->payload.vec.z; arg0->unk30.matrix = allocFixedTransformMatrix(&sp88); } if (arg0->unk30.matrix != NULL) { if (isPositionNearCurrentViewport(&arg0->payload.vec) != 0) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xBB000001; _g->words.w1 = 0xFFFFFFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFC121824; _g->words.w1 = 0xFF33FFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB900031D; _g->words.w1 = 0x005049D8; } ; getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), (frame = D_800D4870[arg0->playerIndex] + (arg0->unk24.timer >> 1), 0xFFFF & frame), &sp84, &sp80); { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = (u32) sp84; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = D_800D4870[arg0->playerIndex] * 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x070FF400; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400400; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x7C07C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = (u32) sp80; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01020040; _g->words.w1 = (u32) arg0->unk30.matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01000040; _g->words.w1 = (u32) gViewportMatrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x0400103F; _g->words.w1 = (u32) D_800D4830; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB1060402; _g->words.w1 = 0x60200; } ; } } } while (0);
+ do { if (gRenderMatricesDirty) { sp88 = gIdentityFixedTransform; sp88.x = arg0->payload.vec.x; sp88.y = arg0->payload.vec.y; sp88.z = arg0->payload.vec.z; arg0->unk30.matrix = allocFixedTransformMatrix(&sp88); } if (arg0->unk30.matrix != NULL) { if (isPositionNearCurrentViewport(&arg0->payload.vec) != 0) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xBB000001; _g->words.w1 = 0xFFFFFFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFC121824; _g->words.w1 = 0xFF33FFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB900031D; _g->words.w1 = 0x005049D8; } ; getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), (frame = D_800D4870[arg0->playerIndex] + (arg0->unk24.timer >> 1), 0xFFFF & frame), &sp84, &sp80); { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = (u32) sp84; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = D_800D4870[arg0->playerIndex] * 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x070FF400; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400400; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x7C07C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = (u32) sp80; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01020040; _g->words.w1 = (u32) arg0->unk30.matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01000040; _g->words.w1 = (u32) gViewportMatrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x0400103F; _g->words.w1 = (u32) D_800D4830; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB1060402; _g->words.w1 = 0x60200; } ; } } } while (0);
 }
 
 void func_8004E3BC(RaceItemEffectActor *arg0) {
@@ -497,7 +497,7 @@ void func_8004E604(RaceItemEffectActor *arg0) {
         gSPMatrix(gRegionAllocPtr++, (Mtx *)arg0->unk24.velocityX,
                   G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-        gSPVertex(gRegionAllocPtr++, (Vtx *)D_800D45E0, 4, 0);
+        gSPVertex(gRegionAllocPtr++, (Vtx *)gRaceItemProjectileQuadVertices, 4, 0);
         temp_v0_3 = gRegionAllocPtr++;
         temp_v0_3->words.w1 = 0x00060200;
         temp_v0_3->words.w0 = 0xB1060402;
@@ -520,7 +520,7 @@ void func_8004E960(RaceItemEffectActor *arg0) {
 void func_8004E9D0(RaceItemEffectActor *arg0) {
     arg0->unk30.screen.x = 0xF0;
     arg0->unk30.screen.y = 0x10;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216C), arg0->unk34.shorts.state.ubyte, &arg0->unk2C, &arg0->unk28.word);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), arg0->unk34.shorts.state.ubyte, &arg0->unk2C, &arg0->unk28.word);
     setCallbackTaskCallback(arg0, func_8004E960);
 }
 
@@ -557,7 +557,7 @@ void func_8004EAA8(RaceItemEffectActor *arg0) {
 
         do {
             if (arg0->unk30.matrix != NULL) {
-                getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168),
+                getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle),
                               (u16)(((s8)arg0->unk34.shorts.height.byte >> 1) + 0x36),
                               &sp7C, &sp78);
 
@@ -700,7 +700,7 @@ void func_8004F3FC(RaceItemEffectActor *arg0) {
 
     arg0->unk38.width = 0xFF;
     arg0->unk30.screen.y = randomNextMain() & 3;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), D_800D46F8[arg0->playerIndex], &arg0->image, &arg0->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), D_800D46F8[arg0->playerIndex], &arg0->image, &arg0->palette);
 
     player = &D_80121D80[arg0->followPlayerIndex];
     arg0->payload.vec.x = player->pos.x;
@@ -769,7 +769,7 @@ void func_8004F68C(RaceItemEffectActor *arg0) {
         }
 
         if (arg0->unk24.velocityX != 0) {
-            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168),
+            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle),
                           ((s8)arg0->unk28.bytes.phase >> 1) + 0x2F,
                           &sp74, &sp70);
 
@@ -841,7 +841,7 @@ void func_8004FB44(RaceItemFollowActor *arg0) {
             arg0->matrix2 = allocFixedTransformMatrix(&sp90);
         }
         if (arg0->matrix2 != NULL) {
-            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), (u16)((((s8)arg0->timer) >> 2) + 0x39), &sp8C, &sp88);
+            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), (u16)((((s8)arg0->timer) >> 2) + 0x39), &sp8C, &sp88);
 
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)sp8C);
@@ -1111,7 +1111,7 @@ void func_8005098C(RaceItemFollowActor *arg0) {
             arg0->matrix2 = allocFixedTransformMatrix(&sp98);
         }
         if (arg0->matrix2 != NULL) {
-            func_800459D4((u8 *)getRelocatableHeapBlockBase(D_80112168), (u16)((((s8)arg0->timer) >> 2) + 0x39), 0x12, &sp94, &sp90);
+            func_800459D4((u8 *)getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), (u16)((((s8)arg0->timer) >> 2) + 0x39), 0x12, &sp94, &sp90);
 
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)sp94);

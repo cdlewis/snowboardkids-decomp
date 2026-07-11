@@ -99,7 +99,7 @@ extern void addRenderCallback(void *, void *, s32);
 extern void osWritebackDCache(void *, s32);
 extern s16 D_80112144;
 extern s16 D_80112146;
-extern s16 D_80112168;
+extern s16 gRaceCommonSpriteAssetHandle;
 extern s16 D_8011216A;
 extern RaceIntroAssetHandles gAssetHandles;
 extern u8 gRenderMatricesDirty;
@@ -637,7 +637,7 @@ void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
                 textureIndex = gRaceIntroAnimatedBillboardTextureIds[entry->textureIndex] + ((s32)(gFrameCounter & 4) / 4);
                 if (textureIndex != loadedTextureIndex) {
                     loadedTextureIndex = textureIndex;
-                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)D_80112168), textureIndex & 0xFFFF, &image, &palette,
+                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)gRaceCommonSpriteAssetHandle), textureIndex & 0xFFFF, &image, &palette,
                                   &width, &height);
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0, G_TX_CLAMP,
                                             G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);

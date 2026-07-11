@@ -249,7 +249,7 @@ extern void *resolveAssetTableRelativePointer(void *, u32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void osWritebackDCache(void *, s32);
-extern s16 D_80112168;
+extern s16 gRaceCommonSpriteAssetHandle;
 extern s16 D_80112140;
 extern s16 D_80112142;
 extern s32 gMenuFlowState;
@@ -302,7 +302,7 @@ extern s32 D_801248D4;
 extern s32 D_801248EC;
 extern s32 D_801248D4;
 extern s32 D_801248B0;
-extern s32 D_801248A4;
+extern s32 gRaceObjectRenderCallbackList;
 extern s32 D_801248F8;
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_2001678[];
@@ -334,17 +334,17 @@ extern Gfx D_2006880[];
 extern Gfx D_20058A8[];
 void drawRaceCountdownReadyPrompt(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
-        func_80047174(-0x34, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x3F, arg0->step);
+        func_80047174(-0x34, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x3F, arg0->step);
     } else {
-        func_80045A78(-0x34, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x3F);
+        func_80045A78(-0x34, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x3F);
     }
 }
 
 void drawRaceCountdownGoPrompt(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
-        func_80047174(-0x20, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x40, arg0->step);
+        func_80047174(-0x20, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x40, arg0->step);
     } else {
-        func_80045A78(-0x20, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x40);
+        func_80045A78(-0x20, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x40);
     }
 }
 
@@ -539,7 +539,7 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
 #endif
 
 void updateRaceCourseModelRenderTask(void *arg0) {
-    addRenderCallback(&D_801248A4, renderRaceCourseModel, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, renderRaceCourseModel, arg0);
     addRenderCallback(&D_801248F8, renderRaceCourseBackdrop, arg0);
 }
 
@@ -549,7 +549,7 @@ void initRaceCourseModelRenderTask(void *arg0) {
 
 void drawFinalLapPromptForViewport(RacePlayerEffect *arg0) {
     if (gCurrentViewportIndex == arg0->playerIndex) {
-        func_80045A78(-0x30, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x41);
+        func_80045A78(-0x30, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x41);
     }
 }
 
@@ -596,7 +596,7 @@ void renderCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
             if (isPositionNearCurrentViewport(&entry->pos) != 0) {
                 if (entry->type != textureIndex) {
                     textureIndex = entry->type;
-                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)D_80112168), textureIndex & 0xFFFF,
+                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)gRaceCommonSpriteAssetHandle), textureIndex & 0xFFFF,
                                   &image, &palette, &width, &height);
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0,
                                             G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
@@ -903,7 +903,7 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             }
         }
     }
-    addRenderCallback(&D_801248A4, renderPatrolCourseObject, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, renderPatrolCourseObject, arg0);
 }
 #endif
 
@@ -1001,7 +1001,7 @@ void updateLaunchRampCourseObjectExit(RaceMovingEffect *arg0) {
             temp_a3->pos.y += sp24.y;
             temp_a3->pos.z += sp24.z;
         }
-        addRenderCallback(&D_801248A4, renderLaunchRampCourseObject, temp_a3);
+        addRenderCallback(&gRaceObjectRenderCallbackList, renderLaunchRampCourseObject, temp_a3);
         return;
     }
     removeCallbackTask(temp_a3);
@@ -1030,7 +1030,7 @@ void updateLaunchRampCourseObjectArc(RaceMovingEffect *arg0) {
         }
     }
 
-    addRenderCallback(&D_801248A4, renderLaunchRampCourseObject, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, renderLaunchRampCourseObject, arg0);
 }
 
 void initLaunchRampCourseObject(RaceMovingEffect *arg0) {
@@ -1090,7 +1090,7 @@ void updateSpiralCourseObjectExit(RaceMovingEffect *arg0) {
             temp_a3->pos.y += sp24.y;
             temp_a3->pos.z += sp24.z;
         }
-        addRenderCallback(&D_801248A4, renderSpiralCourseObject, temp_a3);
+        addRenderCallback(&gRaceObjectRenderCallbackList, renderSpiralCourseObject, temp_a3);
         return;
     }
     removeCallbackTask(temp_a3);
@@ -1124,7 +1124,7 @@ void updateSpiralCourseObjectTurn(RaceMovingEffect *arg0) {
         }
     }
 
-    addRenderCallback(&D_801248A4, renderSpiralCourseObject, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, renderSpiralCourseObject, arg0);
 }
 
 void updateSpiralCourseObjectLaunch(RaceMovingEffect *arg0) {
@@ -1142,7 +1142,7 @@ void updateSpiralCourseObjectLaunch(RaceMovingEffect *arg0) {
             temp_a3->timer = 0x18;
         }
     }
-    addRenderCallback(&D_801248A4, renderSpiralCourseObject, temp_a3);
+    addRenderCallback(&gRaceObjectRenderCallbackList, renderSpiralCourseObject, temp_a3);
 }
 
 void initSpiralCourseObject(RaceMovingEffect *arg0) {
@@ -1251,7 +1251,7 @@ void updateCourseGateClosing(CourseGateObjectEffect *arg0) {
             setCallbackTaskCallback(arg0, waitForCourseGateTrigger);
         }
     }
-    addRenderCallback(&D_801248A4, renderCourseGateObject, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, renderCourseGateObject, arg0);
 }
 
 void updateCourseGateOpening(CourseGateObjectEffect *arg0) {
@@ -1269,7 +1269,7 @@ void updateCourseGateOpening(CourseGateObjectEffect *arg0) {
             setCallbackTaskCallback(temp_s0, updateCourseGateClosing);
         }
     }
-    addRenderCallback(&D_801248A4, renderCourseGateObject, temp_s0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, renderCourseGateObject, temp_s0);
 }
 
 void waitForCourseGateTrigger(CourseGateObjectEffect *arg0) {
@@ -1281,7 +1281,7 @@ void waitForCourseGateTrigger(CourseGateObjectEffect *arg0) {
         enqueuePositionalSoundEffect(0x16, &gCourseGateSoundParams[gRaceCourseIndex], 0x7F, 0x32);
         enqueuePositionalSoundEffect(0x1B, &gCourseGateSoundParams[gRaceCourseIndex], 0x7F, 0x32);
     }
-    addRenderCallback(&D_801248A4, renderCourseGateObject, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, renderCourseGateObject, arg0);
 }
 
 void initCourseGateObject(CourseGateObjectEffect *arg0) {
@@ -1346,12 +1346,12 @@ void updateCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
     if (arg0->useAltQueue != 0) {
         addRenderCallback(&D_801248EC, renderCourseBillboardMarker, arg0);
     } else {
-        addRenderCallback(&D_801248A4, renderCourseBillboardMarker, arg0);
+        addRenderCallback(&gRaceObjectRenderCallbackList, renderCourseBillboardMarker, arg0);
     }
 }
 
 void initCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168),
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle),
                   gCourseBillboardMarkerTextureResources[arg0->entryIndex].textureIndex,
                   &arg0->texture, &arg0->palette);
     arg0->baseVertices =
@@ -1532,7 +1532,7 @@ void updateCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
     if (D_80121D80[3].isActive != 0) {
         collidePlayerWithCourseTriggerVolume(D_80122FA4, arg0);
     }
-    addRenderCallback(&D_801248A4, renderCourseTriggerVolume, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, renderCourseTriggerVolume, arg0);
 }
 
 void initCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {

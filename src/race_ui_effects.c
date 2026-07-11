@@ -9,7 +9,7 @@
 #include "spatial_math.h"
 #include "fixed_point_math.h"
 #include "race_motion.h"
-#include "race_effects.h"
+#include "race_item_projectiles.h"
 #include "race_player_movement.h"
 #include "race_timer_ui.h"
 
@@ -802,7 +802,7 @@ extern s16 D_80112144;
 extern s16 D_80112146;
 extern s16 D_8011216A;
 extern s16 D_8011216E;
-extern s16 D_80112168;
+extern s16 gRaceCommonSpriteAssetHandle;
 extern s16 gRaceLapCount;
 extern s32 D_80121D8C;
 extern RacePlayerPlacement D_80122288[];
@@ -812,16 +812,16 @@ extern RacePlayerHalfwordField gPlayerHitSource[];
 extern RacePlayerHalfwordField D_8012265E[];
 extern RacePlayerHalfwordField D_80122C6A[];
 extern RacePlayerHalfwordField D_80123276[];
-extern RacePlayerByteField D_8012229A[];
+extern RacePlayerByteField gRacePlayerItemTargetFlags[];
 extern s16 gFrameCounter;
-extern s16 D_8011216C;
+extern s16 gRaceItemSpriteAssetHandle;
 extern RaceUiAssetHandles gAssetHandles;
 extern s16 D_801222F6;
 extern s16 D_801222F2;
 extern s16 D_801222F0;
 extern RaceUiRankTrigger *D_8012228C;
 extern void *D_80124878;
-extern void *D_801248A4;
+extern void *gRaceObjectRenderCallbackList;
 extern void *D_801248EC;
 extern s16 D_800D6050[];
 extern Vec3i D_800D6030[];
@@ -949,12 +949,12 @@ void func_80057548(RaceUiSlideActor *arg0) {
         addRenderCallback(&D_801248EC, func_800572A0, arg0);
         return;
     }
-    addRenderCallback(&D_801248A4, func_800572A0, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, func_800572A0, arg0);
 }
 
 void func_80057600(RaceUiSlideActor *arg0) {
     arg0->angle = 0;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), D_800D5FF4[arg0->index].assetId, &arg0->image, &arg0->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), D_800D5FF4[arg0->index].assetId, &arg0->image, &arg0->palette);
     arg0->displayList = (Gfx *) D_800D5FF0[arg0->index].word;
     arg0->velocity = D_800D5FF0[arg0->index].b6;
     arg0->soundIndex = D_800D5FF0[arg0->index].b7;
@@ -3349,10 +3349,10 @@ void func_8005F174(RaceUiSparkleActor *arg0) {
     arg0->scale = 0x1000;
     arg0->unk28 = 0;
 
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x23, &arg0->images[0], &arg0->palettes[0]);
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x24, &arg0->images[1], &arg0->palettes[1]);
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x25, &arg0->images[2], &arg0->palettes[2]);
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x26, &arg0->images[3], &arg0->palettes[3]);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x23, &arg0->images[0], &arg0->palettes[0]);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x24, &arg0->images[1], &arg0->palettes[1]);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x25, &arg0->images[2], &arg0->palettes[2]);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x26, &arg0->images[3], &arg0->palettes[3]);
     enqueuePositionalSoundEffect(0x10, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, func_8005EFFC);
 }
@@ -3710,7 +3710,7 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         arg0->pos.z = player->pos28.z;
     }
 
-    D_8012229A[arg0->targetPlayerIndex].value = 1;
+    gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
     addRenderCallback(&D_801248BC, func_80060544, arg0);
 }
 
@@ -3756,7 +3756,7 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
                 setCallbackTaskCallback(arg0, updateGhostSlowdownImpact);
             }
         }
-        D_8012229A[arg0->targetPlayerIndex].value = 1;
+        gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
         addRenderCallback(&D_801248BC, func_80060544, (s32)arg0);
     } else if (gRaceUpdatePaused == 0) {
         arg0->timer--;
@@ -4023,7 +4023,7 @@ void func_80061984(RaceUiThrownTrailActor *arg0) {
             func_80088294(pos, 0x1A0000, 0x600000, 2);
             if (arg0->soundTimer == 0) {
                 enqueuePositionalSoundEffect(0xD, pos, 0x7F, 0x31);
-                func_8004B8B4(arg0->pos.x, arg0->pos.y + 0x700000, arg0->pos.z, arg0->surface, arg0->angle);
+                createThrownTrailImpactProjectile(arg0->pos.x, arg0->pos.y + 0x700000, arg0->pos.z, arg0->surface, arg0->angle);
                 arg0->soundTimer = 0xF;
             } else {
                 arg0->soundTimer--;
@@ -4039,7 +4039,7 @@ void func_80061984(RaceUiThrownTrailActor *arg0) {
         }
         arg0->spin += 0x40;
     }
-    addRenderCallback(&D_801248A4, func_800617EC, (s32)arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, func_800617EC, (s32)arg0);
 }
 
 void func_80061A98(RaceUiThrownTrailActor *arg0) {
@@ -4306,7 +4306,7 @@ void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
 }
 
 void func_80062A10(void *arg0) {
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x35, (u8 *)arg0 + 0x30, (u8 *)arg0 + 0x2C);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x35, (u8 *)arg0 + 0x30, (u8 *)arg0 + 0x2C);
     setCallbackTaskCallback(arg0, func_800628DC);
 }
 
@@ -4806,7 +4806,7 @@ void func_800643B4(void *arg0, u16 *arg1) {
     *(u16 **)((u8 *)arg0 + 0x30) = arg1;
     *(s16 *)((u8 *)arg0 + 0x34) = arg1[0];
     *(s16 *)((u8 *)arg0 + 0x36) = arg1[1];
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216C), arg1[2], (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x40);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), arg1[2], (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x40);
 }
 
 s32 func_80064414(void *arg0) {
