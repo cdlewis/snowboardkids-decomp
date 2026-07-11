@@ -2,30 +2,30 @@
 #include "callback_task_scheduler.h"
 
 extern CallbackTask *gCurrentCallbackTask;
-extern CallbackTask *gFreeCallbackTaskList[];
+extern CallbackTask *gFreeCallbackTaskPool[];
 extern u16 gFreeCallbackTaskCount;
-extern u16 gCallbackTaskType0FreeCount;
-extern u16 gCallbackTaskType6FreeCount;
-extern u16 gCallbackTaskType5FreeCount;
-extern u16 gCallbackTaskType1FreeCount;
-extern u16 gCallbackTaskType2FreeCount;
-extern u16 gCallbackTaskType3FreeCount;
-extern u16 gCallbackTaskType4FreeCount;
-extern CallbackTask gCallbackTaskListSentinel;
-extern CallbackTask *gCallbackTaskListHead;
+extern u16 gFreeCallbackTaskType0Count;
+extern u16 gFreeCallbackTaskType6Count;
+extern u16 gFreeCallbackTaskType5Count;
+extern u16 gFreeCallbackTaskType1Count;
+extern u16 gFreeCallbackTaskType2Count;
+extern u16 gFreeCallbackTaskType3Count;
+extern u16 gFreeCallbackTaskType4Count;
+extern CallbackTask gCallbackTaskActiveListSentinel;
+extern CallbackTask *gCallbackTaskActiveListHead;
 
 #pragma GLOBAL_ASM("asm/nonmatchings/callback_task_scheduler/initCallbackTaskScheduler.s")
 
-// Mirrors the linked list head gCallbackTaskListHead into the global cursor gCurrentCallbackTask,
+// Mirrors the linked list head gCallbackTaskActiveListHead into the global cursor gCurrentCallbackTask,
 // then for each node clears callbackTimer and invokes its callback with a
 // pointer to itself, advancing via next. Assigning through the captured store
-// (`s0 = (gCurrentCallbackTask = gCallbackTaskListHead)`) and clearing callbackTimer via a temp
+// (`s0 = (gCurrentCallbackTask = gCallbackTaskActiveListHead)`) and clearing callbackTimer via a temp
 // steers IDO's register allocator to match the target's temp-register choice.
 void updateCallbackTasks(void) {
     CallbackTask *s0;
     s32 new_var;
 
-    s0 = (gCurrentCallbackTask = gCallbackTaskListHead);
+    s0 = (gCurrentCallbackTask = gCallbackTaskActiveListHead);
     if (gCurrentCallbackTask != NULL) {
         do {
             new_var = 0;
@@ -37,14 +37,14 @@ void updateCallbackTasks(void) {
     }
 }
 
-// Like updateCallbackTasks, mirrors the linked list head gCallbackTaskListHead into the global
+// Like updateCallbackTasks, mirrors the linked list head gCallbackTaskActiveListHead into the global
 // cursor gCurrentCallbackTask, then iterates: clearing each node's callbackTimer and
 // invoking its callback, advancing via next. Stops early when a node's priority
-// is less than minPriority. The compound assignment `s0 = (gCurrentCallbackTask = gCallbackTaskListHead)`
+// is less than minPriority. The compound assignment `s0 = (gCurrentCallbackTask = gCallbackTaskActiveListHead)`
 // steers IDO's register allocator to use a separate temp (t6) for the high-half
 // load, matching the target.
 void updateCallbackTasksWithMinPriority(s32 minPriority) {
-    CallbackTask *s0 = (gCurrentCallbackTask = gCallbackTaskListHead);
+    CallbackTask *s0 = (gCurrentCallbackTask = gCallbackTaskActiveListHead);
 
     if (s0 != NULL) {
         do {
@@ -82,7 +82,7 @@ void updateRemainingCallbackTasks(void) {
     }
 }
 
-void noopCallbackTaskScheduler(void) {
+void noopCallbackTask(void) {
 }
 
 // createCallbackTaskPreservingArgs best match: 92.071%
@@ -98,46 +98,46 @@ void *createCallbackTaskPreservingArgs(void (*callback)(), s32 type, s32 priorit
     type &= 0xFFFF;
     switch (type & 0xFF) {
     case 0:
-        if (gCallbackTaskType0FreeCount == 0) {
+        if (gFreeCallbackTaskType0Count == 0) {
             return NULL;
         }
-        gCallbackTaskType0FreeCount--;
+        gFreeCallbackTaskType0Count--;
         break;
     case 1:
-        if (gCallbackTaskType1FreeCount == 0) {
+        if (gFreeCallbackTaskType1Count == 0) {
             return NULL;
         }
-        gCallbackTaskType1FreeCount--;
+        gFreeCallbackTaskType1Count--;
         break;
     case 2:
-        if (gCallbackTaskType2FreeCount == 0) {
+        if (gFreeCallbackTaskType2Count == 0) {
             return NULL;
         }
-        gCallbackTaskType2FreeCount--;
+        gFreeCallbackTaskType2Count--;
         break;
     case 3:
-        if (gCallbackTaskType3FreeCount == 0) {
+        if (gFreeCallbackTaskType3Count == 0) {
             return NULL;
         }
-        gCallbackTaskType3FreeCount--;
+        gFreeCallbackTaskType3Count--;
         break;
     case 4:
-        if (gCallbackTaskType4FreeCount == 0) {
+        if (gFreeCallbackTaskType4Count == 0) {
             return NULL;
         }
-        gCallbackTaskType4FreeCount--;
+        gFreeCallbackTaskType4Count--;
         break;
     case 5:
-        if (gCallbackTaskType5FreeCount == 0) {
+        if (gFreeCallbackTaskType5Count == 0) {
             return NULL;
         }
-        gCallbackTaskType5FreeCount--;
+        gFreeCallbackTaskType5Count--;
         break;
     case 6:
-        if (gCallbackTaskType6FreeCount == 0) {
+        if (gFreeCallbackTaskType6Count == 0) {
             return NULL;
         }
-        gCallbackTaskType6FreeCount--;
+        gFreeCallbackTaskType6Count--;
         break;
     default:
         return NULL;
@@ -149,10 +149,10 @@ void *createCallbackTaskPreservingArgs(void (*callback)(), s32 type, s32 priorit
     index = gFreeCallbackTaskCount - 1;
     gFreeCallbackTaskCount = index;
 
-    task = gFreeCallbackTaskList[index];
-    prev = &gCallbackTaskListSentinel;
-    if (gCallbackTaskListSentinel.next != NULL) {
-        next = gCallbackTaskListSentinel.next;
+    task = gFreeCallbackTaskPool[index];
+    prev = &gCallbackTaskActiveListSentinel;
+    if (gCallbackTaskActiveListSentinel.next != NULL) {
+        next = gCallbackTaskActiveListSentinel.next;
         do {
             if ((u16)next->priority < priority) {
                 break;
@@ -191,46 +191,46 @@ void *createCallbackTask(void (*callback)(), u16 type, s32 priority) {
 
     switch (type & 0xFF) {
     case 0:
-        if (gCallbackTaskType0FreeCount == 0) {
+        if (gFreeCallbackTaskType0Count == 0) {
             return NULL;
         }
-        gCallbackTaskType0FreeCount--;
+        gFreeCallbackTaskType0Count--;
         break;
     case 1:
-        if (gCallbackTaskType1FreeCount == 0) {
+        if (gFreeCallbackTaskType1Count == 0) {
             return NULL;
         }
-        gCallbackTaskType1FreeCount--;
+        gFreeCallbackTaskType1Count--;
         break;
     case 2:
-        if (gCallbackTaskType2FreeCount == 0) {
+        if (gFreeCallbackTaskType2Count == 0) {
             return NULL;
         }
-        gCallbackTaskType2FreeCount--;
+        gFreeCallbackTaskType2Count--;
         break;
     case 3:
-        if (gCallbackTaskType3FreeCount == 0) {
+        if (gFreeCallbackTaskType3Count == 0) {
             return NULL;
         }
-        gCallbackTaskType3FreeCount--;
+        gFreeCallbackTaskType3Count--;
         break;
     case 4:
-        if (gCallbackTaskType4FreeCount == 0) {
+        if (gFreeCallbackTaskType4Count == 0) {
             return NULL;
         }
-        gCallbackTaskType4FreeCount--;
+        gFreeCallbackTaskType4Count--;
         break;
     case 5:
-        if (gCallbackTaskType5FreeCount == 0) {
+        if (gFreeCallbackTaskType5Count == 0) {
             return NULL;
         }
-        gCallbackTaskType5FreeCount--;
+        gFreeCallbackTaskType5Count--;
         break;
     case 6:
-        if (gCallbackTaskType6FreeCount == 0) {
+        if (gFreeCallbackTaskType6Count == 0) {
             return NULL;
         }
-        gCallbackTaskType6FreeCount--;
+        gFreeCallbackTaskType6Count--;
         break;
     default:
         return NULL;
@@ -240,10 +240,10 @@ void *createCallbackTask(void (*callback)(), u16 type, s32 priority) {
         return NULL;
     }
     index = gFreeCallbackTaskCount - 1;
-    sentinel = &gCallbackTaskListSentinel;
+    sentinel = &gCallbackTaskActiveListSentinel;
     prev = sentinel;
     gFreeCallbackTaskCount = index;
-    task = gFreeCallbackTaskList[index & 0xFFFF];
+    task = gFreeCallbackTaskPool[index & 0xFFFF];
     if (prev->next != NULL) {
         next = sentinel->next;
         do {
@@ -294,37 +294,37 @@ void removeCallbackTask(void *taskPtr) {
         next->prev = task->prev;
     }
 
-    gFreeCallbackTaskList[gFreeCallbackTaskCount] = task;
+    gFreeCallbackTaskPool[gFreeCallbackTaskCount] = task;
     gFreeCallbackTaskCount++;
 
     type = task->type & 0xFF;
     switch (type) {
     case 0:
-        counter = &gCallbackTaskType0FreeCount;
+        counter = &gFreeCallbackTaskType0Count;
         (*counter)++;
         return;
     case 1:
-        counter = &gCallbackTaskType1FreeCount;
+        counter = &gFreeCallbackTaskType1Count;
         (*counter)++;
         return;
     case 2:
-        counter = &gCallbackTaskType2FreeCount;
+        counter = &gFreeCallbackTaskType2Count;
         (*counter)++;
         return;
     case 3:
-        counter = &gCallbackTaskType3FreeCount;
+        counter = &gFreeCallbackTaskType3Count;
         (*counter)++;
         return;
     case 4:
-        counter = &gCallbackTaskType4FreeCount;
+        counter = &gFreeCallbackTaskType4Count;
         (*counter)++;
         return;
     case 5:
-        counter = &gCallbackTaskType5FreeCount;
+        counter = &gFreeCallbackTaskType5Count;
         (*counter)++;
         return;
     case 6:
-        counter = &gCallbackTaskType6FreeCount;
+        counter = &gFreeCallbackTaskType6Count;
         (*counter)++;
         return;
     }
