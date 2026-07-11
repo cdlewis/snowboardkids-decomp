@@ -39,7 +39,7 @@ extern RomAssetAddress D_800D4020[];
 extern RomAssetAddress D_800D4050[];
 extern MainMenuModelAssetHandles D_80112130;
 
-// func_80040C80 best match: 94.789% (nonmatchings/func_80040C80-2225551288923588688/base_12.c)
+// func_80040C80 best match: 98.116% (nonmatchings/func_80040C80-6113366811127043669/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80040C80.s")
 
 #ifdef NON_MATCHING
@@ -65,7 +65,7 @@ s32 func_80040C80(u8 *src, s32 srcLen, s16 *dst) {
     bestDistance = 0;
     bestLength = 0;
     distance = 1;
-    out = dst + 1;
+    out = &dst[1];
 
 loop:
     maxLength = remaining;
@@ -82,15 +82,18 @@ search_loop:
     length = 0;
     if (maxLength > 0) {
         count = 0;
-        cur = src + srcPos;
-        prev = searchPos + src;
+        cur = src;
+        cur += srcPos;
+        prev = src;
+        prev += searchPos;
 match_loop:
-        count++;
-        if (*cur++ != *prev) {
+        count += 1;
+        if (*cur != *prev) {
             goto compare_best;
         }
-        prev++;
-        length++;
+        cur += 1;
+        prev += 1;
+        length += 1;
         if (count != maxLength) {
             goto match_loop;
         }
@@ -102,8 +105,8 @@ compare_best:
         bestLength = length;
     }
 
-    distance++;
-    searchPos--;
+    distance += 1;
+    searchPos -= 1;
     if (distance < 0x400) {
         goto search_loop;
     }
@@ -111,12 +114,14 @@ compare_best:
 search_done:
     distance = 1;
     if (bestLength <= 0) {
-        *out++ = src[srcPos];
-        outCount++;
-        srcPos++;
+        *out = src[srcPos];
+        out += 1;
+        outCount += 1;
+        srcPos += 1;
     } else {
-        *out++ = (bestLength << 10) | bestDistance;
-        outCount++;
+        *out = (bestLength << 10) | bestDistance;
+        out += 1;
+        outCount += 1;
         srcPos += bestLength;
     }
 
