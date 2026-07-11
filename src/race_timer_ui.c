@@ -1,5 +1,5 @@
 #include "common.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "memory_allocator.h"
 #include "race_item_effects.h"
 #include "race_player_movement.h"
@@ -133,7 +133,7 @@ extern s8 D_80121B79;
 extern s16 D_80121B7A;
 
 void func_80078430(void) {
-    func_800437F0(D_245A80, D_24C8E0, 0x1F);
+    loadCompressedAsset(D_245A80, D_24C8E0, 0x1F);
     D_80121B70 = -1;
     D_80121B72 = 0;
 

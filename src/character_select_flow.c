@@ -1,7 +1,7 @@
 #include "common.h"
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "character_select_flow.h"
 #include "character_select_ui.h"
 #include "input_task_scheduler.h"
@@ -196,17 +196,17 @@ void func_80005F18(void) {
     func_800704F0();
     func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     D_800DEED4 = 0;
-    func_800437F0(D_5A1ED0, D_5C5320, 0x21);
-    func_800437F0(D_593D10, D_598A70, 0x22);
-    func_800437F0(D_598A70, D_59AAA0, 0x23);
-    func_800437F0(D_59AAA0, D_59DFE0, 0x24);
-    func_800437F0(D_59DFE0, D_59E7F0, 0x26);
-    func_800437F0(D_245A80, D_24C8E0, 0x1F);
+    loadCompressedAsset(D_5A1ED0, D_5C5320, 0x21);
+    loadCompressedAsset(D_593D10, D_598A70, 0x22);
+    loadCompressedAsset(D_598A70, D_59AAA0, 0x23);
+    loadCompressedAsset(D_59AAA0, D_59DFE0, 0x24);
+    loadCompressedAsset(D_59DFE0, D_59E7F0, 0x26);
+    loadCompressedAsset(D_245A80, D_24C8E0, 0x1F);
     func_80070EC0(0);
     func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
 
     if (D_800EC9C2 == 1) {
-        func_800437F0(D_5CCD40, D_5D4280, 0x25);
+        loadCompressedAsset(D_5CCD40, D_5D4280, 0x25);
         func_80071408((void (*)(EffectTask *)) func_8001D254, 0, 0x63);
         D_801235B8->fade = 0;
     } else {
@@ -311,12 +311,12 @@ void func_800062F8(void) {
         func_800704F0();
         func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E09A4);
         D_800DEED4 = 0;
-        func_800437F0(D_5A1ED0, D_5C5320, 0x21);
-        func_800437F0(D_593D10, D_598A70, 0x22);
-        func_800437F0(D_598A70, D_59AAA0, 0x23);
-        func_800437F0(D_59AAA0, D_59DFE0, 0x24);
-        func_800437F0(D_59DFE0, D_59E7F0, 0x26);
-        func_800437F0(D_245A80, D_24C8E0, 0x1F);
+        loadCompressedAsset(D_5A1ED0, D_5C5320, 0x21);
+        loadCompressedAsset(D_593D10, D_598A70, 0x22);
+        loadCompressedAsset(D_598A70, D_59AAA0, 0x23);
+        loadCompressedAsset(D_59AAA0, D_59DFE0, 0x24);
+        loadCompressedAsset(D_59DFE0, D_59E7F0, 0x26);
+        loadCompressedAsset(D_245A80, D_24C8E0, 0x1F);
         func_80070EC0(0);
         func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
         D_801235B8->fade = 0xFF;

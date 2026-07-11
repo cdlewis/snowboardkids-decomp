@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_manager.h"
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "fixed_point_matrix.h"
@@ -115,8 +116,6 @@ void func_8003DFB0(void) {
 
 #ifdef NON_MATCHING
 extern void func_80041CF0();
-extern void func_800437F0(void *, void *, s32);
-extern void func_800438EC(void *, void *, s32);
 extern void func_80053DD8(EffectTask *);
 extern void func_80053EBC(EffectTask *);
 extern void func_80054044(s32, s32);
@@ -204,12 +203,12 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     }
 
     func_80041CF0(1, save, transition);
-    func_800437F0(D_5DAF30, D_5DB9D0, 0x2A);
-    func_800437F0(D_1E0F70, D_1E19C0, 0x22);
-    func_800438EC(D_145380, D_1467B0, 8);
-    func_800437F0(D_1DCED0, D_1DE360, 9);
-    func_800438EC(D_13F3B0, D_145380, 0xE);
-    func_800437F0(D_1D3070, D_1D82B0, 0x12);
+    loadCompressedAsset(D_5DAF30, D_5DB9D0, 0x2A);
+    loadCompressedAsset(D_1E0F70, D_1E19C0, 0x22);
+    loadRawAsset(D_145380, D_1467B0, 8);
+    loadCompressedAsset(D_1DCED0, D_1DE360, 9);
+    loadRawAsset(D_13F3B0, D_145380, 0xE);
+    loadCompressedAsset(D_1D3070, D_1D82B0, 0x12);
     func_80070EC0(2);
     func_8006D5CC();
     func_8006D580(0, 0x1D);

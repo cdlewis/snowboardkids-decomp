@@ -2,7 +2,7 @@
 #include "memory_allocator.h"
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "game_boot.h"
 #include "input_task_scheduler.h"
 #include "race_camera.h"
@@ -108,15 +108,15 @@ void func_8000D340(void) {
     (&D_8010B1A8)[3].value = 0;
     (&D_8010B1A8)[4].value = 0;
     (&D_8010B1A8)[1].value = 0;
-    func_800437F0(D_608560, D_609AA0, 0x21);
-    func_800437F0(D_593D10, D_598A70, 0x22);
-    func_800437F0(D_609AA0, D_60ECB0, 0x26);
-    func_800437F0(D_60ECB0, D_60F1A0, 0x27);
+    loadCompressedAsset(D_608560, D_609AA0, 0x21);
+    loadCompressedAsset(D_593D10, D_598A70, 0x22);
+    loadCompressedAsset(D_609AA0, D_60ECB0, 0x26);
+    loadCompressedAsset(D_60ECB0, D_60F1A0, 0x27);
     temp_v0 = D_1502A0 - D_14B450;
     sp34 = temp_v0;
     D_80112130[0xC] = func_80042D58(temp_v0);
     func_80099C44(D_14B450, func_80043040(D_80112130[0xC]), sp34);
-    func_800437F0(D_1EF530, D_1F1A90, 0xD);
+    loadCompressedAsset(D_1EF530, D_1F1A90, 0xD);
     func_80041CC0();
     func_80070EC0(0);
     func_80071408(func_8003D908, 0, 0x64);

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_manager.h"
 #include "race_camera.h"
 #include "effect_task_scheduler.h"
 #include "course_select_menu.h"
@@ -163,7 +164,6 @@ extern void func_800257F0(EffectTask *);
 extern void func_80028194(EffectTask *);
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
-extern void func_800437F0(void *, void *, s32);
 extern void func_80045914(void);
 extern void func_800720E4(s32);
 extern void func_80072114(s32);
@@ -209,19 +209,19 @@ void func_800097E0(void) {
 
     D_800DEED4 = 0;
     D_801235B8->fade = 0xFF;
-    func_800437F0(D_5CBA80, D_5CCD40, 0x21);
-    func_800437F0(D_593D10, D_598A70, 0x22);
-    func_800437F0(D_598A70, D_59AAA0, 0x23);
-    func_800437F0(D_59AAA0, D_59DFE0, 0x24);
-    func_800437F0(D_5A1ED0, D_5C5320, 0x25);
-    func_800437F0(D_59DFE0, D_59E7F0, 0x26);
-    func_800437F0(D_5D4280, D_5DAF30, 0x27);
+    loadCompressedAsset(D_5CBA80, D_5CCD40, 0x21);
+    loadCompressedAsset(D_593D10, D_598A70, 0x22);
+    loadCompressedAsset(D_598A70, D_59AAA0, 0x23);
+    loadCompressedAsset(D_59AAA0, D_59DFE0, 0x24);
+    loadCompressedAsset(D_5A1ED0, D_5C5320, 0x25);
+    loadCompressedAsset(D_59DFE0, D_59E7F0, 0x26);
+    loadCompressedAsset(D_5D4280, D_5DAF30, 0x27);
 
     size = D_1502A0 - D_14B450;
     D_80112130[0xC] = func_80042D58(size);
     func_80099C44(D_14B450, (void *)func_80043040(D_80112130[0xC]), size);
-    func_800437F0(D_1EF530, D_1F1A90, 0xD);
-    func_800437F0(D_1E74E0, D_1EC0F0, 0x1C);
+    loadCompressedAsset(D_1EF530, D_1F1A90, 0xD);
+    loadCompressedAsset(D_1E74E0, D_1EC0F0, 0x1C);
     nextCallback = func_80009C48;
     func_80070EC0(0);
     func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);

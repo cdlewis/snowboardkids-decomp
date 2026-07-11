@@ -1,4 +1,5 @@
 #include "common.h"
+#include "asset_manager.h"
 #include "effect_task_scheduler.h"
 #include "character_select_flow.h"
 #include "character_select_transition.h"
@@ -48,7 +49,6 @@ typedef struct {
 
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
-extern void func_800437F0(void *, void *, s32);
 extern void func_800720E4(s32);
 extern void func_80099C44(void *, void *, s32);
 extern void n_alSeqpDelete(void);
@@ -173,18 +173,18 @@ void func_80006F30(void) {
     D_801235B8->fade = 0xFF;
     D_800DEF14 = D_801235B8->fade;
 
-    func_800437F0(D_5CBA80, D_5CCD40, 0x21);
-    func_800437F0(D_593D10, D_598A70, 0x22);
-    func_800437F0(D_598A70, D_59AAA0, 0x23);
-    func_800437F0(D_59AAA0, D_59DFE0, 0x24);
-    func_800437F0(D_5A1ED0, D_5C5320, 0x25);
-    func_800437F0(D_59DFE0, D_59E7F0, 0x26);
+    loadCompressedAsset(D_5CBA80, D_5CCD40, 0x21);
+    loadCompressedAsset(D_593D10, D_598A70, 0x22);
+    loadCompressedAsset(D_598A70, D_59AAA0, 0x23);
+    loadCompressedAsset(D_59AAA0, D_59DFE0, 0x24);
+    loadCompressedAsset(D_5A1ED0, D_5C5320, 0x25);
+    loadCompressedAsset(D_59DFE0, D_59E7F0, 0x26);
 
     size = D_1502A0 - D_14B450;
     D_80112130[0xC] = func_80042D58(size);
     func_80099C44(D_14B450, (void *)func_80043040(D_80112130[0xC]), size);
-    func_800437F0(D_1EF530, D_1F1A90, 0xD);
-    func_800437F0(D_245A80, D_24C8E0, 0x1F);
+    loadCompressedAsset(D_1EF530, D_1F1A90, 0xD);
+    loadCompressedAsset(D_245A80, D_24C8E0, 0x1F);
     func_80070EC0(0);
     func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x63);
 

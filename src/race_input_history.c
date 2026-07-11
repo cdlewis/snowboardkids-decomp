@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "race_input_history.h"
 
 #define RACE_INPUT_HISTORY_LENGTH 0x1194

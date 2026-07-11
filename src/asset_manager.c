@@ -1,4 +1,4 @@
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "common.h"
 #include "memory_allocator.h"
 #include "game_boot.h"
@@ -31,14 +31,14 @@ struct RandomStateObject {
 extern u8 gRandomTable[];
 extern u16 gMainRngIndex;
 extern u16 gSecondaryRngIndex;
-extern s16 D_800D4010;
-extern s16 D_800D4014;
-extern s16 D_800D4018;
+extern s16 gHuffmanQueueHead;
+extern s16 gHuffmanQueueTail;
+extern s16 gHuffmanQueueCount;
 extern s16 D_801235B0;
-extern CompressedAssetHeader D_80110920;
-extern HuffmanNode D_80110928[];
+extern CompressedAssetHeader gCompressedAssetHeader;
+extern HuffmanNode gHuffmanNodes[];
 extern AssetHandleTable D_80112130;
-extern s32 D_80112128;
+extern s32 gHuffmanNodeCount;
 
 s32 randomNextMain(void) {
     gMainRngIndex++;
@@ -70,11 +70,11 @@ void resetGameplayRng(void) {
     resetSecondaryRng();
 }
 
-// func_800431B0 best match: 99.389%
-#pragma GLOBAL_ASM("asm/nonmatchings/asset_decompression/func_800431B0.s")
+// huffmanQueueInsert best match: 99.389%
+#pragma GLOBAL_ASM("asm/nonmatchings/asset_manager/huffmanQueueInsert.s")
 
 #ifdef NON_MATCHING
-void func_800431B0(s16 arg0) {
+void huffmanQueueInsert(s16 arg0) {
     HuffmanNode *iterNode;
     HuffmanNode *node;
     HuffmanNode *curNode;
@@ -86,16 +86,16 @@ void func_800431B0(s16 arg0) {
     s16 tailCopy;
     s32 end = -1;
 
-    count = &D_800D4018;
+    count = &gHuffmanQueueCount;
     oldHead = 1;
-    head = D_800D4010;
+    head = gHuffmanQueueHead;
     *count += oldHead;
     cur = head;
     if (head == end) {
-        oldHead = D_800D4014;
-        D_800D4010 = arg0;
-        D_800D4014 = arg0;
-        node = &D_80110928[arg0];
+        oldHead = gHuffmanQueueTail;
+        gHuffmanQueueHead = arg0;
+        gHuffmanQueueTail = arg0;
+        node = &gHuffmanNodes[arg0];
         node->next = head;
         node->prev = 0xFFFFu & oldHead;
         return;
@@ -103,69 +103,69 @@ void func_800431B0(s16 arg0) {
 
     if (cur >= 0) {
         do {
-            curNode = &D_80110928[cur];
+            curNode = &gHuffmanNodes[cur];
             iterNode = curNode;
-            if (iterNode->weight < D_80110928[arg0].weight) {
+            if (iterNode->weight < gHuffmanNodes[arg0].weight) {
                 break;
             }
             cur = iterNode->prev;
         } while (cur >= 0);
     }
 
-    node = &D_80110928[arg0];
+    node = &gHuffmanNodes[arg0];
     if (cur == end) {
-        next = (tailCopy = D_800D4014);
-        D_80110928[next].prev = arg0;
+        next = (tailCopy = gHuffmanQueueTail);
+        gHuffmanNodes[next].prev = arg0;
         node->prev = end;
-        D_800D4014 = arg0;
+        gHuffmanQueueTail = arg0;
         node->next = next;
         return;
     }
 
     node->prev = cur;
-    curNode = &D_80110928[cur];
+    curNode = &gHuffmanNodes[cur];
     node->next = curNode->next;
     curNode->next = arg0;
     next = node->next;
     if (end == next) {
-        D_800D4010 = arg0;
+        gHuffmanQueueHead = arg0;
         return;
     }
-    D_80110928[next].prev = arg0;
+    gHuffmanNodes[next].prev = arg0;
 }
 #endif
 
-void func_8004331C(s16 arg0) {
+void huffmanQueueRemove(s16 arg0) {
     HuffmanNode *node;
     s16 prev;
     s16 next;
     s16 end = -1;
 
-    if (D_800D4010 != end) {
-        D_800D4018--;
-        node = &D_80110928[arg0];
+    if (gHuffmanQueueHead != end) {
+        gHuffmanQueueCount--;
+        node = &gHuffmanNodes[arg0];
         next = node->next;
         if (end != next) {
-            D_80110928[next].prev = node->prev;
+            gHuffmanNodes[next].prev = node->prev;
             prev = node->prev;
             next = node->next;
         } else {
             prev = node->prev;
-            D_800D4010 = prev;
+            gHuffmanQueueHead = prev;
         }
         if (end != prev) {
-            D_80110928[prev].next = next;
+            gHuffmanNodes[prev].next = next;
         } else {
-            D_800D4014 = next;
+            gHuffmanQueueTail = next;
         }
     }
 }
 
-// func_800433D8 best match: 62.649%
-#pragma GLOBAL_ASM("asm/nonmatchings/asset_decompression/func_800433D8.s")
+// decompressAssetPayload best match: 62.649%
+#pragma GLOBAL_ASM("asm/nonmatchings/asset_manager/decompressAssetPayload.s")
 
 #ifdef NON_MATCHING
-void func_800433D8(u8 arg0, s32 arg1, s32 arg2, s32 arg3) {
+void decompressAssetPayload(u8 arg0, s32 arg1, s32 arg2, s32 arg3) {
     HuffmanNode *temp_v0;
     HuffmanNode *temp_v0_2;
     HuffmanNode *temp_v1;
@@ -200,10 +200,10 @@ void func_800433D8(u8 arg0, s32 arg1, s32 arg2, s32 arg3) {
     u8 var_s0;
     u8 *var_a1_2;
 
-    D_800D4010 = -1;
-    D_800D4014 = -1;
-    D_800D4018 = 0;
-    D_80112128 = 0;
+    gHuffmanQueueHead = -1;
+    gHuffmanQueueTail = -1;
+    gHuffmanQueueCount = 0;
+    gHuffmanNodeCount = 0;
     var_s2 = 0;
     var_s1 = (u8 *) arg1;
 loop_1:
@@ -222,14 +222,14 @@ block_3:
                 temp_t7 = *var_s1;
                 var_s2 += 1;
                 var_s1 += 1;
-                temp_v0 = &D_80110928[D_80112128];
+                temp_v0 = &gHuffmanNodes[gHuffmanNodeCount];
                 temp_v0->left = -1;
                 temp_v0->right = -1;
                 temp_v0->value = (s16) var_s0;
                 temp_v0->weight = (s16) temp_t7;
-                func_800431B0((s16) D_80112128);
+                huffmanQueueInsert((s16) gHuffmanNodeCount);
                 var_s0 += 1;
-                D_80112128 += 1;
+                gHuffmanNodeCount += 1;
             } while ((temp_s6 + 1) != var_s0);
         }
         goto loop_1;
@@ -238,18 +238,18 @@ block_3:
         goto block_3;
     }
 loop_7:
-    if (D_800D4018 >= 2) {
-        temp_s3_2 = D_800D4014;
-        func_8004331C(temp_s3_2);
-        temp_s6_2 = D_800D4014;
-        func_8004331C(temp_s6_2);
-        temp_v0_2 = &D_80110928[D_80112128];
-        temp_v0_2->weight = D_80110928[temp_s3_2].weight + D_80110928[temp_s6_2].weight;
+    if (gHuffmanQueueCount >= 2) {
+        temp_s3_2 = gHuffmanQueueTail;
+        huffmanQueueRemove(temp_s3_2);
+        temp_s6_2 = gHuffmanQueueTail;
+        huffmanQueueRemove(temp_s6_2);
+        temp_v0_2 = &gHuffmanNodes[gHuffmanNodeCount];
+        temp_v0_2->weight = gHuffmanNodes[temp_s3_2].weight + gHuffmanNodes[temp_s6_2].weight;
         temp_v0_2->left = temp_s6_2;
         temp_v0_2->right = temp_s3_2;
         temp_v0_2->value = -1;
-        func_800431B0((s16) D_80112128);
-        D_80112128 += 1;
+        huffmanQueueInsert((s16) gHuffmanNodeCount);
+        gHuffmanNodeCount += 1;
         goto loop_7;
     }
     var_a0 = 0;
@@ -257,9 +257,9 @@ loop_7:
     if (arg0 == 0) {
         var_a1 = (u8 *) arg2;
         do {
-            var_s0_2 = D_80112128 - 1;
+            var_s0_2 = gHuffmanNodeCount - 1;
 loop_13:
-            temp_v1 = &D_80110928[var_s0_2];
+            temp_v1 = &gHuffmanNodes[var_s0_2];
             temp_v0_3 = temp_v1->value;
             if (temp_v0_3 == -1) {
                 if (var_a0 == 8) {
@@ -281,10 +281,10 @@ loop_13:
         } while (var_t2 != arg3);
     } else {
 loop_23:
-        temp_a1 = D_80112128 - 1;
+        temp_a1 = gHuffmanNodeCount - 1;
         var_s0_3 = temp_a1;
 loop_24:
-        temp_v1_2 = &D_80110928[var_s0_3];
+        temp_v1_2 = &gHuffmanNodes[var_s0_3];
         temp_v0_4 = temp_v1_2->value;
         temp_a2 = temp_v0_4 & 0xFF;
         if (temp_v0_4 == -1) {
@@ -303,7 +303,7 @@ loop_24:
         }
         var_s0_4 = temp_a1;
 loop_31:
-        temp_v1_3 = &D_80110928[var_s0_4];
+        temp_v1_3 = &gHuffmanNodes[var_s0_4];
         temp_v0_5 = temp_v1_3->value;
         if (temp_v0_5 == -1) {
             if (var_a0 == 8) {
@@ -346,22 +346,22 @@ loop_31:
 }
 #endif
 
-void func_800437F0(void *arg0, void *arg1, s32 arg2) {
+void loadCompressedAsset(void *arg0, void *arg1, s32 arg2) {
     s16 *sp28;
     s32 sp30;
 
-    func_80099C44((u32)arg0, &D_80110920, 8);
-    D_80112130.assetHandles[arg2] = func_80042D58(D_80110920.compressedSize);
+    func_80099C44((u32)arg0, &gCompressedAssetHeader, 8);
+    D_80112130.assetHandles[arg2] = func_80042D58(gCompressedAssetHeader.compressedSize);
     D_80112130.compressedAssetHandle = func_80042D58((s32)arg1 - (s32)arg0);
     func_80099C44((u32)arg0, (void *)func_80043040(D_80112130.compressedAssetHandle), (s32)arg1 - (s32)arg0);
     sp30 = func_80043040(D_80112130.compressedAssetHandle) + 5;
     sp28 = &D_80112130.assetHandles[arg2];
-    func_800433D8(D_80110920.flags, sp30, func_80043040(*sp28), D_80110920.compressedSize);
+    decompressAssetPayload(gCompressedAssetHeader.flags, sp30, func_80043040(*sp28), gCompressedAssetHeader.compressedSize);
     func_80043040(*sp28);
     D_80112130.compressedAssetHandle = func_80042EE4(D_80112130.compressedAssetHandle);
 }
 
-void func_800438EC(void *arg0, void *arg1, s32 arg2) {
+void loadRawAsset(void *arg0, void *arg1, s32 arg2) {
     s32 temp_a0 = (s32)arg1 - (s32)arg0;
     s16 *temp_v1;
 

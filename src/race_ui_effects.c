@@ -3,7 +3,7 @@
 #include "snowboard_trail_effects.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "race_item_hit_flags.h"
 #include "viewport_manager.h"
 #include "fixed_point_math.h"

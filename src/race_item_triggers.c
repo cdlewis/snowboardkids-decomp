@@ -1,6 +1,6 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "race_input_history.h"
 #include "fixed_point_math.h"
 #include "race_effects.h"

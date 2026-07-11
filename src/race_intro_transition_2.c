@@ -2,7 +2,7 @@
 #include "race_intro_transition_2.h"
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "course_asset_loader.h"
 #include "input_task_scheduler.h"
 #include "race_camera.h"
@@ -152,7 +152,7 @@ void func_8003ED00(void) {
     D_80122FBA = five3;
 
     if (players[0].replayInputSource == 5) {
-        func_800437F0(&D_24C8E0, &D_24DBE0, 0x2B);
+        loadCompressedAsset(&D_24C8E0, &D_24DBE0, 0x2B);
     }
     func_80043950();
     func_800440F4();

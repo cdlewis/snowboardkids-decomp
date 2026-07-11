@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "viewport_manager.h"
 #include "fixed_point_matrix.h"
 #include "main_menu_overlay_effects.h"
