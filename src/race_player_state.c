@@ -4163,11 +4163,6 @@ void func_80094A94(RaceInputPlayer *player) {
 }
 #endif
 
-// func_80094BEC best match: 95.076% (nonmatchings/func_80094BEC-8207005055717715604/base_2.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094BEC.s")
-
-#ifdef NON_MATCHING
 void func_80094BEC(RaceInputPlayer *player) {
     s16 temp_v1_2;
     s16 temp_v0;
@@ -4190,10 +4185,10 @@ void func_80094BEC(RaceInputPlayer *player) {
 
     temp_v1_2 = player->updateState;
     temp_v0 = temp_v1_2;
-    switch (temp_v0) {
+    switch (temp_v0 ^ 0) {
     case 0:
-        player->stateFlags &= 0xFE0C1FFB;
         player->updateState = temp_v1_2 + 1;
+        player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags |= 0x1202000;
         player->unk2D6 = 1;
         func_80081E40(player, 1);
@@ -4201,10 +4196,10 @@ void func_80094BEC(RaceInputPlayer *player) {
         player->unk60 = 0;
         func_80082DD0(player);
         timer = player->stateTimer;
+        player->stateTimer = (timer ^ 0) - ((timer * player->rankIndex) / 8);
         player->unk40.y = 0;
         player->actionEffectLevel = 6;
         player->actionEffectFrame = 0;
-        player->stateTimer = timer - ((timer * player->rankIndex) / 8);
         /* fallthrough */
     case 1:
         temp_2d6 = player->unk2D6;
@@ -4217,16 +4212,16 @@ void func_80094BEC(RaceInputPlayer *player) {
             player->unk2D6 = 3;
         }
 
-        timer = player->stateTimer - ret - 1;
-        player->stateTimer = timer;
+        player->stateTimer -= ret + 1;
+        timer = player->stateTimer;
         if (timer < 0) {
             player->stateTimer = 0;
             timer = 0;
         }
 
         if (timer == 0) {
-            player->unk2D6 = 1;
             player->updateState += 1;
+            player->unk2D6 = 1;
         }
         break;
     case 2:
@@ -4248,7 +4243,6 @@ void func_80094BEC(RaceInputPlayer *player) {
         break;
     }
 }
-#endif
 
 void func_80094DF8(RaceInputPlayer *player) {
     s16 updateState;
