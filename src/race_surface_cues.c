@@ -1,29 +1,6 @@
 #include "common.h"
 #include "asset_decompression.h"
-
-#define RACE_SURFACE_CUE_COUNT 6
-
-typedef struct {
-    /* 0x000 */ char pad0[0x4];
-    /* 0x004 */ u8 inputOverrideFlags;
-    /* 0x005 */ char pad5[0xB];
-    /* 0x010 */ u8 cueMode;
-    /* 0x011 */ char pad11[0x73];
-    /* 0x084 */ s32 surfaceFlags;
-    /* 0x088 */ char pad88[0x8];
-    /* 0x090 */ s8 stickX;
-    /* 0x091 */ s8 stickY;
-    /* 0x092 */ char pad92[0x216];
-    /* 0x2A8 */ s16 cueState[RACE_SURFACE_CUE_COUNT];
-    /* 0x2B4 */ s16 cueStep[RACE_SURFACE_CUE_COUNT];
-    /* 0x2C0 */ char pad2C0[0x267];
-    /* 0x527 */ s8 overrideMask;
-} RaceSurfaceCueActor;
-
-typedef struct {
-    /* 0x0 */ s16 surfaceType;
-    /* 0x2 */ s16 cueValue;
-} RaceSurfaceCue;
+#include "race_surface_cues.h"
 
 extern RaceSurfaceCue D_800DE590[];
 extern RaceSurfaceCue D_800DE5A0[];
@@ -56,69 +33,69 @@ extern RaceSurfaceCue D_800DE768[];
 #pragma GLOBAL_ASM("asm/nonmatchings/race_surface_cues/func_800831C0.s")
 
 #ifdef NON_MATCHING
-s32 func_800831C0(RaceSurfaceCue *cues, RaceSurfaceCueActor *actor, s16 cueIndex) {
+s32 func_800831C0(RaceSurfaceCue *cues, RaceInputPlayer *player, s16 cueIndex) {
     s16 state;
     s16 step;
     u32 surfaceType;
 
-    state = actor->cueState[cueIndex];
-    surfaceType = (actor->surfaceFlags & 0xF0000) >> 0x10;
+    state = player->surfaceCueState[cueIndex];
+    surfaceType = (player->inputFlags & 0xF0000) >> 0x10;
     switch (state) {
     case 0:
-        step = actor->cueStep[cueIndex];
+        step = player->surfaceCueStep[cueIndex];
         if (surfaceType != cues[step].surfaceType) {
-            actor->cueStep[cueIndex] = 0;
+            player->surfaceCueStep[cueIndex] = 0;
             return 0;
         }
         if (cues[step].cueValue != 0) {
             return cues[step].cueValue;
         }
-        actor->cueState[cueIndex] = state + 1;
+        player->surfaceCueState[cueIndex] = state + 1;
     case 1:
-        step = actor->cueStep[cueIndex];
+        step = player->surfaceCueStep[cueIndex];
         if (surfaceType == cues[step].surfaceType) {
             return 0;
         }
         if (surfaceType == 0) {
             return 0;
         }
-        actor->cueState[cueIndex] = 0;
-        actor->cueStep[cueIndex] = step + 1;
+        player->surfaceCueState[cueIndex] = 0;
+        player->surfaceCueStep[cueIndex] = step + 1;
     default:
         return 0;
     }
 }
 #endif
 
-void func_80083298(RaceSurfaceCueActor *actor) {
-    actor->cueState[0] = 0;
-    actor->cueState[1] = 0;
-    actor->cueState[2] = 0;
-    actor->cueState[3] = 0;
-    actor->cueState[4] = 0;
-    actor->cueState[5] = 0;
-    actor->cueStep[0] = 0;
-    actor->cueStep[1] = 0;
-    actor->cueStep[2] = 0;
-    actor->cueStep[3] = 0;
-    actor->cueStep[4] = 0;
-    actor->cueStep[5] = 0;
+void func_80083298(RaceInputPlayer *player) {
+    player->surfaceCueState[0] = 0;
+    player->surfaceCueState[1] = 0;
+    player->surfaceCueState[2] = 0;
+    player->surfaceCueState[3] = 0;
+    player->surfaceCueState[4] = 0;
+    player->surfaceCueState[5] = 0;
+    player->surfaceCueStep[0] = 0;
+    player->surfaceCueStep[1] = 0;
+    player->surfaceCueStep[2] = 0;
+    player->surfaceCueStep[3] = 0;
+    player->surfaceCueStep[4] = 0;
+    player->surfaceCueStep[5] = 0;
 }
 
-s32 func_800832CC(RaceSurfaceCueActor *actor) {
+s32 func_800832CC(RaceInputPlayer *player) {
     s32 value;
     s32 cue;
     s8 stickY;
     s8 stickX;
 
     cue = 0;
-    if (actor->inputOverrideFlags != 0) {
-        value = func_800430D0() & actor->overrideMask;
+    if (player->unk4 != 0) {
+        value = func_800430D0() & player->surfaceCueOverrideMask;
         cue = value;
         return cue;
     }
 
-    stickY = actor->stickY;
+    stickY = player->stickY;
     if (stickY >= 30) {
         cue = 1;
     }
@@ -126,7 +103,7 @@ s32 func_800832CC(RaceSurfaceCueActor *actor) {
         cue = 2;
     }
 
-    stickX = actor->stickX;
+    stickX = player->stickX;
     if (stickX >= 30) {
         cue = 3;
     }
@@ -146,119 +123,119 @@ s32 func_800832CC(RaceSurfaceCueActor *actor) {
         cue = 8;
     }
 
-    switch (actor->cueMode) {
+    switch (player->characterId) {
     case 0:
-        value = func_800831C0(D_800DE590, actor, 0);
+        value = func_800831C0(D_800DE590, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5A0, actor, 1);
+        value = func_800831C0(D_800DE5A0, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5AC, actor, 2);
+        value = func_800831C0(D_800DE5AC, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5B4, actor, 3);
+        value = func_800831C0(D_800DE5B4, player, 3);
         if (value != 0) {
             cue = value;
         }
         break;
     case 1:
-        value = func_800831C0(D_800DE5EC, actor, 3);
+        value = func_800831C0(D_800DE5EC, player, 3);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5C0, actor, 0);
+        value = func_800831C0(D_800DE5C0, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5D0, actor, 1);
+        value = func_800831C0(D_800DE5D0, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5DC, actor, 2);
+        value = func_800831C0(D_800DE5DC, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5F4, actor, 4);
+        value = func_800831C0(D_800DE5F4, player, 4);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5FC, actor, 5);
+        value = func_800831C0(D_800DE5FC, player, 5);
         if (value != 0) {
             cue = value;
         }
         break;
     case 2:
-        value = func_800831C0(D_800DE628, actor, 2);
+        value = func_800831C0(D_800DE628, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE60C, actor, 0);
+        value = func_800831C0(D_800DE60C, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE61C, actor, 1);
+        value = func_800831C0(D_800DE61C, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE630, actor, 3);
+        value = func_800831C0(D_800DE630, player, 3);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE640, actor, 4);
+        value = func_800831C0(D_800DE640, player, 4);
         if (value != 0) {
             cue = value;
         }
         break;
     case 3:
-        value = func_800831C0(D_800DE684, actor, 0);
+        value = func_800831C0(D_800DE684, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE698, actor, 1);
+        value = func_800831C0(D_800DE698, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE6A0, actor, 2);
+        value = func_800831C0(D_800DE6A0, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE6B0, actor, 3);
+        value = func_800831C0(D_800DE6B0, player, 3);
         if (value != 0) {
             cue = value;
         }
         break;
     case 4:
-        value = func_800831C0(D_800DE6C8, actor, 0);
+        value = func_800831C0(D_800DE6C8, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE6EC, actor, 1);
+        value = func_800831C0(D_800DE6EC, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE6F8, actor, 2);
+        value = func_800831C0(D_800DE6F8, player, 2);
         if (value != 0) {
             cue = value;
         }
         break;
     case 5:
-        value = func_800831C0(D_800DE708, actor, 0);
+        value = func_800831C0(D_800DE708, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE718, actor, 1);
+        value = func_800831C0(D_800DE718, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE724, actor, 2);
+        value = func_800831C0(D_800DE724, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE768, actor, 3);
+        value = func_800831C0(D_800DE768, player, 3);
         if (value != 0) {
             cue = value;
         }

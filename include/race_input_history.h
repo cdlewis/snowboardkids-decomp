@@ -106,7 +106,8 @@ typedef struct RaceInputPlayer {
     /* 0x2A2 */ s16 unk2A2;
     /* 0x2A4 */ s16 unk2A4;
     /* 0x2A6 */ s16 unk2A6;
-    /* 0x2A8 */ char pad2A8[0x18];
+    /* 0x2A8 */ s16 surfaceCueState[6];
+    /* 0x2B4 */ s16 surfaceCueStep[6];
     /* 0x2C0 */ s16 unk2C0;
     /* 0x2C2 */ s8 unk2C2;
     /* 0x2C3 */ s8 unk2C3;
@@ -195,7 +196,8 @@ typedef struct RaceInputPlayer {
     /* 0x51B */ char pad51B[9];
     /* 0x524 */ s8 unk524;
     /* 0x525 */ s8 unk525;
-    /* 0x526 */ char pad526[2];
+    /* 0x526 */ char pad526[1];
+    /* 0x527 */ s8 surfaceCueOverrideMask;
     /* 0x528 */ s8 unk528;
     /* 0x529 */ char pad529[3];
     /* 0x52C */ s8 actionTriggerCooldown;
