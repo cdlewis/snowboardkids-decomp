@@ -859,7 +859,7 @@ extern u32 D_200CFB0[];
 extern u32 D_200D3A8[];
 extern void addRenderCallback(void *, void *, s32);
 extern RaceUiGfxCommandDest *allocFixedTransformMatrix(RaceUiTrailCopyBlock *);
-extern void func_80048C90(RaceUiGfxCommandDest *, s32 *);
+extern void setPackedMatrixTranslation(RaceUiGfxCommandDest *, s32 *);
 extern void osWritebackDCache(void *, s32);
 extern void func_80045A78(s16, s16, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
@@ -5273,7 +5273,7 @@ void func_8006565C(RaceUiGfxCommandActor *arg0) {
         do {
             script->active = one;
             actor1->particles[i] = *template;
-            func_80048C90(&actor1->particles[i], script->command);
+            setPackedMatrixTranslation(&actor1->particles[i], script->command);
             i++;
             offset += sizeof(RaceUiGfxCommandDest);
             script++;

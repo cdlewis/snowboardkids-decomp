@@ -242,10 +242,10 @@ extern void osWritebackDCache(void *, s32);
 extern void *allocMenuRenderScratch(s32);
 extern void func_800486BC(void *, void *);
 extern void *allocFixedTransformMatrix(CourseEffectMatrixSource *);
-extern void func_80048C90(CourseRenderCommand *, Vec3i *);
+extern void setPackedMatrixTranslation(CourseRenderCommand *, Vec3i *);
 extern s32 func_80048E60(Vec3i *);
 extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
-extern s32 func_8004597C(s32, s32);
+extern void *resolveAssetTableRelativePointer(void *, u32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void osWritebackDCache(void *, s32);
@@ -674,7 +674,7 @@ void initCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
         if (count > 0) {
             do {
                 arg0->vertices[i] = gIdentityMatrix[0];
-                func_80048C90(&arg0->vertices[i], &entry->pos);
+                setPackedMatrixTranslation(&arg0->vertices[i], &entry->pos);
                 i++;
                 entry++;
             } while (i != count);
@@ -1355,7 +1355,7 @@ void initCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
                   gCourseBillboardMarkerTextureResources[arg0->entryIndex].textureIndex,
                   &arg0->texture, &arg0->palette);
     arg0->baseVertices =
-        (Vtx *) func_8004597C(getRelocatableHeapBlockBase(D_80112140), (s32) gCourseBillboardMarkerVertexResources[arg0->entryIndex].baseVerticesInput);
+        (Vtx *) resolveAssetTableRelativePointer(getRelocatableHeapBlockBase(D_80112140), (s32) gCourseBillboardMarkerVertexResources[arg0->entryIndex].baseVerticesInput);
 
     {
         CourseMarkerEntry *entry = &gCourseBillboardMarkerEntries[arg0->entryIndex];

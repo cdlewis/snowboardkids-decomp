@@ -158,7 +158,7 @@ struct RaceParticleActor {
 extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
 extern void func_800486BC(CourseEffectMatrixSource *, void *);
 extern GfxCommandDest *allocFixedTransformMatrix(void *);
-extern void func_80048C90(GfxCommandDest *, Vec3i *);
+extern void setPackedMatrixTranslation(GfxCommandDest *, Vec3i *);
 extern s32 func_80048E60(void *);
 extern void osWritebackDCache(void *, s32);
 extern void addRenderCallback(void *, void *, void *);
@@ -450,7 +450,7 @@ void func_80067034(RaceModelListActor *arg0) {
         do {
             script->enabled = one;
             actor1->modelBuffer[i] = *template;
-            func_80048C90(&actor1->modelBuffer[i], &script->transform);
+            setPackedMatrixTranslation(&actor1->modelBuffer[i], &script->transform);
             i++;
             offset += sizeof(GfxCommandDest);
             script++;
