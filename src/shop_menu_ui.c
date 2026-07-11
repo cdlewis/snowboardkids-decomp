@@ -2,6 +2,8 @@
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
+#define MENU_RENDERING_BROAD_PROTOTYPES
+#include "menu_rendering.h"
 
 typedef struct ShopMenuWidgetActor ShopMenuWidgetActor;
 
@@ -175,9 +177,6 @@ extern void func_8002E214(ShopMenuWidgetActor *);
 extern void func_8002E42C(ShopMenuWidgetActor *);
 extern void func_8002E798(ShopMenuWidgetActor *);
 extern void func_8002FBC8(ShopMenuWidgetActor *);
-extern void func_8001061C(s16, s16, s32, u16, s32, s32, s32, s32, s32, s32);
-extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
-extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern s16 D_80112130[];
 extern u8 D_800EC9E6;
 extern u8 D_800EC9C1;
@@ -211,10 +210,6 @@ void func_8002C4E0(ShopMenuRowActor *arg0) {
     } while (0);
 }
 
-extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
-extern void func_800129DC(s16, s16, u16 *, s32, s32);
-extern void func_80013D0C(s16, s16, void *, s32, s32);
-extern void func_80013154(s32, s32, ShopDescriptionText, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern s32 D_800B34B0[];

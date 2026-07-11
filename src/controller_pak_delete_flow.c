@@ -6,6 +6,7 @@
 #include "controller_pak_menu.h"
 #include "input_task_scheduler.h"
 #include "main_menu_score_ui.h"
+#include "menu_rendering.h"
 
 typedef struct {
     /* 0x0 */ s8 step;
@@ -50,7 +51,6 @@ extern u8 D_59DFE0;
 extern u8 D_60F1A0;
 extern u8 D_60F990;
 
-extern s32 func_80013F88(s32, s32, s32);
 extern void func_80045914(void);
 extern void func_80072138(s32, s32);
 extern void func_800704F0(void);

@@ -1,6 +1,8 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
 #include "memory_allocator.h"
+#define MENU_RENDERING_C
+#include "menu_rendering.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
 { \
@@ -11,8 +13,6 @@
 
 typedef struct MenuRenderTask MenuRenderTask;
 typedef struct RenderCallbackNode RenderCallbackNode;
-typedef struct MenuRenderSprite MenuRenderSprite;
-typedef struct MenuRenderSpriteActor MenuRenderSpriteActor;
 typedef struct MenuRenderAssetTableHeader MenuRenderAssetTableHeader;
 typedef struct MenuRenderAssetTableEntry MenuRenderAssetTableEntry;
 typedef struct FontAssetHeader FontAssetHeader;
@@ -114,7 +114,6 @@ void func_8000F0EC(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
                    s32 argA, s32 argB);
 void func_8000F970(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8,
                    s32 arg9, s32 argA, s32 argB, s32 argC);
-extern void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);
 void func_80012AE4(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 arg5);
 void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
 extern Gfx D_800DEFF8[];

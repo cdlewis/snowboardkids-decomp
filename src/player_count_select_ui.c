@@ -1,6 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
+#define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
 typedef struct {
@@ -83,7 +84,6 @@ typedef struct {
 } PlayerCountSelectAssetHandles;
 
 extern void func_800483FC(void *, void *, void *);
-extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
 extern void func_800296D8(PlayerCountSelectWidgetActor *);
 extern void func_8002980C(PlayerCountSelectWidgetActor *);
 extern void func_80029FB8(PlayerCountSelectWidgetActor *);
@@ -102,9 +102,6 @@ extern void func_8002B1FC(PlayerCountSelectWidgetActor *);
 extern void func_8002B2FC(PlayerCountSelectWidgetActor *);
 extern void func_8002B424(PlayerCountSelectWidgetActor *);
 extern void func_8002B524(PlayerCountSelectWidgetActor *);
-extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
-extern void func_80011264(s16, s16, s32, u16, u16, u16);
-extern void func_80013154(s32, s32, PlayerCountPortrait, s32, s32, s32);
 extern void func_8001BA2C(s32, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern u8 D_800EC9C1;

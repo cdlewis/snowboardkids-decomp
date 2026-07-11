@@ -3,9 +3,9 @@
 #include "character_select_flow.h"
 #include "character_select_transition.h"
 #include "input_task_scheduler.h"
+#include "menu_rendering.h"
 #include "title_menu.h"
 
-extern s32 func_80013F88(s32, s32, s32);
 extern void func_80045914(void);
 
 extern CharacterSelectFlowState *D_801235B8;

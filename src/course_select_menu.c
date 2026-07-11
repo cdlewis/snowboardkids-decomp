@@ -2,6 +2,7 @@
 #include "effect_task_scheduler.h"
 #include "course_select_menu.h"
 #include "input_task_scheduler.h"
+#include "menu_rendering.h"
 #include "title_menu.h"
 
 typedef struct {
@@ -160,7 +161,6 @@ extern void func_80028194(EffectTask *);
 extern void func_8002C800(EffectTask *);
 extern void func_8002F854();
 extern void func_8002FEF8(void);
-extern s32 func_80013F88(s32, s32, s32);
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern void func_800437F0(void *, void *, s32);
