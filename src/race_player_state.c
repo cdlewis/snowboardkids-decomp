@@ -3380,17 +3380,9 @@ void func_80093144(RaceInputPlayer *player) {
     }
 }
 
-// func_80093304 best match: 99.344%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80093304.s")
-
-#ifdef NON_MATCHING
 void func_80093304(RaceInputPlayer *player) {
     s16 updateState;
-    long long new_var;
     s32 stateTimer;
-    s32 yVel;
-    s32 temp;
 
     updateState = player->updateState;
     if (updateState == 0) {
@@ -3417,16 +3409,12 @@ void func_80093304(RaceInputPlayer *player) {
         func_8008BB20(player, 0, 0x4000, 0x4000, 0x4000);
     }
 
-    yVel = player->unk40.y - 0xA000;
-    player->unk40.y = yVel;
-    player->posY += yVel;
+    player->unk40.y -= 0xA000;
+    player->posY += player->unk40.y;
 
     if (!(player->stateFlags & 1)) {
-        new_var = func_80084958(player);
-        temp = player->stateTimer - new_var;
-        stateTimer = temp - 1;
-        player->stateTimer = stateTimer;
-        if (stateTimer < 0) {
+        player->stateTimer = player->stateTimer - func_80084958(player) - 1;
+        if (player->stateTimer < 0) {
             player->stateTimer = 0;
         }
         if (func_80082EC0(player) != 0) {
@@ -3450,7 +3438,6 @@ void func_80093304(RaceInputPlayer *player) {
         }
     }
 }
-#endif
 
 void func_800934EC(RaceInputPlayer *player) {
     Struct800955C0 *spawn;
