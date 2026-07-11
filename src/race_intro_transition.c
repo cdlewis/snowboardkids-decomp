@@ -206,7 +206,7 @@ void func_8003EA78(void) {
     D_801235B8->startDelay--;
     if (D_801235B8->startDelay == 0) {
         func_800728E0();
-        func_80071408(func_800540EC, 0, 0x64);
+        createEffectTask(func_800540EC, 0, 0x64);
         func_8009956C(func_8003EAF0, 0);
     }
 }

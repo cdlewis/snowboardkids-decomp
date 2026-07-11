@@ -66,7 +66,7 @@ void func_80008620(void) {
         D_80121B5E = 0;
     }
     func_8009956C(&func_800088C8, 0);
-    func_8007105C();
+    updateEffectTasks();
     D_8010AF50.state = 0;
     D_8010AF50.alpha = 0;
 }
@@ -85,7 +85,7 @@ void func_800086EC(void) {
     loadCompressedRomAsset(&D_5CCD40, &D_5D4280, 0x25);
     loadCompressedRomAsset(&D_245A80, &D_24C8E0, 0x1F);
     func_80070EC0(0);
-    func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
+    createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
     D_800EC9C1 = 0;
     D_80121D88 = 0;
     D_8010ADDC = 0;
@@ -100,7 +100,7 @@ void func_800086EC(void) {
         D_80121B5E = 0;
     }
     func_8009956C(func_800088C8, 0);
-    func_8007105C();
+    updateEffectTasks();
     D_8010AF50.state = 0;
     D_8010AF50.alpha = 0;
 }
@@ -121,9 +121,9 @@ void func_800088C8(void) {
     u8 waitTimer;
 
     if (D_801235B8->fade != 0) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 0);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 0);
         if (D_801235B8->fade == 0) {
-            func_80071408(func_80029548, 0, 0x62);
+            createEffectTask(func_80029548, 0, 0x62);
         }
     } else {
         if (D_80121D88 == 0) {
@@ -214,7 +214,7 @@ void func_800088C8(void) {
         }
     }
     D_801235B4 = 0;
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -227,16 +227,16 @@ void func_80008C04(void) {
         func_80072114(8);
         D_800EC9DD = 1;
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_80008C84(void) {
     if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            func_8007105C();
+            updateEffectTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

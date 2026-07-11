@@ -224,7 +224,7 @@ void func_800097E0(void) {
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     nextCallback = func_80009C48;
     func_80070EC0(0);
-    func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
+    createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
 
     D_800EC9C1 = 0;
     D_800EC9C0 = 0;
@@ -273,7 +273,7 @@ void func_800097E0(void) {
     }
 
     func_8009956C(nextCallback, 0);
-    func_8007105C();
+    updateEffectTasks();
 
     gCourseSelectStatus.unk0Array[zero] = zero;
     D_8010AF1C = zero;
@@ -331,9 +331,9 @@ void func_80009C48(void) {
     u8 transition;
 
     if (D_801235B8->fade != 0) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 0);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 0);
         if (D_801235B8->fade == 0) {
-            func_80071408(func_8002C800, 0, 0x63);
+            createEffectTask(func_8002C800, 0, 0x63);
             if (D_8010AF70 == 0) {
                 enqueueSoundEffect(0x44, 0x32);
             }
@@ -435,7 +435,7 @@ void func_80009C48(void) {
         }
     }
     D_801235B4 = 0;
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -459,8 +459,8 @@ void func_8000A048(void) {
     D_8010AEA0[0] = 0;
     D_800EC9C1 = 0;
     D_8010ADF0 = 0;
-    func_80071408(func_800257F0, 0, 0x63);
-    D_8010ADE8 = func_80071408(func_80028194, 0, 0x61);
+    createEffectTask(func_800257F0, 0, 0x63);
+    D_8010ADE8 = createEffectTask(func_80028194, 0, 0x61);
     courseFlags = D_800F42C7;
     if (courseFlags & 7) {
         D_8010AEA0[0] = 1;
@@ -524,7 +524,7 @@ loop_6:
 
     D_80121D80.unk6 = D_8010AEF8[var_a2_2];
     func_8009956C(func_8000A214, 0);
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -704,7 +704,7 @@ block_17:
                         D_80121D88 = 1;
                         if (D_800EC9E6 == 0) {
                             sp44 = 0;
-                            func_80071408(func_8002EC04, 0, 0x62);
+                            createEffectTask(func_8002EC04, 0, 0x62);
                             var_a3_2 = 0;
                         }
                     }
@@ -824,7 +824,7 @@ block_17:
             D_801235B8->timer = 0;
             sp44 = var_a3_2;
             func_8009956C(func_8000AFE8, 0);
-            func_80071408(func_8002EFB8, 0, 0x64);
+            createEffectTask(func_8002EFB8, 0, 0x64);
         }
         var_v0_3 = (u8) D_800EC9C0;
         sp44 = var_a3_2;
@@ -900,7 +900,7 @@ block_17:
             var_v0_7 += 0xB0;
         } while (var_a3_3 < (s32) D_80121B55);
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 #endif
@@ -973,7 +973,7 @@ void func_8000AFE8(void) {
             var_s1 += 1;
         } while (var_s0 < (s32) (new_var = D_80121B55));
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -1121,7 +1121,7 @@ after_input:
             var_s0 += 1;
         } while (i < (s32) D_80121B55);
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -1131,7 +1131,7 @@ void func_8000B690(void) {
     s8 temp_v0;
 
     if (D_801235B8->screenState == 2) {
-        func_80071408(func_8002F854, 0, 0x63);
+        createEffectTask(func_8002F854, 0, 0x63);
         temp_v0 = D_800ECA2F[D_80121D86];
         D_8010AF72 = temp_v0 % 7;
         D_8010AF73 = temp_v0 / 7;
@@ -1141,7 +1141,7 @@ void func_8000B690(void) {
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 // func_8000B7B8 best match: 68.617% (nonmatchings/func_8000B7B8-2127290767680699791/base_3.c)
@@ -1261,7 +1261,7 @@ block_16:
             var_s0 += 1;
         } while (var_v0 < (s32) D_80121B55);
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -1276,7 +1276,7 @@ void func_8000BAFC(void) {
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_8000BBB4(void) {
@@ -1296,7 +1296,7 @@ void func_8000BBB4(void) {
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_8000BCA0(void) {
@@ -1334,7 +1334,7 @@ void func_8000BCA0(void) {
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_8000BEC0(void) {
@@ -1348,11 +1348,11 @@ void func_8000BEC0(void) {
     D_8010AED0 = temp[0x3F] + 1;
     temp[0x3F] = D_800B34E0[(u8) D_8010AF73 * 7 + (u8) D_8010AF72];
     gCourseSelectStatus.transitionState = 6;
-    func_80071408(&func_8002FEF8, 0, 0x64);
+    createEffectTask(&func_8002FEF8, 0, 0x64);
     func_8009956C(func_8000C010, 0); var_s0 = D_801121E0; do { D_800EC9C4 = var_s0; var_s0->unk2C();
         var_s0 += 1;
     } while (var_s0 != &D_80112340);
-    func_8007105C();
+    updateEffectTasks();
     enqueueSoundEffect(0x17, 0x32);
 }
 
@@ -1368,7 +1368,7 @@ void func_8000C010(void) {
         func_80070614(1);
         func_8009956C(func_8000B7B8, 0);
         gCourseSelectStatus.transitionState = 2;
- D_8010AED0 = 0; } var_s0 = D_801121E0; do { (D_800EC9C4 = var_s0)->unk2C(); var_s0 += 1; } while (var_s0 != (&D_80112340)); func_8007105C();
+ D_8010AED0 = 0; } var_s0 = D_801121E0; do { (D_800EC9C4 = var_s0)->unk2C(); var_s0 += 1; } while (var_s0 != (&D_80112340)); updateEffectTasks();
 }
 
 void func_8000C114(void) {
@@ -1376,11 +1376,11 @@ void func_8000C114(void) {
     s32 count;
 
     if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            func_8007105C();
+            updateEffectTasks();
         }
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();

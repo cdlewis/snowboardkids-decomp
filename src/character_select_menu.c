@@ -156,12 +156,12 @@ loop_1:
         }
     }
 
-    D_8010ADDC = func_80071408(func_800179D4, 0, 0x64);
-    D_8010ADEC = func_80071408(func_800191A0, 0, 0x64);
-    D_8010ADE8 = func_80071408(func_800183DC, 0, 0x64);
-    D_8010ADE0 = func_80071408(func_80018060, 0, 0x64);
-    func_80071408(func_80018B6C, 0, 0x64);
-    D_8010ADE4 = func_80071408(func_80017D08, 0, 0x63);
+    D_8010ADDC = createEffectTask(func_800179D4, 0, 0x64);
+    D_8010ADEC = createEffectTask(func_800191A0, 0, 0x64);
+    D_8010ADE8 = createEffectTask(func_800183DC, 0, 0x64);
+    D_8010ADE0 = createEffectTask(func_80018060, 0, 0x64);
+    createEffectTask(func_80018B6C, 0, 0x64);
+    D_8010ADE4 = createEffectTask(func_80017D08, 0, 0x63);
     func_8009956C(updateCharacterSelectMenu, 0);
 
     playerCount = D_80121B55;
@@ -197,7 +197,7 @@ loop_1:
     if (D_800B3190 != 0) {
         D_8010AE68 = 1;
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -286,17 +286,17 @@ void updateCharacterSelectConfirmationMenu(void) {
             state->fade = 0;
         }
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
 void fadeOutCharacterSelectMenu(void) {
     if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            func_8007105C();
+            updateEffectTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

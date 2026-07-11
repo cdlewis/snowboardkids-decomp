@@ -80,7 +80,7 @@ extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80047E88(s32, s16, s32, s32);
 extern void func_80048278(s32, s32, char *, s32);
 extern void func_800483FC(void *, void *, s32);
-extern void func_80071408(void *, s32, s32);
+extern void createEffectTask(void *, s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
@@ -1140,7 +1140,7 @@ void func_8007AA50(void) {
                 if ((D_800B9540[D_80121B50].finishLinePathIndex * 8) < sp40) {
                     D_80121B7C = *(s32 *)&D_80121B74;
                     D_80121B80 = 1;
-                    func_80071408(func_80065144, 0, 0);
+                    createEffectTask(func_80065144, 0, 0);
                 }
             }
         }

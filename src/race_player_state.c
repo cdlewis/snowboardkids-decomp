@@ -4537,7 +4537,7 @@ void func_80095650(RaceInputPlayer *player) {
         player->updateState++;
         player->updateTimer = 0;
         player->stateTimer = 0x20;
-        func_80071408(func_8006BB50, 0, 0x64);
+        createEffectTask(func_8006BB50, 0, 0x64);
         player->stateFlags &= ~0x20;
     }
 }
@@ -4732,7 +4732,7 @@ void func_80095BE4(RaceInputPlayer *player) {
         D_801121E0[player->playerIndex].unk94 = player->posX;
         D_801121E0[player->playerIndex].unk98 = player->posY;
         D_801121E0[player->playerIndex].unk9C = player->posZ;
-        func_80071408(func_8006C088, 0, 0x64);
+        createEffectTask(func_8006C088, 0, 0x64);
         if (player->unk508 >= (D_80121B52 - 1)) {
             func_800716A4(func_80054B2C, 0, 0x64, player->playerIndex);
         }

@@ -811,7 +811,7 @@ void func_8004B83C(RaceEffectActor *arg0) {
 }
 
 void func_8004B8B4(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
-    RaceEffectActor *obj = func_80071408(func_8004B83C, 0, 0x1E);
+    RaceEffectActor *obj = createEffectTask(func_8004B83C, 0, 0x1E);
 
     if (obj != NULL) {
         obj->pos.x = arg0;

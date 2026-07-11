@@ -262,8 +262,8 @@ void func_8002C624(ShopMenuRowActor *arg0) {
         }
         if (moved == 0) {
             spawnRow->unk24 = 1;
-            func_80071408(func_8002D294, 0, 0x5F);
-            func_80071408(func_8002DC14, 0, 0x61);
+            createEffectTask(func_8002D294, 0, 0x5F);
+            createEffectTask(func_8002DC14, 0, 0x61);
         }
         state = arg0->unk24;
         break;
@@ -426,17 +426,17 @@ void func_8002CFAC(ShopMenuWidgetActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->item.bytes.subTimer == 0) {
-            func_80071408(func_8002CAA0, 0, 0x63);
+            createEffectTask(func_8002CAA0, 0, 0x63);
         }
         arg0->item.bytes.subTimer++;
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->item.bytes.subState = 3;
-            func_80071408(func_8002E074, 0, 0x64);
-            D_8010ADDC = (s32) func_80071408(func_8002DE6C, 0, 0x64);
-            func_80071408(func_8002E214, 0, 0x64);
-            func_80071408(func_8002E798, 0, 0x60);
-            func_80071408(func_8002E42C, 0, 0x64);
+            createEffectTask(func_8002E074, 0, 0x64);
+            D_8010ADDC = (s32) createEffectTask(func_8002DE6C, 0, 0x64);
+            createEffectTask(func_8002E214, 0, 0x64);
+            createEffectTask(func_8002E798, 0, 0x60);
+            createEffectTask(func_8002E42C, 0, 0x64);
         }
         state = arg0->item.bytes.subState;
         break;
@@ -1379,7 +1379,7 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
             if ((s32)count < 10) {
                 arg0->visibleCount = count + 1;
                 if ((u16)arg0->visibleCount == 10) {
-                    func_80071408(func_8002FBC8, 0, 0x63);
+                    createEffectTask(func_8002FBC8, 0, 0x63);
                 }
             }
         }

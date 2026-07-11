@@ -186,7 +186,7 @@ void initRaceCharacterSelectMenu(void) {
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
     func_80070EC0(0);
-    func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x63);
+    createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x63);
 
     D_800EC9C0 = 0;
     D_8010ADDC = 0;
@@ -325,15 +325,15 @@ typedef struct RaceCharacterSelectObject {
     /* 0x30 */ u8 pad30[0x80];
 } RaceCharacterSelectObject;
 
-extern void *func_80071408();
+extern void func_800257F0(EffectTask *);
+extern void func_80028194(EffectTask *);
+extern void func_80028B0C(EffectTask *);
+extern void func_8002916C(EffectTask *);
+extern void *createEffectTask(void (*)(EffectTask *), s32, s32);
 extern void func_80072114(s32);
 extern void func_80072138();
 extern void func_8009956C(void (*)(void), s32);
 extern void func_8007105C(void);
-extern void func_800257F0();
-extern void func_80028194();
-extern void func_80028B0C();
-extern void func_8002916C();
 
 extern void *D_8010ADE8;
 extern u8 D_8010AF06[];
@@ -371,15 +371,15 @@ void updateRaceCharacterSelectMenu(void) {
 
     readyCount = 0;
     if (D_801235B8->fade != 0) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 0);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 0);
         if (D_801235B8->fade == 0) {
             if (D_80121B55 == 1) {
-                func_80071408(func_800257F0, 0, 0x63);
+                createEffectTask(func_800257F0, 0, 0x63);
             } else {
-                func_80071408(func_80028B0C, 0, 0x62);
-                func_80071408(func_8002916C, 0, 0x63);
+                createEffectTask(func_80028B0C, 0, 0x62);
+                createEffectTask(func_8002916C, 0, 0x63);
             }
-            D_8010ADE8 = func_80071408(func_80028194, 0, 0x61);
+            D_8010ADE8 = createEffectTask(func_80028194, 0, 0x61);
         }
     } else {
         playerCount = D_80121B55;
@@ -646,18 +646,18 @@ void updateRaceCharacterSelectMenu(void) {
         obj->update();
         obj++;
     } while (obj != &D_801124A0);
-    func_8007105C();
+    updateEffectTasks();
 }
 
 #endif
 
 void fadeOutRaceCharacterSelectMenu(void) {
     if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
+        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            func_8007105C();
+            updateEffectTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

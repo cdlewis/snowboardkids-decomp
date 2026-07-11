@@ -193,7 +193,7 @@ void func_800367A8(MainMenuSceneActor4 *arg0) {
             var_v0 = arg0->timer;
         }
         if (var_v0 == 0x27) {
-            func_80071408(func_8003C728, 0, 0x64);
+            createEffectTask(func_8003C728, 0, 0x64);
             arg0->timer = 0;
         }
     }
@@ -366,7 +366,7 @@ void func_80036EBC(MainMenuSceneActor4 *arg0) {
 void func_80036F6C(MainMenuSceneActor4 *arg0) {
     if (D_8010B1A2 == 1) {
         func_80071824(arg0, func_80036EBC);
-        func_80071408(&func_8003D384, 0, 0x64);
+        createEffectTask(&func_8003D384, 0, 0x64);
     }
 }
 

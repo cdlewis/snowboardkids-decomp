@@ -199,23 +199,23 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
             if (arg0->itemCount < (gCharacterSelectCourseExitOptionIndex + 1)) {
                 arg0->itemCount++;
                 if (arg0->itemCount == (gCharacterSelectCourseExitOptionIndex + 1)) {
-                    D_8010ADE4 = func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewFrame, 0, 0x58);
-                    func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel1, 0, 0x59);
-                    func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel2, 0, 0x5A);
+                    D_8010ADE4 = createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewFrame, 0, 0x58);
+                    createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel1, 0, 0x59);
+                    createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel2, 0, 0x5A);
                     finalCallback = (void (*)(EffectTask *))initCharacterSelectCourseExitPreviewPanel;
-                    func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel3, 0, 0x5B);
-                    func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel4, 0, 0x5C);
-                    func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel5, 0, 0x5D);
+                    createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel3, 0, 0x5B);
+                    createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel4, 0, 0x5C);
+                    createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel5, 0, 0x5D);
                     if (gHighestUnlockedCourse != 0) {
-                        func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel6, 0, 0x5E);
+                        createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel6, 0, 0x5E);
                         if (gHighestUnlockedCourse >= 2) {
-                            func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel7, 0, 0x5F);
+                            createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel7, 0, 0x5F);
                             if (gHighestUnlockedCourse >= 3) {
-                                func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel8, 0, 0x60);
+                                createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel8, 0, 0x60);
                             }
                         }
                     }
-                    func_80071408(finalCallback, 0, 0x61);
+                    createEffectTask(finalCallback, 0, 0x61);
                 }
             }
         }
@@ -273,11 +273,11 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
             arg0->y[D_80121B50] = -0x60;
             arg0->state = 4;
             if (D_800EC9C2 == 2) {
-                D_8010ADE0 = func_80071408((void (*)(EffectTask *))initCharacterSelectCourseExitPopup, 0, 0x62);
-                func_80071408((void (*)(EffectTask *))initCharacterSelectCourseRecordsPopup, 0, 0x63);
+                D_8010ADE0 = createEffectTask((void (*)(EffectTask *))initCharacterSelectCourseExitPopup, 0, 0x62);
+                createEffectTask((void (*)(EffectTask *))initCharacterSelectCourseRecordsPopup, 0, 0x63);
             } else {
-                func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePlayerStatsPanel, 0, 0x61);
-                func_80071408((void (*)(EffectTask *))initCharacterSelectCourseSubmenuFrame, 0, 0x62);
+                createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePlayerStatsPanel, 0, 0x61);
+                createEffectTask((void (*)(EffectTask *))initCharacterSelectCourseSubmenuFrame, 0, 0x62);
             }
         }
         break;
@@ -508,13 +508,13 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
                 nextItemCount = arg0->itemCount + 1;
                 arg0->itemCount = nextItemCount;
                 if (visibleCount == nextItemCount) {
-                    D_8010ADE4 = func_80071408(initCharacterSelectCoursePreviewFrame, 0, 0x59);
+                    D_8010ADE4 = createEffectTask(initCharacterSelectCoursePreviewFrame, 0, 0x59);
                     if (D_80121B5E < 2) {
-                        func_80071408(initCharacterSelectCoursePreviewPanel1, 0, 0x5A);
-                        func_80071408(initCharacterSelectCoursePreviewPanel2, 0, 0x5B);
+                        createEffectTask(initCharacterSelectCoursePreviewPanel1, 0, 0x5A);
+                        createEffectTask(initCharacterSelectCoursePreviewPanel2, 0, 0x5B);
                     }
-                    func_80071408(initCharacterSelectCourseExitPreviewPanel, 0, 0x5C);
-                    func_80071408(initCharacterSelectCourseRecordsFrame, 0, 0x62);
+                    createEffectTask(initCharacterSelectCourseExitPreviewPanel, 0, 0x5C);
+                    createEffectTask(initCharacterSelectCourseRecordsFrame, 0, 0x62);
                 }
             }
         }
@@ -558,8 +558,8 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         if (arg0->y[D_80121B50] < -0x57) {
             arg0->y[D_80121B50] = -0x58;
             arg0->state = 4;
-            func_80071408(initCharacterSelectCourseRecordsPopup, 0, 0x62);
-            D_8010ADE0 = func_80071408(initCharacterSelectCourseExitPopup, 0, 0x63);
+            createEffectTask(initCharacterSelectCourseRecordsPopup, 0, 0x62);
+            D_8010ADE0 = createEffectTask(initCharacterSelectCourseExitPopup, 0, 0x63);
         }
         break;
 
@@ -805,9 +805,9 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->transition.bytes.state = 3;
-            D_8010ADDC = (s32)func_80071408(initCharacterSelectCourseListCursor, 0, 0x64);
-            func_80071408(initCharacterSelectCourseTitleCursor, 0, 0x62);
-            func_80071408(initCharacterSelectCourseStatsBadge, 0, 0x62);
+            D_8010ADDC = (s32)createEffectTask(initCharacterSelectCourseListCursor, 0, 0x64);
+            createEffectTask(initCharacterSelectCourseTitleCursor, 0, 0x62);
+            createEffectTask(initCharacterSelectCourseStatsBadge, 0, 0x62);
         }
         state = arg0->transition.bytes.state;
         break;
@@ -2320,7 +2320,7 @@ void updateCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *a
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->sprite.bytes.state = 1;
-            D_8010ADE0 = func_80071408(initCharacterSelectCourseNamePopup, 0, 0x63);
+            D_8010ADE0 = createEffectTask(initCharacterSelectCourseNamePopup, 0, 0x63);
         }
         state = arg0->sprite.bytes.state;
         break;
@@ -2371,7 +2371,7 @@ void updateCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *a
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->sprite.bytes.state = 1;
-            func_80071408(initCharacterSelectCourseDescriptionPopup, 0, 0x63);
+            createEffectTask(initCharacterSelectCourseDescriptionPopup, 0, 0x63);
         }
         state = arg0->sprite.bytes.state;
         break;

@@ -17,7 +17,7 @@ typedef struct EffectTask {
 } EffectTask; // size = 0x118
 
 void func_80070EC0(s32 arg0);
-void func_8007105C(void);
+void updateEffectTasks(void);
 void func_800710CC(s32 arg0);
 void func_8007115C(void);
 void func_800711C8(void);
@@ -27,9 +27,9 @@ EffectTask *func_800711D0(void (*callback)(EffectTask *), u16 type, s32 priority
 EffectTask *func_800711D0(void (*callback)(EffectTask *), s32 type, s32 priority);
 #endif
 #ifdef NON_MATCHING
-EffectTask *func_80071408(void (*callback)(EffectTask *), u16 type, s32 priority);
+EffectTask *createEffectTask(void (*callback)(EffectTask *), u16 type, s32 priority);
 #else
-EffectTask *func_80071408(void (*callback)(EffectTask *), s32 type, s32 priority);
+EffectTask *createEffectTask(void (*callback)(EffectTask *), s32 type, s32 priority);
 #endif
 EffectTask *func_80071664(void (*callback)(EffectTask *), s32 arg1, s32 arg2, s32 arg3);
 /*

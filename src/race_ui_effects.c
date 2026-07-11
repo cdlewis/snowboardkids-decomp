@@ -1064,7 +1064,7 @@ void func_80057BCC(RaceUiPopupActor *arg0) {
 }
 
 void func_80057C08(void *arg0, s16 arg1) {
-    RaceUiPopupActor *temp = func_80071408(func_80057BCC, 0, 0x64);
+    RaceUiPopupActor *temp = createEffectTask(func_80057BCC, 0, 0x64);
     if (temp != NULL) {
         temp->parent = arg0;
         temp->playerIndex = arg1;
@@ -3861,7 +3861,7 @@ void func_80060FA4(void *arg0) {
 }
 
 void func_80061034(void *arg0, s16 arg1) {
-    void *temp = func_80071408(func_80060FA4, 0, 0x64);
+    void *temp = createEffectTask(func_80060FA4, 0, 0x64);
     if (temp != NULL) {
         *(void **)((u8 *)temp + 0x2C) = arg0;
         *(s8 *)((u8 *)temp + 0x30) = arg1;
@@ -4051,7 +4051,7 @@ void func_80061A98(RaceUiThrownTrailActor *arg0) {
 }
 
 void func_80061AF4(s16 arg0, void *arg1, void *arg2, s16 arg3) {
-    RaceUiThrownTrailActor *temp = func_80071408(func_80061A98, 0, 0x64);
+    RaceUiThrownTrailActor *temp = createEffectTask(func_80061A98, 0, 0x64);
     if (temp != NULL) {
         temp->pos.x = (s32)arg1;
         temp->pos.z = (s32)arg2;

@@ -98,7 +98,7 @@ void func_80003140(void) {
     loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
 
     func_80070EC0(0);
-    D_8010ADDC = func_80071408(func_80014C7C, 0, 0x64);
+    D_8010ADDC = createEffectTask(func_80014C7C, 0, 0x64);
 
     D_8010AE00.state = 0;
     D_8010AE00.unk1 = 0;
@@ -203,7 +203,7 @@ block_25:
         D_801235B8->fade = 0;
         D_800EC9C1 = 0;
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -295,7 +295,7 @@ void func_800035F8(void) {
     D_8010AE46 = D_800B31C6;
 
     func_8009956C(func_80003798, 0);
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 
@@ -620,10 +620,10 @@ void func_80003798(void) {
                 u8 *end;
 
                 D_800EC9E4 = 0;
-                D_8010ADE8 = func_80071408((void (*)(EffectTask *))func_80016B54, 0, 0x63);
-                func_80071408((void (*)(EffectTask *))func_800165F0, 0, 0x63);
-                D_8010ADE0 = func_80071408((void (*)(EffectTask *))func_8001621C, 0, 0x63);
-                D_8010ADE4 = func_80071408((void (*)(EffectTask *))func_80017014, 0, 0x63);
+                D_8010ADE8 = createEffectTask((void (*)(EffectTask *))func_80016B54, 0, 0x63);
+                createEffectTask((void (*)(EffectTask *))func_800165F0, 0, 0x63);
+                D_8010ADE0 = createEffectTask((void (*)(EffectTask *))func_8001621C, 0, 0x63);
+                D_8010ADE4 = createEffectTask((void (*)(EffectTask *))func_80017014, 0, 0x63);
                 if (D_80121B55 > 0) {
                     ptr = D_800EC9E0;
                     end = &D_800EC9E0[D_80121B55];
@@ -644,7 +644,7 @@ void func_80003798(void) {
             GameSetupSavePlayer03798 *end;
 
             func_8009956C(func_80004164, 0);
-            func_80071408(initControllerPakCheckPrompt, 0, 0x64);
+            createEffectTask(initControllerPakCheckPrompt, 0, 0x64);
             gControllerPakCheckPromptTransition.state = 6;
             gControllerPakCheckPromptTransition.selectedOption = 0;
             gControllerPakCheckPromptTransition.targetScale = 2;
@@ -666,7 +666,7 @@ void func_80003798(void) {
         }
     }
 
-    func_8007105C();
+    updateEffectTasks();
 }
 
 #undef D_8010AE00_03798
@@ -820,7 +820,7 @@ void func_80004164(void) {
     if (state == 5) {
         func_8009956C(initCharacterSelectMenu, 0);
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 #endif
 

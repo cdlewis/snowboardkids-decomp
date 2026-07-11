@@ -7,7 +7,7 @@
 #include "character_select_menu.h"
 #include "race_character_select_menu.h"
 #include "controller_pak_score_delete_flow.h"
-#include "controller_pak_replay_save_notice_flow.h"
+#include "controller_pak_replay_save_message_flow.h"
 #include "controller_pak_file_delete_flow.h"
 #include "course_select_menu.h"
 #include "game_setup_menu.h"
@@ -291,7 +291,7 @@ void func_80072D54(void) {
 
 void func_80072D98(void) {
     func_8009956C(&func_80072DDC, 0);
-    func_800994F4(4, &initControllerPakReplaySaveNoticeFlow, 0x64);
+    func_800994F4(4, &initControllerPakReplaySaveMessageFlow, 0x64);
     func_80099614(0);
 }
 
@@ -637,8 +637,8 @@ void func_80074160(void) {
         if (gMenuFadeAlpha >= 0x100) {
             func_8006D520(0, 1);
             gMenuFadeAlpha = 0xFF;
-            func_80071408(func_80069BC0, 6, 0x64);
-            func_80071408((void (*)(EffectTask *))func_80065E90, 6, 0x64);
+            createEffectTask(func_80069BC0, 6, 0x64);
+            createEffectTask((void (*)(EffectTask *))func_80065E90, 6, 0x64);
             switch (D_80121B55 & 0xFFFFFFFF) {
             case 1:
                 if (D_80121B50.s != 6) {
@@ -1590,9 +1590,9 @@ void func_80077554(void) {
     func_800720E4(0);
     D_801235B8->fadeTimer = 0;
     D_801235B8->unk1C = 0;
-    func_80071408((void (*)(EffectTask *))func_80057E60, 6, 0x64);
+    createEffectTask((void (*)(EffectTask *))func_80057E60, 6, 0x64);
     if (D_80121B61 == -1) {
-        func_80071408((void (*)(EffectTask *))func_80052520, 6, 0x64);
+        createEffectTask((void (*)(EffectTask *))func_80052520, 6, 0x64);
     }
     func_8009956C(func_8007797C, 0);
 }
@@ -1776,7 +1776,7 @@ void func_80077DA0(void) {
     func_80070EC0(0);
     D_801235B4 = 0;
     func_80071664(func_80053634, 0, 0x64, 0);
-    func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
+    createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
     func_8009956C(func_80078078, 0);
     func_800720E4(7);
 }
@@ -1805,7 +1805,7 @@ void func_80078078(void) {
             func_8009956C(func_80078198, 0);
         }
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_80078198(void) {
@@ -1815,7 +1815,7 @@ void func_80078198(void) {
         gFramebufferSwapHold = 1;
         func_8009956C(&func_800781FC, 0);
     }
-    func_8007105C();
+    updateEffectTasks();
 }
 
 void func_800781FC(void) {
