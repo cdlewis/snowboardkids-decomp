@@ -13,7 +13,7 @@
 
 extern s16 D_8011218A[];
 extern s16 D_801121AE;
-extern u8 D_5E34A0;
+extern u8 gMainMenuSceneModelAssetStart;
 extern u8 D_608560;
 extern u8 D_215BE0;
 extern u8 D_21D9D0;
@@ -276,7 +276,7 @@ void func_80041A20(void) {
 #endif
 
 void func_80041CC0(void) {
-    loadCompressedRomAsset(&D_5E34A0, &D_608560, 0x3F);
+    loadCompressedRomAsset(&gMainMenuSceneModelAssetStart, &D_608560, 0x3F);
 }
 
 void func_80041CF0(void) {

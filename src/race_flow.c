@@ -7,7 +7,7 @@
 #include "character_select_menu.h"
 #include "race_character_select_menu.h"
 #include "controller_pak_score_delete_flow.h"
-#include "controller_pak_post_race_warning_flow.h"
+#include "controller_pak_post_race_save_warning_flow.h"
 #include "controller_pak_file_delete_flow.h"
 #include "course_select_menu.h"
 #include "game_setup_menu.h"
@@ -291,7 +291,7 @@ void func_80072D54(void) {
 
 void func_80072D98(void) {
     func_8009956C(&func_80072DDC, 0);
-    func_800994F4(4, &initControllerPakPostRaceWarningFlow, 0x64);
+    func_800994F4(4, &initControllerPakPostRaceSaveWarningFlow, 0x64);
     func_80099614(0);
 }
 
