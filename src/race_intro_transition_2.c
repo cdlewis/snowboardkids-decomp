@@ -9,7 +9,7 @@
 #include "race_player_state.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
-#include "main_menu_effects.h"
+#include "main_menu_screen_effects.h"
 
 typedef struct {
     /* 0x000 */ s16 playerIndex;

@@ -1,11 +1,11 @@
-#ifndef MAIN_MENU_EFFECTS_H
-#define MAIN_MENU_EFFECTS_H
+#ifndef MAIN_MENU_SCREEN_EFFECTS_H
+#define MAIN_MENU_SCREEN_EFFECTS_H
 
 #include "common.h"
 
 typedef struct MainMenuScreenEffectActor MainMenuScreenEffectActor;
 
-void initMenuSnowflakeEffect(MainMenuScreenEffectActor *arg0);
+void initMenuSnowflake(MainMenuScreenEffectActor *arg0);
 void initRaceSetupBackdrop(MainMenuScreenEffectActor *arg0);
 void initRaceSetupCharacterFocus(MainMenuScreenEffectActor *arg0);
 void createRaceSetupOpponentFocus(s32 arg0, s32 arg1);

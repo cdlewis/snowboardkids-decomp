@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "viewport_manager.h"
 #include "fixed_point_math.h"
-#include "main_menu_effects.h"
+#include "main_menu_screen_effects.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
 
@@ -181,7 +181,7 @@ void drawMainMenuRotatingBoardModel(MainMenuScreenEffectActor *);
 void drawMainMenuStaticBoardModel(void *);
 void enqueueSoundEffect(s16, s32, void *);
 
-void drawMenuSnowflakeEffect(MainMenuScreenEffectActor *arg0) {
+void drawMenuSnowflake(MainMenuScreenEffectActor *arg0) {
     if (gCurrentViewportIndex == arg0->index) {
         drawMenuSprite((s16)(arg0->unk18.half.hi >> 4), (s16)(arg0->unk18.half.lo >> 4), getMemoryBlockBase(D_80112184), (arg0->unk1C.half.hi + 2) & 0xFFFF,
                       arg0->timer, arg0->timer, 0, arg0->unk2A + 2);
@@ -227,7 +227,7 @@ void updateMenuDriftingSnowflake(MainMenuScreenEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(D_80124878, drawMenuSnowflakeEffect, (s32)arg0);
+    addRenderCallback(D_80124878, drawMenuSnowflake, (s32)arg0);
 }
 
 void updateMenuSwayingSnowflake(MainMenuScreenEffectActor *arg0) {
@@ -242,10 +242,10 @@ void updateMenuSwayingSnowflake(MainMenuScreenEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(D_80124878, drawMenuSnowflakeEffect, (s32)arg0);
+    addRenderCallback(D_80124878, drawMenuSnowflake, (s32)arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/initMenuSnowflakeEffect.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_screen_effects/initMenuSnowflake.s")
 
 void drawRaceSetupBackdropModels(MainMenuScreenEffectActor *arg0) {
     register MainMenuScreenEffectActor *actor = arg0;
@@ -560,7 +560,7 @@ void waitForRaceSetupNamePlate(MainMenuScreenEffectActor *arg0) {
 }
 
 // drawMainMenuModeBoardTransition best match: 84.797% at nonmatchings/drawMainMenuModeBoardTransition-4923837976568703863/base_11.c
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/drawMainMenuModeBoardTransition.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_screen_effects/drawMainMenuModeBoardTransition.s")
 
 #ifdef NON_MATCHING
 void drawMainMenuModeBoardTransition(MainMenuScreenEffectActor *arg0) {
@@ -722,7 +722,7 @@ void updateMainMenuModeIconFlash(MainMenuScreenEffectActor *arg0) {
 }
 
 // drawMainMenuModeLabel best match: 99.220%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/drawMainMenuModeLabel.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_screen_effects/drawMainMenuModeLabel.s")
 
 #ifdef NON_MATCHING
 void drawMainMenuModeLabel(MainMenuScreenEffectActor *arg0) {
