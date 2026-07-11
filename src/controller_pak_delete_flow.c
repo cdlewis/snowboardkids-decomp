@@ -53,7 +53,7 @@ extern u8 D_60F1A0;
 extern u8 D_60F990;
 
 extern void func_80045914(void);
-extern void func_80072138(s32, s32);
+extern s32 func_80072138(s16, s16);
 
 void func_80008D60(void) {
     func_800704F0();
@@ -100,7 +100,7 @@ extern void func_80001538(u16);
 extern void func_800325D0(EffectTask *);
 #endif
 
-// func_80008F2C best match: 95.588% (base_11.c)
+// func_80008F2C best match: 95.751% (base_24.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_delete_flow/func_80008F2C.s")
 
 #ifdef NON_MATCHING
