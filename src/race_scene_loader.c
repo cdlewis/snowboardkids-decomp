@@ -8,7 +8,7 @@
 #include "race_course_effects.h"
 #include "race_intro_effects.h"
 #include "race_item_effects.h"
-#include "race_pickups_and_course_props.h"
+#include "race_course_props_and_pickups.h"
 #include "race_ui_effects.h"
 
 #define COURSE_PLAYER_COUNT 4

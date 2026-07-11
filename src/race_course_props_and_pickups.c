@@ -1,5 +1,5 @@
 #include "common.h"
-#include "race_pickups_and_course_props.h"
+#include "race_course_props_and_pickups.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
@@ -246,7 +246,7 @@ void updateRaceCoursePropModels(CourseEffectModelListActor *arg0) {
         pos = &entry->pos;
         do {
             if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
-                func_80088294(pos, 0x1C0000, 0x480000, 2);
+                pushRacePlayersOutOfCylinderAndApplyItemHit(pos, 0x1C0000, 0x480000, 2);
             }
             entry++;
             pos = &entry->pos;
@@ -366,26 +366,26 @@ void updateCourseOverlaySprites(CourseEffectModelListActor *arg0) {
 loop:
     if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
         if (entry->enabled != 0) {
-            if (func_80088E98(pos, xzSize, ySize, 0) != 0) {
-                func_8008BB5C(D_80121D80, 0x64);
+            if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 0) != 0) {
+                addRacePlayerScore(D_80121D80, 0x64);
                 entry->enabled = 0;
                 enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
                 goto next;
             }
-            if (func_80088E98(pos, xzSize, ySize, one) != 0) {
-                func_8008BB5C(D_8012238C, 0x64);
+            if (isRacePlayerInsideCylinder(pos, xzSize, ySize, one) != 0) {
+                addRacePlayerScore(D_8012238C, 0x64);
                 entry->enabled = 0;
                 enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
                 goto next;
             }
-            if (func_80088E98(pos, xzSize, ySize, 2) != 0) {
-                func_8008BB5C(D_80122998, 0x64);
+            if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 2) != 0) {
+                addRacePlayerScore(D_80122998, 0x64);
                 entry->enabled = 0;
                 enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
                 goto next;
             }
-            if (func_80088E98(pos, xzSize, ySize, 3) != 0) {
-                func_8008BB5C(D_80122FA4, 0x64);
+            if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 3) != 0) {
+                addRacePlayerScore(D_80122FA4, 0x64);
                 entry->enabled = 0;
                 enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
                 goto next;
@@ -511,7 +511,7 @@ void updateThrownPickupModel(ThrownPickupModelActor *arg0) {
             }
 
             if (arg0->transformedPos.y <= 0) {
-                func_80089000(pos, 0x170000, 0x20);
+                applyItemHitToRacePlayersInsideSphere(pos, 0x170000, 0x20);
             }
         } else {
             arg0->timer = timer - 1;
@@ -554,7 +554,7 @@ void spawnThrownPickupModel(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 }
 
 // updateThrownPickupSpawner best match: 99.625% (nonmatchings/updateThrownPickupSpawner-731940616440357983/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/updateThrownPickupSpawner.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_props_and_pickups/updateThrownPickupSpawner.s")
 
 #ifdef NON_MATCHING
 #define SPAWN_RANGE_MAX 0x14000000
@@ -648,7 +648,7 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
 #endif
 
 // renderRacePickupIdle best match: display-list command stream matched, remaining differences are stack/local layout.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/renderRacePickupIdle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_props_and_pickups/renderRacePickupIdle.s")
 
 #ifdef NON_MATCHING
 void renderRacePickupIdle(RacePickupActor *arg0) {
@@ -787,7 +787,7 @@ void renderRacePickupBase(RacePickupActor *arg0) {
 }
 
 // renderRacePickupRespawn best match: 99.579% (base_22.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/renderRacePickupRespawn.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_props_and_pickups/renderRacePickupRespawn.s")
 
 #ifdef NON_MATCHING
 void renderRacePickupRespawn(RacePickupActor *arg0) {
@@ -872,10 +872,10 @@ void updateRacePickupRespawn(RacePickupActor *arg0) {
             setCallbackTaskCallback(arg0, updateRacePickupIdle);
         }
         temp_s1 = &temp_s0->pos;
-        func_80088C80(temp_s1, 0xC0000, 0x180000, 0);
-        func_80088C80(temp_s1, 0xC0000, 0x180000, 1);
-        func_80088C80(temp_s1, 0xC0000, 0x180000, 2);
-        func_80088C80(temp_s1, 0xC0000, 0x180000, 3);
+        pushRacePlayerOutOfCylinder(temp_s1, 0xC0000, 0x180000, 0);
+        pushRacePlayerOutOfCylinder(temp_s1, 0xC0000, 0x180000, 1);
+        pushRacePlayerOutOfCylinder(temp_s1, 0xC0000, 0x180000, 2);
+        pushRacePlayerOutOfCylinder(temp_s1, 0xC0000, 0x180000, 3);
     }
     addRenderCallback(&gEffectRenderCallbackList, renderRacePickupRespawn, temp_s0);
 }
@@ -891,10 +891,10 @@ void updateRacePickupBounce(RacePickupActor *arg0) {
             setCallbackTaskCallback(arg0, updateRacePickupRespawn);
         }
 
-        func_80088C80(&arg0->pos, 0xC0000, 0x180000, 0);
-        func_80088C80(&arg0->pos, 0xC0000, 0x180000, 1);
-        func_80088C80(&arg0->pos, 0xC0000, 0x180000, 2);
-        func_80088C80(&arg0->pos, 0xC0000, 0x180000, 3);
+        pushRacePlayerOutOfCylinder(&arg0->pos, 0xC0000, 0x180000, 0);
+        pushRacePlayerOutOfCylinder(&arg0->pos, 0xC0000, 0x180000, 1);
+        pushRacePlayerOutOfCylinder(&arg0->pos, 0xC0000, 0x180000, 2);
+        pushRacePlayerOutOfCylinder(&arg0->pos, 0xC0000, 0x180000, 3);
     }
     addRenderCallback(&gEffectRenderCallbackList, renderRacePickupBase, arg0);
 }
@@ -918,17 +918,17 @@ void updateRacePickupCollected(RacePickupActor *arg0) {
         }
         temp_s1 = &arg0->drawPos;
         if (var_v1 < 0) {
-            func_80088C80(temp_s1, 0xC0000, 0x180000, 0);
-            func_80088C80(temp_s1, 0xC0000, 0x180000, 1);
-            func_80088C80(temp_s1, 0xC0000, 0x180000, 2);
-            func_80088C80(temp_s1, 0xC0000, 0x180000, 3);
+            pushRacePlayerOutOfCylinder(temp_s1, 0xC0000, 0x180000, 0);
+            pushRacePlayerOutOfCylinder(temp_s1, 0xC0000, 0x180000, 1);
+            pushRacePlayerOutOfCylinder(temp_s1, 0xC0000, 0x180000, 2);
+            pushRacePlayerOutOfCylinder(temp_s1, 0xC0000, 0x180000, 3);
         }
     }
     addRenderCallback(&gEffectRenderCallbackList, renderRacePickupBase, arg0);
 }
 
 // updateRacePickupIdle best match: 99.901%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/updateRacePickupIdle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_props_and_pickups/updateRacePickupIdle.s")
 
 #ifdef NON_MATCHING
 void updateRacePickupIdle(RacePickupActor *arg0) {
@@ -945,7 +945,7 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
         maxPlayers = 4;
 
 loop:
-        if (func_80088E98(pos, 0xBF000, 0x170000, i) == 0) {
+        if (isRacePlayerInsideCylinder(pos, 0xBF000, 0x170000, i) == 0) {
             goto next;
         }
 
@@ -1000,7 +1000,7 @@ next:
             goto loop;
         }
         if (found != 0) {
-            func_80088294(pos, 0xBF000, 0x170000, 0x800);
+            pushRacePlayersOutOfCylinderAndApplyItemHit(pos, 0xBF000, 0x170000, 0x800);
         }
     }
 
