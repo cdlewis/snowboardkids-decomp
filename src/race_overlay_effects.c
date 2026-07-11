@@ -178,7 +178,7 @@ extern s16 D_80112146;
 extern s16 D_80112168;
 extern u8 D_80156609;
 extern u8 gRaceUpdatePaused;
-extern u8 D_80121B5A;
+extern u8 gMainMenuSelectedCourse;
 extern u8 D_800EC9C2;
 extern s8 D_80121D93;
 extern s32 D_80121D9C;
@@ -987,14 +987,14 @@ loop:
 
         if (arg0->variant == 0) {
             player->itemEffectType = gItemEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
-            if (D_80121B5A != 0) {
+            if (gMainMenuSelectedCourse != 0) {
                 player->itemEffectType = 1;
             }
             player->itemEffectCount = 3;
             player->pad513[0] = maxPlayers;
         } else {
             player->actionEffectType = gActionEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
-            if (D_80121B5A != 0) {
+            if (gMainMenuSelectedCourse != 0) {
                 player->actionEffectType = 1;
             }
             if ((D_80121B50 == 8) && (player->unk4 != 0) && (player->actionEffectType == maxPlayers)) {
@@ -1040,10 +1040,10 @@ void func_800691C8(RaceOverlayModelActor *arg0) {
     arg0->pos.z = entry->pos.z;
     arg0->rotation = entry->rotation;
     arg0->variant = entry->variant;
-    if (D_80121B5A == 7) {
+    if (gMainMenuSelectedCourse == 7) {
         arg0->variant = 1;
     }
-    if (D_80121B5A == 8) {
+    if (gMainMenuSelectedCourse == 8) {
         arg0->variant = 0;
     }
 

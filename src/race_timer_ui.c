@@ -107,7 +107,7 @@ extern s16 D_801222F4;
 extern s16 D_80121B50;
 extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
-extern u8 D_80121B5A;
+extern u8 gMainMenuSelectedCourse;
 extern u8 D_80121B5B;
 extern u8 D_80121B5E;
 extern u8 gCurrentViewportIndex;
@@ -161,7 +161,7 @@ void func_80078430(void) {
         D_80121B70 = gPlayerCount - 1;
     }
 
-    if ((D_80121B5A != 0) || (D_80121B5B != 0)) {
+    if ((gMainMenuSelectedCourse != 0) || (D_80121B5B != 0)) {
         D_80121B70 = 8;
     }
 
