@@ -1,6 +1,6 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
-#include "ending_credits_effects.h"
+#include "ending_credits_effect_actors.h"
 #include "ending_credits_linda.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
@@ -100,7 +100,7 @@ void updateEndingLindaWaitBeforePhase40Prep(EndingCreditsLinda *arg0) {
             *timerPtr = 0;
             setCallbackTaskCallback(arg0, updateEndingLindaPhase40Prep);
             setMainMenuSceneModelAnimation(3, 0x59);
-            spawnEndingPhaseAdvanceSparkle(0x30, -0x5B);
+            spawnEndingCreditsPhaseAdvanceSparkle(0x30, -0x5B);
         }
     }
 }
@@ -811,7 +811,7 @@ void updateEndingLindaSlideRightUntilPhase16(EndingCreditsLinda *arg0) {
         temp_t9 = (arg0->timer & 0xFFFF) + 1;
         arg0->timer = temp_t9;
         if ((temp_t9 & 0xFFFF) == 2) {
-            spawnEndingCharacterVanishPoof(-0x14, -0x40, 3, 1);
+            spawnEndingCreditsCharacterVanishPoof(-0x14, -0x40, 3, 1);
         }
     }
     if (gEndingSequencePhase == 0x16) {

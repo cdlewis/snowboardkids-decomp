@@ -1,6 +1,6 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
-#include "ending_credits_effects.h"
+#include "ending_credits_effect_actors.h"
 #include "ending_credits_jam.h"
 #include "ending_credits_linda.h"
 #include "main_menu_scene_model.h"
@@ -101,7 +101,7 @@ void updateEndingJamPhase3FAnim1(EndingCreditsJam *arg0) {
             *p = 0;
             setCallbackTaskCallback(arg0, updateEndingJamPhase3FAnim2);
             setMainMenuSceneModelAnimation(2, 0x65);
-            spawnEndingPhaseAdvanceSparkle(-0x1F, -0x6B);
+            spawnEndingCreditsPhaseAdvanceSparkle(-0x1F, -0x6B);
         }
     }
 }
@@ -264,7 +264,7 @@ void waitEndingJamPhase33Aura(EndingCreditsJam *arg0) {
             arg0->posX = 0x1900000;
             arg0->posZ = 0x120000;
             gEndingJamEffectDone = 0;
-            spawnEndingCharacterAura(0x18, -0x36, 2, 1);
+            spawnEndingCreditsCharacterAura(0x18, -0x36, 2, 1);
         }
     }
 }
@@ -303,7 +303,7 @@ void updateEndingJamVanishRetreat(EndingCreditsJam *arg0) {
         setMainMenuSceneModelPosition(2, arg0->posX, 0, arg0->posZ);
         setMainMenuSceneModelAnimation(2, 0x1B);
         gEndingJamEffectDone = 0;
-        spawnEndingCharacterAura(0x18, -0x36, 2, 1);
+        spawnEndingCreditsCharacterAura(0x18, -0x36, 2, 1);
     }
 }
 
@@ -312,7 +312,7 @@ void waitEndingJamPhase2F(EndingCreditsJam *arg0) {
     if (gEndingSequencePhase == 0x2F) {
         setCallbackTaskCallback(arg0, updateEndingJamVanishRetreat);
         setMainMenuSceneModelAnimation(2, 0x4E);
-        spawnEndingCharacterVanishPoof(8, -0x40, 2, 0);
+        spawnEndingCreditsCharacterVanishPoof(8, -0x40, 2, 0);
     }
 }
 
@@ -383,7 +383,7 @@ void updateEndingJamSlideRightToPose(EndingCreditsJam *arg0) {
         setCallbackTaskCallback(arg0, waitEndingJamPhase2A);
         gEndingSequencePhase = 0x29;
         gEndingJamEffectDone = 1;
-        spawnEndingCharacterLoopingSparkle(-0x10, -0x4E, 2);
+        spawnEndingCreditsCharacterLoopingSparkle(-0x10, -0x4E, 2);
     }
     setMainMenuSceneModelPosition(2, arg0->posX, arg0->posY, arg0->posZ);
     addMainMenuSceneModelDrawCallback(2);
@@ -516,7 +516,7 @@ void waitEndingJamPhase21Aura(EndingCreditsJam *arg0) {
     if (gEndingSequencePhase == 0x21) {
         setCallbackTaskCallback(arg0, updateEndingJamDiagonalSlideSetPhase22);
         gEndingJamEffectDone = 0;
-        spawnEndingCharacterAura(0x18, -0x36, 2, 1);
+        spawnEndingCreditsCharacterAura(0x18, -0x36, 2, 1);
     }
 }
 
@@ -550,7 +550,7 @@ void updateEndingJamAfterVanishWait(EndingCreditsJam *arg0) {
         setMainMenuSceneModelRotation(2, arg0->rotX, arg0->rotY, arg0->rotZ);
         gEndingSequencePhase = 0x20;
         gEndingJamEffectDone = 0;
-        spawnEndingCharacterAura(0x18, -0x36, 2, 1);
+        spawnEndingCreditsCharacterAura(0x18, -0x36, 2, 1);
         var_a1 = arg0->posX;
     }
     setMainMenuSceneModelPosition(2, var_a1, arg0->posY, arg0->posZ);
@@ -583,7 +583,7 @@ void startEndingJamVanishReturn(EndingCreditsJam *arg0) {
     if (sp18 == 1) {
         setCallbackTaskCallback(arg0, updateEndingJamWaitBeforeVanishReturn);
         setMainMenuSceneModelAnimation(2, 0x47);
-        spawnEndingCharacterVanishPoof(5, -0x46, 2, 0);
+        spawnEndingCreditsCharacterVanishPoof(5, -0x46, 2, 0);
     }
 }
 
@@ -609,7 +609,7 @@ void waitEndingJamPhase1E(EndingCreditsJam *arg0) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, updateEndingJamSlideLeftThenVanish);
         setMainMenuSceneModelAnimation(2, 0x45);
-        spawnEndingSmallBurst(0x2A, -0x57);
+        spawnEndingCreditsSmallBurst(0x2A, -0x57);
     }
 }
 
@@ -646,7 +646,7 @@ void updateEndingJamRepeatAnimThenVanish(EndingCreditsJam *arg0) {
             *p = 0;
             setCallbackTaskCallback(arg0, updateEndingJamExitLeftSetPhase1D);
             setMainMenuSceneModelAnimation(2, 0x35);
-            spawnEndingCharacterVanishPoof(8, -0x40, 2, 0);
+            spawnEndingCreditsCharacterVanishPoof(8, -0x40, 2, 0);
         }
     }
 }

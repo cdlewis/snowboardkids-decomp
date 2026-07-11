@@ -1,6 +1,6 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
-#include "ending_credits_effects.h"
+#include "ending_credits_effect_actors.h"
 #include "ending_credits_nancy.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
@@ -57,7 +57,7 @@ void updateEndingNancyPhase40Prep(EndingCreditsNancy *arg0) {
             arg0->timer = 0;
             setCallbackTaskCallback(arg0, waitEndingNancyPhase40);
             setMainMenuSceneModelAnimation(1, 0x59);
-            spawnEndingPhaseAdvanceSparkle(0x53, -0x64);
+            spawnEndingCreditsPhaseAdvanceSparkle(0x53, -0x64);
         }
     }
 }
@@ -213,7 +213,7 @@ void waitEndingNancyPhase32Aura(EndingCreditsNancy *arg0) {
         arg0->rotY = 0xC00;
         setMainMenuSceneModelRotation(1, arg0->rotX, arg0->rotY, arg0->rotZ);
         gEndingCharacterEffectDoneFlags[0] = 0;
-        spawnEndingCharacterAura(0x13, -0x3A, 1, 1);
+        spawnEndingCreditsCharacterAura(0x13, -0x3A, 1, 1);
     }
 }
 
@@ -222,7 +222,7 @@ void waitEndingNancyPhase30Vanish(EndingCreditsNancy *arg0) {
     if (gEndingSequencePhase == 0x30) {
         setCallbackTaskCallback(arg0, waitEndingNancyPhase32Aura);
         setMainMenuSceneModelAnimation(1, 0x51);
-        spawnEndingCharacterVanishPoof(6, -0x40, 1, 0);
+        spawnEndingCreditsCharacterVanishPoof(6, -0x40, 1, 0);
     }
 }
 
@@ -277,7 +277,7 @@ void updateEndingNancyDriftAfterPhase2D(EndingCreditsNancy *arg0) {
     if (gEndingSequencePhase == 0x2D) {
         setCallbackTaskCallback(arg0, updateEndingNancyWaitPhase2EAnim);
         setMainMenuSceneModelAnimation(1, 0x4F);
-        spawnEndingCharacterVanishPoof(8, -0x40, 1, 0);
+        spawnEndingCreditsCharacterVanishPoof(8, -0x40, 1, 0);
     }
 }
 
@@ -287,7 +287,7 @@ void waitEndingNancyPhase2B(EndingCreditsNancy *arg0) {
     if (gEndingSequencePhase == 0x2B) {
         setCallbackTaskCallback(arg0, updateEndingNancyDriftAfterPhase2D);
         setMainMenuSceneModelAnimation(1, 0x4D);
-        createCallbackTask(&initEndingNancySpeedLines, 0, 0x64);
+        createCallbackTask(&initEndingCreditsNancySpeedLines, 0, 0x64);
     }
 }
 
@@ -385,7 +385,7 @@ void updateEndingNancyStartRunDust(EndingCreditsNancy *arg0) {
             arg0->timer = 0;
             setCallbackTaskCallback(arg0, waitEndingNancyPhase0E);
             setMainMenuSceneModelAnimation(1, 0x15);
-            createCallbackTask(&initEndingNancyRunDust, 0, 0x64);
+            createCallbackTask(&initEndingCreditsNancyRunDust, 0, 0x64);
         }
     }
     addMainMenuSceneModelDrawCallback(1);
@@ -402,7 +402,7 @@ void updateEndingNancyRepeatAnimThenVanish(EndingCreditsNancy *arg0) {
             gEndingSequencePhase = 0xD;
             setCallbackTaskCallback(arg0, updateEndingNancyStartRunDust);
             setMainMenuSceneModelAnimation(1, 0x14);
-            spawnEndingCharacterVanishPoof(8, -0x40, 1, 0);
+            spawnEndingCreditsCharacterVanishPoof(8, -0x40, 1, 0);
         }
     }
     addMainMenuSceneModelDrawCallback(1);
@@ -423,7 +423,7 @@ void updateEndingNancyWaitBeforeRepeatAnim(EndingCreditsNancy *arg0) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, startEndingNancyRepeatAnim);
         setMainMenuSceneModelAnimation(1, 0x12);
-        spawnEndingDelayedSparkle(-0xB, -0x58, 1);
+        spawnEndingCreditsDelayedSparkle(-0xB, -0x58, 1);
     }
     addMainMenuSceneModelDrawCallback(1);
 }
@@ -447,7 +447,7 @@ void updateEndingNancyEnterUntilPhase0B(EndingCreditsNancy *arg0) {
     if (gEndingSequencePhase == 0xB) {
         setCallbackTaskCallback(arg0, waitEndingNancyPhase0C);
         setMainMenuSceneModelAnimation(1, 0x10);
-        spawnEndingCharacterVanishPoof(0xA, -0x40, 1, 0);
+        spawnEndingCreditsCharacterVanishPoof(0xA, -0x40, 1, 0);
     } else {
         setMainMenuSceneModelPosition(1, arg0->posX, arg0->posY, arg0->posZ);
         loopMainMenuSceneModelAnimation(1);
