@@ -5,7 +5,7 @@
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
 #include "character_select_menu.h"
-#include "race_character_select_menu.h"
+#include "race_course_select_menu.h"
 #include "controller_pak_race_record_save_flow.h"
 #include "controller_pak_replay_save_message_flow.h"
 #include "controller_pak_file_delete_flow.h"
@@ -552,7 +552,7 @@ void func_800736E0(void) {
 
 void func_80073738(void) {
     setCurrentGameTaskCallback(&func_8007377C, 0);
-    createGameTask(4, &initRaceCharacterSelectMenu, 0x64);
+    createGameTask(4, &initRaceCourseSelectMenu, 0x64);
     suspendGameTask(2);
 }
 
