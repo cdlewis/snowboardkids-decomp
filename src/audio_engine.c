@@ -29,7 +29,7 @@ extern u32 osAiGetLength(void);
 extern u32 osVirtualToPhysical(void *);
 extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
 extern void alSynSetPan(ALSynth *, ALVoice *, s32);
-extern Struct800A0138 gAudioDmaState;
+extern AudioDmaState gAudioDmaState;
 extern ALLink *gAudioDmaBufferPool;
 extern s32 audioDmaCallback(s32, s32, void *);
 extern f32 sinf(f32);
@@ -43,7 +43,6 @@ extern u32 gPendingAudioDmaCount;
 extern AudioInfo *gNextAudioInfo;
 extern s32 gAudioUnderrunState;
 extern SchedulerViMode gSchedulerViModes[];
-extern u64 D_800E1F00[];
 extern u8 gSchedulerThreadStack[];
 extern Acmd *gAudioCmdLists[];
 extern Acmd *gAudioCmdListEnd0;
@@ -83,7 +82,7 @@ extern s32 gSoundPlayerUpdateCounter;
 extern ALSynth gAudioSynthesizer;
 extern s32 osTvType;
 
-extern ALDMAproc initAudioDmaCallback(Struct800A0138 **);
+extern ALDMAproc initAudioDmaCallback(AudioDmaState **);
 
 void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2) {
     arg0->curRSPTask = 0;
@@ -2275,7 +2274,7 @@ s32 buildAudioTask(AudioTask *task, AudioInfo *info) {
     task2->ucodeBootSize = (u8 *)aspMainTextStart - (u8 *)rspbootTextStart;
     task3->flags = 0;
     task3->ucode = aspMainTextStart;
-    task3->ucodeData = D_800E1F00;
+    task3->ucodeData = aspMainDataStart;
     task3->ucodeDataSize = 0x800;
     task3->dramStack = NULL;
     task3->dramStackSize = 0;
@@ -2310,7 +2309,7 @@ s32 audioDmaCallback(s32 addr, s32 len, void *state) {
     register ALLink *first;
     register ALLink *node;
     ALLink *last;
-    Struct800A0170Node *dmaNode;
+    AudioDmaBuffer *dmaNode;
     u32 aligned;
     u32 offset;
     void *buffer;
@@ -2321,7 +2320,7 @@ s32 audioDmaCallback(s32 addr, s32 len, void *state) {
     if (node != NULL) {
         s32 dmaLen = gAudioDmaBufferSize;
         do {
-            dmaNode = (Struct800A0170Node *)node;
+            dmaNode = (AudioDmaBuffer *)node;
             if ((u32)addr < (u32)dmaNode->addr) {
                 break;
             }
@@ -2359,7 +2358,7 @@ s32 audioDmaCallback(s32 addr, s32 len, void *state) {
 
     offset = addr & 1;
     aligned = addr - offset;
-    dmaNode = (Struct800A0170Node *)node;
+    dmaNode = (AudioDmaBuffer *)node;
     dmaNode->addr = aligned;
     dmaNode->counter = gAudioFrameCounter;
     buffer = dmaNode->buffer;
@@ -2368,7 +2367,7 @@ s32 audioDmaCallback(s32 addr, s32 len, void *state) {
 }
 #endif
 
-ALDMAproc initAudioDmaCallback(Struct800A0138 **arg0) {
+ALDMAproc initAudioDmaCallback(AudioDmaState **arg0) {
     if (gAudioDmaState.initialized == 0) {
         gAudioDmaState.activeList = 0;
         gAudioDmaState.readyList = gAudioDmaBufferPool;
@@ -2381,8 +2380,8 @@ ALDMAproc initAudioDmaCallback(Struct800A0138 **arg0) {
 void reclaimAudioDmaBuffers(void) {
     OSMesg msg[2];
     u32 i;
-    Struct800A0170Node *node;
-    Struct800A0170Node *next;
+    AudioDmaBuffer *node;
+    AudioDmaBuffer *next;
 
     i = 0;
     if (gPendingAudioDmaCount != 0) {
@@ -2392,13 +2391,13 @@ void reclaimAudioDmaBuffers(void) {
         } while (i < gPendingAudioDmaCount);
     }
 
-    node = (Struct800A0170Node *)gAudioDmaState.activeList;
+    node = (AudioDmaBuffer *)gAudioDmaState.activeList;
     if (node != NULL) {
         do {
-            next = (Struct800A0170Node *)node->node.next;
+            next = (AudioDmaBuffer *)node->node.next;
             if ((node->counter + 1) < gAudioFrameCounter) {
                 if ((ALLink *)node == gAudioDmaState.activeList) {
-                    gAudioDmaState.activeList = &((Struct800A0170Node *)node->node.next)->node;
+                    gAudioDmaState.activeList = &((AudioDmaBuffer *)node->node.next)->node;
                 }
                 alUnlink(&node->node);
                 if (gAudioDmaState.readyList != NULL) {

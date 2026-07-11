@@ -181,19 +181,19 @@ typedef struct SchedulerState {
     s32 doAudio;
 } SchedulerState;
 
-typedef struct Struct800A0138 {
+typedef struct AudioDmaState {
     u8 initialized;
     u8 pad1[3];
     ALLink *activeList;
     ALLink *readyList;
-} Struct800A0138;
+} AudioDmaState;
 
-typedef struct Struct800A0170Node {
+typedef struct AudioDmaBuffer {
     ALLink node;
     s32 addr;
     u32 counter;
     void *buffer;
-} Struct800A0170Node;
+} AudioDmaBuffer;
 
 typedef struct OSIoMesg {
     u8 pad[0x18];
@@ -377,7 +377,7 @@ void audioThreadMain(s32 arg0);
 s32 buildAudioTask(AudioTask *task, AudioInfo *info);
 void updateAudioUnderrunState(s32 arg0);
 s32 audioDmaCallback(s32 addr, s32 len, void *state);
-ALDMAproc initAudioDmaCallback(Struct800A0138 **arg0);
+ALDMAproc initAudioDmaCallback(AudioDmaState **arg0);
 void reclaimAudioDmaBuffers(void);
 
 #endif

@@ -1482,6 +1482,7 @@ alFxParamHdl = 0x800B0608; // type:func
 alFxPull = 0x800B087C; // type:func
 rspbootTextStart = 0x800B0DD0;
 aspMainTextStart = 0x800B0EA0;
+aspMainDataStart = 0x800E1F00; // rom:0xE2B00
 __osPiDevMgr = 0x800DF2F0; // type:OSDevMgr size:0x1C
 __osViDevMgr = 0x800DF320; // type:OSDevMgr size:0x1C
 gRaceRumblePatternSolid = 0x800DE550; // rom:0xDF150 size:0x10
