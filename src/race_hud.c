@@ -808,7 +808,7 @@ void func_80018BC0(RaceHudPanelSlot *arg0) {
     }
 }
 
-// func_80018C80 best match: 85.622% (nonmatchings/func_80018C80-8207005055717715604/base_17.c)
+// func_80018C80 best match: 86.079% (nonmatchings/func_80018C80-7892263622508053986/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80018C80.s")
 
 #ifdef NON_MATCHING
@@ -932,9 +932,9 @@ void func_80018C80(RaceHudPanelActor *arg0) {
 
 next_player:
             i++;
+            stateMirror[3] = state;
             stateMirror++;
             actor = (RaceHudPanelActor *)((u8 *)actor + 1);
-            stateMirror[2] = state;
         } while (i < (s32)D_80121B55);
     }
 
