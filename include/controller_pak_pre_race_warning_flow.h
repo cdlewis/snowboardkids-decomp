@@ -1,0 +1,11 @@
+#ifndef CONTROLLER_PAK_PRE_RACE_WARNING_FLOW_H
+#define CONTROLLER_PAK_PRE_RACE_WARNING_FLOW_H
+
+void initControllerPakPreRaceWarningFlow(void);
+void fadeInControllerPakPreRaceWarningFirstMessage(void);
+void fadeOutControllerPakPreRaceWarningFirstMessage(void);
+void waitControllerPakPreRaceWarningSecondMessage(void);
+void fadeInControllerPakPreRaceWarningSecondMessage(void);
+void fadeOutControllerPakPreRaceWarningFlow(void);
+
+#endif
