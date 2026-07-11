@@ -276,7 +276,7 @@ s32 tryQueueRacePlayerHitCueReverseSpin(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerTerrainFallCue(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueTerrainFall(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x41001) {
         return 1;
     }
@@ -286,7 +286,7 @@ s32 tryQueueRacePlayerTerrainFallCue(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerTerrainCrashCue(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueTerrainCrash(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x41001) {
         return 1;
     }
@@ -296,11 +296,11 @@ s32 tryQueueRacePlayerTerrainCrashCue(RaceInputPlayer *arg0) {
     return 0;
 }
 
-// resolveRacePlayerItemHitReactions best match: 88.687% (nonmatchings/resolveRacePlayerItemHitReactions-6113366811127043669/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_collision/resolveRacePlayerItemHitReactions.s")
+// resolveRacePlayerHitReactions best match: 88.687% (nonmatchings/resolveRacePlayerHitReactions-6113366811127043669/base_2.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_collision/resolveRacePlayerHitReactions.s")
 
 #ifdef NON_MATCHING
-void resolveRacePlayerItemHitReactions(RaceInputPlayer *arg0) {
+void resolveRacePlayerHitReactions(RaceInputPlayer *arg0) {
     s32 var_t0;
     s32 var_t1;
     s32 var_t2;
@@ -391,10 +391,10 @@ void resolveRacePlayerItemHitReactions(RaceInputPlayer *arg0) {
         tryQueueRacePlayerHitCueObstacle(arg0);
     }
     if ((arg0->unk330 == 6) || (arg0->unk330 == 0xC) || (arg0->unk330 == 0x10)) {
-        tryQueueRacePlayerTerrainFallCue(arg0);
+        tryQueueRacePlayerHitCueTerrainFall(arg0);
     }
     if ((arg0->unk330 == 7) || (arg0->unk330 == 0xE) || (arg0->unk330 == 0xF)) {
-        tryQueueRacePlayerTerrainCrashCue(arg0);
+        tryQueueRacePlayerHitCueTerrainCrash(arg0);
     }
     if (gRacePlayerHitCueId != 0) {
         if (arg0->stateFlags & 0x800) {
