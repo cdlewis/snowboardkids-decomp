@@ -21,7 +21,7 @@ void func_8001061C(s16 x, s16 y, s32 texture, u16 tileIndex, u8 srcX, u8 srcY, u
                    u16 scaleY);
 void func_80010BCC(s16 x, s16 y, s32 texture, u16 tileIndex, u16 scaleX, u16 scaleY, u8 palette, u8 flip);
 void func_80011264(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height);
-void func_800112F4(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height, s32 clipRight, s32 clipBottom);
+void func_800112F4(s16 x, s16 y, s32 texture, u16 tileIndex, u16 unused, u16 alpha, s16 clipRight, s16 clipBottom);
 void func_80011854(void);
 void func_8001185C(s16 x, s16 y, s32 texture, u16 assetId, u16 width, u16 height);
 void func_80011C18(MenuRenderSpriteActor *actor);
@@ -58,7 +58,7 @@ void func_8001061C(s16 x, s16 y, s32 texture, u16 tileIndex, s32 srcX, s32 srcY,
                    s32 scaleY);
 void func_80010BCC(s16 x, s16 y, s32 texture, s32 tileIndex, s32 scaleX, s32 scaleY, s32 palette, s32 flip);
 void func_80011264(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height);
-void func_800112F4(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height, s32 clipRight, s32 clipBottom);
+void func_800112F4(s16 x, s16 y, s32 texture, u16 tileIndex, u16 unused, u16 alpha, s16 clipRight, s16 clipBottom);
 void func_80011854(void);
 void func_8001185C(s16 x, s16 y, s32 texture, u16 assetId, u16 width, u16 height);
 void func_80011C18(MenuRenderSpriteActor *actor);
@@ -95,7 +95,7 @@ void func_8001061C(s16 x, s16 y, s32 texture, u16 tileIndex, u8 srcX, u8 srcY, u
                    u16 scaleY);
 void func_80010BCC(s16 x, s16 y, s32 texture, u16 tileIndex, u16 scaleX, u16 scaleY, u8 palette, u8 flip);
 void func_80011264(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height);
-void func_800112F4(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height, s32 clipRight, s32 clipBottom);
+void func_800112F4(s16 x, s16 y, s32 texture, u16 tileIndex, u16 unused, u16 alpha, s16 clipRight, s16 clipBottom);
 void func_80011854(void);
 void func_8001185C(s16 x, s16 y, s32 texture, u16 assetId, u16 width, u16 height);
 void func_80011C18(MenuRenderSpriteActor *actor);
