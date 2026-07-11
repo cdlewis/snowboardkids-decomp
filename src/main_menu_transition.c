@@ -370,12 +370,13 @@ void func_80040004(void) {
     func_8009956C(&func_8004002C, 0);
 }
 
-// func_8004002C best match: 97.201% (nonmatchings/func_8004002C-6276316234415602851/base_10.c)
+// func_8004002C best match: 98.186% (nonmatchings/func_8004002C-6061209858023118177/base.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_8004002C.s")
 
 #ifdef NON_MATCHING
 void func_8004002C(void) {
+    u64 characterId;
 
     switch (D_80121B5A) {
         case 1:
@@ -405,7 +406,8 @@ void func_8004002C(void) {
     D_80121D80[3].unk4 = 1;
     D_80121D80[0].characterId = (D_80121D80[0].unk11 = 0);
     D_80121D80[1].characterId = 1;
-    D_80121D80[2].characterId = 2;
+    characterId = 2;
+    D_80121D80[2].characterId = characterId;
     D_80121D80[3].characterId = 3;
     D_80121D80[1].unk11 = 0;
     D_80121D80[2].unk11 = 0;
