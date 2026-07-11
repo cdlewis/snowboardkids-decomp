@@ -35,8 +35,8 @@ typedef struct MainMenuAnimationWritePart {
     s32 word10;
 } MainMenuAnimationWritePart;
 
-extern RomAssetAddress D_800D4020[];
-extern RomAssetAddress D_800D4050[];
+extern RomAssetAddress gCharacterRawAssetRanges[];
+extern RomAssetAddress gCharacterTextureAssetRanges[];
 extern MainMenuModelAssetHandles D_80112130;
 
 // func_80040C80 best match: 98.116% (nonmatchings/func_80040C80-6113366811127043669/base_5.c)
@@ -286,10 +286,10 @@ void func_80041CF0(void) {
 void func_80041D20(s32 actorIndex, s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    loadRawRomAsset(MAIN_MENU_MODEL_ASSET_RANGE_START(D_800D4020, modelIndex),
-                  MAIN_MENU_MODEL_ASSET_RANGE_END(D_800D4020, modelIndex), actorIndex + 0x33);
-    loadCompressedRomAsset((void *)MAIN_MENU_MODEL_ASSET_RANGE_START(D_800D4050, modelIndex),
-                  (void *)MAIN_MENU_MODEL_ASSET_RANGE_END(D_800D4050, modelIndex), actorIndex + 0x39);
+    loadRawRomAsset(MAIN_MENU_MODEL_ASSET_RANGE_START(gCharacterRawAssetRanges, modelIndex),
+                  MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterRawAssetRanges, modelIndex), actorIndex + 0x33);
+    loadCompressedRomAsset((void *)MAIN_MENU_MODEL_ASSET_RANGE_START(gCharacterTextureAssetRanges, modelIndex),
+                  (void *)MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterTextureAssetRanges, modelIndex), actorIndex + 0x39);
     D_80112130.modelInstanceHandles[actorIndex] = func_80042D58(sizeof(MainMenuSceneModel));
     model = (MainMenuSceneModel *)func_80043040(D_80112130.modelInstanceHandles[actorIndex]);
     model->actorIndex = actorIndex;

@@ -3,7 +3,7 @@
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "asset_manager.h"
-#include "course_asset_loader.h"
+#include "race_scene_loader.h"
 #include "input_task_scheduler.h"
 #include "race_camera.h"
 #include "race_player_state.h"
@@ -154,8 +154,8 @@ void func_8003ED00(void) {
     if (players[0].replayInputSource == 5) {
         loadCompressedRomAsset(&D_24C8E0, &D_24DBE0, 0x2B);
     }
-    func_80043950();
-    func_800440F4();
+    loadRaceCourseAssets();
+    loadRaceCharacterAssets();
     D_801235B4 = 0;
     func_8006D5CC();
     resetAllViewports();
@@ -164,7 +164,7 @@ void func_8003ED00(void) {
     gFramebufferSwapDelay = 0;
     func_8008BEB0();
     func_80078430();
-    func_80044294();
+    initRaceCourseEffects();
     setCurrentInputTaskCallback(func_8003EF7C, 0);
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;

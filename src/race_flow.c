@@ -21,6 +21,7 @@
 #include "race_course_effects.h"
 #include "race_flow.h"
 #include "race_player_state.h"
+#include "race_scene_loader.h"
 #include "race_timer_ui.h"
 #include "race_to_main_menu_transition.h"
 #include "race_ui_effects.h"
@@ -250,7 +251,6 @@ extern s16 D_801222F4;
 
 extern void func_8003DFD0(void);
 extern s32 func_80040D94(void);
-extern void func_80044294(void);
 extern void releaseMenuAssetHandles(void);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s32, s32, s32, s32, s32);
@@ -1584,7 +1584,7 @@ void func_80077554(void) {
     resetSecondaryRng();
     func_8008BEB0();
     func_80078430();
-    func_80044294();
+    initRaceCourseEffects();
     gMenuFadeAlpha = 0xFF;
     func_80042C20();
     func_800720E4(0);
