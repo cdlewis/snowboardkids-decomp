@@ -1,5 +1,6 @@
 #include "common.h"
 #include "input_task_scheduler.h"
+#include "system_boot.h"
 
 #define INPUT_TASK_CALLBACK_COUNT 3
 #define INPUT_TASK_COUNT 8
@@ -76,8 +77,6 @@ void func_8004835C();
 #else
 void func_8004835C(void *, void *);
 #endif
-void func_8009B0E8(void);
-void func_8009B704(u8);
 void clearPendingPositionalSoundRequests(void);
 InputTask *func_80099384(s32);
 s32 func_80099288(void);
@@ -118,7 +117,7 @@ void initInputTaskScheduler(void) {
     D_8012378B = zero;
     D_8012378F = zero;
     func_8004835C(&D_801235C0[INPUT_TASK_COUNT], &D_80123708);
-    func_8009B0E8();
+    resetRenderCallbackQueues();
 }
 
 // func_80098EAC best match: 92.403% (nonmatchings/func_80098EAC-7273315160691878794/base_11.c)
@@ -146,7 +145,7 @@ void func_80098EAC(void) {
 
     gFrameCounter = (gFrameCounter + 1) & 0xFFF;
     func_8004835C();
-    func_8009B0E8();
+    resetRenderCallbackQueues();
     clearPendingPositionalSoundRequests();
 
     previousInput = &D_80123768;
@@ -303,7 +302,7 @@ s32 func_80099288(void) {
             frameIndex = D_80123752;
             if (D_8012496E[frameIndex].status == 0) {
                 if ((s32) gPendingFramebufferSwapCount > 0) {
-                    func_8009B704(frameIndex);
+                    submitFramebufferRenderTask(frameIndex);
                     gFramebufferSwapDelayTimer = gFramebufferSwapDelay;
                     gPendingFramebufferSwapCount--;
                     if (D_80123752 != 0) {

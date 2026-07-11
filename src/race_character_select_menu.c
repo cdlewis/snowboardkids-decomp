@@ -7,6 +7,7 @@
 #include "menu_rendering.h"
 #include "race_camera.h"
 #include "sound_manager.h"
+#include "system_boot.h"
 #include "title_menu.h"
 #include "viewport_manager.h"
 
@@ -50,7 +51,6 @@ typedef struct {
 
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
-extern void func_80099C44(void *, void *, s32);
 extern void n_alSeqpDelete(void);
 
 extern u8 D_14B450[];
@@ -182,7 +182,7 @@ void initRaceCharacterSelectMenu(void) {
 
     size = D_1502A0 - D_14B450;
     D_80112130[0xC] = func_80042D58(size);
-    func_80099C44(D_14B450, (void *)func_80043040(D_80112130[0xC]), size);
+    dmaReadRom((u32)D_14B450, (void *)func_80043040(D_80112130[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
     initCallbackTaskScheduler(0);

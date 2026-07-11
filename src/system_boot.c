@@ -1,6 +1,6 @@
 #include "common.h"
 #include "sound_manager.h"
-#include "game_boot.h"
+#include "system_boot.h"
 #include "input_task_scheduler.h"
 #include "main_menu.h"
 #include "memory_allocator.h"
@@ -131,11 +131,11 @@ extern void osViSetSpecialFeatures(u32);
 
 extern s32 osTvType;
 
-extern u8 D_80156618;
-extern u8 D_80156619;
-extern u8 D_8015661A;
-extern s16 D_800DF140;
-extern u16 D_800DF150;
+extern u8 gFadeColorRed;
+extern u8 gFadeColorGreen;
+extern u8 gFadeColorBlue;
+extern s16 gFadeTimer;
+extern u16 gRetraceCounter;
 
 extern OSThread D_801237B0;
 extern OSMesgQueue D_80123CC0;
@@ -169,7 +169,7 @@ extern u8 D_8012496E;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
 extern u8 D_8013CF8E;
-extern s32 D_800DF144;
+extern s32 gClearFramebufferOnNextTask;
 extern s8 D_800DEF10;
 extern Gfx *D_80124904;
 extern u8 D_80124834;
@@ -211,21 +211,21 @@ extern void func_800458E0(void);
 extern void func_80048338(void);
 extern void func_800484F0(void);
 extern void func_80048524(s32);
-extern void func_80099D10(u8);
+extern void appendViewportDisplayLists(u8);
 extern s32 osSendMesg(void *, void *, s32);
 extern void func_80098EAC(void);
-extern void func_800998E4(void *);
-extern void func_8009B14C(void);
+extern void gameThreadMain(void *);
+extern void initVideoTaskState(void);
 
 void main(void *arg) {
     osInitialize();
-    osCreateThread(&D_801237B0, BOOT_THREAD_ID, func_800996FC, arg, D_80324480, THREAD_PRIORITY);
+    osCreateThread(&D_801237B0, BOOT_THREAD_ID, bootThreadMain, arg, D_80324480, THREAD_PRIORITY);
     osStartThread(&D_801237B0);
 }
 
-void func_800996FC(void *arg) {
+void bootThreadMain(void *arg) {
     osCreatePiManager(PI_MANAGER_PRIORITY, &D_80123CC0, D_80123CD8, PI_MANAGER_MSG_COUNT);
-    osCreateThread(&D_80123960, MAIN_THREAD_ID, func_800998E4, arg, D_80328480, THREAD_PRIORITY);
+    osCreateThread(&D_80123960, MAIN_THREAD_ID, gameThreadMain, arg, D_80328480, THREAD_PRIORITY);
     osStartThread(&D_80123960);
     osSetThreadPri(NULL, 0);
     while (1) {
@@ -233,7 +233,7 @@ void func_800996FC(void *arg) {
     }
 }
 
-void func_80099790(void) {
+void initGameSystems(void) {
     osCreateMesgQueue(&D_80123FF8, D_80124010, 1);
     osCreateMesgQueue(&D_80124050, D_80124068, 2);
     osCreateMesgQueue(&D_80124070, D_80124088, 8);
@@ -249,7 +249,7 @@ void func_80099790(void) {
     func_80048338();
     func_800484F0();
     initInputTaskScheduler();
-    func_8009B14C();
+    initVideoTaskState();
     func_80000450();
     resetAllViewports();
     initSoundManager();
@@ -261,9 +261,9 @@ void func_80099790(void) {
     gRumblePakConnectedMask = 0;
 }
 
-// func_800998E4 best match: 89.136% at nonmatchings/func_800998E4-731940616440357983/base_14.c.
+// gameThreadMain best match: 89.136% at nonmatchings/func_800998E4-731940616440357983/base_14.c.
 #ifdef NON_MATCHING
-void func_800998E4(void *arg0) {
+void gameThreadMain(void *arg0) {
     OSMesg msg;
     s32 done;
     s32 initialized;
@@ -275,7 +275,7 @@ void func_800998E4(void *arg0) {
 
     msg = NULL;
     initialized = 0;
-    func_80099790();
+    initGameSystems();
     done = 0;
     queue18 = &D_80124018;
     queue70 = &D_80124070;
@@ -288,7 +288,7 @@ loop_1:
         }
         switch (*(s16 *)msg) {
         case 1:
-            D_80124828 = D_800DF150;
+            D_80124828 = gRetraceCounter;
             if (initialized == 0) {
                 initialized = 1;
                 func_80098EAC();
@@ -365,10 +365,10 @@ loop_17:
     goto loop_16;
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_800998E4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/system_boot/gameThreadMain.s")
 #endif
 
-void func_80099C44(u32 devAddr, void *dramAddr, s32 size) {
+void dmaReadRom(u32 devAddr, void *dramAddr, s32 size) {
     OSIoMesg mb;
     OSMesg msg;
     s32 chunk;
@@ -388,10 +388,10 @@ void func_80099C44(u32 devAddr, void *dramAddr, s32 size) {
     }
 }
 
-// func_80099D10 best match: 11.115% (nonmatchings/func_80099D10-8207005055717715604/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_80099D10.s")
+// appendViewportDisplayLists best match: 11.115% (nonmatchings/appendViewportDisplayLists-8207005055717715604/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/system_boot/appendViewportDisplayLists.s")
 
-void func_8009B0E8(void) {
+void resetRenderCallbackQueues(void) {
     u32 end;
     CallbackQueueGroup *group;
 
@@ -410,7 +410,7 @@ void func_8009B0E8(void) {
     D_80124868 = NULL;
 }
 
-void func_8009B14C(void) {
+void initVideoTaskState(void) {
     D_80124908.msgType = 5;
     D_80124908.framebuffer = D_8038E800;
     D_8013C908.msgType = 6;
@@ -440,23 +440,23 @@ void func_8009B14C(void) {
     D_800DEF10 = 0;
 }
 
-void func_8009B58C(u8 a0, u8 a1, u8 a2) {
-    D_80156618 = a0;
-    D_80156619 = a1;
-    D_8015661A = a2;
-    D_800DF140 = BOOT_FADE_TIMER;
+void setBootFadeColor(u8 a0, u8 a1, u8 a2) {
+    gFadeColorRed = a0;
+    gFadeColorGreen = a1;
+    gFadeColorBlue = a2;
+    gFadeTimer = BOOT_FADE_TIMER;
 }
 
-void func_8009B5C0(u8 a0, u8 a1, u8 a2) {
-    D_80156618 = a0;
-    D_80156619 = a1;
-    D_8015661A = a2;
-    D_800DF140 = TITLE_FADE_TIMER;
+void setTitleFadeColor(u8 a0, u8 a1, u8 a2) {
+    gFadeColorRed = a0;
+    gFadeColorGreen = a1;
+    gFadeColorBlue = a2;
+    gFadeTimer = TITLE_FADE_TIMER;
 }
 
-// func_8009B5F4 best match: 88.485% at nonmatchings/func_8009B5F4-9017456803007796287/base_19.c.
+// appendFadeOverlayDisplayList best match: 88.485% at nonmatchings/appendFadeOverlayDisplayList-9017456803007796287/base_19.c.
 #ifdef NON_MATCHING
-Gfx *func_8009B5F4(void) {
+Gfx *appendFadeOverlayDisplayList(void) {
     Gfx *gfx;
     Gfx *ret;
     Gfx *retCopy;
@@ -468,7 +468,7 @@ Gfx *func_8009B5F4(void) {
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;
     gfx->words.w0 = 0xBC000008;
-    fade = D_800DF140;
+    fade = gFadeTimer;
     do {
     } while (0 != 0U);
     retCopy = gfx;
@@ -481,17 +481,17 @@ Gfx *func_8009B5F4(void) {
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;
     gfx->words.w0 = 0xF8000000;
-    gfx->words.w1 = (D_80156618 << 24) | ((D_80156619 << 8) << 8) | (D_8015661A << 8) | 0xFF;
+    gfx->words.w1 = (gFadeColorRed << 24) | ((gFadeColorGreen << 8) << 8) | (gFadeColorBlue << 8) | 0xFF;
 
     return ret;
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_8009B5F4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/system_boot/appendFadeOverlayDisplayList.s")
 #endif
 
-// func_8009B704 best match: 80.089% at nonmatchings/func_8009B704-8207005055717715604/base_5.c.
+// submitFramebufferRenderTask best match: 80.089% at nonmatchings/submitFramebufferRenderTask-8207005055717715604/base_5.c.
 #ifdef NON_MATCHING
-void func_8009B704(u8 arg0) {
+void submitFramebufferRenderTask(u8 arg0) {
     BootSchedulerTask *task;
     BootSchedulerTask *nextTask;
     s32 colorIndex;
@@ -531,8 +531,8 @@ void func_8009B704(u8 arg0) {
     BOOT_GFX_CMD(0xBA001701, 0);
     BOOT_GFX_CMD(0xFD10013F, D_369000);
 
-    if (D_800DF144 != 0) {
-        D_800DF144 = 0;
+    if (gClearFramebufferOnNextTask != 0) {
+        gClearFramebufferOnNextTask = 0;
         BOOT_GFX_CMD(0xBA001402, 0x300000);
         BOOT_GFX_CMD(0xB900031D, 0);
         BOOT_GFX_CMD(0xFF10013F, D_80369000);
@@ -576,7 +576,7 @@ void func_8009B704(u8 arg0) {
     }
 
     BOOT_GFX_CMD(0xB9000002, 0);
-    func_80099D10(arg0);
+    appendViewportDisplayLists(arg0);
     BOOT_GFX_CMD(0xE9000000, 0);
     BOOT_GFX_CMD(0xB8000000, 0);
 
@@ -659,5 +659,5 @@ void func_8009B704(u8 arg0) {
 }
 
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/game_boot/func_8009B704.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/system_boot/submitFramebufferRenderTask.s")
 #endif

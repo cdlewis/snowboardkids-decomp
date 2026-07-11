@@ -6,6 +6,7 @@
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
 #include "shop_menu_ui.h"
+#include "system_boot.h"
 #include "title_menu.h"
 #include "viewport_manager.h"
 
@@ -164,7 +165,6 @@ extern void releaseMenuAssetHandles(void);
 extern void requestMusicSequenceBank(s32);
 extern void requestMusicSequenceStop(s32);
 extern void enqueueSoundEffect(s32, s32);
-extern void func_80099C44(void *, void *, s32);
 extern void n_alSeqpDelete(void);
 
 // initCourseSelectMenu best match: 98.706%
@@ -215,7 +215,7 @@ void initCourseSelectMenu(void) {
 
     size = D_1502A0 - D_14B450;
     D_80112130[0xC] = func_80042D58(size);
-    func_80099C44(D_14B450, (void *)func_80043040(D_80112130[0xC]), size);
+    dmaReadRom((u32)D_14B450, (void *)func_80043040(D_80112130[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     nextCallback = updateCourseSelectModeMenu;

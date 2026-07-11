@@ -3,7 +3,7 @@
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
-#include "game_boot.h"
+#include "system_boot.h"
 #include "input_task_scheduler.h"
 #include "race_camera.h"
 #include "main_menu_debug_ui.h"
@@ -115,7 +115,7 @@ void func_8000D340(void) {
     temp_v0 = D_1502A0 - D_14B450;
     sp34 = temp_v0;
     D_80112130[0xC] = func_80042D58(temp_v0);
-    func_80099C44(D_14B450, func_80043040(D_80112130[0xC]), sp34);
+    dmaReadRom(D_14B450, func_80043040(D_80112130[0xC]), sp34);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     func_80041CC0();
     initCallbackTaskScheduler(0);
