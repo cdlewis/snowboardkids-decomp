@@ -611,58 +611,47 @@ void func_80056C44(CoursePreviewCamera *arg0) {
     }
 }
 
-// func_80056CA0 best match: 99.373% (nonmatchings/func_80056CA0-8207005055717715604/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_80056CA0.s")
-
-#ifdef NON_MATCHING
 void func_80056CA0(CoursePreviewGfxCommandActor *arg0) {
-    volatile s32 pad[2];
-    u32 spC0;
-    u32 spBC;
-    s16 spBA;
-    s16 spB8;
-    CoursePreviewGfxCommandEntry *var_s2;
-    Gfx *temp_v0_13;
-    Gfx *temp_v0_14;
-    s16 temp_s1;
-    s16 var_s5;
-    s32 var_s3;
-    s8 temp_t7;
+    volatile u8 pad[0xC];
+    u32 image;
+    u32 palette;
+    s16 width;
+    s16 height;
+    CoursePreviewGfxCommandEntry *entry;
+    Gfx *gfx;
+    s16 textureIndex;
+    s16 loadedTextureIndex;
+    s32 i;
 
     gSPDisplayList(gRegionAllocPtr++, D_800D9D00);
-    var_s2 = D_800D5FC8[D_80121B50];
-    var_s5 = -1;
-    var_s3 = 0;
-    if (var_s2->textureIndex != -1) {
+    entry = D_800D5FC8[D_80121B50];
+    loadedTextureIndex = -1;
+    i = 0;
+    if (entry->textureIndex != -1) {
         do {
-            if (func_80049000(var_s2->command) != 0) {
-                temp_s1 = D_800D5D30[var_s2->textureIndex] + ((s32)(D_801235B0 & 4) / 4);
-                if (temp_s1 != var_s5) {
-                    var_s5 = temp_s1;
-                    func_80045A1C((u8 *)func_80043040((s32)D_80112168), temp_s1 & 0xFFFF, &spC0, &spBC, &spBA, &spB8);
-                    gDPLoadTextureBlock_4b(gRegionAllocPtr++, spC0, G_IM_FMT_CI, spBA, spB8, 0, G_TX_CLAMP,
+            if (func_80049000(entry->command) != 0) {
+                textureIndex = D_800D5D30[entry->textureIndex] + ((s32)(D_801235B0 & 4) / 4);
+                if (textureIndex != loadedTextureIndex) {
+                    loadedTextureIndex = textureIndex;
+                    func_80045A1C((u8 *)func_80043040((s32)D_80112168), textureIndex & 0xFFFF, &image, &palette,
+                                  &width, &height);
+                    gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0, G_TX_CLAMP,
                                             G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-                    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, spBC);
+                    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
                 }
-                gSPMatrix(gRegionAllocPtr++, &arg0->matrices[var_s3], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, &arg0->matrices[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-                temp_v0_13 = gRegionAllocPtr;
-                gRegionAllocPtr = temp_v0_13 + 1;
-                temp_v0_13->words.w1 = (u32)D_800D5CF0;
-                temp_v0_13->words.w0 = 0x0400103F;
-                temp_v0_14 = gRegionAllocPtr;
-                gRegionAllocPtr = temp_v0_14 + 1;
-                temp_v0_14->words.w1 = 0x60200;
-                temp_v0_14->words.w0 = 0xB1060402;
+                gfx = gRegionAllocPtr++;
+                gfx->words.w1 = (u32)D_800D5CF0;
+                gfx->words.w0 = 0x0400103F;
+                COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
             }
-            temp_t7 = var_s2[1].textureIndex;
-            var_s2++;
-            var_s3 += 1;
-        } while (temp_t7 != -1);
+            entry++;
+            i++;
+        } while (entry->textureIndex != -1);
     }
     gSPDisplayList(gRegionAllocPtr++, D_800D9D40);
 }
-#endif
 
 void func_8005711C(s32 arg0) {
     func_800483FC(&D_801248D4, func_80056CA0, arg0);
