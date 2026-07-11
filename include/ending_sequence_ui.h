@@ -1,12 +1,12 @@
-#ifndef ENDING_SEQUENCE_CREDITS_H
-#define ENDING_SEQUENCE_CREDITS_H
+#ifndef ENDING_SEQUENCE_UI_H
+#define ENDING_SEQUENCE_UI_H
 
 #include "common.h"
 
-typedef struct EndingSequenceCreditsActor EndingSequenceCreditsActor;
+typedef struct EndingSequenceCreditsAndTheEndActor EndingSequenceCreditsAndTheEndActor;
 typedef struct EndingSequenceObjectSpriteDebugViewerActor EndingSequenceObjectSpriteDebugViewerActor;
 
-void initEndingSequenceCreditsActor(EndingSequenceCreditsActor *arg0);
+void initEndingSequenceCreditsAndTheEndActor(EndingSequenceCreditsAndTheEndActor *arg0);
 void initEndingSequenceObjectSpriteDebugViewerActor(EndingSequenceObjectSpriteDebugViewerActor *arg0);
 
 #endif

@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "ending_sequence_credits.h"
+#include "ending_sequence_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
@@ -11,7 +11,7 @@
 #define ENDING_SEQUENCE_CREDIT_PAGE_VISIBLE_FRAMES 0x96
 #define ENDING_SEQUENCE_CREDIT_PAGE_COUNT 0x19
 
-struct EndingSequenceCreditsActor {
+struct EndingSequenceCreditsAndTheEndActor {
     /* 0x00 */ char pad[0x1C];
     /* 0x1C */ s16 x;
     /* 0x1E */ s16 y;
@@ -52,16 +52,16 @@ extern void addRenderCallback(void *, void *, void *);
 extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 
-void drawEndingSequenceCreditPage(EndingSequenceCreditsActor *arg0);
-void updateEndingSequenceTheEndFadeIn(EndingSequenceCreditsActor *arg0);
-void updateEndingSequenceCreditPages(EndingSequenceCreditsActor *arg0);
+void drawEndingSequenceCreditPage(EndingSequenceCreditsAndTheEndActor *arg0);
+void updateEndingSequenceTheEndTextFadeIn(EndingSequenceCreditsAndTheEndActor *arg0);
+void updateEndingSequenceCreditPages(EndingSequenceCreditsAndTheEndActor *arg0);
 void updateEndingSequenceObjectSpriteDebugViewer(EndingSequenceObjectSpriteDebugViewerActor *arg0);
 
 // drawEndingSequenceCreditPage best match: 93.371%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_credits/drawEndingSequenceCreditPage.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_ui/drawEndingSequenceCreditPage.s")
 
 #ifdef NON_MATCHING
-void drawEndingSequenceCreditPage(EndingSequenceCreditsActor *arg0) {
+void drawEndingSequenceCreditPage(EndingSequenceCreditsAndTheEndActor *arg0) {
     register s32 count;
     s32 i;
     s32 scriptIndex;
@@ -105,14 +105,14 @@ void drawEndingSequenceCreditPage(EndingSequenceCreditsActor *arg0) {
 }
 #endif
 
-void drawEndingSequenceTheEndSpritePair(EndingSequenceCreditsActor *arg0) {
+void drawEndingSequenceTheEndText(EndingSequenceCreditsAndTheEndActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x35, 0x20, 0x20, 0,
                             arg0->alpha, 0);
     drawMenuSpriteWithAlpha((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x36, 0x20,
                             0x20, 0, arg0->alpha, 0);
 }
 
-void updateEndingSequenceTheEndFadeIn(EndingSequenceCreditsActor *arg0) {
+void updateEndingSequenceTheEndTextFadeIn(EndingSequenceCreditsAndTheEndActor *arg0) {
     s32 v1 = ENDING_SEQUENCE_FADE_MAX;
     s32 v0;
 
@@ -124,11 +124,11 @@ void updateEndingSequenceTheEndFadeIn(EndingSequenceCreditsActor *arg0) {
                 arg0->alpha = v1;
             }
         }
-        addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceTheEndSpritePair, arg0);
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceTheEndText, arg0);
     }
 }
 
-void updateEndingSequenceCreditPages(EndingSequenceCreditsActor *arg0) {
+void updateEndingSequenceCreditPages(EndingSequenceCreditsAndTheEndActor *arg0) {
     switch (arg0->state) {
     case 0:
         arg0->alpha += ENDING_SEQUENCE_CREDIT_PAGE_FADE_STEP;
@@ -153,7 +153,7 @@ void updateEndingSequenceCreditPages(EndingSequenceCreditsActor *arg0) {
             arg0->pageIndex = arg0->pageIndex + 1;
             if (arg0->pageIndex == ENDING_SEQUENCE_CREDIT_PAGE_COUNT) {
                 arg0->pageIndex = 0;
-                setCallbackTaskCallback(arg0, updateEndingSequenceTheEndFadeIn);
+                setCallbackTaskCallback(arg0, updateEndingSequenceTheEndTextFadeIn);
             }
             if (gEndingSequencePhase == 0) {
                 gEndingSequencePhase = 1;
@@ -171,7 +171,7 @@ void updateEndingSequenceCreditPages(EndingSequenceCreditsActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceCreditPage, arg0);
 }
 
-void initEndingSequenceCreditsActor(EndingSequenceCreditsActor *arg0) {
+void initEndingSequenceCreditsAndTheEndActor(EndingSequenceCreditsAndTheEndActor *arg0) {
     arg0->state = 3;
     arg0->pageIndex = 0;
     arg0->x = -0x40;
