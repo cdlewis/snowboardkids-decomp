@@ -41,7 +41,7 @@ struct MenuPanelActor {
     /* 0x2B */ u8 selectionState;
 };
 
-extern RenderCallbackNode *D_80124868;
+extern RenderCallbackNode *gMenuRenderCallbackList;
 extern u8 D_8010B1F0;
 extern u8 D_800D4A40[];
 extern u8 D_800D54E7[];
@@ -74,7 +74,7 @@ extern u8 D_8012482B;
 extern u8 D_8012482C;
 extern s16 D_80156612;
 
-extern void func_800483FC(RenderCallbackNode **, RenderCallback, s32);
+extern void addRenderCallback(RenderCallbackNode **, RenderCallback, s32);
 extern void func_80045A78(s16, s16, s32, u16);
 extern void func_80045E84(s16, s16, s32, s32);
 extern void func_80046358(s32, s32, s32, s32);
@@ -250,8 +250,8 @@ void func_800515F0(MenuPanelActor *arg0) {
         arg0->x = 0xFF;
     }
 
-    func_800483FC(&D_80124868, func_80050FF0, (s32)arg0);
-    func_800483FC(&D_80124868, func_80051308, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80050FF0, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80051308, (s32)arg0);
 }
 #endif
 
@@ -386,7 +386,7 @@ void func_80051E80(MenuPanelActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_80051878, (s32) arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80051878, (s32) arg0);
 }
 
 void func_80051ED4(MenuPanelActor *arg0) {
@@ -423,7 +423,7 @@ void func_80051ED4(MenuPanelActor *arg0) {
         enqueueSoundEffect(MENU_PANEL_ACCEPT_SOUND, MENU_PANEL_SOUND_VOLUME);
     }
 
-    func_800483FC(&D_80124868, func_80051878, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80051878, (s32)arg0);
 }
 
 void func_80051FDC(MenuPanelActor *arg0) {
@@ -475,7 +475,7 @@ void func_80052034(s32 arg0) {
 }
 
 void func_80052364(MenuPanelActor *arg0) {
-    func_800483FC(&D_80124868, func_80052034, (s32) arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80052034, (s32) arg0);
 }
 
 void func_80052394(MenuPanelActor *arg0) {
@@ -491,7 +491,7 @@ void func_800523B8(s32 arg0) {
 
 void func_80052464(MenuPanelActor *arg0) {
     if (D_8010B1F0 == 0) {
-        func_800483FC(&D_80124868, func_800523B8, (s32) arg0);
+        addRenderCallback(&gMenuRenderCallbackList, func_800523B8, (s32) arg0);
         return;
     }
     removeCallbackTask(arg0);
@@ -506,7 +506,7 @@ void func_800524D4(s32 arg0) {
 }
 
 void func_80052520(s32 arg0) {
-    func_800483FC(&D_80124868, func_800524D4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_800524D4, arg0);
 }
 
 void func_80052550(s32 arg0) {
@@ -630,8 +630,8 @@ void func_80052868(s32 arg0) {
 }
 
 void func_80052E00(MenuPanelActor *arg0) {
-    func_800483FC(&D_80124868, func_80052550, (s32) arg0);
-    func_800483FC(&D_80124868, func_80052868, (s32) arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80052550, (s32) arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80052868, (s32) arg0);
 }
 
 void func_80052E4C(MenuPanelActor *arg0) {
@@ -718,7 +718,7 @@ void func_80052E70(s32 arg0) {
 #endif
 
 void func_80053604(MenuPanelActor *arg0) {
-    func_800483FC(&D_80124868, func_80052E70, (s32) arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80052E70, (s32) arg0);
 }
 
 void func_80053634(MenuPanelActor *arg0) {

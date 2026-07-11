@@ -37,7 +37,7 @@ extern void *D_80124858;
 extern void *D_80124898;
 extern void sprintf(char *, const char *, ...);
 extern void func_80048278(s32, s32, char *, s32);
-extern void func_800483FC(void *, void *, void *);
+extern void addRenderCallback(void *, void *, void *);
 
 const char D_800E1700[] = "MOTION NO %3.3i";
 
@@ -101,6 +101,6 @@ void func_800782FC(void) {
             func_80082DD0((ModelAnimState *)&D_80121D80);
         }
     }
-    func_800483FC(&D_80124898, func_8007C5E8, (RacePositionUiPlayer *)&D_80121D80);
-    func_800483FC(&D_80124858, func_800782B4, NULL);
+    addRenderCallback(&D_80124898, func_8007C5E8, (RacePositionUiPlayer *)&D_80121D80);
+    addRenderCallback(&D_80124858, func_800782B4, NULL);
 }

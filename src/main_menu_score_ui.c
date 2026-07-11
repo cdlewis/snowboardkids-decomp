@@ -21,18 +21,18 @@ typedef struct {
     /* 0x6 */ s16 nextTimer;
 } ControllerPakRaceRecordSaveScoreUiState;
 
-extern void func_800483FC(void *, void *, void *);
+extern void addRenderCallback(void *, void *, void *);
 extern u8 D_800B73F0[][0x4C];
 extern u8 D_800B7986[];
 extern u8 D_800B7987[];
 extern u8 D_800B79AC[];
-extern s16 D_80112172;
+extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 gControllerPakRaceRecordSaveScoreUiStateTimer;
 extern ControllerPakRaceRecordSaveScoreUiState gControllerPakRaceRecordSaveScoreUiState;
 extern u16 gControllerPakRaceRecordSaveScoreUiStateTargetState;
 extern u16 gControllerPakRaceRecordSaveScoreUiStateNextTimer;
 extern u8 gControllerPakRaceRecordSaveScoreUiStateStep;
-extern void *D_80124868;
+extern void *gMenuRenderCallbackList;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
 extern s16 gControllerPakStatusCodes;
@@ -215,7 +215,7 @@ void func_8002B8B4(MainMenuScoreTask *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002B560, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002B560, arg0);
 }
 
 void func_8002BA00(MainMenuScoreTask *arg0) {
@@ -231,9 +231,9 @@ void func_8002BA38(MainMenuScoreTask *arg0) {
 
     if (gControllerPakStatusCodes != 8) {
         alpha = arg0->unk1C.scale;
-        func_8000F8AC((s16)(arg0->x - 2), (s16)(arg0->y + 0xC), func_80043040(D_80112172), 8, 0x20, 0x20,
+        func_8000F8AC((s16)(arg0->x - 2), (s16)(arg0->y + 0xC), func_80043040(gMenuCommonSpritesAssetHandle), 8, 0x20, 0x20,
                       zero, alpha, zero);
-        func_8000F8AC((s16)(arg0->x + 0x3E), (s16)(arg0->y + 0xC), func_80043040(D_80112172), 9, 0x20,
+        func_8000F8AC((s16)(arg0->x + 0x3E), (s16)(arg0->y + 0xC), func_80043040(gMenuCommonSpritesAssetHandle), 9, 0x20,
                       0x20, zero, alpha, zero);
     }
 }
@@ -273,7 +273,7 @@ void func_8002BB24(MainMenuScoreTask *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002BA38, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002BA38, arg0);
 }
 
 void func_8002BC60(MainMenuScoreTask *arg0) {
@@ -292,7 +292,7 @@ void func_8002BC9C(MainMenuScoreTask *arg0) {
         func_80013154(arg0->x, arg0->y, text, 1, arg0->unk1C.scale, 0);
         if (((gControllerPakStatusCodes == 4) || (gControllerPakStatusCodes >= 7)) && (D_800EC9D0 == 0)) {
             if (arg0->unk1C.scale == 0x100) {
-                func_8000F030((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), func_80043040(D_80112172),
+                func_8000F030((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), func_80043040(gMenuCommonSpritesAssetHandle),
                               (((s32)arg0->state.b.frame >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
             }
         }
@@ -355,7 +355,7 @@ void func_8002BDAC(MainMenuScoreTask *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002BC9C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002BC9C, arg0);
 }
 
 void func_8002BF54(MainMenuScoreTask *arg0) {
@@ -383,7 +383,7 @@ void func_8002BF9C(MainMenuScoreTask *arg0) {
         }
 
         drawAlpha = alpha;
-        func_8000F8AC(arg0->x, arg0->unk1C.scale, func_80043040(D_80112172), D_800B7987[gControllerPakStatusCodes * 2], 0x20, 0x20,
+        func_8000F8AC(arg0->x, arg0->unk1C.scale, func_80043040(gMenuCommonSpritesAssetHandle), D_800B7987[gControllerPakStatusCodes * 2], 0x20, 0x20,
                       0, drawAlpha, 0);
 
         if (drawAlpha == 0x100) {
@@ -392,12 +392,12 @@ void func_8002BF9C(MainMenuScoreTask *arg0) {
             alpha = 0x100;
         }
 
-        func_8000F8AC(arg0->x, arg0->y, func_80043040(D_80112172), D_800B7986[gControllerPakStatusCodes * 2], 0x20, 0x20, 0, alpha,
+        func_8000F8AC(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), D_800B7986[gControllerPakStatusCodes * 2], 0x20, 0x20, 0, alpha,
                       0);
 
         state = D_800EC9D0;
         if ((state == 3) || (state == 4)) {
-            func_8000F8AC(arg0->x, (s16)(((D_800EC9D0 * 0x10) + arg0->y) - 0x30), func_80043040(D_80112172), 0x12,
+            func_8000F8AC(arg0->x, (s16)(((D_800EC9D0 * 0x10) + arg0->y) - 0x30), func_80043040(gMenuCommonSpritesAssetHandle), 0x12,
                           0x20, 0x20, 0, (u16)arg0->state.w.alpha, 7);
             state = D_800EC9D0;
         }
@@ -454,7 +454,7 @@ void func_8002C18C(MainMenuScoreTask *arg0) {
         }
         arg0->state.b.alphaTimer = (arg0->state.b.alphaTimer + 1) & 0x1F;
     }
-    func_800483FC(&D_80124868, func_8002BF9C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002BF9C, arg0);
 }
 
 void func_8002C318(MainMenuScoreTask *arg0) {
@@ -497,7 +497,7 @@ void func_8002C390(MainMenuScoreTask *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002C350, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002C350, arg0);
 }
 
 void func_8002C498(MainMenuScoreTask *arg0) {

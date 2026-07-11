@@ -56,13 +56,13 @@ struct MainMenuEffectActor {
     /* 0x2A */ s16 startY;
 };
 
-extern void func_800483FC(void *, void *, void *);
+extern void addRenderCallback(void *, void *, void *);
 extern Gfx *gRegionAllocPtr;
 extern s32 D_80124838;
-extern s32 D_80124868;
+extern s32 gMenuRenderCallbackList;
 extern Gfx D_800DEFF8[];
 extern s16 gMenuFadeAlpha;
-extern s16 D_80112172;
+extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 D_8011217C;
 extern s16 D_8011217E;
 extern u16 D_8010B1A2;
@@ -99,7 +99,7 @@ void func_8003CF98(MainMenuEffectActor *arg0);
 void func_8003D124(MainMenuEffectActor *arg0);
 
 void func_8003BEF0(MainMenuEffectActor *arg0) {
-    func_8000F030(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, func_80043040(D_80112172), ((u16) arg0->angle + 0x32) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
+    func_8000F030(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, func_80043040(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x32) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
 void func_8003BF7C(MainMenuEffectActor *arg0) {
@@ -118,7 +118,7 @@ void func_8003BF7C(MainMenuEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8003BEF0, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8003BEF0, arg0);
 }
 
 void func_8003C078(MainMenuEffectActor *arg0) {
@@ -137,7 +137,7 @@ void func_8003C0A4(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
 }
 
 void func_8003C118(MainMenuEffectActor *arg0) {
-    s32 temp = func_80043040(D_80112172);
+    s32 temp = func_80043040(gMenuCommonSpritesAssetHandle);
     MainMenuEffectActor *linePosition =
         (MainMenuEffectActor *)((s32)arg0 + arg0->uFrameIndex * sizeof(arg0->linePositions[0]));
 
@@ -155,7 +155,7 @@ void func_8003C180(MainMenuEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8003C118, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8003C118, arg0);
 }
 
 void func_8003C208(MainMenuEffectActor *arg0) {
@@ -171,7 +171,7 @@ void func_8003C208(MainMenuEffectActor *arg0) {
 }
 
 void func_8003C264(MainMenuEffectActor *arg0) {
-    func_8000F030(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, func_80043040(D_80112172), ((u16) arg0->angle + 0x10) & 0xFFFF, 0x20, 0x20, 0, 0);
+    func_8000F030(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, func_80043040(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x10) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
 void func_8003C2EC(MainMenuEffectActor *arg0) {
@@ -191,7 +191,7 @@ void func_8003C2EC(MainMenuEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8003C264, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8003C264, arg0);
 }
 
 void func_8003C3F4(MainMenuEffectActor *arg0) {
@@ -219,7 +219,7 @@ void func_8003C484(MainMenuEffectActor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; do { w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; new_var = gfx; new_var->words.w0 = 0xFA000000; new_var->words.w1 = -0x60; } while (0); if (arg0->effectFrame != 0) { func_8000F030(arg0->offsetX, arg0->offsetY, func_80043040(D_80112172), (((0, arg0->effectFrame)) + 0x24) & 0xFFFF, 0x30, 0x20, 0, 0); } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; if (arg0->effectFrame < 0xC) { func_8000F030(arg0->offsetX, arg0->offsetY, func_80043040(D_80112172), (arg0->effectFrame + 0x25) & 0xFFFF, 0x30, 0x20, 0, 0); } func_8000F030(arg0->x, arg0->y, func_80043040(D_80112172), 0x31, 0x20, 0x20, 0, 0); } while (0);
+    do { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; do { w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; new_var = gfx; new_var->words.w0 = 0xFA000000; new_var->words.w1 = -0x60; } while (0); if (arg0->effectFrame != 0) { func_8000F030(arg0->offsetX, arg0->offsetY, func_80043040(gMenuCommonSpritesAssetHandle), (((0, arg0->effectFrame)) + 0x24) & 0xFFFF, 0x30, 0x20, 0, 0); } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; if (arg0->effectFrame < 0xC) { func_8000F030(arg0->offsetX, arg0->offsetY, func_80043040(gMenuCommonSpritesAssetHandle), (arg0->effectFrame + 0x25) & 0xFFFF, 0x30, 0x20, 0, 0); } func_8000F030(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 0x31, 0x20, 0x20, 0, 0); } while (0);
 }
 #endif
 
@@ -253,7 +253,7 @@ void func_8003C634(MainMenuEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8003C484, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8003C484, arg0);
 }
 
 void func_8003C728(MainMenuEffectActor *arg0) {
@@ -271,7 +271,7 @@ void func_8003C728(MainMenuEffectActor *arg0) {
 void func_8003C77C(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = func_80043040(D_80112172);
+    temp = func_80043040(gMenuCommonSpritesAssetHandle);
     func_8000F030(arg0->x, arg0->y, temp, (arg0->animFrame + 9) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -288,7 +288,7 @@ void func_8003C7E4(MainMenuEffectActor *arg0) {
     if (temp_a2->animFrame == 6) {
         removeCallbackTask(temp_a2);
     } else {
-        func_800483FC(&D_80124868, func_8003C77C, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, func_8003C77C, temp_a2);
     }
 }
 
@@ -301,7 +301,7 @@ void func_8003C870(MainMenuEffectActor *arg0) {
 }
 
 void func_8003C8AC(MainMenuEffectActor *arg0) {
-    s32 temp = func_80043040(D_80112172);
+    s32 temp = func_80043040(gMenuCommonSpritesAssetHandle);
     func_8000F030(arg0->x - 0xE, arg0->y - 0x50, temp, (u16)(D_800B9530[arg0->animFrame] + 6), 0x20, 0x20, 0, 0);
 }
 
@@ -322,7 +322,7 @@ void func_8003C93C(MainMenuEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8003C8AC, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8003C8AC, arg0);
 }
 
 void func_8003CA44(MainMenuEffectActor *arg0) {
@@ -334,7 +334,7 @@ void func_8003CA44(MainMenuEffectActor *arg0) {
 void func_8003CA70(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = func_80043040(D_80112172);
+    temp = func_80043040(gMenuCommonSpritesAssetHandle);
     func_8000F030(arg0->x, arg0->y, temp, (arg0->animFrame + 0x14) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -349,7 +349,7 @@ void func_8003CAD8(MainMenuEffectActor *arg0) {
     if (temp_a2->animFrame == 5) {
         removeCallbackTask(temp_a2);
     } else {
-        func_800483FC(&D_80124868, func_8003CA70, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, func_8003CA70, temp_a2);
     }
 }
 
@@ -367,7 +367,7 @@ void func_8003CB78(s16 arg0, s16 arg1) {
 }
 
 void func_8003CBCC(MainMenuEffectActor *arg0) {
-    func_8000F030(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, func_80043040(D_80112172), ((u16) arg0->angle + 0x20) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
+    func_8000F030(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, func_80043040(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x20) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
 void func_8003CC58(MainMenuEffectActor *arg0) {
@@ -385,7 +385,7 @@ void func_8003CC58(MainMenuEffectActor *arg0) {
         }
     }
     if (D_8010B1A8[arg0->characterId] == 0) {
-        func_800483FC(&D_80124868, func_8003CBCC, arg0);
+        addRenderCallback(&gMenuRenderCallbackList, func_8003CBCC, arg0);
         return;
     }
     removeCallbackTask(arg0);
@@ -409,7 +409,7 @@ void func_8003CD9C(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
 void func_8003CE10(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = func_80043040(D_80112172);
+    temp = func_80043040(gMenuCommonSpritesAssetHandle);
     func_8000F030(arg0->x, arg0->y, temp, (arg0->animFrame + 0x20) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -425,7 +425,7 @@ void func_8003CE78(MainMenuEffectActor *arg0) {
         }
     }
     if (D_8010B1A2 != 7) {
-        func_800483FC(&D_80124868, func_8003CE10, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, func_8003CE10, temp_a2);
     } else {
         removeCallbackTask(temp_a2);
     }
@@ -440,7 +440,7 @@ void func_8003CF00(MainMenuEffectActor *arg0) {
 }
 
 void func_8003CF3C(MainMenuEffectActor *arg0) {
-    s32 temp = func_80043040(D_80112172);
+    s32 temp = func_80043040(gMenuCommonSpritesAssetHandle);
     func_8000F030(arg0->x, arg0->y, temp, arg0->animFrame, 0x20, 0x20, 0, 0);
 }
 
@@ -457,7 +457,7 @@ void func_8003CF98(MainMenuEffectActor *arg0) {
         arg0->animTimer++;
     }
     if (arg0->animTimer < 0xF) {
-        func_800483FC(&D_80124868, func_8003CF3C, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, func_8003CF3C, temp_a2);
         return;
     }
     removeCallbackTask(temp_a2);
@@ -480,7 +480,7 @@ void func_8003D068(s16 arg0, s16 arg1) {
 void func_8003D0BC(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = func_80043040(D_80112172);
+    temp = func_80043040(gMenuCommonSpritesAssetHandle);
     func_8000F030(arg0->x, arg0->y, temp, (arg0->animFrame + 0x1C) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -506,7 +506,7 @@ void func_8003D124(MainMenuEffectActor *arg0) {
         arg0->animTimer++;
     }
     if (arg0->animTimer < var_v1) {
-        func_800483FC(&D_80124868, func_8003D0BC, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, func_8003D0BC, temp_a2);
         return;
     }
     if (D_8010B1A2 == 3) {
@@ -533,7 +533,7 @@ void func_8003D218(s16 arg0, s16 arg1, u8 arg2) {
 void func_8003D27C(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = func_80043040(D_80112172);
+    temp = func_80043040(gMenuCommonSpritesAssetHandle);
     func_8000F030(arg0->x, arg0->y, temp, (D_800B9538[arg0->animFrame] + 0x19) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -551,7 +551,7 @@ void func_8003D2F4(MainMenuEffectActor *arg0) {
     if (D_8010B1A2 == 4) {
         removeCallbackTask(temp_a2);
     } else {
-        func_800483FC(&D_80124868, func_8003D27C, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, func_8003D27C, temp_a2);
     }
 }
 
@@ -568,7 +568,7 @@ void func_8003D3C0(MainMenuEffectActor *arg0) {
 }
 
 void func_8003D3F4(MainMenuEffectActor *arg0) {
-    func_800483FC(&D_80124838, func_8003D3C0, arg0);
+    addRenderCallback(&D_80124838, func_8003D3C0, arg0);
 }
 
 void func_8003D424(MainMenuEffectActor *arg0) {
@@ -585,7 +585,7 @@ void func_8003D424(MainMenuEffectActor *arg0) {
             *temp_v0 = 0x140 - temp_v1;
         }
     }
-    func_800483FC(&D_80124838, func_8003D3C0, temp_a2);
+    addRenderCallback(&D_80124838, func_8003D3C0, temp_a2);
     if (D_8010B1A2 == 0x3A) {
         setCallbackTaskCallback(temp_a2, func_8003D3F4);
     }
@@ -603,7 +603,7 @@ void func_8003D4C0(MainMenuEffectActor *arg0) {
             *temp_v0 = 0x140 - *temp_v0;
         }
     }
-    func_800483FC(&D_80124838, func_8003D3C0, temp_a2);
+    addRenderCallback(&D_80124838, func_8003D3C0, temp_a2);
     if (D_8010B1A2 == 0x39) {
         temp_v0 = &temp_a2->angle;
         setCallbackTaskCallback(temp_a2, func_8003D424);
@@ -615,7 +615,7 @@ void func_8003D4C0(MainMenuEffectActor *arg0) {
 void func_8003D580(MainMenuEffectActor *arg0) {
     s16 *temp_v0;
 
-    func_800483FC(&D_80124838, func_8003D3C0, arg0);
+    addRenderCallback(&D_80124838, func_8003D3C0, arg0);
     temp_v0 = &arg0->angle;
     if (D_8010B1A2 == 0x33) {
         setCallbackTaskCallback(arg0, func_8003D4C0);
@@ -638,7 +638,7 @@ void func_8003D5F8(MainMenuEffectActor *arg0) {
             *temp_v0 = 0x140;
         }
     }
-    func_800483FC(&D_80124838, func_8003D3C0, temp_a2);
+    addRenderCallback(&D_80124838, func_8003D3C0, temp_a2);
     if (D_8010B1A2 == 0x2A) {
         setCallbackTaskCallback(temp_a2, func_8003D580);
     }
@@ -653,7 +653,7 @@ void func_8003D68C(MainMenuEffectActor *arg0) {
         *sp1C -= 8;
         D_8010B1A6 = *sp1C;
     }
-    func_800483FC(&D_80124838, func_8003D3C0, temp_a2);
+    addRenderCallback(&D_80124838, func_8003D3C0, temp_a2);
     if (*sp1C == 0) {
         temp_a2->x = 0x14;
         *sp1C = 0x140;
@@ -673,7 +673,7 @@ void func_8003D720(MainMenuEffectActor *arg0) {
         temp_v1 = &D_8010B1D0;
         *temp_v1 = *temp_v1 + 1;
     }
-    func_800483FC(&D_80124838, func_8003D3C0, temp_a2);
+    addRenderCallback(&D_80124838, func_8003D3C0, temp_a2);
     if (D_8010B1A2 == 0x20) {
         setCallbackTaskCallback(temp_a2, func_8003D68C);
     }
@@ -689,7 +689,7 @@ void func_8003D7C0(MainMenuEffectActor *arg0) {
         *sp1C -= 0x140;
     }
     D_8010B1A6 = *sp1C;
-    func_800483FC(&D_80124838, func_8003D3C0, temp_a2);
+    addRenderCallback(&D_80124838, func_8003D3C0, temp_a2);
     if (D_8010B1A2 == 0x13) {
         setCallbackTaskCallback(temp_a2, func_8003D720);
         temp_a2->x = 0x28;
@@ -702,7 +702,7 @@ void func_8003D88C(MainMenuEffectActor *arg0) {
     s16 *temp_v0;
 
     temp_v0 = &arg0->angle;
-    func_800483FC(&D_80124838, func_8003D3C0, arg0);
+    addRenderCallback(&D_80124838, func_8003D3C0, arg0);
     if (D_8010B1A2 == 0x10) {
         setCallbackTaskCallback(arg0, func_8003D7C0);
         arg0->x = 0x14;
@@ -730,7 +730,7 @@ void func_8003D9A8(MainMenuEffectActor *arg0) {
     if (arg0->angle < 0) {
         arg0->angle = 0x140;
     }
-    func_800483FC(&D_80124838, func_8003D974, arg0);
+    addRenderCallback(&D_80124838, func_8003D974, arg0);
     if ((D_8010B1A2 == 0x2A) || (D_8010B1A2 == 0x3A)) {
         setCallbackTaskCallback(arg0, func_8003DA98);
     }
@@ -741,14 +741,14 @@ void func_8003DA24(MainMenuEffectActor *arg0) {
     if (arg0->angle == 0x140) {
         arg0->angle = 0;
     }
-    func_800483FC(&D_80124838, func_8003D974, arg0);
+    addRenderCallback(&D_80124838, func_8003D974, arg0);
     if (D_8010B1A2 == 0x14) {
         setCallbackTaskCallback(arg0, func_8003DA98);
     }
 }
 
 void func_8003DA98(MainMenuEffectActor *arg0) {
-    func_800483FC(&D_80124838, func_8003D974, arg0);
+    addRenderCallback(&D_80124838, func_8003D974, arg0);
     if (D_8010B1A2 == 0x10) {
         setCallbackTaskCallback(arg0, func_8003DA24);
     }
@@ -771,7 +771,7 @@ void func_8003DB84(MainMenuEffectActor *arg0) {
 }
 
 void func_8003DBB8(MainMenuEffectActor *arg0) {
-    func_800483FC(&D_80124868, func_8003DB84, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8003DB84, arg0);
 }
 
 void func_8003DBE8(MainMenuEffectActor *arg0) {
@@ -787,11 +787,11 @@ void func_8003DBE8(MainMenuEffectActor *arg0) {
             D_8010B1A2 = 0x43;
         }
     }
-    func_800483FC(&D_80124868, func_8003DB84, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8003DB84, arg0);
 }
 
 void func_8003DC70(MainMenuEffectActor *arg0) {
-    func_800483FC(&D_80124868, func_8003DB84, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8003DB84, arg0);
     if (D_8010B1A2 == 0x42) {
         arg0->animFrame = 0;
         setCallbackTaskCallback(arg0, func_8003DBE8);
@@ -814,7 +814,7 @@ void func_8003DCCC(MainMenuEffectActor *arg0) {
             }
         }
     }
-    func_800483FC(&D_80124868, func_8003DB84, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8003DB84, arg0);
 }
 
 void func_8003DD64(MainMenuEffectActor *arg0) {

@@ -101,7 +101,7 @@ typedef struct {
 } GfxCommandDest;
 
 extern Gfx *gRegionAllocPtr;
-extern void *D_80124868;
+extern void *gMenuRenderCallbackList;
 extern u8 D_80124858[];
 extern u8 D_80124878[];
 extern u8 D_801248A4[];
@@ -155,7 +155,7 @@ void func_80045A78(s16, s16, s32, u16);
 void func_80046D68(s32, s32, s32, s32, s32);
 void func_80045990(void *, u16, void **, void **);
 void func_80048278(s32, s32, void *, s32);
-void func_800483FC(void *, void *, s32);
+void addRenderCallback(void *, void *, s32);
 GfxCommandDest *func_8004885C(GfxCommandSource *);
 void func_80053B28(MainMenuOverlayEffectActor *);
 void func_80053C90(void *);
@@ -227,7 +227,7 @@ void func_800536F4(MainMenuOverlayEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(D_80124878, func_80053660, (s32)arg0);
+    addRenderCallback(D_80124878, func_80053660, (s32)arg0);
 }
 
 void func_80053858(MainMenuOverlayEffectActor *arg0) {
@@ -242,7 +242,7 @@ void func_80053858(MainMenuOverlayEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(D_80124878, func_80053660, (s32)arg0);
+    addRenderCallback(D_80124878, func_80053660, (s32)arg0);
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_8005393C.s")
@@ -285,8 +285,8 @@ void func_80053C90(void *arg0) {
 }
 
 void func_80053D8C(s32 arg0) {
-    func_800483FC(D_801248F8, func_80053C90, arg0);
-    func_800483FC(D_801248A4, func_80053B28, arg0);
+    addRenderCallback(D_801248F8, func_80053C90, arg0);
+    addRenderCallback(D_801248A4, func_80053B28, arg0);
 }
 
 void func_80053DD8(void *arg0) {
@@ -364,7 +364,7 @@ void func_8005408C(MainMenuOverlayEffectActor *arg0) {
 
 void func_800540EC(void *arg0) {
     if (gFrameCounter & 8) {
-        func_800483FC(D_80124858, func_8005408C, 0);
+        addRenderCallback(D_80124858, func_8005408C, 0);
     }
 }
 
@@ -442,7 +442,7 @@ void func_80054460(MainMenuOverlayEffectActor *arg0) {
     arg0->unk1C.word += player->pos28.y;
     arg0->unk20.word += player->pos28.z;
 
-    func_800483FC(&D_801248BC, func_80054130, (s32)arg0);
+    addRenderCallback(&D_801248BC, func_80054130, (s32)arg0);
 }
 
 void func_800545D0(MainMenuOverlayEffectActor *arg0) {
@@ -464,7 +464,7 @@ void func_80054644(MainMenuOverlayEffectActor *arg0) {
 }
 
 void func_800546E4(s32 arg0) {
-    func_800483FC(&D_80124868, func_80054644, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80054644, arg0);
 }
 
 void func_80054714(MainMenuOverlayEffectActor *arg0) {
@@ -495,7 +495,7 @@ void func_800548F4(MainMenuOverlayEffectActor *arg0) {
             return;
         }
     }
-    func_800483FC(&D_80124868, func_8005475C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005475C, arg0);
 }
 
 void func_80054968(MainMenuOverlayEffectActor *arg0) {
@@ -522,7 +522,7 @@ void func_80054A04(MainMenuOverlayEffectActor *arg0) {
     if (temp_t8 == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        func_800483FC(D_80124878, func_8005499C, (s32)arg0);
+        addRenderCallback(D_80124878, func_8005499C, (s32)arg0);
     }
 }
 
@@ -536,7 +536,7 @@ void func_80054A64(MainMenuOverlayEffectActor *arg0) {
     }
     if (1) {
     }
-    func_800483FC(D_80124878, func_8005499C, (s32)arg0);
+    addRenderCallback(D_80124878, func_8005499C, (s32)arg0);
 }
 
 void func_80054AC0(MainMenuOverlayEffectActor *arg0) {
@@ -546,7 +546,7 @@ void func_80054AC0(MainMenuOverlayEffectActor *arg0) {
         arg0->timer = 0x1E;
         setCallbackTaskCallback(arg0, func_80054A64);
     }
-    func_800483FC(D_80124878, func_8005499C, (s32)arg0);
+    addRenderCallback(D_80124878, func_8005499C, (s32)arg0);
 }
 
 void func_80054B2C(MainMenuOverlayEffectActor *arg0) {
@@ -666,7 +666,7 @@ void func_80054E70(MainMenuOverlayEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(D_801248D4, func_80054B98, (s32)arg0);
+    addRenderCallback(D_801248D4, func_80054B98, (s32)arg0);
 }
 
 void func_80054EC4(MainMenuOverlayEffectActor *arg0) {
@@ -686,7 +686,7 @@ void func_80054EC4(MainMenuOverlayEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(D_801248D4, func_80054B98, (s32)arg0);
+    addRenderCallback(D_801248D4, func_80054B98, (s32)arg0);
 }
 
 void func_8005502C(MainMenuOverlayEffectActor *arg0) {
@@ -718,7 +718,7 @@ void func_800550E0(MainMenuOverlayEffectActor *arg0) {
     } else {
         arg0->unk18.half.lo = 0;
     }
-    func_800483FC(D_80124878, func_80055074, arg0);
+    addRenderCallback(D_80124878, func_80055074, arg0);
 }
 
 // func_80055148 best match: 99.220%
@@ -775,7 +775,7 @@ void func_8005537C(MainMenuOverlayEffectActor *arg0) {
     if (arg0->unk18.half.lo >= 0x100) {
         arg0->unk18.half.lo = 0xFF;
     }
-    func_800483FC(&D_80124868, func_80055148, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80055148, arg0);
 }
 
 void func_800553E0(MainMenuOverlayEffectActor *arg0) {
@@ -821,8 +821,8 @@ void func_80055530(void *arg0) {
 }
 
 void func_8005562C(s32 arg0) {
-    func_800483FC(D_801248F8, func_80055530, arg0);
-    func_800483FC(D_801248A4, func_80055410, arg0);
+    addRenderCallback(D_801248F8, func_80055530, arg0);
+    addRenderCallback(D_801248A4, func_80055410, arg0);
 }
 
 void func_80055678(MainMenuOverlayEffectActor *arg0) {

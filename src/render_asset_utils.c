@@ -1407,7 +1407,7 @@ void *func_80048388(s32 arg0) {
     return (void *)sp1C;
 }
 
-void func_800483FC(RenderCallbackNode **arg0, void (*arg1)(s32), s32 arg2) {
+void addRenderCallback(RenderCallbackNode **arg0, void (*arg1)(s32), s32 arg2) {
     RenderCallbackNode *temp_v0 = func_80048388(sizeof(RenderCallbackNode));
 
     if (temp_v0 != NULL) {

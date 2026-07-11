@@ -41,14 +41,14 @@ typedef struct {
     /* 0x4A */ s16 frameTextureHandle;
 } PlayerCountSelectAssetHandles;
 
-extern void func_800483FC(void *, void *, void *);
+extern void addRenderCallback(void *, void *, void *);
 extern int sprintf(char *, const char *, ...);
 extern u8 D_800EC9C1;
 extern PlayerCountSelectFrameTileMapTable D_800B70F0;
 extern u16 D_800B7196;
 extern PlayerCountPortrait D_800B7198[];
 extern PlayerCountSelectAssetHandles D_80112130;
-extern s16 D_80112172;
+extern s16 gMenuCommonSpritesAssetHandle;
 extern PlayerCountSelectMenuCursor D_8010AF50;
 extern u8 D_8010AF52;
 extern s32 D_8010ADDC;
@@ -57,7 +57,7 @@ extern u8 D_80121B5E;
 extern u8 D_80121D88;
 extern s32 D_80121D8C;
 extern s32 D_801235B4;
-extern void *D_80124868;
+extern void *gMenuRenderCallbackList;
 
 const char D_800E0EA0[] = "%6dG";
 
@@ -134,7 +134,7 @@ void func_80029344(PlayerCountSelectRowActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_80029200, actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_80029200, actor);
 }
 
 void func_80029548(PlayerCountSelectRowActor *arg0) {
@@ -156,10 +156,10 @@ void func_80029548(PlayerCountSelectRowActor *arg0) {
 }
 
 void func_80029598(PlayerCountSelectWidgetActor *arg0) {
-    func_8000F030(arg0->x, arg0->y, func_80043040(D_80112172), 3, 0x20, 0x20, 0, 0);
-    func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(D_80112172), 4, 0x20, 0x20, 0, 0);
-    func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(D_80112172), 5, 0x20, 0x20, 0, 0);
-    func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(D_80112172), 6, 0x20, 0x20, 0, 0);
+    func_8000F030(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
+    func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
+    func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(gMenuCommonSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
+    func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(gMenuCommonSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
 }
 
 void func_800296D8(PlayerCountSelectWidgetActor *arg0) {
@@ -193,7 +193,7 @@ void func_800296D8(PlayerCountSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_80029598, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80029598, arg0);
 }
 
 void func_800297D8(PlayerCountSelectWidgetActor *arg0) {
@@ -340,7 +340,7 @@ void func_80029CE4(PlayerCountSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002980C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002980C, arg0);
 }
 
 void func_80029FB8(PlayerCountSelectWidgetActor *arg0) {
@@ -447,7 +447,7 @@ void func_8002A27C(PlayerCountSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002A008, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002A008, arg0);
 }
 
 void func_8002A458(PlayerCountSelectWidgetActor *arg0) {
@@ -558,7 +558,7 @@ void func_8002A710(PlayerCountSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002A49C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002A49C, arg0);
 }
 
 void func_8002A8EC(PlayerCountSelectWidgetActor *arg0) {
@@ -676,7 +676,7 @@ void func_8002AB24(PlayerCountSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002A930, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002A930, arg0);
 }
 
 void func_8002AD74(PlayerCountSelectWidgetActor *arg0) {
@@ -689,7 +689,7 @@ void func_8002AD74(PlayerCountSelectWidgetActor *arg0) {
 }
 
 void func_8002ADB8(PlayerCountSelectWidgetActor *arg0) {
-    func_8000F8AC(arg0->x, (s16)(arg0->y + (D_80121B5E * 0x18)), func_80043040(D_80112172), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    func_8000F8AC(arg0->x, (s16)(arg0->y + (D_80121B5E * 0x18)), func_80043040(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
 void func_8002AE3C(PlayerCountSelectWidgetActor *arg0) {
@@ -748,7 +748,7 @@ void func_8002AE3C(PlayerCountSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002ADB8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002ADB8, arg0);
 }
 
 void func_8002AFB8(PlayerCountSelectWidgetActor *arg0) {
@@ -797,7 +797,7 @@ void func_8002B05C(PlayerCountSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002AFF8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002AFF8, arg0);
 }
 
 void func_8002B15C(PlayerCountSelectWidgetActor *arg0) {
@@ -809,7 +809,7 @@ void func_8002B15C(PlayerCountSelectWidgetActor *arg0) {
 }
 
 void func_8002B198(PlayerCountSelectWidgetActor *arg0) {
-    func_8000F8AC(arg0->x, arg0->y, func_80043040(D_80112172), 2, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    func_8000F8AC(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 2, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
 void func_8002B1FC(PlayerCountSelectWidgetActor *arg0) {
@@ -843,7 +843,7 @@ void func_8002B1FC(PlayerCountSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002B198, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002B198, arg0);
 }
 
 void func_8002B2FC(PlayerCountSelectWidgetActor *arg0) {
@@ -859,7 +859,7 @@ void func_8002B338(PlayerCountSelectWidgetActor *arg0) {
 
     if (D_80121B5E != 3) {
         func_8001BA2C(arg0->x, arg0->y, 0x5000, 0x4000);
-        func_8000F8AC((s16)(arg0->x + 8), (s16)(arg0->y + 4), func_80043040(D_80112172), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+        func_8000F8AC((s16)(arg0->x + 8), (s16)(arg0->y + 4), func_80043040(gMenuCommonSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
         sprintf(sp40, D_800E0EA0, D_80121D8C);
         func_80013D0C((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
     }
@@ -896,7 +896,7 @@ void func_8002B424(PlayerCountSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002B338, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002B338, arg0);
 }
 
 void func_8002B524(PlayerCountSelectWidgetActor *arg0) {

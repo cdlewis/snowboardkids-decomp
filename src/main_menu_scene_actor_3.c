@@ -36,7 +36,7 @@ struct MainMenuSceneEffect3 {
     u16 timer;
 };
 
-extern void func_800483FC(void *, void *, void *);
+extern void addRenderCallback(void *, void *, void *);
 extern s32 func_8004885C(void *);
 extern void makeFixedRotationX(void *, s16);
 extern void makeFixedRotationZ(void *, s16);
@@ -917,7 +917,7 @@ void func_8003B3E0(MainMenuSceneEffect3 *arg0) {
     if (D_8010B1A2 == 0x1B) {
         removeCallbackTask(arg0);
     } else {
-        func_800483FC(&D_80124898, func_8003B39C, arg0);
+        addRenderCallback(&D_80124898, func_8003B39C, arg0);
     }
 }
 
@@ -987,7 +987,7 @@ void func_8003B430(MainMenuSceneEffect3 *arg0) {
         multiplyFixedMatrix3s(sp28, sp48, sp24[0]);
     }
 
-    func_800483FC(&D_80124898, func_8003B39C, arg0);
+    addRenderCallback(&D_80124898, func_8003B39C, arg0);
 }
 #endif
 
@@ -995,7 +995,7 @@ void func_8003B6F0(MainMenuSceneEffect3 *arg0) {
     if (D_8010B1A2 == 0x15) {
         setCallbackTaskCallback(arg0, func_8003B430);
     }
-    func_800483FC(&D_80124898, func_8003B39C, arg0);
+    addRenderCallback(&D_80124898, func_8003B39C, arg0);
 }
 
 void func_8003B740(MainMenuSceneEffect3 *arg0) {
@@ -1005,5 +1005,5 @@ void func_8003B740(MainMenuSceneEffect3 *arg0) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_8003B6F0);
     }
-    func_800483FC(&D_80124898, (void *)func_8003B39C, arg0);
+    addRenderCallback(&D_80124898, (void *)func_8003B39C, arg0);
 }

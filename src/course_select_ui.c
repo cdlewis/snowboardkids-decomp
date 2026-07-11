@@ -105,7 +105,7 @@ typedef struct {
     /* 0x100 */ u8 state[4];
 } CourseSelectAnimatedActor;
 
-extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
+extern void addRenderCallback(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *);
 extern s32 func_8004885C(FixedTransform *);
 extern s8 D_800ECA2F[][0x78F8];
@@ -137,7 +137,7 @@ extern s16 gCourseSelectIconListXLayout[][4];
 extern s16 gCourseSelectStatsPanelLayout[][4];
 extern s16 gCourseSelectStatsPlayerMarkerLayout[][2];
 extern s16 D_80112130[];
-extern s16 D_80112172;
+extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 D_8011217A;
 extern s16 D_8011217E;
 extern u8 gPlayerCount;
@@ -146,7 +146,7 @@ extern u8 D_80121D86[][sizeof(CourseSelectRacePlayer)];
 extern u8 D_80121D88;
 extern s32 D_801235B4;
 extern CourseSelectState *gCurrentGameTask;
-extern s32 D_80124868;
+extern s32 gMenuRenderCallbackList;
 extern s32 D_80124898;
 extern u8 gCurrentViewportIndex;
 
@@ -370,7 +370,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
         finishCourseSelectUiTask(1);
         D_8010ADE0 = 0;
     } else {
-        func_800483FC(&D_80124898, (void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModel, actor);
+        addRenderCallback(&D_80124898, (void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModel, actor);
     }
 }
 #endif
@@ -654,7 +654,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
         finishCourseSelectUiTask(2);
         D_8010ADE4 = 0;
     } else {
-        func_800483FC(&D_80124898, drawCourseSelectPreviewModelClose, actor);
+        addRenderCallback(&D_80124898, drawCourseSelectPreviewModelClose, actor);
     }
 }
 #endif
@@ -769,7 +769,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                             }
                         }
 
-                        func_8000F0EC(position[0], position[20], func_80043040(D_80112172),
+                        func_8000F0EC(position[0], position[20], func_80043040(gMenuCommonSpritesAssetHandle),
                                       tileIndex & 0xFFFF, 0x20, 0x20, 0, alpha,
                                       new_var->clipLeft - clipOffset, arg0->clipTop, arg0->clipRight,
                                       new_var->clipBottom);
@@ -788,7 +788,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                                           0x20, 0, alpha, arg0->clipLeft - clipOffset, new_var->clipTop,
                                           new_var->clipRight, new_var->clipBottom);
                         } else {
-                            func_8000F0EC(position[0], position[20], func_80043040(D_80112172), 5, 0x20,
+                            func_8000F0EC(position[0], position[20], func_80043040(gMenuCommonSpritesAssetHandle), 5, 0x20,
                                           0x20, 0, alpha, arg0->clipLeft - clipOffset, arg0->clipTop,
                                           arg0->clipRight, new_var->clipBottom);
                         }
@@ -998,7 +998,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     if (actor->unk30 == 4) {
         removeCallbackTask(actor);
     } else {
-        func_800483FC(&D_80124868, drawCourseSelectCourseCursors, actor);
+        addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectCourseCursors, actor);
     }
 }
 
@@ -1137,7 +1137,7 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
         return;
     }
 
-    func_800483FC(&D_80124868, drawCourseSelectCourseListBackdrop, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectCourseListBackdrop, arg0);
 }
 
 void initCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
@@ -1342,7 +1342,7 @@ void updateCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
         return;
     }
 
-    func_800483FC(&D_80124868, drawCourseSelectCourseStats, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectCourseStats, arg0);
 }
 
 void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
@@ -1584,7 +1584,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         finishCourseSelectUiTask(6);
         return;
     }
-    func_800483FC(&D_80124868, drawCourseSelectCourseDescription, arg0);
+    addRenderCallback(&D_80124868, drawCourseSelectCourseDescription, arg0);
 }
 
 void initCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
@@ -1645,7 +1645,7 @@ void updateCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
         finishCourseSelectUiTask(7);
         return;
     }
-    func_800483FC(&D_80124868, drawCourseSelectExtraCourseBadge, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectExtraCourseBadge, arg0);
 }
 
 void initCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
@@ -1750,7 +1750,7 @@ void updateCourseSelectExtraCourseIconListIn(CourseSelectWidgetActor *arg0) {
     } else if (gCurrentGameTask->screenState == 4) {
         setCallbackTaskCallback(temp_a2, updateCourseSelectExtraCourseIconList);
     }
-    func_800483FC(&D_80124868, drawCourseSelectExtraCourseIconList, temp_a2);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectExtraCourseIconList, temp_a2);
 }
 
 void updateCourseSelectExtraCourseIconListOut(CourseSelectWidgetActor *arg0) {
@@ -1786,7 +1786,7 @@ void updateCourseSelectExtraCourseIconListOut(CourseSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, drawCourseSelectExtraCourseIconList, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectExtraCourseIconList, arg0);
 }
 
 void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
@@ -1820,7 +1820,7 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
         return;
     }
 
-    func_800483FC(&D_80124868, drawCourseSelectExtraCourseIconList, temp_a2);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectExtraCourseIconList, temp_a2);
 }
 
 // updateCourseSelectExtraCourseIconList best match: 90.349% (nonmatchings/updateCourseSelectExtraCourseIconList-7273315160691878794/base_11.c)
@@ -2131,7 +2131,7 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
         } while (next != count);
     }
 
-    func_800483FC(&D_80124868, drawCourseSelectPlayerPanels, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectPlayerPanels, arg0);
 }
 #endif
 
