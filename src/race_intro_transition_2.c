@@ -33,7 +33,7 @@ typedef struct {
 extern RaceIntroTransitionState *gCurrentGameTask;
 extern RaceIntroPlayer D_80121D80[];
 extern s16 gMenuFadeAlpha;
-extern s8 D_800DEF10;
+extern s8 gMenuFadeOverlayActive;
 extern f32 D_800E10C8;
 extern s16 D_800BB890[];
 extern s16 D_800BB8B0[];
@@ -313,7 +313,7 @@ copy_player3:
 
     temp = D_8010B1E1;
     if (temp != 0) {
-        D_800DEF10 = 1;
+        gMenuFadeOverlayActive = 1;
         gMenuFadeAlpha += temp;
     }
 
