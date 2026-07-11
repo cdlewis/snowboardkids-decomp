@@ -2773,7 +2773,7 @@ done2:
 }
 #endif
 
-// func_8005D1CC best match: 84.991% (nonmatchings/func_8005D1CC-3236181511606361864/base_5.c)
+// func_8005D1CC best match: 86.445% (nonmatchings/func_8005D1CC-6061209858023118177/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D1CC.s")
 
 #ifdef NON_MATCHING
@@ -2783,8 +2783,9 @@ const char D_800E144C[0x4] = "%5d";
 const char D_800E1450[0x4] = "%6d";
 
 void func_8005D1CC(RaceUiCourseStatsActor *arg0) {
+    volatile u8 pad[4];
     SplitWord y;
-    char buffer[0x28];
+    char buffer[0x24];
     char *ptr;
     s32 x;
     s16 rowY;
@@ -2794,8 +2795,8 @@ void func_8005D1CC(RaceUiCourseStatsActor *arg0) {
     visibleRows = arg0->visibleRows;
     x = 0x20;
     if (visibleRows >= 0) {
-        sprintf(buffer, D_800E1444, arg0->pendingFirstValue);
-        ptr = buffer;
+        sprintf(buffer - 4, D_800E1444, arg0->pendingFirstValue);
+        ptr = buffer - 4;
 loop1:
         if (*ptr != 0) {
             if (*ptr != ' ') {
@@ -2812,9 +2813,9 @@ loop1:
 
     if (visibleRows > 0) {
         x = 0x20;
-        sprintf(buffer, D_800E1448, arg0->pendingSecondValue);
+        sprintf(buffer - 4, D_800E1448, arg0->pendingSecondValue);
         rowY = y.half.lo;
-        ptr = buffer;
+        ptr = buffer - 4;
 loop2:
         if (*ptr != 0) {
             if (*ptr != ' ') {
@@ -2831,9 +2832,9 @@ loop2:
 
     if (visibleRows >= 2) {
         x = 0x20;
-        sprintf(buffer, D_800E144C, arg0->pendingThirdValue);
+        sprintf(buffer - 4, D_800E144C, arg0->pendingThirdValue);
         rowY = y.half.lo;
-        ptr = buffer;
+        ptr = buffer - 4;
 loop3:
         if (*ptr != 0) {
             if (*ptr != ' ') {
@@ -2850,9 +2851,9 @@ loop3:
 
     if (visibleRows >= 3) {
         x = 0x18;
-        sprintf(buffer, D_800E1450, D_80121D8C);
+        sprintf(buffer - 4, D_800E1450, D_80121D8C);
         rowY = y.half.lo;
-        ptr = buffer;
+        ptr = buffer - 4;
 loop4:
         if (*ptr != 0) {
             if (*ptr != ' ') {
