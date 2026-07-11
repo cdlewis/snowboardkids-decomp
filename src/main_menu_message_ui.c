@@ -214,7 +214,7 @@ void func_8000DF28(MainMenuMessageActor *arg0) {
     func_80071824(arg0, func_8000DDA4);
 }
 
-// func_8000DF9C best match: 94.562%
+// func_8000DF9C best match: 95.343%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_message_ui/func_8000DF9C.s")
 
 #ifdef NON_MATCHING
@@ -258,7 +258,7 @@ void func_8000DF9C(MainMenuMessageActor *arg0) {
     stopped = 0;
     xOffset = 0;
     glyphIndex = new_var;
-    if ((s32)arg0->state.script.visibleGlyphCount > 0) {
+    if ((s32)arg0->state.script.visibleGlyphCount > ((arg0->scriptState == 1) * 0)) {
         scriptOffset = 0;
         lineOffset = 0;
         do {
