@@ -1,7 +1,7 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
 #include "fixed_point_math.h"
-#include "ending_effects.h"
+#include "ending_credits_effects.h"
 #include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
