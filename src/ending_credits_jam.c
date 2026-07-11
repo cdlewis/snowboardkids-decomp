@@ -2,7 +2,7 @@
 #include "callback_task_scheduler.h"
 #include "menu_transition_effects.h"
 #include "ending_credits_jam.h"
-#include "main_menu_scene_actor_3.h"
+#include "ending_credits_linda.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
 
@@ -890,7 +890,7 @@ void updateEndingJamSlideLeftToPhase15Wait(EndingCreditsJam *arg0) {
 void waitEndingJamPhase13(EndingCreditsJam *arg0) {
     if (gEndingSequencePhase == 0x13) {
         setCallbackTaskCallback(arg0, updateEndingJamSlideLeftToPhase15Wait);
-        func_8003B308(arg0->posX + 0x48000, 0x480000, 0xFFF30000, 2, 2, 1);
+        spawnEndingSnowboardTumbleEffect(arg0->posX + 0x48000, 0x480000, 0xFFF30000, 2, 2, 1);
     }
 }
 

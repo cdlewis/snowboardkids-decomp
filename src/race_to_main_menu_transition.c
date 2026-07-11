@@ -12,7 +12,7 @@
 #include "ending_credits_slash.h"
 #include "ending_credits_nancy.h"
 #include "ending_credits_jam.h"
-#include "main_menu_scene_actor_3.h"
+#include "ending_credits_linda.h"
 #include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
 #include "viewport_manager.h"
@@ -69,7 +69,7 @@ extern s16 gMenuTransitionRotationAngle;
 extern MainMenuFlagByte gEndingCharacterEffectDoneFlags[];
 extern s8 gEndingNancyEffectDone;
 extern s8 gEndingJamEffectDone;
-extern s8 gEndingCharacter3EffectDone;
+extern s8 gEndingLindaEffectDone;
 extern s8 gEndingTommyEffectDone;
 extern Vec3i gMenuCameraTargetOffset;
 extern s16 D_80112130[];
@@ -143,7 +143,7 @@ void func_8000D590(void) {
             createCallbackTask((CallbackTaskCallback) initEndingCreditsNancy, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsTommy, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsJam, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback) func_8003B264, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback) initEndingCreditsLinda, 0, 0x64);
             requestMusicSequenceBank(0xA);
         }
     }
