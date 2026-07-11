@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "ending_sequence_credits.h"
+#include "ending_sequence_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
@@ -11,7 +11,7 @@
 #define ENDING_SEQUENCE_CREDITS_PAGE_VISIBLE_FRAMES 0x96
 #define ENDING_SEQUENCE_CREDITS_PAGE_COUNT 0x19
 
-struct EndingSequenceCreditsTextActor {
+struct EndingSequenceTextActor {
     /* 0x00 */ char pad[0x1C];
     /* 0x1C */ s16 x;
     /* 0x1E */ s16 y;
@@ -54,16 +54,16 @@ extern void addRenderCallback(void *, void *, void *);
 extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 
-void drawEndingSequenceCreditsPage(EndingSequenceCreditsTextActor *arg0);
-void updateEndingSequenceTheEndTextFadeIn(EndingSequenceCreditsTextActor *arg0);
-void updateEndingSequenceCreditsPageFadeCycle(EndingSequenceCreditsTextActor *arg0);
+void drawEndingSequenceCreditsPage(EndingSequenceTextActor *arg0);
+void updateEndingSequenceTheEndTextFadeIn(EndingSequenceTextActor *arg0);
+void updateEndingSequenceCreditsPageFadeCycle(EndingSequenceTextActor *arg0);
 void updateEndingSequenceObjectSpriteDebugViewer(EndingSequenceObjectSpriteDebugViewerActor *arg0);
 
 // drawEndingSequenceCreditsPage best match: 93.371%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_credits/drawEndingSequenceCreditsPage.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_ui/drawEndingSequenceCreditsPage.s")
 
 #ifdef NON_MATCHING
-void drawEndingSequenceCreditsPage(EndingSequenceCreditsTextActor *arg0) {
+void drawEndingSequenceCreditsPage(EndingSequenceTextActor *arg0) {
     register s32 count;
     s32 i;
     s32 scriptIndex;
@@ -107,14 +107,14 @@ void drawEndingSequenceCreditsPage(EndingSequenceCreditsTextActor *arg0) {
 }
 #endif
 
-void drawEndingSequenceTheEndText(EndingSequenceCreditsTextActor *arg0) {
+void drawEndingSequenceTheEndText(EndingSequenceTextActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x35, 0x20, 0x20, 0,
                             arg0->alpha, 0);
     drawMenuSpriteWithAlpha((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x36, 0x20,
                             0x20, 0, arg0->alpha, 0);
 }
 
-void updateEndingSequenceTheEndTextFadeIn(EndingSequenceCreditsTextActor *arg0) {
+void updateEndingSequenceTheEndTextFadeIn(EndingSequenceTextActor *arg0) {
     s32 v1 = ENDING_SEQUENCE_FADE_MAX;
     s32 v0;
 
@@ -130,7 +130,7 @@ void updateEndingSequenceTheEndTextFadeIn(EndingSequenceCreditsTextActor *arg0) 
     }
 }
 
-void updateEndingSequenceCreditsPageFadeCycle(EndingSequenceCreditsTextActor *arg0) {
+void updateEndingSequenceCreditsPageFadeCycle(EndingSequenceTextActor *arg0) {
     switch (arg0->state) {
     case 0:
         arg0->alpha += ENDING_SEQUENCE_CREDITS_PAGE_FADE_STEP;
@@ -173,7 +173,7 @@ void updateEndingSequenceCreditsPageFadeCycle(EndingSequenceCreditsTextActor *ar
     addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceCreditsPage, arg0);
 }
 
-void initEndingSequenceCreditsTextActor(EndingSequenceCreditsTextActor *arg0) {
+void initEndingSequenceTextActor(EndingSequenceTextActor *arg0) {
     arg0->state = 3;
     arg0->pageIndex = 0;
     arg0->x = -0x40;
