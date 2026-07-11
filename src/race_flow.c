@@ -24,7 +24,7 @@
 #include "race_scene_loader.h"
 #include "race_start_transition.h"
 #include "race_timer_ui.h"
-#include "race_to_main_menu_transition.h"
+#include "ending_credits_transition.h"
 #include "race_ui_effects.h"
 #include "shop_menu_flow.h"
 #include "title_menu.h"
@@ -597,7 +597,7 @@ void func_8007389C(void) {
 void func_800738F4(void) {
     setCurrentGameTaskCallback(&func_800734A0, 0);
     if (D_800DC4C0 != 0) {
-        createGameTask(4, &func_8000D340, 0x64);
+        createGameTask(4, &initEndingCreditsTransition, 0x64);
         suspendGameTask(2);
     }
 }

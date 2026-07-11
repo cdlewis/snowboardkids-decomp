@@ -1,4 +1,4 @@
-#include "race_to_main_menu_transition.h"
+#include "ending_credits_transition.h"
 #include "relocatable_heap.h"
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
@@ -7,7 +7,7 @@
 #include "game_task_scheduler.h"
 #include "race_camera.h"
 #include "ending_credits_ui.h"
-#include "ending_effects.h"
+#include "ending_credits_effects.h"
 #include "race_start_transition.h"
 #include "ending_credits_slash.h"
 #include "ending_credits_nancy.h"
@@ -23,7 +23,7 @@ typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s32 fade;
     /* 0x1C */ s32 timer;
-} RaceToMainMenuTransitionState;
+} EndingCreditsTransitionState;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x4];
@@ -75,18 +75,18 @@ extern Vec3i gMenuCameraTargetOffset;
 extern s16 gAssetHandles[];
 extern MenuCameraObject D_801121E0;
 extern MenuCameraObject *gCurrentMenuCameraObject;
-extern RaceToMainMenuTransitionState *gCurrentGameTask;
+extern EndingCreditsTransitionState *gCurrentGameTask;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// func_8000D340 best match: 93.231% at nonmatchings/func_8000D340-1197934324348345530/base_6.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_to_main_menu_transition/func_8000D340.s")
+// initEndingCreditsTransition best match: 93.231% at nonmatchings/initEndingCreditsTransition-1197934324348345530/base_6.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_transition/initEndingCreditsTransition.s")
 
 #ifdef NON_MATCHING
-void func_8000D340(void) {
+void initEndingCreditsTransition(void) {
     s32 sp34;
     s32 temp_v0;
-    RaceToMainMenuTransitionState *state;
+    EndingCreditsTransitionState *state;
 
     resetRaceCameras();
     D_801121E0.update = updateMenuCameraObjectFromTargetOffset;
@@ -119,25 +119,25 @@ void func_8000D340(void) {
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadMainMenuSceneModelAssets();
     initCallbackTaskScheduler(0);
-    createCallbackTask(initRaceToMainMenuSnowboardIcon, 0, 0x64);
-    createCallbackTask(initRaceToMainMenuLogoWipe, 0, 0x64);
-    createCallbackTask(initRaceToMainMenuSnowflakeIcon, 0, 0x64);
+    createCallbackTask(initEndingTransitionSnowboardIcon, 0, 0x64);
+    createCallbackTask(initEndingTransitionLogoWipe, 0, 0x64);
+    createCallbackTask(initEndingTransitionSnowflakeIcon, 0, 0x64);
     gCurrentGameTask->fade = 0xFF;
     state = gCurrentGameTask;
     gMenuFadeAlpha = state->fade;
     gCurrentGameTask->timer = 5;
-    setCurrentGameTaskCallback(func_8000D590, 0);
+    setCurrentGameTaskCallback(updateEndingCreditsTransitionFadeIn, 0);
 }
 #endif
 
-void func_8000D590(void) {
+void updateEndingCreditsTransitionFadeIn(void) {
     if (gCurrentGameTask->timer != 0) {
         gCurrentGameTask->timer--;
     } else {
         if (gCurrentGameTask->fade != 0) {
             gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 0);
         } else {
-            setCurrentGameTaskCallback(func_8000D690, 0);
+            setCurrentGameTaskCallback(updateEndingCreditsTransition, 0);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsPageTextActor, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsSlash, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsNancy, 0, 0x64);
@@ -150,12 +150,12 @@ void func_8000D590(void) {
     updateCallbackTasks();
 }
 
-void func_8000D690(void) {
+void updateEndingCreditsTransition(void) {
     if (gEndingSequencePhase == 0x43) {
         gCurrentGameTask->timer++;
         if (gCurrentGameTask->timer == 0x12C) {
             gCurrentGameTask->timer = 0;
-            setCurrentGameTaskCallback(func_8000D724, 0);
+            setCurrentGameTaskCallback(updateEndingCreditsTransitionFadeOut, 0);
         }
     }
     updateCallbackTasks();
@@ -163,7 +163,7 @@ void func_8000D690(void) {
     gCurrentMenuCameraObject->update();
 }
 
-void func_8000D724(void) {
+void updateEndingCreditsTransitionFadeOut(void) {
     if (gCurrentGameTask->fade != 0xFF) {
         gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 1);
         if (gCurrentGameTask->fade == 0xFF) {
