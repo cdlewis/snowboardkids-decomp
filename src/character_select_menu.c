@@ -4,7 +4,7 @@
 #include "character_select_menu.h"
 #include "game_task_scheduler.h"
 #include "menu_renderer.h"
-#include "race_hud.h"
+#include "character_select_ui.h"
 #include "viewport_manager.h"
 
 typedef struct {
@@ -156,12 +156,12 @@ loop_1:
         }
     }
 
-    gActiveMenuTask = createCallbackTask(func_800179D4, 0, 0x64);
-    D_8010ADEC = createCallbackTask(func_800191A0, 0, 0x64);
-    D_8010ADE8 = createCallbackTask(func_800183DC, 0, 0x64);
-    D_8010ADE0 = createCallbackTask(func_80018060, 0, 0x64);
-    createCallbackTask(func_80018B6C, 0, 0x64);
-    D_8010ADE4 = createCallbackTask(func_80017D08, 0, 0x63);
+    gActiveMenuTask = createCallbackTask(initCharacterSelectConfirmationBanner, 0, 0x64);
+    D_8010ADEC = createCallbackTask(initCharacterSelectPlayerSelectionTokens, 0, 0x64);
+    D_8010ADE8 = createCallbackTask(initCharacterSelectPlayerMarkerList, 0, 0x64);
+    D_8010ADE0 = createCallbackTask(initCharacterSelectCharacterIconList, 0, 0x64);
+    createCallbackTask(initCharacterSelectPlayerStatsPanels, 0, 0x64);
+    D_8010ADE4 = createCallbackTask(initCharacterSelectPlayerFrameList, 0, 0x63);
     setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
 
     playerCount = gPlayerCount;
