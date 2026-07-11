@@ -1,17 +1,17 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "main_menu_course_message_ui.h"
+#include "main_menu_course_sequence_ui.h"
 #include "menu_rendering.h"
 
-#define MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE (D_80112130.textureHandle)
+#define MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE (D_80112130.textureHandle)
 
-typedef MenuGlyphScript MainMenuCourseMessageScript;
+typedef MenuGlyphScript MainMenuCourseSequenceScript;
 
-struct MainMenuCourseMessageActor {
-    /* 0x00 */ struct MainMenuCourseMessageActor *prev;
-    /* 0x04 */ struct MainMenuCourseMessageActor *next;
-    /* 0x08 */ void (*callback)(struct MainMenuCourseMessageActor *);
+struct MainMenuCourseSequenceActor {
+    /* 0x00 */ struct MainMenuCourseSequenceActor *prev;
+    /* 0x04 */ struct MainMenuCourseSequenceActor *next;
+    /* 0x08 */ void (*callback)(struct MainMenuCourseSequenceActor *);
     /* 0x0C */ u16 type;
     /* 0x0E */ u16 priority;
     /* 0x10 */ s16 unk10;
@@ -25,7 +25,7 @@ struct MainMenuCourseMessageActor {
             /* 0x1C */ s16 x;
             /* 0x1E */ s16 y;
         } textOffset;
-        /* 0x1C */ MainMenuCourseMessageScript *script;
+        /* 0x1C */ MainMenuCourseSequenceScript *script;
         /* 0x1C */ s32 panelHeight;
     } layout;
     /* 0x20 */ s16 highlightScale;
@@ -44,75 +44,75 @@ struct MainMenuCourseMessageActor {
     /* 0x2C */ u8 returnToSummary;
 };
 
-typedef struct MainMenuCourseMessageAssetHandles {
+typedef struct MainMenuCourseSequenceAssetHandles {
     /* 0x00 */ char pad0[0x54];
     /* 0x54 */ s16 textureHandle;
-} MainMenuCourseMessageAssetHandles;
+} MainMenuCourseSequenceAssetHandles;
 
 typedef struct RenderCallbackNode RenderCallbackNode;
 typedef void (*RenderCallback)(s32);
 
 extern void addRenderCallback(RenderCallbackNode **, RenderCallback, s32);
 extern RenderCallbackNode *gMenuRenderCallbackList;
-extern MainMenuCourseMessageAssetHandles D_80112130;
+extern MainMenuCourseSequenceAssetHandles D_80112130;
 extern u8 gMainMenuSelectionResult;
 extern s32 gPlayerInputPressed;
-extern MainMenuCourseMessageScript gMainMenuCourseIntroMessageScripts[][0x17C];
-extern MainMenuCourseMessageScript gMainMenuCourseFinalMessageScript[];
-extern MainMenuCourseMessageScript gMainMenuCourseTitleLabelTemplate[];
-extern MainMenuCourseMessageScript gMainMenuCourseTitleText[][0x14];
+extern MainMenuCourseSequenceScript gMainMenuCourseIntroMessageScripts[][0x17C];
+extern MainMenuCourseSequenceScript gMainMenuCourseFinalMessageScript[];
+extern MainMenuCourseSequenceScript gMainMenuCourseTitleLabelTemplate[];
+extern MainMenuCourseSequenceScript gMainMenuCourseTitleText[][0x14];
 extern s16 gMainMenuCourseTitleXPositions[];
 extern u8 gMainMenuSelectedCourse;
-extern void enqueueSoundEffect(s32, s32, MainMenuCourseMessageActor *);
-void drawMainMenuCourseMessageBox(MainMenuCourseMessageActor *);
-void updateMainMenuCourseMessageBox(MainMenuCourseMessageActor *);
-void drawMainMenuCourseTitlePanel(MainMenuCourseMessageActor *);
-void updateMainMenuCourseTitlePanelScrollOut(MainMenuCourseMessageActor *);
-void updateMainMenuCourseTitlePanel(MainMenuCourseMessageActor *);
-void updateMainMenuCourseResultOptions(MainMenuCourseMessageActor *);
+extern void enqueueSoundEffect(s32, s32, MainMenuCourseSequenceActor *);
+void drawMainMenuCourseSequenceMessageBox(MainMenuCourseSequenceActor *);
+void updateMainMenuCourseSequenceMessageBox(MainMenuCourseSequenceActor *);
+void drawMainMenuCourseSequenceTitlePanel(MainMenuCourseSequenceActor *);
+void updateMainMenuCourseSequenceTitlePanelScrollOut(MainMenuCourseSequenceActor *);
+void updateMainMenuCourseSequenceTitlePanel(MainMenuCourseSequenceActor *);
+void updateMainMenuCourseSequenceResultOptions(MainMenuCourseSequenceActor *);
 
-void drawMainMenuCourseResultOptions(MainMenuCourseMessageActor *arg0) {
+void drawMainMenuCourseSequenceResultOptions(MainMenuCourseSequenceActor *arg0) {
     s32 i;
     s32 j;
     s32 alpha;
     s32 limit;
     s32 selected;
 
-    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x50), arg0->y, getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x50), arg0->y, getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
-        drawMenuSprite((s16)(arg0->x + i + 0x10), arg0->y, getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + i + 0x10), (s16)(arg0->y + 0x40), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + i + 0x10), arg0->y, getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + i + 0x10), (s16)(arg0->y + 0x40), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0x40);
 
-    drawMenuSprite(arg0->x, (s16)(arg0->y + 0x40), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x40), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16)(arg0->y + 0x40), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x40), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
 
     i = 0;
     limit = 0x40;
     do {
-        drawMenuSprite(arg0->x, (s16)(arg0->y + i + 0x10), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + i + 0x10), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
+        drawMenuSprite(arg0->x, (s16)(arg0->y + i + 0x10), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + i + 0x10), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
         j = 0;
         do {
-            drawMenuSprite((s16)(arg0->x + j + 0x10), (s16)(arg0->y + i + 0x10), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+            drawMenuSprite((s16)(arg0->x + j + 0x10), (s16)(arg0->y + i + 0x10), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
             j += 0x10;
         } while (j != limit);
         i += 0x10;
     } while (i < 0x30);
 
-    drawMenuSprite((s16)(arg0->x + 8), (s16)(arg0->y + 4), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 0x15, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x44), (s16)(arg0->y + 4), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), (gMainMenuSelectedCourse + 0xB) & 0xFFFF, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 8), (s16)(arg0->y + 4), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 0x15, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x44), (s16)(arg0->y + 4), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), (gMainMenuSelectedCourse + 0xB) & 0xFFFF, 0x20, 0x20, 0, 0);
 
     if (gMainMenuSelectedCourse != 9) {
         j = 0;
         i = 0;
         do {
             alpha = (j == (u16)arg0->state.selectedChoice) ? 0x100 : 0x60;
-            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x18), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), (j + 0x16) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
+            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x18), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), (j + 0x16) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
             j++;
             i += 0x10;
         } while (j != 3);
@@ -121,7 +121,7 @@ void drawMainMenuCourseResultOptions(MainMenuCourseMessageActor *arg0) {
         i = 0;
         do {
             alpha = ((j + 1) == (u16)arg0->state.selectedChoice) ? 0x100 : 0x60;
-            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x20), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), (j + 0x17) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
+            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x20), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), (j + 0x17) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
             j++;
             i += 0x10;
         } while (j != 2);
@@ -132,18 +132,18 @@ void drawMainMenuCourseResultOptions(MainMenuCourseMessageActor *arg0) {
     } else {
         selected = (u16)arg0->state.selectedChoice - 1;
     }
-    drawMenuSpriteWithAlpha(arg0->layout.textOffset.x, (s16)(arg0->layout.textOffset.y + (selected * 0x10)), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, arg0->highlightScale, 0);
+    drawMenuSpriteWithAlpha(arg0->layout.textOffset.x, (s16)(arg0->layout.textOffset.y + (selected * 0x10)), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, arg0->highlightScale, 0);
 }
 
-void redrawMainMenuCourseResultOptions(s32 arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)redrawMainMenuCourseResultOptions, arg0);
+void redrawMainMenuCourseSequenceResultOptions(s32 arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)redrawMainMenuCourseSequenceResultOptions, arg0);
 }
 
-// updateMainMenuCourseResultOptions best match: 99.562%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_course_message_ui/updateMainMenuCourseResultOptions.s")
+// updateMainMenuCourseSequenceResultOptions best match: 99.562%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_course_sequence_ui/updateMainMenuCourseSequenceResultOptions.s")
 
 #ifdef NON_MATCHING
-void updateMainMenuCourseResultOptions(MainMenuCourseMessageActor *arg0) {
+void updateMainMenuCourseSequenceResultOptions(MainMenuCourseSequenceActor *arg0) {
     s32 temp_t1;
     s32 temp_t8;
     s32 temp_t9;
@@ -192,13 +192,13 @@ void updateMainMenuCourseResultOptions(MainMenuCourseMessageActor *arg0) {
         gMainMenuSelectionResult = (u16)arg0->state.selectedChoice + 1;
         arg0->highlightScale = 0x100;
         arg0->highlightTimer = 0;
-        setCallbackTaskCallback(arg0, redrawMainMenuCourseResultOptions);
+        setCallbackTaskCallback(arg0, redrawMainMenuCourseSequenceResultOptions);
     }
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuCourseResultOptions, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuCourseSequenceResultOptions, (s32)arg0);
 }
 #endif
 
-void initMainMenuCourseResultOptions(MainMenuCourseMessageActor *arg0) {
+void initMainMenuCourseSequenceResultOptions(MainMenuCourseSequenceActor *arg0) {
     arg0->x = -0x30;
     arg0->y = -0x30;
     arg0->layout.textOffset.x = -0x2C;
@@ -211,17 +211,17 @@ void initMainMenuCourseResultOptions(MainMenuCourseMessageActor *arg0) {
     }
     arg0->highlightScale = 0x100;
     arg0->highlightTimer = 0;
-    setCallbackTaskCallback(arg0, updateMainMenuCourseResultOptions);
+    setCallbackTaskCallback(arg0, updateMainMenuCourseSequenceResultOptions);
 }
 
-// drawMainMenuCourseMessageBox best match: 95.343%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_course_message_ui/drawMainMenuCourseMessageBox.s")
+// drawMainMenuCourseSequenceMessageBox best match: 95.343%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_course_sequence_ui/drawMainMenuCourseSequenceMessageBox.s")
 
 #ifdef NON_MATCHING
-void drawMainMenuCourseMessageBox(MainMenuCourseMessageActor *arg0) {
+void drawMainMenuCourseSequenceMessageBox(MainMenuCourseSequenceActor *arg0) {
     unsigned int new_var;
-    MainMenuCourseMessageScript glyph;
-    MainMenuCourseMessageScript *script;
+    MainMenuCourseSequenceScript glyph;
+    MainMenuCourseSequenceScript *script;
     u16 xOffset;
     s32 i;
     s32 glyphIndex;
@@ -232,24 +232,24 @@ void drawMainMenuCourseMessageBox(MainMenuCourseMessageActor *arg0) {
     u16 drawToken;
     unsigned int pad;
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)((*arg0).y + 0x14), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)((*arg0).y + 0x14), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     new_var = 0;
     do {
-        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x14), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 3, 0x20, 0x20, new_var, new_var);
-        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x4C), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, new_var);
+        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x14), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 3, 0x20, 0x20, new_var, new_var);
+        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x4C), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, new_var);
         i += 0x10;
     } while (i < 0xF0);
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, new_var);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 9, 0x20, 0x20, new_var, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, new_var);
+    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 9, 0x20, 0x20, new_var, 0);
 
     i = new_var;
     do {
-        drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + i + 0x24), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 5, 0x20, 0x20, new_var, 0);
-        drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + i + 0x24), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), 6, 0x20, 0x20, new_var, 0);
+        drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + i + 0x24), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 5, 0x20, 0x20, new_var, 0);
+        drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + i + 0x24), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), 6, 0x20, 0x20, new_var, 0);
         i += 0x10;
     } while (i < 0x30);
 
@@ -263,7 +263,7 @@ void drawMainMenuCourseMessageBox(MainMenuCourseMessageActor *arg0) {
         lineOffset = 0;
         do {
             scriptOffset += 0;
-            script = (MainMenuCourseMessageScript *)((u8 *)arg0->layout.script + scriptOffset);
+            script = (MainMenuCourseSequenceScript *)((u8 *)arg0->layout.script + scriptOffset);
             token = script[new_var];
             if ((token >= 0xFF01) && (token != 0xFFFE)) {
                 drawToken = token;
@@ -300,7 +300,7 @@ void drawMainMenuCourseMessageBox(MainMenuCourseMessageActor *arg0) {
                     if (drawToken < 0xFF01) {
                         break;
                     }
-                    if (((MainMenuCourseMessageScript *)((u8 *)arg0->layout.script + scriptOffset))[0] == 0xFFFE) {
+                    if (((MainMenuCourseSequenceScript *)((u8 *)arg0->layout.script + scriptOffset))[0] == 0xFFFE) {
                         break;
                     }
                     token = drawToken;
@@ -310,7 +310,7 @@ void drawMainMenuCourseMessageBox(MainMenuCourseMessageActor *arg0) {
             if (stopped == 1) {
                 glyph = 0xFFFE;
             } else {
-                glyph = *((MainMenuCourseMessageScript *)((u8 *)arg0->layout.script + scriptOffset));
+                glyph = *((MainMenuCourseSequenceScript *)((u8 *)arg0->layout.script + scriptOffset));
             }
             func_8001303C((s16)(arg0->x + xOffset), (s16)(arg0->y + lineOffset + 0x18), &glyph, 0, 0x100, (u16)arg0->glyphPalette, 0x29);
             if (stopped != 1) {
@@ -330,28 +330,28 @@ void drawMainMenuCourseMessageBox(MainMenuCourseMessageActor *arg0) {
     }
 
     if (((arg0->scriptState == 1) || (arg0->scriptState == 2)) && (gMainMenuSelectionResult == new_var)) {
-        drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48), getMemoryBlockBase(MAIN_MENU_COURSE_MESSAGE_TEXTURE_HANDLE), ((s32)arg0->confirmBlinkTimer >= 8) & 0xFFFF, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48), getMemoryBlockBase(MAIN_MENU_COURSE_SEQUENCE_TEXTURE_HANDLE), ((s32)arg0->confirmBlinkTimer >= 8) & 0xFFFF, 0x20, 0x20, 0, 0);
     }
 }
 #endif
 
-void updateMainMenuCourseMessageScrollOut(MainMenuCourseMessageActor *arg0) {
+void updateMainMenuCourseSequenceMessageScrollOut(MainMenuCourseSequenceActor *arg0) {
     arg0->y += 0x10;
     if (arg0->y >= 0x79) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuCourseMessageBox, (s32)arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuCourseSequenceMessageBox, (s32)arg0);
     }
 }
 
-// updateMainMenuCourseMessageBox best match: 99.775%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_course_message_ui/updateMainMenuCourseMessageBox.s")
+// updateMainMenuCourseSequenceMessageBox best match: 99.775%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_course_sequence_ui/updateMainMenuCourseSequenceMessageBox.s")
 
 #ifdef NON_MATCHING
-void updateMainMenuCourseMessageBox(MainMenuCourseMessageActor *arg0) {
-    MainMenuCourseMessageScript *scan;
-    MainMenuCourseMessageScript *script;
-    MainMenuCourseMessageScript *next;
+void updateMainMenuCourseSequenceMessageBox(MainMenuCourseSequenceActor *arg0) {
+    MainMenuCourseSequenceScript *scan;
+    MainMenuCourseSequenceScript *script;
+    MainMenuCourseSequenceScript *next;
     s32 keepScanning;
     u16 token;
     u16 marker;
@@ -395,9 +395,9 @@ void updateMainMenuCourseMessageBox(MainMenuCourseMessageActor *arg0) {
             arg0->confirmBlinkTimer = 0;
             gMainMenuSelectionResult = 1;
             if (arg0->returnToSummary == 0) {
-                setCallbackTaskCallback(arg0, updateMainMenuCourseMessageScrollOut);
+                setCallbackTaskCallback(arg0, updateMainMenuCourseSequenceMessageScrollOut);
             } else {
-                setCallbackTaskCallback(arg0, redrawMainMenuCourseMessageBox);
+                setCallbackTaskCallback(arg0, redrawMainMenuCourseSequenceMessageBox);
             }
         }
         break;
@@ -425,11 +425,11 @@ void updateMainMenuCourseMessageBox(MainMenuCourseMessageActor *arg0) {
         break;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuCourseMessageBox, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuCourseSequenceMessageBox, (s32)arg0);
 }
 #endif
 
-void initMainMenuCourseIntroMessage(MainMenuCourseMessageActor *arg0) {
+void initMainMenuCourseSequenceIntroMessage(MainMenuCourseSequenceActor *arg0) {
     arg0->x = -0x80;
     arg0->y = 4;
     arg0->scriptState = 0;
@@ -437,14 +437,14 @@ void initMainMenuCourseIntroMessage(MainMenuCourseMessageActor *arg0) {
     arg0->glyphPalette = 0;
     arg0->layout.script = gMainMenuCourseIntroMessageScripts[gMainMenuSelectedCourse - 1];
     arg0->returnToSummary = 0;
-    setCallbackTaskCallback(arg0, updateMainMenuCourseMessageBox);
+    setCallbackTaskCallback(arg0, updateMainMenuCourseSequenceMessageBox);
 }
 
-void redrawMainMenuCourseMessageBox(s32 arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuCourseMessageBox, arg0);
+void redrawMainMenuCourseSequenceMessageBox(s32 arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuCourseSequenceMessageBox, arg0);
 }
 
-void initMainMenuCourseFinalMessage(MainMenuCourseMessageActor *arg0) {
+void initMainMenuCourseSequenceFinalMessage(MainMenuCourseSequenceActor *arg0) {
     arg0->x = -0x80;
     arg0->y = -0x24;
     arg0->scriptState = 0;
@@ -452,34 +452,34 @@ void initMainMenuCourseFinalMessage(MainMenuCourseMessageActor *arg0) {
     arg0->glyphPalette = 7;
     arg0->layout.script = gMainMenuCourseFinalMessageScript;
     arg0->returnToSummary = 1;
-    setCallbackTaskCallback(arg0, updateMainMenuCourseMessageBox);
+    setCallbackTaskCallback(arg0, updateMainMenuCourseSequenceMessageBox);
 }
 
-void drawMainMenuCourseTitlePanel(MainMenuCourseMessageActor *arg0) {
+void drawMainMenuCourseSequenceTitlePanel(MainMenuCourseSequenceActor *arg0) {
     gMainMenuCourseTitleLabelTemplate[9] = gMainMenuSelectedCourse;
     func_8001303C((s16)(arg0->x - 0x10), arg0->y, gMainMenuCourseTitleLabelTemplate, 0, 0x100, 5, 0x29);
     func_8001303C(gMainMenuCourseTitleXPositions[gMainMenuSelectedCourse], (s16)(arg0->y + 0x18), gMainMenuCourseTitleText[gMainMenuSelectedCourse - 1], 0, 0x100, 4, 0x29);
 }
 
-void updateMainMenuCourseTitlePanelScrollOut(MainMenuCourseMessageActor *arg0) {
+void updateMainMenuCourseSequenceTitlePanelScrollOut(MainMenuCourseSequenceActor *arg0) {
     arg0->y -= 0xA;
     if (arg0->y < -0xC7) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuCourseTitlePanel, (s32)arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuCourseSequenceTitlePanel, (s32)arg0);
     }
 }
 
-void updateMainMenuCourseTitlePanel(MainMenuCourseMessageActor *arg0) {
+void updateMainMenuCourseSequenceTitlePanel(MainMenuCourseSequenceActor *arg0) {
     if (gMainMenuSelectionResult == 1) {
-        setCallbackTaskCallback(arg0, updateMainMenuCourseTitlePanelScrollOut);
+        setCallbackTaskCallback(arg0, updateMainMenuCourseSequenceTitlePanelScrollOut);
     }
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuCourseTitlePanel, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuCourseSequenceTitlePanel, (s32)arg0);
 }
 
-void initMainMenuCourseTitlePanel(MainMenuCourseMessageActor *arg0) {
+void initMainMenuCourseSequenceTitlePanel(MainMenuCourseSequenceActor *arg0) {
     arg0->x = -0x48;
     arg0->y = -0x48;
     arg0->layout.panelHeight = 0x78;
-    setCallbackTaskCallback(arg0, updateMainMenuCourseTitlePanel);
+    setCallbackTaskCallback(arg0, updateMainMenuCourseSequenceTitlePanel);
 }
