@@ -123,7 +123,7 @@ extern void func_80048C90(GfxCommandDest *, s32 *);
 extern void func_80045A1C(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 
 extern s8 D_80122288;
-extern s16 D_80122282;
+extern s16 gRacePlayerSurfaceAngles;
 extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern u32 D_80156614;
@@ -512,7 +512,7 @@ void updateRaceCoursePreviewLongPanRise(RaceCoursePreviewCamera *arg0) {
 void waitRaceCoursePreviewLongPanTrigger(RaceCoursePreviewCamera *arg0) {
     approachRaceCoursePreviewSpinStep(arg0, 0x130);
     updateRaceCoursePreviewCameraMotion(arg0);
-    if (D_80122282 == 0x35) {
+    if (gRacePlayerSurfaceAngles == 0x35) {
         arg0->stateTimer = 0x6A;
         setCallbackTaskCallback(arg0, updateRaceCoursePreviewLongPanRise);
     }
