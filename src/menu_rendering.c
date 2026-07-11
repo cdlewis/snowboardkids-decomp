@@ -1,5 +1,5 @@
 #include "common.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "memory_allocator.h"
 #define MENU_RENDERING_C
 #include "menu_rendering.h"
@@ -835,7 +835,7 @@ void func_80011C3C(MenuRenderSpriteActor *actor);
 void func_80011D44(MenuRenderSprite *sprite);
 
 void func_80011C18(MenuRenderSpriteActor *arg0) {
-    func_80071824(arg0, func_80011C3C);
+    setCallbackTaskCallback(arg0, func_80011C3C);
 }
 
 void func_80011C3C(MenuRenderSpriteActor *actor) {

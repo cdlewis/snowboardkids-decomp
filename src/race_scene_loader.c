@@ -2,7 +2,7 @@
 #include "memory_allocator.h"
 #include "asset_manager.h"
 #include "race_scene_loader.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "game_boot.h"
 #include "model_animation.h"
 #include "race_course_effects.h"
@@ -269,37 +269,37 @@ void initRaceCourseEffects(void) {
     }
     switch ((u16) D_80121B50) {
     case 0:
-        createEffectTask(&func_8006A798, 0, 0x64);
-        createEffectTask(&func_8006B108, 0, 0x64);
-        createEffectTask(&func_8006C698, 0, 0x64);
-        func_80071664(&func_8006429C, 0, 0x64, 0);
-        func_80071664(&func_8006429C, 0, 0x64, 1);
-        func_80071664(&func_8006CBBC, 0, 0x64, 0);
+        createCallbackTask(&func_8006A798, 0, 0x64);
+        createCallbackTask(&func_8006B108, 0, 0x64);
+        createCallbackTask(&func_8006C698, 0, 0x64);
+        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&func_8006CBBC, 0, 0x64, 0);
         if ((D_800EC9C2 == 0) && (D_80121B59 == 0) && (D_80121B5A == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                createEffectTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
-                func_80071664(&func_800691C8, 0, 0x64, 0);
-                func_80071664(&func_800691C8, 0, 0x64, 1);
-                func_80071664(&func_800691C8, 0, 0x64, 2);
-                func_80071664(&func_800691C8, 0, 0x64, 3);
-                func_80071664(&func_800691C8, 0, 0x64, 4);
-                func_80071664(&func_800691C8, 0, 0x64, 5);
-                func_80071664(&func_800691C8, 0, 0x64, 0x3F);
-                func_80071664(&func_800691C8, 0, 0x64, 0x4E);
-                func_80071664(&func_800691C8, 0, 0x64, 0x4F);
-                func_80071664(&func_800691C8, 0, 0x64, 0x50);
-                func_80071664(&func_800691C8, 0, 0x64, 0x51);
-                func_80071664(&func_800691C8, 0, 0x64, 0x52);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 1);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 2);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 3);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 4);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 5);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x3F);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x4E);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x4F);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x50);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x51);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x52);
             }
         }
         if (D_800EC9C2 == 1) {
             if (D_80121B5E == 0) {
-                createEffectTask(&func_80065764, 0, 0x64);
+                createCallbackTask(&func_80065764, 0, 0x64);
             }
             if (D_80121B5E == 1) {
-                createEffectTask(&func_800666B0, 0, 1);
+                createCallbackTask(&func_800666B0, 0, 1);
             }
         }
         if (D_800EC9C2 == 1) {
@@ -308,13 +308,13 @@ void initRaceCourseEffects(void) {
             }
         } else {
 block_24:
-            createEffectTask(&func_8006AE00, 0, 0x64);
+            createCallbackTask(&func_8006AE00, 0, 0x64);
         }
         func_8009B58C(0x80U, 0xC0U, 0xFFU);
         break;
     case 1:
-        createEffectTask(&func_8006A798, 0, 0x64);
-        createEffectTask(&func_8006AE00, 0, 0x64);
+        createCallbackTask(&func_8006A798, 0, 0x64);
+        createCallbackTask(&func_8006AE00, 0, 0x64);
         func_8006B760(0x17, 0xF682AF46, 0xEB74F202, 0xF82BAF46, 0xEA17F202);
         func_8006B760(0x17, 0xF7062F46, 0xE897F202, 0xF5C82F46, 0xEA58F202);
         func_8006B760(0x17, 0xF45B2F46, 0xE876F202, 0xF6502F46, 0xE7927202);
@@ -324,271 +324,271 @@ block_24:
         func_8006B760(0x17, 0xF50D1255, 0xE7032BEC, 0xF2E89861, 0xE70079E8);
         func_8006B760(0x17, 0xF3EFF851, 0xE8BCCFE0, 0xF5650CCB, 0xE9A4FC34);
         func_8006B760(0x17, 0xF6BEB9D1, 0xEA69C4DE, 0xF6F1B095, 0xEBF8B05E);
-        createEffectTask(&func_8006B108, 0, 0x64);
-        func_80071664(&func_80057600, 0, 0x64, 6);
-        func_80071664(&func_80057600, 0, 0x64, 7);
-        func_80071664(&func_8006D384, 0, 0x64, 0);
-        func_80071664(&func_800669A0, 0, 0x64, 0);
-        createEffectTask(&func_8006C698, 0, 0x64);
-        func_80071664(&func_800675AC, 0, 0x64, 0);
-        func_80071664(&func_800675AC, 0, 0x64, 1);
-        func_80071664(&func_8006429C, 0, 0x64, 1);
+        createCallbackTask(&func_8006B108, 0, 0x64);
+        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 6);
+        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 7);
+        createCallbackTaskWithUserId(&func_8006D384, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&func_800669A0, 0, 0x64, 0);
+        createCallbackTask(&func_8006C698, 0, 0x64);
+        createCallbackTaskWithUserId(&func_800675AC, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&func_800675AC, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                createEffectTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
-                func_80071664(&func_800691C8, 0, 0x64, 6);
-                func_80071664(&func_800691C8, 0, 0x64, 7);
-                func_80071664(&func_800691C8, 0, 0x64, 8);
-                func_80071664(&func_800691C8, 0, 0x64, 9);
-                func_80071664(&func_800691C8, 0, 0x64, 0xA);
-                func_80071664(&func_800691C8, 0, 0x64, 0xB);
-                func_80071664(&func_800691C8, 0, 0x64, 0xC);
-                func_80071664(&func_800691C8, 0, 0x64, 0xD);
-                func_80071664(&func_800691C8, 0, 0x64, 0x53);
-                func_80071664(&func_800691C8, 0, 0x64, 0x54);
-                func_80071664(&func_800691C8, 0, 0x64, 0x55);
-                func_80071664(&func_800691C8, 0, 0x64, 0x56);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 6);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 7);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 8);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 9);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0xA);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0xB);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0xC);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0xD);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x53);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x54);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x55);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x56);
             }
             func_80061AF4(0x59, (void *)0x2290CDA1, (void *)0xC5F82815, 0xAF0);
         }
         if (D_800EC9C2 == 1) {
             if (D_80121B5E == 0) {
-                createEffectTask(&func_80065764, 0, 0x64);
+                createCallbackTask(&func_80065764, 0, 0x64);
             }
             if (D_80121B5E == 1) {
-                createEffectTask(&func_800666B0, 0, 1);
+                createCallbackTask(&func_800666B0, 0, 1);
             }
         }
         func_8009B58C(0xFFU, 0x80U, 0U);
         break;
     case 2:
-        createEffectTask(&func_8006A798, 0, 0x64);
-        createEffectTask(&func_8006B108, 0, 0x64);
-        createEffectTask(&func_8006C698, 0, 0x64);
-        func_80071664(&func_80057600, 0, 0x64, 2);
-        func_80071664(&func_80063980, 0, 0x64, 0);
-        func_80071664(&func_80063980, 0, 0x64, 1);
+        createCallbackTask(&func_8006A798, 0, 0x64);
+        createCallbackTask(&func_8006B108, 0, 0x64);
+        createCallbackTask(&func_8006C698, 0, 0x64);
+        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 2);
+        createCallbackTaskWithUserId(&func_80063980, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&func_80063980, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                createEffectTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
-                func_80071664(&func_800691C8, 0, 0x64, 0xE);
-                func_80071664(&func_800691C8, 0, 0x64, 0xF);
-                func_80071664(&func_800691C8, 0, 0x64, 0x10);
-                func_80071664(&func_800691C8, 0, 0x64, 0x11);
-                func_80071664(&func_800691C8, 0, 0x64, 0x12);
-                func_80071664(&func_800691C8, 0, 0x64, 0x13);
-                func_80071664(&func_800691C8, 0, 0x64, 0x14);
-                func_80071664(&func_800691C8, 0, 0x64, 0x42);
-                func_80071664(&func_800691C8, 0, 0x64, 0x57);
-                func_80071664(&func_800691C8, 0, 0x64, 0x58);
-                func_80071664(&func_800691C8, 0, 0x64, 0x59);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0xE);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0xF);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x10);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x11);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x12);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x13);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x14);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x42);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x57);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x58);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x59);
             }
         }
         func_8009B58C(0U, 0U, 0x32U);
         break;
     case 3:
-        createEffectTask(&func_8006A798, 0, 0x64);
-        createEffectTask(&func_8006B108, 0, 0x64);
-        createEffectTask(&func_8006C698, 0, 0x64);
-        func_80071664(&func_8006CBBC, 0, 0x64, 1);
-        func_80071664(&func_8006CBBC, 0, 0x64, 2);
-        func_80071664(&func_8006429C, 0, 0x64, 1);
-        createEffectTask(&initRaceCoursePreviewModelMeshes, 0, 0x64);
+        createCallbackTask(&func_8006A798, 0, 0x64);
+        createCallbackTask(&func_8006B108, 0, 0x64);
+        createCallbackTask(&func_8006C698, 0, 0x64);
+        createCallbackTaskWithUserId(&func_8006CBBC, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&func_8006CBBC, 0, 0x64, 2);
+        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
+        createCallbackTask(&initRaceCoursePreviewModelMeshes, 0, 0x64);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                createEffectTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
-                func_80071664(&func_800691C8, 0, 0x64, 0x15);
-                func_80071664(&func_800691C8, 0, 0x64, 0x16);
-                func_80071664(&func_800691C8, 0, 0x64, 0x17);
-                func_80071664(&func_800691C8, 0, 0x64, 0x18);
-                func_80071664(&func_800691C8, 0, 0x64, 0x19);
-                func_80071664(&func_800691C8, 0, 0x64, 0x1A);
-                func_80071664(&func_800691C8, 0, 0x64, 0x1B);
-                func_80071664(&func_800691C8, 0, 0x64, 0x1C);
-                func_80071664(&func_800691C8, 0, 0x64, 0x1D);
-                func_80071664(&func_800691C8, 0, 0x64, 0x43);
-                func_80071664(&func_800691C8, 0, 0x64, 0x44);
-                func_80071664(&func_800691C8, 0, 0x64, 0x45);
-                func_80071664(&func_800691C8, 0, 0x64, 0x5A);
-                func_80071664(&func_800691C8, 0, 0x64, 0x5B);
-                func_80071664(&func_800691C8, 0, 0x64, 0x5C);
-                func_80071664(&func_800691C8, 0, 0x64, 0x5D);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x15);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x16);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x17);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x18);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x19);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x1A);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x1B);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x1C);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x1D);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x43);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x44);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x45);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5A);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5B);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5C);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5D);
             }
         }
         if (D_80121B55 == 1) {
-            createEffectTask(&initRaceCoursePreviewCameraCutscene, 0, 0x64);
+            createCallbackTask(&initRaceCoursePreviewCameraCutscene, 0, 0x64);
         }
         func_8009B58C(0x82U, 0xAFU, 0xFFU);
         break;
     case 4:
-        createEffectTask(&func_8006A798, 0, 0x64);
-        createEffectTask(&func_8006B108, 0, 0x64);
-        createEffectTask(&func_8006C698, 0, 0x64);
-        func_80071664(&func_80061428, 0, 0x64, 0);
-        func_80071664(&func_800631B0, 0, 0x64, 0);
-        func_80071664(&func_80063470, 0, 0x64, 0);
-        func_80071664(&func_80057600, 0, 0x64, 4);
-        func_80071664(&func_80057600, 0, 0x64, 5);
-        func_80071664(&func_8006429C, 0, 0x64, 1);
+        createCallbackTask(&func_8006A798, 0, 0x64);
+        createCallbackTask(&func_8006B108, 0, 0x64);
+        createCallbackTask(&func_8006C698, 0, 0x64);
+        createCallbackTaskWithUserId(&func_80061428, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&func_800631B0, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&func_80063470, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 4);
+        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 5);
+        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                createEffectTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
-                func_80071664(&func_800691C8, 0, 0x64, 0x1E);
-                func_80071664(&func_800691C8, 0, 0x64, 0x1F);
-                func_80071664(&func_800691C8, 0, 0x64, 0x20);
-                func_80071664(&func_800691C8, 0, 0x64, 0x21);
-                func_80071664(&func_800691C8, 0, 0x64, 0x22);
-                func_80071664(&func_800691C8, 0, 0x64, 0x23);
-                func_80071664(&func_800691C8, 0, 0x64, 0x24);
-                func_80071664(&func_800691C8, 0, 0x64, 0x25);
-                func_80071664(&func_800691C8, 0, 0x64, 0x26);
-                func_80071664(&func_800691C8, 0, 0x64, 0x5E);
-                func_80071664(&func_800691C8, 0, 0x64, 0x5F);
-                func_80071664(&func_800691C8, 0, 0x64, 0x60);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x1E);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x1F);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x20);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x21);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x22);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x23);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x24);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x25);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x26);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5E);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5F);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x60);
             }
         }
-        func_80071664(&func_80062ED4, 0, 0x64, 0);
-        func_80071664(&func_80062ED4, 0, 0x64, 1);
-        func_80071664(&func_80062ED4, 0, 0x64, 2);
-        func_80071664(&func_80062ED4, 0, 0x64, 3);
-        func_80071664(&func_80062ED4, 0, 0x64, 4);
-        func_80071664(&func_80062ED4, 0, 0x64, 5);
-        func_80071664(&func_80062ED4, 0, 0x64, 6);
-        func_80071664(&func_80062ED4, 0, 0x64, 7);
-        func_80071664(&func_80062ED4, 0, 0x64, 8);
-        func_80071664(&func_80062ED4, 0, 0x64, 9);
+        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 2);
+        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 3);
+        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 4);
+        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 5);
+        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 6);
+        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 7);
+        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 8);
+        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 9);
         func_8009B58C(0U, 0U, 0x40U);
         break;
     case 5:
-        createEffectTask(&func_8006A798, 0, 0x64);
-        func_80071664(&func_80057600, 0, 0x64, 0);
-        func_80071664(&func_80057600, 0, 0x64, 1);
-        createEffectTask(&func_8006B108, 0, 0x64);
-        func_80071664(&func_8006429C, 0, 0x64, 1);
-        createEffectTask(&func_8006C698, 0, 0x64);
+        createCallbackTask(&func_8006A798, 0, 0x64);
+        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 1);
+        createCallbackTask(&func_8006B108, 0, 0x64);
+        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
+        createCallbackTask(&func_8006C698, 0, 0x64);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                createEffectTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
-                func_80071664(&func_800691C8, 0, 0x64, 0x27);
-                func_80071664(&func_800691C8, 0, 0x64, 0x28);
-                func_80071664(&func_800691C8, 0, 0x64, 0x29);
-                func_80071664(&func_800691C8, 0, 0x64, 0x2A);
-                func_80071664(&func_800691C8, 0, 0x64, 0x2B);
-                func_80071664(&func_800691C8, 0, 0x64, 0x2C);
-                func_80071664(&func_800691C8, 0, 0x64, 0x2D);
-                func_80071664(&func_800691C8, 0, 0x64, 0x2E);
-                func_80071664(&func_800691C8, 0, 0x64, 0x40);
-                func_80071664(&func_800691C8, 0, 0x64, 0x41);
-                func_80071664(&func_800691C8, 0, 0x64, 0x61);
-                func_80071664(&func_800691C8, 0, 0x64, 0x62);
-                func_80071664(&func_800691C8, 0, 0x64, 0x63);
-                func_80071664(&func_800691C8, 0, 0x64, 0x64);
-                func_80071664(&func_800691C8, 0, 0x64, 0x65);
-                func_80071664(&func_800691C8, 0, 0x64, 0x66);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x27);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x28);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x29);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x2A);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x2B);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x2C);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x2D);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x2E);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x40);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x41);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x61);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x62);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x63);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x64);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x65);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x66);
             }
         }
         func_8009B58C(0xF0U, 0xE6U, 0xBEU);
         break;
     case 6:
-        createEffectTask(&func_8006A798, 0, 0x64);
-        createEffectTask(&func_80063FC0, 0, 1);
-        createEffectTask(&func_8006B108, 0, 0x64);
-        createEffectTask(&func_8006C698, 0, 0x64);
-        createEffectTask(&initRaceCoursePreviewModelMeshes, 0, 0x64);
-        func_80071664(&initRaceCoursePreviewBillboard, 0, 0x64, 0);
-        func_80071664(&initRaceCoursePreviewBillboard, 0, 0x64, 1);
-        func_80071664(&initRaceCoursePreviewBillboard, 0, 0x64, 2);
-        func_80071664(&func_8006429C, 0, 0x64, 1);
+        createCallbackTask(&func_8006A798, 0, 0x64);
+        createCallbackTask(&func_80063FC0, 0, 1);
+        createCallbackTask(&func_8006B108, 0, 0x64);
+        createCallbackTask(&func_8006C698, 0, 0x64);
+        createCallbackTask(&initRaceCoursePreviewModelMeshes, 0, 0x64);
+        createCallbackTaskWithUserId(&initRaceCoursePreviewBillboard, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&initRaceCoursePreviewBillboard, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initRaceCoursePreviewBillboard, 0, 0x64, 2);
+        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                createEffectTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
-                func_80071664(&func_800691C8, 0, 0x64, 0x2F);
-                func_80071664(&func_800691C8, 0, 0x64, 0x30);
-                func_80071664(&func_800691C8, 0, 0x64, 0x31);
-                func_80071664(&func_800691C8, 0, 0x64, 0x32);
-                func_80071664(&func_800691C8, 0, 0x64, 0x33);
-                func_80071664(&func_800691C8, 0, 0x64, 0x34);
-                func_80071664(&func_800691C8, 0, 0x64, 0x35);
-                func_80071664(&func_800691C8, 0, 0x64, 0x36);
-                func_80071664(&func_800691C8, 0, 0x64, 0x67);
-                func_80071664(&func_800691C8, 0, 0x64, 0x68);
-                func_80071664(&func_800691C8, 0, 0x64, 0x69);
-                func_80071664(&func_800691C8, 0, 0x64, 0x6A);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x2F);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x30);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x31);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x32);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x33);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x34);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x35);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x36);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x67);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x68);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x69);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x6A);
             }
         }
         if (D_80121B55 == 1) {
-            createEffectTask(&initRaceCoursePreviewCameraCutscene, 0, 0x64);
+            createCallbackTask(&initRaceCoursePreviewCameraCutscene, 0, 0x64);
         }
         func_8009B5C0(0xFFU, 0xFFU, 0xFFU);
         break;
     case 7:
-        createEffectTask(&func_8006A798, 0, 0x64);
-        func_80071664(&func_80057600, 0, 0x64, 3);
-        func_80071664(&func_8006D384, 0, 0x64, 1);
-        createEffectTask(&func_8006B108, 0, 0x64);
+        createCallbackTask(&func_8006A798, 0, 0x64);
+        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 3);
+        createCallbackTaskWithUserId(&func_8006D384, 0, 0x64, 1);
+        createCallbackTask(&func_8006B108, 0, 0x64);
         func_8009B58C(0xFFU, 0xFFU, 0xFFU);
         break;
     case 8:
-        createEffectTask(&func_8006A798, 0, 0x64);
-        createEffectTask(&func_8006B108, 0, 0x64);
-        createEffectTask(&func_8006C698, 0, 0x64);
-        func_80071664(&func_8006429C, 0, 0x64, 1);
+        createCallbackTask(&func_8006A798, 0, 0x64);
+        createCallbackTask(&func_8006B108, 0, 0x64);
+        createCallbackTask(&func_8006C698, 0, 0x64);
+        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
-                createEffectTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
-                func_80071664(&func_800691C8, 0, 0x64, 0x46);
-                func_80071664(&func_800691C8, 0, 0x64, 0x47);
-                func_80071664(&func_800691C8, 0, 0x64, 0x48);
-                func_80071664(&func_800691C8, 0, 0x64, 0x49);
-                func_80071664(&func_800691C8, 0, 0x64, 0x4A);
-                func_80071664(&func_800691C8, 0, 0x64, 0x4B);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x46);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x47);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x48);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x49);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x4A);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x4B);
             }
         }
         func_8009B58C(0xFFU, 0xFFU, 0xFFU);
         break;
     case 9:
-        createEffectTask(&func_8006A798, 0, 0x64);
-        createEffectTask(&func_8006B108, 0, 0x64);
-        createEffectTask(&func_8006C698, 0, 0x64);
-        createEffectTask(&initRaceCoursePreviewAnimatedBillboards, 0, 0x64);
-        func_80071664(&func_8006429C, 0, 0x64, 1);
+        createCallbackTask(&func_8006A798, 0, 0x64);
+        createCallbackTask(&func_8006B108, 0, 0x64);
+        createCallbackTask(&func_8006C698, 0, 0x64);
+        createCallbackTask(&initRaceCoursePreviewAnimatedBillboards, 0, 0x64);
+        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0) && ((D_80121B5A == 0) || (D_80121B5A == 7) || (D_80121B5A == 8))) {
             if (sp2C != 0) {
-                createEffectTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&func_8006713C, 0, 0x64);
             }
             if (sp28 != 0) {
-                func_80071664(&func_800691C8, 0, 0x64, 0x37);
-                func_80071664(&func_800691C8, 0, 0x64, 0x38);
-                func_80071664(&func_800691C8, 0, 0x64, 0x39);
-                func_80071664(&func_800691C8, 0, 0x64, 0x3B);
-                func_80071664(&func_800691C8, 0, 0x64, 0x3C);
-                func_80071664(&func_800691C8, 0, 0x64, 0x3D);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x37);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x38);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x39);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x3B);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x3C);
+                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x3D);
             }
         }
         if (D_800EC9C2 == 1) {
             if (D_80121B5E == 0) {
-                createEffectTask(&func_80065764, 0, 0x64);
+                createCallbackTask(&func_80065764, 0, 0x64);
             }
             if (D_80121B5E == 1) {
-                createEffectTask(&func_800666B0, 0, 1);
+                createCallbackTask(&func_800666B0, 0, 1);
             }
         }
         func_8009B58C(0x20U, 0x40U, 0x50U);
         break;
     }
-    createEffectTask(&func_800508D0, 5, 0x6E);
+    createCallbackTask(&func_800508D0, 5, 0x6E);
 }

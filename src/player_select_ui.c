@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "player_select_ui.h"
 #include "menu_rendering.h"
 
@@ -98,12 +98,12 @@ void func_80019314(PlayerSelectRowActor *arg0) {
 
         if (moved == 0) {
             row->state = 1;
-            createEffectTask(func_80019FAC, 0, 0x5F);
+            createCallbackTask(func_80019FAC, 0, 0x5F);
             callback = func_8001A44C;
-            createEffectTask(callback, 0, 0x60);
-            createEffectTask(func_8001A8E0, 0, 0x61);
-            createEffectTask(func_8001AD74, 0, 0x62);
-            createEffectTask(func_8001B210, 0, 0x63);
+            createCallbackTask(callback, 0, 0x60);
+            createCallbackTask(func_8001A8E0, 0, 0x61);
+            createCallbackTask(func_8001AD74, 0, 0x62);
+            createCallbackTask(func_8001B210, 0, 0x63);
             state++;
             state--;
         }
@@ -127,7 +127,7 @@ void func_80019314(PlayerSelectRowActor *arg0) {
     }
 
     if (arg0->state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_800191D0, actor);
@@ -143,7 +143,7 @@ void func_8001952C(PlayerSelectRowActor *arg0) {
     arg0->playerCount = 1;
     arg0->state = 0;
 
-    func_80071824(arg0, func_80019314);
+    setCallbackTaskCallback(arg0, func_80019314);
 }
 
 void func_8001958C(PlayerSelectWidgetActor *arg0) {
@@ -181,7 +181,7 @@ void func_800196CC(PlayerSelectWidgetActor *arg0) {
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8001958C, arg0);
@@ -190,7 +190,7 @@ void func_800196CC(PlayerSelectWidgetActor *arg0) {
 void func_800197CC(PlayerSelectWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
-    func_80071824(arg0, func_800196CC);
+    setCallbackTaskCallback(arg0, func_800196CC);
 }
 
 // func_80019800 best match: 98.548% (nonmatchings/func_80019800-6061209858023118177/base_3.c)
@@ -277,16 +277,16 @@ void func_80019CD8(PlayerSelectWidgetActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->row.bytes.subTimer == 0) {
-            createEffectTask(func_800197CC, 0, 0x63);
+            createCallbackTask(func_800197CC, 0, 0x63);
         }
         arg0->row.bytes.subTimer++;
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->row.bytes.subState = 3;
-            D_8010ADDC = (s32) createEffectTask(func_8001B454, 0, 0x64);
-            createEffectTask(func_8001B638, 0, 0x64);
-            createEffectTask(func_8001B7D8, 0, 0x64);
-            createEffectTask(func_8001B9F0, 0, 0x64);
+            D_8010ADDC = (s32) createCallbackTask(func_8001B454, 0, 0x64);
+            createCallbackTask(func_8001B638, 0, 0x64);
+            createCallbackTask(func_8001B7D8, 0, 0x64);
+            createCallbackTask(func_8001B9F0, 0, 0x64);
         }
         state = arg0->row.bytes.subState;
         break;
@@ -327,7 +327,7 @@ void func_80019CD8(PlayerSelectWidgetActor *arg0) {
     }
 
     if ((state == 5) && (D_80121D88 == 2)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_80019800, arg0);
@@ -341,7 +341,7 @@ void func_80019FAC(PlayerSelectWidgetActor *arg0) {
     arg0->counter = 0;
     arg0->row.bytes.subTimer = 0;
     arg0->row.bytes.subState = 0;
-    func_80071824(arg0, func_80019CD8);
+    setCallbackTaskCallback(arg0, func_80019CD8);
 }
 
 void func_80019FFC(PlayerSelectWidgetActor *arg0) {
@@ -436,7 +436,7 @@ void func_8001A270(PlayerSelectWidgetActor *arg0) {
     }
 
     if (state == 5) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_80019FFC, arg0);
@@ -448,7 +448,7 @@ void func_8001A44C(PlayerSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 1;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001A270);
+    setCallbackTaskCallback(arg0, func_8001A270);
 }
 
 void func_8001A490(PlayerSelectWidgetActor *arg0) {
@@ -541,7 +541,7 @@ void func_8001A704(PlayerSelectWidgetActor *arg0) {
     }
 
     if (state == 5) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8001A490, arg0);
@@ -553,7 +553,7 @@ void func_8001A8E0(PlayerSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 2;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001A704);
+    setCallbackTaskCallback(arg0, func_8001A704);
 }
 
 void func_8001A924(PlayerSelectWidgetActor *arg0) {
@@ -648,7 +648,7 @@ void func_8001AB98(PlayerSelectWidgetActor *arg0) {
     }
 
     if (state == 5) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8001A924, arg0);
@@ -660,7 +660,7 @@ void func_8001AD74(PlayerSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 3;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001AB98);
+    setCallbackTaskCallback(arg0, func_8001AB98);
 }
 
 void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
@@ -754,7 +754,7 @@ void func_8001B02C(PlayerSelectWidgetActor *arg0) {
     }
 
     if (state == 5) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8001ADB8, arg0);
@@ -766,7 +766,7 @@ void func_8001B210(PlayerSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 4;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001B02C);
+    setCallbackTaskCallback(arg0, func_8001B02C);
 }
 
 void func_8001B254(PlayerSelectWidgetActor *arg0) {
@@ -825,7 +825,7 @@ void func_8001B2D8(PlayerSelectWidgetActor *arg0) {
 
     D_8010AE70_state = state;
     if (arg0->transition.bytes.state == 4) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8001B254, arg0);
@@ -837,7 +837,7 @@ void func_8001B454(PlayerSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
     arg0->transition.bytes.timer = 0;
-    func_80071824(arg0, func_8001B2D8);
+    setCallbackTaskCallback(arg0, func_8001B2D8);
 }
 
 void func_8001B494(PlayerSelectWidgetActor *arg0) {
@@ -881,7 +881,7 @@ void func_8001B520(PlayerSelectWidgetActor *arg0) {
     }
     D_8010AE74 = arg0->sprite.spriteIndex;
     if (arg0->transition.bytes.state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8001B494, arg0);
@@ -892,7 +892,7 @@ void func_8001B638(PlayerSelectWidgetActor *arg0) {
     arg0->y = 0xC;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001B520);
+    setCallbackTaskCallback(arg0, func_8001B520);
 }
 
 void func_8001B674(PlayerSelectWidgetActor *arg0) {
@@ -927,7 +927,7 @@ void func_8001B6D8(PlayerSelectWidgetActor *arg0) {
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8001B674, arg0);
@@ -938,7 +938,7 @@ void func_8001B7D8(PlayerSelectWidgetActor *arg0) {
     arg0->y = -0x5C;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001B6D8);
+    setCallbackTaskCallback(arg0, func_8001B6D8);
 }
 
 void func_8001B814(PlayerSelectWidgetActor *arg0) {
@@ -978,7 +978,7 @@ void func_8001B8F0(PlayerSelectWidgetActor *arg0) {
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8001B814, arg0);
@@ -989,7 +989,7 @@ void func_8001B9F0(PlayerSelectWidgetActor *arg0) {
     arg0->y = 0x40;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001B8F0);
+    setCallbackTaskCallback(arg0, func_8001B8F0);
 }
 
 // func_8001BA2C best match: 95.638% at nonmatchings/func_8001BA2C-5752545231564691495/base_8.c.

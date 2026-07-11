@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "player_count_select_ui.h"
 #include "player_select_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
@@ -106,10 +106,10 @@ void func_80029344(PlayerCountSelectRowActor *arg0) {
 
         if (moved == 0) {
             row->state = 1;
-            createEffectTask(func_80029FB8, 0, 0x5F);
-            createEffectTask(func_8002A458, 0, 0x60);
-            createEffectTask(func_8002A8EC, 0, 0x61);
-            createEffectTask(func_8002AD74, 0, 0x63);
+            createCallbackTask(func_80029FB8, 0, 0x5F);
+            createCallbackTask(func_8002A458, 0, 0x60);
+            createCallbackTask(func_8002A8EC, 0, 0x61);
+            createCallbackTask(func_8002AD74, 0, 0x63);
         }
         state = arg0->state;
         break;
@@ -131,7 +131,7 @@ void func_80029344(PlayerCountSelectRowActor *arg0) {
     }
 
     if (arg0->state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_80029200, actor);
@@ -152,7 +152,7 @@ void func_80029548(PlayerCountSelectRowActor *arg0) {
     arg0->spawnTimer = zero;
     arg0->playerCount = temp_t7;
     arg0->state = zero;
-    func_80071824(arg0, func_80029344);
+    setCallbackTaskCallback(arg0, func_80029344);
 }
 
 void func_80029598(PlayerCountSelectWidgetActor *arg0) {
@@ -190,7 +190,7 @@ void func_800296D8(PlayerCountSelectWidgetActor *arg0) {
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_80029598, arg0);
@@ -199,7 +199,7 @@ void func_800296D8(PlayerCountSelectWidgetActor *arg0) {
 void func_800297D8(PlayerCountSelectWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
-    func_80071824(arg0, func_800296D8);
+    setCallbackTaskCallback(arg0, func_800296D8);
 }
 
 // func_8002980C best match: 98.565% (nonmatchings/func_8002980C-6061209858023118177/base_4.c)
@@ -287,16 +287,16 @@ void func_80029CE4(PlayerCountSelectWidgetActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->row.bytes.subTimer == 0) {
-            createEffectTask(func_800297D8, 0, 0x63);
+            createCallbackTask(func_800297D8, 0, 0x63);
         }
         arg0->row.bytes.subTimer++;
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->row.bytes.subState = 3;
-            D_8010ADDC = (s32) createEffectTask(func_8002AFB8, 0, 0x64);
-            createEffectTask(func_8002B15C, 0, 0x64);
-            createEffectTask(func_8002B2FC, 0, 0x64);
-            createEffectTask(func_8002B524, 0, 0x64);
+            D_8010ADDC = (s32) createCallbackTask(func_8002AFB8, 0, 0x64);
+            createCallbackTask(func_8002B15C, 0, 0x64);
+            createCallbackTask(func_8002B2FC, 0, 0x64);
+            createCallbackTask(func_8002B524, 0, 0x64);
         }
         state = arg0->row.bytes.subState;
         break;
@@ -337,7 +337,7 @@ void func_80029CE4(PlayerCountSelectWidgetActor *arg0) {
     }
 
     if ((state == 5) && (D_80121D88 == 2)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002980C, arg0);
@@ -351,7 +351,7 @@ void func_80029FB8(PlayerCountSelectWidgetActor *arg0) {
     arg0->widget.counter = 0;
     arg0->row.bytes.subTimer = 0;
     arg0->row.bytes.subState = 0;
-    func_80071824(arg0, func_80029CE4);
+    setCallbackTaskCallback(arg0, func_80029CE4);
 }
 
 void func_8002A008(PlayerCountSelectWidgetActor *arg0) {
@@ -444,7 +444,7 @@ void func_8002A27C(PlayerCountSelectWidgetActor *arg0) {
     }
 
     if (state == 5) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002A008, arg0);
@@ -456,7 +456,7 @@ void func_8002A458(PlayerCountSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 1;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8002A27C);
+    setCallbackTaskCallback(arg0, func_8002A27C);
 }
 
 void func_8002A49C(PlayerCountSelectWidgetActor *arg0) {
@@ -555,7 +555,7 @@ void func_8002A710(PlayerCountSelectWidgetActor *arg0) {
     }
 
     if (state == 5) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002A49C, arg0);
@@ -567,7 +567,7 @@ void func_8002A8EC(PlayerCountSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 2;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8002A710);
+    setCallbackTaskCallback(arg0, func_8002A710);
 }
 
 void func_8002A930(PlayerCountSelectWidgetActor *arg0) {
@@ -673,7 +673,7 @@ void func_8002AB24(PlayerCountSelectWidgetActor *arg0) {
     }
 
     if (state == 5) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002A930, arg0);
@@ -685,7 +685,7 @@ void func_8002AD74(PlayerCountSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 2;
     arg0->widget.bytes.timer = 0;
     arg0->widget.bytes.state = 0;
-    func_80071824(arg0, func_8002AB24);
+    setCallbackTaskCallback(arg0, func_8002AB24);
 }
 
 void func_8002ADB8(PlayerCountSelectWidgetActor *arg0) {
@@ -745,7 +745,7 @@ void func_8002AE3C(PlayerCountSelectWidgetActor *arg0) {
 
     D_8010AF52 = state;
     if (arg0->transition.bytes.state == 4) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002ADB8, arg0);
@@ -757,7 +757,7 @@ void func_8002AFB8(PlayerCountSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
     arg0->transition.bytes.timer = 0;
-    func_80071824(arg0, func_8002AE3C);
+    setCallbackTaskCallback(arg0, func_8002AE3C);
 }
 
 void func_8002AFF8(PlayerCountSelectWidgetActor *arg0) {
@@ -794,7 +794,7 @@ void func_8002B05C(PlayerCountSelectWidgetActor *arg0) {
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002AFF8, arg0);
@@ -805,7 +805,7 @@ void func_8002B15C(PlayerCountSelectWidgetActor *arg0) {
     arg0->y = 0xC;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8002B05C);
+    setCallbackTaskCallback(arg0, func_8002B05C);
 }
 
 void func_8002B198(PlayerCountSelectWidgetActor *arg0) {
@@ -840,7 +840,7 @@ void func_8002B1FC(PlayerCountSelectWidgetActor *arg0) {
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002B198, arg0);
@@ -851,7 +851,7 @@ void func_8002B2FC(PlayerCountSelectWidgetActor *arg0) {
     arg0->y = -0x5C;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8002B1FC);
+    setCallbackTaskCallback(arg0, func_8002B1FC);
 }
 
 void func_8002B338(PlayerCountSelectWidgetActor *arg0) {
@@ -893,7 +893,7 @@ void func_8002B424(PlayerCountSelectWidgetActor *arg0) {
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002B338, arg0);
@@ -904,5 +904,5 @@ void func_8002B524(PlayerCountSelectWidgetActor *arg0) {
     arg0->y = 0x40;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8002B424);
+    setCallbackTaskCallback(arg0, func_8002B424);
 }

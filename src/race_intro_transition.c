@@ -1,6 +1,6 @@
 #include "race_intro_transition.h"
 #include "game_audio.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_scene_loader.h"
 #include "input_task_scheduler.h"
@@ -143,9 +143,9 @@ void func_8003E600(void) {
     D_80121B52 = 2;
     D_80121B5C = 0x64;
     if (D_800EC9C2 == 0) {
-        func_80070EC0(one);
+        initCallbackTaskScheduler(one);
     } else {
-        func_80070EC0(2);
+        initCallbackTaskScheduler(2);
     }
     D_80121D95 = 0;
     D_80121D94 = 0;
@@ -206,7 +206,7 @@ void func_8003EA78(void) {
     gCurrentInputTask->startDelay--;
     if (gCurrentInputTask->startDelay == 0) {
         func_800728E0();
-        createEffectTask(func_800540EC, 0, 0x64);
+        createCallbackTask(func_800540EC, 0, 0x64);
         setCurrentInputTaskCallback(func_8003EAF0, 0);
     }
 }
@@ -222,9 +222,9 @@ void func_8003EAF0(void) {
         }
     }
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
     func_8007AA50();
     state = gCurrentInputTask;

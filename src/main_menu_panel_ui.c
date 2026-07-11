@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "main_menu_panel_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
@@ -256,7 +256,7 @@ void func_800515F0(MenuPanelActor *arg0) {
 #endif
 
 void func_80051854(MenuPanelActor *arg0) {
-    func_80071824(arg0, func_800515F0);
+    setCallbackTaskCallback(arg0, func_800515F0);
 }
 
 // func_80051878 best match: 90.948%
@@ -383,7 +383,7 @@ void func_80051878(MenuPanelActor *arg0) {
 void func_80051E80(MenuPanelActor *arg0) {
     arg0->y += MENU_PANEL_SCROLL_STEP;
     if (arg0->y >= MENU_PANEL_SCROLL_LIMIT) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_80051878, (s32) arg0);
@@ -411,7 +411,7 @@ void func_80051ED4(MenuPanelActor *arg0) {
             break;
         case 1:
             D_8010B1F0 = 1;
-            func_80071824(arg0, func_80051E80);
+            setCallbackTaskCallback(arg0, func_80051E80);
             break;
         case 2:
             arg0->selectedTile = 0;
@@ -432,7 +432,7 @@ void func_80051FDC(MenuPanelActor *arg0) {
     arg0->selectionState = 0;
     arg0->inputRepeatTimer = 0;
     arg0->tileList = D_800D5538[D_80121B5B];
-    func_80071824(arg0, func_80051ED4);
+    setCallbackTaskCallback(arg0, func_80051ED4);
 }
 
 void func_80052034(s32 arg0) {
@@ -479,7 +479,7 @@ void func_80052364(MenuPanelActor *arg0) {
 }
 
 void func_80052394(MenuPanelActor *arg0) {
-    func_80071824(arg0, func_80052364);
+    setCallbackTaskCallback(arg0, func_80052364);
 }
 
 void func_800523B8(s32 arg0) {
@@ -494,11 +494,11 @@ void func_80052464(MenuPanelActor *arg0) {
         func_800483FC(&D_80124868, func_800523B8, (s32) arg0);
         return;
     }
-    func_800716E4(arg0);
+    removeCallbackTask(arg0);
 }
 
 void func_800524B0(MenuPanelActor *arg0) {
-    func_80071824(arg0, func_80052464);
+    setCallbackTaskCallback(arg0, func_80052464);
 }
 
 void func_800524D4(s32 arg0) {
@@ -635,7 +635,7 @@ void func_80052E00(MenuPanelActor *arg0) {
 }
 
 void func_80052E4C(MenuPanelActor *arg0) {
-    func_80071824(arg0, func_80052E00);
+    setCallbackTaskCallback(arg0, func_80052E00);
 }
 
 // func_80052E70 best match: 98.939%
@@ -722,5 +722,5 @@ void func_80053604(MenuPanelActor *arg0) {
 }
 
 void func_80053634(MenuPanelActor *arg0) {
-    func_80071824(arg0, func_80053604);
+    setCallbackTaskCallback(arg0, func_80053604);
 }

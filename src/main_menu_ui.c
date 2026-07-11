@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "main_menu_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
@@ -74,7 +74,7 @@ void func_80032684(MainMenuLogoActor *arg0) {
     arg0->sprite.height = 0x10;
     arg0->common.x = arg0->startX;
     arg0->common.y = arg0->startY;
-    func_80071824(arg0, func_80032654);
+    setCallbackTaskCallback(arg0, func_80032654);
 }
 
 void func_800326EC(MainMenuSelectionLabelsActor *arg0) {
@@ -125,7 +125,7 @@ void func_80032934(MainMenuSelectionLabelsActor *arg0) {
     arg0->selectedOption = 0;
     arg0->pulseTimer = 0;
     arg0->pulseScale = 0x100;
-    func_80071824(arg0, func_8003288C);
+    setCallbackTaskCallback(arg0, func_8003288C);
 }
 
 void func_80032984(MainMenuSelectionArrowActor *arg0) {
@@ -146,5 +146,5 @@ void func_800329E0(MainMenuSelectionArrowActor *arg0) {
 
 void func_80032A50(MainMenuSelectionArrowActor *arg0) {
     arg0->common.y = 0x20;
-    func_80071824(arg0, func_800329E0);
+    setCallbackTaskCallback(arg0, func_800329E0);
 }

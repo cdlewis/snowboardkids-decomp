@@ -1,5 +1,5 @@
 #include "common.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_menu.h"
 #include "input_task_scheduler.h"
@@ -51,11 +51,11 @@ extern CharacterSelectMenuState *gCurrentInputTask;
 extern CharacterSelectState gCharacterSelectHudState;
 extern CharacterId gCharacterSelectIdOrder[];
 extern CharacterSelectPlayer D_80121D80[];
-extern EffectTask *D_8010ADDC;
-extern EffectTask *D_8010ADE0;
-extern EffectTask *D_8010ADE4;
-extern EffectTask *D_8010ADE8;
-extern EffectTask *D_8010ADEC;
+extern CallbackTask *D_8010ADDC;
+extern CallbackTask *D_8010ADE0;
+extern CallbackTask *D_8010ADE4;
+extern CallbackTask *D_8010ADE8;
+extern CallbackTask *D_8010ADEC;
 extern f32 gCharacterSelectViewportAspectRatio;
 extern s16 gMenuFadeAlpha;
 extern s16 D_8010ADF0[];
@@ -114,7 +114,7 @@ void initCharacterSelectMenu(void) {
         loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
         loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
         loadCompressedRomAsset(D_60F1A0, D_60F990, 0x29);
-        func_80070EC0(0);
+        initCallbackTaskScheduler(0);
 
         playerCount = D_80121B55;
         i = 0;
@@ -156,12 +156,12 @@ loop_1:
         }
     }
 
-    D_8010ADDC = createEffectTask(func_800179D4, 0, 0x64);
-    D_8010ADEC = createEffectTask(func_800191A0, 0, 0x64);
-    D_8010ADE8 = createEffectTask(func_800183DC, 0, 0x64);
-    D_8010ADE0 = createEffectTask(func_80018060, 0, 0x64);
-    createEffectTask(func_80018B6C, 0, 0x64);
-    D_8010ADE4 = createEffectTask(func_80017D08, 0, 0x63);
+    D_8010ADDC = createCallbackTask(func_800179D4, 0, 0x64);
+    D_8010ADEC = createCallbackTask(func_800191A0, 0, 0x64);
+    D_8010ADE8 = createCallbackTask(func_800183DC, 0, 0x64);
+    D_8010ADE0 = createCallbackTask(func_80018060, 0, 0x64);
+    createCallbackTask(func_80018B6C, 0, 0x64);
+    D_8010ADE4 = createCallbackTask(func_80017D08, 0, 0x63);
     setCurrentInputTaskCallback(updateCharacterSelectMenu, 0);
 
     playerCount = D_80121B55;
@@ -197,7 +197,7 @@ loop_1:
     if (D_800B3190 != 0) {
         D_8010AE68 = 1;
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -286,7 +286,7 @@ void updateCharacterSelectConfirmationMenu(void) {
             state->fade = 0;
         }
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -296,7 +296,7 @@ void fadeOutCharacterSelectMenu(void) {
         if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            updateEffectTasks();
+            updateCallbackTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

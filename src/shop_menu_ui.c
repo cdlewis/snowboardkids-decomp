@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "player_select_ui.h"
 #include "shop_menu_ui.h"
@@ -262,8 +262,8 @@ void func_8002C624(ShopMenuRowActor *arg0) {
         }
         if (moved == 0) {
             spawnRow->unk24 = 1;
-            createEffectTask(func_8002D294, 0, 0x5F);
-            createEffectTask(func_8002DC14, 0, 0x61);
+            createCallbackTask(func_8002D294, 0, 0x5F);
+            createCallbackTask(func_8002DC14, 0, 0x61);
         }
         state = arg0->unk24;
         break;
@@ -285,7 +285,7 @@ void func_8002C624(ShopMenuRowActor *arg0) {
     }
 
     if (arg0->unk24 == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002C4E0, actor);
@@ -301,7 +301,7 @@ void func_8002C800(ShopMenuRowActor *arg0) {
     arg0->unk26 = 1;
     arg0->unk24 = 0;
 
-    func_80071824(arg0, func_8002C624);
+    setCallbackTaskCallback(arg0, func_8002C624);
 }
 
 void func_8002C860(ShopMenuWidgetActor *arg0) {
@@ -339,7 +339,7 @@ void func_8002C9A0(ShopMenuWidgetActor *arg0) {
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002C860, arg0);
@@ -348,7 +348,7 @@ void func_8002C9A0(ShopMenuWidgetActor *arg0) {
 void func_8002CAA0(ShopMenuWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
-    func_80071824(arg0, func_8002C9A0);
+    setCallbackTaskCallback(arg0, func_8002C9A0);
 }
 
 // func_8002CAD4 best match: 98.548% (nonmatchings/func_8002CAD4-6061209858023118177/base_1.c)
@@ -426,17 +426,17 @@ void func_8002CFAC(ShopMenuWidgetActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->item.bytes.subTimer == 0) {
-            createEffectTask(func_8002CAA0, 0, 0x63);
+            createCallbackTask(func_8002CAA0, 0, 0x63);
         }
         arg0->item.bytes.subTimer++;
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->item.bytes.subState = 3;
-            createEffectTask(func_8002E074, 0, 0x64);
-            D_8010ADDC = (s32) createEffectTask(func_8002DE6C, 0, 0x64);
-            createEffectTask(func_8002E214, 0, 0x64);
-            createEffectTask(func_8002E798, 0, 0x60);
-            createEffectTask(func_8002E42C, 0, 0x64);
+            createCallbackTask(func_8002E074, 0, 0x64);
+            D_8010ADDC = (s32) createCallbackTask(func_8002DE6C, 0, 0x64);
+            createCallbackTask(func_8002E214, 0, 0x64);
+            createCallbackTask(func_8002E798, 0, 0x60);
+            createCallbackTask(func_8002E42C, 0, 0x64);
         }
         state = arg0->item.bytes.subState;
         break;
@@ -477,7 +477,7 @@ void func_8002CFAC(ShopMenuWidgetActor *arg0) {
     }
 
     if ((state == 5) && (D_80121D88 == 2)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002CAD4, arg0);
@@ -491,7 +491,7 @@ void func_8002D294(ShopMenuWidgetActor *arg0) {
     arg0->item.counter = 0;
     arg0->item.bytes.subTimer = 0;
     arg0->item.bytes.subState = 0;
-    func_80071824(arg0, func_8002CFAC);
+    setCallbackTaskCallback(arg0, func_8002CFAC);
 }
 
 void func_8002D2E4(ShopMenuWidgetActor *arg0) {
@@ -583,7 +583,7 @@ void func_8002D558(ShopMenuWidgetActor *arg0) {
     }
 
     if (state == 5) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002D2E4, arg0);
@@ -595,7 +595,7 @@ void func_8002D734(ShopMenuWidgetActor *arg0) {
     arg0->sprite.index = 1;
     arg0->item.bytes.timer = 0;
     arg0->item.bytes.state = 0;
-    func_80071824(arg0, func_8002D558);
+    setCallbackTaskCallback(arg0, func_8002D558);
 }
 
 void func_8002D778(ShopMenuWidgetActor *arg0) {
@@ -699,7 +699,7 @@ void func_8002D9EC(ShopMenuWidgetActor *arg0) {
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002D778, arg0);
@@ -711,7 +711,7 @@ void func_8002DC14(ShopMenuWidgetActor *arg0) {
     arg0->sprite.index = 2;
     arg0->item.bytes.timer = 0;
     arg0->item.bytes.state = 0;
-    func_80071824(arg0, func_8002D9EC);
+    setCallbackTaskCallback(arg0, func_8002D9EC);
 }
 
 void func_8002DC58(ShopMenuWidgetActor *arg0) {
@@ -775,7 +775,7 @@ void func_8002DCE8(ShopMenuWidgetActor *arg0) {
 
     D_8010AF40 = state;
     if (arg0->transition.bytes.state == 4) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002DC58, arg0);
@@ -787,7 +787,7 @@ void func_8002DE6C(ShopMenuWidgetActor *arg0) {
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
     arg0->transition.bytes.timer = 0;
-    func_80071824(arg0, func_8002DCE8);
+    setCallbackTaskCallback(arg0, func_8002DCE8);
 }
 
 void func_8002DEAC(ShopMenuWidgetActor *arg0) {
@@ -831,7 +831,7 @@ void func_8002DF40(ShopMenuWidgetActor *arg0) {
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         if (D_8010AF70 == 0) {
             D_8010AF70 = 1;
         }
@@ -848,7 +848,7 @@ void func_8002E074(ShopMenuWidgetActor *arg0) {
     arg0->y = 0xC;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8002DF40);
+    setCallbackTaskCallback(arg0, func_8002DF40);
 }
 
 void func_8002E0B0(ShopMenuWidgetActor *arg0) {
@@ -883,7 +883,7 @@ void func_8002E114(ShopMenuWidgetActor *arg0) {
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002E0B0, arg0);
@@ -894,7 +894,7 @@ void func_8002E214(ShopMenuWidgetActor *arg0) {
     arg0->y = -0x5C;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8002E114);
+    setCallbackTaskCallback(arg0, func_8002E114);
 }
 
 void func_8002E250(ShopMenuWidgetActor *arg0) {
@@ -934,7 +934,7 @@ void func_8002E32C(ShopMenuWidgetActor *arg0) {
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002E250, arg0);
@@ -945,7 +945,7 @@ void func_8002E42C(ShopMenuWidgetActor *arg0) {
     arg0->y = 0x40;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8002E32C);
+    setCallbackTaskCallback(arg0, func_8002E32C);
 }
 
 void func_8002E468(ShopMenuWidgetActor *arg0) {
@@ -976,7 +976,7 @@ void func_8002E468(ShopMenuWidgetActor *arg0) {
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002E250, arg0);
@@ -987,7 +987,7 @@ void func_8002E568(ShopMenuWidgetActor *arg0) {
     arg0->y = 0x40;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8002E468);
+    setCallbackTaskCallback(arg0, func_8002E468);
 }
 
 // func_8002E5A4 best match: 97.125% (nonmatchings/func_8002E5A4-3/output-230-1/source.c)
@@ -1051,7 +1051,7 @@ void func_8002E6E4(ShopMenuWidgetActor *arg0) {
     }
     var_v0 = arg0->slide.slideState;
     if (var_v0 == 2) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002E5A4, arg0);
@@ -1074,7 +1074,7 @@ void func_8002E798(ShopMenuWidgetActor *arg0) {
     arg0->sparkle.tileBase = entry->tileBase;
     arg0->sparkle.alpha = 0x100;
     arg0->slide.slideState = 0;
-    func_80071824(arg0, func_8002E6E4);
+    setCallbackTaskCallback(arg0, func_8002E6E4);
 }
 #endif
 
@@ -1185,7 +1185,7 @@ void func_8002E9E4(ShopMenuWidgetActor *arg0) {
         break;
     }
     if (((D_800EC9D0 >= 5) && (D_800EC9D0 != 9)) || (arg0->slide.bytes.state == 6)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002E810, arg0);
@@ -1198,7 +1198,7 @@ void func_8002EC04(ShopMenuWidgetActor *arg0) {
     arg0->item.price = gCourseUnlockPrices[D_80121D86];
     arg0->sprite.index = 0;
     arg0->slide.bytes.state = 0;
-    func_80071824(arg0, func_8002E9E4);
+    setCallbackTaskCallback(arg0, func_8002E9E4);
 }
 
 // func_8002EC5C best match: 98.264% (nonmatchings/func_8002EC5C-6061209858023118177/base_15.c)
@@ -1255,7 +1255,7 @@ void func_8002EF14(ShopMenuWidgetActor *arg0) {
     }
     temp_a2->transition.counter = (temp_a2->transition.counter + 1) & 0x1F;
     if (D_801235B4 == 1) {
-        func_800716E4(temp_a2);
+        removeCallbackTask(temp_a2);
         D_801235B4 = 0;
     } else {
         func_800483FC(&D_80124868, func_8002EC5C, temp_a2);
@@ -1268,7 +1268,7 @@ void func_8002EFB8(ShopMenuWidgetActor *arg0) {
     arg0->item.price = 0;
     arg0->sprite.index = 0x100;
     arg0->transition.counter = 0;
-    func_80071824(arg0, func_8002EF14);
+    setCallbackTaskCallback(arg0, func_8002EF14);
 }
 
 // func_8002EFFC best match: 86.994% (nonmatchings/func_8002EFFC-5635509610426229442/base_2.c)
@@ -1379,7 +1379,7 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
             if ((s32)count < 10) {
                 arg0->visibleCount = count + 1;
                 if ((u16)arg0->visibleCount == 10) {
-                    createEffectTask(func_8002FBC8, 0, 0x63);
+                    createCallbackTask(func_8002FBC8, 0, 0x63);
                 }
             }
         }
@@ -1521,7 +1521,7 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
 
     D_8010AF41 = nextState;
     if (arg0->state == 7) {
-        func_800716E4((EffectTask *)arg0);
+        removeCallbackTask((CallbackTask *)arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002EFFC, actor);
@@ -1542,7 +1542,7 @@ void func_8002F854(ShopMenuWidgetActor *arg0) {
     arg0->visibleCount = 1;
     arg0->prompt.bytes.pulseAlpha = 0;
     arg0->state = 0;
-    func_80071824(arg0, func_8002F2C8);
+    setCallbackTaskCallback(arg0, func_8002F2C8);
 }
 
 void func_8002F8DC(ShopMenuWidgetActor *arg0) {
@@ -1592,7 +1592,7 @@ void func_8002FAB8(ShopMenuWidgetActor *arg0) {
         break;
     }
     if ((u32)state == 4) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002F8DC, arg0);
@@ -1602,7 +1602,7 @@ void func_8002FBC8(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x90;
     arg0->y = 0x44;
     arg0->sprite.bytes.state = 0;
-    func_80071824(arg0, func_8002FAB8);
+    setCallbackTaskCallback(arg0, func_8002FAB8);
 }
 
 void func_8002FC00(ShopMenuWidgetActor *arg0) {
@@ -1640,7 +1640,7 @@ void func_8002FD70(ShopMenuWidgetActor *arg0) {
     }
 
     if (arg0->sprite.index == 0) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002FC00, arg0);
@@ -1659,5 +1659,5 @@ void func_8002FEF8(ShopMenuWidgetActor *arg0) {
         new_var->randomValues[i + 3] = randomNextMain() % 6;
     }
 
-    func_80071824(new_var, func_8002FD70);
+    setCallbackTaskCallback(new_var, func_8002FD70);
 }

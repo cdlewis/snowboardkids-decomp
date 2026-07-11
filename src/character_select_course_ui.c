@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "character_select_course_ui.h"
 #include "player_select_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
@@ -169,7 +169,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
     s32 i;
     s32 limit;
     s32 targetY;
-    void (*finalCallback)(EffectTask *);
+    void (*finalCallback)(CallbackTask *);
     CharacterSelectCourseMenuFrameActor *base;
     CharacterSelectCourseMenuFrameActor *ptr;
     s16 *x;
@@ -199,23 +199,23 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
             if (arg0->itemCount < (gCharacterSelectCourseExitOptionIndex + 1)) {
                 arg0->itemCount++;
                 if (arg0->itemCount == (gCharacterSelectCourseExitOptionIndex + 1)) {
-                    D_8010ADE4 = createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewFrame, 0, 0x58);
-                    createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel1, 0, 0x59);
-                    createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel2, 0, 0x5A);
-                    finalCallback = (void (*)(EffectTask *))initCharacterSelectCourseExitPreviewPanel;
-                    createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel3, 0, 0x5B);
-                    createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel4, 0, 0x5C);
-                    createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel5, 0, 0x5D);
+                    D_8010ADE4 = createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCoursePreviewFrame, 0, 0x58);
+                    createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCoursePreviewPanel1, 0, 0x59);
+                    createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCoursePreviewPanel2, 0, 0x5A);
+                    finalCallback = (void (*)(CallbackTask *))initCharacterSelectCourseExitPreviewPanel;
+                    createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCoursePreviewPanel3, 0, 0x5B);
+                    createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCoursePreviewPanel4, 0, 0x5C);
+                    createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCoursePreviewPanel5, 0, 0x5D);
                     if (gHighestUnlockedCourse != 0) {
-                        createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel6, 0, 0x5E);
+                        createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCoursePreviewPanel6, 0, 0x5E);
                         if (gHighestUnlockedCourse >= 2) {
-                            createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel7, 0, 0x5F);
+                            createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCoursePreviewPanel7, 0, 0x5F);
                             if (gHighestUnlockedCourse >= 3) {
-                                createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel8, 0, 0x60);
+                                createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCoursePreviewPanel8, 0, 0x60);
                             }
                         }
                     }
-                    createEffectTask(finalCallback, 0, 0x61);
+                    createCallbackTask(finalCallback, 0, 0x61);
                 }
             }
         }
@@ -273,11 +273,11 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
             arg0->y[D_80121B50] = -0x60;
             arg0->state = 4;
             if (D_800EC9C2 == 2) {
-                D_8010ADE0 = createEffectTask((void (*)(EffectTask *))initCharacterSelectCourseExitPopup, 0, 0x62);
-                createEffectTask((void (*)(EffectTask *))initCharacterSelectCourseRecordsPopup, 0, 0x63);
+                D_8010ADE0 = createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCourseExitPopup, 0, 0x62);
+                createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCourseRecordsPopup, 0, 0x63);
             } else {
-                createEffectTask((void (*)(EffectTask *))initCharacterSelectCoursePlayerStatsPanel, 0, 0x61);
-                createEffectTask((void (*)(EffectTask *))initCharacterSelectCourseSubmenuFrame, 0, 0x62);
+                createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCoursePlayerStatsPanel, 0, 0x61);
+                createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCourseSubmenuFrame, 0, 0x62);
             }
         }
         break;
@@ -334,7 +334,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
     }
 
     if ((arg0->state == 7) && (arg0->x[0] < -0x103)) {
-        func_800716E4((EffectTask *)arg0);
+        removeCallbackTask((CallbackTask *)arg0);
         return;
     }
 
@@ -396,7 +396,7 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
     arg0->timer = 0;
     arg0->itemCount = 1;
     arg0->state = 0;
-    func_80071824(arg0, updateCharacterSelectUnlockedCourseList);
+    setCallbackTaskCallback(arg0, updateCharacterSelectUnlockedCourseList);
 }
 #endif
 
@@ -508,13 +508,13 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
                 nextItemCount = arg0->itemCount + 1;
                 arg0->itemCount = nextItemCount;
                 if (visibleCount == nextItemCount) {
-                    D_8010ADE4 = createEffectTask(initCharacterSelectCoursePreviewFrame, 0, 0x59);
+                    D_8010ADE4 = createCallbackTask(initCharacterSelectCoursePreviewFrame, 0, 0x59);
                     if (D_80121B5E < 2) {
-                        createEffectTask(initCharacterSelectCoursePreviewPanel1, 0, 0x5A);
-                        createEffectTask(initCharacterSelectCoursePreviewPanel2, 0, 0x5B);
+                        createCallbackTask(initCharacterSelectCoursePreviewPanel1, 0, 0x5A);
+                        createCallbackTask(initCharacterSelectCoursePreviewPanel2, 0, 0x5B);
                     }
-                    createEffectTask(initCharacterSelectCourseExitPreviewPanel, 0, 0x5C);
-                    createEffectTask(initCharacterSelectCourseRecordsFrame, 0, 0x62);
+                    createCallbackTask(initCharacterSelectCourseExitPreviewPanel, 0, 0x5C);
+                    createCallbackTask(initCharacterSelectCourseRecordsFrame, 0, 0x62);
                 }
             }
         }
@@ -558,8 +558,8 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         if (arg0->y[D_80121B50] < -0x57) {
             arg0->y[D_80121B50] = -0x58;
             arg0->state = 4;
-            createEffectTask(initCharacterSelectCourseRecordsPopup, 0, 0x62);
-            D_8010ADE0 = createEffectTask(initCharacterSelectCourseExitPopup, 0, 0x63);
+            createCallbackTask(initCharacterSelectCourseRecordsPopup, 0, 0x62);
+            D_8010ADE0 = createCallbackTask(initCharacterSelectCourseExitPopup, 0, 0x63);
         }
         break;
 
@@ -658,7 +658,7 @@ state_6_done:
     }
 
     if (arg0->state == 9) {
-        func_800716E4((EffectTask *)arg0);
+        removeCallbackTask((CallbackTask *)arg0);
     } else {
         func_800483FC(&D_80124868, drawCharacterSelectLimitedCourseListOptions, arg0);
     }
@@ -711,7 +711,7 @@ void initCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *a
     arg0->timer = 0;
     arg0->itemCount = temp_t3;
     arg0->state = 0;
-    func_80071824(arg0, updateCharacterSelectLimitedCourseList);
+    setCallbackTaskCallback(arg0, updateCharacterSelectLimitedCourseList);
 }
 #endif
 
@@ -805,9 +805,9 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->transition.bytes.state = 3;
-            D_8010ADDC = (s32)createEffectTask(initCharacterSelectCourseListCursor, 0, 0x64);
-            createEffectTask(initCharacterSelectCourseTitleCursor, 0, 0x62);
-            createEffectTask(initCharacterSelectCourseStatsBadge, 0, 0x62);
+            D_8010ADDC = (s32)createCallbackTask(initCharacterSelectCourseListCursor, 0, 0x64);
+            createCallbackTask(initCharacterSelectCourseTitleCursor, 0, 0x62);
+            createCallbackTask(initCharacterSelectCourseStatsBadge, 0, 0x62);
         }
         state = arg0->transition.bytes.state;
         break;
@@ -867,7 +867,7 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
 
     D_8010AE8A = state;
     if (arg0->transition.bytes.state == 7) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewFrame, arg0);
@@ -880,7 +880,7 @@ void initCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
     arg0->sprite.index = 0;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCoursePreviewFrame);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewFrame);
 }
 
 void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *arg0) {
@@ -983,7 +983,7 @@ void updateCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel1, arg0);
@@ -995,7 +995,7 @@ void initCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x1;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel1);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel1);
 }
 
 void drawCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *arg0) {
@@ -1092,7 +1092,7 @@ void updateCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel2, arg0);
@@ -1104,7 +1104,7 @@ void initCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x2;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel2);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel2);
 }
 
 void drawCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *arg0) {
@@ -1190,7 +1190,7 @@ void updateCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel3, arg0);
@@ -1202,7 +1202,7 @@ void initCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x3;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel3);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel3);
 }
 
 void drawCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *arg0) {
@@ -1302,7 +1302,7 @@ void updateCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel4, arg0);
@@ -1314,7 +1314,7 @@ void initCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x4;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel4);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel4);
 }
 
 void drawCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *arg0) {
@@ -1411,7 +1411,7 @@ void updateCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel5, arg0);
@@ -1423,7 +1423,7 @@ void initCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x5;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel5);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel5);
 }
 
 void drawCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *arg0) {
@@ -1523,7 +1523,7 @@ void updateCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel6, arg0);
@@ -1535,7 +1535,7 @@ void initCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x6;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel6);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel6);
 }
 
 void drawCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *arg0) {
@@ -1632,7 +1632,7 @@ void updateCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel7, arg0);
@@ -1644,7 +1644,7 @@ void initCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x7;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel7);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel7);
 }
 
 void drawCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *arg0) {
@@ -1742,7 +1742,7 @@ void updateCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel8, arg0);
@@ -1754,7 +1754,7 @@ void initCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x8;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel8);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel8);
 }
 
 void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *arg0) {
@@ -1851,7 +1851,7 @@ void updateCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel9, arg0);
@@ -1863,7 +1863,7 @@ void initCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x9;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel9);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel9);
 }
 
 void drawCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor *arg0) {
@@ -1972,7 +1972,7 @@ void updateCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActo
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCourseExitPreviewPanel, arg0);
@@ -1984,7 +1984,7 @@ void initCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor 
     arg0->sprite.index = 0;
     arg0->row.bytes.subTimer = 0;
     arg0->row.bytes.subState = 0;
-    func_80071824(arg0, updateCharacterSelectCourseExitPreviewPanel);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCourseExitPreviewPanel);
 }
 
 void drawCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0) {
@@ -2044,7 +2044,7 @@ void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg
 
     gCharacterSelectCourseCursorStateByte = state;
     if (D_80121D88 == 7) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCourseListCursor, arg0);
@@ -2082,7 +2082,7 @@ void initCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0)
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
     arg0->transition.bytes.timer = 0;
-    func_80071824(arg0, updateCharacterSelectCourseListCursor);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCourseListCursor);
 }
 
 void drawCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0) {
@@ -2128,7 +2128,7 @@ void updateCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *ar
         break;
     }
     if ((unsigned int)state == 4) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCourseTitleCursor, arg0);
@@ -2139,7 +2139,7 @@ void initCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0
     arg0->y = -0x5C;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCourseTitleCursor);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCourseTitleCursor);
 }
 
 const char gCharacterSelectCourseStatsScoreFormat[] = "%4d";
@@ -2225,7 +2225,7 @@ void updateCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg
         break;
     }
     if ((unsigned int)state == 4) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCourseStatsBadge, arg0);
@@ -2236,7 +2236,7 @@ void initCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
     arg0->y = 0x34;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCourseStatsBadge);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCourseStatsBadge);
 }
 
 const char gCharacterSelectCourseBestScoreFormat[] = "%5d";
@@ -2287,7 +2287,7 @@ void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActo
         break;
     }
     if ((unsigned int)state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         if (D_80121D80[8] == 3) {
             D_80121D80[8] = 4;
         }
@@ -2300,7 +2300,7 @@ void initCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor 
     arg0->x = -0x108;
     arg0->y = -0x50;
     arg0->sprite.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCoursePlayerStatsPanel);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePlayerStatsPanel);
 }
 
 void drawCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *arg0) {
@@ -2320,7 +2320,7 @@ void updateCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *a
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->sprite.bytes.state = 1;
-            D_8010ADE0 = createEffectTask(initCharacterSelectCourseNamePopup, 0, 0x63);
+            D_8010ADE0 = createCallbackTask(initCharacterSelectCourseNamePopup, 0, 0x63);
         }
         state = arg0->sprite.bytes.state;
         break;
@@ -2342,7 +2342,7 @@ void updateCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *a
     }
     state = arg0->sprite.bytes.state;
     if (state == 4) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCourseSubmenuFrame, arg0);
@@ -2352,7 +2352,7 @@ void initCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *arg
     arg0->x = -0x108;
     arg0->y = -0x18;
     arg0->sprite.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCourseSubmenuFrame);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCourseSubmenuFrame);
 }
 
 void drawCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *arg0) {
@@ -2371,7 +2371,7 @@ void updateCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *a
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->sprite.bytes.state = 1;
-            createEffectTask(initCharacterSelectCourseDescriptionPopup, 0, 0x63);
+            createCallbackTask(initCharacterSelectCourseDescriptionPopup, 0, 0x63);
         }
         state = arg0->sprite.bytes.state;
         break;
@@ -2417,7 +2417,7 @@ void updateCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *a
         break;
     }
     if (state == 7) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCourseRecordsFrame, arg0);
@@ -2427,7 +2427,7 @@ void initCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *arg
     arg0->x = -0x128;
     arg0->y = 0x8;
     arg0->sprite.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCourseRecordsFrame);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCourseRecordsFrame);
 }
 
 void drawCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) {
@@ -2510,7 +2510,7 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
     D_8010AE8F = arg0->transition.bytes.timer;
 
     if (arg0->transition.bytes.state == 6) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         D_8010ADE0 = NULL;
         gCharacterSelectCourseCursorState.bytes[1] = 0;
         gCharacterSelectCourseCursorState.bytes[7] = 0;
@@ -2524,7 +2524,7 @@ void initCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) 
     arg0->y = -0x14;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCourseNamePopup);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCourseNamePopup);
 }
 
 void drawCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActor *arg0) {
@@ -2613,7 +2613,7 @@ void updateCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActo
         break;
     }
     if (state == 8) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCharacterSelectCourseDescriptionPopup, arg0);
@@ -2624,7 +2624,7 @@ void initCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActor 
     arg0->y = 0xC;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCourseDescriptionPopup);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCourseDescriptionPopup);
 }
 
 void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *arg0) {
@@ -2661,7 +2661,7 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
         }
     }
     if ((state >= 5) && (((s16)arg0->transition.alpha) == 0)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     }
 }
 
@@ -2707,7 +2707,7 @@ void initCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
     arg0->x = -0x74;
     arg0->y = 0x2F;
     arg0->sprite.index = 0x2F;
-    func_80071824(arg0, updateCharacterSelectCourseConfirmCursor);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCourseConfirmCursor);
 }
 
 // drawCharacterSelectCourseRecordsPopup best match: 90.478% (nonmatchings/drawCharacterSelectCourseRecordsPopup-2225551288923588688/base_6.c)
@@ -2895,7 +2895,7 @@ void updateCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *a
     }
     state = arg0->sprite.bytes.state;
     if (state == 4) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         D_80121D88 = 4;
         return;
     }
@@ -2906,7 +2906,7 @@ void initCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
     arg0->x = -0xF0;
     arg0->y = -0x40;
     arg0->sprite.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCourseRecordsPopup);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCourseRecordsPopup);
 }
 
 void drawCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) {
@@ -2982,7 +2982,7 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
     D_8010AE8F = arg0->transition.bytes.timer;
 
     if (arg0->transition.bytes.state == 6) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         D_8010ADE0 = NULL;
         gCharacterSelectCourseCursorState.bytes[1] = 0;
         gCharacterSelectCourseCursorState.bytes[7] = 0;
@@ -2995,7 +2995,7 @@ void initCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) 
     arg0->x = -0x108;
     arg0->y = 0x28;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCourseExitPopup);
+    setCallbackTaskCallback(arg0, updateCharacterSelectCourseExitPopup);
 }
 
 // drawCharacterSelectCourseRecordTime best match: 93.301% (nonmatchings/drawCharacterSelectCourseRecordTime-6061209858023118177/base_10.c)

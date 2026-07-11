@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "menu_rendering.h"
 #include "course_select_ui.h"
 #include "shop_menu_ui.h"
@@ -113,8 +113,8 @@ extern s8 D_800EC9C0;
 extern u8 D_800EC9C2;
 extern u8 D_800EC9E6;
 extern s32 D_8010ADDC;
-extern EffectTask *D_8010ADE0;
-extern EffectTask *D_8010ADE4;
+extern CallbackTask *D_8010ADE0;
+extern CallbackTask *D_8010ADE4;
 extern s32 D_8010ADE8;
 extern s8 D_8010AE64[];
 extern u8 D_8010AECC[];
@@ -366,7 +366,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
     }
 
     if ((D_80121D80[0].pad6[2] == 4) || (actor->state[0] == 9)) {
-        func_800716E4(actor);
+        removeCallbackTask(actor);
         finishCourseSelectUiTask(1);
         D_8010ADE0 = 0;
     } else {
@@ -424,7 +424,7 @@ void initCourseSelectPreviewModelIn(void *arg0) {
     *(s32 *) ((u8 *) actor + 0x34) = 0;
     *(s32 *) ((u8 *) actor + 0x38) = 0;
     func_8009853C((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
-    func_80071824(actor, updateCourseSelectPreviewModelIn);
+    setCallbackTaskCallback(actor, updateCourseSelectPreviewModelIn);
 }
 
 // drawCourseSelectPreviewModelClose best match: 94.265% (nonmatchings/drawCourseSelectPreviewModelClose-7273315160691878794/base_4.c)
@@ -650,7 +650,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
     }
 
     if (((u8 *)&D_80121D80[0])[8] == 4 || actor->state[0] == 9) {
-        func_800716E4(actor);
+        removeCallbackTask(actor);
         finishCourseSelectUiTask(2);
         D_8010ADE4 = 0;
     } else {
@@ -706,7 +706,7 @@ void initCourseSelectPreviewModelOut(void *arg0) {
     *(s32 *) ((u8 *) actor + 0x34) = 0;
     *(s32 *) ((u8 *) actor + 0x38) = 0;
     func_8009853C((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
-    func_80071824(actor, updateCourseSelectPreviewModelOut);
+    setCallbackTaskCallback(actor, updateCourseSelectPreviewModelOut);
 }
 
 // drawCourseSelectCourseIconList best match: 94.322% (nonmatchings/drawCourseSelectCourseIconList-6113366811127043669/base_9.c)
@@ -883,7 +883,7 @@ void initCourseSelectCourseIconList(u8 *arg0) {
             bytePtr[0x8F] = 0;
         } while (i < (s32) D_80121B55);
     }
-    func_80071824(arg0, updateCourseSelectCourseIconList);
+    setCallbackTaskCallback(arg0, updateCourseSelectCourseIconList);
 }
 #endif
 
@@ -996,7 +996,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     }
 
     if (actor->unk30 == 4) {
-        func_800716E4(actor);
+        removeCallbackTask(actor);
     } else {
         func_800483FC(&D_80124868, drawCourseSelectCourseCursors, actor);
     }
@@ -1053,7 +1053,7 @@ void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
         } while (i < (s32)D_80121B55);
     }
 
-    func_80071824(actor, updateCourseSelectCourseCursors);
+    setCallbackTaskCallback(actor, updateCourseSelectCourseCursors);
 }
 #endif
 
@@ -1084,12 +1084,12 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->pad18[4] = 1;
-            D_8010ADDC = createEffectTask(initCourseSelectCourseCursors, 0, 0x64);
-            createEffectTask(initCourseSelectExtraCourseBadge, 0, 0x63);
-            createEffectTask(initCourseSelectCourseDescription, 0, 0x61);
-            createEffectTask(initCourseSelectCourseStats, 0, 0x64);
+            D_8010ADDC = createCallbackTask(initCourseSelectCourseCursors, 0, 0x64);
+            createCallbackTask(initCourseSelectExtraCourseBadge, 0, 0x63);
+            createCallbackTask(initCourseSelectCourseDescription, 0, 0x61);
+            createCallbackTask(initCourseSelectCourseStats, 0, 0x64);
             if ((D_800EC9C2 == 3) && (D_800EC9E6 == 0)) {
-                createEffectTask(func_8002E568, 0, 0x63);
+                createCallbackTask(func_8002E568, 0, 0x63);
             }
         }
         break;
@@ -1132,7 +1132,7 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     }
 
     if (arg0->pad18[4] == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         finishCourseSelectUiTask(4);
         return;
     }
@@ -1143,7 +1143,7 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
 void initCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
-    func_80071824(arg0, updateCourseSelectCourseListBackdrop);
+    setCallbackTaskCallback(arg0, updateCourseSelectCourseListBackdrop);
 }
 
 // drawCourseSelectCourseStats best match: 98.209% (nonmatchings/drawCourseSelectCourseStats-4139837607000619032/base_8.c)
@@ -1337,7 +1337,7 @@ void updateCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     }
 
     if (state == 4) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         finishCourseSelectUiTask(5);
         return;
     }
@@ -1370,7 +1370,7 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 
     temp_a3->transitionOffset = 0;
     temp_a3->transitionState = 0;
-    func_80071824(temp_a3, updateCourseSelectCourseStats);
+    setCallbackTaskCallback(temp_a3, updateCourseSelectCourseStats);
 }
 
 // drawCourseSelectCourseDescription best match: 86.127% (nonmatchings/drawCourseSelectCourseDescription-4923837976568703863/base_8.c)
@@ -1580,8 +1580,8 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     }
 
     if (arg0->pad18_2[6] == temp_a0) {
-        func_800716E4((EffectTask *)arg0);
-        func_800291F0(6);
+        removeCallbackTask(arg0);
+        finishCourseSelectUiTask(6);
         return;
     }
     func_800483FC(&D_80124868, drawCourseSelectCourseDescription, arg0);
@@ -1594,7 +1594,7 @@ void initCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     arg0->state = 0;
     arg0->subState = 0;
     arg0->timer = 0;
-    func_80071824(arg0, updateCourseSelectCourseDescription);
+    setCallbackTaskCallback(arg0, updateCourseSelectCourseDescription);
 }
 
 void drawCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
@@ -1641,7 +1641,7 @@ void updateCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     }
     state = arg0->state;
     if ((state == 2) && (arg0->x >= 0x94)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         finishCourseSelectUiTask(7);
         return;
     }
@@ -1653,7 +1653,7 @@ void initCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     arg0->y = -0x5C;
     arg0->spriteIndex = 0;
     arg0->state = 0;
-    func_80071824(arg0, updateCourseSelectExtraCourseBadge);
+    setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseBadge);
 }
 
 // drawCourseSelectExtraCourseIconList best match: 89.545% (nonmatchings/drawCourseSelectExtraCourseIconList-1315772375853892447/base_2.c)
@@ -1748,7 +1748,7 @@ void updateCourseSelectExtraCourseIconListIn(CourseSelectWidgetActor *arg0) {
             } while (var_v1 < (s32)temp_a1->itemCount);
         }
     } else if (gCurrentInputTask->screenState == 4) {
-        func_80071824(temp_a2, updateCourseSelectExtraCourseIconList);
+        setCallbackTaskCallback(temp_a2, updateCourseSelectExtraCourseIconList);
     }
     func_800483FC(&D_80124868, drawCourseSelectExtraCourseIconList, temp_a2);
 }
@@ -1778,12 +1778,12 @@ void updateCourseSelectExtraCourseIconListOut(CourseSelectWidgetActor *arg0) {
     } else {
         var_v0_3 = gCurrentInputTask->screenState;
         if (var_v0_3 == 3) {
-            func_80071824(arg0, updateCourseSelectExtraCourseIconListIn);
+            setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseIconListIn);
             var_v0_3 = gCurrentInputTask->screenState;
         }
     }
     if (var_v0_3 == 9) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawCourseSelectExtraCourseIconList, arg0);
@@ -1809,12 +1809,12 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
     }
 
     if ((D_80121B55 == 1) && (temp_a2->itemCount == 0)) {
-        func_800716E4(temp_a2);
+        removeCallbackTask(temp_a2);
         return;
     }
 
     if (temp_a2->x < -0xDF) {
-        func_800716E4(temp_a2);
+        removeCallbackTask(temp_a2);
         finishCourseSelectUiTask(8);
         D_8010ADE8 = 0;
         return;
@@ -1904,7 +1904,7 @@ loop:
     } else {
         *(s16 *)((u8 *)arg0 + 0x48) = 0x88;
     }
-    func_80071824(arg0, updateCourseSelectExtraCourseIconList);
+    setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseIconList);
 }
 #endif
 
@@ -2084,9 +2084,9 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
                         if (actor->x[i] == actor->targetX[i]) {
                             statePtr[0] = 1;
                             if (count == next) {
-                                D_8010ADE0 = createEffectTask((void (*)(EffectTask *))initCourseSelectPreviewModelIn, 0, 0x62);
-                                D_8010ADE4 = createEffectTask((void (*)(EffectTask *))initCourseSelectPreviewModelOut, 0, 0x62);
-                                createEffectTask(initCourseSelectCourseIconList, 0, 0x62);
+                                D_8010ADE0 = createCallbackTask((void (*)(CallbackTask *))initCourseSelectPreviewModelIn, 0, 0x62);
+                                D_8010ADE4 = createCallbackTask((void (*)(CallbackTask *))initCourseSelectPreviewModelOut, 0, 0x62);
+                                createCallbackTask(initCourseSelectCourseIconList, 0, 0x62);
                             }
                             break;
                         }
@@ -2195,7 +2195,7 @@ void initCourseSelectPlayerPanels(CourseSelectWidgetInitActor *arg0) {
     arg0->unk5D = 0;
     arg0->unk52 = 0;
     arg0->unk5A = 0;
-    func_80071824(arg0, updateCourseSelectPlayerPanels);
+    setCallbackTaskCallback(arg0, updateCourseSelectPlayerPanels);
 }
 #endif
 
@@ -2266,7 +2266,7 @@ void initCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
             var_v1 = (CourseSelectWidgetActor *)((u8 *)var_v1 + sizeof(s16));
         } while (var_v0 < (s32)D_80121B55);
     }
-    func_80071824(arg0, updateCourseSelectCompletePanels);
+    setCallbackTaskCallback(arg0, updateCourseSelectCompletePanels);
 }
 
 void finishCourseSelectUiTask(s32 arg0) {

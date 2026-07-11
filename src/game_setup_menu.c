@@ -1,6 +1,6 @@
 #include "common.h"
 #include "asset_manager.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "game_audio.h"
 #include "game_setup_menu.h"
 #include "input_task_scheduler.h"
@@ -37,7 +37,7 @@ extern s8 D_800EC8B7;
 extern u8 D_800EC9C1;
 extern s8 D_800EC9E5;
 extern s8 D_800EC9E6;
-extern EffectTask *D_8010ADDC;
+extern CallbackTask *D_8010ADDC;
 extern u16 D_8010ADF0;
 extern s8 gHighestUnlockedCourse;
 extern GameSetupMenuSubState D_8010AE00;
@@ -97,8 +97,8 @@ void func_80003140(void) {
     loadCompressedRomAsset(&D_598A70, &D_59AAA0, 0x23);
     loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
 
-    func_80070EC0(0);
-    D_8010ADDC = createEffectTask(func_80014C7C, 0, 0x64);
+    initCallbackTaskScheduler(0);
+    D_8010ADDC = createCallbackTask(func_80014C7C, 0, 0x64);
 
     D_8010AE00.state = 0;
     D_8010AE00.unk1 = 0;
@@ -203,7 +203,7 @@ block_25:
         gCurrentInputTask->fade = 0;
         D_800EC9C1 = 0;
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -295,7 +295,7 @@ void func_800035F8(void) {
     D_8010AE46 = D_800B31C6;
 
     setCurrentInputTaskCallback(func_80003798, 0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -345,7 +345,7 @@ extern void func_80000C48();
 extern void func_80000DB4();
 extern void func_80001010();
 extern void func_80001538();
-extern void initControllerPakRumbleCheckPrompt(EffectTask *);
+extern void initControllerPakRumbleCheckPrompt(CallbackTask *);
 
 extern u8 D_800B3199[];
 extern s16 D_800EC9C8[];
@@ -355,9 +355,9 @@ extern u8 D_800EC9E0[];
 extern u8 D_800EC9E4;
 extern GameSetupSavePlayer03798 D_800EC9F0[];
 extern ControllerPakRumbleCheckPromptTransition03798 gControllerPakRumbleCheckPromptTransition;
-extern EffectTask *D_8010ADE0;
-extern EffectTask *D_8010ADE4;
-extern EffectTask *D_8010ADE8;
+extern CallbackTask *D_8010ADE0;
+extern CallbackTask *D_8010ADE4;
+extern CallbackTask *D_8010ADE8;
 extern GameSetupPlayerState03798 D_80121D80[];
 
 #define D_8010AE00_03798 (*(GameSetupSubState03798 *)&D_8010AE00)
@@ -367,8 +367,8 @@ extern GameSetupPlayerState03798 D_80121D80[];
 void func_80003798(void) {
     s32 allReady = 0;
     s16 allPresent = 0;
-    EffectTask *task = D_8010ADE0;
-    EffectTask *transitionTask = D_8010ADE8;
+    CallbackTask *task = D_8010ADE0;
+    CallbackTask *transitionTask = D_8010ADE8;
     s32 i;
     u8 *present;
 
@@ -620,10 +620,10 @@ void func_80003798(void) {
                 u8 *end;
 
                 D_800EC9E4 = 0;
-                D_8010ADE8 = createEffectTask((void (*)(EffectTask *))func_80016B54, 0, 0x63);
-                createEffectTask((void (*)(EffectTask *))func_800165F0, 0, 0x63);
-                D_8010ADE0 = createEffectTask((void (*)(EffectTask *))func_8001621C, 0, 0x63);
-                D_8010ADE4 = createEffectTask((void (*)(EffectTask *))func_80017014, 0, 0x63);
+                D_8010ADE8 = createCallbackTask((void (*)(CallbackTask *))func_80016B54, 0, 0x63);
+                createCallbackTask((void (*)(CallbackTask *))func_800165F0, 0, 0x63);
+                D_8010ADE0 = createCallbackTask((void (*)(CallbackTask *))func_8001621C, 0, 0x63);
+                D_8010ADE4 = createCallbackTask((void (*)(CallbackTask *))func_80017014, 0, 0x63);
                 if (D_80121B55 > 0) {
                     ptr = D_800EC9E0;
                     end = &D_800EC9E0[D_80121B55];
@@ -644,7 +644,7 @@ void func_80003798(void) {
             GameSetupSavePlayer03798 *end;
 
             setCurrentInputTaskCallback(func_80004164, 0);
-            createEffectTask(initControllerPakRumbleCheckPrompt, 0, 0x64);
+            createCallbackTask(initControllerPakRumbleCheckPrompt, 0, 0x64);
             gControllerPakRumbleCheckPromptTransition.state = 6;
             gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
             gControllerPakRumbleCheckPromptTransition.targetScale = 2;
@@ -666,7 +666,7 @@ void func_80003798(void) {
         }
     }
 
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 #undef D_8010AE00_03798
@@ -820,7 +820,7 @@ void func_80004164(void) {
     if (state == 5) {
         setCurrentInputTaskCallback(initCharacterSelectMenu, 0);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 

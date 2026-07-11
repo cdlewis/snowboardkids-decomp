@@ -1,6 +1,6 @@
 #include "common.h"
 #include "game_audio.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "memory_allocator.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
@@ -259,7 +259,7 @@ extern void enqueueSoundEffect(s32, s32);
 
 void func_80072C30(void) {
     loadCompressedRomAsset(D_2427D0, D_243270, 6);
-    func_80070EC0(0);
+    initCallbackTaskScheduler(0);
     gCurrentInputTask->fadeTimer = 0xA;
     setCurrentInputTaskCallback(&func_80072C88, 0);
 }
@@ -637,8 +637,8 @@ void func_80074160(void) {
         if (gMenuFadeAlpha >= 0x100) {
             func_8006D520(0, 1);
             gMenuFadeAlpha = 0xFF;
-            createEffectTask(func_80069BC0, 6, 0x64);
-            createEffectTask((void (*)(EffectTask *))func_80065E90, 6, 0x64);
+            createCallbackTask(func_80069BC0, 6, 0x64);
+            createCallbackTask((void (*)(CallbackTask *))func_80065E90, 6, 0x64);
             switch (D_80121B55 & 0xFFFFFFFF) {
             case 1:
                 if (D_80121B50.s != 6) {
@@ -1168,9 +1168,9 @@ void func_80076054(void) {
     if (D_80121B60 != 0) {
         func_800720E4(6);
         if ((D_80121B55 == 1) && (D_800EC9C2 == 0)) {
-            func_80071664((void (*)(EffectTask *))func_8005E68C, 6, 0x64, 0xA9);
+            createCallbackTaskWithUserId((void (*)(CallbackTask *))func_8005E68C, 6, 0x64, 0xA9);
         }
-        func_80071664(func_8005393C, 5, 0x64, D_80121B60 - 1);
+        createCallbackTaskWithUserId(func_8005393C, 5, 0x64, D_80121B60 - 1);
     }
     func_80077C94();
 }
@@ -1453,7 +1453,7 @@ void func_80077324(void) {
         D_801235B4 |= 0x20;
     }
     if (D_80121B60 != 0) {
-        func_80071664(&func_8005393C, 5, 0x64, D_80121B60 - 1);
+        createCallbackTaskWithUserId(&func_8005393C, 5, 0x64, D_80121B60 - 1);
     }
     func_80077C94();
     if (D_801235B4 & 0x10) {
@@ -1469,7 +1469,7 @@ void func_80077324(void) {
 void func_80077400(void) {
     gFramebufferSwapDelay = 0;
     if (D_80121B60 != 0) {
-        func_80071664(func_8005393C, 5, 0x64, D_80121B60 - 1);
+        createCallbackTaskWithUserId(func_8005393C, 5, 0x64, D_80121B60 - 1);
     }
     func_80077C94();
     gRaceRumbleEnabled = 0;
@@ -1556,7 +1556,7 @@ void func_80077554(void) {
     gRacePlayerCount = 1;
     *(u16 *)&D_80121B52 = 1;
     D_80121B5C = 0x64;
-    func_80070EC0(2);
+    initCallbackTaskScheduler(2);
     D_80121D95 = 0;
     D_80121D96 = 0;
     D_80121D94 = 0;
@@ -1590,9 +1590,9 @@ void func_80077554(void) {
     func_800720E4(0);
     gCurrentInputTask->fadeTimer = 0;
     gCurrentInputTask->unk1C = 0;
-    createEffectTask((void (*)(EffectTask *))func_80057E60, 6, 0x64);
+    createCallbackTask((void (*)(CallbackTask *))func_80057E60, 6, 0x64);
     if (D_80121B61 == -1) {
-        createEffectTask((void (*)(EffectTask *))func_80052520, 6, 0x64);
+        createCallbackTask((void (*)(CallbackTask *))func_80052520, 6, 0x64);
     }
     setCurrentInputTaskCallback(func_8007797C, 0);
 }
@@ -1673,26 +1673,26 @@ void func_80077B34(void) {
 
 void func_80077C4C(void) {
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
     func_8007AA50();
 }
 
 void func_80077C94(void) {
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
 }
 
 void func_80077CD4(void) {
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
 }
 
@@ -1773,10 +1773,10 @@ void func_80077DA0(void) {
         break;
     }
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
-    func_80070EC0(0);
+    initCallbackTaskScheduler(0);
     D_801235B4 = 0;
-    func_80071664(func_80053634, 0, 0x64, 0);
-    createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
+    createCallbackTaskWithUserId(func_80053634, 0, 0x64, 0);
+    createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
     setCurrentInputTaskCallback(func_80078078, 0);
     func_800720E4(7);
 }
@@ -1805,7 +1805,7 @@ void func_80078078(void) {
             setCurrentInputTaskCallback(func_80078198, 0);
         }
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_80078198(void) {
@@ -1815,7 +1815,7 @@ void func_80078198(void) {
         gFramebufferSwapHold = 1;
         setCurrentInputTaskCallback(&func_800781FC, 0);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_800781FC(void) {

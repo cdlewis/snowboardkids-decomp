@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "main_menu_message_ui.h"
 #include "menu_rendering.h"
 
@@ -192,7 +192,7 @@ void func_8000DDA4(MainMenuMessageActor *arg0) {
         D_8010B1F0 = (u16)arg0->state.selectedChoice + 1;
         arg0->highlightScale = 0x100;
         arg0->highlightTimer = 0;
-        func_80071824(arg0, func_8000DD74);
+        setCallbackTaskCallback(arg0, func_8000DD74);
     }
     func_800483FC(&D_80124868, (RenderCallback)func_8000D7F0, (s32)arg0);
 }
@@ -211,7 +211,7 @@ void func_8000DF28(MainMenuMessageActor *arg0) {
     }
     arg0->highlightScale = 0x100;
     arg0->highlightTimer = 0;
-    func_80071824(arg0, func_8000DDA4);
+    setCallbackTaskCallback(arg0, func_8000DDA4);
 }
 
 // func_8000DF9C best match: 95.343%
@@ -338,7 +338,7 @@ void func_8000DF9C(MainMenuMessageActor *arg0) {
 void func_8000E548(MainMenuMessageActor *arg0) {
     arg0->y += 0x10;
     if (arg0->y >= 0x79) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     } else {
         func_800483FC(&D_80124868, (RenderCallback)func_8000DF9C, (s32)arg0);
     }
@@ -395,9 +395,9 @@ void func_8000E5A0(MainMenuMessageActor *arg0) {
             arg0->confirmBlinkTimer = 0;
             D_8010B1F0 = 1;
             if (arg0->returnToSummary == 0) {
-                func_80071824(arg0, func_8000E548);
+                setCallbackTaskCallback(arg0, func_8000E548);
             } else {
-                func_80071824(arg0, func_8000E844);
+                setCallbackTaskCallback(arg0, func_8000E844);
             }
         }
         break;
@@ -437,7 +437,7 @@ void func_8000E7CC(MainMenuMessageActor *arg0) {
     arg0->glyphPalette = 0;
     arg0->layout.script = D_800B3500[D_80121B5A - 1];
     arg0->returnToSummary = 0;
-    func_80071824(arg0, func_8000E5A0);
+    setCallbackTaskCallback(arg0, func_8000E5A0);
 }
 
 void func_8000E844(s32 arg0) {
@@ -452,7 +452,7 @@ void func_8000E874(MainMenuMessageActor *arg0) {
     arg0->glyphPalette = 7;
     arg0->layout.script = D_800B4FB8;
     arg0->returnToSummary = 1;
-    func_80071824(arg0, func_8000E5A0);
+    setCallbackTaskCallback(arg0, func_8000E5A0);
 }
 
 void func_8000E8CC(MainMenuMessageActor *arg0) {
@@ -464,7 +464,7 @@ void func_8000E8CC(MainMenuMessageActor *arg0) {
 void func_8000E99C(MainMenuMessageActor *arg0) {
     arg0->y -= 0xA;
     if (arg0->y < -0xC7) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     } else {
         func_800483FC(&D_80124868, (RenderCallback)func_8000E8CC, (s32)arg0);
     }
@@ -472,7 +472,7 @@ void func_8000E99C(MainMenuMessageActor *arg0) {
 
 void func_8000E9F4(MainMenuMessageActor *arg0) {
     if (D_8010B1F0 == 1) {
-        func_80071824(arg0, func_8000E99C);
+        setCallbackTaskCallback(arg0, func_8000E99C);
     }
     func_800483FC(&D_80124868, (RenderCallback)func_8000E8CC, (s32)arg0);
 }
@@ -481,5 +481,5 @@ void func_8000EA44(MainMenuMessageActor *arg0) {
     arg0->x = -0x48;
     arg0->y = -0x48;
     arg0->layout.panelHeight = 0x78;
-    func_80071824(arg0, func_8000E9F4);
+    setCallbackTaskCallback(arg0, func_8000E9F4);
 }

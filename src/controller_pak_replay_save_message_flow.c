@@ -1,5 +1,5 @@
 #include "common.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
 #include "controller_pak_replay_save_message_flow.h"
@@ -28,10 +28,10 @@ void initControllerPakReplaySaveMessageFlow(void) {
     gMenuFadeAlpha = gCurrentInputTask->fade;
     loadCompressedRomAsset(gControllerPakReplaySaveMessageFirstPageStart,
                            gMainMenuSceneModelAssetStart, 0x26);
-    func_80070EC0(0);
-    createEffectTask(initControllerPakMessageIcon, 0, 0x5E);
+    initCallbackTaskScheduler(0);
+    createCallbackTask(initControllerPakMessageIcon, 0, 0x5E);
     setCurrentInputTaskCallback(updateControllerPakReplaySaveMessageFirstPageFadeIn, 0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void updateControllerPakReplaySaveMessageFirstPageFadeIn(void) {
@@ -44,7 +44,7 @@ void updateControllerPakReplaySaveMessageFirstPageFadeIn(void) {
         gCurrentInputTask->timer = 0;
         setCurrentInputTaskCallback(updateControllerPakReplaySaveMessageFirstPageFadeOut, 0);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void updateControllerPakReplaySaveMessageFirstPageFadeOut(void) {
@@ -58,7 +58,7 @@ void updateControllerPakReplaySaveMessageFirstPageFadeOut(void) {
     } else {
         setCurrentInputTaskCallback(waitForControllerPakReplaySaveMessageSecondPage, 0);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void waitForControllerPakReplaySaveMessageSecondPage(void) {
@@ -69,7 +69,7 @@ void waitForControllerPakReplaySaveMessageSecondPage(void) {
         gCurrentInputTask->timer = 0;
         setCurrentInputTaskCallback(updateControllerPakReplaySaveMessageSecondPageFadeIn, 0);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void updateControllerPakReplaySaveMessageSecondPageFadeIn(void) {
@@ -81,7 +81,7 @@ void updateControllerPakReplaySaveMessageSecondPageFadeIn(void) {
     if (gCurrentInputTask->timer >= 0x50) {
         setCurrentInputTaskCallback(fadeOutControllerPakReplaySaveMessageFlow, 0);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void fadeOutControllerPakReplaySaveMessageFlow(void) {
@@ -90,7 +90,7 @@ void fadeOutControllerPakReplaySaveMessageFlow(void) {
         if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            updateEffectTasks();
+            updateCallbackTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

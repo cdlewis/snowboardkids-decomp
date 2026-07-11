@@ -1,6 +1,6 @@
 #include "common.h"
 #include "asset_manager.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "race_rumble.h"
 #include "game_audio.h"
 #include "model_animation.h"
@@ -94,9 +94,9 @@ extern s32 enqueueSoundEffect(s32, s32);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
 extern void func_800483FC(void *, void (*)(void *), void *);
-extern void *func_800716A4(void *, s32, s32, s32);
+extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 extern s16 func_80097AE8(s16);
-extern void func_800545D0(EffectTask *);
+extern void func_800545D0(CallbackTask *);
 extern void (*D_800DECD0[])(RaceInputPlayer *);
 extern void (*D_800DECD8[])(RaceInputPlayer *);
 extern void (*D_800DECE8[])(RaceInputPlayer *);
@@ -280,7 +280,7 @@ void func_8008C098(RaceInputPlayer *player) {
     player->unk68 = 0xC0000;
     if ((player->unk4 == 0) && (player->soundDisabled == 0) && (D_80121B58 == 0) &&
         (player->unk27C != player->unk278)) {
-        func_800716A4(func_80057810, 0, 0x64, player->playerIndexU16);
+        createCallbackTaskWithUserIdPreservingArgs(func_80057810, 0, 0x64, player->playerIndexU16);
     }
     if (D_80121B59 == 1) {
         if (player->playerIndexU16 == 0) {
@@ -418,7 +418,7 @@ void func_8008C098(RaceInputPlayer *player) {
     func_8006D520(player->playerIndexU16, 1);
     if (D_80121B59 == 0) {
         if (D_800EC9C2 == 0) {
-            func_80071664(func_800545D0, 0, 1, player->playerIndexU16);
+            createCallbackTaskWithUserId(func_800545D0, 0, 1, player->playerIndexU16);
         }
     }
 }
@@ -1509,7 +1509,7 @@ void func_8008F568(RaceInputPlayer *player) {
     if (stateTimer < 0x3D0) {
         player->stateFlags = stateFlags | 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -1561,7 +1561,7 @@ void func_8008F6C8(RaceInputPlayer *player) {
     if (stateTimer < 0x3D0) {
         player->stateFlags = stateFlags | 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -1605,7 +1605,7 @@ void func_8008F82C(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -1648,7 +1648,7 @@ void func_8008F9CC(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -1692,7 +1692,7 @@ void func_8008FB6C(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -1736,7 +1736,7 @@ void func_8008FD2C(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -1780,7 +1780,7 @@ void func_8008FEEC(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -1824,7 +1824,7 @@ void func_800900B0(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -1885,7 +1885,7 @@ void func_80090274(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -1926,7 +1926,7 @@ void func_80090470(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -1967,7 +1967,7 @@ void func_800905BC(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2034,7 +2034,7 @@ void func_80090708(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         playerAlias->stateFlags |= 0x800 & allBitsSet;
         if ((playerAlias->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(soundFunc, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(soundFunc, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2067,7 +2067,7 @@ void func_80090898(RaceInputPlayer *player) {
     if (func_80082EC0(player) == 0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2116,7 +2116,7 @@ void func_80090998(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2173,7 +2173,7 @@ void func_80090B30(RaceInputPlayer *player) {
     if (stateTimer < 0x3D0) {
         player2->stateFlags = stateFlags | 0x800;
         if ((player2->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2233,7 +2233,7 @@ void func_80090CD0(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2296,7 +2296,7 @@ void func_80090ECC(RaceInputPlayer *player) {
     if (stateTimer < 0x3D0) {
         player->stateFlags = stateFlags | 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2348,7 +2348,7 @@ void func_8009107C(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2400,7 +2400,7 @@ void func_80091250(RaceInputPlayer *player) {
     if (stateTimer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2451,7 +2451,7 @@ void func_80091400(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2512,7 +2512,7 @@ void func_800915C0(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2578,7 +2578,7 @@ void func_800917BC(RaceInputPlayer *player) {
     if (stateTimer < 0x3D0) {
         player->stateFlags = stateFlags | 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2619,7 +2619,7 @@ void func_800919A4(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2703,7 +2703,7 @@ void func_80091AF8(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2764,7 +2764,7 @@ void func_80091D40(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2850,7 +2850,7 @@ void func_80091F3C(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         playerAlias->stateFlags |= 0x800;
         if ((playerAlias->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) playerAlias->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) playerAlias->playerIndex);
         }
     }
 }
@@ -2902,7 +2902,7 @@ void func_80092194(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2934,7 +2934,7 @@ void func_80092368(RaceInputPlayer *player) {
     if (func_80082EC0(player) == 0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -2995,7 +2995,7 @@ void func_80092468(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -3027,7 +3027,7 @@ void func_80092674(RaceInputPlayer *player) {
     if (func_80082EC0(player) == 0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -3074,7 +3074,7 @@ void func_80092774(RaceInputPlayer *player) {
 
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
         break;
     case 1:
@@ -3098,7 +3098,7 @@ void func_80092774(RaceInputPlayer *player) {
         if (player->stateTimer < 0x3D0) {
             player->stateFlags |= 0x800;
             if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-                func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+                createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
             }
         }
         break;
@@ -3147,7 +3147,7 @@ void func_800929E4(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -3191,7 +3191,7 @@ void func_80092B6C(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -3231,7 +3231,7 @@ void func_80092D04(RaceInputPlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
 }
@@ -4034,7 +4034,7 @@ void func_80094808(RaceInputPlayer *player) {
     }
 
     if (gFrameCounter & 1) {
-        func_800716A4(func_8004FA44, 5, 2, (u16) player->playerIndex);
+        createCallbackTaskWithUserIdPreservingArgs(func_8004FA44, 5, 2, (u16) player->playerIndex);
     }
 
     player->unk40.y -= 0x7000;
@@ -4129,7 +4129,7 @@ void func_80094A94(RaceInputPlayer *player) {
         player->unk60 = 0;
         func_80082DD0(player);
         player->unk40.y = 0;
-        func_800716A4(func_8005FB30, 0, 0x64, (u16) player->playerIndex);
+        createCallbackTaskWithUserIdPreservingArgs(func_8005FB30, 0, 0x64, (u16) player->playerIndex);
         timer = player->stateTimer;
         player->stateTimer = timer - ((player->stateTimer * player->rankIndex) / 8);
         player->actionEffectLevel = 4;
@@ -4260,7 +4260,7 @@ void func_80094DF8(RaceInputPlayer *player) {
         player->stateTimer = 0xF0;
         func_80081E40(player, 1);
         func_80082DD0(player);
-        func_800716A4(func_800617C8, 0, 0x3C, (u16) player->playerIndex);
+        createCallbackTaskWithUserIdPreservingArgs(func_800617C8, 0, 0x3C, (u16) player->playerIndex);
         stateTimer = player->stateTimer;
         player->stateTimer = stateTimer;
         player->stateTimer = player->stateTimer - ((stateTimer * player->rankIndex) / 8);
@@ -4335,7 +4335,7 @@ void func_80094FF4(RaceInputPlayer *player) {
         updateTimer = player->updateTimer;
         if (updateTimer == 0) {
             player->updateTimer = updateTimer + 1;
-            func_800716A4(func_80062530, 0, 3, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80062530, 0, 3, (u16) player->playerIndex);
         }
         player->facingAngle += 0x40;
         player->unk40.y -= 0x800;
@@ -4537,7 +4537,7 @@ void func_80095650(RaceInputPlayer *player) {
         player->updateState++;
         player->updateTimer = 0;
         player->stateTimer = 0x20;
-        createEffectTask(func_8006BB50, 0, 0x64);
+        createCallbackTask(func_8006BB50, 0, 0x64);
         player->stateFlags &= ~0x20;
     }
 }
@@ -4696,7 +4696,7 @@ void func_80095A88(RaceInputPlayer *player) {
 
 // func_80095BE4 best match: 84.515% (nonmatchings/func_80095BE4-7273315160691878794/base_1.c)
 #ifdef NON_MATCHING
-extern void func_80054B2C(EffectTask *);
+extern void func_80054B2C(CallbackTask *);
 
 void func_80095BE4(RaceInputPlayer *player) {
     FixedMatrix3s matrix;
@@ -4732,9 +4732,9 @@ void func_80095BE4(RaceInputPlayer *player) {
         D_801121E0[player->playerIndex].unk94 = player->posX;
         D_801121E0[player->playerIndex].unk98 = player->posY;
         D_801121E0[player->playerIndex].unk9C = player->posZ;
-        createEffectTask(func_8006C088, 0, 0x64);
+        createCallbackTask(func_8006C088, 0, 0x64);
         if (player->unk508 >= (D_80121B52 - 1)) {
-            func_800716A4(func_80054B2C, 0, 0x64, player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(func_80054B2C, 0, 0x64, player->playerIndex);
         }
     }
 
@@ -5606,7 +5606,7 @@ void func_80097910(RaceInputPlayer *player) {
             if (player->unk2C0 >= 0x2710) {
                 player->unk2C0 = 0x270F;
             }
-            func_800711D0(func_80057DD4, 0, 0x64);
+            createCallbackTaskPreservingArgs(func_80057DD4, 0, 0x64);
             enqueueSoundEffect(0x51, 0x32);
         }
         if (D_800EC9C2 == 0) {

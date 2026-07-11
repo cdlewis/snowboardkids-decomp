@@ -1,7 +1,7 @@
 #include "race_intro_transition.h"
 #include "race_intro_transition_2.h"
 #include "game_audio.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_scene_loader.h"
 #include "input_task_scheduler.h"
@@ -75,8 +75,8 @@ extern u8 gFramebufferSwapHold;
 extern s32 D_801235B4;
 extern u8 D_24C8E0;
 extern u8 D_24DBE0;
-extern void func_800710CC(s32);
-extern void func_8007115C(void);
+extern void updateCallbackTasksWithMinPriority(s32);
+extern void updateRemainingCallbackTasks(void);
 extern void func_80072114(s32);
 extern void releaseMenuAssetHandles(void);
 extern void func_800540EC(void *);
@@ -135,7 +135,7 @@ void func_8003ED00(void) {
     gRacePlayerCount = four;
     D_80121B52 = two;
     D_80121B5C = 0x64;
-    func_80070EC0(1);
+    initCallbackTaskScheduler(1);
 
     D_80121D95 = 0;
     D_80121D94 = 0;
@@ -218,7 +218,7 @@ void func_8003F00C(void) {
         temp += 0x10;
         D_8010B1E0 = temp;
         if ((temp & 0xFF) == 0xB0) {
-            createEffectTask(func_800540EC, 0, 0x64);
+            createCallbackTask(func_800540EC, 0, 0x64);
         }
     }
 
@@ -284,9 +284,9 @@ copy_player3:
     }
 
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     gRaceUpdatePaused = prevOpen;
     func_8006D700();
 

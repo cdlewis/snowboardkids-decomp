@@ -1,6 +1,6 @@
 #include "common.h"
 #include "asset_manager.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "character_select_course_menu.h"
 #include "race_character_select_menu.h"
 #include "input_task_scheduler.h"
@@ -185,8 +185,8 @@ void initRaceCharacterSelectMenu(void) {
     func_80099C44(D_14B450, (void *)func_80043040(D_80112130[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
-    func_80070EC0(0);
-    createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x63);
+    initCallbackTaskScheduler(0);
+    createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x63);
 
     D_800EC9C0 = 0;
     D_8010ADDC = 0;
@@ -325,11 +325,10 @@ typedef struct RaceCharacterSelectObject {
     /* 0x30 */ u8 pad30[0x80];
 } RaceCharacterSelectObject;
 
-extern void initCourseSelectCourseIconList(EffectTask *);
-extern void initCourseSelectExtraCourseIconList(EffectTask *);
-extern void initCourseSelectPlayerPanels(EffectTask *);
-extern void initCourseSelectCompletePanels(EffectTask *);
-extern void *createEffectTask(void (*)(EffectTask *), s32, s32);
+extern void initCourseSelectCourseIconList(CallbackTask *);
+extern void initCourseSelectExtraCourseIconList(CallbackTask *);
+extern void initCourseSelectPlayerPanels(CallbackTask *);
+extern void initCourseSelectCompletePanels(CallbackTask *);
 extern void func_80072114(s32);
 extern void func_80072138();
 extern void setCurrentInputTaskCallback(void (*)(void), s32);
@@ -373,12 +372,12 @@ void updateRaceCharacterSelectMenu(void) {
         gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 0);
         if (gCurrentInputTask->fade == 0) {
             if (D_80121B55 == 1) {
-                createEffectTask(initCourseSelectCourseIconList, 0, 0x63);
+                createCallbackTask(initCourseSelectCourseIconList, 0, 0x63);
             } else {
-                createEffectTask(initCourseSelectPlayerPanels, 0, 0x62);
-                createEffectTask(initCourseSelectCompletePanels, 0, 0x63);
+                createCallbackTask(initCourseSelectPlayerPanels, 0, 0x62);
+                createCallbackTask(initCourseSelectCompletePanels, 0, 0x63);
             }
-            D_8010ADE8 = createEffectTask(initCourseSelectExtraCourseIconList, 0, 0x61);
+            D_8010ADE8 = createCallbackTask(initCourseSelectExtraCourseIconList, 0, 0x61);
         }
     } else {
         playerCount = D_80121B55;
@@ -645,7 +644,7 @@ void updateRaceCharacterSelectMenu(void) {
         obj->update();
         obj++;
     } while (obj != &D_801124A0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 #endif
@@ -656,7 +655,7 @@ void fadeOutRaceCharacterSelectMenu(void) {
         if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            updateEffectTasks();
+            updateCallbackTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

@@ -1,5 +1,5 @@
 #include "common.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_input_history.h"
 #include "fixed_point_math.h"
@@ -16,7 +16,7 @@ typedef void (*EffectCallback)(void *);
 
 extern void func_80072A74(s32 soundId, void *pos, s32 volume, s32 distance);
 
-extern void *func_800716A4(void *, s32, s32, s32);
+extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 extern RaceInputPlayer gFrameCounter;
 
 #ifdef NON_MATCHING
@@ -68,32 +68,32 @@ void updateItemUseTrigger(RaceInputPlayer *player) {
     if (trigger != 0) {
         if (player->itemEffectCount != 0) {
             if (player->itemEffectType == 1) {
-                if (func_800716A4(func_80049CE0, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
-                    func_800716A4(func_8004EF24, 5, 4, player->playerIndexU);
+                if (createCallbackTaskWithUserIdPreservingArgs(func_80049CE0, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                    createCallbackTaskWithUserIdPreservingArgs(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 2) {
-                if (func_800716A4(func_8004C8F0, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
-                    func_800716A4(func_8004EF24, 5, 4, player->playerIndexU);
+                if (createCallbackTaskWithUserIdPreservingArgs(func_8004C8F0, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                    createCallbackTaskWithUserIdPreservingArgs(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 3) {
-                if (func_800716A4(func_8004A648, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
-                    func_800716A4(func_8004EF24, 5, 4, player->playerIndexU);
+                if (createCallbackTaskWithUserIdPreservingArgs(func_8004A648, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                    createCallbackTaskWithUserIdPreservingArgs(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 4) {
-                if (func_800716A4(func_8004AFE4, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
-                    func_800716A4(func_8004EF24, 5, 4, player->playerIndexU);
+                if (createCallbackTaskWithUserIdPreservingArgs(func_8004AFE4, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                    createCallbackTaskWithUserIdPreservingArgs(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 5) {
-                if (func_800716A4(func_8004BFA0, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
-                    func_800716A4(func_8004EF24, 5, 4, player->playerIndexU);
+                if (createCallbackTaskWithUserIdPreservingArgs(func_8004BFA0, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                    createCallbackTaskWithUserIdPreservingArgs(func_8004EF24, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
@@ -103,8 +103,8 @@ void updateItemUseTrigger(RaceInputPlayer *player) {
         }
 
         if (player->shieldEffectTimer != 0) {
-            if (func_800716A4(func_8004D880, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
-                func_800716A4(func_8004EF24, 5, 4, player->playerIndexU);
+            if (createCallbackTaskWithUserIdPreservingArgs(func_8004D880, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                createCallbackTaskWithUserIdPreservingArgs(func_8004EF24, 5, 4, player->playerIndexU);
                 player->shieldEffectTimer--;
             }
         }
@@ -164,14 +164,14 @@ void updateActionUseTrigger(RaceInputPlayer *player) {
             }
 
             if (type == 4) {
-                func_800716A4(func_8004D184, 0, 0x3C, (u16) player->playerIndex);
+                createCallbackTaskWithUserIdPreservingArgs(func_8004D184, 0, 0x3C, (u16) player->playerIndex);
                 player->actionEffectType = 0;
                 type = player->actionEffectType;
             }
 
             if (type == 5) {
                 if (player->unk4 == 0) {
-                    func_800716A4(func_80064EAC, 0, 3, (u16) player->playerIndex);
+                    createCallbackTaskWithUserIdPreservingArgs(func_80064EAC, 0, 3, (u16) player->playerIndex);
                 }
                 player->actionEffectType = 0;
                 type = player->actionEffectType;

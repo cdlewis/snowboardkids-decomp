@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "game_audio.h"
 #include "fixed_point_math.h"
@@ -244,8 +244,8 @@ void func_80046D68(s16, s16, s32, s32, s32);
 void func_8004767C(s16, s16, s32, s32, s32, s32);
 void func_800483FC(void *, void *, void *);
 void *func_8004885C(RaceItemGfxCommandSource *);
-/* Local 4-arg declaration; see note in effect_task_scheduler.h. */
-RaceItemEffectActor *func_800716A4(void *, s32, s32, s32);
+/* Local 4-arg declaration; see note in callback_task_scheduler.h. */
+RaceItemEffectActor *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 
 s32 func_8004DB60(s32 arg0) {
     u8 *p = D_800D46D0[D_80121B50];
@@ -269,7 +269,7 @@ void func_8004DB8C(RaceItemEffectActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         arg0->unk64 = arg0->unk64 + 1;
         if (arg0->unk64 == 5) {
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
     }
@@ -309,7 +309,7 @@ loop:
 void func_8004DC6C(RaceItemEffectActor *arg0) {
     arg0->unk64 = 0;
     func_8004DB8C(arg0);
-    func_80071824(arg0, func_8004DB8C);
+    setCallbackTaskCallback(arg0, func_8004DB8C);
 }
 
 // func_8004DCA0 best match: 86.674% (nonmatchings/func_8004DCA0-2225551288923588688/base_6.c)
@@ -356,7 +356,7 @@ void func_8004DCA0(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *arg3, s32 arg4,
 
         if (high > 0) {
             if (high < 2) {}
-            actor = func_800716A4(func_8004DC6C, 5, 0x32, itemType);
+            actor = createCallbackTaskWithUserIdPreservingArgs(func_8004DC6C, 5, 0x32, itemType);
             if (actor != NULL) {
                 actor->unk68 = D_800D4820;
                 if (high < 0x65) {
@@ -401,7 +401,7 @@ void func_8004E3BC(RaceItemEffectActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         arg0->unk24.timer++;
         if (arg0->unk24.timer == 8) {
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
     }
@@ -432,11 +432,11 @@ void func_8004E438(RaceItemEffectActor *arg0) {
         arg0->payload.vec.z += sp58->pos1C.z;
     }
     func_8004E3BC(arg0);
-    func_80071824(arg0, func_8004E3BC);
+    setCallbackTaskCallback(arg0, func_8004E3BC);
 }
 
 void func_8004E518(s16 arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4) {
-    RaceItemEffectActor *p = func_800716A4(func_8004E438, 5, 0x32, arg2);
+    RaceItemEffectActor *p = createCallbackTaskWithUserIdPreservingArgs(func_8004E438, 5, 0x32, arg2);
 
     if (p != NULL) {
         p->unk34.shorts.state.halfword = 0;
@@ -448,7 +448,7 @@ void func_8004E518(s16 arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4) {
 }
 
 void func_8004E594(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
-    RaceItemEffectActor *p = func_800716A4(func_8004E438, 5, 2, arg3);
+    RaceItemEffectActor *p = createCallbackTaskWithUserIdPreservingArgs(func_8004E438, 5, 2, arg3);
 
     if (p != NULL) {
         p->payload.vec.x = arg0;
@@ -510,7 +510,7 @@ void func_8004E960(RaceItemEffectActor *arg0) {
         arg0->unk30.screen.x -= 0x30;
         arg0->unk30.screen.y += 3;
         if (arg0->unk30.screen.x < 0x21) {
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
     }
@@ -521,11 +521,11 @@ void func_8004E9D0(RaceItemEffectActor *arg0) {
     arg0->unk30.screen.x = 0xF0;
     arg0->unk30.screen.y = 0x10;
     func_80045990(func_80043040(D_8011216C), arg0->unk34.shorts.state.ubyte, &arg0->unk2C, &arg0->unk28.word);
-    func_80071824(arg0, func_8004E960);
+    setCallbackTaskCallback(arg0, func_8004E960);
 }
 
 void func_8004EA34(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
-    RaceItemEffectActor *p = func_800711D0(func_8004E9D0, 0, 2);
+    RaceItemEffectActor *p = createCallbackTaskPreservingArgs(func_8004E9D0, 0, 2);
 
     if (p != NULL) {
         p->unk34.shorts.state.byte = arg3;
@@ -592,7 +592,7 @@ void func_8004EE0C(RaceItemEffectActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         arg0->unk34.shorts.height.byte++;
         if (arg0->unk34.shorts.height.byte == 6) {
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
     }
@@ -621,7 +621,7 @@ void func_8004EF24(RaceItemEffectActor *arg0) {
     player = &D_80121D80[arg0->playerIndex];
     func_80072A74(9, (SoundPosition *) &player->pos1C, 0x7F, 0x32);
     func_8004EE0C(arg0);
-    func_80071824(arg0, func_8004EE0C);
+    setCallbackTaskCallback(arg0, func_8004EE0C);
 }
 
 void func_8004EFF8(RaceItemEffectActor *arg0) {
@@ -678,7 +678,7 @@ void func_8004F33C(RaceItemEffectActor *arg0) {
         arg0->unk28.word -= 0x4000;
         arg0->unk38.alpha -= 0x10;
         if (arg0->unk38.alpha <= 0) {
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
     }
@@ -721,7 +721,7 @@ void func_8004F3FC(RaceItemEffectActor *arg0) {
     }
 
     func_8004F33C(arg0);
-    func_80071824(arg0, func_8004F33C);
+    setCallbackTaskCallback(arg0, func_8004F33C);
 }
 
 void func_8004F55C(s16 playerIndex, s16 itemIndex) {
@@ -740,7 +740,7 @@ void func_8004F55C(s16 playerIndex, s16 itemIndex) {
 
         callback = func_8004F3FC;
         for (angleIndex = 0; angleIndex != 0x10; angleIndex++) {
-            actor = func_800716A4(callback, 5, 2, itemType);
+            actor = createCallbackTaskWithUserIdPreservingArgs(callback, 5, 2, itemType);
             if (actor != NULL) {
                 actor->followPlayerIndex = playerIndex;
                 actor->angleIndex = angleIndex;
@@ -799,7 +799,7 @@ void func_8004F9CC(RaceItemEffectActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         arg0->unk28.bytes.phase++;
         if (arg0->unk28.bytes.phase == 0xC) {
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
     }
@@ -815,7 +815,7 @@ void func_8004FA44(RaceItemEffectActor *arg0) {
     arg0->payload.vec.y = D_80121EE8[arg0->playerIndex].pos.y + ((randomNextMain() - 0x80) << 10);
     arg0->payload.vec.z = D_80121EE8[arg0->playerIndex].pos.z + ((randomNextMain() - 0x80) << 10);
     func_8004F9CC(arg0);
-    func_80071824(arg0, func_8004F9CC);
+    setCallbackTaskCallback(arg0, func_8004F9CC);
 }
 
 void func_8004FB44(RaceItemFollowActor *arg0) {
@@ -883,7 +883,7 @@ void func_8004FF34(RaceItemFollowActor *arg0) {
         arg0->pos2.y = arg0->offset2.y + player->pos.y;
         arg0->pos2.z = arg0->offset2.z + player->pos.z;
         if (arg0->timer == 0x18) {
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
     }
@@ -914,7 +914,7 @@ void func_80050030(RaceItemFollowActor *arg0) {
         arg0->offset2.z = player->unk4C4.z - player->pos.z;
     }
     func_8004FF34(arg0);
-    func_80071824(arg0, func_8004FF34);
+    setCallbackTaskCallback(arg0, func_8004FF34);
 }
 
 void func_8005019C(RaceItemEffectActor *arg0) {
@@ -944,7 +944,7 @@ void func_80050340(RaceItemEffectActor *arg0) {
 
     arg0->payload.sprite.frame++;
     if ((((arg0->payload.sprite.frame) + 1) - 1) >= 0x10) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     } else {
         func_800483FC(&D_80124878, func_8005019C, arg0);
     }
@@ -953,13 +953,13 @@ void func_80050340(RaceItemEffectActor *arg0) {
 void func_80050398(RaceItemEffectActor *arg0) {
     arg0->payload.sprite.frame = 0xFFFF;
     func_80050340(arg0);
-    func_80071824(arg0, func_80050340);
+    setCallbackTaskCallback(arg0, func_80050340);
 }
 
 void func_800503D0(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     RaceItemEffectActor *temp_v0;
 
-    temp_v0 = func_800711D0(func_80050398, 5, 3);
+    temp_v0 = createCallbackTaskPreservingArgs(func_80050398, 5, 3);
     if (temp_v0 != NULL) {
         temp_v0->payload.sprite.x = arg0 - 8;
         temp_v0->payload.sprite.y = arg1 - 8;
@@ -1085,7 +1085,7 @@ void func_800508D0(RaceItemEffectActor *arg0) {
     do { var_s0 = D_800D46F8; if (1) { } var_s6 = arg0; actor = var_s6; { } var_s1 = 0; var_s2 = &actor->payload.vec.x; var_s3 = &actor->unk28.word; if (1) { } arg0 = arg0; if (arg0 && arg0) { } var_s5 = 0x10; if (1) { } new_var = func_80050888; callbackActor = actor; do { func_80045990((0, func_80043040((new_var2 = var_s4)->itemTextureHandle)), *var_s0, var_s2, var_s3); var_s1 += 4; var_s0++; var_s2++; var_s3++; } while (var_s1 != var_s5); } while (0);
 
     func_80050888(callbackActor);
-    func_80071824(callbackActor, new_var);
+    setCallbackTaskCallback(callbackActor, new_var);
 }
 
 void func_8005098C(RaceItemFollowActor *arg0) {
@@ -1153,7 +1153,7 @@ void func_80050D84(RaceItemFollowActor *arg0) {
         arg0->pos2.y = arg0->offset2.y + player->pos.y;
         arg0->pos2.z = arg0->offset2.z + player->pos.z;
         if (arg0->timer == 0x18) {
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
     }
@@ -1184,5 +1184,5 @@ void func_80050E80(RaceItemFollowActor *arg0) {
         arg0->offset2.z = player->unk4C4.z - player->pos.z;
     }
     func_80050D84(arg0);
-    func_80071824(arg0, func_80050D84);
+    setCallbackTaskCallback(arg0, func_80050D84);
 }

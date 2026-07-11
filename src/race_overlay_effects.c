@@ -1,7 +1,7 @@
 #include "common.h"
 #include "race_overlay_effects.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_input_history.h"
 #include "race_player_movement.h"
@@ -313,7 +313,7 @@ void func_800669A0(RaceModelListActor *arg0) {
 
         osWritebackDCache(arg0->modelBuffer, size);
     }
-    func_80071824(arg0, func_800668EC);
+    setCallbackTaskCallback(arg0, func_800668EC);
 }
 
 void func_80066ABC(RaceModelListActor *arg0) {
@@ -476,7 +476,7 @@ void func_8006713C(RaceModelListActor *arg0) {
         RACE_MODEL_BUFFER_HANDLE = func_80042D58(new_var->modelCount << 6);
         new_var->modelBuffer = (void *) func_80043040(RACE_MODEL_BUFFER_HANDLE);
         func_80067034(new_var);
-        func_80071824(new_var, func_80066E10);
+        setCallbackTaskCallback(new_var, func_80066E10);
     }
 }
 
@@ -542,7 +542,7 @@ void func_80067364(RaceThrownModelActor *arg0) {
     }
 
     if (arg0->bounceCount == 2) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
 
@@ -560,12 +560,12 @@ void func_800674B4(RaceThrownModelActor *arg0) {
         temp_a3->velocity.y = 0xB0000;
         temp_a3->velocity.z = 0xFFF90000;
         func_80098590(sp1C.scratch, &temp_a3->velocity, &temp_a3->transformedPos);
-        func_80071824(temp_a3, func_80067364);
+        setCallbackTaskCallback(temp_a3, func_80067364);
     }
 }
 
 void func_8006752C(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
-    RaceThrownModelActor *temp = createEffectTask(func_800674B4, 0, 0x64);
+    RaceThrownModelActor *temp = createCallbackTask(func_800674B4, 0, 0x64);
 
     if (temp != NULL) {
         temp->pos.x = arg0;
@@ -641,7 +641,7 @@ void func_800675AC(RaceOverlaySpawnActor *arg0) {
             }
 
             if (found != 0) {
-                spawned = createEffectTask(func_800674B4, 0, 0x64);
+                spawned = createCallbackTask(func_800674B4, 0, 0x64);
                 if (spawned != NULL) {
                     savedSpawned = spawned;
                     entry = (savedEntry = entry);
@@ -892,7 +892,7 @@ void func_80068BF0(RaceOverlayModelActor *arg0) {
         arg0->drawPos.y = temp_v1 + 0x140000;
         arg0->spawnPos.y = temp_v1;
         if (temp_v0 == 0) {
-            func_80071824(arg0, assignPickupRandomEffect);
+            setCallbackTaskCallback(arg0, assignPickupRandomEffect);
         }
         temp_s1 = &temp_s0->pos;
         func_80088C80(temp_s1, 0xC0000, 0x180000, 0);
@@ -911,7 +911,7 @@ void func_80068CD4(RaceOverlayModelActor *arg0) {
         if (arg0->drawPos.y < arg0->pos.y) {
             arg0->drawPos.y = arg0->pos.y;
             arg0->timer = 0x10;
-            func_80071824(arg0, func_80068BF0);
+            setCallbackTaskCallback(arg0, func_80068BF0);
         }
 
         func_80088C80(&arg0->pos, 0xC0000, 0x180000, 0);
@@ -936,7 +936,7 @@ void func_80068DB4(RaceOverlayModelActor *arg0) {
         if (var_v1 < temp_a2) {
             arg0->drawPos.y = temp_a2;
             arg0->velY = 0x30000;
-            func_80071824(arg0, func_80068CD4);
+            setCallbackTaskCallback(arg0, func_80068CD4);
             var_v1 = arg0->drawPos.y;
         }
         temp_s1 = &arg0->drawPos;
@@ -1005,7 +1005,7 @@ loop:
             player->pad516[0] = maxPlayers;
         }
 
-        func_80071824(arg0, func_80068DB4);
+        setCallbackTaskCallback(arg0, func_80068DB4);
         func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 0);
         func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 1);
         func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 2);
@@ -1061,7 +1061,7 @@ void func_800691C8(RaceOverlayModelActor *arg0) {
         func_80045990(func_80043040(D_80112168), 0x21, &arg0->image1, &arg0->palette1);
     }
     func_80045990(func_80043040(D_80112168), 0x22, &arg0->image2, &arg0->palette2);
-    func_80071824(arg0, assignPickupRandomEffect);
+    setCallbackTaskCallback(arg0, assignPickupRandomEffect);
 }
 
 void func_8006935C(RaceParticleActor *arg0) {
@@ -1146,7 +1146,7 @@ void func_80069678(RaceParticleActor *arg0) {
         func_800483FC(&D_801248D4, func_8006935C, temp_a2);
         return;
     }
-    func_800716E4(temp_a2);
+    removeCallbackTask(temp_a2);
 }
 
 void func_80069754(RaceParticleActor *arg0) {
@@ -1159,11 +1159,11 @@ void func_80069754(RaceParticleActor *arg0) {
     func_80097C18(sp28, arg0->rotY);
     func_80098590(sp28, &D_800D9BD8[arg0->spawnOffsetIndex], &arg0->velocity);
     func_80045990(func_80043040(D_80112168), 0x22, &arg0->palette, &arg0->image);
-    func_80071824(arg0, func_80069678);
+    setCallbackTaskCallback(arg0, func_80069678);
 }
 
 void func_80069808(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
-    RaceParticleActor *temp = func_800711D0(func_80069754, 5, 0x3B);
+    RaceParticleActor *temp = createCallbackTaskPreservingArgs(func_80069754, 5, 0x3B);
 
     if (temp != NULL) {
         temp->spawnOffsetIndex = arg4;

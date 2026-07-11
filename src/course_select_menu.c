@@ -1,7 +1,7 @@
 #include "common.h"
 #include "asset_manager.h"
 #include "race_camera.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "course_select_menu.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
@@ -156,8 +156,8 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
-extern void initCourseSelectCourseIconList(EffectTask *);
-extern void initCourseSelectExtraCourseIconList(EffectTask *);
+extern void initCourseSelectCourseIconList(CallbackTask *);
+extern void initCourseSelectExtraCourseIconList(CallbackTask *);
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern void releaseMenuAssetHandles(void);
@@ -219,8 +219,8 @@ void initCourseSelectMenu(void) {
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     nextCallback = updateCourseSelectModeMenu;
-    func_80070EC0(0);
-    createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
+    initCallbackTaskScheduler(0);
+    createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
 
     D_800EC9C1 = 0;
     D_800EC9C0 = 0;
@@ -269,7 +269,7 @@ void initCourseSelectMenu(void) {
     }
 
     setCurrentInputTaskCallback(nextCallback, 0);
-    updateEffectTasks();
+    updateCallbackTasks();
 
     gCourseSelectStatus.unk0Array[zero] = zero;
     D_8010AF1C = zero;
@@ -329,7 +329,7 @@ void updateCourseSelectModeMenu(void) {
     if (gCurrentInputTask->fade != 0) {
         gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 0);
         if (gCurrentInputTask->fade == 0) {
-            createEffectTask(func_8002C800, 0, 0x63);
+            createCallbackTask(func_8002C800, 0, 0x63);
             if (D_8010AF70 == 0) {
                 enqueueSoundEffect(0x44, 0x32);
             }
@@ -431,7 +431,7 @@ void updateCourseSelectModeMenu(void) {
         }
     }
     D_801235B4 = 0;
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -455,8 +455,8 @@ void initCourseSelectCourseList(void) {
     D_8010AEA0[0] = 0;
     D_800EC9C1 = 0;
     D_8010ADF0 = 0;
-    createEffectTask(initCourseSelectCourseIconList, 0, 0x63);
-    D_8010ADE8 = createEffectTask(initCourseSelectExtraCourseIconList, 0, 0x61);
+    createCallbackTask(initCourseSelectCourseIconList, 0, 0x63);
+    D_8010ADE8 = createCallbackTask(initCourseSelectExtraCourseIconList, 0, 0x61);
     courseFlags = gUnlockedExtraCourseFlags;
     if (courseFlags & 7) {
         D_8010AEA0[0] = 1;
@@ -520,7 +520,7 @@ loop_6:
 
     D_80121D80.unk6 = D_8010AEF8[var_a2_2];
     setCurrentInputTaskCallback(updateCourseSelectCourseList, 0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -700,7 +700,7 @@ block_17:
                         D_80121D88 = 1;
                         if (D_800EC9E6 == 0) {
                             sp44 = 0;
-                            createEffectTask(func_8002EC04, 0, 0x62);
+                            createCallbackTask(func_8002EC04, 0, 0x62);
                             var_a3_2 = 0;
                         }
                     }
@@ -820,7 +820,7 @@ block_17:
             gCurrentInputTask->timer = 0;
             sp44 = var_a3_2;
             setCurrentInputTaskCallback(updateCourseSelectPurchasePrompt, 0);
-            createEffectTask(func_8002EFB8, 0, 0x64);
+            createCallbackTask(func_8002EFB8, 0, 0x64);
         }
         var_v0_3 = (u8) D_800EC9C0;
         sp44 = var_a3_2;
@@ -896,7 +896,7 @@ block_17:
             var_v0_7 += 0xB0;
         } while (var_a3_3 < (s32) D_80121B55);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 #endif
@@ -969,7 +969,7 @@ void updateCourseSelectPurchasePrompt(void) {
             var_s1 += 1;
         } while (var_s0 < (s32) (new_var = D_80121B55));
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -1117,7 +1117,7 @@ after_input:
             var_s0 += 1;
         } while (i < (s32) D_80121B55);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -1127,7 +1127,7 @@ void initCourseSelectCourseDetailsMenu(void) {
     s8 temp_v0;
 
     if (gCurrentInputTask->screenState == 2) {
-        createEffectTask(func_8002F854, 0, 0x63);
+        createCallbackTask(func_8002F854, 0, 0x63);
         temp_v0 = D_800ECA2F[D_80121D86];
         D_8010AF72 = temp_v0 % 7;
         D_8010AF73 = temp_v0 / 7;
@@ -1137,7 +1137,7 @@ void initCourseSelectCourseDetailsMenu(void) {
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 // updateCourseSelectCourseDetailsMenu best match: 68.617% (nonmatchings/updateCourseSelectCourseDetailsMenu-2127290767680699791/base_3.c)
@@ -1257,7 +1257,7 @@ block_16:
             var_s0 += 1;
         } while (var_v0 < (s32) D_80121B55);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -1272,7 +1272,7 @@ void waitCourseSelectRecordsClose(void) {
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void returnToCourseSelectUnlockCourseList(void) {
@@ -1292,7 +1292,7 @@ void returnToCourseSelectUnlockCourseList(void) {
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void returnToCourseSelectModeMenu(void) {
@@ -1330,7 +1330,7 @@ void returnToCourseSelectModeMenu(void) {
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void initCourseSelectPreview(void) {
@@ -1344,11 +1344,11 @@ void initCourseSelectPreview(void) {
     D_8010AED0 = temp[0x3F] + 1;
     temp[0x3F] = D_800B34E0[(u8) D_8010AF73 * 7 + (u8) D_8010AF72];
     gCourseSelectStatus.transitionState = 6;
-    createEffectTask(&func_8002FEF8, 0, 0x64);
+    createCallbackTask(&func_8002FEF8, 0, 0x64);
     setCurrentInputTaskCallback(updateCourseSelectPreviewClose, 0); var_s0 = D_801121E0; do { D_800EC9C4 = var_s0; var_s0->unk2C();
         var_s0 += 1;
     } while (var_s0 != &D_80112340);
-    updateEffectTasks();
+    updateCallbackTasks();
     enqueueSoundEffect(0x17, 0x32);
 }
 
@@ -1364,7 +1364,7 @@ void updateCourseSelectPreviewClose(void) {
         func_80070614(1);
         setCurrentInputTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
         gCourseSelectStatus.transitionState = 2;
- D_8010AED0 = 0; } var_s0 = D_801121E0; do { (D_800EC9C4 = var_s0)->unk2C(); var_s0 += 1; } while (var_s0 != (&D_80112340)); updateEffectTasks();
+ D_8010AED0 = 0; } var_s0 = D_801121E0; do { (D_800EC9C4 = var_s0)->unk2C(); var_s0 += 1; } while (var_s0 != (&D_80112340)); updateCallbackTasks();
 }
 
 void exitCourseSelectMenu(void) {
@@ -1376,7 +1376,7 @@ void exitCourseSelectMenu(void) {
         if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            updateEffectTasks();
+            updateCallbackTasks();
         }
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();

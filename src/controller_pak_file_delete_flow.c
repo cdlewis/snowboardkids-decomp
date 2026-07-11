@@ -1,5 +1,5 @@
 #include "common.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
 #include "controller_pak_file_delete_flow.h"
@@ -62,12 +62,12 @@ void initControllerPakFileDeleteFlow(void) {
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x24);
     loadCompressedRomAsset(&D_5E0350, &gControllerPakReplaySaveMessageSecondPageStart, 0x26);
     loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
-    func_80070EC0(0);
-    createEffectTask(&initControllerPakFileDeleteMainOptions, 0, 0x63);
-    createEffectTask(&initControllerPakFileDeleteConfirmOptions, 0, 0x63);
-    createEffectTask(&initControllerPakFileDeleteFreeSpaceInfo, 0, 0x63);
-    createEffectTask(&initControllerPakFileDeleteFileList, 0, 0x63);
-    createEffectTask(&initControllerPakFileDeleteIcon, 0, 0x5E);
+    initCallbackTaskScheduler(0);
+    createCallbackTask(&initControllerPakFileDeleteMainOptions, 0, 0x63);
+    createCallbackTask(&initControllerPakFileDeleteConfirmOptions, 0, 0x63);
+    createCallbackTask(&initControllerPakFileDeleteFreeSpaceInfo, 0, 0x63);
+    createCallbackTask(&initControllerPakFileDeleteFileList, 0, 0x63);
+    createCallbackTask(&initControllerPakFileDeleteIcon, 0, 0x5E);
     gControllerPakMenuState.mainChoice = 0;
     gControllerPakMenuState.fileIndex = 0;
     gControllerPakMenuState.confirmChoice = 0;
@@ -97,7 +97,7 @@ void updateControllerPakFileDeleteMainOptions(void) {
             gControllerPakMenuState.isEdgeScroll = 0;
         }
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void updateControllerPakFileDeleteFileList(void) {
@@ -146,7 +146,7 @@ void updateControllerPakFileDeleteFileList(void) {
         setCurrentInputTaskCallback(updateControllerPakFileDeleteMainOptions, 0);
         gControllerPakMenuState.state = 0;
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void updateControllerPakFileDeleteConfirm(void) {
@@ -160,7 +160,7 @@ void updateControllerPakFileDeleteConfirm(void) {
     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
-            createEffectTask(&initControllerPakDeleteConfirmPrompt, 0, 0x64);
+            createCallbackTask(&initControllerPakDeleteConfirmPrompt, 0, 0x64);
             setCurrentInputTaskCallback(updateControllerPakFileDeletePrompt, 0);
             gControllerPakMenuState.state = 3;
             gControllerPakMenuState.confirmChoice = 1;
@@ -173,7 +173,7 @@ void updateControllerPakFileDeleteConfirm(void) {
         setCurrentInputTaskCallback(updateControllerPakFileDeleteFileList, 0);
         gControllerPakMenuState.state = 1;
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void updateControllerPakFileDeletePrompt(void) {
@@ -195,7 +195,7 @@ void updateControllerPakFileDeletePrompt(void) {
                 setCurrentInputTaskCallback(updateControllerPakFileDeleteFileList, 0);
                 gControllerPakMenuState.state = 1;
             } else {
-                createEffectTask(initControllerPakFileDeleteErrorPrompt, 0, 0x64);
+                createCallbackTask(initControllerPakFileDeleteErrorPrompt, 0, 0x64);
                 gControllerPakMenuState.unk6 = 0;
                 gControllerPakMenuState.state = 4;
                 setCurrentInputTaskCallback(updateControllerPakFileDeleteErrorPrompt, 0);
@@ -211,7 +211,7 @@ void updateControllerPakFileDeletePrompt(void) {
         gControllerPakMenuState.state = 2;
         gControllerPakMenuState.confirmChoice = 0;
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void updateControllerPakFileDeleteErrorPrompt(void) {
@@ -230,7 +230,7 @@ void updateControllerPakFileDeleteErrorPrompt(void) {
         setCurrentInputTaskCallback(&updateControllerPakFileDeleteFileList, 0);
         gControllerPakMenuCursorState = 1;
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void fadeOutControllerPakFileDeleteFlow(void) {
@@ -239,7 +239,7 @@ void fadeOutControllerPakFileDeleteFlow(void) {
         if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            updateEffectTasks();
+            updateCallbackTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

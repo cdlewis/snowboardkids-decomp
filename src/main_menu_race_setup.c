@@ -1,7 +1,7 @@
 #include "common.h"
 #include "asset_manager.h"
 #include "game_audio.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "fixed_point_matrix.h"
 #include "input_task_scheduler.h"
 #include "main_menu_overlay_effects.h"
@@ -116,13 +116,13 @@ void func_8003DFB0(void) {
 
 #ifdef NON_MATCHING
 extern void func_80041CF0();
-extern void func_80053DD8(EffectTask *);
-extern void func_80053EBC(EffectTask *);
+extern void func_80053DD8(CallbackTask *);
+extern void func_80053EBC(CallbackTask *);
 extern void func_80054044(s32, s32);
-extern void func_8005502C(EffectTask *);
-extern void func_800553E0(EffectTask *);
-extern void func_80070EC0(s32);
-extern void createEffectTask(void (*)(EffectTask *), s32, s32);
+extern void func_8005502C(CallbackTask *);
+extern void func_800553E0(CallbackTask *);
+extern void initCallbackTaskScheduler(s32);
+extern void *createCallbackTask(void (*)(), s32, s32);
 extern u8 D_13F3B0[];
 extern u8 D_145380[];
 extern u8 D_1467B0[];
@@ -209,7 +209,7 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     loadCompressedRomAsset(D_1DCED0, D_1DE360, 9);
     loadRawRomAsset(D_13F3B0, D_145380, 0xE);
     loadCompressedRomAsset(D_1D3070, D_1D82B0, 0x12);
-    func_80070EC0(2);
+    initCallbackTaskScheduler(2);
     func_8006D5CC();
     func_8006D580(0, 0x1D);
     func_8006D580(1, 0x1D);
@@ -222,10 +222,10 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     gMenuFadeAlpha = 0xFF;
     gCurrentInputTask->fade = 5;
     effectArg = transition - 1;
-    func_80071664(func_80053DD8, 0, 0x64, effectArg);
-    createEffectTask(func_8005502C, 0, 0x64);
-    func_80071664(func_800553E0, 0, 0x64, effectArg);
-    func_80071664(func_80053EBC, 0, 0x64, D_80121D90);
+    createCallbackTaskWithUserId(func_80053DD8, 0, 0x64, effectArg);
+    createCallbackTask(func_8005502C, 0, 0x64);
+    createCallbackTaskWithUserId(func_800553E0, 0, 0x64, effectArg);
+    createCallbackTaskWithUserId(func_80053EBC, 0, 0x64, D_80121D90);
     func_80054044(1, D_800BB810[D_80121D90 * 4]);
     func_80054044(2, D_800BB811[D_80121D90 * 4]);
     func_80054044(3, D_800BB812[D_80121D90 * 4]);
@@ -241,11 +241,11 @@ void func_8003E3AC(void) {
         gCurrentInputTask->fade = 0x12C;
         setCurrentInputTaskCallback(func_8003E45C, 0);
     }
-    func_80071664(func_8005393C, 5, 0x64, 0);
+    createCallbackTaskWithUserId(func_8005393C, 5, 0x64, 0);
     func_8006D780(0);
     func_8006D780(1);
     func_8006D780(2);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_8003E45C(void) {
@@ -263,10 +263,10 @@ void func_8003E45C(void) {
         func_80072114(0x7E);
         setCurrentInputTaskCallback(func_8003E514, 0);
     }
-    func_80071664(func_8005393C, 5, 0x64, 0);
+    createCallbackTaskWithUserId(func_8005393C, 5, 0x64, 0);
     func_8006D780(0);
     func_8006D780(1);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_8003E514(void) {
@@ -276,10 +276,10 @@ void func_8003E514(void) {
         gFramebufferSwapHold = 1;
         setCurrentInputTaskCallback(func_8003E5A8, 0);
     }
-    func_80071664(func_8005393C, 5, 0x64, 0);
+    createCallbackTaskWithUserId(func_8005393C, 5, 0x64, 0);
     func_8006D780(0);
     func_8006D780(1);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_8003E5A8(void) {

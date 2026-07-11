@@ -1,6 +1,6 @@
 #include "common.h"
 #include "game_audio.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
 #include "character_select_course_ui.h"
@@ -98,7 +98,7 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
 
     gCurrentInputTask->fade = 0;
     func_800720E4(2);
-    createEffectTask((void (*)(EffectTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
+    createCallbackTask((void (*)(CallbackTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
     gCurrentInputTask->timer = 0;
     D_800EC9C1 = 0;
     D_8010ADF8 = 0;
@@ -125,7 +125,7 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
     D_8010ADE4 = 0;
     sp1C = var_v1;
     setCurrentInputTaskCallback(updateCharacterSelectCourseMenu, 0);
-    updateEffectTasks();
+    updateCallbackTasks();
     var_v1 = sp1C;
     if (D_800EC9DD == 1) {
         if (D_80121B5E < 2) {
@@ -202,12 +202,12 @@ void initCharacterSelectCourseMenuFromRace(void) {
     loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
     loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
-    func_80070EC0(0);
-    createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
+    initCallbackTaskScheduler(0);
+    createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
 
     if (D_800EC9C2 == 1) {
         loadCompressedRomAsset(D_5CCD40, D_5D4280, 0x25);
-        createEffectTask((void (*)(EffectTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
+        createCallbackTask((void (*)(CallbackTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
         gCurrentInputTask->fade = 0;
     } else {
         gCurrentInputTask->fade = 0xFF;
@@ -288,7 +288,7 @@ loop_24:
     gCharacterSelectCourseCursorState.fields.spriteIndex = 0;
     gCharacterSelectCourseCursorState.bytes[6] = 0;
     gCharacterSelectCourseCursorState.bytes[7] = 0;
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -317,12 +317,12 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
         loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
         loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
         loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
-        func_80070EC0(0);
-        createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
+        initCallbackTaskScheduler(0);
+        createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
         gCurrentInputTask->fade = 0xFF;
     } else {
         gCurrentInputTask->fade = 0;
-        createEffectTask(initCharacterSelectUnlockedCourseList, 0, 0x63);
+        createCallbackTask(initCharacterSelectUnlockedCourseList, 0, 0x63);
     }
 
     gCurrentInputTask->timer = 0;
@@ -400,7 +400,7 @@ loop_24:
     gCharacterSelectCourseCursorState.fields.spriteIndex = 0;
     gCharacterSelectCourseCursorState.bytes[6] = 0;
     gCharacterSelectCourseCursorState.bytes[7] = 0;
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -419,7 +419,7 @@ void updateCharacterSelectCourseMenu(void) {
     if (gCurrentInputTask->fade != 0) {
         gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 0);
         if (gCurrentInputTask->fade == 0) {
-            createEffectTask(&initCharacterSelectUnlockedCourseList, 0, 0x63);
+            createCallbackTask(&initCharacterSelectUnlockedCourseList, 0, 0x63);
         }
     } else {
         if (D_80121D88 == 0) {
@@ -528,7 +528,7 @@ void updateCharacterSelectCourseMenu(void) {
     }
 
     D_801235B4 = 0;
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -548,7 +548,7 @@ void updateCharacterSelectCourseSubmenu(void) {
                 enqueueSoundEffect(1, 0x32);
                 D_800EC9D0 = 1;
                 gCharacterSelectCourseCursorState.fields.otherState = 3;
-                createEffectTask(initCharacterSelectCourseConfirmCursor, 0, 0x61);
+                createCallbackTask(initCharacterSelectCourseConfirmCursor, 0, 0x61);
             }
             break;
         case 3:
@@ -600,7 +600,7 @@ void updateCharacterSelectCourseSubmenu(void) {
             setCurrentInputTaskCallback(fadeOutCharacterSelectCourseMenu, 0);
         }
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void handleCharacterSelectCourseSelection(void) {
@@ -619,7 +619,7 @@ void handleCharacterSelectCourseSelection(void) {
             D_801235B4 = 0;
         }
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void fadeOutCharacterSelectCourseMenu(void) {
@@ -628,7 +628,7 @@ void fadeOutCharacterSelectCourseMenu(void) {
         if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            updateEffectTasks();
+            updateCallbackTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {
