@@ -11,7 +11,7 @@
 #define MAIN_MENU_MODEL_ASSET_RANGE_START(table, index) ((table)[(index) * MAIN_MENU_MODEL_ASSET_RANGE_WORDS])
 #define MAIN_MENU_MODEL_ASSET_RANGE_END(table, index) ((table)[((index) * MAIN_MENU_MODEL_ASSET_RANGE_WORDS) + 1])
 
-extern s16 D_8011218A[];
+extern s16 gMainMenuSceneModelHandles[];
 extern s16 D_801121AE;
 extern u8 gMainMenuSceneModelAssetStart;
 extern u8 D_608560;
@@ -305,7 +305,7 @@ void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
 
     animationBank = (MainMenuModelAnimationBank *)getMemoryBlockBase(D_801121AE);
     frameData = MAIN_MENU_ANIMATION_FRAME_DATA(animationBank, animationIndex);
-    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     frameDuration = *frameData++;
     model->framesRemaining = frameDuration;
     model->animationStart = frameData;
@@ -315,7 +315,7 @@ void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
 }
 
 MainMenuSceneModel *getMainMenuSceneModel(s32 modelIndex) {
-    return (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
+    return (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
 }
 
 void applyMainMenuSceneModelAnimationFrame(MainMenuSceneModel *model) {
@@ -351,7 +351,7 @@ s32 stepMainMenuSceneModelAnimation(s32 modelIndex) {
     MainMenuSceneModel *new_var;
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     if (model->framesRemaining == 1) {
         goto ret1_initial;
     }
@@ -377,7 +377,7 @@ ret0:
 void loopMainMenuSceneModelAnimation(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     model->framesRemaining--;
     if (model->framesRemaining <= 0) {
         model->framesRemaining = model->frameDuration;
@@ -389,7 +389,7 @@ void loopMainMenuSceneModelAnimation(s32 modelIndex) {
 void setMainMenuSceneModelPosition(s32 modelIndex, s32 x, s32 y, s32 z) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     model->pos.x = x;
     model->pos.y = y;
     model->pos.z = z;
@@ -398,7 +398,7 @@ void setMainMenuSceneModelPosition(s32 modelIndex, s32 x, s32 y, s32 z) {
 void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     model->rot.x = x;
     model->rot.y = y;
     model->rot.z = z;

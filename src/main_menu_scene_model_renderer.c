@@ -1,24 +1,24 @@
 #include "main_menu_scene_model.h"
 #include "memory_allocator.h"
-#include "main_menu_scene_renderer.h"
+#include "main_menu_scene_model_renderer.h"
 #include "race_position_ui.h"
 
 extern void addRenderCallback(void *, void (*)(MainMenuSceneModel *), MainMenuSceneModel *);
-extern s16 D_8011218A[];
+extern s16 gMainMenuSceneModelHandles[];
 extern s32 D_801248B0;
-extern void func_80042574(MainMenuSceneModel *);
-extern void func_8004270C(MainMenuSceneModel *);
+extern void drawMainMenuSceneModel(MainMenuSceneModel *);
+extern void drawMainMenuSceneModelWithTexture(MainMenuSceneModel *);
 
-// func_80042560 best match: 25.000% at nonmatchings/func_80042560-4839787584499344943/base_1.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_80042560.s")
+// initMainMenuSceneModelRenderer best match: 25.000% at nonmatchings/initMainMenuSceneModelRenderer-4839787584499344943/base_1.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model_renderer/initMainMenuSceneModelRenderer.s")
 
 #ifdef NON_MATCHING
-void func_80042560(void) {
+void initMainMenuSceneModelRenderer(void) {
 }
 #endif
 
-// func_80042574 best source-tree match: 99.706% at nonmatchings/func_80042574-4139837607000619032/base_6.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_80042574.s")
+// drawMainMenuSceneModel best source-tree match: 99.706% at nonmatchings/drawMainMenuSceneModel-4139837607000619032/base_6.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model_renderer/drawMainMenuSceneModel.s")
 
 #ifdef NON_MATCHING
 typedef struct MainMenuModelAssetHandles {
@@ -33,7 +33,7 @@ extern u8 gCurrentViewportIndex;
 extern MainMenuModelAssetHandles D_80112130;
 extern Gfx *D_800D3CB0[];
 
-void func_80042574(MainMenuSceneModel *arg0) {
+void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
     MainMenuSceneModel *model;
     MainMenuModelDisplayObject *displayObject;
     Gfx **displayLists;
@@ -46,11 +46,11 @@ void func_80042574(MainMenuSceneModel *arg0) {
 }
 #endif
 
-// func_8004270C best match: 99.595% at nonmatchings/func_8004270C-4139837607000619032/base.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_8004270C.s")
+// drawMainMenuSceneModelWithTexture best match: 99.595% at nonmatchings/drawMainMenuSceneModelWithTexture-4139837607000619032/base.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model_renderer/drawMainMenuSceneModelWithTexture.s")
 
 #ifdef NON_MATCHING
-void func_8004270C(MainMenuSceneModel *arg0) {
+void drawMainMenuSceneModelWithTexture(MainMenuSceneModel *arg0) {
     MainMenuSceneModel *model;
     MainMenuModelDisplayObject *displayObject;
     Gfx **displayLists;
@@ -63,57 +63,57 @@ void func_8004270C(MainMenuSceneModel *arg0) {
 }
 #endif
 
-void addMainMenuSceneModelRenderCallback(s32 modelIndex) {
+void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
     model->renderFrame = 0;
-    addRenderCallback(&D_801248B0, func_80042574, model);
+    addRenderCallback(&D_801248B0, drawMainMenuSceneModel, model);
 }
 
-void func_80042920(s32 modelIndex, s32 textureId, s32 paletteId) {
+void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s32 paletteId) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
-    updateMainMenuSceneModelTransforms(model);
-    model->renderFrame = 0;
-    model->textureId = (s16)textureId;
-    model->paletteId = (s16)paletteId;
-    addRenderCallback(&D_801248B0, func_8004270C, model);
-}
-
-void func_8004298C(s32 modelIndex, s32 textureId, s32 paletteId, s32 arg3) {
-    MainMenuSceneModel *model;
-
-    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
     model->renderFrame = 0;
     model->textureId = (s16)textureId;
     model->paletteId = (s16)paletteId;
-    addRenderCallback(&D_801248B0, func_8004270C, model);
+    addRenderCallback(&D_801248B0, drawMainMenuSceneModelWithTexture, model);
 }
 
-void func_80042A00(s32 modelIndex) {
+void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 textureId, s32 paletteId, s32 unusedArg) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
     model->renderFrame = 0;
-    addRenderCallback(&D_801248B0, func_80042574, model);
+    model->textureId = (s16)textureId;
+    model->paletteId = (s16)paletteId;
+    addRenderCallback(&D_801248B0, drawMainMenuSceneModelWithTexture, model);
 }
 
-void func_80042A58(s32 modelIndex, s32 renderFrame) {
+void addMainMenuSceneModelDrawCallbackViewport0(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    updateMainMenuSceneModelTransforms(model);
+    model->renderFrame = 0;
+    addRenderCallback(&D_801248B0, drawMainMenuSceneModel, model);
+}
+
+void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 renderFrame) {
+    MainMenuSceneModel *model;
+
+    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
     model->renderFrame = (s16)renderFrame;
-    addRenderCallback(&D_801248B0, func_80042574, model);
+    addRenderCallback(&D_801248B0, drawMainMenuSceneModel, model);
 }
 
 // initMainMenuSceneModelParts best match: 99.077% at nonmatchings/func_80042AB4-2225551288923588688/base_10.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/initMainMenuSceneModelParts.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model_renderer/initMainMenuSceneModelParts.s")
 
 #ifdef NON_MATCHING
 typedef struct MainMenuInitPartPair {
