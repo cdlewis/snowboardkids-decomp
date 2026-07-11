@@ -1,5 +1,5 @@
-#ifndef MAIN_MENU_RACE_MODE_FLOW_H
-#define MAIN_MENU_RACE_MODE_FLOW_H
+#ifndef MAIN_MENU_RACE_FLOW_H
+#define MAIN_MENU_RACE_FLOW_H
 
 #include "common.h"
 

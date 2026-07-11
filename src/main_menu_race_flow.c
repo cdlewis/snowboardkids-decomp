@@ -9,7 +9,7 @@
 #include "main_menu_visual_effects.h"
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
-#include "main_menu_race_mode_flow.h"
+#include "main_menu_race_flow.h"
 #include "race_player_state.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
@@ -160,7 +160,7 @@ void exitMainMenuDemoRaceSelectionMenu(void) {
 
 // initMainMenuDemoRace best match: 94.795% (nonmatchings/initMainMenuDemoRace-8662636370764828261/base_5.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_mode_flow/initMainMenuDemoRace.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/initMainMenuDemoRace.s")
 
 #ifdef NON_MATCHING
 void initMainMenuDemoRace(void) {
@@ -279,7 +279,7 @@ void waitForMainMenuDemoRaceStart(void) {
 
 // zoomMainMenuDemoRaceViewport best match: 75.250% (nonmatchings/zoomMainMenuDemoRaceViewport-1197934324348345530/base_3.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_mode_flow/zoomMainMenuDemoRaceViewport.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/zoomMainMenuDemoRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomMainMenuDemoRaceViewport(void) {
@@ -372,7 +372,7 @@ void queueTrainingCourseRaceInit(void) {
 
 // initTrainingCourseRace best match: 98.186% (nonmatchings/func_8004002C-6061209858023118177/base.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_mode_flow/initTrainingCourseRace.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/initTrainingCourseRace.s")
 
 #ifdef NON_MATCHING
 void initTrainingCourseRace(void) {
@@ -519,7 +519,7 @@ void waitForTrainingCourseStartSelection(void) {
 
 // zoomTrainingCourseRaceViewport best match: 74.802% (nonmatchings/zoomTrainingCourseRaceViewport-1197934324348345530/base_8.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_mode_flow/zoomTrainingCourseRaceViewport.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/zoomTrainingCourseRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomTrainingCourseRaceViewport(void) {
