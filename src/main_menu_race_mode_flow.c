@@ -9,7 +9,7 @@
 #include "main_menu_visual_effects.h"
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
-#include "main_menu_race_flow.h"
+#include "main_menu_race_mode_flow.h"
 #include "race_player_state.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
@@ -27,7 +27,7 @@ typedef struct {
     /* 0x1 */ u8 pad1[3];
     /* 0x4 */ u8 *romStart;
     /* 0x8 */ u8 *romEnd;
-} MainMenuDemoRaceAsset;
+} MainMenuDemoRaceCourseAsset;
 
 
 extern u8 D_1467B0[];
@@ -56,7 +56,7 @@ extern u8 gMainMenuModeSelection;
 extern s16 D_80121B5C;
 extern u8 D_80121B5E;
 extern u8 D_80121B5F;
-extern s16 gMainMenuDemoRaceDurations[];
+extern s16 gMainMenuDemoRaceDurationBySelection[];
 
 extern void releaseMenuAssetHandles(void);
 extern u8 gPendingFramebufferSwapCount;
@@ -76,20 +76,20 @@ extern u8 D_801229AE;
 extern u8 D_80122FB8;
 extern u8 D_80122FB9;
 extern u8 D_80122FBA;
-extern MainMenuDemoRaceAsset gMainMenuDemoRaceAssets[];
-extern f32 gMainMenuDemoRaceInitialAspectRatio;
+extern MainMenuDemoRaceCourseAsset gMainMenuDemoRaceCourseAssets[];
+extern f32 gMainMenuDemoRacePreviewAspectRatio;
 extern u8 D_593D10[];
 extern u8 D_598A70[];
 extern u8 D_60F1A0[];
 extern u8 D_60F990[];
 extern s16 gRacePlayerSurfaceAngleByPlayer;
 
-void startMainMenuDemoRaceFlow(void) {
+void startMainMenuDemoRaceSelectionFlow(void) {
     gMainMenuModeSelection = 1;
-    setCurrentGameTaskCallback(initMainMenuDemoRaceModeMenu, 0);
+    setCurrentGameTaskCallback(initMainMenuDemoRaceSelectionMenu, 0);
 }
 
-void initMainMenuDemoRaceModeMenu(void) {
+void initMainMenuDemoRaceSelectionMenu(void) {
     loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
@@ -107,43 +107,43 @@ void initMainMenuDemoRaceModeMenu(void) {
     func_8006D520(0, 0x1F);
     createCallbackTaskWithUserId(&initTitleMenuBoardModels, 0, 0x64, 0);
     createCallbackTask(&initMainMenuModeSelectGrid, 0, 0x64);
-    setCurrentGameTaskCallback(&fadeInMainMenuDemoRaceModeMenu, 0);
+    setCurrentGameTaskCallback(&fadeInMainMenuDemoRaceSelectionMenu, 0);
     requestMusicSequenceBank(7);
 }
 
-void fadeInMainMenuDemoRaceModeMenu(void) {
+void fadeInMainMenuDemoRaceSelectionMenu(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha <= 0) {
         gMenuFadeAlpha = 0;
-        setCurrentGameTaskCallback(&updateMainMenuDemoRaceModeMenu, 0);
+        setCurrentGameTaskCallback(&updateMainMenuDemoRaceSelectionMenu, 0);
     }
     func_8006D780(0);
     updateCallbackTasks();
 }
 
-void updateMainMenuDemoRaceModeMenu(void) {
+void updateMainMenuDemoRaceSelectionMenu(void) {
     if (gMainMenuSelectionResult != 0) {
         if (gMainMenuModeSelection == 0xC) {
             requestMusicSequenceStop(0x3C);
         }
-        setCurrentGameTaskCallback(&fadeOutMainMenuDemoRaceModeMenu, 0);
+        setCurrentGameTaskCallback(&fadeOutMainMenuDemoRaceSelectionMenu, 0);
     }
     func_8006D780(0);
     updateCallbackTasks();
 }
 
-void fadeOutMainMenuDemoRaceModeMenu(void) {
+void fadeOutMainMenuDemoRaceSelectionMenu(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(&exitMainMenuDemoRaceModeMenu, 0);
+        setCurrentGameTaskCallback(&exitMainMenuDemoRaceSelectionMenu, 0);
     }
     func_8006D780(0);
     updateCallbackTasks();
 }
 
-void exitMainMenuDemoRaceModeMenu(void) {
+void exitMainMenuDemoRaceSelectionMenu(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
@@ -160,14 +160,14 @@ void exitMainMenuDemoRaceModeMenu(void) {
 
 // initMainMenuDemoRace best match: 94.795% (nonmatchings/initMainMenuDemoRace-8662636370764828261/base_5.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/initMainMenuDemoRace.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_mode_flow/initMainMenuDemoRace.s")
 
 #ifdef NON_MATCHING
 void initMainMenuDemoRace(void) {
     RaceInputPlayer *players;
-    MainMenuDemoRaceAsset *courseAsset;
+    MainMenuDemoRaceCourseAsset *courseAsset;
 
-    gRaceCourseIndex = gMainMenuDemoRaceAssets[gMainMenuModeSelection].courseIndex;
+    gRaceCourseIndex = gMainMenuDemoRaceCourseAssets[gMainMenuModeSelection].courseIndex;
     gRaceUpdatePaused = 0;
     D_80121B58 = 0;
     D_80121B5F = 0;
@@ -221,7 +221,7 @@ void initMainMenuDemoRace(void) {
     players[3].soundDisabled = 0;
     players[3].replayInputSource = 5;
 
-    courseAsset = &gMainMenuDemoRaceAssets[gMainMenuModeSelection];
+    courseAsset = &gMainMenuDemoRaceCourseAssets[gMainMenuModeSelection];
     loadCompressedRomAsset(courseAsset->romStart, courseAsset->romEnd, 0x2B);
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
@@ -232,7 +232,7 @@ void initMainMenuDemoRace(void) {
     gPlayerCount = 1;
     func_80078430();
     gPlayerCount = 4;
-    configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, gMainMenuDemoRaceInitialAspectRatio);
+    configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, gMainMenuDemoRacePreviewAspectRatio);
     D_8011228C = 1;
     gFramebufferSwapDelay = 0;
     initRaceCourseEffects();
@@ -279,7 +279,7 @@ void waitForMainMenuDemoRaceStart(void) {
 
 // zoomMainMenuDemoRaceViewport best match: 75.250% (nonmatchings/zoomMainMenuDemoRaceViewport-1197934324348345530/base_3.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/zoomMainMenuDemoRaceViewport.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_mode_flow/zoomMainMenuDemoRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomMainMenuDemoRaceViewport(void) {
@@ -328,7 +328,7 @@ void runMainMenuDemoRace(void) {
     func_8006D700();
     func_8007AA50();
     gCurrentGameTask->transitionTimer += 1;
-    if (gCurrentGameTask->transitionTimer == gMainMenuDemoRaceDurations[gMainMenuModeSelection]) {
+    if (gCurrentGameTask->transitionTimer == gMainMenuDemoRaceDurationBySelection[gMainMenuModeSelection]) {
         setCurrentGameTaskCallback(fadeOutMainMenuDemoRace, 0);
         requestMusicSequenceStop(0x40);
     }
@@ -345,34 +345,34 @@ void fadeOutMainMenuDemoRace(void) {
     if (gMenuFadeAlpha >= 0xFF) {
         gFramebufferSwapHold = 1;
         {
-            void (*func_ptr)(void) = returnToMainMenuDemoRaceModeMenu;
+            void (*func_ptr)(void) = returnToMainMenuDemoRaceSelectionMenu;
             setCurrentGameTaskCallback(func_ptr, 0);
         }
     }
 }
 
-void returnToMainMenuDemoRaceModeMenu(void) {
+void returnToMainMenuDemoRaceSelectionMenu(void) {
     if (gPendingFramebufferSwapCount == 2) {
         stopSoundEffects();
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        setCurrentGameTaskCallback(&initMainMenuDemoRaceModeMenu, 0);
+        setCurrentGameTaskCallback(&initMainMenuDemoRaceSelectionMenu, 0);
     }
 }
 
 void startTrainingCourseFlow(void) {
     gTrainingCourseLesson = 1;
-    setCurrentGameTaskCallback(&deferTrainingCourseInit, 0);
+    setCurrentGameTaskCallback(&queueTrainingCourseRaceInit, 0);
 }
 
-void deferTrainingCourseInit(void) {
+void queueTrainingCourseRaceInit(void) {
     setCurrentGameTaskCallback(&initTrainingCourseRace, 0);
 }
 
 // initTrainingCourseRace best match: 98.186% (nonmatchings/func_8004002C-6061209858023118177/base.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/initTrainingCourseRace.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_mode_flow/initTrainingCourseRace.s")
 
 #ifdef NON_MATCHING
 void initTrainingCourseRace(void) {
@@ -519,7 +519,7 @@ void waitForTrainingCourseStartSelection(void) {
 
 // zoomTrainingCourseRaceViewport best match: 74.802% (nonmatchings/zoomTrainingCourseRaceViewport-1197934324348345530/base_8.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/zoomTrainingCourseRaceViewport.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_mode_flow/zoomTrainingCourseRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomTrainingCourseRaceViewport(void) {
@@ -670,7 +670,7 @@ void handleTrainingCourseActionMenuSelection(void) {
             if (gTrainingCourseLesson < 9) {
                 gTrainingCourseLesson += 1;
             }
-            setCurrentGameTaskCallback(deferTrainingCourseInit, 0);
+            setCurrentGameTaskCallback(queueTrainingCourseRaceInit, 0);
         }
         if (gMainMenuSelectionResult == 2) {
             setCurrentGameTaskCallback(initTrainingCourseRace, 0);
