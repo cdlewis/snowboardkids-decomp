@@ -70,11 +70,12 @@ void resetGameplayRng(void) {
     resetSecondaryRng();
 }
 
-// func_800431B0 best match: 98.722%
+// func_800431B0 best match: 99.389%
 #pragma GLOBAL_ASM("asm/nonmatchings/asset_decompression/func_800431B0.s")
 
 #ifdef NON_MATCHING
 void func_800431B0(s16 arg0) {
+    HuffmanNode *iterNode;
     HuffmanNode *node;
     HuffmanNode *curNode;
     s32 head;
@@ -82,11 +83,13 @@ void func_800431B0(s16 arg0) {
     s16 oldHead;
     s16 next;
     s16 *count;
+    s16 tailCopy;
     s32 end = -1;
 
     count = &D_800D4018;
+    oldHead = 1;
     head = D_800D4010;
-    *count += 1;
+    *count += oldHead;
     cur = head;
     if (head == end) {
         oldHead = D_800D4014;
@@ -94,23 +97,24 @@ void func_800431B0(s16 arg0) {
         D_800D4014 = arg0;
         node = &D_80110928[arg0];
         node->next = head;
-        node->prev = oldHead & 0xFFFFu;
+        node->prev = 0xFFFFu & oldHead;
         return;
     }
 
     if (cur >= 0) {
         do {
             curNode = &D_80110928[cur];
-            if (curNode->weight < D_80110928[arg0].weight) {
+            iterNode = curNode;
+            if (iterNode->weight < D_80110928[arg0].weight) {
                 break;
             }
-            cur = curNode->prev;
+            cur = iterNode->prev;
         } while (cur >= 0);
     }
 
     node = &D_80110928[arg0];
     if (cur == end) {
-        next = D_800D4014;
+        next = (tailCopy = D_800D4014);
         D_80110928[next].prev = arg0;
         node->prev = end;
         D_800D4014 = arg0;
