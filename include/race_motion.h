@@ -1,5 +1,5 @@
-#ifndef RACE_COURSE_MOTION_H
-#define RACE_COURSE_MOTION_H
+#ifndef RACE_MOTION_H
+#define RACE_MOTION_H
 
 #include "common.h"
 

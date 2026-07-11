@@ -4,7 +4,7 @@
 #include "race_scene_loader.h"
 #include "callback_task_scheduler.h"
 #include "system_boot.h"
-#include "race_course_motion.h"
+#include "race_motion.h"
 #include "race_course_effects.h"
 #include "race_intro_effects.h"
 #include "race_item_effects.h"

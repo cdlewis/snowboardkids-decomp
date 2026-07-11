@@ -1,6 +1,6 @@
 #include "common.h"
 #include "fixed_point_math.h"
-#include "race_course_motion.h"
+#include "race_motion.h"
 #include "race_camera.h"
 
 #define RACE_CAMERA_COUNT 4
