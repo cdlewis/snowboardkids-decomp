@@ -14,6 +14,7 @@
 #include "race_camera.h"
 #include "race_flow.h"
 #include "race_intro_transition.h"
+#include "race_intro_transition_2.h"
 #define MENU_RENDERING_S16_STEP_PROTOTYPE
 #include "menu_rendering.h"
 
@@ -118,7 +119,6 @@ extern void func_80002A1C(void);
 extern void func_80002CE4(void);
 extern void func_8000262C(void);
 extern void func_80002024(void);
-extern void func_8003ED00(void);
 extern OSThread D_800E29C8;
 extern OSMesgQueue D_800E4B78;
 extern OSMesg D_800E4B90[];
