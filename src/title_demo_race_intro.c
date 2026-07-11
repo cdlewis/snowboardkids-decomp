@@ -1,5 +1,5 @@
-#include "race_intro_transition.h"
-#include "race_intro_transition_2.h"
+#include "course_demo_race_intro.h"
+#include "title_demo_race_intro.h"
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
@@ -35,17 +35,17 @@ extern RaceIntroPlayer D_80121D80[];
 extern s16 gMenuFadeAlpha;
 extern s8 gMenuFadeOverlayActive;
 extern f32 D_800E10C8;
-extern s16 D_800BB890[];
-extern s16 D_800BB8B0[];
-extern u8 D_800BB8DC[];
-extern u8 D_800BB8F4[];
+extern s16 gTitleDemoReplaySegmentFrames[];
+extern s16 gTitleDemoCameraModeFrames[];
+extern u8 gTitleDemoCameraModes[];
+extern u8 gTitleDemoReplayInputs[];
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gRaceRumbleEnabled;
 extern s8 gRaceSplitscreenMode;
 extern s8 gFramebufferSwapDelay;
 extern u8 D_8011228C;
-extern s8 D_8010B1E0;
-extern s8 D_8010B1E1;
+extern s8 gTitleDemoRaceIntroViewportHeight;
+extern s8 gTitleDemoRaceIntroFadeStep;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
@@ -84,7 +84,7 @@ extern void releaseMenuAssetHandles(void);
 #define COURSE_REPLAY_OFFSET(course) ((((((((course) << 2) - (course)) << 5) + (course)) << 2) - (course)) << 2)
 
 // initTitleDemoRaceIntro best match: 99.874% (nonmatchings/initTitleDemoRaceIntro-5635509610426229442/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition_2/initTitleDemoRaceIntro.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/title_demo_race_intro/initTitleDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
 void initTitleDemoRaceIntro(void) {
@@ -165,30 +165,30 @@ void initTitleDemoRaceIntro(void) {
     func_8008BEB0();
     func_80078430();
     initRaceCourseEffects();
-    setCurrentGameTaskCallback(func_8003EF7C, 0);
+    setCurrentGameTaskCallback(waitForTitleDemoRaceIntroStart, 0);
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
     gCurrentGameTask->fadeDelay = 0x4A1;
     gCurrentGameTask->fadeStep = 0;
     gCurrentGameTask->courseSegment = 0;
     gCurrentGameTask->startDelay = 0x14;
-    D_8010B1E1 = 0;
-    D_8010B1E0 = 0;
+    gTitleDemoRaceIntroFadeStep = 0;
+    gTitleDemoRaceIntroViewportHeight = 0;
 }
 #endif
 
-void func_8003EF7C(void) {
+void waitForTitleDemoRaceIntroStart(void) {
     gCurrentGameTask->startDelay--;
     if (gCurrentGameTask->startDelay == 0) {
         configureViewport(0, 0xA0, 0x78, 0x120, 0, 0x140, 0xF0, 1.333333373f);
         gMenuFadeAlpha = 0;
         requestMusicSequenceBank(0);
-        setCurrentGameTaskCallback(func_8003F00C, 0);
+        setCurrentGameTaskCallback(updateTitleDemoRaceIntro, 0);
     }
 }
 
-// func_8003F00C best match: 87.815% (nonmatchings/func_8003F00C-8207005055717715604/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition_2/func_8003F00C.s")
+// updateTitleDemoRaceIntro best match: 87.815% (nonmatchings/updateTitleDemoRaceIntro-8207005055717715604/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/title_demo_race_intro/updateTitleDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -198,7 +198,7 @@ typedef struct {
     u8 b3;
 } FourBytes;
 
-void func_8003F00C(void) {
+void updateTitleDemoRaceIntro(void) {
     RaceIntroTransitionState *state;
     s32 prevOpen;
     s32 i;
@@ -211,12 +211,12 @@ void func_8003F00C(void) {
     FourBytes *fourDst;
 
     prevOpen = gRaceUpdatePaused;
-    configureViewport(0, 0xA0, 0x78, 0x120, D_8010B1E0, 0x140, 0xF0, D_800E10C8);
+    configureViewport(0, 0xA0, 0x78, 0x120, gTitleDemoRaceIntroViewportHeight, 0x140, 0xF0, D_800E10C8);
 
-    temp = D_8010B1E0;
+    temp = gTitleDemoRaceIntroViewportHeight;
     if (temp != 0xB0) {
         temp += 0x10;
-        D_8010B1E0 = temp;
+        gTitleDemoRaceIntroViewportHeight = temp;
         if ((temp & 0xFF) == 0xB0) {
             createCallbackTask(updateTitleScreenStartPrompt, 0, 0x64);
         }
@@ -224,12 +224,12 @@ void func_8003F00C(void) {
 
     state = gCurrentGameTask;
     fadeStep = state->fadeStep;
-    if (fadeStep == D_800BB890[state->courseSegment]) {
+    if (fadeStep == gTitleDemoReplaySegmentFrames[state->courseSegment]) {
         i = 0;
         do {
             dst = (u8 *)D_80121D80 + i;
             offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-            src = D_800BB8F4 + offset + i;
+            src = gTitleDemoReplayInputs + offset + i;
             value = *src;
             i++;
             *dst = value;
@@ -239,7 +239,7 @@ void func_8003F00C(void) {
         do {
             dst = (u8 *)D_8012238C + i;
             offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-            src = D_800BB8F4 + offset + 0x60C0 + i;
+            src = gTitleDemoReplayInputs + offset + 0x60C0 + i;
             value = *src;
             i++;
             *dst = value;
@@ -249,7 +249,7 @@ void func_8003F00C(void) {
         do {
             dst = (u8 *)D_80122998 + i;
             offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-            src = D_800BB8F4 + offset + 0xC180 + i;
+            src = gTitleDemoReplayInputs + offset + 0xC180 + i;
             value = *src;
             i++;
             *dst = value;
@@ -259,13 +259,13 @@ void func_8003F00C(void) {
 copy_player3:
         fourDst = (FourBytes *)((u8 *)D_80122FA4 + i);
         offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-        fourDst->b0 = D_800BB8F4[offset + 0x12240 + i];
+        fourDst->b0 = gTitleDemoReplayInputs[offset + 0x12240 + i];
         offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-        fourDst->b1 = D_800BB8F4[offset + 0x12241 + i];
+        fourDst->b1 = gTitleDemoReplayInputs[offset + 0x12241 + i];
         offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-        fourDst->b2 = D_800BB8F4[offset + 0x12242 + i];
+        fourDst->b2 = gTitleDemoReplayInputs[offset + 0x12242 + i];
         offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-        fourDst->b3 = D_800BB8F4[offset + 0x12243 + i];
+        fourDst->b3 = gTitleDemoReplayInputs[offset + 0x12243 + i];
         i += 4;
         if (i != 0x60C) {
             goto copy_player3;
@@ -277,8 +277,8 @@ copy_player3:
     }
 
     temp = state->startDelay;
-    if (fadeStep == D_800BB8B0[temp]) {
-        setRaceCameraMode(0, D_800BB8DC[temp]);
+    if (fadeStep == gTitleDemoCameraModeFrames[temp]) {
+        setRaceCameraMode(0, gTitleDemoCameraModes[temp]);
         gCurrentGameTask->startDelay++;
         gRaceUpdatePaused = 1;
     }
@@ -298,20 +298,20 @@ copy_player3:
     }
 
     if (gPlayerInputPressed & 0x1000) {
-        if (D_8010B1E1 == 0) {
-            D_8010B1E1 = 0x10;
+        if (gTitleDemoRaceIntroFadeStep == 0) {
+            gTitleDemoRaceIntroFadeStep = 0x10;
         }
         requestMusicSequenceStop(0x20);
     }
 
     if (gCurrentGameTask->fadeDelay < 0x41) {
-        if (D_8010B1E1 == 0) {
-            D_8010B1E1 = 4;
+        if (gTitleDemoRaceIntroFadeStep == 0) {
+            gTitleDemoRaceIntroFadeStep = 4;
         }
         requestMusicSequenceStop(0x82);
     }
 
-    temp = D_8010B1E1;
+    temp = gTitleDemoRaceIntroFadeStep;
     if (temp != 0) {
         gMenuFadeOverlayActive = 1;
         gMenuFadeAlpha += temp;
@@ -320,12 +320,12 @@ copy_player3:
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(func_8003F4B4, 0);
+        setCurrentGameTaskCallback(finishTitleDemoRaceIntro, 0);
     }
 }
 #endif
 
-void func_8003F4B4(void) {
+void finishTitleDemoRaceIntro(void) {
     if (gPendingFramebufferSwapCount == 2) {
         gRaceRumbleEnabled = 0;
         gRaceCameraModeChangeDisabled = 0;

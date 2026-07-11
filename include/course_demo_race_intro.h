@@ -1,5 +1,5 @@
-#ifndef RACE_INTRO_TRANSITION_H
-#define RACE_INTRO_TRANSITION_H
+#ifndef COURSE_DEMO_RACE_INTRO_H
+#define COURSE_DEMO_RACE_INTRO_H
 
 #include "common.h"
 
@@ -15,8 +15,8 @@ typedef struct {
 } RaceIntroTransitionState;
 
 void initCourseDemoRaceIntro(void);
-void func_8003EA78(void);
-void func_8003EAF0(void);
-void func_8003EC6C(void);
+void waitForCourseDemoRaceIntroStart(void);
+void updateCourseDemoRaceIntro(void);
+void finishCourseDemoRaceIntro(void);
 
 #endif
