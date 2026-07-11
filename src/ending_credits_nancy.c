@@ -1,6 +1,6 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
-#include "ending_sequence_effects.h"
+#include "ending_sequence_actors.h"
 #include "ending_credits_nancy.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
@@ -287,7 +287,7 @@ void waitEndingNancyPhase2B(EndingCreditsNancy *arg0) {
     if (gEndingSequencePhase == 0x2B) {
         setCallbackTaskCallback(arg0, updateEndingNancyDriftAfterPhase2D);
         setMainMenuSceneModelAnimation(1, 0x4D);
-        createCallbackTask(&initEndingSpeedLines, 0, 0x64);
+        createCallbackTask(&initEndingNancySpeedLines, 0, 0x64);
     }
 }
 
@@ -385,7 +385,7 @@ void updateEndingNancyStartRunDust(EndingCreditsNancy *arg0) {
             arg0->timer = 0;
             setCallbackTaskCallback(arg0, waitEndingNancyPhase0E);
             setMainMenuSceneModelAnimation(1, 0x15);
-            createCallbackTask(&initEndingRunDust, 0, 0x64);
+            createCallbackTask(&initEndingNancyRunDust, 0, 0x64);
         }
     }
     addMainMenuSceneModelDrawCallback(1);

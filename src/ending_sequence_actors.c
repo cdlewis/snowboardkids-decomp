@@ -1,13 +1,13 @@
 #include "common.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
-#include "ending_sequence_effects.h"
+#include "ending_sequence_actors.h"
 #include "main_menu_scene_model.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "menu_renderer.h"
 #include "title_menu.h"
 
-struct EndingSequenceEffectActor {
+struct EndingSequenceActor {
     char pad0[0x10];
     /* 0x10 */ s16 delay;
     /* 0x12 */ char pad12[6];
@@ -66,43 +66,43 @@ extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 gMenuIconTilemapAssetHandle;
 extern s16 gMenuPanelTilemapAssetHandle;
 extern u16 gEndingSequencePhase;
-extern u8 gMenuTransitionRotationStep;
-extern s16 gMenuTransitionRotationAngle;
+extern u8 gEndingTransitionRotationStep;
+extern s16 gEndingTransitionSnowboardAngle;
 extern u8 gEndingCharacterEffectDoneFlags[];
-extern u16 gMenuTransitionRotationFrameCount;
+extern u16 gEndingTransitionRotationFrameCount;
 extern u16 gEndingCharacterRunDustFrameOffsets[];
 extern u16 gEndingSnowmanEntranceFrameOffsets[];
 extern s32 gActiveMenuTask;
 
-void updateEndingCharacterVanishPoof(EndingSequenceEffectActor *arg0);
-void updateEndingSpeedLines(EndingSequenceEffectActor *arg0);
-void drawEndingBigBurst(EndingSequenceEffectActor *arg0);
-void updateEndingBigBurst(EndingSequenceEffectActor *arg0);
-void updateEndingRisingStar(EndingSequenceEffectActor *arg0);
-void updateEndingIdleSparkle(EndingSequenceEffectActor *arg0);
-void updateEndingSnowmanEntranceEffect(EndingSequenceEffectActor *arg0);
-void updateRaceToMainMenuSnowboardIconSlowSpin(EndingSequenceEffectActor *arg0);
-void updateRaceToMainMenuSnowboardIconWaitSecondSpin(EndingSequenceEffectActor *arg0);
-void updateRaceToMainMenuSnowboardIconSecondSpin(EndingSequenceEffectActor *arg0);
-void drawRaceToMainMenuSnowboardIcon(EndingSequenceEffectActor *arg0);
-void updateRaceToMainMenuSnowboardIconFastSpin(EndingSequenceEffectActor *arg0);
-void updateRaceToMainMenuSnowboardIconWaitStart(EndingSequenceEffectActor *arg0);
-void updateRaceToMainMenuSnowflakeIconIdle(EndingSequenceEffectActor *arg0);
-void drawRaceToMainMenuLogoWipe(EndingSequenceEffectActor *arg0);
-void updateRaceToMainMenuLogoWipeOpen(EndingSequenceEffectActor *arg0);
-void updateRaceToMainMenuLogoWipeClose(EndingSequenceEffectActor *arg0);
-void updateEndingCharacterLoopingSparkle(EndingSequenceEffectActor *arg0);
-void updateEndingRunDust(EndingSequenceEffectActor *arg0);
-void updateEndingSmallBurst(EndingSequenceEffectActor *arg0);
-void updateEndingCharacterAura(EndingSequenceEffectActor *arg0);
-void updateEndingPhaseAdvanceSparkle(EndingSequenceEffectActor *arg0);
-void updateEndingDelayedSparkle(EndingSequenceEffectActor *arg0);
+void updateEndingCharacterVanishPoof(EndingSequenceActor *arg0);
+void updateEndingNancySpeedLines(EndingSequenceActor *arg0);
+void drawEndingTommyBigBurst(EndingSequenceActor *arg0);
+void updateEndingTommyBigBurst(EndingSequenceActor *arg0);
+void updateEndingSlashRisingStar(EndingSequenceActor *arg0);
+void updateEndingIdleSparkle(EndingSequenceActor *arg0);
+void updateEndingTommySnowmanEntrance(EndingSequenceActor *arg0);
+void updateRaceToMainMenuSnowboardIconSlowSpin(EndingSequenceActor *arg0);
+void updateRaceToMainMenuSnowboardIconWaitSecondSpin(EndingSequenceActor *arg0);
+void updateRaceToMainMenuSnowboardIconSecondSpin(EndingSequenceActor *arg0);
+void drawRaceToMainMenuSnowboardIcon(EndingSequenceActor *arg0);
+void updateRaceToMainMenuSnowboardIconFastSpin(EndingSequenceActor *arg0);
+void updateRaceToMainMenuSnowboardIconWaitStart(EndingSequenceActor *arg0);
+void updateRaceToMainMenuSnowflakeIconIdle(EndingSequenceActor *arg0);
+void drawRaceToMainMenuLogoWipe(EndingSequenceActor *arg0);
+void updateRaceToMainMenuLogoWipeOpen(EndingSequenceActor *arg0);
+void updateRaceToMainMenuLogoWipeClose(EndingSequenceActor *arg0);
+void updateEndingCharacterLoopingSparkle(EndingSequenceActor *arg0);
+void updateEndingNancyRunDust(EndingSequenceActor *arg0);
+void updateEndingSmallBurst(EndingSequenceActor *arg0);
+void updateEndingCharacterAura(EndingSequenceActor *arg0);
+void updateEndingPhaseAdvanceSparkle(EndingSequenceActor *arg0);
+void updateEndingDelayedSparkle(EndingSequenceActor *arg0);
 
-void drawEndingCharacterVanishPoof(EndingSequenceEffectActor *arg0) {
+void drawEndingCharacterVanishPoof(EndingSequenceActor *arg0) {
     drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x32) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
-void updateEndingCharacterVanishPoof(EndingSequenceEffectActor *arg0) {
+void updateEndingCharacterVanishPoof(EndingSequenceActor *arg0) {
     MainMenuSceneModel *model;
     s32 divisor;
 
@@ -121,14 +121,14 @@ void updateEndingCharacterVanishPoof(EndingSequenceEffectActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawEndingCharacterVanishPoof, arg0);
 }
 
-void initEndingCharacterVanishPoof(EndingSequenceEffectActor *arg0) {
+void initEndingCharacterVanishPoof(EndingSequenceActor *arg0) {
     arg0->angleVelocity = 0;
     arg0->angle = 0;
     setCallbackTaskCallback(arg0, updateEndingCharacterVanishPoof);
 }
 
 void spawnEndingCharacterVanishPoof(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
-    EndingSequenceEffectActor *temp_v0 = (EndingSequenceEffectActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingCharacterVanishPoof, 0, 0x63));
+    EndingSequenceActor *temp_v0 = (EndingSequenceActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingCharacterVanishPoof, 0, 0x63));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
@@ -136,15 +136,15 @@ void spawnEndingCharacterVanishPoof(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
     temp_v0->palette = arg3;
 }
 
-void drawEndingSpeedLine(EndingSequenceEffectActor *arg0) {
+void drawEndingNancySpeedLine(EndingSequenceActor *arg0) {
     s32 temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
-    EndingSequenceEffectActor *linePosition =
-        (EndingSequenceEffectActor *)((s32)arg0 + arg0->uFrameIndex * sizeof(arg0->linePositions[0]));
+    EndingSequenceActor *linePosition =
+        (EndingSequenceActor *)((s32)arg0 + arg0->uFrameIndex * sizeof(arg0->linePositions[0]));
 
     drawMenuSprite(linePosition->x, linePosition->offsetY, temp, 0xF, 0x20, 0x20, 0, 0);
 }
 
-void updateEndingSpeedLines(EndingSequenceEffectActor *arg0) {
+void updateEndingNancySpeedLines(EndingSequenceActor *arg0) {
     arg0->introTimer = (u16) arg0->introTimer + 1;
     if ((((u16) arg0->introTimer) % 30) == 0) {
         if (arg0->uFrameIndex < 2) {
@@ -155,10 +155,10 @@ void updateEndingSpeedLines(EndingSequenceEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawEndingSpeedLine, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingNancySpeedLine, arg0);
 }
 
-void initEndingSpeedLines(EndingSequenceEffectActor *arg0) {
+void initEndingNancySpeedLines(EndingSequenceActor *arg0) {
     arg0->linePositions[2] = -0x38;
     arg0->linePositions[5] = -0x5A;
     arg0->linePositions[0] = -0x30;
@@ -167,14 +167,14 @@ void initEndingSpeedLines(EndingSequenceEffectActor *arg0) {
     arg0->linePositions[4] = -0x56;
     arg0->introTimer = 0;
     arg0->frameIndex = 0;
-    setCallbackTaskCallback(arg0, updateEndingSpeedLines);
+    setCallbackTaskCallback(arg0, updateEndingNancySpeedLines);
 }
 
-void drawEndingCharacterLoopingSparkle(EndingSequenceEffectActor *arg0) {
+void drawEndingCharacterLoopingSparkle(EndingSequenceActor *arg0) {
     drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x10) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-void updateEndingCharacterLoopingSparkle(EndingSequenceEffectActor *arg0) {
+void updateEndingCharacterLoopingSparkle(EndingSequenceActor *arg0) {
     MainMenuSceneModel *model;
     s32 divisor;
 
@@ -194,25 +194,25 @@ void updateEndingCharacterLoopingSparkle(EndingSequenceEffectActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawEndingCharacterLoopingSparkle, arg0);
 }
 
-void initEndingCharacterLoopingSparkle(EndingSequenceEffectActor *arg0) {
+void initEndingCharacterLoopingSparkle(EndingSequenceActor *arg0) {
     arg0->angleVelocity = 0;
     arg0->angle = 0;
     setCallbackTaskCallback(arg0, updateEndingCharacterLoopingSparkle);
 }
 
 void spawnEndingCharacterLoopingSparkle(s16 arg0, s16 arg1, u8 arg2) {
-    EndingSequenceEffectActor *temp_v0 = (EndingSequenceEffectActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingCharacterLoopingSparkle, 0, 0x63));
+    EndingSequenceActor *temp_v0 = (EndingSequenceActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingCharacterLoopingSparkle, 0, 0x63));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
     temp_v0->characterId = arg2;
 }
 
-// drawEndingBigBurst best match: 99.074%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_effects/drawEndingBigBurst.s")
+// drawEndingTommyBigBurst best match: 99.074%
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_actors/drawEndingTommyBigBurst.s")
 
 #ifdef NON_MATCHING
-void drawEndingBigBurst(EndingSequenceEffectActor *arg0) {
+void drawEndingTommyBigBurst(EndingSequenceActor *arg0) {
     Gfx *gfx;
     Gfx *new_var;
     s32 w0;
@@ -223,7 +223,7 @@ void drawEndingBigBurst(EndingSequenceEffectActor *arg0) {
 }
 #endif
 
-void updateEndingBigBurst(EndingSequenceEffectActor *arg0) {
+void updateEndingTommyBigBurst(EndingSequenceActor *arg0) {
     arg0->effectTimer++;
     if (arg0->effectTimer == 3) {
         arg0->effectTimer = 0;
@@ -253,10 +253,10 @@ void updateEndingBigBurst(EndingSequenceEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawEndingBigBurst, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingTommyBigBurst, arg0);
 }
 
-void initEndingBigBurst(EndingSequenceEffectActor *arg0) {
+void initEndingTommyBigBurst(EndingSequenceActor *arg0) {
     arg0->x = -0x3D;
     arg0->y = -0x63;
     arg0->offsetX = -0x4E;
@@ -265,18 +265,18 @@ void initEndingBigBurst(EndingSequenceEffectActor *arg0) {
     arg0->frameIndex = 0;
     arg0->angle = 0;
     arg0->characterId = 0;
-    setCallbackTaskCallback(arg0, updateEndingBigBurst);
+    setCallbackTaskCallback(arg0, updateEndingTommyBigBurst);
 }
 
-void drawEndingRisingStar(EndingSequenceEffectActor *arg0) {
+void drawEndingSlashRisingStar(EndingSequenceActor *arg0) {
     s32 temp;
 
     temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 9) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-void updateEndingRisingStar(EndingSequenceEffectActor *arg0) {
-    EndingSequenceEffectActor *temp_a2 = arg0;
+void updateEndingSlashRisingStar(EndingSequenceActor *arg0) {
+    EndingSequenceActor *temp_a2 = arg0;
 
     arg0->x++;
     arg0->y--;
@@ -288,24 +288,24 @@ void updateEndingRisingStar(EndingSequenceEffectActor *arg0) {
     if (temp_a2->animFrame == 6) {
         removeCallbackTask(temp_a2);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, drawEndingRisingStar, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingSlashRisingStar, temp_a2);
     }
 }
 
-void initEndingRisingStar(EndingSequenceEffectActor *arg0) {
+void initEndingSlashRisingStar(EndingSequenceActor *arg0) {
     arg0->x = 0x3B;
     arg0->y = -0x38;
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    setCallbackTaskCallback(arg0, updateEndingRisingStar);
+    setCallbackTaskCallback(arg0, updateEndingSlashRisingStar);
 }
 
-void drawEndingRunDust(EndingSequenceEffectActor *arg0) {
+void drawEndingNancyRunDust(EndingSequenceActor *arg0) {
     s32 temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x - 0xE, arg0->y - 0x50, temp, (u16)(gEndingCharacterRunDustFrameOffsets[arg0->animFrame] + 6), 0x20, 0x20, 0, 0);
 }
 
-void updateEndingRunDust(EndingSequenceEffectActor *arg0) {
+void updateEndingNancyRunDust(EndingSequenceActor *arg0) {
     MainMenuSceneModel *model;
     s32 divisor;
 
@@ -322,24 +322,24 @@ void updateEndingRunDust(EndingSequenceEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawEndingRunDust, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingNancyRunDust, arg0);
 }
 
-void initEndingRunDust(EndingSequenceEffectActor *arg0) {
+void initEndingNancyRunDust(EndingSequenceActor *arg0) {
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    setCallbackTaskCallback(arg0, updateEndingRunDust);
+    setCallbackTaskCallback(arg0, updateEndingNancyRunDust);
 }
 
-void drawEndingSmallBurst(EndingSequenceEffectActor *arg0) {
+void drawEndingSmallBurst(EndingSequenceActor *arg0) {
     s32 temp;
 
     temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x14) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-void updateEndingSmallBurst(EndingSequenceEffectActor *arg0) {
-    EndingSequenceEffectActor *temp_a2 = arg0;
+void updateEndingSmallBurst(EndingSequenceActor *arg0) {
+    EndingSequenceActor *temp_a2 = arg0;
 
     arg0->animTimer++;
     if (arg0->animTimer == 2) {
@@ -353,24 +353,24 @@ void updateEndingSmallBurst(EndingSequenceEffectActor *arg0) {
     }
 }
 
-void initEndingSmallBurst(EndingSequenceEffectActor *arg0) {
+void initEndingSmallBurst(EndingSequenceActor *arg0) {
     arg0->animTimer = 0;
     arg0->animFrame = 0;
     setCallbackTaskCallback(arg0, updateEndingSmallBurst);
 }
 
 void spawnEndingSmallBurst(s16 arg0, s16 arg1) {
-    EndingSequenceEffectActor *temp_v0 = (EndingSequenceEffectActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingSmallBurst, 0, 0x64));
+    EndingSequenceActor *temp_v0 = (EndingSequenceActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingSmallBurst, 0, 0x64));
 
     temp_v0->x = arg0;
     temp_v0->y = arg1;
 }
 
-void drawEndingCharacterAura(EndingSequenceEffectActor *arg0) {
+void drawEndingCharacterAura(EndingSequenceActor *arg0) {
     drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x20) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
-void updateEndingCharacterAura(EndingSequenceEffectActor *arg0) {
+void updateEndingCharacterAura(EndingSequenceActor *arg0) {
     MainMenuSceneModel *model;
     s32 divisor;
 
@@ -391,14 +391,14 @@ void updateEndingCharacterAura(EndingSequenceEffectActor *arg0) {
     removeCallbackTask(arg0);
 }
 
-void initEndingCharacterAura(EndingSequenceEffectActor *arg0) {
+void initEndingCharacterAura(EndingSequenceActor *arg0) {
     arg0->angleVelocity = 0;
     arg0->angle = 0;
     setCallbackTaskCallback(arg0, updateEndingCharacterAura);
 }
 
 void spawnEndingCharacterAura(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
-    EndingSequenceEffectActor *temp_v0 = (EndingSequenceEffectActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingCharacterAura, 0, 0x64));
+    EndingSequenceActor *temp_v0 = (EndingSequenceActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingCharacterAura, 0, 0x64));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
@@ -406,15 +406,15 @@ void spawnEndingCharacterAura(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
     temp_v0->palette = arg3;
 }
 
-void drawEndingIdleSparkle(EndingSequenceEffectActor *arg0) {
+void drawEndingIdleSparkle(EndingSequenceActor *arg0) {
     s32 temp;
 
     temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x20) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-void updateEndingIdleSparkle(EndingSequenceEffectActor *arg0) {
-    EndingSequenceEffectActor *temp_a2 = arg0;
+void updateEndingIdleSparkle(EndingSequenceActor *arg0) {
+    EndingSequenceActor *temp_a2 = arg0;
 
     arg0->animTimer++;
     if (arg0->animTimer == 4) {
@@ -431,7 +431,7 @@ void updateEndingIdleSparkle(EndingSequenceEffectActor *arg0) {
     }
 }
 
-void initEndingIdleSparkle(EndingSequenceEffectActor *arg0) {
+void initEndingIdleSparkle(EndingSequenceActor *arg0) {
     arg0->x = -0x14;
     arg0->y = -0x59;
     arg0->animTimer = 0;
@@ -439,13 +439,13 @@ void initEndingIdleSparkle(EndingSequenceEffectActor *arg0) {
     setCallbackTaskCallback(arg0, updateEndingIdleSparkle);
 }
 
-void drawEndingPhaseAdvanceSparkle(EndingSequenceEffectActor *arg0) {
+void drawEndingPhaseAdvanceSparkle(EndingSequenceActor *arg0) {
     s32 temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, arg0->animFrame, 0x20, 0x20, 0, 0);
 }
 
-void updateEndingPhaseAdvanceSparkle(EndingSequenceEffectActor *arg0) {
-    EndingSequenceEffectActor *temp_a2 = arg0;
+void updateEndingPhaseAdvanceSparkle(EndingSequenceActor *arg0) {
+    EndingSequenceActor *temp_a2 = arg0;
 
     if (arg0->animFrame < 5) {
         arg0->animTimer++;
@@ -464,20 +464,20 @@ void updateEndingPhaseAdvanceSparkle(EndingSequenceEffectActor *arg0) {
     gEndingSequencePhase = 3;
 }
 
-void initEndingPhaseAdvanceSparkle(EndingSequenceEffectActor *arg0) {
+void initEndingPhaseAdvanceSparkle(EndingSequenceActor *arg0) {
     arg0->animFrame = 0;
     arg0->animTimer = 0;
     setCallbackTaskCallback(arg0, updateEndingPhaseAdvanceSparkle);
 }
 
 void spawnEndingPhaseAdvanceSparkle(s16 arg0, s16 arg1) {
-    EndingSequenceEffectActor *temp = (EndingSequenceEffectActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingPhaseAdvanceSparkle, 0, 0x64));
+    EndingSequenceActor *temp = (EndingSequenceActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingPhaseAdvanceSparkle, 0, 0x64));
 
     temp->x = arg0;
     temp->y = arg1;
 }
 
-void drawEndingDelayedSparkle(EndingSequenceEffectActor *arg0) {
+void drawEndingDelayedSparkle(EndingSequenceActor *arg0) {
     s32 temp;
 
     temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
@@ -485,12 +485,12 @@ void drawEndingDelayedSparkle(EndingSequenceEffectActor *arg0) {
 }
 
 // updateEndingDelayedSparkle best match: 97.653%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_effects/updateEndingDelayedSparkle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_actors/updateEndingDelayedSparkle.s")
 
 #ifdef NON_MATCHING
-void updateEndingDelayedSparkle(EndingSequenceEffectActor *arg0) {
+void updateEndingDelayedSparkle(EndingSequenceActor *arg0) {
     s32 var_v1;
-    EndingSequenceEffectActor *temp_a2 = arg0;
+    EndingSequenceActor *temp_a2 = arg0;
 
     var_v1 = 0xB4;
     if ((u16) arg0->delay == 0) {
@@ -516,29 +516,29 @@ void updateEndingDelayedSparkle(EndingSequenceEffectActor *arg0) {
 }
 #endif
 
-void initEndingDelayedSparkle(EndingSequenceEffectActor *arg0) {
+void initEndingDelayedSparkle(EndingSequenceActor *arg0) {
     arg0->animFrame = 0;
     arg0->animTimer = 0;
     setCallbackTaskCallback(arg0, updateEndingDelayedSparkle);
 }
 
 void spawnEndingDelayedSparkle(s16 arg0, s16 arg1, u8 arg2) {
-    EndingSequenceEffectActor *temp_v0 = (EndingSequenceEffectActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingDelayedSparkle, 0, 0x64));
+    EndingSequenceActor *temp_v0 = (EndingSequenceActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingDelayedSparkle, 0, 0x64));
 
     temp_v0->x = arg0;
     temp_v0->y = arg1;
     temp_v0->delay = arg2;
 }
 
-void drawEndingSnowmanEntranceEffect(EndingSequenceEffectActor *arg0) {
+void drawEndingTommySnowmanEntrance(EndingSequenceActor *arg0) {
     s32 temp;
 
     temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (gEndingSnowmanEntranceFrameOffsets[arg0->animFrame] + 0x19) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-void updateEndingSnowmanEntranceEffect(EndingSequenceEffectActor *arg0) {
-    EndingSequenceEffectActor *temp_a2 = arg0;
+void updateEndingTommySnowmanEntrance(EndingSequenceActor *arg0) {
+    EndingSequenceActor *temp_a2 = arg0;
 
     arg0->animTimer++;
     if (arg0->animTimer == 7) {
@@ -551,35 +551,35 @@ void updateEndingSnowmanEntranceEffect(EndingSequenceEffectActor *arg0) {
     if (gEndingSequencePhase == 4) {
         removeCallbackTask(temp_a2);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, drawEndingSnowmanEntranceEffect, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingTommySnowmanEntrance, temp_a2);
     }
 }
 
-void initEndingSnowmanEntranceEffect(EndingSequenceEffectActor *arg0) {
+void initEndingTommySnowmanEntrance(EndingSequenceActor *arg0) {
     arg0->x = -0xA7;
     arg0->y = -0x61;
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    setCallbackTaskCallback(arg0, updateEndingSnowmanEntranceEffect);
+    setCallbackTaskCallback(arg0, updateEndingTommySnowmanEntrance);
 }
 
-void drawRaceToMainMenuSnowboardIcon(EndingSequenceEffectActor *arg0) {
+void drawRaceToMainMenuSnowboardIcon(EndingSequenceActor *arg0) {
     drawMenuTilemapSprite(&arg0->angle, 1, arg0->x, arg0->y);
 }
 
-void updateRaceToMainMenuSnowboardIconIdle(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuSnowboardIconIdle(EndingSequenceActor *arg0) {
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawRaceToMainMenuSnowboardIcon, arg0);
 }
 
-void updateRaceToMainMenuSnowboardIconFinalSpin(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuSnowboardIconFinalSpin(EndingSequenceActor *arg0) {
     s16 *temp_v0;
     s16 temp_v1;
-    EndingSequenceEffectActor *temp_a2 = arg0;
+    EndingSequenceActor *temp_a2 = arg0;
 
     temp_v0 = &arg0->angle;
     if (*temp_v0 > 0) {
-        *temp_v0 -= gMenuTransitionRotationStep;
-        gMenuTransitionRotationAngle = *temp_v0;
+        *temp_v0 -= gEndingTransitionRotationStep;
+        gEndingTransitionSnowboardAngle = *temp_v0;
         temp_v1 = *temp_v0;
         if (temp_v1 <= 0) {
             *temp_v0 = 0x140 - temp_v1;
@@ -591,14 +591,14 @@ void updateRaceToMainMenuSnowboardIconFinalSpin(EndingSequenceEffectActor *arg0)
     }
 }
 
-void updateRaceToMainMenuSnowboardIconSecondSpin(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuSnowboardIconSecondSpin(EndingSequenceActor *arg0) {
     s16 *temp_v0;
-    EndingSequenceEffectActor *temp_a2 = arg0;
+    EndingSequenceActor *temp_a2 = arg0;
 
     temp_v0 = &arg0->angle;
     if (*temp_v0 > 0) {
-        *temp_v0 -= gMenuTransitionRotationStep;
-        gMenuTransitionRotationAngle = *temp_v0;
+        *temp_v0 -= gEndingTransitionRotationStep;
+        gEndingTransitionSnowboardAngle = *temp_v0;
         if (*temp_v0 <= 0) {
             *temp_v0 = 0x140 - *temp_v0;
         }
@@ -612,28 +612,28 @@ void updateRaceToMainMenuSnowboardIconSecondSpin(EndingSequenceEffectActor *arg0
     }
 }
 
-void updateRaceToMainMenuSnowboardIconWaitSecondSpin(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuSnowboardIconWaitSecondSpin(EndingSequenceActor *arg0) {
     s16 *temp_v0;
 
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawRaceToMainMenuSnowboardIcon, arg0);
     temp_v0 = &arg0->angle;
     if (gEndingSequencePhase == 0x33) {
         setCallbackTaskCallback(arg0, updateRaceToMainMenuSnowboardIconSecondSpin);
-        gMenuTransitionRotationStep = 8;
+        gEndingTransitionRotationStep = 8;
         if (*temp_v0 == 0) {
             *temp_v0 = 0x140;
         }
     }
 }
 
-void updateRaceToMainMenuSnowboardIconSlowSpin(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuSnowboardIconSlowSpin(EndingSequenceActor *arg0) {
     s16 *temp_v0;
-    EndingSequenceEffectActor *temp_a2 = arg0;
+    EndingSequenceActor *temp_a2 = arg0;
 
     temp_v0 = &arg0->angle;
     if (*temp_v0 > 0) {
         *temp_v0 -= 8;
-        gMenuTransitionRotationAngle = *temp_v0;
+        gEndingTransitionSnowboardAngle = *temp_v0;
         if (*temp_v0 == 0) {
             *temp_v0 = 0x140;
         }
@@ -644,14 +644,14 @@ void updateRaceToMainMenuSnowboardIconSlowSpin(EndingSequenceEffectActor *arg0) 
     }
 }
 
-void updateRaceToMainMenuSnowboardIconResetSpin(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuSnowboardIconResetSpin(EndingSequenceActor *arg0) {
     s16 *sp1C;
-    EndingSequenceEffectActor *temp_a2 = arg0;
+    EndingSequenceActor *temp_a2 = arg0;
 
     sp1C = &arg0->angle;
     if (*sp1C > 0) {
         *sp1C -= 8;
-        gMenuTransitionRotationAngle = *sp1C;
+        gEndingTransitionSnowboardAngle = *sp1C;
     }
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawRaceToMainMenuSnowboardIcon, temp_a2);
     if (*sp1C == 0) {
@@ -661,16 +661,16 @@ void updateRaceToMainMenuSnowboardIconResetSpin(EndingSequenceEffectActor *arg0)
     }
 }
 
-void updateRaceToMainMenuSnowboardIconExpandSpin(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuSnowboardIconExpandSpin(EndingSequenceActor *arg0) {
     s16 *temp_v0;
     u16 *temp_v1;
-    EndingSequenceEffectActor *temp_a2 = arg0;
+    EndingSequenceActor *temp_a2 = arg0;
 
     temp_v0 = &arg0->angle;
     if (*temp_v0 < 0x140) {
-        *temp_v0 += gMenuTransitionRotationStep;
-        gMenuTransitionRotationAngle = *temp_v0;
-        temp_v1 = &gMenuTransitionRotationFrameCount;
+        *temp_v0 += gEndingTransitionRotationStep;
+        gEndingTransitionSnowboardAngle = *temp_v0;
+        temp_v1 = &gEndingTransitionRotationFrameCount;
         *temp_v1 = *temp_v1 + 1;
     }
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawRaceToMainMenuSnowboardIcon, temp_a2);
@@ -679,26 +679,26 @@ void updateRaceToMainMenuSnowboardIconExpandSpin(EndingSequenceEffectActor *arg0
     }
 }
 
-void updateRaceToMainMenuSnowboardIconFastSpin(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuSnowboardIconFastSpin(EndingSequenceActor *arg0) {
     s16 *sp1C;
-    EndingSequenceEffectActor *temp_a2 = arg0;
+    EndingSequenceActor *temp_a2 = arg0;
 
     sp1C = &arg0->angle;
-    *sp1C += gMenuTransitionRotationStep;
+    *sp1C += gEndingTransitionRotationStep;
     if (*sp1C >= 0x140) {
         *sp1C -= 0x140;
     }
-    gMenuTransitionRotationAngle = *sp1C;
+    gEndingTransitionSnowboardAngle = *sp1C;
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawRaceToMainMenuSnowboardIcon, temp_a2);
     if (gEndingSequencePhase == 0x13) {
         setCallbackTaskCallback(temp_a2, updateRaceToMainMenuSnowboardIconExpandSpin);
         temp_a2->x = 0x28;
         *sp1C = 0;
-        gMenuTransitionRotationAngle = *sp1C;
+        gEndingTransitionSnowboardAngle = *sp1C;
     }
 }
 
-void updateRaceToMainMenuSnowboardIconWaitStart(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuSnowboardIconWaitStart(EndingSequenceActor *arg0) {
     s16 *temp_v0;
 
     temp_v0 = &arg0->angle;
@@ -708,24 +708,24 @@ void updateRaceToMainMenuSnowboardIconWaitStart(EndingSequenceEffectActor *arg0)
         arg0->x = 0x14;
         temp_v0[0] = 0;
         temp_v0[1] = 0x100;
-        gMenuTransitionRotationStep = 0x14;
+        gEndingTransitionRotationStep = 0x14;
     }
 }
 
-void initRaceToMainMenuSnowboardIcon(EndingSequenceEffectActor *arg0) {
+void initRaceToMainMenuSnowboardIcon(EndingSequenceActor *arg0) {
     initMenuTilemapSprite((MenuTilemapSprite *)arg0->spriteState, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;
     arg0->y = arg0->startY;
-    gMenuTransitionRotationFrameCount = 0;
+    gEndingTransitionRotationFrameCount = 0;
     setCallbackTaskCallback(arg0, updateRaceToMainMenuSnowboardIconWaitStart);
 }
 
-void drawRaceToMainMenuSnowflakeIcon(EndingSequenceEffectActor *arg0) {
+void drawRaceToMainMenuSnowflakeIcon(EndingSequenceActor *arg0) {
     drawMenuTilemapSprite(&arg0->angle, 1, arg0->x, arg0->y);
 }
 
-void updateRaceToMainMenuSnowflakeIconReverseSpin(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuSnowflakeIconReverseSpin(EndingSequenceActor *arg0) {
     arg0->angle--;
     if (arg0->angle < 0) {
         arg0->angle = 0x140;
@@ -736,7 +736,7 @@ void updateRaceToMainMenuSnowflakeIconReverseSpin(EndingSequenceEffectActor *arg
     }
 }
 
-void updateRaceToMainMenuSnowflakeIconForwardSpin(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuSnowflakeIconForwardSpin(EndingSequenceActor *arg0) {
     arg0->angle++;
     if (arg0->angle == 0x140) {
         arg0->angle = 0;
@@ -747,7 +747,7 @@ void updateRaceToMainMenuSnowflakeIconForwardSpin(EndingSequenceEffectActor *arg
     }
 }
 
-void updateRaceToMainMenuSnowflakeIconIdle(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuSnowflakeIconIdle(EndingSequenceActor *arg0) {
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawRaceToMainMenuSnowflakeIcon, arg0);
     if (gEndingSequencePhase == 0x10) {
         setCallbackTaskCallback(arg0, updateRaceToMainMenuSnowflakeIconForwardSpin);
@@ -757,7 +757,7 @@ void updateRaceToMainMenuSnowflakeIconIdle(EndingSequenceEffectActor *arg0) {
     }
 }
 
-void initRaceToMainMenuSnowflakeIcon(EndingSequenceEffectActor *arg0) {
+void initRaceToMainMenuSnowflakeIcon(EndingSequenceActor *arg0) {
     initMenuTilemapSprite((MenuTilemapSprite *)arg0->spriteState, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
     arg0->angle = 0;
     arg0->angleVelocity = 0x1F0;
@@ -766,15 +766,15 @@ void initRaceToMainMenuSnowflakeIcon(EndingSequenceEffectActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceToMainMenuSnowflakeIconIdle);
 }
 
-void drawRaceToMainMenuLogoWipe(EndingSequenceEffectActor *arg0) {
+void drawRaceToMainMenuLogoWipe(EndingSequenceActor *arg0) {
     drawMenuTilemapSprite(&arg0->angle, 0, arg0->x, arg0->y);
 }
 
-void updateRaceToMainMenuLogoWipeIdle(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuLogoWipeIdle(EndingSequenceActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawRaceToMainMenuLogoWipe, arg0);
 }
 
-void updateRaceToMainMenuLogoWipeClose(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuLogoWipeClose(EndingSequenceActor *arg0) {
     s16 *temp_v0;
 
     arg0->animFrame = arg0->animFrame + 1;
@@ -790,7 +790,7 @@ void updateRaceToMainMenuLogoWipeClose(EndingSequenceEffectActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawRaceToMainMenuLogoWipe, arg0);
 }
 
-void updateRaceToMainMenuLogoWipeWaitClose(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuLogoWipeWaitClose(EndingSequenceActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawRaceToMainMenuLogoWipe, arg0);
     if (gEndingSequencePhase == 0x42) {
         arg0->animFrame = 0;
@@ -798,7 +798,7 @@ void updateRaceToMainMenuLogoWipeWaitClose(EndingSequenceEffectActor *arg0) {
     }
 }
 
-void updateRaceToMainMenuLogoWipeOpen(EndingSequenceEffectActor *arg0) {
+void updateRaceToMainMenuLogoWipeOpen(EndingSequenceActor *arg0) {
     s16 *temp_v0;
 
     if (gMenuFadeAlpha == 0) {
@@ -817,7 +817,7 @@ void updateRaceToMainMenuLogoWipeOpen(EndingSequenceEffectActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawRaceToMainMenuLogoWipe, arg0);
 }
 
-void initRaceToMainMenuLogoWipe(EndingSequenceEffectActor *arg0) {
+void initRaceToMainMenuLogoWipe(EndingSequenceActor *arg0) {
     initMenuTilemapSprite((MenuTilemapSprite *)arg0->spriteState, getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle));
     arg0->angle = 0;
     arg0->angleVelocity = 0x10;
