@@ -7,7 +7,7 @@
 #include "game_task_scheduler.h"
 #include "race_camera.h"
 #include "ending_credits_ui.h"
-#include "ending_credits_effects.h"
+#include "ending_credits_shared_effects.h"
 #include "race_start_transition.h"
 #include "ending_credits_slash.h"
 #include "ending_credits_nancy.h"
