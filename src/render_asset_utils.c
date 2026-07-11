@@ -1496,7 +1496,7 @@ void *func_8004864C(GfxCommandBlock *arg0) {
     return p;
 }
 
-void func_800486BC(void *arg0, void *arg1) {
+void packFixedTransformMatrix(void *arg0, void *arg1) {
     GfxCommandSource *src = arg0;
     GfxCommandDest *dst = arg1;
 
@@ -1628,12 +1628,12 @@ void func_80048E3C(void *arg0, void *arg1, void *arg2) {
 void func_80048E4C(void *arg0, void *arg1, void *arg2, void *arg3) {
 }
 
-// func_80048E60 best match: 99.126%
+// isPositionNearAnyRaceViewportFocus best match: 99.126%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80048E60.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/isPositionNearAnyRaceViewportFocus.s")
 
 #ifdef NON_MATCHING
-s32 func_80048E60(Vec3i *pos) {
+s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
     Vec3i *posAlias;
     s32 tempZ;
     s32 *zPtr;

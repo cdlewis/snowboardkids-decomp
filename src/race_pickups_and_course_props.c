@@ -1,5 +1,5 @@
 #include "common.h"
-#include "race_pickups_and_course_scenery.h"
+#include "race_pickups_and_course_props.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
@@ -156,10 +156,10 @@ struct PickupShardParticleActor {
 };
 
 extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
-extern void func_800486BC(CourseEffectMatrixSource *, void *);
+extern void packFixedTransformMatrix(CourseEffectMatrixSource *, void *);
 extern GfxCommandDest *allocFixedTransformMatrix(void *);
 extern void setPackedMatrixTranslation(GfxCommandDest *, Vec3i *);
-extern s32 func_80048E60(void *);
+extern s32 isPositionNearAnyRaceViewportFocus(void *);
 extern void osWritebackDCache(void *, s32);
 extern void addRenderCallback(void *, void *, void *);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
@@ -180,18 +180,6 @@ extern u8 gRenderMatricesDirty;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gRaceSplitscreenMode;
-extern s8 D_80121D93;
-extern s32 D_80121D9C;
-extern s32 D_80121DA4;
-extern s8 D_8012239F;
-extern s32 D_801223A8;
-extern s32 D_801223B0;
-extern s8 D_801229AB;
-extern s32 D_801229B4;
-extern s32 D_801229BC;
-extern s8 D_80122FB7;
-extern s32 D_80122FC0;
-extern s32 D_80122FC8;
 extern u8 gAssetHandles[];
 extern CourseOverlaySpriteEntry *gCourseOverlaySpriteListsByCourse[];
 extern u32 gCourseOverlaySpriteVertices[];
@@ -257,7 +245,7 @@ void updateRaceCoursePropModels(CourseEffectModelListActor *arg0) {
     if (entry->modelIndex != -1) {
         pos = &entry->pos;
         do {
-            if (func_80048E60(pos) != 0) {
+            if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
                 func_80088294(pos, 0x1C0000, 0x480000, 2);
             }
             entry++;
@@ -296,7 +284,7 @@ void initRaceCoursePropModels(CourseEffectModelListActor *arg0) {
             transform.basePos.x = entry->pos.x;
             transform.basePos.y = entry->pos.y;
             transform.basePos.z = entry->pos.z;
-            func_800486BC(&transform, (void *)((u32)arg0->modelBuffer + (i << 6)));
+            packFixedTransformMatrix(&transform, (void *)((u32)arg0->modelBuffer + (i << 6)));
             entry++;
         }
 
@@ -376,7 +364,7 @@ void updateCourseOverlaySprites(CourseEffectModelListActor *arg0) {
     pos = &entry->transform;
 
 loop:
-    if (func_80048E60(pos) != 0) {
+    if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
         if (entry->enabled != 0) {
             if (func_80088E98(pos, xzSize, ySize, 0) != 0) {
                 func_8008BB5C(D_80121D80, 0x64);
@@ -566,7 +554,7 @@ void spawnThrownPickupModel(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 }
 
 // updateThrownPickupSpawner best match: 99.625% (nonmatchings/updateThrownPickupSpawner-731940616440357983/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_scenery/updateThrownPickupSpawner.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/updateThrownPickupSpawner.s")
 
 #ifdef NON_MATCHING
 #define SPAWN_RANGE_MAX 0x14000000
@@ -592,34 +580,34 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
             entry = newEntry;
             found = FALSE;
             if (gRaceSplitscreenMode != 2) {
-                if (D_80121D93 != 0) {
-                    diffZ = D_80121D9C - entry->pos.x;
+                if (D_80121D80[0].isActive != 0) {
+                    diffZ = D_80121D80[0].posX - entry->pos.x;
                     if ((diffZ < SPAWN_RANGE_MAX) && (diffZ >= SPAWN_RANGE_MIN)) {
-                        diffX = D_80121DA4 - entry->pos.z;
+                        diffX = D_80121D80[0].posZ - entry->pos.z;
                         if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) {
                             found = TRUE;
                         }
                     }
                 }
-                if (D_8012239F != 0) {
-                    diffX = D_801223A8 - entry->pos.x;
-                    diffZ = D_801223B0 - entry->pos.z;
+                if (D_80121D80[1].isActive != 0) {
+                    diffX = D_80121D80[1].posX - entry->pos.x;
+                    diffZ = D_80121D80[1].posZ - entry->pos.z;
                     if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
                         (diffZ >= SPAWN_RANGE_MIN)) {
                         found = TRUE;
                     }
                 }
-                if (D_801229AB != 0) {
-                    diffX = D_801229B4 - entry->pos.x;
-                    diffZ = D_801229BC - entry->pos.z;
+                if (D_80121D80[2].isActive != 0) {
+                    diffX = D_80121D80[2].posX - entry->pos.x;
+                    diffZ = D_80121D80[2].posZ - entry->pos.z;
                     if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
                         (diffZ >= SPAWN_RANGE_MIN)) {
                         found = TRUE;
                     }
                 }
-                if (D_80122FB7 != 0) {
-                    diffX = D_80122FC0 - entry->pos.x;
-                    diffZ = D_80122FC8 - entry->pos.z;
+                if (D_80121D80[3].isActive != 0) {
+                    diffX = D_80121D80[3].posX - entry->pos.x;
+                    diffZ = D_80121D80[3].posZ - entry->pos.z;
                     if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
                         (diffZ >= SPAWN_RANGE_MIN)) {
                         found = TRUE;
@@ -660,7 +648,7 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
 #endif
 
 // renderRacePickupIdle best match: display-list command stream matched, remaining differences are stack/local layout.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_scenery/renderRacePickupIdle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/renderRacePickupIdle.s")
 
 #ifdef NON_MATCHING
 void renderRacePickupIdle(RacePickupActor *arg0) {
@@ -799,7 +787,7 @@ void renderRacePickupBase(RacePickupActor *arg0) {
 }
 
 // renderRacePickupRespawn best match: 99.579% (base_22.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_scenery/renderRacePickupRespawn.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/renderRacePickupRespawn.s")
 
 #ifdef NON_MATCHING
 void renderRacePickupRespawn(RacePickupActor *arg0) {
@@ -940,7 +928,7 @@ void updateRacePickupCollected(RacePickupActor *arg0) {
 }
 
 // updateRacePickupIdle best match: 99.901%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_scenery/updateRacePickupIdle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/updateRacePickupIdle.s")
 
 #ifdef NON_MATCHING
 void updateRacePickupIdle(RacePickupActor *arg0) {
