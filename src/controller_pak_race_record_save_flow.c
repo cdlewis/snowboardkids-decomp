@@ -34,9 +34,9 @@ extern s8 gFramebufferSwapDelay;
 extern u8 gControllerPakMenuCursorState;
 extern s32 D_801235B4;
 extern s32 gPlayerInputPressed;
-extern s16 D_800EC9C8;
+extern s16 gControllerPakStatusCodes;
 extern s16 D_800EC9D0;
-extern u8 D_800EC9D8;
+extern u8 gControllerPakRetryCounts;
 extern s8 D_800EC9C1;
 extern s32 D_8010ADDC;
 extern s32 D_8010ADE0;
@@ -58,9 +58,9 @@ void initControllerPakRaceRecordSaveFlow(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     gFramebufferSwapDelay = 0;
-    D_800EC9C8 = 0;
+    gControllerPakStatusCodes = 0;
     D_800EC9D0 = 0;
-    D_800EC9D8 = 0;
+    gControllerPakRetryCounts = 0;
     D_80121D80.status = 0;
     D_800EC9C1 = 0;
     gCurrentGameTask->fade = 0xFF;
@@ -88,14 +88,14 @@ void initControllerPakRaceRecordSaveFlow(void) {
 }
 
 #ifdef NON_MATCHING
-extern s32 D_800EC898;
+extern s32 gRumbleMotorStatuses;
 extern s8 D_800EC8B4;
 extern u8 D_800B31A5[];
-extern void func_80000A40(u16);
-extern void func_80000C48(u16);
-extern void func_80000DB4(u16);
-extern void func_800012CC(u16, s32, ControllerPakRaceRecordSaveScoreUiState *, s16);
-extern void func_80001538(u16);
+extern void requestRumbleMotorInit(u16);
+extern void requestControllerPakProbe(u16);
+extern void requestControllerPakSaveStatus(u16);
+extern void requestControllerPakSaveWrite(u16, s32, ControllerPakRaceRecordSaveScoreUiState *, s16);
+extern void requestControllerPakRepair(u16);
 extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 #endif
 
@@ -139,14 +139,14 @@ void updateControllerPakRaceRecordSaveFlow(void)
       }
       else
       {
-        var_v0 = D_800EC9C8;
+        var_v0 = gControllerPakStatusCodes;
       }
       switch (var_v0)
       {
         case 0:
           D_800EC8B4 = 0;
-          func_80000A40(0);
-          if (((D_800EC898 != 1) && (D_800EC898 != 0xB)) && (D_800EC898 != 4))
+          requestRumbleMotorInit(0);
+          if (((gRumbleMotorStatuses != 1) && (gRumbleMotorStatuses != 0xB)) && (gRumbleMotorStatuses != 4))
         {
           D_800EC8B4 = 1;
         }
@@ -154,18 +154,18 @@ void updateControllerPakRaceRecordSaveFlow(void)
         {
           D_800EC8B4 = 0;
         }
-          func_80000C48(0);
-          if (D_800EC9C8 == 0x10)
+          requestControllerPakProbe(0);
+          if (gControllerPakStatusCodes == 0x10)
         {
-          D_800EC9C8 = 0x11;
+          gControllerPakStatusCodes = 0x11;
         }
           break;
 
         case 1:
-          func_80000DB4(0);
-          if ((D_800EC9C8 == 9) || (D_800EC9C8 == 2))
+          requestControllerPakSaveStatus(0);
+          if ((gControllerPakStatusCodes == 9) || (gControllerPakStatusCodes == 2))
         {
-          D_800EC9C8 = 8;
+          gControllerPakStatusCodes = 8;
           D_800EC9D0 = 1;
         }
           break;
@@ -174,15 +174,15 @@ void updateControllerPakRaceRecordSaveFlow(void)
           if (((u8) gControllerPakRaceRecordSaveScoreUiState.step) != new_var)
         {
           sp1C = temp_t0;
-          func_800012CC(0, new_var, &gControllerPakRaceRecordSaveScoreUiState, D_800EC9D0);
-          if (D_800EC9D8 == 0)
+          requestControllerPakSaveWrite(0, new_var, &gControllerPakRaceRecordSaveScoreUiState, D_800EC9D0);
+          if (gControllerPakRetryCounts == 0)
           {
             gControllerPakRaceRecordSaveScoreUiState.targetState = 5;
             gControllerPakRaceRecordSaveScoreUiState.step = new_var;
             gControllerPakRaceRecordSaveScoreUiState.timer = 0x100;
           }
           else
-            if (D_800EC9D8 == 3)
+            if (gControllerPakRetryCounts == 3)
           {
             if (temp_t0 != 0)
             {
@@ -192,17 +192,17 @@ void updateControllerPakRaceRecordSaveFlow(void)
             }
             else
             {
-              D_800EC9C8 = 0xD;
+              gControllerPakStatusCodes = 0xD;
             }
-            D_800EC9D8 = 0;
+            gControllerPakRetryCounts = 0;
           }
         }
           break;
 
         case 3:
           sp1C = temp_t0;
-          func_80001538(0);
-          if (D_800EC9D8 == 0)
+          requestControllerPakRepair(0);
+          if (gControllerPakRetryCounts == 0)
         {
           if (temp_t0 != 0)
           {
@@ -211,11 +211,11 @@ void updateControllerPakRaceRecordSaveFlow(void)
           }
           else
           {
-            D_800EC9C8 = 0x10;
+            gControllerPakStatusCodes = 0x10;
           }
         }
         else
-          if (D_800EC9D8 == 3)
+          if (gControllerPakRetryCounts == 3)
         {
           if (temp_t0 != 0)
           {
@@ -224,9 +224,9 @@ void updateControllerPakRaceRecordSaveFlow(void)
           }
           else
           {
-            D_800EC9C8 = 0xE;
+            gControllerPakStatusCodes = 0xE;
           }
-          D_800EC9D8 = 0;
+          gControllerPakRetryCounts = 0;
         }
           break;
 
@@ -239,11 +239,11 @@ void updateControllerPakRaceRecordSaveFlow(void)
           {
             gControllerPakRaceRecordSaveScoreUiState.step = 1;
             gControllerPakRaceRecordSaveScoreUiState.timer = 0x100;
-            D_800EC9C8 = 0;
+            gControllerPakStatusCodes = 0;
           }
           else
           {
-            D_800EC9C8 = 0;
+            gControllerPakStatusCodes = 0;
           }
         }
           break;
@@ -284,17 +284,17 @@ void updateControllerPakRaceRecordSaveFlow(void)
             enqueueSoundEffect(1, 0x32);
             if (D_800EC9D0 == 4)
             {
-              if (D_800EC9C8 == 8)
+              if (gControllerPakStatusCodes == 8)
               {
                 gControllerPakRaceRecordSaveScoreUiState.nextTimer = 0xF;
               }
               else
-                if (D_800EC9C8 == 7)
+                if (gControllerPakStatusCodes == 7)
               {
                 gControllerPakRaceRecordSaveScoreUiState.nextTimer = 3;
               }
               else
-                if (D_800EC9C8 == 0xF)
+                if (gControllerPakStatusCodes == 0xF)
               {
                 gControllerPakRaceRecordSaveScoreUiState.nextTimer = 0;
               }
@@ -304,17 +304,17 @@ void updateControllerPakRaceRecordSaveFlow(void)
               }
             }
             else
-              if (D_800EC9C8 == 8)
+              if (gControllerPakStatusCodes == 8)
             {
               gControllerPakRaceRecordSaveScoreUiState.nextTimer = 2;
             }
             else
-              if ((D_800EC9C8 == 0xA) || (D_800EC9C8 == 0x11))
+              if ((gControllerPakStatusCodes == 0xA) || (gControllerPakStatusCodes == 0x11))
             {
               gControllerPakRaceRecordSaveScoreUiState.nextTimer = 0xF;
             }
             else
-              if (D_800EC9C8 == 7)
+              if (gControllerPakStatusCodes == 7)
             {
               gControllerPakRaceRecordSaveScoreUiState.nextTimer = 4;
             }
@@ -345,7 +345,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           enqueueSoundEffect(1, 0x32);
-          D_800EC9D0 = D_800B31A5[D_800EC9C8];
+          D_800EC9D0 = D_800B31A5[gControllerPakStatusCodes];
         }
           break;
 
@@ -353,7 +353,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           enqueueSoundEffect(1, 0x32);
-          D_800EC9D0 = D_800B31A5[D_800EC9C8];
+          D_800EC9D0 = D_800B31A5[gControllerPakStatusCodes];
         }
           break;
 
@@ -364,7 +364,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
         {
           sp1C = temp_t0;
           enqueueSoundEffect(1, 0x32);
-          if (D_800EC9C8 == 0xE)
+          if (gControllerPakStatusCodes == 0xE)
           {
             if (temp_t0 != 0)
             {
@@ -373,7 +373,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
             }
             else
             {
-              D_800EC9C8 = 7;
+              gControllerPakStatusCodes = 7;
             }
           }
           else
@@ -381,11 +381,11 @@ void updateControllerPakRaceRecordSaveFlow(void)
           {
             gControllerPakRaceRecordSaveScoreUiState.step = 1;
             gControllerPakRaceRecordSaveScoreUiState.timer = 0x100;
-            D_800EC9C8 = 0;
+            gControllerPakStatusCodes = 0;
           }
           else
           {
-            D_800EC9C8 = 0;
+            gControllerPakStatusCodes = 0;
           }
         }
           break;

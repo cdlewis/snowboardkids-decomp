@@ -12,7 +12,7 @@
 #include "course_select_menu.h"
 #include "player_setup_menu.h"
 #include "game_task_scheduler.h"
-#include "main_menu.h"
+#include "main_menu_flow.h"
 #include "main_menu_overlay_effects.h"
 #include "main_menu_panel_ui.h"
 #include "player_count_select_menu.h"
@@ -184,7 +184,7 @@ extern s32 D_80121B7C;
 extern s16 gMenuFadeAlpha;
 extern s8 D_800DEF10;
 extern u8 gRaceRumbleEnabled;
-extern RaceFlowInitScratch D_800EC9F0;
+extern RaceFlowInitScratch gGameSaveDataBuffer;
 extern u8 D_80121B5E;
 #ifdef NON_MATCHING
 extern u8 D_8011228C;
@@ -267,10 +267,10 @@ void func_80072C30(void) {
 void func_80072C88(void) {
     gCurrentGameTask->fadeTimer -= 1;
     if (gCurrentGameTask->fadeTimer == 0) {
-        func_80000A40(0);
-        func_80000A40(1);
-        func_80000A40(2);
-        func_80000A40(3);
+        requestRumbleMotorInit(0);
+        requestRumbleMotorInit(1);
+        requestRumbleMotorInit(2);
+        requestRumbleMotorInit(3);
         setCurrentGameTaskCallback(&func_80072D04, 0);
     }
 }
@@ -296,7 +296,7 @@ void func_80072D98(void) {
 }
 
 void func_80072DDC(void) {
-    createGameTask(3, &func_80001C30, 0x64);
+    createGameTask(3, &enterMainMenuFromRace, 0x64);
     removeGameTask(0);
 }
 
@@ -381,34 +381,34 @@ void func_80073140(void) {
     for (course = 0; course < 11; course++) {
         one = 1;
         for (player = 0; player < 5; player++) {
-            D_800EC9F0.unk4E[course][player].unk0 = 3;
-            D_800EC9F0.unk4E[course][player].unk1 = 0x3B;
-            D_800EC9F0.unk4E[course][player].unk2 = 0;
-            D_800EC9F0.unk156[course][player].unk0 = 3;
-            D_800EC9F0.unk156[course][player].unk1 = 0;
-            D_800EC9F0.unk156[course][player].unk2 = 0;
-            D_800EC9F0.unk77FB[course][player] = player;
-            D_800EC9F0.unk7832[course][player] = 0;
-            D_800EC9F0.unk7869[course][player] = player;
-            D_800EC9F0.unk78A0[course][player] = player;
-            D_800EC9F0.unk7756[course][player] = 0;
-            D_800EC9F0.unk77C4[course][player] = player;
+            gGameSaveDataBuffer.unk4E[course][player].unk0 = 3;
+            gGameSaveDataBuffer.unk4E[course][player].unk1 = 0x3B;
+            gGameSaveDataBuffer.unk4E[course][player].unk2 = 0;
+            gGameSaveDataBuffer.unk156[course][player].unk0 = 3;
+            gGameSaveDataBuffer.unk156[course][player].unk1 = 0;
+            gGameSaveDataBuffer.unk156[course][player].unk2 = 0;
+            gGameSaveDataBuffer.unk77FB[course][player] = player;
+            gGameSaveDataBuffer.unk7832[course][player] = 0;
+            gGameSaveDataBuffer.unk7869[course][player] = player;
+            gGameSaveDataBuffer.unk78A0[course][player] = player;
+            gGameSaveDataBuffer.unk7756[course][player] = 0;
+            gGameSaveDataBuffer.unk77C4[course][player] = player;
         }
-        D_800EC9F0.unk12A[course].unk0 = one;
-        D_800EC9F0.unk12A[course].unk1 = 0x18;
-        D_800EC9F0.unk12A[course].unk2 = 0;
-        D_800EC9F0.unk4[course + 1] = 0;
+        gGameSaveDataBuffer.unk12A[course].unk0 = one;
+        gGameSaveDataBuffer.unk12A[course].unk1 = 0x18;
+        gGameSaveDataBuffer.unk12A[course].unk2 = 0;
+        gGameSaveDataBuffer.unk4[course + 1] = 0;
     }
 
-    D_800EC9F0.unk232[0].unk0 = 0;
-    D_800EC9F0.unk232[1].unk0 = 0;
-    D_800EC9F0.unk232[2].unk0 = 0;
-    D_800EC9F0.unk232[3].unk0 = 0;
-    D_800EC9F0.unk232[4].unk0 = 0;
-    D_800EC9F0.unk232[5].unk0 = (u8)0;
-    D_800EC9F0.unk232[6].unk0 = 0;
-    D_800EC9F0.unk232[7].unk0 = 0;
-    D_800EC9F0.unk232[8].unk0 = 0;
+    gGameSaveDataBuffer.unk232[0].unk0 = 0;
+    gGameSaveDataBuffer.unk232[1].unk0 = 0;
+    gGameSaveDataBuffer.unk232[2].unk0 = 0;
+    gGameSaveDataBuffer.unk232[3].unk0 = 0;
+    gGameSaveDataBuffer.unk232[4].unk0 = 0;
+    gGameSaveDataBuffer.unk232[5].unk0 = (u8)0;
+    gGameSaveDataBuffer.unk232[6].unk0 = 0;
+    gGameSaveDataBuffer.unk232[7].unk0 = 0;
+    gGameSaveDataBuffer.unk232[8].unk0 = 0;
     gPlayerCount = 1;
     D_80121B5E = 0;
     D_80121D80[0].unk5 = 0;
@@ -570,12 +570,12 @@ void func_8007377C(void) {
 }
 
 void func_800737FC(void) {
-    func_80000A40(0);
-    func_80000A40(1);
-    func_80000A40(2);
-    func_80000A40(3);
+    requestRumbleMotorInit(0);
+    requestRumbleMotorInit(1);
+    requestRumbleMotorInit(2);
+    requestRumbleMotorInit(3);
     requestMusicSequenceStop(0);
-    createGameTask(3, &func_80001C30, 0x64);
+    createGameTask(3, &enterMainMenuFromRace, 0x64);
     removeGameTask(2);
 }
 
@@ -751,7 +751,7 @@ void func_80074960(void) {
     s32 selection;
     s32 valueTwo;
 
-    opened = 0; i = 0; if (gPlayerCount > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & 0x1000)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; enqueueSoundEffect(1, 0x32); func_80000A40(0); func_80000A40(1); func_80000A40(2); func_80000A40(3); } i++; player++; } while (i < gPlayerCount); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (gPlayerCount > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = gPlayerInputPressed[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; enqueueSoundEffect(1, 0x32); input = gPlayerInputPressed[i]; }
+    opened = 0; i = 0; if (gPlayerCount > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & 0x1000)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; enqueueSoundEffect(1, 0x32); requestRumbleMotorInit(0); requestRumbleMotorInit(1); requestRumbleMotorInit(2); requestRumbleMotorInit(3); } i++; player++; } while (i < gPlayerCount); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (gPlayerCount > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = gPlayerInputPressed[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; enqueueSoundEffect(1, 0x32); input = gPlayerInputPressed[i]; }
                     }
                     if (input & 0x20400) {
                         selection = D_80121B57;
@@ -1066,7 +1066,7 @@ void func_80076054(void) {
         currentTime = (D_80121B74.seconds * COURSE_TIME_SECOND) + D_80121B74.fraction + (D_80121B74.minutes * COURSE_TIME_MINUTE);
         courseOffset = (D_80121B50.s << 2) + D_80121B50.s;
         courseOffset <<= 2;
-        timeCourse = (TimeCourseView *)((u8 *)&D_800EC9F0 + courseOffset);
+        timeCourse = (TimeCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
         index = 0;
         time = timeCourse->timeTrial;
         do {
@@ -1095,7 +1095,7 @@ void func_80076054(void) {
                 if (D_80121B5E == 2) {
                     courseOffset = (D_80121B50.s << 2) + D_80121B50.s;
                     courseOffset <<= 1;
-                    trickCourse = (TrickCourseView *)((u8 *)&D_800EC9F0 + courseOffset);
+                    trickCourse = (TrickCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
                     trickScore = trickCourse->values;
                     do {
                         if (*trickScore < D_80122040) {
@@ -1116,7 +1116,7 @@ void func_80076054(void) {
                 }
             } else {
                 courseOffset = (D_80121B50.s << 2) + D_80121B50.s;
-                scoreCourse = (ScoreCourseView *)((u8 *)&D_800EC9F0 + courseOffset);
+                scoreCourse = (ScoreCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
                 scoreValue = scoreCourse->values;
                 do {
                     if (*scoreValue < D_801222F4) {
@@ -1139,7 +1139,7 @@ void func_80076054(void) {
             currentTime = (D_80121B74.seconds * COURSE_TIME_SECOND) + D_80121B74.fraction + (D_80121B74.minutes * COURSE_TIME_MINUTE);
             courseOffset = (D_80121B50.s << 2) + D_80121B50.s;
             courseOffset <<= 2;
-            timeCourse = (TimeCourseView *)((u8 *)&D_800EC9F0 + courseOffset);
+            timeCourse = (TimeCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
             i = 0;
             time = timeCourse->raceTimes;
             do {
@@ -1651,10 +1651,10 @@ void func_80077B34(void) {
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
         stopSoundEffects();
-        func_80000A40(0);
-        func_80000A40(1);
-        func_80000A40(2);
-        func_80000A40(3);
+        requestRumbleMotorInit(0);
+        requestRumbleMotorInit(1);
+        requestRumbleMotorInit(2);
+        requestRumbleMotorInit(3);
         D_801235B4 = 0;
         if (D_80121B57 == 2) {
             setCurrentGameTaskCallback(func_80073988, 0);

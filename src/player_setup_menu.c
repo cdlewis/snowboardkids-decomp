@@ -219,10 +219,10 @@ extern s16 D_800B31C0;
 extern s16 D_800B31C2;
 extern s16 D_800B31C4;
 extern s16 D_800B31C6;
-extern s16 D_800EC9C8;
+extern s16 gControllerPakStatusCodes;
 extern s16 D_800EC9D0;
-extern u8 D_800EC9D8;
-extern u8 D_800EC9E0;
+extern u8 gControllerPakRetryCounts;
+extern u8 gControllerPakOperationCounts;
 extern u8 D_800EC9E4;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
@@ -246,10 +246,10 @@ void initPlayerSaveSetupMenu(void) {
     s32 i;
     u8 count;
 
-    var_v0 = &D_800EC9E0;
-    var_a1 = &D_800EC9D8;
+    var_v0 = &gControllerPakOperationCounts;
+    var_a1 = &gControllerPakRetryCounts;
     var_a0 = &D_800EC9D0;
-    var_v1 = &D_800EC9C8;
+    var_v1 = &gControllerPakStatusCodes;
     do {
         var_v0++;
         var_v1++;
@@ -341,19 +341,19 @@ typedef struct {
     u8 selectedOption;
 } ControllerPakRumbleCheckPromptTransition03798;
 
-extern void func_80000C48();
-extern void func_80000DB4();
-extern void func_80001010();
-extern void func_80001538();
+extern void requestControllerPakProbe();
+extern void requestControllerPakSaveStatus();
+extern void requestControllerPakSaveRead();
+extern void requestControllerPakRepair();
 extern void initControllerPakRumbleCheckPrompt(CallbackTask *);
 
 extern u8 D_800B3199[];
-extern s16 D_800EC9C8[];
+extern s16 gControllerPakStatusCodes[];
 extern s16 D_800EC9D0[];
-extern u8 D_800EC9D8[];
-extern u8 D_800EC9E0[];
+extern u8 gControllerPakRetryCounts[];
+extern u8 gControllerPakOperationCounts[];
 extern u8 D_800EC9E4;
-extern PlayerSetupSavePlayer03798 D_800EC9F0[];
+extern PlayerSetupSavePlayer03798 gGameSaveDataBuffer[];
 extern ControllerPakRumbleCheckPromptTransition03798 gControllerPakRumbleCheckPromptTransition;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
@@ -392,7 +392,7 @@ void updatePlayerSaveSetupMenu(void) {
             allPresent = 1;
             i = 0;
             if (gPlayerCount > 0) {
-                present = D_800EC9E0;
+                present = gControllerPakOperationCounts;
                 do {
                     u8 presentValue = *present;
 
@@ -410,7 +410,7 @@ void updatePlayerSaveSetupMenu(void) {
                             if (choiceValue != 0) {
                                 stateIndex = 6;
                             } else {
-                                stateIndex = D_800EC9C8[i];
+                                stateIndex = gControllerPakStatusCodes[i];
                             }
 
                             switch (stateIndex) {
@@ -419,39 +419,39 @@ void updatePlayerSaveSetupMenu(void) {
                                     u16 playerIndex = i;
 
                                     D_800EC8B4_03798[i] = 0;
-                                    func_80000A40(playerIndex, gPlayerCount, choiceValue);
-                                    pakState = D_800EC898[i];
+                                    requestRumbleMotorInit(playerIndex, gPlayerCount, choiceValue);
+                                    pakState = gRumbleMotorStatuses[i];
                                     if ((pakState != 1) && (pakState != 0xB) && (pakState != 4)) {
                                         D_800EC8B4_03798[i] = 1;
                                     } else {
                                         D_800EC8B4_03798[i] = 0;
                                     }
-                                    func_80000C48(playerIndex);
+                                    requestControllerPakProbe(playerIndex);
                                     break;
                                 }
 
                                 case 1:
-                                    func_80000DB4((u16)i, gPlayerCount, choiceValue);
+                                    requestControllerPakSaveStatus((u16)i, gPlayerCount, choiceValue);
                                     break;
 
                                 case 2: {
                                     u8 result;
 
-                                    func_80001010((u16)i, gPlayerCount, choiceValue);
-                                    result = D_800EC9D8[i];
+                                    requestControllerPakSaveRead((u16)i, gPlayerCount, choiceValue);
+                                    result = gControllerPakRetryCounts[i];
                                     if (result == 0) {
                                         player->unk568 = 0;
-                                        player->unkC = D_800EC9F0[i].unk4;
-                                        D_800EC9C8[i] = 8;
+                                        player->unkC = gGameSaveDataBuffer[i].unk4;
+                                        gControllerPakStatusCodes[i] = 8;
                                         *choice = 1;
                                     } else if (result == 3) {
                                         if (transitionTask != NULL) {
                                             D_8010AE00_03798.unkE[i] = 2;
                                             D_8010AE00_03798.unk12[i] = 0xD;
                                         } else {
-                                            D_800EC9C8[i] = 0xD;
+                                            gControllerPakStatusCodes[i] = 0xD;
                                         }
-                                        D_800EC9D8[i] = 0;
+                                        gControllerPakRetryCounts[i] = 0;
                                     }
                                     break;
                                 }
@@ -459,23 +459,23 @@ void updatePlayerSaveSetupMenu(void) {
                                 case 3: {
                                     u8 result;
 
-                                    func_80001538((u16)i, gPlayerCount, choiceValue);
-                                    result = D_800EC9D8[i];
+                                    requestControllerPakRepair((u16)i, gPlayerCount, choiceValue);
+                                    result = gControllerPakRetryCounts[i];
                                     if (result == 0) {
                                         if (transitionTask != NULL) {
                                             D_8010AE00_03798.unkE[i] = 2;
                                             D_8010AE00_03798.unk12[i] = 0xF;
                                         } else {
-                                            D_800EC9C8[i] = 0xF;
+                                            gControllerPakStatusCodes[i] = 0xF;
                                         }
                                     } else if (result == 3) {
                                         if (transitionTask != NULL) {
                                             D_8010AE00_03798.unkE[i] = 2;
                                             D_8010AE00_03798.unk12[i] = 0xE;
                                         } else {
-                                            D_800EC9C8[i] = 0xE;
+                                            gControllerPakStatusCodes[i] = 0xE;
                                         }
-                                        D_800EC9D8[i] = 0;
+                                        gControllerPakRetryCounts[i] = 0;
                                     }
                                     break;
                                 }
@@ -488,7 +488,7 @@ void updatePlayerSaveSetupMenu(void) {
                                             D_8010AE00_03798.unkE[i] = 2;
                                             D_8010AE00_03798.unk12[i] = 0;
                                         } else {
-                                            D_800EC9C8[i] = 0;
+                                            gControllerPakStatusCodes[i] = 0;
                                         }
                                     }
                                     break;
@@ -516,12 +516,12 @@ void updatePlayerSaveSetupMenu(void) {
                                             }
                                         }
                                         if ((input & 0x8000) || (input & 0x1000)) {
-                                            s16 state = D_800EC9C8[i];
+                                            s16 state = gControllerPakStatusCodes[i];
 
                                             enqueueSoundEffect(1, 0x32);
                                             if (*choice == 4) {
                                                 if (state == 8) {
-                                                    PlayerSetupSavePlayer03798 *save = &D_800EC9F0[i];
+                                                    PlayerSetupSavePlayer03798 *save = &gGameSaveDataBuffer[i];
 
                                                     initPlayerSaveData(i);
                                                     D_8010AE00_03798.unk6[i] = 5;
@@ -537,7 +537,7 @@ void updatePlayerSaveSetupMenu(void) {
                                                 } else if (state == 7) {
                                                     D_8010AE00_03798.unk6[i] = 4;
                                                 } else {
-                                                    PlayerSetupSavePlayer03798 *save = &D_800EC9F0[i];
+                                                    PlayerSetupSavePlayer03798 *save = &gGameSaveDataBuffer[i];
 
                                                     D_8010AE00_03798.unk6[i] = 5;
                                                     initPlayerSaveData(i);
@@ -560,7 +560,7 @@ void updatePlayerSaveSetupMenu(void) {
                                     input = gPlayerInputPressedArray_03798[i];
                                     if ((input & 0x8000) || (input & 0x1000)) {
                                         enqueueSoundEffect(1, 0x32);
-                                        *choice = D_800B3199[D_800EC9C8[i]];
+                                        *choice = D_800B3199[gControllerPakStatusCodes[i]];
                                     }
                                     break;
 
@@ -569,18 +569,18 @@ void updatePlayerSaveSetupMenu(void) {
                                     input = gPlayerInputPressedArray_03798[i];
                                     if ((input & 0x8000) || (input & 0x1000)) {
                                         enqueueSoundEffect(1, 0x32);
-                                        if (D_800EC9C8[i] == 0xE) {
+                                        if (gControllerPakStatusCodes[i] == 0xE) {
                                             if (transitionTask != NULL) {
                                                 D_8010AE00_03798.unkE[i] = 2;
                                                 D_8010AE00_03798.unk12[i] = 0x11;
                                             } else {
-                                                D_800EC9C8[i] = 7;
+                                                gControllerPakStatusCodes[i] = 7;
                                             }
                                         } else if (transitionTask != NULL) {
                                             D_8010AE00_03798.unkE[i] = 2;
                                             D_8010AE00_03798.unk12[i] = 0;
                                         } else {
-                                            D_800EC9C8[i] = 0;
+                                            gControllerPakStatusCodes[i] = 0;
                                         }
                                     }
                                     break;
@@ -625,8 +625,8 @@ void updatePlayerSaveSetupMenu(void) {
                 D_8010ADE0 = createCallbackTask((void (*)(CallbackTask *))func_8001621C, 0, 0x63);
                 D_8010ADE4 = createCallbackTask((void (*)(CallbackTask *))func_80017014, 0, 0x63);
                 if (gPlayerCount > 0) {
-                    ptr = D_800EC9E0;
-                    end = &D_800EC9E0[gPlayerCount];
+                    ptr = gControllerPakOperationCounts;
+                    end = &gControllerPakOperationCounts[gPlayerCount];
                     do {
                         *ptr += 1;
                         ptr++;
@@ -650,8 +650,8 @@ void updatePlayerSaveSetupMenu(void) {
             gControllerPakRumbleCheckPromptTransition.targetScale = 2;
             if (gPlayerCount > 0) {
                 subState = &D_8010AE00_03798;
-                save = D_800EC9F0;
-                end = &D_800EC9F0[gPlayerCount];
+                save = gGameSaveDataBuffer;
+                end = &gGameSaveDataBuffer[gPlayerCount];
                 do {
                     u8 value = save->unk4C;
 
@@ -692,7 +692,7 @@ typedef struct {
 } ControllerPakRumbleCheckPromptTransition;
 
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
-extern void func_80000A40(u16 arg0);
+extern void requestRumbleMotorInit(u16 arg0);
 extern void initCharacterSelectMenu(void);
 
 void updatePlayerSetupRumblePrompt(void) {
@@ -715,8 +715,8 @@ void updatePlayerSetupRumblePrompt(void) {
             i = 0;
             if ((s32)gPlayerCount > 0) {
                 do {
-                    func_80000A40(i);
-                    if (((&D_800EC898)[i] != 1) && ((&D_800EC898)[i] != 0xB) && ((&D_800EC898)[i] != 4)) {
+                    requestRumbleMotorInit(i);
+                    if (((&gRumbleMotorStatuses)[i] != 1) && ((&gRumbleMotorStatuses)[i] != 0xB) && ((&gRumbleMotorStatuses)[i] != 4)) {
                         (&D_800EC8B4)[i] = 1;
                         gRumblePakConnectedMask |= 1 << i;
                     } else {
@@ -742,8 +742,8 @@ void updatePlayerSetupRumblePrompt(void) {
             i = 0;
             if ((s32)gPlayerCount > 0) {
                 do {
-                    func_80000A40(i);
-                    if (((&D_800EC898)[i] != 1) && ((&D_800EC898)[i] != 0xB) && ((&D_800EC898)[i] != 4)) {
+                    requestRumbleMotorInit(i);
+                    if (((&gRumbleMotorStatuses)[i] != 1) && ((&gRumbleMotorStatuses)[i] != 0xB) && ((&gRumbleMotorStatuses)[i] != 4)) {
                         gRumblePakConnectedMask |= 1 << i;
                         (&D_800EC8B4)[i] = 1;
                         connectedCount++;

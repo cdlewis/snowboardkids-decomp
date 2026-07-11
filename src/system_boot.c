@@ -2,7 +2,7 @@
 #include "sound_manager.h"
 #include "system_boot.h"
 #include "game_task_scheduler.h"
-#include "main_menu.h"
+#include "main_menu_flow.h"
 #include "memory_allocator.h"
 #include "race_flow.h"
 #include "viewport_manager.h"
@@ -250,7 +250,7 @@ void initGameSystems(void) {
     func_800484F0();
     initGameTaskScheduler();
     initVideoTaskState();
-    func_80000450();
+    initControllerSubsystem();
     resetAllViewports();
     initSoundManager();
     createGameTask(0, func_80072C30, STARTUP_CALLBACK_PRIORITY);
@@ -293,11 +293,11 @@ loop_1:
                 initialized = 1;
                 updateGameTaskScheduler();
                 updateSoundManager();
-                func_80000A8C(0);
-                func_80000A8C(1);
-                func_80000A8C(2);
-                func_80000A8C(3);
-                func_80000960();
+                updateRumbleMotorRequest(0);
+                updateRumbleMotorRequest(1);
+                updateRumbleMotorRequest(2);
+                updateRumbleMotorRequest(3);
+                requestControllerRead();
             } else {
                 initialized = 0;
             }
@@ -314,36 +314,36 @@ loop_1:
             *(volatile s32 *)&done = 1;
             break;
         case 9:
-            func_800009B0();
+            updateControllerInputState();
             break;
         }
     } while (*(volatile s32 *)&done == 0);
     fadeOutAllMusicSequences();
     osViBlack(1);
-    func_80000A40(0);
-    func_80000A40(1);
-    func_80000A40(2);
-    func_80000A40(3);
-    func_80000A8C(0);
-    func_80000A8C(1);
-    func_80000A8C(2);
-    func_80000A8C(3);
-    func_80000A40(0);
-    func_80000A40(1);
-    func_80000A40(2);
-    func_80000A40(3);
-    func_80000A8C(0);
-    func_80000A8C(1);
-    func_80000A8C(2);
-    func_80000A8C(3);
-    func_80000A40(0);
-    func_80000A40(1);
-    func_80000A40(2);
-    func_80000A40(3);
-    func_80000A8C(0);
-    func_80000A8C(1);
-    func_80000A8C(2);
-    func_80000A8C(3);
+    requestRumbleMotorInit(0);
+    requestRumbleMotorInit(1);
+    requestRumbleMotorInit(2);
+    requestRumbleMotorInit(3);
+    updateRumbleMotorRequest(0);
+    updateRumbleMotorRequest(1);
+    updateRumbleMotorRequest(2);
+    updateRumbleMotorRequest(3);
+    requestRumbleMotorInit(0);
+    requestRumbleMotorInit(1);
+    requestRumbleMotorInit(2);
+    requestRumbleMotorInit(3);
+    updateRumbleMotorRequest(0);
+    updateRumbleMotorRequest(1);
+    updateRumbleMotorRequest(2);
+    updateRumbleMotorRequest(3);
+    requestRumbleMotorInit(0);
+    requestRumbleMotorInit(1);
+    requestRumbleMotorInit(2);
+    requestRumbleMotorInit(3);
+    updateRumbleMotorRequest(0);
+    updateRumbleMotorRequest(1);
+    updateRumbleMotorRequest(2);
+    updateRumbleMotorRequest(3);
     finalType = 1;
 loop_16:
     do {
@@ -354,14 +354,14 @@ loop_17:
             }
         }
     } while (*(s16 *)msg != finalType);
-    func_80000A40(0);
-    func_80000A40(1);
-    func_80000A40(2);
-    func_80000A40(3);
-    func_80000A8C(0);
-    func_80000A8C(1);
-    func_80000A8C(2);
-    func_80000A8C(3);
+    requestRumbleMotorInit(0);
+    requestRumbleMotorInit(1);
+    requestRumbleMotorInit(2);
+    requestRumbleMotorInit(3);
+    updateRumbleMotorRequest(0);
+    updateRumbleMotorRequest(1);
+    updateRumbleMotorRequest(2);
+    updateRumbleMotorRequest(3);
     goto loop_16;
 }
 #else

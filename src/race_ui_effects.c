@@ -871,7 +871,7 @@ extern RacePlayerState D_80121D80[];
 extern RacePlayerValue D_80121D98[];
 extern s16 D_8012206C[][0x306];
 extern RacePlayerFlags D_8012207C[];
-extern u8 D_800EC9F0[];
+extern u8 gGameSaveDataBuffer[];
 extern RaceTimer D_80121B74;
 extern void enqueueSoundEffect(s32, s32);
 extern void func_80048278(s32, s32, void *, s32);
@@ -1677,22 +1677,22 @@ void func_80059C34(RaceUiCourseStatsActor *arg0) {
     for (row = 0, offset = 0; row != 5; row++, offset += 4, y += 0x20) {
         func_80045A78(-8, (s16)y, func_80043040(D_80112130.popupFontHandle), (row + 0x77) & 0xFFFF);
         if ((row == actor->index) && (D_80156612 & 1)) {
-            func_80059A04(((RaceUiCourseStatsNameData *)D_800EC9F0)->courseStatsNames[D_80121B50][row],
+            func_80059A04(((RaceUiCourseStatsNameData *)gGameSaveDataBuffer)->courseStatsNames[D_80121B50][row],
                           0x10, y, 0x10);
         } else if (row < 3) {
-            func_80059A04(((RaceUiCourseStatsNameData *)D_800EC9F0)->courseStatsNames[D_80121B50][row],
+            func_80059A04(((RaceUiCourseStatsNameData *)gGameSaveDataBuffer)->courseStatsNames[D_80121B50][row],
                           0x10, y, 0xC);
         } else {
-            func_80059A04(((RaceUiCourseStatsNameData *)D_800EC9F0)->courseStatsNames[D_80121B50][row],
+            func_80059A04(((RaceUiCourseStatsNameData *)gGameSaveDataBuffer)->courseStatsNames[D_80121B50][row],
                           0x10, y, 0xD);
         }
 
         func_80045A78(0x58, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                      ((((RaceUiCourseStatsIconData *)D_800EC9F0)->courseStatsIcons[D_80121B50][row] & 7) +
+                      ((((RaceUiCourseStatsIconData *)gGameSaveDataBuffer)->courseStatsIcons[D_80121B50][row] & 7) +
                        0x51) &
                           0xFFFF);
         func_80045A78(0x6C, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                      (((*((RaceUiCourseStatsIconData *)D_800EC9F0)).courseStatsIcons[D_80121B50][row] >> 3) +
+                      (((*((RaceUiCourseStatsIconData *)gGameSaveDataBuffer)).courseStatsIcons[D_80121B50][row] >> 3) +
                        0x7C) &
                           0xFFFF);
     }
@@ -1927,7 +1927,7 @@ void func_8005A884(RaceUiPopupActor *arg0) {
             color = 0xD;
         }
 
-        sprintf(buffer, D_800E12F4, ((RaceUiCourseValueData *)D_800EC9F0)->values[D_80121B50][i]);
+        sprintf(buffer, D_800E12F4, ((RaceUiCourseValueData *)gGameSaveDataBuffer)->values[D_80121B50][i]);
 
         if ((u8)buffer[0] != space) {
             func_80046D68(0x10, (s16)y, func_80043040(D_80112130.popupFontHandle),
@@ -1940,9 +1940,9 @@ void func_8005A884(RaceUiPopupActor *arg0) {
         }
 
         func_80045A78(0x46, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                      ((((RaceUiCourseValueData *)D_800EC9F0)->icons[D_80121B50][i] & 7) + 0x51) & 0xFFFF);
+                      ((((RaceUiCourseValueData *)gGameSaveDataBuffer)->icons[D_80121B50][i] & 7) + 0x51) & 0xFFFF);
         func_80045A78(0x58, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                      ((((RaceUiCourseValueData *)D_800EC9F0)->icons[D_80121B50][i] >> 3) + 0x7C) & 0xFFFF);
+                      ((((RaceUiCourseValueData *)gGameSaveDataBuffer)->icons[D_80121B50][i] >> 3) + 0x7C) & 0xFFFF);
 
         i++;
         y += 0x20;
@@ -2374,11 +2374,11 @@ void func_8005BE68(RaceUiPopupActor *arg0) {
         } else {
             color = 0xD;
         }
-        func_80059A04(((RaceUiResultNameData *)D_800EC9F0)->resultNames[D_80121B50][i], 0x10, y, color);
+        func_80059A04(((RaceUiResultNameData *)gGameSaveDataBuffer)->resultNames[D_80121B50][i], 0x10, y, color);
         func_80045A78(0x58, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                      ((((RaceUiResultIconData *)D_800EC9F0)->resultIcons[D_80121B50][i] & 7) + 0x51) & 0xFFFF);
+                      ((((RaceUiResultIconData *)gGameSaveDataBuffer)->resultIcons[D_80121B50][i] & 7) + 0x51) & 0xFFFF);
         func_80045A78(0x6C, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                      (((*((RaceUiResultIconData *)D_800EC9F0)).resultIcons[D_80121B50][i] >> 3) + 0x7C) & 0xFFFF);
+                      (((*((RaceUiResultIconData *)gGameSaveDataBuffer)).resultIcons[D_80121B50][i] >> 3) + 0x7C) & 0xFFFF);
         i++;
         offset += 4;
         y += 0x20;
@@ -2902,7 +2902,7 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
             color = 0xD;
         }
 
-        sprintf(buffer, D_800E1454, ((RaceUiTrickValueData *)D_800EC9F0)->values[D_80121B50][i]);
+        sprintf(buffer, D_800E1454, ((RaceUiTrickValueData *)gGameSaveDataBuffer)->values[D_80121B50][i]);
 
         new_var = buffer[0];
         if ((u8)new_var != space) {
@@ -2923,9 +2923,9 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
         }
 
         func_80045A78(0x40, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                      ((((RaceUiTrickIconData *)D_800EC9F0)->icons[D_80121B50][i] & 7) + 0x51) & 0xFFFF);
+                      ((((RaceUiTrickIconData *)gGameSaveDataBuffer)->icons[D_80121B50][i] & 7) + 0x51) & 0xFFFF);
         func_80045A78(0x54, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                      ((((RaceUiTrickIconData *)D_800EC9F0)->icons[D_80121B50][i] >> 3) + 0x7C) & 0xFFFF);
+                      ((((RaceUiTrickIconData *)gGameSaveDataBuffer)->icons[D_80121B50][i] >> 3) + 0x7C) & 0xFFFF);
 
         i++;
         y += 0x20;
@@ -5097,7 +5097,7 @@ void func_80065144(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x20) = -0x2C;
     *(s32 *)((u8 *)arg0 + 0x1C) = 0x1A4;
     *(s32 *)((u8 *)arg0 + 0x28) = 0x38;
-    v0 = func_8007B130(&D_80121B74, (RaceTimer *)&D_800EC9F0[D_80121B50 * 4 + 0x12A],
+    v0 = func_8007B130(&D_80121B74, (RaceTimer *)&gGameSaveDataBuffer[D_80121B50 * 4 + 0x12A],
                        (RaceTimer *)((u8 *)arg0 + 0x2C));
     *(s8 *)((u8 *)arg0 + 0x30) = v0;
     setCallbackTaskCallback(arg0, func_800650D8);

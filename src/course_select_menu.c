@@ -86,7 +86,7 @@ extern s8 gFramebufferSwapDelay;
 extern s8 D_800EC9C0;
 extern s8 D_800EC9C1;
 extern u8 D_800EC9E6;
-extern u8 D_800EC9F0[];
+extern u8 gGameSaveDataBuffer[];
 extern s8 D_800EC9F1;
 extern s8 D_800EC9F9;
 extern s8 D_800ECA2F[];
@@ -248,7 +248,7 @@ void initCourseSelectMenu(void) {
     mask = 1;
     i = 0;
     do {
-        savedUnlocks = D_800EC9F0[0x78D7];
+        savedUnlocks = gGameSaveDataBuffer[0x78D7];
         i++;
         if (savedUnlocks & mask) {
             shiftedMask = mask;
@@ -257,7 +257,7 @@ void initCourseSelectMenu(void) {
                 if (!(savedUnlocks & shiftedMask)) {
                     D_8010AF71 = 1;
                     D_8010AF70 = 1;
-                    D_800EC9F0[0x78D7] = savedUnlocks | shiftedMask;
+                    gGameSaveDataBuffer[0x78D7] = savedUnlocks | shiftedMask;
                 }
             }
         }
@@ -1340,7 +1340,7 @@ void initCourseSelectPreview(void) {
     D_8010AF76 = 0x78;
     configureViewport(1, 0xE8, 0x78, 0x90, D_8010AF76, 0xA0, 0xF0, 0.6666666865f);
     func_80070E90(1);
-    temp = (s8 *) &D_800EC9F0[D_80121D86];
+    temp = (s8 *) &gGameSaveDataBuffer[D_80121D86];
     D_8010AED0 = temp[0x3F] + 1;
     temp[0x3F] = D_800B34E0[(u8) D_8010AF73 * 7 + (u8) D_8010AF72];
     gCourseSelectStatus.transitionState = 6;
@@ -1387,7 +1387,7 @@ void exitCourseSelectMenu(void) {
             goto loop;
         }
         if (count == 0) {
-            D_800EC9F0[0x78D7] |= 4;
+            gGameSaveDataBuffer[0x78D7] |= 4;
         }
     }
 }

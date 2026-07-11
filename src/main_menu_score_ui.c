@@ -35,7 +35,7 @@ extern u8 gControllerPakRaceRecordSaveScoreUiStateStep;
 extern void *D_80124868;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
-extern s16 D_800EC9C8;
+extern s16 gControllerPakStatusCodes;
 extern s16 D_800EC9D0;
 extern u8 D_800EC9C1;
 
@@ -49,7 +49,7 @@ typedef struct {
 } MainMenuScorePlayerView;
 
 extern s16 D_800B3462[];
-extern MainMenuScorePlayerView D_800EC9F0;
+extern MainMenuScorePlayerView gGameSaveDataBuffer;
 extern u8 D_80112130[];
 extern s32 D_80121D8C;
 #endif
@@ -116,10 +116,10 @@ void func_8002B560(MainMenuScoreTask *arg0) {
     sprintf(text, D_800E0F30, D_80121D8C);
     func_80013D0C((s16)(arg0->x + 0x44), (s16)(arg0->y + 0x1B), text, 0, 0x100);
 
-    if (D_800EC9F0.iconCount == 3) {
+    if (gGameSaveDataBuffer.iconCount == 3) {
         count = 3;
     } else {
-        count = D_800EC9F0.iconCount + 1;
+        count = gGameSaveDataBuffer.iconCount + 1;
     }
 
     i = 0;
@@ -129,7 +129,7 @@ void func_8002B560(MainMenuScoreTask *arg0) {
             next = 1;
             next = i + next;
             alpha = 0x100;
-            if (D_800EC9F0.iconCount < next) {
+            if (gGameSaveDataBuffer.iconCount < next) {
                 alpha = 0x70;
             }
 
@@ -142,12 +142,12 @@ void func_8002B560(MainMenuScoreTask *arg0) {
     }
 
     count = 6;
-    if (D_800EC9F0.iconCount == 1) {
+    if (gGameSaveDataBuffer.iconCount == 1) {
         count = 7;
-    } else if (D_800EC9F0.iconCount == 2) {
+    } else if (gGameSaveDataBuffer.iconCount == 2) {
         count = 8;
     } else {
-        if (D_800EC9F0.iconCount == 3) {
+        if (gGameSaveDataBuffer.iconCount == 3) {
             count = 9;
         }
         i = 0;
@@ -158,7 +158,7 @@ void func_8002B560(MainMenuScoreTask *arg0) {
         new_var = D_800B3462;
         badgeIndex = new_var;
         do {
-            tile = D_800EC9F0.badgeIds[*badgeIndex];
+            tile = gGameSaveDataBuffer.badgeIds[*badgeIndex];
             alpha = 0x70;
             if (tile != 0) {
                 alpha = 0x100;
@@ -194,7 +194,7 @@ void func_8002B8B4(MainMenuScoreTask *arg0) {
         state = arg0->unk1C.state;
         break;
     case 1:
-        if (D_800EC9C8 != 0) {
+        if (gControllerPakStatusCodes != 0) {
             if (D_800EC9C1 == 0x14) {
                 state = arg0->unk1C.state = 2;
             }
@@ -229,7 +229,7 @@ void func_8002BA38(MainMenuScoreTask *arg0) {
     s32 zero = 0;
     u16 alpha;
 
-    if (D_800EC9C8 != 8) {
+    if (gControllerPakStatusCodes != 8) {
         alpha = arg0->unk1C.scale;
         func_8000F8AC((s16)(arg0->x - 2), (s16)(arg0->y + 0xC), func_80043040(D_80112172), 8, 0x20, 0x20,
                       zero, alpha, zero);
@@ -255,7 +255,7 @@ void func_8002BB24(MainMenuScoreTask *arg0) {
         state = arg0->state.b.unk1F = 2;
         break;
     case 2:
-        if ((D_800EC9C8 == 5) && (D_800EC9C1 == 0x14)) {
+        if ((gControllerPakStatusCodes == 5) && (D_800EC9C1 == 0x14)) {
             state = arg0->state.b.unk1F = 3;
         }
         break;
@@ -287,10 +287,10 @@ void func_8002BC60(MainMenuScoreTask *arg0) {
 void func_8002BC9C(MainMenuScoreTask *arg0) {
     u8 *text;
 
-    if (D_800EC9C8 != 8) {
-        text = D_800B73F0[D_800EC9C8];
+    if (gControllerPakStatusCodes != 8) {
+        text = D_800B73F0[gControllerPakStatusCodes];
         func_80013154(arg0->x, arg0->y, text, 1, arg0->unk1C.scale, 0);
-        if (((D_800EC9C8 == 4) || (D_800EC9C8 >= 7)) && (D_800EC9D0 == 0)) {
+        if (((gControllerPakStatusCodes == 4) || (gControllerPakStatusCodes >= 7)) && (D_800EC9D0 == 0)) {
             if (arg0->unk1C.scale == 0x100) {
                 func_8000F030((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), func_80043040(D_80112172),
                               (((s32)arg0->state.b.frame >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
@@ -317,7 +317,7 @@ void func_8002BDAC(MainMenuScoreTask *arg0) {
         state = arg0->state.b.unk20;
         break;
     case 1:
-        if ((D_800EC9C8 == 5) && (D_800EC9C1 == 0x14)) {
+        if ((gControllerPakStatusCodes == 5) && (D_800EC9C1 == 0x14)) {
             arg0->state.b.unk20 = 4;
             state = arg0->state.b.unk20;
         }
@@ -336,7 +336,7 @@ void func_8002BDAC(MainMenuScoreTask *arg0) {
             arg0->unk1C.scale = 0;
             arg0->state.b.unk20 = 2;
             D_800EC9D0 = 0;
-            D_800EC9C8 = arg0->state.wu.slideOffset;
+            gControllerPakStatusCodes = arg0->state.wu.slideOffset;
         }
         state = arg0->state.b.unk20;
         break;
@@ -383,7 +383,7 @@ void func_8002BF9C(MainMenuScoreTask *arg0) {
         }
 
         drawAlpha = alpha;
-        func_8000F8AC(arg0->x, arg0->unk1C.scale, func_80043040(D_80112172), D_800B7987[D_800EC9C8 * 2], 0x20, 0x20,
+        func_8000F8AC(arg0->x, arg0->unk1C.scale, func_80043040(D_80112172), D_800B7987[gControllerPakStatusCodes * 2], 0x20, 0x20,
                       0, drawAlpha, 0);
 
         if (drawAlpha == 0x100) {
@@ -392,7 +392,7 @@ void func_8002BF9C(MainMenuScoreTask *arg0) {
             alpha = 0x100;
         }
 
-        func_8000F8AC(arg0->x, arg0->y, func_80043040(D_80112172), D_800B7986[D_800EC9C8 * 2], 0x20, 0x20, 0, alpha,
+        func_8000F8AC(arg0->x, arg0->y, func_80043040(D_80112172), D_800B7986[gControllerPakStatusCodes * 2], 0x20, 0x20, 0, alpha,
                       0);
 
         state = D_800EC9D0;
@@ -409,7 +409,7 @@ void func_8002BF9C(MainMenuScoreTask *arg0) {
         if (arg0->state.w.selection == 0) {
             gControllerPakRaceRecordSaveScoreUiState.timer = 0x100;
             gControllerPakRaceRecordSaveScoreUiState.step = 1;
-            D_800EC9C8 = arg0->state.w.selection;
+            gControllerPakStatusCodes = arg0->state.w.selection;
         }
     }
 }
@@ -481,7 +481,7 @@ void func_8002C390(MainMenuScoreTask *arg0) {
         state = arg0->state.b.unk1E;
         break;
     case 1:
-        if ((D_800EC9C8 == 5) && (D_800EC9C1 == 0x14)) {
+        if ((gControllerPakStatusCodes == 5) && (D_800EC9C1 == 0x14)) {
             state = arg0->state.b.unk1E = 2;
         }
         break;

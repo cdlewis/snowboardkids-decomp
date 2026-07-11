@@ -97,7 +97,7 @@ extern u8 D_800B5B08[];
 extern u16 D_800B5B20[];
 extern const char D_800E0AB0[];
 extern const char D_800E0AB4[];
-extern RacePlayerState D_800EC9F0[];
+extern RacePlayerState gGameSaveDataBuffer[];
 extern u8 D_8010AE5E;
 extern u8 D_8010AE5F;
 extern u16 D_800B5B30[];
@@ -503,7 +503,7 @@ void func_80018060(RaceHudMessageActor *arg0) {
 
     i = 0;
     if (gPlayerCount > 0) {
-        player = D_800EC9F0;
+        player = gGameSaveDataBuffer;
         do {
             actor->playerFlags = actor->playerFlags | (player->flags & 1);
             D_8010AE5E = actor->playerFlags;
@@ -591,9 +591,9 @@ void func_800183DC(RaceHudPlayerListActor *arg0) {
 
     playerFlags = 0;
     i = 0;
- if ((s32)gPlayerCount > 0) { player = D_800EC9F0; do {
+ if ((s32)gPlayerCount > 0) { player = gGameSaveDataBuffer; do {
             playerFlags |= player->flags;
-            i = (s32)&D_800EC9F0[gPlayerCount];
+            i = (s32)&gGameSaveDataBuffer[gPlayerCount];
             player++;
         } while ((u32)player < (u32)i);
         i = 0;

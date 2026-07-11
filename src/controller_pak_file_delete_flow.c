@@ -6,7 +6,7 @@
 #include "controller_pak_menu.h"
 #include "controller_pak_ui.h"
 #include "game_task_scheduler.h"
-#include "main_menu.h"
+#include "main_menu_flow.h"
 #include "menu_rendering.h"
 #include "viewport_manager.h"
 
@@ -17,14 +17,14 @@ extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakFileEntry gControllerPakFileEntries[];
 extern CharacterSelectFlowState *gCurrentGameTask;
 extern s8 gFramebufferSwapDelay;
-extern u8 D_800EC9D8;
+extern u8 gControllerPakRetryCounts;
 extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;
 extern s32 gPlayerInputPressed;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
-extern s16 D_800EC9C8;
+extern s16 gControllerPakStatusCodes;
 extern u8 gRaceRumbleEnabled;
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
@@ -40,8 +40,8 @@ extern u8 D_60F1A0;
 extern u8 D_60F990;
 
 void initControllerPakFileDeleteFlow(void) {
-    func_80000C48(0);
-    if (D_800EC9C8 != 1) {
+    requestControllerPakProbe(0);
+    if (gControllerPakStatusCodes != 1) {
         setCurrentGameTaskCallback(fadeOutControllerPakFileDeleteFlow, 0);
         return;
     }
@@ -51,7 +51,7 @@ void initControllerPakFileDeleteFlow(void) {
     gCurrentGameTask->fade = 0;
     gCurrentGameTask->timer = 0;
     D_801235B4 = 0;
-    D_800EC9D8 = 0;
+    gControllerPakRetryCounts = 0;
     gControllerPakFreeBytes = 0;
     gControllerPakFreeFileCount = 0;
     gRaceRumbleEnabled = 0;
@@ -188,7 +188,7 @@ void updateControllerPakFileDeletePrompt(void) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
             requestControllerPakDeleteFile(gControllerPakMenuState.fileIndex);
-            if (D_800EC9D8 == 0) {
+            if (gControllerPakRetryCounts == 0) {
                 gControllerPakFileEntries[gControllerPakMenuState.fileIndex].exists = 0;
                 requestControllerPakFileList();
                 requestControllerPakFreeSpaceUpdate();
@@ -226,7 +226,7 @@ void updateControllerPakFileDeleteErrorPrompt(void) {
         }
     }
     if (state == 3) {
-        D_800EC9D8 = 0;
+        gControllerPakRetryCounts = 0;
         setCurrentGameTaskCallback(&updateControllerPakFileDeleteFileList, 0);
         gControllerPakMenuCursorState = 1;
     }
