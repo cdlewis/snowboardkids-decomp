@@ -111,7 +111,7 @@ extern s32 allocFixedTransformMatrix(FixedTransform *);
 extern void drawCourseSelectCourseCursors(CourseSelectWidgetActor *);
 extern s8 D_800ECA2F[][0x78F8];
 extern s8 D_800EC9C0;
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern u8 D_800EC9E6;
 extern s32 gActiveMenuTask;
 extern CallbackTask *D_8010ADE0;
@@ -784,7 +784,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                             alpha = 0xFF;
                         }
 
-                        if (D_800EC9C2 == 3) {
+                        if (gRaceSplitscreenMode == 3) {
                             func_8000F0EC(position[0], position[20], getMemoryBlockBase(D_8011217E), 5, 0x20,
                                           0x20, 0, alpha, arg0->clipLeft - clipOffset, new_var->clipTop,
                                           new_var->clipRight, new_var->clipBottom);
@@ -947,7 +947,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     actor = arg0;
     i = 0;
     if ((s32) gPlayerCount > 0) {
-        statePtr = actor; do { if ((D_801235B4 != 0) && (D_800EC9C2 != 3)) { statePtr->unk30 = 4; }
+        statePtr = actor; do { if ((D_801235B4 != 0) && (gRaceSplitscreenMode != 3)) { statePtr->unk30 = 4; }
             state = statePtr->unk30;
             switch (state) {
             case 0:
@@ -1089,7 +1089,7 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
             createCallbackTask(initCourseSelectExtraCourseBadge, 0, 0x63);
             createCallbackTask(initCourseSelectCourseDescription, 0, 0x61);
             createCallbackTask(initCourseSelectCourseStats, 0, 0x64);
-            if ((D_800EC9C2 == 3) && (D_800EC9E6 == 0)) {
+            if ((gRaceSplitscreenMode == 3) && (D_800EC9E6 == 0)) {
                 createCallbackTask(func_8002E568, 0, 0x63);
             }
         }
@@ -1447,7 +1447,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 selectedIndex = arg0->timer;
             }
 
-            if ((D_800EC9C2 == 3) && (selection->courseId < 9)) {
+            if ((gRaceSplitscreenMode == 3) && (selection->courseId < 9)) {
                 text = gCourseSelectBoardLevelByCourseText + ((selection->courseId % 3) * 0x30);
             } else if ((selection->courseId >= 9) && (selection->courseId < 12)) {
                 text = gCourseSelectExtraCourseBoardLevelText + ((gCourseSelectExtraCourseIds[selectedIndex] % 3) * 0x60);
@@ -1458,7 +1458,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
 
         drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
 
-        if ((D_800EC9C2 == 3) && ((selection->mode == 1) || (selection->mode == 2))) {
+        if ((gRaceSplitscreenMode == 3) && ((selection->mode == 1) || (selection->mode == 2))) {
             if ((D_8010AE64[0] != 3) || !(gUnlockedExtraCourseFlags & 7)) {
                 buffer[0] = -4;
                 buffer[1] = 6;

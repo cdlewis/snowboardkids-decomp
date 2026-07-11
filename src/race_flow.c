@@ -223,7 +223,7 @@ extern u8 gRaceRecordSettingsEnabled;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s8 gFramebufferSwapDelay;
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern u8 gRumblePakConnectedMask;
 extern u8 D_800DC4C0;
 extern u8 gRaceUpdatePaused;
@@ -432,7 +432,7 @@ void func_80073140(void) {
     D_80121D80[2].unk18 = 0;
     D_80121D80[3].unk18 = 0;
     gRaceCourseIndex.s = 0;
-    D_800EC9C2 = 0;
+    gRaceSplitscreenMode = 0;
     D_80121B58 = 0;
     setCurrentGameTaskCallback(func_800732C4, 0);
 }
@@ -473,7 +473,7 @@ void func_800733E0(void) {
 }
 
 void func_80073434(void) {
-    if (D_800EC9C2 == 1) {
+    if (gRaceSplitscreenMode == 1) {
         setCurrentGameTaskCallback(&func_800735F8, 0);
     } else {
         setCurrentGameTaskCallback(&func_800734E4, 0);
@@ -494,7 +494,7 @@ void func_800734E4(void) {
         setCurrentGameTaskCallback(&func_80073308, 0);
         return;
     }
-    switch (D_800EC9C2) {
+    switch (gRaceSplitscreenMode) {
     case 0:
     case 2:
         setCurrentGameTaskCallback(&func_80073738, 0);
@@ -793,7 +793,7 @@ void func_80074960(void) {
         addRenderCallback(&gMenuRenderCallbackList, func_80074864, 0);
     }
 
-    if (D_800EC9C2 == valueTwo) {
+    if (gRaceSplitscreenMode == valueTwo) {
         func_80072E98();
     }
     func_80077C4C();
@@ -1046,7 +1046,7 @@ void func_80076054(void) {
     D_80121B60 = 0;
     D_80121B61 = 0;
 
-    switch (D_800EC9C2) {
+    switch (gRaceSplitscreenMode) {
     case 0:
         D_80121B5F = 1;
         i = 0;
@@ -1167,7 +1167,7 @@ void func_80076054(void) {
     setCurrentGameTaskCallback(func_80076490, 0);
     if (D_80121B60 != 0) {
         requestMusicSequenceBank(6);
-        if ((gPlayerCount == 1) && (D_800EC9C2 == 0)) {
+        if ((gPlayerCount == 1) && (gRaceSplitscreenMode == 0)) {
             createCallbackTaskWithUserId((void (*)(CallbackTask *))func_8005E68C, 6, 0x64, 0xA9);
         }
         createCallbackTaskWithUserId(initMenuSnowflakeEffect, 5, 0x64, D_80121B60 - 1);
@@ -1221,7 +1221,7 @@ void func_80076490(void) {
 
         D_801235B4 |= 0x20;
 
-        switch (D_800EC9C2) {
+        switch (gRaceSplitscreenMode) {
         case 0:
             if (D_80121B55 == 1) {
                 task = func_80071408((void (*)(EffectTask *))func_80058BAC, 6, 0x64);
@@ -1479,11 +1479,11 @@ void func_80077400(void) {
         gCurrentGameTask->fadeTimer -= 1;
         if (gCurrentGameTask->fadeTimer == 0) {
             stopSoundEffects();
-            if ((D_800EC9C2 == 2) && (((Unk80043040 *)getMemoryBlockBase(D_80112186))->unk8 != 0) && (D_80121B61 != 0) &&
+            if ((gRaceSplitscreenMode == 2) && (((Unk80043040 *)getMemoryBlockBase(D_80112186))->unk8 != 0) && (D_80121B61 != 0) &&
                 (saveRaceRecordReplayData() != 0)) {
                 D_80121B61 = -1;
             }
-            if (D_800EC9C2 == 2) {
+            if (gRaceSplitscreenMode == 2) {
                 setCurrentGameTaskCallback(&func_80077554, 0);
             } else {
                 gFramebufferSwapHold = 1;
@@ -1659,7 +1659,7 @@ void func_80077B34(void) {
         if (D_80121B57 == 2) {
             setCurrentGameTaskCallback(func_80073988, 0);
         } else if (gPlayerCount == 1) {
-            if (D_800EC9C2 == 1) {
+            if (gRaceSplitscreenMode == 1) {
                 setCurrentGameTaskCallback(func_800735B4, 0);
             } else {
                 setCurrentGameTaskCallback(func_80073944, 0);
@@ -1700,7 +1700,7 @@ s32 func_80077D14(void) {
     s32 var_v0;
     RacePlayerState *player;
 
-    if (D_800EC9C2 == 1) {
+    if (gRaceSplitscreenMode == 1) {
         if (!(D_8012207C & 0x40)) {
             return 0;
         }
@@ -1725,7 +1725,7 @@ loop:
 
 void func_80077DA0(void) {
     gRaceLapCount = D_800B9542[gRaceCourseIndex.s].unk0;
-    if (D_800EC9C2 != 0) {
+    if (gRaceSplitscreenMode != 0) {
         setCurrentGameTaskCallback(func_80073988, 0);
         return;
     }

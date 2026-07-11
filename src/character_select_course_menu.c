@@ -76,7 +76,7 @@ extern u8 gCharacterSelectCourseSubmenuState;
 extern u8 D_8010ADF8;
 extern u8 gHighestUnlockedCourse;
 extern u8 D_800EC9C1;
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern s16 D_800EC9D0;
 extern u8 D_800EC9DD;
 extern u8 gPendingFramebufferSwapCount;
@@ -205,7 +205,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
     initCallbackTaskScheduler(0);
     createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
 
-    if (D_800EC9C2 == 1) {
+    if (gRaceSplitscreenMode == 1) {
         loadCompressedRomAsset(D_5CCD40, D_5D4280, 0x25);
         createCallbackTask((void (*)(CallbackTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
         gCurrentGameTask->fade = 0;

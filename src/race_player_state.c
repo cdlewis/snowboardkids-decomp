@@ -116,7 +116,7 @@ extern CourseAngleEntry D_800B9554[];
 extern CourseAngleEntry D_800B9556[];
 extern u8 D_80121B5F;
 extern u8 gMainMenuModeSelection;
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 D_80121B59;
@@ -264,13 +264,13 @@ void func_8008C098(RaceInputPlayer *player) {
     if ((player->unk4 != 0) && (player->characterId == 5)) {
         player->unk274 = 0xC0000;
     }
-    if (D_800EC9C2 == 2) {
+    if (gRaceSplitscreenMode == 2) {
         player->actionEffectType = 1;
     }
     if (player->unk4 == 0) {
         player->unk519 = 6;
     }
-    if ((D_800EC9C2 == 1) && (D_80121B5E == 1)) {
+    if ((gRaceSplitscreenMode == 1) && (D_80121B5E == 1)) {
         player->shieldEffectTimer = 0xA;
     }
     if (gRaceCourseIndex == 9) {
@@ -416,7 +416,7 @@ void func_8008C098(RaceInputPlayer *player) {
     player->randomIndex = randomNextMain();
     func_8006D520(player->playerIndexU16, 1);
     if (D_80121B59 == 0) {
-        if (D_800EC9C2 == 0) {
+        if (gRaceSplitscreenMode == 0) {
             createCallbackTaskWithUserId(waitForRaceStartPlayerEffect, 0, 1, player->playerIndexU16);
         }
     }
@@ -4966,7 +4966,7 @@ void func_8009652C(RaceInputPlayer *player) {
         player->stateTimer = 0;
     }
     if (player->stateTimer == 0) {
-        if (D_800EC9C2 == 0) {
+        if (gRaceSplitscreenMode == 0) {
             if (player->rankIndex == 0) {
                 player->updateState = 2;
                 player->updateTimer = 0;
@@ -5397,7 +5397,7 @@ void func_8009724C(RaceInputPlayer *arg0) {
         }
         var_a3 = var_a3_2 + arg0->unk2A4;
     }
-    if ((var_a3 != 0) && (D_800EC9C2 == 0) && (D_80121B59 == 0)) {
+    if ((var_a3 != 0) && (gRaceSplitscreenMode == 0) && (D_80121B59 == 0)) {
         sp24 = (s32)var_a3;
         func_8008BB5C(arg0, (s32)var_a3);
         temp_v0_2 = (u16)arg0->playerIndex;
@@ -5423,7 +5423,7 @@ void func_8009724C(RaceInputPlayer *arg0) {
             enqueueSoundEffect(var_a0 >> 0x10, 0x5A);
         }
     }
-    if (D_800EC9C2 == 1) {
+    if (gRaceSplitscreenMode == 1) {
         if (D_80121B5E == 2) {
             if (var_s0 != 0) {
                 var_v1_3 = 0x4D;
@@ -5598,7 +5598,7 @@ void func_80097910(RaceInputPlayer *player) {
         player->mode = 1;
         player->updateState = 0;
         player->updateTimer = 0;
-        if ((D_800EC9C2 == 1) && (D_80121B5E == 2)) {
+        if ((gRaceSplitscreenMode == 1) && (D_80121B5E == 2)) {
             player->unk2C0 *= 2;
             if (player->unk2C0 >= 0x2710) {
                 player->unk2C0 = 0x270F;
@@ -5606,7 +5606,7 @@ void func_80097910(RaceInputPlayer *player) {
             createCallbackTaskPreservingArgs(func_80057DD4, 0, 0x64);
             enqueueSoundEffect(0x51, 0x32);
         }
-        if (D_800EC9C2 == 0) {
+        if (gRaceSplitscreenMode == 0) {
             func_8008BB5C(player, 0x12C);
             playerIndex = player->playerIndex;
             if (D_8011228C[playerIndex].active != 0) {

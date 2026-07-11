@@ -86,7 +86,7 @@ extern u8 D_80121D88;
 extern u8 D_800EC9C1;
 extern s16 D_800EC9D0;
 extern u8 D_800EC9DD;
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern u8 D_80121B5E;
 extern void *gMenuRenderCallbackList;
 extern void addRenderCallback(void *, void *, void *);
@@ -109,7 +109,7 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
     s32 characterIdOffset;
 
     base = arg0;
-    if ((D_800EC9C2 == 0) || (D_800EC9C2 == 2)) {
+    if ((gRaceSplitscreenMode == 0) || (gRaceSplitscreenMode == 2)) {
         characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
     } else if (D_80121B5E >= 3) {
         characterIds = gCharacterSelectShortCourseOptions;
@@ -272,7 +272,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
         if (arg0->y[gRaceCourseIndex] < -0x5F) {
             arg0->y[gRaceCourseIndex] = -0x60;
             arg0->state = 4;
-            if (D_800EC9C2 == 2) {
+            if (gRaceSplitscreenMode == 2) {
                 D_8010ADE0 = createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCourseExitPopup, 0, 0x62);
                 createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCourseRecordsPopup, 0, 0x63);
             } else {
@@ -732,7 +732,7 @@ void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
     register CharacterSelectCourseWidgetActor *actor;
 
     actor = arg0;
-    if ((D_800EC9C2 == 1) && (D_80121B5E == 2)) {
+    if ((gRaceSplitscreenMode == 1) && (D_80121B5E == 2)) {
         do {
             frameIndex = 9;
         } while (0);
@@ -2751,7 +2751,7 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
     s32 var_s7;
     u16 var_s0;
 
-    if (D_800EC9C2 == 2) {
+    if (gRaceSplitscreenMode == 2) {
         courseIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
     } else if ((s32)D_80121B5E < 2) {
         courseIds = gCharacterSelectShortCourseOptions;
@@ -2772,7 +2772,7 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                       (var_s7 + 0x77) & 0xFFFF, 0x20, 0x20, 0, 0);
 
         if (gPlayerCount == 1) {
-            if (D_800EC9C2 != 2) {
+            if (gRaceSplitscreenMode != 2) {
                 if (D_80121B5E == 0) {
                     if (var_s7 < 3) {
                         color = 0xC;
@@ -2862,7 +2862,7 @@ void updateCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *a
     switch (state) {
     case 0:
         unk = D_80121B5E;
-        if ((D_800EC9C2 == 2) || ((D_800EC9C2 == 1) && (unk == 0))) {
+        if ((gRaceSplitscreenMode == 2) || ((gRaceSplitscreenMode == 1) && (unk == 0))) {
             target = -0x8A;
         } else {
             target = -0x88;
@@ -3024,7 +3024,7 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     } while (ptr < end);
     func_80046D68((s16)x, y, getMemoryBlockBase(D_80112130.popupFontHandle), 0x36, alpha);
 
-    if ((D_800EC9C2 == 2) || ((D_800EC9C2 == 1) && (D_80121B5E == 0))) {
+    if ((gRaceSplitscreenMode == 2) || ((gRaceSplitscreenMode == 1) && (D_80121B5E == 0))) {
         x += 6;
     } else {
         x += 8;

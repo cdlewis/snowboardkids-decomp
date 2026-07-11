@@ -71,7 +71,7 @@ extern u8 D_5CBA80[];
 extern u8 D_5CCD40[];
 extern s16 gMenuFadeAlpha;
 extern s8 D_800EC9C0;
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern s16 D_800EC9D0[];
 extern s8 D_800EC9E5;
 extern s8 D_800EC9E6;
@@ -123,7 +123,7 @@ void initRaceCharacterSelectMenu(void) {
     s32 selected;
     s32 screenBase;
 
-    if (D_800EC9C2 == 1) {
+    if (gRaceSplitscreenMode == 1) {
         requestMusicSequenceBank(2);
     }
     func_8006D5CC();

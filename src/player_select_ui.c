@@ -29,7 +29,7 @@ extern int sprintf(char *, const char *, ...);
 extern PlayerSelectFrameTiles D_800B5B50[];
 extern PlayerPortrait D_800B5C24[];
 extern u8 D_800EC9C1;
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern u8 D_80121D85;
 extern u8 D_80121D88;
 extern void *gMenuRenderCallbackList;
@@ -59,7 +59,7 @@ void func_800191D0(PlayerSelectRowActor *arg0) {
     sp54 = arg0;
     var_s0 = 0;
     if ((s32)arg0->playerCount > 0) {
-        do { var_s2 = 0; var_s3 = arg0; do { var_s1 = 0; if (((((D_800EC9C1 != 0) && (((s32)D_800EC9C1) < 8)) && (D_8010ADF8 == 0)) && (var_s0 == D_800EC9C2)) && (D_800EC9C1 & 1)) { var_s1 = 0xFF; } drawMenuSprite(var_s3->iconX[0], (s16)(arg0->iconY + var_s2), getMemoryBlockBase(D_80112130.textureHandle), (var_s0 + 8) & 0xFFFF, 0x20, 0x20, 0, var_s1); var_s0 += 1; var_s2 += 0x14; var_s3 = (PlayerSelectRowActor *)((u8 *)var_s3 + 2); if (arg0->playerCount) {} } while (var_s0 < ((s32)sp54->playerCount)); } while (0);
+        do { var_s2 = 0; var_s3 = arg0; do { var_s1 = 0; if (((((D_800EC9C1 != 0) && (((s32)D_800EC9C1) < 8)) && (D_8010ADF8 == 0)) && (var_s0 == gRaceSplitscreenMode)) && (D_800EC9C1 & 1)) { var_s1 = 0xFF; } drawMenuSprite(var_s3->iconX[0], (s16)(arg0->iconY + var_s2), getMemoryBlockBase(D_80112130.textureHandle), (var_s0 + 8) & 0xFFFF, 0x20, 0x20, 0, var_s1); var_s0 += 1; var_s2 += 0x14; var_s3 = (PlayerSelectRowActor *)((u8 *)var_s3 + 2); if (arg0->playerCount) {} } while (var_s0 < ((s32)sp54->playerCount)); } while (0);
     }
 }
 
@@ -259,11 +259,11 @@ void func_80019800(PlayerSelectWidgetActor *arg0) {
 void func_80019CD8(PlayerSelectWidgetActor *arg0) {
     int state;
 
-    if ((D_800EC9C2 >= (u16) arg0->counter) && (arg0->row.bytes.subState != 0) && (arg0->y != -0x48)) {
+    if ((gRaceSplitscreenMode >= (u16) arg0->counter) && (arg0->row.bytes.subState != 0) && (arg0->y != -0x48)) {
         state = arg0->row.bytes.subState = 2;
     } else {
         state = arg0->row.bytes.subState;
-        if ((D_800EC9C2 < (u16) arg0->counter) && (state != 0) && (arg0->y != -0x140)) {
+        if ((gRaceSplitscreenMode < (u16) arg0->counter) && (state != 0) && (arg0->y != -0x140)) {
             state = arg0->row.bytes.subState = 1;
         } else {
             state = arg0->row.bytes.subState;
@@ -384,9 +384,9 @@ void func_80019FFC(PlayerSelectWidgetActor *arg0) {
 void func_8001A270(PlayerSelectWidgetActor *arg0) {
     int state;
 
-    if ((D_800EC9C2 >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
+    if ((gRaceSplitscreenMode >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((D_800EC9C2 < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
+    } else if ((gRaceSplitscreenMode < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = arg0->transition.bytes.state;
@@ -489,9 +489,9 @@ void func_8001A490(PlayerSelectWidgetActor *arg0) {
 void func_8001A704(PlayerSelectWidgetActor *arg0) {
     int state;
 
-    if ((D_800EC9C2 >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
+    if ((gRaceSplitscreenMode >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((D_800EC9C2 < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
+    } else if ((gRaceSplitscreenMode < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = arg0->transition.bytes.state;
@@ -596,9 +596,9 @@ void func_8001A924(PlayerSelectWidgetActor *arg0) {
 void func_8001AB98(PlayerSelectWidgetActor *arg0) {
     int state;
 
-    if ((D_800EC9C2 >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
+    if ((gRaceSplitscreenMode >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((D_800EC9C2 < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
+    } else if ((gRaceSplitscreenMode < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = arg0->transition.bytes.state;
@@ -702,9 +702,9 @@ void func_8001B02C(PlayerSelectWidgetActor *arg0) {
     int state;
 
     D_801235B4 = 0;
-    if ((D_800EC9C2 >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
+    if ((gRaceSplitscreenMode >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((D_800EC9C2 < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
+    } else if ((gRaceSplitscreenMode < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = arg0->transition.bytes.state;
@@ -770,7 +770,7 @@ void func_8001B210(PlayerSelectWidgetActor *arg0) {
 }
 
 void func_8001B254(PlayerSelectWidgetActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (D_800EC9C2 * 0x14)), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (gRaceSplitscreenMode * 0x14)), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
 void func_8001B2D8(PlayerSelectWidgetActor *arg0) {
@@ -843,13 +843,13 @@ void func_8001B454(PlayerSelectWidgetActor *arg0) {
 void func_8001B494(PlayerSelectWidgetActor *arg0) {
     s32 portraitIndex;
 
-    if (D_800EC9C2 == 3) {
-        portraitIndex = D_800EC9C2 & 0xFF;
+    if (gRaceSplitscreenMode == 3) {
+        portraitIndex = gRaceSplitscreenMode & 0xFF;
         if (D_80121D85 == 5) {
             portraitIndex = 5;
         }
     } else {
-        portraitIndex = D_800EC9C2 & 0xFF;
+        portraitIndex = gRaceSplitscreenMode & 0xFF;
     }
     drawMenuGlyphScript(arg0->x, arg0->y, D_800B5C24[portraitIndex], 1, arg0->sprite.spriteIndex, 0);
 }

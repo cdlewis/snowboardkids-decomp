@@ -50,7 +50,7 @@ extern u8 D_800DE058[];
 extern u8 D_800DE05C[];
 extern u8 D_800DE060[];
 extern u8 D_800DE064[];
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern u8 gPlayerCount;
 extern s16 gRaceCourseIndex;
 
@@ -102,7 +102,7 @@ void func_8007B250(void) {
     s32 dz;
     s8 rank;
 
-    if (D_800EC9C2 != 0) {
+    if (gRaceSplitscreenMode != 0) {
         return;
     }
 

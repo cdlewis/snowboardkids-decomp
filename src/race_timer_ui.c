@@ -87,7 +87,7 @@ extern u8 D_24C8E0[];
 extern RaceTimer D_800DC928[];
 extern RaceTimer D_800DC950;
 extern u8 D_800DC8F9;
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern RaceTimerCourseSpawnEntry D_800B9540[];
 extern u8 D_800DC8F0[];
 extern u8 D_800DC8F8[];
@@ -138,13 +138,13 @@ void func_80078430(void) {
     D_80121B72 = 0;
 
     if (gPlayerCount == 1) {
-        if (D_800EC9C2 == 0) {
+        if (gRaceSplitscreenMode == 0) {
             D_80121B70 = 0;
         }
-        if (D_800EC9C2 == 2) {
+        if (gRaceSplitscreenMode == 2) {
             D_80121B70 = 4;
         }
-        if (D_800EC9C2 == 1) {
+        if (gRaceSplitscreenMode == 1) {
             if (D_80121B5E == 0) {
                 D_80121B70 = 5;
             }

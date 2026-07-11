@@ -9,7 +9,7 @@
 #include "main_menu_panel_ui.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
-#include "main_menu_mode_flow.h"
+#include "main_menu_mode_race_flow.h"
 #include "main_menu_ui.h"
 #include "race_camera.h"
 #include "race_flow.h"
@@ -1226,7 +1226,7 @@ void exitMainMenuModeSelect(void) {
             return;
         }
         if (D_801235B4 == 1) {
-            createGameTask(4, startMainMenuModePreviewFlow, 0x64);
+            createGameTask(4, startMainMenuModeDemoFlow, 0x64);
             suspendGameTask(3);
         }
     }
