@@ -711,7 +711,7 @@ void func_80024968(void *arg0) {
     func_80071824(actor, func_80024380);
 }
 
-// func_80024A90 best match: 90.174% (nonmatchings/func_80024A90-2225551288923588688/base.c)
+// func_80024A90 best match: 94.322% (nonmatchings/func_80024A90-6113366811127043669/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024A90.s")
 
 #ifdef NON_MATCHING
@@ -719,6 +719,7 @@ void func_80024A90(CourseSelectIconListActor *arg0) {
     CourseSelectIconListActor *sp8C;
     CourseSelectIconListActor *sp74;
     u8 *sp60;
+    CourseSelectIconListActor *new_var;
     s32 i;
     s32 j;
     s32 alpha;
@@ -730,16 +731,19 @@ void func_80024A90(CourseSelectIconListActor *arg0) {
     s16 *position;
 
     sp8C = arg0;
+    new_var = arg0;
     i = 0;
     if ((s32)D_80121B55 > 0) {
-        sp60 = (u8 *)arg0;
+        sp60 = (u8 *)new_var;
         do {
             j = 0;
             if (sp60[0x98] > 0) {
                 sp74 = (CourseSelectIconListActor *)((u8 *)sp8C + i);
                 do {
                     if (j < (sp60[0x98] - 1)) {
-                        position = &arg0->coordinates[(i * 5) + j];
+                        position = &new_var->coordinates[(i * 5) + j];
+                        if (1) {
+                        }
                         player = &D_80121D80[i];
                         alpha = 0;
                         clipOffset = (i >= 2) * 0x8C;
@@ -769,8 +773,8 @@ void func_80024A90(CourseSelectIconListActor *arg0) {
 
                         func_8000F0EC(position[0], position[20], func_80043040(D_80112172),
                                       tileIndex & 0xFFFF, 0x20, 0x20, 0, alpha,
-                                      arg0->clipLeft - clipOffset, arg0->clipTop, arg0->clipRight,
-                                      arg0->clipBottom);
+                                      new_var->clipLeft - clipOffset, arg0->clipTop, arg0->clipRight,
+                                      new_var->clipBottom);
                     } else if (D_80121B55 == 1) {
                         alpha = 0;
                         selectedCourse = D_8010AEA4[i];
@@ -783,12 +787,12 @@ void func_80024A90(CourseSelectIconListActor *arg0) {
 
                         if (D_800EC9C2 == 3) {
                             func_8000F0EC(position[0], position[20], func_80043040(D_8011217E), 5, 0x20,
-                                          0x20, 0, alpha, arg0->clipLeft - clipOffset, arg0->clipTop,
-                                          arg0->clipRight, arg0->clipBottom);
+                                          0x20, 0, alpha, arg0->clipLeft - clipOffset, new_var->clipTop,
+                                          new_var->clipRight, new_var->clipBottom);
                         } else {
                             func_8000F0EC(position[0], position[20], func_80043040(D_80112172), 5, 0x20,
                                           0x20, 0, alpha, arg0->clipLeft - clipOffset, arg0->clipTop,
-                                          arg0->clipRight, arg0->clipBottom);
+                                          arg0->clipRight, new_var->clipBottom);
                         }
                     }
                     j++;

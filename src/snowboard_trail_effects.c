@@ -85,24 +85,30 @@ void func_800837D0(SnowboardTrailState *trail) {
     }
 }
 
-// func_8008393C best match: 96.425%
+// func_8008393C best match: 99.958%
 #pragma GLOBAL_ASM("asm/nonmatchings/snowboard_trail_effects/func_8008393C.s")
 
 #ifdef NON_MATCHING
 void func_8008393C(struct RaceInputPlayer *input) {
-    FixedTransform scratch;
     SnowboardTrailPlayer *player = (SnowboardTrailPlayer *)input;
     SnowboardTrailState *trail;
     FixedMatrix3s *playerTransform;
     FixedMatrix3s *rotation;
-    s16 scaleStep;
+    FixedTransform scratch;
 
-    if (player->trail.state == 0) {
+    trail = &player->trail;
+    switch (player->trail.state) {
+    case 0:
+        return;
+    case 1:
+        break;
+    case 2:
+        goto state_2;
+    default:
         return;
     }
 
-    trail = &player->trail;
-    if (player->trail.state == 1) {
+    {
         trail->spinYaw += 0x240;
         playerTransform = (FixedMatrix3s *)player->modelTransform;
         func_80098590(*playerTransform, &trail->localOffset, &trail->worldPos);
@@ -112,19 +118,18 @@ void func_8008393C(struct RaceInputPlayer *input) {
         func_80097C18(scratch.rotation, trail->modelYaw);
         rotation = (FixedMatrix3s *)trail->rotation;
         func_80097CF0(scratch.rotation, *playerTransform, *rotation);
-        scaleStep = trail->scaleStep;
         trail->drawPos.x = trail->worldPos.x;
-        trail->drawPos.z = trail->worldPos.z;
         trail->drawPos.y = trail->worldPos.y;
-        trail->rotation[0] = (trail->rotation[0] * scaleStep) / 16;
-        trail->rotation[1] = (trail->rotation[1] * scaleStep) / 16;
-        trail->rotation[2] = (trail->rotation[2] * scaleStep) / 16;
-        trail->rotation[3] = (trail->rotation[3] * scaleStep) / 16;
-        trail->rotation[4] = (trail->rotation[4] * scaleStep) / 16;
-        trail->rotation[5] = (trail->rotation[5] * scaleStep) / 16;
-        trail->rotation[6] = (trail->rotation[6] * scaleStep) / 16;
-        trail->rotation[7] = (trail->rotation[7] * scaleStep) / 16;
-        trail->rotation[8] = (trail->rotation[8] * scaleStep) / 16;
+        trail->drawPos.z = trail->worldPos.z;
+        trail->rotation[0] = (trail->rotation[0] * trail->scaleStep) / 16;
+        trail->rotation[1] = (trail->rotation[1] * trail->scaleStep) / 16;
+        trail->rotation[2] = (trail->rotation[2] * trail->scaleStep) / 16;
+        trail->rotation[3] = (trail->rotation[3] * trail->scaleStep) / 16;
+        trail->rotation[4] = (trail->rotation[4] * trail->scaleStep) / 16;
+        trail->rotation[5] = (trail->rotation[5] * trail->scaleStep) / 16;
+        trail->rotation[6] = (trail->rotation[6] * trail->scaleStep) / 16;
+        trail->rotation[7] = (trail->rotation[7] * trail->scaleStep) / 16;
+        trail->rotation[8] = (trail->rotation[8] * trail->scaleStep) / 16;
         func_80097BAC(scratch.rotation, trail->spinYaw);
         scratch.translation.x = trail->scale.x;
         scratch.translation.y = trail->scale.y;
@@ -139,7 +144,11 @@ void func_8008393C(struct RaceInputPlayer *input) {
         if (player->disabled == 0) {
             func_800483FC(&D_801248BC, func_800837D0, trail);
         }
-    } else if (player->trail.state == 2) {
+    }
+    return;
+
+state_2:
+    {
         trail->spinYaw += 0x240;
         playerTransform = (FixedMatrix3s *)player->modelTransform;
         func_80098590(*playerTransform, &trail->localOffset, &trail->worldPos);
