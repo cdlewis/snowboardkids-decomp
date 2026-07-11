@@ -24,6 +24,7 @@
 #include "race_timer_ui.h"
 #include "race_to_main_menu_transition.h"
 #include "race_ui_effects.h"
+#include "shop_menu_flow.h"
 #include "title_menu.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
@@ -236,7 +237,6 @@ extern u8 D_60F990[];
 extern s16 D_80122040;
 extern s16 D_801222F4;
 
-extern void func_8000C280(void);
 extern void func_8003DFD0(void);
 extern s32 func_80040D94(void);
 extern void func_80044294(void);
