@@ -1,7 +1,7 @@
 #include "common.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
-#include "ending_credits_shared_effects.h"
+#include "ending_credits_effects.h"
 #include "main_menu_scene_model.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "menu_renderer.h"
@@ -66,10 +66,10 @@ extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 gMenuIconTilemapAssetHandle;
 extern s16 gMenuPanelTilemapAssetHandle;
 extern u16 gEndingSequencePhase;
-extern u8 gEndingTransitionSpinStep;
+extern u8 gEndingTransitionSnowboardIconSpinStep;
 extern s16 gEndingTransitionSnowboardIconAngle;
 extern u8 gEndingCharacterEffectDoneFlags[];
-extern u16 gEndingTransitionSnowboardIconExpandFrameCount;
+extern u16 gEndingTransitionSnowboardIconExpandSpinFrameCount;
 extern u16 gEndingNancyRunDustFrameOffsets[];
 extern u16 gEndingTommySnowmanEntranceFrameOffsets[];
 extern s32 gActiveMenuTask;
@@ -209,7 +209,7 @@ void spawnEndingCreditsCharacterLoopingSparkle(s16 arg0, s16 arg1, u8 arg2) {
 }
 
 // drawEndingCreditsTommyBigBurst best match: 99.074%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_shared_effects/drawEndingCreditsTommyBigBurst.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_effects/drawEndingCreditsTommyBigBurst.s")
 
 #ifdef NON_MATCHING
 void drawEndingCreditsTommyBigBurst(EndingCreditsEffectActor *arg0) {
@@ -485,7 +485,7 @@ void drawEndingCreditsDelayedSparkle(EndingCreditsEffectActor *arg0) {
 }
 
 // updateEndingCreditsDelayedSparkle best match: 97.653%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_shared_effects/updateEndingCreditsDelayedSparkle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_effects/updateEndingCreditsDelayedSparkle.s")
 
 #ifdef NON_MATCHING
 void updateEndingCreditsDelayedSparkle(EndingCreditsEffectActor *arg0) {
@@ -578,7 +578,7 @@ void updateEndingCreditsTransitionSnowboardIconFinalSpin(EndingCreditsEffectActo
 
     temp_v0 = &arg0->angle;
     if (*temp_v0 > 0) {
-        *temp_v0 -= gEndingTransitionSpinStep;
+        *temp_v0 -= gEndingTransitionSnowboardIconSpinStep;
         gEndingTransitionSnowboardIconAngle = *temp_v0;
         temp_v1 = *temp_v0;
         if (temp_v1 <= 0) {
@@ -597,7 +597,7 @@ void updateEndingCreditsTransitionSnowboardIconSecondSpin(EndingCreditsEffectAct
 
     temp_v0 = &arg0->angle;
     if (*temp_v0 > 0) {
-        *temp_v0 -= gEndingTransitionSpinStep;
+        *temp_v0 -= gEndingTransitionSnowboardIconSpinStep;
         gEndingTransitionSnowboardIconAngle = *temp_v0;
         if (*temp_v0 <= 0) {
             *temp_v0 = 0x140 - *temp_v0;
@@ -619,7 +619,7 @@ void updateEndingCreditsTransitionSnowboardIconWaitSecondSpin(EndingCreditsEffec
     temp_v0 = &arg0->angle;
     if (gEndingSequencePhase == 0x33) {
         setCallbackTaskCallback(arg0, updateEndingCreditsTransitionSnowboardIconSecondSpin);
-        gEndingTransitionSpinStep = 8;
+        gEndingTransitionSnowboardIconSpinStep = 8;
         if (*temp_v0 == 0) {
             *temp_v0 = 0x140;
         }
@@ -668,9 +668,9 @@ void updateEndingCreditsTransitionSnowboardIconExpandSpin(EndingCreditsEffectAct
 
     temp_v0 = &arg0->angle;
     if (*temp_v0 < 0x140) {
-        *temp_v0 += gEndingTransitionSpinStep;
+        *temp_v0 += gEndingTransitionSnowboardIconSpinStep;
         gEndingTransitionSnowboardIconAngle = *temp_v0;
-        temp_v1 = &gEndingTransitionSnowboardIconExpandFrameCount;
+        temp_v1 = &gEndingTransitionSnowboardIconExpandSpinFrameCount;
         *temp_v1 = *temp_v1 + 1;
     }
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawEndingCreditsTransitionSnowboardIcon, temp_a2);
@@ -684,7 +684,7 @@ void updateEndingCreditsTransitionSnowboardIconFastSpin(EndingCreditsEffectActor
     EndingCreditsEffectActor *temp_a2 = arg0;
 
     sp1C = &arg0->angle;
-    *sp1C += gEndingTransitionSpinStep;
+    *sp1C += gEndingTransitionSnowboardIconSpinStep;
     if (*sp1C >= 0x140) {
         *sp1C -= 0x140;
     }
@@ -708,7 +708,7 @@ void updateEndingCreditsTransitionSnowboardIconWaitStart(EndingCreditsEffectActo
         arg0->x = 0x14;
         temp_v0[0] = 0;
         temp_v0[1] = 0x100;
-        gEndingTransitionSpinStep = 0x14;
+        gEndingTransitionSnowboardIconSpinStep = 0x14;
     }
 }
 
@@ -717,7 +717,7 @@ void initEndingCreditsTransitionSnowboardIcon(EndingCreditsEffectActor *arg0) {
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;
     arg0->y = arg0->startY;
-    gEndingTransitionSnowboardIconExpandFrameCount = 0;
+    gEndingTransitionSnowboardIconExpandSpinFrameCount = 0;
     setCallbackTaskCallback(arg0, updateEndingCreditsTransitionSnowboardIconWaitStart);
 }
 

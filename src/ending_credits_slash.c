@@ -1,6 +1,6 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
-#include "ending_credits_shared_effects.h"
+#include "ending_credits_effects.h"
 #include "ending_credits_slash.h"
 #include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
@@ -22,7 +22,7 @@ extern MainMenuSceneActorShadow gEndingActorShadow;
 
 extern u16 gEndingSequencePhase;
 extern u8 gEndingActorHandshakeState;
-extern u8 gEndingTransitionSpinStep;
+extern u8 gEndingTransitionSnowboardIconSpinStep;
 extern u8 gEndingCharacterEffectDoneFlags[];
 
 void noopEndingCreditsSlash(void) {
@@ -166,10 +166,10 @@ void updateEndingSlashSlowRotationWipe(EndingCreditsSlash *arg0) {
     loopMainMenuSceneModelAnimation(0);
     addMainMenuSceneModelDrawCallback(0);
     arg0->timer += 1;
-    if (gEndingTransitionSpinStep >= 3) {
+    if (gEndingTransitionSnowboardIconSpinStep >= 3) {
         if (arg0->timer % 15 == 0) {
-            gEndingTransitionSpinStep--;
-            if (gEndingTransitionSpinStep == 2) {
+            gEndingTransitionSnowboardIconSpinStep--;
+            if (gEndingTransitionSnowboardIconSpinStep == 2) {
                 arg0->timer = 0;
             }
         }
@@ -759,10 +759,10 @@ void updateEndingSlashSlideLeftSlowRotation(EndingCreditsSlash *arg0) {
     arg0->posX += -0x20000;
     arg0->timer += 1;
     if ((arg0->timer % 13) == 0) {
-        gEndingTransitionSpinStep -= 1;
+        gEndingTransitionSnowboardIconSpinStep -= 1;
     }
     if (arg0->posX < -0x9FFFFF) {
-        gEndingTransitionSpinStep = 2;
+        gEndingTransitionSnowboardIconSpinStep = 2;
         arg0->timer = 0;
         arg0->posX = -0xA00000;
         setCallbackTaskCallback(arg0, waitEndingSlashRotationPhase14);
@@ -775,8 +775,8 @@ void updateEndingSlashSlideLeftSlowRotation(EndingCreditsSlash *arg0) {
 void updateEndingSlashWaitRotationStepTen(EndingCreditsSlash *arg0) {
     loopMainMenuSceneModelAnimation(0);
     addMainMenuSceneModelDrawCallback(0);
-    if (gEndingTransitionSpinStep != 0xA) {
-        gEndingTransitionSpinStep -= 2;
+    if (gEndingTransitionSnowboardIconSpinStep != 0xA) {
+        gEndingTransitionSnowboardIconSpinStep -= 2;
     } else {
         arg0->timer += 1;
         if (arg0->timer == 1) {
