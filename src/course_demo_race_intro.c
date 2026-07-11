@@ -1,4 +1,4 @@
-#include "race_intro_transition.h"
+#include "course_demo_race_intro.h"
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
@@ -47,14 +47,14 @@ typedef struct {
 extern RaceIntroTransitionState *gCurrentGameTask;
 extern RaceIntroCamera D_801121E0[];
 extern RaceIntroPlayer D_80121D80[];
-extern RaceIntroCourseEntry D_800BB834[];
-extern u8 D_800BB837[];
+extern RaceIntroCourseEntry gCourseDemoRaceIntroEntries[];
+extern u8 gCourseDemoRaceIntroLoadCourseAssetsFlags[];
 extern s16 gMenuFadeAlpha;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s16 D_80121B5C;
 extern u8 gMenuFadeOverlayActive;
-extern u8 D_800BB830;
+extern u8 gCourseDemoRaceIntroIndex;
 extern s8 gFramebufferSwapDelay;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRaceSplitscreenMode;
@@ -86,7 +86,7 @@ extern u8 gPendingFramebufferSwapCount;
 extern s32 gPlayerInputPressed;
 extern void releaseMenuAssetHandles(void);
 // initCourseDemoRaceIntro best match: 65.668% (nonmatchings/func_8003E600-731940616440357983/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition/initCourseDemoRaceIntro.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/course_demo_race_intro/initCourseDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
 void initCourseDemoRaceIntro(void) {
@@ -94,7 +94,7 @@ void initCourseDemoRaceIntro(void) {
     RaceIntroCourseEntry *courseEntry;
     register s32 one;
 
-    courseEntry = &D_800BB834[D_800BB830];
+    courseEntry = &gCourseDemoRaceIntroEntries[gCourseDemoRaceIntroIndex];
     gRaceCourseIndex = courseEntry->courseIndex;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
@@ -110,7 +110,7 @@ void initCourseDemoRaceIntro(void) {
     players[1].unk4 = 0;
     players[2].unk4 = 0;
     players[3].unk4 = 0;
-    courseEntry = &D_800BB834[D_800BB830];
+    courseEntry = &gCourseDemoRaceIntroEntries[gCourseDemoRaceIntroIndex];
     players[0].unk11 = 6;
     players[1].unk11 = 6;
     players[2].unk11 = 6;
@@ -159,7 +159,7 @@ void initCourseDemoRaceIntro(void) {
     D_80122FB9 = 0;
     D_80122FB8 = 0;
     D_80122FBA = 5;
-    courseEntry = &D_800BB834[D_800BB830];
+    courseEntry = &gCourseDemoRaceIntroEntries[gCourseDemoRaceIntroIndex];
     loadCompressedRomAsset(courseEntry->romStart, courseEntry->romEnd, 0x2B);
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
@@ -169,7 +169,7 @@ void initCourseDemoRaceIntro(void) {
     D_8011228C = one;
     gFramebufferSwapDelay = 0;
     func_8008BEB0();
-    if (D_800BB837[D_800BB830 * sizeof(RaceIntroCourseEntry)] == 0) {
+    if (gCourseDemoRaceIntroLoadCourseAssetsFlags[gCourseDemoRaceIntroIndex * sizeof(RaceIntroCourseEntry)] == 0) {
         gPlayerCount = one;
     }
     func_80078430();
@@ -192,7 +192,7 @@ void initCourseDemoRaceIntro(void) {
         gPlayerCount = 4;
     }
     initRaceCourseEffects();
-    setCurrentGameTaskCallback(func_8003EA78, 0);
+    setCurrentGameTaskCallback(waitForCourseDemoRaceIntroStart, 0);
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
     gCurrentGameTask->fadeDelay = 0x384;
@@ -202,16 +202,16 @@ void initCourseDemoRaceIntro(void) {
 }
 #endif
 
-void func_8003EA78(void) {
+void waitForCourseDemoRaceIntroStart(void) {
     gCurrentGameTask->startDelay--;
     if (gCurrentGameTask->startDelay == 0) {
         requestCourseMusicSequence();
         createCallbackTask(updateTitleScreenStartPrompt, 0, 0x64);
-        setCurrentGameTaskCallback(func_8003EAF0, 0);
+        setCurrentGameTaskCallback(updateCourseDemoRaceIntro, 0);
     }
 }
 
-void func_8003EAF0(void) {
+void updateCourseDemoRaceIntro(void) {
     RaceIntroTransitionState *state;
     s32 fadeStep;
 
@@ -253,15 +253,15 @@ void func_8003EAF0(void) {
         if (!(gMenuFadeAlpha < 0xFF)) {
             gMenuFadeAlpha = 0xFF;
             gFramebufferSwapHold = 1;
-            setCurrentGameTaskCallback(func_8003EC6C, 0);
+            setCurrentGameTaskCallback(finishCourseDemoRaceIntro, 0);
         }
     }
 }
 
-void func_8003EC6C(void) {
+void finishCourseDemoRaceIntro(void) {
     if (gPendingFramebufferSwapCount == 2) {
-        if ((D_800BB830 = D_800BB830 + 1) >= 5) {
-            D_800BB830 = 0;
+        if ((gCourseDemoRaceIntroIndex = gCourseDemoRaceIntroIndex + 1) >= 5) {
+            gCourseDemoRaceIntroIndex = 0;
         }
         gRaceRumbleEnabled = 0;
         gRaceCameraModeChangeDisabled = 0;
