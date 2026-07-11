@@ -1226,7 +1226,7 @@ void exitMainMenuModeSelect(void) {
             return;
         }
         if (D_801235B4 == 1) {
-            createGameTask(4, startMainMenuDemoRaceSelectionFlow, 0x64);
+            createGameTask(4, startMainMenuModePreviewRaceFlow, 0x64);
             suspendGameTask(3);
         }
     }
