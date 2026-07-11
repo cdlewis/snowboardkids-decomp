@@ -131,7 +131,7 @@ extern s16 D_80112142;
 extern s16 D_8011214C;
 extern s16 D_80112154;
 extern s16 gRaceCommonSpriteAssetHandle;
-extern s16 D_8011216A;
+extern s16 gRaceCourseSpriteAssetHandle;
 extern s16 gRaceItemSpriteAssetHandle;
 extern s16 D_8011216E;
 extern s16 D_80112174;
@@ -481,7 +481,7 @@ void drawCourseRecordBanner(MenuScreenEffectActor *arg0) {
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x5D); func_80045A78(4, -0x10, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, getRelocatableHeapBlockBase(D_8011216A), courseRecordDigitTileOffsets[gRaceCourseIndex]); func_80045A78(4, -0xC, getRelocatableHeapBlockBase(D_8011216A), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gMenuRenderModeResetDl; } while (0);
+    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x5D); func_80045A78(4, -0x10, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, getRelocatableHeapBlockBase(gRaceCourseSpriteAssetHandle), courseRecordDigitTileOffsets[gRaceCourseIndex]); func_80045A78(4, -0xC, getRelocatableHeapBlockBase(gRaceCourseSpriteAssetHandle), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gMenuRenderModeResetDl; } while (0);
 }
 
 void updateCourseRecordBannerFadeOut(MenuScreenEffectActor *arg0) {
