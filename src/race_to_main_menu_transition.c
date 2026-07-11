@@ -1,4 +1,4 @@
-#include "common.h"
+#include "race_to_main_menu_transition.h"
 #include "memory_allocator.h"
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
@@ -48,11 +48,6 @@ typedef void (*EffectTaskCallback)(void *);
 extern void func_80045914(void);
 extern void func_800704F0(void);
 extern void func_80070860(s32, s32, s32, s32, s32, s32, s32, f32, s32, s32);
-
-void func_8000D340(void);
-void func_8000D590(void);
-void func_8000D690(void);
-void func_8000D724(void);
 
 extern u8 D_14B450[];
 extern u8 D_1502A0[];
