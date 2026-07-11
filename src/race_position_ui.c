@@ -234,7 +234,7 @@ void func_8007C38C(void *asset, s16 dlIndex, s16 textureIndex) {
     gSPDisplayList(gRegionAllocPtr++, D_800DE0D4[dlIndex]);
 }
 
-void func_8007C5E8(RacePositionUiPlayer *player) {
+void drawRacePositionUiPlayerModel(RacePositionUiPlayer *player) {
     RacePositionUiPlayer *countPlayer;
     RacePositionUiPlayer *partVtxPlayer;
     u8 (*partSource)[0x20];

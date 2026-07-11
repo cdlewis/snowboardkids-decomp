@@ -5277,7 +5277,7 @@ void func_80096E3C(void) {
             nextSoundPos->pos = soundPos->pos;
             player->unk2C = player->unk64 + player->unk2C - player->unk58 + 0xA000;
             if (player->soundDisabled == 0) {
-                addRenderCallback(&D_801248C8, (void (*)(void *))func_8007C5E8, (RacePositionUiPlayer *)player);
+                addRenderCallback(&D_801248C8, (void (*)(void *))drawRacePositionUiPlayerModel, (RacePositionUiPlayer *)player);
                 addRenderCallback(&D_801248EC, (void (*)(void *))func_8007BE80, (RacePositionUiPlayer *)player);
             } else {
                 addRenderCallback(&D_801248EC, (void (*)(void *))func_8007CBC0, (RacePositionUiPlayer *)player);
