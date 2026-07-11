@@ -186,7 +186,7 @@ state_2:
 }
 #endif
 
-void func_80083CFC(struct RaceInputPlayer *input) {
+void startSnowboardTrailEffect(struct RaceInputPlayer *input) {
     SnowboardTrailPlayer *player = (SnowboardTrailPlayer *)input;
     SnowboardTrailState *trail = &player->trail;
 
