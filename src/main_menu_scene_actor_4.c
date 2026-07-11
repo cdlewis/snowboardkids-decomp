@@ -28,7 +28,7 @@ typedef struct {
 extern s32 getMemoryBlockBase(s16 arg0);
 extern void func_80045990(s32 arg0, s32 arg1, void **arg2, void **arg3);
 extern Mtx *func_8004885C(GfxCommandSource *arg0);
-extern MainMenuSceneActorShadow D_8010B1C0;
+extern MainMenuSceneActorShadow gEndingActorShadow;
 extern u16 gEndingSequencePhase;
 extern s8 D_8010B1AC;
 extern void addRenderCallback(void *, void *, void *);
@@ -39,7 +39,6 @@ extern u32 D_800D6270[];
 extern Vtx D_800B8100[];
 extern s16 gMenuCommonSpritesAssetHandle;
 extern void func_80037070(MainMenuSceneActorShadow *arg0);
-extern s32 D_8010B1C4;
 
 void func_80036380(void) {
 }
@@ -52,7 +51,7 @@ void func_80036388(MainMenuSceneActor4 *arg0) {
 void func_800363B4(MainMenuSceneActor4 *arg0) {
     func_80041FB4(4);
     func_800428C8(4);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
     if (gEndingSequencePhase == 0x41) {
         setCallbackTaskCallback(arg0, func_80036388);
         func_80041DD4(4, 0x61);
@@ -90,7 +89,7 @@ void func_80036418(MainMenuSceneActor4 *arg0) {
 void func_800364B8(MainMenuSceneActor4 *arg0) {
     func_80042034(4);
     func_800428C8(4);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
     if (gEndingSequencePhase == 0x3D) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_80036418);
@@ -110,7 +109,7 @@ void func_80036520(MainMenuSceneActor4 *arg0) {
     }
     func_8004209C(4, arg0->posX, arg0->posY, arg0->posZ);
     func_800428C8(4);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
 }
 
 void func_800365B4(MainMenuSceneActor4 *arg0) {
@@ -130,10 +129,10 @@ void func_800365B4(MainMenuSceneActor4 *arg0) {
         func_80041DD4(4, 4);
         arg0->rotY = 0;
         func_800420FC(4, arg0->rotX, arg0->rotY, arg0->rotZ);
-        D_8010B1C0.unkC = 9;
-        D_8010B1C0.posX = 0xFFF20000;
-        D_8010B1C0.posY = 0xFFF20000;
-        D_8010B1C0.posZ = 0xA0000;
+        gEndingActorShadow.unkC = 9;
+        gEndingActorShadow.posX = 0xFFF20000;
+        gEndingActorShadow.posY = 0xFFF20000;
+        gEndingActorShadow.posZ = 0xA0000;
     }
 }
 
@@ -147,7 +146,7 @@ void func_80036674(MainMenuSceneActor4 *arg0) {
     func_8004209C(4, arg0->posX, arg0->posY, arg0->posZ);
     func_80042034(4);
     func_800428C8(4);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
 }
 
 void func_80036704(MainMenuSceneActor4 *arg0) {
@@ -156,16 +155,16 @@ void func_80036704(MainMenuSceneActor4 *arg0) {
 
     sp20 = func_80041FB4(4);
     func_800428C8(4);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
     if (sp20 == 1) {
         setCallbackTaskCallback(arg0, func_80036674);
         func_80041DD4(4, 3);
         arg0->rotY = 0xC00;
         func_800420FC(4, arg0->rotX, (new_var = arg0)->rotY, arg0->rotZ);
-        D_8010B1C0.unkC = 9;
-        D_8010B1C0.posX = 0xFFF20000;
-        D_8010B1C0.posY = 0xFFF20000;
-        D_8010B1C0.posZ = 0;
+        gEndingActorShadow.unkC = 9;
+        gEndingActorShadow.posX = 0xFFF20000;
+        gEndingActorShadow.posY = 0xFFF20000;
+        gEndingActorShadow.posZ = 0;
     }
 }
 
@@ -187,9 +186,9 @@ void func_800367A8(MainMenuSceneActor4 *arg0) {
         arg0->timer++;
         var_v0 = arg0->timer;
         if (var_v0 == 0x1F) {
-            D_8010B1C0.actorId = 4;
-            D_8010B1C0.unkC = 0xB;
-            D_8010B1C0.posY = -0x180000;
+            gEndingActorShadow.actorId = 4;
+            gEndingActorShadow.unkC = 0xB;
+            gEndingActorShadow.posY = -0x180000;
             var_v0 = arg0->timer;
         }
         if (var_v0 == 0x27) {
@@ -197,8 +196,8 @@ void func_800367A8(MainMenuSceneActor4 *arg0) {
             arg0->timer = 0;
         }
     }
-    if ((u8)D_8010B1C0.actorId == 4) {
-        func_800373AC(&D_8010B1C0);
+    if ((u8)gEndingActorShadow.actorId == 4) {
+        func_800373AC(&gEndingActorShadow);
     }
 }
 
@@ -291,19 +290,19 @@ void func_80036C14(MainMenuSceneActor4 *arg0) {
         D_8010B1AC = 1;
     }
     func_800428C8(4);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
 }
 
 void func_80036C8C(MainMenuSceneActor4 *arg0) {
     if (gEndingSequencePhase == 8) {
         setCallbackTaskCallback(arg0, func_80036C14);
         func_80041DD4(4, 7);
-        D_8010B1C4 = (s32)0xFFE80000;
+        gEndingActorShadow.posY = (s32)0xFFE80000;
         D_8010B1AC = 0;
         spawnEndingCharacterAura(-0x24, -0x32, 4, 0);
     }
     func_800428C8(4);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
 }
 
 void func_80036D08(MainMenuSceneActor4 *arg0) {
@@ -320,7 +319,7 @@ void func_80036D08(MainMenuSceneActor4 *arg0) {
         gEndingSequencePhase = 7;
     }
     func_800428C8(4);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
 }
 
 void func_80036DAC(MainMenuSceneActor4 *arg0) {
@@ -334,7 +333,7 @@ void func_80036DAC(MainMenuSceneActor4 *arg0) {
         spawnEndingCharacterAura(-0x1C, -0x3A, 4, 0);
     }
     func_800428C8(4);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
 }
 
 void func_80036E58(MainMenuSceneActor4 *arg0) {
@@ -344,7 +343,7 @@ void func_80036E58(MainMenuSceneActor4 *arg0) {
         func_80041DD4(4, 5);
     }
     func_800428C8(4);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
 }
 
 void func_80036EBC(MainMenuSceneActor4 *arg0) {
@@ -360,7 +359,7 @@ void func_80036EBC(MainMenuSceneActor4 *arg0) {
         func_80042034(4);
     }
     func_800428C8(4);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
 }
 
 void func_80036F6C(MainMenuSceneActor4 *arg0) {
@@ -382,11 +381,11 @@ void func_80036FB4(MainMenuSceneActor4 *arg0) {
     func_80041DD4(4, 3);
     func_8004209C(4, arg0->posX, arg0->posY, arg0->posZ);
     func_800420FC(4, arg0->rotX, arg0->rotY, arg0->rotZ);
-    D_8010B1C0.actorId = 4;
-    D_8010B1C0.unkC = 9;
-    D_8010B1C0.posX = (s32)0xFFF20000;
-    D_8010B1C0.posY = (s32)0xFFF20000;
-    D_8010B1C0.posZ = 0;
+    gEndingActorShadow.actorId = 4;
+    gEndingActorShadow.unkC = 9;
+    gEndingActorShadow.posX = (s32)0xFFF20000;
+    gEndingActorShadow.posY = (s32)0xFFF20000;
+    gEndingActorShadow.posZ = 0;
     setCallbackTaskCallback(arg0, func_80036F6C);
 }
 

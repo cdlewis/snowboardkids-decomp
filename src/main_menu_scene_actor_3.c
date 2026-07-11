@@ -43,7 +43,7 @@ extern void makeFixedRotationZ(void *, s16);
 extern void multiplyFixedMatrix3s(void *, void *, void *);
 extern void makeFixedRotationYX(void *, s16, s16, void *);
 extern u16 gEndingSequencePhase;
-extern u8 D_8010B1A4;
+extern u8 gEndingActorHandshakeState;
 extern s32 D_80124898;
 extern void *D_8010ADE0;
 
@@ -631,7 +631,7 @@ void func_8003A944(MainMenuSceneActor3 *arg0) {
 
     func_800428C8(3);
     if (sp20 == 1) {
-        D_8010B1A4++;
+        gEndingActorHandshakeState++;
         setCallbackTaskCallback(arg0, func_8003AC00);
     }
 }
@@ -655,7 +655,7 @@ void func_8003A9E0(MainMenuSceneActor3 *arg0) {
             temp_t8 = (arg0->timer & 0xFFFF) + 1;
             arg0->timer = temp_t8;
             if ((temp_t8 & 0xFFFF) < 5) {
-                if ((D_8010B1A4 == 1) || (D_8010B1A4 == 5)) {
+                if ((gEndingActorHandshakeState == 1) || (gEndingActorHandshakeState == 5)) {
                     arg0->x = (s32) (arg0->x + 0x100000);
                 } else {
                     arg0->x = (s32) (arg0->x + 0xFFF00000);
@@ -667,8 +667,8 @@ void func_8003A9E0(MainMenuSceneActor3 *arg0) {
                 }
                 func_8004209C(3, arg0->x, arg0->y, arg0->z);
                 var_s1 += 1;
-                if ((arg0->animTimer == 0xD) && (D_8010B1A4 == 1) && (arg0->timer == 3)) {
-                    D_8010B1A4 = 5;
+                if ((arg0->animTimer == 0xD) && (gEndingActorHandshakeState == 1) && (arg0->timer == 3)) {
+                    gEndingActorHandshakeState = 5;
                 }
                 continue;
             } else {
@@ -676,14 +676,14 @@ void func_8003A9E0(MainMenuSceneActor3 *arg0) {
                 arg0->y = 0;
                 func_8004209C(3, arg0->x, 0, arg0->z);
                 setCallbackTaskCallback(arg0, func_8003A944);
-                if ((D_8010B1A4 == 1) || (D_8010B1A4 == 5)) {
+                if ((gEndingActorHandshakeState == 1) || (gEndingActorHandshakeState == 5)) {
                     func_80041DD4(3, 0x3A);
                 } else {
                     func_80041DD4(3, 0x3C);
                     arg0->animTimer = (u16) (arg0->animTimer + 1);
                 }
                 if (arg0->animTimer == 0xD) {
-                    if (D_8010B1A4 == 5) {
+                    if (gEndingActorHandshakeState == 5) {
                         setCallbackTaskCallback(arg0, func_8003A8A4);
                         func_80041DD4(3, 0x3E);
                         arg0->animTimer = 0U;
@@ -697,9 +697,9 @@ void func_8003A9E0(MainMenuSceneActor3 *arg0) {
 
 void func_8003AC00(MainMenuSceneActor3 *arg0) {
     func_800428C8(3);
-    if ((D_8010B1A4 == 1) || (D_8010B1A4 == 3)) {
+    if ((gEndingActorHandshakeState == 1) || (gEndingActorHandshakeState == 3)) {
         setCallbackTaskCallback(arg0, func_8003A9E0);
-        if (D_8010B1A4 == 1) {
+        if (gEndingActorHandshakeState == 1) {
             arg0->rotY = 0x400;
             if (arg0->timer == 0xF) {
                 func_80041DD4(3, 0x39);
