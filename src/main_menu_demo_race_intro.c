@@ -13,7 +13,7 @@
 typedef struct {
     /* 0x00 */ u8 courseIndex;
     /* 0x01 */ u8 splitscreen;
-    /* 0x02 */ u8 unk2;
+    /* 0x02 */ u8 raceType;
     /* 0x03 */ u8 loadCourseAssets;
     /* 0x04 */ void *romStart;
     /* 0x08 */ void *romEnd;
@@ -53,13 +53,13 @@ extern s16 gMenuFadeAlpha;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s16 D_80121B5C;
+extern s8 gRacePlayerCount;
 extern u8 gMenuFadeOverlayActive;
 extern u8 gMainMenuDemoRaceIntroIndex;
 extern s8 gFramebufferSwapDelay;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRaceSplitscreenMode;
 extern u8 D_8011228C;
-extern u8 D_80121B54;
 extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gRaceCameraModeChangeDisabled;
@@ -103,8 +103,8 @@ void initMainMenuDemoRaceIntro(void) {
     gTrainingCourseLesson = 0;
     gMainMenuModeSelection = 0;
     gRaceSplitscreenMode = demoEntry->splitscreen;
-    gRaceTypeSelection = demoEntry->unk2;
-    func_80043184();
+    gRaceTypeSelection = demoEntry->raceType;
+    resetGameplayRng();
     players = D_80121D80;
     players[0].unk4 = 0;
     players[1].unk4 = 0;
@@ -129,7 +129,7 @@ void initMainMenuDemoRaceIntro(void) {
         players[1].isActive = one;
         players[2].isActive = one;
         players[3].isActive = one;
-        D_80121B54 = 4;
+        gRacePlayerCount = 4;
         gPlayerCount = 4;
     } else {
         one = 1;
@@ -137,7 +137,7 @@ void initMainMenuDemoRaceIntro(void) {
         players[1].isActive = 0;
         players[2].isActive = 0;
         players[3].isActive = 0;
-        D_80121B54 = one;
+        gRacePlayerCount = one;
         gPlayerCount = one;
     }
     gRaceLapCount = 2;
