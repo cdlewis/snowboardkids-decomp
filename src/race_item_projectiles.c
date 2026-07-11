@@ -1,6 +1,6 @@
 #include "common.h"
 #include "race_item_projectiles.h"
-#include "race_motion.h"
+#include "race_course_motion.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "race_item_effects.h"

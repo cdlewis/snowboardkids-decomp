@@ -1,6 +1,6 @@
 #include "common.h"
 #include "fixed_point_math.h"
-#include "race_motion.h"
+#include "race_course_motion.h"
 #include "race_position_tracker.h"
 
 // Race player records are 0x60C bytes apart. This view only names the fields

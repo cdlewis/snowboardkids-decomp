@@ -5,7 +5,7 @@
 #include "asset_manager.h"
 #include "spatial_math.h"
 #include "fixed_point_math.h"
-#include "race_motion.h"
+#include "race_course_motion.h"
 #include "race_player_movement.h"
 
 #define COURSE_INDEX_RELOAD (*(volatile s16 *)&gRaceCourseIndex)

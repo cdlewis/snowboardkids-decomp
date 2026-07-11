@@ -7,7 +7,7 @@
 #include "race_player_movement.h"
 #include "spatial_math.h"
 #include "fixed_point_math.h"
-#include "race_motion.h"
+#include "race_course_motion.h"
 
 #define RACE_MODEL_BUFFER_HANDLE (*(s16 *)&gAssetHandles[0x48])
 

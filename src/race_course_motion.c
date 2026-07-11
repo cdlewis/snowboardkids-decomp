@@ -1,7 +1,7 @@
 #include "common.h"
 #include "relocatable_heap.h"
 #include "fixed_point_math.h"
-#include "race_motion.h"
+#include "race_course_motion.h"
 #include "race_position_tracker.h"
 
 typedef struct RaceMotionCoord {
@@ -147,7 +147,7 @@ void initRaceCourseSurfaceData(void) {
 }
 
 // findRaceCourseSurfaceFromPoint best match: 87.524% (base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/findRaceCourseSurfaceFromPoint.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_motion/findRaceCourseSurfaceFromPoint.s")
 
 #ifdef NON_MATCHING
 s32 findRaceCourseSurfaceFromPoint(s32 index, s32 x, s32 z) {
@@ -227,7 +227,7 @@ loop:
 #endif
 
 // findRaceCourseSurfaceAtPoint best match: 96.293% (base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/findRaceCourseSurfaceAtPoint.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_motion/findRaceCourseSurfaceAtPoint.s")
 
 #ifdef NON_MATCHING
 s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
@@ -292,7 +292,7 @@ s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
 }
 #endif
 
-void pushRaceCourseBoundaryWithVelocity(s32 *arg0, s32 *arg1, s32 arg2) {
+void pushRaceCourseSurfaceBoundaryWithVelocity(s32 *arg0, s32 *arg1, s32 arg2) {
     s32 temp5;
     s32 temp6;
     s32 temp2;
@@ -322,10 +322,10 @@ void pushRaceCourseBoundaryWithVelocity(s32 *arg0, s32 *arg1, s32 arg2) {
 }
 
 // resolveRaceCourseSurfaceCollisionWithNormal best match: 52.431% (base.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/resolveRaceCourseSurfaceCollisionWithNormal.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_motion/resolveRaceCourseSurfaceCollisionWithNormal.s")
 
 // resolveRaceCourseSurfaceCollisionWithVelocity best match: 86.996% (base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/resolveRaceCourseSurfaceCollisionWithVelocity.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_motion/resolveRaceCourseSurfaceCollisionWithVelocity.s")
 
 #ifdef NON_MATCHING
 static void func_8007ECF4_clamp_to_endpoint(s32 pointX, s32 pointZ, s32 radius) {
@@ -420,7 +420,7 @@ void resolveRaceCourseSurfaceCollisionWithVelocity(s16 arg0, s32 x, s32 z, s32 r
         gRaceCourseCollisionEdgeDeltaZ = z1 - z0;
         gRaceCourseCollisionDeltaX = x - x0;
         gRaceCourseCollisionDeltaZ = z - z0;
-        pushRaceCourseBoundaryWithVelocity(velocityX, velocityZ, radius);
+        pushRaceCourseSurfaceBoundaryWithVelocity(velocityX, velocityZ, radius);
         keyframe = &gRaceCourseSurfaces[arg0];
     }
 
@@ -429,7 +429,7 @@ void resolveRaceCourseSurfaceCollisionWithVelocity(s16 arg0, s32 x, s32 z, s32 r
         gRaceCourseCollisionEdgeDeltaZ = z2 - z3;
         gRaceCourseCollisionDeltaX = gRaceCourseCollisionAdjustedX - x3;
         gRaceCourseCollisionDeltaZ = gRaceCourseCollisionAdjustedZ - z3;
-        pushRaceCourseBoundaryWithVelocity(velocityX, velocityZ, radius);
+        pushRaceCourseSurfaceBoundaryWithVelocity(velocityX, velocityZ, radius);
         keyframe = &gRaceCourseSurfaces[arg0];
     }
 
@@ -480,7 +480,7 @@ void resolveRaceCourseSurfaceCollisionWithVelocity(s16 arg0, s32 x, s32 z, s32 r
 }
 #endif
 
-void pushRaceCourseBoundary(s32 arg0) {
+void pushRaceCourseSurfaceBoundary(s32 arg0) {
     s32 temp_v1;
     s32 temp_v0;
     s32 length;
@@ -501,7 +501,7 @@ void pushRaceCourseBoundary(s32 arg0) {
 }
 
 // resolveRaceCourseSurfaceCollision best match: 74.835% (base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/resolveRaceCourseSurfaceCollision.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_motion/resolveRaceCourseSurfaceCollision.s")
 
 #ifdef NON_MATCHING
 void resolveRaceCourseSurfaceCollision(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5) {
@@ -545,7 +545,7 @@ void resolveRaceCourseSurfaceCollision(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s
         gRaceCourseCollisionEdgeDeltaZ = z1 - z0;
         gRaceCourseCollisionDeltaX = arg1 - x0;
         gRaceCourseCollisionDeltaZ = arg2 - z0;
-        pushRaceCourseBoundary(arg3);
+        pushRaceCourseSurfaceBoundary(arg3);
         keyframe = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset);
     }
 
@@ -554,7 +554,7 @@ void resolveRaceCourseSurfaceCollision(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s
         gRaceCourseCollisionEdgeDeltaZ = z2 - z3;
         gRaceCourseCollisionDeltaX = gRaceCourseCollisionAdjustedX - x3;
         gRaceCourseCollisionDeltaZ = gRaceCourseCollisionAdjustedZ - z3;
-        pushRaceCourseBoundary(arg3);
+        pushRaceCourseSurfaceBoundary(arg3);
         keyframe = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset);
     }
 
@@ -658,7 +658,7 @@ void resolveRaceCourseSurfaceCollision(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s
 #endif
 
 // getRaceCourseSurfaceHeight best match: 82.954% (base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/getRaceCourseSurfaceHeight.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_motion/getRaceCourseSurfaceHeight.s")
 
 #ifdef NON_MATCHING
 s32 getRaceCourseSurfaceHeight(s32 arg0, s32 arg1, s32 arg2) {
@@ -844,7 +844,7 @@ void getRaceCourseSurfaceSpawnTransform(s32 arg0, s32 *x, s32 *y, s32 *z, s16 *a
 }
 
 // getRaceCourseTargetPositionAhead best match: 93.956% (base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/getRaceCourseTargetPositionAhead.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_motion/getRaceCourseTargetPositionAhead.s")
 
 #ifdef NON_MATCHING
 void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s32 *arg4, s32 arg5, s32 arg6) {
@@ -952,7 +952,7 @@ void setRaceMotionAnimation(RaceMotionState *state, s32 animIndex) {
 }
 
 // loadRaceMotionAnimationFrame best match: 99.309% (base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/loadRaceMotionAnimationFrame.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_motion/loadRaceMotionAnimationFrame.s")
 
 #ifdef NON_MATCHING
 void loadRaceMotionAnimationFrame(RaceMotionState *state) {
@@ -1052,7 +1052,7 @@ void loadRaceMotionJointAnimationFrame(RaceMotionState *state) {
 }
 
 // interpolateRaceMotionAnimationFrame best match: 78.465% (base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/interpolateRaceMotionAnimationFrame.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_motion/interpolateRaceMotionAnimationFrame.s")
 
 #ifdef NON_MATCHING
 extern s32 gRaceMotionRotationFrameBuffer[];
@@ -1180,7 +1180,7 @@ loop_pos:
 #endif
 
 // interpolateRaceMotionJointAnimationFrame best match: 78.710% (base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/interpolateRaceMotionJointAnimationFrame.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_motion/interpolateRaceMotionJointAnimationFrame.s")
 
 #ifdef NON_MATCHING
 extern s32 gRaceMotionRotationFrameBuffer[];
@@ -1318,7 +1318,7 @@ loop_interp:
 #endif
 
 // blendRaceMotionJointAnimation best match: 98.133% (base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/blendRaceMotionJointAnimation.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_motion/blendRaceMotionJointAnimation.s")
 
 #ifdef NON_MATCHING
 void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 timer, s32 duration) {
@@ -1503,7 +1503,7 @@ s32 stepRaceMotionJointAnimationUntilEnd(RaceMotionState *state) {
 }
 
 // initRaceMotionModelParts best match: 98.000% (base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/initRaceMotionModelParts.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_motion/initRaceMotionModelParts.s")
 
 #ifdef NON_MATCHING
 void initRaceMotionModelParts(RaceMotionInitState *state) {
