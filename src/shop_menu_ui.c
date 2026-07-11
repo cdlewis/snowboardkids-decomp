@@ -1201,12 +1201,15 @@ void func_8002EC04(ShopMenuWidgetActor *arg0) {
     func_80071824(arg0, func_8002E9E4);
 }
 
-// func_8002EC5C best match: 93.580% (nonmatchings/func_8002EC5C-2775475442547365205/base_8.c)
+// func_8002EC5C best match: 98.264% (nonmatchings/func_8002EC5C-6061209858023118177/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002EC5C.s")
 
 #ifdef NON_MATCHING
 void func_8002EC5C(ShopMenuWidgetActor *arg0) {
-    s32 alpha;
+    s32 size;
+    volatile u16 drawAlpha;
+    s32 zero;
+    s16 alpha;
 
     func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130[0x24]), 0, 0x20, 0x20, 0, 0);
     func_8000F030((s16)(arg0->x + 0x40), arg0->y, func_80043040(D_80112130[0x24]), 1, 0x20, 0x20, 0, 0);
@@ -1219,19 +1222,24 @@ void func_8002EC5C(ShopMenuWidgetActor *arg0) {
         alpha = 0x100;
     }
 
+    drawAlpha = alpha;
     func_8000F8AC((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x14), func_80043040(D_80112130[0x24]), 0x17, 0x20,
-                  0x20, 0, alpha, 0);
+                  0x20, 0, drawAlpha, 0);
 
-    if (alpha == 0x100) {
+    size = 0x20;
+    zero = drawAlpha;
+    if (zero == 0x100) {
         alpha = 0x60;
     } else {
         alpha = 0x100;
     }
 
-    func_8000F8AC((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x24), func_80043040(D_80112130[0x24]), 0x18, 0x20,
-                  0x20, 0, alpha, 0);
+    zero = 0;
+    drawAlpha = alpha;
+    func_8000F8AC((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x24), func_80043040(D_80112130[0x24]), 0x18, size,
+                  size, zero, drawAlpha, zero);
     func_8000F8AC((s16)(arg0->x + 0x50), (s16)(arg0->y + (arg0->item.price * 0x10) + 0x14),
-                  func_80043040(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->sprite.index, 0);
+                  func_80043040(D_80112130[0x24]), 0x12, size, size, zero, arg0->sprite.index, zero);
 }
 #endif
 
