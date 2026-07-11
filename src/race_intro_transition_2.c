@@ -78,7 +78,7 @@ extern u8 D_24DBE0;
 extern void func_800710CC(s32);
 extern void func_8007115C(void);
 extern void func_80072114(s32);
-extern void func_80045914(void);
+extern void releaseMenuAssetHandles(void);
 extern void func_800540EC(void *);
 
 #define COURSE_REPLAY_OFFSET(course) ((((((((course) << 2) - (course)) << 5) + (course)) << 2) - (course)) << 2)
@@ -329,7 +329,7 @@ void func_8003F4B4(void) {
     if (D_80123750 == 2) {
         D_800EC8B0 = 0;
         D_80121B58 = 0;
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         func_80072260();

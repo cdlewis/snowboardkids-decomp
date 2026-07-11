@@ -406,7 +406,7 @@ void func_80085664(RaceInputPlayer *arg0) {
         case 6:
             if (D_80121D50 == 6) {
                 if (D_8011228C[arg0->playerIndexU16].active != 0) {
-                    func_80072138(0x47, 0x32);
+                    enqueueSoundEffect(0x47, 0x32);
                 }
             } else {
                 func_8008BBB8(arg0, 2);

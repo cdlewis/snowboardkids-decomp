@@ -10,9 +10,8 @@
 #include "menu_rendering.h"
 #include "viewport_manager.h"
 
-extern void func_80072138(s32, s32);
-extern void func_80045914(void);
-
+extern s32 enqueueSoundEffect(s32, s32);
+extern void releaseMenuAssetHandles(void);
 
 extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakFileEntry gControllerPakFileEntries[];
@@ -64,11 +63,11 @@ void initControllerPakFileDeleteFlow(void) {
     loadCompressedRomAsset(&D_5E0350, &D_5E0E40, 0x26);
     loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
     func_80070EC0(0);
-    func_80071408(&func_800310EC, 0, 0x63);
-    func_80071408(&func_80031330, 0, 0x63);
-    func_80071408(&func_80031510, 0, 0x63);
-    func_80071408(&func_80031B24, 0, 0x63);
-    func_80071408(&func_80031C04, 0, 0x5E);
+    func_80071408(&initControllerPakFileDeleteMainOptions, 0, 0x63);
+    func_80071408(&initControllerPakFileDeleteConfirmOptions, 0, 0x63);
+    func_80071408(&initControllerPakFreeSpaceInfo, 0, 0x63);
+    func_80071408(&initControllerPakFileList, 0, 0x63);
+    func_80071408(&initControllerPakFileDeleteIcon, 0, 0x5E);
     gControllerPakMenuState.mainChoice = 0;
     gControllerPakMenuState.fileIndex = 0;
     gControllerPakMenuState.confirmChoice = 0;
@@ -77,19 +76,19 @@ void initControllerPakFileDeleteFlow(void) {
     gControllerPakMenuState.isEdgeScroll = 0;
     requestControllerPakFileList();
     requestControllerPakFreeSpaceUpdate();
-    func_8009956C(updateControllerPakFileDeleteMainMenu, 0);
+    func_8009956C(updateControllerPakFileDeleteMainOptions, 0);
 }
 
-void updateControllerPakFileDeleteMainMenu(void) {
+void updateControllerPakFileDeleteMainOptions(void) {
     if ((gPlayerInputPressed & 0x40100) && (gControllerPakMenuState.mainChoice != 1)) {
         gControllerPakMenuState.mainChoice = 1;
-        func_80072138(0x19, 0x32);
+        enqueueSoundEffect(0x19, 0x32);
     } else if ((gPlayerInputPressed & 0x80200) && (gControllerPakMenuState.mainChoice != 0)) {
         gControllerPakMenuState.mainChoice = 0;
-        func_80072138(0x19, 0x32);
+        enqueueSoundEffect(0x19, 0x32);
     }
     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.mainChoice == 1) {
             func_8009956C(fadeOutControllerPakFileDeleteFlow, 0);
         } else {
@@ -114,7 +113,7 @@ void updateControllerPakFileDeleteFileList(void) {
     if (direction == 0) {
         gControllerPakMenuState.isEdgeScroll = 0;
     } else {
-        func_80072138(0x19, 0x32);
+        enqueueSoundEffect(0x19, 0x32);
         if ((gControllerPakMenuState.visibleFileIndex != 0) && (gControllerPakMenuState.visibleFileIndex != 4)) {
             gControllerPakMenuState.isEdgeScroll = 0;
         } else if (gControllerPakMenuState.visibleFileIndex == 0 && direction == 2) {
@@ -138,13 +137,13 @@ void updateControllerPakFileDeleteFileList(void) {
 
     if (((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x4000, ((gPlayerInputPressed & 0x1000) != 0))) &&
         (gPlayerInputPressed & 0x4000, (gControllerPakFileEntries[gControllerPakMenuState.fileIndex].exists != 0))) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         func_8009956C(updateControllerPakFileDeleteConfirm, 0);
         gControllerPakMenuState.state = 2;
         gControllerPakMenuState.confirmChoice = 1;
     } else if ((gPlayerInputPressed & 0x4000) != 0) {
-        func_80072138(0x18, 0x32);
-        func_8009956C(updateControllerPakFileDeleteMainMenu, 0);
+        enqueueSoundEffect(0x18, 0x32);
+        func_8009956C(updateControllerPakFileDeleteMainOptions, 0);
         gControllerPakMenuState.state = 0;
     }
     func_8007105C();
@@ -153,15 +152,15 @@ void updateControllerPakFileDeleteFileList(void) {
 void updateControllerPakFileDeleteConfirm(void) {
     if ((gPlayerInputPressed & 0x40100) && (gControllerPakMenuState.confirmChoice != 1)) {
         gControllerPakMenuState.confirmChoice = 1;
-        func_80072138(0x19, 0x32);
+        enqueueSoundEffect(0x19, 0x32);
     } else if ((gPlayerInputPressed & 0x80200) && (gControllerPakMenuState.confirmChoice != 0)) {
         gControllerPakMenuState.confirmChoice = 0;
-        func_80072138(0x19, 0x32);
+        enqueueSoundEffect(0x19, 0x32);
     }
     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
-            func_80071408(&func_800325D0, 0, 0x64);
+            func_80071408(&initControllerPakDeleteConfirmPrompt, 0, 0x64);
             func_8009956C(updateControllerPakFileDeletePrompt, 0);
             gControllerPakMenuState.state = 3;
             gControllerPakMenuState.confirmChoice = 1;
@@ -170,7 +169,7 @@ void updateControllerPakFileDeleteConfirm(void) {
             gControllerPakMenuState.state = 1;
         }
     } else if (gPlayerInputPressed & 0x4000) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         func_8009956C(updateControllerPakFileDeleteFileList, 0);
         gControllerPakMenuState.state = 1;
     }
@@ -180,13 +179,13 @@ void updateControllerPakFileDeleteConfirm(void) {
 void updateControllerPakFileDeletePrompt(void) {
     if ((gPlayerInputPressed & 0x10800) && (gControllerPakMenuState.confirmChoice != 0)) {
         gControllerPakMenuState.confirmChoice = 0;
-        func_80072138(0x19, 0x32);
+        enqueueSoundEffect(0x19, 0x32);
     } else if ((gPlayerInputPressed & 0x20400) && (gControllerPakMenuState.confirmChoice != 1)) {
         gControllerPakMenuState.confirmChoice = 1;
-        func_80072138(0x19, 0x32);
+        enqueueSoundEffect(0x19, 0x32);
     }
     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
             requestControllerPakDeleteFile(gControllerPakMenuState.fileIndex);
             if (D_800EC9D8 == 0) {
@@ -196,7 +195,7 @@ void updateControllerPakFileDeletePrompt(void) {
                 func_8009956C(updateControllerPakFileDeleteFileList, 0);
                 gControllerPakMenuState.state = 1;
             } else {
-                func_80071408(func_8003205C, 0, 0x64);
+                func_80071408(initControllerPakDeleteErrorPrompt, 0, 0x64);
                 gControllerPakMenuState.unk6 = 0;
                 gControllerPakMenuState.state = 4;
                 func_8009956C(updateControllerPakFileDeleteErrorPrompt, 0);
@@ -207,7 +206,7 @@ void updateControllerPakFileDeletePrompt(void) {
             gControllerPakMenuState.confirmChoice = 0;
         }
     } else if (gPlayerInputPressed & 0x4000) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         func_8009956C(updateControllerPakFileDeleteConfirm, 0);
         gControllerPakMenuState.state = 2;
         gControllerPakMenuState.confirmChoice = 0;
@@ -221,7 +220,7 @@ void updateControllerPakFileDeleteErrorPrompt(void) {
     state = gControllerPakDeletePromptState;
     if (state == 1) {
         if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
-            func_80072138(0x18, 0x32);
+            enqueueSoundEffect(0x18, 0x32);
             gControllerPakDeletePromptState = 2;
             state = 2;
         }
@@ -244,7 +243,7 @@ void fadeOutControllerPakFileDeleteFlow(void) {
         }
     } else {
         if (D_80123750 == 2) {
-            func_80045914();
+            releaseMenuAssetHandles();
             D_80123751 = 0;
             D_800DEED4 = 0;
             func_80099658(0);

@@ -24,7 +24,7 @@ typedef struct {
     /* 0x4 */ u8 unk4;
 } GameSetupMenuSubState;
 
-extern void func_80072138();
+extern void enqueueSoundEffect();
 extern f32 D_800E0900;
 extern u8 D_800E29C0;
 extern s8 D_800DEED4;
@@ -146,7 +146,7 @@ void func_8000337C(void) {
 
     one = 1;
     if ((D_8010AE00.state == one) && ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))) {
-        func_80072138((s16) (one & 0xFFFFFFFF), 0x32);
+        enqueueSoundEffect((s16) (one & 0xFFFFFFFF), 0x32);
         D_8010AE00.state = 2;
         D_8010AE00.unk1 = 0;
         one = 1;
@@ -167,7 +167,7 @@ void func_8000337C(void) {
                 if (D_80121B55 != one) {
                     D_80121B55 -= 1;
                     sp18 = temp_a3;
-                    func_80072138(0x19, 0x32, &D_8010ADF0, temp_a3);
+                    enqueueSoundEffect(0x19, 0x32, &D_8010ADF0, temp_a3);
                     goto block_25;
                 }
             } else if ((temp_a3 & 0x20400) || ((gPlayerInputHeld & 0x20400) && (D_8010ADF0 >= 9) && ((D_8010ADF0 % 3) == 0))) {
@@ -177,7 +177,7 @@ void func_8000337C(void) {
                 if (D_800E29C0 != D_80121B55) {
                     D_80121B55 += 1;
                     sp18 = temp_a3;
-                    func_80072138(0x19, 0x32, &D_8010ADF0, temp_a3);
+                    enqueueSoundEffect(0x19, 0x32, &D_8010ADF0, temp_a3);
 block_25:
                     var_a2 = &D_8010ADF0;
                 }
@@ -192,7 +192,7 @@ block_25:
             }
             if ((temp_a3 & 0x8000) || (temp_a3 & 0x1000)) {
                 D_800EC9C1 = 1;
-                func_80072138(0x18, 0x32, var_a2, temp_a3);
+                enqueueSoundEffect(0x18, 0x32, var_a2, temp_a3);
             }
         } else if (temp_v1 < 0x13) {
             D_800EC9C1 = temp_v1 + 1;
@@ -381,7 +381,7 @@ void func_80003798(void) {
             if (D_8010AE00_03798.state == 6) {
                 s32 input = gPlayerInputPressedArray_03798[0];
                 if ((input & 0x8000) || (input & 0x1000)) {
-                    func_80072138(1, 0x32);
+                    enqueueSoundEffect(1, 0x32);
                     D_8010AE00_03798.state = 7;
                     D_8010AE00_03798.unk2 = 0xFF;
                     D_8010AE00_03798.unk1 = 0;
@@ -483,7 +483,7 @@ void func_80003798(void) {
                                 case 4:
                                     input = gPlayerInputPressedArray_03798[i];
                                     if ((input & 0x8000) || (input & 0x1000)) {
-                                        func_80072138(1, 0x32);
+                                        enqueueSoundEffect(1, 0x32);
                                         if (transitionTask != NULL) {
                                             D_8010AE00_03798.unkE[i] = 2;
                                             D_8010AE00_03798.unk12[i] = 0;
@@ -504,21 +504,21 @@ void func_80003798(void) {
                                         input = gPlayerInputPressedArray_03798[i];
                                         if ((input & 0x10800) && (choiceValue != 3)) {
                                             *choice = choiceValue - 1;
-                                            func_80072138(0x19, 0x32);
+                                            enqueueSoundEffect(0x19, 0x32);
                                             input = gPlayerInputPressedArray_03798[i];
                                         }
                                         if (input & 0x20400) {
                                             choiceValue = *choice;
                                             if (choiceValue != 4) {
                                                 *choice = choiceValue + 1;
-                                                func_80072138(0x19, 0x32);
+                                                enqueueSoundEffect(0x19, 0x32);
                                                 input = gPlayerInputPressedArray_03798[i];
                                             }
                                         }
                                         if ((input & 0x8000) || (input & 0x1000)) {
                                             s16 state = D_800EC9C8[i];
 
-                                            func_80072138(1, 0x32);
+                                            enqueueSoundEffect(1, 0x32);
                                             if (*choice == 4) {
                                                 if (state == 8) {
                                                     GameSetupSavePlayer03798 *save = &D_800EC9F0[i];
@@ -559,7 +559,7 @@ void func_80003798(void) {
                                 case 16:
                                     input = gPlayerInputPressedArray_03798[i];
                                     if ((input & 0x8000) || (input & 0x1000)) {
-                                        func_80072138(1, 0x32);
+                                        enqueueSoundEffect(1, 0x32);
                                         *choice = D_800B3199[D_800EC9C8[i]];
                                     }
                                     break;
@@ -568,7 +568,7 @@ void func_80003798(void) {
                                 case 15:
                                     input = gPlayerInputPressedArray_03798[i];
                                     if ((input & 0x8000) || (input & 0x1000)) {
-                                        func_80072138(1, 0x32);
+                                        enqueueSoundEffect(1, 0x32);
                                         if (D_800EC9C8[i] == 0xE) {
                                             if (transitionTask != NULL) {
                                                 D_8010AE00_03798.unkE[i] = 2;
@@ -588,7 +588,7 @@ void func_80003798(void) {
                                 case 17:
                                     input = gPlayerInputPressedArray_03798[i];
                                     if ((input & 0x8000) || (input & 0x1000)) {
-                                        func_80072138(1, 0x32);
+                                        enqueueSoundEffect(1, 0x32);
                                         D_8010AE00_03798.unkE[i] = 2;
                                         D_8010AE00_03798.unk12[i] = 0;
                                     }
@@ -705,7 +705,7 @@ void func_80004164(void) {
     switch (state) {
         case 1:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
-                func_80072138(1, 0x32);
+                enqueueSoundEffect(1, 0x32);
                 D_8010ADD0.state = 2;
                 D_8010ADD0.targetScale = 1;
                 state = 2;
@@ -732,7 +732,7 @@ void func_80004164(void) {
             break;
         case 3:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
-                func_80072138(1, 0x32);
+                enqueueSoundEffect(1, 0x32);
                 D_8010ADD0.state = 4;
                 state = 4;
             }
@@ -774,7 +774,7 @@ void func_80004164(void) {
             break;
         case 8:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
-                func_80072138(1, 0x32);
+                enqueueSoundEffect(1, 0x32);
                 D_8010ADD0.state = 9;
                 D_8010ADD0.targetScale = 3;
                 D_8010ADD0.confirmSelection = 1;
@@ -784,15 +784,15 @@ void func_80004164(void) {
         case 9:
             if ((gPlayerInputPressed & 0x10800) && (D_8010ADD0.confirmSelection != 0)) {
                 D_8010ADD0.confirmSelection--;
-                func_80072138(0x19, 0x32);
+                enqueueSoundEffect(0x19, 0x32);
             } else if (gPlayerInputPressed & 0x20400) {
                 if (D_8010ADD0.confirmSelection != 1) {
                     D_8010ADD0.confirmSelection++;
-                    func_80072138(0x19, 0x32);
+                    enqueueSoundEffect(0x19, 0x32);
                 }
             }
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
-                func_80072138(1, 0x32);
+                enqueueSoundEffect(1, 0x32);
                 if (D_8010ADD9 == 1) {
                     D_8010ADD0.state = 1;
                     D_8010ADD0.targetScale = 0;

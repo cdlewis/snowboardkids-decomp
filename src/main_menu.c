@@ -112,8 +112,8 @@ extern s32 osPfsDeleteFile(OSPfs *, u16, u32, u8 *, u8 *);
 extern s32 osPfsFindFile(OSPfs *, u16, u32, u8 *, u8 *, s32 *);
 extern s32 osPfsAllocateFile(OSPfs *, u16, u32, u8 *, u8 *, int, s32 *);
 extern s32 osPfsReadWriteFile(OSPfs *, s32, u8, int, int, u8 *);
-extern void func_80045914(void);
-extern void func_80072138(s32, s32);
+extern void releaseMenuAssetHandles(void);
+extern void enqueueSoundEffect(s32, s32);
 extern void func_80002A1C(void);
 extern void func_80002CE4(void);
 extern void func_8000262C(void);
@@ -1007,7 +1007,7 @@ void func_80001C80(void) {
     func_8006D520(0, 0x1F);
     D_800DEF14 = (s16) D_801235B8->fade;
     D_800DEF10 = 1;
-    func_80072138(0x4A, 0x32);
+    enqueueSoundEffect(0x4A, 0x32);
     func_8009956C(&func_80002024, 0);
     func_80000A40(0U);
     func_80000A40(1U);
@@ -1039,20 +1039,20 @@ void func_80002024(void) {
         if (temp_a0 & 0x10800) {
             if (D_801235B8->selection != 0) {
                 D_801235B8->selection -= 1;
-                func_80072138(0x19, 0x32);
+                enqueueSoundEffect(0x19, 0x32);
                 temp_a0 = gPlayerInputPressed;
             }
         }
         if (temp_a0 & 0x20400) {
             if (D_801235B8->selection != 2) {
                 D_801235B8->selection += 1;
-                func_80072138(0x19, 0x32);
+                enqueueSoundEffect(0x19, 0x32);
                 temp_a0 = gPlayerInputPressed;
             }
         }
         if ((temp_a0 & 0x1000) || (temp_a0 & 0x8000)) {
             flag = 1;
-            func_80072138(1, 0x32);
+            enqueueSoundEffect(1, 0x32);
         }
         if (flag == 0) {
             D_801235B8->timer -= 1;
@@ -1068,7 +1068,7 @@ void func_80002024(void) {
     func_8006D780(0);
     if (func_80002DA0() != 0) {
         D_800B3190 = 1;
-        func_80072138(0x26, 0x32);
+        enqueueSoundEffect(0x26, 0x32);
     }
     func_80042034(0);
     func_80042034(1);
@@ -1115,7 +1115,7 @@ void func_800022B8(void) {
             func_8007105C();
         }
     } else if (D_80123750 == 2) {
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         if (D_801235B8->timer != 0) {
@@ -1173,18 +1173,18 @@ void func_8000262C(void) {
         temp_v0 = gPlayerInputPressed;
         if (temp_v0 & 0x10800) {
             if (D_801235B4 != 0) {
-                func_80072138(0x19, 0x32);
+                enqueueSoundEffect(0x19, 0x32);
                 D_801235B4 -= 1;
                 temp_v0 = gPlayerInputPressed;
             }
         }
         if ((temp_v0 & 0x20400) && (D_801235B4 != 2)) {
-            func_80072138(0x19, 0x32);
+            enqueueSoundEffect(0x19, 0x32);
             D_801235B4 += 1;
             temp_v0 = gPlayerInputPressed;
         }
         if (temp_v0 & 0xD000) {
-            func_80072138(0x18, 0x32);
+            enqueueSoundEffect(0x18, 0x32);
             if (gPlayerInputPressed & 0x4000) {
                 D_801235B4 = 2;
             }
@@ -1216,7 +1216,7 @@ void func_80002794(void) {
 
 void func_80002810(void) {
     if (D_80123750 == 2) {
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         func_8009956C(func_80001C80, 0);
@@ -1263,12 +1263,12 @@ void func_80002A1C(void) {
         temp_v1 = gPlayerInputPressed;
         if ((temp_v1 & 0x10800) && (D_801235B4 != 0)) {
             D_801235B4 -= 1;
-            func_80072138(0x19, 0x32);
+            enqueueSoundEffect(0x19, 0x32);
             temp_v1 = gPlayerInputPressed;
         }
         if ((temp_v1 & 0x20400) && (D_801235B4 != 3)) {
             D_801235B4 += 1;
-            func_80072138(0x19, 0x32);
+            enqueueSoundEffect(0x19, 0x32);
             temp_v1 = gPlayerInputPressed;
         }
         if (temp_v1 & 0x4000) {
@@ -1279,21 +1279,21 @@ void func_80002A1C(void) {
             case 0:
                 if (D_8012482A != 0) {
                     D_8012482A -= 1;
-                    func_80072138(0x19, 0x32);
+                    enqueueSoundEffect(0x19, 0x32);
                     temp_v1 = gPlayerInputPressed;
                 }
                 break;
             case 1:
                 if (D_8012482B != 1) {
                     D_8012482B += 1;
-                    func_80072138(0x19, 0x32);
+                    enqueueSoundEffect(0x19, 0x32);
                     temp_v1 = gPlayerInputPressed;
                 }
                 break;
             case 2:
                 if (D_8012482C != 1) {
                     D_8012482C += 1;
-                    func_80072138(0x19, 0x32);
+                    enqueueSoundEffect(0x19, 0x32);
                     temp_v1 = gPlayerInputPressed;
                 }
                 break;
@@ -1304,21 +1304,21 @@ void func_80002A1C(void) {
             case 0:
                 if (D_8012482A != 1) {
                     D_8012482A += 1;
-                    func_80072138(0x19, 0x32);
+                    enqueueSoundEffect(0x19, 0x32);
                     temp_v1 = gPlayerInputPressed;
                 }
                 break;
             case 1:
                 if (D_8012482B != 0) {
                     D_8012482B -= 1;
-                    func_80072138(0x19, 0x32);
+                    enqueueSoundEffect(0x19, 0x32);
                     temp_v1 = gPlayerInputPressed;
                 }
                 break;
             case 2:
                 if (D_8012482C != 0) {
                     D_8012482C -= 1;
-                    func_80072138(0x19, 0x32);
+                    enqueueSoundEffect(0x19, 0x32);
                     temp_v1 = gPlayerInputPressed;
                 }
                 break;
@@ -1326,7 +1326,7 @@ void func_80002A1C(void) {
         }
         if ((temp_v1 & 0xD000) && (D_801235B4 == 3)) {
             func_80072114(0x3C);
-            func_80072138(0x18, 0x32);
+            enqueueSoundEffect(0x18, 0x32);
             func_8009956C(func_80002CE4, 0);
         }
     }
@@ -1347,7 +1347,7 @@ void func_80002CE4(void) {
 
 void func_80002D50(void) {
     if (D_80123750 == 2) {
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         func_8009956C(func_80001C80, 0);

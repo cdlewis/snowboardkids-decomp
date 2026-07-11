@@ -52,8 +52,8 @@ extern u8 D_59DFE0;
 extern u8 D_60F1A0;
 extern u8 D_60F990;
 
-extern void func_80045914(void);
-extern s32 func_80072138(s16, s16);
+extern void releaseMenuAssetHandles(void);
+extern s32 enqueueSoundEffect(s16, s16);
 
 void initControllerPakScoreDeleteFlow(void) {
     func_800704F0();
@@ -97,7 +97,7 @@ extern void func_80000C48(u16);
 extern void func_80000DB4(u16);
 extern void func_800012CC(u16, s32, ControllerPakScoreDeleteFlow *, s16);
 extern void func_80001538(u16);
-extern void func_800325D0(EffectTask *);
+extern void initControllerPakDeleteConfirmPrompt(EffectTask *);
 #endif
 
 // updateControllerPakScoreDeleteFlow best match: 95.751% (base_24.c)
@@ -124,7 +124,7 @@ void updateControllerPakScoreDeleteFlow(void)
     {
       gControllerPakMenuState.state = 3;
       gControllerPakMenuState.confirmChoice = 1;
-      func_80071408(func_800325D0, 0, 0x64);
+      func_80071408(initControllerPakDeleteConfirmPrompt, 0, 0x64);
       func_8009956C(updateControllerPakScoreDeleteConfirm, 0);
     }
   }
@@ -235,7 +235,7 @@ void updateControllerPakScoreDeleteFlow(void)
           if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           sp1C = temp_t0;
-          func_80072138(1, 0x32);
+          enqueueSoundEffect(1, 0x32);
           if (temp_t0 != 0)
           {
             gControllerPakScoreDeleteFlow.step = 1;
@@ -265,7 +265,7 @@ void updateControllerPakScoreDeleteFlow(void)
             if (D_800EC9D0 != new_var)
             {
               D_800EC9D0 -= 1;
-              func_80072138(0x19, 0x32);
+              enqueueSoundEffect(0x19, 0x32);
               temp_v1 = gPlayerInputPressed;
             }
           }
@@ -275,14 +275,14 @@ void updateControllerPakScoreDeleteFlow(void)
             if (D_800EC9D0 != 4)
             {
               D_800EC9D0 += 1;
-              func_80072138(0x19, 0x32);
+              enqueueSoundEffect(0x19, 0x32);
               temp_v1 = gPlayerInputPressed;
             }
             var_t7 = temp_v1 & 0x8000;
           }
           if ((var_t7 != 0) || (temp_v1 & 0x1000))
           {
-            func_80072138(1, 0x32);
+            enqueueSoundEffect(1, 0x32);
             if (D_800EC9D0 == 4)
             {
               if (D_800EC9C8 == 8)
@@ -345,7 +345,7 @@ void updateControllerPakScoreDeleteFlow(void)
         case 17:
           if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
-          func_80072138(1, 0x32);
+          enqueueSoundEffect(1, 0x32);
           D_800EC9D0 = D_800B31A5[D_800EC9C8];
         }
           break;
@@ -353,7 +353,7 @@ void updateControllerPakScoreDeleteFlow(void)
         case 15:
           if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
-          func_80072138(1, 0x32);
+          enqueueSoundEffect(1, 0x32);
           D_800EC9D0 = D_800B31A5[D_800EC9C8];
         }
           break;
@@ -364,7 +364,7 @@ void updateControllerPakScoreDeleteFlow(void)
           if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           sp1C = temp_t0;
-          func_80072138(1, 0x32);
+          enqueueSoundEffect(1, 0x32);
           if (D_800EC9C8 == 0xE)
           {
             if (temp_t0 != 0)
@@ -394,7 +394,7 @@ void updateControllerPakScoreDeleteFlow(void)
         case 18:
           if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
-          func_80072138(1, 0x32);
+          enqueueSoundEffect(1, 0x32);
           gControllerPakScoreDeleteFlow.step = 3;
           gControllerPakScoreDeleteFlow.timer = 0x100;
           gControllerPakScoreDeleteFlow.targetState = 0;
@@ -427,7 +427,7 @@ void fadeOutControllerPakScoreDeleteFlow(void) {
             D_80123751 = 1;
         }
     } else if (D_80123750 == 2) {
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         func_80099658(2);
@@ -438,13 +438,13 @@ void fadeOutControllerPakScoreDeleteFlow(void) {
 void updateControllerPakScoreDeleteConfirm(void) {
     if ((gPlayerInputPressed & 0x10800) && (gControllerPakMenuState.confirmChoice != 0)) {
         gControllerPakMenuState.confirmChoice = 0;
-        func_80072138(0x19, 0x32);
+        enqueueSoundEffect(0x19, 0x32);
     } else if ((gPlayerInputPressed & 0x20400) && (gControllerPakMenuState.confirmChoice != 1)) {
         gControllerPakMenuState.confirmChoice = 1;
-        func_80072138(0x19, 0x32);
+        enqueueSoundEffect(0x19, 0x32);
     }
     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         if (D_8010AF92 == 0) {
             gControllerPakMenuCursorState = 0;
             func_8009956C(updateControllerPakScoreDeleteFlow, 0);
@@ -453,7 +453,7 @@ void updateControllerPakScoreDeleteConfirm(void) {
             func_8009956C(fadeOutControllerPakScoreDeleteFlow, 0);
         }
     } else if (gPlayerInputPressed & 0x4000) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         D_801235B4 = 1;
         func_8009956C(fadeOutControllerPakScoreDeleteFlow, 0);
     }

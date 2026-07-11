@@ -450,7 +450,7 @@ void func_80072114(s32 arg0) {
     D_80121974 = -1;
 }
 
-s32 func_80072138(s16 arg0, s16 arg1) {
+s32 enqueueSoundEffect(s16 arg0, s16 arg1) {
     s32 temp_v0 = func_80071B74();
     GameAudioQueueEntry *temp_v1;
 

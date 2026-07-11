@@ -138,7 +138,7 @@ dummy_label_220868:
 }
 #endif
 
-void func_80045914(void)
+void releaseMenuAssetHandles(void)
 {
  do { s16 *handle = &D_8011213E; do { if ((*handle) != (-1)) { *handle = func_80042EE4(*handle); } handle++; } while (handle != (&D_801121B0)); } while (0);
 }

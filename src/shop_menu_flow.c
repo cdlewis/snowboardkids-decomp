@@ -14,8 +14,8 @@ typedef struct {
     /* 0x2 */ u8 state;
 } ShopMenuPromptTransition;
 
-extern void func_80072138(s32, s32);
-extern void func_80045914(void);
+extern void enqueueSoundEffect(s32, s32);
+extern void releaseMenuAssetHandles(void);
 
 extern CharacterSelectFlowState *D_801235B8;
 extern ShopMenuPromptTransition D_8010AF80;
@@ -66,7 +66,7 @@ void func_8000C52C(void) {
         }
     } else {
         if (D_80123750 == 2) {
-            func_80045914();
+            releaseMenuAssetHandles();
             D_80123751 = 0;
             D_800DEED4 = 0;
             func_80099658(2);

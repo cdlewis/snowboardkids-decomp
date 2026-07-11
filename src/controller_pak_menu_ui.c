@@ -410,7 +410,7 @@ void func_80031038(ControllerPakTitleActor *arg0) {
     func_800483FC(&D_80124868, func_80030EF0, (s32)arg0);
 }
 
-void func_800310EC(ControllerPakTitleActor *arg0) {
+void initControllerPakFileDeleteMainOptions(ControllerPakTitleActor *arg0) {
     arg0->common.x = -0x68;
     arg0->common.y = -0x44;
     arg0->scale = 0x100;
@@ -467,7 +467,7 @@ void func_80031294(ControllerPakTitleActor *arg0) {
     func_800483FC(&D_80124868, func_8003112C, (s32)arg0);
 }
 
-void func_80031330(ControllerPakTitleActor *arg0) {
+void initControllerPakFileDeleteConfirmOptions(ControllerPakTitleActor *arg0) {
     arg0->common.x = -0x68;
     arg0->common.y = 0x48;
     arg0->scale = 0x100;
@@ -527,7 +527,7 @@ void func_800314E0(s32 arg0) {
     func_800483FC(&D_80124868, func_80031370, arg0);
 }
 
-void func_80031510(ControllerPakTwoPointActor *arg0) {
+void initControllerPakFreeSpaceInfo(ControllerPakTwoPointActor *arg0) {
     s32 temp_v0 = 0x34;
 
     arg0->common.x = -0x24;
@@ -719,7 +719,7 @@ void func_80031A88(ControllerPakFileListActor *arg0) {
     func_800483FC(&D_80124868, func_80031550, (s32)arg0);
 }
 
-void func_80031B24(ControllerPakFileListActor *arg0) {
+void initControllerPakFileList(ControllerPakFileListActor *arg0) {
     s32 temp_v0 = -0x20;
     s32 temp_v1 = -0x84;
 
@@ -748,7 +748,7 @@ void func_80031BD4(s32 arg0) {
     func_800483FC(&D_80124838, func_80031BA0, arg0);
 }
 
-void func_80031C04(ControllerPakSpriteActor *arg0) {
+void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
     func_80017168((DstStruct_80017168 *)&arg0->sprite, func_80043040(D_8011217C));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x10;
@@ -839,7 +839,7 @@ void func_80031F40(ControllerPakDeletePromptActor *arg0) {
 }
 #endif
 
-void func_8003205C(ControllerPakDeletePromptActor *arg0) {
+void initControllerPakDeleteErrorPrompt(ControllerPakDeletePromptActor *arg0) {
     arg0->common.x = -0x70;
     arg0->common.y = -0x1C;
     arg0->timer = 0;
@@ -917,7 +917,7 @@ void func_80032534(ControllerPakDeletePromptActor *arg0) {
     }
 }
 
-void func_800325D0(ControllerPakDeletePromptActor *arg0) {
+void initControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) {
     arg0->common.x = -0x54;
     arg0->common.y = -0x20;
     arg0->scale = 0x100;

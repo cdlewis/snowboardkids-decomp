@@ -251,11 +251,11 @@ extern s16 D_801222F4;
 extern void func_8003DFD0(void);
 extern s32 func_80040D94(void);
 extern void func_80044294(void);
-extern void func_80045914(void);
+extern void releaseMenuAssetHandles(void);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s32, s32, s32, s32, s32);
 extern void func_800483FC(void *, void (*)(s32), s32);
-extern void func_80072138(s32, s32);
+extern void enqueueSoundEffect(s32, s32);
 
 void func_80072C30(void) {
     loadCompressedRomAsset(D_2427D0, D_243270, 6);
@@ -751,13 +751,13 @@ void func_80074960(void) {
     s32 selection;
     s32 valueTwo;
 
-    opened = 0; i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & 0x1000)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; func_80072138(1, 0x32); func_80000A40(0); func_80000A40(1); func_80000A40(2); func_80000A40(3); } i++; player++; } while (i < D_80121B55); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = gPlayerInputPressed[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; func_80072138(1, 0x32); input = gPlayerInputPressed[i]; }
+    opened = 0; i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & 0x1000)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; enqueueSoundEffect(1, 0x32); func_80000A40(0); func_80000A40(1); func_80000A40(2); func_80000A40(3); } i++; player++; } while (i < D_80121B55); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = gPlayerInputPressed[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; enqueueSoundEffect(1, 0x32); input = gPlayerInputPressed[i]; }
                     }
                     if (input & 0x20400) {
                         selection = D_80121B57;
                         if (valueTwo != selection) {
                             D_80121B57 = selection + 1;
-                            func_80072138(1, 0x32);
+                            enqueueSoundEffect(1, 0x32);
                             input = gPlayerInputPressed[i];
                         }
                     }
@@ -765,14 +765,14 @@ void func_80074960(void) {
                         input = D_80121B57;
                         if (input == 0) {
                             gRaceUpdatePaused = 0;
-                            func_80072138(1, 0x32);
+                            enqueueSoundEffect(1, 0x32);
                             input = D_80121B57;
                         }
                         if (input == 1) {
                             D_800EC8B0 = 0;
                             gRaceUpdatePaused = 0;
                             D_80123751 = 1;
-                            func_80072138(1, 0x32);
+                            enqueueSoundEffect(1, 0x32);
                             func_8009956C(func_80077B34, 0);
                             return;
                         }
@@ -780,7 +780,7 @@ void func_80074960(void) {
                             D_800EC8B0 = 0;
                             gRaceUpdatePaused = 0;
                             D_80123751 = 1;
-                            func_80072138(1, 0x32);
+                            enqueueSoundEffect(1, 0x32);
                             func_8009956C(func_80077B34, 0);
                             return;
                         }
@@ -1647,7 +1647,7 @@ void func_80077B34(void) {
         D_800EC8B0 = 0;
         D_80121B58 = 0;
         func_80042C20();
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         func_80072260();
@@ -1789,18 +1789,18 @@ void func_80078078(void) {
         D_800DEF14 = 0;
         temp_v0 = gPlayerInputPressed[0];
         if ((temp_v0 & 0x20400) && (D_80121B52 != 9)) {
-            func_80072138(0x19, 0x32);
+            enqueueSoundEffect(0x19, 0x32);
             D_80121B52 += 1;
             temp_v0 = gPlayerInputPressed[0];
         }
         if ((temp_v0 & 0x10800) && (D_80121B52 != 1)) {
-            func_80072138(0x19, 0x32);
+            enqueueSoundEffect(0x19, 0x32);
             D_80121B52 -= 1;
             temp_v0 = gPlayerInputPressed[0];
         }
         if (temp_v0 & 0x9000) {
             D_801235B4 = 1;
-            func_80072138(0x18, 0x32);
+            enqueueSoundEffect(0x18, 0x32);
             func_80072114(0x3C);
             func_8009956C(func_80078198, 0);
         }
@@ -1820,7 +1820,7 @@ void func_80078198(void) {
 
 void func_800781FC(void) {
     if (D_80123750 == 2) {
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         func_8009956C(&func_80073988, 0);
