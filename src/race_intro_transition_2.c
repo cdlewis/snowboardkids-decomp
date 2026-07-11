@@ -7,6 +7,7 @@
 #include "input_task_scheduler.h"
 #include "race_camera.h"
 #include "race_player_state.h"
+#include "race_timer_ui.h"
 
 typedef struct {
     /* 0x000 */ s16 playerIndex;
@@ -77,7 +78,6 @@ extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_800710CC(s32);
 extern void func_8007115C(void);
 extern void func_80072114(s32);
-extern void func_80078430(void);
 extern void func_80045914(void);
 extern void func_800540EC(void *);
 

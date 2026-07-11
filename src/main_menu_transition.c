@@ -11,6 +11,7 @@
 #include "race_camera.h"
 #include "main_menu_transition.h"
 #include "race_player_state.h"
+#include "race_timer_ui.h"
 
 #define MAIN_MENU_TRANSITION_FRAMES 0x10
 
@@ -39,8 +40,6 @@ extern u8 D_1F1A90[];
 extern u8 D_1F2220[];
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
-extern void func_8007AA50(void);
-extern void func_80078430(void);
 extern MainMenuTransitionState *D_801235B8;
 extern u8 D_8010B1F0;
 extern u8 D_8011228C;
