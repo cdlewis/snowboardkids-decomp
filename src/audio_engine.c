@@ -5,7 +5,7 @@
 #include <PR/os_ai.h>
 #include <PR/os_convert.h>
 #include <PR/ucode.h>
-#include "player_commands.h"
+#include "audio_engine.h"
 
 extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern s32 osSetIntMask(s32);
@@ -29,63 +29,63 @@ extern u32 osAiGetLength(void);
 extern u32 osVirtualToPhysical(void *);
 extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
 extern void alSynSetPan(ALSynth *, ALVoice *, s32);
-extern Struct800A0138 D_8015C928;
-extern ALLink *D_8015C964;
-extern s32 func_8009FF80(s32, s32, void *);
+extern Struct800A0138 gAudioDmaState;
+extern ALLink *gAudioDmaBufferPool;
+extern s32 audioDmaCallback(s32, s32, void *);
 extern f32 sinf(f32);
-extern s32 D_800DF154;
+extern s32 gSchedulerYieldResult;
 extern u16 gRetraceCounter;
-extern s32 D_800DF158;
-extern s32 D_800DF29C;
-extern s32 D_800DF298;
-extern u32 D_800DF290;
-extern u32 D_800DF294;
-extern AudioInfo *D_800DF2A0;
-extern s32 D_800DF2A4;
-extern SchedulerViMode D_800DF340[];
+extern s32 gSchedulerYieldRequested;
+extern s32 gAudioThreadStarted;
+extern s32 gAudioCmdListIndex;
+extern u32 gAudioFrameCounter;
+extern u32 gPendingAudioDmaCount;
+extern AudioInfo *gNextAudioInfo;
+extern s32 gAudioUnderrunState;
+extern SchedulerViMode gSchedulerViModes[];
 extern u64 D_800E1F00[];
-extern u8 D_80158620[];
-extern Acmd *D_8015A6A0[];
-extern Acmd *D_8015A6A8;
-extern Acmd *D_8015A6AC;
-extern SchedulerThread D_8015A6B8;
-extern OSMesgQueue D_8015A868;
-extern OSMesg D_8015A880[];
-extern u64 D_8015A8A0[];
-extern OSMesg D_8015A8B8[];
-extern s32 D_8015A680;
-extern s32 D_8015A684;
-extern s32 D_8015A620;
-extern u8 D_8015A624;
-extern s32 D_8015C934;
-extern s32 D_8015C938;
-extern s32 D_8015C93C;
-extern s32 D_8015C940;
-extern OSMesgQueue D_8015C948;
-extern s32 D_8015C960;
-extern OSIoMesg *D_8015C968;
-extern OSMesg *D_8015C96C;
-extern s32 D_8015C970;
+extern u8 gSchedulerThreadStack[];
+extern Acmd *gAudioCmdLists[];
+extern Acmd *gAudioCmdListEnd0;
+extern Acmd *gAudioCmdListEnd1;
+extern SchedulerThread gAudioThread;
+extern OSMesgQueue gAudioThreadQueue;
+extern OSMesg gAudioThreadMessages[];
+extern u64 gAudioTaskDoneQueue[];
+extern OSMesg gAudioTaskDoneMessages[];
+extern s32 gNextSoundPlayerHandle;
+extern s32 gSoundPlayerRandomSeed;
+extern s32 gSchedulerRspTaskState;
+extern u8 gSchedulerRdpTaskActive;
+extern s32 gMinAudioTaskOutputLen;
+extern s32 gTargetAudioTaskOutputLen;
+extern s32 gMaxAudioTaskOutputLen;
+extern s32 gAudioCmdListCapacity;
+extern OSMesgQueue gAudioDmaQueue;
+extern s32 gAudioSchedulerState;
+extern OSIoMesg *gAudioDmaMessages;
+extern OSMesg *gAudioDmaMessageBuffer;
+extern s32 gAudioDmaBufferSize;
 extern s32 *libmus_fxheader_current;
-extern ALPlayer D_8015A630;
-extern ALHeap D_8015A648;
-extern u8 *D_8015A64C;
-extern u8 *D_8015A65C;
-extern s32 D_8015A658;
-extern PlayerCommandState *D_8015A660;
-extern s32 D_8015A664;
-extern s32 D_8015A668;
-extern s32 *D_8015A670;
-extern u16 D_8015A67C;
-extern u16 D_8015A67E;
-extern s32 D_8015A678;
-extern s32 D_8015A68C;
-extern ALSynth D_8015A8D8;
+extern ALPlayer gSoundPlayer;
+extern ALHeap gSoundPlayerHeap;
+extern u8 *gSoundPlayerHeapEnd;
+extern u8 *gSoundPlayerVoices;
+extern s32 gSoundPlayerCount;
+extern PlayerCommandState *gSoundPlayerStates;
+extern s32 gSoundPlayerTuningTable;
+extern s32 gSoundPlayerPitchOffsets;
+extern s32 *gSoundPriorityTable;
+extern u16 gSoundEffectMasterVolume;
+extern u16 gMusicMasterVolume;
+extern s32 gAudioTicksPerSecond;
+extern s32 gSoundPlayerUpdateCounter;
+extern ALSynth gAudioSynthesizer;
 extern s32 osTvType;
 
-extern ALDMAproc func_800A0138(Struct800A0138 **);
+extern ALDMAproc initAudioDmaCallback(Struct800A0138 **);
 
-void func_8009C270(SchedulerState *arg0, u8 arg1, u8 arg2) {
+void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2) {
     arg0->curRSPTask = 0;
     arg0->curRDPTask = 0;
     arg0->clients = 0;
@@ -93,10 +93,10 @@ void func_8009C270(SchedulerState *arg0, u8 arg1, u8 arg2) {
     arg0->doAudio = arg0->doAudio & 0xFFFFFFFFFFFFFFFF;
     arg0->unk0 = 1;
     arg0->unk2 = 3;
-    D_800DF154 = 0;
-    D_800DF158 = 0;
-    D_8015A620 = 0;
-    D_8015A624 = 0;
+    gSchedulerYieldResult = 0;
+    gSchedulerYieldRequested = 0;
+    gSchedulerRspTaskState = 0;
+    gSchedulerRdpTaskActive = 0;
     osCreateMesgQueue(&arg0->retraceQueue, arg0->retraceMsgs, 0x20);
     osCreateMesgQueue(&arg0->queue1A4, arg0->msgs1BC, 0x10);
     osCreateMesgQueue(&arg0->eventQueue, arg0->eventMsgs, 0x10);
@@ -104,32 +104,32 @@ void func_8009C270(SchedulerState *arg0, u8 arg1, u8 arg2) {
     osCreateMesgQueue(&arg0->framebufferQueue, arg0->framebufferMsgs, 0x10);
     osCreateMesgQueue(&arg0->queue14C, arg0->msgs164, 0x10);
     osCreateViManager(0xFE);
-    osViSetMode(&D_800DF340[arg1]);
+    osViSetMode(&gSchedulerViModes[arg1]);
     osViBlack(1);
     osViSetEvent(&arg0->retraceQueue, (OSMesg)0x29A, arg2);
     osSetEventMesg(4, &arg0->retraceQueue, (OSMesg)0x29B);
     osSetEventMesg(0xE, &arg0->retraceQueue, (OSMesg)0x29D);
     osSetEventMesg(9, &arg0->queue1A4, (OSMesg)0x29C);
-    osCreateThread(&arg0->thread258, 6, func_8009C444, arg0, D_80158620, 0x78);
+    osCreateThread(&arg0->thread258, 6, schedulerThreadMain, arg0, gSchedulerThreadStack, 0x78);
     osStartThread(&arg0->thread258);
-    osCreateThread(&arg0->thread408, 5, func_8009C8DC, arg0, &D_8015A620, 0x64);
+    osCreateThread(&arg0->thread408, 5, schedulerSwapBufferThreadMain, arg0, &gSchedulerRspTaskState, 0x64);
     osStartThread(&arg0->thread408);
 }
 
-s32 func_8009C434(s32 arg0) {
+s32 getSchedulerAudioTaskQueue(s32 arg0) {
     return arg0 + 4;
 }
 
-s32 func_8009C43C(s32 arg0) {
+s32 getSchedulerGraphicsTaskQueue(s32 arg0) {
     return arg0 + 0x5C;
 }
 
-// func_8009C444 best match: 98.072% (nonmatchings/func_8009C444-2127290767680699791/base_9.c)
+// schedulerThreadMain best match: 98.072% (nonmatchings/schedulerThreadMain-2127290767680699791/base_9.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C444.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/schedulerThreadMain.s")
 
 #ifdef NON_MATCHING
-void func_8009C444(SchedulerState *arg0) {
+void schedulerThreadMain(SchedulerState *arg0) {
     OSMesgQueue *queue;
     s32 started;
     s32 delayedStart;
@@ -141,7 +141,7 @@ void func_8009C444(SchedulerState *arg0) {
     delayedStart = 0;
     pendingAudio = 0;
     msg = NULL;
-    D_800DF15C = 0;
+    gSchedulerStartupRetraceCount = 0;
     queue = &arg0->retraceQueue;
 
 loop:
@@ -152,51 +152,51 @@ loop:
             gRetraceCounter = nextFrame;
             gRetraceCounter = nextFrame;
             gRetraceCounter = gRetraceCounter & 0xFFF;
-            if ((started == 0) || (D_800DF15C < ((0, 0x16)))) {
-                func_8009C6DC(arg0);
+            if ((started == 0) || (gSchedulerStartupRetraceCount < ((0, 0x16)))) {
+                tryStartPendingRdpTask(arg0);
                 pendingAudio = pendingAudio * 0;
-                if (D_8015A624 != 0) {
+                if (gSchedulerRdpTaskActive != 0) {
                     pendingAudio = 1;
                 } else {
-                    func_8009CB44(arg0, (s32)arg0);
+                    notifySchedulerClients(arg0, (s32)arg0);
                 }
             } else {
                 osViBlack(1);
             }
-            if ((started != 0) && (D_800DF15C < 0x16)) {
-                D_800DF15C += 1;
+            if ((started != 0) && (gSchedulerStartupRetraceCount < 0x16)) {
+                gSchedulerStartupRetraceCount += 1;
             }
             break;
 
         case 0x29B:
-            if (D_8015A620 & 2) {
-                D_8015A620 &= ~2;
-                func_8009C81C(arg0);
+            if (gSchedulerRspTaskState & 2) {
+                gSchedulerRspTaskState &= ~2;
+                finishCurrentRdpTask(arg0);
                 if (pendingAudio != 0) {
                     pendingAudio = 0;
-                    func_8009CB44(arg0, (s32)arg0);
+                    notifySchedulerClients(arg0, (s32)arg0);
                 }
                 if (delayedStart != 0) {
                     delayedStart = 0;
                     osWritebackDCacheAll();
-                    D_8015A620 |= 1;
+                    gSchedulerRspTaskState |= 1;
                     osSpTaskLoad(&arg0->curRSPTask->list);
                     osSpTaskStartGo(&arg0->curRSPTask->list);
                 }
-            } else if (D_8015A620 & 1) {
-                if (D_800DF158 != 0) {
-                    func_8009C77C(arg0);
+            } else if (gSchedulerRspTaskState & 1) {
+                if (gSchedulerYieldRequested != 0) {
+                    startCurrentRdpTask(arg0);
                 } else {
-                    D_8015A620 &= ~1;
+                    gSchedulerRspTaskState &= ~1;
                     osSendMesg(&arg0->queue14C, (OSMesg)arg0, 1);
                 }
             }
             break;
 
         case 1:
-            if (D_8015A624 == 0) {
+            if (gSchedulerRdpTaskActive == 0) {
                 osWritebackDCacheAll();
-                D_8015A620 |= 1;
+                gSchedulerRspTaskState |= 1;
                 osSpTaskLoad(&arg0->curRSPTask->list);
                 osSpTaskStartGo(&(*arg0).curRSPTask->list);
             } else {
@@ -206,63 +206,63 @@ loop:
 
         case 0x29D:
             started = 1;
-            func_8009CB44(arg0, (s32)((u8 *)arg0 + 2));
+            notifySchedulerClients(arg0, (s32)((u8 *)arg0 + 2));
             break;
     }
     goto loop;
 }
 #endif
 
-void func_8009C6DC(SchedulerState *arg0) {
-    if (D_8015A624 == 0) {
+void tryStartPendingRdpTask(SchedulerState *arg0) {
+    if (gSchedulerRdpTaskActive == 0) {
         if (osRecvMesg(&arg0->messageQueue, (OSMesg *)&arg0->curRDPTask, 0) != -1) {
             osWritebackDCacheAll();
-            D_8015A624 = 1;
-            D_800DF154 = 0;
-            *(volatile unsigned int *)&D_800DF158 = 0;
-            if (D_8015A620 & 1) {
-                *(volatile unsigned int *)&D_800DF158 = 1;
+            gSchedulerRdpTaskActive = 1;
+            gSchedulerYieldResult = 0;
+            *(volatile unsigned int *)&gSchedulerYieldRequested = 0;
+            if (gSchedulerRspTaskState & 1) {
+                *(volatile unsigned int *)&gSchedulerYieldRequested = 1;
                 osSpTaskYield();
             } else {
-                func_8009C77C(arg0);
+                startCurrentRdpTask(arg0);
             }
         }
     }
 }
 
-void func_8009C77C(SchedulerState *arg0) {
-    if (D_800DF158 != 0) {
-        D_800DF158 = 0;
+void startCurrentRdpTask(SchedulerState *arg0) {
+    if (gSchedulerYieldRequested != 0) {
+        gSchedulerYieldRequested = 0;
         if (osSpTaskYielded(&arg0->curRSPTask->list) != 0) {
-            D_800DF154 = 1;
+            gSchedulerYieldResult = 1;
         } else {
-            D_800DF154 = 2;
+            gSchedulerYieldResult = 2;
         }
     }
-    D_8015A620 |= 2;
+    gSchedulerRspTaskState |= 2;
     osWritebackDCacheAll();
     osSpTaskLoad(&arg0->curRDPTask->list);
     osSpTaskStartGo(&arg0->curRDPTask->list);
 }
 
-void func_8009C81C(SchedulerState *arg0) {
+void finishCurrentRdpTask(SchedulerState *arg0) {
     OSMesg msg;
 
     msg = 0;
     osWritebackDCacheAll();
-    if (D_800DF154 == 1) {
+    if (gSchedulerYieldResult == 1) {
         osSpTaskLoad(arg0->curRSPTask->list);
         osSpTaskStartGo(arg0->curRSPTask->list);
-    } else if (D_800DF154 == 2) {
-        D_8015A620 &= ~1;
+    } else if (gSchedulerYieldResult == 2) {
+        gSchedulerRspTaskState &= ~1;
         osSendMesg(&arg0->queue14C, &msg, 1);
     }
     osSendMesg(arg0->curRDPTask->queue, arg0->curRDPTask->msg, 1);
-    D_8015A624 = 0;
+    gSchedulerRdpTaskActive = 0;
 }
 
-// func_8009C8DC best match: 95.000% (nonmatchings/func_8009C8DC-4061930211835852828/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009C8DC.s")
+// schedulerSwapBufferThreadMain best match: 95.000% (nonmatchings/schedulerSwapBufferThreadMain-4061930211835852828/base_9.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/schedulerSwapBufferThreadMain.s")
 
 #ifdef NON_MATCHING
 typedef struct SchedulerSwapLocals {
@@ -271,14 +271,14 @@ typedef struct SchedulerSwapLocals {
     OSMesg msg;
 } SchedulerSwapLocals;
 
-void func_8009C8DC(SchedulerState *arg0) {
+void schedulerSwapBufferThreadMain(SchedulerState *arg0) {
     SchedulerSwapLocals locals;
     SchedulerTask *task;
     s16 retrace;
     void *framebuffer;
 
     locals.msg = NULL;
-    locals.queue1A4 = &arg0->queue1A4; loop: do { osRecvMesg(&arg0->eventQueue, (OSMesg *) (&arg0->curRSPTask), 1); func_8009CB98(arg0, arg0->curRSPTask);
+    locals.queue1A4 = &arg0->queue1A4; loop: do { osRecvMesg(&arg0->eventQueue, (OSMesg *) (&arg0->curRSPTask), 1); waitForFramebufferAvailable(arg0, arg0->curRSPTask);
         osSendMesg(&arg0->retraceQueue, (OSMesg)1, 1);
         osRecvMesg(&arg0->queue14C, &locals.msg, 1);
         osRecvMesg(locals.queue1A4, &locals.msg, 1);
@@ -292,7 +292,7 @@ void func_8009C8DC(SchedulerState *arg0) {
         do {
             if ((retrace && retrace) && retrace) {
             }
-            func_8009CC50(arg0);
+            waitForNextFramebufferEvent(arg0);
         } while (((gRetraceCounter - retrace) & 0xFFF) >= 0x801);
     }
     if (arg0->doAudio != 0) {
@@ -304,7 +304,7 @@ void func_8009C8DC(SchedulerState *arg0) {
 }
 #endif
 
-void func_8009CA60(SchedulerState *arg0, SchedulerClient *arg1, OSMesgQueue *arg2) {
+void addSchedulerClient(SchedulerState *arg0, SchedulerClient *arg1, OSMesgQueue *arg2) {
     s32 prev = osSetIntMask(1);
     arg1->queue = arg2;
     arg1->next = arg0->clients;
@@ -312,7 +312,7 @@ void func_8009CA60(SchedulerState *arg0, SchedulerClient *arg1, OSMesgQueue *arg
     osSetIntMask(prev);
 }
 
-void func_8009CAB4(SchedulerState *arg0, SchedulerClient *arg1) {
+void removeSchedulerClient(SchedulerState *arg0, SchedulerClient *arg1) {
     SchedulerClient *node;
     SchedulerClient *prev;
     s32 mask;
@@ -337,7 +337,7 @@ void func_8009CAB4(SchedulerState *arg0, SchedulerClient *arg1) {
     osSetIntMask(mask);
 }
 
-void func_8009CB44(SchedulerState *arg0, s32 arg1) {
+void notifySchedulerClients(SchedulerState *arg0, s32 arg1) {
     SchedulerClient *node = arg0->clients;
     while (node != NULL) {
         osSendMesg(node->queue, (OSMesg)arg1, 0);
@@ -345,7 +345,7 @@ void func_8009CB44(SchedulerState *arg0, s32 arg1) {
     }
 }
 
-void func_8009CB98(SchedulerState *arg0, SchedulerTask *arg1) {
+void waitForFramebufferAvailable(SchedulerState *arg0, SchedulerTask *arg1) {
     OSMesg msg;
     SchedulerClient node;
     void *framebuffer;
@@ -355,23 +355,23 @@ void func_8009CB98(SchedulerState *arg0, SchedulerTask *arg1) {
     framebuffer = arg1->framebuffer;
     while ((osViGetCurrentFramebuffer() == framebuffer) || (osViGetNextFramebuffer() == framebuffer)) {
         queue = &arg0->framebufferQueue;
-        func_8009CA60(arg0, &node, queue);
+        addSchedulerClient(arg0, &node, queue);
         osRecvMesg(queue, &msg, 1);
-        func_8009CAB4(arg0, &node);
+        removeSchedulerClient(arg0, &node);
     }
 }
 
-void func_8009CC50(SchedulerState *arg0) {
+void waitForNextFramebufferEvent(SchedulerState *arg0) {
     OSMesg msg;
     SchedulerClient node;
 
     msg = 0;
-    func_8009CA60(arg0, &node, &arg0->framebufferQueue);
+    addSchedulerClient(arg0, &node, &arg0->framebufferQueue);
     osRecvMesg(&arg0->framebufferQueue, &msg, 1);
-    func_8009CAB4(arg0, &node);
+    removeSchedulerClient(arg0, &node);
 }
 
-s32 func_8009CCA0(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandEndTrack(PlayerCommandState *arg0, s32 arg1) {
     arg0->unk60 = 0;
     arg0->unk68 = 0;
     arg0->data = 0;
@@ -380,7 +380,7 @@ s32 func_8009CCA0(PlayerCommandState *arg0, s32 arg1) {
     return 0;
 }
 
-void *func_8009CCC0(PlayerCommandState *arg0, u8 *arg1) {
+void *soundPlayerCommandSetInstrument(PlayerCommandState *arg0, u8 *arg1) {
     u16 v;
     u8 *new_var;
 
@@ -395,17 +395,17 @@ void *func_8009CCC0(PlayerCommandState *arg0, u8 *arg1) {
     return arg1;
 }
 
-s32 func_8009CCFC(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetPortamentoTime(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unkEA = *arg1;
     return (s32)(arg1 + 1);
 }
 
-s32 func_8009CD0C(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandClearPortamento(PlayerCommandState *arg0, s32 arg1) {
     arg0->unkEA = 0;
     return arg1;
 }
 
-s32 func_8009CD18(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerLoadEnvelope(PlayerCommandState *arg0, u8 *arg1) {
     u32 value;
 
     value = *arg1++;
@@ -443,17 +443,17 @@ s32 func_8009CD18(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)arg1;
 }
 
-// func_8009CE3C best match: 98.929% (nonmatchings/func_8009CE3C-2911448260736516995/base_21.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009CE3C.s")
+// soundPlayerCommandSetTempo best match: 98.929% (nonmatchings/soundPlayerCommandSetTempo-2911448260736516995/base_21.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerCommandSetTempo.s")
 
 #ifdef NON_MATCHING
-s32 func_8009CE3C(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetTempo(PlayerCommandState *arg0, u8 *arg1) {
     s32 i;
     PlayerCommandState *entry;
     s32 value;
     s32 scaled;
 
-    value = (*arg1 * 0x6000) / 120 / D_8015A678;
+    value = (*arg1 * 0x6000) / 120 / gAudioTicksPerSecond;
     scaled = 7;
     scaled = (arg0->unkB4 * value) >> scaled;
     arg1++;
@@ -465,8 +465,8 @@ s32 func_8009CE3C(PlayerCommandState *arg0, u8 *arg1) {
     }
 
     i = 0;
-    entry = D_8015A660;
-    if (D_8015A658 > 0) {
+    entry = gSoundPlayerStates;
+    if (gSoundPlayerCount > 0) {
         do {
             i++;
             if (entry->data == arg0->data) {
@@ -474,13 +474,13 @@ s32 func_8009CE3C(PlayerCommandState *arg0, u8 *arg1) {
                 entry->unkB8 = scaled;
             }
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
     return (s32)arg1;
 }
 #endif
 
-s32 func_8009CF1C(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetReleaseOffset(PlayerCommandState *arg0, u8 *arg1) {
     u8 *ret;
     u8 *temp;
 
@@ -493,7 +493,7 @@ s32 func_8009CF1C(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)ret;
 }
 
-s32 func_8009CF30(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetReleaseTime(PlayerCommandState *arg0, u8 *arg1) {
     u8 *ret;
     u8 *temp;
     u32 v;
@@ -510,7 +510,7 @@ s32 func_8009CF30(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)ret;
 }
 
-s32 func_8009CF50(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetVibrato(PlayerCommandState *arg0, u8 *arg1) {
     u32 temp_t8;
     f32 var_ft1;
 
@@ -523,7 +523,7 @@ s32 func_8009CF50(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)(arg1 + 1);
 }
 
-s32 func_8009CFAC(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetNegativeVibrato(PlayerCommandState *arg0, u8 *arg1) {
     u32 temp_t8;
     f32 var_ft1;
 
@@ -536,13 +536,13 @@ s32 func_8009CFAC(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)(arg1 + 1);
 }
 
-s32 func_8009D00C(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandClearVibrato(PlayerCommandState *arg0, s32 arg1) {
     arg0->unkE9 = 0;
     arg0->unk48 = 0.0f;
     return arg1;
 }
 
-s32 func_8009D020(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetDuration(PlayerCommandState *arg0, u8 *arg1) {
     u8 b;
     unsigned int new_var;
     s16 value;
@@ -562,22 +562,22 @@ s32 func_8009D020(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)arg1;
 }
 
-s32 func_8009D064(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandForceDurationRead(PlayerCommandState *arg0, s32 arg1) {
     arg0->flagE6 = 1;
     return arg1;
 }
 
-s32 func_8009D074(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetPitchOffset(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unk118 = *arg1;
     return (s32)(arg1 + 1);
 }
 
-s32 func_8009D084(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandClearPitchOffsetOnce(PlayerCommandState *arg0, s32 arg1) {
     arg0->flagE7 = 1;
     return arg1;
 }
 
-s32 func_8009D094(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandAddFinePitch(PlayerCommandState *arg0, u8 *arg1) {
     s32 b;
     f32 f;
     b = *arg1;
@@ -590,7 +590,7 @@ s32 func_8009D094(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)arg1;
 }
 
-s32 func_8009D0E0(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandLoadEnvelopePreset(PlayerCommandState *arg0, u8 *arg1) {
     s32 var_v0;
 
     var_v0 = arg1[0];
@@ -599,31 +599,31 @@ s32 func_8009D0E0(PlayerCommandState *arg0, u8 *arg1) {
         var_v0 = arg1[0] | ((0, (var_v0 & 0x7F) << 8));
         arg1 += 1;
     }
-    func_8009CD18(arg0, arg0->data->commands + (var_v0 * 7));
+    soundPlayerLoadEnvelope(arg0, arg0->data->commands + (var_v0 * 7));
     return (s32)arg1;
 }
 
-s32 func_8009D138(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandDisableEnvelopeReset(PlayerCommandState *arg0, s32 arg1) {
     arg0->flagE8 = 1;
     return arg1;
 }
 
-s32 func_8009D148(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandEnableEnvelopeReset(PlayerCommandState *arg0, s32 arg1) {
     arg0->flagE8 = 0;
     return arg1;
 }
 
-s32 func_8009D154(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandTieNotes(PlayerCommandState *arg0, s32 arg1) {
     arg0->flagE5 = 1;
     return arg1;
 }
 
-s32 func_8009D164(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandUntieNotes(PlayerCommandState *arg0, s32 arg1) {
     arg0->flagE5 = 0;
     return arg1;
 }
 
-s32 func_8009D170(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandCallLoop(PlayerCommandState *arg0, u8 *arg1) {
     u8 depth;
 
     depth = arg0->returnDepth;
@@ -639,7 +639,7 @@ s32 func_8009D170(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)arg1;
 }
 
-s32 func_8009D1EC(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandReturnLoop(PlayerCommandState *arg0, s32 arg1) {
     s32 depth;
     u8 *countPtr;
     u8 count;
@@ -668,29 +668,29 @@ s32 func_8009D1EC(PlayerCommandState *arg0, s32 arg1) {
     return arg1;
 }
 
-s32 func_8009D27C(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetTremolo(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unk119 = arg1[0];
     arg0->unkEB = arg1[1];
     arg0->unk106 = arg1[2];
     return (s32)(arg1 + 3);
 }
 
-s32 func_8009D2A0(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandClearTremolo(PlayerCommandState *arg0, s32 arg1) {
     arg0->unkEB = 0;
     return arg1;
 }
 
-s32 func_8009D2AC(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandReadVelocity(PlayerCommandState *arg0, s32 arg1) {
     arg0->unkED = 1;
     return arg1;
 }
 
-s32 func_8009D2BC(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandUseDefaultVelocity(PlayerCommandState *arg0, s32 arg1) {
     arg0->unkED = 0;
     return arg1;
 }
 
-s32 func_8009D2C8(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetDefaultVelocity(PlayerCommandState *arg0, u8 *arg1) {
     s32 ret;
 
     ret = arg1 + 1;
@@ -701,16 +701,16 @@ s32 func_8009D2C8(PlayerCommandState *arg0, u8 *arg1) {
     return ret;
 }
 
-s32 func_8009D2DC(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetPan(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unkF2 = (s32)(u8)*arg1 / 2;
     return (s32)(arg1 + 1);
 }
 
-s32 func_8009D2FC(s32 arg0, s32 arg1) {
+s32 soundPlayerCommandSkipTwoBytes(s32 arg0, s32 arg1) {
     return arg1 + 2;
 }
 
-void *func_8009D308(void *arg0, u8 *arg1) {
+void *soundPlayerCommandSetJumpTable(void *arg0, u8 *arg1) {
     u8 *temp_a2;
     s32 phi;
 
@@ -720,20 +720,20 @@ void *func_8009D308(void *arg0, u8 *arg1) {
     return arg1 + 1;
 }
 
-s32 func_8009D330(PlayerCommandState *arg0, s32 arg1) {
+s32 soundPlayerCommandClearJumpTable(PlayerCommandState *arg0, s32 arg1) {
     arg0->jumpTarget = 0;
     return arg1;
 }
 
-s32 func_8009D33C(s32 arg0, s32 arg1) {
+s32 soundPlayerCommandNoOp(s32 arg0, s32 arg1) {
     return arg1;
 }
 
-// func_8009D348 best match: 97.0%
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009D348.s")
+// soundPlayerCommandJumpRelative best match: 97.0%
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerCommandJumpRelative.s")
 
 #ifdef NON_MATCHING
-s32 func_8009D348(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandJumpRelative(PlayerCommandState *arg0, u8 *arg1) {
     register s32 temp_v0;
     register s32 temp_v1;
     s32 temp_t9;
@@ -761,51 +761,51 @@ s32 func_8009D348(PlayerCommandState *arg0, u8 *arg1) {
 }
 #endif
 
-s32 func_8009D3AC(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetFxMix(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unkF3 = *arg1;
     return (s32)(arg1 + 1);
 }
 
-s32 func_8009D3BC(void *arg0, u8 *arg1) {
+s32 soundPlayerCommandRandomizePitchOffset(void *arg0, u8 *arg1) {
     u8 temp_a0;
 
     temp_a0 = *arg1;
     arg1++;
-    *(s8 *)((u8 *)arg0 + 0x118) = func_8009F4C8(temp_a0, arg1, arg0);
+    *(s8 *)((u8 *)arg0 + 0x118) = soundPlayerRandom(temp_a0, arg1, arg0);
     *(s8 *)((u8 *)arg0 + 0x118) = *arg1 + *(s8 *)((u8 *)arg0 + 0x118);
     return (s32)(arg1 + 1);
 }
 
-s32 func_8009D40C(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandRandomizeVolume(PlayerCommandState *arg0, u8 *arg1) {
     u8 temp_a0;
     s32 temp_v0;
 
     temp_a0 = *arg1;
     arg1++;
-    temp_v0 = func_8009F4C8(temp_a0, arg1, arg0);
+    temp_v0 = soundPlayerRandom(temp_a0, arg1, arg0);
     arg0->unkEF = temp_v0;
     arg0->unkEF = *arg1 + (temp_a0 = temp_v0);
     return (s32)(arg1 + 1);
 }
 
-s32 func_8009D45C(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandRandomizePan(PlayerCommandState *arg0, u8 *arg1) {
     u8 temp_a0;
     s8 temp_v0;
 
     temp_a0 = *arg1;
     arg1++;
-    temp_v0 = func_8009F4C8(temp_a0, arg1, arg0);
+    temp_v0 = soundPlayerRandom(temp_a0, arg1, arg0);
     arg0->unkF2 = temp_v0;
     arg0->unkF2 = *arg1 + (temp_a0 = temp_v0);
     return (s32)(arg1 + 1);
 }
 
-s32 func_8009D4AC(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetVolume(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unkEF = *arg1;
     return (s32)(arg1 + 1);
 }
 
-s32 func_8009D4BC(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetPanSweep(PlayerCommandState *arg0, u8 *arg1) {
     PlayerCommandState *entry;
     s32 i;
     s32 newId;
@@ -838,92 +838,92 @@ s32 func_8009D4BC(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)arg1;
 }
 
-s32 func_8009D598(PlayerCommandState *arg0, u8 *arg1) {
+s32 soundPlayerCommandSetPitchSweepDepth(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unkF1 = *arg1;
     return (s32)(arg1 + 1);
 }
 
-s32 func_8009D5A8(PlayerCommandInit *arg0) {
+s32 initSoundPlayer(PlayerCommandInit *arg0) {
     ALVoiceConfig vc;
     PlayerCommandSynConfig synConfig;
     s32 config2[3];
     s32 i;
 
-    D_8015A658 = arg0->count;
-    D_8015A664 = arg0->unk1C;
-    D_8015A668 = arg0->unk20;
+    gSoundPlayerCount = arg0->count;
+    gSoundPlayerTuningTable = arg0->unk1C;
+    gSoundPlayerPitchOffsets = arg0->unk20;
     libmus_fxheader_current = arg0->fxHeader;
-    D_8015A670 = arg0->unk28;
+    gSoundPriorityTable = arg0->unk28;
 
     if (osTvType == 0) {
-        D_8015A678 = 50;
+        gAudioTicksPerSecond = 50;
     } else {
-        D_8015A678 = 60;
+        gAudioTicksPerSecond = 60;
     }
 
-    func_8009F748(arg0->heapBase, 0, arg0->heapLen);
-    alHeapInit(&D_8015A648, arg0->heapBase, arg0->heapLen);
+    audioMemset(arg0->heapBase, 0, arg0->heapLen);
+    alHeapInit(&gSoundPlayerHeap, arg0->heapBase, arg0->heapLen);
 
-    D_8015A65C = alHeapDBAlloc(0, 0, &D_8015A648, 1, D_8015A658 * sizeof(ALVoice));
-    D_8015A660 = alHeapDBAlloc(0, 0, &D_8015A648, 1, D_8015A658 * sizeof(PlayerCommandState));
+    gSoundPlayerVoices = alHeapDBAlloc(0, 0, &gSoundPlayerHeap, 1, gSoundPlayerCount * sizeof(ALVoice));
+    gSoundPlayerStates = alHeapDBAlloc(0, 0, &gSoundPlayerHeap, 1, gSoundPlayerCount * sizeof(PlayerCommandState));
 
-    func_8009F748(D_8015A65C, 0, D_8015A658 * sizeof(ALVoice));
-    func_8009F748(D_8015A660, 0, D_8015A658 * sizeof(PlayerCommandState));
+    audioMemset(gSoundPlayerVoices, 0, gSoundPlayerCount * sizeof(ALVoice));
+    audioMemset(gSoundPlayerStates, 0, gSoundPlayerCount * sizeof(PlayerCommandState));
 
-    synConfig.maxVVoices = D_8015A658;
-    synConfig.maxPVoices = D_8015A658;
+    synConfig.maxVVoices = gSoundPlayerCount;
+    synConfig.maxPVoices = gSoundPlayerCount;
     synConfig.maxUpdates = arg0->maxUpdates;
     synConfig.dmaproc = 0;
     synConfig.fxType = 2;
     synConfig.outputRate = 0;
-    synConfig.heap = &D_8015A648;
+    synConfig.heap = &gSoundPlayerHeap;
 
     config2[0] = arg0->maxFXBusses;
     config2[1] = arg0->unk38;
     config2[2] = arg0->unk34;
 
-    func_8009F810(arg0->unk4, &synConfig.maxVVoices, arg0->outputRate, config2,
-                  arg0->unk3C, arg0->unk40, D_8015A678);
-    func_8009F344(arg0->unk14, arg0->unk18);
-    func_8009D8B0(3, 0x7FFF);
+    initAudioSynthesizer(arg0->unk4, &synConfig.maxVVoices, arg0->outputRate, config2,
+                  arg0->unk3C, arg0->unk40, gAudioTicksPerSecond);
+    loadSoundBank(arg0->unk14, arg0->unk18);
+    setSoundPlayerMasterVolume(3, 0x7FFF);
 
-    D_8015A68C = 0;
-    D_8015A680 = 1;
-    D_8015A684 = 0x12345678;
+    gSoundPlayerUpdateCounter = 0;
+    gNextSoundPlayerHandle = 1;
+    gSoundPlayerRandomSeed = 0x12345678;
 
-    D_8015A630.next = 0;
-    D_8015A630.handler = func_8009E0D4;
-    D_8015A630.clientData = &D_8015A630;
-    alSynAddPlayer(&D_8015A8D8, &D_8015A630);
+    gSoundPlayer.next = 0;
+    gSoundPlayer.handler = soundPlayerUpdate;
+    gSoundPlayer.clientData = &gSoundPlayer;
+    alSynAddPlayer(&gAudioSynthesizer, &gSoundPlayer);
 
-    for (i = 0; i < D_8015A658; i++) {
-        D_8015A660[i].unkE4 = 0;
-        func_8009F604(&D_8015A660[i]);
+    for (i = 0; i < gSoundPlayerCount; i++) {
+        gSoundPlayerStates[i].unkE4 = 0;
+        resetSoundPlayerState(&gSoundPlayerStates[i]);
         vc.unityPitch = 0;
         vc.priority = arg0->outputRate;
         vc.fxBus = 0;
-        alSynAllocVoice(&D_8015A8D8, &D_8015A65C[i * 0x1C], &vc);
+        alSynAllocVoice(&gAudioSynthesizer, &gSoundPlayerVoices[i * 0x1C], &vc);
     }
 
-    return D_8015A64C - D_8015A648.base;
+    return gSoundPlayerHeapEnd - gSoundPlayerHeap.base;
 }
 
-void func_8009D8B0(s32 arg0, s32 arg1) {
+void setSoundPlayerMasterVolume(s32 arg0, s32 arg1) {
     s32 temp_t7 = arg0 & 2;
 
     if (arg0 & 1) {
-        D_8015A67C = arg1;
+        gSoundEffectMasterVolume = arg1;
     }
     if (temp_t7) {
-        D_8015A67E = arg1;
+        gMusicMasterVolume = arg1;
     }
 }
 
-// func_8009D8D8 best match: 72.150% (nonmatchings/func_8009D8D8-4923837976568703863/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009D8D8.s")
+// startMusicSequence best match: 72.150% (nonmatchings/startMusicSequence-4923837976568703863/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/startMusicSequence.s")
 
 #ifdef NON_MATCHING
-s32 func_8009D8D8(PlayerCommandData *arg0) {
+s32 startMusicSequence(PlayerCommandData *arg0) {
     s32 id;
     s32 saved;
     s32 count;
@@ -1045,9 +1045,9 @@ counted:
     i = 0;
 
 free_count:
-    state = D_8015A660;
+    state = gSoundPlayerStates;
     free = 0;
-    if (D_8015A658 <= 0) {
+    if (gSoundPlayerCount <= 0) {
         goto enough_check;
     }
 free_loop:
@@ -1056,7 +1056,7 @@ free_loop:
         free++;
     }
     state++;
-    if (i < D_8015A658) {
+    if (i < gSoundPlayerCount) {
         goto free_loop;
     }
 
@@ -1065,9 +1065,9 @@ enough_check:
         return 0;
     }
 
-    id = D_8015A680;
+    id = gNextSoundPlayerHandle;
     i = 0;
-    D_8015A680 = id + 1;
+    gNextSoundPlayerHandle = id + 1;
     saved = id;
     if (trackCount <= 0) {
         return saved;
@@ -1077,12 +1077,12 @@ start_loop:
     if (*(s32 *)((s32)arg0->sequenceOffsets + step) == 0) {
         goto next_track;
     }
-    index = func_8009F6F4((s32)arg0, i);
+    index = findFreeSoundPlayerIndex((s32)arg0, i);
     if (index == -1) {
         rmonPrintf("NG Channel\n");
     }
-    state = &D_8015A660[index];
-    func_8009F604(state);
+    state = &gSoundPlayerStates[index];
+    resetSoundPlayerState(state);
     state->data = arg0;
     value = *(s32 *)((s32)arg0->unk8 + step);
     state->unk64 = value;
@@ -1104,63 +1104,63 @@ next_track:
 }
 #endif
 
-s32 func_8009DBE4(s32 arg0) {
+s32 startSoundEffectDefault(s32 arg0) {
     s32 i;
     PlayerCommandState *entry;
     s32 value;
 
-    value = D_8015A670[arg0];
-    entry = D_8015A660;
+    value = gSoundPriorityTable[arg0];
+    entry = gSoundPlayerStates;
     i = 0;
-    if (D_8015A658 > 0) {
+    if (gSoundPlayerCount > 0) {
         do {
             i++;
             if (entry->sequencePos == 0) {
-                return func_8009F780(entry, arg0, 0x80, 0x80, value);
+                return startSoundPlayerState(entry, arg0, 0x80, 0x80, value);
             }
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
     return 0;
 }
 
-s32 func_8009DC68(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+s32 startSoundEffect(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     s32 i;
     PlayerCommandState *entry;
 
     if (arg4 == -1) {
-        arg4 = D_8015A670[arg0];
+        arg4 = gSoundPriorityTable[arg0];
     }
 
     if (arg3 != 0) {
-        entry = D_8015A660;
+        entry = gSoundPlayerStates;
         i = 0;
-        if (D_8015A658 > 0) {
+        if (gSoundPlayerCount > 0) {
             do {
                 i++;
                 if (arg0 == entry->soundId) {
-                    return func_8009F780(entry, arg0, arg1, arg2, arg4);
+                    return startSoundPlayerState(entry, arg0, arg1, arg2, arg4);
                 }
                 entry++;
-            } while (i < D_8015A658);
+            } while (i < gSoundPlayerCount);
         }
     }
 
-    entry = D_8015A660;
+    entry = gSoundPlayerStates;
     i = 0;
-    if (D_8015A658 > 0) {
+    if (gSoundPlayerCount > 0) {
         do {
             i++;
             if (entry->sequencePos == 0) {
-                return func_8009F780(entry, arg0, arg1, arg2, arg4);
+                return startSoundPlayerState(entry, arg0, arg1, arg2, arg4);
             }
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
     return 0;
 }
 
-void func_8009DD5C(s32 arg0, s32 arg1) {
+void fadeOutSoundPlayersByType(s32 arg0, s32 arg1) {
     s32 i;
     s32 value;
     PlayerCommandState *entry;
@@ -1170,10 +1170,10 @@ void func_8009DD5C(s32 arg0, s32 arg1) {
     } else {
         value = 1;
     }
-    entry = D_8015A660;
+    entry = gSoundPlayerStates;
     i = 0;
-    entry = D_8015A660;
-    if (D_8015A658 > 0) {
+    entry = gSoundPlayerStates;
+    if (gSoundPlayerCount > 0) {
         do {
             ;
             i++;
@@ -1183,11 +1183,11 @@ void func_8009DD5C(s32 arg0, s32 arg1) {
                 entry->fadeTime = value;
             }
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
 }
 
-s32 func_8009DDE4(s32 arg0) {
+s32 countActiveSoundPlayersByType(s32 arg0) {
     s32 i;
     s32 matches;
     PlayerCommandState *entry;
@@ -1195,10 +1195,10 @@ s32 func_8009DDE4(s32 arg0) {
     u16 temp_a0;
 
     i = 0;
-    entry = D_8015A660;
+    entry = gSoundPlayerStates;
     ;
     matches = 0;
-    if (D_8015A658 > 0) {
+    if (gSoundPlayerCount > 0) {
         do {
             i++;
             if (entry->sequencePos != 0) {
@@ -1208,12 +1208,12 @@ s32 func_8009DDE4(s32 arg0) {
                 }
             }
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
     return matches;
 }
 
-s32 func_8009DE50(s32 arg0, s32 arg1) {
+s32 stopSoundPlayerByHandle(s32 arg0, s32 arg1) {
     s32 count;
     s32 i;
     s32 value;
@@ -1229,9 +1229,9 @@ s32 func_8009DE50(s32 arg0, s32 arg1) {
     } else {
         value = 1;
     }
-    entry = D_8015A660;
+    entry = gSoundPlayerStates;
     count = 0;
-    if (D_8015A658 > 0) {
+    if (gSoundPlayerCount > 0) {
         do {
             i++;
             if (arg0 == entry->id) {
@@ -1240,12 +1240,12 @@ s32 func_8009DE50(s32 arg0, s32 arg1) {
                 count++;
             }
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
     return count;
 }
 
-s32 func_8009DEC4(s32 arg0) {
+s32 countSoundPlayersByHandle(s32 arg0) {
     s32 i = 0;
     s32 matches;
     PlayerCommandState *entry;
@@ -1254,21 +1254,21 @@ s32 func_8009DEC4(s32 arg0) {
         return 0;
     }
 
-    entry = D_8015A660;
+    entry = gSoundPlayerStates;
     matches = 0;
-    if (D_8015A658 > 0) {
+    if (gSoundPlayerCount > 0) {
         do {
             i++;
             if (arg0 == entry->id) {
                 matches++;
             }
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
     return matches;
 }
 
-s32 func_8009DF14(s32 arg0, s32 arg1) {
+s32 setSoundPlayerVolumeByHandle(s32 arg0, s32 arg1) {
     s32 i;
     s32 matches;
     PlayerCommandState *entry;
@@ -1278,9 +1278,9 @@ s32 func_8009DF14(s32 arg0, s32 arg1) {
     }
 
     i = 0;
-    entry = D_8015A660;
+    entry = gSoundPlayerStates;
     matches = 0;
-    if (D_8015A658 > 0) {
+    if (gSoundPlayerCount > 0) {
         do {
             i++;
             if (arg0 == entry->id) {
@@ -1288,12 +1288,12 @@ s32 func_8009DF14(s32 arg0, s32 arg1) {
                 matches++;
             }
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
     return matches;
 }
 
-s32 func_8009DF78(s32 arg0, s32 arg1) {
+s32 setSoundPlayerPanByHandle(s32 arg0, s32 arg1) {
     s32 i;
     s32 matches;
     PlayerCommandState *entry;
@@ -1303,9 +1303,9 @@ s32 func_8009DF78(s32 arg0, s32 arg1) {
     }
 
     i = 0;
-    entry = D_8015A660;
+    entry = gSoundPlayerStates;
     matches = 0;
-    if (D_8015A658 > 0) {
+    if (gSoundPlayerCount > 0) {
         do {
             i++;
             if (arg0 == entry->id) {
@@ -1313,12 +1313,12 @@ s32 func_8009DF78(s32 arg0, s32 arg1) {
                 matches++;
             }
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
     return matches;
 }
 
-s32 func_8009DFDC(s32 arg0, f32 arg1) {
+s32 setSoundPlayerPitchOffsetByHandle(s32 arg0, f32 arg1) {
     s32 i = 0;
     s32 matches;
     PlayerCommandState *entry;
@@ -1327,9 +1327,9 @@ s32 func_8009DFDC(s32 arg0, f32 arg1) {
         return 0;
     }
 
-    entry = D_8015A660;
+    entry = gSoundPlayerStates;
     matches = 0;
-    if (D_8015A658 > 0) {
+    if (gSoundPlayerCount > 0) {
         do {
             i++;
             if (arg0 == entry->id) {
@@ -1337,12 +1337,12 @@ s32 func_8009DFDC(s32 arg0, f32 arg1) {
                 matches++;
             }
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
     return matches;
 }
 
-s32 func_8009E040(s32 arg0, s32 arg1) {
+s32 setSoundPlayerTempoByHandle(s32 arg0, s32 arg1) {
     s32 i = 0;
     s32 matches;
     PlayerCommandState *entry;
@@ -1357,9 +1357,9 @@ s32 func_8009E040(s32 arg0, s32 arg1) {
         arg1 = 0x100;
     }
 
-    entry = D_8015A660;
+    entry = gSoundPlayerStates;
     matches = 0;
-    if (D_8015A658 > 0) {
+    if (gSoundPlayerCount > 0) {
         do {
             i++;
             if (arg0 == entry->id) {
@@ -1368,17 +1368,17 @@ s32 func_8009E040(s32 arg0, s32 arg1) {
                 entry->unkB8 = (s32)(entry->unkBA * arg1) >> 7;
             }
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
     return matches;
 }
 
-// func_8009E0D4 best match: 91.170%
+// soundPlayerUpdate best match: 91.170%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009E0D4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerUpdate.s")
 
 #ifdef NON_MATCHING
-ALMicroTime func_8009E0D4(void *arg0) {
+ALMicroTime soundPlayerUpdate(void *arg0) {
     PlayerCommandState *entry;
     u8 **voiceBasePtr;
     s32 count;
@@ -1387,26 +1387,26 @@ ALMicroTime func_8009E0D4(void *arg0) {
     u32 temp;
 
     i = 0;
-    count = D_8015A658;
-    entry = D_8015A660;
+    count = gSoundPlayerCount;
+    entry = gSoundPlayerStates;
     if (count > 0) {
-        voiceBasePtr = &D_8015A65C;
+        voiceBasePtr = &gSoundPlayerVoices;
         do {
             if (entry->sequencePos != 0) {
                 entry->unk0 += (u16)entry->unkB8;
 
                 if ((entry->unkBC != 0x7FFF) && (entry->unkC < entry->unk0) && (entry->sequencePos != 0)) {
                     do {
-                        func_8009E354(entry, i);
+                        soundPlayerReadNextNote(entry, i);
                     } while ((entry->unkC < entry->unk0) && (entry->sequencePos != 0));
                 }
 
                 if (entry->sequencePos != 0) {
                     if (entry->unk60 != 0) {
-                        func_8009EFF4(entry);
+                        soundPlayerUpdateVolumeTrack(entry);
                     }
                     if (entry->unk68 != 0) {
-                        func_8009F0C4(entry);
+                        soundPlayerUpdatePanTrack(entry);
                     }
 
                     fadeTarget = entry->fadeTarget;
@@ -1414,28 +1414,28 @@ ALMicroTime func_8009E0D4(void *arg0) {
                         fadeTarget--;
                         entry->fadeTarget = fadeTarget;
                         if (fadeTarget == -1) {
-                            entry->sequencePos = func_8009CCA0(entry, 0);
+                            entry->sequencePos = soundPlayerCommandEndTrack(entry, 0);
                             if (entry->unkE4 != 0) {
                                 entry->unkE4 = 0;
-                                alSynStopVoice(&D_8015A8D8, (ALVoice *)((i * 0x1C) + *voiceBasePtr));
+                                alSynStopVoice(&gAudioSynthesizer, (ALVoice *)((i * 0x1C) + *voiceBasePtr));
                             }
                         }
                     }
 
                     if (entry->unkE4 != 0) {
-                        func_8009EBDC(entry);
-                        func_8009EF44(entry);
-                        func_8009EEE8(entry);
-                        func_8009E938(entry, i);
-                        func_8009E76C(entry, i);
+                        soundPlayerUpdateEnvelope(entry);
+                        soundPlayerUpdateVibrato(entry);
+                        soundPlayerUpdateTremolo(entry);
+                        soundPlayerApplyPitch(entry, i);
+                        soundPlayerApplyVolumeAndPan(entry, i);
                     }
 
                     temp = (entry->unk0 - entry->unk10) >> 8;
                     entry->unkC6 = temp;
                     entry->unk40 = (f32)(temp & 0xFFFF);
-                    count = D_8015A658;
+                    count = gSoundPlayerCount;
                 } else {
-                    count = D_8015A658;
+                    count = gSoundPlayerCount;
                 }
             }
             i++;
@@ -1443,24 +1443,24 @@ ALMicroTime func_8009E0D4(void *arg0) {
         } while (i < count);
     }
 
-    D_8015A68C++;
-    return 0xF4240 / D_8015A678;
+    gSoundPlayerUpdateCounter++;
+    return 0xF4240 / gAudioTicksPerSecond;
 }
 #endif
 
-// func_8009E354 best match: 88.397%
+// soundPlayerReadNextNote best match: 88.397%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009E354.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerReadNextNote.s")
 
 #ifdef NON_MATCHING
 typedef u8 *(*PlayerCommandHandler)(PlayerCommandState *, u8 *, u8);
 
-extern PlayerCommandHandler D_800DF160[];
-extern u8 D_800DF204[];
-extern u8 *D_8015A674;
-extern s32 D_8015A688;
+extern PlayerCommandHandler gSoundPlayerCommandHandlers[];
+extern u8 gSoundPlayerDefaultVelocities[];
+extern u8 *gSoundWaveTable;
+extern s32 gSoundBankEntryCount;
 
-void func_8009E354(PlayerCommandState *arg0, s32 arg1) {
+void soundPlayerReadNextNote(PlayerCommandState *arg0, s32 arg1) {
     u8 *seq;
     u8 cmd;
     u32 duration;
@@ -1470,7 +1470,7 @@ void func_8009E354(PlayerCommandState *arg0, s32 arg1) {
     if (seq != NULL) {
         cmd = seq[0];
         while (cmd >= 0x80) {
-            seq = D_800DF160[cmd & 0x7F](arg0, seq + 1, cmd);
+            seq = gSoundPlayerCommandHandlers[cmd & 0x7F](arg0, seq + 1, cmd);
             if (seq == NULL) {
                 break;
             }
@@ -1485,10 +1485,10 @@ void func_8009E354(PlayerCommandState *arg0, s32 arg1) {
         arg0->unkFE = *seq;
 
         if (arg0->unkED != 0) {
-            arg0->unk108 = D_800DF204[((u8 *)arg0->sequencePos)[0]];
+            arg0->unk108 = gSoundPlayerDefaultVelocities[((u8 *)arg0->sequencePos)[0]];
             arg0->sequencePos++;
         } else {
-            arg0->unk108 = D_800DF204[arg0->unkEE];
+            arg0->unk108 = gSoundPlayerDefaultVelocities[arg0->unkEE];
         }
 
         duration = arg0->unkC0;
@@ -1528,38 +1528,38 @@ void func_8009E354(PlayerCommandState *arg0, s32 arg1) {
 
                 arg0->unkCC = entry[-0x30];
                 arg0->unkF2 = entry[-0x2E] / 2;
-                func_8009CD18(arg0, arg0->data->commands + (entry[-0x2F] * 7));
+                soundPlayerLoadEnvelope(arg0, arg0->data->commands + (entry[-0x2F] * 7));
                 arg0->unkFE = entry[-0x2D];
             }
 
             soundIndex = arg0->unkCC;
-            if (D_8015A688 <= soundIndex) {
+            if (gSoundBankEntryCount <= soundIndex) {
                 soundIndex = 0;
             }
 
             if (arg0->flagE5 == 0) {
                 if (arg0->unkE4 != 0) {
-                    alSynStopVoice(&D_8015A8D8, (ALVoice *)(D_8015A65C + (arg1 * 0x1C)));
+                    alSynStopVoice(&gAudioSynthesizer, (ALVoice *)(gSoundPlayerVoices + (arg1 * 0x1C)));
                 }
                 arg0->unkE4 = 1;
                 arg0->unkB6 = 0xFFFF;
                 arg0->unkE3 = 0xFF;
-                alSynStartVoice(&D_8015A8D8, (ALVoice *)(D_8015A65C + (arg1 * 0x1C)),
-                                *(ALWaveTable **)(D_8015A674 + (soundIndex * 4)));
+                alSynStartVoice(&gAudioSynthesizer, (ALVoice *)(gSoundPlayerVoices + (arg1 * 0x1C)),
+                                *(ALWaveTable **)(gSoundWaveTable + (soundIndex * 4)));
             }
 
-            arg0->unkFF = ((u8 *)D_8015A664)[soundIndex] + arg0->unkFE - 5;
+            arg0->unkFF = ((u8 *)gSoundPlayerTuningTable)[soundIndex] + arg0->unkFE - 5;
             if (arg0->flagE8 == 0) {
                 arg0->padF4[4] = 0;
                 arg0->padF4[5] = arg0->padF4[1];
-                func_8009EB6C(arg0);
+                soundPlayerStartEnvelope(arg0);
             }
-            func_8009E938(arg0, arg1);
-            func_8009E76C(arg0, arg1);
+            soundPlayerApplyPitch(arg0, arg1);
+            soundPlayerApplyVolumeAndPan(arg0, arg1);
             cmd = arg0->unkF3;
             if (arg0->unkE2 != cmd) {
                 arg0->unkE2 = cmd;
-                alSynSetFXMix(&D_8015A8D8, (ALVoice *)(D_8015A65C + (arg1 * 0x1C)), cmd);
+                alSynSetFXMix(&gAudioSynthesizer, (ALVoice *)(gSoundPlayerVoices + (arg1 * 0x1C)), cmd);
             }
         } else if (arg0->padF4[4] < 4) {
             arg0->padF4[4] = 4;
@@ -1569,12 +1569,12 @@ void func_8009E354(PlayerCommandState *arg0, s32 arg1) {
         }
     } else if (arg0->unkE4 != 0) {
         arg0->unkE4 = 0;
-        alSynStopVoice(&D_8015A8D8, (ALVoice *)(D_8015A65C + (arg1 * 0x1C)));
+        alSynStopVoice(&gAudioSynthesizer, (ALVoice *)(gSoundPlayerVoices + (arg1 * 0x1C)));
     }
 }
 #endif
 
-void func_8009E76C(PlayerCommandState *arg0, s32 arg1) {
+void soundPlayerApplyVolumeAndPan(PlayerCommandState *arg0, s32 arg1) {
     u32 volume;
     s32 stopping;
     int pan;
@@ -1586,9 +1586,9 @@ void func_8009E76C(PlayerCommandState *arg0, s32 arg1) {
     }
 
     if (arg0->soundId == 0) {
-        volume *= D_8015A67E;
+        volume *= gMusicMasterVolume;
     } else {
-        volume *= D_8015A67C;
+        volume *= gSoundEffectMasterVolume;
     }
 
     stopping = arg0->fadeTarget;
@@ -1600,7 +1600,7 @@ void func_8009E76C(PlayerCommandState *arg0, s32 arg1) {
 
     if (volume != arg0->unkB6) {
         arg0->unkB6 = volume;
-        alSynSetVol(&D_8015A8D8, (ALVoice *)(D_8015A65C + (14 * (2 * arg1))), (s16)volume, 0xF4240 / D_8015A678);
+        alSynSetVol(&gAudioSynthesizer, (ALVoice *)(gSoundPlayerVoices + (14 * (2 * arg1))), (s16)volume, 0xF4240 / gAudioTicksPerSecond);
     }
 
     stopping = arg0->unkE3;
@@ -1608,18 +1608,18 @@ void func_8009E76C(PlayerCommandState *arg0, s32 arg1) {
     pan = (((*(u8 *)&arg0->unkF2) * arg0->unkB2) >> 7) & 0x7F;
     if (pan != oldPan) {
         arg0->unkE3 = pan;
-        alSynSetPan(&D_8015A8D8, (ALVoice *)(D_8015A65C + (arg1 * 0x1C)), pan & 0xFF);
+        alSynSetPan(&gAudioSynthesizer, (ALVoice *)(gSoundPlayerVoices + (arg1 * 0x1C)), pan & 0xFF);
     }
 }
 
-// func_8009E938 best match: 95.714%
+// soundPlayerApplyPitch best match: 95.714%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009E938.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerApplyPitch.s")
 
 #ifdef NON_MATCHING
 extern void alSynSetPitch(void *, void *, f32);
 
-void func_8009E938(PlayerCommandState *arg0, s32 arg1) {
+void soundPlayerApplyPitch(PlayerCommandState *arg0, s32 arg1) {
     register f32 pitch;
     f32 basePitch;
     f32 slidePitch;
@@ -1646,7 +1646,7 @@ void func_8009E938(PlayerCommandState *arg0, s32 arg1) {
     flagPitch = (f32)arg0->unk118 * (f32)(1 - arg0->flagE7);
     arg0->unk4C = pitch;
     arg0->flagE7 = 0;
-    pitch += arg0->unk48 + flagPitch + arg0->unk2C + (f32)arg0->unk11A + ((f32 *)D_8015A668)[arg0->unkCC];
+    pitch += arg0->unk48 + flagPitch + arg0->unk2C + (f32)arg0->unk11A + ((f32 *)gSoundPlayerPitchOffsets)[arg0->unkCC];
     pitch = (f32)((f64)pitch + ((f64)(f32)arg0->unkF1 * 0.015625 * ((f64)(f32)arg0->unkF0 - 64.0)));
     if (1) {}
     if (1) {}
@@ -1656,7 +1656,7 @@ void func_8009E938(PlayerCommandState *arg0, s32 arg1) {
 
     if (pitch != arg0->unk24) {
         arg0->unk24 = pitch;
-        pitchRatio = func_8009F194((f32)((f64)pitch * 0.083333333333333329));
+        pitchRatio = approximatePitchRatio((f32)((f64)pitch * 0.083333333333333329));
         if (pitchRatio < 0.0f) {
             pitchRatio = 0.0f;
         }
@@ -1664,17 +1664,17 @@ void func_8009E938(PlayerCommandState *arg0, s32 arg1) {
             pitchRatio = 2.0f;
             arg0->unk108 = 0;
         }
-        alSynSetPitch(&D_8015A8D8, D_8015A65C + (arg1 * 0x1C), pitchRatio);
+        alSynSetPitch(&gAudioSynthesizer, gSoundPlayerVoices + (arg1 * 0x1C), pitchRatio);
     }
 }
 #endif
 
-// func_8009EB6C best match: 89.464%
+// soundPlayerStartEnvelope best match: 89.464%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009EB6C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerStartEnvelope.s")
 
 #ifdef NON_MATCHING
-void func_8009EB6C(PlayerCommandState *arg0) {
+void soundPlayerStartEnvelope(PlayerCommandState *arg0) {
     s32 max = 0x7FFFFFFF;
     u16 temp_v0;
     u8 temp_f5;
@@ -1699,12 +1699,12 @@ void func_8009EB6C(PlayerCommandState *arg0) {
 }
 #endif
 
-// func_8009EBDC best match: 93.258% (nonmatchings/func_8009EBDC-6113366811127043669/base_10.c)
+// soundPlayerUpdateEnvelope best match: 93.258% (nonmatchings/func_8009EBDC-6113366811127043669/base_10.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009EBDC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerUpdateEnvelope.s")
 
 #ifdef NON_MATCHING
-void func_8009EBDC(PlayerCommandState *arg0) {
+void soundPlayerUpdateEnvelope(PlayerCommandState *arg0) {
     u8 state;
     s32 tick;
     u8 rate;
@@ -1768,7 +1768,7 @@ void func_8009EBDC(PlayerCommandState *arg0) {
 }
 #endif
 
-void func_8009EEE8(PlayerCommandState *arg0) {
+void soundPlayerUpdateTremolo(PlayerCommandState *arg0) {
     u8 temp_t7;
     u8 temp_v0;
 
@@ -1790,7 +1790,7 @@ void func_8009EEE8(PlayerCommandState *arg0) {
     }
 }
 
-void func_8009EF44(PlayerCommandState *arg0) {
+void soundPlayerUpdateVibrato(PlayerCommandState *arg0) {
     s32 temp_v1;
     register f32 temp_fv1;
     u8 temp_v0;
@@ -1805,11 +1805,11 @@ void func_8009EF44(PlayerCommandState *arg0) {
     }
 }
 
-// func_8009EFF4 best match: 98.137%
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009EFF4.s")
+// soundPlayerUpdateVolumeTrack best match: 98.137%
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerUpdateVolumeTrack.s")
 
 #ifdef NON_MATCHING
-void func_8009EFF4(PlayerCommandState *arg0) {
+void soundPlayerUpdateVolumeTrack(PlayerCommandState *arg0) {
     u16 temp_c8;
     s32 one = 1;
     register u8 *temp_v1;
@@ -1862,11 +1862,11 @@ void func_8009EFF4(PlayerCommandState *arg0) {
 }
 #endif
 
-// func_8009F0C4 best match: 98.137%
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F0C4.s")
+// soundPlayerUpdatePanTrack best match: 98.137%
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerUpdatePanTrack.s")
 
 #ifdef NON_MATCHING
-void func_8009F0C4(PlayerCommandState *arg0) {
+void soundPlayerUpdatePanTrack(PlayerCommandState *arg0) {
     u16 temp_ca;
     s32 one = 1;
     register u8 *temp_v1;
@@ -1919,7 +1919,7 @@ void func_8009F0C4(PlayerCommandState *arg0) {
 }
 #endif
 
-f32 func_8009F194(f32 arg0) {
+f32 approximatePitchRatio(f32 arg0) {
     f32 square;
     f32 fourth;
 
@@ -1949,42 +1949,42 @@ f32 func_8009F194(f32 arg0) {
         ((f64)(fourth * square) * 0.00015403530393381601)));
 }
 
-// func_8009F344 best match: 99.845%
+// loadSoundBank best match: 99.845%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F344.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/loadSoundBank.s")
 
 #ifdef NON_MATCHING
-extern u8 *D_8015A674;
-extern s32 D_8015A688;
-extern PlayerCommandBank *D_8015A690;
+extern u8 *gSoundWaveTable;
+extern s32 gSoundBankEntryCount;
+extern PlayerCommandBank *gCurrentSoundBank;
 
-void func_8009F344(PlayerCommandBank *arg0, s32 arg1) {
+void loadSoundBank(PlayerCommandBank *arg0, s32 arg1) {
     s32 count;
     s32 i;
     s32 offset;
     PlayerCommandRelocEntry *entry;
 
-    D_8015A690 = arg0;
+    gCurrentSoundBank = arg0;
     count = arg0->count;
-    D_8015A688 = ((count & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF;
-    D_8015A674 = alHeapDBAlloc(0, 0, &D_8015A648, 1, count * 4);
+    gSoundBankEntryCount = ((count & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF;
+    gSoundWaveTable = alHeapDBAlloc(0, 0, &gSoundPlayerHeap, 1, count * 4);
 
     i = 0;
-    if (D_8015A688 > 0) {
+    if (gSoundBankEntryCount > 0) {
         offset = 0;
         do {
-            *(PlayerCommandRelocEntry **)(D_8015A674 + offset) =
-                (PlayerCommandRelocEntry *)(*(s32 *)((u8 *)D_8015A690 + offset + 0x14) + (s32)D_8015A690);
-            entry = *(PlayerCommandRelocEntry **)(D_8015A674 + offset);
+            *(PlayerCommandRelocEntry **)(gSoundWaveTable + offset) =
+                (PlayerCommandRelocEntry *)(*(s32 *)((u8 *)gCurrentSoundBank + offset + 0x14) + (s32)gCurrentSoundBank);
+            entry = *(PlayerCommandRelocEntry **)(gSoundWaveTable + offset);
             if (entry->relocated == 0) {
                 do {
                     entry->unk0 += arg1;
-                    (*(PlayerCommandRelocEntry **)(D_8015A674 + offset))->relocated = 1;
-                    entry = *(PlayerCommandRelocEntry **)(D_8015A674 + offset);
+                    (*(PlayerCommandRelocEntry **)(gSoundWaveTable + offset))->relocated = 1;
+                    entry = *(PlayerCommandRelocEntry **)(gSoundWaveTable + offset);
                 } while (0);
                 if (entry->unkC != 0) {
-                    entry->unkC += (s32)D_8015A690;
-                    entry = *(PlayerCommandRelocEntry **)(D_8015A674 + offset);
+                    entry->unkC += (s32)gCurrentSoundBank;
+                    entry = *(PlayerCommandRelocEntry **)(gSoundWaveTable + offset);
                 }
                 if (entry->unk8 == 0) {
                     entry->unk10 += (s32)arg0;
@@ -1992,13 +1992,13 @@ void func_8009F344(PlayerCommandBank *arg0, s32 arg1) {
             }
             i++;
             offset += 4;
-        } while (i < D_8015A688);
+        } while (i < gSoundBankEntryCount);
     }
     osWritebackDCacheAll();
 }
 #endif
 
-s32 func_8009F4C8(s32 arg0) {
+s32 soundPlayerRandom(s32 arg0) {
     s32 temp_v1;
     s32 temp_v1_2;
     s32 temp_v1_3;
@@ -2009,35 +2009,35 @@ s32 func_8009F4C8(s32 arg0) {
 
     for (var_v0 = 0; var_v0 != 8;) {
         var_v0 += 4;
-        temp_v1 = D_8015A684 & 0x48000000;
-        D_8015A684 *= 2;
+        temp_v1 = gSoundPlayerRandomSeed & 0x48000000;
+        gSoundPlayerRandomSeed *= 2;
         if ((temp_v1 == 0x48000000) || (temp_v1 == 0x08000000)) {
-            D_8015A684 |= 1;
+            gSoundPlayerRandomSeed |= 1;
         }
-        temp_v1_2 = D_8015A684 & 0x48000000;
-        D_8015A684 *= 2;
+        temp_v1_2 = gSoundPlayerRandomSeed & 0x48000000;
+        gSoundPlayerRandomSeed *= 2;
         if ((temp_v1_2 == 0x48000000) || (temp_v1_2 == 0x08000000)) {
-            D_8015A684 |= 1;
+            gSoundPlayerRandomSeed |= 1;
         }
-        temp_v1_3 = D_8015A684 & 0x48000000;
-        D_8015A684 *= 2;
+        temp_v1_3 = gSoundPlayerRandomSeed & 0x48000000;
+        gSoundPlayerRandomSeed *= 2;
         if ((temp_v1_3 == 0x48000000) || (temp_v1_3 == 0x08000000)) {
-            D_8015A684 |= 1;
+            gSoundPlayerRandomSeed |= 1;
         }
-        temp_v1_4 = D_8015A684 & 0x48000000;
-        D_8015A684 *= 2;
+        temp_v1_4 = gSoundPlayerRandomSeed & 0x48000000;
+        gSoundPlayerRandomSeed *= 2;
         if ((temp_v1_4 == 0x48000000) || (temp_v1_4 == 0x08000000)) {
-            D_8015A684 |= 1;
+            gSoundPlayerRandomSeed |= 1;
         }
     }
 
-    temp_f0 = (f32)D_8015A684 / 65536.0f;
+    temp_f0 = (f32)gSoundPlayerRandomSeed / 65536.0f;
     temp_f10 = (f32)arg0;
     temp_f0 = temp_f0 / 65536.0f;
     return (s32)(temp_f10 * temp_f0);
 }
 
-void func_8009F604(PlayerCommandState *arg0) {
+void resetSoundPlayerState(PlayerCommandState *arg0) {
     u8 temp_v0;
     PlayerCommandClearBlock *var_v1;
     s32 var_a1;
@@ -2063,7 +2063,7 @@ loop:
     arg0->unkE2 = 0xFF;
     arg0->unkE3 = 0xFF;
     arg0->unk24 = 99.9f;
-    temp_t9 = 0x6000 / D_8015A678;
+    temp_t9 = 0x6000 / gAudioTicksPerSecond;
     arg0->unkBC = 1;
     arg0->unkED = 0;
     arg0->unkEE = 0x7F;
@@ -2083,25 +2083,25 @@ loop:
     arg0->soundId = 0;
 }
 
-s32 func_8009F6F4(s32 arg0, s32 arg1) {
+s32 findFreeSoundPlayerIndex(s32 arg0, s32 arg1) {
     s32 i;
     PlayerCommandState *entry;
 
-    entry = D_8015A660;
+    entry = gSoundPlayerStates;
     i = 0;
-    if (D_8015A658 > 0) {
+    if (gSoundPlayerCount > 0) {
         do {
             if (entry->sequencePos == 0) {
                 return i;
             }
             i++;
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
     return -1;
 }
 
-void func_8009F748(u8 *p, unsigned char c, s32 n) {
+void audioMemset(u8 *p, unsigned char c, s32 n) {
     u8 *q = p;
 
     while (n--) {
@@ -2109,15 +2109,15 @@ void func_8009F748(u8 *p, unsigned char c, s32 n) {
     }
 }
 
-s32 func_8009F780(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+s32 startSoundPlayerState(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     s32 temp_v1;
 
-    func_8009F604(arg0);
+    resetSoundPlayerState(arg0);
     arg0->soundId = arg1;
     arg0->unkB0 = arg2;
     arg0->unkB2 = arg3;
-    arg0->id = D_8015A680;
-    D_8015A680 += 1;
+    arg0->id = gNextSoundPlayerHandle;
+    gNextSoundPlayerHandle += 1;
     arg0->unk20 = arg4;
     temp_v1 = libmus_fxheader_current[arg1];
     arg0->restartPos = temp_v1;
@@ -2125,102 +2125,102 @@ s32 func_8009F780(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, s32 ar
     return arg0->id;
 }
 
-// func_8009F810 best match: 82.529% (nonmatchings/func_8009F810-4061930211835852828/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009F810.s")
+// initAudioSynthesizer best match: 82.529% (nonmatchings/initAudioSynthesizer-4061930211835852828/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/initAudioSynthesizer.s")
 
 #ifdef NON_MATCHING
-void func_8009F810(void *arg0, ALSynConfig *arg1, s32 arg2, s32 *arg3, s32 arg4, s32 arg5, s32 arg6) {
+void initAudioSynthesizer(void *arg0, ALSynConfig *arg1, s32 arg2, s32 *arg3, s32 arg4, s32 arg5, s32 arg6) {
     s32 sp44;
     f32 temp_fv0;
 
-    D_8015C960 = (s32)arg0;
-    D_8015C970 = arg5;
-    D_8015C928.initialized = 0;
-    arg1->dmaproc = func_800A0138;
+    gAudioSchedulerState = (s32)arg0;
+    gAudioDmaBufferSize = arg5;
+    gAudioDmaState.initialized = 0;
+    arg1->dmaproc = initAudioDmaCallback;
     arg1->outputRate = osAiSetFrequency(arg3[0]);
-    D_8015C964 = alHeapDBAlloc(0, 0, arg1->heap, 1, arg4 * 0x14);
+    gAudioDmaBufferPool = alHeapDBAlloc(0, 0, arg1->heap, 1, arg4 * 0x14);
     sp44 = arg4 * 2;
-    D_8015C968 = alHeapDBAlloc(0, 0, arg1->heap, 1, sp44 * 0x18);
-    D_8015C96C = alHeapDBAlloc(0, 0, arg1->heap, 1, sp44 * 4);
+    gAudioDmaMessages = alHeapDBAlloc(0, 0, arg1->heap, 1, sp44 * 0x18);
+    gAudioDmaMessageBuffer = alHeapDBAlloc(0, 0, arg1->heap, 1, sp44 * 4);
 
     temp_fv0 = ((f32)(u32)arg3[1] * (f32)arg1->outputRate) / (f32)arg6;
     arg6 = (s32)temp_fv0;
-    D_8015C938 = arg6;
+    gTargetAudioTaskOutputLen = arg6;
     if ((f32)arg6 < temp_fv0) {
         arg6++;
-        D_8015C938 = arg6;
+        gTargetAudioTaskOutputLen = arg6;
     }
     if (arg6 & 0xF) {
         arg6 = (arg6 & ~0xF) + 0x10;
-        D_8015C938 = arg6;
+        gTargetAudioTaskOutputLen = arg6;
     }
-    D_8015C934 = arg6 - 0x10;
-    D_8015C93C = arg6 + 0x68;
+    gMinAudioTaskOutputLen = arg6 - 0x10;
+    gMaxAudioTaskOutputLen = arg6 + 0x68;
 
-    alInit((ALGlobals *)&D_8015A8D8, arg1);
+    alInit((ALGlobals *)&gAudioSynthesizer, arg1);
 
-    D_8015C964->prev = NULL;
-    D_8015C964->next = NULL;
+    gAudioDmaBufferPool->prev = NULL;
+    gAudioDmaBufferPool->next = NULL;
     arg4--;
     arg6 = 0;
     if (arg4 != 0) {
         arg0 = 0;
         do {
-            alLink((ALLink *)((u8 *)D_8015C964 + (s32)arg0 + 0x14),
-                   (ALLink *)((u8 *)D_8015C964 + (s32)arg0));
-            ((void **)((u8 *)D_8015C964 + (s32)arg0))[4] =
+            alLink((ALLink *)((u8 *)gAudioDmaBufferPool + (s32)arg0 + 0x14),
+                   (ALLink *)((u8 *)gAudioDmaBufferPool + (s32)arg0));
+            ((void **)((u8 *)gAudioDmaBufferPool + (s32)arg0))[4] =
                 alHeapDBAlloc(0, 0, arg1->heap, 1, arg5);
             arg6++;
             arg0 = (void *)((s32)arg0 + 0x14);
         } while (arg6 != arg4);
     }
-    ((void **)((u8 *)D_8015C964 + (arg6 * 0x14)))[4] =
+    ((void **)((u8 *)gAudioDmaBufferPool + (arg6 * 0x14)))[4] =
         alHeapDBAlloc(0, 0, arg1->heap, 1, arg5);
 
-    arg0 = D_8015A6A0;
+    arg0 = gAudioCmdLists;
     do {
         *(void **)arg0 = alHeapDBAlloc(0, 0, arg1->heap, 1, arg3[2] * 8);
         arg0 = (void *)((s32)arg0 + 4);
-    } while ((u32)arg0 < (u32)&D_8015A6A8);
+    } while ((u32)arg0 < (u32)&gAudioCmdListEnd0);
 
-    D_8015C940 = arg3[2];
-    arg0 = D_8015A6A0;
+    gAudioCmdListCapacity = arg3[2];
+    arg0 = gAudioCmdLists;
     do {
         *(void **)((u8 *)arg0 + 8) = alHeapDBAlloc(0, 0, arg1->heap, 1, 0x70);
         *(s16 *)((u8 *)*(void **)((u8 *)arg0 + 8) + 0x68) = 2;
         *(void **)((u8 *)*(void **)((u8 *)arg0 + 8) + 0x6C) = *(void **)((u8 *)arg0 + 8);
         *(void **)*(void **)((u8 *)arg0 + 8) =
-            alHeapDBAlloc(0, 0, arg1->heap, 1, D_8015C93C * 4);
+            alHeapDBAlloc(0, 0, arg1->heap, 1, gMaxAudioTaskOutputLen * 4);
         arg0 = (void *)((s32)arg0 + 4);
-    } while (arg0 != &D_8015A6AC);
+    } while (arg0 != &gAudioCmdListEnd1);
 
-    osCreateMesgQueue((OSMesgQueue *)D_8015A8A0, D_8015A8B8, 8);
-    osCreateMesgQueue(&D_8015A868, D_8015A880, 8);
-    osCreateMesgQueue(&D_8015C948, D_8015C96C, sp44);
-    if (D_800DF29C == 0) {
-        osCreateThread(&D_8015A6B8, 3, func_8009FC0C, NULL, &D_8015C928, arg2);
+    osCreateMesgQueue((OSMesgQueue *)gAudioTaskDoneQueue, gAudioTaskDoneMessages, 8);
+    osCreateMesgQueue(&gAudioThreadQueue, gAudioThreadMessages, 8);
+    osCreateMesgQueue(&gAudioDmaQueue, gAudioDmaMessageBuffer, sp44);
+    if (gAudioThreadStarted == 0) {
+        osCreateThread(&gAudioThread, 3, audioThreadMain, NULL, &gAudioDmaState, arg2);
     }
-    osStartThread(&D_8015A6B8);
-    D_800DF29C = 1;
+    osStartThread(&gAudioThread);
+    gAudioThreadStarted = 1;
 }
 #endif
 
-void func_8009FC0C(s32 arg0) {
+void audioThreadMain(s32 arg0) {
     AudioThreadLocals locals;
     u32 done;
 
     done = 0;
-    func_8009CA60((SchedulerState *)D_8015C960, &locals.client, &D_8015A868);
+    addSchedulerClient((SchedulerState *)gAudioSchedulerState, &locals.client, &gAudioThreadQueue);
     do {
-        osRecvMesg(&D_8015A868, &locals.msg, 1);
+        osRecvMesg(&gAudioThreadQueue, &locals.msg, 1);
         switch (((AudioFrameMessage *)locals.msg)->type) {
         case 3:
             break;
         case 1:
-            if (func_8009FD74((AudioTask *)D_8015A6A0[(D_800DF290 % 3) + 2], D_800DF2A0) != 0) {
-                osRecvMesg((OSMesgQueue *)D_8015A8A0, &locals.msg, 1);
-                func_8009FF40((s32)((AudioFrameMessage *)locals.msg)->info);
-                D_800DF2A0 = ((AudioFrameMessage *)locals.msg)->info;
+            if (buildAudioTask((AudioTask *)gAudioCmdLists[(gAudioFrameCounter % 3) + 2], gNextAudioInfo) != 0) {
+                osRecvMesg((OSMesgQueue *)gAudioTaskDoneQueue, &locals.msg, 1);
+                updateAudioUnderrunState((s32)((AudioFrameMessage *)locals.msg)->info);
+                gNextAudioInfo = ((AudioFrameMessage *)locals.msg)->info;
             }
             break;
         case 10:
@@ -2228,21 +2228,21 @@ void func_8009FC0C(s32 arg0) {
             break;
         }
     } while (done == 0);
-    alClose((ALGlobals *)&D_8015A8D8);
+    alClose((ALGlobals *)&gAudioSynthesizer);
 }
 
-// func_8009FD74 best match: 99.826% (nonmatchings/func_8009FD74-2775475442547365205/base_27.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009FD74.s")
+// buildAudioTask best match: 99.826% (nonmatchings/buildAudioTask-2775475442547365205/base_27.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/buildAudioTask.s")
 
 #ifdef NON_MATCHING
-s32 func_8009FD74(AudioTask *task, AudioInfo *info) {
+s32 buildAudioTask(AudioTask *task, AudioInfo *info) {
     AudioTask *task2;
     AudioTask *task3;
     u32 outBuf;
     s32 cmdLen[4];
     Acmd *cmdListEnd;
 
-    func_800A0170();
+    reclaimAudioDmaBuffers();
     outBuf = osVirtualToPhysical(task->outBuf);
 
     if (info != NULL) {
@@ -2251,23 +2251,23 @@ s32 func_8009FD74(AudioTask *task, AudioInfo *info) {
         osAiSetNextBuffer(info->buf, info->len * 4);
     }
 
-    task->outLen = ((D_8015C938 - (osAiGetLength() >> 2)) + 0x68) & 0xFFF0;
-    if ((u32)task->outLen < (u32)D_8015C934) {
-        task->outLen = D_8015C934;
+    task->outLen = ((gTargetAudioTaskOutputLen - (osAiGetLength() >> 2)) + 0x68) & 0xFFF0;
+    if ((u32)task->outLen < (u32)gMinAudioTaskOutputLen) {
+        task->outLen = gMinAudioTaskOutputLen;
     }
 
-    cmdListEnd = alAudioFrame(D_8015A6A0[D_800DF298], &cmdLen[2], (s16 *)outBuf, task->outLen);
+    cmdListEnd = alAudioFrame(gAudioCmdLists[gAudioCmdListIndex], &cmdLen[2], (s16 *)outBuf, task->outLen);
     if (cmdLen[2] == 0) {
         return 0;
     }
 
     task3 = task;
     task3->unk8 = 0;
-    task3->msgQ = (OSMesgQueue *)D_8015A8A0;
+    task3->msgQ = (OSMesgQueue *)gAudioTaskDoneQueue;
     task3->msg = (OSMesg)&task3->unk68;
     task3->unk10 = 0;
-    task3->dataPtr = D_8015A6A0[D_800DF298];
-    task3->dataSize = (((s32)cmdListEnd - (s32)D_8015A6A0[D_800DF298]) >> 3) << 3;
+    task3->dataPtr = gAudioCmdLists[gAudioCmdListIndex];
+    task3->dataSize = (((s32)cmdListEnd - (s32)gAudioCmdLists[gAudioCmdListIndex]) >> 3) << 3;
 
     task3->type = 2;
     task3->ucodeBoot = rspbootTextStart;
@@ -2284,29 +2284,29 @@ s32 func_8009FD74(AudioTask *task, AudioInfo *info) {
     task3->yieldDataPtr = NULL;
     task3->yieldDataSize = 0;
 
-    osSendMesg(func_8009C434(D_8015C960), &task3->unk8, 1);
-    D_800DF298 ^= 1;
+    osSendMesg(getSchedulerAudioTaskQueue(gAudioSchedulerState), &task3->unk8, 1);
+    gAudioCmdListIndex ^= 1;
     return 1;
 }
 #endif
 
-void func_8009FF40(s32 arg0) {
+void updateAudioUnderrunState(s32 arg0) {
     s32 temp;
 
     if ((osAiGetLength() >> 2) == 0) {
         temp = 0;
-        if (D_800DF2A4 != temp) {
+        if (gAudioUnderrunState != temp) {
             return;
         }
-        D_800DF2A4 = temp;
+        gAudioUnderrunState = temp;
     }
 }
 
-// func_8009FF80 best match: 86.936%
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009FF80.s")
+// audioDmaCallback best match: 86.936%
+#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/audioDmaCallback.s")
 
 #ifdef NON_MATCHING
-s32 func_8009FF80(s32 addr, s32 len, void *state) {
+s32 audioDmaCallback(s32 addr, s32 len, void *state) {
     register ALLink *first;
     register ALLink *node;
     ALLink *last;
@@ -2316,10 +2316,10 @@ s32 func_8009FF80(s32 addr, s32 len, void *state) {
     void *buffer;
 
     last = NULL;
-    first = D_8015C928.activeList;
+    first = gAudioDmaState.activeList;
     node = first;
     if (node != NULL) {
-        s32 dmaLen = D_8015C970;
+        s32 dmaLen = gAudioDmaBufferSize;
         do {
             dmaNode = (Struct800A0170Node *)node;
             if ((u32)addr < (u32)dmaNode->addr) {
@@ -2327,31 +2327,31 @@ s32 func_8009FF80(s32 addr, s32 len, void *state) {
             }
             last = node;
             if ((dmaNode->addr + dmaLen) >= (addr + len)) {
-                dmaNode->counter = D_800DF290;
+                dmaNode->counter = gAudioFrameCounter;
                 return osVirtualToPhysical((u8 *)dmaNode->buffer + addr - dmaNode->addr);
             }
             node = node->next;
         } while (node != NULL);
     }
 
-    node = D_8015C928.readyList;
+    node = gAudioDmaState.readyList;
     if (node == NULL) {
         return osVirtualToPhysical(first);
     }
 
-    D_8015C928.readyList = node->next;
+    gAudioDmaState.readyList = node->next;
     alUnlink(node);
     if (last != NULL) {
         alLink(node, last);
     } else {
-        first = D_8015C928.activeList;
+        first = gAudioDmaState.activeList;
         if (first != NULL) {
-            D_8015C928.activeList = node;
+            gAudioDmaState.activeList = node;
             node->next = first;
             node->prev = NULL;
             first->prev = node;
         } else {
-            D_8015C928.activeList = node;
+            gAudioDmaState.activeList = node;
             node->next = NULL;
             node->prev = NULL;
         }
@@ -2361,50 +2361,50 @@ s32 func_8009FF80(s32 addr, s32 len, void *state) {
     aligned = addr - offset;
     dmaNode = (Struct800A0170Node *)node;
     dmaNode->addr = aligned;
-    dmaNode->counter = D_800DF290;
+    dmaNode->counter = gAudioFrameCounter;
     buffer = dmaNode->buffer;
-    osPiStartDma(&D_8015C968[D_800DF294++], 0, 0, aligned, buffer, D_8015C970, &D_8015C948);
+    osPiStartDma(&gAudioDmaMessages[gPendingAudioDmaCount++], 0, 0, aligned, buffer, gAudioDmaBufferSize, &gAudioDmaQueue);
     return osVirtualToPhysical(buffer) + offset;
 }
 #endif
 
-ALDMAproc func_800A0138(Struct800A0138 **arg0) {
-    if (D_8015C928.initialized == 0) {
-        D_8015C928.activeList = 0;
-        D_8015C928.readyList = D_8015C964;
-        D_8015C928.initialized = 1;
+ALDMAproc initAudioDmaCallback(Struct800A0138 **arg0) {
+    if (gAudioDmaState.initialized == 0) {
+        gAudioDmaState.activeList = 0;
+        gAudioDmaState.readyList = gAudioDmaBufferPool;
+        gAudioDmaState.initialized = 1;
     }
-    *arg0 = &D_8015C928;
-    return func_8009FF80;
+    *arg0 = &gAudioDmaState;
+    return audioDmaCallback;
 }
 
-void func_800A0170(void) {
+void reclaimAudioDmaBuffers(void) {
     OSMesg msg[2];
     u32 i;
     Struct800A0170Node *node;
     Struct800A0170Node *next;
 
     i = 0;
-    if (D_800DF294 != 0) {
+    if (gPendingAudioDmaCount != 0) {
         do {
-            osRecvMesg(&D_8015C948, msg, 0);
+            osRecvMesg(&gAudioDmaQueue, msg, 0);
             i++;
-        } while (i < D_800DF294);
+        } while (i < gPendingAudioDmaCount);
     }
 
-    node = (Struct800A0170Node *)D_8015C928.activeList;
+    node = (Struct800A0170Node *)gAudioDmaState.activeList;
     if (node != NULL) {
         do {
             next = (Struct800A0170Node *)node->node.next;
-            if ((node->counter + 1) < D_800DF290) {
-                if ((ALLink *)node == D_8015C928.activeList) {
-                    D_8015C928.activeList = &((Struct800A0170Node *)node->node.next)->node;
+            if ((node->counter + 1) < gAudioFrameCounter) {
+                if ((ALLink *)node == gAudioDmaState.activeList) {
+                    gAudioDmaState.activeList = &((Struct800A0170Node *)node->node.next)->node;
                 }
                 alUnlink(&node->node);
-                if (D_8015C928.readyList != NULL) {
-                    alLink(&node->node, D_8015C928.readyList);
+                if (gAudioDmaState.readyList != NULL) {
+                    alLink(&node->node, gAudioDmaState.readyList);
                 } else {
-                    D_8015C928.readyList = &node->node;
+                    gAudioDmaState.readyList = &node->node;
                     node->node.next = (node->node.prev = NULL);
                 }
             }
@@ -2413,6 +2413,6 @@ void func_800A0170(void) {
         } while (next != NULL);
     }
 
-    D_800DF294 = 0;
-    D_800DF290++;
+    gPendingAudioDmaCount = 0;
+    gAudioFrameCounter++;
 }

@@ -39,7 +39,7 @@ struct OSPiHandle_s;
 typedef struct OSThread_s OSThread;
 typedef struct OSPiHandle_s OSPiHandle;
 
-#include "player_commands.h"
+#include "audio_engine.h"
 
 typedef struct {
     /* 0x00 */ s32 unk0;
@@ -239,11 +239,11 @@ void initGameSystems(void) {
     osCreateMesgQueue(&gControllerInputUpdateQueue, gControllerInputUpdateMessages, 8);
     osCreateMesgQueue(&D_80124018, D_80124030, 8);
     if (osTvType == OS_TV_NTSC) {
-        func_8009C270((SchedulerState *)D_801240A8, RETRACE_COUNT_NTSC, RETRACE_COUNT_MODE);
+        initScheduler((SchedulerState *)D_801240A8, RETRACE_COUNT_NTSC, RETRACE_COUNT_MODE);
     } else {
-        func_8009C270((SchedulerState *)D_801240A8, RETRACE_COUNT_PAL, RETRACE_COUNT_MODE);
+        initScheduler((SchedulerState *)D_801240A8, RETRACE_COUNT_PAL, RETRACE_COUNT_MODE);
     }
-    func_8009CA60((SchedulerState *)D_801240A8, &D_80124820, &D_80124050);
+    addSchedulerClient((SchedulerState *)D_801240A8, &D_80124820, &D_80124050);
     initRelocatableHeap();
     func_800458E0();
     func_80048338();
@@ -604,7 +604,7 @@ void submitFramebufferRenderTask(u8 arg0) {
     task->unkC = task->unk60;
     task->unk58 = (D_80124828 + 3) & 0xFFF;
     task->unk66 |= 1;
-    osSendMesg(func_8009C43C((s32)D_801240A8), task, 1);
+    osSendMesg(getSchedulerGraphicsTaskQueue((s32)D_801240A8), task, 1);
 
     nextColorIndex = D_80124834 + 1;
     nextBufferIndex = (bufferIndex + 1) & 1;
@@ -655,7 +655,7 @@ void submitFramebufferRenderTask(u8 arg0) {
     nextTask->unk50 = &D_80124018;
     nextTask->unk54 = 0;
     nextTask->unk3C = dramStack;
-    osSendMesg(func_8009C43C((s32)D_801240A8), nextTask, 1);
+    osSendMesg(getSchedulerGraphicsTaskQueue((s32)D_801240A8), nextTask, 1);
 }
 
 #else
