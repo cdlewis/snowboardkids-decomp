@@ -10,7 +10,7 @@
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
 #include "main_menu_race_flow.h"
-#include "main_menu_ui.h"
+#include "main_menu_title_ui.h"
 #include "race_camera.h"
 #include "race_flow.h"
 #include "race_intro_transition.h"
@@ -973,12 +973,12 @@ void initMainMenu(void) {
     gCurrentGameTask->timer = 0x4B0;
     initCallbackTaskScheduler(0);
     if (gConnectedControllerCount != 0) {
-        createCallbackTask(&func_80032A50, 0, 0x64);
+        createCallbackTask(&initMainMenuTitleCursor, 0, 0x64);
     } else {
         createCallbackTask(&updateTitleStartPrompt, 0, 0x64);
     }
-    createCallbackTask(&func_80032934, 0, 0x64);
-    createCallbackTask(&func_80032684, 0, 0x64);
+    createCallbackTask(&initMainMenuTitleOptions, 0, 0x64);
+    createCallbackTask(&initMainMenuTitleLogo, 0, 0x64);
     createCallbackTaskWithUserId(&initTitleMenuSparkle, 0, 0x64, 0);
     createCallbackTaskWithUserId(initTitleMenuBoardModels, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
