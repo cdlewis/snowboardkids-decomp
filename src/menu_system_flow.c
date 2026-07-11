@@ -8,7 +8,7 @@
 #include "main_menu_visual_effects.h"
 #include "main_menu_panel_ui.h"
 #include "main_menu_scene_model.h"
-#include "main_menu_scene_renderer.h"
+#include "main_menu_scene_model_renderer.h"
 #include "main_menu_transition.h"
 #include "main_menu_ui.h"
 #include "race_camera.h"
@@ -1076,17 +1076,17 @@ void updateMainMenu(void) {
     loopMainMenuSceneModelAnimation(3);
     loopMainMenuSceneModelAnimation(4);
     if (gCurrentGameTask->fade == 0xEF) {
-        addMainMenuSceneModelRenderCallback(0);
-        addMainMenuSceneModelRenderCallback(1);
-        addMainMenuSceneModelRenderCallback(2);
-        addMainMenuSceneModelRenderCallback(3);
-        addMainMenuSceneModelRenderCallback(4);
+        addMainMenuSceneModelDrawCallback(0);
+        addMainMenuSceneModelDrawCallback(1);
+        addMainMenuSceneModelDrawCallback(2);
+        addMainMenuSceneModelDrawCallback(3);
+        addMainMenuSceneModelDrawCallback(4);
     } else {
-        func_80042A00(0);
-        addMainMenuSceneModelRenderCallback(1);
-        addMainMenuSceneModelRenderCallback(2);
-        func_80042A00(3);
-        addMainMenuSceneModelRenderCallback(4);
+        addMainMenuSceneModelDrawCallbackViewport0(0);
+        addMainMenuSceneModelDrawCallback(1);
+        addMainMenuSceneModelDrawCallback(2);
+        addMainMenuSceneModelDrawCallbackViewport0(3);
+        addMainMenuSceneModelDrawCallback(4);
     }
     updateCallbackTasks();
 }
@@ -1107,11 +1107,11 @@ void fadeOutMainMenu(void) {
             loopMainMenuSceneModelAnimation(2);
             loopMainMenuSceneModelAnimation(3);
             loopMainMenuSceneModelAnimation(4);
-            addMainMenuSceneModelRenderCallback(0);
-            addMainMenuSceneModelRenderCallback(1);
-            addMainMenuSceneModelRenderCallback(2);
-            addMainMenuSceneModelRenderCallback(3);
-            addMainMenuSceneModelRenderCallback(4);
+            addMainMenuSceneModelDrawCallback(0);
+            addMainMenuSceneModelDrawCallback(1);
+            addMainMenuSceneModelDrawCallback(2);
+            addMainMenuSceneModelDrawCallback(3);
+            addMainMenuSceneModelDrawCallback(4);
             updateCallbackTasks();
         }
     } else if (gPendingFramebufferSwapCount == 2) {
@@ -1197,7 +1197,7 @@ void updateMainMenuModeSelect(void) {
     }
     func_8006D780(0);
     loopMainMenuSceneModelAnimation(4);
-    addMainMenuSceneModelRenderCallback(4);
+    addMainMenuSceneModelDrawCallback(4);
     updateCallbackTasks();
 }
 
@@ -1210,7 +1210,7 @@ void fadeOutMainMenuModeSelect(void) {
     }
     func_8006D780(0);
     loopMainMenuSceneModelAnimation(4);
-    addMainMenuSceneModelRenderCallback(4);
+    addMainMenuSceneModelDrawCallback(4);
     updateCallbackTasks();
 }
 

@@ -6,7 +6,7 @@
 #include "fixed_point_math.h"
 #include "main_menu_visual_effects.h"
 #include "main_menu_scene_model.h"
-#include "main_menu_scene_renderer.h"
+#include "main_menu_scene_model_renderer.h"
 
 #define MAIN_MENU_GFX_CMD(pkt, cmd0, cmd1) \
 { \
@@ -295,7 +295,7 @@ void initRaceSetupBackdrop(MainMenuVisualEffectActor *arg0) {
 
 void stopRaceSetupCharacterFocus(s32 arg0) {
     loopMainMenuSceneModelAnimation(0);
-    func_80042A00(0);
+    addMainMenuSceneModelDrawCallbackViewport0(0);
 }
 
 void updateRaceSetupCharacterFocus(MainMenuVisualEffectActor *arg0) {
@@ -306,10 +306,10 @@ void updateRaceSetupCharacterFocus(MainMenuVisualEffectActor *arg0) {
         }
         loopMainMenuSceneModelAnimation(0);
         setCallbackTaskCallback(arg0, stopRaceSetupCharacterFocus);
-        func_80042A00(0);
+        addMainMenuSceneModelDrawCallbackViewport0(0);
         return;
     }
-    addMainMenuSceneModelRenderCallback(0);
+    addMainMenuSceneModelDrawCallback(0);
 }
 
 void initRaceSetupCharacterFocus(MainMenuVisualEffectActor *arg0) {
@@ -330,7 +330,7 @@ void updateRaceSetupOpponentFocus(MainMenuVisualEffectActor *arg0) {
     } else {
         arg0->unk1C.half.hi = temp - 1;
     }
-    func_80042A58(arg0->unk18.word, 1);
+    addMainMenuSceneModelDrawCallbackForViewport(arg0->unk18.word, 1);
 }
 
 void initRaceSetupOpponentFocus(MainMenuVisualEffectActor *arg0) {
