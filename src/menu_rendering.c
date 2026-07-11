@@ -377,13 +377,14 @@ void func_8000F8AC(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
                   temp_v1 = (s16)(D_8015660C / 2), temp_v0, temp_v1);
 }
 
-// func_8000F970 best match: 81.341% (nonmatchings/func_8000F970-2225551288923588688/base_4.c)
+// func_8000F970 best match: 82.673% (nonmatchings/func_8000F970-6113366811127043669/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000F970.s")
 
 #ifdef NON_MATCHING
 void func_8000F970(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flipMode, u16 alpha,
                    u8 paletteArg, s16 clipLeft, s16 clipTop, s16 clipRight, s16 clipBottom) {
     FontTexture *texture;
+    u8 *textureBase;
     u8 *paletteBase;
     s16 flipS;
     s16 flipT;
@@ -406,12 +407,25 @@ void func_8000F970(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u1
 
     paletteBase = (u8 *)asset + 8 + (asset->header.entryCount * sizeof(FontTexture));
 
-    if ((scaleX < 0x201) && (scaleX > 0) && (scaleY < 0x201) && (scaleY > 0)) {
+    if (scaleX >= 0x201) {
+        return;
+    }
+    if (scaleX <= 0) {
+        return;
+    }
+    if (scaleY >= 0x201) {
+        return;
+    }
+    if (scaleY <= 0) {
+        return;
+    }
+    {
         flipS = D_800B51F0[flipMode & 3][0];
         flipT = D_800B51F0[flipMode & 3][1];
-        texture = &asset->textures[tileIndex];
-        texWidth = texture->width;
-        texHeight = texture->height;
+        textureBase = (u8 *)asset + (tileIndex * sizeof(FontTexture));
+        texWidth = textureBase[0xE];
+        texHeight = textureBase[0xF];
+        texture = (FontTexture *)(textureBase + 8);
 
         left = (x + D_8015660E) << 2;
         top = (y + D_80156610) << 2;
