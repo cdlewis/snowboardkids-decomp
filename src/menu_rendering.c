@@ -1298,7 +1298,7 @@ void func_80013154(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, v
 }
 #endif
 
-// func_80013284 best match: 72.443% (nonmatchings/func_80013284-7273315160691878794/base_1.c)
+// func_80013284 best match: 79.241% (nonmatchings/func_80013284-731940616440357983/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013284.s")
 
 #ifdef NON_MATCHING
@@ -1317,11 +1317,12 @@ void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale, u16 pa
     s32 maxY;
     s32 clipS;
     s32 clipT;
-    s32 drawX0;
-    s32 drawY0;
-    s32 drawX1;
-    s32 drawY1;
+    volatile s32 drawX0;
+    volatile s32 drawY0;
+    volatile s32 drawX1;
+    volatile s32 drawY1;
     u16 *srcPalette;
+    u16 *paletteBase;
     u16 *dstPalette;
     MenuFontAssetEntry *entry;
     s32 i;
@@ -1338,6 +1339,7 @@ void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale, u16 pa
         font = (MenuFontAssetTable *)func_80043040(D_80112132[(u16)fontBank]);
         glyphWidth = 8;
     }
+    paletteBase = (u16 *)(&font->entries[font->entryCount]);
 
     x0 = x + D_8015660E;
     y0 = y + D_80156610;
@@ -1375,7 +1377,7 @@ void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale, u16 pa
                 drawY1 = y1;
 
                 dstPalette = func_80048594(0x20);
-                srcPalette = (u16 *)(&font->entries[font->entryCount]) + ((u16)paletteIndex * 0x10);
+                srcPalette = paletteBase + ((u16)paletteIndex * 0x10);
                 for (i = 0; i != 0x10; i++) {
                     color = srcPalette[i];
                     dstPalette[i] = color;
