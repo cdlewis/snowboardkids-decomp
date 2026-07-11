@@ -805,7 +805,38 @@ s32 func_8009D4AC(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)(arg1 + 1);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009D4BC.s")
+s32 func_8009D4BC(PlayerCommandState *arg0, u8 *arg1) {
+    PlayerCommandState *entry;
+    s32 i;
+    s32 newId;
+    s32 soundId;
+
+    soundId = *arg1;
+    arg1++;
+    if (soundId >= 0x80) {
+        soundId = *arg1 + ((soundId & 0x7F) << 8);
+        arg1++;
+    }
+
+    newId = func_8009DC68(soundId, arg0->unkEF, (u8)arg0->unkF2, 0, arg0->unk20++);
+    arg0->unk20--;
+    if (newId == 0) {
+        return (s32)arg1;
+    }
+
+    i = 0;
+    entry = D_8015A660;
+    if (D_8015A658 > 0) {
+        do {
+            i++;
+            if (newId == entry->id) {
+                entry->id = arg0->id;
+            }
+            entry++;
+        } while (i < D_8015A658);
+    }
+    return (s32)arg1;
+}
 
 s32 func_8009D598(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unkF1 = *arg1;
