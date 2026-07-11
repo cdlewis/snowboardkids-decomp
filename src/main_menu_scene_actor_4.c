@@ -30,7 +30,7 @@ extern void func_80045990(s32 arg0, s32 arg1, void **arg2, void **arg3);
 extern Mtx *func_8004885C(GfxCommandSource *arg0);
 extern MainMenuSceneActorShadow gEndingActorShadow;
 extern u16 gEndingSequencePhase;
-extern s8 D_8010B1AC;
+extern s8 gEndingCharacter4EffectDone;
 extern void addRenderCallback(void *, void *, void *);
 extern s32 D_80124898;
 extern Gfx *gRegionAllocPtr;
@@ -224,7 +224,7 @@ void func_80036930(MainMenuSceneActor4 *arg0) {
         setMainMenuSceneModelPosition(4, arg0->posX, arg0->posY, arg0->posZ);
         setCallbackTaskCallback(arg0, func_800368BC);
         setMainMenuSceneModelAnimation(4, 0x1C);
-        D_8010B1AC = 1;
+        gEndingCharacter4EffectDone = 1;
     }
 }
 
@@ -234,7 +234,7 @@ void func_800369BC(MainMenuSceneActor4 *arg0) {
         setCallbackTaskCallback(arg0, func_80036930);
         setMainMenuSceneModelAnimation(4, 0xC);
         gEndingSequencePhase = 0xC;
-        D_8010B1AC = 0;
+        gEndingCharacter4EffectDone = 0;
         spawnEndingCharacterAura(-0x24, -0x32, 4, 0);
         spawnEndingCharacterAura(0x10, -0x32, 4, 1);
     }
@@ -287,7 +287,7 @@ void func_80036C14(MainMenuSceneActor4 *arg0) {
     } else if (gEndingSequencePhase == 0xB) {
         setCallbackTaskCallback(arg0, func_80036B54);
         setMainMenuSceneModelAnimation(4, 8);
-        D_8010B1AC = 1;
+        gEndingCharacter4EffectDone = 1;
     }
     func_800428C8(4);
     func_800373AC(&gEndingActorShadow);
@@ -298,7 +298,7 @@ void func_80036C8C(MainMenuSceneActor4 *arg0) {
         setCallbackTaskCallback(arg0, func_80036C14);
         setMainMenuSceneModelAnimation(4, 7);
         gEndingActorShadow.posY = (s32)0xFFE80000;
-        D_8010B1AC = 0;
+        gEndingCharacter4EffectDone = 0;
         spawnEndingCharacterAura(-0x24, -0x32, 4, 0);
     }
     func_800428C8(4);
@@ -315,7 +315,7 @@ void func_80036D08(MainMenuSceneActor4 *arg0) {
     if (arg0->timer == 6) {
         setCallbackTaskCallback(arg0, func_80036C8C);
         arg0->timer = 0;
-        D_8010B1AC = 1;
+        gEndingCharacter4EffectDone = 1;
         gEndingSequencePhase = 7;
     }
     func_800428C8(4);
@@ -329,7 +329,7 @@ void func_80036DAC(MainMenuSceneActor4 *arg0) {
     if (gEndingSequencePhase == 6) {
         setCallbackTaskCallback(arg0, func_80036D08);
         setMainMenuSceneModelAnimation(4, 6);
-        D_8010B1AC = 0;
+        gEndingCharacter4EffectDone = 0;
         spawnEndingCharacterAura(-0x1C, -0x3A, 4, 0);
     }
     func_800428C8(4);

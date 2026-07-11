@@ -1,0 +1,46 @@
+#ifndef ENDING_CREDITS_CHARACTER_1_H
+#define ENDING_CREDITS_CHARACTER_1_H
+
+#include "common.h"
+
+typedef struct EndingCreditsCharacter1 EndingCreditsCharacter1;
+
+void updateEndingCharacter1FinalPose(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1StartFinalPose(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase40(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1Phase40Prep(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1WaitBeforePhase40Prep(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1SpinUntilPhase3F(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1TumbleToPhase3C(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1ExitUntilPhase3C(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase3A(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1SlideToCenter(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase38(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1SlideLeftSetPhase37(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase36(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1SlideLeftSetPhase33(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase32Aura(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase30Vanish(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1DashRightSetPhase2F(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase2E(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1WaitPhase2EAnim(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1DriftAfterPhase2D(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase2B(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1RunRightThenPhase2A(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase29(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1SlideFarLeftSetPhase12(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1WaitBeforeSlideFarLeft(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1SlideRightToPose(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase11(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1ExitRightSetPhase0F(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase0E(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1StartRunDust(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1RepeatAnimThenVanish(EndingCreditsCharacter1 *arg0);
+void startEndingCharacter1RepeatAnim(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1WaitBeforeRepeatAnim(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase0C(EndingCreditsCharacter1 *arg0);
+void updateEndingCharacter1EnterUntilPhase0B(EndingCreditsCharacter1 *arg0);
+void waitEndingCharacter1Phase9(EndingCreditsCharacter1 *arg0);
+void initEndingCreditsCharacter1(EndingCreditsCharacter1 *arg0);
+
+#endif
