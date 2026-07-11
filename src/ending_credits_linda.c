@@ -1,7 +1,7 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
 #include "menu_transition_effects.h"
-#include "ending_credits_linda_and_snowboard.h"
+#include "ending_credits_linda.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
 #include "race_position_ui.h"
@@ -23,7 +23,7 @@ struct EndingCreditsLinda {
     u16 paletteId;
 };
 
-struct EndingCreditsSnowboardTumbleEffect {
+struct EndingCreditsTumblingSnowboard {
     char pad0[0x10];
     u16 mode;
     char pad12[0x6];
@@ -233,7 +233,7 @@ void waitEndingLindaPhase35(EndingCreditsLinda *arg0) {
 }
 
 // updateEndingLindaSlideLeftFromFarRight best match: 99.453%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_linda_and_snowboard/updateEndingLindaSlideLeftFromFarRight.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_linda/updateEndingLindaSlideLeftFromFarRight.s")
 
 #ifdef NON_MATCHING
 void updateEndingLindaSlideLeftFromFarRight(EndingCreditsLinda *arg0) {
@@ -609,7 +609,7 @@ void updateEndingLindaSlideRightSetPhase1A(EndingCreditsLinda *arg0) {
 }
 
 // updateEndingLindaHandshakeAnimComplete best match: 97.333%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_linda_and_snowboard/updateEndingLindaHandshakeAnimComplete.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_linda/updateEndingLindaHandshakeAnimComplete.s")
 
 #ifdef NON_MATCHING
 void updateEndingLindaHandshakeAnimComplete(EndingCreditsLinda *arg0) {
@@ -869,7 +869,7 @@ void updateEndingLindaSlideLeftSetPhase14(EndingCreditsLinda *arg0) {
 void waitEndingLindaPhase13(EndingCreditsLinda *arg0) {
     if (gEndingSequencePhase == 0x13) {
         setCallbackTaskCallback(arg0, updateEndingLindaSlideLeftSetPhase14);
-        spawnEndingCreditsSnowboardTumbleEffect(arg0->x + 0x48000, 0x480000, 0xFFF70000, arg0->textureId, arg0->paletteId, 2);
+        spawnEndingCreditsTumblingSnowboard(arg0->x + 0x48000, 0x480000, 0xFFF70000, arg0->textureId, arg0->paletteId, 2);
     }
 }
 
@@ -891,11 +891,11 @@ void initEndingCreditsLinda(EndingCreditsLinda *arg0) {
     setCallbackTaskCallback(arg0, waitEndingLindaPhase13);
 }
 
-void spawnEndingCreditsSnowboardTumbleEffect(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u8 arg5) {
-    EndingCreditsSnowboardTumbleEffect *sp1C;
-    EndingCreditsSnowboardTumbleEffect *temp_v0;
+void spawnEndingCreditsTumblingSnowboard(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u8 arg5) {
+    EndingCreditsTumblingSnowboard *sp1C;
+    EndingCreditsTumblingSnowboard *temp_v0;
 
-    temp_v0 = createCallbackTaskWithUserId((void (*)(void *))updateEndingCreditsSnowboardTumbleEffectSlideIn, 0, 0x64, arg5);
+    temp_v0 = createCallbackTaskWithUserId((void (*)(void *))updateEndingCreditsTumblingSnowboardSlideIn, 0, 0x64, arg5);
     D_8010ADE0 = temp_v0;
     temp_v0->x = arg0;
     temp_v0->y = arg1;
@@ -906,26 +906,26 @@ void spawnEndingCreditsSnowboardTumbleEffect(s32 arg0, s32 arg1, s32 arg2, u16 a
     sp1C->paletteId = arg4;
 }
 
-void drawEndingCreditsSnowboardTumbleEffect(EndingCreditsSnowboardTumbleEffect *arg0) {
+void drawEndingCreditsTumblingSnowboard(EndingCreditsTumblingSnowboard *arg0) {
     s32 temp = func_8004885C(&arg0->displayObject);
     if (temp != 0) {
         func_8007C130((void *)temp, arg0->textureId, arg0->paletteId);
     }
 }
 
-void updateEndingCreditsSnowboardTumbleEffectWaitForRemove(EndingCreditsSnowboardTumbleEffect *arg0) {
+void updateEndingCreditsTumblingSnowboardWaitForRemove(EndingCreditsTumblingSnowboard *arg0) {
     if (gEndingSequencePhase == 0x1B) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&D_80124898, drawEndingCreditsSnowboardTumbleEffect, arg0);
+        addRenderCallback(&D_80124898, drawEndingCreditsTumblingSnowboard, arg0);
     }
 }
 
-// updateEndingCreditsSnowboardTumbleEffectBounce best match: 91.989% (base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_linda_and_snowboard/updateEndingCreditsSnowboardTumbleEffectBounce.s")
+// updateEndingCreditsTumblingSnowboardBounce best match: 91.989% (base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_linda/updateEndingCreditsTumblingSnowboardBounce.s")
 
 #ifdef NON_MATCHING
-void updateEndingCreditsSnowboardTumbleEffectBounce(EndingCreditsSnowboardTumbleEffect *arg0) {
+void updateEndingCreditsTumblingSnowboardBounce(EndingCreditsTumblingSnowboard *arg0) {
     FixedMatrix3sScratch sp48;
     FixedMatrix3sScratch sp28;
     void *sp24[1];
@@ -966,12 +966,12 @@ void updateEndingCreditsSnowboardTumbleEffectBounce(EndingCreditsSnowboardTumble
     if (arg0->mode == 1) {
         if (arg0->x >= 0x1900000) {
             arg0->timer = 0;
-            setCallbackTaskCallback(arg0, updateEndingCreditsSnowboardTumbleEffectWaitForRemove);
+            setCallbackTaskCallback(arg0, updateEndingCreditsTumblingSnowboardWaitForRemove);
         }
     } else if (arg0->timer == 0x14) {
         arg0->timer = 0;
         arg0->y = 0x8BD1E;
-        setCallbackTaskCallback(arg0, updateEndingCreditsSnowboardTumbleEffectWaitForRemove);
+        setCallbackTaskCallback(arg0, updateEndingCreditsTumblingSnowboardWaitForRemove);
         makeFixedRotationYX(sp48, 0x400, 0x400);
         makeFixedRotationZ(sp28, 0xC00);
         multiplyFixedMatrix3s(sp48, sp28, sp24[0]);
@@ -987,23 +987,23 @@ void updateEndingCreditsSnowboardTumbleEffectBounce(EndingCreditsSnowboardTumble
         multiplyFixedMatrix3s(sp28, sp48, sp24[0]);
     }
 
-    addRenderCallback(&D_80124898, drawEndingCreditsSnowboardTumbleEffect, arg0);
+    addRenderCallback(&D_80124898, drawEndingCreditsTumblingSnowboard, arg0);
 }
 #endif
 
-void waitEndingCreditsSnowboardTumbleEffectPhase15(EndingCreditsSnowboardTumbleEffect *arg0) {
+void waitEndingCreditsTumblingSnowboardPhase15(EndingCreditsTumblingSnowboard *arg0) {
     if (gEndingSequencePhase == 0x15) {
-        setCallbackTaskCallback(arg0, updateEndingCreditsSnowboardTumbleEffectBounce);
+        setCallbackTaskCallback(arg0, updateEndingCreditsTumblingSnowboardBounce);
     }
-    addRenderCallback(&D_80124898, drawEndingCreditsSnowboardTumbleEffect, arg0);
+    addRenderCallback(&D_80124898, drawEndingCreditsTumblingSnowboard, arg0);
 }
 
-void updateEndingCreditsSnowboardTumbleEffectSlideIn(EndingCreditsSnowboardTumbleEffect *arg0) {
+void updateEndingCreditsTumblingSnowboardSlideIn(EndingCreditsTumblingSnowboard *arg0) {
     arg0->x = arg0->x + 0xFFFB8000;
     arg0->timer++;
     if (arg0->timer == 0xA2) {
         arg0->timer = 0;
-        setCallbackTaskCallback(arg0, waitEndingCreditsSnowboardTumbleEffectPhase15);
+        setCallbackTaskCallback(arg0, waitEndingCreditsTumblingSnowboardPhase15);
     }
-    addRenderCallback(&D_80124898, (void *)drawEndingCreditsSnowboardTumbleEffect, arg0);
+    addRenderCallback(&D_80124898, (void *)drawEndingCreditsTumblingSnowboard, arg0);
 }

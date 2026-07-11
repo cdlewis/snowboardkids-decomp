@@ -2,7 +2,7 @@
 #include "callback_task_scheduler.h"
 #include "menu_transition_effects.h"
 #include "ending_credits_jam.h"
-#include "ending_credits_linda_and_snowboard.h"
+#include "ending_credits_linda.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
 
@@ -890,7 +890,7 @@ void updateEndingJamSlideLeftToPhase15Wait(EndingCreditsJam *arg0) {
 void waitEndingJamPhase13(EndingCreditsJam *arg0) {
     if (gEndingSequencePhase == 0x13) {
         setCallbackTaskCallback(arg0, updateEndingJamSlideLeftToPhase15Wait);
-        spawnEndingCreditsSnowboardTumbleEffect(arg0->posX + 0x48000, 0x480000, 0xFFF30000, 2, 2, 1);
+        spawnEndingCreditsTumblingSnowboard(arg0->posX + 0x48000, 0x480000, 0xFFF30000, 2, 2, 1);
     }
 }
 
