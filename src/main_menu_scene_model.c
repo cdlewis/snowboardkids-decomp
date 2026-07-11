@@ -283,7 +283,7 @@ void func_80041CF0(void) {
     loadCompressedRomAsset(&D_215BE0, &D_21D9D0, 0x3F);
 }
 
-void func_80041D20(s32 actorIndex, s32 modelIndex) {
+void initMainMenuSceneModel(s32 actorIndex, s32 modelIndex) {
     MainMenuSceneModel *model;
 
     loadRawRomAsset(MAIN_MENU_MODEL_ASSET_RANGE_START(gCharacterRawAssetRanges, modelIndex),
@@ -297,7 +297,7 @@ void func_80041D20(s32 actorIndex, s32 modelIndex) {
     func_80042AB4(model);
 }
 
-void func_80041DD4(s32 modelIndex, s32 animationIndex) {
+void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
     MainMenuModelAnimationBank *animationBank;
     s16 *frameData;
     MainMenuSceneModel *model;
@@ -314,7 +314,7 @@ void func_80041DD4(s32 modelIndex, s32 animationIndex) {
     model->frameDuration = frameDuration;
 }
 
-MainMenuSceneModel *func_80041E60(s32 modelIndex) {
+MainMenuSceneModel *getMainMenuSceneModel(s32 modelIndex) {
     return (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
 }
 
@@ -346,12 +346,12 @@ void func_80041E90(MainMenuSceneModel *model) {
     model->animationCursor = cursor;
 }
 
-s32 func_80041FB4(s32 arg0) {
+s32 stepMainMenuSceneModelAnimation(s32 modelIndex) {
     int new_var2;
     MainMenuSceneModel *new_var;
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[arg0]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
     if (model->framesRemaining == 1) {
         goto ret1_initial;
     }
@@ -374,7 +374,7 @@ ret0:
     return new_var2;
 }
 
-void func_80042034(s32 modelIndex) {
+void loopMainMenuSceneModelAnimation(s32 modelIndex) {
     MainMenuSceneModel *model;
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
@@ -386,7 +386,7 @@ void func_80042034(s32 modelIndex) {
     func_80041E90(model);
 }
 
-void func_8004209C(s32 modelIndex, s32 x, s32 y, s32 z) {
+void setMainMenuSceneModelPosition(s32 modelIndex, s32 x, s32 y, s32 z) {
     MainMenuSceneModel *model;
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
@@ -395,7 +395,7 @@ void func_8004209C(s32 modelIndex, s32 x, s32 y, s32 z) {
     model->pos.z = z;
 }
 
-void func_800420FC(s32 modelIndex, s16 x, s16 y, s16 z) {
+void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
     MainMenuSceneModel *model;
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);

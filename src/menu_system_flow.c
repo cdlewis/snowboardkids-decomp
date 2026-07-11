@@ -983,26 +983,26 @@ void initMainMenu(void) {
     createCallbackTaskWithUserId(initTitleMenuBoardModels, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
     func_80041CF0();
-    func_80041D20(0, 0);
-    func_80041DD4(0, 0);
-    func_8004209C(0, 0x83000, 0, -0x2BF000);
-    func_800420FC(0, 0, 0x30, 0);
-    func_80041D20(1, 1);
-    func_80041DD4(1, 4);
-    func_8004209C(1, 0x564000, 0, 0x8C000);
-    func_800420FC(1, 0, 0xDD0, 0);
-    func_80041D20(2, 2);
-    func_80041DD4(2, 3);
-    func_8004209C(2, -0x5ED000, 0, 0x3C8000);
-    func_800420FC(2, 0, 0x2D0, 0);
-    func_80041D20(3, 3);
-    func_80041DD4(3, 1);
-    func_8004209C(3, -0x4C0000, 0, -0x47000);
-    func_800420FC(3, 0, 0x1B0, 0);
-    func_80041D20(4, 4);
-    func_80041DD4(4, 5);
-    func_8004209C(4, 0x6DB000, 0, 0x4E9000);
-    func_800420FC(4, 0, 0xDD0, 0);
+    initMainMenuSceneModel(0, 0);
+    setMainMenuSceneModelAnimation(0, 0);
+    setMainMenuSceneModelPosition(0, 0x83000, 0, -0x2BF000);
+    setMainMenuSceneModelRotation(0, 0, 0x30, 0);
+    initMainMenuSceneModel(1, 1);
+    setMainMenuSceneModelAnimation(1, 4);
+    setMainMenuSceneModelPosition(1, 0x564000, 0, 0x8C000);
+    setMainMenuSceneModelRotation(1, 0, 0xDD0, 0);
+    initMainMenuSceneModel(2, 2);
+    setMainMenuSceneModelAnimation(2, 3);
+    setMainMenuSceneModelPosition(2, -0x5ED000, 0, 0x3C8000);
+    setMainMenuSceneModelRotation(2, 0, 0x2D0, 0);
+    initMainMenuSceneModel(3, 3);
+    setMainMenuSceneModelAnimation(3, 1);
+    setMainMenuSceneModelPosition(3, -0x4C0000, 0, -0x47000);
+    setMainMenuSceneModelRotation(3, 0, 0x1B0, 0);
+    initMainMenuSceneModel(4, 4);
+    setMainMenuSceneModelAnimation(4, 5);
+    setMainMenuSceneModelPosition(4, 0x6DB000, 0, 0x4E9000);
+    setMainMenuSceneModelRotation(4, 0, 0xDD0, 0);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
     gMenuFadeAlpha = (s16) gCurrentGameTask->fade;
@@ -1070,11 +1070,11 @@ void updateMainMenu(void) {
         gMainMenuSecretCodeUnlocked = 1;
         enqueueSoundEffect(0x26, 0x32);
     }
-    func_80042034(0);
-    func_80042034(1);
-    func_80042034(2);
-    func_80042034(3);
-    func_80042034(4);
+    loopMainMenuSceneModelAnimation(0);
+    loopMainMenuSceneModelAnimation(1);
+    loopMainMenuSceneModelAnimation(2);
+    loopMainMenuSceneModelAnimation(3);
+    loopMainMenuSceneModelAnimation(4);
     if (gCurrentGameTask->fade == 0xEF) {
         func_800428C8(0);
         func_800428C8(1);
@@ -1102,11 +1102,11 @@ void fadeOutMainMenu(void) {
             gFramebufferSwapHold = 1;
         } else {
             func_8006D780(0);
-            func_80042034(0);
-            func_80042034(1);
-            func_80042034(2);
-            func_80042034(3);
-            func_80042034(4);
+            loopMainMenuSceneModelAnimation(0);
+            loopMainMenuSceneModelAnimation(1);
+            loopMainMenuSceneModelAnimation(2);
+            loopMainMenuSceneModelAnimation(3);
+            loopMainMenuSceneModelAnimation(4);
             func_800428C8(0);
             func_800428C8(1);
             func_800428C8(2);
@@ -1156,10 +1156,10 @@ void initMainMenuModeSelect(void) {
     createCallbackTaskWithUserId(&initMainMenuModeSelectMenuOptions, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
     func_80041CF0();
-    func_80041D20(4, 4);
-    func_80041DD4(4, 5);
-    func_8004209C(4, 0xFFE00000, 0, 0x509000);
-    func_800420FC(4, 0, 0x100, 0);
+    initMainMenuSceneModel(4, 4);
+    setMainMenuSceneModelAnimation(4, 5);
+    setMainMenuSceneModelPosition(4, 0xFFE00000, 0, 0x509000);
+    setMainMenuSceneModelRotation(4, 0, 0x100, 0);
     setCurrentGameTaskCallback(updateMainMenuModeSelect, 0);
     requestMusicSequenceBank(7);
 }
@@ -1196,7 +1196,7 @@ void updateMainMenuModeSelect(void) {
         }
     }
     func_8006D780(0);
-    func_80042034(4);
+    loopMainMenuSceneModelAnimation(4);
     func_800428C8(4);
     updateCallbackTasks();
 }
@@ -1209,7 +1209,7 @@ void fadeOutMainMenuModeSelect(void) {
         setCurrentGameTaskCallback(exitMainMenuModeSelect, 0);
     }
     func_8006D780(0);
-    func_80042034(4);
+    loopMainMenuSceneModelAnimation(4);
     func_800428C8(4);
     updateCallbackTasks();
 }

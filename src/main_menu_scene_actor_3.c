@@ -48,18 +48,18 @@ extern s32 D_80124898;
 extern void *D_8010ADE0;
 
 void func_800394E0(s32 arg0) {
-    func_80041FB4(3);
+    stepMainMenuSceneModelAnimation(3);
     func_800428C8(3);
 }
 
 void func_8003950C(MainMenuSceneActor3 *arg0) {
-    func_80041FB4(3);
+    stepMainMenuSceneModelAnimation(3);
     func_800428C8(3);
     if (gEndingSequencePhase == 0x41) {
         setCallbackTaskCallback(arg0, func_800394E0);
-        func_80041DD4(3, 0x5B);
+        setMainMenuSceneModelAnimation(3, 0x5B);
         arg0->rotY = 0xC00;
-        func_800420FC(3, arg0->rotX, arg0->rotY, arg0->rotZ);
+        setMainMenuSceneModelRotation(3, arg0->rotX, arg0->rotY, arg0->rotZ);
     }
 }
 
@@ -69,7 +69,7 @@ void func_80039584(MainMenuSceneActor3 *arg0) {
     int unused;
     u16 temp_t8;
 
-    sp18 = func_80041FB4(3);
+    sp18 = stepMainMenuSceneModelAnimation(3);
     func_800428C8(3);
     if (sp18 == 1) {
         timerPtr = &arg0->timer;
@@ -78,7 +78,7 @@ void func_80039584(MainMenuSceneActor3 *arg0) {
             timerPtr = &arg0->timer;
             *timerPtr = 0;
             setCallbackTaskCallback(arg0, func_8003950C);
-            func_80041DD4(3, 0x5A);
+            setMainMenuSceneModelAnimation(3, 0x5A);
             gEndingSequencePhase = 0x40;
         }
     }
@@ -90,7 +90,7 @@ void func_80039610(MainMenuSceneActor3 *arg0) {
     int unused;
     u16 temp_t8;
 
-    sp18 = func_80041FB4(3);
+    sp18 = stepMainMenuSceneModelAnimation(3);
     func_800428C8(3);
     if (sp18 == 1) {
         timerPtr = &arg0->timer;
@@ -99,7 +99,7 @@ void func_80039610(MainMenuSceneActor3 *arg0) {
             timerPtr = &arg0->timer;
             *timerPtr = 0;
             setCallbackTaskCallback(arg0, func_80039584);
-            func_80041DD4(3, 0x59);
+            setMainMenuSceneModelAnimation(3, 0x59);
             spawnEndingPhaseAdvanceSparkle(0x30, -0x5B);
         }
     }
@@ -108,30 +108,30 @@ void func_80039610(MainMenuSceneActor3 *arg0) {
 void func_8003969C(MainMenuSceneActor3 *arg0) {
     u16 temp_t7;
 
-    if (func_80041FB4(3) == 1) {
+    if (stepMainMenuSceneModelAnimation(3) == 1) {
         temp_t7 = (arg0->timer & 0xFFFF) + 1;
         arg0->timer = temp_t7;
         if ((temp_t7 & 0xFFFF) == 0x14) {
             arg0->timer = 0;
             setCallbackTaskCallback(arg0, func_80039610);
-            func_80041DD4(3, 0x58);
+            setMainMenuSceneModelAnimation(3, 0x58);
         }
     } else {
         arg0->z += 0x80000;
     }
-    func_8004209C(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
     func_800428C8(3);
 }
 
 void func_8003973C(MainMenuSceneActor3 *arg0) {
-    if (func_80041FB4(3) == 0) {
+    if (stepMainMenuSceneModelAnimation(3) == 0) {
         arg0->x = arg0->x + 0x18000;
-        func_8004209C(3, arg0->x, arg0->y, arg0->z);
+        setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
     }
     if (gEndingSequencePhase == 0x3F) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_8003969C);
-        func_80041DD4(3, 0x57);
+        setMainMenuSceneModelAnimation(3, 0x57);
     }
     func_800428C8(3);
 }
@@ -141,7 +141,7 @@ void func_800397C4(MainMenuSceneActor3 *arg0) {
     s32 sp20;
     s32 var_v0;
 
-    sp20 = func_80041FB4(3);
+    sp20 = stepMainMenuSceneModelAnimation(3);
     if (arg0->timer < 5) {
         var_v0 = 1;
     } else {
@@ -151,31 +151,31 @@ void func_800397C4(MainMenuSceneActor3 *arg0) {
     arg0->y += var_v0 << 19;
     arg0->z += 0xFFFA0000;
     arg0->timer = arg0->timer + 1;
-    func_8004209C(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
     func_800428C8(3);
     if (sp20 == 1) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_8003973C);
-        func_80041DD4(3, 0x5D);
+        setMainMenuSceneModelAnimation(3, 0x5D);
     }
 }
 
 void func_80039880(MainMenuSceneActor3 *arg0) {
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     arg0->x += 0xFFF58000;
     if (gEndingSequencePhase == 0x3C) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_800397C4);
-        func_80041DD4(3, 0x5C);
+        setMainMenuSceneModelAnimation(3, 0x5C);
         arg0->rotY = 0xC00;
-        func_800420FC(3, arg0->rotX, arg0->rotY, arg0->rotZ);
+        setMainMenuSceneModelRotation(3, arg0->rotX, arg0->rotY, arg0->rotZ);
     }
-    func_8004209C(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
 void func_80039930(MainMenuSceneActor3 *arg0) {
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (gEndingSequencePhase == 0x3A) {
         setCallbackTaskCallback(arg0, func_80039880);
@@ -185,7 +185,7 @@ void func_80039930(MainMenuSceneActor3 *arg0) {
 void func_8003998C(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     var_a1 = (arg0->x & 0xFFFFFFFFFFFFFFFFu) + 0x24000;
     arg0->x = var_a1;
     if (var_a1 >= 0xE00000) {
@@ -193,12 +193,12 @@ void func_8003998C(MainMenuSceneActor3 *arg0) {
         setCallbackTaskCallback(arg0, func_80039930);
         var_a1 = arg0->x;
     }
-    func_8004209C(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
 void func_80039A14(MainMenuSceneActor3 *arg0) {
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (gEndingSequencePhase == 0x38) {
         setCallbackTaskCallback(arg0, func_8003998C);
@@ -209,7 +209,7 @@ void func_80039A70(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
     MainMenuSceneActor3 *new_var;
 
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     new_var = arg0;
     var_a1 = (new_var->x += 0xFFFB8000);
     if (var_a1 < 0xA00001) {
@@ -220,7 +220,7 @@ void func_80039A70(MainMenuSceneActor3 *arg0) {
         gEndingSequencePhase = 0x36;
         var_a1 = arg0->x;
     }
-    func_8004209C(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -242,7 +242,7 @@ void func_80039B84(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
     s32 temp_v0;
 
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     temp_t7 = arg0->x + -0x48000;
     arg0->x = temp_t7;
     var_a1 = temp_t7;
@@ -272,17 +272,17 @@ block_2:
         var_a1 = arg0->x;
     }
     new_var = 0xB;
-    func_8004209C(3, var_a1, temp_t7 = arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, temp_t7 = arg0->y, arg0->z);
     func_8004298C(3, arg0->textureId, arg0->paletteId, new_var);
 }
 #endif
 
 void func_80039C84(MainMenuSceneActor3 *arg0) {
-    func_80041FB4(3);
+    stepMainMenuSceneModelAnimation(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (gEndingSequencePhase == 0x31) {
         setCallbackTaskCallback(arg0, func_80039B84);
-        func_80041DD4(3, 0x4B);
+        setMainMenuSceneModelAnimation(3, 0x4B);
     }
 }
 
@@ -290,7 +290,7 @@ void func_80039CEC(MainMenuSceneActor3 *arg0) {
     s32 sp;
     s32 temp;
 
-    sp = func_80041FB4(3);
+    sp = stepMainMenuSceneModelAnimation(3);
     if (sp == 0) {
         arg0->x += 0xFFFF6000;
     } else {
@@ -300,11 +300,11 @@ void func_80039CEC(MainMenuSceneActor3 *arg0) {
                 setCallbackTaskCallback(arg0, func_80039C84);
                 gEndingSequencePhase = 0x2E;
             } else {
-                func_80041DD4(3, 0x4A);
+                setMainMenuSceneModelAnimation(3, 0x4A);
             }
         }
     }
-    func_8004209C(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -313,7 +313,7 @@ void func_80039E08(MainMenuSceneActor3 *arg0) {
     if (arg0->timer == 0xF) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_80039CEC);
-        func_80041DD4(3, 0x4A);
+        setMainMenuSceneModelAnimation(3, 0x4A);
     }
     func_800428C8(3);
 }
@@ -321,23 +321,23 @@ void func_80039E08(MainMenuSceneActor3 *arg0) {
 void func_80039E5C(MainMenuSceneActor3 *arg0) {
     s32 sp;
 
-    sp = func_80041FB4(3);
+    sp = stepMainMenuSceneModelAnimation(3);
     arg0->x += 0xFFFD8000;
     if ((sp == 1) && (arg0->x < 0x800001)) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_80039E08);
         gEndingSequencePhase = 0x2D;
     } else if ((sp == 1) && (arg0->x >= 0x800001)) {
-        func_80041DD4(3, 0x4B);
+        setMainMenuSceneModelAnimation(3, 0x4B);
     }
-    func_8004209C(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
 void func_80039F2C(MainMenuSceneActor3 *arg0) {
     if (gEndingSequencePhase == 0x2C) {
         setCallbackTaskCallback(arg0, func_80039E5C);
-        func_80041DD4(3, 0x4B);
+        setMainMenuSceneModelAnimation(3, 0x4B);
         arg0->timer = 0;
     }
 }
@@ -345,7 +345,7 @@ void func_80039F2C(MainMenuSceneActor3 *arg0) {
 void func_80039F7C(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     var_a1 = arg0->x += 0x28000;
     if (var_a1 >= 0x1900000) {
         arg0->x = 0x1900000;
@@ -353,12 +353,12 @@ void func_80039F7C(MainMenuSceneActor3 *arg0) {
         gEndingSequencePhase = 0x28;
         var_a1 = arg0->x;
     }
-    func_8004209C(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
 void func_8003A010(MainMenuSceneActor3 *arg0) {
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     arg0->timer++;
     if (arg0->timer == 0x41) {
@@ -370,14 +370,14 @@ void func_8003A010(MainMenuSceneActor3 *arg0) {
 void func_8003A078(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     var_a1 = arg0->x += 0xFFFD8000;
     if (var_a1 < 0x800001) {
         arg0->x = 0x800000;
         setCallbackTaskCallback(arg0, func_8003A010);
         var_a1 = arg0->x;
     }
-    func_8004209C(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -385,9 +385,9 @@ void func_8003A108(MainMenuSceneActor3 *arg0) {
     s32 temp_a1;
     u16 temp_t9;
 
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     temp_a1 = arg0->x += 0x20000;
-    func_8004209C(3, temp_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, temp_a1, arg0->y, arg0->z);
     temp_t9 = (arg0->timer & 0xFFFF) + 1;
     arg0->timer = temp_t9;
     if ((temp_t9 & 0xFFFF) == 0x28) {
@@ -401,9 +401,9 @@ void func_8003A190(MainMenuSceneActor3 *arg0) {
     s32 temp_a1;
     u16 temp_t9;
 
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     temp_a1 = arg0->x += 0xFFFD8000;
-    func_8004209C(3, temp_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, temp_a1, arg0->y, arg0->z);
     temp_t9 = (arg0->timer & 0xFFFF) + 1;
     arg0->timer = temp_t9;
     if ((temp_t9 & 0xFFFF) == 0x2D) {
@@ -417,9 +417,9 @@ void func_8003A21C(MainMenuSceneActor3 *arg0) {
     s32 temp_a1;
     u16 temp_t9;
 
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     temp_a1 = arg0->x += 0x28000;
-    func_8004209C(3, temp_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, temp_a1, arg0->y, arg0->z);
     temp_t9 = (arg0->timer & 0xFFFF) + 1;
     arg0->timer = temp_t9;
     if ((temp_t9 & 0xFFFF) == 0x1E) {
@@ -430,7 +430,7 @@ void func_8003A21C(MainMenuSceneActor3 *arg0) {
 }
 
 void func_8003A2A8(MainMenuSceneActor3 *arg0) {
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (gEndingSequencePhase == 0x23) {
         arg0->timer++;
@@ -444,7 +444,7 @@ void func_8003A2A8(MainMenuSceneActor3 *arg0) {
 void func_8003A324(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     var_a1 = arg0->x += 0x28000;
     if (var_a1 >= 0x800000) {
         arg0->timer = 0;
@@ -456,21 +456,21 @@ void func_8003A324(MainMenuSceneActor3 *arg0) {
         gEndingSequencePhase = 0x21;
         var_a1 = arg0->x;
     }
-    func_8004209C(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
 void func_8003A3E0(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     var_a1 = arg0->x += 0xFFFA0000;
     if (var_a1 < -0x9FFFFF) {
         arg0->x = 0xFF600000;
         setCallbackTaskCallback(arg0, func_8003A324);
         var_a1 = arg0->x;
     }
-    func_8004209C(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -478,7 +478,7 @@ void func_8003A46C(MainMenuSceneActor3 *arg0) {
     u16 temp_t8;
     s32 sp20;
 
-    sp20 = func_80041FB4(3);
+    sp20 = stepMainMenuSceneModelAnimation(3);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (sp20 == 0) {
         if (gEndingSequencePhase == 0x1D) {
@@ -491,12 +491,12 @@ void func_8003A46C(MainMenuSceneActor3 *arg0) {
         }
     }
     if (sp20 == 1) {
-        func_80041DD4(3, 0x4A);
+        setMainMenuSceneModelAnimation(3, 0x4A);
     }
     if (gEndingSequencePhase == 0x20) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_8003A3E0);
-        func_80041DD4(3, 0x4B);
+        setMainMenuSceneModelAnimation(3, 0x4B);
     }
 }
 
@@ -504,14 +504,14 @@ void func_8003A538(MainMenuSceneActor3 *arg0) {
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
     if (gEndingSequencePhase == 0x1D) {
         setCallbackTaskCallback(arg0, func_8003A46C);
-        func_80041DD4(3, 0x4A);
+        setMainMenuSceneModelAnimation(3, 0x4A);
     }
 }
 
 void func_8003A598(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     var_a1 = arg0->x += 0xFFFE8000;
     if (var_a1 < 0xC80001) {
         arg0->x = 0xC80000;
@@ -519,7 +519,7 @@ void func_8003A598(MainMenuSceneActor3 *arg0) {
         gEndingSequencePhase = 0x1C;
         var_a1 = arg0->x;
     }
-    func_8004209C(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -527,11 +527,11 @@ void func_8003A634(MainMenuSceneActor3 *arg0) {
     s32 pad;
     s32 sp20;
 
-    sp20 = func_80041FB4(3);
+    sp20 = stepMainMenuSceneModelAnimation(3);
     func_80042920(3, arg0->textureId, arg0->paletteId);
     if (sp20 == 1) {
         setCallbackTaskCallback(arg0, func_8003A598);
-        func_80041DD4(3, 0x49);
+        setMainMenuSceneModelAnimation(3, 0x49);
         arg0->x += 0xFFEC0000;
     }
 }
@@ -540,11 +540,11 @@ void func_8003A6A8(MainMenuSceneActor3 *arg0) {
     s32 pad;
     s32 sp18;
 
-    sp18 = func_80041FB4(3);
+    sp18 = stepMainMenuSceneModelAnimation(3);
     func_80042920(3, arg0->textureId, arg0->paletteId);
     if (sp18 == 1) {
         setCallbackTaskCallback(arg0, func_8003A634);
-        func_80041DD4(3, 0x42);
+        setMainMenuSceneModelAnimation(3, 0x42);
     }
 }
 
@@ -555,16 +555,16 @@ void func_8003A70C(MainMenuSceneActor3 *arg0) {
         arg0->timer = 0;
         gEndingSequencePhase = 0x1B;
         setCallbackTaskCallback(arg0, func_8003A6A8);
-        func_80041DD4(3, 0x41);
+        setMainMenuSceneModelAnimation(3, 0x41);
     }
 }
 
 void func_8003A77C(MainMenuSceneActor3 *arg0) {
-    if (func_80041FB4(3) == 1) {
+    if (stepMainMenuSceneModelAnimation(3) == 1) {
         setCallbackTaskCallback(arg0, func_8003A70C);
     } else {
         arg0->x = arg0->x + 0x40000;
-        func_8004209C(3, arg0->x, arg0->y, arg0->z);
+        setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
     }
     func_800428C8(3);
 }
@@ -573,7 +573,7 @@ void func_8003A7EC(MainMenuSceneActor3 *arg0) {
     s32 temp_v0;
     u16 temp_t7;
 
-    temp_v0 = func_80041FB4(3);
+    temp_v0 = stepMainMenuSceneModelAnimation(3);
     temp_t7 = (arg0->timer & 0xFFFF) + 1;
     arg0->timer = temp_t7;
     arg0->x += 0x70000;
@@ -585,9 +585,9 @@ void func_8003A7EC(MainMenuSceneActor3 *arg0) {
     if (temp_v0 == 1) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_8003A77C);
-        func_80041DD4(3, 0x40);
+        setMainMenuSceneModelAnimation(3, 0x40);
     }
-    func_8004209C(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
     func_800428C8(3);
 }
 
@@ -596,15 +596,15 @@ void func_8003A8A4(MainMenuSceneActor3 *arg0) {
     s32 sp20;
 
     arg0->x += 0x100000;
-    func_8004209C(3, arg0->x, arg0->y, arg0->z);
-    sp20 = func_80041FB4(3);
+    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+    sp20 = stepMainMenuSceneModelAnimation(3);
     func_800428C8(3);
     arg0->y += 0x50000;
     if (sp20 == 1) {
         arg0->timer = 0;
         gEndingSequencePhase = 0x1A;
         setCallbackTaskCallback(arg0, func_8003A7EC);
-        func_80041DD4(3, 0x3F);
+        setMainMenuSceneModelAnimation(3, 0x3F);
     }
 }
 
@@ -626,7 +626,7 @@ void func_8003A944(MainMenuSceneActor3 *arg0) {
     }
 
     for (i = 0; i < count; i++) {
-        sp20 = func_80041FB4(3);
+        sp20 = stepMainMenuSceneModelAnimation(3);
     }
 
     func_800428C8(3);
@@ -650,7 +650,7 @@ void func_8003A9E0(MainMenuSceneActor3 *arg0) {
     var_s1 = 0;
     if (var_s4 > 0) {
         do {
-            func_80041FB4(3);
+            stepMainMenuSceneModelAnimation(3);
             func_800428C8(3);
             temp_t8 = (arg0->timer & 0xFFFF) + 1;
             arg0->timer = temp_t8;
@@ -665,7 +665,7 @@ void func_8003A9E0(MainMenuSceneActor3 *arg0) {
                 } else {
                     arg0->y = (s32) (arg0->y + 0xFFF70000);
                 }
-                func_8004209C(3, arg0->x, arg0->y, arg0->z);
+                setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
                 var_s1 += 1;
                 if ((arg0->animTimer == 0xD) && (gEndingActorHandshakeState == 1) && (arg0->timer == 3)) {
                     gEndingActorHandshakeState = 5;
@@ -674,18 +674,18 @@ void func_8003A9E0(MainMenuSceneActor3 *arg0) {
             } else {
                 arg0->timer = 0U;
                 arg0->y = 0;
-                func_8004209C(3, arg0->x, 0, arg0->z);
+                setMainMenuSceneModelPosition(3, arg0->x, 0, arg0->z);
                 setCallbackTaskCallback(arg0, func_8003A944);
                 if ((gEndingActorHandshakeState == 1) || (gEndingActorHandshakeState == 5)) {
-                    func_80041DD4(3, 0x3A);
+                    setMainMenuSceneModelAnimation(3, 0x3A);
                 } else {
-                    func_80041DD4(3, 0x3C);
+                    setMainMenuSceneModelAnimation(3, 0x3C);
                     arg0->animTimer = (u16) (arg0->animTimer + 1);
                 }
                 if (arg0->animTimer == 0xD) {
                     if (gEndingActorHandshakeState == 5) {
                         setCallbackTaskCallback(arg0, func_8003A8A4);
-                        func_80041DD4(3, 0x3E);
+                        setMainMenuSceneModelAnimation(3, 0x3E);
                         arg0->animTimer = 0U;
                     }
                 }
@@ -702,17 +702,17 @@ void func_8003AC00(MainMenuSceneActor3 *arg0) {
         if (gEndingActorHandshakeState == 1) {
             arg0->rotY = 0x400;
             if (arg0->timer == 0xF) {
-                func_80041DD4(3, 0x39);
+                setMainMenuSceneModelAnimation(3, 0x39);
                 arg0->timer = 2;
                 arg0->y = 0x120000;
             } else {
-                func_80041DD4(3, 0x3D);
+                setMainMenuSceneModelAnimation(3, 0x3D);
             }
         } else {
             arg0->rotY = 0x400;
-            func_80041DD4(3, 0x3B);
+            setMainMenuSceneModelAnimation(3, 0x3B);
         }
-        func_800420FC(3, arg0->rotX, arg0->rotY, arg0->rotZ);
+        setMainMenuSceneModelRotation(3, arg0->rotX, arg0->rotY, arg0->rotZ);
     }
 }
 
@@ -722,7 +722,7 @@ void func_8003ACD0(MainMenuSceneActor3 *arg0) {
     if (arg0->timer == 0xF) {
         gEndingSequencePhase = 0x19;
         setCallbackTaskCallback(arg0, func_8003AC00);
-        func_8004209C(3, arg0->x, arg0->y, arg0->z);
+        setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
     }
 }
 
@@ -731,7 +731,7 @@ void func_8003AD40(MainMenuSceneActor3 *arg0) {
     s32 sp18;
     u16 temp_t8;
 
-    sp18 = func_80041FB4(3);
+    sp18 = stepMainMenuSceneModelAnimation(3);
     func_800428C8(3);
     if (sp18 == 1) {
         temp_t8 = (arg0->timer & 0xFFFF) + 1;
@@ -748,7 +748,7 @@ void func_8003AD40(MainMenuSceneActor3 *arg0) {
 void func_8003ADC0(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
-    func_80042034(3);
+    loopMainMenuSceneModelAnimation(3);
     func_800428C8(3);
     var_a1 = arg0->x += (s32)0xFFFD0000;
     arg0->z = arg0->z + (s32)0xFFFF0000;
@@ -756,20 +756,20 @@ void func_8003ADC0(MainMenuSceneActor3 *arg0) {
         arg0->x = 0x2D0000;
         arg0->z = (s32)0xFFFE0000;
         setCallbackTaskCallback(arg0, func_8003AD40);
-        func_80041DD4(3, 0x38);
+        setMainMenuSceneModelAnimation(3, 0x38);
         gEndingSequencePhase = 0x17;
         arg0->rotY = 0x400;
-        func_800420FC(3, arg0->rotX, arg0->rotY, arg0->rotZ);
+        setMainMenuSceneModelRotation(3, arg0->rotX, arg0->rotY, arg0->rotZ);
         var_a1 = arg0->x;
     }
-    func_8004209C(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
 }
 
 void func_8003AE8C(MainMenuSceneActor3 *arg0) {
     u16 temp;
     s32 sp20;
 
-    sp20 = func_80041FB4(3);
+    sp20 = stepMainMenuSceneModelAnimation(3);
     if (arg0->animTimer == 0) {
         func_800428C8(3);
     } else {
@@ -782,22 +782,22 @@ void func_8003AE8C(MainMenuSceneActor3 *arg0) {
         temp = (arg0->timer & 0xFFFF) + 1;
         arg0->timer = temp;
         if ((temp & 0xFFFF) < 2) {
-            func_80041DD4(3, 0x37);
+            setMainMenuSceneModelAnimation(3, 0x37);
         } else {
             arg0->timer = 0;
             setCallbackTaskCallback(arg0, func_8003ADC0);
-            func_80041DD4(3, 0xF);
+            setMainMenuSceneModelAnimation(3, 0xF);
             arg0->rotY = 0xC00;
-            func_800420FC(3, arg0->rotX, arg0->rotY, arg0->rotZ);
+            setMainMenuSceneModelRotation(3, arg0->rotX, arg0->rotY, arg0->rotZ);
         }
     }
 }
 
 void func_8003AF6C(MainMenuSceneActor3 *arg0) {
-    if (func_80041FB4(3) == 1) {
+    if (stepMainMenuSceneModelAnimation(3) == 1) {
         arg0->animTimer = 0;
         setCallbackTaskCallback(arg0, func_8003AE8C);
-        func_80041DD4(3, 0x37);
+        setMainMenuSceneModelAnimation(3, 0x37);
     }
     func_800428C8(3);
 }
@@ -805,9 +805,9 @@ void func_8003AF6C(MainMenuSceneActor3 *arg0) {
 void func_8003AFC0(MainMenuSceneActor3 *arg0) {
     u16 temp_t9;
 
-    if (func_80041FB4(3) == 0) {
+    if (stepMainMenuSceneModelAnimation(3) == 0) {
         arg0->x = arg0->x + 0x48000;
-        func_8004209C(3, arg0->x, arg0->y, arg0->z);
+        setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
         temp_t9 = (arg0->timer & 0xFFFF) + 1;
         arg0->timer = temp_t9;
         if ((temp_t9 & 0xFFFF) == 2) {
@@ -817,7 +817,7 @@ void func_8003AFC0(MainMenuSceneActor3 *arg0) {
     if (gEndingSequencePhase == 0x16) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_8003AF6C);
-        func_80041DD4(3, 0x36);
+        setMainMenuSceneModelAnimation(3, 0x36);
     }
     func_800428C8(3);
 }
@@ -826,20 +826,20 @@ void func_8003B074(MainMenuSceneActor3 *arg0) {
     u16 temp_t0;
     s32 sp20;
 
-    sp20 = func_80041FB4(3);
+    sp20 = stepMainMenuSceneModelAnimation(3);
     func_800428C8(3);
     if (gEndingSequencePhase == 0x15) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_8003AFC0);
         arg0->rotY = 0x400;
-        func_800420FC(3, arg0->rotX, arg0->rotY, arg0->rotZ);
-        func_80041DD4(3, 0x28);
+        setMainMenuSceneModelRotation(3, arg0->rotX, arg0->rotY, arg0->rotZ);
+        setMainMenuSceneModelAnimation(3, 0x28);
     } else if (sp20 == 1) {
         temp_t0 = (arg0->timer & 0xFFFF) + 1;
         arg0->timer = temp_t0;
         if ((temp_t0 & 0xFFFF) == 0x10) {
             arg0->timer = 0;
-            func_80041DD4(3, 0x27);
+            setMainMenuSceneModelAnimation(3, 0x27);
         }
     }
 }
@@ -848,7 +848,7 @@ void func_8003B134(MainMenuSceneActor3 *arg0) {
     s32 temp_v0;
     u16 temp_t2;
 
-    temp_v0 = func_80041FB4(3);
+    temp_v0 = stepMainMenuSceneModelAnimation(3);
     arg0->x += 0xFFFB8000;
     if (arg0->x < 0xE00001) {
         arg0->x = 0xE00000;
@@ -859,10 +859,10 @@ void func_8003B134(MainMenuSceneActor3 *arg0) {
         arg0->timer = temp_t2;
         if ((temp_t2 & 0xFFFF) == 0x10) {
             arg0->timer = 0;
-            func_80041DD4(3, 0x27);
+            setMainMenuSceneModelAnimation(3, 0x27);
         }
     }
-    func_8004209C(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
     func_800428C8(3);
 }
 
@@ -884,10 +884,10 @@ void func_8003B264(MainMenuSceneActor3 *arg0) {
     arg0->animTimer = 0;
     arg0->textureId = 0;
     arg0->paletteId = 3;
-    func_80041D20(3, 3);
-    func_80041DD4(3, 0x27);
-    func_8004209C(3, arg0->x, arg0->y, arg0->z);
-    func_800420FC(3, arg0->rotX, arg0->rotY, arg0->rotZ);
+    initMainMenuSceneModel(3, 3);
+    setMainMenuSceneModelAnimation(3, 0x27);
+    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelRotation(3, arg0->rotX, arg0->rotY, arg0->rotZ);
     setCallbackTaskCallback(arg0, func_8003B1F8);
 }
 

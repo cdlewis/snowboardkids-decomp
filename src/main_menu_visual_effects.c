@@ -294,7 +294,7 @@ void initRaceSetupBackdrop(MainMenuVisualEffectActor *arg0) {
 }
 
 void stopRaceSetupCharacterFocus(s32 arg0) {
-    func_80042034(0);
+    loopMainMenuSceneModelAnimation(0);
     func_80042A00(0);
 }
 
@@ -304,7 +304,7 @@ void updateRaceSetupCharacterFocus(MainMenuVisualEffectActor *arg0) {
             enqueueSoundEffect(D_800D5738[arg0->index], 0x32, arg0);
             arg0->unk18.byte.b0 = 0;
         }
-        func_80042034(0);
+        loopMainMenuSceneModelAnimation(0);
         setCallbackTaskCallback(arg0, stopRaceSetupCharacterFocus);
         func_80042A00(0);
         return;
@@ -314,11 +314,11 @@ void updateRaceSetupCharacterFocus(MainMenuVisualEffectActor *arg0) {
 
 void initRaceSetupCharacterFocus(MainMenuVisualEffectActor *arg0) {
     arg0->unk18.byte.b0 = 1;
-    func_80041D20(0, arg0->index);
-    func_80041DD4(0, D_800D5730[arg0->index]);
-    func_80042034(0);
-    func_8004209C(0, 0, 0, 0);
-    func_800420FC(0, 0, 0, 0);
+    initMainMenuSceneModel(0, arg0->index);
+    setMainMenuSceneModelAnimation(0, D_800D5730[arg0->index]);
+    loopMainMenuSceneModelAnimation(0);
+    setMainMenuSceneModelPosition(0, 0, 0, 0);
+    setMainMenuSceneModelRotation(0, 0, 0, 0);
     setCallbackTaskCallback(arg0, updateRaceSetupCharacterFocus);
 }
 
@@ -326,7 +326,7 @@ void updateRaceSetupOpponentFocus(MainMenuVisualEffectActor *arg0) {
     s16 temp = arg0->unk1C.half.hi;
 
     if (temp == 0) {
-        func_80042034(arg0->unk18.word);
+        loopMainMenuSceneModelAnimation(arg0->unk18.word);
     } else {
         arg0->unk1C.half.hi = temp - 1;
     }
@@ -336,14 +336,14 @@ void updateRaceSetupOpponentFocus(MainMenuVisualEffectActor *arg0) {
 void initRaceSetupOpponentFocus(MainMenuVisualEffectActor *arg0) {
     s32 a = arg0->unk18.word;
     arg0->unk1C.half.hi = a * 0xF;
-    func_80041D20(a, arg0->index);
-    func_80041DD4(arg0->unk18.word, D_800D5744[arg0->index]);
-    func_80042034(arg0->unk18.word);
+    initMainMenuSceneModel(a, arg0->index);
+    setMainMenuSceneModelAnimation(arg0->unk18.word, D_800D5744[arg0->index]);
+    loopMainMenuSceneModelAnimation(arg0->unk18.word);
     {
         s32 b = arg0->unk18.word;
-        func_8004209C(b, D_800D5748[b], 0xFFB50000, 0xA00000);
+        setMainMenuSceneModelPosition(b, D_800D5748[b], 0xFFB50000, 0xA00000);
     }
-    func_800420FC(arg0->unk18.word, 0, 0x800, 0);
+    setMainMenuSceneModelRotation(arg0->unk18.word, 0, 0x800, 0);
     setCallbackTaskCallback(arg0, updateRaceSetupOpponentFocus);
 }
 
