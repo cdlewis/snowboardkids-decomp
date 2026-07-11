@@ -8,6 +8,7 @@
 #include "race_course_effects.h"
 #include "race_item_effects.h"
 #include "race_overlay_effects.h"
+#include "race_ui_effects.h"
 
 #define COURSE_PLAYER_COUNT 4
 #define COURSE_PLAYER_STRIDE 0x60C
@@ -101,17 +102,6 @@ extern void func_80055B34();
 extern void func_800560F4();
 extern void func_80056C44();
 extern void func_8005714C();
-extern void func_80057600();
-extern void func_80061428();
-extern void func_80061AF4(s16, void *, void *, s16);
-extern void func_80062ED4();
-extern void func_800631B0();
-extern void func_80063470();
-extern void func_80063980();
-extern void func_80063FC0();
-extern void func_8006429C();
-extern void func_80065764();
-extern void func_800666B0();
 #ifdef NON_MATCHING
 // func_80043950 best match: 63.023% at nonmatchings/func_80043950-2225551288923588688/base_4.c.
 void func_80043950(void) {

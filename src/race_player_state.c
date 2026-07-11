@@ -18,6 +18,7 @@
 #include "race_position_ui.h"
 #include "race_player_state.h"
 #include "race_surface_cues.h"
+#include "race_ui_effects.h"
 
 #define MODEL_ANIM_STATE(player) ((ModelAnimState *)(player))
 #define MODEL_ANIM_INIT_STATE(player) ((ModelAnimInitState *)(player))
@@ -92,17 +93,10 @@ extern s32 func_80072138(s32, s32);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
 extern void func_8008393C(RaceInputPlayer *);
-extern void func_80061034(s32, s16);
-extern void func_80057C08(s32, s16);
-extern void func_80057DD4(void *);
 extern void func_800483FC(void *, void (*)(void *), void *);
-extern void func_8005FB30(void *);
-extern void func_800617C8(void *);
 extern void *func_800716A4(void *, s32, s32, s32);
-extern void func_80062530(void *);
 extern s16 func_80097AE8(s16);
 extern void func_800545D0(EffectTask *);
-extern void func_80057810(void *);
 extern void (*D_800DECD0[])(RaceInputPlayer *);
 extern void (*D_800DECD8[])(RaceInputPlayer *);
 extern void (*D_800DECE8[])(RaceInputPlayer *);
@@ -3391,8 +3385,6 @@ void func_80093144(RaceInputPlayer *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80093304.s")
 
 #ifdef NON_MATCHING
-extern void func_80062A64(s16);
-
 void func_80093304(RaceInputPlayer *player) {
     s16 updateState;
     long long new_var;
@@ -5432,7 +5424,7 @@ void func_8009724C(RaceInputPlayer *arg0) {
         temp_v0_2 = (u16)arg0->playerIndex;
         if (D_8011228C[temp_v0_2].active != 0) {
             sp24 = (s32)var_a3;
-            func_80061034((s32)var_a3, (s16)temp_v0_2);
+            func_80061034((void *)var_a3, (s16)temp_v0_2);
             var_v1_2 = 0x4D;
             if ((s32)var_a3 >= 0x64) {
                 var_v1_2 = 0x4E;
@@ -5485,11 +5477,11 @@ void func_8009724C(RaceInputPlayer *arg0) {
                     arg0->unk2C4 = 0x3FF;
                     arg0->unk2C0 += 0x12C;
                     sp2C = 0x51;
-                    func_80057C08(var_s0, 1);
+                    func_80057C08((void *)var_s0, 1);
                     var_v1_4 = 0x51;
                 } else {
                     sp2C = var_v1_3;
-                    func_80057C08(var_s0, 0);
+                    func_80057C08((void *)var_s0, 0);
                     var_v1_4 = var_v1_3;
                 }
                 arg0 = arg0;

@@ -1,6 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "fixed_point_matrix.h"
+#include "race_ui_effects.h"
 
 #define SNOWBOARD_TRAIL_TIMER 0xF0
 #define SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD 0x400
@@ -47,7 +48,6 @@ typedef struct {
 
 extern void func_800483FC(void *queue, void (*callback)(SnowboardTrailPlayer *), SnowboardTrailState *trail);
 extern void *func_8004885C(u8 *source);
-extern void func_8005F5C8(SnowboardTrailPlayer *player);
 
 extern u8 D_80121B56;
 extern s16 D_80112144;
@@ -163,7 +163,7 @@ void func_8008393C(SnowboardTrailPlayer *player) {
         }
         if (player->trailTimer == 0) {
             trail->state = 0;
-            func_8005F5C8(player);
+            func_8005F5C8((struct RaceUiSnowboardTrailPlayer *)player);
             return;
         }
         if (player->disabled == 0) {
