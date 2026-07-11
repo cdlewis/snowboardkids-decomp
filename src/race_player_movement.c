@@ -1,6 +1,6 @@
 #include "common.h"
 #include "asset_manager.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "game_audio.h"
 #include "model_animation.h"
 #include "race_course_effects.h"
@@ -318,7 +318,7 @@ void func_80087AFC(void) {
 #endif
 
 void func_80087E14(RaceInputPlayer *player) {
-    EffectTask *task;
+    CallbackTask *task;
     u32 flags;
 
     flags = player->stateFlags;
@@ -326,9 +326,9 @@ void func_80087E14(RaceInputPlayer *player) {
             (player->unk502 == D_800B9540[D_80121B50].unk0) && !(flags & 0x1000)) {
         player->stateFlags = flags | 0x40;
         if ((D_80121B58 == 0) && (D_8011228C[player->playerIndexU16].active != 0)) {
-            task = createEffectTask(func_8006A85C, 6, 0x64);
+            task = createCallbackTask(func_8006A85C, 6, 0x64);
             if (task != NULL) {
-                task->unk10 = player->playerIndexU16;
+                task->userId = player->playerIndexU16;
             }
         }
     }

@@ -1,6 +1,6 @@
 #include "common.h"
 #include "game_audio.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
 #include "controller_pak_ui.h"
@@ -46,11 +46,11 @@ void func_8000C280(void) {
     loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
     loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x29);
-    func_80070EC0(0);
-    createEffectTask(initControllerPakContinuePrompt, 0, 0x64);
+    initCallbackTaskScheduler(0);
+    createCallbackTask(initControllerPakContinuePrompt, 0, 0x64);
     gMenuFadeAlpha = gCurrentInputTask->fade;
     setCurrentInputTaskCallback(func_8000C3C8, 0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_flow/func_8000C3C8.s")
@@ -62,7 +62,7 @@ void func_8000C52C(void) {
             gFramebufferSwapHold = 1;
             gControllerPakContinuePromptTransition.state = 3;
         } else {
-            updateEffectTasks();
+            updateCallbackTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

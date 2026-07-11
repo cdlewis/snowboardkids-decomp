@@ -2,7 +2,7 @@
 #include "race_ui_effects.h"
 #include "snowboard_trail_effects.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_item_hit_flags.h"
 #include "viewport_manager.h"
@@ -13,8 +13,8 @@
 #include "race_player_movement.h"
 #include "race_timer_ui.h"
 
-/* Local 3-arg declaration; see note in effect_task_scheduler.h. */
-extern void *func_800716A4(void *, s32, s32);
+/* Local 3-arg declaration; see note in callback_task_scheduler.h. */
+extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
 #define SCALE_MATRIX_COMPONENT(value, scale) ((value * scale) / 0x1000)
@@ -958,7 +958,7 @@ void func_80057600(RaceUiSlideActor *arg0) {
     arg0->displayList = (Gfx *) D_800D5FF0[arg0->index].word;
     arg0->velocity = D_800D5FF0[arg0->index].b6;
     arg0->soundIndex = D_800D5FF0[arg0->index].b7;
-    func_80071824(arg0, func_80057548);
+    setCallbackTaskCallback(arg0, func_80057548);
 }
 
 void func_80057694(RaceUiPromptActor *arg0) {
@@ -993,7 +993,7 @@ void func_80057810(RaceUiPromptActor *arg0) {
     if (D_80121B55 != 1) {
         arg0->y = -8;
     }
-    func_80071824(arg0, func_80057710);
+    setCallbackTaskCallback(arg0, func_80057710);
 }
 
 void func_80057854(RaceUiPopupActor *arg0) {
@@ -1032,7 +1032,7 @@ void func_80057AA4(RaceUiPopupActor *arg0) {
     arg0->x += arg0->velocity;
     arg0->velocity += 4;
     if (arg0->velocity == 0x38) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     } else {
         func_800483FC(&D_80124878, func_80057854, arg0);
     }
@@ -1041,7 +1041,7 @@ void func_80057AA4(RaceUiPopupActor *arg0) {
 void func_80057B04(RaceUiPopupActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
-        func_80071824(arg0, func_80057AA4);
+        setCallbackTaskCallback(arg0, func_80057AA4);
     }
     func_800483FC(&D_80124878, func_80057854, arg0);
 }
@@ -1051,7 +1051,7 @@ void func_80057B60(RaceUiPopupActor *arg0) {
     arg0->velocity -= 4;
     if (arg0->velocity == 0) {
         arg0->timer = 0x2D;
-        func_80071824(arg0, func_80057B04);
+        setCallbackTaskCallback(arg0, func_80057B04);
     }
     func_800483FC(&D_80124878, func_80057854, arg0);
 }
@@ -1060,11 +1060,11 @@ void func_80057BCC(RaceUiPopupActor *arg0) {
     arg0->y.word = -0x2C;
     arg0->velocity = 0x38;
     arg0->x = 0x1A4;
-    func_80071824(arg0, func_80057B60);
+    setCallbackTaskCallback(arg0, func_80057B60);
 }
 
 void func_80057C08(void *arg0, s16 arg1) {
-    RaceUiPopupActor *temp = createEffectTask(func_80057BCC, 0, 0x64);
+    RaceUiPopupActor *temp = createCallbackTask(func_80057BCC, 0, 0x64);
     if (temp != NULL) {
         temp->parent = arg0;
         temp->playerIndex = arg1;
@@ -1081,7 +1081,7 @@ void func_80057CAC(RaceUiPopupActor *arg0) {
     arg0->x += arg0->velocity;
     arg0->velocity += 4;
     if (arg0->velocity == 0x38) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     } else {
         func_800483FC(&D_80124878, func_80057C5C, arg0);
     }
@@ -1090,7 +1090,7 @@ void func_80057CAC(RaceUiPopupActor *arg0) {
 void func_80057D0C(RaceUiPopupActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
-        func_80071824(arg0, func_80057CAC);
+        setCallbackTaskCallback(arg0, func_80057CAC);
     }
     func_800483FC(&D_80124878, func_80057C5C, arg0);
 }
@@ -1100,7 +1100,7 @@ void func_80057D68(RaceUiPopupActor *arg0) {
     arg0->velocity -= 4;
     if (arg0->velocity == 0) {
         arg0->timer = 0x2D;
-        func_80071824(arg0, func_80057D0C);
+        setCallbackTaskCallback(arg0, func_80057D0C);
     }
     func_800483FC(&D_80124878, func_80057C5C, arg0);
 }
@@ -1109,7 +1109,7 @@ void func_80057DD4(RaceUiPopupActor *arg0) {
     arg0->y.word = 0xC;
     arg0->velocity = 0x38;
     arg0->x = 0x1A4;
-    func_80071824(arg0, func_80057D68);
+    setCallbackTaskCallback(arg0, func_80057D68);
 }
 
 void func_80057E10(void *arg0) {
@@ -1246,7 +1246,7 @@ void func_80058538(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         enqueueSoundEffect(0x18, 0x32);
         D_801235B4 |= 0x10;
-        func_80071824(arg0, func_800584A0);
+        setCallbackTaskCallback(arg0, func_800584A0);
     }
     func_800483FC(&D_80124868, func_80057E90, (s32)arg0);
     func_800483FC(&D_80124868, func_8005804C, (s32)arg0);
@@ -1305,12 +1305,12 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
     if (player->mode != 3) {
         if ((arg0->score == 0) && (player->unk568 == 0)) {
             enqueueSoundEffect(2, 0x32);
-            func_80071824(arg0, func_80058538);
+            setCallbackTaskCallback(arg0, func_80058538);
         }
     } else if (arg0->score == 0) {
         shouldPlaySound = 0;
         enqueueSoundEffect(2, 0x32);
-        func_80071824(arg0, func_80058538);
+        setCallbackTaskCallback(arg0, func_80058538);
     }
 
     if (shouldPlaySound != 0) {
@@ -1334,7 +1334,7 @@ void func_80058880(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0;
-        func_80071824(arg0, func_80058610);
+        setCallbackTaskCallback(arg0, func_80058610);
     }
     func_800483FC(&D_80124868, func_80057E90, arg0);
     func_800483FC(&D_80124868, func_8005804C, arg0);
@@ -1348,7 +1348,7 @@ void func_8005893C(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         enqueueSoundEffect(0x1A, 0x32);
-        func_80071824(arg0, func_80058880);
+        setCallbackTaskCallback(arg0, func_80058880);
     }
     func_800483FC(&D_80124868, func_80057E90, arg0);
     func_800483FC(&D_80124868, func_8005804C, arg0);
@@ -1361,7 +1361,7 @@ void func_800589F4(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        func_80071824(arg0, func_8005893C);
+        setCallbackTaskCallback(arg0, func_8005893C);
     }
     func_800483FC(&D_80124868, func_80057E90, arg0);
     func_800483FC(&D_80124868, func_8005804C, arg0);
@@ -1373,7 +1373,7 @@ void func_80058A98(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         enqueueSoundEffect(0x1A, 0x32);
-        func_80071824(arg0, func_800589F4);
+        setCallbackTaskCallback(arg0, func_800589F4);
     }
     func_800483FC(&D_80124868, func_80057E90, arg0);
     func_800483FC(&D_80124858, func_80058360, arg0);
@@ -1384,7 +1384,7 @@ void func_80058B20(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x18) >= 0x100) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
-        func_80071824(arg0, func_80058A98);
+        setCallbackTaskCallback(arg0, func_80058A98);
     }
     func_800483FC(&D_80124868, func_80057E90, arg0);
     func_800483FC(&D_80124858, func_80058360, arg0);
@@ -1393,7 +1393,7 @@ void func_80058B20(void *arg0) {
 void func_80058BAC(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x18) = 0;
     *(s16 *)((u8 *)arg0 + 0x1C) = D_800D6050[D_80122289 + D_80121B50 * 4];
-    func_80071824(arg0, func_80058B20);
+    setCallbackTaskCallback(arg0, func_80058B20);
 }
 
 void func_80058C00(RaceUiResultsBannerActor *arg0) {
@@ -1588,7 +1588,7 @@ void func_80059854(void *arg0) {
             if ((*input & 0x8000) && !(D_801235B4 & 0x10)) {
                 D_801235B4 |= 0x10;
                 enqueueSoundEffect(0x18, 0x32);
-                func_80071824(actor, func_80059804);
+                setCallbackTaskCallback(actor, func_80059804);
             }
             i++;
             input++;
@@ -1604,7 +1604,7 @@ void func_80059950(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x18) >= 0x100) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x96;
         *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
-        func_80071824(arg0, func_80059854);
+        setCallbackTaskCallback(arg0, func_80059854);
     }
     func_80059518(arg0);
     func_800483FC(&D_80124868, func_80058C00, arg0);
@@ -1613,7 +1613,7 @@ void func_80059950(void *arg0) {
 
 void func_800599DC(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x18) = 0;
-    func_80071824(arg0, func_80059950);
+    setCallbackTaskCallback(arg0, func_80059950);
 }
 
 // func_80059A04 best match: 96.300% (nonmatchings/func_80059A04-5272447827802519043/base_5.c)
@@ -1728,7 +1728,7 @@ void func_8005A0E0(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         D_801235B4 |= 0x10;
         enqueueSoundEffect(0x18, 0x32);
-        func_80071824(arg0, func_8005A07C);
+        setCallbackTaskCallback(arg0, func_8005A07C);
     }
     func_800483FC(&D_80124868, func_80059E5C, arg0);
     func_800483FC(&D_80124868, func_80059C34, arg0);
@@ -1738,7 +1738,7 @@ void func_8005A0E0(void *arg0) {
 void func_8005A184(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1C) = *(s16 *)((u8 *)arg0 + 0x1C) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1C) == 0) {
-        func_80071824(arg0, func_8005A0E0);
+        setCallbackTaskCallback(arg0, func_8005A0E0);
     }
     func_800483FC(&D_80124868, func_80059E5C, arg0);
     func_800483FC(&D_80124858, func_80059F6C, arg0);
@@ -1749,7 +1749,7 @@ void func_8005A1FC(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) >= 0x100) {
         *(s16 *)((u8 *)arg0 + 0x1C) = 0x1E;
         *(s16 *)((u8 *)arg0 + 0x1A) = 0xFF;
-        func_80071824(arg0, func_8005A184);
+        setCallbackTaskCallback(arg0, func_8005A184);
     }
     func_800483FC(&D_80124868, func_80059E5C, arg0);
     func_800483FC(&D_80124858, func_80059F6C, arg0);
@@ -1759,7 +1759,7 @@ void func_8005A288(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x18) = *(s16 *)((u8 *)arg0 + 0x18) + 0x10;
     if (*(s16 *)((u8 *)arg0 + 0x18) >= 0x100) {
         *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
-        func_80071824(arg0, func_8005A1FC);
+        setCallbackTaskCallback(arg0, func_8005A1FC);
     }
     func_800483FC(&D_80124858, func_80059F6C, arg0);
 }
@@ -1767,7 +1767,7 @@ void func_8005A288(void *arg0) {
 void func_8005A2F0(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x18) = 0;
     *(s16 *)((u8 *)arg0 + 0x1A) = 0;
-    func_80071824(arg0, func_8005A288);
+    setCallbackTaskCallback(arg0, func_8005A288);
 }
 
 const char D_800E12E0[4] = "%2d";
@@ -2033,7 +2033,7 @@ void func_8005AF2C(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         enqueueSoundEffect(0x18, 0x32);
         D_801235B4 |= 0x10;
-        func_80071824(arg0, func_8005AEB0);
+        setCallbackTaskCallback(arg0, func_8005AEB0);
     }
     func_800483FC(&D_80124868, func_8005A31C, arg0);
     func_800483FC(&D_80124868, func_8005A884, arg0);
@@ -2052,10 +2052,10 @@ void func_8005B068(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         enqueueSoundEffect(0x18, 0x32);
         if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
-            func_80071824(arg0, func_8005AF2C);
+            setCallbackTaskCallback(arg0, func_8005AF2C);
         } else {
             D_801235B4 |= 0x10;
-            func_80071824(arg0, func_8005AFEC);
+            setCallbackTaskCallback(arg0, func_8005AFEC);
         }
     }
     func_800483FC(&D_80124868, func_8005A31C, (s32)arg0);
@@ -2103,7 +2103,7 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
     if ((arg0->value == 0) && (arg0->bonus == 0) && (arg0->target == 0)) {
         enqueueSoundEffect(2, 0x32);
         arg0->timer = 0x14;
-        func_80071824(arg0, func_8005B068);
+        setCallbackTaskCallback(arg0, func_8005B068);
     }
 
     func_800483FC(&D_80124868, func_8005A31C, (s32)arg0);
@@ -2116,7 +2116,7 @@ void func_8005B344(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1C) = 3;
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        func_80071824(arg0, func_8005B14C);
+        setCallbackTaskCallback(arg0, func_8005B14C);
     }
     func_800483FC(&D_80124868, func_8005A31C, arg0);
     func_800483FC(&D_80124868, func_8005A4BC, arg0);
@@ -2129,7 +2129,7 @@ void func_8005B3EC(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0xA;
-        func_80071824(arg0, func_8005B344);
+        setCallbackTaskCallback(arg0, func_8005B344);
     }
     func_800483FC(&D_80124868, func_8005A31C, arg0);
     func_800483FC(&D_80124868, func_8005A4BC, arg0);
@@ -2143,7 +2143,7 @@ void func_8005B49C(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        func_80071824(arg0, func_8005B3EC);
+        setCallbackTaskCallback(arg0, func_8005B3EC);
     }
     func_800483FC(&D_80124868, func_8005A31C, arg0);
     func_800483FC(&D_80124868, func_8005A4BC, arg0);
@@ -2157,7 +2157,7 @@ void func_8005B55C(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        func_80071824(arg0, func_8005B49C);
+        setCallbackTaskCallback(arg0, func_8005B49C);
     }
     func_800483FC(&D_80124868, func_8005A31C, arg0);
     func_800483FC(&D_80124868, func_8005A4BC, arg0);
@@ -2172,9 +2172,9 @@ void func_8005B61C(void *arg0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         if (*(s16 *)((u8 *)arg0 + 0x24) != 0) {
-            func_80071824(arg0, func_8005B55C);
+            setCallbackTaskCallback(arg0, func_8005B55C);
         } else {
-            func_80071824(arg0, func_8005B49C);
+            setCallbackTaskCallback(arg0, func_8005B49C);
         }
     }
     func_800483FC(&D_80124868, func_8005A31C, arg0);
@@ -2188,7 +2188,7 @@ void func_8005B6F8(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         enqueueSoundEffect(0x1A, 0x32);
-        func_80071824(arg0, func_8005B61C);
+        setCallbackTaskCallback(arg0, func_8005B61C);
     }
     func_800483FC(&D_80124868, func_8005A31C, arg0);
     func_800483FC(&D_80124858, func_8005AAE4, arg0);
@@ -2200,7 +2200,7 @@ void func_8005B798(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x18) >= 0x100) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
-        func_80071824(arg0, func_8005B6F8);
+        setCallbackTaskCallback(arg0, func_8005B6F8);
     }
     func_800483FC(&D_80124868, func_8005A31C, arg0);
     func_800483FC(&D_80124858, func_8005AAE4, arg0);
@@ -2224,7 +2224,7 @@ void func_8005B834(void *arg0) {
             *(s16 *)((u8 *)arg0 + 0x20) = 0x3E8;
         }
     }
-    func_80071824(arg0, func_8005B798);
+    setCallbackTaskCallback(arg0, func_8005B798);
 }
 
 void func_8005B8E8(RaceUiAlphaActor *arg0) {
@@ -2478,7 +2478,7 @@ void func_8005C448(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         enqueueSoundEffect(0x18, 0x32);
         D_801235B4 |= 0x10;
-        func_80071824(arg0, func_8005C3E4);
+        setCallbackTaskCallback(arg0, func_8005C3E4);
     }
     func_800483FC(&D_80124868, func_8005B8E8, arg0);
     func_800483FC(&D_80124868, func_8005BE68, arg0);
@@ -2496,10 +2496,10 @@ void func_8005C568(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         enqueueSoundEffect(0x18, 0x32);
         if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
-            func_80071824(arg0, func_8005C448);
+            setCallbackTaskCallback(arg0, func_8005C448);
         } else {
             D_801235B4 |= 0x10;
-            func_80071824(arg0, func_8005C4EC);
+            setCallbackTaskCallback(arg0, func_8005C4EC);
         }
     }
     func_800483FC(&D_80124868, func_8005B8E8, (s32)arg0);
@@ -2554,7 +2554,7 @@ void func_8005C64C(RaceUiDualCounterActor *arg0) {
     if ((arg0->rightValue == 0) && (arg0->leftValue == 0) && (arg0->bonus == 0) && (arg0->leftTarget == 0)) {
         enqueueSoundEffect(2, 0x32);
         arg0->timer = 0x14;
-        func_80071824(arg0, func_8005C568);
+        setCallbackTaskCallback(arg0, func_8005C568);
     }
 
     func_800483FC(&D_80124868, func_8005B8E8, (s32)arg0);
@@ -2567,7 +2567,7 @@ void func_8005C89C(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x20) = 4;
     *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)((u8 *)arg0 + 0x1E) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
-        func_80071824(arg0, func_8005C64C);
+        setCallbackTaskCallback(arg0, func_8005C64C);
     }
     func_800483FC(&D_80124868, func_8005B8E8, arg0);
     func_800483FC(&D_80124868, func_8005B9F8, arg0);
@@ -2580,7 +2580,7 @@ void func_8005C944(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)((u8 *)arg0 + 0x1E) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1E) = 0xA;
-        func_80071824(arg0, func_8005C89C);
+        setCallbackTaskCallback(arg0, func_8005C89C);
     }
     func_800483FC(&D_80124868, func_8005B8E8, arg0);
     func_800483FC(&D_80124868, func_8005B9F8, arg0);
@@ -2594,7 +2594,7 @@ void func_8005C9F4(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
-        func_80071824(arg0, func_8005C944);
+        setCallbackTaskCallback(arg0, func_8005C944);
     }
     func_800483FC(&D_80124868, func_8005B8E8, arg0);
     func_800483FC(&D_80124868, func_8005B9F8, arg0);
@@ -2608,7 +2608,7 @@ void func_8005CAB4(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
-        func_80071824(arg0, func_8005C9F4);
+        setCallbackTaskCallback(arg0, func_8005C9F4);
     }
     func_800483FC(&D_80124868, func_8005B8E8, arg0);
     func_800483FC(&D_80124868, func_8005B9F8, arg0);
@@ -2623,9 +2623,9 @@ void func_8005CB74(void *arg0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
         if (*(s16 *)((u8 *)arg0 + 0x2A) != 0) {
-            func_80071824(arg0, func_8005CAB4);
+            setCallbackTaskCallback(arg0, func_8005CAB4);
         } else {
-            func_80071824(arg0, func_8005C9F4);
+            setCallbackTaskCallback(arg0, func_8005C9F4);
         }
     }
     func_800483FC(&D_80124868, func_8005B8E8, arg0);
@@ -2640,7 +2640,7 @@ void func_8005CC54(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
-        func_80071824(arg0, func_8005CB74);
+        setCallbackTaskCallback(arg0, func_8005CB74);
     }
     func_800483FC(&D_80124868, func_8005B8E8, arg0);
     func_800483FC(&D_80124868, func_8005B9F8, arg0);
@@ -2653,7 +2653,7 @@ void func_8005CD10(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
         enqueueSoundEffect(0x1A, 0x32);
-        func_80071824(arg0, func_8005CC54);
+        setCallbackTaskCallback(arg0, func_8005CC54);
     }
     func_800483FC(&D_80124868, func_8005B8E8, arg0);
     func_800483FC(&D_80124858, func_8005C03C, arg0);
@@ -2665,7 +2665,7 @@ void func_8005CDB0(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1C) >= 0x100) {
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
         *(s16 *)((u8 *)arg0 + 0x1C) = 0xFF;
-        func_80071824(arg0, func_8005CD10);
+        setCallbackTaskCallback(arg0, func_8005CD10);
     }
     func_800483FC(&D_80124868, func_8005B8E8, arg0);
     func_800483FC(&D_80124858, func_8005C03C, arg0);
@@ -2695,7 +2695,7 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
         }
     }
     arg0->rightValue = temp_v0 * 0xA;
-    func_80071824(arg0, func_8005CDB0);
+    setCallbackTaskCallback(arg0, func_8005CDB0);
 }
 
 // func_8005CF60 best match: 93.690% (nonmatchings/func_8005CF60-7123131487808489545/base_4.c)
@@ -3014,7 +3014,7 @@ void func_8005DC4C(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         enqueueSoundEffect(0x18, 0x32);
         D_801235B4 |= 0x10;
-        func_80071824(arg0, func_8005DBD0);
+        setCallbackTaskCallback(arg0, func_8005DBD0);
     }
     func_800483FC(&D_80124868, func_8005CF60, arg0);
     func_800483FC(&D_80124868, func_8005D558, arg0);
@@ -3033,10 +3033,10 @@ void func_8005DD88(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         enqueueSoundEffect(0x18, 0x32);
         if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
-            func_80071824(arg0, func_8005DC4C);
+            setCallbackTaskCallback(arg0, func_8005DC4C);
         } else {
             D_801235B4 |= 0x10;
-            func_80071824(arg0, func_8005DD0C);
+            setCallbackTaskCallback(arg0, func_8005DD0C);
         }
     }
     func_800483FC(&D_80124868, func_8005CF60, (s32)arg0);
@@ -3084,7 +3084,7 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
     if ((arg0->pendingFirstValue == 0) && (arg0->pendingSecondValue == 0) && (arg0->pendingThirdValue == 0)) {
         enqueueSoundEffect(2, 0x32);
         arg0->timer = 0x14;
-        func_80071824(arg0, func_8005DD88);
+        setCallbackTaskCallback(arg0, func_8005DD88);
     }
 
     func_800483FC(&D_80124868, func_8005CF60, (s32)arg0);
@@ -3097,7 +3097,7 @@ void func_8005E064(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1C) = 3;
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        func_80071824(arg0, func_8005DE6C);
+        setCallbackTaskCallback(arg0, func_8005DE6C);
     }
     func_800483FC(&D_80124868, func_8005CF60, arg0);
     func_800483FC(&D_80124868, func_8005D1CC, arg0);
@@ -3110,7 +3110,7 @@ void func_8005E10C(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0xA;
-        func_80071824(arg0, func_8005E064);
+        setCallbackTaskCallback(arg0, func_8005E064);
     }
     func_800483FC(&D_80124868, func_8005CF60, arg0);
     func_800483FC(&D_80124868, func_8005D1CC, arg0);
@@ -3124,7 +3124,7 @@ void func_8005E1BC(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        func_80071824(arg0, func_8005E10C);
+        setCallbackTaskCallback(arg0, func_8005E10C);
     }
     func_800483FC(&D_80124868, func_8005CF60, arg0);
     func_800483FC(&D_80124868, func_8005D1CC, arg0);
@@ -3138,7 +3138,7 @@ void func_8005E27C(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        func_80071824(arg0, func_8005E1BC);
+        setCallbackTaskCallback(arg0, func_8005E1BC);
     }
     func_800483FC(&D_80124868, func_8005CF60, arg0);
     func_800483FC(&D_80124868, func_8005D1CC, arg0);
@@ -3152,7 +3152,7 @@ void func_8005E33C(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        func_80071824(arg0, func_8005E27C);
+        setCallbackTaskCallback(arg0, func_8005E27C);
     }
     func_800483FC(&D_80124868, func_8005CF60, arg0);
     func_800483FC(&D_80124868, func_8005D1CC, arg0);
@@ -3165,7 +3165,7 @@ void func_8005E3F8(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         enqueueSoundEffect(0x1A, 0x32);
-        func_80071824(arg0, func_8005E33C);
+        setCallbackTaskCallback(arg0, func_8005E33C);
     }
     func_800483FC(&D_80124868, func_8005CF60, arg0);
     func_800483FC(&D_80124858, func_8005D860, arg0);
@@ -3177,7 +3177,7 @@ void func_8005E498(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x18) >= 0x100) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
-        func_80071824(arg0, func_8005E3F8);
+        setCallbackTaskCallback(arg0, func_8005E3F8);
     }
     func_800483FC(&D_80124868, func_8005CF60, arg0);
     func_800483FC(&D_80124858, func_8005D860, arg0);
@@ -3195,7 +3195,7 @@ void func_8005E534(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1E) = D_80121D80[0].unk2C0 * 3;
         *(s16 *)((u8 *)arg0 + 0x20) = D_80121D80[0].unk2C3 * 10;
     }
-    func_80071824(arg0, func_8005E498);
+    setCallbackTaskCallback(arg0, func_8005E498);
 }
 
 void func_8005E5B4(void *arg0) {
@@ -3281,7 +3281,7 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
             if (arg0->alpha <= 0) {
                 player = &D_80121D80[arg0->playerIndex];
                 player->unk2D8--;
-                func_800716E4((EffectTask *) arg0);
+                removeCallbackTask((CallbackTask *) arg0);
                 return;
             }
         }
@@ -3333,7 +3333,7 @@ void func_8005EFFC(RaceUiSparkleActor *arg0) {
             arg0->alpha = 0xFF;
             arg0->alphaStep = -0x20;
             arg0->timer = 0x14;
-            func_80071824(arg0, func_8005ECA8);
+            setCallbackTaskCallback(arg0, func_8005ECA8);
         }
         arg0->zOffset += 0x20000;
     }
@@ -3354,11 +3354,11 @@ void func_8005F174(RaceUiSparkleActor *arg0) {
     func_80045990(func_80043040(D_80112168), 0x25, &arg0->images[2], &arg0->palettes[2]);
     func_80045990(func_80043040(D_80112168), 0x26, &arg0->images[3], &arg0->palettes[3]);
     func_80072A74(0x10, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
-    func_80071824(arg0, func_8005EFFC);
+    setCallbackTaskCallback(arg0, func_8005EFFC);
 }
 
 void func_8005F298(s16 arg0) {
-    RaceUiSparkleActor *temp = func_800711D0(func_8005F174, 0, 0x62);
+    RaceUiSparkleActor *temp = createCallbackTaskPreservingArgs(func_8005F174, 0, 0x62);
     if (temp != NULL) {
         temp->playerIndex = arg0;
     }
@@ -3413,7 +3413,7 @@ void func_8005F448(RaceUiSnowboardTrailActor *arg0) {
 
     actor->timer--;
     if (actor->timer == 0) {
-        func_800716E4(actor);
+        removeCallbackTask(actor);
         return;
     }
 
@@ -3430,11 +3430,11 @@ void func_8005F56C(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x92) = 0xF;
     *(s32 *)((u8 *)arg0 + 0x3C) = 0x20000;
     func_8005F448(arg0);
-    func_80071824(arg0, func_8005F448);
+    setCallbackTaskCallback(arg0, func_8005F448);
 }
 
 void func_8005F5C8(RaceUiSnowboardTrailPlayer *player) {
-    RaceUiSnowboardTrailActor *actor = func_800711D0(func_8005F56C, 0, 0x62);
+    RaceUiSnowboardTrailActor *actor = createCallbackTaskPreservingArgs(func_8005F56C, 0, 0x62);
 
     if (actor != NULL) {
         actor->playerIndex = player->playerIndex;
@@ -3512,13 +3512,13 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
     }
 
     func_80072A74(0x15, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
-    func_800716E4(arg0);
+    removeCallbackTask(arg0);
 }
 
 void func_8005FB30(RaceUiRankTrailActor *arg0) {
     arg0->scale = 2;
     func_80072A74(0xF, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
-    func_80071824(arg0, func_8005F828);
+    setCallbackTaskCallback(arg0, func_8005F828);
 }
 
 void func_8005FBA8(RaceUiAnimatedTextActor *arg0) {
@@ -3590,7 +3590,7 @@ void func_800601F8(void *arg0) {
         *(s32 *)((u8 *)arg0 + 0x4C) = temp - 0x8000;
         *(s16 *)((u8 *)arg0 + 0x54) = *(s16 *)((u8 *)arg0 + 0x54) + 1;
         if (*(s16 *)((u8 *)arg0 + 0x54) >= 0x10) {
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
     }
@@ -3616,11 +3616,11 @@ void func_800602BC(void *arg0) {
         func_80045990(func_80043040(D_80112130.mainFontHandle), 0x2E, (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x34);
     }
     func_800601F8(arg0);
-    func_80071824(arg0, func_800601F8);
+    setCallbackTaskCallback(arg0, func_800601F8);
 }
 
 void func_80060454(void *arg0, void *arg1, void *arg2, s16 arg3) {
-    void *temp = func_800711D0(func_800602BC, 5, 0x1E);
+    void *temp = createCallbackTaskPreservingArgs(func_800602BC, 5, 0x1E);
     if (temp != NULL) {
         *(s8 *)((u8 *)temp + 0x57) = 0;
         *(s16 *)((u8 *)temp + 0x10) = arg3;
@@ -3631,7 +3631,7 @@ void func_80060454(void *arg0, void *arg1, void *arg2, s16 arg3) {
 }
 
 void func_800604CC(void *arg0, void *arg1, void *arg2, s16 arg3) {
-    void *temp = func_800711D0(func_800602BC, 5, 0x1E);
+    void *temp = createCallbackTaskPreservingArgs(func_800602BC, 5, 0x1E);
     if (temp != NULL) {
         *(s8 *)((u8 *)temp + 0x57) = 1;
         *(s16 *)((u8 *)temp + 0x10) = arg3;
@@ -3675,7 +3675,7 @@ void func_8006069C(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x56) = *(s16 *)((u8 *)arg0 + 0x56) - 1;
     }
     if (*(s16 *)((u8 *)arg0 + 0x56) == 0) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     } else {
         func_800483FC(&D_801248B0, func_80060544, arg0);
     }
@@ -3700,7 +3700,7 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         if (height < 0x100000) {
             arg0->timer = 0x14;
             arg0->velocity = 0x80000;
-            func_80071824(arg0, func_8006069C);
+            setCallbackTaskCallback(arg0, func_8006069C);
             height = arg0->height;
         }
 
@@ -3753,7 +3753,7 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
 
             if (arg0->height >= 0xA00001) {
                 arg0->velocity = -0x10000;
-                func_80071824(arg0, updateGhostSlowdownImpact);
+                setCallbackTaskCallback(arg0, updateGhostSlowdownImpact);
             }
         }
         D_8012229A[arg0->targetPlayerIndex].value = 1;
@@ -3770,7 +3770,7 @@ void initGhostSlowdownActor(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x4C) = 0;
     *(u8 *)((u8 *)arg0 + 0x59) = 1;
     func_80072A74(0xD, &D_80121D80[*(s16 *)((u8 *)arg0 + 0x50)].pos1C, 0x7F, 0x32);
-    func_80071824(arg0, updateGhostSlowdownRise);
+    setCallbackTaskCallback(arg0, updateGhostSlowdownRise);
 }
 
 void spawnGhostSlowdownTargets(s16 arg0) {
@@ -3783,7 +3783,7 @@ void spawnGhostSlowdownTargets(s16 arg0) {
     if (gRacePlayerCount > 0) {
         do {
             if (arg0 != var_s0) {
-                temp_v0 = func_800711D0(initGhostSlowdownActor, 0, 0x1E);
+                temp_v0 = createCallbackTaskPreservingArgs(initGhostSlowdownActor, 0, 0x1E);
                 if (temp_v0 != NULL) {
                     *(s16 *)((u8 *)temp_v0 + 0x50) = arg0;
                     *(s16 *)((u8 *)temp_v0 + 0x52) = var_s0;
@@ -3821,7 +3821,7 @@ void func_80060E7C(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x1C) += *(s32 *)((u8 *)arg0 + 0x28);
     *(s32 *)((u8 *)arg0 + 0x28) += 4;
     if (*(s32 *)((u8 *)arg0 + 0x28) == 0x38) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     } else {
         func_800483FC(&D_80124878, func_80060D10, arg0);
     }
@@ -3830,7 +3830,7 @@ void func_80060E7C(void *arg0) {
 void func_80060EDC(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x18) = *(u16 *)((u8 *)arg0 + 0x18) - 1;
     if (*(u16 *)((u8 *)arg0 + 0x18) == 0) {
-        func_80071824(arg0, func_80060E7C);
+        setCallbackTaskCallback(arg0, func_80060E7C);
     }
     func_800483FC(&D_80124878, func_80060D10, arg0);
 }
@@ -3840,7 +3840,7 @@ void func_80060F38(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x28) -= 4;
     if (*(s32 *)((u8 *)arg0 + 0x28) == 0) {
         *(s16 *)((u8 *)arg0 + 0x18) = 0x2D;
-        func_80071824(arg0, func_80060EDC);
+        setCallbackTaskCallback(arg0, func_80060EDC);
     }
     func_800483FC(&D_80124878, func_80060D10, arg0);
 }
@@ -3854,14 +3854,14 @@ void func_80060FA4(void *arg0) {
         }
         *(s32 *)((u8 *)arg0 + 0x28) = 0x38;
         *(s32 *)((u8 *)arg0 + 0x1C) = 0x1A4;
-        func_80071824(arg0, func_80060F38);
+        setCallbackTaskCallback(arg0, func_80060F38);
     } else {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     }
 }
 
 void func_80061034(void *arg0, s16 arg1) {
-    void *temp = createEffectTask(func_80060FA4, 0, 0x64);
+    void *temp = createCallbackTask(func_80060FA4, 0, 0x64);
     if (temp != NULL) {
         *(void **)((u8 *)temp + 0x2C) = arg0;
         *(s8 *)((u8 *)temp + 0x30) = arg1;
@@ -3920,7 +3920,7 @@ void func_800613EC(void *arg0) {
 void func_80061428(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x30) = 0;
     *(Vec3i *)((u8 *)arg0 + 0x18) = D_800D6220[*(u16 *)((u8 *)arg0 + 0x10)];
-    func_80071824(arg0, func_800613EC);
+    setCallbackTaskCallback(arg0, func_800613EC);
 }
 
 void func_80061484(RaceUiRankTrailActor *arg0) {
@@ -3972,11 +3972,11 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
         func_800604CC((void *)arg0->copyBlock.words[5], (void *)arg0->copyBlock.words[6], (void *)arg0->copyBlock.words[7], i);
     }
 
-    func_800716E4(arg0);
+    removeCallbackTask(arg0);
 }
 
 void func_800617C8(void *arg0) {
-    func_80071824(arg0, func_800615BC);
+    setCallbackTaskCallback(arg0, func_800615BC);
 }
 
 void func_800617EC(RaceUiRisingTrailActor *arg0) {
@@ -4047,11 +4047,11 @@ void func_80061A98(RaceUiThrownTrailActor *arg0) {
     arg0->pos.y = func_80080CC4(arg0->surface, arg0->pos.x, arg0->pos.z);
     arg0->angleStep = 8;
     arg0->angle = arg0->angleStep;
-    func_80071824(arg0, func_80061984);
+    setCallbackTaskCallback(arg0, func_80061984);
 }
 
 void func_80061AF4(s16 arg0, void *arg1, void *arg2, s16 arg3) {
-    RaceUiThrownTrailActor *temp = createEffectTask(func_80061A98, 0, 0x64);
+    RaceUiThrownTrailActor *temp = createCallbackTask(func_80061A98, 0, 0x64);
     if (temp != NULL) {
         temp->pos.x = (s32)arg1;
         temp->pos.z = (s32)arg2;
@@ -4093,7 +4093,7 @@ void func_80061CA8(RaceUiSingleTrailActor *arg0) {
     }
 
     if (arg0->timer == 0) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
 
@@ -4106,7 +4106,7 @@ void func_80061D90(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x58) = 0;
     *(s32 *)((u8 *)arg0 + 0x5C) = 0x100000;
     *(s32 *)((u8 *)arg0 + 0x60) = 0xFFE00000;
-    func_80071824(arg0, func_80061CA8);
+    setCallbackTaskCallback(arg0, func_80061CA8);
 }
 
 void func_80061DE8(RaceUiFadingTrailActor *arg0) {
@@ -4183,7 +4183,7 @@ void func_80061F38(RaceUiFadingImpactActor *arg0) {
     }
 
     if (arg0->alpha <= 0) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     } else {
         func_800483FC(&D_801248EC, func_80061DE8, (s32)arg0);
     }
@@ -4197,11 +4197,11 @@ void func_800621DC(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x30) = *(s32 *)((u8 *)arg0 + 0x3C);
     *(s32 *)((u8 *)arg0 + 0x34) = *(s32 *)((u8 *)arg0 + 0x40);
     func_80072A74(0x13, (u8 *)arg0 + 0x38, 0x7F, 0x32);
-    func_80071824(arg0, func_80061F38);
+    setCallbackTaskCallback(arg0, func_80061F38);
 }
 
 void func_8006224C(void *arg0, void *arg1, void *arg2) {
-    void *temp = func_800716A4(func_800621DC, 0, 3);
+    void *temp = createCallbackTaskWithUserIdPreservingArgs(func_800621DC, 0, 3);
     if (temp != NULL) {
         *(void **)((u8 *)temp + 0x38) = arg0;
         *(void **)((u8 *)temp + 0x3C) = arg1;
@@ -4244,7 +4244,7 @@ void func_80062530(RaceUiTransitionActor *arg0) {
     arg0->unk6E = 0xF;
     func_80072A74(0xB, &D_80121D80[arg0->index].pos1C, 0x7F, 0x32);
     func_800623E8(arg0);
-    func_80071824(arg0, func_800623E8);
+    setCallbackTaskCallback(arg0, func_800623E8);
 }
 
 void func_800625D8(RaceUiOrbitingSpriteActor *arg0) {
@@ -4290,7 +4290,7 @@ void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
 
     player = &D_80121D80[arg0->index];
     if (!(player->flags & 0x10000)) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
 
@@ -4307,22 +4307,22 @@ void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
 
 void func_80062A10(void *arg0) {
     func_80045990(func_80043040(D_80112168), 0x35, (u8 *)arg0 + 0x30, (u8 *)arg0 + 0x2C);
-    func_80071824(arg0, func_800628DC);
+    setCallbackTaskCallback(arg0, func_800628DC);
 }
 
 void func_80062A64(s16 arg0) {
     void *temp;
-    temp = func_800711D0(func_80062A10, 0, 4);
+    temp = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
     if (temp != NULL) {
         *(s8 *)((u8 *)temp + 0x35) = arg0;
         *(s16 *)((u8 *)temp + 0x28) = 0;
     }
-    temp = func_800711D0(func_80062A10, 0, 4);
+    temp = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
     if (temp != NULL) {
         *(s8 *)((u8 *)temp + 0x35) = arg0;
         *(s16 *)((u8 *)temp + 0x28) = 0x555;
     }
-    temp = func_800711D0(func_80062A10, 0, 4);
+    temp = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
     if (temp != NULL) {
         *(s8 *)((u8 *)temp + 0x35) = arg0;
         *(s16 *)((u8 *)temp + 0x28) = 0xAAA;
@@ -4412,7 +4412,7 @@ void func_80062ED4(RaceUiScaledParticleActor *arg0) {
     }
     arg0->scale = 0x1000;
     arg0->pos = D_800D62AC[*(u16 *)((u8 *)arg0 + 0x10)];
-    func_80071824(arg0, func_80062D34);
+    setCallbackTaskCallback(arg0, func_80062D34);
 }
 
 void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
@@ -4462,7 +4462,7 @@ void func_80063164(void *arg0) {
 void func_800631B0(void *arg0) {
     *(Vec3i *)((u8 *)arg0 + 0x18) = D_800D6330[*(u16 *)((u8 *)arg0 + 0x10)];
     *(s16 *)((u8 *)arg0 + 0x2C) = D_800D633C[*(u16 *)((u8 *)arg0 + 0x10)];
-    func_80071824(arg0, func_80063164);
+    setCallbackTaskCallback(arg0, func_80063164);
 }
 
 void func_80063220(RaceUiSpinningParticleActor *arg0) {
@@ -4517,7 +4517,7 @@ void func_80063410(void *arg0) {
 
 void func_80063470(void *arg0) {
     *(Vec3i *)((u8 *)arg0 + 0x18) = D_800D6340[*(u16 *)((u8 *)arg0 + 0x10)];
-    func_80071824(arg0, func_80063410);
+    setCallbackTaskCallback(arg0, func_80063410);
 }
 
 // func_800634C8 best match: 99.268% (nonmatchings/func_800634C8-7273315160691878794/base_9.c)
@@ -4608,7 +4608,7 @@ void func_80063980(RaceUiCourseSpriteActor *actor) {
             break;
     }
     unused = 0;
-    func_80071824(actor, func_8006392C);
+    setCallbackTaskCallback(actor, func_8006392C);
 }
 
 // func_80063A9C best match: 98.816% (nonmatchings/func_80063A9C-6061209858023118177/base_9.c)
@@ -4741,7 +4741,7 @@ void func_80063FC0(RaceUiEffectParticleActor *actor) {
         actor->particles[i].unk8 = randomNextMain() << 0x10;
     }
 
-    func_80071824(actor, func_80063E70);
+    setCallbackTaskCallback(actor, func_80063E70);
 }
 
 void func_800640D8(RaceUiRankParticleActor *arg0) {
@@ -4799,7 +4799,7 @@ void func_8006429C(RaceUiRankParticleActor *actor) {
     actor->copyBlock.transform.translation.z = actor->pos.z;
     actor->displayLists[0] = D_800D6400[(actor->index * 2) + (D_80121B50 * 4)];
     actor->displayLists[1] = D_800D6400[(actor->index * 2) + (D_80121B50 * 4) + 1];
-    func_80071824(actor, func_8006426C);
+    setCallbackTaskCallback(actor, func_8006426C);
 }
 
 void func_800643B4(void *arg0, u16 *arg1) {
@@ -4894,7 +4894,7 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
         temp = (actor->verticalVelocity += actor->verticalAcceleration);
         actor->verticalAcceleration += 0x10000;
         if (temp >= 0x300001) {
-            func_800716E4(actor);
+            removeCallbackTask(actor);
             return;
         }
     }
@@ -4949,7 +4949,7 @@ void func_80064914(RaceUiProjectileActor *arg0) {
             arg0->verticalAcceleration = 0;
             arg0->verticalVelocity = 0;
             func_80072A74(0x6A, &D_80121D80[arg0->index].pos28, 0x7F, 0x32);
-            func_80071824(arg0, func_800647E0);
+            setCallbackTaskCallback(arg0, func_800647E0);
         }
     }
 
@@ -4982,7 +4982,7 @@ void func_80064B28(RaceUiProjectileActor *arg0) {
             actor->verticalVelocity = 0;
             func_80072A74(0x68, &player->pos28, 0x7F, 0x32);
             func_80064414(actor);
-            func_80071824(actor, func_80064914);
+            setCallbackTaskCallback(actor, func_80064914);
         }
     }
     func_800483FC(&D_801248C8, func_80064470, actor);
@@ -5004,7 +5004,7 @@ void func_80064C68(RaceUiProjectileActor *arg0) {
         actor->pos.z += player->pos28.z;
         func_80064414(actor);
         if (actor->flags != 0) {
-            func_80071824(actor, func_80064B28);
+            setCallbackTaskCallback(actor, func_80064B28);
             actor->verticalAcceleration = 0x50000;
             actor->verticalVelocity += 0x50000;
         }
@@ -5030,7 +5030,7 @@ void func_80064D88(RaceUiProjectileActor *arg0) {
         actor->verticalAcceleration += 0xFFFF0000;
         if (actor->verticalVelocity <= 0) {
             actor->verticalVelocity = 0;
-            func_80071824(actor, func_80064C68);
+            setCallbackTaskCallback(actor, func_80064C68);
         }
     }
     func_800483FC(&D_801248C8, func_80064470, actor);
@@ -5046,7 +5046,7 @@ void func_80064EAC(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x54) = 0;
     func_800643B4(arg0, D_800D6520);
     func_80072A74(0x66, &D_80121D80[*(u16 *)((u8 *)arg0 + 0x10)].pos28, 0x7F, 0x32);
-    func_80071824(arg0, func_80064D88);
+    setCallbackTaskCallback(arg0, func_80064D88);
 }
 
 void func_80064F4C(void *arg0) {
@@ -5068,7 +5068,7 @@ void func_8006501C(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x1C) -= *(s32 *)((u8 *)arg0 + 0x28);
     *(s32 *)((u8 *)arg0 + 0x28) += 4;
     if (*(s32 *)((u8 *)arg0 + 0x28) == 0x38) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     } else {
         func_800483FC(&D_80124878, func_80064F4C, arg0);
     }
@@ -5077,7 +5077,7 @@ void func_8006501C(void *arg0) {
 void func_8006507C(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x18) = *(u16 *)((u8 *)arg0 + 0x18) - 1;
     if (*(u16 *)((u8 *)arg0 + 0x18) == 0) {
-        func_80071824(arg0, func_8006501C);
+        setCallbackTaskCallback(arg0, func_8006501C);
     }
     func_800483FC(&D_80124878, func_80064F4C, arg0);
 }
@@ -5087,7 +5087,7 @@ void func_800650D8(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x28) -= 4;
     if (*(s32 *)((u8 *)arg0 + 0x28) == 0) {
         *(s16 *)((u8 *)arg0 + 0x18) = 0x5A;
-        func_80071824(arg0, func_8006507C);
+        setCallbackTaskCallback(arg0, func_8006507C);
     }
     func_800483FC(&D_80124878, func_80064F4C, arg0);
 }
@@ -5100,7 +5100,7 @@ void func_80065144(void *arg0) {
     v0 = func_8007B130(&D_80121B74, (RaceTimer *)&D_800EC9F0[D_80121B50 * 4 + 0x12A],
                        (RaceTimer *)((u8 *)arg0 + 0x2C));
     *(s8 *)((u8 *)arg0 + 0x30) = v0;
-    func_80071824(arg0, func_800650D8);
+    setCallbackTaskCallback(arg0, func_800650D8);
 }
 
 // func_800651BC best match: 353 asm-differ differences
@@ -5300,7 +5300,7 @@ void func_80065764(void *arg0) {
         D_80112130.resultTextHandle = func_80042D58(var_v1 << 6);
         *(s32 *)((u8 *)arg0 + 0x18) = func_80043040(D_80112130.resultTextHandle);
         func_8006565C(arg0);
-        func_80071824(arg0, func_80065508);
+        setCallbackTaskCallback(arg0, func_80065508);
     }
 }
 
@@ -5369,7 +5369,7 @@ void func_80065CB8(void *arg0) {
         *(s32 *)((u8 *)arg0 + 0x28) += 0x2000;
         *(s16 *)((u8 *)arg0 + 0x30) = temp_v1 - 1;
     } else {
-        func_800716E4(temp_a2);
+        removeCallbackTask(temp_a2);
         return;
     }
     func_800483FC(&D_801248BC, func_80065808, temp_a2);
@@ -5396,7 +5396,7 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
         temp_s0->assetTimer++;
         if (temp_s0->assetTimer >= 0xB) {
             temp_s0->timer = 0x3C;
-            func_80071824(temp_s0, func_80065CB8);
+            setCallbackTaskCallback(temp_s0, func_80065CB8);
         }
     } else {
         temp_s0->timer = temp_v0 - 1;
@@ -5417,7 +5417,7 @@ void func_80065E0C(void *arg0) {
     } else {
         *(s16 *)((u8 *)arg0 + 0x30) = 0x14;
         *(s16 *)((u8 *)arg0 + 0x32) = 0;
-        func_80071824(arg0, func_80065D24);
+        setCallbackTaskCallback(arg0, func_80065D24);
     }
     func_800483FC(&D_801248BC, func_80065808, arg0);
 }
@@ -5438,7 +5438,7 @@ void func_80065E90(RaceUiOverlayActor *arg0) {
 
     func_80045990(func_80043040(D_8011216E), 0x3A, &arg0->palette3A, &arg0->image3A);
     func_80045990(func_80043040(D_8011216E), 0x3B, &arg0->palette3B, &arg0->image3B);
-    func_80071824(arg0, func_80065E0C);
+    setCallbackTaskCallback(arg0, func_80065E0C);
 }
 
 void func_80065FD8(RaceUiRankTextRenderActor *arg0) {
@@ -5590,6 +5590,6 @@ void func_800666B0(RaceUiRankTextRenderActor *arg0) {
         D_80112130.rankTextHandle = func_80042D58(var_v1 << 6);
         arg0->matrices = (void *)func_80043040(D_80112130.rankTextHandle);
         func_800663C8(arg0);
-        func_80071824(arg0, func_80066158);
+        setCallbackTaskCallback(arg0, func_80066158);
     }
 }

@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "viewport_manager.h"
 #include "fixed_point_matrix.h"
@@ -224,7 +224,7 @@ void func_800536F4(MainMenuOverlayEffectActor *arg0) {
     arg0->unk18.half.hi += var_v1;
     arg0->unk18.half.lo += arg0->unk20.half.lo;
     if (arg0->unk18.half.lo >= 0x6E1) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(D_80124878, func_80053660, (s32)arg0);
@@ -239,7 +239,7 @@ void func_80053858(MainMenuOverlayEffectActor *arg0) {
         arg0->unk1C.half.lo = randomNextMain() & 0xF;
     }
     if (arg0->unk18.half.lo >= 0x6E1) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(D_80124878, func_80053660, (s32)arg0);
@@ -290,7 +290,7 @@ void func_80053D8C(s32 arg0) {
 }
 
 void func_80053DD8(void *arg0) {
-    func_80071824(arg0, func_80053D8C);
+    setCallbackTaskCallback(arg0, func_80053D8C);
 }
 
 void func_80053DFC(s32 arg0) {
@@ -305,7 +305,7 @@ void func_80053E28(MainMenuOverlayEffectActor *arg0) {
             arg0->unk18.byte.b0 = 0;
         }
         func_80042034(0);
-        func_80071824(arg0, func_80053DFC);
+        setCallbackTaskCallback(arg0, func_80053DFC);
         func_80042A00(0);
         return;
     }
@@ -319,7 +319,7 @@ void func_80053EBC(MainMenuOverlayEffectActor *arg0) {
     func_80042034(0);
     func_8004209C(0, 0, 0, 0);
     func_800420FC(0, 0, 0, 0);
-    func_80071824(arg0, func_80053E28);
+    setCallbackTaskCallback(arg0, func_80053E28);
 }
 
 void func_80053F50(MainMenuOverlayEffectActor *arg0) {
@@ -344,11 +344,11 @@ void func_80053FA0(MainMenuOverlayEffectActor *arg0) {
         func_8004209C(b, D_800D5748[b], 0xFFB50000, 0xA00000);
     }
     func_800420FC(arg0->unk18.word, 0, 0x800, 0);
-    func_80071824(arg0, func_80053F50);
+    setCallbackTaskCallback(arg0, func_80053F50);
 }
 
 void func_80054044(s32 arg0, s32 arg1) {
-    MainMenuOverlayEffectActor *p = func_80071664(func_80053FA0, 0, 0x64, arg1);
+    MainMenuOverlayEffectActor *p = createCallbackTaskWithUserId(func_80053FA0, 0, 0x64, arg1);
     if (p != NULL) {
         p->unk18.word = arg0;
     }
@@ -418,7 +418,7 @@ void func_80054460(MainMenuOverlayEffectActor *arg0) {
 
     player = &D_80121D80[arg0->index];
     if (player->flags & 0x2000) {
-        func_80071824(arg0, func_800545D0);
+        setCallbackTaskCallback(arg0, func_800545D0);
         return;
     }
 
@@ -426,7 +426,7 @@ void func_80054460(MainMenuOverlayEffectActor *arg0) {
     if (temp != 5) {
         arg0->unk2E = temp + 1;
     } else if (player->unk51A == 0) {
-        func_80071824(arg0, func_800545D0);
+        setCallbackTaskCallback(arg0, func_800545D0);
     }
 
     sp2C.x = 0x40000;
@@ -450,7 +450,7 @@ void func_800545D0(MainMenuOverlayEffectActor *arg0) {
     if (!(player->flags & 0x2000)) {
         if (player->unk51A != 0) {
             arg0->unk2E = 0xFF;
-            func_80071824(arg0, func_80054460);
+            setCallbackTaskCallback(arg0, func_80054460);
         }
     }
 }
@@ -472,7 +472,7 @@ void func_80054714(MainMenuOverlayEffectActor *arg0) {
 
     arg0->unk18.half.hi = temp[0];
     arg0->unk18.half.lo = temp[1];
-    func_80071824(arg0, func_800546E4);
+    setCallbackTaskCallback(arg0, func_800546E4);
 }
 
 void func_8005475C(MainMenuOverlayEffectActor *arg0) {
@@ -491,7 +491,7 @@ void func_800548F4(MainMenuOverlayEffectActor *arg0) {
     } else {
         arg0->unk18.half.lo -= 0x20;
         if (arg0->unk18.half.lo <= 0) {
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
     }
@@ -501,7 +501,7 @@ void func_800548F4(MainMenuOverlayEffectActor *arg0) {
 void func_80054968(MainMenuOverlayEffectActor *arg0) {
     arg0->unk18.half.hi = 0x3E;
     arg0->unk18.half.lo = 0xFF;
-    func_80071824(arg0, func_800548F4);
+    setCallbackTaskCallback(arg0, func_800548F4);
 }
 
 void func_8005499C(MainMenuOverlayEffectActor *arg0) {
@@ -520,7 +520,7 @@ void func_80054A04(MainMenuOverlayEffectActor *arg0) {
     arg0->unk18.word += temp_v0;
     arg0->unk24.word = temp_t8;
     if (temp_t8 == 0x38) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     } else {
         func_800483FC(D_80124878, func_8005499C, (s32)arg0);
     }
@@ -532,7 +532,7 @@ void func_80054A64(MainMenuOverlayEffectActor *arg0) {
     arg0->timer = temp;
     temp += 0;
     if (temp == 0) {
-        func_80071824(arg0, func_80054A04);
+        setCallbackTaskCallback(arg0, func_80054A04);
     }
     if (1) {
     }
@@ -544,7 +544,7 @@ void func_80054AC0(MainMenuOverlayEffectActor *arg0) {
     arg0->unk24.word -= 4;
     if (arg0->unk24.word == 0) {
         arg0->timer = 0x1E;
-        func_80071824(arg0, func_80054A64);
+        setCallbackTaskCallback(arg0, func_80054A64);
     }
     func_800483FC(D_80124878, func_8005499C, (s32)arg0);
 }
@@ -553,10 +553,10 @@ void func_80054B2C(MainMenuOverlayEffectActor *arg0) {
     if (D_801124B0[arg0->index].active != 0) {
         arg0->unk24.word = 0x38;
         arg0->unk18.word = -0x1A4;
-        func_80071824(arg0, func_80054AC0);
+        setCallbackTaskCallback(arg0, func_80054AC0);
         return;
     }
-    func_800716E4(arg0);
+    removeCallbackTask(arg0);
 }
 
 // func_80054B98 best match: 84.797% at nonmatchings/func_80054B98-4923837976568703863/base_11.c
@@ -663,7 +663,7 @@ void func_80054B98(MainMenuOverlayEffectActor *arg0) {
 void func_80054E70(MainMenuOverlayEffectActor *arg0) {
     arg0->alpha -= 0x20;
     if (arg0->alpha == 0) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(D_801248D4, func_80054B98, (s32)arg0);
@@ -676,14 +676,14 @@ void func_80054EC4(MainMenuOverlayEffectActor *arg0) {
     arg0->unk20.word = ((-0x9F0000LL * arg0->unk30.word) / 0x400) + 0xEC0000;
     arg0->spriteIndex = (0x5000LL * func_80097AE8(arg0->unk30.half.lo)) / 0x1000;
     if (arg0->unk30.word < 0x3F0) {
-        actor = createEffectTask(func_80054E70, 0, 0x65);
+        actor = createCallbackTask(func_80054E70, 0, 0x65);
         *(OverlayActorTransform *)&actor->unk18 = *(OverlayActorTransform *)&arg0->unk18;
         actor->spriteIndex = arg0->spriteIndex;
         actor->alpha = 0xC0;
         arg0->unk30.word += 0x10;
     } else {
-        createEffectTask(func_800550E0, 0, 0x63);
-        func_800716E4(arg0);
+        createCallbackTask(func_800550E0, 0, 0x63);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(D_801248D4, func_80054B98, (s32)arg0);
@@ -696,7 +696,7 @@ void func_8005502C(MainMenuOverlayEffectActor *arg0) {
     arg0->unk1C.word = 0x300000;
     arg0->unk20.word = 0xEC0000;
     arg0->spriteIndex = 0;
-    func_80071824(arg0, func_80054EC4);
+    setCallbackTaskCallback(arg0, func_80054EC4);
 }
 
 void func_80055074(MainMenuOverlayEffectActor *arg0) {
@@ -781,7 +781,7 @@ void func_8005537C(MainMenuOverlayEffectActor *arg0) {
 void func_800553E0(MainMenuOverlayEffectActor *arg0) {
     arg0->unk18.half.hi = 0x50;
     arg0->unk18.half.lo = 0;
-    func_80071824(arg0, func_8005537C);
+    setCallbackTaskCallback(arg0, func_8005537C);
 }
 
 void func_80055410(MainMenuOverlayEffectActor *arg0) {
@@ -827,5 +827,5 @@ void func_8005562C(s32 arg0) {
 
 void func_80055678(MainMenuOverlayEffectActor *arg0) {
     arg0->unk18.half.hi = 0x360;
-    func_80071824(arg0, func_8005562C);
+    setCallbackTaskCallback(arg0, func_8005562C);
 }

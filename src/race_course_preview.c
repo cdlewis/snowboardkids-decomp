@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_course_preview.h"
 #include "fixed_point_math.h"
@@ -219,7 +219,7 @@ void initRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
         osWritebackDCache(arg0->matrices, allocSize);
     }
 
-    func_80071824(arg0, enqueueDrawRaceCoursePreviewModelMeshes);
+    setCallbackTaskCallback(arg0, enqueueDrawRaceCoursePreviewModelMeshes);
 }
 
 void drawRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
@@ -270,7 +270,7 @@ void updateRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
         arg0->timer = randomNextMain() + 0x1E;
-        func_80071824(arg0, waitRaceCoursePreviewBillboardSpawn);
+        setCallbackTaskCallback(arg0, waitRaceCoursePreviewBillboardSpawn);
     }
     func_80097C18(sp24, 0x6D0);
     func_80098590(sp24, (Vec3i *)&temp_s0->velocityY, &sp44);
@@ -292,14 +292,14 @@ void waitRaceCoursePreviewBillboardSpawn(RaceCoursePreviewCamera *arg0) {
         arg0->velocityY = 0;
         arg0->radius = 0;
         arg0->angle.word = 0xFFF00000;
-        func_80071824(arg0, updateRaceCoursePreviewBillboard);
+        setCallbackTaskCallback(arg0, updateRaceCoursePreviewBillboard);
     }
 }
 
 void initRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
     arg0->timer = (arg0->index * 0x1E) + 0x1E;
     func_80045990(func_80043040(D_8011216A), (arg0->index + 3) & 0xFFFF, &arg0->scale, &arg0->pitchVelocity);
-    func_80071824(arg0, waitRaceCoursePreviewBillboardSpawn);
+    setCallbackTaskCallback(arg0, waitRaceCoursePreviewBillboardSpawn);
 }
 
 void drawRaceCoursePreviewCameraModel(RaceCoursePreviewCamera *arg0) {
@@ -438,7 +438,7 @@ void initRaceCoursePreviewCameraIdle(RaceCoursePreviewCamera *arg0) {
     arg0->radius = 0x100000;
     arg0->stateTimer = 0;
     if (D_80122288 == 2) {
-        func_80071824(arg0, updateRaceCoursePreviewCameraIdle);
+        setCallbackTaskCallback(arg0, updateRaceCoursePreviewCameraIdle);
     }
 }
 
@@ -450,7 +450,7 @@ void updateRaceCoursePreviewLongPanReturn(RaceCoursePreviewCamera *arg0) {
     updateRaceCoursePreviewCameraMotion(arg0);
     arg0->stateTimer--;
     if (arg0->stateTimer == 0) {
-        func_80071824(arg0, initRaceCoursePreviewCameraIdle);
+        setCallbackTaskCallback(arg0, initRaceCoursePreviewCameraIdle);
     }
 }
 
@@ -467,7 +467,7 @@ void initRaceCoursePreviewLongPanReturn(RaceCoursePreviewCamera *arg0) {
     arg0->radius = 0x100000;
     arg0->stateTimer = 0x154;
     if (D_80122288 == 1) {
-        func_80071824(arg0, updateRaceCoursePreviewLongPanReturn);
+        setCallbackTaskCallback(arg0, updateRaceCoursePreviewLongPanReturn);
     }
 }
 
@@ -479,7 +479,7 @@ void updateRaceCoursePreviewLongPanHold(RaceCoursePreviewCamera *arg0) {
     updateRaceCoursePreviewCameraMotion(arg0);
     arg0->stateTimer--;
     if (arg0->stateTimer == 0) {
-        func_80071824(arg0, initRaceCoursePreviewLongPanReturn);
+        setCallbackTaskCallback(arg0, initRaceCoursePreviewLongPanReturn);
     }
 }
 
@@ -492,7 +492,7 @@ void updateRaceCoursePreviewLongPanPitchUp(RaceCoursePreviewCamera *arg0) {
     arg0->stateTimer--;
     if (arg0->stateTimer == 0) {
         arg0->stateTimer = 0x96;
-        func_80071824(arg0, updateRaceCoursePreviewLongPanHold);
+        setCallbackTaskCallback(arg0, updateRaceCoursePreviewLongPanHold);
     }
 }
 
@@ -505,7 +505,7 @@ void updateRaceCoursePreviewLongPanRise(RaceCoursePreviewCamera *arg0) {
     updateRaceCoursePreviewCameraMotion(arg0);
     if (arg0->stateTimer == 0) {
         arg0->stateTimer = 0x2A;
-        func_80071824(arg0, updateRaceCoursePreviewLongPanPitchUp);
+        setCallbackTaskCallback(arg0, updateRaceCoursePreviewLongPanPitchUp);
     }
 }
 
@@ -514,7 +514,7 @@ void waitRaceCoursePreviewLongPanTrigger(RaceCoursePreviewCamera *arg0) {
     updateRaceCoursePreviewCameraMotion(arg0);
     if (D_80122282 == 0x35) {
         arg0->stateTimer = 0x6A;
-        func_80071824(arg0, updateRaceCoursePreviewLongPanRise);
+        setCallbackTaskCallback(arg0, updateRaceCoursePreviewLongPanRise);
     }
 }
 
@@ -529,7 +529,7 @@ void initRaceCoursePreviewLongPan(RaceCoursePreviewCamera *arg0) {
     arg0->pitchVelocity = 0;
     arg0->velocityY = 0;
     arg0->stateTimer = 0x1E;
-    func_80071824(arg0, waitRaceCoursePreviewLongPanTrigger);
+    setCallbackTaskCallback(arg0, waitRaceCoursePreviewLongPanTrigger);
 }
 
 void updateRaceCoursePreviewShortPanFinal(RaceCoursePreviewCamera *arg0) {
@@ -552,14 +552,14 @@ void initRaceCoursePreviewShortPanFinal(RaceCoursePreviewCamera *arg0) {
     arg0->velocityY = 0;
     arg0->radius = 0x100000;
     arg0->stateTimer = 0x1E;
-    func_80071824(arg0, updateRaceCoursePreviewShortPanFinal);
+    setCallbackTaskCallback(arg0, updateRaceCoursePreviewShortPanFinal);
 }
 
 void waitRaceCoursePreviewShortPanFinal(RaceCoursePreviewCamera *arg0) {
     approachRaceCoursePreviewSpinStep(arg0, 0x130);
     updateRaceCoursePreviewCameraMotion(arg0);
     if (D_80122288 == 2) {
-        func_80071824(arg0, initRaceCoursePreviewShortPanFinal);
+        setCallbackTaskCallback(arg0, initRaceCoursePreviewShortPanFinal);
     }
 }
 
@@ -574,14 +574,14 @@ void initRaceCoursePreviewShortPanSecond(RaceCoursePreviewCamera *arg0) {
     arg0->pitchVelocity = 0;
     arg0->velocityY = 0;
     arg0->stateTimer = 0x1E;
-    func_80071824(arg0, waitRaceCoursePreviewShortPanFinal);
+    setCallbackTaskCallback(arg0, waitRaceCoursePreviewShortPanFinal);
 }
 
 void waitRaceCoursePreviewShortPanSecond(RaceCoursePreviewCamera *arg0) {
     approachRaceCoursePreviewSpinStep(arg0, 0x30);
     updateRaceCoursePreviewCameraMotion(arg0);
     if (D_80122288 == 1) {
-        func_80071824(arg0, initRaceCoursePreviewShortPanSecond);
+        setCallbackTaskCallback(arg0, initRaceCoursePreviewShortPanSecond);
     }
 }
 
@@ -596,18 +596,18 @@ void initRaceCoursePreviewShortPan(RaceCoursePreviewCamera *arg0) {
     arg0->pitchVelocity = 0;
     arg0->velocityY = 0;
     arg0->stateTimer = 0x1E;
-    func_80071824(arg0, waitRaceCoursePreviewShortPanSecond);
+    setCallbackTaskCallback(arg0, waitRaceCoursePreviewShortPanSecond);
 }
 
 void initRaceCoursePreviewCameraCutscene(RaceCoursePreviewCamera *arg0) {
     s16 temp_v0 = D_80121B50;
 
     if (temp_v0 == 3) {
-        func_80071824(arg0, initRaceCoursePreviewLongPan);
+        setCallbackTaskCallback(arg0, initRaceCoursePreviewLongPan);
         temp_v0 = D_80121B50;
     }
     if (temp_v0 == 6) {
-        func_80071824(arg0, initRaceCoursePreviewShortPan);
+        setCallbackTaskCallback(arg0, initRaceCoursePreviewShortPan);
     }
 }
 
@@ -695,5 +695,5 @@ void initRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
         osWritebackDCache(arg0->matrices, allocSize);
     }
 
-    func_80071824(arg0, enqueueDrawRaceCoursePreviewAnimatedBillboards);
+    setCallbackTaskCallback(arg0, enqueueDrawRaceCoursePreviewAnimatedBillboards);
 }

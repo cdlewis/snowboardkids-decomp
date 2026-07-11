@@ -2,7 +2,7 @@
 #include "race_effects.h"
 #include "model_animation.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "race_item_effects.h"
 #include "race_player_movement.h"
 
@@ -304,7 +304,7 @@ void func_800499A4(RaceEffectActor *arg0) {
         if (arg0->timer == 0) {
             func_80072A74(0xA, pos, 0x7F, 0x32);
             func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
 
@@ -355,7 +355,7 @@ void func_80049CE0(RaceEffectActor *arg0) {
     arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
     func_80045990(func_80043040(D_8011216C), 0, &arg0->image, &arg0->palette);
     func_800499A4(arg0);
-    func_80071824(arg0, func_800499A4);
+    setCallbackTaskCallback(arg0, func_800499A4);
 }
 
 void func_80049FB4(RaceEffectActor *arg0) {
@@ -477,7 +477,7 @@ void func_8004A2F4(RaceEffectActor *arg0) {
                 func_80072A74(0xA, pos, 0x7F, 0x32);
             }
             func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
 
@@ -528,7 +528,7 @@ void func_8004A648(RaceEffectActor *arg0) {
     arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
     func_80045990(func_80043040(D_8011216C), 2, &arg0->image, &arg0->palette);
     func_8004A2F4(arg0);
-    func_80071824(arg0, func_8004A2F4);
+    setCallbackTaskCallback(arg0, func_8004A2F4);
 }
 
 void func_8004A91C(RaceEffectActor *arg0) {
@@ -646,7 +646,7 @@ void func_8004AC5C(RaceEffectActor *arg0) {
         if (arg0->timer == 0) {
             func_80072A74(0xA, pos, 0x7F, 0x32);
             func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
 
@@ -698,7 +698,7 @@ void func_8004AFE4(RaceEffectActor *arg0) {
     arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
     func_80045990(func_80043040(D_8011216C), 3, &arg0->image, &arg0->palette);
     func_8004AC5C(arg0);
-    func_80071824(arg0, func_8004AC5C);
+    setCallbackTaskCallback(arg0, func_8004AC5C);
 }
 
 void func_8004B2B8(RaceEffectActor *arg0) {
@@ -789,7 +789,7 @@ void func_8004B5F8(RaceEffectActor *arg0) {
         }
 
         if (arg0->timer == 0) {
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
 
@@ -807,11 +807,11 @@ void func_8004B83C(RaceEffectActor *arg0) {
     arg0->accelerationY = 0;
     func_80045990(func_80043040(D_8011216C), 3, &arg0->image, &arg0->palette);
     func_8004B5F8(arg0);
-    func_80071824(arg0, func_8004B5F8);
+    setCallbackTaskCallback(arg0, func_8004B5F8);
 }
 
 void func_8004B8B4(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
-    RaceEffectActor *obj = createEffectTask(func_8004B83C, 0, 0x1E);
+    RaceEffectActor *obj = createCallbackTask(func_8004B83C, 0, 0x1E);
 
     if (obj != NULL) {
         obj->pos.x = arg0;
@@ -935,7 +935,7 @@ void func_8004BC74(RaceEffectActor *arg0) {
 
         if (arg0->timer == 0) {
             func_8006224C(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->playerIndex);
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
 
@@ -985,7 +985,7 @@ void func_8004BFA0(RaceEffectActor *arg0) {
     actor->startAngle = D_80121D80[actor->playerIndex].surfaceAngle;
     func_80045990(func_80043040(D_8011216C), 4, &actor->image, &actor->palette);
     func_8004BC74(actor);
-    func_80071824(actor, func_8004BC74);
+    setCallbackTaskCallback(actor, func_8004BC74);
 }
 
 void func_8004C274(RaceEffectActor *arg0) {
@@ -1099,7 +1099,7 @@ void func_8004C5B4(RaceEffectActor *arg0) {
         if (arg0->timer == 0) {
             func_80072A74(0xA, pos, 0x7F, 0x32);
             func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
 
@@ -1150,7 +1150,7 @@ void func_8004C8F0(RaceEffectActor *arg0) {
     actor->startAngle = D_80121D80[actor->playerIndex].surfaceAngle;
     func_80045990(func_80043040(D_8011216C), 1, &actor->image, &actor->palette);
     func_8004C5B4(actor);
-    func_80071824(actor, func_8004C5B4);
+    setCallbackTaskCallback(actor, func_8004C5B4);
 }
 
 void func_8004CBC4(RaceEffectActor *arg0) {
@@ -1205,7 +1205,7 @@ void func_8004CF28(RaceEffectActor *arg0) {
     if (spriteIndex != 0) {
         actor->spriteIndex = spriteIndex - 1;
     } else {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
 
@@ -1216,7 +1216,7 @@ void func_8004CF28(RaceEffectActor *arg0) {
         if (func_800891B8(pos, radius, 0x400, i)) {
             func_80072A74(0x14, pos, 0x7F, 0x32);
             func_8004E594(arg0->pos.x, actor->pos.y, actor->pos.z, 1);
-            func_800716E4(arg0);
+            removeCallbackTask(arg0);
             return;
         }
         i++;
@@ -1240,7 +1240,7 @@ void func_8004D018(RaceEffectActor *arg0) {
         groundY = func_80080CC4(arg0->angle, arg0->pos.x, arg0->pos.z);
         if (arg0->pos.y < groundY + 0x30000) {
             arg0->pos.y = groundY + 0x30000;
-            func_80071824(arg0, func_8004CF28);
+            setCallbackTaskCallback(arg0, func_8004CF28);
         }
 
         for (i = 0; i != 4; i++) {
@@ -1248,7 +1248,7 @@ void func_8004D018(RaceEffectActor *arg0) {
             if ((i != arg0->playerIndex || arg0->timer == 0) && func_800891B8(pos, 0x30000, 0x400, i)) {
                 func_80072A74(0x14, pos, 0x7F, 0x32);
                 func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 1);
-                func_800716E4(arg0);
+                removeCallbackTask(arg0);
                 return;
             }
         }
@@ -1275,7 +1275,7 @@ void func_8004D184(RaceEffectActor *arg0) {
     arg0->angle = D_80122282[arg0->playerIndex].surfaceAngle;
     func_80045990(func_80043040(D_80112168), 2, &arg0->image, &arg0->palette);
     func_8004D018(arg0);
-    func_80071824(arg0, func_8004D018);
+    setCallbackTaskCallback(arg0, func_8004D018);
 }
 
 void func_8004D280(RaceEffectActor *arg0) {
@@ -1368,7 +1368,7 @@ void func_8004D5C0(RaceEffectActor *arg0) {
 
         if (arg0->timer == 0) {
             func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
-            func_800716E4((RaceEffectActor *)arg0);
+            removeCallbackTask((RaceEffectActor *)arg0);
             player = &D_80121D80[arg0->playerIndex];
             player->unk510++;
             return;
@@ -1435,5 +1435,5 @@ void func_8004D880(RaceEffectActor *arg0) {
     func_80045990(func_80043040(D_8011216C), 5, &arg0->image, &arg0->palette);
     arg0->unk54 = 0;
     func_8004D5C0(arg0);
-    func_80071824(arg0, func_8004D5C0);
+    setCallbackTaskCallback(arg0, func_8004D5C0);
 }

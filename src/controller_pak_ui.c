@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "character_select_course_menu.h"
 #include "controller_pak_menu.h"
 #include "controller_pak_ui.h"
@@ -135,7 +135,7 @@ void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     }
 
     if (state == 3) {
-        func_800716E4(temp_a2);
+        removeCallbackTask(temp_a2);
         return;
     }
     func_800483FC(&D_80124868, drawControllerPakContinuePrompt, (s32)temp_a2);
@@ -149,7 +149,7 @@ void initControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     arg0->blinkState = 0;
     arg0->scale = 0x100;
     arg0->timer = 0;
-    func_80071824(arg0, updateControllerPakContinuePrompt);
+    setCallbackTaskCallback(arg0, updateControllerPakContinuePrompt);
 }
 
 // drawControllerPakRumbleCheckPrompt best match: 99.732% (nonmatchings/drawControllerPakRumbleCheckPrompt-5272447827802519043/base_2.c)
@@ -352,7 +352,7 @@ void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *a
 
     gControllerPakRumbleCheckPromptState = state;
     if (arg0->state == 5) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, drawControllerPakRumbleCheckPrompt, (s32)arg0);
@@ -365,7 +365,7 @@ void initControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
     arg0->scale = 0;
     arg0->timer = 0;
     arg0->targetScale = 0;
-    func_80071824(arg0, updateControllerPakRumbleCheckPrompt);
+    setCallbackTaskCallback(arg0, updateControllerPakRumbleCheckPrompt);
 }
 
 void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
@@ -417,7 +417,7 @@ void initControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
     arg0->common.y = -0x44;
     arg0->scale = 0x100;
     arg0->timer = 0;
-    func_80071824(arg0, updateControllerPakFileDeleteMainOptionsUi);
+    setCallbackTaskCallback(arg0, updateControllerPakFileDeleteMainOptionsUi);
 }
 
 void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) {
@@ -474,7 +474,7 @@ void initControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
     arg0->common.y = 0x48;
     arg0->scale = 0x100;
     arg0->timer = 0;
-    func_80071824(arg0, updateControllerPakFileDeleteConfirmOptionsUi);
+    setCallbackTaskCallback(arg0, updateControllerPakFileDeleteConfirmOptionsUi);
 }
 
 // drawControllerPakFileDeleteFreeSpaceInfo best match: 85.330% (nonmatchings/drawControllerPakFileDeleteFreeSpaceInfo-6182772958467082306/base_6.c)
@@ -536,7 +536,7 @@ void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
     arg0->common.y = temp_v0;
     arg0->x2 = 0x5C;
     arg0->y2 = temp_v0;
-    func_80071824(arg0, updateControllerPakFileDeleteFreeSpaceInfo);
+    setCallbackTaskCallback(arg0, updateControllerPakFileDeleteFreeSpaceInfo);
 }
 
 // drawControllerPakFileDeleteFileList best match: 90.458%
@@ -738,7 +738,7 @@ void initControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     arg0->positions[5].y = -0x1F;
     arg0->cursorScale = 0x100;
     arg0->cursorTimer = 0;
-    func_80071824(arg0, updateControllerPakFileDeleteFileListUi);
+    setCallbackTaskCallback(arg0, updateControllerPakFileDeleteFileListUi);
 }
 
 void drawControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
@@ -755,7 +755,7 @@ void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
     arg0->sprite.y = 0x10;
     arg0->common.x = arg0->startX;
     arg0->common.y = arg0->startY;
-    func_80071824(arg0, updateControllerPakFileDeleteIcon);
+    setCallbackTaskCallback(arg0, updateControllerPakFileDeleteIcon);
 }
 
 void drawControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
@@ -772,7 +772,7 @@ void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
     arg0->sprite.y = 0x20;
     arg0->common.x = arg0->startX;
     arg0->common.y = arg0->startY;
-    func_80071824(arg0, updateControllerPakMessageIcon);
+    setCallbackTaskCallback(arg0, updateControllerPakMessageIcon);
 }
 
 void drawControllerPakFileDeleteErrorPrompt(ControllerPakWindowActor *arg0) {
@@ -832,7 +832,7 @@ void updateControllerPakFileDeleteErrorPromptUi(ControllerPakDeletePromptActor *
 
     gControllerPakDeletePromptState = state;
     if (arg0->timer == 3) {
-        func_800716E4((EffectTask *)arg0);
+        removeCallbackTask((CallbackTask *)arg0);
         return;
     }
 
@@ -846,7 +846,7 @@ void initControllerPakFileDeleteErrorPrompt(ControllerPakDeletePromptActor *arg0
     arg0->timer = 0;
     arg0->scale = 0;
     arg0->selectedOption = 0;
-    func_80071824(arg0, updateControllerPakFileDeleteErrorPromptUi);
+    setCallbackTaskCallback(arg0, updateControllerPakFileDeleteErrorPromptUi);
 }
 
 void drawControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) {
@@ -912,7 +912,7 @@ void updateControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0
     }
     arg0->timer = (arg0->timer + 1) & 0x1F;
     if (gControllerPakMenuState.state != 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
     } else {
         func_800483FC(&D_80124868, drawControllerPakDeleteConfirmPrompt, (s32)arg0);
     }
@@ -924,5 +924,5 @@ void initControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) 
     arg0->scale = 0x100;
     arg0->selectedOption = 1;
     arg0->timer = 0;
-    func_80071824(arg0, updateControllerPakDeleteConfirmPrompt);
+    setCallbackTaskCallback(arg0, updateControllerPakDeleteConfirmPrompt);
 }

@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "main_menu_score_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #define MENU_RENDERING_F8AC_U16_ALPHA_PROTOTYPE
@@ -188,8 +188,8 @@ void func_8002B8B4(MainMenuScoreTask *arg0) {
         if (arg0->x < -0x43) {
             arg0->x = -0x44;
             arg0->unk1C.state = 1;
-            D_8010ADE0 = createEffectTask(func_8002BC60, 0, 0x62);
-            createEffectTask(func_8002C498, 0, 0x63);
+            D_8010ADE0 = createCallbackTask(func_8002BC60, 0, 0x62);
+            createCallbackTask(func_8002C498, 0, 0x63);
         }
         state = arg0->unk1C.state;
         break;
@@ -212,7 +212,7 @@ void func_8002B8B4(MainMenuScoreTask *arg0) {
     }
     state = arg0->unk1C.state;
     if (state == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002B560, arg0);
@@ -222,7 +222,7 @@ void func_8002BA00(MainMenuScoreTask *arg0) {
     arg0->x = 0x90;
     arg0->y = -0x20;
     arg0->unk1C.state = 0;
-    func_80071824(arg0, func_8002B8B4);
+    setCallbackTaskCallback(arg0, func_8002B8B4);
 }
 
 void func_8002BA38(MainMenuScoreTask *arg0) {
@@ -247,7 +247,7 @@ void func_8002BB24(MainMenuScoreTask *arg0) {
         if (arg0->unk1C.scale >= 0x100) {
             arg0->unk1C.scale = 0x100;
             arg0->state.b.unk1F = 1;
-            D_8010ADE4 = createEffectTask(func_8002BF54, 0, 0x63);
+            D_8010ADE4 = createCallbackTask(func_8002BF54, 0, 0x63);
         }
         state = arg0->state.b.unk1F;
         break;
@@ -270,7 +270,7 @@ void func_8002BB24(MainMenuScoreTask *arg0) {
         break;
     }
     if ((unsigned int)state == 4) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002BA38, arg0);
@@ -281,7 +281,7 @@ void func_8002BC60(MainMenuScoreTask *arg0) {
     arg0->y = -0x1E;
     arg0->unk1C.scale = 0;
     arg0->state.b.unk1F = 0;
-    func_80071824(arg0, func_8002BB24);
+    setCallbackTaskCallback(arg0, func_8002BB24);
 }
 
 void func_8002BC9C(MainMenuScoreTask *arg0) {
@@ -352,7 +352,7 @@ void func_8002BDAC(MainMenuScoreTask *arg0) {
     arg0->state.b.frame = (arg0->state.b.frame + 1) & 0xF;
     gControllerPakRaceRecordSaveScoreUiStateStep = state;
     if ((u8)arg0->state.b.unk20 == 5) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002BC9C, arg0);
@@ -364,7 +364,7 @@ void func_8002BF54(MainMenuScoreTask *arg0) {
     arg0->unk1C.scale = 0x100;
     gControllerPakRaceRecordSaveScoreUiStateTimer = 0x100;
     arg0->state.b.unk20 = 0;
-    func_80071824(arg0, func_8002BDAC);
+    setCallbackTaskCallback(arg0, func_8002BDAC);
 }
 
 void func_8002BF9C(MainMenuScoreTask *arg0) {
@@ -461,7 +461,7 @@ void func_8002C318(MainMenuScoreTask *arg0) {
     arg0->x = -0x28;
     arg0->y = 0xC;
     arg0->unk1C.scale = 0xC;
-    func_80071824(arg0, func_8002C18C);
+    setCallbackTaskCallback(arg0, func_8002C18C);
 }
 
 void func_8002C350(MainMenuScoreTask *arg0) {
@@ -494,7 +494,7 @@ void func_8002C390(MainMenuScoreTask *arg0) {
         break;
     }
     if ((unsigned int)state == 4) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8002C350, arg0);
@@ -505,5 +505,5 @@ void func_8002C498(MainMenuScoreTask *arg0) {
     arg0->y = -0x38;
     arg0->unk1C.scale = 0;
     arg0->state.b.unk1E = 0;
-    func_80071824(arg0, func_8002C390);
+    setCallbackTaskCallback(arg0, func_8002C390);
 }

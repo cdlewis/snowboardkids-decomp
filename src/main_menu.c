@@ -1,6 +1,6 @@
 #include "common.h"
 #include "game_audio.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "game_boot.h"
 #include "input_task_scheduler.h"
@@ -971,16 +971,16 @@ void func_80001C80(void) {
     gCurrentInputTask->selection = 0;
     gCurrentInputTask->delay = 0x32;
     gCurrentInputTask->timer = 0x4B0;
-    func_80070EC0(0);
+    initCallbackTaskScheduler(0);
     if (D_800E29C0 != 0) {
-        createEffectTask(&func_80032A50, 0, 0x64);
+        createCallbackTask(&func_80032A50, 0, 0x64);
     } else {
-        createEffectTask(&func_800540EC, 0, 0x64);
+        createCallbackTask(&func_800540EC, 0, 0x64);
     }
-    createEffectTask(&func_80032934, 0, 0x64);
-    createEffectTask(&func_80032684, 0, 0x64);
-    func_80071664(&func_80054714, 0, 0x64, 0);
-    func_80071664(func_80055678, 0, 0x64, 0);
+    createCallbackTask(&func_80032934, 0, 0x64);
+    createCallbackTask(&func_80032684, 0, 0x64);
+    createCallbackTaskWithUserId(&func_80054714, 0, 0x64, 0);
+    createCallbackTaskWithUserId(func_80055678, 0, 0x64, 0);
     func_8009B58C(0x20, 0x40, 0x50);
     func_80041CF0();
     func_80041D20(0, 0);
@@ -1088,7 +1088,7 @@ void func_80002024(void) {
         func_80042A00(3);
         func_800428C8(4);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_800022B8(void) {
@@ -1112,7 +1112,7 @@ void func_800022B8(void) {
             func_800428C8(2);
             func_800428C8(3);
             func_800428C8(4);
-            updateEffectTasks();
+            updateCallbackTasks();
         }
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
@@ -1149,11 +1149,11 @@ void func_800024A8(void) {
     loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
-    func_80070EC0(0);
-    func_80071664(func_80055678, 0, 0x64, 0);
+    initCallbackTaskScheduler(0);
+    createCallbackTaskWithUserId(func_80055678, 0, 0x64, 0);
     D_801235B4 = 0;
     D_8010B1F0 = 0;
-    func_80071664(&func_80052394, 0, 0x64, 0);
+    createCallbackTaskWithUserId(&func_80052394, 0, 0x64, 0);
     func_8009B58C(0x20, 0x40, 0x50);
     func_80041CF0();
     func_80041D20(4, 4);
@@ -1198,7 +1198,7 @@ void func_8000262C(void) {
     func_8006D780(0);
     func_80042034(4);
     func_800428C8(4);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_80002794(void) {
@@ -1211,7 +1211,7 @@ void func_80002794(void) {
     func_8006D780(0);
     func_80042034(4);
     func_800428C8(4);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_80002810(void) {
@@ -1244,11 +1244,11 @@ void func_800028B4(void) {
     loadCompressedRomAsset(D_1DE360, D_1E0F70, 9);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
-    func_80070EC0(0);
+    initCallbackTaskScheduler(0);
     D_801235B4 = 0;
     D_8010B1F0 = 0;
-    func_80071664(&func_80052E4C, 0, 0x64, 0);
-    func_80071664(&func_80055678, 0, 0x64, 0);
+    createCallbackTaskWithUserId(&func_80052E4C, 0, 0x64, 0);
+    createCallbackTaskWithUserId(&func_80055678, 0, 0x64, 0);
     func_8009B58C(0x20, 0x40, 0x50);
     setCurrentInputTaskCallback(&func_80002A1C, 0);
     func_800720E4(7);
@@ -1331,7 +1331,7 @@ void func_80002A1C(void) {
         }
     }
     func_8006D780(0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_80002CE4(void) {
@@ -1342,7 +1342,7 @@ void func_80002CE4(void) {
         setCurrentInputTaskCallback(func_80002D50, 0);
     }
     func_8006D780(0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_80002D50(void) {

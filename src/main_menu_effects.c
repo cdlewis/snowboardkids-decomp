@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "main_menu_effects.h"
 #include "main_menu_scene_model.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
@@ -115,7 +115,7 @@ void func_8003BF7C(MainMenuEffectActor *arg0) {
         arg0->effectFrame++;
     }
     if (arg0->effectFrame == 3) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8003BEF0, arg0);
@@ -124,11 +124,11 @@ void func_8003BF7C(MainMenuEffectActor *arg0) {
 void func_8003C078(MainMenuEffectActor *arg0) {
     arg0->angleVelocity = 0;
     arg0->angle = 0;
-    func_80071824(arg0, func_8003BF7C);
+    setCallbackTaskCallback(arg0, func_8003BF7C);
 }
 
 void func_8003C0A4(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createEffectTask(func_8003C078, 0, 0x63));
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createCallbackTask(func_8003C078, 0, 0x63));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
@@ -152,7 +152,7 @@ void func_8003C180(MainMenuEffectActor *arg0) {
         }
     }
     if (((u16) arg0->introTimer) == 0x69) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8003C118, arg0);
@@ -167,7 +167,7 @@ void func_8003C208(MainMenuEffectActor *arg0) {
     arg0->linePositions[4] = -0x56;
     arg0->introTimer = 0;
     arg0->frameIndex = 0;
-    func_80071824(arg0, func_8003C180);
+    setCallbackTaskCallback(arg0, func_8003C180);
 }
 
 void func_8003C264(MainMenuEffectActor *arg0) {
@@ -188,7 +188,7 @@ void func_8003C2EC(MainMenuEffectActor *arg0) {
         arg0->effectFrame &= 3;
     }
     if (D_8010B1A2 == 0x2F) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8003C264, arg0);
@@ -197,11 +197,11 @@ void func_8003C2EC(MainMenuEffectActor *arg0) {
 void func_8003C3F4(MainMenuEffectActor *arg0) {
     arg0->angleVelocity = 0;
     arg0->angle = 0;
-    func_80071824(arg0, func_8003C2EC);
+    setCallbackTaskCallback(arg0, func_8003C2EC);
 }
 
 void func_8003C420(s16 arg0, s16 arg1, u8 arg2) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createEffectTask(func_8003C3F4, 0, 0x63));
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createCallbackTask(func_8003C3F4, 0, 0x63));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
@@ -250,7 +250,7 @@ void func_8003C634(MainMenuEffectActor *arg0) {
     }
 
     if (arg0->effectFrame == 0xD) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8003C484, arg0);
@@ -265,7 +265,7 @@ void func_8003C728(MainMenuEffectActor *arg0) {
     arg0->frameIndex = 0;
     arg0->angle = 0;
     arg0->characterId = 0;
-    func_80071824(arg0, func_8003C634);
+    setCallbackTaskCallback(arg0, func_8003C634);
 }
 
 void func_8003C77C(MainMenuEffectActor *arg0) {
@@ -286,7 +286,7 @@ void func_8003C7E4(MainMenuEffectActor *arg0) {
         arg0->animFrame++;
     }
     if (temp_a2->animFrame == 6) {
-        func_800716E4(temp_a2);
+        removeCallbackTask(temp_a2);
     } else {
         func_800483FC(&D_80124868, func_8003C77C, temp_a2);
     }
@@ -297,7 +297,7 @@ void func_8003C870(MainMenuEffectActor *arg0) {
     arg0->y = -0x38;
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    func_80071824(arg0, func_8003C7E4);
+    setCallbackTaskCallback(arg0, func_8003C7E4);
 }
 
 void func_8003C8AC(MainMenuEffectActor *arg0) {
@@ -319,7 +319,7 @@ void func_8003C93C(MainMenuEffectActor *arg0) {
         arg0->animFrame &= 3;
     }
     if (D_8010B1A2 == 0x12) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8003C8AC, arg0);
@@ -328,7 +328,7 @@ void func_8003C93C(MainMenuEffectActor *arg0) {
 void func_8003CA44(MainMenuEffectActor *arg0) {
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    func_80071824(arg0, func_8003C93C);
+    setCallbackTaskCallback(arg0, func_8003C93C);
 }
 
 void func_8003CA70(MainMenuEffectActor *arg0) {
@@ -347,7 +347,7 @@ void func_8003CAD8(MainMenuEffectActor *arg0) {
         arg0->animFrame++;
     }
     if (temp_a2->animFrame == 5) {
-        func_800716E4(temp_a2);
+        removeCallbackTask(temp_a2);
     } else {
         func_800483FC(&D_80124868, func_8003CA70, temp_a2);
     }
@@ -356,11 +356,11 @@ void func_8003CAD8(MainMenuEffectActor *arg0) {
 void func_8003CB4C(MainMenuEffectActor *arg0) {
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    func_80071824(arg0, func_8003CAD8);
+    setCallbackTaskCallback(arg0, func_8003CAD8);
 }
 
 void func_8003CB78(s16 arg0, s16 arg1) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createEffectTask(func_8003CB4C, 0, 0x64));
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createCallbackTask(func_8003CB4C, 0, 0x64));
 
     temp_v0->x = arg0;
     temp_v0->y = arg1;
@@ -388,17 +388,17 @@ void func_8003CC58(MainMenuEffectActor *arg0) {
         func_800483FC(&D_80124868, func_8003CBCC, arg0);
         return;
     }
-    func_800716E4(arg0);
+    removeCallbackTask(arg0);
 }
 
 void func_8003CD70(MainMenuEffectActor *arg0) {
     arg0->angleVelocity = 0;
     arg0->angle = 0;
-    func_80071824(arg0, func_8003CC58);
+    setCallbackTaskCallback(arg0, func_8003CC58);
 }
 
 void func_8003CD9C(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createEffectTask(func_8003CD70, 0, 0x64));
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createCallbackTask(func_8003CD70, 0, 0x64));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
@@ -427,7 +427,7 @@ void func_8003CE78(MainMenuEffectActor *arg0) {
     if (D_8010B1A2 != 7) {
         func_800483FC(&D_80124868, func_8003CE10, temp_a2);
     } else {
-        func_800716E4(temp_a2);
+        removeCallbackTask(temp_a2);
     }
 }
 
@@ -436,7 +436,7 @@ void func_8003CF00(MainMenuEffectActor *arg0) {
     arg0->y = -0x59;
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    func_80071824(arg0, func_8003CE78);
+    setCallbackTaskCallback(arg0, func_8003CE78);
 }
 
 void func_8003CF3C(MainMenuEffectActor *arg0) {
@@ -460,18 +460,18 @@ void func_8003CF98(MainMenuEffectActor *arg0) {
         func_800483FC(&D_80124868, func_8003CF3C, temp_a2);
         return;
     }
-    func_800716E4(temp_a2);
+    removeCallbackTask(temp_a2);
     D_8010B1A2 = 3;
 }
 
 void func_8003D03C(MainMenuEffectActor *arg0) {
     arg0->animFrame = 0;
     arg0->animTimer = 0;
-    func_80071824(arg0, func_8003CF98);
+    setCallbackTaskCallback(arg0, func_8003CF98);
 }
 
 void func_8003D068(s16 arg0, s16 arg1) {
-    MainMenuEffectActor *temp = (MainMenuEffectActor *)(D_8010ADDC = (s32)createEffectTask(func_8003D03C, 0, 0x64));
+    MainMenuEffectActor *temp = (MainMenuEffectActor *)(D_8010ADDC = (s32)createCallbackTask(func_8003D03C, 0, 0x64));
 
     temp->x = arg0;
     temp->y = arg1;
@@ -512,18 +512,18 @@ void func_8003D124(MainMenuEffectActor *arg0) {
     if (D_8010B1A2 == 3) {
         D_8010B1A2 = 4;
     }
-    func_800716E4(temp_a2);
+    removeCallbackTask(temp_a2);
 }
 #endif
 
 void func_8003D1EC(MainMenuEffectActor *arg0) {
     arg0->animFrame = 0;
     arg0->animTimer = 0;
-    func_80071824(arg0, func_8003D124);
+    setCallbackTaskCallback(arg0, func_8003D124);
 }
 
 void func_8003D218(s16 arg0, s16 arg1, u8 arg2) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createEffectTask(func_8003D1EC, 0, 0x64));
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createCallbackTask(func_8003D1EC, 0, 0x64));
 
     temp_v0->x = arg0;
     temp_v0->y = arg1;
@@ -549,7 +549,7 @@ void func_8003D2F4(MainMenuEffectActor *arg0) {
         temp_a2->x++;
     }
     if (D_8010B1A2 == 4) {
-        func_800716E4(temp_a2);
+        removeCallbackTask(temp_a2);
     } else {
         func_800483FC(&D_80124868, func_8003D27C, temp_a2);
     }
@@ -560,7 +560,7 @@ void func_8003D384(MainMenuEffectActor *arg0) {
     arg0->y = -0x61;
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    func_80071824(arg0, func_8003D2F4);
+    setCallbackTaskCallback(arg0, func_8003D2F4);
 }
 
 void func_8003D3C0(MainMenuEffectActor *arg0) {
@@ -587,7 +587,7 @@ void func_8003D424(MainMenuEffectActor *arg0) {
     }
     func_800483FC(&D_80124838, func_8003D3C0, temp_a2);
     if (D_8010B1A2 == 0x3A) {
-        func_80071824(temp_a2, func_8003D3F4);
+        setCallbackTaskCallback(temp_a2, func_8003D3F4);
     }
 }
 
@@ -606,7 +606,7 @@ void func_8003D4C0(MainMenuEffectActor *arg0) {
     func_800483FC(&D_80124838, func_8003D3C0, temp_a2);
     if (D_8010B1A2 == 0x39) {
         temp_v0 = &temp_a2->angle;
-        func_80071824(temp_a2, func_8003D424);
+        setCallbackTaskCallback(temp_a2, func_8003D424);
         temp_a2->x = 0x28;
         temp_v0[1] = 0x10;
     }
@@ -618,7 +618,7 @@ void func_8003D580(MainMenuEffectActor *arg0) {
     func_800483FC(&D_80124838, func_8003D3C0, arg0);
     temp_v0 = &arg0->angle;
     if (D_8010B1A2 == 0x33) {
-        func_80071824(arg0, func_8003D4C0);
+        setCallbackTaskCallback(arg0, func_8003D4C0);
         D_8010B1A5 = 8;
         if (*temp_v0 == 0) {
             *temp_v0 = 0x140;
@@ -640,7 +640,7 @@ void func_8003D5F8(MainMenuEffectActor *arg0) {
     }
     func_800483FC(&D_80124838, func_8003D3C0, temp_a2);
     if (D_8010B1A2 == 0x2A) {
-        func_80071824(temp_a2, func_8003D580);
+        setCallbackTaskCallback(temp_a2, func_8003D580);
     }
 }
 
@@ -657,7 +657,7 @@ void func_8003D68C(MainMenuEffectActor *arg0) {
     if (*sp1C == 0) {
         temp_a2->x = 0x14;
         *sp1C = 0x140;
-        func_80071824(temp_a2, func_8003D5F8);
+        setCallbackTaskCallback(temp_a2, func_8003D5F8);
     }
 }
 
@@ -675,7 +675,7 @@ void func_8003D720(MainMenuEffectActor *arg0) {
     }
     func_800483FC(&D_80124838, func_8003D3C0, temp_a2);
     if (D_8010B1A2 == 0x20) {
-        func_80071824(temp_a2, func_8003D68C);
+        setCallbackTaskCallback(temp_a2, func_8003D68C);
     }
 }
 
@@ -691,7 +691,7 @@ void func_8003D7C0(MainMenuEffectActor *arg0) {
     D_8010B1A6 = *sp1C;
     func_800483FC(&D_80124838, func_8003D3C0, temp_a2);
     if (D_8010B1A2 == 0x13) {
-        func_80071824(temp_a2, func_8003D720);
+        setCallbackTaskCallback(temp_a2, func_8003D720);
         temp_a2->x = 0x28;
         *sp1C = 0;
         D_8010B1A6 = *sp1C;
@@ -704,7 +704,7 @@ void func_8003D88C(MainMenuEffectActor *arg0) {
     temp_v0 = &arg0->angle;
     func_800483FC(&D_80124838, func_8003D3C0, arg0);
     if (D_8010B1A2 == 0x10) {
-        func_80071824(arg0, func_8003D7C0);
+        setCallbackTaskCallback(arg0, func_8003D7C0);
         arg0->x = 0x14;
         temp_v0[0] = 0;
         temp_v0[1] = 0x100;
@@ -718,7 +718,7 @@ void func_8003D908(MainMenuEffectActor *arg0) {
     arg0->x = arg0->startX;
     arg0->y = arg0->startY;
     D_8010B1D0 = 0;
-    func_80071824(arg0, func_8003D88C);
+    setCallbackTaskCallback(arg0, func_8003D88C);
 }
 
 void func_8003D974(MainMenuEffectActor *arg0) {
@@ -732,7 +732,7 @@ void func_8003D9A8(MainMenuEffectActor *arg0) {
     }
     func_800483FC(&D_80124838, func_8003D974, arg0);
     if ((D_8010B1A2 == 0x2A) || (D_8010B1A2 == 0x3A)) {
-        func_80071824(arg0, func_8003DA98);
+        setCallbackTaskCallback(arg0, func_8003DA98);
     }
 }
 
@@ -743,17 +743,17 @@ void func_8003DA24(MainMenuEffectActor *arg0) {
     }
     func_800483FC(&D_80124838, func_8003D974, arg0);
     if (D_8010B1A2 == 0x14) {
-        func_80071824(arg0, func_8003DA98);
+        setCallbackTaskCallback(arg0, func_8003DA98);
     }
 }
 
 void func_8003DA98(MainMenuEffectActor *arg0) {
     func_800483FC(&D_80124838, func_8003D974, arg0);
     if (D_8010B1A2 == 0x10) {
-        func_80071824(arg0, func_8003DA24);
+        setCallbackTaskCallback(arg0, func_8003DA24);
     }
     if ((D_8010B1A2 == 0x20) || (D_8010B1A2 == 0x33)) {
-        func_80071824(arg0, func_8003D9A8);
+        setCallbackTaskCallback(arg0, func_8003D9A8);
     }
 }
 
@@ -763,7 +763,7 @@ void func_8003DB1C(MainMenuEffectActor *arg0) {
     arg0->angleVelocity = 0x1F0;
     arg0->x = 0x14;
     arg0->y = arg0->startY;
-    func_80071824(arg0, func_8003DA98);
+    setCallbackTaskCallback(arg0, func_8003DA98);
 }
 
 void func_8003DB84(MainMenuEffectActor *arg0) {
@@ -783,7 +783,7 @@ void func_8003DBE8(MainMenuEffectActor *arg0) {
     if (arg0->animFrame == 0) {
         temp_v0[1] -= 1;
         if (temp_v0[1] == 0x10) {
-            func_80071824(arg0, func_8003DBB8);
+            setCallbackTaskCallback(arg0, func_8003DBB8);
             D_8010B1A2 = 0x43;
         }
     }
@@ -794,7 +794,7 @@ void func_8003DC70(MainMenuEffectActor *arg0) {
     func_800483FC(&D_80124868, func_8003DB84, arg0);
     if (D_8010B1A2 == 0x42) {
         arg0->animFrame = 0;
-        func_80071824(arg0, func_8003DBE8);
+        setCallbackTaskCallback(arg0, func_8003DBE8);
     }
 }
 
@@ -809,7 +809,7 @@ void func_8003DCCC(MainMenuEffectActor *arg0) {
                 temp_v0[1]++;
                 if (temp_v0[1] == 0x60) {
                     arg0->animFrame = 0;
-                    func_80071824(arg0, func_8003DC70);
+                    setCallbackTaskCallback(arg0, func_8003DC70);
                 }
             }
         }
@@ -823,5 +823,5 @@ void func_8003DD64(MainMenuEffectActor *arg0) {
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;
     arg0->y = arg0->startY;
-    func_80071824(arg0, func_8003DCCC);
+    setCallbackTaskCallback(arg0, func_8003DCCC);
 }

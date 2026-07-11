@@ -1,6 +1,6 @@
 #include "common.h"
 #include "game_audio.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
 #include "input_task_scheduler.h"
@@ -66,7 +66,7 @@ void func_80008620(void) {
         D_80121B5E = 0;
     }
     setCurrentInputTaskCallback(&func_800088C8, 0);
-    updateEffectTasks();
+    updateCallbackTasks();
     D_8010AF50.state = 0;
     D_8010AF50.alpha = 0;
 }
@@ -84,8 +84,8 @@ void func_800086EC(void) {
     loadCompressedRomAsset(&D_59DFE0, &D_59E7F0, 0x26);
     loadCompressedRomAsset(&D_5CCD40, &D_5D4280, 0x25);
     loadCompressedRomAsset(&D_245A80, &D_24C8E0, 0x1F);
-    func_80070EC0(0);
-    createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
+    initCallbackTaskScheduler(0);
+    createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
     D_800EC9C1 = 0;
     D_80121D88 = 0;
     D_8010ADDC = 0;
@@ -100,7 +100,7 @@ void func_800086EC(void) {
         D_80121B5E = 0;
     }
     setCurrentInputTaskCallback(func_800088C8, 0);
-    updateEffectTasks();
+    updateCallbackTasks();
     D_8010AF50.state = 0;
     D_8010AF50.alpha = 0;
 }
@@ -123,7 +123,7 @@ void func_800088C8(void) {
     if (gCurrentInputTask->fade != 0) {
         gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 0);
         if (gCurrentInputTask->fade == 0) {
-            createEffectTask(func_80029548, 0, 0x62);
+            createCallbackTask(func_80029548, 0, 0x62);
         }
     } else {
         if (D_80121D88 == 0) {
@@ -214,7 +214,7 @@ void func_800088C8(void) {
         }
     }
     D_801235B4 = 0;
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 #endif
 
@@ -227,7 +227,7 @@ void func_80008C04(void) {
         func_80072114(8);
         D_800EC9DD = 1;
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_80008C84(void) {
@@ -236,7 +236,7 @@ void func_80008C84(void) {
         if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            updateEffectTasks();
+            updateCallbackTasks();
         }
     } else {
         if (gPendingFramebufferSwapCount == 2) {

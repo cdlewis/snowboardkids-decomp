@@ -1,6 +1,6 @@
 #include "common.h"
 #include "game_audio.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_scene_loader.h"
 #include "race_input_history.h"
@@ -101,12 +101,12 @@ void func_8003F554(void) {
     gMenuFadeAlpha = 0xFF;
     resetAllViewports();
     D_801124B8 = 0x80;
-    func_80070EC0(0);
+    initCallbackTaskScheduler(0);
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
-    func_80071664(&func_80055678, 0, 0x64, 0);
-    createEffectTask(&func_80051854, 0, 0x64);
+    createCallbackTaskWithUserId(&func_80055678, 0, 0x64, 0);
+    createCallbackTask(&func_80051854, 0, 0x64);
     setCurrentInputTaskCallback(&func_8003F6C0, 0);
     func_800720E4(7);
 }
@@ -118,7 +118,7 @@ void func_8003F6C0(void) {
         setCurrentInputTaskCallback(&func_8003F718, 0);
     }
     func_8006D780(0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_8003F718(void) {
@@ -129,7 +129,7 @@ void func_8003F718(void) {
         setCurrentInputTaskCallback(&func_8003F778, 0);
     }
     func_8006D780(0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_8003F778(void) {
@@ -140,7 +140,7 @@ void func_8003F778(void) {
         setCurrentInputTaskCallback(&func_8003F7E4, 0);
     }
     func_8006D780(0);
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_8003F7E4(void) {
@@ -206,7 +206,7 @@ void func_8003F864(void) {
     gRacePlayerCount = 4;
     D_80121B52 = 5;
     D_80121B5C = 0x64;
-    func_80070EC0(1);
+    initCallbackTaskScheduler(1);
 
     players[0].unk15 = 0;
     players[0].soundDisabled = 0;
@@ -242,8 +242,8 @@ void func_8003F864(void) {
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     D_8010B1F0 = 0;
-    createEffectTask(func_80051FDC, 0, 0x64);
-    createEffectTask(func_800524B0, 0, 0x64);
+    createCallbackTask(func_80051FDC, 0, 0x64);
+    createCallbackTask(func_800524B0, 0, 0x64);
     setCurrentInputTaskCallback(func_8003FB70, 0);
     func_800720E4(7);
 }
@@ -256,18 +256,18 @@ void func_8003FB70(void) {
         setCurrentInputTaskCallback(&func_8003FBE8, 0);
     }
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
     D_801124B8 = 0x80;
 }
 
 void func_8003FBE8(void) {
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
     if (D_8010B1F0 != 0) {
         gCurrentInputTask->transitionTimer = 0;
@@ -312,9 +312,9 @@ void func_8003FC60(void) {
         setCurrentInputTaskCallback(func_8003FE54, 0);
     }
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
 }
 #endif
@@ -322,9 +322,9 @@ void func_8003FC60(void) {
 void func_8003FE54(void) {
     D_801235B4 = 0;
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
     func_8007AA50();
     gCurrentInputTask->transitionTimer += 1;
@@ -336,9 +336,9 @@ void func_8003FE54(void) {
 
 void func_8003FEF4(void) {
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
     func_8007AA50();
     gMenuFadeAlpha += 0x10;
@@ -450,7 +450,7 @@ void func_8004002C(void) {
 
     D_80121B52 = 5;
     D_80121B5C = 0x64;
-    func_80070EC0(1);
+    initCallbackTaskScheduler(1);
     D_80121D95 = 0;
     D_80121D96 = 0;
     D_80121D94 = 0;
@@ -481,9 +481,9 @@ void func_8004002C(void) {
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     D_8010B1F0 = 0;
-    createEffectTask(func_8000E7CC, 0, 0x64);
-    createEffectTask(func_8000EA44, 0, 0x63);
-    createEffectTask(func_800524B0, 0, 0x64);
+    createCallbackTask(func_8000E7CC, 0, 0x64);
+    createCallbackTask(func_8000EA44, 0, 0x63);
+    createCallbackTask(func_800524B0, 0, 0x64);
     setCurrentInputTaskCallback(func_80040360, 0);
     func_800720E4(7);
 }
@@ -496,18 +496,18 @@ void func_80040360(void) {
         setCurrentInputTaskCallback(func_800403D8, 0);
     }
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
     D_801124B8 = 0x80;
 }
 
 void func_800403D8(void) {
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
     if (D_8010B1F0 != 0) {
         gCurrentInputTask->transitionTimer = 0;
@@ -551,9 +551,9 @@ void func_80040450(void) {
         setCurrentInputTaskCallback(func_80040638, 0);
     }
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
 }
 #endif
@@ -561,9 +561,9 @@ void func_80040450(void) {
 void func_80040638(void) {
     D_801235B4 = 0;
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
     func_8007AA50();
     gCurrentInputTask->transitionTimer = 0;
@@ -615,15 +615,15 @@ void func_800407AC(void) {
     gRaceUpdatePaused = 1;
     D_8010B1F0 = 0;
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
     func_8007AA50();
     gCurrentInputTask->transitionTimer += 0x10;
     temp_v1 = gCurrentInputTask->transitionTimer;
     if (temp_v1 == 0x80) {
-        createEffectTask(func_8000DF28, 0, 0x64);
+        createCallbackTask(func_8000DF28, 0, 0x64);
         setCurrentInputTaskCallback(func_8004086C, 0);
     }
     temp_v1 = gCurrentInputTask->transitionTimer;
@@ -633,9 +633,9 @@ void func_800407AC(void) {
 void func_8004086C(void) {
     gRaceUpdatePaused = 1;
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
     func_8007AA50();
     D_801124B8 = 0x80;
@@ -647,9 +647,9 @@ void func_8004086C(void) {
 void func_800408E4(void) {
     gRaceUpdatePaused = 1;
     func_8008C704();
-    func_800710CC(0x63);
+    updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
-    func_8007115C();
+    updateRemainingCallbackTasks();
     func_8006D700();
     func_8007AA50();
     D_801124B8 = 0x80;
@@ -692,8 +692,8 @@ void func_80040A48(void) {
     gFramebufferSwapDelay = 0;
     gMenuFadeAlpha = 0xFF;
     resetAllViewports();
-    func_80070EC0(0);
-    createEffectTask(&func_8000E874, 0, 0x64);
+    initCallbackTaskScheduler(0);
+    createCallbackTask(&func_8000E874, 0, 0x64);
     setCurrentInputTaskCallback(func_80040B04, 0);
 }
 
@@ -703,14 +703,14 @@ void func_80040B04(void) {
         gMenuFadeAlpha = 0;
         setCurrentInputTaskCallback(&func_80040B54, 0);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_80040B54(void) {
     if (D_8010B1F0 != 0) {
         setCurrentInputTaskCallback(&func_80040B90, 0);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_80040B90(void) {
@@ -720,7 +720,7 @@ void func_80040B90(void) {
         gFramebufferSwapHold = 1;
         setCurrentInputTaskCallback(&func_80040BF4, 0);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }
 
 void func_80040BF4(void) {

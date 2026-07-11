@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "main_menu_debug_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
@@ -152,7 +152,7 @@ void func_8003BA64(EndObjTask *arg0) {
             arg0->cycleCount = arg0->cycleCount + 1;
             if (arg0->cycleCount == END_OBJ_HOLD_CYCLES) {
                 arg0->cycleCount = 0;
-                func_80071824(arg0, func_8003B9F8);
+                setCallbackTaskCallback(arg0, func_8003B9F8);
             }
             if (D_8010B1A2 == 0) {
                 D_8010B1A2 = 1;
@@ -176,7 +176,7 @@ void func_8003BBBC(EndObjTask *arg0) {
     arg0->x = -0x40;
     arg0->y = 0x10;
     arg0->alpha = 0;
-    func_80071824(arg0, func_8003BA64);
+    setCallbackTaskCallback(arg0, func_8003BA64);
 }
 
 void func_8003BC00(DebugObjectPositionTask *arg0) {
@@ -254,5 +254,5 @@ void func_8003BEB4(DebugObjectPositionTask *arg0) {
     arg0->objectId = 0;
     arg0->enabled = 0;
     arg0->palette = 0;
-    func_80071824(arg0, func_8003BC9C);
+    setCallbackTaskCallback(arg0, func_8003BC9C);
 }

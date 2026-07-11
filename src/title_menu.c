@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 #include "title_menu.h"
@@ -190,7 +190,7 @@ void func_80014AA4(MenuIntroActor *arg0) {
         case 2:
             actor->y -= 0x10;
             if (actor->y == -0x5C) {
-                actor->child = createEffectTask(func_80015054, 0, 0x63);
+                actor->child = createCallbackTask(func_80015054, 0, 0x63);
                 enqueueSoundEffect(1, 0x32);
                 actor->state = 3;
             }
@@ -233,7 +233,7 @@ void func_80014C7C(void *arg0) {
     actor->y = -0x1C;
     actor->alpha = 0;
     actor->state = 0;
-    func_80071824(arg0, func_80014AA4);
+    setCallbackTaskCallback(arg0, func_80014AA4);
 }
 
 void func_80014CB8(void *arg0) {
@@ -283,7 +283,7 @@ void func_80014EF0(MenuItemActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->x == 0x70) {
-            arg0->child = createEffectTask(func_80015404, 0, 0x63);
+            arg0->child = createCallbackTask(func_80015404, 0, 0x63);
             enqueueSoundEffect(1, 0x32);
         }
         if (arg0->x == -0x50) {
@@ -312,7 +312,7 @@ void func_80014EF0(MenuItemActor *arg0) {
         break;
     }
     if (arg0->x < -0x108) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_80014CB8, (s32)arg0);
@@ -324,7 +324,7 @@ void func_80015054(MenuItemActor *arg0) {
     actor->x = 0x90;
     actor->y = -0x18;
     actor->state = 0;
-    func_80071824(arg0, func_80014EF0);
+    setCallbackTaskCallback(arg0, func_80014EF0);
 }
 
 void func_8001508C(MenuItemActor *arg0) {
@@ -377,7 +377,7 @@ void func_800152D0(MenuItemActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->x == 0x70) {
-            arg0->child = createEffectTask(func_800157B4, 0, 0x63);
+            arg0->child = createCallbackTask(func_800157B4, 0, 0x63);
             enqueueSoundEffect(1, 0x32);
         }
         if (arg0->x == -0x50) {
@@ -400,7 +400,7 @@ void func_800152D0(MenuItemActor *arg0) {
         break;
     }
     if (arg0->x < -0x108) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8001508C, (s32)arg0);
@@ -412,7 +412,7 @@ void func_80015404(MenuItemActor *arg0) {
     actor->x = 0x90;
     actor->y = 8;
     actor->state = 0;
-    func_80071824(arg0, func_800152D0);
+    setCallbackTaskCallback(arg0, func_800152D0);
 }
 
 void func_8001543C(void *arg0) {
@@ -465,7 +465,7 @@ void func_80015680(MenuItemActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->x == 0x70) {
-            arg0->child = createEffectTask(func_80015B20, 0, 0x63);
+            arg0->child = createCallbackTask(func_80015B20, 0, 0x63);
             enqueueSoundEffect(1, 0x32);
         }
         if (arg0->x == -0x50) {
@@ -488,7 +488,7 @@ void func_80015680(MenuItemActor *arg0) {
         break;
     }
     if (arg0->x < -0x108) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         return;
     }
     func_800483FC(&D_80124868, func_8001543C, (s32)arg0);
@@ -500,7 +500,7 @@ void func_800157B4(MenuItemActor *arg0) {
     actor->x = 0x90;
     actor->y = 0x28;
     actor->state = 0;
-    func_80071824(arg0, func_80015680);
+    setCallbackTaskCallback(arg0, func_80015680);
 }
 
 void func_800157EC(void *arg0) {
@@ -556,7 +556,7 @@ void func_80015A30(MenuItemActor *arg0) {
         x = actor->x;
         if (x == -0x50) {
             actor->state = 1;
-            createEffectTask(func_80015C84, 0, 0x63);
+            createCallbackTask(func_80015C84, 0, 0x63);
             x = actor->x;
         }
         break;
@@ -572,7 +572,7 @@ void func_80015A30(MenuItemActor *arg0) {
         break;
     }
     if (x < -0x108) {
-        func_800716E4(actor);
+        removeCallbackTask(actor);
         gCurrentInputTask->unk1C = 2;
         return;
     }
@@ -585,7 +585,7 @@ void func_80015B20(MenuItemActor *arg0) {
     actor->x = 0x90;
     actor->y = 0x48;
     actor->state = 0;
-    func_80071824(arg0, func_80015A30);
+    setCallbackTaskCallback(arg0, func_80015A30);
 }
 
 void func_80015B58(void *arg0) {
@@ -622,7 +622,7 @@ void func_80015BD8(FadeItemActor *arg0) {
         temp_a2->x = temp_a2->x - 0x20;
     }
     if (temp_a2->x < -0x90) {
-        func_800716E4(temp_a2);
+        removeCallbackTask(temp_a2);
     } else {
         func_800483FC(&D_80124868, func_80015B58, (s32)temp_a2);
     }
@@ -634,7 +634,7 @@ void func_80015C84(FadeItemActor *arg0) {
     actor->x = -0x68;
     actor->y = -0x14;
     actor->alpha = 0;
-    func_80071824(arg0, func_80015BD8);
+    setCallbackTaskCallback(arg0, func_80015BD8);
 }
 
 // func_80015CBC best match: 97.244% (nonmatchings/func_80015CBC-6276316234415602851/base_8.c)
@@ -789,7 +789,7 @@ void func_80015F4C(RectListActor *arg0) {
     D_8010AE46 = arg0->rects[1].y1;
 
     if (D_801235B4 == 0x63) {
-        func_800716E4(arg0);
+        removeCallbackTask(arg0);
         D_801235B4 = 0;
         return;
     }
@@ -812,7 +812,7 @@ void func_8001621C(RectListActor *arg0) {
     actor->stepLimit = 0x8C;
     actor->stepIncrement = 0x44;
     actor->frame = 0;
-    func_80071824(arg0, func_80015F4C);
+    setCallbackTaskCallback(arg0, func_80015F4C);
 }
 
 // func_80016284 best match: 90.000% (nonmatchings/func_80016284-180949888360117632/base_10.c)
@@ -939,7 +939,7 @@ void func_800165F0(RectListActor *arg0) {
     actor->stepIncrement = 0x11;
     actor->stepAccumulator = 2;
     actor->unk2E = 0x27;
-    func_80071824(arg0, func_80016560);
+    setCallbackTaskCallback(arg0, func_80016560);
 }
 
 void func_80016664(TitleMenuWidgetActor *arg0) {
@@ -1057,7 +1057,7 @@ void func_80016948(TitleMenuWidgetActor *arg0) {
     }
 
     if (sum == (D_80121B55 * 3)) {
-        func_800716E4((EffectTask *) actor);
+        removeCallbackTask((CallbackTask *) actor);
     } else {
         func_800483FC(&D_80124868, func_80016664, (s32) actor);
     }
@@ -1083,7 +1083,7 @@ void func_80016B54(TitleMenuWidgetActor *arg0) {
         new_var->unk31[i] = 0;
     }
 
-    func_80071824(new_var, func_80016948);
+    setCallbackTaskCallback(new_var, func_80016948);
 }
 
 // func_80016BE8 best match: 99.233% (nonmatchings/func_80016BE8-6061209858023118177/base_12.c)
@@ -1234,7 +1234,7 @@ void func_80017014(RectListActor *arg0) {
     actor->rects[0].y1 = 0x1C;
     actor->rects[1].y1 = 0x30;
     actor->rects[2].y1 = 0x30;
-    func_80071824(arg0, func_80016E40);
+    setCallbackTaskCallback(arg0, func_80016E40);
 }
 
 void func_80017078(void *arg0) {
@@ -1264,7 +1264,7 @@ void func_8001710C(SpriteActor *arg0) {
     func_80017168(&temp_a2->sprite, func_80043040(D_8011217C));
     temp_a2->x = temp_a2->sprite.unk8;
     temp_a2->y = temp_a2->sprite.unkA;
-    func_80071824(temp_a2, func_800170AC);
+    setCallbackTaskCallback(temp_a2, func_800170AC);
 }
 
 void func_80017168(DstStruct_80017168 *arg0, s32 arg1) {

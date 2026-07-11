@@ -1,5 +1,5 @@
 #include "common.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
 #include "controller_pak_race_record_save_flow.h"
@@ -75,9 +75,9 @@ void initControllerPakRaceRecordSaveFlow(void) {
     loadCompressedRomAsset(&D_593D10, &D_598A70, 0x22);
     loadCompressedRomAsset(&D_598A70, &D_59AAA0, 0x23);
     loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
-    func_80070EC0(0);
-    D_8010ADDC = createEffectTask(&func_8002BA00, 0, 0x61);
-    D_8010ADE8 = createEffectTask(&func_8002C318, 0, 0x60);
+    initCallbackTaskScheduler(0);
+    D_8010ADDC = createCallbackTask(&func_8002BA00, 0, 0x61);
+    D_8010ADE8 = createCallbackTask(&func_8002C318, 0, 0x60);
     gControllerPakRaceRecordSaveScoreUiState.step = 0;
     gControllerPakRaceRecordSaveScoreUiState.timer = 0;
     gControllerPakRaceRecordSaveScoreUiState.targetState = 0;
@@ -96,7 +96,7 @@ extern void func_80000C48(u16);
 extern void func_80000DB4(u16);
 extern void func_800012CC(u16, s32, ControllerPakRaceRecordSaveScoreUiState *, s16);
 extern void func_80001538(u16);
-extern void initControllerPakDeleteConfirmPrompt(EffectTask *);
+extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 #endif
 
 // updateControllerPakRaceRecordSaveFlow best match: 95.751% (base_24.c)
@@ -123,7 +123,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
     {
       gControllerPakMenuState.state = 3;
       gControllerPakMenuState.confirmChoice = 1;
-      createEffectTask(initControllerPakDeleteConfirmPrompt, 0, 0x64);
+      createCallbackTask(initControllerPakDeleteConfirmPrompt, 0, 0x64);
       setCurrentInputTaskCallback(updateControllerPakRaceRecordSaveOverwritePrompt, 0);
     }
   }
@@ -413,7 +413,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
   {
  D_800EC9C1 = 1; } if (((u8) D_800EC9C1) == 0x23) { setCurrentInputTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
   }
-  updateEffectTasks();
+  updateCallbackTasks();
 }
 #endif
 
@@ -421,7 +421,7 @@ void fadeOutControllerPakRaceRecordSaveFlow(void) {
     s32 temp_v0 = gCurrentInputTask->fade;
     if (temp_v0 != 0xFF) {
         gCurrentInputTask->fade = stepMenuFadeAlpha((s16) temp_v0, 0x20, 1);
-        updateEffectTasks();
+        updateCallbackTasks();
         if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         }
@@ -456,5 +456,5 @@ void updateControllerPakRaceRecordSaveOverwritePrompt(void) {
         D_801235B4 = 1;
         setCurrentInputTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
     }
-    updateEffectTasks();
+    updateCallbackTasks();
 }

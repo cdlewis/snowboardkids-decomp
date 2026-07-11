@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "effect_task_scheduler.h"
+#include "callback_task_scheduler.h"
 #include "menu_rendering.h"
 #include "race_hud.h"
 
@@ -261,7 +261,7 @@ void func_800179D4(RaceHudBannerActor *arg0) {
     arg0->y = -0x1C;
     arg0->alpha = 0;
     arg0->state = 0;
-    func_80071824(arg0, func_800177F8);
+    setCallbackTaskCallback(arg0, func_800177F8);
 }
 
 // func_80017A10 best match: 99.232% (nonmatchings/func_80017A10-4033633224288138541/base_12.c)
@@ -367,7 +367,7 @@ void func_80017D08(RaceHudPanelActor *arg0) {
     arg0->targetX.target[0] = 0x8C;
     arg0->targetX.target[1] = 0x44;
     arg0->targetY.mode = 0;
-    func_80071824(arg0, func_80017C34);
+    setCallbackTaskCallback(arg0, func_80017C34);
 }
 
 // func_80017D6C best match: 84.174% (nonmatchings/func_80017D6C-7273315160691878794/base.c)
@@ -518,7 +518,7 @@ void func_80018060(RaceHudMessageActor *arg0) {
     } else {
         actor->targetX = targetX;
     }
-    func_80071824(actor, func_80017F94);
+    setCallbackTaskCallback(actor, func_80017F94);
 }
 
 void func_80018134(RaceHudPlayerListActor *arg0) {
@@ -619,7 +619,7 @@ void func_800183DC(RaceHudPlayerListActor *arg0) {
     arg0->y = -0x18;
     arg0->mode = 0;
     arg0->scale = 0x100;
-    func_80071824(arg0, func_800182A4);
+    setCallbackTaskCallback(arg0, func_800182A4);
 }
 
 // func_800184C8 best match: 86.336% (nonmatchings/func_800184C8-4923837976568703863/base_4.c)
@@ -782,7 +782,7 @@ void func_80018B6C(RaceHudPanelActor *arg0) {
     arg0->y[2] = -0x60;
     arg0->x[3] = 4;
     arg0->y[3] = 0x24;
-    func_80071824(arg0, func_80018AA0);
+    setCallbackTaskCallback(arg0, func_80018AA0);
 }
 
 void func_80018BC0(RaceHudPanelSlot *arg0) {
@@ -978,5 +978,5 @@ next_player:
 #endif
 
 void func_800191A0(RaceHudPanelActor *arg0) {
-    func_80071824(arg0, func_80018C80);
+    setCallbackTaskCallback(arg0, func_80018C80);
 }
