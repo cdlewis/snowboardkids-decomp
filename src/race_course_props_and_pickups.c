@@ -15,7 +15,7 @@ typedef struct {
     /* 0x0 */ s16 enabled;
     /* 0x2 */ s16 modelIndex;
     /* 0x4 */ Vec3i transform;
-} CourseOverlaySpriteEntry;
+} CourseCollectibleSpriteEntry;
 
 typedef struct {
     /* 0x00 */ s32 unk0;
@@ -181,8 +181,8 @@ extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gRaceSplitscreenMode;
 extern u8 gAssetHandles[];
-extern CourseOverlaySpriteEntry *gCourseOverlaySpriteListsByCourse[];
-extern u32 gCourseOverlaySpriteVertices[];
+extern CourseCollectibleSpriteEntry *gCourseCollectibleSpriteListsByCourse[];
+extern u32 gCourseCollectibleSpriteVertices[];
 extern Vtx gRacePickupBaseVertices[];
 extern Vtx gRacePickupTopVertices[];
 extern Gfx gEffectRenderModeSetupDl[];
@@ -293,8 +293,8 @@ void initRaceCoursePropModels(CourseEffectModelListActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceCoursePropModels);
 }
 
-void renderCourseOverlaySprites(CourseEffectModelListActor *arg0) {
-    CourseOverlaySpriteEntry *entry;
+void renderCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
+    CourseCollectibleSpriteEntry *entry;
     s16 modelIndex;
     s32 i;
     CourseEffectModelListActor *actor;
@@ -306,7 +306,7 @@ void renderCourseOverlaySprites(CourseEffectModelListActor *arg0) {
     actor = arg0;
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
 
-    entry = gCourseOverlaySpriteListsByCourse[gRaceCourseIndex];
+    entry = gCourseCollectibleSpriteListsByCourse[gRaceCourseIndex];
     i = 0;
     if (entry->modelIndex != -1) {
         do {
@@ -323,7 +323,7 @@ void renderCourseOverlaySprites(CourseEffectModelListActor *arg0) {
                 gSPMatrix(gRegionAllocPtr++, &actor->modelBuffer[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
 
-                gSPVertex(gRegionAllocPtr++, (u32)gCourseOverlaySpriteVertices, 4, 0);
+                gSPVertex(gRegionAllocPtr++, (u32)gCourseCollectibleSpriteVertices, 4, 0);
 
                 gSP2Triangles(gRegionAllocPtr++, 3, 2, 1, 0, 3, 1, 0, 0);
             }
@@ -335,8 +335,8 @@ void renderCourseOverlaySprites(CourseEffectModelListActor *arg0) {
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
 }
 
-void updateCourseOverlaySprites(CourseEffectModelListActor *arg0) {
-    CourseOverlaySpriteEntry *entry;
+void updateCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
+    CourseCollectibleSpriteEntry *entry;
     Vec3i *pos;
     CourseEffectModelListActor *actor;
     register s32 one;
@@ -344,7 +344,7 @@ void updateCourseOverlaySprites(CourseEffectModelListActor *arg0) {
     register s32 ySize;
     register s32 sentinel;
 
-    entry = gCourseOverlaySpriteListsByCourse[gRaceCourseIndex];
+    entry = gCourseCollectibleSpriteListsByCourse[gRaceCourseIndex];
     actor = arg0;
     ySize = 1;
     if (gFrameCounter & ySize) {
@@ -403,18 +403,18 @@ next:
     }
 
 done:
-    addRenderCallback(&gEffectRenderCallbackList, renderCourseOverlaySprites, actor);
+    addRenderCallback(&gEffectRenderCallbackList, renderCourseCollectibleSprites, actor);
 }
 
-void initCourseOverlaySpriteMatrices(CourseEffectModelListActor *arg0) {
+void initCourseCollectibleSpriteMatrices(CourseEffectModelListActor *arg0) {
     register CourseEffectModelListActor *actor1;
     register CourseEffectModelListActor *actor2;
-    register CourseOverlaySpriteEntry *script;
+    register CourseCollectibleSpriteEntry *script;
     register s32 i;
     register s32 offset;
     register s32 one;
 
-    script = gCourseOverlaySpriteListsByCourse[gRaceCourseIndex];
+    script = gCourseCollectibleSpriteListsByCourse[gRaceCourseIndex];
     actor1 = arg0;
     actor2 = arg0;
     i = 0;
@@ -436,13 +436,13 @@ void initCourseOverlaySpriteMatrices(CourseEffectModelListActor *arg0) {
     osWritebackDCache(actor1->modelBuffer, actor1->modelCount * sizeof(GfxCommandDest));
 }
 
-void initCourseOverlaySprites(CourseEffectModelListActor *arg0) {
+void initCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
     CourseEffectModelListActor *new_var;
-    CourseOverlaySpriteEntry *var_v0;
+    CourseCollectibleSpriteEntry *var_v0;
 
     new_var = arg0;
     new_var->modelCount = 0;
-    var_v0 = gCourseOverlaySpriteListsByCourse[gRaceCourseIndex];
+    var_v0 = gCourseCollectibleSpriteListsByCourse[gRaceCourseIndex];
     if (var_v0->modelIndex != -1) {
         do {
             new_var->modelCount += 1;
@@ -452,8 +452,8 @@ void initCourseOverlaySprites(CourseEffectModelListActor *arg0) {
     if (new_var->modelCount != 0) {
         RACE_MODEL_BUFFER_HANDLE = allocRelocatableHeapBlock(new_var->modelCount << 6);
         new_var->modelBuffer = (void *) getRelocatableHeapBlockBase(RACE_MODEL_BUFFER_HANDLE);
-        initCourseOverlaySpriteMatrices(new_var);
-        setCallbackTaskCallback(new_var, updateCourseOverlaySprites);
+        initCourseCollectibleSpriteMatrices(new_var);
+        setCallbackTaskCallback(new_var, updateCourseCollectibleSprites);
     }
 }
 
