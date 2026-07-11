@@ -202,7 +202,7 @@ void func_800297D8(PlayerCountSelectWidgetActor *arg0) {
     func_80071824(arg0, func_800296D8);
 }
 
-// func_8002980C best match: 98.258%
+// func_8002980C best match: 98.565% (nonmatchings/func_8002980C-6061209858023118177/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_ui/func_8002980C.s")
 
 #ifdef NON_MATCHING
@@ -229,13 +229,11 @@ void func_8002980C(PlayerCountSelectWidgetActor *arg0) {
         func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
                       func_80043040(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->widget.counter].right[tileOffset], 0, 0x100);
+        i = 0x80;
         func_80011264((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
                       func_80043040(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->widget.counter].bottom[tileOffset], 0, 0x100);
-        i = 0x80;
         offset += 0x40;
-        if ((arg0 && arg0) && arg0) {
-        }
         tileOffset++;
     } while (offset != i);
     i++;
@@ -250,17 +248,19 @@ void func_8002980C(PlayerCountSelectWidgetActor *arg0) {
                   0x20, 0, 0);
     func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), func_80043040(D_80112130.textureHandle), 0x35, 0x20,
                   0x20, 0, 0);
-    func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), func_80043040(D_80112130.textureHandle), 0x3A, 0x20,
-                  0x20, 0, 0);
+    if (offset && offset) {
+    }
+    func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), func_80043040(D_80112130.textureHandle), 0x3A,
+                  0x20, 0x20, 0, 0);
 
-    for (offset = 0; offset != 0x80; offset += 0x10) {
-        func_8000F030((s16)(arg0->x + offset + 0xC), (s16)(arg0->y - 4), func_80043040(D_80112130.textureHandle),
+    for (offset = 0; (offset ^ 0) != 0x80; offset += 0x10) {
+        func_8000F030((s16)((arg0->x + offset) + 0xC), (s16)(arg0->y - 4), func_80043040(D_80112130.textureHandle),
                       0x34, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->x + offset + 0xC), (s16)(arg0->y + 0x8C), func_80043040(D_80112130.textureHandle),
+        func_8000F030((s16)((arg0->x + offset) + 0xC), (s16)(arg0->y + 0x8C), func_80043040(D_80112130.textureHandle),
                       0x39, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + offset + 0xC), func_80043040(D_80112130.textureHandle),
+        func_8000F030((s16)(arg0->x - 4), (s16)((arg0->y + offset) + 0xC), func_80043040(D_80112130.textureHandle),
                       0x36, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y + offset + 0xC), func_80043040(D_80112130.textureHandle),
+        func_8000F030((s16)(arg0->x + 0x8C), (s16)((arg0->y + offset) + 0xC), func_80043040(D_80112130.textureHandle),
                       0x37, 0x20, 0x20, 0, 0);
     }
 }
