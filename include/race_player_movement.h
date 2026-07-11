@@ -25,7 +25,7 @@ void func_8008B60C(struct RaceVec3i *vec, struct RaceInputPlayer *player);
 void func_8008B73C(struct RaceInputPlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
 void func_8008BB20(struct RaceInputPlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_8008BB5C(struct RaceInputPlayer *player, s32 arg1);
-void func_8008BBB8(struct RaceInputPlayer *player, s16 soundType);
+void enqueueRacePlayerVoiceSound(struct RaceInputPlayer *player, s16 soundType);
 void func_8008BE1C(struct RaceInputPlayer *player);
 
 #endif

@@ -1178,7 +1178,7 @@ void func_8008BB5C(RaceInputPlayer *arg0, s32 arg1) {
     }
 }
 
-void func_8008BBB8(RaceInputPlayer *player, s16 soundType) {
+void enqueueRacePlayerVoiceSound(RaceInputPlayer *player, s16 soundType) {
     if (player->soundDisabled == 0) {
         switch (soundType) {
         case 0:
