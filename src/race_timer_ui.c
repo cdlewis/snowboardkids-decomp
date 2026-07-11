@@ -3,12 +3,7 @@
 #include "memory_allocator.h"
 #include "race_item_effects.h"
 #include "race_player_movement.h"
-
-typedef struct {
-    /* 0x0 */ s8 minutes;
-    /* 0x1 */ s8 seconds;
-    /* 0x2 */ s16 fraction;
-} RaceTimer;
+#include "race_timer_ui.h"
 
 typedef struct {
     /* 0x00 */ char pad[0x14];
@@ -84,7 +79,6 @@ extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80047E88(s32, s16, s32, s32);
 extern void func_80048278(s32, s32, char *, s32);
 extern void func_800483FC(void *, void *, s32);
-extern void func_8007A3D8(s32);
 extern void func_80065144(void);
 extern void func_80071408(void *, s32, s32);
 extern int sprintf(char *, const char *, ...);
@@ -137,8 +131,6 @@ extern s16 D_80122290;
 extern s16 D_801222F0;
 extern s8 D_80121B79;
 extern s16 D_80121B7A;
-
-s32 func_8007B130(RaceTimer *arg0, RaceTimer *arg1, RaceTimer *arg2);
 
 void func_80078430(void) {
     func_800437F0(D_245A80, D_24C8E0, 0x1F);

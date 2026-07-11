@@ -8,6 +8,7 @@
 #include "model_animation.h"
 #include "race_effects.h"
 #include "race_player_movement.h"
+#include "race_timer_ui.h"
 
 /* Local 3-arg declaration; see note in effect_task_scheduler.h. */
 extern void *func_800716A4(void *, s32, s32);
@@ -868,13 +869,12 @@ extern void func_800623E8(void *);
 extern int sprintf(char *, const char *, ...);
 extern void func_80072A74(s32, void *, s32, s32);
 extern void func_80072A20(s32, void *, s32, s32, f32, s32);
-extern s32 func_8007B130(void *, void *, void *, void *);
 extern RacePlayerState D_80121D80[];
 extern RacePlayerValue D_80121D98[];
 extern s16 D_8012206C[][0x306];
 extern RacePlayerFlags D_8012207C[];
 extern u8 D_800EC9F0[];
-extern void *D_80121B74;
+extern RaceTimer D_80121B74;
 extern void func_80072138(s32, s32);
 extern void func_80048278(s32, s32, void *, s32);
 extern void func_80059A04(void *, s32, s32, s32);
@@ -2765,7 +2765,7 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
     if (D_80121B50 == 9) {
         arg0->leftTarget = 0x64;
     }
-    func_8007B130(&D_800DC900[D_80121B50], &D_80121B74, &arg0->row, arg0);
+    func_8007B130((RaceTimer *)&D_800DC900[D_80121B50], &D_80121B74, (RaceTimer *)&arg0->row);
     if (D_80121B81 != 0) {
         arg0->leftValue = 0;
         temp_v0 = D_801222F0;
@@ -5184,7 +5184,8 @@ void func_80065144(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x20) = -0x2C;
     *(s32 *)((u8 *)arg0 + 0x1C) = 0x1A4;
     *(s32 *)((u8 *)arg0 + 0x28) = 0x38;
-    v0 = func_8007B130(&D_80121B74, &D_800EC9F0[D_80121B50 * 4 + 0x12A], (u8 *)arg0 + 0x2C, arg0);
+    v0 = func_8007B130(&D_80121B74, (RaceTimer *)&D_800EC9F0[D_80121B50 * 4 + 0x12A],
+                       (RaceTimer *)((u8 *)arg0 + 0x2C));
     *(s8 *)((u8 *)arg0 + 0x30) = v0;
     func_80071824(arg0, func_800650D8);
 }
