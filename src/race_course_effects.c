@@ -1420,7 +1420,7 @@ void func_8006CCC0(RaceCourseTriggerEffect *arg0) {
     }
 }
 
-// func_8006CE68 best match: 71.266% at nonmatchings/func_8006CE68-7273315160691878794/base_4.c.
+// func_8006CE68 best match: 71.621% at nonmatchings/func_8006CE68-731940616440357983/base_1.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006CE68.s")
 
 #ifdef NON_MATCHING
@@ -1428,86 +1428,86 @@ void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger)
     Vec3i transformed;
     Vec3i delta;
     FixedMatrix3s matrix;
-    s32 push;
+    s32 savedPush;
     CourseTriggerEntry *entry;
-    s32 temp;
-    s32 halfWidth;
+    s32 scaleX;
+    s32 collisionRadius;
     s32 limit;
+    s32 positiveLimit;
+    s32 negativeLimit;
+    s32 push;
 
-    if (gRaceUpdatePaused == 0) {
-        if (player->isActive != 0) {
-            entry = &D_800DA840[trigger->entryIndex];
-            func_8009853C(matrix, -entry->pitch, -entry->yaw);
+    if ((gRaceUpdatePaused == 0) && (player->isActive != 0)) {
+        entry = &D_800DA840[trigger->entryIndex];
+        func_8009853C(matrix, -entry->pitch, -entry->yaw);
 
-            if ((player->flags & 0x2000) == 0) {
-                delta.x = player->posX - D_800DA840[trigger->entryIndex].pos.x;
-                delta.y = player->posY - D_800DA840[trigger->entryIndex].pos.y;
-                delta.z = player->posZ - D_800DA840[trigger->entryIndex].pos.z;
-                func_80098590(matrix, &delta, &transformed);
-
-                if ((transformed.z >= -trigger->scaleZ) &&
-                    (trigger->scaleZ >= transformed.z) &&
-                    (transformed.x >= (-trigger->scaleX - 0x30000)) &&
-                    ((trigger->scaleX + 0x30000) >= transformed.x) &&
-                    (transformed.y >= -0xFFFFF) &&
-                    (trigger->scaleY >= transformed.y)) {
-                    delta.y = trigger->scaleY - transformed.y;
-                    delta.x = -transformed.x;
-                    delta.z = 0;
-
-                    entry = &D_800DA840[trigger->entryIndex];
-                    func_80097FE4(matrix, entry->pitch, entry->yaw);
-                    func_80098590(matrix, &delta, &transformed);
-
-                    player->posX += transformed.x;
-                    player->posY += transformed.y;
-                    player->posZ += transformed.z;
-                    player->flags |= 0x02000000;
-                    player->yaw = D_800DA840[trigger->entryIndex].yaw;
-                    player->pitch = D_800DA840[trigger->entryIndex].pitch;
-                    return;
-                }
-            }
-
-            if (player->unk578 == 0) {
-                func_80088C80(&trigger->pos1, trigger->scaleX + 0x30000, 0x120000, player->unk0);
-                func_80088C80(&trigger->pos2, trigger->scaleX + 0x30000, 0x100000, player->unk0);
-            }
-
+        if ((player->flags & 0x2000) == 0) {
             delta.x = player->posX - D_800DA840[trigger->entryIndex].pos.x;
             delta.y = player->posY - D_800DA840[trigger->entryIndex].pos.y;
             delta.z = player->posZ - D_800DA840[trigger->entryIndex].pos.z;
             func_80098590(matrix, &delta, &transformed);
 
-            if (transformed.y <= 0) {
-                if (transformed.y >= -0x160000) {
-                    if (transformed.z >= -trigger->scaleZ) {
-                        if (trigger->scaleZ >= transformed.z) {
-                            temp = trigger->scaleX;
-                            halfWidth = player->collisionRadius;
-                            limit = temp + halfWidth;
-                            if (transformed.x >= ((-temp - halfWidth) - 0x30000)) {
-                                temp = limit + 0x30000;
-                                if (temp >= transformed.x) {
-                                    push = 0;
-                                    halfWidth = -limit;
-                                    if (transformed.x >= 0) {
-                                        if (transformed.x < temp) {
-                                            push = (limit - transformed.x) + 0x30000;
-                                        }
-                                    } else if ((halfWidth - 0x30000) < transformed.x) {
-                                        push = (halfWidth - transformed.x) - 0x30000;
-                                    }
+            if ((transformed.z >= -trigger->scaleZ) && (trigger->scaleZ >= transformed.z) &&
+                (transformed.x >= (-trigger->scaleX - 0x30000)) &&
+                ((trigger->scaleX + 0x30000) >= transformed.x) && (transformed.y >= -0xFFFFF) &&
+                (trigger->scaleY >= transformed.y)) {
+                delta.y = trigger->scaleY - transformed.y;
+                delta.x = -transformed.x;
+                delta.z = 0;
 
-                                    if (push != 0) {
-                                        func_80097C18(matrix, D_800DA840[trigger->entryIndex].yaw);
-                                        delta.y = 0;
-                                        delta.z = 0;
-                                        delta.x = push;
-                                        func_80098590(matrix, &delta, &transformed);
-                                        player->posX += transformed.x;
-                                        player->posZ += transformed.z;
+                entry = &D_800DA840[trigger->entryIndex];
+                func_80097FE4(matrix, entry->pitch, entry->yaw);
+                func_80098590(matrix, &delta, &transformed);
+
+                player->posX += transformed.x;
+                player->posY += transformed.y;
+                player->posZ += transformed.z;
+                player->flags |= 0x02000000;
+                player->yaw = D_800DA840[trigger->entryIndex].yaw;
+                player->pitch = D_800DA840[trigger->entryIndex].pitch;
+                return;
+            }
+        }
+
+        if (player->unk578 == 0) {
+            func_80088C80(&trigger->pos1, trigger->scaleX + 0x30000, 0x120000, player->unk0);
+            func_80088C80(&trigger->pos2, trigger->scaleX + 0x30000, 0x100000, player->unk0);
+        }
+
+        delta.x = player->posX - D_800DA840[trigger->entryIndex].pos.x;
+        delta.y = player->posY - D_800DA840[trigger->entryIndex].pos.y;
+        delta.z = player->posZ - D_800DA840[trigger->entryIndex].pos.z;
+        func_80098590(matrix, &delta, &transformed);
+
+        if (transformed.y <= 0) {
+            if (transformed.y >= -0x160000) {
+                if (transformed.z >= -trigger->scaleZ) {
+                    if (trigger->scaleZ >= transformed.z) {
+                        scaleX = trigger->scaleX;
+                        collisionRadius = player->collisionRadius;
+                        limit = scaleX + collisionRadius;
+                        if (transformed.x >= ((-scaleX - collisionRadius) - 0x30000)) {
+                            positiveLimit = limit + 0x30000;
+                            if (positiveLimit >= transformed.x) {
+                                push = 0;
+                                negativeLimit = -limit;
+                                if (transformed.x >= 0) {
+                                    if (transformed.x < positiveLimit) {
+                                        push = (limit - transformed.x) + 0x30000;
                                     }
+                                } else if ((negativeLimit - 0x30000) < transformed.x) {
+                                    push = (negativeLimit - transformed.x) - 0x30000;
+                                }
+
+                                if (push != 0) {
+                                    savedPush = push;
+                                    func_80097C18(matrix, D_800DA840[trigger->entryIndex].yaw);
+                                    delta.y = 0;
+                                    delta.z = 0;
+                                    delta.x = savedPush;
+                                    func_80098590(matrix, &delta, &transformed);
+                                    player->posX += transformed.x;
+                                    player->posZ += transformed.z;
                                 }
                             }
                         }
