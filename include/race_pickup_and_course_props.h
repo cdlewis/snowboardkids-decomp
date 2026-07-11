@@ -1,5 +1,5 @@
-#ifndef RACE_PICKUP_EFFECTS_H
-#define RACE_PICKUP_EFFECTS_H
+#ifndef RACE_PICKUP_AND_COURSE_PROPS_H
+#define RACE_PICKUP_AND_COURSE_PROPS_H
 
 #include "common.h"
 
