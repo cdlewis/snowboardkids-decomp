@@ -884,7 +884,7 @@ void func_800257F0(u8 *arg0) {
 }
 #endif
 
-// func_80025AA8 best match: 97.722% (nonmatchings/func_80025AA8-4061930211835852828/base_14.c)
+// func_80025AA8 best match: 98.481% (nonmatchings/func_80025AA8-6061209858023118177/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025AA8.s")
 
 #ifdef NON_MATCHING
@@ -921,7 +921,7 @@ void func_80025AA8(u8 *arg0) {
                         handleIndex = 0x21;
                     }
                     func_8000F8AC(posPtr[0xC],
-                                  (s16)(posPtr[0x10] + (statePtr[0x38] * (direction = *directionPtr))),
+                                  (s16)(posPtr[0x10] + ((statePtr[0x38] * (direction = *directionPtr)) & 0xFFFF)),
                                   func_80043040(handles[handleIndex]), tileIndex & 0xFFFF, 0x20, 0x20, 0,
                                   posPtr[0x14], 0);
                 }
