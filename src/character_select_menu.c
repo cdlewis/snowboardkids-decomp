@@ -4,6 +4,7 @@
 #include "character_select_menu.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
+#include "race_hud.h"
 
 typedef struct {
     char pad[0x18];
@@ -47,13 +48,6 @@ extern void func_80005468(void);
 extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_800720E4(s32);
-extern void func_800179D4(EffectTask *);
-extern void func_80017D08(EffectTask *);
-extern void func_80018060(EffectTask *);
-extern void func_800183DC(EffectTask *);
-extern void func_80018B6C(EffectTask *);
-extern void func_800191A0(EffectTask *);
-
 extern CharacterSelectMenuState *D_801235B8;
 extern CharacterSelectState D_8010AE50;
 extern CharacterId D_800B3400[];

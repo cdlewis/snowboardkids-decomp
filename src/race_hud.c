@@ -2,6 +2,7 @@
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "menu_rendering.h"
+#include "race_hud.h"
 
 #define PLAYER_COUNT 4
 #define PLAYER_DATA_SIZE 0x60C
@@ -19,37 +20,6 @@ typedef struct {
     u8 isActive;
     u8 pad9[PLAYER_DATA_SIZE - 9];
 } RacePlayer;
-
-typedef struct {
-    u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ s16 y;
-    /* 0x1C */ s16 alpha;
-    /* 0x1E */ s16 unk1E;
-    /* 0x20 */ u8 state;
-    /* 0x21 */ u8 frame;
-    /* 0x22 */ u8 mode;
-    /* 0x23 */ u8 bounceTimer;
-} RaceHudBannerActor;
-
-typedef struct {
-    u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ s16 y;
-    /* 0x1C */ s16 targetX;
-    /* 0x1E */ s16 targetY;
-    /* 0x20 */ s16 speedX;
-    union {
-        /* 0x22 */ s16 speedY;
-        struct {
-            /* 0x22 */ u8 playerFlags;
-            /* 0x23 */ u8 unk23;
-        };
-    };
-    /* 0x24 */ u8 state;
-    /* 0x25 */ u8 timer;
-    /* 0x26 */ s16 unk26;
-} RaceHudMessageActor;
 
 typedef struct {
     u8 pad0[0x4B];
@@ -79,43 +49,6 @@ typedef struct {
     /* 0x24 */ u8 playerFrameReady;
 } RaceHudPlayerFrameController;
 
-typedef union {
-    s16 target[PLAYER_COUNT];
-    struct {
-        u8 pad0[4];
-        u8 inactiveTimer[PLAYER_COUNT];
-    } overlay;
-} RaceHudPanelTargetX;
-
-typedef struct {
-    u8 pad0[0x18];
-    /* 0x18 */ s16 x[PLAYER_COUNT];
-    /* 0x20 */ s16 y[PLAYER_COUNT];
-    /* 0x28 */ RaceHudPanelTargetX targetX;
-    union {
-        s16 target[PLAYER_COUNT];
-        u8 finishedBlink[PLAYER_COUNT];
-        u8 mode;
-    } targetY;
-    /* 0x38 */ s16 accumulator[PLAYER_COUNT];
-    /* 0x40 */ u16 tileSize[PLAYER_COUNT];
-    /* 0x48 */ s16 xDirection[PLAYER_COUNT];
-    /* 0x50 */ s16 timer[PLAYER_COUNT];
-    /* 0x58 */ s16 stepCount[PLAYER_COUNT];
-    /* 0x60 */ u8 axis[PLAYER_COUNT];
-    /* 0x64 */ u8 divisor[PLAYER_COUNT];
-    /* 0x68 */ u8 state[PLAYER_COUNT];
-} RaceHudPanelActor;
-
-typedef struct {
-    u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    u8 pad1A[6];
-    /* 0x20 */ s16 y;
-    u8 pad22[0x1E];
-    /* 0x40 */ u16 tileSize;
-} RaceHudPanelSlot;
-
 typedef struct {
     u8 pad0[0x18];
     /* 0x18 */ s16 x[PLAYER_COUNT];
@@ -126,16 +59,6 @@ typedef struct {
     u8 pad2E[2];
     /* 0x30 */ u8 mode;
 } RaceHudPanelTransitionActor;
-
-typedef struct {
-    u8 pad0[0x18];
-    /* 0x18 */ s16 x[PLAYER_COUNT];
-    /* 0x20 */ s16 y;
-    /* 0x22 */ s16 baseX;
-    /* 0x24 */ s16 scale;
-    /* 0x26 */ u8 mode;
-    /* 0x27 */ u8 timer;
-} RaceHudPlayerListActor;
 
 typedef struct {
     /* 0x00 */ u8 phase;
@@ -154,14 +77,6 @@ typedef struct {
     /* 0x26 */ u8 unk26;
 } RaceHudPanelController;
 
-extern void func_80018C80(RaceHudPanelActor *);
-extern void func_800177F8(RaceHudBannerActor *);
-extern void func_80017C34(RaceHudPanelActor *);
-extern void func_800184C8(void);
-extern void func_80018AA0(RaceHudPanelActor *);
-extern void func_80018134(RaceHudPlayerListActor *);
-extern void func_800182A4(RaceHudPlayerListActor *);
-extern void func_80017D6C(RaceHudMessageActor *);
 extern void func_800483FC(void *, void *, void *);
 extern s8 D_8010AE52;
 extern u8 D_8010AE51;
@@ -353,13 +268,6 @@ void func_800179D4(RaceHudBannerActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80017A10.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    u8 pad1A[6];
-    /* 0x20 */ s16 y;
-} RaceHudPlayerFrameActor;
-
 void func_80017A10(RaceHudPlayerFrameActor *arg0) {
     char buf[0x10];
     u8 *sp6C;
@@ -876,7 +784,7 @@ void func_80018B6C(RaceHudPanelActor *arg0) {
     func_80071824(arg0, func_80018AA0);
 }
 
-void func_80018BC0(void *arg0) {
+void func_80018BC0(RaceHudPanelSlot *arg0) {
     u8 *base;
     s32 i;
     u8 *player;
@@ -885,7 +793,7 @@ void func_80018BC0(void *arg0) {
     s32 color;
     u16 temp_v1;
 
- base = arg0; i = 0; if (D_80121B55 > 0) { player = (u8 *)D_80121D80; do {
+ base = (u8 *)arg0; i = 0; if (D_80121B55 > 0) { player = (u8 *)D_80121D80; do {
             if (player[8] != 0) {
                 new_var = i * 2;
                 temp_s0 = base + new_var;
