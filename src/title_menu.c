@@ -1140,7 +1140,7 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
 }
 #endif
 
-// func_80016E40 best match: 97.350% (nonmatchings/func_80016E40-1315772375853892447/base_2.c)
+// func_80016E40 best match: 97.350% (nonmatchings/func_80016E40-6061209858023118177/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016E40.s")
 
 #ifdef NON_MATCHING
@@ -1195,12 +1195,12 @@ void func_80016E40(TitleMenuTransitionActor *arg0) {
             }
 
             if ((state == 3) || (state == 4)) {
-                if ((s32)actor->alphaTimer[i] < 0x10) {
+                if ((s32)(u16)actor->alphaTimer[i] < 0x10) {
                     actor->alpha[i] -= 9;
                 } else {
                     actor->alpha[i] += 9;
                 }
-                actor->alphaTimer[i] = (actor->alphaTimer[i] + 1) & 0x1F;
+                actor->alphaTimer[i] = ((u16)actor->alphaTimer[i] + 1) & 0x1F;
             }
             i++;
         } while (i < *count);
