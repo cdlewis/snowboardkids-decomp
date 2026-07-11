@@ -29,7 +29,7 @@ extern f32 D_800E0900;
 extern u8 D_800E29C0;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
-extern s8 D_800EC8B0;
+extern u8 gRaceRumbleEnabled;
 extern s8 D_800EC8B4;
 extern s8 D_800EC8B5;
 extern s8 D_800EC8B6;
@@ -84,7 +84,7 @@ void func_80003140(void) {
     D_800EC9E5 = 1;
     D_800EC9E6 = 0;
     gHighestUnlockedCourse = 0;
-    D_800EC8B0 = 0;
+    gRaceRumbleEnabled = 0;
     D_80121B50 = 9;
     D_801235B4 = 0;
     D_8010ADF0 = 0;
@@ -283,7 +283,7 @@ void func_800035F8(void) {
     D_8010ADE8 = 0;
     D_800EC9C1 = 0;
     D_801235B4 = 0;
-    D_800EC8B0 = 0;
+    gRaceRumbleEnabled = 0;
 
     D_8010AE38 = D_800B31B8;
     D_8010AE40 = D_800B31BA;
@@ -711,14 +711,14 @@ void func_80004164(void) {
             }
             break;
         case 2:
-            D_8010ADFA = 0;
+            gRumblePakConnectedMask = 0;
             i = 0;
             if ((s32)D_80121B55 > 0) {
                 do {
                     func_80000A40(i);
                     if (((&D_800EC898)[i] != 1) && ((&D_800EC898)[i] != 0xB) && ((&D_800EC898)[i] != 4)) {
                         (&D_800EC8B4)[i] = 1;
-                        D_8010ADFA |= 1 << i;
+                        gRumblePakConnectedMask |= 1 << i;
                     } else {
                         (&D_800EC8B4)[i] = 0;
                     }
@@ -738,13 +738,13 @@ void func_80004164(void) {
             break;
         case 6:
             connectedCount = 0;
-            D_8010ADFA = 0;
+            gRumblePakConnectedMask = 0;
             i = 0;
             if ((s32)D_80121B55 > 0) {
                 do {
                     func_80000A40(i);
                     if (((&D_800EC898)[i] != 1) && ((&D_800EC898)[i] != 0xB) && ((&D_800EC898)[i] != 4)) {
-                        D_8010ADFA |= 1 << i;
+                        gRumblePakConnectedMask |= 1 << i;
                         (&D_800EC8B4)[i] = 1;
                         connectedCount++;
                     } else {

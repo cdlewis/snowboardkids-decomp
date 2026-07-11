@@ -170,7 +170,7 @@ extern SaveSlotBytes D_800EC9F0[];
 extern s32 gPlayerInputHeld;
 extern s16 gMenuFadeAlpha;
 extern s16 D_801124B8;
-extern s16 D_800EC8A8[];
+extern s16 gRumbleMotorRequestStates[];
 extern u8 D_593D10[];
 extern u8 D_598A70[];
 extern u8 D_1F1A90[];
@@ -188,8 +188,8 @@ extern s8 D_800B3190;
 extern u8 D_800B3194;
 extern s8 D_800DEF10;
 extern u8 D_800E29C0;
-extern u8 D_800EC8B0;
-extern u8 D_8010ADFA;
+extern u8 gRaceRumbleEnabled;
+extern u8 gRumblePakConnectedMask;
 extern s8 D_8010B1F0;
 extern OSPfsState gControllerPakFileStates[];
 extern s32 gControllerPakFreeBytes;
@@ -361,10 +361,10 @@ void func_80000A40(u16 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000A8C.s")
 
-void func_80000C00(u16 arg0) {
-    if (D_800EC8B0 != 0) {
-        if (D_8010ADFA & (1 << arg0)) {
-            D_800EC8A8[arg0] = 1;
+void requestRumbleMotorStart(u16 arg0) {
+    if (gRaceRumbleEnabled != 0) {
+        if (gRumblePakConnectedMask & (1 << arg0)) {
+            gRumbleMotorRequestStates[arg0] = 1;
         }
     }
 }

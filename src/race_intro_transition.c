@@ -56,7 +56,7 @@ extern s16 D_80121B5C;
 extern u8 D_800DEF10;
 extern u8 D_800BB830;
 extern s8 gFramebufferSwapDelay;
-extern s8 D_800EC8B0;
+extern u8 gRaceRumbleEnabled;
 extern u8 D_800EC9C2;
 extern u8 D_8011228C;
 extern u8 D_80121B54;
@@ -194,7 +194,7 @@ void func_8003E600(void) {
     func_80044294();
     setCurrentInputTaskCallback(func_8003EA78, 0);
     gMenuFadeAlpha = 0xFF;
-    D_800EC8B0 = 0;
+    gRaceRumbleEnabled = 0;
     gCurrentInputTask->fadeDelay = 0x384;
     gCurrentInputTask->fadeStep = 0;
     gCurrentInputTask->courseSegment = 0;
@@ -263,7 +263,7 @@ void func_8003EC6C(void) {
         if ((D_800BB830 = D_800BB830 + 1) >= 5) {
             D_800BB830 = 0;
         }
-        D_800EC8B0 = 0;
+        gRaceRumbleEnabled = 0;
         D_80121B58 = 0;
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;

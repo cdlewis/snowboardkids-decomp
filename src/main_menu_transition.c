@@ -62,7 +62,7 @@ extern void releaseMenuAssetHandles(void);
 extern u8 gPendingFramebufferSwapCount;
 extern s8 gFramebufferSwapDelay;
 extern u8 D_80121B5A;
-extern u8 D_800EC8B0;
+extern u8 gRaceRumbleEnabled;
 extern u8 D_800EC9C2;
 extern u8 D_80121D94;
 extern u8 D_80121D95;
@@ -237,7 +237,7 @@ void func_8003F864(void) {
     gFramebufferSwapDelay = 0;
     func_80044294();
     gMenuFadeAlpha = 0xFF;
-    D_800EC8B0 = 0;
+    gRaceRumbleEnabled = 0;
     D_801235B4 = 1;
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
@@ -476,7 +476,7 @@ void func_8004002C(void) {
     gFramebufferSwapDelay = 0;
     func_80044294();
     gMenuFadeAlpha = 0xFF;
-    D_800EC8B0 = 0;
+    gRaceRumbleEnabled = 0;
     D_801235B4 = 1;
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);

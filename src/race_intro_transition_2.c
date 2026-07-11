@@ -39,7 +39,7 @@ extern s16 D_800BB8B0[];
 extern u8 D_800BB8DC[];
 extern u8 D_800BB8F4[];
 extern u8 gPendingFramebufferSwapCount;
-extern s8 D_800EC8B0;
+extern u8 gRaceRumbleEnabled;
 extern s8 D_800EC9C2;
 extern s8 gFramebufferSwapDelay;
 extern u8 D_8011228C;
@@ -167,7 +167,7 @@ void func_8003ED00(void) {
     func_80044294();
     setCurrentInputTaskCallback(func_8003EF7C, 0);
     gMenuFadeAlpha = 0xFF;
-    D_800EC8B0 = 0;
+    gRaceRumbleEnabled = 0;
     gCurrentInputTask->fadeDelay = 0x4A1;
     gCurrentInputTask->fadeStep = 0;
     gCurrentInputTask->courseSegment = 0;
@@ -327,7 +327,7 @@ copy_player3:
 
 void func_8003F4B4(void) {
     if (gPendingFramebufferSwapCount == 2) {
-        D_800EC8B0 = 0;
+        gRaceRumbleEnabled = 0;
         D_80121B58 = 0;
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
