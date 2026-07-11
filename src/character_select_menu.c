@@ -5,6 +5,7 @@
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
 #include "race_hud.h"
+#include "viewport_manager.h"
 
 typedef struct {
     char pad[0x18];
@@ -45,8 +46,6 @@ extern void func_80045914(void);
 extern void func_80072138(s32, s32);
 extern void func_80004CC8(void);
 extern void func_80005468(void);
-extern void func_800704F0(void);
-extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_800720E4(s32);
 extern CharacterSelectMenuState *D_801235B8;
 extern CharacterSelectState D_8010AE50;

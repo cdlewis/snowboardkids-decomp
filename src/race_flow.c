@@ -26,6 +26,7 @@
 #include "race_ui_effects.h"
 #include "shop_menu_flow.h"
 #include "title_menu.h"
+#include "viewport_manager.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
 #define COURSE_GRID_ENTRY_END -2
@@ -244,10 +245,6 @@ extern void func_80045914(void);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s32, s32, s32, s32, s32);
 extern void func_800483FC(void *, void (*)(s32), s32);
-extern void func_800704F0(void);
-extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_80070A70(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_80070614(s32);
 extern void func_80072138(s32, s32);
 
 void func_80072C30(void) {
@@ -872,8 +869,6 @@ void func_80074C5C(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80074F50.s")
 
 #ifdef NON_MATCHING
-extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_80070A70(s32, s32, s32, s32, s32, s32, s32, f32);
 
 void func_80074F50(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6,
                   f32 arg7, s32 arg8, s32 arg9, s32 arg10, s32 arg11, s32 arg12, s32 arg13,

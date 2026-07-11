@@ -7,6 +7,7 @@
 #include "input_task_scheduler.h"
 #include "main_menu_score_ui.h"
 #include "menu_rendering.h"
+#include "viewport_manager.h"
 
 typedef struct {
     /* 0x0 */ s8 step;
@@ -53,8 +54,6 @@ extern u8 D_60F990;
 
 extern void func_80045914(void);
 extern void func_80072138(s32, s32);
-extern void func_800704F0(void);
-extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 
 void func_80008D60(void) {
     func_800704F0();

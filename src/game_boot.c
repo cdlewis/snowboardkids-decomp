@@ -5,6 +5,7 @@
 #include "main_menu.h"
 #include "memory_allocator.h"
 #include "race_flow.h"
+#include "viewport_manager.h"
 
 #define BOOT_THREAD_ID 1
 #define MAIN_THREAD_ID 2
@@ -209,7 +210,6 @@ extern GfxCommandDest D_8013D408;
 extern void func_800458E0(void);
 extern void func_80048338(void);
 extern void func_800484F0(void);
-extern void func_800704F0(void);
 extern void func_80071E80(void);
 extern void func_800722B4(void);
 extern void func_80048524(s32);

@@ -8,6 +8,7 @@
 #include "race_camera.h"
 #include "race_player_state.h"
 #include "race_timer_ui.h"
+#include "viewport_manager.h"
 
 typedef struct {
     /* 0x000 */ s16 playerIndex;
@@ -74,7 +75,6 @@ extern u8 D_80123751;
 extern s32 D_801235B4;
 extern u8 D_24C8E0;
 extern u8 D_24DBE0;
-extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_800710CC(s32);
 extern void func_8007115C(void);
 extern void func_80072114(s32);

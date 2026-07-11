@@ -87,14 +87,14 @@ void func_80070614(s32 arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_8007066C.s")
 
 #ifdef NON_MATCHING
-extern void guPerspective(ViewportMtx *, u16 *, f32, s32, f32, f32, f32);
+extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
 
-void func_8007066C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u16 arg4, u16 arg5, u16 arg6, s32 arg7) {
+void func_8007066C(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
     ViewportState *viewport;
     s32 halfHeight;
     s32 halfWidth;
     f32 fovy;
-    s32 *arg3Ptr;
+    u16 *arg3Ptr;
 
     viewport = &D_801124B0[arg0];
     viewport->viewportTranslateX = arg1 * 4;
@@ -153,9 +153,9 @@ void func_8007066C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u16 arg4, u16 arg5, u
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_80070860.s")
 
 #ifdef NON_MATCHING
-extern void guPerspective(ViewportMtx *, u16 *, f32, s32, f32, f32, f32);
+extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
 
-void func_80070860(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, s32 arg7, s16 arg8, s32 arg9) {
+void func_80070860(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7, s16 arg8, s32 arg9) {
     ViewportState *viewport;
     s32 halfHeight;
     s32 halfWidth;
@@ -218,12 +218,12 @@ void func_80070860(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
 #ifdef NON_MATCHING
 extern f32 D_800E1538;
 
-void func_80070A70(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u16 arg4, u16 arg5, u16 arg6, s32 arg7) {
+void func_80070A70(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
     ViewportState *viewport;
     s32 halfHeight;
     s32 halfWidth;
     f32 fovy;
-    s32 *arg3Ptr;
+    u16 *arg3Ptr;
 
     viewport = &D_801124B0[arg0];
     viewport->viewportTranslateX = arg1 * 4;
@@ -285,7 +285,7 @@ void func_80070A70(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u16 arg4, u16 arg5, u
 extern f32 D_800E153C;
 extern f32 D_800E1540;
 
-void func_80070C64(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, s32 arg7) {
+void func_80070C64(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
     ViewportState *viewport;
     ViewportState *savedViewport;
     s32 halfHeight;

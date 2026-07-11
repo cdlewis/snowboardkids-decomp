@@ -8,6 +8,7 @@
 #include "player_select_menu.h"
 #include "player_select_ui.h"
 #include "title_menu.h"
+#include "viewport_manager.h"
 
 typedef struct {
     char pad[0x18];
@@ -23,8 +24,6 @@ typedef struct {
 } PlayerSelectCursorState;
 
 extern void func_80045914(void);
-extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_800704F0(void);
 extern s32 func_80072138(s16, s16);
 
 extern u8 D_800EC9DC;
