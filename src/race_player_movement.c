@@ -42,7 +42,7 @@ extern void func_80097C18(Matrix4s, s16);
 extern void func_80097C84(Matrix4s, s16);
 extern void func_80097CF0(Matrix4s, Matrix4s, Matrix4s);
 extern void func_80097DA4(Matrix4s, s16, s16, s16);
-extern void func_80097FE4(Matrix4s, s16, s16, RaceInputPlayer *);
+extern void func_80097FE4(Matrix4s, s16, s16);
 extern void func_800980D0(Matrix4s, s16, s16);
 extern void func_80098124(Matrix4s, s16, s16);
 extern void func_800981C8(Matrix4s, s16, s16, s16);
@@ -807,7 +807,7 @@ s32 func_800891B8(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80089374.s")
 
-// func_8008A940 best match: 76.152% (nonmatchings/func_8008A940-8207005055717715604/base_3.c)
+// func_8008A940 best match: 76.717% (nonmatchings/func_8008A940-5752545231564691495/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008A940.s")
 
 #ifdef NON_MATCHING
@@ -836,6 +836,7 @@ void func_8008A940(RaceInputPlayer *player) {
     s32 stateFlags;
     RaceInputPlayer *temp_s2;
     RaceVec3i *point;
+    volatile s32 extraPad[6];
 
     temp_s2 = player;
     temp_s2->unk500 = 0;
@@ -850,7 +851,7 @@ void func_8008A940(RaceInputPlayer *player) {
     rollSpan = points[0].z;
 
     baseY = temp_s2->posY - 0x30000;
-    func_80097FE4(mtx, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2);
+    func_80097FE4(mtx, temp_s2->pitchAngle, temp_s2->facingAngle);
 
     i = 0;
     do {
@@ -1215,7 +1216,7 @@ void func_8008BBB8(RaceInputPlayer *player, s16 soundType) {
 void func_8008BE1C(RaceInputPlayer *arg0) {
     TransformScratch scratch;
 
-    func_80097FE4(scratch.rotationMtx, arg0->pitchAngle, arg0->facingAngle, arg0);
+    func_80097FE4(scratch.rotationMtx, arg0->pitchAngle, arg0->facingAngle);
     scratch.localPos.x = 0;
     scratch.localPos.y = 0xC0000;
     scratch.localPos.z = 0;
