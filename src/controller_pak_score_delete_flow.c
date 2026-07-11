@@ -2,7 +2,7 @@
 #include "effect_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
-#include "controller_pak_delete_flow.h"
+#include "controller_pak_score_delete_flow.h"
 #include "controller_pak_menu.h"
 #include "input_task_scheduler.h"
 #include "main_menu_score_ui.h"
@@ -15,19 +15,19 @@ typedef struct {
     /* 0x2 */ s16 timer;
     /* 0x4 */ s16 targetState;
     /* 0x6 */ s16 nextTimer;
-} ControllerPakDeleteFlow;
+} ControllerPakScoreDeleteFlow;
 
 typedef struct {
     /* 0x0 */ char pad0[0x8];
     /* 0x8 */ s8 status;
     /* 0x9 */ char pad9[0x3];
     /* 0xC */ s32 selectedFileInfo;
-} ControllerPakFileContext;
+} ControllerPakScoreFileContext;
 
 extern CharacterSelectFlowState *D_801235B8;
 extern ControllerPakMenuState D_8010AF90;
-extern ControllerPakDeleteFlow D_8010AF60;
-extern ControllerPakFileContext D_80121D80;
+extern ControllerPakScoreDeleteFlow gControllerPakScoreDeleteFlow;
+extern ControllerPakScoreFileContext D_80121D80;
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern s8 D_800DEED4;
@@ -55,7 +55,7 @@ extern u8 D_60F990;
 extern void func_80045914(void);
 extern s32 func_80072138(s16, s16);
 
-void func_80008D60(void) {
+void initControllerPakScoreDeleteFlow(void) {
     func_800704F0();
     func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     D_800DEED4 = 0;
@@ -79,13 +79,13 @@ void func_80008D60(void) {
     func_80070EC0(0);
     D_8010ADDC = func_80071408(&func_8002BA00, 0, 0x61);
     D_8010ADE8 = func_80071408(&func_8002C318, 0, 0x60);
-    D_8010AF60.step = 0;
-    D_8010AF60.timer = 0;
-    D_8010AF60.targetState = 0;
-    D_8010AF60.nextTimer = 0;
+    gControllerPakScoreDeleteFlow.step = 0;
+    gControllerPakScoreDeleteFlow.timer = 0;
+    gControllerPakScoreDeleteFlow.targetState = 0;
+    gControllerPakScoreDeleteFlow.nextTimer = 0;
     D_8010AF90.state = 0;
     D_8010AF90.confirmChoice = 0;
-    func_8009956C(func_80008F2C, 0);
+    func_8009956C(updateControllerPakScoreDeleteFlow, 0);
 }
 
 #ifdef NON_MATCHING
@@ -95,16 +95,16 @@ extern u8 D_800B31A5[];
 extern void func_80000A40(u16);
 extern void func_80000C48(u16);
 extern void func_80000DB4(u16);
-extern void func_800012CC(u16, s32, ControllerPakDeleteFlow *, s16);
+extern void func_800012CC(u16, s32, ControllerPakScoreDeleteFlow *, s16);
 extern void func_80001538(u16);
 extern void func_800325D0(EffectTask *);
 #endif
 
-// func_80008F2C best match: 95.751% (base_24.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_delete_flow/func_80008F2C.s")
+// updateControllerPakScoreDeleteFlow best match: 95.751% (base_24.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_score_delete_flow/updateControllerPakScoreDeleteFlow.s")
 
 #ifdef NON_MATCHING
-void func_80008F2C(void)
+void updateControllerPakScoreDeleteFlow(void)
 {
   s32 sp1C;
   int new_var;
@@ -125,14 +125,14 @@ void func_80008F2C(void)
       D_8010AF90.state = 3;
       D_8010AF90.confirmChoice = 1;
       func_80071408(func_800325D0, 0, 0x64);
-      func_8009956C(func_80009690, 0);
+      func_8009956C(updateControllerPakScoreDeleteConfirm, 0);
     }
   }
   else
     if (((u8) D_800EC9C1) == 0)
   {
     new_var = 3;
-    if (((u8) D_8010AF60.step) == 1)
+    if (((u8) gControllerPakScoreDeleteFlow.step) == 1)
     {
       if (D_800EC9D0 != 0)
       {
@@ -172,24 +172,24 @@ void func_80008F2C(void)
           break;
 
         case 2:
-          if (((u8) D_8010AF60.step) != new_var)
+          if (((u8) gControllerPakScoreDeleteFlow.step) != new_var)
         {
           sp1C = temp_t0;
-          func_800012CC(0, new_var, &D_8010AF60, D_800EC9D0);
+          func_800012CC(0, new_var, &gControllerPakScoreDeleteFlow, D_800EC9D0);
           if (D_800EC9D8 == 0)
           {
-            D_8010AF60.targetState = 5;
-            D_8010AF60.step = new_var;
-            D_8010AF60.timer = 0x100;
+            gControllerPakScoreDeleteFlow.targetState = 5;
+            gControllerPakScoreDeleteFlow.step = new_var;
+            gControllerPakScoreDeleteFlow.timer = 0x100;
           }
           else
             if (D_800EC9D8 == 3)
           {
             if (temp_t0 != 0)
             {
-              D_8010AF60.step = 3;
-              D_8010AF60.targetState = 0xD;
-              D_8010AF60.timer = 0x100;
+              gControllerPakScoreDeleteFlow.step = 3;
+              gControllerPakScoreDeleteFlow.targetState = 0xD;
+              gControllerPakScoreDeleteFlow.timer = 0x100;
             }
             else
             {
@@ -207,8 +207,8 @@ void func_80008F2C(void)
         {
           if (temp_t0 != 0)
           {
-            D_8010AF60.step = 3;
-            D_8010AF60.targetState = 0x10;
+            gControllerPakScoreDeleteFlow.step = 3;
+            gControllerPakScoreDeleteFlow.targetState = 0x10;
           }
           else
           {
@@ -220,8 +220,8 @@ void func_80008F2C(void)
         {
           if (temp_t0 != 0)
           {
-            D_8010AF60.step = new_var;
-            D_8010AF60.targetState = 0xE;
+            gControllerPakScoreDeleteFlow.step = new_var;
+            gControllerPakScoreDeleteFlow.targetState = 0xE;
           }
           else
           {
@@ -238,8 +238,8 @@ void func_80008F2C(void)
           func_80072138(1, 0x32);
           if (temp_t0 != 0)
           {
-            D_8010AF60.step = 1;
-            D_8010AF60.timer = 0x100;
+            gControllerPakScoreDeleteFlow.step = 1;
+            gControllerPakScoreDeleteFlow.timer = 0x100;
             D_800EC9C8 = 0;
           }
           else
@@ -287,41 +287,41 @@ void func_80008F2C(void)
             {
               if (D_800EC9C8 == 8)
               {
-                D_8010AF60.nextTimer = 0xF;
+                gControllerPakScoreDeleteFlow.nextTimer = 0xF;
               }
               else
                 if (D_800EC9C8 == 7)
               {
-                D_8010AF60.nextTimer = 3;
+                gControllerPakScoreDeleteFlow.nextTimer = 3;
               }
               else
                 if (D_800EC9C8 == 0xF)
               {
-                D_8010AF60.nextTimer = 0;
+                gControllerPakScoreDeleteFlow.nextTimer = 0;
               }
               else
               {
-                D_8010AF60.nextTimer = 4;
+                gControllerPakScoreDeleteFlow.nextTimer = 4;
               }
             }
             else
               if (D_800EC9C8 == 8)
             {
-              D_8010AF60.nextTimer = 2;
+              gControllerPakScoreDeleteFlow.nextTimer = 2;
             }
             else
               if ((D_800EC9C8 == 0xA) || (D_800EC9C8 == 0x11))
             {
-              D_8010AF60.nextTimer = 0xF;
+              gControllerPakScoreDeleteFlow.nextTimer = 0xF;
             }
             else
               if (D_800EC9C8 == 7)
             {
-              D_8010AF60.nextTimer = 4;
+              gControllerPakScoreDeleteFlow.nextTimer = 4;
             }
             else
             {
-              D_8010AF60.nextTimer = 5;
+              gControllerPakScoreDeleteFlow.nextTimer = 5;
             }
             D_800EC9D0 += 2;
           }
@@ -369,8 +369,8 @@ void func_80008F2C(void)
           {
             if (temp_t0 != 0)
             {
-              D_8010AF60.step = 3;
-              D_8010AF60.targetState = 0x12;
+              gControllerPakScoreDeleteFlow.step = 3;
+              gControllerPakScoreDeleteFlow.targetState = 0x12;
             }
             else
             {
@@ -380,8 +380,8 @@ void func_80008F2C(void)
           else
             if (temp_t0 != 0)
           {
-            D_8010AF60.step = 1;
-            D_8010AF60.timer = 0x100;
+            gControllerPakScoreDeleteFlow.step = 1;
+            gControllerPakScoreDeleteFlow.timer = 0x100;
             D_800EC9C8 = 0;
           }
           else
@@ -395,9 +395,9 @@ void func_80008F2C(void)
           if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           func_80072138(1, 0x32);
-          D_8010AF60.step = 3;
-          D_8010AF60.timer = 0x100;
-          D_8010AF60.targetState = 0;
+          gControllerPakScoreDeleteFlow.step = 3;
+          gControllerPakScoreDeleteFlow.timer = 0x100;
+          gControllerPakScoreDeleteFlow.targetState = 0;
         }
           break;
 
@@ -412,13 +412,13 @@ void func_80008F2C(void)
   }
   if (sp24 != 0)
   {
- D_800EC9C1 = 1; } if (((u8) D_800EC9C1) == 0x23) { func_8009956C(func_800095DC, 0);
+ D_800EC9C1 = 1; } if (((u8) D_800EC9C1) == 0x23) { func_8009956C(fadeOutControllerPakScoreDeleteFlow, 0);
   }
   func_8007105C();
 }
 #endif
 
-void func_800095DC(void) {
+void fadeOutControllerPakScoreDeleteFlow(void) {
     s32 temp_v0 = D_801235B8->fade;
     if (temp_v0 != 0xFF) {
         D_801235B8->fade = func_80013F88((s16) temp_v0, 0x20, 1);
@@ -435,7 +435,7 @@ void func_800095DC(void) {
     }
 }
 
-void func_80009690(void) {
+void updateControllerPakScoreDeleteConfirm(void) {
     if ((gPlayerInputPressed & 0x10800) && (D_8010AF90.confirmChoice != 0)) {
         D_8010AF90.confirmChoice = 0;
         func_80072138(0x19, 0x32);
@@ -447,15 +447,15 @@ void func_80009690(void) {
         func_80072138(0x18, 0x32);
         if (D_8010AF92 == 0) {
             D_8010AF93 = 0;
-            func_8009956C(func_80008F2C, 0);
+            func_8009956C(updateControllerPakScoreDeleteFlow, 0);
         } else {
             D_801235B4 = 1;
-            func_8009956C(func_800095DC, 0);
+            func_8009956C(fadeOutControllerPakScoreDeleteFlow, 0);
         }
     } else if (gPlayerInputPressed & 0x4000) {
         func_80072138(0x18, 0x32);
         D_801235B4 = 1;
-        func_8009956C(func_800095DC, 0);
+        func_8009956C(fadeOutControllerPakScoreDeleteFlow, 0);
     }
     func_8007105C();
 }

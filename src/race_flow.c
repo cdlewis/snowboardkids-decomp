@@ -6,7 +6,7 @@
 #include "character_select_course_menu.h"
 #include "character_select_menu.h"
 #include "race_character_select_menu.h"
-#include "controller_pak_delete_flow.h"
+#include "controller_pak_score_delete_flow.h"
 #include "controller_pak_message_flow.h"
 #include "controller_pak_menu_flow.h"
 #include "course_select_menu.h"
@@ -537,7 +537,7 @@ void func_80073650(void) {
 void func_80073694(void) {
     D_8010ADFA = 0;
     func_8009956C(&func_800736E0, 0);
-    func_800994F4(4, &func_80008D60, 0x64);
+    func_800994F4(4, &initControllerPakScoreDeleteFlow, 0x64);
     func_80099614(2);
 }
 
