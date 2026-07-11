@@ -1,6 +1,6 @@
 #include "common.h"
 #include "fixed_point_math.h"
-#include "model_animation.h"
+#include "race_motion.h"
 #include "race_position_tracker.h"
 
 // Race player records are 0x60C bytes apart. This view only names the fields
@@ -302,7 +302,7 @@ void func_8007BB08(RacePositionPlayer *player) {
 
         if (!(player->checkpointEventMask & eventMask) && (player->pathFrame <= pathFrame) &&
                 (player->pathFrame > pathFrame - 3)) {
-            func_80081508(pathFrame, &x, &y, &z, &angle);
+            getRaceCourseSurfaceSpawnTransform(pathFrame, &x, &y, &z, &angle);
 
             x = player->posX - x;
             y = player->posY - y;

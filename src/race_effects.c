@@ -1,6 +1,6 @@
 #include "common.h"
 #include "race_effects.h"
-#include "model_animation.h"
+#include "race_motion.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "race_item_effects.h"
@@ -277,8 +277,8 @@ void func_800499A4(RaceEffectActor *arg0) {
         arg0->pos.y = arg0->pos.y + arg0->accelerationY;
         arg0->pos.z += zOffset;
 
-        arg0->startAngle = func_8007D200(arg0->startAngle, arg0->pos.x, arg0->pos.z);
-        groundY = func_80080CC4(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
+        arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
             arg0->pos.y = groundY;
@@ -286,7 +286,7 @@ void func_800499A4(RaceEffectActor *arg0) {
         }
         arg0->accelerationY = (y - prevY) - 0x20000;
 
-        func_8007FF88(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
+        resolveRaceCourseSurfaceCollision(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
         if (pushX != 0 || pushZ != 0) {
             arg0->timer = 0;
             arg0->pos.x += pushX;
@@ -446,8 +446,8 @@ void func_8004A2F4(RaceEffectActor *arg0) {
         arg0->pos.y = arg0->pos.y + arg0->accelerationY;
         arg0->pos.z += zOffset;
 
-        arg0->startAngle = func_8007D200(arg0->startAngle, arg0->pos.x, arg0->pos.z);
-        groundY = func_80080CC4(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
+        arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
             arg0->pos.y = groundY;
@@ -455,7 +455,7 @@ void func_8004A2F4(RaceEffectActor *arg0) {
         }
         arg0->accelerationY = ((y - prevY) - 0x20000) & 0xFFFFFFFF;
 
-        func_8007FF88(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
+        resolveRaceCourseSurfaceCollision(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
         hitPlayer = 0;
         if (pushX != 0 || pushZ != 0) {
             arg0->timer = 0;
@@ -617,8 +617,8 @@ void func_8004AC5C(RaceEffectActor *arg0) {
         arg0->pos.y = prevY + (arg0->accelerationY & 0xFFFFFFFFu);
         arg0->pos.z += zOffset;
 
-        arg0->startAngle = func_8007D200(arg0->startAngle, arg0->pos.x, arg0->pos.z);
-        groundY = func_80080CC4(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
+        arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
             arg0->pos.y = groundY;
@@ -626,7 +626,7 @@ void func_8004AC5C(RaceEffectActor *arg0) {
         }
         arg0->accelerationY = (y - prevY) - 0x20000;
 
-        func_8007ECF4(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ, &xOffset, &zOffset);
+        resolveRaceCourseSurfaceCollisionWithVelocity(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ, &xOffset, &zOffset);
         if (pushX != 0 || pushZ != 0) {
             arg0->accelerationY = 0;
             arg0->pos.x += pushX;
@@ -762,8 +762,8 @@ void func_8004B5F8(RaceEffectActor *arg0) {
         arg0->pos.y = arg0->pos.y + arg0->accelerationY;
         arg0->pos.z += zOffset;
 
-        arg0->startAngle = func_8007D200(arg0->startAngle, arg0->pos.x, arg0->pos.z);
-        groundY = func_80080CC4(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
+        arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
             arg0->pos.y = groundY;
@@ -771,7 +771,7 @@ void func_8004B5F8(RaceEffectActor *arg0) {
         }
         arg0->accelerationY = (y - prevY) - 0x20000;
 
-        func_8007FF88(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
+        resolveRaceCourseSurfaceCollision(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
         pos = &arg0->pos;
         if (pushX != 0 || pushZ != 0) {
             arg0->timer = 0;
@@ -905,8 +905,8 @@ void func_8004BC74(RaceEffectActor *arg0) {
         arg0->pos.y = arg0->pos.y + arg0->accelerationY;
         arg0->pos.z += zOffset;
 
-        arg0->startAngle = func_8007D200(arg0->startAngle, arg0->pos.x, arg0->pos.z);
-        groundY = func_80080CC4(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
+        arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
             arg0->pos.y = groundY;
@@ -914,7 +914,7 @@ void func_8004BC74(RaceEffectActor *arg0) {
         }
         arg0->accelerationY = (y - prevY) - 0x20000;
 
-        func_8007FF88(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
+        resolveRaceCourseSurfaceCollision(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
         i = 0;
         if (pushX != 0 || pushZ != 0) {
             arg0->timer = 0;
@@ -1072,8 +1072,8 @@ void func_8004C5B4(RaceEffectActor *arg0) {
         arg0->pos.y = arg0->pos.y + arg0->accelerationY;
         arg0->pos.z += zOffset;
 
-        arg0->startAngle = func_8007D200(arg0->startAngle, arg0->pos.x, arg0->pos.z);
-        groundY = func_80080CC4(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
+        arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
             arg0->pos.y = groundY;
@@ -1081,7 +1081,7 @@ void func_8004C5B4(RaceEffectActor *arg0) {
         }
         arg0->accelerationY = (y - prevY) - 0x20000;
 
-        func_8007FF88(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
+        resolveRaceCourseSurfaceCollision(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
         if (pushX != 0 || pushZ != 0) {
             arg0->timer = 0;
             arg0->pos.x += pushX;
@@ -1236,8 +1236,8 @@ void func_8004D018(RaceEffectActor *arg0) {
         arg0->pos.y += accelerationY;
         arg0->accelerationY = accelerationY - 0x6000;
 
-        arg0->angle = func_8007D200(arg0->angle, arg0->pos.x, arg0->pos.z);
-        groundY = func_80080CC4(arg0->angle, arg0->pos.x, arg0->pos.z);
+        arg0->angle = findRaceCourseSurfaceFromPoint(arg0->angle, arg0->pos.x, arg0->pos.z);
+        groundY = getRaceCourseSurfaceHeight(arg0->angle, arg0->pos.x, arg0->pos.z);
         if (arg0->pos.y < groundY + 0x30000) {
             arg0->pos.y = groundY + 0x30000;
             setCallbackTaskCallback(arg0, func_8004CF28);
@@ -1345,8 +1345,8 @@ void func_8004D5C0(RaceEffectActor *arg0) {
             arg0->pos.y = y + arg0->accelerationY;
             arg0->pos.z += zOffset;
 
-            arg0->startAngle = func_8007D200(arg0->startAngle, arg0->pos.x, arg0->pos.z);
-            groundY = func_80080CC4(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
+            arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+            groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
             y = arg0->pos.y;
             if (y < groundY) {
                 arg0->pos.y = groundY;
@@ -1354,7 +1354,7 @@ void func_8004D5C0(RaceEffectActor *arg0) {
             }
             arg0->accelerationY = (y - prevY) - 0x20000;
 
-            func_8007FF88(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
+            resolveRaceCourseSurfaceCollision(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
             if (pushX != 0 || pushZ != 0) {
                 arg0->timer = 0;
                 arg0->pos.x += pushX;

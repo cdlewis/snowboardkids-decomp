@@ -5,7 +5,7 @@
 #include "asset_manager.h"
 #include "spatial_math.h"
 #include "fixed_point_math.h"
-#include "model_animation.h"
+#include "race_motion.h"
 #include "race_player_movement.h"
 
 #define COURSE_INDEX_RELOAD (*(volatile s16 *)&gRaceCourseIndex)
@@ -282,7 +282,7 @@ extern CourseMarkerSpawnEntry *D_800DA0B8[];
 extern CourseRenderEntry *D_800DA73C[];
 extern void *D_800DA1C0[];
 extern SoundParams D_800DA764[];
-extern CourseSpawnEntry D_800B9540[];
+extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern CourseAngleEntry D_800B9554[];
 extern CourseAngleEntry D_800B9556[];
 extern CourseMarkerEntry D_800DA804[];
@@ -852,8 +852,8 @@ void func_8006B3E0(Struct6B760 *arg0) {
             arg0->pos.x += fixedSine(arg0->unk3E) * ((s32)-arg0->unk50 / 4096);
             dz = arg0->pos.z + (fixedCosine(arg0->unk3E) * ((s32)-arg0->unk50 / 4096));
             arg0->pos.z = dz;
-            arg0->unk3C = func_8007D200(arg0->unk3C, arg0->pos.x, dz);
-            arg0->pos.y = func_80080CC4(arg0->unk3C, arg0->pos.x, arg0->pos.z);
+            arg0->unk3C = findRaceCourseSurfaceFromPoint(arg0->unk3C, arg0->pos.x, dz);
+            arg0->pos.y = getRaceCourseSurfaceHeight(arg0->unk3C, arg0->pos.x, arg0->pos.z);
             if (arg0->pad42 != 0) {
                 dx = arg0->pos.x - arg0->unk24;
                 dz = arg0->pos.z - arg0->unk2C;
@@ -935,7 +935,7 @@ void func_8006B6C8(Struct6B760 *arg0) {
         arg0->unk4E = temp4E;
         arg0->pos.y = temp28;
         arg0->pos.z = temp2C;
-        arg0->pos.y = func_80080CC4(arg0->unk3C, arg0->pos.x, arg0->pos.z);
+        arg0->pos.y = getRaceCourseSurfaceHeight(arg0->unk3C, arg0->pos.x, arg0->pos.z);
         setCallbackTaskCallback(arg0, func_8006B3E0);
     }
 }
@@ -1042,9 +1042,9 @@ void func_8006BB50(RaceMovingEffect *arg0) {
     makeFixedRotationY(mtx, D_800B9556[gRaceCourseIndex].angle + 0x400);
     transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.z = 0xFFFE0000;
-    arg0->pos.x += D_800B9540[COURSE_INDEX_RELOAD].pos.x;
-    arg0->pos.y += D_800B9540[COURSE_INDEX_RELOAD].pos.y;
-    arg0->pos.z += D_800B9540[COURSE_INDEX_RELOAD].pos.z;
+    arg0->pos.x += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].pos.x;
+    arg0->pos.y += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].pos.y;
+    arg0->pos.z += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].pos.z;
     setCallbackTaskCallback(arg0, func_8006BA50);
 }
 
@@ -1157,9 +1157,9 @@ void func_8006C088(RaceMovingEffect *arg0) {
     transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.x = 0;
     arg0->velocity.z = -0x20000;
-    arg0->pos.x += D_800B9540[gRaceCourseIndex].unk8.x;
-    arg0->pos.y += D_800B9540[gRaceCourseIndex].unk8.y + 0x40000;
-    arg0->pos.z += D_800B9540[gRaceCourseIndex].unk8.z;
+    arg0->pos.x += gRaceCourseStartEntries[gRaceCourseIndex].unk8.x;
+    arg0->pos.y += gRaceCourseStartEntries[gRaceCourseIndex].unk8.y + 0x40000;
+    arg0->pos.z += gRaceCourseStartEntries[gRaceCourseIndex].unk8.z;
     setCallbackTaskCallback(arg0, func_8006BFC0);
     func_8006BFC0(arg0);
 }

@@ -8,7 +8,7 @@
 #include "viewport_manager.h"
 #include "spatial_math.h"
 #include "fixed_point_math.h"
-#include "model_animation.h"
+#include "race_motion.h"
 #include "race_effects.h"
 #include "race_player_movement.h"
 #include "race_timer_ui.h"
@@ -769,7 +769,7 @@ typedef struct RaceUiCourseSpriteActor {
 
 extern RaceUiSpriteInit D_800D5FF0[];
 
-extern CourseSpawnEntry D_800B9540[];
+extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern Vec3i D_800D61C0[];
 extern Vec3i D_800D6340[];
 extern Vtx D_800D6350[][4];
@@ -4044,7 +4044,7 @@ void func_80061984(RaceUiThrownTrailActor *arg0) {
 
 void func_80061A98(RaceUiThrownTrailActor *arg0) {
     arg0->soundTimer = 0xF;
-    arg0->pos.y = func_80080CC4(arg0->surface, arg0->pos.x, arg0->pos.z);
+    arg0->pos.y = getRaceCourseSurfaceHeight(arg0->surface, arg0->pos.x, arg0->pos.z);
     arg0->angleStep = 8;
     arg0->angle = arg0->angleStep;
     setCallbackTaskCallback(arg0, func_80061984);
@@ -4596,13 +4596,13 @@ void func_80063980(RaceUiCourseSpriteActor *actor) {
 
     switch (actor->index) {
         case 0:
-            func_80081508(0, &actor->x, &actor->y, &actor->z, &angle);
+            getRaceCourseSurfaceSpawnTransform(0, &actor->x, &actor->y, &actor->z, &angle);
             getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), 0, &actor->images[0], &actor->palettes[0]);
             actor->images[1] = actor->images[0];
             actor->palettes[1] = actor->palettes[0];
             break;
         case 1:
-            func_80081508(D_800B9540[gRaceCourseIndex].pathIndex, &actor->x, &actor->y, &actor->z, &angle);
+            getRaceCourseSurfaceSpawnTransform(gRaceCourseStartEntries[gRaceCourseIndex].pathIndex, &actor->x, &actor->y, &actor->z, &angle);
             getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), 1, &actor->images[0], &actor->palettes[0]);
             getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), 2, &actor->images[1], &actor->palettes[1]);
             break;
@@ -4786,10 +4786,10 @@ void func_8006429C(RaceUiRankParticleActor *actor) {
 
     switch (actor->index) {
     case 0:
-        func_80081508(1, &actor->pos.x, &actor->pos.y, &actor->pos.z, &local.angle);
+        getRaceCourseSurfaceSpawnTransform(1, &actor->pos.x, &actor->pos.y, &actor->pos.z, &local.angle);
         break;
     case 1:
-        func_80081508(D_800B9540[gRaceCourseIndex].pathIndex, &actor->pos.x, &actor->pos.y, &actor->pos.z, &local.angle);
+        getRaceCourseSurfaceSpawnTransform(gRaceCourseStartEntries[gRaceCourseIndex].pathIndex, &actor->pos.x, &actor->pos.y, &actor->pos.z, &local.angle);
         break;
     }
 
@@ -5428,7 +5428,7 @@ void func_80065E90(RaceUiOverlayActor *arg0) {
     arg0->x = 0;
     arg0->z = D_80121DA4 + 0xFF900000;
     arg0->velocity = 0;
-    arg0->y = func_80080CC4(func_8007D200(0, 0, arg0->z), arg0->x, arg0->z) + 0x200000;
+    arg0->y = getRaceCourseSurfaceHeight(findRaceCourseSurfaceFromPoint(0, 0, arg0->z), arg0->x, arg0->z) + 0x200000;
 
     for (i = 0; i < 0x40; i++) {
         arg0->velocity += 0x2000;

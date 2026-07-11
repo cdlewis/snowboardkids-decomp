@@ -88,7 +88,7 @@ extern RaceTimer D_800DC928[];
 extern RaceTimer D_800DC950;
 extern u8 D_800DC8F9;
 extern u8 gRaceSplitscreenMode;
-extern RaceTimerCourseSpawnEntry D_800B9540[];
+extern RaceTimerCourseSpawnEntry gRaceCourseStartEntries[];
 extern u8 D_800DC8F0[];
 extern u8 D_800DC8F8[];
 extern u16 D_800DC954[];
@@ -1014,7 +1014,7 @@ void func_8007A8EC(void) {
             progress = 0;
         }
         shiftedProgress = progress << 7;
-        new_var = D_800B9540[gRaceCourseIndex].pathIndex;
+        new_var = gRaceCourseStartEntries[gRaceCourseIndex].pathIndex;
         pathIndex = new_var;
         sp50 = progress;
         player->raceProgress = shiftedProgress / (pathIndex * 8);
@@ -1137,7 +1137,7 @@ void func_8007AA50(void) {
             func_8007A2B8();
             if (D_80121B80 == 0) {
                 func_80087600(0, &sp40, &sp3C);
-                if ((D_800B9540[gRaceCourseIndex].finishLinePathIndex * 8) < sp40) {
+                if ((gRaceCourseStartEntries[gRaceCourseIndex].finishLinePathIndex * 8) < sp40) {
                     D_80121B7C = *(s32 *)&D_80121B74;
                     D_80121B80 = 1;
                     createCallbackTask(func_80065144, 0, 0);
