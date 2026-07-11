@@ -1521,7 +1521,7 @@ void func_800486BC(void *arg0, void *arg1) {
     dst->unk3C = (src->unk1C << 16) & 0xFFFF0000;
 }
 
-GfxCommandDest *func_8004885C(GfxCommandSource *arg0) {
+GfxCommandDest *allocFixedTransformMatrix(GfxCommandSource *arg0) {
     GfxCommandDest *dst = func_80048594(sizeof(GfxCommandDest));
 
     if (dst == NULL) {

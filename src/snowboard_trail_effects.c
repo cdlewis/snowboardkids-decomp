@@ -50,7 +50,7 @@ typedef struct {
 } SnowboardTrailPlayer;
 
 extern void addRenderCallback(void *queue, void (*callback)(SnowboardTrailState *), SnowboardTrailState *trail);
-extern void *func_8004885C(u8 *source);
+extern void *allocFixedTransformMatrix(u8 *source);
 
 extern u8 gRaceUpdatePaused;
 extern s16 D_80112144;
@@ -70,8 +70,8 @@ void func_800837D0(SnowboardTrailState *trail) {
 
     if (trail->displayListsDirty != 0) {
         trail->displayListsDirty = 0;
-        trail->frontDisplayList = func_8004885C((u8 *)trail->rotation);
-        trail->backDisplayList = func_8004885C((u8 *)trail->transform);
+        trail->frontDisplayList = allocFixedTransformMatrix((u8 *)trail->rotation);
+        trail->backDisplayList = allocFixedTransformMatrix((u8 *)trail->transform);
     }
 
     if (trail->frontDisplayList != NULL) {

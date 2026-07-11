@@ -157,7 +157,7 @@ struct RaceParticleActor {
 
 extern void func_80045990(s32, s32, void *, void *);
 extern void func_800486BC(CourseEffectMatrixSource *, void *);
-extern GfxCommandDest *func_8004885C(void *);
+extern GfxCommandDest *allocFixedTransformMatrix(void *);
 extern void func_80048C90(GfxCommandDest *, Vec3i *);
 extern s32 func_80048E60(void *);
 extern void osWritebackDCache(void *, s32);
@@ -493,7 +493,7 @@ void func_800671F4(RaceOverlayTransformActor *arg0) {
             ((GfxCommandSource *)scratch)->words[5] = arg0->pos.x;
             ((GfxCommandSource *)scratch)->words[6] = arg0->pos.y + 0x190000;
             ((GfxCommandSource *)scratch)->words[7] = arg0->pos.z;
-            arg0->matrix = func_8004885C((GfxCommandSource *)scratch);
+            arg0->matrix = allocFixedTransformMatrix((GfxCommandSource *)scratch);
             arg0->matrixDirty = 0;
         }
 
@@ -695,8 +695,8 @@ void func_80067830(RaceOverlayModelActor *arg0) {
             spF4.words[5] = arg0->drawPos.x;
             spF4.words[6] = arg0->drawPos.y;
             spF4.words[7] = arg0->drawPos.z;
-            arg0->displayList = func_8004885C(&spF4);
-            arg0->rotationDisplayList = func_8004885C((GfxCommandSource *) arg0->rotationMatrix);
+            arg0->displayList = allocFixedTransformMatrix(&spF4);
+            arg0->rotationDisplayList = allocFixedTransformMatrix((GfxCommandSource *) arg0->rotationMatrix);
             spF4 = *(GfxCommandSource *) arg0->rotationMatrix;
             spF4.halfwords[0] /= 2;
             spF4.halfwords[1] /= 2;
@@ -708,7 +708,7 @@ void func_80067830(RaceOverlayModelActor *arg0) {
             spF4.halfwords[7] /= 2;
             spF4.halfwords[8] /= 2;
             spF4.words[6] += (fixedSine((s16)((gFrameCounter << 7) & 0xFFF)) << 7) + 0x300000;
-            arg0->scaleDisplayList = func_8004885C(&spF4);
+            arg0->scaleDisplayList = allocFixedTransformMatrix(&spF4);
         }
 
         if (arg0->scaleDisplayList != NULL) {
@@ -803,7 +803,7 @@ void func_800681A4(RaceOverlayModelActor *arg0) {
             sp64.source.translation.x = arg0->drawPos.x;
             sp64.source.translation.y = arg0->drawPos.y;
             sp64.source.translation.z = arg0->drawPos.z;
-            arg0->displayList = func_8004885C(&sp64.source);
+            arg0->displayList = allocFixedTransformMatrix(&sp64.source);
         }
         do { if (arg0->displayList != NULL) { temp_v0 = gRegionAllocPtr++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) gEffectRenderModeSetupDl; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette0; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->displayList; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = (u32) D_80156614; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400207F; temp_v0_17->words.w1 = (u32) D_800D92D8; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; temp_v0_19 = gRegionAllocPtr++; temp_v0_19->words.w0 = 0x06000000; temp_v0_19->words.w1 = (u32) gEffectRenderModeCleanupDl; } } while (0);
     }
@@ -833,8 +833,8 @@ void func_800684E4(RaceOverlayModelActor *arg0) {
             spF4.words[5] = arg0->drawPos.x;
             spF4.words[6] = arg0->drawPos.y;
             spF4.words[7] = arg0->drawPos.z;
-            arg0->displayList = func_8004885C(&spF4);
-            arg0->rotationDisplayList = func_8004885C((GfxCommandSource *) arg0->rotationMatrix);
+            arg0->displayList = allocFixedTransformMatrix(&spF4);
+            arg0->rotationDisplayList = allocFixedTransformMatrix((GfxCommandSource *) arg0->rotationMatrix);
         }
         if (arg0->displayList != NULL) {
             if (arg0->rotationDisplayList != NULL) {
@@ -1098,7 +1098,7 @@ void func_8006935C(RaceParticleActor *arg0) {
             transform.basePos.x = arg0->pos.x;
             transform.basePos.y = arg0->pos.y;
             transform.basePos.z = arg0->pos.z;
-            arg0->displayList = func_8004885C((GfxCommandSource *)&transform);
+            arg0->displayList = allocFixedTransformMatrix((GfxCommandSource *)&transform);
         }
         if (arg0->displayList != NULL) {
             temp_v0 = gRegionAllocPtr++;

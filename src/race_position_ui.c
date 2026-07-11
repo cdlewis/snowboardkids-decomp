@@ -52,7 +52,7 @@ struct RacePositionUiPlayer {
 };
 
 extern void *func_80048594(s32 size);
-extern s32 func_8004885C(void *source);
+extern s32 allocFixedTransformMatrix(void *source);
 extern void func_80045990(void *asset, u16 index, void **image, void **palette);
 
 extern u8 D_80156609;
@@ -249,7 +249,7 @@ void func_8007C5E8(RacePositionUiPlayer *player) {
             partVtxPlayer = player;
             partSource = player->partSources;
             do {
-                partVtxPlayer->partVtx[0] = func_8004885C(partSource);
+                partVtxPlayer->partVtx[0] = allocFixedTransformMatrix(partSource);
                 if (partVtxPlayer->partVtx[0] == NULL) {
                     player->flags &= ~RACE_POSITION_UI_FLAG_SHADOW;
                 }
@@ -332,7 +332,7 @@ void func_8007CBC0(RacePositionUiPlayer *player) {
             partVtxPlayer = player;
             partSource = player->partSources;
             do {
-                partVtxPlayer->partVtx[0] = func_8004885C(partSource);
+                partVtxPlayer->partVtx[0] = allocFixedTransformMatrix(partSource);
                 if (partVtxPlayer->partVtx[0] == NULL) {
                     player->flags &= ~RACE_POSITION_UI_FLAG_SHADOW;
                 }

@@ -27,7 +27,7 @@ typedef struct {
 
 extern s32 getMemoryBlockBase(s16 arg0);
 extern void func_80045990(s32 arg0, s32 arg1, void **arg2, void **arg3);
-extern Mtx *func_8004885C(GfxCommandSource *arg0);
+extern Mtx *allocFixedTransformMatrix(GfxCommandSource *arg0);
 extern MainMenuSceneActorShadow gEndingActorShadow;
 extern u16 gEndingSequencePhase;
 extern s8 gEndingTommyEffectDone;
@@ -457,7 +457,7 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;
     gfx->words.w0 = 0x01020040;
-    gfx->words.w1 = (u32)func_8004885C(&sp94);
+    gfx->words.w1 = (u32)allocFixedTransformMatrix(&sp94);
 
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;

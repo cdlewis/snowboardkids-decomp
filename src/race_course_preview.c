@@ -106,7 +106,7 @@ extern u8 D_80156609;
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
-extern Gfx *func_8004885C(FixedTransform *arg0);
+extern Gfx *allocFixedTransformMatrix(FixedTransform *arg0);
 extern void func_80045990(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);
 extern Vec3i gRaceCoursePreviewBillboardPositions[];
 extern GfxCommandDest *gRaceCoursePreviewModelVerticesByCourse[];
@@ -235,7 +235,7 @@ void drawRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
             sp70.translation.x = arg0->position.x;
             sp70.translation.y = arg0->position.y;
             sp70.translation.z = arg0->position.z;
-            arg0->displayList0 = func_8004885C(&sp70);
+            arg0->displayList0 = allocFixedTransformMatrix(&sp70);
         }
 
         if (arg0->displayList0 != NULL) {
@@ -324,8 +324,8 @@ void drawRaceCoursePreviewCameraModel(RaceCoursePreviewCamera *arg0) {
             sp64.translation.y = arg0->position.y;
             sp64.translation.z = arg0->position.z;
             composeFixedTransforms(&sp84, &sp64, &sp44);
-            arg0->displayList0 = func_8004885C(&sp64);
-            arg0->displayList1 = func_8004885C(&sp44);
+            arg0->displayList0 = allocFixedTransformMatrix(&sp64);
+            arg0->displayList1 = allocFixedTransformMatrix(&sp44);
         }
 
         if (arg0->displayList1 != NULL) {

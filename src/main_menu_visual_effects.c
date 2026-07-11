@@ -156,7 +156,7 @@ void func_80046D68(s32, s32, s32, s32, s32);
 void func_80045990(void *, u16, void **, void **);
 void func_80048278(s32, s32, void *, s32);
 void addRenderCallback(void *, void *, s32);
-GfxCommandDest *func_8004885C(GfxCommandSource *);
+GfxCommandDest *allocFixedTransformMatrix(GfxCommandSource *);
 void drawRaceSetupBackdropModels(MainMenuVisualEffectActor *);
 void drawRaceSetupCourseBackdrop(void *);
 void renderRaceSetupBackdrop(s32);
@@ -295,7 +295,7 @@ void initRaceSetupBackdrop(MainMenuVisualEffectActor *arg0) {
 
 void stopRaceSetupCharacterFocus(s32 arg0) {
     loopMainMenuSceneModelAnimation(0);
-    addMainMenuSceneModelDrawCallbackViewport0(0);
+    addMainMenuSceneModelDrawCallbackForViewport0(0);
 }
 
 void updateRaceSetupCharacterFocus(MainMenuVisualEffectActor *arg0) {
@@ -306,7 +306,7 @@ void updateRaceSetupCharacterFocus(MainMenuVisualEffectActor *arg0) {
         }
         loopMainMenuSceneModelAnimation(0);
         setCallbackTaskCallback(arg0, stopRaceSetupCharacterFocus);
-        addMainMenuSceneModelDrawCallbackViewport0(0);
+        addMainMenuSceneModelDrawCallbackForViewport0(0);
         return;
     }
     addMainMenuSceneModelDrawCallback(0);
@@ -384,7 +384,7 @@ void drawRaceStartPlayerEffectSprite(MainMenuVisualEffectActor *arg0) {
         sp74.x = arg0->unk18.word;
         sp74.y = arg0->unk1C.word;
         sp74.z = arg0->unk20.word;
-        arg0->unk24.word = (s32)func_8004885C(&sp74);
+        arg0->unk24.word = (s32)allocFixedTransformMatrix(&sp74);
     }
 
     if (arg0->unk24.word != 0) {
@@ -577,7 +577,7 @@ void drawSpinningBoardTransition(MainMenuVisualEffectActor *arg0) {
         transform.x = arg0->unk18.word;
         transform.y = arg0->unk1C.word;
         transform.z = arg0->unk20.word;
-        matrix = func_8004885C(&transform);
+        matrix = allocFixedTransformMatrix(&transform);
         if (matrix != NULL) {
             gfx = gRegionAllocPtr;
             gRegionAllocPtr = gfx + 1;
@@ -793,7 +793,7 @@ void drawTitleMenuRotatingBoardModel(MainMenuVisualEffectActor *arg0) {
         scratch.source.x = 0;
         scratch.source.y = 0;
         scratch.source.z = 0;
-        matrix = func_8004885C(&scratch.source);
+        matrix = allocFixedTransformMatrix(&scratch.source);
         if (matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
 
