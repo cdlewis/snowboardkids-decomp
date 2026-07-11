@@ -19,6 +19,7 @@
 #include "race_player_state.h"
 #include "race_surface_cues.h"
 #include "race_ui_effects.h"
+#include "snowboard_trail_effects.h"
 
 #define MODEL_ANIM_STATE(player) ((ModelAnimState *)(player))
 #define MODEL_ANIM_INIT_STATE(player) ((ModelAnimInitState *)(player))
@@ -92,7 +93,6 @@ typedef struct {
 extern s32 func_80072138(s32, s32);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
-extern void func_8008393C(RaceInputPlayer *);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void *func_800716A4(void *, s32, s32, s32);
 extern s16 func_80097AE8(s16);
