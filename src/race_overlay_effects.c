@@ -1,4 +1,5 @@
 #include "common.h"
+#include "race_overlay_effects.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
@@ -66,24 +67,24 @@ typedef struct {
     /* 0x0E */ s16 variant;
 } RaceOverlayEffectSpawn;
 
-typedef struct {
+struct RaceOverlaySpawnActor {
     char pad0[0x10];
     /* 0x10 */ u16 spawnIndex;
     char pad12[6];
     /* 0x18 */ s16 timer;
     /* 0x1A */ s8 lastVariant;
-} RaceOverlaySpawnActor;
+};
 
-typedef struct {
+struct RaceModelListActor {
     char pad0[0x10];
     /* 0x10 */ u16 modelListIndex;
     char pad12[6];
     /* 0x18 */ GfxCommandDest *modelBuffer;
     /* 0x1C */ s16 modelIndexOffset;
     /* 0x1E */ s16 modelCount;
-} RaceModelListActor;
+};
 
-typedef struct {
+struct RaceOverlayTransformActor {
     char pad0[0x18];
     /* 0x18 */ GfxCommandDest *matrix;
     /* 0x1C */ Vec3i pos;
@@ -91,9 +92,9 @@ typedef struct {
     /* 0x2A */ s16 yaw;
     char pad2C[2];
     /* 0x2E */ s8 matrixDirty;
-} RaceOverlayTransformActor;
+};
 
-typedef struct {
+struct RaceThrownModelActor {
     char pad0[0x1C];
     /* 0x1C */ Vec3i pos;
     /* 0x28 */ s16 pitch;
@@ -104,9 +105,9 @@ typedef struct {
     /* 0x3C */ Vec3i velocity;
     /* 0x48 */ s16 bounceCount;
     /* 0x4A */ s16 timer;
-} RaceThrownModelActor;
+};
 
-typedef struct {
+struct RaceOverlayModelActor {
     char pad0[0x10];
     /* 0x10 */ u16 spawnIndex;
     char pad12[6];
@@ -130,9 +131,9 @@ typedef struct {
     /* 0x80 */ void *palette2;
     /* 0x84 */ s16 rotation;
     /* 0x86 */ s16 variant;
-} RaceOverlayModelActor;
+};
 
-typedef struct {
+struct RaceParticleActor {
     char pad0[0x10];
     /* 0x10 */ u16 spawnOffsetIndex;
     char pad12[6];
@@ -151,7 +152,7 @@ typedef struct {
     char pad45[3];
     /* 0x48 */ void *image;
     /* 0x4C */ void *palette;
-} RaceParticleActor;
+};
 
 extern void func_80045990(s32, s32, void *, void *);
 extern void func_800486BC(CourseEffectMatrixSource *, void *);
@@ -211,17 +212,6 @@ extern Gfx *gRegionAllocPtr;
 extern void *D_80156614;
 extern s16 D_80121B50;
 extern s16 D_801235B0;
-extern void func_80066E10(RaceModelListActor *);
-extern void func_80066ABC(RaceModelListActor *);
-extern void func_80067034(RaceModelListActor *);
-extern void func_800674B4(RaceThrownModelActor *);
-extern void func_800681A4(RaceOverlayModelActor *);
-extern void func_80068CD4(RaceOverlayModelActor *);
-extern void func_800684E4(RaceOverlayModelActor *);
-extern void func_80068EA0(RaceOverlayModelActor *);
-extern void func_8006935C(RaceParticleActor *);
-extern void func_80069678(RaceParticleActor *);
-
 typedef struct Scratch674B4 {
     char scratch[0x28];
     s32 pad;
