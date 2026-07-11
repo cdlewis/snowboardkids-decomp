@@ -4865,16 +4865,16 @@ void func_8009617C(RaceInputPlayer *player) {
     }
 }
 
-// func_800961DC best match: 89.346% (nonmatchings/func_800961DC-2225551288923588688/base_2.c)
+// func_800961DC best match: 97.991% (nonmatchings/func_800961DC-6113366811127043669/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800961DC.s")
 
 #ifdef NON_MATCHING
 void func_800961DC(RaceInputPlayer *player) {
     s16 updateTimer;
     s16 facingAngle;
-    s16 targetAngle;
     s16 angleDiff;
     s16 roll;
+    s32 tempFlags;
     s32 stateFlags;
 
     updateTimer = player->updateTimer;
@@ -4885,8 +4885,9 @@ void func_800961DC(RaceInputPlayer *player) {
         if (player->unk29C >= 0x20001) {
             player->unk306 = 1;
             player->unk31E = func_8004908C(player->unk40.x, player->unk40.z);
-            stateFlags = player->stateFlags & 0x400;
-            if (stateFlags != 0) {
+            tempFlags = player->stateFlags & 0x400;
+            stateFlags = tempFlags;
+            if (tempFlags != 0) {
                 stateFlags = player->stateFlags & 0x400;
                 player->unk31E += 0x800;
             }
@@ -4913,10 +4914,9 @@ void func_800961DC(RaceInputPlayer *player) {
 
     if (player->unk306 != 0) {
         facingAngle = player->facingAngle;
-        targetAngle = (player->unk31E - facingAngle) & 0xFFF;
-        angleDiff = targetAngle;
-        if (targetAngle >= 0x801) {
-            angleDiff = targetAngle - 0x1000;
+        angleDiff = (player->unk31E - facingAngle) & 0xFFF;
+        if (angleDiff >= 0x801) {
+            angleDiff -= 0x1000;
         }
         if (angleDiff >= 0x41) {
             angleDiff = 0x40;
