@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "system_boot.h"
 #include "game_task_scheduler.h"
-#include "controller_main_menu_flow.h"
+#include "controller_menu_flow.h"
 #include "menu_screen_effects.h"
 #include "main_menu_panel_ui.h"
 #include "main_menu_scene_model.h"
@@ -135,9 +135,9 @@ extern u8 gControllerPakGameName[];
 extern u8 gControllerPakExtName[];
 extern MainMenuState *gCurrentGameTask;
 extern u8 gConnectedControllerBitmask;
-extern u8 D_800B30F4[];
-extern u8 D_800B3104[];
-extern u8 D_800B3108[];
+extern u8 gControllerPakSaveGameNameBytes[];
+extern u8 gControllerPakSaveExtNameBytes[];
+extern u8 gControllerPakSaveExtNameBytesEnd[];
 extern u8 gMainMenuReturnFromRace;
 extern u8 gFramebufferSwapDelay;
 extern u8 gControllerReadPending;
@@ -202,12 +202,12 @@ extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
 extern s32 D_801235B4;
 extern s32 gPlayerInputPressed;
-extern u8 D_800B30F4[];
-extern u8 D_800B3104[];
-extern u8 D_800B3108[];
+extern u8 gControllerPakSaveGameNameBytes[];
+extern u8 gControllerPakSaveExtNameBytes[];
+extern u8 gControllerPakSaveExtNameBytesEnd[];
 
 // initControllerSubsystem best match: 85.817%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/initControllerSubsystem.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/initControllerSubsystem.s")
 
 #ifdef NON_MATCHING
 void initControllerSubsystem(void) {
@@ -258,7 +258,7 @@ loop:
 #endif
 
 // controllerSubsystemThreadMain best match: 99.507%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/controllerSubsystemThreadMain.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/controllerSubsystemThreadMain.s")
 
 #ifdef NON_MATCHING
 void controllerSubsystemThreadMain(void *arg0) {
@@ -348,7 +348,7 @@ void requestControllerRead(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/updateControllerInputState.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/updateControllerInputState.s")
 
 void requestRumbleMotorInit(u16 arg0) {
     OSMesg msg;
@@ -359,7 +359,7 @@ void requestRumbleMotorInit(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/updateRumbleMotorRequest.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/serviceRumbleMotorRequest.s")
 
 void requestRumbleMotorStart(u16 arg0) {
     if (gRaceRumbleEnabled != 0) {
@@ -379,7 +379,7 @@ void requestControllerPakProbe(u16 arg0) {
 }
 
 // probeControllerPak best match: 94.507%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/probeControllerPak.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/probeControllerPak.s")
 
 #ifdef NON_MATCHING
 void probeControllerPak(u16 arg0) {
@@ -422,7 +422,7 @@ void requestControllerPakSaveStatus(u16 arg0) {
 }
 
 // checkControllerPakSaveStatus best match: 81.386%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/checkControllerPakSaveStatus.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/checkControllerPakSaveStatus.s")
 
 #ifdef NON_MATCHING
 void checkControllerPakSaveStatus(u16 arg0) {
@@ -442,16 +442,16 @@ void checkControllerPakSaveStatus(u16 arg0) {
     gControllerPakSaveFileIdentity.game_code = 0x4E534B45;
     gControllerPakSaveFileIdentity.company_code = 0x4542;
 
-    src = D_800B3104;
+    src = gControllerPakSaveExtNameBytes;
     dst = (u8 *) &gControllerPakSaveFileIdentity;
     do {
         byte0 = *src;
         src++;
         dst++;
         dst[9] = byte0;
-    } while (src < D_800B3108);
+    } while (src < gControllerPakSaveExtNameBytesEnd);
 
-    src = D_800B30F4;
+    src = gControllerPakSaveGameNameBytes;
     dst = (u8 *) &gControllerPakSaveFileIdentity;
     do {
         byte0 = *src++;
@@ -463,7 +463,7 @@ void checkControllerPakSaveStatus(u16 arg0) {
         dst[0xB] = byte1;
         dst[0xC] = byte2;
         dst[0xD] = byte3;
-    } while (src != D_800B3104);
+    } while (src != gControllerPakSaveExtNameBytes);
 
     pfs = &gControllerPakHandles[arg0];
     osPfsInitPak(&gControllerEventQueue, pfs, arg0);
@@ -502,7 +502,7 @@ void requestControllerPakSaveRead(u16 arg0) {
 }
 
 // readControllerPakSave best match: 85.904%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/readControllerPakSave.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/readControllerPakSave.s")
 
 #ifdef NON_MATCHING
 void readControllerPakSave(u16 arg0) {
@@ -529,9 +529,9 @@ void readControllerPakSave(u16 arg0) {
     gControllerPakSaveFileIdentity.gameCode = 'NSKE';
     gControllerPakSaveFileIdentity.companyCode = 'EB';
 
-    src = D_800B3104;
+    src = gControllerPakSaveExtNameBytes;
     dst = (u8 *)&gControllerPakSaveFileIdentity;
-    end = D_800B3108;
+    end = gControllerPakSaveExtNameBytesEnd;
 copy_ext:
     dst[10] = *src;
     src++;
@@ -540,9 +540,9 @@ copy_ext:
         goto copy_ext;
     }
 
-    src = D_800B30F4;
+    src = gControllerPakSaveGameNameBytes;
     dst = (u8 *)&gControllerPakSaveFileIdentity;
-    end = D_800B3104;
+    end = gControllerPakSaveExtNameBytes;
 copy_name:
     dst[14] = *src;
     src++;
@@ -604,7 +604,7 @@ void requestControllerPakSaveWrite(u16 arg0) {
 }
 
 // writeControllerPakSave best match: 78.684%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/writeControllerPakSave.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/writeControllerPakSave.s")
 
 #ifdef NON_MATCHING
 void writeControllerPakSave(u16 arg0) {
@@ -624,9 +624,9 @@ void writeControllerPakSave(u16 arg0) {
     gControllerPakSaveFileIdentity.gameCode = 'NSKE';
     gControllerPakSaveFileIdentity.companyCode = 'EB';
 
-    src = D_800B3104;
+    src = gControllerPakSaveExtNameBytes;
     dst = (u8 *)&gControllerPakSaveFileIdentity;
-    end = D_800B3108;
+    end = gControllerPakSaveExtNameBytesEnd;
 copy_ext:
     dst[10] = *src;
     src++;
@@ -635,9 +635,9 @@ copy_ext:
         goto copy_ext;
     }
 
-    src = D_800B30F4;
+    src = gControllerPakSaveGameNameBytes;
     dst = (u8 *)&gControllerPakSaveFileIdentity;
-    end = D_800B3104;
+    end = gControllerPakSaveExtNameBytes;
 copy_name:
     dst[14] = *src;
     src++;
@@ -782,7 +782,7 @@ void updateControllerPakFreeSpaceInfo(void) {
 }
 
 // validateControllerPakSave best match: 33.167%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/validateControllerPakSave.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/validateControllerPakSave.s")
 
 #ifdef NON_MATCHING
 u16 validateControllerPakSave(s32 arg0) {

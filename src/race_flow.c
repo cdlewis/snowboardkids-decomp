@@ -12,7 +12,7 @@
 #include "course_select_menu.h"
 #include "player_setup_menu.h"
 #include "game_task_scheduler.h"
-#include "controller_main_menu_flow.h"
+#include "controller_menu_flow.h"
 #include "menu_screen_effects.h"
 #include "main_menu_panel_ui.h"
 #include "player_count_select_menu.h"
