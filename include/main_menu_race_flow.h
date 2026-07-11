@@ -3,19 +3,19 @@
 
 #include "common.h"
 
-void startMainMenuDemoRaceSelectionFlow(void);
-void initMainMenuDemoRaceSelectionMenu(void);
-void fadeInMainMenuDemoRaceSelectionMenu(void);
-void updateMainMenuDemoRaceSelectionMenu(void);
-void fadeOutMainMenuDemoRaceSelectionMenu(void);
-void exitMainMenuDemoRaceSelectionMenu(void);
-void initMainMenuDemoRace(void);
-void fadeInMainMenuDemoRace(void);
-void waitForMainMenuDemoRaceStart(void);
-void zoomMainMenuDemoRaceViewport(void);
-void runMainMenuDemoRace(void);
-void fadeOutMainMenuDemoRace(void);
-void returnToMainMenuDemoRaceSelectionMenu(void);
+void startMainMenuModePreviewRaceFlow(void);
+void initMainMenuModePreviewRaceSelectionMenu(void);
+void fadeInMainMenuModePreviewRaceSelectionMenu(void);
+void updateMainMenuModePreviewRaceSelectionMenu(void);
+void fadeOutMainMenuModePreviewRaceSelectionMenu(void);
+void exitMainMenuModePreviewRaceSelectionMenu(void);
+void initMainMenuModePreviewRace(void);
+void fadeInMainMenuModePreviewRace(void);
+void waitForMainMenuModePreviewRaceStart(void);
+void zoomMainMenuModePreviewRaceViewport(void);
+void runMainMenuModePreviewRace(void);
+void fadeOutMainMenuModePreviewRace(void);
+void returnToMainMenuModePreviewRaceSelectionMenu(void);
 void startTrainingCourseFlow(void);
 void queueTrainingCourseRaceInit(void);
 void initTrainingCourseRace(void);
