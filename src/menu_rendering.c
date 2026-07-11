@@ -642,60 +642,80 @@ void func_80011264(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5) {
 void func_80011854(void) {
 }
 
-// func_8001185C best match: 91.874% (nonmatchings/func_8001185C-4923837976568703863/base_6.c)
+// func_8001185C best match: 99.328% (nonmatchings/func_8001185C-6061209858023118177/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8001185C.s")
 
 #ifdef NON_MATCHING
 extern s16 D_8011214A;
-extern s16 D_8015660E;
-extern s16 D_80156610;
 extern Gfx *gRegionAllocPtr;
-extern s32 func_80043040(s32 arg0);
+extern void *func_80043040(s16 arg0);
+extern void func_80045990(void *arg0, u16 arg1, void **arg2, void **arg3);
 
-void func_8001185C(s16 x, s16 y, s32 arg2, u16 assetId, u16 width, u16 height) {
-    volatile u8 pad[0x10];
-    void *image;
-    void *palette;
+void func_8001185C(s16 x, s16 y, s32 arg2, u16 assetId, u16 width, u16 height)
+{
     s32 x0;
     s32 y0;
     s32 x1;
     s32 y1;
+    volatile u8 pad[0x10];
     s16 clipX0;
     s16 clipY0;
     s16 clipX1;
     s16 clipY1;
-
-    if ((width < 0x201) && (width > 0) && (height < 0x201) && (height > 0)) {
+    void *image;
+    void *palette;
+    if ((((width < 0x201) && (width > 0)) && (height < 0x201)) && (height > 0))
+    {
         x0 = (x + D_8015660E) * 4;
         y0 = (y + D_80156610) * 4;
-        x1 = x0 + (width * 8);
-        y1 = y0 + (height * 8);
-
+        x1 = (((width * 64) << 2) >> 5) + x0;
+        y1 = (((height * 64) << 2) >> 5) + y0;
         clipY0 = (D_80156610 - (D_8015660C / 2)) * 4;
         clipY1 = (D_80156610 + (D_8015660C / 2)) * 4;
         clipX0 = (D_8015660E - (D_8015660A / 2)) * 4;
         clipX1 = (D_8015660E + (D_8015660A / 2)) * 4;
-
-        if ((x0 < clipX1) && (y0 < clipY1) && (x1 >= clipX0) && (y1 >= clipY0)) {
-            if (x0 < clipX0) {
+        if ((((x0 < clipX1) && (y0 < clipY1)) && (x1 >= clipX0)) && (y1 >= clipY0))
+        {
+            if (x0 < clipX0)
+            {
                 x0 = clipX0;
             }
-            if (y0 < clipY0) {
-                y0 = clipY0;
+            if (y0 < clipY0)
+            {
+ y0 = clipY0; } if (x1 >= clipX1) { x1 = clipX1 - 4; } if (y1 >= clipY1) { y1 = clipY1 - 4; } func_80045990(func_80043040(D_8011214A), assetId, &image, &palette); { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) (&image); if (((!_g) && (!_g)) && (!_g)) { } } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf3) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) MIN((((64 * 64) + 3) >> 2) - 1, 2047)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((((1 << 11) + MAX(1, 64 / 16)) - 1) / MAX(1, 64 / 16))) & ((0x01 << 12) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (((64 >> 1) + 7) >> 3)) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf2) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((64 - 1) << 2)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((64 - 1) << 2)) & ((0x01 << 12) - 1)) << 0)); } } ; { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) palette; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe8) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) (256 + ((0 & 0xf) * 16))) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0;
+                }
+                ;
+                {
+                    Gfx *_g = (Gfx *) (gRegionAllocPtr++);
+                    _g->words.w0 = (unsigned int) ((((unsigned int) 0xf0) & ((0x01 << 8) - 1)) << 24);
+                    _g->words.w1 = ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 15) & ((0x01 << 10) - 1)) << 14));
+                }
+                ;
+                {
+                    Gfx *_g = (Gfx *) (gRegionAllocPtr++);
+                    _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24);
+                    _g->words.w1 = 0;
+                }
             }
-            if (x1 >= clipX1) {
-                x1 = clipX1 - 4;
+            ;
+            {
+                Gfx *_g = (Gfx *) (gRegionAllocPtr++);
+                _g->words.w0 = (((unsigned int) ((((unsigned int) 0xe4) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) x1) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) y1) & ((0x01 << 12) - 1)) << 0));
+                _g->words.w1 = (((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) x0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) y0) & ((0x01 << 12) - 1)) << 0));
+                {
+                    Gfx *_g = (Gfx *) (gRegionAllocPtr++);
+                    _g->words.w0 = (unsigned int) ((((unsigned int) ((-65) - 11)) & ((0x01 << 8) - 1)) << 24);
+                    _g->words.w1 = (unsigned int) (((unsigned int) ((((unsigned int) 0) & ((0x01 << 16) - 1)) << 16)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 16) - 1)) << 0)));
+                }
+                ;
+                {
+                    Gfx *_g = (Gfx *) (gRegionAllocPtr++);
+                    _g->words.w0 = (unsigned int) ((((unsigned int) ((-65) - 12)) & ((0x01 << 8) - 1)) << 24);
+                    _g->words.w1 = (unsigned int) (((unsigned int) ((((unsigned int) 0x400) & ((0x01 << 16) - 1)) << 16)) | ((unsigned int) ((((unsigned int) 0x400) & ((0x01 << 16) - 1)) << 0)));
+                }
+                ;
             }
-            if (y1 >= clipY1) {
-                y1 = clipY1 - 4;
-            }
-
-            func_80045990((void *)func_80043040(D_8011214A), assetId, &image, &palette);
-
-            gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP,
-                                    G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
-            gSPTextureRectangle(gRegionAllocPtr++, x0, y0, x1, y1, G_TX_RENDERTILE, 0, 0, 0x400, 0x400);
+            ;
         }
     }
 }
