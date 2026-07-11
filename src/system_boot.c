@@ -2,7 +2,7 @@
 #include "sound_manager.h"
 #include "system_boot.h"
 #include "game_task_scheduler.h"
-#include "controller_main_menu_flow.h"
+#include "controller_menu_flow.h"
 #include "relocatable_heap.h"
 #include "race_flow.h"
 #include "viewport_manager.h"
@@ -293,10 +293,10 @@ loop_1:
                 initialized = 1;
                 updateGameTaskScheduler();
                 updateSoundManager();
-                updateRumbleMotorRequest(0);
-                updateRumbleMotorRequest(1);
-                updateRumbleMotorRequest(2);
-                updateRumbleMotorRequest(3);
+                serviceRumbleMotorRequest(0);
+                serviceRumbleMotorRequest(1);
+                serviceRumbleMotorRequest(2);
+                serviceRumbleMotorRequest(3);
                 requestControllerRead();
             } else {
                 initialized = 0;
@@ -324,26 +324,26 @@ loop_1:
     requestRumbleMotorInit(1);
     requestRumbleMotorInit(2);
     requestRumbleMotorInit(3);
-    updateRumbleMotorRequest(0);
-    updateRumbleMotorRequest(1);
-    updateRumbleMotorRequest(2);
-    updateRumbleMotorRequest(3);
+    serviceRumbleMotorRequest(0);
+    serviceRumbleMotorRequest(1);
+    serviceRumbleMotorRequest(2);
+    serviceRumbleMotorRequest(3);
     requestRumbleMotorInit(0);
     requestRumbleMotorInit(1);
     requestRumbleMotorInit(2);
     requestRumbleMotorInit(3);
-    updateRumbleMotorRequest(0);
-    updateRumbleMotorRequest(1);
-    updateRumbleMotorRequest(2);
-    updateRumbleMotorRequest(3);
+    serviceRumbleMotorRequest(0);
+    serviceRumbleMotorRequest(1);
+    serviceRumbleMotorRequest(2);
+    serviceRumbleMotorRequest(3);
     requestRumbleMotorInit(0);
     requestRumbleMotorInit(1);
     requestRumbleMotorInit(2);
     requestRumbleMotorInit(3);
-    updateRumbleMotorRequest(0);
-    updateRumbleMotorRequest(1);
-    updateRumbleMotorRequest(2);
-    updateRumbleMotorRequest(3);
+    serviceRumbleMotorRequest(0);
+    serviceRumbleMotorRequest(1);
+    serviceRumbleMotorRequest(2);
+    serviceRumbleMotorRequest(3);
     finalType = 1;
 loop_16:
     do {
@@ -358,10 +358,10 @@ loop_17:
     requestRumbleMotorInit(1);
     requestRumbleMotorInit(2);
     requestRumbleMotorInit(3);
-    updateRumbleMotorRequest(0);
-    updateRumbleMotorRequest(1);
-    updateRumbleMotorRequest(2);
-    updateRumbleMotorRequest(3);
+    serviceRumbleMotorRequest(0);
+    serviceRumbleMotorRequest(1);
+    serviceRumbleMotorRequest(2);
+    serviceRumbleMotorRequest(3);
     goto loop_16;
 }
 #else

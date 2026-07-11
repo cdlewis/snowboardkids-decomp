@@ -1,5 +1,5 @@
-#ifndef CONTROLLER_MAIN_MENU_FLOW_H
-#define CONTROLLER_MAIN_MENU_FLOW_H
+#ifndef CONTROLLER_MENU_FLOW_H
+#define CONTROLLER_MENU_FLOW_H
 
 #include "common.h"
 
@@ -8,7 +8,7 @@ void controllerSubsystemThreadMain(void *arg0);
 void requestControllerRead(void);
 void updateControllerInputState(void);
 void requestRumbleMotorInit(u16 arg0);
-void updateRumbleMotorRequest(u16 arg0);
+void serviceRumbleMotorRequest(u16 arg0);
 void requestRumbleMotorStart(u16 arg0);
 void requestControllerPakProbe(u16 arg0);
 void probeControllerPak(u16 arg0);
