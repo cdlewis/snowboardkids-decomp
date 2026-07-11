@@ -3,6 +3,7 @@
 #include "effect_task_scheduler.h"
 #include "menu_rendering.h"
 #include "course_select_ui.h"
+#include "shop_menu_ui.h"
 #include "fixed_point_matrix.h"
 #include "race_position_ui.h"
 
@@ -97,7 +98,6 @@ extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSel
 extern void func_80023880(CourseSelectCoursePreviewActor *);
 extern s32 func_8004885C(FixedTransform *);
 extern void func_80025AA8(CourseSelectWidgetActor *);
-extern void func_8002E568(CourseSelectWidgetActor *);
 extern s8 D_800ECA2F[][0x78F8];
 extern s8 D_800EC9C0;
 extern u8 D_800EC9C2;

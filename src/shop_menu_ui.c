@@ -3,10 +3,9 @@
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "player_select_ui.h"
+#include "shop_menu_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
-
-typedef struct ShopMenuWidgetActor ShopMenuWidgetActor;
 
 typedef struct {
     char pad[0x1C];
@@ -74,14 +73,14 @@ typedef struct {
 
 typedef ShopMenuSparkleOffset ShopMenuSparklePattern[13];
 
-typedef struct {
+struct ShopMenuRowActor {
     char pad0[0x18];
     /* 0x18 */ s16 unk18[5];
     /* 0x22 */ s16 unk22;
     /* 0x24 */ u8 unk24;
     /* 0x25 */ u8 unk25;
     /* 0x26 */ u8 unk26;
-} ShopMenuRowActor;
+};
 
 struct ShopMenuWidgetActor {
     char pad0[0x18];
@@ -155,29 +154,6 @@ struct ShopMenuWidgetActor {
 };
 
 extern void func_800483FC(void *, void *, void *);
-extern void func_8002C4E0(ShopMenuRowActor *);
-extern void func_8002C9A0(ShopMenuWidgetActor *);
-extern void func_8002FAB8(ShopMenuWidgetActor *);
-extern void func_8002DF40(ShopMenuWidgetActor *);
-extern void func_8002E32C(ShopMenuWidgetActor *);
-extern void func_8002E468(ShopMenuWidgetActor *);
-extern void func_8002CFAC(ShopMenuWidgetActor *);
-extern void func_8002D294(ShopMenuWidgetActor *);
-extern void func_8002D558(ShopMenuWidgetActor *);
-extern void func_8002D778(ShopMenuWidgetActor *);
-extern void func_8002D9EC(ShopMenuWidgetActor *);
-extern void func_8002DC14(ShopMenuWidgetActor *);
-extern void func_8002F2C8(ShopMenuWidgetActor *);
-extern void func_8002E9E4(ShopMenuWidgetActor *);
-extern void func_8002EC5C(ShopMenuWidgetActor *);
-extern void func_8002E5A4(ShopMenuWidgetActor *);
-extern void func_8002CAD4(ShopMenuWidgetActor *);
-extern void func_8002DE6C(ShopMenuWidgetActor *);
-extern void func_8002E074(ShopMenuWidgetActor *);
-extern void func_8002E214(ShopMenuWidgetActor *);
-extern void func_8002E42C(ShopMenuWidgetActor *);
-extern void func_8002E798(ShopMenuWidgetActor *);
-extern void func_8002FBC8(ShopMenuWidgetActor *);
 extern s16 D_80112130[];
 extern u8 D_800EC9E6;
 extern u8 D_800EC9C1;
