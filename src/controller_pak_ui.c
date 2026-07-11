@@ -157,7 +157,7 @@ void initControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
 
 #ifdef NON_MATCHING
 extern u8 gPlayerCount;
-extern u8 D_800EC8B4[];
+extern u8 gRumblePakConnectedByController[];
 extern u8 gControllerPakRumbleCheckPromptText[];
 extern u8 gControllerPakRumbleCheckNotUsedText[];
 extern u8 gControllerPakRumbleCheckNoEntryText[];
@@ -229,7 +229,7 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
             playerNumberText[3] = 0x19;
             playerNumberText[4] = 0xFFFF;
             if (playerIndex < gPlayerCount) {
-                if (D_800EC8B4[playerIndex] == 1) {
+                if (gRumblePakConnectedByController[playerIndex] == 1) {
                     message = gControllerPakRumblePakText;
                 } else {
                     message = gControllerPakRumbleCheckNotUsedText;

@@ -1,5 +1,5 @@
 #include "race_rumble.h"
-#include "main_menu_flow.h"
+#include "menu_system_flow.h"
 
 #define RUMBLE_PATTERN_WRAP_MASK 0xF
 #define RUMBLE_PATTERN_FAST 2

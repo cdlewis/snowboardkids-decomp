@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "system_boot.h"
 #include "game_task_scheduler.h"
-#include "main_menu_flow.h"
+#include "menu_system_flow.h"
 #include "main_menu_overlay_effects.h"
 #include "main_menu_panel_ui.h"
 #include "main_menu_scene_model.h"
@@ -118,21 +118,21 @@ extern void updateMainMenuSettings(void);
 extern void fadeOutMainMenuSettings(void);
 extern void updateMainMenuModeSelect(void);
 extern void updateMainMenu(void);
-extern OSThread D_800E29C8;
-extern OSMesgQueue D_800E4B78;
-extern OSMesg D_800E4B90[];
-extern OSMesgQueue D_800E4BB0;
-extern OSMesg D_800E4BC8[];
-extern OSMesgQueue D_800E4BD0;
-extern OSMesg D_800E4BE8[];
-extern s16 D_800E4BEC;
+extern OSThread gControllerSubsystemThread;
+extern OSMesgQueue gControllerSubsystemRequestQueue;
+extern OSMesg gControllerSubsystemRequestMessages[];
+extern OSMesgQueue gControllerSubsystemReplyQueue;
+extern OSMesg gControllerSubsystemReplyMessages[];
+extern OSMesgQueue gControllerEventQueue;
+extern OSMesg gControllerEventMessages[];
+extern s16 gControllerEventMessage;
 extern OSContPad gControllerPads[];
-extern s32 D_800E4C30[];
-extern OSPfs D_800E4C40[];
-extern OSPfs D_800E4DE0[];
-extern SaveFileIdentity D_800E4F80;
-extern u8 D_800E4F8A[];
-extern u8 D_800E4F8E[];
+extern s32 gControllerPakFileNos[];
+extern OSPfs gControllerPakHandles[];
+extern OSPfs gRumblePakHandles[];
+extern SaveFileIdentity gControllerPakSaveFileIdentity;
+extern u8 gControllerPakGameName[];
+extern u8 gControllerPakExtName[];
 extern MainMenuState *gCurrentGameTask;
 extern u8 gConnectedControllerBitmask;
 extern u8 D_800B30F4[];
@@ -141,7 +141,7 @@ extern u8 D_800B3108[];
 extern u8 gMainMenuReturnFromRace;
 extern u8 gFramebufferSwapDelay;
 extern u8 gControllerReadPending;
-extern OSContStatus D_800E4BF0[];
+extern OSContStatus gControllerStatuses[];
 extern s16 gControllerInputState;
 extern u8 D_800E4C1A;
 extern u8 D_800E4C1B;
@@ -154,15 +154,15 @@ extern u8 D_800E4C27;
 extern s16 D_800E4C2A;
 extern u8 D_800E4C2C;
 extern u8 D_800E4C2D;
-extern s32 D_800E4C30[];
-extern u8 D_800E4F8A[];
-extern u8 D_800E4F8E[];
+extern s32 gControllerPakFileNos[];
+extern u8 gControllerPakGameName[];
+extern u8 gControllerPakExtName[];
 extern u8 gControllerPakRetryCounts;
 extern s32 gRumbleMotorStatuses;
 extern s32 D_800EC89C;
 extern s32 D_800EC8A0;
 extern s32 D_800EC8A4;
-extern u8 D_800EC8B4[];
+extern u8 gRumblePakConnectedByController[];
 extern void *D_800EC8B8;
 extern s16 gControllerPakStatusCodes[];
 extern u8 gControllerPakOperationCounts[];
@@ -207,17 +207,17 @@ extern u8 D_800B3104[];
 extern u8 D_800B3108[];
 
 // initControllerSubsystem best match: 85.817%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/initControllerSubsystem.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/initControllerSubsystem.s")
 
 #ifdef NON_MATCHING
 void initControllerSubsystem(void) {
     s32 i;
 
-    osCreateMesgQueue(&D_800E4BD0, D_800E4BE8, 1);
-    osCreateMesgQueue(&D_800E4B78, D_800E4B90, 8);
-    osCreateMesgQueue(&D_800E4BB0, D_800E4BC8, 1);
-    osSetEventMesg(5, &D_800E4BD0, (OSMesg)1);
-    osContInit(&D_800E4BD0, &gConnectedControllerBitmask, D_800E4BF0);
+    osCreateMesgQueue(&gControllerEventQueue, gControllerEventMessages, 1);
+    osCreateMesgQueue(&gControllerSubsystemRequestQueue, gControllerSubsystemRequestMessages, 8);
+    osCreateMesgQueue(&gControllerSubsystemReplyQueue, gControllerSubsystemReplyMessages, 1);
+    osSetEventMesg(5, &gControllerEventQueue, (OSMesg)1);
+    osContInit(&gControllerEventQueue, &gConnectedControllerBitmask, gControllerStatuses);
 
     gConnectedControllerCount = 0;
     gControllerReadPending = 0;
@@ -234,7 +234,7 @@ loop:
         i++;
     }
 
-    D_800E4BEC = 9;
+    gControllerEventMessage = 9;
     gControllerInputState = 0;
     D_800E4C1A = 0;
     D_800E4C1B = 0;
@@ -252,13 +252,13 @@ loop:
     D_800E4C2D = 0;
     D_800EC8A4 = 1;
 
-    osCreateThread(&D_800E29C8, 4, controllerSubsystemThreadMain, D_800EC8B8, &D_800E4B78, 0x14);
-    osStartThread(&D_800E29C8);
+    osCreateThread(&gControllerSubsystemThread, 4, controllerSubsystemThreadMain, D_800EC8B8, &gControllerSubsystemRequestQueue, 0x14);
+    osStartThread(&gControllerSubsystemThread);
 }
 #endif
 
 // controllerSubsystemThreadMain best match: 99.507%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/controllerSubsystemThreadMain.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/controllerSubsystemThreadMain.s")
 
 #ifdef NON_MATCHING
 void controllerSubsystemThreadMain(void *arg0) {
@@ -268,49 +268,49 @@ void controllerSubsystemThreadMain(void *arg0) {
 
     msg = NULL;
     while (((1 & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF) & 1) {
-        osRecvMesg(&D_800E4B78, &msg, OS_MESG_BLOCK);
+        osRecvMesg(&gControllerSubsystemRequestQueue, &msg, OS_MESG_BLOCK);
         msgValue = (s32)msg;
         switch (msgValue & 0xF0) {
         case 0x10:
-            osContStartReadData(&D_800E4BD0);
-            osRecvMesg(&D_800E4BD0, ((OSMesg *)&arg0) - 2, OS_MESG_BLOCK);
+            osContStartReadData(&gControllerEventQueue);
+            osRecvMesg(&gControllerEventQueue, ((OSMesg *)&arg0) - 2, OS_MESG_BLOCK);
             osContGetReadData(gControllerPads);
-            osSendMesg(&D_80124070, &D_800E4BEC, 0);
+            osSendMesg(&D_80124070, &gControllerEventMessage, 0);
             break;
         case 0x20:
             probeControllerPak(msgValue & 3);
-            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
             break;
         case 0x30:
             checkControllerPakSaveStatus(msgValue & 3);
-            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
             break;
         case 0x40:
             readControllerPakSave(msgValue & 3);
-            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
             break;
         case 0x50:
             writeControllerPakSave(msgValue & 3);
-            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
             break;
         case 0x60:
             repairControllerPakId(msgValue & 3);
-            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
             break;
         case 0x70:
             channel = msgValue & 3;
-            (&gRumbleMotorStatuses)[channel] = osMotorInit(&D_800E4BD0, &D_800E4DE0[channel], channel);
-            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            (&gRumbleMotorStatuses)[channel] = osMotorInit(&gControllerEventQueue, &gRumblePakHandles[channel], channel);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
             break;
         case 0xD0:
             channel = msgValue & 3;
-            (&gRumbleMotorStatuses)[channel] = osMotorInit(&D_800E4BD0, &D_800E4DE0[channel], channel);
+            (&gRumbleMotorStatuses)[channel] = osMotorInit(&gControllerEventQueue, &gRumblePakHandles[channel], channel);
             break;
         case 0x80:
             if (((&gRumbleMotorStatuses)[msgValue & 3] != 1) && ((&gRumbleMotorStatuses)[msgValue & 3] != 11) &&
                 ((&gRumbleMotorStatuses)[msgValue & 3] != 4)) {
                 channel = msgValue & 3;
-                if (osMotorStart(&D_800E4DE0[channel]) == 4) {
+                if (osMotorStart(&gRumblePakHandles[channel]) == 4) {
                     (&gRumbleMotorStatuses)[channel] = 4;
                 }
             }
@@ -319,22 +319,22 @@ void controllerSubsystemThreadMain(void *arg0) {
             if (((&gRumbleMotorStatuses)[msgValue & 3] != 1) && ((&gRumbleMotorStatuses)[msgValue & 3] != 11) &&
                 ((&gRumbleMotorStatuses)[msgValue & 3] != 4)) {
                 channel = msgValue & 3;
-                if (osMotorStop(&D_800E4DE0[channel]) == 4) {
+                if (osMotorStop(&gRumblePakHandles[channel]) == 4) {
                     (&gRumbleMotorStatuses)[channel] = 4;
                 }
             }
             break;
         case 0xA0:
             readControllerPakFileStates();
-            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
             break;
         case 0xB0:
             deleteControllerPakFile(msgValue & 0xF);
-            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
             break;
         case 0xC0:
             updateControllerPakFreeSpaceInfo();
-            osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
             break;
         }
     }
@@ -343,23 +343,23 @@ void controllerSubsystemThreadMain(void *arg0) {
 
 void requestControllerRead(void) {
     if ((gControllerReadPending == 0) && (gConnectedControllerBitmask != 0)) {
-        osSendMesg(&D_800E4B78, (OSMesg)0x10, OS_MESG_BLOCK);
+        osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)0x10, OS_MESG_BLOCK);
         gControllerReadPending = 1;
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/updateControllerInputState.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/updateControllerInputState.s")
 
 void requestRumbleMotorInit(u16 arg0) {
     OSMesg msg;
 
     msg = NULL;
 
-    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0x70), OS_MESG_BLOCK);
-    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x70), OS_MESG_BLOCK);
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/updateRumbleMotorRequest.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/updateRumbleMotorRequest.s")
 
 void requestRumbleMotorStart(u16 arg0) {
     if (gRaceRumbleEnabled != 0) {
@@ -374,20 +374,20 @@ void requestControllerPakProbe(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0x20), OS_MESG_BLOCK);
-    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x20), OS_MESG_BLOCK);
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
 // probeControllerPak best match: 94.507%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/probeControllerPak.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/probeControllerPak.s")
 
 #ifdef NON_MATCHING
 void probeControllerPak(u16 arg0) {
     s32 ret;
 
-    ret = osPfsInitPak(&D_800E4BD0, &D_800E4C40[arg0], arg0);
+    ret = osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[arg0], arg0);
     if (ret == 2) {
-        ret = osPfsInitPak(&D_800E4BD0, &D_800E4C40[arg0], arg0);
+        ret = osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[arg0], arg0);
     }
 
     if (ret == 0) {
@@ -399,7 +399,7 @@ void probeControllerPak(u16 arg0) {
     }
 
     if (ret == 10) {
-        if (D_800EC8B4[arg0] == 1) {
+        if (gRumblePakConnectedByController[arg0] == 1) {
             gControllerPakStatusCodes[arg0] = 16;
         } else {
             gControllerPakStatusCodes[arg0] = 7;
@@ -417,12 +417,12 @@ void requestControllerPakSaveStatus(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0x30), OS_MESG_BLOCK);
-    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x30), OS_MESG_BLOCK);
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
 // checkControllerPakSaveStatus best match: 81.386%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/checkControllerPakSaveStatus.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/checkControllerPakSaveStatus.s")
 
 #ifdef NON_MATCHING
 void checkControllerPakSaveStatus(u16 arg0) {
@@ -438,12 +438,12 @@ void checkControllerPakSaveStatus(u16 arg0) {
     u8 byte2;
     u8 byte3;
 
-    D_800E4F80.file_size = 0x7900;
-    D_800E4F80.game_code = 0x4E534B45;
-    D_800E4F80.company_code = 0x4542;
+    gControllerPakSaveFileIdentity.file_size = 0x7900;
+    gControllerPakSaveFileIdentity.game_code = 0x4E534B45;
+    gControllerPakSaveFileIdentity.company_code = 0x4542;
 
     src = D_800B3104;
-    dst = (u8 *) &D_800E4F80;
+    dst = (u8 *) &gControllerPakSaveFileIdentity;
     do {
         byte0 = *src;
         src++;
@@ -452,7 +452,7 @@ void checkControllerPakSaveStatus(u16 arg0) {
     } while (src < D_800B3108);
 
     src = D_800B30F4;
-    dst = (u8 *) &D_800E4F80;
+    dst = (u8 *) &gControllerPakSaveFileIdentity;
     do {
         byte0 = *src++;
         byte1 = *src++;
@@ -465,11 +465,11 @@ void checkControllerPakSaveStatus(u16 arg0) {
         dst[0xD] = byte3;
     } while (src != D_800B3104);
 
-    pfs = &D_800E4C40[arg0];
-    osPfsInitPak(&D_800E4BD0, pfs, arg0);
+    pfs = &gControllerPakHandles[arg0];
+    osPfsInitPak(&gControllerEventQueue, pfs, arg0);
 
-    ret = osPfsFindFile(pfs, D_800E4F80.company_code, D_800E4F80.game_code, D_800E4F8E, D_800E4F8A,
-                        &D_800E4C30[arg0]);
+    ret = osPfsFindFile(pfs, gControllerPakSaveFileIdentity.company_code, gControllerPakSaveFileIdentity.game_code, gControllerPakExtName, gControllerPakGameName,
+                        &gControllerPakFileNos[arg0]);
     if (ret == 0) {
         gControllerPakStatusCodes[arg0] = 2;
     } else {
@@ -497,12 +497,12 @@ void requestControllerPakSaveRead(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0x40), OS_MESG_BLOCK);
-    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x40), OS_MESG_BLOCK);
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
 // readControllerPakSave best match: 85.904%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/readControllerPakSave.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/readControllerPakSave.s")
 
 #ifdef NON_MATCHING
 void readControllerPakSave(u16 arg0) {
@@ -522,15 +522,15 @@ void readControllerPakSave(u16 arg0) {
 
     channel = arg0 & 0xFFFF;
     savedChannel = channel;
-    pfs = &D_800E4C40[channel];
+    pfs = &gControllerPakHandles[channel];
     badChecksum = 0;
-    osPfsInitPak(&D_800E4BD0, pfs, channel);
+    osPfsInitPak(&gControllerEventQueue, pfs, channel);
 
-    D_800E4F80.gameCode = 'NSKE';
-    D_800E4F80.companyCode = 'EB';
+    gControllerPakSaveFileIdentity.gameCode = 'NSKE';
+    gControllerPakSaveFileIdentity.companyCode = 'EB';
 
     src = D_800B3104;
-    dst = (u8 *)&D_800E4F80;
+    dst = (u8 *)&gControllerPakSaveFileIdentity;
     end = D_800B3108;
 copy_ext:
     dst[10] = *src;
@@ -541,7 +541,7 @@ copy_ext:
     }
 
     src = D_800B30F4;
-    dst = (u8 *)&D_800E4F80;
+    dst = (u8 *)&gControllerPakSaveFileIdentity;
     end = D_800B3104;
 copy_name:
     dst[14] = *src;
@@ -551,8 +551,8 @@ copy_name:
         goto copy_name;
     }
 
-    fileNo = &D_800E4C30[channel];
-    osPfsFindFile(pfs, D_800E4F80.companyCode, D_800E4F80.gameCode, D_800E4F8E, D_800E4F8A, fileNo);
+    fileNo = &gControllerPakFileNos[channel];
+    osPfsFindFile(pfs, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName, gControllerPakGameName, fileNo);
 
     save = &gGameSaveDataBuffer[channel];
     ret = osPfsReadWriteFile(pfs, *fileNo, 0, 0, 0x78E0, (u8 *)save);
@@ -599,12 +599,12 @@ void requestControllerPakSaveWrite(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0x50), OS_MESG_BLOCK);
-    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x50), OS_MESG_BLOCK);
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
 // writeControllerPakSave best match: 78.684%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/writeControllerPakSave.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/writeControllerPakSave.s")
 
 #ifdef NON_MATCHING
 void writeControllerPakSave(u16 arg0) {
@@ -620,12 +620,12 @@ void writeControllerPakSave(u16 arg0) {
     s32 offset;
 
     channel = arg0 & 0xFFFF;
-    D_800E4F80.size = 0x7900;
-    D_800E4F80.gameCode = 'NSKE';
-    D_800E4F80.companyCode = 'EB';
+    gControllerPakSaveFileIdentity.size = 0x7900;
+    gControllerPakSaveFileIdentity.gameCode = 'NSKE';
+    gControllerPakSaveFileIdentity.companyCode = 'EB';
 
     src = D_800B3104;
-    dst = (u8 *)&D_800E4F80;
+    dst = (u8 *)&gControllerPakSaveFileIdentity;
     end = D_800B3108;
 copy_ext:
     dst[10] = *src;
@@ -636,7 +636,7 @@ copy_ext:
     }
 
     src = D_800B30F4;
-    dst = (u8 *)&D_800E4F80;
+    dst = (u8 *)&gControllerPakSaveFileIdentity;
     end = D_800B3104;
 copy_name:
     dst[14] = *src;
@@ -646,12 +646,12 @@ copy_name:
         goto copy_name;
     }
 
-    pfs = &D_800E4C40[channel];
-    osPfsInitPak(&D_800E4BD0, pfs, channel);
+    pfs = &gControllerPakHandles[channel];
+    osPfsInitPak(&gControllerEventQueue, pfs, channel);
 
-    fileNo = &D_800E4C30[channel];
-    if (osPfsFindFile(pfs, D_800E4F80.companyCode, D_800E4F80.gameCode, D_800E4F8E, D_800E4F8A, fileNo) == 5) {
-        osPfsAllocateFile(pfs, D_800E4F80.companyCode, D_800E4F80.gameCode, D_800E4F8E, D_800E4F8A, 0x7900, fileNo);
+    fileNo = &gControllerPakFileNos[channel];
+    if (osPfsFindFile(pfs, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName, gControllerPakGameName, fileNo) == 5) {
+        osPfsAllocateFile(pfs, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName, gControllerPakGameName, 0x7900, fileNo);
     }
 
     save = &gGameSaveDataBuffer[channel];
@@ -683,8 +683,8 @@ void requestControllerPakRepair(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0x60), OS_MESG_BLOCK);
-    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x60), OS_MESG_BLOCK);
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
 void repairControllerPakId(u16 arg0) {
@@ -692,9 +692,9 @@ void repairControllerPakId(u16 arg0) {
     OSPfs *pfs;
     s32 ret;
 
-    pfs = &D_800E4C40[arg0];
+    pfs = &gControllerPakHandles[arg0];
     sp18 = &pfs;
-    osPfsInitPak(&D_800E4BD0, *sp18, arg0);
+    osPfsInitPak(&gControllerEventQueue, *sp18, arg0);
     ret = osPfsRepairId(pfs);
     if ((ret == 4) || (ret == 0xA)) {
         (&gControllerPakRetryCounts)[arg0] += 1;
@@ -706,16 +706,16 @@ void requestControllerPakFileList(void) {
 
     msg = NULL;
 
-    osSendMesg(&D_800E4B78, (OSMesg)0xA0, OS_MESG_BLOCK);
-    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)0xA0, OS_MESG_BLOCK);
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
 void readControllerPakFileStates(void) {
     s32 i;
 
-    osPfsInitPak(&D_800E4BD0, &D_800E4C40[0], 0);
+    osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[0], 0);
     for (i = 0; i != 0x10; i++) {
-        osPfsFileState(&D_800E4C40[0], i, &gControllerPakFileStates[i]);
+        osPfsFileState(&gControllerPakHandles[0], i, &gControllerPakFileStates[i]);
     }
 }
 
@@ -724,8 +724,8 @@ void requestControllerPakDeleteFile(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&D_800E4B78, (OSMesg)(arg0 + 0xB0), OS_MESG_BLOCK);
-    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0xB0), OS_MESG_BLOCK);
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
 void deleteControllerPakFile(u16 arg0) {
@@ -737,8 +737,8 @@ void deleteControllerPakFile(u16 arg0) {
     u8 extName[4];
     s32 i;
 
-    pfs = D_800E4C40;
-    osPfsInitPak(&D_800E4BD0, pfs, 0);
+    pfs = gControllerPakHandles;
+    osPfsInitPak(&gControllerEventQueue, pfs, 0);
 
     state = &gControllerPakFileStates[arg0];
     companyCode = state->company_code;
@@ -766,8 +766,8 @@ void requestControllerPakFreeSpaceUpdate(void) {
 
     msg = NULL;
 
-    osSendMesg(&D_800E4B78, (OSMesg)0xC0, OS_MESG_BLOCK);
-    osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)0xC0, OS_MESG_BLOCK);
+    osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
 void updateControllerPakFreeSpaceInfo(void) {
@@ -775,14 +775,14 @@ void updateControllerPakFreeSpaceInfo(void) {
     s32 maxFiles;
     s32 filesUsed;
 
-    osPfsInitPak(&D_800E4BD0, &D_800E4C40[0], 0);
-    osPfsFreeBlocks(&D_800E4C40[0], &gControllerPakFreeBytes);
-    osPfsNumFiles(&D_800E4C40[0], &maxFiles, &filesUsed);
+    osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[0], 0);
+    osPfsFreeBlocks(&gControllerPakHandles[0], &gControllerPakFreeBytes);
+    osPfsNumFiles(&gControllerPakHandles[0], &maxFiles, &filesUsed);
     gControllerPakFreeFileCount = maxFiles - filesUsed;
 }
 
 // validateControllerPakSave best match: 33.167%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/validateControllerPakSave.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/validateControllerPakSave.s")
 
 #ifdef NON_MATCHING
 u16 validateControllerPakSave(s32 arg0) {

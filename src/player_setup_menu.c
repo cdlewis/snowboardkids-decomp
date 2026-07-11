@@ -30,7 +30,7 @@ extern u8 gConnectedControllerCount;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern u8 gRaceRumbleEnabled;
-extern s8 D_800EC8B4;
+extern s8 gRumblePakConnectedByController;
 extern s8 D_800EC8B5;
 extern s8 D_800EC8B6;
 extern s8 D_800EC8B7;
@@ -104,7 +104,7 @@ void initPlayerSetupMenu(void) {
     D_8010AE00.unk1 = 0;
     D_8010AE00.unk2 = 0;
     D_8010AE00.unk4 = 0;
-    D_800EC8B4 = 0;
+    gRumblePakConnectedByController = 0;
     D_8010AE06 = 0;
     D_8010AE0E = 0;
     D_8010AE12 = 0;
@@ -361,7 +361,7 @@ extern CallbackTask *D_8010ADE8;
 extern PlayerSetupPlayerState03798 D_80121D80[];
 
 #define D_8010AE00_03798 (*(PlayerSetupSubState03798 *)&D_8010AE00)
-#define D_800EC8B4_03798 (&D_800EC8B4)
+#define gRumblePakConnectedByControllerArray_03798 (&gRumblePakConnectedByController)
 #define gPlayerInputPressedArray_03798 (&gPlayerInputPressed)
 
 void updatePlayerSaveSetupMenu(void) {
@@ -418,13 +418,13 @@ void updatePlayerSaveSetupMenu(void) {
                                     s32 pakState;
                                     u16 playerIndex = i;
 
-                                    D_800EC8B4_03798[i] = 0;
+                                    gRumblePakConnectedByControllerArray_03798[i] = 0;
                                     requestRumbleMotorInit(playerIndex, gPlayerCount, choiceValue);
                                     pakState = gRumbleMotorStatuses[i];
                                     if ((pakState != 1) && (pakState != 0xB) && (pakState != 4)) {
-                                        D_800EC8B4_03798[i] = 1;
+                                        gRumblePakConnectedByControllerArray_03798[i] = 1;
                                     } else {
-                                        D_800EC8B4_03798[i] = 0;
+                                        gRumblePakConnectedByControllerArray_03798[i] = 0;
                                     }
                                     requestControllerPakProbe(playerIndex);
                                     break;
@@ -670,7 +670,7 @@ void updatePlayerSaveSetupMenu(void) {
 }
 
 #undef D_8010AE00_03798
-#undef D_800EC8B4_03798
+#undef gRumblePakConnectedByControllerArray_03798
 #undef gPlayerInputPressedArray_03798
 #endif
 
@@ -717,10 +717,10 @@ void updatePlayerSetupRumblePrompt(void) {
                 do {
                     requestRumbleMotorInit(i);
                     if (((&gRumbleMotorStatuses)[i] != 1) && ((&gRumbleMotorStatuses)[i] != 0xB) && ((&gRumbleMotorStatuses)[i] != 4)) {
-                        (&D_800EC8B4)[i] = 1;
+                        (&gRumblePakConnectedByController)[i] = 1;
                         gRumblePakConnectedMask |= 1 << i;
                     } else {
-                        (&D_800EC8B4)[i] = 0;
+                        (&gRumblePakConnectedByController)[i] = 0;
                     }
                     i++;
                 } while (i < (s32)gPlayerCount);
@@ -745,10 +745,10 @@ void updatePlayerSetupRumblePrompt(void) {
                     requestRumbleMotorInit(i);
                     if (((&gRumbleMotorStatuses)[i] != 1) && ((&gRumbleMotorStatuses)[i] != 0xB) && ((&gRumbleMotorStatuses)[i] != 4)) {
                         gRumblePakConnectedMask |= 1 << i;
-                        (&D_800EC8B4)[i] = 1;
+                        (&gRumblePakConnectedByController)[i] = 1;
                         connectedCount++;
                     } else {
-                        (&D_800EC8B4)[i] = 0;
+                        (&gRumblePakConnectedByController)[i] = 0;
                     }
                     i++;
                 } while (i < (s32)gPlayerCount);
@@ -800,7 +800,7 @@ void updatePlayerSetupRumblePrompt(void) {
                     i = 0;
                     if ((s32)gPlayerCount > 0) {
                         do {
-                            if ((&D_800EC8B4)[i] == 1) {
+                            if ((&gRumblePakConnectedByController)[i] == 1) {
                                 connectedCount++;
                             }
                             i++;

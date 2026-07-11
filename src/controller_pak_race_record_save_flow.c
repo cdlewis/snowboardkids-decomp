@@ -89,7 +89,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
 
 #ifdef NON_MATCHING
 extern s32 gRumbleMotorStatuses;
-extern s8 D_800EC8B4;
+extern s8 gRumblePakConnectedByController;
 extern u8 D_800B31A5[];
 extern void requestRumbleMotorInit(u16);
 extern void requestControllerPakProbe(u16);
@@ -144,15 +144,15 @@ void updateControllerPakRaceRecordSaveFlow(void)
       switch (var_v0)
       {
         case 0:
-          D_800EC8B4 = 0;
+          gRumblePakConnectedByController = 0;
           requestRumbleMotorInit(0);
           if (((gRumbleMotorStatuses != 1) && (gRumbleMotorStatuses != 0xB)) && (gRumbleMotorStatuses != 4))
         {
-          D_800EC8B4 = 1;
+          gRumblePakConnectedByController = 1;
         }
         else
         {
-          D_800EC8B4 = 0;
+          gRumblePakConnectedByController = 0;
         }
           requestControllerPakProbe(0);
           if (gControllerPakStatusCodes == 0x10)
