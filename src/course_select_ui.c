@@ -1839,13 +1839,14 @@ loop:
 }
 #endif
 
-// func_80028354 best match: 95.650% (nonmatchings/func_80028354-3836525038718587862/base_8.c)
+// func_80028354 best match: 96.854% (nonmatchings/func_80028354-6061209858023118177/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028354.s")
 
 #ifdef NON_MATCHING
 extern int sprintf(u8 *, u8 *, ...);
 
 void func_80028354(CourseSelectWidgetInitActor *actor) {
+    s16 *yPtr;
     volatile s32 savedIndex;
     s32 count;
     u8 text[4];
@@ -1871,6 +1872,7 @@ void func_80028354(CourseSelectWidgetInitActor *actor) {
         do {
             j = 0;
             alpha = 0x100;
+            yPtr = &cur->unk20;
             if (i == D_80121B55) {
                 alpha = 0xC0;
             }
@@ -1881,7 +1883,7 @@ void func_80028354(CourseSelectWidgetInitActor *actor) {
             }
 
             savedIndex = i;
-            func_8000F8AC(cur->unk18, cur->unk20, func_80043040(D_80112130[0x21]), 0x22, 0x20, 0x20, 0,
+            func_8000F8AC(cur->unk18, *yPtr, func_80043040(D_80112130[0x21]), 0x22, 0x20, 0x20, 0,
                           alpha, tile);
 
             if (D_80121B55 == 2) {
@@ -1892,14 +1894,14 @@ void func_80028354(CourseSelectWidgetInitActor *actor) {
             edgeOffset = 0x38;
             if (middleCount > 0) {
                 do {
-                    func_8000F8AC((s16)(cur->unk18 + edgeOffset), cur->unk20, func_80043040(D_80112130[0x21]),
+                    func_8000F8AC((s16)(cur->unk18 + edgeOffset), *yPtr, func_80043040(D_80112130[0x21]),
                                   0x23, 0x20, 0x20, 0, alpha, tile);
                     j++;
                     edgeOffset += 0x10;
                 } while (j != middleCount);
             }
 
-            func_8000F8AC((s16)(cur->unk18 + edgeOffset), cur->unk20, func_80043040(D_80112130[0x21]), 0x24,
+            func_8000F8AC((s16)(cur->unk18 + edgeOffset), *yPtr, func_80043040(D_80112130[0x21]), 0x24,
                           0x20, 0x20, 0, alpha, tile);
 
             offset = 0;
@@ -1911,14 +1913,14 @@ void func_80028354(CourseSelectWidgetInitActor *actor) {
                 edgeOffset = 0x78;
             }
             do {
-                func_8000F8AC(cur->unk18, (s16)(cur->unk20 + offset + 0x10), func_80043040(D_80112130[0x21]),
+                func_8000F8AC(cur->unk18, (s16)(*yPtr + offset + 0x10), func_80043040(D_80112130[0x21]),
                               0x25, 0x20, 0x20, 0, alpha, tile);
-                func_8000F8AC((s16)(cur->unk18 + edgeOffset), (s16)(cur->unk20 + offset + 0x10),
+                func_8000F8AC((s16)(cur->unk18 + edgeOffset), (s16)(*yPtr + offset + 0x10),
                               func_80043040(D_80112130[0x21]), 0x26, 0x20, 0x20, 0, alpha, tile);
                 offset += 0x10;
             } while (offset < 0x40);
 
-            func_8000F8AC(cur->unk18, (s16)(cur->unk20 + 0x50), func_80043040(D_80112130[0x21]), 0x27, 0x20,
+            func_8000F8AC(cur->unk18, (s16)(*yPtr + 0x50), func_80043040(D_80112130[0x21]), 0x27, 0x20,
                           0x20, 0, alpha, tile);
 
             if (D_80121B55 == 2) {
@@ -1937,12 +1939,12 @@ void func_80028354(CourseSelectWidgetInitActor *actor) {
                 } while (j != middleCount);
             }
 
-            func_8000F8AC((s16)(cur->unk18 + edgeOffset - 8), (s16)(cur->unk20 + 0x50),
+            func_8000F8AC((s16)(cur->unk18 + edgeOffset - 8), (s16)(*yPtr + 0x50),
                           func_80043040(D_80112130[0x21]), 0x29, 0x20, 0x20, 0, alpha, tile);
 
             nextIndex = savedIndex + 1;
             sprintf(text, "%d", nextIndex);
-            func_80013D0C((s16)(cur->unk18 + 0x34), (s16)(cur->unk20 + 2), text, 0, alpha);
+            func_80013D0C((s16)(cur->unk18 + 0x34), (s16)(*yPtr + 2), text, 0, alpha);
 
             if (alpha == 0xC0) {
                 func_8000F8AC((s16)(cur->unk18 + 2), (s16)(cur->unk20 + 0x24),
