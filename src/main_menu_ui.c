@@ -51,7 +51,7 @@ typedef struct {
     /* 0x42 */ s16 menuUiTextureHandle;
 } MainMenuAssetHandles;
 
-extern MainMenuState *D_801235B8;
+extern MainMenuState *gCurrentInputTask;
 extern s32 D_80124868;
 extern MainMenuAssetHandles D_80112130;
 extern s16 D_8011217A;
@@ -103,10 +103,10 @@ void func_800326EC(MainMenuSelectionLabelsActor *arg0) {
 }
 
 void func_8003288C(MainMenuSelectionLabelsActor *arg0) {
-    if (D_801235B8->selection != (u16)(0, arg0->selectedOption)) {
+    if (gCurrentInputTask->selection != (u16)(0, arg0->selectedOption)) {
         arg0->pulseScale = 0x100;
         arg0->pulseTimer = 0;
-        arg0->selectedOption = D_801235B8->selection;
+        arg0->selectedOption = gCurrentInputTask->selection;
     }
     if ((s32)(u16)arg0->pulseTimer < 0x10) {
         arg0->pulseScale -= 9;
@@ -135,12 +135,12 @@ void func_80032984(MainMenuSelectionArrowActor *arg0) {
 }
 
 void func_800329E0(MainMenuSelectionArrowActor *arg0) {
-    if (D_801235B8->selection != 1) {
+    if (gCurrentInputTask->selection != 1) {
         arg0->common.x = -0x34;
     } else {
         arg0->common.x = -0x3C;
     }
-    arg0->common.y = (D_801235B8->selection << 4) + 0x20;
+    arg0->common.y = (gCurrentInputTask->selection << 4) + 0x20;
     func_800483FC(&D_80124868, func_80032984, arg0);
 }
 

@@ -15,7 +15,7 @@ extern void releaseMenuAssetHandles(void);
 
 extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakFileEntry gControllerPakFileEntries[];
-extern CharacterSelectFlowState *D_801235B8;
+extern CharacterSelectFlowState *gCurrentInputTask;
 extern s8 gFramebufferSwapDelay;
 extern u8 D_800EC9D8;
 extern u8 gControllerPakMenuCursorState;
@@ -45,17 +45,17 @@ void initControllerPakFileDeleteFlow(void) {
         setCurrentInputTaskCallback(fadeOutControllerPakFileDeleteFlow, 0);
         return;
     }
-    func_800704F0();
-    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
+    resetAllViewports();
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferSwapDelay = 0;
-    D_801235B8->fade = 0;
-    D_801235B8->timer = 0;
+    gCurrentInputTask->fade = 0;
+    gCurrentInputTask->timer = 0;
     D_801235B4 = 0;
     D_800EC9D8 = 0;
     gControllerPakFreeBytes = 0;
     gControllerPakFreeFileCount = 0;
     D_800EC8B0 = 0;
-    gMenuFadeAlpha = D_801235B8->fade;
+    gMenuFadeAlpha = gCurrentInputTask->fade;
     loadCompressedRomAsset(&D_5DFDD0, &D_5E0350, 0x21);
     loadCompressedRomAsset(&D_593D10, &D_598A70, 0x22);
     loadCompressedRomAsset(&D_598A70, &D_59AAA0, 0x23);
@@ -234,9 +234,9 @@ void updateControllerPakFileDeleteErrorPrompt(void) {
 }
 
 void fadeOutControllerPakFileDeleteFlow(void) {
-    if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 1);
-        if (D_801235B8->fade == 0xFF) {
+    if (gCurrentInputTask->fade != 0xFF) {
+        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 1);
+        if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateEffectTasks();

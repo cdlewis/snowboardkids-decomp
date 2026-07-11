@@ -1,11 +1,11 @@
 #include "viewport_manager.h"
 
-// func_800704F0 best match: 50.342%
+// resetAllViewports best match: 50.342%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_800704F0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/resetAllViewports.s")
 
 #ifdef NON_MATCHING
-void func_800704F0(void) {
+void resetAllViewports(void) {
     volatile ViewportState *viewport = &D_801124B0[0];
 
     viewport->active = 0;
@@ -82,14 +82,14 @@ void func_80070614(s32 arg0) {
     viewport->unk1E = 0;
 }
 
-// func_8007066C best match: 88.911%
+// configureViewport best match: 88.911%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_8007066C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/configureViewport.s")
 
 #ifdef NON_MATCHING
 extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
 
-void func_8007066C(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
+void configureViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
     ViewportState *viewport;
     s32 halfHeight;
     s32 halfWidth;

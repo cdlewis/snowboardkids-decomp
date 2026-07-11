@@ -59,7 +59,7 @@ extern s8 D_80121D86;
 extern s8 D_80122392;
 extern s8 D_8012299E;
 extern s8 D_80122FAA;
-extern GameSetupMenuState *D_801235B8;
+extern GameSetupMenuState *gCurrentInputTask;
 extern s32 D_801235B4;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
@@ -74,12 +74,12 @@ extern u8 D_60F990;
 
 void func_80003140(void) {
     func_800720E4(1);
-    func_800704F0();
-    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0900);
+    resetAllViewports();
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0900);
 
     gFramebufferSwapDelay = 0;
-    D_801235B8->fade = 0;
-    D_801235B8->timer = 0;
+    gCurrentInputTask->fade = 0;
+    gCurrentInputTask->timer = 0;
     D_800EC9C1 = 0;
     D_800EC9E5 = 1;
     D_800EC9E6 = 0;
@@ -89,7 +89,7 @@ void func_80003140(void) {
     D_801235B4 = 0;
     D_8010ADF0 = 0;
     D_80121B55 = 1;
-    gMenuFadeAlpha = D_801235B8->fade;
+    gMenuFadeAlpha = gCurrentInputTask->fade;
 
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x21);
     loadCompressedRomAsset(&D_245A80, &D_24C8E0, 0x1F);
@@ -151,7 +151,7 @@ void func_8000337C(void) {
         D_8010AE00.unk1 = 0;
         one = 1;
     }
-    if (D_801235B8->timer == one) {
+    if (gCurrentInputTask->timer == one) {
         temp_v1 = D_800EC9C1;
         if (temp_v1 == 0) {
             temp_a3 = gPlayerInputPressed;
@@ -200,7 +200,7 @@ block_25:
     }
     if (D_8010AE00.state == 5) {
         setCurrentInputTaskCallback(func_800035F8, 0);
-        D_801235B8->fade = 0;
+        gCurrentInputTask->fade = 0;
         D_800EC9C1 = 0;
     }
     updateEffectTasks();

@@ -75,7 +75,7 @@ extern u8 D_800B5A2E[];
 extern u8 D_800B5A2F[];
 extern u8 D_800EC9C1;
 extern s32 D_801235B4;
-extern Struct801235B8 *D_801235B8;
+extern Struct801235B8 *gCurrentInputTask;
 extern s32 D_80124838;
 extern s32 D_80124868;
 
@@ -197,7 +197,7 @@ void func_80014AA4(MenuIntroActor *arg0) {
             alpha = actor->alpha;
             break;
         case 3:
-            if (D_801235B8->unk1C == 2) {
+            if (gCurrentInputTask->unk1C == 2) {
                 alpha = ((volatile MenuIntroActor *)actor)->alpha;
                 actor->state = 4;
             }
@@ -573,7 +573,7 @@ void func_80015A30(MenuItemActor *arg0) {
     }
     if (x < -0x108) {
         func_800716E4(actor);
-        D_801235B8->unk1C = 2;
+        gCurrentInputTask->unk1C = 2;
         return;
     }
     func_800483FC(&D_80124868, func_800157EC, (s32)actor);
@@ -616,7 +616,7 @@ void func_80015BD8(FadeItemActor *arg0) {
         actor->alpha = temp_t6;
         if ((temp_t6 & 0xFFFF) >= 0x100) {
             actor->alpha = 0x100;
-            D_801235B8->unk1C = 1;
+            gCurrentInputTask->unk1C = 1;
         }
     } else if (D_801235B4 != 0) {
         temp_a2->x = temp_a2->x - 0x20;

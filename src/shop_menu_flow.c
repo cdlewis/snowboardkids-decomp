@@ -17,7 +17,7 @@ typedef struct {
 extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 
-extern CharacterSelectFlowState *D_801235B8;
+extern CharacterSelectFlowState *gCurrentInputTask;
 extern ShopMenuPromptTransition gControllerPakContinuePromptTransition;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
@@ -34,11 +34,11 @@ extern u8 D_60F990[];
 
 void func_8000C280(void) {
     func_800720E4(3);
-    func_800704F0();
-    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
+    resetAllViewports();
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferSwapDelay = 0;
-    D_801235B8->fade = 0xFF;
-    D_801235B8->timer = 0;
+    gCurrentInputTask->fade = 0xFF;
+    gCurrentInputTask->timer = 0;
     D_801235B4 = 0;
     gControllerPakContinuePromptTransition.state = 0;
     gControllerPakContinuePromptTransition.x = 0x100;
@@ -48,7 +48,7 @@ void func_8000C280(void) {
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x29);
     func_80070EC0(0);
     createEffectTask(initControllerPakContinuePrompt, 0, 0x64);
-    gMenuFadeAlpha = D_801235B8->fade;
+    gMenuFadeAlpha = gCurrentInputTask->fade;
     setCurrentInputTaskCallback(func_8000C3C8, 0);
     updateEffectTasks();
 }
@@ -56,9 +56,9 @@ void func_8000C280(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_flow/func_8000C3C8.s")
 
 void func_8000C52C(void) {
-    if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 1);
-        if (D_801235B8->fade == 0xFF) {
+    if (gCurrentInputTask->fade != 0xFF) {
+        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 1);
+        if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
             gControllerPakContinuePromptTransition.state = 3;
         } else {

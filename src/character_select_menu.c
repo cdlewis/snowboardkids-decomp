@@ -47,7 +47,7 @@ extern void enqueueSoundEffect(s32, s32);
 extern void updateCharacterSelectMenu(void);
 extern void fadeOutCharacterSelectMenu(void);
 extern void func_800720E4(s32);
-extern CharacterSelectMenuState *D_801235B8;
+extern CharacterSelectMenuState *gCurrentInputTask;
 extern CharacterSelectState gCharacterSelectHudState;
 extern CharacterId gCharacterSelectIdOrder[];
 extern CharacterSelectPlayer D_80121D80[];
@@ -101,14 +101,14 @@ void initCharacterSelectMenu(void) {
 
     if ((D_800EC9E5 == 0) || (D_8010ADF8 == 1)) {
         func_800720E4(1);
-        func_800704F0();
-        func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gCharacterSelectViewportAspectRatio);
+        resetAllViewports();
+        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gCharacterSelectViewportAspectRatio);
         gFramebufferSwapDelay = 0;
         D_800EC9C1 = 0;
         D_8010ADF8 = 0;
-        D_801235B8->fade = 0xFF;
-        D_801235B8->timer = 0;
-        gMenuFadeAlpha = D_801235B8->fade;
+        gCurrentInputTask->fade = 0xFF;
+        gCurrentInputTask->timer = 0;
+        gMenuFadeAlpha = gCurrentInputTask->fade;
         loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x21);
         loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
         loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
@@ -138,7 +138,7 @@ loop_1:
             } while (i < playerCount);
         }
     } else {
-        D_801235B8->fade = 1;
+        gCurrentInputTask->fade = 1;
         gMenuFadeAlpha = 1;
         playerCount = D_80121B55;
         i = 0;
@@ -291,9 +291,9 @@ void updateCharacterSelectConfirmationMenu(void) {
 #endif
 
 void fadeOutCharacterSelectMenu(void) {
-    if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 1);
-        if (D_801235B8->fade == 0xFF) {
+    if (gCurrentInputTask->fade != 0xFF) {
+        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 1);
+        if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateEffectTasks();

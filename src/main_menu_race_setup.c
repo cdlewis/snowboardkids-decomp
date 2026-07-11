@@ -59,7 +59,7 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
 
-extern MainMenuRaceSetupState *D_801235B8;
+extern MainMenuRaceSetupState *gCurrentInputTask;
 extern MainMenuRaceSetupObject *D_800EC9C4;
 extern Vec2i D_8010B1B0;
 
@@ -214,13 +214,13 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     func_8006D580(0, 0x1D);
     func_8006D580(1, 0x1D);
     func_8006D580(2, 0x1D);
-    func_800704F0();
-    func_8007066C(0, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
-    func_8007066C(1, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
-    func_8007066C(2, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
+    resetAllViewports();
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
+    configureViewport(1, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
+    configureViewport(2, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
     func_80070E90(2);
     gMenuFadeAlpha = 0xFF;
-    D_801235B8->fade = 5;
+    gCurrentInputTask->fade = 5;
     effectArg = transition - 1;
     func_80071664(func_80053DD8, 0, 0x64, effectArg);
     createEffectTask(func_8005502C, 0, 0x64);
@@ -235,10 +235,10 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
 #endif
 
 void func_8003E3AC(void) {
-    D_801235B8->fade--;
-    if (D_801235B8->fade == 0) {
+    gCurrentInputTask->fade--;
+    if (gCurrentInputTask->fade == 0) {
         func_800720E4(4);
-        D_801235B8->fade = 0x12C;
+        gCurrentInputTask->fade = 0x12C;
         setCurrentInputTaskCallback(func_8003E45C, 0);
     }
     func_80071664(func_8005393C, 5, 0x64, 0);
@@ -256,7 +256,7 @@ void func_8003E45C(void) {
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
     }
-    state = &D_801235B8;
+    state = &gCurrentInputTask;
     currentState = *state;
     currentState->fade -= 1;
     if ((*state)->fade == 0) {
@@ -272,7 +272,7 @@ void func_8003E45C(void) {
 void func_8003E514(void) {
     gMenuFadeAlpha += 4;
     if (gMenuFadeAlpha >= 0xFF) {
-        D_801235B8->fade = 0xFF;
+        gCurrentInputTask->fade = 0xFF;
         gFramebufferSwapHold = 1;
         setCurrentInputTaskCallback(func_8003E5A8, 0);
     }

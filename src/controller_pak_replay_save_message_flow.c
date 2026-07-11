@@ -10,7 +10,7 @@
 
 extern void releaseMenuAssetHandles(void);
 
-extern CharacterSelectFlowState *D_801235B8;
+extern CharacterSelectFlowState *gCurrentInputTask;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern u8 gPendingFramebufferSwapCount;
@@ -20,12 +20,12 @@ extern u8 gControllerPakReplaySaveMessageFirstPageStart[];
 extern u8 gMainMenuSceneModelAssetStart[];
 
 void initControllerPakReplaySaveMessageFlow(void) {
-    func_800704F0();
-    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
+    resetAllViewports();
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferSwapDelay = 0;
-    D_801235B8->fade = 0xFF;
-    D_801235B8->timer = 0;
-    gMenuFadeAlpha = D_801235B8->fade;
+    gCurrentInputTask->fade = 0xFF;
+    gCurrentInputTask->timer = 0;
+    gMenuFadeAlpha = gCurrentInputTask->fade;
     loadCompressedRomAsset(gControllerPakReplaySaveMessageFirstPageStart,
                            gMainMenuSceneModelAssetStart, 0x26);
     func_80070EC0(0);
@@ -35,22 +35,22 @@ void initControllerPakReplaySaveMessageFlow(void) {
 }
 
 void updateControllerPakReplaySaveMessageFirstPageFadeIn(void) {
-    if (D_801235B8->fade != 0) {
-        D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0xF, 0);
+    if (gCurrentInputTask->fade != 0) {
+        gCurrentInputTask->fade = stepMenuFadeAlpha(gCurrentInputTask->fade, 0xF, 0);
     } else {
-        D_801235B8->timer++;
+        gCurrentInputTask->timer++;
     }
-    if (D_801235B8->timer >= 0x50) {
-        D_801235B8->timer = 0;
+    if (gCurrentInputTask->timer >= 0x50) {
+        gCurrentInputTask->timer = 0;
         setCurrentInputTaskCallback(updateControllerPakReplaySaveMessageFirstPageFadeOut, 0);
     }
     updateEffectTasks();
 }
 
 void updateControllerPakReplaySaveMessageFirstPageFadeOut(void) {
-    if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0xF, 1);
-        if (D_801235B8->fade == 0xFF) {
+    if (gCurrentInputTask->fade != 0xFF) {
+        gCurrentInputTask->fade = stepMenuFadeAlpha(gCurrentInputTask->fade, 0xF, 1);
+        if (gCurrentInputTask->fade == 0xFF) {
             releaseMenuAssetHandles();
             loadCompressedRomAsset(gControllerPakReplaySaveMessageSecondPageStart,
                                    gControllerPakReplaySaveMessageFirstPageStart, 0x26);
@@ -62,32 +62,32 @@ void updateControllerPakReplaySaveMessageFirstPageFadeOut(void) {
 }
 
 void waitForControllerPakReplaySaveMessageSecondPage(void) {
-    D_801235B8->timer++;
-    if (D_801235B8->timer >= 0x14) {
-        D_801235B8->fade = 0xFF;
-        gMenuFadeAlpha = D_801235B8->fade;
-        D_801235B8->timer = 0;
+    gCurrentInputTask->timer++;
+    if (gCurrentInputTask->timer >= 0x14) {
+        gCurrentInputTask->fade = 0xFF;
+        gMenuFadeAlpha = gCurrentInputTask->fade;
+        gCurrentInputTask->timer = 0;
         setCurrentInputTaskCallback(updateControllerPakReplaySaveMessageSecondPageFadeIn, 0);
     }
     updateEffectTasks();
 }
 
 void updateControllerPakReplaySaveMessageSecondPageFadeIn(void) {
-    if (D_801235B8->fade != 0) {
-        D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0xF, 0);
+    if (gCurrentInputTask->fade != 0) {
+        gCurrentInputTask->fade = stepMenuFadeAlpha(gCurrentInputTask->fade, 0xF, 0);
     } else {
-        D_801235B8->timer++;
+        gCurrentInputTask->timer++;
     }
-    if (D_801235B8->timer >= 0x50) {
+    if (gCurrentInputTask->timer >= 0x50) {
         setCurrentInputTaskCallback(fadeOutControllerPakReplaySaveMessageFlow, 0);
     }
     updateEffectTasks();
 }
 
 void fadeOutControllerPakReplaySaveMessageFlow(void) {
-    if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0xF, 1);
-        if (D_801235B8->fade == 0xFF) {
+    if (gCurrentInputTask->fade != 0xFF) {
+        gCurrentInputTask->fade = stepMenuFadeAlpha(gCurrentInputTask->fade, 0xF, 1);
+        if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateEffectTasks();
