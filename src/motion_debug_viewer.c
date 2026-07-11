@@ -1,5 +1,6 @@
 #include "common.h"
 #include "model_animation.h"
+#include "motion_debug_viewer.h"
 
 typedef struct {
     /* 0x0 */ s32 x;
