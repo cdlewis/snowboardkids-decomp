@@ -16,10 +16,10 @@ typedef struct {
 typedef struct {
     /* 0x0 */ u8 step;
     /* 0x1 */ char pad1[0x1];
-    /* 0x2 */ s16 timer;
-    /* 0x4 */ u16 targetState;
-    /* 0x6 */ s16 nextTimer;
-} ControllerPakRaceRecordSaveScoreUiState;
+    /* 0x2 */ s16 alpha;
+    /* 0x4 */ u16 targetStatus;
+    /* 0x6 */ s16 nextStatus;
+} ControllerPakRaceRecordSaveStatusTransition;
 
 extern void addRenderCallback(void *, void *, void *);
 extern u8 gControllerPakRaceRecordSaveStatusMessages[][0x4C];
@@ -27,11 +27,11 @@ extern u8 gControllerPakRaceRecordSaveChoicePromptTopSprites[];
 extern u8 gControllerPakRaceRecordSaveChoicePromptBottomSprites[];
 extern u8 gControllerPakRaceRecordSaveExitMessage[];
 extern s16 gMenuCommonSpritesAssetHandle;
-extern s16 gControllerPakRaceRecordSaveScoreUiStateTimer;
-extern ControllerPakRaceRecordSaveScoreUiState gControllerPakRaceRecordSaveScoreUiState;
-extern u16 gControllerPakRaceRecordSaveScoreUiStateTargetState;
-extern u16 gControllerPakRaceRecordSaveScoreUiStateNextTimer;
-extern u8 gControllerPakRaceRecordSaveScoreUiStateStep;
+extern s16 gControllerPakRaceRecordSaveStatusTransitionAlpha;
+extern ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
+extern u16 gControllerPakRaceRecordSaveStatusTransitionTargetStatus;
+extern u16 gControllerPakRaceRecordSaveStatusTransitionNextStatus;
+extern u8 gControllerPakRaceRecordSaveStatusTransitionStep;
 extern void *gMenuRenderCallbackList;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
@@ -54,7 +54,7 @@ extern u8 D_80112130[];
 extern s32 D_80121D8C;
 #endif
 
-struct ControllerPakRaceRecordSaveUiTask {
+struct ControllerPakRaceRecordSaveActor {
     char pad[0x18];
     s16 x;
     s16 y;
@@ -92,7 +92,7 @@ struct ControllerPakRaceRecordSaveUiTask {
 #ifdef NON_MATCHING
 const char D_800E0F30[] = "%6d";
 
-void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveUiTask *arg0) {
+void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor *arg0) {
     s16 *new_var;
     s16 *badgeIndex;
     s32 xOffset;
@@ -179,7 +179,7 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveUiTask
 }
 #endif
 
-void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveUiTask *arg0) {
+void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor *arg0) {
     u8 state = arg0->unk1C.state;
 
     switch (state) {
@@ -218,14 +218,14 @@ void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveUiTa
     addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveScorePanel, arg0);
 }
 
-void initControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveUiTask *arg0) {
+void initControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor *arg0) {
     arg0->x = 0x90;
     arg0->y = -0x20;
     arg0->unk1C.state = 0;
     setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSaveScorePanel);
 }
 
-void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveUiTask *arg0) {
+void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor *arg0) {
     s32 zero = 0;
     u16 alpha;
 
@@ -238,7 +238,7 @@ void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveUiTas
     }
 }
 
-void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveUiTask *arg0) {
+void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor *arg0) {
     u8 state = arg0->state.b.unk1F;
 
     switch (state) {
@@ -276,7 +276,7 @@ void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveUiT
     addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSavePromptFrame, arg0);
 }
 
-void initControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveUiTask *arg0) {
+void initControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor *arg0) {
     arg0->x = -0x44;
     arg0->y = -0x1E;
     arg0->unk1C.scale = 0;
@@ -284,7 +284,7 @@ void initControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveUiTas
     setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSavePromptFrame);
 }
 
-void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveUiTask *arg0) {
+void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveActor *arg0) {
     u8 *text;
 
     if (gControllerPakStatusCodes != 8) {
@@ -299,16 +299,16 @@ void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveUiT
     }
 }
 
-void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveUiTask *arg0) {
+void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveActor *arg0) {
     u8 state;
     u8 globalState;
 
     state = arg0->state.b.unk20;
-    if (state != (globalState = gControllerPakRaceRecordSaveScoreUiState.step)) {
+    if (state != (globalState = gControllerPakRaceRecordSaveStatusTransition.step)) {
         arg0->state.b.unk20 = globalState;
         state = globalState;
-        arg0->unk1C.scale = gControllerPakRaceRecordSaveScoreUiState.timer;
-        arg0->state.wu.slideOffset = gControllerPakRaceRecordSaveScoreUiState.targetState;
+        arg0->unk1C.scale = gControllerPakRaceRecordSaveStatusTransition.alpha;
+        arg0->state.wu.slideOffset = gControllerPakRaceRecordSaveStatusTransition.targetStatus;
     }
 
     switch (state) {
@@ -350,7 +350,7 @@ void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveU
     }
 
     arg0->state.b.frame = (arg0->state.b.frame + 1) & 0xF;
-    gControllerPakRaceRecordSaveScoreUiStateStep = state;
+    gControllerPakRaceRecordSaveStatusTransitionStep = state;
     if ((u8)arg0->state.b.unk20 == 5) {
         removeCallbackTask(arg0);
         return;
@@ -358,16 +358,16 @@ void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveU
     addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveStatusMessage, arg0);
 }
 
-void initControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveUiTask *arg0) {
+void initControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveActor *arg0) {
     arg0->x = -0x42;
     arg0->y = -0xE;
     arg0->unk1C.scale = 0x100;
-    gControllerPakRaceRecordSaveScoreUiStateTimer = 0x100;
+    gControllerPakRaceRecordSaveStatusTransitionAlpha = 0x100;
     arg0->state.b.unk20 = 0;
     setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSaveStatusMessage);
 }
 
-void drawControllerPakRaceRecordSaveChoicePrompt(ControllerPakRaceRecordSaveUiTask *arg0) {
+void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveActor *arg0) {
     u32 drawAlpha;
     int isEvenState;
     u16 alpha;
@@ -403,23 +403,23 @@ void drawControllerPakRaceRecordSaveChoicePrompt(ControllerPakRaceRecordSaveUiTa
         }
     }
     if ((state >= 5) && (arg0->state.w.slideOffset == 0)) {
-        gControllerPakRaceRecordSaveScoreUiStateTargetState = arg0->state.w.selection;
-        gControllerPakRaceRecordSaveScoreUiState.step = 3;
+        gControllerPakRaceRecordSaveStatusTransitionTargetStatus = arg0->state.w.selection;
+        gControllerPakRaceRecordSaveStatusTransition.step = 3;
         D_800EC9D0 = 0;
         if (arg0->state.w.selection == 0) {
-            gControllerPakRaceRecordSaveScoreUiState.timer = 0x100;
-            gControllerPakRaceRecordSaveScoreUiState.step = 1;
+            gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
+            gControllerPakRaceRecordSaveStatusTransition.step = 1;
             gControllerPakStatusCodes = arg0->state.w.selection;
         }
     }
 }
 
-void updateControllerPakRaceRecordSaveChoicePrompt(ControllerPakRaceRecordSaveUiTask *arg0) {
+void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveActor *arg0) {
     s32 temp_a0;
     s32 var_v1;
 
-    if (gControllerPakRaceRecordSaveScoreUiStateNextTimer != arg0->state.w.selection) {
-        arg0->state.w.selection = gControllerPakRaceRecordSaveScoreUiStateNextTimer;
+    if (gControllerPakRaceRecordSaveStatusTransitionNextStatus != arg0->state.w.selection) {
+        arg0->state.w.selection = gControllerPakRaceRecordSaveStatusTransitionNextStatus;
     }
     if ((D_800EC9D0 != 0) && (D_800EC9D0 != 3) && (D_800EC9D0 != 4)) {
         if (D_800EC9D0 < 5) {
@@ -454,21 +454,21 @@ void updateControllerPakRaceRecordSaveChoicePrompt(ControllerPakRaceRecordSaveUi
         }
         arg0->state.b.alphaTimer = (arg0->state.b.alphaTimer + 1) & 0x1F;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveChoicePrompt, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveStatusChoicePrompt, arg0);
 }
 
-void initControllerPakRaceRecordSaveChoicePrompt(ControllerPakRaceRecordSaveUiTask *arg0) {
+void initControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveActor *arg0) {
     arg0->x = -0x28;
     arg0->y = 0xC;
     arg0->unk1C.scale = 0xC;
-    setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSaveChoicePrompt);
+    setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSaveStatusChoicePrompt);
 }
 
-void drawControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveUiTask *arg0) {
+void drawControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0) {
     func_800129DC(arg0->x, arg0->y, gControllerPakRaceRecordSaveExitMessage, 1, arg0->unk1C.scale);
 }
 
-void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveUiTask *arg0) {
+void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0) {
     u8 state = arg0->state.b.unk1E;
 
     switch (state) {
@@ -500,7 +500,7 @@ void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveUiT
     addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveExitMessage, arg0);
 }
 
-void initControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveUiTask *arg0) {
+void initControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0) {
     arg0->x = -0x24;
     arg0->y = -0x38;
     arg0->unk1C.scale = 0;
