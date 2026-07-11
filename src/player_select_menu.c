@@ -4,6 +4,7 @@
 #include "asset_decompression.h"
 #include "character_select_flow.h"
 #include "input_task_scheduler.h"
+#include "title_menu.h"
 
 typedef struct {
     char pad[0x18];
@@ -26,7 +27,6 @@ extern s32 func_80072138(s16, s16);
 
 void func_80005788(void);
 void func_80005B80(void);
-void func_8001710C(void);
 
 extern u8 D_800EC9DC;
 extern u8 D_5A1ED0[];
@@ -87,7 +87,7 @@ void func_800055EC(void) {
     func_800437F0(D_245A80, D_24C8E0, 0x1F);
     func_800437F0(D_59AAA0, D_59DFE0, 0x24);
     func_80070EC0(0);
-    func_80071408(func_8001710C, 0, 0x5E);
+    func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
     D_800EC9C1 = 0;
     D_80121D88 = 0;
     D_8010ADDC = 0;

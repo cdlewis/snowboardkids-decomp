@@ -2,6 +2,7 @@
 #include "effect_task_scheduler.h"
 #include "course_select_menu.h"
 #include "input_task_scheduler.h"
+#include "title_menu.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -154,7 +155,6 @@ extern void func_80009C48(void);
 extern void func_8000B220(void);
 extern void func_8000B7B8(void);
 extern void func_8000C010(void);
-extern void func_8001710C(EffectTask *);
 extern void func_800257F0(EffectTask *);
 extern void func_80028194(EffectTask *);
 extern void func_8002C800(EffectTask *);
@@ -229,7 +229,7 @@ void func_800097E0(void) {
     func_800437F0(D_1E74E0, D_1EC0F0, 0x1C);
     nextCallback = func_80009C48;
     func_80070EC0(0);
-    func_80071408(func_8001710C, 0, 0x5E);
+    func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
 
     D_800EC9C1 = 0;
     D_800EC9C0 = 0;

@@ -2,6 +2,7 @@
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "main_menu_ui.h"
+#include "title_menu.h"
 
 typedef struct {
     char pad0[0x18];
@@ -57,7 +58,6 @@ extern u8 D_800E29C0;
 
 extern void func_800483FC(void *, void *, void *);
 extern void func_80011D74(void *, s32, s16, s16);
-extern void func_80017168(void *, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80013D0C(s32, s32, char *, s32, s32);
@@ -71,7 +71,7 @@ void func_80032654(MainMenuLogoActor *arg0) {
 }
 
 void func_80032684(MainMenuLogoActor *arg0) {
-    func_80017168(&arg0->sprite, func_80043040(D_8011217A));
+    func_80017168((DstStruct_80017168 *)&arg0->sprite, func_80043040(D_8011217A));
     arg0->sprite.width = 0x10;
     arg0->sprite.height = 0x10;
     arg0->common.x = arg0->startX;

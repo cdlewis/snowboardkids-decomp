@@ -3,6 +3,7 @@
 #include "effect_task_scheduler.h"
 #include "main_menu_effects.h"
 #include "main_menu_scene_model.h"
+#include "title_menu.h"
 
 struct MainMenuEffectActor {
     char pad0[0x10];
@@ -55,7 +56,6 @@ struct MainMenuEffectActor {
 
 extern void func_800483FC(void *, void *, void *);
 extern void func_80011D74(void *, s32, s16, s16);
-extern void func_80017168(void *, s32);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern Gfx *gRegionAllocPtr;
 extern s32 D_80124838;
@@ -713,7 +713,7 @@ void func_8003D88C(MainMenuEffectActor *arg0) {
 }
 
 void func_8003D908(MainMenuEffectActor *arg0) {
-    func_80017168(arg0->spriteState, func_80043040(D_8011217C));
+    func_80017168((DstStruct_80017168 *)arg0->spriteState, func_80043040(D_8011217C));
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;
     arg0->y = arg0->startY;
@@ -758,7 +758,7 @@ void func_8003DA98(MainMenuEffectActor *arg0) {
 }
 
 void func_8003DB1C(MainMenuEffectActor *arg0) {
-    func_80017168(arg0->spriteState, func_80043040(D_8011217C));
+    func_80017168((DstStruct_80017168 *)arg0->spriteState, func_80043040(D_8011217C));
     arg0->angle = 0;
     arg0->angleVelocity = 0x1F0;
     arg0->x = 0x14;
@@ -818,7 +818,7 @@ void func_8003DCCC(MainMenuEffectActor *arg0) {
 }
 
 void func_8003DD64(MainMenuEffectActor *arg0) {
-    func_80017168(arg0->spriteState, func_80043040(D_8011217E));
+    func_80017168((DstStruct_80017168 *)arg0->spriteState, func_80043040(D_8011217E));
     arg0->angle = 0;
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;

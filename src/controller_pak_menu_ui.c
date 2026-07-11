@@ -5,6 +5,7 @@
 #include "controller_pak_menu.h"
 #include "controller_pak_menu_ui.h"
 #include "menu_rendering.h"
+#include "title_menu.h"
 
 #define CONTROLLER_PAK_DELETE_PANEL_HANDLE (D_80112130[0x29])
 
@@ -23,7 +24,6 @@ typedef struct {
 } ControllerPakConfirmTransition;
 
 extern void func_800483FC(void *, void *, s32);
-extern void func_80017168(void *, s32);
 extern s32 D_80124868;
 extern s32 D_80124838;
 extern CharacterSelectFlowState *D_801235B8;
@@ -745,7 +745,7 @@ void func_80031BD4(s32 arg0) {
 }
 
 void func_80031C04(ControllerPakSpriteActor *arg0) {
-    func_80017168(&arg0->sprite, func_80043040(D_8011217C));
+    func_80017168((DstStruct_80017168 *)&arg0->sprite, func_80043040(D_8011217C));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x10;
     arg0->common.x = arg0->startX;
@@ -762,7 +762,7 @@ void func_80031CA0(s32 arg0) {
 }
 
 void func_80031CD0(ControllerPakSpriteActor *arg0) {
-    func_80017168(&arg0->sprite, func_80043040(D_8011217C));
+    func_80017168((DstStruct_80017168 *)&arg0->sprite, func_80043040(D_8011217C));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x20;
     arg0->common.x = arg0->startX;

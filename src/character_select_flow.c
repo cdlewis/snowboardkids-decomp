@@ -5,6 +5,7 @@
 #include "character_select_flow.h"
 #include "character_select_ui.h"
 #include "input_task_scheduler.h"
+#include "title_menu.h"
 
 typedef s16 CharacterSelectOptionList[10];
 typedef s16 CharacterSelectCourseUnlockList[11];
@@ -32,8 +33,6 @@ extern void func_80072138(s32, s32);
 extern void func_80045914(void);
 extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_8001710C(EffectTask *);
-
 extern void func_80008620(void);
 extern void func_80005540(void);
 extern u8 D_245A80[];
@@ -205,7 +204,7 @@ void func_80005F18(void) {
     func_800437F0(D_59DFE0, D_59E7F0, 0x26);
     func_800437F0(D_245A80, D_24C8E0, 0x1F);
     func_80070EC0(0);
-    func_80071408(func_8001710C, 0, 0x5E);
+    func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
 
     if (D_800EC9C2 == 1) {
         func_800437F0(D_5CCD40, D_5D4280, 0x25);
@@ -320,7 +319,7 @@ void func_800062F8(void) {
         func_800437F0(D_59DFE0, D_59E7F0, 0x26);
         func_800437F0(D_245A80, D_24C8E0, 0x1F);
         func_80070EC0(0);
-        func_80071408(func_8001710C, 0, 0x5E);
+        func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
         D_801235B8->fade = 0xFF;
     } else {
         D_801235B8->fade = 0;
