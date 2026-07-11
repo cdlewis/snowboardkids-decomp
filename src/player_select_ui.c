@@ -34,9 +34,9 @@ extern u8 D_80121D85;
 extern u8 D_80121D88;
 extern void *gMenuRenderCallbackList;
 extern PlayerSelectAssetHandles gAssetHandles;
-extern PlayerSelectCursorState gPlayerCountSelectCursorTarget;
-extern u8 gPlayerCountSelectCursorAnimState;
-extern s16 gPlayerCountSelectPortraitAlpha;
+extern PlayerSelectCursorState gRaceSplitscreenSelectCursorTarget;
+extern u8 gRaceSplitscreenSelectCursorAnimState;
+extern s16 gRaceSplitscreenSelectPortraitAlpha;
 extern u32 D_800B5F80[];
 extern Gfx gMenuRenderModeResetDl[];
 extern s32 gActiveMenuTask;
@@ -778,7 +778,7 @@ void func_8001B2D8(PlayerSelectWidgetActor *arg0) {
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = gPlayerCountSelectCursorTarget.state)) {
+    if (state != (globalState = gRaceSplitscreenSelectCursorTarget.state)) {
         arg0->transition.bytes.state = globalState;
         if (1) {}
         if (1) {}
@@ -786,7 +786,7 @@ void func_8001B2D8(PlayerSelectWidgetActor *arg0) {
         if (1) {}
         if (1) {}
         state = globalState;
-        arg0->sprite.spriteIndex = gPlayerCountSelectCursorTarget.nextState;
+        arg0->sprite.spriteIndex = gRaceSplitscreenSelectCursorTarget.nextState;
     }
 
     switch (state) {
@@ -823,7 +823,7 @@ void func_8001B2D8(PlayerSelectWidgetActor *arg0) {
         break;
     }
 
-    gPlayerCountSelectCursorAnimState = state;
+    gRaceSplitscreenSelectCursorAnimState = state;
     if (arg0->transition.bytes.state == 4) {
         removeCallbackTask(arg0);
         return;
@@ -879,7 +879,7 @@ void func_8001B520(PlayerSelectWidgetActor *arg0) {
     case 3:
         break;
     }
-    gPlayerCountSelectPortraitAlpha = arg0->sprite.spriteIndex;
+    gRaceSplitscreenSelectPortraitAlpha = arg0->sprite.spriteIndex;
     if (arg0->transition.bytes.state == 3) {
         removeCallbackTask(arg0);
         return;
