@@ -6,7 +6,7 @@
 void addMainMenuSceneModelDrawCallback(s32 modelIndex);
 void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s32 paletteId);
 void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 textureId, s32 paletteId, s32 unusedArg);
-void addMainMenuSceneModelDrawCallbackViewport0(s32 modelIndex);
-void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 renderFrame);
+void addMainMenuSceneModelDrawCallbackForViewport0(s32 modelIndex);
+void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 viewportIndex);
 
 #endif

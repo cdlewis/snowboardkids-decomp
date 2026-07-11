@@ -41,7 +41,7 @@ typedef struct MainMenuSceneModel {
     s16 modelIndex;
     s16 textureId;
     s16 paletteId;
-    s16 renderFrame;
+    s16 viewportIndex;
     char padA[0x2];
     s16 *animationStart;
     s16 *animationCursor;

@@ -7,7 +7,7 @@ extern void addRenderCallback(void *, void (*)(MainMenuSceneModel *), MainMenuSc
 extern s16 gMainMenuSceneModelHandles[];
 extern s32 D_801248B0;
 extern void drawMainMenuSceneModel(MainMenuSceneModel *);
-extern void drawMainMenuSceneModelWithTexture(MainMenuSceneModel *);
+extern void drawTexturedMainMenuSceneModel(MainMenuSceneModel *);
 
 // initMainMenuSceneModelRenderer best match: 25.000% at nonmatchings/initMainMenuSceneModelRenderer-4839787584499344943/base_1.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model_renderer/initMainMenuSceneModelRenderer.s")
@@ -27,11 +27,11 @@ typedef struct MainMenuModelAssetHandles {
     s16 animationAssetSlots[6];
 } MainMenuModelAssetHandles;
 
-extern Mtx *func_8004885C(MainMenuModelDisplayObject *);
+extern Mtx *allocFixedTransformMatrix(MainMenuModelDisplayObject *);
 extern Gfx *gRegionAllocPtr;
 extern u8 gCurrentViewportIndex;
 extern MainMenuModelAssetHandles D_80112130;
-extern Gfx *D_800D3CB0[];
+extern Gfx *gMainMenuSceneModelPartDisplayLists[];
 
 void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
     MainMenuSceneModel *model;
@@ -42,15 +42,15 @@ void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
     s32 end;
     s32 stride;
 
- do { if ((u16)arg0->renderFrame == gCurrentViewportIndex) { model = arg0; gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = D_800D3CB0; do { matrix = func_8004885C(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
+ do { if ((u16)arg0->viewportIndex == gCurrentViewportIndex) { model = arg0; gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = gMainMenuSceneModelPartDisplayLists; do { matrix = allocFixedTransformMatrix(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
 }
 #endif
 
-// drawMainMenuSceneModelWithTexture best match: 99.595% at nonmatchings/drawMainMenuSceneModelWithTexture-4139837607000619032/base.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model_renderer/drawMainMenuSceneModelWithTexture.s")
+// drawTexturedMainMenuSceneModel best match: 99.595% at nonmatchings/drawTexturedMainMenuSceneModel-4139837607000619032/base.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model_renderer/drawTexturedMainMenuSceneModel.s")
 
 #ifdef NON_MATCHING
-void drawMainMenuSceneModelWithTexture(MainMenuSceneModel *arg0) {
+void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
     MainMenuSceneModel *model;
     MainMenuModelDisplayObject *displayObject;
     Gfx **displayLists;
@@ -59,7 +59,7 @@ void drawMainMenuSceneModelWithTexture(MainMenuSceneModel *arg0) {
     s32 end;
     s32 stride;
 
-    do { if ((u16)arg0->renderFrame == gCurrentViewportIndex) { matrix = func_8004885C(arg0->displayObjects); model = arg0; if (matrix != NULL) { func_8007C130(matrix, model->textureId, model->paletteId); } gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = D_800D3CB0; do { matrix = func_8004885C(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
+    do { if ((u16)arg0->viewportIndex == gCurrentViewportIndex) { matrix = allocFixedTransformMatrix(arg0->displayObjects); model = arg0; if (matrix != NULL) { func_8007C130(matrix, model->textureId, model->paletteId); } gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = gMainMenuSceneModelPartDisplayLists; do { matrix = allocFixedTransformMatrix(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
 }
 #endif
 
@@ -68,7 +68,7 @@ void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
-    model->renderFrame = 0;
+    model->viewportIndex = 0;
     addRenderCallback(&D_801248B0, drawMainMenuSceneModel, model);
 }
 
@@ -77,10 +77,10 @@ void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s3
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
-    model->renderFrame = 0;
+    model->viewportIndex = 0;
     model->textureId = (s16)textureId;
     model->paletteId = (s16)paletteId;
-    addRenderCallback(&D_801248B0, drawMainMenuSceneModelWithTexture, model);
+    addRenderCallback(&D_801248B0, drawTexturedMainMenuSceneModel, model);
 }
 
 void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 textureId, s32 paletteId, s32 unusedArg) {
@@ -88,27 +88,27 @@ void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
-    model->renderFrame = 0;
+    model->viewportIndex = 0;
     model->textureId = (s16)textureId;
     model->paletteId = (s16)paletteId;
-    addRenderCallback(&D_801248B0, drawMainMenuSceneModelWithTexture, model);
+    addRenderCallback(&D_801248B0, drawTexturedMainMenuSceneModel, model);
 }
 
-void addMainMenuSceneModelDrawCallbackViewport0(s32 modelIndex) {
+void addMainMenuSceneModelDrawCallbackForViewport0(s32 modelIndex) {
     MainMenuSceneModel *model;
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
-    model->renderFrame = 0;
+    model->viewportIndex = 0;
     addRenderCallback(&D_801248B0, drawMainMenuSceneModel, model);
 }
 
-void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 renderFrame) {
+void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 viewportIndex) {
     MainMenuSceneModel *model;
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
-    model->renderFrame = (s16)renderFrame;
+    model->viewportIndex = (s16)viewportIndex;
     addRenderCallback(&D_801248B0, drawMainMenuSceneModel, model);
 }
 
@@ -133,7 +133,7 @@ typedef struct MainMenuInitPartPair {
     s32 word24;
 } MainMenuInitPartPair;
 
-extern s16 *D_800D3EE4[];
+extern s16 *gMainMenuSceneModelPartInitDataByModel[];
 
 void initMainMenuSceneModelParts(MainMenuSceneModel *model) {
     s16 *cursor;
@@ -157,7 +157,7 @@ void initMainMenuSceneModelParts(MainMenuSceneModel *model) {
     model->parts[12].displayObjectIndex = 3;
     model->parts[13].displayObjectIndex = 5;
 
-    cursor = D_800D3EE4[model->modelIndex];
+    cursor = gMainMenuSceneModelPartInitDataByModel[model->modelIndex];
     end = 14; i = 0; writePart = (MainMenuInitPartPair *)model; loop: writePart->half22 = 0;
     zero = writePart->half22;
     i += 2;

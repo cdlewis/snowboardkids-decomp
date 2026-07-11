@@ -858,7 +858,7 @@ extern u32 D_200CE48[];
 extern u32 D_200CFB0[];
 extern u32 D_200D3A8[];
 extern void addRenderCallback(void *, void *, s32);
-extern RaceUiGfxCommandDest *func_8004885C(RaceUiTrailCopyBlock *);
+extern RaceUiGfxCommandDest *allocFixedTransformMatrix(RaceUiTrailCopyBlock *);
 extern void func_80048C90(RaceUiGfxCommandDest *, s32 *);
 extern void osWritebackDCache(void *, s32);
 extern void func_80045A78(s16, s16, s32, s32);
@@ -3235,7 +3235,7 @@ void func_8005E6D0(RaceUiSparkleActor *arg0) {
         sp6C.transform.translation.x = arg1->pos.x;
         sp6C.transform.translation.y = arg1->pos.y;
         sp6C.transform.translation.z = arg1->pos.z;
-        arg1->matrix = func_8004885C(&sp6C);
+        arg1->matrix = allocFixedTransformMatrix(&sp6C);
     }
 
     if (arg1->matrix != NULL) {
@@ -3374,8 +3374,8 @@ void func_8005F2DC(RaceUiSnowboardTrailActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        arg0->matrix0 = func_8004885C(&arg0->copyBlock);
-        arg0->matrix1 = func_8004885C(&arg0->transformedCopyBlock);
+        arg0->matrix0 = allocFixedTransformMatrix(&arg0->copyBlock);
+        arg0->matrix1 = allocFixedTransformMatrix(&arg0->transformedCopyBlock);
     }
 
     if (arg0->matrix0 != NULL) {
@@ -3458,7 +3458,7 @@ void func_8005F6A4(RaceUiRankTrailActor *arg0) {
         arg0->copyBlock.words[5] = player->pos28.x;
         arg0->copyBlock.words[6] = player->pos28.y + 0x100000;
         arg0->copyBlock.words[7] = player->pos28.z;
-        arg0->matrix = func_8004885C(&arg0->copyBlock);
+        arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
     }
 
     if (arg0->matrix != NULL) {
@@ -3535,7 +3535,7 @@ void func_8005FBA8(RaceUiAnimatedTextActor *arg0) {
         sp64.transform.translation.x = arg0->pos.x;
         sp64.transform.translation.y = arg0->pos.y;
         sp64.transform.translation.z = arg0->pos.z;
-        arg0->matrix = func_8004885C(&sp64);
+        arg0->matrix = allocFixedTransformMatrix(&sp64);
     }
 
     if (arg0->matrix != NULL) {
@@ -3564,7 +3564,7 @@ void func_8005FED0(RaceUiTextParticleActor *arg0) {
         sp64.transform.translation.x = arg0->pos.x;
         sp64.transform.translation.y = arg0->pos.y;
         sp64.transform.translation.z = arg0->pos.z;
-        arg0->matrix = func_8004885C(&sp64);
+        arg0->matrix = allocFixedTransformMatrix(&sp64);
     }
 
     if (arg0->matrix != NULL) {
@@ -3654,7 +3654,7 @@ void func_80060544(RaceUiPodiumTrailActor *arg0) {
         arg0->copyBlock.words[5] = arg0->pos.x;
         arg0->copyBlock.words[6] = arg0->pos.y + 0x38000;
         arg0->copyBlock.words[7] = arg0->pos.z;
-        arg0->matrix = func_8004885C(&arg0->copyBlock);
+        arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
     }
 
     if (arg0->matrix != NULL) {
@@ -3893,9 +3893,9 @@ void func_80061088(RaceUiTripleParticleActor *arg0) {
             sp8C.words[6] = (sp8C.words[6] - sine) + 0x80000;
             sp6C.words[6] += sine + 0x80000;
 
-            arg0->matrix0 = func_8004885C(&spAC);
-            arg0->matrix1 = func_8004885C(&sp8C);
-            arg0->matrix2 = func_8004885C(&sp6C);
+            arg0->matrix0 = allocFixedTransformMatrix(&spAC);
+            arg0->matrix1 = allocFixedTransformMatrix(&sp8C);
+            arg0->matrix2 = allocFixedTransformMatrix(&sp6C);
         }
 
         if ((arg0->matrix0 != NULL) && (arg0->matrix1 != NULL) && (arg0->matrix2 != NULL)) {
@@ -3933,7 +3933,7 @@ void func_80061484(RaceUiRankTrailActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        arg0->matrix = func_8004885C(&arg0->copyBlock);
+        arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
     }
 
     if (arg0->matrix != NULL) {
@@ -3998,7 +3998,7 @@ void func_800617EC(RaceUiRisingTrailActor *arg0) {
             sp80.words[6] = arg0->pos.y + ((sine + 0x1000) << 5) + 0x10000;
             sp80.words[7] = arg0->pos.z;
             scaleFixedMatrix3sByQuarter(&sp80);
-            arg0->matrix = func_8004885C(&sp80);
+            arg0->matrix = allocFixedTransformMatrix(&sp80);
         }
 
         if (arg0->matrix != NULL) {
@@ -4070,7 +4070,7 @@ void func_80061B70(RaceUiSingleTrailActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        arg0->matrix = func_8004885C(&arg0->copyBlock);
+        arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
     }
 
     if (arg0->matrix != NULL) {
@@ -4119,7 +4119,7 @@ void func_80061DE8(RaceUiFadingTrailActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        arg0->matrix = func_8004885C(&arg0->copyBlock);
+        arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
     }
 
     if (arg0->matrix != NULL) {
@@ -4219,7 +4219,7 @@ void func_800622B0(RaceUiTransitionRenderActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        arg0->matrix = func_8004885C(&arg0->copyBlock);
+        arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
     }
 
     if (arg0->matrix != NULL) {
@@ -4279,7 +4279,7 @@ void func_800625D8(RaceUiOrbitingSpriteActor *arg0) {
         sp64.transform.translation.x = arg0->pos.x;
         sp64.transform.translation.y = arg0->pos.y;
         sp64.transform.translation.z = arg0->pos.z;
-        arg0->matrix = func_8004885C(&sp64);
+        arg0->matrix = allocFixedTransformMatrix(&sp64);
     }
 
  do { if (arg0->matrix != NULL) { temp_v0 = gRegionAllocPtr++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) D_800D6270; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x0703F800; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->matrix; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = D_80156614; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400103F; temp_v0_17->words.w1 = (u32) D_800D6230; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; } } while (0);
@@ -4349,7 +4349,7 @@ void func_80062AF0(RaceUiScaledParticleActor *arg0) {
             ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.x;
             ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.y;
             ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.z;
-            arg0->matrix = func_8004885C((RaceUiTrailCopyBlock *)scratch);
+            arg0->matrix = allocFixedTransformMatrix((RaceUiTrailCopyBlock *)scratch);
         }
 
         if (arg0->matrix != NULL) {
@@ -4430,14 +4430,14 @@ void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
             ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.x;
             ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.y;
             ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.z;
-            arg0->matrix0 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
+            arg0->matrix0 = allocFixedTransformMatrix((RaceUiTrailCopyBlock *)scratch);
 
             transformVec3iByFixedMatrix(scratch, &D_800D6324, &transformedOffset);
             ((RaceUiTrailCopyBlock *)scratch)->words[5] += transformedOffset.x;
             ((RaceUiTrailCopyBlock *)scratch)->words[6] += transformedOffset.y;
             ((RaceUiTrailCopyBlock *)scratch)->words[7] += transformedOffset.z;
             makeFixedRotationZY(scratch, arg0->rotY, arg0->rotX);
-            arg0->matrix1 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
+            arg0->matrix1 = allocFixedTransformMatrix((RaceUiTrailCopyBlock *)scratch);
         }
 
         if (arg0->matrix1 != NULL) {
@@ -4486,13 +4486,13 @@ void func_80063220(RaceUiSpinningParticleActor *arg0) {
         ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.x;
         ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.y;
         ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.z;
-        arg0->matrix0 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
+        arg0->matrix0 = allocFixedTransformMatrix((RaceUiTrailCopyBlock *)scratch);
 
         ((RaceUiTrailCopyBlock *)scratch)->words[6] += 0x01000000;
         temp.half.lo = fixedSine(arg0->rotX) >> 5;
         temp2 = fixedSine(arg0->rotX2) >> 5;
         makeFixedRotationYZX(scratch, temp.half.lo, arg0->rotZ, temp2);
-        arg0->matrix1 = func_8004885C((RaceUiTrailCopyBlock *)scratch);
+        arg0->matrix1 = allocFixedTransformMatrix((RaceUiTrailCopyBlock *)scratch);
     }
 
     if (arg0->matrix1 != NULL) {
@@ -4682,7 +4682,7 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
             spA0.transform.translation.x = ((actor->particles[i].unk0 - maskedNegX) & mask) + negX + 0xFF800000;
             spA0.transform.translation.y = ((actor->particles[i].unk4 - maskedNegY) & mask) + negY + 0xFF800000;
             spA0.transform.translation.z = ((actor->particles[i].unk8 - maskedNegZ) & mask) + negZ + 0xFF800000;
-            matrix = func_8004885C(&spA0);
+            matrix = allocFixedTransformMatrix(&spA0);
             if (matrix != NULL) {
                 RACE_UI_EFFECT_EMIT_GFX(0x01020040, (u32)matrix);
                 RACE_UI_EFFECT_EMIT_GFX(0x01000040, D_80156614);
@@ -4755,7 +4755,7 @@ void func_800640D8(RaceUiRankParticleActor *arg0) {
     if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            arg0->matrix = func_8004885C(&arg0->copyBlock);
+            arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
         }
 
         if (arg0->matrix != NULL) {
@@ -4860,7 +4860,7 @@ void func_80064470(RaceUiProjectileActor *arg0) {
         sp7C.transform.translation.x = arg0->pos.x;
         sp7C.transform.translation.y = arg0->pos.y;
         sp7C.transform.translation.z = arg0->pos.z;
-        arg0->matrix = func_8004885C(&sp7C);
+        arg0->matrix = allocFixedTransformMatrix(&sp7C);
     }
 
     if (arg0->matrix != NULL) {
@@ -5350,7 +5350,7 @@ void func_80065808(RaceUiOverlayActor *arg0) {
             sp9C.words[5] = arg0->x;
             sp9C.words[6] = arg0->y;
             sp9C.words[7] = arg0->z;
-            arg0->matrix = func_8004885C(&sp9C);
+            arg0->matrix = allocFixedTransformMatrix(&sp9C);
         }
         do {
  do { if (arg0->matrix != NULL) { temp_v0 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) D_800D6270; temp_v0_2 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_2->words.w0 = 0xFD480017; temp_v0_2->words.w1 = (u32) arg0->palette3A; temp_v0_3 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_3->words.w0 = 0xF5480600; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_5->words.w0 = 0xF4000000; temp_v0_5->words.w1 = 0x070600A0; temp_v0_6 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_7->words.w0 = 0xF5400600; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x000C00A0; temp_v0_9 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->image3A; temp_v0_10 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->matrix; temp_v0_16 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = D_80156614; temp_v0_17 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_17->words.w0 = 0x0400207F; temp_v0_17->words.w1 = (u32) D_800D69A8; temp_v0_18 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; temp_v0_19 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_19->words.w0 = 0xFD480017; temp_v0_19->words.w1 = (u32) arg0->palette3B; temp_v0_20 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_20->words.w0 = 0xF5480600; temp_v0_20->words.w1 = 0x07080200; temp_v0_21 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_21->words.w1 = 0; temp_v0_21->words.w0 = 0xE6000000; temp_v0_22 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_22->words.w0 = 0xF4000000; temp_v0_22->words.w1 = 0x070600A0; temp_v0_23 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_23->words.w1 = 0; temp_v0_23->words.w0 = 0xE7000000; temp_v0_24 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_24->words.w0 = 0xF5400600; temp_v0_24->words.w1 = 0x00080200; temp_v0_25 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_25->words.w0 = 0xF2000000; temp_v0_25->words.w1 = 0x000C00A0; temp_v0_26 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_26->words.w0 = 0xFD100000; temp_v0_26->words.w1 = (u32) arg0->image3B; temp_v0_27 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_27->words.w1 = 0; temp_v0_27->words.w0 = 0xE8000000; temp_v0_28 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_28->words.w0 = 0xF5000100; temp_v0_28->words.w1 = 0x07000000; temp_v0_29 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_29->words.w1 = 0; temp_v0_29->words.w0 = 0xE6000000; temp_v0_30 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_30->words.w0 = 0xF0000000; temp_v0_30->words.w1 = 0x0703C000; temp_v0_31 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_31->words.w1 = 0; temp_v0_31->words.w0 = 0xE7000000; temp_v0_32 = (*((RaceUiDisplayCommand **) (&gRegionAllocPtr)))++; temp_v0_32->words.w0 = 0xB10E0C0A; temp_v0_32->words.w1 = 0x000E0A08; } } while (0);

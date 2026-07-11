@@ -107,7 +107,8 @@ typedef struct {
 
 extern void addRenderCallback(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *);
-extern s32 func_8004885C(FixedTransform *);
+extern s32 allocFixedTransformMatrix(FixedTransform *);
+extern void drawCourseSelectCourseCursors(CourseSelectWidgetActor *);
 extern s8 D_800ECA2F[][0x78F8];
 extern s8 D_800EC9C0;
 extern u8 D_800EC9C2;
@@ -201,7 +202,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             sp2E = var_v1;
             sp2F = var_a3;
             composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
-            temp_v0_4 = func_8004885C(&sp30);
+            temp_v0_4 = allocFixedTransformMatrix(&sp30);
             arg0->matrix = temp_v0_4;
             if (temp_v0_4 != 0) {
                 func_8007C130((void *)(temp_v0_4 ^ 0), (s16) sp2F, (s16) sp2E);
@@ -478,7 +479,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             sp2E = var_v1;
             sp2F = var_a3;
             composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
-            temp_v0_4 = func_8004885C(&sp30);
+            temp_v0_4 = allocFixedTransformMatrix(&sp30);
             arg0->matrix = temp_v0_4;
             if (temp_v0_4 != 0) {
                 func_8007C130((void *)temp_v0_4, (s16) sp2F, (s16) sp2E);

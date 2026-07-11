@@ -1082,10 +1082,10 @@ void updateMainMenu(void) {
         addMainMenuSceneModelDrawCallback(3);
         addMainMenuSceneModelDrawCallback(4);
     } else {
-        addMainMenuSceneModelDrawCallbackViewport0(0);
+        addMainMenuSceneModelDrawCallbackForViewport0(0);
         addMainMenuSceneModelDrawCallback(1);
         addMainMenuSceneModelDrawCallback(2);
-        addMainMenuSceneModelDrawCallbackViewport0(3);
+        addMainMenuSceneModelDrawCallbackForViewport0(3);
         addMainMenuSceneModelDrawCallback(4);
     }
     updateCallbackTasks();

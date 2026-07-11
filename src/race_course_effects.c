@@ -241,7 +241,7 @@ extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void osWritebackDCache(void *, s32);
 extern void *func_80048594(s32);
 extern void func_800486BC(void *, void *);
-extern void *func_8004885C(CourseEffectMatrixSource *);
+extern void *allocFixedTransformMatrix(CourseEffectMatrixSource *);
 extern void func_80048C90(CourseRenderCommand *, Vec3i *);
 extern s32 func_80048E60(Vec3i *);
 extern void func_80045990(s32, s32, void *, void *);
@@ -494,7 +494,7 @@ void func_80069E50(RaceCourseBackdropEffect *arg0) {
     sp100.basePos.y = -camera->transformOffset.y;
     sp100.basePos.z = -camera->transformOffset.z;
 
-    temp_s3->matrix = func_8004885C(&sp100);
+    temp_s3->matrix = allocFixedTransformMatrix(&sp100);
     if (temp_s3->matrix != NULL) {
         switch ((u16)D_80121B50) {
             case 0:
@@ -789,7 +789,7 @@ void func_8006B228(Struct6B760 *arg0) {
             }
             transform.basePos.z = arg0->pos.z;
             scaleFixedMatrix3sByQuarter(&transform);
-            arg0->displayList = func_8004885C(&transform);
+            arg0->displayList = allocFixedTransformMatrix(&transform);
         }
 
         if (((&transform) && (&transform)) && (&transform)) {
@@ -962,7 +962,7 @@ void func_8006B7E0(RaceMovingEffect *arg0) {
         transform.basePos.x = arg0->pos.x;
         transform.basePos.y = arg0->pos.y;
         transform.basePos.z = arg0->pos.z;
-        arg0->matrix = func_8004885C(&transform);
+        arg0->matrix = allocFixedTransformMatrix(&transform);
     }
 
     if (arg0->matrix != NULL) {
@@ -1058,7 +1058,7 @@ void func_8006BC68(RaceMovingEffect *arg0) {
         transform.basePos.x = arg0->pos.x;
         transform.basePos.y = arg0->pos.y;
         transform.basePos.z = arg0->pos.z;
-        arg0->matrix = func_8004885C(&transform);
+        arg0->matrix = allocFixedTransformMatrix(&transform);
     }
 
     if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
@@ -1187,7 +1187,7 @@ void func_8006C1B4(Struct6C51C *arg0) {
 
     matrix = arg0->sourceMatrix;
     if (matrix == NULL) {
-        arg0->sourceMatrix = func_8004885C(&arg0->source);
+        arg0->sourceMatrix = allocFixedTransformMatrix(&arg0->source);
         matrix = arg0->sourceMatrix;
     }
 
@@ -1211,7 +1211,7 @@ void func_8006C1B4(Struct6C51C *arg0) {
         scratch.basePos.x = arg0->pos1.x;
         scratch.basePos.y = arg0->pos1.y;
         scratch.basePos.z = arg0->pos1.z;
-        arg0->pos1Matrix = func_8004885C(&scratch);
+        arg0->pos1Matrix = allocFixedTransformMatrix(&scratch);
         matrix = arg0->pos1Matrix;
     }
 
@@ -1226,7 +1226,7 @@ void func_8006C1B4(Struct6C51C *arg0) {
         scratch.basePos.x = arg0->pos2.x;
         scratch.basePos.y = arg0->pos2.y;
         scratch.basePos.z = arg0->pos2.z;
-        arg0->pos2Matrix = func_8004885C(&scratch);
+        arg0->pos2Matrix = allocFixedTransformMatrix(&scratch);
         matrix = arg0->pos2Matrix;
     }
 
@@ -1382,7 +1382,7 @@ void func_8006CCC0(RaceCourseTriggerEffect *arg0) {
         transform.basePos.x = D_800DA840[arg0->entryIndex].pos.x;
         transform.basePos.y = D_800DA840[arg0->entryIndex].pos.y;
         transform.basePos.z = D_800DA840[arg0->entryIndex].pos.z;
-        arg0->matrix = func_8004885C(&transform);
+        arg0->matrix = allocFixedTransformMatrix(&transform);
     }
 
     if (arg0->matrix != NULL) {

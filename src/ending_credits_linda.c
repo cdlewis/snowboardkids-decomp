@@ -37,7 +37,7 @@ struct EndingCreditsTumblingSnowboard {
 };
 
 extern void addRenderCallback(void *, void *, void *);
-extern s32 func_8004885C(void *);
+extern s32 allocFixedTransformMatrix(void *);
 extern void makeFixedRotationX(void *, s16);
 extern void makeFixedRotationZ(void *, s16);
 extern void multiplyFixedMatrix3s(void *, void *, void *);
@@ -773,7 +773,7 @@ void updateEndingLindaBlinkThenSlideLeft(EndingCreditsLinda *arg0) {
     if (arg0->animTimer == 0) {
         addMainMenuSceneModelDrawCallback(3);
     } else {
-        addMainMenuSceneModelDrawCallbackViewport0(3);
+        addMainMenuSceneModelDrawCallbackForViewport0(3);
     }
     temp = (arg0->animTimer & 0xFFFF) + 1;
     arg0->animTimer = temp;
@@ -907,7 +907,7 @@ void spawnEndingCreditsTumblingSnowboard(s32 arg0, s32 arg1, s32 arg2, u16 arg3,
 }
 
 void drawEndingCreditsTumblingSnowboard(EndingCreditsTumblingSnowboard *arg0) {
-    s32 temp = func_8004885C(&arg0->displayObject);
+    s32 temp = allocFixedTransformMatrix(&arg0->displayObject);
     if (temp != 0) {
         func_8007C130((void *)temp, arg0->textureId, arg0->paletteId);
     }
