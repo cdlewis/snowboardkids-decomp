@@ -259,12 +259,13 @@ void func_80051854(MenuPanelActor *arg0) {
     func_80071824(arg0, func_800515F0);
 }
 
-// func_80051878 best match: 89.057%
+// func_80051878 best match: 90.948%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80051878.s")
 
 #ifdef NON_MATCHING
 void func_80051878(MenuPanelActor *arg0) {
     s32 i;
+    u8 *new_var;
 
     func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), func_80043040(D_80112130.textureHandle),
                   2, 0x20, 0x20, 0, 0);
@@ -322,7 +323,7 @@ void func_80051878(MenuPanelActor *arg0) {
                 break;
 
             case 0xFFFD:
-                lineY = (lineY + 0x10) & 0xFFFF;
+                lineY = lineY + 0x10;
                 lineX = 0;
                 break;
 
@@ -370,7 +371,7 @@ void func_80051878(MenuPanelActor *arg0) {
 
     if (D_80121B5B < 6) {
         func_80045A78(-0x10, (s16)((-0x30) - arg0->y), func_80043040(D_80112130.fontHandle),
-                      D_800D54E7[D_80121B5B]);
+                      (new_var = D_800D54E7)[D_80121B5B]);
         return;
     }
 
