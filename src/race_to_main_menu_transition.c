@@ -75,7 +75,7 @@ extern Vec3i D_8010B1B0;
 extern s16 D_80112130[];
 extern MainMenuRaceSetupObject D_801121E0;
 extern MainMenuRaceSetupObject *D_800EC9C4;
-extern RaceToMainMenuTransitionState *D_801235B8;
+extern RaceToMainMenuTransitionState *gCurrentInputTask;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
@@ -92,7 +92,7 @@ void func_8000D340(void) {
     D_801121E0.update = func_8003DFB0;
     D_801121E0.depth = 0x5D24000;
     D_801121E0.yaw = 0xFC0;
-    func_800704F0();
+    resetAllViewports();
     func_80070860(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, D_800E0A70, 0x14, 0xAF0);
     gFramebufferSwapDelay = 0;
     D_8010B1B0.x = 0;
@@ -122,20 +122,20 @@ void func_8000D340(void) {
     createEffectTask(func_8003D908, 0, 0x64);
     createEffectTask(func_8003DD64, 0, 0x64);
     createEffectTask(func_8003DB1C, 0, 0x64);
-    D_801235B8->fade = 0xFF;
-    state = D_801235B8;
+    gCurrentInputTask->fade = 0xFF;
+    state = gCurrentInputTask;
     gMenuFadeAlpha = state->fade;
-    D_801235B8->timer = 5;
+    gCurrentInputTask->timer = 5;
     setCurrentInputTaskCallback(func_8000D590, 0);
 }
 #endif
 
 void func_8000D590(void) {
-    if (D_801235B8->timer != 0) {
-        D_801235B8->timer--;
+    if (gCurrentInputTask->timer != 0) {
+        gCurrentInputTask->timer--;
     } else {
-        if (D_801235B8->fade != 0) {
-            D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0x10, 0);
+        if (gCurrentInputTask->fade != 0) {
+            gCurrentInputTask->fade = stepMenuFadeAlpha(gCurrentInputTask->fade, 0x10, 0);
         } else {
             setCurrentInputTaskCallback(func_8000D690, 0);
             createEffectTask((EffectTaskCallback) func_8003BBBC, 0, 0x64);
@@ -152,9 +152,9 @@ void func_8000D590(void) {
 
 void func_8000D690(void) {
     if (D_8010B1A2 == 0x43) {
-        D_801235B8->timer++;
-        if (D_801235B8->timer == 0x12C) {
-            D_801235B8->timer = 0;
+        gCurrentInputTask->timer++;
+        if (gCurrentInputTask->timer == 0x12C) {
+            gCurrentInputTask->timer = 0;
             setCurrentInputTaskCallback(func_8000D724, 0);
         }
     }
@@ -164,9 +164,9 @@ void func_8000D690(void) {
 }
 
 void func_8000D724(void) {
-    if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0x10, 1);
-        if (D_801235B8->fade == 0xFF) {
+    if (gCurrentInputTask->fade != 0xFF) {
+        gCurrentInputTask->fade = stepMenuFadeAlpha(gCurrentInputTask->fade, 0x10, 1);
+        if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateEffectTasks();

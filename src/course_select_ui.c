@@ -147,7 +147,7 @@ extern CourseSelectRacePlayer D_80121D80[];
 extern u8 D_80121D86[][sizeof(CourseSelectRacePlayer)];
 extern u8 D_80121D88;
 extern s32 D_801235B4;
-extern CourseSelectState *D_801235B8;
+extern CourseSelectState *gCurrentInputTask;
 extern s32 D_80124868;
 extern s32 D_80124898;
 extern u8 D_80156608;
@@ -280,7 +280,7 @@ void func_80023A68(void *arg0) {
                     }
                     actor->state[i] = 2;
                     state = 2;
-                } else if (D_801235B8->screenState == 9) {
+                } else if (gCurrentInputTask->screenState == 9) {
                     actor->state[i] = 8;
                     state = 8;
                 }
@@ -335,7 +335,7 @@ void func_80023A68(void *arg0) {
                 if (D_80121D80[i].pad6[2] == 3) {
                     actor->state[i] = 5;
                     state = 5;
-                } else if (D_801235B8->screenState == 9) {
+                } else if (gCurrentInputTask->screenState == 9) {
                     actor->state[i] = 8;
                     state = 8;
                 }
@@ -560,7 +560,7 @@ void func_80024380(void *arg0) {
                     }
                     actor->state[i] = 2;
                     state = 2;
-                } else if (D_801235B8->screenState == 9) {
+                } else if (gCurrentInputTask->screenState == 9) {
                     actor->state[i] = 8;
                     state = 8;
                 }
@@ -618,7 +618,7 @@ void func_80024380(void *arg0) {
                 if (((u8 *)&D_80121D80[i])[8] == 3) {
                     actor->state[i] = 5;
                     state = 5;
-                } else if (D_801235B8->screenState == 9) {
+                } else if (gCurrentInputTask->screenState == 9) {
                     actor->state[i] = 8;
                     state = 8;
                 }
@@ -627,7 +627,7 @@ void func_80024380(void *arg0) {
                 actor->vecs[i].x += 0x200000;
                 if (actor->vecs[i].x == 0xC00000) {
                     actor->state[i] = 9;
-                    D_801235B8->screenState = 0xB;
+                    gCurrentInputTask->screenState = 0xB;
                 }
                 state = actor->state[i];
                 break;
@@ -982,7 +982,7 @@ void func_80025BE4(CourseSelectWidgetActor *arg0) {
                     actor->coordinates[i + 8] = 0x100;
                     statePtr->unk34 = 0;
                 }
-                if (D_801235B8->screenState == 9) {
+                if (gCurrentInputTask->screenState == 9) {
                     statePtr->unk30 = 4;
                 }
                 state = statePtr->unk30;
@@ -1071,10 +1071,10 @@ void func_800260E8(CourseSelectWidgetActor *arg0) {
     s32 forceState;
 
     forceState = 3;
-    screenState = D_801235B8->screenState;
+    screenState = gCurrentInputTask->screenState;
     if (screenState == 1) {
         arg0->pad18[4] = 2;
-        screenState = D_801235B8->screenState;
+        screenState = gCurrentInputTask->screenState;
     }
     if ((forceState == screenState) && (arg0->pad18[4] < 5)) {
         arg0->pad18[4] = 5;
@@ -1103,16 +1103,16 @@ void func_800260E8(CourseSelectWidgetActor *arg0) {
     case 2:
         arg0->x -= 0x20;
         if (arg0->x < -0x10D) {
-            if (D_801235B8->screenState != 0) {
+            if (gCurrentInputTask->screenState != 0) {
                 arg0->pad18[4] = 4;
-                D_801235B8->screenState = 2;
+                gCurrentInputTask->screenState = 2;
             } else {
                 arg0->pad18[4] = 3;
             }
         }
         break;
     case 4:
-        if (D_801235B8->screenState == 9) {
+        if (gCurrentInputTask->screenState == 9) {
             arg0->pad18[4] = 3;
         }
         break;
@@ -1124,11 +1124,11 @@ void func_800260E8(CourseSelectWidgetActor *arg0) {
         }
         break;
     case 6:
-        D_801235B8->screenState = 4;
+        gCurrentInputTask->screenState = 4;
         arg0->pad18[4] = 7;
         break;
     case 7:
-        D_801235B8->screenState = 5;
+        gCurrentInputTask->screenState = 5;
         arg0->pad18[4] = 1;
         break;
     }
@@ -1320,7 +1320,7 @@ void func_80026A54(CourseSelectWidgetActor *arg0) {
         if (D_80121D88 == 3) {
             arg0->transitionState = 2;
         }
-        if (D_801235B8->screenState == 9) {
+        if (gCurrentInputTask->screenState == 9) {
             arg0->transitionState = 4;
         }
         state = arg0->transitionState;
@@ -1526,10 +1526,10 @@ void func_800271CC(CourseSelectWidgetActor *arg0) {
     s32 temp_a0;
 
     temp_a0 = 3;
-    screenState = D_801235B8->screenState;
+    screenState = gCurrentInputTask->screenState;
     if (screenState == 1) {
         arg0->pad18_2[6] = 2;
-        screenState = D_801235B8->screenState;
+        screenState = gCurrentInputTask->screenState;
     }
     if ((temp_a0 == screenState) && (arg0->pad18_2[6] < 5)) {
         arg0->pad18_2[6] = 5;
@@ -1551,7 +1551,7 @@ void func_800271CC(CourseSelectWidgetActor *arg0) {
     case 2:
         arg0->coordinates[0] -= 0x20;
         if (arg0->coordinates[0] < -0xFF) {
-            if (D_801235B8->screenState != 0) {
+            if (gCurrentInputTask->screenState != 0) {
                 arg0->pad18_2[6] = 4;
             } else {
                 arg0->pad18_2[6] = 3;
@@ -1559,7 +1559,7 @@ void func_800271CC(CourseSelectWidgetActor *arg0) {
         }
         break;
     case 4:
-        if (D_801235B8->screenState == 9) {
+        if (gCurrentInputTask->screenState == 9) {
             arg0->pad18_2[6] = 3;
         }
         break;
@@ -1571,7 +1571,7 @@ void func_800271CC(CourseSelectWidgetActor *arg0) {
         }
         break;
     case 6:
-        if (D_801235B8->screenState == 4) {
+        if (gCurrentInputTask->screenState == 4) {
             arg0->pad18_2[6] = 1;
         }
         break;
@@ -1633,7 +1633,7 @@ void func_80027498(CourseSelectWidgetActor *arg0) {
         state = arg0->state;
         break;
     case 1:
-        if ((D_80121D88 == 3) || (D_801235B8->screenState == 9)) {
+        if ((D_80121D88 == 3) || (gCurrentInputTask->screenState == 9)) {
             state = (arg0->state = 2);
         }
         break;
@@ -1749,7 +1749,7 @@ void func_8002784C(CourseSelectWidgetActor *arg0) {
                 var_v0 = (CourseSelectWidgetActor *)((u8 *)var_v0 + sizeof(s16));
             } while (var_v1 < (s32)temp_a1->itemCount);
         }
-    } else if (D_801235B8->screenState == 4) {
+    } else if (gCurrentInputTask->screenState == 4) {
         func_80071824(temp_a2, func_80027AF8);
     }
     func_800483FC(&D_80124868, func_800275E0, temp_a2);
@@ -1776,12 +1776,12 @@ void func_80027914(CourseSelectWidgetActor *arg0) {
         if (var_v0 < -0xE7) {
             arg0->x = -0xE8;
         }
-        var_v0_3 = D_801235B8->screenState;
+        var_v0_3 = gCurrentInputTask->screenState;
     } else {
-        var_v0_3 = D_801235B8->screenState;
+        var_v0_3 = gCurrentInputTask->screenState;
         if (var_v0_3 == 3) {
             func_80071824(arg0, func_8002784C);
-            var_v0_3 = D_801235B8->screenState;
+            var_v0_3 = gCurrentInputTask->screenState;
         }
     }
     if (var_v0_3 == 9) {

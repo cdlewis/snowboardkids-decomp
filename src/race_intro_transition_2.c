@@ -29,7 +29,7 @@ typedef struct {
     u8 bytes[0x60C];
 } RaceInputRecord;
 
-extern RaceIntroTransitionState *D_801235B8;
+extern RaceIntroTransitionState *gCurrentInputTask;
 extern RaceIntroPlayer D_80121D80[];
 extern s16 gMenuFadeAlpha;
 extern s8 D_800DEF10;
@@ -158,8 +158,8 @@ void func_8003ED00(void) {
     func_800440F4();
     D_801235B4 = 0;
     func_8006D5CC();
-    func_800704F0();
-    func_8007066C(0, 0xA0, 0x78, 0x120, 0xB0, 0x140, 0xF0, D_800E10C0);
+    resetAllViewports();
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xB0, 0x140, 0xF0, D_800E10C0);
     D_8011228C = 1;
     gFramebufferSwapDelay = 0;
     func_8008BEB0();
@@ -168,19 +168,19 @@ void func_8003ED00(void) {
     setCurrentInputTaskCallback(func_8003EF7C, 0);
     gMenuFadeAlpha = 0xFF;
     D_800EC8B0 = 0;
-    D_801235B8->fadeDelay = 0x4A1;
-    D_801235B8->fadeStep = 0;
-    D_801235B8->courseSegment = 0;
-    D_801235B8->startDelay = 0x14;
+    gCurrentInputTask->fadeDelay = 0x4A1;
+    gCurrentInputTask->fadeStep = 0;
+    gCurrentInputTask->courseSegment = 0;
+    gCurrentInputTask->startDelay = 0x14;
     D_8010B1E1 = 0;
     D_8010B1E0 = 0;
 }
 #endif
 
 void func_8003EF7C(void) {
-    D_801235B8->startDelay--;
-    if (D_801235B8->startDelay == 0) {
-        func_8007066C(0, 0xA0, 0x78, 0x120, 0, 0x140, 0xF0, 1.333333373f);
+    gCurrentInputTask->startDelay--;
+    if (gCurrentInputTask->startDelay == 0) {
+        configureViewport(0, 0xA0, 0x78, 0x120, 0, 0x140, 0xF0, 1.333333373f);
         gMenuFadeAlpha = 0;
         func_800720E4(0);
         setCurrentInputTaskCallback(func_8003F00C, 0);
@@ -211,7 +211,7 @@ void func_8003F00C(void) {
     FourBytes *fourDst;
 
     prevOpen = gRaceUpdatePaused;
-    func_8007066C(0, 0xA0, 0x78, 0x120, D_8010B1E0, 0x140, 0xF0, D_800E10C8);
+    configureViewport(0, 0xA0, 0x78, 0x120, D_8010B1E0, 0x140, 0xF0, D_800E10C8);
 
     temp = D_8010B1E0;
     if (temp != 0xB0) {
@@ -222,13 +222,13 @@ void func_8003F00C(void) {
         }
     }
 
-    state = D_801235B8;
+    state = gCurrentInputTask;
     fadeStep = state->fadeStep;
     if (fadeStep == D_800BB890[state->courseSegment]) {
         i = 0;
         do {
             dst = (u8 *)D_80121D80 + i;
-            offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+            offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
             src = D_800BB8F4 + offset + i;
             value = *src;
             i++;
@@ -238,7 +238,7 @@ void func_8003F00C(void) {
         i = 0;
         do {
             dst = (u8 *)D_8012238C + i;
-            offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+            offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
             src = D_800BB8F4 + offset + 0x60C0 + i;
             value = *src;
             i++;
@@ -248,7 +248,7 @@ void func_8003F00C(void) {
         i = 0;
         do {
             dst = (u8 *)D_80122998 + i;
-            offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+            offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
             src = D_800BB8F4 + offset + 0xC180 + i;
             value = *src;
             i++;
@@ -258,28 +258,28 @@ void func_8003F00C(void) {
         i = 0;
 copy_player3:
         fourDst = (FourBytes *)((u8 *)D_80122FA4 + i);
-        offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+        offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
         fourDst->b0 = D_800BB8F4[offset + 0x12240 + i];
-        offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+        offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
         fourDst->b1 = D_800BB8F4[offset + 0x12241 + i];
-        offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+        offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
         fourDst->b2 = D_800BB8F4[offset + 0x12242 + i];
-        offset = COURSE_REPLAY_OFFSET(D_801235B8->courseSegment);
+        offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
         fourDst->b3 = D_800BB8F4[offset + 0x12243 + i];
         i += 4;
         if (i != 0x60C) {
             goto copy_player3;
         }
 
-        D_801235B8->courseSegment++;
-        state = D_801235B8;
+        gCurrentInputTask->courseSegment++;
+        state = gCurrentInputTask;
         fadeStep = state->fadeStep;
     }
 
     temp = state->startDelay;
     if (fadeStep == D_800BB8B0[temp]) {
         func_8006D520(0, D_800BB8DC[temp]);
-        D_801235B8->startDelay++;
+        gCurrentInputTask->startDelay++;
         gRaceUpdatePaused = 1;
     }
 
@@ -290,8 +290,8 @@ copy_player3:
     gRaceUpdatePaused = prevOpen;
     func_8006D700();
 
-    D_801235B8->fadeStep++;
-    state = D_801235B8;
+    gCurrentInputTask->fadeStep++;
+    state = gCurrentInputTask;
     temp = state->fadeDelay;
     if (temp != 0) {
         state->fadeDelay = temp - 1;
@@ -304,7 +304,7 @@ copy_player3:
         func_80072114(0x20);
     }
 
-    if (D_801235B8->fadeDelay < 0x41) {
+    if (gCurrentInputTask->fadeDelay < 0x41) {
         if (D_8010B1E1 == 0) {
             D_8010B1E1 = 4;
         }

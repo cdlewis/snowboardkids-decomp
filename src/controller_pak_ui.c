@@ -27,7 +27,7 @@ typedef struct {
 extern void func_800483FC(void *, void *, s32);
 extern s32 D_80124868;
 extern s32 D_80124838;
-extern CharacterSelectFlowState *D_801235B8;
+extern CharacterSelectFlowState *gCurrentInputTask;
 extern ControllerPakPromptTransition gControllerPakContinuePromptTransition;
 extern ControllerPakConfirmTransition gControllerPakCheckPromptTransition;
 extern ControllerPakMenuState gControllerPakMenuState;
@@ -120,7 +120,7 @@ void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     temp_v0 = state;
     switch (temp_v0) {
         case 1:
-            temp_a2->selectedOption = D_801235B8->timer;
+            temp_a2->selectedOption = gCurrentInputTask->timer;
             if (temp_a2->timer < 0x10) {
                 temp_a2->scale -= 9;
             } else {

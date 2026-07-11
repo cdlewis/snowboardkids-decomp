@@ -44,7 +44,7 @@ typedef struct {
     /* 0xAD */ char padAD[3];
 } RaceIntroCamera;
 
-extern RaceIntroTransitionState *D_801235B8;
+extern RaceIntroTransitionState *gCurrentInputTask;
 extern RaceIntroCamera D_801121E0[];
 extern RaceIntroPlayer D_80121D80[];
 extern RaceIntroCourseEntry D_800BB834[];
@@ -165,7 +165,7 @@ void func_8003E600(void) {
     func_800440F4();
     D_801235B4 = 0;
     func_8006D5CC();
-    func_800704F0();
+    resetAllViewports();
     D_8011228C = one;
     gFramebufferSwapDelay = 0;
     func_8008BEB0();
@@ -174,14 +174,14 @@ void func_8003E600(void) {
     }
     func_80078430();
     if (D_80121B55 == one) {
-        func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         D_8011228C = one;
         gFramebufferSwapDelay = 0;
     } else {
-        func_8007066C(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_8007066C(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_8007066C(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_8007066C(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        configureViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        configureViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        configureViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        configureViewport(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         D_801121E0[0].active = one;
         D_801121E0[1].active = one;
         D_801121E0[2].active = one;
@@ -195,16 +195,16 @@ void func_8003E600(void) {
     setCurrentInputTaskCallback(func_8003EA78, 0);
     gMenuFadeAlpha = 0xFF;
     D_800EC8B0 = 0;
-    D_801235B8->fadeDelay = 0x384;
-    D_801235B8->fadeStep = 0;
-    D_801235B8->courseSegment = 0;
-    D_801235B8->startDelay = 0x14;
+    gCurrentInputTask->fadeDelay = 0x384;
+    gCurrentInputTask->fadeStep = 0;
+    gCurrentInputTask->courseSegment = 0;
+    gCurrentInputTask->startDelay = 0x14;
 }
 #endif
 
 void func_8003EA78(void) {
-    D_801235B8->startDelay--;
-    if (D_801235B8->startDelay == 0) {
+    gCurrentInputTask->startDelay--;
+    if (gCurrentInputTask->startDelay == 0) {
         func_800728E0();
         createEffectTask(func_800540EC, 0, 0x64);
         setCurrentInputTaskCallback(func_8003EAF0, 0);
@@ -215,7 +215,7 @@ void func_8003EAF0(void) {
     RaceIntroTransitionState *state;
     s32 fadeStep;
 
-    if (D_801235B8->fadeStep == 0) {
+    if (gCurrentInputTask->fadeStep == 0) {
         gMenuFadeAlpha -= 0x10;
         if (gMenuFadeAlpha < 0) {
             gMenuFadeAlpha = 0;
@@ -227,24 +227,24 @@ void func_8003EAF0(void) {
     func_8007115C();
     func_8006D700();
     func_8007AA50();
-    state = D_801235B8;
+    state = gCurrentInputTask;
     if (state->fadeDelay != 0) {
         state->fadeDelay--;
-        state = D_801235B8;
+        state = gCurrentInputTask;
         fadeStep = state->fadeStep;
     } else {
         fadeStep = state->fadeStep;
         if (fadeStep == 0) {
             state->fadeStep = 4;
             func_80072114(0x78);
-            state = D_801235B8;
+            state = gCurrentInputTask;
             fadeStep = state->fadeStep;
         }
     }
     if ((gPlayerInputPressed & 0x1000) && (fadeStep == 0)) {
         state->fadeStep = 0x10;
         func_80072114(0x1E);
-        state = D_801235B8;
+        state = gCurrentInputTask;
         fadeStep = state->fadeStep;
     }
     if (fadeStep != 0) {

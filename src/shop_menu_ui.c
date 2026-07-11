@@ -217,7 +217,7 @@ extern s16 D_8011217A;
 extern ShopMenuState D_80121D80;
 extern s32 D_80121D8C;
 extern s32 D_801235B4;
-extern MainMenuState *D_801235B8;
+extern MainMenuState *gCurrentInputTask;
 extern s16 D_800EC9D0;
 extern u8 D_800ECA2F[];
 extern s32 gPlayerInputHeld;
@@ -1139,7 +1139,7 @@ void func_8002E9E4(ShopMenuWidgetActor *arg0) {
         break;
     case 1:
         arg0->item.price = D_800B34B0[D_80121D80.selectedShopItem];
-        if (D_801235B8->shopItemPrice >= 2) {
+        if (gCurrentInputTask->shopItemPrice >= 2) {
             arg0->slide.bytes.state = 2;
         }
         break;
@@ -1169,7 +1169,7 @@ void func_8002E9E4(ShopMenuWidgetActor *arg0) {
         if (arg0->slide.bytes.timer >= 0x14) {
             arg0->slide.bytes.timer = 0;
             arg0->slide.bytes.state = 4;
-            D_801235B8->shopItemPrice += 2;
+            gCurrentInputTask->shopItemPrice += 2;
         }
         break;
     case 4:
@@ -1246,7 +1246,7 @@ void func_8002EC5C(ShopMenuWidgetActor *arg0) {
 void func_8002EF14(ShopMenuWidgetActor *arg0) {
     ShopMenuWidgetActor *temp_a2;
 
-    arg0->item.price = D_801235B8->shopItemPrice;
+    arg0->item.price = gCurrentInputTask->shopItemPrice;
     temp_a2 = arg0;
     if (arg0->transition.counter < 0x10) {
         arg0->sprite.index -= 9;
@@ -1354,7 +1354,7 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
         arg0->state = globalState;
     }
 
-    if (((D_801235B8->unk20 == 3) || (D_801235B8->unk20 == 9)) && (state < 5)) {
+    if (((gCurrentInputTask->unk20 == 3) || (gCurrentInputTask->unk20 == 9)) && (state < 5)) {
         arg0->state = 5;
         nextState = 5 & 0xFF;
         state = nextState;
@@ -1565,7 +1565,7 @@ void func_8002F8DC(ShopMenuWidgetActor *arg0) {
 void func_8002FAB8(ShopMenuWidgetActor *arg0) {
     u8 state;
 
-    if ((D_801235B8->unk20 == 3) || (D_801235B8->unk20 == 9)) {
+    if ((gCurrentInputTask->unk20 == 3) || (gCurrentInputTask->unk20 == 9)) {
         arg0->sprite.bytes.state = 2;
     }
     state = arg0->sprite.bytes.state;

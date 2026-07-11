@@ -38,7 +38,7 @@ extern u8 D_1F1A90[];
 extern u8 D_1F2220[];
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
-extern MainMenuTransitionState *D_801235B8;
+extern MainMenuTransitionState *gCurrentInputTask;
 extern u8 D_8010B1F0;
 extern u8 D_8011228C;
 extern s16 D_801124B8;
@@ -99,7 +99,7 @@ void func_8003F554(void) {
     D_8010B1F0 = 0;
     gFramebufferSwapDelay = 0;
     gMenuFadeAlpha = 0xFF;
-    func_800704F0();
+    resetAllViewports();
     D_801124B8 = 0x80;
     func_80070EC0(0);
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
@@ -226,13 +226,13 @@ void func_8003F864(void) {
     func_80043950();
     func_800440F4();
     func_8006D5CC();
-    func_800704F0();
+    resetAllViewports();
     gFramebufferSwapDelay = 0;
     func_8008BEB0();
     D_80121B55 = 1;
     func_80078430();
     D_80121B55 = 4;
-    func_8007066C(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, D_800E10D4);
+    configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, D_800E10D4);
     D_8011228C = 1;
     gFramebufferSwapDelay = 0;
     func_80044294();
@@ -270,7 +270,7 @@ void func_8003FBE8(void) {
     func_8007115C();
     func_8006D700();
     if (D_8010B1F0 != 0) {
-        D_801235B8->transitionTimer = 0;
+        gCurrentInputTask->transitionTimer = 0;
         func_80072114(0x20);
         setCurrentInputTaskCallback(&func_8003FC60, 0);
     }
@@ -291,8 +291,8 @@ void func_8003FC60(void) {
     f64 denominator = MAIN_MENU_TRANSITION_FRAMES;
     f32 aspect;
 
-    D_801235B8->transitionTimer += 1;
-    timer = D_801235B8->transitionTimer;
+    gCurrentInputTask->transitionTimer += 1;
+    timer = gCurrentInputTask->transitionTimer;
 
     x2 = timer << 2;
     x2 -= timer;
@@ -304,11 +304,11 @@ void func_8003FC60(void) {
     y2 = (s16) (((timer * 0x64) / MAIN_MENU_TRANSITION_FRAMES) + 0x8C);
     aspect = (f32) ((((f64) timer * -0.9523809523809523) / denominator) + 2.2857142857142856);
 
-    func_8007066C(0, 0xA0, x1, x2 & 0xFFFF, y1, 0x140, y2, aspect);
-    if (D_801235B8->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
+    configureViewport(0, 0xA0, x1, x2 & 0xFFFF, y1, 0x140, y2, aspect);
+    if (gCurrentInputTask->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
         func_800720E4(0xF);
-        func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        D_801235B8->transitionTimer = 0;
+        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        gCurrentInputTask->transitionTimer = 0;
         setCurrentInputTaskCallback(func_8003FE54, 0);
     }
     func_8008C704();
@@ -327,8 +327,8 @@ void func_8003FE54(void) {
     func_8007115C();
     func_8006D700();
     func_8007AA50();
-    D_801235B8->transitionTimer += 1;
-    if (D_801235B8->transitionTimer == D_800D3C90[D_80121B5B]) {
+    gCurrentInputTask->transitionTimer += 1;
+    if (gCurrentInputTask->transitionTimer == D_800D3C90[D_80121B5B]) {
         setCurrentInputTaskCallback(func_8003FEF4, 0);
         func_80072114(0x40);
     }
@@ -466,12 +466,12 @@ void func_8004002C(void) {
     func_80043950();
     func_800440F4();
     func_8006D5CC();
-    func_800704F0();
+    resetAllViewports();
     D_8011228C = 1;
     gFramebufferSwapDelay = 0;
     func_8008BEB0();
     func_80078430();
-    func_8007066C(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
+    configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
     D_8011228C = 1;
     gFramebufferSwapDelay = 0;
     func_80044294();
@@ -510,7 +510,7 @@ void func_800403D8(void) {
     func_8007115C();
     func_8006D700();
     if (D_8010B1F0 != 0) {
-        D_801235B8->transitionTimer = 0;
+        gCurrentInputTask->transitionTimer = 0;
         func_80072114(0x20);
         setCurrentInputTaskCallback(&func_80040450, 0);
     }
@@ -531,8 +531,8 @@ void func_80040450(void) {
     f64 denominator = MAIN_MENU_TRANSITION_FRAMES;
     f32 aspect;
 
-    D_801235B8->transitionTimer += 1;
-    timer = D_801235B8->transitionTimer;
+    gCurrentInputTask->transitionTimer += 1;
+    timer = gCurrentInputTask->transitionTimer;
 
     x2 = timer << 2;
     x2 -= timer;
@@ -544,10 +544,10 @@ void func_80040450(void) {
     y2 = (s16) (((timer * 0x64) / MAIN_MENU_TRANSITION_FRAMES) + 0x8C);
     aspect = (f32) ((((f64) timer * -0.9523809523809523) / denominator) + 2.2857142857142856);
 
-    func_8007066C(0, 0xA0, x1, x2 & 0xFFFF, y1, 0x140, y2, aspect);
-    if (D_801235B8->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
+    configureViewport(0, 0xA0, x1, x2 & 0xFFFF, y1, 0x140, y2, aspect);
+    if (gCurrentInputTask->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
         func_800720E4(0xF);
-        func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         setCurrentInputTaskCallback(func_80040638, 0);
     }
     func_8008C704();
@@ -566,7 +566,7 @@ void func_80040638(void) {
     func_8007115C();
     func_8006D700();
     func_8007AA50();
-    D_801235B8->transitionTimer = 0;
+    gCurrentInputTask->transitionTimer = 0;
     switch (D_80121B5A) {
         case 1:
             if (D_80122282 == 0x50) {
@@ -620,13 +620,13 @@ void func_800407AC(void) {
     func_8007115C();
     func_8006D700();
     func_8007AA50();
-    D_801235B8->transitionTimer += 0x10;
-    temp_v1 = D_801235B8->transitionTimer;
+    gCurrentInputTask->transitionTimer += 0x10;
+    temp_v1 = gCurrentInputTask->transitionTimer;
     if (temp_v1 == 0x80) {
         createEffectTask(func_8000DF28, 0, 0x64);
         setCurrentInputTaskCallback(func_8004086C, 0);
     }
-    temp_v1 = D_801235B8->transitionTimer;
+    temp_v1 = gCurrentInputTask->transitionTimer;
     D_801124B8 = temp_v1;
 }
 
@@ -691,7 +691,7 @@ void func_80040A48(void) {
     D_8010B1F0 = 0;
     gFramebufferSwapDelay = 0;
     gMenuFadeAlpha = 0xFF;
-    func_800704F0();
+    resetAllViewports();
     func_80070EC0(0);
     createEffectTask(&func_8000E874, 0, 0x64);
     setCurrentInputTaskCallback(func_80040B04, 0);

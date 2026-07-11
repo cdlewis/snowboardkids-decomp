@@ -11,7 +11,7 @@
 
 extern void releaseMenuAssetHandles(void);
 
-extern CharacterSelectFlowState *D_801235B8;
+extern CharacterSelectFlowState *gCurrentInputTask;
 extern s8 gFramebufferSwapDelay;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
@@ -126,24 +126,24 @@ void initRaceCharacterSelectMenu(void) {
         func_800720E4(2);
     }
     func_8006D5CC();
-    func_800704F0();
+    resetAllViewports();
 
     switch (D_80121B55) {
     case 1:
-        func_8007066C(0, 0xE8, 0x78, 0x90, 0xD0, 0xA0, 0xF0, 0.6666666865f);
+        configureViewport(0, 0xE8, 0x78, 0x90, 0xD0, 0xA0, 0xF0, 0.6666666865f);
         screenBase = 0xA40000;
         break;
     case 2:
-        func_8007066C(0, 0xE4, 0x4A, 0x84, 0x54, 0xA8, 0x74, 1.448275805f);
-        func_8007066C(1, 0xE4, 0xAE, 0x84, 0x54, 0xA8, 0x74, 1.448275805f);
+        configureViewport(0, 0xE4, 0x4A, 0x84, 0x54, 0xA8, 0x74, 1.448275805f);
+        configureViewport(1, 0xE4, 0xAE, 0x84, 0x54, 0xA8, 0x74, 1.448275805f);
         screenBase = 0x894000;
         break;
     case 3:
     case 4:
-        func_8007066C(0, 0x78, 0x44, 0x44, 0x40, 0x60, 0x60, 1.333333373f);
-        func_8007066C(1, 0x78, 0xA8, 0x44, 0x40, 0x60, 0x60, 1.333333373f);
-        func_8007066C(2, 0x104, 0x44, 0x44, 0x40, 0x60, 0x60, 1.333333373f);
-        func_8007066C(3, 0x104, 0xA8, 0x44, 0x40, 0x60, 0x60, 1.333333373f);
+        configureViewport(0, 0x78, 0x44, 0x44, 0x40, 0x60, 0x60, 1.333333373f);
+        configureViewport(1, 0x78, 0xA8, 0x44, 0x40, 0x60, 0x60, 1.333333373f);
+        configureViewport(2, 0x104, 0x44, 0x44, 0x40, 0x60, 0x60, 1.333333373f);
+        configureViewport(3, 0x104, 0xA8, 0x44, 0x40, 0x60, 0x60, 1.333333373f);
         screenBase = 0x894000;
         break;
     default:
@@ -170,8 +170,8 @@ void initRaceCharacterSelectMenu(void) {
     D_800EC9E5 = 0;
     D_8010AEA8 = 0;
     D_8010AEB0 = 0;
-    D_801235B8->fade = 0xFF;
-    gMenuFadeAlpha = D_801235B8->fade;
+    gCurrentInputTask->fade = 0xFF;
+    gMenuFadeAlpha = gCurrentInputTask->fade;
 
     loadCompressedRomAsset(D_5CBA80, D_5CCD40, 0x21);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
@@ -195,8 +195,8 @@ void initRaceCharacterSelectMenu(void) {
     D_801235B4 = 0;
     D_8010AED0 = 0;
     D_800EC9E6 = 0;
-    D_801235B8->timer = 0;
-    D_801235B8->unk20 = 0;
+    gCurrentInputTask->timer = 0;
+    gCurrentInputTask->unk20 = 0;
     setCurrentInputTaskCallback(updateRaceCharacterSelectMenu, 0);
 
     for (i = 0; &D_80121D80[i] < &gFrameCounter; i++) {
@@ -369,9 +369,9 @@ void updateRaceCharacterSelectMenu(void) {
     RaceCharacterSelectObject *obj;
 
     readyCount = 0;
-    if (D_801235B8->fade != 0) {
-        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 0);
-        if (D_801235B8->fade == 0) {
+    if (gCurrentInputTask->fade != 0) {
+        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 0);
+        if (gCurrentInputTask->fade == 0) {
             if (D_80121B55 == 1) {
                 createEffectTask(func_800257F0, 0, 0x63);
             } else {
@@ -651,9 +651,9 @@ void updateRaceCharacterSelectMenu(void) {
 #endif
 
 void fadeOutRaceCharacterSelectMenu(void) {
-    if (D_801235B8->fade != 0xFF) {
-        D_801235B8->fade = stepMenuFadeAlpha((s16) D_801235B8->fade, 0x24, 1);
-        if (D_801235B8->fade == 0xFF) {
+    if (gCurrentInputTask->fade != 0xFF) {
+        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 1);
+        if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateEffectTasks();

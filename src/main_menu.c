@@ -133,7 +133,7 @@ extern OSPfs D_800E4DE0[];
 extern SaveFileIdentity D_800E4F80;
 extern u8 D_800E4F8A[];
 extern u8 D_800E4F8E[];
-extern MainMenuState *D_801235B8;
+extern MainMenuState *gCurrentInputTask;
 extern u8 D_800B30F0;
 extern u8 D_800B30F4[];
 extern u8 D_800B3104[];
@@ -959,7 +959,7 @@ void func_80001C30(void) {
 void func_80001C80(void) {
     D_800B3190 = 0;
     D_800B3194 = 0;
-    func_800704F0();
+    resetAllViewports();
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     gFramebufferSwapDelay = 0;
     loadCompressedRomAsset(D_5DB9D0, D_5DCBE0, 0x21);
@@ -967,10 +967,10 @@ void func_80001C80(void) {
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
     loadRawRomAsset(D_1467B0, D_147910, 8);
     loadCompressedRomAsset(D_1DE360, D_1E0F70, 9);
-    D_801235B8->fade = 0xFF;
-    D_801235B8->selection = 0;
-    D_801235B8->delay = 0x32;
-    D_801235B8->timer = 0x4B0;
+    gCurrentInputTask->fade = 0xFF;
+    gCurrentInputTask->selection = 0;
+    gCurrentInputTask->delay = 0x32;
+    gCurrentInputTask->timer = 0x4B0;
     func_80070EC0(0);
     if (D_800E29C0 != 0) {
         createEffectTask(&func_80032A50, 0, 0x64);
@@ -1005,7 +1005,7 @@ void func_80001C80(void) {
     func_800420FC(4, 0, 0xDD0, 0);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
-    gMenuFadeAlpha = (s16) D_801235B8->fade;
+    gMenuFadeAlpha = (s16) gCurrentInputTask->fade;
     D_800DEF10 = 1;
     enqueueSoundEffect(0x4A, 0x32);
     setCurrentInputTaskCallback(&func_80002024, 0);
@@ -1022,30 +1022,30 @@ void func_80002024(void) {
     s32 temp_a0;
 
     flag = 0;
-    temp_v1 = D_801235B8->fade;
+    temp_v1 = gCurrentInputTask->fade;
     if (temp_v1 != 0) {
-        D_801235B8->fade = stepMenuFadeAlpha((s16) temp_v1, 0x10, 0);
-        if (D_801235B8->fade == 0) {
+        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) temp_v1, 0x10, 0);
+        if (gCurrentInputTask->fade == 0) {
             D_800DEF10 = 0;
         }
     } else {
-        if (D_801235B8->delay != 0) {
-            D_801235B8->delay -= 1;
-            if (D_801235B8->delay == 0) {
+        if (gCurrentInputTask->delay != 0) {
+            gCurrentInputTask->delay -= 1;
+            if (gCurrentInputTask->delay == 0) {
                 func_800720E4(0);
             }
         }
         temp_a0 = gPlayerInputPressed;
         if (temp_a0 & 0x10800) {
-            if (D_801235B8->selection != 0) {
-                D_801235B8->selection -= 1;
+            if (gCurrentInputTask->selection != 0) {
+                gCurrentInputTask->selection -= 1;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_a0 = gPlayerInputPressed;
             }
         }
         if (temp_a0 & 0x20400) {
-            if (D_801235B8->selection != 2) {
-                D_801235B8->selection += 1;
+            if (gCurrentInputTask->selection != 2) {
+                gCurrentInputTask->selection += 1;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_a0 = gPlayerInputPressed;
             }
@@ -1055,8 +1055,8 @@ void func_80002024(void) {
             enqueueSoundEffect(1, 0x32);
         }
         if (flag == 0) {
-            D_801235B8->timer -= 1;
-            if (D_801235B8->timer == 0) {
+            gCurrentInputTask->timer -= 1;
+            if (gCurrentInputTask->timer == 0) {
                 flag = 1;
             }
         }
@@ -1075,7 +1075,7 @@ void func_80002024(void) {
     func_80042034(2);
     func_80042034(3);
     func_80042034(4);
-    if (D_801235B8->fade == 0xEF) {
+    if (gCurrentInputTask->fade == 0xEF) {
         func_800428C8(0);
         func_800428C8(1);
         func_800428C8(2);
@@ -1095,10 +1095,10 @@ void func_800022B8(void) {
     s32 temp_v0;
     s32 temp_v1;
 
-    temp_v0 = D_801235B8->fade;
+    temp_v0 = gCurrentInputTask->fade;
     if (temp_v0 != 0xFF) {
-        D_801235B8->fade = stepMenuFadeAlpha((s16) temp_v0, 0x28, 1);
-        if (D_801235B8->fade == 0xFF) {
+        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) temp_v0, 0x28, 1);
+        if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             func_8006D780(0);
@@ -1118,8 +1118,8 @@ void func_800022B8(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        if (D_801235B8->timer != 0) {
-            temp_v1 = D_801235B8->selection;
+        if (gCurrentInputTask->timer != 0) {
+            temp_v1 = gCurrentInputTask->selection;
             if (temp_v1 == 0) {
                 createInputTask(2, func_80073140, 0x64);
                 removeInputTask(3);
@@ -1140,7 +1140,7 @@ void func_800022B8(void) {
 }
 
 void func_800024A8(void) {
-    func_800704F0();
+    resetAllViewports();
     D_801124B8 = 0x80;
     gFramebufferSwapDelay = 0;
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
@@ -1233,7 +1233,7 @@ void func_80002810(void) {
 }
 
 void func_800028B4(void) {
-    func_800704F0();
+    resetAllViewports();
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     D_801124B8 = 0x80;
     gFramebufferSwapDelay = 0;

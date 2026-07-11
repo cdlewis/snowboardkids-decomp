@@ -38,7 +38,7 @@ extern u8 gFramebufferSwapDelayTimer;
 extern u8 gFramebufferSwapDelay;
 extern ControllerInputState D_800E4C18;
 extern s16 gFrameCounter;
-extern InputTask *D_801235B8;
+extern InputTask *gCurrentInputTask;
 extern InputTask D_801235C0[INPUT_TASK_COUNT];
 extern u8 D_80123700;
 extern InputTaskScheduler D_80123708;
@@ -250,42 +250,42 @@ void func_80098EAC(void) {
     } while (repeatInput != (s32 *)&D_801237A0);
 
     task = D_8012370C;
-    D_801235B8 = task;
+    gCurrentInputTask = task;
     if (task != NULL) {
         do {
             if (task->state == 2) {
                 task->state = 0;
-                task = D_801235B8;
+                task = gCurrentInputTask;
             }
             nextTask = task->next;
-            D_801235B8 = nextTask;
+            gCurrentInputTask = nextTask;
             task = nextTask;
         } while (nextTask != NULL);
-        D_801235B8 = D_8012370C;
+        gCurrentInputTask = D_8012370C;
     }
 
-    task = D_801235B8;
+    task = gCurrentInputTask;
     if (task != NULL) {
         do {
             if (task->state == 0) {
                 callback = task->callbacks[0];
                 if (callback != NULL) {
                     callback();
-                    task = D_801235B8;
+                    task = gCurrentInputTask;
                 }
                 callback = task->callbacks[1];
                 if (callback != NULL) {
                     callback();
-                    task = D_801235B8;
+                    task = gCurrentInputTask;
                 }
                 callback = task->callbacks[2];
                 if (callback != NULL) {
                     callback();
-                    task = D_801235B8;
+                    task = gCurrentInputTask;
                 }
             }
             nextTask = task->next;
-            D_801235B8 = nextTask;
+            gCurrentInputTask = nextTask;
             task = nextTask;
         } while (nextTask != NULL);
     }
@@ -414,13 +414,13 @@ void removeInputTask(s32 taskId) {
 void setCurrentInputTaskCallback(InputTaskCallback callback, s32 callbackIndex) {
     switch (callbackIndex) {
         case 0:
-            D_801235B8->callbacks[0] = callback;
+            gCurrentInputTask->callbacks[0] = callback;
             return;
         case 1:
-            D_801235B8->callbacks[1] = callback;
+            gCurrentInputTask->callbacks[1] = callback;
             return;
         case 2:
-            D_801235B8->callbacks[2] = callback;
+            gCurrentInputTask->callbacks[2] = callback;
             return;
     }
 }
@@ -428,13 +428,13 @@ void setCurrentInputTaskCallback(InputTaskCallback callback, s32 callbackIndex) 
 void clearCurrentInputTaskCallback(s32 callbackIndex) {
     switch (callbackIndex) {
         case 0:
-            D_801235B8->callbacks[0] = NULL;
+            gCurrentInputTask->callbacks[0] = NULL;
             return;
         case 1:
-            D_801235B8->callbacks[1] = NULL;
+            gCurrentInputTask->callbacks[1] = NULL;
             return;
         case 2:
-            D_801235B8->callbacks[2] = NULL;
+            gCurrentInputTask->callbacks[2] = NULL;
             return;
     }
 }

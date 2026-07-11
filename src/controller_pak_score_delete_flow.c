@@ -24,7 +24,7 @@ typedef struct {
     /* 0xC */ s32 selectedFileInfo;
 } ControllerPakScoreFileContext;
 
-extern CharacterSelectFlowState *D_801235B8;
+extern CharacterSelectFlowState *gCurrentInputTask;
 extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakScoreDeleteFlow gControllerPakScoreDeleteFlow;
 extern ControllerPakScoreFileContext D_80121D80;
@@ -55,20 +55,20 @@ extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
 
 void initControllerPakScoreDeleteFlow(void) {
-    func_800704F0();
-    func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+    resetAllViewports();
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     gFramebufferSwapDelay = 0;
     D_800EC9C8 = 0;
     D_800EC9D0 = 0;
     D_800EC9D8 = 0;
     D_80121D80.status = 0;
     D_800EC9C1 = 0;
-    D_801235B8->fade = 0xFF;
+    gCurrentInputTask->fade = 0xFF;
     D_8010ADDC = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     D_8010ADE8 = 0;
-    gMenuFadeAlpha = D_801235B8->fade;
+    gMenuFadeAlpha = gCurrentInputTask->fade;
     D_800EC9F4 = D_80121D80.selectedFileInfo;
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x21);
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x24);
@@ -114,12 +114,12 @@ void updateControllerPakScoreDeleteFlow(void)
   s32 temp_v1;
   s32 var_t7;
   sp24 = 0;
-  temp_v0 = D_801235B8->fade;
+  temp_v0 = gCurrentInputTask->fade;
   temp_t0 = D_8010ADE4;
   if (temp_v0 != 0)
   {
-    D_801235B8->fade = stepMenuFadeAlpha((s32) ((s16) temp_v0), 0x24, 0);
-    if (D_801235B8->fade == 0)
+    gCurrentInputTask->fade = stepMenuFadeAlpha((s32) ((s16) temp_v0), 0x24, 0);
+    if (gCurrentInputTask->fade == 0)
     {
       gControllerPakMenuState.state = 3;
       gControllerPakMenuState.confirmChoice = 1;
@@ -418,11 +418,11 @@ void updateControllerPakScoreDeleteFlow(void)
 #endif
 
 void fadeOutControllerPakScoreDeleteFlow(void) {
-    s32 temp_v0 = D_801235B8->fade;
+    s32 temp_v0 = gCurrentInputTask->fade;
     if (temp_v0 != 0xFF) {
-        D_801235B8->fade = stepMenuFadeAlpha((s16) temp_v0, 0x20, 1);
+        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) temp_v0, 0x20, 1);
         updateEffectTasks();
-        if (D_801235B8->fade == 0xFF) {
+        if (gCurrentInputTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         }
     } else if (gPendingFramebufferSwapCount == 2) {

@@ -253,7 +253,7 @@ void func_80099790(void) {
     initInputTaskScheduler();
     func_8009B14C();
     func_80000450();
-    func_800704F0();
+    resetAllViewports();
     func_80071830();
     createInputTask(0, func_80072C30, STARTUP_CALLBACK_PRIORITY);
     D_8012482A = 0;
