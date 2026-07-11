@@ -165,10 +165,10 @@ extern RenderCallbackNode *D_80124888;
 extern RenderCallbackNode *D_80124898;
 extern RenderCallbackNode *D_801248F8;
 extern u8 gPendingFramebufferSwapCount;
-extern u8 D_8012496E;
+extern u8 gFramebufferRenderTaskStatuses;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
-extern u8 D_8013CF8E;
+extern u8 gFramebufferRenderTaskStatus1;
 extern s32 gClearFramebufferOnNextTask;
 extern s8 D_800DEF10;
 extern Gfx *D_80124904;
@@ -304,11 +304,11 @@ loop_1:
             break;
         case 5:
             *counter += 1;
-            D_8012496E &= 0xFFFE;
+            gFramebufferRenderTaskStatuses &= 0xFFFE;
             break;
         case 6:
             *counter += 1;
-            D_8013CF8E &= 0xFFFE;
+            gFramebufferRenderTaskStatus1 &= 0xFFFE;
             break;
         case 3:
             *(volatile s32 *)&done = 1;
@@ -418,8 +418,8 @@ void initVideoTaskState(void) {
         D_8013C908.framebuffer = D_803B4000;
     }
     osViSetSpecialFeatures(0x6A);
-    D_8012496E = 0;
-    D_8013CF8E = 0;
+    gFramebufferRenderTaskStatuses = 0;
+    gFramebufferRenderTaskStatus1 = 0;
     D_80124834 = 0;
     D_80124C28 = gIdentityMatrix;
     D_80124C68 = gIdentityMatrix;

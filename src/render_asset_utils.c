@@ -1384,7 +1384,7 @@ void func_80048338(void) {
     D_80112130 = func_80042D58(0x4000);
 }
 
-void func_8004835C(void) {
+void resetRenderScratchAllocator(void) {
     D_801121B8 = func_80043040(D_80112130);
 }
 
