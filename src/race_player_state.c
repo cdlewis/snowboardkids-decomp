@@ -5,7 +5,7 @@
 #include "sound_manager.h"
 #include "race_motion.h"
 #include "race_camera.h"
-#include "race_course_effects.h"
+#include "race_course_objects.h"
 #include "race_player_collision.h"
 #define calculateAngleBetweenXZPoints calculateAngleBetweenXZPoints_s32
 #include "fixed_point_math.h"
@@ -4536,7 +4536,7 @@ void func_80095650(RaceInputPlayer *player) {
         player->updateState++;
         player->updateTimer = 0;
         player->stateTimer = 0x20;
-        createCallbackTask(func_8006BB50, 0, 0x64);
+        createCallbackTask(initLaunchRampCourseObject, 0, 0x64);
         player->stateFlags &= ~0x20;
     }
 }
@@ -4729,7 +4729,7 @@ void func_80095BE4(RaceInputPlayer *player) {
         D_801121E0[player->playerIndex].unk94 = player->posX;
         D_801121E0[player->playerIndex].unk98 = player->posY;
         D_801121E0[player->playerIndex].unk9C = player->posZ;
-        createCallbackTask(func_8006C088, 0, 0x64);
+        createCallbackTask(initSpiralCourseObject, 0, 0x64);
         if (player->unk508 >= (gRaceLapCount - 1)) {
             createCallbackTaskWithUserIdPreservingArgs(waitForRaceSetupNamePlate, 0, 0x64, player->playerIndex);
         }

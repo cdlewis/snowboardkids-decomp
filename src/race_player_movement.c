@@ -3,7 +3,7 @@
 #include "callback_task_scheduler.h"
 #include "sound_manager.h"
 #include "race_motion.h"
-#include "race_course_effects.h"
+#include "race_course_objects.h"
 #include "race_input_history.h"
 #include "race_player_movement.h"
 
@@ -326,7 +326,7 @@ void func_80087E14(RaceInputPlayer *player) {
             (player->unk502 == gRaceCourseStartEntries[gRaceCourseIndex].unk0) && !(flags & 0x1000)) {
         player->stateFlags = flags | 0x40;
         if ((gRaceCameraModeChangeDisabled == 0) && (D_8011228C[player->playerIndexU16].active != 0)) {
-            task = createCallbackTask(func_8006A85C, 6, 0x64);
+            task = createCallbackTask(initFinalLapPrompt, 6, 0x64);
             if (task != NULL) {
                 task->userId = player->playerIndexU16;
             }

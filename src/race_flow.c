@@ -18,7 +18,7 @@
 #include "race_type_select_menu.h"
 #include "race_splitscreen_select_menu.h"
 #include "race_camera.h"
-#include "race_course_effects.h"
+#include "race_course_objects.h"
 #include "race_flow.h"
 #include "race_player_state.h"
 #include "race_scene_loader.h"
@@ -637,7 +637,7 @@ void func_80074160(void) {
         if (gMenuFadeAlpha >= 0x100) {
             setRaceCameraMode(0, 1);
             gMenuFadeAlpha = 0xFF;
-            createCallbackTask(func_80069BC0, 6, 0x64);
+            createCallbackTask(initRaceCountdownPrompt, 6, 0x64);
             createCallbackTask((void (*)(CallbackTask *))func_80065E90, 6, 0x64);
             switch (gPlayerCount & 0xFFFFFFFF) {
             case 1:

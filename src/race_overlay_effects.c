@@ -169,7 +169,7 @@ extern RaceOverlayEffectSpawn D_800D9518[];
 extern RaceOverlayEffectSpawn *D_800D92D0[];
 extern Vec3i D_800D9BD8[];
 extern RaceOverlayModelEntry *D_800D7754[];
-extern void *D_800DA1C0[];
+extern void *gRaceCourseSceneryDisplayLists[];
 extern Gfx *D_800DA1F0;
 extern s32 D_801248D4;
 extern s32 D_801248B0;
@@ -252,7 +252,7 @@ void func_80066760(RaceModelListActor *arg0) {
                 gDma1p(temp_s0, 1, (u32)arg0->modelBuffer + (var_s5 << 6), 0x40, 2);
 
                 temp_s0 = gRegionAllocPtr++;
-                gSPDisplayList(temp_s0, D_800DA1C0[var_s4->modelIndex]);
+                gSPDisplayList(temp_s0, gRaceCourseSceneryDisplayLists[var_s4->modelIndex]);
             }
             var_s4++;
             var_s5++;
