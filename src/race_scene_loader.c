@@ -6,7 +6,7 @@
 #include "system_boot.h"
 #include "race_motion.h"
 #include "race_course_effects.h"
-#include "race_intro_effects.h"
+#include "race_intro_course_effects.h"
 #include "race_item_effects.h"
 #include "race_overlay_effects.h"
 #include "race_ui_effects.h"
@@ -422,7 +422,7 @@ block_24:
             }
         }
         if (gPlayerCount == 1) {
-            createCallbackTask(&initRaceIntroCamera, 0, 0x64);
+            createCallbackTask(&initRaceIntroFlyoverCamera, 0, 0x64);
         }
         setBootFadeColor(0x82U, 0xAFU, 0xFFU);
         break;
@@ -529,7 +529,7 @@ block_24:
             }
         }
         if (gPlayerCount == 1) {
-            createCallbackTask(&initRaceIntroCamera, 0, 0x64);
+            createCallbackTask(&initRaceIntroFlyoverCamera, 0, 0x64);
         }
         setTitleFadeColor(0xFFU, 0xFFU, 0xFFU);
         break;
