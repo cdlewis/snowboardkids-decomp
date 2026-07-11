@@ -782,7 +782,7 @@ extern s16 D_800D633C[];
 extern s32 D_800DC900[];
 
 extern void *gMenuRenderCallbackList;
-extern void *D_80124858;
+extern void *gMenuForegroundRenderCallbackList;
 extern void *D_80124888;
 extern void *D_801248B0;
 extern void *D_801248BC;
@@ -1239,7 +1239,7 @@ void func_800584A0(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_8005804C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005812C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005827C, arg0);
-    addRenderCallback(&D_80124858, func_80058360, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
 }
 
 void func_80058538(void *arg0) {
@@ -1252,7 +1252,7 @@ void func_80058538(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_8005804C, (s32)arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005812C, (s32)arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005827C, (s32)arg0);
-    addRenderCallback(&D_80124858, func_80058360, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, (s32)arg0);
 }
 
 void func_80058610(RaceUiAlpha18Actor *arg0) {
@@ -1327,7 +1327,7 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_8005804C, (s32)arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005812C, (s32)arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005827C, (s32)arg0);
-    addRenderCallback(&D_80124858, func_80058360, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, (s32)arg0);
 }
 
 void func_80058880(void *arg0) {
@@ -1340,7 +1340,7 @@ void func_80058880(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_8005804C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005812C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005827C, arg0);
-    addRenderCallback(&D_80124858, func_80058360, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
 }
 
 void func_8005893C(void *arg0) {
@@ -1353,7 +1353,7 @@ void func_8005893C(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005804C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005812C, arg0);
-    addRenderCallback(&D_80124858, func_80058360, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
 }
 
 void func_800589F4(void *arg0) {
@@ -1365,7 +1365,7 @@ void func_800589F4(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005804C, arg0);
-    addRenderCallback(&D_80124858, func_80058360, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
 }
 
 void func_80058A98(void *arg0) {
@@ -1376,7 +1376,7 @@ void func_80058A98(void *arg0) {
         setCallbackTaskCallback(arg0, func_800589F4);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
-    addRenderCallback(&D_80124858, func_80058360, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
 }
 
 void func_80058B20(void *arg0) {
@@ -1387,7 +1387,7 @@ void func_80058B20(void *arg0) {
         setCallbackTaskCallback(arg0, func_80058A98);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
-    addRenderCallback(&D_80124858, func_80058360, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
 }
 
 void func_80058BAC(void *arg0) {
@@ -1573,7 +1573,7 @@ void func_80059518(void *arg0) {
 void func_80059804(void *arg0) {
     func_80059518(arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_80058C00, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005905C, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005905C, (s32)arg0);
 }
 
 void func_80059854(void *arg0) {
@@ -1596,7 +1596,7 @@ void func_80059854(void *arg0) {
     }
     func_80059518(actor);
     addRenderCallback(&gMenuRenderCallbackList, func_80058C00, (s32)actor);
-    addRenderCallback(&D_80124858, func_8005905C, (s32)actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005905C, (s32)actor);
 }
 
 void func_80059950(void *arg0) {
@@ -1608,7 +1608,7 @@ void func_80059950(void *arg0) {
     }
     func_80059518(arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_80058C00, arg0);
-    addRenderCallback(&D_80124858, func_8005905C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005905C, arg0);
 }
 
 void func_800599DC(void *arg0) {
@@ -1721,7 +1721,7 @@ void func_80059F6C(RaceUiAlpha18Actor *arg0) {
 void func_8005A07C(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_80059C34, arg0);
-    addRenderCallback(&D_80124858, func_80059F6C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
 }
 
 void func_8005A0E0(void *arg0) {
@@ -1732,7 +1732,7 @@ void func_8005A0E0(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_80059C34, arg0);
-    addRenderCallback(&D_80124858, func_80059F6C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
 }
 
 void func_8005A184(void *arg0) {
@@ -1741,7 +1741,7 @@ void func_8005A184(void *arg0) {
         setCallbackTaskCallback(arg0, func_8005A0E0);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
-    addRenderCallback(&D_80124858, func_80059F6C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
 }
 
 void func_8005A1FC(void *arg0) {
@@ -1752,7 +1752,7 @@ void func_8005A1FC(void *arg0) {
         setCallbackTaskCallback(arg0, func_8005A184);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
-    addRenderCallback(&D_80124858, func_80059F6C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
 }
 
 void func_8005A288(void *arg0) {
@@ -1761,7 +1761,7 @@ void func_8005A288(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
         setCallbackTaskCallback(arg0, func_8005A1FC);
     }
-    addRenderCallback(&D_80124858, func_80059F6C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
 }
 
 void func_8005A2F0(void *arg0) {
@@ -2025,8 +2025,8 @@ void func_8005AE1C(void *arg0) {
 void func_8005AEB0(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005A884, arg0);
-    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
-    addRenderCallback(&D_80124858, func_8005AE1C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AE1C, arg0);
 }
 
 void func_8005AF2C(void *arg0) {
@@ -2037,15 +2037,15 @@ void func_8005AF2C(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005A884, arg0);
-    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
-    addRenderCallback(&D_80124858, func_8005AE1C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AE1C, arg0);
 }
 
 void func_8005AFEC(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
-    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
-    addRenderCallback(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
 void func_8005B068(void *arg0) {
@@ -2060,8 +2060,8 @@ void func_8005B068(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, (s32)arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005AAE4, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005AC44, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, (s32)arg0);
 }
 
 void func_8005B14C(RaceUiCounterActor *arg0) {
@@ -2108,8 +2108,8 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
 
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, (s32)arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005AAE4, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005AC44, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, (s32)arg0);
 }
 
 void func_8005B344(void *arg0) {
@@ -2120,8 +2120,8 @@ void func_8005B344(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
-    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
-    addRenderCallback(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
 void func_8005B3EC(void *arg0) {
@@ -2133,8 +2133,8 @@ void func_8005B3EC(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
-    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
-    addRenderCallback(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
 void func_8005B49C(void *arg0) {
@@ -2147,8 +2147,8 @@ void func_8005B49C(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
-    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
-    addRenderCallback(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
 void func_8005B55C(void *arg0) {
@@ -2161,8 +2161,8 @@ void func_8005B55C(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
-    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
-    addRenderCallback(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
 void func_8005B61C(void *arg0) {
@@ -2179,8 +2179,8 @@ void func_8005B61C(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
-    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
-    addRenderCallback(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
 void func_8005B6F8(void *arg0) {
@@ -2191,8 +2191,8 @@ void func_8005B6F8(void *arg0) {
         setCallbackTaskCallback(arg0, func_8005B61C);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
-    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
-    addRenderCallback(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
 void func_8005B798(void *arg0) {
@@ -2203,8 +2203,8 @@ void func_8005B798(void *arg0) {
         setCallbackTaskCallback(arg0, func_8005B6F8);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
-    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
-    addRenderCallback(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
 void func_8005B834(void *arg0) {
@@ -2471,7 +2471,7 @@ void func_8005C14C(RaceUiCourseRecordActor *arg0) {
 void func_8005C3E4(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005BE68, arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
 }
 
 void func_8005C448(void *arg0) {
@@ -2482,14 +2482,14 @@ void func_8005C448(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005BE68, arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
 }
 
 void func_8005C4EC(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, arg0);
-    addRenderCallback(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
 }
 
 void func_8005C568(void *arg0) {
@@ -2504,8 +2504,8 @@ void func_8005C568(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, (s32)arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005C14C, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, (s32)arg0);
 }
 
 void func_8005C64C(RaceUiDualCounterActor *arg0) {
@@ -2559,8 +2559,8 @@ void func_8005C64C(RaceUiDualCounterActor *arg0) {
 
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, (s32)arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005C14C, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, (s32)arg0);
 }
 
 void func_8005C89C(void *arg0) {
@@ -2571,8 +2571,8 @@ void func_8005C89C(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, arg0);
-    addRenderCallback(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
 }
 
 void func_8005C944(void *arg0) {
@@ -2584,8 +2584,8 @@ void func_8005C944(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, arg0);
-    addRenderCallback(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
 }
 
 void func_8005C9F4(void *arg0) {
@@ -2598,8 +2598,8 @@ void func_8005C9F4(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, arg0);
-    addRenderCallback(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
 }
 
 void func_8005CAB4(void *arg0) {
@@ -2612,8 +2612,8 @@ void func_8005CAB4(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, arg0);
-    addRenderCallback(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
 }
 
 void func_8005CB74(void *arg0) {
@@ -2630,8 +2630,8 @@ void func_8005CB74(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, arg0);
-    addRenderCallback(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
 }
 
 void func_8005CC54(void *arg0) {
@@ -2644,8 +2644,8 @@ void func_8005CC54(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, arg0);
-    addRenderCallback(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
 }
 
 void func_8005CD10(void *arg0) {
@@ -2656,8 +2656,8 @@ void func_8005CD10(void *arg0) {
         setCallbackTaskCallback(arg0, func_8005CC54);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, arg0);
-    addRenderCallback(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
 }
 
 void func_8005CDB0(void *arg0) {
@@ -2668,8 +2668,8 @@ void func_8005CDB0(void *arg0) {
         setCallbackTaskCallback(arg0, func_8005CD10);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
-    addRenderCallback(&D_80124858, func_8005C03C, arg0);
-    addRenderCallback(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
 }
 
 void func_8005CE4C(RaceUiDualCounterActor *arg0) {
@@ -3006,8 +3006,8 @@ void func_8005DB3C(void *arg0) {
 void func_8005DBD0(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005D558, arg0);
-    addRenderCallback(&D_80124858, func_8005D860, arg0);
-    addRenderCallback(&D_80124858, func_8005DB3C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005DB3C, arg0);
 }
 
 void func_8005DC4C(void *arg0) {
@@ -3018,15 +3018,15 @@ void func_8005DC4C(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005D558, arg0);
-    addRenderCallback(&D_80124858, func_8005D860, arg0);
-    addRenderCallback(&D_80124858, func_8005DB3C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005DB3C, arg0);
 }
 
 void func_8005DD0C(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
-    addRenderCallback(&D_80124858, func_8005D860, arg0);
-    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
 }
 
 void func_8005DD88(void *arg0) {
@@ -3041,8 +3041,8 @@ void func_8005DD88(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, (s32)arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005D860, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005D9B4, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, (s32)arg0);
 }
 
 void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
@@ -3089,8 +3089,8 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
 
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, (s32)arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005D860, (s32)arg0);
-    addRenderCallback(&D_80124858, func_8005D9B4, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, (s32)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, (s32)arg0);
 }
 
 void func_8005E064(void *arg0) {
@@ -3101,8 +3101,8 @@ void func_8005E064(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
-    addRenderCallback(&D_80124858, func_8005D860, arg0);
-    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
 }
 
 void func_8005E10C(void *arg0) {
@@ -3114,8 +3114,8 @@ void func_8005E10C(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
-    addRenderCallback(&D_80124858, func_8005D860, arg0);
-    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
 }
 
 void func_8005E1BC(void *arg0) {
@@ -3128,8 +3128,8 @@ void func_8005E1BC(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
-    addRenderCallback(&D_80124858, func_8005D860, arg0);
-    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
 }
 
 void func_8005E27C(void *arg0) {
@@ -3142,8 +3142,8 @@ void func_8005E27C(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
-    addRenderCallback(&D_80124858, func_8005D860, arg0);
-    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
 }
 
 void func_8005E33C(void *arg0) {
@@ -3156,8 +3156,8 @@ void func_8005E33C(void *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
-    addRenderCallback(&D_80124858, func_8005D860, arg0);
-    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
 }
 
 void func_8005E3F8(void *arg0) {
@@ -3168,8 +3168,8 @@ void func_8005E3F8(void *arg0) {
         setCallbackTaskCallback(arg0, func_8005E33C);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
-    addRenderCallback(&D_80124858, func_8005D860, arg0);
-    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
 }
 
 void func_8005E498(void *arg0) {
@@ -3180,8 +3180,8 @@ void func_8005E498(void *arg0) {
         setCallbackTaskCallback(arg0, func_8005E3F8);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
-    addRenderCallback(&D_80124858, func_8005D860, arg0);
-    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
 }
 
 void func_8005E534(void *arg0) {

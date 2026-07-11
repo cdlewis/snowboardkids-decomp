@@ -158,7 +158,7 @@ extern s8 gRaceCourseModelEffectsDisabled;
 extern s8 gRaceCourseOverlayEffectsDisabled;
 extern RenderCallbackNode *gMenuOverlayRenderCallbackList;
 extern RenderCallbackNode *D_80124848;
-extern RenderCallbackNode *D_80124858;
+extern RenderCallbackNode *gMenuForegroundRenderCallbackList;
 extern RenderCallbackNode *gMenuRenderCallbackList;
 extern RenderCallbackNode *D_80124878;
 extern RenderCallbackNode *D_80124888;
@@ -395,7 +395,7 @@ void resetRenderCallbackQueues(void) {
     u32 end;
     CallbackQueueGroup *group;
 
-    D_80124858 = NULL;
+    gMenuForegroundRenderCallbackList = NULL;
     D_80124888 = NULL;
     do { end = (u32)&D_801248F8; group = (CallbackQueueGroup *)&gModelRenderCallbackList; loop: group++; group[-1].entry0.next = NULL; group[-1].entry1.next = NULL; } while (0);
     group[-1].entry2.next = NULL;
