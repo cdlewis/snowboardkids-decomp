@@ -6,6 +6,7 @@
 #include "course_asset_loader.h"
 #include "input_task_scheduler.h"
 #include "race_camera.h"
+#include "race_player_state.h"
 
 typedef struct {
     /* 0x000 */ s16 playerIndex;
@@ -77,9 +78,6 @@ extern void func_800710CC(s32);
 extern void func_8007115C(void);
 extern void func_80072114(s32);
 extern void func_80078430(void);
-extern void func_8008BEB0(void);
-extern void func_8008C704(void);
-extern void func_80096E3C(void);
 extern void func_80045914(void);
 extern void func_800540EC(void *);
 
