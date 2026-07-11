@@ -6,7 +6,7 @@
 #include "system_boot.h"
 #include "race_motion.h"
 #include "race_course_effects.h"
-#include "race_course_preview.h"
+#include "race_intro_effects.h"
 #include "race_item_effects.h"
 #include "race_overlay_effects.h"
 #include "race_ui_effects.h"
@@ -397,7 +397,7 @@ block_24:
         createCallbackTaskWithUserId(&initCourseBillboardMarker, 0, 0x64, 1);
         createCallbackTaskWithUserId(&initCourseBillboardMarker, 0, 0x64, 2);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
-        createCallbackTask(&initRaceCoursePreviewModelMeshes, 0, 0x64);
+        createCallbackTask(&initRaceIntroModelMeshes, 0, 0x64);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
@@ -422,7 +422,7 @@ block_24:
             }
         }
         if (gPlayerCount == 1) {
-            createCallbackTask(&initRaceCoursePreviewCameraCutscene, 0, 0x64);
+            createCallbackTask(&initRaceIntroCamera, 0, 0x64);
         }
         setBootFadeColor(0x82U, 0xAFU, 0xFFU);
         break;
@@ -504,10 +504,10 @@ block_24:
         createCallbackTask(&func_80063FC0, 0, 1);
         createCallbackTask(&initRaceCourseSceneryObjects, 0, 0x64);
         createCallbackTask(&initCourseGateObject, 0, 0x64);
-        createCallbackTask(&initRaceCoursePreviewModelMeshes, 0, 0x64);
-        createCallbackTaskWithUserId(&initRaceCoursePreviewBillboard, 0, 0x64, 0);
-        createCallbackTaskWithUserId(&initRaceCoursePreviewBillboard, 0, 0x64, 1);
-        createCallbackTaskWithUserId(&initRaceCoursePreviewBillboard, 0, 0x64, 2);
+        createCallbackTask(&initRaceIntroModelMeshes, 0, 0x64);
+        createCallbackTaskWithUserId(&initRaceIntroBillboard, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&initRaceIntroBillboard, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initRaceIntroBillboard, 0, 0x64, 2);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
@@ -529,7 +529,7 @@ block_24:
             }
         }
         if (gPlayerCount == 1) {
-            createCallbackTask(&initRaceCoursePreviewCameraCutscene, 0, 0x64);
+            createCallbackTask(&initRaceIntroCamera, 0, 0x64);
         }
         setTitleFadeColor(0xFFU, 0xFFU, 0xFFU);
         break;
@@ -564,7 +564,7 @@ block_24:
         createCallbackTask(&initRaceCourseModelRenderTask, 0, 0x64);
         createCallbackTask(&initRaceCourseSceneryObjects, 0, 0x64);
         createCallbackTask(&initCourseGateObject, 0, 0x64);
-        createCallbackTask(&initRaceCoursePreviewAnimatedBillboards, 0, 0x64);
+        createCallbackTask(&initRaceIntroAnimatedBillboards, 0, 0x64);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0) && ((gTrainingCourseLesson == 0) || (gTrainingCourseLesson == 7) || (gTrainingCourseLesson == 8))) {
             if (sp2C != 0) {

@@ -2,11 +2,11 @@
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
-#include "race_course_preview.h"
+#include "race_intro_effects.h"
 #include "spatial_math.h"
 #include "fixed_point_math.h"
 
-#define RACE_COURSE_PREVIEW_GFX_CMD(pkt, cmd0, cmd1) \
+#define RACE_INTRO_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
 { \
     Gfx *_g = (Gfx *)(pkt); \
     _g->words.w0 = (cmd0); \
@@ -38,15 +38,15 @@ typedef struct {
     /* 0x00 */ s8 textureIndex;
     /* 0x01 */ u8 pad1[3];
     /* 0x04 */ s32 command[3];
-} RaceCoursePreviewRenderCommandEntry;
+} RaceIntroRenderCommandEntry;
 
-struct RaceCoursePreviewMeshActor {
+struct RaceIntroMeshActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ GfxCommandDest *matrices;
 };
 
-typedef struct RaceCoursePreviewCamera RaceCoursePreviewCamera;
-typedef void (*RaceCoursePreviewCameraCallback)(RaceCoursePreviewCamera *);
+typedef struct RaceIntroCamera RaceIntroCamera;
+typedef void (*RaceIntroCameraCallback)(RaceIntroCamera *);
 
 typedef union {
     s32 word;
@@ -56,9 +56,9 @@ typedef union {
     } half;
 } PackedAngles;
 
-struct RaceCoursePreviewCamera {
+struct RaceIntroCamera {
     /* 0x00 */ char pad0[0x8];
-    /* 0x08 */ RaceCoursePreviewCameraCallback callback;
+    /* 0x08 */ RaceIntroCameraCallback callback;
     /* 0x0C */ char padC[0x4];
     /* 0x10 */ u16 index;
     /* 0x12 */ char pad12[0x6];
@@ -92,7 +92,7 @@ typedef struct {
     /* 0x00 */ u8 pad0[0x4E];
     /* 0x4E */ s16 matrixHandle;
     /* 0x50 */ s16 matrixHandle2;
-} RaceCoursePreviewAssetHandles;
+} RaceIntroAssetHandles;
 
 extern void *D_801248D4;
 extern void addRenderCallback(void *, void *, s32);
@@ -101,26 +101,26 @@ extern s16 D_80112144;
 extern s16 D_80112146;
 extern s16 D_80112168;
 extern s16 D_8011216A;
-extern RaceCoursePreviewAssetHandles gAssetHandles;
+extern RaceIntroAssetHandles gAssetHandles;
 extern u8 gRenderMatricesDirty;
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
 extern Gfx *allocFixedTransformMatrix(FixedTransform *arg0);
 extern void getAssetTableImageAndPalette(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);
-extern Vec3i gRaceCoursePreviewBillboardPositions[];
-extern GfxCommandDest *gRaceCoursePreviewModelVerticesByCourse[];
-extern RaceCoursePreviewRenderCommandEntry *gRaceCoursePreviewModelCommandsByCourse[];
-extern RaceCoursePreviewRenderCommandEntry *gRaceCoursePreviewAnimatedBillboardCommandsByCourse[];
-extern u16 gRaceCoursePreviewAnimatedBillboardTextureIds[];
-extern Gfx gRaceCoursePreviewAnimatedBillboardVertices[];
-extern Gfx gRaceCoursePreviewBillboardVertices[];
+extern Vec3i gRaceIntroBillboardPositions[];
+extern GfxCommandDest *gRaceIntroModelVerticesByCourse[];
+extern RaceIntroRenderCommandEntry *gRaceIntroModelCommandsByCourse[];
+extern RaceIntroRenderCommandEntry *gRaceIntroAnimatedBillboardCommandsByCourse[];
+extern u16 gRaceIntroAnimatedBillboardTextureIds[];
+extern Gfx gRaceIntroAnimatedBillboardVertices[];
+extern Gfx gRaceIntroBillboardVertices[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern GfxCommandDest gIdentityMatrix;
 extern FixedTransform gIdentityFixedTransform;
 extern void setPackedMatrixTranslation(GfxCommandDest *, s32 *);
-extern void func_80045A1C(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
+extern void getAssetTableImagePaletteAndSize(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 
 extern s8 D_80122288;
 extern s16 gRacePlayerSurfaceAngleByPlayer;
@@ -128,17 +128,17 @@ extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern u32 gViewportMatrix;
 
-// drawRaceCoursePreviewModelMeshes best match: 99.531% (nonmatchings/drawRaceCoursePreviewModelMeshes-6061209858023118177/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_preview/drawRaceCoursePreviewModelMeshes.s")
+// drawRaceIntroModelMeshes best match: 99.531% (nonmatchings/drawRaceIntroModelMeshes-6061209858023118177/base_12.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_effects/drawRaceIntroModelMeshes.s")
 
 #ifdef NON_MATCHING
-void drawRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
+void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
     volatile u8 pad[0xC];
     u32 image;
     u32 palette;
     s16 width;
     s16 height;
-    RaceCoursePreviewRenderCommandEntry *entry;
+    RaceIntroRenderCommandEntry *entry;
     GfxCommandDest *vertices;
     Gfx *gfx;
     s16 textureIndex;
@@ -146,8 +146,8 @@ void drawRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
     s8 nextTextureIndex;
 
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
-    entry = gRaceCoursePreviewModelCommandsByCourse[gRaceCourseIndex];
-    vertices = gRaceCoursePreviewModelVerticesByCourse[gRaceCourseIndex];
+    entry = gRaceIntroModelCommandsByCourse[gRaceCourseIndex];
+    vertices = gRaceIntroModelVerticesByCourse[gRaceCourseIndex];
     textureIndex = -1;
     i = 0;
 
@@ -156,7 +156,7 @@ void drawRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
             if (isPositionNearCurrentViewport(entry->command) != 0) {
                 if (textureIndex != entry->textureIndex) {
                     textureIndex = entry->textureIndex;
-                    func_80045A1C((u8 *)getRelocatableHeapBlockBase((s32)D_8011216A), (u16)textureIndex, &image, &palette,
+                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)D_8011216A), (u16)textureIndex, &image, &palette,
                                   &width, &height);
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0, G_TX_CLAMP,
                                             G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
@@ -182,17 +182,17 @@ void drawRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
 }
 #endif
 
-void enqueueDrawRaceCoursePreviewModelMeshes(s32 arg0) {
-    addRenderCallback(&D_801248D4, drawRaceCoursePreviewModelMeshes, arg0);
+void enqueueDrawRaceIntroModelMeshes(s32 arg0) {
+    addRenderCallback(&D_801248D4, drawRaceIntroModelMeshes, arg0);
 }
 
-void initRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
-    RaceCoursePreviewRenderCommandEntry *entry;
+void initRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
+    RaceIntroRenderCommandEntry *entry;
     s32 count;
     s32 allocSize;
     s32 i;
 
-    entry = gRaceCoursePreviewModelCommandsByCourse[gRaceCourseIndex];
+    entry = gRaceIntroModelCommandsByCourse[gRaceCourseIndex];
     count = 0;
     if (entry->textureIndex != -1) {
         do {
@@ -202,7 +202,7 @@ void initRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
     }
 
     if (count != 0) {
-        entry = gRaceCoursePreviewModelCommandsByCourse[gRaceCourseIndex];
+        entry = gRaceIntroModelCommandsByCourse[gRaceCourseIndex];
         allocSize = count * sizeof(GfxCommandDest);
         gAssetHandles.matrixHandle = allocRelocatableHeapBlock(allocSize);
         arg0->matrices = getRelocatableHeapBlockBase(gAssetHandles.matrixHandle);
@@ -219,10 +219,10 @@ void initRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
         osWritebackDCache(arg0->matrices, allocSize);
     }
 
-    setCallbackTaskCallback(arg0, enqueueDrawRaceCoursePreviewModelMeshes);
+    setCallbackTaskCallback(arg0, enqueueDrawRaceIntroModelMeshes);
 }
 
-void drawRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
+void drawRaceIntroBillboard(RaceIntroCamera *arg0) {
     FixedTransform sp70;
 
     if (gRenderMatricesDirty != 0) {
@@ -239,38 +239,38 @@ void drawRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
         }
 
         if (arg0->displayList0 != NULL) {
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeSetupDl);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xFD500000, arg0->image);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x070FF400);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF5400400, 0x00080200);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x0007C07C);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xFD100000, arg0->palette);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->displayList0);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x01000040, gViewportMatrix);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRaceCoursePreviewBillboardVertices);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x00060200);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeCleanupDl);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeSetupDl);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xFD500000, arg0->image);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x070FF400);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF5400400, 0x00080200);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x0007C07C);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xFD100000, arg0->palette);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->displayList0);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x01000040, gViewportMatrix);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRaceIntroBillboardVertices);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x00060200);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeCleanupDl);
         }
     }
 }
 
-void updateRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
+void updateRaceIntroBillboard(RaceIntroCamera *arg0) {
     Vec3i sp44;
     FixedMatrix3sScratch sp24;
-    RaceCoursePreviewCamera *temp_s0 = arg0;
+    RaceIntroCamera *temp_s0 = arg0;
 
     arg0->timer--;
     if (arg0->timer == 0) {
         arg0->timer = randomNextMain() + 0x1E;
-        setCallbackTaskCallback(arg0, waitRaceCoursePreviewBillboardSpawn);
+        setCallbackTaskCallback(arg0, waitRaceIntroBillboardSpawn);
     }
     makeFixedRotationY(sp24, 0x6D0);
     transformVec3iByFixedMatrix(sp24, (Vec3i *)&temp_s0->velocityY, &sp44);
@@ -278,31 +278,31 @@ void updateRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
     temp_s0->position.y += sp44.y;
     temp_s0->position.z += sp44.z;
     temp_s0->radius -= 0x4000;
-    addRenderCallback(&D_801248D4, drawRaceCoursePreviewBillboard, (s32) temp_s0);
+    addRenderCallback(&D_801248D4, drawRaceIntroBillboard, (s32) temp_s0);
 }
 
-void waitRaceCoursePreviewBillboardSpawn(RaceCoursePreviewCamera *arg0) {
+void waitRaceIntroBillboardSpawn(RaceIntroCamera *arg0) {
     Vec3i *temp_t3;
 
     arg0->timer--;
     if (!arg0->timer) {
         arg0->timer = 0x5A;
-        temp_t3 = &gRaceCoursePreviewBillboardPositions[arg0->index];
-        arg0->position = *(&gRaceCoursePreviewBillboardPositions[arg0->index]);
+        temp_t3 = &gRaceIntroBillboardPositions[arg0->index];
+        arg0->position = *(&gRaceIntroBillboardPositions[arg0->index]);
         arg0->velocityY = 0;
         arg0->radius = 0;
         arg0->angle.word = 0xFFF00000;
-        setCallbackTaskCallback(arg0, updateRaceCoursePreviewBillboard);
+        setCallbackTaskCallback(arg0, updateRaceIntroBillboard);
     }
 }
 
-void initRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
+void initRaceIntroBillboard(RaceIntroCamera *arg0) {
     arg0->timer = (arg0->index * 0x1E) + 0x1E;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), (arg0->index + 3) & 0xFFFF, &arg0->scale, &arg0->pitchVelocity);
-    setCallbackTaskCallback(arg0, waitRaceCoursePreviewBillboardSpawn);
+    setCallbackTaskCallback(arg0, waitRaceIntroBillboardSpawn);
 }
 
-void drawRaceCoursePreviewCameraModel(RaceCoursePreviewCamera *arg0) {
+void drawRaceIntroCamera(RaceIntroCamera *arg0) {
     volatile s32 pad0[1];
     FixedTransform sp84;
     FixedTransform sp64;
@@ -340,7 +340,7 @@ void drawRaceCoursePreviewCameraModel(RaceCoursePreviewCamera *arg0) {
     }
 }
 
-void approachRaceCoursePreviewSpinStep(RaceCoursePreviewCamera *arg0, s16 arg1) {
+void approachRaceIntroSpinStep(RaceIntroCamera *arg0, s16 arg1) {
     s16 diff = arg1 - arg0->timer;
 
     if (diff >= 5) {
@@ -352,7 +352,7 @@ void approachRaceCoursePreviewSpinStep(RaceCoursePreviewCamera *arg0, s16 arg1) 
     arg0->timer += diff;
 }
 
-void approachRaceCoursePreviewVerticalVelocity(RaceCoursePreviewCamera *arg0, s32 arg1) {
+void approachRaceIntroVerticalVelocity(RaceIntroCamera *arg0, s32 arg1) {
     s32 diff = arg1 - arg0->velocityY;
 
     if (diff >= 0x2001) {
@@ -364,7 +364,7 @@ void approachRaceCoursePreviewVerticalVelocity(RaceCoursePreviewCamera *arg0, s3
     arg0->velocityY += diff;
 }
 
-void approachRaceCoursePreviewOrbitRadius(RaceCoursePreviewCamera *arg0, s32 arg1) {
+void approachRaceIntroOrbitRadius(RaceIntroCamera *arg0, s32 arg1) {
     s32 diff = arg1 - arg0->radius;
 
     if (diff >= 0x2001) {
@@ -385,7 +385,7 @@ void approachRaceCoursePreviewOrbitRadius(RaceCoursePreviewCamera *arg0, s32 arg
     arg0->radius += diff;
 }
 
-void approachRaceCoursePreviewPitchVelocity(RaceCoursePreviewCamera *arg0, s16 arg1) {
+void approachRaceIntroPitchVelocity(RaceIntroCamera *arg0, s16 arg1) {
     s16 diff = arg1 - arg0->pitchVelocity;
 
     if (diff >= 5) {
@@ -399,7 +399,7 @@ void approachRaceCoursePreviewPitchVelocity(RaceCoursePreviewCamera *arg0, s16 a
     arg0->angle.half.pitch += (((-arg0->pitchVelocity * 2) - arg0->angle.half.pitch) >> 3);
 }
 
-void updateRaceCoursePreviewCameraMotion(RaceCoursePreviewCamera *arg0) {
+void updateRaceIntroCamera(RaceIntroCamera *arg0) {
     s32 sine;
     s32 cosine;
 
@@ -414,18 +414,18 @@ void updateRaceCoursePreviewCameraMotion(RaceCoursePreviewCamera *arg0) {
     arg0->position.z += ((s64) -arg0->radius * cosine) / 0x1000;
     arg0->scale = 0x80 - ((fixedSine(arg0->tilt + 0x400) + 0x1000) / 0x40);
 
-    addRenderCallback(&D_801248D4, drawRaceCoursePreviewCameraModel, (s32) arg0);
+    addRenderCallback(&D_801248D4, drawRaceIntroCamera, (s32) arg0);
 }
 
-void updateRaceCoursePreviewCameraIdle(RaceCoursePreviewCamera *arg0) {
-    approachRaceCoursePreviewSpinStep(arg0, 0x130);
-    approachRaceCoursePreviewVerticalVelocity(arg0, 0);
-    approachRaceCoursePreviewOrbitRadius(arg0, 0x100000);
-    approachRaceCoursePreviewPitchVelocity(arg0, 0xA);
-    updateRaceCoursePreviewCameraMotion(arg0);
+void updateRaceIntroCameraIdle(RaceIntroCamera *arg0) {
+    approachRaceIntroSpinStep(arg0, 0x130);
+    approachRaceIntroVerticalVelocity(arg0, 0);
+    approachRaceIntroOrbitRadius(arg0, 0x100000);
+    approachRaceIntroPitchVelocity(arg0, 0xA);
+    updateRaceIntroCamera(arg0);
 }
 
-void initRaceCoursePreviewCameraIdle(RaceCoursePreviewCamera *arg0) {
+void initRaceIntroCameraIdle(RaceIntroCamera *arg0) {
     arg0->position.x = 0xB51A13A3;
     arg0->position.y = 0xD0E85B43;
     arg0->position.z = 0x9A645264;
@@ -438,23 +438,23 @@ void initRaceCoursePreviewCameraIdle(RaceCoursePreviewCamera *arg0) {
     arg0->radius = 0x100000;
     arg0->stateTimer = 0;
     if (D_80122288 == 2) {
-        setCallbackTaskCallback(arg0, updateRaceCoursePreviewCameraIdle);
+        setCallbackTaskCallback(arg0, updateRaceIntroCameraIdle);
     }
 }
 
-void updateRaceCoursePreviewLongPanReturn(RaceCoursePreviewCamera *arg0) {
-    approachRaceCoursePreviewSpinStep(arg0, 0x130);
-    approachRaceCoursePreviewVerticalVelocity(arg0, -0x20000);
-    approachRaceCoursePreviewOrbitRadius(arg0, 0x100000);
-    approachRaceCoursePreviewPitchVelocity(arg0, -3);
-    updateRaceCoursePreviewCameraMotion(arg0);
+void updateRaceIntroLongPanReturn(RaceIntroCamera *arg0) {
+    approachRaceIntroSpinStep(arg0, 0x130);
+    approachRaceIntroVerticalVelocity(arg0, -0x20000);
+    approachRaceIntroOrbitRadius(arg0, 0x100000);
+    approachRaceIntroPitchVelocity(arg0, -3);
+    updateRaceIntroCamera(arg0);
     arg0->stateTimer--;
     if (arg0->stateTimer == 0) {
-        setCallbackTaskCallback(arg0, initRaceCoursePreviewCameraIdle);
+        setCallbackTaskCallback(arg0, initRaceIntroCameraIdle);
     }
 }
 
-void initRaceCoursePreviewLongPanReturn(RaceCoursePreviewCamera *arg0) {
+void initRaceIntroLongPanReturn(RaceIntroCamera *arg0) {
     arg0->position.x = 0x05CA84CF;
     arg0->position.y = 0x00D0C976;
     arg0->position.z = 0xFAA3DA4A;
@@ -467,58 +467,58 @@ void initRaceCoursePreviewLongPanReturn(RaceCoursePreviewCamera *arg0) {
     arg0->radius = 0x100000;
     arg0->stateTimer = 0x154;
     if (D_80122288 == 1) {
-        setCallbackTaskCallback(arg0, updateRaceCoursePreviewLongPanReturn);
+        setCallbackTaskCallback(arg0, updateRaceIntroLongPanReturn);
     }
 }
 
-void updateRaceCoursePreviewLongPanHold(RaceCoursePreviewCamera *arg0) {
-    approachRaceCoursePreviewSpinStep(arg0, 0x130);
-    approachRaceCoursePreviewVerticalVelocity(arg0, 0);
-    approachRaceCoursePreviewOrbitRadius(arg0, 0x100000);
-    approachRaceCoursePreviewPitchVelocity(arg0, 0);
-    updateRaceCoursePreviewCameraMotion(arg0);
+void updateRaceIntroLongPanHold(RaceIntroCamera *arg0) {
+    approachRaceIntroSpinStep(arg0, 0x130);
+    approachRaceIntroVerticalVelocity(arg0, 0);
+    approachRaceIntroOrbitRadius(arg0, 0x100000);
+    approachRaceIntroPitchVelocity(arg0, 0);
+    updateRaceIntroCamera(arg0);
     arg0->stateTimer--;
     if (arg0->stateTimer == 0) {
-        setCallbackTaskCallback(arg0, initRaceCoursePreviewLongPanReturn);
+        setCallbackTaskCallback(arg0, initRaceIntroLongPanReturn);
     }
 }
 
-void updateRaceCoursePreviewLongPanPitchUp(RaceCoursePreviewCamera *arg0) {
-    approachRaceCoursePreviewSpinStep(arg0, 0x130);
-    approachRaceCoursePreviewVerticalVelocity(arg0, 0);
-    approachRaceCoursePreviewOrbitRadius(arg0, 0x100000);
-    approachRaceCoursePreviewPitchVelocity(arg0, 0x30);
-    updateRaceCoursePreviewCameraMotion(arg0);
+void updateRaceIntroLongPanPitchUp(RaceIntroCamera *arg0) {
+    approachRaceIntroSpinStep(arg0, 0x130);
+    approachRaceIntroVerticalVelocity(arg0, 0);
+    approachRaceIntroOrbitRadius(arg0, 0x100000);
+    approachRaceIntroPitchVelocity(arg0, 0x30);
+    updateRaceIntroCamera(arg0);
     arg0->stateTimer--;
     if (arg0->stateTimer == 0) {
         arg0->stateTimer = 0x96;
-        setCallbackTaskCallback(arg0, updateRaceCoursePreviewLongPanHold);
+        setCallbackTaskCallback(arg0, updateRaceIntroLongPanHold);
     }
 }
 
-void updateRaceCoursePreviewLongPanRise(RaceCoursePreviewCamera *arg0) {
-    approachRaceCoursePreviewSpinStep(arg0, 0x130);
-    approachRaceCoursePreviewVerticalVelocity(arg0, 0x20000);
-    approachRaceCoursePreviewOrbitRadius(arg0, 0x100000);
-    approachRaceCoursePreviewPitchVelocity(arg0, 0);
+void updateRaceIntroLongPanRise(RaceIntroCamera *arg0) {
+    approachRaceIntroSpinStep(arg0, 0x130);
+    approachRaceIntroVerticalVelocity(arg0, 0x20000);
+    approachRaceIntroOrbitRadius(arg0, 0x100000);
+    approachRaceIntroPitchVelocity(arg0, 0);
     arg0->stateTimer--;
-    updateRaceCoursePreviewCameraMotion(arg0);
+    updateRaceIntroCamera(arg0);
     if (arg0->stateTimer == 0) {
         arg0->stateTimer = 0x2A;
-        setCallbackTaskCallback(arg0, updateRaceCoursePreviewLongPanPitchUp);
+        setCallbackTaskCallback(arg0, updateRaceIntroLongPanPitchUp);
     }
 }
 
-void waitRaceCoursePreviewLongPanTrigger(RaceCoursePreviewCamera *arg0) {
-    approachRaceCoursePreviewSpinStep(arg0, 0x130);
-    updateRaceCoursePreviewCameraMotion(arg0);
+void waitRaceIntroLongPanTrigger(RaceIntroCamera *arg0) {
+    approachRaceIntroSpinStep(arg0, 0x130);
+    updateRaceIntroCamera(arg0);
     if (gRacePlayerSurfaceAngleByPlayer == 0x35) {
         arg0->stateTimer = 0x6A;
-        setCallbackTaskCallback(arg0, updateRaceCoursePreviewLongPanRise);
+        setCallbackTaskCallback(arg0, updateRaceIntroLongPanRise);
     }
 }
 
-void initRaceCoursePreviewLongPan(RaceCoursePreviewCamera *arg0) {
+void initRaceIntroLongPan(RaceIntroCamera *arg0) {
     arg0->position.x = 0xE6C45F50;
     arg0->position.y = 0xED3C9CFB;
     arg0->position.z = 0xD14CD682;
@@ -529,18 +529,18 @@ void initRaceCoursePreviewLongPan(RaceCoursePreviewCamera *arg0) {
     arg0->pitchVelocity = 0;
     arg0->velocityY = 0;
     arg0->stateTimer = 0x1E;
-    setCallbackTaskCallback(arg0, waitRaceCoursePreviewLongPanTrigger);
+    setCallbackTaskCallback(arg0, waitRaceIntroLongPanTrigger);
 }
 
-void updateRaceCoursePreviewShortPanFinal(RaceCoursePreviewCamera *arg0) {
-    approachRaceCoursePreviewSpinStep(arg0, 0x130);
-    approachRaceCoursePreviewVerticalVelocity(arg0, 0);
-    approachRaceCoursePreviewOrbitRadius(arg0, 0x100000);
-    approachRaceCoursePreviewPitchVelocity(arg0, 0x18);
-    updateRaceCoursePreviewCameraMotion(arg0);
+void updateRaceIntroShortPanFinal(RaceIntroCamera *arg0) {
+    approachRaceIntroSpinStep(arg0, 0x130);
+    approachRaceIntroVerticalVelocity(arg0, 0);
+    approachRaceIntroOrbitRadius(arg0, 0x100000);
+    approachRaceIntroPitchVelocity(arg0, 0x18);
+    updateRaceIntroCamera(arg0);
 }
 
-void initRaceCoursePreviewShortPanFinal(RaceCoursePreviewCamera *arg0) {
+void initRaceIntroShortPanFinal(RaceIntroCamera *arg0) {
     arg0->position.x = 0xF049BD62;
     arg0->position.y = 0xF0E87871;
     arg0->position.z = 0xDA07DE30;
@@ -552,18 +552,18 @@ void initRaceCoursePreviewShortPanFinal(RaceCoursePreviewCamera *arg0) {
     arg0->velocityY = 0;
     arg0->radius = 0x100000;
     arg0->stateTimer = 0x1E;
-    setCallbackTaskCallback(arg0, updateRaceCoursePreviewShortPanFinal);
+    setCallbackTaskCallback(arg0, updateRaceIntroShortPanFinal);
 }
 
-void waitRaceCoursePreviewShortPanFinal(RaceCoursePreviewCamera *arg0) {
-    approachRaceCoursePreviewSpinStep(arg0, 0x130);
-    updateRaceCoursePreviewCameraMotion(arg0);
+void waitRaceIntroShortPanFinal(RaceIntroCamera *arg0) {
+    approachRaceIntroSpinStep(arg0, 0x130);
+    updateRaceIntroCamera(arg0);
     if (D_80122288 == 2) {
-        setCallbackTaskCallback(arg0, initRaceCoursePreviewShortPanFinal);
+        setCallbackTaskCallback(arg0, initRaceIntroShortPanFinal);
     }
 }
 
-void initRaceCoursePreviewShortPanSecond(RaceCoursePreviewCamera *arg0) {
+void initRaceIntroShortPanSecond(RaceIntroCamera *arg0) {
     arg0->position.x = 0xAB4FC576;
     arg0->position.y = 0xE13FBC73;
     arg0->position.z = 0xD2B26423;
@@ -574,18 +574,18 @@ void initRaceCoursePreviewShortPanSecond(RaceCoursePreviewCamera *arg0) {
     arg0->pitchVelocity = 0;
     arg0->velocityY = 0;
     arg0->stateTimer = 0x1E;
-    setCallbackTaskCallback(arg0, waitRaceCoursePreviewShortPanFinal);
+    setCallbackTaskCallback(arg0, waitRaceIntroShortPanFinal);
 }
 
-void waitRaceCoursePreviewShortPanSecond(RaceCoursePreviewCamera *arg0) {
-    approachRaceCoursePreviewSpinStep(arg0, 0x30);
-    updateRaceCoursePreviewCameraMotion(arg0);
+void waitRaceIntroShortPanSecond(RaceIntroCamera *arg0) {
+    approachRaceIntroSpinStep(arg0, 0x30);
+    updateRaceIntroCamera(arg0);
     if (D_80122288 == 1) {
-        setCallbackTaskCallback(arg0, initRaceCoursePreviewShortPanSecond);
+        setCallbackTaskCallback(arg0, initRaceIntroShortPanSecond);
     }
 }
 
-void initRaceCoursePreviewShortPan(RaceCoursePreviewCamera *arg0) {
+void initRaceIntroShortPan(RaceIntroCamera *arg0) {
     arg0->position.x = 0xAB4FC576;
     arg0->position.y = 0xE0CEDC73;
     arg0->position.z = 0xD2B26423;
@@ -596,48 +596,48 @@ void initRaceCoursePreviewShortPan(RaceCoursePreviewCamera *arg0) {
     arg0->pitchVelocity = 0;
     arg0->velocityY = 0;
     arg0->stateTimer = 0x1E;
-    setCallbackTaskCallback(arg0, waitRaceCoursePreviewShortPanSecond);
+    setCallbackTaskCallback(arg0, waitRaceIntroShortPanSecond);
 }
 
-void initRaceCoursePreviewCameraCutscene(RaceCoursePreviewCamera *arg0) {
+void initRaceIntroCamera(RaceIntroCamera *arg0) {
     s16 temp_v0 = gRaceCourseIndex;
 
     if (temp_v0 == 3) {
-        setCallbackTaskCallback(arg0, initRaceCoursePreviewLongPan);
+        setCallbackTaskCallback(arg0, initRaceIntroLongPan);
         temp_v0 = gRaceCourseIndex;
     }
     if (temp_v0 == 6) {
-        setCallbackTaskCallback(arg0, initRaceCoursePreviewShortPan);
+        setCallbackTaskCallback(arg0, initRaceIntroShortPan);
     }
 }
 
-// drawRaceCoursePreviewAnimatedBillboards best match: 99.373% (nonmatchings/drawRaceCoursePreviewAnimatedBillboards-6061209858023118177/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_preview/drawRaceCoursePreviewAnimatedBillboards.s")
+// drawRaceIntroAnimatedBillboards best match: 99.373% (nonmatchings/drawRaceIntroAnimatedBillboards-6061209858023118177/base_10.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_effects/drawRaceIntroAnimatedBillboards.s")
 
 #ifdef NON_MATCHING
-void drawRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
+void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
     volatile u8 pad[0xC];
     u32 image;
     u32 palette;
     s16 width;
     s16 height;
-    RaceCoursePreviewRenderCommandEntry *entry;
+    RaceIntroRenderCommandEntry *entry;
     Gfx *gfx;
     s16 textureIndex;
     s16 loadedTextureIndex;
     s32 i;
 
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
-    entry = gRaceCoursePreviewAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
+    entry = gRaceIntroAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
     loadedTextureIndex = -1;
     i = 0;
     if (entry->textureIndex != -1) {
         do {
             if (isPositionNearCurrentViewport(entry->command) != 0) {
-                textureIndex = gRaceCoursePreviewAnimatedBillboardTextureIds[entry->textureIndex] + ((s32)(gFrameCounter & 4) / 4);
+                textureIndex = gRaceIntroAnimatedBillboardTextureIds[entry->textureIndex] + ((s32)(gFrameCounter & 4) / 4);
                 if (textureIndex != loadedTextureIndex) {
                     loadedTextureIndex = textureIndex;
-                    func_80045A1C((u8 *)getRelocatableHeapBlockBase((s32)D_80112168), textureIndex & 0xFFFF, &image, &palette,
+                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)D_80112168), textureIndex & 0xFFFF, &image, &palette,
                                   &width, &height);
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0, G_TX_CLAMP,
                                             G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
@@ -646,9 +646,9 @@ void drawRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
                 gSPMatrix(gRegionAllocPtr++, &arg0->matrices[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
                 gfx = gRegionAllocPtr++;
-                gfx->words.w1 = (u32)gRaceCoursePreviewAnimatedBillboardVertices;
+                gfx->words.w1 = (u32)gRaceIntroAnimatedBillboardVertices;
                 gfx->words.w0 = 0x0400103F;
-                RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
+                RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
             }
             entry++;
             i++;
@@ -658,17 +658,17 @@ void drawRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
 }
 #endif
 
-void enqueueDrawRaceCoursePreviewAnimatedBillboards(s32 arg0) {
-    addRenderCallback(&D_801248D4, drawRaceCoursePreviewAnimatedBillboards, arg0);
+void enqueueDrawRaceIntroAnimatedBillboards(s32 arg0) {
+    addRenderCallback(&D_801248D4, drawRaceIntroAnimatedBillboards, arg0);
 }
 
-void initRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
-    RaceCoursePreviewRenderCommandEntry *entry;
+void initRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
+    RaceIntroRenderCommandEntry *entry;
     s32 count;
     s32 allocSize;
     s32 i;
 
-    entry = gRaceCoursePreviewAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
+    entry = gRaceIntroAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
     count = 0;
     if (entry->textureIndex != -1) {
         do {
@@ -678,7 +678,7 @@ void initRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
     }
 
     if (count != 0) {
-        entry = gRaceCoursePreviewAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
+        entry = gRaceIntroAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
         allocSize = count * sizeof(GfxCommandDest);
         gAssetHandles.matrixHandle2 = allocRelocatableHeapBlock(allocSize);
         arg0->matrices = getRelocatableHeapBlockBase(gAssetHandles.matrixHandle2);
@@ -695,5 +695,5 @@ void initRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
         osWritebackDCache(arg0->matrices, allocSize);
     }
 
-    setCallbackTaskCallback(arg0, enqueueDrawRaceCoursePreviewAnimatedBillboards);
+    setCallbackTaskCallback(arg0, enqueueDrawRaceIntroAnimatedBillboards);
 }
