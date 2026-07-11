@@ -280,7 +280,7 @@ void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->pos.y = arg0->pos.y + arg0->accelerationY;
         arg0->pos.z += zOffset;
 
-        arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        arg0->startAngle = findRaceCourseSurfaceFromHint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
         groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
@@ -449,7 +449,7 @@ void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->pos.y = arg0->pos.y + arg0->accelerationY;
         arg0->pos.z += zOffset;
 
-        arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        arg0->startAngle = findRaceCourseSurfaceFromHint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
         groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
@@ -620,7 +620,7 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->pos.y = prevY + (arg0->accelerationY & 0xFFFFFFFFu);
         arg0->pos.z += zOffset;
 
-        arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        arg0->startAngle = findRaceCourseSurfaceFromHint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
         groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
@@ -765,7 +765,7 @@ void updateThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
         arg0->pos.y = arg0->pos.y + arg0->accelerationY;
         arg0->pos.z += zOffset;
 
-        arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        arg0->startAngle = findRaceCourseSurfaceFromHint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
         groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
@@ -908,7 +908,7 @@ void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->pos.y = arg0->pos.y + arg0->accelerationY;
         arg0->pos.z += zOffset;
 
-        arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        arg0->startAngle = findRaceCourseSurfaceFromHint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
         groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
@@ -1075,7 +1075,7 @@ void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->pos.y = arg0->pos.y + arg0->accelerationY;
         arg0->pos.z += zOffset;
 
-        arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+        arg0->startAngle = findRaceCourseSurfaceFromHint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
         groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
         y = arg0->pos.y;
         if (y < groundY) {
@@ -1239,7 +1239,7 @@ void updateFallingActionProjectile(RaceItemProjectileActor *arg0) {
         arg0->pos.y += accelerationY;
         arg0->accelerationY = accelerationY - 0x6000;
 
-        arg0->angle = findRaceCourseSurfaceFromPoint(arg0->angle, arg0->pos.x, arg0->pos.z);
+        arg0->angle = findRaceCourseSurfaceFromHint(arg0->angle, arg0->pos.x, arg0->pos.z);
         groundY = getRaceCourseSurfaceHeight(arg0->angle, arg0->pos.x, arg0->pos.z);
         if (arg0->pos.y < groundY + 0x30000) {
             arg0->pos.y = groundY + 0x30000;
@@ -1348,7 +1348,7 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
             arg0->pos.y = y + arg0->accelerationY;
             arg0->pos.z += zOffset;
 
-            arg0->startAngle = findRaceCourseSurfaceFromPoint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
+            arg0->startAngle = findRaceCourseSurfaceFromHint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
             groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
             y = arg0->pos.y;
             if (y < groundY) {

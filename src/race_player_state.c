@@ -404,7 +404,7 @@ void func_8008C098(RaceInputPlayer *player) {
         player->facingAngle = start->angle;
         player->unk502 = start->unkC;
     }
-    player->unk502 = findRaceCourseSurfaceFromPoint(player->unk502, player->posX, player->posZ);
+    player->unk502 = findRaceCourseSurfaceFromHint(player->unk502, player->posX, player->posZ);
     groundY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
     player->posY = groundY;
     if (D_80121B59 == 0) {

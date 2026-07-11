@@ -523,7 +523,7 @@ void func_80067364(RaceThrownModelActor *arg0) {
         arg0->pitch -= 0x20;
 
         if (timer == 0) {
-            arg0->unk2C = findRaceCourseSurfaceFromPoint(arg0->unk2C, arg0->pos.x, arg0->pos.z);
+            arg0->unk2C = findRaceCourseSurfaceFromHint(arg0->unk2C, arg0->pos.x, arg0->pos.z);
             groundY = getRaceCourseSurfaceHeight(arg0->unk2C, arg0->pos.x, arg0->pos.z);
             pos = &arg0->pos;
             if (arg0->pos.y < groundY) {

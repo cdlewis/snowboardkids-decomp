@@ -146,11 +146,11 @@ void initRaceCourseSurfaceData(void) {
     gRaceCourseSurfaces = (RaceMotionSurface *)(v1 + 2);
 }
 
-// findRaceCourseSurfaceFromPoint best match: 87.524% (base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/findRaceCourseSurfaceFromPoint.s")
+// findRaceCourseSurfaceFromHint best match: 87.524% (base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_motion/findRaceCourseSurfaceFromHint.s")
 
 #ifdef NON_MATCHING
-s32 findRaceCourseSurfaceFromPoint(s32 index, s32 x, s32 z) {
+s32 findRaceCourseSurfaceFromHint(s32 index, s32 x, s32 z) {
     RaceMotionSurface *keyframes;
     RaceMotionSurface *keyframe;
     RaceMotionCoord *coords;
@@ -884,7 +884,7 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
         *arg3 += gRaceCourseSurfaceCoords[((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex].x << 0x11;
         *arg4 += gRaceCourseSurfaceCoords[((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex].z << 0x11;
 
-        pathIndex = findRaceCourseSurfaceFromPoint(arg0, *arg3, *arg4);
+        pathIndex = findRaceCourseSurfaceFromHint(arg0, *arg3, *arg4);
         gRaceCourseSurfaceAngleSin = fixedSine(gRaceCourseSurfaces[pathIndex].angle);
         nextKeyframeOffset = pathIndex * sizeof(RaceMotionSurface);
         gRaceCourseSurfaceAngleCos = fixedCosine(((RaceMotionSurface *)((s32)gRaceCourseSurfaces + nextKeyframeOffset))->angle);

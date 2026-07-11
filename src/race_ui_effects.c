@@ -5428,7 +5428,7 @@ void func_80065E90(RaceUiOverlayActor *arg0) {
     arg0->x = 0;
     arg0->z = D_80121DA4 + 0xFF900000;
     arg0->velocity = 0;
-    arg0->y = getRaceCourseSurfaceHeight(findRaceCourseSurfaceFromPoint(0, 0, arg0->z), arg0->x, arg0->z) + 0x200000;
+    arg0->y = getRaceCourseSurfaceHeight(findRaceCourseSurfaceFromHint(0, 0, arg0->z), arg0->x, arg0->z) + 0x200000;
 
     for (i = 0; i < 0x40; i++) {
         arg0->velocity += 0x2000;

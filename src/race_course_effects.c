@@ -852,7 +852,7 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             arg0->pos.x += fixedSine(arg0->unk3E) * ((s32)-arg0->unk50 / 4096);
             dz = arg0->pos.z + (fixedCosine(arg0->unk3E) * ((s32)-arg0->unk50 / 4096));
             arg0->pos.z = dz;
-            arg0->unk3C = findRaceCourseSurfaceFromPoint(arg0->unk3C, arg0->pos.x, dz);
+            arg0->unk3C = findRaceCourseSurfaceFromHint(arg0->unk3C, arg0->pos.x, dz);
             arg0->pos.y = getRaceCourseSurfaceHeight(arg0->unk3C, arg0->pos.x, arg0->pos.z);
             if (arg0->pad42 != 0) {
                 dx = arg0->pos.x - arg0->unk24;
