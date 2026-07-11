@@ -21,6 +21,7 @@ typedef struct {
     u16 targetScale;
     u8 pad6[2];
     u8 selectedOption;
+    u8 unk9;
 } ControllerPakConfirmTransition;
 
 extern void func_800483FC(void *, void *, s32);
@@ -149,7 +150,7 @@ void func_80030570(ControllerPakTitleActor *arg0) {
     func_80071824(arg0, func_8003048C);
 }
 
-// func_800305B8 best match: 99.732% (nonmatchings/func_800305B8-5272447827802519043/base_2.c)
+// func_800305B8 best match: 99.732% (nonmatchings/func_800305B8-6061209858023118177/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_menu_ui/func_800305B8.s")
 
 #ifdef NON_MATCHING
@@ -241,7 +242,7 @@ void func_800305B8(ControllerPakConfirmActor *arg0) {
             func_80013154((s16)(actor->common.x + 0x40), (s16)(actor->common.y - yAdjust + playerY), message, 0, alpha,
                           0);
             playerIndex++;
-            playerY += 0x10;
+            playerY = playerY + 0x10;
         } while (playerIndex != 4);
     } else {
         func_80013154(actor->common.x, actor->common.y, &D_800B7E78[actor->targetScale * 0x68], 0, actor->scale, 0);
@@ -263,6 +264,8 @@ void func_800305B8(ControllerPakConfirmActor *arg0) {
                       0x18, 0x20, 0x20, 0, alpha, 0);
         func_8000F8AC((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + (D_8010ADD0.unk9 * 0x10) + 0x10),
                       func_80043040(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, actor->optionScale, 0);
+        if (1) {
+        }
     }
 
     if ((actor->state == 1) || (actor->state == 3) || (actor->state == 8)) {

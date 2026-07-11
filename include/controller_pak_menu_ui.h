@@ -29,7 +29,7 @@ typedef struct {
     /* 0x20 */ u16 timer;
     /* 0x22 */ u8 state;
     /* 0x23 */ u8 selectedOption;
-    /* 0x24 */ s16 targetScale;
+    /* 0x24 */ u16 targetScale;
 } ControllerPakConfirmActor;
 
 typedef struct {
