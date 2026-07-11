@@ -80,7 +80,7 @@ typedef struct {
 extern void func_800483FC(void *, void *, void *);
 extern s8 D_8010AE52;
 extern u8 D_8010AE51;
-extern RaceHudCharacterSelectState D_8010AE50;
+extern RaceHudCharacterSelectState gCharacterSelectHudState;
 extern RaceHudPlayerFrameController *D_8010ADE0;
 extern void *D_8010ADE4;
 extern RaceHudPanelController *D_8010ADE8;
@@ -196,15 +196,15 @@ void func_800177F8(RaceHudBannerActor *arg0) {
     RaceHudBannerActor *actor;
 
     actor = arg0;
-    if (D_8010AE50.phase != arg0->state) {
-        arg0->state = D_8010AE50.phase;
-        arg0->alpha = D_8010AE50.fade;
-        arg0->bounceTimer = D_8010AE50.unkD;
-        arg0->unk1E = D_8010AE50.unkA;
+    if (gCharacterSelectHudState.phase != arg0->state) {
+        arg0->state = gCharacterSelectHudState.phase;
+        arg0->alpha = gCharacterSelectHudState.fade;
+        arg0->bounceTimer = gCharacterSelectHudState.unkD;
+        arg0->unk1E = gCharacterSelectHudState.unkA;
     }
 
-    if (D_8010AE50.confirmSelection != actor->mode) {
-        actor->mode = D_8010AE50.confirmSelection;
+    if (gCharacterSelectHudState.confirmSelection != actor->mode) {
+        actor->mode = gCharacterSelectHudState.confirmSelection;
     }
 
     alpha = actor->alpha;
@@ -235,7 +235,7 @@ void func_800177F8(RaceHudBannerActor *arg0) {
                 actor->alpha = 0;
             }
             actor->state = 3;
-            D_8010AE50.exitMode = 1;
+            gCharacterSelectHudState.exitMode = 1;
             D_801235B4 = 0x63;
             break;
         case 4:
@@ -249,7 +249,7 @@ void func_800177F8(RaceHudBannerActor *arg0) {
         }
     }
 
-    D_8010AE50.phase = actor->state;
+    gCharacterSelectHudState.phase = actor->state;
     D_8010AE58 = actor->alpha;
     if (actor->state != 8) {
         func_800483FC(&D_80124868, func_800171F0, actor);
@@ -322,14 +322,14 @@ void func_80017C34(RaceHudPanelActor *arg0) {
     owner = D_8010ADE0;
     actor = arg0;
     var_v0 = actor->targetY.mode;
-    desired = D_8010AE50.exitMode;
+    desired = gCharacterSelectHudState.exitMode;
     var_v1 = var_v0;
     if (desired != var_v0) {
         actor->targetY.mode = desired;
         var_v0 = desired & 0xFF;
-        actor->targetX.target[0] = D_8010AE50.cursorX;
+        actor->targetX.target[0] = gCharacterSelectHudState.cursorX;
         var_v1 = var_v0;
-        actor->targetX.target[1] = D_8010AE50.cursorY;
+        actor->targetX.target[1] = gCharacterSelectHudState.cursorY;
     }
 
     switch (var_v1) {
@@ -833,7 +833,7 @@ void func_80018C80(RaceHudPanelActor *arg0) {
     slots = D_8010ADE4;
     i = 0;
     if ((s32)D_80121B55 > 0) {
-        stateMirror = (u8 *)&D_8010AE50;
+        stateMirror = (u8 *)&gCharacterSelectHudState;
         actor = base;
         do {
             state = actor->state[0];

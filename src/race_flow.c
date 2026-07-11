@@ -445,7 +445,7 @@ void func_800732C4(void) {
 
 void func_80073308(void) {
     func_8009956C(&func_8007334C, 0);
-    func_800994F4(4, &func_80004960, 0x64);
+    func_800994F4(4, &initCharacterSelectMenu, 0x64);
     func_80099614(2);
 }
 

@@ -3,9 +3,9 @@
 
 #include "common.h"
 
-void func_80004960(void);
-void func_80004CC8(void);
-void func_80005290(void);
-void func_80005468(void);
+void initCharacterSelectMenu(void);
+void updateCharacterSelectMenu(void);
+void updateCharacterSelectConfirmationMenu(void);
+void fadeOutCharacterSelectMenu(void);
 
 #endif
