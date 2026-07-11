@@ -5,6 +5,7 @@
 #include "race_input_history.h"
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
+#include "model_animation.h"
 
 #define RACE_MODEL_BUFFER_HANDLE (*(s16 *)&D_80112130[0x48])
 
@@ -164,8 +165,6 @@ extern s32 func_80088E98(Vec3i *, s32, s32, s16);
 extern void func_8008BB5C(RaceInputPlayer *, s32);
 extern void func_800483FC(void *, void *, void *);
 extern void func_80072A74(s32, void *, s32, s32);
-extern s16 func_8007D200(s16, s32, s32);
-extern s32 func_80080CC4(s16, s32, s32);
 extern void func_80089000(void *, s32, s32);
 extern u8 D_800D9498[][0x10];
 extern u8 D_800D94D8[][0x10];

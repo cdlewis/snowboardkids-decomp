@@ -1,4 +1,5 @@
 #include "common.h"
+#include "model_animation.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 
@@ -155,10 +156,6 @@ void func_8004EA34(s32, s32, s32, s16);
 void func_8006224C(s32, s32, s32, u16);
 void func_80072A74(s32, void *, s32, s32);
 s32 func_80098C30(s64);
-s16 func_8007D200(s16, s32, s32);
-void func_8007ECF4(s16, s32, s32, s32, s32 *, s32 *, s32 *, s32 *);
-void func_8007FF88(s16, s32, s32, s32, s32 *, s32 *);
-s32 func_80080CC4(s16, s32, s32);
 s32 func_800891B8(Vec3i *, s32, s32, s16);
 s16 func_80097AE8(s16);
 s16 func_80097B48(s16);

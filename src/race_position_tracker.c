@@ -1,4 +1,5 @@
 #include "common.h"
+#include "model_animation.h"
 
 // Race player records are 0x60C bytes apart. This view only names the fields
 // touched by this placement/progress tracking module.
@@ -51,7 +52,6 @@ extern u8 D_800EC9C2;
 extern u8 D_80121B55;
 extern s16 D_80121B50;
 
-extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
 extern s16 func_80097AE8(s16);
 extern s16 func_80097B48(s16);
 

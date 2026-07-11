@@ -4,6 +4,7 @@
 #include "asset_decompression.h"
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
+#include "model_animation.h"
 
 #define COURSE_INDEX_RELOAD (*(volatile s16 *)&D_80121B50)
 
@@ -250,8 +251,6 @@ extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80088294(Vec3i *, s32, s32, u16);
 extern void func_80088A1C(Vec3i *, s32, s32, s32, s32);
-extern s16 func_8007D200(s16, s32, s32);
-extern s32 func_80080CC4(s16, s32, s32);
 extern void osWritebackDCache(void *, s32);
 extern void func_80088294(Vec3i *, s32, s32, u16);
 extern void func_80088A1C(Vec3i *, s32, s32, s32, s32);
