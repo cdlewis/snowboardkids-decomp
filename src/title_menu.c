@@ -69,14 +69,14 @@ extern u8 D_800B5200[];
 extern u8 gAssetHandles[];
 extern s16 D_8011216E;
 extern s16 gMenuCommonSpritesAssetHandle;
-extern s16 D_8011217C;
+extern s16 gMenuIconTilemapAssetHandle;
 extern u8 gPlayerCount;
 extern u8 D_800B5A2E[];
 extern u8 D_800B5A2F[];
 extern u8 D_800EC9C1;
 extern s32 gMenuFlowState;
 extern Struct801235B8 *gCurrentGameTask;
-extern s32 D_80124838;
+extern s32 gMenuOverlayRenderCallbackList;
 extern s32 gMenuRenderCallbackList;
 
 void func_80014600(MenuIntroActor *arg0) {
@@ -1255,13 +1255,13 @@ void func_800170AC(SpriteActor *arg0) {
         actor->sprite.unk0 = 0x2FF;
     }
     temp_v0->unk2 = (temp_v0->unk2 + 1) & 0x1FF;
-    addRenderCallback(&D_80124838, func_80017078, (s32)temp_a2);
+    addRenderCallback(&gMenuOverlayRenderCallbackList, func_80017078, (s32)temp_a2);
 }
 
 void func_8001710C(SpriteActor *arg0) {
     SpriteActor *temp_a2 = arg0;
 
-    func_80017168(&temp_a2->sprite, getRelocatableHeapBlockBase(D_8011217C));
+    func_80017168(&temp_a2->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
     temp_a2->x = temp_a2->sprite.unk8;
     temp_a2->y = temp_a2->sprite.unkA;
     setCallbackTaskCallback(temp_a2, func_800170AC);

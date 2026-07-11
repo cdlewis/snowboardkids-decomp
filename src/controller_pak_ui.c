@@ -26,7 +26,7 @@ typedef struct {
 
 extern void addRenderCallback(void *, void *, s32);
 extern s32 gMenuRenderCallbackList;
-extern s32 D_80124838;
+extern s32 gMenuOverlayRenderCallbackList;
 extern CharacterSelectFlowState *gCurrentGameTask;
 extern ControllerPakPromptTransition gControllerPakContinuePromptTransition;
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
@@ -40,7 +40,7 @@ extern u8 gControllerPakDeletePromptState;
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
 extern s16 gMenuCommonSpritesAssetHandle;
-extern s16 D_8011217C;
+extern s16 gMenuIconTilemapAssetHandle;
 extern s16 D_80112178;
 extern u8 gControllerPakContinuePromptText[];
 extern u8 gControllerPakAreYouSureText[];
@@ -746,11 +746,11 @@ void drawControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
 }
 
 void updateControllerPakFileDeleteIcon(s32 arg0) {
-    addRenderCallback(&D_80124838, drawControllerPakFileDeleteIcon, arg0);
+    addRenderCallback(&gMenuOverlayRenderCallbackList, drawControllerPakFileDeleteIcon, arg0);
 }
 
 void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
-    func_80017168((DstStruct_80017168 *)&arg0->sprite, getRelocatableHeapBlockBase(D_8011217C));
+    func_80017168((DstStruct_80017168 *)&arg0->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x10;
     arg0->common.x = arg0->startX;
@@ -763,11 +763,11 @@ void drawControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
 }
 
 void updateControllerPakMessageIcon(s32 arg0) {
-    addRenderCallback(&D_80124838, drawControllerPakMessageIcon, arg0);
+    addRenderCallback(&gMenuOverlayRenderCallbackList, drawControllerPakMessageIcon, arg0);
 }
 
 void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
-    func_80017168((DstStruct_80017168 *)&arg0->sprite, getRelocatableHeapBlockBase(D_8011217C));
+    func_80017168((DstStruct_80017168 *)&arg0->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x20;
     arg0->common.x = arg0->startX;

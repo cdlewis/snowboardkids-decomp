@@ -140,7 +140,7 @@ extern s16 gCourseSelectStatsPlayerMarkerLayout[][2];
 extern s16 gAssetHandles[];
 extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 D_8011217A;
-extern s16 D_8011217E;
+extern s16 gMenuPanelTilemapAssetHandle;
 extern u8 gPlayerCount;
 extern CourseSelectRacePlayer D_80121D80[];
 extern u8 D_80121D86[][sizeof(CourseSelectRacePlayer)];
@@ -785,7 +785,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                         }
 
                         if (gRaceSplitscreenMode == 3) {
-                            drawMenuSpriteClipped(position[0], position[20], getRelocatableHeapBlockBase(D_8011217E), 5, 0x20,
+                            drawMenuSpriteClipped(position[0], position[20], getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 5, 0x20,
                                           0x20, 0, alpha, arg0->clipLeft - clipOffset, new_var->clipTop,
                                           new_var->clipRight, new_var->clipBottom);
                         } else {
