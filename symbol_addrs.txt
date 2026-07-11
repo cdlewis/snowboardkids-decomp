@@ -523,6 +523,7 @@ updateEndingCreditsTumblingSnowboardSlideIn = 0x8003B740; // type:func rom:0x3C3
 releaseMenuAssetHandles = 0x80045914; // type:func
 resetAllViewports = 0x800704F0; // type:func
 configureViewport = 0x8007066C; // type:func
+configureViewportWithFovAndFarClip = 0x80070860; // type:func
 initCallbackTaskScheduler = 0x80070EC0; // type:func
 updateCallbackTasks = 0x8007105C; // type:func
 updateCallbackTasksWithMinPriority = 0x800710CC; // type:func

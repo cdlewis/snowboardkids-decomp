@@ -44,7 +44,8 @@ extern s16 D_801124B8;
 void resetAllViewports(void);
 void func_80070614(s32 arg0);
 void configureViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY, f32 aspect);
-void func_80070860(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7, s16 arg8, s32 arg9);
+void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX,
+                                        u16 scaleY, f32 aspect, s16 fovY, s32 farClip);
 void func_80070A70(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7);
 void configureMenuViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7);
 void func_80070E58(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
