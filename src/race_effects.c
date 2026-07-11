@@ -353,7 +353,7 @@ void func_80049CE0(RaceEffectActor *arg0) {
     arg0->pos.y += D_80121D80[arg0->playerIndex].velocity.y;
     arg0->pos.z += D_80121D80[arg0->playerIndex].velocity.z;
     arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
-    func_80045990(func_80043040(D_8011216C), 0, &arg0->image, &arg0->palette);
+    func_80045990(getMemoryBlockBase(D_8011216C), 0, &arg0->image, &arg0->palette);
     func_800499A4(arg0);
     setCallbackTaskCallback(arg0, func_800499A4);
 }
@@ -526,7 +526,7 @@ void func_8004A648(RaceEffectActor *arg0) {
     arg0->pos.y += D_80121D80[arg0->playerIndex].velocity.y;
     arg0->pos.z += D_80121D80[arg0->playerIndex].velocity.z;
     arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
-    func_80045990(func_80043040(D_8011216C), 2, &arg0->image, &arg0->palette);
+    func_80045990(getMemoryBlockBase(D_8011216C), 2, &arg0->image, &arg0->palette);
     func_8004A2F4(arg0);
     setCallbackTaskCallback(arg0, func_8004A2F4);
 }
@@ -696,7 +696,7 @@ void func_8004AFE4(RaceEffectActor *arg0) {
     arg0->pos.y += D_80121D80[arg0->playerIndex].velocity.y;
     arg0->pos.z += D_80121D80[arg0->playerIndex].velocity.z;
     arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
-    func_80045990(func_80043040(D_8011216C), 3, &arg0->image, &arg0->palette);
+    func_80045990(getMemoryBlockBase(D_8011216C), 3, &arg0->image, &arg0->palette);
     func_8004AC5C(arg0);
     setCallbackTaskCallback(arg0, func_8004AC5C);
 }
@@ -805,7 +805,7 @@ void func_8004B83C(RaceEffectActor *arg0) {
     arg0->spriteIndex = -1;
     arg0->velocityY = 0xFFF00000;
     arg0->accelerationY = 0;
-    func_80045990(func_80043040(D_8011216C), 3, &arg0->image, &arg0->palette);
+    func_80045990(getMemoryBlockBase(D_8011216C), 3, &arg0->image, &arg0->palette);
     func_8004B5F8(arg0);
     setCallbackTaskCallback(arg0, func_8004B5F8);
 }
@@ -983,7 +983,7 @@ void func_8004BFA0(RaceEffectActor *arg0) {
     actor->pos.y += D_80121D80[actor->playerIndex].posA8.y;
     actor->pos.z += D_80121D80[actor->playerIndex].posA8.z;
     actor->startAngle = D_80121D80[actor->playerIndex].surfaceAngle;
-    func_80045990(func_80043040(D_8011216C), 4, &actor->image, &actor->palette);
+    func_80045990(getMemoryBlockBase(D_8011216C), 4, &actor->image, &actor->palette);
     func_8004BC74(actor);
     setCallbackTaskCallback(actor, func_8004BC74);
 }
@@ -1148,7 +1148,7 @@ void func_8004C8F0(RaceEffectActor *arg0) {
     actor->pos.y += D_80121D80[actor->playerIndex].posA8.y;
     actor->pos.z += D_80121D80[actor->playerIndex].posA8.z;
     actor->startAngle = D_80121D80[actor->playerIndex].surfaceAngle;
-    func_80045990(func_80043040(D_8011216C), 1, &actor->image, &actor->palette);
+    func_80045990(getMemoryBlockBase(D_8011216C), 1, &actor->image, &actor->palette);
     func_8004C5B4(actor);
     setCallbackTaskCallback(actor, func_8004C5B4);
 }
@@ -1273,7 +1273,7 @@ void func_8004D184(RaceEffectActor *arg0) {
     arg0->pos.z = player->pos.z;
     enqueuePositionalSoundEffect(0x6A, &arg0->pos, 0x7F, 0x32);
     arg0->angle = D_80122282[arg0->playerIndex].surfaceAngle;
-    func_80045990(func_80043040(D_80112168), 2, &arg0->image, &arg0->palette);
+    func_80045990(getMemoryBlockBase(D_80112168), 2, &arg0->image, &arg0->palette);
     func_8004D018(arg0);
     setCallbackTaskCallback(arg0, func_8004D018);
 }
@@ -1432,7 +1432,7 @@ void func_8004D880(RaceEffectActor *arg0) {
     arg0->pos.y += D_80121D80[arg0->playerIndex].posA8.y;
     arg0->pos.z += D_80121D80[arg0->playerIndex].posA8.z;
     arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
-    func_80045990(func_80043040(D_8011216C), 5, &arg0->image, &arg0->palette);
+    func_80045990(getMemoryBlockBase(D_8011216C), 5, &arg0->image, &arg0->palette);
     arg0->unk54 = 0;
     func_8004D5C0(arg0);
     setCallbackTaskCallback(arg0, func_8004D5C0);

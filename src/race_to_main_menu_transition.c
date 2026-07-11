@@ -6,7 +6,7 @@
 #include "system_boot.h"
 #include "game_task_scheduler.h"
 #include "race_camera.h"
-#include "ending_sequence_tasks.h"
+#include "ending_sequence_ui.h"
 #include "main_menu_effects.h"
 #include "main_menu_race_setup.h"
 #include "main_menu_scene_actor_0.h"
@@ -115,7 +115,7 @@ void func_8000D340(void) {
     temp_v0 = D_1502A0 - D_14B450;
     sp34 = temp_v0;
     D_80112130[0xC] = func_80042D58(temp_v0);
-    dmaReadRom(D_14B450, func_80043040(D_80112130[0xC]), sp34);
+    dmaReadRom(D_14B450, getMemoryBlockBase(D_80112130[0xC]), sp34);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     func_80041CC0();
     initCallbackTaskScheduler(0);
@@ -138,7 +138,7 @@ void func_8000D590(void) {
             gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 0);
         } else {
             setCurrentGameTaskCallback(func_8000D690, 0);
-            createCallbackTask((CallbackTaskCallback) initEndingSequenceTextPageTask, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback) initEndingSequenceTextPageActor, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80035184, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_800362E8, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80036FB4, 0, 0x64);

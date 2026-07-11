@@ -322,10 +322,10 @@ void func_80072E98(void) {
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
         if ((entry->status == COURSE_GRID_ENTRY_FREE) && (entry->courseId == D_80121D80[0].courseId)) {
-            s32 *status = (s32 *)func_80043040(D_80112130[0x2B]);
+            s32 *status = (s32 *)getMemoryBlockBase(D_80112130[0x2B]);
             if (*status < 0x1194) {
                 entry->status = *status;
-                ((RacePlayerState *) func_80043040(D_80112130[0x2C]))[i] = D_80121D80[0];
+                ((RacePlayerState *) getMemoryBlockBase(D_80112130[0x2C]))[i] = D_80121D80[0];
             }
         }
         entry++;
@@ -343,8 +343,8 @@ s32 func_80072FC4(void) {
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
         if (entry->status != COURSE_GRID_ENTRY_FREE) {
-            D_80121D80[0] = ((RacePlayerState *)func_80043040(D_80112188))[count];
-            *(s32 *)func_80043040(D_80112186) = entry->status;
+            D_80121D80[0] = ((RacePlayerState *)getMemoryBlockBase(D_80112188))[count];
+            *(s32 *)getMemoryBlockBase(D_80112186) = entry->status;
             entry->status = COURSE_GRID_ENTRY_FREE;
             D_80121B40 = entry->unk4;
             D_80121B44 = entry->unk8;
@@ -725,22 +725,22 @@ void func_800747E8(void) {
 void func_80074864(s32 arg0) {
     s32 color;
 
-    func_80045A78(-0x14, -0x10, func_80043040(D_8011216E), 0x57);
+    func_80045A78(-0x14, -0x10, getMemoryBlockBase(D_8011216E), 0x57);
     color = 0x1A;
     if (D_80121B57 == 0) {
         color = 0x1B;
     }
-    func_80046D68(-0x1C, 0, func_80043040(D_8011216E), 0x58, color);
+    func_80046D68(-0x1C, 0, getMemoryBlockBase(D_8011216E), 0x58, color);
     color = 0x1A;
     if (D_80121B57 == 1) {
         color = 0x1B;
     }
-    func_80046D68(-0x1C, 0xA, func_80043040(D_8011216E), 0x59, color);
+    func_80046D68(-0x1C, 0xA, getMemoryBlockBase(D_8011216E), 0x59, color);
     color = 0x1A;
     if (D_80121B57 == 2) {
         color = 0x1B;
     }
-    func_80046D68(-0x1C, 0x14, func_80043040(D_8011216E), 0x5A, color);
+    func_80046D68(-0x1C, 0x14, getMemoryBlockBase(D_8011216E), 0x5A, color);
 }
 
 void func_80074960(void) {
@@ -1479,7 +1479,7 @@ void func_80077400(void) {
         gCurrentGameTask->fadeTimer -= 1;
         if (gCurrentGameTask->fadeTimer == 0) {
             stopSoundEffects();
-            if ((D_800EC9C2 == 2) && (((Unk80043040 *)func_80043040(D_80112186))->unk8 != 0) && (D_80121B61 != 0) &&
+            if ((D_800EC9C2 == 2) && (((Unk80043040 *)getMemoryBlockBase(D_80112186))->unk8 != 0) && (D_80121B61 != 0) &&
                 (func_80040D94() != 0)) {
                 D_80121B61 = -1;
             }
@@ -1504,7 +1504,7 @@ void func_80077554(void) {
     gRaceUpdatePaused = 0;
     D_80121B58 = 1;
     D_80121B5F = 0;
-    asset = func_80043040(D_80112130[0x2B]);
+    asset = getMemoryBlockBase(D_80112130[0x2B]);
     if (((Unk80043040 *)asset)->unk8 == 0) {
         gFramebufferSwapHold = 1;
         setCurrentGameTaskCallback(func_80077B34, 0);

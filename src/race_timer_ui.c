@@ -204,7 +204,7 @@ void func_80078568(s32 arg0) {
         digit = buffer;
         end = &buffer[2];
         do {
-            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle),
+            func_80046D68((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle),
                           ((u8)*digit - 5) & 0xFFFF, finalPalette);
             digit++;
             x += 8;
@@ -216,7 +216,7 @@ void func_80078568(s32 arg0) {
         end = &buffer[2];
         end += 0;
         do {
-            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle),
+            func_80046D68((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle),
                           ((u8)*digit - 5) & 0xFFFF, finalPalette);
             digit++;
             x += 8;
@@ -227,28 +227,28 @@ void func_80078568(s32 arg0) {
         digit = buffer;
         end = &buffer[2];
         do {
-            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle),
+            func_80046D68((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle),
                           ((u8)*digit - 5) & 0xFFFF, finalPalette);
             digit++;
             x += 8;
         } while ((u32)digit < (u32)end);
     }
 
-    func_80046D68(0x50, 0x50, func_80043040(D_80112130.popupFontHandle), 0x36, finalPalette);
-    func_80046D68(0x68, 0x50, func_80043040(D_80112130.popupFontHandle), 0x35, finalPalette);
+    func_80046D68(0x50, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), 0x36, finalPalette);
+    func_80046D68(0x68, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), 0x35, finalPalette);
 
     if (D_80122043 < 10) {
         x = -0x90;
         i = 0;
         if (D_80122043 > 0) {
             do {
-                func_80047174((s16)x, -0x68, func_80043040(D_80112130.popupFontHandle), 0x26, 1);
+                func_80047174((s16)x, -0x68, getMemoryBlockBase(D_80112130.popupFontHandle), 0x26, 1);
                 i++;
                 x += 8;
             } while (i < D_80122043);
         }
     } else {
-        func_80045A78(-0x84, -0x60, func_80043040(D_80112130.popupFontHandle), 0x26);
+        func_80045A78(-0x84, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), 0x26);
     }
 
     {
@@ -260,7 +260,7 @@ void func_80078568(s32 arg0) {
         end = &buffer[4];
         do {
             if ((u8)*digit != ' ') {
-                func_80045A78((s16)x, -0x58, func_80043040(D_80112130.popupFontHandle),
+                func_80045A78((s16)x, -0x58, getMemoryBlockBase(D_80112130.popupFontHandle),
                               ((u8)*digit - 5) & 0xFFFF);
             }
             digit++;
@@ -268,16 +268,16 @@ void func_80078568(s32 arg0) {
         } while (digit != end);
     }
 
-    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x27);
-    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x28);
+    func_80045A78(-0x88, 0x40, getMemoryBlockBase(D_80112130.popupFontHandle), 0x27);
+    func_80045A78(-0x88, 0x40, getMemoryBlockBase(D_80112130.popupFontHandle), 0x28);
     if (D_80121B81 != 0) {
-        func_80045A78(0x40, 0x54, func_80043040(D_80112130.popupFontHandle), 0x4F);
+        func_80045A78(0x40, 0x54, getMemoryBlockBase(D_80112130.popupFontHandle), 0x4F);
     }
 
     if (D_80122043 >= 10) {
         sprintf(buffer, D_800E172C, D_80122043);
-        func_80045A78(-0x64, -0x59, func_80043040(D_80112130.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
-        func_80045A78(-0x5C, -0x59, func_80043040(D_80112130.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
+        func_80045A78(-0x64, -0x59, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
+        func_80045A78(-0x5C, -0x59, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
     }
 }
 #endif
@@ -319,7 +319,7 @@ void func_800789C0(s32 arg0) {
         digit = buffer;
         end = &buffer[2];
         do {
-            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
+            func_80046D68((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
                           palette & 0xFFFF);
             digit++;
             x += 8;
@@ -330,7 +330,7 @@ void func_800789C0(s32 arg0) {
         digit = buffer;
         end = &buffer[2];
         do {
-            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
+            func_80046D68((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
                           palette & 0xFFFF);
             digit++;
             x += 8;
@@ -341,17 +341,17 @@ void func_800789C0(s32 arg0) {
         digit = buffer;
         end = &buffer[2];
         do {
-            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
+            func_80046D68((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
                           palette & 0xFFFF);
             digit++;
             x += 8;
         } while ((u32)digit < (u32)end);
 
-        func_80046D68(0x50, 0x50, func_80043040(D_80112130.popupFontHandle), 0x36, palette & 0xFFFF);
-        func_80046D68(0x68, 0x50, func_80043040(D_80112130.popupFontHandle), 0x35, palette & 0xFFFF);
+        func_80046D68(0x50, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), 0x36, palette & 0xFFFF);
+        func_80046D68(0x68, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), 0x35, palette & 0xFFFF);
     }
 
-    func_80045A78(0x68, -0x60, func_80043040(D_80112130.popupFontHandle), 0x20);
+    func_80045A78(0x68, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), 0x20);
 
     {
         char *end;
@@ -362,7 +362,7 @@ void func_800789C0(s32 arg0) {
         end = &buffer[2];
         do {
             if ((u8)*digit != ' ') {
-                func_80045A78((s16)(x + 0x60), -0x50, func_80043040(D_80112130.popupFontHandle),
+                func_80045A78((s16)(x + 0x60), -0x50, getMemoryBlockBase(D_80112130.popupFontHandle),
                               ((u8)*digit - 5) & 0xFFFF);
             }
             digit++;
@@ -374,16 +374,16 @@ void func_800789C0(s32 arg0) {
     i = 0;
     if (D_80122290 > 0) {
         do {
-            func_80045A78((s16)(x - 0x88), -0x60, func_80043040(D_80112130.popupFontHandle), 0x21);
+            func_80045A78((s16)(x - 0x88), -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), 0x21);
             i++;
             x += 8;
         } while (i < D_80122290);
     }
 
-    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x22);
-    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x23);
+    func_80045A78(-0x88, 0x40, getMemoryBlockBase(D_80112130.popupFontHandle), 0x22);
+    func_80045A78(-0x88, 0x40, getMemoryBlockBase(D_80112130.popupFontHandle), 0x23);
     if (D_80121B81 != 0) {
-        func_80045A78(0x40, 0x54, func_80043040(D_80112130.popupFontHandle), 0x4F);
+        func_80045A78(0x40, 0x54, getMemoryBlockBase(D_80112130.popupFontHandle), 0x4F);
     }
 }
 #endif
@@ -422,7 +422,7 @@ void func_80078D9C(s32 arg0) {
     end = &buffer[2];
     digit = buffer;
     do {
-        func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        func_80045A78((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
     } while ((u32)digit < (u32)end);
@@ -433,7 +433,7 @@ void func_80078D9C(s32 arg0) {
     end = &buffer[2];
     endValue = (u32)end;
     do {
-        func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        func_80045A78((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
     } while ((u32)digit < endValue);
@@ -443,26 +443,26 @@ void func_80078D9C(s32 arg0) {
     digit = end;
     end = &buffer[2];
     do {
-        func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        func_80045A78((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
     } while (digit != end);
 
-    func_80045A78(0x58, 0x50, func_80043040(D_80112130.popupFontHandle), 0x36);
-    func_80045A78(0x70, 0x50, func_80043040(D_80112130.popupFontHandle), 0x35);
+    func_80045A78(0x58, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), 0x36);
+    func_80045A78(0x70, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), 0x35);
 
     if (D_80121B81 != 0) {
-        func_80045A78(0x48, 0x54, func_80043040(D_80112130.popupFontHandle), 0x4F);
+        func_80045A78(0x48, 0x54, getMemoryBlockBase(D_80112130.popupFontHandle), 0x4F);
     }
 
-    func_80045A78(-0x88, -0x60, func_80043040(D_80112130.popupFontHandle), D_800DC8F9);
-    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x24);
-    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x25);
+    func_80045A78(-0x88, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), D_800DC8F9);
+    func_80045A78(-0x88, 0x40, getMemoryBlockBase(D_80112130.popupFontHandle), 0x24);
+    func_80045A78(-0x88, 0x40, getMemoryBlockBase(D_80112130.popupFontHandle), 0x25);
 
     sprintf(buffer, D_800E1788, D_801222F0);
-    func_80045A78(-0x60, -0x50, func_80043040(D_80112130.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
+    func_80045A78(-0x60, -0x50, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
     if (buffer[1] != 0) {
-        func_80045A78(-0x58, -0x50, func_80043040(D_80112130.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
+        func_80045A78(-0x58, -0x50, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
     }
 }
 #endif
@@ -507,7 +507,7 @@ void func_80079154(s32 arg0) {
     digit = buffer;
     end = &buffer[2];
     do {
-        func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        func_80045A78((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
     } while ((u32)digit < (u32)end);
@@ -518,7 +518,7 @@ void func_80079154(s32 arg0) {
     end = &buffer[2];
     endValue = (u32)end;
     do {
-        func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        func_80045A78((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
     } while ((u32)digit < endValue);
@@ -528,20 +528,20 @@ void func_80079154(s32 arg0) {
     digit = end;
     end = &buffer[2];
     do {
-        func_80045A78((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        func_80045A78((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
     } while (digit != end);
 
-    func_80045A78(0x58, 0x50, func_80043040(D_80112130.popupFontHandle), 0x36);
-    func_80045A78(0x70, 0x50, func_80043040(D_80112130.popupFontHandle), 0x35);
+    func_80045A78(0x58, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), 0x36);
+    func_80045A78(0x70, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), 0x35);
 
     if (D_80121D80[0].onesDigitTile != 0) {
-        func_80045A78(-0x10, -0x60, func_80043040(D_80112130.popupFontHandle), D_800DC8F8[D_80121D80[0].onesDigitTile]);
+        func_80045A78(-0x10, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), D_800DC8F8[D_80121D80[0].onesDigitTile]);
     }
 
-    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x24);
-    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x2A);
+    func_80045A78(-0x88, 0x40, getMemoryBlockBase(D_80112130.popupFontHandle), 0x24);
+    func_80045A78(-0x88, 0x40, getMemoryBlockBase(D_80112130.popupFontHandle), 0x2A);
 }
 
 const char D_800E17D8[] = "Lap Time";
@@ -587,36 +587,36 @@ void func_80079438(s32 arg0) {
 
     do {
         if (*digit != ' ') {
-            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), (*digit - 5) & 0xFFFF,
+            func_80046D68((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), (*digit - 5) & 0xFFFF,
                           palette & 0xFFFF);
         }
         digit++;
         x += 8;
     } while (digit != &end);
 
-    func_80045A78(0x78, 0x50, func_80043040(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF);
+    func_80045A78(0x78, 0x50, getMemoryBlockBase(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF);
 
     if (player->tensDigitPalette != 0) {
-        func_80047174(-0x20, -0x60, func_80043040(D_80112130.popupFontHandle),
+        func_80047174(-0x20, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle),
                       (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF,
                       player->tensDigitPalette);
     } else {
-        func_80045A78(-0x20, -0x60, func_80043040(D_80112130.popupFontHandle),
+        func_80045A78(-0x20, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle),
                       (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF);
     }
 
     if (player->onesDigitPalette != 0) {
-        func_80047174(0, -0x60, func_80043040(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile],
+        func_80047174(0, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile],
                       player->onesDigitPalette);
     } else {
-        func_80045A78(0, -0x60, func_80043040(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile]);
+        func_80045A78(0, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile]);
     }
 
-    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), player->iconTile & 0xFFFF);
-    func_80045A78(-0x88, -0x60, func_80043040(D_80112130.popupFontHandle), 0x39);
-    func_80046D68(-0x68, -0x60, func_80043040(D_80112130.popupFontHandle), (player->lapDigit + 0x2C) & 0xFFFF, 0xE);
-    func_80045A78(-0x5C, -0x60, func_80043040(D_80112130.popupFontHandle), 0x38);
-    func_80046D68(-0x50, -0x60, func_80043040(D_80112130.popupFontHandle), (D_80121B52 + 0x2B) & 0xFFFF, 0xE);
+    func_80045A78(-0x88, 0x40, getMemoryBlockBase(D_80112130.popupFontHandle), player->iconTile & 0xFFFF);
+    func_80045A78(-0x88, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), 0x39);
+    func_80046D68(-0x68, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), (player->lapDigit + 0x2C) & 0xFFFF, 0xE);
+    func_80045A78(-0x5C, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), 0x38);
+    func_80046D68(-0x50, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), (D_80121B52 + 0x2B) & 0xFFFF, 0xE);
 }
 #endif
 
@@ -652,35 +652,35 @@ void func_80079758(s32 arg0) {
 
     do {
         if (*digit != ' ') {
-            func_80046D68((s16)x, 0x50, func_80043040(D_80112130.popupFontHandle), (*digit - 5) & 0xFFFF,
+            func_80046D68((s16)x, 0x50, getMemoryBlockBase(D_80112130.popupFontHandle), (*digit - 5) & 0xFFFF,
                           palette & 0xFFFF);
         }
         digit++;
         x += 8;
     } while (digit != &end);
 
-    func_80045A78(0x78, 0x50, func_80043040(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF);
+    func_80045A78(0x78, 0x50, getMemoryBlockBase(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF);
     if (((!buffer) && (!buffer)) && (!buffer)) {
     }
 
     if (player->tensDigitPalette != 0) {
-        func_80047174(-0x20, -0x60, func_80043040(D_80112130.popupFontHandle),
+        func_80047174(-0x20, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle),
                       (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF,
                       player->tensDigitPalette);
     } else {
-        func_80045A78(-0x20, -0x60, func_80043040(D_80112130.popupFontHandle),
+        func_80045A78(-0x20, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle),
                       (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF);
     }
 
     if (player->onesDigitPalette != 0) {
-        func_80047174(0, -0x60, func_80043040(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile],
+        func_80047174(0, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile],
                       player->onesDigitPalette);
     } else {
-        func_80045A78(0, -0x60, func_80043040(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile]);
+        func_80045A78(0, -0x60, getMemoryBlockBase(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile]);
     }
 
-    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x24);
-    func_80045A78(-0x88, 0x40, func_80043040(D_80112130.popupFontHandle), 0x29);
+    func_80045A78(-0x88, 0x40, getMemoryBlockBase(D_80112130.popupFontHandle), 0x24);
+    func_80045A78(-0x88, 0x40, getMemoryBlockBase(D_80112130.popupFontHandle), 0x29);
 }
 #endif
 
@@ -718,41 +718,41 @@ void func_800799DC(s32 arg0) {
 
     do {
         if (*ptr != ' ') {
-            func_80046D68(x, y, func_80043040(D_80112130.popupFontHandle), ((*ptr) - 5) & 0xFFFF, color & 0xFFFF);
+            func_80046D68(x, y, getMemoryBlockBase(D_80112130.popupFontHandle), ((*ptr) - 5) & 0xFFFF, color & 0xFFFF);
         }
         ptr++;
         x += 8;
     } while (ptr != end);
 
-    func_80045A78(0x78, y, func_80043040(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF);
+    func_80045A78(0x78, y, getMemoryBlockBase(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF);
 
     if (D_80122293[gCurrentViewportIndex].value != 0) {
         player = &D_80121D80[gCurrentViewportIndex];
-        func_80047174(-0x88, -0x30, func_80043040(D_80112130.popupFontHandle),
+        func_80047174(-0x88, -0x30, getMemoryBlockBase(D_80112130.popupFontHandle),
                       (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF,
                       player->tensDigitPalette);
     } else {
         player = &D_80121D80[gCurrentViewportIndex];
-        func_80045A78(-0x88, -0x30, func_80043040(D_80112130.popupFontHandle),
+        func_80045A78(-0x88, -0x30, getMemoryBlockBase(D_80112130.popupFontHandle),
                       (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF);
     }
 
     if (D_80122296[gCurrentViewportIndex].value != 0) {
         player = &D_80121D80[gCurrentViewportIndex];
-        func_80047174(-0x68, -0x30, func_80043040(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile],
+        func_80047174(-0x68, -0x30, getMemoryBlockBase(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile],
                       player->onesDigitPalette);
     } else {
-        func_80045A78(-0x68, -0x30, func_80043040(D_80112130.popupFontHandle),
+        func_80045A78(-0x68, -0x30, getMemoryBlockBase(D_80112130.popupFontHandle),
                       D_800DC8F8[D_80122295[gCurrentViewportIndex].value]);
     }
 
-    func_80045A78(-0x88, 0x12, func_80043040(D_80112130.popupFontHandle), D_80122289[gCurrentViewportIndex].value & 0xFFFF);
+    func_80045A78(-0x88, 0x12, getMemoryBlockBase(D_80112130.popupFontHandle), D_80122289[gCurrentViewportIndex].value & 0xFFFF);
 
     finalY = 0x2A;
     if (gCurrentViewportIndex == 0) {
         finalY = -0x30;
     }
-    func_80045A78(0x58, finalY, func_80043040(D_80112130.popupFontHandle), 0x1A);
+    func_80045A78(0x58, finalY, getMemoryBlockBase(D_80112130.popupFontHandle), 0x1A);
 }
 #endif
 
@@ -776,26 +776,26 @@ void func_80079F04(s32 arg0) {
     RaceTimerUiPlayer *player;
     s32 texture;
 
-    func_80047174(0x38, 0x24, func_80043040(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF, 1);
+    func_80047174(0x38, 0x24, getMemoryBlockBase(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF, 1);
 
-    texture = func_80043040(D_80112130.popupFontHandle);
+    texture = getMemoryBlockBase(D_80112130.popupFontHandle);
     player = &D_80121D80[gCurrentViewportIndex];
     func_80047174(-0x18, -0x38, texture,
                   (D_800DC8F0[D_80121D80[gCurrentViewportIndex].tensDigitTile] + D_80121D80[gCurrentViewportIndex].tensDigitOffset - 1) & 0xFFFF,
                   player->tensDigitPalette + 1);
 
-    texture = func_80043040(D_80112130.popupFontHandle);
+    texture = getMemoryBlockBase(D_80112130.popupFontHandle);
     player = &D_80121D80[gCurrentViewportIndex];
     func_80047174(-8, -0x38, texture, D_800DC8F8[player->onesDigitTile], player->onesDigitPalette + 1);
 
-    texture = func_80043040(D_80112130.popupFontHandle);
+    texture = getMemoryBlockBase(D_80112130.popupFontHandle);
     func_80047174(-0x4C, 0x18, texture, D_80122289[gCurrentViewportIndex].value & 0xFFFF, 1);
 
     if (gCurrentViewportIndex < 2) {
-        func_80045A78(-0x44, -0x30, func_80043040(D_80112130.popupFontHandle), 0x1A);
+        func_80045A78(-0x44, -0x30, getMemoryBlockBase(D_80112130.popupFontHandle), 0x1A);
         return;
     }
-    func_80045A78(0x14, -0x30, func_80043040(D_80112130.popupFontHandle), 0x1A);
+    func_80045A78(0x14, -0x30, getMemoryBlockBase(D_80112130.popupFontHandle), 0x1A);
 }
 
 const char D_800E181C[] = "%5ld";
@@ -825,7 +825,7 @@ void func_8007A108(s32 arg0) {
 }
 
 void func_8007A278(s32 arg0) {
-    func_80045A78(0xC, 0x2C, func_80043040(D_8011216E), 0x90);
+    func_80045A78(0xC, 0x2C, getMemoryBlockBase(D_8011216E), 0x90);
 }
 
 void func_8007A2B8(void) {
@@ -943,7 +943,7 @@ sort_next:
         yBase = -0x48;
     }
 
-    func_80045A78((s16)(xBase + 4), (s16)(yBase + 4), func_80043040(D_80112130.popupFontHandle), 0x50);
+    func_80045A78((s16)(xBase + 4), (s16)(yBase + 4), getMemoryBlockBase(D_80112130.popupFontHandle), 0x50);
 
     slot = &order[3];
     do {
@@ -967,26 +967,26 @@ sort_next:
                 player = &D_80121D80[*slot];
                 iconGroup = player->iconGroup;
                 func_80046D68(x, (s16)(player->raceProgress + yBase),
-                              func_80043040(D_80112130.popupFontHandle),
+                              getMemoryBlockBase(D_80112130.popupFontHandle),
                               D_800DC954[player->flashFrame + (iconGroup * 6)],
                               D_800DC99C[iconGroup]);
             } else {
                 player = &D_80121D80[*slot];
                 func_80045A78(x, (s16)(player->raceProgress + yBase),
-                              func_80043040(D_80112130.popupFontHandle),
+                              getMemoryBlockBase(D_80112130.popupFontHandle),
                               D_800DC954[player->flashFrame + (player->iconGroup * 6)]);
             }
         } else if (player->unk2D8 != 0) {
             player = &D_80121D80[*slot];
             iconGroup = player->iconGroup;
             func_80046D68(xBase, (s16)(player->raceProgress + yBase),
-                          func_80043040(D_80112130.popupFontHandle),
+                          getMemoryBlockBase(D_80112130.popupFontHandle),
                           D_800DC954[player->flashFrame + (iconGroup * 6)],
                           D_800DC99C[iconGroup]);
         } else {
             player = &D_80121D80[*slot];
             func_80045A78(xBase, (s16)(player->raceProgress + yBase),
-                          func_80043040(D_80112130.popupFontHandle),
+                          getMemoryBlockBase(D_80112130.popupFontHandle),
                           D_800DC954[player->flashFrame + (player->iconGroup * 6)]);
         }
 

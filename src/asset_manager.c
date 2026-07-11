@@ -353,11 +353,11 @@ void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2) {
     dmaReadRom((u32)arg0, &gCompressedAssetHeader, 8);
     D_80112130.assetHandles[arg2] = func_80042D58(gCompressedAssetHeader.compressedSize);
     D_80112130.compressedAssetHandle = func_80042D58((s32)arg1 - (s32)arg0);
-    dmaReadRom((u32)arg0, (void *)func_80043040(D_80112130.compressedAssetHandle), (s32)arg1 - (s32)arg0);
-    sp30 = func_80043040(D_80112130.compressedAssetHandle) + 5;
+    dmaReadRom((u32)arg0, (void *)getMemoryBlockBase(D_80112130.compressedAssetHandle), (s32)arg1 - (s32)arg0);
+    sp30 = getMemoryBlockBase(D_80112130.compressedAssetHandle) + 5;
     sp28 = &D_80112130.assetHandles[arg2];
-    decompressHuffmanAssetPayload(gCompressedAssetHeader.flags, sp30, func_80043040(*sp28), gCompressedAssetHeader.compressedSize);
-    func_80043040(*sp28);
+    decompressHuffmanAssetPayload(gCompressedAssetHeader.flags, sp30, getMemoryBlockBase(*sp28), gCompressedAssetHeader.compressedSize);
+    getMemoryBlockBase(*sp28);
     D_80112130.compressedAssetHandle = func_80042EE4(D_80112130.compressedAssetHandle);
 }
 
@@ -367,5 +367,5 @@ void loadRawRomAsset(void *arg0, void *arg1, s32 arg2) {
 
     temp_v1 = &D_80112130.assetHandles[arg2];
     *temp_v1 = func_80042D58(temp_a0);
-    dmaReadRom((u32)arg0, (void *)func_80043040(*temp_v1), temp_a0);
+    dmaReadRom((u32)arg0, (void *)getMemoryBlockBase(*temp_v1), temp_a0);
 }

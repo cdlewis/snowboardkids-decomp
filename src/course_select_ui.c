@@ -769,7 +769,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                             }
                         }
 
-                        func_8000F0EC(position[0], position[20], func_80043040(gMenuCommonSpritesAssetHandle),
+                        func_8000F0EC(position[0], position[20], getMemoryBlockBase(gMenuCommonSpritesAssetHandle),
                                       tileIndex & 0xFFFF, 0x20, 0x20, 0, alpha,
                                       new_var->clipLeft - clipOffset, arg0->clipTop, arg0->clipRight,
                                       new_var->clipBottom);
@@ -784,11 +784,11 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                         }
 
                         if (D_800EC9C2 == 3) {
-                            func_8000F0EC(position[0], position[20], func_80043040(D_8011217E), 5, 0x20,
+                            func_8000F0EC(position[0], position[20], getMemoryBlockBase(D_8011217E), 5, 0x20,
                                           0x20, 0, alpha, arg0->clipLeft - clipOffset, new_var->clipTop,
                                           new_var->clipRight, new_var->clipBottom);
                         } else {
-                            func_8000F0EC(position[0], position[20], func_80043040(gMenuCommonSpritesAssetHandle), 5, 0x20,
+                            func_8000F0EC(position[0], position[20], getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20,
                                           0x20, 0, alpha, arg0->clipLeft - clipOffset, arg0->clipTop,
                                           arg0->clipRight, new_var->clipBottom);
                         }
@@ -923,9 +923,9 @@ void drawCourseSelectCourseCursors(u8 *arg0) {
                         tileIndex = 0x13;
                         handleIndex = 0x21;
                     }
-                    func_8000F8AC(posPtr[0xC],
+                    drawMenuSpriteWithAlpha(posPtr[0xC],
                                   (s16)(posPtr[0x10] + ((statePtr[0x38] * (direction = *directionPtr)) & 0xFFFF)),
-                                  func_80043040(handles[handleIndex]), tileIndex & 0xFFFF, 0x20, 0x20, 0,
+                                  getMemoryBlockBase(handles[handleIndex]), tileIndex & 0xFFFF, 0x20, 0x20, 0,
                                   posPtr[0x14], 0);
                 }
                 i++;
@@ -1058,10 +1058,10 @@ void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
 #endif
 
 void drawCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
-    func_8000F030(arg0->x, arg0->y, func_80043040(D_8011217A), 3, 0x20, 0x20, 0, 0);
-    func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(D_8011217A), 4, 0x20, 0x20, 0, 0);
-    func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(D_8011217A), 5, 0x20, 0x20, 0, 0);
-    func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(D_8011217A), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(D_8011217A), 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getMemoryBlockBase(D_8011217A), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getMemoryBlockBase(D_8011217A), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getMemoryBlockBase(D_8011217A), 6, 0x20, 0x20, 0, 0);
 }
 
 void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
@@ -1188,13 +1188,13 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     xOffset = (u16)(courseId % 3);
                 }
 
-                func_8000F8AC(playerWidget->coordinates[0], playerWidget->coordinates[4],
-                              func_80043040(D_80112130[0x21]), frameTile, 0x20, 0x20, 0, arg0->coordinates[8], 0);
+                drawMenuSpriteWithAlpha(playerWidget->coordinates[0], playerWidget->coordinates[4],
+                              getMemoryBlockBase(D_80112130[0x21]), frameTile, 0x20, 0x20, 0, arg0->coordinates[8], 0);
 
                 if (gPlayerCount < 3) {
                     selectedCourseId = xOffset;
                     if (selectedCourseId >= 9) {
-                        func_80013D0C((s16)(playerWidget->coordinates[0] + 0x38), playerWidget->coordinates[4],
+                        drawMenuAsciiText((s16)(playerWidget->coordinates[0] + 0x38), playerWidget->coordinates[4],
                                       "?", 0, arg0->coordinates[8]);
                     } else {
                         ratings = &gCourseSelectCourseSpeedRatings[selectedCourseId * 3];
@@ -1202,9 +1202,9 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                         if (ratings[0] > ((0, 0))) {
                             xOffset = 0;
                             do {
-                                func_8000F8AC((s16)(playerWidget->coordinates[0] + xOffset + 0x38),
+                                drawMenuSpriteWithAlpha((s16)(playerWidget->coordinates[0] + xOffset + 0x38),
                                               (s16)(playerWidget->coordinates[4] - 2),
-                                              func_80043040(D_80112130[0x24]), 0x25, 0x20, 0x20, 0,
+                                              getMemoryBlockBase(D_80112130[0x24]), 0x25, 0x20, 0x20, 0,
                                               arg0->coordinates[8], 0);
                                 j++;
                                 xOffset += 0xC;
@@ -1213,7 +1213,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     }
 
                     if (selectedCourseId >= 9) {
-                        func_80013D0C((s16)(playerWidget->coordinates[0] + 0x38),
+                        drawMenuAsciiText((s16)(playerWidget->coordinates[0] + 0x38),
                                       (s16)(playerWidget->coordinates[4] + 0xC), "?", 0, arg0->coordinates[8]);
                     } else {
                         ratings = &gCourseSelectCourseSpeedRatings[selectedCourseId * 3];
@@ -1225,9 +1225,9 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                         if (ratings[1] > 0) {
                             xOffset = 0;
                             do {
-                                func_8000F8AC((s16)(playerWidget->coordinates[0] + xOffset + 0x38),
+                                drawMenuSpriteWithAlpha((s16)(playerWidget->coordinates[0] + xOffset + 0x38),
                                               (s16)(playerWidget->coordinates[4] + 0xA),
-                                              func_80043040(D_80112130[0x24]), 0x25, 0x20, 0x20, 0,
+                                              getMemoryBlockBase(D_80112130[0x24]), 0x25, 0x20, 0x20, 0,
                                               arg0->coordinates[8], 0);
                                 j++;
                                 xOffset += 0xC;
@@ -1236,7 +1236,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     }
 
                     if (selectedCourseId >= 9) {
-                        func_80013D0C((s16)(playerWidget->coordinates[0] + 0x38),
+                        drawMenuAsciiText((s16)(playerWidget->coordinates[0] + 0x38),
                                       (s16)(playerWidget->coordinates[4] + 0x18), "?", 0, arg0->coordinates[8]);
                     } else {
                         ratings = &gCourseSelectCourseSpeedRatings[selectedCourseId * 3];
@@ -1244,9 +1244,9 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                         if (ratings[2] > 0) {
                             xOffset = 0;
                             do {
-                                func_8000F8AC((s16)(playerWidget->coordinates[0] + xOffset + 0x38),
+                                drawMenuSpriteWithAlpha((s16)(playerWidget->coordinates[0] + xOffset + 0x38),
                                               (s16)(playerWidget->coordinates[4] + 0x16),
-                                              func_80043040(D_80112130[0x24]), 0x25, 0x20, 0x20, 0,
+                                              getMemoryBlockBase(D_80112130[0x24]), 0x25, 0x20, 0x20, 0,
                                               arg0->coordinates[8], 0);
                                 j++;
                                 xOffset += 0xC;
@@ -1267,19 +1267,19 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                         do {
                         } while (0);
                     }
-                    func_80013D0C((s16)(playerWidget->coordinates[0] + 0x34), playerWidget->coordinates[4], text, 0,
+                    drawMenuAsciiText((s16)(playerWidget->coordinates[0] + 0x34), playerWidget->coordinates[4], text, 0,
                                   arg0->coordinates[8]);
 
                     if (selectedCourseId < 9) {
                         sprintf(text, "%d", gCourseSelectCourseHandlingRatings[selectedCourseId * 3]);
                     }
-                    func_80013D0C((s16)(playerWidget->coordinates[0] + 0x34),
+                    drawMenuAsciiText((s16)(playerWidget->coordinates[0] + 0x34),
                                   (s16)(playerWidget->coordinates[4] + 8), text, 0, arg0->coordinates[8]);
 
                     if (9 > selectedCourseId) {
                         sprintf(text, "%d", gCourseSelectCourseTrickRatings[selectedCourseId * 3]);
                     }
-                    func_80013D0C((s16)(playerWidget->coordinates[0] + 0x34),
+                    drawMenuAsciiText((s16)(playerWidget->coordinates[0] + 0x34),
                                   (s16)(playerWidget->coordinates[4] + 0x10), text, 0, arg0->coordinates[8]);
                 }
 
@@ -1290,9 +1290,9 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                         positionColumn = 0;
                     }
                     bottomRow = i >= 2;
-                    func_8000F8AC((s16)(gCourseSelectStatsPlayerMarkerLayout[positionColumn * 2 + (i & 1)][0] + (bottomRow * 0x8C)),
+                    drawMenuSpriteWithAlpha((s16)(gCourseSelectStatsPlayerMarkerLayout[positionColumn * 2 + (i & 1)][0] + (bottomRow * 0x8C)),
                                   gCourseSelectStatsPlayerMarkerLayout[positionColumn * 2 + (i & 1)][1],
-                                  func_80043040(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, arg0->coordinates[8], 0);
+                                  getMemoryBlockBase(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, arg0->coordinates[8], 0);
                     playerCount = gPlayerCount;
                 }
             }
@@ -1455,7 +1455,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             }
         }
 
-        func_80013154(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
+        drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
 
         if ((D_800EC9C2 == 3) && ((selection->mode == 1) || (selection->mode == 2))) {
             if ((D_8010AE64[0] != 3) || !(gUnlockedExtraCourseFlags & 7)) {
@@ -1463,7 +1463,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 buffer[1] = 6;
                 buffer[2] = selectedIndex;
                 buffer[3] = -1;
-                func_80013154((s16)(arg0->x + 0x48), (s16)(arg0->y + 0x10), (u8 *)buffer, 1, arg0->spriteIndex, 0);
+                drawMenuGlyphScript((s16)(arg0->x + 0x48), (s16)(arg0->y + 0x10), (u8 *)buffer, 1, arg0->spriteIndex, 0);
             }
 
             if (D_800EC9E6 == 0) {
@@ -1509,12 +1509,12 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     digits[3] = 0x2B;
                     buffer[7] = -1;
                 }
-                func_80013154((s16)(arg0->x + 0x20), (s16)(arg0->y + 0x20), (u8 *)buffer, 1, arg0->spriteIndex, 0);
+                drawMenuGlyphScript((s16)(arg0->x + 0x20), (s16)(arg0->y + 0x20), (u8 *)buffer, 1, arg0->spriteIndex, 0);
             }
         }
     } else {
         text = gCourseSelectPurchaseMessageText + ((status->unk2C * 0x32) - 0x32);
-        func_80013154(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
+        drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
     }
 }
 #endif
@@ -1614,7 +1614,7 @@ void drawCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
 
     tileIndexSpill = tileIndex;
     promotedTileIndex = tileIndexSpill;
-    func_8000F8AC((*arg0).coordinates[0], arg0->coordinates[1], func_80043040(D_80112130[handleIndex]),
+    drawMenuSpriteWithAlpha((*arg0).coordinates[0], arg0->coordinates[1], getMemoryBlockBase(D_80112130[handleIndex]),
                   promotedTileIndex, 0x20, 0x20, 0, arg0->coordinates[2], 0);
 }
 
@@ -1694,7 +1694,7 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                 alpha = 0x60;
                             }
                             func_8000F970(slotActor->coordinates[0], slotActor->coordinates[0xC],
-                                          func_80043040(D_80112130[0x21]), slotActor->coordinates[0x28],
+                                          getMemoryBlockBase(D_80112130[0x21]), slotActor->coordinates[0x28],
                                           0x20, 0x20, 0, alpha, 0, arg0->coordinates[0x18] - rightSideOffset,
                                           arg0->coordinates[0x1A], arg0->coordinates[0x19],
                                           arg0->coordinates[0x1B]);
@@ -1711,9 +1711,9 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                             } else {
                                 alpha = 0x1B;
                             }
-                            func_8000F8AC(slotActor->coordinates[0],
+                            drawMenuSpriteWithAlpha(slotActor->coordinates[0],
                                           (s16)(slotActor->coordinates[0xC] + (countActor->pad18[0x38] * (*state - 2))),
-                                          func_80043040(D_80112130[0x21]), alpha & 0xFFFF, 0x20, 0x20, 0,
+                                          getMemoryBlockBase(D_80112130[0x21]), alpha & 0xFFFF, 0x20, 0x20, 0,
                                           alphaActor->coordinates[0x24], 0);
                         }
                     }
@@ -1952,7 +1952,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
             }
 
             savedIndex = i;
-            func_8000F8AC(cur->unk18, *yPtr, func_80043040(D_80112130[0x21]), 0x22, 0x20, 0x20, 0,
+            drawMenuSpriteWithAlpha(cur->unk18, *yPtr, getMemoryBlockBase(D_80112130[0x21]), 0x22, 0x20, 0x20, 0,
                           alpha, tile);
 
             if (gPlayerCount == 2) {
@@ -1963,14 +1963,14 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
             edgeOffset = 0x38;
             if (middleCount > 0) {
                 do {
-                    func_8000F8AC((s16)(cur->unk18 + edgeOffset), *yPtr, func_80043040(D_80112130[0x21]),
+                    drawMenuSpriteWithAlpha((s16)(cur->unk18 + edgeOffset), *yPtr, getMemoryBlockBase(D_80112130[0x21]),
                                   0x23, 0x20, 0x20, 0, alpha, tile);
                     j++;
                     edgeOffset += 0x10;
                 } while (j != middleCount);
             }
 
-            func_8000F8AC((s16)(cur->unk18 + edgeOffset), *yPtr, func_80043040(D_80112130[0x21]), 0x24,
+            drawMenuSpriteWithAlpha((s16)(cur->unk18 + edgeOffset), *yPtr, getMemoryBlockBase(D_80112130[0x21]), 0x24,
                           0x20, 0x20, 0, alpha, tile);
 
             offset = 0;
@@ -1982,14 +1982,14 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
                 edgeOffset = 0x78;
             }
             do {
-                func_8000F8AC(cur->unk18, (s16)(*yPtr + offset + 0x10), func_80043040(D_80112130[0x21]),
+                drawMenuSpriteWithAlpha(cur->unk18, (s16)(*yPtr + offset + 0x10), getMemoryBlockBase(D_80112130[0x21]),
                               0x25, 0x20, 0x20, 0, alpha, tile);
-                func_8000F8AC((s16)(cur->unk18 + edgeOffset), (s16)(*yPtr + offset + 0x10),
-                              func_80043040(D_80112130[0x21]), 0x26, 0x20, 0x20, 0, alpha, tile);
+                drawMenuSpriteWithAlpha((s16)(cur->unk18 + edgeOffset), (s16)(*yPtr + offset + 0x10),
+                              getMemoryBlockBase(D_80112130[0x21]), 0x26, 0x20, 0x20, 0, alpha, tile);
                 offset += 0x10;
             } while (offset < 0x40);
 
-            func_8000F8AC(cur->unk18, (s16)(*yPtr + 0x50), func_80043040(D_80112130[0x21]), 0x27, 0x20,
+            drawMenuSpriteWithAlpha(cur->unk18, (s16)(*yPtr + 0x50), getMemoryBlockBase(D_80112130[0x21]), 0x27, 0x20,
                           0x20, 0, alpha, tile);
 
             if (gPlayerCount == 2) {
@@ -2001,23 +2001,23 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
             if (middleCount > 0) {
                 offset = 0;
                 do {
-                    func_8000F8AC((s16)(cur->unk18 + offset + 0x10), (s16)(cur->unk20 + 0x50),
-                                  func_80043040(D_80112130[0x21]), 0x28, 0x20, 0x20, 0, alpha, tile);
+                    drawMenuSpriteWithAlpha((s16)(cur->unk18 + offset + 0x10), (s16)(cur->unk20 + 0x50),
+                                  getMemoryBlockBase(D_80112130[0x21]), 0x28, 0x20, 0x20, 0, alpha, tile);
                     j++;
                     offset += 0x10;
                 } while (j != middleCount);
             }
 
-            func_8000F8AC((s16)(cur->unk18 + edgeOffset - 8), (s16)(*yPtr + 0x50),
-                          func_80043040(D_80112130[0x21]), 0x29, 0x20, 0x20, 0, alpha, tile);
+            drawMenuSpriteWithAlpha((s16)(cur->unk18 + edgeOffset - 8), (s16)(*yPtr + 0x50),
+                          getMemoryBlockBase(D_80112130[0x21]), 0x29, 0x20, 0x20, 0, alpha, tile);
 
             nextIndex = savedIndex + 1;
             sprintf(text, "%d", nextIndex);
-            func_80013D0C((s16)(cur->unk18 + 0x34), (s16)(*yPtr + 2), text, 0, alpha);
+            drawMenuGlyphScript((s16)(cur->unk18 + 0x34), (s16)(*yPtr + 2), text, 0, alpha);
 
             if (alpha == 0xC0) {
-                func_8000F8AC((s16)(cur->unk18 + 2), (s16)(cur->unk20 + 0x24),
-                              func_80043040(D_80112130[0x1F]), 0x90, 0x20, 0x20, 0, 0xF0, 0);
+                drawMenuSpriteWithAlpha((s16)(cur->unk18 + 2), (s16)(cur->unk20 + 0x24),
+                              getMemoryBlockBase(D_80112130[0x1F]), 0x90, 0x20, 0x20, 0, 0xF0, 0);
             }
             i = nextIndex;
             cur = (CourseSelectWidgetInitActor *)((u8 *)cur + sizeof(s16));
@@ -2214,29 +2214,29 @@ void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
         if (actor->playerPanelFadeAlpha[i] != 0) {
             if (two == playerCount) {
                 yOffset = i * 0x64;
-                func_8000F8AC(actor->x, (s16)(actor->y + yOffset), func_80043040(D_80112130[0x24]), 0, 0x20,
+                drawMenuSpriteWithAlpha(actor->x, (s16)(actor->y + yOffset), getMemoryBlockBase(D_80112130[0x24]), 0, 0x20,
                               0x20, 0, actor->playerPanelFadeAlpha[i], 0);
-                func_8000F8AC((s16)(actor->x + 0x40), (s16)(actor->y + yOffset),
-                              func_80043040(D_80112130[0x24]), 1, 0x20, 0x20, 0,
+                drawMenuSpriteWithAlpha((s16)(actor->x + 0x40), (s16)(actor->y + yOffset),
+                              getMemoryBlockBase(D_80112130[0x24]), 1, 0x20, 0x20, 0,
                               actor->playerPanelFadeAlpha[i], 0);
-                func_8000F8AC((s16)(actor->x + 0x78), (s16)(actor->y + yOffset),
-                              func_80043040(D_80112130[0x24]), 1, 0x20, 0x20, 0,
+                drawMenuSpriteWithAlpha((s16)(actor->x + 0x78), (s16)(actor->y + yOffset),
+                              getMemoryBlockBase(D_80112130[0x24]), 1, 0x20, 0x20, 0,
                               actor->playerPanelFadeAlpha[i], 0);
-                func_8000F8AC((s16)(actor->x + 0xB0), (s16)(actor->y + yOffset),
-                              func_80043040(D_80112130[0x24]), rightEdgeTile, 0x20, 0x20, 0,
+                drawMenuSpriteWithAlpha((s16)(actor->x + 0xB0), (s16)(actor->y + yOffset),
+                              getMemoryBlockBase(D_80112130[0x24]), rightEdgeTile, 0x20, 0x20, 0,
                               actor->playerPanelFadeAlpha[i], 0);
-                func_80013154((s16)(actor->x + 0x2E), (s16)(actor->y + yOffset + 0xC), gCourseSelectCompleteText, 0,
+                drawMenuGlyphScript((s16)(actor->x + 0x2E), (s16)(actor->y + yOffset + 0xC), gCourseSelectCompleteText, 0,
                               actor->playerPanelFadeAlpha[i], 0);
             } else {
                 xOffset = (i >= 2) * 0x8C;
                 yOffset = (i & 1) * 0x64;
-                func_8000F8AC((s16)(actor->x + xOffset), (s16)(actor->y + yOffset),
-                              func_80043040(D_80112130[0x24]), 8, 0x20, 0x20, 0,
+                drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y + yOffset),
+                              getMemoryBlockBase(D_80112130[0x24]), 8, 0x20, 0x20, 0,
                               actor->playerPanelFadeAlpha[i], 0);
-                func_8000F8AC((s16)(actor->x + xOffset + 0x40), (s16)(actor->y + yOffset),
-                              func_80043040(D_80112130[0x24]), 9, 0x20, 0x20, 0,
+                drawMenuSpriteWithAlpha((s16)(actor->x + xOffset + 0x40), (s16)(actor->y + yOffset),
+                              getMemoryBlockBase(D_80112130[0x24]), 9, 0x20, 0x20, 0,
                               actor->playerPanelFadeAlpha[i], 0);
-                func_80013154((s16)(actor->x + xOffset + 0x24), (s16)(actor->y + yOffset + 3), gCourseSelectCompleteText, 1,
+                drawMenuGlyphScript((s16)(actor->x + xOffset + 0x24), (s16)(actor->y + yOffset + 3), gCourseSelectCompleteText, 1,
                               actor->playerPanelFadeAlpha[i], 0);
             }
         }

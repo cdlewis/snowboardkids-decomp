@@ -182,9 +182,9 @@ void initSoundManager(void) {
     init.count = 0x18;
     init.unk4 = D_801240A8;
     init.outputRate = 0x6E;
-    init.heapBase = (u8 *)func_80043040(D_80112130.unk6);
+    init.heapBase = (u8 *)getMemoryBlockBase(D_80112130.unk6);
     init.heapLen = 0x80000;
-    init.unk14 = (PlayerCommandBank *)func_80043040(D_80112138);
+    init.unk14 = (PlayerCommandBank *)getMemoryBlockBase(D_80112138);
     init.unk18 = D_27E290;
     init.unk1C = D_800DABB0;
     init.unk20 = D_800DACAC;
@@ -216,8 +216,8 @@ s32 loadMusicSequenceBank(s32 arg0) {
     if (gCurrentMusicSequenceHandle == 0) {
         range = (SoundRomRange *)((arg0 * 2) + (s32 *)gMusicSequenceRomRanges);
         size = range->words[1] - range->words[0];
-        dmaReadRom(range->words[0], func_80043040(D_8011213A), size);
-        if ((gCurrentMusicSequenceHandle = func_8009D8D8((PlayerCommandData *)func_80043040(D_8011213A))) != 0) {
+        dmaReadRom(range->words[0], getMemoryBlockBase(D_8011213A), size);
+        if ((gCurrentMusicSequenceHandle = func_8009D8D8((PlayerCommandData *)getMemoryBlockBase(D_8011213A))) != 0) {
             gCurrentMusicSequenceBank = arg0;
             if (range == gRaceMusicSequenceRomRanges) {
                 func_8009D8B0(2, 0x7FFF);

@@ -156,7 +156,7 @@ void drawRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
             if (isPositionNearCurrentViewport(entry->command) != 0) {
                 if (textureIndex != entry->textureIndex) {
                     textureIndex = entry->textureIndex;
-                    func_80045A1C((u8 *)func_80043040((s32)D_8011216A), (u16)textureIndex, &image, &palette,
+                    func_80045A1C((u8 *)getMemoryBlockBase((s32)D_8011216A), (u16)textureIndex, &image, &palette,
                                   &width, &height);
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0, G_TX_CLAMP,
                                             G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
@@ -205,7 +205,7 @@ void initRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
         entry = gRaceCoursePreviewModelCommandsByCourse[D_80121B50];
         allocSize = count * sizeof(GfxCommandDest);
         D_80112130.matrixHandle = func_80042D58(allocSize);
-        arg0->matrices = func_80043040(D_80112130.matrixHandle);
+        arg0->matrices = getMemoryBlockBase(D_80112130.matrixHandle);
 
         i = 0;
         if (count > 0) {
@@ -298,7 +298,7 @@ void waitRaceCoursePreviewBillboardSpawn(RaceCoursePreviewCamera *arg0) {
 
 void initRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
     arg0->timer = (arg0->index * 0x1E) + 0x1E;
-    func_80045990(func_80043040(D_8011216A), (arg0->index + 3) & 0xFFFF, &arg0->scale, &arg0->pitchVelocity);
+    func_80045990(getMemoryBlockBase(D_8011216A), (arg0->index + 3) & 0xFFFF, &arg0->scale, &arg0->pitchVelocity);
     setCallbackTaskCallback(arg0, waitRaceCoursePreviewBillboardSpawn);
 }
 
@@ -330,8 +330,8 @@ void drawRaceCoursePreviewCameraModel(RaceCoursePreviewCamera *arg0) {
 
         if (arg0->displayList1 != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112144));
-            gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112146));
+            gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112144));
+            gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112146));
             gSPMatrix(gRegionAllocPtr++, arg0->displayList0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, D_20028F0);
             gSPMatrix(gRegionAllocPtr++, arg0->displayList1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -637,7 +637,7 @@ void drawRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
                 textureIndex = gRaceCoursePreviewAnimatedBillboardTextureIds[entry->textureIndex] + ((s32)(gFrameCounter & 4) / 4);
                 if (textureIndex != loadedTextureIndex) {
                     loadedTextureIndex = textureIndex;
-                    func_80045A1C((u8 *)func_80043040((s32)D_80112168), textureIndex & 0xFFFF, &image, &palette,
+                    func_80045A1C((u8 *)getMemoryBlockBase((s32)D_80112168), textureIndex & 0xFFFF, &image, &palette,
                                   &width, &height);
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0, G_TX_CLAMP,
                                             G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
@@ -681,7 +681,7 @@ void initRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
         entry = gRaceCoursePreviewAnimatedBillboardCommandsByCourse[D_80121B50];
         allocSize = count * sizeof(GfxCommandDest);
         D_80112130.matrixHandle2 = func_80042D58(allocSize);
-        arg0->matrices = func_80043040(D_80112130.matrixHandle2);
+        arg0->matrices = getMemoryBlockBase(D_80112130.matrixHandle2);
 
         i = 0;
         if (count > 0) {

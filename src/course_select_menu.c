@@ -160,7 +160,7 @@ extern s32 gPlayerInputPressed;
 extern void initCourseSelectCourseIconList(CallbackTask *);
 extern void initCourseSelectExtraCourseIconList(CallbackTask *);
 extern s16 func_80042D58(s32);
-extern s32 func_80043040(s16);
+extern s32 getMemoryBlockBase(s16);
 extern void releaseMenuAssetHandles(void);
 extern void requestMusicSequenceBank(s32);
 extern void requestMusicSequenceStop(s32);
@@ -215,7 +215,7 @@ void initCourseSelectMenu(void) {
 
     size = D_1502A0 - D_14B450;
     D_80112130[0xC] = func_80042D58(size);
-    dmaReadRom((u32)D_14B450, (void *)func_80043040(D_80112130[0xC]), size);
+    dmaReadRom((u32)D_14B450, (void *)getMemoryBlockBase(D_80112130[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     nextCallback = updateCourseSelectModeMenu;
