@@ -464,7 +464,7 @@ void func_8004215C(MainMenuSceneModel *model) {
         partCursor += 0x14;
     } while (partMatrix != partMatrixEnd);
 
-    makeFixedRotateZXY(rootMatrix, model->rot.x, model->rot.y, model->rot.z);
+    makeFixedRotationZXY(rootMatrix, model->rot.x, model->rot.y, model->rot.z);
     *(s32 *)&rootMatrix[10] = model->pos.x;
     *(s32 *)&rootMatrix[12] = model->pos.y;
     *(s32 *)&rootMatrix[14] = model->pos.z;

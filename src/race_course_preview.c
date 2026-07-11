@@ -272,8 +272,8 @@ void updateRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
         arg0->timer = randomNextMain() + 0x1E;
         setCallbackTaskCallback(arg0, waitRaceCoursePreviewBillboardSpawn);
     }
-    makeFixedRotateY(sp24, 0x6D0);
-    transformVec3ByFixedMatrix(sp24, (Vec3i *)&temp_s0->velocityY, &sp44);
+    makeFixedRotationY(sp24, 0x6D0);
+    transformVec3iByFixedMatrix(sp24, (Vec3i *)&temp_s0->velocityY, &sp44);
     temp_s0->position.x += sp44.x;
     temp_s0->position.y += sp44.y;
     temp_s0->position.z += sp44.z;
@@ -315,11 +315,11 @@ void drawRaceCoursePreviewCameraModel(RaceCoursePreviewCamera *arg0) {
 
     if (isPositionNearCurrentViewport(&arg0->position) != 0) {
         if (arg0->displayListValid == 0) {
-            makeFixedRotateY(sp84.rotation, arg0->spinVelocity);
+            makeFixedRotationY(sp84.rotation, arg0->spinVelocity);
             sp84.translation.x = 0;
             sp84.translation.y = 0x600000;
             sp84.translation.z = 0;
-            makeFixedRotateZXY(sp64.rotation, arg0->scale, arg0->angle.half.yaw + 0x800, arg0->angle.half.pitch);
+            makeFixedRotationZXY(sp64.rotation, arg0->scale, arg0->angle.half.yaw + 0x800, arg0->angle.half.pitch);
             sp64.translation.x = arg0->position.x;
             sp64.translation.y = arg0->position.y;
             sp64.translation.z = arg0->position.z;

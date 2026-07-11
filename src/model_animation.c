@@ -300,7 +300,7 @@ void func_8007D87C(s32 *arg0, s32 *arg1, s32 arg2) {
     s32 temp1;
     s32 temp4;
 
-    temp1 = integerSqrt64((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+    temp1 = integerSquareRoot64((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
     temp2 = ((s64)D_80121BBC * 0x1000) / temp1;
     temp3 = ((s64)D_80121BB4 * 0x1000) / temp1;
 
@@ -395,7 +395,7 @@ void func_8007ECF4(s16 arg0, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ, s
         D_80121BA8 = D_80121BC0 - x1;
         D_80121BB0 = D_80121BC8 - z1;
 
-        length = integerSqrt64((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+        length = integerSquareRoot64((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
         normalX = ((s64)D_80121BBC * 0x1000) / length;
         tangentX = ((s64)D_80121BB4 * 0x1000) / length;
         alongEdge = ((s64)tangentX * D_80121BA8 + (s64)normalX * D_80121BB0) / 0x1000;
@@ -410,7 +410,7 @@ void func_8007ECF4(s16 arg0, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ, s
 
             dx = D_80121BC0 - x1;
             dz = D_80121BC8 - z1;
-            distance = integerSqrt64((s64)dx * dx + (s64)dz * dz);
+            distance = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
             if (distance < radius) {
                 D_80121BC0 = ((s64)dx * radius) / distance + x1;
                 D_80121BC8 = ((s64)dz * radius) / distance + z1;
@@ -422,7 +422,7 @@ void func_8007ECF4(s16 arg0, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ, s
 
             dx = D_80121BC0 - x3;
             dz = D_80121BC8 - z3;
-            distance = integerSqrt64((s64)dx * dx + (s64)dz * dz);
+            distance = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
             if (distance < radius) {
                 D_80121BC0 = ((s64)dx * radius) / distance + x3;
                 D_80121BC8 = ((s64)dz * radius) / distance + z3;
@@ -456,7 +456,7 @@ void func_8007ECF4(s16 arg0, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ, s
         D_80121BA8 = D_80121BC0 - x2;
         D_80121BB0 = D_80121BC8 - z2;
 
-        length = integerSqrt64((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+        length = integerSquareRoot64((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
         normalX = ((s64)D_80121BBC * 0x1000) / length;
         tangentX = ((s64)D_80121BB4 * 0x1000) / length;
         alongEdge = ((s64)tangentX * D_80121BA8 + (s64)normalX * D_80121BB0) / 0x1000;
@@ -471,7 +471,7 @@ void func_8007ECF4(s16 arg0, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ, s
 
             dx = D_80121BC0 - x2;
             dz = D_80121BC8 - z2;
-            distance = integerSqrt64((s64)dx * dx + (s64)dz * dz);
+            distance = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
             if (distance < radius) {
                 D_80121BC0 = ((s64)dx * radius) / distance + x2;
                 D_80121BC8 = ((s64)dz * radius) / distance + z2;
@@ -483,7 +483,7 @@ void func_8007ECF4(s16 arg0, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ, s
 
             dx = D_80121BC0 - x0;
             dz = D_80121BC8 - z0;
-            distance = integerSqrt64((s64)dx * dx + (s64)dz * dz);
+            distance = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
             if (distance < radius) {
                 D_80121BC0 = ((s64)dx * radius) / distance + x0;
                 D_80121BC8 = ((s64)dz * radius) / distance + z0;
@@ -520,7 +520,7 @@ void func_8007FD88(s32 arg0) {
     s32 length;
     s32 temp_a1;
 
-    length = integerSqrt64((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+    length = integerSquareRoot64((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
     temp_v1 = ((s64)D_80121BBC * 0x1000) / length;
     temp_v0 = ((s64)D_80121BB4 * 0x1000) / length;
 
@@ -598,7 +598,7 @@ void func_8007FF88(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5)
         D_80121BA8 = D_80121BC0 - x1;
         D_80121BB0 = D_80121BC8 - z1;
 
-        length = integerSqrt64((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+        length = integerSquareRoot64((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
         nx = ((s64)D_80121BBC * 0x1000) / length;
         nz = ((s64)D_80121BB4 * 0x1000) / length;
         along = ((s64)nz * D_80121BA8 + (s64)nx * D_80121BB0) / 0x1000;
@@ -609,7 +609,7 @@ void func_8007FF88(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5)
         if ((flags & 2) && (along < 0)) {
             deltaX = D_80121BC0 - x1;
             deltaZ = D_80121BC8 - z1;
-            dist = integerSqrt64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
+            dist = integerSquareRoot64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
             if (dist < arg3) {
                 D_80121BC0 = (((s64)deltaX * arg3) / dist) + x1;
                 D_80121BC8 = (((s64)deltaZ * arg3) / dist) + z1;
@@ -620,7 +620,7 @@ void func_8007FF88(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5)
                 if (edgeLength < along) {
                     deltaX = D_80121BC0 - x3;
                     deltaZ = D_80121BC8 - z3;
-                    dist = integerSqrt64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
+                    dist = integerSquareRoot64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
                     if (dist < arg3) {
                         D_80121BC0 = (((s64)deltaX * arg3) / dist) + x3;
                         D_80121BC8 = (((s64)deltaZ * arg3) / dist) + z3;
@@ -647,7 +647,7 @@ void func_8007FF88(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5)
         D_80121BA8 = D_80121BC0 - x2;
         D_80121BB0 = D_80121BC8 - z2;
 
-        length = integerSqrt64((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
+        length = integerSquareRoot64((s64)D_80121BB4 * D_80121BB4 + (s64)D_80121BBC * D_80121BBC);
         nx = ((s64)D_80121BBC * 0x1000) / length;
         nz = ((s64)D_80121BB4 * 0x1000) / length;
         along = ((s64)nz * D_80121BA8 + (s64)nx * D_80121BB0) / 0x1000;
@@ -658,7 +658,7 @@ void func_8007FF88(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5)
         if ((flags & 4) && (along < 0)) {
             deltaX = D_80121BC0 - x2;
             deltaZ = D_80121BC8 - z2;
-            dist = integerSqrt64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
+            dist = integerSquareRoot64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
             if (dist < arg3) {
                 D_80121BC0 = (((s64)deltaX * arg3) / dist) + x2;
                 D_80121BC8 = (((s64)deltaZ * arg3) / dist) + z2;
@@ -668,7 +668,7 @@ void func_8007FF88(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5)
                 if (edgeLength < along) {
                     deltaX = D_80121BC0 - x0;
                     deltaZ = D_80121BC8 - z0;
-                    dist = integerSqrt64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
+                    dist = integerSquareRoot64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
                     if (dist < arg3) {
                         D_80121BC0 = (((s64)deltaX * arg3) / dist) + x0;
                         D_80121BC8 = (((s64)deltaZ * arg3) / dist) + z0;

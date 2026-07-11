@@ -68,13 +68,13 @@ void func_8003DDD0() {
     MainMenuRaceSetupObject *obj;
 
     obj = D_800EC9C4;
-    makeFixedRotateYX(obj->rotationMtx, -obj->pitch, -obj->yaw);
+    makeFixedRotationYX(obj->rotationMtx, -obj->pitch, -obj->yaw);
     obj = D_800EC9C4;
     scratch.localPos.x = 0;
     scratch.localPos.y = 0;
     scratch.localPos.z = -obj->depth;
-    makeFixedRotateXY(scratch.rotationMtx, obj->pitch, obj->yaw);
-    transformVec3ByFixedMatrix(scratch.rotationMtx, &scratch.localPos.x, &scratch.worldPos.x);
+    makeFixedRotationXY(scratch.rotationMtx, obj->pitch, obj->yaw);
+    transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.localPos.x, &scratch.worldPos.x);
     obj = D_800EC9C4;
     obj->cameraDelta.x = scratch.worldPos.x - obj->pos.x;
     obj = D_800EC9C4;
@@ -92,13 +92,13 @@ void func_8003DEC8(void) {
     MainMenuRaceSetupObject *obj;
 
     obj = D_800EC9C4;
-    makeFixedRotateYX(obj->rotationMtx, -obj->pitch, -obj->yaw);
+    makeFixedRotationYX(obj->rotationMtx, -obj->pitch, -obj->yaw);
     obj = D_800EC9C4;
     scratch.localPos.x = D_8010B1B0.x;
     scratch.localPos.y = D_8010B1B0.y;
     scratch.localPos.z = -obj->depth;
-    makeFixedRotateXY(scratch.rotationMtx, obj->pitch, obj->yaw);
-    transformVec3ByFixedMatrix(scratch.rotationMtx, &scratch.localPos.x, &scratch.worldPos.x);
+    makeFixedRotationXY(scratch.rotationMtx, obj->pitch, obj->yaw);
+    transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.localPos.x, &scratch.worldPos.x);
     obj = D_800EC9C4;
     obj->cameraDelta.x = scratch.worldPos.x - obj->pos.x;
     obj = D_800EC9C4;

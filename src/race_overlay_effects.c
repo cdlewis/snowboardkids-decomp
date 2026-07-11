@@ -303,7 +303,7 @@ void func_800669A0(RaceModelListActor *arg0) {
         arg0->modelBuffer = (void *)func_80043040(*(s16 *)&D_80112130[0x46]);
 
         for (i = 0; i < count; i++) {
-            makeFixedRotateY(&transform, entry->assetIndex);
+            makeFixedRotationY(&transform, entry->assetIndex);
             transform.basePos.x = entry->pos.x;
             transform.basePos.y = entry->pos.y;
             transform.basePos.z = entry->pos.z;
@@ -489,7 +489,7 @@ void func_800671F4(RaceOverlayTransformActor *arg0) {
 
     if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
-            makeFixedRotateXY(scratch, arg0->pitch, arg0->yaw);
+            makeFixedRotationXY(scratch, arg0->pitch, arg0->yaw);
             ((GfxCommandSource *)scratch)->words[5] = arg0->pos.x;
             ((GfxCommandSource *)scratch)->words[6] = arg0->pos.y + 0x190000;
             ((GfxCommandSource *)scratch)->words[7] = arg0->pos.z;
@@ -554,12 +554,12 @@ void func_800674B4(RaceThrownModelActor *arg0) {
     RaceThrownModelActor *temp_a3 = arg0;
 
     if (gRaceUpdatePaused == 0) {
-        makeFixedRotateY(sp1C.scratch, temp_a3->modelIndex);
+        makeFixedRotationY(sp1C.scratch, temp_a3->modelIndex);
         temp_a3->timer = 0x32;
         temp_a3->velocity.x = 0;
         temp_a3->velocity.y = 0xB0000;
         temp_a3->velocity.z = 0xFFF90000;
-        transformVec3ByFixedMatrix(sp1C.scratch, &temp_a3->velocity, &temp_a3->transformedPos);
+        transformVec3iByFixedMatrix(sp1C.scratch, &temp_a3->velocity, &temp_a3->transformedPos);
         setCallbackTaskCallback(temp_a3, func_80067364);
     }
 }
@@ -1049,7 +1049,7 @@ void func_800691C8(RaceOverlayModelActor *arg0) {
 
     arg0->drawPos = arg0->pos;
     arg0->drawPos.y += 0x140000;
-    makeFixedRotateY(arg0->rotationMatrix, arg0->rotation);
+    makeFixedRotationY(arg0->rotationMatrix, arg0->rotation);
 
     arg0->spawnPos.x = arg0->pos.x;
     arg0->spawnPos.y = arg0->pos.y;
@@ -1094,7 +1094,7 @@ void func_8006935C(RaceParticleActor *arg0) {
     if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->transformDirty != 0) {
             arg0->transformDirty = 0;
-            makeFixedRotateXYZ(transform.rotation, arg0->rotX, arg0->rotY, arg0->rotZ);
+            makeFixedRotationXYZ(transform.rotation, arg0->rotX, arg0->rotY, arg0->rotZ);
             transform.basePos.x = arg0->pos.x;
             transform.basePos.y = arg0->pos.y;
             transform.basePos.z = arg0->pos.z;
@@ -1156,8 +1156,8 @@ void func_80069754(RaceParticleActor *arg0) {
     arg0->rotVelX = randomNextMain() - 0x80;
     arg0->rotVelY = randomNextMain() - 0x80;
     arg0->rotVelZ = randomNextMain() - 0x80;
-    makeFixedRotateY(sp28, arg0->rotY);
-    transformVec3ByFixedMatrix(sp28, &D_800D9BD8[arg0->spawnOffsetIndex], &arg0->velocity);
+    makeFixedRotationY(sp28, arg0->rotY);
+    transformVec3iByFixedMatrix(sp28, &D_800D9BD8[arg0->spawnOffsetIndex], &arg0->velocity);
     func_80045990(func_80043040(D_80112168), 0x22, &arg0->palette, &arg0->image);
     setCallbackTaskCallback(arg0, func_80069678);
 }

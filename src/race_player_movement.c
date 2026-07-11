@@ -37,20 +37,20 @@ typedef struct {
 
 extern s32 calculateAngleBetweenXZPoints(s32, s32, s32, s32);
 extern s16 calculateAngleFromDeltaXZ(s32, s32);
-extern void makeFixedRotateX(Matrix4s, s16);
-extern void makeFixedRotateY(Matrix4s, s16);
-extern void makeFixedRotateZ(Matrix4s, s16);
-extern void multiplyFixedMatrices(Matrix4s, Matrix4s, Matrix4s);
-extern void makeFixedRotateXYZ(Matrix4s, s16, s16, s16);
-extern void makeFixedRotateXY(Matrix4s, s16, s16, RaceInputPlayer *);
-extern void makeFixedRotateZX(Matrix4s, s16, s16);
-extern void makeFixedRotateXZ(Matrix4s, s16, s16);
-extern void makeFixedRotateZXY(Matrix4s, s16, s16, s16);
-extern void makeFixedRotateZYX(Matrix4s, s16, s16, s16);
-extern void transformVec3ByFixedMatrix(Matrix4s, RaceVec3i *, RaceVec3i *);
+extern void makeFixedRotationX(Matrix4s, s16);
+extern void makeFixedRotationY(Matrix4s, s16);
+extern void makeFixedRotationZ(Matrix4s, s16);
+extern void multiplyFixedMatrix3s(Matrix4s, Matrix4s, Matrix4s);
+extern void makeFixedRotationXYZ(Matrix4s, s16, s16, s16);
+extern void makeFixedRotationXY(Matrix4s, s16, s16, RaceInputPlayer *);
+extern void makeFixedRotationZX(Matrix4s, s16, s16);
+extern void makeFixedRotationXZ(Matrix4s, s16, s16);
+extern void makeFixedRotationZXY(Matrix4s, s16, s16, s16);
+extern void makeFixedRotationZYX(Matrix4s, s16, s16, s16);
+extern void transformVec3iByFixedMatrix(Matrix4s, RaceVec3i *, RaceVec3i *);
 extern s16 fixedSine(s16);
 extern s16 fixedCosine(s16);
-extern s32 integerSqrt64(s64);
+extern s32 integerSquareRoot64(s64);
 extern u8 D_800EC9C2;
 extern s8 gRacePlayerCount;
 extern s8 gRaceOrderPlayerIds[];
@@ -386,7 +386,7 @@ void func_80087EFC(void) {
                                     temp *= -1;
                                 }
                                 if ((temp < radius) &&
-                                    ((temp = integerSqrt64((s64)((0, xDiff)) * xDiff +
+                                    ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                                            (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < radius)) {
                                     temp = ((radius - temp) * -1) / 2;
                                     angle = calculateAngleBetweenXZPoints(playerA->posX, playerA->posZ,
@@ -464,7 +464,7 @@ void func_80088294(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
                         temp = -temp;
                     }
                     if ((temp < xzLimit) &&
-                        ((temp = integerSqrt64((s64)((0, xDiff)) * xDiff +
+                        ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                                (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
                         angle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                         sine = fixedSine(angle);
@@ -533,7 +533,7 @@ void func_80088664(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIn
                     temp = -temp;
                 }
                 if ((temp < xzLimit) &&
-                    ((temp = integerSqrt64((s64)((0, xDiff)) * xDiff +
+                    ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                            (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
                     angle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                     sine = fixedSine(angle);
@@ -595,7 +595,7 @@ void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
                         temp = -temp;
                     }
                     if ((temp < xzLimit) &&
-                        ((temp = integerSqrt64((s64)((0, xDiff)) * xDiff +
+                        ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                                (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
                         if (player->unk29C < arg3) {
                             angle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
@@ -657,7 +657,7 @@ void func_80088C80(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
                     temp = -temp;
                 }
                 if ((temp < xzLimit) &&
-                    ((temp = integerSqrt64((s64)((0, xDiff)) * xDiff +
+                    ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                            (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
                     angle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                     sine = fixedSine(angle);
@@ -715,7 +715,7 @@ s32 func_80088E98(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
             if (zDiff < 0) {
                 zDiff = -zDiff;
             }
-            if ((zDiff < xzLimit) && (integerSqrt64((s64)xDiff * xDiff + (s64)zDiff * zDiff) < xzLimit)) {
+            if ((zDiff < xzLimit) && (integerSquareRoot64((s64)xDiff * xDiff + (s64)zDiff * zDiff) < xzLimit)) {
                 result = 1;
             }
         }
@@ -753,7 +753,7 @@ void func_80089000(RaceVec3i *pos, s32 xzSize, s16 flag) {
                         dz = -dz;
                     }
                     if ((dz < radius) &&
-                        (integerSqrt64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
+                        (integerSquareRoot64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
                         player->pendingItemHitFlags |= flag;
                     }
                 }
@@ -795,7 +795,7 @@ s32 func_800891B8(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex) {
                 dz = -dz;
             }
             if ((dz < radius) &&
-                (integerSqrt64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
+                (integerSquareRoot64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
                 player->pendingItemHitFlags |= flag;
                 return 1;
             }
@@ -843,21 +843,21 @@ void func_8008A940(RaceInputPlayer *player) {
     temp_s2->unk500 = 0;
     terrainId = temp_s2->unk502;
 
-    makeFixedRotateZ(mtx, temp_s2->unk2EE);
-    transformVec3ByFixedMatrix(mtx, &D_800DE7F8, points);
+    makeFixedRotationZ(mtx, temp_s2->unk2EE);
+    transformVec3iByFixedMatrix(mtx, &D_800DE7F8, points);
     pitchSpan = points[0].x;
 
-    makeFixedRotateX(mtx, temp_s2->pitchAngle);
-    transformVec3ByFixedMatrix(mtx, &D_800DE810, points);
+    makeFixedRotationX(mtx, temp_s2->pitchAngle);
+    transformVec3iByFixedMatrix(mtx, &D_800DE810, points);
     rollSpan = points[0].z;
 
     baseY = temp_s2->posY - 0x30000;
-    makeFixedRotateXY(mtx, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2);
+    makeFixedRotationXY(mtx, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2);
 
     i = 0;
     do {
         point = &points[i];
-        transformVec3ByFixedMatrix(mtx, &D_800DE7B0[i + 2], point);
+        transformVec3iByFixedMatrix(mtx, &D_800DE7B0[i + 2], point);
         point->x += temp_s2->posX;
         point->y += baseY;
         point->z += temp_s2->posZ;
@@ -913,11 +913,11 @@ void func_8008A940(RaceInputPlayer *player) {
     temp_s2->unk2F4 = calculateAngleFromDeltaXZ(-(frontMidGround - backMidGround), -pitchSpan * 2);
     temp_s2->unk64 = 0;
 
-    makeFixedRotateZXY(mtx, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2->unk2EE);
+    makeFixedRotationZXY(mtx, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2->unk2EE);
     i = 0;
     do {
         point = &points[i];
-        transformVec3ByFixedMatrix(mtx, &D_800DE7B0[i + 2], point);
+        transformVec3iByFixedMatrix(mtx, &D_800DE7B0[i + 2], point);
         point->x += temp_s2->posX;
         point->z += temp_s2->posZ;
         point->y += baseY + temp_s2->unk64;
@@ -941,13 +941,13 @@ void func_8008A940(RaceInputPlayer *player) {
     transformedZ = (s64)mtx[5] * temp_s2->unk68 / 0x1000;
 
     if (temp_s2->stateFlags & 0x400) {
-        makeFixedRotateZYX(effectMtx, temp_s2->unk6C, -temp_s2->unk6E, -temp_s2->unk70);
-        multiplyFixedMatrices(effectMtx, mtx, baseMtx);
+        makeFixedRotationZYX(effectMtx, temp_s2->unk6C, -temp_s2->unk6E, -temp_s2->unk70);
+        multiplyFixedMatrix3s(effectMtx, mtx, baseMtx);
     } else {
-        makeFixedRotateZYX(effectMtx, temp_s2->unk6C, temp_s2->unk6E, temp_s2->unk70);
-        makeFixedRotateY(baseMtx, 0x800);
-        multiplyFixedMatrices(baseMtx, mtx, tiltMtx);
-        multiplyFixedMatrices(effectMtx, tiltMtx, baseMtx);
+        makeFixedRotationZYX(effectMtx, temp_s2->unk6C, temp_s2->unk6E, temp_s2->unk70);
+        makeFixedRotationY(baseMtx, 0x800);
+        multiplyFixedMatrix3s(baseMtx, mtx, tiltMtx);
+        multiplyFixedMatrix3s(effectMtx, tiltMtx, baseMtx);
     }
 
     stateFlags = temp_s2->stateFlags;
@@ -961,7 +961,7 @@ void func_8008A940(RaceInputPlayer *player) {
         backHeightDiff = ((s64)baseMtx[5] * (temp_s2->unk344 - temp_s2->unk68) +
                           (s64)-baseMtx[2] * temp_s2->unk340 + (s64)baseMtx[8] * temp_s2->unk348) /
                          0x1000;
-        makeFixedRotateXYZ(tiltMtx, temp_s2->unk33A, -temp_s2->unk33C, -temp_s2->unk33E);
+        makeFixedRotationXYZ(tiltMtx, temp_s2->unk33A, -temp_s2->unk33C, -temp_s2->unk33E);
     } else {
         sideHeightDiff = ((s64)baseMtx[3] * (temp_s2->unk344 - temp_s2->unk68) +
                           (s64)baseMtx[0] * temp_s2->unk340 + (s64)baseMtx[6] * temp_s2->unk348) /
@@ -972,16 +972,16 @@ void func_8008A940(RaceInputPlayer *player) {
         backHeightDiff = ((s64)baseMtx[5] * (temp_s2->unk344 - temp_s2->unk68) +
                           (s64)baseMtx[2] * temp_s2->unk340 + (s64)baseMtx[8] * temp_s2->unk348) /
                          0x1000;
-        makeFixedRotateXYZ(tiltMtx, temp_s2->unk33A, temp_s2->unk33C, temp_s2->unk33E);
+        makeFixedRotationXYZ(tiltMtx, temp_s2->unk33A, temp_s2->unk33C, temp_s2->unk33E);
     }
 
     sideHeightDiff += temp_s2->posX + transformedX;
     backHeightDiff += temp_s2->posZ + transformedZ;
-    multiplyFixedMatrices(tiltMtx, baseMtx, mtx);
+    multiplyFixedMatrix3s(tiltMtx, baseMtx, mtx);
 
     i = 0;
     do {
-        transformVec3ByFixedMatrix(mtx, &D_800DE7B0[i + 9], &temp_s2->markerPoints[i]);
+        transformVec3iByFixedMatrix(mtx, &D_800DE7B0[i + 9], &temp_s2->markerPoints[i]);
         temp_s2->markerPoints[i].x += sideHeightDiff;
         temp_s2->markerPoints[i].z += backHeightDiff;
         temp_s2->markerPoints[i].y =
@@ -1051,7 +1051,7 @@ s32 func_8008B408(RaceInputPlayer *player, s32 arg1, s16 arg2) {
 void func_8008B508(RaceVec3i *vec, RaceInputPlayer *player) {
     s32 magnitude;
 
-    magnitude = integerSqrt64((s64)vec->x * vec->x + (s64)vec->z * vec->z);
+    magnitude = integerSquareRoot64((s64)vec->x * vec->x + (s64)vec->z * vec->z);
     if (player->unk314 < magnitude) {
         vec->x = (s64)vec->x * player->unk314 / magnitude;
         vec->z = (s64)vec->z * player->unk314 / magnitude;
@@ -1061,7 +1061,7 @@ void func_8008B508(RaceVec3i *vec, RaceInputPlayer *player) {
 void func_8008B60C(RaceVec3i *vec, RaceInputPlayer *player) {
     s32 magnitude;
 
-    magnitude = integerSqrt64((s64)vec->x * vec->x + (s64)vec->z * vec->z);
+    magnitude = integerSquareRoot64((s64)vec->x * vec->x + (s64)vec->z * vec->z);
     if ((player->unk314 / 2) < magnitude) {
         vec->x = (s64)vec->x * (player->unk314 / 2) / magnitude;
         vec->z = (s64)vec->z * (player->unk314 / 2) / magnitude;
@@ -1087,8 +1087,8 @@ void func_8008B73C(RaceInputPlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 ar
     scratch.localPos.z = ((s64)player->unk40.x * -sin + (s64)player->unk40.z * cos) / 0x1000;
     scratch.localPos.y = player->unk40.y;
 
-    makeFixedRotateXZ(scratch.rotationMtx, -player->unk2F0, -player->unk2F4);
-    transformVec3ByFixedMatrix(scratch.rotationMtx, &scratch.localPos, &scratch.worldPos);
+    makeFixedRotationXZ(scratch.rotationMtx, -player->unk2F0, -player->unk2F4);
+    transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.localPos, &scratch.worldPos);
 
     if (arg1 > 0) {
         if (scratch.worldPos.z < 0x30000) {
@@ -1146,8 +1146,8 @@ void func_8008B73C(RaceInputPlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 ar
     player->unk258 = scratch.worldPos.x;
     player->unk254 = scratch.worldPos.z;
 
-    makeFixedRotateZX(scratch.rotationMtx, player->unk2F0, player->unk2F4);
-    transformVec3ByFixedMatrix(scratch.rotationMtx, &scratch.worldPos, &scratch.localPos);
+    makeFixedRotationZX(scratch.rotationMtx, player->unk2F0, player->unk2F4);
+    transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.worldPos, &scratch.localPos);
 
     player->unk74 = scratch.localPos.y + 0x1000;
     scratch.localPos.y = (scratch.localPos.y + player->unk40.y) - scratch.localPos.y;
@@ -1220,11 +1220,11 @@ void func_8008BBB8(RaceInputPlayer *player, s16 soundType) {
 void func_8008BE1C(RaceInputPlayer *arg0) {
     TransformScratch scratch;
 
-    makeFixedRotateXY(scratch.rotationMtx, arg0->pitchAngle, arg0->facingAngle, arg0);
+    makeFixedRotationXY(scratch.rotationMtx, arg0->pitchAngle, arg0->facingAngle, arg0);
     scratch.localPos.x = 0;
     scratch.localPos.y = 0xC0000;
     scratch.localPos.z = 0;
-    transformVec3ByFixedMatrix(scratch.rotationMtx, &scratch.localPos, &scratch.worldPos);
+    transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.localPos, &scratch.worldPos);
     arg0->projectedPos.x = scratch.worldPos.x + arg0->posX;
     arg0->projectedPos.y = scratch.worldPos.y + arg0->posY;
     arg0->projectedPos.z = scratch.worldPos.z + arg0->posZ;
