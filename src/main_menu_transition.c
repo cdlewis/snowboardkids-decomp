@@ -2,7 +2,7 @@
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "asset_manager.h"
-#include "course_asset_loader.h"
+#include "race_scene_loader.h"
 #include "race_input_history.h"
 #include "input_task_scheduler.h"
 #include "main_menu_message_ui.h"
@@ -223,8 +223,8 @@ void func_8003F864(void) {
 
     courseAsset = &D_800D3C00[D_80121B5B];
     loadCompressedRomAsset(courseAsset->romStart, courseAsset->romEnd, 0x2B);
-    func_80043950();
-    func_800440F4();
+    loadRaceCourseAssets();
+    loadRaceCharacterAssets();
     func_8006D5CC();
     resetAllViewports();
     gFramebufferSwapDelay = 0;
@@ -235,7 +235,7 @@ void func_8003F864(void) {
     configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, D_800E10D4);
     D_8011228C = 1;
     gFramebufferSwapDelay = 0;
-    func_80044294();
+    initRaceCourseEffects();
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
     D_801235B4 = 1;
@@ -463,8 +463,8 @@ void func_8004002C(void) {
     D_80122FB9 = 0;
     D_80122FBA = 0;
     D_80122FB8 = 0;
-    func_80043950();
-    func_800440F4();
+    loadRaceCourseAssets();
+    loadRaceCharacterAssets();
     func_8006D5CC();
     resetAllViewports();
     D_8011228C = 1;
@@ -474,7 +474,7 @@ void func_8004002C(void) {
     configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
     D_8011228C = 1;
     gFramebufferSwapDelay = 0;
-    func_80044294();
+    initRaceCourseEffects();
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
     D_801235B4 = 1;

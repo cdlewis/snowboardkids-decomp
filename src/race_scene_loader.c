@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "asset_manager.h"
-#include "course_asset_loader.h"
+#include "race_scene_loader.h"
 #include "effect_task_scheduler.h"
 #include "game_boot.h"
 #include "model_animation.h"
@@ -20,20 +20,20 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u8 courseAssetIndex;
+    /* 0x10 */ u8 characterId;
     /* 0x11 */ u8 pad11[2];
     /* 0x13 */ s8 isActive;
     /* 0x14 */ u8 pad14[COURSE_PLAYER_STRIDE - 0x14];
-} CoursePlayerState;
+} RaceScenePlayer;
 
 extern s16 D_80112130[];
 extern s16 D_80112140;
 extern s16 D_80112144;
 extern u16 D_80121B50;
-extern CoursePlayerState D_80121D80[];
-extern RomAssetRange D_800D4020[];
-extern RomAssetRange D_800D4050[];
-extern RomAssetRange D_800D4080[];
+extern RaceScenePlayer D_80121D80[];
+extern RomAssetRange gCharacterRawAssetRanges[];
+extern RomAssetRange gCharacterTextureAssetRanges[];
+extern RomAssetRange gCharacterModelAssetRanges[];
 
 extern u8 D_E35C0[];
 extern u8 D_EC9A0[];
@@ -103,8 +103,8 @@ extern void func_800560F4();
 extern void func_80056C44();
 extern void func_8005714C();
 #ifdef NON_MATCHING
-// func_80043950 best match: 63.023% at nonmatchings/func_80043950-2225551288923588688/base_4.c.
-void func_80043950(void) {
+// loadRaceCourseAssets best match: 63.023% at nonmatchings/loadRaceCourseAssets-2225551288923588688/base_4.c.
+void loadRaceCourseAssets(void) {
     s32 size;
 
     switch (D_80121B50) {
@@ -218,13 +218,13 @@ void func_80043950(void) {
     loadCompressedRomAsset(D_5DAF30, D_5DB9D0, 0x2A);
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/course_asset_loader/func_80043950.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_scene_loader/loadRaceCourseAssets.s")
 #endif
 
-// func_800440F4 best match: 98.654% at nonmatchings/func_800440F4-5635509610426229442/base_6.c.
+// loadRaceCharacterAssets best match: 98.654% at nonmatchings/loadRaceCharacterAssets-5635509610426229442/base_6.c.
 #ifdef NON_MATCHING
-void func_800440F4(void) {
-    CoursePlayerState *player;
+void loadRaceCharacterAssets(void) {
+    RaceScenePlayer *player;
     RomAssetRange *rawRanges;
     RomAssetRange *textureRanges;
     RomAssetRange *modelRanges;
@@ -237,27 +237,27 @@ void func_800440F4(void) {
     func_80099C44(D_14B450, func_80043040(D_80112130[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
 
-    rawRanges = D_800D4020;
-    textureRanges = D_800D4050;
-    modelRanges = D_800D4080;
+    rawRanges = gCharacterRawAssetRanges;
+    textureRanges = gCharacterTextureAssetRanges;
+    modelRanges = gCharacterModelAssetRanges;
     for (player = D_80121D80, i = 0; i != COURSE_PLAYER_COUNT; i++, player++) {
         assetHandles = &D_80112130[i];
         if (player->isActive != 0) {
-            size = rawRanges[player->courseAssetIndex].end - rawRanges[player->courseAssetIndex].start;
+            size = rawRanges[player->characterId].end - rawRanges[player->characterId].start;
             assetHandles[0xE] = func_80042D58(size);
-            func_80099C44(rawRanges[player->courseAssetIndex].start, func_80043040(assetHandles[0xE]), size);
-            loadCompressedRomAsset(textureRanges[player->courseAssetIndex].start, textureRanges[player->courseAssetIndex].end, i + 0x12);
-            loadCompressedRomAsset(modelRanges[player->courseAssetIndex].start, modelRanges[player->courseAssetIndex].end, i + 0x16);
+            func_80099C44(rawRanges[player->characterId].start, func_80043040(assetHandles[0xE]), size);
+            loadCompressedRomAsset(textureRanges[player->characterId].start, textureRanges[player->characterId].end, i + 0x12);
+            loadCompressedRomAsset(modelRanges[player->characterId].start, modelRanges[player->characterId].end, i + 0x16);
         }
     }
 
     loadCompressedRomAsset(D_243270, D_245A80, 0x1E);
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/course_asset_loader/func_800440F4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_scene_loader/loadRaceCharacterAssets.s")
 #endif
 
-void func_80044294(void) {
+void initRaceCourseEffects(void) {
     s32 sp2C;
     s32 sp28;
 
