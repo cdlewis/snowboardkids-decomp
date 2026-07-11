@@ -1,21 +1,21 @@
-#ifndef MAIN_MENU_MODE_RACE_FLOW_H
-#define MAIN_MENU_MODE_RACE_FLOW_H
+#ifndef MAIN_MENU_RACE_FLOW_H
+#define MAIN_MENU_RACE_FLOW_H
 
 #include "common.h"
 
-void startMainMenuModeDemoFlow(void);
-void initMainMenuModeDemoMenu(void);
-void fadeInMainMenuModeDemoMenu(void);
-void updateMainMenuModeDemoMenu(void);
-void fadeOutMainMenuModeDemoMenu(void);
-void exitMainMenuModeDemoMenu(void);
-void initMainMenuModeDemoRace(void);
-void fadeInMainMenuModeDemoRace(void);
-void waitForMainMenuModeDemoRaceSelection(void);
-void zoomMainMenuModeDemoRaceViewport(void);
-void runMainMenuModeDemoRace(void);
-void fadeOutMainMenuModeDemoRace(void);
-void returnToMainMenuModeDemoMenu(void);
+void startMainMenuDemoRaceFlow(void);
+void initMainMenuDemoRaceModeMenu(void);
+void fadeInMainMenuDemoRaceModeMenu(void);
+void updateMainMenuDemoRaceModeMenu(void);
+void fadeOutMainMenuDemoRaceModeMenu(void);
+void exitMainMenuDemoRaceModeMenu(void);
+void initMainMenuDemoRace(void);
+void fadeInMainMenuDemoRace(void);
+void waitForMainMenuDemoRaceStart(void);
+void zoomMainMenuDemoRaceViewport(void);
+void runMainMenuDemoRace(void);
+void fadeOutMainMenuDemoRace(void);
+void returnToMainMenuDemoRaceModeMenu(void);
 void startTrainingCourseFlow(void);
 void deferTrainingCourseInit(void);
 void initTrainingCourseRace(void);
