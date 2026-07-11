@@ -66,8 +66,8 @@ extern s16 D_800DE8AC[];
 extern s16 D_800DE8B8[];
 extern RaceCourseStartEntry D_800B9540[];
 extern Unk8011228C D_8011228C[];
-extern s16 D_80121B50;
-extern s16 D_80121B52;
+extern s16 gRaceCourseIndex;
+extern s16 gRaceLapCount;
 extern u8 D_80121B58;
 
 void func_80087600(s32 arg0, s32 *arg1, s32 *arg2) {
@@ -78,7 +78,7 @@ void func_80087600(s32 arg0, s32 *arg1, s32 *arg2) {
     *arg1 = player->unk502 * 8;
     *arg2 = player->unk504;
 
-    switch (D_80121B50) {
+    switch (gRaceCourseIndex) {
     case 0:
         temp = *arg1;
         if (temp >= 0x580) {
@@ -322,8 +322,8 @@ void func_80087E14(RaceInputPlayer *player) {
     u32 flags;
 
     flags = player->stateFlags;
-    if (!(flags & 0x40) && (player->unk508 >= (D_80121B52 - 1)) &&
-            (player->unk502 == D_800B9540[D_80121B50].unk0) && !(flags & 0x1000)) {
+    if (!(flags & 0x40) && (player->unk508 >= (gRaceLapCount - 1)) &&
+            (player->unk502 == D_800B9540[gRaceCourseIndex].unk0) && !(flags & 0x1000)) {
         player->stateFlags = flags | 0x40;
         if ((D_80121B58 == 0) && (D_8011228C[player->playerIndexU16].active != 0)) {
             task = createCallbackTask(func_8006A85C, 6, 0x64);

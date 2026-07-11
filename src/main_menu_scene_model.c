@@ -157,7 +157,7 @@ extern u16 D_800ECC44;
 extern u16 D_800ECC46;
 extern u8 D_8010B200[];
 extern s16 D_8011213E;
-extern u16 D_80121B50;
+extern u16 gRaceCourseIndex;
 
 void loadCurrentRaceRecordReplayData(void) {
     u16 *srcBase = &D_800ECC46;
@@ -172,7 +172,7 @@ void loadCurrentRaceRecordReplayData(void) {
     s32 offset;
     s32 remainder;
 
-    switch (D_80121B50) {
+    switch (gRaceCourseIndex) {
     case 0:
         src = (u16 *)((u8 *)srcBase + (D_800ECC24 * 2));
         break;
@@ -253,7 +253,7 @@ void loadCurrentRaceRecordReplayData(void) {
     *(s32 *)&model[0] = 0;
     *(s32 *)&model[4] = *(s16 *)&dst[0];
     model[8] = 1;
-    model[9] = D_80121B50;
+    model[9] = gRaceCourseIndex;
     model[10] = *(s8 *)&dst[2];
     model[12] = 0;
     model[11] = *(s8 *)&dst[3];

@@ -104,7 +104,7 @@ extern void *D_800DA880[];
 extern s32 D_80121B40;
 extern s32 D_80121B44;
 extern s32 D_80121B48;
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 D_80121B58;
@@ -416,7 +416,7 @@ void func_8006ECBC(void) {
         }
         D_801124A0->unk28 += diff;
 
-        diff = D_800B9540[D_80121B50].cameraPos.x - D_801124A0->pos.x;
+        diff = D_800B9540[gRaceCourseIndex].cameraPos.x - D_801124A0->pos.x;
         if (diff >= 0xC001) {
             diff = 0xC000;
         }
@@ -425,7 +425,7 @@ void func_8006ECBC(void) {
         }
         D_801124A0->pos.x += diff;
 
-        diff = D_800B9540[D_80121B50].cameraPos.y - D_801124A0->pos.y;
+        diff = D_800B9540[gRaceCourseIndex].cameraPos.y - D_801124A0->pos.y;
         if (diff >= 0xC001) {
             diff = 0xC000;
         }
@@ -434,7 +434,7 @@ void func_8006ECBC(void) {
         }
         D_801124A0->pos.y += diff;
 
-        diff = D_800B9540[D_80121B50].cameraPos.z - D_801124A0->pos.z;
+        diff = D_800B9540[gRaceCourseIndex].cameraPos.z - D_801124A0->pos.z;
         if (diff >= 0xC001) {
             diff = 0xC000;
         }

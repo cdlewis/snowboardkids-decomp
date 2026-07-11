@@ -9,7 +9,7 @@
 #include "main_menu_visual_effects.h"
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
-#include "main_menu_mode_flow.h"
+#include "main_menu_race_flow.h"
 #include "race_player_state.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
@@ -42,8 +42,8 @@ extern MainMenuModeFlowState *gCurrentGameTask;
 extern u8 gMainMenuSelectionResult;
 extern u8 D_8011228C;
 extern s16 D_801124B8;
-extern s16 D_80121B50;
-extern s16 D_80121B52;
+extern s16 gRaceCourseIndex;
+extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
 extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
@@ -160,14 +160,14 @@ void exitMainMenuModeDemoMenu(void) {
 
 // initMainMenuModeDemoRace best match: 94.795% (nonmatchings/initMainMenuModeDemoRace-8662636370764828261/base_5.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_mode_flow/initMainMenuModeDemoRace.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/initMainMenuModeDemoRace.s")
 
 #ifdef NON_MATCHING
 void initMainMenuModeDemoRace(void) {
     RaceInputPlayer *players;
     MainMenuModeDemoRaceAsset *courseAsset;
 
-    D_80121B50 = gMainMenuModeDemoRaceAssets[gMainMenuModeSelection].courseIndex;
+    gRaceCourseIndex = gMainMenuModeDemoRaceAssets[gMainMenuModeSelection].courseIndex;
     gRaceUpdatePaused = 0;
     D_80121B58 = 0;
     D_80121B5F = 0;
@@ -204,7 +204,7 @@ void initMainMenuModeDemoRace(void) {
     players[2].isActive = 1;
     players[3].isActive = 1;
     gRacePlayerCount = 4;
-    D_80121B52 = 5;
+    gRaceLapCount = 5;
     D_80121B5C = 0x64;
     initCallbackTaskScheduler(1);
 
@@ -279,7 +279,7 @@ void waitForMainMenuModeDemoRaceSelection(void) {
 
 // zoomMainMenuModeDemoRaceViewport best match: 75.250% (nonmatchings/zoomMainMenuModeDemoRaceViewport-1197934324348345530/base_3.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_mode_flow/zoomMainMenuModeDemoRaceViewport.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/zoomMainMenuModeDemoRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomMainMenuModeDemoRaceViewport(void) {
@@ -372,7 +372,7 @@ void deferTrainingCourseRaceInit(void) {
 
 // initTrainingCourseRace best match: 98.186% (nonmatchings/func_8004002C-6061209858023118177/base.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_mode_flow/initTrainingCourseRace.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/initTrainingCourseRace.s")
 
 #ifdef NON_MATCHING
 void initTrainingCourseRace(void) {
@@ -385,10 +385,10 @@ void initTrainingCourseRace(void) {
         case 4:
         case 5:
         case 6:
-            D_80121B50 = 0;
+            gRaceCourseIndex = 0;
             break;
         default:
-            D_80121B50 = 9;
+            gRaceCourseIndex = 9;
             break;
     }
 
@@ -448,7 +448,7 @@ void initTrainingCourseRace(void) {
             break;
     }
 
-    D_80121B52 = 5;
+    gRaceLapCount = 5;
     D_80121B5C = 0x64;
     initCallbackTaskScheduler(1);
     D_80121D95 = 0;
@@ -519,7 +519,7 @@ void waitForTrainingCourseStartSelection(void) {
 
 // zoomTrainingCourseRaceViewport best match: 74.802% (nonmatchings/zoomTrainingCourseRaceViewport-1197934324348345530/base_8.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_mode_flow/zoomTrainingCourseRaceViewport.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/zoomTrainingCourseRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomTrainingCourseRaceViewport(void) {
@@ -683,7 +683,7 @@ void applyTrainingCourseActionMenuSelection(void) {
 
 void finishOrAdvanceTrainingCourse(void) {
     if (gMainMenuSelectedCourse != 9) {
-        setCurrentGameTaskCallback(returnFromMainMenuModeFlow, 0);
+        setCurrentGameTaskCallback(returnFromMainMenuRaceFlow, 0);
         return;
     }
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
@@ -728,11 +728,11 @@ void exitTrainingCourseEndingDialog(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        setCurrentGameTaskCallback(&returnFromMainMenuModeFlow, 0);
+        setCurrentGameTaskCallback(&returnFromMainMenuRaceFlow, 0);
     }
 }
 
-void returnFromMainMenuModeFlow(void) {
+void returnFromMainMenuRaceFlow(void) {
     D_801235B4 = 0;
     resumeGameTask(3);
     removeGameTask(4);
