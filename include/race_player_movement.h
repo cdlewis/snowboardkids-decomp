@@ -16,7 +16,7 @@ void func_80088A1C(struct RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 a
 void func_80088C80(struct RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex);
 s32 func_80088E98(struct RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex);
 void func_80089000(struct RaceVec3i *pos, s32 xzSize, s16 flag);
-s32 func_800891B8(struct RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex);
+s32 tryApplyRacePlayerItemHit(struct RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex);
 s32 func_80089374(void);
 void func_8008A940(struct RaceInputPlayer *player);
 s32 func_8008B408(struct RaceInputPlayer *player, s32 arg1, s16 arg2);
