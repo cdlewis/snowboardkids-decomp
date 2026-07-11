@@ -44,19 +44,19 @@ typedef struct {
 
 extern void func_80045914(void);
 extern void func_80072138(s32, s32);
-extern void func_80004CC8(void);
-extern void func_80005468(void);
+extern void updateCharacterSelectMenu(void);
+extern void fadeOutCharacterSelectMenu(void);
 extern void func_800720E4(s32);
 extern CharacterSelectMenuState *D_801235B8;
-extern CharacterSelectState D_8010AE50;
-extern CharacterId D_800B3400[];
+extern CharacterSelectState gCharacterSelectHudState;
+extern CharacterId gCharacterSelectIdOrder[];
 extern CharacterSelectPlayer D_80121D80[];
 extern EffectTask *D_8010ADDC;
 extern EffectTask *D_8010ADE0;
 extern EffectTask *D_8010ADE4;
 extern EffectTask *D_8010ADE8;
 extern EffectTask *D_8010ADEC;
-extern f32 D_800E0980;
+extern f32 gCharacterSelectViewportAspectRatio;
 extern s16 D_800DEF14;
 extern s16 D_8010ADF0[];
 extern s8 D_800DEED4;
@@ -84,11 +84,11 @@ extern u8 D_80121B55;
 extern u8 D_80123750;
 extern u8 D_80123751;
 
-// func_80004960 best match: 90.714%
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_menu/func_80004960.s")
+// initCharacterSelectMenu best match: 90.714%
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_menu/initCharacterSelectMenu.s")
 
 #ifdef NON_MATCHING
-void func_80004960(void) {
+void initCharacterSelectMenu(void) {
     CharacterSelectPlayer *player;
     CharacterId *character;
     CharacterSelectState *state;
@@ -102,7 +102,7 @@ void func_80004960(void) {
     if ((D_800EC9E5 == 0) || (D_8010ADF8 == 1)) {
         func_800720E4(1);
         func_800704F0();
-        func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0980);
+        func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gCharacterSelectViewportAspectRatio);
         D_800DEED4 = 0;
         D_800EC9C1 = 0;
         D_8010ADF8 = 0;
@@ -121,7 +121,7 @@ void func_80004960(void) {
         if (playerCount > 0) {
             player = D_80121D80;
             do {
-                character = D_800B3400;
+                character = gCharacterSelectIdOrder;
                 j = 0;
 loop_1:
                 if (player->characterId == character->characterId) {
@@ -162,7 +162,7 @@ loop_1:
     D_8010ADE0 = func_80071408(func_80018060, 0, 0x64);
     func_80071408(func_80018B6C, 0, 0x64);
     D_8010ADE4 = func_80071408(func_80017D08, 0, 0x63);
-    func_8009956C(func_80004CC8, 0);
+    func_8009956C(updateCharacterSelectMenu, 0);
 
     playerCount = D_80121B55;
     if (playerCount > 0) {
@@ -177,7 +177,7 @@ loop_1:
         } while ((u32) timerPtr < (u32) timerEnd);
     }
 
-    state = &D_8010AE50;
+    state = &gCharacterSelectHudState;
     state->phase = 0;
     state->exitMode = 0;
     state->readyCount = 0;
@@ -201,14 +201,14 @@ loop_1:
 }
 #endif
 
-// func_80004CC8 best match: 55.575% (nonmatchings/func_80004CC8-731940616440357983/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_menu/func_80004CC8.s")
+// updateCharacterSelectMenu best match: 55.575% (nonmatchings/func_80004CC8-731940616440357983/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_menu/updateCharacterSelectMenu.s")
 
-// func_80005290 best match: 85.264%
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_menu/func_80005290.s")
+// updateCharacterSelectConfirmationMenu best match: 85.264%
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_menu/updateCharacterSelectConfirmationMenu.s")
 
 #ifdef NON_MATCHING
-void func_80005290(void) {
+void updateCharacterSelectConfirmationMenu(void) {
     CharacterSelectState *state;
     CharacterSelectPlayer *player;
     u8 *readyPtr;
@@ -218,7 +218,7 @@ void func_80005290(void) {
     s32 selection;
     u8 playerCount;
 
-    state = &D_8010AE50;
+    state = &gCharacterSelectHudState;
     if (state->fade == 0x100) {
         buttons = gPlayerInputPressed;
         selection = state->confirmSelection;
@@ -241,10 +241,10 @@ void func_80005290(void) {
 
         if ((buttons & 0x8000) || (buttons & 0x1000)) {
             func_80072138(0x18, 0x32);
-            state = &D_8010AE50;
+            state = &gCharacterSelectHudState;
             if (state->confirmSelection == 0) {
-                func_8009956C(func_80005468, 0);
-                state = &D_8010AE50;
+                func_8009956C(fadeOutCharacterSelectMenu, 0);
+                state = &gCharacterSelectHudState;
                 state->cursorX = 0x8C;
                 state->cursorY = 0x44;
                 state->exitMode = 3;
@@ -252,7 +252,7 @@ void func_80005290(void) {
                 playerCount = D_80121B55;
                 player = D_80121D80;
                 if ((s32) playerCount > 0) {
-                    readyPtr = (u8 *) &D_8010AE50;
+                    readyPtr = (u8 *) &gCharacterSelectHudState;
                     readyEnd = playerCount + readyPtr;
                     do {
                         readyPtr++;
@@ -261,8 +261,8 @@ void func_80005290(void) {
                         readyPtr[2] = 0;
                     } while ((u32) readyPtr < (u32) readyEnd);
                 }
-                func_8009956C(func_80004CC8, 0);
-                state = &D_8010AE50;
+                func_8009956C(updateCharacterSelectMenu, 0);
+                state = &gCharacterSelectHudState;
                 state->phase = 3;
                 state->fade = 0;
             }
@@ -271,7 +271,7 @@ void func_80005290(void) {
             playerCount = D_80121B55;
             player = D_80121D80;
             if ((s32) playerCount > 0) {
-                readyPtr = (u8 *) &D_8010AE50;
+                readyPtr = (u8 *) &gCharacterSelectHudState;
                 readyEnd = playerCount + readyPtr;
                 do {
                     readyPtr++;
@@ -280,8 +280,8 @@ void func_80005290(void) {
                     readyPtr[2] = 0;
                 } while ((u32) readyPtr < (u32) readyEnd);
             }
-            func_8009956C(func_80004CC8, 0);
-            state = &D_8010AE50;
+            func_8009956C(updateCharacterSelectMenu, 0);
+            state = &gCharacterSelectHudState;
             state->phase = 3;
             state->fade = 0;
         }
@@ -290,7 +290,7 @@ void func_80005290(void) {
 }
 #endif
 
-void func_80005468(void) {
+void fadeOutCharacterSelectMenu(void) {
     if (D_801235B8->fade != 0xFF) {
         D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {

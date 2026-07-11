@@ -694,7 +694,7 @@ typedef struct {
 extern ControllerPakConfirmTransition D_8010ADD0;
 extern u8 D_8010ADD9;
 extern void func_80000A40(u16 arg0);
-extern void func_80004960(void);
+extern void initCharacterSelectMenu(void);
 
 void func_80004164(void) {
     s32 connectedCount;
@@ -819,7 +819,7 @@ void func_80004164(void) {
             break;
     }
     if (state == 5) {
-        func_8009956C(func_80004960, 0);
+        func_8009956C(initCharacterSelectMenu, 0);
     }
     func_8007105C();
 }
