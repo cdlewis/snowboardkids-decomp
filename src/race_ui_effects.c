@@ -911,8 +911,8 @@ const char D_800E1240[0x4] = "%2d";
 const char D_800E1244[0xC] = "%3d";
 const char D_800E1250[0x4] = "%5d";
 
-extern s32 func_80048E60(Vec3i *);
-extern void func_800486BC(void *, void *);
+extern s32 isPositionNearAnyRaceViewportFocus(Vec3i *);
+extern void packFixedTransformMatrix(void *, void *);
 extern s16 gRaceCourseIndex;
 extern s16 D_801222F4;
 extern void *gEffectRenderCallbackList;
@@ -4019,7 +4019,7 @@ void func_80061984(RaceUiThrownTrailActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        if (func_80048E60(pos) != 0) {
+        if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
             func_80088294(pos, 0x1A0000, 0x600000, 2);
             if (arg0->soundTimer == 0) {
                 enqueuePositionalSoundEffect(0xD, pos, 0x7F, 0x31);
@@ -4370,7 +4370,7 @@ void func_80062D34(RaceUiScaledParticleActor *arg0) {
     actor = arg0;
     if (gRaceUpdatePaused == 0) {
         pos = &actor->pos;
-        if (func_80048E60(pos) != 0) {
+        if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
             actor->rotY += actor->rotYStep;
 
             if (func_80088E98(pos, 0x200000, 0xF0000, 0) != 0) {
@@ -5226,7 +5226,7 @@ void func_80065508(RaceUiGfxCommandActor *arg0) {
 
 loop:
     if (entry->active != 0) {
-        if (func_80048E60(pos) != 0) {
+        if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
             if (func_80088E98(pos, xzSize, ySize, 0) != 0) {
                 entry->active = 0;
                 enqueuePositionalSoundEffect(0x18, pos, 0x7F, 0x32);
@@ -5562,7 +5562,7 @@ void func_800663C8(RaceUiRankTextRenderActor *arg0) {
             ((Vec3i *)&scratch[10])->x = entry->position.x;
             ((Vec3i *)&scratch[10])->y = entry->position.y;
             ((Vec3i *)&scratch[10])->z = entry->position.z;
-            func_800486BC(scratch, (void *)((u32)actor1->matrices + (i << 6)));
+            packFixedTransformMatrix(scratch, (void *)((u32)actor1->matrices + (i << 6)));
             entry->active = active;
             i++;
             entry++;

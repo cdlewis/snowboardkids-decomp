@@ -91,7 +91,7 @@ typedef struct StackD7D4 {
     s32 sp5C;
 } StackD7D4;
 
-extern void func_800486BC(void *, void *);
+extern void packFixedTransformMatrix(void *, void *);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
 extern RacePlayerSlot D_80121D80[];
@@ -181,7 +181,7 @@ void updateRaceCameraTransformFromAngles(void) {
     D_801124A0->transformOffset.x = stack.sp48 - D_801124A0->pos.x;
     D_801124A0->transformOffset.y = stack.sp4C - D_801124A0->pos.y;
     D_801124A0->transformOffset.z = stack.sp50 - D_801124A0->pos.z;
-    func_800486BC(stack.sp28, D_801124A0->transform);
+    packFixedTransformMatrix(stack.sp28, D_801124A0->transform);
 }
 
 // updateRaceCameraLookAtTransform best match: 98.219% (nonmatchings/updateRaceCameraLookAtTransform-6061209858023118177/base_14.c)
@@ -263,7 +263,7 @@ void updateRaceCameraLookAtTransform(void) {
         -((((s64)resultMtx[MTX_YY] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
     D_801124A0->transformOffset.z =
         -((((s64)resultMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
-    func_800486BC(resultMtx, D_801124A0->transform);
+    packFixedTransformMatrix(resultMtx, D_801124A0->transform);
 }
 #endif
 
@@ -345,7 +345,7 @@ void updateRaceCameraAlternateLookAtTransform(void) {
     D_801124A0->transformOffset.x = -((((s64)transformMtx[MTX_XZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
     D_801124A0->transformOffset.y = -((((s64)transformMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
     D_801124A0->transformOffset.z = -((((s64)transformMtx[MTX_ZZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
-    func_800486BC(transformMtx, D_801124A0->transform);
+    packFixedTransformMatrix(transformMtx, D_801124A0->transform);
 }
 #endif
 

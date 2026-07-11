@@ -240,10 +240,10 @@ extern void enqueueSoundEffect(s32, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void osWritebackDCache(void *, s32);
 extern void *allocMenuRenderScratch(s32);
-extern void func_800486BC(void *, void *);
+extern void packFixedTransformMatrix(void *, void *);
 extern void *allocFixedTransformMatrix(CourseEffectMatrixSource *);
 extern void setPackedMatrixTranslation(CourseRenderCommand *, Vec3i *);
-extern s32 func_80048E60(Vec3i *);
+extern s32 isPositionNearAnyRaceViewportFocus(Vec3i *);
 extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
 extern void *resolveAssetTableRelativePointer(void *, u32);
 extern void func_80047174(s32, s32, s32, s32, s32);
@@ -753,7 +753,7 @@ void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
             transform.basePos.x = entry->position.x;
             transform.basePos.y = entry->position.y;
             transform.basePos.z = entry->position.z;
-            func_800486BC(&transform, (void *)((u32)arg0->vertices + (i << 6)));
+            packFixedTransformMatrix(&transform, (void *)((u32)arg0->vertices + (i << 6)));
             entry++;
         }
 
@@ -828,7 +828,7 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        if (func_80048E60(pos) != 0) {
+        if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
             if (arg0->pad42 != 0) {
                 targetAngle = calculateAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->unk24, arg0->unk2C);
             } else {
