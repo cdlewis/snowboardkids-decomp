@@ -58,7 +58,7 @@ extern u8 D_608560[];
 extern u8 D_609AA0[];
 extern u8 D_60ECB0[];
 extern u8 D_60F1A0[];
-extern s8 D_800DEED4;
+extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern f32 D_800E0A70;
 extern s16 D_8010B1A0;
@@ -76,8 +76,8 @@ extern s16 D_80112130[];
 extern MainMenuRaceSetupObject D_801121E0;
 extern MainMenuRaceSetupObject *D_800EC9C4;
 extern RaceToMainMenuTransitionState *D_801235B8;
-extern u8 D_80123750;
-extern u8 D_80123751;
+extern u8 gPendingFramebufferSwapCount;
+extern u8 gFramebufferSwapHold;
 
 // func_8000D340 best match: 93.231% at nonmatchings/func_8000D340-1197934324348345530/base_6.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_to_main_menu_transition/func_8000D340.s")
@@ -94,7 +94,7 @@ void func_8000D340(void) {
     D_801121E0.yaw = 0xFC0;
     func_800704F0();
     func_80070860(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, D_800E0A70, 0x14, 0xAF0);
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     D_8010B1B0.x = 0;
     D_8010B1B0.y = 0xFFB60000;
     D_8010B1B0.z = 0;
@@ -167,15 +167,15 @@ void func_8000D724(void) {
     if (D_801235B8->fade != 0xFF) {
         D_801235B8->fade = func_80013F88(D_801235B8->fade, 0x10, 1);
         if (D_801235B8->fade == 0xFF) {
-            D_80123751 = 1;
+            gFramebufferSwapHold = 1;
         } else {
             func_8007105C();
         }
     } else {
-        if (D_80123750 == 2) {
+        if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
-            D_80123751 = 0;
-            D_800DEED4 = 0;
+            gFramebufferSwapHold = 0;
+            gFramebufferSwapDelay = 0;
             func_80099658(2);
             func_8009954C(4);
         }

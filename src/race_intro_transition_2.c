@@ -38,10 +38,10 @@ extern s16 D_800BB890[];
 extern s16 D_800BB8B0[];
 extern u8 D_800BB8DC[];
 extern u8 D_800BB8F4[];
-extern u8 D_80123750;
+extern u8 gPendingFramebufferSwapCount;
 extern s8 D_800EC8B0;
 extern s8 D_800EC9C2;
-extern s8 D_800DEED4;
+extern s8 gFramebufferSwapDelay;
 extern u8 D_8011228C;
 extern s8 D_8010B1E0;
 extern s8 D_8010B1E1;
@@ -71,7 +71,7 @@ extern s8 D_801229AE;
 extern s8 D_80122FB8;
 extern s8 D_80122FB9;
 extern s8 D_80122FBA;
-extern u8 D_80123751;
+extern u8 gFramebufferSwapHold;
 extern s32 D_801235B4;
 extern u8 D_24C8E0;
 extern u8 D_24DBE0;
@@ -161,7 +161,7 @@ void func_8003ED00(void) {
     func_800704F0();
     func_8007066C(0, 0xA0, 0x78, 0x120, 0xB0, 0x140, 0xF0, D_800E10C0);
     D_8011228C = 1;
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     func_8008BEB0();
     func_80078430();
     func_80044294();
@@ -319,19 +319,19 @@ copy_player3:
 
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
-        D_80123751 = 1;
+        gFramebufferSwapHold = 1;
         func_8009956C(func_8003F4B4, 0);
     }
 }
 #endif
 
 void func_8003F4B4(void) {
-    if (D_80123750 == 2) {
+    if (gPendingFramebufferSwapCount == 2) {
         D_800EC8B0 = 0;
         D_80121B58 = 0;
         releaseMenuAssetHandles();
-        D_80123751 = 0;
-        D_800DEED4 = 0;
+        gFramebufferSwapHold = 0;
+        gFramebufferSwapDelay = 0;
         func_80072260();
         D_801235B4 = 0;
         func_80099658(3);

@@ -59,7 +59,7 @@ extern EffectTask *D_8010ADEC;
 extern f32 gCharacterSelectViewportAspectRatio;
 extern s16 gMenuFadeAlpha;
 extern s16 D_8010ADF0[];
-extern s8 D_800DEED4;
+extern s8 gFramebufferSwapDelay;
 extern s8 D_800EC9C1;
 extern s8 D_8010AE53;
 extern s8 D_8010AE54;
@@ -81,8 +81,8 @@ extern u8 D_800EC9E5;
 extern u8 D_8010ADF8;
 extern u8 D_8010AE68;
 extern u8 D_80121B55;
-extern u8 D_80123750;
-extern u8 D_80123751;
+extern u8 gPendingFramebufferSwapCount;
+extern u8 gFramebufferSwapHold;
 
 // initCharacterSelectMenu best match: 90.714%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_menu/initCharacterSelectMenu.s")
@@ -103,7 +103,7 @@ void initCharacterSelectMenu(void) {
         func_800720E4(1);
         func_800704F0();
         func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gCharacterSelectViewportAspectRatio);
-        D_800DEED4 = 0;
+        gFramebufferSwapDelay = 0;
         D_800EC9C1 = 0;
         D_8010ADF8 = 0;
         D_801235B8->fade = 0xFF;
@@ -294,15 +294,15 @@ void fadeOutCharacterSelectMenu(void) {
     if (D_801235B8->fade != 0xFF) {
         D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
-            D_80123751 = 1;
+            gFramebufferSwapHold = 1;
         } else {
             func_8007105C();
         }
     } else {
-        if (D_80123750 == 2) {
+        if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
-            D_80123751 = 0;
-            D_800DEED4 = 0;
+            gFramebufferSwapHold = 0;
+            gFramebufferSwapDelay = 0;
             D_801235B4 = 0;
             func_80099658(2);
             func_8009954C(4);

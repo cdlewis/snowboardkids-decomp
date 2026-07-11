@@ -48,7 +48,7 @@ extern s8 gRacePlayerCount;
 extern u8 D_80121B55;
 extern u8 gRaceUpdatePaused;
 extern s16 gMenuFadeAlpha;
-extern u8 D_80123751;
+extern u8 gFramebufferSwapHold;
 extern s32 D_801235B4;
 extern u8 D_80121B58;
 extern u8 D_80121B59;
@@ -59,8 +59,8 @@ extern u8 D_80121B5F;
 extern s16 D_800D3C90[];
 
 extern void releaseMenuAssetHandles(void);
-extern u8 D_80123750;
-extern s8 D_800DEED4;
+extern u8 gPendingFramebufferSwapCount;
+extern s8 gFramebufferSwapDelay;
 extern u8 D_80121B5A;
 extern u8 D_800EC8B0;
 extern u8 D_800EC9C2;
@@ -97,7 +97,7 @@ void func_8003F554(void) {
     loadRawRomAsset(D_1467B0, D_147910, 8);
     loadCompressedRomAsset(D_1DE360, D_1E0F70, 9);
     D_8010B1F0 = 0;
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     gMenuFadeAlpha = 0xFF;
     func_800704F0();
     D_801124B8 = 0x80;
@@ -136,7 +136,7 @@ void func_8003F778(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
-        D_80123751 = 1;
+        gFramebufferSwapHold = 1;
         func_8009956C(&func_8003F7E4, 0);
     }
     func_8006D780(0);
@@ -144,10 +144,10 @@ void func_8003F778(void) {
 }
 
 void func_8003F7E4(void) {
-    if (D_80123750 == 2) {
+    if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
-        D_80123751 = 0;
-        D_800DEED4 = 0;
+        gFramebufferSwapHold = 0;
+        gFramebufferSwapDelay = 0;
         if (D_80121B5B != 0xC) {
             func_8009956C(&func_8003F864, 0);
         } else {
@@ -227,14 +227,14 @@ void func_8003F864(void) {
     func_800440F4();
     func_8006D5CC();
     func_800704F0();
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     func_8008BEB0();
     D_80121B55 = 1;
     func_80078430();
     D_80121B55 = 4;
     func_8007066C(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, D_800E10D4);
     D_8011228C = 1;
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     func_80044294();
     gMenuFadeAlpha = 0xFF;
     D_800EC8B0 = 0;
@@ -343,7 +343,7 @@ void func_8003FEF4(void) {
     func_8007AA50();
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
-        D_80123751 = 1;
+        gFramebufferSwapHold = 1;
         {
             void (*func_ptr)(void) = func_8003FF78;
             func_8009956C(func_ptr, 0);
@@ -352,11 +352,11 @@ void func_8003FEF4(void) {
 }
 
 void func_8003FF78(void) {
-    if (D_80123750 == 2) {
+    if (gPendingFramebufferSwapCount == 2) {
         func_80072260();
         releaseMenuAssetHandles();
-        D_80123751 = 0;
-        D_800DEED4 = 0;
+        gFramebufferSwapHold = 0;
+        gFramebufferSwapDelay = 0;
         func_8009956C(&func_8003F554, 0);
     }
 }
@@ -468,12 +468,12 @@ void func_8004002C(void) {
     func_8006D5CC();
     func_800704F0();
     D_8011228C = 1;
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     func_8008BEB0();
     func_80078430();
     func_8007066C(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
     D_8011228C = 1;
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     func_80044294();
     gMenuFadeAlpha = 0xFF;
     D_800EC8B0 = 0;
@@ -655,17 +655,17 @@ void func_800408E4(void) {
     D_801124B8 = 0x80;
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
-        D_80123751 = 1;
+        gFramebufferSwapHold = 1;
         func_8009956C(&func_8004097C, 0);
     }
 }
 
 void func_8004097C(void) {
-    if (D_80123750 == 2) {
+    if (gPendingFramebufferSwapCount == 2) {
         func_80072260();
         releaseMenuAssetHandles();
-        D_80123751 = 0;
-        D_800DEED4 = 0;
+        gFramebufferSwapHold = 0;
+        gFramebufferSwapDelay = 0;
         if (D_8010B1F0 == 1) {
             if (D_80121B5A < 9) {
                 D_80121B5A += 1;
@@ -689,7 +689,7 @@ void func_80040A48(void) {
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     D_8010B1F0 = 0;
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     gMenuFadeAlpha = 0xFF;
     func_800704F0();
     func_80070EC0(0);
@@ -717,17 +717,17 @@ void func_80040B90(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
-        D_80123751 = 1;
+        gFramebufferSwapHold = 1;
         func_8009956C(&func_80040BF4, 0);
     }
     func_8007105C();
 }
 
 void func_80040BF4(void) {
-    if (D_80123750 == 2) {
+    if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
-        D_80123751 = 0;
-        D_800DEED4 = 0;
+        gFramebufferSwapHold = 0;
+        gFramebufferSwapDelay = 0;
         func_8009956C(&func_80040C44, 0);
     }
 }

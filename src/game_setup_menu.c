@@ -27,7 +27,7 @@ typedef struct {
 extern void enqueueSoundEffect();
 extern f32 D_800E0900;
 extern u8 D_800E29C0;
-extern s8 D_800DEED4;
+extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern s8 D_800EC8B0;
 extern s8 D_800EC8B4;
@@ -77,7 +77,7 @@ void func_80003140(void) {
     func_800704F0();
     func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0900);
 
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     D_801235B8->fade = 0;
     D_801235B8->timer = 0;
     D_800EC9C1 = 0;

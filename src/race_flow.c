@@ -7,7 +7,7 @@
 #include "character_select_menu.h"
 #include "race_character_select_menu.h"
 #include "controller_pak_score_delete_flow.h"
-#include "controller_pak_post_race_save_prompt_flow.h"
+#include "controller_pak_post_race_warning_flow.h"
 #include "controller_pak_file_delete_flow.h"
 #include "course_select_menu.h"
 #include "game_setup_menu.h"
@@ -218,9 +218,9 @@ extern s8 D_80121B61;
 extern RaceTime D_80121B74;
 extern u8 D_80121B81;
 extern u8 D_8012482A;
-extern u8 D_80123750;
-extern u8 D_80123751;
-extern s8 D_800DEED4;
+extern u8 gPendingFramebufferSwapCount;
+extern u8 gFramebufferSwapHold;
+extern s8 gFramebufferSwapDelay;
 extern u8 D_800EC9C2;
 extern u8 D_8010ADFA;
 extern u8 D_800DC4C0;
@@ -291,7 +291,7 @@ void func_80072D54(void) {
 
 void func_80072D98(void) {
     func_8009956C(&func_80072DDC, 0);
-    func_800994F4(4, &initControllerPakPostRaceSavePromptFlow, 0x64);
+    func_800994F4(4, &initControllerPakPostRaceWarningFlow, 0x64);
     func_80099614(0);
 }
 
@@ -647,7 +647,7 @@ void func_80074160(void) {
                     func_80070A70(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
                 }
                 D_801121E0[0].active = 1;
-                D_800DEED4 = 0;
+                gFramebufferSwapDelay = 0;
                 break;
             case 2:
                 if (D_80121B50.s != 6) {
@@ -659,7 +659,7 @@ void func_80074160(void) {
                 }
                 D_801121E0[0].active = 1;
                 D_801121E0[1].active = 1;
-                D_800DEED4 = 1;
+                gFramebufferSwapDelay = 1;
                 break;
             case 3:
                 if (D_80121B50.s != 6) {
@@ -674,7 +674,7 @@ void func_80074160(void) {
                 D_801121E0[0].active = 1;
                 D_801121E0[1].active = 1;
                 D_801121E0[2].active = 1;
-                D_800DEED4 = 1;
+                gFramebufferSwapDelay = 1;
                 break;
             case 4:
                 if (D_80121B50.s != 6) {
@@ -692,7 +692,7 @@ void func_80074160(void) {
                 D_801121E0[1].active = 1;
                 D_801121E0[2].active = 1;
                 D_801121E0[3].active = 1;
-                D_800DEED4 = 1;
+                gFramebufferSwapDelay = 1;
                 break;
             }
             func_8009956C(func_800747E8, 0);
@@ -771,7 +771,7 @@ void func_80074960(void) {
                         if (input == 1) {
                             D_800EC8B0 = 0;
                             gRaceUpdatePaused = 0;
-                            D_80123751 = 1;
+                            gFramebufferSwapHold = 1;
                             enqueueSoundEffect(1, 0x32);
                             func_8009956C(func_80077B34, 0);
                             return;
@@ -779,7 +779,7 @@ void func_80074960(void) {
                         if (valueTwo == input) {
                             D_800EC8B0 = 0;
                             gRaceUpdatePaused = 0;
-                            D_80123751 = 1;
+                            gFramebufferSwapHold = 1;
                             enqueueSoundEffect(1, 0x32);
                             func_8009956C(func_80077B34, 0);
                             return;
@@ -1042,7 +1042,7 @@ void func_80076054(void) {
     s32 courseOffset;
 
     D_800DC4C0 = 0;
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     D_80121B60 = 0;
     D_80121B61 = 0;
 
@@ -1467,7 +1467,7 @@ void func_80077324(void) {
 }
 
 void func_80077400(void) {
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     if (D_80121B60 != 0) {
         func_80071664(func_8005393C, 5, 0x64, D_80121B60 - 1);
     }
@@ -1486,7 +1486,7 @@ void func_80077400(void) {
             if (D_800EC9C2 == 2) {
                 func_8009956C(&func_80077554, 0);
             } else {
-                D_80123751 = 1;
+                gFramebufferSwapHold = 1;
                 func_8009956C(func_80077B34, 0);
             }
         }
@@ -1506,12 +1506,12 @@ void func_80077554(void) {
     D_80121B5F = 0;
     asset = func_80043040(D_80112130[0x2B]);
     if (((Unk80043040 *)asset)->unk8 == 0) {
-        D_80123751 = 1;
+        gFramebufferSwapHold = 1;
         func_8009956C(func_80077B34, 0);
         return;
     }
     if (func_800730EC() == 0) {
-        D_80123751 = 1;
+        gFramebufferSwapHold = 1;
         func_8009956C(func_80077B34, 0);
         return;
     }
@@ -1580,7 +1580,7 @@ void func_80077554(void) {
     }
     loadCompressedRomAsset(D_598A70, D_59AAA0, 0x29);
     D_8011228C = 1;
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     resetSecondaryRng();
     func_8008BEB0();
     func_80078430();
@@ -1642,14 +1642,14 @@ void func_80077AD4(void) {
 }
 
 void func_80077B34(void) {
-    D_80123751 = 1;
-    if (D_80123750 == 2) {
+    gFramebufferSwapHold = 1;
+    if (gPendingFramebufferSwapCount == 2) {
         D_800EC8B0 = 0;
         D_80121B58 = 0;
         func_80042C20();
         releaseMenuAssetHandles();
-        D_80123751 = 0;
-        D_800DEED4 = 0;
+        gFramebufferSwapHold = 0;
+        gFramebufferSwapDelay = 0;
         func_80072260();
         func_80000A40(0);
         func_80000A40(1);
@@ -1738,7 +1738,7 @@ void func_80077DA0(void) {
         return;
     }
     func_800704F0();
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
@@ -1812,17 +1812,17 @@ void func_80078198(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0x100) {
         gMenuFadeAlpha = 0xFF;
-        D_80123751 = 1;
+        gFramebufferSwapHold = 1;
         func_8009956C(&func_800781FC, 0);
     }
     func_8007105C();
 }
 
 void func_800781FC(void) {
-    if (D_80123750 == 2) {
+    if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
-        D_80123751 = 0;
-        D_800DEED4 = 0;
+        gFramebufferSwapHold = 0;
+        gFramebufferSwapDelay = 0;
         func_8009956C(&func_80073988, 0);
     }
 }

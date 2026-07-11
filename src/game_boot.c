@@ -164,7 +164,7 @@ extern RenderCallbackNode *D_80124878;
 extern RenderCallbackNode *D_80124888;
 extern RenderCallbackNode *D_80124898;
 extern RenderCallbackNode *D_801248F8;
-extern u8 D_80123750;
+extern u8 gPendingFramebufferSwapCount;
 extern u8 D_8012496E;
 extern s8 D_800EC8B0;
 extern s8 D_8010ADFA;
@@ -282,7 +282,7 @@ void func_800998E4(void *arg0) {
     queue18 = &D_80124018;
     queue70 = &D_80124070;
     queue50 = &D_80124050;
-    counter = &D_80123750;
+    counter = &gPendingFramebufferSwapCount;
 loop_1:
     do {
         if ((osRecvMesg(queue18, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue70, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue50, &msg, OS_MESG_NOBLOCK) != 0)) {

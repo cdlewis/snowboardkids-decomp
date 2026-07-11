@@ -49,7 +49,7 @@ extern CharacterSelectCourseUnlockList gCharacterSelectCourseOptionsByUnlock[];
 extern s16 gCharacterSelectShortCourseOptions[];
 extern s16 gCharacterSelectSingleCourseOption[];
 extern CharacterSelectFlowState *D_801235B8;
-extern s8 D_800DEED4;
+extern s8 gFramebufferSwapDelay;
 extern f32 D_800E09A4;
 extern s16 gMenuFadeAlpha;
 extern CharacterSelectSaveData D_800EC9F0[];
@@ -79,8 +79,8 @@ extern u8 D_800EC9C1;
 extern u8 D_800EC9C2;
 extern s16 D_800EC9D0;
 extern u8 D_800EC9DD;
-extern u8 D_80123750;
-extern u8 D_80123751;
+extern u8 gPendingFramebufferSwapCount;
+extern u8 gFramebufferSwapHold;
 
 // initCharacterSelectCourseMenuFromPlayerCount best match: 79.600% (nonmatchings/initCharacterSelectCourseMenuFromPlayerCount-8207005055717715604/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/initCharacterSelectCourseMenuFromPlayerCount.s")
@@ -195,7 +195,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
     func_800720E4(2);
     func_800704F0();
     func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     loadCompressedRomAsset(D_5A1ED0, D_5C5320, 0x21);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
     loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
@@ -310,7 +310,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     if (D_80121B55 >= 2) {
         func_800704F0();
         func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E09A4);
-        D_800DEED4 = 0;
+        gFramebufferSwapDelay = 0;
         loadCompressedRomAsset(D_5A1ED0, D_5C5320, 0x21);
         loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
         loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
@@ -626,15 +626,15 @@ void fadeOutCharacterSelectCourseMenu(void) {
     if (D_801235B8->fade != 0xFF) {
         D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
-            D_80123751 = 1;
+            gFramebufferSwapHold = 1;
         } else {
             func_8007105C();
         }
     } else {
-        if (D_80123750 == 2) {
+        if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
-            D_80123751 = 0;
-            D_800DEED4 = 0;
+            gFramebufferSwapHold = 0;
+            gFramebufferSwapDelay = 0;
             D_80121B50 = (*gCharacterSelectActiveCourseOptions)[D_80121B50];
             func_80099658(2);
             func_8009954C(4);
