@@ -78,7 +78,7 @@ extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80047E88(s32, s16, s32, s32);
-extern void func_80048278(s32, s32, char *, s32);
+extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
 extern void addRenderCallback(void *, void *, s32);
 extern void *createCallbackTask(void (*)(), s32, s32);
 extern int sprintf(char *, const char *, ...);
@@ -286,8 +286,8 @@ const char D_800E1730[] = "Point";
 const char D_800E1738[] = "Time Limit";
 
 void func_80078974(s32 arg0) {
-    func_80048278(0x60, -0x61, (char *)D_800E1730, 5);
-    func_80048278(0x38, 0x47, (char *)D_800E1738, 5);
+    drawMenuAsciiTextDefaultScale(0x60, -0x61, (char *)D_800E1730, 5);
+    drawMenuAsciiTextDefaultScale(0x38, 0x47, (char *)D_800E1738, 5);
 }
 
 // func_800789C0 best match: 92.076% at nonmatchings/func_800789C0-2225551288923588688/base_14.c.
@@ -394,9 +394,9 @@ const char D_800E176C[] = "/%d";
 void func_80078D3C(s32 arg0) {
     char sp18[0x20];
 
-    func_80048278(0x38, 0x47, (char *)D_800E1760, 5);
+    drawMenuAsciiTextDefaultScale(0x38, 0x47, (char *)D_800E1760, 5);
     sprintf(sp18, D_800E176C, D_801222F6);
-    func_80048278(0x70, -0x48, sp18, 6);
+    drawMenuAsciiTextDefaultScale(0x70, -0x48, sp18, 6);
 }
 
 // func_80078D9C best match: 94.116% at nonmatchings/func_80078D9C-2127290767680699791/base_3.c.
@@ -476,17 +476,17 @@ void func_80079068(s32 arg0) {
     char sp28[0x20];
     RaceUiCoursePosition *pos;
 
-    func_80048278(0x48, 0x47, (char *)D_800E178C, 5);
-    func_80048278(0x32, -0x60, (char *)D_800E1798, 7);
+    drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)D_800E178C, 5);
+    drawMenuAsciiTextDefaultScale(0x32, -0x60, (char *)D_800E1798, 7);
     pos = &D_800DC900[gRaceCourseIndex];
     sprintf(sp28, D_800E17A4, pos->x, pos->y, pos->z >> 8);
-    func_80048278(0x48, -0x57, sp28, 7);
+    drawMenuAsciiTextDefaultScale(0x48, -0x57, sp28, 7);
     sprintf(sp28, D_800E17B8, D_80121D80[0].score, D_80121D80[0].targetScore);
     sp28[1] = ' ';
     if (sp28[2] != '/') {
         sp28[2] = ' ';
     }
-    func_80048278(-0x68, -0x48, sp28, 6);
+    drawMenuAsciiTextDefaultScale(-0x68, -0x48, sp28, 6);
 }
 
 const char D_800E17C0[] = "%2.2d";
@@ -552,11 +552,11 @@ void func_80079394(s32 arg0) {
     char sp28[0x20];
     CourseBestLapView *course;
 
-    func_80048278(0x48, 0x47, (char *)D_800E17D8, 5);
-    func_80048278(0x48, -0x61, (char *)D_800E17E4, 7);
+    drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)D_800E17D8, 5);
+    drawMenuAsciiTextDefaultScale(0x48, -0x61, (char *)D_800E17E4, 7);
     course = (CourseBestLapView *)&gGameSaveDataBuffer[gRaceCourseIndex];
     sprintf(sp28, D_800E17F0, course->bestLapMinutes, course->bestLapSeconds, course->bestLapFraction >> 8);
-    func_80048278(0x48, -0x58, sp28, 7);
+    drawMenuAsciiTextDefaultScale(0x48, -0x58, sp28, 7);
 }
 
 // func_80079438 best match: 95.528% at nonmatchings/func_80079438-3236181511606361864/base_5.c.
@@ -811,7 +811,7 @@ void func_8007A108(s32 arg0) {
     } else {
         palette = 2;
     }
-    func_80048278(0x14, 0x28, buffer, palette & 0xFFFF);
+    drawMenuAsciiTextDefaultScale(0x14, 0x28, buffer, palette & 0xFFFF);
 
     if (gCurrentViewportIndex < 2) {
         x = -0x2C;

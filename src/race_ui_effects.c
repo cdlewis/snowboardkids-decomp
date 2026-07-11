@@ -874,7 +874,7 @@ extern RacePlayerFlags D_8012207C[];
 extern u8 gGameSaveDataBuffer[];
 extern RaceTimer D_80121B74;
 extern void enqueueSoundEffect(s32, s32);
-extern void func_80048278(s32, s32, void *, s32);
+extern void drawMenuAsciiTextDefaultScale(s32, s32, void *, s32);
 extern char D_800E12F4[];
 extern char D_800E128C[];
 extern char D_800E1290[];
@@ -964,10 +964,10 @@ void func_80057600(RaceUiSlideActor *arg0) {
 void func_80057694(RaceUiPromptActor *arg0) {
     if (gCurrentViewportIndex == arg0->index) {
         if (gUiBlinkTimer & 1) {
-            func_80048278(-0x34, arg0->y, &D_800E1220, 0);
+            drawMenuAsciiTextDefaultScale(-0x34, arg0->y, &D_800E1220, 0);
             return;
         }
-        func_80048278(-0x34, arg0->y, &D_800E1230, 1);
+        drawMenuAsciiTextDefaultScale(-0x34, arg0->y, &D_800E1230, 1);
     }
 }
 
@@ -1226,9 +1226,9 @@ void func_80058360(RaceUiAlpha18Actor *arg0) {
         gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
     }
-    func_80048278(8, -0x48, &D_800E125C, 5);
-    func_80048278(0, -0x18, &D_800E126C, 5);
-    func_80048278(4, 0x18, &D_800E127C, 5);
+    drawMenuAsciiTextDefaultScale(8, -0x48, &D_800E125C, 5);
+    drawMenuAsciiTextDefaultScale(0, -0x18, &D_800E126C, 5);
+    drawMenuAsciiTextDefaultScale(4, 0x18, &D_800E127C, 5);
     if (arg0->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
@@ -1466,59 +1466,59 @@ void func_8005905C(void *arg0) {
     if (playerIndex != -1) {
         sprintf(text, D_800E128C, D_80121D98[playerIndex].value);
         if (gUiBlinkTimer & 1) {
-            func_80048278(-0x20, -0x38, text, 6);
+            drawMenuAsciiTextDefaultScale(-0x20, -0x38, text, 6);
         } else {
-            func_80048278(-0x20, -0x38, text, 0);
+            drawMenuAsciiTextDefaultScale(-0x20, -0x38, text, 0);
         }
 
         player = &D_80121D80[actor->player0];
         if (player->pad002[2] == 0) {
             sprintf(text, D_800E1290, player->playerIndex + 1);
-            func_80048278(-0x30, -0x48, text, 5);
+            drawMenuAsciiTextDefaultScale(-0x30, -0x48, text, 5);
         } else {
-            func_80048278(-0x30, -0x48, D_800E1294, 4);
+            drawMenuAsciiTextDefaultScale(-0x30, -0x48, D_800E1294, 4);
         }
     }
 
     playerIndex = actor->player1;
     if (playerIndex != -1) {
         sprintf(text, D_800E1298, D_80121D98[playerIndex].value);
-        func_80048278(0x70, -0x18, text, 6);
+        drawMenuAsciiTextDefaultScale(0x70, -0x18, text, 6);
 
         player = &D_80121D80[actor->player1];
         if (player->pad002[2] == 0) {
             sprintf(text, D_800E129C, player->playerIndex + 1);
-            func_80048278(0x60, -0x28, text, 5);
+            drawMenuAsciiTextDefaultScale(0x60, -0x28, text, 5);
         } else {
-            func_80048278(0x60, -0x28, D_800E12A0, 4);
+            drawMenuAsciiTextDefaultScale(0x60, -0x28, D_800E12A0, 4);
         }
     }
 
     playerIndex = actor->player2;
     if (playerIndex != -1) {
         sprintf(text, D_800E12A4, D_80121D98[playerIndex].value);
-        func_80048278(-0x20, 8, text, 6);
+        drawMenuAsciiTextDefaultScale(-0x20, 8, text, 6);
 
         player = &D_80121D80[actor->player2];
         if (player->pad002[2] == 0) {
             sprintf(text, D_800E12A8, player->playerIndex + 1);
-            func_80048278(-0x30, -8, text, 5);
+            drawMenuAsciiTextDefaultScale(-0x30, -8, text, 5);
         } else {
-            func_80048278(-0x30, -8, D_800E12AC, 4);
+            drawMenuAsciiTextDefaultScale(-0x30, -8, D_800E12AC, 4);
         }
     }
 
     playerIndex = actor->player3;
     if (playerIndex != -1) {
         sprintf(text, D_800E12B0, D_80121D98[playerIndex].value);
-        func_80048278(0x70, 0x28, text, 6);
+        drawMenuAsciiTextDefaultScale(0x70, 0x28, text, 6);
 
         player = &D_80121D80[actor->player3];
         if (player->pad002[2] == 0) {
             sprintf(text, D_800E12B4, player->playerIndex + 1);
-            func_80048278(0x60, 0x18, text, 5);
+            drawMenuAsciiTextDefaultScale(0x60, 0x18, text, 5);
         } else {
-            func_80048278(0x60, 0x18, D_800E12B8, 4);
+            drawMenuAsciiTextDefaultScale(0x60, 0x18, D_800E12B8, 4);
         }
     }
 
@@ -1715,7 +1715,7 @@ void func_80059F6C(RaceUiAlpha18Actor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x74, -0x3C, D_800E12D4, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } drawMenuAsciiTextDefaultScale(-0x74, -0x3C, D_800E12D4, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
 void func_8005A07C(void *arg0) {
@@ -1963,7 +1963,7 @@ void func_8005AAE4(RaceUiAlpha18Actor *arg0) {
 
     /* IDO scheduling for this function depends on this block staying on one line. */
     do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); }
-    sprintf(&sp20[0x14], D_800E12F8, D_801222F6); func_80048278(-0x54, -0x14, D_800E12FC, 6); func_80048278(-0x3C, -0x14, &sp20[0x14], 6); if (D_80121B81 != 0) { func_80048278(-0x68, -4, D_800E1300, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    sprintf(&sp20[0x14], D_800E12F8, D_801222F6); drawMenuAsciiTextDefaultScale(-0x54, -0x14, D_800E12FC, 6); drawMenuAsciiTextDefaultScale(-0x3C, -0x14, &sp20[0x14], 6); if (D_80121B81 != 0) { drawMenuAsciiTextDefaultScale(-0x68, -4, D_800E1300, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
 const char D_800E130C[0x14] = "-Hit Prize(*1G)-";
@@ -1988,20 +1988,20 @@ void func_8005AC44(RaceUiCounterActor *arg0) {
     }
 
     if (D_80121B81 != 0) {
-        func_80048278(-8, (s16)y, &D_800E130C, 5);
+        drawMenuAsciiTextDefaultScale(-8, (s16)y, &D_800E130C, 5);
     } else {
-        func_80048278(-0xC, (s16)y, &D_800E1320, 5);
+        drawMenuAsciiTextDefaultScale(-0xC, (s16)y, &D_800E1320, 5);
     }
 
     y += 0x28;
     if (arg0->flag != 0) {
-        func_80048278(-0xC, (s16)y, &D_800E1334, 5);
+        drawMenuAsciiTextDefaultScale(-0xC, (s16)y, &D_800E1334, 5);
         y += 0x28;
     }
 
-    func_80048278(-8, (s16)y, &D_800E1344, 5);
+    drawMenuAsciiTextDefaultScale(-8, (s16)y, &D_800E1344, 5);
     y += 0x28;
-    func_80048278(4, (s16)y, &D_800E1358, 5);
+    drawMenuAsciiTextDefaultScale(4, (s16)y, &D_800E1358, 5);
 
     if (arg0->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
@@ -2015,11 +2015,11 @@ const char D_800E1374[0x4] = "Hit";
 const char D_800E1378[0x4] = "Hit";
 
 void func_8005AE1C(void *arg0) {
-    func_80048278(0x20, -0x48, &D_800E1368, 6);
-    func_80048278(0x20, -0x28, &D_800E136C, 6);
-    func_80048278(0x20, -8, &D_800E1370, 6);
-    func_80048278(0x20, 0x18, &D_800E1374, 4);
-    func_80048278(0x20, 0x38, &D_800E1378, 4);
+    drawMenuAsciiTextDefaultScale(0x20, -0x48, &D_800E1368, 6);
+    drawMenuAsciiTextDefaultScale(0x20, -0x28, &D_800E136C, 6);
+    drawMenuAsciiTextDefaultScale(0x20, -8, &D_800E1370, 6);
+    drawMenuAsciiTextDefaultScale(0x20, 0x18, &D_800E1374, 4);
+    drawMenuAsciiTextDefaultScale(0x20, 0x38, &D_800E1378, 4);
 }
 
 void func_8005AEB0(void *arg0) {
@@ -2396,7 +2396,7 @@ void func_8005C03C(RaceUiAlphaActor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x70, -0x40, D_800E1390, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } drawMenuAsciiTextDefaultScale(-0x70, -0x40, D_800E1390, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
 // func_8005C14C best match: 93.873% (nonmatchings/func_8005C14C-4139837607000619032/base_13.c)
@@ -2438,29 +2438,29 @@ void func_8005C14C(RaceUiCourseRecordActor *arg0) {
             gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF);
         }
         if (D_80121B81 == 0) {
-            func_80048278(-0x68, -0x1F, &D_800E139C, 7);
+            drawMenuAsciiTextDefaultScale(-0x68, -0x1F, &D_800E139C, 7);
             pos = &D_800DC900[gRaceCourseIndex];
             bufp = buf;
             sprintf(bufp, &D_800E13A8, pos->x, pos->y, pos->z >> 8);
-            func_80048278(-0x68, -0x16, bufp, 7);
-            func_80048278(-0x68, -8, &D_800E13BC, 7);
+            drawMenuAsciiTextDefaultScale(-0x68, -0x16, bufp, 7);
+            drawMenuAsciiTextDefaultScale(-0x68, -8, &D_800E13BC, 7);
             sprintf(bufp, &D_800E13C4, arg0->unk18, arg0->unk19, arg0->unk1A >> 8);
-            func_80048278(-0x6C, 1, bufp, 7);
+            drawMenuAsciiTextDefaultScale(-0x6C, 1, bufp, 7);
         } else {
-            func_80048278(-0x68, -0x24, &D_800E13D8, 4);
+            drawMenuAsciiTextDefaultScale(-0x68, -0x24, &D_800E13D8, 4);
         }
-        func_80048278(-8, -0x50, &D_800E13E4, 5);
+        drawMenuAsciiTextDefaultScale(-8, -0x50, &D_800E13E4, 5);
         y = -0x30;
-        func_80048278(-0xC, y, &D_800E13F4, 5);
+        drawMenuAsciiTextDefaultScale(-0xC, y, &D_800E13F4, 5);
         y += 0x20;
         if (arg0->flag != 0) {
-            func_80048278(-0xC, y, &D_800E1408, 5);
+            drawMenuAsciiTextDefaultScale(-0xC, y, &D_800E1408, 5);
             y += 0x20;
         }
-        func_80048278(-8, y, &D_800E1418, 5);
+        drawMenuAsciiTextDefaultScale(-8, y, &D_800E1418, 5);
         y += 0x20;
         new_var = y;
-        func_80048278(-0xC, new_var, &D_800E142C, 5);
+        drawMenuAsciiTextDefaultScale(-0xC, new_var, &D_800E142C, 5);
         if (arg0->alpha != 0xFF) {
             gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1;
         }
@@ -2949,7 +2949,7 @@ void func_8005D860(RaceUiAlpha18Actor *arg0) {
     s32 new_var;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; if (!gfx) { } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x68, -0x40, new_var2 = &D_800E1458, 6); func_80048278(-0x64, -0x1C, &D_800E1460, 5); w0 = 8; if (D_80121B81 != 0) { new_var = w0; func_80048278(-0x6C, new_var, &D_800E1468, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; if (!gfx) { } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } drawMenuAsciiTextDefaultScale(-0x68, -0x40, new_var2 = &D_800E1458, 6); drawMenuAsciiTextDefaultScale(-0x64, -0x1C, &D_800E1460, 5); w0 = 8; if (D_80121B81 != 0) { new_var = w0; drawMenuAsciiTextDefaultScale(-0x6C, new_var, &D_800E1468, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
 void func_8005D9B4(RaceUiAlpha18Actor *arg0) {
@@ -2975,13 +2975,13 @@ void func_8005D9B4(RaceUiAlpha18Actor *arg0) {
     }
 
     y = -0x50;
-    func_80048278(-0xC, (s16)y, &D_800E1474, 5);
+    drawMenuAsciiTextDefaultScale(-0xC, (s16)y, &D_800E1474, 5);
     y += 0x28;
-    func_80048278(-8, (s16)y, &D_800E1484, 5);
+    drawMenuAsciiTextDefaultScale(-8, (s16)y, &D_800E1484, 5);
     y += 0x28;
-    func_80048278(-8, (s16)y, &D_800E1494, 5);
+    drawMenuAsciiTextDefaultScale(-8, (s16)y, &D_800E1494, 5);
     y += 0x28;
-    func_80048278(-0xC, (s16)y, &D_800E14A8, 5);
+    drawMenuAsciiTextDefaultScale(-0xC, (s16)y, &D_800E14A8, 5);
 
     if ((*arg0p)->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
@@ -2996,11 +2996,11 @@ const char D_800E14C4[0x4] = "P";
 const char D_800E14C8[0x8] = "P";
 
 void func_8005DB3C(void *arg0) {
-    func_80048278(0x30, -0x48, &D_800E14B8, 6);
-    func_80048278(0x30, -0x28, &D_800E14BC, 6);
-    func_80048278(0x30, -8, &D_800E14C0, 6);
-    func_80048278(0x30, 0x18, &D_800E14C4, 4);
-    func_80048278(0x30, 0x38, &D_800E14C8, 4);
+    drawMenuAsciiTextDefaultScale(0x30, -0x48, &D_800E14B8, 6);
+    drawMenuAsciiTextDefaultScale(0x30, -0x28, &D_800E14BC, 6);
+    drawMenuAsciiTextDefaultScale(0x30, -8, &D_800E14C0, 6);
+    drawMenuAsciiTextDefaultScale(0x30, 0x18, &D_800E14C4, 4);
+    drawMenuAsciiTextDefaultScale(0x30, 0x38, &D_800E14C8, 4);
 }
 
 void func_8005DBD0(void *arg0) {

@@ -154,7 +154,7 @@ void drawMenuSprite(s32, s32, s32, s32, s32, s32, s32, s32);
 void func_80045A78(s16, s16, s32, u16);
 void func_80046D68(s32, s32, s32, s32, s32);
 void getAssetTableImageAndPalette(void *, u16, void **, void **);
-void func_80048278(s32, s32, void *, s32);
+void drawMenuAsciiTextDefaultScale(s32, s32, void *, s32);
 void addRenderCallback(void *, void *, s32);
 GfxCommandDest *allocFixedTransformMatrix(GfxCommandSource *);
 void drawRaceSetupBackdropModels(MenuScreenEffectActor *);
@@ -356,10 +356,10 @@ void createRaceSetupOpponentFocus(s32 arg0, s32 arg1) {
 
 void drawTitleScreenStartPrompt(MenuScreenEffectActor *arg0) {
     if (gConnectedControllerCount != 0) {
-        func_80048278(-0x44, 0x38, "Push Start Button", 0);
+        drawMenuAsciiTextDefaultScale(-0x44, 0x38, "Push Start Button", 0);
         return;
     }
-    func_80048278(-0x5C, 0x38, "No Control Pad detected", 1);
+    drawMenuAsciiTextDefaultScale(-0x5C, 0x38, "No Control Pad detected", 1);
 }
 
 void updateTitleScreenStartPrompt(void *arg0) {

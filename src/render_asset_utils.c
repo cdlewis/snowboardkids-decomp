@@ -1344,7 +1344,7 @@ void func_80047E88(s16 x, s16 y, s32 ch, u16 arg3) {
 extern void func_80047E88(s16 x, s16 y, volatile s32 ch, u16 arg3);
 #endif
 
-void func_80048278(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
+void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
     s32 var_s0;
     u8 *var_s1;
     char mask;
