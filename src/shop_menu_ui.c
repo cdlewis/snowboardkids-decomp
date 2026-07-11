@@ -1083,7 +1083,7 @@ void func_8002E6E4(ShopMenuWidgetActor *arg0) {
     func_800483FC(&D_80124868, func_8002E5A4, arg0);
 }
 
-// func_8002E798 best match: 95.172% (nonmatchings/func_8002E798-786318006044585456/base_8.c)
+// func_8002E798 best match: 98.621% (nonmatchings/func_8002E798/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002E798.s")
 
 #ifdef NON_MATCHING
@@ -1092,9 +1092,9 @@ void func_8002E798(ShopMenuWidgetActor *arg0) {
     ShopMenuCursorIconInit *entry;
 
     index = D_80121D85;
-    entry = &D_800B7E20[index & 0xFFFF];
     arg0->sparkle.patternIndex = index;
-    arg0->sprite.index = entry->x;
+    entry = &D_800B7E20[(u16)(index & 0xFFFF)];
+    arg0->sprite.index = entry->x & 0xFFFFu;
     arg0->x = 0x94;
     arg0->y = entry->y;
     arg0->sparkle.tileBase = entry->tileBase;
