@@ -121,7 +121,7 @@ extern s16 gUiBlinkTimer;
 extern Mtx *D_80156614;
 extern RacePlayerState D_80121D80[];
 extern RacePlayerHalfwordField gPlayerHitSource[];
-extern RacePlayerSurfaceState D_80122282[];
+extern RacePlayerSurfaceState gRacePlayerSurfaceAngles[];
 extern RacePlayerByteField D_8012229A[];
 extern s32 D_801248A4;
 
@@ -1272,7 +1272,7 @@ void func_8004D184(RaceEffectActor *arg0) {
     arg0->pos.y = player->pos.y;
     arg0->pos.z = player->pos.z;
     enqueuePositionalSoundEffect(0x6A, &arg0->pos, 0x7F, 0x32);
-    arg0->angle = D_80122282[arg0->playerIndex].surfaceAngle;
+    arg0->angle = gRacePlayerSurfaceAngles[arg0->playerIndex].surfaceAngle;
     func_80045990(getMemoryBlockBase(D_80112168), 2, &arg0->image, &arg0->palette);
     func_8004D018(arg0);
     setCallbackTaskCallback(arg0, func_8004D018);
