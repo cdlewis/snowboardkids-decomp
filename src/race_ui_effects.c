@@ -2873,25 +2873,26 @@ loop4:
 }
 #endif
 
-// func_8005D558 best match: 96.287% (nonmatchings/func_8005D558-3836525038718587862/base_9.c, permuter artifact)
-// Clean source below: 95.113% (nonmatchings/func_8005D558-3836525038718587862/base_1.c)
+// func_8005D558 best match: 98.194% (nonmatchings/func_8005D558-6061209858023118177/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D558.s")
 
 #ifdef NON_MATCHING
 const char D_800E1454[0x4] = "%4d";
 
 void func_8005D558(RaceUiCourseStatsActor *arg0) {
-    volatile u8 padding[0x20];
-    char buffer[8];
+    volatile u8 padding[0x18];
+    char new_var;
     s32 i;
-    s32 color;
+    u16 color;
     s32 y;
     s32 space;
 
-    y = -0x50;
     i = 0;
+    y = -0x50;
     space = ' ';
     do {
+        char buffer[8];
+
         func_80045A78(-8, (s16)y, func_80043040(D_80112130.popupFontHandle), (i + 0x77) & 0xFFFF);
         if ((i == arg0->index) && (D_80156612 & 1)) {
             color = 0x10;
@@ -2903,9 +2904,10 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
 
         sprintf(buffer, D_800E1454, ((RaceUiTrickValueData *)D_800EC9F0)->values[D_80121B50][i]);
 
-        if ((u8)buffer[0] != space) {
+        new_var = buffer[0];
+        if ((u8)new_var != space) {
             func_80046D68(0x10, (s16)y, func_80043040(D_80112130.popupFontHandle),
-                          (buffer[0] - 5) & 0xFFFF, color);
+                          (buffer[(color & 0xFFFF) * 0] - 5) & 0xFFFF, color);
         }
         if ((u8)buffer[1] != space) {
             func_80046D68(0x18, (s16)y, func_80043040(D_80112130.popupFontHandle),
