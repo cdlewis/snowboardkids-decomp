@@ -143,7 +143,7 @@ void releaseMenuAssetHandles(void)
  do { s16 *handle = &D_8011213E; do { if ((*handle) != (-1)) { *handle = freeRelocatableHeapBlock(*handle); } handle++; } while (handle != (&D_801121B0)); } while (0);
 }
 
-void *func_8004597C(void *arg0, u32 arg1) {
+void *resolveAssetTableRelativePointer(void *arg0, u32 arg1) {
     return (void *)((u8 *)arg0 + (arg1 & 0xFFFFFF));
 }
 
@@ -1596,7 +1596,7 @@ GfxCommandDest *func_80048BBC(GfxCommandDest *arg0) {
     return dst;
 }
 
-void func_80048C90(GfxCommandDest *arg0, GfxCommandTriple *arg1) {
+void setPackedMatrixTranslation(GfxCommandDest *arg0, GfxCommandTriple *arg1) {
     arg0->unk18 = (s32) ((arg1->unk0 & 0xFFFF0000) | (((s32) arg1->unk4 >> 0x10) & 0xFFFF));
     arg0->unk1C = (s32) ((arg1->unk8 & 0xFFFF0000) | 1);
     arg0->unk38 = (s32) (((arg1->unk0 << 0x10) & 0xFFFF0000) | (arg1->unk4 & 0xFFFF));

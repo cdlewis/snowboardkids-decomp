@@ -119,7 +119,7 @@ extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern GfxCommandDest gIdentityMatrix;
 extern FixedTransform gIdentityFixedTransform;
-extern void func_80048C90(GfxCommandDest *, s32 *);
+extern void setPackedMatrixTranslation(GfxCommandDest *, s32 *);
 extern void func_80045A1C(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 
 extern s8 D_80122288;
@@ -211,7 +211,7 @@ void initRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
         if (count > 0) {
             do {
                 arg0->matrices[i] = gIdentityMatrix;
-                func_80048C90(&arg0->matrices[i], entry->command);
+                setPackedMatrixTranslation(&arg0->matrices[i], entry->command);
                 i++;
                 entry++;
             } while (i != count);
@@ -687,7 +687,7 @@ void initRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
         if (count > 0) {
             do {
                 arg0->matrices[i] = gIdentityMatrix;
-                func_80048C90(&arg0->matrices[i], entry->command);
+                setPackedMatrixTranslation(&arg0->matrices[i], entry->command);
                 i++;
                 entry++;
             } while (i != count);
