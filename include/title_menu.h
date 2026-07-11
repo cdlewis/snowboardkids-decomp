@@ -121,27 +121,40 @@ typedef struct {
     /* 0x1C */ DstStruct_80017168 sprite;
 } SpriteActor;
 
+void func_80014600(MenuIntroActor *arg0);
+void func_80014AA4(MenuIntroActor *arg0);
+void func_80014C7C(void *arg0);
+void func_80014CB8(void *arg0);
+void func_80014EF0(MenuItemActor *arg0);
 void func_80015054(MenuItemActor *arg0);
 void func_8001508C(MenuItemActor *arg0);
 void func_800152D0(MenuItemActor *arg0);
 void func_80015404(MenuItemActor *arg0);
+void func_8001543C(void *arg0);
 void func_80015680(MenuItemActor *arg0);
 void func_800157B4(MenuItemActor *arg0);
+void func_800157EC(void *arg0);
 void func_80015A30(MenuItemActor *arg0);
 void func_80015B20(MenuItemActor *arg0);
+void func_80015B58(void *arg0);
 void func_80015BD8(FadeItemActor *arg0);
 void func_80015C84(FadeItemActor *arg0);
 void func_80015CBC(TitleMenuWidgetItemView *arg0);
 void func_80015F4C(RectListActor *arg0);
 void func_8001621C(RectListActor *arg0);
 void func_80016284(TitleMenuIconStripActor *arg0);
+void func_80016560(void *arg0);
 void func_800165F0(RectListActor *arg0);
+void func_80016664(TitleMenuWidgetActor *arg0);
 void func_80016948(TitleMenuWidgetActor *arg0);
 void func_80016B54(TitleMenuWidgetActor *arg0);
+void func_80016BE8(TitleMenuTransitionActor *arg0);
 void func_80016E40(TitleMenuTransitionActor *arg0);
 void func_80017014(RectListActor *arg0);
+void func_80017078(void *arg0);
 void func_800170AC(SpriteActor *arg0);
 void func_8001710C(SpriteActor *arg0);
 void func_80017168(DstStruct_80017168 *arg0, s32 arg1);
+void n_alSynFreeFX(s32 arg0);
 
 #endif
