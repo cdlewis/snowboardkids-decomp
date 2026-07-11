@@ -277,7 +277,7 @@ void initRaceCourseEffects(void) {
         createCallbackTaskWithUserId(&initCourseBillboardMarker, 0, 0x64, 0);
         if ((gRaceSplitscreenMode == 0) && (D_80121B59 == 0) && (gTrainingCourseLesson == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
+                createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
             }
             if (sp28 != 0) {
                 createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0);
@@ -335,7 +335,7 @@ block_24:
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
+                createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
             }
             if (sp28 != 0) {
                 createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 6);
@@ -372,7 +372,7 @@ block_24:
         createCallbackTaskWithUserId(&func_80063980, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
+                createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
             }
             if (sp28 != 0) {
                 createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0xE);
@@ -400,7 +400,7 @@ block_24:
         createCallbackTask(&initRaceIntroModelMeshes, 0, 0x64);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
+                createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
             }
             if (sp28 != 0) {
                 createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x15);
@@ -438,7 +438,7 @@ block_24:
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
+                createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
             }
             if (sp28 != 0) {
                 createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x1E);
@@ -476,7 +476,7 @@ block_24:
         createCallbackTask(&initCourseGateObject, 0, 0x64);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
+                createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
             }
             if (sp28 != 0) {
                 createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x27);
@@ -511,7 +511,7 @@ block_24:
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
+                createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
             }
             if (sp28 != 0) {
                 createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x2F);
@@ -547,7 +547,7 @@ block_24:
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
+                createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
             }
             if (sp28 != 0) {
                 createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x46);
@@ -568,7 +568,7 @@ block_24:
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0) && ((gTrainingCourseLesson == 0) || (gTrainingCourseLesson == 7) || (gTrainingCourseLesson == 8))) {
             if (sp2C != 0) {
-                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
+                createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
             }
             if (sp28 != 0) {
                 createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x37);
