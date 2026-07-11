@@ -1,15 +1,10 @@
 #include "common.h"
+#include "race_effects.h"
 #include "model_animation.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
-
-typedef struct {
-    /* 0x0 */ s32 x;
-    /* 0x4 */ s32 y;
-    /* 0x8 */ s32 z;
-} Vec3i;
 
 typedef s16 FixedMatrix3s[10];
 
@@ -80,7 +75,7 @@ typedef struct {
     /* 0x01 */ u8 pad1[RACE_PLAYER_STATE_SIZE - 1];
 } RacePlayerByteField;
 
-typedef struct {
+struct RaceEffectActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[6];
@@ -108,7 +103,7 @@ typedef struct {
     /* 0x54 */ s8 unk54;
     /* 0x55 */ u8 pad55[0x58 - 0x55];
     /* 0x58 */ s8 matrixDirty2;
-} RaceEffectActor;
+};
 
 extern s16 D_8011216C;
 extern s16 D_80112168;
@@ -128,30 +123,10 @@ extern RacePlayerSurfaceState D_80122282[];
 extern RacePlayerByteField D_8012229A[];
 extern s32 D_801248A4;
 
-s16 func_8004908C(s32, s32);
-s32 func_80049000(Vec3i *);
-s32 func_8004940C(s32, s32, s32, s32);
 Mtx *func_8004885C(RaceEffectMatrixSource *);
 void func_800483FC(void *, void *, void *);
-s32 func_80049440(Vec3i *, s32, s16, s16, s16 *);
 void func_80045990(s32, s32, void **, void **);
-void func_80049664(RaceEffectActor *);
-void func_800499A4(RaceEffectActor *);
-void func_80049FB4(RaceEffectActor *);
-void func_8004A2F4(RaceEffectActor *);
-void func_8004AC5C(RaceEffectActor *);
-void func_8004B2B8(RaceEffectActor *);
-void func_8004AC5C(RaceEffectActor *);
-void func_8004B5F8(RaceEffectActor *);
-void func_8004B934(RaceEffectActor *);
-void func_8004BC74(RaceEffectActor *);
-void func_8004C274(RaceEffectActor *);
-void func_8004C5B4(RaceEffectActor *);
-void func_8004CBC4(RaceEffectActor *);
-void func_8004CF28(RaceEffectActor *);
-void func_8004D018(RaceEffectActor *);
-void func_8004D5C0(RaceEffectActor *);
-void func_8004E594(s32, s32, s32, s32);
+void func_8004E594(s32, s32, s32, s16);
 void func_8004EA34(s32, s32, s32, s16);
 void func_8006224C(s32, s32, s32, u16);
 void func_80072A74(s32, void *, s32, s32);
