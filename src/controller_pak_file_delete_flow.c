@@ -35,7 +35,7 @@ extern u8 D_59AAA0;
 extern u8 D_59DFE0;
 extern u8 D_5DFDD0;
 extern u8 D_5E0350;
-extern u8 D_5E0E40;
+extern u8 gControllerPakPostRaceSaveWarningSecondMessageStart;
 extern u8 D_60F1A0;
 extern u8 D_60F990;
 
@@ -60,7 +60,7 @@ void initControllerPakFileDeleteFlow(void) {
     loadCompressedRomAsset(&D_593D10, &D_598A70, 0x22);
     loadCompressedRomAsset(&D_598A70, &D_59AAA0, 0x23);
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x24);
-    loadCompressedRomAsset(&D_5E0350, &D_5E0E40, 0x26);
+    loadCompressedRomAsset(&D_5E0350, &gControllerPakPostRaceSaveWarningSecondMessageStart, 0x26);
     loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
     func_80070EC0(0);
     func_80071408(&initControllerPakFileDeleteMainOptions, 0, 0x63);
