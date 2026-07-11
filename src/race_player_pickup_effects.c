@@ -5,22 +5,25 @@
 #include "spatial_math.h"
 #include "race_item_projectiles.h"
 #include "race_item_effects.h"
-#include "race_player_item_effects.h"
+#include "race_player_pickup_effects.h"
 #include "snowboard_trail_effects.h"
 #include "race_ui_effects.h"
 
-// updatePlayerItemEffectUse best match: 98.537% (nonmatchings/func_800849E0-731940616440357983/base_13.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_item_effects/updatePlayerItemEffectUse.s")
+// updateRacePlayerItemEffectUse best match: 98.537% (nonmatchings/func_800849E0-731940616440357983/base_13.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_pickup_effects/updateRacePlayerItemEffectUse.s")
 
 typedef void (*EffectCallback)(void *);
 
 extern void enqueuePositionalSoundEffect(s32 soundId, void *pos, s32 volume, s32 distance);
 
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
-extern RaceInputPlayer gFrameCounter;
+extern s32 gFrameCounter;
+
+#define gRaceInputPlayers D_80121D80
+#define gRaceInputPlayersEnd ((RaceInputPlayer *)&gFrameCounter)
 
 #ifdef NON_MATCHING
-void updatePlayerItemEffectUse(RaceInputPlayer *player) {
+void updateRacePlayerItemEffectUse(RaceInputPlayer *player) {
     struct TriggerSlot { s32 pad0; s32 pad1; s32 pad2; s32 trigger; } triggerSlot;
     volatile s32 dummy;
 #define trigger triggerSlot.trigger
@@ -46,7 +49,7 @@ void updatePlayerItemEffectUse(RaceInputPlayer *player) {
 
         if ((trigger != 0) && (player->itemEffectCount != 0)) {
             trigger = 0;
-            otherPlayer = D_80121D80;
+            otherPlayer = gRaceInputPlayers;
             do {
                 if (otherPlayer->unk4 == 0) {
                     deltaX = otherPlayer->posX - player->posX;
@@ -61,7 +64,7 @@ void updatePlayerItemEffectUse(RaceInputPlayer *player) {
                     }
                 }
                 otherPlayer++;
-            } while (otherPlayer != &gFrameCounter);
+            } while (otherPlayer != gRaceInputPlayersEnd);
         }
     }
 
@@ -113,7 +116,7 @@ void updatePlayerItemEffectUse(RaceInputPlayer *player) {
 }
 #endif
 
-void updatePlayerActionEffectUse(RaceInputPlayer *player) {
+void updateRacePlayerActionEffectUse(RaceInputPlayer *player) {
     s32 trigger;
     s32 type;
 

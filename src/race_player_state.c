@@ -12,7 +12,7 @@
 #undef calculateAngleBetweenXZPoints
 #include "race_player_input.h"
 #include "race_item_effects.h"
-#include "race_player_item_effects.h"
+#include "race_player_pickup_effects.h"
 #include "menu_screen_effects.h"
 #include "race_player_movement.h"
 #include "race_position_tracker.h"
@@ -767,8 +767,8 @@ void func_8008D09C(RaceInputPlayer *player) {
                 player->updateTimer = 0;
                 player->unk525 = 0;
             }
-            updatePlayerItemEffectUse(player);
-            updatePlayerActionEffectUse(player);
+            updateRacePlayerItemEffectUse(player);
+            updateRacePlayerActionEffectUse(player);
         } else {
             player->unk57A--;
             player->unk92 = 6;
@@ -859,7 +859,7 @@ void func_8008DC2C(RaceInputPlayer *player) {
     }
 
     if (player->subState == 0) {
-        updatePlayerItemEffectUse(player);
+        updateRacePlayerItemEffectUse(player);
         if (player->unk4 == 0) {
             if (player->stickX > 0) {
                 player->facingAngle -= 0x18;
@@ -916,7 +916,7 @@ void func_8008DE1C(RaceInputPlayer *player) {
     }
 
     if (player->subState == 0) {
-        updatePlayerItemEffectUse(player);
+        updateRacePlayerItemEffectUse(player);
         if (player->unk4 == 0) {
             if (player->stickX > 0) {
                 player->facingAngle -= 0x18;
@@ -1018,7 +1018,7 @@ void func_8008E008(RaceInputPlayer *player) {
         setRaceMotionAnimation(player, 5);
     }
 
-    updatePlayerItemEffectUse(player);
+    updateRacePlayerItemEffectUse(player);
     stepRaceMotionJointAnimationUntilEnd(player);
 
     velocityY = player->unk60;
@@ -1148,7 +1148,7 @@ void func_8008E350(RaceInputPlayer *player) {
         }
     }
 
-    updatePlayerItemEffectUse(player);
+    updateRacePlayerItemEffectUse(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk260;
 
