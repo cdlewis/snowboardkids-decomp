@@ -5,7 +5,7 @@
 #include "sound_manager.h"
 #include "race_motion.h"
 #include "race_camera.h"
-#include "race_course_objects.h"
+#include "race_course_effects.h"
 #include "race_player_collision.h"
 #define calculateAngleBetweenXZPoints calculateAngleBetweenXZPoints_s32
 #include "fixed_point_math.h"
@@ -112,8 +112,8 @@ extern PlayerTuningRow D_800DC6F0[];
 extern PlayerTuningRow D_800DC770[];
 extern PlayerTuningRow D_800DC880[];
 extern Struct800955C0 gRaceCourseStartEntries[];
-extern CourseAngleEntry D_800B9554[];
-extern CourseAngleEntry D_800B9556[];
+extern CourseAngleEntry gSpiralCourseObjectAngles[];
+extern CourseAngleEntry gLaunchRampCourseObjectAngles[];
 extern u8 D_80121B5F;
 extern u8 gMainMenuModeSelection;
 extern u8 gRaceSplitscreenMode;
@@ -4433,7 +4433,7 @@ void func_80095338(RaceInputPlayer *player) {
         player->updateTimer = updateTimer + 1;
         player->stateTimer = 0x14;
         player->unk80 = 0xA;
-        player->unk2FA = D_800B9556[gRaceCourseIndex].angle;
+        player->unk2FA = gLaunchRampCourseObjectAngles[gRaceCourseIndex].angle;
         if (player->stateFlags & 0x400) {
             player->unk2FA += 0x800;
         }
@@ -4710,7 +4710,7 @@ void func_80095BE4(RaceInputPlayer *player) {
         source.x = -0x200000;
         source.y = 0;
         source.z = 0x400000;
-        makeFixedRotationY(matrix, D_800B9554[gRaceCourseIndex].angle);
+        makeFixedRotationY(matrix, gSpiralCourseObjectAngles[gRaceCourseIndex].angle);
         pos = (Vec3i *) &player->posX;
         transformVec3iByFixedMatrix(matrix, &source, pos);
         player->posX += gRaceCourseStartEntries[gRaceCourseIndex].unk8.x;
@@ -4739,7 +4739,7 @@ void func_80095BE4(RaceInputPlayer *player) {
     source.x = 0;
     source.y = 0;
     source.z = -0x40000;
-    makeFixedRotationY(matrix, D_800B9554[gRaceCourseIndex].angle);
+    makeFixedRotationY(matrix, gSpiralCourseObjectAngles[gRaceCourseIndex].angle);
     transformVec3iByFixedMatrix(matrix, &source, &transformed);
     nextX = player->posX + transformed.x;
     player->posX = nextX;

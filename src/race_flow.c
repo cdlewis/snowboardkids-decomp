@@ -18,7 +18,7 @@
 #include "race_type_select_menu.h"
 #include "race_splitscreen_select_menu.h"
 #include "race_camera.h"
-#include "race_course_objects.h"
+#include "race_course_effects.h"
 #include "race_flow.h"
 #include "race_player_state.h"
 #include "race_scene_loader.h"

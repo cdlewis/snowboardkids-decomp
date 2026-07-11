@@ -5,7 +5,7 @@
 #include "callback_task_scheduler.h"
 #include "system_boot.h"
 #include "race_motion.h"
-#include "race_course_objects.h"
+#include "race_course_effects.h"
 #include "race_course_preview.h"
 #include "race_item_effects.h"
 #include "race_overlay_effects.h"
