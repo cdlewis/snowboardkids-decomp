@@ -595,4 +595,11 @@ s32 func_800860A0(RaceInputPlayer *arg0) {
     return 1;
 }
 
+// func_80086170 best match: 47.068% (nonmatchings/func_80086170-731940616440357983/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_actor_collision/func_80086170.s")
+
+#ifdef NON_MATCHING
+// The current best attempt is a cleaned m2c baseline in the matching workspace.
+// It is not integrated here because the generated pointer arithmetic still needs
+// restructuring around byte-stride collision subrecords before it is useful.
+#endif
