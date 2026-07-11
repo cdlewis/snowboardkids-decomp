@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "race_course_preview.h"
 #include "spatial_math.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 
 #define RACE_COURSE_PREVIEW_GFX_CMD(pkt, cmd0, cmd1) \
 { \
@@ -272,8 +272,8 @@ void updateRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
         arg0->timer = randomNextMain() + 0x1E;
         setCallbackTaskCallback(arg0, waitRaceCoursePreviewBillboardSpawn);
     }
-    func_80097C18(sp24, 0x6D0);
-    func_80098590(sp24, (Vec3i *)&temp_s0->velocityY, &sp44);
+    makeFixedRotateY(sp24, 0x6D0);
+    transformVec3ByFixedMatrix(sp24, (Vec3i *)&temp_s0->velocityY, &sp44);
     temp_s0->position.x += sp44.x;
     temp_s0->position.y += sp44.y;
     temp_s0->position.z += sp44.z;
@@ -315,15 +315,15 @@ void drawRaceCoursePreviewCameraModel(RaceCoursePreviewCamera *arg0) {
 
     if (isPositionNearCurrentViewport(&arg0->position) != 0) {
         if (arg0->displayListValid == 0) {
-            func_80097C18(sp84.rotation, arg0->spinVelocity);
+            makeFixedRotateY(sp84.rotation, arg0->spinVelocity);
             sp84.translation.x = 0;
             sp84.translation.y = 0x600000;
             sp84.translation.z = 0;
-            func_800981C8(sp64.rotation, arg0->scale, arg0->angle.half.yaw + 0x800, arg0->angle.half.pitch);
+            makeFixedRotateZXY(sp64.rotation, arg0->scale, arg0->angle.half.yaw + 0x800, arg0->angle.half.pitch);
             sp64.translation.x = arg0->position.x;
             sp64.translation.y = arg0->position.y;
             sp64.translation.z = arg0->position.z;
-            func_800987A0(&sp84, &sp64, &sp44);
+            composeFixedTransforms(&sp84, &sp64, &sp44);
             arg0->displayList0 = func_8004885C(&sp64);
             arg0->displayList1 = func_8004885C(&sp44);
         }
@@ -407,12 +407,12 @@ void updateRaceCoursePreviewCameraMotion(RaceCoursePreviewCamera *arg0) {
     arg0->angle.half.yaw += arg0->pitchVelocity;
     arg0->position.y += arg0->velocityY;
 
-    sine = func_80097AE8(arg0->angle.half.yaw);
-    cosine = func_80097B48(arg0->angle.half.yaw);
+    sine = fixedSine(arg0->angle.half.yaw);
+    cosine = fixedCosine(arg0->angle.half.yaw);
 
     arg0->position.x += ((s64) -arg0->radius * sine) / 0x1000;
     arg0->position.z += ((s64) -arg0->radius * cosine) / 0x1000;
-    arg0->scale = 0x80 - ((func_80097AE8(arg0->tilt + 0x400) + 0x1000) / 0x40);
+    arg0->scale = 0x80 - ((fixedSine(arg0->tilt + 0x400) + 0x1000) / 0x40);
 
     func_800483FC(&D_801248D4, drawRaceCoursePreviewCameraModel, (s32) arg0);
 }

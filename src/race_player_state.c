@@ -8,7 +8,7 @@
 #include "race_course_effects.h"
 #include "race_actor_collision.h"
 #define calculateAngleBetweenXZPoints calculateAngleBetweenXZPoints_s32
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 #undef calculateAngleBetweenXZPoints
 #include "race_input_history.h"
 #include "race_item_effects.h"
@@ -95,7 +95,6 @@ extern s16 calculateAngleBetweenXZPoints(s32, s32, s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
-extern s16 func_80097AE8(s16);
 extern void func_800545D0(CallbackTask *);
 extern void (*D_800DECD0[])(RaceInputPlayer *);
 extern void (*D_800DECD8[])(RaceInputPlayer *);
@@ -1494,7 +1493,7 @@ void func_8008F568(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
 
-    sine = func_80097AE8(player->stateTimerLow) << 0xC;
+    sine = fixedSine(player->stateTimerLow) << 0xC;
     player->unk6C = sine / 0x1000;
     stateTimer = (player->stateTimer & 0xFFFFFFFFFFFFFFFF) + 0x20;
     player->stateTimer = stateTimer;
@@ -1549,7 +1548,7 @@ void func_8008F6C8(RaceInputPlayer *player) {
     player->posZ += player->velocity.z;
     player->unk74 = yVel;
 
-    player->unk6C = (s16) ((s32) (func_80097AE8(player->unk7E) * -0x1000) / 0x1000);
+    player->unk6C = (s16) ((s32) (fixedSine(player->unk7E) * -0x1000) / 0x1000);
     stateTimer = (unsigned long long) (player->stateTimer + 0x20);
     player->stateTimer = stateTimer;
     if (stateTimer >= 0x401) {
@@ -1591,9 +1590,9 @@ void func_8008F82C(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
     if (player->stateFlags & 0x400) {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) << 0xC) / 4096);
+        player->unk6E = (s16) ((s32) (fixedSine(player->stateTimerLow) << 0xC) / 4096);
     } else {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) * -0x1000) / 4096);
+        player->unk6E = (s16) ((s32) (fixedSine(player->stateTimerLow) * -0x1000) / 4096);
     }
 
     player->stateTimer += 0x1E;
@@ -1634,9 +1633,9 @@ void func_8008F9CC(RaceInputPlayer *player) {
     player->posZ += player->velocity.z;
     player->unk74 = yVel;
     if (player->stateFlags & 0x400) {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->unk7E) * -0x1000) / 0x1000);
+        player->unk6E = (s16) ((s32) (fixedSine(player->unk7E) * -0x1000) / 0x1000);
     } else {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->unk7E) << 12) / 0x1000);
+        player->unk6E = (s16) ((s32) (fixedSine(player->unk7E) << 12) / 0x1000);
     }
 
     player->stateTimer += 0x1D;
@@ -1676,11 +1675,11 @@ void func_8008FB6C(RaceInputPlayer *player) {
     player->posY += yVel;
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
-    player->unk6C = (s16) ((s32) (func_80097AE8((s16) player->stateTimer) << 12) / 0x1000);
+    player->unk6C = (s16) ((s32) (fixedSine((s16) player->stateTimer) << 12) / 0x1000);
     if (player->stateFlags & 0x400) {
-        player->unk6E = (s16) ((s32) (func_80097AE8((s16) player->stateTimer) << 12) / 0x1000);
+        player->unk6E = (s16) ((s32) (fixedSine((s16) player->stateTimer) << 12) / 0x1000);
     } else {
-        player->unk6E = (s16) ((s32) (func_80097AE8((s16) player->stateTimer) * -0x1000) / 0x1000);
+        player->unk6E = (s16) ((s32) (fixedSine((s16) player->stateTimer) * -0x1000) / 0x1000);
     }
 
     player->stateTimer += 0x1A;
@@ -1720,11 +1719,11 @@ void func_8008FD2C(RaceInputPlayer *player) {
     player->posY += yVel;
     player->posZ += player->velocity.z;
     player->unk74 = yVel;
-    player->unk6C = (s16) ((s32) (func_80097AE8(player->unk7E) << 12) / 0x1000);
+    player->unk6C = (s16) ((s32) (fixedSine(player->unk7E) << 12) / 0x1000);
     if (player->stateFlags & 0x400) {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->unk7E) * -0x1000) / 0x1000);
+        player->unk6E = (s16) ((s32) (fixedSine(player->unk7E) * -0x1000) / 0x1000);
     } else {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->unk7E) << 12) / 0x1000);
+        player->unk6E = (s16) ((s32) (fixedSine(player->unk7E) << 12) / 0x1000);
     }
 
     player->stateTimer += 0x1A;
@@ -1764,11 +1763,11 @@ void func_8008FEEC(RaceInputPlayer *player) {
     player->posY += yVel;
     player->posZ += player->velocity.z;
     player->unk74 = yVel;
-    player->unk6C = (s16) ((s32) (func_80097AE8(player->unk7E) * -0x1000) / 0x1000);
+    player->unk6C = (s16) ((s32) (fixedSine(player->unk7E) * -0x1000) / 0x1000);
     if (player->stateFlags & 0x400) {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->unk7E) << 12) / 0x1000);
+        player->unk6E = (s16) ((s32) (fixedSine(player->unk7E) << 12) / 0x1000);
     } else {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->unk7E) * -0x1000) / 0x1000);
+        player->unk6E = (s16) ((s32) (fixedSine(player->unk7E) * -0x1000) / 0x1000);
     }
 
     player->stateTimer += 0x1A;
@@ -1808,11 +1807,11 @@ void func_800900B0(RaceInputPlayer *player) {
     player->posY += yVel;
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
-    player->unk6C = (s16) ((s32) (func_80097AE8(player->stateTimerLow) * -0x1000) / 0x1000);
+    player->unk6C = (s16) ((s32) (fixedSine(player->stateTimerLow) * -0x1000) / 0x1000);
     if (player->stateFlags & 0x400) {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) * -0x1000) / 0x1000);
+        player->unk6E = (s16) ((s32) (fixedSine(player->stateTimerLow) * -0x1000) / 0x1000);
     } else {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) << 12) / 0x1000);
+        player->unk6E = (s16) ((s32) (fixedSine(player->stateTimerLow) << 12) / 0x1000);
     }
 
     player->stateTimer += 0x1A;
@@ -1856,9 +1855,9 @@ void func_80090274(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8(player->stateTimerLow) * -0x2000) / 4096;
+        player->unk6E = (fixedSine(player->stateTimerLow) * -0x2000) / 4096;
     } else {
-        player->unk6E = (func_80097AE8(player->stateTimerLow) * 0x2000) / 4096;
+        player->unk6E = (fixedSine(player->stateTimerLow) * 0x2000) / 4096;
     }
 
     player->stateTimer += 0x16;
@@ -1914,7 +1913,7 @@ void func_80090470(RaceInputPlayer *player) {
     player->posZ += player->velocity.z;
     player->unk74 = yVel;
 
-    player->unk6C = (func_80097AE8(player->unk7E) << 13) / 0x1000;
+    player->unk6C = (fixedSine(player->unk7E) << 13) / 0x1000;
 
     player->stateTimer += 0x14;
     if (player->stateTimer >= 0x401) {
@@ -1955,7 +1954,7 @@ void func_800905BC(RaceInputPlayer *player) {
     player->posZ += player->velocity.z;
     player->unk74 = yVel;
 
-    player->unk70 = (func_80097AE8(player->unk7E) << 13) / 0x1000;
+    player->unk70 = (fixedSine(player->unk7E) << 13) / 0x1000;
 
     player->stateTimer += 0x14;
     if (player->stateTimer >= 0x401) {
@@ -2020,7 +2019,7 @@ void func_80090708(RaceInputPlayer *player) {
     player->posZ += player->velocity.z;
     playerAlias->unk74 = yVel;
 
-    playerAlias->unk6E = (((0, func_80097AE8(player->unk7E))) << 14) / 0x1000;
+    playerAlias->unk6E = (((0, fixedSine(player->unk7E))) << 14) / 0x1000;
 
     timer = playerAlias->stateTimer + 0x14;
     playerAlias->stateTimer = timer;
@@ -2096,7 +2095,7 @@ void func_80090998(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
 
-    player->unk6C = (func_80097AE8(player->stateTimerLow) * -0x3000) / 4096;
+    player->unk6C = (fixedSine(player->stateTimerLow) * -0x3000) / 4096;
     if (player->stateFlags & 0x400) {
         player->unk6E = -player->updateTimer;
     } else {
@@ -2156,9 +2155,9 @@ void func_80090B30(RaceInputPlayer *player) {
     player2->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player2->unk6E = (func_80097AE8((s16) stateTimer) * -0x4000) / 0x1000;
+        player2->unk6E = (fixedSine((s16) stateTimer) * -0x4000) / 0x1000;
     } else {
-        player2->unk6E = (func_80097AE8((s16) stateTimer) << 14) / 0x1000;
+        player2->unk6E = (fixedSine((s16) stateTimer) << 14) / 0x1000;
     }
 
     stateTimer = (unsigned long long) (player2->stateTimer + 0x15);
@@ -2205,9 +2204,9 @@ void func_80090CD0(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8(player->stateTimerLow) * -0x2000) / 4096;
+        player->unk6E = (fixedSine(player->stateTimerLow) * -0x2000) / 4096;
     } else {
-        player->unk6E = (func_80097AE8(player->stateTimerLow) * 0x2000) / 4096;
+        player->unk6E = (fixedSine(player->stateTimerLow) * 0x2000) / 4096;
     }
 
     player->stateTimer += 0x16;
@@ -2269,7 +2268,7 @@ void func_80090ECC(RaceInputPlayer *player) {
     player->posZ += player->velocity.z;
     player->unk74 = yVel;
 
-    player->updateTimer = (s16) ((s32) (func_80097AE8(player->unk7E) << 13) / 0x1000);
+    player->updateTimer = (s16) ((s32) (fixedSine(player->unk7E) << 13) / 0x1000);
     updateTimer = player->updateTimer;
     if (updateTimer >= 0x1001) {
         player->unk6E = 0x2000 - updateTimer;
@@ -2281,7 +2280,7 @@ void func_80090ECC(RaceInputPlayer *player) {
         player->unk6E = -player->unk6E;
     }
 
-    player->unk6C = (s16) ((s32) (func_80097AE8(player->unk7E) << 13) / 0x1000);
+    player->unk6C = (s16) ((s32) (fixedSine(player->unk7E) << 13) / 0x1000);
     timerConstant = 0x14;
     stateTimer = player->stateTimer + timerConstant;
     timerConstant = 0x400;
@@ -2328,9 +2327,9 @@ void func_8009107C(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8(player->unk7E) * -0x5000) / 0x1000;
+        player->unk6E = (fixedSine(player->unk7E) * -0x5000) / 0x1000;
     } else {
-        player->unk6E = (func_80097AE8(player->unk7E) * 0x5000) / 0x1000;
+        player->unk6E = (fixedSine(player->unk7E) * 0x5000) / 0x1000;
     }
 
     player->stateTimer += 0x12;
@@ -2380,9 +2379,9 @@ void func_80091250(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk70 = (func_80097AE8(player->unk7E) * -0x2000) / 0x1000;
+        player->unk70 = (fixedSine(player->unk7E) * -0x2000) / 0x1000;
     } else {
-        player->unk70 = (func_80097AE8(player->unk7E) << 13) / 0x1000;
+        player->unk70 = (fixedSine(player->unk7E) << 13) / 0x1000;
     }
 
     player->stateTimer += 0x16;
@@ -2431,9 +2430,9 @@ void func_80091400(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) * -0x3000) / 4096);
+        player->unk6E = (s16) ((s32) (fixedSine(player->stateTimerLow) * -0x3000) / 4096);
     } else {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) * 0x3000) / 4096);
+        player->unk6E = (s16) ((s32) (fixedSine(player->stateTimerLow) * 0x3000) / 4096);
     }
 
     player->stateTimer += 0x15;
@@ -2483,9 +2482,9 @@ void func_800915C0(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8(player->stateTimerLow) * -0x2000) / 4096;
+        player->unk6E = (fixedSine(player->stateTimerLow) * -0x2000) / 4096;
     } else {
-        player->unk6E = (func_80097AE8(player->stateTimerLow) << 0xD) / 4096;
+        player->unk6E = (fixedSine(player->stateTimerLow) << 0xD) / 4096;
     }
 
     player->stateTimer += 0x16;
@@ -2550,9 +2549,9 @@ void func_800917BC(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk70 = (func_80097AE8(player->stateTimerLow) * 0x3000) / 0x1000;
+        player->unk70 = (fixedSine(player->stateTimerLow) * 0x3000) / 0x1000;
     } else {
-        player->unk70 = (func_80097AE8(player->stateTimerLow) * -0x3000) / 0x1000;
+        player->unk70 = (fixedSine(player->stateTimerLow) * -0x3000) / 0x1000;
     }
 
     player->stateTimer += 0x16;
@@ -2607,7 +2606,7 @@ void func_800919A4(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
 
-    player->unk6C = (func_80097AE8(player->stateTimerLow) * -0x3000) / 0x1000;
+    player->unk6C = (fixedSine(player->stateTimerLow) * -0x3000) / 0x1000;
 
     player->stateTimer += 0x12;
     if (player->stateTimer >= 0x401) {
@@ -2656,9 +2655,9 @@ void func_80091AF8(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk70 = (func_80097AE8(player->stateTimerLow) * -0x2000) / 4096;
+        player->unk70 = (fixedSine(player->stateTimerLow) * -0x2000) / 4096;
     } else {
-        player->unk70 = (func_80097AE8(player->stateTimerLow) << 0xD) / 4096;
+        player->unk70 = (fixedSine(player->stateTimerLow) << 0xD) / 4096;
     }
 
     player->stateTimer += 0x16;
@@ -2735,9 +2734,9 @@ void func_80091D40(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8(player->stateTimerLow) * -0x2000) / 4096;
+        player->unk6E = (fixedSine(player->stateTimerLow) * -0x2000) / 4096;
     } else {
-        player->unk6E = (func_80097AE8(player->stateTimerLow) * 0x2000) / 4096;
+        player->unk6E = (fixedSine(player->stateTimerLow) * 0x2000) / 4096;
     }
 
     player->stateTimer += 0x16;
@@ -2801,9 +2800,9 @@ void func_80091F3C(RaceInputPlayer *player) {
     playerAlias->unk74 = yVel;
 
     if (playerAlias->stateFlags & 0x400) {
-        playerAlias->unk70 = (func_80097AE8((s16) player->stateTimer) * 0x3000) / 4096;
+        playerAlias->unk70 = (fixedSine((s16) player->stateTimer) * 0x3000) / 4096;
     } else {
-        player->unk70 = (func_80097AE8((s16) player->stateTimer) * -0x3000) / 4096;
+        player->unk70 = (fixedSine((s16) player->stateTimer) * -0x3000) / 4096;
     }
 
     playerAlias->stateTimer += 0x14;
@@ -2882,9 +2881,9 @@ void func_80092194(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8(player->stateTimerLow) * -0x3000) / 0x1000;
+        player->unk6E = (fixedSine(player->stateTimerLow) * -0x3000) / 0x1000;
     } else {
-        player->unk6E = (func_80097AE8(player->stateTimerLow) * 0x3000) / 0x1000;
+        player->unk6E = (fixedSine(player->stateTimerLow) * 0x3000) / 0x1000;
     }
 
     player->stateTimer += 0x16;
@@ -2966,9 +2965,9 @@ void func_80092468(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8(player->stateTimerLow) * -0x1800) / 4096;
+        player->unk6E = (fixedSine(player->stateTimerLow) * -0x1800) / 4096;
     } else {
-        player->unk6E = ((func_80097AE8(player->stateTimerLow) * 6) * 1024) / 4096;
+        player->unk6E = ((fixedSine(player->stateTimerLow) * 6) * 1024) / 4096;
     }
 
     player->stateTimer += 0x16;
@@ -3064,7 +3063,7 @@ void func_80092774(RaceInputPlayer *player) {
 
     switch (updateTimer) {
     case 0:
-        player->unk6C = (s16) ((s32) (func_80097AE8(player->stateTimerLow) << 12) / 4096);
+        player->unk6C = (s16) ((s32) (fixedSine(player->stateTimerLow) << 12) / 4096);
         player->stateTimer += 0x33;
         if (player->stateTimer >= 0x401) {
             player->stateTimer = 0;
@@ -3079,9 +3078,9 @@ void func_80092774(RaceInputPlayer *player) {
         break;
     case 1:
         if (player->stateFlags & 0x400) {
-            player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) * -0x2000) / 4096);
+            player->unk6E = (s16) ((s32) (fixedSine(player->stateTimerLow) * -0x2000) / 4096);
         } else {
-            player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) << 13) / 4096);
+            player->unk6E = (s16) ((s32) (fixedSine(player->stateTimerLow) << 13) / 4096);
         }
 
         timer = player->stateTimer + 0x20;
@@ -3132,9 +3131,9 @@ void func_800929E4(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) * -0x2000) / 4096);
+        player->unk6E = (s16) ((s32) (fixedSine(player->stateTimerLow) * -0x2000) / 4096);
     } else {
-        player->unk6E = (s16) ((s32) (func_80097AE8(player->stateTimerLow) << 0xD) / 4096);
+        player->unk6E = (s16) ((s32) (fixedSine(player->stateTimerLow) << 0xD) / 4096);
     }
 
     player->stateTimer += 0x16;
@@ -3176,9 +3175,9 @@ void func_80092B6C(RaceInputPlayer *player) {
     player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player->unk6E = (func_80097AE8(player->unk7E) * -0x5000) / 0x1000;
+        player->unk6E = (fixedSine(player->unk7E) * -0x5000) / 0x1000;
     } else {
-        player->unk6E = (func_80097AE8(player->unk7E) * 0x5000) / 0x1000;
+        player->unk6E = (fixedSine(player->unk7E) * 0x5000) / 0x1000;
     }
 
     player->stateTimer += 0x14;
@@ -3219,7 +3218,7 @@ void func_80092D04(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
 
-    player->unk6C = (func_80097AE8(player->stateTimer) * -0x5000) / 0x1000;
+    player->unk6C = (fixedSine(player->stateTimer) * -0x5000) / 0x1000;
 
     player->stateTimer += 0x14;
     if (player->stateTimer >= 0x401) {
@@ -3797,8 +3796,8 @@ void func_80093E0C(RaceInputPlayer *player) {
             posZ = &player->posZ;
             func_80081508(player->unk80, posX, &player->posY, posZ, &player->facingAngle);
             player->posY = func_80080CC4(player->unk502, player->posX, player->posZ);
-            sine = func_80097AE8(player->facingAngle);
-            cosine = func_80097B48(player->facingAngle);
+            sine = fixedSine(player->facingAngle);
+            cosine = fixedCosine(player->facingAngle);
             *posX += ((s64)sine * -0x240000) / 0x1000;
             *posZ += ((s64)cosine * -0x240000) / 0x1000;
             player->unk34.x = posX[0];
@@ -4505,19 +4504,19 @@ void func_80095650(RaceInputPlayer *player) {
         }
     }
 
-    func_80097C18((s16 *)&scratch[2], player->facingAngle);
+    makeFixedRotateY((s16 *)&scratch[2], player->facingAngle);
     scratch[13] = 0;
     scratch[14] = 0;
     scratch[15] = player->unk80;
-    func_80098590((s16 *)&scratch[2], (Vec3i *)&scratch[13], (Vec3i *)&scratch[10]);
+    transformVec3ByFixedMatrix((s16 *)&scratch[2], (Vec3i *)&scratch[13], (Vec3i *)&scratch[10]);
     player->posX += scratch[10];
     player->posZ += scratch[12];
 
-    func_80097C18((s16 *)&scratch[2], player->facingAngle);
+    makeFixedRotateY((s16 *)&scratch[2], player->facingAngle);
     scratch[13] = 0;
     scratch[14] = 0;
     scratch[15] = player->unk80;
-    func_80098590((s16 *)&scratch[2], (Vec3i *)&scratch[13], (Vec3i *)&scratch[10]);
+    transformVec3ByFixedMatrix((s16 *)&scratch[2], (Vec3i *)&scratch[13], (Vec3i *)&scratch[10]);
     player->posX += scratch[10];
     player->posZ += scratch[12];
     player->unk40.y -= 0x7000;
@@ -4552,11 +4551,11 @@ void func_80095804(RaceInputPlayer *player) {
         player->unk80 += 0x820;
     }
 
-    func_80097C18((s16 *)&scratch[1], player->facingAngle);
+    makeFixedRotateY((s16 *)&scratch[1], player->facingAngle);
     scratch[12] = 0;
     scratch[13] = 0;
     scratch[14] = player->unk80;
-    func_80098590((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
+    transformVec3ByFixedMatrix((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
     player->posX += scratch[9];
     player->posZ += scratch[11];
 
@@ -4567,11 +4566,11 @@ void func_80095804(RaceInputPlayer *player) {
         player->unk80 += 0x820;
     }
 
-    func_80097C18((s16 *)&scratch[1], player->facingAngle);
+    makeFixedRotateY((s16 *)&scratch[1], player->facingAngle);
     scratch[12] = 0;
     scratch[13] = 0;
     scratch[14] = player->unk80;
-    func_80098590((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
+    transformVec3ByFixedMatrix((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
     player->posX += scratch[9];
     player->posZ += scratch[11];
 
@@ -4612,11 +4611,11 @@ void func_800959B4(RaceInputPlayer *player) {
         }
     }
 
-    func_80097C18((s16 *)&scratch[1], player->facingAngle);
+    makeFixedRotateY((s16 *)&scratch[1], player->facingAngle);
     scratch[12] = 0;
     scratch[13] = 0;
     scratch[14] = player->unk80;
-    func_80098590((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
+    transformVec3ByFixedMatrix((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
     player->posX += scratch[9];
     player->posZ += scratch[11];
 
@@ -4662,18 +4661,18 @@ void func_80095A88(RaceInputPlayer *player) {
         if (player->unk80 < 0xA0000) {
             player->unk80 += 0x2000;
         }
-        func_80097FE4((s16 *) scratch.matrix, -0x100, player->facingAngle);
+        makeFixedRotateXY((s16 *) scratch.matrix, -0x100, player->facingAngle);
     } else {
         if (player->unk80 >= -0x9FFFF) {
             player->unk80 -= 0x2000;
         }
-        func_80097FE4((s16 *) scratch.matrix, 0x100, ((0, player))->facingAngle);
+        makeFixedRotateXY((s16 *) scratch.matrix, 0x100, ((0, player))->facingAngle);
     }
 
     scratch.sourceX = 0;
     scratch.sourceY = 0;
     scratch.sourceZ = player->unk80;
-    func_80098590((s16 *) scratch.matrix, (Vec3i *) &scratch.sourceX, (Vec3i *) &scratch.transformedX);
+    transformVec3ByFixedMatrix((s16 *) scratch.matrix, (Vec3i *) &scratch.sourceX, (Vec3i *) &scratch.transformedX);
     player->posX = player->posX + scratch.transformedX;
     player->posY += scratch.transformedY;
     player->posZ += scratch.transformedZ;
@@ -4713,9 +4712,9 @@ void func_80095BE4(RaceInputPlayer *player) {
         source.x = -0x200000;
         source.y = 0;
         source.z = 0x400000;
-        func_80097C18(matrix, D_800B9554[D_80121B50].angle);
+        makeFixedRotateY(matrix, D_800B9554[D_80121B50].angle);
         pos = (Vec3i *) &player->posX;
-        func_80098590(matrix, &source, pos);
+        transformVec3ByFixedMatrix(matrix, &source, pos);
         player->posX += D_800B9540[D_80121B50].unk8.x;
         player->posY += D_800B9540[D_80121B50].unk8.y + 0x80000;
         player->posZ += D_800B9540[D_80121B50].unk8.z;
@@ -4742,8 +4741,8 @@ void func_80095BE4(RaceInputPlayer *player) {
     source.x = 0;
     source.y = 0;
     source.z = -0x40000;
-    func_80097C18(matrix, D_800B9554[D_80121B50].angle);
-    func_80098590(matrix, &source, &transformed);
+    makeFixedRotateY(matrix, D_800B9554[D_80121B50].angle);
+    transformVec3ByFixedMatrix(matrix, &source, &transformed);
     nextX = player->posX + transformed.x;
     player->posX = nextX;
     nextZ = player->posZ + transformed.z;

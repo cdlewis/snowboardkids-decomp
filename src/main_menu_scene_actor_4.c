@@ -1,6 +1,6 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 #include "main_menu_effects.h"
 #include "main_menu_scene_actor_4.h"
 #include "main_menu_scene_model.h"
@@ -412,7 +412,7 @@ void func_80037070(MainMenuSceneActorShadow *arg0) {
     sp84.x = arg0->posX;
     sp84.y = arg0->posY;
     sp84.z = arg0->posZ;
-    func_80098590(model->displayObjects[arg0->unkC].pad0, &sp84, &sp78);
+    transformVec3ByFixedMatrix(model->displayObjects[arg0->unkC].pad0, &sp84, &sp78);
     sp6C = model;
     sp94 = gIdentityFixedTransform;
     spA8 = sp6C->displayObjects[arg0->unkC].screenX + sp78.x;

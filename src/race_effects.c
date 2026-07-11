@@ -130,10 +130,10 @@ void func_800483FC(void *, void *, void *);
 void func_80045990(s32, s32, void **, void **);
 void func_8006224C(s32, s32, s32, u16);
 void func_80072A74(s32, void *, s32, s32);
-s32 func_80098C30(s64);
-s16 func_80097AE8(s16);
-s16 func_80097B48(s16);
-void func_80098590(s16 *, Vec3i *, void *);
+s32 integerSqrt64(s64);
+s16 fixedSine(s16);
+s16 fixedCosine(s16);
+void transformVec3ByFixedMatrix(s16 *, Vec3i *, void *);
 s64 __ll_mul(s64, s64);
 
 // func_80049440 best match: 99.927% (nonmatchings/func_80049440-7273315160691878794/base_3.c)
@@ -174,7 +174,7 @@ s32 func_80049440(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAn
                         if (dz < radius) {
                             playerAngle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                             if ((s16)((playerAngle - angle + 0x380) & 0xFFF) < 0x700) {
-                                dist = func_80098C30((s64)dx * dx + (s64)dz * dz);
+                                dist = integerSqrt64((s64)dx * dx + (s64)dz * dz);
                                 if ((dist < radius) && (dist < closest)) {
                                     hit = i;
                                     closest = dist;
@@ -265,8 +265,8 @@ void func_800499A4(RaceEffectActor *arg0) {
             arg0->targetAngle += angleDiff;
         }
 
-        sin = func_80097AE8(arg0->targetAngle);
-        cos = func_80097B48(arg0->targetAngle);
+        sin = fixedSine(arg0->targetAngle);
+        cos = fixedCosine(arg0->targetAngle);
         xOffset = ((s64)sin * arg0->velocityY) / 0x1000;
         zOffset = ((s64)cos * arg0->velocityY) / 0x1000;
 
@@ -331,7 +331,7 @@ void func_80049CE0(RaceEffectActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = func_80098C30(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
+    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3ByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSqrt64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
         arg0->accelerationY = (((s64) arg0->velocityY) * sp50) / magnitude;
         var_a0 = -arg0->velocityY;
     } else {
@@ -348,7 +348,7 @@ void func_80049CE0(RaceEffectActor *arg0) {
         source.x = 0xFFF00000;
         arg0->targetAngle += 0x800;
     }
-    func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos.x);
+    transformVec3ByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos.x);
     arg0->pos.x += D_80121D80[arg0->playerIndex].velocity.x;
     arg0->pos.y += D_80121D80[arg0->playerIndex].velocity.y;
     arg0->pos.z += D_80121D80[arg0->playerIndex].velocity.z;
@@ -434,8 +434,8 @@ void func_8004A2F4(RaceEffectActor *arg0) {
             arg0->targetAngle += angleDiff;
         }
 
-        sin = func_80097AE8(arg0->targetAngle);
-        cos = func_80097B48(arg0->targetAngle);
+        sin = fixedSine(arg0->targetAngle);
+        cos = fixedCosine(arg0->targetAngle);
         xOffset = ((s64)sin * arg0->velocityY) / 0x1000;
         zOffset = ((s64)cos * arg0->velocityY) / 0x1000;
 
@@ -504,7 +504,7 @@ void func_8004A648(RaceEffectActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = func_80098C30(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
+    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3ByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSqrt64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
         arg0->accelerationY = (((s64) arg0->velocityY) * sp50) / magnitude;
         var_a0 = -arg0->velocityY;
     } else {
@@ -521,7 +521,7 @@ void func_8004A648(RaceEffectActor *arg0) {
         source.x = 0xFFF00000;
         arg0->targetAngle += 0x800;
     }
-    func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos.x);
+    transformVec3ByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos.x);
     arg0->pos.x += D_80121D80[arg0->playerIndex].velocity.x;
     arg0->pos.y += D_80121D80[arg0->playerIndex].velocity.y;
     arg0->pos.z += D_80121D80[arg0->playerIndex].velocity.z;
@@ -607,8 +607,8 @@ void func_8004AC5C(RaceEffectActor *arg0) {
             arg0->targetAngle += angleDiff;
         }
 
-        sin = func_80097AE8(arg0->targetAngle);
-        cos = func_80097B48(arg0->targetAngle);
+        sin = fixedSine(arg0->targetAngle);
+        cos = fixedCosine(arg0->targetAngle);
         xOffset = ((s64) sin * arg0->velocityY) / 0x1000;
         zOffset = ((s64) cos * arg0->velocityY) / 0x1000;
 
@@ -674,7 +674,7 @@ void func_8004AFE4(RaceEffectActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = func_80098C30(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
+    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3ByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSqrt64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
         arg0->accelerationY = (((s64) arg0->velocityY) * sp50) / magnitude;
         var_a0 = -arg0->velocityY;
     } else {
@@ -691,7 +691,7 @@ void func_8004AFE4(RaceEffectActor *arg0) {
         source.x = 0xFFF00000;
         arg0->targetAngle += 0x800;
     }
-    func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos.x);
+    transformVec3ByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos.x);
     arg0->pos.x += D_80121D80[arg0->playerIndex].velocity.x;
     arg0->pos.y += D_80121D80[arg0->playerIndex].velocity.y;
     arg0->pos.z += D_80121D80[arg0->playerIndex].velocity.z;
@@ -752,8 +752,8 @@ void func_8004B5F8(RaceEffectActor *arg0) {
     s32 i;
 
     if (gRaceUpdatePaused == 0) {
-        sin = func_80097AE8(arg0->targetAngle);
-        cos = func_80097B48(arg0->targetAngle);
+        sin = fixedSine(arg0->targetAngle);
+        cos = fixedCosine(arg0->targetAngle);
         xOffset = ((s64)sin * arg0->velocityY) / 0x1000;
         zOffset = ((s64)cos * arg0->velocityY) / 0x1000;
 
@@ -894,8 +894,8 @@ void func_8004BC74(RaceEffectActor *arg0) {
             arg0->targetAngle += angleDiff;
         }
 
-        sin = func_80097AE8(arg0->targetAngle);
-        cos = func_80097B48(arg0->targetAngle);
+        sin = fixedSine(arg0->targetAngle);
+        cos = fixedCosine(arg0->targetAngle);
         xOffset = ((s64)sin * arg0->velocityY) / 0x1000;
         zOffset = ((s64)cos * arg0->velocityY) / 0x1000;
 
@@ -969,7 +969,7 @@ void func_8004BFA0(RaceEffectActor *arg0) {
         }
     }
 
-    actor = arg0; func_80098590(D_80121D80[arg0->playerIndex].transform, &sp58, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = func_80098C30(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * sp50 / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += D_80121D80[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = D_80121D80[actor->playerIndex].yaw; sp58.z = 0; sp58.x = 0xFFF00000;
+    actor = arg0; transformVec3ByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &sp58, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSqrt64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * sp50 / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += D_80121D80[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = D_80121D80[actor->playerIndex].yaw; sp58.z = 0; sp58.x = 0xFFF00000;
     sp58.y = 0x280000;
     sp58.x = 0x100000;
 
@@ -978,7 +978,7 @@ void func_8004BFA0(RaceEffectActor *arg0) {
         actor->targetAngle += 0x800;
     }
 
-    func_80098590(D_80121D80[actor->playerIndex].transform, &sp58, &actor->pos);
+    transformVec3ByFixedMatrix(D_80121D80[actor->playerIndex].transform, &sp58, &actor->pos);
     actor->pos.x += ((0, D_80121D80))[actor->playerIndex].posA8.x;
     actor->pos.y += D_80121D80[actor->playerIndex].posA8.y;
     actor->pos.z += D_80121D80[actor->playerIndex].posA8.z;
@@ -1060,8 +1060,8 @@ void func_8004C5B4(RaceEffectActor *arg0) {
             arg0->targetAngle += angleDiff;
         }
 
-        sin = func_80097AE8(arg0->targetAngle);
-        cos = func_80097B48(arg0->targetAngle);
+        sin = fixedSine(arg0->targetAngle);
+        cos = fixedCosine(arg0->targetAngle);
         xOffset = ((s64)sin * arg0->velocityY) / 0x1000;
         zOffset = ((s64)cos * arg0->velocityY) / 0x1000;
 
@@ -1133,7 +1133,7 @@ void func_8004C8F0(RaceEffectActor *arg0) {
         }
     }
 
-    actor = arg0; func_80098590(D_80121D80[arg0->playerIndex].transform, &sp58, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = func_80098C30(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * sp50 / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += D_80121D80[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = D_80121D80[actor->playerIndex].yaw; sp58.z = 0;
+    actor = arg0; transformVec3ByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &sp58, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSqrt64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * sp50 / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += D_80121D80[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = D_80121D80[actor->playerIndex].yaw; sp58.z = 0;
     new_var = &sp58;
     sp58.y = 0x280000;
     sp58.x = 0x100000;
@@ -1143,7 +1143,7 @@ void func_8004C8F0(RaceEffectActor *arg0) {
         actor->targetAngle += 0x800;
     }
 
-    func_80098590(D_80121D80[actor->playerIndex].transform, new_var, &actor->pos);
+    transformVec3ByFixedMatrix(D_80121D80[actor->playerIndex].transform, new_var, &actor->pos);
     actor->pos.x += D_80121D80[actor->playerIndex].posA8.x;
     actor->pos.y += D_80121D80[actor->playerIndex].posA8.y;
     actor->pos.z += D_80121D80[actor->playerIndex].posA8.z;
@@ -1335,8 +1335,8 @@ void func_8004D5C0(RaceEffectActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         if (arg0->unk54 == 0) {
-            sin = func_80097AE8(arg0->targetAngle);
-            cos = func_80097B48(arg0->targetAngle);
+            sin = fixedSine(arg0->targetAngle);
+            cos = fixedCosine(arg0->targetAngle);
             xOffset = ((s64)sin * arg0->velocityY) / 0x1000;
             zOffset = ((s64)cos * arg0->velocityY) / 0x1000;
             y = arg0->pos.y;
@@ -1405,7 +1405,7 @@ void func_8004D880(RaceEffectActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = func_80098C30(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
+    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3ByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSqrt64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
         arg0->accelerationY = (s64)arg0->velocityY * sp50 / magnitude;
         newVelocity = -arg0->velocityY;
     } else {
@@ -1426,7 +1426,7 @@ void func_8004D880(RaceEffectActor *arg0) {
         arg0->targetAngle += 0x800;
     }
 
-    func_80098590(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos);
+    transformVec3ByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos);
 
     arg0->pos.x += D_80121D80[arg0->playerIndex].posA8.x;
     arg0->pos.y += D_80121D80[arg0->playerIndex].posA8.y;

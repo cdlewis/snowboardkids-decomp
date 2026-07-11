@@ -2,7 +2,7 @@
 #include "asset_manager.h"
 #include "game_audio.h"
 #include "callback_task_scheduler.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 #include "input_task_scheduler.h"
 #include "main_menu_overlay_effects.h"
 #include "race_camera.h"
@@ -68,13 +68,13 @@ void func_8003DDD0() {
     MainMenuRaceSetupObject *obj;
 
     obj = D_800EC9C4;
-    func_8009853C(obj->rotationMtx, -obj->pitch, -obj->yaw);
+    makeFixedRotateYX(obj->rotationMtx, -obj->pitch, -obj->yaw);
     obj = D_800EC9C4;
     scratch.localPos.x = 0;
     scratch.localPos.y = 0;
     scratch.localPos.z = -obj->depth;
-    func_80097FE4(scratch.rotationMtx, obj->pitch, obj->yaw);
-    func_80098590(scratch.rotationMtx, &scratch.localPos.x, &scratch.worldPos.x);
+    makeFixedRotateXY(scratch.rotationMtx, obj->pitch, obj->yaw);
+    transformVec3ByFixedMatrix(scratch.rotationMtx, &scratch.localPos.x, &scratch.worldPos.x);
     obj = D_800EC9C4;
     obj->cameraDelta.x = scratch.worldPos.x - obj->pos.x;
     obj = D_800EC9C4;
@@ -92,13 +92,13 @@ void func_8003DEC8(void) {
     MainMenuRaceSetupObject *obj;
 
     obj = D_800EC9C4;
-    func_8009853C(obj->rotationMtx, -obj->pitch, -obj->yaw);
+    makeFixedRotateYX(obj->rotationMtx, -obj->pitch, -obj->yaw);
     obj = D_800EC9C4;
     scratch.localPos.x = D_8010B1B0.x;
     scratch.localPos.y = D_8010B1B0.y;
     scratch.localPos.z = -obj->depth;
-    func_80097FE4(scratch.rotationMtx, obj->pitch, obj->yaw);
-    func_80098590(scratch.rotationMtx, &scratch.localPos.x, &scratch.worldPos.x);
+    makeFixedRotateXY(scratch.rotationMtx, obj->pitch, obj->yaw);
+    transformVec3ByFixedMatrix(scratch.rotationMtx, &scratch.localPos.x, &scratch.worldPos.x);
     obj = D_800EC9C4;
     obj->cameraDelta.x = scratch.worldPos.x - obj->pos.x;
     obj = D_800EC9C4;

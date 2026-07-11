@@ -1,6 +1,6 @@
 #include "common.h"
 #include "asset_manager.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 #include "memory_allocator.h"
 #include "game_audio.h"
 #include "game_boot.h"
@@ -533,7 +533,7 @@ s32 func_800722F0(SoundPosition *pos, s32 volume) {
                 if (((camera->prevPos.y - pos->y) >= -0x4000000) && (dy < 0x4000001)) {
                     dz = camera->prevPos.z - pos->z;
                     if ((dz >= -0x4000000) && (dz < 0x4000001)) {
-                        adjustedVolume = func_80098C30((s64)dx * dx + (s64)dy * dy + (s64)dz * dz);
+                        adjustedVolume = integerSqrt64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz);
                         if (adjustedVolume < distance) {
                             distance = adjustedVolume;
                         }
@@ -544,7 +544,7 @@ s32 func_800722F0(SoundPosition *pos, s32 volume) {
         camera++;
     } while (camera != D_801124A0);
 
-    attenuation = 0x1000 - func_80097AE8(distance / 0x10000);
+    attenuation = 0x1000 - fixedSine(distance / 0x10000);
     adjustedVolume = (volume * attenuation) / 0x1000;
     if (adjustedVolume < 0) {
         adjustedVolume = 0;

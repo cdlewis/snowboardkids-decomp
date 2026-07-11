@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 #include "race_ui_effects.h"
 #include "snowboard_trail_effects.h"
 
@@ -111,13 +111,13 @@ void func_8008393C(struct RaceInputPlayer *input) {
     {
         trail->spinYaw += 0x240;
         playerTransform = (FixedMatrix3s *)player->modelTransform;
-        func_80098590(*playerTransform, &trail->localOffset, &trail->worldPos);
+        transformVec3ByFixedMatrix(*playerTransform, &trail->localOffset, &trail->worldPos);
         trail->worldPos.x += player->velocity.x;
         trail->worldPos.y += player->velocity.y;
         trail->worldPos.z += player->velocity.z;
-        func_80097C18(scratch.rotation, trail->modelYaw);
+        makeFixedRotateY(scratch.rotation, trail->modelYaw);
         rotation = (FixedMatrix3s *)trail->rotation;
-        func_80097CF0(scratch.rotation, *playerTransform, *rotation);
+        multiplyFixedMatrices(scratch.rotation, *playerTransform, *rotation);
         trail->drawPos.x = trail->worldPos.x;
         trail->drawPos.y = trail->worldPos.y;
         trail->drawPos.z = trail->worldPos.z;
@@ -130,11 +130,11 @@ void func_8008393C(struct RaceInputPlayer *input) {
         trail->rotation[6] = (trail->rotation[6] * trail->scaleStep) / 16;
         trail->rotation[7] = (trail->rotation[7] * trail->scaleStep) / 16;
         trail->rotation[8] = (trail->rotation[8] * trail->scaleStep) / 16;
-        func_80097BAC(scratch.rotation, trail->spinYaw);
+        makeFixedRotateX(scratch.rotation, trail->spinYaw);
         scratch.translation.x = trail->scale.x;
         scratch.translation.y = trail->scale.y;
         scratch.translation.z = trail->scale.z;
-        func_800987A0(&scratch, (FixedTransform *)rotation, (FixedTransform *)trail->transform);
+        composeFixedTransforms(&scratch, (FixedTransform *)rotation, (FixedTransform *)trail->transform);
         if (gRaceUpdatePaused == 0) {
             trail->scaleStep++;
         }
@@ -151,21 +151,21 @@ state_2:
     {
         trail->spinYaw += 0x240;
         playerTransform = (FixedMatrix3s *)player->modelTransform;
-        func_80098590(*playerTransform, &trail->localOffset, &trail->worldPos);
+        transformVec3ByFixedMatrix(*playerTransform, &trail->localOffset, &trail->worldPos);
         trail->worldPos.x += player->velocity.x;
         trail->worldPos.y += player->velocity.y;
         trail->worldPos.z += player->velocity.z;
-        func_80097C18(scratch.rotation, trail->modelYaw);
+        makeFixedRotateY(scratch.rotation, trail->modelYaw);
         rotation = (FixedMatrix3s *)trail->rotation;
-        func_80097CF0(scratch.rotation, *playerTransform, *rotation);
+        multiplyFixedMatrices(scratch.rotation, *playerTransform, *rotation);
         trail->drawPos.x = trail->worldPos.x;
         trail->drawPos.y = trail->worldPos.y;
         trail->drawPos.z = trail->worldPos.z;
-        func_80097BAC(scratch.rotation, trail->spinYaw);
+        makeFixedRotateX(scratch.rotation, trail->spinYaw);
         scratch.translation.x = trail->scale.x;
         scratch.translation.y = trail->scale.y;
         scratch.translation.z = trail->scale.z;
-        func_800987A0(&scratch, (FixedTransform *)rotation, (FixedTransform *)trail->transform);
+        composeFixedTransforms(&scratch, (FixedTransform *)rotation, (FixedTransform *)trail->transform);
         if (player->flags & SNOWBOARD_TRAIL_FLAG_CANCEL) {
             player->trailTimer = 0;
         }

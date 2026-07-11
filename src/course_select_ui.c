@@ -4,7 +4,7 @@
 #include "menu_rendering.h"
 #include "course_select_ui.h"
 #include "shop_menu_ui.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 #include "race_position_ui.h"
 
 typedef struct {
@@ -200,7 +200,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             }
             sp2E = var_v1;
             sp2F = var_a3;
-            func_800987A0(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
+            composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
             temp_v0_4 = func_8004885C(&sp30);
             arg0->matrix = temp_v0_4;
             if (temp_v0_4 != 0) {
@@ -355,8 +355,8 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                     actor->angle[i] &= 0xFFF;
                 }
             }
-            func_80097C18(&actor->matrix[i * 0x10], (s16)actor->angle[i]);
-            func_80098590(&actor->matrix[i * 0x10], &actor->vecs[i], &sp78);
+            makeFixedRotateY(&actor->matrix[i * 0x10], (s16)actor->angle[i]);
+            transformVec3ByFixedMatrix(&actor->matrix[i * 0x10], &actor->vecs[i], &sp78);
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x50) = sp78.x;
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x54) = sp78.y;
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x58) = sp78.z;
@@ -403,10 +403,10 @@ void initCourseSelectPreviewModelIn(void *arg0) {
         *(s32 *) (var_s2 + (short) 0xC0) = 0;
         *(s32 *) (var_s2 + 0xC4) = 0;
         *(s16 *) (var_s4 + 0xEC) = 0;
-        func_80097C18(var_s3, *(s16 *) (var_s4 + 0xEC));
+        makeFixedRotateY(var_s3, *(s16 *) (var_s4 + 0xEC));
         if (actor && actor) {
         }
-        func_80098590(var_s3, var_s7, &sp60);
+        transformVec3ByFixedMatrix(var_s3, var_s7, &sp60);
         var_s5 += 2;
         *(s32 *) (var_s1 + 0x50) = sp60.x;
         *(s32 *) (var_s1 + 0x54) = sp60.y;
@@ -423,7 +423,7 @@ void initCourseSelectPreviewModelIn(void *arg0) {
     *(s32 *) ((u8 *) actor + 0x30) = 0;
     *(s32 *) ((u8 *) actor + 0x34) = 0;
     *(s32 *) ((u8 *) actor + 0x38) = 0;
-    func_8009853C((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
+    makeFixedRotateYX((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
     setCallbackTaskCallback(actor, updateCourseSelectPreviewModelIn);
 }
 
@@ -477,7 +477,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             }
             sp2E = var_v1;
             sp2F = var_a3;
-            func_800987A0(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
+            composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
             temp_v0_4 = func_8004885C(&sp30);
             arg0->matrix = temp_v0_4;
             if (temp_v0_4 != 0) {
@@ -638,8 +638,8 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                 actor->angle[i] = angle;
                 actor->angle[i] = angle & 0xFFF;
             }
-            func_80097C18(&actor->matrix[i * 0x10], (s16)actor->angle[i]);
-            func_80098590(&actor->matrix[i * 0x10], &actor->vecs[i], &sp78);
+            makeFixedRotateY(&actor->matrix[i * 0x10], (s16)actor->angle[i]);
+            transformVec3ByFixedMatrix(&actor->matrix[i * 0x10], &actor->vecs[i], &sp78);
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x50) = sp78.x;
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x54) = sp78.y;
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x58) = sp78.z;
@@ -686,10 +686,10 @@ void initCourseSelectPreviewModelOut(void *arg0) {
         *(s32 *) (var_s2 + 0xC0) = 0x800000;
         *(s32 *) (var_s2 + 0xC4) = 0;
         *(s16 *) (var_s5 + 0xEC) = 0;
-        func_80097C18(var_s4, *(s16 *) (var_s5 + 0xEC));
+        makeFixedRotateY(var_s4, *(s16 *) (var_s5 + 0xEC));
         if ((arg0 && arg0) && arg0) {
         }
-        func_80098590(var_s4, var_s7, &sp60);
+        transformVec3ByFixedMatrix(var_s4, var_s7, &sp60);
         *(s32 *) (var_s1 + 0x50) = sp60.x;
         *(s32 *) (var_s1 + 0x54) = sp60.y;
         *(s32 *) (var_s1 + 0x58) = sp60.z;
@@ -705,7 +705,7 @@ void initCourseSelectPreviewModelOut(void *arg0) {
     *(s32 *) ((u8 *) actor + 0x30) = 0;
     *(s32 *) ((u8 *) actor + 0x34) = 0;
     *(s32 *) ((u8 *) actor + 0x38) = 0;
-    func_8009853C((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
+    makeFixedRotateYX((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
     setCallbackTaskCallback(actor, updateCourseSelectPreviewModelOut);
 }
 
