@@ -51,7 +51,7 @@ extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
 extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
-extern u8 D_80121B58;
+extern u8 gRaceCameraModeChangeDisabled;
 extern u8 D_80121B59;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
@@ -102,7 +102,7 @@ void initTitleDemoRaceIntro(void) {
 
     gRaceCourseIndex = 0;
     gRaceUpdatePaused = 0;
-    D_80121B58 = 0;
+    gRaceCameraModeChangeDisabled = 0;
     D_80121B5F = 0;
     D_80121B59 = one;
     gPlayerCount = four;
@@ -328,7 +328,7 @@ copy_player3:
 void func_8003F4B4(void) {
     if (gPendingFramebufferSwapCount == 2) {
         gRaceRumbleEnabled = 0;
-        D_80121B58 = 0;
+        gRaceCameraModeChangeDisabled = 0;
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
