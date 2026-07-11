@@ -8,11 +8,27 @@ extern s32 D_801248B0;
 extern void func_80042574(MainMenuSceneModel *);
 extern void func_8004270C(MainMenuSceneModel *);
 
-// func_80042560 best match: 25.000% at nonmatchings/func_80042560-4839787584499344943/base_1.c.
+// func_80042560 best match: 75.000% at nonmatchings/func_80042560/base_1.c.
+// This 0x14-byte range is not really one function: the leading
+// `addiu $sp, $sp, 0x280` is the delay slot of the `jr $ra` that ends
+// func_8004215C (src/main_menu_scene_model.c) — the main_menu_scene_model /
+// main_menu_scene_renderer segment boundary in snowboardkids.yaml lands
+// mid-delay-slot, so splat attributes that instruction to this segment
+// instead. The remaining 0x10 bytes are two consecutive empty functions
+// (`jr $ra; nop` twice). No legitimate C function can reproduce a lone
+// positive `addiu $sp, $sp, N` as its first instruction (IDO always pairs it
+// with a negative prologue allocation in the same function), so 100% is not
+// reachable here without moving the YAML segment boundary 4 bytes later,
+// which also touches func_8004215C's (separately, still non-matching)
+// extraction. See nonmatchings/func_80042560/LEARNINGS.md for the two
+// remediation attempts and why they were reverted.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_80042560.s")
 
 #ifdef NON_MATCHING
 void func_80042560(void) {
+}
+
+void func_80042564(void) {
 }
 #endif
 
