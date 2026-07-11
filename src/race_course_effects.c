@@ -763,7 +763,7 @@ void func_8006B108(RaceCourseRenderEffect *arg0) {
     func_80071824(arg0, func_8006B0D8);
 }
 
-// func_8006B228 best match: 99.091% at nonmatchings/func_8006B228-4839787584499344943/base_1.c.
+// func_8006B228 best match: 99.182% at nonmatchings/func_8006B228-731940616440357983/angle_5.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B228.s")
 
 #ifdef NON_MATCHING
@@ -783,9 +783,9 @@ void func_8006B228(Struct6B760 *arg0) {
             sine = func_80097AE8(arg0->unk40);
             if (1) {
                 doubleSine = func_80097AE8((s16)(arg0->unk40 * 2));
-                func_80097C18(transform.rotation, arg0->unk3E + (sine >> 4) + 0x800);
+                func_80097C18(transform.rotation, (sine >> 4) + (0x800 + arg0->unk3E));
                 transform.basePos.x = arg0->pos.x;
-                transform.basePos.y = arg0->pos.y + ((doubleSine + 0x1000) << 4) + 0xA4000;
+                transform.basePos.y = (arg0->pos.y + ((doubleSine + 0x1000) << 4)) + 0xA4000;
             }
             transform.basePos.z = arg0->pos.z;
             func_80048D60(&transform);
