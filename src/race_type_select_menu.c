@@ -6,7 +6,7 @@
 #include "game_task_scheduler.h"
 #include "menu_renderer.h"
 #include "race_type_select_menu.h"
-#include "player_count_select_ui.h"
+#include "race_type_select_ui.h"
 #include "title_menu.h"
 #include "viewport_manager.h"
 
@@ -123,7 +123,7 @@ void updateRaceTypeSelectMenu(void) {
     if (gCurrentGameTask->fade != 0) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
-            createCallbackTask(func_80029548, 0, 0x62);
+            createCallbackTask(initRaceTypeSelectOptionIcons, 0, 0x62);
         }
     } else {
         if (D_80121D88 == 0) {
