@@ -4,6 +4,7 @@
 #include "memory_allocator.h"
 #include "game_audio.h"
 #include "game_boot.h"
+#include "player_commands.h"
 
 #define GAME_AUDIO_FREE_HANDLE_COUNT 13
 #define GAME_AUDIO_QUEUE_CAPACITY 64
@@ -55,26 +56,6 @@ typedef struct AudioCamera {
 typedef struct AudioRomRange {
     s32 words[2];
 } AudioRomRange;
-
-typedef struct PlayerCommandInit {
-    s32 count;
-    void *unk4;
-    s32 outputRate;
-    u8 *heapBase;
-    s32 heapLen;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-    s32 unk20;
-    s32 *fxHeader;
-    s32 *unk28;
-    s32 maxUpdates;
-    s32 maxFXBusses;
-    s32 unk34;
-    s32 unk38;
-    s32 unk3C;
-    s32 unk40;
-} PlayerCommandInit;
 
 typedef struct AudioAssetHandles {
     s16 unk0;
@@ -146,16 +127,8 @@ extern u8 D_80121B05;
 extern s8 D_8015A6B8;
 extern u8 D_801240A8[];
 
-s32 func_8009D5A8(PlayerCommandInit *arg0);
-void func_8009D8B0(s32 arg0, s32 arg1);
-void func_8009DE50(s32 arg0, s32 arg1);
 void osStartThread(void *);
 void osStopThread(void *);
-s32 func_8009D8D8(s32 arg0);
-s32 func_8009DEC4(s32 arg0);
-s32 func_8009DF14(s32 arg0, s32 arg1);
-s32 func_8009DFDC(s32 arg0, f32 arg1);
-s32 func_8009DC68(s32 soundId, s32 volume, s32 pan, s32 arg3, s32 priority);
 void *func_80048388(s32 arg0);
 void func_800720E4(s32 arg0);
 s32 func_80071B74(void);
@@ -211,7 +184,7 @@ void func_80071830(void) {
     init.outputRate = 0x6E;
     init.heapBase = (u8 *)func_80043040(D_80112130.unk6);
     init.heapLen = 0x80000;
-    init.unk14 = func_80043040(D_80112138);
+    init.unk14 = (PlayerCommandBank *)func_80043040(D_80112138);
     init.unk18 = D_27E290;
     init.unk1C = D_800DABB0;
     init.unk20 = D_800DACAC;
@@ -244,7 +217,7 @@ s32 func_80071A8C(s32 arg0) {
         range = (AudioRomRange *)((arg0 * 2) + (s32 *)D_800DBC5C);
         size = range->words[1] - range->words[0];
         func_80099C44(range->words[0], func_80043040(D_8011213A), size);
-        if ((D_80121858 = func_8009D8D8(func_80043040(D_8011213A))) != 0) {
+        if ((D_80121858 = func_8009D8D8((PlayerCommandData *)func_80043040(D_8011213A))) != 0) {
             D_80121974 = arg0;
             if (range == D_800DBCAC) {
                 func_8009D8B0(2, 0x7FFF);
@@ -518,8 +491,6 @@ s32 func_800721B8(s16 arg0, s16 arg1, s16 arg2) {
     return 0;
 }
 
-extern void func_8009DD5C(s32 arg0, s32 arg1);
-extern void func_8009DDE4(s32 arg0);
 void func_80072260(void) {
     osStopThread(&D_8015A6B8);
     D_80121B00 = 0;

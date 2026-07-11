@@ -30,7 +30,6 @@
 
 typedef s32 OSId;
 typedef s32 OSPri;
-typedef void *OSMesg;
 
 struct OSThread_s;
 struct OSPiHandle_s;
@@ -38,33 +37,7 @@ struct OSPiHandle_s;
 typedef struct OSThread_s OSThread;
 typedef struct OSPiHandle_s OSPiHandle;
 
-typedef struct OSMesgQueue_s {
-    OSThread *mtqueue;
-    OSThread *fullqueue;
-    s32 validCount;
-    s32 first;
-    s32 msgCount;
-    OSMesg *msg;
-} OSMesgQueue;
-
-typedef struct {
-    u16 type;
-    u8 pri;
-    u8 status;
-    OSMesgQueue *retQueue;
-} OSIoMesgHdr;
-
-typedef struct {
-    OSIoMesgHdr hdr;
-    void *dramAddr;
-    u32 devAddr;
-    u32 size;
-    OSPiHandle *piHandle;
-} OSIoMesg;
-
-typedef struct {
-    u8 unk0[8];
-} MainSchedulerClient;
+#include "player_commands.h"
 
 typedef struct {
     /* 0x00 */ s32 unk0;
@@ -96,7 +69,7 @@ typedef struct {
     /* 0x66 */ u8 unk66;
     /* 0x67 */ u8 pad67;
     /* 0x68 */ Gfx dlStart[1];
-} SchedulerTask;
+} BootSchedulerTask;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x60];
@@ -175,7 +148,7 @@ extern OSMesg D_80124088[8];
 extern OSMesgQueue D_80124018;
 extern OSMesg D_80124030[8];
 extern u8 D_801240A8[0x778];
-extern MainSchedulerClient D_80124820;
+extern SchedulerClient D_80124820;
 extern u16 D_80124828;
 extern Gfx *gRegionAllocPtr;
 extern s8 D_8012482A;
@@ -241,13 +214,10 @@ extern void func_800722B4(void);
 extern void func_80072C30(void);
 extern void func_80048524(s32);
 extern void func_80099D10(u8);
-extern void *func_8009C43C(void *, void *);
 extern s32 osSendMesg(void *, void *, s32);
 extern void func_80098EAC(void);
 extern void func_800998E4(void *);
 extern void func_8009B14C(void);
-extern void func_8009C270(void *, s32, s32);
-extern void func_8009CA60(void *, MainSchedulerClient *, OSMesgQueue *);
 
 void main(void *arg) {
     osInitialize();
@@ -271,11 +241,11 @@ void func_80099790(void) {
     osCreateMesgQueue(&D_80124070, D_80124088, 8);
     osCreateMesgQueue(&D_80124018, D_80124030, 8);
     if (osTvType == OS_TV_NTSC) {
-        func_8009C270(D_801240A8, RETRACE_COUNT_NTSC, RETRACE_COUNT_MODE);
+        func_8009C270((SchedulerState *)D_801240A8, RETRACE_COUNT_NTSC, RETRACE_COUNT_MODE);
     } else {
-        func_8009C270(D_801240A8, RETRACE_COUNT_PAL, RETRACE_COUNT_MODE);
+        func_8009C270((SchedulerState *)D_801240A8, RETRACE_COUNT_PAL, RETRACE_COUNT_MODE);
     }
-    func_8009CA60(D_801240A8, &D_80124820, &D_80124050);
+    func_8009CA60((SchedulerState *)D_801240A8, &D_80124820, &D_80124050);
     func_80042C28();
     func_800458E0();
     func_80048338();
@@ -524,8 +494,8 @@ Gfx *func_8009B5F4(void) {
 // func_8009B704 best match: 80.089% at nonmatchings/func_8009B704-8207005055717715604/base_5.c.
 #ifdef NON_MATCHING
 void func_8009B704(u8 arg0) {
-    SchedulerTask *task;
-    SchedulerTask *nextTask;
+    BootSchedulerTask *task;
+    BootSchedulerTask *nextTask;
     s32 colorIndex;
     s32 bufferIndex;
     s32 nextColorIndex;
@@ -546,7 +516,7 @@ void func_8009B704(u8 arg0) {
 
     one = 1;
     allBits = 0xFFFF;
-    task = (SchedulerTask *)((u8 *)&D_80124908 + bufferIndex * 0x18620);
+    task = (BootSchedulerTask *)((u8 *)&D_80124908 + bufferIndex * 0x18620);
     task->unk60 = D_8038E800 + colorIndex * 0x25800;
     func_80048524(bufferIndex);
 
@@ -636,7 +606,7 @@ void func_8009B704(u8 arg0) {
     task->unkC = task->unk60;
     task->unk58 = (D_80124828 + 3) & 0xFFF;
     task->unk66 |= 1;
-    osSendMesg(func_8009C43C(D_801240A8, task), task, 1);
+    osSendMesg(func_8009C43C((s32)D_801240A8), task, 1);
 
     nextColorIndex = D_80124834 + 1;
     nextBufferIndex = (bufferIndex + 1) & 1;
@@ -644,7 +614,7 @@ void func_8009B704(u8 arg0) {
         nextColorIndex = 0;
     }
 
-    nextTask = (SchedulerTask *)(D_80155548 + nextBufferIndex * 0x860);
+    nextTask = (BootSchedulerTask *)(D_80155548 + nextBufferIndex * 0x860);
     gRegionAllocPtr = (Gfx *)&nextTask->unk60;
     BOOT_GFX_CMD(0xBC000006, 0);
     BOOT_GFX_CMD(0xED000000, 0x5003C0);
@@ -687,7 +657,7 @@ void func_8009B704(u8 arg0) {
     nextTask->unk50 = &D_80124018;
     nextTask->unk54 = 0;
     nextTask->unk3C = dramStack;
-    osSendMesg(func_8009C43C(D_801240A8, nextTask), nextTask, 1);
+    osSendMesg(func_8009C43C((s32)D_801240A8), nextTask, 1);
 }
 
 #else
