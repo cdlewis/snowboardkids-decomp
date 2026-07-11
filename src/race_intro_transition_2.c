@@ -73,7 +73,7 @@ extern s8 D_80122FB8;
 extern s8 D_80122FB9;
 extern s8 D_80122FBA;
 extern u8 gFramebufferSwapHold;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern u8 D_24C8E0;
 extern u8 D_24DBE0;
 extern void updateCallbackTasksWithMinPriority(s32);
@@ -156,7 +156,7 @@ void func_8003ED00(void) {
     }
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     func_8006D5CC();
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xB0, 0x140, 0xF0, D_800E10C0);
@@ -333,7 +333,7 @@ void func_8003F4B4(void) {
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
         stopSoundEffects();
-        D_801235B4 = 0;
+        gMenuFlowState = 0;
         resumeGameTask(3);
         removeGameTask(4);
     }

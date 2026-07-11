@@ -6,7 +6,7 @@
 #include "controller_pak_menu.h"
 #include "controller_pak_ui.h"
 #include "game_task_scheduler.h"
-#include "controller_menu_flow.h"
+#include "controller_main_menu_flow.h"
 #include "menu_renderer.h"
 #include "viewport_manager.h"
 
@@ -28,7 +28,7 @@ extern s16 gControllerPakStatusCodes;
 extern u8 gRaceRumbleEnabled;
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern u8 D_593D10;
 extern u8 D_598A70;
 extern u8 D_59AAA0;
@@ -50,7 +50,7 @@ void initControllerPakFileDeleteFlow(void) {
     gFramebufferSwapDelay = 0;
     gCurrentGameTask->fade = 0;
     gCurrentGameTask->timer = 0;
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     gControllerPakRetryCounts = 0;
     gControllerPakFreeBytes = 0;
     gControllerPakFreeFileCount = 0;

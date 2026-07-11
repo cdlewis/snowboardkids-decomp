@@ -55,7 +55,7 @@ extern u8 gRaceSplitscreenMode;
 extern s8 gRacePlayerCount;
 extern s8 gRaceOrderPlayerIds[];
 extern RaceInputPlayer gFrameCounter;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern RaceVec3i D_800DE7B0[];
 extern s16 D_800DE84C[];
 extern s16 D_800DE864[];
@@ -208,7 +208,7 @@ void func_80087AFC(void) {
     s8 left;
 
     if (gRaceSplitscreenMode != 2) {
-        if (D_801235B4 & 1) {
+        if (gMenuFlowState & 1) {
             gRaceOrderPlayerIds[0] = 0;
             gRaceOrderPlayerIds[1] = 1;
             gRaceOrderPlayerIds[2] = 2;

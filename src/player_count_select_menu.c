@@ -43,7 +43,7 @@ extern s16 gMenuFadeAlpha;
 extern u8 D_80121B5E;
 extern u8 D_800EC9DD;
 extern s8 gFramebufferSwapDelay;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
 extern u8 gPendingFramebufferSwapCount;
@@ -180,7 +180,7 @@ void func_800088C8(void) {
                         gRaceCourseIndex = 9;
                     }
 
-                    if ((heldInput & 0x1000) || ((heldInput & 0x8000) && (D_801235B4 == 4))) {
+                    if ((heldInput & 0x1000) || ((heldInput & 0x8000) && (gMenuFlowState == 4))) {
                         enqueueSoundEffect(0x18, 0x32);
                         D_800EC9C1 = 1;
                         D_8010AF50.state = 2;
@@ -200,7 +200,7 @@ void func_800088C8(void) {
             waitTimer = D_800EC9C1;
         }
 
-        if ((waitTimer == 0) && (gPlayerInputPressed & 0x4000) && (D_801235B4 == (sp18 + 1))) {
+        if ((waitTimer == 0) && (gPlayerInputPressed & 0x4000) && (gMenuFlowState == (sp18 + 1))) {
             enqueueSoundEffect(0x18, 0x32);
             D_8010AF50.state = 2;
             D_8010AF50.alpha = 0x100;
@@ -213,7 +213,7 @@ void func_800088C8(void) {
             requestMusicSequenceStop(4);
         }
     }
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     updateCallbackTasks();
 }
 #endif
@@ -243,7 +243,7 @@ void func_80008C84(void) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
-            D_801235B4 = 1;
+            gMenuFlowState = 1;
             resumeGameTask(2);
             removeGameTask(4);
         }

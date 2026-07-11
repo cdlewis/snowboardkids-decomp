@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "system_boot.h"
 #include "game_task_scheduler.h"
-#include "controller_menu_flow.h"
+#include "controller_main_menu_flow.h"
 #include "menu_screen_effects.h"
 #include "main_menu_panel_ui.h"
 #include "main_menu_scene_model.h"
@@ -200,14 +200,14 @@ extern u8 gFramebufferSwapHold;
 extern u8 gRaceRecordSettingsEnabled;
 extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern s32 gPlayerInputPressed;
 extern u8 gControllerPakSaveGameNameBytes[];
 extern u8 gControllerPakSaveExtNameBytes[];
 extern u8 gControllerPakSaveExtNameBytesEnd[];
 
 // initControllerSubsystem best match: 85.817%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/initControllerSubsystem.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/initControllerSubsystem.s")
 
 #ifdef NON_MATCHING
 void initControllerSubsystem(void) {
@@ -258,7 +258,7 @@ loop:
 #endif
 
 // controllerSubsystemThreadMain best match: 99.507%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/controllerSubsystemThreadMain.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/controllerSubsystemThreadMain.s")
 
 #ifdef NON_MATCHING
 void controllerSubsystemThreadMain(void *arg0) {
@@ -348,7 +348,7 @@ void requestControllerRead(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/updateControllerInputState.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/updateControllerInputState.s")
 
 void requestRumbleMotorInit(u16 arg0) {
     OSMesg msg;
@@ -359,7 +359,7 @@ void requestRumbleMotorInit(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/serviceRumbleMotorRequest.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/serviceRumbleMotorRequest.s")
 
 void requestRumbleMotorStart(u16 arg0) {
     if (gRaceRumbleEnabled != 0) {
@@ -379,7 +379,7 @@ void requestControllerPakProbe(u16 arg0) {
 }
 
 // probeControllerPak best match: 94.507%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/probeControllerPak.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/probeControllerPak.s")
 
 #ifdef NON_MATCHING
 void probeControllerPak(u16 arg0) {
@@ -422,7 +422,7 @@ void requestControllerPakSaveStatus(u16 arg0) {
 }
 
 // checkControllerPakSaveStatus best match: 81.386%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/checkControllerPakSaveStatus.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/checkControllerPakSaveStatus.s")
 
 #ifdef NON_MATCHING
 void checkControllerPakSaveStatus(u16 arg0) {
@@ -502,7 +502,7 @@ void requestControllerPakSaveRead(u16 arg0) {
 }
 
 // readControllerPakSave best match: 85.904%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/readControllerPakSave.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/readControllerPakSave.s")
 
 #ifdef NON_MATCHING
 void readControllerPakSave(u16 arg0) {
@@ -604,7 +604,7 @@ void requestControllerPakSaveWrite(u16 arg0) {
 }
 
 // writeControllerPakSave best match: 78.684%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/writeControllerPakSave.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/writeControllerPakSave.s")
 
 #ifdef NON_MATCHING
 void writeControllerPakSave(u16 arg0) {
@@ -782,7 +782,7 @@ void updateControllerPakFreeSpaceInfo(void) {
 }
 
 // validateControllerPakSave best match: 33.167%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_menu_flow/validateControllerPakSave.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/validateControllerPakSave.s")
 
 #ifdef NON_MATCHING
 u16 validateControllerPakSave(s32 arg0) {
@@ -1151,7 +1151,7 @@ void initMainMenuModeSelect(void) {
     func_8006D520(0, 0x1F);
     initCallbackTaskScheduler(0);
     createCallbackTaskWithUserId(initMainMenuBoardModels, 0, 0x64, 0);
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     gMainMenuSelectionResult = 0;
     createCallbackTaskWithUserId(&initMainMenuModeSelectMenuOptions, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
@@ -1172,24 +1172,24 @@ void updateMainMenuModeSelect(void) {
         gMenuFadeAlpha = 0;
         temp_v0 = gPlayerInputPressed;
         if (temp_v0 & 0x10800) {
-            if (D_801235B4 != 0) {
+            if (gMenuFlowState != 0) {
                 enqueueSoundEffect(0x19, 0x32);
-                D_801235B4 -= 1;
+                gMenuFlowState -= 1;
                 temp_v0 = gPlayerInputPressed;
             }
         }
-        if ((temp_v0 & 0x20400) && (D_801235B4 != 2)) {
+        if ((temp_v0 & 0x20400) && (gMenuFlowState != 2)) {
             enqueueSoundEffect(0x19, 0x32);
-            D_801235B4 += 1;
+            gMenuFlowState += 1;
             temp_v0 = gPlayerInputPressed;
         }
         if (temp_v0 & 0xD000) {
             enqueueSoundEffect(0x18, 0x32);
             if (gPlayerInputPressed & 0x4000) {
-                D_801235B4 = 2;
+                gMenuFlowState = 2;
             }
             gMainMenuSelectionResult = 1;
-            if (D_801235B4 == 2) {
+            if (gMenuFlowState == 2) {
                 requestMusicSequenceStop(0x3C);
             }
             setCurrentGameTaskCallback(fadeOutMainMenuModeSelect, 0);
@@ -1220,12 +1220,12 @@ void exitMainMenuModeSelect(void) {
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
         setCurrentGameTaskCallback(initMainMenu, 0);
-        if (D_801235B4 == 0) {
+        if (gMenuFlowState == 0) {
             createGameTask(4, startTrainingCourseFlow, 0x64);
             suspendGameTask(3);
             return;
         }
-        if (D_801235B4 == 1) {
+        if (gMenuFlowState == 1) {
             createGameTask(4, startMainMenuModePreviewRaceFlow, 0x64);
             suspendGameTask(3);
         }
@@ -1245,7 +1245,7 @@ void initMainMenuSettings(void) {
     func_8006D5CC();
     func_8006D520(0, 0x1F);
     initCallbackTaskScheduler(0);
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     gMainMenuSelectionResult = 0;
     createCallbackTaskWithUserId(&initMainMenuSettingsPanel, 0, 0x64, 0);
     createCallbackTaskWithUserId(&initMainMenuBoardModels, 0, 0x64, 0);
@@ -1261,21 +1261,21 @@ void updateMainMenuSettings(void) {
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
         temp_v1 = gPlayerInputPressed;
-        if ((temp_v1 & 0x10800) && (D_801235B4 != 0)) {
-            D_801235B4 -= 1;
+        if ((temp_v1 & 0x10800) && (gMenuFlowState != 0)) {
+            gMenuFlowState -= 1;
             enqueueSoundEffect(0x19, 0x32);
             temp_v1 = gPlayerInputPressed;
         }
-        if ((temp_v1 & 0x20400) && (D_801235B4 != 3)) {
-            D_801235B4 += 1;
+        if ((temp_v1 & 0x20400) && (gMenuFlowState != 3)) {
+            gMenuFlowState += 1;
             enqueueSoundEffect(0x19, 0x32);
             temp_v1 = gPlayerInputPressed;
         }
         if (temp_v1 & 0x4000) {
-            D_801235B4 = 3;
+            gMenuFlowState = 3;
         }
         if (temp_v1 & 0x40100) {
-            switch (D_801235B4) {
+            switch (gMenuFlowState) {
             case 0:
                 if (gRaceRecordSettingsEnabled != 0) {
                     gRaceRecordSettingsEnabled -= 1;
@@ -1300,7 +1300,7 @@ void updateMainMenuSettings(void) {
             }
         }
         if (temp_v1 & 0x80200) {
-            switch (D_801235B4) {
+            switch (gMenuFlowState) {
             case 0:
                 if (gRaceRecordSettingsEnabled != 1) {
                     gRaceRecordSettingsEnabled += 1;
@@ -1324,7 +1324,7 @@ void updateMainMenuSettings(void) {
                 break;
             }
         }
-        if ((temp_v1 & 0xD000) && (D_801235B4 == 3)) {
+        if ((temp_v1 & 0xD000) && (gMenuFlowState == 3)) {
             requestMusicSequenceStop(0x3C);
             enqueueSoundEffect(0x18, 0x32);
             setCurrentGameTaskCallback(fadeOutMainMenuSettings, 0);

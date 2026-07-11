@@ -12,7 +12,7 @@
 #include "course_select_menu.h"
 #include "player_setup_menu.h"
 #include "game_task_scheduler.h"
-#include "controller_menu_flow.h"
+#include "controller_main_menu_flow.h"
 #include "menu_screen_effects.h"
 #include "main_menu_panel_ui.h"
 #include "player_count_select_menu.h"
@@ -169,7 +169,7 @@ extern RacePlayerState D_80121D80[];
 extern s32 D_80121B40;
 extern s32 D_80121B44;
 extern s32 D_80121B48;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 D_8012207C;
 extern s32 gPlayerInputPressed[];
@@ -464,10 +464,10 @@ void func_8007339C(void) {
 }
 
 void func_800733E0(void) {
-    if (D_801235B4 == 0) {
+    if (gMenuFlowState == 0) {
         setCurrentGameTaskCallback(&func_80073738, 0);
     } else {
-        D_801235B4 = 0;
+        gMenuFlowState = 0;
         setCurrentGameTaskCallback(&func_80073308, 0);
     }
 }
@@ -489,8 +489,8 @@ void func_800734A0(void) {
 }
 
 void func_800734E4(void) {
-    if (D_801235B4 == 1) {
-        D_801235B4 = 0;
+    if (gMenuFlowState == 1) {
+        gMenuFlowState = 0;
         setCurrentGameTaskCallback(&func_80073308, 0);
         return;
     }
@@ -520,8 +520,8 @@ void func_800735B4(void) {
 }
 
 void func_800735F8(void) {
-    if (D_801235B4 == 1) {
-        D_801235B4 = 0;
+    if (gMenuFlowState == 1) {
+        gMenuFlowState = 0;
         setCurrentGameTaskCallback(&func_800734A0, 0);
     } else {
         setCurrentGameTaskCallback(&func_80073738, 0);
@@ -542,8 +542,8 @@ void func_80073694(void) {
 }
 
 void func_800736E0(void) {
-    if (D_801235B4 == 1) {
-        D_801235B4 = 0;
+    if (gMenuFlowState == 1) {
+        gMenuFlowState = 0;
         setCurrentGameTaskCallback(&func_800734A0, 0);
     } else {
         setCurrentGameTaskCallback(&func_800737FC, 0);
@@ -557,8 +557,8 @@ void func_80073738(void) {
 }
 
 void func_8007377C(void) {
-    if (D_801235B4 == 1) {
-        D_801235B4 = 0;
+    if (gMenuFlowState == 1) {
+        gMenuFlowState = 0;
         if (gPlayerCount >= 2) {
             setCurrentGameTaskCallback(&func_8007339C, 0);
         } else {
@@ -586,8 +586,8 @@ void func_80073858(void) {
 }
 
 void func_8007389C(void) {
-    if (D_801235B4 == 1) {
-        D_801235B4 = 0;
+    if (gMenuFlowState == 1) {
+        gMenuFlowState = 0;
         setCurrentGameTaskCallback(&func_800737FC, 0);
     } else {
         setCurrentGameTaskCallback(&func_80073308, 0);
@@ -715,7 +715,7 @@ void func_800747E8(void) {
         gMenuFadeAlpha = 0;
     }
     func_80077C4C();
-    if (!(D_801235B4 & 1)) {
+    if (!(gMenuFlowState & 1)) {
         gMenuFadeOverlayActive = 0;
         requestCourseMusicSequence();
         setCurrentGameTaskCallback(func_80074960, 0);
@@ -816,7 +816,7 @@ void func_80074C5C(void) {
     func_80077C4C();
     gCurrentGameTask->fadeTimer--;
     if (gCurrentGameTask->fadeTimer == 0) {
-        D_801235B4 |= 8;
+        gMenuFlowState |= 8;
         switch (gPlayerCount) {
         case 3:
             gCurrentGameTask->unk1C = 0;
@@ -1450,13 +1450,13 @@ void func_80077324(void) {
     if (countActiveMusicSequences() == 0) {
         requestMusicSequenceBank(7);
         gCurrentGameTask->unk1C = 0x3C;
-        D_801235B4 |= 0x20;
+        gMenuFlowState |= 0x20;
     }
     if (D_80121B60 != 0) {
         createCallbackTaskWithUserId(&initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
     }
     func_80077C94();
-    if (D_801235B4 & 0x10) {
+    if (gMenuFlowState & 0x10) {
         gCurrentGameTask->fadeTimer -= 1;
         if (gCurrentGameTask->fadeTimer == 0) {
             gCurrentGameTask->fadeTimer = 4;
@@ -1570,7 +1570,7 @@ void func_80077554(void) {
     D_80122FBA = 0;
     D_80122FB8 = 0;
     D_80121D80[0].unk16 = 2;
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     func_8006D5CC();
     resetAllViewports();
     if (gRaceCourseIndex.s != 6) {
@@ -1655,7 +1655,7 @@ void func_80077B34(void) {
         requestRumbleMotorInit(1);
         requestRumbleMotorInit(2);
         requestRumbleMotorInit(3);
-        D_801235B4 = 0;
+        gMenuFlowState = 0;
         if (D_80121B57 == 2) {
             setCurrentGameTaskCallback(func_80073988, 0);
         } else if (gPlayerCount == 1) {
@@ -1719,7 +1719,7 @@ loop:
             }
         }
     }
-    D_801235B4 |= 2;
+    gMenuFlowState |= 2;
     return 1;
 }
 
@@ -1774,7 +1774,7 @@ void func_80077DA0(void) {
     }
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     initCallbackTaskScheduler(0);
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     createCallbackTaskWithUserId(initRaceRecordSettingsPanel, 0, 0x64, 0);
     createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
     setCurrentGameTaskCallback(func_80078078, 0);
@@ -1799,7 +1799,7 @@ void func_80078078(void) {
             temp_v0 = gPlayerInputPressed[0];
         }
         if (temp_v0 & 0x9000) {
-            D_801235B4 = 1;
+            gMenuFlowState = 1;
             enqueueSoundEffect(0x18, 0x32);
             requestMusicSequenceStop(0x3C);
             setCurrentGameTaskCallback(func_80078198, 0);

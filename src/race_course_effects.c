@@ -252,7 +252,7 @@ extern void osWritebackDCache(void *, s32);
 extern s16 D_80112168;
 extern s16 D_80112140;
 extern s16 D_80112142;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern u8 gCurrentViewportIndex;
 extern u8 gRenderMatricesDirty;
 extern void func_8006C5C0(Struct6C51C *);
@@ -365,7 +365,7 @@ void func_800699F0(RaceCountdownEffect *arg0) {
     }
     temp_a2->timer--;
     if (temp_a2->timer == 0) {
-        D_801235B4 &= ~1;
+        gMenuFlowState &= ~1;
         setCallbackTaskCallback(temp_a2, func_80069998);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80069914, temp_a2);
@@ -554,7 +554,7 @@ void func_8006A7BC(RacePlayerEffect *arg0) {
 }
 
 void func_8006A80C(void *arg0) {
-    if (D_801235B4 & 8) {
+    if (gMenuFlowState & 8) {
         removeCallbackTask(arg0);
         return;
     }
@@ -1273,9 +1273,9 @@ void func_8006C51C(Struct6C51C *arg0) {
 }
 
 void func_8006C5C0(Struct6C51C *arg0) {
-    if ((gRaceUpdatePaused == 0) && (D_801235B4 & 4)) {
+    if ((gRaceUpdatePaused == 0) && (gMenuFlowState & 4)) {
         arg0->unk54 = 0x2D;
-        D_801235B4 &= ~4;
+        gMenuFlowState &= ~4;
         setCallbackTaskCallback(arg0, func_8006C51C);
         arg0->unk56 = 1;
         enqueuePositionalSoundEffect(0x16, &D_800DA764[gRaceCourseIndex], 0x7F, 0x32);

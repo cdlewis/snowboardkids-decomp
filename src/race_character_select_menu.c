@@ -107,7 +107,7 @@ extern void (*D_8011241C)(void);
 extern u8 gPlayerCount;
 extern RaceCharacterSelectPlayer D_80121D80[];
 extern RaceCharacterSelectPlayer gFrameCounter;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 
 // initRaceCharacterSelectMenu best match: 78.174% (nonmatchings/initRaceCharacterSelectMenu-7273315160691878794/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_character_select_menu/initRaceCharacterSelectMenu.s")
@@ -192,7 +192,7 @@ void initRaceCharacterSelectMenu(void) {
     gActiveMenuTask = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     D_8010AED0 = 0;
     D_800EC9E6 = 0;
     gCurrentGameTask->timer = 0;
@@ -402,7 +402,7 @@ void updateRaceCharacterSelectMenu(void) {
                     D_80121D80[i].state = 3;
                 }
                 D_800EC9C0 = 0xF;
-                D_801235B4 = 1;
+                gMenuFlowState = 1;
             }
         } else if (D_800EC9C0 == 0) {
             activeCount = 0;
@@ -488,7 +488,7 @@ void updateRaceCharacterSelectMenu(void) {
                                             enqueueSoundEffect(0x18, 0x32);
                                             D_80121D80[0].state = 9;
                                             D_8010AEB0 = 1;
-                                            D_801235B4 = 1;
+                                            gMenuFlowState = 1;
                                         } else if ((player->selection >= 9) || (D_8010AEB8[i][*column] != 0)) {
                                             rowLock = &D_8010AEA4[i];
                                             enqueueSoundEffect(0x18, 0x32);
@@ -632,7 +632,7 @@ void updateRaceCharacterSelectMenu(void) {
 
     if (D_800EC9C0 == 0x19) {
         setCurrentGameTaskCallback(fadeOutRaceCharacterSelectMenu, 0);
-        if (D_801235B4 == 0) {
+        if (gMenuFlowState == 0) {
             requestMusicSequenceStop(8);
         }
     }

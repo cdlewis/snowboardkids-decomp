@@ -93,7 +93,7 @@ extern void addRenderCallback(void *, void *, void *);
 extern u8 gPlayerCount;
 extern u8 D_80121D80[];
 extern CharacterSelectCoursePlayerRecord gFrameCounter;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 
 // drawCharacterSelectCourseListOptions best match: 95.048%
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/drawCharacterSelectCourseListOptions.s")
@@ -828,7 +828,7 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         state = D_80121D80[8];
         if (state == 1) {
             arg0->transition.bytes.state = 4;
@@ -955,7 +955,7 @@ void updateCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->transition.bytes.state = 4;
         }
@@ -1067,7 +1067,7 @@ void updateCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->transition.bytes.state = 4;
         }
@@ -1165,7 +1165,7 @@ void updateCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->transition.bytes.state = 4;
         }
@@ -1277,7 +1277,7 @@ void updateCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->transition.bytes.state = 4;
         }
@@ -1386,7 +1386,7 @@ void updateCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->transition.bytes.state = 4;
         }
@@ -1498,7 +1498,7 @@ void updateCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->transition.bytes.state = 4;
         }
@@ -1607,7 +1607,7 @@ void updateCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->transition.bytes.state = 4;
         }
@@ -1717,7 +1717,7 @@ void updateCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->transition.bytes.state = 4;
         }
@@ -1826,7 +1826,7 @@ void updateCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->transition.bytes.state = 4;
         }
@@ -1933,7 +1933,7 @@ void updateCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActo
         state = arg0->row.bytes.subState;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->row.bytes.subState = 4;
         }
