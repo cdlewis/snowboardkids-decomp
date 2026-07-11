@@ -997,12 +997,13 @@ void func_8008A940(RaceInputPlayer *player) {
 }
 #endif
 
-// func_8008B408 best match: 90.364% (nonmatchings/func_8008B408-7273315160691878794/base_7.c)
+// func_8008B408 best match: 95.985% (nonmatchings/func_8008B408-4/output-255-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008B408.s")
 
 #ifdef NON_MATCHING
 s32 func_8008B408(RaceInputPlayer *player, s32 arg1, s16 arg2) {
     s16 temp_v0;
+    s32 threshold;
     s32 scale;
     s32 temp;
 
@@ -1012,7 +1013,7 @@ s32 func_8008B408(RaceInputPlayer *player, s32 arg1, s16 arg2) {
 
     temp_v0 = player->unk2F6;
     arg2 = (arg2 * 0x10) - temp_v0;
-    scale = arg1 << 3;
+    scale = (arg1 << 2) << 1;
     if (arg2 >= 0x81) {
         arg2 = 0x80;
     }
@@ -1020,26 +1021,28 @@ s32 func_8008B408(RaceInputPlayer *player, s32 arg1, s16 arg2) {
     if (arg2 < -0x80) {
         arg2 = -0x80;
     }
-    player->unk2F6 = temp_v0 + arg2;
+    player->unk2F6 = (unsigned long long)(temp_v0 + arg2);
 
     arg2 = player->unk2F6 * player->unk2F8 / 0x3F;
     scale <<= 2;
     scale -= arg1;
     scale <<= 3;
     scale -= arg1;
-    if (arg1 >= 0x40001) {
+    if (arg1 >= (threshold = 0x40001)) {
         scale = 0x117;
     } else {
         temp = scale >> 18;
-        if (scale < 0) {
-            temp = (scale + 0x3FFFF) >> 18;
+        if (scale <= -1) {
+            scale++;
+            scale--;
+            temp = (unsigned long long)((scale + 0x3FFFF) >> 18);
         }
-        scale = (s16)temp;
+        scale = (s16)((unsigned long long)temp);
     }
 
     arg1 = player->unk2EE;
     temp_v0 = arg2 * scale / 0x1F0;
-    player->unk2EE = arg1 + ((temp_v0 - arg1) >> 2);
+    player->unk2EE = player->unk2EE + ((temp_v0 - arg1) >> 2);
     return temp_v0;
 }
 #endif
