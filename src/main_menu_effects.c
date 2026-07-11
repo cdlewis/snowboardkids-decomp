@@ -61,7 +61,7 @@ extern Gfx *gRegionAllocPtr;
 extern s32 D_80124838;
 extern s32 D_80124868;
 extern Gfx D_800DEFF8[];
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s16 D_80112172;
 extern s16 D_8011217C;
 extern s16 D_8011217E;
@@ -801,7 +801,7 @@ void func_8003DC70(MainMenuEffectActor *arg0) {
 void func_8003DCCC(MainMenuEffectActor *arg0) {
     s16 *temp_v0;
 
-    if (D_800DEF14 == 0) {
+    if (gMenuFadeAlpha == 0) {
         arg0->animFrame = (u16)arg0->animFrame + 1;
         temp_v0 = &arg0->angle;
         if ((u16)arg0->animFrame >= 0x78) {

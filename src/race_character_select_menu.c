@@ -68,7 +68,7 @@ extern u8 D_5A1ED0[];
 extern u8 D_5C5320[];
 extern u8 D_5CBA80[];
 extern u8 D_5CCD40[];
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s8 D_800EC9C0;
 extern u8 D_800EC9C2;
 extern s16 D_800EC9D0[];
@@ -171,7 +171,7 @@ void initRaceCharacterSelectMenu(void) {
     D_8010AEA8 = 0;
     D_8010AEB0 = 0;
     D_801235B8->fade = 0xFF;
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
 
     loadCompressedRomAsset(D_5CBA80, D_5CCD40, 0x21);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);

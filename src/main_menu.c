@@ -168,7 +168,7 @@ extern s16 D_800EC9C8[];
 extern u8 D_800EC9E0[];
 extern SaveSlotBytes D_800EC9F0[];
 extern s32 gPlayerInputHeld;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s16 D_801124B8;
 extern s16 D_800EC8A8[];
 extern u8 D_593D10[];
@@ -1005,7 +1005,7 @@ void func_80001C80(void) {
     func_800420FC(4, 0, 0xDD0, 0);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
-    D_800DEF14 = (s16) D_801235B8->fade;
+    gMenuFadeAlpha = (s16) D_801235B8->fade;
     D_800DEF10 = 1;
     enqueueSoundEffect(0x4A, 0x32);
     func_8009956C(&func_80002024, 0);
@@ -1167,9 +1167,9 @@ void func_800024A8(void) {
 void func_8000262C(void) {
     s32 temp_v0;
 
-    D_800DEF14 -= 0x10;
-    if (D_800DEF14 < 0) {
-        D_800DEF14 = 0;
+    gMenuFadeAlpha -= 0x10;
+    if (gMenuFadeAlpha < 0) {
+        gMenuFadeAlpha = 0;
         temp_v0 = gPlayerInputPressed;
         if (temp_v0 & 0x10800) {
             if (D_801235B4 != 0) {
@@ -1202,9 +1202,9 @@ void func_8000262C(void) {
 }
 
 void func_80002794(void) {
-    D_800DEF14 += 0x10;
-    if (D_800DEF14 >= 0x100) {
-        D_800DEF14 = 0xFF;
+    gMenuFadeAlpha += 0x10;
+    if (gMenuFadeAlpha >= 0x100) {
+        gMenuFadeAlpha = 0xFF;
         D_80123751 = 1;
         func_8009956C(func_80002810, 0);
     }
@@ -1257,9 +1257,9 @@ void func_800028B4(void) {
 void func_80002A1C(void) {
     s32 temp_v1;
 
-    D_800DEF14 -= 0x10;
-    if (D_800DEF14 < 0) {
-        D_800DEF14 = 0;
+    gMenuFadeAlpha -= 0x10;
+    if (gMenuFadeAlpha < 0) {
+        gMenuFadeAlpha = 0;
         temp_v1 = gPlayerInputPressed;
         if ((temp_v1 & 0x10800) && (D_801235B4 != 0)) {
             D_801235B4 -= 1;
@@ -1335,9 +1335,9 @@ void func_80002A1C(void) {
 }
 
 void func_80002CE4(void) {
-    D_800DEF14 += 0x10;
-    if (D_800DEF14 >= 0x100) {
-        D_800DEF14 = 0xFF;
+    gMenuFadeAlpha += 0x10;
+    if (gMenuFadeAlpha >= 0x100) {
+        gMenuFadeAlpha = 0xFF;
         D_80123751 = 1;
         func_8009956C(func_80002D50, 0);
     }

@@ -63,7 +63,7 @@ extern MenuPanelAssetHandles D_80112130;
 extern u8 D_80121B5B;
 extern s16 D_80121B50;
 extern s16 D_80121B52;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s16 D_8011213C;
 extern s16 D_80112180;
 extern s32 gPlayerInputPressed;
@@ -194,7 +194,7 @@ void func_800515F0(MenuPanelActor *arg0) {
     u8 temp_a2_3;
     u8 temp_a2_4;
 
-    if ((D_800DEF14 == 0) && (D_8010B1F0 == 0)) {
+    if ((gMenuFadeAlpha == 0) && (D_8010B1F0 == 0)) {
         temp_v1 = gPlayerInputPressed;
         if (temp_v1 & 0x10800) {
             temp_a2 = D_800D54F8[D_80121B5B];

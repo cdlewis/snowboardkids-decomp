@@ -57,7 +57,7 @@ extern void releaseMenuAssetHandles(void);
 extern s8 D_800DEED4;
 extern u8 D_80123750;
 extern u8 D_80123751;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 
 extern MainMenuRaceSetupState *D_801235B8;
 extern MainMenuRaceSetupObject *D_800EC9C4;
@@ -219,7 +219,7 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     func_8007066C(1, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
     func_8007066C(2, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
     func_80070E90(2);
-    D_800DEF14 = 0xFF;
+    gMenuFadeAlpha = 0xFF;
     D_801235B8->fade = 5;
     effectArg = transition - 1;
     func_80071664(func_80053DD8, 0, 0x64, effectArg);
@@ -252,9 +252,9 @@ void func_8003E45C(void) {
     MainMenuRaceSetupState **state;
     MainMenuRaceSetupState *currentState;
 
-    D_800DEF14 -= 8;
-    if (D_800DEF14 < 0) {
-        D_800DEF14 = 0;
+    gMenuFadeAlpha -= 8;
+    if (gMenuFadeAlpha < 0) {
+        gMenuFadeAlpha = 0;
     }
     state = &D_801235B8;
     currentState = *state;
@@ -270,8 +270,8 @@ void func_8003E45C(void) {
 }
 
 void func_8003E514(void) {
-    D_800DEF14 += 4;
-    if (D_800DEF14 >= 0xFF) {
+    gMenuFadeAlpha += 4;
+    if (gMenuFadeAlpha >= 0xFF) {
         D_801235B8->fade = 0xFF;
         D_80123751 = 1;
         func_8009956C(func_8003E5A8, 0);

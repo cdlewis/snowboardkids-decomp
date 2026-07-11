@@ -1,0 +1,11 @@
+#ifndef CONTROLLER_PAK_POST_RACE_SAVE_PROMPT_FLOW_H
+#define CONTROLLER_PAK_POST_RACE_SAVE_PROMPT_FLOW_H
+
+void initControllerPakPostRaceSavePromptFlow(void);
+void fadeInControllerPakPostRaceSavePromptFirstMessage(void);
+void fadeOutControllerPakPostRaceSavePromptFirstMessage(void);
+void waitBeforeControllerPakPostRaceSavePromptSecondMessage(void);
+void fadeInControllerPakPostRaceSavePromptSecondMessage(void);
+void fadeOutControllerPakPostRaceSavePromptFlow(void);
+
+#endif

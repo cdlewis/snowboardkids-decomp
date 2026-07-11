@@ -47,7 +47,7 @@ extern s32 D_8010ADDC;
 extern s32 D_801235B4;
 extern u8 D_8010ADF8;
 extern u16 D_8010ADF0;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s8 D_800DEED4;
 extern u8 D_80123750;
 extern u8 D_80123751;
@@ -63,7 +63,7 @@ void func_80005540(void) {
     D_8010ADF8 = 0;
     D_800EC9DD = 0;
     D_8010ADF0 = 0;
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
     func_8009956C(func_80005788, 0);
     D_8010AE70.state = 0;
     D_8010AE70.nextState = 0;
@@ -92,7 +92,7 @@ void func_800055EC(void) {
     D_801235B8->timer = 0;
     D_8010ADF8 = 0;
     D_8010ADF0 = 0;
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
     func_8009956C(func_80005788, 0);
     D_8010AE70.state = 0;
     D_8010AE70.nextState = 0;

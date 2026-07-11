@@ -49,7 +49,7 @@ extern RaceIntroCamera D_801121E0[];
 extern RaceIntroPlayer D_80121D80[];
 extern RaceIntroCourseEntry D_800BB834[];
 extern u8 D_800BB837[];
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s16 D_80121B50;
 extern s16 D_80121B52;
 extern s16 D_80121B5C;
@@ -193,7 +193,7 @@ void func_8003E600(void) {
     }
     func_80044294();
     func_8009956C(func_8003EA78, 0);
-    D_800DEF14 = 0xFF;
+    gMenuFadeAlpha = 0xFF;
     D_800EC8B0 = 0;
     D_801235B8->fadeDelay = 0x384;
     D_801235B8->fadeStep = 0;
@@ -216,9 +216,9 @@ void func_8003EAF0(void) {
     s32 fadeStep;
 
     if (D_801235B8->fadeStep == 0) {
-        D_800DEF14 -= 0x10;
-        if (D_800DEF14 < 0) {
-            D_800DEF14 = 0;
+        gMenuFadeAlpha -= 0x10;
+        if (gMenuFadeAlpha < 0) {
+            gMenuFadeAlpha = 0;
         }
     }
     func_8008C704();
@@ -249,9 +249,9 @@ void func_8003EAF0(void) {
     }
     if (fadeStep != 0) {
         D_800DEF10 = 1;
-        D_800DEF14 += state->fadeStep;
-        if (!(D_800DEF14 < 0xFF)) {
-            D_800DEF14 = 0xFF;
+        gMenuFadeAlpha += state->fadeStep;
+        if (!(gMenuFadeAlpha < 0xFF)) {
+            gMenuFadeAlpha = 0xFF;
             D_80123751 = 1;
             func_8009956C(func_8003EC6C, 0);
         }

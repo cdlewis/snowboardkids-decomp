@@ -51,7 +51,7 @@ extern s16 gCharacterSelectSingleCourseOption[];
 extern CharacterSelectFlowState *D_801235B8;
 extern s8 D_800DEED4;
 extern f32 D_800E09A4;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern CharacterSelectSaveData D_800EC9F0[];
 extern u8 D_80121D80[];
 extern u8 D_80121D88;
@@ -105,7 +105,7 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
     D_80121D88 = 0;
     D_8010ADF0 = 0;
     D_800EC9D0 = 0;
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
     var_v1 = 0;
     if (D_80121B55 > 0) {
         var_v0 = D_800EC9F0;
@@ -220,7 +220,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
     D_80121D88 = 0;
     D_8010ADF0 = 0;
     D_800EC9D0 = 0;
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
     var_v1 = 0;
     if (D_80121B55 > 0) {
         var_v0 = D_800EC9F0;
@@ -332,7 +332,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     D_80121D88 = 0;
     D_8010ADF0 = 0;
     D_800EC9D0 = 0;
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
     D_8010ADDC = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;

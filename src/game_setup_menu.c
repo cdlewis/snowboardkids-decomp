@@ -28,7 +28,7 @@ extern void enqueueSoundEffect();
 extern f32 D_800E0900;
 extern u8 D_800E29C0;
 extern s8 D_800DEED4;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s8 D_800EC8B0;
 extern s8 D_800EC8B4;
 extern s8 D_800EC8B5;
@@ -89,7 +89,7 @@ void func_80003140(void) {
     D_801235B4 = 0;
     D_8010ADF0 = 0;
     D_80121B55 = 1;
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
 
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x21);
     loadCompressedRomAsset(&D_245A80, &D_24C8E0, 0x1F);

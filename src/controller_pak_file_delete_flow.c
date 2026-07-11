@@ -23,7 +23,7 @@ extern u8 gControllerPakDeletePromptState;
 extern s32 gPlayerInputPressed;
 extern u8 D_80123750;
 extern u8 D_80123751;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s16 D_800EC9C8;
 extern s8 D_800EC8B0;
 extern s32 gControllerPakFreeBytes;
@@ -55,7 +55,7 @@ void initControllerPakFileDeleteFlow(void) {
     gControllerPakFreeBytes = 0;
     gControllerPakFreeFileCount = 0;
     D_800EC8B0 = 0;
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
     loadCompressedRomAsset(&D_5DFDD0, &D_5E0350, 0x21);
     loadCompressedRomAsset(&D_593D10, &D_598A70, 0x22);
     loadCompressedRomAsset(&D_598A70, &D_59AAA0, 0x23);

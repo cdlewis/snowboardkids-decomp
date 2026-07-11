@@ -42,7 +42,7 @@ extern s32 D_8010ADDC;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s32 D_8010ADE8;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s32 D_800EC9F4;
 extern u8 D_593D10;
 extern u8 D_598A70;
@@ -68,7 +68,7 @@ void initControllerPakScoreDeleteFlow(void) {
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     D_8010ADE8 = 0;
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
     D_800EC9F4 = D_80121D80.selectedFileInfo;
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x21);
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x24);
