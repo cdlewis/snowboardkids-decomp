@@ -142,7 +142,7 @@ extern RacePlayerState D_80121D80[];
 extern u8 gCurrentViewportIndex;
 extern u8 D_80156609;
 extern GfxCommandDest *D_80156614;
-extern u8 D_800E29C0;
+extern u8 gConnectedControllerCount;
 extern u32 D_2000000[];
 extern u32 D_20006C8[];
 extern u32 D_2000D78[];
@@ -355,7 +355,7 @@ void func_80054044(s32 arg0, s32 arg1) {
 }
 
 void func_8005408C(MainMenuOverlayEffectActor *arg0) {
-    if (D_800E29C0 != 0) {
+    if (gConnectedControllerCount != 0) {
         func_80048278(-0x44, 0x38, "Push Start Button", 0);
         return;
     }

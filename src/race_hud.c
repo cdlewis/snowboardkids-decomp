@@ -87,7 +87,7 @@ extern RaceHudPanelController *D_8010ADE8;
 extern s16 D_8010AE58;
 extern s32 D_801235B4;
 extern void *D_80124868;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern RacePlayer D_80121D80[];
 extern u8 D_80121D85[];
 extern s8 D_8010AE64[];
@@ -280,7 +280,7 @@ void func_80017A10(RaceHudPlayerFrameActor *arg0) {
 
     sp6C = buf - 0xC;
     actor = arg0; i = 0; do {
-        if ((D_80121B55 - 1) < i) {
+        if ((gPlayerCount - 1) < i) {
             alpha = 0x50;
         } else {
             alpha = 0x100;
@@ -389,7 +389,7 @@ void func_80017D6C(RaceHudMessageActor *arg0) {
         do {
             alpha = 0x100;
             j = 0;
-            if (D_80121B55 > 0) {
+            if (gPlayerCount > 0) {
                 player = D_80121D80;
 loop_4:
                 j++;
@@ -399,7 +399,7 @@ loop_4:
                     textureIndex = 0x1F;
                 } else {
                     player++;
-                    if (j < D_80121B55) {
+                    if (j < gPlayerCount) {
                         goto loop_4;
                     }
                 }
@@ -421,7 +421,7 @@ loop_4:
         if (arg0->playerFlags != 0) {
             alpha = 0x100;
             j = 0;
-            if (D_80121B55 > 0) {
+            if (gPlayerCount > 0) {
                 player = D_80121D80;
 loop_17:
                 j++;
@@ -431,7 +431,7 @@ loop_17:
                     textureIndex = 0x1F;
                 } else {
                     player++;
-                    if (j < D_80121B55) {
+                    if (j < gPlayerCount) {
                         goto loop_17;
                     }
                 }
@@ -502,7 +502,7 @@ void func_80018060(RaceHudMessageActor *arg0) {
     arg0->unk23 = 0;
 
     i = 0;
-    if (D_80121B55 > 0) {
+    if (gPlayerCount > 0) {
         player = D_800EC9F0;
         do {
             actor->playerFlags = actor->playerFlags | (player->flags & 1);
@@ -510,7 +510,7 @@ void func_80018060(RaceHudMessageActor *arg0) {
             D_8010AE5F = actor->unk23;
             i++;
             player++;
-        } while (i < D_80121B55);
+        } while (i < gPlayerCount);
     }
 
     if (actor->playerFlags == 1) {
@@ -531,7 +531,7 @@ void func_80018134(RaceHudPlayerListActor *arg0) {
     RacePlayer *player;
     RaceHudPlayerListActor *actorX;
 
- do { if (arg0->mode != 0) { i = 0; if (((s32) D_80121B55) > 0) { player = D_80121D80; tiles = D_800B5B30; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) D_80121B55) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) D_80121B55)); } func_8000F8AC(actorX->x[0], arg0->y, func_80043040(D_80112172), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (RaceHudPlayerListActor *) (((u8 *) actorX) + 2); } while (i < ((s32) D_80121B55)); } } } while (0);
+ do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = D_80121D80; tiles = D_800B5B30; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } func_8000F8AC(actorX->x[0], arg0->y, func_80043040(D_80112172), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (RaceHudPlayerListActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
 }
 
 // func_800182A4 best match: 99.740% (nonmatchings/func_800182A4-1315772375853892447/base_16.c)
@@ -554,7 +554,7 @@ void func_800182A4(RaceHudPlayerListActor *arg0) {
 
     if (mode != 0) {
         i = 0;
-        if ((s32)D_80121B55 > 0) {
+        if ((s32)gPlayerCount > 0) {
             layout = D_8010AE64;
             player = D_80121D80;
             do {
@@ -565,7 +565,7 @@ void func_800182A4(RaceHudPlayerListActor *arg0) {
                 }
                 i++;
                 player += 0x60C;
-            } while (i < (s32)D_80121B55);
+            } while (i < (s32)gPlayerCount);
         }
 
         if ((s32)arg0->timer < 0x10) {
@@ -591,9 +591,9 @@ void func_800183DC(RaceHudPlayerListActor *arg0) {
 
     playerFlags = 0;
     i = 0;
- if ((s32)D_80121B55 > 0) { player = D_800EC9F0; do {
+ if ((s32)gPlayerCount > 0) { player = D_800EC9F0; do {
             playerFlags |= player->flags;
-            i = (s32)&D_800EC9F0[D_80121B55];
+            i = (s32)&D_800EC9F0[gPlayerCount];
             player++;
         } while ((u32)player < (u32)i);
         i = 0;
@@ -605,7 +605,7 @@ void func_800183DC(RaceHudPlayerListActor *arg0) {
         arg0->baseX = -0x70;
     }
 
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         playerLayout = D_8010AE64;
         actor = arg0;
         do {
@@ -613,7 +613,7 @@ void func_800183DC(RaceHudPlayerListActor *arg0) {
             i++;
             playerLayout++;
             actor = (RaceHudPlayerListActor *)((u8 *)actor + 2);
-        } while (i < (s32)D_80121B55);
+        } while (i < (s32)gPlayerCount);
     }
 
     arg0->y = -0x18;
@@ -645,7 +645,7 @@ void func_800184C8(RaceHudPanelActor *arg0) {
     base = arg0;
     if (D_8010ADE8->unk26 != 0) {
         i = 0;
-        if ((s32)D_80121B55 > 0) {
+        if ((s32)gPlayerCount > 0) {
             player = D_80121D80;
             statsBase = D_800B5B08;
             textureHandles = D_80112130;
@@ -744,7 +744,7 @@ void func_800184C8(RaceHudPanelActor *arg0) {
                 i++;
                 player++;
                 actor = (RaceHudPanelActor *)((u8 *)actor + 2);
-            } while (i < (s32)D_80121B55);
+            } while (i < (s32)gPlayerCount);
         }
     }
 }
@@ -794,7 +794,7 @@ void func_80018BC0(RaceHudPanelSlot *arg0) {
     s32 color;
     u16 temp_v1;
 
- base = (u8 *)arg0; i = 0; if (D_80121B55 > 0) { player = (u8 *)D_80121D80; do {
+ base = (u8 *)arg0; i = 0; if (gPlayerCount > 0) { player = (u8 *)D_80121D80; do {
             if (player[8] != 0) {
                 new_var = i * 2;
                 temp_s0 = base + new_var;
@@ -804,7 +804,7 @@ void func_80018BC0(RaceHudPanelSlot *arg0) {
             }
             i++;
             player += PLAYER_DATA_SIZE;
-        } while (i < D_80121B55);
+        } while (i < gPlayerCount);
     }
 }
 
@@ -832,7 +832,7 @@ void func_80018C80(RaceHudPanelActor *arg0) {
     actor2 = arg0;
     slots = D_8010ADE4;
     i = 0;
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         stateMirror = (u8 *)&gCharacterSelectHudState;
         actor = base;
         do {
@@ -935,7 +935,7 @@ next_player:
             stateMirror[3] = state;
             stateMirror++;
             actor = (RaceHudPanelActor *)((u8 *)actor + 1);
-        } while (i < (s32)D_80121B55);
+        } while (i < (s32)gPlayerCount);
     }
 
     if (slots->mode == 3) {

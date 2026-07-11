@@ -51,7 +51,7 @@ extern u8 D_800DE05C[];
 extern u8 D_800DE060[];
 extern u8 D_800DE064[];
 extern u8 D_800EC9C2;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern s16 D_80121B50;
 
 // func_8007B250 best match: 30.134% (nonmatchings/func_8007B250-5752545231564691495/base_6.c)
@@ -148,7 +148,7 @@ sort_next:
         i++;
     } while (i < 3);
 
-    mode = D_80121B55;
+    mode = gPlayerCount;
 
     switch (mode) {
     case 1:

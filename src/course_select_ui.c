@@ -140,7 +140,7 @@ extern s16 D_80112130[];
 extern s16 D_80112172;
 extern s16 D_8011217A;
 extern s16 D_8011217E;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern CourseSelectRacePlayer D_80121D80[];
 extern u8 D_80121D86[][sizeof(CourseSelectRacePlayer)];
 extern u8 D_80121D88;
@@ -225,7 +225,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
 
     actor = arg0;
     i = 0;
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         do {
             state = actor->state[i];
             if (gCourseSelectStatus[4 + i] != state) {
@@ -302,7 +302,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                 if (actor->timer[i] == 0xF) {
                     actor->timer[i] = 0;
                     actor->state[i] = 4;
-                    if (D_80121B55 == 1) {
+                    if (gPlayerCount == 1) {
                         D_80121D80[0].pad6[2] = 3;
                         D_800EC9C0 = 0x10;
                     }
@@ -324,7 +324,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                 break;
             case 6:
                 D_80121D80[i].pad6[2] = 4;
-                if ((i == 2) && (D_80121B55 == 3)) {
+                if ((i == 2) && (gPlayerCount == 3)) {
                     D_80121D80[3].pad6[2] = 4;
                 }
                 state = actor->state[i];
@@ -362,7 +362,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x58) = sp78.z;
             gCourseSelectStatus[4 + i] = actor->state[i];
             i++;
-        } while (i < (s32)D_80121B55);
+        } while (i < (s32)gPlayerCount);
     }
 
     if ((D_80121D80[0].pad6[2] == 4) || (actor->state[0] == 9)) {
@@ -510,7 +510,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
 
     actor = arg0;
     i = 0;
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         offset = 0;
         do {
             state = gCourseSelectStatus[8 + i];
@@ -585,7 +585,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                 if (actor->timer[i] == 0xF) {
                     actor->timer[i] = 0;
                     actor->state[i] = 4;
-                    if (D_80121B55 == 1) {
+                    if (gPlayerCount == 1) {
                         ((u8 *)&D_80121D80[0])[8] = 3;
                         D_800EC9C0 = 0x10;
                     }
@@ -607,7 +607,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                 break;
             case 6:
                 ((u8 *)&D_80121D80[i])[8] = 4;
-                if (i == 2 && D_80121B55 == 3) {
+                if (i == 2 && gPlayerCount == 3) {
                     ((u8 *)&D_80121D80[3])[8] = 4;
                 }
                 state = actor->state[i];
@@ -646,7 +646,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
             gCourseSelectStatus[8 + i] = actor->state[i];
             i++;
             offset += 2;
-        } while (i < (s32)D_80121B55);
+        } while (i < (s32)gPlayerCount);
     }
 
     if (((u8 *)&D_80121D80[0])[8] == 4 || actor->state[0] == 9) {
@@ -731,7 +731,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     sp8C = arg0;
     new_var = arg0;
     i = 0;
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         sp60 = (u8 *)new_var;
         do {
             j = 0;
@@ -745,7 +745,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                         player = &D_80121D80[i];
                         alpha = 0;
                         clipOffset = (i >= 2) * 0x8C;
-                        if (D_80121B55 == 1) {
+                        if (gPlayerCount == 1) {
                             if (player->state != 5) {
                                 tileIndex = (j + 1) & 0xFFFF;
                             } else {
@@ -773,7 +773,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                                       tileIndex & 0xFFFF, 0x20, 0x20, 0, alpha,
                                       new_var->clipLeft - clipOffset, arg0->clipTop, arg0->clipRight,
                                       new_var->clipBottom);
-                    } else if (D_80121B55 == 1) {
+                    } else if (gPlayerCount == 1) {
                         alpha = 0;
                         selectedCourse = D_8010AEA4[i];
                         position = &arg0->coordinates[(i * 5) + j];
@@ -798,7 +798,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
             }
             i++;
             sp60++;
-        } while (i < (s32)D_80121B55);
+        } while (i < (s32)gPlayerCount);
     }
 }
 #endif
@@ -823,13 +823,13 @@ void initCourseSelectCourseIconList(u8 *arg0) {
     s16 *xPair;
     s32 layoutIndex;
 
-    if ((s32) D_80121B55 < 3) {
-        layoutIndex = D_80121B55 - 1;
+    if ((s32) gPlayerCount < 3) {
+        layoutIndex = gPlayerCount - 1;
     } else {
         layoutIndex = 2;
     }
     i = 0;
-    if ((s32) D_80121B55 > 0) {
+    if ((s32) gPlayerCount > 0) {
         unlockPtr = D_8010AEA0;
         xyTable = gCourseSelectIconListYLayout[layoutIndex];
         bytePtr = arg0;
@@ -854,9 +854,9 @@ void initCourseSelectCourseIconList(u8 *arg0) {
             ((s16 *) arg0)[0x52] = 0x78;
             ((s16 *) arg0)[0x51] = 0xA0;
             ((s16 *) arg0)[0x53] = 0x78;
-            if (D_80121B55 == 1) {
+            if (gPlayerCount == 1) {
                 ((s16 *) arg0)[0x50] = 0xA0;
-            } else if (D_80121B55 == 2) {
+            } else if (gPlayerCount == 2) {
                 ((s16 *) arg0)[0x50] = 0x7E;
             } else {
                 ((s16 *) arg0)[0x50] = 0x88;
@@ -881,7 +881,7 @@ void initCourseSelectCourseIconList(u8 *arg0) {
             bytePtr[0x93] = 0;
             bytePtr[0x97] = 1;
             bytePtr[0x8F] = 0;
-        } while (i < (s32) D_80121B55);
+        } while (i < (s32) gPlayerCount);
     }
     setCallbackTaskCallback(arg0, updateCourseSelectCourseIconList);
 }
@@ -906,7 +906,7 @@ void drawCourseSelectCourseCursors(u8 *arg0) {
 
     actor = arg0;
     if (D_8010AEB0 == 0) {
-        playerCount = D_80121B55;
+        playerCount = gPlayerCount;
         i = 0;
         if (playerCount > 0) {
             statePtr = arg0;
@@ -916,7 +916,7 @@ void drawCourseSelectCourseCursors(u8 *arg0) {
                 directionPtr = &D_8010AE64[i];
                 if (statePtr[0x30] < 2) {
                     posPtr = (s16 *)(actor + (i * 2));
-                    if (one == D_80121B55) {
+                    if (one == gPlayerCount) {
                         tileIndex = 7;
                         handleIndex = 0x25;
                     } else {
@@ -930,7 +930,7 @@ void drawCourseSelectCourseCursors(u8 *arg0) {
                 }
                 i++;
                 statePtr++;
-            } while (i < D_80121B55);
+            } while (i < gPlayerCount);
         }
     }
 }
@@ -945,7 +945,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
 
     actor = arg0;
     i = 0;
-    if ((s32) D_80121B55 > 0) {
+    if ((s32) gPlayerCount > 0) {
         statePtr = actor; do { if ((D_801235B4 != 0) && (D_800EC9C2 != 3)) { statePtr->unk30 = 4; }
             state = statePtr->unk30;
             switch (state) {
@@ -992,7 +992,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
             i++;
             statePtr = (CourseSelectWidgetActor *) ((u8 *) statePtr + 1);
             gCourseSelectStatus[i - 1] = state;
-        } while (i < (s32) D_80121B55);
+        } while (i < (s32) gPlayerCount);
     }
 
     if (actor->unk30 == 4) {
@@ -1019,14 +1019,14 @@ void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     if (actor && actor) {
     }
 
-    if (D_80121B55 < 3) {
-        idx = D_80121B55 - 1;
+    if (gPlayerCount < 3) {
+        idx = gPlayerCount - 1;
     } else {
         idx = 2;
     }
 
     i = 0;
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         xyTable = &gCourseSelectIconListYLayout[idx];
         xTable = &gCourseSelectIconListXLayout[idx];
         courseUnlocked = D_8010AEA0;
@@ -1050,7 +1050,7 @@ void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
             i++;
             bytePtr++;
             posPtr = (s16 *)((u8 *)posPtr + 2);
-        } while (i < (s32)D_80121B55);
+        } while (i < (s32)gPlayerCount);
     }
 
     setCallbackTaskCallback(actor, updateCourseSelectCourseCursors);
@@ -1166,7 +1166,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     u8 *ratings;
     CourseSelectWidgetActor *playerWidget;
 
-    playerCount = D_80121B55;
+    playerCount = gPlayerCount;
     if (playerCount < 3) {
         frameTile = 0x10;
     } else {
@@ -1191,7 +1191,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                 func_8000F8AC(playerWidget->coordinates[0], playerWidget->coordinates[4],
                               func_80043040(D_80112130[0x21]), frameTile, 0x20, 0x20, 0, arg0->coordinates[8], 0);
 
-                if (D_80121B55 < 3) {
+                if (gPlayerCount < 3) {
                     selectedCourseId = xOffset;
                     if (selectedCourseId >= 9) {
                         func_80013D0C((s16)(playerWidget->coordinates[0] + 0x38), playerWidget->coordinates[4],
@@ -1283,7 +1283,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                   (s16)(playerWidget->coordinates[4] + 0x10), text, 0, arg0->coordinates[8]);
                 }
 
-                playerCount = D_80121B55;
+                playerCount = gPlayerCount;
                 if (playerCount >= 2) {
                     positionColumn = 1;
                     if (playerCount == 2) {
@@ -1293,7 +1293,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     func_8000F8AC((s16)(gCourseSelectStatsPlayerMarkerLayout[positionColumn * 2 + (i & 1)][0] + (bottomRow * 0x8C)),
                                   gCourseSelectStatsPlayerMarkerLayout[positionColumn * 2 + (i & 1)][1],
                                   func_80043040(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, arg0->coordinates[8], 0);
-                    playerCount = D_80121B55;
+                    playerCount = gPlayerCount;
                 }
             }
             i++;
@@ -1352,20 +1352,20 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     s16 (*table)[4];
 
     temp_a3 = arg0;
-    if (D_80121B55 < 3) {
-        row = D_80121B55 - 1;
+    if (gPlayerCount < 3) {
+        row = gPlayerCount - 1;
     } else {
         row = 2;
     }
 
     i = 0;
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         table = &gCourseSelectStatsPanelLayout[row];
         do {
             temp_a3->coordinates[i] = (*table)[(i & 1) * 2] + ((i >= 2) * 0x8C);
             temp_a3->coordinates[i + 4] = (*table)[(i & 1) * 2 + 1];
             i++;
-        } while (i < (s32)D_80121B55);
+        } while (i < (s32)gPlayerCount);
     }
 
     temp_a3->transitionOffset = 0;
@@ -1672,7 +1672,7 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     CourseSelectWidgetActor *alphaActor;
 
     playerIndex = 0;
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         state = D_800EC9D0;
         playerOffset = 0;
         do {
@@ -1706,7 +1706,7 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                         if ((*state >= 2) && (*state < 5)) {
                             slotActor = (CourseSelectWidgetActor *)((u8 *)arg0 + (playerIndex * 6));
                             alphaActor = (CourseSelectWidgetActor *)((u8 *)arg0 + playerOffset);
-                            if ((s32)D_80121B55 == 1) {
+                            if ((s32)gPlayerCount == 1) {
                                 alpha = 0xF;
                             } else {
                                 alpha = 0x1B;
@@ -1722,7 +1722,7 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
             playerIndex++;
             playerOffset += 2;
             state++;
-        } while (playerIndex < (s32)D_80121B55);
+        } while (playerIndex < (s32)gPlayerCount);
     }
 }
 #endif
@@ -1795,7 +1795,7 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
     CourseSelectWidgetActor *temp_a2 = arg0;
 
     i = 0;
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         do {
             j = 0;
             if ((s32)arg0->itemCounts[i] > 0) {
@@ -1805,10 +1805,10 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
                 } while (j < (s32)arg0->itemCounts[i]);
             }
             i++;
-        } while (i < (s32)D_80121B55);
+        } while (i < (s32)gPlayerCount);
     }
 
-    if ((D_80121B55 == 1) && (temp_a2->itemCount == 0)) {
+    if ((gPlayerCount == 1) && (temp_a2->itemCount == 0)) {
         removeCallbackTask(temp_a2);
         return;
     }
@@ -1847,13 +1847,13 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     s32 temp_s2;
     s32 temp_a3;
 
-    if ((s32)D_80121B55 < 3) {
-        var_t5 = D_80121B55 - 1;
+    if ((s32)gPlayerCount < 3) {
+        var_t5 = gPlayerCount - 1;
     } else {
         var_t5 = 2;
     }
     var_t0 = 0;
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         temp_ra = gCourseSelectIconListXLayout[var_t5];
         temp_s1 = gCourseSelectIconListYLayout[var_t5];
         var_t1 = (u8 *)arg0;
@@ -1866,14 +1866,14 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
         temp_a3 = 3;
         do {
             var_v1 = 0;
-            if ((s32)D_80121B55 >= 3) {
+            if ((s32)gPlayerCount >= 3) {
                 var_t1[0x50] = temp_s2;
             } else {
                 var_t1[0x50] = *(s16 *)((u8 *)gCourseSelectIconListYLayout + (var_t5 * temp_s6));
             }
             var_t1[0x5C] = 0;
             *(s16 *)(var_t3 + 0x60) = temp_s3;
-            if (D_80121B55 == temp_s4) {
+            if (gPlayerCount == temp_s4) {
                 var_a0 = 8;
             } else {
                 var_a0 = 4;
@@ -1891,15 +1891,15 @@ loop:
             var_t1 += 1;
             var_t2 += 6;
             var_t3 += 2;
-        } while (var_t0 < (s32)D_80121B55);
+        } while (var_t0 < (s32)gPlayerCount);
     }
 
     *(s16 *)((u8 *)arg0 + 0x4A) = 0xA0;
     *(s16 *)((u8 *)arg0 + 0x4C) = 0x78;
     *(s16 *)((u8 *)arg0 + 0x4E) = 0x78;
-    if (D_80121B55 == 1) {
+    if (gPlayerCount == 1) {
         *(s16 *)((u8 *)arg0 + 0x48) = 0xA0;
-    } else if (D_80121B55 == 2) {
+    } else if (gPlayerCount == 2) {
         *(s16 *)((u8 *)arg0 + 0x48) = 0x7E;
     } else {
         *(s16 *)((u8 *)arg0 + 0x48) = 0x88;
@@ -1929,7 +1929,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
     s32 i;
     CourseSelectWidgetInitActor *cur;
 
-    if (D_80121B55 == 2) {
+    if (gPlayerCount == 2) {
         count = 2;
     } else {
         count = 4;
@@ -1942,7 +1942,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
             j = 0;
             alpha = 0x100;
             yPtr = &cur->unk20;
-            if (i == D_80121B55) {
+            if (i == gPlayerCount) {
                 alpha = 0xC0;
             }
             if (i == 0) {
@@ -1955,7 +1955,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
             func_8000F8AC(cur->unk18, *yPtr, func_80043040(D_80112130[0x21]), 0x22, 0x20, 0x20, 0,
                           alpha, tile);
 
-            if (D_80121B55 == 2) {
+            if (gPlayerCount == 2) {
                 middleCount = 0xB;
             } else {
                 middleCount = 3;
@@ -1974,7 +1974,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
                           0x20, 0x20, 0, alpha, tile);
 
             offset = 0;
-            if (D_80121B55 == 2) {
+            if (gPlayerCount == 2) {
                 if (1) {
                     edgeOffset = 0xF8;
                 }
@@ -1992,7 +1992,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
             func_8000F8AC(cur->unk18, (s16)(*yPtr + 0x50), func_80043040(D_80112130[0x21]), 0x27, 0x20,
                           0x20, 0, alpha, tile);
 
-            if (D_80121B55 == 2) {
+            if (gPlayerCount == 2) {
                 middleCount = 0xE;
             } else {
                 middleCount = 6;
@@ -2056,7 +2056,7 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
     u8 *modePtr;
 
     actor = (CourseSelectWidgetTransitionActor *)arg0;
-    modePtr = &D_80121B55;
+    modePtr = &gPlayerCount;
     if (*modePtr == 2) {
         count = 2;
     } else {
@@ -2140,7 +2140,7 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
 
 #ifdef NON_MATCHING
 void initCourseSelectPlayerPanels(CourseSelectWidgetInitActor *arg0) {
-    if (D_80121B55 == 2) {
+    if (gPlayerCount == 2) {
         arg0->unk40 = 0xA0;
         arg0->unk18 = 0x90;
         arg0->unk20 = -0xC8;
@@ -2207,7 +2207,7 @@ void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
     s32 two;
     u32 rightEdgeTile;
 
-    playerCount = D_80121B55;
+    playerCount = gPlayerCount;
     two = 2;
     rightEdgeTile = 2;
     for (i = 0; i < playerCount; i++) {
@@ -2240,7 +2240,7 @@ void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
                               actor->playerPanelFadeAlpha[i], 0);
             }
         }
-        playerCount = D_80121B55;
+        playerCount = gPlayerCount;
     }
 }
 
@@ -2250,7 +2250,7 @@ void initCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
     s32 var_v0;
     CourseSelectWidgetActor *var_v1;
 
-    if (D_80121B55 == 2) {
+    if (gPlayerCount == 2) {
         arg0->x = -0x6E;
         arg0->y = -0x4C;
     } else {
@@ -2259,12 +2259,12 @@ void initCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
     }
     var_v0 = 0;
     var_v1 = arg0;
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         do {
             var_v1->spriteIndex = 0;
             var_v0++;
             var_v1 = (CourseSelectWidgetActor *)((u8 *)var_v1 + sizeof(s16));
-        } while (var_v0 < (s32)D_80121B55);
+        } while (var_v0 < (s32)gPlayerCount);
     }
     setCallbackTaskCallback(arg0, updateCourseSelectCompletePanels);
 }

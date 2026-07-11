@@ -55,7 +55,7 @@ extern s16 gMenuFadeAlpha;
 extern CharacterSelectSaveData D_800EC9F0[];
 extern u8 D_80121D80[];
 extern u8 D_80121D88;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 D_80121B5E;
 extern s16 D_80121B50;
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
@@ -107,9 +107,9 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
     D_800EC9D0 = 0;
     gMenuFadeAlpha = gCurrentInputTask->fade;
     var_v1 = 0;
-    if (D_80121B55 > 0) {
+    if (gPlayerCount > 0) {
         var_v0 = D_800EC9F0;
-        temp_a0 = &D_800EC9F0[D_80121B55];
+        temp_a0 = &D_800EC9F0[gPlayerCount];
         do {
             temp_v1 = var_v0->highestCourse;
             var_v0 += 1;
@@ -222,9 +222,9 @@ void initCharacterSelectCourseMenuFromRace(void) {
     D_800EC9D0 = 0;
     gMenuFadeAlpha = gCurrentInputTask->fade;
     var_v1 = 0;
-    if (D_80121B55 > 0) {
+    if (gPlayerCount > 0) {
         var_v0 = D_800EC9F0;
-        temp_a0 = &D_800EC9F0[D_80121B55];
+        temp_a0 = &D_800EC9F0[gPlayerCount];
         do {
             temp_v1 = var_v0->highestCourse;
             var_v0 += 1;
@@ -307,7 +307,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     CharacterSelectSaveData *temp_a0;
 
     requestMusicSequenceBank(2);
-    if (D_80121B55 >= 2) {
+    if (gPlayerCount >= 2) {
         resetAllViewports();
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E09A4);
         gFramebufferSwapDelay = 0;
@@ -337,9 +337,9 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     var_v1 = 0;
-    if (D_80121B55 > 0) {
+    if (gPlayerCount > 0) {
         var_v0 = D_800EC9F0;
-        temp_a0 = &D_800EC9F0[D_80121B55];
+        temp_a0 = &D_800EC9F0[gPlayerCount];
         do {
             temp_v1 = var_v0->highestCourse;
             var_v0 += 1;
@@ -605,7 +605,7 @@ void updateCharacterSelectCourseSubmenu(void) {
 
 void handleCharacterSelectCourseSelection(void) {
     if (D_80121D88 == 8) {
-        if (D_80121B55 >= 2) {
+        if (gPlayerCount >= 2) {
             setCurrentInputTaskCallback(&fadeOutCharacterSelectCourseMenu, 0);
             D_801235B4 = 1;
             D_8010ADF8 = 1;

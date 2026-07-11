@@ -104,7 +104,7 @@ extern s32 D_80112364;
 extern void (*D_8011236C)(void);
 extern s32 D_80112414;
 extern void (*D_8011241C)(void);
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern RaceCharacterSelectPlayer D_80121D80[];
 extern RaceCharacterSelectPlayer gFrameCounter;
 extern s32 D_801235B4;
@@ -128,7 +128,7 @@ void initRaceCharacterSelectMenu(void) {
     func_8006D5CC();
     resetAllViewports();
 
-    switch (D_80121B55) {
+    switch (gPlayerCount) {
     case 1:
         configureViewport(0, 0xE8, 0x78, 0x90, 0xD0, 0xA0, 0xF0, 0.6666666865f);
         screenBase = 0xA40000;
@@ -203,7 +203,7 @@ void initRaceCharacterSelectMenu(void) {
         D_80121D80[i].mode = 0;
     }
 
-    for (i = 0; i < D_80121B55; i++) {
+    for (i = 0; i < gPlayerCount; i++) {
         D_8010AEA4[i] = 0;
         D_8010AEC8[i] = 0;
         D_8010AECC[i] = 0;
@@ -256,7 +256,7 @@ void initRaceCharacterSelectMenu(void) {
         }
     }
 
-    for (i = 0; i < D_80121B55; i++) {
+    for (i = 0; i < gPlayerCount; i++) {
         selected = D_80121D80[i].selection;
         if ((selected >= 9) && (selected < 12)) {
             j = 3;
@@ -370,7 +370,7 @@ void updateRaceCharacterSelectMenu(void) {
     if (gCurrentInputTask->fade != 0) {
         gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 0);
         if (gCurrentInputTask->fade == 0) {
-            if (D_80121B55 == 1) {
+            if (gPlayerCount == 1) {
                 createCallbackTask(initCourseSelectCourseIconList, 0, 0x63);
             } else {
                 createCallbackTask(initCourseSelectPlayerPanels, 0, 0x62);
@@ -379,7 +379,7 @@ void updateRaceCharacterSelectMenu(void) {
             D_8010ADE8 = createCallbackTask(initCourseSelectExtraCourseIconList, 0, 0x61);
         }
     } else {
-        playerCount = D_80121B55;
+        playerCount = gPlayerCount;
         readyCount = 0;
         for (i = 0; i < playerCount; i++) {
             if (D_80121D80[i].state == 9) {
@@ -484,7 +484,7 @@ void updateRaceCharacterSelectMenu(void) {
 
                                 if (*momentum == 0) {
                                     if ((pressed & 0x1000) || (pressed & 0x8000)) {
-                                        if ((D_80121B55 == 1) && (maxColumn == D_8010AE64[0])) {
+                                        if ((gPlayerCount == 1) && (maxColumn == D_8010AE64[0])) {
                                             enqueueSoundEffect(0x18, 0x32);
                                             D_80121D80[0].state = 9;
                                             D_8010AEB0 = 1;
@@ -621,7 +621,7 @@ void updateRaceCharacterSelectMenu(void) {
                         activeCount++;
                     }
                 }
-                if (activeCount == D_80121B55) {
+                if (activeCount == gPlayerCount) {
                     D_800EC9C0 = 1;
                 }
             }

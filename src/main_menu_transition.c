@@ -45,7 +45,7 @@ extern s16 D_801124B8;
 extern s16 D_80121B50;
 extern s16 D_80121B52;
 extern s8 gRacePlayerCount;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern s16 gMenuFadeAlpha;
 extern u8 gFramebufferSwapHold;
@@ -198,7 +198,7 @@ void func_8003F864(void) {
     players[1].unk17 = 1;
     players[2].unk17 = 2;
     players[3].unk17 = 3;
-    D_80121B55 = 4;
+    gPlayerCount = 4;
     players[0].isActive = 1;
     players[1].isActive = 1;
     players[2].isActive = 1;
@@ -229,9 +229,9 @@ void func_8003F864(void) {
     resetAllViewports();
     gFramebufferSwapDelay = 0;
     func_8008BEB0();
-    D_80121B55 = 1;
+    gPlayerCount = 1;
     func_80078430();
-    D_80121B55 = 4;
+    gPlayerCount = 4;
     configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, D_800E10D4);
     D_8011228C = 1;
     gFramebufferSwapDelay = 0;
@@ -423,7 +423,7 @@ void func_8004002C(void) {
     D_80121D80[1].unk17 = 1;
     D_80121D80[2].unk17 = 2;
     D_80121D80[3].unk17 = 3;
-    D_80121B55 = 1;
+    gPlayerCount = 1;
 
     switch (D_80121B5A) {
         case 1:

@@ -187,7 +187,7 @@ extern u8 D_5DFDD0[];
 extern s8 D_800B3190;
 extern u8 D_800B3194;
 extern s8 D_800DEF10;
-extern u8 D_800E29C0;
+extern u8 gConnectedControllerCount;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
 extern s8 D_8010B1F0;
@@ -219,14 +219,14 @@ void func_80000450(void) {
     osSetEventMesg(5, &D_800E4BD0, (OSMesg)1);
     osContInit(&D_800E4BD0, &D_800B30F0, D_800E4BF0);
 
-    D_800E29C0 = 0;
+    gConnectedControllerCount = 0;
     D_800E4BEE = 0;
 
     i = 0;
 loop:
     if (((s32)D_800B30F0 >> i) & 1) {
         i++;
-        D_800E29C0++;
+        gConnectedControllerCount++;
         if (i < 4) {
             goto loop;
         }
@@ -972,7 +972,7 @@ void func_80001C80(void) {
     gCurrentInputTask->delay = 0x32;
     gCurrentInputTask->timer = 0x4B0;
     initCallbackTaskScheduler(0);
-    if (D_800E29C0 != 0) {
+    if (gConnectedControllerCount != 0) {
         createCallbackTask(&func_80032A50, 0, 0x64);
     } else {
         createCallbackTask(&func_800540EC, 0, 0x64);

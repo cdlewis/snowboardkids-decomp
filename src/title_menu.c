@@ -70,7 +70,7 @@ extern u8 D_80112130[];
 extern s16 D_8011216E;
 extern s16 D_80112172;
 extern s16 D_8011217C;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 D_800B5A2E[];
 extern u8 D_800B5A2F[];
 extern u8 D_800EC9C1;
@@ -124,7 +124,7 @@ void func_80014600(MenuIntroActor *arg0) {
     } else {
         selected = actor->state - 2;
         if (actor->state < 5) {
-            if (D_80121B55 == 1) {
+            if (gPlayerCount == 1) {
                 selected = 1;
             } else {
                 selected = 2;
@@ -250,7 +250,7 @@ void func_80014CB8(void *arg0) {
         width = 0x18;
         xOffset = 0x10;
         yOffset = 0;
-    } else if (D_80121B55 == 1) {
+    } else if (gPlayerCount == 1) {
         alpha = 0x100;
         width = 0x20;
         xOffset = 0xC;
@@ -262,7 +262,7 @@ void func_80014CB8(void *arg0) {
         yOffset = -4;
     }
 
-    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (D_80121B55 != 1)) {
+    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 1)) {
         func_8000F8AC(actor->x, actor->y, func_80043040(D_80112172), 3, 0x20, 0x20, 0, alpha, 0);
         if (width == 0x20) {
             temp = width & 0xFFFF;
@@ -293,7 +293,7 @@ void func_80014EF0(MenuItemActor *arg0) {
     case 1:
         if (D_800EC9C1 == 0x13) {
             arg0->state = 2;
-            if (D_80121B55 == 1) {
+            if (gPlayerCount == 1) {
                 D_801235B4 = 1;
             }
         }
@@ -303,7 +303,7 @@ void func_80014EF0(MenuItemActor *arg0) {
         if (arg0->x == -0x70) {
             child = arg0->child;
             child->state = 2;
-            if (D_80121B55 == 2) {
+            if (gPlayerCount == 2) {
                 D_801235B4 = 1;
             }
         }
@@ -342,7 +342,7 @@ void func_8001508C(MenuItemActor *arg0) {
         width = 0x18;
         xOffset = 0x10;
         yOffset = 0;
-    } else if (D_80121B55 == 2) {
+    } else if (gPlayerCount == 2) {
         alpha = 0x100;
         width = 0x20;
         xOffset = 0xC;
@@ -354,7 +354,7 @@ void func_8001508C(MenuItemActor *arg0) {
         yOffset = -4;
     }
 
-    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (D_80121B55 != 2)) {
+    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 2)) {
         func_8000F8AC(actor->x, actor->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 2);
         if (width == 0x20) {
             temp = width & 0xFFFF;
@@ -391,7 +391,7 @@ void func_800152D0(MenuItemActor *arg0) {
         if (arg0->x == -0x70) {
             child = arg0->child;
             child->state = 2;
-            if (D_80121B55 == 3) {
+            if (gPlayerCount == 3) {
                 D_801235B4 = 1;
             }
         }
@@ -430,7 +430,7 @@ void func_8001543C(void *arg0) {
         width = 0x18;
         xOffset = 0x10;
         yOffset = 0;
-    } else if (D_80121B55 == 3) {
+    } else if (gPlayerCount == 3) {
         alpha = 0x100;
         width = 0x20;
         xOffset = 0xC;
@@ -442,7 +442,7 @@ void func_8001543C(void *arg0) {
         yOffset = -4;
     }
 
-    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (D_80121B55 != 3)) {
+    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 3)) {
         func_8000F8AC(actor->x, actor->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 3);
         if (width == 0x20) {
             temp = width & 0xFFFF;
@@ -479,7 +479,7 @@ void func_80015680(MenuItemActor *arg0) {
         if (arg0->x == -0x70) {
             child = arg0->child;
             child->state = 2;
-            if (D_80121B55 == 4) {
+            if (gPlayerCount == 4) {
                 D_801235B4 = 1;
             }
         }
@@ -518,7 +518,7 @@ void func_800157EC(void *arg0) {
         width = 0x18;
         xOffset = 0x10;
         yOffset = 0;
-    } else if (D_80121B55 == 4) {
+    } else if (gPlayerCount == 4) {
         alpha = 0x100;
         width = 0x20;
         xOffset = 0xC;
@@ -530,7 +530,7 @@ void func_800157EC(void *arg0) {
         yOffset = -4;
     }
 
-    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (D_80121B55 != 4)) {
+    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 4)) {
         func_8000F8AC(actor->x, actor->y, func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 4);
         if (width == 0x20) {
             temp = width & 0xFFFF;
@@ -593,7 +593,7 @@ void func_80015B58(void *arg0) {
 
     func_8000F8AC(
         actor->x,
-        (s16)((actor->y + (D_80121B55 << 5)) - 0x20),
+        (s16)((actor->y + (gPlayerCount << 5)) - 0x20),
         func_80043040(D_80112172),
         4,
         0x20,
@@ -650,7 +650,7 @@ void func_80015CBC(TitleMenuWidgetItemView *arg0) {
     volatile u8 *selected;
     u8 *text;
 
-    selected = &D_80121B55;
+    selected = &gPlayerCount;
     item = arg0;
     text = buf - 0x10;
     for (i = 0; i != 4;) {
@@ -837,7 +837,7 @@ void func_80016284(TitleMenuIconStripActor *arg0) {
     s32 tile;
 
     i = 0;
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         courseId = D_800EC9C8;
         actorOffset = 0;
         do {
@@ -903,7 +903,7 @@ void func_80016284(TitleMenuIconStripActor *arg0) {
             i++;
             actorOffset += 2;
             courseId++;
-        } while (i < (s32)D_80121B55);
+        } while (i < (s32)gPlayerCount);
     }
 }
 #endif
@@ -954,7 +954,7 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
 
     actor = arg0;
     intro = D_8010ADDC;
-    for (i = 0; i < D_80121B55; i++) {
+    for (i = 0; i < gPlayerCount; i++) {
         state = D_800EC9C8[i];
         if (D_800EC9C8[i] != 8) {
             if (D_800EC9C8[i] == 5) {
@@ -1004,7 +1004,7 @@ void func_80016948(TitleMenuWidgetActor *arg0) {
     view = D_8010ADE0;
     actor = arg0;
     i = 0;
-    if ((s32) D_80121B55 > 0) {
+    if ((s32) gPlayerCount > 0) {
         global = &D_8010AE00;
         do {
             actor->x[i] = view->x;
@@ -1043,20 +1043,20 @@ void func_80016948(TitleMenuWidgetActor *arg0) {
             i++;
             view = (TitleMenuWidgetItemView *) ((u8 *) view + 2);
             global->padE[i - 1] = state;
-        } while (i < (s32) D_80121B55);
+        } while (i < (s32) gPlayerCount);
     }
 
     actor->frame = (actor->frame + 1) & 0xF;
     sum = 0;
     i = 0;
-    if ((s32) D_80121B55 > 0) {
+    if ((s32) gPlayerCount > 0) {
         do {
             sum += actor->unk31[i];
             i++;
-        } while (i < (s32) D_80121B55);
+        } while (i < (s32) gPlayerCount);
     }
 
-    if (sum == (D_80121B55 * 3)) {
+    if (sum == (gPlayerCount * 3)) {
         removeCallbackTask((CallbackTask *) actor);
     } else {
         func_800483FC(&D_80124868, func_80016664, (s32) actor);
@@ -1078,7 +1078,7 @@ void func_80016B54(TitleMenuWidgetActor *arg0) {
     new_var->x[3] = 0x90;
     new_var->y[3] = 0x48;
 
-    for (i = 0; i < D_80121B55; i++) {
+    for (i = 0; i < gPlayerCount; i++) {
         new_var->alpha[i] = 0x100;
         new_var->unk31[i] = 0;
     }
@@ -1101,7 +1101,7 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
     intro = D_8010ADDC;
     new_var2 = arg0;
     if (intro->state == 8) {
-        for (i = 0; i < D_80121B55; i++) {
+        for (i = 0; i < gPlayerCount; i++) {
             if (D_8010AE00.selection[i] != arg0->selection[i]) {
                 arg0->selection[i] = D_8010AE00.selection[i];
             }
@@ -1161,7 +1161,7 @@ void func_80016E40(TitleMenuTransitionActor *arg0) {
     s32 stepAmount;
     s16 state;
 
-    count = &D_80121B55;
+    count = &gPlayerCount;
     actor = arg0;
     i = 0;
     if (*count > 0) {

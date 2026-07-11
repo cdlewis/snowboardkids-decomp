@@ -146,7 +146,7 @@ extern s8 D_8010AF74;
 extern s16 D_80112130[];
 extern ObjectA3E0 D_801121E0[];
 extern ObjectA3E0 D_80112340;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 D_80121D86;
 extern s8 D_80121D87;
 extern u8 D_80121D88;
@@ -564,7 +564,7 @@ void updateCourseSelectCourseList(void) {
     var_a0 = 0;
     if (D_80121D88 == 9) {
         var_a3 = 0;
-        if ((s32) D_80121B55 > 0) {
+        if ((s32) gPlayerCount > 0) {
             var_v1 = D_8010AEE8;
             do {
                 if ((*var_v1 != 0) || (temp_v0 = (&D_800EC9D0)[var_a3], (temp_v0 == 1)) || (temp_v0 >= 5)) {
@@ -572,12 +572,12 @@ void updateCourseSelectCourseList(void) {
                 }
                 var_a3 += 1;
                 var_v1 += 1;
-            } while (var_a3 < (s32) D_80121B55);
+            } while (var_a3 < (s32) gPlayerCount);
         }
         if (var_a0 == 0) {
             var_a3 = 0;
-            if ((s32) D_80121B55 < 3) {
-                var_a1 = D_80121B55;
+            if ((s32) gPlayerCount < 3) {
+                var_a1 = gPlayerCount;
             } else {
                 var_a1 = 4;
             }
@@ -620,7 +620,7 @@ block_17:
                     var_t1 = 3;
                 }
                 sp32 = var_t1;
-                if ((s32) D_80121B55 >= 2) {
+                if ((s32) gPlayerCount >= 2) {
                     var_t1 = (var_t1 - 1) & 0xFF;
                 }
                 temp_v0_2 = gPlayerInputHeld & 0x10800;
@@ -690,7 +690,7 @@ block_17:
                     sp33 = var_t1;
                     enqueueSoundEffect(1, 0x32);
                     var_a3_2 = 0;
-                    if ((D_80121B55 == 1) && (var_t1 == D_8010AE64)) {
+                    if ((gPlayerCount == 1) && (var_t1 == D_8010AE64)) {
                         D_80121D88 = 9;
                         D_801235B4 = 1;
                     } else {
@@ -709,12 +709,12 @@ block_17:
                     enqueueSoundEffect(1, 0x32);
                     D_8010ADF0 = 0;
                     var_a3_2 = 0;
-                    if ((s32) D_80121B55 > 0) {
+                    if ((s32) gPlayerCount > 0) {
                         var_v0_5 = &D_80121D80;
                         do {
                             var_v0_5->unk8 = 9;
                             var_v0_5 += 1;
-                        } while ((u32) var_v0_5 < (u32) (&D_80121D80 + D_80121B55));
+                        } while ((u32) var_v0_5 < (u32) (&D_80121D80 + gPlayerCount));
                     }
                 }
             }
@@ -885,7 +885,7 @@ block_17:
         gCourseSelectStatus.unk2E = 0;
     }
     var_a3_3 = 0;
-    if ((s32) D_80121B55 > 0) {
+    if ((s32) gPlayerCount > 0) {
         var_v0_7 = D_801121E0;
         do {
             D_800EC9C4 = var_v0_7;
@@ -894,7 +894,7 @@ block_17:
             var_v0_7->unk2C();
             var_a3_3 += 1;
             var_v0_7 += 0xB0;
-        } while (var_a3_3 < (s32) D_80121B55);
+        } while (var_a3_3 < (s32) gPlayerCount);
     }
     updateCallbackTasks();
 }
@@ -958,7 +958,7 @@ void updateCourseSelectPurchasePrompt(void) {
     }
 
     var_s0 = 0;
-    if (D_80121B55 > 0) {
+    if (gPlayerCount > 0) {
         var_s1 = D_801121E0;
         do {
             D_800EC9C4 = var_s1;
@@ -967,7 +967,7 @@ void updateCourseSelectPurchasePrompt(void) {
             var_s0--;
             var_s0 += 1;
             var_s1 += 1;
-        } while (var_s0 < (s32) (new_var = D_80121B55));
+        } while (var_s0 < (s32) (new_var = gPlayerCount));
     }
     updateCallbackTasks();
 }
@@ -1106,7 +1106,7 @@ after_input:
         setCurrentInputTaskCallback(initCourseSelectCourseDetailsMenu, 0);
     }
     i = 0;
-    if ((s32) D_80121B55 > 0) {
+    if ((s32) gPlayerCount > 0) {
         currentPtr = &D_800EC9C4;
         var_s0 = D_801121E0;
         do {
@@ -1115,7 +1115,7 @@ after_input:
             var_s0->unk2C();
             i += 1;
             var_s0 += 1;
-        } while (i < (s32) D_80121B55);
+        } while (i < (s32) gPlayerCount);
     }
     updateCallbackTasks();
 }
@@ -1136,7 +1136,7 @@ void initCourseSelectCourseDetailsMenu(void) {
         setCurrentInputTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
     }
 
- do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
+ do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
     updateCallbackTasks();
 }
 
@@ -1247,7 +1247,7 @@ block_16:
         }
     }
     var_v0 = 0;
-    if ((s32) D_80121B55 > 0) {
+    if ((s32) gPlayerCount > 0) {
         var_s0 = D_801121E0;
         do {
             D_800EC9C4 = var_s0;
@@ -1255,7 +1255,7 @@ block_16:
             var_s0->unk2C();
             var_v0 = sp24 + 1;
             var_s0 += 1;
-        } while (var_v0 < (s32) D_80121B55);
+        } while (var_v0 < (s32) gPlayerCount);
     }
     updateCallbackTasks();
 }
@@ -1271,7 +1271,7 @@ void waitCourseSelectRecordsClose(void) {
         setCurrentInputTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
     }
 
- do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
+ do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
     updateCallbackTasks();
 }
 
@@ -1291,7 +1291,7 @@ void returnToCourseSelectUnlockCourseList(void) {
         setCurrentInputTaskCallback(updateCourseSelectUnlockCourseList, 0);
     }
 
- do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
+ do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
     updateCallbackTasks();
 }
 
@@ -1329,7 +1329,7 @@ void returnToCourseSelectModeMenu(void) {
         gCourseSelectStatus.unk2E = 0;
     }
 
- do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
+ do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
     updateCallbackTasks();
 }
 
