@@ -1086,16 +1086,21 @@ void func_80016B54(TitleMenuWidgetActor *arg0) {
     func_80071824(new_var, func_80016948);
 }
 
-// func_80016BE8 best match: 94.563% (nonmatchings/func_80016BE8-4061930211835852828/base_10.c)
+// func_80016BE8 best match: 99.233% (nonmatchings/func_80016BE8-6061209858023118177/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016BE8.s")
 
 #ifdef NON_MATCHING
 void func_80016BE8(TitleMenuTransitionActor *arg0) {
+    MenuIntroActor *intro;
+    TitleMenuTransitionActor *new_var;
+    TitleMenuTransitionActor *new_var2;
     s32 i;
     s32 alpha;
     s16 state;
 
-    if (D_8010ADDC->state == 8) {
+    intro = D_8010ADDC;
+    new_var2 = arg0;
+    if (intro->state == 8) {
         for (i = 0; i < D_80121B55; i++) {
             if (D_8010AE00.selection[i] != arg0->selection[i]) {
                 arg0->selection[i] = D_8010AE00.selection[i];
@@ -1118,19 +1123,23 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
                     alpha = 0x100;
                 }
 
-                func_8000F8AC(arg0->x[i], arg0->y[i], func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                new_var = arg0;
+                func_8000F8AC(arg0->x[i], new_var->y[i], func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE),
                               D_800B5A2E[D_800EC9C8[i] * 2], 0x20, 0x20, 0, alpha, 0);
+
+                if (new_var->alpha == 0) {
+                }
 
                 state = D_800EC9D0[i];
                 if ((state == 3) || (state == 4)) {
-                    func_8000F8AC(arg0->x[i], (s16)(((D_800EC9D0[i] * 0x10) + arg0->y[i]) - 0x30),
-                                  func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0x12, 0x20, 0x20, 0, arg0->alpha[i],
+                    func_8000F8AC(new_var2->x[i], (s16)(((D_800EC9D0[i] * 0x10) + new_var->y[i]) - 0x30),
+                                  func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0x12, 0x20, 0x20, 0, new_var->alpha[i],
                                   i + 7);
                     state = D_800EC9D0[i];
                 }
             }
 
-            if ((state >= 5) && (arg0->slideOffset[i] == 0)) {
+            if ((state >= 5) && (new_var2->slideOffset[i] == 0)) {
                 D_8010AE00.nextSelection[i] = arg0->selection[i];
                 D_8010AE0E[i] = 2;
                 D_800EC9D0[i] = 0;
