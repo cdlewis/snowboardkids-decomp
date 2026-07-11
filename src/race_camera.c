@@ -466,12 +466,11 @@ void func_8006EFF4(void) {
     D_801124A0->update();
 }
 
-// func_8006F048 best match: 77.167% (nonmatchings/func_8006F048-2225551288923588688/base_1.c)
+// func_8006F048 best match: 79.490% (nonmatchings/func_8006F048-6113366811127043669/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006F048.s")
 
 #ifdef NON_MATCHING
 void func_8006F048(void) {
-    RaceCamera *camera;
     RacePlayerSlot *player;
     RacePlayerSlot *otherPlayer;
     RacePlayerSlot *players;
@@ -495,19 +494,15 @@ void func_8006F048(void) {
         stride = RACE_PLAYER_STATE_SIZE;
         players = D_80121D80;
         playerCount = &gRacePlayerCount;
-        camera = D_801124A0;
-        player = (RacePlayerSlot *)((u8 *)players + (camera->playerIndex * stride));
+        player = (RacePlayerSlot *)((u8 *)players + (D_801124A0->playerIndex * stride));
 
-        camera->focus.x += (player->state.cameraPos.x - camera->focus.x) >> 1;
-        camera = D_801124A0;
-        player = (RacePlayerSlot *)((u8 *)players + (camera->playerIndex * stride));
-        camera->focus.y += (player->state.cameraPos.y - camera->focus.y) >> 1;
-        camera = D_801124A0;
-        player = (RacePlayerSlot *)((u8 *)players + (camera->playerIndex * stride));
-        camera->focus.z += (player->state.cameraPos.z - camera->focus.z) >> 1;
+        D_801124A0->focus.x += (player->state.cameraPos.x - D_801124A0->focus.x) >> 1;
+        player = (RacePlayerSlot *)((u8 *)players + (D_801124A0->playerIndex * stride));
+        D_801124A0->focus.y += (player->state.cameraPos.y - D_801124A0->focus.y) >> 1;
+        player = (RacePlayerSlot *)((u8 *)players + (D_801124A0->playerIndex * stride));
+        D_801124A0->focus.z += (player->state.cameraPos.z - D_801124A0->focus.z) >> 1;
 
-        camera = D_801124A0;
-        player = (RacePlayerSlot *)((u8 *)players + (camera->playerIndex * stride));
+        player = (RacePlayerSlot *)((u8 *)players + (D_801124A0->playerIndex * stride));
         targetYaw = player->state.yaw - 0x300;
         blockedAngles = 0;
         i = 0;
@@ -515,15 +510,15 @@ void func_8006F048(void) {
         if (*playerCount > 0) {
             otherStride = RACE_PLAYER_STATE_SIZE;
             do {
-                if (i != camera->playerIndex) {
-                    player = (RacePlayerSlot *)((u8 *)players + (camera->playerIndex * stride));
+                if (i != D_801124A0->playerIndex) {
+                    player = (RacePlayerSlot *)((u8 *)players + (D_801124A0->playerIndex * stride));
                     otherPlayer = (RacePlayerSlot *)((u8 *)players + (i * otherStride));
                     dx = player->state.pos.x - otherPlayer->state.pos.x;
                     dz = player->state.pos.z - otherPlayer->state.pos.z;
                     distSq = (s64)dx * dx + (s64)dz * dz;
 
-                    if (distSq < 0xE1100000000LL) {
-                        if (distSq < 0xE1000000000LL) {
+                    if (distSq < 0xE1000000000LL) {
+                        if (distSq < 0xE0F00000000LL) {
                             blockedAngles |= 1 << (s16)((((func_8004908C(dx, dz) + 0x800) - targetYaw) + 0x100) & 0xFFF) >> 9;
                         } else {
                             break;
@@ -531,7 +526,6 @@ void func_8006F048(void) {
                     }
                 }
                 i++;
-                camera = D_801124A0;
             } while (i < *playerCount);
             i = 0;
         }
@@ -547,8 +541,7 @@ void func_8006F048(void) {
 
         yaw = targetYaw + D_800DA900[i];
         yaw = (s16)yaw;
-        camera = D_801124A0;
-        sine = func_8004940C(camera->focus.x, camera->focus.z, camera->pos.x, camera->pos.z);
+        sine = func_8004940C(D_801124A0->focus.x, D_801124A0->focus.z, D_801124A0->pos.x, D_801124A0->pos.z);
         diff = (yaw - sine) & 0xFFF;
         if (diff >= 0x801) {
             diff -= 0x1000;
@@ -562,9 +555,8 @@ void func_8006F048(void) {
         yaw = diff + sine;
         D_801124A0->unk92 = yaw;
 
-        camera = D_801124A0;
-        dx = camera->pos.x - camera->focus.x;
-        dz = camera->pos.z - camera->focus.z;
+        dx = D_801124A0->pos.x - D_801124A0->focus.x;
+        dz = D_801124A0->pos.z - D_801124A0->focus.z;
         dist = func_80098C30((s64)dx * dx + (s64)dz * dz);
         dist = ((0x300000 - dist) >> 1) + dist;
 
@@ -573,26 +565,18 @@ void func_8006F048(void) {
         D_801124A0->pos.x = (((s64)sine * -dist) / 0x1000) + D_801124A0->focus.x;
         D_801124A0->pos.z = (((s64)cosine * -dist) / 0x1000) + D_801124A0->focus.z;
 
-        camera = D_801124A0;
-        camera->pos.y += (camera->focus.y - camera->pos.y) >> 1;
+        D_801124A0->pos.y += (D_801124A0->focus.y - D_801124A0->pos.y) >> 1;
 
-        camera = D_801124A0;
-        camera->unk28 += (0x960000 - camera->unk28) >> 1;
+        D_801124A0->unk28 += (0x960000 - D_801124A0->unk28) >> 1;
 
         if (D_801235B4 & 0x20) {
             D_801124A0->update = func_8006F5B0;
         }
     }
 
-    camera = D_801124A0;
-    player = &D_80121D80[camera->playerIndex];
-    camera->prevPos.x = player->state.pos.x;
-    camera = D_801124A0;
-    player = &D_80121D80[camera->playerIndex];
-    camera->prevPos.y = player->state.pos.y;
-    camera = D_801124A0;
-    player = &D_80121D80[camera->playerIndex];
-    camera->prevPos.z = player->state.pos.z;
+    D_801124A0->prevPos.x = D_80121D80[D_801124A0->playerIndex].state.pos.x;
+    D_801124A0->prevPos.y = D_80121D80[D_801124A0->playerIndex].state.pos.y;
+    D_801124A0->prevPos.z = D_80121D80[D_801124A0->playerIndex].state.pos.z;
     func_8006D8B4();
 }
 #endif
