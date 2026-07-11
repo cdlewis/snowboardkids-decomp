@@ -9,7 +9,7 @@
 #include "ending_credits_ui.h"
 #include "menu_transition_effects.h"
 #include "race_start_transition.h"
-#include "ending_credits_actor_0.h"
+#include "ending_credits_slash.h"
 #include "main_menu_scene_actor_1.h"
 #include "main_menu_scene_actor_2.h"
 #include "main_menu_scene_actor_3.h"
@@ -139,7 +139,7 @@ void func_8000D590(void) {
         } else {
             setCurrentGameTaskCallback(func_8000D690, 0);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsPageTextActor, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback) initEndingCreditsActor0, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback) initEndingCreditsSlash, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_800362E8, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80036FB4, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80039440, 0, 0x64);

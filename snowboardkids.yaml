@@ -94,7 +94,7 @@ segments:
       - [0x2D0E0, c, shop_menu_ui]
       - [0x30BD0, c, controller_pak_ui]
       - [0x33220, c, main_menu_ui]
-      - [0x33680, c, ending_credits_actor_0]
+      - [0x33680, c, ending_credits_slash]
       - [0x35E20, c, main_menu_scene_actor_1]
       - [0x36F80, c, main_menu_scene_actor_4]
       - [0x37FE0, c, main_menu_scene_actor_2]
