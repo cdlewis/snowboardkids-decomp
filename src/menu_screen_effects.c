@@ -102,7 +102,7 @@ typedef struct {
 
 extern Gfx *gRegionAllocPtr;
 extern void *gMenuRenderCallbackList;
-extern u8 D_80124858[];
+extern u8 gMenuForegroundRenderCallbackList[];
 extern u8 D_80124878[];
 extern u8 gRaceObjectRenderCallbackList[];
 extern u8 D_801248BC;
@@ -364,7 +364,7 @@ void drawTitleScreenStartPrompt(MenuScreenEffectActor *arg0) {
 
 void updateTitleScreenStartPrompt(void *arg0) {
     if (gFrameCounter & 8) {
-        addRenderCallback(D_80124858, drawTitleScreenStartPrompt, 0);
+        addRenderCallback(gMenuForegroundRenderCallbackList, drawTitleScreenStartPrompt, 0);
     }
 }
 
