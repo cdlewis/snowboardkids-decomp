@@ -6,7 +6,7 @@
 #include "system_boot.h"
 #include "game_task_scheduler.h"
 #include "race_camera.h"
-#include "ending_object_sequence.h"
+#include "ending_sequence_ui.h"
 #include "main_menu_effects.h"
 #include "main_menu_race_setup.h"
 #include "main_menu_scene_actor_0.h"
@@ -62,7 +62,7 @@ extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern f32 D_800E0A70;
 extern s16 D_8010B1A0;
-extern u16 D_8010B1A2;
+extern u16 gEndingSequencePhase;
 extern s8 D_8010B1A4;
 extern s8 D_8010B1A5;
 extern s16 D_8010B1A6;
@@ -99,7 +99,7 @@ void func_8000D340(void) {
     D_8010B1B0.y = 0xFFB60000;
     D_8010B1B0.z = 0;
     D_8010B1A0 = 0;
-    D_8010B1A2 = 0;
+    gEndingSequencePhase = 0;
     D_8010B1A4 = 0;
     D_8010B1A6 = 0;
     D_8010B1A5 = 0;
@@ -138,7 +138,7 @@ void func_8000D590(void) {
             gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 0);
         } else {
             setCurrentGameTaskCallback(func_8000D690, 0);
-            createCallbackTask((CallbackTaskCallback) initEndingObjectSequenceTask, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback) initEndingSequenceMessageTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80035184, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_800362E8, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80036FB4, 0, 0x64);
@@ -151,7 +151,7 @@ void func_8000D590(void) {
 }
 
 void func_8000D690(void) {
-    if (D_8010B1A2 == 0x43) {
+    if (gEndingSequencePhase == 0x43) {
         gCurrentGameTask->timer++;
         if (gCurrentGameTask->timer == 0x12C) {
             gCurrentGameTask->timer = 0;

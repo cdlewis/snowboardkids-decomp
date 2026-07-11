@@ -29,7 +29,7 @@ extern s32 func_80043040(s16 arg0);
 extern void func_80045990(s32 arg0, s32 arg1, void **arg2, void **arg3);
 extern Mtx *func_8004885C(GfxCommandSource *arg0);
 extern MainMenuSceneActorShadow D_8010B1C0;
-extern u16 D_8010B1A2;
+extern u16 gEndingSequencePhase;
 extern s8 D_8010B1AC;
 extern void addRenderCallback(void *, void *, void *);
 extern s32 D_80124898;
@@ -53,7 +53,7 @@ void func_800363B4(MainMenuSceneActor4 *arg0) {
     func_80041FB4(4);
     func_800428C8(4);
     func_800373AC(&D_8010B1C0);
-    if (D_8010B1A2 == 0x41) {
+    if (gEndingSequencePhase == 0x41) {
         setCallbackTaskCallback(arg0, func_80036388);
         func_80041DD4(4, 0x61);
     }
@@ -76,10 +76,10 @@ void func_80036418(MainMenuSceneActor4 *arg0) {
         if (temp_v0 < 0x1E) {
             arg0->timer = temp_t7;
             if ((temp_t7 & 0xFFFFU) == 0x1E) {
-                D_8010B1A2 = 0x3E;
+                gEndingSequencePhase = 0x3E;
             }
         }
-        if (D_8010B1A2 == 0x40) {
+        if (gEndingSequencePhase == 0x40) {
             arg0->timer = 0;
             setCallbackTaskCallback(arg0, func_800363B4);
             func_80041DD4(4, 0x60);
@@ -91,7 +91,7 @@ void func_800364B8(MainMenuSceneActor4 *arg0) {
     func_80042034(4);
     func_800428C8(4);
     func_800373AC(&D_8010B1C0);
-    if (D_8010B1A2 == 0x3D) {
+    if (gEndingSequencePhase == 0x3D) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_80036418);
         func_80041DD4(4, 0x5F);
@@ -105,7 +105,7 @@ void func_80036520(MainMenuSceneActor4 *arg0) {
     arg0->posX += 0x48000;
     if (arg0->posX >= limit) {
         arg0->posX = limit;
-        D_8010B1A2 = 0x3A;
+        gEndingSequencePhase = 0x3A;
         setCallbackTaskCallback(arg0, func_800364B8);
     }
     func_8004209C(4, arg0->posX, arg0->posY, arg0->posZ);
@@ -122,9 +122,9 @@ void func_800365B4(MainMenuSceneActor4 *arg0) {
         temp_t6 = temp_v0 + 1;
         arg0->timer = temp_t6;
         if ((temp_t6 & 0xFFFF) == 0x23) {
-            D_8010B1A2 = 0x10;
+            gEndingSequencePhase = 0x10;
         }
-    } else if (D_8010B1A2 == 0x39) {
+    } else if (gEndingSequencePhase == 0x39) {
         arg0->posX = 0xFCA00000;
         setCallbackTaskCallback(arg0, func_80036520);
         func_80041DD4(4, 4);
@@ -220,7 +220,7 @@ void func_80036930(MainMenuSceneActor4 *arg0) {
     func_80042034(4);
     func_800428C8(4);
     arg0->timer++;
-    if (D_8010B1A2 == 0xF) {
+    if (gEndingSequencePhase == 0xF) {
         arg0->timer = 0;
         func_8004209C(4, arg0->posX, arg0->posY, arg0->posZ);
         setCallbackTaskCallback(arg0, func_800368BC);
@@ -234,7 +234,7 @@ void func_800369BC(MainMenuSceneActor4 *arg0) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_80036930);
         func_80041DD4(4, 0xC);
-        D_8010B1A2 = 0xC;
+        gEndingSequencePhase = 0xC;
         D_8010B1AC = 0;
         func_8003CD9C(-0x24, -0x32, 4, 0);
         func_8003CD9C(0x10, -0x32, 4, 1);
@@ -283,9 +283,9 @@ void func_80036B54(MainMenuSceneActor4 *arg0) {
 }
 
 void func_80036C14(MainMenuSceneActor4 *arg0) {
-    if (D_8010B1A2 < 0xA) {
+    if (gEndingSequencePhase < 0xA) {
         func_80042034(4);
-    } else if (D_8010B1A2 == 0xB) {
+    } else if (gEndingSequencePhase == 0xB) {
         setCallbackTaskCallback(arg0, func_80036B54);
         func_80041DD4(4, 8);
         D_8010B1AC = 1;
@@ -295,7 +295,7 @@ void func_80036C14(MainMenuSceneActor4 *arg0) {
 }
 
 void func_80036C8C(MainMenuSceneActor4 *arg0) {
-    if (D_8010B1A2 == 8) {
+    if (gEndingSequencePhase == 8) {
         setCallbackTaskCallback(arg0, func_80036C14);
         func_80041DD4(4, 7);
         D_8010B1C4 = (s32)0xFFE80000;
@@ -317,17 +317,17 @@ void func_80036D08(MainMenuSceneActor4 *arg0) {
         setCallbackTaskCallback(arg0, func_80036C8C);
         arg0->timer = 0;
         D_8010B1AC = 1;
-        D_8010B1A2 = 7;
+        gEndingSequencePhase = 7;
     }
     func_800428C8(4);
     func_800373AC(&D_8010B1C0);
 }
 
 void func_80036DAC(MainMenuSceneActor4 *arg0) {
-    if ((func_80041FB4(4) == 1) && (D_8010B1A2 == 4)) {
-        D_8010B1A2 = 5;
+    if ((func_80041FB4(4) == 1) && (gEndingSequencePhase == 4)) {
+        gEndingSequencePhase = 5;
     }
-    if (D_8010B1A2 == 6) {
+    if (gEndingSequencePhase == 6) {
         setCallbackTaskCallback(arg0, func_80036D08);
         func_80041DD4(4, 6);
         D_8010B1AC = 0;
@@ -339,7 +339,7 @@ void func_80036DAC(MainMenuSceneActor4 *arg0) {
 
 void func_80036E58(MainMenuSceneActor4 *arg0) {
     func_80042034(4);
-    if (D_8010B1A2 == 4) {
+    if (gEndingSequencePhase == 4) {
         setCallbackTaskCallback(arg0, func_80036DAC);
         func_80041DD4(4, 5);
     }
@@ -351,7 +351,7 @@ void func_80036EBC(MainMenuSceneActor4 *arg0) {
     arg0->posX += 0x24000;
     if (arg0->posX >= 0x100000) {
         arg0->posX = 0x100000;
-        D_8010B1A2 = 2;
+        gEndingSequencePhase = 2;
         setCallbackTaskCallback(arg0, func_80036E58);
         func_8004209C(4, arg0->posX, arg0->posY, arg0->posZ);
         func_80041DD4(4, 4);
@@ -364,7 +364,7 @@ void func_80036EBC(MainMenuSceneActor4 *arg0) {
 }
 
 void func_80036F6C(MainMenuSceneActor4 *arg0) {
-    if (D_8010B1A2 == 1) {
+    if (gEndingSequencePhase == 1) {
         setCallbackTaskCallback(arg0, func_80036EBC);
         createCallbackTask(&func_8003D384, 0, 0x64);
     }
