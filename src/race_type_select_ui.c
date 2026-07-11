@@ -2,7 +2,7 @@
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "race_type_select_ui.h"
-#include "player_select_ui.h"
+#include "race_splitscreen_select_ui.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "menu_renderer.h"
 
@@ -858,7 +858,7 @@ void drawRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
     char sp40[0x18];
 
     if (gRaceTypeSelection != 3) {
-        func_8001BA2C(arg0->x, arg0->y, 0x5000, 0x4000);
+        drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
         drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
         sprintf(sp40, gRaceTypeSelectEntryFeeFormat, D_80121D8C);
         drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);

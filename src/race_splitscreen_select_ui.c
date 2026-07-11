@@ -1,43 +1,43 @@
 #include "common.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
-#include "player_select_ui.h"
+#include "race_splitscreen_select_ui.h"
 #include "menu_renderer.h"
 
 typedef struct {
     char pad0[0x42];
     /* 0x42 */ s16 textureHandle;
-} PlayerSelectAssetHandles;
+} RaceSplitscreenSelectAssetHandles;
 
 typedef struct {
     u8 state;
     char pad1[1];
     s16 nextState;
-} PlayerSelectCursorState;
+} RaceSplitscreenSelectCursorState;
 
-typedef u8 PlayerPortrait[0x8C];
+typedef u8 RaceSplitscreenSelectPortrait[0x8C];
 
 typedef struct {
     /* 0x00 */ u16 centerTiles[16];
     /* 0x20 */ u16 rightEdgeTiles[2];
     /* 0x24 */ u16 bottomEdgeTiles[2];
     /* 0x28 */ u16 cornerTile;
-} PlayerSelectFrameTiles;
+} RaceSplitscreenSelectFrameTiles;
 
 extern void addRenderCallback(void *, void *, void *);
 extern int sprintf(char *, const char *, ...);
-extern PlayerSelectFrameTiles D_800B5B50[];
-extern PlayerPortrait D_800B5C24[];
+extern RaceSplitscreenSelectFrameTiles gRaceSplitscreenSelectFrameTiles[];
+extern RaceSplitscreenSelectPortrait gRaceSplitscreenSelectPortraitScripts[];
 extern u8 D_800EC9C1;
 extern u8 gRaceSplitscreenMode;
 extern u8 D_80121D85;
 extern u8 D_80121D88;
 extern void *gMenuRenderCallbackList;
-extern PlayerSelectAssetHandles gAssetHandles;
-extern PlayerSelectCursorState gRaceSplitscreenSelectCursorTarget;
+extern RaceSplitscreenSelectAssetHandles gAssetHandles;
+extern RaceSplitscreenSelectCursorState gRaceSplitscreenSelectCursorTarget;
 extern u8 gRaceSplitscreenSelectCursorAnimState;
 extern s16 gRaceSplitscreenSelectPortraitAlpha;
-extern u32 D_800B5F80[];
+extern u32 gMenuPanelBackdropTexture[];
 extern Gfx gMenuRenderModeResetDl[];
 extern s32 gActiveMenuTask;
 extern u8 D_8010ADF8;
@@ -47,11 +47,11 @@ extern s16 gMenuViewportCenterY;
 extern s32 D_80121D8C;
 extern s32 gMenuFlowState;
 
-const char D_800E0AE0[] = "%6dG";
+const char gRaceSplitscreenSelectEntryFeeFormat[] = "%6dG";
 
-void func_800191D0(PlayerSelectRowActor *arg0) {
-    PlayerSelectRowActor *sp54;
-    PlayerSelectRowActor *var_s3;
+void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *arg0) {
+    RaceSplitscreenSelectRowActor *sp54;
+    RaceSplitscreenSelectRowActor *var_s3;
     s32 var_s0;
     s32 var_s1;
     s32 var_s2;
@@ -59,18 +59,18 @@ void func_800191D0(PlayerSelectRowActor *arg0) {
     sp54 = arg0;
     var_s0 = 0;
     if ((s32)arg0->playerCount > 0) {
-        do { var_s2 = 0; var_s3 = arg0; do { var_s1 = 0; if (((((D_800EC9C1 != 0) && (((s32)D_800EC9C1) < 8)) && (D_8010ADF8 == 0)) && (var_s0 == gRaceSplitscreenMode)) && (D_800EC9C1 & 1)) { var_s1 = 0xFF; } drawMenuSprite(var_s3->iconX[0], (s16)(arg0->iconY + var_s2), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (var_s0 + 8) & 0xFFFF, 0x20, 0x20, 0, var_s1); var_s0 += 1; var_s2 += 0x14; var_s3 = (PlayerSelectRowActor *)((u8 *)var_s3 + 2); if (arg0->playerCount) {} } while (var_s0 < ((s32)sp54->playerCount)); } while (0);
+        do { var_s2 = 0; var_s3 = arg0; do { var_s1 = 0; if (((((D_800EC9C1 != 0) && (((s32)D_800EC9C1) < 8)) && (D_8010ADF8 == 0)) && (var_s0 == gRaceSplitscreenMode)) && (D_800EC9C1 & 1)) { var_s1 = 0xFF; } drawMenuSprite(var_s3->iconX[0], (s16)(arg0->iconY + var_s2), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (var_s0 + 8) & 0xFFFF, 0x20, 0x20, 0, var_s1); var_s0 += 1; var_s2 += 0x14; var_s3 = (RaceSplitscreenSelectRowActor *)((u8 *)var_s3 + 2); if (arg0->playerCount) {} } while (var_s0 < ((s32)sp54->playerCount)); } while (0);
     }
 }
 
-void func_80019314(PlayerSelectRowActor *arg0) {
+void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *arg0) {
     s32 i;
     s32 moved;
-    void (*callback)(PlayerSelectWidgetActor *);
+    void (*callback)(RaceSplitscreenSelectWidgetActor *);
     s32 state;
     int stateByte;
-    PlayerSelectRowActor *row;
-    PlayerSelectRowActor *actor;
+    RaceSplitscreenSelectRowActor *row;
+    RaceSplitscreenSelectRowActor *actor;
 
     stateByte = arg0->state;
     actor = arg0;
@@ -98,12 +98,12 @@ void func_80019314(PlayerSelectRowActor *arg0) {
 
         if (moved == 0) {
             row->state = 1;
-            createCallbackTask(func_80019FAC, 0, 0x5F);
-            callback = func_8001A44C;
+            createCallbackTask(initRaceSplitscreenSelectOption0Frame, 0, 0x5F);
+            callback = initRaceSplitscreenSelectOption1Frame;
             createCallbackTask(callback, 0, 0x60);
-            createCallbackTask(func_8001A8E0, 0, 0x61);
-            createCallbackTask(func_8001AD74, 0, 0x62);
-            createCallbackTask(func_8001B210, 0, 0x63);
+            createCallbackTask(initRaceSplitscreenSelectOption2Frame, 0, 0x61);
+            createCallbackTask(initRaceSplitscreenSelectOption3Frame, 0, 0x62);
+            createCallbackTask(initRaceSplitscreenSelectOption4Frame, 0, 0x63);
             state++;
             state--;
         }
@@ -130,10 +130,10 @@ void func_80019314(PlayerSelectRowActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_800191D0, actor);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectPlayerCountIcons, actor);
 }
 
-void func_8001952C(PlayerSelectRowActor *arg0) {
+void initRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *arg0) {
     s32 i;
 
     for (i = 0; i < 5; i++) { arg0->iconX[i] = -0x104; }
@@ -143,17 +143,17 @@ void func_8001952C(PlayerSelectRowActor *arg0) {
     arg0->playerCount = 1;
     arg0->state = 0;
 
-    setCallbackTaskCallback(arg0, func_80019314);
+    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectPlayerCountIcons);
 }
 
-void func_8001958C(PlayerSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *arg0) {
     drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
     drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
 }
 
-void func_800196CC(PlayerSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
 
     switch (state) {
@@ -184,20 +184,20 @@ void func_800196CC(PlayerSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8001958C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectCornerSprites, arg0);
 }
 
-void func_800197CC(PlayerSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
-    setCallbackTaskCallback(arg0, func_800196CC);
+    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectCornerSprites);
 }
 
-// func_80019800 best match: 98.548% (nonmatchings/func_80019800-6061209858023118177/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_80019800.s")
+// drawRaceSplitscreenSelectOption0Frame best match: 98.548% (nonmatchings/drawRaceSplitscreenSelectOption0Frame-6061209858023118177/base_3.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_splitscreen_select_ui/drawRaceSplitscreenSelectOption0Frame.s")
 
 #ifdef NON_MATCHING
-void func_80019800(PlayerSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -208,7 +208,7 @@ void func_80019800(PlayerSelectWidgetActor *arg0) {
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTile((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->counter].centerTiles[tileOffset], 0, 0x100);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->counter].centerTiles[tileOffset], 0, 0x100);
     }
 
     if (shouldDraw) {
@@ -220,10 +220,10 @@ void func_80019800(PlayerSelectWidgetActor *arg0) {
     offset = 0;
     do {
         drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->counter].rightEdgeTiles[tileOffset], 0, 0x100);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->counter].rightEdgeTiles[tileOffset], 0, 0x100);
         i = 0x80;
         drawMenuSpriteTile((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->counter].bottomEdgeTiles[tileOffset], 0, 0x100);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->counter].bottomEdgeTiles[tileOffset], 0, 0x100);
         offset += 0x40;
         tileOffset++;
     } while (offset != i);
@@ -231,7 +231,7 @@ void func_80019800(PlayerSelectWidgetActor *arg0) {
     i--;
 
     drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                  D_800B5B50[(u16)arg0->counter].cornerTile, 0, 0x100);
+                  gRaceSplitscreenSelectFrameTiles[(u16)arg0->counter].cornerTile, 0, 0x100);
 
     drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x33, 0x20,
                   0x20, 0, 0);
@@ -256,7 +256,7 @@ void func_80019800(PlayerSelectWidgetActor *arg0) {
 }
 #endif
 
-void func_80019CD8(PlayerSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     int state;
 
     if ((gRaceSplitscreenMode >= (u16) arg0->counter) && (arg0->row.bytes.subState != 0) && (arg0->y != -0x48)) {
@@ -277,16 +277,16 @@ void func_80019CD8(PlayerSelectWidgetActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->row.bytes.subTimer == 0) {
-            createCallbackTask(func_800197CC, 0, 0x63);
+            createCallbackTask(initRaceSplitscreenSelectCornerSprites, 0, 0x63);
         }
         arg0->row.bytes.subTimer++;
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->row.bytes.subState = 3;
-            gActiveMenuTask = (s32) createCallbackTask(func_8001B454, 0, 0x64);
-            createCallbackTask(func_8001B638, 0, 0x64);
-            createCallbackTask(func_8001B7D8, 0, 0x64);
-            createCallbackTask(func_8001B9F0, 0, 0x64);
+            gActiveMenuTask = (s32) createCallbackTask(initRaceSplitscreenSelectCursor, 0, 0x64);
+            createCallbackTask(initRaceSplitscreenSelectPortrait, 0, 0x64);
+            createCallbackTask(initRaceSplitscreenSelectArrowPrompt, 0, 0x64);
+            createCallbackTask(initRaceSplitscreenSelectEntryFee, 0, 0x64);
         }
         state = arg0->row.bytes.subState;
         break;
@@ -330,10 +330,10 @@ void func_80019CD8(PlayerSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80019800, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectOption0Frame, arg0);
 }
 
-void func_80019FAC(PlayerSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->x = 0x94;
     arg0->y = -0x48;
     arg0->sprite.spriteIndex = -8;
@@ -341,10 +341,10 @@ void func_80019FAC(PlayerSelectWidgetActor *arg0) {
     arg0->counter = 0;
     arg0->row.bytes.subTimer = 0;
     arg0->row.bytes.subState = 0;
-    setCallbackTaskCallback(arg0, func_80019CD8);
+    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectOption0Frame);
 }
 
-void func_80019FFC(PlayerSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -355,7 +355,7 @@ void func_80019FFC(PlayerSelectWidgetActor *arg0) {
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->sprite.spriteIndex].centerTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].centerTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -366,10 +366,10 @@ void func_80019FFC(PlayerSelectWidgetActor *arg0) {
     do {
         drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -378,10 +378,10 @@ void func_80019FFC(PlayerSelectWidgetActor *arg0) {
     i--;
 
     drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                  D_800B5B50[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
+                  gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8001A270(PlayerSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     int state;
 
     if ((gRaceSplitscreenMode >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
@@ -439,19 +439,19 @@ void func_8001A270(PlayerSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80019FFC, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectOption1Frame, arg0);
 }
 
-void func_8001A44C(PlayerSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
     arg0->sprite.spriteIndex = 1;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8001A270);
+    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectOption1Frame);
 }
 
-void func_8001A490(PlayerSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileIndex;
@@ -462,7 +462,7 @@ void func_8001A490(PlayerSelectWidgetActor *arg0) {
     for (i = 0; i < 16; i++, tileIndex++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->sprite.spriteIndex].centerTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].centerTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -472,9 +472,9 @@ void func_8001A490(PlayerSelectWidgetActor *arg0) {
     offset = 0;
     do {
         drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
         drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileIndex++;
@@ -483,10 +483,10 @@ void func_8001A490(PlayerSelectWidgetActor *arg0) {
     i--;
 
     drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                  D_800B5B50[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
+                  gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8001A704(PlayerSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     int state;
 
     if ((gRaceSplitscreenMode >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
@@ -544,19 +544,19 @@ void func_8001A704(PlayerSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8001A490, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectOption2Frame, arg0);
 }
 
-void func_8001A8E0(PlayerSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
     arg0->sprite.spriteIndex = 2;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8001A704);
+    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectOption2Frame);
 }
 
-void func_8001A924(PlayerSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -567,7 +567,7 @@ void func_8001A924(PlayerSelectWidgetActor *arg0) {
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->sprite.spriteIndex].centerTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].centerTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -578,10 +578,10 @@ void func_8001A924(PlayerSelectWidgetActor *arg0) {
     do {
         drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -590,10 +590,10 @@ void func_8001A924(PlayerSelectWidgetActor *arg0) {
     i--;
 
     drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                  D_800B5B50[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
+                  gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8001AB98(PlayerSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     int state;
 
     if ((gRaceSplitscreenMode >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
@@ -651,19 +651,19 @@ void func_8001AB98(PlayerSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8001A924, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectOption3Frame, arg0);
 }
 
-void func_8001AD74(PlayerSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
     arg0->sprite.spriteIndex = 3;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8001AB98);
+    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectOption3Frame);
 }
 
-void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileIndex;
@@ -674,7 +674,7 @@ void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
     for (i = 0; i < 16; i++, tileIndex++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->sprite.spriteIndex].centerTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].centerTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -684,9 +684,9 @@ void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
     offset = 0;
     do {
         drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
         drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                      D_800B5B50[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
+                      gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileIndex++;
@@ -695,10 +695,10 @@ void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
     i--;
 
     drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                  D_800B5B50[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
+                  gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8001B02C(PlayerSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     int state;
 
     gMenuFlowState = 0;
@@ -757,23 +757,23 @@ void func_8001B02C(PlayerSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8001ADB8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectOption4Frame, arg0);
 }
 
-void func_8001B210(PlayerSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
     arg0->sprite.spriteIndex = 4;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8001B02C);
+    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectOption4Frame);
 }
 
-void func_8001B254(PlayerSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (gRaceSplitscreenMode * 0x14)), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
-void func_8001B2D8(PlayerSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
     u8 state;
     u8 globalState;
 
@@ -828,19 +828,19 @@ void func_8001B2D8(PlayerSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8001B254, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectCursor, arg0);
 }
 
-void func_8001B454(PlayerSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->x = -0x7C;
     arg0->y = -0x60;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
     arg0->transition.bytes.timer = 0;
-    setCallbackTaskCallback(arg0, func_8001B2D8);
+    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectCursor);
 }
 
-void func_8001B494(PlayerSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
     s32 portraitIndex;
 
     if (gRaceSplitscreenMode == 3) {
@@ -851,10 +851,10 @@ void func_8001B494(PlayerSelectWidgetActor *arg0) {
     } else {
         portraitIndex = gRaceSplitscreenMode & 0xFF;
     }
-    drawMenuGlyphScript(arg0->x, arg0->y, D_800B5C24[portraitIndex], 1, arg0->sprite.spriteIndex, 0);
+    drawMenuGlyphScript(arg0->x, arg0->y, gRaceSplitscreenSelectPortraitScripts[portraitIndex], 1, arg0->sprite.spriteIndex, 0);
 }
 
-void func_8001B520(PlayerSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
     u8 state = arg0->transition.bytes.state;
 
     switch (state) {
@@ -884,22 +884,22 @@ void func_8001B520(PlayerSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8001B494, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectPortrait, arg0);
 }
 
-void func_8001B638(PlayerSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->x = -0x84;
     arg0->y = 0xC;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8001B520);
+    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectPortrait);
 }
 
-void func_8001B674(PlayerSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
-void func_8001B6D8(PlayerSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *arg0) {
     u8 state = arg0->transition.bytes.state;
 
     switch (state) {
@@ -930,27 +930,27 @@ void func_8001B6D8(PlayerSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8001B674, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectArrowPrompt, arg0);
 }
 
-void func_8001B7D8(PlayerSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x5C;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8001B6D8);
+    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectArrowPrompt);
 }
 
-void func_8001B814(PlayerSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
     char sp40[0x18];
 
-    func_8001BA2C(arg0->x, arg0->y, 0x5000, 0x4000);
+    drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
     drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
-    sprintf(sp40, D_800E0AE0, D_80121D8C);
+    sprintf(sp40, gRaceSplitscreenSelectEntryFeeFormat, D_80121D8C);
     drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
 }
 
-void func_8001B8F0(PlayerSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
     u8 state = arg0->transition.bytes.state;
 
     switch (state) {
@@ -981,22 +981,22 @@ void func_8001B8F0(PlayerSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8001B814, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectEntryFee, arg0);
 }
 
-void func_8001B9F0(PlayerSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->x = 0x30;
     arg0->y = 0x40;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8001B8F0);
+    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectEntryFee);
 }
 
-// func_8001BA2C best match: 95.638% at nonmatchings/func_8001BA2C-5752545231564691495/base_8.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/player_select_ui/func_8001BA2C.s")
+// drawMenuPanelBackdrop best match: 95.638% at nonmatchings/drawMenuPanelBackdrop-5752545231564691495/base_8.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/race_splitscreen_select_ui/drawMenuPanelBackdrop.s")
 
 #ifdef NON_MATCHING
-void func_8001BA2C(s32 x, s32 y, s32 width, s32 height) {
+void drawMenuPanelBackdrop(s32 x, s32 y, s32 width, s32 height) {
     Gfx *volatile unused0;
     Gfx *volatile unused1;
     Gfx *volatile unused2;
@@ -1009,7 +1009,7 @@ void func_8001BA2C(s32 x, s32 y, s32 width, s32 height) {
     gDPSetTextureLUT(gRegionAllocPtr++, G_TT_NONE);
     gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEI_PRIM, G_CC_MODULATEI_PRIM);
     gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
-    gDPLoadTextureTile_4b(gRegionAllocPtr++, D_800B5F80, G_IM_FMT_I, 16, 8, 0, 0, 16, 8, 0,
+    gDPLoadTextureTile_4b(gRegionAllocPtr++, gMenuPanelBackdropTexture, G_IM_FMT_I, 16, 8, 0, 0, 16, 8, 0,
                           G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
                           G_TX_NOLOD, G_TX_NOLOD);
     gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, 0x64);

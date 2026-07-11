@@ -6,7 +6,7 @@
 #include "game_task_scheduler.h"
 #include "menu_renderer.h"
 #include "race_splitscreen_select_menu.h"
-#include "player_select_ui.h"
+#include "race_splitscreen_select_ui.h"
 #include "title_menu.h"
 #include "viewport_manager.h"
 
@@ -117,7 +117,7 @@ void updateRaceSplitscreenSelectMenu(void) {
     if (gCurrentGameTask->fade != 0) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
-            createCallbackTask(func_8001952C, 0, 0x63);
+            createCallbackTask(initRaceSplitscreenSelectPlayerCountIcons, 0, 0x63);
         }
     } else {
         if ((gRaceSplitscreenSelectCursorTarget.portraitAlpha == 0x100) && (D_80121D88 == 0)) {
