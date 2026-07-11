@@ -1,6 +1,6 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
-#include "ending_credits_effects.h"
+#include "ending_credits_effect_actors.h"
 #include "ending_credits_slash.h"
 #include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
@@ -81,7 +81,7 @@ void updateEndingSlashPhase40Prep(EndingCreditsSlash *arg0) {
             temp->timer = 0;
             setCallbackTaskCallback(temp, waitEndingSlashPhase40);
             setMainMenuSceneModelAnimation(0, 0x54);
-            spawnEndingPhaseAdvanceSparkle(0xA, -0x64);
+            spawnEndingCreditsPhaseAdvanceSparkle(0xA, -0x64);
         }
     }
     addMainMenuSceneModelDrawCallback(0);
@@ -231,7 +231,7 @@ void waitEndingSlashPhase34(EndingCreditsSlash *arg0) {
         arg0->posX = 0x1900000;
         arg0->posZ = 0;
         gEndingCharacterEffectDoneFlags[0] = 0;
-        spawnEndingCharacterAura(0x1C, -0x30, 0, 1);
+        spawnEndingCreditsCharacterAura(0x1C, -0x30, 0, 1);
     }
 }
 
@@ -271,7 +271,7 @@ void updateEndingSlashVanishRetreat(EndingCreditsSlash *arg0) {
         setMainMenuSceneModelPosition(0, arg0->posX, 0, arg0->posZ);
         setMainMenuSceneModelAnimation(0, 0x1B);
         gEndingCharacterEffectDoneFlags[0] = 0;
-        spawnEndingCharacterAura(0x1C, -0x30, 0, 1);
+        spawnEndingCreditsCharacterAura(0x1C, -0x30, 0, 1);
     }
 }
 
@@ -280,7 +280,7 @@ void waitEndingSlashPhase2F(void *arg0) {
     if (gEndingSequencePhase == 0x2F) {
         setCallbackTaskCallback(arg0, updateEndingSlashVanishRetreat);
         setMainMenuSceneModelAnimation(0, 0x4E);
-        spawnEndingCharacterVanishPoof(8, -0x40, 0, 0);
+        spawnEndingCreditsCharacterVanishPoof(8, -0x40, 0, 0);
     }
 }
 
@@ -338,7 +338,7 @@ void updateEndingSlashSlideRightToPose(EndingCreditsSlash *arg0) {
         arg0->posX = 0x800000;
         setCallbackTaskCallback(arg0, waitEndingSlashPhase2A);
         gEndingCharacterEffectDoneFlags[0] = 1;
-        spawnEndingCharacterLoopingSparkle(-0x10, -0x4A, 0);
+        spawnEndingCreditsCharacterLoopingSparkle(-0x10, -0x4A, 0);
         var_a1 = arg0->posX;
     }
     setMainMenuSceneModelPosition(0, var_a1, arg0->posY, arg0->posZ);
@@ -438,7 +438,7 @@ void waitEndingSlashPhase22Aura(void *arg0) {
     if (gEndingSequencePhase == 0x22) {
         setCallbackTaskCallback(arg0, updateEndingSlashSlideRightSetPhase23);
         gEndingCharacterEffectDoneFlags[0] = 0;
-        spawnEndingCharacterAura(0x1C, -0x30, 0, 1);
+        spawnEndingCreditsCharacterAura(0x1C, -0x30, 0, 1);
     }
 }
 
@@ -472,7 +472,7 @@ void updateEndingSlashAfterVanishWait(EndingCreditsSlash *arg0) {
             setMainMenuSceneModelRotation(0, arg0->rotX, arg0->rotY, arg0->rotZ);
             gEndingSequencePhase = 0x1F;
             gEndingCharacterEffectDoneFlags[0] = 0;
-            spawnEndingCharacterAura(0x1C, -0x30, 0, 1);
+            spawnEndingCreditsCharacterAura(0x1C, -0x30, 0, 1);
         }
     }
 }
@@ -482,7 +482,7 @@ void waitEndingSlashPhase1E(void *arg0) {
     if (gEndingSequencePhase == 0x1E) {
         setCallbackTaskCallback(arg0, updateEndingSlashAfterVanishWait);
         setMainMenuSceneModelAnimation(0, 0x2D);
-        spawnEndingCharacterVanishPoof(8, -0x40, 0, 0);
+        spawnEndingCreditsCharacterVanishPoof(8, -0x40, 0, 0);
     }
 }
 
@@ -546,7 +546,7 @@ void waitEndingSlashPhase1B(EndingCreditsSlash *arg0) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, updateEndingSlashWaitBeforeRepeatAnim);
         setMainMenuSceneModelAnimation(0, 0x2D);
-        spawnEndingCharacterVanishPoof(8, -0x40, 0, 0);
+        spawnEndingCreditsCharacterVanishPoof(8, -0x40, 0, 0);
     }
 }
 
@@ -734,7 +734,7 @@ void updateEndingSlashSlideRightBurst(EndingCreditsSlash *arg0) {
         setCallbackTaskCallback(arg0, updateEndingSlashHopLeftAnim);
         gEndingSequencePhase = 0x15;
         gEndingCharacterEffectDoneFlags[0] = 1;
-        spawnEndingSmallBurst(0xB, -0x4C);
+        spawnEndingCreditsSmallBurst(0xB, -0x4C);
         var_a1 = arg0->posX;
     }
     setMainMenuSceneModelPosition(0, var_a1, arg0->posY, arg0->posZ);
@@ -825,7 +825,7 @@ void waitEndingSlashPhase10Aura(EndingCreditsSlash *arg0) {
         setCallbackTaskCallback(arg0, updateEndingSlashSlideRightSetPhase11);
         setMainMenuSceneModelAnimation(0, 0x1B);
         gEndingCharacterEffectDoneFlags[0] = 0;
-        spawnEndingCharacterAura(-0x32, -0x30, 0, 0);
+        spawnEndingCreditsCharacterAura(-0x32, -0x30, 0, 0);
     }
 }
 
@@ -856,9 +856,9 @@ void updateEndingSlashVanishBeforeExitRight(EndingCreditsSlash *arg0) {
             setCallbackTaskCallback(arg0, updateEndingSlashExitRightSetPhase0E);
             setMainMenuSceneModelAnimation(0, 0x1B);
             gEndingCharacterEffectDoneFlags[0] = 0;
-            spawnEndingCharacterAura(-0x32, -0x30, 0, 0);
+            spawnEndingCreditsCharacterAura(-0x32, -0x30, 0, 0);
         } else if (temp == 2) {
-            spawnEndingCharacterVanishPoof(5, -0x40, 0, 0);
+            spawnEndingCreditsCharacterVanishPoof(5, -0x40, 0, 0);
         }
     }
     addMainMenuSceneModelDrawCallback(0);
@@ -884,7 +884,7 @@ void updateEndingSlashWaitRisingStar(EndingCreditsSlash *arg0) {
         arg0->timer += 1;
         if (arg0->timer == 0x23) {
             arg0->timer = 0;
-            createCallbackTask(initEndingSlashRisingStar, 0, 0x64);
+            createCallbackTask(initEndingCreditsSlashRisingStar, 0, 0x64);
         }
     }
     addMainMenuSceneModelDrawCallback(0);
@@ -940,7 +940,7 @@ void updateEndingSlashAfterPhase0DAnim(EndingCreditsSlash *arg0) {
     } else {
         arg0->timer += 1;
         if (arg0->timer == 3) {
-            spawnEndingSmallBurst(6, -0x42);
+            spawnEndingCreditsSmallBurst(6, -0x42);
         }
     }
     addMainMenuSceneModelDrawCallback(0);
@@ -982,7 +982,7 @@ void updateEndingSlashSlideLeftToAura(EndingCreditsSlash *arg0) {
         setMainMenuSceneModelRotation(0, arg0->rotX, arg0->rotY, arg0->rotZ);
         gEndingSequencePhase = 8;
         gEndingCharacterEffectDoneFlags[0] = 0;
-        spawnEndingCharacterAura(0x1C, -0x38, 0, 1);
+        spawnEndingCreditsCharacterAura(0x1C, -0x38, 0, 1);
     } else {
         setMainMenuSceneModelPosition(0, temp_a1, arg0->posY, arg0->posZ);
         loopMainMenuSceneModelAnimation(0);
@@ -1013,7 +1013,7 @@ void waitEndingSlashPhase5(s32 arg0) {
     if (gEndingSequencePhase == 5) {
         setCallbackTaskCallback(arg0, updateEndingSlashWaitPhase5To7);
         setMainMenuSceneModelAnimation(0, 2);
-        spawnEndingDelayedSparkle(0x55, -0x62, 0);
+        spawnEndingCreditsDelayedSparkle(0x55, -0x62, 0);
     }
     addMainMenuSceneModelDrawCallback(0);
 }
@@ -1023,7 +1023,7 @@ void waitEndingSlashPhase3(EndingCreditsSlash *arg0) {
     if (gEndingSequencePhase == 3) {
         setCallbackTaskCallback(arg0, waitEndingSlashPhase5);
         setMainMenuSceneModelAnimation(0, 2);
-        spawnEndingDelayedSparkle(0x55, -0x62, 0);
+        spawnEndingCreditsDelayedSparkle(0x55, -0x62, 0);
         arg0->timer = 0;
     }
     addMainMenuSceneModelDrawCallback(0);
@@ -1038,7 +1038,7 @@ void updateEndingSlashEnterFromRight(EndingCreditsSlash *arg0) {
         setCallbackTaskCallback(arg0, waitEndingSlashPhase3);
         setMainMenuSceneModelPosition(0, arg0->posX, arg0->posY, arg0->posZ);
         setMainMenuSceneModelAnimation(0, 1);
-        spawnEndingPhaseAdvanceSparkle(0x50, -0x68);
+        spawnEndingCreditsPhaseAdvanceSparkle(0x50, -0x68);
     } else {
         if (!temp_a1) {
         }

@@ -1,7 +1,7 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
 #include "fixed_point_math.h"
-#include "ending_credits_effects.h"
+#include "ending_credits_effect_actors.h"
 #include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
@@ -192,7 +192,7 @@ void updateEndingTommyWaitBeforeBurstExit(EndingCreditsTommy *arg0) {
             var_v0 = arg0->timer;
         }
         if (var_v0 == 0x27) {
-            createCallbackTask(initEndingTommyBigBurst, 0, 0x64);
+            createCallbackTask(initEndingCreditsTommyBigBurst, 0, 0x64);
             arg0->timer = 0;
         }
     }
@@ -235,8 +235,8 @@ void updateEndingTommyStartPhase0CAuras(EndingCreditsTommy *arg0) {
         setMainMenuSceneModelAnimation(4, 0xC);
         gEndingSequencePhase = 0xC;
         gEndingTommyEffectDone = 0;
-        spawnEndingCharacterAura(-0x24, -0x32, 4, 0);
-        spawnEndingCharacterAura(0x10, -0x32, 4, 1);
+        spawnEndingCreditsCharacterAura(-0x24, -0x32, 4, 0);
+        spawnEndingCreditsCharacterAura(0x10, -0x32, 4, 1);
     }
     addMainMenuSceneModelDrawCallback(4);
 }
@@ -299,7 +299,7 @@ void waitEndingTommyPhase08Aura(EndingCreditsTommy *arg0) {
         setMainMenuSceneModelAnimation(4, 7);
         gEndingActorShadow.posY = (s32)0xFFE80000;
         gEndingTommyEffectDone = 0;
-        spawnEndingCharacterAura(-0x24, -0x32, 4, 0);
+        spawnEndingCreditsCharacterAura(-0x24, -0x32, 4, 0);
     }
     addMainMenuSceneModelDrawCallback(4);
     addEndingActorShadowRenderCallback(&gEndingActorShadow);
@@ -330,7 +330,7 @@ void updateEndingTommyWaitForPhase06(EndingCreditsTommy *arg0) {
         setCallbackTaskCallback(arg0, updateEndingTommyRepeatAnimThenPhase07);
         setMainMenuSceneModelAnimation(4, 6);
         gEndingTommyEffectDone = 0;
-        spawnEndingCharacterAura(-0x1C, -0x3A, 4, 0);
+        spawnEndingCreditsCharacterAura(-0x1C, -0x3A, 4, 0);
     }
     addMainMenuSceneModelDrawCallback(4);
     addEndingActorShadowRenderCallback(&gEndingActorShadow);
@@ -365,7 +365,7 @@ void updateEndingTommyEnterToCenter(EndingCreditsTommy *arg0) {
 void waitEndingTommyPhase01(EndingCreditsTommy *arg0) {
     if (gEndingSequencePhase == 1) {
         setCallbackTaskCallback(arg0, updateEndingTommyEnterToCenter);
-        createCallbackTask(&initEndingTommySnowmanEntrance, 0, 0x64);
+        createCallbackTask(&initEndingCreditsTommySnowmanEntrance, 0, 0x64);
     }
 }
 
