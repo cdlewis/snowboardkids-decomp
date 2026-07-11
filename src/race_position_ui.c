@@ -1,6 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "fixed_point_math.h"
+#include "race_position_ui.h"
 
 #define RACE_POSITION_UI_PART_COUNT 13
 #define RACE_POSITION_UI_TEXTURE_VARIANTS 6
@@ -28,7 +29,7 @@ typedef struct {
     /* 0x00 */ u32 words[16];
 } RacePositionUiMtx;
 
-typedef struct {
+struct RacePositionUiPlayer {
     /* 0x00 */ u16 playerIndex;
     /* 0x02 */ u8 pad02[0x10 - 0x02];
     /* 0x10 */ u8 textureSet;
@@ -48,7 +49,7 @@ typedef struct {
     /* 0x49C */ RacePositionUiMtx *markerMtx;
     /* 0x4A0 */ u8 pad4A0[0x530 - 0x4A0];
     /* 0x530 */ void *partVtx[RACE_POSITION_UI_PLAYER_PART_CAPACITY];
-} RacePositionUiPlayer;
+};
 
 extern void *func_80048594(s32 size);
 extern s32 func_8004885C(void *source);
@@ -204,7 +205,7 @@ void func_8007BE80(RacePositionUiPlayer *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007BE80.s")
 #endif
 
-void func_8007C130(void *asset, s16 dlIndex, u16 textureIndex) {
+void func_8007C130(void *asset, s16 dlIndex, s16 textureIndex) {
     void *image;
     void *palette;
 
@@ -219,7 +220,7 @@ void func_8007C130(void *asset, s16 dlIndex, u16 textureIndex) {
     gSPDisplayList(gRegionAllocPtr++, D_800DE098[dlIndex]);
 }
 
-void func_8007C38C(void *asset, s16 dlIndex, u16 textureIndex) {
+void func_8007C38C(void *asset, s16 dlIndex, s16 textureIndex) {
     void *image;
     void *palette;
 

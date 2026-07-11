@@ -15,6 +15,7 @@
 #include "race_item_triggers.h"
 #include "race_player_movement.h"
 #include "race_position_tracker.h"
+#include "race_position_ui.h"
 #include "race_player_state.h"
 
 #define MODEL_ANIM_STATE(player) ((ModelAnimState *)(player))
@@ -94,9 +95,6 @@ extern void func_8008393C(RaceInputPlayer *);
 extern void func_80061034(s32, s16);
 extern void func_80057C08(s32, s16);
 extern void func_80057DD4(void *);
-extern void func_8007BE80(void *);
-extern void func_8007C5E8(void *);
-extern void func_8007CBC0(void *);
 extern s32 func_800832CC(RaceInputPlayer *);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void func_8005FB30(void *);
@@ -5307,10 +5305,10 @@ void func_80096E3C(void) {
             nextSoundPos->pos = soundPos->pos;
             player->unk2C = player->unk64 + player->unk2C - player->unk58 + 0xA000;
             if (player->soundDisabled == 0) {
-                func_800483FC(&D_801248C8, func_8007C5E8, player);
-                func_800483FC(&D_801248EC, func_8007BE80, player);
+                func_800483FC(&D_801248C8, (void (*)(void *))func_8007C5E8, (RacePositionUiPlayer *)player);
+                func_800483FC(&D_801248EC, (void (*)(void *))func_8007BE80, (RacePositionUiPlayer *)player);
             } else {
-                func_800483FC(&D_801248EC, func_8007CBC0, player);
+                func_800483FC(&D_801248EC, (void (*)(void *))func_8007CBC0, (RacePositionUiPlayer *)player);
             }
             i++;
             player++;

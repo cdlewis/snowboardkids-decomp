@@ -4,6 +4,7 @@
 #include "main_menu_scene_actor_3.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
+#include "race_position_ui.h"
 
 typedef s16 FixedMatrix3sScratch[0x10];
 typedef s32 MatrixWordCopy[8];
@@ -37,7 +38,6 @@ struct MainMenuSceneEffect3 {
 
 extern void func_800483FC(void *, void *, void *);
 extern s32 func_8004885C(void *);
-extern void func_8007C130(s32, s16, s16);
 #ifdef NON_MATCHING
 extern void func_80097BAC();
 extern void func_80097C84();
@@ -913,7 +913,7 @@ void func_8003B308(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u8 arg5) {
 void func_8003B39C(MainMenuSceneEffect3 *arg0) {
     s32 temp = func_8004885C(&arg0->displayObject);
     if (temp != 0) {
-        func_8007C130(temp, arg0->textureId, arg0->paletteId);
+        func_8007C130((void *)temp, arg0->textureId, arg0->paletteId);
     }
 }
 
