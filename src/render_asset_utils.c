@@ -171,7 +171,7 @@ void func_800459D4(u8 *arg0, u16 arg1, u16 arg2, void **arg3, void **arg4) {
     *arg4 = (void *)((arg2 << 5) + temp_v0);
 }
 
-void func_80045A1C(u8 *arg0, u16 arg1, void **arg2, void **arg3, s16 *arg4, s16 *arg5) {
+void getAssetTableImagePaletteAndSize(u8 *arg0, u16 arg1, void **arg2, void **arg3, s16 *arg4, s16 *arg5) {
     AssetTableEntry *temp_v1;
     u8 *temp_v0;
     short idx;

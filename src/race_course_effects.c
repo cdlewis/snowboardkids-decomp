@@ -570,7 +570,7 @@ void initFinalLapPrompt(void *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/renderCourseTextureMarkers.s")
 
 #ifdef NON_MATCHING
-extern void func_80045A1C(u8 *, u16, void **, void **, s16 *, s16 *);
+extern void getAssetTableImagePaletteAndSize(u8 *, u16, void **, void **, s16 *, s16 *);
 extern Vtx D_800D9C40[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
@@ -596,7 +596,7 @@ void renderCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
             if (isPositionNearCurrentViewport(&entry->pos) != 0) {
                 if (entry->type != textureIndex) {
                     textureIndex = entry->type;
-                    func_80045A1C((u8 *)getRelocatableHeapBlockBase((s32)D_80112168), textureIndex & 0xFFFF,
+                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)D_80112168), textureIndex & 0xFFFF,
                                   &image, &palette, &width, &height);
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0,
                                             G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
