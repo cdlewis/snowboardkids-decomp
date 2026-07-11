@@ -275,8 +275,8 @@ void renderSpiralCourseObject(RaceMovingEffect *);
 extern u8 gRaceUpdatePaused;
 extern s16 gRaceCourseIndex;
 extern CourseAssetHandles gAssetHandles;
-extern s16 D_80112144;
-extern s16 D_80112146;
+extern s16 gRaceRspSegment2AssetHandle;
+extern s16 gRaceRspSegment3AssetHandle;
 extern RaceCamera D_801121E0[];
 extern CourseMarkerSpawnEntry *gCourseTextureMarkerSpawnEntriesByCourse[];
 extern CourseRenderEntry *gRaceCourseSceneryEntriesByCourse[];
@@ -298,10 +298,9 @@ extern CourseEffectPlayer D_80122FA4[];
 extern CourseRenderCommand gIdentityMatrix[];
 extern s32 gMenuRenderCallbackList;
 extern s32 D_80124878;
-extern s32 D_801248D4;
+extern s32 gEffectRenderCallbackList;
 extern s32 D_801248EC;
-extern s32 D_801248D4;
-extern s32 D_801248B0;
+extern s32 gSceneModelRenderCallbackList;
 extern s32 gRaceObjectRenderCallbackList;
 extern s32 D_801248F8;
 extern Gfx *gRegionAllocPtr;
@@ -646,7 +645,7 @@ void updateCourseTextureMarkers(void *arg0) {
         } while (entry->type != -1);
     }
 
-    addRenderCallback(&D_801248D4, renderCourseTextureMarkers, arg0);
+    addRenderCallback(&gEffectRenderCallbackList, renderCourseTextureMarkers, arg0);
 }
 
 void initCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
@@ -722,7 +721,7 @@ void renderRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
 }
 
 void updateRaceCourseSceneryObjects(void *arg0) {
-    addRenderCallback(&D_801248B0, renderRaceCourseSceneryObjects, arg0);
+    addRenderCallback(&gSceneModelRenderCallbackList, renderRaceCourseSceneryObjects, arg0);
 }
 
 void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
@@ -797,8 +796,8 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
 
         if (arg0->displayList != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
             {
                 Gfx *_g = (Gfx *) (gRegionAllocPtr++);
 
@@ -970,8 +969,8 @@ void renderLaunchRampCourseObject(RaceMovingEffect *arg0) {
             Gfx *_g;
 
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (gRaceCourseIndex != 8) {
                 gSPDisplayList(gRegionAllocPtr++, D_2000910);
@@ -1064,8 +1063,8 @@ void renderSpiralCourseObject(RaceMovingEffect *arg0) {
     if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (gRaceCourseIndex != 8) {
                 gSPDisplayList(gRegionAllocPtr++, D_2000910);
@@ -1195,10 +1194,10 @@ void renderCourseGateObject(CourseGateObjectEffect *arg0) {
         gDPPipeSync(gRegionAllocPtr++);
         segment1 = gRegionAllocPtr++;
         segment1->words.w0 = 0xBC000806;
-        segment1->words.w1 = getRelocatableHeapBlockBase(D_80112144);
+        segment1->words.w1 = getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle);
         segment2 = gRegionAllocPtr++;
         segment2->words.w0 = 0xBC000C06;
-        segment2->words.w1 = getRelocatableHeapBlockBase(D_80112146);
+        segment2->words.w1 = getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle);
         arg0++;
         arg0--;
         gSPMatrix(gRegionAllocPtr++, arg0->sourceMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);

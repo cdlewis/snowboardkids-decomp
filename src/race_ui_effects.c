@@ -784,7 +784,7 @@ extern s32 D_800DC900[];
 extern void *gMenuRenderCallbackList;
 extern void *gMenuForegroundRenderCallbackList;
 extern void *D_80124888;
-extern void *D_801248B0;
+extern void *gSceneModelRenderCallbackList;
 extern void *D_801248BC;
 extern void *D_801248C8;
 extern u8 gPlayerCount;
@@ -798,8 +798,8 @@ extern u8 gRenderMatricesDirty;
 extern s16 gUiBlinkTimer;
 extern s16 D_80112140;
 extern s16 D_80112142;
-extern s16 D_80112144;
-extern s16 D_80112146;
+extern s16 gRaceRspSegment2AssetHandle;
+extern s16 gRaceRspSegment3AssetHandle;
 extern s16 gRaceCourseSpriteAssetHandle;
 extern s16 gRaceUiSpriteAssetHandle;
 extern s16 gRaceCommonSpriteAssetHandle;
@@ -915,7 +915,7 @@ extern s32 func_80048E60(Vec3i *);
 extern void func_800486BC(void *, void *);
 extern s16 gRaceCourseIndex;
 extern s16 D_801222F4;
-extern void *D_801248D4;
+extern void *gEffectRenderCallbackList;
 
 void func_800572A0(RaceUiSlideActor *arg0) {
     volatile u8 pad[8];
@@ -3380,8 +3380,8 @@ void func_8005F2DC(RaceUiSnowboardTrailActor *arg0) {
 
     if (arg0->matrix0 != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2002208);
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -3418,7 +3418,7 @@ void func_8005F448(RaceUiSnowboardTrailActor *arg0) {
     }
 
     if (D_80121D94[actor->playerIndex].value == 0) {
-        addRenderCallback(&D_801248B0, func_8005F2DC, arg0);
+        addRenderCallback(&gSceneModelRenderCallbackList, func_8005F2DC, arg0);
     }
 }
 
@@ -3463,8 +3463,8 @@ void func_8005F6A4(RaceUiRankTrailActor *arg0) {
 
     if (arg0->matrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2003870);
     }
@@ -3598,7 +3598,7 @@ void func_800601F8(void *arg0) {
         addRenderCallback(&D_801248EC, func_8005FBA8, arg0);
         return;
     }
-    addRenderCallback(&D_801248B0, func_8005FED0, arg0);
+    addRenderCallback(&gSceneModelRenderCallbackList, func_8005FED0, arg0);
 }
 
 void func_800602BC(void *arg0) {
@@ -3659,8 +3659,8 @@ void func_80060544(RaceUiPodiumTrailActor *arg0) {
 
     if (arg0->matrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2002660);
     }
@@ -3677,7 +3677,7 @@ void func_8006069C(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x56) == 0) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&D_801248B0, func_80060544, arg0);
+        addRenderCallback(&gSceneModelRenderCallbackList, func_80060544, arg0);
     }
 }
 
@@ -3914,7 +3914,7 @@ void func_80061088(RaceUiTripleParticleActor *arg0) {
 
 void func_800613EC(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x30) = *(s16 *)((u8 *)arg0 + 0x30) + 4;
-    addRenderCallback(&D_801248B0, func_80061088, (s32)arg0);
+    addRenderCallback(&gSceneModelRenderCallbackList, func_80061088, (s32)arg0);
 }
 
 void func_80061428(void *arg0) {
@@ -3938,8 +3938,8 @@ void func_80061484(RaceUiRankTrailActor *arg0) {
 
     if (arg0->matrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_20019C0);
     }
@@ -4003,8 +4003,8 @@ void func_800617EC(RaceUiRisingTrailActor *arg0) {
 
         if (arg0->matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, D_20019C0);
         }
@@ -4075,8 +4075,8 @@ void func_80061B70(RaceUiSingleTrailActor *arg0) {
 
     if (arg0->matrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2003538);
     }
@@ -4124,8 +4124,8 @@ void func_80061DE8(RaceUiFadingTrailActor *arg0) {
 
     if (arg0->matrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gDPSetPrimColor(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_20035F8);
@@ -4224,8 +4224,8 @@ void func_800622B0(RaceUiTransitionRenderActor *arg0) {
 
     if (arg0->matrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2002490);
     }
@@ -4719,7 +4719,7 @@ void func_80063E70(RaceUiEffectParticleActor *arg0) {
         actor->particles[i].unk4 += 0xFFFD0000;
         actor->particles[i].unk4 &= 0xFFFFFF;
     }
-    addRenderCallback(&D_801248D4, func_80063A9C, (s32)actor);
+    addRenderCallback(&gEffectRenderCallbackList, func_80063A9C, (s32)actor);
 }
 
 void func_80063FC0(RaceUiEffectParticleActor *actor) {
@@ -5249,7 +5249,7 @@ loop:
     }
 
 done:
-    addRenderCallback(&D_801248D4, func_800651BC, actor);
+    addRenderCallback(&gEffectRenderCallbackList, func_800651BC, actor);
 }
 
 void func_8006565C(RaceUiGfxCommandActor *arg0) {
@@ -5527,7 +5527,7 @@ void func_80066158(void *arg0) {
         } while (entry->active != -1);
     }
 
-    addRenderCallback(&D_801248B0, func_80065FD8, arg0);
+    addRenderCallback(&gSceneModelRenderCallbackList, func_80065FD8, arg0);
 }
 
 void func_800663C8(RaceUiRankTextRenderActor *arg0) {

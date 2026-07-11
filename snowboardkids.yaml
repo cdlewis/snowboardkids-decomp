@@ -118,7 +118,7 @@ segments:
       - [0x54260, c, menu_screen_effects]
       - [0x562B0, c, race_intro_effects]
       - [0x57EA0, c, race_ui_effects]
-      - [0x67360, c, race_pickup_and_course_props]
+      - [0x67360, c, race_pickups_and_course_props]
       - [0x6A490, c, race_course_effects]
       - [0x6E120, c, race_camera]
       - [0x710F0, c, viewport_manager]
