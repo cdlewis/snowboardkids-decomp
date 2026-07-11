@@ -1219,7 +1219,7 @@ loop_interp:
 }
 #endif
 
-// func_80082664 best match: 75.937% (base_4.c)
+// func_80082664 best match: 78.710% (base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/model_animation/func_80082664.s")
 
 #ifdef NON_MATCHING
@@ -1244,10 +1244,13 @@ void func_80082664(ModelAnimState *state, s32 animIndex, s32 frameTimer, s32 fra
     s32 z;
     s16 packed0;
     s16 packed1;
+    s32 stride;
+    s32 rotBase;
 
     base = func_80043040(D_8011215C[state->modelId]);
     data = (s16 *)(base + (((u16 *)base)[animIndex] * 2) + 2);
 
+    stride = 0xC;
     rotFrame = D_80121BD0;
     posFrame = D_80121C00;
     do {
@@ -1280,11 +1283,11 @@ loop_pos:
             pos[0] = x + 8;
         }
         if (packed1 & 2) {
-            pos[1] += 8;
+            pos[1] = y + 8;
         }
-        offset += 0xC;
+        offset += stride;
         if (packed1 & 4) {
-            pos[2] += 8;
+            pos[2] = z + 8;
         }
         pos += 3;
         if (offset < 0x3C) {
@@ -1334,16 +1337,17 @@ loop_interp:
         goto loop_interp;
     }
 
+    rotBase = (s32)D_80121BD0;
     *(s32 *)((u8 *)state + 0x340) =
-        D_80121BD0[0] + (((D_80121BD0[6] - D_80121BD0[0]) * frameTimer) / frameTimerReset);
+        *(s32 *)(rotBase + 0x0) + (((*(s32 *)(rotBase + 0x18) - *(s32 *)(rotBase + 0x0)) * frameTimer) / frameTimerReset);
     *(s32 *)((u8 *)state + 0x344) =
-        D_80121BD0[1] + (((D_80121BD0[7] - D_80121BD0[1]) * frameTimer) / frameTimerReset);
+        *(s32 *)(rotBase + 0x4) + (((*(s32 *)(rotBase + 0x1C) - *(s32 *)(rotBase + 0x4)) * frameTimer) / frameTimerReset);
     *(s32 *)((u8 *)state + 0x348) =
-        D_80121BD0[2] + (((D_80121BD0[8] - D_80121BD0[2]) * frameTimer) / frameTimerReset);
+        *(s32 *)(rotBase + 0x8) + (((*(s32 *)(rotBase + 0x20) - *(s32 *)(rotBase + 0x8)) * frameTimer) / frameTimerReset);
     *(s32 *)((u8 *)state + 0x354) =
-        D_80121BD0[3] + (((D_80121BD0[9] - D_80121BD0[3]) * frameTimer) / frameTimerReset);
+        *(s32 *)(rotBase + 0xC) + (((*(s32 *)(rotBase + 0x24) - *(s32 *)(rotBase + 0xC)) * frameTimer) / frameTimerReset);
     *(s32 *)((u8 *)state + 0x358) =
-        D_80121BD0[4] + (((D_80121BD0[10] - D_80121BD0[4]) * frameTimer) / frameTimerReset);
+        *(s32 *)(rotBase + 0x10) + (((*(s32 *)(rotBase + 0x28) - *(s32 *)(rotBase + 0x10)) * frameTimer) / frameTimerReset);
 
     *(s16 *)((u8 *)state + 0x42A) = *(s16 *)((u8 *)state + 0x33A);
     *(s16 *)((u8 *)state + 0x43E) = *(s16 *)((u8 *)state + 0x33A);
@@ -1353,7 +1357,7 @@ loop_interp:
     *(s16 *)((u8 *)state + 0x42E) = *(s16 *)((u8 *)state + 0x33E);
 
     *(s32 *)((u8 *)state + 0x35C) =
-        D_80121BD0[5] + (((D_80121BD0[11] - D_80121BD0[5]) * frameTimer) / frameTimerReset);
+        *(s32 *)(rotBase + 0x14) + (((*(s32 *)(rotBase + 0x2C) - *(s32 *)(rotBase + 0x14)) * frameTimer) / frameTimerReset);
 }
 #endif
 
