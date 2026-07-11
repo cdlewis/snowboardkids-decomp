@@ -781,7 +781,37 @@ void func_8000189C(void) {
     D_8010B19C = maxFiles - filesUsed;
 }
 
+// func_80001904 best match: 33.167%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80001904.s")
+
+#ifdef NON_MATCHING
+u16 func_80001904(s32 arg0) {
+    u8 *var_a3;
+    u8 *var_a2;
+    u8 *var_v1;
+    s32 var_a1;
+    s32 var_a0;
+
+    var_a3 = (u8 *)&D_800EC9F0[arg0];
+    var_a2 = var_a3;
+    var_v1 = var_a3;
+    var_a1 = 0;
+    do {
+        var_a1 += 4;
+        var_a2 += 4;
+        var_v1 += 1;
+    } while (var_a1 < 0x2C);
+
+    var_a0 = 0;
+    var_v1 = var_a3;
+    do {
+        var_a0 += 1;
+        var_v1 += 1;
+    } while (var_a0 != 0xC);
+
+    return func_80001994(arg0);
+}
+#endif
 
 s32 func_80001994(s32 arg0) {
     s32 pad;
