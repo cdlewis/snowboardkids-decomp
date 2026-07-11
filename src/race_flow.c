@@ -15,7 +15,7 @@
 #include "controller_main_menu_flow.h"
 #include "menu_screen_effects.h"
 #include "main_menu_panel_ui.h"
-#include "player_count_select_menu.h"
+#include "race_type_select_menu.h"
 #include "player_select_menu.h"
 #include "race_camera.h"
 #include "race_course_effects.h"
@@ -186,7 +186,7 @@ extern s16 gMenuFadeAlpha;
 extern s8 gMenuFadeOverlayActive;
 extern u8 gRaceRumbleEnabled;
 extern RaceFlowInitScratch gGameSaveDataBuffer;
-extern u8 D_80121B5E;
+extern u8 gRaceTypeSelection;
 #ifdef NON_MATCHING
 extern u8 D_8011228C;
 extern u8 D_8011233C;
@@ -213,7 +213,7 @@ extern u8 D_243270[];
 extern u8 gPlayerCount;
 extern u8 D_80121B57;
 extern u8 D_80121B58;
-extern u8 D_80121B5E;
+extern u8 gRaceTypeSelection;
 extern s8 D_80121B5F;
 extern u8 D_80121B60;
 extern s8 D_80121B61;
@@ -410,7 +410,7 @@ void initNewGameSaveData(void) {
     gGameSaveDataBuffer.unk232[7].unk0 = 0;
     gGameSaveDataBuffer.unk232[8].unk0 = 0;
     gPlayerCount = 1;
-    D_80121B5E = 0;
+    gRaceTypeSelection = 0;
     D_80121D80[0].unk5 = 0;
     D_80121D80[1].unk5 = 0;
     D_80121D80[2].unk5 = 0;
@@ -515,7 +515,7 @@ void func_800734E4(void) {
 
 void func_800735B4(void) {
     setCurrentGameTaskCallback(&func_800735F8, 0);
-    createGameTask(4, &func_800086EC, 0x64);
+    createGameTask(4, &initRaceTypeSelectMenu, 0x64);
     suspendGameTask(2);
 }
 
@@ -1089,10 +1089,10 @@ void func_80076054(void) {
         break;
 
     case 1:
-        if (D_80121B5E != 0) {
+        if (gRaceTypeSelection != 0) {
             i = 0;
-            if (D_80121B5E != 1) {
-                if (D_80121B5E == 2) {
+            if (gRaceTypeSelection != 1) {
+                if (gRaceTypeSelection == 2) {
                     courseOffset = (gRaceCourseIndex.s << 2) + gRaceCourseIndex.s;
                     courseOffset <<= 1;
                     trickCourse = (TrickCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);

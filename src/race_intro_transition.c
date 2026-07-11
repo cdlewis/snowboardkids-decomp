@@ -66,7 +66,7 @@ extern s8 D_80121B58;
 extern u8 D_80121B59;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
-extern u8 D_80121B5E;
+extern u8 gRaceTypeSelection;
 extern u8 D_80121B5F;
 extern s8 D_80121D94;
 extern s8 D_80121D95;
@@ -103,7 +103,7 @@ void initCourseDemoRaceIntro(void) {
     gTrainingCourseLesson = 0;
     gMainMenuModeSelection = 0;
     gRaceSplitscreenMode = courseEntry->splitscreen;
-    D_80121B5E = courseEntry->unk2;
+    gRaceTypeSelection = courseEntry->unk2;
     func_80043184();
     players = D_80121D80;
     players[0].unk4 = 0;

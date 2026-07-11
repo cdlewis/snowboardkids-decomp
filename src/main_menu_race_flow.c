@@ -54,7 +54,7 @@ extern u8 D_80121B58;
 extern u8 D_80121B59;
 extern u8 gMainMenuModeSelection;
 extern s16 D_80121B5C;
-extern u8 D_80121B5E;
+extern u8 gRaceTypeSelection;
 extern u8 D_80121B5F;
 extern s16 gMainMenuModePreviewRaceDurationBySelection[];
 
@@ -174,7 +174,7 @@ void initMainMenuModePreviewRace(void) {
     D_80121B59 = 0;
     gTrainingCourseLesson = 0;
     gRaceSplitscreenMode = 0;
-    D_80121B5E = 0;
+    gRaceTypeSelection = 0;
     resetGameplayRng();
 
     players = D_80121D80;
@@ -398,7 +398,7 @@ void initTrainingCourseRace(void) {
     D_80121B59 = 0;
     gMainMenuModeSelection = 0;
     gRaceSplitscreenMode = 0;
-    D_80121B5E = 0;
+    gRaceTypeSelection = 0;
 
     D_80121D80[0].unk4 = 0;
     D_80121D80[1].unk4 = 1;
