@@ -325,10 +325,10 @@ typedef struct RaceCharacterSelectObject {
     /* 0x30 */ u8 pad30[0x80];
 } RaceCharacterSelectObject;
 
-extern void func_800257F0(EffectTask *);
-extern void func_80028194(EffectTask *);
-extern void func_80028B0C(EffectTask *);
-extern void func_8002916C(EffectTask *);
+extern void initCourseSelectCourseIconList(EffectTask *);
+extern void initCourseSelectExtraCourseIconList(EffectTask *);
+extern void initCourseSelectPlayerPanels(EffectTask *);
+extern void initCourseSelectCompletePanels(EffectTask *);
 extern void *createEffectTask(void (*)(EffectTask *), s32, s32);
 extern void func_80072114(s32);
 extern void func_80072138();
@@ -373,12 +373,12 @@ void updateRaceCharacterSelectMenu(void) {
         gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 0);
         if (gCurrentInputTask->fade == 0) {
             if (D_80121B55 == 1) {
-                createEffectTask(func_800257F0, 0, 0x63);
+                createEffectTask(initCourseSelectCourseIconList, 0, 0x63);
             } else {
-                createEffectTask(func_80028B0C, 0, 0x62);
-                createEffectTask(func_8002916C, 0, 0x63);
+                createEffectTask(initCourseSelectPlayerPanels, 0, 0x62);
+                createEffectTask(initCourseSelectCompletePanels, 0, 0x63);
             }
-            D_8010ADE8 = createEffectTask(func_80028194, 0, 0x61);
+            D_8010ADE8 = createEffectTask(initCourseSelectExtraCourseIconList, 0, 0x61);
         }
     } else {
         playerCount = D_80121B55;

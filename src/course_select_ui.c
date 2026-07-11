@@ -106,10 +106,8 @@ typedef struct {
 } CourseSelectAnimatedActor;
 
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
-extern void func_80023880(CourseSelectCoursePreviewActor *);
+extern void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *);
 extern s32 func_8004885C(FixedTransform *);
-extern void func_80025AA8(CourseSelectWidgetActor *);
-void func_80026C4C(CourseSelectWidgetActor *);
 extern s8 D_800ECA2F[][0x78F8];
 extern s8 D_800EC9C0;
 extern u8 D_800EC9C2;
@@ -130,14 +128,14 @@ extern u8 D_8010AF46;
 extern u8 gCourseSelectStatus[];
 extern u8 D_8010AF1C;
 extern s16 D_800EC9D0[];
-extern u8 D_800B7040[];
-extern u8 D_800B706C[];
-extern u8 D_800B706D[];
-extern u8 D_800B706E[];
-extern s16 D_800B7084[][6];
-extern s16 D_800B70A8[][4];
-extern s16 D_800B70C0[][4];
-extern s16 D_800B70D8[][2];
+extern u8 gCourseSelectCompleteText[];
+extern u8 gCourseSelectCourseSpeedRatings[];
+extern u8 gCourseSelectCourseHandlingRatings[];
+extern u8 gCourseSelectCourseTrickRatings[];
+extern s16 gCourseSelectIconListYLayout[][6];
+extern s16 gCourseSelectIconListXLayout[][4];
+extern s16 gCourseSelectStatsPanelLayout[][4];
+extern s16 gCourseSelectStatsPlayerMarkerLayout[][2];
 extern s16 D_80112130[];
 extern s16 D_80112172;
 extern s16 D_8011217A;
@@ -152,11 +150,11 @@ extern s32 D_80124868;
 extern s32 D_80124898;
 extern u8 D_80156608;
 
-// func_80023880 best match: 97.975%
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80023880.s")
+// drawCourseSelectPreviewModel best match: 97.975%
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectPreviewModel.s")
 
 #ifdef NON_MATCHING
-void func_80023880(CourseSelectCoursePreviewActor *arg0) {
+void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
     FixedTransform sp30;
     u8 sp2F;
     unsigned char sp2E;
@@ -213,11 +211,11 @@ void func_80023880(CourseSelectCoursePreviewActor *arg0) {
 }
 #endif
 
-// func_80023A68 best match: 92.299% (nonmatchings/func_80023A68-6061209858023118177/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80023A68.s")
+// updateCourseSelectPreviewModelIn best match: 92.299% (nonmatchings/updateCourseSelectPreviewModelIn-6061209858023118177/base_10.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectPreviewModelIn.s")
 
 #ifdef NON_MATCHING
-void func_80023A68(void *arg0) {
+void updateCourseSelectPreviewModelIn(void *arg0) {
     CourseSelectTempVec3i sp78;
     CourseSelectAnimatedActor *actor;
     CourseSelectRacePlayer *player;
@@ -369,15 +367,15 @@ void func_80023A68(void *arg0) {
 
     if ((D_80121D80[0].pad6[2] == 4) || (actor->state[0] == 9)) {
         func_800716E4(actor);
-        func_800291F0(1);
+        finishCourseSelectUiTask(1);
         D_8010ADE0 = 0;
     } else {
-        func_800483FC(&D_80124898, (void (*)(CourseSelectWidgetActor *))func_80023880, actor);
+        func_800483FC(&D_80124898, (void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModel, actor);
     }
 }
 #endif
 
-void func_80024050(void *arg0) {
+void initCourseSelectPreviewModelIn(void *arg0) {
     void *actor;
     CourseSelectTempVec3i sp60;
     u8 *var_s1;
@@ -426,14 +424,14 @@ void func_80024050(void *arg0) {
     *(s32 *) ((u8 *) actor + 0x34) = 0;
     *(s32 *) ((u8 *) actor + 0x38) = 0;
     func_8009853C((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
-    func_80071824(actor, func_80023A68);
+    func_80071824(actor, updateCourseSelectPreviewModelIn);
 }
 
-// func_80024168 best match: 94.265% (nonmatchings/func_80024168-7273315160691878794/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024168.s")
+// drawCourseSelectPreviewModelClose best match: 94.265% (nonmatchings/drawCourseSelectPreviewModelClose-7273315160691878794/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectPreviewModelClose.s")
 
 #ifdef NON_MATCHING
-void func_80024168(CourseSelectCoursePreviewActor *arg0) {
+void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
     FixedTransform sp30;
     u8 sp2F;
     u8 sp2E;
@@ -490,8 +488,8 @@ void func_80024168(CourseSelectCoursePreviewActor *arg0) {
 }
 #endif
 
-// func_80024380 best match: 83.285% (nonmatchings/func_80024380-2225551288923588688/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024380.s")
+// updateCourseSelectPreviewModelOut best match: 83.285% (nonmatchings/updateCourseSelectPreviewModelOut-2225551288923588688/base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectPreviewModelOut.s")
 
 #ifdef NON_MATCHING
 extern u8 D_800EC9C0;
@@ -501,7 +499,7 @@ extern s32 D_8010AEE8[];
 extern u8 D_8010AEFB[];
 extern s32 D_80124898;
 
-void func_80024380(void *arg0) {
+void updateCourseSelectPreviewModelOut(void *arg0) {
     CourseSelectTempVec3i sp78;
     CourseSelectAnimatedActor *actor;
     CourseSelectRacePlayer *player;
@@ -653,15 +651,15 @@ void func_80024380(void *arg0) {
 
     if (((u8 *)&D_80121D80[0])[8] == 4 || actor->state[0] == 9) {
         func_800716E4(actor);
-        func_800291F0(2);
+        finishCourseSelectUiTask(2);
         D_8010ADE4 = 0;
     } else {
-        func_800483FC(&D_80124898, func_80024168, actor);
+        func_800483FC(&D_80124898, drawCourseSelectPreviewModelClose, actor);
     }
 }
 #endif
 
-void func_80024968(void *arg0) {
+void initCourseSelectPreviewModelOut(void *arg0) {
     u8 *var_s1;
     CourseSelectTempVec3i sp60;
     void *actor;
@@ -708,14 +706,14 @@ void func_80024968(void *arg0) {
     *(s32 *) ((u8 *) actor + 0x34) = 0;
     *(s32 *) ((u8 *) actor + 0x38) = 0;
     func_8009853C((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
-    func_80071824(actor, func_80024380);
+    func_80071824(actor, updateCourseSelectPreviewModelOut);
 }
 
-// func_80024A90 best match: 94.322% (nonmatchings/func_80024A90-6113366811127043669/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024A90.s")
+// drawCourseSelectCourseIconList best match: 94.322% (nonmatchings/drawCourseSelectCourseIconList-6113366811127043669/base_9.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectCourseIconList.s")
 
 #ifdef NON_MATCHING
-void func_80024A90(CourseSelectIconListActor *arg0) {
+void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     CourseSelectIconListActor *sp8C;
     CourseSelectIconListActor *sp74;
     u8 *sp60;
@@ -805,14 +803,14 @@ void func_80024A90(CourseSelectIconListActor *arg0) {
 }
 #endif
 
-// func_80024E98 best match: 78.897% (nonmatchings/func_80024E98-7273315160691878794/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024E98.s")
+// updateCourseSelectCourseIconList best match: 78.897% (nonmatchings/updateCourseSelectCourseIconList-7273315160691878794/base_2.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectCourseIconList.s")
 
-// func_800257F0 best match: 62.914% (nonmatchings/func_800257F0-7273315160691878794/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800257F0.s")
+// initCourseSelectCourseIconList best match: 62.914% (nonmatchings/initCourseSelectCourseIconList-7273315160691878794/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/initCourseSelectCourseIconList.s")
 
 #ifdef NON_MATCHING
-void func_800257F0(u8 *arg0) {
+void initCourseSelectCourseIconList(u8 *arg0) {
     s16 *xyTable;
     s32 temp_lo;
     s32 enabled;
@@ -833,7 +831,7 @@ void func_800257F0(u8 *arg0) {
     i = 0;
     if ((s32) D_80121B55 > 0) {
         unlockPtr = D_8010AEA0;
-        xyTable = D_800B7084[layoutIndex];
+        xyTable = gCourseSelectIconListYLayout[layoutIndex];
         bytePtr = arg0;
         stride10Ptr = arg0;
         halfPtr = (s16 *) arg0;
@@ -850,7 +848,7 @@ void func_800257F0(u8 *arg0) {
             bytePtr[0x9C] = xyTable[enabled];
             halfPtr[0x34] = xyTable[((i & 1) * 2) + enabled + 2];
             halfPtr[0x44] = xyTable[((i & 1) * 2) + 2];
-            xPair = &D_800B70A8[layoutIndex][(i >= 2) * 2];
+            xPair = &gCourseSelectIconListXLayout[layoutIndex][(i >= 2) * 2];
             halfPtr[0x40] = xPair[1];
             halfPtr[0x3C] = xPair[0];
             ((s16 *) arg0)[0x52] = 0x78;
@@ -885,15 +883,15 @@ void func_800257F0(u8 *arg0) {
             bytePtr[0x8F] = 0;
         } while (i < (s32) D_80121B55);
     }
-    func_80071824(arg0, func_80024E98);
+    func_80071824(arg0, updateCourseSelectCourseIconList);
 }
 #endif
 
-// func_80025AA8 best match: 98.481% (nonmatchings/func_80025AA8-6061209858023118177/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025AA8.s")
+// drawCourseSelectCourseCursors best match: 98.481% (nonmatchings/drawCourseSelectCourseCursors-6061209858023118177/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectCourseCursors.s")
 
 #ifdef NON_MATCHING
-void func_80025AA8(u8 *arg0) {
+void drawCourseSelectCourseCursors(u8 *arg0) {
     u8 *actor;
     s32 i;
     u8 *statePtr;
@@ -938,7 +936,7 @@ void func_80025AA8(u8 *arg0) {
 }
 #endif
 
-void func_80025BE4(CourseSelectWidgetActor *arg0) {
+void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     register CourseSelectWidgetActor *actor;
     s32 i;
     CourseSelectWidgetActor *statePtr;
@@ -1000,15 +998,15 @@ void func_80025BE4(CourseSelectWidgetActor *arg0) {
     if (actor->unk30 == 4) {
         func_800716E4(actor);
     } else {
-        func_800483FC(&D_80124868, func_80025AA8, actor);
+        func_800483FC(&D_80124868, drawCourseSelectCourseCursors, actor);
     }
 }
 
-// func_80025E6C best match: 85.650% (nonmatchings/func_80025E6C-1315772375853892447/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80025E6C.s")
+// initCourseSelectCourseCursors best match: 85.650% (nonmatchings/initCourseSelectCourseCursors-1315772375853892447/base_12.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/initCourseSelectCourseCursors.s")
 
 #ifdef NON_MATCHING
-void func_80025E6C(CourseSelectWidgetActor *arg0) {
+void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     CourseSelectWidgetActor *actor = arg0;
     s32 idx;
     s32 i;
@@ -1029,8 +1027,8 @@ void func_80025E6C(CourseSelectWidgetActor *arg0) {
 
     i = 0;
     if ((s32)D_80121B55 > 0) {
-        xyTable = &D_800B7084[idx];
-        xTable = &D_800B70A8[idx];
+        xyTable = &gCourseSelectIconListYLayout[idx];
+        xTable = &gCourseSelectIconListXLayout[idx];
         courseUnlocked = D_8010AEA0;
         bytePtr = (u8 *)actor;
         posPtr = (s16 *)actor;
@@ -1055,18 +1053,18 @@ void func_80025E6C(CourseSelectWidgetActor *arg0) {
         } while (i < (s32)D_80121B55);
     }
 
-    func_80071824(actor, func_80025BE4);
+    func_80071824(actor, updateCourseSelectCourseCursors);
 }
 #endif
 
-void func_80025FA8(CourseSelectWidgetActor *arg0) {
+void drawCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     func_8000F030(arg0->x, arg0->y, func_80043040(D_8011217A), 3, 0x20, 0x20, 0, 0);
     func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(D_8011217A), 4, 0x20, 0x20, 0, 0);
     func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(D_8011217A), 5, 0x20, 0x20, 0, 0);
     func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(D_8011217A), 6, 0x20, 0x20, 0, 0);
 }
 
-void func_800260E8(CourseSelectWidgetActor *arg0) {
+void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     s32 screenState;
     s32 forceState;
 
@@ -1086,10 +1084,10 @@ void func_800260E8(CourseSelectWidgetActor *arg0) {
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->pad18[4] = 1;
-            D_8010ADDC = createEffectTask(func_80025E6C, 0, 0x64);
-            createEffectTask(func_800275A4, 0, 0x63);
-            createEffectTask(func_800273C4, 0, 0x61);
-            createEffectTask(func_80026B88, 0, 0x64);
+            D_8010ADDC = createEffectTask(initCourseSelectCourseCursors, 0, 0x64);
+            createEffectTask(initCourseSelectExtraCourseBadge, 0, 0x63);
+            createEffectTask(initCourseSelectCourseDescription, 0, 0x61);
+            createEffectTask(initCourseSelectCourseStats, 0, 0x64);
             if ((D_800EC9C2 == 3) && (D_800EC9E6 == 0)) {
                 createEffectTask(func_8002E568, 0, 0x63);
             }
@@ -1135,26 +1133,26 @@ void func_800260E8(CourseSelectWidgetActor *arg0) {
 
     if (arg0->pad18[4] == 3) {
         func_800716E4(arg0);
-        func_800291F0(4);
+        finishCourseSelectUiTask(4);
         return;
     }
 
-    func_800483FC(&D_80124868, func_80025FA8, arg0);
+    func_800483FC(&D_80124868, drawCourseSelectCourseListBackdrop, arg0);
 }
 
-void func_800263A4(CourseSelectWidgetActor *arg0) {
+void initCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
-    func_80071824(arg0, func_800260E8);
+    func_80071824(arg0, updateCourseSelectCourseListBackdrop);
 }
 
-// func_800263D8 best match: 98.209% (nonmatchings/func_800263D8-4139837607000619032/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800263D8.s")
+// drawCourseSelectCourseStats best match: 98.209% (nonmatchings/drawCourseSelectCourseStats-4139837607000619032/base_8.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectCourseStats.s")
 
 #ifdef NON_MATCHING
 extern int sprintf(u8 *, u8 *, ...);
 
-void func_800263D8(CourseSelectWidgetActor *arg0) {
+void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     volatile u16 frameTile;
     u8 text[2];
     s32 playerCount;
@@ -1199,7 +1197,7 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                         func_80013D0C((s16)(playerWidget->coordinates[0] + 0x38), playerWidget->coordinates[4],
                                       "?", 0, arg0->coordinates[8]);
                     } else {
-                        ratings = &D_800B706C[selectedCourseId * 3];
+                        ratings = &gCourseSelectCourseSpeedRatings[selectedCourseId * 3];
                         j = 0;
                         if (ratings[0] > ((0, 0))) {
                             xOffset = 0;
@@ -1218,7 +1216,7 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                         func_80013D0C((s16)(playerWidget->coordinates[0] + 0x38),
                                       (s16)(playerWidget->coordinates[4] + 0xC), "?", 0, arg0->coordinates[8]);
                     } else {
-                        ratings = &D_800B706C[selectedCourseId * 3];
+                        ratings = &gCourseSelectCourseSpeedRatings[selectedCourseId * 3];
                         if (1) {
                         }
                         if (1) {
@@ -1241,7 +1239,7 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                         func_80013D0C((s16)(playerWidget->coordinates[0] + 0x38),
                                       (s16)(playerWidget->coordinates[4] + 0x18), "?", 0, arg0->coordinates[8]);
                     } else {
-                        ratings = &D_800B706C[selectedCourseId * 3];
+                        ratings = &gCourseSelectCourseSpeedRatings[selectedCourseId * 3];
                         j = 0;
                         if (ratings[2] > 0) {
                             xOffset = 0;
@@ -1265,7 +1263,7 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                     xOffset--;
                     if (selectedCourseId < 9) {
                         playerWidget = playerWidget;
-                        sprintf(text, "%d", D_800B706C[selectedCourseId * 3]);
+                        sprintf(text, "%d", gCourseSelectCourseSpeedRatings[selectedCourseId * 3]);
                         do {
                         } while (0);
                     }
@@ -1273,13 +1271,13 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                                   arg0->coordinates[8]);
 
                     if (selectedCourseId < 9) {
-                        sprintf(text, "%d", D_800B706D[selectedCourseId * 3]);
+                        sprintf(text, "%d", gCourseSelectCourseHandlingRatings[selectedCourseId * 3]);
                     }
                     func_80013D0C((s16)(playerWidget->coordinates[0] + 0x34),
                                   (s16)(playerWidget->coordinates[4] + 8), text, 0, arg0->coordinates[8]);
 
                     if (9 > selectedCourseId) {
-                        sprintf(text, "%d", D_800B706E[selectedCourseId * 3]);
+                        sprintf(text, "%d", gCourseSelectCourseTrickRatings[selectedCourseId * 3]);
                     }
                     func_80013D0C((s16)(playerWidget->coordinates[0] + 0x34),
                                   (s16)(playerWidget->coordinates[4] + 0x10), text, 0, arg0->coordinates[8]);
@@ -1292,8 +1290,8 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
                         positionColumn = 0;
                     }
                     bottomRow = i >= 2;
-                    func_8000F8AC((s16)(D_800B70D8[positionColumn * 2 + (i & 1)][0] + (bottomRow * 0x8C)),
-                                  D_800B70D8[positionColumn * 2 + (i & 1)][1],
+                    func_8000F8AC((s16)(gCourseSelectStatsPlayerMarkerLayout[positionColumn * 2 + (i & 1)][0] + (bottomRow * 0x8C)),
+                                  gCourseSelectStatsPlayerMarkerLayout[positionColumn * 2 + (i & 1)][1],
                                   func_80043040(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, arg0->coordinates[8], 0);
                     playerCount = D_80121B55;
                 }
@@ -1304,7 +1302,7 @@ void func_800263D8(CourseSelectWidgetActor *arg0) {
 }
 #endif
 
-void func_80026A54(CourseSelectWidgetActor *arg0) {
+void updateCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     s32 state = arg0->transitionState;
 
     switch (state ^ 0) {
@@ -1340,14 +1338,14 @@ void func_80026A54(CourseSelectWidgetActor *arg0) {
 
     if (state == 4) {
         func_800716E4(arg0);
-        func_800291F0(5);
+        finishCourseSelectUiTask(5);
         return;
     }
 
-    func_800483FC(&D_80124868, func_800263D8, arg0);
+    func_800483FC(&D_80124868, drawCourseSelectCourseStats, arg0);
 }
 
-void func_80026B88(CourseSelectWidgetActor *arg0) {
+void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     s32 row;
     s32 i;
     CourseSelectWidgetActor *temp_a3;
@@ -1362,7 +1360,7 @@ void func_80026B88(CourseSelectWidgetActor *arg0) {
 
     i = 0;
     if ((s32)D_80121B55 > 0) {
-        table = &D_800B70C0[row];
+        table = &gCourseSelectStatsPanelLayout[row];
         do {
             temp_a3->coordinates[i] = (*table)[(i & 1) * 2] + ((i >= 2) * 0x8C);
             temp_a3->coordinates[i + 4] = (*table)[(i & 1) * 2 + 1];
@@ -1372,11 +1370,11 @@ void func_80026B88(CourseSelectWidgetActor *arg0) {
 
     temp_a3->transitionOffset = 0;
     temp_a3->transitionState = 0;
-    func_80071824(temp_a3, func_80026A54);
+    func_80071824(temp_a3, updateCourseSelectCourseStats);
 }
 
-// func_80026C4C best match: 86.127% (nonmatchings/func_80026C4C-4923837976568703863/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80026C4C.s")
+// drawCourseSelectCourseDescription best match: 86.127% (nonmatchings/drawCourseSelectCourseDescription-4923837976568703863/base_8.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectCourseDescription.s")
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -1393,15 +1391,15 @@ typedef struct {
 } CourseSelectStatus26C4C;
 
 extern u32 gCourseUnlockPrices[];
-extern u8 D_800B6BE4[];
-extern u8 D_800B6DD0[];
-extern u8 D_800B6DFC[];
-extern u8 D_800B6EBC[];
-extern u8 D_800B6FDC[];
+extern u8 gCourseSelectModeDescriptionText[];
+extern u8 gCourseSelectBoardLevelText[];
+extern u8 gCourseSelectBoardLevelByCourseText[];
+extern u8 gCourseSelectExtraCourseBoardLevelText[];
+extern u8 gCourseSelectPurchaseMessageText[];
 extern u8 gUnlockedExtraCourseFlags;
-extern u8 D_8010AF07[];
+extern u8 gCourseSelectExtraCourseIds[];
 
-void func_80026C4C(CourseSelectWidgetActor *arg0) {
+void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     CourseSelectSelection26C4C *selection;
     CourseSelectStatus26C4C *status;
     u8 *volatile text;
@@ -1430,7 +1428,7 @@ void func_80026C4C(CourseSelectWidgetActor *arg0) {
             } else {
                 value = selection->courseId % 3;
             }
-            text = D_800B6BE4 + (value * 0x46);
+            text = gCourseSelectModeDescriptionText + (value * 0x46);
         } else {
             if ((D_800EC9D0[0] < 2) || (D_800EC9D0[0] == 9)) {
                 selectedIndex = 1;
@@ -1449,11 +1447,11 @@ void func_80026C4C(CourseSelectWidgetActor *arg0) {
             }
 
             if ((D_800EC9C2 == 3) && (selection->courseId < 9)) {
-                text = D_800B6DFC + ((selection->courseId % 3) * 0x30);
+                text = gCourseSelectBoardLevelByCourseText + ((selection->courseId % 3) * 0x30);
             } else if ((selection->courseId >= 9) && (selection->courseId < 12)) {
-                text = D_800B6EBC + ((D_8010AF07[selectedIndex] % 3) * 0x60);
+                text = gCourseSelectExtraCourseBoardLevelText + ((gCourseSelectExtraCourseIds[selectedIndex] % 3) * 0x60);
             } else {
-                text = D_800B6DD0;
+                text = gCourseSelectBoardLevelText;
             }
         }
 
@@ -1473,7 +1471,7 @@ void func_80026C4C(CourseSelectWidgetActor *arg0) {
                 buffer[1] = 6;
                 if ((selectedIndex >= 2) || (selection->courseId >= 9)) {
                     if (selection->courseId >= 9) {
-                        courseIndex = D_8010AF07[selectedIndex];
+                        courseIndex = gCourseSelectExtraCourseIds[selectedIndex];
                     } else {
                         courseIndex = ((selection->courseId % 3) + (selectedIndex * 3)) - 3;
                     }
@@ -1515,13 +1513,13 @@ void func_80026C4C(CourseSelectWidgetActor *arg0) {
             }
         }
     } else {
-        text = D_800B6FDC + ((status->unk2C * 0x32) - 0x32);
+        text = gCourseSelectPurchaseMessageText + ((status->unk2C * 0x32) - 0x32);
         func_80013154(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
     }
 }
 #endif
 
-void func_800271CC(CourseSelectWidgetActor *arg0) {
+void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     s32 screenState;
     s32 temp_a0;
 
@@ -1586,20 +1584,20 @@ void func_800271CC(CourseSelectWidgetActor *arg0) {
         func_800291F0(6);
         return;
     }
-    func_800483FC(&D_80124868, func_80026C4C, arg0);
+    func_800483FC(&D_80124868, drawCourseSelectCourseDescription, arg0);
 }
 
-void func_800273C4(CourseSelectWidgetActor *arg0) {
+void initCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     arg0->x = -0x84;
     arg0->y = 0xC;
     arg0->spriteIndex = 0;
     arg0->state = 0;
     arg0->subState = 0;
     arg0->timer = 0;
-    func_80071824(arg0, func_800271CC);
+    func_80071824(arg0, updateCourseSelectCourseDescription);
 }
 
-void func_80027408(CourseSelectWidgetActor *arg0) {
+void drawCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     u16 tileIndexSpill;
     s32 handleIndex;
     u16 unusedPadding;
@@ -1620,7 +1618,7 @@ void func_80027408(CourseSelectWidgetActor *arg0) {
                   promotedTileIndex, 0x20, 0x20, 0, arg0->coordinates[2], 0);
 }
 
-void func_80027498(CourseSelectWidgetActor *arg0) {
+void updateCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     u8 state = arg0->state;
 
     switch (state) {
@@ -1644,25 +1642,25 @@ void func_80027498(CourseSelectWidgetActor *arg0) {
     state = arg0->state;
     if ((state == 2) && (arg0->x >= 0x94)) {
         func_800716E4(arg0);
-        func_800291F0(7);
+        finishCourseSelectUiTask(7);
         return;
     }
-    func_800483FC(&D_80124868, func_80027408, arg0);
+    func_800483FC(&D_80124868, drawCourseSelectExtraCourseBadge, arg0);
 }
 
-void func_800275A4(CourseSelectWidgetActor *arg0) {
+void initCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     arg0->x = -0x8;
     arg0->y = -0x5C;
     arg0->spriteIndex = 0;
     arg0->state = 0;
-    func_80071824(arg0, func_80027498);
+    func_80071824(arg0, updateCourseSelectExtraCourseBadge);
 }
 
-// func_800275E0 best match: 89.545% (nonmatchings/func_800275E0-1315772375853892447/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800275E0.s")
+// drawCourseSelectExtraCourseIconList best match: 89.545% (nonmatchings/drawCourseSelectExtraCourseIconList-1315772375853892447/base_2.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
-void func_800275E0(CourseSelectWidgetActor *arg0) {
+void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     s32 playerIndex;
     s32 playerOffset;
     s32 alpha;
@@ -1729,7 +1727,7 @@ void func_800275E0(CourseSelectWidgetActor *arg0) {
 }
 #endif
 
-void func_8002784C(CourseSelectWidgetActor *arg0) {
+void updateCourseSelectExtraCourseIconListIn(CourseSelectWidgetActor *arg0) {
     s32 var_v1;
     CourseSelectWidgetActor *var_v0;
     CourseSelectWidgetActor *temp_a2 = arg0;
@@ -1750,12 +1748,12 @@ void func_8002784C(CourseSelectWidgetActor *arg0) {
             } while (var_v1 < (s32)temp_a1->itemCount);
         }
     } else if (gCurrentInputTask->screenState == 4) {
-        func_80071824(temp_a2, func_80027AF8);
+        func_80071824(temp_a2, updateCourseSelectExtraCourseIconList);
     }
-    func_800483FC(&D_80124868, func_800275E0, temp_a2);
+    func_800483FC(&D_80124868, drawCourseSelectExtraCourseIconList, temp_a2);
 }
 
-void func_80027914(CourseSelectWidgetActor *arg0) {
+void updateCourseSelectExtraCourseIconListOut(CourseSelectWidgetActor *arg0) {
     s16 var_v0;
     s32 var_v1;
     CourseSelectWidgetActor *var_v0_2;
@@ -1780,7 +1778,7 @@ void func_80027914(CourseSelectWidgetActor *arg0) {
     } else {
         var_v0_3 = gCurrentInputTask->screenState;
         if (var_v0_3 == 3) {
-            func_80071824(arg0, func_8002784C);
+            func_80071824(arg0, updateCourseSelectExtraCourseIconListIn);
             var_v0_3 = gCurrentInputTask->screenState;
         }
     }
@@ -1788,10 +1786,10 @@ void func_80027914(CourseSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_800275E0, arg0);
+    func_800483FC(&D_80124868, drawCourseSelectExtraCourseIconList, arg0);
 }
 
-void func_80027A08(CourseSelectWidgetActor *arg0) {
+void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
     s32 i;
     s32 j;
     CourseSelectWidgetActor *temp_a2 = arg0;
@@ -1817,22 +1815,22 @@ void func_80027A08(CourseSelectWidgetActor *arg0) {
 
     if (temp_a2->x < -0xDF) {
         func_800716E4(temp_a2);
-        func_800291F0(8);
+        finishCourseSelectUiTask(8);
         D_8010ADE8 = 0;
         return;
     }
 
-    func_800483FC(&D_80124868, func_800275E0, temp_a2);
+    func_800483FC(&D_80124868, drawCourseSelectExtraCourseIconList, temp_a2);
 }
 
-// func_80027AF8 best match: 90.349% (nonmatchings/func_80027AF8-7273315160691878794/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80027AF8.s")
+// updateCourseSelectExtraCourseIconList best match: 90.349% (nonmatchings/updateCourseSelectExtraCourseIconList-7273315160691878794/base_11.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectExtraCourseIconList.s")
 
-// func_80028194 best match: 83.366% (nonmatchings/func_80028194-2225551288923588688/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028194.s")
+// initCourseSelectExtraCourseIconList best match: 83.366% (nonmatchings/initCourseSelectExtraCourseIconList-2225551288923588688/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/initCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
-void func_80028194(CourseSelectWidgetActor *arg0) {
+void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     s32 var_a0;
     s32 var_t0;
     s32 var_t5;
@@ -1856,8 +1854,8 @@ void func_80028194(CourseSelectWidgetActor *arg0) {
     }
     var_t0 = 0;
     if ((s32)D_80121B55 > 0) {
-        temp_ra = D_800B70A8[var_t5];
-        temp_s1 = D_800B7084[var_t5];
+        temp_ra = gCourseSelectIconListXLayout[var_t5];
+        temp_s1 = gCourseSelectIconListYLayout[var_t5];
         var_t1 = (u8 *)arg0;
         var_t2 = (u8 *)arg0;
         var_t3 = (u8 *)arg0;
@@ -1871,7 +1869,7 @@ void func_80028194(CourseSelectWidgetActor *arg0) {
             if ((s32)D_80121B55 >= 3) {
                 var_t1[0x50] = temp_s2;
             } else {
-                var_t1[0x50] = *(s16 *)((u8 *)D_800B7084 + (var_t5 * temp_s6));
+                var_t1[0x50] = *(s16 *)((u8 *)gCourseSelectIconListYLayout + (var_t5 * temp_s6));
             }
             var_t1[0x5C] = 0;
             *(s16 *)(var_t3 + 0x60) = temp_s3;
@@ -1906,17 +1904,17 @@ loop:
     } else {
         *(s16 *)((u8 *)arg0 + 0x48) = 0x88;
     }
-    func_80071824(arg0, func_80027AF8);
+    func_80071824(arg0, updateCourseSelectExtraCourseIconList);
 }
 #endif
 
-// func_80028354 best match: 96.854% (nonmatchings/func_80028354-6061209858023118177/base_13.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028354.s")
+// drawCourseSelectPlayerPanels best match: 96.854% (nonmatchings/drawCourseSelectPlayerPanels-6061209858023118177/base_13.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
 extern int sprintf(u8 *, u8 *, ...);
 
-void func_80028354(CourseSelectWidgetInitActor *actor) {
+void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
     s16 *yPtr;
     volatile s32 savedIndex;
     s32 count;
@@ -2029,8 +2027,8 @@ void func_80028354(CourseSelectWidgetInitActor *actor) {
 }
 #endif
 
-// func_800287EC best match: 82.540% (nonmatchings/func_800287EC-8207005055717715604/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800287EC.s")
+// updateCourseSelectPlayerPanels best match: 82.540% (nonmatchings/updateCourseSelectPlayerPanels-8207005055717715604/base_15.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -2047,7 +2045,7 @@ typedef struct {
     /* 0x5A */ u8 state[4];
 } CourseSelectWidgetTransitionActor;
 
-void func_800287EC(CourseSelectWidgetActor *arg0) {
+void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
     volatile u8 pad[0x20];
     CourseSelectWidgetTransitionActor *actor;
     s32 i;
@@ -2086,9 +2084,9 @@ void func_800287EC(CourseSelectWidgetActor *arg0) {
                         if (actor->x[i] == actor->targetX[i]) {
                             statePtr[0] = 1;
                             if (count == next) {
-                                D_8010ADE0 = createEffectTask((void (*)(EffectTask *))func_80024050, 0, 0x62);
-                                D_8010ADE4 = createEffectTask((void (*)(EffectTask *))func_80024968, 0, 0x62);
-                                createEffectTask(func_800257F0, 0, 0x62);
+                                D_8010ADE0 = createEffectTask((void (*)(EffectTask *))initCourseSelectPreviewModelIn, 0, 0x62);
+                                D_8010ADE4 = createEffectTask((void (*)(EffectTask *))initCourseSelectPreviewModelOut, 0, 0x62);
+                                createEffectTask(initCourseSelectCourseIconList, 0, 0x62);
                             }
                             break;
                         }
@@ -2133,15 +2131,15 @@ void func_800287EC(CourseSelectWidgetActor *arg0) {
         } while (next != count);
     }
 
-    func_800483FC(&D_80124868, func_80028354, arg0);
+    func_800483FC(&D_80124868, drawCourseSelectPlayerPanels, arg0);
 }
 #endif
 
-// func_80028B0C best match: 92.500% (nonmatchings/func_80028B0C-180949888360117632/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028B0C.s")
+// initCourseSelectPlayerPanels best match: 92.500% (nonmatchings/initCourseSelectPlayerPanels-180949888360117632/base_9.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/initCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
-void func_80028B0C(CourseSelectWidgetInitActor *arg0) {
+void initCourseSelectPlayerPanels(CourseSelectWidgetInitActor *arg0) {
     if (D_80121B55 == 2) {
         arg0->unk40 = 0xA0;
         arg0->unk18 = 0x90;
@@ -2197,11 +2195,11 @@ void func_80028B0C(CourseSelectWidgetInitActor *arg0) {
     arg0->unk5D = 0;
     arg0->unk52 = 0;
     arg0->unk5A = 0;
-    func_80071824(arg0, func_800287EC);
+    func_80071824(arg0, updateCourseSelectPlayerPanels);
 }
 #endif
 
-void func_80028C68(CourseSelectPlayerPanelsActor *actor) {
+void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
     s32 i;
     s32 playerCount;
     s32 xOffset;
@@ -2227,7 +2225,7 @@ void func_80028C68(CourseSelectPlayerPanelsActor *actor) {
                 func_8000F8AC((s16)(actor->x + 0xB0), (s16)(actor->y + yOffset),
                               func_80043040(D_80112130[0x24]), rightEdgeTile, 0x20, 0x20, 0,
                               actor->playerPanelFadeAlpha[i], 0);
-                func_80013154((s16)(actor->x + 0x2E), (s16)(actor->y + yOffset + 0xC), D_800B7040, 0,
+                func_80013154((s16)(actor->x + 0x2E), (s16)(actor->y + yOffset + 0xC), gCourseSelectCompleteText, 0,
                               actor->playerPanelFadeAlpha[i], 0);
             } else {
                 xOffset = (i >= 2) * 0x8C;
@@ -2238,7 +2236,7 @@ void func_80028C68(CourseSelectPlayerPanelsActor *actor) {
                 func_8000F8AC((s16)(actor->x + xOffset + 0x40), (s16)(actor->y + yOffset),
                               func_80043040(D_80112130[0x24]), 9, 0x20, 0x20, 0,
                               actor->playerPanelFadeAlpha[i], 0);
-                func_80013154((s16)(actor->x + xOffset + 0x24), (s16)(actor->y + yOffset + 3), D_800B7040, 1,
+                func_80013154((s16)(actor->x + xOffset + 0x24), (s16)(actor->y + yOffset + 3), gCourseSelectCompleteText, 1,
                               actor->playerPanelFadeAlpha[i], 0);
             }
         }
@@ -2246,9 +2244,9 @@ void func_80028C68(CourseSelectPlayerPanelsActor *actor) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80028FF0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectCompletePanels.s")
 
-void func_8002916C(CourseSelectWidgetActor *arg0) {
+void initCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
     s32 var_v0;
     CourseSelectWidgetActor *var_v1;
 
@@ -2268,9 +2266,9 @@ void func_8002916C(CourseSelectWidgetActor *arg0) {
             var_v1 = (CourseSelectWidgetActor *)((u8 *)var_v1 + sizeof(s16));
         } while (var_v0 < (s32)D_80121B55);
     }
-    func_80071824(arg0, func_80028FF0);
+    func_80071824(arg0, updateCourseSelectCompletePanels);
 }
 
-void func_800291F0(s32 arg0) {
+void finishCourseSelectUiTask(s32 arg0) {
 
 }

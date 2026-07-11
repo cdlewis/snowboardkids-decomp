@@ -156,8 +156,8 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
-extern void func_800257F0(EffectTask *);
-extern void func_80028194(EffectTask *);
+extern void initCourseSelectCourseIconList(EffectTask *);
+extern void initCourseSelectExtraCourseIconList(EffectTask *);
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern void releaseMenuAssetHandles(void);
@@ -455,8 +455,8 @@ void initCourseSelectCourseList(void) {
     D_8010AEA0[0] = 0;
     D_800EC9C1 = 0;
     D_8010ADF0 = 0;
-    createEffectTask(func_800257F0, 0, 0x63);
-    D_8010ADE8 = createEffectTask(func_80028194, 0, 0x61);
+    createEffectTask(initCourseSelectCourseIconList, 0, 0x63);
+    D_8010ADE8 = createEffectTask(initCourseSelectExtraCourseIconList, 0, 0x61);
     courseFlags = gUnlockedExtraCourseFlags;
     if (courseFlags & 7) {
         D_8010AEA0[0] = 1;
