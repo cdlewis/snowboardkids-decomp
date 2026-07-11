@@ -8,6 +8,7 @@
 #include "main_menu_message_ui.h"
 #include "main_menu_overlay_effects.h"
 #include "main_menu_panel_ui.h"
+#include "race_camera.h"
 #include "main_menu_transition.h"
 
 #define MAIN_MENU_TRANSITION_FRAMES 0x10
@@ -26,13 +27,10 @@ typedef struct {
 } MainMenuCourseAsset;
 
 extern void func_8008C704(void);
-extern void func_8006D700(void);
 extern void func_80096E3C(void);
 extern void func_800704F0(void);
 extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_8006D5CC(void);
-extern void func_8006D520(s32, s32);
 
 extern u8 D_1467B0[];
 extern u8 D_147910[];
@@ -65,7 +63,6 @@ extern u8 D_80121B5E;
 extern u8 D_80121B5F;
 extern s16 D_800D3C90[];
 
-extern void func_8006D780(s32);
 extern void func_80045914(void);
 extern u8 D_80123750;
 extern s8 D_800DEED4;

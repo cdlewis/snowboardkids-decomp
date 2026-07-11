@@ -11,6 +11,7 @@
 #include "main_menu_scene_renderer.h"
 #include "main_menu_transition.h"
 #include "main_menu_ui.h"
+#include "race_camera.h"
 #define MENU_RENDERING_S16_STEP_PROTOTYPE
 #include "menu_rendering.h"
 
@@ -108,12 +109,9 @@ extern s32 osPfsFindFile(OSPfs *, u16, u32, u8 *, u8 *, s32 *);
 extern s32 osPfsAllocateFile(OSPfs *, u16, u32, u8 *, u8 *, int, s32 *);
 extern s32 osPfsReadWriteFile(OSPfs *, s32, u8, int, int, u8 *);
 extern void func_80045914(void);
-extern void func_8006D780(s32);
 extern void func_80072138(s32, s32);
 extern void func_800704F0(void);
 extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_8006D5CC(void);
-extern void func_8006D520(s32, s32);
 extern void func_80002A1C(void);
 extern void func_80002CE4(void);
 extern void func_8000262C(void);

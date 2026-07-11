@@ -4,6 +4,7 @@
 #include "controller_rumble.h"
 #include "game_audio.h"
 #include "model_animation.h"
+#include "race_camera.h"
 #include "race_actor_collision.h"
 #define func_8004940C func_8004940C_s32
 #include "fixed_point_matrix.h"
@@ -101,7 +102,6 @@ extern void func_80097038(RaceInputPlayer *);
 extern void func_8008F1B4(RaceInputPlayer *);
 extern void func_8008F1CC(RaceInputPlayer *);
 extern s32 func_800832CC(RaceInputPlayer *);
-extern void func_8006D520(u16, u16);
 extern void func_8004F55C(s16, s16);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void func_8004FA44(void *);
@@ -3541,7 +3541,6 @@ void func_800934EC(RaceInputPlayer *player) {
 
 #ifdef NON_MATCHING
 extern void func_8004F55C(s16 playerIndex, s16 itemIndex);
-extern void func_8006D520(u16 arg0, u16 arg1);
 
 void func_800936D4(RaceInputPlayer *player) {
     s16 updateState;
