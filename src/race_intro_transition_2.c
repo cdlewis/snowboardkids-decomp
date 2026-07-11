@@ -31,7 +31,7 @@ typedef struct {
 
 extern RaceIntroTransitionState *D_801235B8;
 extern RaceIntroPlayer D_80121D80[];
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s8 D_800DEF10;
 extern f32 D_800E10C8;
 extern s16 D_800BB890[];
@@ -166,7 +166,7 @@ void func_8003ED00(void) {
     func_80078430();
     func_80044294();
     func_8009956C(func_8003EF7C, 0);
-    D_800DEF14 = 0xFF;
+    gMenuFadeAlpha = 0xFF;
     D_800EC8B0 = 0;
     D_801235B8->fadeDelay = 0x4A1;
     D_801235B8->fadeStep = 0;
@@ -181,7 +181,7 @@ void func_8003EF7C(void) {
     D_801235B8->startDelay--;
     if (D_801235B8->startDelay == 0) {
         func_8007066C(0, 0xA0, 0x78, 0x120, 0, 0x140, 0xF0, 1.333333373f);
-        D_800DEF14 = 0;
+        gMenuFadeAlpha = 0;
         func_800720E4(0);
         func_8009956C(func_8003F00C, 0);
     }
@@ -314,11 +314,11 @@ copy_player3:
     temp = D_8010B1E1;
     if (temp != 0) {
         D_800DEF10 = 1;
-        D_800DEF14 += temp;
+        gMenuFadeAlpha += temp;
     }
 
-    if (D_800DEF14 >= 0xFF) {
-        D_800DEF14 = 0xFF;
+    if (gMenuFadeAlpha >= 0xFF) {
+        gMenuFadeAlpha = 0xFF;
         D_80123751 = 1;
         func_8009956C(func_8003F4B4, 0);
     }

@@ -123,7 +123,7 @@ extern u32 D_800D6270[];
 extern u32 D_800D60E0[];
 extern GfxCommandSource D_800DEE30;
 extern u32 D_800DEE50[];
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern u32 D_800DEFF8[];
 extern s16 D_8011213C;
 extern s16 D_80112140;
@@ -299,7 +299,7 @@ void func_80053DFC(s32 arg0) {
 }
 
 void func_80053E28(MainMenuOverlayEffectActor *arg0) {
-    if (D_800DEF14 == 0) {
+    if (gMenuFadeAlpha == 0) {
         if (arg0->unk18.byte.b0 != 0) {
             enqueueSoundEffect(D_800D5738[arg0->index], 0x32, arg0);
             arg0->unk18.byte.b0 = 0;

@@ -7,7 +7,7 @@
 #include "character_select_menu.h"
 #include "race_character_select_menu.h"
 #include "controller_pak_score_delete_flow.h"
-#include "controller_pak_race_save_warning_flow.h"
+#include "controller_pak_post_race_save_prompt_flow.h"
 #include "controller_pak_file_delete_flow.h"
 #include "course_select_menu.h"
 #include "game_setup_menu.h"
@@ -180,7 +180,7 @@ extern s16 D_801124B8;
 extern SignedUnsignedShort D_80121B50;
 extern s16 D_80121B52;
 extern s32 D_80121B7C;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s8 D_800DEF10;
 extern s8 D_800EC8B0;
 extern RaceFlowInitScratch D_800EC9F0;
@@ -291,7 +291,7 @@ void func_80072D54(void) {
 
 void func_80072D98(void) {
     func_8009956C(&func_80072DDC, 0);
-    func_800994F4(4, &initControllerPakRaceSaveWarningFlow, 0x64);
+    func_800994F4(4, &initControllerPakPostRaceSavePromptFlow, 0x64);
     func_80099614(0);
 }
 
@@ -611,9 +611,9 @@ void func_80073944(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80073988.s")
 
 void func_800740C0(void) {
-    D_800DEF14 -= 8;
-    if (D_800DEF14 < 0) {
-        D_800DEF14 = 0;
+    gMenuFadeAlpha -= 8;
+    if (gMenuFadeAlpha < 0) {
+        gMenuFadeAlpha = 0;
         D_801235B8->countdown--;
     }
     if (D_801235B8->countdown == 0) {
@@ -633,10 +633,10 @@ void func_80074160(void) {
     temp_a0 = state->unk1C;
     if (temp_a0 >= 0x32) {
         D_800DEF10 = 1;
-        D_800DEF14 += 0x16;
-        if (D_800DEF14 >= 0x100) {
+        gMenuFadeAlpha += 0x16;
+        if (gMenuFadeAlpha >= 0x100) {
             func_8006D520(0, 1);
-            D_800DEF14 = 0xFF;
+            gMenuFadeAlpha = 0xFF;
             func_80071408(func_80069BC0, 6, 0x64);
             func_80071408((void (*)(EffectTask *))func_80065E90, 6, 0x64);
             switch (D_80121B55 & 0xFFFFFFFF) {
@@ -699,20 +699,20 @@ void func_80074160(void) {
         }
     } else {
         state->unk1C = temp_a0 + 1;
-        D_800DEF14 -= 0x10;
-        if (D_800DEF14 < 0) {
-            D_800DEF14 = 0;
+        gMenuFadeAlpha -= 0x10;
+        if (gMenuFadeAlpha < 0) {
+            gMenuFadeAlpha = 0;
         }
     }
     func_80077C94();
 }
 
 void func_800747E8(void) {
-    if (D_800DEF14 != 0) {
-        D_800DEF14 -= 0x10;
+    if (gMenuFadeAlpha != 0) {
+        gMenuFadeAlpha -= 0x10;
     }
-    if (D_800DEF14 < 0) {
-        D_800DEF14 = 0;
+    if (gMenuFadeAlpha < 0) {
+        gMenuFadeAlpha = 0;
     }
     func_80077C4C();
     if (!(D_801235B4 & 1)) {
@@ -1473,9 +1473,9 @@ void func_80077400(void) {
     }
     func_80077C94();
     D_800EC8B0 = 0;
-    D_800DEF14 += 0x10;
-    if (D_800DEF14 >= 0xFF) {
-        D_800DEF14 = 0xFF;
+    gMenuFadeAlpha += 0x10;
+    if (gMenuFadeAlpha >= 0xFF) {
+        gMenuFadeAlpha = 0xFF;
         D_801235B8->fadeTimer -= 1;
         if (D_801235B8->fadeTimer == 0) {
             func_80072260();
@@ -1585,7 +1585,7 @@ void func_80077554(void) {
     func_8008BEB0();
     func_80078430();
     func_80044294();
-    D_800DEF14 = 0xFF;
+    gMenuFadeAlpha = 0xFF;
     func_80042C20();
     func_800720E4(0);
     D_801235B8->fadeTimer = 0;
@@ -1618,7 +1618,7 @@ void func_8007797C(void) {
         }
     }
     if (D_801235B8->fadeTimer == 1) {
-        D_800DEF14 = 0;
+        gMenuFadeAlpha = 0;
     }
     if (gRaceUpdatePaused == 0) {
         D_801235B8->fadeTimer++;
@@ -1634,9 +1634,9 @@ void func_8007797C(void) {
 void func_80077AD4(void) {
     func_80077CD4();
     D_800EC8B0 = 0;
-    D_800DEF14 += 7;
-    if (D_800DEF14 >= 0xFF) {
-        D_800DEF14 = 0xFF;
+    gMenuFadeAlpha += 7;
+    if (gMenuFadeAlpha >= 0xFF) {
+        gMenuFadeAlpha = 0xFF;
         func_8009956C(&func_80077B34, 0);
     }
 }
@@ -1784,9 +1784,9 @@ void func_80077DA0(void) {
 void func_80078078(void) {
     s32 temp_v0;
 
-    D_800DEF14 -= 0x10;
-    if (D_800DEF14 < 0) {
-        D_800DEF14 = 0;
+    gMenuFadeAlpha -= 0x10;
+    if (gMenuFadeAlpha < 0) {
+        gMenuFadeAlpha = 0;
         temp_v0 = gPlayerInputPressed[0];
         if ((temp_v0 & 0x20400) && (D_80121B52 != 9)) {
             enqueueSoundEffect(0x19, 0x32);
@@ -1809,9 +1809,9 @@ void func_80078078(void) {
 }
 
 void func_80078198(void) {
-    D_800DEF14 += 0x10;
-    if (D_800DEF14 >= 0x100) {
-        D_800DEF14 = 0xFF;
+    gMenuFadeAlpha += 0x10;
+    if (gMenuFadeAlpha >= 0x100) {
+        gMenuFadeAlpha = 0xFF;
         D_80123751 = 1;
         func_8009956C(&func_800781FC, 0);
     }

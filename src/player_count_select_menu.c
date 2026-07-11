@@ -39,7 +39,7 @@ extern u8 D_8010ADF8;
 extern u16 D_8010ADF0;
 extern u8 D_8010AF52;
 extern s16 D_80121B50;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern u8 D_80121B5E;
 extern u8 D_800EC9DD;
 extern s8 D_800DEED4;
@@ -61,7 +61,7 @@ void func_80008620(void) {
     if (D_80121B50 == 7) {
         D_80121B50 = 9;
     }
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
     if (D_80121B5E == 3) {
         D_80121B5E = 0;
     }
@@ -95,7 +95,7 @@ void func_800086EC(void) {
     if (D_80121B50 == 7) {
         D_80121B50 = 9;
     }
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
     if (D_80121B5E == 3) {
         D_80121B5E = 0;
     }

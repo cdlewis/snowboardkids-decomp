@@ -79,7 +79,7 @@ extern u8 D_5D4280[];
 extern u8 D_5DAF30[];
 extern ObjectA3E0 *D_800EC9C4;
 extern u16 D_800B34E0[];
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s16 D_800EC9D0;
 extern s8 D_800DEED4;
 extern s8 D_800EC9C0;
@@ -248,7 +248,7 @@ void func_800097E0(void) {
     D_8010AECC = 0;
     D_8010ADF0 = 0;
 
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
     mask = 1;
     i = 0;
     do {

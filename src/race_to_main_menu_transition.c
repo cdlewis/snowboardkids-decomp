@@ -59,7 +59,7 @@ extern u8 D_609AA0[];
 extern u8 D_60ECB0[];
 extern u8 D_60F1A0[];
 extern s8 D_800DEED4;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern f32 D_800E0A70;
 extern s16 D_8010B1A0;
 extern u16 D_8010B1A2;
@@ -124,7 +124,7 @@ void func_8000D340(void) {
     func_80071408(func_8003DB1C, 0, 0x64);
     D_801235B8->fade = 0xFF;
     state = D_801235B8;
-    D_800DEF14 = state->fade;
+    gMenuFadeAlpha = state->fade;
     D_801235B8->timer = 5;
     func_8009956C(func_8000D590, 0);
 }

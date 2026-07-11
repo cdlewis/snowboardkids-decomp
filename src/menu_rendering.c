@@ -124,7 +124,7 @@ extern s16 D_80112132[];
 extern u32 gPlayerInputHeld;
 extern Gfx D_800DEFF8[];
 extern s16 D_800B51F0[][2];
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s16 D_8011213C;
 extern s16 D_8015660A;
 extern s16 D_8015660C;
@@ -1634,7 +1634,7 @@ u8 increase;
         value = 0;
     }
 
-    D_800DEF14 = value;
+    gMenuFadeAlpha = value;
     return value;
 }
 

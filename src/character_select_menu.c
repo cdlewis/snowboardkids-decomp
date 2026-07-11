@@ -57,7 +57,7 @@ extern EffectTask *D_8010ADE4;
 extern EffectTask *D_8010ADE8;
 extern EffectTask *D_8010ADEC;
 extern f32 gCharacterSelectViewportAspectRatio;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s16 D_8010ADF0[];
 extern s8 D_800DEED4;
 extern s8 D_800EC9C1;
@@ -108,7 +108,7 @@ void initCharacterSelectMenu(void) {
         D_8010ADF8 = 0;
         D_801235B8->fade = 0xFF;
         D_801235B8->timer = 0;
-        D_800DEF14 = D_801235B8->fade;
+        gMenuFadeAlpha = D_801235B8->fade;
         loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x21);
         loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
         loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
@@ -139,7 +139,7 @@ loop_1:
         }
     } else {
         D_801235B8->fade = 1;
-        D_800DEF14 = 1;
+        gMenuFadeAlpha = 1;
         playerCount = D_80121B55;
         i = 0;
         if (playerCount > 0) {

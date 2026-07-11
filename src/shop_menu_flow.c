@@ -20,7 +20,7 @@ extern void releaseMenuAssetHandles(void);
 extern CharacterSelectFlowState *D_801235B8;
 extern ShopMenuPromptTransition gControllerPakContinuePromptTransition;
 extern s8 D_800DEED4;
-extern s16 D_800DEF14;
+extern s16 gMenuFadeAlpha;
 extern s32 D_801235B4;
 extern u8 D_80123750;
 extern u8 D_80123751;
@@ -48,7 +48,7 @@ void func_8000C280(void) {
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x29);
     func_80070EC0(0);
     func_80071408(initControllerPakContinuePrompt, 0, 0x64);
-    D_800DEF14 = D_801235B8->fade;
+    gMenuFadeAlpha = D_801235B8->fade;
     func_8009956C(func_8000C3C8, 0);
     func_8007105C();
 }
