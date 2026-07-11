@@ -160,7 +160,7 @@ void getAssetTableImageAndPalette(u8 *arg0, u16 arg1, void **arg2, void **arg3) 
     *arg3 = (void *)((temp_v1[idx].textureIndex << 5) + temp_v0);
 }
 
-void func_800459D4(u8 *arg0, u16 arg1, u16 arg2, void **arg3, void **arg4) {
+void getAssetTableImageAndExplicitPalette(u8 *arg0, u16 arg1, u16 arg2, void **arg3, void **arg4) {
     u8 *temp_v0;
     AssetTableEntry *temp_v1;
 

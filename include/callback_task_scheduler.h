@@ -30,7 +30,7 @@ void *createCallbackTask(void (*callback)(), s32 type, s32 priority);
 void *createCallbackTaskWithUserId(void (*callback)(), s32 type, s32 priority, s32 userId);
 /*
  * createCallbackTaskWithUserIdPreservingArgs is intentionally not declared here: its callers disagree on the
- * arity (race_item_effects.c passes 4 args, race_ui_effects.c passes 3), and
+ * arity (race_item_visual_effects.c passes 4 args, race_ui_effects.c passes 3), and
  * both call shapes are baked into matched ROM code. A single shared prototype
  * cannot satisfy both, so each caller keeps its own local declaration.
  */

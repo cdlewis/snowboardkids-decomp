@@ -6,7 +6,7 @@
 #include "sound_manager.h"
 #include "race_motion.h"
 #include "race_player_collision.h"
-#include "race_item_effects.h"
+#include "race_item_visual_effects.h"
 #include "race_item_hit_flags.h"
 
 #define RACE_PLAYER_COLLISION_YAW_FLIPPED 0x400
@@ -419,7 +419,7 @@ void resolveRacePlayerItemHitReactions(RaceInputPlayer *arg0) {
             arg0->unk2E4 = arg0->unk2CC;
             if (arg0->soundDisabled == 0) {
                 enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
-                func_8004E518((s16) arg0->playerIndexU16, arg0->unk2DE, 0, arg0->unk284 / 2, arg0->unk280);
+                spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, arg0->unk2DE, 0, arg0->unk284 / 2, arg0->unk280);
             }
             break;
         case 8:
@@ -429,7 +429,7 @@ void resolveRacePlayerItemHitReactions(RaceInputPlayer *arg0) {
             arg0->updateTimer = 0;
             if (arg0->soundDisabled == 0) {
                 enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
-                func_8004E518((s16) arg0->playerIndexU16, gRacePlayerHitEffectAngle, 0, arg0->unk284 / 2, arg0->unk280);
+                spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, gRacePlayerHitEffectAngle, 0, arg0->unk284 / 2, arg0->unk280);
             }
             break;
         case 9:
@@ -451,7 +451,7 @@ void resolveRacePlayerItemHitReactions(RaceInputPlayer *arg0) {
             arg0->unk2E4 = arg0->unk2CC;
             if (arg0->soundDisabled == 0) {
                 enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
-                func_8004E518((s16) arg0->playerIndexU16, arg0->unk2DE, 1, arg0->unk284 / 2, arg0->unk280);
+                spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, arg0->unk2DE, 1, arg0->unk284 / 2, arg0->unk280);
             }
             break;
         case 1:
@@ -460,7 +460,7 @@ void resolveRacePlayerItemHitReactions(RaceInputPlayer *arg0) {
         case 7:
             if (arg0->soundDisabled == 0) {
                 enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
-                func_8004E518((s16) arg0->playerIndexU16, 0, 1, arg0->unk284 / 2, 0);
+                spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, 0, 1, arg0->unk284 / 2, 0);
             }
             /* fallthrough */
         case 10:
@@ -527,7 +527,7 @@ block_104:
                 enqueueRacePlayerVoiceSound(arg0, 2);
             }
             if (arg0->soundDisabled == 0) {
-                func_8004E518((s16) arg0->playerIndexU16, 0, 3, arg0->unk284 / 2, 0);
+                spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, 0, 3, arg0->unk284 / 2, 0);
             }
             arg0->mode = 0x18;
             arg0->updateState = 0;
@@ -551,7 +551,7 @@ block_104:
             arg0->mode = 6;
             arg0->updateState = 0;
             arg0->updateTimer = 0;
-            if (func_8004DB60(arg0->unk330) != 0) {
+            if (getRaceItemEffectType(arg0->unk330) != 0) {
                 arg0->mode = 0x1C;
             }
             break;

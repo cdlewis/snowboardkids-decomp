@@ -1,7 +1,7 @@
 #include "common.h"
 #include "asset_manager.h"
 #include "relocatable_heap.h"
-#include "race_item_effects.h"
+#include "race_item_visual_effects.h"
 #include "race_player_movement.h"
 #include "race_timer_ui.h"
 #include "race_ui_effects.h"
@@ -1055,13 +1055,13 @@ void func_8007AA50(void) {
         player = D_80121D80;
         if (player->tensDigitPalette != 0) {
             if (player->tensDigitPalette == 4) {
-                func_800503D0(-0x20, -0x60, 0, 0, 0);
+                spawnRaceUiSparkle(-0x20, -0x60, 0, 0, 0);
             }
             player->tensDigitPalette--;
         }
         if (player->onesDigitPalette != 0) {
             if (player->onesDigitPalette == 4) {
-                func_800503D0(0, -0x60, 0, 0, 1);
+                spawnRaceUiSparkle(0, -0x60, 0, 0, 1);
             }
             player->onesDigitPalette--;
         }
@@ -1075,13 +1075,13 @@ void func_8007AA50(void) {
         do {
             if (player->tensDigitPalette != 0) {
                 if (player->tensDigitPalette == 4) {
-                    func_800503D0(-0x88, -0x30, i, 0, 0);
+                    spawnRaceUiSparkle(-0x88, -0x30, i, 0, 0);
                 }
                 player->tensDigitPalette--;
             }
             if (player->onesDigitPalette != 0) {
                 if (player->onesDigitPalette == 4) {
-                    func_800503D0(-0x68, -0x30, i, 0, 1);
+                    spawnRaceUiSparkle(-0x68, -0x30, i, 0, 1);
                 }
                 player->onesDigitPalette--;
             }
@@ -1096,13 +1096,13 @@ void func_8007AA50(void) {
         player = D_80121D80;
         if (player[3].tensDigitPalette != 0) {
             if (player[3].tensDigitPalette == 4) {
-                func_800503D0(-0x10, -0x30, 3, 1, 0);
+                spawnRaceUiSparkle(-0x10, -0x30, 3, 1, 0);
             }
             player[3].tensDigitPalette--;
         }
         if (player[3].onesDigitPalette != 0) {
             if (player[3].onesDigitPalette == 4) {
-                func_800503D0(0, -0x30, 3, 1, 1);
+                spawnRaceUiSparkle(0, -0x30, 3, 1, 1);
             }
             player[3].onesDigitPalette--;
         }
@@ -1112,13 +1112,13 @@ void func_8007AA50(void) {
         do {
             if (player->tensDigitPalette != 0) {
                 if (player->tensDigitPalette == 4) {
-                    func_800503D0(-0x10, -0x30, i, 1, 0);
+                    spawnRaceUiSparkle(-0x10, -0x30, i, 1, 0);
                 }
                 player->tensDigitPalette--;
             }
             if (player->onesDigitPalette != 0) {
                 if (player->onesDigitPalette == 4) {
-                    func_800503D0(0, -0x30, i, 1, 1);
+                    spawnRaceUiSparkle(0, -0x30, i, 1, 1);
                 }
                 player->onesDigitPalette--;
             }
@@ -1181,13 +1181,13 @@ void func_8007AA50(void) {
         player = D_80121D80;
         if (player->tensDigitPalette != 0) {
             if (player->tensDigitPalette == 4) {
-                func_800503D0(-0x20, -0x60, 0, 0, 0);
+                spawnRaceUiSparkle(-0x20, -0x60, 0, 0, 0);
             }
             player->tensDigitPalette--;
         }
         if (player->onesDigitPalette != 0) {
             if (player->onesDigitPalette == 4) {
-                func_800503D0(0, -0x60, 0, 0, 1);
+                spawnRaceUiSparkle(0, -0x60, 0, 0, 1);
             }
             player->onesDigitPalette--;
         }
