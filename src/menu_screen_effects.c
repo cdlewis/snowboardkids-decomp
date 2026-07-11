@@ -104,7 +104,7 @@ extern Gfx *gRegionAllocPtr;
 extern void *gMenuRenderCallbackList;
 extern u8 D_80124858[];
 extern u8 D_80124878[];
-extern u8 D_801248A4[];
+extern u8 gRaceObjectRenderCallbackList[];
 extern u8 D_801248BC;
 extern u8 D_801248D4[];
 extern u8 D_801248F8[];
@@ -130,9 +130,9 @@ extern s16 D_80112140;
 extern s16 D_80112142;
 extern s16 D_8011214C;
 extern s16 D_80112154;
-extern s16 D_80112168;
+extern s16 gRaceCommonSpriteAssetHandle;
 extern s16 D_8011216A;
-extern s16 D_8011216C;
+extern s16 gRaceItemSpriteAssetHandle;
 extern s16 D_8011216E;
 extern s16 D_80112174;
 extern s16 D_80112184;
@@ -286,7 +286,7 @@ void drawRaceSetupCourseBackdrop(void *arg0) {
 
 void renderRaceSetupBackdrop(s32 arg0) {
     addRenderCallback(D_801248F8, drawRaceSetupCourseBackdrop, arg0);
-    addRenderCallback(D_801248A4, drawRaceSetupBackdropModels, arg0);
+    addRenderCallback(gRaceObjectRenderCallbackList, drawRaceSetupBackdropModels, arg0);
 }
 
 void initRaceSetupBackdrop(MenuScreenEffectActor *arg0) {
@@ -389,7 +389,7 @@ void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *arg0) {
 
     if (arg0->unk24.word != 0) {
         gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216C), (u16)(arg0->unk2E + 0x24), &spA4, &spA0);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), (u16)(arg0->unk2E + 0x24), &spA4, &spA0);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)spA4);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
@@ -481,7 +481,7 @@ void drawCourseRecordBanner(MenuScreenEffectActor *arg0) {
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, getRelocatableHeapBlockBase(D_80112168), 0x5D); func_80045A78(4, -0x10, getRelocatableHeapBlockBase(D_80112168), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, getRelocatableHeapBlockBase(D_8011216A), courseRecordDigitTileOffsets[gRaceCourseIndex]); func_80045A78(4, -0xC, getRelocatableHeapBlockBase(D_8011216A), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gMenuRenderModeResetDl; } while (0);
+    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x5D); func_80045A78(4, -0x10, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, getRelocatableHeapBlockBase(D_8011216A), courseRecordDigitTileOffsets[gRaceCourseIndex]); func_80045A78(4, -0xC, getRelocatableHeapBlockBase(D_8011216A), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gMenuRenderModeResetDl; } while (0);
 }
 
 void updateCourseRecordBannerFadeOut(MenuScreenEffectActor *arg0) {
@@ -822,7 +822,7 @@ void drawMainMenuStaticBoardModel(void *arg0) {
 
 void renderMainMenuBoardModels(s32 arg0) {
     addRenderCallback(D_801248F8, drawMainMenuStaticBoardModel, arg0);
-    addRenderCallback(D_801248A4, drawMainMenuRotatingBoardModel, arg0);
+    addRenderCallback(gRaceObjectRenderCallbackList, drawMainMenuRotatingBoardModel, arg0);
 }
 
 void initMainMenuBoardModels(MenuScreenEffectActor *arg0) {
