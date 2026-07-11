@@ -1,4 +1,5 @@
 #include "race_intro_transition.h"
+#include "race_intro_transition_2.h"
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
@@ -80,7 +81,6 @@ extern void func_8008BEB0(void);
 extern void func_8008C704(void);
 extern void func_80096E3C(void);
 extern void func_80045914(void);
-extern void func_8003F00C(void);
 extern void func_800540EC(void *);
 
 #define COURSE_REPLAY_OFFSET(course) ((((((((course) << 2) - (course)) << 5) + (course)) << 2) - (course)) << 2)
