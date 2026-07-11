@@ -23,6 +23,7 @@
 #include "race_player_state.h"
 #include "race_timer_ui.h"
 #include "race_to_main_menu_transition.h"
+#include "race_ui_effects.h"
 #include "title_menu.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
@@ -242,10 +243,7 @@ extern void func_80044294(void);
 extern void func_80045914(void);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s32, s32, s32, s32, s32);
-extern void func_80057E60(EffectTask *);
-extern void func_80065E90(EffectTask *);
 extern void func_800483FC(void *, void (*)(s32), s32);
-extern void func_8005E68C(void *);
 extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_80070A70(s32, s32, s32, s32, s32, s32, s32, f32);
@@ -633,7 +631,7 @@ void func_80074160(void) {
             func_8006D520(0, 1);
             D_800DEF14 = 0xFF;
             func_80071408(func_80069BC0, 6, 0x64);
-            func_80071408(func_80065E90, 6, 0x64);
+            func_80071408((void (*)(EffectTask *))func_80065E90, 6, 0x64);
             switch (D_80121B55 & 0xFFFFFFFF) {
             case 1:
                 if (D_80121B50.s != 6) {
@@ -1165,7 +1163,7 @@ void func_80076054(void) {
     if (D_80121B60 != 0) {
         func_800720E4(6);
         if ((D_80121B55 == 1) && (D_800EC9C2 == 0)) {
-            func_80071664(func_8005E68C, 6, 0x64, 0xA9);
+            func_80071664((void (*)(EffectTask *))func_8005E68C, 6, 0x64, 0xA9);
         }
         func_80071664(func_8005393C, 5, 0x64, D_80121B60 - 1);
     }
@@ -1320,7 +1318,7 @@ void func_80077554(void) {
     func_800720E4(0);
     D_801235B8->fadeTimer = 0;
     D_801235B8->unk1C = 0;
-    func_80071408(func_80057E60, 6, 0x64);
+    func_80071408((void (*)(EffectTask *))func_80057E60, 6, 0x64);
     if (D_80121B61 == -1) {
         func_80071408((void (*)(EffectTask *))func_80052520, 6, 0x64);
     }

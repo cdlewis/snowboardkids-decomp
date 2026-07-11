@@ -1,4 +1,5 @@
 #include "common.h"
+#include "race_ui_effects.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
@@ -123,7 +124,7 @@ typedef struct {
     /* 0x20 */ u8 pad20[0x40 - 0x20];
 } RaceUiTransitionTransformSource;
 
-typedef struct {
+typedef struct RaceUiTransitionActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
@@ -137,7 +138,7 @@ typedef struct {
     /* 0x72 */ u8 matrixDirty;
 } RaceUiTransitionActor;
 
-typedef struct {
+typedef struct RaceUiSlideActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
@@ -150,7 +151,7 @@ typedef struct {
     /* 0x2C */ s32 soundIndex;
 } RaceUiSlideActor;
 
-typedef struct {
+typedef struct RaceUiCounterActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
@@ -163,7 +164,7 @@ typedef struct {
     /* 0x24 */ s16 flag;
 } RaceUiCounterActor;
 
-typedef struct {
+typedef struct RaceUiDualCounterActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s8 row;
     /* 0x19 */ s8 column;
@@ -217,7 +218,7 @@ typedef struct {
     /* 0x68 */ s16 unk68;
 } RaceUiEffectActor;
 
-typedef struct {
+typedef struct RaceUiProjectileActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
@@ -280,13 +281,13 @@ typedef struct {
     /* 0x6A */ s16 spinYaw;
 } RaceUiSnowboardTrailState;
 
-typedef struct {
+typedef struct RaceUiSnowboardTrailPlayer {
     /* 0x000 */ u16 playerIndex;
     /* 0x002 */ u8 pad002[0x58C - 0x002];
     /* 0x58C */ RaceUiSnowboardTrailState trail;
 } RaceUiSnowboardTrailPlayer;
 
-typedef struct {
+typedef struct RaceUiSnowboardTrailActor {
     /* 0x00 */ u8 pad0[0x24];
     /* 0x24 */ Vec3i sourcePos;
     /* 0x30 */ Vec3i worldPos;
@@ -304,7 +305,7 @@ typedef struct {
     /* 0x94 */ u8 matrixDirty;
 } RaceUiSnowboardTrailActor;
 
-typedef struct {
+typedef struct RaceUiRankParticleActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
@@ -320,7 +321,7 @@ typedef struct {
     /* 0x02 */ u8 pad2[0x48 - 0x02];
 } RaceUiCourseSpawnEntry;
 
-typedef struct {
+typedef struct RaceUiPodiumTrailActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
@@ -345,7 +346,7 @@ typedef struct {
     /* 0x001 */ u8 pad1[0x60C - 0x001];
 } RacePlayerByteField;
 
-typedef struct {
+typedef struct RaceUiRankTrailActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
@@ -356,7 +357,7 @@ typedef struct {
     /* 0x4A */ u8 matrixDirty;
 } RaceUiRankTrailActor;
 
-typedef struct {
+typedef struct RaceUiTextParticleActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
@@ -370,7 +371,7 @@ typedef struct {
     /* 0x57 */ u8 useAltTextures;
 } RaceUiTextParticleActor;
 
-typedef struct {
+typedef struct RaceUiAnimatedTextActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ RaceUiGfxCommandDest *matrix;
@@ -381,7 +382,7 @@ typedef struct {
     /* 0x56 */ u8 matrixDirty;
 } RaceUiAnimatedTextActor;
 
-typedef struct {
+typedef struct RaceUiTrailingParticleActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ RaceUiGfxCommandDest *matrix0;
@@ -391,7 +392,7 @@ typedef struct {
     /* 0x30 */ u8 matrixDirty;
 } RaceUiTrailingParticleActor;
 
-typedef struct {
+typedef struct RaceUiTripleParticleActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ RaceUiGfxCommandDest *matrix0;
@@ -401,7 +402,7 @@ typedef struct {
     /* 0x32 */ u8 matrixDirty;
 } RaceUiTripleParticleActor;
 
-typedef struct {
+typedef struct RaceUiSpinningParticleActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ RaceUiGfxCommandDest *matrix0;
@@ -413,7 +414,7 @@ typedef struct {
     /* 0x34 */ u8 matrixDirty;
 } RaceUiSpinningParticleActor;
 
-typedef struct {
+typedef struct RaceUiScaledParticleActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ s16 scale;
@@ -424,7 +425,7 @@ typedef struct {
     /* 0x30 */ u8 matrixDirty;
 } RaceUiScaledParticleActor;
 
-typedef struct {
+typedef struct RaceUiRisingTrailActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ u8 pad24[4];
@@ -437,7 +438,7 @@ typedef struct {
     /* 0x36 */ u8 matrixDirty;
 } RaceUiRisingTrailActor;
 
-typedef struct {
+typedef struct RaceUiThrownTrailActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ s16 surface;
@@ -449,7 +450,7 @@ typedef struct {
     /* 0x34 */ s16 soundTimer;
 } RaceUiThrownTrailActor;
 
-typedef struct {
+typedef struct RaceUiSingleTrailActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[0x24 - 0x12];
@@ -460,7 +461,7 @@ typedef struct {
     /* 0x6A */ u8 matrixDirty;
 } RaceUiSingleTrailActor;
 
-typedef struct {
+typedef struct RaceUiFadingTrailActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ RaceUiTrailCopyBlock copyBlock;
     /* 0x38 */ Vec3i pos;
@@ -471,7 +472,7 @@ typedef struct {
     /* 0x4E */ u8 matrixDirty;
 } RaceUiFadingTrailActor;
 
-typedef struct {
+typedef struct RaceUiFadingImpactActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
@@ -484,7 +485,7 @@ typedef struct {
     /* 0x4E */ u8 matrixDirty;
 } RaceUiFadingImpactActor;
 
-typedef struct {
+typedef struct RaceUiTransitionRenderActor {
     /* 0x00 */ u8 pad0[0x24];
     /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
     /* 0x44 */ u8 pad44[0x64 - 0x44];
@@ -504,7 +505,7 @@ typedef struct {
     /* 0x4E */ u8 matrixDirty;
 } RaceUiFragmentActor;
 
-typedef struct {
+typedef struct RaceUiEffectParticleActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ RaceUiEffectParticle *particles;
     /* 0x1C */ void *unk1C;
@@ -524,14 +525,14 @@ typedef struct {
     /* 0x04 */ s32 command[3];
 } RaceUiGfxCommandScriptEntry;
 
-typedef struct {
+typedef struct RaceUiGfxCommandActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ RaceUiGfxCommandDest *particles;
     /* 0x1C */ s16 textureOffset;
     /* 0x1E */ s16 count;
 } RaceUiGfxCommandActor;
 
-typedef struct {
+typedef struct RaceUiRankTextRenderActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ void *matrices;
     /* 0x1C */ s16 count;
@@ -554,7 +555,7 @@ typedef struct RaceUiRankTrigger {
     /* 0x14 */ s8 triggered;
 } RaceUiRankTrigger;
 
-typedef struct {
+typedef struct RaceUiPopupActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
@@ -585,7 +586,7 @@ typedef struct {
     /* 0x7869 */ u8 icons[10][5];
 } RaceUiCourseValueData;
 
-typedef struct {
+typedef struct RaceUiPromptActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
@@ -593,7 +594,7 @@ typedef struct {
     /* 0x1C */ s16 y;
 } RaceUiPromptActor;
 
-typedef struct {
+typedef struct RaceUiCourseStatsActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x1A - 0x12];
@@ -630,12 +631,12 @@ typedef struct {
     /* 0x77C4 */ u8 icons[10][5];
 } RaceUiTrickIconData;
 
-typedef struct {
+typedef struct RaceUiAlphaActor {
     /* 0x00 */ u8 pad0[0x1C];
     /* 0x1C */ s16 alpha;
 } RaceUiAlphaActor;
 
-typedef struct {
+typedef struct RaceUiAlpha1AActor {
     /* 0x00 */ u8 pad0[0x1A];
     /* 0x1A */ s16 alpha;
 } RaceUiAlpha1AActor;
@@ -655,14 +656,14 @@ typedef struct {
     /* 0x002 */ u8 pad2[0x60C - 0x002];
 } RacePlayerValue;
 
-typedef struct {
+typedef struct RaceUiAlpha18Actor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 alpha;
     /* 0x1A */ s16 timer;
     /* 0x1C */ s16 score;
 } RaceUiAlpha18Actor;
 
-typedef struct {
+typedef struct RaceUiResultsBannerActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 alpha;
     /* 0x1A */ u8 pad1A[2];
@@ -687,7 +688,7 @@ typedef struct {
     /* 0x44 */ s32 assetX;
 } RaceUiScriptActor;
 
-typedef struct {
+typedef struct RaceUiOverlayActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s32 x;
     /* 0x1C */ s32 y;
@@ -705,7 +706,7 @@ typedef struct {
     /* 0x48 */ u8 matrixDirty;
 } RaceUiOverlayActor;
 
-typedef struct {
+typedef struct RaceUiOrbitingSpriteActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ RaceUiGfxCommandDest *matrix;
@@ -717,7 +718,7 @@ typedef struct {
     /* 0x35 */ u8 index;
 } RaceUiOrbitingSpriteActor;
 
-typedef struct {
+typedef struct RaceUiSparkleActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ RaceUiGfxCommandDest *matrix;
@@ -747,7 +748,7 @@ typedef struct {
     /* 0x02 */ u8 pad2[0x48 - 0x2];
 } CourseSpawnEntry;
 
-typedef struct {
+typedef struct RaceUiCourseSpriteActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
@@ -861,11 +862,6 @@ extern void osWritebackDCache(void *, s32);
 extern void func_80045A78(s16, s16, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80045990(s32, s32, void *, void *);
-extern void func_8005B14C(RaceUiCounterActor *);
-extern void func_8005C64C(RaceUiDualCounterActor *);
-extern void func_8005DE6C(RaceUiCourseStatsActor *);
-extern void func_8005CB74(void *);
-extern void func_800623E8(void *);
 extern int sprintf(char *, const char *, ...);
 extern void func_80072A74(s32, void *, s32, s32);
 extern void func_80072A20(s32, void *, s32, s32, f32, s32);
@@ -877,7 +873,6 @@ extern u8 D_800EC9F0[];
 extern RaceTimer D_80121B74;
 extern void func_80072138(s32, s32);
 extern void func_80048278(s32, s32, void *, s32);
-extern void func_80059A04(void *, s32, s32, s32);
 extern char D_800E12F4[];
 extern char D_800E128C[];
 extern char D_800E1290[];
@@ -914,89 +909,9 @@ const char D_800E1240[0x4] = "%2d";
 const char D_800E1244[0xC] = "%3d";
 const char D_800E1250[0x4] = "%5d";
 
-extern void func_80057E10(void *);
-extern void func_800640D8(RaceUiRankParticleActor *);
-extern void func_80057710(RaceUiPromptActor *);
-extern void func_80057B60(RaceUiPopupActor *);
-extern void func_80057D68(RaceUiPopupActor *);
-extern void func_80058C00(RaceUiResultsBannerActor *);
-extern void func_8005905C(void *);
-extern void func_80059518(void *);
-extern void func_80059950(void *);
-extern void func_8005A288(void *);
-extern void func_8005E5B4(void *);
-extern void func_8005E6D0(RaceUiSparkleActor *);
-extern void func_8005ECA8(RaceUiSparkleActor *);
-extern void func_8005F174(RaceUiSparkleActor *);
 extern s32 func_80048E60(Vec3i *);
 extern void func_800486BC(void *, void *);
-extern void func_80061088(RaceUiTripleParticleActor *);
-extern void func_80062F6C(RaceUiTrailingParticleActor *);
-extern void func_80058B20(void *);
-extern void func_80060FA4(void *);
-extern void func_80061CA8(RaceUiSingleTrailActor *);
-extern void func_800634C8(RaceUiCourseSpriteActor *);
-extern void func_80064914(RaceUiProjectileActor *);
-extern void func_80064B28(RaceUiProjectileActor *);
-extern void func_80057AA4(RaceUiPopupActor *);
-extern void func_80057CAC(RaceUiPopupActor *);
-extern void func_80060E7C(void *);
-extern void func_80060D10(RaceUiPopupActor *);
-extern void func_8006501C(void *);
-extern void func_80064F4C(void *);
-extern void func_80059E5C(RaceUiAlpha1AActor *);
-extern void func_80059C34(RaceUiCourseStatsActor *);
-extern void func_8005BE68(RaceUiPopupActor *);
-extern void func_80061984(RaceUiThrownTrailActor *);
-extern void func_80063220(RaceUiSpinningParticleActor *);
-extern void func_800621DC(void *);
-extern void func_8005A1FC(void *);
-extern void func_8005A884(RaceUiPopupActor *);
-extern void func_8005AAE4(RaceUiAlpha18Actor *);
-extern void func_8005AE1C(void *);
-extern void func_8005A4BC(void);
-extern void func_8005AC44(RaceUiCounterActor *);
-extern void func_8005B9F8(RaceUiDualCounterActor *);
-extern void func_8005C14C(void);
-extern void func_8005A0E0(void *);
-extern void func_80061F38(RaceUiFadingImpactActor *);
-extern void func_8005F828(RaceUiRankTrailActor *);
-extern void func_80060454(void *, void *, void *, s16);
-extern void func_8005FBA8(RaceUiAnimatedTextActor *);
-extern void func_8005FED0(RaceUiTextParticleActor *);
-extern void func_8005CF60(RaceUiDualCounterActor *);
-extern void func_8005D558(void);
-extern void func_8005DB3C(void *);
-extern void func_8005D1CC(RaceUiCourseStatsActor *);
-extern void func_8005D9B4(RaceUiAlpha18Actor *);
-extern void func_800601F8(void *);
-extern void func_800602BC(void *);
-extern void func_800589F4(void *);
-extern void func_80057E90(RaceUiAlpha18Actor *);
-extern void func_80058360(RaceUiAlpha18Actor *);
-extern void func_80065D24(RaceUiOverlayActor *);
-extern void func_800651BC(RaceUiGfxCommandActor *);
-extern void func_80065508(RaceUiGfxCommandActor *);
 extern void func_80083CFC(RacePlayerState *);
-extern void func_800663C8(RaceUiRankTextRenderActor *);
-extern void func_80059854(void *);
-extern void func_8005804C(RaceUiAlpha18Actor *);
-extern void func_8005812C(void *);
-extern void func_8005827C(void *);
-extern void func_80057548(RaceUiSlideActor *);
-extern void func_8005B6F8(void *);
-extern void func_8005CD10(void *);
-extern void func_8005E3F8(void *);
-extern void func_80064D88(RaceUiProjectileActor *);
-extern void func_80062D34(RaceUiScaledParticleActor *);
-extern void func_80063A9C(void);
-extern void func_8005B61C(void *);
-extern void func_8005CC54(void *);
-extern void func_8005E33C(void *);
-extern void func_8005893C(void *);
-extern void func_80060544(RaceUiPodiumTrailActor *);
-extern void func_80060914(RaceUiPodiumTrailActor *);
-extern void func_80058880(void *);
 extern s16 D_80121B50;
 extern s16 D_801222F4;
 extern void *D_801248D4;
@@ -2486,7 +2401,7 @@ void func_8005C03C(RaceUiAlphaActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005C14C.s")
 
 #ifdef NON_MATCHING
-typedef struct {
+typedef struct RaceUiCourseRecordActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s8 unk18;
     /* 0x19 */ s8 unk19;
