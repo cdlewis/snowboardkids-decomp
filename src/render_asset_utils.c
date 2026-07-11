@@ -104,39 +104,23 @@ extern s8 D_80112610;
 extern s8 D_801126C0;
 extern void *D_801121B4;
 
-// func_800458E0 best match: 97.917%
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_800458E0.s")
-
-#ifdef NON_MATCHING
 void func_800458E0(void)
 {
-    s16 **new_var;
     s16 *end;
     s16 *handle;
-    s16 *new_var2;
-
     end = &D_801121B0;
-    do {
-        ;
-        if (1) {
-            handle = &D_80112130;
-        }
-        end = (new_var2 = &D_801121B0);
-        do {
-            *handle++ = -1;
-            new_var2 = &D_801121B0;
-            *handle++ = -((0, 1));
-            *handle++ = -1;
-            if (!end) {
-            }
-dummy_label_220868:
-            ;
-            *handle++ = -1;
-            end = new_var2;
-        } while (*(&handle) != end);
-    } while (0 != 0);
+    do { handle = &D_80112130; do { end = &D_801121B0;
+        *handle++ = -1;
+        *handle++ = -1;
+        *handle++ = -1;
+        *handle++ = -1;
+    }
+    while (handle != end);
+    }
+    while (0);
+    end++;
+    end--;
 }
-#endif
 
 void func_80045914(void)
 {
