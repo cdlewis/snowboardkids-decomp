@@ -55,20 +55,20 @@ extern CharacterSelectCourseAssetHandles D_80112130;
 extern s16 D_80112172;
 extern s16 D_80112178;
 extern s16 gCharacterSelectCourseOptionsByUnlock[][11];
-extern CharacterSelectCourseFrameTileMap D_800B5FC0[];
-extern CharacterSelectCourseFrameCornerTileMap D_800B5FE8[];
-extern u16 D_800B618C;
+extern CharacterSelectCourseFrameTileMap gCharacterSelectCoursePreviewFrameTileMaps[];
+extern CharacterSelectCourseFrameCornerTileMap gCharacterSelectCoursePreviewFrameCornerTileMaps[];
+extern u16 gCharacterSelectCourseExitPreviewCornerTile;
 extern s16 gCharacterSelectShortCourseOptions[];
 extern s16 gCharacterSelectSingleCourseOption[];
-extern u16 D_800B61AC[];
-extern u8 D_800B61C0[];
-extern u8 D_800B61CC[];
-extern u8 D_800B6B88[];
-extern CharacterSelectCourseText D_800B6210[];
-extern u8 D_800B67D8[][0x74];
-extern u8 D_800B6934[][0x60];
-extern u8 D_800B6A54[][0x70];
-extern u8 D_800B6B34[];
+extern u16 gCharacterSelectCourseStatsScoreValues[];
+extern u8 gCharacterSelectCourseDifficultyRatings[];
+extern u8 gCharacterSelectCourseMedalScoreThresholds[];
+extern u8 gCharacterSelectCourseStartGameText[];
+extern CharacterSelectCourseText gCharacterSelectCourseNameText[];
+extern u8 gCharacterSelectBeginnerCourseDescriptionText[][0x74];
+extern u8 gCharacterSelectAdvancedCourseDescriptionText[][0x60];
+extern u8 gCharacterSelectExpertCourseDescriptionText[][0x70];
+extern u8 gCharacterSelectCourseReturnDescriptionText[];
 extern u8 D_800ECA24[];
 extern s32 D_800EC9F8[];
 extern s16 D_80121B50;
@@ -199,7 +199,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
             if (arg0->itemCount < (gCharacterSelectCourseExitOptionIndex + 1)) {
                 arg0->itemCount++;
                 if (arg0->itemCount == (gCharacterSelectCourseExitOptionIndex + 1)) {
-                    D_8010ADE4 = func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel0, 0, 0x58);
+                    D_8010ADE4 = func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewFrame, 0, 0x58);
                     func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel1, 0, 0x59);
                     func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel2, 0, 0x5A);
                     finalCallback = (void (*)(EffectTask *))initCharacterSelectCourseExitPreviewPanel;
@@ -508,7 +508,7 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
                 nextItemCount = arg0->itemCount + 1;
                 arg0->itemCount = nextItemCount;
                 if (visibleCount == nextItemCount) {
-                    D_8010ADE4 = func_80071408(initCharacterSelectCoursePreviewPanel0, 0, 0x59);
+                    D_8010ADE4 = func_80071408(initCharacterSelectCoursePreviewFrame, 0, 0x59);
                     if (D_80121B5E < 2) {
                         func_80071408(initCharacterSelectCoursePreviewPanel1, 0, 0x5A);
                         func_80071408(initCharacterSelectCoursePreviewPanel2, 0, 0x5B);
@@ -737,7 +737,7 @@ void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
             frameIndex = 9;
         } while (0);
     } else {
- frameIndex = actor->sprite.unsignedIndex; } savedFrame = (tileMap = &D_800B5FC0[frameIndex]); i = (offset = 0); if (arg0 == 0) { } do { func_80011264((s16) (actor->x + ((i & 3) << 5)), (s16) (actor->y + ((i / 4) << 5)), func_80043040(D_80112130.textureHandle), tileMap->center[0], 0, 0x100); i += 1; tileMap = (CharacterSelectCourseFrameTileMap *) (((u16 *) tileMap) + 1); } while (i < 0x10); tileMap = savedFrame; yOffset = offset; do { func_80011264((s16) (actor->x + 0x80), (s16) (actor->y + yOffset), func_80043040(D_80112130.textureHandle), tileMap->right[0], 0, 0x100); func_80011264((s16) (actor->x + offset), (s16) (actor->y + 0x80), func_80043040(D_80112130.textureHandle), tileMap->bottom[0], 0, 0x100); offset += 0x40; tileMap = (CharacterSelectCourseFrameTileMap *) (((u16 *) tileMap) + 1); } while (offset < 0x80); func_80011264((s16) (actor->x + 0x80), (s16) (actor->y + 0x80), func_80043040(D_80112130.textureHandle), D_800B5FE8[frameIndex].corner, 0, 0x100);
+ frameIndex = actor->sprite.unsignedIndex; } savedFrame = (tileMap = &gCharacterSelectCoursePreviewFrameTileMaps[frameIndex]); i = (offset = 0); if (arg0 == 0) { } do { func_80011264((s16) (actor->x + ((i & 3) << 5)), (s16) (actor->y + ((i / 4) << 5)), func_80043040(D_80112130.textureHandle), tileMap->center[0], 0, 0x100); i += 1; tileMap = (CharacterSelectCourseFrameTileMap *) (((u16 *) tileMap) + 1); } while (i < 0x10); tileMap = savedFrame; yOffset = offset; do { func_80011264((s16) (actor->x + 0x80), (s16) (actor->y + yOffset), func_80043040(D_80112130.textureHandle), tileMap->right[0], 0, 0x100); func_80011264((s16) (actor->x + offset), (s16) (actor->y + 0x80), func_80043040(D_80112130.textureHandle), tileMap->bottom[0], 0, 0x100); offset += 0x40; tileMap = (CharacterSelectCourseFrameTileMap *) (((u16 *) tileMap) + 1); } while (offset < 0x80); func_80011264((s16) (actor->x + 0x80), (s16) (actor->y + 0x80), func_80043040(D_80112130.textureHandle), gCharacterSelectCoursePreviewFrameCornerTileMaps[frameIndex].corner, 0, 0x100);
 
     func_8000F030((s16)(actor->x - 4), (s16)(actor->y - 4), func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x33,
                   0x20, 0x20, 0, 0);
@@ -763,11 +763,11 @@ void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
 }
 #endif
 
-// updateCharacterSelectCoursePreviewPanel0 best match: 91.995%
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/updateCharacterSelectCoursePreviewPanel0.s")
+// updateCharacterSelectCoursePreviewFrame best match: 91.995%
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/updateCharacterSelectCoursePreviewFrame.s")
 
 #ifdef NON_MATCHING
-void updateCharacterSelectCoursePreviewPanel0(CharacterSelectCourseWidgetActor *arg0) {
+void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     int stateValue;
     u16 selectedSpriteIndex;
@@ -874,13 +874,13 @@ void updateCharacterSelectCoursePreviewPanel0(CharacterSelectCourseWidgetActor *
 }
 #endif
 
-void initCharacterSelectCoursePreviewPanel0(CharacterSelectCourseWidgetActor *arg0) {
+void initCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = 0x96;
     arg0->y = -0x48;
     arg0->sprite.index = 0;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel0);
+    func_80071824(arg0, updateCharacterSelectCoursePreviewFrame);
 }
 
 void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *arg0) {
@@ -894,7 +894,7 @@ void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *ar
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -905,10 +905,10 @@ void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *ar
     do {
         func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
                       func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
                       func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -917,7 +917,7 @@ void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *ar
     i--;
 
     func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
-                  D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
 void updateCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *arg0) {
@@ -1008,7 +1008,7 @@ void drawCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *ar
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -1018,9 +1018,9 @@ void drawCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *ar
     offset = 0;
     do {
         func_800112F4(arg0->x + 0x80, arg0->y + offset, func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         func_800112F4(arg0->x + offset, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -1029,7 +1029,7 @@ void drawCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *ar
     i--;
 
     func_800112F4(arg0->x + 0x80, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
-                  D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
 void updateCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *arg0) {
@@ -1114,20 +1114,20 @@ void drawCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *ar
     tileOffset = 0;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     tileOffset = 0;
     for (i = 0; i < 2; i++) {
         func_800112F4(arg0->x + 0x80, arg0->y + i * 0x40, func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         func_800112F4(arg0->x + i * 0x40, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         tileOffset++;
     }
 
     func_800112F4(arg0->x + 0x80, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
-                  D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
 void updateCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *arg0) {
@@ -1216,7 +1216,7 @@ void drawCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *ar
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -1227,10 +1227,10 @@ void drawCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *ar
     do {
         func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
                       func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
                       func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -1239,7 +1239,7 @@ void drawCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *ar
     i--;
 
     func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
-                  D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
 void updateCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *arg0) {
@@ -1327,7 +1327,7 @@ void drawCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *ar
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -1337,9 +1337,9 @@ void drawCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *ar
     offset = 0;
     do {
         func_800112F4(arg0->x + 0x80, arg0->y + offset, func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         func_800112F4(arg0->x + offset, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -1348,7 +1348,7 @@ void drawCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *ar
     i--;
 
     func_800112F4(arg0->x + 0x80, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
-                  D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
 void updateCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *arg0) {
@@ -1437,7 +1437,7 @@ void drawCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *ar
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -1448,10 +1448,10 @@ void drawCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *ar
     do {
         func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
                       func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
                       func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -1460,7 +1460,7 @@ void drawCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *ar
     i--;
 
     func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
-                  D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
 void updateCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *arg0) {
@@ -1548,7 +1548,7 @@ void drawCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *ar
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -1558,9 +1558,9 @@ void drawCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *ar
     offset = 0;
     do {
         func_800112F4(arg0->x + 0x80, arg0->y + offset, func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         func_800112F4(arg0->x + offset, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -1569,7 +1569,7 @@ void drawCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *ar
     i--;
 
     func_800112F4(arg0->x + 0x80, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
-                  D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
 void updateCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *arg0) {
@@ -1658,7 +1658,7 @@ void drawCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *ar
     for (i = 0; i < 16; i++, tileIndex++) {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].center[tileIndex], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileIndex], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -1668,9 +1668,9 @@ void drawCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *ar
     offset = 0;
     do {
         func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].right[tileIndex], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileIndex], 0, 0x100, 0xA0, 0x49);
         func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].bottom[tileIndex], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileIndex], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileIndex++;
@@ -1679,7 +1679,7 @@ void drawCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *ar
     i--;
 
     func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.textureHandle),
-                  D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
 void updateCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *arg0) {
@@ -1767,7 +1767,7 @@ void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -1777,9 +1777,9 @@ void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     offset = 0;
     do {
         func_800112F4(arg0->x + 0x80, arg0->y + offset, func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         func_800112F4(arg0->x + offset, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
-                      D_800B5FC0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -1788,7 +1788,7 @@ void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     i--;
 
     func_800112F4(arg0->x + 0x80, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
-                  D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
 void updateCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *arg0) {
@@ -1874,14 +1874,14 @@ void drawCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor 
     tileOffset = 0;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      D_800B5FC0[10].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[10].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     tileOffset = 0; offset = 0; i = 0x80; do {
         func_800112F4(arg0->x + 0x80, arg0->y + offset, func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      D_800B5FC0[10].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[10].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         func_800112F4(arg0->x + offset, arg0->y + 0x80, func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      D_800B5FC0[10].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gCharacterSelectCoursePreviewFrameTileMaps[10].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -1891,7 +1891,7 @@ void drawCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor 
     i--;
 
     func_800112F4(arg0->x + 0x80, arg0->y + 0x80, func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  D_800B618C, 0, 0x100, 0xA0, 0x49);
+                  gCharacterSelectCourseExitPreviewCornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
 void updateCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor *arg0) {
@@ -2156,14 +2156,14 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
         func_8001BA2C(arg0->x, arg0->y, 0x3800, 0x5800);
         func_8000F8AC((s16)(arg0->x + 4), (s16)(arg0->y + 4), func_80043040(D_80112130.textureHandle),
                       0x23, 0x20, 0x20, 0, arg0->sprite.index, 0);
-        sprintf(buf - 4, gCharacterSelectCourseStatsScoreFormat, D_800B61AC[D_80121B50]);
+        sprintf(buf - 4, gCharacterSelectCourseStatsScoreFormat, gCharacterSelectCourseStatsScoreValues[D_80121B50]);
         func_80013D0C((s16)(arg0->x + 8), (s16)(arg0->y + 0xC), buf - 4, 0, arg0->sprite.index);
         func_8000F8AC((s16)(arg0->x + 0x28), (s16)(arg0->y + 0xC), func_80043040(D_80112130.textureHandle),
                       0x24, 0x20, 0x20, 0, arg0->sprite.index, 0);
         func_8000F8AC(arg0->x, (s16)(arg0->y + 0x14), func_80043040(D_80112130.textureHandle), 0x25, 0x20,
                       0x20, 0, arg0->sprite.index, 0);
 
-        temp_v0 = D_800B61C0[D_80121B50];
+        temp_v0 = gCharacterSelectCourseDifficultyRatings[D_80121B50];
         xOffset = 0;
         i = 0;
         var_t8 = temp_v0 & 1;
@@ -2173,7 +2173,7 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
                               func_80043040(D_80112130.iconTextureHandle), 0x25, 0x20, 0x20, 0,
                               arg0->sprite.index, 0);
                 i++;
-                temp_v0 = D_800B61C0[D_80121B50];
+                temp_v0 = gCharacterSelectCourseDifficultyRatings[D_80121B50];
                 xOffset += 0xC;
             } while (i < (temp_v0 / 2));
         }
@@ -2250,7 +2250,7 @@ void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor 
     s32 valueOffset;
     s32 three;
     CharacterSelectCoursePlayerRecord *player;
-    do { characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse]; if (D_80121B55 == 1) { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x21, 0x20, 0x20, 0, 0); func_8000F030((s16)(arg0->x + 0x30), arg0->y, func_80043040(D_80112130.textureHandle), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, gCharacterSelectCourseBestScoreFormat, D_800EC9F8[characterIds[*(&D_80121B50)]]); func_80013D0C((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, gCharacterSelectCourseMedalScoreFormat, *((u16 *)(&D_800B61CC[(((*(&D_80121B50)) * three) * 2) + valueOffset]))); func_80013D0C((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x26, 0x20, 0x20, 0, 0); func_8000F030(arg0->x, (s16)(arg0->y + 0x10), func_80043040(D_80112130.textureHandle), 0x27, 0x20, 0x20, 0, 0); player = (CharacterSelectCoursePlayerRecord *)D_80121D80; yOffset = 0; do { sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, player->value); func_80013D0C((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); player++; yOffset += 8; } while (player != &gFrameCounter); } } while (0);
+    do { characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse]; if (D_80121B55 == 1) { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x21, 0x20, 0x20, 0, 0); func_8000F030((s16)(arg0->x + 0x30), arg0->y, func_80043040(D_80112130.textureHandle), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, gCharacterSelectCourseBestScoreFormat, D_800EC9F8[characterIds[*(&D_80121B50)]]); func_80013D0C((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, gCharacterSelectCourseMedalScoreFormat, *((u16 *)(&gCharacterSelectCourseMedalScoreThresholds[(((*(&D_80121B50)) * three) * 2) + valueOffset]))); func_80013D0C((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x26, 0x20, 0x20, 0, 0); func_8000F030(arg0->x, (s16)(arg0->y + 0x10), func_80043040(D_80112130.textureHandle), 0x27, 0x20, 0x20, 0, 0); player = (CharacterSelectCoursePlayerRecord *)D_80121D80; yOffset = 0; do { sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, player->value); func_80013D0C((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); player++; yOffset += 8; } while (player != &gFrameCounter); } } while (0);
 }
 
 void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
@@ -2434,7 +2434,7 @@ void drawCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) 
     CharacterSelectCourseText *texts;
     u8 *text;
 
-    texts = D_800B6210;
+    texts = gCharacterSelectCourseNameText;
     text = texts[D_80121B50];
     func_80013154(arg0->x, arg0->y, text, 1, arg0->sprite.index, 0);
     if (arg0->transition.bytes.state == 2) {
@@ -2540,14 +2540,14 @@ void drawCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActor 
     if (threshold >= D_80121B50) {
         idx = (u16)D_80121B50;
         if (D_80121B5E == 0) {
-            text = D_800B67D8[idx];
+            text = gCharacterSelectBeginnerCourseDescriptionText[idx];
         } else if (D_80121B5E == 1) {
-            text = D_800B6934[idx];
+            text = gCharacterSelectAdvancedCourseDescriptionText[idx];
         } else {
-            text = D_800B6A54[idx];
+            text = gCharacterSelectExpertCourseDescriptionText[idx];
         }
     } else {
-        text = D_800B6B34;
+        text = gCharacterSelectCourseReturnDescriptionText;
     }
     func_80013154(arg0->x, arg0->y, text, 1, arg0->sprite.index, 0);
 }
@@ -2912,7 +2912,7 @@ void initCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
 void drawCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) {
     func_8000F030(arg0->x, arg0->y, func_80043040(D_80112172), 0x28, 0x20, 0x20, 0, 0);
     if ((s32) arg0->transition.bytes.state > 0) {
-        func_80013154((s16) (arg0->x + 4), (s16) (arg0->y + 4), D_800B6B88, 1, 0x100, 0);
+        func_80013154((s16) (arg0->x + 4), (s16) (arg0->y + 4), gCharacterSelectCourseStartGameText, 1, 0x100, 0);
         func_8000F030(
             (s16) (arg0->x + 0x64),
             (s16) (arg0->y + 4),
