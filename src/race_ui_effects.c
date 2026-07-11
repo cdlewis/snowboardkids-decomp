@@ -3483,7 +3483,7 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
 
     for (i = 0; i < 4; i++) {
         if (i != arg0->playerIndex) {
-            func_80088664(&arg0->pos, 0xE0000, 0xB0000, 2, i);
+            pushRacePlayerOutOfCylinderAndApplyItemHit(&arg0->pos, 0xE0000, 0xB0000, 2, i);
         }
     }
 
@@ -4020,7 +4020,7 @@ void func_80061984(RaceUiThrownTrailActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
         if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
-            func_80088294(pos, 0x1A0000, 0x600000, 2);
+            pushRacePlayersOutOfCylinderAndApplyItemHit(pos, 0x1A0000, 0x600000, 2);
             if (arg0->soundTimer == 0) {
                 enqueuePositionalSoundEffect(0xD, pos, 0x7F, 0x31);
                 createThrownTrailImpactProjectile(arg0->pos.x, arg0->pos.y + 0x700000, arg0->pos.z, arg0->surface, arg0->angle);
@@ -4373,25 +4373,25 @@ void func_80062D34(RaceUiScaledParticleActor *arg0) {
         if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
             actor->rotY += actor->rotYStep;
 
-            if (func_80088E98(pos, 0x200000, 0xF0000, 0) != 0) {
+            if (isRacePlayerInsideCylinder(pos, 0x200000, 0xF0000, 0) != 0) {
                 actor->scale = 0x1800;
                 enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
-                func_80088C80(pos, 0x2C0000, 0xF0000, 0);
+                pushRacePlayerOutOfCylinder(pos, 0x2C0000, 0xF0000, 0);
             }
-            if (func_80088E98(pos, 0x200000, 0xF0000, 1) != 0) {
+            if (isRacePlayerInsideCylinder(pos, 0x200000, 0xF0000, 1) != 0) {
                 actor->scale = 0x1800;
                 enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
-                func_80088C80(pos, 0x2C0000, 0xF0000, 1);
+                pushRacePlayerOutOfCylinder(pos, 0x2C0000, 0xF0000, 1);
             }
-            if (func_80088E98(pos, 0x200000, 0xF0000, 2) != 0) {
+            if (isRacePlayerInsideCylinder(pos, 0x200000, 0xF0000, 2) != 0) {
                 actor->scale = 0x1800;
                 enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
-                func_80088C80(pos, 0x2C0000, 0xF0000, 2);
+                pushRacePlayerOutOfCylinder(pos, 0x2C0000, 0xF0000, 2);
             }
-            if (func_80088E98(pos, 0x200000, 0xF0000, 3) != 0) {
+            if (isRacePlayerInsideCylinder(pos, 0x200000, 0xF0000, 3) != 0) {
                 actor->scale = 0x1800;
                 enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
-                func_80088C80(pos, 0x2C0000, 0xF0000, 3);
+                pushRacePlayerOutOfCylinder(pos, 0x2C0000, 0xF0000, 3);
             }
 
             scale = actor->scale;
@@ -4933,7 +4933,7 @@ void func_80064914(RaceUiProjectileActor *arg0) {
                     amount = 0xA6;
                 }
                 otherPlayer->unk568 = value - amount;
-                func_8008BB5C((struct RaceInputPlayer *)&D_80121D80[arg0->index], amount);
+                addRacePlayerScore((struct RaceInputPlayer *)&D_80121D80[arg0->index], amount);
             }
             otherPlayer++;
         } while (otherPlayer != &gFrameCounter);
@@ -5227,7 +5227,7 @@ void func_80065508(RaceUiGfxCommandActor *arg0) {
 loop:
     if (entry->active != 0) {
         if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
-            if (func_80088E98(pos, xzSize, ySize, 0) != 0) {
+            if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 0) != 0) {
                 entry->active = 0;
                 enqueuePositionalSoundEffect(0x18, pos, 0x7F, 0x32);
                 D_80121D80[0].unk570++;
@@ -5492,7 +5492,7 @@ void func_80066158(void *arg0) {
     if (entry->active != -1) {
         do {
             if (entry->active != 0) {
-                func_80088294(&entry->position, 0xE0000, 0x100000, 2);
+                pushRacePlayersOutOfCylinderAndApplyItemHit(&entry->position, 0xE0000, 0x100000, 2);
                 trigger = D_8012228C;
                 if (trigger != NULL) {
                     do {

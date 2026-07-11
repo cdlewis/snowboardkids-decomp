@@ -5399,7 +5399,7 @@ void func_8009724C(RaceInputPlayer *arg0) {
     }
     if ((var_a3 != 0) && (gRaceSplitscreenMode == 0) && (D_80121B59 == 0)) {
         sp24 = (s32)var_a3;
-        func_8008BB5C(arg0, (s32)var_a3);
+        addRacePlayerScore(arg0, (s32)var_a3);
         temp_v0_2 = (u16)arg0->playerIndex;
         if (D_8011228C[temp_v0_2].active != 0) {
             sp24 = (s32)var_a3;
@@ -5607,7 +5607,7 @@ void func_80097910(RaceInputPlayer *player) {
             enqueueSoundEffect(0x51, 0x32);
         }
         if (gRaceSplitscreenMode == 0) {
-            func_8008BB5C(player, 0x12C);
+            addRacePlayerScore(player, 0x12C);
             playerIndex = player->playerIndex;
             if (D_8011228C[playerIndex].active != 0) {
                 func_80061034(0x12C, (s16)playerIndex);

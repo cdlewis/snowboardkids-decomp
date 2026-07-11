@@ -422,11 +422,11 @@ void func_80087EFC(void) {
 }
 #endif
 
-// func_80088294 best match: 97.245% (nonmatchings/func_80088294-8207005055717715604/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088294.s")
+// pushRacePlayersOutOfCylinderAndApplyItemHit best match: 97.245% (nonmatchings/pushRacePlayersOutOfCylinderAndApplyItemHit-8207005055717715604/base_9.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/pushRacePlayersOutOfCylinderAndApplyItemHit.s")
 
 #ifdef NON_MATCHING
-void func_80088294(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
+void pushRacePlayersOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
     volatile u8 pad[8];
     RaceInputPlayer *player;
     s32 temp;
@@ -492,11 +492,11 @@ void func_80088294(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
 }
 #endif
 
-// func_80088664 best match: 99.643% (nonmatchings/func_80088664-6113366811127043669/base_order_18.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088664.s")
+// pushRacePlayerOutOfCylinderAndApplyItemHit best match: 99.643% (nonmatchings/pushRacePlayerOutOfCylinderAndApplyItemHit-6113366811127043669/base_order_18.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/pushRacePlayerOutOfCylinderAndApplyItemHit.s")
 
 #ifdef NON_MATCHING
-void func_80088664(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIndex) {
+void pushRacePlayerOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIndex) {
     volatile u8 pad[8];
     RaceInputPlayer *player;
     s32 temp;
@@ -559,7 +559,7 @@ void func_80088664(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIn
 }
 #endif
 
-void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
+void pushRacePlayersOutOfCylinderOrApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
     volatile u8 pad[16];
     RaceInputPlayer *player;
     s32 temp;
@@ -617,11 +617,11 @@ void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
     } while (player != &gFrameCounter);
 }
 
-// func_80088C80 best match: 99.776% (nonmatchings/func_80088C80-7273315160691878794/base_13.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088C80.s")
+// pushRacePlayerOutOfCylinder best match: 99.776% (nonmatchings/pushRacePlayerOutOfCylinder-7273315160691878794/base_13.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/pushRacePlayerOutOfCylinder.s")
 
 #ifdef NON_MATCHING
-void func_80088C80(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
+void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
     RaceInputPlayer *player;
     s32 temp;
     s32 xzLimit;
@@ -674,11 +674,11 @@ void func_80088C80(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
 }
 #endif
 
-// func_80088E98 best match: 99.719% (nonmatchings/func_80088E98-6688367443449623229/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088E98.s")
+// isRacePlayerInsideCylinder best match: 99.719% (nonmatchings/isRacePlayerInsideCylinder-6688367443449623229/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/isRacePlayerInsideCylinder.s")
 
 #ifdef NON_MATCHING
-s32 func_80088E98(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
+s32 isRacePlayerInsideCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
     RaceInputPlayer *player;
     s32 yDiff;
     s32 newLimit;
@@ -725,7 +725,7 @@ s32 func_80088E98(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
 }
 #endif
 
-void func_80089000(RaceVec3i *pos, s32 xzSize, s16 flag) {
+void applyItemHitToRacePlayersInsideSphere(RaceVec3i *pos, s32 xzSize, s16 flag) {
     volatile u8 pad[16];
     RaceInputPlayer *player;
     RaceInputPlayer *end;
@@ -1165,7 +1165,7 @@ void func_8008BB20(RaceInputPlayer *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4
     func_8008B73C(arg0, arg1, 0, arg2, arg3, arg4);
 }
 
-void func_8008BB5C(RaceInputPlayer *arg0, s32 arg1) {
+void addRacePlayerScore(RaceInputPlayer *arg0, s32 arg1) {
     if (arg0->isActive != 0) {
         arg0->unk568 += arg1;
         if (arg0->unk568 >= 0x186A0) {

@@ -634,10 +634,10 @@ void updateCourseTextureMarkers(void *arg0) {
             switch (entry->type) {
                 case 0:
                 case 1:
-                    func_80088294(&entry->pos, 0xC0000, 0x600000, 2);
+                    pushRacePlayersOutOfCylinderAndApplyItemHit(&entry->pos, 0xC0000, 0x600000, 2);
                     break;
                 case 2:
-                    func_80088A1C(&entry->pos, 0x20000, 0x40000, 0x30000, 4);
+                    pushRacePlayersOutOfCylinderOrApplyItemHit(&entry->pos, 0x20000, 0x40000, 0x30000, 4);
                     break;
             }
             type = entry[1].type;
@@ -880,7 +880,7 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
                     arg0->pad42 = 1;
                 }
             }
-            func_80088A1C(pos, 0x40000, 0x50000, 0x30000, 4);
+            pushRacePlayersOutOfCylinderOrApplyItemHit(pos, 0x40000, 0x50000, 0x30000, 4);
             arg0->unk40 += arg0->unk4E;
             if (arg0->unk40 == 0) {
                 rand = randomNextSecondary() & 3;
@@ -1469,8 +1469,8 @@ void collidePlayerWithCourseTriggerVolume(CourseEffectPlayer *player, RaceCourse
         }
 
         if (player->unk578 == 0) {
-            func_80088C80(&trigger->pos1, trigger->scaleX + 0x30000, 0x120000, player->unk0);
-            func_80088C80(&trigger->pos2, trigger->scaleX + 0x30000, 0x100000, player->unk0);
+            pushRacePlayerOutOfCylinder(&trigger->pos1, trigger->scaleX + 0x30000, 0x120000, player->unk0);
+            pushRacePlayerOutOfCylinder(&trigger->pos2, trigger->scaleX + 0x30000, 0x100000, player->unk0);
         }
 
         delta.x = player->posX - gCourseTriggerEntries[trigger->entryIndex].pos.x;
