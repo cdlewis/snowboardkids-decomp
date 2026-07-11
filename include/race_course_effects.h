@@ -1,5 +1,5 @@
-#ifndef RACE_COURSE_OBJECTS_H
-#define RACE_COURSE_OBJECTS_H
+#ifndef RACE_COURSE_EFFECTS_H
+#define RACE_COURSE_EFFECTS_H
 
 #include "common.h"
 

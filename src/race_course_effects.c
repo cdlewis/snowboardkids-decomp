@@ -1,5 +1,5 @@
 #include "common.h"
-#include "race_course_objects.h"
+#include "race_course_effects.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
@@ -283,8 +283,8 @@ extern CourseRenderEntry *gRaceCourseSceneryEntriesByCourse[];
 extern void *gRaceCourseSceneryDisplayLists[];
 extern SoundParams gCourseGateSoundParams[];
 extern CourseSpawnEntry gRaceCourseStartEntries[];
-extern CourseAngleEntry D_800B9554[];
-extern CourseAngleEntry D_800B9556[];
+extern CourseAngleEntry gSpiralCourseObjectAngles[];
+extern CourseAngleEntry gLaunchRampCourseObjectAngles[];
 extern CourseMarkerEntry gCourseBillboardMarkerEntries[];
 extern CourseMarkerVertexResource gCourseBillboardMarkerVertexResources[];
 extern CourseMarkerTextureResource gCourseBillboardMarkerTextureResources[];
@@ -451,7 +451,7 @@ void renderRaceCourseModel(void *arg0) {
 }
 
 // renderRaceCourseBackdrop best match: 52.371% (base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/renderRaceCourseBackdrop.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/renderRaceCourseBackdrop.s")
 
 #ifdef NON_MATCHING
 #define EMIT_COURSE_BACKDROP(list)                             \
@@ -567,7 +567,7 @@ void initFinalLapPrompt(void *arg0) {
 }
 
 // renderCourseTextureMarkers best match: 99.693% (nonmatchings/renderCourseTextureMarkers-7892263622508053986/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/renderCourseTextureMarkers.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/renderCourseTextureMarkers.s")
 
 #ifdef NON_MATCHING
 extern void func_80045A1C(u8 *, u16, void **, void **, s16 *, s16 *);
@@ -764,7 +764,7 @@ void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
 }
 
 // renderPatrolCourseObject best match: 99.182% at nonmatchings/renderPatrolCourseObject-731940616440357983/angle_5.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/renderPatrolCourseObject.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/renderPatrolCourseObject.s")
 
 #ifdef NON_MATCHING
 void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
@@ -813,7 +813,7 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
 #endif
 
 // updatePatrolCourseObject best match: 97.016% at nonmatchings/updatePatrolCourseObject-3836525038718587862/base_6.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/updatePatrolCourseObject.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/updatePatrolCourseObject.s")
 
 #ifdef NON_MATCHING
 void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
@@ -908,7 +908,7 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
 #endif
 
 // initPatrolCourseObject best match: 98.684% at nonmatchings/initPatrolCourseObject-5821324921387846781/base.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/initPatrolCourseObject.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/initPatrolCourseObject.s")
 
 #ifdef NON_MATCHING
 void initPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
@@ -958,7 +958,7 @@ void renderLaunchRampCourseObject(RaceMovingEffect *arg0) {
     volatile s32 pad[1];
 
     if (gRenderMatricesDirty != 0) {
-        makeFixedRotationY(&transform, D_800B9556[gRaceCourseIndex].angle + 0x400);
+        makeFixedRotationY(&transform, gLaunchRampCourseObjectAngles[gRaceCourseIndex].angle + 0x400);
         transform.basePos.x = arg0->pos.x;
         transform.basePos.y = arg0->pos.y;
         transform.basePos.z = arg0->pos.z;
@@ -1025,7 +1025,7 @@ void updateLaunchRampCourseObjectArc(RaceMovingEffect *arg0) {
 
         if (arg0->timer == 0) {
             setCallbackTaskCallback(arg0, updateLaunchRampCourseObjectExit);
-            makeFixedRotationXY(mtx, 0x100, D_800B9556[gRaceCourseIndex].angle + 0x400);
+            makeFixedRotationXY(mtx, 0x100, gLaunchRampCourseObjectAngles[gRaceCourseIndex].angle + 0x400);
             arg0->timer = 0x64;
         }
     }
@@ -1039,7 +1039,7 @@ void initLaunchRampCourseObject(RaceMovingEffect *arg0) {
     arg0->timer = 0x46;
     arg0->velocity.z = 0x680000;
     mtx = arg0->unk30;
-    makeFixedRotationY(mtx, D_800B9556[gRaceCourseIndex].angle + 0x400);
+    makeFixedRotationY(mtx, gLaunchRampCourseObjectAngles[gRaceCourseIndex].angle + 0x400);
     transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.z = 0xFFFE0000;
     arg0->pos.x += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].pos.x;
@@ -1149,7 +1149,7 @@ void initSpiralCourseObject(RaceMovingEffect *arg0) {
     void *mtx;
 
     arg0->timer = 0x28;
-    arg0->unk52 = D_800B9554[gRaceCourseIndex].angle;
+    arg0->unk52 = gSpiralCourseObjectAngles[gRaceCourseIndex].angle;
     arg0->velocity.x = -0x200000;
     arg0->velocity.z = 0x400000;
     mtx = arg0->unk30;
@@ -1165,7 +1165,7 @@ void initSpiralCourseObject(RaceMovingEffect *arg0) {
 }
 
 // renderCourseGateObject best match: 99.414% (nonmatchings/renderCourseGateObject-6182772958467082306/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/renderCourseGateObject.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/renderCourseGateObject.s")
 
 #ifdef NON_MATCHING
 void renderCourseGateObject(CourseGateObjectEffect *arg0) {
@@ -1312,7 +1312,7 @@ void initCourseGateObject(CourseGateObjectEffect *arg0) {
 }
 
 // renderCourseBillboardMarker best match: 99.603% at nonmatchings/renderCourseBillboardMarker-2/output-129-1/source.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/renderCourseBillboardMarker.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/renderCourseBillboardMarker.s")
 
 #ifdef NON_MATCHING
 void renderCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
@@ -1421,7 +1421,7 @@ void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
 }
 
 // collidePlayerWithCourseTriggerVolume best match: 71.621% at nonmatchings/collidePlayerWithCourseTriggerVolume-731940616440357983/base_1.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/collidePlayerWithCourseTriggerVolume.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/collidePlayerWithCourseTriggerVolume.s")
 
 #ifdef NON_MATCHING
 void collidePlayerWithCourseTriggerVolume(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger) {
