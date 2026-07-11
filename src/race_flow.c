@@ -8,7 +8,7 @@
 #include "race_character_select_menu.h"
 #include "controller_pak_score_delete_flow.h"
 #include "controller_pak_message_flow.h"
-#include "controller_pak_menu_flow.h"
+#include "controller_pak_file_delete_flow.h"
 #include "course_select_menu.h"
 #include "game_setup_menu.h"
 #include "input_task_scheduler.h"
@@ -285,7 +285,7 @@ void func_80072D04(void) {
 
 void func_80072D54(void) {
     func_8009956C(&func_80072D98, 0);
-    func_800994F4(4, &func_8000C600, 0x64);
+    func_800994F4(4, &initControllerPakFileDeleteFlow, 0x64);
     func_80099614(0);
 }
 
