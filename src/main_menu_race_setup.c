@@ -4,6 +4,7 @@
 #include "fixed_point_matrix.h"
 #include "input_task_scheduler.h"
 #include "main_menu_overlay_effects.h"
+#include "race_camera.h"
 #include "main_menu_race_setup.h"
 
 typedef struct {
@@ -55,7 +56,6 @@ extern s8 D_800DEED4;
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern s16 D_800DEF14;
-extern void func_8006D780(s32);
 
 extern MainMenuRaceSetupState *D_801235B8;
 extern MainMenuRaceSetupObject *D_800EC9C4;
@@ -121,8 +121,6 @@ extern void func_80053EBC(EffectTask *);
 extern void func_80054044(s32, s32);
 extern void func_8005502C(EffectTask *);
 extern void func_800553E0(EffectTask *);
-extern void func_8006D580(s32, s32);
-extern void func_8006D5CC(void);
 extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_80070E90(s32);

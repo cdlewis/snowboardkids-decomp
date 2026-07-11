@@ -1,6 +1,7 @@
 #include "common.h"
 #include "fixed_point_matrix.h"
 #include "model_animation.h"
+#include "race_camera.h"
 
 #define RACE_CAMERA_COUNT 4
 #define RACE_CAMERA_STATE_SIZE 0xB0
@@ -90,17 +91,6 @@ typedef struct StackD7D4 {
     s32 sp5C;
 } StackD7D4;
 
-extern void func_8006D8B4();
-void func_8006E534(void);
-extern void func_8006ECBC(void);
-extern void func_8006EF1C(void);
-extern void func_8006F048(void);
-extern void func_8006F984(void);
-extern void func_8006FA20(void);
-void func_8006FE88(void);
-extern void func_8007022C(void);
-void func_8007031C(void);
-extern void func_800704C4(void);
 extern void func_800486BC(void *, void *);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;

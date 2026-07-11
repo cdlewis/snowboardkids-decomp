@@ -1,4 +1,5 @@
 #include "common.h"
+#include "race_camera.h"
 #include "model_animation.h"
 #include "motion_debug_viewer.h"
 
@@ -36,7 +37,6 @@ extern void *D_80124898;
 extern void sprintf(char *, const char *, ...);
 extern void func_80048278(s32, s32, char *, s32);
 extern void func_800483FC(void *, void *, void *);
-extern void func_8006D520(s32, s32);
 extern void func_8007C5E8(MotionDebugViewerState *);
 
 const char D_800E1700[] = "MOTION NO %3.3i";
