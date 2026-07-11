@@ -271,7 +271,7 @@ void func_80055FA4(CoursePreviewCamera *arg0) {
 
     arg0->timer--;
     if (arg0->timer == 0) {
-        arg0->timer = func_800430D0() + 0x1E;
+        arg0->timer = randomNextMain() + 0x1E;
         func_80071824(arg0, func_80056070);
     }
     func_80097C18(sp24, 0x6D0);

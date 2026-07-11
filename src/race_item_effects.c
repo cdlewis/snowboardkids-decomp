@@ -226,7 +226,7 @@ extern s16 D_80112168;
 extern s16 D_8011216C;
 extern s16 D_8011216E;
 extern s16 D_80121B50;
-extern u8 D_80121B56;
+extern u8 gRaceUpdatePaused;
 extern RaceItemFollowPlayer D_80121D80[];
 extern RaceItemEffectPlayerState D_80121EE8[];
 extern s32 D_80124878;
@@ -265,7 +265,7 @@ void func_8004DB8C(RaceItemEffectActor *arg0) {
     s32 i;
     u16 playerIndex;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->unk64 = arg0->unk64 + 1;
         if (arg0->unk64 == 5) {
             func_800716E4(arg0);
@@ -370,7 +370,7 @@ void func_8004DCA0(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *arg3, s32 arg4,
 
                 cursor = (u8 *) actor;
                 for (i = 0; i != 2; i++) {
-                    random = func_800430D0() & 0xF;
+                    random = randomNextMain() & 0xF;
                     cursor += 0xC;
                     *(s32 *)(cursor + 0xC) = (((arg0->x - arg1->x) * random) / 15) + arg1->x;
                     *(s32 *)(cursor + 0x10) = (((arg0->y - arg1->y) * random) / 15) + arg1->y;
@@ -394,7 +394,7 @@ void func_8004E02C(RaceItemEffectActor *arg0) {
 void func_8004E3BC(RaceItemEffectActor *arg0) {
     s16 temp_v0;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->unk24.timer++;
         if (arg0->unk24.timer == 8) {
             func_800716E4(arg0);
@@ -561,7 +561,7 @@ void func_8004E604(RaceItemEffectActor *arg0) {
 #endif
 
 void func_8004E960(RaceItemEffectActor *arg0) {
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->unk30.screen.x -= 0x30;
         arg0->unk30.screen.y += 3;
         if (arg0->unk30.screen.x < 0x21) {
@@ -644,7 +644,7 @@ void func_8004EE0C(RaceItemEffectActor *arg0) {
     RaceItemFollowPlayer *player;
     RaceItemEffectActor *actor = arg0;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->unk34.shorts.height.byte++;
         if (arg0->unk34.shorts.height.byte == 6) {
             func_800716E4(arg0);
@@ -720,7 +720,7 @@ void func_8004EFF8(RaceItemEffectActor *arg0) {
 void func_8004F33C(RaceItemEffectActor *arg0) {
     s16 temp_v0;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         temp_v0 = arg0->unk30.particle.delay;
         if (temp_v0 != 0) {
             arg0->unk30.particle.delay = temp_v0 - 1;
@@ -754,7 +754,7 @@ void func_8004F3FC(RaceItemEffectActor *arg0) {
     Vec2s *angles;
 
     arg0->unk38.width = 0xFF;
-    arg0->unk30.screen.y = func_800430D0() & 3;
+    arg0->unk30.screen.y = randomNextMain() & 3;
     func_80045990(func_80043040(D_80112168), D_800D46F8[arg0->playerIndex], &arg0->image, &arg0->palette);
 
     player = &D_80121D80[arg0->followPlayerIndex];
@@ -851,7 +851,7 @@ void func_8004F68C(RaceItemEffectActor *arg0) {
 }
 
 void func_8004F9CC(RaceItemEffectActor *arg0) {
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->unk28.bytes.phase++;
         if (arg0->unk28.bytes.phase == 0xC) {
             func_800716E4(arg0);
@@ -866,9 +866,9 @@ void func_8004F9CC(RaceItemEffectActor *arg0) {
 
 void func_8004FA44(RaceItemEffectActor *arg0) {
     arg0->unk28.bytes.phase = -1;
-    arg0->payload.vec.x = D_80121EE8[arg0->playerIndex].pos.x + ((func_800430D0() - 0x80) << 10);
-    arg0->payload.vec.y = D_80121EE8[arg0->playerIndex].pos.y + ((func_800430D0() - 0x80) << 10);
-    arg0->payload.vec.z = D_80121EE8[arg0->playerIndex].pos.z + ((func_800430D0() - 0x80) << 10);
+    arg0->payload.vec.x = D_80121EE8[arg0->playerIndex].pos.x + ((randomNextMain() - 0x80) << 10);
+    arg0->payload.vec.y = D_80121EE8[arg0->playerIndex].pos.y + ((randomNextMain() - 0x80) << 10);
+    arg0->payload.vec.z = D_80121EE8[arg0->playerIndex].pos.z + ((randomNextMain() - 0x80) << 10);
     func_8004F9CC(arg0);
     func_80071824(arg0, func_8004F9CC);
 }
@@ -928,7 +928,7 @@ void func_8004FF34(RaceItemFollowActor *arg0) {
     RaceItemFollowPlayer *player;
     RaceItemFollowActor *temp_a2 = arg0;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->timer++;
         player = &D_80121D80[arg0->playerIndex];
         arg0->pos1.x = arg0->offset1.x + player->pos.x;
@@ -1198,7 +1198,7 @@ void func_80050D84(RaceItemFollowActor *arg0) {
     RaceItemFollowPlayer *player;
     RaceItemFollowActor *temp_a2 = arg0;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->timer++;
         player = &D_80121D80[arg0->playerIndex];
         arg0->pos1.x = arg0->offset1.x + player->pos.x;

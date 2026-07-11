@@ -90,7 +90,7 @@ s32 func_800832CC(RaceInputPlayer *player) {
 
     cue = 0;
     if (player->unk4 != 0) {
-        value = func_800430D0() & player->surfaceCueOverrideMask;
+        value = randomNextMain() & player->surfaceCueOverrideMask;
         cue = value;
         return cue;
     }

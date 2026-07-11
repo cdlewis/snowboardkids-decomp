@@ -173,6 +173,7 @@ void func_80060544(struct RaceUiPodiumTrailActor *arg0);
 void func_8006069C(void *arg0);
 void func_80060738(struct RaceUiPodiumTrailActor *arg0);
 void func_80060914(struct RaceUiPodiumTrailActor *arg0);
+void updateGhostSlowdownRise(struct RaceUiPodiumTrailActor *arg0);
 void func_80060BC4(void *arg0);
 void func_80060C4C(s16 arg0);
 void func_80060D10(struct RaceUiPopupActor *arg0);

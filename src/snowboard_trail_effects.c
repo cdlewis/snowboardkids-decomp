@@ -52,7 +52,7 @@ typedef struct {
 extern void func_800483FC(void *queue, void (*callback)(SnowboardTrailState *), SnowboardTrailState *trail);
 extern void *func_8004885C(u8 *source);
 
-extern u8 D_80121B56;
+extern u8 gRaceUpdatePaused;
 extern s16 D_80112144;
 extern s16 D_80112146;
 extern u32 D_2002208[];
@@ -130,7 +130,7 @@ void func_8008393C(struct RaceInputPlayer *input) {
         scratch.translation.y = trail->scale.y;
         scratch.translation.z = trail->scale.z;
         func_800987A0(&scratch, (FixedTransform *)rotation, (FixedTransform *)trail->transform);
-        if (D_80121B56 == 0) {
+        if (gRaceUpdatePaused == 0) {
             trail->scaleStep++;
         }
         if (trail->scaleStep == 0x10) {
@@ -160,7 +160,7 @@ void func_8008393C(struct RaceInputPlayer *input) {
         if (player->flags & SNOWBOARD_TRAIL_FLAG_CANCEL) {
             player->trailTimer = 0;
         }
-        if (D_80121B56 == 0) {
+        if (gRaceUpdatePaused == 0) {
             if (player->trailTimer != 0) {
                 player->trailTimer--;
             }

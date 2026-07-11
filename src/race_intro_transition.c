@@ -61,7 +61,7 @@ extern u8 D_800EC9C2;
 extern u8 D_8011228C;
 extern u8 D_80121B54;
 extern u8 D_80121B55;
-extern u8 D_80121B56;
+extern u8 gRaceUpdatePaused;
 extern s8 D_80121B58;
 extern u8 D_80121B59;
 extern u8 D_80121B5A;
@@ -96,7 +96,7 @@ void func_8003E600(void) {
 
     courseEntry = &D_800BB834[D_800BB830];
     D_80121B50 = courseEntry->courseIndex;
-    D_80121B56 = 0;
+    gRaceUpdatePaused = 0;
     D_80121B58 = 0;
     D_80121B5F = 0;
     D_80121B59 = 0;

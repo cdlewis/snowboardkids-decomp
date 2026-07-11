@@ -105,8 +105,8 @@ extern s32 D_80121B40;
 extern s32 D_80121B44;
 extern s32 D_80121B48;
 extern s16 D_80121B50;
-extern s8 D_80121B54;
-extern u8 D_80121B56;
+extern s8 gRacePlayerCount;
+extern u8 gRaceUpdatePaused;
 extern u8 D_80121B58;
 extern s32 D_801235B4;
 
@@ -155,12 +155,12 @@ void func_8006D700(void) {
     s32 index;
 
     index = 0;
-    if (D_80121B54 > 0) {
+    if (gRacePlayerCount > 0) {
  camera = D_801121E0; do {
             (D_801124A0 = camera)->update();
             index += 1;
             camera += 1;
-        } while (index < D_80121B54);
+        } while (index < gRacePlayerCount);
     }
 }
 
@@ -399,7 +399,7 @@ void func_8006EC74(void) {
 void func_8006ECBC(void) {
     s32 diff;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         D_801124A0->focus.x += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
         D_801124A0->focus.y += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
         D_801124A0->focus.z += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
@@ -449,7 +449,7 @@ void func_8006EED4(void) {
 }
 
 void func_8006EF1C(void) {
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         D_801124A0->focus.x += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
         D_801124A0->focus.y += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
         D_801124A0->focus.z += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
@@ -488,10 +488,10 @@ void func_8006F048(void) {
     s16 diff;
     u8 *angleOrder;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         stride = RACE_PLAYER_STATE_SIZE;
         players = D_80121D80;
-        playerCount = &D_80121B54;
+        playerCount = &gRacePlayerCount;
         camera = D_801124A0;
         player = (RacePlayerSlot *)((u8 *)players + (camera->playerIndex * stride));
 
@@ -603,7 +603,7 @@ void func_8006F5B0(void) {
     s32 cosine;
     s32 dx;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         D_801124A0->focus.x += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
         D_801124A0->focus.y += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
         D_801124A0->focus.z += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;

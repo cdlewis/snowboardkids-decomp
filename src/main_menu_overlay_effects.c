@@ -202,7 +202,7 @@ void func_800536F4(MainMenuOverlayEffectActor *arg0) {
         } else {
             arg0->unk20.half.hi -= 4;
             if (arg0->unk20.half.hi == 0) {
-                arg0->unk24.half.lo = (func_800430D0() & 0x1F) + 0x10;
+                arg0->unk24.half.lo = (randomNextMain() & 0x1F) + 0x10;
                 arg0->unk24.half.hi = -1;
             }
         }
@@ -214,7 +214,7 @@ void func_800536F4(MainMenuOverlayEffectActor *arg0) {
         } else {
             arg0->unk20.half.hi += 4;
             if (arg0->unk20.half.hi == 0) {
-                arg0->unk24.half.lo = (func_800430D0() & 0x1F) + 0x10;
+                arg0->unk24.half.lo = (randomNextMain() & 0x1F) + 0x10;
                 arg0->unk24.half.hi = 1;
             }
         }
@@ -236,7 +236,7 @@ void func_80053858(MainMenuOverlayEffectActor *arg0) {
     arg0->unk24.half.hi = (arg0->unk24.half.hi + 0x20) & 0xFFF;
     arg0->unk18.half.hi += (func_80097AE8(arg0->unk24.half.hi) * (arg0->unk1C.half.lo + 0x30)) / 4096;
     if ((arg0->unk24.half.hi == 0) || (arg0->unk24.half.hi == 0x800)) {
-        arg0->unk1C.half.lo = func_800430D0() & 0xF;
+        arg0->unk1C.half.lo = randomNextMain() & 0xF;
     }
     if (arg0->unk18.half.lo >= 0x6E1) {
         func_800716E4(arg0);

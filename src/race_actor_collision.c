@@ -7,6 +7,7 @@
 #include "model_animation.h"
 #include "race_actor_collision.h"
 #include "race_item_effects.h"
+#include "race_item_hit_flags.h"
 
 #define RACE_ACTOR_COLLISION_YAW_FLIPPED 0x400
 #define RACE_ACTOR_COLLISION_ACTIVE 0x800
@@ -310,74 +311,74 @@ void func_80085664(RaceInputPlayer *arg0) {
     u16 temp_v0;
 
     D_80121D50 = 0;
-    temp_v0 = arg0->unk2C6;
+    temp_v0 = arg0->pendingItemHitFlags;
     if (temp_v0 != 0) {
         if ((temp_v0 & 0x200) && (arg0->unk5C < (func_80080CC4(arg0->unk502, arg0->posX, arg0->posZ) + 0xB0000))) {
-            arg0->unk2C6 |= 1;
+            arg0->pendingItemHitFlags |= 1;
         }
         D_80121D5C = arg0->unk2C8 - arg0->unk40_x;
         D_80121D60 = arg0->unk2CC - arg0->unk48;
         D_80121D58 = func_80098C30((s64) D_80121D5C * D_80121D5C + (s64) D_80121D60 * D_80121D60) >> 1;
         D_80121D54 = func_8004908C(D_80121D5C, D_80121D60);
-        if ((arg0->unk2C6 & 1) && (func_80085238(arg0) != 0) && (func_80084F50(arg0) != 0) && (func_800852E8(arg0) != 0)) {
+        if ((arg0->pendingItemHitFlags & 1) && (func_80085238(arg0) != 0) && (func_80084F50(arg0) != 0) && (func_800852E8(arg0) != 0)) {
             func_800853A0(arg0);
         }
-        if ((arg0->unk2C6 & 2) && (func_80085238(arg0) != 0)) {
+        if ((arg0->pendingItemHitFlags & 2) && (func_80085238(arg0) != 0)) {
             func_80084F50(arg0);
         }
-        temp_a0 = arg0->unk2C6;
+        temp_a0 = arg0->pendingItemHitFlags;
         var_t4 = temp_a0 & 0x400;
         if (temp_a0 & 0x800) {
             func_80085010(arg0);
-            var_t4 = arg0->unk2C6 & 0x400;
+            var_t4 = arg0->pendingItemHitFlags & 0x400;
         }
         if ((var_t4 != 0) && (func_80085160(arg0) != 0)) {
             func_80085160(arg0);
         }
-        if ((arg0->unk2C6 & 4) && (func_80085290(arg0) != 0)) {
+        if ((arg0->pendingItemHitFlags & 4) && (func_80085290(arg0) != 0)) {
             func_800850D0(arg0);
         }
-        temp_a0_2 = arg0->unk2C6;
+        temp_a0_2 = arg0->pendingItemHitFlags;
         var_t3 = temp_a0_2 & 0x100;
         if (temp_a0_2 & 8) {
             func_80085118(arg0);
-            var_t3 = arg0->unk2C6 & 0x100;
+            var_t3 = arg0->pendingItemHitFlags & 0x100;
         }
-        var_t8 = arg0->unk2C6 & 0x10;
+        var_t8 = arg0->pendingItemHitFlags & 0x10;
         if (var_t3 != 0) {
             func_800851F0(arg0);
-            var_t8 = arg0->unk2C6 & 0x10;
+            var_t8 = arg0->pendingItemHitFlags & 0x10;
         }
-        var_t9 = arg0->unk2C6 & 0x20;
+        var_t9 = arg0->pendingItemHitFlags & 0x20;
         if (var_t8 != 0) {
             func_8008542C(arg0);
-            var_t9 = arg0->unk2C6 & 0x20;
+            var_t9 = arg0->pendingItemHitFlags & 0x20;
         }
-        var_t0 = arg0->unk2C6 & 0x1000;
+        var_t0 = arg0->pendingItemHitFlags & PLAYER_HITFLAG_GHOST_SLOWDOWN;
         if (var_t9 != 0) {
             func_80085474(arg0);
-            var_t0 = arg0->unk2C6 & 0x1000;
+            var_t0 = arg0->pendingItemHitFlags & PLAYER_HITFLAG_GHOST_SLOWDOWN;
         }
-        var_t1 = arg0->unk2C6 & 0x40;
+        var_t1 = arg0->pendingItemHitFlags & 0x40;
         if (var_t0 != 0) {
             func_800854E8(arg0);
-            var_t1 = arg0->unk2C6 & 0x40;
+            var_t1 = arg0->pendingItemHitFlags & 0x40;
         }
-        var_t2 = arg0->unk2C6 & 0x2000;
+        var_t2 = arg0->pendingItemHitFlags & 0x2000;
         if (var_t1 != 0) {
             func_80085544(arg0);
-            var_t2 = arg0->unk2C6 & 0x2000;
+            var_t2 = arg0->pendingItemHitFlags & 0x2000;
         }
-        var_t4_2 = arg0->unk2C6 & 0x80;
+        var_t4_2 = arg0->pendingItemHitFlags & 0x80;
         if (var_t2 != 0) {
             func_8008558C(arg0);
-            var_t4_2 = arg0->unk2C6 & 0x80;
+            var_t4_2 = arg0->pendingItemHitFlags & 0x80;
         }
         if (var_t4_2 != 0) {
             func_800851A8(arg0);
         }
     }
-    arg0->unk2C6 = 0;
+    arg0->pendingItemHitFlags = 0;
     if (arg0->unk330 == 3) {
         if (arg0->pad331 == 3) {
             func_800853E4(arg0);

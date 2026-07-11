@@ -112,7 +112,7 @@ typedef struct RaceInputPlayer {
     /* 0x2C2 */ s8 unk2C2;
     /* 0x2C3 */ s8 unk2C3;
     /* 0x2C4 */ u16 unk2C4;
-    /* 0x2C6 */ u16 unk2C6;
+    /* 0x2C6 */ u16 pendingItemHitFlags;
     /* 0x2C8 */ s32 unk2C8;
     /* 0x2CC */ s32 unk2CC;
     /* 0x2D0 */ char pad2D0[4];
@@ -181,7 +181,7 @@ typedef struct RaceInputPlayer {
     /* 0x502 */ s16 unk502;
     /* 0x504 */ s32 unk504;
     /* 0x508 */ s8 unk508;
-    /* 0x509 */ s8 unk509;
+    /* 0x509 */ s8 rankIndex;
     /* 0x50A */ char pad50A[6];
     /* 0x510 */ s16 shieldEffectTimer;
     /* 0x512 */ s8 itemEffectType;
@@ -190,7 +190,7 @@ typedef struct RaceInputPlayer {
     /* 0x515 */ s8 actionEffectType;
     /* 0x516 */ char pad516[1];
     /* 0x517 */ s8 unk517;
-    /* 0x518 */ s8 unk518;
+    /* 0x518 */ s8 randomIndex;
     /* 0x519 */ s8 unk519;
     /* 0x51A */ u8 actionEffectEnabled;
     /* 0x51B */ char pad51B[9];

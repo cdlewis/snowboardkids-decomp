@@ -214,7 +214,7 @@ extern s8 D_800DEED4;
 extern u8 D_800EC9C2;
 extern u8 D_8010ADFA;
 extern u8 D_800DC4C0;
-extern u8 D_80121B56;
+extern u8 gRaceUpdatePaused;
 extern ViewportSlot D_801121E0[];
 extern u8 D_1E74E0[];
 extern u8 D_1EC0F0[];
@@ -741,7 +741,7 @@ void func_80074960(void) {
     s32 selection;
     s32 valueTwo;
 
-    opened = 0; i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (D_80121B56 == 0)) && (D_80123778[i] & 0x1000)) { D_80121B57 = 0; D_80121B56 = 1; opened = 1; func_80072138(1, 0x32); func_80000A40(0); func_80000A40(1); func_80000A40(2); func_80000A40(3); } i++; player++; } while (i < D_80121B55); } valueTwo = 2; if ((D_80121B56 != 0) && (opened == 0)) { i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = D_80123778[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; func_80072138(1, 0x32); input = D_80123778[i]; }
+    opened = 0; i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (D_80123778[i] & 0x1000)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; func_80072138(1, 0x32); func_80000A40(0); func_80000A40(1); func_80000A40(2); func_80000A40(3); } i++; player++; } while (i < D_80121B55); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = D_80123778[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; func_80072138(1, 0x32); input = D_80123778[i]; }
                     }
                     if (input & 0x20400) {
                         selection = D_80121B57;
@@ -754,13 +754,13 @@ void func_80074960(void) {
                     if (input & 0x1000) {
                         input = D_80121B57;
                         if (input == 0) {
-                            D_80121B56 = 0;
+                            gRaceUpdatePaused = 0;
                             func_80072138(1, 0x32);
                             input = D_80121B57;
                         }
                         if (input == 1) {
                             D_800EC8B0 = 0;
-                            D_80121B56 = 0;
+                            gRaceUpdatePaused = 0;
                             D_80123751 = 1;
                             func_80072138(1, 0x32);
                             func_8009956C(func_80077B34, 0);
@@ -768,7 +768,7 @@ void func_80074960(void) {
                         }
                         if (valueTwo == input) {
                             D_800EC8B0 = 0;
-                            D_80121B56 = 0;
+                            gRaceUpdatePaused = 0;
                             D_80123751 = 1;
                             func_80072138(1, 0x32);
                             func_8009956C(func_80077B34, 0);
@@ -1224,7 +1224,7 @@ void func_80077554(void) {
     s32 one;
     s32 asset;
 
-    D_80121B56 = 0;
+    gRaceUpdatePaused = 0;
     D_80121B58 = 1;
     D_80121B5F = 0;
     asset = func_80043040(D_80112130[0x2B]);
@@ -1276,7 +1276,7 @@ void func_80077554(void) {
     D_80121D80[1].unk13 = 0;
     D_80121D80[2].unk13 = 0;
     D_80121D80[3].unk13 = 0;
-    D_80121B54 = 1;
+    gRacePlayerCount = 1;
     *(u16 *)&D_80121B52 = 1;
     D_80121B5C = 0x64;
     func_80070EC0(2);
@@ -1304,7 +1304,7 @@ void func_80077554(void) {
     func_800437F0(D_598A70, D_59AAA0, 0x29);
     D_8011228C = 1;
     D_800DEED4 = 0;
-    func_80043154();
+    resetSecondaryRng();
     func_8008BEB0();
     func_80078430();
     func_80044294();
@@ -1343,7 +1343,7 @@ void func_8007797C(void) {
     if (D_801235B8->fadeTimer == 1) {
         D_800DEF14 = 0;
     }
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         D_801235B8->fadeTimer++;
     }
     func_80077CD4();

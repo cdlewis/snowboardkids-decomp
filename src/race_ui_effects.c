@@ -4,6 +4,7 @@
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
+#include "race_item_hit_flags.h"
 #include "viewport_manager.h"
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
@@ -83,7 +84,7 @@ typedef struct {
     /* 0x2C2 */ s8 pad2C2;
     /* 0x2C3 */ s8 unk2C3;
     /* 0x2C4 */ u8 pad2C4[0x2C6 - 0x2C4];
-    /* 0x2C6 */ u16 unk2C6;
+    /* 0x2C6 */ u16 pendingItemHitFlags;
     /* 0x2C8 */ u8 pad2C8[0x2D8 - 0x2C8];
     /* 0x2D8 */ s16 unk2D8;
     /* 0x2DA */ s16 unk2DA;
@@ -787,8 +788,8 @@ extern void *D_801248B0;
 extern void *D_801248BC;
 extern void *D_801248C8;
 extern u8 D_80121B55;
-extern u8 D_80121B56;
-extern s8 D_80121B54;
+extern u8 gRaceUpdatePaused;
+extern s8 gRacePlayerCount;
 extern u8 D_80121B81;
 extern RacePlayerUnsignedPlacement D_80121D90[];
 extern s32 D_80121DA4;
@@ -807,7 +808,7 @@ extern s32 D_80121D8C;
 extern RacePlayerPlacement D_80122288[];
 extern s8 D_80122289;
 extern RacePlayerByteField D_80121D94[];
-extern RacePlayerHalfwordField D_80122052[];
+extern RacePlayerHalfwordField gPlayerHitSource[];
 extern RacePlayerHalfwordField D_8012265E[];
 extern RacePlayerHalfwordField D_80122C6A[];
 extern RacePlayerHalfwordField D_80123276[];
@@ -3248,7 +3249,7 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
     s16 timer;
     s32 angle;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->scale += 0x100;
         if (arg0->scale >= 0x1001) {
             arg0->scale = 0x1000;
@@ -3303,7 +3304,7 @@ void func_8005EFFC(RaceUiSparkleActor *arg0) {
     volatile u8 pad[8];
     RacePlayerState *player;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         if (D_801235B0 & 1) {
             arg0->frame = (arg0->frame + 1) & 3;
         }
@@ -3387,7 +3388,7 @@ void func_8005F448(RaceUiSnowboardTrailActor *arg0) {
 
     actor = arg0;
     actor->spinYaw += 0x240;
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         actor->worldPos.y += actor->velocityY;
         actor->velocityY -= 0x8000;
     }
@@ -3573,7 +3574,7 @@ void func_8005FED0(RaceUiTextParticleActor *arg0) {
 void func_800601F8(void *arg0) {
     s32 temp;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         temp = *(s32 *)((u8 *)arg0 + 0x4C);
         *(s32 *)((u8 *)arg0 + 0x18) += *(s32 *)((u8 *)arg0 + 0x48);
         *(s32 *)((u8 *)arg0 + 0x1C) += temp;
@@ -3658,7 +3659,7 @@ void func_80060544(RaceUiPodiumTrailActor *arg0) {
 }
 
 void func_8006069C(void *arg0) {
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         *(s32 *)((u8 *)arg0 + 0x4C) += -0x10000;
         *(s32 *)((u8 *)arg0 + 0x18) += 0x20000;
         *(s32 *)((u8 *)arg0 + 0x1C) += *(s32 *)((u8 *)arg0 + 0x4C);
@@ -3672,18 +3673,18 @@ void func_8006069C(void *arg0) {
     }
 }
 
-void func_80060738(RaceUiPodiumTrailActor *arg0) {
+void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
     RacePlayerState *player;
     s32 height;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->velocity += -0x10000;
         height = arg0->height + arg0->velocity;
         arg0->height = height;
         if ((height < 0x200000) && ((arg0->playImpactSound & 0xFF) != 0)) {
             func_80072A74(0xC, &D_80121D80[arg0->targetPlayerIndex].pos1C, 0x7F, 0x32);
-            D_80121D80[arg0->targetPlayerIndex].unk2C6 |= 0x1000;
-            D_80122052[arg0->targetPlayerIndex].value = arg0->playerIndex;
+            D_80121D80[arg0->targetPlayerIndex].pendingItemHitFlags |= PLAYER_HITFLAG_GHOST_SLOWDOWN;
+            gPlayerHitSource[arg0->targetPlayerIndex].value = arg0->playerIndex;
             height = arg0->height;
             arg0->playImpactSound = 0;
         }
@@ -3705,18 +3706,18 @@ void func_80060738(RaceUiPodiumTrailActor *arg0) {
     func_800483FC(&D_801248BC, func_80060544, arg0);
 }
 
-// func_80060914 best match: 83.297% (nonmatchings/func_80060914-8662636370764828261/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80060914.s")
+// updateGhostSlowdownRise best match: 83.297% (nonmatchings/updateGhostSlowdownRise-8662636370764828261/base_15.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/updateGhostSlowdownRise.s")
 
 #ifdef NON_MATCHING
-void func_80060914(RaceUiPodiumTrailActor *arg0) {
+void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
     RacePlayerState *player;
     s16 playerIndex;
     s16 scale;
     s32 height;
 
     if (arg0->timer == 0) {
-        if (D_80121B56 == 0) {
+        if (gRaceUpdatePaused == 0) {
             arg0->velocity += 0x10000;
             arg0->height += arg0->velocity;
             height = arg0->height;
@@ -3744,37 +3745,37 @@ void func_80060914(RaceUiPodiumTrailActor *arg0) {
 
             if (arg0->height >= 0xA00001) {
                 arg0->velocity = -0x10000;
-                func_80071824(arg0, func_80060738);
+                func_80071824(arg0, updateGhostSlowdownImpact);
             }
         }
         D_8012229A[arg0->targetPlayerIndex].value = 1;
         func_800483FC(&D_801248BC, func_80060544, (s32)arg0);
-    } else if (D_80121B56 == 0) {
+    } else if (gRaceUpdatePaused == 0) {
         arg0->timer--;
     }
 }
 #endif
 
-void func_80060BC4(void *arg0) {
+void initGhostSlowdownActor(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x54) = 1;
     *(s32 *)((u8 *)arg0 + 0x48) = 0;
     *(s32 *)((u8 *)arg0 + 0x4C) = 0;
     *(u8 *)((u8 *)arg0 + 0x59) = 1;
     func_80072A74(0xD, &D_80121D80[*(s16 *)((u8 *)arg0 + 0x50)].pos1C, 0x7F, 0x32);
-    func_80071824(arg0, func_80060914);
+    func_80071824(arg0, updateGhostSlowdownRise);
 }
 
-void func_80060C4C(s16 arg0) {
+void spawnGhostSlowdownTargets(s16 arg0) {
     s32 var_s1;
     s32 var_s0;
     void *temp_v0;
 
     var_s1 = 0;
     var_s0 = 0;
-    if (D_80121B54 > 0) {
+    if (gRacePlayerCount > 0) {
         do {
             if (arg0 != var_s0) {
-                temp_v0 = func_800711D0(func_80060BC4, 0, 0x1E);
+                temp_v0 = func_800711D0(initGhostSlowdownActor, 0, 0x1E);
                 if (temp_v0 != NULL) {
                     *(s16 *)((u8 *)temp_v0 + 0x50) = arg0;
                     *(s16 *)((u8 *)temp_v0 + 0x52) = var_s0;
@@ -3783,7 +3784,7 @@ void func_80060C4C(s16 arg0) {
                 }
             }
             var_s0 += 1;
-        } while (var_s0 < D_80121B54);
+        } while (var_s0 < gRacePlayerCount);
     }
 }
 
@@ -4008,7 +4009,7 @@ void func_80061984(RaceUiThrownTrailActor *arg0) {
     volatile s16 unused1;
     Vec3i *pos;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
         if (func_80048E60(pos) != 0) {
             func_80088294(pos, 0x1A0000, 0x600000, 2);
@@ -4076,7 +4077,7 @@ void func_80061B70(RaceUiSingleTrailActor *arg0) {
 void func_80061CA8(RaceUiSingleTrailActor *arg0) {
     func_800987A0(&arg0->sourceTransform, &D_80121D80[arg0->playerIndex].transform, &arg0->copyBlock.transform);
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->timer--;
         if (!(D_8012207C[arg0->playerIndex].flags & 0x2000)) {
             arg0->timer = 0;
@@ -4130,7 +4131,7 @@ void func_80061F38(RaceUiFadingImpactActor *arg0) {
     s32 sp2C;
     RaceUiFadingImpactActor *new_var;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->angle += 0x100;
         func_80097C18(&arg0->copyBlock, arg0->angle);
 
@@ -4159,7 +4160,7 @@ void func_80061F38(RaceUiFadingImpactActor *arg0) {
             sp24 = &arg0->pos;
             sp2C = (new_var->scale * 0x480000) / 64;
             if (func_800891B8(sp24, sp2C, 0x80, 0) != 0) {
-                D_80122052[0].value = new_var->playerIndex;
+                gPlayerHitSource[0].value = new_var->playerIndex;
             }
             if (func_800891B8(sp24, sp2C, 0x80, 1) != 0) {
                 D_8012265E[0].value = new_var->playerIndex;
@@ -4359,7 +4360,7 @@ void func_80062D34(RaceUiScaledParticleActor *arg0) {
     s16 scale;
 
     actor = arg0;
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         pos = &actor->pos;
         if (func_80048E60(pos) != 0) {
             actor->rotY += actor->rotYStep;
@@ -4395,8 +4396,8 @@ void func_80062D34(RaceUiScaledParticleActor *arg0) {
 }
 
 void func_80062ED4(RaceUiScaledParticleActor *arg0) {
-    arg0->rotY = func_80043120() << 4;
-    if (func_80043120() & 1) {
+    arg0->rotY = randomNextSecondary() << 4;
+    if (randomNextSecondary() & 1) {
         arg0->rotYStep = 0x40;
     } else {
         arg0->rotYStep = -0x40;
@@ -4444,7 +4445,7 @@ void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
 }
 
 void func_80063164(void *arg0) {
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         *(s16 *)((u8 *)arg0 + 0x2E) = *(s16 *)((u8 *)arg0 + 0x2E) + 8;
     }
     func_800483FC(&D_801248BC, func_80062F6C, (s32)arg0);
@@ -4498,7 +4499,7 @@ void func_80063220(RaceUiSpinningParticleActor *arg0) {
 }
 
 void func_80063410(void *arg0) {
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         *(s16 *)((u8 *)arg0 + 0x2E) = *(s16 *)((u8 *)arg0 + 0x2E) + 0x60;
         *(s16 *)((u8 *)arg0 + 0x30) = *(s16 *)((u8 *)arg0 + 0x30) + 0x10;
         *(s16 *)((u8 *)arg0 + 0x32) = *(s16 *)((u8 *)arg0 + 0x32) + 4;
@@ -4714,8 +4715,8 @@ void func_80063E70(RaceUiEffectParticleActor *arg0) {
     for (i = 0; i < actor->count; i++) {
         actor->particles[i].unk0 += 0xA0000;
         if (actor->particles[i].unk0 >= 0x1000000) {
-            actor->particles[i].unk8 = func_800430D0() << 0x10;
-            actor->particles[i].unk4 = func_800430D0() << 0x10;
+            actor->particles[i].unk8 = randomNextMain() << 0x10;
+            actor->particles[i].unk4 = randomNextMain() << 0x10;
             actor->particles[i].unk0 = 0;
         }
         actor->particles[i].unk4 += 0xFFFD0000;
@@ -4738,9 +4739,9 @@ void func_80063FC0(RaceUiEffectParticleActor *actor) {
     actor->particles = (RaceUiEffectParticle *)func_80043040(D_80112130.pad4A);
 
     for (i = 0; i < actor->count; i++) {
-        actor->particles[i].unk0 = func_800430D0() << 0x10;
-        actor->particles[i].unk4 = func_800430D0() << 0x10;
-        actor->particles[i].unk8 = func_800430D0() << 0x10;
+        actor->particles[i].unk0 = randomNextMain() << 0x10;
+        actor->particles[i].unk4 = randomNextMain() << 0x10;
+        actor->particles[i].unk8 = randomNextMain() << 0x10;
     }
 
     func_80071824(actor, func_80063E70);
@@ -4887,7 +4888,7 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
     s32 temp;
 
     actor = arg0;
-    if (!D_80121B56) {
+    if (!gRaceUpdatePaused) {
         func_80097FE4(sp24.mtx, D_80121D80[actor->index].pitch, D_80121D80[actor->index].yaw);
         func_80098590(sp24.mtx, &actor->velocity, &actor->pos);
         actor->pos.x += D_80121D80[actor->index].pos28.x;
@@ -4915,7 +4916,7 @@ void func_80064914(RaceUiProjectileActor *arg0) {
     s32 amount;
     s16 flags;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         player = &D_80121D80[arg0->index];
         func_80097FE4(sp44, D_80121D80[arg0->index].pitch, D_80121D80[arg0->index].yaw);
         func_80098590(sp44, &arg0->velocity, &arg0->pos);
@@ -4965,7 +4966,7 @@ void func_80064B28(RaceUiProjectileActor *arg0) {
     RaceUiProjectileActor *actor;
 
     actor = arg0;
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         player = &D_80121D80[actor->index];
         arg0 += 0;
         if (((!actor) && (!actor)) && (!actor)) {
@@ -4996,7 +4997,7 @@ void func_80064C68(RaceUiProjectileActor *arg0) {
     RaceUiProjectileActor *actor;
 
     actor = arg0;
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         func_80097FE4(sp2C, D_80121D80[actor->index].pitch, D_80121D80[actor->index].yaw);
         func_80098590(sp2C, &actor->velocity, &actor->pos);
 
@@ -5020,7 +5021,7 @@ void func_80064D88(RaceUiProjectileActor *arg0) {
     RaceUiProjectileActor *actor;
 
     actor = arg0;
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         func_80097FE4(sp2C, D_80121D80[actor->index].pitch, D_80121D80[actor->index].yaw);
         func_80098590(sp2C, &actor->velocity, &actor->pos);
 
