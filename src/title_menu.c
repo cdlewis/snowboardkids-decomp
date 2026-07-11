@@ -1,6 +1,8 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
+#define MENU_RENDERING_BROAD_PROTOTYPES
+#include "menu_rendering.h"
 #include "title_menu.h"
 
 #define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x3E])
@@ -31,17 +33,10 @@ typedef struct {
     /* 0x4D */ u8 pad4D[0x78F8 - 0x4D];
 } TitleMenuPlayerView;
 
-extern s32 func_80011D74(void *, s32, s16, s16);
-extern void func_8000F8AC(s16, s16, s32, s32, s32, s32, s32, s32, s32);
-extern void func_80010074(s16, s16, s32, s32, s32);
-extern void func_800129DC(s16, s16, u16 *, s32, s32);
 extern void func_80014EF0(MenuItemActor *);
 extern void func_80014CB8(void *);
 extern void func_800483FC(void *, void *, s32);
 extern s32 func_80072138(s32, s32);
-extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
-extern void func_80013154(s16, s16, u8 *, s32, s32, s32);
-extern void func_80013D0C(s16, s16, u8 *, u16, u16);
 extern u8 D_800B5458[][0x4C];
 extern u8 D_800B5A14[];
 #ifdef NON_MATCHING

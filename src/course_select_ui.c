@@ -92,7 +92,6 @@ typedef struct {
     /* 0xA6 */ s16 clipBottom;
 } CourseSelectIconListActor;
 
-extern void func_8000F0EC(s16, s16, s32, u16, u16, u16, u8, u8, s32, s32, s32, s32);
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void func_80023880(CourseSelectCoursePreviewActor *);
 extern s32 func_8004885C(FixedTransform *);

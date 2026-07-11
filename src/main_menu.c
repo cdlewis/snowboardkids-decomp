@@ -11,6 +11,8 @@
 #include "main_menu_scene_renderer.h"
 #include "main_menu_transition.h"
 #include "main_menu_ui.h"
+#define MENU_RENDERING_S16_STEP_PROTOTYPE
+#include "menu_rendering.h"
 
 #define OS_MESG_BLOCK 1
 
@@ -105,7 +107,6 @@ extern s32 osPfsDeleteFile(OSPfs *, u16, u32, u8 *, u8 *);
 extern s32 osPfsFindFile(OSPfs *, u16, u32, u8 *, u8 *, s32 *);
 extern s32 osPfsAllocateFile(OSPfs *, u16, u32, u8 *, u8 *, int, s32 *);
 extern s32 osPfsReadWriteFile(OSPfs *, s32, u8, int, int, u8 *);
-extern s32 func_80013F88(s16, s32, s32);
 extern void func_80045914(void);
 extern void func_8006D780(s32);
 extern void func_80072138(s32, s32);

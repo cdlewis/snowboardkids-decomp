@@ -2,6 +2,9 @@
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "main_menu_score_ui.h"
+#define MENU_RENDERING_BROAD_PROTOTYPES
+#define MENU_RENDERING_F8AC_U16_ALPHA_PROTOTYPE
+#include "menu_rendering.h"
 
 typedef struct {
     u8 state;
@@ -18,10 +21,6 @@ typedef struct {
     /* 0x6 */ s16 nextTimer;
 } ControllerPakDeleteFlow;
 
-extern void func_800129DC(s16, s16, u8 *, s32, s32);
-extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
-extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
-extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, u16, s32);
 extern void func_800483FC(void *, void *, void *);
 extern u8 D_800B73F0[][0x4C];
 extern u8 D_800B7986[];

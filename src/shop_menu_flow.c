@@ -5,6 +5,7 @@
 #include "character_select_flow.h"
 #include "controller_pak_menu_ui.h"
 #include "input_task_scheduler.h"
+#include "menu_rendering.h"
 
 typedef struct {
     /* 0x0 */ s16 x;
@@ -13,7 +14,6 @@ typedef struct {
 
 extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern s32 func_80013F88(s32, s32, s32);
 extern void func_80072138(s32, s32);
 extern void func_80045914(void);
 

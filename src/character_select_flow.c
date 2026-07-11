@@ -5,6 +5,7 @@
 #include "character_select_flow.h"
 #include "character_select_ui.h"
 #include "input_task_scheduler.h"
+#include "menu_rendering.h"
 #include "title_menu.h"
 
 typedef s16 CharacterSelectOptionList[10];
@@ -28,7 +29,6 @@ typedef union {
     } fields;
 } CharacterSelectCursorState;
 
-extern s32 func_80013F88(s32, s32, s32);
 extern void func_80072138(s32, s32);
 extern void func_80045914(void);
 extern void func_800704F0(void);

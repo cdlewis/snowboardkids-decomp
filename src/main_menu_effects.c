@@ -3,6 +3,8 @@
 #include "effect_task_scheduler.h"
 #include "main_menu_effects.h"
 #include "main_menu_scene_model.h"
+#define MENU_RENDERING_BROAD_PROTOTYPES
+#include "menu_rendering.h"
 #include "title_menu.h"
 
 struct MainMenuEffectActor {
@@ -55,8 +57,6 @@ struct MainMenuEffectActor {
 };
 
 extern void func_800483FC(void *, void *, void *);
-extern void func_80011D74(void *, s32, s16, s16);
-extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern Gfx *gRegionAllocPtr;
 extern s32 D_80124838;
 extern s32 D_80124868;

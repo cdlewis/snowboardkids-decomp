@@ -14,6 +14,8 @@
 #include "main_menu_scene_actor_3.h"
 #include "main_menu_scene_actor_4.h"
 #include "main_menu_scene_model.h"
+#define MENU_RENDERING_S16_STEP_PROTOTYPE
+#include "menu_rendering.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -42,7 +44,6 @@ typedef struct {
 
 typedef void (*EffectTaskCallback)(void *);
 
-extern s32 func_80013F88(s16, s32, s32);
 extern void func_80045914(void);
 extern void func_8006D5CC(void);
 extern void func_800704F0(void);

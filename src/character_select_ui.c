@@ -2,6 +2,8 @@
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "character_select_ui.h"
+#define MENU_RENDERING_BROAD_PROTOTYPES
+#include "menu_rendering.h"
 
 #define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (D_80112130.textureHandle)
 
@@ -47,12 +49,6 @@ typedef union {
 } CharacterSelectCursorState;
 
 extern void func_8001BA2C(s32, s32, s32, s32);
-extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
-extern void func_80011264(s16, s16, s32, u16, u16, u16);
-extern void func_8000F8AC(s32, s32, s32, s32, s32, s32, s32, s32, s32);
-extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
-extern void func_80013154(s32, s32, u8 *, s32, s32, s32);
-extern void func_80013D0C(s32, s32, char *, s32, s32);
 extern void func_80046D68(s16, s16, s32, u16, s32);
 extern int sprintf(char *, const char *, ...);
 extern CharacterSelectAssetHandles D_80112130;

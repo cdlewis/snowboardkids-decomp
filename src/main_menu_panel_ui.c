@@ -2,6 +2,8 @@
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "main_menu_panel_ui.h"
+#define MENU_RENDERING_BROAD_PROTOTYPES
+#include "menu_rendering.h"
 
 #define MENU_PANEL_SCROLL_STEP 0x10
 #define MENU_PANEL_SCROLL_LIMIT 0x79
@@ -73,8 +75,6 @@ extern u8 D_8012482C;
 extern s16 D_80156612;
 
 extern void func_800483FC(RenderCallbackNode **, RenderCallback, s32);
-extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
-extern void func_8001303C(s32, s32, u8 *, s32, s32, s32, s32);
 extern void func_80045A78(s16, s16, s32, u16);
 extern void func_80045E84(s16, s16, s32, s32);
 extern void func_80046358(s32, s32, s32, s32);

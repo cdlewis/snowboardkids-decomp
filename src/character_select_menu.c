@@ -3,6 +3,7 @@
 #include "asset_decompression.h"
 #include "character_select_menu.h"
 #include "input_task_scheduler.h"
+#include "menu_rendering.h"
 
 typedef struct {
     char pad[0x18];
@@ -39,7 +40,6 @@ typedef struct {
     char pad9[0x603];
 } CharacterSelectPlayer;
 
-extern s32 func_80013F88(s32, s32, s32);
 extern void func_80045914(void);
 extern void func_80072138(s32, s32);
 extern void func_80004CC8(void);

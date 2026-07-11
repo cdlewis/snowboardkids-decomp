@@ -7,8 +7,8 @@
 #include "controller_pak_menu_ui.h"
 #include "input_task_scheduler.h"
 #include "main_menu.h"
+#include "menu_rendering.h"
 
-extern s32 func_80013F88(s32, s32, s32);
 extern void func_80072138(s32, s32);
 extern void func_80045914(void);
 

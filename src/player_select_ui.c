@@ -70,8 +70,6 @@ typedef struct {
 } PlayerSelectFrameTiles;
 
 extern void func_800483FC(void *, void *, void *);
-extern void func_80011264(s16, s16, s32, u16, u16, u16);
-extern void func_800112F4(s16, s16, s32, u16, u16, u16, s32, s32);
 extern void func_80019800(PlayerSelectWidgetActor *);
 extern void func_800196CC(PlayerSelectWidgetActor *);
 extern void func_80019FAC(PlayerSelectWidgetActor *);
