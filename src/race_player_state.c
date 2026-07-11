@@ -1059,7 +1059,7 @@ void func_8008E008(RaceInputPlayer *player) {
     }
 }
 
-// func_8008E350 best match: 97.041% (nonmatchings/func_8008E350-2/output-2593-1/source.c)
+// func_8008E350 best match: 97.952% (nonmatchings/func_8008E350-4/output-1781-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008E350.s")
 
 #ifdef NON_MATCHING
@@ -1094,8 +1094,9 @@ void func_8008E350(RaceInputPlayer *player) {
                     player->unk93 = 6 - player->unk93;
                 }
             } else if (!(player->stateFlags & 0x400)) {
+                turnTimer = 6 - player->unk93;
                 player->stateFlags |= 0x400;
-                player->unk93 = 6 - player->unk93;
+                player->unk93 = turnTimer;
             }
         } else {
             if (player->unk254 < -0x8000) {
