@@ -4,6 +4,7 @@
 #include "controller_rumble.h"
 #include "game_audio.h"
 #include "model_animation.h"
+#include "race_actor_collision.h"
 #define func_8004940C func_8004940C_s32
 #include "fixed_point_matrix.h"
 #undef func_8004940C
@@ -90,7 +91,6 @@ extern s32 func_80072138(s32, s32);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
 extern void func_8008393C(RaceInputPlayer *);
-extern void func_80086170(RaceInputPlayer *);
 extern void func_80061034(s32, s16);
 extern void func_80057C08(s32, s16);
 extern void func_80057DD4(void *);
@@ -116,8 +116,6 @@ extern s16 func_80097AE8(s16);
 extern void func_800545D0(EffectTask *);
 extern void func_80057810(void *);
 extern s32 func_8004DB60(s8);
-extern s32 func_800860A0(RaceInputPlayer *);
-
 extern void (*D_800DECD0[])(RaceInputPlayer *);
 extern void (*D_800DECD8[])(RaceInputPlayer *);
 extern void (*D_800DECE8[])(RaceInputPlayer *);
@@ -3544,7 +3542,6 @@ void func_800934EC(RaceInputPlayer *player) {
 #ifdef NON_MATCHING
 extern void func_8004F55C(s16 playerIndex, s16 itemIndex);
 extern void func_8006D520(u16 arg0, u16 arg1);
-extern s32 func_800860A0(RaceInputPlayer *);
 
 void func_800936D4(RaceInputPlayer *player) {
     s16 updateState;
