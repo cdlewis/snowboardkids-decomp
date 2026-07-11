@@ -3357,7 +3357,7 @@ void func_8005F174(RaceUiSparkleActor *arg0) {
     setCallbackTaskCallback(arg0, func_8005EFFC);
 }
 
-void func_8005F298(s16 arg0) {
+void spawnRacePlayerSparkleEffect(s16 arg0) {
     RaceUiSparkleActor *temp = createCallbackTaskPreservingArgs(func_8005F174, 0, 0x62);
     if (temp != NULL) {
         temp->playerIndex = arg0;
@@ -5036,7 +5036,7 @@ void func_80064D88(RaceUiProjectileActor *arg0) {
     addRenderCallback(&D_801248C8, func_80064470, actor);
 }
 
-void func_80064EAC(void *arg0) {
+void initForwardActionProjectileEffect(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x24) = 0;
     *(s32 *)((u8 *)arg0 + 0x28) = 0x280000;
     *(s32 *)((u8 *)arg0 + 0x2C) = 0;
@@ -5234,7 +5234,7 @@ loop:
                 if (D_80121D80[0].unk2DA != 0) {
                     D_80121D80[0].unk2DA = 0xF0;
                 } else {
-                    func_80083CFC((struct RaceInputPlayer *)D_80121D80);
+                    startSnowboardTrailEffect((struct RaceInputPlayer *)D_80121D80);
                 }
                 if (D_80121D80[0].unk2DA) {
                 }

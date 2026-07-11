@@ -5,12 +5,12 @@
 #include "spatial_math.h"
 #include "race_item_weapons.h"
 #include "race_item_visual_effects.h"
-#include "race_item_triggers.h"
+#include "race_player_item_effects.h"
 #include "snowboard_trail_effects.h"
 #include "race_ui_effects.h"
 
-// updateItemUseTrigger best match: 98.537% (nonmatchings/func_800849E0-731940616440357983/base_13.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_triggers/updateItemUseTrigger.s")
+// updatePlayerItemEffectUse best match: 98.537% (nonmatchings/func_800849E0-731940616440357983/base_13.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_item_effects/updatePlayerItemEffectUse.s")
 
 typedef void (*EffectCallback)(void *);
 
@@ -20,7 +20,7 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 extern RaceInputPlayer gFrameCounter;
 
 #ifdef NON_MATCHING
-void updateItemUseTrigger(RaceInputPlayer *player) {
+void updatePlayerItemEffectUse(RaceInputPlayer *player) {
     struct TriggerSlot { s32 pad0; s32 pad1; s32 pad2; s32 trigger; } triggerSlot;
     volatile s32 dummy;
 #define trigger triggerSlot.trigger
@@ -113,7 +113,7 @@ void updateItemUseTrigger(RaceInputPlayer *player) {
 }
 #endif
 
-void updateActionUseTrigger(RaceInputPlayer *player) {
+void updatePlayerActionEffectUse(RaceInputPlayer *player) {
     s32 trigger;
     s32 type;
 
@@ -146,13 +146,13 @@ void updateActionUseTrigger(RaceInputPlayer *player) {
         type = player->actionEffectType;
         if (type != 0) {
             if ((type == 1) && (player->trailEffectTimer == 0)) {
-                func_80083CFC(player);
+                startSnowboardTrailEffect(player);
                 player->actionEffectType = 0;
                 type = player->actionEffectType;
             }
 
             if (type == 2) {
-                func_8005F298(player->playerIndex);
+                spawnRacePlayerSparkleEffect(player->playerIndex);
                 player->actionEffectType = 0;
                 type = player->actionEffectType;
             }
@@ -171,7 +171,7 @@ void updateActionUseTrigger(RaceInputPlayer *player) {
 
             if (type == 5) {
                 if (player->unk4 == 0) {
-                    createCallbackTaskWithUserIdPreservingArgs(func_80064EAC, 0, 3, (u16) player->playerIndex);
+                    createCallbackTaskWithUserIdPreservingArgs(initForwardActionProjectileEffect, 0, 3, (u16) player->playerIndex);
                 }
                 player->actionEffectType = 0;
                 type = player->actionEffectType;
