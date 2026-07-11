@@ -44,7 +44,7 @@ extern u8 gRaceSplitscreenMode;
 extern u8 D_800EC9DD;
 extern u8 D_80121D88;
 extern s32 gActiveMenuTask;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern u8 D_8010ADF8;
 extern u16 D_8010ADF0;
 extern s16 gMenuFadeAlpha;
@@ -59,7 +59,7 @@ void func_80005540(void) {
     D_80121D88 = 0;
     gActiveMenuTask = 0;
     gCurrentGameTask->timer = 0;
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     D_8010ADF8 = 0;
     D_800EC9DD = 0;
     D_8010ADF0 = 0;
@@ -173,7 +173,7 @@ void func_80005788(void) {
                         heldInput = gPlayerInputPressed;
                     }
 
-                    if ((heldInput & 0x1000) || ((heldInput & 0x8000) && (D_801235B4 == 5))) {
+                    if ((heldInput & 0x1000) || ((heldInput & 0x8000) && (gMenuFlowState == 5))) {
                         if ((gRaceSplitscreenMode == 3) && (D_80121D85 == 5)) {
                             enqueueSoundEffect(0x46, 0x32);
                         } else {
@@ -193,7 +193,7 @@ void func_80005788(void) {
         }
 
         waitTimer = D_800EC9C1;
-        if ((gPlayerInputPressed & 0x4000) && (D_801235B4 == 5) && (waitTimer == 0)) {
+        if ((gPlayerInputPressed & 0x4000) && (gMenuFlowState == 5) && (waitTimer == 0)) {
             enqueueSoundEffect(1, 0x32);
             D_800EC9C1 = 1;
             D_8010AE70.state = 2;
@@ -214,7 +214,7 @@ void func_80005788(void) {
             }
         }
     }
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     updateCallbackTasks();
 }
 #endif
@@ -225,7 +225,7 @@ void func_80005B14(void) {
     v0 = gRaceSplitscreenMode;
     if ((v0 == 0 || v0 == 2) && D_8010ADF8 == 0) {
         setCurrentGameTaskCallback(initCharacterSelectCourseMenuFromPlayerSelect, 0);
-        D_801235B4 = 0;
+        gMenuFlowState = 0;
     } else {
         setCurrentGameTaskCallback(func_80005B80, 0);
     }
@@ -246,9 +246,9 @@ void func_80005B80(void) {
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
             if (D_8010ADF8 == 1) {
-                D_801235B4 = 1;
+                gMenuFlowState = 1;
             } else {
-                D_801235B4 = 0;
+                gMenuFlowState = 0;
             }
             resumeGameTask(2);
             removeGameTask(4);

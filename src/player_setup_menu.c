@@ -60,7 +60,7 @@ extern s8 D_80122392;
 extern s8 D_8012299E;
 extern s8 D_80122FAA;
 extern PlayerSetupMenuState *gCurrentGameTask;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
 extern u8 D_245A80;
@@ -86,7 +86,7 @@ void initPlayerSetupMenu(void) {
     gHighestUnlockedCourse = 0;
     gRaceRumbleEnabled = 0;
     gRaceCourseIndex = 9;
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     D_8010ADF0 = 0;
     gPlayerCount = 1;
     gMenuFadeAlpha = gCurrentGameTask->fade;
@@ -282,7 +282,7 @@ void initPlayerSaveSetupMenu(void) {
     D_8010ADE4 = 0;
     D_8010ADE8 = 0;
     D_800EC9C1 = 0;
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     gRaceRumbleEnabled = 0;
 
     D_8010AE38 = D_800B31B8;

@@ -45,7 +45,7 @@ extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern s32 D_80121D8C;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 
 const char D_800E0AE0[] = "%6dG";
 
@@ -307,7 +307,7 @@ void func_80019CD8(PlayerSelectWidgetActor *arg0) {
         state = arg0->row.bytes.subState;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->row.bytes.subState = 4;
         }
@@ -416,7 +416,7 @@ void func_8001A270(PlayerSelectWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
@@ -521,7 +521,7 @@ void func_8001A704(PlayerSelectWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
@@ -628,7 +628,7 @@ void func_8001AB98(PlayerSelectWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
@@ -701,7 +701,7 @@ void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
 void func_8001B02C(PlayerSelectWidgetActor *arg0) {
     int state;
 
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     if ((gRaceSplitscreenMode >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
     } else if ((gRaceSplitscreenMode < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
@@ -734,7 +734,7 @@ void func_8001B02C(PlayerSelectWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;

@@ -85,7 +85,7 @@ extern RaceHudPlayerFrameController *D_8010ADE0;
 extern void *D_8010ADE4;
 extern RaceHudPanelController *D_8010ADE8;
 extern s16 D_8010AE58;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern void *gMenuRenderCallbackList;
 extern u8 gPlayerCount;
 extern RacePlayer D_80121D80[];
@@ -236,7 +236,7 @@ void func_800177F8(RaceHudBannerActor *arg0) {
             }
             actor->state = 3;
             gCharacterSelectHudState.exitMode = 1;
-            D_801235B4 = 0x63;
+            gMenuFlowState = 0x63;
             break;
         case 4:
             if (actor->bounceTimer < 0x10) {

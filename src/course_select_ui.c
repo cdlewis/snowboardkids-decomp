@@ -145,7 +145,7 @@ extern u8 gPlayerCount;
 extern CourseSelectRacePlayer D_80121D80[];
 extern u8 D_80121D86[][sizeof(CourseSelectRacePlayer)];
 extern u8 D_80121D88;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern CourseSelectState *gCurrentGameTask;
 extern s32 gMenuRenderCallbackList;
 extern s32 gModelRenderCallbackList;
@@ -238,7 +238,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                 state = actor->state[i];
             }
 
-            if (D_801235B4 != 0 && state < 5) {
+            if (gMenuFlowState != 0 && state < 5) {
                 actor->state[i] = 4;
                 actor->angle[i] = 0;
                 state = actor->state[i];
@@ -524,7 +524,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                 state = actor->state[i];
             }
 
-            if (D_801235B4 != 0 && state < 5) {
+            if (gMenuFlowState != 0 && state < 5) {
                 actor->state[i] = 4;
                 actor->angle[i] = 0;
                 state = actor->state[i];
@@ -947,7 +947,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     actor = arg0;
     i = 0;
     if ((s32) gPlayerCount > 0) {
-        statePtr = actor; do { if ((D_801235B4 != 0) && (gRaceSplitscreenMode != 3)) { statePtr->unk30 = 4; }
+        statePtr = actor; do { if ((gMenuFlowState != 0) && (gRaceSplitscreenMode != 3)) { statePtr->unk30 = 4; }
             state = statePtr->unk30;
             switch (state) {
             case 0:

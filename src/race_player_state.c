@@ -126,7 +126,7 @@ extern u8 D_80121B58;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern s16 gRaceCourseIndex;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern s16 D_80121B5C;
 extern s8 D_80121D93;
 extern s32 D_8012207C;
@@ -138,7 +138,7 @@ extern s8 D_80122FB7;
 extern s32 D_801232A0;
 extern s16 gRaceLapCount;
 extern s16 gFrameCounter;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern Unk8011228C D_8011228C[];
 extern RacePlayerSoundPosition D_80121D9C[];
 extern RacePlayerSoundPosition D_80121DA8[];
@@ -651,7 +651,7 @@ void func_8008D09C(RaceInputPlayer *player) {
         }
     }
 
-    if (!(D_801235B4 & 1)) {
+    if (!(gMenuFlowState & 1)) {
         turnTarget = func_8008B408(player, lean, turn);
         if (player->unk93 == 0) {
             turnDelta = turnTarget - player->unk2FA;
@@ -4437,7 +4437,7 @@ void func_80095338(RaceInputPlayer *player) {
         if (player->stateFlags & 0x400) {
             player->unk2FA += 0x800;
         }
-        D_801235B4 |= 4;
+        gMenuFlowState |= 4;
         func_80081E40(player, 1);
     }
 
@@ -5295,7 +5295,7 @@ void func_80097038(RaceInputPlayer *player) {
     unsigned long long random;
 
     D_800DED48[player->mode](player);
-    if (!(D_801235B4 & 1) && !(player->stateFlags & 0x41000) && (player->soundDisabled == 0)) {
+    if (!(gMenuFlowState & 1) && !(player->stateFlags & 0x41000) && (player->soundDisabled == 0)) {
         if (player->unk500 & 3) {
             random = randomNextMain();
             func_8004DCA0(&player->unk4A0, &player->unk4AC, &player->unk4D0, &player->unk4DC, random, player->unk330);

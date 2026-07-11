@@ -1133,7 +1133,7 @@ void func_8007AA50(void) {
         }
         return;
     case 4:
-        if (!(D_801235B4 & 3)) {
+        if (!(gMenuFlowState & 3)) {
             func_8007A2B8();
             if (D_80121B80 == 0) {
                 func_80087600(0, &sp40, &sp3C);
@@ -1148,7 +1148,7 @@ void func_8007AA50(void) {
         addRenderCallback(&D_80124888, func_80079394, 0);
         return;
     case 5:
-        if (!(D_801235B4 & 3)) {
+        if (!(gMenuFlowState & 3)) {
             func_8007A2B8();
         }
         if (func_8007B130((RaceTimer *)&D_800DC900[gRaceCourseIndex], &D_80121B74, &sp38) != 0) {
@@ -1158,7 +1158,7 @@ void func_8007AA50(void) {
         addRenderCallback(&D_80124888, func_80079068, 0);
         return;
     case 6:
-        if (!(D_801235B4 & 3)) {
+        if (!(gMenuFlowState & 3)) {
             func_8007A350();
         }
         if ((D_80121B78.minutes == 0) && (D_80121B78.seconds == 0) && (D_80121B78.fraction == 0)) {
@@ -1168,7 +1168,7 @@ void func_8007AA50(void) {
         addRenderCallback(&D_80124888, func_80078D3C, 0);
         return;
     case 7:
-        if (!(D_801235B4 & 3)) {
+        if (!(gMenuFlowState & 3)) {
             func_8007A350();
         }
         if ((D_80121B78.minutes == 0) && (D_80121B78.seconds == 0) && (D_80121B78.fraction == 0)) {

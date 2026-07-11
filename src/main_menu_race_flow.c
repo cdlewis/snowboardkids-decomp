@@ -49,7 +49,7 @@ extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern s16 gMenuFadeAlpha;
 extern u8 gFramebufferSwapHold;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern u8 D_80121B58;
 extern u8 D_80121B59;
 extern u8 gMainMenuModeSelection;
@@ -151,7 +151,7 @@ void exitMainMenuModePreviewRaceSelectionMenu(void) {
         if (gMainMenuModeSelection != 0xC) {
             setCurrentGameTaskCallback(&initMainMenuModePreviewRace, 0);
         } else {
-            D_801235B4 = 0;
+            gMenuFlowState = 0;
             resumeGameTask(3);
             removeGameTask(4);
         }
@@ -238,7 +238,7 @@ void initMainMenuModePreviewRace(void) {
     initRaceCourseEffects();
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
-    D_801235B4 = 1;
+    gMenuFlowState = 1;
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     gMainMenuSelectionResult = 0;
@@ -320,7 +320,7 @@ void zoomMainMenuModePreviewRaceViewport(void) {
 #endif
 
 void runMainMenuModePreviewRace(void) {
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
@@ -477,7 +477,7 @@ void initTrainingCourseRace(void) {
     initRaceCourseEffects();
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
-    D_801235B4 = 1;
+    gMenuFlowState = 1;
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     gMainMenuSelectionResult = 0;
@@ -559,7 +559,7 @@ void zoomTrainingCourseRaceViewport(void) {
 #endif
 
 void runTrainingCourseUntilActionPrompt(void) {
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
@@ -733,7 +733,7 @@ void exitTrainingCourseEndingDialog(void) {
 }
 
 void returnToMainMenuFromTrainingCourse(void) {
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     resumeGameTask(3);
     removeGameTask(4);
 }

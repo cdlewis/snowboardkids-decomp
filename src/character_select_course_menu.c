@@ -62,7 +62,7 @@ extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 extern s32 gActiveMenuTask;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
 #ifndef NON_MATCHING
@@ -216,7 +216,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
     gCurrentGameTask->timer = 0;
     D_800EC9C1 = 0;
     D_8010ADF8 = 0;
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     D_80121D88 = 0;
     D_8010ADF0 = 0;
     D_800EC9D0 = 0;
@@ -328,7 +328,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     gCurrentGameTask->timer = 0;
     D_800EC9C1 = 0;
     D_8010ADF8 = 0;
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     D_80121D88 = 0;
     D_8010ADF0 = 0;
     D_800EC9D0 = 0;
@@ -485,7 +485,7 @@ void updateCharacterSelectCourseMenu(void) {
 
                     temp_input = gPlayerInputPressed;
                     if (((temp_input & 0x1000) || (temp_input & 0x8000)) &&
-                        (D_801235B4 == (gCharacterSelectCourseExitOptionIndex + 1))) {
+                        (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         enqueueSoundEffect(1, 0x32);
                         if ((*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex] != -1) {
                             D_800EC9C1 = 1;
@@ -498,7 +498,7 @@ void updateCharacterSelectCourseMenu(void) {
                             setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                             requestMusicSequenceStop(8);
                         }
-                    } else if ((temp_input & 0x4000) && (D_801235B4 == (gCharacterSelectCourseExitOptionIndex + 1))) {
+                    } else if ((temp_input & 0x4000) && (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         enqueueSoundEffect(1, 0x32);
                         gCharacterSelectCourseCursorState.fields.state = 2;
                         gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
@@ -527,7 +527,7 @@ void updateCharacterSelectCourseMenu(void) {
         }
     }
 
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     updateCallbackTasks();
 }
 #endif
@@ -607,7 +607,7 @@ void handleCharacterSelectCourseSelection(void) {
     if (D_80121D88 == 8) {
         if (gPlayerCount >= 2) {
             setCurrentGameTaskCallback(&fadeOutCharacterSelectCourseMenu, 0);
-            D_801235B4 = 1;
+            gMenuFlowState = 1;
             D_8010ADF8 = 1;
         } else {
             if (D_800EC9DD == 0) {
@@ -616,7 +616,7 @@ void handleCharacterSelectCourseSelection(void) {
                 setCurrentGameTaskCallback(&func_80008620, 0);
             }
             gRaceCourseIndex = (*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex];
-            D_801235B4 = 0;
+            gMenuFlowState = 0;
         }
     }
     updateCallbackTasks();

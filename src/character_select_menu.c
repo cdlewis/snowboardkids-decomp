@@ -66,7 +66,7 @@ extern s8 D_8010AE54;
 extern s8 D_8010AE55;
 extern s8 D_8010AE56;
 extern s8 D_8010AE64[];
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern s32 gPlayerInputPressed;
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
@@ -303,7 +303,7 @@ void fadeOutCharacterSelectMenu(void) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
-            D_801235B4 = 0;
+            gMenuFlowState = 0;
             resumeGameTask(2);
             removeGameTask(4);
         }

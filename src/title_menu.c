@@ -74,7 +74,7 @@ extern u8 gPlayerCount;
 extern u8 D_800B5A2E[];
 extern u8 D_800B5A2F[];
 extern u8 D_800EC9C1;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern Struct801235B8 *gCurrentGameTask;
 extern s32 D_80124838;
 extern s32 gMenuRenderCallbackList;
@@ -294,7 +294,7 @@ void func_80014EF0(MenuItemActor *arg0) {
         if (D_800EC9C1 == 0x13) {
             arg0->state = 2;
             if (gPlayerCount == 1) {
-                D_801235B4 = 1;
+                gMenuFlowState = 1;
             }
         }
         break;
@@ -304,7 +304,7 @@ void func_80014EF0(MenuItemActor *arg0) {
             child = arg0->child;
             child->state = 2;
             if (gPlayerCount == 2) {
-                D_801235B4 = 1;
+                gMenuFlowState = 1;
             }
         }
         break;
@@ -392,7 +392,7 @@ void func_800152D0(MenuItemActor *arg0) {
             child = arg0->child;
             child->state = 2;
             if (gPlayerCount == 3) {
-                D_801235B4 = 1;
+                gMenuFlowState = 1;
             }
         }
         break;
@@ -480,7 +480,7 @@ void func_80015680(MenuItemActor *arg0) {
             child = arg0->child;
             child->state = 2;
             if (gPlayerCount == 4) {
-                D_801235B4 = 1;
+                gMenuFlowState = 1;
             }
         }
         break;
@@ -618,7 +618,7 @@ void func_80015BD8(FadeItemActor *arg0) {
             actor->alpha = 0x100;
             gCurrentGameTask->unk1C = 1;
         }
-    } else if (D_801235B4 != 0) {
+    } else if (gMenuFlowState != 0) {
         temp_a2->x = temp_a2->x - 0x20;
     }
     if (temp_a2->x < -0x90) {
@@ -788,9 +788,9 @@ void func_80015F4C(RectListActor *arg0) {
     D_8010AE3E = arg0->rects[0].y1;
     D_8010AE46 = arg0->rects[1].y1;
 
-    if (D_801235B4 == 0x63) {
+    if (gMenuFlowState == 0x63) {
         removeCallbackTask(arg0);
-        D_801235B4 = 0;
+        gMenuFlowState = 0;
         return;
     }
 

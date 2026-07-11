@@ -32,7 +32,7 @@ extern s16 D_8011213E;
 extern s16 D_80112186;
 
 extern u32 D_80121E04[][0x183];
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern u32 gPlayerInputHeld[];
 extern s8 gPlayerStickX[];
 extern s8 gPlayerStickY[];
@@ -287,7 +287,7 @@ dummy_label:
 void func_80084730(RaceInputPlayer *player) {
     u16 index;
 
-    if (!(D_801235B4 & 1) && !(player->stateFlags & 0x40)) {
+    if (!(gMenuFlowState & 1) && !(player->stateFlags & 0x40)) {
         index = player->playerIndex;
         player->disabledInputFlags = D_80121E04[index][0];
 

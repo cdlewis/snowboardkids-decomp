@@ -32,7 +32,7 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s8 gFramebufferSwapDelay;
 extern u8 gControllerPakMenuCursorState;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern s32 gPlayerInputPressed;
 extern s16 gControllerPakStatusCodes;
 extern s16 D_800EC9D0;
@@ -448,12 +448,12 @@ void updateControllerPakRaceRecordSaveOverwritePrompt(void) {
             gControllerPakMenuCursorState = 0;
             setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveFlow, 0);
         } else {
-            D_801235B4 = 1;
+            gMenuFlowState = 1;
             setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
         }
     } else if (gPlayerInputPressed & 0x4000) {
         enqueueSoundEffect(0x18, 0x32);
-        D_801235B4 = 1;
+        gMenuFlowState = 1;
         setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
     }
     updateCallbackTasks();

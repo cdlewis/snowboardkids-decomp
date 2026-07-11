@@ -21,7 +21,7 @@ extern CharacterSelectFlowState *gCurrentGameTask;
 extern ShopMenuPromptTransition gControllerPakContinuePromptTransition;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s32 gPlayerInputPressed;
@@ -39,7 +39,7 @@ void func_8000C280(void) {
     gFramebufferSwapDelay = 0;
     gCurrentGameTask->fade = 0xFF;
     gCurrentGameTask->timer = 0;
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     gControllerPakContinuePromptTransition.state = 0;
     gControllerPakContinuePromptTransition.x = 0x100;
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);

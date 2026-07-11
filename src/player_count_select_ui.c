@@ -56,7 +56,7 @@ extern u8 D_8010ADF8;
 extern u8 D_80121B5E;
 extern u8 D_80121D88;
 extern s32 D_80121D8C;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern void *gMenuRenderCallbackList;
 
 const char D_800E0EA0[] = "%6dG";
@@ -317,7 +317,7 @@ void func_80029CE4(PlayerCountSelectWidgetActor *arg0) {
         state = arg0->row.bytes.subState;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->row.bytes.subState = 4;
         }
@@ -424,7 +424,7 @@ void func_8002A27C(PlayerCountSelectWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
@@ -535,7 +535,7 @@ void func_8002A710(PlayerCountSelectWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
@@ -639,7 +639,7 @@ void func_8002AB24(PlayerCountSelectWidgetActor *arg0) {
         state = arg0->widget.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             if (arg0->y == -0x140) {
                 arg0->widget.bytes.state = 5;

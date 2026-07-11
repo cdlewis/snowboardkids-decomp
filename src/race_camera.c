@@ -108,7 +108,7 @@ extern s16 gRaceCourseIndex;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 D_80121B58;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 
 void func_8006D520(u16 arg0, u16 arg1) {
     RaceCamera *temp;
@@ -572,7 +572,7 @@ void func_8006F048(void) {
 
         D_801124A0->unk28 += (0x960000 - D_801124A0->unk28) >> 1;
 
-        if (D_801235B4 & 0x20) {
+        if (gMenuFlowState & 0x20) {
             D_801124A0->update = func_8006F5B0;
         }
     }

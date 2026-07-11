@@ -80,7 +80,7 @@ extern s8 D_801229AE;
 extern s8 D_80122FB8;
 extern s8 D_80122FB9;
 extern s8 D_80122FBA;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern u8 gFramebufferSwapHold;
 extern u8 gPendingFramebufferSwapCount;
 extern s32 gPlayerInputPressed;
@@ -163,7 +163,7 @@ void func_8003E600(void) {
     loadCompressedRomAsset(courseEntry->romStart, courseEntry->romEnd, 0x2B);
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
-    D_801235B4 = 0;
+    gMenuFlowState = 0;
     func_8006D5CC();
     resetAllViewports();
     D_8011228C = one;
@@ -269,7 +269,7 @@ void func_8003EC6C(void) {
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
         stopSoundEffects();
-        D_801235B4 = 0;
+        gMenuFlowState = 0;
         resumeGameTask(3);
         removeGameTask(4);
     }

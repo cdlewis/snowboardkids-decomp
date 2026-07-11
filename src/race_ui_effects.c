@@ -902,7 +902,7 @@ extern RaceUiAssetEntry D_800D5FF4[];
 extern Vec3i D_800D6110;
 extern u16 D_800D6520[];
 extern s32 gPlayerInputPressed;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern u32 gViewportMatrix;
 
 const char D_800E1220[0x10] = "Board Reverse";
@@ -1245,7 +1245,7 @@ void func_800584A0(void *arg0) {
 void func_80058538(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         enqueueSoundEffect(0x18, 0x32);
-        D_801235B4 |= 0x10;
+        gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, func_800584A0);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80057E90, (s32)arg0);
@@ -1585,8 +1585,8 @@ void func_80059854(void *arg0) {
     i = 0;
     if ((s32)gPlayerCount > 0) {
         input = &gPlayerInputPressed; do {
-            if ((*input & 0x8000) && !(D_801235B4 & 0x10)) {
-                D_801235B4 |= 0x10;
+            if ((*input & 0x8000) && !(gMenuFlowState & 0x10)) {
+                gMenuFlowState |= 0x10;
                 enqueueSoundEffect(0x18, 0x32);
                 setCallbackTaskCallback(actor, func_80059804);
             }
@@ -1726,7 +1726,7 @@ void func_8005A07C(void *arg0) {
 
 void func_8005A0E0(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
-        D_801235B4 |= 0x10;
+        gMenuFlowState |= 0x10;
         enqueueSoundEffect(0x18, 0x32);
         setCallbackTaskCallback(arg0, func_8005A07C);
     }
@@ -2032,7 +2032,7 @@ void func_8005AEB0(void *arg0) {
 void func_8005AF2C(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         enqueueSoundEffect(0x18, 0x32);
-        D_801235B4 |= 0x10;
+        gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, func_8005AEB0);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
@@ -2054,7 +2054,7 @@ void func_8005B068(void *arg0) {
         if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
             setCallbackTaskCallback(arg0, func_8005AF2C);
         } else {
-            D_801235B4 |= 0x10;
+            gMenuFlowState |= 0x10;
             setCallbackTaskCallback(arg0, func_8005AFEC);
         }
     }
@@ -2477,7 +2477,7 @@ void func_8005C3E4(void *arg0) {
 void func_8005C448(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         enqueueSoundEffect(0x18, 0x32);
-        D_801235B4 |= 0x10;
+        gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, func_8005C3E4);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
@@ -2498,7 +2498,7 @@ void func_8005C568(void *arg0) {
         if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
             setCallbackTaskCallback(arg0, func_8005C448);
         } else {
-            D_801235B4 |= 0x10;
+            gMenuFlowState |= 0x10;
             setCallbackTaskCallback(arg0, func_8005C4EC);
         }
     }
@@ -3013,7 +3013,7 @@ void func_8005DBD0(void *arg0) {
 void func_8005DC4C(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         enqueueSoundEffect(0x18, 0x32);
-        D_801235B4 |= 0x10;
+        gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, func_8005DBD0);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
@@ -3035,7 +3035,7 @@ void func_8005DD88(void *arg0) {
         if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
             setCallbackTaskCallback(arg0, func_8005DC4C);
         } else {
-            D_801235B4 |= 0x10;
+            gMenuFlowState |= 0x10;
             setCallbackTaskCallback(arg0, func_8005DD0C);
         }
     }

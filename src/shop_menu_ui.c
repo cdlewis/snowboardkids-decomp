@@ -216,7 +216,7 @@ extern s16 D_8010AF76;
 extern s16 D_8011217A;
 extern ShopMenuState D_80121D80;
 extern s32 D_80121D8C;
-extern s32 D_801235B4;
+extern s32 gMenuFlowState;
 extern MainMenuState *gCurrentGameTask;
 extern s16 D_800EC9D0;
 extern u8 D_800ECA2F[];
@@ -457,7 +457,7 @@ void func_8002CFAC(ShopMenuWidgetActor *arg0) {
         state = arg0->item.bytes.subState;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->item.bytes.subState = 4;
         }
@@ -563,7 +563,7 @@ void func_8002D558(ShopMenuWidgetActor *arg0) {
         state = arg0->item.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             if (arg0->y == -0x140) {
                 arg0->item.bytes.state = 5;
@@ -671,7 +671,7 @@ void func_8002D9EC(ShopMenuWidgetActor *arg0) {
         state = arg0->item.bytes.state;
         break;
     case 3:
-        D_801235B4 += 1;
+        gMenuFlowState += 1;
         if (D_80121D88 == 1) {
             arg0->item.bytes.state = 5;
         }
@@ -1254,9 +1254,9 @@ void func_8002EF14(ShopMenuWidgetActor *arg0) {
         temp_a2->sprite.index += 9;
     }
     temp_a2->transition.counter = (temp_a2->transition.counter + 1) & 0x1F;
-    if (D_801235B4 == 1) {
+    if (gMenuFlowState == 1) {
         removeCallbackTask(temp_a2);
-        D_801235B4 = 0;
+        gMenuFlowState = 0;
     } else {
         addRenderCallback(&gMenuRenderCallbackList, func_8002EC5C, temp_a2);
     }

@@ -2,7 +2,7 @@
 #include "sound_manager.h"
 #include "system_boot.h"
 #include "game_task_scheduler.h"
-#include "controller_menu_flow.h"
+#include "controller_main_menu_flow.h"
 #include "relocatable_heap.h"
 #include "race_flow.h"
 #include "viewport_manager.h"
@@ -145,8 +145,8 @@ extern OSMesgQueue D_80123FF8;
 extern OSMesg D_80124010[1];
 extern OSMesgQueue D_80124050;
 extern OSMesg D_80124068[2];
-extern OSMesgQueue D_80124070;
-extern OSMesg D_80124088[8];
+extern OSMesgQueue gControllerInputUpdateQueue;
+extern OSMesg gControllerInputUpdateMessages[8];
 extern OSMesgQueue D_80124018;
 extern OSMesg D_80124030[8];
 extern u8 D_801240A8[0x778];
@@ -236,7 +236,7 @@ void bootThreadMain(void *arg) {
 void initGameSystems(void) {
     osCreateMesgQueue(&D_80123FF8, D_80124010, 1);
     osCreateMesgQueue(&D_80124050, D_80124068, 2);
-    osCreateMesgQueue(&D_80124070, D_80124088, 8);
+    osCreateMesgQueue(&gControllerInputUpdateQueue, gControllerInputUpdateMessages, 8);
     osCreateMesgQueue(&D_80124018, D_80124030, 8);
     if (osTvType == OS_TV_NTSC) {
         func_8009C270((SchedulerState *)D_801240A8, RETRACE_COUNT_NTSC, RETRACE_COUNT_MODE);
@@ -278,7 +278,7 @@ void gameThreadMain(void *arg0) {
     initGameSystems();
     done = 0;
     queue18 = &D_80124018;
-    queue70 = &D_80124070;
+    queue70 = &gControllerInputUpdateQueue;
     queue50 = &D_80124050;
     counter = &gPendingFramebufferSwapCount;
 loop_1:
