@@ -15,7 +15,7 @@ typedef struct {
     /* 0x2 */ s16 timer;
     /* 0x4 */ s16 targetState;
     /* 0x6 */ s16 nextTimer;
-} ControllerPakRaceRecordSaveUiState;
+} ControllerPakRaceRecordSaveScoreUiState;
 
 typedef struct {
     /* 0x0 */ char pad0[0x8];
@@ -26,7 +26,7 @@ typedef struct {
 
 extern CharacterSelectFlowState *gCurrentInputTask;
 extern ControllerPakMenuState gControllerPakMenuState;
-extern ControllerPakRaceRecordSaveUiState gControllerPakRaceRecordSaveUiState;
+extern ControllerPakRaceRecordSaveScoreUiState gControllerPakRaceRecordSaveScoreUiState;
 extern ControllerPakRaceRecordSaveFileContext D_80121D80;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
@@ -78,10 +78,10 @@ void initControllerPakRaceRecordSaveFlow(void) {
     func_80070EC0(0);
     D_8010ADDC = createEffectTask(&func_8002BA00, 0, 0x61);
     D_8010ADE8 = createEffectTask(&func_8002C318, 0, 0x60);
-    gControllerPakRaceRecordSaveUiState.step = 0;
-    gControllerPakRaceRecordSaveUiState.timer = 0;
-    gControllerPakRaceRecordSaveUiState.targetState = 0;
-    gControllerPakRaceRecordSaveUiState.nextTimer = 0;
+    gControllerPakRaceRecordSaveScoreUiState.step = 0;
+    gControllerPakRaceRecordSaveScoreUiState.timer = 0;
+    gControllerPakRaceRecordSaveScoreUiState.targetState = 0;
+    gControllerPakRaceRecordSaveScoreUiState.nextTimer = 0;
     gControllerPakMenuState.state = 0;
     gControllerPakMenuState.confirmChoice = 0;
     setCurrentInputTaskCallback(updateControllerPakRaceRecordSaveFlow, 0);
@@ -94,7 +94,7 @@ extern u8 D_800B31A5[];
 extern void func_80000A40(u16);
 extern void func_80000C48(u16);
 extern void func_80000DB4(u16);
-extern void func_800012CC(u16, s32, ControllerPakRaceRecordSaveUiState *, s16);
+extern void func_800012CC(u16, s32, ControllerPakRaceRecordSaveScoreUiState *, s16);
 extern void func_80001538(u16);
 extern void initControllerPakDeleteConfirmPrompt(EffectTask *);
 #endif
@@ -124,14 +124,14 @@ void updateControllerPakRaceRecordSaveFlow(void)
       gControllerPakMenuState.state = 3;
       gControllerPakMenuState.confirmChoice = 1;
       createEffectTask(initControllerPakDeleteConfirmPrompt, 0, 0x64);
-      setCurrentInputTaskCallback(updateControllerPakRaceRecordSaveConfirmPrompt, 0);
+      setCurrentInputTaskCallback(updateControllerPakRaceRecordSaveOverwritePrompt, 0);
     }
   }
   else
     if (((u8) D_800EC9C1) == 0)
   {
     new_var = 3;
-    if (((u8) gControllerPakRaceRecordSaveUiState.step) == 1)
+    if (((u8) gControllerPakRaceRecordSaveScoreUiState.step) == 1)
     {
       if (D_800EC9D0 != 0)
       {
@@ -171,24 +171,24 @@ void updateControllerPakRaceRecordSaveFlow(void)
           break;
 
         case 2:
-          if (((u8) gControllerPakRaceRecordSaveUiState.step) != new_var)
+          if (((u8) gControllerPakRaceRecordSaveScoreUiState.step) != new_var)
         {
           sp1C = temp_t0;
-          func_800012CC(0, new_var, &gControllerPakRaceRecordSaveUiState, D_800EC9D0);
+          func_800012CC(0, new_var, &gControllerPakRaceRecordSaveScoreUiState, D_800EC9D0);
           if (D_800EC9D8 == 0)
           {
-            gControllerPakRaceRecordSaveUiState.targetState = 5;
-            gControllerPakRaceRecordSaveUiState.step = new_var;
-            gControllerPakRaceRecordSaveUiState.timer = 0x100;
+            gControllerPakRaceRecordSaveScoreUiState.targetState = 5;
+            gControllerPakRaceRecordSaveScoreUiState.step = new_var;
+            gControllerPakRaceRecordSaveScoreUiState.timer = 0x100;
           }
           else
             if (D_800EC9D8 == 3)
           {
             if (temp_t0 != 0)
             {
-              gControllerPakRaceRecordSaveUiState.step = 3;
-              gControllerPakRaceRecordSaveUiState.targetState = 0xD;
-              gControllerPakRaceRecordSaveUiState.timer = 0x100;
+              gControllerPakRaceRecordSaveScoreUiState.step = 3;
+              gControllerPakRaceRecordSaveScoreUiState.targetState = 0xD;
+              gControllerPakRaceRecordSaveScoreUiState.timer = 0x100;
             }
             else
             {
@@ -206,8 +206,8 @@ void updateControllerPakRaceRecordSaveFlow(void)
         {
           if (temp_t0 != 0)
           {
-            gControllerPakRaceRecordSaveUiState.step = 3;
-            gControllerPakRaceRecordSaveUiState.targetState = 0x10;
+            gControllerPakRaceRecordSaveScoreUiState.step = 3;
+            gControllerPakRaceRecordSaveScoreUiState.targetState = 0x10;
           }
           else
           {
@@ -219,8 +219,8 @@ void updateControllerPakRaceRecordSaveFlow(void)
         {
           if (temp_t0 != 0)
           {
-            gControllerPakRaceRecordSaveUiState.step = new_var;
-            gControllerPakRaceRecordSaveUiState.targetState = 0xE;
+            gControllerPakRaceRecordSaveScoreUiState.step = new_var;
+            gControllerPakRaceRecordSaveScoreUiState.targetState = 0xE;
           }
           else
           {
@@ -237,8 +237,8 @@ void updateControllerPakRaceRecordSaveFlow(void)
           enqueueSoundEffect(1, 0x32);
           if (temp_t0 != 0)
           {
-            gControllerPakRaceRecordSaveUiState.step = 1;
-            gControllerPakRaceRecordSaveUiState.timer = 0x100;
+            gControllerPakRaceRecordSaveScoreUiState.step = 1;
+            gControllerPakRaceRecordSaveScoreUiState.timer = 0x100;
             D_800EC9C8 = 0;
           }
           else
@@ -286,41 +286,41 @@ void updateControllerPakRaceRecordSaveFlow(void)
             {
               if (D_800EC9C8 == 8)
               {
-                gControllerPakRaceRecordSaveUiState.nextTimer = 0xF;
+                gControllerPakRaceRecordSaveScoreUiState.nextTimer = 0xF;
               }
               else
                 if (D_800EC9C8 == 7)
               {
-                gControllerPakRaceRecordSaveUiState.nextTimer = 3;
+                gControllerPakRaceRecordSaveScoreUiState.nextTimer = 3;
               }
               else
                 if (D_800EC9C8 == 0xF)
               {
-                gControllerPakRaceRecordSaveUiState.nextTimer = 0;
+                gControllerPakRaceRecordSaveScoreUiState.nextTimer = 0;
               }
               else
               {
-                gControllerPakRaceRecordSaveUiState.nextTimer = 4;
+                gControllerPakRaceRecordSaveScoreUiState.nextTimer = 4;
               }
             }
             else
               if (D_800EC9C8 == 8)
             {
-              gControllerPakRaceRecordSaveUiState.nextTimer = 2;
+              gControllerPakRaceRecordSaveScoreUiState.nextTimer = 2;
             }
             else
               if ((D_800EC9C8 == 0xA) || (D_800EC9C8 == 0x11))
             {
-              gControllerPakRaceRecordSaveUiState.nextTimer = 0xF;
+              gControllerPakRaceRecordSaveScoreUiState.nextTimer = 0xF;
             }
             else
               if (D_800EC9C8 == 7)
             {
-              gControllerPakRaceRecordSaveUiState.nextTimer = 4;
+              gControllerPakRaceRecordSaveScoreUiState.nextTimer = 4;
             }
             else
             {
-              gControllerPakRaceRecordSaveUiState.nextTimer = 5;
+              gControllerPakRaceRecordSaveScoreUiState.nextTimer = 5;
             }
             D_800EC9D0 += 2;
           }
@@ -368,8 +368,8 @@ void updateControllerPakRaceRecordSaveFlow(void)
           {
             if (temp_t0 != 0)
             {
-              gControllerPakRaceRecordSaveUiState.step = 3;
-              gControllerPakRaceRecordSaveUiState.targetState = 0x12;
+              gControllerPakRaceRecordSaveScoreUiState.step = 3;
+              gControllerPakRaceRecordSaveScoreUiState.targetState = 0x12;
             }
             else
             {
@@ -379,8 +379,8 @@ void updateControllerPakRaceRecordSaveFlow(void)
           else
             if (temp_t0 != 0)
           {
-            gControllerPakRaceRecordSaveUiState.step = 1;
-            gControllerPakRaceRecordSaveUiState.timer = 0x100;
+            gControllerPakRaceRecordSaveScoreUiState.step = 1;
+            gControllerPakRaceRecordSaveScoreUiState.timer = 0x100;
             D_800EC9C8 = 0;
           }
           else
@@ -394,9 +394,9 @@ void updateControllerPakRaceRecordSaveFlow(void)
           if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           enqueueSoundEffect(1, 0x32);
-          gControllerPakRaceRecordSaveUiState.step = 3;
-          gControllerPakRaceRecordSaveUiState.timer = 0x100;
-          gControllerPakRaceRecordSaveUiState.targetState = 0;
+          gControllerPakRaceRecordSaveScoreUiState.step = 3;
+          gControllerPakRaceRecordSaveScoreUiState.timer = 0x100;
+          gControllerPakRaceRecordSaveScoreUiState.targetState = 0;
         }
           break;
 
@@ -434,7 +434,7 @@ void fadeOutControllerPakRaceRecordSaveFlow(void) {
     }
 }
 
-void updateControllerPakRaceRecordSaveConfirmPrompt(void) {
+void updateControllerPakRaceRecordSaveOverwritePrompt(void) {
     if ((gPlayerInputPressed & 0x10800) && (gControllerPakMenuState.confirmChoice != 0)) {
         gControllerPakMenuState.confirmChoice = 0;
         enqueueSoundEffect(0x19, 0x32);

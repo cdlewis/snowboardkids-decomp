@@ -4,6 +4,6 @@
 void initControllerPakRaceRecordSaveFlow(void);
 void updateControllerPakRaceRecordSaveFlow(void);
 void fadeOutControllerPakRaceRecordSaveFlow(void);
-void updateControllerPakRaceRecordSaveConfirmPrompt(void);
+void updateControllerPakRaceRecordSaveOverwritePrompt(void);
 
 #endif
