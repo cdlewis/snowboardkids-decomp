@@ -15,6 +15,7 @@
 #include "main_menu.h"
 #include "main_menu_overlay_effects.h"
 #include "main_menu_panel_ui.h"
+#include "player_count_select_menu.h"
 #include "title_menu.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
@@ -230,7 +231,6 @@ extern s16 D_80122040;
 extern s16 D_801222F4;
 
 extern void func_800055EC(void);
-extern void func_800086EC(void);
 extern void func_8000C280(void);
 extern void func_8000D340(void);
 extern void func_8003DFD0(void);

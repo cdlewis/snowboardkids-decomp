@@ -5,6 +5,7 @@
 #include "character_select_flow.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
+#include "player_count_select_menu.h"
 #include "title_menu.h"
 
 typedef struct {
@@ -17,9 +18,6 @@ extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_80029548(void);
 extern s32 func_80072138(s16, s16);
-
-void func_800088C8(void);
-void func_80008C84(void);
 
 extern u8 D_245A80;
 extern u8 D_24C8E0;
