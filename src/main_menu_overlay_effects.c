@@ -179,7 +179,7 @@ void func_80055148(MainMenuOverlayEffectActor *);
 void func_8005537C(MainMenuOverlayEffectActor *);
 void func_80055410(MainMenuOverlayEffectActor *);
 void func_80055530(void *);
-void func_80072138(s16, s32, void *);
+void enqueueSoundEffect(s16, s32, void *);
 
 void func_80053660(MainMenuOverlayEffectActor *arg0) {
     if (D_80156608 == arg0->index) {
@@ -301,7 +301,7 @@ void func_80053DFC(s32 arg0) {
 void func_80053E28(MainMenuOverlayEffectActor *arg0) {
     if (D_800DEF14 == 0) {
         if (arg0->unk18.byte.b0 != 0) {
-            func_80072138(D_800D5738[arg0->index], 0x32, arg0);
+            enqueueSoundEffect(D_800D5738[arg0->index], 0x32, arg0);
             arg0->unk18.byte.b0 = 0;
         }
         func_80042034(0);

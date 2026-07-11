@@ -53,7 +53,7 @@ typedef struct {
     Vec3i localPos;
 } TransformScratch;
 
-extern void func_80045914(void);
+extern void releaseMenuAssetHandles(void);
 extern s8 D_800DEED4;
 extern u8 D_80123750;
 extern u8 D_80123751;
@@ -284,7 +284,7 @@ void func_8003E514(void) {
 
 void func_8003E5A8(void) {
     if (D_80123750 == 2) {
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         func_80099658(2);

@@ -32,8 +32,8 @@ typedef union {
     } fields;
 } CharacterSelectCursorState;
 
-extern void func_80072138(s32, s32);
-extern void func_80045914(void);
+extern void enqueueSoundEffect(s32, s32);
+extern void releaseMenuAssetHandles(void);
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
 extern u8 D_593D10[];
@@ -480,13 +480,13 @@ void updateCharacterSelectCourseMenu(void) {
                     }
 
                     if (previousSelection != selection) {
-                        func_80072138(0x19, 0x32);
+                        enqueueSoundEffect(0x19, 0x32);
                     }
 
                     temp_input = gPlayerInputPressed;
                     if (((temp_input & 0x1000) || (temp_input & 0x8000)) &&
                         (D_801235B4 == (gCharacterSelectCourseExitOptionIndex + 1))) {
-                        func_80072138(1, 0x32);
+                        enqueueSoundEffect(1, 0x32);
                         if ((*gCharacterSelectActiveCourseOptions)[D_80121B50] != -1) {
                             D_800EC9C1 = 1;
                             gCharacterSelectCourseCursorState.fields.state = 2;
@@ -499,7 +499,7 @@ void updateCharacterSelectCourseMenu(void) {
                             func_80072114(8);
                         }
                     } else if ((temp_input & 0x4000) && (D_801235B4 == (gCharacterSelectCourseExitOptionIndex + 1))) {
-                        func_80072138(1, 0x32);
+                        enqueueSoundEffect(1, 0x32);
                         gCharacterSelectCourseCursorState.fields.state = 2;
                         gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
                         D_80121D88 = 7;
@@ -543,9 +543,9 @@ void updateCharacterSelectCourseSubmenu(void) {
             input = gPlayerInputPressed;
             if (input & 0x4000) {
                 D_80121D80[8] = 3;
-                func_80072138(1, 0x32);
+                enqueueSoundEffect(1, 0x32);
             } else if ((input & 0x8000) || (input & 0x1000)) {
-                func_80072138(1, 0x32);
+                enqueueSoundEffect(1, 0x32);
                 D_800EC9D0 = 1;
                 gCharacterSelectCourseCursorState.fields.otherState = 3;
                 func_80071408(initCharacterSelectCourseConfirmCursor, 0, 0x61);
@@ -556,20 +556,20 @@ void updateCharacterSelectCourseSubmenu(void) {
                 input = gPlayerInputPressed;
                 if ((input & 0x10800) && (D_800EC9D0 != 3)) {
                     D_800EC9D0--;
-                    func_80072138(0x19, 0x32);
+                    enqueueSoundEffect(0x19, 0x32);
                     input = gPlayerInputPressed;
                 } else if ((input & 0x20400) && (D_800EC9D0 != 4)) {
                     D_800EC9D0++;
-                    func_80072138(0x19, 0x32);
+                    enqueueSoundEffect(0x19, 0x32);
                     input = gPlayerInputPressed;
                 }
 
                 if ((input & 0x8000) || (input & 0x1000)) {
-                    func_80072138(0x18, 0x32);
+                    enqueueSoundEffect(0x18, 0x32);
                     D_800EC9D0 += 2;
                     gCharacterSelectCourseCursorState.fields.otherState = 4;
                 } else if (input & 0x4000) {
-                    func_80072138(1, 0x32);
+                    enqueueSoundEffect(1, 0x32);
                     D_800EC9D0 = 6;
                     gCharacterSelectCourseCursorState.fields.otherState = 4;
                 }
@@ -632,7 +632,7 @@ void fadeOutCharacterSelectCourseMenu(void) {
         }
     } else {
         if (D_80123750 == 2) {
-            func_80045914();
+            releaseMenuAssetHandles();
             D_80123751 = 0;
             D_800DEED4 = 0;
             D_80121B50 = (*gCharacterSelectActiveCourseOptions)[D_80121B50];

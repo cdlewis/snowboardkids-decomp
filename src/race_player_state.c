@@ -90,7 +90,7 @@ typedef struct {
     char pad4[0x44];
 } CourseAngleEntry;
 
-extern s32 func_80072138(s32, s32);
+extern s32 enqueueSoundEffect(s32, s32);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
 extern void func_800483FC(void *, void (*)(void *), void *);
@@ -5423,7 +5423,7 @@ void func_8009724C(RaceInputPlayer *arg0) {
             if (var_at == 0) {
                 var_a0 = 0x50 << 0x10;
             }
-            func_80072138(var_a0 >> 0x10, 0x5A);
+            enqueueSoundEffect(var_a0 >> 0x10, 0x5A);
         }
     }
     if (D_800EC9C2 == 1) {
@@ -5467,7 +5467,7 @@ void func_8009724C(RaceInputPlayer *arg0) {
                     var_v1_4 = var_v1_3;
                 }
                 arg0 = arg0;
-                func_80072138((s32)(s16)var_v1_4, 0x5A);
+                enqueueSoundEffect((s32)(s16)var_v1_4, 0x5A);
                 if (arg0->unk2C0 >= 0x2710) {
                     arg0->unk2C0 = 0x270F;
                 }
@@ -5607,14 +5607,14 @@ void func_80097910(RaceInputPlayer *player) {
                 player->unk2C0 = 0x270F;
             }
             func_800711D0(func_80057DD4, 0, 0x64);
-            func_80072138(0x51, 0x32);
+            enqueueSoundEffect(0x51, 0x32);
         }
         if (D_800EC9C2 == 0) {
             func_8008BB5C(player, 0x12C);
             playerIndex = player->playerIndex;
             if (D_8011228C[playerIndex].active != 0) {
                 func_80061034(0x12C, (s16)playerIndex);
-                func_80072138(0x51, 0x32);
+                enqueueSoundEffect(0x51, 0x32);
             }
         }
     }

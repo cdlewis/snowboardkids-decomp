@@ -23,8 +23,8 @@ typedef struct {
     s16 confirmState;
 } PlayerSelectCursorState;
 
-extern void func_80045914(void);
-extern s32 func_80072138(s16, s16);
+extern void releaseMenuAssetHandles(void);
+extern s32 enqueueSoundEffect(s16, s16);
 
 extern u8 D_800EC9DC;
 extern u8 D_5A1ED0[];
@@ -169,15 +169,15 @@ void func_80005788(void) {
                     }
 
                     if (selection != previousSelection) {
-                        func_80072138(0x19, 0x32);
+                        enqueueSoundEffect(0x19, 0x32);
                         heldInput = gPlayerInputPressed;
                     }
 
                     if ((heldInput & 0x1000) || ((heldInput & 0x8000) && (D_801235B4 == 5))) {
                         if ((D_800EC9C2 == 3) && (D_80121D85 == 5)) {
-                            func_80072138(0x46, 0x32);
+                            enqueueSoundEffect(0x46, 0x32);
                         } else {
-                            func_80072138(0x18, 0x32);
+                            enqueueSoundEffect(0x18, 0x32);
                             D_800EC9C1 = 1;
                             if (D_8010ADF0 && D_8010ADF0) {
                             }
@@ -194,7 +194,7 @@ void func_80005788(void) {
 
         waitTimer = D_800EC9C1;
         if ((gPlayerInputPressed & 0x4000) && (D_801235B4 == 5) && (waitTimer == 0)) {
-            func_80072138(1, 0x32);
+            enqueueSoundEffect(1, 0x32);
             D_800EC9C1 = 1;
             D_8010AE70.state = 2;
             D_8010AE70.nextState = 0x100;
@@ -242,7 +242,7 @@ void func_80005B80(void) {
         }
     } else {
         if (D_80123750 == 2) {
-            func_80045914();
+            releaseMenuAssetHandles();
             D_80123751 = 0;
             D_800DEED4 = 0;
             if (D_8010ADF8 == 1) {

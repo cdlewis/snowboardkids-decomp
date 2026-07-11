@@ -236,7 +236,7 @@ typedef struct RaceCourseBackdropEffect {
 } RaceCourseBackdropEffect;
 
 extern void func_800483FC(void *, void *, void *);
-extern void func_80072138(s32, s32);
+extern void enqueueSoundEffect(s32, s32);
 extern void func_80072A74(s32, void *, s32, s32);
 extern void osWritebackDCache(void *, s32);
 extern void *func_80048594(s32);
@@ -374,7 +374,7 @@ void func_800699F0(RaceCountdownEffect *arg0) {
 void func_80069A78(RaceCountdownEffect *arg0) {
     arg0->step++;
     if (arg0->step == 4) {
-        func_80072138(0x4C, 0x5A);
+        enqueueSoundEffect(0x4C, 0x5A);
         arg0->timer = 0x14;
         func_80071824(arg0, func_800699F0);
     }
@@ -394,7 +394,7 @@ void func_80069AF0(RaceCountdownEffect *arg0) {
 
 void func_80069B60(RaceCountdownEffect *arg0) {
     if ((--arg0->timer) == 0) {
-        func_80072138(0x4B, 0x5A);
+        enqueueSoundEffect(0x4B, 0x5A);
         arg0->step = 4;
         arg0->timer = 0x3C;
         func_80071824(arg0, func_80069AF0);
@@ -562,7 +562,7 @@ void func_8006A80C(void *arg0) {
 }
 
 void func_8006A85C(void *arg0) {
-    func_80072138(0x52, 0x5A);
+    enqueueSoundEffect(0x52, 0x5A);
     func_80071824(arg0, func_8006A80C);
 }
 

@@ -84,7 +84,7 @@ extern s32 D_801235B4;
 extern u8 D_80123751;
 extern u8 D_80123750;
 extern s32 gPlayerInputPressed;
-extern void func_80045914(void);
+extern void releaseMenuAssetHandles(void);
 // func_8003E600 best match: 65.668% (nonmatchings/func_8003E600-731940616440357983/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition/func_8003E600.s")
 
@@ -265,7 +265,7 @@ void func_8003EC6C(void) {
         }
         D_800EC8B0 = 0;
         D_80121B58 = 0;
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         func_80072260();

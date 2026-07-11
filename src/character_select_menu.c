@@ -42,8 +42,8 @@ typedef struct {
     char pad9[0x603];
 } CharacterSelectPlayer;
 
-extern void func_80045914(void);
-extern void func_80072138(s32, s32);
+extern void releaseMenuAssetHandles(void);
+extern void enqueueSoundEffect(s32, s32);
 extern void updateCharacterSelectMenu(void);
 extern void fadeOutCharacterSelectMenu(void);
 extern void func_800720E4(s32);
@@ -235,12 +235,12 @@ void updateCharacterSelectConfirmationMenu(void) {
         }
 
         if (selection != oldSelection) {
-            func_80072138(0x19, 0x32);
+            enqueueSoundEffect(0x19, 0x32);
             buttons = gPlayerInputPressed;
         }
 
         if ((buttons & 0x8000) || (buttons & 0x1000)) {
-            func_80072138(0x18, 0x32);
+            enqueueSoundEffect(0x18, 0x32);
             state = &gCharacterSelectHudState;
             if (state->confirmSelection == 0) {
                 func_8009956C(fadeOutCharacterSelectMenu, 0);
@@ -267,7 +267,7 @@ void updateCharacterSelectConfirmationMenu(void) {
                 state->fade = 0;
             }
         } else if (buttons & 0x4000) {
-            func_80072138(0x18, 0x32);
+            enqueueSoundEffect(0x18, 0x32);
             playerCount = D_80121B55;
             player = D_80121D80;
             if ((s32) playerCount > 0) {
@@ -300,7 +300,7 @@ void fadeOutCharacterSelectMenu(void) {
         }
     } else {
         if (D_80123750 == 2) {
-            func_80045914();
+            releaseMenuAssetHandles();
             D_80123751 = 0;
             D_800DEED4 = 0;
             D_801235B4 = 0;

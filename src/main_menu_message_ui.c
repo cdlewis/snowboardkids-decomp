@@ -63,7 +63,7 @@ extern MainMenuMessageScript D_800B5038[];
 extern MainMenuMessageScript D_800B5050[][0x14];
 extern s16 D_800B51B6[];
 extern u8 D_80121B5A;
-extern void func_80072138(s32, s32, MainMenuMessageActor *);
+extern void enqueueSoundEffect(s32, s32, MainMenuMessageActor *);
 void func_8000DF9C(MainMenuMessageActor *);
 void func_8000E5A0(MainMenuMessageActor *);
 void func_8000E8CC(MainMenuMessageActor *);
@@ -179,7 +179,7 @@ void func_8000DDA4(MainMenuMessageActor *arg0) {
         }
     }
     if (var_a0 != temp_a1) {
-        func_80072138(0x19, 0x32, arg0);
+        enqueueSoundEffect(0x19, 0x32, arg0);
     }
     if ((u16)arg0->highlightTimer < 0x10) {
         arg0->highlightScale -= 9;
@@ -188,7 +188,7 @@ void func_8000DDA4(MainMenuMessageActor *arg0) {
     }
     arg0->highlightTimer = ((u16)arg0->highlightTimer + 1) & 0x1F;
     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
-        func_80072138(1, 0x32, arg0);
+        enqueueSoundEffect(1, 0x32, arg0);
         D_8010B1F0 = (u16)arg0->state.selectedChoice + 1;
         arg0->highlightScale = 0x100;
         arg0->highlightTimer = 0;
@@ -391,7 +391,7 @@ void func_8000E5A0(MainMenuMessageActor *arg0) {
     case 1:
         arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
         if ((0x8000 & gPlayerInputPressed) || (gPlayerInputPressed & 0x1000)) {
-            func_80072138(1, 0x32, arg0);
+            enqueueSoundEffect(1, 0x32, arg0);
             arg0->confirmBlinkTimer = 0;
             D_8010B1F0 = 1;
             if (arg0->returnToSummary == 0) {
@@ -404,7 +404,7 @@ void func_8000E5A0(MainMenuMessageActor *arg0) {
     case 2:
         arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
         if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
-            func_80072138(1, 0x32, arg0);
+            enqueueSoundEffect(1, 0x32, arg0);
             script = arg0->layout.script;
             if (*script != 0xFFFB) {
                 do {

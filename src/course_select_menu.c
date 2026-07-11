@@ -164,10 +164,10 @@ extern void func_800257F0(EffectTask *);
 extern void func_80028194(EffectTask *);
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
-extern void func_80045914(void);
+extern void releaseMenuAssetHandles(void);
 extern void func_800720E4(s32);
 extern void func_80072114(s32);
-extern void func_80072138(s32, s32);
+extern void enqueueSoundEffect(s32, s32);
 extern void func_80099C44(void *, void *, s32);
 extern void n_alSeqpDelete(void);
 
@@ -335,7 +335,7 @@ void func_80009C48(void) {
         if (D_801235B8->fade == 0) {
             func_80071408(func_8002C800, 0, 0x63);
             if (D_8010AF70 == 0) {
-                func_80072138(0x44, 0x32);
+                enqueueSoundEffect(0x44, 0x32);
             }
         }
     } else {
@@ -381,7 +381,7 @@ void func_80009C48(void) {
                     }
                 }
                 if (selection != oldSelection) {
-                    func_80072138(0x19, 0x32);
+                    enqueueSoundEffect(0x19, 0x32);
                     if (D_8010AF70 == 0) {
                         D_8010AF70 = 1;
                     }
@@ -396,10 +396,10 @@ void func_80009C48(void) {
                     gCourseSelectStatus.unk2A = 0x100;
                     if ((s32) D_800EC9E6 < 2) {
                         D_8010ADF8 = 0;
-                        func_80072138(0x18, 0x32);
+                        enqueueSoundEffect(0x18, 0x32);
                     } else {
                         D_8010ADF8 = 1;
-                        func_80072138(0x46, 0x32);
+                        enqueueSoundEffect(0x46, 0x32);
                     }
                     transition = D_800EC9C1;
                 } else {
@@ -409,7 +409,7 @@ void func_80009C48(void) {
                         gCourseSelectStatus.unk28 = 2;
                         gCourseSelectStatus.unk2A = 0x100;
                         D_8010ADF8 = 1;
-                        func_80072138(0x46, 0x32);
+                        enqueueSoundEffect(0x46, 0x32);
                         transition = D_800EC9C1;
                     }
                 }
@@ -640,7 +640,7 @@ block_17:
                         D_8010AE64 -= 1;
                         sp44 = 0;
                         sp33 = var_t1;
-                        func_80072138(0x19, 0x32);
+                        enqueueSoundEffect(0x19, 0x32);
                         var_a3_2 = 0;
                     }
                 } else if ((gPlayerInputPressed & 0x20400) || ((gPlayerInputHeld & 0x20400) && ((s32) (u16) D_8010ADF0 >= 9))) {
@@ -651,7 +651,7 @@ block_17:
                         D_8010AE64 += 1;
                         sp44 = 0;
                         sp33 = (s8) var_t1;
-                        func_80072138(0x19, 0x32);
+                        enqueueSoundEffect(0x19, 0x32);
                         var_a3_2 = 0;
                         var_t1 = (u8) sp33;
                     }
@@ -692,7 +692,7 @@ block_17:
                 if ((D_8010AEE8[0] == 0) && ((gPlayerInputPressed & 0x1000) || (gPlayerInputPressed & 0x8000))) {
                     sp44 = 0;
                     sp33 = var_t1;
-                    func_80072138(1, 0x32);
+                    enqueueSoundEffect(1, 0x32);
                     var_a3_2 = 0;
                     if ((D_80121B55 == 1) && (var_t1 == D_8010AE64)) {
                         D_80121D88 = 9;
@@ -710,7 +710,7 @@ block_17:
                     }
                 } else if (gPlayerInputPressed & 0x4000) {
                     sp44 = 0;
-                    func_80072138(1, 0x32);
+                    enqueueSoundEffect(1, 0x32);
                     D_8010ADF0 = 0;
                     var_a3_2 = 0;
                     if ((s32) D_80121B55 > 0) {
@@ -747,7 +747,7 @@ block_17:
                     if (D_800EC9D0 >= 3) {
                         D_800EC9D0 -= 1;
                         sp44 = 0;
-                        func_80072138(0x19, 0x32);
+                        enqueueSoundEffect(0x19, 0x32);
                         var_a3_2 = 0;
                         D_8010AF44 = 0;
                     }
@@ -761,7 +761,7 @@ block_17:
                         if (D_800EC9D0 < (D_8010AF3C + 1)) {
                             D_800EC9D0 += 1;
                             sp44 = 0;
-                            func_80072138(0x19, 0x32);
+                            enqueueSoundEffect(0x19, 0x32);
                             var_a3_2 = 0;
                             D_8010AF44 = 0;
                         }
@@ -782,7 +782,7 @@ block_17:
                 D_80121D86 = var_t8;
                 if (temp_t4 & 0x4000) {
                     sp44 = 0;
-                    func_80072138(0x18, 0x32);
+                    enqueueSoundEffect(0x18, 0x32);
                     D_8010AF44 = 0;
                     D_80121D86 = D_8010AEF8[D_8010AE64];
                     D_8010ADF0 = 0;
@@ -792,7 +792,7 @@ block_17:
                     if (D_800ECA2F[D_80121D86] == -1) {
                         if ((u32) D_80121D8C >= (u32) *(&D_800B34B0 + (D_80121D86 * 4))) {
                             sp44 = 0;
-                            func_80072138(0x49, 0x32);
+                            enqueueSoundEffect(0x49, 0x32);
                             var_a3_2 = 0;
                             if ((*D_8010AEA0 == 1) && (D_8010AE64 == 3)) {
                                 var_v0_6 = *(&D_8010AF06 + D_800EC9D0);
@@ -810,7 +810,7 @@ block_17:
                             }
                         } else if (D_8010AF44 == 0) {
                             sp44 = 0;
-                            func_80072138(0x47, 0x32);
+                            enqueueSoundEffect(0x47, 0x32);
                             var_a3_2 = 0;
                             D_8010AF44 = 1;
                         }
@@ -923,18 +923,18 @@ void func_8000AFE8(void) {
         temp_v1 = *new_var2;
         if ((temp_v1 & 0x10800) && (temp_v0 != 0)) {
             D_801235B8->timer = temp_v0 - 1;
-            func_80072138(0x19, 0x32);
+            enqueueSoundEffect(0x19, 0x32);
             temp_v1 = gPlayerInputPressed;
         } else if ((temp_v1 & 0x20400) && (temp_v0 != 1)) {
             D_801235B8->timer = temp_v0 + 1;
-            func_80072138(0x19, 0x32);
+            enqueueSoundEffect(0x19, 0x32);
             temp_v1 = gPlayerInputPressed;
         }
 
         if (temp_v1 & 0x8000) {
             D_801235B4 = 1;
             if (D_801235B8->timer == 1) {
-                func_80072138(0x18, 0x32);
+                enqueueSoundEffect(0x18, 0x32);
                 if (D_8010AECC == 0) {
                     D_8010AF1C = 1;
                 } else {
@@ -942,12 +942,12 @@ void func_8000AFE8(void) {
                 }
                 func_8009956C(func_8000A214, 0);
             } else {
-                func_80072138(0x45, 0x32);
+                enqueueSoundEffect(0x45, 0x32);
                 D_801235B8->timer += 2;
             }
         } else if (temp_v1 & 0x4000) {
             D_801235B4 = 1;
-            func_80072138(0x18, 0x32);
+            enqueueSoundEffect(0x18, 0x32);
             if (D_8010AECC == 0) {
                 D_8010AF1C = 1;
             } else {
@@ -1047,7 +1047,7 @@ move_down:
     D_8010ADF0 = repeat;
     if (state < D_8010AF3C + 1) {
         D_800EC9D0 = state + 1;
-        func_80072138(0x19, 0x32);
+        enqueueSoundEffect(0x19, 0x32);
         state = D_800EC9D0;
         buttonsPressed = gPlayerInputPressed;
     }
@@ -1060,7 +1060,7 @@ move_up:
     D_8010ADF0 = repeat;
     if (state >= 3) {
         D_800EC9D0 = state - 1;
-        func_80072138(0x19, 0x32);
+        enqueueSoundEffect(0x19, 0x32);
         state = D_800EC9D0;
         buttonsPressed = gPlayerInputPressed;
     }
@@ -1080,12 +1080,12 @@ after_row_change:
     D_80121D86 = ((state * divisor) + (D_80121D86 % divisor) - 6) & 0xFF;
     D_800EC9D0 = state;
     if (buttonsPressed & 0x4000) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         D_80121D86 = (D_80121D86 % divisor) & 0xFF;
         D_8010ADF0 = 0;
         D_800EC9D0 += 3;
     } else if ((buttonsPressed & 0x8000) || (buttonsPressed & 0x1000)) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         index = ((D_800EC9D0 * divisor) + (D_80121D86 % divisor) - 6) & 0xFF;
         D_80121D87 = D_800ECA2F[index];
         D_80121D86 = index;
@@ -1220,7 +1220,7 @@ block_16:
             }
         }
         if (var_a1 != temp_t1) {
-            func_80072138(0x19, 0x32);
+            enqueueSoundEffect(0x19, 0x32);
             temp_a2 = gPlayerInputPressed;
         }
         if (temp_a2 & 0x4000) {
@@ -1229,7 +1229,7 @@ block_16:
         if ((temp_a2 & 0x8000) || (temp_a2 & 0x1000) || ((u8) D_8010ADF8 != 0)) {
             temp_a0 = (u8) D_8010AF72;
             if (((s32) temp_a0 >= 7) || ((u8) D_8010ADF8 != 0)) {
-                func_80072138(0x18, 0x32);
+                enqueueSoundEffect(0x18, 0x32);
             }
             if (((temp_a0 == 7) || ((u8) D_8010ADF8 == 1)) && ((u8) D_8010ADF8 != 2)) {
                 D_8010AF41 = 3;
@@ -1353,7 +1353,7 @@ void func_8000BEC0(void) {
         var_s0 += 1;
     } while (var_s0 != &D_80112340);
     func_8007105C();
-    func_80072138(0x17, 0x32);
+    enqueueSoundEffect(0x17, 0x32);
 }
 
 void func_8000C010(void) {
@@ -1383,7 +1383,7 @@ void func_8000C114(void) {
             func_8007105C();
         }
     } else if (D_80123750 == 2) {
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         do { D_800DEED4 = 0; D_801235B4 = 0; func_80099658(2); func_8009954C(4); count = 0; if (D_800ECA2F[0] == (-1)) { count = 1; } ptr = &D_800EC9F1; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
         ptr += 4;

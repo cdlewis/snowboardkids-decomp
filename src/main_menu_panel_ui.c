@@ -80,7 +80,7 @@ extern void func_80045E84(s16, s16, s32, s32);
 extern void func_80046358(s32, s32, s32, s32);
 extern void func_80046748(s16, s16, s32, s32, s32, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
-extern void func_80072138(s16, s16);
+extern void enqueueSoundEffect(s16, s16);
 
 void func_80050FF0(s32 arg0) {
     s32 edgeX;
@@ -200,28 +200,28 @@ void func_800515F0(MenuPanelActor *arg0) {
             temp_a2 = D_800D54F8[D_80121B5B];
             if (D_80121B5B != temp_a2) {
                 D_80121B5B = temp_a2;
-                func_80072138(0x19, 0x32);
+                enqueueSoundEffect(0x19, 0x32);
                 temp_v1 = gPlayerInputPressed;
             }
         } else if (temp_v1 & 0x20400) {
             temp_a2_2 = D_800D5508[D_80121B5B];
             if (D_80121B5B != temp_a2_2) {
                 D_80121B5B = temp_a2_2;
-                func_80072138(0x19, 0x32);
+                enqueueSoundEffect(0x19, 0x32);
                 temp_v1 = gPlayerInputPressed;
             }
         } else if (temp_v1 & 0x40100) {
             temp_a2_3 = D_800D5528[D_80121B5B];
             if (D_80121B5B != temp_a2_3) {
                 D_80121B5B = temp_a2_3;
-                func_80072138(0x19, 0x32);
+                enqueueSoundEffect(0x19, 0x32);
                 temp_v1 = gPlayerInputPressed;
             }
         } else if (temp_v1 & 0x80200) {
             temp_a2_4 = D_800D5518[D_80121B5B];
             if (D_80121B5B != temp_a2_4) {
                 D_80121B5B = temp_a2_4;
-                func_80072138(0x19, 0x32);
+                enqueueSoundEffect(0x19, 0x32);
                 temp_v1 = gPlayerInputPressed;
             }
         }
@@ -231,7 +231,7 @@ void func_800515F0(MenuPanelActor *arg0) {
             if (temp_v1 & 0x4000) {
                 D_80121B5B = 0xC;
             }
-            func_80072138(0x18, 0x32);
+            enqueueSoundEffect(0x18, 0x32);
         }
     }
 
@@ -420,7 +420,7 @@ void func_80051ED4(MenuPanelActor *arg0) {
             arg0->tileList = arg0->tileListStart;
             break;
         }
-        func_80072138(MENU_PANEL_ACCEPT_SOUND, MENU_PANEL_SOUND_VOLUME);
+        enqueueSoundEffect(MENU_PANEL_ACCEPT_SOUND, MENU_PANEL_SOUND_VOLUME);
     }
 
     func_800483FC(&D_80124868, func_80051878, (s32)arg0);

@@ -873,7 +873,7 @@ extern s16 D_8012206C[][0x306];
 extern RacePlayerFlags D_8012207C[];
 extern u8 D_800EC9F0[];
 extern RaceTimer D_80121B74;
-extern void func_80072138(s32, s32);
+extern void enqueueSoundEffect(s32, s32);
 extern void func_80048278(s32, s32, void *, s32);
 extern char D_800E12F4[];
 extern char D_800E128C[];
@@ -1244,7 +1244,7 @@ void func_800584A0(void *arg0) {
 
 void func_80058538(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         D_801235B4 |= 0x10;
         func_80071824(arg0, func_800584A0);
     }
@@ -1304,12 +1304,12 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
 
     if (player->mode != 3) {
         if ((arg0->score == 0) && (player->unk568 == 0)) {
-            func_80072138(2, 0x32);
+            enqueueSoundEffect(2, 0x32);
             func_80071824(arg0, func_80058538);
         }
     } else if (arg0->score == 0) {
         shouldPlaySound = 0;
-        func_80072138(2, 0x32);
+        enqueueSoundEffect(2, 0x32);
         func_80071824(arg0, func_80058538);
     }
 
@@ -1317,7 +1317,7 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
         s16 timer = arg0->timer;
         if (timer == 0) {
             arg0->timer = 2;
-            func_80072138(0x1A, 0x32);
+            enqueueSoundEffect(0x1A, 0x32);
         } else {
             arg0->timer = timer - 1;
         }
@@ -1347,7 +1347,7 @@ void func_8005893C(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         func_80071824(arg0, func_80058880);
     }
     func_800483FC(&D_80124868, func_80057E90, arg0);
@@ -1359,7 +1359,7 @@ void func_8005893C(void *arg0) {
 void func_800589F4(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         func_80071824(arg0, func_8005893C);
     }
@@ -1372,7 +1372,7 @@ void func_80058A98(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         func_80071824(arg0, func_800589F4);
     }
     func_800483FC(&D_80124868, func_80057E90, arg0);
@@ -1587,7 +1587,7 @@ void func_80059854(void *arg0) {
         input = &gPlayerInputPressed; do {
             if ((*input & 0x8000) && !(D_801235B4 & 0x10)) {
                 D_801235B4 |= 0x10;
-                func_80072138(0x18, 0x32);
+                enqueueSoundEffect(0x18, 0x32);
                 func_80071824(actor, func_80059804);
             }
             i++;
@@ -1727,7 +1727,7 @@ void func_8005A07C(void *arg0) {
 void func_8005A0E0(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
         D_801235B4 |= 0x10;
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         func_80071824(arg0, func_8005A07C);
     }
     func_800483FC(&D_80124868, func_80059E5C, arg0);
@@ -2031,7 +2031,7 @@ void func_8005AEB0(void *arg0) {
 
 void func_8005AF2C(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         D_801235B4 |= 0x10;
         func_80071824(arg0, func_8005AEB0);
     }
@@ -2050,7 +2050,7 @@ void func_8005AFEC(void *arg0) {
 
 void func_8005B068(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
             func_80071824(arg0, func_8005AF2C);
         } else {
@@ -2069,7 +2069,7 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
 
     if (arg0->timer == 0) {
         arg0->timer = 2;
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
     } else {
         arg0->timer--;
     }
@@ -2101,7 +2101,7 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
     }
 
     if ((arg0->value == 0) && (arg0->bonus == 0) && (arg0->target == 0)) {
-        func_80072138(2, 0x32);
+        enqueueSoundEffect(2, 0x32);
         arg0->timer = 0x14;
         func_80071824(arg0, func_8005B068);
     }
@@ -2141,7 +2141,7 @@ void func_8005B49C(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1C) = 2;
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         func_80071824(arg0, func_8005B3EC);
     }
@@ -2155,7 +2155,7 @@ void func_8005B55C(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1C) = 1;
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         func_80071824(arg0, func_8005B49C);
     }
@@ -2169,7 +2169,7 @@ void func_8005B61C(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1C) = 0;
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         if (*(s16 *)((u8 *)arg0 + 0x24) != 0) {
             func_80071824(arg0, func_8005B55C);
@@ -2187,7 +2187,7 @@ void func_8005B6F8(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         func_80071824(arg0, func_8005B61C);
     }
     func_800483FC(&D_80124868, func_8005A31C, arg0);
@@ -2476,7 +2476,7 @@ void func_8005C3E4(void *arg0) {
 
 void func_8005C448(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         D_801235B4 |= 0x10;
         func_80071824(arg0, func_8005C3E4);
     }
@@ -2494,7 +2494,7 @@ void func_8005C4EC(void *arg0) {
 
 void func_8005C568(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
             func_80071824(arg0, func_8005C448);
         } else {
@@ -2513,7 +2513,7 @@ void func_8005C64C(RaceUiDualCounterActor *arg0) {
 
     if (arg0->timer == 0) {
         arg0->timer = 2;
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
     } else {
         arg0->timer--;
     }
@@ -2552,7 +2552,7 @@ void func_8005C64C(RaceUiDualCounterActor *arg0) {
     }
 
     if ((arg0->rightValue == 0) && (arg0->leftValue == 0) && (arg0->bonus == 0) && (arg0->leftTarget == 0)) {
-        func_80072138(2, 0x32);
+        enqueueSoundEffect(2, 0x32);
         arg0->timer = 0x14;
         func_80071824(arg0, func_8005C568);
     }
@@ -2592,7 +2592,7 @@ void func_8005C9F4(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x20) = 3;
     *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)((u8 *)arg0 + 0x1E) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
         func_80071824(arg0, func_8005C944);
     }
@@ -2606,7 +2606,7 @@ void func_8005CAB4(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x20) = 2;
     *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)((u8 *)arg0 + 0x1E) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
         func_80071824(arg0, func_8005C9F4);
     }
@@ -2620,7 +2620,7 @@ void func_8005CB74(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x20) = 1;
     *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)((u8 *)arg0 + 0x1E) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
         if (*(s16 *)((u8 *)arg0 + 0x2A) != 0) {
             func_80071824(arg0, func_8005CAB4);
@@ -2638,7 +2638,7 @@ void func_8005CC54(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x20) = 0;
     *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)((u8 *)arg0 + 0x1E) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
         func_80071824(arg0, func_8005CB74);
     }
@@ -2652,7 +2652,7 @@ void func_8005CD10(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)((u8 *)arg0 + 0x1E) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         func_80071824(arg0, func_8005CC54);
     }
     func_800483FC(&D_80124868, func_8005B8E8, arg0);
@@ -3012,7 +3012,7 @@ void func_8005DBD0(void *arg0) {
 
 void func_8005DC4C(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         D_801235B4 |= 0x10;
         func_80071824(arg0, func_8005DBD0);
     }
@@ -3031,7 +3031,7 @@ void func_8005DD0C(void *arg0) {
 
 void func_8005DD88(void *arg0) {
     if (gPlayerInputPressed & 0x8000) {
-        func_80072138(0x18, 0x32);
+        enqueueSoundEffect(0x18, 0x32);
         if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
             func_80071824(arg0, func_8005DC4C);
         } else {
@@ -3050,7 +3050,7 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
 
     if (arg0->timer == 0) {
         arg0->timer = 2;
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
     } else {
         arg0->timer--;
     }
@@ -3082,7 +3082,7 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
     }
 
     if ((arg0->pendingFirstValue == 0) && (arg0->pendingSecondValue == 0) && (arg0->pendingThirdValue == 0)) {
-        func_80072138(2, 0x32);
+        enqueueSoundEffect(2, 0x32);
         arg0->timer = 0x14;
         func_80071824(arg0, func_8005DD88);
     }
@@ -3122,7 +3122,7 @@ void func_8005E1BC(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1C) = 2;
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         func_80071824(arg0, func_8005E10C);
     }
@@ -3136,7 +3136,7 @@ void func_8005E27C(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1C) = 1;
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         func_80071824(arg0, func_8005E1BC);
     }
@@ -3150,7 +3150,7 @@ void func_8005E33C(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     *(s16 *)((u8 *)arg0 + 0x1C) = 0;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         func_80071824(arg0, func_8005E27C);
     }
@@ -3164,7 +3164,7 @@ void func_8005E3F8(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        func_80072138(0x1A, 0x32);
+        enqueueSoundEffect(0x1A, 0x32);
         func_80071824(arg0, func_8005E33C);
     }
     func_800483FC(&D_80124868, func_8005CF60, arg0);

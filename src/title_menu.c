@@ -34,7 +34,7 @@ typedef struct {
 } TitleMenuPlayerView;
 
 extern void func_800483FC(void *, void *, s32);
-extern s32 func_80072138(s32, s32);
+extern s32 enqueueSoundEffect(s32, s32);
 extern u8 D_800B5458[][0x4C];
 extern u8 D_800B5A14[];
 #ifdef NON_MATCHING
@@ -191,7 +191,7 @@ void func_80014AA4(MenuIntroActor *arg0) {
             actor->y -= 0x10;
             if (actor->y == -0x5C) {
                 actor->child = func_80071408(func_80015054, 0, 0x63);
-                func_80072138(1, 0x32);
+                enqueueSoundEffect(1, 0x32);
                 actor->state = 3;
             }
             alpha = actor->alpha;
@@ -284,7 +284,7 @@ void func_80014EF0(MenuItemActor *arg0) {
         arg0->x -= 0x20;
         if (arg0->x == 0x70) {
             arg0->child = func_80071408(func_80015404, 0, 0x63);
-            func_80072138(1, 0x32);
+            enqueueSoundEffect(1, 0x32);
         }
         if (arg0->x == -0x50) {
             arg0->state = 1;
@@ -378,7 +378,7 @@ void func_800152D0(MenuItemActor *arg0) {
         arg0->x -= 0x20;
         if (arg0->x == 0x70) {
             arg0->child = func_80071408(func_800157B4, 0, 0x63);
-            func_80072138(1, 0x32);
+            enqueueSoundEffect(1, 0x32);
         }
         if (arg0->x == -0x50) {
             arg0->state = 1;
@@ -466,7 +466,7 @@ void func_80015680(MenuItemActor *arg0) {
         arg0->x -= 0x20;
         if (arg0->x == 0x70) {
             arg0->child = func_80071408(func_80015B20, 0, 0x63);
-            func_80072138(1, 0x32);
+            enqueueSoundEffect(1, 0x32);
         }
         if (arg0->x == -0x50) {
             arg0->state = 1;

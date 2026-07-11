@@ -58,7 +58,7 @@ extern u8 D_80121B5E;
 extern u8 D_80121B5F;
 extern s16 D_800D3C90[];
 
-extern void func_80045914(void);
+extern void releaseMenuAssetHandles(void);
 extern u8 D_80123750;
 extern s8 D_800DEED4;
 extern u8 D_80121B5A;
@@ -145,7 +145,7 @@ void func_8003F778(void) {
 
 void func_8003F7E4(void) {
     if (D_80123750 == 2) {
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         if (D_80121B5B != 0xC) {
@@ -354,7 +354,7 @@ void func_8003FEF4(void) {
 void func_8003FF78(void) {
     if (D_80123750 == 2) {
         func_80072260();
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         func_8009956C(&func_8003F554, 0);
@@ -663,7 +663,7 @@ void func_800408E4(void) {
 void func_8004097C(void) {
     if (D_80123750 == 2) {
         func_80072260();
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         if (D_8010B1F0 == 1) {
@@ -725,7 +725,7 @@ void func_80040B90(void) {
 
 void func_80040BF4(void) {
     if (D_80123750 == 2) {
-        func_80045914();
+        releaseMenuAssetHandles();
         D_80123751 = 0;
         D_800DEED4 = 0;
         func_8009956C(&func_80040C44, 0);
