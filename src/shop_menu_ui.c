@@ -2,7 +2,7 @@
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
-#include "player_select_ui.h"
+#include "race_splitscreen_select_ui.h"
 #include "shop_menu_ui.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "menu_renderer.h"
@@ -900,7 +900,7 @@ void func_8002E214(ShopMenuWidgetActor *arg0) {
 void func_8002E250(ShopMenuWidgetActor *arg0) {
     char sp40[0x18];
 
-    func_8001BA2C(arg0->x, arg0->y, 0x5000, 0x4000);
+    drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
     drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(D_8011217A), 0x11, 0x20, 0x20, 0, arg0->sprite.index, 0);
     sprintf(sp40, D_800E0F60, D_80121D8C);
     drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.index);
@@ -1103,7 +1103,7 @@ void func_8002E810(ShopMenuWidgetActor *arg0) {
             sprintf(sp4C, D_800E0F78, arg0->item.price);
         }
 
-        func_8001BA2C((s16)(arg0->x + sp48), arg0->y, sp4A, 0x2000);
+        drawMenuPanelBackdrop((s16)(arg0->x + sp48), arg0->y, sp4A, 0x2000);
 
         if ((u32)D_80121D8C < (u32)gCourseUnlockPrices[D_80121D86]) {
             palette = 1;

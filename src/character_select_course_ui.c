@@ -2,7 +2,7 @@
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "character_select_course_ui.h"
-#include "player_select_ui.h"
+#include "race_splitscreen_select_ui.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "menu_renderer.h"
 
@@ -2153,7 +2153,7 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
     s32 var_t8;
 
     if (gRaceCourseIndex != gCharacterSelectCourseExitOptionIndex) {
-        func_8001BA2C(arg0->x, arg0->y, 0x3800, 0x5800);
+        drawMenuPanelBackdrop(arg0->x, arg0->y, 0x3800, 0x5800);
         drawMenuSpriteWithAlpha((s16)(arg0->x + 4), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       0x23, 0x20, 0x20, 0, arg0->sprite.index, 0);
         sprintf(buf - 4, gCharacterSelectCourseStatsScoreFormat, gCharacterSelectCourseStatsScoreValues[gRaceCourseIndex]);
