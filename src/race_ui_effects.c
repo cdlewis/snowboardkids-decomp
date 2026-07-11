@@ -5,6 +5,7 @@
 #include "viewport_manager.h"
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
+#include "model_animation.h"
 
 /* Local 3-arg declaration; see note in effect_task_scheduler.h. */
 extern void *func_800716A4(void *, s32, s32);
@@ -862,12 +863,8 @@ extern void func_8005C64C(RaceUiDualCounterActor *);
 extern void func_8005DE6C(RaceUiCourseStatsActor *);
 extern void func_8005CB74(void *);
 extern void func_800623E8(void *);
-extern s32 func_8007D200(s32, s32, s32);
-extern s32 func_80080CC4(s32, s32, s32);
-extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
 extern void func_80088664(Vec3i *, s32, s32, s32, s32);
 extern s32 func_800891B8(Vec3i *, s32, s32, s16);
-extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
 extern int sprintf(char *, const char *, ...);
 extern void func_80072A74(s32, void *, s32, s32);
 extern void func_80072A20(s32, void *, s32, s32, f32, s32);

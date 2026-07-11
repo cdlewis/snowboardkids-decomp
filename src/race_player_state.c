@@ -3,10 +3,24 @@
 #include "effect_task_scheduler.h"
 #include "controller_rumble.h"
 #include "game_audio.h"
+#include "model_animation.h"
 #define func_8004940C func_8004940C_s32
 #include "fixed_point_matrix.h"
 #undef func_8004940C
 #include "race_input_history.h"
+
+#define MODEL_ANIM_STATE(player) ((ModelAnimState *)(player))
+#define MODEL_ANIM_INIT_STATE(player) ((ModelAnimInitState *)(player))
+#define func_80081E40(player, animIndex) func_80081E40(MODEL_ANIM_STATE(player), (animIndex))
+#define func_80082664(player, animIndex, frameTimer, frameTimerReset) \
+    func_80082664(MODEL_ANIM_STATE(player), (animIndex), (frameTimer), (frameTimerReset))
+#define func_80082B58(player, animIndex, timer, duration) \
+    func_80082B58(MODEL_ANIM_STATE(player), (animIndex), (timer), (duration))
+#define func_80082DD0(player) func_80082DD0(MODEL_ANIM_STATE(player))
+#define func_80082E48(player) func_80082E48(MODEL_ANIM_STATE(player))
+#define func_80082EC0(player) func_80082EC0(MODEL_ANIM_STATE(player))
+#define func_80082F44(player) func_80082F44(MODEL_ANIM_STATE(player))
+#define func_80082FC8(player) func_80082FC8(MODEL_ANIM_INIT_STATE(player))
 
 typedef struct {
     /* 0x00 */ s8 active;
@@ -66,11 +80,6 @@ typedef struct {
 
 extern void func_8008C098(RaceInputPlayer *);
 extern void func_8008C7D0(RaceInputPlayer *);
-extern void func_80082664(RaceInputPlayer *, s32, s32, s32);
-extern void func_80082DD0(RaceInputPlayer *);
-extern void func_80082E48(RaceInputPlayer *);
-extern void func_80081E40(RaceInputPlayer *, s32);
-extern s32 func_80082EC0(RaceInputPlayer *);
 extern void func_80083298(RaceInputPlayer *);
 extern void func_800849E0(RaceInputPlayer *);
 extern s32 func_80095F90(s16);
@@ -92,11 +101,6 @@ extern void func_80097038(RaceInputPlayer *);
 extern void func_8008F1B4(RaceInputPlayer *);
 extern void func_8008F1CC(RaceInputPlayer *);
 extern s32 func_800832CC(RaceInputPlayer *);
-extern s32 func_80082F44(RaceInputPlayer *);
-extern void func_80082B58(RaceInputPlayer *, s32, s32, s32);
-extern void func_800815D4(s16, s32, s32, s32 *, s32 *, s32, s32);
-extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
-extern s32 func_80080CC4(s32, s32, s32);
 extern void func_8006D520(u16, u16);
 extern void func_8004F55C(s16, s16);
 extern void func_800483FC(void *, void (*)(void *), void *);
@@ -3540,8 +3544,6 @@ void func_800934EC(RaceInputPlayer *player) {
 #ifdef NON_MATCHING
 extern void func_8004F55C(s16 playerIndex, s16 itemIndex);
 extern void func_8006D520(u16 arg0, u16 arg1);
-extern s32 func_80080CC4(s16, s32, s32);
-extern void func_80081508(s32, s32 *, s32 *, s32 *, s16 *);
 extern s32 func_800860A0(RaceInputPlayer *);
 
 void func_800936D4(RaceInputPlayer *player) {
@@ -4744,7 +4746,6 @@ void func_80095A88(RaceInputPlayer *player) {
 #ifdef NON_MATCHING
 extern void func_8006C088(EffectTask *);
 extern void func_80054B2C(EffectTask *);
-extern s32 func_800813F8(s32, s32, s32);
 
 void func_80095BE4(RaceInputPlayer *player) {
     FixedMatrix3s matrix;

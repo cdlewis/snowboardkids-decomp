@@ -1,6 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "fixed_point_matrix.h"
+#include "model_animation.h"
 
 typedef struct ModelAnimCoord {
     s16 x;
@@ -53,7 +54,7 @@ typedef struct ModelAnimStateJoint {
     s32 unk10;
 } ModelAnimStateJoint;
 
-typedef struct ModelAnimState {
+struct ModelAnimState {
     u16 modelId;
     char pad2[0x332];
     ModelAnimStateJoint joints[12];
@@ -75,9 +76,9 @@ typedef struct ModelAnimState {
     s16 unk462;
     s16 frameTimerReset;
     s16 frameTimer;
-} ModelAnimState;
+};
 
-typedef struct ModelAnimInitState {
+struct ModelAnimInitState {
     u8 pad0[0x10];
     u8 modelId;
     u8 pad11[0x314];
@@ -93,7 +94,7 @@ typedef struct ModelAnimInitState {
     s16 unk33E;
     u8 pad340[0x110];
     s16 partCount;
-} ModelAnimInitState;
+};
 
 typedef struct CourseSpawnEntry {
     s16 pathIndex;

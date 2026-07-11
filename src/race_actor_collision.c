@@ -1,4 +1,5 @@
 #include "common.h"
+#include "model_animation.h"
 
 #define RACE_ACTOR_COLLISION_YAW_FLIPPED 0x400
 #define RACE_ACTOR_COLLISION_ACTIVE 0x800
@@ -82,10 +83,7 @@ s32 func_8004DB60(s8);
 s32 func_8004E518(s16, s16, s32, s32, s32);
 s32 func_80072138(s32, s32);
 s32 func_80072A74(s32, s32 *, s32, s32);
-s32 func_80080CC4(s16, s32, s32);
 s32 func_80098C30(s64);
-
-s32 func_80081124(s16, s32, s32, RaceActorCollision *);
 
 s32 func_80084F50(RaceActorCollision *arg0) {
     s32 temp_v0;
@@ -622,7 +620,7 @@ block_104:
 s32 func_800860A0(RaceActorCollision *arg0) {
     s32 temp_v0;
 
-    temp_v0 = func_80081124(arg0->unk502, arg0->unk1C, arg0->unk24, arg0);
+    temp_v0 = func_80081124(arg0->unk502, arg0->unk1C, arg0->unk24);
     if (temp_v0 == 3) {
         return 0;
     }

@@ -1,5 +1,6 @@
 #include "common.h"
 #include "fixed_point_matrix.h"
+#include "model_animation.h"
 
 #define RACE_CAMERA_COUNT 4
 #define RACE_CAMERA_STATE_SIZE 0xB0
@@ -101,8 +102,6 @@ extern void func_8007022C(void);
 void func_8007031C(void);
 extern void func_800704C4(void);
 extern void func_800486BC(void *, void *);
-extern s16 func_8007D200(s32, s32, s32);
-extern s32 func_80080CC4(s16, s32, s32);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
 extern RacePlayerSlot D_80121D80[];
@@ -796,7 +795,7 @@ void func_8007031C(void) {
     }
 
     D_801124A0->pos.z += velocity;
-    D_801124A0->pos.y = func_80080CC4(func_8007D200(0, D_801124A0->pos.x, D_801124A0->pos.z), D_801124A0->pos.x, D_801124A0->pos.z) + D_801124A0->unkA8 + 0xE0000;
+    D_801124A0->pos.y = func_80080CC4((s16)func_8007D200(0, D_801124A0->pos.x, D_801124A0->pos.z), D_801124A0->pos.x, D_801124A0->pos.z) + D_801124A0->unkA8 + 0xE0000;
     func_8006D8B4();
 }
 
