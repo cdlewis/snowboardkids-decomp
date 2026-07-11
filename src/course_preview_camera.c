@@ -128,16 +128,16 @@ extern s16 D_80121B50;
 extern s16 D_801235B0;
 extern u32 D_80156614;
 
-// func_800556B0 best match: 99.170% (nonmatchings/func_800556B0-4923837976568703863/base_1.c)
+// func_800556B0 best match: 99.531% (nonmatchings/func_800556B0-6061209858023118177/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_preview_camera/func_800556B0.s")
 
 #ifdef NON_MATCHING
 void func_800556B0(CoursePreviewGfxCommandActor *arg0) {
+    volatile u8 pad[0xC];
     u32 image;
     u32 palette;
     s16 width;
     s16 height;
-    volatile u8 pad[0x10];
     CoursePreviewGfxCommandEntry *entry;
     GfxCommandDest *vertices;
     Gfx *gfx;
@@ -165,12 +165,10 @@ void func_800556B0(CoursePreviewGfxCommandActor *arg0) {
 
                 gSPMatrix(gRegionAllocPtr++, &arg0->matrices[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-                gfx = gRegionAllocPtr;
-                gRegionAllocPtr = gfx + 1;
+                gfx = gRegionAllocPtr++;
                 gfx->words.w0 = 0x0400103F;
                 gfx->words.w1 = (u32)&vertices[entry->textureIndex];
-                gfx = gRegionAllocPtr;
-                gRegionAllocPtr = gfx + 1;
+                gfx = gRegionAllocPtr++;
                 gfx->words.w0 = 0xB1060402;
                 gfx->words.w1 = 0x60200;
             }
