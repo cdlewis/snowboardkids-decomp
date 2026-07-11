@@ -4,6 +4,7 @@
 #include "menu_rendering.h"
 #include "course_select_ui.h"
 #include "fixed_point_matrix.h"
+#include "race_position_ui.h"
 
 typedef struct {
     u8 pad0[0x20];
@@ -97,7 +98,6 @@ extern void func_80023880(CourseSelectCoursePreviewActor *);
 extern s32 func_8004885C(FixedTransform *);
 extern void func_80025AA8(CourseSelectWidgetActor *);
 extern void func_8002E568(CourseSelectWidgetActor *);
-extern void func_8007C130(s32, s16, s16);
 extern s8 D_800ECA2F[][0x78F8];
 extern s8 D_800EC9C0;
 extern u8 D_800EC9C2;
@@ -194,7 +194,7 @@ void func_80023880(CourseSelectCoursePreviewActor *arg0) {
             temp_v0_4 = func_8004885C(&sp30);
             arg0->matrix = temp_v0_4;
             if (temp_v0_4 != 0) {
-                func_8007C130(temp_v0_4 ^ 0, (s16) sp2F, (s16) sp2E);
+                func_8007C130((void *)(temp_v0_4 ^ 0), (s16) sp2F, (s16) sp2E);
             }
         }
     }
@@ -503,7 +503,7 @@ void func_80024168(CourseSelectCoursePreviewActor *arg0) {
             temp_v0_4 = func_8004885C(&sp30);
             arg0->matrix = temp_v0_4;
             if (temp_v0_4 != 0) {
-                func_8007C130(temp_v0_4, (s16) sp2F, (s16) sp2E);
+                func_8007C130((void *)temp_v0_4, (s16) sp2F, (s16) sp2E);
             }
         }
     }

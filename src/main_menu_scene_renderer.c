@@ -1,6 +1,7 @@
 #include "main_menu_scene_model.h"
 #include "memory_allocator.h"
 #include "main_menu_scene_renderer.h"
+#include "race_position_ui.h"
 
 extern void func_800483FC(void *, void (*)(MainMenuSceneModel *), MainMenuSceneModel *);
 extern s16 D_8011218A[];
@@ -27,7 +28,6 @@ typedef struct MainMenuModelAssetHandles {
 } MainMenuModelAssetHandles;
 
 extern Mtx *func_8004885C(MainMenuModelDisplayObject *);
-extern void func_8007C130(Mtx *, s16, s16);
 extern Gfx *gRegionAllocPtr;
 extern u8 D_80156608;
 extern MainMenuModelAssetHandles D_80112130;
