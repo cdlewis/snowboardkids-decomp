@@ -1,7 +1,7 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
 #include "relocatable_heap.h"
-#define MENU_RENDERING_C
+#define MENU_RENDERER_C
 #include "menu_renderer.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
@@ -109,7 +109,7 @@ typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 extern void addRenderCallback(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
 extern void *allocMenuRenderScratch(s32 size);
 s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
-void drawMenuSpriteTileClipped(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, s16 arg6, s16 arg7);
+void drawMenuSpriteTileClipped(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, s32 arg6, s32 arg7);
 void drawMenuSpriteClipped(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7, s32 arg8, s32 arg9,
                    s32 argA, s32 argB);
 void drawMenuSpriteWithAlphaClipped(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8,
@@ -132,8 +132,8 @@ extern s16 gMenuViewportCenterY;
 extern u16 D_800B51D0[];
 extern s16 D_800B51F0[][2];
 
-// func_8000EA80 best match: 78.118% (nonmatchings/func_8000EA80-4923837976568703863/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_8000EA80.s")
+// drawMenuAssetRegion best match: 78.118% (nonmatchings/func_8000EA80-4923837976568703863/base_9.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuAssetRegion.s")
 
 #ifdef NON_MATCHING
 #define MENU_RENDER_EMIT_GFX(cmd0, cmd1) \
@@ -146,7 +146,7 @@ extern Gfx *gRegionAllocPtr;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 
-void func_8000EA80(s16 x, s16 y, MenuRenderAssetTableHeader *table, u16 entryIndex, u16 scaleX, u16 scaleY,
+void drawMenuAssetRegion(s16 x, s16 y, MenuRenderAssetTableHeader *table, u16 entryIndex, u16 scaleX, u16 scaleY,
                    u8 startS, u8 startT, u8 width, u8 height) {
     MenuRenderAssetTableEntry *entry;
     MenuRenderAssetTableHeader *tableBase;
@@ -495,11 +495,11 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
 }
 #endif
 
-// func_80010074 best match: 76.801% (nonmatchings/func_80010074-2225551288923588688/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_80010074.s")
+// drawMenuSpriteWithPaletteScale best match: 76.801% (nonmatchings/func_80010074-2225551288923588688/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSpriteWithPaletteScale.s")
 
 #ifdef NON_MATCHING
-void func_80010074(s16 x, s16 y, FontAsset *asset, u16 index, s32 alpha) {
+void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s32 alpha) {
     FontTexture *texture;
     u8 *paletteBase;
     u16 *srcPalette;
@@ -580,11 +580,11 @@ void func_80010074(s16 x, s16 y, FontAsset *asset, u16 index, s32 alpha) {
 }
 #endif
 
-// func_8001061C best match: 82.830% (nonmatchings/func_8001061C-2225551288923588688/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_8001061C.s")
+// drawMenuSpriteSubrect best match: 82.830% (nonmatchings/func_8001061C-2225551288923588688/base_3.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSpriteSubrect.s")
 
 #ifdef NON_MATCHING
-void func_8001061C(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u8 srcY, u8 width, u8 height, u16 scaleX,
+void drawMenuSpriteSubrect(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u8 srcY, u8 width, u8 height, u16 scaleX,
                    u16 scaleY) {
     FontTexture *texture;
     u8 *paletteBase;
@@ -644,7 +644,7 @@ void func_8001061C(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u8 srcY, 
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_80010BCC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSpriteFixedScale.s")
 
 void drawMenuSpriteTile(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5) {
     drawMenuSpriteTileClipped(arg0, arg1, arg2, arg3, arg4, arg5, gMenuViewportWidth / 2, gMenuViewportHeight / 2);
@@ -1112,7 +1112,7 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
 #undef MENU_RENDER_SPRITE_EMIT_GFX
 #endif
 
-void func_800128C8(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u16 arg5) {
+void drawMenuGlyphScriptWithFontBank(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u16 arg5) {
     u16 first;
     s32 code;
     u16 *ptr;
@@ -1154,7 +1154,7 @@ void func_800128C8(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u
     }
 }
 
-void func_800129DC(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale) {
+void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale) {
     u16 first;
     s32 code;
     u16 *ptr;
@@ -1416,11 +1416,11 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
 }
 #endif
 
-// func_800137C8 best match: 73.956% (nonmatchings/func_800137C8-2225551288923588688/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_800137C8.s")
+// drawMenuAsciiGlyph best match: 73.956% (nonmatchings/func_800137C8-2225551288923588688/base_2.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuAsciiGlyph.s")
 
 #ifdef NON_MATCHING
-void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale) {
+void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale) {
     FontAsset *asset;
     FontTexture *font;
     u16 *paletteBase;
@@ -1564,7 +1564,7 @@ void drawMenuAsciiText(s16 arg0, s16 arg1, u8 *arg2, u16 arg3, u16 arg4) {
                 var_v0 = var_v1 - 0x20;
                 if ((u32)var_v0 < 0x40) {
                     var_a2 = var_v0 & 7;
-                    func_800137C8(var_s0, var_s2, ((var_a2 << 3) & 0xFFFF) & 0xFFFF, var_v0 & 0x38, arg3,
+                    drawMenuAsciiGlyph(var_s0, var_s2, ((var_a2 << 3) & 0xFFFF) & 0xFFFF, var_v0 & 0x38, arg3,
                                   arg4);
                 }
                 var_s0 += 8;
@@ -1575,11 +1575,11 @@ void drawMenuAsciiText(s16 arg0, s16 arg1, u8 *arg2, u16 arg3, u16 arg4) {
     }
 }
 
-// func_80013DFC best match: 70.220%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_80013DFC.s")
+// drawMenuSolidRect best match: 70.220%
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSolidRect.s")
 
 #ifdef NON_MATCHING
-void func_80013DFC(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b) {
+void drawMenuSolidRect(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b) {
     Gfx *gfx;
     s32 color;
     extern u32 gMenuRenderModeResetDl[];
@@ -1636,11 +1636,11 @@ u8 increase;
     return value;
 }
 
-// func_80013FEC best match: 82.448% (nonmatchings/func_80013FEC-7273315160691878794/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_80013FEC.s")
+// drawMenuSpriteCrossfade best match: 82.448% (nonmatchings/func_80013FEC-7273315160691878794/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSpriteCrossfade.s")
 
 #ifdef NON_MATCHING
-void func_80013FEC(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex0, u16 imageIndex1, u8 alpha) {
+void drawMenuSpriteCrossfade(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex0, u16 imageIndex1, u8 alpha) {
     MenuFontAssetEntry *entry0;
     MenuFontAssetEntry *entry1;
     s32 minX;

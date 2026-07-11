@@ -817,22 +817,22 @@ s32 soundPlayerCommandSetPanSweep(PlayerCommandState *arg0, u8 *arg1) {
         arg1++;
     }
 
-    newId = func_8009DC68(soundId, arg0->unkEF, (u8)arg0->unkF2, 0, arg0->unk20++);
+    newId = startSoundEffect(soundId, arg0->unkEF, (u8)arg0->unkF2, 0, arg0->unk20++);
     arg0->unk20--;
     if (newId == 0) {
         return (s32)arg1;
     }
 
     i = 0;
-    entry = D_8015A660;
-    if (D_8015A658 > 0) {
+    entry = gSoundPlayerStates;
+    if (gSoundPlayerCount > 0) {
         do {
             i++;
             if (newId == entry->id) {
                 entry->id = arg0->id;
             }
             entry++;
-        } while (i < D_8015A658);
+        } while (i < gSoundPlayerCount);
     }
     return (s32)arg1;
 }
