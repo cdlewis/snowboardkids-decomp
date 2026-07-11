@@ -93,7 +93,7 @@ extern u8 D_5DB9D0[];
 extern u8 D_800EC9C2;
 extern u8 gPlayerCount;
 extern u8 D_80121B59;
-extern u8 gMainMenuSelectedCourse;
+extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern u8 D_80121B5E;
 extern u8 gRaceCourseModelEffectsDisabled;
@@ -275,7 +275,7 @@ void initRaceCourseEffects(void) {
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 0);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         createCallbackTaskWithUserId(&func_8006CBBC, 0, 0x64, 0);
-        if ((D_800EC9C2 == 0) && (D_80121B59 == 0) && (gMainMenuSelectedCourse == 0) && (gMainMenuModeSelection == 0)) {
+        if ((D_800EC9C2 == 0) && (D_80121B59 == 0) && (gTrainingCourseLesson == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -566,7 +566,7 @@ block_24:
         createCallbackTask(&func_8006C698, 0, 0x64);
         createCallbackTask(&initRaceCoursePreviewAnimatedBillboards, 0, 0x64);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0) && ((gMainMenuSelectedCourse == 0) || (gMainMenuSelectedCourse == 7) || (gMainMenuSelectedCourse == 8))) {
+        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0) && ((gTrainingCourseLesson == 0) || (gTrainingCourseLesson == 7) || (gTrainingCourseLesson == 8))) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }

@@ -123,7 +123,7 @@ extern u8 D_80121B59;
 extern u8 D_80121B5E;
 extern u8 D_80121B59;
 extern u8 D_80121B58;
-extern u8 gMainMenuSelectedCourse;
+extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern s16 gRaceCourseIndex;
 extern s32 D_801235B4;
@@ -290,7 +290,7 @@ void func_8008C098(RaceInputPlayer *player) {
         player->itemEffectCount = 3;
         player->actionEffectType = 1;
     }
-    switch (gMainMenuSelectedCourse) {
+    switch (gTrainingCourseLesson) {
     case 1:
         player->facingAngle = 0x57E;
         player->posX = 0xDB870B2D;
