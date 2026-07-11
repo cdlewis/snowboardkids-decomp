@@ -31,7 +31,6 @@ typedef struct {
 extern s16 gCurrentRaceRecordReplayHandle;
 extern s16 gRaceReplayInputBufferHandle;
 
-extern u32 D_80121E04[][0x183];
 extern s32 gMenuFlowState;
 extern u32 gPlayerInputHeld[];
 extern s8 gPlayerStickX[];
@@ -158,7 +157,7 @@ void playRaceReplayInputFrame(RaceInputPlayer *player) {
 #undef PLAYER_INDEX
 #endif
 
-void recordRaceInputFrame(RaceInputPlayer *player) {
+void recordRaceInputHistoryFrame(RaceInputPlayer *player) {
     RaceInputHistoryBuffer *history;
     s32 index;
     u32 inputFlags;
@@ -213,11 +212,11 @@ void recordRaceInputFrame(RaceInputPlayer *player) {
     history->lastWriteIndex = index;
 }
 
-// playRaceInputFrame best match: 98.763% (base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_input/playRaceInputFrame.s")
+// playRaceInputHistoryFrame best match: 98.763% (base_9.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_input/playRaceInputHistoryFrame.s")
 
 #ifdef NON_MATCHING
-void playRaceInputFrame(RaceInputPlayer *player) {
+void playRaceInputHistoryFrame(RaceInputPlayer *player) {
     RaceInputHistoryBuffer *history;
     s32 index;
     s8 replayInputSource;
@@ -289,17 +288,17 @@ void updateRacePlayerInput(RaceInputPlayer *player) {
 
     if (!(gMenuFlowState & 1) && !(player->stateFlags & 0x40)) {
         index = player->playerIndex;
-        player->disabledInputFlags = D_80121E04[index][0];
+        player->disabledInputFlags = D_80121D80[index].inputFlags;
 
         if (player->replayInputSource == 0) {
             player->inputFlags = gPlayerInputHeld[index];
             player->stickX = gPlayerStickX[index];
             player->stickY = gPlayerStickY[index];
             if (player->unk15 != 0) {
-                recordRaceInputFrame(player);
+                recordRaceInputHistoryFrame(player);
             }
         } else {
-            playRaceInputFrame(player);
+            playRaceInputHistoryFrame(player);
         }
 
         player->inputFlags &= 0xFFF0FFFF;
