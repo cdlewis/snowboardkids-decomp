@@ -1,32 +1,35 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "main_menu_title_ui.h"
+#include "title_screen_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 #include "title_menu.h"
+
+#define TITLE_SCREEN_LOGO_SPRITE_HANDLE D_8011217A
+#define TITLE_SCREEN_TEXTURE_HANDLE (D_80112130.titleTextureHandle)
 
 typedef struct {
     char pad0[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
-} MainMenuTitleActor;
+} TitleScreenActor;
 
 typedef struct {
     s16 width;
     s16 height;
-} MainMenuTitleSprite;
+} TitleScreenSprite;
 
-struct MainMenuLogoActor {
-    MainMenuTitleActor common;
-    /* 0x1C */ MainMenuTitleSprite sprite;
+struct TitleScreenLogoActor {
+    TitleScreenActor common;
+    /* 0x1C */ TitleScreenSprite sprite;
     /* 0x20 */ char pad20[4];
     /* 0x24 */ s16 startX;
     /* 0x26 */ s16 startY;
 };
 
-struct MainMenuSelectionLabelsActor {
-    MainMenuTitleActor common;
+struct TitleScreenMenuOptionsActor {
+    TitleScreenActor common;
     /* 0x1C */ s16 labelY;
     /* 0x1E */ s16 unused1E;
     /* 0x20 */ u16 selectedOption;
@@ -34,8 +37,8 @@ struct MainMenuSelectionLabelsActor {
     /* 0x24 */ s16 pulseScale;
 };
 
-struct MainMenuSelectionArrowActor {
-    MainMenuTitleActor common;
+struct TitleScreenMenuCursorActor {
+    TitleScreenActor common;
 };
 
 typedef struct {
@@ -49,35 +52,35 @@ typedef struct {
 typedef struct {
     char pad0[0x42];
     /* 0x42 */ s16 titleTextureHandle;
-} MainMenuTitleAssetHandles;
+} TitleScreenAssetHandles;
 
 extern MainMenuState *gCurrentGameTask;
 extern s32 gMenuRenderCallbackList;
-extern MainMenuTitleAssetHandles D_80112130;
+extern TitleScreenAssetHandles D_80112130;
 extern s16 D_8011217A;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern u8 gConnectedControllerCount;
 
 extern void addRenderCallback(void *, void *, void *);
 
-void drawMainMenuTitleLogo(MainMenuLogoActor *arg0) {
+void drawTitleScreenLogo(TitleScreenLogoActor *arg0) {
     func_80011D74(&arg0->sprite, 1, arg0->common.x, arg0->common.y);
 }
 
-void updateMainMenuTitleLogo(MainMenuLogoActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuTitleLogo, arg0);
+void updateTitleScreenLogo(TitleScreenLogoActor *arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, drawTitleScreenLogo, arg0);
 }
 
-void initMainMenuTitleLogo(MainMenuLogoActor *arg0) {
-    func_80017168((DstStruct_80017168 *)&arg0->sprite, getMemoryBlockBase(D_8011217A));
+void initTitleScreenLogo(TitleScreenLogoActor *arg0) {
+    func_80017168((DstStruct_80017168 *)&arg0->sprite, getMemoryBlockBase(TITLE_SCREEN_LOGO_SPRITE_HANDLE));
     arg0->sprite.width = 0x10;
     arg0->sprite.height = 0x10;
     arg0->common.x = arg0->startX;
     arg0->common.y = arg0->startY;
-    setCallbackTaskCallback(arg0, updateMainMenuTitleLogo);
+    setCallbackTaskCallback(arg0, updateTitleScreenLogo);
 }
 
-void drawMainMenuTitleOptions(MainMenuSelectionLabelsActor *arg0) {
+void drawTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0) {
     s32 i;
     s32 tile;
     u16 palette;
@@ -92,17 +95,17 @@ void drawMainMenuTitleOptions(MainMenuSelectionLabelsActor *arg0) {
                 palette = 3;
             }
             drawMenuSpriteWithAlpha(arg0->common.x, (s16)(arg0->labelY + (i * 0x10)),
-                          getMemoryBlockBase(D_80112130.titleTextureHandle),
+                          getMemoryBlockBase(TITLE_SCREEN_TEXTURE_HANDLE),
                           tile & 0xFFFF, 0x20, 0x20, 0, 0x100, palette + 1);
         }
     }
 
-    drawMenuSprite(-0x48, 0x4F, getMemoryBlockBase(D_80112130.titleTextureHandle), 0xA, 0x20, 0x20, 0, 0);
+    drawMenuSprite(-0x48, 0x4F, getMemoryBlockBase(TITLE_SCREEN_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
     drawMenuAsciiText(0x68, -0x1A, "TM", 0, 0x100);
-    drawMenuSprite(-0x48, 0x5A, getMemoryBlockBase(D_80112130.titleTextureHandle), 0xB, 0x20, 0x20, 0, 0);
+    drawMenuSprite(-0x48, 0x5A, getMemoryBlockBase(TITLE_SCREEN_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
 }
 
-void updateMainMenuTitleOptions(MainMenuSelectionLabelsActor *arg0) {
+void updateTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0) {
     if (gCurrentGameTask->selection != (u16)(0, arg0->selectedOption)) {
         arg0->pulseScale = 0x100;
         arg0->pulseTimer = 0;
@@ -114,10 +117,10 @@ void updateMainMenuTitleOptions(MainMenuSelectionLabelsActor *arg0) {
         arg0->pulseScale += 9;
     }
     arg0->pulseTimer = ((u16)arg0->pulseTimer + 1) & 0x1F;
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuTitleOptions, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawTitleScreenMenuOptions, arg0);
 }
 
-void initMainMenuTitleOptions(MainMenuSelectionLabelsActor *arg0) {
+void initTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0) {
     arg0->common.x = -0x2C;
     arg0->common.y = -0x2C;
     arg0->labelY = 0x20;
@@ -125,26 +128,26 @@ void initMainMenuTitleOptions(MainMenuSelectionLabelsActor *arg0) {
     arg0->selectedOption = 0;
     arg0->pulseTimer = 0;
     arg0->pulseScale = 0x100;
-    setCallbackTaskCallback(arg0, updateMainMenuTitleOptions);
+    setCallbackTaskCallback(arg0, updateTitleScreenMenuOptions);
 }
 
-void drawMainMenuTitleCursor(MainMenuSelectionArrowActor *arg0) {
+void drawTitleScreenMenuCursor(TitleScreenMenuCursorActor *arg0) {
     s32 temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
 
     drawMenuSprite(arg0->common.x, arg0->common.y, temp, 3, 0x20, 0x20, 0, 0);
 }
 
-void updateMainMenuTitleCursor(MainMenuSelectionArrowActor *arg0) {
+void updateTitleScreenMenuCursor(TitleScreenMenuCursorActor *arg0) {
     if (gCurrentGameTask->selection != 1) {
         arg0->common.x = -0x34;
     } else {
         arg0->common.x = -0x3C;
     }
     arg0->common.y = (gCurrentGameTask->selection << 4) + 0x20;
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuTitleCursor, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawTitleScreenMenuCursor, arg0);
 }
 
-void initMainMenuTitleCursor(MainMenuSelectionArrowActor *arg0) {
+void initTitleScreenMenuCursor(TitleScreenMenuCursorActor *arg0) {
     arg0->common.y = 0x20;
-    setCallbackTaskCallback(arg0, updateMainMenuTitleCursor);
+    setCallbackTaskCallback(arg0, updateTitleScreenMenuCursor);
 }
