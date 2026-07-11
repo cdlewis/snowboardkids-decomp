@@ -1,5 +1,5 @@
 #include "common.h"
-#include "race_course_effects.h"
+#include "race_course_objects.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
@@ -66,7 +66,7 @@ typedef struct CourseEffectPlayer {
     /* 0x57A */ char pad57A[0x92];
 } CourseEffectPlayer;
 
-typedef struct Struct6B760 {
+typedef struct PatrolCourseObjectEffect {
     char pad[0x18];
     Vec3i pos;
     s32 unk24;
@@ -85,7 +85,7 @@ typedef struct Struct6B760 {
     s16 unk4C;
     s16 unk4E;
     s32 unk50;
-} Struct6B760;
+} PatrolCourseObjectEffect;
 
 typedef struct {
     s16 rotation[9];
@@ -93,7 +93,7 @@ typedef struct {
     Vec3i basePos;
 } CourseEffectMatrixSource;
 
-typedef struct Struct6C51C {
+typedef struct CourseGateObjectEffect {
     char pad0[0x18];
     CourseEffectMatrixSource source;
     Vec3i pos1;
@@ -105,7 +105,7 @@ typedef struct Struct6C51C {
     void *sourceMatrix;
     void *pos1Matrix;
     void *pos2Matrix;
-} Struct6C51C;
+} CourseGateObjectEffect;
 
 typedef struct RaceMovingEffect {
     char pad0[0x18];
@@ -255,42 +255,42 @@ extern s16 D_80112142;
 extern s32 gMenuFlowState;
 extern u8 gCurrentViewportIndex;
 extern u8 gRenderMatricesDirty;
-extern void func_8006C5C0(Struct6C51C *);
-void func_8006C1B4(Struct6C51C *);
-void func_8006CCC0(RaceCourseTriggerEffect *);
-void func_8006CE68(CourseEffectPlayer *, RaceCourseTriggerEffect *);
-void func_8006D2D0(RaceCourseTriggerEffect *);
-void func_80069890(RaceCountdownEffect *);
-void func_80069914(RaceCountdownEffect *);
-void func_80069998(RaceCountdownEffect *);
-void func_800699F0(RaceCountdownEffect *);
-void func_80069A78(RaceCountdownEffect *);
-void func_80069AF0(RaceCountdownEffect *);
-void func_80069B60(RaceCountdownEffect *);
-extern void func_8006C7F4(RaceCourseMarkerEffect *);
-void func_8006B3E0(Struct6B760 *);
-void func_8006B6C8(Struct6B760 *);
-void func_8006AF48(RaceCourseRenderEffect *);
-void func_8006BC68(RaceMovingEffect *);
+extern void waitForCourseGateTrigger(CourseGateObjectEffect *);
+void renderCourseGateObject(CourseGateObjectEffect *);
+void renderCourseTriggerVolume(RaceCourseTriggerEffect *);
+void collidePlayerWithCourseTriggerVolume(CourseEffectPlayer *, RaceCourseTriggerEffect *);
+void updateCourseTriggerVolume(RaceCourseTriggerEffect *);
+void drawRaceCountdownReadyPrompt(RaceCountdownEffect *);
+void drawRaceCountdownGoPrompt(RaceCountdownEffect *);
+void updateRaceCountdownGoPromptOut(RaceCountdownEffect *);
+void updateRaceCountdownGoPromptHold(RaceCountdownEffect *);
+void updateRaceCountdownReadyPromptIn(RaceCountdownEffect *);
+void updateRaceCountdownReadyPromptHold(RaceCountdownEffect *);
+void updateRaceCountdownInitialDelay(RaceCountdownEffect *);
+extern void renderCourseBillboardMarker(RaceCourseMarkerEffect *);
+void updatePatrolCourseObject(PatrolCourseObjectEffect *);
+void initPatrolCourseObject(PatrolCourseObjectEffect *);
+void renderRaceCourseSceneryObjects(RaceCourseRenderEffect *);
+void renderSpiralCourseObject(RaceMovingEffect *);
 extern u8 gRaceUpdatePaused;
 extern s16 gRaceCourseIndex;
 extern CourseAssetHandles gAssetHandles;
 extern s16 D_80112144;
 extern s16 D_80112146;
 extern RaceCamera D_801121E0[];
-extern CourseMarkerSpawnEntry *D_800DA0B8[];
-extern CourseRenderEntry *D_800DA73C[];
-extern void *D_800DA1C0[];
-extern SoundParams D_800DA764[];
+extern CourseMarkerSpawnEntry *gCourseTextureMarkerSpawnEntriesByCourse[];
+extern CourseRenderEntry *gRaceCourseSceneryEntriesByCourse[];
+extern void *gRaceCourseSceneryDisplayLists[];
+extern SoundParams gCourseGateSoundParams[];
 extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern CourseAngleEntry D_800B9554[];
 extern CourseAngleEntry D_800B9556[];
-extern CourseMarkerEntry D_800DA804[];
-extern CourseMarkerVertexResource D_800DA80C[];
-extern CourseMarkerTextureResource D_800DA814[];
-extern CourseTriggerEntry D_800DA840[];
+extern CourseMarkerEntry gCourseBillboardMarkerEntries[];
+extern CourseMarkerVertexResource gCourseBillboardMarkerVertexResources[];
+extern CourseMarkerTextureResource gCourseBillboardMarkerTextureResources[];
+extern CourseTriggerEntry gCourseTriggerEntries[];
 extern Gfx D_2001D00[];
-extern SoundParamAngle D_800DA770[];
+extern SoundParamAngle gCourseGateAngles[];
 extern CourseEffectPlayer D_80121D80[];
 extern CourseEffectPlayer D_8012238C[];
 extern CourseEffectPlayer D_80122998[];
@@ -332,7 +332,7 @@ extern Gfx D_200C7A8[];
 extern Gfx D_2006548[];
 extern Gfx D_2006880[];
 extern Gfx D_20058A8[];
-void func_80069890(RaceCountdownEffect *arg0) {
+void drawRaceCountdownReadyPrompt(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
         func_80047174(-0x34, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x3F, arg0->step);
     } else {
@@ -340,7 +340,7 @@ void func_80069890(RaceCountdownEffect *arg0) {
     }
 }
 
-void func_80069914(RaceCountdownEffect *arg0) {
+void drawRaceCountdownGoPrompt(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
         func_80047174(-0x20, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x40, arg0->step);
     } else {
@@ -348,16 +348,16 @@ void func_80069914(RaceCountdownEffect *arg0) {
     }
 }
 
-void func_80069998(RaceCountdownEffect *arg0) {
+void updateRaceCountdownGoPromptOut(RaceCountdownEffect *arg0) {
     arg0->step++;
     if (arg0->step == 4) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80069914, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceCountdownGoPrompt, arg0);
 }
 
-void func_800699F0(RaceCountdownEffect *arg0) {
+void updateRaceCountdownGoPromptHold(RaceCountdownEffect *arg0) {
     RaceCountdownEffect *temp_a2 = arg0;
 
     if (arg0->step != 0) {
@@ -366,47 +366,47 @@ void func_800699F0(RaceCountdownEffect *arg0) {
     temp_a2->timer--;
     if (temp_a2->timer == 0) {
         gMenuFlowState &= ~1;
-        setCallbackTaskCallback(temp_a2, func_80069998);
+        setCallbackTaskCallback(temp_a2, updateRaceCountdownGoPromptOut);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80069914, temp_a2);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceCountdownGoPrompt, temp_a2);
 }
 
-void func_80069A78(RaceCountdownEffect *arg0) {
+void updateRaceCountdownReadyPromptIn(RaceCountdownEffect *arg0) {
     arg0->step++;
     if (arg0->step == 4) {
         enqueueSoundEffect(0x4C, 0x5A);
         arg0->timer = 0x14;
-        setCallbackTaskCallback(arg0, func_800699F0);
+        setCallbackTaskCallback(arg0, updateRaceCountdownGoPromptHold);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80069890, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceCountdownReadyPrompt, arg0);
 }
 
-void func_80069AF0(RaceCountdownEffect *arg0) {
+void updateRaceCountdownReadyPromptHold(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
         arg0->step--;
     }
     arg0->timer--;
     if (arg0->timer == 0) {
-        setCallbackTaskCallback(arg0, func_80069A78);
+        setCallbackTaskCallback(arg0, updateRaceCountdownReadyPromptIn);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80069890, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceCountdownReadyPrompt, arg0);
 }
 
-void func_80069B60(RaceCountdownEffect *arg0) {
+void updateRaceCountdownInitialDelay(RaceCountdownEffect *arg0) {
     if ((--arg0->timer) == 0) {
         enqueueSoundEffect(0x4B, 0x5A);
         arg0->step = 4;
         arg0->timer = 0x3C;
-        setCallbackTaskCallback(arg0, func_80069AF0);
+        setCallbackTaskCallback(arg0, updateRaceCountdownReadyPromptHold);
     }
 }
 
-void func_80069BC0(RaceCountdownEffect *arg0) {
+void initRaceCountdownPrompt(RaceCountdownEffect *arg0) {
     arg0->timer = 0x14;
-    setCallbackTaskCallback(arg0, func_80069B60);
+    setCallbackTaskCallback(arg0, updateRaceCountdownInitialDelay);
 }
 
-void func_80069BEC(void *arg0) {
+void renderRaceCourseModel(void *arg0) {
     volatile u8 pad[0x30];
 
     gDPPipeSync(gRegionAllocPtr++);
@@ -450,8 +450,8 @@ void func_80069BEC(void *arg0) {
     }
 }
 
-// func_80069E50 best match: 52.371% (base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_80069E50.s")
+// renderRaceCourseBackdrop best match: 52.371% (base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/renderRaceCourseBackdrop.s")
 
 #ifdef NON_MATCHING
 #define EMIT_COURSE_BACKDROP(list)                             \
@@ -480,7 +480,7 @@ void func_80069BEC(void *arg0) {
         gfx->words.w0 = 0x06000000;                            \
     } while (0)
 
-void func_80069E50(RaceCourseBackdropEffect *arg0) {
+void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
     CourseEffectMatrixSource sp100;
     RaceCamera *camera;
     RaceCourseBackdropEffect *temp_s3;
@@ -538,36 +538,36 @@ void func_80069E50(RaceCourseBackdropEffect *arg0) {
 }
 #endif
 
-void func_8006A74C(void *arg0) {
-    addRenderCallback(&D_801248A4, func_80069BEC, arg0);
-    addRenderCallback(&D_801248F8, func_80069E50, arg0);
+void updateRaceCourseModelRenderTask(void *arg0) {
+    addRenderCallback(&D_801248A4, renderRaceCourseModel, arg0);
+    addRenderCallback(&D_801248F8, renderRaceCourseBackdrop, arg0);
 }
 
-void func_8006A798(void *arg0) {
-    setCallbackTaskCallback(arg0, func_8006A74C);
+void initRaceCourseModelRenderTask(void *arg0) {
+    setCallbackTaskCallback(arg0, updateRaceCourseModelRenderTask);
 }
 
-void func_8006A7BC(RacePlayerEffect *arg0) {
+void drawFinalLapPromptForViewport(RacePlayerEffect *arg0) {
     if (gCurrentViewportIndex == arg0->playerIndex) {
         func_80045A78(-0x30, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x41);
     }
 }
 
-void func_8006A80C(void *arg0) {
+void updateFinalLapPrompt(void *arg0) {
     if (gMenuFlowState & 8) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&D_80124878, func_8006A7BC, arg0);
+    addRenderCallback(&D_80124878, drawFinalLapPromptForViewport, arg0);
 }
 
-void func_8006A85C(void *arg0) {
+void initFinalLapPrompt(void *arg0) {
     enqueueSoundEffect(0x52, 0x5A);
-    setCallbackTaskCallback(arg0, func_8006A80C);
+    setCallbackTaskCallback(arg0, updateFinalLapPrompt);
 }
 
-// func_8006A894 best match: 99.693% (nonmatchings/func_8006A894-7892263622508053986/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006A894.s")
+// renderCourseTextureMarkers best match: 99.693% (nonmatchings/renderCourseTextureMarkers-7892263622508053986/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/renderCourseTextureMarkers.s")
 
 #ifdef NON_MATCHING
 extern void func_80045A1C(u8 *, u16, void **, void **, s16 *, s16 *);
@@ -576,7 +576,7 @@ extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern u32 gViewportMatrix;
 
-void func_8006A894(RaceCourseRenderEffect *arg0) {
+void renderCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
     volatile u8 pad[8];
     void *image;
     void *palette;
@@ -589,7 +589,7 @@ void func_8006A894(RaceCourseRenderEffect *arg0) {
 
     textureIndex = -1;
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
-    entry = D_800DA0B8[gRaceCourseIndex];
+    entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex];
     i = 0;
     if (entry->type != -1) {
         do {
@@ -625,11 +625,11 @@ void func_8006A894(RaceCourseRenderEffect *arg0) {
 }
 #endif
 
-void func_8006ACE8(void *arg0) {
+void updateCourseTextureMarkers(void *arg0) {
     CourseMarkerSpawnEntry *entry;
     s8 type;
 
-    entry = D_800DA0B8[gRaceCourseIndex];
+    entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex];
     if (entry->type != -1) {
         do {
             switch (entry->type) {
@@ -646,16 +646,16 @@ void func_8006ACE8(void *arg0) {
         } while (entry->type != -1);
     }
 
-    addRenderCallback(&D_801248D4, func_8006A894, arg0);
+    addRenderCallback(&D_801248D4, renderCourseTextureMarkers, arg0);
 }
 
-void func_8006AE00(RaceCourseRenderEffect *arg0) {
+void initCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
     CourseMarkerSpawnEntry *entry;
     s32 count;
     s32 allocSize;
     s32 i;
 
-    entry = D_800DA0B8[gRaceCourseIndex];
+    entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex];
     count = 0;
     if (entry->type != -1) {
         do {
@@ -665,7 +665,7 @@ void func_8006AE00(RaceCourseRenderEffect *arg0) {
     }
 
     if (count != 0) {
-        entry = D_800DA0B8[gRaceCourseIndex];
+        entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex];
         allocSize = count * sizeof(CourseRenderCommand);
         gAssetHandles.markerMatrixHandle = allocRelocatableHeapBlock(allocSize);
         arg0->vertices = getRelocatableHeapBlockBase(gAssetHandles.markerMatrixHandle);
@@ -682,10 +682,10 @@ void func_8006AE00(RaceCourseRenderEffect *arg0) {
         osWritebackDCache(arg0->vertices, allocSize);
     }
 
-    setCallbackTaskCallback(arg0, func_8006ACE8);
+    setCallbackTaskCallback(arg0, updateCourseTextureMarkers);
 }
 
-void func_8006AF48(RaceCourseRenderEffect *arg0) {
+void renderRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
     CourseRenderEntry *var_s4;
     s32 var_s5;
     s32 var_s7;
@@ -693,7 +693,7 @@ void func_8006AF48(RaceCourseRenderEffect *arg0) {
     Gfx *temp_s2;
     Gfx *temp_s3;
 
-    var_s4 = D_800DA73C[gRaceCourseIndex];
+    var_s4 = gRaceCourseSceneryEntriesByCourse[gRaceCourseIndex];
     var_s7 = TRUE;
     var_s5 = 0;
     if (var_s4->displayListIndex != -1) {
@@ -713,7 +713,7 @@ void func_8006AF48(RaceCourseRenderEffect *arg0) {
                 gDma1p(temp_s0, 1, (u32)arg0->vertices + (var_s5 << 6), 0x40, 2);
 
                 temp_s0 = gRegionAllocPtr++;
-                gSPDisplayList(temp_s0, D_800DA1C0[var_s4->displayListIndex]);
+                gSPDisplayList(temp_s0, gRaceCourseSceneryDisplayLists[var_s4->displayListIndex]);
             }
             var_s4++;
             var_s5++;
@@ -721,11 +721,11 @@ void func_8006AF48(RaceCourseRenderEffect *arg0) {
     }
 }
 
-void func_8006B0D8(void *arg0) {
-    addRenderCallback(&D_801248B0, func_8006AF48, arg0);
+void updateRaceCourseSceneryObjects(void *arg0) {
+    addRenderCallback(&D_801248B0, renderRaceCourseSceneryObjects, arg0);
 }
 
-void func_8006B108(RaceCourseRenderEffect *arg0) {
+void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
     s32 size;
     CourseRenderEntry *base;
     CourseRenderEntry *entry;
@@ -733,7 +733,7 @@ void func_8006B108(RaceCourseRenderEffect *arg0) {
     CourseEffectMatrixSource transform;
     s32 count;
 
-    base = D_800DA73C[gRaceCourseIndex];
+    base = gRaceCourseSceneryEntriesByCourse[gRaceCourseIndex];
     count = 0;
     entry = base;
     if (base->displayListIndex != -1) {
@@ -760,14 +760,14 @@ void func_8006B108(RaceCourseRenderEffect *arg0) {
 
         osWritebackDCache(arg0->vertices, size);
     }
-    setCallbackTaskCallback(arg0, func_8006B0D8);
+    setCallbackTaskCallback(arg0, updateRaceCourseSceneryObjects);
 }
 
-// func_8006B228 best match: 99.182% at nonmatchings/func_8006B228-731940616440357983/angle_5.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B228.s")
+// renderPatrolCourseObject best match: 99.182% at nonmatchings/renderPatrolCourseObject-731940616440357983/angle_5.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/renderPatrolCourseObject.s")
 
 #ifdef NON_MATCHING
-void func_8006B228(Struct6B760 *arg0) {
+void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
     s32 sine;
     s32 doubleSine;
     CourseEffectMatrixSource transform;
@@ -812,11 +812,11 @@ void func_8006B228(Struct6B760 *arg0) {
 }
 #endif
 
-// func_8006B3E0 best match: 97.016% at nonmatchings/func_8006B3E0-3836525038718587862/base_6.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B3E0.s")
+// updatePatrolCourseObject best match: 97.016% at nonmatchings/updatePatrolCourseObject-3836525038718587862/base_6.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/updatePatrolCourseObject.s")
 
 #ifdef NON_MATCHING
-void func_8006B3E0(Struct6B760 *arg0) {
+void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
     Vec3i *pos;
     s16 temp_a1;
     s16 temp_t2;
@@ -903,15 +903,15 @@ void func_8006B3E0(Struct6B760 *arg0) {
             }
         }
     }
-    addRenderCallback(&D_801248A4, func_8006B228, arg0);
+    addRenderCallback(&D_801248A4, renderPatrolCourseObject, arg0);
 }
 #endif
 
-// func_8006B6C8 best match: 98.684% at nonmatchings/func_8006B6C8-5821324921387846781/base.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B6C8.s")
+// initPatrolCourseObject best match: 98.684% at nonmatchings/initPatrolCourseObject-5821324921387846781/base.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/initPatrolCourseObject.s")
 
 #ifdef NON_MATCHING
-void func_8006B6C8(Struct6B760 *arg0) {
+void initPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
     s32 temp24;
     s32 temp28;
     s32 temp2C;
@@ -936,13 +936,13 @@ void func_8006B6C8(Struct6B760 *arg0) {
         arg0->pos.y = temp28;
         arg0->pos.z = temp2C;
         arg0->pos.y = getRaceCourseSurfaceHeight(arg0->unk3C, arg0->pos.x, arg0->pos.z);
-        setCallbackTaskCallback(arg0, func_8006B3E0);
+        setCallbackTaskCallback(arg0, updatePatrolCourseObject);
     }
 }
 #endif
 
-void func_8006B760(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
-    Struct6B760 *p = createCallbackTask(func_8006B6C8, 0, 0x64);
+void spawnPatrolCourseObject(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    PatrolCourseObjectEffect *p = createCallbackTask(initPatrolCourseObject, 0, 0x64);
     if (p != 0) {
         p->unk24 = arg1;
         p->unk2C = arg2;
@@ -952,7 +952,7 @@ void func_8006B760(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     }
 }
 
-void func_8006B7E0(RaceMovingEffect *arg0) {
+void renderLaunchRampCourseObject(RaceMovingEffect *arg0) {
     volatile s32 unused;
     CourseEffectMatrixSource transform;
     volatile s32 pad[1];
@@ -982,7 +982,7 @@ void func_8006B7E0(RaceMovingEffect *arg0) {
     }
 }
 
-void func_8006B988(RaceMovingEffect *arg0) {
+void updateLaunchRampCourseObjectExit(RaceMovingEffect *arg0) {
     Vec3i sp24;
     s16 temp_v0;
     s32 temp_v1;
@@ -1001,13 +1001,13 @@ void func_8006B988(RaceMovingEffect *arg0) {
             temp_a3->pos.y += sp24.y;
             temp_a3->pos.z += sp24.z;
         }
-        addRenderCallback(&D_801248A4, func_8006B7E0, temp_a3);
+        addRenderCallback(&D_801248A4, renderLaunchRampCourseObject, temp_a3);
         return;
     }
     removeCallbackTask(temp_a3);
 }
 
-void func_8006BA50(RaceMovingEffect *arg0) {
+void updateLaunchRampCourseObjectArc(RaceMovingEffect *arg0) {
     Vec3i sp2C;
     void *mtx;
 
@@ -1024,16 +1024,16 @@ void func_8006BA50(RaceMovingEffect *arg0) {
         arg0->pos.z += sp2C.z;
 
         if (arg0->timer == 0) {
-            setCallbackTaskCallback(arg0, func_8006B988);
+            setCallbackTaskCallback(arg0, updateLaunchRampCourseObjectExit);
             makeFixedRotationXY(mtx, 0x100, D_800B9556[gRaceCourseIndex].angle + 0x400);
             arg0->timer = 0x64;
         }
     }
 
-    addRenderCallback(&D_801248A4, func_8006B7E0, arg0);
+    addRenderCallback(&D_801248A4, renderLaunchRampCourseObject, arg0);
 }
 
-void func_8006BB50(RaceMovingEffect *arg0) {
+void initLaunchRampCourseObject(RaceMovingEffect *arg0) {
     void *mtx;
 
     arg0->timer = 0x46;
@@ -1045,10 +1045,10 @@ void func_8006BB50(RaceMovingEffect *arg0) {
     arg0->pos.x += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].pos.x;
     arg0->pos.y += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].pos.y;
     arg0->pos.z += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].pos.z;
-    setCallbackTaskCallback(arg0, func_8006BA50);
+    setCallbackTaskCallback(arg0, updateLaunchRampCourseObjectArc);
 }
 
-void func_8006BC68(RaceMovingEffect *arg0) {
+void renderSpiralCourseObject(RaceMovingEffect *arg0) {
     volatile s32 unused;
     CourseEffectMatrixSource transform;
     volatile s32 pad[2];
@@ -1076,7 +1076,7 @@ void func_8006BC68(RaceMovingEffect *arg0) {
     }
 }
 
-void func_8006BDE4(RaceMovingEffect *arg0) {
+void updateSpiralCourseObjectExit(RaceMovingEffect *arg0) {
     Vec3i sp24;
     s16 temp_v0;
     RaceMovingEffect *temp_a3 = arg0;
@@ -1090,13 +1090,13 @@ void func_8006BDE4(RaceMovingEffect *arg0) {
             temp_a3->pos.y += sp24.y;
             temp_a3->pos.z += sp24.z;
         }
-        addRenderCallback(&D_801248A4, func_8006BC68, temp_a3);
+        addRenderCallback(&D_801248A4, renderSpiralCourseObject, temp_a3);
         return;
     }
     removeCallbackTask(temp_a3);
 }
 
-void func_8006BE90(RaceMovingEffect *arg0) {
+void updateSpiralCourseObjectTurn(RaceMovingEffect *arg0) {
     Vec3i sp2C;
     void *velocity;
 
@@ -1119,15 +1119,15 @@ void func_8006BE90(RaceMovingEffect *arg0) {
         arg0->pos.z += sp2C.z;
 
         if (arg0->timer == 0) {
-            setCallbackTaskCallback(arg0, func_8006BDE4);
+            setCallbackTaskCallback(arg0, updateSpiralCourseObjectExit);
             arg0->timer = 0x38;
         }
     }
 
-    addRenderCallback(&D_801248A4, func_8006BC68, arg0);
+    addRenderCallback(&D_801248A4, renderSpiralCourseObject, arg0);
 }
 
-void func_8006BFC0(RaceMovingEffect *arg0) {
+void updateSpiralCourseObjectLaunch(RaceMovingEffect *arg0) {
     Vec3i sp1C;
     RaceMovingEffect *temp_a3 = arg0;
 
@@ -1138,14 +1138,14 @@ void func_8006BFC0(RaceMovingEffect *arg0) {
         temp_a3->pos.y += sp1C.y * 2;
         temp_a3->pos.z += sp1C.z * 2;
         if (temp_a3->timer == 0) {
-            setCallbackTaskCallback(temp_a3, func_8006BE90);
+            setCallbackTaskCallback(temp_a3, updateSpiralCourseObjectTurn);
             temp_a3->timer = 0x18;
         }
     }
-    addRenderCallback(&D_801248A4, func_8006BC68, temp_a3);
+    addRenderCallback(&D_801248A4, renderSpiralCourseObject, temp_a3);
 }
 
-void func_8006C088(RaceMovingEffect *arg0) {
+void initSpiralCourseObject(RaceMovingEffect *arg0) {
     void *mtx;
 
     arg0->timer = 0x28;
@@ -1160,15 +1160,15 @@ void func_8006C088(RaceMovingEffect *arg0) {
     arg0->pos.x += gRaceCourseStartEntries[gRaceCourseIndex].unk8.x;
     arg0->pos.y += gRaceCourseStartEntries[gRaceCourseIndex].unk8.y + 0x40000;
     arg0->pos.z += gRaceCourseStartEntries[gRaceCourseIndex].unk8.z;
-    setCallbackTaskCallback(arg0, func_8006BFC0);
-    func_8006BFC0(arg0);
+    setCallbackTaskCallback(arg0, updateSpiralCourseObjectLaunch);
+    updateSpiralCourseObjectLaunch(arg0);
 }
 
-// func_8006C1B4 best match: 99.414% (nonmatchings/func_8006C1B4-6182772958467082306/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C1B4.s")
+// renderCourseGateObject best match: 99.414% (nonmatchings/renderCourseGateObject-6182772958467082306/base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/renderCourseGateObject.s")
 
 #ifdef NON_MATCHING
-void func_8006C1B4(Struct6C51C *arg0) {
+void renderCourseGateObject(CourseGateObjectEffect *arg0) {
     CourseEffectMatrixSource scratch;
     volatile s32 pad[2];
     void *matrix;
@@ -1181,7 +1181,7 @@ void func_8006C1B4(Struct6C51C *arg0) {
         arg0->pos2Matrix = NULL;
     }
 
-    if (isPositionNearCurrentViewport((Vec3i *) &D_800DA764[gRaceCourseIndex]) == 0) {
+    if (isPositionNearCurrentViewport((Vec3i *) &gCourseGateSoundParams[gRaceCourseIndex]) == 0) {
         return;
     }
 
@@ -1207,7 +1207,7 @@ void func_8006C1B4(Struct6C51C *arg0) {
 
     matrix = arg0->pos1Matrix;
     if (matrix == NULL) {
-        makeFixedRotationZY(scratch.rotation, D_800DA770[gRaceCourseIndex].angle, arg0->unk50);
+        makeFixedRotationZY(scratch.rotation, gCourseGateAngles[gRaceCourseIndex].angle, arg0->unk50);
         scratch.basePos.x = arg0->pos1.x;
         scratch.basePos.y = arg0->pos1.y;
         scratch.basePos.z = arg0->pos1.z;
@@ -1242,20 +1242,20 @@ void func_8006C1B4(Struct6C51C *arg0) {
 }
 #endif
 
-void func_8006C4AC(Struct6C51C *arg0) {
+void updateCourseGateClosing(CourseGateObjectEffect *arg0) {
     if (gRaceUpdatePaused == 0) {
         if (arg0->unk50 != 0) {
             arg0->unk50 += 0x80;
         } else {
             arg0->unk56 = 0;
-            setCallbackTaskCallback(arg0, func_8006C5C0);
+            setCallbackTaskCallback(arg0, waitForCourseGateTrigger);
         }
     }
-    addRenderCallback(&D_801248A4, func_8006C1B4, arg0);
+    addRenderCallback(&D_801248A4, renderCourseGateObject, arg0);
 }
 
-void func_8006C51C(Struct6C51C *arg0) {
-    Struct6C51C *temp_s0 = arg0;
+void updateCourseGateOpening(CourseGateObjectEffect *arg0) {
+    CourseGateObjectEffect *temp_s0 = arg0;
     s16 temp_v0;
 
     if (gRaceUpdatePaused == 0) {
@@ -1265,34 +1265,34 @@ void func_8006C51C(Struct6C51C *arg0) {
         }
         temp_s0->unk54--;
         if (temp_s0->unk54 == 0) {
-            enqueuePositionalSoundEffect(0x1C, &D_800DA764[gRaceCourseIndex], 0x7F, 0x32);
-            setCallbackTaskCallback(temp_s0, func_8006C4AC);
+            enqueuePositionalSoundEffect(0x1C, &gCourseGateSoundParams[gRaceCourseIndex], 0x7F, 0x32);
+            setCallbackTaskCallback(temp_s0, updateCourseGateClosing);
         }
     }
-    addRenderCallback(&D_801248A4, func_8006C1B4, temp_s0);
+    addRenderCallback(&D_801248A4, renderCourseGateObject, temp_s0);
 }
 
-void func_8006C5C0(Struct6C51C *arg0) {
+void waitForCourseGateTrigger(CourseGateObjectEffect *arg0) {
     if ((gRaceUpdatePaused == 0) && (gMenuFlowState & 4)) {
         arg0->unk54 = 0x2D;
         gMenuFlowState &= ~4;
-        setCallbackTaskCallback(arg0, func_8006C51C);
+        setCallbackTaskCallback(arg0, updateCourseGateOpening);
         arg0->unk56 = 1;
-        enqueuePositionalSoundEffect(0x16, &D_800DA764[gRaceCourseIndex], 0x7F, 0x32);
-        enqueuePositionalSoundEffect(0x1B, &D_800DA764[gRaceCourseIndex], 0x7F, 0x32);
+        enqueuePositionalSoundEffect(0x16, &gCourseGateSoundParams[gRaceCourseIndex], 0x7F, 0x32);
+        enqueuePositionalSoundEffect(0x1B, &gCourseGateSoundParams[gRaceCourseIndex], 0x7F, 0x32);
     }
-    addRenderCallback(&D_801248A4, func_8006C1B4, arg0);
+    addRenderCallback(&D_801248A4, renderCourseGateObject, arg0);
 }
 
-void func_8006C698(Struct6C51C *arg0) {
+void initCourseGateObject(CourseGateObjectEffect *arg0) {
     void *mtx;
     Vec3i sp28;
 
     mtx = arg0->source.rotation;
-    makeFixedRotationY(mtx, D_800DA764[gRaceCourseIndex].angle);
-    arg0->source.basePos.x = D_800DA764[gRaceCourseIndex].x;
-    arg0->source.basePos.y = D_800DA764[gRaceCourseIndex].y;
-    arg0->source.basePos.z = D_800DA764[gRaceCourseIndex].z;
+    makeFixedRotationY(mtx, gCourseGateSoundParams[gRaceCourseIndex].angle);
+    arg0->source.basePos.x = gCourseGateSoundParams[gRaceCourseIndex].x;
+    arg0->source.basePos.y = gCourseGateSoundParams[gRaceCourseIndex].y;
+    arg0->source.basePos.z = gCourseGateSoundParams[gRaceCourseIndex].z;
     sp28.x = 0x18000;
     sp28.y = 0x120000;
     sp28.z = -0x80000;
@@ -1308,14 +1308,14 @@ void func_8006C698(Struct6C51C *arg0) {
     arg0->pos2.y += arg0->source.basePos.y;
     arg0->pos2.z += arg0->source.basePos.z;
     arg0->unk52 = 0;
-    setCallbackTaskCallback(arg0, func_8006C5C0);
+    setCallbackTaskCallback(arg0, waitForCourseGateTrigger);
 }
 
-// func_8006C7F4 best match: 99.603% at nonmatchings/func_8006C7F4-2/output-129-1/source.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006C7F4.s")
+// renderCourseBillboardMarker best match: 99.603% at nonmatchings/renderCourseBillboardMarker-2/output-129-1/source.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/renderCourseBillboardMarker.s")
 
 #ifdef NON_MATCHING
-void func_8006C7F4(RaceCourseMarkerEffect *arg0) {
+void renderCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
     Gfx *gfx;
     s32 i;
     s16 vertexCount;
@@ -1340,25 +1340,25 @@ void func_8006C7F4(RaceCourseMarkerEffect *arg0) {
 }
 #endif
 
-void func_8006CB50(RaceCourseMarkerEffect *arg0) {
+void updateCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
     arg0->rotation -= 0x40;
     arg0->rotation &= 0x7FF;
     if (arg0->useAltQueue != 0) {
-        addRenderCallback(&D_801248EC, func_8006C7F4, arg0);
+        addRenderCallback(&D_801248EC, renderCourseBillboardMarker, arg0);
     } else {
-        addRenderCallback(&D_801248A4, func_8006C7F4, arg0);
+        addRenderCallback(&D_801248A4, renderCourseBillboardMarker, arg0);
     }
 }
 
-void func_8006CBBC(RaceCourseMarkerEffect *arg0) {
+void initCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168),
-                  D_800DA814[arg0->entryIndex].textureIndex,
+                  gCourseBillboardMarkerTextureResources[arg0->entryIndex].textureIndex,
                   &arg0->texture, &arg0->palette);
     arg0->baseVertices =
-        (Vtx *) func_8004597C(getRelocatableHeapBlockBase(D_80112140), (s32) D_800DA80C[arg0->entryIndex].baseVerticesInput);
+        (Vtx *) func_8004597C(getRelocatableHeapBlockBase(D_80112140), (s32) gCourseBillboardMarkerVertexResources[arg0->entryIndex].baseVerticesInput);
 
     {
-        CourseMarkerEntry *entry = &D_800DA804[arg0->entryIndex];
+        CourseMarkerEntry *entry = &gCourseBillboardMarkerEntries[arg0->entryIndex];
 
         arg0->vertexCount = entry->vertexCount;
         arg0->texturePtr = entry->texturePtr;
@@ -1367,21 +1367,21 @@ void func_8006CBBC(RaceCourseMarkerEffect *arg0) {
         arg0->useAltQueue = entry->flags & 1;
         arg0->unk3C = entry->flags & 2;
     }
-    setCallbackTaskCallback(arg0, func_8006CB50);
+    setCallbackTaskCallback(arg0, updateCourseBillboardMarker);
 }
 
-void func_8006CCC0(RaceCourseTriggerEffect *arg0) {
+void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
     volatile s32 unused;
     CourseEffectMatrixSource transform;
     Gfx *gfx;
 
     if (gRenderMatricesDirty != 0) {
-        CourseTriggerEntry *entry = &D_800DA840[((volatile RaceCourseTriggerEffect *) arg0)->entryIndex];
+        CourseTriggerEntry *entry = &gCourseTriggerEntries[((volatile RaceCourseTriggerEffect *) arg0)->entryIndex];
 
         makeFixedRotationXY(&transform, entry->pitch, entry->yaw);
-        transform.basePos.x = D_800DA840[arg0->entryIndex].pos.x;
-        transform.basePos.y = D_800DA840[arg0->entryIndex].pos.y;
-        transform.basePos.z = D_800DA840[arg0->entryIndex].pos.z;
+        transform.basePos.x = gCourseTriggerEntries[arg0->entryIndex].pos.x;
+        transform.basePos.y = gCourseTriggerEntries[arg0->entryIndex].pos.y;
+        transform.basePos.z = gCourseTriggerEntries[arg0->entryIndex].pos.z;
         arg0->matrix = allocFixedTransformMatrix(&transform);
     }
 
@@ -1420,11 +1420,11 @@ void func_8006CCC0(RaceCourseTriggerEffect *arg0) {
     }
 }
 
-// func_8006CE68 best match: 71.621% at nonmatchings/func_8006CE68-731940616440357983/base_1.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006CE68.s")
+// collidePlayerWithCourseTriggerVolume best match: 71.621% at nonmatchings/collidePlayerWithCourseTriggerVolume-731940616440357983/base_1.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/race_course_objects/collidePlayerWithCourseTriggerVolume.s")
 
 #ifdef NON_MATCHING
-void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger) {
+void collidePlayerWithCourseTriggerVolume(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger) {
     Vec3i transformed;
     Vec3i delta;
     FixedMatrix3s matrix;
@@ -1438,13 +1438,13 @@ void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger)
     s32 push;
 
     if ((gRaceUpdatePaused == 0) && (player->isActive != 0)) {
-        entry = &D_800DA840[trigger->entryIndex];
+        entry = &gCourseTriggerEntries[trigger->entryIndex];
         makeFixedRotationYX(matrix, -entry->pitch, -entry->yaw);
 
         if ((player->flags & 0x2000) == 0) {
-            delta.x = player->posX - D_800DA840[trigger->entryIndex].pos.x;
-            delta.y = player->posY - D_800DA840[trigger->entryIndex].pos.y;
-            delta.z = player->posZ - D_800DA840[trigger->entryIndex].pos.z;
+            delta.x = player->posX - gCourseTriggerEntries[trigger->entryIndex].pos.x;
+            delta.y = player->posY - gCourseTriggerEntries[trigger->entryIndex].pos.y;
+            delta.z = player->posZ - gCourseTriggerEntries[trigger->entryIndex].pos.z;
             transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
             if ((transformed.z >= -trigger->scaleZ) && (trigger->scaleZ >= transformed.z) &&
@@ -1455,7 +1455,7 @@ void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger)
                 delta.x = -transformed.x;
                 delta.z = 0;
 
-                entry = &D_800DA840[trigger->entryIndex];
+                entry = &gCourseTriggerEntries[trigger->entryIndex];
                 makeFixedRotationXY(matrix, entry->pitch, entry->yaw);
                 transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
@@ -1463,8 +1463,8 @@ void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger)
                 player->posY += transformed.y;
                 player->posZ += transformed.z;
                 player->flags |= 0x02000000;
-                player->yaw = D_800DA840[trigger->entryIndex].yaw;
-                player->pitch = D_800DA840[trigger->entryIndex].pitch;
+                player->yaw = gCourseTriggerEntries[trigger->entryIndex].yaw;
+                player->pitch = gCourseTriggerEntries[trigger->entryIndex].pitch;
                 return;
             }
         }
@@ -1474,9 +1474,9 @@ void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger)
             func_80088C80(&trigger->pos2, trigger->scaleX + 0x30000, 0x100000, player->unk0);
         }
 
-        delta.x = player->posX - D_800DA840[trigger->entryIndex].pos.x;
-        delta.y = player->posY - D_800DA840[trigger->entryIndex].pos.y;
-        delta.z = player->posZ - D_800DA840[trigger->entryIndex].pos.z;
+        delta.x = player->posX - gCourseTriggerEntries[trigger->entryIndex].pos.x;
+        delta.y = player->posY - gCourseTriggerEntries[trigger->entryIndex].pos.y;
+        delta.z = player->posZ - gCourseTriggerEntries[trigger->entryIndex].pos.z;
         transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
         if (transformed.y <= 0) {
@@ -1501,7 +1501,7 @@ void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger)
 
                                 if (push != 0) {
                                     savedPush = push;
-                                    makeFixedRotationY(matrix, D_800DA840[trigger->entryIndex].yaw);
+                                    makeFixedRotationY(matrix, gCourseTriggerEntries[trigger->entryIndex].yaw);
                                     delta.y = 0;
                                     delta.z = 0;
                                     delta.x = savedPush;
@@ -1519,27 +1519,27 @@ void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger)
 }
 #endif
 
-void func_8006D2D0(RaceCourseTriggerEffect *arg0) {
+void updateCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
     if (D_80121D80[0].isActive != 0) {
-        func_8006CE68(D_80121D80, arg0);
+        collidePlayerWithCourseTriggerVolume(D_80121D80, arg0);
     }
     if (D_80121D80[1].isActive != 0) {
-        func_8006CE68(D_8012238C, arg0);
+        collidePlayerWithCourseTriggerVolume(D_8012238C, arg0);
     }
     if (D_80121D80[2].isActive != 0) {
-        func_8006CE68(D_80122998, arg0);
+        collidePlayerWithCourseTriggerVolume(D_80122998, arg0);
     }
     if (D_80121D80[3].isActive != 0) {
-        func_8006CE68(D_80122FA4, arg0);
+        collidePlayerWithCourseTriggerVolume(D_80122FA4, arg0);
     }
-    addRenderCallback(&D_801248A4, func_8006CCC0, arg0);
+    addRenderCallback(&D_801248A4, renderCourseTriggerVolume, arg0);
 }
 
-void func_8006D384(RaceCourseTriggerEffect *arg0) {
+void initCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
     CourseTriggerScratch scratch;
     CourseTriggerEntry *entry;
 
-    entry = &D_800DA840[arg0->entryIndex];
+    entry = &gCourseTriggerEntries[arg0->entryIndex];
     arg0->pitch = entry->pitch;
     arg0->yaw = entry->yaw;
     arg0->scaleX = entry->scaleX << 0x10;
@@ -1554,7 +1554,7 @@ void func_8006D384(RaceCourseTriggerEffect *arg0) {
     scratch.source.z = arg0->scaleZ;
     transformVec3iByFixedMatrix(scratch.mtx, &scratch.source, &scratch.dest);
 
-    entry = &D_800DA840[arg0->entryIndex];
+    entry = &gCourseTriggerEntries[arg0->entryIndex];
     arg0->pos1.x = entry->pos.x + scratch.dest.x;
     arg0->pos1.y = entry->pos.y + scratch.dest.y - 0x100000;
     arg0->pos1.z = entry->pos.z + scratch.dest.z;
@@ -1564,10 +1564,10 @@ void func_8006D384(RaceCourseTriggerEffect *arg0) {
     scratch.source.z = -arg0->scaleZ;
     transformVec3iByFixedMatrix(scratch.mtx, &scratch.source, &scratch.dest);
 
-    entry = &D_800DA840[arg0->entryIndex];
+    entry = &gCourseTriggerEntries[arg0->entryIndex];
     arg0->pos2.x = entry->pos.x + scratch.dest.x;
     arg0->pos2.y = entry->pos.y + scratch.dest.y - 0x100000;
     arg0->pos2.z = entry->pos.z + scratch.dest.z;
 
-    setCallbackTaskCallback(arg0, func_8006D2D0);
+    setCallbackTaskCallback(arg0, updateCourseTriggerVolume);
 }
