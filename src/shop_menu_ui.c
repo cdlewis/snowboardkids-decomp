@@ -203,7 +203,7 @@ extern u16 D_800B7D00[];
 extern u8 D_80121D86;
 extern u8 D_80121D88;
 extern u8 D_80121D85;
-extern s16 D_8011217E;
+extern s16 gMenuPanelTilemapAssetHandle;
 extern s16 gShopMenuTextureAssetHandle;
 extern CourseSelectStatus gCourseSelectStatus;
 extern s32 gActiveMenuTask;
@@ -852,7 +852,7 @@ void func_8002E074(ShopMenuWidgetActor *arg0) {
 }
 
 void func_8002E0B0(ShopMenuWidgetActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(D_8011217E), 0, 0x20, 0x20, 0, arg0->sprite.index, 0);
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 0, 0x20, 0x20, 0, arg0->sprite.index, 0);
 }
 
 void func_8002E114(ShopMenuWidgetActor *arg0) {
@@ -1118,7 +1118,7 @@ void func_8002E810(ShopMenuWidgetActor *arg0) {
         return;
     }
 
-    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(D_8011217E), 6, 0x20, 0x20, 0, arg0->sprite.index, 0);
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 6, 0x20, 0x20, 0, arg0->sprite.index, 0);
 }
 
 // func_8002E9E4 best match: 94.119% (nonmatchings/func_8002E9E4-1404502880690620360/base_1.c)
@@ -1558,8 +1558,8 @@ void func_8002F8DC(ShopMenuWidgetActor *arg0) {
     drawMenuSpriteSubrect(arg0->x, arg0->y, getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), tileIndex, 0, 0, 0x40, 0x1C, 0x20, 0x20);
     drawMenuSpriteSubrect((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), tileIndex, 0, 0x1C, 0x40, 0x1C, 0x20,
                   0x20);
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 1), getRelocatableHeapBlockBase(D_8011217E), 0xA, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x3C), (s16)(arg0->y - 1), getRelocatableHeapBlockBase(D_8011217E), 0xB, 0x20, 0x20, 1, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 1), getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 0xA, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x3C), (s16)(arg0->y - 1), getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 0xB, 0x20, 0x20, 1, 0);
 }
 
 void func_8002FAB8(ShopMenuWidgetActor *arg0) {

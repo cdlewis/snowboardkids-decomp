@@ -156,7 +156,7 @@ extern Gfx *gRegionAllocPtr;
 extern s8 gRaceRecordSettingsEnabled;
 extern s8 gRaceCourseModelEffectsDisabled;
 extern s8 gRaceCourseOverlayEffectsDisabled;
-extern RenderCallbackNode *D_80124838;
+extern RenderCallbackNode *gMenuOverlayRenderCallbackList;
 extern RenderCallbackNode *D_80124848;
 extern RenderCallbackNode *D_80124858;
 extern RenderCallbackNode *gMenuRenderCallbackList;
@@ -404,7 +404,7 @@ void resetRenderCallbackQueues(void) {
         goto loop;
     }
     D_801248F8 = NULL;
-    D_80124838 = NULL;
+    gMenuOverlayRenderCallbackList = NULL;
     D_80124848 = NULL;
     D_80124878 = NULL;
     gMenuRenderCallbackList = NULL;

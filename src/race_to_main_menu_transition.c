@@ -7,7 +7,7 @@
 #include "game_task_scheduler.h"
 #include "race_camera.h"
 #include "ending_credits_ui.h"
-#include "menu_transition_effects.h"
+#include "ending_credits_effects.h"
 #include "race_start_transition.h"
 #include "ending_credits_slash.h"
 #include "ending_credits_nancy.h"
@@ -119,9 +119,9 @@ void func_8000D340(void) {
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadMainMenuSceneModelAssets();
     initCallbackTaskScheduler(0);
-    createCallbackTask(initRaceToMenuSnowboardIcon, 0, 0x64);
-    createCallbackTask(initRaceToMenuLogoWipe, 0, 0x64);
-    createCallbackTask(initRaceToMenuSnowflakeIcon, 0, 0x64);
+    createCallbackTask(initRaceToMainMenuSnowboardIcon, 0, 0x64);
+    createCallbackTask(initRaceToMainMenuLogoWipe, 0, 0x64);
+    createCallbackTask(initRaceToMainMenuSnowflakeIcon, 0, 0x64);
     gCurrentGameTask->fade = 0xFF;
     state = gCurrentGameTask;
     gMenuFadeAlpha = state->fade;
