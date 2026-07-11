@@ -1645,7 +1645,7 @@ void func_8002FEF8(ShopMenuWidgetActor *arg0) {
     new_var->sprite.index = D_8010AF76 / 2;
 
     for (i = 0; i < 12; i++) {
-        new_var->randomValues[i + 3] = func_800430D0() % 6;
+        new_var->randomValues[i + 3] = randomNextMain() % 6;
     }
 
     func_80071824(new_var, func_8002FD70);

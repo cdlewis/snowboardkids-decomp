@@ -28,9 +28,9 @@ struct RandomStateObject {
     /* 0x518 */ u8 randomIndex;
 };
 
-extern u8 D_800D3F00[];
-extern u16 D_800D4000;
-extern u16 D_800D4004;
+extern u8 gRandomTable[];
+extern u16 gMainRngIndex;
+extern u16 gSecondaryRngIndex;
 extern s16 D_800D4010;
 extern s16 D_800D4014;
 extern s16 D_800D4018;
@@ -40,34 +40,34 @@ extern HuffmanNode D_80110928[];
 extern AssetHandleTable D_80112130;
 extern s32 D_80112128;
 
-s32 func_800430D0(void) {
-    D_800D4000++;
+s32 randomNextMain(void) {
+    gMainRngIndex++;
     if (D_801235B0 == 0) {
-        D_800D4000++;
+        gMainRngIndex++;
     }
-    D_800D4000 &= 0xFF;
-    return D_800D3F00[D_800D4000];
+    gMainRngIndex &= 0xFF;
+    return gRandomTable[gMainRngIndex];
 }
 
-s32 func_80043120(void) {
-    D_800D4004++;
-    D_800D4004 &= 0xFF;
-    return D_800D3F00[D_800D4004];
+s32 randomNextSecondary(void) {
+    gSecondaryRngIndex++;
+    gSecondaryRngIndex &= 0xFF;
+    return gRandomTable[gSecondaryRngIndex];
 }
 
-void func_80043154(void) {
-    D_800D4004 = 0;
+void resetSecondaryRng(void) {
+    gSecondaryRngIndex = 0;
 }
 
-u8 func_80043160(RandomStateObject *arg0) {
+u8 randomNextObject(RandomStateObject *arg0) {
     arg0->randomIndex++;
-    return D_800D3F00[arg0->randomIndex];
+    return gRandomTable[arg0->randomIndex];
 }
 
-void func_80043184(void) {
+void resetGameplayRng(void) {
     D_801235B0 = 0;
-    D_800D4000 = 0;
-    func_80043154();
+    gMainRngIndex = 0;
+    resetSecondaryRng();
 }
 
 // func_800431B0 best match: 98.722%

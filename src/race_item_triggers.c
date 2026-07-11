@@ -9,8 +9,8 @@
 #include "snowboard_trail_effects.h"
 #include "race_ui_effects.h"
 
-// func_800849E0 best match: 98.406% (nonmatchings/func_800849E0-7273315160691878794/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_triggers/func_800849E0.s")
+// updateItemUseTrigger best match: 98.406% (nonmatchings/func_800849E0-7273315160691878794/base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_triggers/updateItemUseTrigger.s")
 
 typedef void (*EffectCallback)(void *);
 
@@ -20,7 +20,7 @@ extern void *func_800716A4(void *, s32, s32, s32);
 extern RaceInputPlayer D_801235B0;
 
 #ifdef NON_MATCHING
-void func_800849E0(RaceInputPlayer *player) {
+void updateItemUseTrigger(RaceInputPlayer *player) {
     s32 trigger;
     RaceInputPlayer *otherPlayer;
     s32 deltaX;
@@ -35,7 +35,7 @@ void func_800849E0(RaceInputPlayer *player) {
     } else {
         if (player->itemTriggerCooldown == 0) {
             player->itemTriggerCooldown = 10;
-            if (player->itemTriggerChance >= func_800430D0()) {
+            if (player->itemTriggerChance >= randomNextMain()) {
                 trigger = 1;
             }
         } else {
@@ -110,7 +110,7 @@ void func_800849E0(RaceInputPlayer *player) {
 }
 #endif
 
-void func_80084D74(RaceInputPlayer *player) {
+void updateActionUseTrigger(RaceInputPlayer *player) {
     s32 trigger;
     s32 type;
 
@@ -121,7 +121,7 @@ void func_80084D74(RaceInputPlayer *player) {
         }
     } else {
         if (player->actionTriggerCooldown == 0) {
-            if (player->actionTriggerChance >= func_800430D0()) {
+            if (player->actionTriggerChance >= randomNextMain()) {
                 trigger = 1;
             }
             player->actionTriggerCooldown = 10;
@@ -155,7 +155,7 @@ void func_80084D74(RaceInputPlayer *player) {
             }
 
             if (type == 3) {
-                func_80060C4C(player->playerIndex);
+                spawnGhostSlowdownTargets(player->playerIndex);
                 player->actionEffectType = 0;
                 type = player->actionEffectType;
             }

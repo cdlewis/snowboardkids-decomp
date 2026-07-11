@@ -5,11 +5,11 @@
 
 typedef struct RandomStateObject RandomStateObject;
 
-s32 func_800430D0(void);
-s32 func_80043120(void);
-void func_80043154(void);
-u8 func_80043160(RandomStateObject *arg0);
-void func_80043184(void);
+s32 randomNextMain(void);
+s32 randomNextSecondary(void);
+void resetSecondaryRng(void);
+u8 randomNextObject(RandomStateObject *arg0);
+void resetGameplayRng(void);
 void func_800431B0(s16 arg0);
 void func_8004331C(s16 arg0);
 void func_800433D8(u8 arg0, s32 arg1, s32 arg2, s32 arg3);

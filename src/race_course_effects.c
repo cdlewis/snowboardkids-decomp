@@ -255,7 +255,24 @@ extern s16 D_80112142;
 extern s32 D_801235B4;
 extern u8 D_80156608;
 extern u8 D_80156609;
-extern u8 D_80121B56;
+extern void func_8006C5C0(Struct6C51C *);
+void func_8006C1B4(Struct6C51C *);
+void func_8006CCC0(RaceCourseTriggerEffect *);
+void func_8006CE68(CourseEffectPlayer *, RaceCourseTriggerEffect *);
+void func_8006D2D0(RaceCourseTriggerEffect *);
+void func_80069890(RaceCountdownEffect *);
+void func_80069914(RaceCountdownEffect *);
+void func_80069998(RaceCountdownEffect *);
+void func_800699F0(RaceCountdownEffect *);
+void func_80069A78(RaceCountdownEffect *);
+void func_80069AF0(RaceCountdownEffect *);
+void func_80069B60(RaceCountdownEffect *);
+extern void func_8006C7F4(RaceCourseMarkerEffect *);
+void func_8006B3E0(Struct6B760 *);
+void func_8006B6C8(Struct6B760 *);
+void func_8006AF48(RaceCourseRenderEffect *);
+void func_8006BC68(RaceMovingEffect *);
+extern u8 gRaceUpdatePaused;
 extern s16 D_80121B50;
 extern CourseAssetHandles D_80112130;
 extern s16 D_80112144;
@@ -810,7 +827,7 @@ void func_8006B3E0(Struct6B760 *arg0) {
     s32 dx;
     s32 dz;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
         if (func_80048E60(pos) != 0) {
             if (arg0->pad42 != 0) {
@@ -867,7 +884,7 @@ void func_8006B3E0(Struct6B760 *arg0) {
             func_80088A1C(pos, 0x40000, 0x50000, 0x30000, 4);
             arg0->unk40 += arg0->unk4E;
             if (arg0->unk40 == 0) {
-                rand = func_80043120() & 3;
+                rand = randomNextSecondary() & 3;
                 if (rand == 1) {
                     arg0->unk50 = 0x10000;
                     arg0->unk4E = 0x80;
@@ -903,7 +920,7 @@ void func_8006B6C8(Struct6B760 *arg0) {
     s32 temp50;
     s16 temp4E;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         angle = func_8004940C(arg0->unk24, arg0->unk2C, arg0->unk30, arg0->unk38);
         temp24 = arg0->unk24;
         temp28 = arg0->unk28;
@@ -973,7 +990,7 @@ void func_8006B988(RaceMovingEffect *arg0) {
 
     temp_v0 = arg0->timer;
     if (temp_v0 != 0) {
-        if (D_80121B56 == 0) {
+        if (gRaceUpdatePaused == 0) {
             temp_v1 = arg0->velocity.z;
             arg0->timer = temp_v0 - 1;
             if (temp_v1 >= (s32)0xFFF60001) {
@@ -994,7 +1011,7 @@ void func_8006BA50(RaceMovingEffect *arg0) {
     Vec3i sp2C;
     void *mtx;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->timer--;
         if (arg0->timer < 0x13) {
             arg0->velocity.z = 0xFFFC0000;
@@ -1066,7 +1083,7 @@ void func_8006BDE4(RaceMovingEffect *arg0) {
 
     temp_v0 = arg0->timer;
     if (temp_v0 != 0) {
-        if (D_80121B56 == 0) {
+        if (gRaceUpdatePaused == 0) {
             arg0->timer = temp_v0 - 1;
             func_80098590(&arg0->unk30, &temp_a3->velocity, &sp24);
             temp_a3->pos.x += sp24.x;
@@ -1083,7 +1100,7 @@ void func_8006BE90(RaceMovingEffect *arg0) {
     Vec3i sp2C;
     void *velocity;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->timer--;
         arg0->unk52 -= 0x2A;
         func_80097C18(arg0->unk30, arg0->unk52);
@@ -1114,7 +1131,7 @@ void func_8006BFC0(RaceMovingEffect *arg0) {
     Vec3i sp1C;
     RaceMovingEffect *temp_a3 = arg0;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->timer--;
         func_80098590(&arg0->unk30, &temp_a3->velocity, &sp1C);
         temp_a3->pos.x += sp1C.x * 2;
@@ -1226,7 +1243,7 @@ void func_8006C1B4(Struct6C51C *arg0) {
 #endif
 
 void func_8006C4AC(Struct6C51C *arg0) {
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         if (arg0->unk50 != 0) {
             arg0->unk50 += 0x80;
         } else {
@@ -1241,7 +1258,7 @@ void func_8006C51C(Struct6C51C *arg0) {
     Struct6C51C *temp_s0 = arg0;
     s16 temp_v0;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         temp_v0 = arg0->unk50;
         if (temp_v0 != -0x400) {
             arg0->unk50 = temp_v0 - 0x40;
@@ -1256,7 +1273,7 @@ void func_8006C51C(Struct6C51C *arg0) {
 }
 
 void func_8006C5C0(Struct6C51C *arg0) {
-    if ((D_80121B56 == 0) && (D_801235B4 & 4)) {
+    if ((gRaceUpdatePaused == 0) && (D_801235B4 & 4)) {
         arg0->unk54 = 0x2D;
         D_801235B4 &= ~4;
         func_80071824(arg0, func_8006C51C);
@@ -1417,7 +1434,7 @@ void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger)
     s32 halfWidth;
     s32 limit;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         if (player->isActive != 0) {
             entry = &D_800DA840[trigger->entryIndex];
             func_8009853C(matrix, -entry->pitch, -entry->yaw);

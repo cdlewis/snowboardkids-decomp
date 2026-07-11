@@ -106,7 +106,7 @@ extern s16 D_801222F6;
 extern s16 D_801222F4;
 extern s16 D_80121B50;
 extern u8 D_80121B55;
-extern u8 D_80121B56;
+extern u8 gRaceUpdatePaused;
 extern u8 D_80121B5A;
 extern u8 D_80121B5B;
 extern u8 D_80121B5E;
@@ -829,7 +829,7 @@ void func_8007A278(s32 arg0) {
 }
 
 void func_8007A2B8(void) {
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         D_80121B74.fraction = D_80121B74.fraction + 0x358;
         if (D_80121B74.fraction >= 0x6401) {
             D_80121B74.fraction = 0;
@@ -848,7 +848,7 @@ void func_8007A2B8(void) {
 }
 
 void func_8007A350(void) {
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         D_80121B78.fraction = D_80121B78.fraction - 0x358;
         if (D_80121B78.fraction < 0) {
             D_80121B78.fraction = 0x60F8;

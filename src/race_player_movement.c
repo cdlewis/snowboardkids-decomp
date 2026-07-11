@@ -52,8 +52,8 @@ extern s16 func_80097AE8(s16);
 extern s16 func_80097B48(s16);
 extern s32 func_80098C30(s64);
 extern u8 D_800EC9C2;
-extern s8 D_80121B54;
-extern s8 D_80121D70[];
+extern s8 gRacePlayerCount;
+extern s8 gRaceOrderPlayerIds[];
 extern RaceInputPlayer D_801235B0;
 extern s32 D_801235B4;
 extern RaceVec3i D_800DE7B0[];
@@ -209,14 +209,14 @@ void func_80087AFC(void) {
 
     if (D_800EC9C2 != 2) {
         if (D_801235B4 & 1) {
-            D_80121D70[0] = 0;
-            D_80121D70[1] = 1;
-            D_80121D70[2] = 2;
-            D_80121D70[3] = 3;
+            gRaceOrderPlayerIds[0] = 0;
+            gRaceOrderPlayerIds[1] = 1;
+            gRaceOrderPlayerIds[2] = 2;
+            gRaceOrderPlayerIds[3] = 3;
             return;
         }
 
-        playerCount = D_80121B54;
+        playerCount = gRacePlayerCount;
         order.order0 = 0;
         order.order1 = 1;
         order.order2 = 2;
@@ -231,7 +231,7 @@ void func_80087AFC(void) {
                     primary[i - 1] += player->unk57C;
                 }
                 player++;
-            } while (i < D_80121B54);
+            } while (i < gRacePlayerCount);
             i = 0;
         }
 
@@ -249,7 +249,7 @@ void func_80087AFC(void) {
                         left = orderI[0];
                         player = &base[right];
                         player2 = &base[left];
-                        if (player->unk509 < player2->unk509) {
+                        if (player->rankIndex < player2->rankIndex) {
                             orderI[0] = right;
                             orderJ[0] = left;
                         }
@@ -301,14 +301,14 @@ void func_80087AFC(void) {
         }
 
         if (playerCount > 0) {
-            rankPtr = D_80121D70;
+            rankPtr = gRaceOrderPlayerIds;
             orderI = &order.order0;
             do {
                 right = orderI[0];
                 orderI++;
                 rankPtr++;
                 player = &base[right];
-                player->unk509 = i;
+                player->rankIndex = i;
                 i++;
                 rankPtr[-1] = player->playerIndex;
             } while (i < playerCount);
@@ -482,7 +482,7 @@ void func_80088294(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
                         }
                         player->unk2C8 = ((s64)cosine * localX + (s64)sine * localZ) / 0x1000;
                         player->unk2CC = ((s64)-sine * localX + (s64)cosine * localZ) / 0x1000;
-                        player->unk2C6 |= flag;
+                        player->pendingItemHitFlags |= flag;
                     }
                 }
             }
@@ -551,7 +551,7 @@ void func_80088664(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIn
                     }
                     player->unk2C8 = ((s64)cosine * localX + (s64)sine * localZ) / 0x1000;
                     player->unk2CC = ((s64)-sine * localX + (s64)cosine * localZ) / 0x1000;
-                    player->unk2C6 |= flag;
+                    player->pendingItemHitFlags |= flag;
                 }
             }
         }
@@ -607,7 +607,7 @@ void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
                             player->posX -= pushX;
                             player->posZ += pushZ;
                         } else {
-                            player->unk2C6 |= arg4;
+                            player->pendingItemHitFlags |= arg4;
                         }
                     }
                 }
@@ -754,7 +754,7 @@ void func_80089000(RaceVec3i *pos, s32 xzSize, s16 flag) {
                     }
                     if ((dz < radius) &&
                         (func_80098C30((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
-                        player->unk2C6 |= flag;
+                        player->pendingItemHitFlags |= flag;
                     }
                 }
             }
@@ -796,7 +796,7 @@ s32 func_800891B8(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex) {
             }
             if ((dz < radius) &&
                 (func_80098C30((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
-                player->unk2C6 |= flag;
+                player->pendingItemHitFlags |= flag;
                 return 1;
             }
         }
@@ -1177,19 +1177,19 @@ void func_8008BBB8(RaceInputPlayer *player, s16 soundType) {
     if (player->soundDisabled == 0) {
         switch (soundType) {
         case 0:
-            func_80072AC8(D_800DE84C[(func_800430D0() & 1) + (player->characterId * 2)],
+            func_80072AC8(D_800DE84C[(randomNextMain() & 1) + (player->characterId * 2)],
                           (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
             return;
         case 1:
-            func_80072AC8(D_800DE864[(func_800430D0() & 1) + (player->characterId * 2)],
+            func_80072AC8(D_800DE864[(randomNextMain() & 1) + (player->characterId * 2)],
                           (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
             return;
         case 2:
-            func_80072AC8(D_800DE87C[(func_800430D0() & 1) + (player->characterId * 2)],
+            func_80072AC8(D_800DE87C[(randomNextMain() & 1) + (player->characterId * 2)],
                           (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
             return;
         case 3:
-            func_80072AC8(D_800DE87C[(func_800430D0() & 1) + (player->characterId * 2)],
+            func_80072AC8(D_800DE87C[(randomNextMain() & 1) + (player->characterId * 2)],
                           (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0x60);
             return;
         case 4:

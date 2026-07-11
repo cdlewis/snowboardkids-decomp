@@ -3,7 +3,7 @@
 
 #include "race_input_history.h"
 
-void func_800849E0(RaceInputPlayer *player);
+void updateItemUseTrigger(RaceInputPlayer *player);
 void func_80084D74(RaceInputPlayer *player);
 
 #endif

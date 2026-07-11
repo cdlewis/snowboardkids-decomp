@@ -47,9 +47,9 @@ extern s8 D_8010B1E0;
 extern s8 D_8010B1E1;
 extern s16 D_80121B50;
 extern s16 D_80121B52;
-extern s8 D_80121B54;
+extern s8 gRacePlayerCount;
 extern u8 D_80121B55;
-extern u8 D_80121B56;
+extern u8 gRaceUpdatePaused;
 extern u8 D_80121B58;
 extern u8 D_80121B59;
 extern u8 D_80121B5A;
@@ -101,7 +101,7 @@ void func_8003ED00(void) {
     s32 five3 = 5;
 
     D_80121B50 = 0;
-    D_80121B56 = 0;
+    gRaceUpdatePaused = 0;
     D_80121B58 = 0;
     D_80121B5F = 0;
     D_80121B59 = one;
@@ -132,7 +132,7 @@ void func_8003ED00(void) {
     players[2].isActive = active;
     players[3].isActive = active;
 
-    D_80121B54 = four;
+    gRacePlayerCount = four;
     D_80121B52 = two;
     D_80121B5C = 0x64;
     func_80070EC0(1);
@@ -210,7 +210,7 @@ void func_8003F00C(void) {
     u8 value;
     FourBytes *fourDst;
 
-    prevOpen = D_80121B56;
+    prevOpen = gRaceUpdatePaused;
     func_8007066C(0, 0xA0, 0x78, 0x120, D_8010B1E0, 0x140, 0xF0, D_800E10C8);
 
     temp = D_8010B1E0;
@@ -280,14 +280,14 @@ copy_player3:
     if (fadeStep == D_800BB8B0[temp]) {
         func_8006D520(0, D_800BB8DC[temp]);
         D_801235B8->startDelay++;
-        D_80121B56 = 1;
+        gRaceUpdatePaused = 1;
     }
 
     func_8008C704();
     func_800710CC(0x63);
     func_80096E3C();
     func_8007115C();
-    D_80121B56 = prevOpen;
+    gRaceUpdatePaused = prevOpen;
     func_8006D700();
 
     D_801235B8->fadeStep++;

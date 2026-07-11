@@ -348,7 +348,7 @@ s32 func_80084958(RaceInputPlayer *player) {
     if (player->unk4 != 0) {
         sp18 = 0;
         var_v1 = sp18;
-        if (!(func_800430D0() & 3)) {
+        if (!(randomNextMain() & 3)) {
             return 1;
         }
     }

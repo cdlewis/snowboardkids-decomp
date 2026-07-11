@@ -163,8 +163,8 @@ extern s32 func_80048E60(void *);
 extern void osWritebackDCache(void *, s32);
 extern void func_800483FC(void *, void *, void *);
 extern void func_80072A74(s32, void *, s32, s32);
-extern u8 D_800D9498[][0x10];
-extern u8 D_800D94D8[][0x10];
+extern u8 gItemEffectRollTable[][0x10];
+extern u8 gActionEffectRollTable[][0x10];
 extern RaceOverlayEffectSpawn D_800D9518[];
 extern RaceOverlayEffectSpawn *D_800D92D0[];
 extern Vec3i D_800D9BD8[];
@@ -177,7 +177,7 @@ extern s16 D_80112144;
 extern s16 D_80112146;
 extern s16 D_80112168;
 extern u8 D_80156609;
-extern u8 D_80121B56;
+extern u8 gRaceUpdatePaused;
 extern u8 D_80121B5A;
 extern u8 D_800EC9C2;
 extern s8 D_80121D93;
@@ -208,6 +208,17 @@ extern Gfx *gRegionAllocPtr;
 extern void *D_80156614;
 extern s16 D_80121B50;
 extern s16 D_801235B0;
+extern void func_80066E10(RaceModelListActor *);
+extern void func_80066ABC(RaceModelListActor *);
+extern void func_80067034(RaceModelListActor *);
+extern void func_800674B4(RaceThrownModelActor *);
+extern void func_800681A4(RaceOverlayModelActor *);
+extern void func_80068CD4(RaceOverlayModelActor *);
+extern void func_800684E4(RaceOverlayModelActor *);
+extern void assignPickupRandomEffect(RaceOverlayModelActor *);
+extern void func_8006935C(RaceParticleActor *);
+extern void func_80069678(RaceParticleActor *);
+
 typedef struct Scratch674B4 {
     char scratch[0x28];
     s32 pad;
@@ -502,7 +513,7 @@ void func_80067364(RaceThrownModelActor *arg0) {
     s32 velocityY;
     s16 timer;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->pos.x += arg0->transformedPos.x;
         velocityY = arg0->transformedPos.y;
         timer = arg0->timer;
@@ -542,7 +553,7 @@ void func_800674B4(RaceThrownModelActor *arg0) {
     Scratch674B4 sp1C;
     RaceThrownModelActor *temp_a3 = arg0;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         func_80097C18(sp1C.scratch, temp_a3->modelIndex);
         temp_a3->timer = 0x32;
         temp_a3->velocity.x = 0;
@@ -583,7 +594,7 @@ void func_800675AC(RaceOverlaySpawnActor *arg0) {
     s32 rand;
     s32 prev;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         if (arg0->timer == 0) {
             arg0->timer = 0x20;
             entry = D_800D92D0[arg0->spawnIndex];
@@ -870,14 +881,14 @@ void func_80068BF0(RaceOverlayModelActor *arg0) {
     RaceOverlayModelActor *temp_s0 = arg0;
     void *temp_s1;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->timer--;
         temp_v0 = arg0->timer;
         temp_v1 = arg0->pos.y - (temp_v0 * 0x14000);
         arg0->drawPos.y = temp_v1 + 0x140000;
         arg0->spawnPos.y = temp_v1;
         if (temp_v0 == 0) {
-            func_80071824(arg0, func_80068EA0);
+            func_80071824(arg0, assignPickupRandomEffect);
         }
         temp_s1 = &temp_s0->pos;
         func_80088C80(temp_s1, 0xC0000, 0x180000, 0);
@@ -889,7 +900,7 @@ void func_80068BF0(RaceOverlayModelActor *arg0) {
 }
 
 void func_80068CD4(RaceOverlayModelActor *arg0) {
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->drawPos.y += arg0->velY;
         arg0->velY += 0xFFFF0000;
 
@@ -913,7 +924,7 @@ void func_80068DB4(RaceOverlayModelActor *arg0) {
     s32 var_v1;
     void *temp_s1;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         temp_v0 = arg0->velY;
         temp_a2 = arg0->pos.y;
         var_v1 = (arg0->drawPos.y += temp_v0);
@@ -935,18 +946,18 @@ void func_80068DB4(RaceOverlayModelActor *arg0) {
     func_800483FC(&D_801248D4, func_800681A4, arg0);
 }
 
-// func_80068EA0 best match: 99.901%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80068EA0.s")
+// assignPickupRandomEffect best match: 99.901%
+#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/assignPickupRandomEffect.s")
 
 #ifdef NON_MATCHING
-void func_80068EA0(RaceOverlayModelActor *arg0) {
+void assignPickupRandomEffect(RaceOverlayModelActor *arg0) {
     RaceInputPlayer *player;
     Vec3i *pos;
     s32 found;
     s32 i;
     s32 maxPlayers;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         found = 0;
         i = 0;
         pos = &arg0->pos;
@@ -971,19 +982,19 @@ loop:
         }
 
         if (arg0->variant == 0) {
-            player->itemEffectType = D_800D9498[player->unk509][func_80043160((RandomStateObject *)player) & 0xF];
+            player->itemEffectType = gItemEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
             if (D_80121B5A != 0) {
                 player->itemEffectType = 1;
             }
             player->itemEffectCount = 3;
             player->pad513[0] = maxPlayers;
         } else {
-            player->actionEffectType = D_800D94D8[player->unk509][func_80043160((RandomStateObject *)player) & 0xF];
+            player->actionEffectType = gActionEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
             if (D_80121B5A != 0) {
                 player->actionEffectType = 1;
             }
             if ((D_80121B50 == 8) && (player->unk4 != 0) && (player->actionEffectType == maxPlayers)) {
-                if (func_800430D0() != 0) {
+                if (randomNextMain() != 0) {
                     player->actionEffectType = 6;
                 }
             }
@@ -1046,7 +1057,7 @@ void func_800691C8(RaceOverlayModelActor *arg0) {
         func_80045990(func_80043040(D_80112168), 0x21, &arg0->image1, &arg0->palette1);
     }
     func_80045990(func_80043040(D_80112168), 0x22, &arg0->image2, &arg0->palette2);
-    func_80071824(arg0, func_80068EA0);
+    func_80071824(arg0, assignPickupRandomEffect);
 }
 
 void func_8006935C(RaceParticleActor *arg0) {
@@ -1114,11 +1125,11 @@ void func_80069678(RaceParticleActor *arg0) {
     s32 temp_v0;
     RaceParticleActor *temp_a2 = arg0;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         arg0->timer--;
     }
     if (temp_a2->timer != 0) {
-        if (D_80121B56 == 0) {
+        if (gRaceUpdatePaused == 0) {
             temp_v0 = temp_a2->velocity.y;
             temp_a2->pos.x += temp_a2->velocity.x;
             temp_a2->pos.y += temp_v0;
@@ -1138,9 +1149,9 @@ void func_80069754(RaceParticleActor *arg0) {
     char sp28[0x20];
 
     arg0->timer = 0xA;
-    arg0->rotVelX = func_800430D0() - 0x80;
-    arg0->rotVelY = func_800430D0() - 0x80;
-    arg0->rotVelZ = func_800430D0() - 0x80;
+    arg0->rotVelX = randomNextMain() - 0x80;
+    arg0->rotVelY = randomNextMain() - 0x80;
+    arg0->rotVelZ = randomNextMain() - 0x80;
     func_80097C18(sp28, arg0->rotY);
     func_80098590(sp28, &D_800D9BD8[arg0->spawnOffsetIndex], &arg0->velocity);
     func_80045990(func_80043040(D_80112168), 0x22, &arg0->palette, &arg0->image);

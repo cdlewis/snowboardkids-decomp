@@ -44,9 +44,9 @@ extern u8 D_8011228C;
 extern s16 D_801124B8;
 extern s16 D_80121B50;
 extern s16 D_80121B52;
-extern s8 D_80121B54;
+extern s8 gRacePlayerCount;
 extern u8 D_80121B55;
-extern u8 D_80121B56;
+extern u8 gRaceUpdatePaused;
 extern s16 D_800DEF14;
 extern u8 D_80123751;
 extern s32 D_801235B4;
@@ -168,14 +168,14 @@ void func_8003F864(void) {
     MainMenuCourseAsset *courseAsset;
 
     D_80121B50 = D_800D3C00[D_80121B5B].courseIndex;
-    D_80121B56 = 0;
+    gRaceUpdatePaused = 0;
     D_80121B58 = 0;
     D_80121B5F = 0;
     D_80121B59 = 0;
     D_80121B5A = 0;
     D_800EC9C2 = 0;
     D_80121B5E = 0;
-    func_80043184();
+    resetGameplayRng();
 
     players = D_80121D80;
     players[0].unk4 = 0;
@@ -203,7 +203,7 @@ void func_8003F864(void) {
     players[1].isActive = 1;
     players[2].isActive = 1;
     players[3].isActive = 1;
-    D_80121B54 = 4;
+    gRacePlayerCount = 4;
     D_80121B52 = 5;
     D_80121B5C = 0x64;
     func_80070EC0(1);
@@ -391,7 +391,7 @@ void func_8004002C(void) {
             break;
     }
 
-    D_80121B56 = 0;
+    gRaceUpdatePaused = 0;
     D_80121B58 = 0;
     D_80121B5F = 0;
     D_80121B59 = 0;
@@ -435,14 +435,14 @@ void func_8004002C(void) {
             D_80121D80[1].isActive = 0;
             D_80121D80[2].isActive = 0;
             D_80121D80[3].isActive = 0;
-            D_80121B54 = 1;
+            gRacePlayerCount = 1;
             break;
         default:
             D_80121D80[0].isActive = 1;
             D_80121D80[1].isActive = 1;
             D_80121D80[2].isActive = 1;
             D_80121D80[3].isActive = 1;
-            D_80121B54 = 4;
+            gRacePlayerCount = 4;
             break;
     }
 
@@ -610,7 +610,7 @@ void func_80040638(void) {
 void func_800407AC(void) {
     s32 temp_v1;
 
-    D_80121B56 = 1;
+    gRaceUpdatePaused = 1;
     D_8010B1F0 = 0;
     func_8008C704();
     func_800710CC(0x63);
@@ -629,7 +629,7 @@ void func_800407AC(void) {
 }
 
 void func_8004086C(void) {
-    D_80121B56 = 1;
+    gRaceUpdatePaused = 1;
     func_8008C704();
     func_800710CC(0x63);
     func_80096E3C();
@@ -643,7 +643,7 @@ void func_8004086C(void) {
 }
 
 void func_800408E4(void) {
-    D_80121B56 = 1;
+    gRaceUpdatePaused = 1;
     func_8008C704();
     func_800710CC(0x63);
     func_80096E3C();

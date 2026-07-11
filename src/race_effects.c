@@ -115,12 +115,12 @@ extern Gfx D_800D4620[];
 extern Gfx D_800D9D00[];
 extern Gfx D_800D9D40[];
 extern Gfx *gRegionAllocPtr;
-extern u8 D_80121B56;
+extern u8 gRaceUpdatePaused;
 extern u8 D_80156609;
 extern s16 D_80156612;
 extern Mtx *D_80156614;
 extern RacePlayerState D_80121D80[];
-extern RacePlayerHalfwordField D_80122052[];
+extern RacePlayerHalfwordField gPlayerHitSource[];
 extern RacePlayerSurfaceState D_80122282[];
 extern RacePlayerByteField D_8012229A[];
 extern s32 D_801248A4;
@@ -244,7 +244,7 @@ void func_800499A4(RaceEffectActor *arg0) {
     s32 i;
     volatile u8 padding[0x10];
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
         arg0->spriteIndex = func_80049440(pos, 0x1600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
@@ -295,7 +295,7 @@ void func_800499A4(RaceEffectActor *arg0) {
 
         for (i = 0; i < 4; i++) {
             if (i != arg0->playerIndex && func_800891B8(pos, 0x30000, 8, i)) {
-                D_80122052[i].value = arg0->playerIndex;
+                gPlayerHitSource[i].value = arg0->playerIndex;
                 arg0->timer = 0;
                 i = 4;
             }
@@ -413,7 +413,7 @@ void func_8004A2F4(RaceEffectActor *arg0) {
     Vec3i *pos;
     s32 i;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
         arg0->spriteIndex = func_80049440(pos, 0xE00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
@@ -465,7 +465,7 @@ void func_8004A2F4(RaceEffectActor *arg0) {
 
         for (i = 0; i < 4; i++) {
             if (i != arg0->playerIndex && func_800891B8(pos, 0x30000, 0x10, i)) {
-                D_80122052[i].value = arg0->playerIndex;
+                gPlayerHitSource[i].value = arg0->playerIndex;
                 hitPlayer = 1;
                 arg0->timer = 0;
                 i = 4;
@@ -586,7 +586,7 @@ void func_8004AC5C(RaceEffectActor *arg0) {
     s32 i;
     volatile u8 padding[0x10];
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
         arg0->spriteIndex = func_80049440(pos, 0x600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
@@ -637,7 +637,7 @@ void func_8004AC5C(RaceEffectActor *arg0) {
 
         for (i = 0; i < 4; i++) {
             if ((i != arg0->playerIndex || arg0->timer < 0x4B) && func_800891B8(pos, 0x30000, 0x40, i)) {
-                D_80122052[i].value = arg0->playerIndex;
+                gPlayerHitSource[i].value = arg0->playerIndex;
                 arg0->timer = 0;
                 i = 4;
             }
@@ -751,7 +751,7 @@ void func_8004B5F8(RaceEffectActor *arg0) {
     Vec3i *pos;
     s32 i;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         sin = func_80097AE8(arg0->targetAngle);
         cos = func_80097B48(arg0->targetAngle);
         xOffset = ((s64)sin * arg0->velocityY) / 0x1000;
@@ -873,7 +873,7 @@ void func_8004BC74(RaceEffectActor *arg0) {
     Vec3i *pos;
     s32 i;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
         arg0->spriteIndex = func_80049440(pos, 0xA00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
@@ -926,7 +926,7 @@ void func_8004BC74(RaceEffectActor *arg0) {
 
         do {
             if ((i != arg0->playerIndex) && func_800891B8(pos, 0x30000, 0x80, i)) {
-                D_80122052[i].value = arg0->playerIndex;
+                gPlayerHitSource[i].value = arg0->playerIndex;
                 arg0->timer = 0;
                 i = 4;
             }
@@ -1039,7 +1039,7 @@ void func_8004C5B4(RaceEffectActor *arg0) {
     s32 i;
     volatile u8 padding[0x10];
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
         arg0->spriteIndex = func_80049440(pos, 0x1200000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
@@ -1090,7 +1090,7 @@ void func_8004C5B4(RaceEffectActor *arg0) {
 
         for (i = 0; i < 4; i++) {
             if ((i != arg0->playerIndex) && func_800891B8(pos, 0x30000, 0x100, i)) {
-                D_80122052[i].value = arg0->playerIndex;
+                gPlayerHitSource[i].value = arg0->playerIndex;
                 arg0->timer = 0;
                 i = 4;
             }
@@ -1231,7 +1231,7 @@ void func_8004D018(RaceEffectActor *arg0) {
     s32 accelerationY;
     s32 groundY;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         accelerationY = arg0->accelerationY;
         arg0->pos.y += accelerationY;
         arg0->accelerationY = accelerationY - 0x6000;
@@ -1333,7 +1333,7 @@ void func_8004D5C0(RaceEffectActor *arg0) {
     Vec3i *pos;
     RacePlayerState *player;
 
-    if (D_80121B56 == 0) {
+    if (gRaceUpdatePaused == 0) {
         if (arg0->unk54 == 0) {
             sin = func_80097AE8(arg0->targetAngle);
             cos = func_80097B48(arg0->targetAngle);
