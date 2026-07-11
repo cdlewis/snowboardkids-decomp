@@ -253,7 +253,7 @@ extern s16 D_801222F4;
 extern s32 saveRaceRecordReplayData(void);
 extern void releaseMenuAssetHandles(void);
 extern void func_80045A78(s32, s32, s32, s32);
-extern void func_80046D68(s32, s32, s32, s32, s32);
+extern void drawAssetTableSpriteWithExplicitPalette(s32, s32, s32, s32, s32);
 extern void addRenderCallback(void *, void (*)(s32), s32);
 extern void enqueueSoundEffect(s32, s32);
 
@@ -730,17 +730,17 @@ void drawRacePauseMenu(s32 arg0) {
     if (D_80121B57 == 0) {
         color = 0x1B;
     }
-    func_80046D68(-0x1C, 0, getRelocatableHeapBlockBase(D_8011216E), 0x58, color);
+    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0, getRelocatableHeapBlockBase(D_8011216E), 0x58, color);
     color = 0x1A;
     if (D_80121B57 == 1) {
         color = 0x1B;
     }
-    func_80046D68(-0x1C, 0xA, getRelocatableHeapBlockBase(D_8011216E), 0x59, color);
+    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0xA, getRelocatableHeapBlockBase(D_8011216E), 0x59, color);
     color = 0x1A;
     if (D_80121B57 == 2) {
         color = 0x1B;
     }
-    func_80046D68(-0x1C, 0x14, getRelocatableHeapBlockBase(D_8011216E), 0x5A, color);
+    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0x14, getRelocatableHeapBlockBase(D_8011216E), 0x5A, color);
 }
 
 void updateRaceGameplayFlow(void) {

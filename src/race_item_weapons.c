@@ -3,7 +3,7 @@
 #include "race_motion.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
-#include "race_item_visual_effects.h"
+#include "race_item_effects.h"
 #include "race_player_movement.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C

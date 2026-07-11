@@ -49,7 +49,7 @@ typedef union {
     } fields;
 } CharacterSelectCourseCursorState;
 
-extern void func_80046D68(s16, s16, s32, u16, s32);
+extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, u16, s32);
 extern int sprintf(char *, const char *, ...);
 extern CharacterSelectCourseAssetHandles gAssetHandles;
 extern s16 gMenuCommonSpritesAssetHandle;
@@ -3017,12 +3017,12 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     ptr = buffer;
     end = buffer + 2;
     do {
-        func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF,
+        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF,
                       alpha);
         ptr++;
         x += 8;
     } while (ptr < end);
-    func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, alpha);
+    drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, alpha);
 
     if ((gRaceSplitscreenMode == 2) || ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 0))) {
         x += 6;
@@ -3034,19 +3034,19 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     ptr = buffer;
     end = buffer + 2;
     do {
-        func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF,
+        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF,
                       alpha);
         ptr++;
         x += 8;
     } while (ptr < end);
-    func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, alpha);
+    drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, alpha);
 
     x += 8;
     sprintf(buffer, D_800E0BA8, arg0->centiseconds >> 8);
     ptr = buffer;
     end = buffer + 2;
     do {
-        func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF,
+        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF,
                       alpha);
         ptr++;
         x += 8;

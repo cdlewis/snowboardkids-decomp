@@ -7,7 +7,7 @@
 #include "race_motion.h"
 #include "race_course_effects.h"
 #include "race_intro_effects.h"
-#include "race_item_visual_effects.h"
+#include "race_item_effects.h"
 #include "race_overlay_effects.h"
 #include "race_ui_effects.h"
 

@@ -152,7 +152,7 @@ extern u32 D_20058A8[];
 
 void drawMenuSprite(s32, s32, s32, s32, s32, s32, s32, s32);
 void func_80045A78(s16, s16, s32, u16);
-void func_80046D68(s32, s32, s32, s32, s32);
+void drawAssetTableSpriteWithExplicitPalette(s32, s32, s32, s32, s32);
 void getAssetTableImageAndPalette(void *, u16, void **, void **);
 void drawMenuAsciiTextDefaultScale(s32, s32, void *, s32);
 void addRenderCallback(void *, void *, s32);
@@ -701,7 +701,7 @@ void initMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
 
 void drawMainMenuModeIconFlash(MenuScreenEffectActor *arg0) {
     if (gCurrentViewportIndex == 2) {
-        func_80046D68(-0x6C, -0x48, getRelocatableHeapBlockBase(D_80112174), 0, mainMenuModeIconFlashTileOffsets[arg0->unk18.half.lo]);
+        drawAssetTableSpriteWithExplicitPalette(-0x6C, -0x48, getRelocatableHeapBlockBase(D_80112174), 0, mainMenuModeIconFlashTileOffsets[arg0->unk18.half.lo]);
     }
 }
 
@@ -751,15 +751,15 @@ void drawMainMenuModeLabel(MenuScreenEffectActor *arg0) {
     switch (temp_t0) {
     case 0:
         func_80045A78(-0x8C, 0x38, getRelocatableHeapBlockBase(D_80112174), 1);
-        func_80046D68(-0x10, 0x38, getRelocatableHeapBlockBase(D_80112174), 2, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
+        drawAssetTableSpriteWithExplicitPalette(-0x10, 0x38, getRelocatableHeapBlockBase(D_80112174), 2, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
         break;
     case 1:
         func_80045A78(-0x89, 0x38, getRelocatableHeapBlockBase(D_80112174), 1);
-        func_80046D68(-0xD, 0x38, getRelocatableHeapBlockBase(D_80112174), 3, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
+        drawAssetTableSpriteWithExplicitPalette(-0xD, 0x38, getRelocatableHeapBlockBase(D_80112174), 3, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
         break;
     case 2:
         func_80045A78(-0x7E, 0x38, getRelocatableHeapBlockBase(D_80112174), 1);
-        func_80046D68(-2, 0x38, getRelocatableHeapBlockBase(D_80112174), 4, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
+        drawAssetTableSpriteWithExplicitPalette(-2, 0x38, getRelocatableHeapBlockBase(D_80112174), 4, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
         break;
     } temp_v0_5 = gRegionAllocPtr; gRegionAllocPtr = temp_v0_5 + 1; temp_v0_5->words.w0 = 0x06000000; temp_v0_5->words.w1 = (u32) gMenuRenderModeResetDl;
 }
