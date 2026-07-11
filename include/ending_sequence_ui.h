@@ -1,5 +1,5 @@
-#ifndef ENDING_CREDITS_UI_H
-#define ENDING_CREDITS_UI_H
+#ifndef ENDING_SEQUENCE_UI_H
+#define ENDING_SEQUENCE_UI_H
 
 #include "common.h"
 
