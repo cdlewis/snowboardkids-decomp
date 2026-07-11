@@ -576,7 +576,7 @@ void func_8006752C(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
     }
 }
 
-// func_800675AC best match: 87.877% (nonmatchings/func_800675AC-7273315160691878794/base_4.c)
+// func_800675AC best match: 99.625% (nonmatchings/func_800675AC-731940616440357983/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800675AC.s")
 
 #ifdef NON_MATCHING
@@ -584,8 +584,10 @@ void func_8006752C(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 #define SPAWN_RANGE_MIN -0x13FFFFFF
 
 void func_800675AC(RaceOverlaySpawnActor *arg0) {
-    volatile s32 forceStack;
+    RaceThrownModelActor *savedSpawned;
+    volatile s32 forceStack[6];
     RaceOverlayEffectSpawn *savedEntry;
+    RaceOverlayEffectSpawn *newEntry;
     RaceThrownModelActor *spawned;
     RaceOverlayEffectSpawn *entry;
     s32 found;
@@ -597,7 +599,8 @@ void func_800675AC(RaceOverlaySpawnActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         if (arg0->timer == 0) {
             arg0->timer = 0x20;
-            entry = D_800D92D0[arg0->spawnIndex];
+            newEntry = D_800D92D0[arg0->spawnIndex];
+            entry = newEntry;
             found = FALSE;
             if (D_800EC9C2 != 2) {
                 if (D_80121D93 != 0) {
@@ -638,12 +641,13 @@ void func_800675AC(RaceOverlaySpawnActor *arg0) {
             }
 
             if (found != 0) {
-                savedEntry = entry;
-                spawned = func_80071408((void (*)(EffectTask *)) func_800674B4, 0, 0x64);
-                entry = savedEntry;
+                spawned = func_80071408(func_800674B4, 0, 0x64);
                 if (spawned != NULL) {
-                    prev = arg0->lastVariant;
+                    savedSpawned = spawned;
+                    entry = (savedEntry = entry);
                     rand = func_80043120() & 3;
+                    spawned = savedSpawned;
+                    prev = arg0->lastVariant;
                     if (rand == prev) {
                         rand = (prev + 1) & 3;
                     }
