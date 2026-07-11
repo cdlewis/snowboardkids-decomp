@@ -530,7 +530,7 @@ void func_800735F8(void) {
 
 void func_80073650(void) {
     setCurrentInputTaskCallback(&func_800734A0, 0);
-    createInputTask(4, &func_800097E0, 0x64);
+    createInputTask(4, &initCourseSelectMenu, 0x64);
     suspendInputTask(2);
 }
 

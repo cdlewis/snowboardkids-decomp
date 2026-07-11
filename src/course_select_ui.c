@@ -1392,13 +1392,13 @@ typedef struct {
     /* 0x2E */ u8 unk2E;
 } CourseSelectStatus26C4C;
 
-extern u32 D_800B34B0[];
+extern u32 gCourseUnlockPrices[];
 extern u8 D_800B6BE4[];
 extern u8 D_800B6DD0[];
 extern u8 D_800B6DFC[];
 extern u8 D_800B6EBC[];
 extern u8 D_800B6FDC[];
-extern u8 D_800F42C7;
+extern u8 gUnlockedExtraCourseFlags;
 extern u8 D_8010AF07[];
 
 void func_80026C4C(CourseSelectWidgetActor *arg0) {
@@ -1460,7 +1460,7 @@ void func_80026C4C(CourseSelectWidgetActor *arg0) {
         func_80013154(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
 
         if ((D_800EC9C2 == 3) && ((selection->mode == 1) || (selection->mode == 2))) {
-            if ((D_8010AE64[0] != 3) || !(D_800F42C7 & 7)) {
+            if ((D_8010AE64[0] != 3) || !(gUnlockedExtraCourseFlags & 7)) {
                 buffer[0] = -4;
                 buffer[1] = 6;
                 buffer[2] = selectedIndex;
@@ -1478,7 +1478,7 @@ void func_80026C4C(CourseSelectWidgetActor *arg0) {
                         courseIndex = ((selection->courseId % 3) + (selectedIndex * 3)) - 3;
                     }
 
-                    price = D_800B34B0[courseIndex];
+                    price = gCourseUnlockPrices[courseIndex];
                     if (price < 10000) {
                         digitCount = 5;
                     } else if (price < 100000) {

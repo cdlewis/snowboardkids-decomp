@@ -156,10 +156,6 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
-extern void func_80009C48(void);
-extern void func_8000B220(void);
-extern void func_8000B7B8(void);
-extern void func_8000C010(void);
 extern void func_800257F0(EffectTask *);
 extern void func_80028194(EffectTask *);
 extern s16 func_80042D58(s32);
@@ -171,11 +167,11 @@ extern void enqueueSoundEffect(s32, s32);
 extern void func_80099C44(void *, void *, s32);
 extern void n_alSeqpDelete(void);
 
-// func_800097E0 best match: 98.706%
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_800097E0.s")
+// initCourseSelectMenu best match: 98.706%
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/initCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
-void func_800097E0(void) {
+void initCourseSelectMenu(void) {
     u32 size;
     s32 i;
     s32 zero;
@@ -222,7 +218,7 @@ void func_800097E0(void) {
     func_80099C44(D_14B450, (void *)func_80043040(D_80112130[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
-    nextCallback = func_80009C48;
+    nextCallback = updateCourseSelectModeMenu;
     func_80070EC0(0);
     createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
 
@@ -316,11 +312,11 @@ void func_800097E0(void) {
 }
 #endif
 
-// func_80009C48 best match: 76.508% (nonmatchings/func_80009C48-7273315160691878794/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_80009C48.s")
+// updateCourseSelectModeMenu best match: 76.508% (nonmatchings/updateCourseSelectModeMenu-7273315160691878794/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/updateCourseSelectModeMenu.s")
 
 #ifdef NON_MATCHING
-void func_80009C48(void) {
+void updateCourseSelectModeMenu(void) {
     s32 input;
     s32 pressed;
     s32 leftPressed;
@@ -425,9 +421,9 @@ void func_80009C48(void) {
         if (D_80121D88 == 2) {
             D_800EC9C1 = 0;
             if (D_8010ADF8 == 0) {
-                setCurrentInputTaskCallback(func_8000A048, 0);
+                setCurrentInputTaskCallback(initCourseSelectCourseList, 0);
             } else {
-                setCurrentInputTaskCallback(func_8000C114, 0);
+                setCurrentInputTaskCallback(exitCourseSelectMenu, 0);
                 func_80072114(8);
                 D_8010ADF8 = 0;
                 D_8010AF46 = 0;
@@ -439,11 +435,11 @@ void func_80009C48(void) {
 }
 #endif
 
-// func_8000A048 best match: 86.471%
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000A048.s")
+// initCourseSelectCourseList best match: 86.471%
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/initCourseSelectCourseList.s")
 
 #ifdef NON_MATCHING
-void func_8000A048(void) {
+void initCourseSelectCourseList(void) {
     u8 courseFlags;
     s32 var_a0;
     s32 var_a2;
@@ -461,7 +457,7 @@ void func_8000A048(void) {
     D_8010ADF0 = 0;
     createEffectTask(func_800257F0, 0, 0x63);
     D_8010ADE8 = createEffectTask(func_80028194, 0, 0x61);
-    courseFlags = D_800F42C7;
+    courseFlags = gUnlockedExtraCourseFlags;
     if (courseFlags & 7) {
         D_8010AEA0[0] = 1;
     }
@@ -523,16 +519,16 @@ loop_6:
     }
 
     D_80121D80.unk6 = D_8010AEF8[var_a2_2];
-    setCurrentInputTaskCallback(func_8000A214, 0);
+    setCurrentInputTaskCallback(updateCourseSelectCourseList, 0);
     updateEffectTasks();
 }
 #endif
 
-// func_8000A214 best match: 54.533% (nonmatchings/func_8000A214-7123131487808489545/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000A214.s")
+// updateCourseSelectCourseList best match: 54.533% (nonmatchings/updateCourseSelectCourseList-7123131487808489545/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/updateCourseSelectCourseList.s")
 
 #ifdef NON_MATCHING
-void func_8000A214(void) {
+void updateCourseSelectCourseList(void) {
     s32 sp44;
     s8 sp33;                                        /* compiler-managed */
     u8 sp32;
@@ -724,7 +720,7 @@ block_17:
             }
             if ((D_80121D88 == 1) && (D_800EC9E6 == 1)) {
                 sp44 = var_a3_2;
-                setCurrentInputTaskCallback(func_8000B220, 0);
+                setCurrentInputTaskCallback(updateCourseSelectUnlockCourseList, 0);
                 gCurrentInputTask->screenState = 0;
             }
         } else {
@@ -790,7 +786,7 @@ block_17:
                     D_800EC9D0 += 3;
                 } else if ((temp_t4 & 0x8000) || (temp_t4 & 0x1000)) {
                     if (D_800ECA2F[D_80121D86] == -1) {
-                        if ((u32) D_80121D8C >= (u32) *(&D_800B34B0 + (D_80121D86 * 4))) {
+                        if ((u32) D_80121D8C >= (u32) gCourseUnlockPrices[D_80121D86]) {
                             sp44 = 0;
                             enqueueSoundEffect(0x49, 0x32);
                             var_a3_2 = 0;
@@ -823,7 +819,7 @@ block_17:
         if ((D_8010AF1C == 7) || (D_8010AF20 == 7)) {
             gCurrentInputTask->timer = 0;
             sp44 = var_a3_2;
-            setCurrentInputTaskCallback(func_8000AFE8, 0);
+            setCurrentInputTaskCallback(updateCourseSelectPurchasePrompt, 0);
             createEffectTask(func_8002EFB8, 0, 0x64);
         }
         var_v0_3 = (u8) D_800EC9C0;
@@ -841,7 +837,7 @@ block_17:
         gCurrentInputTask->fade = 1;
         D_80121D88 = 0;
         sp18 = temp_v0_3;
-        setCurrentInputTaskCallback(func_80009C48, 0);
+        setCurrentInputTaskCallback(updateCourseSelectModeMenu, 0);
         temp_v0_3->pad0[6] = D_8010AEF8[D_8010AE64];
         if (D_801235B4 == 1) {
             D_80121D86 = 0;
@@ -905,11 +901,11 @@ block_17:
 
 #endif
 
-// func_8000AFE8 best match: 99.401% (nonmatchings/func_8000AFE8-6061209858023118177/base_22.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000AFE8.s")
+// updateCourseSelectPurchasePrompt best match: 99.401% (nonmatchings/updateCourseSelectPurchasePrompt-6061209858023118177/base_22.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/updateCourseSelectPurchasePrompt.s")
 
 #ifdef NON_MATCHING
-void func_8000AFE8(void) {
+void updateCourseSelectPurchasePrompt(void) {
     ObjectA3E0 *var_s1;
     s32 temp_v0;
     s32 temp_v1;
@@ -940,7 +936,7 @@ void func_8000AFE8(void) {
                 } else {
                     D_8010AF20 = 1;
                 }
-                setCurrentInputTaskCallback(func_8000A214, 0);
+                setCurrentInputTaskCallback(updateCourseSelectCourseList, 0);
             } else {
                 enqueueSoundEffect(0x45, 0x32);
                 gCurrentInputTask->timer += 2;
@@ -953,12 +949,12 @@ void func_8000AFE8(void) {
             } else {
                 D_8010AF20 = 1;
             }
-            setCurrentInputTaskCallback(func_8000A214, 0);
+            setCurrentInputTaskCallback(updateCourseSelectCourseList, 0);
         }
     } else if (temp_v0 > (4 - 1)) {
         gCurrentInputTask->timer = 0;
         D_80121D88 = 9;
-        setCurrentInputTaskCallback(func_8000A214, 0);
+        setCurrentInputTaskCallback(updateCourseSelectCourseList, 0);
     }
 
     var_s0 = 0;
@@ -977,11 +973,11 @@ void func_8000AFE8(void) {
 }
 #endif
 
-// func_8000B220 best match: 56.849% (nonmatchings/func_8000B220-7273315160691878794/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000B220.s")
+// updateCourseSelectUnlockCourseList best match: 56.849% (nonmatchings/updateCourseSelectUnlockCourseList-7273315160691878794/base_9.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/updateCourseSelectUnlockCourseList.s")
 
 #ifdef NON_MATCHING
-void func_8000B220(void) {
+void updateCourseSelectUnlockCourseList(void) {
     s32 sp24;
     ObjectA3E0 *var_s0;
     s16 state;
@@ -1101,13 +1097,13 @@ after_row_change:
 
 outside_menu_rows:
     if (D_800EC9D0 == 0) {
-        setCurrentInputTaskCallback(func_8000A214, 0);
+        setCurrentInputTaskCallback(updateCourseSelectCourseList, 0);
     }
 
 after_input:
     if ((gCourseSelectStatus.unk4Array[0] == 7) || (gCourseSelectStatus.unk8Array[0] == 7)) {
         gCurrentInputTask->screenState = 1;
-        setCurrentInputTaskCallback(func_8000B690, 0);
+        setCurrentInputTaskCallback(initCourseSelectCourseDetailsMenu, 0);
     }
     i = 0;
     if ((s32) D_80121B55 > 0) {
@@ -1125,7 +1121,7 @@ after_input:
 }
 #endif
 
-void func_8000B690(void) {
+void initCourseSelectCourseDetailsMenu(void) {
     ObjectA3E0 *var_s1;
     s32 var_s0;
     s8 temp_v0;
@@ -1137,18 +1133,18 @@ void func_8000B690(void) {
         D_8010AF73 = temp_v0 / 7;
         D_8010ADF0 = 0;
         D_8010ADF8 = 0;
-        setCurrentInputTaskCallback(func_8000B7B8, 0);
+        setCurrentInputTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
     updateEffectTasks();
 }
 
-// func_8000B7B8 best match: 68.617% (nonmatchings/func_8000B7B8-2127290767680699791/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/func_8000B7B8.s")
+// updateCourseSelectCourseDetailsMenu best match: 68.617% (nonmatchings/updateCourseSelectCourseDetailsMenu-2127290767680699791/base_3.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/updateCourseSelectCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
-void func_8000B7B8(void) {
+void updateCourseSelectCourseDetailsMenu(void) {
     s32 sp24;
     ObjectA3E0 *var_s0;
     s32 temp_t2;
@@ -1237,16 +1233,16 @@ block_16:
                     D_8010AF74 = 1;
                 }
                 D_8010ADF8 = 0;
-                setCurrentInputTaskCallback(func_8000BAFC, 0);
+                setCurrentInputTaskCallback(waitCourseSelectRecordsClose, 0);
             } else if ((temp_a0 == 8) || ((u8) D_8010ADF8 == 2)) {
-                setCurrentInputTaskCallback(func_8000BBB4, 0);
+                setCurrentInputTaskCallback(returnToCourseSelectUnlockCourseList, 0);
                 D_8010ADF8 = 0;
                 gCurrentInputTask->screenState = 3;
             } else if (temp_a0 == 9) {
-                setCurrentInputTaskCallback(func_8000BCA0, 0);
+                setCurrentInputTaskCallback(returnToCourseSelectModeMenu, 0);
                 gCurrentInputTask->screenState = 9;
             } else {
-                setCurrentInputTaskCallback(func_8000BEC0, 0);
+                setCurrentInputTaskCallback(initCourseSelectPreview, 0);
             }
         }
     }
@@ -1265,21 +1261,21 @@ block_16:
 }
 #endif
 
-void func_8000BAFC(void) {
+void waitCourseSelectRecordsClose(void) {
     ObjectA3E0 *var_s1;
     s32 var_s0;
 
     if (gCourseSelectStatus.transitionState == 2) {
         D_8010ADF0 = 0;
         D_8010AF74 = 0;
-        setCurrentInputTaskCallback(func_8000B7B8, 0);
+        setCurrentInputTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
     updateEffectTasks();
 }
 
-void func_8000BBB4(void) {
+void returnToCourseSelectUnlockCourseList(void) {
     ObjectA3E0 *var_s1;
     s32 var_s0;
 
@@ -1292,20 +1288,20 @@ void func_8000BBB4(void) {
         gCourseSelectStatus.transitionState = 0;
         gCurrentInputTask->screenState = 0;
         D_8010ADF0 = 0;
-        setCurrentInputTaskCallback(func_8000B220, 0);
+        setCurrentInputTaskCallback(updateCourseSelectUnlockCourseList, 0);
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
     updateEffectTasks();
 }
 
-void func_8000BCA0(void) {
+void returnToCourseSelectModeMenu(void) {
     ObjectA3E0 *var_s1;
     s32 var_s0;
     s32 i;
 
     if (gCurrentInputTask->screenState == 0xB) {
-        setCurrentInputTaskCallback(func_80009C48, 0);
+        setCurrentInputTaskCallback(updateCourseSelectModeMenu, 0);
         gCurrentInputTask->fade = 1;
         gCurrentInputTask->timer = 0;
         gCurrentInputTask->screenState = 0;
@@ -1337,7 +1333,7 @@ void func_8000BCA0(void) {
     updateEffectTasks();
 }
 
-void func_8000BEC0(void) {
+void initCourseSelectPreview(void) {
     ObjectA3E0 *var_s0;
     s8 *temp;
 
@@ -1349,14 +1345,14 @@ void func_8000BEC0(void) {
     temp[0x3F] = D_800B34E0[(u8) D_8010AF73 * 7 + (u8) D_8010AF72];
     gCourseSelectStatus.transitionState = 6;
     createEffectTask(&func_8002FEF8, 0, 0x64);
-    setCurrentInputTaskCallback(func_8000C010, 0); var_s0 = D_801121E0; do { D_800EC9C4 = var_s0; var_s0->unk2C();
+    setCurrentInputTaskCallback(updateCourseSelectPreviewClose, 0); var_s0 = D_801121E0; do { D_800EC9C4 = var_s0; var_s0->unk2C();
         var_s0 += 1;
     } while (var_s0 != &D_80112340);
     updateEffectTasks();
     enqueueSoundEffect(0x17, 0x32);
 }
 
-void func_8000C010(void) {
+void updateCourseSelectPreviewClose(void) {
     ObjectA3E0 *var_s0;
 
     D_8010AF76 -= 4;
@@ -1366,12 +1362,12 @@ void func_8000C010(void) {
     configureViewport(1, 0xE8, 0x78, 0x90, D_8010AF76, 0xA0, 0xF0, 0.6666666865f);
     if (D_8010AF76 == 0) {
         func_80070614(1);
-        setCurrentInputTaskCallback(func_8000B7B8, 0);
+        setCurrentInputTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
         gCourseSelectStatus.transitionState = 2;
  D_8010AED0 = 0; } var_s0 = D_801121E0; do { (D_800EC9C4 = var_s0)->unk2C(); var_s0 += 1; } while (var_s0 != (&D_80112340)); updateEffectTasks();
 }
 
-void func_8000C114(void) {
+void exitCourseSelectMenu(void) {
     s8 *ptr;
     s32 count;
 
