@@ -2998,33 +2998,31 @@ void func_800235E0(CharacterSelectWidgetActor *arg0) {
     func_80071824(arg0, func_80023434);
 }
 
-// func_80023618 best match: 81.667%
+// func_80023618 best match: 93.301% (nonmatchings/func_80023618-6061209858023118177/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80023618.s")
 
 #ifdef NON_MATCHING
-void func_80023618(CharacterSelectTime *arg0, s32 x, s32 y, s32 alpha) {
-    char buffer[8];
-    char *it;
-    char *end;
-    s32 tempY;
-    s32 tempAlpha;
-    s32 drawY;
-    s32 drawAlpha;
+extern char D_800E0B98[];
+extern char D_800E0BA0[];
+extern char D_800E0BA8[];
 
-    tempY = y;
-    tempAlpha = alpha;
-    sprintf(buffer, "%2.2d", arg0->minutes);
-    drawY = (s16)tempY;
-    drawAlpha = tempAlpha & 0xFFFF;
-    it = buffer;
+void func_80023618(CharacterSelectTime *arg0, s32 x, s32 y, s32 alpha) {
+    char buffer[0x60];
+    char *ptr;
+    char *end;
+
+    sprintf(buffer, D_800E0B98, arg0->minutes);
+    y = (s16)y;
+    alpha &= 0xFFFF;
+    ptr = buffer;
     end = buffer + 2;
     do {
-        func_80046D68((s16)x, drawY, func_80043040(D_80112130.popupFontHandle), ((u8)*it - 5) & 0xFFFF,
-                      drawAlpha);
-        it++;
+        func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF,
+                      alpha);
+        ptr++;
         x += 8;
-    } while ((u32)it < (u32)end);
-    func_80046D68((s16)x, drawY, func_80043040(D_80112130.popupFontHandle), 0x36, drawAlpha);
+    } while (ptr < end);
+    func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), 0x36, alpha);
 
     if ((D_800EC9C2 == 2) || ((D_800EC9C2 == 1) && (D_80121B5E == 0))) {
         x += 6;
@@ -3032,26 +3030,26 @@ void func_80023618(CharacterSelectTime *arg0, s32 x, s32 y, s32 alpha) {
         x += 8;
     }
 
-    sprintf(buffer, "%2.2d", arg0->seconds);
-    it = buffer;
+    sprintf(buffer, D_800E0BA0, arg0->seconds);
+    ptr = buffer;
     end = buffer + 2;
     do {
-        func_80046D68((s16)x, drawY, func_80043040(D_80112130.popupFontHandle), ((u8)*it - 5) & 0xFFFF,
-                      drawAlpha);
-        it++;
+        func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF,
+                      alpha);
+        ptr++;
         x += 8;
-    } while ((u32)it < (u32)end);
-    func_80046D68((s16)x, drawY, func_80043040(D_80112130.popupFontHandle), 0x35, drawAlpha);
+    } while (ptr < end);
+    func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), 0x35, alpha);
 
     x += 8;
-    sprintf(buffer, "%2.2d", arg0->centiseconds >> 8);
-    it = buffer;
+    sprintf(buffer, D_800E0BA8, arg0->centiseconds >> 8);
+    ptr = buffer;
     end = buffer + 2;
     do {
-        func_80046D68((s16)x, drawY, func_80043040(D_80112130.popupFontHandle), ((u8)*it - 5) & 0xFFFF,
-                      drawAlpha);
-        it++;
+        func_80046D68((s16)x, y, func_80043040(D_80112130.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF,
+                      alpha);
+        ptr++;
         x += 8;
-    } while (it != end);
+    } while (ptr != end);
 }
 #endif
