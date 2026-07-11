@@ -182,7 +182,7 @@ extern s16 D_80121B52;
 extern s32 D_80121B7C;
 extern s16 gMenuFadeAlpha;
 extern s8 D_800DEF10;
-extern s8 D_800EC8B0;
+extern u8 gRaceRumbleEnabled;
 extern RaceFlowInitScratch D_800EC9F0;
 extern u8 D_80121B5E;
 #ifdef NON_MATCHING
@@ -222,7 +222,7 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s8 gFramebufferSwapDelay;
 extern u8 D_800EC9C2;
-extern u8 D_8010ADFA;
+extern u8 gRumblePakConnectedMask;
 extern u8 D_800DC4C0;
 extern u8 gRaceUpdatePaused;
 extern ViewportSlot D_801121E0[];
@@ -535,7 +535,7 @@ void func_80073650(void) {
 }
 
 void func_80073694(void) {
-    D_8010ADFA = 0;
+    gRumblePakConnectedMask = 0;
     setCurrentInputTaskCallback(&func_800736E0, 0);
     createInputTask(4, &initControllerPakRaceRecordSaveFlow, 0x64);
     suspendInputTask(2);
@@ -769,7 +769,7 @@ void func_80074960(void) {
                             input = D_80121B57;
                         }
                         if (input == 1) {
-                            D_800EC8B0 = 0;
+                            gRaceRumbleEnabled = 0;
                             gRaceUpdatePaused = 0;
                             gFramebufferSwapHold = 1;
                             enqueueSoundEffect(1, 0x32);
@@ -777,7 +777,7 @@ void func_80074960(void) {
                             return;
                         }
                         if (valueTwo == input) {
-                            D_800EC8B0 = 0;
+                            gRaceRumbleEnabled = 0;
                             gRaceUpdatePaused = 0;
                             gFramebufferSwapHold = 1;
                             enqueueSoundEffect(1, 0x32);
@@ -799,7 +799,7 @@ void func_80074960(void) {
     func_80077C4C();
     if (func_80077D14() != 0) {
         gCurrentInputTask->fadeTimer = 0x3C;
-        D_800EC8B0 = 0;
+        gRaceRumbleEnabled = 0;
         setCurrentInputTaskCallback(func_80074C5C, 0);
     }
 }
@@ -1472,7 +1472,7 @@ void func_80077400(void) {
         func_80071664(func_8005393C, 5, 0x64, D_80121B60 - 1);
     }
     func_80077C94();
-    D_800EC8B0 = 0;
+    gRaceRumbleEnabled = 0;
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
@@ -1633,7 +1633,7 @@ void func_8007797C(void) {
 
 void func_80077AD4(void) {
     func_80077CD4();
-    D_800EC8B0 = 0;
+    gRaceRumbleEnabled = 0;
     gMenuFadeAlpha += 7;
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
@@ -1644,7 +1644,7 @@ void func_80077AD4(void) {
 void func_80077B34(void) {
     gFramebufferSwapHold = 1;
     if (gPendingFramebufferSwapCount == 2) {
-        D_800EC8B0 = 0;
+        gRaceRumbleEnabled = 0;
         D_80121B58 = 0;
         func_80042C20();
         releaseMenuAssetHandles();

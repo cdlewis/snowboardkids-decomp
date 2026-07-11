@@ -25,7 +25,7 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
 extern s16 D_800EC9C8;
-extern s8 D_800EC8B0;
+extern u8 gRaceRumbleEnabled;
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
 extern s32 D_801235B4;
@@ -54,7 +54,7 @@ void initControllerPakFileDeleteFlow(void) {
     D_800EC9D8 = 0;
     gControllerPakFreeBytes = 0;
     gControllerPakFreeFileCount = 0;
-    D_800EC8B0 = 0;
+    gRaceRumbleEnabled = 0;
     gMenuFadeAlpha = gCurrentInputTask->fade;
     loadCompressedRomAsset(&D_5DFDD0, &D_5E0350, 0x21);
     loadCompressedRomAsset(&D_593D10, &D_598A70, 0x22);

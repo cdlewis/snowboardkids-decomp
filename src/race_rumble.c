@@ -1,4 +1,4 @@
-#include "controller_rumble.h"
+#include "race_rumble.h"
 #include "main_menu.h"
 
 #define RUMBLE_PATTERN_WRAP_MASK 0xF
@@ -7,12 +7,12 @@
 
 typedef u8 ControllerRumblePattern[];
 
-extern ControllerRumblePattern D_800DE550;
-extern ControllerRumblePattern D_800DE560;
-extern ControllerRumblePattern D_800DE570;
-extern ControllerRumblePattern D_800DE578;
+extern ControllerRumblePattern gRaceRumblePatternSolid;
+extern ControllerRumblePattern gRaceRumblePatternSlowPulse;
+extern ControllerRumblePattern gRaceRumblePatternFastPulse;
+extern ControllerRumblePattern gRaceRumblePatternAlternatingPulse;
 
-void func_800830C0(RaceInputPlayer *arg0) {
+void updateRaceRumble(RaceInputPlayer *arg0) {
     s32 patternId;
     s32 fastPatternId;
     u8 *pattern;
@@ -30,15 +30,15 @@ void func_800830C0(RaceInputPlayer *arg0) {
     arg0->rumbleTimer = arg0->rumbleTimer - 1;
     patternId = arg0->rumblePatternId;
     fastPatternId = RUMBLE_PATTERN_FAST;
-    pattern = D_800DE550;
+    pattern = gRaceRumblePatternSolid;
     if (patternId == 1) {
-        pattern = D_800DE560;
+        pattern = gRaceRumblePatternSlowPulse;
     }
     if (fastPatternId == patternId) {
-        pattern = D_800DE570;
+        pattern = gRaceRumblePatternFastPulse;
     }
     if (patternId == 3) {
-        pattern = D_800DE578;
+        pattern = gRaceRumblePatternAlternatingPulse;
     }
     if (fastPatternId == patternId) {
         if (!(arg0->rumblePatternIndex < RUMBLE_PATTERN_FAST_LENGTH)) {
@@ -46,7 +46,7 @@ void func_800830C0(RaceInputPlayer *arg0) {
         }
     }
     if (pattern[arg0->rumblePatternIndex] != 0) {
-        func_80000C00(arg0->playerIndex);
+        requestRumbleMotorStart(arg0->playerIndex);
     }
     arg0->rumblePatternIndex = (arg0->rumblePatternIndex + 1) & RUMBLE_PATTERN_WRAP_MASK;
 }

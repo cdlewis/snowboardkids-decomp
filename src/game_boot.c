@@ -166,8 +166,8 @@ extern RenderCallbackNode *D_80124898;
 extern RenderCallbackNode *D_801248F8;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 D_8012496E;
-extern s8 D_800EC8B0;
-extern s8 D_8010ADFA;
+extern u8 gRaceRumbleEnabled;
+extern u8 gRumblePakConnectedMask;
 extern u8 D_8013CF8E;
 extern s32 D_800DF144;
 extern s8 D_800DEF10;
@@ -259,8 +259,8 @@ void func_80099790(void) {
     D_8012482A = 0;
     D_8012482B = 0;
     D_8012482C = 0;
-    D_800EC8B0 = 0;
-    D_8010ADFA = 0;
+    gRaceRumbleEnabled = 0;
+    gRumblePakConnectedMask = 0;
 }
 
 // func_800998E4 best match: 89.136% at nonmatchings/func_800998E4-731940616440357983/base_14.c.

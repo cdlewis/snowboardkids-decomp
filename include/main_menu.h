@@ -9,7 +9,7 @@ void func_80000960(void);
 void func_800009B0(void);
 void func_80000A40(u16 arg0);
 void func_80000A8C(u16 arg0);
-void func_80000C00(u16 arg0);
+void requestRumbleMotorStart(u16 arg0);
 void func_80000C48(u16 arg0);
 void func_80000C94(u16 arg0);
 void func_80000DB4(u16 arg0);

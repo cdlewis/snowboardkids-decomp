@@ -1,7 +1,7 @@
 #include "common.h"
 #include "asset_manager.h"
 #include "effect_task_scheduler.h"
-#include "controller_rumble.h"
+#include "race_rumble.h"
 #include "game_audio.h"
 #include "model_animation.h"
 #include "race_camera.h"
@@ -5310,7 +5310,7 @@ void func_80097038(RaceInputPlayer *player) {
     }
     func_80087E14(player);
     func_80086170(player);
-    func_800830C0(player);
+    updateRaceRumble(player);
 }
 
 void func_80097144(void) {
