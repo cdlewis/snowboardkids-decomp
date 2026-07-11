@@ -10,7 +10,7 @@ typedef struct CharacterSelectFlowState {
     /* 0x20 */ s32 unk20;
 } CharacterSelectFlowState;
 
-void initCharacterSelectCourseMenuFromPlayerCount(void);
+void initCharacterSelectCourseMenuFromRaceTypeSelect(void);
 void initCharacterSelectCourseMenuFromRace(void);
 void initCharacterSelectCourseMenuFromPlayerSelect(void);
 void updateCharacterSelectCourseMenu(void);

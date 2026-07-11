@@ -11,7 +11,7 @@ typedef u8 PlayerCountPortrait[0x8C];
 typedef struct {
     s16 alpha;
     s8 state;
-} PlayerCountSelectMenuCursor;
+} RaceTypeSelectCursorState;
 
 typedef struct {
     /* 0x00 */ u16 center[16];
@@ -49,11 +49,11 @@ extern u16 D_800B7196;
 extern PlayerCountPortrait D_800B7198[];
 extern PlayerCountSelectAssetHandles gAssetHandles;
 extern s16 gMenuCommonSpritesAssetHandle;
-extern PlayerCountSelectMenuCursor D_8010AF50;
-extern u8 D_8010AF52;
+extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
+extern u8 gRaceTypeSelectCursorAnimState;
 extern s32 gActiveMenuTask;
 extern u8 D_8010ADF8;
-extern u8 D_80121B5E;
+extern u8 gRaceTypeSelection;
 extern u8 D_80121D88;
 extern s32 D_80121D8C;
 extern s32 gMenuFlowState;
@@ -69,7 +69,7 @@ void func_80029200(PlayerCountSelectRowActor *arg0) {
     PlayerCountSelectRowActor *row;
 
     savedArg = arg0;
- do { i = 0; if (arg0->playerCount > 0) { yOffset = 0; row = arg0; do { alpha = 0; if (((((D_800EC9C1 > 0) && (D_800EC9C1 < 8)) && (D_8010ADF8 == 0)) && (i == D_80121B5E)) && (D_800EC9C1 & 1)) { if ((!savedArg->playerCount) && (!savedArg->playerCount)) { } alpha = 0xFF; } drawMenuSprite(row->iconX[0], (s16) (arg0->iconY + yOffset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (i + 0xD) & 0xFFFF, 0x20, 0x20, 0, alpha); i++; yOffset += 0x18; row = (PlayerCountSelectRowActor *) (((u8 *) row) + 2); } while (i < savedArg->playerCount); } } while (0);
+ do { i = 0; if (arg0->playerCount > 0) { yOffset = 0; row = arg0; do { alpha = 0; if (((((D_800EC9C1 > 0) && (D_800EC9C1 < 8)) && (D_8010ADF8 == 0)) && (i == gRaceTypeSelection)) && (D_800EC9C1 & 1)) { if ((!savedArg->playerCount) && (!savedArg->playerCount)) { } alpha = 0xFF; } drawMenuSprite(row->iconX[0], (s16) (arg0->iconY + yOffset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (i + 0xD) & 0xFFFF, 0x20, 0x20, 0, alpha); i++; yOffset += 0x18; row = (PlayerCountSelectRowActor *) (((u8 *) row) + 2); } while (i < savedArg->playerCount); } } while (0);
 }
 
 void func_80029344(PlayerCountSelectRowActor *arg0) {
@@ -269,11 +269,11 @@ void func_8002980C(PlayerCountSelectWidgetActor *arg0) {
 void func_80029CE4(PlayerCountSelectWidgetActor *arg0) {
     int state;
 
-    if ((D_80121B5E >= (u16) arg0->widget.counter) && (arg0->row.bytes.subState != 0) && (arg0->y != -0x48)) {
+    if ((gRaceTypeSelection >= (u16) arg0->widget.counter) && (arg0->row.bytes.subState != 0) && (arg0->y != -0x48)) {
         state = arg0->row.bytes.subState = 2;
     } else {
         state = arg0->row.bytes.subState;
-        if ((D_80121B5E < (u16) arg0->widget.counter) && (state != 0) && (arg0->y != -0x140)) {
+        if ((gRaceTypeSelection < (u16) arg0->widget.counter) && (state != 0) && (arg0->y != -0x140)) {
             state = arg0->row.bytes.subState = 1;
         } else {
             state = arg0->row.bytes.subState;
@@ -392,9 +392,9 @@ void func_8002A008(PlayerCountSelectWidgetActor *arg0) {
 void func_8002A27C(PlayerCountSelectWidgetActor *arg0) {
     int state;
 
-    if ((D_80121B5E >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
+    if ((gRaceTypeSelection >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((D_80121B5E < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
+    } else if ((gRaceTypeSelection < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = arg0->transition.bytes.state;
@@ -503,9 +503,9 @@ void func_8002A49C(PlayerCountSelectWidgetActor *arg0) {
 void func_8002A710(PlayerCountSelectWidgetActor *arg0) {
     int state;
 
-    if ((D_80121B5E >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
+    if ((gRaceTypeSelection >= (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((D_80121B5E < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
+    } else if ((gRaceTypeSelection < (u16) arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = arg0->transition.bytes.state;
@@ -604,11 +604,11 @@ void func_8002A930(PlayerCountSelectWidgetActor *arg0) {
 void func_8002AB24(PlayerCountSelectWidgetActor *arg0) {
     int state;
 
-    if ((D_80121B5E == 3) && (arg0->y != -0x48) && ((s32) arg0->widget.bytes.state < 6)) {
+    if ((gRaceTypeSelection == 3) && (arg0->y != -0x48) && ((s32) arg0->widget.bytes.state < 6)) {
         state = arg0->widget.bytes.state = 2;
     } else {
         state = (s32) arg0->widget.bytes.state;
-        if ((D_80121B5E != 3) && (arg0->y != -0x140) && (state < 6)) {
+        if ((gRaceTypeSelection != 3) && (arg0->y != -0x140) && (state < 6)) {
             state = arg0->widget.bytes.state = 1;
         } else {
             state = arg0->widget.bytes.state;
@@ -689,7 +689,7 @@ void func_8002AD74(PlayerCountSelectWidgetActor *arg0) {
 }
 
 void func_8002ADB8(PlayerCountSelectWidgetActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (D_80121B5E * 0x18)), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (gRaceTypeSelection * 0x18)), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
 void func_8002AE3C(PlayerCountSelectWidgetActor *arg0) {
@@ -697,7 +697,7 @@ void func_8002AE3C(PlayerCountSelectWidgetActor *arg0) {
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = D_8010AF50.state)) {
+    if (state != (globalState = gRaceTypeSelectCursorTarget.state)) {
         arg0->transition.bytes.state = globalState;
         /* Preserve IDO's state/globalState register allocation. */
         if (1) {}
@@ -706,7 +706,7 @@ void func_8002AE3C(PlayerCountSelectWidgetActor *arg0) {
         if (1) {}
         if (1) {}
         state = globalState;
-        arg0->sprite.spriteIndex = D_8010AF50.alpha;
+        arg0->sprite.spriteIndex = gRaceTypeSelectCursorTarget.alpha;
     }
 
     switch (state) {
@@ -743,7 +743,7 @@ void func_8002AE3C(PlayerCountSelectWidgetActor *arg0) {
         break;
     }
 
-    D_8010AF52 = state;
+    gRaceTypeSelectCursorAnimState = state;
     if (arg0->transition.bytes.state == 4) {
         removeCallbackTask(arg0);
         return;
@@ -761,7 +761,7 @@ void func_8002AFB8(PlayerCountSelectWidgetActor *arg0) {
 }
 
 void func_8002AFF8(PlayerCountSelectWidgetActor *arg0) {
-    PlayerCountPortrait *portrait = &D_800B7198[D_80121B5E];
+    PlayerCountPortrait *portrait = &D_800B7198[gRaceTypeSelection];
 
     drawMenuGlyphScript(arg0->x, arg0->y, *portrait, 1, arg0->sprite.spriteIndex, 0);
 }
@@ -857,7 +857,7 @@ void func_8002B2FC(PlayerCountSelectWidgetActor *arg0) {
 void func_8002B338(PlayerCountSelectWidgetActor *arg0) {
     char sp40[0x18];
 
-    if (D_80121B5E != 3) {
+    if (gRaceTypeSelection != 3) {
         func_8001BA2C(arg0->x, arg0->y, 0x5000, 0x4000);
         drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
         sprintf(sp40, D_800E0EA0, D_80121D8C);

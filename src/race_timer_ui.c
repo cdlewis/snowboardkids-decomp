@@ -109,7 +109,7 @@ extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
-extern u8 D_80121B5E;
+extern u8 gRaceTypeSelection;
 extern u8 gCurrentViewportIndex;
 extern s16 gUiBlinkTimer;
 extern s32 gMenuRenderCallbackList;
@@ -145,14 +145,14 @@ void func_80078430(void) {
             D_80121B70 = 4;
         }
         if (gRaceSplitscreenMode == 1) {
-            if (D_80121B5E == 0) {
+            if (gRaceTypeSelection == 0) {
                 D_80121B70 = 5;
             }
-            if (D_80121B5E == 1) {
+            if (gRaceTypeSelection == 1) {
                 D_80121B70 = 6;
                 D_80121B78 = D_800DC928[gRaceCourseIndex];
             }
-            if (D_80121B5E == 2) {
+            if (gRaceTypeSelection == 2) {
                 D_80121B70 = 7;
                 D_80121B78 = D_800DC950;
             }

@@ -120,7 +120,7 @@ extern u8 gRaceSplitscreenMode;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 D_80121B59;
-extern u8 D_80121B5E;
+extern u8 gRaceTypeSelection;
 extern u8 D_80121B59;
 extern u8 D_80121B58;
 extern u8 gTrainingCourseLesson;
@@ -270,7 +270,7 @@ void func_8008C098(RaceInputPlayer *player) {
     if (player->unk4 == 0) {
         player->unk519 = 6;
     }
-    if ((gRaceSplitscreenMode == 1) && (D_80121B5E == 1)) {
+    if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 1)) {
         player->shieldEffectTimer = 0xA;
     }
     if (gRaceCourseIndex == 9) {
@@ -5424,7 +5424,7 @@ void func_8009724C(RaceInputPlayer *arg0) {
         }
     }
     if (gRaceSplitscreenMode == 1) {
-        if (D_80121B5E == 2) {
+        if (gRaceTypeSelection == 2) {
             if (var_s0 != 0) {
                 var_v1_3 = 0x4D;
                 if (var_s0 >= 0x2710) {
@@ -5598,7 +5598,7 @@ void func_80097910(RaceInputPlayer *player) {
         player->mode = 1;
         player->updateState = 0;
         player->updateTimer = 0;
-        if ((gRaceSplitscreenMode == 1) && (D_80121B5E == 2)) {
+        if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 2)) {
             player->unk2C0 *= 2;
             if (player->unk2C0 >= 0x2710) {
                 player->unk2C0 = 0x270F;

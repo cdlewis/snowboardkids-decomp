@@ -95,7 +95,7 @@ extern u8 gPlayerCount;
 extern u8 D_80121B59;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
-extern u8 D_80121B5E;
+extern u8 gRaceTypeSelection;
 extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
 
@@ -295,15 +295,15 @@ void initRaceCourseEffects(void) {
             }
         }
         if (gRaceSplitscreenMode == 1) {
-            if (D_80121B5E == 0) {
+            if (gRaceTypeSelection == 0) {
                 createCallbackTask(&func_80065764, 0, 0x64);
             }
-            if (D_80121B5E == 1) {
+            if (gRaceTypeSelection == 1) {
                 createCallbackTask(&func_800666B0, 0, 1);
             }
         }
         if (gRaceSplitscreenMode == 1) {
-            if (D_80121B5E != 1) {
+            if (gRaceTypeSelection != 1) {
                 goto block_24;
             }
         } else {
@@ -354,10 +354,10 @@ block_24:
             func_80061AF4(0x59, (void *)0x2290CDA1, (void *)0xC5F82815, 0xAF0);
         }
         if (gRaceSplitscreenMode == 1) {
-            if (D_80121B5E == 0) {
+            if (gRaceTypeSelection == 0) {
                 createCallbackTask(&func_80065764, 0, 0x64);
             }
-            if (D_80121B5E == 1) {
+            if (gRaceTypeSelection == 1) {
                 createCallbackTask(&func_800666B0, 0, 1);
             }
         }
@@ -580,10 +580,10 @@ block_24:
             }
         }
         if (gRaceSplitscreenMode == 1) {
-            if (D_80121B5E == 0) {
+            if (gRaceTypeSelection == 0) {
                 createCallbackTask(&func_80065764, 0, 0x64);
             }
-            if (D_80121B5E == 1) {
+            if (gRaceTypeSelection == 1) {
                 createCallbackTask(&func_800666B0, 0, 1);
             }
         }

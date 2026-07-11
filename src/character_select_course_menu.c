@@ -6,7 +6,7 @@
 #include "character_select_course_ui.h"
 #include "game_task_scheduler.h"
 #include "menu_renderer.h"
-#include "player_count_select_menu.h"
+#include "race_type_select_menu.h"
 #include "player_select_menu.h"
 #include "title_menu.h"
 #include "viewport_manager.h"
@@ -56,7 +56,7 @@ extern CharacterSelectSaveData gGameSaveDataBuffer[];
 extern u8 D_80121D80[];
 extern u8 D_80121D88;
 extern u8 gPlayerCount;
-extern u8 D_80121B5E;
+extern u8 gRaceTypeSelection;
 extern s16 gRaceCourseIndex;
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 extern s32 gActiveMenuTask;
@@ -82,11 +82,11 @@ extern u8 D_800EC9DD;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initCharacterSelectCourseMenuFromPlayerCount best match: 79.600% (nonmatchings/initCharacterSelectCourseMenuFromPlayerCount-8207005055717715604/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/initCharacterSelectCourseMenuFromPlayerCount.s")
+// initCharacterSelectCourseMenuFromRaceTypeSelect best match: 79.600% (nonmatchings/initCharacterSelectCourseMenuFromRaceTypeSelect-8207005055717715604/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/initCharacterSelectCourseMenuFromRaceTypeSelect.s")
 
 #ifdef NON_MATCHING
-void initCharacterSelectCourseMenuFromPlayerCount(void) {
+void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     s32 sp1C;
     s16 *var_v0_2;
     s16 *var_v1_2;
@@ -128,7 +128,7 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
     updateCallbackTasks();
     var_v1 = sp1C;
     if (D_800EC9DD == 1) {
-        if (D_80121B5E < 2) {
+        if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
             if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
                 gRaceCourseIndex = 9;
@@ -241,7 +241,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
     setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
     var_v1 = sp2C;
     if (D_800EC9DD == 1) {
-        if (D_80121B5E < 2) {
+        if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
             if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
                 gRaceCourseIndex = 9;
@@ -353,7 +353,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
     var_v1 = sp2C;
     if (D_800EC9DD == 1) {
-        if (D_80121B5E < 2) {
+        if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
             if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
                 gRaceCourseIndex = 9;
@@ -613,7 +613,7 @@ void handleCharacterSelectCourseSelection(void) {
             if (D_800EC9DD == 0) {
                 setCurrentGameTaskCallback(&func_80005540, 0);
             } else {
-                setCurrentGameTaskCallback(&func_80008620, 0);
+                setCurrentGameTaskCallback(&returnToRaceTypeSelectMenu, 0);
             }
             gRaceCourseIndex = (*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex];
             gMenuFlowState = 0;
