@@ -10,7 +10,7 @@
 #define calculateAngleBetweenXZPoints calculateAngleBetweenXZPoints_s32
 #include "fixed_point_math.h"
 #undef calculateAngleBetweenXZPoints
-#include "race_input_history.h"
+#include "race_player_input.h"
 #include "race_item_effects.h"
 #include "race_item_triggers.h"
 #include "menu_screen_effects.h"
@@ -431,10 +431,10 @@ void func_8008C704(void) {
     D_80121D80[2].unk582 = 0;
     D_80121D80[3].unk582 = 0;
     if (gRaceUpdatePaused == 0) {
-        func_80084730(D_80121D80);
-        func_80084730(D_8012238C);
-        func_80084730(D_80122998);
-        func_80084730(D_80122FA4);
+        updateRacePlayerInput(D_80121D80);
+        updateRacePlayerInput(D_8012238C);
+        updateRacePlayerInput(D_80122998);
+        updateRacePlayerInput(D_80122FA4);
         func_8007B250();
         for (i = 0; i < gRacePlayerCount; i++) {
             func_8008C7D0(&D_80121D80[i]);
@@ -3413,7 +3413,7 @@ void func_80093304(RaceInputPlayer *player) {
     player->posY += player->unk40.y;
 
     if (!(player->stateFlags & 1)) {
-        player->stateTimer = player->stateTimer - func_80084958(player) - 1;
+        player->stateTimer = player->stateTimer - getRaceInputTimerDecrementBonus(player) - 1;
         if (player->stateTimer < 0) {
             player->stateTimer = 0;
         }
@@ -3949,7 +3949,7 @@ void func_80094480(RaceInputPlayer *player) {
 
     stateFlags = player->stateFlags;
     if (!(stateFlags & 1)) {
-        player->stateTimer = player->stateTimer - func_80084958(player) - 1;
+        player->stateTimer = player->stateTimer - getRaceInputTimerDecrementBonus(player) - 1;
         if (player->stateTimer < 0) {
             player->stateTimer = 0;
         }
@@ -4146,7 +4146,7 @@ void func_80094A94(RaceInputPlayer *player) {
     player->unk40.y -= 0xA000;
     player->posY += player->unk40.y;
 
-    timer = (player->stateTimer - func_80084958(player) - 1) & 0xFFFFFFFFFFFFFFFFu;
+    timer = (player->stateTimer - getRaceInputTimerDecrementBonus(player) - 1) & 0xFFFFFFFFFFFFFFFFu;
     player->stateTimer = timer;
     if (timer < 0) {
         player->stateTimer = 0;
@@ -4207,7 +4207,7 @@ void func_80094BEC(RaceInputPlayer *player) {
             player->unk2D6 = temp_2d6 - 1;
         }
 
-        ret = func_80084958(player);
+        ret = getRaceInputTimerDecrementBonus(player);
         if (ret != 0) {
             player->unk2D6 = 3;
         }
@@ -4279,7 +4279,7 @@ void func_80094DF8(RaceInputPlayer *player) {
         func_8008B508(&player->unk40, player);
     }
 
-    player->stateTimer -= func_80084958(player) + 1;
+    player->stateTimer -= getRaceInputTimerDecrementBonus(player) + 1;
     if (player->stateTimer < 0) {
         player->stateTimer = 0;
     }

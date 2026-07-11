@@ -156,7 +156,7 @@ extern u16 D_800ECC40;
 extern u16 D_800ECC44;
 extern u16 D_800ECC46;
 extern u8 D_8010B200[];
-extern s16 D_8011213E;
+extern s16 gCurrentRaceRecordReplayHandle;
 extern u16 gRaceCourseIndex;
 
 void loadCurrentRaceRecordReplayData(void) {
@@ -249,7 +249,7 @@ void loadCurrentRaceRecordReplayData(void) {
         }
     }
 
-    model = (u8 *)getRelocatableHeapBlockBase(D_8011213E);
+    model = (u8 *)getRelocatableHeapBlockBase(gCurrentRaceRecordReplayHandle);
     *(s32 *)&model[0] = 0;
     *(s32 *)&model[4] = *(s16 *)&dst[0];
     model[8] = 1;

@@ -1,7 +1,7 @@
 #include "common.h"
 #include "relocatable_heap.h"
 #include "asset_manager.h"
-#include "race_input_history.h"
+#include "race_player_input.h"
 
 #define RACE_INPUT_HISTORY_LENGTH 0x1194
 #define RACE_INPUT_REPLAY_FRAME_COUNT 0x960
@@ -28,8 +28,8 @@ typedef struct {
     /* 0x2335 */ u8 buttons[RACE_INPUT_HISTORY_LENGTH];
 } RaceInputHistoryBuffer;
 
-extern s16 D_8011213E;
-extern s16 D_80112186;
+extern s16 gCurrentRaceRecordReplayHandle;
+extern s16 gRaceReplayInputBufferHandle;
 
 extern u32 D_80121E04[][0x183];
 extern s32 gMenuFlowState;
@@ -37,12 +37,12 @@ extern u32 gPlayerInputHeld[];
 extern s8 gPlayerStickX[];
 extern s8 gPlayerStickY[];
 
-void func_80083D80(RaceInputPlayer *player) {
+void recordRaceReplayInputFrame(RaceInputPlayer *player) {
     RaceInputReplayHistory *history;
     s16 frame;
     u32 inputFlags;
 
-    history = (RaceInputReplayHistory *)getRelocatableHeapBlockBase(D_80112186);
+    history = (RaceInputReplayHistory *)getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle);
     frame = player->replayFrame;
     if (frame < RACE_INPUT_REPLAY_FRAME_COUNT) {
         history[(u16) player->playerIndex].inputs[frame].stickX = player->stickX;
@@ -82,8 +82,8 @@ void func_80083D80(RaceInputPlayer *player) {
     }
 }
 
-// func_8008409C best match: 90.346% (base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_input_history/func_8008409C.s")
+// playRaceReplayInputFrame best match: 90.346% (base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_input/playRaceReplayInputFrame.s")
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -92,13 +92,13 @@ typedef struct {
 
 #define PLAYER_INDEX(player) (*(volatile u16 *)&(player)->playerIndex)
 
-void func_8008409C(RaceInputPlayer *player) {
+void playRaceReplayInputFrame(RaceInputPlayer *player) {
     RaceReplayInputHistoryPlayer *history;
     s16 replayFrame;
     u8 buttons;
     s32 replayOffset;
 
-    history = (RaceReplayInputHistoryPlayer *) getRelocatableHeapBlockBase(D_80112186);
+    history = (RaceReplayInputHistoryPlayer *) getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle);
     replayFrame = player->replayFrame;
     if (replayFrame < 0x960) {
         replayOffset = (replayFrame * 4) - replayFrame;
@@ -158,17 +158,17 @@ void func_8008409C(RaceInputPlayer *player) {
 #undef PLAYER_INDEX
 #endif
 
-void func_8008431C(RaceInputPlayer *player) {
+void recordRaceInputFrame(RaceInputPlayer *player) {
     RaceInputHistoryBuffer *history;
     s32 index;
     u32 inputFlags;
 
     if (player->unk15 == 5) {
-        func_80083D80(player);
+        recordRaceReplayInputFrame(player);
         return;
     }
 
-    history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(D_80112186);
+    history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle);
     index = history->writeIndex;
     if (index >= RACE_INPUT_HISTORY_LENGTH) {
         history->enabled = 0;
@@ -213,11 +213,11 @@ void func_8008431C(RaceInputPlayer *player) {
     history->lastWriteIndex = index;
 }
 
-// func_80084510 best match: 98.763% (base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_input_history/func_80084510.s")
+// playRaceInputFrame best match: 98.763% (base_9.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_input/playRaceInputFrame.s")
 
 #ifdef NON_MATCHING
-void func_80084510(RaceInputPlayer *player) {
+void playRaceInputFrame(RaceInputPlayer *player) {
     RaceInputHistoryBuffer *history;
     s32 index;
     s8 replayInputSource;
@@ -225,17 +225,17 @@ void func_80084510(RaceInputPlayer *player) {
 
     replayInputSource = player->replayInputSource;
     if (replayInputSource == 5) {
-        func_8008409C(player);
+        playRaceReplayInputFrame(player);
         return;
     }
 
     if (replayInputSource == 1) {
-        history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(D_8011213E);
+        history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(gCurrentRaceRecordReplayHandle);
         replayInputSource = player->replayInputSource;
     }
 
     if (replayInputSource == 2) {
-        history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(D_80112186);
+        history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle);
     }
 
     if (history->enabled == 0) {
@@ -284,7 +284,7 @@ dummy_label:
 }
 #endif
 
-void func_80084730(RaceInputPlayer *player) {
+void updateRacePlayerInput(RaceInputPlayer *player) {
     u16 index;
 
     if (!(gMenuFlowState & 1) && !(player->stateFlags & 0x40)) {
@@ -296,10 +296,10 @@ void func_80084730(RaceInputPlayer *player) {
             player->stickX = gPlayerStickX[index];
             player->stickY = gPlayerStickY[index];
             if (player->unk15 != 0) {
-                func_8008431C(player);
+                recordRaceInputFrame(player);
             }
         } else {
-            func_80084510(player);
+            playRaceInputFrame(player);
         }
 
         player->inputFlags &= 0xFFF0FFFF;
@@ -339,7 +339,7 @@ void func_80084730(RaceInputPlayer *player) {
     player->stickY = 0;
 }
 
-s32 func_80084958(RaceInputPlayer *player) {
+s32 getRaceInputTimerDecrementBonus(RaceInputPlayer *player) {
     s32 sp18;
     s32 var_v1;
     s32 temp_v0;

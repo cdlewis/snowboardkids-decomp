@@ -3,7 +3,7 @@
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_scene_loader.h"
-#include "race_input_history.h"
+#include "race_player_input.h"
 #include "game_task_scheduler.h"
 #include "training_course_ui.h"
 #include "menu_screen_effects.h"

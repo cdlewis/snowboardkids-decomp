@@ -91,7 +91,7 @@ extern s32 D_80112360;
 extern s32 D_80112408;
 extern s32 D_80112410;
 extern s16 gAssetHandles[];
-extern s16 D_8011213E;
+extern s16 gCurrentRaceRecordReplayHandle;
 extern s16 D_801121B0;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
@@ -140,7 +140,7 @@ dummy_label_220868:
 
 void releaseMenuAssetHandles(void)
 {
- do { s16 *handle = &D_8011213E; do { if ((*handle) != (-1)) { *handle = freeRelocatableHeapBlock(*handle); } handle++; } while (handle != (&D_801121B0)); } while (0);
+ do { s16 *handle = &gCurrentRaceRecordReplayHandle; do { if ((*handle) != (-1)) { *handle = freeRelocatableHeapBlock(*handle); } handle++; } while (handle != (&D_801121B0)); } while (0);
 }
 
 void *resolveAssetTableRelativePointer(void *arg0, u32 arg1) {
