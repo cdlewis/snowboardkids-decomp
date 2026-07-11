@@ -1,5 +1,5 @@
-#ifndef RACE_PICKUPS_AND_COURSE_PROPS_H
-#define RACE_PICKUPS_AND_COURSE_PROPS_H
+#ifndef RACE_PICKUPS_AND_COURSE_SCENERY_H
+#define RACE_PICKUPS_AND_COURSE_SCENERY_H
 
 #include "common.h"
 
@@ -10,9 +10,9 @@ typedef struct ThrownPickupRenderActor ThrownPickupRenderActor;
 typedef struct PickupShardParticleActor PickupShardParticleActor;
 typedef struct ThrownPickupModelActor ThrownPickupModelActor;
 
-void renderCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0);
-void updateCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0);
-void initCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0);
+void renderRaceCoursePropModels(CourseEffectModelListActor *arg0);
+void updateRaceCoursePropModels(CourseEffectModelListActor *arg0);
+void initRaceCoursePropModels(CourseEffectModelListActor *arg0);
 void renderCourseOverlaySprites(CourseEffectModelListActor *arg0);
 void updateCourseOverlaySprites(CourseEffectModelListActor *arg0);
 void initCourseOverlaySpriteMatrices(CourseEffectModelListActor *arg0);

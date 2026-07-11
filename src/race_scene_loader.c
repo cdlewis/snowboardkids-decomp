@@ -8,7 +8,7 @@
 #include "race_course_effects.h"
 #include "race_intro_effects.h"
 #include "race_item_effects.h"
-#include "race_pickups_and_course_props.h"
+#include "race_pickups_and_course_scenery.h"
 #include "race_ui_effects.h"
 
 #define COURSE_PLAYER_COUNT 4
@@ -328,7 +328,7 @@ block_24:
         createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 6);
         createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 7);
         createCallbackTaskWithUserId(&initCourseTriggerVolume, 0, 0x64, 0);
-        createCallbackTaskWithUserId(&initCourseSceneryDisplayListModels, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&initRaceCoursePropModels, 0, 0x64, 0);
         createCallbackTask(&initCourseGateObject, 0, 0x64);
         createCallbackTaskWithUserId(&updateThrownPickupSpawner, 0, 0x64, 0);
         createCallbackTaskWithUserId(&updateThrownPickupSpawner, 0, 0x64, 1);

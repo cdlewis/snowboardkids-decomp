@@ -1,5 +1,5 @@
 #include "common.h"
-#include "race_pickups_and_course_props.h"
+#include "race_pickups_and_course_scenery.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
@@ -60,7 +60,7 @@ typedef struct {
     /* 0x04 */ Vec3i pos;
     /* 0x10 */ s16 assetIndex;
     char pad12[2];
-} CourseSceneryDisplayListModelEntry;
+} RaceCoursePropModelEntry;
 
 typedef struct {
     /* 0x00 */ Vec3i pos;
@@ -168,7 +168,7 @@ extern u8 gActionEffectRollTable[][0x10];
 extern PickupSpawnEntry gRacePickupSpawnEntries[];
 extern PickupSpawnEntry *gThrownPickupSpawnLists[];
 extern Vec3i gPickupShardInitialVelocities[];
-extern CourseSceneryDisplayListModelEntry *gCourseSceneryDisplayListModelLists[];
+extern RaceCoursePropModelEntry *gRaceCoursePropModelLists[];
 extern void *gRaceCourseSceneryDisplayLists[];
 extern Gfx *gThrownPickupModelDisplayList;
 extern s32 gEffectRenderCallbackList;
@@ -213,15 +213,15 @@ typedef struct Scratch674B4 {
     s32 pad;
 } Scratch674B4;
 
-void renderCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0) {
-    CourseSceneryDisplayListModelEntry *var_s4;
+void renderRaceCoursePropModels(CourseEffectModelListActor *arg0) {
+    RaceCoursePropModelEntry *var_s4;
     s32 var_s5;
     s32 var_s7;
     Gfx *temp_s0;
     Gfx *temp_s2;
     Gfx *temp_s3;
 
-    var_s4 = gCourseSceneryDisplayListModelLists[arg0->modelListIndex];
+    var_s4 = gRaceCoursePropModelLists[arg0->modelListIndex];
     var_s7 = TRUE;
     var_s5 = 0;
     if (var_s4->modelIndex != -1) {
@@ -249,11 +249,11 @@ void renderCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0) {
     }
 }
 
-void updateCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0) {
-    CourseSceneryDisplayListModelEntry *entry;
+void updateRaceCoursePropModels(CourseEffectModelListActor *arg0) {
+    RaceCoursePropModelEntry *entry;
     void *pos;
 
-    entry = gCourseSceneryDisplayListModelLists[arg0->modelListIndex];
+    entry = gRaceCoursePropModelLists[arg0->modelListIndex];
     if (entry->modelIndex != -1) {
         pos = &entry->pos;
         do {
@@ -264,18 +264,18 @@ void updateCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0) {
             pos = &entry->pos;
         } while (entry->modelIndex != -1);
     }
-    addRenderCallback(&gSceneModelRenderCallbackList, renderCourseSceneryDisplayListModels, arg0);
+    addRenderCallback(&gSceneModelRenderCallbackList, renderRaceCoursePropModels, arg0);
 }
 
-void initCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0) {
+void initRaceCoursePropModels(CourseEffectModelListActor *arg0) {
     s32 size;
-    CourseSceneryDisplayListModelEntry *base;
-    CourseSceneryDisplayListModelEntry *entry;
+    RaceCoursePropModelEntry *base;
+    RaceCoursePropModelEntry *entry;
     s32 i;
     CourseEffectMatrixSource transform;
     s32 count;
 
-    base = gCourseSceneryDisplayListModelLists[arg0->modelListIndex];
+    base = gRaceCoursePropModelLists[arg0->modelListIndex];
     count = 0;
     entry = base;
     if (base->modelIndex != -1) {
@@ -302,7 +302,7 @@ void initCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0) {
 
         osWritebackDCache(arg0->modelBuffer, size);
     }
-    setCallbackTaskCallback(arg0, updateCourseSceneryDisplayListModels);
+    setCallbackTaskCallback(arg0, updateRaceCoursePropModels);
 }
 
 void renderCourseOverlaySprites(CourseEffectModelListActor *arg0) {
@@ -566,7 +566,7 @@ void spawnThrownPickupModel(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 }
 
 // updateThrownPickupSpawner best match: 99.625% (nonmatchings/updateThrownPickupSpawner-731940616440357983/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/updateThrownPickupSpawner.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_scenery/updateThrownPickupSpawner.s")
 
 #ifdef NON_MATCHING
 #define SPAWN_RANGE_MAX 0x14000000
@@ -660,7 +660,7 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
 #endif
 
 // renderRacePickupIdle best match: display-list command stream matched, remaining differences are stack/local layout.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/renderRacePickupIdle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_scenery/renderRacePickupIdle.s")
 
 #ifdef NON_MATCHING
 void renderRacePickupIdle(RacePickupActor *arg0) {
@@ -799,7 +799,7 @@ void renderRacePickupBase(RacePickupActor *arg0) {
 }
 
 // renderRacePickupRespawn best match: 99.579% (base_22.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/renderRacePickupRespawn.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_scenery/renderRacePickupRespawn.s")
 
 #ifdef NON_MATCHING
 void renderRacePickupRespawn(RacePickupActor *arg0) {
@@ -940,7 +940,7 @@ void updateRacePickupCollected(RacePickupActor *arg0) {
 }
 
 // updateRacePickupIdle best match: 99.901%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/updateRacePickupIdle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_scenery/updateRacePickupIdle.s")
 
 #ifdef NON_MATCHING
 void updateRacePickupIdle(RacePickupActor *arg0) {
