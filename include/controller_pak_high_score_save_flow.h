@@ -1,0 +1,9 @@
+#ifndef CONTROLLER_PAK_HIGH_SCORE_SAVE_FLOW_H
+#define CONTROLLER_PAK_HIGH_SCORE_SAVE_FLOW_H
+
+void initControllerPakHighScoreSaveFlow(void);
+void updateControllerPakHighScoreSaveFlow(void);
+void fadeOutControllerPakHighScoreSaveFlow(void);
+void updateControllerPakHighScoreSaveConfirm(void);
+
+#endif

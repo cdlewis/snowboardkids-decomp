@@ -8,4 +8,4 @@ osAppNMIBuffer = 0x8000031C;
 D_8010AE70_state = D_8010AE70;
 D_8010AE52_state = D_8010AE52;
 gCharacterSelectCourseCursorStateByte = gCharacterSelectCourseCursorState;
-gControllerPakScoreSaveFlowStep = gControllerPakScoreSaveFlow;
+gControllerPakHighScoreSaveFlowStep = gControllerPakHighScoreSaveFlow;
