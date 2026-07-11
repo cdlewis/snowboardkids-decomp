@@ -5,7 +5,7 @@
 #include "character_select_course_menu.h"
 #include "game_task_scheduler.h"
 #include "menu_renderer.h"
-#include "player_select_menu.h"
+#include "player_count_select_menu.h"
 #include "player_select_ui.h"
 #include "title_menu.h"
 #include "viewport_manager.h"
@@ -14,14 +14,14 @@ typedef struct {
     char pad[0x18];
     s32 fade;
     s32 timer;
-} PlayerSelectMenuState;
+} PlayerCountSelectMenuState;
 
 typedef struct {
     u8 state;
     char pad1[1];
     s16 nextState;
-    s16 confirmState;
-} PlayerSelectCursorState;
+    s16 portraitAlpha;
+} PlayerCountSelectCursorTarget;
 
 extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
@@ -37,8 +37,8 @@ extern u8 D_59E7F0[];
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
 
-extern PlayerSelectMenuState *gCurrentGameTask;
-extern PlayerSelectCursorState D_8010AE70;
+extern PlayerCountSelectMenuState *gCurrentGameTask;
+extern PlayerCountSelectCursorTarget gPlayerCountSelectCursorTarget;
 extern u8 D_800EC9C1;
 extern u8 gRaceSplitscreenMode;
 extern u8 D_800EC9DD;
@@ -52,7 +52,7 @@ extern s8 gFramebufferSwapDelay;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-void func_80005540(void) {
+void returnToPlayerCountSelectMenu(void) {
     gCurrentGameTask->fade = 1;
     requestMusicSequenceBank(1);
     D_800EC9C1 = 0;
@@ -64,13 +64,13 @@ void func_80005540(void) {
     D_800EC9DD = 0;
     D_8010ADF0 = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
-    setCurrentGameTaskCallback(func_80005788, 0);
-    D_8010AE70.state = 0;
-    D_8010AE70.nextState = 0;
+    setCurrentGameTaskCallback(updatePlayerCountSelectMenu, 0);
+    gPlayerCountSelectCursorTarget.state = 0;
+    gPlayerCountSelectCursorTarget.nextState = 0;
     updateCallbackTasks();
 }
 
-void func_800055EC(void) {
+void initPlayerCountSelectMenu(void) {
     requestMusicSequenceBank(1);
     D_800EC9DC = 0;
     D_800EC9DD = 0;
@@ -93,17 +93,17 @@ void func_800055EC(void) {
     D_8010ADF8 = 0;
     D_8010ADF0 = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
-    setCurrentGameTaskCallback(func_80005788, 0);
-    D_8010AE70.state = 0;
-    D_8010AE70.nextState = 0;
+    setCurrentGameTaskCallback(updatePlayerCountSelectMenu, 0);
+    gPlayerCountSelectCursorTarget.state = 0;
+    gPlayerCountSelectCursorTarget.nextState = 0;
     updateCallbackTasks();
 }
 
-// func_80005788 best match: 98.535% (nonmatchings/func_80005788-7273315160691878794/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/player_select_menu/func_80005788.s")
+// updatePlayerCountSelectMenu best match: 98.535% (nonmatchings/func_80005788-7273315160691878794/base_15.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/player_count_select_menu/updatePlayerCountSelectMenu.s")
 
 #ifdef NON_MATCHING
-void func_80005788(void) {
+void updatePlayerCountSelectMenu(void) {
     s32 newInput;
     s32 heldInput;
     s32 pressedUp;
@@ -120,9 +120,9 @@ void func_80005788(void) {
             createCallbackTask(func_8001952C, 0, 0x63);
         }
     } else {
-        if ((D_8010AE70.confirmState == 0x100) && (D_80121D88 == 0)) {
+        if ((gPlayerCountSelectCursorTarget.portraitAlpha == 0x100) && (D_80121D88 == 0)) {
             if (D_800EC9C1 == 0) {
-                if (D_8010AE70.state == 1) {
+                if (gPlayerCountSelectCursorTarget.state == 1) {
                     selection = gRaceSplitscreenMode;
                     newInputCopy = gPlayerInputHeld;
                     newInput = newInputCopy;
@@ -181,8 +181,8 @@ void func_80005788(void) {
                             D_800EC9C1 = 1;
                             if (D_8010ADF0 && D_8010ADF0) {
                             }
-                            D_8010AE70.state = 2;
-                            D_8010AE70.nextState = 0x100;
+                            gPlayerCountSelectCursorTarget.state = 2;
+                            gPlayerCountSelectCursorTarget.nextState = 0x100;
                             D_8010ADF8 = 0;
                         }
                     }
@@ -196,8 +196,8 @@ void func_80005788(void) {
         if ((gPlayerInputPressed & 0x4000) && (gMenuFlowState == 5) && (waitTimer == 0)) {
             enqueueSoundEffect(1, 0x32);
             D_800EC9C1 = 1;
-            D_8010AE70.state = 2;
-            D_8010AE70.nextState = 0x100;
+            gPlayerCountSelectCursorTarget.state = 2;
+            gPlayerCountSelectCursorTarget.nextState = 0x100;
             D_8010ADF8 = 1;
         }
 
@@ -208,7 +208,7 @@ void func_80005788(void) {
         }
 
         if (D_80121D88 == 2) {
-            setCurrentGameTaskCallback(func_80005B14, 0);
+            setCurrentGameTaskCallback(handlePlayerCountSelectMenuSelection, 0);
             if (D_8010ADF8 == 0) {
                 requestMusicSequenceStop(4);
             }
@@ -219,7 +219,7 @@ void func_80005788(void) {
 }
 #endif
 
-void func_80005B14(void) {
+void handlePlayerCountSelectMenuSelection(void) {
     u8 v0;
 
     v0 = gRaceSplitscreenMode;
@@ -227,12 +227,12 @@ void func_80005B14(void) {
         setCurrentGameTaskCallback(initCharacterSelectCourseMenuFromPlayerSelect, 0);
         gMenuFlowState = 0;
     } else {
-        setCurrentGameTaskCallback(func_80005B80, 0);
+        setCurrentGameTaskCallback(fadeOutPlayerCountSelectMenu, 0);
     }
     updateCallbackTasks();
 }
 
-void func_80005B80(void) {
+void fadeOutPlayerCountSelectMenu(void) {
     if (gCurrentGameTask->fade != 0xFF) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 1);
         if (gCurrentGameTask->fade == 0xFF) {
