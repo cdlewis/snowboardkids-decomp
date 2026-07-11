@@ -21,7 +21,11 @@ void func_8007105C(void);
 void func_800710CC(s32 arg0);
 void func_8007115C(void);
 void func_800711C8(void);
+#ifdef NON_MATCHING
+EffectTask *func_800711D0(void (*callback)(EffectTask *), u16 type, s32 priority);
+#else
 EffectTask *func_800711D0(void (*callback)(EffectTask *), s32 type, s32 priority);
+#endif
 #ifdef NON_MATCHING
 EffectTask *func_80071408(void (*callback)(EffectTask *), u16 type, s32 priority);
 #else

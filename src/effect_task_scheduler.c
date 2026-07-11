@@ -85,17 +85,17 @@ void func_8007115C(void) {
 void func_800711C8(void) {
 }
 
-// func_800711D0 best match: 92.071%
+// func_800711D0 best match: 98.163%
 #pragma GLOBAL_ASM("asm/nonmatchings/effect_task_scheduler/func_800711D0.s")
 
 #ifdef NON_MATCHING
-EffectTask *func_800711D0(void (*callback)(EffectTask *), s32 type, s32 priority) {
+EffectTask *func_800711D0(void (*callback)(EffectTask *), u16 type, s32 priority) {
     EffectTask *task;
     EffectTask *prev;
     EffectTask *next;
-    s32 index;
+    EffectTask *sentinel;
+    u16 index;
 
-    type &= 0xFFFF;
     switch (type & 0xFF) {
     case 0:
         if (D_8012183A == 0) {
@@ -132,8 +132,10 @@ EffectTask *func_800711D0(void (*callback)(EffectTask *), s32 type, s32 priority
             return NULL;
         }
         D_8012183E--;
+        task = NULL;
         break;
     case 6:
+        prev = NULL;
         if (D_8012183C == 0) {
             return NULL;
         }
@@ -147,12 +149,13 @@ EffectTask *func_800711D0(void (*callback)(EffectTask *), s32 type, s32 priority
         return NULL;
     }
     index = D_80121838 - 1;
+    sentinel = &D_80112780;
+    prev = sentinel;
     D_80121838 = index;
 
-    task = D_801214D8[index];
-    prev = &D_80112780;
-    if (D_80112780.next != NULL) {
-        next = D_80112780.next;
+    task = D_801214D8[index & 0xFFFF];
+    if (prev->next != NULL) {
+        next = sentinel->next;
         do {
             if ((u16)next->priority < priority) {
                 break;
