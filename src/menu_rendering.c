@@ -109,7 +109,7 @@ typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 extern void func_800483FC(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
 extern void *func_80048594(s32 size);
 s32 func_80011D74(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
-void func_800112F4(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, s32 arg6, s32 arg7);
+void func_800112F4(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, s16 arg6, s16 arg7);
 void func_8000F0EC(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7, s32 arg8, s32 arg9,
                    s32 argA, s32 argB);
 void func_8000F970(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8,
@@ -637,7 +637,103 @@ void func_80011264(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5) {
     func_800112F4(arg0, arg1, arg2, arg3, arg4, arg5, D_8015660A / 2, D_8015660C / 2);
 }
 
+// func_800112F4 best match: 80.680% (nonmatchings/func_800112F4-6061209858023118177/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_800112F4.s")
+
+#ifdef NON_MATCHING
+void func_800112F4(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 unused, u16 alpha, s16 clipRight,
+                   s16 clipBottom) {
+    MenuFontAssetEntry *entry;
+    u8 *paletteBase;
+    s16 minX;
+    s16 maxX;
+    s16 minY;
+    s16 maxY;
+    s32 x0;
+    volatile s32 y0;
+    s32 x1;
+    s32 y1;
+    volatile s32 clipS;
+    volatile s32 clipT;
+    s32 halfWidth;
+    s32 halfHeight;
+
+    entry = &table->entries[entryIndex];
+    paletteBase = (u8 *)&table->entries[table->entryCount];
+    x0 = x + D_8015660E;
+    y0 = y + D_80156610;
+    x1 = x0 + entry->width;
+    y1 = y0 + entry->height;
+    minX = D_8015660E - clipRight;
+    minY = D_80156610 - clipBottom;
+    maxX = D_8015660E + clipRight;
+    maxY = D_80156610 + clipBottom;
+    clipS = 0;
+    clipT = 0;
+
+    halfWidth = D_8015660A / 2;
+    if (minX < D_8015660E - halfWidth) {
+        minX = D_8015660E - halfWidth;
+    }
+    if (D_8015660E + halfWidth < maxX) {
+        maxX = D_8015660E + halfWidth;
+    }
+    halfHeight = D_8015660C / 2;
+    if (minY < D_80156610 - halfHeight) {
+        minY = D_80156610 - halfHeight;
+    }
+    if (D_80156610 + halfHeight < maxY) {
+        maxY = D_80156610 + halfHeight;
+    }
+
+    if ((x0 < maxX) && (y0 < maxY) && (x1 >= minX) && (y1 >= minY)) {
+        if (x0 < minX) {
+            clipS = minX - x0;
+            x0 = minX;
+        }
+        if (y0 < minY) {
+            clipT = minY - y0;
+            y0 = minY;
+        }
+        if (x1 >= maxX) {
+            x1 = maxX - 1;
+        }
+        if (y1 >= maxY) {
+            y1 = maxY - 1;
+        }
+
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD480000 | ((entry->width - 1) & 0xFFF),
+                     (u32)((u8 *)table + entry->imageOffset));
+        FONT_GFX_CMD(gRegionAllocPtr++, ((((entry->width + 8) >> 3) & 0x1FF) << 9) | 0xF5480000, 0x07080200);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                     0x07000000 | (((entry->width << 2) & 0xFFF) << 12) | ((entry->height << 2) & 0xFFF));
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+        FONT_GFX_CMD(gRegionAllocPtr++, ((((entry->width + 8) >> 3) & 0x1FF) << 9) | 0xF5480000, 0x00080200);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                     (((entry->width << 2) & 0xFFF) << 12) | ((entry->height << 2) & 0xFFF));
+        if (alpha != 0x100) {
+            FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            FONT_GFX_CMD(gRegionAllocPtr++, 0xFC119623, 0xFF2FFFFF);
+            FONT_GFX_CMD(gRegionAllocPtr++, 0xFA000000,
+                         ((alpha & 0xFF) << 0x18) | ((alpha & 0xFF) << 0x10) | ((alpha & 0xFF) << 8) | 0xFF);
+        }
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(paletteBase + (entry->textureIndex << 5)));
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x073FC000);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE4000000 | (((x1 << 2) & 0xFFF) << 12) | ((y1 << 2) & 0xFFF),
+                     (((x0 << 2) & 0xFFF) << 12) | ((y0 << 2) & 0xFFF));
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, ((clipS << 21) & 0xFFFF0000) | ((clipT << 5) & 0xFFFF));
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
+        if (alpha != 0x100) {
+            FONT_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)D_800DEFF8);
+        }
+    }
+}
+#endif
 
 void func_80011854(void) {
 }
