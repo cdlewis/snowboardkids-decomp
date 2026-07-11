@@ -1,31 +1,31 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "ending_sequence_ui.h"
+#include "ending_sequence_tasks.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
 #define ENDING_SEQUENCE_FADE_MAX 0x100
-#define ENDING_SEQUENCE_MESSAGE_FADE_STEP 0xA
-#define ENDING_SEQUENCE_MESSAGE_RESET_DELAY 0x20
-#define ENDING_SEQUENCE_MESSAGE_VISIBLE_FRAMES 0x96
-#define ENDING_SEQUENCE_MESSAGE_COUNT 0x19
+#define ENDING_SEQUENCE_TEXT_PAGE_FADE_STEP 0xA
+#define ENDING_SEQUENCE_TEXT_PAGE_RESET_DELAY 0x20
+#define ENDING_SEQUENCE_TEXT_PAGE_VISIBLE_FRAMES 0x96
+#define ENDING_SEQUENCE_TEXT_PAGE_COUNT 0x19
 
-struct EndingSequenceMessageTask {
+struct EndingSequenceTextPageTask {
     /* 0x00 */ char pad[0x1C];
     /* 0x1C */ s16 x;
     /* 0x1E */ s16 y;
-    /* 0x20 */ u16 cycleCount;
+    /* 0x20 */ u16 pageIndex;
     /* 0x22 */ u16 timer;
     /* 0x24 */ s16 alpha;
     /* 0x26 */ u8 state;
 };
 
-struct EndingObjectDebugViewerTask {
+struct EndingSequenceSpriteDebugViewerTask {
     /* 0x00 */ char pad[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
-    /* 0x1C */ s16 objectId;
+    /* 0x1C */ s16 spriteId;
     /* 0x1E */ u8 enabled;
     /* 0x1F */ u8 palette;
 };
@@ -33,35 +33,35 @@ struct EndingObjectDebugViewerTask {
 typedef struct {
     /* 0x00 */ s16 x;
     /* 0x02 */ s16 y;
-} EndingSequenceMessagePosition;
+} EndingSequenceTextPagePosition;
 
 typedef struct {
     /* 0x00 */ s16 count;
-    /* 0x02 */ EndingSequenceMessagePosition positions[5];
+    /* 0x02 */ EndingSequenceTextPagePosition positions[5];
     /* 0x16 */ s16 pad;
-} EndingSequenceMessageLayout;
+} EndingSequenceTextPageLayout;
 
 extern u16 gEndingSequencePhase;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern void *gMenuRenderCallbackList;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
-extern u16 gEndingSequenceMessageScripts[][0x5A];
-extern EndingSequenceMessageLayout gEndingSequenceMessageLayouts[];
+extern u16 gEndingSequenceTextPageScripts[][0x5A];
+extern EndingSequenceTextPageLayout gEndingSequenceTextPageLayouts[];
 extern void addRenderCallback(void *, void *, void *);
 extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 
-void drawEndingSequenceMessagePage(EndingSequenceMessageTask *arg0);
-void updateEndingSequenceFinalSprites(EndingSequenceMessageTask *arg0);
-void updateEndingSequenceMessages(EndingSequenceMessageTask *arg0);
-void updateEndingObjectDebugViewer(EndingObjectDebugViewerTask *arg0);
+void drawEndingSequenceTextPage(EndingSequenceTextPageTask *arg0);
+void updateEndingSequenceFinalSprites(EndingSequenceTextPageTask *arg0);
+void updateEndingSequenceTextPages(EndingSequenceTextPageTask *arg0);
+void updateEndingSequenceSpriteDebugViewer(EndingSequenceSpriteDebugViewerTask *arg0);
 
-// drawEndingSequenceMessagePage best match: 93.371%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_ui/drawEndingSequenceMessagePage.s")
+// drawEndingSequenceTextPage best match: 93.371%
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_tasks/drawEndingSequenceTextPage.s")
 
 #ifdef NON_MATCHING
-void drawEndingSequenceMessagePage(EndingSequenceMessageTask *arg0) {
+void drawEndingSequenceTextPage(EndingSequenceTextPageTask *arg0) {
     register s32 count;
     s32 i;
     s32 scriptIndex;
@@ -73,27 +73,27 @@ void drawEndingSequenceMessagePage(EndingSequenceMessageTask *arg0) {
     u16 pad[12];
     volatile u16 colorMode;
     u16 glyph;
-    EndingSequenceMessageLayout *layout;
+    EndingSequenceTextPageLayout *layout;
 
-    layout = &gEndingSequenceMessageLayouts[arg0->cycleCount];
+    layout = &gEndingSequenceTextPageLayouts[arg0->pageIndex];
     count = layout->count;
     i = 0;
     if (layout->count > 0) {
         scriptIndex = 0;
         layoutOffset = 0;
         do {
-            layout = &gEndingSequenceMessageLayouts[arg0->cycleCount];
-            glyph = gEndingSequenceMessageScripts[arg0->cycleCount][scriptIndex];
+            layout = &gEndingSequenceTextPageLayouts[arg0->pageIndex];
+            glyph = gEndingSequenceTextPageScripts[arg0->pageIndex][scriptIndex];
             x = *(s16 *)((u8 *)layout + layoutOffset + 2);
             y = *(s16 *)((u8 *)layout + layoutOffset + 4);
             lineLength = 0;
-            if (gEndingSequenceMessageScripts[arg0->cycleCount][scriptIndex] != 0xFFFF) {
+            if (gEndingSequenceTextPageScripts[arg0->pageIndex][scriptIndex] != 0xFFFF) {
                 do {
-                    text[lineLength] = gEndingSequenceMessageScripts[arg0->cycleCount][scriptIndex];
+                    text[lineLength] = gEndingSequenceTextPageScripts[arg0->pageIndex][scriptIndex];
                     scriptIndex++;
-                    glyph = gEndingSequenceMessageScripts[arg0->cycleCount][scriptIndex];
+                    glyph = gEndingSequenceTextPageScripts[arg0->pageIndex][scriptIndex];
                     lineLength++;
-                } while (gEndingSequenceMessageScripts[arg0->cycleCount][scriptIndex] != 0xFFFF);
+                } while (gEndingSequenceTextPageScripts[arg0->pageIndex][scriptIndex] != 0xFFFF);
             }
             text[lineLength] = 0xFFFF;
             scriptIndex++;
@@ -105,13 +105,13 @@ void drawEndingSequenceMessagePage(EndingSequenceMessageTask *arg0) {
 }
 #endif
 
-void drawEndingSequenceFinalSprites(EndingSequenceMessageTask *arg0) {
+void drawEndingSequenceFinalSprites(EndingSequenceTextPageTask *arg0) {
     func_8000F8AC(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 0x35, 0x20, 0x20, 0, arg0->alpha, 0);
     func_8000F8AC((s16)(arg0->x + 0x40), arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 0x36, 0x20, 0x20, 0,
                   arg0->alpha, 0);
 }
 
-void updateEndingSequenceFinalSprites(EndingSequenceMessageTask *arg0) {
+void updateEndingSequenceFinalSprites(EndingSequenceTextPageTask *arg0) {
     s32 v1 = ENDING_SEQUENCE_FADE_MAX;
     s32 v0;
 
@@ -127,10 +127,10 @@ void updateEndingSequenceFinalSprites(EndingSequenceMessageTask *arg0) {
     }
 }
 
-void updateEndingSequenceMessages(EndingSequenceMessageTask *arg0) {
+void updateEndingSequenceTextPages(EndingSequenceTextPageTask *arg0) {
     switch (arg0->state) {
     case 0:
-        arg0->alpha += ENDING_SEQUENCE_MESSAGE_FADE_STEP;
+        arg0->alpha += ENDING_SEQUENCE_TEXT_PAGE_FADE_STEP;
         if (!(arg0->alpha < ENDING_SEQUENCE_FADE_MAX)) {
             arg0->alpha = ENDING_SEQUENCE_FADE_MAX;
             arg0->state = 1;
@@ -139,19 +139,19 @@ void updateEndingSequenceMessages(EndingSequenceMessageTask *arg0) {
         break;
     case 1:
         arg0->timer = arg0->timer + 1;
-        if (arg0->timer == ENDING_SEQUENCE_MESSAGE_VISIBLE_FRAMES) {
+        if (arg0->timer == ENDING_SEQUENCE_TEXT_PAGE_VISIBLE_FRAMES) {
             arg0->timer = 0;
             arg0->state = 2;
         }
         break;
     case 2:
-        arg0->alpha -= ENDING_SEQUENCE_MESSAGE_FADE_STEP;
+        arg0->alpha -= ENDING_SEQUENCE_TEXT_PAGE_FADE_STEP;
         if (!(arg0->alpha > 0)) {
             arg0->alpha = 0;
             arg0->state = 3;
-            arg0->cycleCount = arg0->cycleCount + 1;
-            if (arg0->cycleCount == ENDING_SEQUENCE_MESSAGE_COUNT) {
-                arg0->cycleCount = 0;
+            arg0->pageIndex = arg0->pageIndex + 1;
+            if (arg0->pageIndex == ENDING_SEQUENCE_TEXT_PAGE_COUNT) {
+                arg0->pageIndex = 0;
                 setCallbackTaskCallback(arg0, updateEndingSequenceFinalSprites);
             }
             if (gEndingSequencePhase == 0) {
@@ -161,36 +161,36 @@ void updateEndingSequenceMessages(EndingSequenceMessageTask *arg0) {
         break;
     case 3:
         arg0->timer = arg0->timer + 1;
-        if (!(arg0->timer < ENDING_SEQUENCE_MESSAGE_RESET_DELAY)) {
+        if (!(arg0->timer < ENDING_SEQUENCE_TEXT_PAGE_RESET_DELAY)) {
             arg0->timer = 0;
             arg0->state = 0;
         }
         break;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceMessagePage, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceTextPage, arg0);
 }
 
-void initEndingSequenceMessageTask(EndingSequenceMessageTask *arg0) {
+void initEndingSequenceTextPageTask(EndingSequenceTextPageTask *arg0) {
     arg0->state = 3;
-    arg0->cycleCount = 0;
+    arg0->pageIndex = 0;
     arg0->x = -0x40;
     arg0->y = 0x10;
     arg0->alpha = 0;
-    setCallbackTaskCallback(arg0, updateEndingSequenceMessages);
+    setCallbackTaskCallback(arg0, updateEndingSequenceTextPages);
 }
 
-void drawEndingObjectDebugViewer(EndingObjectDebugViewerTask *arg0) {
+void drawEndingSequenceSpriteDebugViewer(EndingSequenceSpriteDebugViewerTask *arg0) {
     char sp38[0x10];
 
     if (arg0->enabled == 1) {
-        func_8000F030(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), (u16)arg0->objectId, 0x20, 0x20, arg0->palette,
+        func_8000F030(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), (u16)arg0->spriteId, 0x20, 0x20, arg0->palette,
                       0);
-        sprintf(sp38, "ENDOBJ %2d \n", arg0->objectId);
+        sprintf(sp38, "ENDOBJ %2d \n", arg0->spriteId);
         func_80013D0C(0x40, -0x66, sp38, 0, 0x100);
     }
 }
 
-void updateEndingObjectDebugViewer(EndingObjectDebugViewerTask *arg0) {
+void updateEndingSequenceSpriteDebugViewer(EndingSequenceSpriteDebugViewerTask *arg0) {
     s16 temp_a1;
     s16 temp_a2;
     s16 oldY;
@@ -226,15 +226,15 @@ void updateEndingObjectDebugViewer(EndingObjectDebugViewerTask *arg0) {
             }
         }
         if (gPlayerInputPressed[0] & 0x8000) {
-            arg0->objectId += 1;
-            if (arg0->objectId == 0x35) {
-                arg0->objectId = 0;
+            arg0->spriteId += 1;
+            if (arg0->spriteId == 0x35) {
+                arg0->spriteId = 0;
             }
         }
         if (gPlayerInputPressed[0] & 0x4000) {
-            arg0->objectId = arg0->objectId - 1;
-            if (arg0->objectId < 0) {
-                arg0->objectId = 0x34;
+            arg0->spriteId = arg0->spriteId - 1;
+            if (arg0->spriteId < 0) {
+                arg0->spriteId = 0x34;
             }
         }
         if (gPlayerInputPressed[0] & 8) {
@@ -245,14 +245,14 @@ void updateEndingObjectDebugViewer(EndingObjectDebugViewerTask *arg0) {
             rmonPrintf("x = %d  y = %d \n", arg0->x, temp_a2);
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawEndingObjectDebugViewer, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceSpriteDebugViewer, arg0);
 }
 
-void initEndingObjectDebugViewerTask(EndingObjectDebugViewerTask *arg0) {
+void initEndingSequenceSpriteDebugViewerTask(EndingSequenceSpriteDebugViewerTask *arg0) {
     arg0->x = 0;
     arg0->y = 0;
-    arg0->objectId = 0;
+    arg0->spriteId = 0;
     arg0->enabled = 0;
     arg0->palette = 0;
-    setCallbackTaskCallback(arg0, updateEndingObjectDebugViewer);
+    setCallbackTaskCallback(arg0, updateEndingSequenceSpriteDebugViewer);
 }
