@@ -64,7 +64,7 @@ extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern s8 D_80121B58;
 extern u8 D_80121B59;
-extern u8 D_80121B5A;
+extern u8 gMainMenuSelectedCourse;
 extern u8 D_80121B5B;
 extern u8 D_80121B5E;
 extern u8 D_80121B5F;
@@ -100,7 +100,7 @@ void func_8003E600(void) {
     D_80121B58 = 0;
     D_80121B5F = 0;
     D_80121B59 = 0;
-    D_80121B5A = 0;
+    gMainMenuSelectedCourse = 0;
     D_80121B5B = 0;
     D_800EC9C2 = courseEntry->splitscreen;
     D_80121B5E = courseEntry->unk2;

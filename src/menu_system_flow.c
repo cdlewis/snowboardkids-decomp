@@ -190,7 +190,7 @@ extern s8 D_800DEF10;
 extern u8 gConnectedControllerCount;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
-extern s8 D_8010B1F0;
+extern s8 gMainMenuSelectionResult;
 extern OSPfsState gControllerPakFileStates[];
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
@@ -1152,7 +1152,7 @@ void initMainMenuModeSelect(void) {
     initCallbackTaskScheduler(0);
     createCallbackTaskWithUserId(func_80055678, 0, 0x64, 0);
     D_801235B4 = 0;
-    D_8010B1F0 = 0;
+    gMainMenuSelectionResult = 0;
     createCallbackTaskWithUserId(&func_80052394, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
     func_80041CF0();
@@ -1188,7 +1188,7 @@ void updateMainMenuModeSelect(void) {
             if (gPlayerInputPressed & 0x4000) {
                 D_801235B4 = 2;
             }
-            D_8010B1F0 = 1;
+            gMainMenuSelectionResult = 1;
             if (D_801235B4 == 2) {
                 requestMusicSequenceStop(0x3C);
             }
@@ -1246,7 +1246,7 @@ void initMainMenuSettings(void) {
     func_8006D520(0, 0x1F);
     initCallbackTaskScheduler(0);
     D_801235B4 = 0;
-    D_8010B1F0 = 0;
+    gMainMenuSelectionResult = 0;
     createCallbackTaskWithUserId(&func_80052E4C, 0, 0x64, 0);
     createCallbackTaskWithUserId(&func_80055678, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);

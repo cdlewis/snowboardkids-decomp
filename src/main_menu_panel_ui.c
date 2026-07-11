@@ -42,7 +42,7 @@ struct MenuPanelActor {
 };
 
 extern RenderCallbackNode *gMenuRenderCallbackList;
-extern u8 D_8010B1F0;
+extern u8 gMainMenuSelectionResult;
 extern u8 D_800D4A40[];
 extern u8 D_800D54E7[];
 extern u8 D_800D54E8[];
@@ -194,7 +194,7 @@ void func_800515F0(MenuPanelActor *arg0) {
     u8 temp_a2_3;
     u8 temp_a2_4;
 
-    if ((gMenuFadeAlpha == 0) && (D_8010B1F0 == 0)) {
+    if ((gMenuFadeAlpha == 0) && (gMainMenuSelectionResult == 0)) {
         temp_v1 = gPlayerInputPressed;
         if (temp_v1 & 0x10800) {
             temp_a2 = D_800D54F8[D_80121B5B];
@@ -227,7 +227,7 @@ void func_800515F0(MenuPanelActor *arg0) {
         }
 
         if (temp_v1 & 0xD000) {
-            D_8010B1F0 = 1;
+            gMainMenuSelectionResult = 1;
             if (temp_v1 & 0x4000) {
                 D_80121B5B = 0xC;
             }
@@ -235,7 +235,7 @@ void func_800515F0(MenuPanelActor *arg0) {
         }
     }
 
-    if (D_8010B1F0 == 0) {
+    if (gMainMenuSelectionResult == 0) {
         temp_t8 = gFrameCounter & 0xF;
         arg0->x = temp_t8;
         var_v0 = temp_t8;
@@ -346,7 +346,7 @@ void func_80051878(MenuPanelActor *arg0) {
             }
         }
 
-        if ((arg0->selectionState != 0) && (D_8010B1F0 == 0)) {
+        if ((arg0->selectionState != 0) && (gMainMenuSelectionResult == 0)) {
             drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48),
                           getMemoryBlockBase(D_80112130.textureHandle), (gFrameCounter >> 4) & 1, 0x20, 0x20, 0,
                           0);
@@ -410,7 +410,7 @@ void func_80051ED4(MenuPanelActor *arg0) {
             arg0->selectedTile = 0xE7;
             break;
         case 1:
-            D_8010B1F0 = 1;
+            gMainMenuSelectionResult = 1;
             setCallbackTaskCallback(arg0, func_80051E80);
             break;
         case 2:
@@ -437,7 +437,7 @@ void func_80051FDC(MenuPanelActor *arg0) {
 
 void func_80052034(s32 arg0) {
     if (D_801235B4 == 0) {
-        if ((D_8010B1F0 == 0) || (gFrameCounter & 1)) {
+        if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
             func_80045A78(-0x30, -0x20, getMemoryBlockBase(D_80112180), 0);
             func_80045E84(-0x30, -0x20, getMemoryBlockBase(D_80112180), 3);
         } else {
@@ -449,7 +449,7 @@ void func_80052034(s32 arg0) {
     }
 
     if (D_801235B4 == 1) {
-        if ((D_8010B1F0 == 0) || (gFrameCounter & 1)) {
+        if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
             func_80045A78(-0x30, -8, getMemoryBlockBase(D_80112180), 1);
             func_80045E84(-0x30, -8, getMemoryBlockBase(D_80112180), 3);
         } else {
@@ -461,7 +461,7 @@ void func_80052034(s32 arg0) {
     }
 
     if (D_801235B4 == 2) {
-        if ((D_8010B1F0 == 0) || (gFrameCounter & 1)) {
+        if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
             func_80045A78(-0x30, 0x10, getMemoryBlockBase(D_80112180), 2);
             func_80045E84(-0x30, 0x10, getMemoryBlockBase(D_80112180), 3);
             return;
@@ -490,7 +490,7 @@ void func_800523B8(s32 arg0) {
 }
 
 void func_80052464(MenuPanelActor *arg0) {
-    if (D_8010B1F0 == 0) {
+    if (gMainMenuSelectionResult == 0) {
         addRenderCallback(&gMenuRenderCallbackList, func_800523B8, (s32) arg0);
         return;
     }
