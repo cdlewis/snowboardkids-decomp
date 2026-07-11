@@ -6,7 +6,7 @@
 #include "character_select_course_menu.h"
 #include "character_select_menu.h"
 #include "race_character_select_menu.h"
-#include "controller_pak_record_save_flow.h"
+#include "controller_pak_race_record_save_flow.h"
 #include "controller_pak_replay_save_message_flow.h"
 #include "controller_pak_file_delete_flow.h"
 #include "course_select_menu.h"
@@ -537,7 +537,7 @@ void func_80073650(void) {
 void func_80073694(void) {
     D_8010ADFA = 0;
     setCurrentInputTaskCallback(&func_800736E0, 0);
-    createInputTask(4, &initControllerPakRecordSaveFlow, 0x64);
+    createInputTask(4, &initControllerPakRaceRecordSaveFlow, 0x64);
     suspendInputTask(2);
 }
 

@@ -1,0 +1,9 @@
+#ifndef CONTROLLER_PAK_RACE_RECORD_SAVE_FLOW_H
+#define CONTROLLER_PAK_RACE_RECORD_SAVE_FLOW_H
+
+void initControllerPakRaceRecordSaveFlow(void);
+void updateControllerPakRaceRecordSaveFlow(void);
+void fadeOutControllerPakRaceRecordSaveFlow(void);
+void updateControllerPakRaceRecordSaveConfirmPrompt(void);
+
+#endif
