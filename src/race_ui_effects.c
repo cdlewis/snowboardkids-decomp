@@ -800,7 +800,7 @@ extern s16 D_80112140;
 extern s16 D_80112142;
 extern s16 D_80112144;
 extern s16 D_80112146;
-extern s16 D_8011216A;
+extern s16 gRaceCourseSpriteAssetHandle;
 extern s16 D_8011216E;
 extern s16 gRaceCommonSpriteAssetHandle;
 extern s16 gRaceLapCount;
@@ -4597,14 +4597,14 @@ void func_80063980(RaceUiCourseSpriteActor *actor) {
     switch (actor->index) {
         case 0:
             getRaceCourseSurfaceSpawnTransform(0, &actor->x, &actor->y, &actor->z, &angle);
-            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), 0, &actor->images[0], &actor->palettes[0]);
+            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCourseSpriteAssetHandle), 0, &actor->images[0], &actor->palettes[0]);
             actor->images[1] = actor->images[0];
             actor->palettes[1] = actor->palettes[0];
             break;
         case 1:
             getRaceCourseSurfaceSpawnTransform(gRaceCourseStartEntries[gRaceCourseIndex].pathIndex, &actor->x, &actor->y, &actor->z, &angle);
-            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), 1, &actor->images[0], &actor->palettes[0]);
-            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), 2, &actor->images[1], &actor->palettes[1]);
+            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCourseSpriteAssetHandle), 1, &actor->images[0], &actor->palettes[0]);
+            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCourseSpriteAssetHandle), 2, &actor->images[1], &actor->palettes[1]);
             break;
     }
     unused = 0;

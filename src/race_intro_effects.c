@@ -100,7 +100,7 @@ extern void osWritebackDCache(void *, s32);
 extern s16 D_80112144;
 extern s16 D_80112146;
 extern s16 gRaceCommonSpriteAssetHandle;
-extern s16 D_8011216A;
+extern s16 gRaceCourseSpriteAssetHandle;
 extern RaceIntroAssetHandles gAssetHandles;
 extern u8 gRenderMatricesDirty;
 extern Gfx *gRegionAllocPtr;
@@ -156,7 +156,7 @@ void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
             if (isPositionNearCurrentViewport(entry->command) != 0) {
                 if (textureIndex != entry->textureIndex) {
                     textureIndex = entry->textureIndex;
-                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)D_8011216A), (u16)textureIndex, &image, &palette,
+                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)gRaceCourseSpriteAssetHandle), (u16)textureIndex, &image, &palette,
                                   &width, &height);
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0, G_TX_CLAMP,
                                             G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
@@ -298,7 +298,7 @@ void waitRaceIntroBillboardSpawn(RaceIntroEffectActor *arg0) {
 
 void initRaceIntroBillboard(RaceIntroEffectActor *arg0) {
     arg0->timer = (arg0->index * 0x1E) + 0x1E;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), (arg0->index + 3) & 0xFFFF, &arg0->scale, &arg0->pitchVelocity);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCourseSpriteAssetHandle), (arg0->index + 3) & 0xFFFF, &arg0->scale, &arg0->pitchVelocity);
     setCallbackTaskCallback(arg0, waitRaceIntroBillboardSpawn);
 }
 

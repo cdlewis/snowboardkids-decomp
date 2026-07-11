@@ -1528,6 +1528,7 @@ gMenuPanelTilemapAssetHandle = 0x8011217E; // size:0x2
 gRaceMotionAnimationAssetHandles = 0x8011215C; // size:0xA
 gRaceCourseSurfaceAssetHandle = 0x80112166; // size:0x2
 gRaceCommonSpriteAssetHandle = 0x80112168; // size:0x2
+gRaceCourseSpriteAssetHandle = 0x8011216A; // size:0x2
 gRaceItemSpriteAssetHandle = 0x8011216C; // size:0x2
 gRaceReplayInputBufferHandle = 0x80112186; // size:0x2
 gRaceReplayPlayerStateBufferHandle = 0x80112188; // size:0x2
