@@ -50,6 +50,12 @@ struct MenuRenderSprite {
     /* 0x20 */ u16 *palette;
 };
 
+typedef struct MenuRenderTileInfo {
+    /* 0x0 */ s16 imageIndex;
+    /* 0x2 */ u8 paletteIndex;
+    /* 0x3 */ u8 flip;
+} MenuRenderTileInfo;
+
 struct MenuRenderSpriteActor {
     /* 0x00 */ MenuRenderTask task;
     /* 0x18 */ MenuRenderSprite sprite;
@@ -740,7 +746,244 @@ void func_80011D44(MenuRenderSprite *arg0) {
 void func_80011D6C(void) {
 }
 
+// func_80011D74 best match: 74.828% (nonmatchings/func_80011D74-7123131487808489545/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80011D74.s")
+
+#ifdef NON_MATCHING
+#define MENU_RENDER_SPRITE_EMIT_GFX(cmd0, cmd1) \
+{ \
+    Gfx *_g = gRegionAllocPtr++; \
+    _g->words.w0 = (cmd0); \
+    _g->words.w1 = (cmd1); \
+}
+
+s32 func_80011D74(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivisor, s16 yDivisor) {
+    s16 minX;
+    s16 minY;
+    s16 maxX;
+    s16 maxY;
+    s16 x;
+    s16 y;
+    s16 clipX;
+    s16 clipY;
+    s16 clipRight;
+    s16 clipBottom;
+    s16 tileMask;
+    s16 tileShift;
+    s16 cols;
+    s16 rows;
+    s16 xStart;
+    s16 yStart;
+    s16 xRemainder;
+    s16 yRemainder;
+    s16 row;
+    s16 col;
+    s16 tilemapX;
+    s16 tilemapY;
+    s16 drawX0;
+    s16 drawY0;
+    s16 drawX1;
+    s16 drawY1;
+    s16 texS;
+    s16 texT;
+    s16 sScale;
+    s16 tScale;
+    s16 tileIndex;
+    s16 imageIndex;
+    s16 paletteIndex;
+    s16 flip;
+    s16 tileWidth;
+    s16 tileHeight;
+    s16 screenX;
+    s16 screenY;
+    Gfx *gfx;
+
+    minX = -D_8015660A / 2;
+    x = sprite->x;
+    clipX = sprite->clipX;
+    if (clipX < minX) {
+        x = x + minX - clipX;
+        clipX = minX;
+    }
+
+    minY = -D_8015660C / 2;
+    y = sprite->y;
+    clipY = sprite->clipY;
+    if (clipY < minY) {
+        y = y + minY - clipY;
+        clipY = minY;
+    }
+
+    maxX = sprite->clipX + sprite->width;
+    if ((D_8015660A / 2) < maxX) {
+        maxX = D_8015660A / 2;
+    }
+
+    maxY = sprite->clipY + sprite->height;
+    if ((D_8015660C / 2) < maxY) {
+        maxY = D_8015660C / 2;
+    }
+
+    clipX += D_8015660E;
+    maxX += D_8015660E;
+    clipY += D_80156610;
+    maxY += D_80156610;
+
+    tileMask = sprite->tileSize - 1;
+    if (sprite->tileSize == 0x10) {
+        tileShift = 4;
+    } else {
+        tileShift = 5;
+    }
+
+    xStart = clipX;
+    yStart = clipY;
+    cols = (maxX - clipX + tileMask - 1) >> tileShift;
+    rows = (maxY - clipY + tileMask - 1) >> tileShift;
+    if (x & tileMask) {
+        cols++;
+    }
+    if (y & tileMask) {
+        rows++;
+    }
+
+    clipRight = maxX;
+    clipBottom = maxY;
+    xStart -= x & tileMask;
+    yStart -= y & tileMask;
+    xRemainder = (x >> tileShift) % xDivisor;
+    yRemainder = (y >> tileShift) % yDivisor;
+
+    row = 0;
+    tilemapY = yRemainder;
+    if (rows > 0) {
+        do {
+            col = 0;
+            screenX = xStart;
+            tilemapX = xRemainder;
+            if (cols > 0) {
+                do {
+                    tileIndex = sprite->tilemap[tilemapX + (tilemapY * sprite->tileYStep)];
+                    imageIndex = ((MenuRenderTileInfo *)sprite->tileInfo)[tileIndex].imageIndex;
+                    paletteIndex = ((MenuRenderTileInfo *)sprite->tileInfo)[tileIndex].paletteIndex;
+                    if (tileIndex != 0) {
+                        flip = ((MenuRenderTileInfo *)sprite->tileInfo)[tileIndex].flip;
+                        sScale = D_800B51F0[flip][0];
+                        tScale = D_800B51F0[flip][1];
+                        drawX0 = screenX;
+                        drawY0 = screenY = yStart;
+                        drawX1 = screenX + sprite->tileSize;
+                        drawY1 = yStart + sprite->tileXStep;
+                        texS = 0;
+                        texT = 0;
+                        if (sScale == -1) {
+                            texS = sprite->tileSize - 1;
+                        }
+                        if (tScale == -1) {
+                            texT = sprite->tileXStep - 1;
+                        }
+                        if ((screenX < clipRight) && (yStart < clipBottom) && (drawX1 >= clipX) && (drawY1 >= clipY)) {
+                            if (screenX < clipX) {
+                                drawX0 = clipX;
+                                texS = clipX - screenX;
+                                if (sScale == -1) {
+                                    texS = sprite->tileSize - (clipX - screenX) - 1;
+                                }
+                            }
+                            if (yStart < clipY) {
+                                drawY0 = clipY;
+                                texT = clipY - yStart;
+                                if (tScale == -1) {
+                                    texT = sprite->tileXStep - (clipY - yStart) - 1;
+                                }
+                            }
+                            if (drawX1 >= clipRight) {
+                                drawX1 = clipRight - 1;
+                            }
+                            if (drawY1 >= clipBottom) {
+                                drawY1 = clipBottom - 1;
+                            }
+
+                            if (useLargeTiles == 0) {
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xFD100000, (u32)(sprite->palette + (paletteIndex << 4)));
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xE8000000, 0);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xF5000000 | ((((paletteIndex & 0xF) << 4) + 0x100) & 0x1FF),
+                                                            0x07000000);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xE6000000, 0);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xF0000000, 0x0703C000);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xE7000000, 0);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xFD480000 | (((sprite->tileSize >> 1) - 1) & 0xFFF),
+                                                            (u32)(sprite->image +
+                                                                  ((((imageIndex - 1) * sprite->tileSize *
+                                                                     sprite->tileXStep) /
+                                                                    4) *
+                                                                   2)));
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xF5480000 |
+                                                                (((((sprite->tileSize + 1) >> 1) + 7) >> 3) & 0x1FF)
+                                                                    << 9,
+                                                            0x07080200);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xE6000000, 0);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xF4000000,
+                                                            0x07000000 | (((sprite->tileSize * 2) & 0xFFF) << 12) |
+                                                                ((sprite->tileXStep * 4) & 0xFFF));
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xE7000000, 0);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xF5400000 |
+                                                                (((((sprite->tileSize + 1) >> 1) + 7) >> 3) & 0x1FF)
+                                                                    << 9,
+                                                            ((paletteIndex & 0xF) << 20) | 0x00080200);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xF2000000,
+                                                            (((sprite->tileSize * 4) & 0xFFF) << 12) |
+                                                                ((sprite->tileXStep * 4) & 0xFFF));
+                            } else {
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xFD100000, (u32)(sprite->palette + (paletteIndex << 4)));
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xE8000000, 0);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xF5000100, 0x07000000);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xE6000000, 0);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xF0000000, 0x073FC000);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xE7000000, 0);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xFD480000 | ((sprite->tileSize - 1) & 0xFFF),
+                                                            (u32)(sprite->image +
+                                                                  ((((imageIndex - 1) * sprite->tileSize *
+                                                                     sprite->tileXStep) /
+                                                                    2) *
+                                                                   2)));
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xF5480000 |
+                                                                ((((sprite->tileSize + 8) >> 3) & 0x1FF) << 9),
+                                                            0x07080200);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xE6000000, 0);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xF4000000,
+                                                            0x07000000 | (((sprite->tileSize * 4) & 0xFFF) << 12) |
+                                                                ((sprite->tileXStep * 4) & 0xFFF));
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xE7000000, 0);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xF5480000 |
+                                                                ((((sprite->tileSize + 8) >> 3) & 0x1FF) << 9),
+                                                            0x00080200);
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xF2000000,
+                                                            (((sprite->tileSize * 4) & 0xFFF) << 12) |
+                                                                ((sprite->tileXStep * 4) & 0xFFF));
+                            }
+
+                            MENU_RENDER_SPRITE_EMIT_GFX(0xE4000000 | (((drawX1 * 4) & 0xFFF) << 12) |
+                                                            ((drawY1 * 4) & 0xFFF),
+                                                        (((drawX0 * 4) & 0xFFF) << 12) | ((drawY0 * 4) & 0xFFF));
+                            MENU_RENDER_SPRITE_EMIT_GFX(0xB4000000, ((texS << 21) | ((texT << 5) & 0xFFFF)));
+                            MENU_RENDER_SPRITE_EMIT_GFX(0xB3000000, (sScale << 26) | ((tScale << 10) & 0xFFFF));
+                        }
+                    }
+                    screenX += sprite->tileSize;
+                    tilemapX = (tilemapX + 1) % xDivisor;
+                    col++;
+                } while (col < cols);
+            }
+            yStart += sprite->tileXStep;
+            tilemapY = (tilemapY + 1) % yDivisor;
+            row++;
+        } while (row < rows);
+    }
+}
+
+#undef MENU_RENDER_SPRITE_EMIT_GFX
+#endif
 
 void func_800128C8(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u16 arg5) {
     u16 first;
