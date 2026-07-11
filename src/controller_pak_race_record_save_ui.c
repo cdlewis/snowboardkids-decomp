@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "controller_pak_race_record_save_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
@@ -103,10 +103,10 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
     s32 next;
     s32 count;
 
-    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0xB, 0x20,
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0xB, 0x20,
                   0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x80), arg0->y, getMemoryBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0xC, 0x20,
+    drawMenuSprite((s16)(arg0->x + 0x80), arg0->y, getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0xC, 0x20,
                   0x20, 0, 0);
 
     text[0] = '1';
@@ -134,7 +134,7 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
             }
 
             drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x11),
-                          getMemoryBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0x19, 0x20, 0x20, 0, alpha, 9 - i);
+                          getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0x19, 0x20, 0x20, 0, alpha, 9 - i);
             i = next;
             xOffset += 0x10;
         } while (next != count);
@@ -169,7 +169,7 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
                 }
             }
             drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x27),
-                          getMemoryBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0,
+                          getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0,
                           alpha, tile);
             i++;
             xOffset += 0xE;
@@ -231,9 +231,9 @@ void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor
 
     if (gControllerPakStatusCodes != 8) {
         alpha = arg0->unk1C.scale;
-        drawMenuSpriteWithAlpha((s16)(arg0->x - 2), (s16)(arg0->y + 0xC), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 8, 0x20, 0x20,
+        drawMenuSpriteWithAlpha((s16)(arg0->x - 2), (s16)(arg0->y + 0xC), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 8, 0x20, 0x20,
                       zero, alpha, zero);
-        drawMenuSpriteWithAlpha((s16)(arg0->x + 0x3E), (s16)(arg0->y + 0xC), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 9, 0x20,
+        drawMenuSpriteWithAlpha((s16)(arg0->x + 0x3E), (s16)(arg0->y + 0xC), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 9, 0x20,
                       0x20, zero, alpha, zero);
     }
 }
@@ -292,7 +292,7 @@ void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveAct
         drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->unk1C.scale, 0);
         if (((gControllerPakStatusCodes == 4) || (gControllerPakStatusCodes >= 7)) && (D_800EC9D0 == 0)) {
             if (arg0->unk1C.scale == 0x100) {
-                drawMenuSprite((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), getMemoryBlockBase(gMenuCommonSpritesAssetHandle),
+                drawMenuSprite((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
                               (((s32)arg0->state.b.frame >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
             }
         }
@@ -383,7 +383,7 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
         }
 
         drawAlpha = alpha;
-        drawMenuSpriteWithAlpha(arg0->x, arg0->unk1C.scale, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), gControllerPakRaceRecordSaveChoicePromptBottomSprites[gControllerPakStatusCodes * 2], 0x20, 0x20,
+        drawMenuSpriteWithAlpha(arg0->x, arg0->unk1C.scale, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), gControllerPakRaceRecordSaveChoicePromptBottomSprites[gControllerPakStatusCodes * 2], 0x20, 0x20,
                       0, drawAlpha, 0);
 
         if (drawAlpha == 0x100) {
@@ -392,12 +392,12 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
             alpha = 0x100;
         }
 
-        drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), gControllerPakRaceRecordSaveChoicePromptTopSprites[gControllerPakStatusCodes * 2], 0x20, 0x20, 0, alpha,
+        drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), gControllerPakRaceRecordSaveChoicePromptTopSprites[gControllerPakStatusCodes * 2], 0x20, 0x20, 0, alpha,
                       0);
 
         state = D_800EC9D0;
         if ((state == 3) || (state == 4)) {
-            drawMenuSpriteWithAlpha(arg0->x, (s16)(((D_800EC9D0 * 0x10) + arg0->y) - 0x30), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x12,
+            drawMenuSpriteWithAlpha(arg0->x, (s16)(((D_800EC9D0 * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x12,
                           0x20, 0x20, 0, (u16)arg0->state.w.alpha, 7);
             state = D_800EC9D0;
         }

@@ -181,8 +181,8 @@ void initRaceCharacterSelectMenu(void) {
     loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
 
     size = D_1502A0 - D_14B450;
-    D_80112130[0xC] = allocMemoryBlock(size);
-    dmaReadRom((u32)D_14B450, (void *)getMemoryBlockBase(D_80112130[0xC]), size);
+    D_80112130[0xC] = allocRelocatableHeapBlock(size);
+    dmaReadRom((u32)D_14B450, (void *)getRelocatableHeapBlockBase(D_80112130[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
     initCallbackTaskScheduler(0);

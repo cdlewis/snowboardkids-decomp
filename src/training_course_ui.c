@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "training_course_ui.h"
 #include "menu_rendering.h"
@@ -78,41 +78,41 @@ void drawTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
     s32 limit;
     s32 selected;
 
-    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x50), arg0->y, getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x50), arg0->y, getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
-        drawMenuSprite((s16)(arg0->x + i + 0x10), arg0->y, getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + i + 0x10), (s16)(arg0->y + 0x40), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + i + 0x10), arg0->y, getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + i + 0x10), (s16)(arg0->y + 0x40), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0x40);
 
-    drawMenuSprite(arg0->x, (s16)(arg0->y + 0x40), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x40), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16)(arg0->y + 0x40), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x40), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
 
     i = 0;
     limit = 0x40;
     do {
-        drawMenuSprite(arg0->x, (s16)(arg0->y + i + 0x10), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + i + 0x10), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
+        drawMenuSprite(arg0->x, (s16)(arg0->y + i + 0x10), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + i + 0x10), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
         j = 0;
         do {
-            drawMenuSprite((s16)(arg0->x + j + 0x10), (s16)(arg0->y + i + 0x10), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+            drawMenuSprite((s16)(arg0->x + j + 0x10), (s16)(arg0->y + i + 0x10), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
             j += 0x10;
         } while (j != limit);
         i += 0x10;
     } while (i < 0x30);
 
-    drawMenuSprite((s16)(arg0->x + 8), (s16)(arg0->y + 4), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0x15, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x44), (s16)(arg0->y + 4), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), (gTrainingCourseLesson + 0xB) & 0xFFFF, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0x15, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x44), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), (gTrainingCourseLesson + 0xB) & 0xFFFF, 0x20, 0x20, 0, 0);
 
     if (gTrainingCourseLesson != 9) {
         j = 0;
         i = 0;
         do {
             alpha = (j == (u16)arg0->state.selectedAction) ? 0x100 : 0x60;
-            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x18), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), (j + 0x16) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
+            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x18), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), (j + 0x16) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
             j++;
             i += 0x10;
         } while (j != 3);
@@ -121,7 +121,7 @@ void drawTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
         i = 0;
         do {
             alpha = ((j + 1) == (u16)arg0->state.selectedAction) ? 0x100 : 0x60;
-            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x20), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), (j + 0x17) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
+            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x20), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), (j + 0x17) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
             j++;
             i += 0x10;
         } while (j != 2);
@@ -132,7 +132,7 @@ void drawTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
     } else {
         selected = (u16)arg0->state.selectedAction - 1;
     }
-    drawMenuSpriteWithAlpha(arg0->layout.textOffset.x, (s16)(arg0->layout.textOffset.y + (selected * 0x10)), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, arg0->highlightScale, 0);
+    drawMenuSpriteWithAlpha(arg0->layout.textOffset.x, (s16)(arg0->layout.textOffset.y + (selected * 0x10)), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, arg0->highlightScale, 0);
 }
 
 void redrawTrainingCourseActionMenu(s32 arg0) {
@@ -232,24 +232,24 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     u16 drawToken;
     unsigned int pad;
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)((*arg0).y + 0x14), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)((*arg0).y + 0x14), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     new_var = 0;
     do {
-        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x14), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 3, 0x20, 0x20, new_var, new_var);
-        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x4C), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, new_var);
+        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 3, 0x20, 0x20, new_var, new_var);
+        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x4C), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, new_var);
         i += 0x10;
     } while (i < 0xF0);
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, new_var);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 9, 0x20, 0x20, new_var, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, new_var);
+    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 9, 0x20, 0x20, new_var, 0);
 
     i = new_var;
     do {
-        drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + i + 0x24), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 5, 0x20, 0x20, new_var, 0);
-        drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + i + 0x24), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 6, 0x20, 0x20, new_var, 0);
+        drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + i + 0x24), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 5, 0x20, 0x20, new_var, 0);
+        drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + i + 0x24), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 6, 0x20, 0x20, new_var, 0);
         i += 0x10;
     } while (i < 0x30);
 
@@ -330,7 +330,7 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     }
 
     if (((arg0->scriptState == 1) || (arg0->scriptState == 2)) && (gMainMenuSelectionResult == new_var)) {
-        drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), ((s32)arg0->confirmBlinkTimer >= 8) & 0xFFFF, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), ((s32)arg0->confirmBlinkTimer >= 8) & 0xFFFF, 0x20, 0x20, 0, 0);
     }
 }
 #endif

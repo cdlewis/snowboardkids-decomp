@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
@@ -87,33 +87,33 @@ void func_80014600(MenuIntroActor *arg0) {
     MenuIntroActor *actor;
 
     actor = arg0;
-    drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y - 4), getMemoryBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE), 2,
+    drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y - 4), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE), 2,
                   0x20, 0x20, 0, actor->alpha, 0);
-    drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y - 4), getMemoryBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE), 4,
+    drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y - 4), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE), 4,
                   0x20, 0x20, 0, actor->alpha, 0);
     i = 0;
     do {
-        drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y - 4), getMemoryBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+        drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y - 4), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
                       3, 0x20, 0x20, 0, actor->alpha, 0);
-        drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y + 0x24), getMemoryBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+        drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y + 0x24), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
                       8, 0x20, 0x20, 0, actor->alpha, 0);
         i += 0x10;
     } while (i < 0xE0);
-    drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y + 0x24), getMemoryBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+    drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y + 0x24), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
                   7, 0x20, 0x20, 0, actor->alpha, 0);
     drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y + 0x24),
-                  getMemoryBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, actor->alpha, 0);
+                  getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, actor->alpha, 0);
     i = (actor->state == 4) * 0;
     limit = 0xE0;
     do {
-        drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y + i), getMemoryBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+        drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y + i), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
                       5, 0x20, 0x20, 0, actor->alpha, 0);
-        drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y + i), getMemoryBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+        drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y + i), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
                       6, 0x20, 0x20, 0, actor->alpha, 0);
         j = 0;
         do {
             drawMenuSpriteWithAlpha((s16)(actor->x + j), (s16)(actor->y + i),
-                          getMemoryBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, actor->alpha, 0);
+                          getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, actor->alpha, 0);
             j += 0x10;
         } while (j != limit);
         i += 0x10;
@@ -137,7 +137,7 @@ void func_80014600(MenuIntroActor *arg0) {
 
     if ((actor->state == 1) || (actor->state == 6)) {
         drawMenuSprite((s16)(actor->x + 0xD0), (s16)(actor->y + 0x20),
-                      getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), ((actor->timer >= 8) + 5) & 0xFFFF,
+                      getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), ((actor->timer >= 8) + 5) & 0xFFFF,
                       0x20, 0x20, 0, 0);
     }
 }
@@ -263,17 +263,17 @@ void func_80014CB8(void *arg0) {
     }
 
     if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 1)) {
-        drawMenuSpriteWithAlpha(actor->x, actor->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, alpha, 0);
+        drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, alpha, 0);
         if (width == 0x20) {
             temp = width & 0xFFFF;
-            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getMemoryBlockBase(D_8011216E), 0, temp, temp, 0, alpha, 0);
+            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(D_8011216E), 0, temp, temp, 0, alpha, 0);
         } else {
-            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getMemoryBlockBase(D_8011216E), 0, alpha);
+            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(D_8011216E), 0, alpha);
         }
         func_800129DC((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5408, 1, alpha);
     }
 
-    drawMenuSpriteWithAlpha((s16)(actor->x + 0x80), actor->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, alpha, 0);
+    drawMenuSpriteWithAlpha((s16)(actor->x + 0x80), actor->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, alpha, 0);
 }
 
 void func_80014EF0(MenuItemActor *arg0) {
@@ -355,18 +355,18 @@ void func_8001508C(MenuItemActor *arg0) {
     }
 
     if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 2)) {
-        drawMenuSpriteWithAlpha(actor->x, actor->y, getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 2);
+        drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 2);
         if (width == 0x20) {
             temp = width & 0xFFFF;
-            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getMemoryBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 1, temp, temp, 0, alpha, 0);
+            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 1, temp, temp, 0, alpha, 0);
         } else {
-            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getMemoryBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 1, alpha);
+            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 1, alpha);
         }
         func_800129DC((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B541C, 1, alpha);
     }
 
     for (i = 0; i != 0x28; i += 0x14) {
-        drawMenuSpriteWithAlpha((s16)(actor->x + i + 0x80), actor->y, getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, alpha, 0);
+        drawMenuSpriteWithAlpha((s16)(actor->x + i + 0x80), actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, alpha, 0);
     }
 }
 
@@ -443,18 +443,18 @@ void func_8001543C(void *arg0) {
     }
 
     if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 3)) {
-        drawMenuSpriteWithAlpha(actor->x, actor->y, getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 3);
+        drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 3);
         if (width == 0x20) {
             temp = width & 0xFFFF;
-            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getMemoryBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 2, temp, temp, 0, alpha, 0);
+            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 2, temp, temp, 0, alpha, 0);
         } else {
-            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getMemoryBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 2, alpha);
+            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 2, alpha);
         }
         func_800129DC((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5430, 1, alpha);
     }
 
     for (i = 0; i != 0x3C; i += 0x14) {
-        drawMenuSpriteWithAlpha((s16)(actor->x + i + 0x80), actor->y, getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, alpha, 0);
+        drawMenuSpriteWithAlpha((s16)(actor->x + i + 0x80), actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, alpha, 0);
     }
 }
 
@@ -531,18 +531,18 @@ void func_800157EC(void *arg0) {
     }
 
     if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 4)) {
-        drawMenuSpriteWithAlpha(actor->x, actor->y, getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 4);
+        drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 4);
         if (width == 0x20) {
             temp = width & 0xFFFF;
-            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getMemoryBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 3, temp, temp, 0, alpha, 0);
+            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 3, temp, temp, 0, alpha, 0);
         } else {
-            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getMemoryBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 3, alpha);
+            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 3, alpha);
         }
         func_800129DC((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5444, 1, alpha);
     }
 
     for (i = 0; i != 0x50; i += 0x14) {
-        drawMenuSpriteWithAlpha((s16)(actor->x + i + 0x80), actor->y, getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, alpha, 0);
+        drawMenuSpriteWithAlpha((s16)(actor->x + i + 0x80), actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, alpha, 0);
     }
 }
 
@@ -594,7 +594,7 @@ void func_80015B58(void *arg0) {
     drawMenuSpriteWithAlpha(
         actor->x,
         (s16)((actor->y + (gPlayerCount << 5)) - 0x20),
-        getMemoryBlockBase(gMenuCommonSpritesAssetHandle),
+        getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
         4,
         0x20,
         0x20,
@@ -660,11 +660,11 @@ void func_80015CBC(TitleMenuWidgetItemView *arg0) {
             alpha = 0x50;
         }
 
-        drawMenuSpriteWithAlpha(item->x, item->y, getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xA, 0x20, 0x20,
+        drawMenuSpriteWithAlpha(item->x, item->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xA, 0x20, 0x20,
                       (i * RACE_PLAYER_STATE_SIZE) * 0, alpha, (i + 1) & 0xFF);
         next = i + 1;
-        drawMenuSpriteWithAlpha((s16)(item->x + 0x40), item->y, getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, alpha, next & 0xFF);
-        drawMenuSpriteWithAlpha((s16)(item->x + 0x80), item->y, getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xC, 0x20, 0x20, 0, alpha, next & 0xFF);
+        drawMenuSpriteWithAlpha((s16)(item->x + 0x40), item->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, alpha, next & 0xFF);
+        drawMenuSpriteWithAlpha((s16)(item->x + 0x80), item->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xC, 0x20, 0x20, 0, alpha, next & 0xFF);
 
         sprintf(text, D_800E0A80, next);
         drawMenuAsciiText((s16)(item->x + 0x32), (s16)(item->y + 2), text, 0, alpha);
@@ -672,7 +672,7 @@ void func_80015CBC(TitleMenuWidgetItemView *arg0) {
             sprintf(text, D_800E0A84, *(s32 *)((u8 *)&D_80121D8C + (i * RACE_PLAYER_STATE_SIZE)));
             drawMenuAsciiText((s16)(item->x + 0x44), (s16)(item->y + 0x1B), text, 0, alpha);
         } else {
-            drawMenuSpriteWithAlpha((s16)(item->x + 2), (s16)(item->y + 0x14), getMemoryBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 0x90, 0x20, 0x20, 0, 0xF0, 0);
+            drawMenuSpriteWithAlpha((s16)(item->x + 2), (s16)(item->y + 0x14), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 0x90, 0x20, 0x20, 0, 0xF0, 0);
         }
         i = next;
         item = (TitleMenuWidgetItemView *)((s16 *)item + 1);
@@ -860,7 +860,7 @@ void func_80016284(TitleMenuIconStripActor *arg0) {
                             alpha = 0x100;
                         }
                         drawMenuSpriteWithAlpha((s16)(item->rects[0].x0 + arg0->iconOffsetX + xOffset),
-                                      (s16)(item->rects[1].x0 + arg0->iconOffsetY), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x19,
+                                      (s16)(item->rects[1].x0 + arg0->iconOffsetY), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x19,
                                       0x20, 0x20, 0, alpha, 9 - j);
                         j = nextJ;
                         xOffset += 0x10;
@@ -892,7 +892,7 @@ void func_80016284(TitleMenuIconStripActor *arg0) {
                             tile = 9;
                         }
                         drawMenuSpriteWithAlpha((s16)(item->rects[0].x0 + arg0->badgeOffsetX + xOffset),
-                                      (s16)(item->rects[1].x0 + arg0->badgeOffsetY), getMemoryBlockBase(gMenuCommonSpritesAssetHandle),
+                                      (s16)(item->rects[1].x0 + arg0->badgeOffsetY), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
                                       (j + 0x1A) & 0xFFFF, 0x20, 0x20, 0, alpha, tile);
                         j++;
                         xOffset += 0xE;
@@ -964,9 +964,9 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
             }
 
             tile = 8;
-            drawMenuSpriteWithAlpha((s16)(actor->x[i] - 2), (s16)(actor->y[i] + 0xC), getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), tile,
+            drawMenuSpriteWithAlpha((s16)(actor->x[i] - 2), (s16)(actor->y[i] + 0xC), getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), tile,
                           0x20, 0x20, 0, alpha, 0);
-            drawMenuSpriteWithAlpha((s16)(actor->x[i] + 0x3E), (s16)(actor->y[i] + 0xC), getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 9,
+            drawMenuSpriteWithAlpha((s16)(actor->x[i] + 0x3E), (s16)(actor->y[i] + 0xC), getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 9,
                           0x20, 0x20, 0, alpha, 0);
 
             state = gControllerPakStatusCodes[i];
@@ -981,7 +981,7 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
             if ((actor->alpha[i] == 0x100) && (intro->state == 8)) {
                 state = gControllerPakStatusCodes[i];
                 if ((state == 4) || ((state >= 7) && (state != 0x12) && (D_800EC9D0[i] == 0))) {
-                    drawMenuSprite((s16)(actor->x[i] + 0x70), (s16)(actor->y[i] + 0x20), getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                    drawMenuSprite((s16)(actor->x[i] + 0x70), (s16)(actor->y[i] + 0x20), getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
                                   (((s32)actor->frame >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
                 }
             }
@@ -1114,7 +1114,7 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
                     alpha = 0x60;
                 }
 
-                drawMenuSpriteWithAlpha(arg0->x[i], arg0->topY[i], getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                drawMenuSpriteWithAlpha(arg0->x[i], arg0->topY[i], getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
                               D_800B5A2F[gControllerPakStatusCodes[i] * 2], 0x20, 0x20, 0, alpha, 0);
 
                 if (alpha == 0x100) {
@@ -1124,7 +1124,7 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
                 }
 
                 new_var = arg0;
-                drawMenuSpriteWithAlpha(arg0->x[i], new_var->y[i], getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                drawMenuSpriteWithAlpha(arg0->x[i], new_var->y[i], getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
                               D_800B5A2E[gControllerPakStatusCodes[i] * 2], 0x20, 0x20, 0, alpha, 0);
 
                 if (new_var->alpha == 0) {
@@ -1133,7 +1133,7 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
                 state = D_800EC9D0[i];
                 if ((state == 3) || (state == 4)) {
                     drawMenuSpriteWithAlpha(new_var2->x[i], (s16)(((D_800EC9D0[i] * 0x10) + new_var->y[i]) - 0x30),
-                                  getMemoryBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0x12, 0x20, 0x20, 0, new_var->alpha[i],
+                                  getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0x12, 0x20, 0x20, 0, new_var->alpha[i],
                                   i + 7);
                     state = D_800EC9D0[i];
                 }
@@ -1261,7 +1261,7 @@ void func_800170AC(SpriteActor *arg0) {
 void func_8001710C(SpriteActor *arg0) {
     SpriteActor *temp_a2 = arg0;
 
-    func_80017168(&temp_a2->sprite, getMemoryBlockBase(D_8011217C));
+    func_80017168(&temp_a2->sprite, getRelocatableHeapBlockBase(D_8011217C));
     temp_a2->x = temp_a2->sprite.unk8;
     temp_a2->y = temp_a2->sprite.unkA;
     setCallbackTaskCallback(temp_a2, func_800170AC);

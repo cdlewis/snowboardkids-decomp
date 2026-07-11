@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "asset_manager.h"
 #include "race_input_history.h"
 
@@ -42,7 +42,7 @@ void func_80083D80(RaceInputPlayer *player) {
     s16 frame;
     u32 inputFlags;
 
-    history = (RaceInputReplayHistory *)getMemoryBlockBase(D_80112186);
+    history = (RaceInputReplayHistory *)getRelocatableHeapBlockBase(D_80112186);
     frame = player->replayFrame;
     if (frame < RACE_INPUT_REPLAY_FRAME_COUNT) {
         history[(u16) player->playerIndex].inputs[frame].stickX = player->stickX;
@@ -98,7 +98,7 @@ void func_8008409C(RaceInputPlayer *player) {
     u8 buttons;
     s32 replayOffset;
 
-    history = (RaceReplayInputHistoryPlayer *) getMemoryBlockBase(D_80112186);
+    history = (RaceReplayInputHistoryPlayer *) getRelocatableHeapBlockBase(D_80112186);
     replayFrame = player->replayFrame;
     if (replayFrame < 0x960) {
         replayOffset = (replayFrame * 4) - replayFrame;
@@ -168,7 +168,7 @@ void func_8008431C(RaceInputPlayer *player) {
         return;
     }
 
-    history = (RaceInputHistoryBuffer *)getMemoryBlockBase(D_80112186);
+    history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(D_80112186);
     index = history->writeIndex;
     if (index >= RACE_INPUT_HISTORY_LENGTH) {
         history->enabled = 0;
@@ -230,12 +230,12 @@ void func_80084510(RaceInputPlayer *player) {
     }
 
     if (replayInputSource == 1) {
-        history = (RaceInputHistoryBuffer *)getMemoryBlockBase(D_8011213E);
+        history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(D_8011213E);
         replayInputSource = player->replayInputSource;
     }
 
     if (replayInputSource == 2) {
-        history = (RaceInputHistoryBuffer *)getMemoryBlockBase(D_80112186);
+        history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(D_80112186);
     }
 
     if (history->enabled == 0) {

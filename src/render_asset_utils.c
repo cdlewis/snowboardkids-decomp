@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "fixed_point_math.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
@@ -140,7 +140,7 @@ dummy_label_220868:
 
 void releaseMenuAssetHandles(void)
 {
- do { s16 *handle = &D_8011213E; do { if ((*handle) != (-1)) { *handle = freeMemoryBlock(*handle); } handle++; } while (handle != (&D_801121B0)); } while (0);
+ do { s16 *handle = &D_8011213E; do { if ((*handle) != (-1)) { *handle = freeRelocatableHeapBlock(*handle); } handle++; } while (handle != (&D_801121B0)); } while (0);
 }
 
 void *func_8004597C(void *arg0, u32 arg1) {
@@ -1263,7 +1263,7 @@ extern s16 D_8011213C;
 extern s16 D_801121B2;
 
 void func_80047E38(void) {
-    s32 v0 = getMemoryBlockBase(D_8011213C);
+    s32 v0 = getRelocatableHeapBlockBase(D_8011213C);
     AssetTable *assetTable = (AssetTable *)v0;
 
     D_801121B4 = (void *)((assetTable->entryCount * sizeof(AssetTableEntry)) + (u8 *)assetTable + sizeof(AssetTableEntry));
@@ -1288,7 +1288,7 @@ void func_80047E88(s16 x, s16 y, s32 ch, u16 arg3) {
         tile = chByte - 0x40;
 
         if (D_801121B2 != 0) {
-            font = (FontTexture *)getMemoryBlockBase(D_8011213C);
+            font = (FontTexture *)getRelocatableHeapBlockBase(D_8011213C);
 
             FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
                          (u32)(font->imageOffset + (u8 *)font));
@@ -1314,7 +1314,7 @@ void func_80047E88(s16 x, s16 y, s32 ch, u16 arg3) {
 
     tile = chByte - 0x20;
     if (D_801121B2 != 0) {
-        font = (FontTexture *)getMemoryBlockBase(D_8011213C);
+        font = (FontTexture *)getRelocatableHeapBlockBase(D_8011213C);
 
         FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
                      (u32)(font->imageOffset + (u8 *)font));
@@ -1381,11 +1381,11 @@ void func_80048278(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
 extern s32 D_801121B8;
 
 void func_80048338(void) {
-    D_80112130 = allocMemoryBlock(0x4000);
+    D_80112130 = allocRelocatableHeapBlock(0x4000);
 }
 
 void resetRenderScratchAllocator(void) {
-    D_801121B8 = getMemoryBlockBase(D_80112130);
+    D_801121B8 = getRelocatableHeapBlockBase(D_80112130);
 }
 
 void *func_80048388(s32 arg0) {
@@ -1396,7 +1396,7 @@ void *func_80048388(s32 arg0) {
     s32 temp_a0;
 
     sp1C = D_801121B8;
-    base = getMemoryBlockBase(D_80112130);
+    base = getRelocatableHeapBlockBase(D_80112130);
     new_var2 = &temp_a0;
     temp_a0 = D_801121B8 + ((((u32)(arg0 + 3)) >> 2) * 4);
     new_var = (u32)(*new_var2 - base);
@@ -1439,8 +1439,8 @@ extern s16 D_80112132;
 extern s16 D_80112134;
 
 void func_800484F0(void) {
-    D_80112132 = allocMemoryBlock(0x8000);
-    D_80112134 = allocMemoryBlock(0x8000);
+    D_80112132 = allocRelocatableHeapBlock(0x8000);
+    D_80112134 = allocRelocatableHeapBlock(0x8000);
 }
 
 extern u32 D_80123754;
@@ -1450,9 +1450,9 @@ extern u8 *D_801121BC;
 void func_80048524(s32 arg0) {
     D_80123754 = 0;
     if (arg0 == 0) {
-        D_801121BC = D_801121C0 = getMemoryBlockBase(D_80112132);
+        D_801121BC = D_801121C0 = getRelocatableHeapBlockBase(D_80112132);
     } else {
-        D_801121BC = D_801121C0 = getMemoryBlockBase(D_80112134);
+        D_801121BC = D_801121C0 = getRelocatableHeapBlockBase(D_80112134);
     }
 }
 
@@ -1482,9 +1482,9 @@ extern void osWritebackDCache(void *, s32);
 
 void func_800485E8(s32 arg0) {
     if (arg0 == 0) {
-        osWritebackDCache((void *)getMemoryBlockBase(D_80112132), D_80123754);
+        osWritebackDCache((void *)getRelocatableHeapBlockBase(D_80112132), D_80123754);
     } else {
-        osWritebackDCache((void *)getMemoryBlockBase(D_80112134), D_80123754);
+        osWritebackDCache((void *)getRelocatableHeapBlockBase(D_80112134), D_80123754);
     }
 }
 

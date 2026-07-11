@@ -1,5 +1,5 @@
 #include "main_menu_scene_model.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "main_menu_scene_model_renderer.h"
 #include "race_position_ui.h"
 
@@ -42,7 +42,7 @@ void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
     s32 end;
     s32 stride;
 
- do { if ((u16)arg0->viewportIndex == gCurrentViewportIndex) { model = arg0; gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = gMainMenuSceneModelPartDisplayLists; do { matrix = allocFixedTransformMatrix(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
+ do { if ((u16)arg0->viewportIndex == gCurrentViewportIndex) { model = arg0; gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = gMainMenuSceneModelPartDisplayLists; do { matrix = allocFixedTransformMatrix(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
 }
 #endif
 
@@ -59,14 +59,14 @@ void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
     s32 end;
     s32 stride;
 
-    do { if ((u16)arg0->viewportIndex == gCurrentViewportIndex) { matrix = allocFixedTransformMatrix(arg0->displayObjects); model = arg0; if (matrix != NULL) { func_8007C130(matrix, model->textureId, model->paletteId); } gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = gMainMenuSceneModelPartDisplayLists; do { matrix = allocFixedTransformMatrix(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
+    do { if ((u16)arg0->viewportIndex == gCurrentViewportIndex) { matrix = allocFixedTransformMatrix(arg0->displayObjects); model = arg0; if (matrix != NULL) { func_8007C130(matrix, model->textureId, model->paletteId); } gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = gMainMenuSceneModelPartDisplayLists; do { matrix = allocFixedTransformMatrix(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
 }
 #endif
 
 void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     addRenderCallback(&D_801248B0, drawMainMenuSceneModel, model);
@@ -75,7 +75,7 @@ void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
 void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s32 paletteId) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     model->textureId = (s16)textureId;
@@ -86,7 +86,7 @@ void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s3
 void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 textureId, s32 paletteId, s32 unusedArg) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     model->textureId = (s16)textureId;
@@ -97,7 +97,7 @@ void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 
 void addMainMenuSceneModelDrawCallbackForViewport0(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     addRenderCallback(&D_801248B0, drawMainMenuSceneModel, model);
@@ -106,7 +106,7 @@ void addMainMenuSceneModelDrawCallbackForViewport0(s32 modelIndex) {
 void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 viewportIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = (s16)viewportIndex;
     addRenderCallback(&D_801248B0, drawMainMenuSceneModel, model);

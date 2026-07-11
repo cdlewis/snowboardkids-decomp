@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "player_select_ui.h"
 #include "menu_rendering.h"
@@ -59,7 +59,7 @@ void func_800191D0(PlayerSelectRowActor *arg0) {
     sp54 = arg0;
     var_s0 = 0;
     if ((s32)arg0->playerCount > 0) {
-        do { var_s2 = 0; var_s3 = arg0; do { var_s1 = 0; if (((((D_800EC9C1 != 0) && (((s32)D_800EC9C1) < 8)) && (D_8010ADF8 == 0)) && (var_s0 == gRaceSplitscreenMode)) && (D_800EC9C1 & 1)) { var_s1 = 0xFF; } drawMenuSprite(var_s3->iconX[0], (s16)(arg0->iconY + var_s2), getMemoryBlockBase(D_80112130.textureHandle), (var_s0 + 8) & 0xFFFF, 0x20, 0x20, 0, var_s1); var_s0 += 1; var_s2 += 0x14; var_s3 = (PlayerSelectRowActor *)((u8 *)var_s3 + 2); if (arg0->playerCount) {} } while (var_s0 < ((s32)sp54->playerCount)); } while (0);
+        do { var_s2 = 0; var_s3 = arg0; do { var_s1 = 0; if (((((D_800EC9C1 != 0) && (((s32)D_800EC9C1) < 8)) && (D_8010ADF8 == 0)) && (var_s0 == gRaceSplitscreenMode)) && (D_800EC9C1 & 1)) { var_s1 = 0xFF; } drawMenuSprite(var_s3->iconX[0], (s16)(arg0->iconY + var_s2), getRelocatableHeapBlockBase(D_80112130.textureHandle), (var_s0 + 8) & 0xFFFF, 0x20, 0x20, 0, var_s1); var_s0 += 1; var_s2 += 0x14; var_s3 = (PlayerSelectRowActor *)((u8 *)var_s3 + 2); if (arg0->playerCount) {} } while (var_s0 < ((s32)sp54->playerCount)); } while (0);
     }
 }
 
@@ -147,10 +147,10 @@ void func_8001952C(PlayerSelectRowActor *arg0) {
 }
 
 void func_8001958C(PlayerSelectWidgetActor *arg0) {
-    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
-    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
 }
 
 void func_800196CC(PlayerSelectWidgetActor *arg0) {
@@ -207,7 +207,7 @@ void func_80019800(PlayerSelectWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_80011264((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getMemoryBlockBase(D_80112130.textureHandle),
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->counter].centerTiles[tileOffset], 0, 0x100);
     }
 
@@ -219,10 +219,10 @@ void func_80019800(PlayerSelectWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getMemoryBlockBase(D_80112130.textureHandle),
+        func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->counter].rightEdgeTiles[tileOffset], 0, 0x100);
         i = 0x80;
-        func_80011264((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130.textureHandle),
+        func_80011264((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->counter].bottomEdgeTiles[tileOffset], 0, 0x100);
         offset += 0x40;
         tileOffset++;
@@ -230,28 +230,28 @@ void func_80019800(PlayerSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130.textureHandle),
+    func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.textureHandle),
                   D_800B5B50[(u16)arg0->counter].cornerTile, 0, 0x100);
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getMemoryBlockBase(D_80112130.textureHandle), 0x33, 0x20,
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(D_80112130.textureHandle), 0x33, 0x20,
                   0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getMemoryBlockBase(D_80112130.textureHandle), 0x38, 0x20,
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(D_80112130.textureHandle), 0x38, 0x20,
                   0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), getMemoryBlockBase(D_80112130.textureHandle), 0x35, 0x20,
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(D_80112130.textureHandle), 0x35, 0x20,
                   0x20, 0, 0);
     if (offset && offset) {}
-    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getMemoryBlockBase(D_80112130.textureHandle), 0x3A, 0x20,
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(D_80112130.textureHandle), 0x3A, 0x20,
                   0x20, 0, 0);
 
     for (offset = 0; offset != 0x80; offset += 0x10) {
         drawMenuSprite((s16)((arg0->x + offset) + 0xC), (s16)(arg0->y - 4),
-                      getMemoryBlockBase(D_80112130.textureHandle), 0x34, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle), 0x34, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)((arg0->x + offset) + 0xC), (s16)(arg0->y + 0x8C),
-                      getMemoryBlockBase(D_80112130.textureHandle), 0x39, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle), 0x39, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(arg0->x - 4), (s16)((arg0->y + offset) + 0xC),
-                      getMemoryBlockBase(D_80112130.textureHandle), 0x36, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle), 0x36, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(arg0->x + 0x8C), (s16)((arg0->y + offset) + 0xC),
-                      getMemoryBlockBase(D_80112130.textureHandle), 0x37, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle), 0x37, 0x20, 0x20, 0, 0);
     }
 }
 #endif
@@ -354,7 +354,7 @@ void func_80019FFC(PlayerSelectWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getMemoryBlockBase(D_80112130.textureHandle),
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].centerTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -365,10 +365,10 @@ void func_80019FFC(PlayerSelectWidgetActor *arg0) {
     offset = 0;
     do {
         func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      getMemoryBlockBase(D_80112130.textureHandle),
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      getMemoryBlockBase(D_80112130.textureHandle),
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -377,7 +377,7 @@ void func_80019FFC(PlayerSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130.textureHandle),
+    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.textureHandle),
                   D_800B5B50[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -461,7 +461,7 @@ void func_8001A490(PlayerSelectWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileIndex++) {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getMemoryBlockBase(D_80112130.textureHandle),
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].centerTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -471,9 +471,9 @@ void func_8001A490(PlayerSelectWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getMemoryBlockBase(D_80112130.textureHandle),
+        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
-        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130.textureHandle),
+        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -482,7 +482,7 @@ void func_8001A490(PlayerSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130.textureHandle),
+    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.textureHandle),
                   D_800B5B50[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -566,7 +566,7 @@ void func_8001A924(PlayerSelectWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getMemoryBlockBase(D_80112130.textureHandle),
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].centerTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -577,10 +577,10 @@ void func_8001A924(PlayerSelectWidgetActor *arg0) {
     offset = 0;
     do {
         func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      getMemoryBlockBase(D_80112130.textureHandle),
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      getMemoryBlockBase(D_80112130.textureHandle),
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -589,7 +589,7 @@ void func_8001A924(PlayerSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130.textureHandle),
+    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.textureHandle),
                   D_800B5B50[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -673,7 +673,7 @@ void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileIndex++) {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getMemoryBlockBase(D_80112130.textureHandle),
+                      getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].centerTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -683,9 +683,9 @@ void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getMemoryBlockBase(D_80112130.textureHandle),
+        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
-        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130.textureHandle),
+        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       D_800B5B50[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -694,7 +694,7 @@ void func_8001ADB8(PlayerSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130.textureHandle),
+    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.textureHandle),
                   D_800B5B50[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -770,7 +770,7 @@ void func_8001B210(PlayerSelectWidgetActor *arg0) {
 }
 
 void func_8001B254(PlayerSelectWidgetActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (gRaceSplitscreenMode * 0x14)), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (gRaceSplitscreenMode * 0x14)), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
 void func_8001B2D8(PlayerSelectWidgetActor *arg0) {
@@ -896,7 +896,7 @@ void func_8001B638(PlayerSelectWidgetActor *arg0) {
 }
 
 void func_8001B674(PlayerSelectWidgetActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
 void func_8001B6D8(PlayerSelectWidgetActor *arg0) {
@@ -945,7 +945,7 @@ void func_8001B814(PlayerSelectWidgetActor *arg0) {
     char sp40[0x18];
 
     func_8001BA2C(arg0->x, arg0->y, 0x5000, 0x4000);
-    drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
     sprintf(sp40, D_800E0AE0, D_80121D8C);
     drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
 }

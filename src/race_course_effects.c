@@ -1,6 +1,6 @@
 #include "common.h"
 #include "race_course_effects.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "spatial_math.h"
@@ -334,17 +334,17 @@ extern Gfx D_2006880[];
 extern Gfx D_20058A8[];
 void func_80069890(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
-        func_80047174(-0x34, -0xC, getMemoryBlockBase(D_80112168), 0x3F, arg0->step);
+        func_80047174(-0x34, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x3F, arg0->step);
     } else {
-        func_80045A78(-0x34, -0xC, getMemoryBlockBase(D_80112168), 0x3F);
+        func_80045A78(-0x34, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x3F);
     }
 }
 
 void func_80069914(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
-        func_80047174(-0x20, -0xC, getMemoryBlockBase(D_80112168), 0x40, arg0->step);
+        func_80047174(-0x20, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x40, arg0->step);
     } else {
-        func_80045A78(-0x20, -0xC, getMemoryBlockBase(D_80112168), 0x40);
+        func_80045A78(-0x20, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x40);
     }
 }
 
@@ -411,8 +411,8 @@ void func_80069BEC(void *arg0) {
 
     gDPPipeSync(gRegionAllocPtr++);
 
-    gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112140));
-    gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112142));
+    gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112140));
+    gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112142));
 
     gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
@@ -465,11 +465,11 @@ void func_80069BEC(void *arg0) {
         gfx = *region;                                         \
         *region = gfx + 1;                                     \
         gfx->words.w0 = 0xBC000806;                            \
-        gfx->words.w1 = (u32)getMemoryBlockBase(handles->courseVtxHandle);    \
+        gfx->words.w1 = (u32)getRelocatableHeapBlockBase(handles->courseVtxHandle);    \
         gfx = *region;                                         \
         *region = gfx + 1;                                     \
         gfx->words.w0 = 0xBC000C06;                            \
-        gfx->words.w1 = (u32)getMemoryBlockBase(handles->courseTextureHandle); \
+        gfx->words.w1 = (u32)getRelocatableHeapBlockBase(handles->courseTextureHandle); \
         gfx = *region;                                         \
         *region = gfx + 1;                                     \
         gfx->words.w0 = 0x01020040;                            \
@@ -549,7 +549,7 @@ void func_8006A798(void *arg0) {
 
 void func_8006A7BC(RacePlayerEffect *arg0) {
     if (gCurrentViewportIndex == arg0->playerIndex) {
-        func_80045A78(-0x30, -0xC, getMemoryBlockBase(D_80112168), 0x41);
+        func_80045A78(-0x30, -0xC, getRelocatableHeapBlockBase(D_80112168), 0x41);
     }
 }
 
@@ -596,7 +596,7 @@ void func_8006A894(RaceCourseRenderEffect *arg0) {
             if (isPositionNearCurrentViewport(&entry->pos) != 0) {
                 if (entry->type != textureIndex) {
                     textureIndex = entry->type;
-                    func_80045A1C((u8 *)getMemoryBlockBase((s32)D_80112168), textureIndex & 0xFFFF,
+                    func_80045A1C((u8 *)getRelocatableHeapBlockBase((s32)D_80112168), textureIndex & 0xFFFF,
                                   &image, &palette, &width, &height);
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0,
                                             G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
@@ -667,8 +667,8 @@ void func_8006AE00(RaceCourseRenderEffect *arg0) {
     if (count != 0) {
         entry = D_800DA0B8[gRaceCourseIndex];
         allocSize = count * sizeof(CourseRenderCommand);
-        D_80112130.markerMatrixHandle = allocMemoryBlock(allocSize);
-        arg0->vertices = getMemoryBlockBase(D_80112130.markerMatrixHandle);
+        D_80112130.markerMatrixHandle = allocRelocatableHeapBlock(allocSize);
+        arg0->vertices = getRelocatableHeapBlockBase(D_80112130.markerMatrixHandle);
 
         i = 0;
         if (count > 0) {
@@ -703,10 +703,10 @@ void func_8006AF48(RaceCourseRenderEffect *arg0) {
                     gDPPipeSync(gRegionAllocPtr++);
                     temp_s2 = gRegionAllocPtr++;
                     var_s7 = FALSE;
-                    gSPSegment(temp_s2, 0x02, getMemoryBlockBase(D_80112130.courseVtxHandle));
+                    gSPSegment(temp_s2, 0x02, getRelocatableHeapBlockBase(D_80112130.courseVtxHandle));
 
                     temp_s3 = gRegionAllocPtr++;
-                    gSPSegment(temp_s3, 0x03, getMemoryBlockBase(D_80112130.courseTextureHandle));
+                    gSPSegment(temp_s3, 0x03, getRelocatableHeapBlockBase(D_80112130.courseTextureHandle));
                 }
 
                 temp_s0 = gRegionAllocPtr++;
@@ -746,8 +746,8 @@ void func_8006B108(RaceCourseRenderEffect *arg0) {
     if (count != 0) {
         entry = base;
         size = count << 6;
-        D_80112130.courseRenderBufferHandle = allocMemoryBlock(size);
-        arg0->vertices = (void *)getMemoryBlockBase(D_80112130.courseRenderBufferHandle);
+        D_80112130.courseRenderBufferHandle = allocRelocatableHeapBlock(size);
+        arg0->vertices = (void *)getRelocatableHeapBlockBase(D_80112130.courseRenderBufferHandle);
 
         for (i = 0; i < count; i++) {
             makeFixedRotationY(&transform, entry->rotation);
@@ -797,8 +797,8 @@ void func_8006B228(Struct6B760 *arg0) {
 
         if (arg0->displayList != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112144));
-            gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112146));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
             {
                 Gfx *_g = (Gfx *) (gRegionAllocPtr++);
 
@@ -970,8 +970,8 @@ void func_8006B7E0(RaceMovingEffect *arg0) {
             Gfx *_g;
 
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112144));
-            gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112146));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (gRaceCourseIndex != 8) {
                 gSPDisplayList(gRegionAllocPtr++, D_2000910);
@@ -1064,8 +1064,8 @@ void func_8006BC68(RaceMovingEffect *arg0) {
     if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112144));
-            gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112146));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (gRaceCourseIndex != 8) {
                 gSPDisplayList(gRegionAllocPtr++, D_2000910);
@@ -1195,10 +1195,10 @@ void func_8006C1B4(Struct6C51C *arg0) {
         gDPPipeSync(gRegionAllocPtr++);
         segment1 = gRegionAllocPtr++;
         segment1->words.w0 = 0xBC000806;
-        segment1->words.w1 = getMemoryBlockBase(D_80112144);
+        segment1->words.w1 = getRelocatableHeapBlockBase(D_80112144);
         segment2 = gRegionAllocPtr++;
         segment2->words.w0 = 0xBC000C06;
-        segment2->words.w1 = getMemoryBlockBase(D_80112146);
+        segment2->words.w1 = getRelocatableHeapBlockBase(D_80112146);
         arg0++;
         arg0--;
         gSPMatrix(gRegionAllocPtr++, arg0->sourceMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -1336,7 +1336,7 @@ void func_8006C7F4(RaceCourseMarkerEffect *arg0) {
         }
     }
 
-    do { if (arg0->vertices != NULL) { gfx = gRegionAllocPtr++; gfx->words.w0 = 0xE7000000; vertexCount = (unsigned int) ((((unsigned int) ((((1 << 11) + MAX(1, 0x20 / 16)) - 1) / MAX(1, 0x20 / 16))) & ((0x01 << 12) - 1)) << 0); gfx->words.w1 = 0; gfx = gRegionAllocPtr++; gfx->words.w0 = 0xBC000806; gfx->words.w1 = getMemoryBlockBase(D_80112140); gfx = gRegionAllocPtr++; gfx->words.w0 = 0x01020040; gfx->words.w1 = (u32) gIdentityMatrix; gfx = gRegionAllocPtr++; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) arg0->texturePtr; { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) arg0->texture; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 6) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 5) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf3) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) MIN((((0x20 * 0x40) + 3) >> 2) - 1, 2047)) & ((0x01 << 12) - 1)) << 12)); _g->words.w1 = _g->words.w1 | ((unsigned int) ((((unsigned int) ((((1 << 11) + MAX(1, 0x20 / 16)) - 1) / MAX(1, 0x20 / 16))) & ((0x01 << 12) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); dummy_label_166469: ; ; ; _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (((0x20 >> 1) + 7) >> 3)) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 6) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 5) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf2) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((0x20 - 1) << 2)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((0x40 - 1) << 2)) & ((0x01 << 12) - 1)) << 0)); } } ; { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) arg0->palette; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe8) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) (256 + ((0 & 0xf) * 16))) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xf0) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 15) & ((0x01 << 10) - 1)) << 14)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } } ; gfx = gRegionAllocPtr++; vertexCount = arg0->vertexCount; gfx->words.w0 = (((vertexCount << 0xA) | ((vertexCount << 4) - 1)) & 0xFFFF) | 0x04000000; gfx->words.w1 = (u32) arg0->vertices; gfx = gRegionAllocPtr++; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) arg0->palettePtr; } } while (0);
+    do { if (arg0->vertices != NULL) { gfx = gRegionAllocPtr++; gfx->words.w0 = 0xE7000000; vertexCount = (unsigned int) ((((unsigned int) ((((1 << 11) + MAX(1, 0x20 / 16)) - 1) / MAX(1, 0x20 / 16))) & ((0x01 << 12) - 1)) << 0); gfx->words.w1 = 0; gfx = gRegionAllocPtr++; gfx->words.w0 = 0xBC000806; gfx->words.w1 = getRelocatableHeapBlockBase(D_80112140); gfx = gRegionAllocPtr++; gfx->words.w0 = 0x01020040; gfx->words.w1 = (u32) gIdentityMatrix; gfx = gRegionAllocPtr++; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) arg0->texturePtr; { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) arg0->texture; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 6) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 5) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf3) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) MIN((((0x20 * 0x40) + 3) >> 2) - 1, 2047)) & ((0x01 << 12) - 1)) << 12)); _g->words.w1 = _g->words.w1 | ((unsigned int) ((((unsigned int) ((((1 << 11) + MAX(1, 0x20 / 16)) - 1) / MAX(1, 0x20 / 16))) & ((0x01 << 12) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); dummy_label_166469: ; ; ; _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (((0x20 >> 1) + 7) >> 3)) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 6) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 5) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf2) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((0x20 - 1) << 2)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((0x40 - 1) << 2)) & ((0x01 << 12) - 1)) << 0)); } } ; { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) arg0->palette; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe8) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) (256 + ((0 & 0xf) * 16))) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xf0) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 15) & ((0x01 << 10) - 1)) << 14)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } } ; gfx = gRegionAllocPtr++; vertexCount = arg0->vertexCount; gfx->words.w0 = (((vertexCount << 0xA) | ((vertexCount << 4) - 1)) & 0xFFFF) | 0x04000000; gfx->words.w1 = (u32) arg0->vertices; gfx = gRegionAllocPtr++; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) arg0->palettePtr; } } while (0);
 }
 #endif
 
@@ -1351,11 +1351,11 @@ void func_8006CB50(RaceCourseMarkerEffect *arg0) {
 }
 
 void func_8006CBBC(RaceCourseMarkerEffect *arg0) {
-    func_80045990(getMemoryBlockBase(D_80112168),
+    func_80045990(getRelocatableHeapBlockBase(D_80112168),
                   D_800DA814[arg0->entryIndex].textureIndex,
                   &arg0->texture, &arg0->palette);
     arg0->baseVertices =
-        (Vtx *) func_8004597C(getMemoryBlockBase(D_80112140), (s32) D_800DA80C[arg0->entryIndex].baseVerticesInput);
+        (Vtx *) func_8004597C(getRelocatableHeapBlockBase(D_80112140), (s32) D_800DA80C[arg0->entryIndex].baseVerticesInput);
 
     {
         CourseMarkerEntry *entry = &D_800DA804[arg0->entryIndex];
@@ -1396,14 +1396,14 @@ void func_8006CCC0(RaceCourseTriggerEffect *arg0) {
             Gfx *_g = gRegionAllocPtr++;
 
             _g->words.w0 = 0xBC000806;
-            _g->words.w1 = getMemoryBlockBase(D_80112140);
+            _g->words.w1 = getRelocatableHeapBlockBase(D_80112140);
         }
         {
             Gfx *_g = gRegionAllocPtr++;
             volatile s32 pad[2];
 
             _g->words.w0 = 0xBC000C06;
-            _g->words.w1 = getMemoryBlockBase(D_80112142);
+            _g->words.w1 = getRelocatableHeapBlockBase(D_80112142);
         }
         {
             Gfx *_g = gRegionAllocPtr++;

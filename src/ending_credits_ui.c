@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "ending_credits_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
@@ -108,9 +108,9 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
 #endif
 
 void drawEndingCreditsTheEndText(EndingCreditsPageTextActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x35, 0x20, 0x20, 0,
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x35, 0x20, 0x20, 0,
                             arg0->alpha, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x36, 0x20,
+    drawMenuSpriteWithAlpha((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x36, 0x20,
                             0x20, 0, arg0->alpha, 0);
 }
 
@@ -186,7 +186,7 @@ void drawEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0)
     char sp38[0x10];
 
     if (arg0->enabled == 1) {
-        drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), (u16)arg0->spriteId, 0x20, 0x20, arg0->palette,
+        drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), (u16)arg0->spriteId, 0x20, 0x20, arg0->palette,
                        0);
         sprintf(sp38, "ENDOBJ %2d \n", arg0->spriteId);
         drawMenuAsciiText(0x40, -0x66, sp38, 0, 0x100);

@@ -1,5 +1,5 @@
 #include "race_to_main_menu_transition.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
@@ -114,8 +114,8 @@ void func_8000D340(void) {
     loadCompressedRomAsset(D_60ECB0, D_60F1A0, 0x27);
     temp_v0 = D_1502A0 - D_14B450;
     sp34 = temp_v0;
-    D_80112130[0xC] = allocMemoryBlock(temp_v0);
-    dmaReadRom(D_14B450, getMemoryBlockBase(D_80112130[0xC]), sp34);
+    D_80112130[0xC] = allocRelocatableHeapBlock(temp_v0);
+    dmaReadRom(D_14B450, getRelocatableHeapBlockBase(D_80112130[0xC]), sp34);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadMainMenuSceneModelAssets();
     initCallbackTaskScheduler(0);

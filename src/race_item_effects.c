@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "sound_manager.h"
@@ -392,7 +392,7 @@ void func_8004E02C(RaceItemEffectActor *arg0) {
     void *sp80;
     s32 frame;
 
- do { if (D_80156609) { sp88 = gIdentityFixedTransform; sp88.x = arg0->payload.vec.x; sp88.y = arg0->payload.vec.y; sp88.z = arg0->payload.vec.z; arg0->unk30.matrix = allocFixedTransformMatrix(&sp88); } if (arg0->unk30.matrix != NULL) { if (isPositionNearCurrentViewport(&arg0->payload.vec) != 0) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xBB000001; _g->words.w1 = 0xFFFFFFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFC121824; _g->words.w1 = 0xFF33FFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB900031D; _g->words.w1 = 0x005049D8; } ; func_80045990(getMemoryBlockBase(D_80112168), (frame = D_800D4870[arg0->playerIndex] + (arg0->unk24.timer >> 1), 0xFFFF & frame), &sp84, &sp80); { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = (u32) sp84; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = D_800D4870[arg0->playerIndex] * 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x070FF400; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400400; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x7C07C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = (u32) sp80; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01020040; _g->words.w1 = (u32) arg0->unk30.matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01000040; _g->words.w1 = (u32) D_80156614; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x0400103F; _g->words.w1 = (u32) D_800D4830; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB1060402; _g->words.w1 = 0x60200; } ; } } } while (0);
+ do { if (D_80156609) { sp88 = gIdentityFixedTransform; sp88.x = arg0->payload.vec.x; sp88.y = arg0->payload.vec.y; sp88.z = arg0->payload.vec.z; arg0->unk30.matrix = allocFixedTransformMatrix(&sp88); } if (arg0->unk30.matrix != NULL) { if (isPositionNearCurrentViewport(&arg0->payload.vec) != 0) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xBB000001; _g->words.w1 = 0xFFFFFFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFC121824; _g->words.w1 = 0xFF33FFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB900031D; _g->words.w1 = 0x005049D8; } ; func_80045990(getRelocatableHeapBlockBase(D_80112168), (frame = D_800D4870[arg0->playerIndex] + (arg0->unk24.timer >> 1), 0xFFFF & frame), &sp84, &sp80); { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = (u32) sp84; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = D_800D4870[arg0->playerIndex] * 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x070FF400; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400400; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x7C07C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = (u32) sp80; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01020040; _g->words.w1 = (u32) arg0->unk30.matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01000040; _g->words.w1 = (u32) D_80156614; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x0400103F; _g->words.w1 = (u32) D_800D4830; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB1060402; _g->words.w1 = 0x60200; } ; } } } while (0);
 }
 
 void func_8004E3BC(RaceItemEffectActor *arg0) {
@@ -520,7 +520,7 @@ void func_8004E960(RaceItemEffectActor *arg0) {
 void func_8004E9D0(RaceItemEffectActor *arg0) {
     arg0->unk30.screen.x = 0xF0;
     arg0->unk30.screen.y = 0x10;
-    func_80045990(getMemoryBlockBase(D_8011216C), arg0->unk34.shorts.state.ubyte, &arg0->unk2C, &arg0->unk28.word);
+    func_80045990(getRelocatableHeapBlockBase(D_8011216C), arg0->unk34.shorts.state.ubyte, &arg0->unk2C, &arg0->unk28.word);
     setCallbackTaskCallback(arg0, func_8004E960);
 }
 
@@ -557,7 +557,7 @@ void func_8004EAA8(RaceItemEffectActor *arg0) {
 
         do {
             if (arg0->unk30.matrix != NULL) {
-                func_80045990(getMemoryBlockBase(D_80112168),
+                func_80045990(getRelocatableHeapBlockBase(D_80112168),
                               (u16)(((s8)arg0->unk34.shorts.height.byte >> 1) + 0x36),
                               &sp7C, &sp78);
 
@@ -700,7 +700,7 @@ void func_8004F3FC(RaceItemEffectActor *arg0) {
 
     arg0->unk38.width = 0xFF;
     arg0->unk30.screen.y = randomNextMain() & 3;
-    func_80045990(getMemoryBlockBase(D_80112168), D_800D46F8[arg0->playerIndex], &arg0->image, &arg0->palette);
+    func_80045990(getRelocatableHeapBlockBase(D_80112168), D_800D46F8[arg0->playerIndex], &arg0->image, &arg0->palette);
 
     player = &D_80121D80[arg0->followPlayerIndex];
     arg0->payload.vec.x = player->pos.x;
@@ -769,7 +769,7 @@ void func_8004F68C(RaceItemEffectActor *arg0) {
         }
 
         if (arg0->unk24.velocityX != 0) {
-            func_80045990(getMemoryBlockBase(D_80112168),
+            func_80045990(getRelocatableHeapBlockBase(D_80112168),
                           ((s8)arg0->unk28.bytes.phase >> 1) + 0x2F,
                           &sp74, &sp70);
 
@@ -841,7 +841,7 @@ void func_8004FB44(RaceItemFollowActor *arg0) {
             arg0->matrix2 = allocFixedTransformMatrix(&sp90);
         }
         if (arg0->matrix2 != NULL) {
-            func_80045990(getMemoryBlockBase(D_80112168), (u16)((((s8)arg0->timer) >> 2) + 0x39), &sp8C, &sp88);
+            func_80045990(getRelocatableHeapBlockBase(D_80112168), (u16)((((s8)arg0->timer) >> 2) + 0x39), &sp8C, &sp88);
 
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)D_800D6270);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)sp8C);
@@ -921,19 +921,19 @@ void func_8005019C(RaceItemEffectActor *arg0) {
     if ((u8)arg0->payload.sprite.colorR == gCurrentViewportIndex) {
         if ((u8)arg0->payload.sprite.colorG == 0) {
             if ((u8)arg0->payload.sprite.colorB == 0) {
-                func_80046D68(arg0->payload.sprite.x, arg0->payload.sprite.y, getMemoryBlockBase(D_8011216E),
+                func_80046D68(arg0->payload.sprite.x, arg0->payload.sprite.y, getRelocatableHeapBlockBase(D_8011216E),
                               ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF, 0x1D);
             } else {
-                func_80046D68(arg0->payload.sprite.x, arg0->payload.sprite.y, getMemoryBlockBase(D_8011216E),
+                func_80046D68(arg0->payload.sprite.x, arg0->payload.sprite.y, getRelocatableHeapBlockBase(D_8011216E),
                               ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF, 0x1E);
             }
         } else if ((u8)arg0->payload.sprite.colorB == 0) {
             func_8004767C((s16)(arg0->payload.sprite.x - 8), (s16)(arg0->payload.sprite.y - 8),
-                          getMemoryBlockBase(D_8011216E), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
+                          getRelocatableHeapBlockBase(D_8011216E), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
                           0x1D, 1);
         } else {
             func_8004767C((s16)(arg0->payload.sprite.x - 8), (s16)(arg0->payload.sprite.y - 8),
-                          getMemoryBlockBase(D_8011216E), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
+                          getRelocatableHeapBlockBase(D_8011216E), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
                           0x1E, 1);
         }
     }
@@ -1082,7 +1082,7 @@ void func_800508D0(RaceItemEffectActor *arg0) {
     var_s4 = &D_80112130;
     if (1 != 0) {
     }
-    do { var_s0 = D_800D46F8; if (1) { } var_s6 = arg0; actor = var_s6; { } var_s1 = 0; var_s2 = &actor->payload.vec.x; var_s3 = &actor->unk28.word; if (1) { } arg0 = arg0; if (arg0 && arg0) { } var_s5 = 0x10; if (1) { } new_var = func_80050888; callbackActor = actor; do { func_80045990((0, getMemoryBlockBase((new_var2 = var_s4)->itemTextureHandle)), *var_s0, var_s2, var_s3); var_s1 += 4; var_s0++; var_s2++; var_s3++; } while (var_s1 != var_s5); } while (0);
+    do { var_s0 = D_800D46F8; if (1) { } var_s6 = arg0; actor = var_s6; { } var_s1 = 0; var_s2 = &actor->payload.vec.x; var_s3 = &actor->unk28.word; if (1) { } arg0 = arg0; if (arg0 && arg0) { } var_s5 = 0x10; if (1) { } new_var = func_80050888; callbackActor = actor; do { func_80045990((0, getRelocatableHeapBlockBase((new_var2 = var_s4)->itemTextureHandle)), *var_s0, var_s2, var_s3); var_s1 += 4; var_s0++; var_s2++; var_s3++; } while (var_s1 != var_s5); } while (0);
 
     func_80050888(callbackActor);
     setCallbackTaskCallback(callbackActor, new_var);
@@ -1111,7 +1111,7 @@ void func_8005098C(RaceItemFollowActor *arg0) {
             arg0->matrix2 = allocFixedTransformMatrix(&sp98);
         }
         if (arg0->matrix2 != NULL) {
-            func_800459D4((u8 *)getMemoryBlockBase(D_80112168), (u16)((((s8)arg0->timer) >> 2) + 0x39), 0x12, &sp94, &sp90);
+            func_800459D4((u8 *)getRelocatableHeapBlockBase(D_80112168), (u16)((((s8)arg0->timer) >> 2) + 0x39), 0x12, &sp94, &sp90);
 
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)D_800D6270);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)sp94);
