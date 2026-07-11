@@ -40,10 +40,6 @@ typedef struct {
     /* 0x08 */ s32 z;
 } Vec3i;
 
-typedef struct {
-    /* 0x00 */ s8 value;
-} MainMenuFlagByte;
-
 typedef void (*CallbackTaskCallback)(void *);
 
 extern void releaseMenuAssetHandles(void);
@@ -66,11 +62,6 @@ extern u16 gEndingSequencePhase;
 extern s8 gEndingActorHandshakeState;
 extern u8 gEndingCreditsTransitionSnowboardIconSpinStep;
 extern s16 gEndingCreditsTransitionSnowboardIconAngle;
-extern MainMenuFlagByte gEndingCreditsCharacterEffectDoneFlags[];
-extern s8 gEndingNancyEffectDone;
-extern s8 gEndingJamEffectDone;
-extern s8 gEndingLindaEffectDone;
-extern s8 gEndingTommyEffectDone;
 extern Vec3i gMenuCameraTargetOffset;
 extern s16 gAssetHandles[];
 extern MenuCameraObject D_801121E0;
@@ -103,11 +94,11 @@ void initEndingCreditsTransition(void) {
     gEndingActorHandshakeState = 0;
     gEndingCreditsTransitionSnowboardIconAngle = 0;
     gEndingCreditsTransitionSnowboardIconSpinStep = 0;
-    gEndingCreditsCharacterEffectDoneFlags[0].value = 0;
-    gEndingCreditsCharacterEffectDoneFlags[2].value = 0;
-    gEndingCreditsCharacterEffectDoneFlags[3].value = 0;
-    gEndingCreditsCharacterEffectDoneFlags[4].value = 0;
-    gEndingCreditsCharacterEffectDoneFlags[1].value = 0;
+    gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_SLASH] = 0;
+    gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_JAM] = 0;
+    gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_LINDA] = 0;
+    gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_TOMMY] = 0;
+    gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_NANCY] = 0;
     loadCompressedRomAsset(D_608560, D_609AA0, 0x21);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
     loadCompressedRomAsset(D_609AA0, D_60ECB0, 0x26);

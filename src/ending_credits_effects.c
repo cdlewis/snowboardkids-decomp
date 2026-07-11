@@ -68,7 +68,6 @@ extern s16 gMenuPanelTilemapAssetHandle;
 extern u16 gEndingSequencePhase;
 extern u8 gEndingCreditsTransitionSnowboardIconSpinStep;
 extern s16 gEndingCreditsTransitionSnowboardIconAngle;
-extern u8 gEndingCreditsCharacterEffectDoneFlags[];
 extern u16 gEndingCreditsTransitionSnowboardIconExpandFrameCounter;
 extern u16 gEndingCreditsNancyRunDustFrameOffsets[];
 extern u16 gEndingCreditsTommySnowmanEntranceFrameOffsets[];
@@ -384,7 +383,7 @@ void updateEndingCreditsCharacterAura(EndingCreditsEffectActor *arg0) {
             arg0->effectFrame = 0;
         }
     }
-    if (gEndingCreditsCharacterEffectDoneFlags[arg0->characterId] == 0) {
+    if (gEndingCreditsCharacterAuraDoneFlags[arg0->characterId] == 0) {
         addRenderCallback(&gMenuRenderCallbackList, drawEndingCreditsCharacterAura, arg0);
         return;
     }
