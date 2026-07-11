@@ -4414,15 +4414,15 @@ void func_80095300(RaceInputPlayer *player) {
     D_800DECE8[player->updateState](player);
 }
 
-// func_80095338 best match: 93.327% (nonmatchings/func_80095338-7273315160691878794/base.c)
+// func_80095338 best match: 95.401% (nonmatchings/func_80095338-731940616440357983/base_26.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095338.s")
 
 #ifdef NON_MATCHING
 void func_80095338(RaceInputPlayer *player) {
+    s16 savedAngle;
     s16 angleDelta;
     s16 angleStep;
-    s16 savedAngle;
     s16 updateTimer;
     s32 temp_a1;
     s32 tempX;
@@ -4455,8 +4455,10 @@ void func_80095338(RaceInputPlayer *player) {
     if (temp_a1 != 0) {
         angleStep = angleDelta / temp_a1;
         player->facingAngle += angleStep;
-        tempX = player->posX;
         tempZ = player->posZ;
+        if (temp_a1) {
+        }
+        tempX = player->posX;
         player->posX = tempX + ((D_800B9540[D_80121B50].unk18 - tempX) / temp_a1);
         player->posZ = tempZ + ((D_800B9540[D_80121B50].unk1C - tempZ) / temp_a1);
     }
@@ -4465,10 +4467,10 @@ void func_80095338(RaceInputPlayer *player) {
     player->stateTimer = timer;
     if (timer == 0) {
         player->posX = D_800B9540[D_80121B50].unk18;
+        player->posZ = D_800B9540[D_80121B50].unk1C;
         player->updateState++;
         player->updateTimer = 0;
         player->stateTimer = 0;
-        player->posZ = D_800B9540[D_80121B50].unk1C;
         func_80081E40(player, 5);
         func_8006D520((u16) player->playerIndex, 3);
     }
