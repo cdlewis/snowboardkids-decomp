@@ -109,6 +109,7 @@ extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSel
 extern void func_80023880(CourseSelectCoursePreviewActor *);
 extern s32 func_8004885C(FixedTransform *);
 extern void func_80025AA8(CourseSelectWidgetActor *);
+void func_80026C4C(CourseSelectWidgetActor *);
 extern s8 D_800ECA2F[][0x78F8];
 extern s8 D_800EC9C0;
 extern u8 D_800EC9C2;
@@ -1516,7 +1517,73 @@ void func_80026C4C(CourseSelectWidgetActor *arg0) {
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_800271CC.s")
+void func_800271CC(CourseSelectWidgetActor *arg0) {
+    s32 screenState;
+    s32 temp_a0;
+
+    temp_a0 = 3;
+    screenState = D_801235B8->screenState;
+    if (screenState == 1) {
+        arg0->pad18_2[6] = 2;
+        screenState = D_801235B8->screenState;
+    }
+    if ((temp_a0 == screenState) && (arg0->pad18_2[6] < 5)) {
+        arg0->pad18_2[6] = 5;
+    }
+
+    switch (arg0->pad18_2[6]) {
+    case 0:
+        arg0->coordinates[2] += 0x26;
+        if (arg0->coordinates[2] >= 0x100) {
+            arg0->coordinates[2] = 0x100;
+            arg0->pad18_2[6] = 1;
+        }
+        break;
+    case 1:
+        if (D_80121D88 == temp_a0) {
+            arg0->pad18_2[6] = 2;
+        }
+        break;
+    case 2:
+        arg0->coordinates[0] -= 0x20;
+        if (arg0->coordinates[0] < -0xFF) {
+            if (D_801235B8->screenState != 0) {
+                arg0->pad18_2[6] = 4;
+            } else {
+                arg0->pad18_2[6] = 3;
+            }
+        }
+        break;
+    case 4:
+        if (D_801235B8->screenState == 9) {
+            arg0->pad18_2[6] = 3;
+        }
+        break;
+    case 5:
+        arg0->coordinates[0] += 0x20;
+        if (arg0->coordinates[0] >= -0x84) {
+            arg0->coordinates[0] = -0x84;
+            arg0->pad18_2[6] = 6;
+        }
+        break;
+    case 6:
+        if (D_801235B8->screenState == 4) {
+            arg0->pad18_2[6] = 1;
+        }
+        break;
+    }
+
+    if (D_80121D88 == 0) {
+        arg0->pad18_2[8] = 0;
+    }
+
+    if (arg0->pad18_2[6] == temp_a0) {
+        func_800716E4((EffectTask *)arg0);
+        func_800291F0(6);
+        return;
+    }
+    func_800483FC(&D_80124868, func_80026C4C, arg0);
+}
 
 void func_800273C4(CourseSelectWidgetActor *arg0) {
     arg0->x = -0x84;
