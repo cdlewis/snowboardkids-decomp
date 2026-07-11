@@ -9,7 +9,7 @@
 #include "snowboard_trail_effects.h"
 #include "race_ui_effects.h"
 
-// updateItemUseTrigger best match: 98.406% (nonmatchings/func_800849E0-7273315160691878794/base_6.c)
+// updateItemUseTrigger best match: 98.537% (nonmatchings/func_800849E0-731940616440357983/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_triggers/updateItemUseTrigger.s")
 
 typedef void (*EffectCallback)(void *);
@@ -21,7 +21,9 @@ extern RaceInputPlayer D_801235B0;
 
 #ifdef NON_MATCHING
 void updateItemUseTrigger(RaceInputPlayer *player) {
-    s32 trigger;
+    struct TriggerSlot { s32 pad0; s32 pad1; s32 pad2; s32 trigger; } triggerSlot;
+    volatile s32 dummy;
+#define trigger triggerSlot.trigger
     RaceInputPlayer *otherPlayer;
     s32 deltaX;
     s32 deltaZ;
@@ -107,6 +109,7 @@ void updateItemUseTrigger(RaceInputPlayer *player) {
             }
         }
     }
+#undef trigger
 }
 #endif
 
