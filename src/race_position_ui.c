@@ -106,9 +106,9 @@ static void racePositionUiLoadAssetTexture(void *asset, u16 textureIndex, u32 se
     void *palette;
 
     racePositionUiAppendGfx(0xE7000000, 0);
-    racePositionUiAppendGfx(0xBC000806, (u32)func_80043040(D_80112148));
+    racePositionUiAppendGfx(0xBC000806, (u32)getMemoryBlockBase(D_80112148));
     racePositionUiAppendGfx(0x01020040, (u32)asset);
-    func_80045990((void *)func_80043040(D_8011214A), textureIndex, &image, &palette);
+    func_80045990((void *)getMemoryBlockBase(D_8011214A), textureIndex, &image, &palette);
     racePositionUiAppendGfx(0xFD500000, (u32)image);
     racePositionUiAppendGfx(0xF5500000, 0x07080200);
     racePositionUiAppendGfx(0xE6000000, 0);
@@ -129,8 +129,8 @@ static void racePositionUiDrawParts(RacePositionUiPlayer *player, u32 *textures[
     s32 i;
 
     racePositionUiAppendGfx(0xE7000000, 0);
-    racePositionUiAppendGfx(0xBC000806, (u32)func_80043040(D_80112130[player->playerIndex + 0xE]));
-    racePositionUiAppendGfx(0xBC000C06, (u32)func_80043040(D_80112130[player->playerIndex + 0x12]));
+    racePositionUiAppendGfx(0xBC000806, (u32)getMemoryBlockBase(D_80112130[player->playerIndex + 0xE]));
+    racePositionUiAppendGfx(0xBC000C06, (u32)getMemoryBlockBase(D_80112130[player->playerIndex + 0x12]));
 
     for (i = 0; i < RACE_POSITION_UI_PART_COUNT; i++) {
         racePositionUiAppendGfx(0x01020040, (u32)player->partVtx[i + 1]);
@@ -210,10 +210,10 @@ void func_8007C130(void *asset, s16 dlIndex, s16 textureIndex) {
     void *palette;
 
     gDPPipeSync(gRegionAllocPtr++);
-    gSPSegment(gRegionAllocPtr++, 2, func_80043040(D_80112148));
+    gSPSegment(gRegionAllocPtr++, 2, getMemoryBlockBase(D_80112148));
     gSPMatrix(gRegionAllocPtr++, (Mtx *)asset, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-    func_80045990((void *)func_80043040(D_8011214A), textureIndex, &image, &palette);
+    func_80045990((void *)getMemoryBlockBase(D_8011214A), textureIndex, &image, &palette);
 
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
@@ -225,9 +225,9 @@ void func_8007C38C(void *asset, s16 dlIndex, s16 textureIndex) {
     void *palette;
 
     gDPPipeSync(gRegionAllocPtr++);
-    gSPSegment(gRegionAllocPtr++, 2, func_80043040(D_80112148));
+    gSPSegment(gRegionAllocPtr++, 2, getMemoryBlockBase(D_80112148));
     gSPMatrix(gRegionAllocPtr++, (Mtx *)asset, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    func_80045990((void *)func_80043040(D_8011214A), textureIndex, &image, &palette);
+    func_80045990((void *)getMemoryBlockBase(D_8011214A), textureIndex, &image, &palette);
 
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
@@ -278,8 +278,8 @@ void func_8007C5E8(RacePositionUiPlayer *player) {
 
     if ((drawPlayer->flags & RACE_POSITION_UI_FLAG_HIDE_MESHES) == 0) {
         gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 2, func_80043040(D_80112130[drawPlayer->playerIndex + 0xE]));
-        gSPSegment(gRegionAllocPtr++, 3, func_80043040(D_80112130[drawPlayer->playerIndex + 0x12]));
+        gSPSegment(gRegionAllocPtr++, 2, getMemoryBlockBase(D_80112130[drawPlayer->playerIndex + 0xE]));
+        gSPSegment(gRegionAllocPtr++, 3, getMemoryBlockBase(D_80112130[drawPlayer->playerIndex + 0x12]));
 
         gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_800DE110[drawPlayer->textureSet]);
@@ -358,9 +358,9 @@ void func_8007CBC0(RacePositionUiPlayer *player) {
 
     if ((player->flags & RACE_POSITION_UI_FLAG_HIDE_MESHES) == 0) {
         gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 2, func_80043040(D_80112130[player->playerIndex + 0xE]));
+        gSPSegment(gRegionAllocPtr++, 2, getMemoryBlockBase(D_80112130[player->playerIndex + 0xE]));
         segmentGfx = gRegionAllocPtr++;
-        gSPSegment(segmentGfx, 3, func_80043040(D_80112130[player->playerIndex + 0x12]));
+        gSPSegment(segmentGfx, 3, getMemoryBlockBase(D_80112130[player->playerIndex + 0x12]));
         gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_800DE248[player->textureSet]);
         gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[2], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);

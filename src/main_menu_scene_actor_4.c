@@ -25,7 +25,7 @@ typedef struct {
     /* 0x1C */ s32 z;
 } GfxCommandSource;
 
-extern s32 func_80043040(s16 arg0);
+extern s32 getMemoryBlockBase(s16 arg0);
 extern void func_80045990(s32 arg0, s32 arg1, void **arg2, void **arg3);
 extern Mtx *func_8004885C(GfxCommandSource *arg0);
 extern MainMenuSceneActorShadow D_8010B1C0;
@@ -424,7 +424,7 @@ void func_80037070(MainMenuSceneActorShadow *arg0) {
     gfx->words.w0 = 0x06000000;
     gfx->words.w1 = (u32)D_800D6270;
 
-    func_80045990(func_80043040(gMenuCommonSpritesAssetHandle), 0x31, &sp74, &sp70);
+    func_80045990(getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x31, &sp74, &sp70);
 
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;

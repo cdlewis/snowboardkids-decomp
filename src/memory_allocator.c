@@ -224,7 +224,7 @@ s32 func_80042EE4(s32 arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/memory_allocator/func_80042FA0.s")
 
-s32 func_80043040(s32 arg0) {
+s32 getMemoryBlockBase(s32 arg0) {
     return (s32) D_801101A0[arg0].start;
 }
 

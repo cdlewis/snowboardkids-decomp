@@ -1263,7 +1263,7 @@ extern s16 D_8011213C;
 extern s16 D_801121B2;
 
 void func_80047E38(void) {
-    s32 v0 = func_80043040(D_8011213C);
+    s32 v0 = getMemoryBlockBase(D_8011213C);
     AssetTable *assetTable = (AssetTable *)v0;
 
     D_801121B4 = (void *)((assetTable->entryCount * sizeof(AssetTableEntry)) + (u8 *)assetTable + sizeof(AssetTableEntry));
@@ -1288,7 +1288,7 @@ void func_80047E88(s16 x, s16 y, s32 ch, u16 arg3) {
         tile = chByte - 0x40;
 
         if (D_801121B2 != 0) {
-            font = (FontTexture *)func_80043040(D_8011213C);
+            font = (FontTexture *)getMemoryBlockBase(D_8011213C);
 
             FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
                          (u32)(font->imageOffset + (u8 *)font));
@@ -1314,7 +1314,7 @@ void func_80047E88(s16 x, s16 y, s32 ch, u16 arg3) {
 
     tile = chByte - 0x20;
     if (D_801121B2 != 0) {
-        font = (FontTexture *)func_80043040(D_8011213C);
+        font = (FontTexture *)getMemoryBlockBase(D_8011213C);
 
         FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
                      (u32)(font->imageOffset + (u8 *)font));
@@ -1385,7 +1385,7 @@ void func_80048338(void) {
 }
 
 void resetRenderScratchAllocator(void) {
-    D_801121B8 = func_80043040(D_80112130);
+    D_801121B8 = getMemoryBlockBase(D_80112130);
 }
 
 void *func_80048388(s32 arg0) {
@@ -1396,7 +1396,7 @@ void *func_80048388(s32 arg0) {
     s32 temp_a0;
 
     sp1C = D_801121B8;
-    base = func_80043040(D_80112130);
+    base = getMemoryBlockBase(D_80112130);
     new_var2 = &temp_a0;
     temp_a0 = D_801121B8 + ((((u32)(arg0 + 3)) >> 2) * 4);
     new_var = (u32)(*new_var2 - base);
@@ -1450,9 +1450,9 @@ extern u8 *D_801121BC;
 void func_80048524(s32 arg0) {
     D_80123754 = 0;
     if (arg0 == 0) {
-        D_801121BC = D_801121C0 = func_80043040(D_80112132);
+        D_801121BC = D_801121C0 = getMemoryBlockBase(D_80112132);
     } else {
-        D_801121BC = D_801121C0 = func_80043040(D_80112134);
+        D_801121BC = D_801121C0 = getMemoryBlockBase(D_80112134);
     }
 }
 
@@ -1482,9 +1482,9 @@ extern void osWritebackDCache(void *, s32);
 
 void func_800485E8(s32 arg0) {
     if (arg0 == 0) {
-        osWritebackDCache((void *)func_80043040(D_80112132), D_80123754);
+        osWritebackDCache((void *)getMemoryBlockBase(D_80112132), D_80123754);
     } else {
-        osWritebackDCache((void *)func_80043040(D_80112134), D_80123754);
+        osWritebackDCache((void *)getMemoryBlockBase(D_80112134), D_80123754);
     }
 }
 

@@ -249,7 +249,7 @@ void func_80041A20(void) {
         }
     }
 
-    model = (u8 *)func_80043040(D_8011213E);
+    model = (u8 *)getMemoryBlockBase(D_8011213E);
     *(s32 *)&model[0] = 0;
     *(s32 *)&model[4] = *(s16 *)&dst[0];
     model[8] = 1;
@@ -291,7 +291,7 @@ void func_80041D20(s32 actorIndex, s32 modelIndex) {
     loadCompressedRomAsset((void *)MAIN_MENU_MODEL_ASSET_RANGE_START(gCharacterTextureAssetRanges, modelIndex),
                   (void *)MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterTextureAssetRanges, modelIndex), actorIndex + 0x39);
     D_80112130.modelInstanceHandles[actorIndex] = func_80042D58(sizeof(MainMenuSceneModel));
-    model = (MainMenuSceneModel *)func_80043040(D_80112130.modelInstanceHandles[actorIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(D_80112130.modelInstanceHandles[actorIndex]);
     model->actorIndex = actorIndex;
     model->modelIndex = modelIndex;
     func_80042AB4(model);
@@ -303,9 +303,9 @@ void func_80041DD4(s32 modelIndex, s32 animationIndex) {
     MainMenuSceneModel *model;
     s16 frameDuration;
 
-    animationBank = (MainMenuModelAnimationBank *)func_80043040(D_801121AE);
+    animationBank = (MainMenuModelAnimationBank *)getMemoryBlockBase(D_801121AE);
     frameData = MAIN_MENU_ANIMATION_FRAME_DATA(animationBank, animationIndex);
-    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
     frameDuration = *frameData++;
     model->framesRemaining = frameDuration;
     model->animationStart = frameData;
@@ -315,7 +315,7 @@ void func_80041DD4(s32 modelIndex, s32 animationIndex) {
 }
 
 MainMenuSceneModel *func_80041E60(s32 modelIndex) {
-    return (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
+    return (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
 }
 
 void func_80041E90(MainMenuSceneModel *model) {
@@ -351,7 +351,7 @@ s32 func_80041FB4(s32 arg0) {
     MainMenuSceneModel *new_var;
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)func_80043040(D_8011218A[arg0]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[arg0]);
     if (model->framesRemaining == 1) {
         goto ret1_initial;
     }
@@ -377,7 +377,7 @@ ret0:
 void func_80042034(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
     model->framesRemaining--;
     if (model->framesRemaining <= 0) {
         model->framesRemaining = model->frameDuration;
@@ -389,7 +389,7 @@ void func_80042034(s32 modelIndex) {
 void func_8004209C(s32 modelIndex, s32 x, s32 y, s32 z) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
     model->pos.x = x;
     model->pos.y = y;
     model->pos.z = z;
@@ -398,7 +398,7 @@ void func_8004209C(s32 modelIndex, s32 x, s32 y, s32 z) {
 void func_800420FC(s32 modelIndex, s16 x, s16 y, s16 z) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
     model->rot.x = x;
     model->rot.y = y;
     model->rot.z = z;

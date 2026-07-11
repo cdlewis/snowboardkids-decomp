@@ -69,7 +69,7 @@ void func_80032654(MainMenuLogoActor *arg0) {
 }
 
 void func_80032684(MainMenuLogoActor *arg0) {
-    func_80017168((DstStruct_80017168 *)&arg0->sprite, func_80043040(D_8011217A));
+    func_80017168((DstStruct_80017168 *)&arg0->sprite, getMemoryBlockBase(D_8011217A));
     arg0->sprite.width = 0x10;
     arg0->sprite.height = 0x10;
     arg0->common.x = arg0->startX;
@@ -91,15 +91,15 @@ void func_800326EC(MainMenuSelectionLabelsActor *arg0) {
                 tile = ((i * 2) + 5) & 0xFFFF;
                 palette = 3;
             }
-            func_8000F8AC(arg0->common.x, (s16)(arg0->labelY + (i * 0x10)),
-                          func_80043040(D_80112130.menuUiTextureHandle),
+            drawMenuSpriteWithAlpha(arg0->common.x, (s16)(arg0->labelY + (i * 0x10)),
+                          getMemoryBlockBase(D_80112130.menuUiTextureHandle),
                           tile & 0xFFFF, 0x20, 0x20, 0, 0x100, palette + 1);
         }
     }
 
-    func_8000F030(-0x48, 0x4F, func_80043040(D_80112130.menuUiTextureHandle), 0xA, 0x20, 0x20, 0, 0);
-    func_80013D0C(0x68, -0x1A, "TM", 0, 0x100);
-    func_8000F030(-0x48, 0x5A, func_80043040(D_80112130.menuUiTextureHandle), 0xB, 0x20, 0x20, 0, 0);
+    drawMenuSprite(-0x48, 0x4F, getMemoryBlockBase(D_80112130.menuUiTextureHandle), 0xA, 0x20, 0x20, 0, 0);
+    drawMenuAsciiText(0x68, -0x1A, "TM", 0, 0x100);
+    drawMenuSprite(-0x48, 0x5A, getMemoryBlockBase(D_80112130.menuUiTextureHandle), 0xB, 0x20, 0x20, 0, 0);
 }
 
 void func_8003288C(MainMenuSelectionLabelsActor *arg0) {
@@ -129,9 +129,9 @@ void func_80032934(MainMenuSelectionLabelsActor *arg0) {
 }
 
 void func_80032984(MainMenuSelectionArrowActor *arg0) {
-    s32 temp = func_80043040(gMenuCommonSpritesAssetHandle);
+    s32 temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
 
-    func_8000F030(arg0->common.x, arg0->common.y, temp, 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->common.x, arg0->common.y, temp, 3, 0x20, 0x20, 0, 0);
 }
 
 void func_800329E0(MainMenuSelectionArrowActor *arg0) {

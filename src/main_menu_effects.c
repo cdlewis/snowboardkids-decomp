@@ -99,7 +99,7 @@ void func_8003CF98(MainMenuEffectActor *arg0);
 void func_8003D124(MainMenuEffectActor *arg0);
 
 void func_8003BEF0(MainMenuEffectActor *arg0) {
-    func_8000F030(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, func_80043040(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x32) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
+    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x32) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
 void func_8003BF7C(MainMenuEffectActor *arg0) {
@@ -137,11 +137,11 @@ void func_8003C0A4(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
 }
 
 void func_8003C118(MainMenuEffectActor *arg0) {
-    s32 temp = func_80043040(gMenuCommonSpritesAssetHandle);
+    s32 temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
     MainMenuEffectActor *linePosition =
         (MainMenuEffectActor *)((s32)arg0 + arg0->uFrameIndex * sizeof(arg0->linePositions[0]));
 
-    func_8000F030(linePosition->x, linePosition->offsetY, temp, 0xF, 0x20, 0x20, 0, 0);
+    drawMenuSprite(linePosition->x, linePosition->offsetY, temp, 0xF, 0x20, 0x20, 0, 0);
 }
 
 void func_8003C180(MainMenuEffectActor *arg0) {
@@ -171,7 +171,7 @@ void func_8003C208(MainMenuEffectActor *arg0) {
 }
 
 void func_8003C264(MainMenuEffectActor *arg0) {
-    func_8000F030(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, func_80043040(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x10) & 0xFFFF, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x10) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
 void func_8003C2EC(MainMenuEffectActor *arg0) {
@@ -219,7 +219,7 @@ void func_8003C484(MainMenuEffectActor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; do { w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; new_var = gfx; new_var->words.w0 = 0xFA000000; new_var->words.w1 = -0x60; } while (0); if (arg0->effectFrame != 0) { func_8000F030(arg0->offsetX, arg0->offsetY, func_80043040(gMenuCommonSpritesAssetHandle), (((0, arg0->effectFrame)) + 0x24) & 0xFFFF, 0x30, 0x20, 0, 0); } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; if (arg0->effectFrame < 0xC) { func_8000F030(arg0->offsetX, arg0->offsetY, func_80043040(gMenuCommonSpritesAssetHandle), (arg0->effectFrame + 0x25) & 0xFFFF, 0x30, 0x20, 0, 0); } func_8000F030(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 0x31, 0x20, 0x20, 0, 0); } while (0);
+    do { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; do { w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; new_var = gfx; new_var->words.w0 = 0xFA000000; new_var->words.w1 = -0x60; } while (0); if (arg0->effectFrame != 0) { drawMenuSprite(arg0->offsetX, arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), (((0, arg0->effectFrame)) + 0x24) & 0xFFFF, 0x30, 0x20, 0, 0); } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; if (arg0->effectFrame < 0xC) { drawMenuSprite(arg0->offsetX, arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), (arg0->effectFrame + 0x25) & 0xFFFF, 0x30, 0x20, 0, 0); } drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x31, 0x20, 0x20, 0, 0); } while (0);
 }
 #endif
 
@@ -271,8 +271,8 @@ void func_8003C728(MainMenuEffectActor *arg0) {
 void func_8003C77C(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = func_80043040(gMenuCommonSpritesAssetHandle);
-    func_8000F030(arg0->x, arg0->y, temp, (arg0->animFrame + 9) & 0xFFFF, 0x20, 0x20, 0, 0);
+    temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 9) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
 void func_8003C7E4(MainMenuEffectActor *arg0) {
@@ -301,8 +301,8 @@ void func_8003C870(MainMenuEffectActor *arg0) {
 }
 
 void func_8003C8AC(MainMenuEffectActor *arg0) {
-    s32 temp = func_80043040(gMenuCommonSpritesAssetHandle);
-    func_8000F030(arg0->x - 0xE, arg0->y - 0x50, temp, (u16)(D_800B9530[arg0->animFrame] + 6), 0x20, 0x20, 0, 0);
+    s32 temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    drawMenuSprite(arg0->x - 0xE, arg0->y - 0x50, temp, (u16)(D_800B9530[arg0->animFrame] + 6), 0x20, 0x20, 0, 0);
 }
 
 void func_8003C93C(MainMenuEffectActor *arg0) {
@@ -334,8 +334,8 @@ void func_8003CA44(MainMenuEffectActor *arg0) {
 void func_8003CA70(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = func_80043040(gMenuCommonSpritesAssetHandle);
-    func_8000F030(arg0->x, arg0->y, temp, (arg0->animFrame + 0x14) & 0xFFFF, 0x20, 0x20, 0, 0);
+    temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x14) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
 void func_8003CAD8(MainMenuEffectActor *arg0) {
@@ -367,7 +367,7 @@ void func_8003CB78(s16 arg0, s16 arg1) {
 }
 
 void func_8003CBCC(MainMenuEffectActor *arg0) {
-    func_8000F030(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, func_80043040(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x20) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
+    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x20) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
 void func_8003CC58(MainMenuEffectActor *arg0) {
@@ -409,8 +409,8 @@ void func_8003CD9C(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
 void func_8003CE10(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = func_80043040(gMenuCommonSpritesAssetHandle);
-    func_8000F030(arg0->x, arg0->y, temp, (arg0->animFrame + 0x20) & 0xFFFF, 0x20, 0x20, 0, 0);
+    temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x20) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
 void func_8003CE78(MainMenuEffectActor *arg0) {
@@ -440,8 +440,8 @@ void func_8003CF00(MainMenuEffectActor *arg0) {
 }
 
 void func_8003CF3C(MainMenuEffectActor *arg0) {
-    s32 temp = func_80043040(gMenuCommonSpritesAssetHandle);
-    func_8000F030(arg0->x, arg0->y, temp, arg0->animFrame, 0x20, 0x20, 0, 0);
+    s32 temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    drawMenuSprite(arg0->x, arg0->y, temp, arg0->animFrame, 0x20, 0x20, 0, 0);
 }
 
 void func_8003CF98(MainMenuEffectActor *arg0) {
@@ -480,8 +480,8 @@ void func_8003D068(s16 arg0, s16 arg1) {
 void func_8003D0BC(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = func_80043040(gMenuCommonSpritesAssetHandle);
-    func_8000F030(arg0->x, arg0->y, temp, (arg0->animFrame + 0x1C) & 0xFFFF, 0x20, 0x20, 0, 0);
+    temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x1C) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
 // func_8003D124 best match: 97.653%
@@ -533,8 +533,8 @@ void func_8003D218(s16 arg0, s16 arg1, u8 arg2) {
 void func_8003D27C(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = func_80043040(gMenuCommonSpritesAssetHandle);
-    func_8000F030(arg0->x, arg0->y, temp, (D_800B9538[arg0->animFrame] + 0x19) & 0xFFFF, 0x20, 0x20, 0, 0);
+    temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    drawMenuSprite(arg0->x, arg0->y, temp, (D_800B9538[arg0->animFrame] + 0x19) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
 void func_8003D2F4(MainMenuEffectActor *arg0) {
@@ -713,7 +713,7 @@ void func_8003D88C(MainMenuEffectActor *arg0) {
 }
 
 void func_8003D908(MainMenuEffectActor *arg0) {
-    func_80017168((DstStruct_80017168 *)arg0->spriteState, func_80043040(D_8011217C));
+    func_80017168((DstStruct_80017168 *)arg0->spriteState, getMemoryBlockBase(D_8011217C));
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;
     arg0->y = arg0->startY;
@@ -758,7 +758,7 @@ void func_8003DA98(MainMenuEffectActor *arg0) {
 }
 
 void func_8003DB1C(MainMenuEffectActor *arg0) {
-    func_80017168((DstStruct_80017168 *)arg0->spriteState, func_80043040(D_8011217C));
+    func_80017168((DstStruct_80017168 *)arg0->spriteState, getMemoryBlockBase(D_8011217C));
     arg0->angle = 0;
     arg0->angleVelocity = 0x1F0;
     arg0->x = 0x14;
@@ -818,7 +818,7 @@ void func_8003DCCC(MainMenuEffectActor *arg0) {
 }
 
 void func_8003DD64(MainMenuEffectActor *arg0) {
-    func_80017168((DstStruct_80017168 *)arg0->spriteState, func_80043040(D_8011217E));
+    func_80017168((DstStruct_80017168 *)arg0->spriteState, getMemoryBlockBase(D_8011217E));
     arg0->angle = 0;
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;

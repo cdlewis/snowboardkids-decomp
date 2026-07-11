@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "ending_sequence_tasks.h"
+#include "ending_sequence_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
@@ -11,7 +11,7 @@
 #define ENDING_SEQUENCE_TEXT_PAGE_VISIBLE_FRAMES 0x96
 #define ENDING_SEQUENCE_TEXT_PAGE_COUNT 0x19
 
-struct EndingSequenceTextPageTask {
+struct EndingSequenceTextPageActor {
     /* 0x00 */ char pad[0x1C];
     /* 0x1C */ s16 x;
     /* 0x1E */ s16 y;
@@ -21,7 +21,7 @@ struct EndingSequenceTextPageTask {
     /* 0x26 */ u8 state;
 };
 
-struct EndingSequenceSpriteDebugViewerTask {
+struct EndingSequenceSpriteDebugViewerActor {
     /* 0x00 */ char pad[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
@@ -52,16 +52,16 @@ extern void addRenderCallback(void *, void *, void *);
 extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 
-void drawEndingSequenceTextPage(EndingSequenceTextPageTask *arg0);
-void updateEndingSequenceFinalSprites(EndingSequenceTextPageTask *arg0);
-void updateEndingSequenceTextPages(EndingSequenceTextPageTask *arg0);
-void updateEndingSequenceSpriteDebugViewer(EndingSequenceSpriteDebugViewerTask *arg0);
+void drawEndingSequenceTextPage(EndingSequenceTextPageActor *arg0);
+void updateEndingSequenceFinalSprites(EndingSequenceTextPageActor *arg0);
+void updateEndingSequenceTextPages(EndingSequenceTextPageActor *arg0);
+void updateEndingSequenceSpriteDebugViewer(EndingSequenceSpriteDebugViewerActor *arg0);
 
 // drawEndingSequenceTextPage best match: 93.371%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_tasks/drawEndingSequenceTextPage.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_ui/drawEndingSequenceTextPage.s")
 
 #ifdef NON_MATCHING
-void drawEndingSequenceTextPage(EndingSequenceTextPageTask *arg0) {
+void drawEndingSequenceTextPage(EndingSequenceTextPageActor *arg0) {
     register s32 count;
     s32 i;
     s32 scriptIndex;
@@ -97,7 +97,7 @@ void drawEndingSequenceTextPage(EndingSequenceTextPageTask *arg0) {
             }
             text[lineLength] = 0xFFFF;
             scriptIndex++;
-            func_80013154((s16)x, y, (u8 *)text, 0, lineLength = arg0->alpha, colorMode);
+            drawMenuGlyphScript((s16)x, y, (u8 *)text, 0, lineLength = arg0->alpha, colorMode);
             i++;
             layoutOffset += 4;
         } while (i != layout->count);
@@ -105,13 +105,14 @@ void drawEndingSequenceTextPage(EndingSequenceTextPageTask *arg0) {
 }
 #endif
 
-void drawEndingSequenceFinalSprites(EndingSequenceTextPageTask *arg0) {
-    func_8000F8AC(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 0x35, 0x20, 0x20, 0, arg0->alpha, 0);
-    func_8000F8AC((s16)(arg0->x + 0x40), arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 0x36, 0x20, 0x20, 0,
-                  arg0->alpha, 0);
+void drawEndingSequenceFinalSprites(EndingSequenceTextPageActor *arg0) {
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x35, 0x20, 0x20, 0,
+                            arg0->alpha, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x36, 0x20,
+                            0x20, 0, arg0->alpha, 0);
 }
 
-void updateEndingSequenceFinalSprites(EndingSequenceTextPageTask *arg0) {
+void updateEndingSequenceFinalSprites(EndingSequenceTextPageActor *arg0) {
     s32 v1 = ENDING_SEQUENCE_FADE_MAX;
     s32 v0;
 
@@ -127,7 +128,7 @@ void updateEndingSequenceFinalSprites(EndingSequenceTextPageTask *arg0) {
     }
 }
 
-void updateEndingSequenceTextPages(EndingSequenceTextPageTask *arg0) {
+void updateEndingSequenceTextPages(EndingSequenceTextPageActor *arg0) {
     switch (arg0->state) {
     case 0:
         arg0->alpha += ENDING_SEQUENCE_TEXT_PAGE_FADE_STEP;
@@ -170,7 +171,7 @@ void updateEndingSequenceTextPages(EndingSequenceTextPageTask *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceTextPage, arg0);
 }
 
-void initEndingSequenceTextPageTask(EndingSequenceTextPageTask *arg0) {
+void initEndingSequenceTextPageActor(EndingSequenceTextPageActor *arg0) {
     arg0->state = 3;
     arg0->pageIndex = 0;
     arg0->x = -0x40;
@@ -179,18 +180,18 @@ void initEndingSequenceTextPageTask(EndingSequenceTextPageTask *arg0) {
     setCallbackTaskCallback(arg0, updateEndingSequenceTextPages);
 }
 
-void drawEndingSequenceSpriteDebugViewer(EndingSequenceSpriteDebugViewerTask *arg0) {
+void drawEndingSequenceSpriteDebugViewer(EndingSequenceSpriteDebugViewerActor *arg0) {
     char sp38[0x10];
 
     if (arg0->enabled == 1) {
-        func_8000F030(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), (u16)arg0->spriteId, 0x20, 0x20, arg0->palette,
-                      0);
+        drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), (u16)arg0->spriteId, 0x20, 0x20, arg0->palette,
+                       0);
         sprintf(sp38, "ENDOBJ %2d \n", arg0->spriteId);
-        func_80013D0C(0x40, -0x66, sp38, 0, 0x100);
+        drawMenuAsciiText(0x40, -0x66, sp38, 0, 0x100);
     }
 }
 
-void updateEndingSequenceSpriteDebugViewer(EndingSequenceSpriteDebugViewerTask *arg0) {
+void updateEndingSequenceSpriteDebugViewer(EndingSequenceSpriteDebugViewerActor *arg0) {
     s16 temp_a1;
     s16 temp_a2;
     s16 oldY;
@@ -248,7 +249,7 @@ void updateEndingSequenceSpriteDebugViewer(EndingSequenceSpriteDebugViewerTask *
     addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceSpriteDebugViewer, arg0);
 }
 
-void initEndingSequenceSpriteDebugViewerTask(EndingSequenceSpriteDebugViewerTask *arg0) {
+void initEndingSequenceSpriteDebugViewerActor(EndingSequenceSpriteDebugViewerActor *arg0) {
     arg0->x = 0;
     arg0->y = 0;
     arg0->spriteId = 0;

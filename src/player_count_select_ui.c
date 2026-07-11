@@ -69,7 +69,7 @@ void func_80029200(PlayerCountSelectRowActor *arg0) {
     PlayerCountSelectRowActor *row;
 
     savedArg = arg0;
- do { i = 0; if (arg0->playerCount > 0) { yOffset = 0; row = arg0; do { alpha = 0; if (((((D_800EC9C1 > 0) && (D_800EC9C1 < 8)) && (D_8010ADF8 == 0)) && (i == D_80121B5E)) && (D_800EC9C1 & 1)) { if ((!savedArg->playerCount) && (!savedArg->playerCount)) { } alpha = 0xFF; } func_8000F030(row->iconX[0], (s16) (arg0->iconY + yOffset), func_80043040(D_80112130.textureHandle), (i + 0xD) & 0xFFFF, 0x20, 0x20, 0, alpha); i++; yOffset += 0x18; row = (PlayerCountSelectRowActor *) (((u8 *) row) + 2); } while (i < savedArg->playerCount); } } while (0);
+ do { i = 0; if (arg0->playerCount > 0) { yOffset = 0; row = arg0; do { alpha = 0; if (((((D_800EC9C1 > 0) && (D_800EC9C1 < 8)) && (D_8010ADF8 == 0)) && (i == D_80121B5E)) && (D_800EC9C1 & 1)) { if ((!savedArg->playerCount) && (!savedArg->playerCount)) { } alpha = 0xFF; } drawMenuSprite(row->iconX[0], (s16) (arg0->iconY + yOffset), getMemoryBlockBase(D_80112130.textureHandle), (i + 0xD) & 0xFFFF, 0x20, 0x20, 0, alpha); i++; yOffset += 0x18; row = (PlayerCountSelectRowActor *) (((u8 *) row) + 2); } while (i < savedArg->playerCount); } } while (0);
 }
 
 void func_80029344(PlayerCountSelectRowActor *arg0) {
@@ -156,10 +156,10 @@ void func_80029548(PlayerCountSelectRowActor *arg0) {
 }
 
 void func_80029598(PlayerCountSelectWidgetActor *arg0) {
-    func_8000F030(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
-    func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
-    func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(gMenuCommonSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
-    func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(gMenuCommonSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
 }
 
 void func_800296D8(PlayerCountSelectWidgetActor *arg0) {
@@ -216,7 +216,7 @@ void func_8002980C(PlayerCountSelectWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_80011264((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      func_80043040(D_80112130.frameTextureHandle),
+                      getMemoryBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->widget.counter].center[tileOffset], 0, 0x100);
     }
 
@@ -227,11 +227,11 @@ void func_8002980C(PlayerCountSelectWidgetActor *arg0) {
     offset = 0;
     do {
         func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      func_80043040(D_80112130.frameTextureHandle),
+                      getMemoryBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->widget.counter].right[tileOffset], 0, 0x100);
         i = 0x80;
         func_80011264((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      func_80043040(D_80112130.frameTextureHandle),
+                      getMemoryBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->widget.counter].bottom[tileOffset], 0, 0x100);
         offset += 0x40;
         tileOffset++;
@@ -239,28 +239,28 @@ void func_8002980C(PlayerCountSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.frameTextureHandle),
+    func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130.frameTextureHandle),
                   D_800B70F0.frames[(u16)arg0->widget.counter].corner, 0, 0x100);
 
-    func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y - 4), func_80043040(D_80112130.textureHandle), 0x33, 0x20,
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getMemoryBlockBase(D_80112130.textureHandle), 0x33, 0x20,
                   0x20, 0, 0);
-    func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), func_80043040(D_80112130.textureHandle), 0x38, 0x20,
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getMemoryBlockBase(D_80112130.textureHandle), 0x38, 0x20,
                   0x20, 0, 0);
-    func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), func_80043040(D_80112130.textureHandle), 0x35, 0x20,
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), getMemoryBlockBase(D_80112130.textureHandle), 0x35, 0x20,
                   0x20, 0, 0);
     if (offset && offset) {
     }
-    func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), func_80043040(D_80112130.textureHandle), 0x3A,
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getMemoryBlockBase(D_80112130.textureHandle), 0x3A,
                   0x20, 0x20, 0, 0);
 
     for (offset = 0; (offset ^ 0) != 0x80; offset += 0x10) {
-        func_8000F030((s16)((arg0->x + offset) + 0xC), (s16)(arg0->y - 4), func_80043040(D_80112130.textureHandle),
+        drawMenuSprite((s16)((arg0->x + offset) + 0xC), (s16)(arg0->y - 4), getMemoryBlockBase(D_80112130.textureHandle),
                       0x34, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)((arg0->x + offset) + 0xC), (s16)(arg0->y + 0x8C), func_80043040(D_80112130.textureHandle),
+        drawMenuSprite((s16)((arg0->x + offset) + 0xC), (s16)(arg0->y + 0x8C), getMemoryBlockBase(D_80112130.textureHandle),
                       0x39, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->x - 4), (s16)((arg0->y + offset) + 0xC), func_80043040(D_80112130.textureHandle),
+        drawMenuSprite((s16)(arg0->x - 4), (s16)((arg0->y + offset) + 0xC), getMemoryBlockBase(D_80112130.textureHandle),
                       0x36, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->x + 0x8C), (s16)((arg0->y + offset) + 0xC), func_80043040(D_80112130.textureHandle),
+        drawMenuSprite((s16)(arg0->x + 0x8C), (s16)((arg0->y + offset) + 0xC), getMemoryBlockBase(D_80112130.textureHandle),
                       0x37, 0x20, 0x20, 0, 0);
     }
 }
@@ -364,7 +364,7 @@ void func_8002A008(PlayerCountSelectWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      func_80043040(D_80112130.frameTextureHandle),
+                      getMemoryBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->sprite.spriteIndex].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -374,9 +374,9 @@ void func_8002A008(PlayerCountSelectWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), func_80043040(D_80112130.frameTextureHandle),
+        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getMemoryBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->sprite.spriteIndex].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), func_80043040(D_80112130.frameTextureHandle),
+        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->sprite.spriteIndex].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -385,7 +385,7 @@ void func_8002A008(PlayerCountSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130.frameTextureHandle),
+    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130.frameTextureHandle),
                   D_800B70F0.frames[(u16)arg0->sprite.spriteIndex].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -469,7 +469,7 @@ void func_8002A49C(PlayerCountSelectWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5),
-                      func_80043040(D_80112130.frameTextureHandle),
+                      getMemoryBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.entries[(u16)arg0->sprite.spriteIndex].center[tileOffset], 0, 0x100, 0xA0,
                       0x49);
     }
@@ -481,11 +481,11 @@ void func_8002A49C(PlayerCountSelectWidgetActor *arg0) {
     offset = 0;
     do {
         func_800112F4(arg0->x + 0x80, arg0->y + offset,
-                      func_80043040(D_80112130.frameTextureHandle),
+                      getMemoryBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.entries[(u16)arg0->sprite.spriteIndex].right[tileOffset], 0, 0x100, 0xA0,
                       0x49);
         func_800112F4(arg0->x + offset, arg0->y + 0x80,
-                      func_80043040(D_80112130.frameTextureHandle),
+                      getMemoryBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.entries[(u16)arg0->sprite.spriteIndex].bottom[tileOffset], 0, 0x100, 0xA0,
                       0x49);
         i = 0x80;
@@ -496,7 +496,7 @@ void func_8002A49C(PlayerCountSelectWidgetActor *arg0) {
     i--;
 
     func_800112F4(arg0->x + 0x80, arg0->y + 0x80,
-                  func_80043040(D_80112130.frameTextureHandle),
+                  getMemoryBlockBase(D_80112130.frameTextureHandle),
                   D_800B70F0.entries[(u16)arg0->sprite.spriteIndex].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -579,16 +579,16 @@ void func_8002A930(PlayerCountSelectWidgetActor *arg0) {
     tileMap = (PlayerCountSelectPaddedFrameTileMapTable *)&D_800B70F0;
     tileOffset = 0;
     for (i = 0; i < 16; i++, tileOffset++) {
-        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), func_80043040(D_80112130.textureHandle),
+        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getMemoryBlockBase(D_80112130.textureHandle),
                       tileMap->selected.center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     tileMap = (PlayerCountSelectPaddedFrameTileMapTable *)&D_800B70F0;
     tileOffset = 0;
     offset = 0; i = 0x80; do {
-        func_800112F4(arg0->x + 0x80, arg0->y + offset, func_80043040(D_80112130.textureHandle),
+        func_800112F4(arg0->x + 0x80, arg0->y + offset, getMemoryBlockBase(D_80112130.textureHandle),
                       tileMap->selected.right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        func_800112F4(arg0->x + offset, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
+        func_800112F4(arg0->x + offset, arg0->y + 0x80, getMemoryBlockBase(D_80112130.textureHandle),
                       tileMap->selected.bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -597,7 +597,7 @@ void func_8002A930(PlayerCountSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4(arg0->x + 0x80, arg0->y + 0x80, func_80043040(D_80112130.textureHandle),
+    func_800112F4(arg0->x + 0x80, arg0->y + 0x80, getMemoryBlockBase(D_80112130.textureHandle),
                   D_800B7196, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -689,7 +689,7 @@ void func_8002AD74(PlayerCountSelectWidgetActor *arg0) {
 }
 
 void func_8002ADB8(PlayerCountSelectWidgetActor *arg0) {
-    func_8000F8AC(arg0->x, (s16)(arg0->y + (D_80121B5E * 0x18)), func_80043040(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (D_80121B5E * 0x18)), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
 void func_8002AE3C(PlayerCountSelectWidgetActor *arg0) {
@@ -763,7 +763,7 @@ void func_8002AFB8(PlayerCountSelectWidgetActor *arg0) {
 void func_8002AFF8(PlayerCountSelectWidgetActor *arg0) {
     PlayerCountPortrait *portrait = &D_800B7198[D_80121B5E];
 
-    func_80013154(arg0->x, arg0->y, *portrait, 1, arg0->sprite.spriteIndex, 0);
+    drawMenuGlyphScript(arg0->x, arg0->y, *portrait, 1, arg0->sprite.spriteIndex, 0);
 }
 
 void func_8002B05C(PlayerCountSelectWidgetActor *arg0) {
@@ -809,7 +809,7 @@ void func_8002B15C(PlayerCountSelectWidgetActor *arg0) {
 }
 
 void func_8002B198(PlayerCountSelectWidgetActor *arg0) {
-    func_8000F8AC(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 2, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 2, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
 void func_8002B1FC(PlayerCountSelectWidgetActor *arg0) {
@@ -859,9 +859,9 @@ void func_8002B338(PlayerCountSelectWidgetActor *arg0) {
 
     if (D_80121B5E != 3) {
         func_8001BA2C(arg0->x, arg0->y, 0x5000, 0x4000);
-        func_8000F8AC((s16)(arg0->x + 8), (s16)(arg0->y + 4), func_80043040(gMenuCommonSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+        drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
         sprintf(sp40, D_800E0EA0, D_80121D8C);
-        func_80013D0C((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
+        drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
     }
 }
 

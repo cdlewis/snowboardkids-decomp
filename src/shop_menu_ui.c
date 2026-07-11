@@ -175,7 +175,7 @@ void func_8002C4E0(ShopMenuRowActor *arg0) {
                     (D_800EC9C1 & 1)) {
                     var_s1 = 0xFF;
                 }
-                func_8000F030(var_s3->unk18[0], (s16)(arg0->unk22 + var_s2), func_80043040(D_80112130[0x27]),
+                drawMenuSprite(var_s3->unk18[0], (s16)(arg0->unk22 + var_s2), getMemoryBlockBase(D_80112130[0x27]),
                               (var_s0 + 2) & 0xFFFF, 0x20, 0x20, 0, var_s1);
                 if (1) {
                 }
@@ -305,10 +305,10 @@ void func_8002C800(ShopMenuRowActor *arg0) {
 }
 
 void func_8002C860(ShopMenuWidgetActor *arg0) {
-    func_8000F030(arg0->x, arg0->y, func_80043040(D_8011217A), 3, 0x20, 0x20, 0, 0);
-    func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(D_8011217A), 4, 0x20, 0x20, 0, 0);
-    func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(D_8011217A), 5, 0x20, 0x20, 0, 0);
-    func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(D_8011217A), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(D_8011217A), 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getMemoryBlockBase(D_8011217A), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getMemoryBlockBase(D_8011217A), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getMemoryBlockBase(D_8011217A), 6, 0x20, 0x20, 0, 0);
 }
 
 void func_8002C9A0(ShopMenuWidgetActor *arg0) {
@@ -365,7 +365,7 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         func_80011264((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      func_80043040(D_80112130[0x27]), D_800B79C0[(u16)arg0->item.counter].center[tileOffset], 0, 0x100);
+                      getMemoryBlockBase(D_80112130[0x27]), D_800B79C0[(u16)arg0->item.counter].center[tileOffset], 0, 0x100);
     }
 
     if (shouldDraw) {
@@ -376,10 +376,10 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), func_80043040(D_80112130[0x27]),
+        func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getMemoryBlockBase(D_80112130[0x27]),
                       D_800B79C0[(u16)arg0->item.counter].right[tileOffset], 0, 0x100);
         i = 0x80;
-        func_80011264((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), func_80043040(D_80112130[0x27]),
+        func_80011264((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130[0x27]),
                       D_800B79C0[(u16)arg0->item.counter].bottom[tileOffset], 0, 0x100);
         offset += 0x40;
         tileOffset++;
@@ -387,20 +387,20 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
     i++;
     i--;
 
-    func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), func_80043040(D_80112130[0x27]),
+    func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getMemoryBlockBase(D_80112130[0x27]),
                   D_800B79C0[(u16)arg0->item.counter].corner, 0, 0x100);
 
-    func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y - 4), func_80043040(D_80112130[0x25]), 0x33, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), func_80043040(D_80112130[0x25]), 0x38, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), func_80043040(D_80112130[0x25]), 0x35, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getMemoryBlockBase(D_80112130[0x25]), 0x33, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getMemoryBlockBase(D_80112130[0x25]), 0x38, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), getMemoryBlockBase(D_80112130[0x25]), 0x35, 0x20, 0x20, 0, 0);
     if (offset && offset) {}
-    func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), func_80043040(D_80112130[0x25]), 0x3A, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getMemoryBlockBase(D_80112130[0x25]), 0x3A, 0x20, 0x20, 0, 0);
 
     for (offset = 0; offset != 0x80; offset += 0x10) {
-        func_8000F030((s16)(arg0->x + offset + 0xC), (s16)(arg0->y - 4), func_80043040(D_80112130[0x25]), 0x34, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->x + offset + 0xC), (s16)(arg0->y + 0x8C), func_80043040(D_80112130[0x25]), 0x39, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + offset + 0xC), func_80043040(D_80112130[0x25]), 0x36, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y + offset + 0xC), func_80043040(D_80112130[0x25]), 0x37, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + offset + 0xC), (s16)(arg0->y - 4), getMemoryBlockBase(D_80112130[0x25]), 0x34, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + offset + 0xC), (s16)(arg0->y + 0x8C), getMemoryBlockBase(D_80112130[0x25]), 0x39, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + offset + 0xC), getMemoryBlockBase(D_80112130[0x25]), 0x36, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + offset + 0xC), getMemoryBlockBase(D_80112130[0x25]), 0x37, 0x20, 0x20, 0, 0);
     }
 }
 #endif
@@ -503,7 +503,7 @@ void func_8002D2E4(ShopMenuWidgetActor *arg0) {
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), func_80043040(D_80112130[0x25]),
+        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getMemoryBlockBase(D_80112130[0x25]),
                       D_800B79C0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -513,9 +513,9 @@ void func_8002D2E4(ShopMenuWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_800112F4(arg0->x + 0x80, arg0->y + offset, func_80043040(D_80112130[0x25]),
+        func_800112F4(arg0->x + 0x80, arg0->y + offset, getMemoryBlockBase(D_80112130[0x25]),
                       D_800B79C0[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        func_800112F4(arg0->x + offset, arg0->y + 0x80, func_80043040(D_80112130[0x25]),
+        func_800112F4(arg0->x + offset, arg0->y + 0x80, getMemoryBlockBase(D_80112130[0x25]),
                       D_800B79C0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -524,7 +524,7 @@ void func_8002D2E4(ShopMenuWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4(arg0->x + 0x80, arg0->y + 0x80, func_80043040(D_80112130[0x25]),
+    func_800112F4(arg0->x + 0x80, arg0->y + 0x80, getMemoryBlockBase(D_80112130[0x25]),
                   D_800B79C0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -607,7 +607,7 @@ void func_8002D778(ShopMenuWidgetActor *arg0) {
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), func_80043040(D_80112130[0x25]),
+        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getMemoryBlockBase(D_80112130[0x25]),
                       D_800B79C0[(u16)arg0->sprite.index - 1].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -617,9 +617,9 @@ void func_8002D778(ShopMenuWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_800112F4(arg0->x + 0x80, arg0->y + offset, func_80043040(D_80112130[0x25]),
+        func_800112F4(arg0->x + 0x80, arg0->y + offset, getMemoryBlockBase(D_80112130[0x25]),
                       D_800B79C0[(u16)arg0->sprite.index - 1].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        func_800112F4(arg0->x + offset, arg0->y + 0x80, func_80043040(D_80112130[0x25]),
+        func_800112F4(arg0->x + offset, arg0->y + 0x80, getMemoryBlockBase(D_80112130[0x25]),
                       D_800B79C0[(u16)arg0->sprite.index - 1].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -628,7 +628,7 @@ void func_8002D778(ShopMenuWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4(arg0->x + 0x80, arg0->y + 0x80, func_80043040(D_80112130[0x25]),
+    func_800112F4(arg0->x + 0x80, arg0->y + 0x80, getMemoryBlockBase(D_80112130[0x25]),
                   D_800B79C0[(u16)arg0->sprite.index - 1].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -716,7 +716,7 @@ void func_8002DC14(ShopMenuWidgetActor *arg0) {
 
 void func_8002DC58(ShopMenuWidgetActor *arg0) {
     if (arg0->transition.bytes.state != 5) {
-        func_8000F8AC(arg0->x, (s16)(arg0->y + (D_800EC9E6 * 0x1C)), func_80043040(D_8011217A), 7, 0x20, 0x20, 0, arg0->sprite.index, 0);
+        drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (D_800EC9E6 * 0x1C)), getMemoryBlockBase(D_8011217A), 7, 0x20, 0x20, 0, arg0->sprite.index, 0);
     }
 }
 
@@ -800,7 +800,7 @@ void func_8002DEAC(ShopMenuWidgetActor *arg0) {
     } else {
         var_v0 = D_800EC9E6;
     }
-    func_80013154(arg0->x, arg0->y, D_800B7A14[var_v0], 1, arg0->sprite.index, 0);
+    drawMenuGlyphScript(arg0->x, arg0->y, D_800B7A14[var_v0], 1, arg0->sprite.index, 0);
 }
 
 void func_8002DF40(ShopMenuWidgetActor *arg0) {
@@ -852,7 +852,7 @@ void func_8002E074(ShopMenuWidgetActor *arg0) {
 }
 
 void func_8002E0B0(ShopMenuWidgetActor *arg0) {
-    func_8000F8AC(arg0->x, arg0->y, func_80043040(D_8011217E), 0, 0x20, 0x20, 0, arg0->sprite.index, 0);
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(D_8011217E), 0, 0x20, 0x20, 0, arg0->sprite.index, 0);
 }
 
 void func_8002E114(ShopMenuWidgetActor *arg0) {
@@ -901,9 +901,9 @@ void func_8002E250(ShopMenuWidgetActor *arg0) {
     char sp40[0x18];
 
     func_8001BA2C(arg0->x, arg0->y, 0x5000, 0x4000);
-    func_8000F8AC((s16)(arg0->x + 8), (s16)(arg0->y + 4), func_80043040(D_8011217A), 0x11, 0x20, 0x20, 0, arg0->sprite.index, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getMemoryBlockBase(D_8011217A), 0x11, 0x20, 0x20, 0, arg0->sprite.index, 0);
     sprintf(sp40, D_800E0F60, D_80121D8C);
-    func_80013D0C((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.index);
+    drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.index);
 }
 
 void func_8002E32C(ShopMenuWidgetActor *arg0) {
@@ -1011,7 +1011,7 @@ void func_8002E5A4(ShopMenuWidgetActor *arg0) {
     if (D_800B7D1C[actor->sparkle.patternIndex][0].x != -1) {
         tileOffset = 0;
         do {
-            texture = func_80043040(D_80112130[0x27]);
+            texture = getMemoryBlockBase(D_80112130[0x27]);
             randomValues = actor->randomValues;
             alpha = actor->sparkle.alpha;
             offset = &D_800B7D1C[actor->sparkle.patternIndex][tileOffset];
@@ -1114,11 +1114,11 @@ void func_8002E810(ShopMenuWidgetActor *arg0) {
             palette = 0;
         }
 
-        func_80013D0C((s16)(arg0->x + sp48 + 4), (s16)(arg0->y + 4), sp4C, palette & 0xFF, arg0->sprite.index);
+        drawMenuAsciiText((s16)(arg0->x + sp48 + 4), (s16)(arg0->y + 4), sp4C, palette & 0xFF, arg0->sprite.index);
         return;
     }
 
-    func_8000F8AC(arg0->x, arg0->y, func_80043040(D_8011217E), 6, 0x20, 0x20, 0, arg0->sprite.index, 0);
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(D_8011217E), 6, 0x20, 0x20, 0, arg0->sprite.index, 0);
 }
 
 // func_8002E9E4 best match: 94.119% (nonmatchings/func_8002E9E4-1404502880690620360/base_1.c)
@@ -1211,11 +1211,11 @@ void func_8002EC5C(ShopMenuWidgetActor *arg0) {
     s32 zero;
     s16 alpha;
 
-    func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130[0x24]), 0, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->x + 0x40), arg0->y, func_80043040(D_80112130[0x24]), 1, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->x + 0x78), arg0->y, func_80043040(D_80112130[0x24]), 1, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->x + 0xB0), arg0->y, func_80043040(D_80112130[0x24]), 2, 0x20, 0x20, 0, 0);
-    func_80013154((s16)(arg0->x + 0x30), (s16)(arg0->y + 4), &D_800B7CD0, 0, 0x100, 0);
+    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(D_80112130[0x24]), 0, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(D_80112130[0x24]), 1, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x78), arg0->y, getMemoryBlockBase(D_80112130[0x24]), 1, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0xB0), arg0->y, getMemoryBlockBase(D_80112130[0x24]), 2, 0x20, 0x20, 0, 0);
+    drawMenuGlyphScript((s16)(arg0->x + 0x30), (s16)(arg0->y + 4), &D_800B7CD0, 0, 0x100, 0);
 
     alpha = 0x60;
     if (arg0->item.price == 0) {
@@ -1223,7 +1223,7 @@ void func_8002EC5C(ShopMenuWidgetActor *arg0) {
     }
 
     drawAlpha = alpha;
-    func_8000F8AC((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x14), func_80043040(D_80112130[0x24]), 0x17, 0x20,
+    drawMenuSpriteWithAlpha((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x14), getMemoryBlockBase(D_80112130[0x24]), 0x17, 0x20,
                   0x20, 0, drawAlpha, 0);
 
     size = 0x20;
@@ -1236,10 +1236,10 @@ void func_8002EC5C(ShopMenuWidgetActor *arg0) {
 
     zero = 0;
     drawAlpha = alpha;
-    func_8000F8AC((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x24), func_80043040(D_80112130[0x24]), 0x18, size,
+    drawMenuSpriteWithAlpha((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x24), getMemoryBlockBase(D_80112130[0x24]), 0x18, size,
                   size, zero, drawAlpha, zero);
-    func_8000F8AC((s16)(arg0->x + 0x50), (s16)(arg0->y + (arg0->item.price * 0x10) + 0x14),
-                  func_80043040(D_80112130[0x24]), 0x12, size, size, zero, arg0->sprite.index, zero);
+    drawMenuSpriteWithAlpha((s16)(arg0->x + 0x50), (s16)(arg0->y + (arg0->item.price * 0x10) + 0x14),
+                  getMemoryBlockBase(D_80112130[0x24]), 0x12, size, size, zero, arg0->sprite.index, zero);
 }
 #endif
 
@@ -1289,7 +1289,7 @@ void func_8002EFFC(ShopMenuWidgetActor *arg0) {
     cursor = (s16 *)arg0;
     yOffset = 0;
     for (i = 0; i < 7; i++) {
-        func_8000F030(cursor[12], (s16)(arg0->targetY + yOffset), func_80043040(D_80112130[0x27]),
+        drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset), getMemoryBlockBase(D_80112130[0x27]),
                       tiles[D_8010AF73 * 7], 0x20, 0x20, 0, 0);
 
         value = (D_8010AF73 * 7) + i + 1;
@@ -1309,7 +1309,7 @@ void func_8002EFFC(ShopMenuWidgetActor *arg0) {
     cursor = &((s16 *)arg0)[7];
     yOffset = 0x85;
     for (i = 7; i != 10; i++) {
-        func_8000F030(cursor[12], (s16)(arg0->targetY + yOffset), func_80043040(D_80112130[0x27]), i, 0x20,
+        drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset), getMemoryBlockBase(D_80112130[0x27]), i, 0x20,
                       0x20, 0, 0);
 
         yOffset += 0x13;
@@ -1322,7 +1322,7 @@ void func_8002EFFC(ShopMenuWidgetActor *arg0) {
         } else {
             cursorX = arg0->cursorPositions[0];
         }
-        func_8000F8AC(cursorX, (s16)(arg0->targetY + (D_8010AF72 * 0x13)), func_80043040(D_80112130[0x25]),
+        drawMenuSpriteWithAlpha(cursorX, (s16)(arg0->targetY + (D_8010AF72 * 0x13)), getMemoryBlockBase(D_80112130[0x25]),
                       0x12, 0x20, 0x20, 0, arg0->prompt.bytes.pulseAlpha, 0);
     }
 }
@@ -1555,11 +1555,11 @@ void func_8002F8DC(ShopMenuWidgetActor *arg0) {
         tileIndex = D_800B34EC[D_8010AF73 * 7];
     }
 
-    func_8001061C(arg0->x, arg0->y, func_80043040(D_8011214A), tileIndex, 0, 0, 0x40, 0x1C, 0x20, 0x20);
-    func_8001061C((s16)(arg0->x + 0x40), arg0->y, func_80043040(D_8011214A), tileIndex, 0, 0x1C, 0x40, 0x1C, 0x20,
+    func_8001061C(arg0->x, arg0->y, getMemoryBlockBase(D_8011214A), tileIndex, 0, 0, 0x40, 0x1C, 0x20, 0x20);
+    func_8001061C((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(D_8011214A), tileIndex, 0, 0x1C, 0x40, 0x1C, 0x20,
                   0x20);
-    func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y - 1), func_80043040(D_8011217E), 0xA, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->x + 0x3C), (s16)(arg0->y - 1), func_80043040(D_8011217E), 0xB, 0x20, 0x20, 1, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 1), getMemoryBlockBase(D_8011217E), 0xA, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x3C), (s16)(arg0->y - 1), getMemoryBlockBase(D_8011217E), 0xB, 0x20, 0x20, 1, 0);
 }
 
 void func_8002FAB8(ShopMenuWidgetActor *arg0) {
@@ -1612,12 +1612,12 @@ void func_8002FC00(ShopMenuWidgetActor *arg0) {
 
     actor = arg0; offset = D_800B7E40; counterActor = arg0; do {
         if (offset < D_800B7E58) {
-            func_8000F030((s16)(offset->x + actor->x), (s16)(offset->y + actor->sprite.index - 8),
-                          func_80043040(D_80112130[0x1C]), (counterActor->transition.counter + 0x39) & 0xFFFF,
+            drawMenuSprite((s16)(offset->x + actor->x), (s16)(offset->y + actor->sprite.index - 8),
+                          getMemoryBlockBase(D_80112130[0x1C]), (counterActor->transition.counter + 0x39) & 0xFFFF,
                           0x20, 0x20, 0, 0);
         } else {
-            func_8000F030((s16)(offset[-6].x + actor->y), (s16)((offset[-6].y + actor->sprite.index) * -1 - 8),
-                          func_80043040(D_80112130[0x1C]), (counterActor->transition.counter + 0x39) & 0xFFFF,
+            drawMenuSprite((s16)(offset[-6].x + actor->y), (s16)((offset[-6].y + actor->sprite.index) * -1 - 8),
+                          getMemoryBlockBase(D_80112130[0x1C]), (counterActor->transition.counter + 0x39) & 0xFFFF,
                           0x20, 0x20, 0, 0);
         }
         offset++;

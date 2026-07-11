@@ -51,26 +51,26 @@ void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     s32 j;
     s32 alpha;
 
-    func_8000F030((s16)(arg0->common.x - 4), (s16)(arg0->common.y - 4), func_80043040(D_80112130[0x29]), 2, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y - 4), func_80043040(D_80112130[0x29]), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y - 4), getMemoryBlockBase(D_80112130[0x29]), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y - 4), getMemoryBlockBase(D_80112130[0x29]), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
-        func_8000F030((s16)(arg0->common.x + i), (s16)(arg0->common.y - 4), func_80043040(D_80112130[0x29]), 3, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->common.x + i), (s16)(arg0->common.y + 0x24), func_80043040(D_80112130[0x29]), 8, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + i), (s16)(arg0->common.y - 4), getMemoryBlockBase(D_80112130[0x29]), 3, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + i), (s16)(arg0->common.y + 0x24), getMemoryBlockBase(D_80112130[0x29]), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0xE0);
 
-    func_8000F030((s16)(arg0->common.x - 4), (s16)(arg0->common.y + 0x24), func_80043040(D_80112130[0x29]), 7, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), func_80043040(D_80112130[0x29]), 9, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y + 0x24), getMemoryBlockBase(D_80112130[0x29]), 7, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), getMemoryBlockBase(D_80112130[0x29]), 9, 0x20, 0x20, 0, 0);
 
     i = 0;
 loop_outer:
-    func_8000F030((s16)(arg0->common.x - 4), (s16)(arg0->common.y + i), func_80043040(D_80112130[0x29]), 5, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + i), func_80043040(D_80112130[0x29]), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y + i), getMemoryBlockBase(D_80112130[0x29]), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + i), getMemoryBlockBase(D_80112130[0x29]), 6, 0x20, 0x20, 0, 0);
     j = 0;
     do {
-        func_8000F030((s16)(arg0->common.x + j), (s16)(arg0->common.y + i), func_80043040(D_80112130[0x29]), 0xB, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + j), (s16)(arg0->common.y + i), getMemoryBlockBase(D_80112130[0x29]), 0xB, 0x20, 0x20, 0, 0);
         j += 0x10;
     } while (j != 0xE0);
     i += 0x10;
@@ -81,11 +81,11 @@ loop_outer:
         goto loop_outer;
     }
 
-    func_80013154((s16)(arg0->common.x + 0x30), arg0->common.y, gControllerPakContinuePromptText, 0, 0x100, 0);
+    drawMenuGlyphScript((s16)(arg0->common.x + 0x30), arg0->common.y, gControllerPakContinuePromptText, 0, 0x100, 0);
 
     alpha = (arg0->selectedOption == 0) ? 0x100 : 0x60;
 
-    func_8000F8AC((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x10), func_80043040(D_80112130[0x24]), 0x17, 0x20,
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x10), getMemoryBlockBase(D_80112130[0x24]), 0x17, 0x20,
                   0x20, 0, alpha, 0);
 
     if (alpha == 0x100) {
@@ -94,10 +94,10 @@ loop_outer:
         alpha = 0x100;
     }
 
-    func_8000F8AC((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x20), func_80043040(D_80112130[0x24]), 0x18, 0x20,
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x20), getMemoryBlockBase(D_80112130[0x24]), 0x18, 0x20,
                   0x20, 0, alpha, 0);
-    func_8000F8AC((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x10),
-                  func_80043040(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x10),
+                  getMemoryBlockBase(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
 // updateControllerPakContinuePrompt best match: 92.821%
@@ -182,34 +182,34 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
         yAdjust = 0;
     }
 
-    func_8000F8AC((s16)(actor->common.x - 4), (s16)(actor->common.y - yAdjust - 4), func_80043040(D_80112130[0x29]), 2,
+    drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y - yAdjust - 4), getMemoryBlockBase(D_80112130[0x29]), 2,
                   0x20, 0x20, 0, actor->scale, 0);
-    func_8000F8AC((s16)(actor->common.x + 0xD4), (s16)(actor->common.y - yAdjust - 4), func_80043040(D_80112130[0x29]),
+    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y - yAdjust - 4), getMemoryBlockBase(D_80112130[0x29]),
                   4, 0x20, 0x20, 0, actor->scale, 0);
 
     i = 0;
     do {
-        func_8000F8AC((s16)(actor->common.x + i), (s16)(actor->common.y - yAdjust - 4), func_80043040(D_80112130[0x29]),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + i), (s16)(actor->common.y - yAdjust - 4), getMemoryBlockBase(D_80112130[0x29]),
                       3, 0x20, 0x20, 0, actor->scale, 0);
-        func_8000F8AC((s16)(actor->common.x + i), (s16)(actor->common.y + yAdjust + 0x24), func_80043040(D_80112130[0x29]),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + i), (s16)(actor->common.y + yAdjust + 0x24), getMemoryBlockBase(D_80112130[0x29]),
                       8, 0x20, 0x20, 0, actor->scale, 0);
         i += 0x10;
     } while (i < 0xE0);
 
-    func_8000F8AC((s16)(actor->common.x - 4), (s16)(actor->common.y + yAdjust + 0x24), func_80043040(D_80112130[0x29]),
+    drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y + yAdjust + 0x24), getMemoryBlockBase(D_80112130[0x29]),
                   7, 0x20, 0x20, 0, actor->scale, 0);
-    func_8000F8AC((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + yAdjust + 0x24), func_80043040(D_80112130[0x29]),
+    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + yAdjust + 0x24), getMemoryBlockBase(D_80112130[0x29]),
                   9, 0x20, 0x20, 0, actor->scale, 0);
 
     i = 0;
     do {
-        func_8000F8AC((s16)(actor->common.x - 4), (s16)(actor->common.y + i), func_80043040(D_80112130[0x29]), 5, 0x20,
+        drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y + i), getMemoryBlockBase(D_80112130[0x29]), 5, 0x20,
                       0x20, 0, actor->scale, 0);
-        func_8000F8AC((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + i), func_80043040(D_80112130[0x29]), 6, 0x20,
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + i), getMemoryBlockBase(D_80112130[0x29]), 6, 0x20,
                       0x20, 0, actor->scale, 0);
         j = 0;
         do {
-            func_8000F8AC((s16)(actor->common.x + j), (s16)(actor->common.y + i), func_80043040(D_80112130[0x29]), 0xB,
+            drawMenuSpriteWithAlpha((s16)(actor->common.x + j), (s16)(actor->common.y + i), getMemoryBlockBase(D_80112130[0x29]), 0xB,
                           0x20, 0x20, 0, actor->scale, 0);
             j += 0x10;
             // IDO register allocation nudge for matching codegen.
@@ -239,15 +239,15 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
                 message = gControllerPakRumbleCheckNoEntryText;
                 alpha = 0x60;
             }
-            func_80013154((s16)(actor->common.x + 0x10), (s16)(actor->common.y - yAdjust + playerY),
+            drawMenuGlyphScript((s16)(actor->common.x + 0x10), (s16)(actor->common.y - yAdjust + playerY),
                           (u8 *)playerNumberText, 0, alpha, 0);
-            func_80013154((s16)(actor->common.x + 0x40), (s16)(actor->common.y - yAdjust + playerY), message, 0, alpha,
+            drawMenuGlyphScript((s16)(actor->common.x + 0x40), (s16)(actor->common.y - yAdjust + playerY), message, 0, alpha,
                           0);
             playerIndex++;
             playerY = playerY + 0x10;
         } while (playerIndex != 4);
     } else {
-        func_80013154(actor->common.x, actor->common.y, &gControllerPakRumbleCheckPromptText[actor->targetScale * 0x68], 0, actor->scale, 0);
+        drawMenuGlyphScript(actor->common.x, actor->common.y, &gControllerPakRumbleCheckPromptText[actor->targetScale * 0x68], 0, actor->scale, 0);
     }
 
     if (actor->state == 9) {
@@ -255,24 +255,24 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
         if (gControllerPakRumbleCheckPromptConfirmSelection == 0) {
             alpha = 0x100;
         }
-        func_8000F8AC((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x10), func_80043040(D_80112130[0x21]),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x10), getMemoryBlockBase(D_80112130[0x21]),
                       0x17, 0x20, 0x20, 0, alpha, 0);
         if (alpha == 0x100) {
             alpha = 0x60;
         } else {
             alpha = 0x100;
         }
-        func_8000F8AC((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x20), func_80043040(D_80112130[0x21]),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x20), getMemoryBlockBase(D_80112130[0x21]),
                       0x18, 0x20, 0x20, 0, alpha, 0);
-        func_8000F8AC((s16)(actor->common.x + 0x4C),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C),
                       (s16)(actor->common.y + (gControllerPakRumbleCheckPromptConfirmSelection * 0x10) + 0x10),
-                      func_80043040(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, actor->optionScale, 0);
+                      getMemoryBlockBase(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, actor->optionScale, 0);
         if (1) {
         }
     }
 
     if ((actor->state == 1) || (actor->state == 3) || (actor->state == 8)) {
-        func_8000F030((s16)(actor->common.x + 0xD0), (s16)(actor->common.y + yAdjust + 0x20), func_80043040(D_80112130[0x21]),
+        drawMenuSprite((s16)(actor->common.x + 0xD0), (s16)(actor->common.y + yAdjust + 0x20), getMemoryBlockBase(D_80112130[0x21]),
                       ((actor->timer >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
     }
 }
@@ -379,7 +379,7 @@ void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
     }
 
     drawAlpha = alpha;
-    func_8000F8AC(arg0->common.x, arg0->common.y, func_80043040(gMenuCommonSpritesAssetHandle), 1, 0x20, 0x20, 0, drawAlpha, 0);
+    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 1, 0x20, 0x20, 0, drawAlpha, 0);
 
     if (drawAlpha == 0x100) {
         alpha = 0x80;
@@ -387,9 +387,9 @@ void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
         alpha = 0x100;
     }
 
-    func_8000F8AC((s16)(arg0->common.x + 0x70), arg0->common.y, func_80043040(gMenuCommonSpritesAssetHandle), 2, 0x20, 0x20, 0,
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x70), arg0->common.y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 2, 0x20, 0x20, 0,
                   alpha, 0);
-    func_8000F8AC((s16)(arg0->common.x + (gControllerPakMenuState.mainChoice * 0x70)), arg0->common.y, func_80043040(gMenuCommonSpritesAssetHandle),
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + (gControllerPakMenuState.mainChoice * 0x70)), arg0->common.y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle),
                   5, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
@@ -442,12 +442,12 @@ void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
         }
     }
 
-    func_8000F8AC(arg0->common.x, arg0->common.y, func_80043040(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, alpha, 0);
-    func_8000F8AC((s16)(actor->common.x + 0x70), actor->common.y, func_80043040(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0,
+    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, alpha, 0);
+    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x70), actor->common.y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0,
                   otherAlpha, 0);
 
     if (gControllerPakMenuCursorState == 2) {
-        func_8000F8AC((s16)(actor->common.x + (gControllerPakMenuConfirmChoice * 0x70)), actor->common.y, func_80043040(gMenuCommonSpritesAssetHandle), 5, 0x20,
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + (gControllerPakMenuConfirmChoice * 0x70)), actor->common.y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20,
                       0x20, 0, actor->scale, 0);
     }
 }
@@ -504,7 +504,7 @@ void drawControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
         digit[1] = remainder;
     } while (value != 0);
     text[2] = 0xFFFF;
-    func_80013154(arg0->common.x, arg0->common.y, (u8 *)text, 1, 0x100, 8);
+    drawMenuGlyphScript(arg0->common.x, arg0->common.y, (u8 *)text, 1, 0x100, 8);
 
     digit = text;
     do {
@@ -521,7 +521,7 @@ void drawControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
         digit[1] = remainder;
     } while (value != 0);
     text[3] = 0xFFFF;
-    func_80013154(arg0->x2, arg0->y2, (u8 *)text, 1, 0x100, 8);
+    drawMenuGlyphScript(arg0->x2, arg0->y2, (u8 *)text, 1, 0x100, 8);
 }
 #endif
 
@@ -602,7 +602,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
         }
         textB0[2] = 0xFFFF;
         textB0[1] = (fileIndex + 1) % ten;
-        func_80013154((s16)(arg0->positions[0].x + indexXOffset), (s16)(arg0->positions[0].y + rowY), (u8 *)textB0, 1, alpha, 8);
+        drawMenuGlyphScript((s16)(arg0->positions[0].x + indexXOffset), (s16)(arg0->positions[0].y + rowY), (u8 *)textB0, 1, alpha, 8);
 
         fileState = &gControllerPakFileStates[fileIndex];
         i = gControllerPakVisibleFileIndex * 0;
@@ -635,7 +635,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 fileNameText[insertIndex + 1] = ch - 0x10;
             }
             fileNameText[18] = 0xFFFF;
-            func_80013154(arg0->positions[1].x, (s16)(arg0->positions[1].y + rowY), (u8 *)fileNameText, 1, alpha, 8);
+            drawMenuGlyphScript(arg0->positions[1].x, (s16)(arg0->positions[1].y + rowY), (u8 *)fileNameText, 1, alpha, 8);
 
             out = text7C;
             i = 0x18;
@@ -654,7 +654,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 i -= 8;
             } while (out < &text7C[4]);
             text7C[4] = 0xFFFF;
-            func_80013154(arg0->positions[2].x, (s16)(arg0->positions[2].y + rowY), (u8 *)text7C, 1, alpha, 8);
+            drawMenuGlyphScript(arg0->positions[2].x, (s16)(arg0->positions[2].y + rowY), (u8 *)text7C, 1, alpha, 8);
 
             out = text7C;
             i = 8;
@@ -673,7 +673,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 out++;
             } while ((i ^ 0) >= -7);
             text7C[2] = 0xFFFF;
-            func_80013154(arg0->positions[3].x, (s16)(arg0->positions[3].y + rowY), (u8 *)text7C, 1, alpha, 8);
+            drawMenuGlyphScript(arg0->positions[3].x, (s16)(arg0->positions[3].y + rowY), (u8 *)text7C, 1, alpha, 8);
 
             digit = textB0;
             do {
@@ -689,7 +689,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 value = value / ten;
             } while (value != 0);
             textB0[3] = 0xFFFF;
-            func_80013154(arg0->positions[4].x, (s16)(arg0->positions[4].y + rowY), (u8 *)textB0, 1, alpha, 8);
+            drawMenuGlyphScript(arg0->positions[4].x, (s16)(arg0->positions[4].y + rowY), (u8 *)textB0, 1, alpha, 8);
         }
 
         rowY += 0x10;
@@ -697,10 +697,10 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     } while (rowY != 0x50);
 
     if (gControllerPakMenuCursorState != 0) {
-        func_8000F8AC(arg0->positions[5].x, (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)), func_80043040(D_80112130[0x21]), 6,
+        drawMenuSpriteWithAlpha(arg0->positions[5].x, (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)), getMemoryBlockBase(D_80112130[0x21]), 6,
                       0x20, 0x20, 0, arg0->cursorScale, 0);
-        func_8000F8AC((s16)(arg0->positions[5].x + 0x80), (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)),
-                      func_80043040(D_80112130[0x21]), 7, 0x20, 0x20, 0, arg0->cursorScale, 0);
+        drawMenuSpriteWithAlpha((s16)(arg0->positions[5].x + 0x80), (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)),
+                      getMemoryBlockBase(D_80112130[0x21]), 7, 0x20, 0x20, 0, arg0->cursorScale, 0);
     }
 }
 #endif
@@ -750,7 +750,7 @@ void updateControllerPakFileDeleteIcon(s32 arg0) {
 }
 
 void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
-    func_80017168((DstStruct_80017168 *)&arg0->sprite, func_80043040(D_8011217C));
+    func_80017168((DstStruct_80017168 *)&arg0->sprite, getMemoryBlockBase(D_8011217C));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x10;
     arg0->common.x = arg0->startX;
@@ -767,7 +767,7 @@ void updateControllerPakMessageIcon(s32 arg0) {
 }
 
 void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
-    func_80017168((DstStruct_80017168 *)&arg0->sprite, func_80043040(D_8011217C));
+    func_80017168((DstStruct_80017168 *)&arg0->sprite, getMemoryBlockBase(D_8011217C));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x20;
     arg0->common.x = arg0->startX;
@@ -776,13 +776,13 @@ void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
 }
 
 void drawControllerPakFileDeleteErrorPrompt(ControllerPakWindowActor *arg0) {
-    func_8000F8AC(arg0->common.x, arg0->common.y, func_80043040(D_80112178), 0, 0x20, 0x20, 0, arg0->scale, 0);
-    func_8000F8AC((s16)(arg0->common.x + 0x40), arg0->common.y, func_80043040(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
-    func_8000F8AC((s16)(arg0->common.x + 0x78), arg0->common.y, func_80043040(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
-    func_8000F8AC((s16)(arg0->common.x + 0xB0), arg0->common.y, func_80043040(D_80112178), 2, 0x20, 0x20, 0, arg0->scale, 0);
-    func_80013154((s16)(arg0->common.x + 4), (s16)(arg0->common.y + 4), gControllerPakCouldNotEraseNoteText, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getMemoryBlockBase(D_80112178), 0, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x40), arg0->common.y, getMemoryBlockBase(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x78), arg0->common.y, getMemoryBlockBase(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0xB0), arg0->common.y, getMemoryBlockBase(D_80112178), 2, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuGlyphScript((s16)(arg0->common.x + 4), (s16)(arg0->common.y + 4), gControllerPakCouldNotEraseNoteText, 0, arg0->scale, 0);
     if (arg0->selectedOption == 1) {
-        func_8000F030((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), func_80043040(D_80112178),
+        drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), getMemoryBlockBase(D_80112178),
                       ((arg0->timer >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
     }
 }
@@ -855,28 +855,28 @@ void drawControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) 
     s32 alpha;
     s32 limit;
 
-    func_8000F030(arg0->common.x, arg0->common.y, func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 2, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->common.x + 0x90), arg0->common.y, func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->common.x, arg0->common.y, getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0x90), arg0->common.y, getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
-        func_8000F030((s16)(arg0->common.x + i + 0x10), arg0->common.y, func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 3, 0x20, 0x20, 0, 0);
-        func_8000F030((s16)(arg0->common.x + i + 0x10), (s16)(arg0->common.y + 0x30), func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 8, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + i + 0x10), arg0->common.y, getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 3, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + i + 0x10), (s16)(arg0->common.y + 0x30), getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0x80);
 
-    func_8000F030(arg0->common.x, (s16)(arg0->common.y + 0x30), func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 7, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->common.x + 0x90), (s16)(arg0->common.y + 0x30), func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 9, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->common.x, (s16)(arg0->common.y + 0x30), getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 7, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0x90), (s16)(arg0->common.y + 0x30), getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 9, 0x20, 0x20, 0, 0);
 
     i = 0;
     limit = 0x80;
 loop_outer:
-    func_8000F030(arg0->common.x, (s16)(arg0->common.y + i + 0x10), func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 5, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->common.x + 0x90), (s16)(arg0->common.y + i + 0x10), func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->common.x, (s16)(arg0->common.y + i + 0x10), getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0x90), (s16)(arg0->common.y + i + 0x10), getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 6, 0x20, 0x20, 0, 0);
 
     j = 0;
     do {
-        func_8000F030((s16)(arg0->common.x + j + 0x10), (s16)(arg0->common.y + i + 0x10), func_80043040(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + j + 0x10), (s16)(arg0->common.y + i + 0x10), getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 0xB, 0x20, 0x20, 0, 0);
         j += 0x10;
     } while (j != limit);
 
@@ -887,11 +887,11 @@ loop_outer:
         goto loop_outer;
     }
 
-    func_80013154((s16)(arg0->common.x + 0x1C), (s16)(arg0->common.y + 4), gControllerPakAreYouSureText, 1, 0x100, 0);
+    drawMenuGlyphScript((s16)(arg0->common.x + 0x1C), (s16)(arg0->common.y + 4), gControllerPakAreYouSureText, 1, 0x100, 0);
 
     alpha = (arg0->selectedOption == 0) ? 0x100 : 0x60;
 
-    func_8000F8AC((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x18), func_80043040(D_80112130[0x24]), 0x17, 0x20, 0x20, 0, alpha, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x18), getMemoryBlockBase(D_80112130[0x24]), 0x17, 0x20, 0x20, 0, alpha, 0);
 
     if (alpha == 0x100) {
         alpha = 0x60;
@@ -899,8 +899,8 @@ loop_outer:
         alpha = 0x100;
     }
 
-    func_8000F8AC((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x28), func_80043040(D_80112130[0x24]), 0x18, 0x20, 0x20, 0, alpha, 0);
-    func_8000F8AC((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x18), func_80043040(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x28), getMemoryBlockBase(D_80112130[0x24]), 0x18, 0x20, 0x20, 0, alpha, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x18), getMemoryBlockBase(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
 void updateControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) {

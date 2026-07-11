@@ -103,18 +103,18 @@ void func_8002B560(MainMenuScoreTask *arg0) {
     s32 next;
     s32 count;
 
-    func_8000F030(arg0->x, arg0->y, func_80043040(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
-    func_8000F030((s16)(arg0->x + 0x40), arg0->y, func_80043040(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0xB, 0x20,
+    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0xB, 0x20,
                   0x20, 0, 0);
-    func_8000F030((s16)(arg0->x + 0x80), arg0->y, func_80043040(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0xC, 0x20,
+    drawMenuSprite((s16)(arg0->x + 0x80), arg0->y, getMemoryBlockBase(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0xC, 0x20,
                   0x20, 0, 0);
 
     text[0] = '1';
     text[1] = 0;
-    func_80013D0C((s16)(arg0->x + 0x32), (s16)((unsigned long)(arg0->y + 2)), text, 0, 0x100);
+    drawMenuAsciiText((s16)(arg0->x + 0x32), (s16)((unsigned long)(arg0->y + 2)), text, 0, 0x100);
 
     sprintf(text, D_800E0F30, D_80121D8C);
-    func_80013D0C((s16)(arg0->x + 0x44), (s16)(arg0->y + 0x1B), text, 0, 0x100);
+    drawMenuAsciiText((s16)(arg0->x + 0x44), (s16)(arg0->y + 0x1B), text, 0, 0x100);
 
     if (gGameSaveDataBuffer.iconCount == 3) {
         count = 3;
@@ -133,8 +133,8 @@ void func_8002B560(MainMenuScoreTask *arg0) {
                 alpha = 0x70;
             }
 
-            func_8000F8AC((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x11),
-                          func_80043040(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0x19, 0x20, 0x20, 0, alpha, 9 - i);
+            drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x11),
+                          getMemoryBlockBase(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0x19, 0x20, 0x20, 0, alpha, 9 - i);
             i = next;
             xOffset += 0x10;
         } while (next != count);
@@ -168,8 +168,8 @@ void func_8002B560(MainMenuScoreTask *arg0) {
                 if ((!i) && (!i)) {
                 }
             }
-            func_8000F8AC((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x27),
-                          func_80043040(MAIN_MENU_SCORE_TEXTURE_HANDLE), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0,
+            drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x27),
+                          getMemoryBlockBase(MAIN_MENU_SCORE_TEXTURE_HANDLE), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0,
                           alpha, tile);
             i++;
             xOffset += 0xE;
@@ -231,9 +231,9 @@ void func_8002BA38(MainMenuScoreTask *arg0) {
 
     if (gControllerPakStatusCodes != 8) {
         alpha = arg0->unk1C.scale;
-        func_8000F8AC((s16)(arg0->x - 2), (s16)(arg0->y + 0xC), func_80043040(gMenuCommonSpritesAssetHandle), 8, 0x20, 0x20,
+        drawMenuSpriteWithAlpha((s16)(arg0->x - 2), (s16)(arg0->y + 0xC), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 8, 0x20, 0x20,
                       zero, alpha, zero);
-        func_8000F8AC((s16)(arg0->x + 0x3E), (s16)(arg0->y + 0xC), func_80043040(gMenuCommonSpritesAssetHandle), 9, 0x20,
+        drawMenuSpriteWithAlpha((s16)(arg0->x + 0x3E), (s16)(arg0->y + 0xC), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 9, 0x20,
                       0x20, zero, alpha, zero);
     }
 }
@@ -289,10 +289,10 @@ void func_8002BC9C(MainMenuScoreTask *arg0) {
 
     if (gControllerPakStatusCodes != 8) {
         text = D_800B73F0[gControllerPakStatusCodes];
-        func_80013154(arg0->x, arg0->y, text, 1, arg0->unk1C.scale, 0);
+        drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->unk1C.scale, 0);
         if (((gControllerPakStatusCodes == 4) || (gControllerPakStatusCodes >= 7)) && (D_800EC9D0 == 0)) {
             if (arg0->unk1C.scale == 0x100) {
-                func_8000F030((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), func_80043040(gMenuCommonSpritesAssetHandle),
+                drawMenuSprite((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), getMemoryBlockBase(gMenuCommonSpritesAssetHandle),
                               (((s32)arg0->state.b.frame >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
             }
         }
@@ -383,7 +383,7 @@ void func_8002BF9C(MainMenuScoreTask *arg0) {
         }
 
         drawAlpha = alpha;
-        func_8000F8AC(arg0->x, arg0->unk1C.scale, func_80043040(gMenuCommonSpritesAssetHandle), D_800B7987[gControllerPakStatusCodes * 2], 0x20, 0x20,
+        drawMenuSpriteWithAlpha(arg0->x, arg0->unk1C.scale, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), D_800B7987[gControllerPakStatusCodes * 2], 0x20, 0x20,
                       0, drawAlpha, 0);
 
         if (drawAlpha == 0x100) {
@@ -392,12 +392,12 @@ void func_8002BF9C(MainMenuScoreTask *arg0) {
             alpha = 0x100;
         }
 
-        func_8000F8AC(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), D_800B7986[gControllerPakStatusCodes * 2], 0x20, 0x20, 0, alpha,
+        drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), D_800B7986[gControllerPakStatusCodes * 2], 0x20, 0x20, 0, alpha,
                       0);
 
         state = D_800EC9D0;
         if ((state == 3) || (state == 4)) {
-            func_8000F8AC(arg0->x, (s16)(((D_800EC9D0 * 0x10) + arg0->y) - 0x30), func_80043040(gMenuCommonSpritesAssetHandle), 0x12,
+            drawMenuSpriteWithAlpha(arg0->x, (s16)(((D_800EC9D0 * 0x10) + arg0->y) - 0x30), getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x12,
                           0x20, 0x20, 0, (u16)arg0->state.w.alpha, 7);
             state = D_800EC9D0;
         }

@@ -42,7 +42,7 @@ void func_80042574(MainMenuSceneModel *arg0) {
     s32 end;
     s32 stride;
 
- do { if ((u16)arg0->renderFrame == gCurrentViewportIndex) { model = arg0; gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = D_800D3CB0; do { matrix = func_8004885C(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
+ do { if ((u16)arg0->renderFrame == gCurrentViewportIndex) { model = arg0; gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = D_800D3CB0; do { matrix = func_8004885C(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
 }
 #endif
 
@@ -59,14 +59,14 @@ void func_8004270C(MainMenuSceneModel *arg0) {
     s32 end;
     s32 stride;
 
-    do { if ((u16)arg0->renderFrame == gCurrentViewportIndex) { matrix = func_8004885C(arg0->displayObjects); model = arg0; if (matrix != NULL) { func_8007C130(matrix, model->textureId, model->paletteId); } gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = D_800D3CB0; do { matrix = func_8004885C(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
+    do { if ((u16)arg0->renderFrame == gCurrentViewportIndex) { matrix = func_8004885C(arg0->displayObjects); model = arg0; if (matrix != NULL) { func_8007C130(matrix, model->textureId, model->paletteId); } gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112130.modelAssetSlots[(u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112130.animationAssetSlots[(u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = D_800D3CB0; do { matrix = func_8004885C(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
 }
 #endif
 
 void func_800428C8(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = 0;
     addRenderCallback(&D_801248B0, func_80042574, model);
@@ -75,7 +75,7 @@ void func_800428C8(s32 modelIndex) {
 void func_80042920(s32 modelIndex, s32 textureId, s32 paletteId) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = 0;
     model->textureId = (s16)textureId;
@@ -86,7 +86,7 @@ void func_80042920(s32 modelIndex, s32 textureId, s32 paletteId) {
 void func_8004298C(s32 modelIndex, s32 textureId, s32 paletteId, s32 arg3) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = 0;
     model->textureId = (s16)textureId;
@@ -97,7 +97,7 @@ void func_8004298C(s32 modelIndex, s32 textureId, s32 paletteId, s32 arg3) {
 void func_80042A00(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = 0;
     addRenderCallback(&D_801248B0, func_80042574, model);
@@ -106,7 +106,7 @@ void func_80042A00(s32 modelIndex) {
 void func_80042A58(s32 modelIndex, s32 renderFrame) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
+    model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = (s16)renderFrame;
     addRenderCallback(&D_801248B0, func_80042574, model);
