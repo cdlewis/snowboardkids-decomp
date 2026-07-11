@@ -4611,13 +4611,21 @@ void func_80063980(RaceUiCourseSpriteActor *actor) {
     func_80071824(actor, func_8006392C);
 }
 
-// func_80063A9C best match: 83.012% (nonmatchings/func_80063A9C-4923837976568703863/base_10.c)
+// func_80063A9C best match: 98.816% (nonmatchings/func_80063A9C-6061209858023118177/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80063A9C.s")
 
 #ifdef NON_MATCHING
+#define RACE_UI_EFFECT_EMIT_GFX(word0, word1) \
+    {                                         \
+        Gfx *_g;                              \
+        _g = gRegionAllocPtr++;               \
+        _g->words.w0 = (word0);               \
+        _g->words.w1 = (word1);               \
+    }
+
 void func_80063A9C(RaceUiEffectParticleActor *arg0) {
     RaceUiTrailCopyBlock spA0;
-    volatile u8 pad[0x18];
+    Gfx *new_var;
     RaceUiGfxCommandDest *matrix;
     RaceUiCameraTransformSource *camera;
     s32 negX;
@@ -4627,53 +4635,33 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
     s32 maskedNegY;
     s32 maskedNegZ;
     s32 i;
+    Gfx *new_var2;
     s32 mask;
     RaceUiEffectParticleActor *actor;
     RaceUiEffectParticleActor *actor2;
-    Gfx *gfx;
 
-    gfx = gRegionAllocPtr++;
-    gfx->words.w0 = 0xFD500000;
-    gfx->words.w1 = (u32)arg0->unk20;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w0 = 0xF5500000;
-    gfx->words.w1 = 0x07080200;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w1 = 0;
-    gfx->words.w0 = 0xE6000000;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w0 = 0xF3000000;
-    gfx->words.w1 = 0x070FF400;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w1 = 0;
-    gfx->words.w0 = 0xE7000000;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w0 = 0xF5400400;
-    gfx->words.w1 = 0x00080200;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w0 = 0xF2000000;
-    gfx->words.w1 = 0x0007C07C;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w0 = 0xFD100000;
-    gfx->words.w1 = (u32)arg0->unk1C;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w1 = 0;
-    gfx->words.w0 = 0xE8000000;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w0 = 0xF5000100;
-    gfx->words.w1 = 0x07000000;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w1 = 0;
-    gfx->words.w0 = 0xE6000000;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w0 = 0xF0000000;
-    gfx->words.w1 = 0x0703C000;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w1 = 0;
-    gfx->words.w0 = 0xE7000000;
-    gfx = gRegionAllocPtr++;
-    gfx->words.w0 = 0x06000000;
-    gfx->words.w1 = (u32)D_800D6270;
+    RACE_UI_EFFECT_EMIT_GFX(0xFD500000, (u32)arg0->unk20);
+    RACE_UI_EFFECT_EMIT_GFX(0xF5500000, 0x07080200);
+    RACE_UI_EFFECT_EMIT_GFX(0xE6000000, 0);
+    negX = 0x070FF400;
+    RACE_UI_EFFECT_EMIT_GFX(0xF3000000, negX);
+    RACE_UI_EFFECT_EMIT_GFX(0xE7000000, 0);
+    RACE_UI_EFFECT_EMIT_GFX(0xF5400400, 0x00080200);
+    RACE_UI_EFFECT_EMIT_GFX(0xF2000000, 0x0007C07C);
+    RACE_UI_EFFECT_EMIT_GFX(0xFD100000, (u32)arg0->unk1C);
+    RACE_UI_EFFECT_EMIT_GFX(0xE8000000, 0);
+    RACE_UI_EFFECT_EMIT_GFX(0xF5000100, 0x07000000);
+    {
+        Gfx *_g;
+
+        _g = gRegionAllocPtr++;
+        _g->words.w0 = 0xE6000000;
+        new_var2 = _g;
+        new_var2->words.w1 = 0;
+    }
+    RACE_UI_EFFECT_EMIT_GFX(0xF0000000, 0x0703C000);
+    RACE_UI_EFFECT_EMIT_GFX(0xE7000000, 0);
+    RACE_UI_EFFECT_EMIT_GFX(0x06000000, (u32)D_800D6270);
 
     spA0.transform = D_800DEE30;
 
@@ -4696,23 +4684,24 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
             spA0.transform.translation.z = ((actor->particles[i].unk8 - maskedNegZ) & mask) + negZ + 0xFF800000;
             matrix = func_8004885C(&spA0);
             if (matrix != NULL) {
-                gfx = gRegionAllocPtr++;
-                gfx->words.w0 = 0x01020040;
-                gfx->words.w1 = (u32)matrix;
-                gfx = gRegionAllocPtr++;
-                gfx->words.w0 = 0x01000040;
-                gfx->words.w1 = D_80156614;
-                gfx = gRegionAllocPtr++;
-                gfx->words.w0 = 0x04000C2F;
-                gfx->words.w1 = (u32)D_800D63D0;
-                gfx = gRegionAllocPtr++;
-                gfx->words.w0 = 0xBF000000;
-                gfx->words.w1 = 0x402;
+                RACE_UI_EFFECT_EMIT_GFX(0x01020040, (u32)matrix);
+                RACE_UI_EFFECT_EMIT_GFX(0x01000040, D_80156614);
+                RACE_UI_EFFECT_EMIT_GFX(0x04000C2F, (u32)D_800D63D0);
+                {
+                    Gfx *_g;
+
+                    _g = gRegionAllocPtr++;
+                    new_var = _g;
+                    new_var->words.w0 = 0xBF000000;
+                    _g->words.w1 = 0x402;
+                }
             }
             i++;
         } while (i < actor2->count);
     }
 }
+
+#undef RACE_UI_EFFECT_EMIT_GFX
 #endif
 
 void func_80063E70(RaceUiEffectParticleActor *arg0) {
