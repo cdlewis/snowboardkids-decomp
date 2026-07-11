@@ -30,7 +30,7 @@ typedef struct {
     /* 0x22 */ u8 state;
     /* 0x23 */ u8 selectedOption;
     /* 0x24 */ s16 targetScale;
-} ControllerPakConfirmActor;
+} ControllerPakRumbleCheckPromptActor;
 
 typedef struct {
     /* 0x00 */ char pad[0x18];
@@ -75,9 +75,9 @@ typedef struct {
 void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0);
 void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0);
 void initControllerPakContinuePrompt(ControllerPakOptionsActor *arg0);
-void drawControllerPakCheckPrompt(ControllerPakConfirmActor *arg0);
-void updateControllerPakCheckPrompt(ControllerPakConfirmActor *arg0);
-void initControllerPakCheckPrompt(ControllerPakConfirmActor *arg0);
+void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg0);
+void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg0);
+void initControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg0);
 void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0);
 void updateControllerPakFileDeleteMainOptionsUi(ControllerPakOptionsActor *arg0);
 void initControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0);

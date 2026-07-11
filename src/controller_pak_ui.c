@@ -22,18 +22,18 @@ typedef struct {
     u16 timer;
     u8 selectedOption;
     u8 confirmSelection;
-} ControllerPakConfirmTransition;
+} ControllerPakRumbleCheckPromptTransition;
 
 extern void func_800483FC(void *, void *, s32);
 extern s32 D_80124868;
 extern s32 D_80124838;
 extern CharacterSelectFlowState *gCurrentInputTask;
 extern ControllerPakPromptTransition gControllerPakContinuePromptTransition;
-extern ControllerPakConfirmTransition gControllerPakCheckPromptTransition;
+extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern ControllerPakMenuState gControllerPakMenuState;
 extern s16 D_80112130[];
-extern u8 gControllerPakCheckPromptState;
-extern u8 gControllerPakCheckPromptConfirmSelection;
+extern u8 gControllerPakRumbleCheckPromptState;
+extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
 extern u8 gControllerPakMenuConfirmChoice;
 extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;
@@ -152,19 +152,19 @@ void initControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     func_80071824(arg0, updateControllerPakContinuePrompt);
 }
 
-// drawControllerPakCheckPrompt best match: 99.732% (nonmatchings/drawControllerPakCheckPrompt-5272447827802519043/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/drawControllerPakCheckPrompt.s")
+// drawControllerPakRumbleCheckPrompt best match: 99.732% (nonmatchings/drawControllerPakRumbleCheckPrompt-5272447827802519043/base_2.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/drawControllerPakRumbleCheckPrompt.s")
 
 #ifdef NON_MATCHING
 extern u8 D_80121B55;
 extern u8 D_800EC8B4[];
-extern u8 D_800B7E78[];
-extern u8 D_800B8018[];
-extern u8 D_800B8030[];
-extern u8 D_800B8048[];
+extern u8 gControllerPakRumbleCheckPromptText[];
+extern u8 gControllerPakRumbleCheckNotUsedText[];
+extern u8 gControllerPakRumbleCheckNoEntryText[];
+extern u8 gControllerPakRumblePakText[];
 
-void drawControllerPakCheckPrompt(ControllerPakConfirmActor *arg0) {
-    register ControllerPakConfirmActor *actor;
+void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg0) {
+    register ControllerPakRumbleCheckPromptActor *actor;
     s32 i;
     s32 j;
     s32 playerIndex;
@@ -230,13 +230,13 @@ void drawControllerPakCheckPrompt(ControllerPakConfirmActor *arg0) {
             playerNumberText[4] = 0xFFFF;
             if (playerIndex < D_80121B55) {
                 if (D_800EC8B4[playerIndex] == 1) {
-                    message = D_800B8048;
+                    message = gControllerPakRumblePakText;
                 } else {
-                    message = D_800B8018;
+                    message = gControllerPakRumbleCheckNotUsedText;
                 }
                 alpha = (u16)actor->scale;
             } else {
-                message = D_800B8030;
+                message = gControllerPakRumbleCheckNoEntryText;
                 alpha = 0x60;
             }
             func_80013154((s16)(actor->common.x + 0x10), (s16)(actor->common.y - yAdjust + playerY),
@@ -247,12 +247,12 @@ void drawControllerPakCheckPrompt(ControllerPakConfirmActor *arg0) {
             playerY = playerY + 0x10;
         } while (playerIndex != 4);
     } else {
-        func_80013154(actor->common.x, actor->common.y, &D_800B7E78[actor->targetScale * 0x68], 0, actor->scale, 0);
+        func_80013154(actor->common.x, actor->common.y, &gControllerPakRumbleCheckPromptText[actor->targetScale * 0x68], 0, actor->scale, 0);
     }
 
     if (actor->state == 9) {
         alpha = 0x60;
-        if (gControllerPakCheckPromptConfirmSelection == 0) {
+        if (gControllerPakRumbleCheckPromptConfirmSelection == 0) {
             alpha = 0x100;
         }
         func_8000F8AC((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x10), func_80043040(D_80112130[0x21]),
@@ -265,7 +265,7 @@ void drawControllerPakCheckPrompt(ControllerPakConfirmActor *arg0) {
         func_8000F8AC((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x20), func_80043040(D_80112130[0x21]),
                       0x18, 0x20, 0x20, 0, alpha, 0);
         func_8000F8AC((s16)(actor->common.x + 0x4C),
-                      (s16)(actor->common.y + (gControllerPakCheckPromptConfirmSelection * 0x10) + 0x10),
+                      (s16)(actor->common.y + (gControllerPakRumbleCheckPromptConfirmSelection * 0x10) + 0x10),
                       func_80043040(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, actor->optionScale, 0);
         if (1) {
         }
@@ -278,19 +278,19 @@ void drawControllerPakCheckPrompt(ControllerPakConfirmActor *arg0) {
 }
 #endif
 
-void updateControllerPakCheckPrompt(ControllerPakConfirmActor *arg0) {
+void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg0) {
     u8 state;
     u8 globalState;
 
     state = arg0->state;
-    if (state != (globalState = gControllerPakCheckPromptTransition.state)) {
+    if (state != (globalState = gControllerPakRumbleCheckPromptTransition.state)) {
         arg0->state = globalState;
         if (1) {}
         {}
         if (1) {}
         if (1) {}
         if (1) {}
-        arg0->targetScale = gControllerPakCheckPromptTransition.targetScale;
+        arg0->targetScale = gControllerPakRumbleCheckPromptTransition.targetScale;
         arg0->timer = 0;
         arg0->optionScale = 0x100; state = globalState;
     }
@@ -300,7 +300,7 @@ void updateControllerPakCheckPrompt(ControllerPakConfirmActor *arg0) {
             arg0->scale += 0x28;
             if (arg0->scale >= 0x100) {
                 arg0->scale = 0x100;
-                if (gControllerPakCheckPromptTransition.selectedOption == 1) {
+                if (gControllerPakRumbleCheckPromptTransition.selectedOption == 1) {
                     arg0->state = 3;
                 } else {
                     arg0->state = 1;
@@ -350,22 +350,22 @@ void updateControllerPakCheckPrompt(ControllerPakConfirmActor *arg0) {
             break;
     }
 
-    gControllerPakCheckPromptState = state;
+    gControllerPakRumbleCheckPromptState = state;
     if (arg0->state == 5) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, drawControllerPakCheckPrompt, (s32)arg0);
+    func_800483FC(&D_80124868, drawControllerPakRumbleCheckPrompt, (s32)arg0);
 }
 
-void initControllerPakCheckPrompt(ControllerPakConfirmActor *arg0) {
+void initControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg0) {
     arg0->common.x = -0x70;
     arg0->common.y = -0x1C;
     arg0->state = 6;
     arg0->scale = 0;
     arg0->timer = 0;
     arg0->targetScale = 0;
-    func_80071824(arg0, updateControllerPakCheckPrompt);
+    func_80071824(arg0, updateControllerPakRumbleCheckPrompt);
 }
 
 void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
