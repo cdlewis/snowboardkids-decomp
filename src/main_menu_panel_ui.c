@@ -19,9 +19,11 @@ typedef struct RenderCallbackNode RenderCallbackNode;
 typedef void (*RenderCallback)(s32);
 
 typedef struct MenuPanelAssetHandles {
-    /* 0x00 */ char pad0[0x38];
-    /* 0x38 */ s16 unk38;
-    /* 0x3A */ s16 unk3A;
+    /* 0x00 */ char pad0[0x0C];
+    /* 0x0C */ s16 raceSetupPromptHandle;
+    /* 0x0E */ char padE[0x2A];
+    /* 0x38 */ s16 courseRecordIconHandle;
+    /* 0x3A */ s16 courseRecordDigitHandle;
     /* 0x3C */ char pad3C[2];
     /* 0x3E */ s16 fontHandle;
     /* 0x40 */ char pad40[0x10];
@@ -64,8 +66,6 @@ extern u8 gMainMenuModeSelection;
 extern s16 D_80121B50;
 extern s16 D_80121B52;
 extern s16 gMenuFadeAlpha;
-extern s16 D_8011213C;
-extern s16 D_80112180;
 extern s32 gPlayerInputPressed;
 extern s32 D_801235B4;
 extern s16 gFrameCounter;
@@ -435,58 +435,58 @@ void initMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     setCallbackTaskCallback(arg0, updateMainMenuModeDescriptionPanel);
 }
 
-void drawMainMenuModeSelectList(s32 arg0) {
+void drawMainMenuModeSelectMenuOptions(s32 arg0) {
     if (D_801235B4 == 0) {
         if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
-            func_80045A78(-0x30, -0x20, getMemoryBlockBase(D_80112180), 0);
-            func_80045E84(-0x30, -0x20, getMemoryBlockBase(D_80112180), 3);
+            func_80045A78(-0x30, -0x20, getMemoryBlockBase(D_80112130.cancelHandle), 0);
+            func_80045E84(-0x30, -0x20, getMemoryBlockBase(D_80112130.cancelHandle), 3);
         } else {
-            func_80046D68(-0x30, -0x20, getMemoryBlockBase(D_80112180), 0, 1);
-            func_80045E84(-0x30, -0x20, getMemoryBlockBase(D_80112180), 3);
+            func_80046D68(-0x30, -0x20, getMemoryBlockBase(D_80112130.cancelHandle), 0, 1);
+            func_80045E84(-0x30, -0x20, getMemoryBlockBase(D_80112130.cancelHandle), 3);
         }
     } else {
-        func_80046D68(-0x30, -0x20, getMemoryBlockBase(D_80112180), 0, 1);
+        func_80046D68(-0x30, -0x20, getMemoryBlockBase(D_80112130.cancelHandle), 0, 1);
     }
 
     if (D_801235B4 == 1) {
         if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
-            func_80045A78(-0x30, -8, getMemoryBlockBase(D_80112180), 1);
-            func_80045E84(-0x30, -8, getMemoryBlockBase(D_80112180), 3);
+            func_80045A78(-0x30, -8, getMemoryBlockBase(D_80112130.cancelHandle), 1);
+            func_80045E84(-0x30, -8, getMemoryBlockBase(D_80112130.cancelHandle), 3);
         } else {
-            func_80046D68(-0x30, -8, getMemoryBlockBase(D_80112180), 1, 1);
-            func_80045E84(-0x30, -8, getMemoryBlockBase(D_80112180), 3);
+            func_80046D68(-0x30, -8, getMemoryBlockBase(D_80112130.cancelHandle), 1, 1);
+            func_80045E84(-0x30, -8, getMemoryBlockBase(D_80112130.cancelHandle), 3);
         }
     } else {
-        func_80046D68(-0x30, -8, getMemoryBlockBase(D_80112180), 1, 1);
+        func_80046D68(-0x30, -8, getMemoryBlockBase(D_80112130.cancelHandle), 1, 1);
     }
 
     if (D_801235B4 == 2) {
         if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
-            func_80045A78(-0x30, 0x10, getMemoryBlockBase(D_80112180), 2);
-            func_80045E84(-0x30, 0x10, getMemoryBlockBase(D_80112180), 3);
+            func_80045A78(-0x30, 0x10, getMemoryBlockBase(D_80112130.cancelHandle), 2);
+            func_80045E84(-0x30, 0x10, getMemoryBlockBase(D_80112130.cancelHandle), 3);
             return;
         }
-        func_80046D68(-0x30, 0x10, getMemoryBlockBase(D_80112180), 2, 1);
-        func_80045E84(-0x30, 0x10, getMemoryBlockBase(D_80112180), 3);
+        func_80046D68(-0x30, 0x10, getMemoryBlockBase(D_80112130.cancelHandle), 2, 1);
+        func_80045E84(-0x30, 0x10, getMemoryBlockBase(D_80112130.cancelHandle), 3);
         return;
     }
 
-    func_80046D68(-0x30, 0x10, getMemoryBlockBase(D_80112180), 2, 1);
+    func_80046D68(-0x30, 0x10, getMemoryBlockBase(D_80112130.cancelHandle), 2, 1);
 }
 
-void updateMainMenuModeSelectList(MenuPanelActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeSelectList, (s32) arg0);
+void updateMainMenuModeSelectMenuOptions(MenuPanelActor *arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeSelectMenuOptions, (s32) arg0);
 }
 
-void initMainMenuModeSelectList(MenuPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, updateMainMenuModeSelectList);
+void initMainMenuModeSelectMenuOptions(MenuPanelActor *arg0) {
+    setCallbackTaskCallback(arg0, updateMainMenuModeSelectMenuOptions);
 }
 
 void drawRaceSetupCornerPrompts(s32 arg0) {
-    func_80046358(-0x84, -0x64, getMemoryBlockBase(D_8011213C), 6);
-    func_80046358(0x74, -0x64, getMemoryBlockBase(D_8011213C), 7);
-    func_80046358(-0x84, 4, getMemoryBlockBase(D_8011213C), 8);
-    func_80046358(0x74, 4, getMemoryBlockBase(D_8011213C), 9);
+    func_80046358(-0x84, -0x64, getMemoryBlockBase(D_80112130.raceSetupPromptHandle), 6);
+    func_80046358(0x74, -0x64, getMemoryBlockBase(D_80112130.raceSetupPromptHandle), 7);
+    func_80046358(-0x84, 4, getMemoryBlockBase(D_80112130.raceSetupPromptHandle), 8);
+    func_80046358(0x74, 4, getMemoryBlockBase(D_80112130.raceSetupPromptHandle), 9);
 }
 
 void updateRaceSetupCornerPrompts(MenuPanelActor *arg0) {
@@ -710,10 +710,10 @@ void drawRaceRecordSettingsPanel(s32 arg0) {
     } else {
         drawMenuColoredGlyphScript(-0x30, -0x18, raceRecordLapCountTexts[D_80121B52], 0, 0x100, 5, 0x29);
     }
-    func_80045A78(-0x54, -0x60, getMemoryBlockBase(D_80112130.unk38), 0x5D);
-    func_80045A78(4, -0x60, getMemoryBlockBase(D_80112130.unk38), 0x5E);
-    func_80045A78(-0x4C, -0x5C, getMemoryBlockBase(D_80112130.unk3A), courseRecordDigitTileOffsets[D_80121B50]);
-    func_80045A78(4, -0x5C, getMemoryBlockBase(D_80112130.unk3A), courseRecordDigitTileOffsets[D_80121B50] + 1);
+    func_80045A78(-0x54, -0x60, getMemoryBlockBase(D_80112130.courseRecordIconHandle), 0x5D);
+    func_80045A78(4, -0x60, getMemoryBlockBase(D_80112130.courseRecordIconHandle), 0x5E);
+    func_80045A78(-0x4C, -0x5C, getMemoryBlockBase(D_80112130.courseRecordDigitHandle), courseRecordDigitTileOffsets[D_80121B50]);
+    func_80045A78(4, -0x5C, getMemoryBlockBase(D_80112130.courseRecordDigitHandle), courseRecordDigitTileOffsets[D_80121B50] + 1);
 }
 #endif
 

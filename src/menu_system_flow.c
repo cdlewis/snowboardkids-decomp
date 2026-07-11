@@ -1153,7 +1153,7 @@ void initMainMenuModeSelect(void) {
     createCallbackTaskWithUserId(initTitleMenuBoardModels, 0, 0x64, 0);
     D_801235B4 = 0;
     gMainMenuSelectionResult = 0;
-    createCallbackTaskWithUserId(&initMainMenuModeSelectList, 0, 0x64, 0);
+    createCallbackTaskWithUserId(&initMainMenuModeSelectMenuOptions, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
     func_80041CF0();
     func_80041D20(4, 4);
