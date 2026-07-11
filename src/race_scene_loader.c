@@ -4,7 +4,7 @@
 #include "race_scene_loader.h"
 #include "callback_task_scheduler.h"
 #include "system_boot.h"
-#include "model_animation.h"
+#include "race_motion.h"
 #include "race_course_effects.h"
 #include "race_course_preview.h"
 #include "race_item_effects.h"
@@ -112,7 +112,7 @@ void loadRaceCourseAssets(void) {
         dmaReadRom(D_E35C0, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_163410, D_171480, 9);
         loadCompressedRomAsset(D_21D9D0, D_222500, 0x1B);
-        func_8007D190();
+        initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EC0F0, D_1EC4A0, 0x1D);
         break;
     case 1:
@@ -122,7 +122,7 @@ void loadRaceCourseAssets(void) {
         dmaReadRom(D_EC9A0, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_171480, D_17D220, 9);
         loadCompressedRomAsset(D_222500, D_2274A0, 0x1B);
-        func_8007D190();
+        initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EC4A0, D_1EC810, 0x1D);
         break;
     case 2:
@@ -132,7 +132,7 @@ void loadRaceCourseAssets(void) {
         dmaReadRom(D_F6160, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_17D220, D_186910, 9);
         loadCompressedRomAsset(D_2274A0, D_22AE50, 0x1B);
-        func_8007D190();
+        initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EC810, D_1ECD00, 0x1D);
         break;
     case 3:
@@ -142,7 +142,7 @@ void loadRaceCourseAssets(void) {
         dmaReadRom(D_FEDA0, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_186910, D_197490, 9);
         loadCompressedRomAsset(D_22AE50, D_2308E0, 0x1B);
-        func_8007D190();
+        initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1ECD00, D_1ED910, 0x1D);
         break;
     case 4:
@@ -152,7 +152,7 @@ void loadRaceCourseAssets(void) {
         dmaReadRom(D_10AAB0, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_197490, D_1A5620, 9);
         loadCompressedRomAsset(D_2308E0, D_2349E0, 0x1B);
-        func_8007D190();
+        initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1ED910, D_1EDC80, 0x1D);
         break;
     case 5:
@@ -162,7 +162,7 @@ void loadRaceCourseAssets(void) {
         dmaReadRom(D_118670, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_1A5620, D_1B3160, 9);
         loadCompressedRomAsset(D_2349E0, D_23A7D0, 0x1B);
-        func_8007D190();
+        initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EDC80, D_1EE060, 0x1D);
         break;
     case 6:
@@ -172,7 +172,7 @@ void loadRaceCourseAssets(void) {
         dmaReadRom(D_125C90, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_1B3160, D_1C24B0, 9);
         loadCompressedRomAsset(D_23A7D0, D_23E9D0, 0x1B);
-        func_8007D190();
+        initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EE060, D_1EEEA0, 0x1D);
         break;
     case 7:
@@ -182,7 +182,7 @@ void loadRaceCourseAssets(void) {
         dmaReadRom(D_131A90, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_1C24B0, D_1C9630, 9);
         loadCompressedRomAsset(D_23E9D0, D_23FCC0, 0x1B);
-        func_8007D190();
+        initRaceCourseSurfaceData();
         break;
     case 8:
         size = D_13F3B0 - D_1384B0;
@@ -191,7 +191,7 @@ void loadRaceCourseAssets(void) {
         dmaReadRom(D_1384B0, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_1C9630, D_1D3070, 9);
         loadCompressedRomAsset(D_23FCC0, D_241160, 0x1B);
-        func_8007D190();
+        initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EEEA0, D_1EF1D0, 0x1D);
         break;
     case 9:
@@ -201,7 +201,7 @@ void loadRaceCourseAssets(void) {
         dmaReadRom(D_13F3B0, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_1D3070, D_1D82B0, 9);
         loadCompressedRomAsset(D_241160, D_2427D0, 0x1B);
-        func_8007D190();
+        initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EF1D0, D_1EF530, 0x1D);
         break;
     }

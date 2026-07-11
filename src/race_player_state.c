@@ -3,7 +3,7 @@
 #include "callback_task_scheduler.h"
 #include "race_rumble.h"
 #include "sound_manager.h"
-#include "model_animation.h"
+#include "race_motion.h"
 #include "race_camera.h"
 #include "race_course_effects.h"
 #include "race_actor_collision.h"
@@ -22,18 +22,18 @@
 #include "race_ui_effects.h"
 #include "snowboard_trail_effects.h"
 
-#define MODEL_ANIM_STATE(player) ((ModelAnimState *)(player))
-#define MODEL_ANIM_INIT_STATE(player) ((ModelAnimInitState *)(player))
-#define func_80081E40(player, animIndex) func_80081E40(MODEL_ANIM_STATE(player), (animIndex))
-#define func_80082664(player, animIndex, frameTimer, frameTimerReset) \
-    func_80082664(MODEL_ANIM_STATE(player), (animIndex), (frameTimer), (frameTimerReset))
-#define func_80082B58(player, animIndex, timer, duration) \
-    func_80082B58(MODEL_ANIM_STATE(player), (animIndex), (timer), (duration))
-#define func_80082DD0(player) func_80082DD0(MODEL_ANIM_STATE(player))
-#define func_80082E48(player) func_80082E48(MODEL_ANIM_STATE(player))
-#define func_80082EC0(player) func_80082EC0(MODEL_ANIM_STATE(player))
-#define func_80082F44(player) func_80082F44(MODEL_ANIM_STATE(player))
-#define func_80082FC8(player) func_80082FC8(MODEL_ANIM_INIT_STATE(player))
+#define RACE_MOTION_STATE(player) ((RaceMotionState *)(player))
+#define RACE_MOTION_INIT_STATE(player) ((RaceMotionInitState *)(player))
+#define setRaceMotionAnimation(player, animIndex) setRaceMotionAnimation(RACE_MOTION_STATE(player), (animIndex))
+#define interpolateRaceMotionJointAnimationFrame(player, animIndex, frameTimer, frameTimerReset) \
+    interpolateRaceMotionJointAnimationFrame(RACE_MOTION_STATE(player), (animIndex), (frameTimer), (frameTimerReset))
+#define blendRaceMotionJointAnimation(player, animIndex, timer, duration) \
+    blendRaceMotionJointAnimation(RACE_MOTION_STATE(player), (animIndex), (timer), (duration))
+#define stepRaceMotionLoopingAnimation(player) stepRaceMotionLoopingAnimation(RACE_MOTION_STATE(player))
+#define stepRaceMotionLoopingJointAnimation(player) stepRaceMotionLoopingJointAnimation(RACE_MOTION_STATE(player))
+#define stepRaceMotionAnimationUntilEnd(player) stepRaceMotionAnimationUntilEnd(RACE_MOTION_STATE(player))
+#define stepRaceMotionJointAnimationUntilEnd(player) stepRaceMotionJointAnimationUntilEnd(RACE_MOTION_STATE(player))
+#define initRaceMotionModelParts(player) initRaceMotionModelParts(RACE_MOTION_INIT_STATE(player))
 
 typedef struct {
     /* 0x00 */ s8 active;
@@ -111,7 +111,7 @@ extern PlayerTuningRow D_800DC5E0[];
 extern PlayerTuningRow D_800DC6F0[];
 extern PlayerTuningRow D_800DC770[];
 extern PlayerTuningRow D_800DC880[];
-extern Struct800955C0 D_800B9540[];
+extern Struct800955C0 gRaceCourseStartEntries[];
 extern CourseAngleEntry D_800B9554[];
 extern CourseAngleEntry D_800B9556[];
 extern u8 D_80121B5F;
@@ -144,7 +144,7 @@ extern RacePlayerSoundPosition D_80121D9C[];
 extern RacePlayerSoundPosition D_80121DA8[];
 extern void *D_801248C8;
 extern void *D_801248EC;
-extern Struct800955C0 D_800B9540[];
+extern Struct800955C0 gRaceCourseStartEntries[];
 extern s16 gRaceCourseIndex;
 extern Unk801124B8 D_801124B8[];
 
@@ -231,8 +231,8 @@ void func_8008C098(RaceInputPlayer *player) {
         } while (i < size);
     }
     player->unk588 = 0.0f;
-    func_80082FC8(player);
-    func_80081E40(player, 1);
+    initRaceMotionModelParts(player);
+    setRaceMotionAnimation(player, 1);
     if (gRacePlayerCount == 4) {
         switch (player->playerIndexU16) {
         case 0:
@@ -404,8 +404,8 @@ void func_8008C098(RaceInputPlayer *player) {
         player->facingAngle = start->angle;
         player->unk502 = start->unkC;
     }
-    player->unk502 = func_8007D200(player->unk502, player->posX, player->posZ);
-    groundY = func_80080CC4(player->unk502, player->posX, player->posZ);
+    player->unk502 = findRaceCourseSurfaceFromPoint(player->unk502, player->posX, player->posZ);
+    groundY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
     player->posY = groundY;
     if (D_80121B59 == 0) {
         player->posY = groundY + 0x40000;
@@ -530,7 +530,7 @@ void func_8008D09C(RaceInputPlayer *player) {
         player->unk258 = 0;
         if (player->unk57B != 0) {
             func_8008BBB8(player, 7);
-            func_80081E40(player, 0x22);
+            setRaceMotionAnimation(player, 0x22);
         }
     }
 
@@ -552,7 +552,7 @@ void func_8008D09C(RaceInputPlayer *player) {
     }
 
     if (player->unk4 != 0) {
-        func_800815D4(player->unk502, player->posX, player->posZ, &targetX, &targetZ, (s8) player->unk17,
+        getRaceCourseTargetPositionAhead(player->unk502, player->posX, player->posZ, &targetX, &targetZ, (s8) player->unk17,
                       (u16) player->playerIndex);
         turn = (calculateAngleBetweenXZPoints(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
         if (turn >= 0x801) {
@@ -608,7 +608,7 @@ void func_8008D09C(RaceInputPlayer *player) {
     }
 
     if (player->unk4 == 0) {
-        spawn = &D_800B9540[gRaceCourseIndex];
+        spawn = &gRaceCourseStartEntries[gRaceCourseIndex];
         if ((player->unk502 == spawn->unk0) && !(player->stateFlags & 0x40)) {
             surfaceCue = (s16)(((calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
@@ -664,21 +664,21 @@ void func_8008D09C(RaceInputPlayer *player) {
             player->unk2FA += turnDelta;
             if (player->unk2FA == 0) {
                 if (player->animationId == 0x22) {
-                    if (func_80082F44(player) != 0) {
-                        func_80081E40(player, 1);
+                    if (stepRaceMotionJointAnimationUntilEnd(player) != 0) {
+                        setRaceMotionAnimation(player, 1);
                     }
                 } else {
                     if (player->animationId != 1) {
-                        func_80081E40(player, 1);
+                        setRaceMotionAnimation(player, 1);
                     }
-                    func_80082E48(player);
+                    stepRaceMotionLoopingJointAnimation(player);
                 }
             } else if (player->unk2FA >= 0) {
-                func_80081E40(player, 3);
-                func_80082B58(player, 3, player->unk2FA, 0x118);
+                setRaceMotionAnimation(player, 3);
+                blendRaceMotionJointAnimation(player, 3, player->unk2FA, 0x118);
             } else {
-                func_80081E40(player, 2);
-                func_80082B58(player, 2, -player->unk2FA, 0x118);
+                setRaceMotionAnimation(player, 2);
+                blendRaceMotionJointAnimation(player, 2, -player->unk2FA, 0x118);
             }
         } else {
             turnDelta = -player->unk2FA;
@@ -690,8 +690,8 @@ void func_8008D09C(RaceInputPlayer *player) {
                 turnDelta = -0x30;
             }
             player->unk2FA += turnDelta;
-            func_80081E40(player, player->unk93 + 8);
-            func_80082F44(player);
+            setRaceMotionAnimation(player, player->unk93 + 8);
+            stepRaceMotionJointAnimationUntilEnd(player);
         }
 
         if (player->unk4 == 0) {
@@ -785,7 +785,7 @@ void func_8008D09C(RaceInputPlayer *player) {
             player->updateTimer = 0;
         }
     } else {
-        func_80082E48(player);
+        stepRaceMotionLoopingJointAnimation(player);
     }
 
     player->posX += player->unk40.x;
@@ -811,7 +811,7 @@ void func_8008DAF0(RaceInputPlayer *player) {
         player->subStateTimer = 0;
         player->unk2FA = 0;
         player->unk528 = 0;
-        func_80081E40(player, 0x1E);
+        setRaceMotionAnimation(player, 0x1E);
     }
 
     player->unk40.y -= player->unk260;
@@ -828,9 +828,9 @@ void func_8008DAF0(RaceInputPlayer *player) {
     player->posY += player->unk40.y;
     player->posZ += player->unk40.z;
 
-    if (func_80082EC0(player) != 0) {
-        func_80081E40(player, 0x1F);
-        func_80082EC0(player);
+    if (stepRaceMotionAnimationUntilEnd(player) != 0) {
+        setRaceMotionAnimation(player, 0x1F);
+        stepRaceMotionAnimationUntilEnd(player);
     }
 
     player->unk578 = 6;
@@ -849,7 +849,7 @@ void func_8008DC2C(RaceInputPlayer *player) {
 
     if (player->updateState == 0) {
         if (player->animationId != 4) {
-            func_80081E40(player, 4);
+            setRaceMotionAnimation(player, 4);
         }
         player->updateState++;
         player->stateFlags |= 0x200;
@@ -868,7 +868,7 @@ void func_8008DC2C(RaceInputPlayer *player) {
                 player->facingAngle += 0x18;
             }
         } else {
-            func_800815D4(player->unk502, unused = player->posX, player->posZ, &targetX, &targetZ,
+            getRaceCourseTargetPositionAhead(player->unk502, unused = player->posX, player->posZ, &targetX, &targetZ,
                           (s8) player->unk17, (u16) player->playerIndex);
             angleDiff = (calculateAngleBetweenXZPoints(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
@@ -882,7 +882,7 @@ void func_8008DC2C(RaceInputPlayer *player) {
             }
             player->facingAngle += angleDiff;
         }
-        func_80082EC0(player);
+        stepRaceMotionAnimationUntilEnd(player);
     }
 
     func_8008F1CC(player);
@@ -925,7 +925,7 @@ void func_8008DE1C(RaceInputPlayer *player) {
                 player->facingAngle += 0x18;
             }
         } else {
-            func_800815D4(player->unk502, unused = player->posX, player->posZ, &targetX, &targetZ,
+            getRaceCourseTargetPositionAhead(player->unk502, unused = player->posX, player->posZ, &targetX, &targetZ,
                           (s8) player->unk17, (u16) player->playerIndex);
             angleDiff = (calculateAngleBetweenXZPoints(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
@@ -970,7 +970,7 @@ void func_8008E008(RaceInputPlayer *player) {
         player->updateTimer = updateTimer + 1;
         player->stateTimer = 0x40000;
         player->stateFlags |= 0x10;
-        func_80081E40(player, 5);
+        setRaceMotionAnimation(player, 5);
         func_80083298(player);
         player->unk60 = 0x40000;
         player->unk2A6 = 0;
@@ -979,7 +979,7 @@ void func_8008E008(RaceInputPlayer *player) {
     }
 
     if (player->unk4 == 0) {
-        spawn = &D_800B9540[gRaceCourseIndex];
+        spawn = &gRaceCourseStartEntries[gRaceCourseIndex];
         if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
             velocityY = (s16) (((calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
@@ -1013,13 +1013,13 @@ void func_8008E008(RaceInputPlayer *player) {
     turnTimer = player->unk93;
     if (turnTimer != 0) {
         player->unk93 = turnTimer - 1;
-        func_80081E40(player, player->unk93 + 8);
+        setRaceMotionAnimation(player, player->unk93 + 8);
     } else if (player->animationId != 5) {
-        func_80081E40(player, 5);
+        setRaceMotionAnimation(player, 5);
     }
 
     updateItemUseTrigger(player);
-    func_80082F44(player);
+    stepRaceMotionJointAnimationUntilEnd(player);
 
     velocityY = player->unk60;
     if (velocityY != 0) {
@@ -1081,7 +1081,7 @@ void func_8008E350(RaceInputPlayer *player) {
     s8 turnTimer;
 
     if (player->unk4 == 0) {
-        spawn = &D_800B9540[gRaceCourseIndex];
+        spawn = &gRaceCourseStartEntries[gRaceCourseIndex];
         if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
             surfaceCue = (s16)(((calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
@@ -1122,10 +1122,10 @@ void func_8008E350(RaceInputPlayer *player) {
     turnTimer = player->unk93;
     if (turnTimer != 0) {
         player->unk93 = turnTimer - 1;
-        func_80081E40(player, player->unk93 + 8);
+        setRaceMotionAnimation(player, player->unk93 + 8);
     } else {
         if (player->animationId != 5) {
-            func_80081E40(player, 5);
+            setRaceMotionAnimation(player, 5);
         }
     }
 
@@ -1311,7 +1311,7 @@ void func_8008E350(RaceInputPlayer *player) {
         player->stateFlags |= 0x208;
         player->updateState = 0;
         player->updateTimer = 0;
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
     } else {
         func_800832CC(player);
     }
@@ -1319,7 +1319,7 @@ void func_8008E350(RaceInputPlayer *player) {
     player->posX += player->unk40.x;
     player->posY += player->unk40.y;
     player->posZ += player->unk40.z;
-    func_80082F44(player);
+    stepRaceMotionJointAnimationUntilEnd(player);
     func_8008CF10(player);
     if (player->unk517 != 0) {
         func_8008BBB8(player, 5);
@@ -1373,30 +1373,30 @@ void func_8008F204(RaceInputPlayer *player) {
             if (player->stateFlags & 0x400) {
                 inputMask = player->subStateTimer;
                 if (inputMask & 1) {
-                    func_80081E40(player, 0x17);
+                    setRaceMotionAnimation(player, 0x17);
                     inputMask = player->subStateTimer;
                 }
                 if (inputMask & 2) {
-                    func_80081E40(player, 0x15);
+                    setRaceMotionAnimation(player, 0x15);
                     inputMask = player->subStateTimer;
                 }
             } else {
                 inputMask = player->subStateTimer;
                 if (inputMask & 1) {
-                    func_80081E40(player, 0x15);
+                    setRaceMotionAnimation(player, 0x15);
                     inputMask = player->subStateTimer;
                 }
                 if (inputMask & 2) {
-                    func_80081E40(player, 0x17);
+                    setRaceMotionAnimation(player, 0x17);
                     inputMask = player->subStateTimer;
                 }
             }
             if (inputMask & 8) {
-                func_80081E40(player, 0x19);
+                setRaceMotionAnimation(player, 0x19);
                 inputMask = player->subStateTimer;
             }
             if (inputMask & 4) {
-                func_80081E40(player, 0x1B);
+                setRaceMotionAnimation(player, 0x1B);
             }
             player->stateFlags |= 0x800;
         }
@@ -1410,36 +1410,36 @@ void func_8008F3C8(RaceInputPlayer *player) {
     if (!(player->inputFlags & player->subStateTimer)) {
         player->subStateStep = 1;
     }
-    if (func_80082EC0(player) != 0) {
+    if (stepRaceMotionAnimationUntilEnd(player) != 0) {
         if (player->subStateStep != 0) {
             player->subState++;
             if (player->stateFlags & 0x400) {
                 inputMask = player->subStateTimer;
                 if (inputMask & 1) {
-                    func_80081E40(player, 0x18);
+                    setRaceMotionAnimation(player, 0x18);
                     inputMask = player->subStateTimer;
                 }
                 if (inputMask & 2) {
-                    func_80081E40(player, 0x16);
+                    setRaceMotionAnimation(player, 0x16);
                     inputMask = player->subStateTimer;
                 }
             } else {
                 inputMask = player->subStateTimer;
                 if (inputMask & 1) {
-                    func_80081E40(player, 0x16);
+                    setRaceMotionAnimation(player, 0x16);
                     inputMask = player->subStateTimer;
                 }
                 if (inputMask & 2) {
-                    func_80081E40(player, 0x18);
+                    setRaceMotionAnimation(player, 0x18);
                     inputMask = player->subStateTimer;
                 }
             }
             if (inputMask & 8) {
-                func_80081E40(player, 0x1A);
+                setRaceMotionAnimation(player, 0x1A);
                 inputMask = player->subStateTimer;
             }
             if (inputMask & 4) {
-                func_80081E40(player, 0x1C);
+                setRaceMotionAnimation(player, 0x1C);
             }
         } else {
             player->unk2A4++;
@@ -1449,7 +1449,7 @@ void func_8008F3C8(RaceInputPlayer *player) {
 }
 
 void func_8008F514(RaceInputPlayer *player) {
-    if (func_80082EC0(player) != 0) {
+    if (stepRaceMotionAnimationUntilEnd(player) != 0) {
         player->subState++;
     }
     player->stateFlags |= 0x800;
@@ -1471,7 +1471,7 @@ void func_8008F568(RaceInputPlayer *player) {
     long long clampedTimer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
@@ -1479,7 +1479,7 @@ void func_8008F568(RaceInputPlayer *player) {
     }
 
     if (player->subState == 0) {
-        func_80082EC0(player);
+        stepRaceMotionAnimationUntilEnd(player);
     }
 
     func_8008F1CC(player);
@@ -1525,7 +1525,7 @@ void func_8008F6C8(RaceInputPlayer *player) {
     u32 stateFlags;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
@@ -1533,7 +1533,7 @@ void func_8008F6C8(RaceInputPlayer *player) {
     }
 
     if (player->subState == 0) {
-        func_80082EC0(player);
+        stepRaceMotionAnimationUntilEnd(player);
     }
 
     func_8008F1CC(player);
@@ -1571,14 +1571,14 @@ void func_8008F82C(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
     }
     if (player->subState == 0) {
-        func_80082EC0(player);
+        stepRaceMotionAnimationUntilEnd(player);
     }
     func_8008F1CC(player);
     func_8008B408(player, player->unk254, 0);
@@ -1614,14 +1614,14 @@ void func_8008F9CC(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
     }
     if (player->subState == 0) {
-        func_80082EC0(player);
+        stepRaceMotionAnimationUntilEnd(player);
     }
     func_8008F1CC(player);
     func_8008B408(player, player->unk254, 0);
@@ -1657,14 +1657,14 @@ void func_8008FB6C(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
     }
     if (player->subState == 0) {
-        func_80082EC0(player);
+        stepRaceMotionAnimationUntilEnd(player);
     }
     func_8008F1CC(player);
     func_8008B408(player, player->unk254, 0);
@@ -1701,14 +1701,14 @@ void func_8008FD2C(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
     }
     if (player->subState == 0) {
-        func_80082EC0(player);
+        stepRaceMotionAnimationUntilEnd(player);
     }
     func_8008F1CC(player);
     func_8008B408(player, player->unk254, 0);
@@ -1745,14 +1745,14 @@ void func_8008FEEC(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
     }
     if (player->subState == 0) {
-        func_80082EC0(player);
+        stepRaceMotionAnimationUntilEnd(player);
     }
     func_8008F1CC(player);
     func_8008B408(player, player->unk254, 0);
@@ -1789,14 +1789,14 @@ void func_800900B0(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
     }
     if (player->subState == 0) {
-        func_80082EC0(player);
+        stepRaceMotionAnimationUntilEnd(player);
     }
     func_8008F1CC(player);
     func_8008B408(player, player->unk254, 0);
@@ -1834,16 +1834,16 @@ void func_80090274(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
-        func_80081E40(player, 0x15);
+        setRaceMotionAnimation(player, 0x15);
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -1864,15 +1864,15 @@ void func_80090274(RaceInputPlayer *player) {
     player->updateTimer++;
     updateTimer = player->updateTimer;
     if (updateTimer == 8) {
-        func_80081E40(player, 0x16);
+        setRaceMotionAnimation(player, 0x16);
         updateTimer = player->updateTimer;
     }
     if (updateTimer == 0xF) {
-        func_80081E40(player, 0x1B);
+        setRaceMotionAnimation(player, 0x1B);
         updateTimer = player->updateTimer;
     }
     if (updateTimer == 0x1E) {
-        func_80081E40(player, 0x1C);
+        setRaceMotionAnimation(player, 0x1C);
     }
 
     if (player->stateTimer >= 0x401) {
@@ -1894,7 +1894,7 @@ void func_80090470(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
@@ -1902,7 +1902,7 @@ void func_80090470(RaceInputPlayer *player) {
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->velocity.y -= player->unk264;
     func_8008B508(&player->velocity, player);
@@ -1935,7 +1935,7 @@ void func_800905BC(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
@@ -1943,7 +1943,7 @@ void func_800905BC(RaceInputPlayer *player) {
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->velocity.y -= player->unk264;
     func_8008B508(&player->velocity, player);
@@ -1986,7 +1986,7 @@ void func_80090708(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
@@ -1994,7 +1994,7 @@ void func_80090708(RaceInputPlayer *player) {
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
 
     updateTimer = player->updateTimer;
@@ -2046,7 +2046,7 @@ void func_80090898(RaceInputPlayer *player) {
     updateState = player->updateState;
     if (updateState == 0) {
         player->updateState = updateState + 1;
-        func_80081E40(player, 0x28);
+        setRaceMotionAnimation(player, 0x28);
         player->stateTimer = 0;
         player->stateFlags |= 0x200;
         func_8008F1B4(player);
@@ -2063,7 +2063,7 @@ void func_80090898(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
 
-    if (func_80082EC0(player) == 0) {
+    if (stepRaceMotionAnimationUntilEnd(player) == 0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
@@ -2076,7 +2076,7 @@ void func_80090998(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 0x23);
+        setRaceMotionAnimation(player, 0x23);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
@@ -2084,7 +2084,7 @@ void func_80090998(RaceInputPlayer *player) {
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -2132,7 +2132,7 @@ void func_80090B30(RaceInputPlayer *player) {
     u32 stateFlags;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 0x23);
+        setRaceMotionAnimation(player, 0x23);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
@@ -2140,7 +2140,7 @@ void func_80090B30(RaceInputPlayer *player) {
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     player2 = player;
     func_8008B408(player, player->unk254, 0);
     player->velocity.y -= player->unk264;
@@ -2183,16 +2183,16 @@ void func_80090CD0(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
-        func_80081E40(player, 0x17);
+        setRaceMotionAnimation(player, 0x17);
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -2212,13 +2212,13 @@ void func_80090CD0(RaceInputPlayer *player) {
     player->stateTimer += 0x16;
     player->updateTimer++;
     if (player->updateTimer == 8) {
-        func_80081E40(player, 0x18);
+        setRaceMotionAnimation(player, 0x18);
     }
     if (player->updateTimer == 0xF) {
-        func_80081E40(player, 0x19);
+        setRaceMotionAnimation(player, 0x19);
     }
     if (player->updateTimer == 0x1E) {
-        func_80081E40(player, 0x1A);
+        setRaceMotionAnimation(player, 0x1A);
     }
 
     timer = player->stateTimer;
@@ -2250,14 +2250,14 @@ void func_80090ECC(RaceInputPlayer *player) {
     u32 stateFlags;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->velocity.y -= player->unk264;
     func_8008B508(&player->velocity, player);
@@ -2306,16 +2306,16 @@ void func_8009107C(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
-        func_80081E40(player, 0x1B);
+        setRaceMotionAnimation(player, 0x1B);
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->velocity.y -= player->unk264;
     func_8008B508(&player->velocity, player);
@@ -2335,7 +2335,7 @@ void func_8009107C(RaceInputPlayer *player) {
     player->stateTimer += 0x12;
     player->updateTimer++;
     if (player->updateTimer == 0x28) {
-        func_80081E40(player, 0x1C);
+        setRaceMotionAnimation(player, 0x1C);
     }
 
     if (player->stateTimer >= 0x401) {
@@ -2363,11 +2363,11 @@ void func_80091250(RaceInputPlayer *player) {
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
-        func_80081E40(player, 0x15);
+        setRaceMotionAnimation(player, 0x15);
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->velocity.y -= player->unk264;
     func_8008B508(&player->velocity, player);
@@ -2387,7 +2387,7 @@ void func_80091250(RaceInputPlayer *player) {
     player->stateTimer += 0x16;
     player->updateTimer++;
     if (player->updateTimer == 0x1E) {
-        func_80081E40(player, 0x16);
+        setRaceMotionAnimation(player, 0x16);
     }
 
     if (player->stateTimer >= 0x401) {
@@ -2415,10 +2415,10 @@ void func_80091400(RaceInputPlayer *player) {
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
-        func_80081E40(player, 0x15);
+        setRaceMotionAnimation(player, 0x15);
         player->updateTimer = 0;
     }
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -2438,7 +2438,7 @@ void func_80091400(RaceInputPlayer *player) {
     player->stateTimer += 0x15;
     player->updateTimer++;
     if (player->updateTimer == 0x1E) {
-        func_80081E40(player, 0x16);
+        setRaceMotionAnimation(player, 0x16);
     }
 
     if (player->stateTimer >= 0x401) {
@@ -2461,16 +2461,16 @@ void func_800915C0(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
-        func_80081E40(player, 0x19);
+        setRaceMotionAnimation(player, 0x19);
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -2491,15 +2491,15 @@ void func_800915C0(RaceInputPlayer *player) {
     player->updateTimer++;
     updateTimer = player->updateTimer;
     if (updateTimer == 8) {
-        func_80081E40(player, 0x1A);
+        setRaceMotionAnimation(player, 0x1A);
         updateTimer = player->updateTimer;
     }
     if (updateTimer == 0xF) {
-        func_80081E40(player, 0x15);
+        setRaceMotionAnimation(player, 0x15);
         updateTimer = player->updateTimer;
     }
     if (updateTimer == 0x1E) {
-        func_80081E40(player, 0x16);
+        setRaceMotionAnimation(player, 0x16);
     }
 
     if (player->stateTimer >= 0x401) {
@@ -2533,11 +2533,11 @@ void func_800917BC(RaceInputPlayer *player) {
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
-        func_80081E40(player, 0x15);
+        setRaceMotionAnimation(player, 0x15);
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -2560,7 +2560,7 @@ void func_800917BC(RaceInputPlayer *player) {
     }
 
     if (player->updateTimer == 0x1E) {
-        func_80081E40(player, 0x16);
+        setRaceMotionAnimation(player, 0x16);
     }
 
     stateTimer = player->stateTimer;
@@ -2588,14 +2588,14 @@ void func_800919A4(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -2634,7 +2634,7 @@ void func_80091AF8(RaceInputPlayer *player) {
     updateState = player->updateState;
     if (updateState == 0) {
         player->updateState = updateState + 1;
-        func_80081E40(player, 0x23);
+        setRaceMotionAnimation(player, 0x23);
         player->stateTimer = 0;
         player->stateFlags |= 0x200;
         func_8008F1B4(player);
@@ -2642,7 +2642,7 @@ void func_80091AF8(RaceInputPlayer *player) {
         player->unk306 = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -2664,12 +2664,12 @@ void func_80091AF8(RaceInputPlayer *player) {
     player->updateTimer++;
     updateTimer = player->updateTimer;
     if (updateTimer == 0xC) {
-        func_80081E40(player, 0x15);
+        setRaceMotionAnimation(player, 0x15);
         updateTimer = *updateTimerPtr;
     }
 
     if (updateTimer == 0x1E) {
-        func_80081E40(player, 0x16);
+        setRaceMotionAnimation(player, 0x16);
         updateTimer = player->updateTimer;
     }
 
@@ -2713,16 +2713,16 @@ void func_80091D40(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
-        func_80081E40(player, 0x19);
+        setRaceMotionAnimation(player, 0x19);
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -2743,15 +2743,15 @@ void func_80091D40(RaceInputPlayer *player) {
     player->updateTimer++;
     updateTimer = player->updateTimer;
     if (updateTimer == 8) {
-        func_80081E40(player, 0x1A);
+        setRaceMotionAnimation(player, 0x1A);
         updateTimer = player->updateTimer;
     }
     if (updateTimer == 0xF) {
-        func_80081E40(player, 0x17);
+        setRaceMotionAnimation(player, 0x17);
         updateTimer = player->updateTimer;
     }
     if (updateTimer == 0x1E) {
-        func_80081E40(player, 0x18);
+        setRaceMotionAnimation(player, 0x18);
     }
 
     if (player->stateTimer >= 0x401) {
@@ -2779,7 +2779,7 @@ void func_80091F3C(RaceInputPlayer *player) {
     updateState = player->updateState;
     if (updateState == 0) {
         player->updateState = updateState + 1;
-        func_80081E40(player, 0x23);
+        setRaceMotionAnimation(player, 0x23);
         player->stateTimer = 0;
         player->stateFlags |= 0x200;
         func_8008F1B4(player);
@@ -2787,7 +2787,7 @@ void func_80091F3C(RaceInputPlayer *player) {
         player->unk306 = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     playerAlias = player;
     playerAlias->unk40.y -= playerAlias->unk264;
@@ -2809,12 +2809,12 @@ void func_80091F3C(RaceInputPlayer *player) {
     player->updateTimer++;
     updateTimer = player->updateTimer;
     if (updateTimer == 0xC) {
-        func_80081E40(playerAlias, 0x15);
+        setRaceMotionAnimation(playerAlias, 0x15);
         updateTimer = playerAlias->updateTimer;
     }
 
     if (updateTimer == 0x1E) {
-        func_80081E40(playerAlias, 0x16);
+        setRaceMotionAnimation(playerAlias, 0x16);
         updateTimer = playerAlias->updateTimer;
     }
 
@@ -2860,16 +2860,16 @@ void func_80092194(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
-        func_80081E40(player, 0x1B);
+        setRaceMotionAnimation(player, 0x1B);
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -2889,7 +2889,7 @@ void func_80092194(RaceInputPlayer *player) {
     player->stateTimer += 0x16;
     player->updateTimer++;
     if (player->updateTimer == 0x1E) {
-        func_80081E40(player, 0x1C);
+        setRaceMotionAnimation(player, 0x1C);
     }
 
     if (player->stateTimer >= 0x401) {
@@ -2913,7 +2913,7 @@ void func_80092368(RaceInputPlayer *player) {
     updateState = player->updateState;
     if (updateState == 0) {
         player->updateState = updateState + 1;
-        func_80081E40(player, 0x23);
+        setRaceMotionAnimation(player, 0x23);
         player->stateTimer = 0;
         player->stateFlags |= 0x200;
         func_8008F1B4(player);
@@ -2930,7 +2930,7 @@ void func_80092368(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
 
-    if (func_80082EC0(player) == 0) {
+    if (stepRaceMotionAnimationUntilEnd(player) == 0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
@@ -2944,16 +2944,16 @@ void func_80092468(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
-        func_80081E40(player, 0x19);
+        setRaceMotionAnimation(player, 0x19);
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -2974,15 +2974,15 @@ void func_80092468(RaceInputPlayer *player) {
     player->updateTimer++;
     updateTimer = player->updateTimer;
     if (updateTimer == 8) {
-        func_80081E40(player, 0x1A);
+        setRaceMotionAnimation(player, 0x1A);
         updateTimer = player->updateTimer;
     }
     if (updateTimer == 0xF) {
-        func_80081E40(player, 0x1B);
+        setRaceMotionAnimation(player, 0x1B);
         updateTimer = player->updateTimer;
     }
     if (updateTimer == 0x1E) {
-        func_80081E40(player, 0x1C);
+        setRaceMotionAnimation(player, 0x1C);
     }
 
     if (player->stateTimer >= 0x401) {
@@ -3006,7 +3006,7 @@ void func_80092674(RaceInputPlayer *player) {
     updateState = player->updateState;
     if (updateState == 0) {
         player->updateState = updateState + 1;
-        func_80081E40(player, 0x28);
+        setRaceMotionAnimation(player, 0x28);
         player->stateTimer = 0;
         player->stateFlags |= 0x200;
         func_8008F1B4(player);
@@ -3023,7 +3023,7 @@ void func_80092674(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
 
-    if (func_80082EC0(player) == 0) {
+    if (stepRaceMotionAnimationUntilEnd(player) == 0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(func_80050E80, 5, 2, (u16) player->playerIndex);
@@ -3041,7 +3041,7 @@ void func_80092774(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
@@ -3049,7 +3049,7 @@ void func_80092774(RaceInputPlayer *player) {
         player->updateTimer = 0;
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -3112,14 +3112,14 @@ void func_800929E4(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -3156,14 +3156,14 @@ void func_80092B6C(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->velocity.y -= player->unk264;
     func_8008B508(&player->velocity, player);
@@ -3200,14 +3200,14 @@ void func_80092D04(RaceInputPlayer *player) {
     s32 timer;
 
     if (player->updateState == 0) {
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
         func_8008F1B4(player);
     }
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008B408(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     func_8008B508(&player->unk40, player);
@@ -3250,9 +3250,9 @@ void func_80092E58(RaceInputPlayer *player) {
         player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags |= 0x2000;
         if (((player->unk2DE - player->facingAngle) & 0xFFF) < 0x800) {
-            func_80081E40(player, 7);
+            setRaceMotionAnimation(player, 7);
         } else {
-            func_80081E40(player, 6);
+            setRaceMotionAnimation(player, 6);
         }
         player->unk40.x = player->unk2E0;
         player->unk40.z = player->unk2E4;
@@ -3298,7 +3298,7 @@ void func_80092E58(RaceInputPlayer *player) {
     playerAlias->posY += player->unk40.y;
     playerAlias->posZ += playerAlias->unk40.z;
 
-    spawn = &D_800B9540[gRaceCourseIndex];
+    spawn = &gRaceCourseStartEntries[gRaceCourseIndex];
     if ((spawn->unk0 == playerAlias->unk502) && !(playerAlias->stateFlags & 0x40)) {
         angleDiff = calculateAngleBetweenXZPoints(playerAlias->posX, player->posZ, spawn->unk40, spawn->unk44);
         if (playerAlias->stateFlags & 0x400) {
@@ -3322,7 +3322,7 @@ void func_80092E58(RaceInputPlayer *player) {
         func_8008CF10(player);
     }
 
-    if (func_80082EC0(player) != 0) {
+    if (stepRaceMotionAnimationUntilEnd(player) != 0) {
         playerAlias->stateFlags &= 0xFE0C1FFB;
         if (playerAlias->stateFlags & 0x200) {
             player->mode = 1;
@@ -3344,7 +3344,7 @@ void func_80093144(RaceInputPlayer *player) {
     updateState = player->updateState;
     if (updateState == 0) {
         player->updateState = updateState + 1;
-        func_80081E40(player, 0xE);
+        setRaceMotionAnimation(player, 0xE);
         player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags |= 0x12204;
         player->pitchAngle = 0;
@@ -3373,7 +3373,7 @@ void func_80093144(RaceInputPlayer *player) {
     player->posY += player->unk40.y;
     player->posZ += player->unk40.z;
 
-    if ((func_80082EC0(player) != 0) && !(player->stateFlags & 1)) {
+    if ((stepRaceMotionAnimationUntilEnd(player) != 0) && !(player->stateFlags & 1)) {
         player->mode = 5;
         player->updateState = 0;
         player->updateTimer = 0;
@@ -3392,7 +3392,7 @@ void func_80093304(RaceInputPlayer *player) {
             player->stateTimer = 0x5A;
             func_80062A64(player->playerIndex);
         }
-        func_80081E40(player, 0xF);
+        setRaceMotionAnimation(player, 0xF);
         stateTimer = player->stateTimer;
         player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags &= ~0x200;
@@ -3417,7 +3417,7 @@ void func_80093304(RaceInputPlayer *player) {
         if (player->stateTimer < 0) {
             player->stateTimer = 0;
         }
-        if (func_80082EC0(player) != 0) {
+        if (stepRaceMotionAnimationUntilEnd(player) != 0) {
             player->stateFlags &= ~0x200;
             if (player->stateTimer == 0) {
                 player->mode = 8;
@@ -3427,8 +3427,8 @@ void func_80093304(RaceInputPlayer *player) {
         }
     } else {
         player->stateFlags |= 0x200;
-        func_80081E40(player, 0xF);
-        func_80082EC0(player);
+        setRaceMotionAnimation(player, 0xF);
+        stepRaceMotionAnimationUntilEnd(player);
         if (player->stateTimer < 0x1E) {
             player->stateTimer = 0x1E;
         }
@@ -3449,9 +3449,9 @@ void func_800934EC(RaceInputPlayer *player) {
     if (updateState == 0) {
         player->updateState = updateState + 1;
         if (player->stateFlags & 0x10000) {
-            func_80081E40(player, 0x11);
+            setRaceMotionAnimation(player, 0x11);
         } else {
-            func_80081E40(player, 0x10);
+            setRaceMotionAnimation(player, 0x10);
         }
         player->stateFlags = player->stateFlags & 0xFE0C1FFB;
         player->stateFlags = player->stateFlags & ~0x200;
@@ -3465,7 +3465,7 @@ void func_800934EC(RaceInputPlayer *player) {
         player->stateFlags &= ~0x200;
     }
 
-    spawn = &D_800B9540[gRaceCourseIndex];
+    spawn = &gRaceCourseStartEntries[gRaceCourseIndex];
     if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
         targetAngle = calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44);
         if (player->stateFlags & 0x400) {
@@ -3490,7 +3490,7 @@ void func_800934EC(RaceInputPlayer *player) {
     player->unk40.y -= 0xA000;
     player->posY += player->unk40.y;
 
-    if (func_80082EC0(player) != 0) {
+    if (stepRaceMotionAnimationUntilEnd(player) != 0) {
         player->stateFlags &= 0xFE0C1FFB;
         player->mode = 0;
         player->updateState = 0;
@@ -3529,7 +3529,7 @@ void func_800936D4(RaceInputPlayer *player) {
         player->actionEffectLevel = 2;
         player->actionEffectFrame = 0;
         player->stateTimer = timer - ((timer * player->rankIndex) / 8);
-        func_80081E40(player, 0x20);
+        setRaceMotionAnimation(player, 0x20);
     }
 
     updateTimer = player->updateTimer;
@@ -3540,13 +3540,13 @@ void func_800936D4(RaceInputPlayer *player) {
         if (yVel == 0) {
             player->updateTimer++;
         }
-        if (func_80082EC0(player) != 0) {
-            func_80081E40(player, 0x21);
+        if (stepRaceMotionAnimationUntilEnd(player) != 0) {
+            setRaceMotionAnimation(player, 0x21);
         }
         break;
     case 1:
-        if (func_80082EC0(player) != 0) {
-            func_80081E40(player, 0x21);
+        if (stepRaceMotionAnimationUntilEnd(player) != 0) {
+            setRaceMotionAnimation(player, 0x21);
         }
         player->stateFlags |= 0x80000;
         pos = &player->posX;
@@ -3555,14 +3555,14 @@ void func_800936D4(RaceInputPlayer *player) {
             player->unk74 = 0;
             player->unk502 = player->unk2E8;
             do {
-                func_80081508(player->unk502, pos, &player->posY, &player->posZ, &player->facingAngle);
+                getRaceCourseSurfaceSpawnTransform(player->unk502, pos, &player->posY, &player->posZ, &player->facingAngle);
                 if (func_800860A0(player) == 0) {
                     player->unk502--;
                 } else {
                     break;
                 }
             } while (1);
-            player->posY = func_80080CC4(player->unk502, player->posX, player->posZ);
+            player->posY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
             player->unk34.x = pos[0];
             player->unk34.y = pos[1];
             player->unk34.z = pos[2];
@@ -3572,8 +3572,8 @@ void func_800936D4(RaceInputPlayer *player) {
             player->stateFlags &= ~0x400;
             player->unk2EE = 0;
             func_8008B408(player, 0, 0);
-            func_80081E40(player, 1);
-            func_80082EC0(player);
+            setRaceMotionAnimation(player, 1);
+            stepRaceMotionAnimationUntilEnd(player);
             setRaceCameraMode((u16) player->playerIndex, 1);
             player->unk60 = 0x40000;
         }
@@ -3586,7 +3586,7 @@ void func_800936D4(RaceInputPlayer *player) {
             player->updateTimer = 0;
             player->stateFlags = 0;
         }
-        func_80082EC0(player);
+        stepRaceMotionAnimationUntilEnd(player);
         break;
     }
 
@@ -3621,8 +3621,8 @@ void func_800939E0(RaceInputPlayer *player) {
             player->stateFlags = stateFlags;
             player->updateState = updateState + 1;
             player->stateFlags = stateFlags | 0x42000;
-            func_80081E40(player, 0xE);
-            func_80082EC0(player);
+            setRaceMotionAnimation(player, 0xE);
+            stepRaceMotionAnimationUntilEnd(player);
             player->unk80 = player->unk502 + 2;
             setRaceCameraMode(player->playerIndex, 4);
             player->unk60 = 0;
@@ -3634,9 +3634,9 @@ void func_800939E0(RaceInputPlayer *player) {
             player->unk2E8 = player->unk502;
             /* fallthrough */
         case 1:
-            if (func_80082EC0(player) != 0) {
+            if (stepRaceMotionAnimationUntilEnd(player) != 0) {
                 player->updateState++;
-                func_80081E40(player, 0xF);
+                setRaceMotionAnimation(player, 0xF);
             }
             func_8008B408(player, player->unk254, 0);
             player->unk314 = 0x20000;
@@ -3648,10 +3648,10 @@ void func_800939E0(RaceInputPlayer *player) {
         default:
             break;
         case 2:
-            if (func_80082EC0(player) != 0) {
+            if (stepRaceMotionAnimationUntilEnd(player) != 0) {
                 player->updateState++;
                 player->stateTimer = 0x3C - ((player->rankIndex * 0x3C) / 8);
-                func_80081E40(player, 0x20);
+                setRaceMotionAnimation(player, 0x20);
             }
             func_8008B408(player, player->unk254, 0);
             player->unk314 = 0x20000;
@@ -3662,16 +3662,16 @@ void func_800939E0(RaceInputPlayer *player) {
             break;
         case 3:
             player->stateTimer--;
-            if (func_80082EC0(player) != 0) {
-                func_80081E40(player, 0x21);
+            if (stepRaceMotionAnimationUntilEnd(player) != 0) {
+                setRaceMotionAnimation(player, 0x21);
             }
             if (player->stateTimer == 0) {
                 player->updateState++;
             }
             break;
         case 4:
-            if (func_80082EC0(player) != 0) {
-                func_80081E40(player, 0x21);
+            if (stepRaceMotionAnimationUntilEnd(player) != 0) {
+                setRaceMotionAnimation(player, 0x21);
             }
             player->stateFlags |= 0x80000;
             if (D_801124B8[(u16) player->playerIndex].unk0 == 0xFF) {
@@ -3682,12 +3682,12 @@ void func_800939E0(RaceInputPlayer *player) {
                 sp30 = &player->posZ;
                 sp2C = &player->facingAngle;
 loop:
-                func_80081508(player->unk502, sp38, sp34, sp30, sp2C);
+                getRaceCourseSurfaceSpawnTransform(player->unk502, sp38, sp34, sp30, sp2C);
                 if (func_800860A0(player) == 0) {
                     player->unk502--;
                     goto loop;
                 }
-                player->posY = func_80080CC4(player->unk502, player->posX, player->posZ);
+                player->posY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
                 player->unk34.x = sp38[0];
                 player->unk34.y = sp38[1];
                 player->unk34.z = sp38[2];
@@ -3697,8 +3697,8 @@ loop:
                 player->stateFlags &= ~0x400;
                 player->unk2EE = 0;
                 func_8008B408(player, 0, 0);
-                func_80081E40(player, 1);
-                func_80082EC0(player);
+                setRaceMotionAnimation(player, 1);
+                stepRaceMotionAnimationUntilEnd(player);
                 setRaceCameraMode(player->playerIndex, 1);
                 player->unk60 = 0x40000;
             }
@@ -3709,7 +3709,7 @@ loop:
                 player->mode = 0;
                 player->updateState = 0;
                 player->updateTimer = 0;
-                func_80082EC0(player);
+                stepRaceMotionAnimationUntilEnd(player);
                 player->stateFlags = 0;
             }
             break;
@@ -3738,8 +3738,8 @@ void func_80093E0C(RaceInputPlayer *player) {
         player->stateFlags &= 0xFE0C1FFB;
         player->updateState = updateState + 1;
         player->stateFlags |= 0x42000;
-        func_80081E40(player, 0xE);
-        func_80082EC0(player);
+        setRaceMotionAnimation(player, 0xE);
+        stepRaceMotionAnimationUntilEnd(player);
         player->unk80 = player->unk502 + 2;
         setRaceCameraMode((u16)player->playerIndex, 4);
         player->unk60 = 0;
@@ -3751,9 +3751,9 @@ void func_80093E0C(RaceInputPlayer *player) {
         player->unk2E8 = player->unk502;
         /* fallthrough */
     case 1:
-        if (func_80082EC0(player) != 0) {
+        if (stepRaceMotionAnimationUntilEnd(player) != 0) {
             player->updateState++;
-            func_80081E40(player, 0xF);
+            setRaceMotionAnimation(player, 0xF);
         }
         func_8008B408(player, player->unk254, 0);
         player->unk314 = 0x20000;
@@ -3763,10 +3763,10 @@ void func_80093E0C(RaceInputPlayer *player) {
         player->posZ += player->unk40.z;
         break;
     case 2:
-        if (func_80082EC0(player) != 0) {
+        if (stepRaceMotionAnimationUntilEnd(player) != 0) {
             player->updateState++;
             player->stateTimer = 0x3C - ((player->rankIndex * 0x3C) / 8);
-            func_80081E40(player, 0x20);
+            setRaceMotionAnimation(player, 0x20);
         }
         func_8008B408(player, player->unk254, 0);
         player->unk314 = 0x20000;
@@ -3776,8 +3776,8 @@ void func_80093E0C(RaceInputPlayer *player) {
         player->posZ += player->unk40.z;
         break;
     case 3:
-        if (func_80082EC0(player) != 0) {
-            func_80081E40(player, 0x21);
+        if (stepRaceMotionAnimationUntilEnd(player) != 0) {
+            setRaceMotionAnimation(player, 0x21);
         }
         player->stateTimer--;
         if (player->stateTimer == 0) {
@@ -3785,8 +3785,8 @@ void func_80093E0C(RaceInputPlayer *player) {
         }
         break;
     case 4:
-        if (func_80082EC0(player) != 0) {
-            func_80081E40(player, 0x21);
+        if (stepRaceMotionAnimationUntilEnd(player) != 0) {
+            setRaceMotionAnimation(player, 0x21);
         }
         player->stateFlags |= 0x80000;
         posX = &player->posX;
@@ -3794,8 +3794,8 @@ void func_80093E0C(RaceInputPlayer *player) {
             player->updateState++;
             player->unk502 = player->unk2E8;
             posZ = &player->posZ;
-            func_80081508(player->unk80, posX, &player->posY, posZ, &player->facingAngle);
-            player->posY = func_80080CC4(player->unk502, player->posX, player->posZ);
+            getRaceCourseSurfaceSpawnTransform(player->unk80, posX, &player->posY, posZ, &player->facingAngle);
+            player->posY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
             sine = fixedSine(player->facingAngle);
             cosine = fixedCosine(player->facingAngle);
             *posX += ((s64)sine * -0x240000) / 0x1000;
@@ -3810,8 +3810,8 @@ void func_80093E0C(RaceInputPlayer *player) {
             player->stateFlags &= ~0x400;
             player->unk2EE = 0;
             func_8008B408(player, 0, 0);
-            func_80081E40(player, 1);
-            func_80082EC0(player);
+            setRaceMotionAnimation(player, 1);
+            stepRaceMotionAnimationUntilEnd(player);
             setRaceCameraMode((u16)player->playerIndex, 1);
             player->unk60 = 0x40000;
         }
@@ -3822,7 +3822,7 @@ void func_80093E0C(RaceInputPlayer *player) {
             player->mode = 0;
             player->updateState = 0;
             player->updateTimer = 0;
-            func_80082EC0(player);
+            stepRaceMotionAnimationUntilEnd(player);
             player->stateFlags = 0;
         }
         break;
@@ -3850,12 +3850,12 @@ void func_80094288(RaceInputPlayer *player) {
         player->stateFlags &= 0xFE0C1FFB;
         (*player).stateFlags |= 0x01006000;
         if (player->animationId != 0x12) {
-            func_80081E40(player, 0x12);
+            setRaceMotionAnimation(player, 0x12);
         }
         player->stateTimer = 0x1E;
         player->unk60 = 0;
     }
-    func_80082DD0(player);
+    stepRaceMotionLoopingAnimation(player);
     func_8008B408(player, player->unk254, 0);
     player->velocity.y += 0xFFFF6000;
     player->unk314 = 0x80000;
@@ -3917,7 +3917,7 @@ void func_80094480(RaceInputPlayer *player) {
     updateState = player->updateState;
     if (updateState == 0) {
         player->updateState = updateState + 1;
-        func_80081E40(player, 0x14);
+        setRaceMotionAnimation(player, 0x14);
         player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags &= ~0x200;
         player->stateFlags |= 0x1022000;
@@ -3953,7 +3953,7 @@ void func_80094480(RaceInputPlayer *player) {
         if (player->stateTimer < 0) {
             player->stateTimer = 0;
         }
-        if (func_80082EC0(player)) {
+        if (stepRaceMotionAnimationUntilEnd(player)) {
             player->stateFlags &= ~0x200;
             if (player->stateTimer == 0) {
                 player->mode = 8;
@@ -3963,8 +3963,8 @@ void func_80094480(RaceInputPlayer *player) {
         }
     } else {
         player->stateFlags = stateFlags | 0x200;
-        func_80081E40(player, 0x14);
-        func_80082EC0(player);
+        setRaceMotionAnimation(player, 0x14);
+        stepRaceMotionAnimationUntilEnd(player);
         player->stateTimer = 0x1E;
         player->unk80 = 7;
         if (!(player->stateFlags & 1)) {
@@ -3982,7 +3982,7 @@ void func_8009469C(RaceInputPlayer *player) {
     updateState = player->updateState;
     if (updateState == 0) {
         player->updateState = updateState + 1;
-        func_80081E40(player, 0x13);
+        setRaceMotionAnimation(player, 0x13);
         player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags |= 0x22200;
         player->pitchAngle = 0;
@@ -4008,7 +4008,7 @@ void func_8009469C(RaceInputPlayer *player) {
     player->posY += player->unk40.y;
     player->posZ += player->unk40.z;
 
-    if ((func_80082EC0(player) != 0) && !(player->stateFlags & 1)) {
+    if ((stepRaceMotionAnimationUntilEnd(player) != 0) && !(player->stateFlags & 1)) {
         player->mode = 0xC;
         player->updateState = 0;
         player->updateTimer = 0;
@@ -4022,7 +4022,7 @@ void func_80094808(RaceInputPlayer *player) {
     updateState = player->updateState;
     if (updateState == 0) {
         player->updateState = updateState + 1;
-        func_80081E40(player, 0x12);
+        setRaceMotionAnimation(player, 0x12);
         player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags |= 0x6204;
         player->pitchAngle = 0;
@@ -4038,7 +4038,7 @@ void func_80094808(RaceInputPlayer *player) {
 
     player->unk40.y -= 0x7000;
     player->posY += player->unk40.y;
-    func_80082DD0(player);
+    stepRaceMotionLoopingAnimation(player);
 
     timer = player->stateTimer;
     if (timer == 0) {
@@ -4070,11 +4070,11 @@ void func_8009491C(RaceInputPlayer *player) {
         player->updateState = nextState;
         player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags |= 0x01006000;
-        func_80081E40(player, 0x12);
+        setRaceMotionAnimation(player, 0x12);
         player->stateTimer = 0xF;
         player->unk60 = 0;
     }
-    func_80082DD0(player);
+    stepRaceMotionLoopingAnimation(player);
     func_8008B408(player, 0x10000, 0);
     player->velocity.y += 0xFFFF6000;
     func_8008B508(&player->velocity, player);
@@ -4123,10 +4123,10 @@ void func_80094A94(RaceInputPlayer *player) {
         player->updateState = nextState;
         player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags |= 0x102000;
-        func_80081E40(player, 0xE);
+        setRaceMotionAnimation(player, 0xE);
         player->stateTimer = 0x5A;
         player->unk60 = 0;
-        func_80082DD0(player);
+        stepRaceMotionLoopingAnimation(player);
         player->unk40.y = 0;
         createCallbackTaskWithUserIdPreservingArgs(func_8005FB30, 0, 0x64, (u16) player->playerIndex);
         timer = player->stateTimer;
@@ -4191,10 +4191,10 @@ void func_80094BEC(RaceInputPlayer *player) {
         player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags |= 0x1202000;
         player->unk2D6 = 1;
-        func_80081E40(player, 1);
+        setRaceMotionAnimation(player, 1);
         player->stateTimer = 0x5A;
         player->unk60 = 0;
-        func_80082DD0(player);
+        stepRaceMotionLoopingAnimation(player);
         timer = player->stateTimer;
         player->stateTimer = (timer ^ 0) - ((timer * player->rankIndex) / 8);
         player->unk40.y = 0;
@@ -4257,8 +4257,8 @@ void func_80094DF8(RaceInputPlayer *player) {
         player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags |= 0x400000;
         player->stateTimer = 0xF0;
-        func_80081E40(player, 1);
-        func_80082DD0(player);
+        setRaceMotionAnimation(player, 1);
+        stepRaceMotionLoopingAnimation(player);
         createCallbackTaskWithUserIdPreservingArgs(func_800617C8, 0, 0x3C, (u16) player->playerIndex);
         stateTimer = player->stateTimer;
         player->stateTimer = stateTimer;
@@ -4316,7 +4316,7 @@ void func_80094FF4(RaceInputPlayer *player) {
     updateState = player->updateState;
     if (updateState == 0) {
         player->updateState = updateState + 1;
-        func_80081E40(player, 0x13);
+        setRaceMotionAnimation(player, 0x13);
         player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags |= 0x822204;
         player->pitchAngle = 0;
@@ -4346,7 +4346,7 @@ void func_80094FF4(RaceInputPlayer *player) {
     player->posY += player->unk40.y;
     player->posZ += player->unk40.z;
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     if (player->unk40.y < 0) {
         stateFlags = player->stateFlags;
         if (!(stateFlags & 1)) {
@@ -4371,12 +4371,12 @@ void func_80095164(RaceInputPlayer *player) {
         player->updateState = nextState;
         player->stateFlags &= 0xFE0C1FFB;
         player->stateFlags |= 0x01006000;
-        func_80081E40(player, 0x12);
+        setRaceMotionAnimation(player, 0x12);
         player->stateTimer = 0x1E;
         player->stateTimer += randomNextMain() >> 4;
         player->unk60 = 0;
     }
-    func_80082DD0(player);
+    stepRaceMotionLoopingAnimation(player);
     func_8008B408(player, 0x10000, 0);
     player->velocity.y += 0xFFFF6000;
     func_8008B508(&player->velocity, player);
@@ -4438,10 +4438,10 @@ void func_80095338(RaceInputPlayer *player) {
             player->unk2FA += 0x800;
         }
         gMenuFlowState |= 4;
-        func_80081E40(player, 1);
+        setRaceMotionAnimation(player, 1);
     }
 
-    func_80082DD0(player);
+    stepRaceMotionLoopingAnimation(player);
     angleDelta = (player->unk2FA - player->facingAngle) & 0xFFF;
     if (angleDelta >= 0x801) {
         angleDelta -= 0x1000;
@@ -4458,31 +4458,31 @@ void func_80095338(RaceInputPlayer *player) {
         if (temp_a1) {
         }
         tempX = player->posX;
-        player->posX = tempX + ((D_800B9540[gRaceCourseIndex].unk18 - tempX) / temp_a1);
-        player->posZ = tempZ + ((D_800B9540[gRaceCourseIndex].unk1C - tempZ) / temp_a1);
+        player->posX = tempX + ((gRaceCourseStartEntries[gRaceCourseIndex].unk18 - tempX) / temp_a1);
+        player->posZ = tempZ + ((gRaceCourseStartEntries[gRaceCourseIndex].unk1C - tempZ) / temp_a1);
     }
 
     timer = player->stateTimer - 1;
     player->stateTimer = timer;
     if (timer == 0) {
-        player->posX = D_800B9540[gRaceCourseIndex].unk18;
-        player->posZ = D_800B9540[gRaceCourseIndex].unk1C;
+        player->posX = gRaceCourseStartEntries[gRaceCourseIndex].unk18;
+        player->posZ = gRaceCourseStartEntries[gRaceCourseIndex].unk1C;
         player->updateState++;
         player->updateTimer = 0;
         player->stateTimer = 0;
-        func_80081E40(player, 5);
+        setRaceMotionAnimation(player, 5);
         setRaceCameraMode((u16) player->playerIndex, 3);
     }
 }
 #endif
 
 void func_800955C0(RaceInputPlayer *player) {
-    if (func_80082EC0(player) != 0) {
+    if (stepRaceMotionAnimationUntilEnd(player) != 0) {
         player->updateState++;
         player->updateTimer = 0;
         player->facingAngle = player->unk2FA;
-        player->posX = D_800B9540[gRaceCourseIndex].unk18;
-        player->posZ = D_800B9540[gRaceCourseIndex].unk1C;
+        player->posX = gRaceCourseStartEntries[gRaceCourseIndex].unk18;
+        player->posZ = gRaceCourseStartEntries[gRaceCourseIndex].unk1C;
     }
 }
 
@@ -4496,7 +4496,7 @@ void func_80095650(RaceInputPlayer *player) {
         player->updateTimer = updateTimer + 1;
         player->unk40.y = 0x30000;
         player->stateTimer = 0x1E;
-        func_80081E40(player, 4);
+        setRaceMotionAnimation(player, 4);
         if (player->stateFlags & 0x400) {
             player->unk80 = 0x20000;
         } else {
@@ -4524,12 +4524,12 @@ void func_80095650(RaceInputPlayer *player) {
 
     if ((player->unk40.y < 0) && !(player->stateFlags & 1)) {
         if (player->animationId != 1) {
-            func_80081E40(player, 1);
+            setRaceMotionAnimation(player, 1);
         }
-        func_80082DD0(player);
+        stepRaceMotionLoopingAnimation(player);
         func_8008CF10(player);
     } else {
-        func_80082EC0(player);
+        stepRaceMotionAnimationUntilEnd(player);
     }
 
     if (--player->stateTimer == 0) {
@@ -4574,7 +4574,7 @@ void func_80095804(RaceInputPlayer *player) {
     player->posX += scratch[9];
     player->posZ += scratch[11];
 
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     func_8008CF10(player);
     if (--player->stateTimer == 0) {
         player->updateTimer = 0;
@@ -4585,10 +4585,10 @@ void func_80095804(RaceInputPlayer *player) {
 void func_80095940(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
-        func_80081E40(player, 0x1D);
+        setRaceMotionAnimation(player, 0x1D);
         player->stateTimer = 0x13;
     }
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
     player->stateTimer--;
     if (player->stateTimer == 0) {
         player->updateTimer = 0;
@@ -4624,7 +4624,7 @@ void func_800959B4(RaceInputPlayer *player) {
         player->updateTimer = 0;
         player->updateState++;
     }
-    func_80082EC0(player);
+    stepRaceMotionAnimationUntilEnd(player);
 }
 
 typedef struct {
@@ -4713,18 +4713,18 @@ void func_80095BE4(RaceInputPlayer *player) {
         makeFixedRotationY(matrix, D_800B9554[gRaceCourseIndex].angle);
         pos = (Vec3i *) &player->posX;
         transformVec3iByFixedMatrix(matrix, &source, pos);
-        player->posX += D_800B9540[gRaceCourseIndex].unk8.x;
-        player->posY += D_800B9540[gRaceCourseIndex].unk8.y + 0x80000;
-        player->posZ += D_800B9540[gRaceCourseIndex].unk8.z;
+        player->posX += gRaceCourseStartEntries[gRaceCourseIndex].unk8.x;
+        player->posY += gRaceCourseStartEntries[gRaceCourseIndex].unk8.y + 0x80000;
+        player->posZ += gRaceCourseStartEntries[gRaceCourseIndex].unk8.z;
         player->unk508++;
-        player->unk502 = D_800B9540[gRaceCourseIndex].unk4;
+        player->unk502 = gRaceCourseStartEntries[gRaceCourseIndex].unk4;
         player->unk34.x = pos->x;
         player->unk34.y = pos->y;
         player->stateTimer = 0x28;
         player->unk34.z = pos->z;
         player->stateFlags &= 0xFBFFFBFF;
-        player->facingAngle = D_800B9540[gRaceCourseIndex].unk14;
-        player->unk504 = -func_800813F8(player->unk502, player->posX, player->posZ);
+        player->facingAngle = gRaceCourseStartEntries[gRaceCourseIndex].unk14;
+        player->unk504 = -projectRaceCourseSurfaceProgress(player->unk502, player->posX, player->posZ);
         setRaceCameraMode(player->playerIndex, 1);
         D_801121E0[player->playerIndex].unk94 = player->posX;
         D_801121E0[player->playerIndex].unk98 = player->posY;
@@ -4811,7 +4811,7 @@ s32 func_80095F90(s16 arg0) {
         return 0;
     }
 
-    temp_a1 = &D_800B9540[gRaceCourseIndex];
+    temp_a1 = &gRaceCourseStartEntries[gRaceCourseIndex];
     var_a0 = temp_v0->posX - temp_a1->unk18;
     if (var_a0 < 0) {
         var_a0 = -var_a0;
@@ -4889,7 +4889,7 @@ void func_800961DC(RaceInputPlayer *player) {
             player->stateTimer = 0;
         } else {
             player->unk306 = 0;
-            func_80081E40(player, 1);
+            setRaceMotionAnimation(player, 1);
         }
     }
 
@@ -4927,19 +4927,19 @@ void func_800961DC(RaceInputPlayer *player) {
         roll = player->unk2FA;
         if (roll == 0) {
             if (player->animationId != 1) {
-                func_80081E40(player, 1);
+                setRaceMotionAnimation(player, 1);
             }
-            func_80082E48(player);
+            stepRaceMotionLoopingJointAnimation(player);
         } else if (roll >= 0) {
-            func_80081E40(player, 3);
-            func_80082B58(player, 3, player->unk2FA, 0x118);
+            setRaceMotionAnimation(player, 3);
+            blendRaceMotionJointAnimation(player, 3, player->unk2FA, 0x118);
         } else {
-            func_80081E40(player, 2);
-            func_80082B58(player, 2, -player->unk2FA, 0x118);
+            setRaceMotionAnimation(player, 2);
+            blendRaceMotionJointAnimation(player, 2, -player->unk2FA, 0x118);
         }
     } else {
         func_8008B408(player, 0, 0);
-        func_80082E48(player);
+        stepRaceMotionLoopingJointAnimation(player);
     }
 
     player->unk40.y -= player->unk260;
@@ -4954,7 +4954,7 @@ void func_800961DC(RaceInputPlayer *player) {
             player->updateState++;
             player->stateTimer = 0x1E;
             if (player->animationId != 1) {
-                func_80081E40(player, 1);
+                setRaceMotionAnimation(player, 1);
             }
         }
     }
@@ -4983,7 +4983,7 @@ void func_8009652C(RaceInputPlayer *player) {
         }
     }
     func_8008B408(player, 0, 0);
-    func_80082E48(player);
+    stepRaceMotionLoopingJointAnimation(player);
 }
 
 void func_800965E0(RaceInputPlayer *player) {
@@ -4995,9 +4995,9 @@ void func_80096630(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
-        func_80081E40(player, 0x23);
+        setRaceMotionAnimation(player, 0x23);
     }
-    if (func_80082EC0(player)) {
+    if (stepRaceMotionAnimationUntilEnd(player)) {
         if (player->animationId == 0x24) {
             player->stateFlags |= 0x8000000;
         }
@@ -5007,7 +5007,7 @@ void func_80096630(RaceInputPlayer *player) {
                 player->updateTimer++;
             }
             player->stateTimer = 0x14;
-            func_80081E40(player, 0x24);
+            setRaceMotionAnimation(player, 0x24);
         } else {
             player->stateTimer--;
         }
@@ -5018,9 +5018,9 @@ void func_800966F4(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
-        func_80081E40(player, 0x24);
+        setRaceMotionAnimation(player, 0x24);
     }
-    if (func_80082EC0(player)) {
+    if (stepRaceMotionAnimationUntilEnd(player)) {
         if (player->animationId == 0x25) {
             player->stateFlags |= 0x8000000;
         }
@@ -5029,7 +5029,7 @@ void func_800966F4(RaceInputPlayer *player) {
                 func_8008BBB8(player, 6);
                 player->updateTimer++;
             }
-            func_80081E40(player, 0x25);
+            setRaceMotionAnimation(player, 0x25);
         } else {
             player->stateTimer--;
         }
@@ -5040,9 +5040,9 @@ void func_800967B0(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
-        func_80081E40(player, 0x23);
+        setRaceMotionAnimation(player, 0x23);
     }
-    if (func_80082EC0(player)) {
+    if (stepRaceMotionAnimationUntilEnd(player)) {
         if (player->animationId == 0x24) {
             player->stateFlags |= 0x8000000;
         }
@@ -5052,7 +5052,7 @@ void func_800967B0(RaceInputPlayer *player) {
                 player->updateTimer++;
             }
             player->stateTimer = 0x14;
-            func_80081E40(player, 0x24);
+            setRaceMotionAnimation(player, 0x24);
         } else {
             player->stateTimer--;
         }
@@ -5063,9 +5063,9 @@ void func_80096874(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
-        func_80081E40(player, 0x24);
+        setRaceMotionAnimation(player, 0x24);
     }
-    if (func_80082EC0(player)) {
+    if (stepRaceMotionAnimationUntilEnd(player)) {
         if (player->animationId == 0x25) {
             player->stateFlags |= 0x8000000;
         }
@@ -5075,7 +5075,7 @@ void func_80096874(RaceInputPlayer *player) {
                 player->updateTimer++;
             }
             player->stateTimer = 0;
-            func_80081E40(player, 0x25);
+            setRaceMotionAnimation(player, 0x25);
         } else {
             player->stateTimer--;
         }
@@ -5086,9 +5086,9 @@ void func_80096934(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
-        func_80081E40(player, 0x24);
+        setRaceMotionAnimation(player, 0x24);
     }
-    if (func_80082EC0(player)) {
+    if (stepRaceMotionAnimationUntilEnd(player)) {
         if (player->animationId == 0x25) {
             player->stateFlags |= 0x8000000;
         }
@@ -5098,7 +5098,7 @@ void func_80096934(RaceInputPlayer *player) {
                 player->updateTimer++;
             }
             player->stateTimer = 0x32;
-            func_80081E40(player, 0x25);
+            setRaceMotionAnimation(player, 0x25);
         } else {
             player->stateTimer--;
         }
@@ -5110,13 +5110,13 @@ void func_800969F8(RaceInputPlayer *player) {
         player->updateTimer++;
         func_8008BBB8(player, 6);
         player->stateTimer = 0x1E;
-        func_80081E40(player, 0x23);
+        setRaceMotionAnimation(player, 0x23);
     }
-    if (func_80082EC0(player)) {
+    if (stepRaceMotionAnimationUntilEnd(player)) {
         player->stateFlags |= 0x8000000;
         if (player->stateTimer == 0) {
             player->stateTimer = 0x1E;
-            func_80081E40(player, 0x23);
+            setRaceMotionAnimation(player, 0x23);
         } else {
             player->stateTimer--;
         }
@@ -5132,13 +5132,13 @@ void func_80096ADC(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
-        func_80081E40(player, 0x25);
+        setRaceMotionAnimation(player, 0x25);
     }
-    if (func_80082EC0(player)) {
+    if (stepRaceMotionAnimationUntilEnd(player)) {
         if (player->stateTimer == 0) {
             player->stateFlags |= 0x8000000;
             player->stateTimer = 0x1E;
-            func_80081E40(player, 0x26);
+            setRaceMotionAnimation(player, 0x26);
         } else {
             player->stateTimer--;
         }
@@ -5149,13 +5149,13 @@ void func_80096B68(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
-        func_80081E40(player, 0x26);
+        setRaceMotionAnimation(player, 0x26);
     }
-    if (func_80082EC0(player)) {
+    if (stepRaceMotionAnimationUntilEnd(player)) {
         if (player->stateTimer == 0) {
             player->stateFlags |= 0x8000000;
             player->stateTimer = 0x1E;
-            func_80081E40(player, 0x27);
+            setRaceMotionAnimation(player, 0x27);
         } else {
             player->stateTimer--;
         }
@@ -5166,13 +5166,13 @@ void func_80096BF4(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
-        func_80081E40(player, 0x25);
+        setRaceMotionAnimation(player, 0x25);
     }
-    if (func_80082EC0(player)) {
+    if (stepRaceMotionAnimationUntilEnd(player)) {
         if (player->stateTimer == 0) {
             player->stateTimer = 0;
             player->stateFlags |= 0x8000000;
-            func_80081E40(player, 0x26);
+            setRaceMotionAnimation(player, 0x26);
         } else {
             player->stateTimer--;
         }
@@ -5183,13 +5183,13 @@ void func_80096C7C(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
-        func_80081E40(player, 0x26);
+        setRaceMotionAnimation(player, 0x26);
     }
-    if (func_80082EC0(player)) {
+    if (stepRaceMotionAnimationUntilEnd(player)) {
         if (player->stateTimer == 0) {
             player->stateFlags |= 0x8000000;
             player->stateTimer = 0;
-            func_80081E40(player, 0x27);
+            setRaceMotionAnimation(player, 0x27);
         } else {
             player->stateTimer--;
         }
@@ -5200,13 +5200,13 @@ void func_80096D04(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
-        func_80081E40(player, 0x26);
+        setRaceMotionAnimation(player, 0x26);
     }
-    if (func_80082EC0(player)) {
+    if (stepRaceMotionAnimationUntilEnd(player)) {
         if (player->stateTimer == 0) {
             player->stateFlags |= 0x8000000;
             player->stateTimer = 0;
-            func_80081E40(player, 0x27);
+            setRaceMotionAnimation(player, 0x27);
         } else {
             player->stateTimer--;
         }
@@ -5217,17 +5217,17 @@ void func_80096D8C(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
-        func_80081E40(player, 0x24);
+        setRaceMotionAnimation(player, 0x24);
     }
-    if (func_80082EC0(player)) {
+    if (stepRaceMotionAnimationUntilEnd(player)) {
         if (player->stateTimer == 0) {
             if (player->animationId == 0x25) {
                 player->stateTimer = 0;
-                func_80081E40(player, 0x26);
+                setRaceMotionAnimation(player, 0x26);
             } else {
                 player->stateFlags |= 0x8000000;
                 player->stateTimer = 0x1E;
-                func_80081E40(player, 0x25);
+                setRaceMotionAnimation(player, 0x25);
             }
         } else {
             player->stateTimer--;
@@ -5335,7 +5335,7 @@ void func_800971B8(RaceInputPlayer *player) {
         player->updateState = 0;
         player->updateTimer = 0;
     }
-    func_80082664(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
+    interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
 }
 
 // func_8009724C best match: 74.373%
@@ -5579,7 +5579,7 @@ void func_8009782C(RaceInputPlayer *player) {
         player->updateState = 0;
         player->updateTimer = 0;
     }
-    func_80082664(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
+    interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
 }
 
 void func_800978C0(RaceInputPlayer *player) {
@@ -5620,6 +5620,6 @@ void func_80097910(RaceInputPlayer *player) {
 void func_80097A14(RaceInputPlayer *player) {
     func_80089374();
     if (player->updateState < 2) {
-        func_80082664(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
+        interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
     }
 }

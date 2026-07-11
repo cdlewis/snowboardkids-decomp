@@ -4,7 +4,7 @@
 #include "fixed_point_math.h"
 #undef calculateAngleBetweenXZPoints
 #include "sound_manager.h"
-#include "model_animation.h"
+#include "race_motion.h"
 #include "race_actor_collision.h"
 #include "race_item_effects.h"
 #include "race_item_hit_flags.h"
@@ -21,7 +21,7 @@ typedef struct {
     char pad1[0xAF];
 } Unk8011228C;
 
-extern s32 D_80121D50;
+extern s32 gRaceSurfaceCueId;
 extern s32 D_80121D54;
 extern s32 D_80121D58;
 extern s16 D_80121D56;
@@ -55,8 +55,8 @@ s32 func_80084F50(RaceInputPlayer *arg0) {
             return 1;
         }
     }
-    if (D_80121D50 < 5) {
-        D_80121D50 = 5;
+    if (gRaceSurfaceCueId < 5) {
+        gRaceSurfaceCueId = 5;
     }
     return 0;
 }
@@ -84,8 +84,8 @@ s32 func_80085010(RaceInputPlayer *arg0) {
             return 1;
         }
     }
-    if (D_80121D50 < 6) {
-        D_80121D50 = 6;
+    if (gRaceSurfaceCueId < 6) {
+        gRaceSurfaceCueId = 6;
     }
     return 0;
 }
@@ -94,8 +94,8 @@ s32 func_800850D0(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x37D000) {
         return 1;
     }
-    if (D_80121D50 < 7) {
-        D_80121D50 = 7;
+    if (gRaceSurfaceCueId < 7) {
+        gRaceSurfaceCueId = 7;
     }
     return 0;
 }
@@ -104,8 +104,8 @@ s32 func_80085118(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x77D000) {
         return 1;
     }
-    if (D_80121D50 < 0xB) {
-        D_80121D50 = 0xB;
+    if (gRaceSurfaceCueId < 0xB) {
+        gRaceSurfaceCueId = 0xB;
     }
     return 0;
 }
@@ -114,8 +114,8 @@ s32 func_80085160(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x77D000) {
         return 1;
     }
-    if (D_80121D50 < 0xA) {
-        D_80121D50 = 0xA;
+    if (gRaceSurfaceCueId < 0xA) {
+        gRaceSurfaceCueId = 0xA;
     }
     return 0;
 }
@@ -124,8 +124,8 @@ s32 func_800851A8(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x77D000) {
         return 1;
     }
-    if (D_80121D50 < 0xC) {
-        D_80121D50 = 0xC;
+    if (gRaceSurfaceCueId < 0xC) {
+        gRaceSurfaceCueId = 0xC;
     }
     return 0;
 }
@@ -134,8 +134,8 @@ s32 func_800851F0(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x77D000) {
         return 1;
     }
-    if (D_80121D50 < 0xD) {
-        D_80121D50 = 0xD;
+    if (gRaceSurfaceCueId < 0xD) {
+        gRaceSurfaceCueId = 0xD;
     }
     return 0;
 }
@@ -149,8 +149,8 @@ s32 func_80085238(RaceInputPlayer *arg0) {
     if (!(temp_v0 & RACE_ACTOR_COLLISION_ACTIVE)) {
         return 1;
     }
-    if (D_80121D50 < 8) {
-        D_80121D50 = 8;
+    if (gRaceSurfaceCueId < 8) {
+        gRaceSurfaceCueId = 8;
     }
     return 0;
 }
@@ -164,8 +164,8 @@ s32 func_80085290(RaceInputPlayer *arg0) {
     if (!(temp_v0 & RACE_ACTOR_COLLISION_ACTIVE)) {
         return 1;
     }
-    if (D_80121D50 < 9) {
-        D_80121D50 = 9;
+    if (gRaceSurfaceCueId < 9) {
+        gRaceSurfaceCueId = 9;
     }
     return 0;
 }
@@ -191,8 +191,8 @@ s32 func_800852E8(RaceInputPlayer *arg0) {
     if ((D_80121D58 < 0x14000) || (var_v1 >= 0x801)) {
         return 1;
     }
-    if (D_80121D50 < 2) {
-        D_80121D50 = 2;
+    if (gRaceSurfaceCueId < 2) {
+        gRaceSurfaceCueId = 2;
     }
     return 0;
 }
@@ -201,8 +201,8 @@ s32 func_800853A0(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x43000) {
         return 1;
     }
-    if (D_80121D50 <= 0) {
-        D_80121D50 = 1;
+    if (gRaceSurfaceCueId <= 0) {
+        gRaceSurfaceCueId = 1;
     }
     return 0;
 }
@@ -211,8 +211,8 @@ s32 func_800853E4(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x345001) {
         return 1;
     }
-    if (D_80121D50 < 0xE) {
-        D_80121D50 = 0xE;
+    if (gRaceSurfaceCueId < 0xE) {
+        gRaceSurfaceCueId = 0xE;
     }
     return 0;
 }
@@ -221,8 +221,8 @@ s32 func_8008542C(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x775000) {
         return 1;
     }
-    if (D_80121D50 < 0xF) {
-        D_80121D50 = 0xF;
+    if (gRaceSurfaceCueId < 0xF) {
+        gRaceSurfaceCueId = 0xF;
     }
     return 0;
 }
@@ -237,8 +237,8 @@ s32 func_80085474(RaceInputPlayer *arg0) {
     if (arg0->actionSoundTimer != 0) {
         return 1;
     }
-    if (D_80121D50 < 0x10) {
-        D_80121D50 = 0x10;
+    if (gRaceSurfaceCueId < 0x10) {
+        gRaceSurfaceCueId = 0x10;
     }
     return 0;
 }
@@ -250,8 +250,8 @@ s32 func_800854E8(RaceInputPlayer *arg0) {
     if (arg0->actionSoundTimer != 0) {
         return 1;
     }
-    if (D_80121D50 < 0x11) {
-        D_80121D50 = 0x11;
+    if (gRaceSurfaceCueId < 0x11) {
+        gRaceSurfaceCueId = 0x11;
     }
     return 0;
 }
@@ -260,8 +260,8 @@ s32 func_80085544(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x775000) {
         return 1;
     }
-    if (D_80121D50 < 3) {
-        D_80121D50 = 3;
+    if (gRaceSurfaceCueId < 3) {
+        gRaceSurfaceCueId = 3;
     }
     return 0;
 }
@@ -270,8 +270,8 @@ s32 func_8008558C(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x775000) {
         return 1;
     }
-    if (D_80121D50 < 4) {
-        D_80121D50 = 4;
+    if (gRaceSurfaceCueId < 4) {
+        gRaceSurfaceCueId = 4;
     }
     return 0;
 }
@@ -280,8 +280,8 @@ s32 func_800855D4(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x41001) {
         return 1;
     }
-    if (D_80121D50 < 0x12) {
-        D_80121D50 = 0x12;
+    if (gRaceSurfaceCueId < 0x12) {
+        gRaceSurfaceCueId = 0x12;
     }
     return 0;
 }
@@ -290,8 +290,8 @@ s32 func_8008561C(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x41001) {
         return 1;
     }
-    if (D_80121D50 < 0x13) {
-        D_80121D50 = 0x13;
+    if (gRaceSurfaceCueId < 0x13) {
+        gRaceSurfaceCueId = 0x13;
     }
     return 0;
 }
@@ -313,10 +313,10 @@ void func_80085664(RaceInputPlayer *arg0) {
     s32 temp_a0_2;
     u16 temp_v0;
 
-    D_80121D50 = 0;
+    gRaceSurfaceCueId = 0;
     temp_v0 = arg0->pendingItemHitFlags;
     if (temp_v0 != 0) {
-        if ((temp_v0 & 0x200) && (arg0->unk5C < (func_80080CC4(arg0->unk502, arg0->posX, arg0->posZ) + 0xB0000))) {
+        if ((temp_v0 & 0x200) && (arg0->unk5C < (getRaceCourseSurfaceHeight(arg0->unk502, arg0->posX, arg0->posZ) + 0xB0000))) {
             arg0->pendingItemHitFlags |= 1;
         }
         D_80121D5C = arg0->unk2C8 - arg0->unk40_x;
@@ -396,15 +396,15 @@ void func_80085664(RaceInputPlayer *arg0) {
     if ((arg0->unk330 == 7) || (arg0->unk330 == 0xE) || (arg0->unk330 == 0xF)) {
         func_8008561C(arg0);
     }
-    if (D_80121D50 != 0) {
+    if (gRaceSurfaceCueId != 0) {
         if (arg0->stateFlags & 0x800) {
             arg0->unk2C3 = 0;
         }
         arg0->unk57A = 0;
-        switch (D_80121D50) {
+        switch (gRaceSurfaceCueId) {
         case 5:
         case 6:
-            if (D_80121D50 == 6) {
+            if (gRaceSurfaceCueId == 6) {
                 if (D_8011228C[arg0->playerIndexU16].active != 0) {
                     enqueueSoundEffect(0x47, 0x32);
                 }
@@ -517,7 +517,7 @@ block_104:
             goto block_104;
         case 16:
         case 17:
-            if (D_80121D50 == 0x11) {
+            if (gRaceSurfaceCueId == 0x11) {
                 if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
                     func_8008BBB8(arg0, 2);
                 } else {
@@ -567,7 +567,7 @@ block_104:
 s32 func_800860A0(RaceInputPlayer *arg0) {
     s32 temp_v0;
 
-    temp_v0 = func_80081124(arg0->unk502, arg0->posX, arg0->posZ);
+    temp_v0 = getRaceCourseSurfaceType(arg0->unk502, arg0->posX, arg0->posZ);
     if (temp_v0 == 3) {
         return 0;
     }

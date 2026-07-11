@@ -2,7 +2,7 @@
 #include "asset_manager.h"
 #include "callback_task_scheduler.h"
 #include "sound_manager.h"
-#include "model_animation.h"
+#include "race_motion.h"
 #include "race_course_effects.h"
 #include "race_input_history.h"
 #include "race_player_movement.h"
@@ -64,7 +64,7 @@ extern s16 D_800DE894[];
 extern s16 D_800DE8A0[];
 extern s16 D_800DE8AC[];
 extern s16 D_800DE8B8[];
-extern RaceCourseStartEntry D_800B9540[];
+extern RaceCourseStartEntry gRaceCourseStartEntries[];
 extern Unk8011228C D_8011228C[];
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
@@ -323,7 +323,7 @@ void func_80087E14(RaceInputPlayer *player) {
 
     flags = player->stateFlags;
     if (!(flags & 0x40) && (player->unk508 >= (gRaceLapCount - 1)) &&
-            (player->unk502 == D_800B9540[gRaceCourseIndex].unk0) && !(flags & 0x1000)) {
+            (player->unk502 == gRaceCourseStartEntries[gRaceCourseIndex].unk0) && !(flags & 0x1000)) {
         player->stateFlags = flags | 0x40;
         if ((D_80121B58 == 0) && (D_8011228C[player->playerIndexU16].active != 0)) {
             task = createCallbackTask(func_8006A85C, 6, 0x64);
@@ -861,7 +861,7 @@ void func_8008A940(RaceInputPlayer *player) {
         point->x += temp_s2->posX;
         point->y += baseY;
         point->z += temp_s2->posZ;
-        groundHeights[i] = func_80080CC4(terrainId, point->x, point->z);
+        groundHeights[i] = getRaceCourseSurfaceHeight(terrainId, point->x, point->z);
         heightDiffs[i] = groundHeights[i] - point->y;
         if (heightDiffs[i] < 0) {
             groundHeights[i] = point->y;
@@ -921,7 +921,7 @@ void func_8008A940(RaceInputPlayer *player) {
         point->x += temp_s2->posX;
         point->z += temp_s2->posZ;
         point->y += baseY + temp_s2->unk64;
-        groundHeights[i] = func_80080CC4(terrainId, point->x, point->z);
+        groundHeights[i] = getRaceCourseSurfaceHeight(terrainId, point->x, point->z);
         if (point->y < groundHeights[i]) {
             temp_s2->unk64 += groundHeights[i] - point->y;
         }
@@ -985,7 +985,7 @@ void func_8008A940(RaceInputPlayer *player) {
         temp_s2->markerPoints[i].x += sideHeightDiff;
         temp_s2->markerPoints[i].z += backHeightDiff;
         temp_s2->markerPoints[i].y =
-            func_80080CC4(terrainId, temp_s2->markerPoints[i].x, temp_s2->markerPoints[i].z);
+            getRaceCourseSurfaceHeight(terrainId, temp_s2->markerPoints[i].x, temp_s2->markerPoints[i].z);
         i++;
     } while (i < 4);
 

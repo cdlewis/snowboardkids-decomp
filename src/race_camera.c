@@ -1,6 +1,6 @@
 #include "common.h"
 #include "fixed_point_math.h"
-#include "model_animation.h"
+#include "race_motion.h"
 #include "race_camera.h"
 
 #define RACE_CAMERA_COUNT 4
@@ -95,7 +95,7 @@ extern void func_800486BC(void *, void *);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
 extern RacePlayerSlot D_80121D80[];
-extern CourseSpawnEntry D_800B9540[];
+extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern u8 D_800DA91C[];
 extern s16 D_800DA900[];
 extern u8 D_800DA914[];
@@ -416,7 +416,7 @@ void func_8006ECBC(void) {
         }
         D_801124A0->unk28 += diff;
 
-        diff = D_800B9540[gRaceCourseIndex].cameraPos.x - D_801124A0->pos.x;
+        diff = gRaceCourseStartEntries[gRaceCourseIndex].cameraPos.x - D_801124A0->pos.x;
         if (diff >= 0xC001) {
             diff = 0xC000;
         }
@@ -425,7 +425,7 @@ void func_8006ECBC(void) {
         }
         D_801124A0->pos.x += diff;
 
-        diff = D_800B9540[gRaceCourseIndex].cameraPos.y - D_801124A0->pos.y;
+        diff = gRaceCourseStartEntries[gRaceCourseIndex].cameraPos.y - D_801124A0->pos.y;
         if (diff >= 0xC001) {
             diff = 0xC000;
         }
@@ -434,7 +434,7 @@ void func_8006ECBC(void) {
         }
         D_801124A0->pos.y += diff;
 
-        diff = D_800B9540[gRaceCourseIndex].cameraPos.z - D_801124A0->pos.z;
+        diff = gRaceCourseStartEntries[gRaceCourseIndex].cameraPos.z - D_801124A0->pos.z;
         if (diff >= 0xC001) {
             diff = 0xC000;
         }
@@ -775,7 +775,7 @@ void func_8007031C(void) {
     }
 
     D_801124A0->pos.z += velocity;
-    D_801124A0->pos.y = func_80080CC4((s16)func_8007D200(0, D_801124A0->pos.x, D_801124A0->pos.z), D_801124A0->pos.x, D_801124A0->pos.z) + D_801124A0->unkA8 + 0xE0000;
+    D_801124A0->pos.y = getRaceCourseSurfaceHeight((s16)findRaceCourseSurfaceFromPoint(0, D_801124A0->pos.x, D_801124A0->pos.z), D_801124A0->pos.x, D_801124A0->pos.z) + D_801124A0->unkA8 + 0xE0000;
     func_8006D8B4();
 }
 
