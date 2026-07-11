@@ -5,7 +5,7 @@
 #include "system_boot.h"
 #include "game_task_scheduler.h"
 #include "menu_system_flow.h"
-#include "main_menu_visual_effects.h"
+#include "main_menu_effects.h"
 #include "main_menu_panel_ui.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
@@ -975,12 +975,12 @@ void initMainMenu(void) {
     if (gConnectedControllerCount != 0) {
         createCallbackTask(&initTitleScreenMenuCursor, 0, 0x64);
     } else {
-        createCallbackTask(&updateTitleStartPrompt, 0, 0x64);
+        createCallbackTask(&updateTitleScreenStartPrompt, 0, 0x64);
     }
     createCallbackTask(&initTitleScreenMenuOptions, 0, 0x64);
     createCallbackTask(&initTitleScreenLogo, 0, 0x64);
     createCallbackTaskWithUserId(&initTitleMenuSparkle, 0, 0x64, 0);
-    createCallbackTaskWithUserId(initTitleMenuBoardModels, 0, 0x64, 0);
+    createCallbackTaskWithUserId(initMainMenuBoardModels, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
     loadMainMenuSceneModelAnimationBank();
     initMainMenuSceneModel(0, 0);
@@ -1150,7 +1150,7 @@ void initMainMenuModeSelect(void) {
     func_8006D5CC();
     func_8006D520(0, 0x1F);
     initCallbackTaskScheduler(0);
-    createCallbackTaskWithUserId(initTitleMenuBoardModels, 0, 0x64, 0);
+    createCallbackTaskWithUserId(initMainMenuBoardModels, 0, 0x64, 0);
     D_801235B4 = 0;
     gMainMenuSelectionResult = 0;
     createCallbackTaskWithUserId(&initMainMenuModeSelectMenuOptions, 0, 0x64, 0);
@@ -1248,7 +1248,7 @@ void initMainMenuSettings(void) {
     D_801235B4 = 0;
     gMainMenuSelectionResult = 0;
     createCallbackTaskWithUserId(&initMainMenuSettingsPanel, 0, 0x64, 0);
-    createCallbackTaskWithUserId(&initTitleMenuBoardModels, 0, 0x64, 0);
+    createCallbackTaskWithUserId(&initMainMenuBoardModels, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
     setCurrentGameTaskCallback(&updateMainMenuSettings, 0);
     requestMusicSequenceBank(7);

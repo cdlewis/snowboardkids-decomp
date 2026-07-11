@@ -6,7 +6,7 @@
 #include "race_input_history.h"
 #include "game_task_scheduler.h"
 #include "training_course_ui.h"
-#include "main_menu_visual_effects.h"
+#include "main_menu_effects.h"
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
 #include "main_menu_race_flow.h"
@@ -105,7 +105,7 @@ void initMainMenuModePreviewRaceSelectionMenu(void) {
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
-    createCallbackTaskWithUserId(&initTitleMenuBoardModels, 0, 0x64, 0);
+    createCallbackTaskWithUserId(&initMainMenuBoardModels, 0, 0x64, 0);
     createCallbackTask(&initMainMenuModeSelectGrid, 0, 0x64);
     setCurrentGameTaskCallback(&fadeInMainMenuModePreviewRaceSelectionMenu, 0);
     requestMusicSequenceBank(7);
