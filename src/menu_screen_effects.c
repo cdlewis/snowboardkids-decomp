@@ -106,7 +106,7 @@ extern u8 gMenuForegroundRenderCallbackList[];
 extern u8 D_80124878[];
 extern u8 gRaceObjectRenderCallbackList[];
 extern u8 D_801248BC;
-extern u8 D_801248D4[];
+extern u8 gEffectRenderCallbackList[];
 extern u8 D_801248F8[];
 extern s16 raceSetupCharacterFocusSoundIds[];
 extern u8 raceSetupCharacterFocusAnimationIds[];
@@ -666,7 +666,7 @@ void updateMainMenuModeBoardAfterimage(MenuScreenEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(D_801248D4, drawMainMenuModeBoardTransition, (s32)arg0);
+    addRenderCallback(gEffectRenderCallbackList, drawMainMenuModeBoardTransition, (s32)arg0);
 }
 
 void updateMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
@@ -686,7 +686,7 @@ void updateMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(D_801248D4, drawMainMenuModeBoardTransition, (s32)arg0);
+    addRenderCallback(gEffectRenderCallbackList, drawMainMenuModeBoardTransition, (s32)arg0);
 }
 
 void initMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {

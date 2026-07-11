@@ -5,7 +5,7 @@
 
 extern void addRenderCallback(void *, void (*)(MainMenuSceneModel *), MainMenuSceneModel *);
 extern s16 gMainMenuSceneModelHandles[];
-extern s32 D_801248B0;
+extern s32 gSceneModelRenderCallbackList;
 extern void drawMainMenuSceneModel(MainMenuSceneModel *);
 extern void drawTexturedMainMenuSceneModel(MainMenuSceneModel *);
 
@@ -69,7 +69,7 @@ void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
     model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
-    addRenderCallback(&D_801248B0, drawMainMenuSceneModel, model);
+    addRenderCallback(&gSceneModelRenderCallbackList, drawMainMenuSceneModel, model);
 }
 
 void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s32 paletteId) {
@@ -80,7 +80,7 @@ void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s3
     model->viewportIndex = 0;
     model->textureId = (s16)textureId;
     model->paletteId = (s16)paletteId;
-    addRenderCallback(&D_801248B0, drawTexturedMainMenuSceneModel, model);
+    addRenderCallback(&gSceneModelRenderCallbackList, drawTexturedMainMenuSceneModel, model);
 }
 
 void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 textureId, s32 paletteId, s32 unusedArg) {
@@ -91,7 +91,7 @@ void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 
     model->viewportIndex = 0;
     model->textureId = (s16)textureId;
     model->paletteId = (s16)paletteId;
-    addRenderCallback(&D_801248B0, drawTexturedMainMenuSceneModel, model);
+    addRenderCallback(&gSceneModelRenderCallbackList, drawTexturedMainMenuSceneModel, model);
 }
 
 void addMainMenuSceneModelDrawCallbackForViewport0(s32 modelIndex) {
@@ -100,7 +100,7 @@ void addMainMenuSceneModelDrawCallbackForViewport0(s32 modelIndex) {
     model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
-    addRenderCallback(&D_801248B0, drawMainMenuSceneModel, model);
+    addRenderCallback(&gSceneModelRenderCallbackList, drawMainMenuSceneModel, model);
 }
 
 void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 viewportIndex) {
@@ -109,7 +109,7 @@ void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 viewportIn
     model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = (s16)viewportIndex;
-    addRenderCallback(&D_801248B0, drawMainMenuSceneModel, model);
+    addRenderCallback(&gSceneModelRenderCallbackList, drawMainMenuSceneModel, model);
 }
 
 // initMainMenuSceneModelParts best match: 99.077% at nonmatchings/func_80042AB4-2225551288923588688/base_10.c.

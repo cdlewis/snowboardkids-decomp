@@ -8,7 +8,7 @@
 #include "race_course_effects.h"
 #include "race_intro_effects.h"
 #include "race_item_effects.h"
-#include "race_pickup_and_course_props.h"
+#include "race_pickups_and_course_props.h"
 #include "race_ui_effects.h"
 
 #define COURSE_PLAYER_COUNT 4
@@ -29,7 +29,7 @@ typedef struct {
 
 extern s16 gAssetHandles[];
 extern s16 D_80112140;
-extern s16 D_80112144;
+extern s16 gRaceRspSegment2AssetHandle;
 extern u16 gRaceCourseIndex;
 extern RaceScenePlayer D_80121D80[];
 extern RomAssetRange gCharacterRawAssetRanges[];
@@ -209,7 +209,7 @@ void loadRaceCourseAssets(void) {
     size = D_14B450 - D_147910;
     gAssetHandles[10] = allocRelocatableHeapBlock(size);
     lockRelocatableHeapBlock(gAssetHandles[10]);
-    dmaReadRom(D_147910, getRelocatableHeapBlockBase(D_80112144), size);
+    dmaReadRom(D_147910, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle), size);
     loadCompressedRomAsset(D_1D82B0, D_1DCED0, 0xB);
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     loadCompressedRomAsset(D_5DAF30, D_5DB9D0, 0x2A);

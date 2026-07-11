@@ -1,5 +1,5 @@
 #include "common.h"
-#include "race_pickup_and_course_props.h"
+#include "race_pickups_and_course_props.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
@@ -171,10 +171,10 @@ extern Vec3i gPickupShardInitialVelocities[];
 extern CourseSceneryDisplayListModelEntry *gCourseSceneryDisplayListModelLists[];
 extern void *gRaceCourseSceneryDisplayLists[];
 extern Gfx *gThrownPickupModelDisplayList;
-extern s32 D_801248D4;
-extern s32 D_801248B0;
-extern s16 D_80112144;
-extern s16 D_80112146;
+extern s32 gEffectRenderCallbackList;
+extern s32 gSceneModelRenderCallbackList;
+extern s16 gRaceRspSegment2AssetHandle;
+extern s16 gRaceRspSegment3AssetHandle;
 extern s16 gRaceCommonSpriteAssetHandle;
 extern u8 gRenderMatricesDirty;
 extern u8 gRaceUpdatePaused;
@@ -264,7 +264,7 @@ void updateCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0) {
             pos = &entry->pos;
         } while (entry->modelIndex != -1);
     }
-    addRenderCallback(&D_801248B0, renderCourseSceneryDisplayListModels, arg0);
+    addRenderCallback(&gSceneModelRenderCallbackList, renderCourseSceneryDisplayListModels, arg0);
 }
 
 void initCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0) {
@@ -415,7 +415,7 @@ next:
     }
 
 done:
-    addRenderCallback(&D_801248D4, renderCourseOverlaySprites, actor);
+    addRenderCallback(&gEffectRenderCallbackList, renderCourseOverlaySprites, actor);
 }
 
 void initCourseOverlaySpriteMatrices(CourseEffectModelListActor *arg0) {
@@ -488,8 +488,8 @@ void renderThrownPickupModel(ThrownPickupRenderActor *arg0) {
 
         if (arg0->matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, gThrownPickupModelDisplayList);
         }
@@ -535,7 +535,7 @@ void updateThrownPickupModel(ThrownPickupModelActor *arg0) {
         return;
     }
 
-    addRenderCallback(&D_801248B0, renderThrownPickupModel, arg0);
+    addRenderCallback(&gSceneModelRenderCallbackList, renderThrownPickupModel, arg0);
 }
 
 void initThrownPickupModel(ThrownPickupModelActor *arg0) {
@@ -566,7 +566,7 @@ void spawnThrownPickupModel(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 }
 
 // updateThrownPickupSpawner best match: 99.625% (nonmatchings/updateThrownPickupSpawner-731940616440357983/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_and_course_props/updateThrownPickupSpawner.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/updateThrownPickupSpawner.s")
 
 #ifdef NON_MATCHING
 #define SPAWN_RANGE_MAX 0x14000000
@@ -660,7 +660,7 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
 #endif
 
 // renderRacePickupIdle best match: display-list command stream matched, remaining differences are stack/local layout.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_and_course_props/renderRacePickupIdle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/renderRacePickupIdle.s")
 
 #ifdef NON_MATCHING
 void renderRacePickupIdle(RacePickupActor *arg0) {
@@ -705,11 +705,11 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
             temp_v0 = gRegionAllocPtr++;
             temp_v0->words.w0 = 0xBC000806;
             sp10C = temp_v0;
-            sp10C->words.w1 = getRelocatableHeapBlockBase(D_80112144);
+            sp10C->words.w1 = getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle);
             temp_v0 = gRegionAllocPtr++;
             temp_v0->words.w0 = 0xBC000C06;
             sp108 = temp_v0;
-            sp108->words.w1 = getRelocatableHeapBlockBase(D_80112146);
+            sp108->words.w1 = getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle);
             gSPMatrix(gRegionAllocPtr++, arg0->scaleDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (arg0->variant == 0) {
                 gSPDisplayList(gRegionAllocPtr++, gRaceItemPickupDisplayList);
@@ -799,7 +799,7 @@ void renderRacePickupBase(RacePickupActor *arg0) {
 }
 
 // renderRacePickupRespawn best match: 99.579% (base_22.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_and_course_props/renderRacePickupRespawn.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/renderRacePickupRespawn.s")
 
 #ifdef NON_MATCHING
 void renderRacePickupRespawn(RacePickupActor *arg0) {
@@ -889,7 +889,7 @@ void updateRacePickupRespawn(RacePickupActor *arg0) {
         func_80088C80(temp_s1, 0xC0000, 0x180000, 2);
         func_80088C80(temp_s1, 0xC0000, 0x180000, 3);
     }
-    addRenderCallback(&D_801248D4, renderRacePickupRespawn, temp_s0);
+    addRenderCallback(&gEffectRenderCallbackList, renderRacePickupRespawn, temp_s0);
 }
 
 void updateRacePickupBounce(RacePickupActor *arg0) {
@@ -908,7 +908,7 @@ void updateRacePickupBounce(RacePickupActor *arg0) {
         func_80088C80(&arg0->pos, 0xC0000, 0x180000, 2);
         func_80088C80(&arg0->pos, 0xC0000, 0x180000, 3);
     }
-    addRenderCallback(&D_801248D4, renderRacePickupBase, arg0);
+    addRenderCallback(&gEffectRenderCallbackList, renderRacePickupBase, arg0);
 }
 
 void updateRacePickupCollected(RacePickupActor *arg0) {
@@ -936,11 +936,11 @@ void updateRacePickupCollected(RacePickupActor *arg0) {
             func_80088C80(temp_s1, 0xC0000, 0x180000, 3);
         }
     }
-    addRenderCallback(&D_801248D4, renderRacePickupBase, arg0);
+    addRenderCallback(&gEffectRenderCallbackList, renderRacePickupBase, arg0);
 }
 
 // updateRacePickupIdle best match: 99.901%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_and_course_props/updateRacePickupIdle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickups_and_course_props/updateRacePickupIdle.s")
 
 #ifdef NON_MATCHING
 void updateRacePickupIdle(RacePickupActor *arg0) {
@@ -1017,7 +1017,7 @@ next:
     }
 
 done:
-    addRenderCallback(&D_801248D4, renderRacePickupIdle, arg0);
+    addRenderCallback(&gEffectRenderCallbackList, renderRacePickupIdle, arg0);
 }
 #endif
 
@@ -1132,7 +1132,7 @@ void updatePickupShardParticle(PickupShardParticleActor *arg0) {
             temp_a2->rotY += temp_a2->rotVelY;
             temp_a2->rotZ += temp_a2->rotVelZ;
         }
-        addRenderCallback(&D_801248D4, renderPickupShardParticle, temp_a2);
+        addRenderCallback(&gEffectRenderCallbackList, renderPickupShardParticle, temp_a2);
         return;
     }
     removeCallbackTask(temp_a2);

@@ -53,8 +53,8 @@ extern void addRenderCallback(void *queue, void (*callback)(SnowboardTrailState 
 extern void *allocFixedTransformMatrix(u8 *source);
 
 extern u8 gRaceUpdatePaused;
-extern s16 D_80112144;
-extern s16 D_80112146;
+extern s16 gRaceRspSegment2AssetHandle;
+extern s16 gRaceRspSegment3AssetHandle;
 extern u32 D_2002208[];
 extern u32 D_20023A8[];
 extern Gfx *gRegionAllocPtr;
@@ -76,8 +76,8 @@ void func_800837D0(SnowboardTrailState *trail) {
 
     if (trail->frontDisplayList != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
         gSPMatrix(gRegionAllocPtr++, trail->frontDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_2002208);
         gSPMatrix(gRegionAllocPtr++, trail->backDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);

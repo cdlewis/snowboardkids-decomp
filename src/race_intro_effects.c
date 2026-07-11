@@ -94,11 +94,11 @@ typedef struct {
     /* 0x50 */ s16 matrixHandle2;
 } RaceIntroAssetHandles;
 
-extern void *D_801248D4;
+extern void *gEffectRenderCallbackList;
 extern void addRenderCallback(void *, void *, s32);
 extern void osWritebackDCache(void *, s32);
-extern s16 D_80112144;
-extern s16 D_80112146;
+extern s16 gRaceRspSegment2AssetHandle;
+extern s16 gRaceRspSegment3AssetHandle;
 extern s16 gRaceCommonSpriteAssetHandle;
 extern s16 gRaceCourseSpriteAssetHandle;
 extern RaceIntroAssetHandles gAssetHandles;
@@ -183,7 +183,7 @@ void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
 #endif
 
 void enqueueDrawRaceIntroModelMeshes(s32 arg0) {
-    addRenderCallback(&D_801248D4, drawRaceIntroModelMeshes, arg0);
+    addRenderCallback(&gEffectRenderCallbackList, drawRaceIntroModelMeshes, arg0);
 }
 
 void initRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
@@ -278,7 +278,7 @@ void updateRaceIntroBillboard(RaceIntroEffectActor *arg0) {
     temp_s0->position.y += sp44.y;
     temp_s0->position.z += sp44.z;
     temp_s0->radius -= 0x4000;
-    addRenderCallback(&D_801248D4, drawRaceIntroBillboard, (s32) temp_s0);
+    addRenderCallback(&gEffectRenderCallbackList, drawRaceIntroBillboard, (s32) temp_s0);
 }
 
 void waitRaceIntroBillboardSpawn(RaceIntroEffectActor *arg0) {
@@ -330,8 +330,8 @@ void drawRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
 
         if (arg0->displayList1 != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
             gSPMatrix(gRegionAllocPtr++, arg0->displayList0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, D_20028F0);
             gSPMatrix(gRegionAllocPtr++, arg0->displayList1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -414,7 +414,7 @@ void updateRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
     arg0->position.z += ((s64) -arg0->radius * cosine) / 0x1000;
     arg0->scale = 0x80 - ((fixedSine(arg0->tilt + 0x400) + 0x1000) / 0x40);
 
-    addRenderCallback(&D_801248D4, drawRaceIntroFlyoverActor, (s32) arg0);
+    addRenderCallback(&gEffectRenderCallbackList, drawRaceIntroFlyoverActor, (s32) arg0);
 }
 
 void updateRaceIntroFlyoverIdle(RaceIntroEffectActor *arg0) {
@@ -659,7 +659,7 @@ void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
 #endif
 
 void enqueueDrawRaceIntroAnimatedBillboards(s32 arg0) {
-    addRenderCallback(&D_801248D4, drawRaceIntroAnimatedBillboards, arg0);
+    addRenderCallback(&gEffectRenderCallbackList, drawRaceIntroAnimatedBillboards, arg0);
 }
 
 void initRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
