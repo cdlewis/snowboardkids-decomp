@@ -216,9 +216,9 @@ extern s32 D_800D4968[];
 extern s32 D_800D4974[];
 extern u32 D_800D4980[];
 extern u32 D_800D6270[];
-extern Gfx D_800D9D00[];
-extern Gfx D_800D9D40[];
-extern RaceItemGfxCommandSource D_800DEE30;
+extern Gfx gEffectRenderModeSetupDl[];
+extern Gfx gEffectRenderModeCleanupDl[];
+extern RaceItemGfxCommandSource gIdentityFixedTransform;
 extern RaceItemEffectAssetHandles D_80112130;
 extern RaceItemDrawLists D_801121D0;
 extern RaceItemDrawLists D_801121E0;
@@ -392,7 +392,7 @@ void func_8004E02C(RaceItemEffectActor *arg0) {
     void *sp80;
     s32 frame;
 
- do { if (D_80156609) { sp88 = D_800DEE30; sp88.x = arg0->payload.vec.x; sp88.y = arg0->payload.vec.y; sp88.z = arg0->payload.vec.z; arg0->unk30.matrix = func_8004885C(&sp88); } if (arg0->unk30.matrix != NULL) { if (func_80049000(&arg0->payload.vec) != 0) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xBB000001; _g->words.w1 = 0xFFFFFFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFC121824; _g->words.w1 = 0xFF33FFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB900031D; _g->words.w1 = 0x005049D8; } ; func_80045990(func_80043040(D_80112168), (frame = D_800D4870[arg0->playerIndex] + (arg0->unk24.timer >> 1), 0xFFFF & frame), &sp84, &sp80); { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = (u32) sp84; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = D_800D4870[arg0->playerIndex] * 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x070FF400; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400400; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x7C07C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = (u32) sp80; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01020040; _g->words.w1 = (u32) arg0->unk30.matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01000040; _g->words.w1 = (u32) D_80156614; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x0400103F; _g->words.w1 = (u32) D_800D4830; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB1060402; _g->words.w1 = 0x60200; } ; } } } while (0);
+ do { if (D_80156609) { sp88 = gIdentityFixedTransform; sp88.x = arg0->payload.vec.x; sp88.y = arg0->payload.vec.y; sp88.z = arg0->payload.vec.z; arg0->unk30.matrix = func_8004885C(&sp88); } if (arg0->unk30.matrix != NULL) { if (func_80049000(&arg0->payload.vec) != 0) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xBB000001; _g->words.w1 = 0xFFFFFFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFC121824; _g->words.w1 = 0xFF33FFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB900031D; _g->words.w1 = 0x005049D8; } ; func_80045990(func_80043040(D_80112168), (frame = D_800D4870[arg0->playerIndex] + (arg0->unk24.timer >> 1), 0xFFFF & frame), &sp84, &sp80); { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = (u32) sp84; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = D_800D4870[arg0->playerIndex] * 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x070FF400; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400400; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x7C07C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = (u32) sp80; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01020040; _g->words.w1 = (u32) arg0->unk30.matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01000040; _g->words.w1 = (u32) D_80156614; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x0400103F; _g->words.w1 = (u32) D_800D4830; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB1060402; _g->words.w1 = 0x60200; } ; } } } while (0);
 }
 
 void func_8004E3BC(RaceItemEffectActor *arg0) {
@@ -476,7 +476,7 @@ void func_8004E604(RaceItemEffectActor *arg0) {
 
     if ((u8)arg0->unk34.shorts.state.bytes.matrixDirty != 0) {
         arg0->unk34.shorts.state.bytes.matrixDirty = 0;
-        sp64 = D_800DEE30;
+        sp64 = gIdentityFixedTransform;
         sp64.unk0 = arg0->unk30.screen.y << 8;
         sp64.unk8 = arg0->unk30.screen.y << 8;
         sp64.unk10 = arg0->unk30.screen.y << 8;
@@ -548,7 +548,7 @@ void func_8004EAA8(RaceItemEffectActor *arg0) {
     if (func_80049000(&arg0->payload.vec) != 0) {
         if (arg0->unk34.shorts.state.bytes.matrixDirty != 0) {
             arg0->unk34.shorts.state.bytes.matrixDirty = 0;
-            sp80 = D_800DEE30;
+            sp80 = gIdentityFixedTransform;
             sp80.x = arg0->payload.vec.x;
             sp80.y = arg0->payload.vec.y;
             sp80.z = arg0->payload.vec.z;
@@ -561,7 +561,7 @@ void func_8004EAA8(RaceItemEffectActor *arg0) {
                               (u16)(((s8)arg0->unk34.shorts.height.byte >> 1) + 0x36),
                               &sp7C, &sp78);
 
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)D_800D9D00);
+                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeSetupDl);
                 RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)sp7C);
                 RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
                 RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
@@ -579,7 +579,7 @@ void func_8004EAA8(RaceItemEffectActor *arg0) {
                 RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)D_80156614);
                 RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)D_800D48A8);
                 RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)D_800D9D40);
+                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeCleanupDl);
             }
         } while (0);
     }
@@ -651,7 +651,7 @@ void func_8004EFF8(RaceItemEffectActor *arg0) {
     if (func_80049000(&arg0->payload.vec) != 0) {
         if (arg0->pad4E != 0) {
             arg0->pad4E = 0;
-            sp74 = D_800DEE30;
+            sp74 = gIdentityFixedTransform;
             sp74.x = arg0->payload.vec.x;
             sp74.y = arg0->payload.vec.y;
             sp74.z = arg0->payload.vec.z;
@@ -761,7 +761,7 @@ void func_8004F68C(RaceItemEffectActor *arg0) {
     if (func_80049000(&arg0->payload.vec) != 0) {
         if (arg0->unk28.bytes.unk28 != 0) {
             arg0->unk28.bytes.unk28 = 0;
-            sp78 = D_800DEE30;
+            sp78 = gIdentityFixedTransform;
             sp78.x = arg0->payload.vec.x;
             sp78.y = arg0->payload.vec.y;
             sp78.z = arg0->payload.vec.z;
@@ -830,7 +830,7 @@ void func_8004FB44(RaceItemFollowActor *arg0) {
     if (func_80049000(&arg0->pos1) != 0) {
         if (arg0->dirty != 0) {
             arg0->dirty = 0;
-            sp90 = D_800DEE30;
+            sp90 = gIdentityFixedTransform;
             sp90.x = arg0->pos1.x;
             sp90.y = arg0->pos1.y;
             sp90.z = arg0->pos1.z;
@@ -983,7 +983,7 @@ void func_80050458(RaceItemTextureActor *arg0) {
     RaceItemDrawNode *node;
     Gfx *gfx;
 
-    sp94 = D_800DEE30;
+    sp94 = gIdentityFixedTransform;
     if (D_80156609 != 0) {
         head = D_801121D0.heads;
         do {
@@ -998,7 +998,7 @@ void func_80050458(RaceItemTextureActor *arg0) {
     }
 
     gfx = gRegionAllocPtr++;
-    gfx->words.w1 = (u32)D_800D9D00;
+    gfx->words.w1 = (u32)gEffectRenderModeSetupDl;
     gfx->words.w0 = 0x06000000;
 
     head = D_801121D0.heads;
@@ -1047,7 +1047,7 @@ void func_80050458(RaceItemTextureActor *arg0) {
 
     gfx = gRegionAllocPtr++;
     gfx->words.w0 = 0x06000000;
-    gfx->words.w1 = (u32)D_800D9D40;
+    gfx->words.w1 = (u32)gEffectRenderModeCleanupDl;
 }
 #endif
 
@@ -1100,7 +1100,7 @@ void func_8005098C(RaceItemFollowActor *arg0) {
     if (func_80049000(&arg0->pos1) != 0) {
         if (arg0->dirty != 0) {
             arg0->dirty = 0;
-            sp98 = D_800DEE30;
+            sp98 = gIdentityFixedTransform;
             sp98.x = arg0->pos1.x;
             sp98.y = arg0->pos1.y;
             sp98.z = arg0->pos1.z;

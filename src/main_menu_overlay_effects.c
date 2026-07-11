@@ -121,8 +121,8 @@ extern s16 D_800D581C[];
 extern u32 D_800D5760[];
 extern u32 D_800D6270[];
 extern u32 D_800D60E0[];
-extern GfxCommandSource D_800DEE30;
-extern u32 D_800DEE50[];
+extern GfxCommandSource gIdentityFixedTransform;
+extern u32 gIdentityMatrix[];
 extern s16 gMenuFadeAlpha;
 extern u32 D_800DEFF8[];
 extern s16 D_8011213C;
@@ -256,7 +256,7 @@ void func_80053B28(MainMenuOverlayEffectActor *arg0) {
         gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));
         gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112142));
 
-        gSPMatrix(gRegionAllocPtr++, D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
         if (actor->index == 0) {
             gSPDisplayList(gRegionAllocPtr++, D_2000000);
@@ -278,7 +278,7 @@ void func_80053C90(void *arg0) {
         gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_8011214C));
         gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112154));
 
-        gSPMatrix(gRegionAllocPtr++, D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
         gSPDisplayList(gRegionAllocPtr++, D_20058A8);
     }
@@ -380,7 +380,7 @@ void func_80054130(MainMenuOverlayEffectActor *arg0) {
 
     if (arg0->unk2F != 0) {
         arg0->unk2F = 0;
-        sp74 = D_800DEE30;
+        sp74 = gIdentityFixedTransform;
         sp74.x = arg0->unk18.word;
         sp74.y = arg0->unk1C.word;
         sp74.z = arg0->unk20.word;
@@ -814,7 +814,7 @@ void func_80055530(void *arg0) {
         gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));
         gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112142));
 
-        gSPMatrix(gRegionAllocPtr++, D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
         gSPDisplayList(gRegionAllocPtr++, D_2000E70);
     }

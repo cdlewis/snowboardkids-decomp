@@ -6,6 +6,7 @@
 #include "game_boot.h"
 #include "model_animation.h"
 #include "race_course_effects.h"
+#include "race_course_preview.h"
 #include "race_item_effects.h"
 #include "race_overlay_effects.h"
 #include "race_ui_effects.h"
@@ -98,10 +99,6 @@ extern u8 D_80121B5E;
 extern u8 D_8012482B;
 extern u8 D_8012482C;
 
-extern void func_80055B34();
-extern void func_800560F4();
-extern void func_80056C44();
-extern void func_8005714C();
 #ifdef NON_MATCHING
 // loadRaceCourseAssets best match: 63.023% at nonmatchings/loadRaceCourseAssets-2225551288923588688/base_4.c.
 void loadRaceCourseAssets(void) {
@@ -400,7 +397,7 @@ block_24:
         func_80071664(&func_8006CBBC, 0, 0x64, 1);
         func_80071664(&func_8006CBBC, 0, 0x64, 2);
         func_80071664(&func_8006429C, 0, 0x64, 1);
-        createEffectTask(&func_80055B34, 0, 0x64);
+        createEffectTask(&initRaceCoursePreviewModelMeshes, 0, 0x64);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
                 createEffectTask(&func_8006713C, 0, 0x64);
@@ -425,7 +422,7 @@ block_24:
             }
         }
         if (D_80121B55 == 1) {
-            createEffectTask(&func_80056C44, 0, 0x64);
+            createEffectTask(&initRaceCoursePreviewCameraCutscene, 0, 0x64);
         }
         func_8009B58C(0x82U, 0xAFU, 0xFFU);
         break;
@@ -507,10 +504,10 @@ block_24:
         createEffectTask(&func_80063FC0, 0, 1);
         createEffectTask(&func_8006B108, 0, 0x64);
         createEffectTask(&func_8006C698, 0, 0x64);
-        createEffectTask(&func_80055B34, 0, 0x64);
-        func_80071664(&func_800560F4, 0, 0x64, 0);
-        func_80071664(&func_800560F4, 0, 0x64, 1);
-        func_80071664(&func_800560F4, 0, 0x64, 2);
+        createEffectTask(&initRaceCoursePreviewModelMeshes, 0, 0x64);
+        func_80071664(&initRaceCoursePreviewBillboard, 0, 0x64, 0);
+        func_80071664(&initRaceCoursePreviewBillboard, 0, 0x64, 1);
+        func_80071664(&initRaceCoursePreviewBillboard, 0, 0x64, 2);
         func_80071664(&func_8006429C, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
             if (sp2C != 0) {
@@ -532,7 +529,7 @@ block_24:
             }
         }
         if (D_80121B55 == 1) {
-            createEffectTask(&func_80056C44, 0, 0x64);
+            createEffectTask(&initRaceCoursePreviewCameraCutscene, 0, 0x64);
         }
         func_8009B5C0(0xFFU, 0xFFU, 0xFFU);
         break;
@@ -567,7 +564,7 @@ block_24:
         createEffectTask(&func_8006A798, 0, 0x64);
         createEffectTask(&func_8006B108, 0, 0x64);
         createEffectTask(&func_8006C698, 0, 0x64);
-        createEffectTask(&func_8005714C, 0, 0x64);
+        createEffectTask(&initRaceCoursePreviewAnimatedBillboards, 0, 0x64);
         func_80071664(&func_8006429C, 0, 0x64, 1);
         if ((D_800EC9C2 == 0) && (D_80121B5B == 0) && ((D_80121B5A == 0) || (D_80121B5A == 7) || (D_80121B5A == 8))) {
             if (sp2C != 0) {
