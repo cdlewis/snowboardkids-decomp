@@ -995,21 +995,36 @@ sort_next:
 }
 #endif
 
-// func_8007A8EC best match: 98.371% at nonmatchings/func_8007A8EC-5272447827802519043/base_13.c.
+// func_8007A8EC best match: 98.539% at nonmatchings/func_8007A8EC-6061209858023118177/base_9.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/func_8007A8EC.s")
 
 #ifdef NON_MATCHING
 void func_8007A8EC(void) {
-    u8 pad[4];
-    s32 sp50;
     s32 sp4C;
+    s16 new_var;
     RaceTimerUiPlayer *player;
     s32 shiftedProgress;
     s16 pathIndex;
+    s32 sp50;
     s32 i;
+    int new_var2;
     s32 progress;
 
-    do { player = D_80121D80; i = 0; do { func_80087600(i, &sp50, &sp4C); progress = sp50; i++; if (progress < 0) { progress = 0; } shiftedProgress = progress << 7; pathIndex = D_800B9540[D_80121B50].pathIndex; sp50 = progress; player->raceProgress = shiftedProgress / (pathIndex * 8); if (player->raceProgress >= 0x81) { player->raceProgress = 0x80; } player++; } while (i != 4); } while (0);
+    player = D_80121D80; i = 0; do { func_80087600(i, &sp50, &sp4C); progress = sp50; i++; if (progress < 0) {
+            progress = 0;
+        }
+        shiftedProgress = progress << 7;
+        new_var = D_800B9540[D_80121B50].pathIndex;
+        pathIndex = new_var;
+        sp50 = progress;
+        player->raceProgress = shiftedProgress / (pathIndex * 8);
+        if (player->raceProgress > (new_var2 = 0x81 - 1))
+        {
+            player->raceProgress = 0x80;
+        }
+        player++;
+    }
+    while (i != 4);
 
     if (D_80121B70 == 0) {
         func_800483FC(&D_80124878, func_8007A3D8, 0);
