@@ -106,7 +106,7 @@ void updateEndingCharacterVanishPoof(MainMenuEffectActor *arg0) {
     MainMenuSceneModel *model;
     s32 divisor;
 
-    model = func_80041E60(arg0->characterId); divisor = 0x24000;
+    model = getMainMenuSceneModel(arg0->characterId); divisor = 0x24000;
     if (0) {}
     arg0->x = model->displayObjects[7].screenX / divisor;
     arg0->y = -(model->displayObjects[7].screenY / divisor);
@@ -178,7 +178,7 @@ void updateEndingCharacterLoopingSparkle(MainMenuEffectActor *arg0) {
     MainMenuSceneModel *model;
     s32 divisor;
 
-    model = func_80041E60(arg0->characterId); divisor = 0x24000;
+    model = getMainMenuSceneModel(arg0->characterId); divisor = 0x24000;
     if (0) {}
     arg0->x = model->displayObjects[7].screenX / divisor;
     arg0->y = -(model->displayObjects[7].screenY / divisor);
@@ -309,7 +309,7 @@ void updateEndingRunDust(MainMenuEffectActor *arg0) {
     MainMenuSceneModel *model;
     s32 divisor;
 
-    model = func_80041E60(1); divisor = 0x24000;
+    model = getMainMenuSceneModel(1); divisor = 0x24000;
     if (0) {}
     arg0->x = model->displayObjects[7].screenX / divisor;
     arg0->y = -(model->displayObjects[7].screenY / divisor);
@@ -374,7 +374,7 @@ void updateEndingCharacterAura(MainMenuEffectActor *arg0) {
     MainMenuSceneModel *model;
     s32 divisor;
 
-    model = func_80041E60(arg0->characterId); divisor = 0x24000;
+    model = getMainMenuSceneModel(arg0->characterId); divisor = 0x24000;
     if (0) {}
     arg0->x = model->displayObjects[7].screenX / divisor;
     arg0->y = -(model->displayObjects[7].screenY / divisor);
