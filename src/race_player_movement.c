@@ -805,6 +805,7 @@ s32 func_800891B8(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex) {
     return 0;
 }
 
+// func_80089374 best match: 63.781% (nonmatchings/func_80089374-731940616440357983/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80089374.s")
 
 // func_8008A940 best match: 76.717% (nonmatchings/func_8008A940-5752545231564691495/base_9.c)
