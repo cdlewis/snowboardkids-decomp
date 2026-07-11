@@ -20,6 +20,7 @@
 #include "race_camera.h"
 #include "race_course_effects.h"
 #include "race_flow.h"
+#include "race_player_state.h"
 #include "title_menu.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
@@ -251,9 +252,6 @@ extern void func_80070614(s32);
 extern void func_80072138(s32, s32);
 extern void func_80078430(void);
 extern void func_8007AA50(void);
-extern void func_8008BEB0(void);
-extern void func_8008C704(void);
-extern void func_80096E3C(void);
 
 void func_80072C30(void) {
     func_800437F0(D_2427D0, D_243270, 6);

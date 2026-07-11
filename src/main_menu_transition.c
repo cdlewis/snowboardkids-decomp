@@ -10,6 +10,7 @@
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
 #include "main_menu_transition.h"
+#include "race_player_state.h"
 
 #define MAIN_MENU_TRANSITION_FRAMES 0x10
 
@@ -26,8 +27,6 @@ typedef struct {
     /* 0x8 */ u8 *romEnd;
 } MainMenuCourseAsset;
 
-extern void func_8008C704(void);
-extern void func_80096E3C(void);
 extern void func_800704F0(void);
 extern void func_80070C64(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
@@ -41,7 +40,6 @@ extern u8 D_1F2220[];
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
 extern void func_8007AA50(void);
-extern void func_8008BEB0(void);
 extern void func_80078430(void);
 extern MainMenuTransitionState *D_801235B8;
 extern u8 D_8010B1F0;

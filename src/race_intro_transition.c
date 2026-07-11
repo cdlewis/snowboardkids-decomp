@@ -6,6 +6,7 @@
 #include "input_task_scheduler.h"
 #include "main_menu_overlay_effects.h"
 #include "race_camera.h"
+#include "race_player_state.h"
 
 typedef struct {
     /* 0x00 */ u8 courseIndex;
@@ -82,13 +83,10 @@ extern u8 D_80123751;
 extern u8 D_80123750;
 extern s32 D_80123778;
 extern void func_80045914(void);
-extern void func_8008C704(void);
-extern void func_80096E3C(void);
 extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_8007AA50(void);
 extern void func_80078430(void);
-extern void func_8008BEB0(void);
 
 // func_8003E600 best match: 56.497% (nonmatchings/func_8003E600-7273315160691878794/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition/func_8003E600.s")

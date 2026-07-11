@@ -14,6 +14,7 @@
 #include "race_item_effects.h"
 #include "race_item_triggers.h"
 #include "race_player_movement.h"
+#include "race_player_state.h"
 
 #define MODEL_ANIM_STATE(player) ((ModelAnimState *)(player))
 #define MODEL_ANIM_INIT_STATE(player) ((ModelAnimInitState *)(player))
@@ -84,10 +85,7 @@ typedef struct {
     char pad4[0x44];
 } CourseAngleEntry;
 
-extern void func_8008C098(RaceInputPlayer *);
-extern void func_8008C7D0(RaceInputPlayer *);
 extern void func_80083298(RaceInputPlayer *);
-extern s32 func_80095F90(s16);
 extern s32 func_80072138(s32, s32);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
@@ -98,9 +96,6 @@ extern void func_80057DD4(void *);
 extern void func_8007BE80(void *);
 extern void func_8007C5E8(void *);
 extern void func_8007CBC0(void *);
-extern void func_80097038(RaceInputPlayer *);
-extern void func_8008F1B4(RaceInputPlayer *);
-extern void func_8008F1CC(RaceInputPlayer *);
 extern s32 func_800832CC(RaceInputPlayer *);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void func_8005FB30(void *);
