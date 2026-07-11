@@ -197,8 +197,8 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     }
 
     if (transition == 0) {
-        func_80099658(2);
-        func_8009954C(4);
+        resumeInputTask(2);
+        removeInputTask(4);
         return;
     }
 
@@ -230,7 +230,7 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     func_80054044(2, D_800BB811[D_80121D90 * 4]);
     func_80054044(3, D_800BB812[D_80121D90 * 4]);
     func_80054044(4, D_800BB813[D_80121D90 * 4]);
-    func_8009956C(func_8003E3AC, 0);
+    setCurrentInputTaskCallback(func_8003E3AC, 0);
 }
 #endif
 
@@ -239,7 +239,7 @@ void func_8003E3AC(void) {
     if (D_801235B8->fade == 0) {
         func_800720E4(4);
         D_801235B8->fade = 0x12C;
-        func_8009956C(func_8003E45C, 0);
+        setCurrentInputTaskCallback(func_8003E45C, 0);
     }
     func_80071664(func_8005393C, 5, 0x64, 0);
     func_8006D780(0);
@@ -261,7 +261,7 @@ void func_8003E45C(void) {
     currentState->fade -= 1;
     if ((*state)->fade == 0) {
         func_80072114(0x7E);
-        func_8009956C(func_8003E514, 0);
+        setCurrentInputTaskCallback(func_8003E514, 0);
     }
     func_80071664(func_8005393C, 5, 0x64, 0);
     func_8006D780(0);
@@ -274,7 +274,7 @@ void func_8003E514(void) {
     if (gMenuFadeAlpha >= 0xFF) {
         D_801235B8->fade = 0xFF;
         gFramebufferSwapHold = 1;
-        func_8009956C(func_8003E5A8, 0);
+        setCurrentInputTaskCallback(func_8003E5A8, 0);
     }
     func_80071664(func_8005393C, 5, 0x64, 0);
     func_8006D780(0);
@@ -287,7 +287,7 @@ void func_8003E5A8(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        func_80099658(2);
-        func_8009954C(4);
+        resumeInputTask(2);
+        removeInputTask(4);
     }
 }

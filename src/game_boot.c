@@ -250,12 +250,12 @@ void func_80099790(void) {
     func_800458E0();
     func_80048338();
     func_800484F0();
-    func_80098D80();
+    initInputTaskScheduler();
     func_8009B14C();
     func_80000450();
     func_800704F0();
     func_80071830();
-    func_800994F4(0, func_80072C30, STARTUP_CALLBACK_PRIORITY);
+    createInputTask(0, func_80072C30, STARTUP_CALLBACK_PRIORITY);
     D_8012482A = 0;
     D_8012482B = 0;
     D_8012482C = 0;

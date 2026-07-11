@@ -162,7 +162,7 @@ loop_1:
     D_8010ADE0 = createEffectTask(func_80018060, 0, 0x64);
     createEffectTask(func_80018B6C, 0, 0x64);
     D_8010ADE4 = createEffectTask(func_80017D08, 0, 0x63);
-    func_8009956C(updateCharacterSelectMenu, 0);
+    setCurrentInputTaskCallback(updateCharacterSelectMenu, 0);
 
     playerCount = D_80121B55;
     if (playerCount > 0) {
@@ -243,7 +243,7 @@ void updateCharacterSelectConfirmationMenu(void) {
             enqueueSoundEffect(0x18, 0x32);
             state = &gCharacterSelectHudState;
             if (state->confirmSelection == 0) {
-                func_8009956C(fadeOutCharacterSelectMenu, 0);
+                setCurrentInputTaskCallback(fadeOutCharacterSelectMenu, 0);
                 state = &gCharacterSelectHudState;
                 state->cursorX = 0x8C;
                 state->cursorY = 0x44;
@@ -261,7 +261,7 @@ void updateCharacterSelectConfirmationMenu(void) {
                         readyPtr[2] = 0;
                     } while ((u32) readyPtr < (u32) readyEnd);
                 }
-                func_8009956C(updateCharacterSelectMenu, 0);
+                setCurrentInputTaskCallback(updateCharacterSelectMenu, 0);
                 state = &gCharacterSelectHudState;
                 state->phase = 3;
                 state->fade = 0;
@@ -280,7 +280,7 @@ void updateCharacterSelectConfirmationMenu(void) {
                     readyPtr[2] = 0;
                 } while ((u32) readyPtr < (u32) readyEnd);
             }
-            func_8009956C(updateCharacterSelectMenu, 0);
+            setCurrentInputTaskCallback(updateCharacterSelectMenu, 0);
             state = &gCharacterSelectHudState;
             state->phase = 3;
             state->fade = 0;
@@ -304,8 +304,8 @@ void fadeOutCharacterSelectMenu(void) {
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
             D_801235B4 = 0;
-            func_80099658(2);
-            func_8009954C(4);
+            resumeInputTask(2);
+            removeInputTask(4);
         }
     }
 }

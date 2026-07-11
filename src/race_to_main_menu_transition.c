@@ -126,7 +126,7 @@ void func_8000D340(void) {
     state = D_801235B8;
     gMenuFadeAlpha = state->fade;
     D_801235B8->timer = 5;
-    func_8009956C(func_8000D590, 0);
+    setCurrentInputTaskCallback(func_8000D590, 0);
 }
 #endif
 
@@ -137,7 +137,7 @@ void func_8000D590(void) {
         if (D_801235B8->fade != 0) {
             D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0x10, 0);
         } else {
-            func_8009956C(func_8000D690, 0);
+            setCurrentInputTaskCallback(func_8000D690, 0);
             createEffectTask((EffectTaskCallback) func_8003BBBC, 0, 0x64);
             createEffectTask((EffectTaskCallback) func_80035184, 0, 0x64);
             createEffectTask((EffectTaskCallback) func_800362E8, 0, 0x64);
@@ -155,7 +155,7 @@ void func_8000D690(void) {
         D_801235B8->timer++;
         if (D_801235B8->timer == 0x12C) {
             D_801235B8->timer = 0;
-            func_8009956C(func_8000D724, 0);
+            setCurrentInputTaskCallback(func_8000D724, 0);
         }
     }
     updateEffectTasks();
@@ -176,8 +176,8 @@ void func_8000D724(void) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
-            func_80099658(2);
-            func_8009954C(4);
+            resumeInputTask(2);
+            removeInputTask(4);
         }
     }
 }

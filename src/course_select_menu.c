@@ -272,7 +272,7 @@ void func_800097E0(void) {
         D_800EC9E6 = 0;
     }
 
-    func_8009956C(nextCallback, 0);
+    setCurrentInputTaskCallback(nextCallback, 0);
     updateEffectTasks();
 
     gCourseSelectStatus.unk0Array[zero] = zero;
@@ -425,9 +425,9 @@ void func_80009C48(void) {
         if (D_80121D88 == 2) {
             D_800EC9C1 = 0;
             if (D_8010ADF8 == 0) {
-                func_8009956C(func_8000A048, 0);
+                setCurrentInputTaskCallback(func_8000A048, 0);
             } else {
-                func_8009956C(func_8000C114, 0);
+                setCurrentInputTaskCallback(func_8000C114, 0);
                 func_80072114(8);
                 D_8010ADF8 = 0;
                 D_8010AF46 = 0;
@@ -523,7 +523,7 @@ loop_6:
     }
 
     D_80121D80.unk6 = D_8010AEF8[var_a2_2];
-    func_8009956C(func_8000A214, 0);
+    setCurrentInputTaskCallback(func_8000A214, 0);
     updateEffectTasks();
 }
 #endif
@@ -724,7 +724,7 @@ block_17:
             }
             if ((D_80121D88 == 1) && (D_800EC9E6 == 1)) {
                 sp44 = var_a3_2;
-                func_8009956C(func_8000B220, 0);
+                setCurrentInputTaskCallback(func_8000B220, 0);
                 D_801235B8->screenState = 0;
             }
         } else {
@@ -823,7 +823,7 @@ block_17:
         if ((D_8010AF1C == 7) || (D_8010AF20 == 7)) {
             D_801235B8->timer = 0;
             sp44 = var_a3_2;
-            func_8009956C(func_8000AFE8, 0);
+            setCurrentInputTaskCallback(func_8000AFE8, 0);
             createEffectTask(func_8002EFB8, 0, 0x64);
         }
         var_v0_3 = (u8) D_800EC9C0;
@@ -841,7 +841,7 @@ block_17:
         D_801235B8->fade = 1;
         D_80121D88 = 0;
         sp18 = temp_v0_3;
-        func_8009956C(func_80009C48, 0);
+        setCurrentInputTaskCallback(func_80009C48, 0);
         temp_v0_3->pad0[6] = D_8010AEF8[D_8010AE64];
         if (D_801235B4 == 1) {
             D_80121D86 = 0;
@@ -940,7 +940,7 @@ void func_8000AFE8(void) {
                 } else {
                     D_8010AF20 = 1;
                 }
-                func_8009956C(func_8000A214, 0);
+                setCurrentInputTaskCallback(func_8000A214, 0);
             } else {
                 enqueueSoundEffect(0x45, 0x32);
                 D_801235B8->timer += 2;
@@ -953,12 +953,12 @@ void func_8000AFE8(void) {
             } else {
                 D_8010AF20 = 1;
             }
-            func_8009956C(func_8000A214, 0);
+            setCurrentInputTaskCallback(func_8000A214, 0);
         }
     } else if (temp_v0 > (4 - 1)) {
         D_801235B8->timer = 0;
         D_80121D88 = 9;
-        func_8009956C(func_8000A214, 0);
+        setCurrentInputTaskCallback(func_8000A214, 0);
     }
 
     var_s0 = 0;
@@ -1101,13 +1101,13 @@ after_row_change:
 
 outside_menu_rows:
     if (D_800EC9D0 == 0) {
-        func_8009956C(func_8000A214, 0);
+        setCurrentInputTaskCallback(func_8000A214, 0);
     }
 
 after_input:
     if ((gCourseSelectStatus.unk4Array[0] == 7) || (gCourseSelectStatus.unk8Array[0] == 7)) {
         D_801235B8->screenState = 1;
-        func_8009956C(func_8000B690, 0);
+        setCurrentInputTaskCallback(func_8000B690, 0);
     }
     i = 0;
     if ((s32) D_80121B55 > 0) {
@@ -1137,7 +1137,7 @@ void func_8000B690(void) {
         D_8010AF73 = temp_v0 / 7;
         D_8010ADF0 = 0;
         D_8010ADF8 = 0;
-        func_8009956C(func_8000B7B8, 0);
+        setCurrentInputTaskCallback(func_8000B7B8, 0);
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
@@ -1237,16 +1237,16 @@ block_16:
                     D_8010AF74 = 1;
                 }
                 D_8010ADF8 = 0;
-                func_8009956C(func_8000BAFC, 0);
+                setCurrentInputTaskCallback(func_8000BAFC, 0);
             } else if ((temp_a0 == 8) || ((u8) D_8010ADF8 == 2)) {
-                func_8009956C(func_8000BBB4, 0);
+                setCurrentInputTaskCallback(func_8000BBB4, 0);
                 D_8010ADF8 = 0;
                 D_801235B8->screenState = 3;
             } else if (temp_a0 == 9) {
-                func_8009956C(func_8000BCA0, 0);
+                setCurrentInputTaskCallback(func_8000BCA0, 0);
                 D_801235B8->screenState = 9;
             } else {
-                func_8009956C(func_8000BEC0, 0);
+                setCurrentInputTaskCallback(func_8000BEC0, 0);
             }
         }
     }
@@ -1272,7 +1272,7 @@ void func_8000BAFC(void) {
     if (gCourseSelectStatus.transitionState == 2) {
         D_8010ADF0 = 0;
         D_8010AF74 = 0;
-        func_8009956C(func_8000B7B8, 0);
+        setCurrentInputTaskCallback(func_8000B7B8, 0);
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
@@ -1292,7 +1292,7 @@ void func_8000BBB4(void) {
         gCourseSelectStatus.transitionState = 0;
         D_801235B8->screenState = 0;
         D_8010ADF0 = 0;
-        func_8009956C(func_8000B220, 0);
+        setCurrentInputTaskCallback(func_8000B220, 0);
     }
 
  do { var_s0 = 0; if (D_80121B55 > 0) { var_s1 = D_801121E0; do { ; (D_800EC9C4 = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < D_80121B55); } } while (0);
@@ -1305,7 +1305,7 @@ void func_8000BCA0(void) {
     s32 i;
 
     if (D_801235B8->screenState == 0xB) {
-        func_8009956C(func_80009C48, 0);
+        setCurrentInputTaskCallback(func_80009C48, 0);
         D_801235B8->fade = 1;
         D_801235B8->timer = 0;
         D_801235B8->screenState = 0;
@@ -1349,7 +1349,7 @@ void func_8000BEC0(void) {
     temp[0x3F] = D_800B34E0[(u8) D_8010AF73 * 7 + (u8) D_8010AF72];
     gCourseSelectStatus.transitionState = 6;
     createEffectTask(&func_8002FEF8, 0, 0x64);
-    func_8009956C(func_8000C010, 0); var_s0 = D_801121E0; do { D_800EC9C4 = var_s0; var_s0->unk2C();
+    setCurrentInputTaskCallback(func_8000C010, 0); var_s0 = D_801121E0; do { D_800EC9C4 = var_s0; var_s0->unk2C();
         var_s0 += 1;
     } while (var_s0 != &D_80112340);
     updateEffectTasks();
@@ -1366,7 +1366,7 @@ void func_8000C010(void) {
     func_8007066C(1, 0xE8, 0x78, 0x90, D_8010AF76, 0xA0, 0xF0, 0.6666666865f);
     if (D_8010AF76 == 0) {
         func_80070614(1);
-        func_8009956C(func_8000B7B8, 0);
+        setCurrentInputTaskCallback(func_8000B7B8, 0);
         gCourseSelectStatus.transitionState = 2;
  D_8010AED0 = 0; } var_s0 = D_801121E0; do { (D_800EC9C4 = var_s0)->unk2C(); var_s0 += 1; } while (var_s0 != (&D_80112340)); updateEffectTasks();
 }
@@ -1385,7 +1385,7 @@ void func_8000C114(void) {
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        do { gFramebufferSwapDelay = 0; D_801235B4 = 0; func_80099658(2); func_8009954C(4); count = 0; if (D_800ECA2F[0] == (-1)) { count = 1; } ptr = &D_800EC9F1; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
+        do { gFramebufferSwapDelay = 0; D_801235B4 = 0; resumeInputTask(2); removeInputTask(4); count = 0; if (D_800ECA2F[0] == (-1)) { count = 1; } ptr = &D_800EC9F1; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
         ptr += 4;
         if (ptr != (&D_800EC9F9)) {
             goto loop;

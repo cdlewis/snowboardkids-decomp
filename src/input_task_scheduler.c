@@ -83,7 +83,7 @@ InputTask *func_80099384(s32);
 s32 func_80099288(void);
 void func_80072B24(void);
 
-void func_80098D80(void) {
+void initInputTaskScheduler(void) {
     InputTask **freeTask;
     InputTask *task;
     s32 zero;
@@ -374,7 +374,7 @@ InputTask *func_80099384(s32 priority) {
 }
 #endif
 
-void func_80099464(s32 taskId) {
+void unlinkInputTask(s32 taskId) {
     InputTask *task;
     InputTask *next;
     s32 freeTaskCount;
@@ -395,7 +395,7 @@ void func_80099464(s32 taskId) {
     }
 }
 
-void func_800994F4(s32 taskId, InputTaskCallback callback, s32 priority) {
+void createInputTask(s32 taskId, InputTaskCallback callback, s32 priority) {
     InputTask *task;
 
     task = func_80099384(priority);
@@ -407,11 +407,11 @@ void func_800994F4(s32 taskId, InputTaskCallback callback, s32 priority) {
     }
 }
 
-void func_8009954C(s32 taskId) {
-    func_80099464(taskId);
+void removeInputTask(s32 taskId) {
+    unlinkInputTask(taskId);
 }
 
-void func_8009956C(InputTaskCallback callback, s32 callbackIndex) {
+void setCurrentInputTaskCallback(InputTaskCallback callback, s32 callbackIndex) {
     switch (callbackIndex) {
         case 0:
             D_801235B8->callbacks[0] = callback;
@@ -425,7 +425,7 @@ void func_8009956C(InputTaskCallback callback, s32 callbackIndex) {
     }
 }
 
-void func_800995C0(s32 callbackIndex) {
+void clearCurrentInputTaskCallback(s32 callbackIndex) {
     switch (callbackIndex) {
         case 0:
             D_801235B8->callbacks[0] = NULL;
@@ -439,7 +439,7 @@ void func_800995C0(s32 callbackIndex) {
     }
 }
 
-void func_80099614(s32 taskId) {
+void suspendInputTask(s32 taskId) {
     InputTask *task = D_8012370C;
 
     while (task != NULL) {
@@ -451,7 +451,7 @@ void func_80099614(s32 taskId) {
     }
 }
 
-void func_80099658(s32 taskId) {
+void resumeInputTask(s32 taskId) {
     InputTask *task = D_8012370C;
 
     while (task != NULL) {

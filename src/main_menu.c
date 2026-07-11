@@ -951,9 +951,9 @@ block_32:
 
 void func_80001C30(void) {
     D_800B318C = 1;
-    func_8009956C(func_80001C80, 0);
-    func_800994F4(4, func_8003ED00, 0x64);
-    func_80099614(3);
+    setCurrentInputTaskCallback(func_80001C80, 0);
+    createInputTask(4, func_8003ED00, 0x64);
+    suspendInputTask(3);
 }
 
 void func_80001C80(void) {
@@ -1008,7 +1008,7 @@ void func_80001C80(void) {
     gMenuFadeAlpha = (s16) D_801235B8->fade;
     D_800DEF10 = 1;
     enqueueSoundEffect(0x4A, 0x32);
-    func_8009956C(&func_80002024, 0);
+    setCurrentInputTaskCallback(&func_80002024, 0);
     func_80000A40(0U);
     func_80000A40(1U);
     func_80000A40(2U);
@@ -1061,7 +1061,7 @@ void func_80002024(void) {
             }
         }
         if (flag != 0) {
-            func_8009956C(func_800022B8, 0);
+            setCurrentInputTaskCallback(func_800022B8, 0);
             func_80072114(0xC);
         }
     }
@@ -1121,20 +1121,20 @@ void func_800022B8(void) {
         if (D_801235B8->timer != 0) {
             temp_v1 = D_801235B8->selection;
             if (temp_v1 == 0) {
-                func_800994F4(2, func_80073140, 0x64);
-                func_8009954C(3);
+                createInputTask(2, func_80073140, 0x64);
+                removeInputTask(3);
             } else if (temp_v1 == 1) {
-                func_8009956C(func_800024A8, 0);
+                setCurrentInputTaskCallback(func_800024A8, 0);
             } else {
-                func_8009956C(func_800028B4, 0);
+                setCurrentInputTaskCallback(func_800028B4, 0);
             }
         } else if (D_800B318C == 0) {
-            func_8009956C(func_80001C30, 0);
+            setCurrentInputTaskCallback(func_80001C30, 0);
         } else {
             D_800B318C = 0;
-            func_8009956C(func_80001C80, 0);
-            func_800994F4(4, func_8003E600, 0x64);
-            func_80099614(3);
+            setCurrentInputTaskCallback(func_80001C80, 0);
+            createInputTask(4, func_8003E600, 0x64);
+            suspendInputTask(3);
         }
     }
 }
@@ -1160,7 +1160,7 @@ void func_800024A8(void) {
     func_80041DD4(4, 5);
     func_8004209C(4, 0xFFE00000, 0, 0x509000);
     func_800420FC(4, 0, 0x100, 0);
-    func_8009956C(func_8000262C, 0);
+    setCurrentInputTaskCallback(func_8000262C, 0);
     func_800720E4(7);
 }
 
@@ -1192,7 +1192,7 @@ void func_8000262C(void) {
             if (D_801235B4 == 2) {
                 func_80072114(0x3C);
             }
-            func_8009956C(func_80002794, 0);
+            setCurrentInputTaskCallback(func_80002794, 0);
         }
     }
     func_8006D780(0);
@@ -1206,7 +1206,7 @@ void func_80002794(void) {
     if (gMenuFadeAlpha >= 0x100) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        func_8009956C(func_80002810, 0);
+        setCurrentInputTaskCallback(func_80002810, 0);
     }
     func_8006D780(0);
     func_80042034(4);
@@ -1219,15 +1219,15 @@ void func_80002810(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        func_8009956C(func_80001C80, 0);
+        setCurrentInputTaskCallback(func_80001C80, 0);
         if (D_801235B4 == 0) {
-            func_800994F4(4, func_8003FFD0, 0x64);
-            func_80099614(3);
+            createInputTask(4, func_8003FFD0, 0x64);
+            suspendInputTask(3);
             return;
         }
         if (D_801235B4 == 1) {
-            func_800994F4(4, func_8003F520, 0x64);
-            func_80099614(3);
+            createInputTask(4, func_8003F520, 0x64);
+            suspendInputTask(3);
         }
     }
 }
@@ -1250,7 +1250,7 @@ void func_800028B4(void) {
     func_80071664(&func_80052E4C, 0, 0x64, 0);
     func_80071664(&func_80055678, 0, 0x64, 0);
     func_8009B58C(0x20, 0x40, 0x50);
-    func_8009956C(&func_80002A1C, 0);
+    setCurrentInputTaskCallback(&func_80002A1C, 0);
     func_800720E4(7);
 }
 
@@ -1327,7 +1327,7 @@ void func_80002A1C(void) {
         if ((temp_v1 & 0xD000) && (D_801235B4 == 3)) {
             func_80072114(0x3C);
             enqueueSoundEffect(0x18, 0x32);
-            func_8009956C(func_80002CE4, 0);
+            setCurrentInputTaskCallback(func_80002CE4, 0);
         }
     }
     func_8006D780(0);
@@ -1339,7 +1339,7 @@ void func_80002CE4(void) {
     if (gMenuFadeAlpha >= 0x100) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        func_8009956C(func_80002D50, 0);
+        setCurrentInputTaskCallback(func_80002D50, 0);
     }
     func_8006D780(0);
     updateEffectTasks();
@@ -1350,7 +1350,7 @@ void func_80002D50(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        func_8009956C(func_80001C80, 0);
+        setCurrentInputTaskCallback(func_80001C80, 0);
     }
 }
 

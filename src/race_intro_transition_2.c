@@ -165,7 +165,7 @@ void func_8003ED00(void) {
     func_8008BEB0();
     func_80078430();
     func_80044294();
-    func_8009956C(func_8003EF7C, 0);
+    setCurrentInputTaskCallback(func_8003EF7C, 0);
     gMenuFadeAlpha = 0xFF;
     D_800EC8B0 = 0;
     D_801235B8->fadeDelay = 0x4A1;
@@ -183,7 +183,7 @@ void func_8003EF7C(void) {
         func_8007066C(0, 0xA0, 0x78, 0x120, 0, 0x140, 0xF0, 1.333333373f);
         gMenuFadeAlpha = 0;
         func_800720E4(0);
-        func_8009956C(func_8003F00C, 0);
+        setCurrentInputTaskCallback(func_8003F00C, 0);
     }
 }
 
@@ -320,7 +320,7 @@ copy_player3:
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        func_8009956C(func_8003F4B4, 0);
+        setCurrentInputTaskCallback(func_8003F4B4, 0);
     }
 }
 #endif
@@ -334,7 +334,7 @@ void func_8003F4B4(void) {
         gFramebufferSwapDelay = 0;
         func_80072260();
         D_801235B4 = 0;
-        func_80099658(3);
-        func_8009954C(4);
+        resumeInputTask(3);
+        removeInputTask(4);
     }
 }

@@ -86,7 +86,7 @@ extern s16 D_80122282;
 
 void func_8003F520(void) {
     D_80121B5B = 1;
-    func_8009956C(func_8003F554, 0);
+    setCurrentInputTaskCallback(func_8003F554, 0);
 }
 
 void func_8003F554(void) {
@@ -107,7 +107,7 @@ void func_8003F554(void) {
     func_8006D520(0, 0x1F);
     func_80071664(&func_80055678, 0, 0x64, 0);
     createEffectTask(&func_80051854, 0, 0x64);
-    func_8009956C(&func_8003F6C0, 0);
+    setCurrentInputTaskCallback(&func_8003F6C0, 0);
     func_800720E4(7);
 }
 
@@ -115,7 +115,7 @@ void func_8003F6C0(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha <= 0) {
         gMenuFadeAlpha = 0;
-        func_8009956C(&func_8003F718, 0);
+        setCurrentInputTaskCallback(&func_8003F718, 0);
     }
     func_8006D780(0);
     updateEffectTasks();
@@ -126,7 +126,7 @@ void func_8003F718(void) {
         if (D_80121B5B == 0xC) {
             func_80072114(0x3C);
         }
-        func_8009956C(&func_8003F778, 0);
+        setCurrentInputTaskCallback(&func_8003F778, 0);
     }
     func_8006D780(0);
     updateEffectTasks();
@@ -137,7 +137,7 @@ void func_8003F778(void) {
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        func_8009956C(&func_8003F7E4, 0);
+        setCurrentInputTaskCallback(&func_8003F7E4, 0);
     }
     func_8006D780(0);
     updateEffectTasks();
@@ -149,11 +149,11 @@ void func_8003F7E4(void) {
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
         if (D_80121B5B != 0xC) {
-            func_8009956C(&func_8003F864, 0);
+            setCurrentInputTaskCallback(&func_8003F864, 0);
         } else {
             D_801235B4 = 0;
-            func_80099658(3);
-            func_8009954C(4);
+            resumeInputTask(3);
+            removeInputTask(4);
         }
     }
 }
@@ -244,7 +244,7 @@ void func_8003F864(void) {
     D_8010B1F0 = 0;
     createEffectTask(func_80051FDC, 0, 0x64);
     createEffectTask(func_800524B0, 0, 0x64);
-    func_8009956C(func_8003FB70, 0);
+    setCurrentInputTaskCallback(func_8003FB70, 0);
     func_800720E4(7);
 }
 #endif
@@ -253,7 +253,7 @@ void func_8003FB70(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
-        func_8009956C(&func_8003FBE8, 0);
+        setCurrentInputTaskCallback(&func_8003FBE8, 0);
     }
     func_8008C704();
     func_800710CC(0x63);
@@ -272,7 +272,7 @@ void func_8003FBE8(void) {
     if (D_8010B1F0 != 0) {
         D_801235B8->transitionTimer = 0;
         func_80072114(0x20);
-        func_8009956C(&func_8003FC60, 0);
+        setCurrentInputTaskCallback(&func_8003FC60, 0);
     }
     D_801124B8 = 0x80;
 }
@@ -309,7 +309,7 @@ void func_8003FC60(void) {
         func_800720E4(0xF);
         func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         D_801235B8->transitionTimer = 0;
-        func_8009956C(func_8003FE54, 0);
+        setCurrentInputTaskCallback(func_8003FE54, 0);
     }
     func_8008C704();
     func_800710CC(0x63);
@@ -329,7 +329,7 @@ void func_8003FE54(void) {
     func_8007AA50();
     D_801235B8->transitionTimer += 1;
     if (D_801235B8->transitionTimer == D_800D3C90[D_80121B5B]) {
-        func_8009956C(func_8003FEF4, 0);
+        setCurrentInputTaskCallback(func_8003FEF4, 0);
         func_80072114(0x40);
     }
 }
@@ -346,7 +346,7 @@ void func_8003FEF4(void) {
         gFramebufferSwapHold = 1;
         {
             void (*func_ptr)(void) = func_8003FF78;
-            func_8009956C(func_ptr, 0);
+            setCurrentInputTaskCallback(func_ptr, 0);
         }
     }
 }
@@ -357,17 +357,17 @@ void func_8003FF78(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        func_8009956C(&func_8003F554, 0);
+        setCurrentInputTaskCallback(&func_8003F554, 0);
     }
 }
 
 void func_8003FFD0(void) {
     D_80121B5A = 1;
-    func_8009956C(&func_80040004, 0);
+    setCurrentInputTaskCallback(&func_80040004, 0);
 }
 
 void func_80040004(void) {
-    func_8009956C(&func_8004002C, 0);
+    setCurrentInputTaskCallback(&func_8004002C, 0);
 }
 
 // func_8004002C best match: 98.186% (nonmatchings/func_8004002C-6061209858023118177/base.c)
@@ -484,7 +484,7 @@ void func_8004002C(void) {
     createEffectTask(func_8000E7CC, 0, 0x64);
     createEffectTask(func_8000EA44, 0, 0x63);
     createEffectTask(func_800524B0, 0, 0x64);
-    func_8009956C(func_80040360, 0);
+    setCurrentInputTaskCallback(func_80040360, 0);
     func_800720E4(7);
 }
 #endif
@@ -493,7 +493,7 @@ void func_80040360(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
-        func_8009956C(func_800403D8, 0);
+        setCurrentInputTaskCallback(func_800403D8, 0);
     }
     func_8008C704();
     func_800710CC(0x63);
@@ -512,7 +512,7 @@ void func_800403D8(void) {
     if (D_8010B1F0 != 0) {
         D_801235B8->transitionTimer = 0;
         func_80072114(0x20);
-        func_8009956C(&func_80040450, 0);
+        setCurrentInputTaskCallback(&func_80040450, 0);
     }
     D_801124B8 = 0x80;
 }
@@ -548,7 +548,7 @@ void func_80040450(void) {
     if (D_801235B8->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
         func_800720E4(0xF);
         func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        func_8009956C(func_80040638, 0);
+        setCurrentInputTaskCallback(func_80040638, 0);
     }
     func_8008C704();
     func_800710CC(0x63);
@@ -570,7 +570,7 @@ void func_80040638(void) {
     switch (D_80121B5A) {
         case 1:
             if (D_80122282 == 0x50) {
-                func_8009956C(func_800407AC, 0);
+                setCurrentInputTaskCallback(func_800407AC, 0);
                 func_80072114(0x40);
                 return;
             }
@@ -580,14 +580,14 @@ void func_80040638(void) {
         case 4:
         case 5:
             if (D_80122282 == 0x9C) {
-                func_8009956C(func_800407AC, 0);
+                setCurrentInputTaskCallback(func_800407AC, 0);
                 func_80072114(0x40);
                 return;
             }
             break;
         case 6:
             if (D_80122282 == 0xB4) {
-                func_8009956C(func_800407AC, 0);
+                setCurrentInputTaskCallback(func_800407AC, 0);
                 func_80072114(0x40);
                 return;
             }
@@ -595,14 +595,14 @@ void func_80040638(void) {
         case 7:
         case 8:
             if (D_80122282 == 0x16) {
-                func_8009956C(func_800407AC, 0);
+                setCurrentInputTaskCallback(func_800407AC, 0);
                 func_80072114(0x40);
                 return;
             }
             break;
         case 9:
             if (D_80122282 == 0x36) {
-                func_8009956C(func_800407AC, 0);
+                setCurrentInputTaskCallback(func_800407AC, 0);
                 func_80072114(0x40);
             }
             break;
@@ -624,7 +624,7 @@ void func_800407AC(void) {
     temp_v1 = D_801235B8->transitionTimer;
     if (temp_v1 == 0x80) {
         createEffectTask(func_8000DF28, 0, 0x64);
-        func_8009956C(func_8004086C, 0);
+        setCurrentInputTaskCallback(func_8004086C, 0);
     }
     temp_v1 = D_801235B8->transitionTimer;
     D_801124B8 = temp_v1;
@@ -640,7 +640,7 @@ void func_8004086C(void) {
     func_8007AA50();
     D_801124B8 = 0x80;
     if (D_8010B1F0 != 0) {
-        func_8009956C(&func_800408E4, 0);
+        setCurrentInputTaskCallback(&func_800408E4, 0);
     }
 }
 
@@ -656,7 +656,7 @@ void func_800408E4(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gFramebufferSwapHold = 1;
-        func_8009956C(&func_8004097C, 0);
+        setCurrentInputTaskCallback(&func_8004097C, 0);
     }
 }
 
@@ -670,20 +670,20 @@ void func_8004097C(void) {
             if (D_80121B5A < 9) {
                 D_80121B5A += 1;
             }
-            func_8009956C(func_80040004, 0);
+            setCurrentInputTaskCallback(func_80040004, 0);
         }
         if (D_8010B1F0 == 2) {
-            func_8009956C(func_8004002C, 0);
+            setCurrentInputTaskCallback(func_8004002C, 0);
         }
         if (D_8010B1F0 == 3) {
-            func_8009956C(func_80040A48, 0);
+            setCurrentInputTaskCallback(func_80040A48, 0);
         }
     }
 }
 
 void func_80040A48(void) {
     if (D_80121B5A != 9) {
-        func_8009956C(func_80040C44, 0);
+        setCurrentInputTaskCallback(func_80040C44, 0);
         return;
     }
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
@@ -694,21 +694,21 @@ void func_80040A48(void) {
     func_800704F0();
     func_80070EC0(0);
     createEffectTask(&func_8000E874, 0, 0x64);
-    func_8009956C(func_80040B04, 0);
+    setCurrentInputTaskCallback(func_80040B04, 0);
 }
 
 void func_80040B04(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha <= 0) {
         gMenuFadeAlpha = 0;
-        func_8009956C(&func_80040B54, 0);
+        setCurrentInputTaskCallback(&func_80040B54, 0);
     }
     updateEffectTasks();
 }
 
 void func_80040B54(void) {
     if (D_8010B1F0 != 0) {
-        func_8009956C(&func_80040B90, 0);
+        setCurrentInputTaskCallback(&func_80040B90, 0);
     }
     updateEffectTasks();
 }
@@ -718,7 +718,7 @@ void func_80040B90(void) {
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        func_8009956C(&func_80040BF4, 0);
+        setCurrentInputTaskCallback(&func_80040BF4, 0);
     }
     updateEffectTasks();
 }
@@ -728,12 +728,12 @@ void func_80040BF4(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        func_8009956C(&func_80040C44, 0);
+        setCurrentInputTaskCallback(&func_80040C44, 0);
     }
 }
 
 void func_80040C44(void) {
     D_801235B4 = 0;
-    func_80099658(3);
-    func_8009954C(4);
+    resumeInputTask(3);
+    removeInputTask(4);
 }

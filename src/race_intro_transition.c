@@ -192,7 +192,7 @@ void func_8003E600(void) {
         D_80121B55 = 4;
     }
     func_80044294();
-    func_8009956C(func_8003EA78, 0);
+    setCurrentInputTaskCallback(func_8003EA78, 0);
     gMenuFadeAlpha = 0xFF;
     D_800EC8B0 = 0;
     D_801235B8->fadeDelay = 0x384;
@@ -207,7 +207,7 @@ void func_8003EA78(void) {
     if (D_801235B8->startDelay == 0) {
         func_800728E0();
         createEffectTask(func_800540EC, 0, 0x64);
-        func_8009956C(func_8003EAF0, 0);
+        setCurrentInputTaskCallback(func_8003EAF0, 0);
     }
 }
 
@@ -253,7 +253,7 @@ void func_8003EAF0(void) {
         if (!(gMenuFadeAlpha < 0xFF)) {
             gMenuFadeAlpha = 0xFF;
             gFramebufferSwapHold = 1;
-            func_8009956C(func_8003EC6C, 0);
+            setCurrentInputTaskCallback(func_8003EC6C, 0);
         }
     }
 }
@@ -270,7 +270,7 @@ void func_8003EC6C(void) {
         gFramebufferSwapDelay = 0;
         func_80072260();
         D_801235B4 = 0;
-        func_80099658(3);
-        func_8009954C(4);
+        resumeInputTask(3);
+        removeInputTask(4);
     }
 }
