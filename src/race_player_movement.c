@@ -51,7 +51,7 @@ extern void transformVec3iByFixedMatrix(Matrix4s, RaceVec3i *, RaceVec3i *);
 extern s16 fixedSine(s16);
 extern s16 fixedCosine(s16);
 extern s32 integerSquareRoot64(s64);
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern s8 gRacePlayerCount;
 extern s8 gRaceOrderPlayerIds[];
 extern RaceInputPlayer gFrameCounter;
@@ -207,7 +207,7 @@ void func_80087AFC(void) {
     s8 right;
     s8 left;
 
-    if (D_800EC9C2 != 2) {
+    if (gRaceSplitscreenMode != 2) {
         if (D_801235B4 & 1) {
             gRaceOrderPlayerIds[0] = 0;
             gRaceOrderPlayerIds[1] = 1;

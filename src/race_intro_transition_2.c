@@ -41,7 +41,7 @@ extern u8 D_800BB8DC[];
 extern u8 D_800BB8F4[];
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gRaceRumbleEnabled;
-extern s8 D_800EC9C2;
+extern s8 gRaceSplitscreenMode;
 extern s8 gFramebufferSwapDelay;
 extern u8 D_8011228C;
 extern s8 D_8010B1E0;
@@ -106,7 +106,7 @@ void func_8003ED00(void) {
     D_80121B5F = 0;
     D_80121B59 = one;
     gPlayerCount = four;
-    D_800EC9C2 = 0;
+    gRaceSplitscreenMode = 0;
     gTrainingCourseLesson = 0;
     gMainMenuModeSelection = 0;
 

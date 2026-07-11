@@ -40,7 +40,7 @@ extern u8 D_24C8E0[];
 extern PlayerSelectMenuState *gCurrentGameTask;
 extern PlayerSelectCursorState D_8010AE70;
 extern u8 D_800EC9C1;
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern u8 D_800EC9DD;
 extern u8 D_80121D88;
 extern s32 gActiveMenuTask;
@@ -123,7 +123,7 @@ void func_80005788(void) {
         if ((D_8010AE70.confirmState == 0x100) && (D_80121D88 == 0)) {
             if (D_800EC9C1 == 0) {
                 if (D_8010AE70.state == 1) {
-                    selection = D_800EC9C2;
+                    selection = gRaceSplitscreenMode;
                     newInputCopy = gPlayerInputHeld;
                     newInput = newInputCopy;
                     pressedUp = newInput & 0x10800;
@@ -143,7 +143,7 @@ void func_80005788(void) {
                             repeatTimer = D_8010ADF0;
                         }
                         if (selection > 0) {
-                            D_800EC9C2 = tempSelection;
+                            gRaceSplitscreenMode = tempSelection;
                             selection = ((tempSelection & 0xFF) & 0xFF) & 0xFF;
                         }
                     } else {
@@ -155,7 +155,7 @@ void func_80005788(void) {
                                 repeatTimer = D_8010ADF0;
                             }
                             if (selection < 4) {
-                                D_800EC9C2 = selection + 1;
+                                gRaceSplitscreenMode = selection + 1;
                                 selection = (u8) (selection + 1);
                             }
                         }
@@ -174,7 +174,7 @@ void func_80005788(void) {
                     }
 
                     if ((heldInput & 0x1000) || ((heldInput & 0x8000) && (D_801235B4 == 5))) {
-                        if ((D_800EC9C2 == 3) && (D_80121D85 == 5)) {
+                        if ((gRaceSplitscreenMode == 3) && (D_80121D85 == 5)) {
                             enqueueSoundEffect(0x46, 0x32);
                         } else {
                             enqueueSoundEffect(0x18, 0x32);
@@ -222,7 +222,7 @@ void func_80005788(void) {
 void func_80005B14(void) {
     u8 v0;
 
-    v0 = D_800EC9C2;
+    v0 = gRaceSplitscreenMode;
     if ((v0 == 0 || v0 == 2) && D_8010ADF8 == 0) {
         setCurrentGameTaskCallback(initCharacterSelectCourseMenuFromPlayerSelect, 0);
         D_801235B4 = 0;

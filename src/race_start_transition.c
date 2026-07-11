@@ -134,7 +134,7 @@ extern u8 D_800BB811[];
 extern u8 D_800BB812[];
 extern u8 D_800BB813[];
 extern s8 D_800DC4C0;
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern RaceSetupSaveData gGameSaveDataBuffer;
 extern u8 D_800ECA24;
 extern u8 gPlayerCount;
@@ -148,7 +148,7 @@ void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
     u8 state;
 
     transition = 0;
-    if (D_800EC9C2 == 0) {
+    if (gRaceSplitscreenMode == 0) {
         arg0 = 1;
         if (gPlayerCount == 1) {
             save = &gGameSaveDataBuffer;

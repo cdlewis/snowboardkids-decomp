@@ -57,7 +57,7 @@ extern u8 D_800DEF10;
 extern u8 D_800BB830;
 extern s8 gFramebufferSwapDelay;
 extern u8 gRaceRumbleEnabled;
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern u8 D_8011228C;
 extern u8 D_80121B54;
 extern u8 gPlayerCount;
@@ -102,7 +102,7 @@ void func_8003E600(void) {
     D_80121B59 = 0;
     gTrainingCourseLesson = 0;
     gMainMenuModeSelection = 0;
-    D_800EC9C2 = courseEntry->splitscreen;
+    gRaceSplitscreenMode = courseEntry->splitscreen;
     D_80121B5E = courseEntry->unk2;
     func_80043184();
     players = D_80121D80;
@@ -123,8 +123,8 @@ void func_8003E600(void) {
     players[1].characterId = courseEntry->player1Character;
     players[2].characterId = courseEntry->player2Character;
     players[3].characterId = courseEntry->player3Character;
-    if (D_800EC9C2 == 0) {
-        one = 1;
+    one = 1;
+    if (gRaceSplitscreenMode == 0) {
         players[0].isActive = one;
         players[1].isActive = one;
         players[2].isActive = one;
@@ -142,7 +142,7 @@ void func_8003E600(void) {
     }
     gRaceLapCount = 2;
     D_80121B5C = 0x64;
-    if (D_800EC9C2 == 0) {
+    if (gRaceSplitscreenMode == 0) {
         initCallbackTaskScheduler(one);
     } else {
         initCallbackTaskScheduler(2);
@@ -188,7 +188,7 @@ void func_8003E600(void) {
         D_801121E0[3].active = one;
         gFramebufferSwapDelay = one;
     }
-    if (D_800EC9C2 == 0) {
+    if (gRaceSplitscreenMode == 0) {
         gPlayerCount = 4;
     }
     initRaceCourseEffects();

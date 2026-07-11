@@ -90,7 +90,7 @@ extern u8 D_245A80[];
 extern u8 D_5DAF30[];
 extern u8 D_5DB9D0[];
 
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern u8 gPlayerCount;
 extern u8 D_80121B59;
 extern u8 gTrainingCourseLesson;
@@ -275,7 +275,7 @@ void initRaceCourseEffects(void) {
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 0);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         createCallbackTaskWithUserId(&func_8006CBBC, 0, 0x64, 0);
-        if ((D_800EC9C2 == 0) && (D_80121B59 == 0) && (gTrainingCourseLesson == 0) && (gMainMenuModeSelection == 0)) {
+        if ((gRaceSplitscreenMode == 0) && (D_80121B59 == 0) && (gTrainingCourseLesson == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -294,7 +294,7 @@ void initRaceCourseEffects(void) {
                 createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x52);
             }
         }
-        if (D_800EC9C2 == 1) {
+        if (gRaceSplitscreenMode == 1) {
             if (D_80121B5E == 0) {
                 createCallbackTask(&func_80065764, 0, 0x64);
             }
@@ -302,7 +302,7 @@ void initRaceCourseEffects(void) {
                 createCallbackTask(&func_800666B0, 0, 1);
             }
         }
-        if (D_800EC9C2 == 1) {
+        if (gRaceSplitscreenMode == 1) {
             if (D_80121B5E != 1) {
                 goto block_24;
             }
@@ -333,7 +333,7 @@ block_24:
         createCallbackTaskWithUserId(&func_800675AC, 0, 0x64, 0);
         createCallbackTaskWithUserId(&func_800675AC, 0, 0x64, 1);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
+        if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -353,7 +353,7 @@ block_24:
             }
             func_80061AF4(0x59, (void *)0x2290CDA1, (void *)0xC5F82815, 0xAF0);
         }
-        if (D_800EC9C2 == 1) {
+        if (gRaceSplitscreenMode == 1) {
             if (D_80121B5E == 0) {
                 createCallbackTask(&func_80065764, 0, 0x64);
             }
@@ -370,7 +370,7 @@ block_24:
         createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 2);
         createCallbackTaskWithUserId(&func_80063980, 0, 0x64, 0);
         createCallbackTaskWithUserId(&func_80063980, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
+        if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -398,7 +398,7 @@ block_24:
         createCallbackTaskWithUserId(&func_8006CBBC, 0, 0x64, 2);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         createCallbackTask(&initRaceCoursePreviewModelMeshes, 0, 0x64);
-        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
+        if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -436,7 +436,7 @@ block_24:
         createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 4);
         createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 5);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
+        if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -474,7 +474,7 @@ block_24:
         createCallbackTask(&func_8006B108, 0, 0x64);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         createCallbackTask(&func_8006C698, 0, 0x64);
-        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
+        if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -509,7 +509,7 @@ block_24:
         createCallbackTaskWithUserId(&initRaceCoursePreviewBillboard, 0, 0x64, 1);
         createCallbackTaskWithUserId(&initRaceCoursePreviewBillboard, 0, 0x64, 2);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
+        if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -545,7 +545,7 @@ block_24:
         createCallbackTask(&func_8006B108, 0, 0x64);
         createCallbackTask(&func_8006C698, 0, 0x64);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
+        if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -566,7 +566,7 @@ block_24:
         createCallbackTask(&func_8006C698, 0, 0x64);
         createCallbackTask(&initRaceCoursePreviewAnimatedBillboards, 0, 0x64);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0) && ((gTrainingCourseLesson == 0) || (gTrainingCourseLesson == 7) || (gTrainingCourseLesson == 8))) {
+        if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0) && ((gTrainingCourseLesson == 0) || (gTrainingCourseLesson == 7) || (gTrainingCourseLesson == 8))) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -579,7 +579,7 @@ block_24:
                 createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x3D);
             }
         }
-        if (D_800EC9C2 == 1) {
+        if (gRaceSplitscreenMode == 1) {
             if (D_80121B5E == 0) {
                 createCallbackTask(&func_80065764, 0, 0x64);
             }

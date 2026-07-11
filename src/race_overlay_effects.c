@@ -179,7 +179,7 @@ extern s16 D_80112168;
 extern u8 D_80156609;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
-extern u8 D_800EC9C2;
+extern u8 gRaceSplitscreenMode;
 extern s8 D_80121D93;
 extern s32 D_80121D9C;
 extern s32 D_80121DA4;
@@ -602,7 +602,7 @@ void func_800675AC(RaceOverlaySpawnActor *arg0) {
             newEntry = D_800D92D0[arg0->spawnIndex];
             entry = newEntry;
             found = FALSE;
-            if (D_800EC9C2 != 2) {
+            if (gRaceSplitscreenMode != 2) {
                 if (D_80121D93 != 0) {
                     diffZ = D_80121D9C - entry->pos.x;
                     if ((diffZ < SPAWN_RANGE_MAX) && (diffZ >= SPAWN_RANGE_MIN)) {
