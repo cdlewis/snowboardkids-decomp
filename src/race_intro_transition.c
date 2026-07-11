@@ -53,7 +53,7 @@ extern s16 gMenuFadeAlpha;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s16 D_80121B5C;
-extern u8 D_800DEF10;
+extern u8 gMenuFadeOverlayActive;
 extern u8 D_800BB830;
 extern s8 gFramebufferSwapDelay;
 extern u8 gRaceRumbleEnabled;
@@ -248,7 +248,7 @@ void func_8003EAF0(void) {
         fadeStep = state->fadeStep;
     }
     if (fadeStep != 0) {
-        D_800DEF10 = 1;
+        gMenuFadeOverlayActive = 1;
         gMenuFadeAlpha += state->fadeStep;
         if (!(gMenuFadeAlpha < 0xFF)) {
             gMenuFadeAlpha = 0xFF;

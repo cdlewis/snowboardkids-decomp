@@ -2,7 +2,7 @@
 #include "sound_manager.h"
 #include "system_boot.h"
 #include "game_task_scheduler.h"
-#include "menu_system_flow.h"
+#include "controller_main_menu_flow.h"
 #include "relocatable_heap.h"
 #include "race_flow.h"
 #include "viewport_manager.h"
@@ -170,7 +170,7 @@ extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
 extern u8 gFramebufferRenderTaskStatus1;
 extern s32 gClearFramebufferOnNextTask;
-extern s8 D_800DEF10;
+extern s8 gMenuFadeOverlayActive;
 extern Gfx *D_80124904;
 extern u8 D_80124834;
 extern BootTaskHeader D_80124908;
@@ -437,7 +437,7 @@ void initVideoTaskState(void) {
     D_8013D388 = gIdentityMatrix;
     D_8013D3C8 = gIdentityMatrix;
     D_8013D408 = gIdentityMatrix;
-    D_800DEF10 = 0;
+    gMenuFadeOverlayActive = 0;
 }
 
 void setBootFadeColor(u8 a0, u8 a1, u8 a2) {

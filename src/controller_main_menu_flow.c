@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "system_boot.h"
 #include "game_task_scheduler.h"
-#include "menu_system_flow.h"
+#include "controller_main_menu_flow.h"
 #include "menu_screen_effects.h"
 #include "main_menu_panel_ui.h"
 #include "main_menu_scene_model.h"
@@ -186,7 +186,7 @@ extern u8 D_5DCBE0[];
 extern u8 D_5DFDD0[];
 extern s8 gMainMenuSecretCodeUnlocked;
 extern u8 gMainMenuSecretCodeStep;
-extern s8 D_800DEF10;
+extern s8 gMenuFadeOverlayActive;
 extern u8 gConnectedControllerCount;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
@@ -207,7 +207,7 @@ extern u8 D_800B3104[];
 extern u8 D_800B3108[];
 
 // initControllerSubsystem best match: 85.817%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/initControllerSubsystem.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/initControllerSubsystem.s")
 
 #ifdef NON_MATCHING
 void initControllerSubsystem(void) {
@@ -258,7 +258,7 @@ loop:
 #endif
 
 // controllerSubsystemThreadMain best match: 99.507%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/controllerSubsystemThreadMain.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/controllerSubsystemThreadMain.s")
 
 #ifdef NON_MATCHING
 void controllerSubsystemThreadMain(void *arg0) {
@@ -348,7 +348,7 @@ void requestControllerRead(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/updateControllerInputState.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/updateControllerInputState.s")
 
 void requestRumbleMotorInit(u16 arg0) {
     OSMesg msg;
@@ -359,7 +359,7 @@ void requestRumbleMotorInit(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/updateRumbleMotorRequest.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/updateRumbleMotorRequest.s")
 
 void requestRumbleMotorStart(u16 arg0) {
     if (gRaceRumbleEnabled != 0) {
@@ -379,7 +379,7 @@ void requestControllerPakProbe(u16 arg0) {
 }
 
 // probeControllerPak best match: 94.507%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/probeControllerPak.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/probeControllerPak.s")
 
 #ifdef NON_MATCHING
 void probeControllerPak(u16 arg0) {
@@ -422,7 +422,7 @@ void requestControllerPakSaveStatus(u16 arg0) {
 }
 
 // checkControllerPakSaveStatus best match: 81.386%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/checkControllerPakSaveStatus.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/checkControllerPakSaveStatus.s")
 
 #ifdef NON_MATCHING
 void checkControllerPakSaveStatus(u16 arg0) {
@@ -502,7 +502,7 @@ void requestControllerPakSaveRead(u16 arg0) {
 }
 
 // readControllerPakSave best match: 85.904%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/readControllerPakSave.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/readControllerPakSave.s")
 
 #ifdef NON_MATCHING
 void readControllerPakSave(u16 arg0) {
@@ -604,7 +604,7 @@ void requestControllerPakSaveWrite(u16 arg0) {
 }
 
 // writeControllerPakSave best match: 78.684%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/writeControllerPakSave.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/writeControllerPakSave.s")
 
 #ifdef NON_MATCHING
 void writeControllerPakSave(u16 arg0) {
@@ -782,7 +782,7 @@ void updateControllerPakFreeSpaceInfo(void) {
 }
 
 // validateControllerPakSave best match: 33.167%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_system_flow/validateControllerPakSave.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/validateControllerPakSave.s")
 
 #ifdef NON_MATCHING
 u16 validateControllerPakSave(s32 arg0) {
@@ -1006,7 +1006,7 @@ void initMainMenu(void) {
     func_8006D5CC();
     func_8006D520(0, 0x1F);
     gMenuFadeAlpha = (s16) gCurrentGameTask->fade;
-    D_800DEF10 = 1;
+    gMenuFadeOverlayActive = 1;
     enqueueSoundEffect(0x4A, 0x32);
     setCurrentGameTaskCallback(&updateMainMenu, 0);
     requestRumbleMotorInit(0U);
@@ -1026,7 +1026,7 @@ void updateMainMenu(void) {
     if (temp_v1 != 0) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) temp_v1, 0x10, 0);
         if (gCurrentGameTask->fade == 0) {
-            D_800DEF10 = 0;
+            gMenuFadeOverlayActive = 0;
         }
     } else {
         if (gCurrentGameTask->delay != 0) {

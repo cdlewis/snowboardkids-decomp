@@ -12,7 +12,7 @@
 #include "course_select_menu.h"
 #include "player_setup_menu.h"
 #include "game_task_scheduler.h"
-#include "menu_system_flow.h"
+#include "controller_main_menu_flow.h"
 #include "menu_screen_effects.h"
 #include "main_menu_panel_ui.h"
 #include "player_count_select_menu.h"
@@ -183,7 +183,7 @@ extern SignedUnsignedShort gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s32 D_80121B7C;
 extern s16 gMenuFadeAlpha;
-extern s8 D_800DEF10;
+extern s8 gMenuFadeOverlayActive;
 extern u8 gRaceRumbleEnabled;
 extern RaceFlowInitScratch gGameSaveDataBuffer;
 extern u8 D_80121B5E;
@@ -632,7 +632,7 @@ void func_80074160(void) {
     state = gCurrentGameTask;
     temp_a0 = state->unk1C;
     if (temp_a0 >= 0x32) {
-        D_800DEF10 = 1;
+        gMenuFadeOverlayActive = 1;
         gMenuFadeAlpha += 0x16;
         if (gMenuFadeAlpha >= 0x100) {
             func_8006D520(0, 1);
@@ -716,7 +716,7 @@ void func_800747E8(void) {
     }
     func_80077C4C();
     if (!(D_801235B4 & 1)) {
-        D_800DEF10 = 0;
+        gMenuFadeOverlayActive = 0;
         requestCourseMusicSequence();
         setCurrentGameTaskCallback(func_80074960, 0);
     }
