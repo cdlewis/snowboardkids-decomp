@@ -334,8 +334,8 @@ extern s32 enqueueSoundEffect(s16, s16);
 
 extern void *D_8010ADE8;
 extern u8 D_8010AF06[];
-extern u8 D_8010AF46;
-extern s16 D_800B349C[];
+extern u8 gCourseSelectExtraCourseColumnState;
+extern s16 gCourseSelectColumnSoundEffects[];
 extern s8 D_800ECA2F[][0x78F8];
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
@@ -477,10 +477,10 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 }
                                 if (maxColumnOriginal == *column) {
                                     player->selection = selections[maxColumnOriginal - 1];
-                                    D_8010AF46 = 1;
+                                    gCourseSelectExtraCourseColumnState = 1;
                                 } else {
                                     player->selection = selections[*column];
-                                    D_8010AF46 = 0;
+                                    gCourseSelectExtraCourseColumnState = 0;
                                 }
 
                                 if (*momentum == 0) {
@@ -497,7 +497,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                             if (player->mode == 5) {
                                                 enqueueSoundEffect(0x40, 0x32);
                                             } else {
-                                                enqueueSoundEffect(D_800B349C[*column], 0x32);
+                                                enqueueSoundEffect(gCourseSelectColumnSoundEffects[*column], 0x32);
                                             }
                                             D_800EC9D0[i] = 9;
                                             *rowLock = 1;
