@@ -1076,17 +1076,17 @@ void updateMainMenu(void) {
     loopMainMenuSceneModelAnimation(3);
     loopMainMenuSceneModelAnimation(4);
     if (gCurrentGameTask->fade == 0xEF) {
-        func_800428C8(0);
-        func_800428C8(1);
-        func_800428C8(2);
-        func_800428C8(3);
-        func_800428C8(4);
+        addMainMenuSceneModelRenderCallback(0);
+        addMainMenuSceneModelRenderCallback(1);
+        addMainMenuSceneModelRenderCallback(2);
+        addMainMenuSceneModelRenderCallback(3);
+        addMainMenuSceneModelRenderCallback(4);
     } else {
         func_80042A00(0);
-        func_800428C8(1);
-        func_800428C8(2);
+        addMainMenuSceneModelRenderCallback(1);
+        addMainMenuSceneModelRenderCallback(2);
         func_80042A00(3);
-        func_800428C8(4);
+        addMainMenuSceneModelRenderCallback(4);
     }
     updateCallbackTasks();
 }
@@ -1107,11 +1107,11 @@ void fadeOutMainMenu(void) {
             loopMainMenuSceneModelAnimation(2);
             loopMainMenuSceneModelAnimation(3);
             loopMainMenuSceneModelAnimation(4);
-            func_800428C8(0);
-            func_800428C8(1);
-            func_800428C8(2);
-            func_800428C8(3);
-            func_800428C8(4);
+            addMainMenuSceneModelRenderCallback(0);
+            addMainMenuSceneModelRenderCallback(1);
+            addMainMenuSceneModelRenderCallback(2);
+            addMainMenuSceneModelRenderCallback(3);
+            addMainMenuSceneModelRenderCallback(4);
             updateCallbackTasks();
         }
     } else if (gPendingFramebufferSwapCount == 2) {
@@ -1197,7 +1197,7 @@ void updateMainMenuModeSelect(void) {
     }
     func_8006D780(0);
     loopMainMenuSceneModelAnimation(4);
-    func_800428C8(4);
+    addMainMenuSceneModelRenderCallback(4);
     updateCallbackTasks();
 }
 
@@ -1210,7 +1210,7 @@ void fadeOutMainMenuModeSelect(void) {
     }
     func_8006D780(0);
     loopMainMenuSceneModelAnimation(4);
-    func_800428C8(4);
+    addMainMenuSceneModelRenderCallback(4);
     updateCallbackTasks();
 }
 

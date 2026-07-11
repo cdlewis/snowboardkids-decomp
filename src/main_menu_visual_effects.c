@@ -309,7 +309,7 @@ void updateRaceSetupCharacterFocus(MainMenuVisualEffectActor *arg0) {
         func_80042A00(0);
         return;
     }
-    func_800428C8(0);
+    addMainMenuSceneModelRenderCallback(0);
 }
 
 void initRaceSetupCharacterFocus(MainMenuVisualEffectActor *arg0) {

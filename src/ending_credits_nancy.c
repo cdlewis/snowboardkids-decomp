@@ -22,12 +22,12 @@ extern s8 gEndingNancyEffectDone;
 
 void updateEndingNancyFinalPose(EndingCreditsNancy *arg0) {
     stepMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void updateEndingNancyStartFinalPose(EndingCreditsNancy *arg0) {
     stepMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (gEndingSequencePhase == 0x41) {
         setCallbackTaskCallback(arg0, updateEndingNancyFinalPose);
         setMainMenuSceneModelAnimation(1, 0x5B);
@@ -38,7 +38,7 @@ void updateEndingNancyStartFinalPose(EndingCreditsNancy *arg0) {
 
 void waitEndingNancyPhase40(EndingCreditsNancy *arg0) {
     stepMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (gEndingSequencePhase == 0x40) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, updateEndingNancyStartFinalPose);
@@ -51,7 +51,7 @@ void updateEndingNancyPhase40Prep(EndingCreditsNancy *arg0) {
     s32 sp18;
 
     sp18 = stepMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (sp18 == 1) {
         if (++arg0->timer == 0x1A) {
             arg0->timer = 0;
@@ -67,7 +67,7 @@ void updateEndingNancyWaitBeforePhase40Prep(EndingCreditsNancy *arg0) {
     s32 sp18;
 
     sp18 = stepMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (sp18 == 1) {
         if (++arg0->timer == 0x14) {
             arg0->timer = 0;
@@ -83,7 +83,7 @@ void updateEndingNancySpinUntilPhase3F(EndingCreditsNancy *arg0) {
     s32 temp_a1;
 
     sp20 = stepMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (sp20 == 0) {
         temp_a1 = (arg0->posX += 0x18000);
         setMainMenuSceneModelPosition(1, temp_a1, arg0->posY, arg0->posZ);
@@ -110,7 +110,7 @@ void updateEndingNancyTumbleToPhase3C(EndingCreditsNancy *arg0) {
     arg0->posY += var_v0 << 19;
     arg0->timer = arg0->timer + 1;
     setMainMenuSceneModelPosition(1, arg0->posX, arg0->posY, arg0->posZ);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (sp20 == 1) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, updateEndingNancySpinUntilPhase3F);
@@ -128,12 +128,12 @@ void updateEndingNancyExitUntilPhase3C(EndingCreditsNancy *arg0) {
         gEndingNancyEffectDone = 1;
     }
     setMainMenuSceneModelPosition(1, arg0->posX, arg0->posY, arg0->posZ);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void waitEndingNancyPhase3A(EndingCreditsNancy *arg0) {
     loopMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (gEndingSequencePhase == 0x3A) {
         setCallbackTaskCallback(arg0, updateEndingNancyExitUntilPhase3C);
     }
@@ -151,12 +151,12 @@ void updateEndingNancySlideToCenter(EndingCreditsNancy *arg0) {
         var_a1 = arg0->posX;
     }
     setMainMenuSceneModelPosition(1, var_a1, arg0->posY, arg0->posZ);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void waitEndingNancyPhase38(EndingCreditsNancy *arg0) {
     loopMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (gEndingSequencePhase == 0x38) {
         setCallbackTaskCallback(arg0, updateEndingNancySlideToCenter);
     }
@@ -175,7 +175,7 @@ void updateEndingNancySlideLeftSetPhase37(EndingCreditsNancy *arg0) {
         var_a1 = arg0->posX;
     }
     setMainMenuSceneModelPosition(1, var_a1, arg0->posY, arg0->posZ);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void waitEndingNancyPhase36(EndingCreditsNancy *arg0) {
@@ -198,7 +198,7 @@ void updateEndingNancySlideLeftSetPhase33(EndingCreditsNancy *arg0) {
         var_a1 = arg0->posX;
     }
     setMainMenuSceneModelPosition(1, var_a1, arg0->posY, arg0->posZ);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void waitEndingNancyPhase32Aura(EndingCreditsNancy *arg0) {
@@ -206,7 +206,7 @@ void waitEndingNancyPhase32Aura(EndingCreditsNancy *arg0) {
         arg0->posZ = 0;
     }
     setMainMenuSceneModelPosition(1, arg0->posX, arg0->posY, arg0->posZ);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (gEndingSequencePhase == 0x32) {
         setCallbackTaskCallback(arg0, updateEndingNancySlideLeftSetPhase33);
         setMainMenuSceneModelAnimation(1, 0x52);
@@ -218,7 +218,7 @@ void waitEndingNancyPhase32Aura(EndingCreditsNancy *arg0) {
 }
 
 void waitEndingNancyPhase30Vanish(EndingCreditsNancy *arg0) {
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (gEndingSequencePhase == 0x30) {
         setCallbackTaskCallback(arg0, waitEndingNancyPhase32Aura);
         setMainMenuSceneModelAnimation(1, 0x51);
@@ -238,11 +238,11 @@ void updateEndingNancyDashRightSetPhase2F(EndingCreditsNancy *arg0) {
         arg0->posX += 0x20000;
     }
     setMainMenuSceneModelPosition(1, arg0->posX, arg0->posY, arg0->posZ);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void waitEndingNancyPhase2E(EndingCreditsNancy *arg0) {
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (gEndingSequencePhase == 0x2E) {
         if (++arg0->timer == 0x14) {
             arg0->timer = 0;
@@ -257,7 +257,7 @@ void updateEndingNancyWaitPhase2EAnim(EndingCreditsNancy *arg0) {
     s32 sp18;
 
     sp18 = stepMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     sp1c = (sp18 == 1);
     if (sp1c) {
         setCallbackTaskCallback(arg0, waitEndingNancyPhase2E);
@@ -272,7 +272,7 @@ void updateEndingNancyDriftAfterPhase2D(EndingCreditsNancy *arg0) {
     temp_a1 = (arg0->posX += 0x2800);
     if (1) {
         setMainMenuSceneModelPosition(1, temp_a1, arg0->posY, arg0->posZ);
-        func_800428C8(1);
+        addMainMenuSceneModelRenderCallback(1);
     }
     if (gEndingSequencePhase == 0x2D) {
         setCallbackTaskCallback(arg0, updateEndingNancyWaitPhase2EAnim);
@@ -283,7 +283,7 @@ void updateEndingNancyDriftAfterPhase2D(EndingCreditsNancy *arg0) {
 
 void waitEndingNancyPhase2B(EndingCreditsNancy *arg0) {
     loopMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (gEndingSequencePhase == 0x2B) {
         setCallbackTaskCallback(arg0, updateEndingNancyDriftAfterPhase2D);
         setMainMenuSceneModelAnimation(1, 0x4D);
@@ -304,7 +304,7 @@ void updateEndingNancyRunRightThenPhase2A(EndingCreditsNancy *arg0) {
         var_a1 = arg0->posX;
     }
     setMainMenuSceneModelPosition(1, var_a1, arg0->posY, arg0->posZ);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void waitEndingNancyPhase29(EndingCreditsNancy *arg0) {
@@ -324,12 +324,12 @@ void updateEndingNancySlideFarLeftSetPhase12(EndingCreditsNancy *arg0) {
         setCallbackTaskCallback(arg0, waitEndingNancyPhase29);
     }
     loopMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void updateEndingNancyWaitBeforeSlideFarLeft(EndingCreditsNancy *arg0) {
     loopMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (++arg0->timer == 0x32) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, updateEndingNancySlideFarLeftSetPhase12);
@@ -344,7 +344,7 @@ void updateEndingNancySlideRightToPose(EndingCreditsNancy *arg0) {
         arg0->posX = -0x580000;
         setCallbackTaskCallback(arg0, updateEndingNancyWaitBeforeSlideFarLeft);
     }
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void waitEndingNancyPhase11(EndingCreditsNancy *arg0) {
@@ -367,12 +367,12 @@ void updateEndingNancyExitRightSetPhase0F(EndingCreditsNancy *arg0) {
         setCallbackTaskCallback(arg0, waitEndingNancyPhase11);
         gEndingSequencePhase = 0xF;
     }
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void waitEndingNancyPhase0E(EndingCreditsNancy *arg0) {
     loopMainMenuSceneModelAnimation(1);
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
     if (gEndingSequencePhase == 0xE) {
         setCallbackTaskCallback(arg0, updateEndingNancyExitRightSetPhase0F);
         setMainMenuSceneModelAnimation(1, 0x1F);
@@ -388,7 +388,7 @@ void updateEndingNancyStartRunDust(EndingCreditsNancy *arg0) {
             createCallbackTask(&initEndingRunDust, 0, 0x64);
         }
     }
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void updateEndingNancyRepeatAnimThenVanish(EndingCreditsNancy *arg0) {
@@ -405,7 +405,7 @@ void updateEndingNancyRepeatAnimThenVanish(EndingCreditsNancy *arg0) {
             spawnEndingCharacterVanishPoof(8, -0x40, 1, 0);
         }
     }
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void startEndingNancyRepeatAnim(EndingCreditsNancy *arg0) {
@@ -413,7 +413,7 @@ void startEndingNancyRepeatAnim(EndingCreditsNancy *arg0) {
         setCallbackTaskCallback(arg0, updateEndingNancyRepeatAnimThenVanish);
         setMainMenuSceneModelAnimation(1, 0x13);
     }
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void updateEndingNancyWaitBeforeRepeatAnim(EndingCreditsNancy *arg0) {
@@ -425,7 +425,7 @@ void updateEndingNancyWaitBeforeRepeatAnim(EndingCreditsNancy *arg0) {
         setMainMenuSceneModelAnimation(1, 0x12);
         spawnEndingDelayedSparkle(-0xB, -0x58, 1);
     }
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void waitEndingNancyPhase0C(EndingCreditsNancy *arg0) {
@@ -439,7 +439,7 @@ void waitEndingNancyPhase0C(EndingCreditsNancy *arg0) {
         setCallbackTaskCallback(arg0, updateEndingNancyWaitBeforeRepeatAnim);
         setMainMenuSceneModelAnimation(1, 0x11);
     }
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void updateEndingNancyEnterUntilPhase0B(EndingCreditsNancy *arg0) {
@@ -452,7 +452,7 @@ void updateEndingNancyEnterUntilPhase0B(EndingCreditsNancy *arg0) {
         setMainMenuSceneModelPosition(1, arg0->posX, arg0->posY, arg0->posZ);
         loopMainMenuSceneModelAnimation(1);
     }
-    func_800428C8(1);
+    addMainMenuSceneModelRenderCallback(1);
 }
 
 void waitEndingNancyPhase9(EndingCreditsNancy *arg0) {

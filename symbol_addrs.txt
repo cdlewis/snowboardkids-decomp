@@ -712,6 +712,7 @@ stepMainMenuSceneModelAnimation = 0x80041FB4; // type:func rom:0x42BB4
 loopMainMenuSceneModelAnimation = 0x80042034; // type:func rom:0x42C34
 setMainMenuSceneModelPosition = 0x8004209C; // type:func rom:0x42C9C
 setMainMenuSceneModelRotation = 0x800420FC; // type:func rom:0x42CFC
+addMainMenuSceneModelRenderCallback = 0x800428C8; // type:func rom:0x434C8
 getMemoryBlockBase = 0x80043040; // type:func
 resetRenderScratchAllocator = 0x8004835C; // type:func
 addRenderCallback = 0x800483FC; // type:func
