@@ -775,7 +775,7 @@ void updateRaceCameraIntroPan(void) {
     }
 
     D_801124A0->pos.z += velocity;
-    D_801124A0->pos.y = getRaceCourseSurfaceHeight((s16)findRaceCourseSurfaceFromPoint(0, D_801124A0->pos.x, D_801124A0->pos.z), D_801124A0->pos.x, D_801124A0->pos.z) + D_801124A0->unkA8 + 0xE0000;
+    D_801124A0->pos.y = getRaceCourseSurfaceHeight((s16)findRaceCourseSurfaceFromHint(0, D_801124A0->pos.x, D_801124A0->pos.z), D_801124A0->pos.x, D_801124A0->pos.z) + D_801124A0->unkA8 + 0xE0000;
     updateRaceCameraLookAtTransform();
 }
 

@@ -7,21 +7,22 @@ typedef struct RaceMotionState RaceMotionState;
 typedef struct RaceMotionInitState RaceMotionInitState;
 
 void initRaceCourseSurfaceData(void);
-s32 findRaceCourseSurfaceFromPoint(s32 index, s32 x, s32 z);
+s32 findRaceCourseSurfaceFromHint(s32 surfaceIndex, s32 x, s32 z);
 s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z);
-void pushRaceCourseSurfaceBoundaryWithVelocity(s32 *arg0, s32 *arg1, s32 arg2);
+void pushRaceCourseSurfaceBoundaryWithVelocity(s32 *velocityX, s32 *velocityZ, s32 radius);
 void resolveRaceCourseSurfaceCollisionWithNormal(void);
-void resolveRaceCourseSurfaceCollisionWithVelocity(s16 arg0, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ, s32 *velocityX,
-                  s32 *velocityZ);
-void pushRaceCourseSurfaceBoundary(s32 arg0);
-void resolveRaceCourseSurfaceCollision(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5);
-s32 getRaceCourseSurfaceHeight(s32 arg0, s32 arg1, s32 arg2);
-s32 getRaceCourseSurfaceType(s32 arg0, s32 arg1, s32 arg2);
-u32 projectRaceCourseSurfaceProgress(s32 arg0, s32 arg1, s32 arg2);
-void getRaceCourseSurfaceSpawnTransform(s32 arg0, s32 *x, s32 *y, s32 *z, s16 *angle);
-void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s32 *arg4, s32 arg5, s32 arg6);
-void getRaceCourseProgressPosition(s32 arg0, s32 *arg1, s32 *arg2, s32 arg3);
-s16 getRaceCourseNextSurface(s32 arg0);
+void resolveRaceCourseSurfaceCollisionWithVelocity(s16 surfaceIndex, s32 x, s32 z, s32 radius, s32 *pushX,
+                  s32 *pushZ, s32 *velocityX, s32 *velocityZ);
+void pushRaceCourseSurfaceBoundary(s32 radius);
+void resolveRaceCourseSurfaceCollision(s16 surfaceIndex, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ);
+s32 getRaceCourseSurfaceHeight(s32 surfaceIndex, s32 x, s32 z);
+s32 getRaceCourseSurfaceType(s32 surfaceIndex, s32 x, s32 z);
+u32 projectRaceCourseSurfaceProgress(s32 surfaceIndex, s32 x, s32 z);
+void getRaceCourseSurfaceSpawnTransform(s32 surfaceIndex, s32 *x, s32 *y, s32 *z, s16 *angle);
+void getRaceCourseTargetPositionAhead(s32 surfaceIndex, s32 x, s32 z, s32 *targetX, s32 *targetZ, s32 playerIndex,
+                  s32 lookahead);
+void getRaceCourseProgressPosition(s32 surfaceIndex, s32 *x, s32 *z, s32 playerIndex);
+s16 getRaceCourseNextSurface(s32 surfaceIndex);
 void setRaceMotionAnimation(RaceMotionState *state, s32 animIndex);
 void loadRaceMotionAnimationFrame(RaceMotionState *state);
 void loadRaceMotionJointAnimationFrame(RaceMotionState *state);
