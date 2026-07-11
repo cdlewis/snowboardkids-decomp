@@ -492,7 +492,7 @@ void func_80088294(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
 }
 #endif
 
-// func_80088664 best match: 99.517% (nonmatchings/func_80088664-2225551288923588688/base_1.c)
+// func_80088664 best match: 99.643% (nonmatchings/func_80088664-6113366811127043669/base_order_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80088664.s")
 
 #ifdef NON_MATCHING
@@ -506,10 +506,10 @@ void func_80088664(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIn
     s32 xzLimit;
     s32 pushX;
     s32 pushZ;
+    s16 angle;
     s32 localX;
     s32 localZ;
     s32 cosine;
-    s16 angle;
 
     player = &D_80121D80[playerIndex];
     if (player->isActive != 0) {
