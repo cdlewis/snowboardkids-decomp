@@ -6,6 +6,7 @@
 #include "controller_pak_menu_ui.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
+#include "shop_menu_flow.h"
 
 typedef struct {
     /* 0x0 */ s16 x;
@@ -16,9 +17,6 @@ extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_80072138(s32, s32);
 extern void func_80045914(void);
-
-void func_8000C3C8(void);
-void func_8000C52C(void);
 
 extern CharacterSelectFlowState *D_801235B8;
 extern ShopMenuPromptTransition D_8010AF80;
