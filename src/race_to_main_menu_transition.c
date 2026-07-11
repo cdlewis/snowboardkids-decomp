@@ -11,9 +11,9 @@
 #include "race_start_transition.h"
 #include "ending_credits_slash.h"
 #include "ending_credits_nancy.h"
-#include "ending_credits_tommy.h"
+#include "ending_credits_jam.h"
 #include "main_menu_scene_actor_3.h"
-#include "main_menu_scene_actor_4.h"
+#include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
 #include "viewport_manager.h"
 #define MENU_RENDERING_S16_STEP_PROTOTYPE
@@ -68,9 +68,9 @@ extern s8 gMenuTransitionRotationStep;
 extern s16 gMenuTransitionRotationAngle;
 extern MainMenuFlagByte gEndingCharacterEffectDoneFlags[];
 extern s8 gEndingNancyEffectDone;
-extern s8 gEndingTommyEffectDone;
+extern s8 gEndingJamEffectDone;
 extern s8 gEndingCharacter3EffectDone;
-extern s8 gEndingCharacter4EffectDone;
+extern s8 gEndingTommyEffectDone;
 extern Vec3i gMenuCameraTargetOffset;
 extern s16 D_80112130[];
 extern MenuCameraObject D_801121E0;
@@ -141,8 +141,8 @@ void func_8000D590(void) {
             createCallbackTask((CallbackTaskCallback) initEndingCreditsPageTextActor, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsSlash, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsNancy, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback) func_80036FB4, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsTommy, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback) initEndingCreditsJam, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_8003B264, 0, 0x64);
             requestMusicSequenceBank(0xA);
         }

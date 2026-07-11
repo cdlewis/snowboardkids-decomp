@@ -2,7 +2,7 @@
 #include "callback_task_scheduler.h"
 #include "menu_transition_effects.h"
 #include "ending_credits_slash.h"
-#include "main_menu_scene_actor_4.h"
+#include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
 
@@ -911,7 +911,7 @@ void updateEndingSlashRepeatAnim17(EndingCreditsSlash *arg0) {
         }
     }
     func_800428C8(0);
-    func_800373AC(&gEndingActorShadow);
+    addEndingActorShadowRenderCallback(&gEndingActorShadow);
 }
 
 void startEndingSlashRepeatAnim17(s32 arg0) {
@@ -920,7 +920,7 @@ void startEndingSlashRepeatAnim17(s32 arg0) {
         setMainMenuSceneModelAnimation(0, 0x17);
     }
     func_800428C8(0);
-    func_800373AC(&gEndingActorShadow);
+    addEndingActorShadowRenderCallback(&gEndingActorShadow);
 }
 
 void waitEndingSlashPhase0D(EndingCreditsSlash *arg0) {
@@ -930,7 +930,7 @@ void waitEndingSlashPhase0D(EndingCreditsSlash *arg0) {
         arg0->unk2C = 0x16;
     }
     func_800428C8(0);
-    func_800373AC(&gEndingActorShadow);
+    addEndingActorShadowRenderCallback(&gEndingActorShadow);
 }
 
 void updateEndingSlashAfterPhase0DAnim(EndingCreditsSlash *arg0) {
@@ -944,7 +944,7 @@ void updateEndingSlashAfterPhase0DAnim(EndingCreditsSlash *arg0) {
         }
     }
     func_800428C8(0);
-    func_800373AC(&gEndingActorShadow);
+    addEndingActorShadowRenderCallback(&gEndingActorShadow);
 }
 
 void updateEndingSlashLongWaitSetShadow(EndingCreditsSlash *arg0) {
