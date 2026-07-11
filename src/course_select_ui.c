@@ -127,7 +127,7 @@ extern u8 D_8010AEA4[];
 extern u8 D_8010AEB0;
 extern u8 D_8010AEA0[];
 extern u8 D_8010AF46;
-extern u8 D_8010AF18[];
+extern u8 gCourseSelectStatus[];
 extern u8 D_8010AF1C;
 extern s16 D_800EC9D0[];
 extern u8 D_800B7040[];
@@ -230,12 +230,12 @@ void func_80023A68(void *arg0) {
     if ((s32)D_80121B55 > 0) {
         do {
             state = actor->state[i];
-            if (D_8010AF18[4 + i] != state) {
-                actor->state[i] = D_8010AF18[4 + i];
-                actor->timer[i] = D_8010AF18[0xC + i];
-                actor->angle[i] = *(u16 *)&D_8010AF18[(i * 2) + 0x14];
-                D_8010AF18[0xC + i] = 0;
-                *(s16 *)&D_8010AF18[(i * 2) + 0x14] = 0;
+            if (gCourseSelectStatus[4 + i] != state) {
+                actor->state[i] = gCourseSelectStatus[4 + i];
+                actor->timer[i] = gCourseSelectStatus[0xC + i];
+                actor->angle[i] = *(u16 *)&gCourseSelectStatus[(i * 2) + 0x14];
+                gCourseSelectStatus[0xC + i] = 0;
+                *(s16 *)&gCourseSelectStatus[(i * 2) + 0x14] = 0;
                 state = actor->state[i];
             }
 
@@ -362,7 +362,7 @@ void func_80023A68(void *arg0) {
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x50) = sp78.x;
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x54) = sp78.y;
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x58) = sp78.z;
-            D_8010AF18[4 + i] = actor->state[i];
+            gCourseSelectStatus[4 + i] = actor->state[i];
             i++;
         } while (i < (s32)D_80121B55);
     }
@@ -515,13 +515,13 @@ void func_80024380(void *arg0) {
     if ((s32)D_80121B55 > 0) {
         offset = 0;
         do {
-            state = D_8010AF18[8 + i];
+            state = gCourseSelectStatus[8 + i];
             if (state != actor->state[i]) {
                 actor->state[i] = state;
-                actor->timer[i] = D_8010AF18[0x10 + i];
-                actor->angle[i] = *(u16 *)&D_8010AF18[offset + 0x1C];
-                D_8010AF18[0x10 + i] = 0;
-                *(s16 *)&D_8010AF18[offset + 0x1C] = 0;
+                actor->timer[i] = gCourseSelectStatus[0x10 + i];
+                actor->angle[i] = *(u16 *)&gCourseSelectStatus[offset + 0x1C];
+                gCourseSelectStatus[0x10 + i] = 0;
+                *(s16 *)&gCourseSelectStatus[offset + 0x1C] = 0;
                 state = actor->state[i];
             }
 
@@ -645,7 +645,7 @@ void func_80024380(void *arg0) {
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x50) = sp78.x;
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x54) = sp78.y;
             *(s32 *)((u8 *)actor + (i * 0x20) + 0x58) = sp78.z;
-            D_8010AF18[8 + i] = actor->state[i];
+            gCourseSelectStatus[8 + i] = actor->state[i];
             i++;
             offset += 2;
         } while (i < (s32)D_80121B55);
@@ -673,7 +673,7 @@ void func_80024968(void *arg0) {
     CourseSelectTempVec3i *var_s7;
     s32 one;
 
-    var_s3 = (u8 *) &D_8010AF18;
+    var_s3 = (u8 *) &gCourseSelectStatus;
     actor = arg0;
     var_s1 = arg0; var_s2 = arg0;
     var_s4 = (s16 *) ((u8 *) arg0 + 0x3C);
@@ -993,7 +993,7 @@ void func_80025BE4(CourseSelectWidgetActor *arg0) {
             }
             i++;
             statePtr = (CourseSelectWidgetActor *) ((u8 *) statePtr + 1);
-            D_8010AF18[i - 1] = state;
+            gCourseSelectStatus[i - 1] = state;
         } while (i < (s32) D_80121B55);
     }
 
@@ -1413,7 +1413,7 @@ void func_80026C4C(CourseSelectWidgetActor *arg0) {
     u32 price;
     s16 *digits;
 
-    status = (CourseSelectStatus26C4C *)D_8010AF18;
+    status = (CourseSelectStatus26C4C *)gCourseSelectStatus;
     selection = (CourseSelectSelection26C4C *)D_80121D80;
 
     if (status->unk2C == 0) {

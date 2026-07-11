@@ -2,7 +2,7 @@
 #include "asset_manager.h"
 #include "effect_task_scheduler.h"
 #include "character_select_course_menu.h"
-#include "character_select_transition.h"
+#include "race_character_select_menu.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
 #include "race_camera.h"
@@ -20,7 +20,7 @@ typedef struct {
     char pad0[0x3F];
     s8 characterState[12];
     char pad4B[0x78AD];
-} CharacterSelectTransitionSaveData;
+} RaceCharacterSelectSaveData;
 
 typedef struct {
     char pad0[5];
@@ -29,7 +29,7 @@ typedef struct {
     s8 unk7;
     u8 state;
     char pad9[0x603];
-} CharacterSelectTransitionPlayer;
+} RaceCharacterSelectPlayer;
 
 typedef struct {
     u8 unk0[4];
@@ -45,7 +45,7 @@ typedef struct {
     s16 unk2A;
     s16 unk2C;
     u8 unk2E;
-} CharacterSelectTransitionState2;
+} RaceCharacterSelectStatus;
 
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
@@ -74,7 +74,7 @@ extern u8 D_800EC9C2;
 extern s16 D_800EC9D0[];
 extern s8 D_800EC9E5;
 extern s8 D_800EC9E6;
-extern CharacterSelectTransitionSaveData D_800EC9F0[];
+extern RaceCharacterSelectSaveData D_800EC9F0[];
 extern s32 D_8010ADDC;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
@@ -94,7 +94,7 @@ extern s32 D_8010AEE8[];
 extern u8 D_8010AEF8[][4];
 extern s8 D_8010AEFB[];
 extern u8 D_8010AF08[][3];
-extern CharacterSelectTransitionState2 D_8010AF18;
+extern RaceCharacterSelectStatus gCourseSelectStatus;
 extern s16 D_80112130[];
 extern s32 D_80112204;
 extern void (*D_8011220C)(void);
@@ -105,15 +105,15 @@ extern void (*D_8011236C)(void);
 extern s32 D_80112414;
 extern void (*D_8011241C)(void);
 extern u8 D_80121B55;
-extern CharacterSelectTransitionPlayer D_80121D80[];
-extern CharacterSelectTransitionPlayer gFrameCounter;
+extern RaceCharacterSelectPlayer D_80121D80[];
+extern RaceCharacterSelectPlayer gFrameCounter;
 extern s32 D_801235B4;
 
-// func_80006F30 best match: 78.174% (nonmatchings/func_80006F30-7273315160691878794/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_transition/func_80006F30.s")
+// initRaceCharacterSelectMenu best match: 78.174% (nonmatchings/initRaceCharacterSelectMenu-7273315160691878794/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_character_select_menu/initRaceCharacterSelectMenu.s")
 
 #ifdef NON_MATCHING
-void func_80006F30(void) {
+void initRaceCharacterSelectMenu(void) {
     s32 size;
     s32 i;
     s32 j;
@@ -197,7 +197,7 @@ void func_80006F30(void) {
     D_800EC9E6 = 0;
     D_801235B8->timer = 0;
     D_801235B8->unk20 = 0;
-    func_8009956C(func_80007840, 0);
+    func_8009956C(updateRaceCharacterSelectMenu, 0);
 
     for (i = 0; &D_80121D80[i] < &gFrameCounter; i++) {
         D_80121D80[i].mode = 0;
@@ -263,12 +263,12 @@ void func_80006F30(void) {
             if (D_80121D80[i].mode == 5) {
                 j = 0;
             }
-            k = D_8010AF18.unk2E;
+            k = gCourseSelectStatus.unk2E;
         } else {
-            k = D_8010AF18.unk2E;
+            k = gCourseSelectStatus.unk2E;
             if (k == 1) {
                 j = 0;
-                D_8010AF18.unk2E = 0;
+                gCourseSelectStatus.unk2E = 0;
                 k = 0;
             } else {
                 j = selected % 3;
@@ -299,31 +299,31 @@ void func_80006F30(void) {
         }
 
         D_80121D80[i].selection = D_8010AEF8[i][j];
-        D_8010AF18.unk0[i] = 0;
-        D_8010AF18.unk4[i] = 0;
-        D_8010AF18.unk8[i] = 0;
-        D_8010AF18.unkC[i] = 0;
-        D_8010AF18.unk10[i] = 0;
-        D_8010AF18.unk14[i] = 0;
-        D_8010AF18.unk1C[i] = 0;
-        D_8010AF18.unk24[i] = 0;
+        gCourseSelectStatus.unk0[i] = 0;
+        gCourseSelectStatus.unk4[i] = 0;
+        gCourseSelectStatus.unk8[i] = 0;
+        gCourseSelectStatus.unkC[i] = 0;
+        gCourseSelectStatus.unk10[i] = 0;
+        gCourseSelectStatus.unk14[i] = 0;
+        gCourseSelectStatus.unk1C[i] = 0;
+        gCourseSelectStatus.unk24[i] = 0;
     }
 
-    D_8010AF18.unk28 = 0;
-    D_8010AF18.unk2A = 0;
-    D_8010AF18.unk2C = 0;
+    gCourseSelectStatus.unk28 = 0;
+    gCourseSelectStatus.unk2A = 0;
+    gCourseSelectStatus.unk2C = 0;
 }
 #endif
 
-// func_80007840 best match: 57.412% (nonmatchings/func_80007840-5752545231564691495/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_transition/func_80007840.s")
+// updateRaceCharacterSelectMenu best match: 57.412% (nonmatchings/updateRaceCharacterSelectMenu-5752545231564691495/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_character_select_menu/updateRaceCharacterSelectMenu.s")
 
 #ifdef NON_MATCHING
-typedef struct CharacterSelectTransitionObject {
-    /* 0x00 */ char pad0[0x2C];
+typedef struct RaceCharacterSelectObject {
+    /* 0x00 */ u8 pad0[0x2C];
     /* 0x2C */ void (*update)(void);
-    /* 0x30 */ char pad30[0x80];
-} CharacterSelectTransitionObject;
+    /* 0x30 */ u8 pad30[0x80];
+} RaceCharacterSelectObject;
 
 extern void *func_80071408();
 extern void func_80072114(s32);
@@ -340,13 +340,13 @@ extern u8 D_8010AF06[];
 extern u8 D_8010AF46;
 extern s16 D_800B349C[];
 extern s8 D_800ECA2F[][0x78F8];
-extern s32 D_80123758[];
-extern s32 D_80123778[];
-extern CharacterSelectTransitionObject *D_800EC9C4;
-extern CharacterSelectTransitionObject D_801121E0[];
-extern CharacterSelectTransitionObject D_801124A0;
+extern s32 gPlayerInputHeld[];
+extern s32 gPlayerInputPressed[];
+extern RaceCharacterSelectObject *D_800EC9C4;
+extern RaceCharacterSelectObject D_801121E0[];
+extern RaceCharacterSelectObject D_801124A0;
 
-void func_80007840(void) {
+void updateRaceCharacterSelectMenu(void) {
     s32 readyCount;
     s32 blockingCount;
     s32 activeCount;
@@ -366,8 +366,8 @@ void func_80007840(void) {
     s8 *rowLock;
     s32 *momentum;
     u8 *selections;
-    CharacterSelectTransitionPlayer *player;
-    CharacterSelectTransitionObject *obj;
+    RaceCharacterSelectPlayer *player;
+    RaceCharacterSelectObject *obj;
 
     readyCount = 0;
     if (D_801235B8->fade != 0) {
@@ -413,7 +413,7 @@ void func_80007840(void) {
             for (i = 0; i < playerCount; i++, player++) {
                 row = D_800EC9D0[i];
                 if (row == 0) {
-                    if ((D_8010AF18.unk0[i] == 1) && (player->state == 0)) {
+                    if ((gCourseSelectStatus.unk0[i] == 1) && (player->state == 0)) {
                         confirmHold = &D_8010AECC[i];
                         if (((u8) *confirmHold & 1) == 0) {
                             if (D_8010AEB0 == 1) {
@@ -432,13 +432,13 @@ void func_80007840(void) {
                                     maxColumn = (maxColumn - 1) & 0xFF;
                                 }
 
-                                held = D_80123758[i];
+                                held = gPlayerInputHeld[i];
                                 oldColumn = *column;
                                 heldHorizontal = held & 0x10800;
                                 if ((heldHorizontal == 0) && !(held & 0x20400)) {
                                     *repeatTimer = 0;
                                 }
-                                pressed = D_80123778[i];
+                                pressed = gPlayerInputPressed[i];
                                 if ((pressed & 0x10800) || ((heldHorizontal != 0) && (*repeatTimer >= 9))) {
                                     if (*repeatTimer == 0) {
                                         *repeatTimer = *repeatTimer + 1;
@@ -448,7 +448,7 @@ void func_80007840(void) {
                                         func_80072138(0x19, 0x32);
                                         D_8010AEAC[i] = 0;
                                         oldColumn = *column;
-                                        pressed = D_80123778[i];
+                                        pressed = gPlayerInputPressed[i];
                                     }
                                 } else if ((pressed & 0x20400) || ((held & 0x20400) && (*repeatTimer >= 9))) {
                                     if (*repeatTimer == 0) {
@@ -459,7 +459,7 @@ void func_80007840(void) {
                                         func_80072138(0x19, 0x32);
                                         D_8010AEAC[i] = 0;
                                         oldColumn = *column;
-                                        pressed = D_80123778[i];
+                                        pressed = gPlayerInputPressed[i];
                                     }
                                 }
                                 if (*repeatTimer != 0) {
@@ -530,14 +530,14 @@ void func_80007840(void) {
                         if (D_8010AEB0 == 1) {
                             player->state = 9;
                         } else {
-                            held = D_80123758[i];
+                            held = gPlayerInputHeld[i];
                             heldHorizontal = held & 0x10800;
                             unlockColumn = &D_8010AEA0[i];
                             repeatTimer = &D_8010ADF0[i];
                             if ((heldHorizontal == 0) && !(held & 0x20400)) {
                                 *repeatTimer = 0;
                             }
-                            pressed = D_80123778[i];
+                            pressed = gPlayerInputPressed[i];
                             if ((pressed & 0x10800) || ((heldHorizontal != 0) && (*repeatTimer >= 9) && (*repeatTimer & 1))) {
                                 if (*repeatTimer == 0) {
                                     *repeatTimer = *repeatTimer + 1;
@@ -546,17 +546,17 @@ void func_80007840(void) {
                                     D_800EC9D0[i] = row - 1;
                                     func_80072138(0x19, 0x32);
                                     row = D_800EC9D0[i];
-                                    pressed = D_80123778[i];
+                                    pressed = gPlayerInputPressed[i];
                                 }
                             } else if ((pressed & 0x20400) || ((held & 0x20400) && (*repeatTimer >= 9) && (*repeatTimer & 1))) {
                                 if (*repeatTimer == 0) {
                                     *repeatTimer = *repeatTimer + 1;
                                 }
-                                if (row < D_8010AF18.unk24[i] + 1) {
+                                if (row < gCourseSelectStatus.unk24[i] + 1) {
                                     D_800EC9D0[i] = row + 1;
                                     func_80072138(0x19, 0x32);
                                     row = D_800EC9D0[i];
-                                    pressed = D_80123778[i];
+                                    pressed = gPlayerInputPressed[i];
                                 }
                             }
                             if (*repeatTimer != 0) {
@@ -588,13 +588,13 @@ void func_80007840(void) {
                                 }
                                 D_800EC9D0[i] += 3;
                                 if ((u8) D_8010AECC[i] == 0) {
-                                    D_8010AF18.unkC[i] = 1;
-                                    D_8010AF18.unk14[i] = 0;
-                                    D_8010AF18.unk4[i] = 3;
+                                    gCourseSelectStatus.unkC[i] = 1;
+                                    gCourseSelectStatus.unk14[i] = 0;
+                                    gCourseSelectStatus.unk4[i] = 3;
                                 } else {
-                                    D_8010AF18.unk10[i] = 1;
-                                    D_8010AF18.unk1C[i] = 0;
-                                    D_8010AF18.unk8[i] = 3;
+                                    gCourseSelectStatus.unk10[i] = 1;
+                                    gCourseSelectStatus.unk1C[i] = 0;
+                                    gCourseSelectStatus.unk8[i] = 3;
                                 }
                             } else if (pressed & 0x4000) {
                                 func_80072138(0x18, 0x32);
@@ -609,16 +609,16 @@ void func_80007840(void) {
                 if (player->state == 2) {
                     if (D_8010AEB0 == 1) {
                         player->state = 9;
-                    } else if (D_80123778[i] & 0x4000) {
+                    } else if (gPlayerInputPressed[i] & 0x4000) {
                         func_80072138(0x18, 0x32);
                         D_8010ADF0[i] = 0;
                         D_8010AEA8 = 0;
                         player->state = 1;
                         D_800EC9D0[i] -= 3;
                         if ((u8) D_8010AECC[i] == 0) {
-                            D_8010AF18.unk4[i] = 1;
+                            gCourseSelectStatus.unk4[i] = 1;
                         } else {
-                            D_8010AF18.unk8[i] = 1;
+                            gCourseSelectStatus.unk8[i] = 1;
                         }
                     } else {
                         activeCount++;
@@ -633,8 +633,8 @@ void func_80007840(void) {
         }
     }
 
-    if ((u8) D_800EC9C0 == 0x19) {
-        func_8009956C(func_8000854C, 0);
+    if (D_800EC9C0 == 0x19) {
+        func_8009956C(fadeOutRaceCharacterSelectMenu, 0);
         if (D_801235B4 == 0) {
             func_80072114(8);
         }
@@ -651,7 +651,7 @@ void func_80007840(void) {
 
 #endif
 
-void func_8000854C(void) {
+void fadeOutRaceCharacterSelectMenu(void) {
     if (D_801235B8->fade != 0xFF) {
         D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
