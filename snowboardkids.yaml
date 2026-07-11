@@ -141,7 +141,7 @@ segments:
       - [0x98680, c, fixed_point_math]
       - [0x99980, c, game_task_scheduler]
       - [0x9A2A0, c, system_boot]
-      - [0x9CE70, c, player_commands] # libmus:player_commands.c
+      - [0x9CE70, c, audio_engine] # libmus:audio_engine.c
       - [0xA0E90, c, ultra/os/createmesgqueue]
       - [0xA0EC0, c, ultra/os/seteventmesg]
       - [0xA0F30, c, ultra/io/controller]
@@ -337,7 +337,7 @@ segments:
       - [0xE24C0, .rodata, race_player_movement]
       - [0xE2510, .rodata, race_player_state]
       - [0xE2630, .rodata, system_boot]
-      - [0xE2660, .rodata, player_commands]
+      - [0xE2660, .rodata, audio_engine]
       - [0xE26F0, .rodata, ultra/gu/perspective]
       - [0xE2700, .rodata, ultra/os/setintmask]
       - [0xE2780, .rodata, ultra/gu/sinf]

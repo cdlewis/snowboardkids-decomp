@@ -4,7 +4,7 @@
 #include "relocatable_heap.h"
 #include "sound_manager.h"
 #include "system_boot.h"
-#include "player_commands.h"
+#include "audio_engine.h"
 
 #define SOUND_MANAGER_FREE_HANDLE_COUNT 13
 #define SOUND_MANAGER_QUEUE_CAPACITY 64
@@ -121,7 +121,7 @@ extern u8 gCurrentQueuedSoundVolume;
 extern u8 gCurrentQueuedSoundPan;
 extern u8 gCurrentQueuedSoundPriority;
 extern u8 gCurrentQueuedSoundAux;
-extern s8 D_8015A6B8;
+extern SchedulerThread gAudioThread;
 extern u8 D_801240A8[];
 
 void osStartThread(void *);
@@ -193,14 +193,14 @@ void initSoundManager(void) {
     init.unk38 = 1;
     init.unk3C = 0x20;
     init.unk40 = 0x1000;
-    func_8009D5A8(&init);
-    func_8009D8B0(1, 0x7FFF);
+    initSoundPlayer(&init);
+    setSoundPlayerMasterVolume(1, 0x7FFF);
 }
 
 void stopCurrentMusicSequence(s32 arg0) {
     if (gMusicSequenceStopped == 0) {
         if (gCurrentMusicSequenceHandle != 0) {
-            func_8009DE50(gCurrentMusicSequenceHandle, arg0);
+            stopSoundPlayerByHandle(gCurrentMusicSequenceHandle, arg0);
         }
         gMusicSequenceStopped = 1;
     }
@@ -214,12 +214,12 @@ s32 loadMusicSequenceBank(s32 arg0) {
         range = (SoundRomRange *)((arg0 * 2) + (s32 *)gMusicSequenceRomRanges);
         size = range->words[1] - range->words[0];
         dmaReadRom(range->words[0], getRelocatableHeapBlockBase(gAssetHandles.unkA), size);
-        if ((gCurrentMusicSequenceHandle = func_8009D8D8((PlayerCommandData *)getRelocatableHeapBlockBase(gAssetHandles.unkA))) != 0) {
+        if ((gCurrentMusicSequenceHandle = startMusicSequence((PlayerCommandData *)getRelocatableHeapBlockBase(gAssetHandles.unkA))) != 0) {
             gCurrentMusicSequenceBank = arg0;
             if (range == gRaceMusicSequenceRomRanges) {
-                func_8009D8B0(2, 0x7FFF);
+                setSoundPlayerMasterVolume(2, 0x7FFF);
             } else {
-                func_8009D8B0(2, 0x60FF);
+                setSoundPlayerMasterVolume(2, 0x60FF);
             }
             gMusicSequenceStopped = 0;
             return 0;
@@ -311,7 +311,7 @@ s32 startQueuedSoundEffect(void) {
         }
         if (gActiveSoundHandleListTail->stopRequested != 0) {
             gActiveSoundHandleListTail->stopRequested = 0;
-            func_8009DE50(gActiveSoundHandleListTail->handle, 0);
+            stopSoundPlayerByHandle(gActiveSoundHandleListTail->handle, 0);
         }
         return 0;
     }
@@ -322,7 +322,7 @@ s32 startQueuedSoundEffect(void) {
         var_a0 = 0 & 0xFF;
     }
 
-    temp_v0->handle = func_8009DC68(var_a0, gCurrentQueuedSoundVolume, gCurrentQueuedSoundPan, 0, gCurrentQueuedSoundPriority);
+    temp_v0->handle = startSoundEffect(var_a0, gCurrentQueuedSoundVolume, gCurrentQueuedSoundPan, 0, gCurrentQueuedSoundPriority);
     temp_v0->volume = gCurrentQueuedSoundAux;
     temp_v0->priority = gCurrentQueuedSoundPriority;
     temp_v0->stopRequested = 1;
@@ -368,7 +368,7 @@ void updateSoundManager(void) {
     SoundQueueEntry *entry;
     s32 index;
 
-    osStopThread(&D_8015A6B8);
+    osStopThread(&gAudioThread);
 
     node = gActiveSoundHandleListHead;
     while (node != NULL) {
@@ -376,7 +376,7 @@ void updateSoundManager(void) {
             releaseSoundHandleNode(node);
             goto next_node;
         } else {
-            if (func_8009DEC4(node->handle) == 0) {
+            if (countSoundPlayersByHandle(node->handle) == 0) {
                 releaseSoundHandleNode(node);
             }
         }
@@ -386,16 +386,16 @@ void updateSoundManager(void) {
 
     right = &gPlayerLoopingSoundHandle0, left = gPlayerPositionalSoundHandle0;
     do {
-        if ((*right != 0) && (func_8009DEC4(*right) == 0)) {
+        if ((*right != 0) && (countSoundPlayersByHandle(*right) == 0)) {
             *right = 0;
         }
-        if ((*left != 0) && (func_8009DEC4(*left) == 0)) {
+        if ((*left != 0) && (countSoundPlayersByHandle(*left) == 0)) {
             *left = 0;
         }
         right++;
     } while (&gPlayerLoopingSoundHandle0 > ++left);
 
-    if ((gSharedLoopingPositionalSoundHandle != 0) && (func_8009DEC4(gSharedLoopingPositionalSoundHandle) == 0)) {
+    if ((gSharedLoopingPositionalSoundHandle != 0) && (countSoundPlayersByHandle(gSharedLoopingPositionalSoundHandle) == 0)) {
         gSharedLoopingPositionalSoundHandle = 0;
     }
 
@@ -416,7 +416,7 @@ void updateSoundManager(void) {
         gCurrentQueuedSoundType = 0;
     }
 
-    if ((gCurrentMusicSequenceHandle != 0) && (func_8009DEC4(gCurrentMusicSequenceHandle) == 0)) {
+    if ((gCurrentMusicSequenceHandle != 0) && (countSoundPlayersByHandle(gCurrentMusicSequenceHandle) == 0)) {
         gCurrentMusicSequenceHandle = 0;
         gCurrentMusicSequenceBank = -1;
     }
@@ -430,7 +430,7 @@ void updateSoundManager(void) {
         gPendingMusicCommand = 0;
     }
 
-    osStartThread(&D_8015A6B8);
+    osStartThread(&gAudioThread);
 }
 
 void requestMusicSequenceBank(s32 arg0) {
@@ -489,18 +489,18 @@ s32 enqueueSoundEffectWithVolume(s16 arg0, s16 arg1, s16 arg2) {
 }
 
 void stopSoundEffects(void) {
-    osStopThread(&D_8015A6B8);
+    osStopThread(&gAudioThread);
     gCurrentQueuedSoundType = 0;
     gSoundQueueWriteIndex = 0;
     gSoundQueueReadIndex = 0;
-    func_8009DD5C(1, 0);
-    osStartThread(&D_8015A6B8);
+    fadeOutSoundPlayersByType(1, 0);
+    osStartThread(&gAudioThread);
 }
 
 void fadeOutAllMusicSequences(void) {
-    osStopThread(&D_8015A6B8);
-    func_8009DD5C(3, 0x14);
-    osStartThread(&D_8015A6B8);
+    osStopThread(&gAudioThread);
+    fadeOutSoundPlayersByType(3, 0x14);
+    osStartThread(&gAudioThread);
 }
 
 s32 calculatePositionalSoundVolume(SoundPosition *pos, s32 volume) {
@@ -590,22 +590,22 @@ void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 p
     if (adjustedVolume == 0) {
         handle = (&gPlayerLoopingSoundHandle0) + mode;
         if (*handle != 0) {
-            func_8009DE50(*handle, 0);
+            stopSoundPlayerByHandle(*handle, 0);
             *handle = 0;
         }
     } else {
         if ((*handle != 0) && (soundId != *(&gPlayerLoopingSoundId0 + mode))) {
-            func_8009DE50(*handle, 0);
+            stopSoundPlayerByHandle(*handle, 0);
             *handle = 0;
         }
 
         if (*handle == 0) {
             *(&gPlayerLoopingSoundId0 + mode) = soundId;
-            *handle = func_8009DC68(soundId, adjustedVolume, 0x80, 0, 0x46);
-            func_8009DFDC(*handle, pitch);
+            *handle = startSoundEffect(soundId, adjustedVolume, 0x80, 0, 0x46);
+            setSoundPlayerPitchOffsetByHandle(*handle, pitch);
         } else {
-            func_8009DF14(*handle, adjustedVolume);
-            func_8009DFDC(*handle, pitch);
+            setSoundPlayerVolumeByHandle(*handle, adjustedVolume);
+            setSoundPlayerPitchOffsetByHandle(*handle, pitch);
         }
     }
 }
@@ -620,10 +620,10 @@ void playPlayerPositionalSound(s32 soundId, s32 playerIndex, s32 volume, s32 min
     }
     if (adjustedVolume != 0) {
         if (gPlayerPositionalSoundHandle0[playerIndex] != 0) {
-            func_8009DE50(gPlayerPositionalSoundHandle0[playerIndex], 0);
+            stopSoundPlayerByHandle(gPlayerPositionalSoundHandle0[playerIndex], 0);
             gPlayerPositionalSoundHandle0[playerIndex] = 0;
         }
-        gPlayerPositionalSoundHandle0[playerIndex] = func_8009DC68(soundId, adjustedVolume, 0x80, 0, 0x5A);
+        gPlayerPositionalSoundHandle0[playerIndex] = startSoundEffect(soundId, adjustedVolume, 0x80, 0, 0x5A);
     }
 }
 
@@ -633,13 +633,13 @@ void updateSingleLoopingPositionalSound(s16 soundId, SoundPosition *pos, s16 vol
     adjustedVolume = calculatePositionalSoundVolume(pos, volume);
     if (adjustedVolume == 0) {
         if (gSharedLoopingPositionalSoundHandle != 0) {
-            func_8009DE50(gSharedLoopingPositionalSoundHandle, 0);
+            stopSoundPlayerByHandle(gSharedLoopingPositionalSoundHandle, 0);
             gSharedLoopingPositionalSoundHandle = 0;
         }
     } else if (gSharedLoopingPositionalSoundHandle == 0) {
-        gSharedLoopingPositionalSoundHandle = func_8009DC68(soundId, adjustedVolume, 0x80, 0, 0x32);
+        gSharedLoopingPositionalSoundHandle = startSoundEffect(soundId, adjustedVolume, 0x80, 0, 0x32);
     } else {
-        func_8009DF14(gSharedLoopingPositionalSoundHandle, adjustedVolume);
+        setSoundPlayerVolumeByHandle(gSharedLoopingPositionalSoundHandle, adjustedVolume);
     }
 }
 
@@ -648,11 +648,11 @@ void requestCourseMusicSequence(void) {
 }
 
 void countActiveAudioSequences(void) {
-    func_8009DDE4(3);
+    countActiveSoundPlayersByType(3);
 }
 
 s32 countActiveMusicSequences(void) {
-    func_8009DDE4(2);
+    countActiveSoundPlayersByType(2);
 }
 
 extern PositionalSoundRequest *gPendingPositionalSoundRequests;
@@ -700,7 +700,7 @@ void playPendingPositionalSoundRequests(void) {
     PositionalSoundRequest *node;
     s16 mode;
 
-    osStopThread(&D_8015A6B8);
+    osStopThread(&gAudioThread);
     node = gPendingPositionalSoundRequests;
 
     while (node != NULL) {
@@ -731,5 +731,5 @@ void playPendingPositionalSoundRequests(void) {
         node = node->next;
     }
 
-    osStartThread(&D_8015A6B8);
+    osStartThread(&gAudioThread);
 }
