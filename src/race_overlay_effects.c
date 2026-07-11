@@ -4,6 +4,7 @@
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
 #include "race_input_history.h"
+#include "race_player_movement.h"
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
 #include "model_animation.h"
@@ -160,13 +161,8 @@ extern GfxCommandDest *func_8004885C(void *);
 extern void func_80048C90(GfxCommandDest *, Vec3i *);
 extern s32 func_80048E60(void *);
 extern void osWritebackDCache(void *, s32);
-extern void func_80088C80(void *, s32, s32, s32);
-extern void func_80088294(void *, s32, s32, s32);
-extern s32 func_80088E98(Vec3i *, s32, s32, s16);
-extern void func_8008BB5C(RaceInputPlayer *, s32);
 extern void func_800483FC(void *, void *, void *);
 extern void func_80072A74(s32, void *, s32, s32);
-extern void func_80089000(void *, s32, s32);
 extern u8 D_800D9498[][0x10];
 extern u8 D_800D94D8[][0x10];
 extern RaceOverlayEffectSpawn D_800D9518[];

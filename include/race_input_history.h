@@ -7,13 +7,13 @@
 
 typedef s16 Matrix4s[0x10];
 
-typedef struct {
+typedef struct RaceVec3i {
     /* 0x0 */ s32 x;
     /* 0x4 */ s32 y;
     /* 0x8 */ s32 z;
 } RaceVec3i;
 
-typedef struct {
+typedef struct RaceInputPlayer {
     /* 0x000 */ union {
         s16 playerIndex;
         u16 playerIndexU16;
@@ -238,11 +238,5 @@ void func_8008431C(RaceInputPlayer *player);
 void func_80084510(RaceInputPlayer *player);
 void func_80084730(RaceInputPlayer *player);
 s32 func_80084958(RaceInputPlayer *player);
-void func_8008A940(RaceInputPlayer *player);
-u32 func_8008B408(RaceInputPlayer *player, s32 arg1, s32 arg2);
-void func_8008B508(RaceVec3i *vec, RaceInputPlayer *player);
-void func_8008BBB8(RaceInputPlayer *player, s16 soundType);
-void func_8008BE1C(RaceInputPlayer *player);
-void func_80087E14(RaceInputPlayer *player);
 
 #endif

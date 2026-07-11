@@ -6,6 +6,7 @@
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
 #include "model_animation.h"
+#include "race_player_movement.h"
 
 #define COURSE_INDEX_RELOAD (*(volatile s16 *)&D_80121B50)
 
@@ -247,11 +248,7 @@ extern void func_80045990(s32, s32, void *, void *);
 extern s32 func_8004597C(s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
-extern void func_80088294(Vec3i *, s32, s32, u16);
-extern void func_80088A1C(Vec3i *, s32, s32, s32, s32);
 extern void osWritebackDCache(void *, s32);
-extern void func_80088294(Vec3i *, s32, s32, u16);
-extern void func_80088A1C(Vec3i *, s32, s32, s32, s32);
 extern s16 D_80112168;
 extern s16 D_80112140;
 extern s16 D_80112142;

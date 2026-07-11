@@ -4,6 +4,7 @@
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "race_item_effects.h"
+#include "race_player_movement.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
 
@@ -130,7 +131,6 @@ void func_80045990(s32, s32, void **, void **);
 void func_8006224C(s32, s32, s32, u16);
 void func_80072A74(s32, void *, s32, s32);
 s32 func_80098C30(s64);
-s32 func_800891B8(Vec3i *, s32, s32, s16);
 s16 func_80097AE8(s16);
 s16 func_80097B48(s16);
 void func_80098590(s16 *, Vec3i *, void *);
