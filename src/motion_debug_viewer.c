@@ -34,7 +34,7 @@ extern MotionDebugViewerState D_80121D80;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
 extern void *D_80124858;
-extern void *D_80124898;
+extern void *gModelRenderCallbackList;
 extern void sprintf(char *, const char *, ...);
 extern void func_80048278(s32, s32, char *, s32);
 extern void addRenderCallback(void *, void *, void *);
@@ -101,6 +101,6 @@ void func_800782FC(void) {
             func_80082DD0((ModelAnimState *)&D_80121D80);
         }
     }
-    addRenderCallback(&D_80124898, func_8007C5E8, (RacePositionUiPlayer *)&D_80121D80);
+    addRenderCallback(&gModelRenderCallbackList, func_8007C5E8, (RacePositionUiPlayer *)&D_80121D80);
     addRenderCallback(&D_80124858, func_800782B4, NULL);
 }

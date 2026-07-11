@@ -32,7 +32,7 @@ extern MainMenuSceneActorShadow gEndingActorShadow;
 extern u16 gEndingSequencePhase;
 extern s8 gEndingTommyEffectDone;
 extern void addRenderCallback(void *, void *, void *);
-extern s32 D_80124898;
+extern s32 gModelRenderCallbackList;
 extern Gfx *gRegionAllocPtr;
 extern GfxCommandSource gIdentityFixedTransform;
 extern u32 D_800D6270[];
@@ -499,5 +499,5 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
 #endif
 
 void addEndingActorShadowRenderCallback(MainMenuSceneActorShadow *arg0) {
-    addRenderCallback(&D_80124898, drawEndingActorShadow, arg0);
+    addRenderCallback(&gModelRenderCallbackList, drawEndingActorShadow, arg0);
 }
