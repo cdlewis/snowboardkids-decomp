@@ -6,6 +6,7 @@
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
 #include "player_count_select_menu.h"
+#include "player_count_select_ui.h"
 #include "title_menu.h"
 
 typedef struct {
@@ -16,7 +17,6 @@ typedef struct {
 extern void func_80045914(void);
 extern void func_800704F0(void);
 extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_80029548(void);
 extern s32 func_80072138(s16, s16);
 
 extern u8 D_245A80;
