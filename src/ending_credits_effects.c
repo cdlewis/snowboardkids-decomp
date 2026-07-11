@@ -65,7 +65,7 @@ extern s16 gMenuFadeAlpha;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 gMenuIconTilemapAssetHandle;
 extern s16 gMenuPanelTilemapAssetHandle;
-extern u16 gEndingSequencePhase;
+extern u16 gEndingCreditsSequencePhase;
 extern u8 gEndingCreditsTransitionSnowboardIconSpinStep;
 extern s16 gEndingCreditsTransitionSnowboardIconAngle;
 extern u16 gEndingCreditsTransitionSnowboardIconExpandFrameCounter;
@@ -186,7 +186,7 @@ void updateEndingCreditsCharacterLoopingSparkle(EndingCreditsEffectActor *arg0) 
         arg0->effectFrame++;
         arg0->effectFrame &= 3;
     }
-    if (gEndingSequencePhase == 0x2F) {
+    if (gEndingCreditsSequencePhase == 0x2F) {
         removeCallbackTask(arg0);
         return;
     }
@@ -317,7 +317,7 @@ void updateEndingCreditsNancyRunDust(EndingCreditsEffectActor *arg0) {
         arg0->animFrame++;
         arg0->animFrame &= 3;
     }
-    if (gEndingSequencePhase == 0x12) {
+    if (gEndingCreditsSequencePhase == 0x12) {
         removeCallbackTask(arg0);
         return;
     }
@@ -423,7 +423,7 @@ void updateEndingCreditsIdleSparkle(EndingCreditsEffectActor *arg0) {
             arg0->animFrame = 0;
         }
     }
-    if (gEndingSequencePhase != 7) {
+    if (gEndingCreditsSequencePhase != 7) {
         addRenderCallback(&gMenuRenderCallbackList, drawEndingCreditsIdleSparkle, temp_a2);
     } else {
         removeCallbackTask(temp_a2);
@@ -460,7 +460,7 @@ void updateEndingCreditsPhaseAdvanceSparkle(EndingCreditsEffectActor *arg0) {
         return;
     }
     removeCallbackTask(temp_a2);
-    gEndingSequencePhase = 3;
+    gEndingCreditsSequencePhase = 3;
 }
 
 void initEndingCreditsPhaseAdvanceSparkle(EndingCreditsEffectActor *arg0) {
@@ -508,8 +508,8 @@ void updateEndingCreditsDelayedSparkle(EndingCreditsEffectActor *arg0) {
         addRenderCallback(&gMenuRenderCallbackList, drawEndingCreditsDelayedSparkle, temp_a2);
         return;
     }
-    if (gEndingSequencePhase == 3) {
-        gEndingSequencePhase = 4;
+    if (gEndingCreditsSequencePhase == 3) {
+        gEndingCreditsSequencePhase = 4;
     }
     removeCallbackTask(temp_a2);
 }
@@ -547,7 +547,7 @@ void updateEndingCreditsTommySnowmanEntrance(EndingCreditsEffectActor *arg0) {
     if (temp_a2->x < 0x12) {
         temp_a2->x++;
     }
-    if (gEndingSequencePhase == 4) {
+    if (gEndingCreditsSequencePhase == 4) {
         removeCallbackTask(temp_a2);
     } else {
         addRenderCallback(&gMenuRenderCallbackList, drawEndingCreditsTommySnowmanEntrance, temp_a2);
@@ -585,7 +585,7 @@ void updateEndingCreditsTransitionSnowboardIconFinalSpin(EndingCreditsEffectActo
         }
     }
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawEndingCreditsTransitionSnowboardIcon, temp_a2);
-    if (gEndingSequencePhase == 0x3A) {
+    if (gEndingCreditsSequencePhase == 0x3A) {
         setCallbackTaskCallback(temp_a2, updateEndingCreditsTransitionSnowboardIconIdle);
     }
 }
@@ -603,7 +603,7 @@ void updateEndingCreditsTransitionSnowboardIconSecondSpin(EndingCreditsEffectAct
         }
     }
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawEndingCreditsTransitionSnowboardIcon, temp_a2);
-    if (gEndingSequencePhase == 0x39) {
+    if (gEndingCreditsSequencePhase == 0x39) {
         temp_v0 = &temp_a2->angle;
         setCallbackTaskCallback(temp_a2, updateEndingCreditsTransitionSnowboardIconFinalSpin);
         temp_a2->x = 0x28;
@@ -616,7 +616,7 @@ void updateEndingCreditsTransitionSnowboardIconWaitSecondSpin(EndingCreditsEffec
 
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawEndingCreditsTransitionSnowboardIcon, arg0);
     temp_v0 = &arg0->angle;
-    if (gEndingSequencePhase == 0x33) {
+    if (gEndingCreditsSequencePhase == 0x33) {
         setCallbackTaskCallback(arg0, updateEndingCreditsTransitionSnowboardIconSecondSpin);
         gEndingCreditsTransitionSnowboardIconSpinStep = 8;
         if (*temp_v0 == 0) {
@@ -638,7 +638,7 @@ void updateEndingCreditsTransitionSnowboardIconSlowSpin(EndingCreditsEffectActor
         }
     }
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawEndingCreditsTransitionSnowboardIcon, temp_a2);
-    if (gEndingSequencePhase == 0x2A) {
+    if (gEndingCreditsSequencePhase == 0x2A) {
         setCallbackTaskCallback(temp_a2, updateEndingCreditsTransitionSnowboardIconWaitSecondSpin);
     }
 }
@@ -673,7 +673,7 @@ void updateEndingCreditsTransitionSnowboardIconExpandSpin(EndingCreditsEffectAct
         *temp_v1 = *temp_v1 + 1;
     }
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawEndingCreditsTransitionSnowboardIcon, temp_a2);
-    if (gEndingSequencePhase == 0x20) {
+    if (gEndingCreditsSequencePhase == 0x20) {
         setCallbackTaskCallback(temp_a2, updateEndingCreditsTransitionSnowboardIconResetSpin);
     }
 }
@@ -689,7 +689,7 @@ void updateEndingCreditsTransitionSnowboardIconFastSpin(EndingCreditsEffectActor
     }
     gEndingCreditsTransitionSnowboardIconAngle = *sp1C;
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawEndingCreditsTransitionSnowboardIcon, temp_a2);
-    if (gEndingSequencePhase == 0x13) {
+    if (gEndingCreditsSequencePhase == 0x13) {
         setCallbackTaskCallback(temp_a2, updateEndingCreditsTransitionSnowboardIconExpandSpin);
         temp_a2->x = 0x28;
         *sp1C = 0;
@@ -702,7 +702,7 @@ void updateEndingCreditsTransitionSnowboardIconWaitStart(EndingCreditsEffectActo
 
     temp_v0 = &arg0->angle;
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawEndingCreditsTransitionSnowboardIcon, arg0);
-    if (gEndingSequencePhase == 0x10) {
+    if (gEndingCreditsSequencePhase == 0x10) {
         setCallbackTaskCallback(arg0, updateEndingCreditsTransitionSnowboardIconFastSpin);
         arg0->x = 0x14;
         temp_v0[0] = 0;
@@ -730,7 +730,7 @@ void updateEndingCreditsTransitionSnowflakeIconReverseSpin(EndingCreditsEffectAc
         arg0->angle = 0x140;
     }
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawEndingCreditsTransitionSnowflakeIcon, arg0);
-    if ((gEndingSequencePhase == 0x2A) || (gEndingSequencePhase == 0x3A)) {
+    if ((gEndingCreditsSequencePhase == 0x2A) || (gEndingCreditsSequencePhase == 0x3A)) {
         setCallbackTaskCallback(arg0, updateEndingCreditsTransitionSnowflakeIconIdle);
     }
 }
@@ -741,17 +741,17 @@ void updateEndingCreditsTransitionSnowflakeIconForwardSpin(EndingCreditsEffectAc
         arg0->angle = 0;
     }
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawEndingCreditsTransitionSnowflakeIcon, arg0);
-    if (gEndingSequencePhase == 0x14) {
+    if (gEndingCreditsSequencePhase == 0x14) {
         setCallbackTaskCallback(arg0, updateEndingCreditsTransitionSnowflakeIconIdle);
     }
 }
 
 void updateEndingCreditsTransitionSnowflakeIconIdle(EndingCreditsEffectActor *arg0) {
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawEndingCreditsTransitionSnowflakeIcon, arg0);
-    if (gEndingSequencePhase == 0x10) {
+    if (gEndingCreditsSequencePhase == 0x10) {
         setCallbackTaskCallback(arg0, updateEndingCreditsTransitionSnowflakeIconForwardSpin);
     }
-    if ((gEndingSequencePhase == 0x20) || (gEndingSequencePhase == 0x33)) {
+    if ((gEndingCreditsSequencePhase == 0x20) || (gEndingCreditsSequencePhase == 0x33)) {
         setCallbackTaskCallback(arg0, updateEndingCreditsTransitionSnowflakeIconReverseSpin);
     }
 }
@@ -783,7 +783,7 @@ void updateEndingCreditsTransitionLogoWipeClose(EndingCreditsEffectActor *arg0) 
         temp_v0[1] -= 1;
         if (temp_v0[1] == 0x10) {
             setCallbackTaskCallback(arg0, updateEndingCreditsTransitionLogoWipeIdle);
-            gEndingSequencePhase = 0x43;
+            gEndingCreditsSequencePhase = 0x43;
         }
     }
     addRenderCallback(&gMenuRenderCallbackList, drawEndingCreditsTransitionLogoWipe, arg0);
@@ -791,7 +791,7 @@ void updateEndingCreditsTransitionLogoWipeClose(EndingCreditsEffectActor *arg0) 
 
 void updateEndingCreditsTransitionLogoWipeWaitClose(EndingCreditsEffectActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawEndingCreditsTransitionLogoWipe, arg0);
-    if (gEndingSequencePhase == 0x42) {
+    if (gEndingCreditsSequencePhase == 0x42) {
         arg0->animFrame = 0;
         setCallbackTaskCallback(arg0, updateEndingCreditsTransitionLogoWipeClose);
     }

@@ -1,4 +1,4 @@
-#include "ending_credits_sequence_flow.h"
+#include "ending_credits_flow.h"
 #include "relocatable_heap.h"
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
@@ -23,7 +23,7 @@ typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s32 fade;
     /* 0x1C */ s32 timer;
-} EndingCreditsSequenceFlowState;
+} EndingCreditsFlowState;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x4];
@@ -58,26 +58,26 @@ extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern f32 gEndingCreditsViewportAspectRatio;
 extern s16 gEndingCreditsUnusedValue;
-extern u16 gEndingSequencePhase;
-extern s8 gEndingActorHandshakeState;
+extern u16 gEndingCreditsSequencePhase;
+extern s8 gEndingCreditsHandshakeState;
 extern u8 gEndingCreditsTransitionSnowboardIconSpinStep;
 extern s16 gEndingCreditsTransitionSnowboardIconAngle;
 extern Vec3i gMenuCameraTargetOffset;
 extern s16 gAssetHandles[];
 extern MenuCameraObject D_801121E0;
 extern MenuCameraObject *gCurrentMenuCameraObject;
-extern EndingCreditsSequenceFlowState *gCurrentGameTask;
+extern EndingCreditsFlowState *gCurrentGameTask;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initEndingCreditsSequenceFlow best match: 93.231% at nonmatchings/initEndingCreditsFlow-1197934324348345530/base_6.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_sequence_flow/initEndingCreditsSequenceFlow.s")
+// initEndingCreditsFlow best match: 93.231% at nonmatchings/initEndingCreditsFlow-1197934324348345530/base_6.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_flow/initEndingCreditsFlow.s")
 
 #ifdef NON_MATCHING
-void initEndingCreditsSequenceFlow(void) {
+void initEndingCreditsFlow(void) {
     s32 sp34;
     s32 temp_v0;
-    EndingCreditsSequenceFlowState *state;
+    EndingCreditsFlowState *state;
 
     resetRaceCameras();
     D_801121E0.update = updateMenuCameraObjectFromTargetOffset;
@@ -90,8 +90,8 @@ void initEndingCreditsSequenceFlow(void) {
     gMenuCameraTargetOffset.y = 0xFFB60000;
     gMenuCameraTargetOffset.z = 0;
     gEndingCreditsUnusedValue = 0;
-    gEndingSequencePhase = 0;
-    gEndingActorHandshakeState = 0;
+    gEndingCreditsSequencePhase = 0;
+    gEndingCreditsHandshakeState = 0;
     gEndingCreditsTransitionSnowboardIconAngle = 0;
     gEndingCreditsTransitionSnowboardIconSpinStep = 0;
     gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_SLASH] = 0;
@@ -117,18 +117,18 @@ void initEndingCreditsSequenceFlow(void) {
     state = gCurrentGameTask;
     gMenuFadeAlpha = state->fade;
     gCurrentGameTask->timer = 5;
-    setCurrentGameTaskCallback(fadeInEndingCreditsSequenceFlow, 0);
+    setCurrentGameTaskCallback(fadeInEndingCreditsFlow, 0);
 }
 #endif
 
-void fadeInEndingCreditsSequenceFlow(void) {
+void fadeInEndingCreditsFlow(void) {
     if (gCurrentGameTask->timer != 0) {
         gCurrentGameTask->timer--;
     } else {
         if (gCurrentGameTask->fade != 0) {
             gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 0);
         } else {
-            setCurrentGameTaskCallback(updateEndingCreditsSequenceFlow, 0);
+            setCurrentGameTaskCallback(updateEndingCreditsFlow, 0);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsPageTextActor, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsSlash, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsNancy, 0, 0x64);
@@ -141,12 +141,12 @@ void fadeInEndingCreditsSequenceFlow(void) {
     updateCallbackTasks();
 }
 
-void updateEndingCreditsSequenceFlow(void) {
-    if (gEndingSequencePhase == 0x43) {
+void updateEndingCreditsFlow(void) {
+    if (gEndingCreditsSequencePhase == 0x43) {
         gCurrentGameTask->timer++;
         if (gCurrentGameTask->timer == 0x12C) {
             gCurrentGameTask->timer = 0;
-            setCurrentGameTaskCallback(fadeOutEndingCreditsSequenceFlow, 0);
+            setCurrentGameTaskCallback(fadeOutEndingCreditsFlow, 0);
         }
     }
     updateCallbackTasks();
@@ -154,7 +154,7 @@ void updateEndingCreditsSequenceFlow(void) {
     gCurrentMenuCameraObject->update();
 }
 
-void fadeOutEndingCreditsSequenceFlow(void) {
+void fadeOutEndingCreditsFlow(void) {
     if (gCurrentGameTask->fade != 0xFF) {
         gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 1);
         if (gCurrentGameTask->fade == 0xFF) {
