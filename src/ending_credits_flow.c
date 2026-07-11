@@ -84,7 +84,7 @@ void initEndingCreditsFlow(void) {
     D_801121E0.depth = 0x5D24000;
     D_801121E0.yaw = 0xFC0;
     resetAllViewports();
-    func_80070860(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, gEndingCreditsViewportAspectRatio, 0x14, 0xAF0);
+    configureViewportWithFovAndFarClip(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, gEndingCreditsViewportAspectRatio, 0x14, 0xAF0);
     gFramebufferSwapDelay = 0;
     gMenuCameraTargetOffset.x = 0;
     gMenuCameraTargetOffset.y = 0xFFB60000;

@@ -148,32 +148,33 @@ void configureViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg
 }
 #endif
 
-// func_80070860 best match: 90.168%
+// configureViewportWithFovAndFarClip best match: 90.168%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_80070860.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/configureViewportWithFovAndFarClip.s")
 
 #ifdef NON_MATCHING
 extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
 
-void func_80070860(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7, s16 arg8, s32 arg9) {
+void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
+                                        f32 aspect, s16 fovY, s32 farClip) {
     ViewportState *viewport;
     s32 halfHeight;
     s32 halfWidth;
     f32 fovy;
 
-    viewport = &D_801124B0[arg0];
-    viewport->viewportTranslateX = arg1 * 4;
+    viewport = &D_801124B0[viewportIndex];
+    viewport->viewportTranslateX = centerX * 4;
     viewport->active = 1;
-    viewport->viewportTranslateY = arg2 * 4;
-    viewport->viewportScaleX = arg5 * 2;
-    viewport->viewportScaleY = arg6 * 2;
+    viewport->viewportTranslateY = centerY * 4;
+    viewport->viewportScaleX = scaleX * 2;
+    viewport->viewportScaleY = scaleY * 2;
 
-    halfWidth = arg3 / 2;
-    viewport->right = halfWidth + arg1;
-    viewport->left = arg1 - halfWidth;
-    halfHeight = arg4 / 2;
-    viewport->top = arg2 - halfHeight;
-    viewport->bottom = halfHeight + arg2;
+    halfWidth = width / 2;
+    viewport->right = halfWidth + centerX;
+    viewport->left = centerX - halfWidth;
+    halfHeight = height / 2;
+    viewport->top = centerY - halfHeight;
+    viewport->bottom = halfHeight + centerY;
     viewport->right = viewport->right;
     viewport->screenBoundsValid = 1;
     viewport->left = viewport->left;
@@ -205,9 +206,9 @@ void func_80070860(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
         viewport->bottom = 0xEF;
     }
 
-    fovy = (f32) arg8;
-    guPerspective(&viewport->projection, &viewport->perspectiveNorm, fovy, arg7, 10.0f, (f32) arg9, 0.5f);
-    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, fovy, arg7, 10.0f, 15000.0f, 0.5f);
+    fovy = (f32) fovY;
+    guPerspective(&viewport->projection, &viewport->perspectiveNorm, fovy, aspect, 10.0f, (f32) farClip, 0.5f);
+    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, fovy, aspect, 10.0f, 15000.0f, 0.5f);
 }
 #endif
 
