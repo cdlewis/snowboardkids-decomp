@@ -750,7 +750,7 @@ void func_8006B108(RaceCourseRenderEffect *arg0) {
         arg0->vertices = (void *)func_80043040(D_80112130.courseRenderBufferHandle);
 
         for (i = 0; i < count; i++) {
-            makeFixedRotateY(&transform, entry->rotation);
+            makeFixedRotationY(&transform, entry->rotation);
             transform.basePos.x = entry->position.x;
             transform.basePos.y = entry->position.y;
             transform.basePos.z = entry->position.z;
@@ -783,12 +783,12 @@ void func_8006B228(Struct6B760 *arg0) {
             sine = fixedSine(arg0->unk40);
             if (1) {
                 doubleSine = fixedSine((s16)(arg0->unk40 * 2));
-                makeFixedRotateY(transform.rotation, (sine >> 4) + (0x800 + arg0->unk3E));
+                makeFixedRotationY(transform.rotation, (sine >> 4) + (0x800 + arg0->unk3E));
                 transform.basePos.x = arg0->pos.x;
                 transform.basePos.y = (arg0->pos.y + ((doubleSine + 0x1000) << 4)) + 0xA4000;
             }
             transform.basePos.z = arg0->pos.z;
-            func_80048D60(&transform);
+            scaleFixedMatrix3sByQuarter(&transform);
             arg0->displayList = func_8004885C(&transform);
         }
 
@@ -958,7 +958,7 @@ void func_8006B7E0(RaceMovingEffect *arg0) {
     volatile s32 pad[1];
 
     if (D_80156609 != 0) {
-        makeFixedRotateY(&transform, D_800B9556[D_80121B50].angle + 0x400);
+        makeFixedRotationY(&transform, D_800B9556[D_80121B50].angle + 0x400);
         transform.basePos.x = arg0->pos.x;
         transform.basePos.y = arg0->pos.y;
         transform.basePos.z = arg0->pos.z;
@@ -996,7 +996,7 @@ void func_8006B988(RaceMovingEffect *arg0) {
             if (temp_v1 >= (s32)0xFFF60001) {
                 arg0->velocity.z = temp_v1 - 0x2000;
             }
-            transformVec3ByFixedMatrix(&arg0->unk30, &temp_a3->velocity, &sp24);
+            transformVec3iByFixedMatrix(&arg0->unk30, &temp_a3->velocity, &sp24);
             temp_a3->pos.x += sp24.x;
             temp_a3->pos.y += sp24.y;
             temp_a3->pos.z += sp24.z;
@@ -1018,14 +1018,14 @@ void func_8006BA50(RaceMovingEffect *arg0) {
         }
 
         mtx = arg0->unk30;
-        transformVec3ByFixedMatrix(mtx, &arg0->velocity, &sp2C);
+        transformVec3iByFixedMatrix(mtx, &arg0->velocity, &sp2C);
         arg0->pos.x += sp2C.x;
         arg0->pos.y += sp2C.y;
         arg0->pos.z += sp2C.z;
 
         if (arg0->timer == 0) {
             setCallbackTaskCallback(arg0, func_8006B988);
-            makeFixedRotateXY(mtx, 0x100, D_800B9556[D_80121B50].angle + 0x400);
+            makeFixedRotationXY(mtx, 0x100, D_800B9556[D_80121B50].angle + 0x400);
             arg0->timer = 0x64;
         }
     }
@@ -1039,8 +1039,8 @@ void func_8006BB50(RaceMovingEffect *arg0) {
     arg0->timer = 0x46;
     arg0->velocity.z = 0x680000;
     mtx = arg0->unk30;
-    makeFixedRotateY(mtx, D_800B9556[D_80121B50].angle + 0x400);
-    transformVec3ByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
+    makeFixedRotationY(mtx, D_800B9556[D_80121B50].angle + 0x400);
+    transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.z = 0xFFFE0000;
     arg0->pos.x += D_800B9540[COURSE_INDEX_RELOAD].pos.x;
     arg0->pos.y += D_800B9540[COURSE_INDEX_RELOAD].pos.y;
@@ -1054,7 +1054,7 @@ void func_8006BC68(RaceMovingEffect *arg0) {
     volatile s32 pad[2];
 
     if (D_80156609 != 0) {
-        makeFixedRotateY(&transform, arg0->unk52);
+        makeFixedRotationY(&transform, arg0->unk52);
         transform.basePos.x = arg0->pos.x;
         transform.basePos.y = arg0->pos.y;
         transform.basePos.z = arg0->pos.z;
@@ -1085,7 +1085,7 @@ void func_8006BDE4(RaceMovingEffect *arg0) {
     if (temp_v0 != 0) {
         if (gRaceUpdatePaused == 0) {
             arg0->timer = temp_v0 - 1;
-            transformVec3ByFixedMatrix(&arg0->unk30, &temp_a3->velocity, &sp24);
+            transformVec3iByFixedMatrix(&arg0->unk30, &temp_a3->velocity, &sp24);
             temp_a3->pos.x += sp24.x;
             temp_a3->pos.y += sp24.y;
             temp_a3->pos.z += sp24.z;
@@ -1103,17 +1103,17 @@ void func_8006BE90(RaceMovingEffect *arg0) {
     if (gRaceUpdatePaused == 0) {
         arg0->timer--;
         arg0->unk52 -= 0x2A;
-        makeFixedRotateY(arg0->unk30, arg0->unk52);
+        makeFixedRotationY(arg0->unk30, arg0->unk52);
 
         velocity = &arg0->velocity;
-        transformVec3ByFixedMatrix(arg0->unk30, velocity, &sp2C);
+        transformVec3iByFixedMatrix(arg0->unk30, velocity, &sp2C);
         arg0->pos.x += sp2C.x;
         arg0->pos.y += sp2C.y;
         arg0->pos.z += sp2C.z;
 
         arg0->unk52 -= 0x2A;
-        makeFixedRotateY(arg0->unk30, arg0->unk52);
-        transformVec3ByFixedMatrix(arg0->unk30, velocity, &sp2C);
+        makeFixedRotationY(arg0->unk30, arg0->unk52);
+        transformVec3iByFixedMatrix(arg0->unk30, velocity, &sp2C);
         arg0->pos.x += sp2C.x;
         arg0->pos.y += sp2C.y;
         arg0->pos.z += sp2C.z;
@@ -1133,7 +1133,7 @@ void func_8006BFC0(RaceMovingEffect *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         arg0->timer--;
-        transformVec3ByFixedMatrix(&arg0->unk30, &temp_a3->velocity, &sp1C);
+        transformVec3iByFixedMatrix(&arg0->unk30, &temp_a3->velocity, &sp1C);
         temp_a3->pos.x += sp1C.x * 2;
         temp_a3->pos.y += sp1C.y * 2;
         temp_a3->pos.z += sp1C.z * 2;
@@ -1153,8 +1153,8 @@ void func_8006C088(RaceMovingEffect *arg0) {
     arg0->velocity.x = -0x200000;
     arg0->velocity.z = 0x400000;
     mtx = arg0->unk30;
-    makeFixedRotateY(mtx, arg0->unk52);
-    transformVec3ByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
+    makeFixedRotationY(mtx, arg0->unk52);
+    transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.x = 0;
     arg0->velocity.z = -0x20000;
     arg0->pos.x += D_800B9540[D_80121B50].unk8.x;
@@ -1207,7 +1207,7 @@ void func_8006C1B4(Struct6C51C *arg0) {
 
     matrix = arg0->pos1Matrix;
     if (matrix == NULL) {
-        makeFixedRotateZY(scratch.rotation, D_800DA770[D_80121B50].angle, arg0->unk50);
+        makeFixedRotationZY(scratch.rotation, D_800DA770[D_80121B50].angle, arg0->unk50);
         scratch.basePos.x = arg0->pos1.x;
         scratch.basePos.y = arg0->pos1.y;
         scratch.basePos.z = arg0->pos1.z;
@@ -1289,21 +1289,21 @@ void func_8006C698(Struct6C51C *arg0) {
     Vec3i sp28;
 
     mtx = arg0->source.rotation;
-    makeFixedRotateY(mtx, D_800DA764[D_80121B50].angle);
+    makeFixedRotationY(mtx, D_800DA764[D_80121B50].angle);
     arg0->source.basePos.x = D_800DA764[D_80121B50].x;
     arg0->source.basePos.y = D_800DA764[D_80121B50].y;
     arg0->source.basePos.z = D_800DA764[D_80121B50].z;
     sp28.x = 0x18000;
     sp28.y = 0x120000;
     sp28.z = -0x80000;
-    transformVec3ByFixedMatrix(mtx, &sp28, &arg0->pos1);
+    transformVec3iByFixedMatrix(mtx, &sp28, &arg0->pos1);
     arg0->pos1.x += arg0->source.basePos.x;
     arg0->pos1.y += arg0->source.basePos.y;
     arg0->pos1.z += arg0->source.basePos.z;
     sp28.x = 0;
     sp28.y = 0x120000;
     sp28.z = 0x50000;
-    transformVec3ByFixedMatrix(mtx, &sp28, &arg0->pos2);
+    transformVec3iByFixedMatrix(mtx, &sp28, &arg0->pos2);
     arg0->pos2.x += arg0->source.basePos.x;
     arg0->pos2.y += arg0->source.basePos.y;
     arg0->pos2.z += arg0->source.basePos.z;
@@ -1378,7 +1378,7 @@ void func_8006CCC0(RaceCourseTriggerEffect *arg0) {
     if (D_80156609 != 0) {
         CourseTriggerEntry *entry = &D_800DA840[((volatile RaceCourseTriggerEffect *) arg0)->entryIndex];
 
-        makeFixedRotateXY(&transform, entry->pitch, entry->yaw);
+        makeFixedRotationXY(&transform, entry->pitch, entry->yaw);
         transform.basePos.x = D_800DA840[arg0->entryIndex].pos.x;
         transform.basePos.y = D_800DA840[arg0->entryIndex].pos.y;
         transform.basePos.z = D_800DA840[arg0->entryIndex].pos.z;
@@ -1439,13 +1439,13 @@ void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger)
 
     if ((gRaceUpdatePaused == 0) && (player->isActive != 0)) {
         entry = &D_800DA840[trigger->entryIndex];
-        makeFixedRotateYX(matrix, -entry->pitch, -entry->yaw);
+        makeFixedRotationYX(matrix, -entry->pitch, -entry->yaw);
 
         if ((player->flags & 0x2000) == 0) {
             delta.x = player->posX - D_800DA840[trigger->entryIndex].pos.x;
             delta.y = player->posY - D_800DA840[trigger->entryIndex].pos.y;
             delta.z = player->posZ - D_800DA840[trigger->entryIndex].pos.z;
-            transformVec3ByFixedMatrix(matrix, &delta, &transformed);
+            transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
             if ((transformed.z >= -trigger->scaleZ) && (trigger->scaleZ >= transformed.z) &&
                 (transformed.x >= (-trigger->scaleX - 0x30000)) &&
@@ -1456,8 +1456,8 @@ void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger)
                 delta.z = 0;
 
                 entry = &D_800DA840[trigger->entryIndex];
-                makeFixedRotateXY(matrix, entry->pitch, entry->yaw);
-                transformVec3ByFixedMatrix(matrix, &delta, &transformed);
+                makeFixedRotationXY(matrix, entry->pitch, entry->yaw);
+                transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
                 player->posX += transformed.x;
                 player->posY += transformed.y;
@@ -1477,7 +1477,7 @@ void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger)
         delta.x = player->posX - D_800DA840[trigger->entryIndex].pos.x;
         delta.y = player->posY - D_800DA840[trigger->entryIndex].pos.y;
         delta.z = player->posZ - D_800DA840[trigger->entryIndex].pos.z;
-        transformVec3ByFixedMatrix(matrix, &delta, &transformed);
+        transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
         if (transformed.y <= 0) {
             if (transformed.y >= -0x160000) {
@@ -1501,11 +1501,11 @@ void func_8006CE68(CourseEffectPlayer *player, RaceCourseTriggerEffect *trigger)
 
                                 if (push != 0) {
                                     savedPush = push;
-                                    makeFixedRotateY(matrix, D_800DA840[trigger->entryIndex].yaw);
+                                    makeFixedRotationY(matrix, D_800DA840[trigger->entryIndex].yaw);
                                     delta.y = 0;
                                     delta.z = 0;
                                     delta.x = savedPush;
-                                    transformVec3ByFixedMatrix(matrix, &delta, &transformed);
+                                    transformVec3iByFixedMatrix(matrix, &delta, &transformed);
                                     player->posX += transformed.x;
                                     player->posZ += transformed.z;
                                 }
@@ -1547,12 +1547,12 @@ void func_8006D384(RaceCourseTriggerEffect *arg0) {
     arg0->scaleZ = entry->scaleZ << 0x10;
     arg0->displayList = entry->displayList;
 
-    makeFixedRotateXY(scratch.mtx, arg0->pitch, arg0->yaw);
+    makeFixedRotationXY(scratch.mtx, arg0->pitch, arg0->yaw);
 
     scratch.source.y = 0;
     scratch.source.x = 0;
     scratch.source.z = arg0->scaleZ;
-    transformVec3ByFixedMatrix(scratch.mtx, &scratch.source, &scratch.dest);
+    transformVec3iByFixedMatrix(scratch.mtx, &scratch.source, &scratch.dest);
 
     entry = &D_800DA840[arg0->entryIndex];
     arg0->pos1.x = entry->pos.x + scratch.dest.x;
@@ -1562,7 +1562,7 @@ void func_8006D384(RaceCourseTriggerEffect *arg0) {
     scratch.source.x = 0;
     scratch.source.y = 0;
     scratch.source.z = -arg0->scaleZ;
-    transformVec3ByFixedMatrix(scratch.mtx, &scratch.source, &scratch.dest);
+    transformVec3iByFixedMatrix(scratch.mtx, &scratch.source, &scratch.dest);
 
     entry = &D_800DA840[arg0->entryIndex];
     arg0->pos2.x = entry->pos.x + scratch.dest.x;

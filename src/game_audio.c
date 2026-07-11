@@ -533,7 +533,7 @@ s32 func_800722F0(SoundPosition *pos, s32 volume) {
                 if (((camera->prevPos.y - pos->y) >= -0x4000000) && (dy < 0x4000001)) {
                     dz = camera->prevPos.z - pos->z;
                     if ((dz >= -0x4000000) && (dz < 0x4000001)) {
-                        adjustedVolume = integerSqrt64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz);
+                        adjustedVolume = integerSquareRoot64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz);
                         if (adjustedVolume < distance) {
                             distance = adjustedVolume;
                         }

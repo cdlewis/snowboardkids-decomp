@@ -321,7 +321,7 @@ void func_80085664(RaceInputPlayer *arg0) {
         }
         D_80121D5C = arg0->unk2C8 - arg0->unk40_x;
         D_80121D60 = arg0->unk2CC - arg0->unk48;
-        D_80121D58 = integerSqrt64((s64) D_80121D5C * D_80121D5C + (s64) D_80121D60 * D_80121D60) >> 1;
+        D_80121D58 = integerSquareRoot64((s64) D_80121D5C * D_80121D5C + (s64) D_80121D60 * D_80121D60) >> 1;
         D_80121D54 = calculateAngleFromDeltaXZ(D_80121D5C, D_80121D60);
         if ((arg0->pendingItemHitFlags & 1) && (func_80085238(arg0) != 0) && (func_80084F50(arg0) != 0) && (func_800852E8(arg0) != 0)) {
             func_800853A0(arg0);

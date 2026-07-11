@@ -4504,19 +4504,19 @@ void func_80095650(RaceInputPlayer *player) {
         }
     }
 
-    makeFixedRotateY((s16 *)&scratch[2], player->facingAngle);
+    makeFixedRotationY((s16 *)&scratch[2], player->facingAngle);
     scratch[13] = 0;
     scratch[14] = 0;
     scratch[15] = player->unk80;
-    transformVec3ByFixedMatrix((s16 *)&scratch[2], (Vec3i *)&scratch[13], (Vec3i *)&scratch[10]);
+    transformVec3iByFixedMatrix((s16 *)&scratch[2], (Vec3i *)&scratch[13], (Vec3i *)&scratch[10]);
     player->posX += scratch[10];
     player->posZ += scratch[12];
 
-    makeFixedRotateY((s16 *)&scratch[2], player->facingAngle);
+    makeFixedRotationY((s16 *)&scratch[2], player->facingAngle);
     scratch[13] = 0;
     scratch[14] = 0;
     scratch[15] = player->unk80;
-    transformVec3ByFixedMatrix((s16 *)&scratch[2], (Vec3i *)&scratch[13], (Vec3i *)&scratch[10]);
+    transformVec3iByFixedMatrix((s16 *)&scratch[2], (Vec3i *)&scratch[13], (Vec3i *)&scratch[10]);
     player->posX += scratch[10];
     player->posZ += scratch[12];
     player->unk40.y -= 0x7000;
@@ -4551,11 +4551,11 @@ void func_80095804(RaceInputPlayer *player) {
         player->unk80 += 0x820;
     }
 
-    makeFixedRotateY((s16 *)&scratch[1], player->facingAngle);
+    makeFixedRotationY((s16 *)&scratch[1], player->facingAngle);
     scratch[12] = 0;
     scratch[13] = 0;
     scratch[14] = player->unk80;
-    transformVec3ByFixedMatrix((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
+    transformVec3iByFixedMatrix((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
     player->posX += scratch[9];
     player->posZ += scratch[11];
 
@@ -4566,11 +4566,11 @@ void func_80095804(RaceInputPlayer *player) {
         player->unk80 += 0x820;
     }
 
-    makeFixedRotateY((s16 *)&scratch[1], player->facingAngle);
+    makeFixedRotationY((s16 *)&scratch[1], player->facingAngle);
     scratch[12] = 0;
     scratch[13] = 0;
     scratch[14] = player->unk80;
-    transformVec3ByFixedMatrix((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
+    transformVec3iByFixedMatrix((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
     player->posX += scratch[9];
     player->posZ += scratch[11];
 
@@ -4611,11 +4611,11 @@ void func_800959B4(RaceInputPlayer *player) {
         }
     }
 
-    makeFixedRotateY((s16 *)&scratch[1], player->facingAngle);
+    makeFixedRotationY((s16 *)&scratch[1], player->facingAngle);
     scratch[12] = 0;
     scratch[13] = 0;
     scratch[14] = player->unk80;
-    transformVec3ByFixedMatrix((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
+    transformVec3iByFixedMatrix((s16 *)&scratch[1], (Vec3i *)&scratch[12], (Vec3i *)&scratch[9]);
     player->posX += scratch[9];
     player->posZ += scratch[11];
 
@@ -4661,18 +4661,18 @@ void func_80095A88(RaceInputPlayer *player) {
         if (player->unk80 < 0xA0000) {
             player->unk80 += 0x2000;
         }
-        makeFixedRotateXY((s16 *) scratch.matrix, -0x100, player->facingAngle);
+        makeFixedRotationXY((s16 *) scratch.matrix, -0x100, player->facingAngle);
     } else {
         if (player->unk80 >= -0x9FFFF) {
             player->unk80 -= 0x2000;
         }
-        makeFixedRotateXY((s16 *) scratch.matrix, 0x100, ((0, player))->facingAngle);
+        makeFixedRotationXY((s16 *) scratch.matrix, 0x100, ((0, player))->facingAngle);
     }
 
     scratch.sourceX = 0;
     scratch.sourceY = 0;
     scratch.sourceZ = player->unk80;
-    transformVec3ByFixedMatrix((s16 *) scratch.matrix, (Vec3i *) &scratch.sourceX, (Vec3i *) &scratch.transformedX);
+    transformVec3iByFixedMatrix((s16 *) scratch.matrix, (Vec3i *) &scratch.sourceX, (Vec3i *) &scratch.transformedX);
     player->posX = player->posX + scratch.transformedX;
     player->posY += scratch.transformedY;
     player->posZ += scratch.transformedZ;
@@ -4712,9 +4712,9 @@ void func_80095BE4(RaceInputPlayer *player) {
         source.x = -0x200000;
         source.y = 0;
         source.z = 0x400000;
-        makeFixedRotateY(matrix, D_800B9554[D_80121B50].angle);
+        makeFixedRotationY(matrix, D_800B9554[D_80121B50].angle);
         pos = (Vec3i *) &player->posX;
-        transformVec3ByFixedMatrix(matrix, &source, pos);
+        transformVec3iByFixedMatrix(matrix, &source, pos);
         player->posX += D_800B9540[D_80121B50].unk8.x;
         player->posY += D_800B9540[D_80121B50].unk8.y + 0x80000;
         player->posZ += D_800B9540[D_80121B50].unk8.z;
@@ -4741,8 +4741,8 @@ void func_80095BE4(RaceInputPlayer *player) {
     source.x = 0;
     source.y = 0;
     source.z = -0x40000;
-    makeFixedRotateY(matrix, D_800B9554[D_80121B50].angle);
-    transformVec3ByFixedMatrix(matrix, &source, &transformed);
+    makeFixedRotationY(matrix, D_800B9554[D_80121B50].angle);
+    transformVec3iByFixedMatrix(matrix, &source, &transformed);
     nextX = player->posX + transformed.x;
     player->posX = nextX;
     nextZ = player->posZ + transformed.z;

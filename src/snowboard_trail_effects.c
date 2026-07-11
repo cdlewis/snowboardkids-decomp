@@ -111,13 +111,13 @@ void func_8008393C(struct RaceInputPlayer *input) {
     {
         trail->spinYaw += 0x240;
         playerTransform = (FixedMatrix3s *)player->modelTransform;
-        transformVec3ByFixedMatrix(*playerTransform, &trail->localOffset, &trail->worldPos);
+        transformVec3iByFixedMatrix(*playerTransform, &trail->localOffset, &trail->worldPos);
         trail->worldPos.x += player->velocity.x;
         trail->worldPos.y += player->velocity.y;
         trail->worldPos.z += player->velocity.z;
-        makeFixedRotateY(scratch.rotation, trail->modelYaw);
+        makeFixedRotationY(scratch.rotation, trail->modelYaw);
         rotation = (FixedMatrix3s *)trail->rotation;
-        multiplyFixedMatrices(scratch.rotation, *playerTransform, *rotation);
+        multiplyFixedMatrix3s(scratch.rotation, *playerTransform, *rotation);
         trail->drawPos.x = trail->worldPos.x;
         trail->drawPos.y = trail->worldPos.y;
         trail->drawPos.z = trail->worldPos.z;
@@ -130,7 +130,7 @@ void func_8008393C(struct RaceInputPlayer *input) {
         trail->rotation[6] = (trail->rotation[6] * trail->scaleStep) / 16;
         trail->rotation[7] = (trail->rotation[7] * trail->scaleStep) / 16;
         trail->rotation[8] = (trail->rotation[8] * trail->scaleStep) / 16;
-        makeFixedRotateX(scratch.rotation, trail->spinYaw);
+        makeFixedRotationX(scratch.rotation, trail->spinYaw);
         scratch.translation.x = trail->scale.x;
         scratch.translation.y = trail->scale.y;
         scratch.translation.z = trail->scale.z;
@@ -151,17 +151,17 @@ state_2:
     {
         trail->spinYaw += 0x240;
         playerTransform = (FixedMatrix3s *)player->modelTransform;
-        transformVec3ByFixedMatrix(*playerTransform, &trail->localOffset, &trail->worldPos);
+        transformVec3iByFixedMatrix(*playerTransform, &trail->localOffset, &trail->worldPos);
         trail->worldPos.x += player->velocity.x;
         trail->worldPos.y += player->velocity.y;
         trail->worldPos.z += player->velocity.z;
-        makeFixedRotateY(scratch.rotation, trail->modelYaw);
+        makeFixedRotationY(scratch.rotation, trail->modelYaw);
         rotation = (FixedMatrix3s *)trail->rotation;
-        multiplyFixedMatrices(scratch.rotation, *playerTransform, *rotation);
+        multiplyFixedMatrix3s(scratch.rotation, *playerTransform, *rotation);
         trail->drawPos.x = trail->worldPos.x;
         trail->drawPos.y = trail->worldPos.y;
         trail->drawPos.z = trail->worldPos.z;
-        makeFixedRotateX(scratch.rotation, trail->spinYaw);
+        makeFixedRotationX(scratch.rotation, trail->spinYaw);
         scratch.translation.x = trail->scale.x;
         scratch.translation.y = trail->scale.y;
         scratch.translation.z = trail->scale.z;

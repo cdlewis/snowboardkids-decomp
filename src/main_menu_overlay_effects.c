@@ -434,8 +434,8 @@ void func_80054460(MainMenuOverlayEffectActor *arg0) {
     sp2C.z = 0;
 
     player = &D_80121D80[arg0->index];
-    makeFixedRotateXY(sp38, player->pitch, player->yaw);
-    transformVec3ByFixedMatrix(sp38, &sp2C, (Vec3i *) &arg0->unk18);
+    makeFixedRotationXY(sp38, player->pitch, player->yaw);
+    transformVec3iByFixedMatrix(sp38, &sp2C, (Vec3i *) &arg0->unk18);
 
     player = &D_80121D80[arg0->index];
     arg0->unk18.word += player->pos28.x;
@@ -573,7 +573,7 @@ void func_80054B98(MainMenuOverlayEffectActor *arg0) {
 
     if (gCurrentViewportIndex == 2) {
         func_80045990((void *) func_80043040(D_80112174), 0, &image, &palette);
-        makeFixedRotateZ(transform.rotation, arg0->spriteIndex);
+        makeFixedRotationZ(transform.rotation, arg0->spriteIndex);
         transform.x = arg0->unk18.word;
         transform.y = arg0->unk1C.word;
         transform.z = arg0->unk20.word;
@@ -789,7 +789,7 @@ void func_80055410(MainMenuOverlayEffectActor *arg0) {
     GfxCommandDest *matrix;
 
     if (gCurrentViewportIndex == 0) {
-        makeFixedRotateY(scratch.source.rotation, arg0->unk18.half.hi);
+        makeFixedRotationY(scratch.source.rotation, arg0->unk18.half.hi);
         scratch.source.x = 0;
         scratch.source.y = 0;
         scratch.source.z = 0;

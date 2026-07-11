@@ -1613,7 +1613,7 @@ void func_80048CF8(GfxCommandBlock *arg0, GfxCommandBlock *arg1) {
     arg1->words[15] = (arg0->words[7] << 0x10) & 0xFFFF0000;
 }
 
-void func_80048D60(FixedMatrix3s arg0) {
+void scaleFixedMatrix3sByQuarter(FixedMatrix3s arg0) {
     arg0[0] = arg0[0] / 4;
     arg0[1] = arg0[1] / 4;
     arg0[2] = arg0[2] / 4;

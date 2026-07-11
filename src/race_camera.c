@@ -172,12 +172,12 @@ void func_8006D780(s32 arg0) {
 void func_8006D7D4(void) {
     StackD7D4 stack;
 
-    makeFixedRotateYX(D_801124A0->rotationMatrix, -D_801124A0->pitch, -D_801124A0->yaw);
+    makeFixedRotationYX(D_801124A0->rotationMatrix, -D_801124A0->pitch, -D_801124A0->yaw);
     stack.sp54 = 0;
     stack.sp58 = 0;
     stack.sp5C = -D_801124A0->distance;
-    makeFixedRotateXY(stack.sp28, D_801124A0->pitch, D_801124A0->yaw);
-    transformVec3ByFixedMatrix(stack.sp28, &stack.sp54, &stack.sp48);
+    makeFixedRotationXY(stack.sp28, D_801124A0->pitch, D_801124A0->yaw);
+    transformVec3iByFixedMatrix(stack.sp28, &stack.sp54, &stack.sp48);
     D_801124A0->transformOffset.x = stack.sp48 - D_801124A0->pos.x;
     D_801124A0->transformOffset.y = stack.sp4C - D_801124A0->pos.y;
     D_801124A0->transformOffset.z = stack.sp50 - D_801124A0->pos.z;
@@ -211,8 +211,8 @@ void func_8006D8B4(void) {
     dy = (D_801124A0->pos.y - D_801124A0->focus.y) + 0x40000;
     dz = D_801124A0->pos.z - D_801124A0->focus.z;
 
-    xzDist = integerSqrt64((s64)dx * dx + (s64)dz * dz);
-    dist = integerSqrt64((s64)xzDist * xzDist + (s64)dy * dy);
+    xzDist = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
+    dist = integerSquareRoot64((s64)xzDist * xzDist + (s64)dy * dy);
 
     D_801124A0->pitch = calculateAngleBetweenXZPoints(0, 0, xzDist, -dy);
     if (dist != 0) {
@@ -296,8 +296,8 @@ void func_8006DDB4(void) {
     dx = D_801124A0->pos.x - D_801124A0->focus.x;
     dz = D_801124A0->pos.z - D_801124A0->focus.z;
 
-    xzLen = integerSqrt64((s64)dx * dx + (s64)dz * dz);
-    fullLen = integerSqrt64((s64)xzLen * xzLen + (s64)dy * dy);
+    xzLen = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
+    fullLen = integerSquareRoot64((s64)xzLen * xzLen + (s64)dy * dy);
 
     D_801124A0->pitch = calculateAngleBetweenXZPoints(0, 0, xzLen, -dy);
     if (fullLen != 0) {
@@ -369,8 +369,8 @@ void func_8006E2C4(void) {
         offset.z = 0xFFC00000;
         player = (RacePlayerSlot *) ((u8 *) D_80121D80 + (D_801124A0->playerIndex * RACE_PLAYER_STATE_SIZE));
     }
-    makeFixedRotateY(matrix, player->state.yaw);
-    transformVec3ByFixedMatrix(matrix, &offset, &transformedOffset);
+    makeFixedRotationY(matrix, player->state.yaw);
+    transformVec3iByFixedMatrix(matrix, &offset, &transformedOffset);
     D_801124A0->focus.x = D_80121D80[D_801124A0->playerIndex].state.cameraPos.x;
     D_801124A0->focus.y = D_80121D80[D_801124A0->playerIndex].state.cameraPos.y;
     D_801124A0->focus.z = D_80121D80[D_801124A0->playerIndex].state.cameraPos.z;
@@ -560,7 +560,7 @@ void func_8006F048(void) {
         camera = D_801124A0;
         dx = camera->pos.x - camera->focus.x;
         dz = camera->pos.z - camera->focus.z;
-        dist = integerSqrt64((s64)dx * dx + (s64)dz * dz);
+        dist = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
         dist = ((0x300000 - dist) >> 1) + dist;
 
         sine = fixedSine(yaw);
@@ -600,7 +600,7 @@ void func_8006F5B0(void) {
 
         dx = D_801124A0->pos.x - D_801124A0->focus.x;
         dz = D_801124A0->pos.z - D_801124A0->focus.z;
-        dist = integerSqrt64((s64)dx * dx + (s64)dz * dz);
+        dist = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
         dist = ((0x400000 - dist) >> 4) + dist;
 
         D_801124A0->unk92 += 8;
