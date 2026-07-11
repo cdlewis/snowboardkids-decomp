@@ -2789,7 +2789,7 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
     func_80071824(arg0, func_8005CDB0);
 }
 
-// func_8005CF60 best match: 91.432% (nonmatchings/func_8005CF60-4923837976568703863/base_20.c)
+// func_8005CF60 best match: 93.690% (nonmatchings/func_8005CF60-7123131487808489545/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005CF60.s")
 
 #ifdef NON_MATCHING
@@ -2799,6 +2799,7 @@ const char D_800E1440[4] = "%d";
 void func_8005CF60(RaceUiDualCounterActor *arg0) {
     char buffer[0x2C];
     char *ptr;
+    char *ptr2;
     Gfx *gfx;
     Gfx **gfxp;
     s32 w0;
@@ -2810,10 +2811,10 @@ void func_8005CF60(RaceUiDualCounterActor *arg0) {
 
     sprintf(buffer, D_800E143C, D_80122040);
     x = -0x50;
+    ptr = buffer;
     if (D_80122040 >= 10) {
         x = -0x54;
     }
-    ptr = buffer;
     if (D_80122040 >= 100) {
         x = -0x58;
     }
@@ -2838,22 +2839,22 @@ body1:
 done1:
     x = -0x50;
     sprintf(buffer, D_800E1440, D_80122043);
-    ptr = buffer;
+    ptr2 = buffer;
     if (D_80122043 >= 10) {
         x = -0x54;
     }
 
 loop2:
-    if (*ptr != '\0') {
+    if (*ptr2 != '\0') {
         goto body2;
     }
     goto done2;
 
 body2:
-    if (*ptr != ' ') {
-        func_80046D68(x, -0x13, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF, 0xE);
+    if (*ptr2 != ' ') {
+        func_80046D68(x, -0x13, func_80043040(D_80112130.popupFontHandle), (*ptr2 - 5) & 0xFFFF, 0xE);
     }
-    ptr++;
+    ptr2++;
     x += 8;
     goto loop2;
 
