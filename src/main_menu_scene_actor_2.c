@@ -19,7 +19,7 @@ struct MainMenuSceneActor2 {
 
 extern u8 gEndingActorHandshakeState;
 extern u16 gEndingSequencePhase;
-extern u8 D_8010B1AA;
+extern u8 gEndingCharacter2EffectDone;
 
 void func_800373E0(MainMenuSceneActor2 *arg0) {
     stepMainMenuSceneModelAnimation(2);
@@ -202,7 +202,7 @@ void func_80037998(MainMenuSceneActor2 *arg0) {
         setMainMenuSceneModelRotation(2, arg0->rotX, arg0->rotY, arg0->rotZ);
         setMainMenuSceneModelAnimation(2, 0x20);
         gEndingSequencePhase = 0x3B;
-        D_8010B1AA = 1;
+        gEndingCharacter2EffectDone = 1;
     }
     setMainMenuSceneModelPosition(2, arg0->posX, arg0->posY, arg0->posZ);
     func_800428C8(2);
@@ -263,7 +263,7 @@ void func_80037C28(MainMenuSceneActor2 *arg0) {
             setCallbackTaskCallback(arg0, func_80037B6C);
             arg0->posX = 0x1900000;
             arg0->posZ = 0x120000;
-            D_8010B1AA = 0;
+            gEndingCharacter2EffectDone = 0;
             spawnEndingCharacterAura(0x18, -0x36, 2, 1);
         }
     }
@@ -276,7 +276,7 @@ void func_80037CAC(MainMenuSceneActor2 *arg0) {
         arg0->posX = 0xFE700000;
         setCallbackTaskCallback(arg0, func_80037C28);
         gEndingSequencePhase = 0x31;
-        D_8010B1AA = 1;
+        gEndingCharacter2EffectDone = 1;
     }
     setMainMenuSceneModelPosition(2, arg0->posX, arg0->posY, arg0->posZ);
     func_800428C8(2);
@@ -302,7 +302,7 @@ void func_80037D48(MainMenuSceneActor2 *arg0) {
         arg0->posY = 0;
         setMainMenuSceneModelPosition(2, arg0->posX, 0, arg0->posZ);
         setMainMenuSceneModelAnimation(2, 0x1B);
-        D_8010B1AA = 0;
+        gEndingCharacter2EffectDone = 0;
         spawnEndingCharacterAura(0x18, -0x36, 2, 1);
     }
 }
@@ -382,7 +382,7 @@ void func_800380F0(MainMenuSceneActor2 *arg0) {
         arg0->posX = 0xF00000;
         setCallbackTaskCallback(arg0, func_80038098);
         gEndingSequencePhase = 0x29;
-        D_8010B1AA = 1;
+        gEndingCharacter2EffectDone = 1;
         spawnEndingCharacterLoopingSparkle(-0x10, -0x4E, 2);
     }
     setMainMenuSceneModelPosition(2, arg0->posX, arg0->posY, arg0->posZ);
@@ -515,7 +515,7 @@ void func_8003857C(MainMenuSceneActor2 *arg0) {
 void func_80038628(MainMenuSceneActor2 *arg0) {
     if (gEndingSequencePhase == 0x21) {
         setCallbackTaskCallback(arg0, func_8003857C);
-        D_8010B1AA = 0;
+        gEndingCharacter2EffectDone = 0;
         spawnEndingCharacterAura(0x18, -0x36, 2, 1);
     }
 }
@@ -529,7 +529,7 @@ void func_80038678(MainMenuSceneActor2 *arg0) {
     if (var_a1 < (s32)0xFE700001) {
         arg0->posX = 0xFE700000;
         setCallbackTaskCallback(arg0, func_80038628);
-        D_8010B1AA = 1;
+        gEndingCharacter2EffectDone = 1;
         var_a1 = arg0->posX;
     }
     temp_a2 = &arg0->posY;
@@ -549,7 +549,7 @@ void func_80038704(MainMenuSceneActor2 *arg0) {
         arg0->rotY = 0xC00;
         setMainMenuSceneModelRotation(2, arg0->rotX, arg0->rotY, arg0->rotZ);
         gEndingSequencePhase = 0x20;
-        D_8010B1AA = 0;
+        gEndingCharacter2EffectDone = 0;
         spawnEndingCharacterAura(0x18, -0x36, 2, 1);
         var_a1 = arg0->posX;
     }
