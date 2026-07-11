@@ -1,5 +1,5 @@
 #include "common.h"
-#include "race_pickup_effects.h"
+#include "race_pickup_and_course_props.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
@@ -199,8 +199,8 @@ extern Vtx gRacePickupBaseVertices[];
 extern Vtx gRacePickupTopVertices[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
-extern Gfx D_2003A38[];
-extern Gfx D_2003AB8[];
+extern Gfx gRaceItemPickupDisplayList[];
+extern Gfx gRaceActionPickupDisplayList[];
 extern FixedTransform gIdentityFixedTransform;
 extern GfxCommandDest gIdentityMatrix;
 extern FixedTransform gIdentityFixedTransform;
@@ -566,7 +566,7 @@ void spawnThrownPickupModel(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
 }
 
 // updateThrownPickupSpawner best match: 99.625% (nonmatchings/updateThrownPickupSpawner-731940616440357983/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_effects/updateThrownPickupSpawner.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_and_course_props/updateThrownPickupSpawner.s")
 
 #ifdef NON_MATCHING
 #define SPAWN_RANGE_MAX 0x14000000
@@ -660,7 +660,7 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
 #endif
 
 // renderRacePickupIdle best match: display-list command stream matched, remaining differences are stack/local layout.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_effects/renderRacePickupIdle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_and_course_props/renderRacePickupIdle.s")
 
 #ifdef NON_MATCHING
 void renderRacePickupIdle(RacePickupActor *arg0) {
@@ -712,9 +712,9 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
             sp108->words.w1 = getRelocatableHeapBlockBase(D_80112146);
             gSPMatrix(gRegionAllocPtr++, arg0->scaleDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (arg0->variant == 0) {
-                gSPDisplayList(gRegionAllocPtr++, D_2003A38);
+                gSPDisplayList(gRegionAllocPtr++, gRaceItemPickupDisplayList);
             } else {
-                gSPDisplayList(gRegionAllocPtr++, D_2003AB8);
+                gSPDisplayList(gRegionAllocPtr++, gRaceActionPickupDisplayList);
             }
             gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
             gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image0, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
@@ -799,7 +799,7 @@ void renderRacePickupBase(RacePickupActor *arg0) {
 }
 
 // renderRacePickupRespawn best match: 99.579% (base_22.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_effects/renderRacePickupRespawn.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_and_course_props/renderRacePickupRespawn.s")
 
 #ifdef NON_MATCHING
 void renderRacePickupRespawn(RacePickupActor *arg0) {
@@ -940,7 +940,7 @@ void updateRacePickupCollected(RacePickupActor *arg0) {
 }
 
 // updateRacePickupIdle best match: 99.901%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_effects/updateRacePickupIdle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_and_course_props/updateRacePickupIdle.s")
 
 #ifdef NON_MATCHING
 void updateRacePickupIdle(RacePickupActor *arg0) {
