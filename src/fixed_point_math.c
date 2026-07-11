@@ -1,19 +1,19 @@
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 
 #define FIXED_MATRIX_ONE 0x1000
 #define FIXED_MATRIX_ROWS(matrix) ((s16(*)[3])(matrix))
 
-extern s16 D_800B9810[];
+extern s16 gSineTable[];
 
 typedef s16 FixedMatrix3sScratch[0x10];
 
 extern FixedTransform gIdentityFixedTransform;
 
-void func_80097A80(FixedTransform *arg0) {
-    *arg0 = gIdentityFixedTransform;
+void initFixedTransform(FixedTransform *transform) {
+    *transform = gIdentityFixedTransform;
 }
 
-s16 func_80097AE8(s16 arg0) {
+s16 fixedSine(s16 arg0) {
     s16 temp;
 
     arg0 &= 0xFFF;
@@ -23,11 +23,11 @@ s16 func_80097AE8(s16 arg0) {
     if (arg0 == 0xC00) {
         return -FIXED_MATRIX_ONE;
     }
-    temp = D_800B9810[arg0] >> 3;
+    temp = gSineTable[arg0] >> 3;
     return temp;
 }
 
-s16 func_80097B48(s16 arg0) {
+s16 fixedCosine(s16 arg0) {
     s16 temp;
 
     arg0 = (arg0 + 0x400) & 0xFFF;
@@ -37,13 +37,13 @@ s16 func_80097B48(s16 arg0) {
     if (arg0 == 0xC00) {
         return -FIXED_MATRIX_ONE;
     }
-    temp = D_800B9810[arg0] >> 3;
+    temp = gSineTable[arg0] >> 3;
     return temp;
 }
 
-void func_80097BAC(FixedMatrix3s arg0, s16 arg1) {
-    s32 sine = func_80097AE8(arg1);
-    s16 cosine = func_80097B48(arg1);
+void makeFixedRotateX(FixedMatrix3s arg0, s16 arg1) {
+    s32 sine = fixedSine(arg1);
+    s16 cosine = fixedCosine(arg1);
 
     arg0[MTX_XX] = FIXED_MATRIX_ONE;
     arg0[MTX_XY] = 0;
@@ -56,9 +56,9 @@ void func_80097BAC(FixedMatrix3s arg0, s16 arg1) {
     arg0[MTX_ZZ] = cosine;
 }
 
-void func_80097C18(FixedMatrix3s arg0, s16 arg1) {
-    s32 sine = func_80097AE8(arg1);
-    s16 cosine = func_80097B48(arg1);
+void makeFixedRotateY(FixedMatrix3s arg0, s16 arg1) {
+    s32 sine = fixedSine(arg1);
+    s16 cosine = fixedCosine(arg1);
 
     arg0[MTX_XX] = cosine;
     arg0[MTX_XY] = 0;
@@ -71,9 +71,9 @@ void func_80097C18(FixedMatrix3s arg0, s16 arg1) {
     arg0[MTX_ZZ] = cosine;
 }
 
-void func_80097C84(FixedMatrix3s arg0, s16 arg1) {
-    s32 sine = func_80097AE8(arg1);
-    s16 cosine = func_80097B48(arg1);
+void makeFixedRotateZ(FixedMatrix3s arg0, s16 arg1) {
+    s32 sine = fixedSine(arg1);
+    s16 cosine = fixedCosine(arg1);
 
     arg0[MTX_XX] = cosine;
     arg0[MTX_XY] = sine;
@@ -86,7 +86,7 @@ void func_80097C84(FixedMatrix3s arg0, s16 arg1) {
     arg0[MTX_ZZ] = FIXED_MATRIX_ONE;
 }
 
-void func_80097CF0(FixedMatrix3s arg0, FixedMatrix3s arg1, FixedMatrix3s arg2) {
+void multiplyFixedMatrices(FixedMatrix3s arg0, FixedMatrix3s arg1, FixedMatrix3s arg2) {
     s32 i;
     s32 j;
 
@@ -103,7 +103,7 @@ void func_80097CF0(FixedMatrix3s arg0, FixedMatrix3s arg1, FixedMatrix3s arg2) {
     } while (i != 3);
 }
 
-void func_80097DA4(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
+void makeFixedRotateXYZ(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     s32 sineX;
     s32 cosineX;
     s32 sineY;
@@ -115,12 +115,12 @@ void func_80097DA4(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     s32 sineXTimesSineY;
     s32 cosineXTimesSineY;
 
-    sineX = func_80097AE8(arg1);
-    cosineX = func_80097B48(arg1);
-    sineY = func_80097AE8(arg2);
-    cosineY = func_80097B48(arg2);
-    sineZ = func_80097AE8(arg3);
-    cosineZ = func_80097B48(arg3);
+    sineX = fixedSine(arg1);
+    cosineX = fixedCosine(arg1);
+    sineY = fixedSine(arg2);
+    cosineY = fixedCosine(arg2);
+    sineZ = fixedSine(arg3);
+    cosineZ = fixedCosine(arg3);
     negSineY = -sineY;
     negSineZ = -sineZ;
 
@@ -137,7 +137,7 @@ void func_80097DA4(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     arg0[MTX_ZZ] = (cosineX * cosineY) / FIXED_MATRIX_ONE;
 }
 
-void func_80097FE4(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
+void makeFixedRotateXY(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
     s32 sineX;
     s32 cosineX;
     s32 sineY;
@@ -145,10 +145,10 @@ void func_80097FE4(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
     s32 negSineX;
     s32 negSineY;
 
-    sineX = func_80097AE8(arg1);
-    cosineX = func_80097B48(arg1);
-    sineY = func_80097AE8(arg2);
-    cosineY = func_80097B48(arg2);
+    sineX = fixedSine(arg1);
+    cosineX = fixedCosine(arg1);
+    sineY = fixedSine(arg2);
+    cosineY = fixedCosine(arg2);
     negSineX = -sineX;
     negSineY = -sineY;
 
@@ -164,34 +164,34 @@ void func_80097FE4(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
     arg0[MTX_ZZ] = (cosineX * cosineY) / FIXED_MATRIX_ONE;
 }
 
-void func_800980D0(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
+void makeFixedRotateZX(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
     FixedMatrix3sScratch sp38;
     FixedMatrix3sScratch sp18;
 
-    func_80097C84(sp38, arg2);
-    func_80097BAC(sp18, arg1);
-    func_80097CF0(sp38, sp18, arg0);
+    makeFixedRotateZ(sp38, arg2);
+    makeFixedRotateX(sp18, arg1);
+    multiplyFixedMatrices(sp38, sp18, arg0);
 }
 
-void func_80098124(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
+void makeFixedRotateXZ(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
     FixedMatrix3sScratch sp38;
     FixedMatrix3sScratch sp18;
 
-    func_80097BAC(sp38, arg1);
-    func_80097C84(sp18, arg2);
-    func_80097CF0(sp38, sp18, arg0);
+    makeFixedRotateX(sp38, arg1);
+    makeFixedRotateZ(sp18, arg2);
+    multiplyFixedMatrices(sp38, sp18, arg0);
 }
 
-void func_80098174(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
+void makeFixedRotateZY(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
     FixedMatrix3sScratch sp38;
     FixedMatrix3sScratch sp18;
 
-    func_80097C84(sp38, arg2);
-    func_80097C18(sp18, arg1);
-    func_80097CF0(sp38, sp18, arg0);
+    makeFixedRotateZ(sp38, arg2);
+    makeFixedRotateY(sp18, arg1);
+    multiplyFixedMatrices(sp38, sp18, arg0);
 }
 
-void func_800981C8(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
+void makeFixedRotateZXY(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     s32 sineX;
     s32 cosineX;
     s32 sineY;
@@ -203,12 +203,12 @@ void func_800981C8(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     s32 sineZTimesSineX;
     s32 cosineZTimesSineX;
 
-    sineX = func_80097AE8(arg1);
-    cosineX = func_80097B48(arg1);
-    sineY = func_80097AE8(arg2);
-    cosineY = func_80097B48(arg2);
-    sineZ = func_80097AE8(arg3);
-    cosineZ = func_80097B48(arg3);
+    sineX = fixedSine(arg1);
+    cosineX = fixedCosine(arg1);
+    sineY = fixedSine(arg2);
+    cosineY = fixedCosine(arg2);
+    sineZ = fixedSine(arg3);
+    cosineZ = fixedCosine(arg3);
     negSineY = -sineY;
     negSineZ = -sineZ;
     sineZTimesSineX = (sineZ * sineX) / FIXED_MATRIX_ONE;
@@ -225,52 +225,52 @@ void func_800981C8(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     arg0[MTX_ZZ] = (cosineX * cosineY) / FIXED_MATRIX_ONE;
 }
 
-void func_800983E4(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
+void makeFixedRotateYZX(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     FixedMatrix3sScratch sp58;
     FixedMatrix3sScratch sp38;
     FixedMatrix3sScratch sp18;
 
-    func_80097C18(sp58, arg2);
-    func_80097C84(sp38, arg3);
-    func_80097CF0(sp58, sp38, sp18);
-    func_80097BAC(sp38, arg1);
-    func_80097CF0(sp18, sp38, arg0);
+    makeFixedRotateY(sp58, arg2);
+    makeFixedRotateZ(sp38, arg3);
+    multiplyFixedMatrices(sp58, sp38, sp18);
+    makeFixedRotateX(sp38, arg1);
+    multiplyFixedMatrices(sp18, sp38, arg0);
 }
 
-void func_80098458(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
+void makeFixedRotateZYX(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     FixedMatrix3sScratch sp58;
     FixedMatrix3sScratch sp38;
     FixedMatrix3sScratch sp18;
 
-    func_80097C18(sp58, arg2);
-    func_80097C84(sp38, arg3);
-    func_80097CF0(sp38, sp58, sp18);
-    func_80097BAC(sp38, arg1);
-    func_80097CF0(sp18, sp38, arg0);
+    makeFixedRotateY(sp58, arg2);
+    makeFixedRotateZ(sp38, arg3);
+    multiplyFixedMatrices(sp38, sp58, sp18);
+    makeFixedRotateX(sp38, arg1);
+    multiplyFixedMatrices(sp18, sp38, arg0);
 }
 
-void func_800984CC(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
+void makeFixedRotateXZY(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     FixedMatrix3sScratch sp58;
     FixedMatrix3sScratch sp38;
     FixedMatrix3sScratch sp18;
 
-    func_80097BAC(sp58, arg1);
-    func_80097C84(sp38, arg3);
-    func_80097CF0(sp58, sp38, sp18);
-    func_80097C18(sp38, arg2);
-    func_80097CF0(sp18, sp38, arg0);
+    makeFixedRotateX(sp58, arg1);
+    makeFixedRotateZ(sp38, arg3);
+    multiplyFixedMatrices(sp58, sp38, sp18);
+    makeFixedRotateY(sp38, arg2);
+    multiplyFixedMatrices(sp18, sp38, arg0);
 }
 
-void func_8009853C(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
+void makeFixedRotateYX(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
     FixedMatrix3sScratch sp38;
     FixedMatrix3sScratch sp18;
 
-    func_80097C18(sp38, arg2);
-    func_80097BAC(sp18, arg1);
-    func_80097CF0(sp38, sp18, arg0);
+    makeFixedRotateY(sp38, arg2);
+    makeFixedRotateX(sp18, arg1);
+    multiplyFixedMatrices(sp38, sp18, arg0);
 }
 
-void func_80098590(FixedMatrix3s arg0, Vec3i *source, Vec3i *dest) {
+void transformVec3ByFixedMatrix(FixedMatrix3s arg0, Vec3i *source, Vec3i *dest) {
     dest->x = (s64)arg0[MTX_XX] * source->x / FIXED_MATRIX_ONE +
               (s64)arg0[MTX_YX] * source->y / FIXED_MATRIX_ONE +
               (s64)arg0[MTX_ZX] * source->z / FIXED_MATRIX_ONE;
@@ -282,7 +282,7 @@ void func_80098590(FixedMatrix3s arg0, Vec3i *source, Vec3i *dest) {
               (s64)arg0[MTX_ZZ] * source->z / FIXED_MATRIX_ONE;
 }
 
-void func_800987A0(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2) {
+void composeFixedTransforms(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2) {
     arg2->translation.x = (s64)arg1->rotation[MTX_XX] * arg0->translation.x / FIXED_MATRIX_ONE +
                            (s64)arg1->rotation[MTX_YX] * arg0->translation.y / FIXED_MATRIX_ONE +
                            (s64)arg1->rotation[MTX_ZX] * arg0->translation.z / FIXED_MATRIX_ONE;
@@ -295,10 +295,10 @@ void func_800987A0(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *a
     arg2->translation.x += arg1->translation.x;
     arg2->translation.y += arg1->translation.y;
     arg2->translation.z += arg1->translation.z;
-    func_80097CF0(arg0->rotation, arg1->rotation, arg2->rotation);
+    multiplyFixedMatrices(arg0->rotation, arg1->rotation, arg2->rotation);
 }
 
-void func_800989EC(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2) {
+void composeFixedTransformTranslation(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2) {
     arg2->translation.x = (s64)arg1->rotation[MTX_XX] * arg0->translation.x / FIXED_MATRIX_ONE +
                            (s64)arg1->rotation[MTX_YX] * arg0->translation.y / FIXED_MATRIX_ONE +
                            (s64)arg1->rotation[MTX_ZX] * arg0->translation.z / FIXED_MATRIX_ONE;
@@ -313,7 +313,7 @@ void func_800989EC(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *a
     arg2->translation.z += arg1->translation.z;
 }
 
-s32 func_80098C30(s64 arg0) {
+s32 integerSqrt64(s64 arg0) {
     u64 pad;
     u64 bit;
     u64 root;

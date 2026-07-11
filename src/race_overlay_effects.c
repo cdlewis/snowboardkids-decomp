@@ -6,7 +6,7 @@
 #include "race_input_history.h"
 #include "race_player_movement.h"
 #include "spatial_math.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 #include "model_animation.h"
 
 #define RACE_MODEL_BUFFER_HANDLE (*(s16 *)&D_80112130[0x48])
@@ -303,7 +303,7 @@ void func_800669A0(RaceModelListActor *arg0) {
         arg0->modelBuffer = (void *)func_80043040(*(s16 *)&D_80112130[0x46]);
 
         for (i = 0; i < count; i++) {
-            func_80097C18(&transform, entry->assetIndex);
+            makeFixedRotateY(&transform, entry->assetIndex);
             transform.basePos.x = entry->pos.x;
             transform.basePos.y = entry->pos.y;
             transform.basePos.z = entry->pos.z;
@@ -489,7 +489,7 @@ void func_800671F4(RaceOverlayTransformActor *arg0) {
 
     if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
-            func_80097FE4(scratch, arg0->pitch, arg0->yaw);
+            makeFixedRotateXY(scratch, arg0->pitch, arg0->yaw);
             ((GfxCommandSource *)scratch)->words[5] = arg0->pos.x;
             ((GfxCommandSource *)scratch)->words[6] = arg0->pos.y + 0x190000;
             ((GfxCommandSource *)scratch)->words[7] = arg0->pos.z;
@@ -554,12 +554,12 @@ void func_800674B4(RaceThrownModelActor *arg0) {
     RaceThrownModelActor *temp_a3 = arg0;
 
     if (gRaceUpdatePaused == 0) {
-        func_80097C18(sp1C.scratch, temp_a3->modelIndex);
+        makeFixedRotateY(sp1C.scratch, temp_a3->modelIndex);
         temp_a3->timer = 0x32;
         temp_a3->velocity.x = 0;
         temp_a3->velocity.y = 0xB0000;
         temp_a3->velocity.z = 0xFFF90000;
-        func_80098590(sp1C.scratch, &temp_a3->velocity, &temp_a3->transformedPos);
+        transformVec3ByFixedMatrix(sp1C.scratch, &temp_a3->velocity, &temp_a3->transformedPos);
         setCallbackTaskCallback(temp_a3, func_80067364);
     }
 }
@@ -707,7 +707,7 @@ void func_80067830(RaceOverlayModelActor *arg0) {
             spF4.halfwords[6] /= 2;
             spF4.halfwords[7] /= 2;
             spF4.halfwords[8] /= 2;
-            spF4.words[6] += (func_80097AE8((s16)((gFrameCounter << 7) & 0xFFF)) << 7) + 0x300000;
+            spF4.words[6] += (fixedSine((s16)((gFrameCounter << 7) & 0xFFF)) << 7) + 0x300000;
             arg0->scaleDisplayList = func_8004885C(&spF4);
         }
 
@@ -1049,7 +1049,7 @@ void func_800691C8(RaceOverlayModelActor *arg0) {
 
     arg0->drawPos = arg0->pos;
     arg0->drawPos.y += 0x140000;
-    func_80097C18(arg0->rotationMatrix, arg0->rotation);
+    makeFixedRotateY(arg0->rotationMatrix, arg0->rotation);
 
     arg0->spawnPos.x = arg0->pos.x;
     arg0->spawnPos.y = arg0->pos.y;
@@ -1094,7 +1094,7 @@ void func_8006935C(RaceParticleActor *arg0) {
     if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
         if (arg0->transformDirty != 0) {
             arg0->transformDirty = 0;
-            func_80097DA4(transform.rotation, arg0->rotX, arg0->rotY, arg0->rotZ);
+            makeFixedRotateXYZ(transform.rotation, arg0->rotX, arg0->rotY, arg0->rotZ);
             transform.basePos.x = arg0->pos.x;
             transform.basePos.y = arg0->pos.y;
             transform.basePos.z = arg0->pos.z;
@@ -1156,8 +1156,8 @@ void func_80069754(RaceParticleActor *arg0) {
     arg0->rotVelX = randomNextMain() - 0x80;
     arg0->rotVelY = randomNextMain() - 0x80;
     arg0->rotVelZ = randomNextMain() - 0x80;
-    func_80097C18(sp28, arg0->rotY);
-    func_80098590(sp28, &D_800D9BD8[arg0->spawnOffsetIndex], &arg0->velocity);
+    makeFixedRotateY(sp28, arg0->rotY);
+    transformVec3ByFixedMatrix(sp28, &D_800D9BD8[arg0->spawnOffsetIndex], &arg0->velocity);
     func_80045990(func_80043040(D_80112168), 0x22, &arg0->palette, &arg0->image);
     setCallbackTaskCallback(arg0, func_80069678);
 }

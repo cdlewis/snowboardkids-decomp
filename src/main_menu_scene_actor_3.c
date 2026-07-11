@@ -38,14 +38,10 @@ struct MainMenuSceneEffect3 {
 
 extern void func_800483FC(void *, void *, void *);
 extern s32 func_8004885C(void *);
-#ifdef NON_MATCHING
-extern void func_80097BAC();
-extern void func_80097C84();
-extern void func_80097CF0();
-extern void func_8009853C();
-#else
-extern void func_8009853C(void *, s32, s32, void *);
-#endif
+extern void makeFixedRotateX(void *, s16);
+extern void makeFixedRotateZ(void *, s16);
+extern void multiplyFixedMatrices(void *, void *, void *);
+extern void makeFixedRotateYX(void *, s16, s16, void *);
 extern u16 D_8010B1A2;
 extern u8 D_8010B1A4;
 extern s32 D_80124898;
@@ -905,7 +901,7 @@ void func_8003B308(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u8 arg5) {
     temp_v0->y = arg1;
     temp_v0->z = arg2;
     sp1C = temp_v0;
-    func_8009853C(&temp_v0->displayObject, 0x400, 0x400, &D_8010ADE0);
+    makeFixedRotateYX(&temp_v0->displayObject, 0x400, 0x400, &D_8010ADE0);
     sp1C->textureId = arg3;
     sp1C->paletteId = arg4;
 }
@@ -957,15 +953,15 @@ void func_8003B430(MainMenuSceneEffect3 *arg0) {
         arg0->x += 0x1D000;
     }
 
-    func_8009853C(sp48, 0x400, 0x400);
+    makeFixedRotateYX(sp48, 0x400, 0x400);
     if (arg0->mode == 1) {
-        func_80097C84(sp28, 0x1000 - (arg0->timer << 6));
+        makeFixedRotateZ(sp28, 0x1000 - (arg0->timer << 6));
     } else {
-        func_80097C84(sp28, 0x1000 - (arg0->timer * 0x28));
+        makeFixedRotateZ(sp28, 0x1000 - (arg0->timer * 0x28));
     }
 
     sp24[0] = &arg0->displayObject;
-    func_80097CF0(sp48, sp28, sp24[0]);
+    multiplyFixedMatrices(sp48, sp28, sp24[0]);
 
     if (arg0->mode == 1) {
         if (arg0->x >= 0x1900000) {
@@ -976,10 +972,10 @@ void func_8003B430(MainMenuSceneEffect3 *arg0) {
         arg0->timer = 0;
         arg0->y = 0x8BD1E;
         setCallbackTaskCallback(arg0, func_8003B3E0);
-        func_8009853C(sp48, 0x400, 0x400);
-        func_80097C84(sp28, 0xC00);
-        func_80097CF0(sp48, sp28, sp24[0]);
-        func_80097BAC(sp48, 0x300);
+        makeFixedRotateYX(sp48, 0x400, 0x400);
+        makeFixedRotateZ(sp28, 0xC00);
+        multiplyFixedMatrices(sp48, sp28, sp24[0]);
+        makeFixedRotateX(sp48, 0x300);
         ((MatrixWordCopy *) sp28)[0][0] = ((MatrixWordCopy *) sp24[0])[0][0];
         ((MatrixWordCopy *) sp28)[0][1] = ((MatrixWordCopy *) sp24[0])[0][1];
         ((MatrixWordCopy *) sp28)[0][2] = ((MatrixWordCopy *) sp24[0])[0][2];
@@ -988,7 +984,7 @@ void func_8003B430(MainMenuSceneEffect3 *arg0) {
         ((MatrixWordCopy *) sp28)[0][5] = ((MatrixWordCopy *) sp24[0])[0][5];
         ((MatrixWordCopy *) sp28)[0][6] = ((MatrixWordCopy *) sp24[0])[0][6];
         ((MatrixWordCopy *) sp28)[0][7] = ((MatrixWordCopy *) sp24[0])[0][7];
-        func_80097CF0(sp28, sp48, sp24[0]);
+        multiplyFixedMatrices(sp28, sp48, sp24[0]);
     }
 
     func_800483FC(&D_80124898, func_8003B39C, arg0);

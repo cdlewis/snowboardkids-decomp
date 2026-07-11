@@ -1,6 +1,6 @@
 #include "common.h"
 #include "memory_allocator.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
 { \

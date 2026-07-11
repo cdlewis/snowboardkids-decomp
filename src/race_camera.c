@@ -1,5 +1,5 @@
 #include "common.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 #include "model_animation.h"
 #include "race_camera.h"
 
@@ -172,12 +172,12 @@ void func_8006D780(s32 arg0) {
 void func_8006D7D4(void) {
     StackD7D4 stack;
 
-    func_8009853C(D_801124A0->rotationMatrix, -D_801124A0->pitch, -D_801124A0->yaw);
+    makeFixedRotateYX(D_801124A0->rotationMatrix, -D_801124A0->pitch, -D_801124A0->yaw);
     stack.sp54 = 0;
     stack.sp58 = 0;
     stack.sp5C = -D_801124A0->distance;
-    func_80097FE4(stack.sp28, D_801124A0->pitch, D_801124A0->yaw);
-    func_80098590(stack.sp28, &stack.sp54, &stack.sp48);
+    makeFixedRotateXY(stack.sp28, D_801124A0->pitch, D_801124A0->yaw);
+    transformVec3ByFixedMatrix(stack.sp28, &stack.sp54, &stack.sp48);
     D_801124A0->transformOffset.x = stack.sp48 - D_801124A0->pos.x;
     D_801124A0->transformOffset.y = stack.sp4C - D_801124A0->pos.y;
     D_801124A0->transformOffset.z = stack.sp50 - D_801124A0->pos.z;
@@ -203,16 +203,16 @@ void func_8006D8B4(void) {
     s32 i;
     s32 j;
 
-    func_80097A80(&pitchMtx);
-    func_80097A80(&yawMtx);
+    initFixedTransform(&pitchMtx);
+    initFixedTransform(&yawMtx);
     dx = D_801124A0->pos.x - D_801124A0->focus.x;
     pad[0] = pad[0];
 
     dy = (D_801124A0->pos.y - D_801124A0->focus.y) + 0x40000;
     dz = D_801124A0->pos.z - D_801124A0->focus.z;
 
-    xzDist = func_80098C30((s64)dx * dx + (s64)dz * dz);
-    dist = func_80098C30((s64)xzDist * xzDist + (s64)dy * dy);
+    xzDist = integerSqrt64((s64)dx * dx + (s64)dz * dz);
+    dist = integerSqrt64((s64)xzDist * xzDist + (s64)dy * dy);
 
     D_801124A0->pitch = calculateAngleBetweenXZPoints(0, 0, xzDist, -dy);
     if (dist != 0) {
@@ -289,15 +289,15 @@ void func_8006DDB4(void) {
     s32 row;
     s32 col;
 
-    func_80097A80(&pitchMtx);
-    func_80097A80(&yawMtx);
+    initFixedTransform(&pitchMtx);
+    initFixedTransform(&yawMtx);
 
     dy = (D_801124A0->pos.y - D_801124A0->focus.y) + 0x40000;
     dx = D_801124A0->pos.x - D_801124A0->focus.x;
     dz = D_801124A0->pos.z - D_801124A0->focus.z;
 
-    xzLen = func_80098C30((s64)dx * dx + (s64)dz * dz);
-    fullLen = func_80098C30((s64)xzLen * xzLen + (s64)dy * dy);
+    xzLen = integerSqrt64((s64)dx * dx + (s64)dz * dz);
+    fullLen = integerSqrt64((s64)xzLen * xzLen + (s64)dy * dy);
 
     D_801124A0->pitch = calculateAngleBetweenXZPoints(0, 0, xzLen, -dy);
     if (fullLen != 0) {
@@ -369,8 +369,8 @@ void func_8006E2C4(void) {
         offset.z = 0xFFC00000;
         player = (RacePlayerSlot *) ((u8 *) D_80121D80 + (D_801124A0->playerIndex * RACE_PLAYER_STATE_SIZE));
     }
-    func_80097C18(matrix, player->state.yaw);
-    func_80098590(matrix, &offset, &transformedOffset);
+    makeFixedRotateY(matrix, player->state.yaw);
+    transformVec3ByFixedMatrix(matrix, &offset, &transformedOffset);
     D_801124A0->focus.x = D_80121D80[D_801124A0->playerIndex].state.cameraPos.x;
     D_801124A0->focus.y = D_80121D80[D_801124A0->playerIndex].state.cameraPos.y;
     D_801124A0->focus.z = D_80121D80[D_801124A0->playerIndex].state.cameraPos.z;
@@ -557,13 +557,14 @@ void func_8006F048(void) {
         yaw = diff + sine;
         D_801124A0->unk92 = yaw;
 
-        dx = D_801124A0->pos.x - D_801124A0->focus.x;
-        dz = D_801124A0->pos.z - D_801124A0->focus.z;
-        dist = func_80098C30((s64)dx * dx + (s64)dz * dz);
+        camera = D_801124A0;
+        dx = camera->pos.x - camera->focus.x;
+        dz = camera->pos.z - camera->focus.z;
+        dist = integerSqrt64((s64)dx * dx + (s64)dz * dz);
         dist = ((0x300000 - dist) >> 1) + dist;
 
-        sine = func_80097AE8(yaw);
-        cosine = func_80097B48(yaw);
+        sine = fixedSine(yaw);
+        cosine = fixedCosine(yaw);
         D_801124A0->pos.x = (((s64)sine * -dist) / 0x1000) + D_801124A0->focus.x;
         D_801124A0->pos.z = (((s64)cosine * -dist) / 0x1000) + D_801124A0->focus.z;
 
@@ -599,12 +600,12 @@ void func_8006F5B0(void) {
 
         dx = D_801124A0->pos.x - D_801124A0->focus.x;
         dz = D_801124A0->pos.z - D_801124A0->focus.z;
-        dist = func_80098C30((s64)dx * dx + (s64)dz * dz);
+        dist = integerSqrt64((s64)dx * dx + (s64)dz * dz);
         dist = ((0x400000 - dist) >> 4) + dist;
 
         D_801124A0->unk92 += 8;
-        sine = func_80097AE8(D_801124A0->unk92);
-        cosine = func_80097B48(D_801124A0->unk92);
+        sine = fixedSine(D_801124A0->unk92);
+        cosine = fixedCosine(D_801124A0->unk92);
 
         D_801124A0->pos.x = (((s64)sine * -dist) / 0x1000) + D_801124A0->focus.x;
         D_801124A0->pos.z = (((s64)cosine * -dist) / 0x1000) + D_801124A0->focus.z;
@@ -765,7 +766,7 @@ void func_8007031C(void) {
         D_801124A0->timer = angle + 0x10;
         angle = D_801124A0->timer;
     }
-    D_801124A0->unkA8 = (-func_80097AE8(angle) * 0xC00) + 0xC00000;
+    D_801124A0->unkA8 = (-fixedSine(angle) * 0xC00) + 0xC00000;
 
     velocity = D_801124A0->velocity;
     if (velocity < 0x80000) {

@@ -138,7 +138,7 @@ segments:
       - [0x85B50, c, race_actor_collision]
       - [0x88200, c, race_player_movement]
       - [0x8CAB0, c, race_player_state]
-      - [0x98680, c, fixed_point_matrix]
+      - [0x98680, c, fixed_point_math]
       - [0x99980, c, input_task_scheduler]
       - [0x9A2A0, c, game_boot]
       - [0x9CE70, c, player_commands] # libmus:player_commands.c

@@ -3,7 +3,7 @@
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "viewport_manager.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 #include "main_menu_overlay_effects.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
@@ -234,7 +234,7 @@ void func_80053858(MainMenuOverlayEffectActor *arg0) {
     arg0->unk1C.half.hi = (arg0->unk1C.half.hi + 1) & 3;
     arg0->unk18.half.lo += arg0->unk20.half.lo;
     arg0->unk24.half.hi = (arg0->unk24.half.hi + 0x20) & 0xFFF;
-    arg0->unk18.half.hi += (func_80097AE8(arg0->unk24.half.hi) * (arg0->unk1C.half.lo + 0x30)) / 4096;
+    arg0->unk18.half.hi += (fixedSine(arg0->unk24.half.hi) * (arg0->unk1C.half.lo + 0x30)) / 4096;
     if ((arg0->unk24.half.hi == 0) || (arg0->unk24.half.hi == 0x800)) {
         arg0->unk1C.half.lo = randomNextMain() & 0xF;
     }
@@ -434,8 +434,8 @@ void func_80054460(MainMenuOverlayEffectActor *arg0) {
     sp2C.z = 0;
 
     player = &D_80121D80[arg0->index];
-    func_80097FE4(sp38, player->pitch, player->yaw);
-    func_80098590(sp38, &sp2C, (Vec3i *) &arg0->unk18);
+    makeFixedRotateXY(sp38, player->pitch, player->yaw);
+    transformVec3ByFixedMatrix(sp38, &sp2C, (Vec3i *) &arg0->unk18);
 
     player = &D_80121D80[arg0->index];
     arg0->unk18.word += player->pos28.x;
@@ -573,7 +573,7 @@ void func_80054B98(MainMenuOverlayEffectActor *arg0) {
 
     if (gCurrentViewportIndex == 2) {
         func_80045990((void *) func_80043040(D_80112174), 0, &image, &palette);
-        func_80097C84(transform.rotation, arg0->spriteIndex);
+        makeFixedRotateZ(transform.rotation, arg0->spriteIndex);
         transform.x = arg0->unk18.word;
         transform.y = arg0->unk1C.word;
         transform.z = arg0->unk20.word;
@@ -672,9 +672,9 @@ void func_80054E70(MainMenuOverlayEffectActor *arg0) {
 void func_80054EC4(MainMenuOverlayEffectActor *arg0) {
     MainMenuOverlayEffectActor *actor;
 
-    arg0->unk1C.word = ((-0x400000LL * func_80097AE8((s16)(arg0->unk30.word + 0x400))) / 0x1000) + 0x700000;
+    arg0->unk1C.word = ((-0x400000LL * fixedSine((s16)(arg0->unk30.word + 0x400))) / 0x1000) + 0x700000;
     arg0->unk20.word = ((-0x9F0000LL * arg0->unk30.word) / 0x400) + 0xEC0000;
-    arg0->spriteIndex = (0x5000LL * func_80097AE8(arg0->unk30.half.lo)) / 0x1000;
+    arg0->spriteIndex = (0x5000LL * fixedSine(arg0->unk30.half.lo)) / 0x1000;
     if (arg0->unk30.word < 0x3F0) {
         actor = createCallbackTask(func_80054E70, 0, 0x65);
         *(OverlayActorTransform *)&actor->unk18 = *(OverlayActorTransform *)&arg0->unk18;
@@ -789,7 +789,7 @@ void func_80055410(MainMenuOverlayEffectActor *arg0) {
     GfxCommandDest *matrix;
 
     if (gCurrentViewportIndex == 0) {
-        func_80097C18(scratch.source.rotation, arg0->unk18.half.hi);
+        makeFixedRotateY(scratch.source.rotation, arg0->unk18.half.hi);
         scratch.source.x = 0;
         scratch.source.y = 0;
         scratch.source.z = 0;

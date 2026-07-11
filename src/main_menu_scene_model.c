@@ -1,7 +1,7 @@
 #include "main_menu_scene_model.h"
 #include "memory_allocator.h"
 #include "asset_manager.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 
 /* Frame offsets are halfword-relative to the bank start; this form preserves target addu order. */
 #define MAIN_MENU_ANIMATION_FRAME_DATA(bank, index) \
@@ -440,12 +440,12 @@ void func_8004215C(MainMenuSceneModel *model) {
     partMatrix = partMatrices;
     partMatrixEnd = &partMatrices[14];
     do {
-        sineX = func_80097AE8(*(s16 *)(partCursor + 0x1E));
-        cosineX = func_80097B48(*(s16 *)(partCursor + 0x1E));
-        sineY = func_80097AE8(*(s16 *)(partCursor + 0x20));
-        cosineY = func_80097B48(*(s16 *)(partCursor + 0x20));
-        sineZ = func_80097AE8(*(s16 *)(partCursor + 0x22));
-        cosineZ = func_80097B48(*(s16 *)(partCursor + 0x22));
+        sineX = fixedSine(*(s16 *)(partCursor + 0x1E));
+        cosineX = fixedCosine(*(s16 *)(partCursor + 0x1E));
+        sineY = fixedSine(*(s16 *)(partCursor + 0x20));
+        cosineY = fixedCosine(*(s16 *)(partCursor + 0x20));
+        sineZ = fixedSine(*(s16 *)(partCursor + 0x22));
+        cosineZ = fixedCosine(*(s16 *)(partCursor + 0x22));
         negSineY = -sineY;
         negSineZ = -sineZ;
 
@@ -464,7 +464,7 @@ void func_8004215C(MainMenuSceneModel *model) {
         partCursor += 0x14;
     } while (partMatrix != partMatrixEnd);
 
-    func_800981C8(rootMatrix, model->rot.x, model->rot.y, model->rot.z);
+    makeFixedRotateZXY(rootMatrix, model->rot.x, model->rot.y, model->rot.z);
     *(s32 *)&rootMatrix[10] = model->pos.x;
     *(s32 *)&rootMatrix[12] = model->pos.y;
     *(s32 *)&rootMatrix[14] = model->pos.z;

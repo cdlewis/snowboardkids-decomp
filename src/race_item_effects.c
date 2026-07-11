@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "game_audio.h"
 #include "spatial_math.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 #include "race_item_effects.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
@@ -422,11 +422,11 @@ void func_8004E438(RaceItemEffectActor *arg0) {
     arg0->unk24.timer = -1;
     if (arg0->unk34.shorts.state.halfword == 0) {
         sp58 = &D_80121D80[arg0->unk38.width];
-        func_80097C18(sp30, arg0->unk34.shorts.height.halfword);
+        makeFixedRotateY(sp30, arg0->unk34.shorts.height.halfword);
         sp24[0] = 0;
         sp24[1] = arg0->unk28.word;
         sp24[2] = arg0->unk2C;
-        func_80098590(sp30, sp24, &arg0->payload);
+        transformVec3ByFixedMatrix(sp30, sp24, &arg0->payload);
         arg0->payload.vec.x += sp58->pos1C.x;
         arg0->payload.vec.y += sp58->pos1C.y;
         arg0->payload.vec.z += sp58->pos1C.z;
@@ -599,7 +599,7 @@ void func_8004EE0C(RaceItemEffectActor *arg0) {
     if (actor->unk34.shorts.height.byte < 0) {
         actor->unk34.shorts.height.byte = 0;
     }
-    func_80098590(D_80121D80[actor->playerIndex].transform, &actor->unk24.velocityX, &actor->payload);
+    transformVec3ByFixedMatrix(D_80121D80[actor->playerIndex].transform, &actor->unk24.velocityX, &actor->payload);
     player = &D_80121D80[actor->playerIndex];
     actor->payload.vec.x += player->posA8.x;
     actor->payload.vec.y += player->posA8.y;
@@ -708,14 +708,14 @@ void func_8004F3FC(RaceItemEffectActor *arg0) {
     arg0->payload.vec.z = player->pos.z;
 
     angles = &D_800D4928[arg0->angleIndex & 0xFF];
-    func_80097FE4(sp3C, angles->x, angles->y);
-    func_80098590(sp3C, D_800D4968, &sp30);
+    makeFixedRotateXY(sp3C, angles->x, angles->y);
+    transformVec3ByFixedMatrix(sp3C, D_800D4968, &sp30);
 
     arg0->payload.vec.x += sp30.vec.x;
     arg0->payload.vec.y += sp30.vec.y;
     arg0->payload.vec.z += sp30.vec.z;
 
-    func_80098590(sp3C, D_800D4974, (RaceItemEffectPayload *) &arg0->unk24);
+    transformVec3ByFixedMatrix(sp3C, D_800D4974, (RaceItemEffectPayload *) &arg0->unk24);
     if (arg0->playerIndex == 0) {
         arg0->payload.vec.y += 0x60000;
     }

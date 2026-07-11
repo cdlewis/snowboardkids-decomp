@@ -1,5 +1,5 @@
 #include "common.h"
-#include "fixed_point_matrix.h"
+#include "fixed_point_math.h"
 #include "model_animation.h"
 #include "race_position_tracker.h"
 
@@ -308,8 +308,8 @@ void func_8007BB08(RacePositionPlayer *player) {
             y = player->posY - y;
             z = player->posZ - z;
 
-            sine = func_80097AE8(-angle);
-            cosine = func_80097B48(-angle);
+            sine = fixedSine(-angle);
+            cosine = fixedCosine(-angle);
             product = -(s64)sine * x;
             z = (product + (s64)cosine * z) / 0x1000;
 
