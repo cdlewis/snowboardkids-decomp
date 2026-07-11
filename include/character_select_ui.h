@@ -20,7 +20,7 @@ typedef struct {
     /* 0x18 */ s16 x;
     u8 pad1A[6];
     /* 0x20 */ s16 y;
-} CharacterSelectUiPlayerFrameActor;
+} CharacterSelectUiPlayerPanelFrameActor;
 
 typedef struct {
     u8 pad0[0x18];
@@ -39,7 +39,7 @@ typedef struct {
     /* 0x24 */ u8 state;
     /* 0x25 */ u8 timer;
     /* 0x26 */ s16 unk26;
-} CharacterSelectUiMessageActor;
+} CharacterSelectUiRosterIconActor;
 
 typedef union {
     s16 target[4];
@@ -76,7 +76,7 @@ typedef struct {
     /* 0x20 */ s16 y;
     u8 pad22[0x1E];
     /* 0x40 */ u16 tileSize;
-} CharacterSelectUiPanelSlot;
+} CharacterSelectUiSelectedCharacterTokenActor;
 
 typedef struct {
     u8 pad0[0x18];
@@ -86,25 +86,25 @@ typedef struct {
     /* 0x24 */ s16 scale;
     /* 0x26 */ u8 mode;
     /* 0x27 */ u8 timer;
-} CharacterSelectUiPlayerListActor;
+} CharacterSelectUiPlayerCursorActor;
 
 void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0);
 void updateCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0);
 void initCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0);
-void drawCharacterSelectPlayerFrameList(CharacterSelectUiPlayerFrameActor *arg0);
-void updateCharacterSelectPlayerFrameList(CharacterSelectUiPanelActor *arg0);
-void initCharacterSelectPlayerFrameList(CharacterSelectUiPanelActor *arg0);
-void drawCharacterSelectCharacterIconList(CharacterSelectUiMessageActor *arg0);
-void updateCharacterSelectCharacterIconList(CharacterSelectUiMessageActor *arg0);
-void initCharacterSelectCharacterIconList(CharacterSelectUiMessageActor *arg0);
-void drawCharacterSelectPlayerMarkerList(CharacterSelectUiPlayerListActor *arg0);
-void updateCharacterSelectPlayerMarkerList(CharacterSelectUiPlayerListActor *arg0);
-void initCharacterSelectPlayerMarkerList(CharacterSelectUiPlayerListActor *arg0);
+void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor *arg0);
+void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0);
+void initCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0);
+void drawCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0);
+void updateCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0);
+void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0);
+void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0);
+void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0);
+void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0);
 void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0);
 void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0);
 void initCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0);
-void drawCharacterSelectPlayerSelectionTokens(CharacterSelectUiPanelSlot *arg0);
-void updateCharacterSelectPlayerSelectionTokens(CharacterSelectUiPanelActor *arg0);
-void initCharacterSelectPlayerSelectionTokens(CharacterSelectUiPanelActor *arg0);
+void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0);
+void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiPanelActor *arg0);
+void initCharacterSelectSelectedCharacterTokens(CharacterSelectUiPanelActor *arg0);
 
 #endif

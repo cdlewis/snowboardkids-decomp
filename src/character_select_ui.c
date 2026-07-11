@@ -4,8 +4,8 @@
 #include "menu_renderer.h"
 #include "character_select_ui.h"
 
-#define PLAYER_COUNT 4
-#define PLAYER_DATA_SIZE 0x60C
+#define CHARACTER_SELECT_PLAYER_COUNT 4
+#define CHARACTER_SELECT_PLAYER_DATA_SIZE 0x60C
 #define CHARACTER_SELECT_UI_UNUSED_HANDLE (*(s16 *)&gAssetHandles[0x3E])
 #define CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE (*(s16 *)&gAssetHandles[0x42])
 #define CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x52])
@@ -18,7 +18,7 @@ typedef struct {
     };
     u8 pad6[2];
     u8 isActive;
-    u8 pad9[PLAYER_DATA_SIZE - 9];
+    u8 pad9[CHARACTER_SELECT_PLAYER_DATA_SIZE - 9];
 } RacePlayer;
 
 typedef struct {
@@ -41,18 +41,18 @@ typedef struct {
     /* 0x0F */ u8 blockIncrease;
     /* 0x10 */ u16 cursorX;
     /* 0x12 */ u16 cursorY;
-    /* 0x14 */ s8 playerSelections[PLAYER_COUNT];
+    /* 0x14 */ s8 playerSelections[CHARACTER_SELECT_PLAYER_COUNT];
 } CharacterSelectUiCharacterSelectState;
 
 typedef struct {
     u8 pad0[0x24];
     /* 0x24 */ u8 playerFrameReady;
-} CharacterSelectUiPlayerFrameController;
+} CharacterSelectUiPlayerPanelFrameController;
 
 typedef struct {
     u8 pad0[0x18];
-    /* 0x18 */ s16 x[PLAYER_COUNT];
-    /* 0x20 */ s16 y[PLAYER_COUNT];
+    /* 0x18 */ s16 x[CHARACTER_SELECT_PLAYER_COUNT];
+    /* 0x20 */ s16 y[CHARACTER_SELECT_PLAYER_COUNT];
     /* 0x28 */ u16 frameLimit;
     /* 0x2A */ u16 frameStep;
     /* 0x2C */ u16 frameCounter;
@@ -81,7 +81,7 @@ extern void addRenderCallback(void *, void *, void *);
 extern s8 D_8010AE52;
 extern u8 D_8010AE51;
 extern CharacterSelectUiCharacterSelectState gCharacterSelectHudState;
-extern CharacterSelectUiPlayerFrameController *D_8010ADE0;
+extern CharacterSelectUiPlayerPanelFrameController *D_8010ADE0;
 extern void *D_8010ADE4;
 extern CharacterSelectUiPanelController *D_8010ADE8;
 extern s16 D_8010AE58;
@@ -264,11 +264,11 @@ void initCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
     setCallbackTaskCallback(arg0, updateCharacterSelectConfirmationBanner);
 }
 
-// drawCharacterSelectPlayerFrameList best match: 99.232% (nonmatchings/drawCharacterSelectPlayerFrameList-4033633224288138541/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/drawCharacterSelectPlayerFrameList.s")
+// drawCharacterSelectPlayerPanelFrames best match: 99.232% (nonmatchings/drawCharacterSelectPlayerPanelFrames-4033633224288138541/base_12.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/drawCharacterSelectPlayerPanelFrames.s")
 
 #ifdef NON_MATCHING
-void drawCharacterSelectPlayerFrameList(CharacterSelectUiPlayerFrameActor *arg0) {
+void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor *arg0) {
     char buf[0x10];
     u8 *sp6C;
     s32 flip;
@@ -276,7 +276,7 @@ void drawCharacterSelectPlayerFrameList(CharacterSelectUiPlayerFrameActor *arg0)
     s32 i;
     s32 playerNumber;
     s32 texture;
-    CharacterSelectUiPlayerFrameActor *actor;
+    CharacterSelectUiPlayerPanelFrameActor *actor;
 
     sp6C = buf - 0xC;
     actor = arg0; i = 0; do {
@@ -303,21 +303,21 @@ void drawCharacterSelectPlayerFrameList(CharacterSelectUiPlayerFrameActor *arg0)
         }
 
         i = playerNumber;
-        actor = (CharacterSelectUiPlayerFrameActor *)((u8 *)actor + 2);
+        actor = (CharacterSelectUiPlayerPanelFrameActor *)((u8 *)actor + 2);
     } while (playerNumber != 4);
 }
 #endif
 
-// updateCharacterSelectPlayerFrameList best match: 97.500% (nonmatchings/updateCharacterSelectPlayerFrameList-6061209858023118177/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/updateCharacterSelectPlayerFrameList.s")
+// updateCharacterSelectPlayerPanelFrames best match: 97.500% (nonmatchings/updateCharacterSelectPlayerPanelFrames-6061209858023118177/base_10.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/updateCharacterSelectPlayerPanelFrames.s")
 
 #ifdef NON_MATCHING
-void updateCharacterSelectPlayerFrameList(CharacterSelectUiPanelActor *arg0) {
+void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
     s32 var_v0;
     u8 desired;
     s32 var_v1;
     CharacterSelectUiPanelActor *actor;
-    CharacterSelectUiPlayerFrameController *owner;
+    CharacterSelectUiPlayerPanelFrameController *owner;
 
     owner = D_8010ADE0;
     actor = arg0;
@@ -351,11 +351,11 @@ void updateCharacterSelectPlayerFrameList(CharacterSelectUiPanelActor *arg0) {
     }
 
     D_8010AE51 = var_v0;
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectPlayerFrameList, actor);
+    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectPlayerPanelFrames, actor);
 }
 #endif
 
-void initCharacterSelectPlayerFrameList(CharacterSelectUiPanelActor *arg0) {
+void initCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
     arg0->x[0] = -0x88;
     arg0->y[0] = -0x60;
     arg0->x[1] = -0x88;
@@ -367,14 +367,14 @@ void initCharacterSelectPlayerFrameList(CharacterSelectUiPanelActor *arg0) {
     arg0->targetX.target[0] = 0x8C;
     arg0->targetX.target[1] = 0x44;
     arg0->targetY.mode = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectPlayerFrameList);
+    setCallbackTaskCallback(arg0, updateCharacterSelectPlayerPanelFrames);
 }
 
-// drawCharacterSelectCharacterIconList best match: 84.174% (nonmatchings/drawCharacterSelectCharacterIconList-7273315160691878794/base.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/drawCharacterSelectCharacterIconList.s")
+// drawCharacterSelectRosterIcons best match: 84.174% (nonmatchings/drawCharacterSelectRosterIcons-7273315160691878794/base.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/drawCharacterSelectRosterIcons.s")
 
 #ifdef NON_MATCHING
-void drawCharacterSelectCharacterIconList(CharacterSelectUiMessageActor *arg0) {
+void drawCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     RacePlayer *player;
     s32 i;
     s32 j;
@@ -451,7 +451,7 @@ loop_17:
 }
 #endif
 
-void updateCharacterSelectCharacterIconList(CharacterSelectUiMessageActor *arg0) {
+void updateCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     s16 temp_v0;
     int new_var;
     u8 var_v1;
@@ -479,13 +479,13 @@ void updateCharacterSelectCharacterIconList(CharacterSelectUiMessageActor *arg0)
     if (var_v1) {
         arg0->timer = (arg0->timer + new_var) % 20;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCharacterIconList, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectRosterIcons, arg0);
 }
 
-void initCharacterSelectCharacterIconList(CharacterSelectUiMessageActor *arg0) {
+void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     s32 i;
     RacePlayerState *player;
-    CharacterSelectUiMessageActor *actor;
+    CharacterSelectUiRosterIconActor *actor;
     s32 targetX;
 
     targetX = -0x50;
@@ -518,10 +518,10 @@ void initCharacterSelectCharacterIconList(CharacterSelectUiMessageActor *arg0) {
     } else {
         actor->targetX = targetX;
     }
-    setCallbackTaskCallback(actor, updateCharacterSelectCharacterIconList);
+    setCallbackTaskCallback(actor, updateCharacterSelectRosterIcons);
 }
 
-void drawCharacterSelectPlayerMarkerList(CharacterSelectUiPlayerListActor *arg0) {
+void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
     s32 i;
     s32 j;
     s32 evenMatch;
@@ -529,16 +529,16 @@ void drawCharacterSelectPlayerMarkerList(CharacterSelectUiPlayerListActor *arg0)
     u16 alpha;
     u16 *tiles;
     RacePlayer *player;
-    CharacterSelectUiPlayerListActor *actorX;
+    CharacterSelectUiPlayerCursorActor *actorX;
 
- do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = D_80121D80; tiles = gCharacterSelectPlayerMarkerTiles; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (CharacterSelectUiPlayerListActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
+ do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = D_80121D80; tiles = gCharacterSelectPlayerMarkerTiles; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (CharacterSelectUiPlayerCursorActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
 }
 
-// updateCharacterSelectPlayerMarkerList best match: 99.740% (nonmatchings/updateCharacterSelectPlayerMarkerList-1315772375853892447/base_16.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/updateCharacterSelectPlayerMarkerList.s")
+// updateCharacterSelectPlayerCursorMarkers best match: 99.740% (nonmatchings/updateCharacterSelectPlayerCursorMarkers-1315772375853892447/base_16.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/updateCharacterSelectPlayerCursorMarkers.s")
 
 #ifdef NON_MATCHING
-void updateCharacterSelectPlayerMarkerList(CharacterSelectUiPlayerListActor *arg0) {
+void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
     s32 i;
     u8 mode;
     u8 globalMode;
@@ -578,14 +578,14 @@ void updateCharacterSelectPlayerMarkerList(CharacterSelectUiPlayerListActor *arg
     }
 
     *(u8 *)0x8010AE52 = mode;
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectPlayerMarkerList, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectPlayerCursorMarkers, arg0);
 }
 #endif
 
-void initCharacterSelectPlayerMarkerList(CharacterSelectUiPlayerListActor *arg0) {
+void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
     RacePlayerState *player;
     s8 *playerLayout;
-    CharacterSelectUiPlayerListActor *actor;
+    CharacterSelectUiPlayerCursorActor *actor;
     s32 i;
     s32 playerFlags;
 
@@ -612,14 +612,14 @@ void initCharacterSelectPlayerMarkerList(CharacterSelectUiPlayerListActor *arg0)
             actor->x[0] = (*playerLayout * 0x20) + arg0->baseX;
             i++;
             playerLayout++;
-            actor = (CharacterSelectUiPlayerListActor *)((u8 *)actor + 2);
+            actor = (CharacterSelectUiPlayerCursorActor *)((u8 *)actor + 2);
         } while (i < (s32)gPlayerCount);
     }
 
     arg0->y = -0x18;
     arg0->mode = 0;
     arg0->scale = 0x100;
-    setCallbackTaskCallback(arg0, updateCharacterSelectPlayerMarkerList);
+    setCallbackTaskCallback(arg0, updateCharacterSelectPlayerCursorMarkers);
 }
 
 // drawCharacterSelectPlayerStatsPanels best match: 86.336% (nonmatchings/drawCharacterSelectPlayerStatsPanels-4923837976568703863/base_4.c)
@@ -759,11 +759,11 @@ void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
     u8 *timer;
 
     srcBase = D_8010ADE4;
-    player = (u8 *)D_80121D80; for (i = 0, src = srcBase, dst = (u8 *)arg0; i != PLAYER_COUNT; i++, dst += 2) {
+    player = (u8 *)D_80121D80; for (i = 0, src = srcBase, dst = (u8 *)arg0; i != CHARACTER_SELECT_PLAYER_COUNT; i++, dst += 2) {
         *(s16 *)(dst + 0x18) = *(s16 *)(src + 0x18);
         src += 2;
         *(s16 *)(dst + 0x20) = *(s16 *)(src + 0x1E);
-        player += PLAYER_DATA_SIZE;
+        player += CHARACTER_SELECT_PLAYER_DATA_SIZE;
         timer = (u8 *)arg0;
         timer += i;
         if (player[-0x604] == 0) {
@@ -785,7 +785,7 @@ void initCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
     setCallbackTaskCallback(arg0, updateCharacterSelectPlayerStatsPanels);
 }
 
-void drawCharacterSelectPlayerSelectionTokens(CharacterSelectUiPanelSlot *arg0) {
+void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0) {
     u8 *base;
     s32 i;
     u8 *player;
@@ -803,16 +803,16 @@ void drawCharacterSelectPlayerSelectionTokens(CharacterSelectUiPanelSlot *arg0) 
                 drawMenuSprite(*(s16 *) (temp_s0 + 0x18), *(s16 *) (temp_s0 + 0x20), color, 0xD, temp_v1, temp_v1, 0, 0);
             }
             i++;
-            player += PLAYER_DATA_SIZE;
+            player += CHARACTER_SELECT_PLAYER_DATA_SIZE;
         } while (i < gPlayerCount);
     }
 }
 
-// updateCharacterSelectPlayerSelectionTokens best match: 86.079% (nonmatchings/updateCharacterSelectPlayerSelectionTokens-7892263622508053986/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/updateCharacterSelectPlayerSelectionTokens.s")
+// updateCharacterSelectSelectedCharacterTokens best match: 86.079% (nonmatchings/updateCharacterSelectSelectedCharacterTokens-7892263622508053986/base_3.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/updateCharacterSelectSelectedCharacterTokens.s")
 
 #ifdef NON_MATCHING
-void updateCharacterSelectPlayerSelectionTokens(CharacterSelectUiPanelActor *arg0) {
+void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiPanelActor *arg0) {
     CharacterSelectUiPanelTransitionActor *slots;
     u8 *stateMirror;
     CharacterSelectUiPanelActor *base;
@@ -846,7 +846,7 @@ void updateCharacterSelectPlayerSelectionTokens(CharacterSelectUiPanelActor *arg
             case 0:
                 break;
             case 1:
-                state = D_80121D85[i * PLAYER_DATA_SIZE];
+                state = D_80121D85[i * CHARACTER_SELECT_PLAYER_DATA_SIZE];
                 if ((s32)state < 5) {
                     offsetX = (state * 0x20) - 0x40;
                 } else if (state == 5) {
@@ -941,7 +941,7 @@ next_player:
     if (slots->mode == 3) {
         j = 0;
         do {
-            for (i = 0; i != PLAYER_COUNT; i++) {
+            for (i = 0; i != CHARACTER_SELECT_PLAYER_COUNT; i++) {
                 if (i < 2) {
                     moveX = -1;
                 } else {
@@ -973,10 +973,10 @@ next_player:
         } while (j != 0x10);
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectPlayerSelectionTokens, base);
+    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectSelectedCharacterTokens, base);
 }
 #endif
 
-void initCharacterSelectPlayerSelectionTokens(CharacterSelectUiPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, updateCharacterSelectPlayerSelectionTokens);
+void initCharacterSelectSelectedCharacterTokens(CharacterSelectUiPanelActor *arg0) {
+    setCallbackTaskCallback(arg0, updateCharacterSelectSelectedCharacterTokens);
 }

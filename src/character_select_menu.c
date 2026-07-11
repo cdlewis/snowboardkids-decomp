@@ -157,11 +157,11 @@ loop_1:
     }
 
     gActiveMenuTask = createCallbackTask(initCharacterSelectConfirmationBanner, 0, 0x64);
-    D_8010ADEC = createCallbackTask(initCharacterSelectPlayerSelectionTokens, 0, 0x64);
-    D_8010ADE8 = createCallbackTask(initCharacterSelectPlayerMarkerList, 0, 0x64);
-    D_8010ADE0 = createCallbackTask(initCharacterSelectCharacterIconList, 0, 0x64);
+    D_8010ADEC = createCallbackTask(initCharacterSelectSelectedCharacterTokens, 0, 0x64);
+    D_8010ADE8 = createCallbackTask(initCharacterSelectPlayerCursorMarkers, 0, 0x64);
+    D_8010ADE0 = createCallbackTask(initCharacterSelectRosterIcons, 0, 0x64);
     createCallbackTask(initCharacterSelectPlayerStatsPanels, 0, 0x64);
-    D_8010ADE4 = createCallbackTask(initCharacterSelectPlayerFrameList, 0, 0x63);
+    D_8010ADE4 = createCallbackTask(initCharacterSelectPlayerPanelFrames, 0, 0x63);
     setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
 
     playerCount = gPlayerCount;
