@@ -43,7 +43,7 @@ typedef struct {
 } RacePositionPlayer;
 
 extern RacePositionPlayer D_80121D80[RACE_POSITION_PLAYER_COUNT];
-extern RacePositionPlayer D_801235B0;
+extern RacePositionPlayer gFrameCounter;
 extern RacePositionCheckpointEvent *D_800DE030[];
 extern s8 *D_800DDE74[];
 extern u8 D_800DE058[];
@@ -259,7 +259,7 @@ sort_next:
             }
         }
         player++;
-    } while (player != &D_801235B0);
+    } while (player != &gFrameCounter);
 }
 
 #undef ASSIGN_DISPLAY_RANKS

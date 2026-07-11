@@ -203,12 +203,12 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     }
 
     func_80041CF0(1, save, transition);
-    loadCompressedAsset(D_5DAF30, D_5DB9D0, 0x2A);
-    loadCompressedAsset(D_1E0F70, D_1E19C0, 0x22);
-    loadRawAsset(D_145380, D_1467B0, 8);
-    loadCompressedAsset(D_1DCED0, D_1DE360, 9);
-    loadRawAsset(D_13F3B0, D_145380, 0xE);
-    loadCompressedAsset(D_1D3070, D_1D82B0, 0x12);
+    loadCompressedRomAsset(D_5DAF30, D_5DB9D0, 0x2A);
+    loadCompressedRomAsset(D_1E0F70, D_1E19C0, 0x22);
+    loadRawRomAsset(D_145380, D_1467B0, 8);
+    loadCompressedRomAsset(D_1DCED0, D_1DE360, 9);
+    loadRawRomAsset(D_13F3B0, D_145380, 0xE);
+    loadCompressedRomAsset(D_1D3070, D_1D82B0, 0x12);
     func_80070EC0(2);
     func_8006D5CC();
     func_8006D580(0, 0x1D);

@@ -160,7 +160,7 @@ void func_8003E600(void) {
     D_80122FB8 = 0;
     D_80122FBA = 5;
     courseEntry = &D_800BB834[D_800BB830];
-    loadCompressedAsset(courseEntry->romStart, courseEntry->romEnd, 0x2B);
+    loadCompressedRomAsset(courseEntry->romStart, courseEntry->romEnd, 0x2B);
     func_80043950();
     func_800440F4();
     D_801235B4 = 0;

@@ -68,7 +68,7 @@ extern s16 D_8011213C;
 extern s16 D_80112180;
 extern s32 D_80123778;
 extern s32 D_801235B4;
-extern s16 D_801235B0;
+extern s16 gFrameCounter;
 extern u8 D_8012482A;
 extern u8 D_8012482B;
 extern u8 D_8012482C;
@@ -236,7 +236,7 @@ void func_800515F0(MenuPanelActor *arg0) {
     }
 
     if (D_8010B1F0 == 0) {
-        temp_t8 = D_801235B0 & 0xF;
+        temp_t8 = gFrameCounter & 0xF;
         arg0->x = temp_t8;
         var_v0 = temp_t8;
         if (temp_t8 >= 9) {
@@ -244,7 +244,7 @@ void func_800515F0(MenuPanelActor *arg0) {
             arg0->x = var_v0;
         }
         arg0->x = (var_v0 * 0x10) + 0x7F;
-    } else if (D_801235B0 & 1) {
+    } else if (gFrameCounter & 1) {
         arg0->x = 0;
     } else {
         arg0->x = 0xFF;
@@ -348,7 +348,7 @@ void func_80051878(MenuPanelActor *arg0) {
 
         if ((arg0->selectionState != 0) && (D_8010B1F0 == 0)) {
             func_8000F030((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48),
-                          func_80043040(D_80112130.textureHandle), (D_801235B0 >> 4) & 1, 0x20, 0x20, 0,
+                          func_80043040(D_80112130.textureHandle), (gFrameCounter >> 4) & 1, 0x20, 0x20, 0,
                           0);
         }
     }
@@ -437,7 +437,7 @@ void func_80051FDC(MenuPanelActor *arg0) {
 
 void func_80052034(s32 arg0) {
     if (D_801235B4 == 0) {
-        if ((D_8010B1F0 == 0) || (D_801235B0 & 1)) {
+        if ((D_8010B1F0 == 0) || (gFrameCounter & 1)) {
             func_80045A78(-0x30, -0x20, func_80043040(D_80112180), 0);
             func_80045E84(-0x30, -0x20, func_80043040(D_80112180), 3);
         } else {
@@ -449,7 +449,7 @@ void func_80052034(s32 arg0) {
     }
 
     if (D_801235B4 == 1) {
-        if ((D_8010B1F0 == 0) || (D_801235B0 & 1)) {
+        if ((D_8010B1F0 == 0) || (gFrameCounter & 1)) {
             func_80045A78(-0x30, -8, func_80043040(D_80112180), 1);
             func_80045E84(-0x30, -8, func_80043040(D_80112180), 3);
         } else {
@@ -461,7 +461,7 @@ void func_80052034(s32 arg0) {
     }
 
     if (D_801235B4 == 2) {
-        if ((D_8010B1F0 == 0) || (D_801235B0 & 1)) {
+        if ((D_8010B1F0 == 0) || (gFrameCounter & 1)) {
             func_80045A78(-0x30, 0x10, func_80043040(D_80112180), 2);
             func_80045E84(-0x30, 0x10, func_80043040(D_80112180), 3);
             return;

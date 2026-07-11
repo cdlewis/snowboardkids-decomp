@@ -813,7 +813,7 @@ extern RacePlayerHalfwordField D_8012265E[];
 extern RacePlayerHalfwordField D_80122C6A[];
 extern RacePlayerHalfwordField D_80123276[];
 extern RacePlayerByteField D_8012229A[];
-extern s16 D_801235B0;
+extern s16 gFrameCounter;
 extern s16 D_8011216C;
 extern RaceUiAssetHandles D_80112130;
 extern s16 D_801222F6;
@@ -3262,7 +3262,7 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
         if (arg0->scale >= 0x1001) {
             arg0->scale = 0x1000;
         }
-        if (D_801235B0 & 1) {
+        if (gFrameCounter & 1) {
             arg0->frame = (arg0->frame + 1) & 3;
         }
 
@@ -3313,7 +3313,7 @@ void func_8005EFFC(RaceUiSparkleActor *arg0) {
     RacePlayerState *player;
 
     if (gRaceUpdatePaused == 0) {
-        if (D_801235B0 & 1) {
+        if (gFrameCounter & 1) {
             arg0->frame = (arg0->frame + 1) & 3;
         }
 
@@ -4584,7 +4584,7 @@ void func_800634C8(RaceUiCourseSpriteActor *arg0) {
 #endif
 
 void func_8006392C(void *arg0) {
-    if ((D_801235B0 & 7) == 0) {
+    if ((gFrameCounter & 7) == 0) {
         *(s16 *)((u8 *)arg0 + 0x4C) = (*(s16 *)((u8 *)arg0 + 0x4C) + 4) & 0x3F;
     }
     func_800483FC(&D_801248C8, func_800634C8, arg0);
@@ -4936,7 +4936,7 @@ void func_80064914(RaceUiProjectileActor *arg0) {
                 func_8008BB5C((struct RaceInputPlayer *)&D_80121D80[arg0->index], amount);
             }
             otherPlayer++;
-        } while (otherPlayer != (RacePlayerState *)&D_801235B0);
+        } while (otherPlayer != &gFrameCounter);
 
         flags = arg0->flags;
         amount = flags & 1;
@@ -5209,7 +5209,7 @@ void func_80065508(RaceUiGfxCommandActor *arg0) {
 
     entry = D_800D693C[D_80121B50];
     actor = arg0;
-    if (D_801235B0 & 1) {
+    if (gFrameCounter & 1) {
         actor->textureOffset++;
     }
     if (actor->textureOffset >= 6) {

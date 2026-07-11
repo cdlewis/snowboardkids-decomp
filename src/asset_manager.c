@@ -34,7 +34,7 @@ extern u16 gSecondaryRngIndex;
 extern s16 gHuffmanQueueHead;
 extern s16 gHuffmanQueueTail;
 extern s16 gHuffmanQueueCount;
-extern s16 D_801235B0;
+extern s16 gFrameCounter;
 extern CompressedAssetHeader gCompressedAssetHeader;
 extern HuffmanNode gHuffmanNodes[];
 extern AssetHandleTable D_80112130;
@@ -42,7 +42,7 @@ extern s32 gHuffmanNodeCount;
 
 s32 randomNextMain(void) {
     gMainRngIndex++;
-    if (D_801235B0 == 0) {
+    if (gFrameCounter == 0) {
         gMainRngIndex++;
     }
     gMainRngIndex &= 0xFF;
@@ -65,16 +65,16 @@ u8 randomNextObject(RandomStateObject *arg0) {
 }
 
 void resetGameplayRng(void) {
-    D_801235B0 = 0;
+    gFrameCounter = 0;
     gMainRngIndex = 0;
     resetSecondaryRng();
 }
 
-// huffmanQueueInsert best match: 99.389%
-#pragma GLOBAL_ASM("asm/nonmatchings/asset_manager/huffmanQueueInsert.s")
+// insertHuffmanQueueNode best match: 99.389%
+#pragma GLOBAL_ASM("asm/nonmatchings/asset_manager/insertHuffmanQueueNode.s")
 
 #ifdef NON_MATCHING
-void huffmanQueueInsert(s16 arg0) {
+void insertHuffmanQueueNode(s16 arg0) {
     HuffmanNode *iterNode;
     HuffmanNode *node;
     HuffmanNode *curNode;
@@ -135,7 +135,7 @@ void huffmanQueueInsert(s16 arg0) {
 }
 #endif
 
-void huffmanQueueRemove(s16 arg0) {
+void removeHuffmanQueueNode(s16 arg0) {
     HuffmanNode *node;
     s16 prev;
     s16 next;
@@ -161,11 +161,11 @@ void huffmanQueueRemove(s16 arg0) {
     }
 }
 
-// decompressAssetPayload best match: 62.649%
-#pragma GLOBAL_ASM("asm/nonmatchings/asset_manager/decompressAssetPayload.s")
+// decompressHuffmanAssetPayload best match: 62.649%
+#pragma GLOBAL_ASM("asm/nonmatchings/asset_manager/decompressHuffmanAssetPayload.s")
 
 #ifdef NON_MATCHING
-void decompressAssetPayload(u8 arg0, s32 arg1, s32 arg2, s32 arg3) {
+void decompressHuffmanAssetPayload(u8 arg0, s32 arg1, s32 arg2, s32 arg3) {
     HuffmanNode *temp_v0;
     HuffmanNode *temp_v0_2;
     HuffmanNode *temp_v1;
@@ -227,7 +227,7 @@ block_3:
                 temp_v0->right = -1;
                 temp_v0->value = (s16) var_s0;
                 temp_v0->weight = (s16) temp_t7;
-                huffmanQueueInsert((s16) gHuffmanNodeCount);
+                insertHuffmanQueueNode((s16) gHuffmanNodeCount);
                 var_s0 += 1;
                 gHuffmanNodeCount += 1;
             } while ((temp_s6 + 1) != var_s0);
@@ -240,15 +240,15 @@ block_3:
 loop_7:
     if (gHuffmanQueueCount >= 2) {
         temp_s3_2 = gHuffmanQueueTail;
-        huffmanQueueRemove(temp_s3_2);
+        removeHuffmanQueueNode(temp_s3_2);
         temp_s6_2 = gHuffmanQueueTail;
-        huffmanQueueRemove(temp_s6_2);
+        removeHuffmanQueueNode(temp_s6_2);
         temp_v0_2 = &gHuffmanNodes[gHuffmanNodeCount];
         temp_v0_2->weight = gHuffmanNodes[temp_s3_2].weight + gHuffmanNodes[temp_s6_2].weight;
         temp_v0_2->left = temp_s6_2;
         temp_v0_2->right = temp_s3_2;
         temp_v0_2->value = -1;
-        huffmanQueueInsert((s16) gHuffmanNodeCount);
+        insertHuffmanQueueNode((s16) gHuffmanNodeCount);
         gHuffmanNodeCount += 1;
         goto loop_7;
     }
@@ -346,7 +346,7 @@ loop_31:
 }
 #endif
 
-void loadCompressedAsset(void *arg0, void *arg1, s32 arg2) {
+void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2) {
     s16 *sp28;
     s32 sp30;
 
@@ -356,12 +356,12 @@ void loadCompressedAsset(void *arg0, void *arg1, s32 arg2) {
     func_80099C44((u32)arg0, (void *)func_80043040(D_80112130.compressedAssetHandle), (s32)arg1 - (s32)arg0);
     sp30 = func_80043040(D_80112130.compressedAssetHandle) + 5;
     sp28 = &D_80112130.assetHandles[arg2];
-    decompressAssetPayload(gCompressedAssetHeader.flags, sp30, func_80043040(*sp28), gCompressedAssetHeader.compressedSize);
+    decompressHuffmanAssetPayload(gCompressedAssetHeader.flags, sp30, func_80043040(*sp28), gCompressedAssetHeader.compressedSize);
     func_80043040(*sp28);
     D_80112130.compressedAssetHandle = func_80042EE4(D_80112130.compressedAssetHandle);
 }
 
-void loadRawAsset(void *arg0, void *arg1, s32 arg2) {
+void loadRawRomAsset(void *arg0, void *arg1, s32 arg2) {
     s32 temp_a0 = (s32)arg1 - (s32)arg0;
     s16 *temp_v1;
 

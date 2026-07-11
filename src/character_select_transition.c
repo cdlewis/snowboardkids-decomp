@@ -106,7 +106,7 @@ extern s32 D_80112414;
 extern void (*D_8011241C)(void);
 extern u8 D_80121B55;
 extern CharacterSelectTransitionPlayer D_80121D80[];
-extern CharacterSelectTransitionPlayer D_801235B0;
+extern CharacterSelectTransitionPlayer gFrameCounter;
 extern s32 D_801235B4;
 
 // func_80006F30 best match: 78.174% (nonmatchings/func_80006F30-7273315160691878794/base_1.c)
@@ -173,18 +173,18 @@ void func_80006F30(void) {
     D_801235B8->fade = 0xFF;
     D_800DEF14 = D_801235B8->fade;
 
-    loadCompressedAsset(D_5CBA80, D_5CCD40, 0x21);
-    loadCompressedAsset(D_593D10, D_598A70, 0x22);
-    loadCompressedAsset(D_598A70, D_59AAA0, 0x23);
-    loadCompressedAsset(D_59AAA0, D_59DFE0, 0x24);
-    loadCompressedAsset(D_5A1ED0, D_5C5320, 0x25);
-    loadCompressedAsset(D_59DFE0, D_59E7F0, 0x26);
+    loadCompressedRomAsset(D_5CBA80, D_5CCD40, 0x21);
+    loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
+    loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
+    loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
+    loadCompressedRomAsset(D_5A1ED0, D_5C5320, 0x25);
+    loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
 
     size = D_1502A0 - D_14B450;
     D_80112130[0xC] = func_80042D58(size);
     func_80099C44(D_14B450, (void *)func_80043040(D_80112130[0xC]), size);
-    loadCompressedAsset(D_1EF530, D_1F1A90, 0xD);
-    loadCompressedAsset(D_245A80, D_24C8E0, 0x1F);
+    loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
+    loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
     func_80070EC0(0);
     func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x63);
 
@@ -199,7 +199,7 @@ void func_80006F30(void) {
     D_801235B8->unk20 = 0;
     func_8009956C(func_80007840, 0);
 
-    for (i = 0; &D_80121D80[i] < &D_801235B0; i++) {
+    for (i = 0; &D_80121D80[i] < &gFrameCounter; i++) {
         D_80121D80[i].mode = 0;
     }
 

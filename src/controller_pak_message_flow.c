@@ -26,7 +26,7 @@ void func_8000CF70(void) {
     D_801235B8->fade = 0xFF;
     D_801235B8->timer = 0;
     D_800DEF14 = D_801235B8->fade;
-    loadCompressedAsset(D_5E26E0, D_5E34A0, 0x26);
+    loadCompressedRomAsset(D_5E26E0, D_5E34A0, 0x26);
     func_80070EC0(0);
     func_80071408(func_80031CD0, 0, 0x5E);
     func_8009956C(func_8000D048, 0);
@@ -51,7 +51,7 @@ void func_8000D0D4(void) {
         D_801235B8->fade = func_80013F88(D_801235B8->fade, 0xF, 1);
         if (D_801235B8->fade == 0xFF) {
             func_80045914();
-            loadCompressedAsset(D_5E0E40, D_5E26E0, 0x26);
+            loadCompressedRomAsset(D_5E0E40, D_5E26E0, 0x26);
         }
     } else {
         func_8009956C(func_8000D17C, 0);

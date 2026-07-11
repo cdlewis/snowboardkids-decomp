@@ -207,7 +207,7 @@ extern FixedTransform D_800DEE30;
 extern Gfx *gRegionAllocPtr;
 extern void *D_80156614;
 extern s16 D_80121B50;
-extern s16 D_801235B0;
+extern s16 gFrameCounter;
 extern void func_80066E10(RaceModelListActor *);
 extern void func_80066ABC(RaceModelListActor *);
 extern void func_80067034(RaceModelListActor *);
@@ -370,7 +370,7 @@ void func_80066E10(RaceModelListActor *arg0) {
     entry = D_800D91E8[D_80121B50];
     actor = arg0;
     ySize = 1;
-    if (D_801235B0 & ySize) {
+    if (gFrameCounter & ySize) {
         actor->modelIndexOffset++;
     }
     one = 1;
@@ -707,7 +707,7 @@ void func_80067830(RaceOverlayModelActor *arg0) {
             spF4.halfwords[6] /= 2;
             spF4.halfwords[7] /= 2;
             spF4.halfwords[8] /= 2;
-            spF4.words[6] += (func_80097AE8((s16)((D_801235B0 << 7) & 0xFFF)) << 7) + 0x300000;
+            spF4.words[6] += (func_80097AE8((s16)((gFrameCounter << 7) & 0xFFF)) << 7) + 0x300000;
             arg0->scaleDisplayList = func_8004885C(&spF4);
         }
 

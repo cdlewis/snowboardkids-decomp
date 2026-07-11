@@ -152,7 +152,7 @@ void func_8003ED00(void) {
     D_80122FBA = five3;
 
     if (players[0].replayInputSource == 5) {
-        loadCompressedAsset(&D_24C8E0, &D_24DBE0, 0x2B);
+        loadCompressedRomAsset(&D_24C8E0, &D_24DBE0, 0x2B);
     }
     func_80043950();
     func_800440F4();

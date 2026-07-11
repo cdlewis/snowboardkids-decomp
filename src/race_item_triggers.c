@@ -17,7 +17,7 @@ typedef void (*EffectCallback)(void *);
 extern void func_80072A74(s32 soundId, void *pos, s32 volume, s32 distance);
 
 extern void *func_800716A4(void *, s32, s32, s32);
-extern RaceInputPlayer D_801235B0;
+extern RaceInputPlayer gFrameCounter;
 
 #ifdef NON_MATCHING
 void updateItemUseTrigger(RaceInputPlayer *player) {
@@ -61,7 +61,7 @@ void updateItemUseTrigger(RaceInputPlayer *player) {
                     }
                 }
                 otherPlayer++;
-            } while (otherPlayer != &D_801235B0);
+            } while (otherPlayer != &gFrameCounter);
         }
     }
 

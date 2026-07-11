@@ -90,12 +90,12 @@ void func_8003F520(void) {
 }
 
 void func_8003F554(void) {
-    loadCompressedAsset(D_1F1A90, D_1F2220, 0x28);
-    loadCompressedAsset(D_593D10, D_598A70, 0x29);
-    loadCompressedAsset(D_60F1A0, D_60F990, 0x2A);
-    loadCompressedAsset(D_245A80, D_24C8E0, 0x1F);
-    loadRawAsset(D_1467B0, D_147910, 8);
-    loadCompressedAsset(D_1DE360, D_1E0F70, 9);
+    loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);
+    loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
+    loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
+    loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
+    loadRawRomAsset(D_1467B0, D_147910, 8);
+    loadCompressedRomAsset(D_1DE360, D_1E0F70, 9);
     D_8010B1F0 = 0;
     D_800DEED4 = 0;
     D_800DEF14 = 0xFF;
@@ -222,7 +222,7 @@ void func_8003F864(void) {
     players[3].replayInputSource = 5;
 
     courseAsset = &D_800D3C00[D_80121B5B];
-    loadCompressedAsset(courseAsset->romStart, courseAsset->romEnd, 0x2B);
+    loadCompressedRomAsset(courseAsset->romStart, courseAsset->romEnd, 0x2B);
     func_80043950();
     func_800440F4();
     func_8006D5CC();
@@ -239,8 +239,8 @@ void func_8003F864(void) {
     D_800DEF14 = 0xFF;
     D_800EC8B0 = 0;
     D_801235B4 = 1;
-    loadCompressedAsset(D_593D10, D_598A70, 0x29);
-    loadCompressedAsset(D_60F1A0, D_60F990, 0x2A);
+    loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
+    loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     D_8010B1F0 = 0;
     func_80071408(func_80051FDC, 0, 0x64);
     func_80071408(func_800524B0, 0, 0x64);
@@ -478,8 +478,8 @@ void func_8004002C(void) {
     D_800DEF14 = 0xFF;
     D_800EC8B0 = 0;
     D_801235B4 = 1;
-    loadCompressedAsset(D_593D10, D_598A70, 0x29);
-    loadCompressedAsset(D_60F1A0, D_60F990, 0x2A);
+    loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
+    loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     D_8010B1F0 = 0;
     func_80071408(func_8000E7CC, 0, 0x64);
     func_80071408(func_8000EA44, 0, 0x63);
@@ -686,8 +686,8 @@ void func_80040A48(void) {
         func_8009956C(func_80040C44, 0);
         return;
     }
-    loadCompressedAsset(D_593D10, D_598A70, 0x29);
-    loadCompressedAsset(D_60F1A0, D_60F990, 0x2A);
+    loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
+    loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     D_8010B1F0 = 0;
     D_800DEED4 = 0;
     D_800DEF14 = 0xFF;

@@ -133,7 +133,7 @@ extern s8 D_80121B79;
 extern s16 D_80121B7A;
 
 void func_80078430(void) {
-    loadCompressedAsset(D_245A80, D_24C8E0, 0x1F);
+    loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
     D_80121B70 = -1;
     D_80121B72 = 0;
 
