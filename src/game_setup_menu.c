@@ -23,7 +23,6 @@ typedef struct {
     /* 0x4 */ u8 unk4;
 } GameSetupMenuSubState;
 
-extern void func_80014C7C(EffectTask *task);
 extern void func_800704F0(void);
 extern void func_8007066C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, f32 arg7);
 extern void func_80072138();

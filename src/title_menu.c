@@ -33,8 +33,6 @@ typedef struct {
     /* 0x4D */ u8 pad4D[0x78F8 - 0x4D];
 } TitleMenuPlayerView;
 
-extern void func_80014EF0(MenuItemActor *);
-extern void func_80014CB8(void *);
 extern void func_800483FC(void *, void *, s32);
 extern s32 func_80072138(s32, s32);
 extern u8 D_800B5458[][0x4C];
