@@ -100,7 +100,7 @@ segments:
       - [0x37FE0, c, ending_credits_jam]
       - [0x3A0E0, c, ending_credits_linda]
       - [0x3C3C0, c, ending_credits_ui]
-      - [0x3CAF0, c, ending_credits_effect_actors]
+      - [0x3CAF0, c, ending_credits_effects]
       - [0x3E9D0, c, race_start_transition]
       - [0x3F200, c, race_intro_transition]
       - [0x3F900, c, race_intro_transition_2]

@@ -1,6 +1,6 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
-#include "ending_credits_effect_actors.h"
+#include "ending_credits_effects.h"
 #include "ending_credits_nancy.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
