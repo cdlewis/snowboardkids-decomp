@@ -1,6 +1,6 @@
 #include "common.h"
 #include "fixed_point_math.h"
-#include "race_course_motion.h"
+#include "race_motion.h"
 #include "race_position_tracker.h"
 
 // Race player records are 0x60C bytes apart. This view only names the fields
@@ -327,7 +327,7 @@ void func_8007BB08(RacePositionPlayer *player) {
 }
 #endif
 
-s32 func_8007BCFC(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
+s32 getSmoothedRacePlayerPathOffset(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
     s32 courseIndex;
     s32 pathIndexCopy;
     s8 *entry;
@@ -365,7 +365,7 @@ s32 func_8007BCFC(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
     return D_80121D80[rankSlot].smoothedPathOffset;
 }
 
-s32 func_8007BDE4(s32 playerIndex, s32 pathIndex) {
+s32 getRacePlayerPathOffset(s32 playerIndex, s32 pathIndex) {
     s8 *entry;
 
     if (gRaceCourseIndex == 7) {

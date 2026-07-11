@@ -1,6 +1,6 @@
 #include "common.h"
 #include "race_camera.h"
-#include "race_course_motion.h"
+#include "race_motion.h"
 #include "race_motion_debug_viewer.h"
 #include "race_position_ui.h"
 

@@ -2,7 +2,7 @@
 #include "asset_manager.h"
 #include "callback_task_scheduler.h"
 #include "sound_manager.h"
-#include "race_course_motion.h"
+#include "race_motion.h"
 #include "race_course_effects.h"
 #include "race_player_input.h"
 #include "race_player_movement.h"
