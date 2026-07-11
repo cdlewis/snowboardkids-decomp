@@ -1,17 +1,17 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "main_menu_training_ui.h"
+#include "training_course_ui.h"
 #include "menu_rendering.h"
 
-#define MAIN_MENU_TRAINING_TEXTURE_HANDLE (D_80112130.textureHandle)
+#define TRAINING_COURSE_UI_TEXTURE_HANDLE (D_80112130.textureHandle)
 
-typedef MenuGlyphScript MainMenuTrainingScript;
+typedef MenuGlyphScript TrainingCourseUiScript;
 
-struct MainMenuTrainingActor {
-    /* 0x00 */ struct MainMenuTrainingActor *prev;
-    /* 0x04 */ struct MainMenuTrainingActor *next;
-    /* 0x08 */ void (*callback)(struct MainMenuTrainingActor *);
+struct TrainingCourseUiActor {
+    /* 0x00 */ struct TrainingCourseUiActor *prev;
+    /* 0x04 */ struct TrainingCourseUiActor *next;
+    /* 0x08 */ void (*callback)(struct TrainingCourseUiActor *);
     /* 0x0C */ u16 type;
     /* 0x0E */ u16 priority;
     /* 0x10 */ s16 unk10;
@@ -25,7 +25,7 @@ struct MainMenuTrainingActor {
             /* 0x1C */ s16 x;
             /* 0x1E */ s16 y;
         } textOffset;
-        /* 0x1C */ MainMenuTrainingScript *script;
+        /* 0x1C */ TrainingCourseUiScript *script;
         /* 0x1C */ s32 panelHeight;
     } layout;
     /* 0x20 */ s16 highlightScale;
@@ -44,75 +44,75 @@ struct MainMenuTrainingActor {
     /* 0x2C */ u8 keepVisibleAfterConfirm;
 };
 
-typedef struct MainMenuTrainingAssetHandles {
+typedef struct TrainingCourseAssetHandles {
     /* 0x00 */ char pad0[0x54];
     /* 0x54 */ s16 textureHandle;
-} MainMenuTrainingAssetHandles;
+} TrainingCourseAssetHandles;
 
 typedef struct RenderCallbackNode RenderCallbackNode;
 typedef void (*RenderCallback)(s32);
 
 extern void addRenderCallback(RenderCallbackNode **, RenderCallback, s32);
 extern RenderCallbackNode *gMenuRenderCallbackList;
-extern MainMenuTrainingAssetHandles D_80112130;
+extern TrainingCourseAssetHandles D_80112130;
 extern u8 gMainMenuSelectionResult;
 extern s32 gPlayerInputPressed;
-extern MainMenuTrainingScript gMainMenuTrainingOpeningDialogScripts[][0x17C];
-extern MainMenuTrainingScript gMainMenuTrainingEndingDialogScript[];
-extern MainMenuTrainingScript gMainMenuTrainingTitleLabelTemplate[];
-extern MainMenuTrainingScript gMainMenuTrainingTitleText[][0x14];
-extern s16 gMainMenuTrainingTitleXPositions[];
+extern TrainingCourseUiScript gTrainingCourseOpeningDialogScripts[][0x17C];
+extern TrainingCourseUiScript gTrainingCourseEndingDialogScript[];
+extern TrainingCourseUiScript gTrainingCourseTitleLabelTemplate[];
+extern TrainingCourseUiScript gTrainingCourseTitleText[][0x14];
+extern s16 gTrainingCourseTitleXPositions[];
 extern u8 gMainMenuSelectedCourse;
-extern void enqueueSoundEffect(s32, s32, MainMenuTrainingActor *);
-void drawMainMenuTrainingDialog(MainMenuTrainingActor *);
-void updateMainMenuTrainingDialog(MainMenuTrainingActor *);
-void drawMainMenuTrainingTitlePanel(MainMenuTrainingActor *);
-void updateMainMenuTrainingTitlePanelScrollOut(MainMenuTrainingActor *);
-void updateMainMenuTrainingTitlePanel(MainMenuTrainingActor *);
-void updateMainMenuTrainingActionMenu(MainMenuTrainingActor *);
+extern void enqueueSoundEffect(s32, s32, TrainingCourseUiActor *);
+void drawTrainingCourseDialog(TrainingCourseUiActor *);
+void updateTrainingCourseDialog(TrainingCourseUiActor *);
+void drawTrainingCourseTitlePanel(TrainingCourseUiActor *);
+void updateTrainingCourseTitlePanelScrollOut(TrainingCourseUiActor *);
+void updateTrainingCourseTitlePanel(TrainingCourseUiActor *);
+void updateTrainingCourseActionMenu(TrainingCourseUiActor *);
 
-void drawMainMenuTrainingActionMenu(MainMenuTrainingActor *arg0) {
+void drawTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
     s32 i;
     s32 j;
     s32 alpha;
     s32 limit;
     s32 selected;
 
-    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x50), arg0->y, getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x50), arg0->y, getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
-        drawMenuSprite((s16)(arg0->x + i + 0x10), arg0->y, getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + i + 0x10), (s16)(arg0->y + 0x40), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + i + 0x10), arg0->y, getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + i + 0x10), (s16)(arg0->y + 0x40), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0x40);
 
-    drawMenuSprite(arg0->x, (s16)(arg0->y + 0x40), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x40), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16)(arg0->y + 0x40), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x40), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
 
     i = 0;
     limit = 0x40;
     do {
-        drawMenuSprite(arg0->x, (s16)(arg0->y + i + 0x10), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + i + 0x10), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
+        drawMenuSprite(arg0->x, (s16)(arg0->y + i + 0x10), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + i + 0x10), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
         j = 0;
         do {
-            drawMenuSprite((s16)(arg0->x + j + 0x10), (s16)(arg0->y + i + 0x10), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+            drawMenuSprite((s16)(arg0->x + j + 0x10), (s16)(arg0->y + i + 0x10), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
             j += 0x10;
         } while (j != limit);
         i += 0x10;
     } while (i < 0x30);
 
-    drawMenuSprite((s16)(arg0->x + 8), (s16)(arg0->y + 4), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 0x15, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x44), (s16)(arg0->y + 4), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), (gMainMenuSelectedCourse + 0xB) & 0xFFFF, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 8), (s16)(arg0->y + 4), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0x15, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x44), (s16)(arg0->y + 4), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), (gMainMenuSelectedCourse + 0xB) & 0xFFFF, 0x20, 0x20, 0, 0);
 
     if (gMainMenuSelectedCourse != 9) {
         j = 0;
         i = 0;
         do {
             alpha = (j == (u16)arg0->state.selectedAction) ? 0x100 : 0x60;
-            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x18), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), (j + 0x16) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
+            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x18), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), (j + 0x16) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
             j++;
             i += 0x10;
         } while (j != 3);
@@ -121,7 +121,7 @@ void drawMainMenuTrainingActionMenu(MainMenuTrainingActor *arg0) {
         i = 0;
         do {
             alpha = ((j + 1) == (u16)arg0->state.selectedAction) ? 0x100 : 0x60;
-            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x20), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), (j + 0x17) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
+            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x20), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), (j + 0x17) & 0xFFFF, 0x20, 0x20, 0, alpha, 0);
             j++;
             i += 0x10;
         } while (j != 2);
@@ -132,18 +132,18 @@ void drawMainMenuTrainingActionMenu(MainMenuTrainingActor *arg0) {
     } else {
         selected = (u16)arg0->state.selectedAction - 1;
     }
-    drawMenuSpriteWithAlpha(arg0->layout.textOffset.x, (s16)(arg0->layout.textOffset.y + (selected * 0x10)), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, arg0->highlightScale, 0);
+    drawMenuSpriteWithAlpha(arg0->layout.textOffset.x, (s16)(arg0->layout.textOffset.y + (selected * 0x10)), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, arg0->highlightScale, 0);
 }
 
-void redrawMainMenuTrainingActionMenu(s32 arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)redrawMainMenuTrainingActionMenu, arg0);
+void redrawTrainingCourseActionMenu(s32 arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)redrawTrainingCourseActionMenu, arg0);
 }
 
-// updateMainMenuTrainingActionMenu best match: 99.562%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_training_ui/updateMainMenuTrainingActionMenu.s")
+// updateTrainingCourseActionMenu best match: 99.562%
+#pragma GLOBAL_ASM("asm/nonmatchings/training_course_ui/updateTrainingCourseActionMenu.s")
 
 #ifdef NON_MATCHING
-void updateMainMenuTrainingActionMenu(MainMenuTrainingActor *arg0) {
+void updateTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
     s32 temp_t1;
     s32 temp_t8;
     s32 temp_t9;
@@ -192,13 +192,13 @@ void updateMainMenuTrainingActionMenu(MainMenuTrainingActor *arg0) {
         gMainMenuSelectionResult = (u16)arg0->state.selectedAction + 1;
         arg0->highlightScale = 0x100;
         arg0->highlightTimer = 0;
-        setCallbackTaskCallback(arg0, redrawMainMenuTrainingActionMenu);
+        setCallbackTaskCallback(arg0, redrawTrainingCourseActionMenu);
     }
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuTrainingActionMenu, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseActionMenu, (s32)arg0);
 }
 #endif
 
-void initMainMenuTrainingActionMenu(MainMenuTrainingActor *arg0) {
+void initTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
     arg0->x = -0x30;
     arg0->y = -0x30;
     arg0->layout.textOffset.x = -0x2C;
@@ -211,17 +211,17 @@ void initMainMenuTrainingActionMenu(MainMenuTrainingActor *arg0) {
     }
     arg0->highlightScale = 0x100;
     arg0->highlightTimer = 0;
-    setCallbackTaskCallback(arg0, updateMainMenuTrainingActionMenu);
+    setCallbackTaskCallback(arg0, updateTrainingCourseActionMenu);
 }
 
-// drawMainMenuTrainingDialog best match: 95.343%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_training_ui/drawMainMenuTrainingDialog.s")
+// drawTrainingCourseDialog best match: 95.343%
+#pragma GLOBAL_ASM("asm/nonmatchings/training_course_ui/drawTrainingCourseDialog.s")
 
 #ifdef NON_MATCHING
-void drawMainMenuTrainingDialog(MainMenuTrainingActor *arg0) {
+void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     unsigned int new_var;
-    MainMenuTrainingScript glyph;
-    MainMenuTrainingScript *script;
+    TrainingCourseUiScript glyph;
+    TrainingCourseUiScript *script;
     u16 xOffset;
     s32 i;
     s32 glyphIndex;
@@ -232,24 +232,24 @@ void drawMainMenuTrainingDialog(MainMenuTrainingActor *arg0) {
     u16 drawToken;
     unsigned int pad;
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)((*arg0).y + 0x14), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)((*arg0).y + 0x14), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     new_var = 0;
     do {
-        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x14), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 3, 0x20, 0x20, new_var, new_var);
-        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x4C), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, new_var);
+        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x14), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 3, 0x20, 0x20, new_var, new_var);
+        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x4C), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, new_var);
         i += 0x10;
     } while (i < 0xF0);
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, new_var);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 9, 0x20, 0x20, new_var, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, new_var);
+    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 9, 0x20, 0x20, new_var, 0);
 
     i = new_var;
     do {
-        drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + i + 0x24), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 5, 0x20, 0x20, new_var, 0);
-        drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + i + 0x24), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), 6, 0x20, 0x20, new_var, 0);
+        drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + i + 0x24), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 5, 0x20, 0x20, new_var, 0);
+        drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + i + 0x24), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 6, 0x20, 0x20, new_var, 0);
         i += 0x10;
     } while (i < 0x30);
 
@@ -263,7 +263,7 @@ void drawMainMenuTrainingDialog(MainMenuTrainingActor *arg0) {
         lineOffset = 0;
         do {
             scriptOffset += 0;
-            script = (MainMenuTrainingScript *)((u8 *)arg0->layout.script + scriptOffset);
+            script = (TrainingCourseUiScript *)((u8 *)arg0->layout.script + scriptOffset);
             token = script[new_var];
             if ((token >= 0xFF01) && (token != 0xFFFE)) {
                 drawToken = token;
@@ -300,7 +300,7 @@ void drawMainMenuTrainingDialog(MainMenuTrainingActor *arg0) {
                     if (drawToken < 0xFF01) {
                         break;
                     }
-                    if (((MainMenuTrainingScript *)((u8 *)arg0->layout.script + scriptOffset))[0] == 0xFFFE) {
+                    if (((TrainingCourseUiScript *)((u8 *)arg0->layout.script + scriptOffset))[0] == 0xFFFE) {
                         break;
                     }
                     token = drawToken;
@@ -310,7 +310,7 @@ void drawMainMenuTrainingDialog(MainMenuTrainingActor *arg0) {
             if (stopped == 1) {
                 glyph = 0xFFFE;
             } else {
-                glyph = *((MainMenuTrainingScript *)((u8 *)arg0->layout.script + scriptOffset));
+                glyph = *((TrainingCourseUiScript *)((u8 *)arg0->layout.script + scriptOffset));
             }
             drawMenuColoredGlyphScript((s16)(arg0->x + xOffset), (s16)(arg0->y + lineOffset + 0x18), &glyph, 0, 0x100, (u16)arg0->glyphPalette, 0x29);
             if (stopped != 1) {
@@ -330,28 +330,28 @@ void drawMainMenuTrainingDialog(MainMenuTrainingActor *arg0) {
     }
 
     if (((arg0->scriptState == 1) || (arg0->scriptState == 2)) && (gMainMenuSelectionResult == new_var)) {
-        drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48), getMemoryBlockBase(MAIN_MENU_TRAINING_TEXTURE_HANDLE), ((s32)arg0->confirmBlinkTimer >= 8) & 0xFFFF, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), ((s32)arg0->confirmBlinkTimer >= 8) & 0xFFFF, 0x20, 0x20, 0, 0);
     }
 }
 #endif
 
-void updateMainMenuTrainingDialogScrollOut(MainMenuTrainingActor *arg0) {
+void updateTrainingCourseDialogScrollOut(TrainingCourseUiActor *arg0) {
     arg0->y += 0x10;
     if (arg0->y >= 0x79) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuTrainingDialog, (s32)arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseDialog, (s32)arg0);
     }
 }
 
-// updateMainMenuTrainingDialog best match: 99.775%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_training_ui/updateMainMenuTrainingDialog.s")
+// updateTrainingCourseDialog best match: 99.775%
+#pragma GLOBAL_ASM("asm/nonmatchings/training_course_ui/updateTrainingCourseDialog.s")
 
 #ifdef NON_MATCHING
-void updateMainMenuTrainingDialog(MainMenuTrainingActor *arg0) {
-    MainMenuTrainingScript *scan;
-    MainMenuTrainingScript *script;
-    MainMenuTrainingScript *next;
+void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
+    TrainingCourseUiScript *scan;
+    TrainingCourseUiScript *script;
+    TrainingCourseUiScript *next;
     s32 keepScanning;
     u16 token;
     u16 marker;
@@ -395,9 +395,9 @@ void updateMainMenuTrainingDialog(MainMenuTrainingActor *arg0) {
             arg0->confirmBlinkTimer = 0;
             gMainMenuSelectionResult = 1;
             if (arg0->keepVisibleAfterConfirm == 0) {
-                setCallbackTaskCallback(arg0, updateMainMenuTrainingDialogScrollOut);
+                setCallbackTaskCallback(arg0, updateTrainingCourseDialogScrollOut);
             } else {
-                setCallbackTaskCallback(arg0, redrawMainMenuTrainingDialog);
+                setCallbackTaskCallback(arg0, redrawTrainingCourseDialog);
             }
         }
         break;
@@ -425,61 +425,61 @@ void updateMainMenuTrainingDialog(MainMenuTrainingActor *arg0) {
         break;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuTrainingDialog, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseDialog, (s32)arg0);
 }
 #endif
 
-void initMainMenuTrainingOpeningDialog(MainMenuTrainingActor *arg0) {
+void initTrainingCourseOpeningDialog(TrainingCourseUiActor *arg0) {
     arg0->x = -0x80;
     arg0->y = 4;
     arg0->scriptState = 0;
     arg0->state.script.visibleGlyphCount = 1;
     arg0->glyphPalette = 0;
-    arg0->layout.script = gMainMenuTrainingOpeningDialogScripts[gMainMenuSelectedCourse - 1];
+    arg0->layout.script = gTrainingCourseOpeningDialogScripts[gMainMenuSelectedCourse - 1];
     arg0->keepVisibleAfterConfirm = 0;
-    setCallbackTaskCallback(arg0, updateMainMenuTrainingDialog);
+    setCallbackTaskCallback(arg0, updateTrainingCourseDialog);
 }
 
-void redrawMainMenuTrainingDialog(s32 arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuTrainingDialog, arg0);
+void redrawTrainingCourseDialog(s32 arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseDialog, arg0);
 }
 
-void initMainMenuTrainingEndingDialog(MainMenuTrainingActor *arg0) {
+void initTrainingCourseEndingDialog(TrainingCourseUiActor *arg0) {
     arg0->x = -0x80;
     arg0->y = -0x24;
     arg0->scriptState = 0;
     arg0->state.script.visibleGlyphCount = 1;
     arg0->glyphPalette = 7;
-    arg0->layout.script = gMainMenuTrainingEndingDialogScript;
+    arg0->layout.script = gTrainingCourseEndingDialogScript;
     arg0->keepVisibleAfterConfirm = 1;
-    setCallbackTaskCallback(arg0, updateMainMenuTrainingDialog);
+    setCallbackTaskCallback(arg0, updateTrainingCourseDialog);
 }
 
-void drawMainMenuTrainingTitlePanel(MainMenuTrainingActor *arg0) {
-    gMainMenuTrainingTitleLabelTemplate[9] = gMainMenuSelectedCourse;
-    drawMenuColoredGlyphScript((s16)(arg0->x - 0x10), arg0->y, gMainMenuTrainingTitleLabelTemplate, 0, 0x100, 5, 0x29);
-    drawMenuColoredGlyphScript(gMainMenuTrainingTitleXPositions[gMainMenuSelectedCourse], (s16)(arg0->y + 0x18), gMainMenuTrainingTitleText[gMainMenuSelectedCourse - 1], 0, 0x100, 4, 0x29);
+void drawTrainingCourseTitlePanel(TrainingCourseUiActor *arg0) {
+    gTrainingCourseTitleLabelTemplate[9] = gMainMenuSelectedCourse;
+    drawMenuColoredGlyphScript((s16)(arg0->x - 0x10), arg0->y, gTrainingCourseTitleLabelTemplate, 0, 0x100, 5, 0x29);
+    drawMenuColoredGlyphScript(gTrainingCourseTitleXPositions[gMainMenuSelectedCourse], (s16)(arg0->y + 0x18), gTrainingCourseTitleText[gMainMenuSelectedCourse - 1], 0, 0x100, 4, 0x29);
 }
 
-void updateMainMenuTrainingTitlePanelScrollOut(MainMenuTrainingActor *arg0) {
+void updateTrainingCourseTitlePanelScrollOut(TrainingCourseUiActor *arg0) {
     arg0->y -= 0xA;
     if (arg0->y < -0xC7) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuTrainingTitlePanel, (s32)arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseTitlePanel, (s32)arg0);
     }
 }
 
-void updateMainMenuTrainingTitlePanel(MainMenuTrainingActor *arg0) {
+void updateTrainingCourseTitlePanel(TrainingCourseUiActor *arg0) {
     if (gMainMenuSelectionResult == 1) {
-        setCallbackTaskCallback(arg0, updateMainMenuTrainingTitlePanelScrollOut);
+        setCallbackTaskCallback(arg0, updateTrainingCourseTitlePanelScrollOut);
     }
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuTrainingTitlePanel, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseTitlePanel, (s32)arg0);
 }
 
-void initMainMenuTrainingTitlePanel(MainMenuTrainingActor *arg0) {
+void initTrainingCourseTitlePanel(TrainingCourseUiActor *arg0) {
     arg0->x = -0x48;
     arg0->y = -0x48;
     arg0->layout.panelHeight = 0x78;
-    setCallbackTaskCallback(arg0, updateMainMenuTrainingTitlePanel);
+    setCallbackTaskCallback(arg0, updateTrainingCourseTitlePanel);
 }
