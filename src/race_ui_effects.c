@@ -6,6 +6,7 @@
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
 #include "model_animation.h"
+#include "race_effects.h"
 
 /* Local 3-arg declaration; see note in effect_task_scheduler.h. */
 extern void *func_800716A4(void *, s32, s32);
@@ -929,7 +930,6 @@ extern void func_8005E6D0(RaceUiSparkleActor *);
 extern void func_8005ECA8(RaceUiSparkleActor *);
 extern void func_8005F174(RaceUiSparkleActor *);
 extern s32 func_80048E60(Vec3i *);
-extern void func_8004B8B4(s32, s32, s32, s16, s16);
 extern void func_80088294(Vec3i *, s32, s32, s32);
 extern void func_80088C80(Vec3i *, s32, s32, s32);
 extern s32 func_80088E98(Vec3i *, s32, s32, s32);
