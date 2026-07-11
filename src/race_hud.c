@@ -308,14 +308,14 @@ void func_80017A10(RaceHudPlayerFrameActor *arg0) {
 }
 #endif
 
-// func_80017C34 best match: 92.981% (nonmatchings/func_80017C34-5635509610426229442/base_7.c)
+// func_80017C34 best match: 97.500% (nonmatchings/func_80017C34-6061209858023118177/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80017C34.s")
 
 #ifdef NON_MATCHING
 void func_80017C34(RaceHudPanelActor *arg0) {
-    u8 var_v0;
+    s32 var_v0;
     u8 desired;
-    u8 var_v1;
+    s32 var_v1;
     RaceHudPanelActor *actor;
     RaceHudPlayerFrameController *owner;
 
@@ -334,7 +334,8 @@ void func_80017C34(RaceHudPanelActor *arg0) {
 
     switch (var_v1) {
     case 1:
-        actor->y[3] += 8;
+        var_v1 = actor->y[3] + 8;
+        actor->y[3] = var_v1;
         actor->y[1] += 8;
         if (actor->y[3] == 0x24) {
             actor->targetY.mode = 2;
