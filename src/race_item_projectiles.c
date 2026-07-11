@@ -3,7 +3,7 @@
 #include "race_motion.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
-#include "race_item_effects.h"
+#include "race_item_visual_effects.h"
 #include "race_player_movement.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
@@ -303,13 +303,13 @@ void updateRaceItemProjectileType1(RaceItemProjectileActor *arg0) {
 
         if (arg0->timer == 0) {
             enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
-            func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
+            spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask(arg0);
             return;
         }
 
         arg0->timer--;
-        func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 0);
+        spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 0);
     }
 
     addRenderCallback(&gRaceObjectRenderCallbackList, renderRaceItemProjectileType1, arg0);
@@ -476,13 +476,13 @@ void updateRaceItemProjectileType3(RaceItemProjectileActor *arg0) {
             if (hitPlayer == 0) {
                 enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
             }
-            func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
+            spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask(arg0);
             return;
         }
 
         arg0->timer--;
-        func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
+        spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
     }
 
     addRenderCallback(&gRaceObjectRenderCallbackList, renderRaceItemProjectileType3, arg0);
@@ -645,13 +645,13 @@ void updateRaceItemProjectileType4(RaceItemProjectileActor *arg0) {
 
         if (arg0->timer == 0) {
             enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
-            func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
+            spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask(arg0);
             return;
         }
 
         arg0->timer--;
-        func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 3);
+        spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 3);
     }
 
     addRenderCallback(&gRaceObjectRenderCallbackList, renderRaceItemProjectileType4, arg0);
@@ -782,7 +782,7 @@ void updateThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
         for (i = 0; i < 4; i++) {
             if (func_800891B8(pos, 0x30000, 0x2000, i)) {
                 enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
-                func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
+                spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
                 arg0->timer = 0;
                 i = 4;
             }
@@ -794,7 +794,7 @@ void updateThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
         }
 
         arg0->timer--;
-        func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 3);
+        spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 3);
     }
 
     addRenderCallback(&gRaceObjectRenderCallbackList, renderThrownTrailImpactProjectile, arg0);
@@ -940,7 +940,7 @@ void updateRaceItemProjectileType5(RaceItemProjectileActor *arg0) {
         }
 
         arg0->timer--;
-        func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 4);
+        spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 4);
     }
 
     addRenderCallback(&gRaceObjectRenderCallbackList, renderRaceItemProjectileType5, arg0);
@@ -1098,13 +1098,13 @@ void updateRaceItemProjectileType2(RaceItemProjectileActor *arg0) {
 
         if (arg0->timer == 0) {
             enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
-            func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
+            spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask(arg0);
             return;
         }
 
         arg0->timer--;
-        func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 1);
+        spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 1);
     }
 
     addRenderCallback(&gRaceObjectRenderCallbackList, renderRaceItemProjectileType2, arg0);
@@ -1215,7 +1215,7 @@ void updateFallingActionProjectileLanded(RaceItemProjectileActor *arg0) {
     do {
         if (func_800891B8(pos, radius, 0x400, i)) {
             enqueuePositionalSoundEffect(0x14, pos, 0x7F, 0x32);
-            func_8004E594(arg0->pos.x, actor->pos.y, actor->pos.z, 1);
+            spawnRaceItemImpactEffect(arg0->pos.x, actor->pos.y, actor->pos.z, 1);
             removeCallbackTask(arg0);
             return;
         }
@@ -1247,7 +1247,7 @@ void updateFallingActionProjectile(RaceItemProjectileActor *arg0) {
             pos = &arg0->pos;
             if ((i != arg0->playerIndex || arg0->timer == 0) && func_800891B8(pos, 0x30000, 0x400, i)) {
                 enqueuePositionalSoundEffect(0x14, pos, 0x7F, 0x32);
-                func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 1);
+                spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 1);
                 removeCallbackTask(arg0);
                 return;
             }
@@ -1367,7 +1367,7 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
         }
 
         if (arg0->timer == 0) {
-            func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
+            spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask((RaceItemProjectileActor *)arg0);
             player = &D_80121D80[arg0->playerIndex];
             player->unk510++;
@@ -1376,7 +1376,7 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
 
         arg0->timer--;
         pos = &arg0->pos;
-        func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 5);
+        spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 5);
         arg0->prevPos = *pos;
         arg0->radius = 0x30000;
         player = &D_80121D80[arg0->playerIndex];
