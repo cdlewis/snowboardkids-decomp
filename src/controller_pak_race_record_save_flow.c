@@ -4,7 +4,7 @@
 #include "character_select_course_menu.h"
 #include "controller_pak_race_record_save_flow.h"
 #include "controller_pak_menu.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "main_menu_score_ui.h"
 #include "menu_rendering.h"
 #include "viewport_manager.h"
@@ -24,7 +24,7 @@ typedef struct {
     /* 0xC */ s32 selectedFileInfo;
 } ControllerPakRaceRecordSaveFileContext;
 
-extern CharacterSelectFlowState *gCurrentInputTask;
+extern CharacterSelectFlowState *gCurrentGameTask;
 extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakRaceRecordSaveScoreUiState gControllerPakRaceRecordSaveScoreUiState;
 extern ControllerPakRaceRecordSaveFileContext D_80121D80;
@@ -63,12 +63,12 @@ void initControllerPakRaceRecordSaveFlow(void) {
     D_800EC9D8 = 0;
     D_80121D80.status = 0;
     D_800EC9C1 = 0;
-    gCurrentInputTask->fade = 0xFF;
+    gCurrentGameTask->fade = 0xFF;
     D_8010ADDC = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     D_8010ADE8 = 0;
-    gMenuFadeAlpha = gCurrentInputTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->fade;
     D_800EC9F4 = D_80121D80.selectedFileInfo;
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x21);
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x24);
@@ -84,7 +84,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     gControllerPakRaceRecordSaveScoreUiState.nextTimer = 0;
     gControllerPakMenuState.state = 0;
     gControllerPakMenuState.confirmChoice = 0;
-    setCurrentInputTaskCallback(updateControllerPakRaceRecordSaveFlow, 0);
+    setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveFlow, 0);
 }
 
 #ifdef NON_MATCHING
@@ -114,17 +114,17 @@ void updateControllerPakRaceRecordSaveFlow(void)
   s32 temp_v1;
   s32 var_t7;
   sp24 = 0;
-  temp_v0 = gCurrentInputTask->fade;
+  temp_v0 = gCurrentGameTask->fade;
   temp_t0 = D_8010ADE4;
   if (temp_v0 != 0)
   {
-    gCurrentInputTask->fade = stepMenuFadeAlpha((s32) ((s16) temp_v0), 0x24, 0);
-    if (gCurrentInputTask->fade == 0)
+    gCurrentGameTask->fade = stepMenuFadeAlpha((s32) ((s16) temp_v0), 0x24, 0);
+    if (gCurrentGameTask->fade == 0)
     {
       gControllerPakMenuState.state = 3;
       gControllerPakMenuState.confirmChoice = 1;
       createCallbackTask(initControllerPakDeleteConfirmPrompt, 0, 0x64);
-      setCurrentInputTaskCallback(updateControllerPakRaceRecordSaveOverwritePrompt, 0);
+      setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveOverwritePrompt, 0);
     }
   }
   else
@@ -411,26 +411,26 @@ void updateControllerPakRaceRecordSaveFlow(void)
   }
   if (sp24 != 0)
   {
- D_800EC9C1 = 1; } if (((u8) D_800EC9C1) == 0x23) { setCurrentInputTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
+ D_800EC9C1 = 1; } if (((u8) D_800EC9C1) == 0x23) { setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
   }
   updateCallbackTasks();
 }
 #endif
 
 void fadeOutControllerPakRaceRecordSaveFlow(void) {
-    s32 temp_v0 = gCurrentInputTask->fade;
+    s32 temp_v0 = gCurrentGameTask->fade;
     if (temp_v0 != 0xFF) {
-        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) temp_v0, 0x20, 1);
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) temp_v0, 0x20, 1);
         updateCallbackTasks();
-        if (gCurrentInputTask->fade == 0xFF) {
+        if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         }
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        resumeInputTask(2);
-        removeInputTask(4);
+        resumeGameTask(2);
+        removeGameTask(4);
     }
 }
 
@@ -446,15 +446,15 @@ void updateControllerPakRaceRecordSaveOverwritePrompt(void) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
             gControllerPakMenuCursorState = 0;
-            setCurrentInputTaskCallback(updateControllerPakRaceRecordSaveFlow, 0);
+            setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveFlow, 0);
         } else {
             D_801235B4 = 1;
-            setCurrentInputTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
+            setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
         }
     } else if (gPlayerInputPressed & 0x4000) {
         enqueueSoundEffect(0x18, 0x32);
         D_801235B4 = 1;
-        setCurrentInputTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
+        setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
     }
     updateCallbackTasks();
 }

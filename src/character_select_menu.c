@@ -2,7 +2,7 @@
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_menu.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "menu_rendering.h"
 #include "race_hud.h"
 #include "viewport_manager.h"
@@ -47,7 +47,7 @@ extern void enqueueSoundEffect(s32, s32);
 extern void updateCharacterSelectMenu(void);
 extern void fadeOutCharacterSelectMenu(void);
 extern void requestMusicSequenceBank(s32);
-extern CharacterSelectMenuState *gCurrentInputTask;
+extern CharacterSelectMenuState *gCurrentGameTask;
 extern CharacterSelectState gCharacterSelectHudState;
 extern CharacterId gCharacterSelectIdOrder[];
 extern CharacterSelectPlayer D_80121D80[];
@@ -106,9 +106,9 @@ void initCharacterSelectMenu(void) {
         gFramebufferSwapDelay = 0;
         D_800EC9C1 = 0;
         D_8010ADF8 = 0;
-        gCurrentInputTask->fade = 0xFF;
-        gCurrentInputTask->timer = 0;
-        gMenuFadeAlpha = gCurrentInputTask->fade;
+        gCurrentGameTask->fade = 0xFF;
+        gCurrentGameTask->timer = 0;
+        gMenuFadeAlpha = gCurrentGameTask->fade;
         loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x21);
         loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
         loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
@@ -138,7 +138,7 @@ loop_1:
             } while (i < playerCount);
         }
     } else {
-        gCurrentInputTask->fade = 1;
+        gCurrentGameTask->fade = 1;
         gMenuFadeAlpha = 1;
         playerCount = gPlayerCount;
         i = 0;
@@ -162,7 +162,7 @@ loop_1:
     D_8010ADE0 = createCallbackTask(func_80018060, 0, 0x64);
     createCallbackTask(func_80018B6C, 0, 0x64);
     D_8010ADE4 = createCallbackTask(func_80017D08, 0, 0x63);
-    setCurrentInputTaskCallback(updateCharacterSelectMenu, 0);
+    setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
 
     playerCount = gPlayerCount;
     if (playerCount > 0) {
@@ -243,7 +243,7 @@ void updateCharacterSelectConfirmationMenu(void) {
             enqueueSoundEffect(0x18, 0x32);
             state = &gCharacterSelectHudState;
             if (state->confirmSelection == 0) {
-                setCurrentInputTaskCallback(fadeOutCharacterSelectMenu, 0);
+                setCurrentGameTaskCallback(fadeOutCharacterSelectMenu, 0);
                 state = &gCharacterSelectHudState;
                 state->cursorX = 0x8C;
                 state->cursorY = 0x44;
@@ -261,7 +261,7 @@ void updateCharacterSelectConfirmationMenu(void) {
                         readyPtr[2] = 0;
                     } while ((u32) readyPtr < (u32) readyEnd);
                 }
-                setCurrentInputTaskCallback(updateCharacterSelectMenu, 0);
+                setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
                 state = &gCharacterSelectHudState;
                 state->phase = 3;
                 state->fade = 0;
@@ -280,7 +280,7 @@ void updateCharacterSelectConfirmationMenu(void) {
                     readyPtr[2] = 0;
                 } while ((u32) readyPtr < (u32) readyEnd);
             }
-            setCurrentInputTaskCallback(updateCharacterSelectMenu, 0);
+            setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
             state = &gCharacterSelectHudState;
             state->phase = 3;
             state->fade = 0;
@@ -291,9 +291,9 @@ void updateCharacterSelectConfirmationMenu(void) {
 #endif
 
 void fadeOutCharacterSelectMenu(void) {
-    if (gCurrentInputTask->fade != 0xFF) {
-        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 1);
-        if (gCurrentInputTask->fade == 0xFF) {
+    if (gCurrentGameTask->fade != 0xFF) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 1);
+        if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();
@@ -304,8 +304,8 @@ void fadeOutCharacterSelectMenu(void) {
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
             D_801235B4 = 0;
-            resumeInputTask(2);
-            removeInputTask(4);
+            resumeGameTask(2);
+            removeGameTask(4);
         }
     }
 }

@@ -4,7 +4,7 @@
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_scene_loader.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "race_camera.h"
 #include "race_player_state.h"
 #include "race_timer_ui.h"
@@ -29,7 +29,7 @@ typedef struct {
     u8 bytes[0x60C];
 } RaceInputRecord;
 
-extern RaceIntroTransitionState *gCurrentInputTask;
+extern RaceIntroTransitionState *gCurrentGameTask;
 extern RaceIntroPlayer D_80121D80[];
 extern s16 gMenuFadeAlpha;
 extern s8 D_800DEF10;
@@ -165,25 +165,25 @@ void func_8003ED00(void) {
     func_8008BEB0();
     func_80078430();
     initRaceCourseEffects();
-    setCurrentInputTaskCallback(func_8003EF7C, 0);
+    setCurrentGameTaskCallback(func_8003EF7C, 0);
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
-    gCurrentInputTask->fadeDelay = 0x4A1;
-    gCurrentInputTask->fadeStep = 0;
-    gCurrentInputTask->courseSegment = 0;
-    gCurrentInputTask->startDelay = 0x14;
+    gCurrentGameTask->fadeDelay = 0x4A1;
+    gCurrentGameTask->fadeStep = 0;
+    gCurrentGameTask->courseSegment = 0;
+    gCurrentGameTask->startDelay = 0x14;
     D_8010B1E1 = 0;
     D_8010B1E0 = 0;
 }
 #endif
 
 void func_8003EF7C(void) {
-    gCurrentInputTask->startDelay--;
-    if (gCurrentInputTask->startDelay == 0) {
+    gCurrentGameTask->startDelay--;
+    if (gCurrentGameTask->startDelay == 0) {
         configureViewport(0, 0xA0, 0x78, 0x120, 0, 0x140, 0xF0, 1.333333373f);
         gMenuFadeAlpha = 0;
         requestMusicSequenceBank(0);
-        setCurrentInputTaskCallback(func_8003F00C, 0);
+        setCurrentGameTaskCallback(func_8003F00C, 0);
     }
 }
 
@@ -222,13 +222,13 @@ void func_8003F00C(void) {
         }
     }
 
-    state = gCurrentInputTask;
+    state = gCurrentGameTask;
     fadeStep = state->fadeStep;
     if (fadeStep == D_800BB890[state->courseSegment]) {
         i = 0;
         do {
             dst = (u8 *)D_80121D80 + i;
-            offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
+            offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
             src = D_800BB8F4 + offset + i;
             value = *src;
             i++;
@@ -238,7 +238,7 @@ void func_8003F00C(void) {
         i = 0;
         do {
             dst = (u8 *)D_8012238C + i;
-            offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
+            offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
             src = D_800BB8F4 + offset + 0x60C0 + i;
             value = *src;
             i++;
@@ -248,7 +248,7 @@ void func_8003F00C(void) {
         i = 0;
         do {
             dst = (u8 *)D_80122998 + i;
-            offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
+            offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
             src = D_800BB8F4 + offset + 0xC180 + i;
             value = *src;
             i++;
@@ -258,28 +258,28 @@ void func_8003F00C(void) {
         i = 0;
 copy_player3:
         fourDst = (FourBytes *)((u8 *)D_80122FA4 + i);
-        offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
+        offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
         fourDst->b0 = D_800BB8F4[offset + 0x12240 + i];
-        offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
+        offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
         fourDst->b1 = D_800BB8F4[offset + 0x12241 + i];
-        offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
+        offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
         fourDst->b2 = D_800BB8F4[offset + 0x12242 + i];
-        offset = COURSE_REPLAY_OFFSET(gCurrentInputTask->courseSegment);
+        offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
         fourDst->b3 = D_800BB8F4[offset + 0x12243 + i];
         i += 4;
         if (i != 0x60C) {
             goto copy_player3;
         }
 
-        gCurrentInputTask->courseSegment++;
-        state = gCurrentInputTask;
+        gCurrentGameTask->courseSegment++;
+        state = gCurrentGameTask;
         fadeStep = state->fadeStep;
     }
 
     temp = state->startDelay;
     if (fadeStep == D_800BB8B0[temp]) {
         func_8006D520(0, D_800BB8DC[temp]);
-        gCurrentInputTask->startDelay++;
+        gCurrentGameTask->startDelay++;
         gRaceUpdatePaused = 1;
     }
 
@@ -290,8 +290,8 @@ copy_player3:
     gRaceUpdatePaused = prevOpen;
     func_8006D700();
 
-    gCurrentInputTask->fadeStep++;
-    state = gCurrentInputTask;
+    gCurrentGameTask->fadeStep++;
+    state = gCurrentGameTask;
     temp = state->fadeDelay;
     if (temp != 0) {
         state->fadeDelay = temp - 1;
@@ -304,7 +304,7 @@ copy_player3:
         requestMusicSequenceStop(0x20);
     }
 
-    if (gCurrentInputTask->fadeDelay < 0x41) {
+    if (gCurrentGameTask->fadeDelay < 0x41) {
         if (D_8010B1E1 == 0) {
             D_8010B1E1 = 4;
         }
@@ -320,7 +320,7 @@ copy_player3:
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentInputTaskCallback(func_8003F4B4, 0);
+        setCurrentGameTaskCallback(func_8003F4B4, 0);
     }
 }
 #endif
@@ -334,7 +334,7 @@ void func_8003F4B4(void) {
         gFramebufferSwapDelay = 0;
         stopSoundEffects();
         D_801235B4 = 0;
-        resumeInputTask(3);
-        removeInputTask(4);
+        resumeGameTask(3);
+        removeGameTask(4);
     }
 }

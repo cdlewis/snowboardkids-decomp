@@ -3,7 +3,7 @@
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "menu_rendering.h"
 #include "player_select_menu.h"
 #include "player_select_ui.h"
@@ -37,7 +37,7 @@ extern u8 D_59E7F0[];
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
 
-extern PlayerSelectMenuState *gCurrentInputTask;
+extern PlayerSelectMenuState *gCurrentGameTask;
 extern PlayerSelectCursorState D_8010AE70;
 extern u8 D_800EC9C1;
 extern u8 D_800EC9C2;
@@ -53,18 +53,18 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
 void func_80005540(void) {
-    gCurrentInputTask->fade = 1;
+    gCurrentGameTask->fade = 1;
     requestMusicSequenceBank(1);
     D_800EC9C1 = 0;
     D_80121D88 = 0;
     D_8010ADDC = 0;
-    gCurrentInputTask->timer = 0;
+    gCurrentGameTask->timer = 0;
     D_801235B4 = 0;
     D_8010ADF8 = 0;
     D_800EC9DD = 0;
     D_8010ADF0 = 0;
-    gMenuFadeAlpha = gCurrentInputTask->fade;
-    setCurrentInputTaskCallback(func_80005788, 0);
+    gMenuFadeAlpha = gCurrentGameTask->fade;
+    setCurrentGameTaskCallback(func_80005788, 0);
     D_8010AE70.state = 0;
     D_8010AE70.nextState = 0;
     updateCallbackTasks();
@@ -77,7 +77,7 @@ void func_800055EC(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferSwapDelay = 0;
-    gCurrentInputTask->fade = 0xFF;
+    gCurrentGameTask->fade = 0xFF;
     loadCompressedRomAsset(D_5A1ED0, D_5C5320, 0x21);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
     loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
@@ -89,11 +89,11 @@ void func_800055EC(void) {
     D_800EC9C1 = 0;
     D_80121D88 = 0;
     D_8010ADDC = 0;
-    gCurrentInputTask->timer = 0;
+    gCurrentGameTask->timer = 0;
     D_8010ADF8 = 0;
     D_8010ADF0 = 0;
-    gMenuFadeAlpha = gCurrentInputTask->fade;
-    setCurrentInputTaskCallback(func_80005788, 0);
+    gMenuFadeAlpha = gCurrentGameTask->fade;
+    setCurrentGameTaskCallback(func_80005788, 0);
     D_8010AE70.state = 0;
     D_8010AE70.nextState = 0;
     updateCallbackTasks();
@@ -114,9 +114,9 @@ void func_80005788(void) {
     s32 tempSelection;
     u8 waitTimer;
 
-    if (gCurrentInputTask->fade != 0) {
-        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 0);
-        if (gCurrentInputTask->fade == 0) {
+    if (gCurrentGameTask->fade != 0) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
+        if (gCurrentGameTask->fade == 0) {
             createCallbackTask(func_8001952C, 0, 0x63);
         }
     } else {
@@ -208,7 +208,7 @@ void func_80005788(void) {
         }
 
         if (D_80121D88 == 2) {
-            setCurrentInputTaskCallback(func_80005B14, 0);
+            setCurrentGameTaskCallback(func_80005B14, 0);
             if (D_8010ADF8 == 0) {
                 requestMusicSequenceStop(4);
             }
@@ -224,18 +224,18 @@ void func_80005B14(void) {
 
     v0 = D_800EC9C2;
     if ((v0 == 0 || v0 == 2) && D_8010ADF8 == 0) {
-        setCurrentInputTaskCallback(initCharacterSelectCourseMenuFromPlayerSelect, 0);
+        setCurrentGameTaskCallback(initCharacterSelectCourseMenuFromPlayerSelect, 0);
         D_801235B4 = 0;
     } else {
-        setCurrentInputTaskCallback(func_80005B80, 0);
+        setCurrentGameTaskCallback(func_80005B80, 0);
     }
     updateCallbackTasks();
 }
 
 void func_80005B80(void) {
-    if (gCurrentInputTask->fade != 0xFF) {
-        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 1);
-        if (gCurrentInputTask->fade == 0xFF) {
+    if (gCurrentGameTask->fade != 0xFF) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 1);
+        if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();
@@ -250,8 +250,8 @@ void func_80005B80(void) {
             } else {
                 D_801235B4 = 0;
             }
-            resumeInputTask(2);
-            removeInputTask(4);
+            resumeGameTask(2);
+            removeGameTask(4);
         }
     }
 }

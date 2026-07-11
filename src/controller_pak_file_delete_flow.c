@@ -5,7 +5,7 @@
 #include "controller_pak_file_delete_flow.h"
 #include "controller_pak_menu.h"
 #include "controller_pak_ui.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "main_menu.h"
 #include "menu_rendering.h"
 #include "viewport_manager.h"
@@ -15,7 +15,7 @@ extern void releaseMenuAssetHandles(void);
 
 extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakFileEntry gControllerPakFileEntries[];
-extern CharacterSelectFlowState *gCurrentInputTask;
+extern CharacterSelectFlowState *gCurrentGameTask;
 extern s8 gFramebufferSwapDelay;
 extern u8 D_800EC9D8;
 extern u8 gControllerPakMenuCursorState;
@@ -42,20 +42,20 @@ extern u8 D_60F990;
 void initControllerPakFileDeleteFlow(void) {
     func_80000C48(0);
     if (D_800EC9C8 != 1) {
-        setCurrentInputTaskCallback(fadeOutControllerPakFileDeleteFlow, 0);
+        setCurrentGameTaskCallback(fadeOutControllerPakFileDeleteFlow, 0);
         return;
     }
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferSwapDelay = 0;
-    gCurrentInputTask->fade = 0;
-    gCurrentInputTask->timer = 0;
+    gCurrentGameTask->fade = 0;
+    gCurrentGameTask->timer = 0;
     D_801235B4 = 0;
     D_800EC9D8 = 0;
     gControllerPakFreeBytes = 0;
     gControllerPakFreeFileCount = 0;
     gRaceRumbleEnabled = 0;
-    gMenuFadeAlpha = gCurrentInputTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->fade;
     loadCompressedRomAsset(&D_5DFDD0, &D_5E0350, 0x21);
     loadCompressedRomAsset(&D_593D10, &D_598A70, 0x22);
     loadCompressedRomAsset(&D_598A70, &D_59AAA0, 0x23);
@@ -76,7 +76,7 @@ void initControllerPakFileDeleteFlow(void) {
     gControllerPakMenuState.isEdgeScroll = 0;
     requestControllerPakFileList();
     requestControllerPakFreeSpaceUpdate();
-    setCurrentInputTaskCallback(updateControllerPakFileDeleteMainOptions, 0);
+    setCurrentGameTaskCallback(updateControllerPakFileDeleteMainOptions, 0);
 }
 
 void updateControllerPakFileDeleteMainOptions(void) {
@@ -90,9 +90,9 @@ void updateControllerPakFileDeleteMainOptions(void) {
     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.mainChoice == 1) {
-            setCurrentInputTaskCallback(fadeOutControllerPakFileDeleteFlow, 0);
+            setCurrentGameTaskCallback(fadeOutControllerPakFileDeleteFlow, 0);
         } else {
-            setCurrentInputTaskCallback(updateControllerPakFileDeleteFileList, 0);
+            setCurrentGameTaskCallback(updateControllerPakFileDeleteFileList, 0);
             gControllerPakMenuState.state = 1;
             gControllerPakMenuState.isEdgeScroll = 0;
         }
@@ -138,12 +138,12 @@ void updateControllerPakFileDeleteFileList(void) {
     if (((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x4000, ((gPlayerInputPressed & 0x1000) != 0))) &&
         (gPlayerInputPressed & 0x4000, (gControllerPakFileEntries[gControllerPakMenuState.fileIndex].exists != 0))) {
         enqueueSoundEffect(0x18, 0x32);
-        setCurrentInputTaskCallback(updateControllerPakFileDeleteConfirm, 0);
+        setCurrentGameTaskCallback(updateControllerPakFileDeleteConfirm, 0);
         gControllerPakMenuState.state = 2;
         gControllerPakMenuState.confirmChoice = 1;
     } else if ((gPlayerInputPressed & 0x4000) != 0) {
         enqueueSoundEffect(0x18, 0x32);
-        setCurrentInputTaskCallback(updateControllerPakFileDeleteMainOptions, 0);
+        setCurrentGameTaskCallback(updateControllerPakFileDeleteMainOptions, 0);
         gControllerPakMenuState.state = 0;
     }
     updateCallbackTasks();
@@ -161,16 +161,16 @@ void updateControllerPakFileDeleteConfirm(void) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
             createCallbackTask(&initControllerPakDeleteConfirmPrompt, 0, 0x64);
-            setCurrentInputTaskCallback(updateControllerPakFileDeletePrompt, 0);
+            setCurrentGameTaskCallback(updateControllerPakFileDeletePrompt, 0);
             gControllerPakMenuState.state = 3;
             gControllerPakMenuState.confirmChoice = 1;
         } else {
-            setCurrentInputTaskCallback(updateControllerPakFileDeleteFileList, 0);
+            setCurrentGameTaskCallback(updateControllerPakFileDeleteFileList, 0);
             gControllerPakMenuState.state = 1;
         }
     } else if (gPlayerInputPressed & 0x4000) {
         enqueueSoundEffect(0x18, 0x32);
-        setCurrentInputTaskCallback(updateControllerPakFileDeleteFileList, 0);
+        setCurrentGameTaskCallback(updateControllerPakFileDeleteFileList, 0);
         gControllerPakMenuState.state = 1;
     }
     updateCallbackTasks();
@@ -192,22 +192,22 @@ void updateControllerPakFileDeletePrompt(void) {
                 gControllerPakFileEntries[gControllerPakMenuState.fileIndex].exists = 0;
                 requestControllerPakFileList();
                 requestControllerPakFreeSpaceUpdate();
-                setCurrentInputTaskCallback(updateControllerPakFileDeleteFileList, 0);
+                setCurrentGameTaskCallback(updateControllerPakFileDeleteFileList, 0);
                 gControllerPakMenuState.state = 1;
             } else {
                 createCallbackTask(initControllerPakFileDeleteErrorPrompt, 0, 0x64);
                 gControllerPakMenuState.unk6 = 0;
                 gControllerPakMenuState.state = 4;
-                setCurrentInputTaskCallback(updateControllerPakFileDeleteErrorPrompt, 0);
+                setCurrentGameTaskCallback(updateControllerPakFileDeleteErrorPrompt, 0);
             }
         } else {
-            setCurrentInputTaskCallback(updateControllerPakFileDeleteConfirm, 0);
+            setCurrentGameTaskCallback(updateControllerPakFileDeleteConfirm, 0);
             gControllerPakMenuState.state = 2;
             gControllerPakMenuState.confirmChoice = 0;
         }
     } else if (gPlayerInputPressed & 0x4000) {
         enqueueSoundEffect(0x18, 0x32);
-        setCurrentInputTaskCallback(updateControllerPakFileDeleteConfirm, 0);
+        setCurrentGameTaskCallback(updateControllerPakFileDeleteConfirm, 0);
         gControllerPakMenuState.state = 2;
         gControllerPakMenuState.confirmChoice = 0;
     }
@@ -227,16 +227,16 @@ void updateControllerPakFileDeleteErrorPrompt(void) {
     }
     if (state == 3) {
         D_800EC9D8 = 0;
-        setCurrentInputTaskCallback(&updateControllerPakFileDeleteFileList, 0);
+        setCurrentGameTaskCallback(&updateControllerPakFileDeleteFileList, 0);
         gControllerPakMenuCursorState = 1;
     }
     updateCallbackTasks();
 }
 
 void fadeOutControllerPakFileDeleteFlow(void) {
-    if (gCurrentInputTask->fade != 0xFF) {
-        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 1);
-        if (gCurrentInputTask->fade == 0xFF) {
+    if (gCurrentGameTask->fade != 0xFF) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 1);
+        if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();
@@ -246,8 +246,8 @@ void fadeOutControllerPakFileDeleteFlow(void) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
-            resumeInputTask(0);
-            removeInputTask(4);
+            resumeGameTask(0);
+            removeGameTask(4);
         }
     }
 }

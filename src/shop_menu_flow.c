@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
 #include "controller_pak_ui.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "menu_rendering.h"
 #include "shop_menu_flow.h"
 #include "viewport_manager.h"
@@ -17,7 +17,7 @@ typedef struct {
 extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 
-extern CharacterSelectFlowState *gCurrentInputTask;
+extern CharacterSelectFlowState *gCurrentGameTask;
 extern ShopMenuPromptTransition gControllerPakContinuePromptTransition;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
@@ -37,8 +37,8 @@ void func_8000C280(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferSwapDelay = 0;
-    gCurrentInputTask->fade = 0xFF;
-    gCurrentInputTask->timer = 0;
+    gCurrentGameTask->fade = 0xFF;
+    gCurrentGameTask->timer = 0;
     D_801235B4 = 0;
     gControllerPakContinuePromptTransition.state = 0;
     gControllerPakContinuePromptTransition.x = 0x100;
@@ -48,17 +48,17 @@ void func_8000C280(void) {
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x29);
     initCallbackTaskScheduler(0);
     createCallbackTask(initControllerPakContinuePrompt, 0, 0x64);
-    gMenuFadeAlpha = gCurrentInputTask->fade;
-    setCurrentInputTaskCallback(func_8000C3C8, 0);
+    gMenuFadeAlpha = gCurrentGameTask->fade;
+    setCurrentGameTaskCallback(func_8000C3C8, 0);
     updateCallbackTasks();
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_flow/func_8000C3C8.s")
 
 void func_8000C52C(void) {
-    if (gCurrentInputTask->fade != 0xFF) {
-        gCurrentInputTask->fade = stepMenuFadeAlpha((s16) gCurrentInputTask->fade, 0x24, 1);
-        if (gCurrentInputTask->fade == 0xFF) {
+    if (gCurrentGameTask->fade != 0xFF) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 1);
+        if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
             gControllerPakContinuePromptTransition.state = 3;
         } else {
@@ -69,8 +69,8 @@ void func_8000C52C(void) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
-            resumeInputTask(2);
-            removeInputTask(4);
+            resumeGameTask(2);
+            removeGameTask(4);
         }
     }
 }

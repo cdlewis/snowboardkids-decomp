@@ -145,7 +145,7 @@ extern CourseSelectRacePlayer D_80121D80[];
 extern u8 D_80121D86[][sizeof(CourseSelectRacePlayer)];
 extern u8 D_80121D88;
 extern s32 D_801235B4;
-extern CourseSelectState *gCurrentInputTask;
+extern CourseSelectState *gCurrentGameTask;
 extern s32 D_80124868;
 extern s32 D_80124898;
 extern u8 gCurrentViewportIndex;
@@ -278,7 +278,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                     }
                     actor->state[i] = 2;
                     state = 2;
-                } else if (gCurrentInputTask->screenState == 9) {
+                } else if (gCurrentGameTask->screenState == 9) {
                     actor->state[i] = 8;
                     state = 8;
                 }
@@ -333,7 +333,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                 if (D_80121D80[i].pad6[2] == 3) {
                     actor->state[i] = 5;
                     state = 5;
-                } else if (gCurrentInputTask->screenState == 9) {
+                } else if (gCurrentGameTask->screenState == 9) {
                     actor->state[i] = 8;
                     state = 8;
                 }
@@ -558,7 +558,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                     }
                     actor->state[i] = 2;
                     state = 2;
-                } else if (gCurrentInputTask->screenState == 9) {
+                } else if (gCurrentGameTask->screenState == 9) {
                     actor->state[i] = 8;
                     state = 8;
                 }
@@ -616,7 +616,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                 if (((u8 *)&D_80121D80[i])[8] == 3) {
                     actor->state[i] = 5;
                     state = 5;
-                } else if (gCurrentInputTask->screenState == 9) {
+                } else if (gCurrentGameTask->screenState == 9) {
                     actor->state[i] = 8;
                     state = 8;
                 }
@@ -625,7 +625,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                 actor->vecs[i].x += 0x200000;
                 if (actor->vecs[i].x == 0xC00000) {
                     actor->state[i] = 9;
-                    gCurrentInputTask->screenState = 0xB;
+                    gCurrentGameTask->screenState = 0xB;
                 }
                 state = actor->state[i];
                 break;
@@ -980,7 +980,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
                     actor->coordinates[i + 8] = 0x100;
                     statePtr->unk34 = 0;
                 }
-                if (gCurrentInputTask->screenState == 9) {
+                if (gCurrentGameTask->screenState == 9) {
                     statePtr->unk30 = 4;
                 }
                 state = statePtr->unk30;
@@ -1069,10 +1069,10 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     s32 forceState;
 
     forceState = 3;
-    screenState = gCurrentInputTask->screenState;
+    screenState = gCurrentGameTask->screenState;
     if (screenState == 1) {
         arg0->pad18[4] = 2;
-        screenState = gCurrentInputTask->screenState;
+        screenState = gCurrentGameTask->screenState;
     }
     if ((forceState == screenState) && (arg0->pad18[4] < 5)) {
         arg0->pad18[4] = 5;
@@ -1101,16 +1101,16 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     case 2:
         arg0->x -= 0x20;
         if (arg0->x < -0x10D) {
-            if (gCurrentInputTask->screenState != 0) {
+            if (gCurrentGameTask->screenState != 0) {
                 arg0->pad18[4] = 4;
-                gCurrentInputTask->screenState = 2;
+                gCurrentGameTask->screenState = 2;
             } else {
                 arg0->pad18[4] = 3;
             }
         }
         break;
     case 4:
-        if (gCurrentInputTask->screenState == 9) {
+        if (gCurrentGameTask->screenState == 9) {
             arg0->pad18[4] = 3;
         }
         break;
@@ -1122,11 +1122,11 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
         }
         break;
     case 6:
-        gCurrentInputTask->screenState = 4;
+        gCurrentGameTask->screenState = 4;
         arg0->pad18[4] = 7;
         break;
     case 7:
-        gCurrentInputTask->screenState = 5;
+        gCurrentGameTask->screenState = 5;
         arg0->pad18[4] = 1;
         break;
     }
@@ -1318,7 +1318,7 @@ void updateCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
         if (D_80121D88 == 3) {
             arg0->transitionState = 2;
         }
-        if (gCurrentInputTask->screenState == 9) {
+        if (gCurrentGameTask->screenState == 9) {
             arg0->transitionState = 4;
         }
         state = arg0->transitionState;
@@ -1524,10 +1524,10 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     s32 temp_a0;
 
     temp_a0 = 3;
-    screenState = gCurrentInputTask->screenState;
+    screenState = gCurrentGameTask->screenState;
     if (screenState == 1) {
         arg0->pad18_2[6] = 2;
-        screenState = gCurrentInputTask->screenState;
+        screenState = gCurrentGameTask->screenState;
     }
     if ((temp_a0 == screenState) && (arg0->pad18_2[6] < 5)) {
         arg0->pad18_2[6] = 5;
@@ -1549,7 +1549,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     case 2:
         arg0->coordinates[0] -= 0x20;
         if (arg0->coordinates[0] < -0xFF) {
-            if (gCurrentInputTask->screenState != 0) {
+            if (gCurrentGameTask->screenState != 0) {
                 arg0->pad18_2[6] = 4;
             } else {
                 arg0->pad18_2[6] = 3;
@@ -1557,7 +1557,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         }
         break;
     case 4:
-        if (gCurrentInputTask->screenState == 9) {
+        if (gCurrentGameTask->screenState == 9) {
             arg0->pad18_2[6] = 3;
         }
         break;
@@ -1569,7 +1569,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         }
         break;
     case 6:
-        if (gCurrentInputTask->screenState == 4) {
+        if (gCurrentGameTask->screenState == 4) {
             arg0->pad18_2[6] = 1;
         }
         break;
@@ -1631,7 +1631,7 @@ void updateCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
         state = arg0->state;
         break;
     case 1:
-        if ((D_80121D88 == 3) || (gCurrentInputTask->screenState == 9)) {
+        if ((D_80121D88 == 3) || (gCurrentGameTask->screenState == 9)) {
             state = (arg0->state = 2);
         }
         break;
@@ -1747,7 +1747,7 @@ void updateCourseSelectExtraCourseIconListIn(CourseSelectWidgetActor *arg0) {
                 var_v0 = (CourseSelectWidgetActor *)((u8 *)var_v0 + sizeof(s16));
             } while (var_v1 < (s32)temp_a1->itemCount);
         }
-    } else if (gCurrentInputTask->screenState == 4) {
+    } else if (gCurrentGameTask->screenState == 4) {
         setCallbackTaskCallback(temp_a2, updateCourseSelectExtraCourseIconList);
     }
     func_800483FC(&D_80124868, drawCourseSelectExtraCourseIconList, temp_a2);
@@ -1774,12 +1774,12 @@ void updateCourseSelectExtraCourseIconListOut(CourseSelectWidgetActor *arg0) {
         if (var_v0 < -0xE7) {
             arg0->x = -0xE8;
         }
-        var_v0_3 = gCurrentInputTask->screenState;
+        var_v0_3 = gCurrentGameTask->screenState;
     } else {
-        var_v0_3 = gCurrentInputTask->screenState;
+        var_v0_3 = gCurrentGameTask->screenState;
         if (var_v0_3 == 3) {
             setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseIconListIn);
-            var_v0_3 = gCurrentInputTask->screenState;
+            var_v0_3 = gCurrentGameTask->screenState;
         }
     }
     if (var_v0_3 == 9) {

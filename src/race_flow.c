@@ -11,7 +11,7 @@
 #include "controller_pak_file_delete_flow.h"
 #include "course_select_menu.h"
 #include "player_setup_menu.h"
-#include "input_task_scheduler.h"
+#include "game_task_scheduler.h"
 #include "main_menu.h"
 #include "main_menu_overlay_effects.h"
 #include "main_menu_panel_ui.h"
@@ -163,7 +163,7 @@ typedef struct {
 extern CourseGridEntry *D_800DC490[];
 extern u16 D_800DC5C0[];
 extern CourseSelectTableEntry D_800B9542[];
-extern RaceFlowState *gCurrentInputTask;
+extern RaceFlowState *gCurrentGameTask;
 extern RacePlayerState D_80121D80[];
 extern s32 D_80121B40;
 extern s32 D_80121B44;
@@ -260,44 +260,44 @@ extern void enqueueSoundEffect(s32, s32);
 void func_80072C30(void) {
     loadCompressedRomAsset(D_2427D0, D_243270, 6);
     initCallbackTaskScheduler(0);
-    gCurrentInputTask->fadeTimer = 0xA;
-    setCurrentInputTaskCallback(&func_80072C88, 0);
+    gCurrentGameTask->fadeTimer = 0xA;
+    setCurrentGameTaskCallback(&func_80072C88, 0);
 }
 
 void func_80072C88(void) {
-    gCurrentInputTask->fadeTimer -= 1;
-    if (gCurrentInputTask->fadeTimer == 0) {
+    gCurrentGameTask->fadeTimer -= 1;
+    if (gCurrentGameTask->fadeTimer == 0) {
         func_80000A40(0);
         func_80000A40(1);
         func_80000A40(2);
         func_80000A40(3);
-        setCurrentInputTaskCallback(&func_80072D04, 0);
+        setCurrentGameTaskCallback(&func_80072D04, 0);
     }
 }
 
 void func_80072D04(void) {
     if (gPlayerInputHeld & 0x1000) {
-        setCurrentInputTaskCallback(&func_80072D54, 0);
+        setCurrentGameTaskCallback(&func_80072D54, 0);
     } else {
-        setCurrentInputTaskCallback(&func_80072D98, 0);
+        setCurrentGameTaskCallback(&func_80072D98, 0);
     }
 }
 
 void func_80072D54(void) {
-    setCurrentInputTaskCallback(&func_80072D98, 0);
-    createInputTask(4, &initControllerPakFileDeleteFlow, 0x64);
-    suspendInputTask(0);
+    setCurrentGameTaskCallback(&func_80072D98, 0);
+    createGameTask(4, &initControllerPakFileDeleteFlow, 0x64);
+    suspendGameTask(0);
 }
 
 void func_80072D98(void) {
-    setCurrentInputTaskCallback(&func_80072DDC, 0);
-    createInputTask(4, &initControllerPakReplaySaveMessageFlow, 0x64);
-    suspendInputTask(0);
+    setCurrentGameTaskCallback(&func_80072DDC, 0);
+    createGameTask(4, &initControllerPakReplaySaveMessageFlow, 0x64);
+    suspendGameTask(0);
 }
 
 void func_80072DDC(void) {
-    createInputTask(3, &func_80001C30, 0x64);
-    removeInputTask(0);
+    createGameTask(3, &func_80001C30, 0x64);
+    removeGameTask(0);
 }
 
 void func_80072E10(void) {
@@ -434,79 +434,79 @@ void func_80073140(void) {
     D_80121B50.s = 0;
     D_800EC9C2 = 0;
     D_80121B58 = 0;
-    setCurrentInputTaskCallback(func_800732C4, 0);
+    setCurrentGameTaskCallback(func_800732C4, 0);
 }
 
 void func_800732C4(void) {
-    setCurrentInputTaskCallback(&func_8007334C, 0);
-    createInputTask(4, &initPlayerSetupMenu, 0x64);
-    suspendInputTask(2);
+    setCurrentGameTaskCallback(&func_8007334C, 0);
+    createGameTask(4, &initPlayerSetupMenu, 0x64);
+    suspendGameTask(2);
 }
 
 void func_80073308(void) {
-    setCurrentInputTaskCallback(&func_8007334C, 0);
-    createInputTask(4, &initCharacterSelectMenu, 0x64);
-    suspendInputTask(2);
+    setCurrentGameTaskCallback(&func_8007334C, 0);
+    createGameTask(4, &initCharacterSelectMenu, 0x64);
+    suspendGameTask(2);
 }
 
 void func_8007334C(void) {
     if (gPlayerCount >= 2) {
-        setCurrentInputTaskCallback(&func_8007339C, 0);
+        setCurrentGameTaskCallback(&func_8007339C, 0);
     } else {
-        setCurrentInputTaskCallback(&func_800734A0, 0);
+        setCurrentGameTaskCallback(&func_800734A0, 0);
     }
 }
 
 void func_8007339C(void) {
-    setCurrentInputTaskCallback(&func_800733E0, 0);
-    createInputTask(4, &initCharacterSelectCourseMenuFromPlayerSelect, 0x64);
-    suspendInputTask(2);
+    setCurrentGameTaskCallback(&func_800733E0, 0);
+    createGameTask(4, &initCharacterSelectCourseMenuFromPlayerSelect, 0x64);
+    suspendGameTask(2);
 }
 
 void func_800733E0(void) {
     if (D_801235B4 == 0) {
-        setCurrentInputTaskCallback(&func_80073738, 0);
+        setCurrentGameTaskCallback(&func_80073738, 0);
     } else {
         D_801235B4 = 0;
-        setCurrentInputTaskCallback(&func_80073308, 0);
+        setCurrentGameTaskCallback(&func_80073308, 0);
     }
 }
 
 void func_80073434(void) {
     if (D_800EC9C2 == 1) {
-        setCurrentInputTaskCallback(&func_800735F8, 0);
+        setCurrentGameTaskCallback(&func_800735F8, 0);
     } else {
-        setCurrentInputTaskCallback(&func_800734E4, 0);
+        setCurrentGameTaskCallback(&func_800734E4, 0);
     }
-    createInputTask(4, &initCharacterSelectCourseMenuFromRace, 0x64);
-    suspendInputTask(2);
+    createGameTask(4, &initCharacterSelectCourseMenuFromRace, 0x64);
+    suspendGameTask(2);
 }
 
 void func_800734A0(void) {
-    setCurrentInputTaskCallback(&func_800734E4, 0);
-    createInputTask(4, &func_800055EC, 0x64);
-    suspendInputTask(2);
+    setCurrentGameTaskCallback(&func_800734E4, 0);
+    createGameTask(4, &func_800055EC, 0x64);
+    suspendGameTask(2);
 }
 
 void func_800734E4(void) {
     if (D_801235B4 == 1) {
         D_801235B4 = 0;
-        setCurrentInputTaskCallback(&func_80073308, 0);
+        setCurrentGameTaskCallback(&func_80073308, 0);
         return;
     }
     switch (D_800EC9C2) {
     case 0:
     case 2:
-        setCurrentInputTaskCallback(&func_80073738, 0);
+        setCurrentGameTaskCallback(&func_80073738, 0);
         return;
     case 1:
-        setCurrentInputTaskCallback(&func_800735B4, 0);
+        setCurrentGameTaskCallback(&func_800735B4, 0);
         return;
     case 3:
-        setCurrentInputTaskCallback(&func_80073650, 0);
+        setCurrentGameTaskCallback(&func_80073650, 0);
         return;
     case 4:
-        setCurrentInputTaskCallback(&func_80073694, 0);
+        setCurrentGameTaskCallback(&func_80073694, 0);
         /* fallthrough */
     default:
         return;
@@ -514,58 +514,58 @@ void func_800734E4(void) {
 }
 
 void func_800735B4(void) {
-    setCurrentInputTaskCallback(&func_800735F8, 0);
-    createInputTask(4, &func_800086EC, 0x64);
-    suspendInputTask(2);
+    setCurrentGameTaskCallback(&func_800735F8, 0);
+    createGameTask(4, &func_800086EC, 0x64);
+    suspendGameTask(2);
 }
 
 void func_800735F8(void) {
     if (D_801235B4 == 1) {
         D_801235B4 = 0;
-        setCurrentInputTaskCallback(&func_800734A0, 0);
+        setCurrentGameTaskCallback(&func_800734A0, 0);
     } else {
-        setCurrentInputTaskCallback(&func_80073738, 0);
+        setCurrentGameTaskCallback(&func_80073738, 0);
     }
 }
 
 void func_80073650(void) {
-    setCurrentInputTaskCallback(&func_800734A0, 0);
-    createInputTask(4, &initCourseSelectMenu, 0x64);
-    suspendInputTask(2);
+    setCurrentGameTaskCallback(&func_800734A0, 0);
+    createGameTask(4, &initCourseSelectMenu, 0x64);
+    suspendGameTask(2);
 }
 
 void func_80073694(void) {
     gRumblePakConnectedMask = 0;
-    setCurrentInputTaskCallback(&func_800736E0, 0);
-    createInputTask(4, &initControllerPakRaceRecordSaveFlow, 0x64);
-    suspendInputTask(2);
+    setCurrentGameTaskCallback(&func_800736E0, 0);
+    createGameTask(4, &initControllerPakRaceRecordSaveFlow, 0x64);
+    suspendGameTask(2);
 }
 
 void func_800736E0(void) {
     if (D_801235B4 == 1) {
         D_801235B4 = 0;
-        setCurrentInputTaskCallback(&func_800734A0, 0);
+        setCurrentGameTaskCallback(&func_800734A0, 0);
     } else {
-        setCurrentInputTaskCallback(&func_800737FC, 0);
+        setCurrentGameTaskCallback(&func_800737FC, 0);
     }
 }
 
 void func_80073738(void) {
-    setCurrentInputTaskCallback(&func_8007377C, 0);
-    createInputTask(4, &initRaceCharacterSelectMenu, 0x64);
-    suspendInputTask(2);
+    setCurrentGameTaskCallback(&func_8007377C, 0);
+    createGameTask(4, &initRaceCharacterSelectMenu, 0x64);
+    suspendGameTask(2);
 }
 
 void func_8007377C(void) {
     if (D_801235B4 == 1) {
         D_801235B4 = 0;
         if (gPlayerCount >= 2) {
-            setCurrentInputTaskCallback(&func_8007339C, 0);
+            setCurrentGameTaskCallback(&func_8007339C, 0);
         } else {
-            setCurrentInputTaskCallback(&func_80073434, 0);
+            setCurrentGameTaskCallback(&func_80073434, 0);
         }
     } else {
-        setCurrentInputTaskCallback(&func_80077DA0, 0);
+        setCurrentGameTaskCallback(&func_80077DA0, 0);
     }
 }
 
@@ -575,37 +575,37 @@ void func_800737FC(void) {
     func_80000A40(2);
     func_80000A40(3);
     requestMusicSequenceStop(0);
-    createInputTask(3, &func_80001C30, 0x64);
-    removeInputTask(2);
+    createGameTask(3, &func_80001C30, 0x64);
+    removeGameTask(2);
 }
 
 void func_80073858(void) {
-    setCurrentInputTaskCallback(&func_8007389C, 0);
-    createInputTask(4, &func_8000C280, 0x64);
-    suspendInputTask(2);
+    setCurrentGameTaskCallback(&func_8007389C, 0);
+    createGameTask(4, &func_8000C280, 0x64);
+    suspendGameTask(2);
 }
 
 void func_8007389C(void) {
     if (D_801235B4 == 1) {
         D_801235B4 = 0;
-        setCurrentInputTaskCallback(&func_800737FC, 0);
+        setCurrentGameTaskCallback(&func_800737FC, 0);
     } else {
-        setCurrentInputTaskCallback(&func_80073308, 0);
+        setCurrentGameTaskCallback(&func_80073308, 0);
     }
 }
 
 void func_800738F4(void) {
-    setCurrentInputTaskCallback(&func_800734A0, 0);
+    setCurrentGameTaskCallback(&func_800734A0, 0);
     if (D_800DC4C0 != 0) {
-        createInputTask(4, &func_8000D340, 0x64);
-        suspendInputTask(2);
+        createGameTask(4, &func_8000D340, 0x64);
+        suspendGameTask(2);
     }
 }
 
 void func_80073944(void) {
-    setCurrentInputTaskCallback(&func_800738F4, 0);
-    createInputTask(4, &func_8003DFD0, 0x64);
-    suspendInputTask(2);
+    setCurrentGameTaskCallback(&func_800738F4, 0);
+    createGameTask(4, &func_8003DFD0, 0x64);
+    suspendGameTask(2);
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80073988.s")
@@ -614,12 +614,12 @@ void func_800740C0(void) {
     gMenuFadeAlpha -= 8;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
-        gCurrentInputTask->countdown--;
+        gCurrentGameTask->countdown--;
     }
-    if (gCurrentInputTask->countdown == 0) {
+    if (gCurrentGameTask->countdown == 0) {
         func_8006D520(0, 0x1E);
         requestMusicSequenceBank(5);
-        setCurrentInputTaskCallback(&func_80074160, 0);
+        setCurrentGameTaskCallback(&func_80074160, 0);
     }
     func_80077C94();
     D_801124B8 = 0xFF;
@@ -629,7 +629,7 @@ void func_80074160(void) {
     s32 temp_a0;
     RaceFlowState *state;
 
-    state = gCurrentInputTask;
+    state = gCurrentGameTask;
     temp_a0 = state->unk1C;
     if (temp_a0 >= 0x32) {
         D_800DEF10 = 1;
@@ -695,7 +695,7 @@ void func_80074160(void) {
                 gFramebufferSwapDelay = 1;
                 break;
             }
-            setCurrentInputTaskCallback(func_800747E8, 0);
+            setCurrentGameTaskCallback(func_800747E8, 0);
         }
     } else {
         state->unk1C = temp_a0 + 1;
@@ -718,7 +718,7 @@ void func_800747E8(void) {
     if (!(D_801235B4 & 1)) {
         D_800DEF10 = 0;
         requestCourseMusicSequence();
-        setCurrentInputTaskCallback(func_80074960, 0);
+        setCurrentGameTaskCallback(func_80074960, 0);
     }
 }
 
@@ -773,7 +773,7 @@ void func_80074960(void) {
                             gRaceUpdatePaused = 0;
                             gFramebufferSwapHold = 1;
                             enqueueSoundEffect(1, 0x32);
-                            setCurrentInputTaskCallback(func_80077B34, 0);
+                            setCurrentGameTaskCallback(func_80077B34, 0);
                             return;
                         }
                         if (valueTwo == input) {
@@ -781,7 +781,7 @@ void func_80074960(void) {
                             gRaceUpdatePaused = 0;
                             gFramebufferSwapHold = 1;
                             enqueueSoundEffect(1, 0x32);
-                            setCurrentInputTaskCallback(func_80077B34, 0);
+                            setCurrentGameTaskCallback(func_80077B34, 0);
                             return;
                         }
                     }
@@ -798,9 +798,9 @@ void func_80074960(void) {
     }
     func_80077C4C();
     if (func_80077D14() != 0) {
-        gCurrentInputTask->fadeTimer = 0x3C;
+        gCurrentGameTask->fadeTimer = 0x3C;
         gRaceRumbleEnabled = 0;
-        setCurrentInputTaskCallback(func_80074C5C, 0);
+        setCurrentGameTaskCallback(func_80074C5C, 0);
     }
 }
 
@@ -814,61 +814,61 @@ void func_80074C5C(void) {
 
     D_80121B57 = 0;
     func_80077C4C();
-    gCurrentInputTask->fadeTimer--;
-    if (gCurrentInputTask->fadeTimer == 0) {
+    gCurrentGameTask->fadeTimer--;
+    if (gCurrentGameTask->fadeTimer == 0) {
         D_801235B4 |= 8;
         switch (gPlayerCount) {
         case 3:
-            gCurrentInputTask->unk1C = 0;
-            bestPlayer = gCurrentInputTask->unk1C;
+            gCurrentGameTask->unk1C = 0;
+            bestPlayer = gCurrentGameTask->unk1C;
             value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
             if (RACE_PLAYER_RESULT_VALUE(1) < value) {
-                gCurrentInputTask->unk1C = 1;
-                bestPlayer = gCurrentInputTask->unk1C;
+                gCurrentGameTask->unk1C = 1;
+                bestPlayer = gCurrentGameTask->unk1C;
                 value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
             }
             if (RACE_PLAYER_RESULT_VALUE(2) < value) {
-                gCurrentInputTask->unk1C = 2;
-                bestPlayer = gCurrentInputTask->unk1C;
+                gCurrentGameTask->unk1C = 2;
+                bestPlayer = gCurrentGameTask->unk1C;
             }
-            gCurrentInputTask->unk1C = bestPlayer + 2;
-            setCurrentInputTaskCallback(func_800751C4, 0);
+            gCurrentGameTask->unk1C = bestPlayer + 2;
+            setCurrentGameTaskCallback(func_800751C4, 0);
             break;
         case 4:
-            gCurrentInputTask->unk1C = 0;
-            bestPlayer = gCurrentInputTask->unk1C;
+            gCurrentGameTask->unk1C = 0;
+            bestPlayer = gCurrentGameTask->unk1C;
             value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
             if (RACE_PLAYER_RESULT_VALUE(1) < value) {
-                gCurrentInputTask->unk1C = 1;
-                bestPlayer = gCurrentInputTask->unk1C;
+                gCurrentGameTask->unk1C = 1;
+                bestPlayer = gCurrentGameTask->unk1C;
                 value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
             }
             if (RACE_PLAYER_RESULT_VALUE(2) < value) {
-                gCurrentInputTask->unk1C = 2;
-                bestPlayer = gCurrentInputTask->unk1C;
+                gCurrentGameTask->unk1C = 2;
+                bestPlayer = gCurrentGameTask->unk1C;
                 value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
             }
             if (RACE_PLAYER_RESULT_VALUE(3) < value) {
-                gCurrentInputTask->unk1C = 3;
-                bestPlayer = gCurrentInputTask->unk1C;
+                gCurrentGameTask->unk1C = 3;
+                bestPlayer = gCurrentGameTask->unk1C;
             }
-            gCurrentInputTask->unk1C = bestPlayer + 5;
-            setCurrentInputTaskCallback(func_800751C4, 0);
+            gCurrentGameTask->unk1C = bestPlayer + 5;
+            setCurrentGameTaskCallback(func_800751C4, 0);
             break;
         case 2:
             if (RACE_PLAYER_RESULT_VALUE(0) < RACE_PLAYER_RESULT_VALUE(1)) {
-                gCurrentInputTask->unk1C = 0;
+                gCurrentGameTask->unk1C = 0;
                 D_8011233C = 0;
             } else {
-                gCurrentInputTask->unk1C = 1;
+                gCurrentGameTask->unk1C = 1;
                 D_8011228C = 0;
             }
-            gCurrentInputTask->fadeTimer = 0;
-            setCurrentInputTaskCallback(func_800751C4, 0);
+            gCurrentGameTask->fadeTimer = 0;
+            setCurrentGameTaskCallback(func_800751C4, 0);
             break;
         case 1:
-            gCurrentInputTask->fadeTimer = 0;
-            setCurrentInputTaskCallback(func_80076054, 0);
+            gCurrentGameTask->fadeTimer = 0;
+            setCurrentGameTaskCallback(func_80076054, 0);
             break;
         }
     }
@@ -892,7 +892,7 @@ void func_80074F50(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
     volatile s32 temp_t3;
     s32 temp_v0;
 
-    temp_v0 = gCurrentInputTask->fadeTimer;
+    temp_v0 = gCurrentGameTask->fadeTimer;
     sp2C = (((arg8 - arg1) * temp_v0) / 15) + arg1;
     sp28 = (((arg9 - arg2) * temp_v0) / 15) + arg2;
     temp_t0 = (((arg10 - arg3) * temp_v0) / 15) + arg3;
@@ -909,12 +909,12 @@ void func_80074F50(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
 #endif
 
 void func_800751C4(void) {
-    gCurrentInputTask->fadeTimer += 1;
-    switch (gCurrentInputTask->unk1C) {
+    gCurrentGameTask->fadeTimer += 1;
+    switch (gCurrentGameTask->unk1C) {
     case 0:
         func_80074F50(0, 0xA0, 0x43, 0x120, 0x68, 0x140, 0x78, 2.6666667f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         func_80074F50(1, 0xA0, 0xAD, 0x120, 0x68, 0x140, 0x78, 2.6666667f, 0xA0, 0x115, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
-        if (gCurrentInputTask->fadeTimer == 0xF) {
+        if (gCurrentGameTask->fadeTimer == 0xF) {
             func_80070614(1);
             D_801121E0[1].active = 0;
         }
@@ -922,7 +922,7 @@ void func_800751C4(void) {
     case 1:
         func_80074F50(1, 0xA0, 0xAD, 0x120, 0x68, 0x140, 0x78, 2.6666667f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         func_80074F50(0, 0xA0, 0x43, 0x120, 0x68, 0x140, 0x78, 2.6666667f, 0xA0, -0x25, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
-        if (gCurrentInputTask->fadeTimer == 0xF) {
+        if (gCurrentGameTask->fadeTimer == 0xF) {
             func_80070614(0);
             D_801121E0[0].active = 0;
         }
@@ -931,7 +931,7 @@ void func_800751C4(void) {
         func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x57, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        if (gCurrentInputTask->fadeTimer == 0xF) {
+        if (gCurrentGameTask->fadeTimer == 0xF) {
             D_801121E0[1].active = 0;
             D_801121E0[2].active = 0;
             func_80070614(1);
@@ -942,7 +942,7 @@ void func_800751C4(void) {
         func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x57, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        if (gCurrentInputTask->fadeTimer == 0xF) {
+        if (gCurrentGameTask->fadeTimer == 0xF) {
             D_801121E0[0].active = 0;
             D_801121E0[2].active = 0;
             func_80070614(0);
@@ -953,7 +953,7 @@ void func_800751C4(void) {
         func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        if (gCurrentInputTask->fadeTimer == 0xF) {
+        if (gCurrentGameTask->fadeTimer == 0xF) {
             D_801121E0[0].active = 0;
             D_801121E0[1].active = 0;
             func_80070614(0);
@@ -965,7 +965,7 @@ void func_800751C4(void) {
         func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x57, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         func_80074F50(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        if (gCurrentInputTask->fadeTimer == 0xF) {
+        if (gCurrentGameTask->fadeTimer == 0xF) {
             func_80070614(1);
             func_80070614(2);
             func_80070614(3);
@@ -979,7 +979,7 @@ void func_800751C4(void) {
         func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x57, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         func_80074F50(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        if (gCurrentInputTask->fadeTimer == 0xF) {
+        if (gCurrentGameTask->fadeTimer == 0xF) {
             D_801121E0[0].active = 0;
             D_801121E0[2].active = 0;
             D_801121E0[3].active = 0;
@@ -993,7 +993,7 @@ void func_800751C4(void) {
         func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         func_80074F50(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xE9, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        if (gCurrentInputTask->fadeTimer == 0xF) {
+        if (gCurrentGameTask->fadeTimer == 0xF) {
             D_801121E0[0].active = 0;
             D_801121E0[1].active = 0;
             D_801121E0[3].active = 0;
@@ -1007,7 +1007,7 @@ void func_800751C4(void) {
         func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xE9, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        if (gCurrentInputTask->fadeTimer == 0xF) {
+        if (gCurrentGameTask->fadeTimer == 0xF) {
             D_801121E0[0].active = 0;
             D_801121E0[1].active = 0;
             D_801121E0[2].active = 0;
@@ -1018,8 +1018,8 @@ void func_800751C4(void) {
         break;
     }
     func_80077C94();
-    if (gCurrentInputTask->fadeTimer == 0xF) {
-        setCurrentInputTaskCallback(func_80076054, 0);
+    if (gCurrentGameTask->fadeTimer == 0xF) {
+        setCurrentGameTaskCallback(func_80076054, 0);
     }
 }
 
@@ -1163,8 +1163,8 @@ void func_80076054(void) {
         break;
     }
 
-    gCurrentInputTask->unk1C = 0x3C;
-    setCurrentInputTaskCallback(func_80076490, 0);
+    gCurrentGameTask->unk1C = 0x3C;
+    setCurrentGameTaskCallback(func_80076490, 0);
     if (D_80121B60 != 0) {
         requestMusicSequenceBank(6);
         if ((gPlayerCount == 1) && (D_800EC9C2 == 0)) {
@@ -1449,7 +1449,7 @@ void func_80076490(void) {
 void func_80077324(void) {
     if (countActiveMusicSequences() == 0) {
         requestMusicSequenceBank(7);
-        gCurrentInputTask->unk1C = 0x3C;
+        gCurrentGameTask->unk1C = 0x3C;
         D_801235B4 |= 0x20;
     }
     if (D_80121B60 != 0) {
@@ -1457,10 +1457,10 @@ void func_80077324(void) {
     }
     func_80077C94();
     if (D_801235B4 & 0x10) {
-        gCurrentInputTask->fadeTimer -= 1;
-        if (gCurrentInputTask->fadeTimer == 0) {
-            gCurrentInputTask->fadeTimer = 4;
-            setCurrentInputTaskCallback(&func_80077400, 0);
+        gCurrentGameTask->fadeTimer -= 1;
+        if (gCurrentGameTask->fadeTimer == 0) {
+            gCurrentGameTask->fadeTimer = 4;
+            setCurrentGameTaskCallback(&func_80077400, 0);
             requestMusicSequenceStop(0x14);
         }
     }
@@ -1476,18 +1476,18 @@ void func_80077400(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
-        gCurrentInputTask->fadeTimer -= 1;
-        if (gCurrentInputTask->fadeTimer == 0) {
+        gCurrentGameTask->fadeTimer -= 1;
+        if (gCurrentGameTask->fadeTimer == 0) {
             stopSoundEffects();
             if ((D_800EC9C2 == 2) && (((Unk80043040 *)func_80043040(D_80112186))->unk8 != 0) && (D_80121B61 != 0) &&
                 (func_80040D94() != 0)) {
                 D_80121B61 = -1;
             }
             if (D_800EC9C2 == 2) {
-                setCurrentInputTaskCallback(&func_80077554, 0);
+                setCurrentGameTaskCallback(&func_80077554, 0);
             } else {
                 gFramebufferSwapHold = 1;
-                setCurrentInputTaskCallback(func_80077B34, 0);
+                setCurrentGameTaskCallback(func_80077B34, 0);
             }
         }
     }
@@ -1507,12 +1507,12 @@ void func_80077554(void) {
     asset = func_80043040(D_80112130[0x2B]);
     if (((Unk80043040 *)asset)->unk8 == 0) {
         gFramebufferSwapHold = 1;
-        setCurrentInputTaskCallback(func_80077B34, 0);
+        setCurrentGameTaskCallback(func_80077B34, 0);
         return;
     }
     if (func_800730EC() == 0) {
         gFramebufferSwapHold = 1;
-        setCurrentInputTaskCallback(func_80077B34, 0);
+        setCurrentGameTaskCallback(func_80077B34, 0);
         return;
     }
     ((Unk80043040 *)asset)->unk0 = 0;
@@ -1588,46 +1588,46 @@ void func_80077554(void) {
     gMenuFadeAlpha = 0xFF;
     func_80042C20();
     requestMusicSequenceBank(0);
-    gCurrentInputTask->fadeTimer = 0;
-    gCurrentInputTask->unk1C = 0;
+    gCurrentGameTask->fadeTimer = 0;
+    gCurrentGameTask->unk1C = 0;
     createCallbackTask((void (*)(CallbackTask *))func_80057E60, 6, 0x64);
     if (D_80121B61 == -1) {
         createCallbackTask((void (*)(CallbackTask *))func_80052520, 6, 0x64);
     }
-    setCurrentInputTaskCallback(func_8007797C, 0);
+    setCurrentGameTaskCallback(func_8007797C, 0);
 }
 #endif
 
 void func_8007797C(void) {
     void *sp18;
 
-    if (gCurrentInputTask->fadeTimer == D_800DC5C0[gCurrentInputTask->unk1C]) {
+    if (gCurrentGameTask->fadeTimer == D_800DC5C0[gCurrentGameTask->unk1C]) {
         if (func_80072FC4() != 0) {
-            if (gCurrentInputTask->unk1C != 0xB) {
-                gCurrentInputTask->unk1C++;
+            if (gCurrentGameTask->unk1C != 0xB) {
+                gCurrentGameTask->unk1C++;
                 D_80121D80[0].unk16 = 2;
                 D_80121D80[0].unk15 = 0;
                 D_801124B8 = 0;
             } else {
                 requestMusicSequenceStop(0x48);
-                setCurrentInputTaskCallback(func_80077AD4, 0);
+                setCurrentGameTaskCallback(func_80077AD4, 0);
             }
         } else {
             requestMusicSequenceStop(0x48);
-            setCurrentInputTaskCallback(func_80077AD4, 0);
+            setCurrentGameTaskCallback(func_80077AD4, 0);
         }
     }
-    if (gCurrentInputTask->fadeTimer == 1) {
+    if (gCurrentGameTask->fadeTimer == 1) {
         gMenuFadeAlpha = 0;
     }
     if (gRaceUpdatePaused == 0) {
-        gCurrentInputTask->fadeTimer++;
+        gCurrentGameTask->fadeTimer++;
     }
     func_80077CD4();
     if (gPlayerInputPressed[0] & 0x1000) {
         sp18 = func_80077AD4;
         requestMusicSequenceStop(0x48);
-        setCurrentInputTaskCallback(sp18, 0);
+        setCurrentGameTaskCallback(sp18, 0);
     }
 }
 
@@ -1637,7 +1637,7 @@ void func_80077AD4(void) {
     gMenuFadeAlpha += 7;
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
-        setCurrentInputTaskCallback(&func_80077B34, 0);
+        setCurrentGameTaskCallback(&func_80077B34, 0);
     }
 }
 
@@ -1657,15 +1657,15 @@ void func_80077B34(void) {
         func_80000A40(3);
         D_801235B4 = 0;
         if (D_80121B57 == 2) {
-            setCurrentInputTaskCallback(func_80073988, 0);
+            setCurrentGameTaskCallback(func_80073988, 0);
         } else if (gPlayerCount == 1) {
             if (D_800EC9C2 == 1) {
-                setCurrentInputTaskCallback(func_800735B4, 0);
+                setCurrentGameTaskCallback(func_800735B4, 0);
             } else {
-                setCurrentInputTaskCallback(func_80073944, 0);
+                setCurrentGameTaskCallback(func_80073944, 0);
             }
         } else {
-            setCurrentInputTaskCallback(func_80073858, 0);
+            setCurrentGameTaskCallback(func_80073858, 0);
         }
         requestMusicSequenceStop(0);
     }
@@ -1726,15 +1726,15 @@ loop:
 void func_80077DA0(void) {
     D_80121B52 = D_800B9542[D_80121B50.s].unk0;
     if (D_800EC9C2 != 0) {
-        setCurrentInputTaskCallback(func_80073988, 0);
+        setCurrentGameTaskCallback(func_80073988, 0);
         return;
     }
     if (gPlayerCount == 1) {
-        setCurrentInputTaskCallback(func_80073988, 0);
+        setCurrentGameTaskCallback(func_80073988, 0);
         return;
     }
     if (D_8012482A == 0) {
-        setCurrentInputTaskCallback(func_80073988, 0);
+        setCurrentGameTaskCallback(func_80073988, 0);
         return;
     }
     resetAllViewports();
@@ -1777,7 +1777,7 @@ void func_80077DA0(void) {
     D_801235B4 = 0;
     createCallbackTaskWithUserId(func_80053634, 0, 0x64, 0);
     createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
-    setCurrentInputTaskCallback(func_80078078, 0);
+    setCurrentGameTaskCallback(func_80078078, 0);
     requestMusicSequenceBank(7);
 }
 
@@ -1802,7 +1802,7 @@ void func_80078078(void) {
             D_801235B4 = 1;
             enqueueSoundEffect(0x18, 0x32);
             requestMusicSequenceStop(0x3C);
-            setCurrentInputTaskCallback(func_80078198, 0);
+            setCurrentGameTaskCallback(func_80078198, 0);
         }
     }
     updateCallbackTasks();
@@ -1813,7 +1813,7 @@ void func_80078198(void) {
     if (gMenuFadeAlpha >= 0x100) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentInputTaskCallback(&func_800781FC, 0);
+        setCurrentGameTaskCallback(&func_800781FC, 0);
     }
     updateCallbackTasks();
 }
@@ -1823,6 +1823,6 @@ void func_800781FC(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        setCurrentInputTaskCallback(&func_80073988, 0);
+        setCurrentGameTaskCallback(&func_80073988, 0);
     }
 }
