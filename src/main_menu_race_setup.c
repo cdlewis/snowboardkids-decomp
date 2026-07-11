@@ -142,7 +142,7 @@ extern s8 D_800DC4C0;
 extern u8 D_800EC9C2;
 extern RaceSetupSaveData D_800EC9F0;
 extern u8 D_800ECA24;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 D_80121D90;
 
 void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
@@ -155,7 +155,7 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     transition = 0;
     if (D_800EC9C2 == 0) {
         arg0 = 1;
-        if (D_80121B55 == 1) {
+        if (gPlayerCount == 1) {
             save = &D_800EC9F0;
             state = save->unk4C;
             if ((state == 2) && (save->unk3A == 1)) {

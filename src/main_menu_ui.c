@@ -56,7 +56,7 @@ extern s32 D_80124868;
 extern MainMenuAssetHandles D_80112130;
 extern s16 D_8011217A;
 extern s16 D_80112172;
-extern u8 D_800E29C0;
+extern u8 gConnectedControllerCount;
 
 extern void func_800483FC(void *, void *, void *);
 
@@ -82,7 +82,7 @@ void func_800326EC(MainMenuSelectionLabelsActor *arg0) {
     s32 tile;
     u16 palette;
 
-    if (D_800E29C0 != 0) {
+    if (gConnectedControllerCount != 0) {
         for (i = 0; i < 3; i++) {
             if (i == arg0->selectedOption) {
                 tile = ((i * 2) + 4) & 0xFFFF;

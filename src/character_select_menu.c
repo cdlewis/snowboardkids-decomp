@@ -80,7 +80,7 @@ extern u8 D_800B3190;
 extern u8 D_800EC9E5;
 extern u8 D_8010ADF8;
 extern u8 D_8010AE68;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
@@ -116,7 +116,7 @@ void initCharacterSelectMenu(void) {
         loadCompressedRomAsset(D_60F1A0, D_60F990, 0x29);
         initCallbackTaskScheduler(0);
 
-        playerCount = D_80121B55;
+        playerCount = gPlayerCount;
         i = 0;
         if (playerCount > 0) {
             player = D_80121D80;
@@ -140,7 +140,7 @@ loop_1:
     } else {
         gCurrentInputTask->fade = 1;
         gMenuFadeAlpha = 1;
-        playerCount = D_80121B55;
+        playerCount = gPlayerCount;
         i = 0;
         if (playerCount > 0) {
             selectionPtr = (u8 *) D_8010AE64;
@@ -164,7 +164,7 @@ loop_1:
     D_8010ADE4 = createCallbackTask(func_80017D08, 0, 0x63);
     setCurrentInputTaskCallback(updateCharacterSelectMenu, 0);
 
-    playerCount = D_80121B55;
+    playerCount = gPlayerCount;
     if (playerCount > 0) {
         timerPtr = D_8010ADF0;
         timerEnd = timerPtr + playerCount;
@@ -249,7 +249,7 @@ void updateCharacterSelectConfirmationMenu(void) {
                 state->cursorY = 0x44;
                 state->exitMode = 3;
             } else {
-                playerCount = D_80121B55;
+                playerCount = gPlayerCount;
                 player = D_80121D80;
                 if ((s32) playerCount > 0) {
                     readyPtr = (u8 *) &gCharacterSelectHudState;
@@ -268,7 +268,7 @@ void updateCharacterSelectConfirmationMenu(void) {
             }
         } else if (buttons & 0x4000) {
             enqueueSoundEffect(0x18, 0x32);
-            playerCount = D_80121B55;
+            playerCount = gPlayerCount;
             player = D_80121D80;
             if ((s32) playerCount > 0) {
                 readyPtr = (u8 *) &gCharacterSelectHudState;

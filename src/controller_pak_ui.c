@@ -156,7 +156,7 @@ void initControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/drawControllerPakRumbleCheckPrompt.s")
 
 #ifdef NON_MATCHING
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 D_800EC8B4[];
 extern u8 gControllerPakRumbleCheckPromptText[];
 extern u8 gControllerPakRumbleCheckNotUsedText[];
@@ -228,7 +228,7 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
             playerNumberText[2] = playerIndex + 1;
             playerNumberText[3] = 0x19;
             playerNumberText[4] = 0xFFFF;
-            if (playerIndex < D_80121B55) {
+            if (playerIndex < gPlayerCount) {
                 if (D_800EC8B4[playerIndex] == 1) {
                     message = gControllerPakRumblePakText;
                 } else {

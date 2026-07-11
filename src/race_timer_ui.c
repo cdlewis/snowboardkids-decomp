@@ -105,7 +105,7 @@ extern s8 D_80122043;
 extern s16 D_801222F6;
 extern s16 D_801222F4;
 extern s16 D_80121B50;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 D_80121B5A;
 extern u8 D_80121B5B;
@@ -137,7 +137,7 @@ void func_80078430(void) {
     D_80121B70 = -1;
     D_80121B72 = 0;
 
-    if (D_80121B55 == 1) {
+    if (gPlayerCount == 1) {
         if (D_800EC9C2 == 0) {
             D_80121B70 = 0;
         }
@@ -158,7 +158,7 @@ void func_80078430(void) {
             }
         }
     } else {
-        D_80121B70 = D_80121B55 - 1;
+        D_80121B70 = gPlayerCount - 1;
     }
 
     if ((D_80121B5A != 0) || (D_80121B5B != 0)) {

@@ -2,31 +2,31 @@
 #include "asset_manager.h"
 #include "callback_task_scheduler.h"
 #include "sound_manager.h"
-#include "game_setup_menu.h"
+#include "player_setup_menu.h"
 #include "input_task_scheduler.h"
 #include "title_menu.h"
 #include "viewport_manager.h"
 
-// func_80003140 best match: 98.611% (nonmatchings/func_80003140-5743805732885129799/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_80003140.s")
+// initPlayerSetupMenu best match: 98.611% (nonmatchings/initPlayerSetupMenu-5743805732885129799/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/player_setup_menu/initPlayerSetupMenu.s")
 
 #ifdef NON_MATCHING
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s32 fade;
     /* 0x1C */ s32 timer;
-} GameSetupMenuState;
+} PlayerSetupMenuState;
 
 typedef struct {
     /* 0x0 */ u8 state;
     /* 0x1 */ u8 unk1;
     /* 0x2 */ s16 unk2;
     /* 0x4 */ u8 unk4;
-} GameSetupMenuSubState;
+} PlayerSetupMenuSubState;
 
 extern void enqueueSoundEffect();
 extern f32 D_800E0900;
-extern u8 D_800E29C0;
+extern u8 gConnectedControllerCount;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern u8 gRaceRumbleEnabled;
@@ -40,7 +40,7 @@ extern s8 D_800EC9E6;
 extern CallbackTask *D_8010ADDC;
 extern u16 D_8010ADF0;
 extern s8 gHighestUnlockedCourse;
-extern GameSetupMenuSubState D_8010AE00;
+extern PlayerSetupMenuSubState D_8010AE00;
 extern s16 D_8010AE06;
 extern s16 D_8010AE08;
 extern s16 D_8010AE0A;
@@ -54,12 +54,12 @@ extern s16 D_8010AE14;
 extern s16 D_8010AE16;
 extern s16 D_8010AE18;
 extern s16 D_80121B50;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern s8 D_80121D86;
 extern s8 D_80122392;
 extern s8 D_8012299E;
 extern s8 D_80122FAA;
-extern GameSetupMenuState *gCurrentInputTask;
+extern PlayerSetupMenuState *gCurrentInputTask;
 extern s32 D_801235B4;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
@@ -72,7 +72,7 @@ extern u8 D_59DFE0;
 extern u8 D_60F1A0;
 extern u8 D_60F990;
 
-void func_80003140(void) {
+void initPlayerSetupMenu(void) {
     requestMusicSequenceBank(1);
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0900);
@@ -88,7 +88,7 @@ void func_80003140(void) {
     D_80121B50 = 9;
     D_801235B4 = 0;
     D_8010ADF0 = 0;
-    D_80121B55 = 1;
+    gPlayerCount = 1;
     gMenuFadeAlpha = gCurrentInputTask->fade;
 
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x21);
@@ -125,16 +125,16 @@ void func_80003140(void) {
     D_8010AE18 = 0;
     D_80122FAA = 0;
 
-    setCurrentInputTaskCallback(func_8000337C, 0);
+    setCurrentInputTaskCallback(updatePlayerSetupPlayerCountMenu, 0);
 }
 #endif
 
-// func_8000337C best match: 88.068% (nonmatchings/func_8000337C-6276316234415602851/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_8000337C.s")
+// updatePlayerSetupPlayerCountMenu best match: 88.068% (nonmatchings/updatePlayerSetupPlayerCountMenu-6276316234415602851/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/player_setup_menu/updatePlayerSetupPlayerCountMenu.s")
 
 #ifdef NON_MATCHING
 
-void func_8000337C(void) {
+void updatePlayerSetupPlayerCountMenu(void) {
     s32 sp18;
     s32 temp_a3;
     s32 temp_v0;
@@ -164,8 +164,8 @@ void func_8000337C(void) {
                 if (D_8010ADF0 == 0) {
                     D_8010ADF0 += 1;
                 }
-                if (D_80121B55 != one) {
-                    D_80121B55 -= 1;
+                if (gPlayerCount != one) {
+                    gPlayerCount -= 1;
                     sp18 = temp_a3;
                     enqueueSoundEffect(0x19, 0x32, &D_8010ADF0, temp_a3);
                     goto block_25;
@@ -174,8 +174,8 @@ void func_8000337C(void) {
                 if (D_8010ADF0 == 0) {
                     D_8010ADF0 += 1;
                 }
-                if (D_800E29C0 != D_80121B55) {
-                    D_80121B55 += 1;
+                if (gConnectedControllerCount != gPlayerCount) {
+                    gPlayerCount += 1;
                     sp18 = temp_a3;
                     enqueueSoundEffect(0x19, 0x32, &D_8010ADF0, temp_a3);
 block_25:
@@ -199,7 +199,7 @@ block_25:
         }
     }
     if (D_8010AE00.state == 5) {
-        setCurrentInputTaskCallback(func_800035F8, 0);
+        setCurrentInputTaskCallback(initPlayerSaveSetupMenu, 0);
         gCurrentInputTask->fade = 0;
         D_800EC9C1 = 0;
     }
@@ -207,8 +207,8 @@ block_25:
 }
 #endif
 
-// func_800035F8 best match: 90.019% (nonmatchings/func_800035F8-2225551288923588688/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_800035F8.s")
+// initPlayerSaveSetupMenu best match: 90.019% (nonmatchings/initPlayerSaveSetupMenu-2225551288923588688/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/player_setup_menu/initPlayerSaveSetupMenu.s")
 
 #ifdef NON_MATCHING
 extern s16 D_800B31B8;
@@ -237,7 +237,7 @@ extern s16 D_8010AE44;
 extern s16 D_8010AE46;
 extern u8 D_80121D80;
 
-void func_800035F8(void) {
+void initPlayerSaveSetupMenu(void) {
     s16 *var_v1;
     s16 *var_a0;
     u8 *var_a1;
@@ -261,7 +261,7 @@ void func_800035F8(void) {
         var_v0[-1] = 0;
     } while (var_v0 < &D_800EC9E4);
 
-    count = D_800E29C0;
+    count = gConnectedControllerCount;
     D_800EC9E4 = 0;
     i = 0;
     if (count > 0) {
@@ -274,7 +274,7 @@ void func_800035F8(void) {
     }
 
     do {
-        func_800045D8(i);
+        initPlayerSaveData(i);
         i++;
     } while (i < 4);
 
@@ -294,13 +294,13 @@ void func_800035F8(void) {
     D_8010AE3E = D_800B31C4;
     D_8010AE46 = D_800B31C6;
 
-    setCurrentInputTaskCallback(func_80003798, 0);
+    setCurrentInputTaskCallback(updatePlayerSaveSetupMenu, 0);
     updateCallbackTasks();
 }
 #endif
 
-// func_80003798 best match: 72.707% (nonmatchings/func_80003798-7273315160691878794/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_80003798.s")
+// updatePlayerSaveSetupMenu best match: 72.707% (nonmatchings/updatePlayerSaveSetupMenu-7273315160691878794/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/player_setup_menu/updatePlayerSaveSetupMenu.s")
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -312,7 +312,7 @@ typedef struct {
     s16 unk6[4];
     u8 unkE[4];
     s16 unk12[4];
-} GameSetupSubState03798;
+} PlayerSetupSubState03798;
 
 typedef struct {
     u8 pad0[0x8];
@@ -322,7 +322,7 @@ typedef struct {
     u8 pad10[0x558];
     s32 unk568;
     u8 pad56C[0xA0];
-} GameSetupPlayerState03798;
+} PlayerSetupPlayerState03798;
 
 typedef struct {
     u8 pad0[0x4];
@@ -330,7 +330,7 @@ typedef struct {
     u8 pad8[0x44];
     u8 unk4C;
     u8 pad4D[0x78AB];
-} GameSetupSavePlayer03798;
+} PlayerSetupSavePlayer03798;
 
 typedef struct {
     u8 pad0[2];
@@ -353,18 +353,18 @@ extern s16 D_800EC9D0[];
 extern u8 D_800EC9D8[];
 extern u8 D_800EC9E0[];
 extern u8 D_800EC9E4;
-extern GameSetupSavePlayer03798 D_800EC9F0[];
+extern PlayerSetupSavePlayer03798 D_800EC9F0[];
 extern ControllerPakRumbleCheckPromptTransition03798 gControllerPakRumbleCheckPromptTransition;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern CallbackTask *D_8010ADE8;
-extern GameSetupPlayerState03798 D_80121D80[];
+extern PlayerSetupPlayerState03798 D_80121D80[];
 
-#define D_8010AE00_03798 (*(GameSetupSubState03798 *)&D_8010AE00)
+#define D_8010AE00_03798 (*(PlayerSetupSubState03798 *)&D_8010AE00)
 #define D_800EC8B4_03798 (&D_800EC8B4)
 #define gPlayerInputPressedArray_03798 (&gPlayerInputPressed)
 
-void func_80003798(void) {
+void updatePlayerSaveSetupMenu(void) {
     s32 allReady = 0;
     s16 allPresent = 0;
     CallbackTask *task = D_8010ADE0;
@@ -391,13 +391,13 @@ void func_80003798(void) {
             allReady = 1;
             allPresent = 1;
             i = 0;
-            if (D_80121B55 > 0) {
+            if (gPlayerCount > 0) {
                 present = D_800EC9E0;
                 do {
                     u8 presentValue = *present;
 
                     if (presentValue != 1) {
-                        GameSetupPlayerState03798 *player = &D_80121D80[i];
+                        PlayerSetupPlayerState03798 *player = &D_80121D80[i];
                         s32 stateIndex;
                         s16 *choice;
                         s16 choiceValue;
@@ -419,7 +419,7 @@ void func_80003798(void) {
                                     u16 playerIndex = i;
 
                                     D_800EC8B4_03798[i] = 0;
-                                    func_80000A40(playerIndex, D_80121B55, choiceValue);
+                                    func_80000A40(playerIndex, gPlayerCount, choiceValue);
                                     pakState = D_800EC898[i];
                                     if ((pakState != 1) && (pakState != 0xB) && (pakState != 4)) {
                                         D_800EC8B4_03798[i] = 1;
@@ -431,13 +431,13 @@ void func_80003798(void) {
                                 }
 
                                 case 1:
-                                    func_80000DB4((u16)i, D_80121B55, choiceValue);
+                                    func_80000DB4((u16)i, gPlayerCount, choiceValue);
                                     break;
 
                                 case 2: {
                                     u8 result;
 
-                                    func_80001010((u16)i, D_80121B55, choiceValue);
+                                    func_80001010((u16)i, gPlayerCount, choiceValue);
                                     result = D_800EC9D8[i];
                                     if (result == 0) {
                                         player->unk568 = 0;
@@ -459,7 +459,7 @@ void func_80003798(void) {
                                 case 3: {
                                     u8 result;
 
-                                    func_80001538((u16)i, D_80121B55, choiceValue);
+                                    func_80001538((u16)i, gPlayerCount, choiceValue);
                                     result = D_800EC9D8[i];
                                     if (result == 0) {
                                         if (transitionTask != NULL) {
@@ -521,9 +521,9 @@ void func_80003798(void) {
                                             enqueueSoundEffect(1, 0x32);
                                             if (*choice == 4) {
                                                 if (state == 8) {
-                                                    GameSetupSavePlayer03798 *save = &D_800EC9F0[i];
+                                                    PlayerSetupSavePlayer03798 *save = &D_800EC9F0[i];
 
-                                                    func_800045D8(i);
+                                                    initPlayerSaveData(i);
                                                     D_8010AE00_03798.unk6[i] = 5;
                                                     player->unkC = save->unk4;
                                                 } else if (state == 7) {
@@ -537,10 +537,10 @@ void func_80003798(void) {
                                                 } else if (state == 7) {
                                                     D_8010AE00_03798.unk6[i] = 4;
                                                 } else {
-                                                    GameSetupSavePlayer03798 *save = &D_800EC9F0[i];
+                                                    PlayerSetupSavePlayer03798 *save = &D_800EC9F0[i];
 
                                                     D_8010AE00_03798.unk6[i] = 5;
-                                                    func_800045D8(i);
+                                                    initPlayerSaveData(i);
                                                     player->unkC = save->unk4;
                                                 }
                                             }
@@ -607,7 +607,7 @@ void func_80003798(void) {
                     i++;
                     present++;
                     allPresent &= presentValue;
-                } while (i < D_80121B55);
+                } while (i < gPlayerCount);
             }
         }
     }
@@ -624,9 +624,9 @@ void func_80003798(void) {
                 createCallbackTask((void (*)(CallbackTask *))func_800165F0, 0, 0x63);
                 D_8010ADE0 = createCallbackTask((void (*)(CallbackTask *))func_8001621C, 0, 0x63);
                 D_8010ADE4 = createCallbackTask((void (*)(CallbackTask *))func_80017014, 0, 0x63);
-                if (D_80121B55 > 0) {
+                if (gPlayerCount > 0) {
                     ptr = D_800EC9E0;
-                    end = &D_800EC9E0[D_80121B55];
+                    end = &D_800EC9E0[gPlayerCount];
                     do {
                         *ptr += 1;
                         ptr++;
@@ -639,19 +639,19 @@ void func_80003798(void) {
     if (allReady != 0) {
         D_800EC9C1++;
         if (D_800EC9C1 == 0xF) {
-            GameSetupSubState03798 *subState;
-            GameSetupSavePlayer03798 *save;
-            GameSetupSavePlayer03798 *end;
+            PlayerSetupSubState03798 *subState;
+            PlayerSetupSavePlayer03798 *save;
+            PlayerSetupSavePlayer03798 *end;
 
-            setCurrentInputTaskCallback(func_80004164, 0);
+            setCurrentInputTaskCallback(updatePlayerSetupRumblePrompt, 0);
             createCallbackTask(initControllerPakRumbleCheckPrompt, 0, 0x64);
             gControllerPakRumbleCheckPromptTransition.state = 6;
             gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
             gControllerPakRumbleCheckPromptTransition.targetScale = 2;
-            if (D_80121B55 > 0) {
+            if (gPlayerCount > 0) {
                 subState = &D_8010AE00_03798;
                 save = D_800EC9F0;
-                end = &D_800EC9F0[D_80121B55];
+                end = &D_800EC9F0[gPlayerCount];
                 do {
                     u8 value = save->unk4C;
 
@@ -660,7 +660,7 @@ void func_80003798(void) {
                         gHighestUnlockedCourse = value;
                     }
                     save++;
-                    subState = (GameSetupSubState03798 *)((u8 *)subState + 1);
+                    subState = (PlayerSetupSubState03798 *)((u8 *)subState + 1);
                 } while (save < end);
             }
         }
@@ -674,11 +674,11 @@ void func_80003798(void) {
 #undef gPlayerInputPressedArray_03798
 #endif
 
-void __dummy(void) {
+void playerSetupMenuNoop(void) {
 }
 
-// func_80004164 best match: 87.420% (nonmatchings/func_80004164-3236181511606361864/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_80004164.s")
+// updatePlayerSetupRumblePrompt best match: 87.420% (nonmatchings/updatePlayerSetupRumblePrompt-3236181511606361864/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/player_setup_menu/updatePlayerSetupRumblePrompt.s")
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -695,7 +695,7 @@ extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptT
 extern void func_80000A40(u16 arg0);
 extern void initCharacterSelectMenu(void);
 
-void func_80004164(void) {
+void updatePlayerSetupRumblePrompt(void) {
     s32 connectedCount;
     s32 i;
     u8 state;
@@ -713,7 +713,7 @@ void func_80004164(void) {
         case 2:
             gRumblePakConnectedMask = 0;
             i = 0;
-            if ((s32)D_80121B55 > 0) {
+            if ((s32)gPlayerCount > 0) {
                 do {
                     func_80000A40(i);
                     if (((&D_800EC898)[i] != 1) && ((&D_800EC898)[i] != 0xB) && ((&D_800EC898)[i] != 4)) {
@@ -723,7 +723,7 @@ void func_80004164(void) {
                         (&D_800EC8B4)[i] = 0;
                     }
                     i++;
-                } while (i < (s32)D_80121B55);
+                } while (i < (s32)gPlayerCount);
             }
             gControllerPakRumbleCheckPromptTransition.state = 7;
             gControllerPakRumbleCheckPromptTransition.timer = 0x11;
@@ -740,7 +740,7 @@ void func_80004164(void) {
             connectedCount = 0;
             gRumblePakConnectedMask = 0;
             i = 0;
-            if ((s32)D_80121B55 > 0) {
+            if ((s32)gPlayerCount > 0) {
                 do {
                     func_80000A40(i);
                     if (((&D_800EC898)[i] != 1) && ((&D_800EC898)[i] != 0xB) && ((&D_800EC898)[i] != 4)) {
@@ -751,9 +751,9 @@ void func_80004164(void) {
                         (&D_800EC8B4)[i] = 0;
                     }
                     i++;
-                } while (i < (s32)D_80121B55);
+                } while (i < (s32)gPlayerCount);
             }
-            if (connectedCount == D_80121B55) {
+            if (connectedCount == gPlayerCount) {
                 gControllerPakRumbleCheckPromptTransition.selectedOption = 1;
                 gControllerPakRumbleCheckPromptTransition.targetScale = 2;
             } else {
@@ -798,13 +798,13 @@ void func_80004164(void) {
                 } else {
                     connectedCount = 0;
                     i = 0;
-                    if ((s32)D_80121B55 > 0) {
+                    if ((s32)gPlayerCount > 0) {
                         do {
                             if ((&D_800EC8B4)[i] == 1) {
                                 connectedCount++;
                             }
                             i++;
-                        } while (i < (s32)D_80121B55);
+                        } while (i < (s32)gPlayerCount);
                     }
                     if (connectedCount > 0) {
                         gControllerPakRumbleCheckPromptTransition.state = 3;
@@ -824,4 +824,4 @@ void func_80004164(void) {
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_800045D8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/player_setup_menu/initPlayerSaveData.s")

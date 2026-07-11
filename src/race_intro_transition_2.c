@@ -48,7 +48,7 @@ extern s8 D_8010B1E1;
 extern s16 D_80121B50;
 extern s16 D_80121B52;
 extern s8 gRacePlayerCount;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 D_80121B58;
 extern u8 D_80121B59;
@@ -105,7 +105,7 @@ void func_8003ED00(void) {
     D_80121B58 = 0;
     D_80121B5F = 0;
     D_80121B59 = one;
-    D_80121B55 = four;
+    gPlayerCount = four;
     D_800EC9C2 = 0;
     D_80121B5A = 0;
     D_80121B5B = 0;

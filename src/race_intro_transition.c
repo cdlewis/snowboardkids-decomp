@@ -60,7 +60,7 @@ extern u8 gRaceRumbleEnabled;
 extern u8 D_800EC9C2;
 extern u8 D_8011228C;
 extern u8 D_80121B54;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern s8 D_80121B58;
 extern u8 D_80121B59;
@@ -130,7 +130,7 @@ void func_8003E600(void) {
         players[2].isActive = one;
         players[3].isActive = one;
         D_80121B54 = 4;
-        D_80121B55 = 4;
+        gPlayerCount = 4;
     } else {
         one = 1;
         players[0].isActive = one;
@@ -138,7 +138,7 @@ void func_8003E600(void) {
         players[2].isActive = 0;
         players[3].isActive = 0;
         D_80121B54 = one;
-        D_80121B55 = one;
+        gPlayerCount = one;
     }
     D_80121B52 = 2;
     D_80121B5C = 0x64;
@@ -170,10 +170,10 @@ void func_8003E600(void) {
     gFramebufferSwapDelay = 0;
     func_8008BEB0();
     if (D_800BB837[D_800BB830 * sizeof(RaceIntroCourseEntry)] == 0) {
-        D_80121B55 = one;
+        gPlayerCount = one;
     }
     func_80078430();
-    if (D_80121B55 == one) {
+    if (gPlayerCount == one) {
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         D_8011228C = one;
         gFramebufferSwapDelay = 0;
@@ -189,7 +189,7 @@ void func_8003E600(void) {
         gFramebufferSwapDelay = one;
     }
     if (D_800EC9C2 == 0) {
-        D_80121B55 = 4;
+        gPlayerCount = 4;
     }
     initRaceCourseEffects();
     setCurrentInputTaskCallback(func_8003EA78, 0);

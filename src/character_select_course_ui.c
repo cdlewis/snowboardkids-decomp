@@ -90,7 +90,7 @@ extern u8 D_800EC9C2;
 extern u8 D_80121B5E;
 extern void *D_80124868;
 extern void func_800483FC(void *, void *, void *);
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 D_80121D80[];
 extern CharacterSelectCoursePlayerRecord gFrameCounter;
 extern s32 D_801235B4;
@@ -132,7 +132,7 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
                 if ((gCharacterSelectCourseExitOptionIndex == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
                     alpha = 0xFF;
                 }
-                if ((D_80121B55 - 1) == 0) {
+                if ((gPlayerCount - 1) == 0) {
                     func_8000F030(pos[12], pos[23], func_80043040(D_80112130.textureHandle), 0x1B, 0x20, 0x20, 0, alpha);
                 } else {
                     func_8000F030(pos[12], pos[23], func_80043040(D_80112130.textureHandle), 0x1E, 0x20, 0x20, 0, alpha);
@@ -146,7 +146,7 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
 
             if (i != gCharacterSelectCourseExitOptionIndex) {
                 characterId = (s16 *)((u8 *)characterIds + characterIdOffset);
-                if (((D_80121B55 - 1) == 0) && (D_800ECA24[*characterId] != 0)) {
+                if (((gPlayerCount - 1) == 0) && (D_800ECA24[*characterId] != 0)) {
                     func_8000F030((s16)(pos[12] - 0x10), pos[23], func_80043040(D_80112130.iconTextureHandle), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0, D_800ECA24[*characterId] + 6);
                 } else {
                     func_8000F030((s16)(pos[12] - 0x10), pos[23], func_80043040(D_80112130.textureHandle), (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
@@ -2250,7 +2250,7 @@ void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor 
     s32 valueOffset;
     s32 three;
     CharacterSelectCoursePlayerRecord *player;
-    do { characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse]; if (D_80121B55 == 1) { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x21, 0x20, 0x20, 0, 0); func_8000F030((s16)(arg0->x + 0x30), arg0->y, func_80043040(D_80112130.textureHandle), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, gCharacterSelectCourseBestScoreFormat, D_800EC9F8[characterIds[*(&D_80121B50)]]); func_80013D0C((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, gCharacterSelectCourseMedalScoreFormat, *((u16 *)(&gCharacterSelectCourseMedalScoreThresholds[(((*(&D_80121B50)) * three) * 2) + valueOffset]))); func_80013D0C((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x26, 0x20, 0x20, 0, 0); func_8000F030(arg0->x, (s16)(arg0->y + 0x10), func_80043040(D_80112130.textureHandle), 0x27, 0x20, 0x20, 0, 0); player = (CharacterSelectCoursePlayerRecord *)D_80121D80; yOffset = 0; do { sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, player->value); func_80013D0C((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); player++; yOffset += 8; } while (player != &gFrameCounter); } } while (0);
+    do { characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse]; if (gPlayerCount == 1) { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x21, 0x20, 0x20, 0, 0); func_8000F030((s16)(arg0->x + 0x30), arg0->y, func_80043040(D_80112130.textureHandle), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, gCharacterSelectCourseBestScoreFormat, D_800EC9F8[characterIds[*(&D_80121B50)]]); func_80013D0C((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, gCharacterSelectCourseMedalScoreFormat, *((u16 *)(&gCharacterSelectCourseMedalScoreThresholds[(((*(&D_80121B50)) * three) * 2) + valueOffset]))); func_80013D0C((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x26, 0x20, 0x20, 0, 0); func_8000F030(arg0->x, (s16)(arg0->y + 0x10), func_80043040(D_80112130.textureHandle), 0x27, 0x20, 0x20, 0, 0); player = (CharacterSelectCoursePlayerRecord *)D_80121D80; yOffset = 0; do { sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, player->value); func_80013D0C((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); player++; yOffset += 8; } while (player != &gFrameCounter); } } while (0);
 }
 
 void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
@@ -2259,7 +2259,7 @@ void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActo
 
     switch (state) {
     case 0:
-        if (D_80121B55 == 1) {
+        if (gPlayerCount == 1) {
             target = -0x78;
         } else {
             target = -0x80;
@@ -2771,7 +2771,7 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
         func_8000F030(arg0->x, (s16)(arg0->y + var_s5), func_80043040(D_80112130.popupFontHandle),
                       (var_s7 + 0x77) & 0xFFFF, 0x20, 0x20, 0, 0);
 
-        if (D_80121B55 == 1) {
+        if (gPlayerCount == 1) {
             if (D_800EC9C2 != 2) {
                 if (D_80121B5E == 0) {
                     if (var_s7 < 3) {

@@ -91,7 +91,7 @@ extern u8 D_5DAF30[];
 extern u8 D_5DB9D0[];
 
 extern u8 D_800EC9C2;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 D_80121B59;
 extern u8 D_80121B5A;
 extern u8 D_80121B5B;
@@ -259,7 +259,7 @@ void initRaceCourseEffects(void) {
     s32 sp28;
 
     sp28 = (sp2C = 1);
-    if (D_80121B55 != 1) {
+    if (gPlayerCount != 1) {
         if (D_8012482B != 0) {
             sp28 = 0;
         }
@@ -421,7 +421,7 @@ block_24:
                 createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5D);
             }
         }
-        if (D_80121B55 == 1) {
+        if (gPlayerCount == 1) {
             createCallbackTask(&initRaceCoursePreviewCameraCutscene, 0, 0x64);
         }
         setBootFadeColor(0x82U, 0xAFU, 0xFFU);
@@ -528,7 +528,7 @@ block_24:
                 createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x6A);
             }
         }
-        if (D_80121B55 == 1) {
+        if (gPlayerCount == 1) {
             createCallbackTask(&initRaceCoursePreviewCameraCutscene, 0, 0x64);
         }
         setTitleFadeColor(0xFFU, 0xFFU, 0xFFU);

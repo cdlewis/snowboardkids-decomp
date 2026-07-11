@@ -10,7 +10,7 @@
 #include "controller_pak_replay_save_message_flow.h"
 #include "controller_pak_file_delete_flow.h"
 #include "course_select_menu.h"
-#include "game_setup_menu.h"
+#include "player_setup_menu.h"
 #include "input_task_scheduler.h"
 #include "main_menu.h"
 #include "main_menu_overlay_effects.h"
@@ -209,7 +209,7 @@ extern u8 D_80122FBA;
 #endif
 extern u8 D_2427D0[];
 extern u8 D_243270[];
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 D_80121B57;
 extern u8 D_80121B58;
 extern u8 D_80121B5E;
@@ -409,7 +409,7 @@ void func_80073140(void) {
     D_800EC9F0.unk232[6].unk0 = 0;
     D_800EC9F0.unk232[7].unk0 = 0;
     D_800EC9F0.unk232[8].unk0 = 0;
-    D_80121B55 = 1;
+    gPlayerCount = 1;
     D_80121B5E = 0;
     D_80121D80[0].unk5 = 0;
     D_80121D80[1].unk5 = 0;
@@ -439,7 +439,7 @@ void func_80073140(void) {
 
 void func_800732C4(void) {
     setCurrentInputTaskCallback(&func_8007334C, 0);
-    createInputTask(4, &func_80003140, 0x64);
+    createInputTask(4, &initPlayerSetupMenu, 0x64);
     suspendInputTask(2);
 }
 
@@ -450,7 +450,7 @@ void func_80073308(void) {
 }
 
 void func_8007334C(void) {
-    if (D_80121B55 >= 2) {
+    if (gPlayerCount >= 2) {
         setCurrentInputTaskCallback(&func_8007339C, 0);
     } else {
         setCurrentInputTaskCallback(&func_800734A0, 0);
@@ -559,7 +559,7 @@ void func_80073738(void) {
 void func_8007377C(void) {
     if (D_801235B4 == 1) {
         D_801235B4 = 0;
-        if (D_80121B55 >= 2) {
+        if (gPlayerCount >= 2) {
             setCurrentInputTaskCallback(&func_8007339C, 0);
         } else {
             setCurrentInputTaskCallback(&func_80073434, 0);
@@ -639,7 +639,7 @@ void func_80074160(void) {
             gMenuFadeAlpha = 0xFF;
             createCallbackTask(func_80069BC0, 6, 0x64);
             createCallbackTask((void (*)(CallbackTask *))func_80065E90, 6, 0x64);
-            switch (D_80121B55 & 0xFFFFFFFF) {
+            switch (gPlayerCount & 0xFFFFFFFF) {
             case 1:
                 if (D_80121B50.s != 6) {
                     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
@@ -751,7 +751,7 @@ void func_80074960(void) {
     s32 selection;
     s32 valueTwo;
 
-    opened = 0; i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & 0x1000)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; enqueueSoundEffect(1, 0x32); func_80000A40(0); func_80000A40(1); func_80000A40(2); func_80000A40(3); } i++; player++; } while (i < D_80121B55); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = gPlayerInputPressed[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; enqueueSoundEffect(1, 0x32); input = gPlayerInputPressed[i]; }
+    opened = 0; i = 0; if (gPlayerCount > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & 0x1000)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; enqueueSoundEffect(1, 0x32); func_80000A40(0); func_80000A40(1); func_80000A40(2); func_80000A40(3); } i++; player++; } while (i < gPlayerCount); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (gPlayerCount > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = gPlayerInputPressed[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; enqueueSoundEffect(1, 0x32); input = gPlayerInputPressed[i]; }
                     }
                     if (input & 0x20400) {
                         selection = D_80121B57;
@@ -788,7 +788,7 @@ void func_80074960(void) {
                 }
                 i++;
                 player++;
-            } while (i < D_80121B55);
+            } while (i < gPlayerCount);
         }
         func_800483FC(&D_80124868, func_80074864, 0);
     }
@@ -817,7 +817,7 @@ void func_80074C5C(void) {
     gCurrentInputTask->fadeTimer--;
     if (gCurrentInputTask->fadeTimer == 0) {
         D_801235B4 |= 8;
-        switch (D_80121B55) {
+        switch (gPlayerCount) {
         case 3:
             gCurrentInputTask->unk1C = 0;
             bestPlayer = gCurrentInputTask->unk1C;
@@ -1050,7 +1050,7 @@ void func_80076054(void) {
     case 0:
         D_80121B5F = 1;
         i = 0;
-        if (D_80121B55 > 0) {
+        if (gPlayerCount > 0) {
             player = D_80121D80;
             do {
                 if (player->result == 0) {
@@ -1058,7 +1058,7 @@ void func_80076054(void) {
                 }
                 i++;
                 player++;
-            } while (i < D_80121B55);
+            } while (i < gPlayerCount);
         }
         break;
 
@@ -1167,7 +1167,7 @@ void func_80076054(void) {
     setCurrentInputTaskCallback(func_80076490, 0);
     if (D_80121B60 != 0) {
         requestMusicSequenceBank(6);
-        if ((D_80121B55 == 1) && (D_800EC9C2 == 0)) {
+        if ((gPlayerCount == 1) && (D_800EC9C2 == 0)) {
             createCallbackTaskWithUserId((void (*)(CallbackTask *))func_8005E68C, 6, 0x64, 0xA9);
         }
         createCallbackTaskWithUserId(func_8005393C, 5, 0x64, D_80121B60 - 1);
@@ -1658,7 +1658,7 @@ void func_80077B34(void) {
         D_801235B4 = 0;
         if (D_80121B57 == 2) {
             setCurrentInputTaskCallback(func_80073988, 0);
-        } else if (D_80121B55 == 1) {
+        } else if (gPlayerCount == 1) {
             if (D_800EC9C2 == 1) {
                 setCurrentInputTaskCallback(func_800735B4, 0);
             } else {
@@ -1706,7 +1706,7 @@ s32 func_80077D14(void) {
         }
     } else {
         var_v0 = 0;
-        if ((s32)D_80121B55 > 0) {
+        if ((s32)gPlayerCount > 0) {
             player = D_80121D80;
 loop:
             if (!(player->flags & RACE_PLAYER_READY_FLAG)) {
@@ -1714,7 +1714,7 @@ loop:
             }
             var_v0++;
             player++;
-            if (var_v0 < (s32)D_80121B55) {
+            if (var_v0 < (s32)gPlayerCount) {
                 goto loop;
             }
         }
@@ -1729,7 +1729,7 @@ void func_80077DA0(void) {
         setCurrentInputTaskCallback(func_80073988, 0);
         return;
     }
-    if (D_80121B55 == 1) {
+    if (gPlayerCount == 1) {
         setCurrentInputTaskCallback(func_80073988, 0);
         return;
     }

@@ -787,7 +787,7 @@ extern void *D_80124888;
 extern void *D_801248B0;
 extern void *D_801248BC;
 extern void *D_801248C8;
-extern u8 D_80121B55;
+extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern s8 gRacePlayerCount;
 extern u8 D_80121B81;
@@ -990,7 +990,7 @@ void func_80057710(RaceUiPromptActor *arg0) {
 
 void func_80057810(RaceUiPromptActor *arg0) {
     arg0->y = -0x10;
-    if (D_80121B55 != 1) {
+    if (gPlayerCount != 1) {
         arg0->y = -8;
     }
     setCallbackTaskCallback(arg0, func_80057710);
@@ -1583,7 +1583,7 @@ void func_80059854(void *arg0) {
 
     actor = arg0;
     i = 0;
-    if ((s32)D_80121B55 > 0) {
+    if ((s32)gPlayerCount > 0) {
         input = &gPlayerInputPressed; do {
             if ((*input & 0x8000) && !(D_801235B4 & 0x10)) {
                 D_801235B4 |= 0x10;
@@ -1592,7 +1592,7 @@ void func_80059854(void *arg0) {
             }
             i++;
             input++;
-        } while (i < (s32)D_80121B55);
+        } while (i < (s32)gPlayerCount);
     }
     func_80059518(actor);
     func_800483FC(&D_80124868, func_80058C00, (s32)actor);
@@ -3847,7 +3847,7 @@ void func_80060F38(void *arg0) {
 
 void func_80060FA4(void *arg0) {
     if (D_801124B0[*(s8 *)((u8 *)arg0 + 0x30)].active != 0) {
-        if (D_80121B55 == 1) {
+        if (gPlayerCount == 1) {
             *(s32 *)((u8 *)arg0 + 0x20) = -0x24;
         } else {
             *(s32 *)((u8 *)arg0 + 0x20) = -0x16;
@@ -4725,7 +4725,7 @@ void func_80063E70(RaceUiEffectParticleActor *arg0) {
 void func_80063FC0(RaceUiEffectParticleActor *actor) {
     s32 i;
 
-    if (D_80121B55 != 0) {
+    if (gPlayerCount != 0) {
         actor->count = 0xF;
     } else {
         actor->count = 0x3C;
