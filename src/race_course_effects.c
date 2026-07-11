@@ -918,35 +918,41 @@ void func_8006B3E0(Struct6B760 *arg0) {
 }
 #endif
 
-// func_8006B6C8 best match: 98.684% at nonmatchings/func_8006B6C8-5821324921387846781/base.c.
+// func_8006B6C8 best match: 97.895%
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006B6C8.s")
 
 #ifdef NON_MATCHING
 void func_8006B6C8(Struct6B760 *arg0) {
     s32 temp24;
     s32 temp28;
+    u16 new_var2;
     s32 temp2C;
     s16 angle;
+    s32 new_var;
     s16 temp4C;
     s32 temp50;
     s16 temp4E;
 
     if (D_80121B56 == 0) {
         angle = func_8004940C(arg0->unk24, arg0->unk2C, arg0->unk30, arg0->unk38);
+        new_var = arg0->unk28;
         temp24 = arg0->unk24;
-        temp28 = arg0->unk28;
+        temp28 = new_var;
         temp2C = arg0->unk2C;
         arg0->pos.x = temp24;
+        new_var2 = angle;
         temp4C = 0x10;
         temp50 = 0x10000;
         temp4E = 0x80;
-        arg0->unk3E = angle;
+        arg0->unk3E = new_var2;
         arg0->unk4C = temp4C;
         arg0->unk50 = temp50;
         arg0->unk4E = temp4E;
         arg0->pos.y = temp28;
-        arg0->pos.z = temp2C;
-        arg0->pos.y = func_80080CC4(arg0->unk3C, arg0->pos.x, arg0->pos.z);
+        if (1) {
+            arg0->pos.z = temp2C;
+            arg0->pos.y = func_80080CC4(arg0->unk3C, arg0->pos.x, temp2C);
+        }
         func_80071824(arg0, func_8006B3E0);
     }
 }
