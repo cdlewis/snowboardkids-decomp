@@ -232,6 +232,10 @@ extern RaceInputPlayer D_8012238C[];
 extern RaceInputPlayer D_80122998[];
 extern RaceInputPlayer D_80122FA4[];
 
+void func_80083D80(RaceInputPlayer *player);
+void func_8008409C(RaceInputPlayer *player);
+void func_8008431C(RaceInputPlayer *player);
+void func_80084510(RaceInputPlayer *player);
 void func_80084730(RaceInputPlayer *player);
 s32 func_80084958(RaceInputPlayer *player);
 void func_8008A940(RaceInputPlayer *player);
