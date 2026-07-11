@@ -137,7 +137,7 @@ extern u8 D_8010AF3C;
 extern u8 D_8010AF3D;
 extern u8 D_8010AF3E;
 extern u8 D_8010AF3F;
-extern u8 D_8010AF46;
+extern u8 gCourseSelectExtraCourseColumnState;
 extern s8 D_8010AF70;
 extern s8 D_8010AF71;
 extern s8 D_8010AF72;
@@ -423,7 +423,7 @@ void updateCourseSelectModeMenu(void) {
                 setCurrentGameTaskCallback(exitCourseSelectMenu, 0);
                 requestMusicSequenceStop(8);
                 D_8010ADF8 = 0;
-                D_8010AF46 = 0;
+                gCourseSelectExtraCourseColumnState = 0;
             }
         }
     }
@@ -497,7 +497,7 @@ loop_6:
     }
 
     if (((s32) D_80121D80.unk6 >= 9) && ((s32) D_80121D80.unk6 < 0xC)) {
-        var_v0_4 = D_8010AF46;
+        var_v0_4 = gCourseSelectExtraCourseColumnState;
         var_a2_2 = 3;
     } else {
         var_v0_4 = gCourseSelectStatus.unk2E;
@@ -666,10 +666,10 @@ block_17:
                 }
                 if (sp32 == D_8010AE64) {
                     var_v0_4 = *(&D_8010AEF7 + sp32);
-                    D_8010AF46 = 2;
+                    gCourseSelectExtraCourseColumnState = 2;
                 } else {
                     var_v0_4 = D_8010AEF8[D_8010AE64];
-                    D_8010AF46 = 0;
+                    gCourseSelectExtraCourseColumnState = 0;
                 }
                 D_80121D86 = var_v0_4;
                 if ((s32) D_80121D80.unk6 >= 9) {

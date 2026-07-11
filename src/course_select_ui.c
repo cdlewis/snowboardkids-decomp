@@ -125,7 +125,7 @@ extern u8 D_8010AEFB[];
 extern u8 D_8010AEA4[];
 extern u8 D_8010AEB0;
 extern u8 D_8010AEA0[];
-extern u8 D_8010AF46;
+extern u8 gCourseSelectExtraCourseColumnState;
 extern u8 gCourseSelectStatus[];
 extern u8 D_8010AF1C;
 extern s16 D_800EC9D0[];
@@ -779,7 +779,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                         selectedCourse = D_8010AEA4[i];
                         position = &arg0->coordinates[(i * 5) + j];
                         clipOffset = (i >= 2) * 0x88;
-                        if ((selectedCourse > 0) && (selectedCourse < 8) && (D_8010AF46 == 1) &&
+                        if ((selectedCourse > 0) && (selectedCourse < 8) && (gCourseSelectExtraCourseColumnState == 1) &&
                             (selectedCourse & 1)) {
                             alpha = 0xFF;
                         }
@@ -1178,7 +1178,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     if (playerCount > 0) {
         do {
             if ((playerCount >= 2 || D_80121D80[i].pad6[2] == 0) &&
-                (playerCount >= 2 || (playerCount == 1 && D_8010AF46 == 0))) {
+                (playerCount >= 2 || (playerCount == 1 && gCourseSelectExtraCourseColumnState == 0))) {
                 playerWidget = (CourseSelectWidgetActor *)((u8 *)arg0 + (i * 2));
                 courseId = D_80121D80[i].pad6[0];
                 if (!playerCount) {
