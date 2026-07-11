@@ -188,7 +188,7 @@ void func_8002C4E0(ShopMenuRowActor *arg0) {
 }
 
 extern int sprintf(char *, const char *, ...);
-extern s32 D_800B34B0[];
+extern s32 gCourseUnlockPrices[];
 extern u16 D_800B34E0[];
 extern u16 D_800B34EC[];
 extern ShopMenuFrameTileMap D_800B79C0[];
@@ -1088,7 +1088,7 @@ void func_8002E810(ShopMenuWidgetActor *arg0) {
 
     if ((s8)D_800ECA2F[D_80121D86] == -1) {
         new_var = 0x3000;
-        temp = D_800B34B0[D_80121D86];
+        temp = gCourseUnlockPrices[D_80121D86];
         if ((u32)temp >= 0x186A0U) {
             sp4A = 0x4000;
             sp48 = 0;
@@ -1105,7 +1105,7 @@ void func_8002E810(ShopMenuWidgetActor *arg0) {
 
         func_8001BA2C((s16)(arg0->x + sp48), arg0->y, sp4A, 0x2000);
 
-        if ((u32)D_80121D8C < (u32)D_800B34B0[D_80121D86]) {
+        if ((u32)D_80121D8C < (u32)gCourseUnlockPrices[D_80121D86]) {
             palette = 1;
         } else {
             palette = 0;
@@ -1138,7 +1138,7 @@ void func_8002E9E4(ShopMenuWidgetActor *arg0) {
         }
         break;
     case 1:
-        arg0->item.price = D_800B34B0[D_80121D80.selectedShopItem];
+        arg0->item.price = gCourseUnlockPrices[D_80121D80.selectedShopItem];
         if (gCurrentInputTask->shopItemPrice >= 2) {
             arg0->slide.bytes.state = 2;
         }
@@ -1195,7 +1195,7 @@ void func_8002E9E4(ShopMenuWidgetActor *arg0) {
 void func_8002EC04(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x20;
     arg0->y = -8;
-    arg0->item.price = D_800B34B0[D_80121D86];
+    arg0->item.price = gCourseUnlockPrices[D_80121D86];
     arg0->sprite.index = 0;
     arg0->slide.bytes.state = 0;
     func_80071824(arg0, func_8002E9E4);
