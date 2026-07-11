@@ -781,7 +781,7 @@ extern Vec3i D_800D62AC[];
 extern s16 D_800D633C[];
 extern s32 D_800DC900[];
 
-extern void *D_80124868;
+extern void *gMenuRenderCallbackList;
 extern void *D_80124858;
 extern void *D_80124888;
 extern void *D_801248B0;
@@ -857,7 +857,7 @@ extern u32 D_200C7D8[];
 extern u32 D_200CE48[];
 extern u32 D_200CFB0[];
 extern u32 D_200D3A8[];
-extern void func_800483FC(void *, void *, s32);
+extern void addRenderCallback(void *, void *, s32);
 extern RaceUiGfxCommandDest *func_8004885C(RaceUiTrailCopyBlock *);
 extern void func_80048C90(RaceUiGfxCommandDest *, s32 *);
 extern void osWritebackDCache(void *, s32);
@@ -946,10 +946,10 @@ void func_80057548(RaceUiSlideActor *arg0) {
         enqueuePlayerLoopingPositionalSoundRequest(0xE, &D_800D6030[temp_v0], 0x7F, 0x32, 0.0f, 0xA);
     }
     if (arg0->velocity != 0) {
-        func_800483FC(&D_801248EC, func_800572A0, arg0);
+        addRenderCallback(&D_801248EC, func_800572A0, arg0);
         return;
     }
-    func_800483FC(&D_801248A4, func_800572A0, arg0);
+    addRenderCallback(&D_801248A4, func_800572A0, arg0);
 }
 
 void func_80057600(RaceUiSlideActor *arg0) {
@@ -983,7 +983,7 @@ void func_80057710(RaceUiPromptActor *arg0) {
         arg0->timer = 0;
     }
     if (arg0->timer >= 0x1E) {
-        func_800483FC(&D_80124888, func_80057694, (s32) arg0);
+        addRenderCallback(&D_80124888, func_80057694, (s32) arg0);
     }
 }
 
@@ -1034,7 +1034,7 @@ void func_80057AA4(RaceUiPopupActor *arg0) {
     if (arg0->velocity == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        func_800483FC(&D_80124878, func_80057854, arg0);
+        addRenderCallback(&D_80124878, func_80057854, arg0);
     }
 }
 
@@ -1043,7 +1043,7 @@ void func_80057B04(RaceUiPopupActor *arg0) {
     if (arg0->timer == 0) {
         setCallbackTaskCallback(arg0, func_80057AA4);
     }
-    func_800483FC(&D_80124878, func_80057854, arg0);
+    addRenderCallback(&D_80124878, func_80057854, arg0);
 }
 
 void func_80057B60(RaceUiPopupActor *arg0) {
@@ -1053,7 +1053,7 @@ void func_80057B60(RaceUiPopupActor *arg0) {
         arg0->timer = 0x2D;
         setCallbackTaskCallback(arg0, func_80057B04);
     }
-    func_800483FC(&D_80124878, func_80057854, arg0);
+    addRenderCallback(&D_80124878, func_80057854, arg0);
 }
 
 void func_80057BCC(RaceUiPopupActor *arg0) {
@@ -1083,7 +1083,7 @@ void func_80057CAC(RaceUiPopupActor *arg0) {
     if (arg0->velocity == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        func_800483FC(&D_80124878, func_80057C5C, arg0);
+        addRenderCallback(&D_80124878, func_80057C5C, arg0);
     }
 }
 
@@ -1092,7 +1092,7 @@ void func_80057D0C(RaceUiPopupActor *arg0) {
     if (arg0->timer == 0) {
         setCallbackTaskCallback(arg0, func_80057CAC);
     }
-    func_800483FC(&D_80124878, func_80057C5C, arg0);
+    addRenderCallback(&D_80124878, func_80057C5C, arg0);
 }
 
 void func_80057D68(RaceUiPopupActor *arg0) {
@@ -1102,7 +1102,7 @@ void func_80057D68(RaceUiPopupActor *arg0) {
         arg0->timer = 0x2D;
         setCallbackTaskCallback(arg0, func_80057D0C);
     }
-    func_800483FC(&D_80124878, func_80057C5C, arg0);
+    addRenderCallback(&D_80124878, func_80057C5C, arg0);
 }
 
 void func_80057DD4(RaceUiPopupActor *arg0) {
@@ -1119,7 +1119,7 @@ void func_80057E10(void *arg0) {
 }
 
 void func_80057E60(s32 arg0) {
-    func_800483FC(&D_80124868, func_80057E10, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80057E10, arg0);
 }
 
 void func_80057E90(RaceUiAlpha18Actor *arg0) {
@@ -1235,11 +1235,11 @@ void func_80058360(RaceUiAlpha18Actor *arg0) {
 }
 
 void func_800584A0(void *arg0) {
-    func_800483FC(&D_80124868, func_80057E90, arg0);
-    func_800483FC(&D_80124868, func_8005804C, arg0);
-    func_800483FC(&D_80124868, func_8005812C, arg0);
-    func_800483FC(&D_80124868, func_8005827C, arg0);
-    func_800483FC(&D_80124858, func_80058360, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005812C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005827C, arg0);
+    addRenderCallback(&D_80124858, func_80058360, arg0);
 }
 
 void func_80058538(void *arg0) {
@@ -1248,11 +1248,11 @@ void func_80058538(void *arg0) {
         D_801235B4 |= 0x10;
         setCallbackTaskCallback(arg0, func_800584A0);
     }
-    func_800483FC(&D_80124868, func_80057E90, (s32)arg0);
-    func_800483FC(&D_80124868, func_8005804C, (s32)arg0);
-    func_800483FC(&D_80124868, func_8005812C, (s32)arg0);
-    func_800483FC(&D_80124868, func_8005827C, (s32)arg0);
-    func_800483FC(&D_80124858, func_80058360, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005812C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005827C, (s32)arg0);
+    addRenderCallback(&D_80124858, func_80058360, (s32)arg0);
 }
 
 void func_80058610(RaceUiAlpha18Actor *arg0) {
@@ -1323,11 +1323,11 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
         }
     }
 
-    func_800483FC(&D_80124868, func_80057E90, (s32)arg0);
-    func_800483FC(&D_80124868, func_8005804C, (s32)arg0);
-    func_800483FC(&D_80124868, func_8005812C, (s32)arg0);
-    func_800483FC(&D_80124868, func_8005827C, (s32)arg0);
-    func_800483FC(&D_80124858, func_80058360, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005812C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005827C, (s32)arg0);
+    addRenderCallback(&D_80124858, func_80058360, (s32)arg0);
 }
 
 void func_80058880(void *arg0) {
@@ -1336,11 +1336,11 @@ void func_80058880(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0;
         setCallbackTaskCallback(arg0, func_80058610);
     }
-    func_800483FC(&D_80124868, func_80057E90, arg0);
-    func_800483FC(&D_80124868, func_8005804C, arg0);
-    func_800483FC(&D_80124868, func_8005812C, arg0);
-    func_800483FC(&D_80124868, func_8005827C, arg0);
-    func_800483FC(&D_80124858, func_80058360, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005812C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005827C, arg0);
+    addRenderCallback(&D_80124858, func_80058360, arg0);
 }
 
 void func_8005893C(void *arg0) {
@@ -1350,10 +1350,10 @@ void func_8005893C(void *arg0) {
         enqueueSoundEffect(0x1A, 0x32);
         setCallbackTaskCallback(arg0, func_80058880);
     }
-    func_800483FC(&D_80124868, func_80057E90, arg0);
-    func_800483FC(&D_80124868, func_8005804C, arg0);
-    func_800483FC(&D_80124868, func_8005812C, arg0);
-    func_800483FC(&D_80124858, func_80058360, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005812C, arg0);
+    addRenderCallback(&D_80124858, func_80058360, arg0);
 }
 
 void func_800589F4(void *arg0) {
@@ -1363,9 +1363,9 @@ void func_800589F4(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         setCallbackTaskCallback(arg0, func_8005893C);
     }
-    func_800483FC(&D_80124868, func_80057E90, arg0);
-    func_800483FC(&D_80124868, func_8005804C, arg0);
-    func_800483FC(&D_80124858, func_80058360, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, arg0);
+    addRenderCallback(&D_80124858, func_80058360, arg0);
 }
 
 void func_80058A98(void *arg0) {
@@ -1375,8 +1375,8 @@ void func_80058A98(void *arg0) {
         enqueueSoundEffect(0x1A, 0x32);
         setCallbackTaskCallback(arg0, func_800589F4);
     }
-    func_800483FC(&D_80124868, func_80057E90, arg0);
-    func_800483FC(&D_80124858, func_80058360, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
+    addRenderCallback(&D_80124858, func_80058360, arg0);
 }
 
 void func_80058B20(void *arg0) {
@@ -1386,8 +1386,8 @@ void func_80058B20(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
         setCallbackTaskCallback(arg0, func_80058A98);
     }
-    func_800483FC(&D_80124868, func_80057E90, arg0);
-    func_800483FC(&D_80124858, func_80058360, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
+    addRenderCallback(&D_80124858, func_80058360, arg0);
 }
 
 void func_80058BAC(void *arg0) {
@@ -1572,8 +1572,8 @@ void func_80059518(void *arg0) {
 
 void func_80059804(void *arg0) {
     func_80059518(arg0);
-    func_800483FC(&D_80124868, func_80058C00, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005905C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80058C00, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005905C, (s32)arg0);
 }
 
 void func_80059854(void *arg0) {
@@ -1595,8 +1595,8 @@ void func_80059854(void *arg0) {
         } while (i < (s32)gPlayerCount);
     }
     func_80059518(actor);
-    func_800483FC(&D_80124868, func_80058C00, (s32)actor);
-    func_800483FC(&D_80124858, func_8005905C, (s32)actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_80058C00, (s32)actor);
+    addRenderCallback(&D_80124858, func_8005905C, (s32)actor);
 }
 
 void func_80059950(void *arg0) {
@@ -1607,8 +1607,8 @@ void func_80059950(void *arg0) {
         setCallbackTaskCallback(arg0, func_80059854);
     }
     func_80059518(arg0);
-    func_800483FC(&D_80124868, func_80058C00, arg0);
-    func_800483FC(&D_80124858, func_8005905C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80058C00, arg0);
+    addRenderCallback(&D_80124858, func_8005905C, arg0);
 }
 
 void func_800599DC(void *arg0) {
@@ -1719,9 +1719,9 @@ void func_80059F6C(RaceUiAlpha18Actor *arg0) {
 }
 
 void func_8005A07C(void *arg0) {
-    func_800483FC(&D_80124868, func_80059E5C, arg0);
-    func_800483FC(&D_80124868, func_80059C34, arg0);
-    func_800483FC(&D_80124858, func_80059F6C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80059C34, arg0);
+    addRenderCallback(&D_80124858, func_80059F6C, arg0);
 }
 
 void func_8005A0E0(void *arg0) {
@@ -1730,9 +1730,9 @@ void func_8005A0E0(void *arg0) {
         enqueueSoundEffect(0x18, 0x32);
         setCallbackTaskCallback(arg0, func_8005A07C);
     }
-    func_800483FC(&D_80124868, func_80059E5C, arg0);
-    func_800483FC(&D_80124868, func_80059C34, arg0);
-    func_800483FC(&D_80124858, func_80059F6C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80059C34, arg0);
+    addRenderCallback(&D_80124858, func_80059F6C, arg0);
 }
 
 void func_8005A184(void *arg0) {
@@ -1740,8 +1740,8 @@ void func_8005A184(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1C) == 0) {
         setCallbackTaskCallback(arg0, func_8005A0E0);
     }
-    func_800483FC(&D_80124868, func_80059E5C, arg0);
-    func_800483FC(&D_80124858, func_80059F6C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
+    addRenderCallback(&D_80124858, func_80059F6C, arg0);
 }
 
 void func_8005A1FC(void *arg0) {
@@ -1751,8 +1751,8 @@ void func_8005A1FC(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0xFF;
         setCallbackTaskCallback(arg0, func_8005A184);
     }
-    func_800483FC(&D_80124868, func_80059E5C, arg0);
-    func_800483FC(&D_80124858, func_80059F6C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
+    addRenderCallback(&D_80124858, func_80059F6C, arg0);
 }
 
 void func_8005A288(void *arg0) {
@@ -1761,7 +1761,7 @@ void func_8005A288(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
         setCallbackTaskCallback(arg0, func_8005A1FC);
     }
-    func_800483FC(&D_80124858, func_80059F6C, arg0);
+    addRenderCallback(&D_80124858, func_80059F6C, arg0);
 }
 
 void func_8005A2F0(void *arg0) {
@@ -2023,10 +2023,10 @@ void func_8005AE1C(void *arg0) {
 }
 
 void func_8005AEB0(void *arg0) {
-    func_800483FC(&D_80124868, func_8005A31C, arg0);
-    func_800483FC(&D_80124868, func_8005A884, arg0);
-    func_800483FC(&D_80124858, func_8005AAE4, arg0);
-    func_800483FC(&D_80124858, func_8005AE1C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A884, arg0);
+    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
+    addRenderCallback(&D_80124858, func_8005AE1C, arg0);
 }
 
 void func_8005AF2C(void *arg0) {
@@ -2035,17 +2035,17 @@ void func_8005AF2C(void *arg0) {
         D_801235B4 |= 0x10;
         setCallbackTaskCallback(arg0, func_8005AEB0);
     }
-    func_800483FC(&D_80124868, func_8005A31C, arg0);
-    func_800483FC(&D_80124868, func_8005A884, arg0);
-    func_800483FC(&D_80124858, func_8005AAE4, arg0);
-    func_800483FC(&D_80124858, func_8005AE1C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A884, arg0);
+    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
+    addRenderCallback(&D_80124858, func_8005AE1C, arg0);
 }
 
 void func_8005AFEC(void *arg0) {
-    func_800483FC(&D_80124868, func_8005A31C, arg0);
-    func_800483FC(&D_80124868, func_8005A4BC, arg0);
-    func_800483FC(&D_80124858, func_8005AAE4, arg0);
-    func_800483FC(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
+    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
+    addRenderCallback(&D_80124858, func_8005AC44, arg0);
 }
 
 void func_8005B068(void *arg0) {
@@ -2058,10 +2058,10 @@ void func_8005B068(void *arg0) {
             setCallbackTaskCallback(arg0, func_8005AFEC);
         }
     }
-    func_800483FC(&D_80124868, func_8005A31C, (s32)arg0);
-    func_800483FC(&D_80124868, func_8005A4BC, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005AAE4, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005AC44, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005AAE4, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005AC44, (s32)arg0);
 }
 
 void func_8005B14C(RaceUiCounterActor *arg0) {
@@ -2106,10 +2106,10 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
         setCallbackTaskCallback(arg0, func_8005B068);
     }
 
-    func_800483FC(&D_80124868, func_8005A31C, (s32)arg0);
-    func_800483FC(&D_80124868, func_8005A4BC, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005AAE4, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005AC44, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005AAE4, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005AC44, (s32)arg0);
 }
 
 void func_8005B344(void *arg0) {
@@ -2118,10 +2118,10 @@ void func_8005B344(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         setCallbackTaskCallback(arg0, func_8005B14C);
     }
-    func_800483FC(&D_80124868, func_8005A31C, arg0);
-    func_800483FC(&D_80124868, func_8005A4BC, arg0);
-    func_800483FC(&D_80124858, func_8005AAE4, arg0);
-    func_800483FC(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
+    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
+    addRenderCallback(&D_80124858, func_8005AC44, arg0);
 }
 
 void func_8005B3EC(void *arg0) {
@@ -2131,10 +2131,10 @@ void func_8005B3EC(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0xA;
         setCallbackTaskCallback(arg0, func_8005B344);
     }
-    func_800483FC(&D_80124868, func_8005A31C, arg0);
-    func_800483FC(&D_80124868, func_8005A4BC, arg0);
-    func_800483FC(&D_80124858, func_8005AAE4, arg0);
-    func_800483FC(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
+    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
+    addRenderCallback(&D_80124858, func_8005AC44, arg0);
 }
 
 void func_8005B49C(void *arg0) {
@@ -2145,10 +2145,10 @@ void func_8005B49C(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         setCallbackTaskCallback(arg0, func_8005B3EC);
     }
-    func_800483FC(&D_80124868, func_8005A31C, arg0);
-    func_800483FC(&D_80124868, func_8005A4BC, arg0);
-    func_800483FC(&D_80124858, func_8005AAE4, arg0);
-    func_800483FC(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
+    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
+    addRenderCallback(&D_80124858, func_8005AC44, arg0);
 }
 
 void func_8005B55C(void *arg0) {
@@ -2159,10 +2159,10 @@ void func_8005B55C(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         setCallbackTaskCallback(arg0, func_8005B49C);
     }
-    func_800483FC(&D_80124868, func_8005A31C, arg0);
-    func_800483FC(&D_80124868, func_8005A4BC, arg0);
-    func_800483FC(&D_80124858, func_8005AAE4, arg0);
-    func_800483FC(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
+    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
+    addRenderCallback(&D_80124858, func_8005AC44, arg0);
 }
 
 void func_8005B61C(void *arg0) {
@@ -2177,10 +2177,10 @@ void func_8005B61C(void *arg0) {
             setCallbackTaskCallback(arg0, func_8005B49C);
         }
     }
-    func_800483FC(&D_80124868, func_8005A31C, arg0);
-    func_800483FC(&D_80124868, func_8005A4BC, arg0);
-    func_800483FC(&D_80124858, func_8005AAE4, arg0);
-    func_800483FC(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
+    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
+    addRenderCallback(&D_80124858, func_8005AC44, arg0);
 }
 
 void func_8005B6F8(void *arg0) {
@@ -2190,9 +2190,9 @@ void func_8005B6F8(void *arg0) {
         enqueueSoundEffect(0x1A, 0x32);
         setCallbackTaskCallback(arg0, func_8005B61C);
     }
-    func_800483FC(&D_80124868, func_8005A31C, arg0);
-    func_800483FC(&D_80124858, func_8005AAE4, arg0);
-    func_800483FC(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
+    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
+    addRenderCallback(&D_80124858, func_8005AC44, arg0);
 }
 
 void func_8005B798(void *arg0) {
@@ -2202,9 +2202,9 @@ void func_8005B798(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
         setCallbackTaskCallback(arg0, func_8005B6F8);
     }
-    func_800483FC(&D_80124868, func_8005A31C, arg0);
-    func_800483FC(&D_80124858, func_8005AAE4, arg0);
-    func_800483FC(&D_80124858, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
+    addRenderCallback(&D_80124858, func_8005AAE4, arg0);
+    addRenderCallback(&D_80124858, func_8005AC44, arg0);
 }
 
 void func_8005B834(void *arg0) {
@@ -2469,9 +2469,9 @@ void func_8005C14C(RaceUiCourseRecordActor *arg0) {
 #endif
 
 void func_8005C3E4(void *arg0) {
-    func_800483FC(&D_80124868, func_8005B8E8, arg0);
-    func_800483FC(&D_80124868, func_8005BE68, arg0);
-    func_800483FC(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005BE68, arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, arg0);
 }
 
 void func_8005C448(void *arg0) {
@@ -2480,16 +2480,16 @@ void func_8005C448(void *arg0) {
         D_801235B4 |= 0x10;
         setCallbackTaskCallback(arg0, func_8005C3E4);
     }
-    func_800483FC(&D_80124868, func_8005B8E8, arg0);
-    func_800483FC(&D_80124868, func_8005BE68, arg0);
-    func_800483FC(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005BE68, arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, arg0);
 }
 
 void func_8005C4EC(void *arg0) {
-    func_800483FC(&D_80124868, func_8005B8E8, arg0);
-    func_800483FC(&D_80124868, func_8005B9F8, arg0);
-    func_800483FC(&D_80124858, func_8005C03C, arg0);
-    func_800483FC(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&D_80124858, func_8005C14C, arg0);
 }
 
 void func_8005C568(void *arg0) {
@@ -2502,10 +2502,10 @@ void func_8005C568(void *arg0) {
             setCallbackTaskCallback(arg0, func_8005C4EC);
         }
     }
-    func_800483FC(&D_80124868, func_8005B8E8, (s32)arg0);
-    func_800483FC(&D_80124868, func_8005B9F8, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005C03C, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005C14C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005C14C, (s32)arg0);
 }
 
 void func_8005C64C(RaceUiDualCounterActor *arg0) {
@@ -2557,10 +2557,10 @@ void func_8005C64C(RaceUiDualCounterActor *arg0) {
         setCallbackTaskCallback(arg0, func_8005C568);
     }
 
-    func_800483FC(&D_80124868, func_8005B8E8, (s32)arg0);
-    func_800483FC(&D_80124868, func_8005B9F8, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005C03C, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005C14C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005C14C, (s32)arg0);
 }
 
 void func_8005C89C(void *arg0) {
@@ -2569,10 +2569,10 @@ void func_8005C89C(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
         setCallbackTaskCallback(arg0, func_8005C64C);
     }
-    func_800483FC(&D_80124868, func_8005B8E8, arg0);
-    func_800483FC(&D_80124868, func_8005B9F8, arg0);
-    func_800483FC(&D_80124858, func_8005C03C, arg0);
-    func_800483FC(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&D_80124858, func_8005C14C, arg0);
 }
 
 void func_8005C944(void *arg0) {
@@ -2582,10 +2582,10 @@ void func_8005C944(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1E) = 0xA;
         setCallbackTaskCallback(arg0, func_8005C89C);
     }
-    func_800483FC(&D_80124868, func_8005B8E8, arg0);
-    func_800483FC(&D_80124868, func_8005B9F8, arg0);
-    func_800483FC(&D_80124858, func_8005C03C, arg0);
-    func_800483FC(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&D_80124858, func_8005C14C, arg0);
 }
 
 void func_8005C9F4(void *arg0) {
@@ -2596,10 +2596,10 @@ void func_8005C9F4(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
         setCallbackTaskCallback(arg0, func_8005C944);
     }
-    func_800483FC(&D_80124868, func_8005B8E8, arg0);
-    func_800483FC(&D_80124868, func_8005B9F8, arg0);
-    func_800483FC(&D_80124858, func_8005C03C, arg0);
-    func_800483FC(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&D_80124858, func_8005C14C, arg0);
 }
 
 void func_8005CAB4(void *arg0) {
@@ -2610,10 +2610,10 @@ void func_8005CAB4(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
         setCallbackTaskCallback(arg0, func_8005C9F4);
     }
-    func_800483FC(&D_80124868, func_8005B8E8, arg0);
-    func_800483FC(&D_80124868, func_8005B9F8, arg0);
-    func_800483FC(&D_80124858, func_8005C03C, arg0);
-    func_800483FC(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&D_80124858, func_8005C14C, arg0);
 }
 
 void func_8005CB74(void *arg0) {
@@ -2628,10 +2628,10 @@ void func_8005CB74(void *arg0) {
             setCallbackTaskCallback(arg0, func_8005C9F4);
         }
     }
-    func_800483FC(&D_80124868, func_8005B8E8, arg0);
-    func_800483FC(&D_80124868, func_8005B9F8, arg0);
-    func_800483FC(&D_80124858, func_8005C03C, arg0);
-    func_800483FC(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&D_80124858, func_8005C14C, arg0);
 }
 
 void func_8005CC54(void *arg0) {
@@ -2642,10 +2642,10 @@ void func_8005CC54(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
         setCallbackTaskCallback(arg0, func_8005CB74);
     }
-    func_800483FC(&D_80124868, func_8005B8E8, arg0);
-    func_800483FC(&D_80124868, func_8005B9F8, arg0);
-    func_800483FC(&D_80124858, func_8005C03C, arg0);
-    func_800483FC(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&D_80124858, func_8005C14C, arg0);
 }
 
 void func_8005CD10(void *arg0) {
@@ -2655,9 +2655,9 @@ void func_8005CD10(void *arg0) {
         enqueueSoundEffect(0x1A, 0x32);
         setCallbackTaskCallback(arg0, func_8005CC54);
     }
-    func_800483FC(&D_80124868, func_8005B8E8, arg0);
-    func_800483FC(&D_80124858, func_8005C03C, arg0);
-    func_800483FC(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&D_80124858, func_8005C14C, arg0);
 }
 
 void func_8005CDB0(void *arg0) {
@@ -2667,9 +2667,9 @@ void func_8005CDB0(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1C) = 0xFF;
         setCallbackTaskCallback(arg0, func_8005CD10);
     }
-    func_800483FC(&D_80124868, func_8005B8E8, arg0);
-    func_800483FC(&D_80124858, func_8005C03C, arg0);
-    func_800483FC(&D_80124858, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
+    addRenderCallback(&D_80124858, func_8005C03C, arg0);
+    addRenderCallback(&D_80124858, func_8005C14C, arg0);
 }
 
 void func_8005CE4C(RaceUiDualCounterActor *arg0) {
@@ -3004,10 +3004,10 @@ void func_8005DB3C(void *arg0) {
 }
 
 void func_8005DBD0(void *arg0) {
-    func_800483FC(&D_80124868, func_8005CF60, arg0);
-    func_800483FC(&D_80124868, func_8005D558, arg0);
-    func_800483FC(&D_80124858, func_8005D860, arg0);
-    func_800483FC(&D_80124858, func_8005DB3C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005D558, arg0);
+    addRenderCallback(&D_80124858, func_8005D860, arg0);
+    addRenderCallback(&D_80124858, func_8005DB3C, arg0);
 }
 
 void func_8005DC4C(void *arg0) {
@@ -3016,17 +3016,17 @@ void func_8005DC4C(void *arg0) {
         D_801235B4 |= 0x10;
         setCallbackTaskCallback(arg0, func_8005DBD0);
     }
-    func_800483FC(&D_80124868, func_8005CF60, arg0);
-    func_800483FC(&D_80124868, func_8005D558, arg0);
-    func_800483FC(&D_80124858, func_8005D860, arg0);
-    func_800483FC(&D_80124858, func_8005DB3C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005D558, arg0);
+    addRenderCallback(&D_80124858, func_8005D860, arg0);
+    addRenderCallback(&D_80124858, func_8005DB3C, arg0);
 }
 
 void func_8005DD0C(void *arg0) {
-    func_800483FC(&D_80124868, func_8005CF60, arg0);
-    func_800483FC(&D_80124868, func_8005D1CC, arg0);
-    func_800483FC(&D_80124858, func_8005D860, arg0);
-    func_800483FC(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
+    addRenderCallback(&D_80124858, func_8005D860, arg0);
+    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
 }
 
 void func_8005DD88(void *arg0) {
@@ -3039,10 +3039,10 @@ void func_8005DD88(void *arg0) {
             setCallbackTaskCallback(arg0, func_8005DD0C);
         }
     }
-    func_800483FC(&D_80124868, func_8005CF60, (s32)arg0);
-    func_800483FC(&D_80124868, func_8005D1CC, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005D860, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005D9B4, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005D860, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005D9B4, (s32)arg0);
 }
 
 void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
@@ -3087,10 +3087,10 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
         setCallbackTaskCallback(arg0, func_8005DD88);
     }
 
-    func_800483FC(&D_80124868, func_8005CF60, (s32)arg0);
-    func_800483FC(&D_80124868, func_8005D1CC, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005D860, (s32)arg0);
-    func_800483FC(&D_80124858, func_8005D9B4, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005D860, (s32)arg0);
+    addRenderCallback(&D_80124858, func_8005D9B4, (s32)arg0);
 }
 
 void func_8005E064(void *arg0) {
@@ -3099,10 +3099,10 @@ void func_8005E064(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         setCallbackTaskCallback(arg0, func_8005DE6C);
     }
-    func_800483FC(&D_80124868, func_8005CF60, arg0);
-    func_800483FC(&D_80124868, func_8005D1CC, arg0);
-    func_800483FC(&D_80124858, func_8005D860, arg0);
-    func_800483FC(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
+    addRenderCallback(&D_80124858, func_8005D860, arg0);
+    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
 }
 
 void func_8005E10C(void *arg0) {
@@ -3112,10 +3112,10 @@ void func_8005E10C(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0xA;
         setCallbackTaskCallback(arg0, func_8005E064);
     }
-    func_800483FC(&D_80124868, func_8005CF60, arg0);
-    func_800483FC(&D_80124868, func_8005D1CC, arg0);
-    func_800483FC(&D_80124858, func_8005D860, arg0);
-    func_800483FC(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
+    addRenderCallback(&D_80124858, func_8005D860, arg0);
+    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
 }
 
 void func_8005E1BC(void *arg0) {
@@ -3126,10 +3126,10 @@ void func_8005E1BC(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         setCallbackTaskCallback(arg0, func_8005E10C);
     }
-    func_800483FC(&D_80124868, func_8005CF60, arg0);
-    func_800483FC(&D_80124868, func_8005D1CC, arg0);
-    func_800483FC(&D_80124858, func_8005D860, arg0);
-    func_800483FC(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
+    addRenderCallback(&D_80124858, func_8005D860, arg0);
+    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
 }
 
 void func_8005E27C(void *arg0) {
@@ -3140,10 +3140,10 @@ void func_8005E27C(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         setCallbackTaskCallback(arg0, func_8005E1BC);
     }
-    func_800483FC(&D_80124868, func_8005CF60, arg0);
-    func_800483FC(&D_80124868, func_8005D1CC, arg0);
-    func_800483FC(&D_80124858, func_8005D860, arg0);
-    func_800483FC(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
+    addRenderCallback(&D_80124858, func_8005D860, arg0);
+    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
 }
 
 void func_8005E33C(void *arg0) {
@@ -3154,10 +3154,10 @@ void func_8005E33C(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         setCallbackTaskCallback(arg0, func_8005E27C);
     }
-    func_800483FC(&D_80124868, func_8005CF60, arg0);
-    func_800483FC(&D_80124868, func_8005D1CC, arg0);
-    func_800483FC(&D_80124858, func_8005D860, arg0);
-    func_800483FC(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
+    addRenderCallback(&D_80124858, func_8005D860, arg0);
+    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
 }
 
 void func_8005E3F8(void *arg0) {
@@ -3167,9 +3167,9 @@ void func_8005E3F8(void *arg0) {
         enqueueSoundEffect(0x1A, 0x32);
         setCallbackTaskCallback(arg0, func_8005E33C);
     }
-    func_800483FC(&D_80124868, func_8005CF60, arg0);
-    func_800483FC(&D_80124858, func_8005D860, arg0);
-    func_800483FC(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
+    addRenderCallback(&D_80124858, func_8005D860, arg0);
+    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
 }
 
 void func_8005E498(void *arg0) {
@@ -3179,9 +3179,9 @@ void func_8005E498(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
         setCallbackTaskCallback(arg0, func_8005E3F8);
     }
-    func_800483FC(&D_80124868, func_8005CF60, arg0);
-    func_800483FC(&D_80124858, func_8005D860, arg0);
-    func_800483FC(&D_80124858, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
+    addRenderCallback(&D_80124858, func_8005D860, arg0);
+    addRenderCallback(&D_80124858, func_8005D9B4, arg0);
 }
 
 void func_8005E534(void *arg0) {
@@ -3209,7 +3209,7 @@ void func_8005E68C(void *arg0) {
     if (*(u16 *)((u8 *)arg0 + 0x10) != 0) {
         *(s16 *)((u8 *)arg0 + 0x10) = *(u16 *)((u8 *)arg0 + 0x10) - 1;
     } else {
-        func_800483FC(&D_80124868, func_8005E5B4, (s32)arg0);
+        addRenderCallback(&gMenuRenderCallbackList, func_8005E5B4, (s32)arg0);
     }
 }
 
@@ -3301,7 +3301,7 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
         arg0->pos.z += player->pos28.z;
     }
 
-    func_800483FC(&D_801248EC, func_8005E6D0, (s32) arg0);
+    addRenderCallback(&D_801248EC, func_8005E6D0, (s32) arg0);
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005ECA8.s")
@@ -3338,7 +3338,7 @@ void func_8005EFFC(RaceUiSparkleActor *arg0) {
         arg0->zOffset += 0x20000;
     }
 
-    func_800483FC(&D_801248EC, func_8005E6D0, arg0);
+    addRenderCallback(&D_801248EC, func_8005E6D0, arg0);
 }
 
 void func_8005F174(RaceUiSparkleActor *arg0) {
@@ -3418,7 +3418,7 @@ void func_8005F448(RaceUiSnowboardTrailActor *arg0) {
     }
 
     if (D_80121D94[actor->playerIndex].value == 0) {
-        func_800483FC(&D_801248B0, func_8005F2DC, arg0);
+        addRenderCallback(&D_801248B0, func_8005F2DC, arg0);
     }
 }
 
@@ -3503,7 +3503,7 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
     }
 
     if (D_8012207C[arg0->playerIndex].flags & 0x100000) {
-        func_800483FC(&D_801248EC, func_8005F6A4, (s32)arg0);
+        addRenderCallback(&D_801248EC, func_8005F6A4, (s32)arg0);
         return;
     }
 
@@ -3595,10 +3595,10 @@ void func_800601F8(void *arg0) {
         }
     }
     if (*(u8 *)((u8 *)arg0 + 0x57) == 0) {
-        func_800483FC(&D_801248EC, func_8005FBA8, arg0);
+        addRenderCallback(&D_801248EC, func_8005FBA8, arg0);
         return;
     }
-    func_800483FC(&D_801248B0, func_8005FED0, arg0);
+    addRenderCallback(&D_801248B0, func_8005FED0, arg0);
 }
 
 void func_800602BC(void *arg0) {
@@ -3677,7 +3677,7 @@ void func_8006069C(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x56) == 0) {
         removeCallbackTask(arg0);
     } else {
-        func_800483FC(&D_801248B0, func_80060544, arg0);
+        addRenderCallback(&D_801248B0, func_80060544, arg0);
     }
 }
 
@@ -3711,7 +3711,7 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
     }
 
     D_8012229A[arg0->targetPlayerIndex].value = 1;
-    func_800483FC(&D_801248BC, func_80060544, arg0);
+    addRenderCallback(&D_801248BC, func_80060544, arg0);
 }
 
 // updateGhostSlowdownRise best match: 83.297% (nonmatchings/updateGhostSlowdownRise-8662636370764828261/base_15.c)
@@ -3757,7 +3757,7 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
             }
         }
         D_8012229A[arg0->targetPlayerIndex].value = 1;
-        func_800483FC(&D_801248BC, func_80060544, (s32)arg0);
+        addRenderCallback(&D_801248BC, func_80060544, (s32)arg0);
     } else if (gRaceUpdatePaused == 0) {
         arg0->timer--;
     }
@@ -3823,7 +3823,7 @@ void func_80060E7C(void *arg0) {
     if (*(s32 *)((u8 *)arg0 + 0x28) == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        func_800483FC(&D_80124878, func_80060D10, arg0);
+        addRenderCallback(&D_80124878, func_80060D10, arg0);
     }
 }
 
@@ -3832,7 +3832,7 @@ void func_80060EDC(void *arg0) {
     if (*(u16 *)((u8 *)arg0 + 0x18) == 0) {
         setCallbackTaskCallback(arg0, func_80060E7C);
     }
-    func_800483FC(&D_80124878, func_80060D10, arg0);
+    addRenderCallback(&D_80124878, func_80060D10, arg0);
 }
 
 void func_80060F38(void *arg0) {
@@ -3842,7 +3842,7 @@ void func_80060F38(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x18) = 0x2D;
         setCallbackTaskCallback(arg0, func_80060EDC);
     }
-    func_800483FC(&D_80124878, func_80060D10, arg0);
+    addRenderCallback(&D_80124878, func_80060D10, arg0);
 }
 
 void func_80060FA4(void *arg0) {
@@ -3914,7 +3914,7 @@ void func_80061088(RaceUiTripleParticleActor *arg0) {
 
 void func_800613EC(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x30) = *(s16 *)((u8 *)arg0 + 0x30) + 4;
-    func_800483FC(&D_801248B0, func_80061088, (s32)arg0);
+    addRenderCallback(&D_801248B0, func_80061088, (s32)arg0);
 }
 
 void func_80061428(void *arg0) {
@@ -3962,7 +3962,7 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
 
     player = &D_80121D80[arg0->playerIndex];
     if (player->flags & 0x400000) {
-        func_800483FC(&D_801248BC, func_80061484, (s32)arg0);
+        addRenderCallback(&D_801248BC, func_80061484, (s32)arg0);
         return;
     }
 
@@ -4039,7 +4039,7 @@ void func_80061984(RaceUiThrownTrailActor *arg0) {
         }
         arg0->spin += 0x40;
     }
-    func_800483FC(&D_801248A4, func_800617EC, (s32)arg0);
+    addRenderCallback(&D_801248A4, func_800617EC, (s32)arg0);
 }
 
 void func_80061A98(RaceUiThrownTrailActor *arg0) {
@@ -4097,7 +4097,7 @@ void func_80061CA8(RaceUiSingleTrailActor *arg0) {
         return;
     }
 
-    func_800483FC(&D_801248BC, func_80061B70, (s32)arg0);
+    addRenderCallback(&D_801248BC, func_80061B70, (s32)arg0);
 }
 
 void func_80061D90(void *arg0) {
@@ -4185,7 +4185,7 @@ void func_80061F38(RaceUiFadingImpactActor *arg0) {
     if (arg0->alpha <= 0) {
         removeCallbackTask(arg0);
     } else {
-        func_800483FC(&D_801248EC, func_80061DE8, (s32)arg0);
+        addRenderCallback(&D_801248EC, func_80061DE8, (s32)arg0);
     }
 }
 
@@ -4302,7 +4302,7 @@ void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
     arg0->angle += 0xC0;
     arg0->pos.x -= fixedSine(arg0->angle) << 7;
     arg0->pos.z += fixedCosine(arg0->angle) << 7;
-    func_800483FC(&D_801248EC, func_800625D8, (s32)arg0);
+    addRenderCallback(&D_801248EC, func_800625D8, (s32)arg0);
 }
 
 void func_80062A10(void *arg0) {
@@ -4400,7 +4400,7 @@ void func_80062D34(RaceUiScaledParticleActor *arg0) {
             }
         }
     }
-    func_800483FC(&D_801248BC, func_80062AF0, actor);
+    addRenderCallback(&D_801248BC, func_80062AF0, actor);
 }
 
 void func_80062ED4(RaceUiScaledParticleActor *arg0) {
@@ -4456,7 +4456,7 @@ void func_80063164(void *arg0) {
     if (gRaceUpdatePaused == 0) {
         *(s16 *)((u8 *)arg0 + 0x2E) = *(s16 *)((u8 *)arg0 + 0x2E) + 8;
     }
-    func_800483FC(&D_801248BC, func_80062F6C, (s32)arg0);
+    addRenderCallback(&D_801248BC, func_80062F6C, (s32)arg0);
 }
 
 void func_800631B0(void *arg0) {
@@ -4512,7 +4512,7 @@ void func_80063410(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x30) = *(s16 *)((u8 *)arg0 + 0x30) + 0x10;
         *(s16 *)((u8 *)arg0 + 0x32) = *(s16 *)((u8 *)arg0 + 0x32) + 4;
     }
-    func_800483FC(&D_801248BC, func_80063220, arg0);
+    addRenderCallback(&D_801248BC, func_80063220, arg0);
 }
 
 void func_80063470(void *arg0) {
@@ -4587,7 +4587,7 @@ void func_8006392C(void *arg0) {
     if ((gFrameCounter & 7) == 0) {
         *(s16 *)((u8 *)arg0 + 0x4C) = (*(s16 *)((u8 *)arg0 + 0x4C) + 4) & 0x3F;
     }
-    func_800483FC(&D_801248C8, func_800634C8, arg0);
+    addRenderCallback(&D_801248C8, func_800634C8, arg0);
 }
 
 void func_80063980(RaceUiCourseSpriteActor *actor) {
@@ -4719,7 +4719,7 @@ void func_80063E70(RaceUiEffectParticleActor *arg0) {
         actor->particles[i].unk4 += 0xFFFD0000;
         actor->particles[i].unk4 &= 0xFFFFFF;
     }
-    func_800483FC(&D_801248D4, func_80063A9C, (s32)actor);
+    addRenderCallback(&D_801248D4, func_80063A9C, (s32)actor);
 }
 
 void func_80063FC0(RaceUiEffectParticleActor *actor) {
@@ -4774,7 +4774,7 @@ void func_800640D8(RaceUiRankParticleActor *arg0) {
 }
 
 void func_8006426C(s32 arg0) {
-    func_800483FC(&D_801248C8, func_800640D8, arg0);
+    addRenderCallback(&D_801248C8, func_800640D8, arg0);
 }
 
 void func_8006429C(RaceUiRankParticleActor *actor) {
@@ -4898,7 +4898,7 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
             return;
         }
     }
-    func_800483FC(&D_801248C8, func_80064470, actor);
+    addRenderCallback(&D_801248C8, func_80064470, actor);
 }
 
 // func_80064914 best match: 96.414% (nonmatchings/func_80064914-5272447827802519043/base_13.c)
@@ -4953,7 +4953,7 @@ void func_80064914(RaceUiProjectileActor *arg0) {
         }
     }
 
-    func_800483FC(&D_801248C8, func_80064470, arg0);
+    addRenderCallback(&D_801248C8, func_80064470, arg0);
 }
 #endif
 
@@ -4985,7 +4985,7 @@ void func_80064B28(RaceUiProjectileActor *arg0) {
             setCallbackTaskCallback(actor, func_80064914);
         }
     }
-    func_800483FC(&D_801248C8, func_80064470, actor);
+    addRenderCallback(&D_801248C8, func_80064470, actor);
 }
 
 void func_80064C68(RaceUiProjectileActor *arg0) {
@@ -5009,7 +5009,7 @@ void func_80064C68(RaceUiProjectileActor *arg0) {
             actor->verticalVelocity += 0x50000;
         }
     }
-    func_800483FC(&D_801248C8, func_80064470, actor);
+    addRenderCallback(&D_801248C8, func_80064470, actor);
 }
 
 void func_80064D88(RaceUiProjectileActor *arg0) {
@@ -5033,7 +5033,7 @@ void func_80064D88(RaceUiProjectileActor *arg0) {
             setCallbackTaskCallback(actor, func_80064C68);
         }
     }
-    func_800483FC(&D_801248C8, func_80064470, actor);
+    addRenderCallback(&D_801248C8, func_80064470, actor);
 }
 
 void func_80064EAC(void *arg0) {
@@ -5070,7 +5070,7 @@ void func_8006501C(void *arg0) {
     if (*(s32 *)((u8 *)arg0 + 0x28) == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        func_800483FC(&D_80124878, func_80064F4C, arg0);
+        addRenderCallback(&D_80124878, func_80064F4C, arg0);
     }
 }
 
@@ -5079,7 +5079,7 @@ void func_8006507C(void *arg0) {
     if (*(u16 *)((u8 *)arg0 + 0x18) == 0) {
         setCallbackTaskCallback(arg0, func_8006501C);
     }
-    func_800483FC(&D_80124878, func_80064F4C, arg0);
+    addRenderCallback(&D_80124878, func_80064F4C, arg0);
 }
 
 void func_800650D8(void *arg0) {
@@ -5089,7 +5089,7 @@ void func_800650D8(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x18) = 0x5A;
         setCallbackTaskCallback(arg0, func_8006507C);
     }
-    func_800483FC(&D_80124878, func_80064F4C, arg0);
+    addRenderCallback(&D_80124878, func_80064F4C, arg0);
 }
 
 void func_80065144(void *arg0) {
@@ -5249,7 +5249,7 @@ loop:
     }
 
 done:
-    func_800483FC(&D_801248D4, func_800651BC, actor);
+    addRenderCallback(&D_801248D4, func_800651BC, actor);
 }
 
 void func_8006565C(RaceUiGfxCommandActor *arg0) {
@@ -5372,7 +5372,7 @@ void func_80065CB8(void *arg0) {
         removeCallbackTask(temp_a2);
         return;
     }
-    func_800483FC(&D_801248BC, func_80065808, temp_a2);
+    addRenderCallback(&D_801248BC, func_80065808, temp_a2);
 }
 
 void func_80065D24(RaceUiOverlayActor *arg0) {
@@ -5405,7 +5405,7 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
     temp_v0_2 = temp_s0->velocity;
     temp_s0->y += temp_v0_2;
     temp_s0->velocity = temp_v0_2 + 0xC00;
-    func_800483FC(&D_801248BC, func_80065808, temp_s0);
+    addRenderCallback(&D_801248BC, func_80065808, temp_s0);
 }
 
 void func_80065E0C(void *arg0) {
@@ -5419,7 +5419,7 @@ void func_80065E0C(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x32) = 0;
         setCallbackTaskCallback(arg0, func_80065D24);
     }
-    func_800483FC(&D_801248BC, func_80065808, arg0);
+    addRenderCallback(&D_801248BC, func_80065808, arg0);
 }
 
 void func_80065E90(RaceUiOverlayActor *arg0) {
@@ -5527,7 +5527,7 @@ void func_80066158(void *arg0) {
         } while (entry->active != -1);
     }
 
-    func_800483FC(&D_801248B0, func_80065FD8, arg0);
+    addRenderCallback(&D_801248B0, func_80065FD8, arg0);
 }
 
 void func_800663C8(RaceUiRankTextRenderActor *arg0) {

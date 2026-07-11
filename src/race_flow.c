@@ -172,7 +172,7 @@ extern s32 D_801235B4;
 extern s32 gPlayerInputHeld;
 extern s32 D_8012207C;
 extern s32 gPlayerInputPressed[];
-extern void *D_80124868;
+extern void *gMenuRenderCallbackList;
 extern s16 D_80112130[];
 extern s16 D_80112186;
 extern s16 D_80112188;
@@ -254,7 +254,7 @@ extern s32 func_80040D94(void);
 extern void releaseMenuAssetHandles(void);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s32, s32, s32, s32, s32);
-extern void func_800483FC(void *, void (*)(s32), s32);
+extern void addRenderCallback(void *, void (*)(s32), s32);
 extern void enqueueSoundEffect(s32, s32);
 
 void func_80072C30(void) {
@@ -790,7 +790,7 @@ void func_80074960(void) {
                 player++;
             } while (i < gPlayerCount);
         }
-        func_800483FC(&D_80124868, func_80074864, 0);
+        addRenderCallback(&gMenuRenderCallbackList, func_80074864, 0);
     }
 
     if (D_800EC9C2 == valueTwo) {

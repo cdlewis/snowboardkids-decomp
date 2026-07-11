@@ -95,7 +95,7 @@ typedef struct {
 } RaceCoursePreviewAssetHandles;
 
 extern void *D_801248D4;
-extern void func_800483FC(void *, void *, s32);
+extern void addRenderCallback(void *, void *, s32);
 extern void osWritebackDCache(void *, s32);
 extern s16 D_80112144;
 extern s16 D_80112146;
@@ -183,7 +183,7 @@ void drawRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
 #endif
 
 void enqueueDrawRaceCoursePreviewModelMeshes(s32 arg0) {
-    func_800483FC(&D_801248D4, drawRaceCoursePreviewModelMeshes, arg0);
+    addRenderCallback(&D_801248D4, drawRaceCoursePreviewModelMeshes, arg0);
 }
 
 void initRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
@@ -278,7 +278,7 @@ void updateRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
     temp_s0->position.y += sp44.y;
     temp_s0->position.z += sp44.z;
     temp_s0->radius -= 0x4000;
-    func_800483FC(&D_801248D4, drawRaceCoursePreviewBillboard, (s32) temp_s0);
+    addRenderCallback(&D_801248D4, drawRaceCoursePreviewBillboard, (s32) temp_s0);
 }
 
 void waitRaceCoursePreviewBillboardSpawn(RaceCoursePreviewCamera *arg0) {
@@ -414,7 +414,7 @@ void updateRaceCoursePreviewCameraMotion(RaceCoursePreviewCamera *arg0) {
     arg0->position.z += ((s64) -arg0->radius * cosine) / 0x1000;
     arg0->scale = 0x80 - ((fixedSine(arg0->tilt + 0x400) + 0x1000) / 0x40);
 
-    func_800483FC(&D_801248D4, drawRaceCoursePreviewCameraModel, (s32) arg0);
+    addRenderCallback(&D_801248D4, drawRaceCoursePreviewCameraModel, (s32) arg0);
 }
 
 void updateRaceCoursePreviewCameraIdle(RaceCoursePreviewCamera *arg0) {
@@ -659,7 +659,7 @@ void drawRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
 #endif
 
 void enqueueDrawRaceCoursePreviewAnimatedBillboards(s32 arg0) {
-    func_800483FC(&D_801248D4, drawRaceCoursePreviewAnimatedBillboards, arg0);
+    addRenderCallback(&D_801248D4, drawRaceCoursePreviewAnimatedBillboards, arg0);
 }
 
 void initRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {

@@ -159,7 +159,7 @@ extern s8 D_8012482C;
 extern RenderCallbackNode *D_80124838;
 extern RenderCallbackNode *D_80124848;
 extern RenderCallbackNode *D_80124858;
-extern RenderCallbackNode *D_80124868;
+extern RenderCallbackNode *gMenuRenderCallbackList;
 extern RenderCallbackNode *D_80124878;
 extern RenderCallbackNode *D_80124888;
 extern RenderCallbackNode *D_80124898;
@@ -407,7 +407,7 @@ void resetRenderCallbackQueues(void) {
     D_80124838 = NULL;
     D_80124848 = NULL;
     D_80124878 = NULL;
-    D_80124868 = NULL;
+    gMenuRenderCallbackList = NULL;
 }
 
 void initVideoTaskState(void) {

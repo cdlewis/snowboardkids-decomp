@@ -93,7 +93,7 @@ typedef struct {
 extern s32 enqueueSoundEffect(s32, s32);
 extern s16 calculateAngleBetweenXZPoints(s32, s32, s32, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, SoundPosition *, s32, s32, f32, s16);
-extern void func_800483FC(void *, void (*)(void *), void *);
+extern void addRenderCallback(void *, void (*)(void *), void *);
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 extern void func_800545D0(CallbackTask *);
 extern void (*D_800DECD0[])(RaceInputPlayer *);
@@ -5279,10 +5279,10 @@ void func_80096E3C(void) {
             nextSoundPos->pos = soundPos->pos;
             player->unk2C = player->unk64 + player->unk2C - player->unk58 + 0xA000;
             if (player->soundDisabled == 0) {
-                func_800483FC(&D_801248C8, (void (*)(void *))func_8007C5E8, (RacePositionUiPlayer *)player);
-                func_800483FC(&D_801248EC, (void (*)(void *))func_8007BE80, (RacePositionUiPlayer *)player);
+                addRenderCallback(&D_801248C8, (void (*)(void *))func_8007C5E8, (RacePositionUiPlayer *)player);
+                addRenderCallback(&D_801248EC, (void (*)(void *))func_8007BE80, (RacePositionUiPlayer *)player);
             } else {
-                func_800483FC(&D_801248EC, (void (*)(void *))func_8007CBC0, (RacePositionUiPlayer *)player);
+                addRenderCallback(&D_801248EC, (void (*)(void *))func_8007CBC0, (RacePositionUiPlayer *)player);
             }
             i++;
             player++;

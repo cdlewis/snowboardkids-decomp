@@ -6,7 +6,7 @@
 #include "system_boot.h"
 #include "game_task_scheduler.h"
 #include "race_camera.h"
-#include "ending_object_ui.h"
+#include "ending_object_sequence.h"
 #include "main_menu_effects.h"
 #include "main_menu_race_setup.h"
 #include "main_menu_scene_actor_0.h"

@@ -161,7 +161,7 @@ extern GfxCommandDest *func_8004885C(void *);
 extern void func_80048C90(GfxCommandDest *, Vec3i *);
 extern s32 func_80048E60(void *);
 extern void osWritebackDCache(void *, s32);
-extern void func_800483FC(void *, void *, void *);
+extern void addRenderCallback(void *, void *, void *);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern u8 gItemEffectRollTable[][0x10];
 extern u8 gActionEffectRollTable[][0x10];
@@ -275,7 +275,7 @@ void func_800668EC(RaceModelListActor *arg0) {
             pos = &entry->pos;
         } while (entry->modelIndex != -1);
     }
-    func_800483FC(&D_801248B0, func_80066760, arg0);
+    addRenderCallback(&D_801248B0, func_80066760, arg0);
 }
 
 void func_800669A0(RaceModelListActor *arg0) {
@@ -426,7 +426,7 @@ next:
     }
 
 done:
-    func_800483FC(&D_801248D4, func_80066ABC, actor);
+    addRenderCallback(&D_801248D4, func_80066ABC, actor);
 }
 
 void func_80067034(RaceModelListActor *arg0) {
@@ -546,7 +546,7 @@ void func_80067364(RaceThrownModelActor *arg0) {
         return;
     }
 
-    func_800483FC(&D_801248B0, func_800671F4, arg0);
+    addRenderCallback(&D_801248B0, func_800671F4, arg0);
 }
 
 void func_800674B4(RaceThrownModelActor *arg0) {
@@ -900,7 +900,7 @@ void func_80068BF0(RaceOverlayModelActor *arg0) {
         func_80088C80(temp_s1, 0xC0000, 0x180000, 2);
         func_80088C80(temp_s1, 0xC0000, 0x180000, 3);
     }
-    func_800483FC(&D_801248D4, func_800684E4, temp_s0);
+    addRenderCallback(&D_801248D4, func_800684E4, temp_s0);
 }
 
 void func_80068CD4(RaceOverlayModelActor *arg0) {
@@ -919,7 +919,7 @@ void func_80068CD4(RaceOverlayModelActor *arg0) {
         func_80088C80(&arg0->pos, 0xC0000, 0x180000, 2);
         func_80088C80(&arg0->pos, 0xC0000, 0x180000, 3);
     }
-    func_800483FC(&D_801248D4, func_800681A4, arg0);
+    addRenderCallback(&D_801248D4, func_800681A4, arg0);
 }
 
 void func_80068DB4(RaceOverlayModelActor *arg0) {
@@ -947,7 +947,7 @@ void func_80068DB4(RaceOverlayModelActor *arg0) {
             func_80088C80(temp_s1, 0xC0000, 0x180000, 3);
         }
     }
-    func_800483FC(&D_801248D4, func_800681A4, arg0);
+    addRenderCallback(&D_801248D4, func_800681A4, arg0);
 }
 
 // assignPickupRandomEffect best match: 99.901%
@@ -1028,7 +1028,7 @@ next:
     }
 
 done:
-    func_800483FC(&D_801248D4, func_80067830, arg0);
+    addRenderCallback(&D_801248D4, func_80067830, arg0);
 }
 #endif
 
@@ -1143,7 +1143,7 @@ void func_80069678(RaceParticleActor *arg0) {
             temp_a2->rotY += temp_a2->rotVelY;
             temp_a2->rotZ += temp_a2->rotVelZ;
         }
-        func_800483FC(&D_801248D4, func_8006935C, temp_a2);
+        addRenderCallback(&D_801248D4, func_8006935C, temp_a2);
         return;
     }
     removeCallbackTask(temp_a2);

@@ -126,7 +126,7 @@ extern RacePlayerByteField D_8012229A[];
 extern s32 D_801248A4;
 
 Mtx *func_8004885C(RaceEffectMatrixSource *);
-void func_800483FC(void *, void *, void *);
+void addRenderCallback(void *, void *, void *);
 void func_80045990(s32, s32, void **, void **);
 void func_8006224C(s32, s32, s32, u16);
 void enqueuePositionalSoundEffect(s32, void *, s32, s32);
@@ -312,7 +312,7 @@ void func_800499A4(RaceEffectActor *arg0) {
         func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 0);
     }
 
-    func_800483FC(&D_801248A4, func_80049664, arg0);
+    addRenderCallback(&D_801248A4, func_80049664, arg0);
 }
 
 void func_80049CE0(RaceEffectActor *arg0) {
@@ -485,7 +485,7 @@ void func_8004A2F4(RaceEffectActor *arg0) {
         func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
     }
 
-    func_800483FC(&D_801248A4, func_80049FB4, arg0);
+    addRenderCallback(&D_801248A4, func_80049FB4, arg0);
 }
 
 void func_8004A648(RaceEffectActor *arg0) {
@@ -654,7 +654,7 @@ void func_8004AC5C(RaceEffectActor *arg0) {
         func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 3);
     }
 
-    func_800483FC(&D_801248A4, func_8004A91C, arg0);
+    addRenderCallback(&D_801248A4, func_8004A91C, arg0);
 }
 #endif
 
@@ -797,7 +797,7 @@ void func_8004B5F8(RaceEffectActor *arg0) {
         func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 3);
     }
 
-    func_800483FC(&D_801248A4, func_8004B2B8, arg0);
+    addRenderCallback(&D_801248A4, func_8004B2B8, arg0);
 }
 
 void func_8004B83C(RaceEffectActor *arg0) {
@@ -943,7 +943,7 @@ void func_8004BC74(RaceEffectActor *arg0) {
         func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 4);
     }
 
-    func_800483FC(&D_801248A4, func_8004B934, arg0);
+    addRenderCallback(&D_801248A4, func_8004B934, arg0);
 }
 
 void func_8004BFA0(RaceEffectActor *arg0) {
@@ -1107,7 +1107,7 @@ void func_8004C5B4(RaceEffectActor *arg0) {
         func_8004EA34(arg0->pos.x, arg0->pos.y, arg0->pos.z, 1);
     }
 
-    func_800483FC(&D_801248A4, func_8004C274, arg0);
+    addRenderCallback(&D_801248A4, func_8004C274, arg0);
 }
 
 void func_8004C8F0(RaceEffectActor *arg0) {
@@ -1222,7 +1222,7 @@ void func_8004CF28(RaceEffectActor *arg0) {
         i++;
     } while (i != 4);
 
-    func_800483FC(&D_801248A4, func_8004CBC4, actor);
+    addRenderCallback(&D_801248A4, func_8004CBC4, actor);
 }
 
 void func_8004D018(RaceEffectActor *arg0) {
@@ -1258,7 +1258,7 @@ void func_8004D018(RaceEffectActor *arg0) {
         }
     }
 
-    func_800483FC(&D_801248A4, func_8004CBC4, arg0);
+    addRenderCallback(&D_801248A4, func_8004CBC4, arg0);
 }
 
 void func_8004D184(RaceEffectActor *arg0) {
@@ -1384,7 +1384,7 @@ void func_8004D5C0(RaceEffectActor *arg0) {
         player->unk50C = (s16 *)&arg0->anglePtr;
     }
 
-    func_800483FC(&D_801248A4, func_8004D280, arg0);
+    addRenderCallback(&D_801248A4, func_8004D280, arg0);
 }
 #endif
 

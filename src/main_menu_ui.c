@@ -52,20 +52,20 @@ typedef struct {
 } MainMenuAssetHandles;
 
 extern MainMenuState *gCurrentGameTask;
-extern s32 D_80124868;
+extern s32 gMenuRenderCallbackList;
 extern MainMenuAssetHandles D_80112130;
 extern s16 D_8011217A;
-extern s16 D_80112172;
+extern s16 gMenuCommonSpritesAssetHandle;
 extern u8 gConnectedControllerCount;
 
-extern void func_800483FC(void *, void *, void *);
+extern void addRenderCallback(void *, void *, void *);
 
 void func_80032620(MainMenuLogoActor *arg0) {
     func_80011D74(&arg0->sprite, 1, arg0->common.x, arg0->common.y);
 }
 
 void func_80032654(MainMenuLogoActor *arg0) {
-    func_800483FC(&D_80124868, func_80032620, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80032620, arg0);
 }
 
 void func_80032684(MainMenuLogoActor *arg0) {
@@ -114,7 +114,7 @@ void func_8003288C(MainMenuSelectionLabelsActor *arg0) {
         arg0->pulseScale += 9;
     }
     arg0->pulseTimer = ((u16)arg0->pulseTimer + 1) & 0x1F;
-    func_800483FC(&D_80124868, func_800326EC, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_800326EC, arg0);
 }
 
 void func_80032934(MainMenuSelectionLabelsActor *arg0) {
@@ -129,7 +129,7 @@ void func_80032934(MainMenuSelectionLabelsActor *arg0) {
 }
 
 void func_80032984(MainMenuSelectionArrowActor *arg0) {
-    s32 temp = func_80043040(D_80112172);
+    s32 temp = func_80043040(gMenuCommonSpritesAssetHandle);
 
     func_8000F030(arg0->common.x, arg0->common.y, temp, 3, 0x20, 0x20, 0, 0);
 }
@@ -141,7 +141,7 @@ void func_800329E0(MainMenuSelectionArrowActor *arg0) {
         arg0->common.x = -0x3C;
     }
     arg0->common.y = (gCurrentGameTask->selection << 4) + 0x20;
-    func_800483FC(&D_80124868, func_80032984, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80032984, arg0);
 }
 
 void func_80032A50(MainMenuSelectionArrowActor *arg0) {

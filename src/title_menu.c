@@ -33,7 +33,7 @@ typedef struct {
     /* 0x4D */ u8 pad4D[0x78F8 - 0x4D];
 } TitleMenuPlayerView;
 
-extern void func_800483FC(void *, void *, s32);
+extern void addRenderCallback(void *, void *, s32);
 extern s32 enqueueSoundEffect(s32, s32);
 extern u8 D_800B5458[][0x4C];
 extern u8 D_800B5A14[];
@@ -68,7 +68,7 @@ extern u16 D_800B5444[];
 extern u8 D_800B5200[];
 extern u8 D_80112130[];
 extern s16 D_8011216E;
-extern s16 D_80112172;
+extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 D_8011217C;
 extern u8 gPlayerCount;
 extern u8 D_800B5A2E[];
@@ -77,7 +77,7 @@ extern u8 D_800EC9C1;
 extern s32 D_801235B4;
 extern Struct801235B8 *gCurrentGameTask;
 extern s32 D_80124838;
-extern s32 D_80124868;
+extern s32 gMenuRenderCallbackList;
 
 void func_80014600(MenuIntroActor *arg0) {
     s32 i;
@@ -222,7 +222,7 @@ void func_80014AA4(MenuIntroActor *arg0) {
     D_8010AE00.state = actor->state;
     D_8010AE02 = actor->alpha;
     if (actor->state != 8) {
-        func_800483FC(&D_80124868, func_80014600, (s32)actor);
+        addRenderCallback(&gMenuRenderCallbackList, func_80014600, (s32)actor);
     }
 }
 
@@ -263,7 +263,7 @@ void func_80014CB8(void *arg0) {
     }
 
     if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 1)) {
-        func_8000F8AC(actor->x, actor->y, func_80043040(D_80112172), 3, 0x20, 0x20, 0, alpha, 0);
+        func_8000F8AC(actor->x, actor->y, func_80043040(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, alpha, 0);
         if (width == 0x20) {
             temp = width & 0xFFFF;
             func_8000F8AC((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), func_80043040(D_8011216E), 0, temp, temp, 0, alpha, 0);
@@ -273,7 +273,7 @@ void func_80014CB8(void *arg0) {
         func_800129DC((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5408, 1, alpha);
     }
 
-    func_8000F8AC((s16)(actor->x + 0x80), actor->y, func_80043040(D_80112172), 7, 0x20, 0x20, 0, alpha, 0);
+    func_8000F8AC((s16)(actor->x + 0x80), actor->y, func_80043040(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, alpha, 0);
 }
 
 void func_80014EF0(MenuItemActor *arg0) {
@@ -315,7 +315,7 @@ void func_80014EF0(MenuItemActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_80014CB8, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80014CB8, (s32)arg0);
 }
 
 void func_80015054(MenuItemActor *arg0) {
@@ -403,7 +403,7 @@ void func_800152D0(MenuItemActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8001508C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8001508C, (s32)arg0);
 }
 
 void func_80015404(MenuItemActor *arg0) {
@@ -491,7 +491,7 @@ void func_80015680(MenuItemActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8001543C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8001543C, (s32)arg0);
 }
 
 void func_800157B4(MenuItemActor *arg0) {
@@ -576,7 +576,7 @@ void func_80015A30(MenuItemActor *arg0) {
         gCurrentGameTask->unk1C = 2;
         return;
     }
-    func_800483FC(&D_80124868, func_800157EC, (s32)actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_800157EC, (s32)actor);
 }
 
 void func_80015B20(MenuItemActor *arg0) {
@@ -594,7 +594,7 @@ void func_80015B58(void *arg0) {
     func_8000F8AC(
         actor->x,
         (s16)((actor->y + (gPlayerCount << 5)) - 0x20),
-        func_80043040(D_80112172),
+        func_80043040(gMenuCommonSpritesAssetHandle),
         4,
         0x20,
         0x20,
@@ -624,7 +624,7 @@ void func_80015BD8(FadeItemActor *arg0) {
     if (temp_a2->x < -0x90) {
         removeCallbackTask(temp_a2);
     } else {
-        func_800483FC(&D_80124868, func_80015B58, (s32)temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, func_80015B58, (s32)temp_a2);
     }
 }
 
@@ -794,7 +794,7 @@ void func_80015F4C(RectListActor *arg0) {
         return;
     }
 
-    func_800483FC(&D_80124868, func_80015CBC, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80015CBC, (s32)arg0);
 }
 #endif
 
@@ -860,7 +860,7 @@ void func_80016284(TitleMenuIconStripActor *arg0) {
                             alpha = 0x100;
                         }
                         func_8000F8AC((s16)(item->rects[0].x0 + arg0->iconOffsetX + xOffset),
-                                      (s16)(item->rects[1].x0 + arg0->iconOffsetY), func_80043040(D_80112172), 0x19,
+                                      (s16)(item->rects[1].x0 + arg0->iconOffsetY), func_80043040(gMenuCommonSpritesAssetHandle), 0x19,
                                       0x20, 0x20, 0, alpha, 9 - j);
                         j = nextJ;
                         xOffset += 0x10;
@@ -892,7 +892,7 @@ void func_80016284(TitleMenuIconStripActor *arg0) {
                             tile = 9;
                         }
                         func_8000F8AC((s16)(item->rects[0].x0 + arg0->badgeOffsetX + xOffset),
-                                      (s16)(item->rects[1].x0 + arg0->badgeOffsetY), func_80043040(D_80112172),
+                                      (s16)(item->rects[1].x0 + arg0->badgeOffsetY), func_80043040(gMenuCommonSpritesAssetHandle),
                                       (j + 0x1A) & 0xFFFF, 0x20, 0x20, 0, alpha, tile);
                         j++;
                         xOffset += 0xE;
@@ -921,7 +921,7 @@ void func_80016560(void *arg0) {
     actor->rects[0].y1 = D_8010AE3E;
     temp_a2 = actor;
     actor->rects[1].y1 = D_8010AE46;
-    func_800483FC(&D_80124868, func_80016284, (s32)temp_a2);
+    addRenderCallback(&gMenuRenderCallbackList, func_80016284, (s32)temp_a2);
 }
 
 void func_800165F0(RectListActor *arg0) {
@@ -1059,7 +1059,7 @@ void func_80016948(TitleMenuWidgetActor *arg0) {
     if (sum == (gPlayerCount * 3)) {
         removeCallbackTask((CallbackTask *) actor);
     } else {
-        func_800483FC(&D_80124868, func_80016664, (s32) actor);
+        addRenderCallback(&gMenuRenderCallbackList, func_80016664, (s32) actor);
     }
 }
 #endif
@@ -1215,7 +1215,7 @@ void func_80016E40(TitleMenuTransitionActor *arg0) {
         } while (i < *count);
     }
 
-    func_800483FC(&D_80124868, func_80016BE8, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80016BE8, (s32)arg0);
 }
 #endif
 
@@ -1255,7 +1255,7 @@ void func_800170AC(SpriteActor *arg0) {
         actor->sprite.unk0 = 0x2FF;
     }
     temp_v0->unk2 = (temp_v0->unk2 + 1) & 0x1FF;
-    func_800483FC(&D_80124838, func_80017078, (s32)temp_a2);
+    addRenderCallback(&D_80124838, func_80017078, (s32)temp_a2);
 }
 
 void func_8001710C(SpriteActor *arg0) {

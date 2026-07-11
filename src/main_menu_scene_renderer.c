@@ -3,7 +3,7 @@
 #include "main_menu_scene_renderer.h"
 #include "race_position_ui.h"
 
-extern void func_800483FC(void *, void (*)(MainMenuSceneModel *), MainMenuSceneModel *);
+extern void addRenderCallback(void *, void (*)(MainMenuSceneModel *), MainMenuSceneModel *);
 extern s16 D_8011218A[];
 extern s32 D_801248B0;
 extern void func_80042574(MainMenuSceneModel *);
@@ -69,7 +69,7 @@ void func_800428C8(s32 modelIndex) {
     model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = 0;
-    func_800483FC(&D_801248B0, func_80042574, model);
+    addRenderCallback(&D_801248B0, func_80042574, model);
 }
 
 void func_80042920(s32 modelIndex, s32 textureId, s32 paletteId) {
@@ -80,7 +80,7 @@ void func_80042920(s32 modelIndex, s32 textureId, s32 paletteId) {
     model->renderFrame = 0;
     model->textureId = (s16)textureId;
     model->paletteId = (s16)paletteId;
-    func_800483FC(&D_801248B0, func_8004270C, model);
+    addRenderCallback(&D_801248B0, func_8004270C, model);
 }
 
 void func_8004298C(s32 modelIndex, s32 textureId, s32 paletteId, s32 arg3) {
@@ -91,7 +91,7 @@ void func_8004298C(s32 modelIndex, s32 textureId, s32 paletteId, s32 arg3) {
     model->renderFrame = 0;
     model->textureId = (s16)textureId;
     model->paletteId = (s16)paletteId;
-    func_800483FC(&D_801248B0, func_8004270C, model);
+    addRenderCallback(&D_801248B0, func_8004270C, model);
 }
 
 void func_80042A00(s32 modelIndex) {
@@ -100,7 +100,7 @@ void func_80042A00(s32 modelIndex) {
     model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = 0;
-    func_800483FC(&D_801248B0, func_80042574, model);
+    addRenderCallback(&D_801248B0, func_80042574, model);
 }
 
 void func_80042A58(s32 modelIndex, s32 renderFrame) {
@@ -109,7 +109,7 @@ void func_80042A58(s32 modelIndex, s32 renderFrame) {
     model = (MainMenuSceneModel *)func_80043040(D_8011218A[modelIndex]);
     func_8004215C(model);
     model->renderFrame = (s16)renderFrame;
-    func_800483FC(&D_801248B0, func_80042574, model);
+    addRenderCallback(&D_801248B0, func_80042574, model);
 }
 
 // func_80042AB4 best match: 99.077% at nonmatchings/func_80042AB4-2225551288923588688/base_10.c.

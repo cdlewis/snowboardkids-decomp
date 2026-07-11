@@ -79,7 +79,7 @@ extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80047E88(s32, s16, s32, s32);
 extern void func_80048278(s32, s32, char *, s32);
-extern void func_800483FC(void *, void *, s32);
+extern void addRenderCallback(void *, void *, s32);
 extern void *createCallbackTask(void (*)(), s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern u8 D_245A80[];
@@ -112,7 +112,7 @@ extern u8 D_80121B5B;
 extern u8 D_80121B5E;
 extern u8 gCurrentViewportIndex;
 extern s16 D_80156612;
-extern s32 D_80124868;
+extern s32 gMenuRenderCallbackList;
 extern s32 D_80124878;
 extern RaceTimer D_80121B74;
 extern s8 D_80121B75;
@@ -1027,10 +1027,10 @@ void func_8007A8EC(void) {
     while (i != 4);
 
     if (D_80121B70 == 0) {
-        func_800483FC(&D_80124878, func_8007A3D8, 0);
+        addRenderCallback(&D_80124878, func_8007A3D8, 0);
         return;
     }
-    func_800483FC(&D_80124868, func_8007A3D8, 0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8007A3D8, 0);
 }
 #endif
 
@@ -1065,8 +1065,8 @@ void func_8007AA50(void) {
             }
             player->onesDigitPalette--;
         }
-        func_800483FC(&D_80124878, func_80079438, 0);
-        func_800483FC(&D_80124888, func_80079750, 0);
+        addRenderCallback(&D_80124878, func_80079438, 0);
+        addRenderCallback(&D_80124888, func_80079750, 0);
         func_8007A8EC();
         return;
     case 1:
@@ -1088,8 +1088,8 @@ void func_8007AA50(void) {
             i++;
             player++;
         } while (i != 2);
-        func_800483FC(&D_80124878, func_800799DC, 0);
-        func_800483FC(&D_80124888, func_80079E48, 0);
+        addRenderCallback(&D_80124878, func_800799DC, 0);
+        addRenderCallback(&D_80124888, func_80079E48, 0);
         func_8007A8EC();
         return;
     case 3:
@@ -1125,11 +1125,11 @@ void func_8007AA50(void) {
             i++;
             player++;
         } while (i != 3);
-        func_800483FC(&D_80124878, func_80079F04, 0);
-        func_800483FC(&D_80124888, func_8007A108, 0);
+        addRenderCallback(&D_80124878, func_80079F04, 0);
+        addRenderCallback(&D_80124888, func_8007A108, 0);
         func_8007A8EC();
         if ((s16)D_80121B70 == 2) {
-            func_800483FC(&D_80124868, func_8007A278, 0);
+            addRenderCallback(&gMenuRenderCallbackList, func_8007A278, 0);
         }
         return;
     case 4:
@@ -1144,8 +1144,8 @@ void func_8007AA50(void) {
                 }
             }
         }
-        func_800483FC(&D_80124878, func_80079154, 0);
-        func_800483FC(&D_80124888, func_80079394, 0);
+        addRenderCallback(&D_80124878, func_80079154, 0);
+        addRenderCallback(&D_80124888, func_80079394, 0);
         return;
     case 5:
         if (!(D_801235B4 & 3)) {
@@ -1154,8 +1154,8 @@ void func_8007AA50(void) {
         if (func_8007B130((RaceTimer *)&D_800DC900[D_80121B50], &D_80121B74, &sp38) != 0) {
             D_80121B81 = 1;
         }
-        func_800483FC(&D_80124878, func_80078D9C, 0);
-        func_800483FC(&D_80124888, func_80079068, 0);
+        addRenderCallback(&D_80124878, func_80078D9C, 0);
+        addRenderCallback(&D_80124888, func_80079068, 0);
         return;
     case 6:
         if (!(D_801235B4 & 3)) {
@@ -1164,8 +1164,8 @@ void func_8007AA50(void) {
         if ((D_80121B78.minutes == 0) && (D_80121B78.seconds == 0) && (D_80121B78.fraction == 0)) {
             D_80121B81 = 1;
         }
-        func_800483FC(&D_80124878, func_800789C0, 0);
-        func_800483FC(&D_80124888, func_80078D3C, 0);
+        addRenderCallback(&D_80124878, func_800789C0, 0);
+        addRenderCallback(&D_80124888, func_80078D3C, 0);
         return;
     case 7:
         if (!(D_801235B4 & 3)) {
@@ -1174,8 +1174,8 @@ void func_8007AA50(void) {
         if ((D_80121B78.minutes == 0) && (D_80121B78.seconds == 0) && (D_80121B78.fraction == 0)) {
             D_80121B81 = 1;
         }
-        func_800483FC(&D_80124878, func_80078568, 0);
-        func_800483FC(&D_80124888, func_80078974, 0);
+        addRenderCallback(&D_80124878, func_80078568, 0);
+        addRenderCallback(&D_80124888, func_80078974, 0);
         return;
     case 8:
         player = D_80121D80;
@@ -1191,7 +1191,7 @@ void func_8007AA50(void) {
             }
             player->onesDigitPalette--;
         }
-        func_800483FC(&D_80124878, func_80079758, 0);
+        addRenderCallback(&D_80124878, func_80079758, 0);
         return;
     }
 }

@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "ending_object_ui.h"
+#include "ending_object_sequence.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
@@ -42,26 +42,26 @@ typedef struct {
 } EndingObjectMessageLayout;
 
 extern u16 D_8010B1A2;
-extern s16 D_80112172;
-extern void *D_80124868;
+extern s16 gMenuCommonSpritesAssetHandle;
+extern void *gMenuRenderCallbackList;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
 extern u16 gEndingObjectMessageScripts[][0x5A];
 extern EndingObjectMessageLayout gEndingObjectMessageLayouts[];
-extern void func_800483FC(void *, void *, void *);
+extern void addRenderCallback(void *, void *, void *);
 extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 
-void drawEndingObjectMessagePage(EndingObjectSequenceTask *arg0);
-void updateEndingObjectFinalSprites(EndingObjectSequenceTask *arg0);
-void updateEndingObjectMessageSequence(EndingObjectSequenceTask *arg0);
-void updateEndingObjectDebugViewer(EndingObjectDebugViewerTask *arg0);
+void drawEndingObjectSequenceMessagePage(EndingObjectSequenceTask *arg0);
+void updateEndingObjectSequenceFinalSprites(EndingObjectSequenceTask *arg0);
+void updateEndingObjectSequenceMessages(EndingObjectSequenceTask *arg0);
+void updateEndingObjectDebugObjectViewer(EndingObjectDebugViewerTask *arg0);
 
-// drawEndingObjectMessagePage best match: 93.371%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_object_ui/drawEndingObjectMessagePage.s")
+// drawEndingObjectSequenceMessagePage best match: 93.371%
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_object_sequence/drawEndingObjectSequenceMessagePage.s")
 
 #ifdef NON_MATCHING
-void drawEndingObjectMessagePage(EndingObjectSequenceTask *arg0) {
+void drawEndingObjectSequenceMessagePage(EndingObjectSequenceTask *arg0) {
     register s32 count;
     s32 i;
     s32 scriptIndex;
@@ -105,13 +105,13 @@ void drawEndingObjectMessagePage(EndingObjectSequenceTask *arg0) {
 }
 #endif
 
-void drawEndingObjectFinalSprites(EndingObjectSequenceTask *arg0) {
-    func_8000F8AC(arg0->x, arg0->y, func_80043040(D_80112172), 0x35, 0x20, 0x20, 0, arg0->alpha, 0);
-    func_8000F8AC((s16)(arg0->x + 0x40), arg0->y, func_80043040(D_80112172), 0x36, 0x20, 0x20, 0,
+void drawEndingObjectSequenceFinalSprites(EndingObjectSequenceTask *arg0) {
+    func_8000F8AC(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 0x35, 0x20, 0x20, 0, arg0->alpha, 0);
+    func_8000F8AC((s16)(arg0->x + 0x40), arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), 0x36, 0x20, 0x20, 0,
                   arg0->alpha, 0);
 }
 
-void updateEndingObjectFinalSprites(EndingObjectSequenceTask *arg0) {
+void updateEndingObjectSequenceFinalSprites(EndingObjectSequenceTask *arg0) {
     s32 v1 = ENDING_OBJECT_FADE_MAX;
     s32 v0;
 
@@ -123,11 +123,11 @@ void updateEndingObjectFinalSprites(EndingObjectSequenceTask *arg0) {
                 arg0->alpha = v1;
             }
         }
-        func_800483FC(&D_80124868, drawEndingObjectFinalSprites, arg0);
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingObjectSequenceFinalSprites, arg0);
     }
 }
 
-void updateEndingObjectMessageSequence(EndingObjectSequenceTask *arg0) {
+void updateEndingObjectSequenceMessages(EndingObjectSequenceTask *arg0) {
     switch (arg0->state) {
     case 0:
         arg0->alpha += ENDING_OBJECT_FADE_STEP;
@@ -152,7 +152,7 @@ void updateEndingObjectMessageSequence(EndingObjectSequenceTask *arg0) {
             arg0->cycleCount = arg0->cycleCount + 1;
             if (arg0->cycleCount == ENDING_OBJECT_MESSAGE_COUNT) {
                 arg0->cycleCount = 0;
-                setCallbackTaskCallback(arg0, updateEndingObjectFinalSprites);
+                setCallbackTaskCallback(arg0, updateEndingObjectSequenceFinalSprites);
             }
             if (D_8010B1A2 == 0) {
                 D_8010B1A2 = 1;
@@ -167,7 +167,7 @@ void updateEndingObjectMessageSequence(EndingObjectSequenceTask *arg0) {
         }
         break;
     }
-    func_800483FC(&D_80124868, drawEndingObjectMessagePage, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingObjectSequenceMessagePage, arg0);
 }
 
 void initEndingObjectSequenceTask(EndingObjectSequenceTask *arg0) {
@@ -176,21 +176,21 @@ void initEndingObjectSequenceTask(EndingObjectSequenceTask *arg0) {
     arg0->x = -0x40;
     arg0->y = 0x10;
     arg0->alpha = 0;
-    setCallbackTaskCallback(arg0, updateEndingObjectMessageSequence);
+    setCallbackTaskCallback(arg0, updateEndingObjectSequenceMessages);
 }
 
-void drawEndingObjectDebugViewer(EndingObjectDebugViewerTask *arg0) {
+void drawEndingObjectDebugObjectViewer(EndingObjectDebugViewerTask *arg0) {
     char sp38[0x10];
 
     if (arg0->enabled == 1) {
-        func_8000F030(arg0->x, arg0->y, func_80043040(D_80112172), (u16)arg0->objectId, 0x20, 0x20, arg0->palette,
+        func_8000F030(arg0->x, arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), (u16)arg0->objectId, 0x20, 0x20, arg0->palette,
                       0);
         sprintf(sp38, "ENDOBJ %2d \n", arg0->objectId);
         func_80013D0C(0x40, -0x66, sp38, 0, 0x100);
     }
 }
 
-void updateEndingObjectDebugViewer(EndingObjectDebugViewerTask *arg0) {
+void updateEndingObjectDebugObjectViewer(EndingObjectDebugViewerTask *arg0) {
     s16 temp_a1;
     s16 temp_a2;
     s16 oldY;
@@ -245,14 +245,14 @@ void updateEndingObjectDebugViewer(EndingObjectDebugViewerTask *arg0) {
             rmonPrintf("x = %d  y = %d \n", arg0->x, temp_a2);
         }
     }
-    func_800483FC(&D_80124868, drawEndingObjectDebugViewer, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingObjectDebugObjectViewer, arg0);
 }
 
-void initEndingObjectDebugViewerTask(EndingObjectDebugViewerTask *arg0) {
+void initEndingObjectDebugObjectViewerTask(EndingObjectDebugViewerTask *arg0) {
     arg0->x = 0;
     arg0->y = 0;
     arg0->objectId = 0;
     arg0->enabled = 0;
     arg0->palette = 0;
-    setCallbackTaskCallback(arg0, updateEndingObjectDebugViewer);
+    setCallbackTaskCallback(arg0, updateEndingObjectDebugObjectViewer);
 }

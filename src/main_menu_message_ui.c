@@ -52,8 +52,8 @@ typedef struct MainMenuMessageAssetHandles {
 typedef struct RenderCallbackNode RenderCallbackNode;
 typedef void (*RenderCallback)(s32);
 
-extern void func_800483FC(RenderCallbackNode **, RenderCallback, s32);
-extern RenderCallbackNode *D_80124868;
+extern void addRenderCallback(RenderCallbackNode **, RenderCallback, s32);
+extern RenderCallbackNode *gMenuRenderCallbackList;
 extern MainMenuMessageAssetHandles D_80112130;
 extern u8 D_8010B1F0;
 extern s32 gPlayerInputPressed;
@@ -136,7 +136,7 @@ void func_8000D7F0(MainMenuMessageActor *arg0) {
 }
 
 void func_8000DD74(s32 arg0) {
-    func_800483FC(&D_80124868, (RenderCallback)func_8000DD74, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8000DD74, arg0);
 }
 
 // func_8000DDA4 best match: 99.562%
@@ -194,7 +194,7 @@ void func_8000DDA4(MainMenuMessageActor *arg0) {
         arg0->highlightTimer = 0;
         setCallbackTaskCallback(arg0, func_8000DD74);
     }
-    func_800483FC(&D_80124868, (RenderCallback)func_8000D7F0, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8000D7F0, (s32)arg0);
 }
 #endif
 
@@ -340,7 +340,7 @@ void func_8000E548(MainMenuMessageActor *arg0) {
     if (arg0->y >= 0x79) {
         removeCallbackTask(arg0);
     } else {
-        func_800483FC(&D_80124868, (RenderCallback)func_8000DF9C, (s32)arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8000DF9C, (s32)arg0);
     }
 }
 
@@ -425,7 +425,7 @@ void func_8000E5A0(MainMenuMessageActor *arg0) {
         break;
     }
 
-    func_800483FC(&D_80124868, (RenderCallback)func_8000DF9C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8000DF9C, (s32)arg0);
 }
 #endif
 
@@ -441,7 +441,7 @@ void func_8000E7CC(MainMenuMessageActor *arg0) {
 }
 
 void func_8000E844(s32 arg0) {
-    func_800483FC(&D_80124868, (RenderCallback)func_8000DF9C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8000DF9C, arg0);
 }
 
 void func_8000E874(MainMenuMessageActor *arg0) {
@@ -466,7 +466,7 @@ void func_8000E99C(MainMenuMessageActor *arg0) {
     if (arg0->y < -0xC7) {
         removeCallbackTask(arg0);
     } else {
-        func_800483FC(&D_80124868, (RenderCallback)func_8000E8CC, (s32)arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8000E8CC, (s32)arg0);
     }
 }
 
@@ -474,7 +474,7 @@ void func_8000E9F4(MainMenuMessageActor *arg0) {
     if (D_8010B1F0 == 1) {
         setCallbackTaskCallback(arg0, func_8000E99C);
     }
-    func_800483FC(&D_80124868, (RenderCallback)func_8000E8CC, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8000E8CC, (s32)arg0);
 }
 
 void func_8000EA44(MainMenuMessageActor *arg0) {

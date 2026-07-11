@@ -235,7 +235,7 @@ typedef struct RaceCourseBackdropEffect {
     void *matrix;
 } RaceCourseBackdropEffect;
 
-extern void func_800483FC(void *, void *, void *);
+extern void addRenderCallback(void *, void *, void *);
 extern void enqueueSoundEffect(s32, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void osWritebackDCache(void *, s32);
@@ -296,7 +296,7 @@ extern CourseEffectPlayer D_8012238C[];
 extern CourseEffectPlayer D_80122998[];
 extern CourseEffectPlayer D_80122FA4[];
 extern CourseRenderCommand gIdentityMatrix[];
-extern s32 D_80124868;
+extern s32 gMenuRenderCallbackList;
 extern s32 D_80124878;
 extern s32 D_801248D4;
 extern s32 D_801248EC;
@@ -354,7 +354,7 @@ void func_80069998(RaceCountdownEffect *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_80069914, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80069914, arg0);
 }
 
 void func_800699F0(RaceCountdownEffect *arg0) {
@@ -368,7 +368,7 @@ void func_800699F0(RaceCountdownEffect *arg0) {
         D_801235B4 &= ~1;
         setCallbackTaskCallback(temp_a2, func_80069998);
     }
-    func_800483FC(&D_80124868, func_80069914, temp_a2);
+    addRenderCallback(&gMenuRenderCallbackList, func_80069914, temp_a2);
 }
 
 void func_80069A78(RaceCountdownEffect *arg0) {
@@ -378,7 +378,7 @@ void func_80069A78(RaceCountdownEffect *arg0) {
         arg0->timer = 0x14;
         setCallbackTaskCallback(arg0, func_800699F0);
     }
-    func_800483FC(&D_80124868, func_80069890, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80069890, arg0);
 }
 
 void func_80069AF0(RaceCountdownEffect *arg0) {
@@ -389,7 +389,7 @@ void func_80069AF0(RaceCountdownEffect *arg0) {
     if (arg0->timer == 0) {
         setCallbackTaskCallback(arg0, func_80069A78);
     }
-    func_800483FC(&D_80124868, func_80069890, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80069890, arg0);
 }
 
 void func_80069B60(RaceCountdownEffect *arg0) {
@@ -539,8 +539,8 @@ void func_80069E50(RaceCourseBackdropEffect *arg0) {
 #endif
 
 void func_8006A74C(void *arg0) {
-    func_800483FC(&D_801248A4, func_80069BEC, arg0);
-    func_800483FC(&D_801248F8, func_80069E50, arg0);
+    addRenderCallback(&D_801248A4, func_80069BEC, arg0);
+    addRenderCallback(&D_801248F8, func_80069E50, arg0);
 }
 
 void func_8006A798(void *arg0) {
@@ -558,7 +558,7 @@ void func_8006A80C(void *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124878, func_8006A7BC, arg0);
+    addRenderCallback(&D_80124878, func_8006A7BC, arg0);
 }
 
 void func_8006A85C(void *arg0) {
@@ -646,7 +646,7 @@ void func_8006ACE8(void *arg0) {
         } while (entry->type != -1);
     }
 
-    func_800483FC(&D_801248D4, func_8006A894, arg0);
+    addRenderCallback(&D_801248D4, func_8006A894, arg0);
 }
 
 void func_8006AE00(RaceCourseRenderEffect *arg0) {
@@ -722,7 +722,7 @@ void func_8006AF48(RaceCourseRenderEffect *arg0) {
 }
 
 void func_8006B0D8(void *arg0) {
-    func_800483FC(&D_801248B0, func_8006AF48, arg0);
+    addRenderCallback(&D_801248B0, func_8006AF48, arg0);
 }
 
 void func_8006B108(RaceCourseRenderEffect *arg0) {
@@ -903,7 +903,7 @@ void func_8006B3E0(Struct6B760 *arg0) {
             }
         }
     }
-    func_800483FC(&D_801248A4, func_8006B228, arg0);
+    addRenderCallback(&D_801248A4, func_8006B228, arg0);
 }
 #endif
 
@@ -1001,7 +1001,7 @@ void func_8006B988(RaceMovingEffect *arg0) {
             temp_a3->pos.y += sp24.y;
             temp_a3->pos.z += sp24.z;
         }
-        func_800483FC(&D_801248A4, func_8006B7E0, temp_a3);
+        addRenderCallback(&D_801248A4, func_8006B7E0, temp_a3);
         return;
     }
     removeCallbackTask(temp_a3);
@@ -1030,7 +1030,7 @@ void func_8006BA50(RaceMovingEffect *arg0) {
         }
     }
 
-    func_800483FC(&D_801248A4, func_8006B7E0, arg0);
+    addRenderCallback(&D_801248A4, func_8006B7E0, arg0);
 }
 
 void func_8006BB50(RaceMovingEffect *arg0) {
@@ -1090,7 +1090,7 @@ void func_8006BDE4(RaceMovingEffect *arg0) {
             temp_a3->pos.y += sp24.y;
             temp_a3->pos.z += sp24.z;
         }
-        func_800483FC(&D_801248A4, func_8006BC68, temp_a3);
+        addRenderCallback(&D_801248A4, func_8006BC68, temp_a3);
         return;
     }
     removeCallbackTask(temp_a3);
@@ -1124,7 +1124,7 @@ void func_8006BE90(RaceMovingEffect *arg0) {
         }
     }
 
-    func_800483FC(&D_801248A4, func_8006BC68, arg0);
+    addRenderCallback(&D_801248A4, func_8006BC68, arg0);
 }
 
 void func_8006BFC0(RaceMovingEffect *arg0) {
@@ -1142,7 +1142,7 @@ void func_8006BFC0(RaceMovingEffect *arg0) {
             temp_a3->timer = 0x18;
         }
     }
-    func_800483FC(&D_801248A4, func_8006BC68, temp_a3);
+    addRenderCallback(&D_801248A4, func_8006BC68, temp_a3);
 }
 
 void func_8006C088(RaceMovingEffect *arg0) {
@@ -1251,7 +1251,7 @@ void func_8006C4AC(Struct6C51C *arg0) {
             setCallbackTaskCallback(arg0, func_8006C5C0);
         }
     }
-    func_800483FC(&D_801248A4, func_8006C1B4, arg0);
+    addRenderCallback(&D_801248A4, func_8006C1B4, arg0);
 }
 
 void func_8006C51C(Struct6C51C *arg0) {
@@ -1269,7 +1269,7 @@ void func_8006C51C(Struct6C51C *arg0) {
             setCallbackTaskCallback(temp_s0, func_8006C4AC);
         }
     }
-    func_800483FC(&D_801248A4, func_8006C1B4, temp_s0);
+    addRenderCallback(&D_801248A4, func_8006C1B4, temp_s0);
 }
 
 void func_8006C5C0(Struct6C51C *arg0) {
@@ -1281,7 +1281,7 @@ void func_8006C5C0(Struct6C51C *arg0) {
         enqueuePositionalSoundEffect(0x16, &D_800DA764[D_80121B50], 0x7F, 0x32);
         enqueuePositionalSoundEffect(0x1B, &D_800DA764[D_80121B50], 0x7F, 0x32);
     }
-    func_800483FC(&D_801248A4, func_8006C1B4, arg0);
+    addRenderCallback(&D_801248A4, func_8006C1B4, arg0);
 }
 
 void func_8006C698(Struct6C51C *arg0) {
@@ -1344,9 +1344,9 @@ void func_8006CB50(RaceCourseMarkerEffect *arg0) {
     arg0->rotation -= 0x40;
     arg0->rotation &= 0x7FF;
     if (arg0->useAltQueue != 0) {
-        func_800483FC(&D_801248EC, func_8006C7F4, arg0);
+        addRenderCallback(&D_801248EC, func_8006C7F4, arg0);
     } else {
-        func_800483FC(&D_801248A4, func_8006C7F4, arg0);
+        addRenderCallback(&D_801248A4, func_8006C7F4, arg0);
     }
 }
 
@@ -1532,7 +1532,7 @@ void func_8006D2D0(RaceCourseTriggerEffect *arg0) {
     if (D_80121D80[3].isActive != 0) {
         func_8006CE68(D_80122FA4, arg0);
     }
-    func_800483FC(&D_801248A4, func_8006CCC0, arg0);
+    addRenderCallback(&D_801248A4, func_8006CCC0, arg0);
 }
 
 void func_8006D384(RaceCourseTriggerEffect *arg0) {

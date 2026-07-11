@@ -106,7 +106,7 @@ struct MenuFontAssetTable {
 typedef void (*MenuRenderSpriteActorCallback)(MenuRenderSpriteActor *);
 typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
-extern void func_800483FC(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
+extern void addRenderCallback(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
 extern void *func_80048594(s32 size);
 s32 func_80011D74(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
 void func_800112F4(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, s16 arg6, s16 arg7);
@@ -117,7 +117,7 @@ void func_8000F970(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
 void func_80012AE4(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 arg5);
 void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
 extern Gfx D_800DEFF8[];
-extern RenderCallbackNode *D_80124868;
+extern RenderCallbackNode *gMenuRenderCallbackList;
 extern Gfx *gRegionAllocPtr;
 extern s16 D_80112130[];
 extern s16 D_80112132[];
@@ -865,7 +865,7 @@ void func_80011C3C(MenuRenderSpriteActor *actor) {
         actor->sprite.y = 0x9BF;
     }
 
-    func_800483FC(&D_80124868, func_80011D44, &actor->sprite);
+    addRenderCallback(&gMenuRenderCallbackList, func_80011D44, &actor->sprite);
 }
 
 void func_80011D44(MenuRenderSprite *arg0) {

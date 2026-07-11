@@ -49,7 +49,7 @@ typedef struct {
     /* 0x58C */ SnowboardTrailState trail;
 } SnowboardTrailPlayer;
 
-extern void func_800483FC(void *queue, void (*callback)(SnowboardTrailState *), SnowboardTrailState *trail);
+extern void addRenderCallback(void *queue, void (*callback)(SnowboardTrailState *), SnowboardTrailState *trail);
 extern void *func_8004885C(u8 *source);
 
 extern u8 gRaceUpdatePaused;
@@ -142,7 +142,7 @@ void func_8008393C(struct RaceInputPlayer *input) {
             trail->state = 2;
         }
         if (player->disabled == 0) {
-            func_800483FC(&D_801248BC, func_800837D0, trail);
+            addRenderCallback(&D_801248BC, func_800837D0, trail);
         }
     }
     return;
@@ -180,7 +180,7 @@ state_2:
             return;
         }
         if (player->disabled == 0) {
-            func_800483FC(&D_801248BC, func_800837D0, trail);
+            addRenderCallback(&D_801248BC, func_800837D0, trail);
         }
     }
 }

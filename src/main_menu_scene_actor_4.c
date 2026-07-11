@@ -31,13 +31,13 @@ extern Mtx *func_8004885C(GfxCommandSource *arg0);
 extern MainMenuSceneActorShadow D_8010B1C0;
 extern u16 D_8010B1A2;
 extern s8 D_8010B1AC;
-extern void func_800483FC(void *, void *, void *);
+extern void addRenderCallback(void *, void *, void *);
 extern s32 D_80124898;
 extern Gfx *gRegionAllocPtr;
 extern GfxCommandSource gIdentityFixedTransform;
 extern u32 D_800D6270[];
 extern Vtx D_800B8100[];
-extern s16 D_80112172;
+extern s16 gMenuCommonSpritesAssetHandle;
 extern void func_80037070(MainMenuSceneActorShadow *arg0);
 extern s32 D_8010B1C4;
 
@@ -424,7 +424,7 @@ void func_80037070(MainMenuSceneActorShadow *arg0) {
     gfx->words.w0 = 0x06000000;
     gfx->words.w1 = (u32)D_800D6270;
 
-    func_80045990(func_80043040(D_80112172), 0x31, &sp74, &sp70);
+    func_80045990(func_80043040(gMenuCommonSpritesAssetHandle), 0x31, &sp74, &sp70);
 
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;
@@ -500,5 +500,5 @@ void func_80037070(MainMenuSceneActorShadow *arg0) {
 #endif
 
 void func_800373AC(MainMenuSceneActorShadow *arg0) {
-    func_800483FC(&D_80124898, func_80037070, arg0);
+    addRenderCallback(&D_80124898, func_80037070, arg0);
 }

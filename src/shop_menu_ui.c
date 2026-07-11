@@ -153,7 +153,7 @@ struct ShopMenuWidgetActor {
     };
 };
 
-extern void func_800483FC(void *, void *, void *);
+extern void addRenderCallback(void *, void *, void *);
 extern s16 D_80112130[];
 extern u8 D_800EC9E6;
 extern u8 D_800EC9C1;
@@ -221,7 +221,7 @@ extern MainMenuState *gCurrentGameTask;
 extern s16 D_800EC9D0;
 extern u8 D_800ECA2F[];
 extern s32 gPlayerInputHeld;
-extern u8 D_80124868;
+extern u8 gMenuRenderCallbackList;
 
 const char D_800E0F60[] = "%6dG";
 const char D_800E0F68[] = "%6dG";
@@ -288,7 +288,7 @@ void func_8002C624(ShopMenuRowActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002C4E0, actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002C4E0, actor);
 }
 
 void func_8002C800(ShopMenuRowActor *arg0) {
@@ -342,7 +342,7 @@ void func_8002C9A0(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002C860, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002C860, arg0);
 }
 
 void func_8002CAA0(ShopMenuWidgetActor *arg0) {
@@ -480,7 +480,7 @@ void func_8002CFAC(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002CAD4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002CAD4, arg0);
 }
 
 void func_8002D294(ShopMenuWidgetActor *arg0) {
@@ -586,7 +586,7 @@ void func_8002D558(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002D2E4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002D2E4, arg0);
 }
 
 void func_8002D734(ShopMenuWidgetActor *arg0) {
@@ -702,7 +702,7 @@ void func_8002D9EC(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002D778, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002D778, arg0);
 }
 
 void func_8002DC14(ShopMenuWidgetActor *arg0) {
@@ -778,7 +778,7 @@ void func_8002DCE8(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002DC58, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002DC58, arg0);
 }
 
 void func_8002DE6C(ShopMenuWidgetActor *arg0) {
@@ -840,7 +840,7 @@ void func_8002DF40(ShopMenuWidgetActor *arg0) {
         }
         return;
     }
-    func_800483FC(&D_80124868, func_8002DEAC, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002DEAC, arg0);
 }
 
 void func_8002E074(ShopMenuWidgetActor *arg0) {
@@ -886,7 +886,7 @@ void func_8002E114(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002E0B0, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002E0B0, arg0);
 }
 
 void func_8002E214(ShopMenuWidgetActor *arg0) {
@@ -937,7 +937,7 @@ void func_8002E32C(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002E250, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002E250, arg0);
 }
 
 void func_8002E42C(ShopMenuWidgetActor *arg0) {
@@ -979,7 +979,7 @@ void func_8002E468(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002E250, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002E250, arg0);
 }
 
 void func_8002E568(ShopMenuWidgetActor *arg0) {
@@ -1054,7 +1054,7 @@ void func_8002E6E4(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002E5A4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002E5A4, arg0);
 }
 
 // func_8002E798 best match: 95.172% (nonmatchings/func_8002E798-786318006044585456/base_8.c)
@@ -1188,7 +1188,7 @@ void func_8002E9E4(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002E810, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002E810, arg0);
 }
 #endif
 
@@ -1258,7 +1258,7 @@ void func_8002EF14(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(temp_a2);
         D_801235B4 = 0;
     } else {
-        func_800483FC(&D_80124868, func_8002EC5C, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, func_8002EC5C, temp_a2);
     }
 }
 
@@ -1524,7 +1524,7 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
         removeCallbackTask((CallbackTask *)arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002EFFC, actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002EFFC, actor);
 }
 #endif
 
@@ -1595,7 +1595,7 @@ void func_8002FAB8(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002F8DC, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002F8DC, arg0);
 }
 
 void func_8002FBC8(ShopMenuWidgetActor *arg0) {
@@ -1643,7 +1643,7 @@ void func_8002FD70(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002FC00, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8002FC00, arg0);
 }
 
 void func_8002FEF8(ShopMenuWidgetActor *arg0) {

@@ -77,7 +77,7 @@ typedef struct {
     /* 0x26 */ u8 unk26;
 } RaceHudPanelController;
 
-extern void func_800483FC(void *, void *, void *);
+extern void addRenderCallback(void *, void *, void *);
 extern s8 D_8010AE52;
 extern u8 D_8010AE51;
 extern RaceHudCharacterSelectState gCharacterSelectHudState;
@@ -86,7 +86,7 @@ extern void *D_8010ADE4;
 extern RaceHudPanelController *D_8010ADE8;
 extern s16 D_8010AE58;
 extern s32 D_801235B4;
-extern void *D_80124868;
+extern void *gMenuRenderCallbackList;
 extern u8 gPlayerCount;
 extern RacePlayer D_80121D80[];
 extern u8 D_80121D85[];
@@ -101,7 +101,7 @@ extern RacePlayerState gGameSaveDataBuffer[];
 extern u8 D_8010AE5E;
 extern u8 D_8010AE5F;
 extern u16 D_800B5B30[];
-extern s16 D_80112172;
+extern s16 gMenuCommonSpritesAssetHandle;
 
 void func_800171F0(RaceHudBannerActor *arg0) {
     s32 i;
@@ -252,7 +252,7 @@ void func_800177F8(RaceHudBannerActor *arg0) {
     gCharacterSelectHudState.phase = actor->state;
     D_8010AE58 = actor->alpha;
     if (actor->state != 8) {
-        func_800483FC(&D_80124868, func_800171F0, actor);
+        addRenderCallback(&gMenuRenderCallbackList, func_800171F0, actor);
     }
 }
 
@@ -351,7 +351,7 @@ void func_80017C34(RaceHudPanelActor *arg0) {
     }
 
     D_8010AE51 = var_v0;
-    func_800483FC(&D_80124868, func_80017A10, actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_80017A10, actor);
 }
 #endif
 
@@ -479,7 +479,7 @@ void func_80017F94(RaceHudMessageActor *arg0) {
     if (var_v1) {
         arg0->timer = (arg0->timer + new_var) % 20;
     }
-    func_800483FC(&D_80124868, func_80017D6C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80017D6C, arg0);
 }
 
 void func_80018060(RaceHudMessageActor *arg0) {
@@ -531,7 +531,7 @@ void func_80018134(RaceHudPlayerListActor *arg0) {
     RacePlayer *player;
     RaceHudPlayerListActor *actorX;
 
- do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = D_80121D80; tiles = D_800B5B30; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } func_8000F8AC(actorX->x[0], arg0->y, func_80043040(D_80112172), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (RaceHudPlayerListActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
+ do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = D_80121D80; tiles = D_800B5B30; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } func_8000F8AC(actorX->x[0], arg0->y, func_80043040(gMenuCommonSpritesAssetHandle), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (RaceHudPlayerListActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
 }
 
 // func_800182A4 best match: 99.740% (nonmatchings/func_800182A4-1315772375853892447/base_16.c)
@@ -578,7 +578,7 @@ void func_800182A4(RaceHudPlayerListActor *arg0) {
     }
 
     *(u8 *)0x8010AE52 = mode;
-    func_800483FC(&D_80124868, func_80018134, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80018134, arg0);
 }
 #endif
 
@@ -770,7 +770,7 @@ void func_80018AA0(RaceHudPanelActor *arg0) {
             timer[0x2C] = (timer[0x2C] + 1) % 20;
         }
     }
-    func_800483FC(&D_80124868, func_800184C8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_800184C8, arg0);
 }
 
 void func_80018B6C(RaceHudPanelActor *arg0) {
@@ -973,7 +973,7 @@ next_player:
         } while (j != 0x10);
     }
 
-    func_800483FC(&D_80124868, func_80018BC0, base);
+    addRenderCallback(&gMenuRenderCallbackList, func_80018BC0, base);
 }
 #endif
 
