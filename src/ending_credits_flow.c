@@ -1,4 +1,4 @@
-#include "ending_credits_transition.h"
+#include "ending_credits_flow.h"
 #include "relocatable_heap.h"
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
@@ -23,7 +23,7 @@ typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s32 fade;
     /* 0x1C */ s32 timer;
-} EndingCreditsTransitionState;
+} EndingCreditsFlowState;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x4];
@@ -56,7 +56,7 @@ extern u8 D_60ECB0[];
 extern u8 D_60F1A0[];
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
-extern f32 D_800E0A70;
+extern f32 gEndingCreditsViewportAspectRatio;
 extern s16 D_8010B1A0;
 extern u16 gEndingSequencePhase;
 extern s8 gEndingActorHandshakeState;
@@ -66,25 +66,25 @@ extern Vec3i gMenuCameraTargetOffset;
 extern s16 gAssetHandles[];
 extern MenuCameraObject D_801121E0;
 extern MenuCameraObject *gCurrentMenuCameraObject;
-extern EndingCreditsTransitionState *gCurrentGameTask;
+extern EndingCreditsFlowState *gCurrentGameTask;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initEndingCreditsTransition best match: 93.231% at nonmatchings/initEndingCreditsTransition-1197934324348345530/base_6.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_transition/initEndingCreditsTransition.s")
+// initEndingCreditsFlow best match: 93.231% at nonmatchings/initEndingCreditsFlow-1197934324348345530/base_6.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_flow/initEndingCreditsFlow.s")
 
 #ifdef NON_MATCHING
-void initEndingCreditsTransition(void) {
+void initEndingCreditsFlow(void) {
     s32 sp34;
     s32 temp_v0;
-    EndingCreditsTransitionState *state;
+    EndingCreditsFlowState *state;
 
     resetRaceCameras();
     D_801121E0.update = updateMenuCameraObjectFromTargetOffset;
     D_801121E0.depth = 0x5D24000;
     D_801121E0.yaw = 0xFC0;
     resetAllViewports();
-    func_80070860(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, D_800E0A70, 0x14, 0xAF0);
+    func_80070860(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, gEndingCreditsViewportAspectRatio, 0x14, 0xAF0);
     gFramebufferSwapDelay = 0;
     gMenuCameraTargetOffset.x = 0;
     gMenuCameraTargetOffset.y = 0xFFB60000;
@@ -117,18 +117,18 @@ void initEndingCreditsTransition(void) {
     state = gCurrentGameTask;
     gMenuFadeAlpha = state->fade;
     gCurrentGameTask->timer = 5;
-    setCurrentGameTaskCallback(updateEndingCreditsTransitionFadeIn, 0);
+    setCurrentGameTaskCallback(fadeInEndingCreditsFlow, 0);
 }
 #endif
 
-void updateEndingCreditsTransitionFadeIn(void) {
+void fadeInEndingCreditsFlow(void) {
     if (gCurrentGameTask->timer != 0) {
         gCurrentGameTask->timer--;
     } else {
         if (gCurrentGameTask->fade != 0) {
             gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 0);
         } else {
-            setCurrentGameTaskCallback(updateEndingCreditsTransition, 0);
+            setCurrentGameTaskCallback(updateEndingCreditsFlow, 0);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsPageTextActor, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsSlash, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsNancy, 0, 0x64);
@@ -141,12 +141,12 @@ void updateEndingCreditsTransitionFadeIn(void) {
     updateCallbackTasks();
 }
 
-void updateEndingCreditsTransition(void) {
+void updateEndingCreditsFlow(void) {
     if (gEndingSequencePhase == 0x43) {
         gCurrentGameTask->timer++;
         if (gCurrentGameTask->timer == 0x12C) {
             gCurrentGameTask->timer = 0;
-            setCurrentGameTaskCallback(updateEndingCreditsTransitionFadeOut, 0);
+            setCurrentGameTaskCallback(fadeOutEndingCreditsFlow, 0);
         }
     }
     updateCallbackTasks();
@@ -154,7 +154,7 @@ void updateEndingCreditsTransition(void) {
     gCurrentMenuCameraObject->update();
 }
 
-void updateEndingCreditsTransitionFadeOut(void) {
+void fadeOutEndingCreditsFlow(void) {
     if (gCurrentGameTask->fade != 0xFF) {
         gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 1);
         if (gCurrentGameTask->fade == 0xFF) {
