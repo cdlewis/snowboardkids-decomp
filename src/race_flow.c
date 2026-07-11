@@ -257,50 +257,50 @@ extern void func_80046D68(s32, s32, s32, s32, s32);
 extern void addRenderCallback(void *, void (*)(s32), s32);
 extern void enqueueSoundEffect(s32, s32);
 
-void func_80072C30(void) {
+void initStartupControllerPakFlow(void) {
     loadCompressedRomAsset(D_2427D0, D_243270, 6);
     initCallbackTaskScheduler(0);
     gCurrentGameTask->fadeTimer = 0xA;
-    setCurrentGameTaskCallback(&func_80072C88, 0);
+    setCurrentGameTaskCallback(&waitStartupRumbleInit, 0);
 }
 
-void func_80072C88(void) {
+void waitStartupRumbleInit(void) {
     gCurrentGameTask->fadeTimer -= 1;
     if (gCurrentGameTask->fadeTimer == 0) {
         requestRumbleMotorInit(0);
         requestRumbleMotorInit(1);
         requestRumbleMotorInit(2);
         requestRumbleMotorInit(3);
-        setCurrentGameTaskCallback(&func_80072D04, 0);
+        setCurrentGameTaskCallback(&routeStartupControllerPakFlow, 0);
     }
 }
 
-void func_80072D04(void) {
+void routeStartupControllerPakFlow(void) {
     if (gPlayerInputHeld & 0x1000) {
-        setCurrentGameTaskCallback(&func_80072D54, 0);
+        setCurrentGameTaskCallback(&openStartupControllerPakFileDeleteFlow, 0);
     } else {
-        setCurrentGameTaskCallback(&func_80072D98, 0);
+        setCurrentGameTaskCallback(&openStartupReplaySaveMessageFlow, 0);
     }
 }
 
-void func_80072D54(void) {
-    setCurrentGameTaskCallback(&func_80072D98, 0);
+void openStartupControllerPakFileDeleteFlow(void) {
+    setCurrentGameTaskCallback(&openStartupReplaySaveMessageFlow, 0);
     createGameTask(4, &initControllerPakFileDeleteFlow, 0x64);
     suspendGameTask(0);
 }
 
-void func_80072D98(void) {
-    setCurrentGameTaskCallback(&func_80072DDC, 0);
+void openStartupReplaySaveMessageFlow(void) {
+    setCurrentGameTaskCallback(&enterMainMenuAfterStartupControllerPakFlow, 0);
     createGameTask(4, &initControllerPakReplaySaveMessageFlow, 0x64);
     suspendGameTask(0);
 }
 
-void func_80072DDC(void) {
+void enterMainMenuAfterStartupControllerPakFlow(void) {
     createGameTask(3, &enterMainMenuFromRace, 0x64);
     removeGameTask(0);
 }
 
-void func_80072E10(void) {
+void clearRaceReplayCourseGrid(void) {
     CourseGridEntry *entry = D_800DC490[gRaceCourseIndex.s];
     s32 count = 0;
 loop:
@@ -315,7 +315,7 @@ loop:
     }
 }
 
-void func_80072E98(void) {
+void saveRaceReplayCourseGridEntry(void) {
     CourseGridEntry *entry = D_800DC490[gRaceCourseIndex.s];
     s32 i = 0;
 
@@ -334,7 +334,7 @@ loop:
     }
 }
 
-s32 func_80072FC4(void) {
+s32 loadNextRaceReplayCourseGridEntry(void) {
     s32 count;
     CourseGridEntry *entry;
 
@@ -359,7 +359,7 @@ loop:
     return 0;
 }
 
-s32 func_800730EC(void) {
+s32 hasPendingRaceReplayCourseGridEntry(void) {
     CourseGridEntry *entry = D_800DC490[gRaceCourseIndex.s];
 
 loop:
@@ -434,142 +434,142 @@ void initNewGameSaveData(void) {
     gRaceCourseIndex.s = 0;
     gRaceSplitscreenMode = 0;
     gRaceCameraModeChangeDisabled = 0;
-    setCurrentGameTaskCallback(func_800732C4, 0);
+    setCurrentGameTaskCallback(openRaceSetupMenuFlow, 0);
 }
 
-void func_800732C4(void) {
-    setCurrentGameTaskCallback(&func_8007334C, 0);
+void openRaceSetupMenuFlow(void) {
+    setCurrentGameTaskCallback(&routeRaceCharacterSetupFlow, 0);
     createGameTask(4, &initRaceSetupMenu, 0x64);
     suspendGameTask(2);
 }
 
-void func_80073308(void) {
-    setCurrentGameTaskCallback(&func_8007334C, 0);
+void openRaceCharacterSelectMenuFlow(void) {
+    setCurrentGameTaskCallback(&routeRaceCharacterSetupFlow, 0);
     createGameTask(4, &initCharacterSelectMenu, 0x64);
     suspendGameTask(2);
 }
 
-void func_8007334C(void) {
+void routeRaceCharacterSetupFlow(void) {
     if (gPlayerCount >= 2) {
-        setCurrentGameTaskCallback(&func_8007339C, 0);
+        setCurrentGameTaskCallback(&openPlayerSelectCourseMenuFlow, 0);
     } else {
-        setCurrentGameTaskCallback(&func_800734A0, 0);
+        setCurrentGameTaskCallback(&openRaceSplitscreenSelectFlow, 0);
     }
 }
 
-void func_8007339C(void) {
-    setCurrentGameTaskCallback(&func_800733E0, 0);
+void openPlayerSelectCourseMenuFlow(void) {
+    setCurrentGameTaskCallback(&handlePlayerSelectCourseMenuFlow, 0);
     createGameTask(4, &initCharacterSelectCourseMenuFromPlayerSelect, 0x64);
     suspendGameTask(2);
 }
 
-void func_800733E0(void) {
+void handlePlayerSelectCourseMenuFlow(void) {
     if (gMenuFlowState == 0) {
-        setCurrentGameTaskCallback(&func_80073738, 0);
+        setCurrentGameTaskCallback(&openMultiplayerCourseSelectFlow, 0);
     } else {
         gMenuFlowState = 0;
-        setCurrentGameTaskCallback(&func_80073308, 0);
+        setCurrentGameTaskCallback(&openRaceCharacterSelectMenuFlow, 0);
     }
 }
 
-void func_80073434(void) {
+void openRaceCourseMenuFlow(void) {
     if (gRaceSplitscreenMode == 1) {
-        setCurrentGameTaskCallback(&func_800735F8, 0);
+        setCurrentGameTaskCallback(&handleRaceTypeSelectFlow, 0);
     } else {
-        setCurrentGameTaskCallback(&func_800734E4, 0);
+        setCurrentGameTaskCallback(&handleRaceSplitscreenSelectFlow, 0);
     }
     createGameTask(4, &initCharacterSelectCourseMenuFromRace, 0x64);
     suspendGameTask(2);
 }
 
-void func_800734A0(void) {
-    setCurrentGameTaskCallback(&func_800734E4, 0);
+void openRaceSplitscreenSelectFlow(void) {
+    setCurrentGameTaskCallback(&handleRaceSplitscreenSelectFlow, 0);
     createGameTask(4, &initRaceSplitscreenSelectMenu, 0x64);
     suspendGameTask(2);
 }
 
-void func_800734E4(void) {
+void handleRaceSplitscreenSelectFlow(void) {
     if (gMenuFlowState == 1) {
         gMenuFlowState = 0;
-        setCurrentGameTaskCallback(&func_80073308, 0);
+        setCurrentGameTaskCallback(&openRaceCharacterSelectMenuFlow, 0);
         return;
     }
     switch (gRaceSplitscreenMode) {
     case 0:
     case 2:
-        setCurrentGameTaskCallback(&func_80073738, 0);
+        setCurrentGameTaskCallback(&openMultiplayerCourseSelectFlow, 0);
         return;
     case 1:
-        setCurrentGameTaskCallback(&func_800735B4, 0);
+        setCurrentGameTaskCallback(&openRaceTypeSelectFlow, 0);
         return;
     case 3:
-        setCurrentGameTaskCallback(&func_80073650, 0);
+        setCurrentGameTaskCallback(&openSinglePlayerCourseSelectFlow, 0);
         return;
     case 4:
-        setCurrentGameTaskCallback(&func_80073694, 0);
+        setCurrentGameTaskCallback(&openRaceRecordSaveOptionsFlow, 0);
         /* fallthrough */
     default:
         return;
     }
 }
 
-void func_800735B4(void) {
-    setCurrentGameTaskCallback(&func_800735F8, 0);
+void openRaceTypeSelectFlow(void) {
+    setCurrentGameTaskCallback(&handleRaceTypeSelectFlow, 0);
     createGameTask(4, &initRaceTypeSelectMenu, 0x64);
     suspendGameTask(2);
 }
 
-void func_800735F8(void) {
+void handleRaceTypeSelectFlow(void) {
     if (gMenuFlowState == 1) {
         gMenuFlowState = 0;
-        setCurrentGameTaskCallback(&func_800734A0, 0);
+        setCurrentGameTaskCallback(&openRaceSplitscreenSelectFlow, 0);
     } else {
-        setCurrentGameTaskCallback(&func_80073738, 0);
+        setCurrentGameTaskCallback(&openMultiplayerCourseSelectFlow, 0);
     }
 }
 
-void func_80073650(void) {
-    setCurrentGameTaskCallback(&func_800734A0, 0);
+void openSinglePlayerCourseSelectFlow(void) {
+    setCurrentGameTaskCallback(&openRaceSplitscreenSelectFlow, 0);
     createGameTask(4, &initCourseSelectMenu, 0x64);
     suspendGameTask(2);
 }
 
-void func_80073694(void) {
+void openRaceRecordSaveOptionsFlow(void) {
     gRumblePakConnectedMask = 0;
-    setCurrentGameTaskCallback(&func_800736E0, 0);
+    setCurrentGameTaskCallback(&handleRaceRecordSaveOptionsFlow, 0);
     createGameTask(4, &initControllerPakRaceRecordSaveFlow, 0x64);
     suspendGameTask(2);
 }
 
-void func_800736E0(void) {
+void handleRaceRecordSaveOptionsFlow(void) {
     if (gMenuFlowState == 1) {
         gMenuFlowState = 0;
-        setCurrentGameTaskCallback(&func_800734A0, 0);
+        setCurrentGameTaskCallback(&openRaceSplitscreenSelectFlow, 0);
     } else {
-        setCurrentGameTaskCallback(&func_800737FC, 0);
+        setCurrentGameTaskCallback(&exitRaceFlowToMainMenu, 0);
     }
 }
 
-void func_80073738(void) {
-    setCurrentGameTaskCallback(&func_8007377C, 0);
+void openMultiplayerCourseSelectFlow(void) {
+    setCurrentGameTaskCallback(&handleMultiplayerCourseSelectFlow, 0);
     createGameTask(4, &initMultiplayerCourseSelectMenu, 0x64);
     suspendGameTask(2);
 }
 
-void func_8007377C(void) {
+void handleMultiplayerCourseSelectFlow(void) {
     if (gMenuFlowState == 1) {
         gMenuFlowState = 0;
         if (gPlayerCount >= 2) {
-            setCurrentGameTaskCallback(&func_8007339C, 0);
+            setCurrentGameTaskCallback(&openPlayerSelectCourseMenuFlow, 0);
         } else {
-            setCurrentGameTaskCallback(&func_80073434, 0);
+            setCurrentGameTaskCallback(&openRaceCourseMenuFlow, 0);
         }
     } else {
-        setCurrentGameTaskCallback(&func_80077DA0, 0);
+        setCurrentGameTaskCallback(&initRaceRecordSettingsFlow, 0);
     }
 }
 
-void func_800737FC(void) {
+void exitRaceFlowToMainMenu(void) {
     requestRumbleMotorInit(0);
     requestRumbleMotorInit(1);
     requestRumbleMotorInit(2);
@@ -579,38 +579,38 @@ void func_800737FC(void) {
     removeGameTask(2);
 }
 
-void func_80073858(void) {
-    setCurrentGameTaskCallback(&func_8007389C, 0);
-    createGameTask(4, &func_8000C280, 0x64);
+void openPostRaceControllerPakContinuePromptFlow(void) {
+    setCurrentGameTaskCallback(&handleControllerPakContinuePromptFlow, 0);
+    createGameTask(4, &initControllerPakContinuePromptFlow, 0x64);
     suspendGameTask(2);
 }
 
-void func_8007389C(void) {
+void handleControllerPakContinuePromptFlow(void) {
     if (gMenuFlowState == 1) {
         gMenuFlowState = 0;
-        setCurrentGameTaskCallback(&func_800737FC, 0);
+        setCurrentGameTaskCallback(&exitRaceFlowToMainMenu, 0);
     } else {
-        setCurrentGameTaskCallback(&func_80073308, 0);
+        setCurrentGameTaskCallback(&openRaceCharacterSelectMenuFlow, 0);
     }
 }
 
-void func_800738F4(void) {
-    setCurrentGameTaskCallback(&func_800734A0, 0);
+void openEndingCreditsIfUnlockedFlow(void) {
+    setCurrentGameTaskCallback(&openRaceSplitscreenSelectFlow, 0);
     if (D_800DC4C0 != 0) {
         createGameTask(4, &initEndingCreditsFlow, 0x64);
         suspendGameTask(2);
     }
 }
 
-void func_80073944(void) {
-    setCurrentGameTaskCallback(&func_800738F4, 0);
+void openRaceStartTransitionFlow(void) {
+    setCurrentGameTaskCallback(&openEndingCreditsIfUnlockedFlow, 0);
     createGameTask(4, &initRaceStartTransition, 0x64);
     suspendGameTask(2);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80073988.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/initRaceSceneFlow.s")
 
-void func_800740C0(void) {
+void fadeOutRaceStartTransitionFlow(void) {
     gMenuFadeAlpha -= 8;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
@@ -619,13 +619,13 @@ void func_800740C0(void) {
     if (gCurrentGameTask->countdown == 0) {
         setRaceCameraMode(0, 0x1E);
         requestMusicSequenceBank(5);
-        setCurrentGameTaskCallback(&func_80074160, 0);
+        setCurrentGameTaskCallback(&fadeInRaceGameplayViewports, 0);
     }
-    func_80077C94();
+    updateRaceFlowFrame();
     D_801124B8 = 0xFF;
 }
 
-void func_80074160(void) {
+void fadeInRaceGameplayViewports(void) {
     s32 temp_a0;
     RaceFlowState *state;
 
@@ -695,7 +695,7 @@ void func_80074160(void) {
                 gFramebufferSwapDelay = 1;
                 break;
             }
-            setCurrentGameTaskCallback(func_800747E8, 0);
+            setCurrentGameTaskCallback(startRaceGameplayFlow, 0);
         }
     } else {
         state->unk1C = temp_a0 + 1;
@@ -704,25 +704,25 @@ void func_80074160(void) {
             gMenuFadeAlpha = 0;
         }
     }
-    func_80077C94();
+    updateRaceFlowFrame();
 }
 
-void func_800747E8(void) {
+void startRaceGameplayFlow(void) {
     if (gMenuFadeAlpha != 0) {
         gMenuFadeAlpha -= 0x10;
     }
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
     }
-    func_80077C4C();
+    updateRaceFlowFrameWithCourseEffects();
     if (!(gMenuFlowState & 1)) {
         gMenuFadeOverlayActive = 0;
         requestCourseMusicSequence();
-        setCurrentGameTaskCallback(func_80074960, 0);
+        setCurrentGameTaskCallback(updateRaceGameplayFlow, 0);
     }
 }
 
-void func_80074864(s32 arg0) {
+void drawRacePauseMenu(s32 arg0) {
     s32 color;
 
     func_80045A78(-0x14, -0x10, getRelocatableHeapBlockBase(D_8011216E), 0x57);
@@ -743,7 +743,7 @@ void func_80074864(s32 arg0) {
     func_80046D68(-0x1C, 0x14, getRelocatableHeapBlockBase(D_8011216E), 0x5A, color);
 }
 
-void func_80074960(void) {
+void updateRaceGameplayFlow(void) {
     RacePlayerState *player;
     s32 opened;
     s32 i;
@@ -773,7 +773,7 @@ void func_80074960(void) {
                             gRaceUpdatePaused = 0;
                             gFramebufferSwapHold = 1;
                             enqueueSoundEffect(1, 0x32);
-                            setCurrentGameTaskCallback(func_80077B34, 0);
+                            setCurrentGameTaskCallback(finalizeRaceExitFlow, 0);
                             return;
                         }
                         if (valueTwo == input) {
@@ -781,7 +781,7 @@ void func_80074960(void) {
                             gRaceUpdatePaused = 0;
                             gFramebufferSwapHold = 1;
                             enqueueSoundEffect(1, 0x32);
-                            setCurrentGameTaskCallback(func_80077B34, 0);
+                            setCurrentGameTaskCallback(finalizeRaceExitFlow, 0);
                             return;
                         }
                     }
@@ -790,30 +790,30 @@ void func_80074960(void) {
                 player++;
             } while (i < gPlayerCount);
         }
-        addRenderCallback(&gMenuRenderCallbackList, func_80074864, 0);
+        addRenderCallback(&gMenuRenderCallbackList, drawRacePauseMenu, 0);
     }
 
     if (gRaceSplitscreenMode == valueTwo) {
-        func_80072E98();
+        saveRaceReplayCourseGridEntry();
     }
-    func_80077C4C();
-    if (func_80077D14() != 0) {
+    updateRaceFlowFrameWithCourseEffects();
+    if (areRacePlayersFinished() != 0) {
         gCurrentGameTask->fadeTimer = 0x3C;
         gRaceRumbleEnabled = 0;
-        setCurrentGameTaskCallback(func_80074C5C, 0);
+        setCurrentGameTaskCallback(waitRaceFinishResultsFlow, 0);
     }
 }
 
-// func_80074C5C best match: 88.931% (nonmatchings/func_80074C5C-3236181511606361864/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80074C5C.s")
+// waitRaceFinishResultsFlow best match: 88.931% (nonmatchings/waitRaceFinishResultsFlow-3236181511606361864/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/waitRaceFinishResultsFlow.s")
 
 #ifdef NON_MATCHING
-void func_80074C5C(void) {
+void waitRaceFinishResultsFlow(void) {
     s32 bestPlayer;
     s8 value;
 
     D_80121B57 = 0;
-    func_80077C4C();
+    updateRaceFlowFrameWithCourseEffects();
     gCurrentGameTask->fadeTimer--;
     if (gCurrentGameTask->fadeTimer == 0) {
         gMenuFlowState |= 8;
@@ -832,7 +832,7 @@ void func_80074C5C(void) {
                 bestPlayer = gCurrentGameTask->unk1C;
             }
             gCurrentGameTask->unk1C = bestPlayer + 2;
-            setCurrentGameTaskCallback(func_800751C4, 0);
+            setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
             break;
         case 4:
             gCurrentGameTask->unk1C = 0;
@@ -853,7 +853,7 @@ void func_80074C5C(void) {
                 bestPlayer = gCurrentGameTask->unk1C;
             }
             gCurrentGameTask->unk1C = bestPlayer + 5;
-            setCurrentGameTaskCallback(func_800751C4, 0);
+            setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
             break;
         case 2:
             if (RACE_PLAYER_RESULT_VALUE(0) < RACE_PLAYER_RESULT_VALUE(1)) {
@@ -864,23 +864,23 @@ void func_80074C5C(void) {
                 D_8011228C = 0;
             }
             gCurrentGameTask->fadeTimer = 0;
-            setCurrentGameTaskCallback(func_800751C4, 0);
+            setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
             break;
         case 1:
             gCurrentGameTask->fadeTimer = 0;
-            setCurrentGameTaskCallback(func_80076054, 0);
+            setCurrentGameTaskCallback(prepareRaceResultsFlow, 0);
             break;
         }
     }
 }
 #endif
 
-// func_80074F50 best match: 60.289%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80074F50.s")
+// interpolateRaceViewport best match: 60.289%
+#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/interpolateRaceViewport.s")
 
 #ifdef NON_MATCHING
 
-void func_80074F50(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6,
+void interpolateRaceViewport(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6,
                   f32 arg7, s32 arg8, s32 arg9, s32 arg10, s32 arg11, s32 arg12, s32 arg13,
                   f32 arg14) {
     volatile s32 sp2C;
@@ -908,29 +908,29 @@ void func_80074F50(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
 }
 #endif
 
-void func_800751C4(void) {
+void zoomRaceWinnerViewport(void) {
     gCurrentGameTask->fadeTimer += 1;
     switch (gCurrentGameTask->unk1C) {
     case 0:
-        func_80074F50(0, 0xA0, 0x43, 0x120, 0x68, 0x140, 0x78, 2.6666667f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        func_80074F50(1, 0xA0, 0xAD, 0x120, 0x68, 0x140, 0x78, 2.6666667f, 0xA0, 0x115, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
+        interpolateRaceViewport(0, 0xA0, 0x43, 0x120, 0x68, 0x140, 0x78, 2.6666667f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        interpolateRaceViewport(1, 0xA0, 0xAD, 0x120, 0x68, 0x140, 0x78, 2.6666667f, 0xA0, 0x115, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
         if (gCurrentGameTask->fadeTimer == 0xF) {
             func_80070614(1);
             D_801121E0[1].active = 0;
         }
         break;
     case 1:
-        func_80074F50(1, 0xA0, 0xAD, 0x120, 0x68, 0x140, 0x78, 2.6666667f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        func_80074F50(0, 0xA0, 0x43, 0x120, 0x68, 0x140, 0x78, 2.6666667f, 0xA0, -0x25, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
+        interpolateRaceViewport(1, 0xA0, 0xAD, 0x120, 0x68, 0x140, 0x78, 2.6666667f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        interpolateRaceViewport(0, 0xA0, 0x43, 0x120, 0x68, 0x140, 0x78, 2.6666667f, 0xA0, -0x25, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
         if (gCurrentGameTask->fadeTimer == 0xF) {
             func_80070614(0);
             D_801121E0[0].active = 0;
         }
         break;
     case 2:
-        func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x57, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        interpolateRaceViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x57, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         if (gCurrentGameTask->fadeTimer == 0xF) {
             D_801121E0[1].active = 0;
             D_801121E0[2].active = 0;
@@ -939,9 +939,9 @@ void func_800751C4(void) {
         }
         break;
     case 3:
-        func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x57, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        interpolateRaceViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x57, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         if (gCurrentGameTask->fadeTimer == 0xF) {
             D_801121E0[0].active = 0;
             D_801121E0[2].active = 0;
@@ -950,9 +950,9 @@ void func_800751C4(void) {
         }
         break;
     case 4:
-        func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        interpolateRaceViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         if (gCurrentGameTask->fadeTimer == 0xF) {
             D_801121E0[0].active = 0;
             D_801121E0[1].active = 0;
@@ -961,10 +961,10 @@ void func_800751C4(void) {
         }
         break;
     case 5:
-        func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x57, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_80074F50(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        interpolateRaceViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x57, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         if (gCurrentGameTask->fadeTimer == 0xF) {
             func_80070614(1);
             func_80070614(2);
@@ -975,10 +975,10 @@ void func_800751C4(void) {
         }
         break;
     case 6:
-        func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x57, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_80074F50(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        interpolateRaceViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x57, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0x179, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         if (gCurrentGameTask->fadeTimer == 0xF) {
             D_801121E0[0].active = 0;
             D_801121E0[2].active = 0;
@@ -989,10 +989,10 @@ void func_800751C4(void) {
         }
         break;
     case 7:
-        func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_80074F50(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xE9, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        interpolateRaceViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xE9, 0x115, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         if (gCurrentGameTask->fadeTimer == 0xF) {
             D_801121E0[0].active = 0;
             D_801121E0[1].active = 0;
@@ -1003,10 +1003,10 @@ void func_800751C4(void) {
         }
         break;
     case 8:
-        func_80074F50(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        func_80074F50(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_80074F50(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
-        func_80074F50(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xE9, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        interpolateRaceViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, -0x39, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
+        interpolateRaceViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f, 0xE9, -0x25, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         if (gCurrentGameTask->fadeTimer == 0xF) {
             D_801121E0[0].active = 0;
             D_801121E0[1].active = 0;
@@ -1017,17 +1017,17 @@ void func_800751C4(void) {
         }
         break;
     }
-    func_80077C94();
+    updateRaceFlowFrame();
     if (gCurrentGameTask->fadeTimer == 0xF) {
-        setCurrentGameTaskCallback(func_80076054, 0);
+        setCurrentGameTaskCallback(prepareRaceResultsFlow, 0);
     }
 }
 
-// func_80076054 best match: 81.749% (nonmatchings/func_80076054-7273315160691878794/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80076054.s")
+// prepareRaceResultsFlow best match: 81.749% (nonmatchings/prepareRaceResultsFlow-7273315160691878794/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/prepareRaceResultsFlow.s")
 
 #ifdef NON_MATCHING
-void func_80076054(void) {
+void prepareRaceResultsFlow(void) {
     RacePlayerState *player;
     TimeCourseView *timeCourse;
     TrickCourseView *trickCourse;
@@ -1164,7 +1164,7 @@ void func_80076054(void) {
     }
 
     gCurrentGameTask->unk1C = 0x3C;
-    setCurrentGameTaskCallback(func_80076490, 0);
+    setCurrentGameTaskCallback(updateRaceResultsFlow, 0);
     if (D_80121B60 != 0) {
         requestMusicSequenceBank(6);
         if ((gPlayerCount == 1) && (gRaceSplitscreenMode == 0)) {
@@ -1172,15 +1172,15 @@ void func_80076054(void) {
         }
         createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
     }
-    func_80077C94();
+    updateRaceFlowFrame();
 }
 #endif
 
-// func_80076490 best match: 93.039% at nonmatchings/func_80076490-731940616440357983/base_1.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80076490.s")
+// updateRaceResultsFlow best match: 93.039% at nonmatchings/updateRaceResultsFlow-731940616440357983/base_1.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/updateRaceResultsFlow.s")
 
 #ifdef NON_MATCHING
-void func_80076490(void) {
+void updateRaceResultsFlow(void) {
     volatile u8 padding[8];
     s32 allDone;
     s32 i;
@@ -1247,7 +1247,7 @@ void func_80076490(void) {
                         D_801235B4 |= 0x20;
                     }
                     D_801235B8->fadeTimer = 0xA;
-                    func_8009956C(func_80077324, 0);
+                    func_8009956C(updateRaceResultsMusicFlow, 0);
                 }
             } else {
                 task = func_80071408((void (*)(EffectTask *))func_800599DC, 6, 0x64);
@@ -1277,7 +1277,7 @@ void func_80076490(void) {
                         D_801235B4 |= 0x20;
                     }
                     D_801235B8->fadeTimer = 0xA;
-                    func_8009956C(func_80077324, 0);
+                    func_8009956C(updateRaceResultsMusicFlow, 0);
                 }
             }
             break;
@@ -1319,7 +1319,7 @@ void func_80076490(void) {
                     D_801235B4 |= 0x20;
                 }
                 D_801235B8->fadeTimer = 0xA;
-                func_8009956C(func_80077324, 0);
+                func_8009956C(updateRaceResultsMusicFlow, 0);
             }
             break;
 
@@ -1358,7 +1358,7 @@ void func_80076490(void) {
                         D_801235B4 |= 0x20;
                     }
                     D_801235B8->fadeTimer = 0xA;
-                    func_8009956C(func_80077324, 0);
+                    func_8009956C(updateRaceResultsMusicFlow, 0);
                 }
                 break;
 
@@ -1392,7 +1392,7 @@ void func_80076490(void) {
                         D_801235B4 |= 0x20;
                     }
                     D_801235B8->fadeTimer = 0xA;
-                    func_8009956C(func_80077324, 0);
+                    func_8009956C(updateRaceResultsMusicFlow, 0);
                 }
                 break;
 
@@ -1431,7 +1431,7 @@ void func_80076490(void) {
                         D_801235B4 |= 0x20;
                     }
                     D_801235B8->fadeTimer = 0xA;
-                    func_8009956C(func_80077324, 0);
+                    func_8009956C(updateRaceResultsMusicFlow, 0);
                 }
                 break;
             }
@@ -1442,11 +1442,11 @@ void func_80076490(void) {
     if (D_80121B60 != 0) {
         func_80071664((void (*)(EffectTask *))func_8005393C, 5, 0x64, D_80121B60 - 1);
     }
-    func_80077C94();
+    updateRaceFlowFrame();
 }
 #endif
 
-void func_80077324(void) {
+void updateRaceResultsMusicFlow(void) {
     if (countActiveMusicSequences() == 0) {
         requestMusicSequenceBank(7);
         gCurrentGameTask->unk1C = 0x3C;
@@ -1455,23 +1455,23 @@ void func_80077324(void) {
     if (D_80121B60 != 0) {
         createCallbackTaskWithUserId(&initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
     }
-    func_80077C94();
+    updateRaceFlowFrame();
     if (gMenuFlowState & 0x10) {
         gCurrentGameTask->fadeTimer -= 1;
         if (gCurrentGameTask->fadeTimer == 0) {
             gCurrentGameTask->fadeTimer = 4;
-            setCurrentGameTaskCallback(&func_80077400, 0);
+            setCurrentGameTaskCallback(&fadeOutRaceResultsFlow, 0);
             requestMusicSequenceStop(0x14);
         }
     }
 }
 
-void func_80077400(void) {
+void fadeOutRaceResultsFlow(void) {
     gFramebufferSwapDelay = 0;
     if (D_80121B60 != 0) {
         createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
     }
-    func_80077C94();
+    updateRaceFlowFrame();
     gRaceRumbleEnabled = 0;
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
@@ -1484,20 +1484,20 @@ void func_80077400(void) {
                 D_80121B61 = -1;
             }
             if (gRaceSplitscreenMode == 2) {
-                setCurrentGameTaskCallback(&func_80077554, 0);
+                setCurrentGameTaskCallback(&initRaceGhostReplayFlow, 0);
             } else {
                 gFramebufferSwapHold = 1;
-                setCurrentGameTaskCallback(func_80077B34, 0);
+                setCurrentGameTaskCallback(finalizeRaceExitFlow, 0);
             }
         }
     }
 }
 
-// func_80077554 best match: 99.464%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80077554.s")
+// initRaceGhostReplayFlow best match: 99.464%
+#pragma GLOBAL_ASM("asm/nonmatchings/race_flow/initRaceGhostReplayFlow.s")
 
 #ifdef NON_MATCHING
-void func_80077554(void) {
+void initRaceGhostReplayFlow(void) {
     s32 one;
     s32 asset;
 
@@ -1507,12 +1507,12 @@ void func_80077554(void) {
     asset = getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     if (((Unk80043040 *)asset)->unk8 == 0) {
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(func_80077B34, 0);
+        setCurrentGameTaskCallback(finalizeRaceExitFlow, 0);
         return;
     }
-    if (func_800730EC() == 0) {
+    if (hasPendingRaceReplayCourseGridEntry() == 0) {
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(func_80077B34, 0);
+        setCurrentGameTaskCallback(finalizeRaceExitFlow, 0);
         return;
     }
     ((Unk80043040 *)asset)->unk0 = 0;
@@ -1594,15 +1594,15 @@ void func_80077554(void) {
     if (D_80121B61 == -1) {
         createCallbackTask((void (*)(CallbackTask *))updateRaceGhostUnavailableMessage, 6, 0x64);
     }
-    setCurrentGameTaskCallback(func_8007797C, 0);
+    setCurrentGameTaskCallback(updateRaceGhostReplayFlow, 0);
 }
 #endif
 
-void func_8007797C(void) {
+void updateRaceGhostReplayFlow(void) {
     void *sp18;
 
     if (gCurrentGameTask->fadeTimer == D_800DC5C0[gCurrentGameTask->unk1C]) {
-        if (func_80072FC4() != 0) {
+        if (loadNextRaceReplayCourseGridEntry() != 0) {
             if (gCurrentGameTask->unk1C != 0xB) {
                 gCurrentGameTask->unk1C++;
                 D_80121D80[0].unk16 = 2;
@@ -1610,11 +1610,11 @@ void func_8007797C(void) {
                 D_801124B8 = 0;
             } else {
                 requestMusicSequenceStop(0x48);
-                setCurrentGameTaskCallback(func_80077AD4, 0);
+                setCurrentGameTaskCallback(fadeOutRaceGhostReplayFlow, 0);
             }
         } else {
             requestMusicSequenceStop(0x48);
-            setCurrentGameTaskCallback(func_80077AD4, 0);
+            setCurrentGameTaskCallback(fadeOutRaceGhostReplayFlow, 0);
         }
     }
     if (gCurrentGameTask->fadeTimer == 1) {
@@ -1623,25 +1623,25 @@ void func_8007797C(void) {
     if (gRaceUpdatePaused == 0) {
         gCurrentGameTask->fadeTimer++;
     }
-    func_80077CD4();
+    updateRaceReplayFrame();
     if (gPlayerInputPressed[0] & 0x1000) {
-        sp18 = func_80077AD4;
+        sp18 = fadeOutRaceGhostReplayFlow;
         requestMusicSequenceStop(0x48);
         setCurrentGameTaskCallback(sp18, 0);
     }
 }
 
-void func_80077AD4(void) {
-    func_80077CD4();
+void fadeOutRaceGhostReplayFlow(void) {
+    updateRaceReplayFrame();
     gRaceRumbleEnabled = 0;
     gMenuFadeAlpha += 7;
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
-        setCurrentGameTaskCallback(&func_80077B34, 0);
+        setCurrentGameTaskCallback(&finalizeRaceExitFlow, 0);
     }
 }
 
-void func_80077B34(void) {
+void finalizeRaceExitFlow(void) {
     gFramebufferSwapHold = 1;
     if (gPendingFramebufferSwapCount == 2) {
         gRaceRumbleEnabled = 0;
@@ -1657,21 +1657,21 @@ void func_80077B34(void) {
         requestRumbleMotorInit(3);
         gMenuFlowState = 0;
         if (D_80121B57 == 2) {
-            setCurrentGameTaskCallback(func_80073988, 0);
+            setCurrentGameTaskCallback(initRaceSceneFlow, 0);
         } else if (gPlayerCount == 1) {
             if (gRaceSplitscreenMode == 1) {
-                setCurrentGameTaskCallback(func_800735B4, 0);
+                setCurrentGameTaskCallback(openRaceTypeSelectFlow, 0);
             } else {
-                setCurrentGameTaskCallback(func_80073944, 0);
+                setCurrentGameTaskCallback(openRaceStartTransitionFlow, 0);
             }
         } else {
-            setCurrentGameTaskCallback(func_80073858, 0);
+            setCurrentGameTaskCallback(openPostRaceControllerPakContinuePromptFlow, 0);
         }
         requestMusicSequenceStop(0);
     }
 }
 
-void func_80077C4C(void) {
+void updateRaceFlowFrameWithCourseEffects(void) {
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
@@ -1680,7 +1680,7 @@ void func_80077C4C(void) {
     func_8007AA50();
 }
 
-void func_80077C94(void) {
+void updateRaceFlowFrame(void) {
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
@@ -1688,7 +1688,7 @@ void func_80077C94(void) {
     updateRaceCameras();
 }
 
-void func_80077CD4(void) {
+void updateRaceReplayFrame(void) {
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
@@ -1696,7 +1696,7 @@ void func_80077CD4(void) {
     updateRaceCameras();
 }
 
-s32 func_80077D14(void) {
+s32 areRacePlayersFinished(void) {
     s32 var_v0;
     RacePlayerState *player;
 
@@ -1723,18 +1723,18 @@ loop:
     return 1;
 }
 
-void func_80077DA0(void) {
+void initRaceRecordSettingsFlow(void) {
     gRaceLapCount = D_800B9542[gRaceCourseIndex.s].unk0;
     if (gRaceSplitscreenMode != 0) {
-        setCurrentGameTaskCallback(func_80073988, 0);
+        setCurrentGameTaskCallback(initRaceSceneFlow, 0);
         return;
     }
     if (gPlayerCount == 1) {
-        setCurrentGameTaskCallback(func_80073988, 0);
+        setCurrentGameTaskCallback(initRaceSceneFlow, 0);
         return;
     }
     if (gRaceRecordSettingsEnabled == 0) {
-        setCurrentGameTaskCallback(func_80073988, 0);
+        setCurrentGameTaskCallback(initRaceSceneFlow, 0);
         return;
     }
     resetAllViewports();
@@ -1777,11 +1777,11 @@ void func_80077DA0(void) {
     gMenuFlowState = 0;
     createCallbackTaskWithUserId(initRaceRecordSettingsPanel, 0, 0x64, 0);
     createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
-    setCurrentGameTaskCallback(func_80078078, 0);
+    setCurrentGameTaskCallback(updateRaceRecordSettingsFlow, 0);
     requestMusicSequenceBank(7);
 }
 
-void func_80078078(void) {
+void updateRaceRecordSettingsFlow(void) {
     s32 temp_v0;
 
     gMenuFadeAlpha -= 0x10;
@@ -1802,27 +1802,27 @@ void func_80078078(void) {
             gMenuFlowState = 1;
             enqueueSoundEffect(0x18, 0x32);
             requestMusicSequenceStop(0x3C);
-            setCurrentGameTaskCallback(func_80078198, 0);
+            setCurrentGameTaskCallback(fadeOutRaceRecordSettingsFlow, 0);
         }
     }
     updateCallbackTasks();
 }
 
-void func_80078198(void) {
+void fadeOutRaceRecordSettingsFlow(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0x100) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(&func_800781FC, 0);
+        setCurrentGameTaskCallback(&closeRaceRecordSettingsFlow, 0);
     }
     updateCallbackTasks();
 }
 
-void func_800781FC(void) {
+void closeRaceRecordSettingsFlow(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        setCurrentGameTaskCallback(&func_80073988, 0);
+        setCurrentGameTaskCallback(&initRaceSceneFlow, 0);
     }
 }

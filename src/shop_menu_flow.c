@@ -32,7 +32,7 @@ extern u8 D_59DFE0[];
 extern u8 D_60F1A0[];
 extern u8 D_60F990[];
 
-void func_8000C280(void) {
+void initControllerPakContinuePromptFlow(void) {
     requestMusicSequenceBank(3);
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
@@ -49,13 +49,13 @@ void func_8000C280(void) {
     initCallbackTaskScheduler(0);
     createCallbackTask(initControllerPakContinuePrompt, 0, 0x64);
     gMenuFadeAlpha = gCurrentGameTask->fade;
-    setCurrentGameTaskCallback(func_8000C3C8, 0);
+    setCurrentGameTaskCallback(updateControllerPakContinuePromptFlow, 0);
     updateCallbackTasks();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_flow/func_8000C3C8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_flow/updateControllerPakContinuePromptFlow.s")
 
-void func_8000C52C(void) {
+void closeControllerPakContinuePromptFlow(void) {
     if (gCurrentGameTask->fade != 0xFF) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 1);
         if (gCurrentGameTask->fade == 0xFF) {

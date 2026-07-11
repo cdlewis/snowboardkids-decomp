@@ -253,7 +253,7 @@ void initGameSystems(void) {
     initControllerSubsystem();
     resetAllViewports();
     initSoundManager();
-    createGameTask(0, func_80072C30, STARTUP_CALLBACK_PRIORITY);
+    createGameTask(0, initStartupControllerPakFlow, STARTUP_CALLBACK_PRIORITY);
     gRaceRecordSettingsEnabled = 0;
     gRaceCourseModelEffectsDisabled = 0;
     gRaceCourseOverlayEffectsDisabled = 0;
