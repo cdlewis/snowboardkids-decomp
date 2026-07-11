@@ -2,11 +2,11 @@
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
-#include "race_intro_effects.h"
+#include "race_intro_course_effects.h"
 #include "spatial_math.h"
 #include "fixed_point_math.h"
 
-#define RACE_INTRO_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
+#define RACE_INTRO_COURSE_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
 { \
     Gfx *_g = (Gfx *)(pkt); \
     _g->words.w0 = (cmd0); \
@@ -45,8 +45,8 @@ struct RaceIntroMeshActor {
     /* 0x18 */ GfxCommandDest *matrices;
 };
 
-typedef struct RaceIntroCamera RaceIntroCamera;
-typedef void (*RaceIntroCameraCallback)(RaceIntroCamera *);
+typedef struct RaceIntroFlyoverCamera RaceIntroFlyoverCamera;
+typedef void (*RaceIntroFlyoverCameraCallback)(RaceIntroFlyoverCamera *);
 
 typedef union {
     s32 word;
@@ -56,9 +56,9 @@ typedef union {
     } half;
 } PackedAngles;
 
-struct RaceIntroCamera {
+struct RaceIntroFlyoverCamera {
     /* 0x00 */ char pad0[0x8];
-    /* 0x08 */ RaceIntroCameraCallback callback;
+    /* 0x08 */ RaceIntroFlyoverCameraCallback callback;
     /* 0x0C */ char padC[0x4];
     /* 0x10 */ u16 index;
     /* 0x12 */ char pad12[0x6];
@@ -129,7 +129,7 @@ extern s16 gFrameCounter;
 extern u32 gViewportMatrix;
 
 // drawRaceIntroModelMeshes best match: 99.531% (nonmatchings/drawRaceIntroModelMeshes-6061209858023118177/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_effects/drawRaceIntroModelMeshes.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_course_effects/drawRaceIntroModelMeshes.s")
 
 #ifdef NON_MATCHING
 void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
@@ -222,7 +222,7 @@ void initRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
     setCallbackTaskCallback(arg0, enqueueDrawRaceIntroModelMeshes);
 }
 
-void drawRaceIntroBillboard(RaceIntroCamera *arg0) {
+void drawRaceIntroBillboard(RaceIntroFlyoverCamera *arg0) {
     FixedTransform sp70;
 
     if (gRenderMatricesDirty != 0) {
@@ -239,33 +239,33 @@ void drawRaceIntroBillboard(RaceIntroCamera *arg0) {
         }
 
         if (arg0->displayList0 != NULL) {
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeSetupDl);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xFD500000, arg0->image);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x070FF400);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF5400400, 0x00080200);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x0007C07C);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xFD100000, arg0->palette);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->displayList0);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x01000040, gViewportMatrix);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRaceIntroBillboardVertices);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x00060200);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeCleanupDl);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeSetupDl);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xFD500000, arg0->image);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x070FF400);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF5400400, 0x00080200);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x0007C07C);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xFD100000, arg0->palette);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->displayList0);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x01000040, gViewportMatrix);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRaceIntroBillboardVertices);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x00060200);
+            RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeCleanupDl);
         }
     }
 }
 
-void updateRaceIntroBillboard(RaceIntroCamera *arg0) {
+void updateRaceIntroBillboard(RaceIntroFlyoverCamera *arg0) {
     Vec3i sp44;
     FixedMatrix3sScratch sp24;
-    RaceIntroCamera *temp_s0 = arg0;
+    RaceIntroFlyoverCamera *temp_s0 = arg0;
 
     arg0->timer--;
     if (arg0->timer == 0) {
@@ -281,7 +281,7 @@ void updateRaceIntroBillboard(RaceIntroCamera *arg0) {
     addRenderCallback(&D_801248D4, drawRaceIntroBillboard, (s32) temp_s0);
 }
 
-void waitRaceIntroBillboardSpawn(RaceIntroCamera *arg0) {
+void waitRaceIntroBillboardSpawn(RaceIntroFlyoverCamera *arg0) {
     Vec3i *temp_t3;
 
     arg0->timer--;
@@ -296,13 +296,13 @@ void waitRaceIntroBillboardSpawn(RaceIntroCamera *arg0) {
     }
 }
 
-void initRaceIntroBillboard(RaceIntroCamera *arg0) {
+void initRaceIntroBillboard(RaceIntroFlyoverCamera *arg0) {
     arg0->timer = (arg0->index * 0x1E) + 0x1E;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), (arg0->index + 3) & 0xFFFF, &arg0->scale, &arg0->pitchVelocity);
     setCallbackTaskCallback(arg0, waitRaceIntroBillboardSpawn);
 }
 
-void drawRaceIntroCamera(RaceIntroCamera *arg0) {
+void drawRaceIntroFlyoverCamera(RaceIntroFlyoverCamera *arg0) {
     volatile s32 pad0[1];
     FixedTransform sp84;
     FixedTransform sp64;
@@ -340,7 +340,7 @@ void drawRaceIntroCamera(RaceIntroCamera *arg0) {
     }
 }
 
-void approachRaceIntroSpinStep(RaceIntroCamera *arg0, s16 arg1) {
+void approachRaceIntroFlyoverSpinStep(RaceIntroFlyoverCamera *arg0, s16 arg1) {
     s16 diff = arg1 - arg0->timer;
 
     if (diff >= 5) {
@@ -352,7 +352,7 @@ void approachRaceIntroSpinStep(RaceIntroCamera *arg0, s16 arg1) {
     arg0->timer += diff;
 }
 
-void approachRaceIntroVerticalVelocity(RaceIntroCamera *arg0, s32 arg1) {
+void approachRaceIntroFlyoverVerticalVelocity(RaceIntroFlyoverCamera *arg0, s32 arg1) {
     s32 diff = arg1 - arg0->velocityY;
 
     if (diff >= 0x2001) {
@@ -364,7 +364,7 @@ void approachRaceIntroVerticalVelocity(RaceIntroCamera *arg0, s32 arg1) {
     arg0->velocityY += diff;
 }
 
-void approachRaceIntroOrbitRadius(RaceIntroCamera *arg0, s32 arg1) {
+void approachRaceIntroFlyoverOrbitRadius(RaceIntroFlyoverCamera *arg0, s32 arg1) {
     s32 diff = arg1 - arg0->radius;
 
     if (diff >= 0x2001) {
@@ -385,7 +385,7 @@ void approachRaceIntroOrbitRadius(RaceIntroCamera *arg0, s32 arg1) {
     arg0->radius += diff;
 }
 
-void approachRaceIntroPitchVelocity(RaceIntroCamera *arg0, s16 arg1) {
+void approachRaceIntroFlyoverPitchVelocity(RaceIntroFlyoverCamera *arg0, s16 arg1) {
     s16 diff = arg1 - arg0->pitchVelocity;
 
     if (diff >= 5) {
@@ -399,7 +399,7 @@ void approachRaceIntroPitchVelocity(RaceIntroCamera *arg0, s16 arg1) {
     arg0->angle.half.pitch += (((-arg0->pitchVelocity * 2) - arg0->angle.half.pitch) >> 3);
 }
 
-void updateRaceIntroCamera(RaceIntroCamera *arg0) {
+void updateRaceIntroFlyoverCamera(RaceIntroFlyoverCamera *arg0) {
     s32 sine;
     s32 cosine;
 
@@ -414,18 +414,18 @@ void updateRaceIntroCamera(RaceIntroCamera *arg0) {
     arg0->position.z += ((s64) -arg0->radius * cosine) / 0x1000;
     arg0->scale = 0x80 - ((fixedSine(arg0->tilt + 0x400) + 0x1000) / 0x40);
 
-    addRenderCallback(&D_801248D4, drawRaceIntroCamera, (s32) arg0);
+    addRenderCallback(&D_801248D4, drawRaceIntroFlyoverCamera, (s32) arg0);
 }
 
-void updateRaceIntroCameraIdle(RaceIntroCamera *arg0) {
-    approachRaceIntroSpinStep(arg0, 0x130);
-    approachRaceIntroVerticalVelocity(arg0, 0);
-    approachRaceIntroOrbitRadius(arg0, 0x100000);
-    approachRaceIntroPitchVelocity(arg0, 0xA);
-    updateRaceIntroCamera(arg0);
+void updateRaceIntroFlyoverCameraIdle(RaceIntroFlyoverCamera *arg0) {
+    approachRaceIntroFlyoverSpinStep(arg0, 0x130);
+    approachRaceIntroFlyoverVerticalVelocity(arg0, 0);
+    approachRaceIntroFlyoverOrbitRadius(arg0, 0x100000);
+    approachRaceIntroFlyoverPitchVelocity(arg0, 0xA);
+    updateRaceIntroFlyoverCamera(arg0);
 }
 
-void initRaceIntroCameraIdle(RaceIntroCamera *arg0) {
+void initRaceIntroFlyoverCameraIdle(RaceIntroFlyoverCamera *arg0) {
     arg0->position.x = 0xB51A13A3;
     arg0->position.y = 0xD0E85B43;
     arg0->position.z = 0x9A645264;
@@ -438,23 +438,23 @@ void initRaceIntroCameraIdle(RaceIntroCamera *arg0) {
     arg0->radius = 0x100000;
     arg0->stateTimer = 0;
     if (D_80122288 == 2) {
-        setCallbackTaskCallback(arg0, updateRaceIntroCameraIdle);
+        setCallbackTaskCallback(arg0, updateRaceIntroFlyoverCameraIdle);
     }
 }
 
-void updateRaceIntroLongPanReturn(RaceIntroCamera *arg0) {
-    approachRaceIntroSpinStep(arg0, 0x130);
-    approachRaceIntroVerticalVelocity(arg0, -0x20000);
-    approachRaceIntroOrbitRadius(arg0, 0x100000);
-    approachRaceIntroPitchVelocity(arg0, -3);
-    updateRaceIntroCamera(arg0);
+void updateRaceIntroFlyoverLongPanReturn(RaceIntroFlyoverCamera *arg0) {
+    approachRaceIntroFlyoverSpinStep(arg0, 0x130);
+    approachRaceIntroFlyoverVerticalVelocity(arg0, -0x20000);
+    approachRaceIntroFlyoverOrbitRadius(arg0, 0x100000);
+    approachRaceIntroFlyoverPitchVelocity(arg0, -3);
+    updateRaceIntroFlyoverCamera(arg0);
     arg0->stateTimer--;
     if (arg0->stateTimer == 0) {
-        setCallbackTaskCallback(arg0, initRaceIntroCameraIdle);
+        setCallbackTaskCallback(arg0, initRaceIntroFlyoverCameraIdle);
     }
 }
 
-void initRaceIntroLongPanReturn(RaceIntroCamera *arg0) {
+void initRaceIntroFlyoverLongPanReturn(RaceIntroFlyoverCamera *arg0) {
     arg0->position.x = 0x05CA84CF;
     arg0->position.y = 0x00D0C976;
     arg0->position.z = 0xFAA3DA4A;
@@ -467,58 +467,58 @@ void initRaceIntroLongPanReturn(RaceIntroCamera *arg0) {
     arg0->radius = 0x100000;
     arg0->stateTimer = 0x154;
     if (D_80122288 == 1) {
-        setCallbackTaskCallback(arg0, updateRaceIntroLongPanReturn);
+        setCallbackTaskCallback(arg0, updateRaceIntroFlyoverLongPanReturn);
     }
 }
 
-void updateRaceIntroLongPanHold(RaceIntroCamera *arg0) {
-    approachRaceIntroSpinStep(arg0, 0x130);
-    approachRaceIntroVerticalVelocity(arg0, 0);
-    approachRaceIntroOrbitRadius(arg0, 0x100000);
-    approachRaceIntroPitchVelocity(arg0, 0);
-    updateRaceIntroCamera(arg0);
+void updateRaceIntroFlyoverLongPanHold(RaceIntroFlyoverCamera *arg0) {
+    approachRaceIntroFlyoverSpinStep(arg0, 0x130);
+    approachRaceIntroFlyoverVerticalVelocity(arg0, 0);
+    approachRaceIntroFlyoverOrbitRadius(arg0, 0x100000);
+    approachRaceIntroFlyoverPitchVelocity(arg0, 0);
+    updateRaceIntroFlyoverCamera(arg0);
     arg0->stateTimer--;
     if (arg0->stateTimer == 0) {
-        setCallbackTaskCallback(arg0, initRaceIntroLongPanReturn);
+        setCallbackTaskCallback(arg0, initRaceIntroFlyoverLongPanReturn);
     }
 }
 
-void updateRaceIntroLongPanPitchUp(RaceIntroCamera *arg0) {
-    approachRaceIntroSpinStep(arg0, 0x130);
-    approachRaceIntroVerticalVelocity(arg0, 0);
-    approachRaceIntroOrbitRadius(arg0, 0x100000);
-    approachRaceIntroPitchVelocity(arg0, 0x30);
-    updateRaceIntroCamera(arg0);
+void updateRaceIntroFlyoverLongPanPitchUp(RaceIntroFlyoverCamera *arg0) {
+    approachRaceIntroFlyoverSpinStep(arg0, 0x130);
+    approachRaceIntroFlyoverVerticalVelocity(arg0, 0);
+    approachRaceIntroFlyoverOrbitRadius(arg0, 0x100000);
+    approachRaceIntroFlyoverPitchVelocity(arg0, 0x30);
+    updateRaceIntroFlyoverCamera(arg0);
     arg0->stateTimer--;
     if (arg0->stateTimer == 0) {
         arg0->stateTimer = 0x96;
-        setCallbackTaskCallback(arg0, updateRaceIntroLongPanHold);
+        setCallbackTaskCallback(arg0, updateRaceIntroFlyoverLongPanHold);
     }
 }
 
-void updateRaceIntroLongPanRise(RaceIntroCamera *arg0) {
-    approachRaceIntroSpinStep(arg0, 0x130);
-    approachRaceIntroVerticalVelocity(arg0, 0x20000);
-    approachRaceIntroOrbitRadius(arg0, 0x100000);
-    approachRaceIntroPitchVelocity(arg0, 0);
+void updateRaceIntroFlyoverLongPanRise(RaceIntroFlyoverCamera *arg0) {
+    approachRaceIntroFlyoverSpinStep(arg0, 0x130);
+    approachRaceIntroFlyoverVerticalVelocity(arg0, 0x20000);
+    approachRaceIntroFlyoverOrbitRadius(arg0, 0x100000);
+    approachRaceIntroFlyoverPitchVelocity(arg0, 0);
     arg0->stateTimer--;
-    updateRaceIntroCamera(arg0);
+    updateRaceIntroFlyoverCamera(arg0);
     if (arg0->stateTimer == 0) {
         arg0->stateTimer = 0x2A;
-        setCallbackTaskCallback(arg0, updateRaceIntroLongPanPitchUp);
+        setCallbackTaskCallback(arg0, updateRaceIntroFlyoverLongPanPitchUp);
     }
 }
 
-void waitRaceIntroLongPanTrigger(RaceIntroCamera *arg0) {
-    approachRaceIntroSpinStep(arg0, 0x130);
-    updateRaceIntroCamera(arg0);
+void waitRaceIntroFlyoverLongPanTrigger(RaceIntroFlyoverCamera *arg0) {
+    approachRaceIntroFlyoverSpinStep(arg0, 0x130);
+    updateRaceIntroFlyoverCamera(arg0);
     if (gRacePlayerSurfaceAngleByPlayer == 0x35) {
         arg0->stateTimer = 0x6A;
-        setCallbackTaskCallback(arg0, updateRaceIntroLongPanRise);
+        setCallbackTaskCallback(arg0, updateRaceIntroFlyoverLongPanRise);
     }
 }
 
-void initRaceIntroLongPan(RaceIntroCamera *arg0) {
+void initRaceIntroFlyoverLongPan(RaceIntroFlyoverCamera *arg0) {
     arg0->position.x = 0xE6C45F50;
     arg0->position.y = 0xED3C9CFB;
     arg0->position.z = 0xD14CD682;
@@ -529,18 +529,18 @@ void initRaceIntroLongPan(RaceIntroCamera *arg0) {
     arg0->pitchVelocity = 0;
     arg0->velocityY = 0;
     arg0->stateTimer = 0x1E;
-    setCallbackTaskCallback(arg0, waitRaceIntroLongPanTrigger);
+    setCallbackTaskCallback(arg0, waitRaceIntroFlyoverLongPanTrigger);
 }
 
-void updateRaceIntroShortPanFinal(RaceIntroCamera *arg0) {
-    approachRaceIntroSpinStep(arg0, 0x130);
-    approachRaceIntroVerticalVelocity(arg0, 0);
-    approachRaceIntroOrbitRadius(arg0, 0x100000);
-    approachRaceIntroPitchVelocity(arg0, 0x18);
-    updateRaceIntroCamera(arg0);
+void updateRaceIntroFlyoverShortPanFinal(RaceIntroFlyoverCamera *arg0) {
+    approachRaceIntroFlyoverSpinStep(arg0, 0x130);
+    approachRaceIntroFlyoverVerticalVelocity(arg0, 0);
+    approachRaceIntroFlyoverOrbitRadius(arg0, 0x100000);
+    approachRaceIntroFlyoverPitchVelocity(arg0, 0x18);
+    updateRaceIntroFlyoverCamera(arg0);
 }
 
-void initRaceIntroShortPanFinal(RaceIntroCamera *arg0) {
+void initRaceIntroFlyoverShortPanFinal(RaceIntroFlyoverCamera *arg0) {
     arg0->position.x = 0xF049BD62;
     arg0->position.y = 0xF0E87871;
     arg0->position.z = 0xDA07DE30;
@@ -552,18 +552,18 @@ void initRaceIntroShortPanFinal(RaceIntroCamera *arg0) {
     arg0->velocityY = 0;
     arg0->radius = 0x100000;
     arg0->stateTimer = 0x1E;
-    setCallbackTaskCallback(arg0, updateRaceIntroShortPanFinal);
+    setCallbackTaskCallback(arg0, updateRaceIntroFlyoverShortPanFinal);
 }
 
-void waitRaceIntroShortPanFinal(RaceIntroCamera *arg0) {
-    approachRaceIntroSpinStep(arg0, 0x130);
-    updateRaceIntroCamera(arg0);
+void waitRaceIntroFlyoverShortPanFinal(RaceIntroFlyoverCamera *arg0) {
+    approachRaceIntroFlyoverSpinStep(arg0, 0x130);
+    updateRaceIntroFlyoverCamera(arg0);
     if (D_80122288 == 2) {
-        setCallbackTaskCallback(arg0, initRaceIntroShortPanFinal);
+        setCallbackTaskCallback(arg0, initRaceIntroFlyoverShortPanFinal);
     }
 }
 
-void initRaceIntroShortPanSecond(RaceIntroCamera *arg0) {
+void initRaceIntroFlyoverShortPanSecond(RaceIntroFlyoverCamera *arg0) {
     arg0->position.x = 0xAB4FC576;
     arg0->position.y = 0xE13FBC73;
     arg0->position.z = 0xD2B26423;
@@ -574,18 +574,18 @@ void initRaceIntroShortPanSecond(RaceIntroCamera *arg0) {
     arg0->pitchVelocity = 0;
     arg0->velocityY = 0;
     arg0->stateTimer = 0x1E;
-    setCallbackTaskCallback(arg0, waitRaceIntroShortPanFinal);
+    setCallbackTaskCallback(arg0, waitRaceIntroFlyoverShortPanFinal);
 }
 
-void waitRaceIntroShortPanSecond(RaceIntroCamera *arg0) {
-    approachRaceIntroSpinStep(arg0, 0x30);
-    updateRaceIntroCamera(arg0);
+void waitRaceIntroFlyoverShortPanSecond(RaceIntroFlyoverCamera *arg0) {
+    approachRaceIntroFlyoverSpinStep(arg0, 0x30);
+    updateRaceIntroFlyoverCamera(arg0);
     if (D_80122288 == 1) {
-        setCallbackTaskCallback(arg0, initRaceIntroShortPanSecond);
+        setCallbackTaskCallback(arg0, initRaceIntroFlyoverShortPanSecond);
     }
 }
 
-void initRaceIntroShortPan(RaceIntroCamera *arg0) {
+void initRaceIntroFlyoverShortPan(RaceIntroFlyoverCamera *arg0) {
     arg0->position.x = 0xAB4FC576;
     arg0->position.y = 0xE0CEDC73;
     arg0->position.z = 0xD2B26423;
@@ -596,23 +596,23 @@ void initRaceIntroShortPan(RaceIntroCamera *arg0) {
     arg0->pitchVelocity = 0;
     arg0->velocityY = 0;
     arg0->stateTimer = 0x1E;
-    setCallbackTaskCallback(arg0, waitRaceIntroShortPanSecond);
+    setCallbackTaskCallback(arg0, waitRaceIntroFlyoverShortPanSecond);
 }
 
-void initRaceIntroCamera(RaceIntroCamera *arg0) {
+void initRaceIntroFlyoverCamera(RaceIntroFlyoverCamera *arg0) {
     s16 temp_v0 = gRaceCourseIndex;
 
     if (temp_v0 == 3) {
-        setCallbackTaskCallback(arg0, initRaceIntroLongPan);
+        setCallbackTaskCallback(arg0, initRaceIntroFlyoverLongPan);
         temp_v0 = gRaceCourseIndex;
     }
     if (temp_v0 == 6) {
-        setCallbackTaskCallback(arg0, initRaceIntroShortPan);
+        setCallbackTaskCallback(arg0, initRaceIntroFlyoverShortPan);
     }
 }
 
 // drawRaceIntroAnimatedBillboards best match: 99.373% (nonmatchings/drawRaceIntroAnimatedBillboards-6061209858023118177/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_effects/drawRaceIntroAnimatedBillboards.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_course_effects/drawRaceIntroAnimatedBillboards.s")
 
 #ifdef NON_MATCHING
 void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
@@ -648,7 +648,7 @@ void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
                 gfx = gRegionAllocPtr++;
                 gfx->words.w1 = (u32)gRaceIntroAnimatedBillboardVertices;
                 gfx->words.w0 = 0x0400103F;
-                RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
+                RACE_INTRO_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
             }
             entry++;
             i++;
