@@ -184,7 +184,7 @@ void func_8006D7D4(void) {
     func_800486BC(stack.sp28, D_801124A0->transform);
 }
 
-// func_8006D8B4 best match: 92.028% (nonmatchings/func_8006D8B4-8207005055717715604/base_4.c)
+// func_8006D8B4 best match: 98.219% (nonmatchings/func_8006D8B4-6061209858023118177/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/func_8006D8B4.s")
 
 #ifdef NON_MATCHING
@@ -194,20 +194,21 @@ void func_8006D8B4(void) {
     s32 dz;
     s32 xzDist;
     s32 dist;
-    s32 temp;
+    s32 sine;
+    s32 cosine;
     FixedTransform pitchMtx;
     FixedTransform yawMtx;
-    s32 pad[4];
+    s32 pad[3];
     FixedMatrix3s resultMtx;
     s32 i;
     s32 j;
 
     func_80097A80(&pitchMtx);
     func_80097A80(&yawMtx);
+    dx = D_801124A0->pos.x - D_801124A0->focus.x;
     pad[0] = pad[0];
 
     dy = (D_801124A0->pos.y - D_801124A0->focus.y) + 0x40000;
-    dx = D_801124A0->pos.x - D_801124A0->focus.x;
     dz = D_801124A0->pos.z - D_801124A0->focus.z;
 
     xzDist = func_80098C30((s64)dx * dx + (s64)dz * dz);
@@ -215,23 +216,25 @@ void func_8006D8B4(void) {
 
     D_801124A0->pitch = func_8004940C(0, 0, xzDist, -dy);
     if (dist != 0) {
-        temp = ((s64)dy * 0x1000) / dist;
-        pitchMtx.rotation[MTX_YY] = ((s64)xzDist * 0x1000) / dist;
-        pitchMtx.rotation[MTX_ZY] = -temp;
-        pitchMtx.rotation[MTX_ZZ] = pitchMtx.rotation[MTX_YY];
-        pitchMtx.rotation[MTX_YZ] = temp;
+        sine = ((s64)dy * 0x1000) / dist;
+        cosine = ((s64)xzDist * 0x1000) / dist;
+        pitchMtx.rotation[MTX_YY] = cosine;
+        pitchMtx.rotation[MTX_ZY] = -sine;
+        pitchMtx.rotation[MTX_ZZ] = cosine;
+        pitchMtx.rotation[MTX_YZ] = sine;
     }
 
     D_801124A0->yaw = -func_8004940C(0, 0, dx, dz);
     if (xzDist != 0) {
-        temp = ((s64)dx * 0x1000) / xzDist;
-        yawMtx.rotation[MTX_XX] = ((s64)dz * 0x1000) / xzDist;
-        yawMtx.rotation[MTX_ZX] = -temp;
-        yawMtx.rotation[MTX_ZZ] = yawMtx.rotation[MTX_XX];
-        yawMtx.rotation[MTX_XZ] = temp;
+        sine = ((s64)dx * 0x1000) / xzDist;
+        cosine = ((s64)dz * 0x1000) / xzDist;
+        yawMtx.rotation[MTX_XX] = cosine;
+        yawMtx.rotation[MTX_XZ] = sine;
+        yawMtx.rotation[MTX_ZX] = -sine;
+        yawMtx.rotation[MTX_ZZ] = cosine;
     }
 
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i + 1 <= 3; i++) {
         for (j = 0; j < 3; j++) {
             D_801124A0->rotationMatrix[(i * 3) + j] =
                 FIXED_MUL(pitchMtx.rotation[j], yawMtx.rotation[i * 3]) +
