@@ -254,7 +254,7 @@ extern s16 D_80112140;
 extern s16 D_80112142;
 extern s32 D_801235B4;
 extern u8 gCurrentViewportIndex;
-extern u8 D_80156609;
+extern u8 gRenderMatricesDirty;
 extern void func_8006C5C0(Struct6C51C *);
 void func_8006C1B4(Struct6C51C *);
 void func_8006CCC0(RaceCourseTriggerEffect *);
@@ -574,7 +574,7 @@ extern void func_80045A1C(u8 *, u16, void **, void **, s16 *, s16 *);
 extern Vtx D_800D9C40[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
-extern u32 D_80156614;
+extern u32 gViewportMatrix;
 
 void func_8006A894(RaceCourseRenderEffect *arg0) {
     volatile u8 pad[8];
@@ -604,7 +604,7 @@ void func_8006A894(RaceCourseRenderEffect *arg0) {
                     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
                 }
                 gSPMatrix(gRegionAllocPtr++, &arg0->vertices[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-                gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
                 {
                     Gfx *_g = gRegionAllocPtr++;
                     _g->words.w0 = 0x0400103F;
@@ -773,7 +773,7 @@ void func_8006B228(Struct6B760 *arg0) {
     CourseEffectMatrixSource transform;
     volatile s32 pad0[18];
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         arg0->displayListValid = 0;
     }
 
@@ -957,7 +957,7 @@ void func_8006B7E0(RaceMovingEffect *arg0) {
     CourseEffectMatrixSource transform;
     volatile s32 pad[1];
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         makeFixedRotationY(&transform, D_800B9556[gRaceCourseIndex].angle + 0x400);
         transform.basePos.x = arg0->pos.x;
         transform.basePos.y = arg0->pos.y;
@@ -1053,7 +1053,7 @@ void func_8006BC68(RaceMovingEffect *arg0) {
     CourseEffectMatrixSource transform;
     volatile s32 pad[2];
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         makeFixedRotationY(&transform, arg0->unk52);
         transform.basePos.x = arg0->pos.x;
         transform.basePos.y = arg0->pos.y;
@@ -1175,7 +1175,7 @@ void func_8006C1B4(Struct6C51C *arg0) {
     Gfx *segment1;
     Gfx *segment2;
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         arg0->sourceMatrix = NULL;
         arg0->pos1Matrix = NULL;
         arg0->pos2Matrix = NULL;
@@ -1321,7 +1321,7 @@ void func_8006C7F4(RaceCourseMarkerEffect *arg0) {
     s16 vertexCount;
     volatile s32 pad[4];
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         arg0->vertices = allocMenuRenderScratch(arg0->vertexCount * sizeof(Vtx));
         if (arg0->vertices != NULL) {
             i = 0;
@@ -1375,7 +1375,7 @@ void func_8006CCC0(RaceCourseTriggerEffect *arg0) {
     CourseEffectMatrixSource transform;
     Gfx *gfx;
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         CourseTriggerEntry *entry = &D_800DA840[((volatile RaceCourseTriggerEffect *) arg0)->entryIndex];
 
         makeFixedRotationXY(&transform, entry->pitch, entry->yaw);

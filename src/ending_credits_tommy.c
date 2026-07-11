@@ -35,7 +35,7 @@ extern void addRenderCallback(void *, void *, void *);
 extern s32 gModelRenderCallbackList;
 extern Gfx *gRegionAllocPtr;
 extern GfxCommandSource gIdentityFixedTransform;
-extern u32 D_800D6270[];
+extern u32 gAlphaSpriteRenderModeDl[];
 extern Vtx D_800B8100[];
 extern s16 gMenuCommonSpritesAssetHandle;
 extern void drawEndingActorShadow(MainMenuSceneActorShadow *arg0);
@@ -421,7 +421,7 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;
     gfx->words.w0 = 0x06000000;
-    gfx->words.w1 = (u32)D_800D6270;
+    gfx->words.w1 = (u32)gAlphaSpriteRenderModeDl;
 
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x31, &sp74, &sp70);
 

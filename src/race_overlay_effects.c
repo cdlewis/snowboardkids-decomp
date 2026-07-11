@@ -176,7 +176,7 @@ extern s32 D_801248B0;
 extern s16 D_80112144;
 extern s16 D_80112146;
 extern s16 D_80112168;
-extern u8 D_80156609;
+extern u8 gRenderMatricesDirty;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gRaceSplitscreenMode;
@@ -205,7 +205,7 @@ extern FixedTransform gIdentityFixedTransform;
 extern GfxCommandDest gIdentityMatrix;
 extern FixedTransform gIdentityFixedTransform;
 extern Gfx *gRegionAllocPtr;
-extern void *D_80156614;
+extern void *gViewportMatrix;
 extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern void func_80066E10(RaceModelListActor *);
@@ -344,7 +344,7 @@ void func_80066ABC(RaceModelListActor *arg0) {
                 }
 
                 gSPMatrix(gRegionAllocPtr++, &actor->modelBuffer[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-                gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
 
                 gSPVertex(gRegionAllocPtr++, (u32)D_800D9210, 4, 0);
 
@@ -483,7 +483,7 @@ void func_8006713C(RaceModelListActor *arg0) {
 void func_800671F4(RaceOverlayTransformActor *arg0) {
     FixedMatrix3sScratch scratch;
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
     }
 
@@ -684,7 +684,7 @@ void func_80067830(RaceOverlayModelActor *arg0) {
     Gfx *temp_v0;
     Gfx *temp_t1;
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
     }
 
@@ -732,7 +732,7 @@ void func_80067830(RaceOverlayModelActor *arg0) {
                                     G_TX_CLAMP, 0, 0, 0, 0);
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette0);
             gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+            gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
             gDma1p(gRegionAllocPtr++, G_VTX, D_800D92D8, 0x103F, 0);
             temp_v0 = gRegionAllocPtr++;
             temp_v0->words.w1 = 0x60200;
@@ -792,7 +792,7 @@ void func_800681A4(RaceOverlayModelActor *arg0) {
     Gfx *temp_v0_18;
     Gfx *temp_v0_19;
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
     }
 
@@ -805,7 +805,7 @@ void func_800681A4(RaceOverlayModelActor *arg0) {
             sp64.source.translation.z = arg0->drawPos.z;
             arg0->displayList = allocFixedTransformMatrix(&sp64.source);
         }
-        do { if (arg0->displayList != NULL) { temp_v0 = gRegionAllocPtr++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) gEffectRenderModeSetupDl; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette0; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->displayList; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = (u32) D_80156614; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400207F; temp_v0_17->words.w1 = (u32) D_800D92D8; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; temp_v0_19 = gRegionAllocPtr++; temp_v0_19->words.w0 = 0x06000000; temp_v0_19->words.w1 = (u32) gEffectRenderModeCleanupDl; } } while (0);
+        do { if (arg0->displayList != NULL) { temp_v0 = gRegionAllocPtr++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) gEffectRenderModeSetupDl; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette0; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->displayList; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = (u32) gViewportMatrix; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400207F; temp_v0_17->words.w1 = (u32) D_800D92D8; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; temp_v0_19 = gRegionAllocPtr++; temp_v0_19->words.w0 = 0x06000000; temp_v0_19->words.w1 = (u32) gEffectRenderModeCleanupDl; } } while (0);
     }
 }
 
@@ -823,7 +823,7 @@ void func_800684E4(RaceOverlayModelActor *arg0) {
     Gfx *temp_v0_36;
     Gfx *temp_v0_50;
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
     }
     if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
@@ -843,7 +843,7 @@ void func_800684E4(RaceOverlayModelActor *arg0) {
                                         G_TX_CLAMP, 0, 0, 0, 0);
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette0);
                 gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-                gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
                 gDma1p(gRegionAllocPtr++, G_VTX, D_800D92D8, 0x103F, 0);
                 temp_v0_18 = gRegionAllocPtr++;
                 temp_v0_18->words.w1 = 0x60200;
@@ -1088,7 +1088,7 @@ void func_8006935C(RaceParticleActor *arg0) {
     Gfx *temp_v0_9;
     Gfx *var_v0;
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         arg0->transformDirty = 1;
     }
     if (isPositionNearCurrentViewport(&arg0->pos) != 0) {

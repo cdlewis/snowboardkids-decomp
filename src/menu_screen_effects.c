@@ -119,8 +119,8 @@ extern u32 mainMenuModeBoardTransitionVertices[];
 extern s16 mainMenuModeIconFlashTileOffsets[];
 extern s16 mainMenuModeLabelFlashTileOffsets[];
 extern u32 raceStartPlayerEffectVertices[];
-extern u32 D_800D6270[];
-extern u32 D_800D60E0[];
+extern u32 gAlphaSpriteRenderModeDl[];
+extern u32 gTranslucentSpriteRenderModeDl[];
 extern GfxCommandSource gIdentityFixedTransform;
 extern u32 gIdentityMatrix[];
 extern s16 gMenuFadeAlpha;
@@ -140,8 +140,8 @@ extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern RacePlayerState D_80121D80[];
 extern u8 gCurrentViewportIndex;
-extern u8 D_80156609;
-extern GfxCommandDest *D_80156614;
+extern u8 gRenderMatricesDirty;
+extern GfxCommandDest *gViewportMatrix;
 extern u8 gConnectedControllerCount;
 extern u32 D_2000000[];
 extern u32 D_20006C8[];
@@ -374,7 +374,7 @@ void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *arg0) {
     volatile u8 gap[0xC];
     GfxCommandSource sp74;
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         arg0->unk2F = 1;
     }
 
@@ -388,7 +388,7 @@ void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *arg0) {
     }
 
     if (arg0->unk24.word != 0) {
-        gSPDisplayList(gRegionAllocPtr++, D_800D6270);
+        gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
         getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216C), (u16)(arg0->unk2E + 0x24), &spA4, &spA0);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)spA4);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
@@ -404,7 +404,7 @@ void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *arg0) {
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x01020040, arg0->unk24.word);
-        MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)D_80156614);
+        MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)raceStartPlayerEffectVertices);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
     }
@@ -582,7 +582,7 @@ void drawMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
             gfx = gRegionAllocPtr;
             gRegionAllocPtr = gfx + 1;
             gfx->words.w0 = 0x06000000;
-            gfx->words.w1 = (u32) D_800D60E0;
+            gfx->words.w1 = (u32) gTranslucentSpriteRenderModeDl;
             gfx = gRegionAllocPtr;
             gRegionAllocPtr = gfx + 1;
             gfx->words.w0 = 0xFA000000;
@@ -646,7 +646,7 @@ void drawMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
             gfx = gRegionAllocPtr;
             gRegionAllocPtr = gfx + 1;
             gfx->words.w0 = 0x01000040;
-            gfx->words.w1 = (u32) D_80156614;
+            gfx->words.w1 = (u32) gViewportMatrix;
             gfx = gRegionAllocPtr;
             gRegionAllocPtr = gfx + 1;
             gfx->words.w0 = 0x0400103F;
