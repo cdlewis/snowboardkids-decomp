@@ -13,7 +13,7 @@
 #include "title_screen_ui.h"
 #include "race_camera.h"
 #include "race_flow.h"
-#include "course_demo_race_intro.h"
+#include "main_menu_demo_race_intro.h"
 #include "title_demo_race_intro.h"
 #include "viewport_manager.h"
 #define MENU_RENDERER_S16_STEP_PROTOTYPE
@@ -1133,7 +1133,7 @@ void fadeOutMainMenu(void) {
         } else {
             gMainMenuReturnFromRace = 0;
             setCurrentGameTaskCallback(initMainMenu, 0);
-            createGameTask(4, initCourseDemoRaceIntro, 0x64);
+            createGameTask(4, initMainMenuDemoRaceIntro, 0x64);
             suspendGameTask(3);
         }
     }

@@ -1,4 +1,4 @@
-#include "course_demo_race_intro.h"
+#include "race_demo_intro.h"
 #include "title_demo_race_intro.h"
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
