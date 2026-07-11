@@ -25,14 +25,14 @@ typedef struct {
 } ControllerPakScoreFileContext;
 
 extern CharacterSelectFlowState *D_801235B8;
-extern ControllerPakMenuState D_8010AF90;
+extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakScoreDeleteFlow gControllerPakScoreDeleteFlow;
 extern ControllerPakScoreFileContext D_80121D80;
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern s8 D_800DEED4;
 extern u8 D_8010AF92;
-extern u8 D_8010AF93;
+extern u8 gControllerPakMenuCursorState;
 extern s32 D_801235B4;
 extern s32 gPlayerInputPressed;
 extern s16 D_800EC9C8;
@@ -83,8 +83,8 @@ void initControllerPakScoreDeleteFlow(void) {
     gControllerPakScoreDeleteFlow.timer = 0;
     gControllerPakScoreDeleteFlow.targetState = 0;
     gControllerPakScoreDeleteFlow.nextTimer = 0;
-    D_8010AF90.state = 0;
-    D_8010AF90.confirmChoice = 0;
+    gControllerPakMenuState.state = 0;
+    gControllerPakMenuState.confirmChoice = 0;
     func_8009956C(updateControllerPakScoreDeleteFlow, 0);
 }
 
@@ -122,8 +122,8 @@ void updateControllerPakScoreDeleteFlow(void)
     D_801235B8->fade = func_80013F88((s32) ((s16) temp_v0), 0x24, 0);
     if (D_801235B8->fade == 0)
     {
-      D_8010AF90.state = 3;
-      D_8010AF90.confirmChoice = 1;
+      gControllerPakMenuState.state = 3;
+      gControllerPakMenuState.confirmChoice = 1;
       func_80071408(func_800325D0, 0, 0x64);
       func_8009956C(updateControllerPakScoreDeleteConfirm, 0);
     }
@@ -436,17 +436,17 @@ void fadeOutControllerPakScoreDeleteFlow(void) {
 }
 
 void updateControllerPakScoreDeleteConfirm(void) {
-    if ((gPlayerInputPressed & 0x10800) && (D_8010AF90.confirmChoice != 0)) {
-        D_8010AF90.confirmChoice = 0;
+    if ((gPlayerInputPressed & 0x10800) && (gControllerPakMenuState.confirmChoice != 0)) {
+        gControllerPakMenuState.confirmChoice = 0;
         func_80072138(0x19, 0x32);
-    } else if ((gPlayerInputPressed & 0x20400) && (D_8010AF90.confirmChoice != 1)) {
-        D_8010AF90.confirmChoice = 1;
+    } else if ((gPlayerInputPressed & 0x20400) && (gControllerPakMenuState.confirmChoice != 1)) {
+        gControllerPakMenuState.confirmChoice = 1;
         func_80072138(0x19, 0x32);
     }
     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
         func_80072138(0x18, 0x32);
         if (D_8010AF92 == 0) {
-            D_8010AF93 = 0;
+            gControllerPakMenuCursorState = 0;
             func_8009956C(updateControllerPakScoreDeleteFlow, 0);
         } else {
             D_801235B4 = 1;

@@ -30,13 +30,14 @@ extern s32 D_80124838;
 extern CharacterSelectFlowState *D_801235B8;
 extern ControllerPakPromptTransition D_8010AF80;
 extern ControllerPakConfirmTransition D_8010ADD0;
-extern ControllerPakMenuState D_8010AF90;
+extern ControllerPakMenuState gControllerPakMenuState;
 extern s16 D_80112130[];
 extern u8 D_8010ADD2;
 extern u8 D_8010AF92;
-extern u8 D_8010AF93;
-extern s32 D_8010B198;
-extern s32 D_8010B19C;
+extern u8 gControllerPakMenuCursorState;
+extern u8 gControllerPakDeletePromptState;
+extern s32 gControllerPakFreeBytes;
+extern s32 gControllerPakFreeFileCount;
 extern s16 D_80112172;
 extern s16 D_8011217C;
 extern s16 D_80112178;
@@ -369,7 +370,7 @@ void func_80030EF0(ControllerPakTitleActor *arg0) {
     u32 drawAlpha;
     u16 alpha;
 
-    if (D_8010AF90.mainChoice == 0) {
+    if (gControllerPakMenuState.mainChoice == 0) {
         alpha = 0x100;
     } else {
         alpha = 0x80;
@@ -386,12 +387,12 @@ void func_80030EF0(ControllerPakTitleActor *arg0) {
 
     func_8000F8AC((s16)(arg0->common.x + 0x70), arg0->common.y, func_80043040(D_80112172), 2, 0x20, 0x20, 0,
                   alpha, 0);
-    func_8000F8AC((s16)(arg0->common.x + (D_8010AF90.mainChoice * 0x70)), arg0->common.y, func_80043040(D_80112172),
+    func_8000F8AC((s16)(arg0->common.x + (gControllerPakMenuState.mainChoice * 0x70)), arg0->common.y, func_80043040(D_80112172),
                   5, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
 void func_80031038(ControllerPakTitleActor *arg0) {
-    switch (D_8010AF93) {
+    switch (gControllerPakMenuCursorState) {
         case 0:
             if (arg0->timer < 0x10) {
                 arg0->scale -= 8;
@@ -424,10 +425,10 @@ void func_8003112C(ControllerPakTitleActor *arg0) {
 
     actor = arg0;
 
-    if (D_8010AF90.state == 2) {
+    if (gControllerPakMenuState.state == 2) {
         otherAlpha = 0x80;
         alpha = 0x80;
-        if (D_8010AF90.confirmChoice == 0) {
+        if (gControllerPakMenuState.confirmChoice == 0) {
             alpha = 0x100;
         } else {
             otherAlpha = 0x100;
@@ -443,14 +444,14 @@ void func_8003112C(ControllerPakTitleActor *arg0) {
     func_8000F8AC((s16)(actor->common.x + 0x70), actor->common.y, func_80043040(D_80112172), 4, 0x20, 0x20, 0,
                   otherAlpha, 0);
 
-    if (D_8010AF93 == 2) {
+    if (gControllerPakMenuCursorState == 2) {
         func_8000F8AC((s16)(actor->common.x + (D_8010AF92 * 0x70)), actor->common.y, func_80043040(D_80112172), 5, 0x20,
                       0x20, 0, actor->scale, 0);
     }
 }
 
 void func_80031294(ControllerPakTitleActor *arg0) {
-    switch (D_8010AF93) {
+    switch (gControllerPakMenuCursorState) {
         case 0:
         case 1:
             break;
@@ -492,7 +493,7 @@ void func_80031370(ControllerPakTwoPointActor *arg0) {
         digit[-1] = 0xFFFE;
     } while (digit < text + 4);
 
-    value = D_8010B19C;
+    value = gControllerPakFreeFileCount;
     digit = &text[1];
     do {
         remainder = value % 10;
@@ -509,7 +510,7 @@ void func_80031370(ControllerPakTwoPointActor *arg0) {
         digit[-1] = 0xFFFE;
     } while (digit < text + 4);
 
-    value = D_8010B198 / 0x100;
+    value = gControllerPakFreeBytes / 0x100;
     digit = &text[2];
     do {
         remainder = value % 10;
@@ -548,7 +549,7 @@ typedef struct {
     /* 0x0E */ char game_name[16];
 } ControllerPakPfsState;
 
-extern ControllerPakPfsState D_8010AF98[];
+extern ControllerPakPfsState gControllerPakFileStates[];
 extern u8 D_8010AF94;
 
 void func_80031550(ControllerPakFileListActor *arg0) {
@@ -570,24 +571,24 @@ void func_80031550(ControllerPakFileListActor *arg0) {
     s32 ch;
     s32 ten;
 
-    if (D_8010AF90.visibleFileIndex == 0) {
-        fileIndex = D_8010AF90.fileIndex;
-    } else if (D_8010AF90.visibleFileIndex == 4) {
-        fileIndex = D_8010AF90.fileIndex - 4;
+    if (gControllerPakMenuState.visibleFileIndex == 0) {
+        fileIndex = gControllerPakMenuState.fileIndex;
+    } else if (gControllerPakMenuState.visibleFileIndex == 4) {
+        fileIndex = gControllerPakMenuState.fileIndex - 4;
     } else {
-        fileIndex = D_8010AF90.fileIndex - D_8010AF90.visibleFileIndex;
+        fileIndex = gControllerPakMenuState.fileIndex - gControllerPakMenuState.visibleFileIndex;
     }
 
     ten = 10;
     rowY = 0;
     do {
-        state = D_8010AF90.state;
+        state = gControllerPakMenuState.state;
         alpha = 0xE0;
         indexXOffset = 0;
         if ((s32)state <= 0) {
         } else {
             alpha = 0xE0;
-            if (D_8010AF90.fileIndex == fileIndex) {
+            if (gControllerPakMenuState.fileIndex == fileIndex) {
                 alpha = 0x100;
             }
         }
@@ -602,7 +603,7 @@ void func_80031550(ControllerPakFileListActor *arg0) {
         textB0[1] = (fileIndex + 1) % ten;
         func_80013154((s16)(arg0->positions[0].x + indexXOffset), (s16)(arg0->positions[0].y + rowY), (u8 *)textB0, 1, alpha, 8);
 
-        fileState = &D_8010AF98[fileIndex];
+        fileState = &gControllerPakFileStates[fileIndex];
         i = D_8010AF94 * 0;
         if (fileState->company_code != 0) {
             insertIndex = 0;
@@ -694,7 +695,7 @@ void func_80031550(ControllerPakFileListActor *arg0) {
         fileIndex++;
     } while (rowY != 0x50);
 
-    if (D_8010AF93 != 0) {
+    if (gControllerPakMenuCursorState != 0) {
         func_8000F8AC(arg0->positions[5].x, (s16)(arg0->positions[5].y + (D_8010AF94 * 0x10)), func_80043040(D_80112130[0x21]), 6,
                       0x20, 0x20, 0, arg0->cursorScale, 0);
         func_8000F8AC((s16)(arg0->positions[5].x + 0x80), (s16)(arg0->positions[5].y + (D_8010AF94 * 0x10)),
@@ -704,7 +705,7 @@ void func_80031550(ControllerPakFileListActor *arg0) {
 #endif
 
 void func_80031A88(ControllerPakFileListActor *arg0) {
-    if (D_8010AF93 == 1) {
+    if (gControllerPakMenuCursorState == 1) {
         if (arg0->cursorTimer < 0x10) {
             arg0->cursorScale -= 9;
         } else {
@@ -794,7 +795,7 @@ void func_80031F40(ControllerPakDeletePromptActor *arg0) {
     u8 state;
     u8 switchState;
 
-    globalState = D_8010AF96;
+    globalState = gControllerPakDeletePromptState;
     state = arg0->timer;
     switchState = state;
     if (state != globalState) {
@@ -828,7 +829,7 @@ void func_80031F40(ControllerPakDeletePromptActor *arg0) {
         break;
     }
 
-    D_8010AF96 = state;
+    gControllerPakDeletePromptState = state;
     if (arg0->timer == 3) {
         func_800716E4((EffectTask *)arg0);
         return;
@@ -902,14 +903,14 @@ loop_outer:
 }
 
 void func_80032534(ControllerPakDeletePromptActor *arg0) {
-    arg0->selectedOption = D_8010AF90.confirmChoice;
+    arg0->selectedOption = gControllerPakMenuState.confirmChoice;
     if (arg0->timer < 0x10) {
         arg0->scale -= 9;
     } else {
         arg0->scale += 9;
     }
     arg0->timer = (arg0->timer + 1) & 0x1F;
-    if (D_8010AF90.state != 3) {
+    if (gControllerPakMenuState.state != 3) {
         func_800716E4(arg0);
     } else {
         func_800483FC(&D_80124868, func_8003209C, (s32)arg0);

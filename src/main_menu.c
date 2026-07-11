@@ -191,9 +191,9 @@ extern u8 D_800E29C0;
 extern u8 D_800EC8B0;
 extern u8 D_8010ADFA;
 extern s8 D_8010B1F0;
-extern OSPfsState D_8010AF98[];
-extern s32 D_8010B198;
-extern s32 D_8010B19C;
+extern OSPfsState gControllerPakFileStates[];
+extern s32 gControllerPakFreeBytes;
+extern s32 gControllerPakFreeFileCount;
 extern OSMesgQueue D_80124070;
 extern u8 D_80123750;
 extern u8 D_80123751;
@@ -325,15 +325,15 @@ void func_800005E4(void *arg0) {
             }
             break;
         case 0xA0:
-            func_8000165C();
+            readControllerPakFileStates();
             osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
             break;
         case 0xB0:
-            func_80001724(msgValue & 0xF);
+            deleteControllerPakFile(msgValue & 0xF);
             osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
             break;
         case 0xC0:
-            func_8000189C();
+            updateControllerPakFreeSpaceInfo();
             osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
             break;
         }
@@ -701,7 +701,7 @@ void func_80001584(u16 arg0) {
     }
 }
 
-void func_80001618(void) {
+void requestControllerPakFileList(void) {
     OSMesg msg;
 
     msg = NULL;
@@ -710,16 +710,16 @@ void func_80001618(void) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-void func_8000165C(void) {
+void readControllerPakFileStates(void) {
     s32 i;
 
     osPfsInitPak(&D_800E4BD0, &D_800E4C40[0], 0);
     for (i = 0; i != 0x10; i++) {
-        osPfsFileState(&D_800E4C40[0], i, &D_8010AF98[i]);
+        osPfsFileState(&D_800E4C40[0], i, &gControllerPakFileStates[i]);
     }
 }
 
-void func_800016D8(u16 arg0) {
+void requestControllerPakDeleteFile(u16 arg0) {
     OSMesg msg;
 
     msg = NULL;
@@ -728,7 +728,7 @@ void func_800016D8(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-void func_80001724(u16 arg0) {
+void deleteControllerPakFile(u16 arg0) {
     OSPfs *pfs;
     OSPfsState *state;
     u16 companyCode;
@@ -740,16 +740,16 @@ void func_80001724(u16 arg0) {
     pfs = D_800E4C40;
     osPfsInitPak(&D_800E4BD0, pfs, 0);
 
-    state = &D_8010AF98[arg0];
+    state = &gControllerPakFileStates[arg0];
     companyCode = state->company_code;
     gameCode = state->game_code;
 
     for (i = 0; i < 16; i++) {
-        gameName[i] = D_8010AF98[arg0].game_name[i];
+        gameName[i] = gControllerPakFileStates[arg0].game_name[i];
     }
 
     for (i = 0; i < 4; i++) {
-        extName[i] = D_8010AF98[arg0].ext_name[i];
+        extName[i] = gControllerPakFileStates[arg0].ext_name[i];
     }
 
     for (i = 0; i != 3; i++) {
@@ -761,7 +761,7 @@ void func_80001724(u16 arg0) {
     }
 }
 
-void func_80001858(void) {
+void requestControllerPakFreeSpaceUpdate(void) {
     OSMesg msg;
 
     msg = NULL;
@@ -770,15 +770,15 @@ void func_80001858(void) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-void func_8000189C(void) {
+void updateControllerPakFreeSpaceInfo(void) {
     s32 pad;
     s32 maxFiles;
     s32 filesUsed;
 
     osPfsInitPak(&D_800E4BD0, &D_800E4C40[0], 0);
-    osPfsFreeBlocks(&D_800E4C40[0], &D_8010B198);
+    osPfsFreeBlocks(&D_800E4C40[0], &gControllerPakFreeBytes);
     osPfsNumFiles(&D_800E4C40[0], &maxFiles, &filesUsed);
-    D_8010B19C = maxFiles - filesUsed;
+    gControllerPakFreeFileCount = maxFiles - filesUsed;
 }
 
 // func_80001904 best match: 33.167%
