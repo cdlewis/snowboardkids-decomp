@@ -1,17 +1,17 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "ending_sequence_ui.h"
+#include "ending_sequence_captions.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
 #define ENDING_SEQUENCE_FADE_MAX 0x100
-#define ENDING_SEQUENCE_TEXT_PAGE_FADE_STEP 0xA
-#define ENDING_SEQUENCE_TEXT_PAGE_RESET_DELAY 0x20
-#define ENDING_SEQUENCE_TEXT_PAGE_VISIBLE_FRAMES 0x96
-#define ENDING_SEQUENCE_TEXT_PAGE_COUNT 0x19
+#define ENDING_SEQUENCE_CAPTION_FADE_STEP 0xA
+#define ENDING_SEQUENCE_CAPTION_RESET_DELAY 0x20
+#define ENDING_SEQUENCE_CAPTION_VISIBLE_FRAMES 0x96
+#define ENDING_SEQUENCE_CAPTION_COUNT 0x19
 
-struct EndingSequenceTextPageActor {
+struct EndingSequenceCaptionActor {
     /* 0x00 */ char pad[0x1C];
     /* 0x1C */ s16 x;
     /* 0x1E */ s16 y;
@@ -33,35 +33,35 @@ struct EndingSequenceSpriteDebugViewerActor {
 typedef struct {
     /* 0x00 */ s16 x;
     /* 0x02 */ s16 y;
-} EndingSequenceTextPagePosition;
+} EndingSequenceCaptionPosition;
 
 typedef struct {
     /* 0x00 */ s16 count;
-    /* 0x02 */ EndingSequenceTextPagePosition positions[5];
+    /* 0x02 */ EndingSequenceCaptionPosition positions[5];
     /* 0x16 */ s16 pad;
-} EndingSequenceTextPageLayout;
+} EndingSequenceCaptionLayout;
 
 extern u16 gEndingSequencePhase;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern void *gMenuRenderCallbackList;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
-extern u16 gEndingSequenceTextPageScripts[][0x5A];
-extern EndingSequenceTextPageLayout gEndingSequenceTextPageLayouts[];
+extern u16 gEndingSequenceCaptionScripts[][0x5A];
+extern EndingSequenceCaptionLayout gEndingSequenceCaptionLayouts[];
 extern void addRenderCallback(void *, void *, void *);
 extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 
-void drawEndingSequenceTextPage(EndingSequenceTextPageActor *arg0);
-void updateEndingSequenceFinalSprites(EndingSequenceTextPageActor *arg0);
-void updateEndingSequenceTextPages(EndingSequenceTextPageActor *arg0);
+void drawEndingSequenceCaptionPage(EndingSequenceCaptionActor *arg0);
+void updateEndingSequenceTheEndSprites(EndingSequenceCaptionActor *arg0);
+void updateEndingSequenceCaptionPages(EndingSequenceCaptionActor *arg0);
 void updateEndingSequenceSpriteDebugViewer(EndingSequenceSpriteDebugViewerActor *arg0);
 
-// drawEndingSequenceTextPage best match: 93.371%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_ui/drawEndingSequenceTextPage.s")
+// drawEndingSequenceCaptionPage best match: 93.371%
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_captions/drawEndingSequenceCaptionPage.s")
 
 #ifdef NON_MATCHING
-void drawEndingSequenceTextPage(EndingSequenceTextPageActor *arg0) {
+void drawEndingSequenceCaptionPage(EndingSequenceCaptionActor *arg0) {
     register s32 count;
     s32 i;
     s32 scriptIndex;
@@ -73,27 +73,27 @@ void drawEndingSequenceTextPage(EndingSequenceTextPageActor *arg0) {
     u16 pad[12];
     volatile u16 colorMode;
     u16 glyph;
-    EndingSequenceTextPageLayout *layout;
+    EndingSequenceCaptionLayout *layout;
 
-    layout = &gEndingSequenceTextPageLayouts[arg0->pageIndex];
+    layout = &gEndingSequenceCaptionLayouts[arg0->pageIndex];
     count = layout->count;
     i = 0;
     if (layout->count > 0) {
         scriptIndex = 0;
         layoutOffset = 0;
         do {
-            layout = &gEndingSequenceTextPageLayouts[arg0->pageIndex];
-            glyph = gEndingSequenceTextPageScripts[arg0->pageIndex][scriptIndex];
+            layout = &gEndingSequenceCaptionLayouts[arg0->pageIndex];
+            glyph = gEndingSequenceCaptionScripts[arg0->pageIndex][scriptIndex];
             x = *(s16 *)((u8 *)layout + layoutOffset + 2);
             y = *(s16 *)((u8 *)layout + layoutOffset + 4);
             lineLength = 0;
-            if (gEndingSequenceTextPageScripts[arg0->pageIndex][scriptIndex] != 0xFFFF) {
+            if (gEndingSequenceCaptionScripts[arg0->pageIndex][scriptIndex] != 0xFFFF) {
                 do {
-                    text[lineLength] = gEndingSequenceTextPageScripts[arg0->pageIndex][scriptIndex];
+                    text[lineLength] = gEndingSequenceCaptionScripts[arg0->pageIndex][scriptIndex];
                     scriptIndex++;
-                    glyph = gEndingSequenceTextPageScripts[arg0->pageIndex][scriptIndex];
+                    glyph = gEndingSequenceCaptionScripts[arg0->pageIndex][scriptIndex];
                     lineLength++;
-                } while (gEndingSequenceTextPageScripts[arg0->pageIndex][scriptIndex] != 0xFFFF);
+                } while (gEndingSequenceCaptionScripts[arg0->pageIndex][scriptIndex] != 0xFFFF);
             }
             text[lineLength] = 0xFFFF;
             scriptIndex++;
@@ -105,14 +105,14 @@ void drawEndingSequenceTextPage(EndingSequenceTextPageActor *arg0) {
 }
 #endif
 
-void drawEndingSequenceFinalSprites(EndingSequenceTextPageActor *arg0) {
+void drawEndingSequenceTheEndSprites(EndingSequenceCaptionActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x35, 0x20, 0x20, 0,
                             arg0->alpha, 0);
     drawMenuSpriteWithAlpha((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x36, 0x20,
                             0x20, 0, arg0->alpha, 0);
 }
 
-void updateEndingSequenceFinalSprites(EndingSequenceTextPageActor *arg0) {
+void updateEndingSequenceTheEndSprites(EndingSequenceCaptionActor *arg0) {
     s32 v1 = ENDING_SEQUENCE_FADE_MAX;
     s32 v0;
 
@@ -124,14 +124,14 @@ void updateEndingSequenceFinalSprites(EndingSequenceTextPageActor *arg0) {
                 arg0->alpha = v1;
             }
         }
-        addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceFinalSprites, arg0);
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceTheEndSprites, arg0);
     }
 }
 
-void updateEndingSequenceTextPages(EndingSequenceTextPageActor *arg0) {
+void updateEndingSequenceCaptionPages(EndingSequenceCaptionActor *arg0) {
     switch (arg0->state) {
     case 0:
-        arg0->alpha += ENDING_SEQUENCE_TEXT_PAGE_FADE_STEP;
+        arg0->alpha += ENDING_SEQUENCE_CAPTION_FADE_STEP;
         if (!(arg0->alpha < ENDING_SEQUENCE_FADE_MAX)) {
             arg0->alpha = ENDING_SEQUENCE_FADE_MAX;
             arg0->state = 1;
@@ -140,20 +140,20 @@ void updateEndingSequenceTextPages(EndingSequenceTextPageActor *arg0) {
         break;
     case 1:
         arg0->timer = arg0->timer + 1;
-        if (arg0->timer == ENDING_SEQUENCE_TEXT_PAGE_VISIBLE_FRAMES) {
+        if (arg0->timer == ENDING_SEQUENCE_CAPTION_VISIBLE_FRAMES) {
             arg0->timer = 0;
             arg0->state = 2;
         }
         break;
     case 2:
-        arg0->alpha -= ENDING_SEQUENCE_TEXT_PAGE_FADE_STEP;
+        arg0->alpha -= ENDING_SEQUENCE_CAPTION_FADE_STEP;
         if (!(arg0->alpha > 0)) {
             arg0->alpha = 0;
             arg0->state = 3;
             arg0->pageIndex = arg0->pageIndex + 1;
-            if (arg0->pageIndex == ENDING_SEQUENCE_TEXT_PAGE_COUNT) {
+            if (arg0->pageIndex == ENDING_SEQUENCE_CAPTION_COUNT) {
                 arg0->pageIndex = 0;
-                setCallbackTaskCallback(arg0, updateEndingSequenceFinalSprites);
+                setCallbackTaskCallback(arg0, updateEndingSequenceTheEndSprites);
             }
             if (gEndingSequencePhase == 0) {
                 gEndingSequencePhase = 1;
@@ -162,22 +162,22 @@ void updateEndingSequenceTextPages(EndingSequenceTextPageActor *arg0) {
         break;
     case 3:
         arg0->timer = arg0->timer + 1;
-        if (!(arg0->timer < ENDING_SEQUENCE_TEXT_PAGE_RESET_DELAY)) {
+        if (!(arg0->timer < ENDING_SEQUENCE_CAPTION_RESET_DELAY)) {
             arg0->timer = 0;
             arg0->state = 0;
         }
         break;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceTextPage, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceCaptionPage, arg0);
 }
 
-void initEndingSequenceTextPageActor(EndingSequenceTextPageActor *arg0) {
+void initEndingSequenceCaptionActor(EndingSequenceCaptionActor *arg0) {
     arg0->state = 3;
     arg0->pageIndex = 0;
     arg0->x = -0x40;
     arg0->y = 0x10;
     arg0->alpha = 0;
-    setCallbackTaskCallback(arg0, updateEndingSequenceTextPages);
+    setCallbackTaskCallback(arg0, updateEndingSequenceCaptionPages);
 }
 
 void drawEndingSequenceSpriteDebugViewer(EndingSequenceSpriteDebugViewerActor *arg0) {
