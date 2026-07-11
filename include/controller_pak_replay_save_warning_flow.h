@@ -1,0 +1,11 @@
+#ifndef CONTROLLER_PAK_REPLAY_SAVE_WARNING_FLOW_H
+#define CONTROLLER_PAK_REPLAY_SAVE_WARNING_FLOW_H
+
+void initControllerPakReplaySaveWarningFlow(void);
+void fadeInControllerPakReplaySaveWarningFirstMessage(void);
+void fadeOutControllerPakReplaySaveWarningFirstMessage(void);
+void waitBeforeControllerPakReplaySaveWarningSecondMessage(void);
+void fadeInControllerPakReplaySaveWarningSecondMessage(void);
+void fadeOutControllerPakReplaySaveWarningFlow(void);
+
+#endif
