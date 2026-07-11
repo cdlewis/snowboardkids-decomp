@@ -2,6 +2,7 @@
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
+#include "player_select_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
@@ -210,7 +211,6 @@ void func_8002C4E0(ShopMenuRowActor *arg0) {
     } while (0);
 }
 
-extern void func_8001BA2C(s32, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern s32 D_800B34B0[];
 extern u16 D_800B34E0[];

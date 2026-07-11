@@ -2,6 +2,7 @@
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "player_count_select_ui.h"
+#include "player_select_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
@@ -41,7 +42,6 @@ typedef struct {
 } PlayerCountSelectAssetHandles;
 
 extern void func_800483FC(void *, void *, void *);
-extern void func_8001BA2C(s32, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern u8 D_800EC9C1;
 extern PlayerCountSelectFrameTileMapTable D_800B70F0;

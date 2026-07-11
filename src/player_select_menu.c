@@ -6,6 +6,7 @@
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
 #include "player_select_menu.h"
+#include "player_select_ui.h"
 #include "title_menu.h"
 
 typedef struct {

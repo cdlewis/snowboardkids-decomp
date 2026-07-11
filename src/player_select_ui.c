@@ -1,58 +1,13 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
+#include "player_select_ui.h"
 #include "menu_rendering.h"
-
-typedef struct {
-    char pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ s16 y;
-    union {
-        /* 0x1C */ s16 spriteIndex;
-        struct {
-            /* 0x1C */ u8 state;
-            /* 0x1D */ u8 pad1D;
-        } bytes;
-    } sprite;
-    union {
-        struct {
-            /* 0x1E */ u8 state;
-            /* 0x1F */ u8 timer;
-        } bytes;
-        /* 0x1E */ s16 alpha;
-    } transition;
-    /* 0x20 */ s16 counter;
-    union {
-        struct {
-            /* 0x22 */ u8 subState;
-            /* 0x23 */ u8 subTimer;
-        } bytes;
-        /* 0x22 */ s16 rowY;
-    } row;
-} PlayerSelectWidgetActor;
 
 typedef struct {
     char pad0[0x42];
     /* 0x42 */ s16 textureHandle;
 } PlayerSelectAssetHandles;
-
-typedef struct {
-    char pad0[0x18];
-    /* 0x18 */ s16 iconX[5];
-    /* 0x22 */ s16 iconY;
-    /* 0x24 */ u8 state;
-    /* 0x25 */ u8 spawnTimer;
-    /* 0x26 */ u8 playerCount;
-} PlayerSelectRowActor;
-
-typedef struct {
-    char pad0[0x18];
-    s16 unk18[5];
-    s16 unk22;
-    s8 unk24;
-    s8 unk25;
-    s8 unk26;
-} Struct1952C;
 
 typedef struct {
     u8 state;
@@ -70,26 +25,6 @@ typedef struct {
 } PlayerSelectFrameTiles;
 
 extern void func_800483FC(void *, void *, void *);
-extern void func_80019800(PlayerSelectWidgetActor *);
-extern void func_800196CC(PlayerSelectWidgetActor *);
-extern void func_80019FAC(PlayerSelectWidgetActor *);
-extern void func_8001A44C(PlayerSelectWidgetActor *);
-extern void func_8001A490(PlayerSelectWidgetActor *);
-extern void func_8001A8E0(PlayerSelectWidgetActor *);
-extern void func_8001A704(PlayerSelectWidgetActor *);
-extern void func_8001A924(PlayerSelectWidgetActor *);
-extern void func_8001AD74(PlayerSelectWidgetActor *);
-extern void func_8001AB98(PlayerSelectWidgetActor *);
-extern void func_8001B210(PlayerSelectWidgetActor *);
-extern void func_8001B02C(PlayerSelectWidgetActor *);
-extern void func_8001B454(PlayerSelectWidgetActor *);
-extern void func_8001B520(PlayerSelectWidgetActor *);
-extern void func_8001B638(PlayerSelectWidgetActor *);
-extern void func_8001B6D8(PlayerSelectWidgetActor *);
-extern void func_8001B7D8(PlayerSelectWidgetActor *);
-extern void func_8001B8F0(PlayerSelectWidgetActor *);
-extern void func_8001B9F0(PlayerSelectWidgetActor *);
-extern void func_8001BA2C(s32, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern PlayerSelectFrameTiles D_800B5B50[];
 extern PlayerPortrait D_800B5C24[];
@@ -198,15 +133,15 @@ void func_80019314(PlayerSelectRowActor *arg0) {
     func_800483FC(&D_80124868, func_800191D0, actor);
 }
 
-void func_8001952C(Struct1952C *arg0) {
+void func_8001952C(PlayerSelectRowActor *arg0) {
     s32 i;
 
-    for (i = 0; i < 5; i++) { arg0->unk18[i] = -0x104; }
+    for (i = 0; i < 5; i++) { arg0->iconX[i] = -0x104; }
 
-    arg0->unk22 = -0x60;
-    arg0->unk25 = 0;
-    arg0->unk26 = 1;
-    arg0->unk24 = 0;
+    arg0->iconY = -0x60;
+    arg0->spawnTimer = 0;
+    arg0->playerCount = 1;
+    arg0->state = 0;
 
     func_80071824(arg0, func_80019314);
 }
