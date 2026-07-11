@@ -1699,7 +1699,7 @@ void func_8009EB6C(PlayerCommandState *arg0) {
 }
 #endif
 
-// func_8009EBDC best match: 90.768% (nonmatchings/func_8009EBDC-2225551288923588688/base_3.c)
+// func_8009EBDC best match: 93.258% (nonmatchings/func_8009EBDC-6113366811127043669/base_10.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/player_commands/func_8009EBDC.s")
 
@@ -1735,7 +1735,8 @@ void func_8009EBDC(PlayerCommandState *arg0) {
                     arg0->unkF9 = (s32)((f32)value + ((arg0->unkF6 - value) * arg0->unk30 * (f32)step));
                     return;
                 }
-                arg0->unkF8 = state + 1;
+                arg0->unkF8 = state;
+                arg0->unkF8 = arg0->unkF8 + 1;
                 arg0->unkF9 = arg0->unkF6;
                 return;
             case 2:
@@ -1759,7 +1760,8 @@ void func_8009EBDC(PlayerCommandState *arg0) {
                     return;
                 }
                 arg0->unkF8 = state + 1;
-                arg0->unkF9 = 0;
+                // Match-shaping no-op; this value is always stored as zero.
+                arg0->unkF9 = (((((u32)(arg0->unk0 - arg0->unk10)) >> 8) - arg0->unkFB) / rate) * 0;
                 break;
         }
     }
