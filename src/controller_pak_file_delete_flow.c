@@ -4,7 +4,7 @@
 #include "character_select_course_menu.h"
 #include "controller_pak_file_delete_flow.h"
 #include "controller_pak_menu.h"
-#include "controller_pak_file_delete_ui.h"
+#include "controller_pak_ui.h"
 #include "input_task_scheduler.h"
 #include "main_menu.h"
 #include "menu_rendering.h"
@@ -160,7 +160,7 @@ void updateControllerPakFileDeleteConfirm(void) {
     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
-            func_80071408(&initControllerPakFileDeleteConfirmPrompt, 0, 0x64);
+            func_80071408(&initControllerPakDeleteConfirmPrompt, 0, 0x64);
             func_8009956C(updateControllerPakFileDeletePrompt, 0);
             gControllerPakMenuState.state = 3;
             gControllerPakMenuState.confirmChoice = 1;

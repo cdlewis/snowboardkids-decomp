@@ -3,7 +3,7 @@
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
 #include "controller_pak_message_flow.h"
-#include "controller_pak_file_delete_ui.h"
+#include "controller_pak_ui.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
 #include "viewport_manager.h"

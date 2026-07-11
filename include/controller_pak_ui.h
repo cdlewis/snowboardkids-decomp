@@ -1,5 +1,5 @@
-#ifndef CONTROLLER_PAK_FILE_DELETE_UI_H
-#define CONTROLLER_PAK_FILE_DELETE_UI_H
+#ifndef CONTROLLER_PAK_UI_H
+#define CONTROLLER_PAK_UI_H
 
 #include "common.h"
 
@@ -20,7 +20,7 @@ typedef struct {
     /* 0x1E */ u16 timer;
     /* 0x20 */ s32 selectedOption;
     /* 0x24 */ u8 blinkState;
-} ControllerPakTitleActor;
+} ControllerPakOptionsActor;
 
 typedef struct {
     /* 0x00 */ ControllerPakMenuActor common;
@@ -72,18 +72,18 @@ typedef struct {
     /* 0x20 */ u8 selectedOption;
 } ControllerPakWindowActor;
 
-void drawControllerPakTitlePrompt(ControllerPakTitleActor *arg0);
-void updateControllerPakTitlePrompt(ControllerPakTitleActor *arg0);
-void initControllerPakTitlePrompt(ControllerPakTitleActor *arg0);
+void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0);
+void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0);
+void initControllerPakContinuePrompt(ControllerPakOptionsActor *arg0);
 void drawControllerPakCheckPrompt(ControllerPakConfirmActor *arg0);
 void updateControllerPakCheckPrompt(ControllerPakConfirmActor *arg0);
 void initControllerPakCheckPrompt(ControllerPakConfirmActor *arg0);
-void drawControllerPakFileDeleteMainOptions(ControllerPakTitleActor *arg0);
-void updateControllerPakFileDeleteMainOptionsUi(ControllerPakTitleActor *arg0);
-void initControllerPakFileDeleteMainOptions(ControllerPakTitleActor *arg0);
-void drawControllerPakFileDeleteConfirmOptions(ControllerPakTitleActor *arg0);
-void updateControllerPakFileDeleteConfirmOptionsUi(ControllerPakTitleActor *arg0);
-void initControllerPakFileDeleteConfirmOptions(ControllerPakTitleActor *arg0);
+void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0);
+void updateControllerPakFileDeleteMainOptionsUi(ControllerPakOptionsActor *arg0);
+void initControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0);
+void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0);
+void updateControllerPakFileDeleteConfirmOptionsUi(ControllerPakOptionsActor *arg0);
+void initControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0);
 void drawControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0);
 void updateControllerPakFileDeleteFreeSpaceInfo(s32 arg0);
 void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0);
@@ -99,8 +99,8 @@ void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0);
 void drawControllerPakFileDeleteErrorPrompt(ControllerPakWindowActor *arg0);
 void updateControllerPakFileDeleteErrorPromptUi(ControllerPakDeletePromptActor *arg0);
 void initControllerPakFileDeleteErrorPrompt(ControllerPakDeletePromptActor *arg0);
-void drawControllerPakFileDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0);
-void updateControllerPakFileDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0);
-void initControllerPakFileDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0);
+void drawControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0);
+void updateControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0);
+void initControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0);
 
 #endif
