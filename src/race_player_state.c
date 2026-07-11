@@ -13,7 +13,7 @@
 #include "race_input_history.h"
 #include "race_item_effects.h"
 #include "race_item_triggers.h"
-#include "main_menu_screen_effects.h"
+#include "menu_screen_effects.h"
 #include "race_player_movement.h"
 #include "race_position_tracker.h"
 #include "race_position_ui.h"

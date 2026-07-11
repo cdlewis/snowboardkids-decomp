@@ -6,7 +6,7 @@
 #include "race_input_history.h"
 #include "game_task_scheduler.h"
 #include "training_course_ui.h"
-#include "main_menu_screen_effects.h"
+#include "menu_screen_effects.h"
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
 #include "main_menu_race_flow.h"

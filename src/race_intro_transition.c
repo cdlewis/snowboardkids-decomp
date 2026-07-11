@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "race_scene_loader.h"
 #include "game_task_scheduler.h"
-#include "main_menu_screen_effects.h"
+#include "menu_screen_effects.h"
 #include "race_camera.h"
 #include "race_player_state.h"
 #include "race_timer_ui.h"

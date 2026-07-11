@@ -13,7 +13,7 @@
 #include "player_setup_menu.h"
 #include "game_task_scheduler.h"
 #include "menu_system_flow.h"
-#include "main_menu_screen_effects.h"
+#include "menu_screen_effects.h"
 #include "main_menu_panel_ui.h"
 #include "player_count_select_menu.h"
 #include "player_select_menu.h"
@@ -1170,7 +1170,7 @@ void func_80076054(void) {
         if ((gPlayerCount == 1) && (gRaceSplitscreenMode == 0)) {
             createCallbackTaskWithUserId((void (*)(CallbackTask *))func_8005E68C, 6, 0x64, 0xA9);
         }
-        createCallbackTaskWithUserId(initMenuSnowflake, 5, 0x64, D_80121B60 - 1);
+        createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
     }
     func_80077C94();
 }
@@ -1453,7 +1453,7 @@ void func_80077324(void) {
         D_801235B4 |= 0x20;
     }
     if (D_80121B60 != 0) {
-        createCallbackTaskWithUserId(&initMenuSnowflake, 5, 0x64, D_80121B60 - 1);
+        createCallbackTaskWithUserId(&initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
     }
     func_80077C94();
     if (D_801235B4 & 0x10) {
@@ -1469,7 +1469,7 @@ void func_80077324(void) {
 void func_80077400(void) {
     gFramebufferSwapDelay = 0;
     if (D_80121B60 != 0) {
-        createCallbackTaskWithUserId(initMenuSnowflake, 5, 0x64, D_80121B60 - 1);
+        createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
     }
     func_80077C94();
     gRaceRumbleEnabled = 0;
