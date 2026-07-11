@@ -1,7 +1,7 @@
 #include "common.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
-#include "ending_credits_effect_actors.h"
+#include "ending_credits_effects.h"
 #include "main_menu_scene_model.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "menu_renderer.h"
@@ -69,7 +69,7 @@ extern u16 gEndingSequencePhase;
 extern u8 gEndingTransitionRotationStep;
 extern s16 gEndingTransitionSnowboardAngle;
 extern u8 gEndingCharacterEffectDoneFlags[];
-extern u16 gEndingTransitionRotationFrameCount;
+extern u16 gEndingTransitionSnowboardRotationFrameCount;
 extern u16 gEndingCharacterRunDustFrameOffsets[];
 extern u16 gEndingSnowmanEntranceFrameOffsets[];
 extern s32 gActiveMenuTask;
@@ -209,7 +209,7 @@ void spawnEndingCreditsCharacterLoopingSparkle(s16 arg0, s16 arg1, u8 arg2) {
 }
 
 // drawEndingCreditsTommyBigBurst best match: 99.074%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_effect_actors/drawEndingCreditsTommyBigBurst.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_effects/drawEndingCreditsTommyBigBurst.s")
 
 #ifdef NON_MATCHING
 void drawEndingCreditsTommyBigBurst(EndingCreditsEffectActor *arg0) {
@@ -485,7 +485,7 @@ void drawEndingCreditsDelayedSparkle(EndingCreditsEffectActor *arg0) {
 }
 
 // updateEndingCreditsDelayedSparkle best match: 97.653%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_effect_actors/updateEndingCreditsDelayedSparkle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_effects/updateEndingCreditsDelayedSparkle.s")
 
 #ifdef NON_MATCHING
 void updateEndingCreditsDelayedSparkle(EndingCreditsEffectActor *arg0) {
@@ -670,7 +670,7 @@ void updateEndingCreditsTransitionSnowboardIconExpandSpin(EndingCreditsEffectAct
     if (*temp_v0 < 0x140) {
         *temp_v0 += gEndingTransitionRotationStep;
         gEndingTransitionSnowboardAngle = *temp_v0;
-        temp_v1 = &gEndingTransitionRotationFrameCount;
+        temp_v1 = &gEndingTransitionSnowboardRotationFrameCount;
         *temp_v1 = *temp_v1 + 1;
     }
     addRenderCallback(&gMenuOverlayRenderCallbackList, drawEndingCreditsTransitionSnowboardIcon, temp_a2);
@@ -717,7 +717,7 @@ void initEndingCreditsTransitionSnowboardIcon(EndingCreditsEffectActor *arg0) {
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;
     arg0->y = arg0->startY;
-    gEndingTransitionRotationFrameCount = 0;
+    gEndingTransitionSnowboardRotationFrameCount = 0;
     setCallbackTaskCallback(arg0, updateEndingCreditsTransitionSnowboardIconWaitStart);
 }
 
