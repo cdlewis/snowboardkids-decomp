@@ -339,13 +339,13 @@ typedef struct {
     s16 targetScale;
     s16 timer;
     u8 selectedOption;
-} ControllerPakConfirmTransition03798;
+} ControllerPakRumbleCheckPromptTransition03798;
 
 extern void func_80000C48();
 extern void func_80000DB4();
 extern void func_80001010();
 extern void func_80001538();
-extern void initControllerPakCheckPrompt(EffectTask *);
+extern void initControllerPakRumbleCheckPrompt(EffectTask *);
 
 extern u8 D_800B3199[];
 extern s16 D_800EC9C8[];
@@ -354,7 +354,7 @@ extern u8 D_800EC9D8[];
 extern u8 D_800EC9E0[];
 extern u8 D_800EC9E4;
 extern GameSetupSavePlayer03798 D_800EC9F0[];
-extern ControllerPakConfirmTransition03798 gControllerPakCheckPromptTransition;
+extern ControllerPakRumbleCheckPromptTransition03798 gControllerPakRumbleCheckPromptTransition;
 extern EffectTask *D_8010ADE0;
 extern EffectTask *D_8010ADE4;
 extern EffectTask *D_8010ADE8;
@@ -644,10 +644,10 @@ void func_80003798(void) {
             GameSetupSavePlayer03798 *end;
 
             setCurrentInputTaskCallback(func_80004164, 0);
-            createEffectTask(initControllerPakCheckPrompt, 0, 0x64);
-            gControllerPakCheckPromptTransition.state = 6;
-            gControllerPakCheckPromptTransition.selectedOption = 0;
-            gControllerPakCheckPromptTransition.targetScale = 2;
+            createEffectTask(initControllerPakRumbleCheckPrompt, 0, 0x64);
+            gControllerPakRumbleCheckPromptTransition.state = 6;
+            gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
+            gControllerPakRumbleCheckPromptTransition.targetScale = 2;
             if (D_80121B55 > 0) {
                 subState = &D_8010AE00_03798;
                 save = D_800EC9F0;
@@ -689,9 +689,9 @@ typedef struct {
     /* 0x6 */ u16 timer;
     /* 0x8 */ u8 selectedOption;
     /* 0x9 */ u8 confirmSelection;
-} ControllerPakConfirmTransition;
+} ControllerPakRumbleCheckPromptTransition;
 
-extern ControllerPakConfirmTransition gControllerPakCheckPromptTransition;
+extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern void func_80000A40(u16 arg0);
 extern void initCharacterSelectMenu(void);
 
@@ -700,13 +700,13 @@ void func_80004164(void) {
     s32 i;
     u8 state;
 
-    state = gControllerPakCheckPromptTransition.state;
+    state = gControllerPakRumbleCheckPromptTransition.state;
     switch (state) {
         case 1:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                gControllerPakCheckPromptTransition.state = 2;
-                gControllerPakCheckPromptTransition.targetScale = 1;
+                gControllerPakRumbleCheckPromptTransition.state = 2;
+                gControllerPakRumbleCheckPromptTransition.targetScale = 1;
                 state = 2;
             }
             break;
@@ -725,14 +725,14 @@ void func_80004164(void) {
                     i++;
                 } while (i < (s32)D_80121B55);
             }
-            gControllerPakCheckPromptTransition.state = 7;
-            gControllerPakCheckPromptTransition.timer = 0x11;
+            gControllerPakRumbleCheckPromptTransition.state = 7;
+            gControllerPakRumbleCheckPromptTransition.timer = 0x11;
             state = 7;
             break;
         case 3:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                gControllerPakCheckPromptTransition.state = 4;
+                gControllerPakRumbleCheckPromptTransition.state = 4;
                 state = 4;
             }
             break;
@@ -754,47 +754,47 @@ void func_80004164(void) {
                 } while (i < (s32)D_80121B55);
             }
             if (connectedCount == D_80121B55) {
-                gControllerPakCheckPromptTransition.selectedOption = 1;
-                gControllerPakCheckPromptTransition.targetScale = 2;
+                gControllerPakRumbleCheckPromptTransition.selectedOption = 1;
+                gControllerPakRumbleCheckPromptTransition.targetScale = 2;
             } else {
-                gControllerPakCheckPromptTransition.selectedOption = 0;
-                gControllerPakCheckPromptTransition.targetScale = 0;
+                gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
+                gControllerPakRumbleCheckPromptTransition.targetScale = 0;
             }
-            gControllerPakCheckPromptTransition.state = 0;
+            gControllerPakRumbleCheckPromptTransition.state = 0;
             state = 0;
             break;
         case 7:
-            gControllerPakCheckPromptTransition.timer--;
-            if (gControllerPakCheckPromptTransition.timer == 0) {
-                gControllerPakCheckPromptTransition.state = 8;
-                gControllerPakCheckPromptTransition.targetScale = 2;
+            gControllerPakRumbleCheckPromptTransition.timer--;
+            if (gControllerPakRumbleCheckPromptTransition.timer == 0) {
+                gControllerPakRumbleCheckPromptTransition.state = 8;
+                gControllerPakRumbleCheckPromptTransition.targetScale = 2;
                 state = 8;
             }
             break;
         case 8:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                gControllerPakCheckPromptTransition.state = 9;
-                gControllerPakCheckPromptTransition.targetScale = 3;
-                gControllerPakCheckPromptTransition.confirmSelection = 1;
+                gControllerPakRumbleCheckPromptTransition.state = 9;
+                gControllerPakRumbleCheckPromptTransition.targetScale = 3;
+                gControllerPakRumbleCheckPromptTransition.confirmSelection = 1;
                 state = 9;
             }
             break;
         case 9:
-            if ((gPlayerInputPressed & 0x10800) && (gControllerPakCheckPromptTransition.confirmSelection != 0)) {
-                gControllerPakCheckPromptTransition.confirmSelection--;
+            if ((gPlayerInputPressed & 0x10800) && (gControllerPakRumbleCheckPromptTransition.confirmSelection != 0)) {
+                gControllerPakRumbleCheckPromptTransition.confirmSelection--;
                 enqueueSoundEffect(0x19, 0x32);
             } else if (gPlayerInputPressed & 0x20400) {
-                if (gControllerPakCheckPromptTransition.confirmSelection != 1) {
-                    gControllerPakCheckPromptTransition.confirmSelection++;
+                if (gControllerPakRumbleCheckPromptTransition.confirmSelection != 1) {
+                    gControllerPakRumbleCheckPromptTransition.confirmSelection++;
                     enqueueSoundEffect(0x19, 0x32);
                 }
             }
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                if (gControllerPakCheckPromptTransition.confirmSelection == 1) {
-                    gControllerPakCheckPromptTransition.state = 1;
-                    gControllerPakCheckPromptTransition.targetScale = 0;
+                if (gControllerPakRumbleCheckPromptTransition.confirmSelection == 1) {
+                    gControllerPakRumbleCheckPromptTransition.state = 1;
+                    gControllerPakRumbleCheckPromptTransition.targetScale = 0;
                 } else {
                     connectedCount = 0;
                     i = 0;
@@ -807,14 +807,14 @@ void func_80004164(void) {
                         } while (i < (s32)D_80121B55);
                     }
                     if (connectedCount > 0) {
-                        gControllerPakCheckPromptTransition.state = 3;
-                        gControllerPakCheckPromptTransition.targetScale = 2;
+                        gControllerPakRumbleCheckPromptTransition.state = 3;
+                        gControllerPakRumbleCheckPromptTransition.targetScale = 2;
                     } else {
-                        gControllerPakCheckPromptTransition.state = 4;
+                        gControllerPakRumbleCheckPromptTransition.state = 4;
                     }
                 }
             }
-            state = gControllerPakCheckPromptTransition.state;
+            state = gControllerPakRumbleCheckPromptTransition.state;
             break;
     }
     if (state == 5) {
