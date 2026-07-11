@@ -53,7 +53,7 @@ extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 D_80121B58;
 extern u8 D_80121B59;
-extern u8 gMainMenuSelectedCourse;
+extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern s16 D_80121B5C;
 extern u8 D_80121B5F;
@@ -107,7 +107,7 @@ void func_8003ED00(void) {
     D_80121B59 = one;
     gPlayerCount = four;
     D_800EC9C2 = 0;
-    gMainMenuSelectedCourse = 0;
+    gTrainingCourseLesson = 0;
     gMainMenuModeSelection = 0;
 
     players = D_80121D80;

@@ -62,7 +62,7 @@ extern TrainingCourseUiScript gTrainingCourseEndingDialogScript[];
 extern TrainingCourseUiScript gTrainingCourseTitleLabelTemplate[];
 extern TrainingCourseUiScript gTrainingCourseTitleText[][0x14];
 extern s16 gTrainingCourseTitleXPositions[];
-extern u8 gMainMenuSelectedCourse;
+extern u8 gTrainingCourseLesson;
 extern void enqueueSoundEffect(s32, s32, TrainingCourseUiActor *);
 void drawTrainingCourseDialog(TrainingCourseUiActor *);
 void updateTrainingCourseDialog(TrainingCourseUiActor *);
@@ -105,9 +105,9 @@ void drawTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
     } while (i < 0x30);
 
     drawMenuSprite((s16)(arg0->x + 8), (s16)(arg0->y + 4), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0x15, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x44), (s16)(arg0->y + 4), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), (gMainMenuSelectedCourse + 0xB) & 0xFFFF, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x44), (s16)(arg0->y + 4), getMemoryBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), (gTrainingCourseLesson + 0xB) & 0xFFFF, 0x20, 0x20, 0, 0);
 
-    if (gMainMenuSelectedCourse != 9) {
+    if (gTrainingCourseLesson != 9) {
         j = 0;
         i = 0;
         do {
@@ -127,7 +127,7 @@ void drawTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
         } while (j != 2);
     }
 
-    if (gMainMenuSelectedCourse != 9) {
+    if (gTrainingCourseLesson != 9) {
         selected = (u16)arg0->state.selectedAction;
     } else {
         selected = (u16)arg0->state.selectedAction - 1;
@@ -154,7 +154,7 @@ void updateTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
     var_v0 = (u16)arg0->state.selectedAction;
     temp_a1 = var_v0;
     if (gPlayerInputPressed & 0x10800) {
-        if (gMainMenuSelectedCourse != 9) {
+        if (gTrainingCourseLesson != 9) {
             temp_t8 = var_v0 - 1;
             if (var_v0 != 0) {
                 arg0->state.selectedAction = temp_t8;
@@ -202,7 +202,7 @@ void initTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
     arg0->x = -0x30;
     arg0->y = -0x30;
     arg0->layout.textOffset.x = -0x2C;
-    if (gMainMenuSelectedCourse != 9) {
+    if (gTrainingCourseLesson != 9) {
         arg0->layout.textOffset.y = -0x1A;
         arg0->state.selectedAction = 0;
     } else {
@@ -435,7 +435,7 @@ void initTrainingCourseOpeningDialog(TrainingCourseUiActor *arg0) {
     arg0->scriptState = 0;
     arg0->state.script.visibleGlyphCount = 1;
     arg0->glyphPalette = 0;
-    arg0->layout.script = gTrainingCourseOpeningDialogScripts[gMainMenuSelectedCourse - 1];
+    arg0->layout.script = gTrainingCourseOpeningDialogScripts[gTrainingCourseLesson - 1];
     arg0->keepVisibleAfterConfirm = 0;
     setCallbackTaskCallback(arg0, updateTrainingCourseDialog);
 }
@@ -456,9 +456,9 @@ void initTrainingCourseEndingDialog(TrainingCourseUiActor *arg0) {
 }
 
 void drawTrainingCourseTitlePanel(TrainingCourseUiActor *arg0) {
-    gTrainingCourseTitleLabelTemplate[9] = gMainMenuSelectedCourse;
+    gTrainingCourseTitleLabelTemplate[9] = gTrainingCourseLesson;
     drawMenuColoredGlyphScript((s16)(arg0->x - 0x10), arg0->y, gTrainingCourseTitleLabelTemplate, 0, 0x100, 5, 0x29);
-    drawMenuColoredGlyphScript(gTrainingCourseTitleXPositions[gMainMenuSelectedCourse], (s16)(arg0->y + 0x18), gTrainingCourseTitleText[gMainMenuSelectedCourse - 1], 0, 0x100, 4, 0x29);
+    drawMenuColoredGlyphScript(gTrainingCourseTitleXPositions[gTrainingCourseLesson], (s16)(arg0->y + 0x18), gTrainingCourseTitleText[gTrainingCourseLesson - 1], 0, 0x100, 4, 0x29);
 }
 
 void updateTrainingCourseTitlePanelScrollOut(TrainingCourseUiActor *arg0) {
