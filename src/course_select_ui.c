@@ -94,6 +94,17 @@ typedef struct {
     /* 0xA6 */ s16 clipBottom;
 } CourseSelectIconListActor;
 
+typedef struct {
+    /* 0x000 */ u8 pad0[0x3C];
+    /* 0x03C */ s16 matrix[0x10];
+    /* 0x05C */ u8 pad5C[0x60];
+    /* 0x0BC */ CourseSelectTempVec3i vecs[4];
+    /* 0x0EC */ u16 angle[4];
+    /* 0x0F4 */ s16 targetCourse[4];
+    /* 0x0FC */ u8 timer[4];
+    /* 0x100 */ u8 state[4];
+} CourseSelectAnimatedActor;
+
 extern void func_800483FC(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void func_80023880(CourseSelectCoursePreviewActor *);
 extern s32 func_8004885C(FixedTransform *);
@@ -201,193 +212,161 @@ void func_80023880(CourseSelectCoursePreviewActor *arg0) {
 }
 #endif
 
-// func_80023A68 best match: 76.748% (nonmatchings/func_80023A68-4923837976568703863/base_7.c)
+// func_80023A68 best match: 92.299% (nonmatchings/func_80023A68-6061209858023118177/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80023A68.s")
 
 #ifdef NON_MATCHING
 void func_80023A68(void *arg0) {
     CourseSelectTempVec3i sp78;
-    s32 sp64;
-    CourseSelectTempVec3i *sp40;
-    s16 *sp44;
-    void *actor;
-    u8 *var_s1;
-    u8 *var_s2;
-    u8 *var_s3;
-    u8 *var_s6;
-    u8 *var_s7;
-    s32 i;
-    s32 statusHalfIndex;
-    u8 state;
-    s32 step;
-    s32 *targetVelocity;
+    CourseSelectAnimatedActor *actor;
     CourseSelectRacePlayer *player;
+    s32 i;
+    s32 move;
+    u8 state;
 
     actor = arg0;
     i = 0;
     if ((s32)D_80121B55 > 0) {
-        var_s6 = D_8010AF18;
-        sp44 = (s16 *)((u8 *)arg0 + 0x3C);
-        sp40 = (CourseSelectTempVec3i *)((u8 *)arg0 + 0xBC);
-        statusHalfIndex = 0;
-        var_s1 = arg0;
-        var_s2 = arg0;
-        var_s3 = arg0;
-        var_s7 = arg0;
         do {
-            if (var_s6[4] != var_s1[0x100]) {
-                var_s1[0x100] = var_s6[4];
-                var_s1[0xFC] = var_s6[0xC];
-                *(s16 *)(var_s2 + 0xEC) = *(u16 *)(D_8010AF18 + statusHalfIndex + 0x14);
-                var_s6[0xC] = 0;
-                *(s16 *)(D_8010AF18 + statusHalfIndex + 0x14) = 0;
+            state = actor->state[i];
+            if (D_8010AF18[4 + i] != state) {
+                actor->state[i] = D_8010AF18[4 + i];
+                actor->timer[i] = D_8010AF18[0xC + i];
+                actor->angle[i] = *(u16 *)&D_8010AF18[(i * 2) + 0x14];
+                D_8010AF18[0xC + i] = 0;
+                *(s16 *)&D_8010AF18[(i * 2) + 0x14] = 0;
+                state = actor->state[i];
             }
 
-            state = var_s1[0x100];
-            if (D_801235B4 != 0) {
-                if ((s32)state < 5) {
-                    var_s1[0x100] = 4;
-                    *(s16 *)(var_s2 + 0xEC) = 0;
-                    state = var_s1[0x100];
-                }
+            if (D_801235B4 != 0 && state < 5) {
+                actor->state[i] = 4;
+                actor->angle[i] = 0;
+                state = actor->state[i];
             }
 
             switch (state) {
             case 0:
-                    *(s32 *)(var_s3 + 0xBC) += -0x200000;
-                    if (*(s32 *)(var_s3 + 0xBC) <= 0) {
-                        *(s32 *)(var_s3 + 0xBC) = 0;
-                        var_s1[0x100] = 1;
-                    }
-                    state = var_s1[0x100];
-                    break;
+                actor->vecs[i].x += -0x200000;
+                if (actor->vecs[i].x <= 0) {
+                    actor->vecs[i].x = 0;
+                    actor->state[i] = 1;
+                }
+                state = actor->state[i];
+                break;
             case 1:
-                    if (D_8010AECC[i] & 1) {
-                        targetVelocity = &D_8010AEE8[i];
-                        player = &D_80121D80[i];
-                        if (*targetVelocity < 0) {
-                            if ((s32)player->pad6[0xB] >= 9) {
-                                *(s16 *)(var_s2 + 0xF4) = 2;
-                            } else {
-                                *(s16 *)(var_s2 + 0xF4) = (player->pad6[0] % 3) - 1;
-                            }
+                if (D_8010AECC[i] & 1) {
+                    player = &D_80121D80[i];
+                    if (D_8010AEE8[i] < 0) {
+                        if ((s32)player->pad6[0xB] >= 9) {
+                            actor->targetCourse[i] = 2;
                         } else {
-                            *(s16 *)(var_s2 + 0xF4) = (player->pad6[0] % 3) + 1;
+                            actor->targetCourse[i] = player->pad6[0] % 3 - 1;
                         }
-                        if (*(s16 *)(var_s2 + 0xF4) < 0) {
-                            *(s16 *)(var_s2 + 0xF4) = 2;
-                        }
-                        if (*(s16 *)(var_s2 + 0xF4) == 3) {
-                            *(s16 *)(var_s2 + 0xF4) = D_8010AEFB[i * 4];
-                        }
-                        if (*(s16 *)(var_s2 + 0xF4) == 8) {
-                            *(s16 *)(var_s2 + 0xF4) = 2;
-                        }
-                        if (D_8010AECC[i] == 3) {
-                            *(s32 *)(var_s3 + 0xC0) = -*targetVelocity;
-                        }
-                        var_s1[0x100] = 2;
-                        state = 2;
-                    } else if (D_801235B8->screenState == 9) {
-                        var_s1[0x100] = 8;
-                        state = 8;
+                    } else {
+                        actor->targetCourse[i] = player->pad6[0] % 3 + 1;
                     }
-                    break;
+                    if (actor->targetCourse[i] < 0) {
+                        actor->targetCourse[i] = 2;
+                    }
+                    if (actor->targetCourse[i] == 3) {
+                        actor->targetCourse[i] = D_8010AEFB[i * 4];
+                    }
+                    if (actor->targetCourse[i] == 8) {
+                        actor->targetCourse[i] = 2;
+                    }
+                    if (D_8010AECC[i] == 3) {
+                        actor->vecs[i].y = -D_8010AEE8[i];
+                    }
+                    actor->state[i] = 2;
+                    state = 2;
+                } else if (D_801235B8->screenState == 9) {
+                    actor->state[i] = 8;
+                    state = 8;
+                }
+                break;
             case 2:
-                    targetVelocity = &D_8010AEE8[i];
-                    step = 0x200000;
-                    if (*targetVelocity < 0) {
-                        step = -0x200000;
-                    }
-                    *(s32 *)(var_s3 + 0xC0) += step;
-                    if (*targetVelocity == step) {
-                        var_s1[0x100] = 1;
-                    }
-                    state = var_s1[0x100];
-                    break;
+                move = 0x200000;
+                if (D_8010AEE8[i] < 0) {
+                    move = -0x200000;
+                }
+                actor->vecs[i].y += move;
+                if (D_8010AEE8[i] == move) {
+                    actor->state[i] = 1;
+                }
+                state = actor->state[i];
+                break;
             case 3:
-                    var_s1[0xFC]++;
-                    if (D_800EC9C0 != 0) {
-                        D_800EC9C0 = 1;
+                actor->timer[i]++;
+                if (D_800EC9C0 != 0) {
+                    D_800EC9C0 = 1;
+                }
+                if (actor->timer[i] == 0xF) {
+                    actor->timer[i] = 0;
+                    actor->state[i] = 4;
+                    if (D_80121B55 == 1) {
+                        D_80121D80[0].pad6[2] = 3;
+                        D_800EC9C0 = 0x10;
                     }
-                    if (var_s1[0xFC] == 0xF) {
-                        var_s1[0xFC] = 0;
-                        var_s1[0x100] = 4;
-                        if (D_80121B55 == 1) {
-                            D_80121D80[0].pad6[2] = 3;
-                            D_800EC9C0 = 0x10;
-                        }
-                    }
-                    state = var_s1[0x100];
-                    break;
+                }
+                state = actor->state[i];
+                break;
             case 4:
-                    if (D_80121D80[i].pad6[2] == 3) {
-                        var_s1[0x100] = 5;
-                        state = 5;
-                    }
-                    break;
+                if (D_80121D80[i].pad6[2] == 3) {
+                    actor->state[i] = 5;
+                    state = 5;
+                }
+                break;
             case 5:
-                    *(s32 *)(var_s3 + 0xBC) += 0x200000;
-                    if (*(s32 *)(var_s3 + 0xBC) == 0x1000000) {
-                        var_s1[0x100] = 6;
-                    }
-                    state = var_s1[0x100];
-                    break;
+                actor->vecs[i].x += 0x200000;
+                if (actor->vecs[i].x == 0x1000000) {
+                    actor->state[i] = 6;
+                }
+                state = actor->state[i];
+                break;
             case 6:
-                    D_80121D80[i].pad6[2] = 4;
-                    if ((i == 2) && (D_80121B55 == 3)) {
-                        D_80121D80[3].pad6[2] = 4;
-                    }
-                    state = var_s1[0x100];
-                    break;
+                D_80121D80[i].pad6[2] = 4;
+                if ((i == 2) && (D_80121B55 == 3)) {
+                    D_80121D80[3].pad6[2] = 4;
+                }
+                state = actor->state[i];
+                break;
             case 7:
-                    if (D_80121D80[i].pad6[2] == 3) {
-                        var_s1[0x100] = 5;
-                        state = 5;
-                    } else if (D_801235B8->screenState == 9) {
-                        var_s1[0x100] = 8;
-                        state = 8;
-                    }
-                    break;
+                if (D_80121D80[i].pad6[2] == 3) {
+                    actor->state[i] = 5;
+                    state = 5;
+                } else if (D_801235B8->screenState == 9) {
+                    actor->state[i] = 8;
+                    state = 8;
+                }
+                break;
             case 8:
-                    *(s32 *)(var_s3 + 0xBC) += 0x200000;
-                    if (*(s32 *)(var_s3 + 0xBC) == 0xC00000) {
-                        var_s1[0x100] = 9;
-                    }
-                    state = var_s1[0x100];
-                    break;
+                actor->vecs[i].x += 0x200000;
+                if (actor->vecs[i].x == 0xC00000) {
+                    actor->state[i] = 9;
+                }
+                state = actor->state[i];
+                break;
             case 9:
-                    break;
-            default:
                 break;
             }
 
             if (state != 0) {
                 if ((s32)state < 3) {
-                    *(s16 *)(var_s2 + 0xEC) += 0x20;
-                    *(s16 *)(var_s2 + 0xEC) &= 0xFFF;
+                    actor->angle[i] += 0x20;
+                    actor->angle[i] &= 0xFFF;
                 }
             }
-            sp64 = statusHalfIndex;
-            func_80097C18(sp44, *(s16 *)(var_s2 + 0xEC));
-            func_80098590(sp44, sp40, &sp78);
-            *(s32 *)(var_s7 + 0x50) = sp78.x;
-            *(s32 *)(var_s7 + 0x54) = sp78.y;
-            *(s32 *)(var_s7 + 0x58) = sp78.z;
+            func_80097C18(&actor->matrix[i * 0x10], (s16)actor->angle[i]);
+            func_80098590(&actor->matrix[i * 0x10], &actor->vecs[i], &sp78);
+            *(s32 *)((u8 *)actor + (i * 0x20) + 0x50) = sp78.x;
+            *(s32 *)((u8 *)actor + (i * 0x20) + 0x54) = sp78.y;
+            *(s32 *)((u8 *)actor + (i * 0x20) + 0x58) = sp78.z;
+            D_8010AF18[4 + i] = actor->state[i];
             i++;
-            var_s6[4] = var_s1[0x100];
-            sp40++;
-            sp44 = (s16 *)((u8 *)sp44 + 0x20);
-            var_s6++;
-            var_s1++;
-            var_s2 += 2;
-            var_s3 += 0xC;
-            var_s7 += 0x20;
-            statusHalfIndex = sp64 + 2;
         } while (i < (s32)D_80121B55);
     }
 
-    if ((D_80121D80[0].pad6[2] == 4) || (((u8 *)actor)[0x100] == 9)) {
+    if ((D_80121D80[0].pad6[2] == 4) || (actor->state[0] == 9)) {
         func_800716E4(actor);
         func_800291F0(1);
         D_8010ADE0 = 0;
@@ -514,17 +493,6 @@ void func_80024168(CourseSelectCoursePreviewActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/func_80024380.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    /* 0x000 */ u8 pad0[0x3C];
-    /* 0x03C */ s16 matrix[0x10];
-    /* 0x05C */ u8 pad5C[0x60];
-    /* 0x0BC */ CourseSelectTempVec3i vecs[4];
-    /* 0x0EC */ u16 angle[4];
-    /* 0x0F4 */ s16 targetCourse[4];
-    /* 0x0FC */ u8 timer[4];
-    /* 0x100 */ u8 state[4];
-} CourseSelectAnimatedActor;
-
 extern u8 D_800EC9C0;
 extern s32 D_8010ADE4;
 extern u8 D_8010AECC[];
