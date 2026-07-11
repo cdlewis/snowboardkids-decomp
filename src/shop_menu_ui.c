@@ -205,7 +205,7 @@ extern u8 D_80121D88;
 extern u8 D_80121D85;
 extern s16 D_8011217E;
 extern s16 D_8011214A;
-extern CourseSelectStatus D_8010AF18;
+extern CourseSelectStatus gCourseSelectStatus;
 extern s32 D_8010ADDC;
 extern u8 D_8010AF40;
 extern u8 D_8010AF70;
@@ -725,7 +725,7 @@ void func_8002DCE8(ShopMenuWidgetActor *arg0) {
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = D_8010AF18.unk28)) {
+    if (state != (globalState = gCourseSelectStatus.unk28)) {
         arg0->transition.bytes.state = globalState;
         /* Preserve IDO's state/globalState register allocation. */
         if (1) {}
@@ -734,8 +734,8 @@ void func_8002DCE8(ShopMenuWidgetActor *arg0) {
         if (1) {}
         if (1) {}
         state = globalState;
-        arg0->sprite.index = D_8010AF18.unk2A;
-        arg0->transition.bytes.timer = D_8010AF18.unk2C;
+        arg0->sprite.index = gCourseSelectStatus.unk2A;
+        arg0->transition.bytes.timer = gCourseSelectStatus.unk2C;
     }
 
     switch (state) {
