@@ -4,7 +4,7 @@
 #include "callback_task_scheduler.h"
 #include "fixed_point_math.h"
 #include "game_task_scheduler.h"
-#include "main_menu_screen_effects.h"
+#include "menu_screen_effects.h"
 #include "race_camera.h"
 #include "race_start_transition.h"
 #include "viewport_manager.h"
@@ -236,7 +236,7 @@ void updateRaceStartTransitionIntroDelay(void) {
         gCurrentGameTask->fade = 0x12C;
         setCurrentGameTaskCallback(updateRaceStartTransitionFadeIn, 0);
     }
-    createCallbackTaskWithUserId(initMenuSnowflake, 5, 0x64, 0);
+    createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, 0);
     func_8006D780(0);
     func_8006D780(1);
     func_8006D780(2);
@@ -258,7 +258,7 @@ void updateRaceStartTransitionFadeIn(void) {
         requestMusicSequenceStop(0x7E);
         setCurrentGameTaskCallback(updateRaceStartTransitionFadeOut, 0);
     }
-    createCallbackTaskWithUserId(initMenuSnowflake, 5, 0x64, 0);
+    createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, 0);
     func_8006D780(0);
     func_8006D780(1);
     updateCallbackTasks();
@@ -271,7 +271,7 @@ void updateRaceStartTransitionFadeOut(void) {
         gFramebufferSwapHold = 1;
         setCurrentGameTaskCallback(finishRaceStartTransition, 0);
     }
-    createCallbackTaskWithUserId(initMenuSnowflake, 5, 0x64, 0);
+    createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, 0);
     func_8006D780(0);
     func_8006D780(1);
     updateCallbackTasks();
