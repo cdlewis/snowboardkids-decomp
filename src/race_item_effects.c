@@ -220,11 +220,11 @@ extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern RaceItemGfxCommandSource gIdentityFixedTransform;
 extern RaceItemEffectAssetHandles gAssetHandles;
-extern RaceItemDrawLists D_801121D0;
+extern RaceItemDrawLists gRaceItemTextureEffectDrawLists;
 extern RaceItemDrawLists D_801121E0;
 extern s16 gRaceCommonSpriteAssetHandle;
 extern s16 gRaceItemSpriteAssetHandle;
-extern s16 D_8011216E;
+extern s16 gRaceUiSpriteAssetHandle;
 extern s16 gRaceCourseIndex;
 extern u8 gRaceUpdatePaused;
 extern RaceItemFollowPlayer D_80121D80[];
@@ -276,7 +276,7 @@ void updateRaceItemSparkBurst(RaceItemEffectActor *arg0) {
 
     state = arg0->unk64;
     i = 0;
-    drawList = D_801121D0.heads;
+    drawList = gRaceItemTextureEffectDrawLists.heads;
     if (state == 0) {
         arg0->unk64 = state + 1;
     }
@@ -921,19 +921,19 @@ void renderRaceUiSparkle(RaceItemEffectActor *arg0) {
     if ((u8)arg0->payload.sprite.colorR == gCurrentViewportIndex) {
         if ((u8)arg0->payload.sprite.colorG == 0) {
             if ((u8)arg0->payload.sprite.colorB == 0) {
-                drawAssetTableSpriteWithExplicitPalette(arg0->payload.sprite.x, arg0->payload.sprite.y, getRelocatableHeapBlockBase(D_8011216E),
+                drawAssetTableSpriteWithExplicitPalette(arg0->payload.sprite.x, arg0->payload.sprite.y, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle),
                               ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF, 0x1D);
             } else {
-                drawAssetTableSpriteWithExplicitPalette(arg0->payload.sprite.x, arg0->payload.sprite.y, getRelocatableHeapBlockBase(D_8011216E),
+                drawAssetTableSpriteWithExplicitPalette(arg0->payload.sprite.x, arg0->payload.sprite.y, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle),
                               ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF, 0x1E);
             }
         } else if ((u8)arg0->payload.sprite.colorB == 0) {
             drawScaledAssetTableSpriteWithExplicitPalette((s16)(arg0->payload.sprite.x - 8), (s16)(arg0->payload.sprite.y - 8),
-                          getRelocatableHeapBlockBase(D_8011216E), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
+                          getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
                           0x1D, 1);
         } else {
             drawScaledAssetTableSpriteWithExplicitPalette((s16)(arg0->payload.sprite.x - 8), (s16)(arg0->payload.sprite.y - 8),
-                          getRelocatableHeapBlockBase(D_8011216E), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
+                          getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
                           0x1E, 1);
         }
     }
@@ -985,7 +985,7 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
 
     sp94 = gIdentityFixedTransform;
     if (gRenderMatricesDirty != 0) {
-        head = D_801121D0.heads;
+        head = gRaceItemTextureEffectDrawLists.heads;
         do {
             node = *head++;
             if (node != NULL) {
@@ -1001,7 +1001,7 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
     gfx->words.w1 = (u32)gEffectRenderModeSetupDl;
     gfx->words.w0 = 0x06000000;
 
-    head = D_801121D0.heads;
+    head = gRaceItemTextureEffectDrawLists.heads;
     i = 0;
     do {
         node = *head;
@@ -1057,10 +1057,10 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
 
 #ifdef NON_MATCHING
 void updateRaceItemTextureEffects(RaceItemEffectActor *arg0) {
-    D_801121D0.heads[0] = NULL;
-    D_801121D0.heads[1] = NULL;
-    D_801121D0.heads[2] = NULL;
-    D_801121D0.heads[3] = NULL;
+    gRaceItemTextureEffectDrawLists.heads[0] = NULL;
+    gRaceItemTextureEffectDrawLists.heads[1] = NULL;
+    gRaceItemTextureEffectDrawLists.heads[2] = NULL;
+    gRaceItemTextureEffectDrawLists.heads[3] = NULL;
     addRenderCallback(&D_801248E0, renderRaceItemTextureEffects, arg0);
 }
 #endif

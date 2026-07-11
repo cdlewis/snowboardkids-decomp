@@ -67,7 +67,7 @@ extern u16 D_800B5430[];
 extern u16 D_800B5444[];
 extern u8 D_800B5200[];
 extern u8 gAssetHandles[];
-extern s16 D_8011216E;
+extern s16 gRaceUiSpriteAssetHandle;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 gMenuIconTilemapAssetHandle;
 extern u8 gPlayerCount;
@@ -266,9 +266,9 @@ void func_80014CB8(void *arg0) {
         drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, alpha, 0);
         if (width == 0x20) {
             temp = width & 0xFFFF;
-            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(D_8011216E), 0, temp, temp, 0, alpha, 0);
+            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0, temp, temp, 0, alpha, 0);
         } else {
-            drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(D_8011216E), 0, alpha);
+            drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0, alpha);
         }
         drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5408, 1, alpha);
     }

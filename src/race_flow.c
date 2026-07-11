@@ -177,7 +177,7 @@ extern void *gMenuRenderCallbackList;
 extern s16 gAssetHandles[];
 extern s16 gRaceReplayInputBufferHandle;
 extern s16 gRaceReplayPlayerStateBufferHandle;
-extern s16 D_8011216E;
+extern s16 gRaceUiSpriteAssetHandle;
 extern s16 D_801124B8;
 extern SignedUnsignedShort gRaceCourseIndex;
 extern s16 gRaceLapCount;
@@ -725,22 +725,22 @@ void startRaceGameplayFlow(void) {
 void drawRacePauseMenu(s32 arg0) {
     s32 color;
 
-    func_80045A78(-0x14, -0x10, getRelocatableHeapBlockBase(D_8011216E), 0x57);
+    func_80045A78(-0x14, -0x10, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x57);
     color = 0x1A;
     if (D_80121B57 == 0) {
         color = 0x1B;
     }
-    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0, getRelocatableHeapBlockBase(D_8011216E), 0x58, color);
+    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x58, color);
     color = 0x1A;
     if (D_80121B57 == 1) {
         color = 0x1B;
     }
-    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0xA, getRelocatableHeapBlockBase(D_8011216E), 0x59, color);
+    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0xA, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x59, color);
     color = 0x1A;
     if (D_80121B57 == 2) {
         color = 0x1B;
     }
-    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0x14, getRelocatableHeapBlockBase(D_8011216E), 0x5A, color);
+    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0x14, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x5A, color);
 }
 
 void updateRaceGameplayFlow(void) {

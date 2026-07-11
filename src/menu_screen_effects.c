@@ -133,7 +133,7 @@ extern s16 D_80112154;
 extern s16 gRaceCommonSpriteAssetHandle;
 extern s16 gRaceCourseSpriteAssetHandle;
 extern s16 gRaceItemSpriteAssetHandle;
-extern s16 D_8011216E;
+extern s16 gRaceUiSpriteAssetHandle;
 extern s16 D_80112174;
 extern s16 D_80112184;
 extern s16 gRaceCourseIndex;
@@ -509,7 +509,7 @@ void drawRaceSetupNamePlate(MenuScreenEffectActor *arg0) {
 
     new_var = &gCurrentViewportIndex;
     if (arg0->index == *new_var) {
-        func_80045A78((s16)((arg0->unk18.word >> 1) - 0x38), -8, getRelocatableHeapBlockBase(D_8011216E), 0x76);
+        func_80045A78((s16)((arg0->unk18.word >> 1) - 0x38), -8, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x76);
     }
 }
 

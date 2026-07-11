@@ -96,7 +96,7 @@ extern u16 D_800DC99C[];
 extern RaceUiCoursePosition D_800DC900[];
 extern CourseDataStride gGameSaveDataBuffer[];
 extern RaceTimerUiAssetHandles gAssetHandles;
-extern s16 D_8011216E;
+extern s16 gRaceUiSpriteAssetHandle;
 extern s16 gRaceLapCount;
 extern s16 D_80121B72;
 extern s16 D_80121B70;
@@ -825,7 +825,7 @@ void func_8007A108(s32 arg0) {
 }
 
 void func_8007A278(s32 arg0) {
-    func_80045A78(0xC, 0x2C, getRelocatableHeapBlockBase(D_8011216E), 0x90);
+    func_80045A78(0xC, 0x2C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x90);
 }
 
 void func_8007A2B8(void) {

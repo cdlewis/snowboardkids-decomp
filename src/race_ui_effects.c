@@ -801,7 +801,7 @@ extern s16 D_80112142;
 extern s16 D_80112144;
 extern s16 D_80112146;
 extern s16 gRaceCourseSpriteAssetHandle;
-extern s16 D_8011216E;
+extern s16 gRaceUiSpriteAssetHandle;
 extern s16 gRaceCommonSpriteAssetHandle;
 extern s16 gRaceLapCount;
 extern s32 D_80121D8C;
@@ -1073,7 +1073,7 @@ void func_80057C08(void *arg0, s16 arg1) {
 
 void func_80057C5C(RaceUiPopupActor *arg0) {
     if (gCurrentViewportIndex == 0) {
-        func_80045A78(-0x3C, arg0->y.half.lo, getRelocatableHeapBlockBase(D_8011216E), 0x8F);
+        func_80045A78(-0x3C, arg0->y.half.lo, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x8F);
     }
 }
 
@@ -1114,7 +1114,7 @@ void func_80057DD4(RaceUiPopupActor *arg0) {
 
 void func_80057E10(void *arg0) {
     if (gUiBlinkTimer & 8) {
-        func_80045A78(0x20, 0x4A, getRelocatableHeapBlockBase(D_8011216E), 0x5B);
+        func_80045A78(0x20, 0x4A, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x5B);
     }
 }
 
@@ -1135,10 +1135,10 @@ void func_80057E90(RaceUiAlpha18Actor *arg0) {
                 gfx->words.w1 = (arg0->alpha & 0xFF) | ~0xFF;
             }
         }
-        func_80045A78(-0x68, -0x2C, getRelocatableHeapBlockBase(D_8011216E), 0x4D);
-        func_80045A78(-0x42, -0xC, getRelocatableHeapBlockBase(D_8011216E), D_80122289 & 0xFFFF);
-        func_80045A78(-0x22, 4, getRelocatableHeapBlockBase(D_8011216E), (D_80122289 + 0x48) & 0xFFFF);
-        func_80045A78(-0x68, 6, getRelocatableHeapBlockBase(D_8011216E), (D_80121D90[0].placement + 0x91) & 0xFFFF);
+        func_80045A78(-0x68, -0x2C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x4D);
+        func_80045A78(-0x42, -0xC, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), D_80122289 & 0xFFFF);
+        func_80045A78(-0x22, 4, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (D_80122289 + 0x48) & 0xFFFF);
+        func_80045A78(-0x68, 6, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (D_80121D90[0].placement + 0x91) & 0xFFFF);
         if (arg0->alpha != 0xFF) {
             gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
         }
@@ -1785,15 +1785,15 @@ void func_8005A31C(RaceUiAlpha18Actor *arg0) {
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, actor->alpha);
     }
 
-    func_80045A78(-0x6C, -0x24, getRelocatableHeapBlockBase(D_8011216E), 0x20);
+    func_80045A78(-0x6C, -0x24, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x20);
     sprintf(buffer + -8, D_800E12E0, D_801222F4);
 
     if (buffer[-8] != ' ') {
-        func_80045A78(-0x4C, -0x1C, getRelocatableHeapBlockBase(D_8011216E), (buffer[-8] - 5) & 0xFFFF);
+        func_80045A78(-0x4C, -0x1C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (buffer[-8] - 5) & 0xFFFF);
     }
 
     x = -0x44;
-    func_80045A78(((SplitWord *)&x)->half.lo, -0x1C, getRelocatableHeapBlockBase(D_8011216E), (buffer[-7] - 5) & 0xFFFF);
+    func_80045A78(((SplitWord *)&x)->half.lo, -0x1C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (buffer[-7] - 5) & 0xFFFF);
 
     if (actor->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
@@ -3199,10 +3199,10 @@ void func_8005E534(void *arg0) {
 }
 
 void func_8005E5B4(void *arg0) {
-    func_80045A78(-0x68, -0x2C, getRelocatableHeapBlockBase(D_8011216E), 0x4D);
-    func_80045A78(-0x42, -0xC, getRelocatableHeapBlockBase(D_8011216E), D_80122289 & 0xFFFF);
-    func_80045A78(-0x22, 4, getRelocatableHeapBlockBase(D_8011216E), (D_80122289 + 0x48) & 0xFFFF);
-    func_80045A78(-0x68, 6, getRelocatableHeapBlockBase(D_8011216E), (D_80121D90[0].placement + 0x91) & 0xFFFF);
+    func_80045A78(-0x68, -0x2C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x4D);
+    func_80045A78(-0x42, -0xC, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), D_80122289 & 0xFFFF);
+    func_80045A78(-0x22, 4, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (D_80122289 + 0x48) & 0xFFFF);
+    func_80045A78(-0x68, 6, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (D_80121D90[0].placement + 0x91) & 0xFFFF);
 }
 
 void func_8005E68C(void *arg0) {
@@ -5055,11 +5055,11 @@ void func_80064F4C(void *arg0) {
     temp_s0 = arg0;
     if (gCurrentViewportIndex == 0) {
         if (*(s8 *)((u8 *)arg0 + 0x30) != 0) {
-            func_80045A78((s16)(*(s32 *)((u8 *)temp_s0 + 0x1C) - 0x66), *(s16 *)((u8 *)temp_s0 + 0x22), getRelocatableHeapBlockBase(D_8011216E), 0x98);
+            func_80045A78((s16)(*(s32 *)((u8 *)temp_s0 + 0x1C) - 0x66), *(s16 *)((u8 *)temp_s0 + 0x22), getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x98);
             func_80059A04((u8 *)temp_s0 + 0x2C, *(s32 *)((u8 *)temp_s0 + 0x1C) + 0x26, *(s32 *)((u8 *)temp_s0 + 0x20), 0xC);
             return;
         }
-        func_80045A78((s16)(*(s32 *)((u8 *)temp_s0 + 0x1C) - 0x62), *(s16 *)((u8 *)temp_s0 + 0x22), getRelocatableHeapBlockBase(D_8011216E), 0x97);
+        func_80045A78((s16)(*(s32 *)((u8 *)temp_s0 + 0x1C) - 0x62), *(s16 *)((u8 *)temp_s0 + 0x22), getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x97);
         func_80059A04((u8 *)temp_s0 + 0x2C, *(s32 *)((u8 *)temp_s0 + 0x1C) + 0x22, *(s32 *)((u8 *)temp_s0 + 0x20), 0x10);
     }
 }
@@ -5143,7 +5143,7 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
             if ((entry->active != 0) && (isPositionNearCurrentViewport(&entry->command) != 0)) {
                 if (textureIndex != entry->sentinel + actor->textureOffset) {
                     textureIndex = entry->sentinel + actor->textureOffset;
-                    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216E), 0x14, &spA0, &sp9C);
+                    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x14, &spA0, &sp9C);
                     temp_v0_2 = gRegionAllocPtr++;
                     temp_v0_2->words.w0 = 0xFD500000;
                     temp_v0_2->words.w1 = (u32)spA0;
@@ -5388,7 +5388,7 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
         if (arg0->assetTimer == 0) {
             enqueuePositionalSoundEffect(9, &temp_s0->x, 0x7F, 0x32);
         }
-        temp_v0_3 = getRelocatableHeapBlockBase(D_8011216E);
+        temp_v0_3 = getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle);
         temp_a1 = temp_s0->assetTimer;
         temp_a1 = (temp_a1 >> 1) + 0x3B;
         temp_a1 = (u16)temp_a1;
@@ -5436,8 +5436,8 @@ void func_80065E90(RaceUiOverlayActor *arg0) {
         arg0->timer++;
     }
 
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216E), 0x3A, &arg0->palette3A, &arg0->image3A);
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216E), 0x3B, &arg0->palette3B, &arg0->image3B);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x3A, &arg0->palette3A, &arg0->image3A);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x3B, &arg0->palette3B, &arg0->image3B);
     setCallbackTaskCallback(arg0, func_80065E0C);
 }
 
