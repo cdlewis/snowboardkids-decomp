@@ -1,5 +1,5 @@
 #include "common.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "game_boot.h"
@@ -1032,7 +1032,7 @@ void func_80002024(void) {
         if (gCurrentInputTask->delay != 0) {
             gCurrentInputTask->delay -= 1;
             if (gCurrentInputTask->delay == 0) {
-                func_800720E4(0);
+                requestMusicSequenceBank(0);
             }
         }
         temp_a0 = gPlayerInputPressed;
@@ -1062,7 +1062,7 @@ void func_80002024(void) {
         }
         if (flag != 0) {
             setCurrentInputTaskCallback(func_800022B8, 0);
-            func_80072114(0xC);
+            requestMusicSequenceStop(0xC);
         }
     }
     func_8006D780(0);
@@ -1161,7 +1161,7 @@ void func_800024A8(void) {
     func_8004209C(4, 0xFFE00000, 0, 0x509000);
     func_800420FC(4, 0, 0x100, 0);
     setCurrentInputTaskCallback(func_8000262C, 0);
-    func_800720E4(7);
+    requestMusicSequenceBank(7);
 }
 
 void func_8000262C(void) {
@@ -1190,7 +1190,7 @@ void func_8000262C(void) {
             }
             D_8010B1F0 = 1;
             if (D_801235B4 == 2) {
-                func_80072114(0x3C);
+                requestMusicSequenceStop(0x3C);
             }
             setCurrentInputTaskCallback(func_80002794, 0);
         }
@@ -1251,7 +1251,7 @@ void func_800028B4(void) {
     createCallbackTaskWithUserId(&func_80055678, 0, 0x64, 0);
     func_8009B58C(0x20, 0x40, 0x50);
     setCurrentInputTaskCallback(&func_80002A1C, 0);
-    func_800720E4(7);
+    requestMusicSequenceBank(7);
 }
 
 void func_80002A1C(void) {
@@ -1325,7 +1325,7 @@ void func_80002A1C(void) {
             }
         }
         if ((temp_v1 & 0xD000) && (D_801235B4 == 3)) {
-            func_80072114(0x3C);
+            requestMusicSequenceStop(0x3C);
             enqueueSoundEffect(0x18, 0x32);
             setCurrentInputTaskCallback(func_80002CE4, 0);
         }

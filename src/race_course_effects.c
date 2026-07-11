@@ -237,7 +237,7 @@ typedef struct RaceCourseBackdropEffect {
 
 extern void func_800483FC(void *, void *, void *);
 extern void enqueueSoundEffect(s32, s32);
-extern void func_80072A74(s32, void *, s32, s32);
+extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void osWritebackDCache(void *, s32);
 extern void *func_80048594(s32);
 extern void func_800486BC(void *, void *);
@@ -1265,7 +1265,7 @@ void func_8006C51C(Struct6C51C *arg0) {
         }
         temp_s0->unk54--;
         if (temp_s0->unk54 == 0) {
-            func_80072A74(0x1C, &D_800DA764[D_80121B50], 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x1C, &D_800DA764[D_80121B50], 0x7F, 0x32);
             setCallbackTaskCallback(temp_s0, func_8006C4AC);
         }
     }
@@ -1278,8 +1278,8 @@ void func_8006C5C0(Struct6C51C *arg0) {
         D_801235B4 &= ~4;
         setCallbackTaskCallback(arg0, func_8006C51C);
         arg0->unk56 = 1;
-        func_80072A74(0x16, &D_800DA764[D_80121B50], 0x7F, 0x32);
-        func_80072A74(0x1B, &D_800DA764[D_80121B50], 0x7F, 0x32);
+        enqueuePositionalSoundEffect(0x16, &D_800DA764[D_80121B50], 0x7F, 0x32);
+        enqueuePositionalSoundEffect(0x1B, &D_800DA764[D_80121B50], 0x7F, 0x32);
     }
     func_800483FC(&D_801248A4, func_8006C1B4, arg0);
 }

@@ -1,5 +1,5 @@
 #include "common.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_scene_loader.h"
@@ -108,7 +108,7 @@ void func_8003F554(void) {
     createCallbackTaskWithUserId(&func_80055678, 0, 0x64, 0);
     createCallbackTask(&func_80051854, 0, 0x64);
     setCurrentInputTaskCallback(&func_8003F6C0, 0);
-    func_800720E4(7);
+    requestMusicSequenceBank(7);
 }
 
 void func_8003F6C0(void) {
@@ -124,7 +124,7 @@ void func_8003F6C0(void) {
 void func_8003F718(void) {
     if (D_8010B1F0 != 0) {
         if (D_80121B5B == 0xC) {
-            func_80072114(0x3C);
+            requestMusicSequenceStop(0x3C);
         }
         setCurrentInputTaskCallback(&func_8003F778, 0);
     }
@@ -245,7 +245,7 @@ void func_8003F864(void) {
     createCallbackTask(func_80051FDC, 0, 0x64);
     createCallbackTask(func_800524B0, 0, 0x64);
     setCurrentInputTaskCallback(func_8003FB70, 0);
-    func_800720E4(7);
+    requestMusicSequenceBank(7);
 }
 #endif
 
@@ -271,7 +271,7 @@ void func_8003FBE8(void) {
     func_8006D700();
     if (D_8010B1F0 != 0) {
         gCurrentInputTask->transitionTimer = 0;
-        func_80072114(0x20);
+        requestMusicSequenceStop(0x20);
         setCurrentInputTaskCallback(&func_8003FC60, 0);
     }
     D_801124B8 = 0x80;
@@ -306,7 +306,7 @@ void func_8003FC60(void) {
 
     configureViewport(0, 0xA0, x1, x2 & 0xFFFF, y1, 0x140, y2, aspect);
     if (gCurrentInputTask->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
-        func_800720E4(0xF);
+        requestMusicSequenceBank(0xF);
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         gCurrentInputTask->transitionTimer = 0;
         setCurrentInputTaskCallback(func_8003FE54, 0);
@@ -330,7 +330,7 @@ void func_8003FE54(void) {
     gCurrentInputTask->transitionTimer += 1;
     if (gCurrentInputTask->transitionTimer == D_800D3C90[D_80121B5B]) {
         setCurrentInputTaskCallback(func_8003FEF4, 0);
-        func_80072114(0x40);
+        requestMusicSequenceStop(0x40);
     }
 }
 
@@ -353,7 +353,7 @@ void func_8003FEF4(void) {
 
 void func_8003FF78(void) {
     if (gPendingFramebufferSwapCount == 2) {
-        func_80072260();
+        stopSoundEffects();
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
@@ -485,7 +485,7 @@ void func_8004002C(void) {
     createCallbackTask(func_8000EA44, 0, 0x63);
     createCallbackTask(func_800524B0, 0, 0x64);
     setCurrentInputTaskCallback(func_80040360, 0);
-    func_800720E4(7);
+    requestMusicSequenceBank(7);
 }
 #endif
 
@@ -511,7 +511,7 @@ void func_800403D8(void) {
     func_8006D700();
     if (D_8010B1F0 != 0) {
         gCurrentInputTask->transitionTimer = 0;
-        func_80072114(0x20);
+        requestMusicSequenceStop(0x20);
         setCurrentInputTaskCallback(&func_80040450, 0);
     }
     D_801124B8 = 0x80;
@@ -546,7 +546,7 @@ void func_80040450(void) {
 
     configureViewport(0, 0xA0, x1, x2 & 0xFFFF, y1, 0x140, y2, aspect);
     if (gCurrentInputTask->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
-        func_800720E4(0xF);
+        requestMusicSequenceBank(0xF);
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         setCurrentInputTaskCallback(func_80040638, 0);
     }
@@ -571,7 +571,7 @@ void func_80040638(void) {
         case 1:
             if (D_80122282 == 0x50) {
                 setCurrentInputTaskCallback(func_800407AC, 0);
-                func_80072114(0x40);
+                requestMusicSequenceStop(0x40);
                 return;
             }
             break;
@@ -581,14 +581,14 @@ void func_80040638(void) {
         case 5:
             if (D_80122282 == 0x9C) {
                 setCurrentInputTaskCallback(func_800407AC, 0);
-                func_80072114(0x40);
+                requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 6:
             if (D_80122282 == 0xB4) {
                 setCurrentInputTaskCallback(func_800407AC, 0);
-                func_80072114(0x40);
+                requestMusicSequenceStop(0x40);
                 return;
             }
             break;
@@ -596,14 +596,14 @@ void func_80040638(void) {
         case 8:
             if (D_80122282 == 0x16) {
                 setCurrentInputTaskCallback(func_800407AC, 0);
-                func_80072114(0x40);
+                requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 9:
             if (D_80122282 == 0x36) {
                 setCurrentInputTaskCallback(func_800407AC, 0);
-                func_80072114(0x40);
+                requestMusicSequenceStop(0x40);
             }
             break;
     }
@@ -662,7 +662,7 @@ void func_800408E4(void) {
 
 void func_8004097C(void) {
     if (gPendingFramebufferSwapCount == 2) {
-        func_80072260();
+        stopSoundEffects();
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;

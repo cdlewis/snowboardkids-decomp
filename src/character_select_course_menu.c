@@ -1,5 +1,5 @@
 #include "common.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
@@ -97,7 +97,7 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
     CharacterSelectSaveData *temp_a0;
 
     gCurrentInputTask->fade = 0;
-    func_800720E4(2);
+    requestMusicSequenceBank(2);
     createCallbackTask((void (*)(CallbackTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
     gCurrentInputTask->timer = 0;
     D_800EC9C1 = 0;
@@ -192,7 +192,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
     CharacterSelectSaveData *var_v0;
     CharacterSelectSaveData *temp_a0;
 
-    func_800720E4(2);
+    requestMusicSequenceBank(2);
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferSwapDelay = 0;
@@ -306,7 +306,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     CharacterSelectSaveData *var_v0;
     CharacterSelectSaveData *temp_a0;
 
-    func_800720E4(2);
+    requestMusicSequenceBank(2);
     if (D_80121B55 >= 2) {
         resetAllViewports();
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E09A4);
@@ -496,7 +496,7 @@ void updateCharacterSelectCourseMenu(void) {
                             gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
                             D_80121D88 = 7;
                             setCurrentInputTaskCallback(&handleCharacterSelectCourseSelection, 0);
-                            func_80072114(8);
+                            requestMusicSequenceStop(8);
                         }
                     } else if ((temp_input & 0x4000) && (D_801235B4 == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         enqueueSoundEffect(1, 0x32);
@@ -504,7 +504,7 @@ void updateCharacterSelectCourseMenu(void) {
                         gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
                         D_80121D88 = 7;
                         setCurrentInputTaskCallback(&handleCharacterSelectCourseSelection, 0);
-                        func_80072114(8);
+                        requestMusicSequenceStop(8);
                     }
                 }
             } else {
@@ -515,7 +515,7 @@ void updateCharacterSelectCourseMenu(void) {
                 if ((*gCharacterSelectActiveCourseOptions)[D_80121B50] == -1) {
                     D_80121D88 = 2;
                     setCurrentInputTaskCallback(&handleCharacterSelectCourseSelection, 0);
-                    func_80072114(8);
+                    requestMusicSequenceStop(8);
                 } else {
                     D_80121D88 = 1;
                 }

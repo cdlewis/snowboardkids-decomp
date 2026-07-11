@@ -6,6 +6,7 @@
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
 #include "race_camera.h"
+#include "sound_manager.h"
 #include "title_menu.h"
 #include "viewport_manager.h"
 
@@ -49,7 +50,6 @@ typedef struct {
 
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
-extern void func_800720E4(s32);
 extern void func_80099C44(void *, void *, s32);
 extern void n_alSeqpDelete(void);
 
@@ -123,7 +123,7 @@ void initRaceCharacterSelectMenu(void) {
     s32 screenBase;
 
     if (D_800EC9C2 == 1) {
-        func_800720E4(2);
+        requestMusicSequenceBank(2);
     }
     func_8006D5CC();
     resetAllViewports();
@@ -329,8 +329,7 @@ extern void initCourseSelectCourseIconList(CallbackTask *);
 extern void initCourseSelectExtraCourseIconList(CallbackTask *);
 extern void initCourseSelectPlayerPanels(CallbackTask *);
 extern void initCourseSelectCompletePanels(CallbackTask *);
-extern void func_80072114(s32);
-extern void func_80072138();
+extern s32 enqueueSoundEffect(s16, s16);
 extern void setCurrentInputTaskCallback(void (*)(void), s32);
 
 extern void *D_8010ADE8;
@@ -443,7 +442,7 @@ void updateRaceCharacterSelectMenu(void) {
                                     }
                                     if (oldColumn > 0) {
                                         *column = oldColumn - 1;
-                                        func_80072138(0x19, 0x32);
+                                        enqueueSoundEffect(0x19, 0x32);
                                         D_8010AEAC[i] = 0;
                                         oldColumn = *column;
                                         pressed = gPlayerInputPressed[i];
@@ -454,7 +453,7 @@ void updateRaceCharacterSelectMenu(void) {
                                     }
                                     if (oldColumn < maxColumn) {
                                         *column = oldColumn + 1;
-                                        func_80072138(0x19, 0x32);
+                                        enqueueSoundEffect(0x19, 0x32);
                                         D_8010AEAC[i] = 0;
                                         oldColumn = *column;
                                         pressed = gPlayerInputPressed[i];
@@ -486,30 +485,30 @@ void updateRaceCharacterSelectMenu(void) {
                                 if (*momentum == 0) {
                                     if ((pressed & 0x1000) || (pressed & 0x8000)) {
                                         if ((D_80121B55 == 1) && (maxColumn == D_8010AE64[0])) {
-                                            func_80072138(0x18, 0x32);
+                                            enqueueSoundEffect(0x18, 0x32);
                                             D_80121D80[0].state = 9;
                                             D_8010AEB0 = 1;
                                             D_801235B4 = 1;
                                         } else if ((player->selection >= 9) || (D_8010AEB8[i][*column] != 0)) {
                                             rowLock = &D_8010AEA4[i];
-                                            func_80072138(0x18, 0x32);
+                                            enqueueSoundEffect(0x18, 0x32);
                                             player->state = 1;
                                             if (player->mode == 5) {
-                                                func_80072138(0x40, 0x32);
+                                                enqueueSoundEffect(0x40, 0x32);
                                             } else {
-                                                func_80072138(D_800B349C[*column], 0x32);
+                                                enqueueSoundEffect(D_800B349C[*column], 0x32);
                                             }
                                             D_800EC9D0[i] = 9;
                                             *rowLock = 1;
                                             *repeatTimer = 0;
                                         }
                                     } else if (pressed & 0x4000) {
-                                        func_80072138(0x18, 0x32);
+                                        enqueueSoundEffect(0x18, 0x32);
                                         player->state = 9;
                                         D_8010AEB0 = 1;
                                     }
                                 } else if (pressed & 0x4000) {
-                                    func_80072138(0x18, 0x32);
+                                    enqueueSoundEffect(0x18, 0x32);
                                     player->state = 9;
                                     D_8010AEB0 = 1;
                                 }
@@ -542,7 +541,7 @@ void updateRaceCharacterSelectMenu(void) {
                                 }
                                 if (row >= 3) {
                                     D_800EC9D0[i] = row - 1;
-                                    func_80072138(0x19, 0x32);
+                                    enqueueSoundEffect(0x19, 0x32);
                                     row = D_800EC9D0[i];
                                     pressed = gPlayerInputPressed[i];
                                 }
@@ -552,7 +551,7 @@ void updateRaceCharacterSelectMenu(void) {
                                 }
                                 if (row < gCourseSelectStatus.unk24[i] + 1) {
                                     D_800EC9D0[i] = row + 1;
-                                    func_80072138(0x19, 0x32);
+                                    enqueueSoundEffect(0x19, 0x32);
                                     row = D_800EC9D0[i];
                                     pressed = gPlayerInputPressed[i];
                                 }
@@ -571,7 +570,7 @@ void updateRaceCharacterSelectMenu(void) {
                             }
 
                             if ((pressed & 0x8000) || (pressed & 0x1000)) {
-                                func_80072138(0x18, 0x32);
+                                enqueueSoundEffect(0x18, 0x32);
                                 player->state = 2;
                                 D_8010AEA8 = 1;
                                 if ((*unlockColumn == 1) && (D_8010AE64[i] == 3)) {
@@ -595,7 +594,7 @@ void updateRaceCharacterSelectMenu(void) {
                                     gCourseSelectStatus.unk8[i] = 3;
                                 }
                             } else if (pressed & 0x4000) {
-                                func_80072138(0x18, 0x32);
+                                enqueueSoundEffect(0x18, 0x32);
                                 *repeatTimer = 0;
                                 D_800EC9D0[i] += 3;
                                 player->selection = D_8010AEF8[i][D_8010AE64[i]];
@@ -608,7 +607,7 @@ void updateRaceCharacterSelectMenu(void) {
                     if (D_8010AEB0 == 1) {
                         player->state = 9;
                     } else if (gPlayerInputPressed[i] & 0x4000) {
-                        func_80072138(0x18, 0x32);
+                        enqueueSoundEffect(0x18, 0x32);
                         D_8010ADF0[i] = 0;
                         D_8010AEA8 = 0;
                         player->state = 1;
@@ -634,7 +633,7 @@ void updateRaceCharacterSelectMenu(void) {
     if (D_800EC9C0 == 0x19) {
         setCurrentInputTaskCallback(fadeOutRaceCharacterSelectMenu, 0);
         if (D_801235B4 == 0) {
-            func_80072114(8);
+            requestMusicSequenceStop(8);
         }
     }
 

@@ -1,5 +1,5 @@
 #include "common.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "memory_allocator.h"
 #include "asset_manager.h"
@@ -574,7 +574,7 @@ void func_800737FC(void) {
     func_80000A40(1);
     func_80000A40(2);
     func_80000A40(3);
-    func_80072114(0);
+    requestMusicSequenceStop(0);
     createInputTask(3, &func_80001C30, 0x64);
     removeInputTask(2);
 }
@@ -618,7 +618,7 @@ void func_800740C0(void) {
     }
     if (gCurrentInputTask->countdown == 0) {
         func_8006D520(0, 0x1E);
-        func_800720E4(5);
+        requestMusicSequenceBank(5);
         setCurrentInputTaskCallback(&func_80074160, 0);
     }
     func_80077C94();
@@ -717,7 +717,7 @@ void func_800747E8(void) {
     func_80077C4C();
     if (!(D_801235B4 & 1)) {
         D_800DEF10 = 0;
-        func_800728E0();
+        requestCourseMusicSequence();
         setCurrentInputTaskCallback(func_80074960, 0);
     }
 }
@@ -1166,7 +1166,7 @@ void func_80076054(void) {
     gCurrentInputTask->unk1C = 0x3C;
     setCurrentInputTaskCallback(func_80076490, 0);
     if (D_80121B60 != 0) {
-        func_800720E4(6);
+        requestMusicSequenceBank(6);
         if ((D_80121B55 == 1) && (D_800EC9C2 == 0)) {
             createCallbackTaskWithUserId((void (*)(CallbackTask *))func_8005E68C, 6, 0x64, 0xA9);
         }
@@ -1447,8 +1447,8 @@ void func_80076490(void) {
 #endif
 
 void func_80077324(void) {
-    if (func_80072938() == 0) {
-        func_800720E4(7);
+    if (countActiveMusicSequences() == 0) {
+        requestMusicSequenceBank(7);
         gCurrentInputTask->unk1C = 0x3C;
         D_801235B4 |= 0x20;
     }
@@ -1461,7 +1461,7 @@ void func_80077324(void) {
         if (gCurrentInputTask->fadeTimer == 0) {
             gCurrentInputTask->fadeTimer = 4;
             setCurrentInputTaskCallback(&func_80077400, 0);
-            func_80072114(0x14);
+            requestMusicSequenceStop(0x14);
         }
     }
 }
@@ -1478,7 +1478,7 @@ void func_80077400(void) {
         gMenuFadeAlpha = 0xFF;
         gCurrentInputTask->fadeTimer -= 1;
         if (gCurrentInputTask->fadeTimer == 0) {
-            func_80072260();
+            stopSoundEffects();
             if ((D_800EC9C2 == 2) && (((Unk80043040 *)func_80043040(D_80112186))->unk8 != 0) && (D_80121B61 != 0) &&
                 (func_80040D94() != 0)) {
                 D_80121B61 = -1;
@@ -1587,7 +1587,7 @@ void func_80077554(void) {
     initRaceCourseEffects();
     gMenuFadeAlpha = 0xFF;
     func_80042C20();
-    func_800720E4(0);
+    requestMusicSequenceBank(0);
     gCurrentInputTask->fadeTimer = 0;
     gCurrentInputTask->unk1C = 0;
     createCallbackTask((void (*)(CallbackTask *))func_80057E60, 6, 0x64);
@@ -1609,11 +1609,11 @@ void func_8007797C(void) {
                 D_80121D80[0].unk15 = 0;
                 D_801124B8 = 0;
             } else {
-                func_80072114(0x48);
+                requestMusicSequenceStop(0x48);
                 setCurrentInputTaskCallback(func_80077AD4, 0);
             }
         } else {
-            func_80072114(0x48);
+            requestMusicSequenceStop(0x48);
             setCurrentInputTaskCallback(func_80077AD4, 0);
         }
     }
@@ -1626,7 +1626,7 @@ void func_8007797C(void) {
     func_80077CD4();
     if (gPlayerInputPressed[0] & 0x1000) {
         sp18 = func_80077AD4;
-        func_80072114(0x48);
+        requestMusicSequenceStop(0x48);
         setCurrentInputTaskCallback(sp18, 0);
     }
 }
@@ -1650,7 +1650,7 @@ void func_80077B34(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        func_80072260();
+        stopSoundEffects();
         func_80000A40(0);
         func_80000A40(1);
         func_80000A40(2);
@@ -1667,7 +1667,7 @@ void func_80077B34(void) {
         } else {
             setCurrentInputTaskCallback(func_80073858, 0);
         }
-        func_80072114(0);
+        requestMusicSequenceStop(0);
     }
 }
 
@@ -1778,7 +1778,7 @@ void func_80077DA0(void) {
     createCallbackTaskWithUserId(func_80053634, 0, 0x64, 0);
     createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
     setCurrentInputTaskCallback(func_80078078, 0);
-    func_800720E4(7);
+    requestMusicSequenceBank(7);
 }
 
 void func_80078078(void) {
@@ -1801,7 +1801,7 @@ void func_80078078(void) {
         if (temp_v0 & 0x9000) {
             D_801235B4 = 1;
             enqueueSoundEffect(0x18, 0x32);
-            func_80072114(0x3C);
+            requestMusicSequenceStop(0x3C);
             setCurrentInputTaskCallback(func_80078198, 0);
         }
     }

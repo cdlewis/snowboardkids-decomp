@@ -1,7 +1,7 @@
 #include "common.h"
 #include "asset_manager.h"
 #include "callback_task_scheduler.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "model_animation.h"
 #include "race_course_effects.h"
 #include "race_input_history.h"
@@ -1182,35 +1182,35 @@ void func_8008BBB8(RaceInputPlayer *player, s16 soundType) {
     if (player->soundDisabled == 0) {
         switch (soundType) {
         case 0:
-            func_80072AC8(D_800DE84C[(randomNextMain() & 1) + (player->characterId * 2)],
+            enqueuePlayerPositionalSoundEffect(D_800DE84C[(randomNextMain() & 1) + (player->characterId * 2)],
                           (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
             return;
         case 1:
-            func_80072AC8(D_800DE864[(randomNextMain() & 1) + (player->characterId * 2)],
+            enqueuePlayerPositionalSoundEffect(D_800DE864[(randomNextMain() & 1) + (player->characterId * 2)],
                           (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
             return;
         case 2:
-            func_80072AC8(D_800DE87C[(randomNextMain() & 1) + (player->characterId * 2)],
+            enqueuePlayerPositionalSoundEffect(D_800DE87C[(randomNextMain() & 1) + (player->characterId * 2)],
                           (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
             return;
         case 3:
-            func_80072AC8(D_800DE87C[(randomNextMain() & 1) + (player->characterId * 2)],
+            enqueuePlayerPositionalSoundEffect(D_800DE87C[(randomNextMain() & 1) + (player->characterId * 2)],
                           (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0x60);
             return;
         case 4:
-            func_80072AC8(D_800DE894[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+            enqueuePlayerPositionalSoundEffect(D_800DE894[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
                           (u16)player->playerIndex, 0);
             return;
         case 5:
-            func_80072AC8(D_800DE8A0[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+            enqueuePlayerPositionalSoundEffect(D_800DE8A0[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
                           (u16)player->playerIndex, 0);
             return;
         case 6:
-            func_80072AC8(D_800DE8AC[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+            enqueuePlayerPositionalSoundEffect(D_800DE8AC[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
                           (u16)player->playerIndex, 0);
             return;
         case 7:
-            func_80072AC8(D_800DE8B8[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+            enqueuePlayerPositionalSoundEffect(D_800DE8B8[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
                           (u16)player->playerIndex, 0);
             break;
         }

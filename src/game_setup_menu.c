@@ -1,7 +1,7 @@
 #include "common.h"
 #include "asset_manager.h"
 #include "callback_task_scheduler.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "game_setup_menu.h"
 #include "input_task_scheduler.h"
 #include "title_menu.h"
@@ -73,7 +73,7 @@ extern u8 D_60F1A0;
 extern u8 D_60F990;
 
 void func_80003140(void) {
-    func_800720E4(1);
+    requestMusicSequenceBank(1);
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0900);
 

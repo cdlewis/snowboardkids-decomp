@@ -1,5 +1,5 @@
 #include "common.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "game_boot.h"
 #include "input_task_scheduler.h"
 #include "main_menu.h"
@@ -210,8 +210,6 @@ extern GfxCommandDest D_8013D408;
 extern void func_800458E0(void);
 extern void func_80048338(void);
 extern void func_800484F0(void);
-extern void func_80071E80(void);
-extern void func_800722B4(void);
 extern void func_80048524(s32);
 extern void func_80099D10(u8);
 extern s32 osSendMesg(void *, void *, s32);
@@ -254,7 +252,7 @@ void func_80099790(void) {
     func_8009B14C();
     func_80000450();
     resetAllViewports();
-    func_80071830();
+    initSoundManager();
     createInputTask(0, func_80072C30, STARTUP_CALLBACK_PRIORITY);
     D_8012482A = 0;
     D_8012482B = 0;
@@ -294,7 +292,7 @@ loop_1:
             if (initialized == 0) {
                 initialized = 1;
                 func_80098EAC();
-                func_80071E80();
+                updateSoundManager();
                 func_80000A8C(0);
                 func_80000A8C(1);
                 func_80000A8C(2);
@@ -320,7 +318,7 @@ loop_1:
             break;
         }
     } while (*(volatile s32 *)&done == 0);
-    func_800722B4();
+    fadeOutAllMusicSequences();
     osViBlack(1);
     func_80000A40(0);
     func_80000A40(1);

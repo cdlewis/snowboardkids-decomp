@@ -14,7 +14,7 @@
 
 typedef void (*EffectCallback)(void *);
 
-extern void func_80072A74(s32 soundId, void *pos, s32 volume, s32 distance);
+extern void enqueuePositionalSoundEffect(s32 soundId, void *pos, s32 volume, s32 distance);
 
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 extern RaceInputPlayer gFrameCounter;
@@ -180,7 +180,7 @@ void updateActionUseTrigger(RaceInputPlayer *player) {
             if ((type == 6) && (player->actionSoundTimer == 0)) {
                 player->actionSoundTimer = 0xB4;
                 player->actionEffectType = 0;
-                func_80072A74(0x10, &player->posX, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x10, &player->posX, 0x7F, 0x32);
             }
         }
     }

@@ -161,8 +161,8 @@ extern void initCourseSelectExtraCourseIconList(CallbackTask *);
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern void releaseMenuAssetHandles(void);
-extern void func_800720E4(s32);
-extern void func_80072114(s32);
+extern void requestMusicSequenceBank(s32);
+extern void requestMusicSequenceStop(s32);
 extern void enqueueSoundEffect(s32, s32);
 extern void func_80099C44(void *, void *, s32);
 extern void n_alSeqpDelete(void);
@@ -183,7 +183,7 @@ void initCourseSelectMenu(void) {
     void (*nextCallback)(void);
     s32 savedUnlocks;
 
-    func_800720E4(3);
+    requestMusicSequenceBank(3);
     func_8006D5CC();
     resetAllViewports();
     configureViewport(0, 0xE8, 0x78, 0x90, 0xD0, 0xA0, 0xF0, 0.6666666865f);
@@ -424,7 +424,7 @@ void updateCourseSelectModeMenu(void) {
                 setCurrentInputTaskCallback(initCourseSelectCourseList, 0);
             } else {
                 setCurrentInputTaskCallback(exitCourseSelectMenu, 0);
-                func_80072114(8);
+                requestMusicSequenceStop(8);
                 D_8010ADF8 = 0;
                 D_8010AF46 = 0;
             }

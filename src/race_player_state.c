@@ -2,7 +2,7 @@
 #include "asset_manager.h"
 #include "callback_task_scheduler.h"
 #include "race_rumble.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "model_animation.h"
 #include "race_camera.h"
 #include "race_course_effects.h"
@@ -92,7 +92,7 @@ typedef struct {
 
 extern s32 enqueueSoundEffect(s32, s32);
 extern s16 calculateAngleBetweenXZPoints(s32, s32, s32, s32);
-extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
+extern void enqueuePlayerLoopingPositionalSoundRequest(s32, SoundPosition *, s32, s32, f32, s16);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 extern void func_800545D0(CallbackTask *);
@@ -1064,7 +1064,7 @@ void func_8008E008(RaceInputPlayer *player) {
 #ifdef NON_MATCHING
 #define HANDLE_SURFACE_CUE(modeValue, effectValue, soundType)                         \
     if (player->soundDisabled == 0) {                                                 \
-        func_80072A74(0x17, (SoundPosition *)&player->posX, 0x7F, 0x32);              \
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *)&player->posX, 0x7F, 0x32);              \
         func_8008BBB8(player, soundType);                                             \
     }                                                                                 \
     flags = player->stateFlags | 0x800;                                               \
@@ -5271,9 +5271,9 @@ void func_80096E3C(void) {
     if (gRacePlayerCount > 0) {
         player = D_80121D80; soundPos = D_80121D9C; nextSoundPos = D_80121DA8; do {
             if (player->soundDisabled == 0) {
-                func_80072A20(player->unk584, &soundPos->pos, player->unk582, 0x46, player->unk588, i);
+                enqueuePlayerLoopingPositionalSoundRequest(player->unk584, &soundPos->pos, player->unk582, 0x46, player->unk588, i);
             } else {
-                func_80072A20(player->unk584, &soundPos->pos, 0, 0x46, player->unk588, i);
+                enqueuePlayerLoopingPositionalSoundRequest(player->unk584, &soundPos->pos, 0, 0x46, player->unk588, i);
             }
 
             nextSoundPos->pos = soundPos->pos;
@@ -5492,7 +5492,7 @@ void func_8009759C(RaceInputPlayer *player) {
         player->rumblePatternId = 0;
     }
     if (player->soundDisabled == 0) {
-        func_80072A74(0x21, (SoundPosition *)&player->posX, (s16)v0, 0x32);
+        enqueuePositionalSoundEffect(0x21, (SoundPosition *)&player->posX, (s16)v0, 0x32);
     }
 }
 

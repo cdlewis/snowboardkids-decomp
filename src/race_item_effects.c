@@ -2,7 +2,7 @@
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "spatial_math.h"
 #include "fixed_point_math.h"
 #include "race_item_effects.h"
@@ -619,7 +619,7 @@ void func_8004EF24(RaceItemEffectActor *arg0) {
         arg0->unk24.velocityX = -arg0->unk24.velocityX;
     }
     player = &D_80121D80[arg0->playerIndex];
-    func_80072A74(9, (SoundPosition *) &player->pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(9, (SoundPosition *) &player->pos1C, 0x7F, 0x32);
     func_8004EE0C(arg0);
     setCallbackTaskCallback(arg0, func_8004EE0C);
 }
@@ -733,9 +733,9 @@ void func_8004F55C(s16 playerIndex, s16 itemIndex) {
     itemType = func_8004DB60(itemIndex);
     if (itemType != 4) {
         if (itemType == 1) {
-            func_80072A74(0x12, (SoundPosition *) &D_80121D80[playerIndex].pos1C, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x12, (SoundPosition *) &D_80121D80[playerIndex].pos1C, 0x7F, 0x32);
         } else {
-            func_80072A74(0x11, (SoundPosition *) &D_80121D80[playerIndex].pos1C, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x11, (SoundPosition *) &D_80121D80[playerIndex].pos1C, 0x7F, 0x32);
         }
 
         callback = func_8004F3FC;

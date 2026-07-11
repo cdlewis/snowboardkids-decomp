@@ -162,7 +162,7 @@ extern void func_80048C90(GfxCommandDest *, Vec3i *);
 extern s32 func_80048E60(void *);
 extern void osWritebackDCache(void *, s32);
 extern void func_800483FC(void *, void *, void *);
-extern void func_80072A74(s32, void *, s32, s32);
+extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern u8 gItemEffectRollTable[][0x10];
 extern u8 gActionEffectRollTable[][0x10];
 extern RaceOverlayEffectSpawn D_800D9518[];
@@ -392,25 +392,25 @@ loop:
             if (func_80088E98(pos, xzSize, ySize, 0) != 0) {
                 func_8008BB5C(D_80121D80, 0x64);
                 entry->enabled = 0;
-                func_80072A74(0x1A, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
                 goto next;
             }
             if (func_80088E98(pos, xzSize, ySize, one) != 0) {
                 func_8008BB5C(D_8012238C, 0x64);
                 entry->enabled = 0;
-                func_80072A74(0x1A, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
                 goto next;
             }
             if (func_80088E98(pos, xzSize, ySize, 2) != 0) {
                 func_8008BB5C(D_80122998, 0x64);
                 entry->enabled = 0;
-                func_80072A74(0x1A, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
                 goto next;
             }
             if (func_80088E98(pos, xzSize, ySize, 3) != 0) {
                 func_8008BB5C(D_80122FA4, 0x64);
                 entry->enabled = 0;
-                func_80072A74(0x1A, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
                 goto next;
             }
         }
@@ -527,7 +527,7 @@ void func_80067364(RaceThrownModelActor *arg0) {
             groundY = func_80080CC4(arg0->unk2C, arg0->pos.x, arg0->pos.z);
             pos = &arg0->pos;
             if (arg0->pos.y < groundY) {
-                func_80072A74(0x20, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x20, pos, 0x7F, 0x32);
                 arg0->pos.y = groundY;
                 arg0->transformedPos.y = arg0->velocity.y / 2;
                 arg0->bounceCount++;
@@ -1014,7 +1014,7 @@ loop:
         func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 5);
         func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 6);
         func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 7);
-        func_80072A74(0x1F, pos, 0x7F, 0x32);
+        enqueuePositionalSoundEffect(0x1F, pos, 0x7F, 0x32);
         goto done;
 
 next:
