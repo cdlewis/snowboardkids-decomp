@@ -10,7 +10,7 @@
 #include "controller_pak_replay_save_message_flow.h"
 #include "controller_pak_file_delete_flow.h"
 #include "course_select_menu.h"
-#include "player_setup_menu.h"
+#include "race_setup_menu.h"
 #include "game_task_scheduler.h"
 #include "controller_main_menu_flow.h"
 #include "menu_screen_effects.h"
@@ -439,7 +439,7 @@ void initNewGameSaveData(void) {
 
 void func_800732C4(void) {
     setCurrentGameTaskCallback(&func_8007334C, 0);
-    createGameTask(4, &initPlayerSetupMenu, 0x64);
+    createGameTask(4, &initRaceSetupMenu, 0x64);
     suspendGameTask(2);
 }
 

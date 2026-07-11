@@ -2,27 +2,27 @@
 #include "asset_manager.h"
 #include "callback_task_scheduler.h"
 #include "sound_manager.h"
-#include "player_setup_menu.h"
+#include "race_setup_menu.h"
 #include "game_task_scheduler.h"
 #include "title_menu.h"
 #include "viewport_manager.h"
 
-// initPlayerSetupMenu best match: 98.611% (nonmatchings/initPlayerSetupMenu-5743805732885129799/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/player_setup_menu/initPlayerSetupMenu.s")
+// initRaceSetupMenu best match: 98.611% (nonmatchings/initRaceSetupMenu-5743805732885129799/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/initRaceSetupMenu.s")
 
 #ifdef NON_MATCHING
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s32 fade;
     /* 0x1C */ s32 timer;
-} PlayerSetupMenuState;
+} RaceSetupMenuState;
 
 typedef struct {
     /* 0x0 */ u8 state;
     /* 0x1 */ u8 unk1;
     /* 0x2 */ s16 unk2;
     /* 0x4 */ u8 unk4;
-} PlayerSetupMenuSubState;
+} RaceSetupMenuSubState;
 
 extern void enqueueSoundEffect();
 extern f32 D_800E0900;
@@ -40,7 +40,7 @@ extern s8 D_800EC9E6;
 extern CallbackTask *gActiveMenuTask;
 extern u16 D_8010ADF0;
 extern s8 gHighestUnlockedCourse;
-extern PlayerSetupMenuSubState D_8010AE00;
+extern RaceSetupMenuSubState D_8010AE00;
 extern s16 D_8010AE06;
 extern s16 D_8010AE08;
 extern s16 D_8010AE0A;
@@ -59,7 +59,7 @@ extern s8 D_80121D86;
 extern s8 D_80122392;
 extern s8 D_8012299E;
 extern s8 D_80122FAA;
-extern PlayerSetupMenuState *gCurrentGameTask;
+extern RaceSetupMenuState *gCurrentGameTask;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
@@ -72,7 +72,7 @@ extern u8 D_59DFE0;
 extern u8 D_60F1A0;
 extern u8 D_60F990;
 
-void initPlayerSetupMenu(void) {
+void initRaceSetupMenu(void) {
     requestMusicSequenceBank(1);
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0900);
@@ -98,7 +98,7 @@ void initPlayerSetupMenu(void) {
     loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
 
     initCallbackTaskScheduler(0);
-    gActiveMenuTask = createCallbackTask(func_80014C7C, 0, 0x64);
+    gActiveMenuTask = createCallbackTask(initRaceSetupPlayerCountPrompt, 0, 0x64);
 
     D_8010AE00.state = 0;
     D_8010AE00.unk1 = 0;
@@ -125,16 +125,16 @@ void initPlayerSetupMenu(void) {
     D_8010AE18 = 0;
     D_80122FAA = 0;
 
-    setCurrentGameTaskCallback(updatePlayerSetupPlayerCountMenu, 0);
+    setCurrentGameTaskCallback(updateRaceSetupPlayerCountMenu, 0);
 }
 #endif
 
-// updatePlayerSetupPlayerCountMenu best match: 88.068% (nonmatchings/updatePlayerSetupPlayerCountMenu-6276316234415602851/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/player_setup_menu/updatePlayerSetupPlayerCountMenu.s")
+// updateRaceSetupPlayerCountMenu best match: 88.068% (nonmatchings/updateRaceSetupPlayerCountMenu-6276316234415602851/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/updateRaceSetupPlayerCountMenu.s")
 
 #ifdef NON_MATCHING
 
-void updatePlayerSetupPlayerCountMenu(void) {
+void updateRaceSetupPlayerCountMenu(void) {
     s32 sp18;
     s32 temp_a3;
     s32 temp_v0;
@@ -199,7 +199,7 @@ block_25:
         }
     }
     if (D_8010AE00.state == 5) {
-        setCurrentGameTaskCallback(initPlayerSaveSetupMenu, 0);
+        setCurrentGameTaskCallback(initRaceSetupSaveMenu, 0);
         gCurrentGameTask->fade = 0;
         D_800EC9C1 = 0;
     }
@@ -207,8 +207,8 @@ block_25:
 }
 #endif
 
-// initPlayerSaveSetupMenu best match: 90.019% (nonmatchings/initPlayerSaveSetupMenu-2225551288923588688/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/player_setup_menu/initPlayerSaveSetupMenu.s")
+// initRaceSetupSaveMenu best match: 90.019% (nonmatchings/initRaceSetupSaveMenu-2225551288923588688/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/initRaceSetupSaveMenu.s")
 
 #ifdef NON_MATCHING
 extern s16 D_800B31B8;
@@ -237,7 +237,7 @@ extern s16 D_8010AE44;
 extern s16 D_8010AE46;
 extern u8 D_80121D80;
 
-void initPlayerSaveSetupMenu(void) {
+void initRaceSetupSaveMenu(void) {
     s16 *var_v1;
     s16 *var_a0;
     u8 *var_a1;
@@ -274,7 +274,7 @@ void initPlayerSaveSetupMenu(void) {
     }
 
     do {
-        initPlayerSaveData(i);
+        initRaceSetupPlayerSaveData(i);
         i++;
     } while (i < 4);
 
@@ -294,13 +294,13 @@ void initPlayerSaveSetupMenu(void) {
     D_8010AE3E = D_800B31C4;
     D_8010AE46 = D_800B31C6;
 
-    setCurrentGameTaskCallback(updatePlayerSaveSetupMenu, 0);
+    setCurrentGameTaskCallback(updateRaceSetupSaveMenu, 0);
     updateCallbackTasks();
 }
 #endif
 
-// updatePlayerSaveSetupMenu best match: 72.707% (nonmatchings/updatePlayerSaveSetupMenu-7273315160691878794/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/player_setup_menu/updatePlayerSaveSetupMenu.s")
+// updateRaceSetupSaveMenu best match: 72.707% (nonmatchings/updateRaceSetupSaveMenu-7273315160691878794/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/updateRaceSetupSaveMenu.s")
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -312,7 +312,7 @@ typedef struct {
     s16 unk6[4];
     u8 unkE[4];
     s16 unk12[4];
-} PlayerSetupSubState03798;
+} RaceSetupSubState03798;
 
 typedef struct {
     u8 pad0[0x8];
@@ -322,7 +322,7 @@ typedef struct {
     u8 pad10[0x558];
     s32 unk568;
     u8 pad56C[0xA0];
-} PlayerSetupPlayerState03798;
+} RaceSetupPlayerState03798;
 
 typedef struct {
     u8 pad0[0x4];
@@ -330,7 +330,7 @@ typedef struct {
     u8 pad8[0x44];
     u8 unk4C;
     u8 pad4D[0x78AB];
-} PlayerSetupSavePlayer03798;
+} RaceSetupSavePlayer03798;
 
 typedef struct {
     u8 pad0[2];
@@ -353,18 +353,18 @@ extern s16 D_800EC9D0[];
 extern u8 gControllerPakRetryCounts[];
 extern u8 gControllerPakOperationCounts[];
 extern u8 D_800EC9E4;
-extern PlayerSetupSavePlayer03798 gGameSaveDataBuffer[];
+extern RaceSetupSavePlayer03798 gGameSaveDataBuffer[];
 extern ControllerPakRumbleCheckPromptTransition03798 gControllerPakRumbleCheckPromptTransition;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern CallbackTask *D_8010ADE8;
-extern PlayerSetupPlayerState03798 D_80121D80[];
+extern RaceSetupPlayerState03798 D_80121D80[];
 
-#define D_8010AE00_03798 (*(PlayerSetupSubState03798 *)&D_8010AE00)
+#define D_8010AE00_03798 (*(RaceSetupSubState03798 *)&D_8010AE00)
 #define gRumblePakConnectedByControllerArray_03798 (&gRumblePakConnectedByController)
 #define gPlayerInputPressedArray_03798 (&gPlayerInputPressed)
 
-void updatePlayerSaveSetupMenu(void) {
+void updateRaceSetupSaveMenu(void) {
     s32 allReady = 0;
     s16 allPresent = 0;
     CallbackTask *task = D_8010ADE0;
@@ -397,7 +397,7 @@ void updatePlayerSaveSetupMenu(void) {
                     u8 presentValue = *present;
 
                     if (presentValue != 1) {
-                        PlayerSetupPlayerState03798 *player = &D_80121D80[i];
+                        RaceSetupPlayerState03798 *player = &D_80121D80[i];
                         s32 stateIndex;
                         s16 *choice;
                         s16 choiceValue;
@@ -521,9 +521,9 @@ void updatePlayerSaveSetupMenu(void) {
                                             enqueueSoundEffect(1, 0x32);
                                             if (*choice == 4) {
                                                 if (state == 8) {
-                                                    PlayerSetupSavePlayer03798 *save = &gGameSaveDataBuffer[i];
+                                                    RaceSetupSavePlayer03798 *save = &gGameSaveDataBuffer[i];
 
-                                                    initPlayerSaveData(i);
+                                                    initRaceSetupPlayerSaveData(i);
                                                     D_8010AE00_03798.unk6[i] = 5;
                                                     player->unkC = save->unk4;
                                                 } else if (state == 7) {
@@ -537,10 +537,10 @@ void updatePlayerSaveSetupMenu(void) {
                                                 } else if (state == 7) {
                                                     D_8010AE00_03798.unk6[i] = 4;
                                                 } else {
-                                                    PlayerSetupSavePlayer03798 *save = &gGameSaveDataBuffer[i];
+                                                    RaceSetupSavePlayer03798 *save = &gGameSaveDataBuffer[i];
 
                                                     D_8010AE00_03798.unk6[i] = 5;
-                                                    initPlayerSaveData(i);
+                                                    initRaceSetupPlayerSaveData(i);
                                                     player->unkC = save->unk4;
                                                 }
                                             }
@@ -620,10 +620,10 @@ void updatePlayerSaveSetupMenu(void) {
                 u8 *end;
 
                 D_800EC9E4 = 0;
-                D_8010ADE8 = createCallbackTask((void (*)(CallbackTask *))func_80016B54, 0, 0x63);
-                createCallbackTask((void (*)(CallbackTask *))func_800165F0, 0, 0x63);
-                D_8010ADE0 = createCallbackTask((void (*)(CallbackTask *))func_8001621C, 0, 0x63);
-                D_8010ADE4 = createCallbackTask((void (*)(CallbackTask *))func_80017014, 0, 0x63);
+                D_8010ADE8 = createCallbackTask((void (*)(CallbackTask *))initRaceSetupSaveStatusWidgets, 0, 0x63);
+                createCallbackTask((void (*)(CallbackTask *))initRaceSetupSavePanelIcons, 0, 0x63);
+                D_8010ADE0 = createCallbackTask((void (*)(CallbackTask *))initRaceSetupSavePanelFrame, 0, 0x63);
+                D_8010ADE4 = createCallbackTask((void (*)(CallbackTask *))initRaceSetupSaveChoicePrompts, 0, 0x63);
                 if (gPlayerCount > 0) {
                     ptr = gControllerPakOperationCounts;
                     end = &gControllerPakOperationCounts[gPlayerCount];
@@ -639,11 +639,11 @@ void updatePlayerSaveSetupMenu(void) {
     if (allReady != 0) {
         D_800EC9C1++;
         if (D_800EC9C1 == 0xF) {
-            PlayerSetupSubState03798 *subState;
-            PlayerSetupSavePlayer03798 *save;
-            PlayerSetupSavePlayer03798 *end;
+            RaceSetupSubState03798 *subState;
+            RaceSetupSavePlayer03798 *save;
+            RaceSetupSavePlayer03798 *end;
 
-            setCurrentGameTaskCallback(updatePlayerSetupRumblePrompt, 0);
+            setCurrentGameTaskCallback(updateRaceSetupRumblePrompt, 0);
             createCallbackTask(initControllerPakRumbleCheckPrompt, 0, 0x64);
             gControllerPakRumbleCheckPromptTransition.state = 6;
             gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
@@ -660,7 +660,7 @@ void updatePlayerSaveSetupMenu(void) {
                         gHighestUnlockedCourse = value;
                     }
                     save++;
-                    subState = (PlayerSetupSubState03798 *)((u8 *)subState + 1);
+                    subState = (RaceSetupSubState03798 *)((u8 *)subState + 1);
                 } while (save < end);
             }
         }
@@ -674,11 +674,11 @@ void updatePlayerSaveSetupMenu(void) {
 #undef gPlayerInputPressedArray_03798
 #endif
 
-void playerSetupMenuNoop(void) {
+void raceSetupMenuNoop(void) {
 }
 
-// updatePlayerSetupRumblePrompt best match: 87.420% (nonmatchings/updatePlayerSetupRumblePrompt-3236181511606361864/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/player_setup_menu/updatePlayerSetupRumblePrompt.s")
+// updateRaceSetupRumblePrompt best match: 87.420% (nonmatchings/updateRaceSetupRumblePrompt-3236181511606361864/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/updateRaceSetupRumblePrompt.s")
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -695,7 +695,7 @@ extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptT
 extern void requestRumbleMotorInit(u16 arg0);
 extern void initCharacterSelectMenu(void);
 
-void updatePlayerSetupRumblePrompt(void) {
+void updateRaceSetupRumblePrompt(void) {
     s32 connectedCount;
     s32 i;
     u8 state;
@@ -824,4 +824,4 @@ void updatePlayerSetupRumblePrompt(void) {
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/player_setup_menu/initPlayerSaveData.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/initRaceSetupPlayerSaveData.s")

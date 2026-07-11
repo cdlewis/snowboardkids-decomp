@@ -226,7 +226,7 @@ void func_80014AA4(MenuIntroActor *arg0) {
     }
 }
 
-void func_80014C7C(void *arg0) {
+void initRaceSetupPlayerCountPrompt(void *arg0) {
     MenuIntroActor *actor = arg0;
 
     actor->x = -0x70;
@@ -798,7 +798,7 @@ void func_80015F4C(RectListActor *arg0) {
 }
 #endif
 
-void func_8001621C(RectListActor *arg0) {
+void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     RectListActor *actor = arg0;
 
     actor->rects[0].x0 = -0x114;
@@ -924,7 +924,7 @@ void func_80016560(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_80016284, (s32)temp_a2);
 }
 
-void func_800165F0(RectListActor *arg0) {
+void initRaceSetupSavePanelIcons(RectListActor *arg0) {
     RectListActor *actor = arg0;
 
     actor->rects[0].x0 = -0x114;
@@ -1064,7 +1064,7 @@ void func_80016948(TitleMenuWidgetActor *arg0) {
 }
 #endif
 
-void func_80016B54(TitleMenuWidgetActor *arg0) {
+void initRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     s32 i;
     TitleMenuWidgetActor *new_var;
 
@@ -1219,7 +1219,7 @@ void func_80016E40(TitleMenuTransitionActor *arg0) {
 }
 #endif
 
-void func_80017014(RectListActor *arg0) {
+void initRaceSetupSaveChoicePrompts(RectListActor *arg0) {
     RectListActor *actor = arg0;
 
     actor->rects[0].x0 = -0x70;
