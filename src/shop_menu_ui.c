@@ -351,7 +351,7 @@ void func_8002CAA0(ShopMenuWidgetActor *arg0) {
     func_80071824(arg0, func_8002C9A0);
 }
 
-// func_8002CAD4 best match: 97.629% (nonmatchings/func_8002CAD4-4061930211835852828/base_6.c)
+// func_8002CAD4 best match: 98.548% (nonmatchings/func_8002CAD4-6061209858023118177/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002CAD4.s")
 
 #ifdef NON_MATCHING
@@ -370,7 +370,9 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
 
     if (shouldDraw) {
         tileOffset = 0;
-        i = 0x80;
+        if (1) {
+            i = 0x80;
+        }
     }
     offset = 0;
     do {
@@ -391,6 +393,7 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
     func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y - 4), func_80043040(D_80112130[0x25]), 0x33, 0x20, 0x20, 0, 0);
     func_8000F030((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), func_80043040(D_80112130[0x25]), 0x38, 0x20, 0x20, 0, 0);
     func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), func_80043040(D_80112130[0x25]), 0x35, 0x20, 0x20, 0, 0);
+    if (offset && offset) {}
     func_8000F030((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), func_80043040(D_80112130[0x25]), 0x3A, 0x20, 0x20, 0, 0);
 
     for (offset = 0; offset != 0x80; offset += 0x10) {
