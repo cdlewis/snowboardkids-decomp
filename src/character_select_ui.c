@@ -2,6 +2,7 @@
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "character_select_ui.h"
+#include "player_select_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
@@ -48,7 +49,6 @@ typedef union {
     } fields;
 } CharacterSelectCursorState;
 
-extern void func_8001BA2C(s32, s32, s32, s32);
 extern void func_80046D68(s16, s16, s32, u16, s32);
 extern int sprintf(char *, const char *, ...);
 extern CharacterSelectAssetHandles D_80112130;
