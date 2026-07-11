@@ -54,7 +54,7 @@ extern u8 D_800EC9C2;
 extern u8 D_80121B55;
 extern s16 D_80121B50;
 
-// func_8007B250 best match: 29.699% (nonmatchings/func_8007B250-8207005055717715604/base_6.c)
+// func_8007B250 best match: 30.134% (nonmatchings/func_8007B250-5752545231564691495/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007B250.s")
 
 #ifdef NON_MATCHING
@@ -90,8 +90,10 @@ extern s16 D_80121B50;
 void func_8007B250(void) {
     s32 order[4];
     s32 i;
-    s32 j;
     s32 temp;
+    s32 candidate;
+    s32 *rankSlot;
+    s32 *scan;
     s32 rankIndex;
     s32 mode;
     RacePositionPlayer *player;
@@ -109,15 +111,42 @@ void func_8007B250(void) {
     order[2] = 2;
     order[3] = 3;
 
-    for (i = 0; i < 3; i++) {
-        for (j = i + 1; j < 4; j++) {
-            if (D_80121D80[order[j]].raceRank < D_80121D80[order[i]].raceRank) {
-                temp = order[i];
-                order[i] = order[j];
-                order[j] = temp;
+    i = 0;
+    do {
+        if (i < 4) {
+            rankSlot = &order[i];
+            candidate = i;
+            if ((4 - i) & 1) {
+                temp = *rankSlot;
+                candidate = i + 1;
+                if (((volatile RacePositionPlayer *)D_80121D80)[temp].raceRank < D_80121D80[temp].raceRank) {
+                    *((volatile s32 *)rankSlot) = temp;
+                    *((volatile s32 *)rankSlot) = temp;
+                }
+                if (candidate == 4) {
+                    goto sort_next;
+                }
             }
+            scan = &order[candidate];
+            do {
+                temp = *rankSlot;
+                candidate = *scan;
+                if (D_80121D80[candidate].raceRank < D_80121D80[temp].raceRank) {
+                    *rankSlot = candidate;
+                    *scan = temp;
+                    temp = *rankSlot;
+                }
+                candidate = scan[1];
+                if (D_80121D80[candidate].raceRank < D_80121D80[temp].raceRank) {
+                    *rankSlot = candidate;
+                    scan[1] = temp;
+                }
+                scan += 2;
+            } while (scan != &order[4]);
         }
-    }
+sort_next:
+        i++;
+    } while (i < 3);
 
     mode = D_80121B55;
 
