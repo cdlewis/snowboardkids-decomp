@@ -39,11 +39,11 @@ extern RomAssetAddress gCharacterRawAssetRanges[];
 extern RomAssetAddress gCharacterTextureAssetRanges[];
 extern MainMenuModelAssetHandles D_80112130;
 
-// func_80040C80 best match: 98.116% (nonmatchings/func_80040C80-6113366811127043669/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80040C80.s")
+// compressRaceRecordReplayData best match: 98.116% (nonmatchings/func_80040C80-6113366811127043669/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/compressRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
-s32 func_80040C80(u8 *src, s32 srcLen, s16 *dst) {
+s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, s16 *dst) {
     s16 *out;
     s32 srcPos;
     s32 outCount;
@@ -139,10 +139,10 @@ search_done:
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80040D94.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/saveRaceRecordReplayData.s")
 
-// func_80041A20 best match: 48.898% (nonmatchings/func_80041A20-3236181511606361864/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_80041A20.s")
+// loadCurrentRaceRecordReplayData best match: 48.898% (nonmatchings/func_80041A20-3236181511606361864/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/loadCurrentRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
 extern u16 D_800ECC24;
@@ -159,7 +159,7 @@ extern u8 D_8010B200[];
 extern s16 D_8011213E;
 extern u16 D_80121B50;
 
-void func_80041A20(void) {
+void loadCurrentRaceRecordReplayData(void) {
     u16 *srcBase = &D_800ECC46;
     u16 *src = srcBase;
     u8 *dst;
@@ -275,11 +275,11 @@ void func_80041A20(void) {
 }
 #endif
 
-void func_80041CC0(void) {
+void loadMainMenuSceneModelAssets(void) {
     loadCompressedRomAsset(&gMainMenuSceneModelAssetStart, &D_608560, 0x3F);
 }
 
-void func_80041CF0(void) {
+void loadMainMenuSceneModelAnimationBank(void) {
     loadCompressedRomAsset(&D_215BE0, &D_21D9D0, 0x3F);
 }
 
@@ -294,7 +294,7 @@ void initMainMenuSceneModel(s32 actorIndex, s32 modelIndex) {
     model = (MainMenuSceneModel *)getMemoryBlockBase(D_80112130.modelInstanceHandles[actorIndex]);
     model->actorIndex = actorIndex;
     model->modelIndex = modelIndex;
-    func_80042AB4(model);
+    initMainMenuSceneModelParts(model);
 }
 
 void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
@@ -318,7 +318,7 @@ MainMenuSceneModel *getMainMenuSceneModel(s32 modelIndex) {
     return (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
 }
 
-void func_80041E90(MainMenuSceneModel *model) {
+void applyMainMenuSceneModelAnimationFrame(MainMenuSceneModel *model) {
     s16 *cursor;
     s32 i;
     MainMenuAnimationWritePart *writePart;
@@ -358,7 +358,7 @@ s32 stepMainMenuSceneModelAnimation(s32 modelIndex) {
     new_var = model;
     new_var2 = 0 & 0xFFu;
     model->framesRemaining--;
-    func_80041E90(model);
+    applyMainMenuSceneModelAnimationFrame(model);
     if (1 != new_var->framesRemaining) {
         goto ret0;
     }
@@ -383,7 +383,7 @@ void loopMainMenuSceneModelAnimation(s32 modelIndex) {
         model->framesRemaining = model->frameDuration;
         model->animationCursor = model->animationStart;
     }
-    func_80041E90(model);
+    applyMainMenuSceneModelAnimationFrame(model);
 }
 
 void setMainMenuSceneModelPosition(s32 modelIndex, s32 x, s32 y, s32 z) {
@@ -404,11 +404,11 @@ void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
     model->rot.z = z;
 }
 
-// func_8004215C best match: 83.677% (nonmatchings/func_8004215C-7273315160691878794/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/func_8004215C.s")
+// updateMainMenuSceneModelTransforms best match: 83.677% (nonmatchings/func_8004215C-7273315160691878794/base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/updateMainMenuSceneModelTransforms.s")
 
 #ifdef NON_MATCHING
-void func_8004215C(MainMenuSceneModel *model) {
+void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
     s16 partMatrices[14][16];
     s16 rootMatrix[16];
     MainMenuModelPart *part;

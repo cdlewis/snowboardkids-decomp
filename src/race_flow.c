@@ -250,7 +250,7 @@ extern u8 D_60F990[];
 extern s16 D_80122040;
 extern s16 D_801222F4;
 
-extern s32 func_80040D94(void);
+extern s32 saveRaceRecordReplayData(void);
 extern void releaseMenuAssetHandles(void);
 extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s32, s32, s32, s32, s32);
@@ -1480,7 +1480,7 @@ void func_80077400(void) {
         if (gCurrentGameTask->fadeTimer == 0) {
             stopSoundEffects();
             if ((D_800EC9C2 == 2) && (((Unk80043040 *)getMemoryBlockBase(D_80112186))->unk8 != 0) && (D_80121B61 != 0) &&
-                (func_80040D94() != 0)) {
+                (saveRaceRecordReplayData() != 0)) {
                 D_80121B61 = -1;
             }
             if (D_800EC9C2 == 2) {

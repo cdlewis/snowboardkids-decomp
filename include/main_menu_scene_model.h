@@ -55,17 +55,17 @@ typedef struct MainMenuSceneModel {
     MainMenuModelDisplayObject displayObjects[14];
 } MainMenuSceneModel;
 
-void func_80041CC0(void);
-void func_80041CF0(void);
+void loadMainMenuSceneModelAssets(void);
+void loadMainMenuSceneModelAnimationBank(void);
 void initMainMenuSceneModel(s32 actorIndex, s32 modelIndex);
 void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex);
 MainMenuSceneModel *getMainMenuSceneModel(s32 modelIndex);
-void func_80041E90(MainMenuSceneModel *model);
+void applyMainMenuSceneModelAnimationFrame(MainMenuSceneModel *model);
 s32 stepMainMenuSceneModelAnimation(s32 modelIndex);
 void loopMainMenuSceneModelAnimation(s32 modelIndex);
 void setMainMenuSceneModelPosition(s32 modelIndex, s32 x, s32 y, s32 z);
 void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z);
-void func_8004215C(MainMenuSceneModel *model);
-void func_80042AB4(MainMenuSceneModel *model);
+void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model);
+void initMainMenuSceneModelParts(MainMenuSceneModel *model);
 
 #endif
