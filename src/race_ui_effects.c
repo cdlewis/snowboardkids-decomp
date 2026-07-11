@@ -828,8 +828,8 @@ extern Vec3i D_800D6030[];
 extern u32 *D_800D6400[];
 extern RaceUiRankTextRenderEntry *D_800D761C[];
 extern RaceUiGfxCommandScriptEntry *D_800D693C[];
-extern FixedTransform D_800DEE30;
-extern RaceUiGfxCommandDest D_800DEE50;
+extern FixedTransform gIdentityFixedTransform;
+extern RaceUiGfxCommandDest gIdentityMatrix;
 extern RaceUiCameraTransformSource D_801121E0[];
 extern Gfx D_800D6120[];
 extern Gfx D_800D6160[];
@@ -839,8 +839,8 @@ extern u32 D_800D6270[];
 extern u32 D_800D63D0[];
 extern RaceUiProjectileVertexBlock D_800D64A0[];
 extern u32 D_800D69A8[];
-extern Gfx D_800D9D00[];
-extern Gfx D_800D9D40[];
+extern Gfx gEffectRenderModeSetupDl[];
+extern Gfx gEffectRenderModeCleanupDl[];
 extern u32 D_20019C0[];
 extern u32 D_2002208[];
 extern u32 D_20023A8[];
@@ -924,7 +924,7 @@ void func_800572A0(RaceUiSlideActor *arg0) {
     gDPPipeSync(gRegionAllocPtr++);
     gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));
     gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112142));
-    gSPMatrix(gRegionAllocPtr++, &D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image, G_IM_FMT_CI, 0x20, 0x40, 0, G_TX_WRAP, G_TX_WRAP,
                            5, 6, G_TX_NOLOD, G_TX_NOLOD);
 
@@ -3226,7 +3226,7 @@ void func_8005E6D0(RaceUiSparkleActor *arg0) {
 
     if (arg1->matrixDirty != 0) {
         arg1->matrixDirty = 0;
-        sp6C.transform = D_800DEE30;
+        sp6C.transform = gIdentityFixedTransform;
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 3; j++) {
                 sp6C.halfwords[(i * 3) + j] = (sp6C.halfwords[(i * 3) + j] * arg1->scale) / 0x1000;
@@ -3475,7 +3475,7 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
     s16 scale;
     s32 i;
 
-    arg0->copyBlock.transform = D_800DEE30;
+    arg0->copyBlock.transform = gIdentityFixedTransform;
     player = &D_80121D80[arg0->playerIndex];
     arg0->pos.x = player->pos28.x;
     arg0->pos.y = player->pos28.y;
@@ -3531,7 +3531,7 @@ void func_8005FBA8(RaceUiAnimatedTextActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        sp64.transform = D_800DEE30;
+        sp64.transform = gIdentityFixedTransform;
         sp64.transform.translation.x = arg0->pos.x;
         sp64.transform.translation.y = arg0->pos.y;
         sp64.transform.translation.z = arg0->pos.z;
@@ -3560,7 +3560,7 @@ void func_8005FED0(RaceUiTextParticleActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        sp64.transform = D_800DEE30;
+        sp64.transform = gIdentityFixedTransform;
         sp64.transform.translation.x = arg0->pos.x;
         sp64.transform.translation.y = arg0->pos.y;
         sp64.transform.translation.z = arg0->pos.z;
@@ -3729,7 +3729,7 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
             arg0->velocity += 0x10000;
             arg0->height += arg0->velocity;
             height = arg0->height;
-            arg0->copyBlock.transform = D_800DEE30;
+            arg0->copyBlock.transform = gIdentityFixedTransform;
             playerIndex = arg0->playerIndex;
             player = &D_80121D80[playerIndex];
             arg0->pos.x = player->pos28.x;
@@ -4275,7 +4275,7 @@ void func_800625D8(RaceUiOrbitingSpriteActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        sp64.transform = D_800DEE30;
+        sp64.transform = gIdentityFixedTransform;
         sp64.transform.translation.x = arg0->pos.x;
         sp64.transform.translation.y = arg0->pos.y;
         sp64.transform.translation.z = arg0->pos.z;
@@ -4555,7 +4555,7 @@ void func_800634C8(RaceUiCourseSpriteActor *arg0) {
             }
 
             gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_800D6270);
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &D_800DEE50, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gDPSetTextureImage(RACE_UI_TRAIL_GFX_ALLOC_PTR++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, arg0->palettes[imageIndex]);
             gDPTileSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
             gDPSetTile(RACE_UI_TRAIL_GFX_ALLOC_PTR++, G_IM_FMT_RGBA, G_IM_SIZ_4b, 0, 0x100, G_TX_LOADTILE, 0,
@@ -4663,7 +4663,7 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
     RACE_UI_EFFECT_EMIT_GFX(0xE7000000, 0);
     RACE_UI_EFFECT_EMIT_GFX(0x06000000, (u32)D_800D6270);
 
-    spA0.transform = D_800DEE30;
+    spA0.transform = gIdentityFixedTransform;
 
     actor = arg0;
     actor2 = arg0;
@@ -4856,7 +4856,7 @@ void func_80064470(RaceUiProjectileActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        sp7C.transform = D_800DEE30;
+        sp7C.transform = gIdentityFixedTransform;
         sp7C.transform.translation.x = arg0->pos.x;
         sp7C.transform.translation.y = arg0->pos.y;
         sp7C.transform.translation.z = arg0->pos.z;
@@ -5133,7 +5133,7 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
     int new_var;
 
     actor = arg0;
-    gSPDisplayList(gRegionAllocPtr++, D_800D9D00);
+    gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
 
     textureIndex = -1;
     entry = D_800D693C[D_80121B50];
@@ -5195,7 +5195,7 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
         } while (entry->sentinel != -1);
     }
 
-    gSPDisplayList(gRegionAllocPtr++, D_800D9D40);
+    gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
 }
 #endif
 
@@ -5267,7 +5267,7 @@ void func_8006565C(RaceUiGfxCommandActor *arg0) {
     if (actor1->count > 0) {
         register RaceUiGfxCommandDest *template;
 
-        template = &D_800DEE50;
+        template = &gIdentityMatrix;
         offset = 0;
         one = 1;
         do {
@@ -5346,7 +5346,7 @@ void func_80065808(RaceUiOverlayActor *arg0) {
         }
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            sp9C.transform = D_800DEE30;
+            sp9C.transform = gIdentityFixedTransform;
             sp9C.words[5] = arg0->x;
             sp9C.words[6] = arg0->y;
             sp9C.words[7] = arg0->z;

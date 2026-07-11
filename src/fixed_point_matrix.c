@@ -7,10 +7,10 @@ extern s16 D_800B9810[];
 
 typedef s16 FixedMatrix3sScratch[0x10];
 
-extern FixedTransform D_800DEE30;
+extern FixedTransform gIdentityFixedTransform;
 
 void func_80097A80(FixedTransform *arg0) {
-    *arg0 = D_800DEE30;
+    *arg0 = gIdentityFixedTransform;
 }
 
 s16 func_80097AE8(s16 arg0) {

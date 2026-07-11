@@ -34,7 +34,7 @@ extern s8 D_8010B1AC;
 extern void func_800483FC(void *, void *, void *);
 extern s32 D_80124898;
 extern Gfx *gRegionAllocPtr;
-extern GfxCommandSource D_800DEE30;
+extern GfxCommandSource gIdentityFixedTransform;
 extern u32 D_800D6270[];
 extern Vtx D_800B8100[];
 extern s16 D_80112172;
@@ -414,7 +414,7 @@ void func_80037070(MainMenuSceneActorShadow *arg0) {
     sp84.z = arg0->posZ;
     func_80098590(model->displayObjects[arg0->unkC].pad0, &sp84, &sp78);
     sp6C = model;
-    sp94 = D_800DEE30;
+    sp94 = gIdentityFixedTransform;
     spA8 = sp6C->displayObjects[arg0->unkC].screenX + sp78.x;
     spAC = sp6C->displayObjects[arg0->unkC].screenY + sp78.y;
     spB0 = (void *)sp6C->displayObjects[arg0->unkC].screenZ;
