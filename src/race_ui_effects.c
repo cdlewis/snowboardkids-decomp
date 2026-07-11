@@ -1,7 +1,7 @@
 #include "common.h"
 #include "race_ui_effects.h"
 #include "snowboard_trail_effects.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_item_hit_flags.h"
@@ -4732,7 +4732,7 @@ void func_80063FC0(RaceUiEffectParticleActor *actor) {
     }
 
     func_80045990(getMemoryBlockBase(D_80112130.mainFontHandle), 0x42, &actor->unk20, &actor->unk1C);
-    D_80112130.pad4A = func_80042D58(actor->count * sizeof(RaceUiEffectParticle));
+    D_80112130.pad4A = allocMemoryBlock(actor->count * sizeof(RaceUiEffectParticle));
     actor->particles = (RaceUiEffectParticle *)getMemoryBlockBase(D_80112130.pad4A);
 
     for (i = 0; i < actor->count; i++) {
@@ -5297,7 +5297,7 @@ void func_80065764(void *arg0) {
     D_801222F2 = var_v1;
     *(s16 *)((u8 *)arg0 + 0x1E) = var_v1;
     if (var_v1 != 0) {
-        D_80112130.resultTextHandle = func_80042D58(var_v1 << 6);
+        D_80112130.resultTextHandle = allocMemoryBlock(var_v1 << 6);
         *(s32 *)((u8 *)arg0 + 0x18) = getMemoryBlockBase(D_80112130.resultTextHandle);
         func_8006565C(arg0);
         setCallbackTaskCallback(arg0, func_80065508);
@@ -5587,7 +5587,7 @@ void func_800666B0(RaceUiRankTextRenderActor *arg0) {
     D_801222F6 = var_v1;
     arg0->count = var_v1;
     if (var_v1 != 0) {
-        D_80112130.rankTextHandle = func_80042D58(var_v1 << 6);
+        D_80112130.rankTextHandle = allocMemoryBlock(var_v1 << 6);
         arg0->matrices = (void *)getMemoryBlockBase(D_80112130.rankTextHandle);
         func_800663C8(arg0);
         setCallbackTaskCallback(arg0, func_80066158);

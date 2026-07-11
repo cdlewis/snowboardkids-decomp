@@ -1,7 +1,7 @@
 #include "common.h"
 #include "asset_manager.h"
 #include "fixed_point_math.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 #include "sound_manager.h"
 #include "system_boot.h"
 #include "player_commands.h"
@@ -175,9 +175,9 @@ void initSoundManager(void) {
     gPlayerLoopingSoundId3 = 0;
     gSharedLoopingPositionalSoundHandle = 0;
 
-    D_80112136 = func_80042D58(0x80000);
+    D_80112136 = allocMemoryBlock(0x80000);
     loadCompressedRomAsset(D_275A90, D_27E290, 4);
-    D_80112130.unkA = func_80042D58(0x10000);
+    D_80112130.unkA = allocMemoryBlock(0x10000);
 
     init.count = 0x18;
     init.unk4 = D_801240A8;

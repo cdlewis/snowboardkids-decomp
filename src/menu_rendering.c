@@ -1,6 +1,6 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 #define MENU_RENDERING_C
 #include "menu_rendering.h"
 
@@ -758,7 +758,6 @@ void func_80011854(void) {
 #ifdef NON_MATCHING
 extern s16 D_8011214A;
 extern Gfx *gRegionAllocPtr;
-extern void *getMemoryBlockBase(s16 arg0);
 extern void func_80045990(void *arg0, u16 arg1, void **arg2, void **arg3);
 
 void func_8001185C(s16 x, s16 y, s32 arg2, u16 assetId, u16 width, u16 height)

@@ -1,5 +1,5 @@
 #include "main_menu_scene_model.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 #include "asset_manager.h"
 #include "fixed_point_math.h"
 
@@ -290,7 +290,7 @@ void initMainMenuSceneModel(s32 actorIndex, s32 modelIndex) {
                   MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterRawAssetRanges, modelIndex), actorIndex + 0x33);
     loadCompressedRomAsset((void *)MAIN_MENU_MODEL_ASSET_RANGE_START(gCharacterTextureAssetRanges, modelIndex),
                   (void *)MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterTextureAssetRanges, modelIndex), actorIndex + 0x39);
-    D_80112130.modelInstanceHandles[actorIndex] = func_80042D58(sizeof(MainMenuSceneModel));
+    D_80112130.modelInstanceHandles[actorIndex] = allocMemoryBlock(sizeof(MainMenuSceneModel));
     model = (MainMenuSceneModel *)getMemoryBlockBase(D_80112130.modelInstanceHandles[actorIndex]);
     model->actorIndex = actorIndex;
     model->modelIndex = modelIndex;

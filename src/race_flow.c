@@ -1,7 +1,7 @@
 #include "common.h"
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
 #include "character_select_menu.h"
@@ -311,7 +311,7 @@ loop:
         goto loop;
     }
     if (count != 0) {
-        D_80112188 = func_80042D58(count * sizeof(RacePlayerState));
+        D_80112188 = allocMemoryBlock(count * sizeof(RacePlayerState));
     }
 }
 
@@ -1517,31 +1517,31 @@ void func_80077554(void) {
     }
     ((Unk80043040 *)asset)->unk0 = 0;
     if (D_80112130[0x21] != -1) {
-        D_80112130[0x21] = func_80042EE4(D_80112130[0x21]);
+        D_80112130[0x21] = freeMemoryBlock(D_80112130[0x21]);
     }
     if (D_80112130[0x22] != -1) {
-        D_80112130[0x22] = func_80042EE4(D_80112130[0x22]);
+        D_80112130[0x22] = freeMemoryBlock(D_80112130[0x22]);
     }
     if (D_80112130[0x23] != -1) {
-        D_80112130[0x23] = func_80042EE4(D_80112130[0x23]);
+        D_80112130[0x23] = freeMemoryBlock(D_80112130[0x23]);
     }
     if (D_80112130[0x24] != -1) {
-        D_80112130[0x24] = func_80042EE4(D_80112130[0x24]);
+        D_80112130[0x24] = freeMemoryBlock(D_80112130[0x24]);
     }
     if (D_80112130[0x25] != -1) {
-        D_80112130[0x25] = func_80042EE4(D_80112130[0x25]);
+        D_80112130[0x25] = freeMemoryBlock(D_80112130[0x25]);
     }
     if (D_80112130[0x26] != -1) {
-        D_80112130[0x26] = func_80042EE4(D_80112130[0x26]);
+        D_80112130[0x26] = freeMemoryBlock(D_80112130[0x26]);
     }
     if (D_80112130[0x27] != -1) {
-        D_80112130[0x27] = func_80042EE4(D_80112130[0x27]);
+        D_80112130[0x27] = freeMemoryBlock(D_80112130[0x27]);
     }
     if (D_80112130[0x28] != -1) {
-        D_80112130[0x28] = func_80042EE4(D_80112130[0x28]);
+        D_80112130[0x28] = freeMemoryBlock(D_80112130[0x28]);
     }
     if (D_80112130[0x1F] != -1) {
-        D_80112130[0x1F] = func_80042EE4(D_80112130[0x1F]);
+        D_80112130[0x1F] = freeMemoryBlock(D_80112130[0x1F]);
     }
     ((Unk80043040 *)asset)->unk0 = 0;
     one = 1;
@@ -1586,7 +1586,7 @@ void func_80077554(void) {
     func_80078430();
     initRaceCourseEffects();
     gMenuFadeAlpha = 0xFF;
-    func_80042C20();
+    updateMemoryBlockAllocator();
     requestMusicSequenceBank(0);
     gCurrentGameTask->fadeTimer = 0;
     gCurrentGameTask->unk1C = 0;
@@ -1646,7 +1646,7 @@ void func_80077B34(void) {
     if (gPendingFramebufferSwapCount == 2) {
         gRaceRumbleEnabled = 0;
         D_80121B58 = 0;
-        func_80042C20();
+        updateMemoryBlockAllocator();
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;

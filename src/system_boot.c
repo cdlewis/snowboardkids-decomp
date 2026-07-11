@@ -3,7 +3,7 @@
 #include "system_boot.h"
 #include "game_task_scheduler.h"
 #include "menu_system_flow.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 #include "race_flow.h"
 #include "viewport_manager.h"
 
@@ -244,7 +244,7 @@ void initGameSystems(void) {
         func_8009C270((SchedulerState *)D_801240A8, RETRACE_COUNT_PAL, RETRACE_COUNT_MODE);
     }
     func_8009CA60((SchedulerState *)D_801240A8, &D_80124820, &D_80124050);
-    func_80042C28();
+    initMemoryBlockAllocator();
     func_800458E0();
     func_80048338();
     func_800484F0();

@@ -4,6 +4,7 @@
 #include "character_select_course_menu.h"
 #include "race_character_select_menu.h"
 #include "game_task_scheduler.h"
+#include "memory_block_allocator.h"
 #include "menu_rendering.h"
 #include "race_camera.h"
 #include "race_start_transition.h"
@@ -50,8 +51,6 @@ typedef struct {
     u8 unk2E;
 } RaceCharacterSelectStatus;
 
-extern s16 func_80042D58(s32);
-extern s32 getMemoryBlockBase(s16);
 extern void n_alSeqpDelete(void);
 extern void requestMusicSequenceBank(s32);
 extern u8 D_14B450[];
@@ -182,7 +181,7 @@ void initRaceCharacterSelectMenu(void) {
     loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
 
     size = D_1502A0 - D_14B450;
-    D_80112130[0xC] = func_80042D58(size);
+    D_80112130[0xC] = allocMemoryBlock(size);
     dmaReadRom((u32)D_14B450, (void *)getMemoryBlockBase(D_80112130[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
