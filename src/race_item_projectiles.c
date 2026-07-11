@@ -88,7 +88,10 @@ struct RaceItemProjectileActor {
     /* 0x30 */ void *image;
     /* 0x34 */ void *palette;
     /* 0x38 */ s16 timer;
-    /* 0x3A */ s16 spriteIndex;
+    union {
+        /* 0x3A */ s16 targetPlayerIndex;
+        /* 0x3A */ s16 blinkTimer;
+    };
     /* 0x3C */ s16 targetAngle;
     /* 0x3E */ s16 startAngle;
     union {
@@ -136,11 +139,11 @@ s16 fixedCosine(s16);
 void transformVec3iByFixedMatrix(s16 *, Vec3i *, void *);
 s64 __ll_mul(s64, s64);
 
-// findRaceItemProjectileTargetPlayer best match: 99.927% (nonmatchings/findRaceItemProjectileTargetPlayer-7273315160691878794/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_projectiles/findRaceItemProjectileTargetPlayer.s")
+// findRaceItemProjectileHomingTarget best match: 99.927% (nonmatchings/findRaceItemProjectileHomingTarget-7273315160691878794/base_3.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_projectiles/findRaceItemProjectileHomingTarget.s")
 
 #ifdef NON_MATCHING
-s32 findRaceItemProjectileTargetPlayer(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle) {
+s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle) {
     RacePlayerState *player;
     s32 closest;
     s32 dx;
@@ -246,10 +249,10 @@ void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->spriteIndex = findRaceItemProjectileTargetPlayer(pos, 0x1600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0x1600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
-        if (arg0->spriteIndex != -1) {
-            gRacePlayerItemTargetFlags[arg0->spriteIndex].value = 1;
+        if (arg0->targetPlayerIndex != -1) {
+            gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -326,7 +329,7 @@ void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     s64 product;
 
     arg0->timer = 0x12C;
-    arg0->spriteIndex = -1;
+    arg0->targetPlayerIndex = -1;
     arg0->velocityY = 0x130000;
     source.z = 0;
     source.y = 0;
@@ -415,10 +418,10 @@ void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->spriteIndex = findRaceItemProjectileTargetPlayer(pos, 0xE00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0xE00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
-        if (arg0->spriteIndex != -1) {
-            gRacePlayerItemTargetFlags[arg0->spriteIndex].value = 1;
+        if (arg0->targetPlayerIndex != -1) {
+            gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -499,7 +502,7 @@ void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     s64 product;
 
     arg0->timer = 0x12C;
-    arg0->spriteIndex = -1;
+    arg0->targetPlayerIndex = -1;
     arg0->velocityY = 0x150000;
     source.z = 0;
     source.y = 0;
@@ -588,10 +591,10 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->spriteIndex = findRaceItemProjectileTargetPlayer(pos, 0x600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0x600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
-        if (arg0->spriteIndex != -1) {
-            gRacePlayerItemTargetFlags[arg0->spriteIndex].value = 1;
+        if (arg0->targetPlayerIndex != -1) {
+            gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -669,7 +672,7 @@ void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     s64 product;
 
     arg0->timer = 0xB4;
-    arg0->spriteIndex = -1;
+    arg0->targetPlayerIndex = -1;
     arg0->velocityY = 0x170000;
     source.z = 0;
     source.y = 0;
@@ -802,7 +805,7 @@ void updateThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
 
 void initThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
     arg0->timer = 0x3C;
-    arg0->spriteIndex = -1;
+    arg0->targetPlayerIndex = -1;
     arg0->velocityY = 0xFFF00000;
     arg0->accelerationY = 0;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 3, &arg0->image, &arg0->palette);
@@ -875,10 +878,10 @@ void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->spriteIndex = findRaceItemProjectileTargetPlayer(pos, 0xA00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0xA00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
-        if (arg0->spriteIndex != -1) {
-            gRacePlayerItemTargetFlags[arg0->spriteIndex].value = 1;
+        if (arg0->targetPlayerIndex != -1) {
+            gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -958,7 +961,7 @@ void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     s64 product;
 
     arg0->timer = 0x12C;
-    arg0->spriteIndex = -1;
+    arg0->targetPlayerIndex = -1;
     arg0->velocityY = 0x110000;
     sp58.z = (sp58.y = 0);
     sp58.x = 0x1000;
@@ -1041,10 +1044,10 @@ void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->spriteIndex = findRaceItemProjectileTargetPlayer(pos, 0x1200000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0x1200000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
-        if (arg0->spriteIndex != -1) {
-            gRacePlayerItemTargetFlags[arg0->spriteIndex].value = 1;
+        if (arg0->targetPlayerIndex != -1) {
+            gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -1122,7 +1125,7 @@ void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     s64 product;
 
     arg0->timer = 0x12C;
-    arg0->spriteIndex = -1;
+    arg0->targetPlayerIndex = -1;
     arg0->velocityY = 0x130000;
     sp58.z = (sp58.y = 0);
     sp58.x = 0x1000;
@@ -1175,7 +1178,7 @@ void renderFallingActionProjectile(RaceItemProjectileActor *arg0) {
         arg0->matrixFlags.matrixDirty2 = 1;
     }
 
-    if ((arg0->spriteIndex < 0x1F) && !(gUiBlinkTimer & 1)) {
+    if ((arg0->blinkTimer < 0x1F) && !(gUiBlinkTimer & 1)) {
         return;
     }
 
@@ -1198,12 +1201,12 @@ void updateFallingActionProjectileLanded(RaceItemProjectileActor *arg0) {
     RaceItemProjectileActor *actor;
     s32 i;
     s32 radius;
-    s16 spriteIndex;
+    s16 blinkTimer;
 
-    spriteIndex = arg0->spriteIndex;
+    blinkTimer = arg0->blinkTimer;
     actor = arg0;
-    if (spriteIndex != 0) {
-        actor->spriteIndex = spriteIndex - 1;
+    if (blinkTimer != 0) {
+        actor->blinkTimer = blinkTimer - 1;
     } else {
         removeCallbackTask(arg0);
         return;
@@ -1265,7 +1268,7 @@ void initFallingActionProjectile(RaceItemProjectileActor *arg0) {
     RacePlayerState *player;
 
     arg0->timer = 0x3C;
-    arg0->spriteIndex = 0x708;
+    arg0->blinkTimer = 0x708;
     arg0->accelerationY = 0x30000;
     player = &D_80121D80[arg0->playerIndex];
     arg0->pos.x = player->pos.x;
@@ -1399,7 +1402,7 @@ void initShieldProjectile(RaceItemProjectileActor *arg0) {
     s64 product;
 
     arg0->timer = 0x12C;
-    arg0->spriteIndex = -1;
+    arg0->targetPlayerIndex = -1;
     arg0->velocityY = 0x120000;
 
     source.z = 0;

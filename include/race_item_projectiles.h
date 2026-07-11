@@ -5,7 +5,7 @@
 
 typedef struct RaceItemProjectileActor RaceItemProjectileActor;
 
-s32 findRaceItemProjectileTargetPlayer(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle);
+s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle);
 void renderWideHomingItemProjectile(RaceItemProjectileActor *arg0);
 void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0);
 void initWideHomingItemProjectile(RaceItemProjectileActor *arg0);
