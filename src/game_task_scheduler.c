@@ -70,12 +70,12 @@ extern s8 gPlayer3StickY;
 extern s8 gPlayer4StickY;
 extern s32 gPlayerInputRepeat;
 extern u8 gPlayerInputRepeatTimer;
-extern FramebufferState D_8012496E[];
+extern FramebufferState gFramebufferRenderTaskStatuses[];
 
 #ifdef NON_MATCHING
-void func_8004835C();
+void resetRenderScratchAllocator();
 #else
-void func_8004835C(void *, void *);
+void resetRenderScratchAllocator(void *, void *);
 #endif
 void clearPendingPositionalSoundRequests(void);
 GameTask *allocateGameTask(s32);
@@ -116,7 +116,7 @@ void initGameTaskScheduler(void) {
     gPlayer4InputPressed = 0;
     gPlayer4StickX = zero;
     gPlayer4StickY = zero;
-    func_8004835C(&gGameTaskPool[GAME_TASK_COUNT], &gGameTaskScheduler);
+    resetRenderScratchAllocator(&gGameTaskPool[GAME_TASK_COUNT], &gGameTaskScheduler);
     resetRenderCallbackQueues();
 }
 
@@ -144,7 +144,7 @@ void updateGameTaskScheduler(void) {
     s32 timer;
 
     gFrameCounter = (gFrameCounter + 1) & 0xFFF;
-    func_8004835C();
+    resetRenderScratchAllocator();
     resetRenderCallbackQueues();
     clearPendingPositionalSoundRequests();
 
@@ -300,7 +300,7 @@ s32 updateFramebufferRenderScheduler(void) {
     if (gFramebufferSwapDelayTimer == 0) {
         if (gFramebufferSwapHold == 0) {
             frameIndex = gNextFramebufferRenderTaskIndex;
-            if (D_8012496E[frameIndex].status == 0) {
+            if (gFramebufferRenderTaskStatuses[frameIndex].status == 0) {
                 if ((s32) gPendingFramebufferSwapCount > 0) {
                     submitFramebufferRenderTask(frameIndex);
                     gFramebufferSwapDelayTimer = gFramebufferSwapDelay;
@@ -373,7 +373,7 @@ GameTask *allocateGameTask(s32 priority) {
 }
 #endif
 
-void unlinkGameTask(s32 taskId) {
+void releaseGameTaskById(s32 taskId) {
     GameTask *task;
     GameTask *next;
     s32 freeTaskCount;
@@ -407,7 +407,7 @@ void createGameTask(s32 taskId, GameTaskCallback callback, s32 priority) {
 }
 
 void removeGameTask(s32 taskId) {
-    unlinkGameTask(taskId);
+    releaseGameTaskById(taskId);
 }
 
 void setCurrentGameTaskCallback(GameTaskCallback callback, s32 callbackIndex) {
