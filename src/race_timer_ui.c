@@ -1,7 +1,7 @@
 #include "common.h"
 #include "asset_manager.h"
 #include "relocatable_heap.h"
-#include "race_item_visual_effects.h"
+#include "race_item_effects.h"
 #include "race_player_movement.h"
 #include "race_timer_ui.h"
 #include "race_ui_effects.h"
@@ -75,7 +75,7 @@ typedef struct {
 } RaceTimerUiS32Stride;
 
 extern void func_80045A78(s32, s32, s32, s32);
-extern void func_80046D68(s16, s16, s32, s32, s32);
+extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80047E88(s32, s16, s32, s32);
 extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
@@ -204,7 +204,7 @@ void func_80078568(s32 arg0) {
         digit = buffer;
         end = &buffer[2];
         do {
-            func_80046D68((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           ((u8)*digit - 5) & 0xFFFF, finalPalette);
             digit++;
             x += 8;
@@ -216,7 +216,7 @@ void func_80078568(s32 arg0) {
         end = &buffer[2];
         end += 0;
         do {
-            func_80046D68((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           ((u8)*digit - 5) & 0xFFFF, finalPalette);
             digit++;
             x += 8;
@@ -227,15 +227,15 @@ void func_80078568(s32 arg0) {
         digit = buffer;
         end = &buffer[2];
         do {
-            func_80046D68((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           ((u8)*digit - 5) & 0xFFFF, finalPalette);
             digit++;
             x += 8;
         } while ((u32)digit < (u32)end);
     }
 
-    func_80046D68(0x50, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, finalPalette);
-    func_80046D68(0x68, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, finalPalette);
+    drawAssetTableSpriteWithExplicitPalette(0x50, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, finalPalette);
+    drawAssetTableSpriteWithExplicitPalette(0x68, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, finalPalette);
 
     if (D_80122043 < 10) {
         x = -0x90;
@@ -319,7 +319,7 @@ void func_800789C0(s32 arg0) {
         digit = buffer;
         end = &buffer[2];
         do {
-            func_80046D68((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
+            drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
                           palette & 0xFFFF);
             digit++;
             x += 8;
@@ -330,7 +330,7 @@ void func_800789C0(s32 arg0) {
         digit = buffer;
         end = &buffer[2];
         do {
-            func_80046D68((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
+            drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
                           palette & 0xFFFF);
             digit++;
             x += 8;
@@ -341,14 +341,14 @@ void func_800789C0(s32 arg0) {
         digit = buffer;
         end = &buffer[2];
         do {
-            func_80046D68((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
+            drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
                           palette & 0xFFFF);
             digit++;
             x += 8;
         } while ((u32)digit < (u32)end);
 
-        func_80046D68(0x50, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, palette & 0xFFFF);
-        func_80046D68(0x68, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, palette & 0xFFFF);
+        drawAssetTableSpriteWithExplicitPalette(0x50, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, palette & 0xFFFF);
+        drawAssetTableSpriteWithExplicitPalette(0x68, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, palette & 0xFFFF);
     }
 
     func_80045A78(0x68, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x20);
@@ -587,7 +587,7 @@ void func_80079438(s32 arg0) {
 
     do {
         if (*digit != ' ') {
-            func_80046D68((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*digit - 5) & 0xFFFF,
+            drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*digit - 5) & 0xFFFF,
                           palette & 0xFFFF);
         }
         digit++;
@@ -614,9 +614,9 @@ void func_80079438(s32 arg0) {
 
     func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), player->iconTile & 0xFFFF);
     func_80045A78(-0x88, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x39);
-    func_80046D68(-0x68, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (player->lapDigit + 0x2C) & 0xFFFF, 0xE);
+    drawAssetTableSpriteWithExplicitPalette(-0x68, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (player->lapDigit + 0x2C) & 0xFFFF, 0xE);
     func_80045A78(-0x5C, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x38);
-    func_80046D68(-0x50, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (gRaceLapCount + 0x2B) & 0xFFFF, 0xE);
+    drawAssetTableSpriteWithExplicitPalette(-0x50, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (gRaceLapCount + 0x2B) & 0xFFFF, 0xE);
 }
 #endif
 
@@ -652,7 +652,7 @@ void func_80079758(s32 arg0) {
 
     do {
         if (*digit != ' ') {
-            func_80046D68((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*digit - 5) & 0xFFFF,
+            drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*digit - 5) & 0xFFFF,
                           palette & 0xFFFF);
         }
         digit++;
@@ -718,7 +718,7 @@ void func_800799DC(s32 arg0) {
 
     do {
         if (*ptr != ' ') {
-            func_80046D68(x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((*ptr) - 5) & 0xFFFF, color & 0xFFFF);
+            drawAssetTableSpriteWithExplicitPalette(x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((*ptr) - 5) & 0xFFFF, color & 0xFFFF);
         }
         ptr++;
         x += 8;
@@ -966,7 +966,7 @@ sort_next:
             if (player->unk2D8 != 0) {
                 player = &D_80121D80[*slot];
                 iconGroup = player->iconGroup;
-                func_80046D68(x, (s16)(player->raceProgress + yBase),
+                drawAssetTableSpriteWithExplicitPalette(x, (s16)(player->raceProgress + yBase),
                               getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                               D_800DC954[player->flashFrame + (iconGroup * 6)],
                               D_800DC99C[iconGroup]);
@@ -979,7 +979,7 @@ sort_next:
         } else if (player->unk2D8 != 0) {
             player = &D_80121D80[*slot];
             iconGroup = player->iconGroup;
-            func_80046D68(xBase, (s16)(player->raceProgress + yBase),
+            drawAssetTableSpriteWithExplicitPalette(xBase, (s16)(player->raceProgress + yBase),
                           getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           D_800DC954[player->flashFrame + (iconGroup * 6)],
                           D_800DC99C[iconGroup]);

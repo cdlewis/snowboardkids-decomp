@@ -5,7 +5,7 @@
 #include "sound_manager.h"
 #include "spatial_math.h"
 #include "fixed_point_math.h"
-#include "race_item_visual_effects.h"
+#include "race_item_effects.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
 #define RACE_ITEM_GFX_CMD(pkt, cmd0, cmd1) \
@@ -240,8 +240,8 @@ extern Gfx *gRegionAllocPtr;
 
 void getAssetTableImageAndExplicitPalette(u8 *, u16, u16, void **, void **);
 void getAssetTableImageAndPalette(s32, u16, void *, void *);
-void func_80046D68(s16, s16, s32, s32, s32);
-void func_8004767C(s16, s16, s32, s32, s32, s32);
+void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
+void drawScaledAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32, s32);
 void addRenderCallback(void *, void *, void *);
 void *allocFixedTransformMatrix(RaceItemGfxCommandSource *);
 /* Local 4-arg declaration; see note in callback_task_scheduler.h. */
@@ -254,7 +254,7 @@ s32 getRaceItemEffectType(s32 arg0) {
 
 // updateRaceItemSparkBurst best match: 77.625% (nonmatchings/updateRaceItemSparkBurst-6113366811127043669/base_10.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_visual_effects/updateRaceItemSparkBurst.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/updateRaceItemSparkBurst.s")
 
 #ifdef NON_MATCHING
 void updateRaceItemSparkBurst(RaceItemEffectActor *arg0) {
@@ -314,7 +314,7 @@ void initRaceItemSparkBurst(RaceItemEffectActor *arg0) {
 
 // spawnRaceItemTrackSparkBurst best match: 86.674% (nonmatchings/spawnRaceItemTrackSparkBurst-2225551288923588688/base_6.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_visual_effects/spawnRaceItemTrackSparkBurst.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/spawnRaceItemTrackSparkBurst.s")
 
 #ifdef NON_MATCHING
 void spawnRaceItemTrackSparkBurst(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *arg3, s32 arg4, s16 arg5) {
@@ -460,7 +460,7 @@ void spawnRaceItemImpactEffect(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
 
 // renderRaceItemProjectileTrailEffect best match: 99.089% (nonmatchings/renderRaceItemProjectileTrailEffect-6061209858023118177/base_9.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_visual_effects/renderRaceItemProjectileTrailEffect.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/renderRaceItemProjectileTrailEffect.s")
 
 #ifdef NON_MATCHING
 void renderRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
@@ -921,18 +921,18 @@ void renderRaceUiSparkle(RaceItemEffectActor *arg0) {
     if ((u8)arg0->payload.sprite.colorR == gCurrentViewportIndex) {
         if ((u8)arg0->payload.sprite.colorG == 0) {
             if ((u8)arg0->payload.sprite.colorB == 0) {
-                func_80046D68(arg0->payload.sprite.x, arg0->payload.sprite.y, getRelocatableHeapBlockBase(D_8011216E),
+                drawAssetTableSpriteWithExplicitPalette(arg0->payload.sprite.x, arg0->payload.sprite.y, getRelocatableHeapBlockBase(D_8011216E),
                               ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF, 0x1D);
             } else {
-                func_80046D68(arg0->payload.sprite.x, arg0->payload.sprite.y, getRelocatableHeapBlockBase(D_8011216E),
+                drawAssetTableSpriteWithExplicitPalette(arg0->payload.sprite.x, arg0->payload.sprite.y, getRelocatableHeapBlockBase(D_8011216E),
                               ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF, 0x1E);
             }
         } else if ((u8)arg0->payload.sprite.colorB == 0) {
-            func_8004767C((s16)(arg0->payload.sprite.x - 8), (s16)(arg0->payload.sprite.y - 8),
+            drawScaledAssetTableSpriteWithExplicitPalette((s16)(arg0->payload.sprite.x - 8), (s16)(arg0->payload.sprite.y - 8),
                           getRelocatableHeapBlockBase(D_8011216E), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
                           0x1D, 1);
         } else {
-            func_8004767C((s16)(arg0->payload.sprite.x - 8), (s16)(arg0->payload.sprite.y - 8),
+            drawScaledAssetTableSpriteWithExplicitPalette((s16)(arg0->payload.sprite.x - 8), (s16)(arg0->payload.sprite.y - 8),
                           getRelocatableHeapBlockBase(D_8011216E), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
                           0x1E, 1);
         }
@@ -971,7 +971,7 @@ void spawnRaceUiSparkle(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
 
 // renderRaceItemTextureEffects best match: 96.026% (nonmatchings/renderRaceItemTextureEffects-6061209858023118177/base_5.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_visual_effects/renderRaceItemTextureEffects.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/renderRaceItemTextureEffects.s")
 
 #ifdef NON_MATCHING
 void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
@@ -1053,7 +1053,7 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
 
 // updateRaceItemTextureEffects best match: 66.842%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_visual_effects/updateRaceItemTextureEffects.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/updateRaceItemTextureEffects.s")
 
 #ifdef NON_MATCHING
 void updateRaceItemTextureEffects(RaceItemEffectActor *arg0) {

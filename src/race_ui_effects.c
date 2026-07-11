@@ -862,7 +862,7 @@ extern RaceUiGfxCommandDest *allocFixedTransformMatrix(RaceUiTrailCopyBlock *);
 extern void setPackedMatrixTranslation(RaceUiGfxCommandDest *, s32 *);
 extern void osWritebackDCache(void *, s32);
 extern void func_80045A78(s16, s16, s32, s32);
-extern void func_80046D68(s16, s16, s32, s32, s32);
+extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
 extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
 extern int sprintf(char *, const char *, ...);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
@@ -1007,7 +1007,7 @@ void func_80057854(RaceUiPopupActor *arg0) {
         sprintf(buffer, D_800E1240, arg0->parent);
         for (i = 0; i < 2; i++) {
             if (buffer[i] != ' ') {
-                func_80046D68((s16)(arg0->x + (i * 8) + 4), arg0->y.half.lo,
+                drawAssetTableSpriteWithExplicitPalette((s16)(arg0->x + (i * 8) + 4), arg0->y.half.lo,
                               getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
             }
         }
@@ -1020,7 +1020,7 @@ void func_80057854(RaceUiPopupActor *arg0) {
             sprintf(buffer, D_800E1244, 0x12C);
             for (i = 0; i != 3; i++) {
                 if (buffer[i] != ' ') {
-                    func_80046D68((s16)(arg0->x + (i * 8) + 8), (s16)(arg0->y.word + 0x12),
+                    drawAssetTableSpriteWithExplicitPalette((s16)(arg0->x + (i * 8) + 8), (s16)(arg0->y.word + 0x12),
                                   getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
                 }
             }
@@ -1184,7 +1184,7 @@ void func_8005812C(void *arg0) {
     i = 0;
     do { sprintf(&buffer[i], D_800E1254, D_801222E8); x = 0x20; if (D_80122289 == 3) { colorValue = 0xD; } else { colorValue = 0xC; } do { assets = (RaceUiAssetHandles *)((u8 *)&gAssetHandles + (u8)i); space = ' '; color = colorValue; if (space) { }
 loop:
-    if (buffer[i] != '\0') { if (buffer[i] != space) { func_80046D68((s16)x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), (buffer[i] - 5) & 0xFFFF, color); } x += 8; i++; goto loop; } } while (0); func_80046D68((s16)x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), 0x37, color); } while (0);
+    if (buffer[i] != '\0') { if (buffer[i] != space) { drawAssetTableSpriteWithExplicitPalette((s16)x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), (buffer[i] - 5) & 0xFFFF, color); } x += 8; i++; goto loop; } } while (0); drawAssetTableSpriteWithExplicitPalette((s16)x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), 0x37, color); } while (0);
     if (D_80122289 == 3) {
         func_80045A78(0x18, -0xB, getRelocatableHeapBlockBase(assets->popupFontHandle), 0x4E);
     }
@@ -1635,29 +1635,29 @@ void func_80059A04(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
     y = arg2;
     color = arg3;
     end = &buffer[-0xE];
-    ptr = buffer - 0x10; do { func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+    ptr = buffer - 0x10; do { drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
         ptr++;
         x += 8;
     } while (ptr < end);
 
-    func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color);
+    drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color);
     x += 8;
     sprintf(buffer - 0x10, D_800E12C4, record->second);
     ptr = buffer - 0x10;
     end = &buffer[-0xE];
     do {
-        func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
         ptr++;
         x += 8;
     } while (ptr < end);
 
-    func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, color);
+    drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, color);
     x += 8;
     sprintf(buffer - 0x10, D_800E12CC, record->third >> 8);
     ptr = buffer - 0x10;
     end = &buffer[-0xE];
     do {
-        func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
         do {
             ptr++;
             x += 8;
@@ -1930,12 +1930,12 @@ void func_8005A884(RaceUiPopupActor *arg0) {
         sprintf(buffer, D_800E12F4, ((RaceUiCourseValueData *)gGameSaveDataBuffer)->values[gRaceCourseIndex][i]);
 
         if ((u8)buffer[0] != space) {
-            func_80046D68(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[0] - 5) & 0xFFFF, color);
         }
 
         if ((u8)buffer[1] != space) {
-            func_80046D68(0x18, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            drawAssetTableSpriteWithExplicitPalette(0x18, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[1] - 5) & 0xFFFF, color & 0xFFFF);
         }
 
@@ -2761,7 +2761,7 @@ loop2:
 
 body2:
     if (*ptr2 != ' ') {
-        func_80046D68(x, -0x13, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*ptr2 - 5) & 0xFFFF, 0xE);
+        drawAssetTableSpriteWithExplicitPalette(x, -0x13, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*ptr2 - 5) & 0xFFFF, 0xE);
     }
     ptr2++;
     x += 8;
@@ -2906,19 +2906,19 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
 
         new_var = buffer[0];
         if ((u8)new_var != space) {
-            func_80046D68(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[(color & 0xFFFF) * 0] - 5) & 0xFFFF, color);
         }
         if ((u8)buffer[1] != space) {
-            func_80046D68(0x18, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            drawAssetTableSpriteWithExplicitPalette(0x18, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[1] - 5) & 0xFFFF, color & 0xFFFF);
         }
         if ((u8)buffer[2] != space) {
-            func_80046D68(0x20, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            drawAssetTableSpriteWithExplicitPalette(0x20, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[2] - 5) & 0xFFFF, color & 0xFFFF);
         }
         if ((u8)buffer[3] != space) {
-            func_80046D68(0x28, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            drawAssetTableSpriteWithExplicitPalette(0x28, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[3] - 5) & 0xFFFF, color & 0xFFFF);
         }
 
@@ -3808,11 +3808,11 @@ void func_80060D10(RaceUiPopupActor *arg0) {
         sprintf(buffer, D_800E14D0, arg0->parent);
         for (i = 0; i != 4; i++) {
             if (buffer[i] != ' ') {
-                func_80046D68((s16)(arg0->x + (i * 8) + 4), (s16)(arg0->y.word - 8),
+                drawAssetTableSpriteWithExplicitPalette((s16)(arg0->x + (i * 8) + 4), (s16)(arg0->y.word - 8),
                               getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
             }
         }
-        func_80046D68((s16)(arg0->x + (i * 8) + 4), (s16)(arg0->y.word - 8),
+        drawAssetTableSpriteWithExplicitPalette((s16)(arg0->x + (i * 8) + 4), (s16)(arg0->y.word - 8),
                       getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37, 0xE);
     }
 }

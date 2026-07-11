@@ -6,7 +6,7 @@
 #include "sound_manager.h"
 #include "race_motion.h"
 #include "race_player_collision.h"
-#include "race_item_visual_effects.h"
+#include "race_item_effects.h"
 #include "race_item_hit_flags.h"
 
 #define RACE_PLAYER_COLLISION_YAW_FLIPPED 0x400

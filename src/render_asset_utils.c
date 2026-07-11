@@ -842,11 +842,11 @@ void func_80046970(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
 }
 #endif
 
-// func_80046D68 best match: 80.448% (nonmatchings/func_80046D68-4923837976568703863/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80046D68.s")
+// drawAssetTableSpriteWithExplicitPalette best match: 80.448% (nonmatchings/drawAssetTableSpriteWithExplicitPalette-4923837976568703863/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawAssetTableSpriteWithExplicitPalette.s")
 
 #ifdef NON_MATCHING
-void func_80046D68(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3, u16 arg4) {
+void drawAssetTableSpriteWithExplicitPalette(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3, u16 arg4) {
     volatile u8 padding[0x10];
     u8 *sp2C;
     s32 sp18;
@@ -1077,11 +1077,11 @@ void func_80047174(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4)
 #undef RENDER_EMIT_GFX
 #endif
 
-// func_8004767C best match: 74.481% (nonmatchings/func_8004767C-7273315160691878794/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_8004767C.s")
+// drawScaledAssetTableSpriteWithExplicitPalette best match: 74.481% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-7273315160691878794/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawScaledAssetTableSpriteWithExplicitPalette.s")
 
 #ifdef NON_MATCHING
-void func_8004767C(s16 x, s16 y, AssetTable *asset, u16 entryIndex, u16 paletteIndex, u16 scale) {
+void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *asset, u16 entryIndex, u16 paletteIndex, u16 scale) {
     u8 *paletteBase;
     AssetTableEntry *entry;
     AssetTableEntry *entry2;

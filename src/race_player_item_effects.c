@@ -4,7 +4,7 @@
 #include "race_player_input.h"
 #include "spatial_math.h"
 #include "race_item_weapons.h"
-#include "race_item_visual_effects.h"
+#include "race_item_effects.h"
 #include "race_player_item_effects.h"
 #include "snowboard_trail_effects.h"
 #include "race_ui_effects.h"

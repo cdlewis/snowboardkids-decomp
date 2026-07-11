@@ -79,7 +79,7 @@ extern void func_80045A78(s16, s16, s32, u16);
 extern void func_80045E84(s16, s16, s32, s32);
 extern void func_80046358(s32, s32, s32, s32);
 extern void func_80046748(s16, s16, s32, s32, s32, s32, s32);
-extern void func_80046D68(s16, s16, s32, s32, s32);
+extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
 extern void enqueueSoundEffect(s16, s16);
 
 void drawMainMenuModeSelectFrame(s32 arg0) {
@@ -173,12 +173,12 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
             func_80045E84(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
             return;
         }
-        func_80046D68(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
+        drawAssetTableSpriteWithExplicitPalette(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
         func_80045E84(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
         return;
     }
 
-    func_80046D68(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
+    drawAssetTableSpriteWithExplicitPalette(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
 }
 
 // updateMainMenuModeSelectGrid best match: 75.664%
@@ -441,11 +441,11 @@ void drawMainMenuModeSelectMenuOptions(s32 arg0) {
             func_80045A78(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0);
             func_80045E84(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
         } else {
-            func_80046D68(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0, 1);
+            drawAssetTableSpriteWithExplicitPalette(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0, 1);
             func_80045E84(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
         }
     } else {
-        func_80046D68(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0, 1);
+        drawAssetTableSpriteWithExplicitPalette(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0, 1);
     }
 
     if (gMenuFlowState == 1) {
@@ -453,11 +453,11 @@ void drawMainMenuModeSelectMenuOptions(s32 arg0) {
             func_80045A78(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 1);
             func_80045E84(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
         } else {
-            func_80046D68(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 1, 1);
+            drawAssetTableSpriteWithExplicitPalette(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 1, 1);
             func_80045E84(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
         }
     } else {
-        func_80046D68(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 1, 1);
+        drawAssetTableSpriteWithExplicitPalette(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 1, 1);
     }
 
     if (gMenuFlowState == 2) {
@@ -466,12 +466,12 @@ void drawMainMenuModeSelectMenuOptions(s32 arg0) {
             func_80045E84(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
             return;
         }
-        func_80046D68(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
+        drawAssetTableSpriteWithExplicitPalette(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
         func_80045E84(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
         return;
     }
 
-    func_80046D68(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
+    drawAssetTableSpriteWithExplicitPalette(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
 }
 
 void updateMainMenuModeSelectMenuOptions(MenuPanelActor *arg0) {
@@ -560,19 +560,19 @@ void drawMainMenuSettingsOptions(s32 arg0) {
         var_v0 = 2;
         sp28 = var_v0;
     }
-    func_80046D68(-0x78, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 4, sp28);
+    drawAssetTableSpriteWithExplicitPalette(-0x78, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 4, sp28);
     sp28 = 1;
     if (gRaceRecordSettingsEnabled == 1) {
-        func_80046D68(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 7, 2);
-        func_80046D68(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 8, 1);
+        drawAssetTableSpriteWithExplicitPalette(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 7, 2);
+        drawAssetTableSpriteWithExplicitPalette(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 8, 1);
         if (gMenuFlowState == 0) {
             func_80045E84(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         } else {
             func_80045A78(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         }
     } else {
-        func_80046D68(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 7, 1);
-        func_80046D68(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 8, 2);
+        drawAssetTableSpriteWithExplicitPalette(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 7, 1);
+        drawAssetTableSpriteWithExplicitPalette(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 8, 2);
         if (gMenuFlowState == 0) {
             func_80045E84(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         } else {
@@ -582,19 +582,19 @@ void drawMainMenuSettingsOptions(s32 arg0) {
     if (gMenuFlowState == 1) {
         sp28 = 2;
     }
-    func_80046D68(-0x78, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 5, sp28);
+    drawAssetTableSpriteWithExplicitPalette(-0x78, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 5, sp28);
     sp28 = 1;
     if (gRaceCourseModelEffectsDisabled == 0) {
-        func_80046D68(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 2);
-        func_80046D68(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 1);
+        drawAssetTableSpriteWithExplicitPalette(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 2);
+        drawAssetTableSpriteWithExplicitPalette(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 1);
         if (gMenuFlowState == 1) {
             func_80045E84(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         } else {
             func_80045A78(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         }
     } else {
-        func_80046D68(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 1);
-        func_80046D68(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 2);
+        drawAssetTableSpriteWithExplicitPalette(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 1);
+        drawAssetTableSpriteWithExplicitPalette(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 2);
         if (gMenuFlowState == 1) {
             func_80045E84(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         } else {
@@ -604,19 +604,19 @@ void drawMainMenuSettingsOptions(s32 arg0) {
     if (gMenuFlowState == 2) {
         sp28 = 2;
     }
-    func_80046D68(-0x78, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 6, sp28);
+    drawAssetTableSpriteWithExplicitPalette(-0x78, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 6, sp28);
     sp28 = 1;
     if (gRaceCourseOverlayEffectsDisabled == 0) {
-        func_80046D68(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 2);
-        func_80046D68(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 1);
+        drawAssetTableSpriteWithExplicitPalette(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 2);
+        drawAssetTableSpriteWithExplicitPalette(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 1);
         if (gMenuFlowState == 2) {
             func_80045E84(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         } else {
             func_80045A78(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         }
     } else {
-        func_80046D68(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 1);
-        func_80046D68(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 2);
+        drawAssetTableSpriteWithExplicitPalette(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 1);
+        drawAssetTableSpriteWithExplicitPalette(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 2);
         if (gMenuFlowState == 2) {
             func_80045E84(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         } else {
@@ -626,7 +626,7 @@ void drawMainMenuSettingsOptions(s32 arg0) {
     if (gMenuFlowState == 3) {
         sp28 = 2;
     }
-    func_80046D68(-0x68, 0x48, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, sp28);
+    drawAssetTableSpriteWithExplicitPalette(-0x68, 0x48, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, sp28);
 }
 
 void updateMainMenuSettingsPanel(MenuPanelActor *arg0) {

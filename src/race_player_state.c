@@ -11,7 +11,7 @@
 #include "fixed_point_math.h"
 #undef calculateAngleBetweenXZPoints
 #include "race_player_input.h"
-#include "race_item_visual_effects.h"
+#include "race_item_effects.h"
 #include "race_player_item_effects.h"
 #include "menu_screen_effects.h"
 #include "race_player_movement.h"
