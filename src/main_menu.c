@@ -603,13 +603,13 @@ void func_800012CC(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-// func_80001318 best match: 69.772%
+// func_80001318 best match: 78.684%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80001318.s")
 
 #ifdef NON_MATCHING
 void func_80001318(u16 arg0) {
     OSPfs * volatile pfs;
-    s32 * volatile fileNo;
+    s32 *fileNo;
     s32 channel;
     u8 *src;
     u8 *dst;
