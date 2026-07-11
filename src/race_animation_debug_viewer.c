@@ -1,7 +1,7 @@
 #include "common.h"
 #include "race_camera.h"
 #include "race_motion.h"
-#include "race_motion_debug_viewer.h"
+#include "race_animation_debug_viewer.h"
 #include "race_position_ui.h"
 
 typedef struct {
@@ -27,10 +27,9 @@ typedef struct {
     /* 0x300 */ s16 initialized;
     /* 0x302 */ u8 pad302[0x150];
     /* 0x452 */ s16 motionIndex;
-} RaceMotionDebugViewerState;
+} RaceAnimationDebugViewerState;
 
-extern s16 D_801221D2;
-extern RaceMotionDebugViewerState D_80121D80;
+extern RaceAnimationDebugViewerState D_80121D80;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
 extern void *D_80124858;
@@ -39,10 +38,10 @@ extern void sprintf(char *, const char *, ...);
 extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
 extern void addRenderCallback(void *, void *, void *);
 
-const char gRaceMotionDebugViewerMotionNumberFormat[] = "MOTION NO %3.3i";
+const char gRaceAnimationDebugViewerMotionNumberFormat[] = "MOTION NO %3.3i";
 
-void initRaceMotionDebugViewer(void) {
-    RaceMotionDebugViewerState *state;
+void initRaceAnimationDebugViewer(void) {
+    RaceAnimationDebugViewerState *state;
     s16 temp_v0;
 
     setRaceCameraMode(0, 2);
@@ -62,14 +61,14 @@ void initRaceMotionDebugViewer(void) {
     initRaceMotionModelParts((RaceMotionInitState *)state);
 }
 
-void drawRaceMotionDebugViewerMotionNumber(s32 arg0) {
+void drawRaceAnimationDebugViewerMotionNumber(s32 arg0) {
     char buf[0x64];
 
-    sprintf(buf, gRaceMotionDebugViewerMotionNumberFormat, D_801221D2);
+    sprintf(buf, gRaceAnimationDebugViewerMotionNumberFormat, D_80121D80.motionIndex);
     drawMenuAsciiTextDefaultScale(0x28, 0x28, buf, 1);
 }
 
-void updateRaceMotionDebugViewer(void) {
+void updateRaceAnimationDebugViewer(void) {
     s32 buttons;
 
     if (D_80121D80.initialized == 0) {
@@ -102,5 +101,5 @@ void updateRaceMotionDebugViewer(void) {
         }
     }
     addRenderCallback(&gModelRenderCallbackList, func_8007C5E8, (RacePositionUiPlayer *)&D_80121D80);
-    addRenderCallback(&D_80124858, drawRaceMotionDebugViewerMotionNumber, NULL);
+    addRenderCallback(&D_80124858, drawRaceAnimationDebugViewerMotionNumber, NULL);
 }
