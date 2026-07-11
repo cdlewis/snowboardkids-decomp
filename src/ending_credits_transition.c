@@ -7,7 +7,7 @@
 #include "game_task_scheduler.h"
 #include "race_camera.h"
 #include "ending_credits_ui.h"
-#include "ending_credits_effects.h"
+#include "ending_credits_shared_effects.h"
 #include "race_start_transition.h"
 #include "ending_credits_slash.h"
 #include "ending_credits_nancy.h"
@@ -64,8 +64,8 @@ extern f32 D_800E0A70;
 extern s16 D_8010B1A0;
 extern u16 gEndingSequencePhase;
 extern s8 gEndingActorHandshakeState;
-extern u8 gEndingTransitionRotationStep;
-extern s16 gEndingTransitionSnowboardAngle;
+extern u8 gEndingTransitionSpinStep;
+extern s16 gEndingTransitionSnowboardIconAngle;
 extern MainMenuFlagByte gEndingCharacterEffectDoneFlags[];
 extern s8 gEndingNancyEffectDone;
 extern s8 gEndingJamEffectDone;
@@ -101,8 +101,8 @@ void initEndingCreditsTransition(void) {
     D_8010B1A0 = 0;
     gEndingSequencePhase = 0;
     gEndingActorHandshakeState = 0;
-    gEndingTransitionSnowboardAngle = 0;
-    gEndingTransitionRotationStep = 0;
+    gEndingTransitionSnowboardIconAngle = 0;
+    gEndingTransitionSpinStep = 0;
     gEndingCharacterEffectDoneFlags[0].value = 0;
     gEndingCharacterEffectDoneFlags[2].value = 0;
     gEndingCharacterEffectDoneFlags[3].value = 0;
