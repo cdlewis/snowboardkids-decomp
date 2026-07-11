@@ -1,5 +1,5 @@
-#ifndef MAIN_MENU_FLOW_H
-#define MAIN_MENU_FLOW_H
+#ifndef MENU_SYSTEM_FLOW_H
+#define MENU_SYSTEM_FLOW_H
 
 #include "common.h"
 
