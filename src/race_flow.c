@@ -16,7 +16,7 @@
 #include "menu_screen_effects.h"
 #include "main_menu_panel_ui.h"
 #include "race_type_select_menu.h"
-#include "player_select_menu.h"
+#include "player_count_select_menu.h"
 #include "race_camera.h"
 #include "race_course_effects.h"
 #include "race_flow.h"
@@ -484,7 +484,7 @@ void func_80073434(void) {
 
 void func_800734A0(void) {
     setCurrentGameTaskCallback(&func_800734E4, 0);
-    createGameTask(4, &func_800055EC, 0x64);
+    createGameTask(4, &initPlayerCountSelectMenu, 0x64);
     suspendGameTask(2);
 }
 
