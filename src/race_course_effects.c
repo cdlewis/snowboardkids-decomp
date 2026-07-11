@@ -1,6 +1,6 @@
 #include "common.h"
 #include "race_course_effects.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "spatial_math.h"
@@ -667,7 +667,7 @@ void func_8006AE00(RaceCourseRenderEffect *arg0) {
     if (count != 0) {
         entry = D_800DA0B8[gRaceCourseIndex];
         allocSize = count * sizeof(CourseRenderCommand);
-        D_80112130.markerMatrixHandle = func_80042D58(allocSize);
+        D_80112130.markerMatrixHandle = allocMemoryBlock(allocSize);
         arg0->vertices = getMemoryBlockBase(D_80112130.markerMatrixHandle);
 
         i = 0;
@@ -746,7 +746,7 @@ void func_8006B108(RaceCourseRenderEffect *arg0) {
     if (count != 0) {
         entry = base;
         size = count << 6;
-        D_80112130.courseRenderBufferHandle = func_80042D58(size);
+        D_80112130.courseRenderBufferHandle = allocMemoryBlock(size);
         arg0->vertices = (void *)getMemoryBlockBase(D_80112130.courseRenderBufferHandle);
 
         for (i = 0; i < count; i++) {

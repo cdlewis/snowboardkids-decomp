@@ -107,7 +107,7 @@ segments:
       - [0x40120, c, main_menu_race_flow]
       - [0x41880, c, main_menu_scene_model]
       - [0x43160, c, main_menu_scene_model_renderer]
-      - [0x437C0, c, memory_allocator]
+      - [0x437C0, c, memory_block_allocator]
       - [0x43CD0, c, asset_manager]
       - [0x44550, c, race_scene_loader]
       - [0x464E0, c, render_asset_utils]

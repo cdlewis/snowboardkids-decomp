@@ -5,6 +5,7 @@
 #include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
+#include "memory_block_allocator.h"
 
 struct EndingCreditsTommy {
     /* 0x00 */ char pad0[0x18];
@@ -25,7 +26,6 @@ typedef struct {
     /* 0x1C */ s32 z;
 } GfxCommandSource;
 
-extern s32 getMemoryBlockBase(s16 arg0);
 extern void func_80045990(s32 arg0, s32 arg1, void **arg2, void **arg3);
 extern Mtx *allocFixedTransformMatrix(GfxCommandSource *arg0);
 extern MainMenuSceneActorShadow gEndingActorShadow;

@@ -1,6 +1,6 @@
 #include "common.h"
 #include "race_overlay_effects.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_input_history.h"
@@ -299,7 +299,7 @@ void func_800669A0(RaceModelListActor *arg0) {
     if (count != 0) {
         entry = base;
         size = count << 6;
-        *(s16 *)&D_80112130[0x46] = func_80042D58(size);
+        *(s16 *)&D_80112130[0x46] = allocMemoryBlock(size);
         arg0->modelBuffer = (void *)getMemoryBlockBase(*(s16 *)&D_80112130[0x46]);
 
         for (i = 0; i < count; i++) {
@@ -473,7 +473,7 @@ void func_8006713C(RaceModelListActor *arg0) {
         } while (var_v0->modelIndex != -1);
     }
     if (new_var->modelCount != 0) {
-        RACE_MODEL_BUFFER_HANDLE = func_80042D58(new_var->modelCount << 6);
+        RACE_MODEL_BUFFER_HANDLE = allocMemoryBlock(new_var->modelCount << 6);
         new_var->modelBuffer = (void *) getMemoryBlockBase(RACE_MODEL_BUFFER_HANDLE);
         func_80067034(new_var);
         setCallbackTaskCallback(new_var, func_80066E10);

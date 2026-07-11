@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 #include "fixed_point_math.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
@@ -140,7 +140,7 @@ dummy_label_220868:
 
 void releaseMenuAssetHandles(void)
 {
- do { s16 *handle = &D_8011213E; do { if ((*handle) != (-1)) { *handle = func_80042EE4(*handle); } handle++; } while (handle != (&D_801121B0)); } while (0);
+ do { s16 *handle = &D_8011213E; do { if ((*handle) != (-1)) { *handle = freeMemoryBlock(*handle); } handle++; } while (handle != (&D_801121B0)); } while (0);
 }
 
 void *func_8004597C(void *arg0, u32 arg1) {
@@ -1381,7 +1381,7 @@ void func_80048278(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
 extern s32 D_801121B8;
 
 void func_80048338(void) {
-    D_80112130 = func_80042D58(0x4000);
+    D_80112130 = allocMemoryBlock(0x4000);
 }
 
 void resetRenderScratchAllocator(void) {
@@ -1439,8 +1439,8 @@ extern s16 D_80112132;
 extern s16 D_80112134;
 
 void func_800484F0(void) {
-    D_80112132 = func_80042D58(0x8000);
-    D_80112134 = func_80042D58(0x8000);
+    D_80112132 = allocMemoryBlock(0x8000);
+    D_80112134 = allocMemoryBlock(0x8000);
 }
 
 extern u32 D_80123754;

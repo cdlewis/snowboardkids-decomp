@@ -1,7 +1,7 @@
 #include "common.h"
 #include "race_effects.h"
 #include "model_animation.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 #include "callback_task_scheduler.h"
 #include "race_item_effects.h"
 #include "race_player_movement.h"

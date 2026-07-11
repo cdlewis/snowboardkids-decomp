@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_course_preview.h"
@@ -204,7 +204,7 @@ void initRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
     if (count != 0) {
         entry = gRaceCoursePreviewModelCommandsByCourse[gRaceCourseIndex];
         allocSize = count * sizeof(GfxCommandDest);
-        D_80112130.matrixHandle = func_80042D58(allocSize);
+        D_80112130.matrixHandle = allocMemoryBlock(allocSize);
         arg0->matrices = getMemoryBlockBase(D_80112130.matrixHandle);
 
         i = 0;
@@ -680,7 +680,7 @@ void initRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
     if (count != 0) {
         entry = gRaceCoursePreviewAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
         allocSize = count * sizeof(GfxCommandDest);
-        D_80112130.matrixHandle2 = func_80042D58(allocSize);
+        D_80112130.matrixHandle2 = allocMemoryBlock(allocSize);
         arg0->matrices = getMemoryBlockBase(D_80112130.matrixHandle2);
 
         i = 0;

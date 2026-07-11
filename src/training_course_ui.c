@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 #include "callback_task_scheduler.h"
 #include "training_course_ui.h"
 #include "menu_rendering.h"

@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_allocator.h"
+#include "memory_block_allocator.h"
 
 #define MEMORY_BLOCK_COUNT 0x50
 
@@ -23,21 +23,21 @@ typedef struct MemoryBlockStartAlias {
     u8 pad[0x10];
 } MemoryBlockStartAlias; // size = 0x14
 
-extern MemoryBlockStartAlias D_801101A0[];
-extern MemoryBlock *D_801107D8[];
-extern u16 D_80110918;
-extern u8 D_80160480;
+extern MemoryBlockStartAlias gMemoryBlockStartFields[];
+extern MemoryBlock *gFreeMemoryBlocks[];
+extern u16 gUsedMemoryBlockCount;
+extern u8 gMemoryBlockHeapStart;
 
-extern MemoryBlock D_80110198[];
-extern MemoryBlock *D_80110184;
-extern u8 *D_8011091C;
+extern MemoryBlock gMemoryBlocks[];
+extern MemoryBlock *gFirstMemoryBlock;
+extern u8 *gMemoryBlockHeapEnd;
 
-void func_80042BC0(void) {
-    MemoryBlock *node = D_80110184;
+void updateMemoryBlockHeapEnd(void) {
+    MemoryBlock *node = gFirstMemoryBlock;
     MemoryBlock *next;
 
     if (node == NULL) {
-        D_8011091C = &D_80160480;
+        gMemoryBlockHeapEnd = &gMemoryBlockHeapStart;
         return;
     }
     next = node->next;
@@ -47,26 +47,26 @@ void func_80042BC0(void) {
             next = next->next;
         } while (next != NULL);
     }
-    D_8011091C = node->start + node->size;
+    gMemoryBlockHeapEnd = node->start + node->size;
 }
 
-void func_80042C20(void) {
+void updateMemoryBlockAllocator(void) {
 }
 
-// func_80042C28 best match: 97.727%
-#pragma GLOBAL_ASM("asm/nonmatchings/memory_allocator/func_80042C28.s")
+// initMemoryBlockAllocator best match: 97.727%
+#pragma GLOBAL_ASM("asm/nonmatchings/memory_block_allocator/initMemoryBlockAllocator.s")
 
 #ifdef NON_MATCHING
-extern MemoryBlock D_801101AC[];
-extern MemoryBlock D_801101C0[];
-extern MemoryBlock D_801101D4[];
+extern MemoryBlock gMemoryBlocks1[];
+extern MemoryBlock gMemoryBlocks2[];
+extern MemoryBlock gMemoryBlocks3[];
 
-void func_80042C28(void) {
-    MemoryBlock **freeList = D_801107D8;
-    MemoryBlock *block0 = D_80110198;
-    MemoryBlock *block1 = D_801101AC;
-    MemoryBlock *block2 = D_801101C0;
-    MemoryBlock *block3 = D_801101D4;
+void initMemoryBlockAllocator(void) {
+    MemoryBlock **freeList = gFreeMemoryBlocks;
+    MemoryBlock *block0 = gMemoryBlocks;
+    MemoryBlock *block1 = gMemoryBlocks1;
+    MemoryBlock *block2 = gMemoryBlocks2;
+    MemoryBlock *block3 = gMemoryBlocks3;
     s32 i = 0;
     s32 next1;
     s32 next2;
@@ -98,33 +98,33 @@ void func_80042C28(void) {
         block0[-4].status = MEMORY_BLOCK_FREE;
     } while (i != MEMORY_BLOCK_COUNT);
 
-    D_80110918 = 0;
-    D_80110184 = NULL;
-    func_80042BC0();
+    gUsedMemoryBlockCount = 0;
+    gFirstMemoryBlock = NULL;
+    updateMemoryBlockHeapEnd();
 }
 #endif
 
-void *func_80042CDC(void) {
+void *popFreeMemoryBlock(void) {
     MemoryBlock *block;
 
-    if (D_80110918 >= MEMORY_BLOCK_COUNT) {
+    if (gUsedMemoryBlockCount >= MEMORY_BLOCK_COUNT) {
         return NULL;
     }
-    block = D_801107D8[D_80110918];
+    block = gFreeMemoryBlocks[gUsedMemoryBlockCount];
     block->status = MEMORY_BLOCK_USED;
-    D_80110918++;
+    gUsedMemoryBlockCount++;
     return block;
 }
 
-void func_80042D28(MemoryBlock *block) {
-    D_80110918 = D_80110918 - 1;
-    D_801107D8[D_80110918] = block;
+void pushFreeMemoryBlock(MemoryBlock *block) {
+    gUsedMemoryBlockCount = gUsedMemoryBlockCount - 1;
+    gFreeMemoryBlocks[gUsedMemoryBlockCount] = block;
     block->status = MEMORY_BLOCK_FREE;
 }
 
-extern MemoryBlock D_80110180;
+extern MemoryBlock gMemoryBlockListHead;
 
-s16 func_80042D58(s32 size) {
+s16 allocMemoryBlock(s32 size) {
     MemoryBlock *node;
     MemoryBlock *newBlock;
     u32 available;
@@ -134,9 +134,9 @@ s16 func_80042D58(s32 size) {
 
     /*
      * First try to allocate inside a gap between two existing blocks.
-     * D_80110180 is the sentinel/list head.
+     * gMemoryBlockListHead is the sentinel/list head.
      */
-    node = D_80110180.next;
+    node = gMemoryBlockListHead.next;
     while (node != NULL) {
         if (node->next == NULL) {
             break;
@@ -144,7 +144,7 @@ s16 func_80042D58(s32 size) {
 
         available = (node->next->start - node->start) - node->size;
         if (available >= alignedSize) {
-            newBlock = func_80042CDC();
+            newBlock = popFreeMemoryBlock();
             if (newBlock == NULL) {
                 return -1;
             }
@@ -166,16 +166,16 @@ s16 func_80042D58(s32 size) {
     }
 
     /* No suitable gap was found, so append at the current heap end. */
-    available = (D_8011091C + alignedSize) - &D_80160480;
+    available = (gMemoryBlockHeapEnd + alignedSize) - &gMemoryBlockHeapStart;
     if (available > 0x1C0000) {
         return -1;
     }
 
     if (node == NULL) {
-        node = &D_80110180;
+        node = &gMemoryBlockListHead;
     }
 
-    newBlock = func_80042CDC();
+    newBlock = popFreeMemoryBlock();
     if (newBlock == NULL) {
         return -1;
     }
@@ -189,55 +189,55 @@ s16 func_80042D58(s32 size) {
 
     node->next = newBlock;
 
-    newBlock->start = D_8011091C;
+    newBlock->start = gMemoryBlockHeapEnd;
     newBlock->size = alignedSize;
 
-    func_80042BC0();
+    updateMemoryBlockHeapEnd();
 
     return newBlock->index;
 }
 
-s32 func_80042EE4(s32 arg0) {
-    MemoryBlock *temp_a0;
-    MemoryBlock *temp_v0;
+s32 freeMemoryBlock(s32 handle) {
+    MemoryBlock *block;
+    MemoryBlock *next;
 
-    if (arg0 == -1) {
+    if (handle == -1) {
         return -1;
     }
-    temp_a0 = &D_80110198[arg0];
-    if (temp_a0->status != MEMORY_BLOCK_FREE) {
-        temp_v0 = temp_a0->next;
-        if (temp_v0 == NULL) {
-            D_8011091C -= temp_a0->size;
-            temp_v0 = temp_a0->next;
+    block = &gMemoryBlocks[handle];
+    if (block->status != MEMORY_BLOCK_FREE) {
+        next = block->next;
+        if (next == NULL) {
+            gMemoryBlockHeapEnd -= block->size;
+            next = block->next;
         }
-        temp_a0->prev->next = temp_v0;
-        temp_v0 = temp_a0->next;
-        if (temp_v0 != NULL) {
-            temp_v0->prev = temp_a0->prev;
+        block->prev->next = next;
+        next = block->next;
+        if (next != NULL) {
+            next->prev = block->prev;
         }
-        func_80042D28(temp_a0);
-        func_80042BC0();
+        pushFreeMemoryBlock(block);
+        updateMemoryBlockHeapEnd();
     }
     return -1;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/memory_allocator/func_80042FA0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/memory_block_allocator/compactMemoryBlocks.s")
 
-s32 getMemoryBlockBase(s32 arg0) {
-    return (s32) D_801101A0[arg0].start;
+s32 getMemoryBlockBase(s32 handle) {
+    return (s32) gMemoryBlockStartFields[handle].start;
 }
 
-void func_80043060(s32 arg0) {
-    MemoryBlock *block = &D_80110198[arg0];
+void lockMemoryBlock(s32 handle) {
+    MemoryBlock *block = &gMemoryBlocks[handle];
 
     if (block->status != MEMORY_BLOCK_FREE) {
         block->status = MEMORY_BLOCK_LOCKED;
     }
 }
 
-void func_80043094(s32 arg0) {
-    MemoryBlock *block = &D_80110198[arg0];
+void unlockMemoryBlock(s32 handle) {
+    MemoryBlock *block = &gMemoryBlocks[handle];
 
     if (block->status != MEMORY_BLOCK_FREE) {
         block->status = MEMORY_BLOCK_USED;
