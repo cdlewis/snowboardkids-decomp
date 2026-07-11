@@ -75,7 +75,7 @@ extern s16 D_800EC9D0[];
 extern s8 D_800EC9E5;
 extern s8 D_800EC9E6;
 extern RaceCharacterSelectSaveData gGameSaveDataBuffer[];
-extern s32 D_8010ADDC;
+extern s32 gActiveMenuTask;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s16 D_8010ADF0[];
@@ -189,7 +189,7 @@ void initRaceCharacterSelectMenu(void) {
     createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x63);
 
     D_800EC9C0 = 0;
-    D_8010ADDC = 0;
+    gActiveMenuTask = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     D_801235B4 = 0;

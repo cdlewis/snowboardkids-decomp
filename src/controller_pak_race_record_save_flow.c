@@ -38,7 +38,7 @@ extern s16 gControllerPakStatusCodes;
 extern s16 D_800EC9D0;
 extern u8 gControllerPakRetryCounts;
 extern s8 D_800EC9C1;
-extern s32 D_8010ADDC;
+extern s32 gActiveMenuTask;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s32 D_8010ADE8;
@@ -64,7 +64,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     D_80121D80.status = 0;
     D_800EC9C1 = 0;
     gCurrentGameTask->fade = 0xFF;
-    D_8010ADDC = 0;
+    gActiveMenuTask = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     D_8010ADE8 = 0;
@@ -76,7 +76,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     loadCompressedRomAsset(&D_598A70, &D_59AAA0, 0x23);
     loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
     initCallbackTaskScheduler(0);
-    D_8010ADDC = createCallbackTask(&func_8002BA00, 0, 0x61);
+    gActiveMenuTask = createCallbackTask(&func_8002BA00, 0, 0x61);
     D_8010ADE8 = createCallbackTask(&func_8002C318, 0, 0x60);
     gControllerPakRaceRecordSaveScoreUiState.step = 0;
     gControllerPakRaceRecordSaveScoreUiState.timer = 0;

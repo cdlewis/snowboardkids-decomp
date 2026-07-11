@@ -90,7 +90,7 @@ extern u8 gGameSaveDataBuffer[];
 extern s8 D_800EC9F1;
 extern s8 D_800EC9F9;
 extern s8 D_800ECA2F[];
-extern s32 D_8010ADDC;
+extern s32 gActiveMenuTask;
 extern s8 D_8010AE64;
 extern u8 D_8010AEA0[];
 extern s8 D_8010AEA4;
@@ -228,7 +228,7 @@ void initCourseSelectMenu(void) {
     D_80121D80.unk8 = 0;
     D_80121D80.unk6 = 0;
     D_8010AE64 = 0;
-    D_8010ADDC = 0;
+    gActiveMenuTask = 0;
     gCurrentGameTask->timer = 0;
     D_8010ADF8 = 0;
     D_8010AF70 = 0;

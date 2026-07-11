@@ -1,6 +1,6 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
-#include "main_menu_effects.h"
+#include "menu_transition_effects.h"
 #include "main_menu_scene_actor_3.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
@@ -100,7 +100,7 @@ void func_80039610(MainMenuSceneActor3 *arg0) {
             *timerPtr = 0;
             setCallbackTaskCallback(arg0, func_80039584);
             func_80041DD4(3, 0x59);
-            func_8003D068(0x30, -0x5B);
+            spawnEndingPhaseAdvanceSparkle(0x30, -0x5B);
         }
     }
 }
@@ -811,7 +811,7 @@ void func_8003AFC0(MainMenuSceneActor3 *arg0) {
         temp_t9 = (arg0->timer & 0xFFFF) + 1;
         arg0->timer = temp_t9;
         if ((temp_t9 & 0xFFFF) == 2) {
-            func_8003C0A4(-0x14, -0x40, 3, 1);
+            spawnEndingCharacterVanishPoof(-0x14, -0x40, 3, 1);
         }
     }
     if (gEndingSequencePhase == 0x16) {

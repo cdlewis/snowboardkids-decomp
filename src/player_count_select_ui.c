@@ -51,7 +51,7 @@ extern PlayerCountSelectAssetHandles D_80112130;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern PlayerCountSelectMenuCursor D_8010AF50;
 extern u8 D_8010AF52;
-extern s32 D_8010ADDC;
+extern s32 gActiveMenuTask;
 extern u8 D_8010ADF8;
 extern u8 D_80121B5E;
 extern u8 D_80121D88;
@@ -293,7 +293,7 @@ void func_80029CE4(PlayerCountSelectWidgetActor *arg0) {
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->row.bytes.subState = 3;
-            D_8010ADDC = (s32) createCallbackTask(func_8002AFB8, 0, 0x64);
+            gActiveMenuTask = (s32) createCallbackTask(func_8002AFB8, 0, 0x64);
             createCallbackTask(func_8002B15C, 0, 0x64);
             createCallbackTask(func_8002B2FC, 0, 0x64);
             createCallbackTask(func_8002B524, 0, 0x64);

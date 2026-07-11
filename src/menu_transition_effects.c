@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "main_menu_effects.h"
+#include "menu_transition_effects.h"
 #include "main_menu_scene_model.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
@@ -66,43 +66,43 @@ extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 D_8011217C;
 extern s16 D_8011217E;
 extern u16 gEndingSequencePhase;
-extern u8 D_8010B1A5;
-extern s16 D_8010B1A6;
-extern u8 D_8010B1A8[];
-extern u16 D_8010B1D0;
-extern u16 D_800B9530[];
-extern u16 D_800B9538[];
-extern s32 D_8010ADDC;
+extern u8 gMenuTransitionRotationStep;
+extern s16 gMenuTransitionRotationAngle;
+extern u8 gEndingCharacterEffectDone[];
+extern u16 gMenuTransitionRotationFrameCount;
+extern u16 gEndingCharacterRunDustFrameOffsets[];
+extern u16 gEndingSnowmanEntranceFrameOffsets[];
+extern s32 gActiveMenuTask;
 
-void func_8003BF7C(MainMenuEffectActor *arg0);
-void func_8003C180(MainMenuEffectActor *arg0);
-void func_8003C484(MainMenuEffectActor *arg0);
-void func_8003C634(MainMenuEffectActor *arg0);
-void func_8003C7E4(MainMenuEffectActor *arg0);
-void func_8003CE78(MainMenuEffectActor *arg0);
-void func_8003D2F4(MainMenuEffectActor *arg0);
-void func_8003D5F8(MainMenuEffectActor *arg0);
-void func_8003D580(MainMenuEffectActor *arg0);
-void func_8003D4C0(MainMenuEffectActor *arg0);
-void func_8003D3C0(MainMenuEffectActor *arg0);
-void func_8003D7C0(MainMenuEffectActor *arg0);
-void func_8003D88C(MainMenuEffectActor *arg0);
-void func_8003DA98(MainMenuEffectActor *arg0);
-void func_8003DB84(MainMenuEffectActor *arg0);
-void func_8003DCCC(MainMenuEffectActor *arg0);
-void func_8003DBE8(MainMenuEffectActor *arg0);
-void func_8003C2EC(MainMenuEffectActor *arg0);
-void func_8003C93C(MainMenuEffectActor *arg0);
-void func_8003CAD8(MainMenuEffectActor *arg0);
-void func_8003CC58(MainMenuEffectActor *arg0);
-void func_8003CF98(MainMenuEffectActor *arg0);
-void func_8003D124(MainMenuEffectActor *arg0);
+void updateEndingCharacterVanishPoof(MainMenuEffectActor *arg0);
+void updateEndingSpeedLines(MainMenuEffectActor *arg0);
+void drawEndingBigBurst(MainMenuEffectActor *arg0);
+void updateEndingBigBurst(MainMenuEffectActor *arg0);
+void updateEndingRisingStar(MainMenuEffectActor *arg0);
+void updateEndingIdleSparkle(MainMenuEffectActor *arg0);
+void updateEndingSnowmanEntranceEffect(MainMenuEffectActor *arg0);
+void updateRaceToMenuSnowboardIconSlowSpin(MainMenuEffectActor *arg0);
+void updateRaceToMenuSnowboardIconWaitSecondSpin(MainMenuEffectActor *arg0);
+void updateRaceToMenuSnowboardIconSecondSpin(MainMenuEffectActor *arg0);
+void drawRaceToMenuSnowboardIcon(MainMenuEffectActor *arg0);
+void updateRaceToMenuSnowboardIconFastSpin(MainMenuEffectActor *arg0);
+void updateRaceToMenuSnowboardIconWaitStart(MainMenuEffectActor *arg0);
+void updateRaceToMenuSnowflakeIconIdle(MainMenuEffectActor *arg0);
+void drawRaceToMenuLogoWipe(MainMenuEffectActor *arg0);
+void updateRaceToMenuLogoWipeOpen(MainMenuEffectActor *arg0);
+void updateRaceToMenuLogoWipeClose(MainMenuEffectActor *arg0);
+void updateEndingCharacterLoopingSparkle(MainMenuEffectActor *arg0);
+void updateEndingRunDust(MainMenuEffectActor *arg0);
+void updateEndingSmallBurst(MainMenuEffectActor *arg0);
+void updateEndingCharacterAura(MainMenuEffectActor *arg0);
+void updateEndingPhaseAdvanceSparkle(MainMenuEffectActor *arg0);
+void updateEndingDelayedSparkle(MainMenuEffectActor *arg0);
 
-void func_8003BEF0(MainMenuEffectActor *arg0) {
+void drawEndingCharacterVanishPoof(MainMenuEffectActor *arg0) {
     drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x32) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
-void func_8003BF7C(MainMenuEffectActor *arg0) {
+void updateEndingCharacterVanishPoof(MainMenuEffectActor *arg0) {
     MainMenuSceneModel *model;
     s32 divisor;
 
@@ -118,17 +118,17 @@ void func_8003BF7C(MainMenuEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8003BEF0, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingCharacterVanishPoof, arg0);
 }
 
-void func_8003C078(MainMenuEffectActor *arg0) {
+void initEndingCharacterVanishPoof(MainMenuEffectActor *arg0) {
     arg0->angleVelocity = 0;
     arg0->angle = 0;
-    setCallbackTaskCallback(arg0, func_8003BF7C);
+    setCallbackTaskCallback(arg0, updateEndingCharacterVanishPoof);
 }
 
-void func_8003C0A4(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createCallbackTask(func_8003C078, 0, 0x63));
+void spawnEndingCharacterVanishPoof(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingCharacterVanishPoof, 0, 0x63));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
@@ -136,7 +136,7 @@ void func_8003C0A4(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
     temp_v0->palette = arg3;
 }
 
-void func_8003C118(MainMenuEffectActor *arg0) {
+void drawEndingSpeedLine(MainMenuEffectActor *arg0) {
     s32 temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
     MainMenuEffectActor *linePosition =
         (MainMenuEffectActor *)((s32)arg0 + arg0->uFrameIndex * sizeof(arg0->linePositions[0]));
@@ -144,7 +144,7 @@ void func_8003C118(MainMenuEffectActor *arg0) {
     drawMenuSprite(linePosition->x, linePosition->offsetY, temp, 0xF, 0x20, 0x20, 0, 0);
 }
 
-void func_8003C180(MainMenuEffectActor *arg0) {
+void updateEndingSpeedLines(MainMenuEffectActor *arg0) {
     arg0->introTimer = (u16) arg0->introTimer + 1;
     if ((((u16) arg0->introTimer) % 30) == 0) {
         if (arg0->uFrameIndex < 2) {
@@ -155,10 +155,10 @@ void func_8003C180(MainMenuEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8003C118, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingSpeedLine, arg0);
 }
 
-void func_8003C208(MainMenuEffectActor *arg0) {
+void initEndingSpeedLines(MainMenuEffectActor *arg0) {
     arg0->linePositions[2] = -0x38;
     arg0->linePositions[5] = -0x5A;
     arg0->linePositions[0] = -0x30;
@@ -167,14 +167,14 @@ void func_8003C208(MainMenuEffectActor *arg0) {
     arg0->linePositions[4] = -0x56;
     arg0->introTimer = 0;
     arg0->frameIndex = 0;
-    setCallbackTaskCallback(arg0, func_8003C180);
+    setCallbackTaskCallback(arg0, updateEndingSpeedLines);
 }
 
-void func_8003C264(MainMenuEffectActor *arg0) {
+void drawEndingCharacterLoopingSparkle(MainMenuEffectActor *arg0) {
     drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x10) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-void func_8003C2EC(MainMenuEffectActor *arg0) {
+void updateEndingCharacterLoopingSparkle(MainMenuEffectActor *arg0) {
     MainMenuSceneModel *model;
     s32 divisor;
 
@@ -191,28 +191,28 @@ void func_8003C2EC(MainMenuEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8003C264, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingCharacterLoopingSparkle, arg0);
 }
 
-void func_8003C3F4(MainMenuEffectActor *arg0) {
+void initEndingCharacterLoopingSparkle(MainMenuEffectActor *arg0) {
     arg0->angleVelocity = 0;
     arg0->angle = 0;
-    setCallbackTaskCallback(arg0, func_8003C2EC);
+    setCallbackTaskCallback(arg0, updateEndingCharacterLoopingSparkle);
 }
 
-void func_8003C420(s16 arg0, s16 arg1, u8 arg2) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createCallbackTask(func_8003C3F4, 0, 0x63));
+void spawnEndingCharacterLoopingSparkle(s16 arg0, s16 arg1, u8 arg2) {
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingCharacterLoopingSparkle, 0, 0x63));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
     temp_v0->characterId = arg2;
 }
 
-// func_8003C484 best match: 99.074%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003C484.s")
+// drawEndingBigBurst best match: 99.074%
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_transition_effects/drawEndingBigBurst.s")
 
 #ifdef NON_MATCHING
-void func_8003C484(MainMenuEffectActor *arg0) {
+void drawEndingBigBurst(MainMenuEffectActor *arg0) {
     Gfx *gfx;
     Gfx *new_var;
     s32 w0;
@@ -223,7 +223,7 @@ void func_8003C484(MainMenuEffectActor *arg0) {
 }
 #endif
 
-void func_8003C634(MainMenuEffectActor *arg0) {
+void updateEndingBigBurst(MainMenuEffectActor *arg0) {
     arg0->effectTimer++;
     if (arg0->effectTimer == 3) {
         arg0->effectTimer = 0;
@@ -253,10 +253,10 @@ void func_8003C634(MainMenuEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8003C484, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingBigBurst, arg0);
 }
 
-void func_8003C728(MainMenuEffectActor *arg0) {
+void initEndingBigBurst(MainMenuEffectActor *arg0) {
     arg0->x = -0x3D;
     arg0->y = -0x63;
     arg0->offsetX = -0x4E;
@@ -265,17 +265,17 @@ void func_8003C728(MainMenuEffectActor *arg0) {
     arg0->frameIndex = 0;
     arg0->angle = 0;
     arg0->characterId = 0;
-    setCallbackTaskCallback(arg0, func_8003C634);
+    setCallbackTaskCallback(arg0, updateEndingBigBurst);
 }
 
-void func_8003C77C(MainMenuEffectActor *arg0) {
+void drawEndingRisingStar(MainMenuEffectActor *arg0) {
     s32 temp;
 
     temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 9) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-void func_8003C7E4(MainMenuEffectActor *arg0) {
+void updateEndingRisingStar(MainMenuEffectActor *arg0) {
     MainMenuEffectActor *temp_a2 = arg0;
 
     arg0->x++;
@@ -288,24 +288,24 @@ void func_8003C7E4(MainMenuEffectActor *arg0) {
     if (temp_a2->animFrame == 6) {
         removeCallbackTask(temp_a2);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, func_8003C77C, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingRisingStar, temp_a2);
     }
 }
 
-void func_8003C870(MainMenuEffectActor *arg0) {
+void initEndingRisingStar(MainMenuEffectActor *arg0) {
     arg0->x = 0x3B;
     arg0->y = -0x38;
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    setCallbackTaskCallback(arg0, func_8003C7E4);
+    setCallbackTaskCallback(arg0, updateEndingRisingStar);
 }
 
-void func_8003C8AC(MainMenuEffectActor *arg0) {
+void drawEndingRunDust(MainMenuEffectActor *arg0) {
     s32 temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
-    drawMenuSprite(arg0->x - 0xE, arg0->y - 0x50, temp, (u16)(D_800B9530[arg0->animFrame] + 6), 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x - 0xE, arg0->y - 0x50, temp, (u16)(gEndingCharacterRunDustFrameOffsets[arg0->animFrame] + 6), 0x20, 0x20, 0, 0);
 }
 
-void func_8003C93C(MainMenuEffectActor *arg0) {
+void updateEndingRunDust(MainMenuEffectActor *arg0) {
     MainMenuSceneModel *model;
     s32 divisor;
 
@@ -322,23 +322,23 @@ void func_8003C93C(MainMenuEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8003C8AC, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingRunDust, arg0);
 }
 
-void func_8003CA44(MainMenuEffectActor *arg0) {
+void initEndingRunDust(MainMenuEffectActor *arg0) {
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    setCallbackTaskCallback(arg0, func_8003C93C);
+    setCallbackTaskCallback(arg0, updateEndingRunDust);
 }
 
-void func_8003CA70(MainMenuEffectActor *arg0) {
+void drawEndingSmallBurst(MainMenuEffectActor *arg0) {
     s32 temp;
 
     temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x14) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-void func_8003CAD8(MainMenuEffectActor *arg0) {
+void updateEndingSmallBurst(MainMenuEffectActor *arg0) {
     MainMenuEffectActor *temp_a2 = arg0;
 
     arg0->animTimer++;
@@ -349,28 +349,28 @@ void func_8003CAD8(MainMenuEffectActor *arg0) {
     if (temp_a2->animFrame == 5) {
         removeCallbackTask(temp_a2);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, func_8003CA70, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingSmallBurst, temp_a2);
     }
 }
 
-void func_8003CB4C(MainMenuEffectActor *arg0) {
+void initEndingSmallBurst(MainMenuEffectActor *arg0) {
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    setCallbackTaskCallback(arg0, func_8003CAD8);
+    setCallbackTaskCallback(arg0, updateEndingSmallBurst);
 }
 
-void func_8003CB78(s16 arg0, s16 arg1) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createCallbackTask(func_8003CB4C, 0, 0x64));
+void spawnEndingSmallBurst(s16 arg0, s16 arg1) {
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingSmallBurst, 0, 0x64));
 
     temp_v0->x = arg0;
     temp_v0->y = arg1;
 }
 
-void func_8003CBCC(MainMenuEffectActor *arg0) {
+void drawEndingCharacterAura(MainMenuEffectActor *arg0) {
     drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x20) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
-void func_8003CC58(MainMenuEffectActor *arg0) {
+void updateEndingCharacterAura(MainMenuEffectActor *arg0) {
     MainMenuSceneModel *model;
     s32 divisor;
 
@@ -384,21 +384,21 @@ void func_8003CC58(MainMenuEffectActor *arg0) {
             arg0->effectFrame = 0;
         }
     }
-    if (D_8010B1A8[arg0->characterId] == 0) {
-        addRenderCallback(&gMenuRenderCallbackList, func_8003CBCC, arg0);
+    if (gEndingCharacterEffectDone[arg0->characterId] == 0) {
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingCharacterAura, arg0);
         return;
     }
     removeCallbackTask(arg0);
 }
 
-void func_8003CD70(MainMenuEffectActor *arg0) {
+void initEndingCharacterAura(MainMenuEffectActor *arg0) {
     arg0->angleVelocity = 0;
     arg0->angle = 0;
-    setCallbackTaskCallback(arg0, func_8003CC58);
+    setCallbackTaskCallback(arg0, updateEndingCharacterAura);
 }
 
-void func_8003CD9C(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createCallbackTask(func_8003CD70, 0, 0x64));
+void spawnEndingCharacterAura(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingCharacterAura, 0, 0x64));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
@@ -406,14 +406,14 @@ void func_8003CD9C(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
     temp_v0->palette = arg3;
 }
 
-void func_8003CE10(MainMenuEffectActor *arg0) {
+void drawEndingIdleSparkle(MainMenuEffectActor *arg0) {
     s32 temp;
 
     temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x20) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-void func_8003CE78(MainMenuEffectActor *arg0) {
+void updateEndingIdleSparkle(MainMenuEffectActor *arg0) {
     MainMenuEffectActor *temp_a2 = arg0;
 
     arg0->animTimer++;
@@ -425,26 +425,26 @@ void func_8003CE78(MainMenuEffectActor *arg0) {
         }
     }
     if (gEndingSequencePhase != 7) {
-        addRenderCallback(&gMenuRenderCallbackList, func_8003CE10, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingIdleSparkle, temp_a2);
     } else {
         removeCallbackTask(temp_a2);
     }
 }
 
-void func_8003CF00(MainMenuEffectActor *arg0) {
+void initEndingIdleSparkle(MainMenuEffectActor *arg0) {
     arg0->x = -0x14;
     arg0->y = -0x59;
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    setCallbackTaskCallback(arg0, func_8003CE78);
+    setCallbackTaskCallback(arg0, updateEndingIdleSparkle);
 }
 
-void func_8003CF3C(MainMenuEffectActor *arg0) {
+void drawEndingPhaseAdvanceSparkle(MainMenuEffectActor *arg0) {
     s32 temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, arg0->animFrame, 0x20, 0x20, 0, 0);
 }
 
-void func_8003CF98(MainMenuEffectActor *arg0) {
+void updateEndingPhaseAdvanceSparkle(MainMenuEffectActor *arg0) {
     MainMenuEffectActor *temp_a2 = arg0;
 
     if (arg0->animFrame < 5) {
@@ -457,38 +457,38 @@ void func_8003CF98(MainMenuEffectActor *arg0) {
         arg0->animTimer++;
     }
     if (arg0->animTimer < 0xF) {
-        addRenderCallback(&gMenuRenderCallbackList, func_8003CF3C, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingPhaseAdvanceSparkle, temp_a2);
         return;
     }
     removeCallbackTask(temp_a2);
     gEndingSequencePhase = 3;
 }
 
-void func_8003D03C(MainMenuEffectActor *arg0) {
+void initEndingPhaseAdvanceSparkle(MainMenuEffectActor *arg0) {
     arg0->animFrame = 0;
     arg0->animTimer = 0;
-    setCallbackTaskCallback(arg0, func_8003CF98);
+    setCallbackTaskCallback(arg0, updateEndingPhaseAdvanceSparkle);
 }
 
-void func_8003D068(s16 arg0, s16 arg1) {
-    MainMenuEffectActor *temp = (MainMenuEffectActor *)(D_8010ADDC = (s32)createCallbackTask(func_8003D03C, 0, 0x64));
+void spawnEndingPhaseAdvanceSparkle(s16 arg0, s16 arg1) {
+    MainMenuEffectActor *temp = (MainMenuEffectActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingPhaseAdvanceSparkle, 0, 0x64));
 
     temp->x = arg0;
     temp->y = arg1;
 }
 
-void func_8003D0BC(MainMenuEffectActor *arg0) {
+void drawEndingDelayedSparkle(MainMenuEffectActor *arg0) {
     s32 temp;
 
     temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x1C) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-// func_8003D124 best match: 97.653%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_effects/func_8003D124.s")
+// updateEndingDelayedSparkle best match: 97.653%
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_transition_effects/updateEndingDelayedSparkle.s")
 
 #ifdef NON_MATCHING
-void func_8003D124(MainMenuEffectActor *arg0) {
+void updateEndingDelayedSparkle(MainMenuEffectActor *arg0) {
     s32 var_v1;
     MainMenuEffectActor *temp_a2 = arg0;
 
@@ -506,7 +506,7 @@ void func_8003D124(MainMenuEffectActor *arg0) {
         arg0->animTimer++;
     }
     if (arg0->animTimer < var_v1) {
-        addRenderCallback(&gMenuRenderCallbackList, func_8003D0BC, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingDelayedSparkle, temp_a2);
         return;
     }
     if (gEndingSequencePhase == 3) {
@@ -516,28 +516,28 @@ void func_8003D124(MainMenuEffectActor *arg0) {
 }
 #endif
 
-void func_8003D1EC(MainMenuEffectActor *arg0) {
+void initEndingDelayedSparkle(MainMenuEffectActor *arg0) {
     arg0->animFrame = 0;
     arg0->animTimer = 0;
-    setCallbackTaskCallback(arg0, func_8003D124);
+    setCallbackTaskCallback(arg0, updateEndingDelayedSparkle);
 }
 
-void func_8003D218(s16 arg0, s16 arg1, u8 arg2) {
-    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(D_8010ADDC = (s32)createCallbackTask(func_8003D1EC, 0, 0x64));
+void spawnEndingDelayedSparkle(s16 arg0, s16 arg1, u8 arg2) {
+    MainMenuEffectActor *temp_v0 = (MainMenuEffectActor *)(gActiveMenuTask = (s32)createCallbackTask(initEndingDelayedSparkle, 0, 0x64));
 
     temp_v0->x = arg0;
     temp_v0->y = arg1;
     temp_v0->delay = arg2;
 }
 
-void func_8003D27C(MainMenuEffectActor *arg0) {
+void drawEndingSnowmanEntranceEffect(MainMenuEffectActor *arg0) {
     s32 temp;
 
     temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
-    drawMenuSprite(arg0->x, arg0->y, temp, (D_800B9538[arg0->animFrame] + 0x19) & 0xFFFF, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, temp, (gEndingSnowmanEntranceFrameOffsets[arg0->animFrame] + 0x19) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-void func_8003D2F4(MainMenuEffectActor *arg0) {
+void updateEndingSnowmanEntranceEffect(MainMenuEffectActor *arg0) {
     MainMenuEffectActor *temp_a2 = arg0;
 
     arg0->animTimer++;
@@ -551,230 +551,230 @@ void func_8003D2F4(MainMenuEffectActor *arg0) {
     if (gEndingSequencePhase == 4) {
         removeCallbackTask(temp_a2);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, func_8003D27C, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingSnowmanEntranceEffect, temp_a2);
     }
 }
 
-void func_8003D384(MainMenuEffectActor *arg0) {
+void initEndingSnowmanEntranceEffect(MainMenuEffectActor *arg0) {
     arg0->x = -0xA7;
     arg0->y = -0x61;
     arg0->animTimer = 0;
     arg0->animFrame = 0;
-    setCallbackTaskCallback(arg0, func_8003D2F4);
+    setCallbackTaskCallback(arg0, updateEndingSnowmanEntranceEffect);
 }
 
-void func_8003D3C0(MainMenuEffectActor *arg0) {
+void drawRaceToMenuSnowboardIcon(MainMenuEffectActor *arg0) {
     func_80011D74(&arg0->angle, 1, arg0->x, arg0->y);
 }
 
-void func_8003D3F4(MainMenuEffectActor *arg0) {
-    addRenderCallback(&D_80124838, func_8003D3C0, arg0);
+void updateRaceToMenuSnowboardIconIdle(MainMenuEffectActor *arg0) {
+    addRenderCallback(&D_80124838, drawRaceToMenuSnowboardIcon, arg0);
 }
 
-void func_8003D424(MainMenuEffectActor *arg0) {
+void updateRaceToMenuSnowboardIconFinalSpin(MainMenuEffectActor *arg0) {
     s16 *temp_v0;
     s16 temp_v1;
     MainMenuEffectActor *temp_a2 = arg0;
 
     temp_v0 = &arg0->angle;
     if (*temp_v0 > 0) {
-        *temp_v0 -= D_8010B1A5;
-        D_8010B1A6 = *temp_v0;
+        *temp_v0 -= gMenuTransitionRotationStep;
+        gMenuTransitionRotationAngle = *temp_v0;
         temp_v1 = *temp_v0;
         if (temp_v1 <= 0) {
             *temp_v0 = 0x140 - temp_v1;
         }
     }
-    addRenderCallback(&D_80124838, func_8003D3C0, temp_a2);
+    addRenderCallback(&D_80124838, drawRaceToMenuSnowboardIcon, temp_a2);
     if (gEndingSequencePhase == 0x3A) {
-        setCallbackTaskCallback(temp_a2, func_8003D3F4);
+        setCallbackTaskCallback(temp_a2, updateRaceToMenuSnowboardIconIdle);
     }
 }
 
-void func_8003D4C0(MainMenuEffectActor *arg0) {
+void updateRaceToMenuSnowboardIconSecondSpin(MainMenuEffectActor *arg0) {
     s16 *temp_v0;
     MainMenuEffectActor *temp_a2 = arg0;
 
     temp_v0 = &arg0->angle;
     if (*temp_v0 > 0) {
-        *temp_v0 -= D_8010B1A5;
-        D_8010B1A6 = *temp_v0;
+        *temp_v0 -= gMenuTransitionRotationStep;
+        gMenuTransitionRotationAngle = *temp_v0;
         if (*temp_v0 <= 0) {
             *temp_v0 = 0x140 - *temp_v0;
         }
     }
-    addRenderCallback(&D_80124838, func_8003D3C0, temp_a2);
+    addRenderCallback(&D_80124838, drawRaceToMenuSnowboardIcon, temp_a2);
     if (gEndingSequencePhase == 0x39) {
         temp_v0 = &temp_a2->angle;
-        setCallbackTaskCallback(temp_a2, func_8003D424);
+        setCallbackTaskCallback(temp_a2, updateRaceToMenuSnowboardIconFinalSpin);
         temp_a2->x = 0x28;
         temp_v0[1] = 0x10;
     }
 }
 
-void func_8003D580(MainMenuEffectActor *arg0) {
+void updateRaceToMenuSnowboardIconWaitSecondSpin(MainMenuEffectActor *arg0) {
     s16 *temp_v0;
 
-    addRenderCallback(&D_80124838, func_8003D3C0, arg0);
+    addRenderCallback(&D_80124838, drawRaceToMenuSnowboardIcon, arg0);
     temp_v0 = &arg0->angle;
     if (gEndingSequencePhase == 0x33) {
-        setCallbackTaskCallback(arg0, func_8003D4C0);
-        D_8010B1A5 = 8;
+        setCallbackTaskCallback(arg0, updateRaceToMenuSnowboardIconSecondSpin);
+        gMenuTransitionRotationStep = 8;
         if (*temp_v0 == 0) {
             *temp_v0 = 0x140;
         }
     }
 }
 
-void func_8003D5F8(MainMenuEffectActor *arg0) {
+void updateRaceToMenuSnowboardIconSlowSpin(MainMenuEffectActor *arg0) {
     s16 *temp_v0;
     MainMenuEffectActor *temp_a2 = arg0;
 
     temp_v0 = &arg0->angle;
     if (*temp_v0 > 0) {
         *temp_v0 -= 8;
-        D_8010B1A6 = *temp_v0;
+        gMenuTransitionRotationAngle = *temp_v0;
         if (*temp_v0 == 0) {
             *temp_v0 = 0x140;
         }
     }
-    addRenderCallback(&D_80124838, func_8003D3C0, temp_a2);
+    addRenderCallback(&D_80124838, drawRaceToMenuSnowboardIcon, temp_a2);
     if (gEndingSequencePhase == 0x2A) {
-        setCallbackTaskCallback(temp_a2, func_8003D580);
+        setCallbackTaskCallback(temp_a2, updateRaceToMenuSnowboardIconWaitSecondSpin);
     }
 }
 
-void func_8003D68C(MainMenuEffectActor *arg0) {
+void updateRaceToMenuSnowboardIconResetSpin(MainMenuEffectActor *arg0) {
     s16 *sp1C;
     MainMenuEffectActor *temp_a2 = arg0;
 
     sp1C = &arg0->angle;
     if (*sp1C > 0) {
         *sp1C -= 8;
-        D_8010B1A6 = *sp1C;
+        gMenuTransitionRotationAngle = *sp1C;
     }
-    addRenderCallback(&D_80124838, func_8003D3C0, temp_a2);
+    addRenderCallback(&D_80124838, drawRaceToMenuSnowboardIcon, temp_a2);
     if (*sp1C == 0) {
         temp_a2->x = 0x14;
         *sp1C = 0x140;
-        setCallbackTaskCallback(temp_a2, func_8003D5F8);
+        setCallbackTaskCallback(temp_a2, updateRaceToMenuSnowboardIconSlowSpin);
     }
 }
 
-void func_8003D720(MainMenuEffectActor *arg0) {
+void updateRaceToMenuSnowboardIconExpandSpin(MainMenuEffectActor *arg0) {
     s16 *temp_v0;
     u16 *temp_v1;
     MainMenuEffectActor *temp_a2 = arg0;
 
     temp_v0 = &arg0->angle;
     if (*temp_v0 < 0x140) {
-        *temp_v0 += D_8010B1A5;
-        D_8010B1A6 = *temp_v0;
-        temp_v1 = &D_8010B1D0;
+        *temp_v0 += gMenuTransitionRotationStep;
+        gMenuTransitionRotationAngle = *temp_v0;
+        temp_v1 = &gMenuTransitionRotationFrameCount;
         *temp_v1 = *temp_v1 + 1;
     }
-    addRenderCallback(&D_80124838, func_8003D3C0, temp_a2);
+    addRenderCallback(&D_80124838, drawRaceToMenuSnowboardIcon, temp_a2);
     if (gEndingSequencePhase == 0x20) {
-        setCallbackTaskCallback(temp_a2, func_8003D68C);
+        setCallbackTaskCallback(temp_a2, updateRaceToMenuSnowboardIconResetSpin);
     }
 }
 
-void func_8003D7C0(MainMenuEffectActor *arg0) {
+void updateRaceToMenuSnowboardIconFastSpin(MainMenuEffectActor *arg0) {
     s16 *sp1C;
     MainMenuEffectActor *temp_a2 = arg0;
 
     sp1C = &arg0->angle;
-    *sp1C += D_8010B1A5;
+    *sp1C += gMenuTransitionRotationStep;
     if (*sp1C >= 0x140) {
         *sp1C -= 0x140;
     }
-    D_8010B1A6 = *sp1C;
-    addRenderCallback(&D_80124838, func_8003D3C0, temp_a2);
+    gMenuTransitionRotationAngle = *sp1C;
+    addRenderCallback(&D_80124838, drawRaceToMenuSnowboardIcon, temp_a2);
     if (gEndingSequencePhase == 0x13) {
-        setCallbackTaskCallback(temp_a2, func_8003D720);
+        setCallbackTaskCallback(temp_a2, updateRaceToMenuSnowboardIconExpandSpin);
         temp_a2->x = 0x28;
         *sp1C = 0;
-        D_8010B1A6 = *sp1C;
+        gMenuTransitionRotationAngle = *sp1C;
     }
 }
 
-void func_8003D88C(MainMenuEffectActor *arg0) {
+void updateRaceToMenuSnowboardIconWaitStart(MainMenuEffectActor *arg0) {
     s16 *temp_v0;
 
     temp_v0 = &arg0->angle;
-    addRenderCallback(&D_80124838, func_8003D3C0, arg0);
+    addRenderCallback(&D_80124838, drawRaceToMenuSnowboardIcon, arg0);
     if (gEndingSequencePhase == 0x10) {
-        setCallbackTaskCallback(arg0, func_8003D7C0);
+        setCallbackTaskCallback(arg0, updateRaceToMenuSnowboardIconFastSpin);
         arg0->x = 0x14;
         temp_v0[0] = 0;
         temp_v0[1] = 0x100;
-        D_8010B1A5 = 0x14;
+        gMenuTransitionRotationStep = 0x14;
     }
 }
 
-void func_8003D908(MainMenuEffectActor *arg0) {
+void initRaceToMenuSnowboardIcon(MainMenuEffectActor *arg0) {
     func_80017168((DstStruct_80017168 *)arg0->spriteState, getMemoryBlockBase(D_8011217C));
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;
     arg0->y = arg0->startY;
-    D_8010B1D0 = 0;
-    setCallbackTaskCallback(arg0, func_8003D88C);
+    gMenuTransitionRotationFrameCount = 0;
+    setCallbackTaskCallback(arg0, updateRaceToMenuSnowboardIconWaitStart);
 }
 
-void func_8003D974(MainMenuEffectActor *arg0) {
+void drawRaceToMenuSnowflakeIcon(MainMenuEffectActor *arg0) {
     func_80011D74(&arg0->angle, 1, arg0->x, arg0->y);
 }
 
-void func_8003D9A8(MainMenuEffectActor *arg0) {
+void updateRaceToMenuSnowflakeIconReverseSpin(MainMenuEffectActor *arg0) {
     arg0->angle--;
     if (arg0->angle < 0) {
         arg0->angle = 0x140;
     }
-    addRenderCallback(&D_80124838, func_8003D974, arg0);
+    addRenderCallback(&D_80124838, drawRaceToMenuSnowflakeIcon, arg0);
     if ((gEndingSequencePhase == 0x2A) || (gEndingSequencePhase == 0x3A)) {
-        setCallbackTaskCallback(arg0, func_8003DA98);
+        setCallbackTaskCallback(arg0, updateRaceToMenuSnowflakeIconIdle);
     }
 }
 
-void func_8003DA24(MainMenuEffectActor *arg0) {
+void updateRaceToMenuSnowflakeIconForwardSpin(MainMenuEffectActor *arg0) {
     arg0->angle++;
     if (arg0->angle == 0x140) {
         arg0->angle = 0;
     }
-    addRenderCallback(&D_80124838, func_8003D974, arg0);
+    addRenderCallback(&D_80124838, drawRaceToMenuSnowflakeIcon, arg0);
     if (gEndingSequencePhase == 0x14) {
-        setCallbackTaskCallback(arg0, func_8003DA98);
+        setCallbackTaskCallback(arg0, updateRaceToMenuSnowflakeIconIdle);
     }
 }
 
-void func_8003DA98(MainMenuEffectActor *arg0) {
-    addRenderCallback(&D_80124838, func_8003D974, arg0);
+void updateRaceToMenuSnowflakeIconIdle(MainMenuEffectActor *arg0) {
+    addRenderCallback(&D_80124838, drawRaceToMenuSnowflakeIcon, arg0);
     if (gEndingSequencePhase == 0x10) {
-        setCallbackTaskCallback(arg0, func_8003DA24);
+        setCallbackTaskCallback(arg0, updateRaceToMenuSnowflakeIconForwardSpin);
     }
     if ((gEndingSequencePhase == 0x20) || (gEndingSequencePhase == 0x33)) {
-        setCallbackTaskCallback(arg0, func_8003D9A8);
+        setCallbackTaskCallback(arg0, updateRaceToMenuSnowflakeIconReverseSpin);
     }
 }
 
-void func_8003DB1C(MainMenuEffectActor *arg0) {
+void initRaceToMenuSnowflakeIcon(MainMenuEffectActor *arg0) {
     func_80017168((DstStruct_80017168 *)arg0->spriteState, getMemoryBlockBase(D_8011217C));
     arg0->angle = 0;
     arg0->angleVelocity = 0x1F0;
     arg0->x = 0x14;
     arg0->y = arg0->startY;
-    setCallbackTaskCallback(arg0, func_8003DA98);
+    setCallbackTaskCallback(arg0, updateRaceToMenuSnowflakeIconIdle);
 }
 
-void func_8003DB84(MainMenuEffectActor *arg0) {
+void drawRaceToMenuLogoWipe(MainMenuEffectActor *arg0) {
     func_80011D74(&arg0->angle, 0, arg0->x, arg0->y);
 }
 
-void func_8003DBB8(MainMenuEffectActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_8003DB84, arg0);
+void updateRaceToMenuLogoWipeIdle(MainMenuEffectActor *arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceToMenuLogoWipe, arg0);
 }
 
-void func_8003DBE8(MainMenuEffectActor *arg0) {
+void updateRaceToMenuLogoWipeClose(MainMenuEffectActor *arg0) {
     s16 *temp_v0;
 
     arg0->animFrame = arg0->animFrame + 1;
@@ -783,22 +783,22 @@ void func_8003DBE8(MainMenuEffectActor *arg0) {
     if (arg0->animFrame == 0) {
         temp_v0[1] -= 1;
         if (temp_v0[1] == 0x10) {
-            setCallbackTaskCallback(arg0, func_8003DBB8);
+            setCallbackTaskCallback(arg0, updateRaceToMenuLogoWipeIdle);
             gEndingSequencePhase = 0x43;
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8003DB84, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceToMenuLogoWipe, arg0);
 }
 
-void func_8003DC70(MainMenuEffectActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_8003DB84, arg0);
+void updateRaceToMenuLogoWipeWaitClose(MainMenuEffectActor *arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceToMenuLogoWipe, arg0);
     if (gEndingSequencePhase == 0x42) {
         arg0->animFrame = 0;
-        setCallbackTaskCallback(arg0, func_8003DBE8);
+        setCallbackTaskCallback(arg0, updateRaceToMenuLogoWipeClose);
     }
 }
 
-void func_8003DCCC(MainMenuEffectActor *arg0) {
+void updateRaceToMenuLogoWipeOpen(MainMenuEffectActor *arg0) {
     s16 *temp_v0;
 
     if (gMenuFadeAlpha == 0) {
@@ -809,19 +809,19 @@ void func_8003DCCC(MainMenuEffectActor *arg0) {
                 temp_v0[1]++;
                 if (temp_v0[1] == 0x60) {
                     arg0->animFrame = 0;
-                    setCallbackTaskCallback(arg0, func_8003DC70);
+                    setCallbackTaskCallback(arg0, updateRaceToMenuLogoWipeWaitClose);
                 }
             }
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8003DB84, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceToMenuLogoWipe, arg0);
 }
 
-void func_8003DD64(MainMenuEffectActor *arg0) {
+void initRaceToMenuLogoWipe(MainMenuEffectActor *arg0) {
     func_80017168((DstStruct_80017168 *)arg0->spriteState, getMemoryBlockBase(D_8011217E));
     arg0->angle = 0;
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;
     arg0->y = arg0->startY;
-    setCallbackTaskCallback(arg0, func_8003DCCC);
+    setCallbackTaskCallback(arg0, updateRaceToMenuLogoWipeOpen);
 }

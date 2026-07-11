@@ -37,7 +37,7 @@ extern s8 D_800EC8B7;
 extern u8 D_800EC9C1;
 extern s8 D_800EC9E5;
 extern s8 D_800EC9E6;
-extern CallbackTask *D_8010ADDC;
+extern CallbackTask *gActiveMenuTask;
 extern u16 D_8010ADF0;
 extern s8 gHighestUnlockedCourse;
 extern PlayerSetupMenuSubState D_8010AE00;
@@ -98,7 +98,7 @@ void initPlayerSetupMenu(void) {
     loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
 
     initCallbackTaskScheduler(0);
-    D_8010ADDC = createCallbackTask(func_80014C7C, 0, 0x64);
+    gActiveMenuTask = createCallbackTask(func_80014C7C, 0, 0x64);
 
     D_8010AE00.state = 0;
     D_8010AE00.unk1 = 0;

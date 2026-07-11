@@ -43,7 +43,7 @@ extern u8 D_800EC9C1;
 extern u8 D_800EC9C2;
 extern u8 D_800EC9DD;
 extern u8 D_80121D88;
-extern s32 D_8010ADDC;
+extern s32 gActiveMenuTask;
 extern s32 D_801235B4;
 extern u8 D_8010ADF8;
 extern u16 D_8010ADF0;
@@ -57,7 +57,7 @@ void func_80005540(void) {
     requestMusicSequenceBank(1);
     D_800EC9C1 = 0;
     D_80121D88 = 0;
-    D_8010ADDC = 0;
+    gActiveMenuTask = 0;
     gCurrentGameTask->timer = 0;
     D_801235B4 = 0;
     D_8010ADF8 = 0;
@@ -88,7 +88,7 @@ void func_800055EC(void) {
     createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
     D_800EC9C1 = 0;
     D_80121D88 = 0;
-    D_8010ADDC = 0;
+    gActiveMenuTask = 0;
     gCurrentGameTask->timer = 0;
     D_8010ADF8 = 0;
     D_8010ADF0 = 0;

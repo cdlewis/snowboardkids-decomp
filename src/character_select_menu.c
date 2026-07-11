@@ -51,7 +51,7 @@ extern CharacterSelectMenuState *gCurrentGameTask;
 extern CharacterSelectState gCharacterSelectHudState;
 extern CharacterId gCharacterSelectIdOrder[];
 extern CharacterSelectPlayer D_80121D80[];
-extern CallbackTask *D_8010ADDC;
+extern CallbackTask *gActiveMenuTask;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern CallbackTask *D_8010ADE8;
@@ -156,7 +156,7 @@ loop_1:
         }
     }
 
-    D_8010ADDC = createCallbackTask(func_800179D4, 0, 0x64);
+    gActiveMenuTask = createCallbackTask(func_800179D4, 0, 0x64);
     D_8010ADEC = createCallbackTask(func_800191A0, 0, 0x64);
     D_8010ADE8 = createCallbackTask(func_800183DC, 0, 0x64);
     D_8010ADE0 = createCallbackTask(func_80018060, 0, 0x64);
