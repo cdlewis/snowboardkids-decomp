@@ -206,7 +206,7 @@ extern u8 D_80121D85;
 extern s16 D_8011217E;
 extern s16 D_8011214A;
 extern CourseSelectStatus gCourseSelectStatus;
-extern s32 D_8010ADDC;
+extern s32 gActiveMenuTask;
 extern u8 D_8010AF40;
 extern u8 D_8010AF70;
 extern u8 D_8010AF71;
@@ -433,7 +433,7 @@ void func_8002CFAC(ShopMenuWidgetActor *arg0) {
             arg0->x = -8;
             arg0->item.bytes.subState = 3;
             createCallbackTask(func_8002E074, 0, 0x64);
-            D_8010ADDC = (s32) createCallbackTask(func_8002DE6C, 0, 0x64);
+            gActiveMenuTask = (s32) createCallbackTask(func_8002DE6C, 0, 0x64);
             createCallbackTask(func_8002E214, 0, 0x64);
             createCallbackTask(func_8002E798, 0, 0x60);
             createCallbackTask(func_8002E42C, 0, 0x64);

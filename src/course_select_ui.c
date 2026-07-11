@@ -112,7 +112,7 @@ extern s8 D_800ECA2F[][0x78F8];
 extern s8 D_800EC9C0;
 extern u8 D_800EC9C2;
 extern u8 D_800EC9E6;
-extern s32 D_8010ADDC;
+extern s32 gActiveMenuTask;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern s32 D_8010ADE8;
@@ -1084,7 +1084,7 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->pad18[4] = 1;
-            D_8010ADDC = createCallbackTask(initCourseSelectCourseCursors, 0, 0x64);
+            gActiveMenuTask = createCallbackTask(initCourseSelectCourseCursors, 0, 0x64);
             createCallbackTask(initCourseSelectExtraCourseBadge, 0, 0x63);
             createCallbackTask(initCourseSelectCourseDescription, 0, 0x61);
             createCallbackTask(initCourseSelectCourseStats, 0, 0x64);

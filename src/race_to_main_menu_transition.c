@@ -7,7 +7,7 @@
 #include "game_task_scheduler.h"
 #include "race_camera.h"
 #include "ending_credits_ui.h"
-#include "main_menu_effects.h"
+#include "menu_transition_effects.h"
 #include "main_menu_race_setup.h"
 #include "main_menu_scene_actor_0.h"
 #include "main_menu_scene_actor_1.h"
@@ -64,9 +64,9 @@ extern f32 D_800E0A70;
 extern s16 D_8010B1A0;
 extern u16 gEndingSequencePhase;
 extern s8 D_8010B1A4;
-extern s8 D_8010B1A5;
-extern s16 D_8010B1A6;
-extern MainMenuFlagByte D_8010B1A8;
+extern s8 gMenuTransitionRotationStep;
+extern s16 gMenuTransitionRotationAngle;
+extern MainMenuFlagByte gEndingCharacterEffectDone;
 extern s8 D_8010B1A9;
 extern s8 D_8010B1AA;
 extern s8 D_8010B1AB;
@@ -101,13 +101,13 @@ void func_8000D340(void) {
     D_8010B1A0 = 0;
     gEndingSequencePhase = 0;
     D_8010B1A4 = 0;
-    D_8010B1A6 = 0;
-    D_8010B1A5 = 0;
-    D_8010B1A8.value = 0;
-    (&D_8010B1A8)[2].value = 0;
-    (&D_8010B1A8)[3].value = 0;
-    (&D_8010B1A8)[4].value = 0;
-    (&D_8010B1A8)[1].value = 0;
+    gMenuTransitionRotationAngle = 0;
+    gMenuTransitionRotationStep = 0;
+    gEndingCharacterEffectDone.value = 0;
+    (&gEndingCharacterEffectDone)[2].value = 0;
+    (&gEndingCharacterEffectDone)[3].value = 0;
+    (&gEndingCharacterEffectDone)[4].value = 0;
+    (&gEndingCharacterEffectDone)[1].value = 0;
     loadCompressedRomAsset(D_608560, D_609AA0, 0x21);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
     loadCompressedRomAsset(D_609AA0, D_60ECB0, 0x26);
@@ -119,9 +119,9 @@ void func_8000D340(void) {
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     func_80041CC0();
     initCallbackTaskScheduler(0);
-    createCallbackTask(func_8003D908, 0, 0x64);
-    createCallbackTask(func_8003DD64, 0, 0x64);
-    createCallbackTask(func_8003DB1C, 0, 0x64);
+    createCallbackTask(initRaceToMenuSnowboardIcon, 0, 0x64);
+    createCallbackTask(initRaceToMenuLogoWipe, 0, 0x64);
+    createCallbackTask(initRaceToMenuSnowflakeIcon, 0, 0x64);
     gCurrentGameTask->fade = 0xFF;
     state = gCurrentGameTask;
     gMenuFadeAlpha = state->fade;

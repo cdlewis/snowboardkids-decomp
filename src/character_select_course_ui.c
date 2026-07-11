@@ -72,7 +72,7 @@ extern u8 gCharacterSelectCourseReturnDescriptionText[];
 extern u8 D_800ECA24[];
 extern s32 D_800EC9F8[];
 extern s16 D_80121B50;
-extern s32 D_8010ADDC;
+extern s32 gActiveMenuTask;
 extern u16 gCharacterSelectCourseExitOptionIndex;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
@@ -805,7 +805,7 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->transition.bytes.state = 3;
-            D_8010ADDC = (s32)createCallbackTask(initCharacterSelectCourseListCursor, 0, 0x64);
+            gActiveMenuTask = (s32)createCallbackTask(initCharacterSelectCourseListCursor, 0, 0x64);
             createCallbackTask(initCharacterSelectCourseTitleCursor, 0, 0x62);
             createCallbackTask(initCharacterSelectCourseStatsBadge, 0, 0x62);
         }

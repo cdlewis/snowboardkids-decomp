@@ -34,7 +34,7 @@ extern CharacterSelectFlowState *gCurrentGameTask;
 extern PlayerCountSelectMenuCursor D_8010AF50;
 extern s8 D_800EC9C1;
 extern u8 D_80121D88;
-extern s32 D_8010ADDC;
+extern s32 gActiveMenuTask;
 extern u8 D_8010ADF8;
 extern u16 D_8010ADF0;
 extern u8 D_8010AF52;
@@ -53,7 +53,7 @@ void func_80008620(void) {
     requestMusicSequenceBank(4);
     D_800EC9C1 = 0;
     D_80121D88 = 0;
-    D_8010ADDC = 0;
+    gActiveMenuTask = 0;
     gCurrentGameTask->fade = 1;
     gCurrentGameTask->timer = 0;
     D_8010ADF8 = 0;
@@ -88,7 +88,7 @@ void func_800086EC(void) {
     createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
     D_800EC9C1 = 0;
     D_80121D88 = 0;
-    D_8010ADDC = 0;
+    gActiveMenuTask = 0;
     gCurrentGameTask->timer = 0;
     D_8010ADF8 = 0;
     D_8010ADF0 = 0;

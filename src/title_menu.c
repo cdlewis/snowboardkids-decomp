@@ -42,7 +42,7 @@ extern u8 D_800E0A80[];
 extern u8 D_800E0A84[];
 extern s32 D_80121D8C;
 #endif
-extern MenuIntroActor *D_8010ADDC;
+extern MenuIntroActor *gActiveMenuTask;
 extern TitleMenuWidgetItemView *D_8010ADE0;
 extern s16 gControllerPakStatusCodes[];
 extern s16 D_800EC9D0[];
@@ -953,7 +953,7 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
     s32 alpha;
 
     actor = arg0;
-    intro = D_8010ADDC;
+    intro = gActiveMenuTask;
     for (i = 0; i < gPlayerCount; i++) {
         state = gControllerPakStatusCodes[i];
         if (gControllerPakStatusCodes[i] != 8) {
@@ -1098,7 +1098,7 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
     s32 alpha;
     s16 state;
 
-    intro = D_8010ADDC;
+    intro = gActiveMenuTask;
     new_var2 = arg0;
     if (intro->state == 8) {
         for (i = 0; i < gPlayerCount; i++) {

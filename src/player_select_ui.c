@@ -39,7 +39,7 @@ extern u8 D_8010AE70_state;
 extern s16 D_8010AE74;
 extern u32 D_800B5F80[];
 extern Gfx D_800DEFF8[];
-extern s32 D_8010ADDC;
+extern s32 gActiveMenuTask;
 extern u8 D_8010ADF8;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 D_8015660E;
@@ -283,7 +283,7 @@ void func_80019CD8(PlayerSelectWidgetActor *arg0) {
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->row.bytes.subState = 3;
-            D_8010ADDC = (s32) createCallbackTask(func_8001B454, 0, 0x64);
+            gActiveMenuTask = (s32) createCallbackTask(func_8001B454, 0, 0x64);
             createCallbackTask(func_8001B638, 0, 0x64);
             createCallbackTask(func_8001B7D8, 0, 0x64);
             createCallbackTask(func_8001B9F0, 0, 0x64);

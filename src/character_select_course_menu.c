@@ -59,7 +59,7 @@ extern u8 gPlayerCount;
 extern u8 D_80121B5E;
 extern s16 D_80121B50;
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
-extern s32 D_8010ADDC;
+extern s32 gActiveMenuTask;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s32 D_801235B4;
@@ -120,7 +120,7 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
         var_v1 = 0;
     }
 
-    D_8010ADDC = 0;
+    gActiveMenuTask = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     sp1C = var_v1;
@@ -234,7 +234,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
         } while (var_v0 < temp_a0);
     }
 
-    D_8010ADDC = 0;
+    gActiveMenuTask = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     sp2C = var_v1;
@@ -333,7 +333,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     D_8010ADF0 = 0;
     D_800EC9D0 = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
-    D_8010ADDC = 0;
+    gActiveMenuTask = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     var_v1 = 0;

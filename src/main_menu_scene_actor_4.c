@@ -1,7 +1,7 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
 #include "fixed_point_math.h"
-#include "main_menu_effects.h"
+#include "menu_transition_effects.h"
 #include "main_menu_scene_actor_4.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
@@ -193,7 +193,7 @@ void func_800367A8(MainMenuSceneActor4 *arg0) {
             var_v0 = arg0->timer;
         }
         if (var_v0 == 0x27) {
-            createCallbackTask(func_8003C728, 0, 0x64);
+            createCallbackTask(initEndingBigBurst, 0, 0x64);
             arg0->timer = 0;
         }
     }
@@ -236,8 +236,8 @@ void func_800369BC(MainMenuSceneActor4 *arg0) {
         func_80041DD4(4, 0xC);
         gEndingSequencePhase = 0xC;
         D_8010B1AC = 0;
-        func_8003CD9C(-0x24, -0x32, 4, 0);
-        func_8003CD9C(0x10, -0x32, 4, 1);
+        spawnEndingCharacterAura(-0x24, -0x32, 4, 0);
+        spawnEndingCharacterAura(0x10, -0x32, 4, 1);
     }
     func_800428C8(4);
 }
@@ -300,7 +300,7 @@ void func_80036C8C(MainMenuSceneActor4 *arg0) {
         func_80041DD4(4, 7);
         D_8010B1C4 = (s32)0xFFE80000;
         D_8010B1AC = 0;
-        func_8003CD9C(-0x24, -0x32, 4, 0);
+        spawnEndingCharacterAura(-0x24, -0x32, 4, 0);
     }
     func_800428C8(4);
     func_800373AC(&D_8010B1C0);
@@ -331,7 +331,7 @@ void func_80036DAC(MainMenuSceneActor4 *arg0) {
         setCallbackTaskCallback(arg0, func_80036D08);
         func_80041DD4(4, 6);
         D_8010B1AC = 0;
-        func_8003CD9C(-0x1C, -0x3A, 4, 0);
+        spawnEndingCharacterAura(-0x1C, -0x3A, 4, 0);
     }
     func_800428C8(4);
     func_800373AC(&D_8010B1C0);
@@ -366,7 +366,7 @@ void func_80036EBC(MainMenuSceneActor4 *arg0) {
 void func_80036F6C(MainMenuSceneActor4 *arg0) {
     if (gEndingSequencePhase == 1) {
         setCallbackTaskCallback(arg0, func_80036EBC);
-        createCallbackTask(&func_8003D384, 0, 0x64);
+        createCallbackTask(&initEndingSnowmanEntranceEffect, 0, 0x64);
     }
 }
 
