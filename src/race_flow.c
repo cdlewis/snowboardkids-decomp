@@ -14,7 +14,7 @@
 #include "game_task_scheduler.h"
 #include "menu_system_flow.h"
 #include "main_menu_visual_effects.h"
-#include "main_menu_panel_ui.h"
+#include "main_menu_panels_ui.h"
 #include "player_count_select_menu.h"
 #include "player_select_menu.h"
 #include "race_camera.h"
@@ -1592,7 +1592,7 @@ void func_80077554(void) {
     gCurrentGameTask->unk1C = 0;
     createCallbackTask((void (*)(CallbackTask *))func_80057E60, 6, 0x64);
     if (D_80121B61 == -1) {
-        createCallbackTask((void (*)(CallbackTask *))func_80052520, 6, 0x64);
+        createCallbackTask((void (*)(CallbackTask *))updateRaceGhostUnavailableMessage, 6, 0x64);
     }
     setCurrentGameTaskCallback(func_8007797C, 0);
 }
@@ -1775,7 +1775,7 @@ void func_80077DA0(void) {
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     initCallbackTaskScheduler(0);
     D_801235B4 = 0;
-    createCallbackTaskWithUserId(func_80053634, 0, 0x64, 0);
+    createCallbackTaskWithUserId(initRaceRecordSettingsPanel, 0, 0x64, 0);
     createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
     setCurrentGameTaskCallback(func_80078078, 0);
     requestMusicSequenceBank(7);

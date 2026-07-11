@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "main_menu_panel_ui.h"
+#include "main_menu_panels_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
@@ -43,22 +43,22 @@ struct MenuPanelActor {
 
 extern RenderCallbackNode *gMenuRenderCallbackList;
 extern u8 gMainMenuSelectionResult;
-extern u8 D_800D4A40[];
-extern u8 D_800D54E7[];
-extern u8 D_800D54E8[];
-extern u8 D_800D54EA[];
-extern u8 D_800D54F0[];
-extern u8 D_800D54F8[];
-extern u8 D_800D5508[];
-extern u8 D_800D5518[];
-extern u8 D_800D5528[];
-extern u8 D_800D5598[];
-extern u8 D_800D55E8[];
-extern u8 D_800D5630[];
-extern u16 *D_800D5704[];
-extern s16 D_800D57B4[];
-extern u16 *D_800D5538[];
-extern u16 *D_800D5568[];
+extern u8 mainMenuModeSelectTitleText[];
+extern u8 mainMenuModeSelectPrimaryIconTiles[];
+extern u8 mainMenuModeSelectTopRowIconTiles[];
+extern u8 mainMenuModeSelectSecondaryIconTiles[];
+extern u8 mainMenuModeSelectBottomRowIconTiles[];
+extern u8 mainMenuModeSelectUpTargets[];
+extern u8 mainMenuModeSelectDownTargets[];
+extern u8 mainMenuModeSelectLeftTargets[];
+extern u8 mainMenuModeSelectRightTargets[];
+extern u8 raceGhostUnavailableText[];
+extern u8 mainMenuSettingsTitleText[];
+extern u8 raceRecordSettingsTitleText[];
+extern u16 *raceRecordLapCountTexts[];
+extern s16 courseRecordDigitTileOffsets[];
+extern u16 *mainMenuModeDescriptionTexts[];
+extern u16 *mainMenuModeDescriptionTitles[];
 extern MenuPanelAssetHandles D_80112130;
 extern u8 D_80121B5B;
 extern s16 D_80121B50;
@@ -82,7 +82,7 @@ extern void func_80046748(s16, s16, s32, s32, s32, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void enqueueSoundEffect(s16, s16);
 
-void func_80050FF0(s32 arg0) {
+void drawMainMenuModeSelectFrame(s32 arg0) {
     s32 edgeX;
     s32 edgeY;
     s32 y;
@@ -121,10 +121,10 @@ void func_80050FF0(s32 arg0) {
         }
     }
 
-    drawMenuColoredGlyphScript(-0x68, -0x58, D_800D4A40, 0, 0x100, 5, 0x29);
+    drawMenuColoredGlyphScript(-0x68, -0x58, mainMenuModeSelectTitleText, 0, 0x100, 5, 0x29);
 }
 
-void func_80051308(MenuPanelActor *arg0) {
+void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
     s32 alpha;
     s32 i;
     s32 next;
@@ -135,7 +135,7 @@ void func_80051308(MenuPanelActor *arg0) {
     }
 
     x = -0x6E;
-    tile = D_800D54E8; i = 0; do {
+    tile = mainMenuModeSelectTopRowIconTiles; i = 0; do {
         next = i + 1;
         alpha = 0;
         if (next == D_80121B5B) {
@@ -151,7 +151,7 @@ void func_80051308(MenuPanelActor *arg0) {
     } while (next < 5);
 
     x = -0x84;
-    tile = D_800D54F0;
+    tile = mainMenuModeSelectBottomRowIconTiles;
     i = 0;
     do {
         alpha = 0;
@@ -181,11 +181,11 @@ void func_80051308(MenuPanelActor *arg0) {
     func_80046D68(-0x30, 0x4D, getMemoryBlockBase(D_80112130.cancelHandle), 2, 1);
 }
 
-// func_800515F0 best match: 75.664%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_800515F0.s")
+// updateMainMenuModeSelectGrid best match: 75.664%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panels_ui/updateMainMenuModeSelectGrid.s")
 
 #ifdef NON_MATCHING
-void func_800515F0(MenuPanelActor *arg0) {
+void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     s32 temp_t8;
     s32 temp_v1;
     s32 var_v0;
@@ -197,28 +197,28 @@ void func_800515F0(MenuPanelActor *arg0) {
     if ((gMenuFadeAlpha == 0) && (gMainMenuSelectionResult == 0)) {
         temp_v1 = gPlayerInputPressed;
         if (temp_v1 & 0x10800) {
-            temp_a2 = D_800D54F8[D_80121B5B];
+            temp_a2 = mainMenuModeSelectUpTargets[D_80121B5B];
             if (D_80121B5B != temp_a2) {
                 D_80121B5B = temp_a2;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_v1 = gPlayerInputPressed;
             }
         } else if (temp_v1 & 0x20400) {
-            temp_a2_2 = D_800D5508[D_80121B5B];
+            temp_a2_2 = mainMenuModeSelectDownTargets[D_80121B5B];
             if (D_80121B5B != temp_a2_2) {
                 D_80121B5B = temp_a2_2;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_v1 = gPlayerInputPressed;
             }
         } else if (temp_v1 & 0x40100) {
-            temp_a2_3 = D_800D5528[D_80121B5B];
+            temp_a2_3 = mainMenuModeSelectRightTargets[D_80121B5B];
             if (D_80121B5B != temp_a2_3) {
                 D_80121B5B = temp_a2_3;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_v1 = gPlayerInputPressed;
             }
         } else if (temp_v1 & 0x80200) {
-            temp_a2_4 = D_800D5518[D_80121B5B];
+            temp_a2_4 = mainMenuModeSelectLeftTargets[D_80121B5B];
             if (D_80121B5B != temp_a2_4) {
                 D_80121B5B = temp_a2_4;
                 enqueueSoundEffect(0x19, 0x32);
@@ -250,20 +250,20 @@ void func_800515F0(MenuPanelActor *arg0) {
         arg0->x = 0xFF;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, func_80050FF0, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_80051308, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeSelectFrame, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeSelectIcons, (s32)arg0);
 }
 #endif
 
-void func_80051854(MenuPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, func_800515F0);
+void initMainMenuModeSelectGrid(MenuPanelActor *arg0) {
+    setCallbackTaskCallback(arg0, updateMainMenuModeSelectGrid);
 }
 
-// func_80051878 best match: 90.948%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80051878.s")
+// drawMainMenuModeDescriptionPanel best match: 90.948%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panels_ui/drawMainMenuModeDescriptionPanel.s")
 
 #ifdef NON_MATCHING
-void func_80051878(MenuPanelActor *arg0) {
+void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     s32 i;
     u8 *new_var;
 
@@ -358,38 +358,38 @@ void func_80051878(MenuPanelActor *arg0) {
         u16 *text;
 
         count = 0;
-        text = D_800D5568[D_80121B5B];
-        if (D_800D5568[D_80121B5B][0] != 0xFFFF) {
+        text = mainMenuModeDescriptionTitles[D_80121B5B];
+        if (mainMenuModeDescriptionTitles[D_80121B5B][0] != 0xFFFF) {
             do {
                 count++;
             } while (text[count] != 0xFFFF);
         }
 
         drawMenuColoredGlyphScript((s16)(-((count * 0x10) / 2)), (s16)((-0x48) - arg0->y),
-                      (u8 *)D_800D5568[D_80121B5B], 0, 0x100, 4, 0x29);
+                      (u8 *)mainMenuModeDescriptionTitles[D_80121B5B], 0, 0x100, 4, 0x29);
     }
 
     if (D_80121B5B < 6) {
         func_80045A78(-0x10, (s16)((-0x30) - arg0->y), getMemoryBlockBase(D_80112130.fontHandle),
-                      (new_var = D_800D54E7)[D_80121B5B]);
+                      (new_var = mainMenuModeSelectPrimaryIconTiles)[D_80121B5B]);
         return;
     }
 
     func_80045A78(-0x10, (s16)((-0x30) - arg0->y), getMemoryBlockBase(D_80112130.fontHandle),
-                  D_800D54EA[D_80121B5B]);
+                  mainMenuModeSelectSecondaryIconTiles[D_80121B5B]);
 }
 #endif
 
-void func_80051E80(MenuPanelActor *arg0) {
+void scrollMainMenuModeDescriptionPanelOut(MenuPanelActor *arg0) {
     arg0->y += MENU_PANEL_SCROLL_STEP;
     if (arg0->y >= MENU_PANEL_SCROLL_LIMIT) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80051878, (s32) arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeDescriptionPanel, (s32) arg0);
 }
 
-void func_80051ED4(MenuPanelActor *arg0) {
+void updateMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     s16 timer;
     u8 state;
 
@@ -411,7 +411,7 @@ void func_80051ED4(MenuPanelActor *arg0) {
             break;
         case 1:
             gMainMenuSelectionResult = 1;
-            setCallbackTaskCallback(arg0, func_80051E80);
+            setCallbackTaskCallback(arg0, scrollMainMenuModeDescriptionPanelOut);
             break;
         case 2:
             arg0->selectedTile = 0;
@@ -423,19 +423,19 @@ void func_80051ED4(MenuPanelActor *arg0) {
         enqueueSoundEffect(MENU_PANEL_ACCEPT_SOUND, MENU_PANEL_SOUND_VOLUME);
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, func_80051878, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeDescriptionPanel, (s32)arg0);
 }
 
-void func_80051FDC(MenuPanelActor *arg0) {
+void initMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     arg0->x = -0x80;
     arg0->y = 4;
     arg0->selectionState = 0;
     arg0->inputRepeatTimer = 0;
-    arg0->tileList = D_800D5538[D_80121B5B];
-    setCallbackTaskCallback(arg0, func_80051ED4);
+    arg0->tileList = mainMenuModeDescriptionTexts[D_80121B5B];
+    setCallbackTaskCallback(arg0, updateMainMenuModeDescriptionPanel);
 }
 
-void func_80052034(s32 arg0) {
+void drawMainMenuModeSelectList(s32 arg0) {
     if (D_801235B4 == 0) {
         if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
             func_80045A78(-0x30, -0x20, getMemoryBlockBase(D_80112180), 0);
@@ -474,42 +474,42 @@ void func_80052034(s32 arg0) {
     func_80046D68(-0x30, 0x10, getMemoryBlockBase(D_80112180), 2, 1);
 }
 
-void func_80052364(MenuPanelActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_80052034, (s32) arg0);
+void updateMainMenuModeSelectList(MenuPanelActor *arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeSelectList, (s32) arg0);
 }
 
-void func_80052394(MenuPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, func_80052364);
+void initMainMenuModeSelectList(MenuPanelActor *arg0) {
+    setCallbackTaskCallback(arg0, updateMainMenuModeSelectList);
 }
 
-void func_800523B8(s32 arg0) {
+void drawRaceSetupCornerPrompts(s32 arg0) {
     func_80046358(-0x84, -0x64, getMemoryBlockBase(D_8011213C), 6);
     func_80046358(0x74, -0x64, getMemoryBlockBase(D_8011213C), 7);
     func_80046358(-0x84, 4, getMemoryBlockBase(D_8011213C), 8);
     func_80046358(0x74, 4, getMemoryBlockBase(D_8011213C), 9);
 }
 
-void func_80052464(MenuPanelActor *arg0) {
+void updateRaceSetupCornerPrompts(MenuPanelActor *arg0) {
     if (gMainMenuSelectionResult == 0) {
-        addRenderCallback(&gMenuRenderCallbackList, func_800523B8, (s32) arg0);
+        addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupCornerPrompts, (s32) arg0);
         return;
     }
     removeCallbackTask(arg0);
 }
 
-void func_800524B0(MenuPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, func_80052464);
+void initRaceSetupCornerPrompts(MenuPanelActor *arg0) {
+    setCallbackTaskCallback(arg0, updateRaceSetupCornerPrompts);
 }
 
-void func_800524D4(s32 arg0) {
-    drawMenuColoredGlyphScript(-0x78, -0x58, D_800D5598, 1, 0x100, 5, 0x28);
+void drawRaceGhostUnavailableMessage(s32 arg0) {
+    drawMenuColoredGlyphScript(-0x78, -0x58, raceGhostUnavailableText, 1, 0x100, 5, 0x28);
 }
 
-void func_80052520(s32 arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_800524D4, arg0);
+void updateRaceGhostUnavailableMessage(s32 arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceGhostUnavailableMessage, arg0);
 }
 
-void func_80052550(s32 arg0) {
+void drawMainMenuSettingsPanel(s32 arg0) {
     s32 y;
     s32 edgeX;
     s32 edgeY;
@@ -547,10 +547,10 @@ void func_80052550(s32 arg0) {
             drawMenuSprite(edgeX, y, getMemoryBlockBase(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
         }
     }
-    drawMenuColoredGlyphScript(-0x76, -0x58, D_800D55E8, 0, 0x100, 5, 0x29);
+    drawMenuColoredGlyphScript(-0x76, -0x58, mainMenuSettingsTitleText, 0, 0x100, 5, 0x29);
 }
 
-void func_80052868(s32 arg0) {
+void drawMainMenuSettingsOptions(s32 arg0) {
     s32 var_v0;
     s32 sp28;
 
@@ -629,20 +629,20 @@ void func_80052868(s32 arg0) {
     func_80046D68(-0x68, 0x48, getMemoryBlockBase(D_80112130.cancelHandle), 2, sp28);
 }
 
-void func_80052E00(MenuPanelActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_80052550, (s32) arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_80052868, (s32) arg0);
+void updateMainMenuSettingsPanel(MenuPanelActor *arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuSettingsPanel, (s32) arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuSettingsOptions, (s32) arg0);
 }
 
-void func_80052E4C(MenuPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, func_80052E00);
+void initMainMenuSettingsPanel(MenuPanelActor *arg0) {
+    setCallbackTaskCallback(arg0, updateMainMenuSettingsPanel);
 }
 
-// func_80052E70 best match: 98.939%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80052E70.s")
+// drawRaceRecordSettingsPanel best match: 98.939%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panels_ui/drawRaceRecordSettingsPanel.s")
 
 #ifdef NON_MATCHING
-void func_80052E70(s32 arg0) {
+void drawRaceRecordSettingsPanel(s32 arg0) {
     s32 x;
     s32 x2;
     s16 xStart;
@@ -673,7 +673,7 @@ void func_80052E70(s32 arg0) {
             drawMenuSprite((s16)x, (s16)y, getMemoryBlockBase(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
         }
     }
-    drawMenuColoredGlyphScript(-0x76, 0x28, D_800D5630, 0, 0x100, 7, 0x29);
+    drawMenuColoredGlyphScript(-0x76, 0x28, raceRecordSettingsTitleText, 0, 0x100, 7, 0x29);
     drawMenuSprite(-0x40, -0x30, getMemoryBlockBase(MENU_PANEL_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
     drawMenuSprite(0x30, -0x30, getMemoryBlockBase(MENU_PANEL_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
     x2 = -0x30;
@@ -706,21 +706,21 @@ void func_80052E70(s32 arg0) {
         }
     }
     if ((D_801235B4 != 0) && (D_80156612 & 1)) {
-        drawMenuColoredGlyphScript(-0x30, -0x18, D_800D5704[D_80121B52], 0, 0x100, 0, 0x29);
+        drawMenuColoredGlyphScript(-0x30, -0x18, raceRecordLapCountTexts[D_80121B52], 0, 0x100, 0, 0x29);
     } else {
-        drawMenuColoredGlyphScript(-0x30, -0x18, D_800D5704[D_80121B52], 0, 0x100, 5, 0x29);
+        drawMenuColoredGlyphScript(-0x30, -0x18, raceRecordLapCountTexts[D_80121B52], 0, 0x100, 5, 0x29);
     }
     func_80045A78(-0x54, -0x60, getMemoryBlockBase(D_80112130.unk38), 0x5D);
     func_80045A78(4, -0x60, getMemoryBlockBase(D_80112130.unk38), 0x5E);
-    func_80045A78(-0x4C, -0x5C, getMemoryBlockBase(D_80112130.unk3A), D_800D57B4[D_80121B50]);
-    func_80045A78(4, -0x5C, getMemoryBlockBase(D_80112130.unk3A), D_800D57B4[D_80121B50] + 1);
+    func_80045A78(-0x4C, -0x5C, getMemoryBlockBase(D_80112130.unk3A), courseRecordDigitTileOffsets[D_80121B50]);
+    func_80045A78(4, -0x5C, getMemoryBlockBase(D_80112130.unk3A), courseRecordDigitTileOffsets[D_80121B50] + 1);
 }
 #endif
 
-void func_80053604(MenuPanelActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_80052E70, (s32) arg0);
+void updateRaceRecordSettingsPanel(MenuPanelActor *arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceRecordSettingsPanel, (s32) arg0);
 }
 
-void func_80053634(MenuPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, func_80053604);
+void initRaceRecordSettingsPanel(MenuPanelActor *arg0) {
+    setCallbackTaskCallback(arg0, updateRaceRecordSettingsPanel);
 }
