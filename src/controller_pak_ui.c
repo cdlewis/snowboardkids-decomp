@@ -3,7 +3,7 @@
 #include "effect_task_scheduler.h"
 #include "character_select_course_menu.h"
 #include "controller_pak_menu.h"
-#include "controller_pak_file_delete_ui.h"
+#include "controller_pak_ui.h"
 #include "menu_rendering.h"
 #include "title_menu.h"
 
@@ -28,7 +28,7 @@ extern void func_800483FC(void *, void *, s32);
 extern s32 D_80124868;
 extern s32 D_80124838;
 extern CharacterSelectFlowState *D_801235B8;
-extern ControllerPakPromptTransition gControllerPakTitlePromptTransition;
+extern ControllerPakPromptTransition gControllerPakContinuePromptTransition;
 extern ControllerPakConfirmTransition gControllerPakCheckPromptTransition;
 extern ControllerPakMenuState gControllerPakMenuState;
 extern s16 D_80112130[];
@@ -42,11 +42,11 @@ extern s32 gControllerPakFreeFileCount;
 extern s16 D_80112172;
 extern s16 D_8011217C;
 extern s16 D_80112178;
-extern u8 D_800B7E60[];
-extern u8 D_800B8070[];
-extern u8 D_800B8090[];
+extern u8 gControllerPakContinuePromptText[];
+extern u8 gControllerPakAreYouSureText[];
+extern u8 gControllerPakCouldNotEraseNoteText[];
 
-void drawControllerPakTitlePrompt(ControllerPakTitleActor *arg0) {
+void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     s32 i;
     s32 j;
     s32 alpha;
@@ -81,7 +81,7 @@ loop_outer:
         goto loop_outer;
     }
 
-    func_80013154((s16)(arg0->common.x + 0x30), arg0->common.y, D_800B7E60, 0, 0x100, 0);
+    func_80013154((s16)(arg0->common.x + 0x30), arg0->common.y, gControllerPakContinuePromptText, 0, 0x100, 0);
 
     alpha = (arg0->selectedOption == 0) ? 0x100 : 0x60;
 
@@ -100,21 +100,21 @@ loop_outer:
                   func_80043040(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
-// updateControllerPakTitlePrompt best match: 92.821%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_file_delete_ui/updateControllerPakTitlePrompt.s")
+// updateControllerPakContinuePrompt best match: 92.821%
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/updateControllerPakContinuePrompt.s")
 
 #ifdef NON_MATCHING
-void updateControllerPakTitlePrompt(ControllerPakTitleActor *arg0) {
+void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     s32 temp_v0;
     s32 state;
-    ControllerPakTitleActor *temp_a2 = arg0;
+    ControllerPakOptionsActor *temp_a2 = arg0;
 
-    temp_v0 = gControllerPakTitlePromptTransition.state;
+    temp_v0 = gControllerPakContinuePromptTransition.state;
     state = arg0->blinkState;
     if (state != temp_v0) {
         arg0->blinkState = temp_v0;
         state = temp_v0 & 0xFF;
-        arg0->scale = gControllerPakTitlePromptTransition.x;
+        arg0->scale = gControllerPakContinuePromptTransition.x;
     }
 
     temp_v0 = state;
@@ -138,22 +138,22 @@ void updateControllerPakTitlePrompt(ControllerPakTitleActor *arg0) {
         func_800716E4(temp_a2);
         return;
     }
-    func_800483FC(&D_80124868, drawControllerPakTitlePrompt, (s32)temp_a2);
+    func_800483FC(&D_80124868, drawControllerPakContinuePrompt, (s32)temp_a2);
 }
 #endif
 
-void initControllerPakTitlePrompt(ControllerPakTitleActor *arg0) {
+void initControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     arg0->common.x = -0x70;
     arg0->common.y = -0x28;
     arg0->selectedOption = 0;
     arg0->blinkState = 0;
     arg0->scale = 0x100;
     arg0->timer = 0;
-    func_80071824(arg0, updateControllerPakTitlePrompt);
+    func_80071824(arg0, updateControllerPakContinuePrompt);
 }
 
 // drawControllerPakCheckPrompt best match: 99.732% (nonmatchings/drawControllerPakCheckPrompt-5272447827802519043/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_file_delete_ui/drawControllerPakCheckPrompt.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/drawControllerPakCheckPrompt.s")
 
 #ifdef NON_MATCHING
 extern u8 D_80121B55;
@@ -368,7 +368,7 @@ void initControllerPakCheckPrompt(ControllerPakConfirmActor *arg0) {
     func_80071824(arg0, updateControllerPakCheckPrompt);
 }
 
-void drawControllerPakFileDeleteMainOptions(ControllerPakTitleActor *arg0) {
+void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
     u32 drawAlpha;
     u16 alpha;
 
@@ -393,7 +393,7 @@ void drawControllerPakFileDeleteMainOptions(ControllerPakTitleActor *arg0) {
                   5, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
-void updateControllerPakFileDeleteMainOptionsUi(ControllerPakTitleActor *arg0) {
+void updateControllerPakFileDeleteMainOptionsUi(ControllerPakOptionsActor *arg0) {
     switch (gControllerPakMenuCursorState) {
         case 0:
             if (arg0->timer < 0x10) {
@@ -412,7 +412,7 @@ void updateControllerPakFileDeleteMainOptionsUi(ControllerPakTitleActor *arg0) {
     func_800483FC(&D_80124868, drawControllerPakFileDeleteMainOptions, (s32)arg0);
 }
 
-void initControllerPakFileDeleteMainOptions(ControllerPakTitleActor *arg0) {
+void initControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
     arg0->common.x = -0x68;
     arg0->common.y = -0x44;
     arg0->scale = 0x100;
@@ -420,8 +420,8 @@ void initControllerPakFileDeleteMainOptions(ControllerPakTitleActor *arg0) {
     func_80071824(arg0, updateControllerPakFileDeleteMainOptionsUi);
 }
 
-void drawControllerPakFileDeleteConfirmOptions(ControllerPakTitleActor *arg0) {
-    ControllerPakTitleActor *actor;
+void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) {
+    ControllerPakOptionsActor *actor;
     u16 alpha;
     u16 otherAlpha;
 
@@ -452,7 +452,7 @@ void drawControllerPakFileDeleteConfirmOptions(ControllerPakTitleActor *arg0) {
     }
 }
 
-void updateControllerPakFileDeleteConfirmOptionsUi(ControllerPakTitleActor *arg0) {
+void updateControllerPakFileDeleteConfirmOptionsUi(ControllerPakOptionsActor *arg0) {
     switch (gControllerPakMenuCursorState) {
         case 0:
         case 1:
@@ -469,7 +469,7 @@ void updateControllerPakFileDeleteConfirmOptionsUi(ControllerPakTitleActor *arg0
     func_800483FC(&D_80124868, drawControllerPakFileDeleteConfirmOptions, (s32)arg0);
 }
 
-void initControllerPakFileDeleteConfirmOptions(ControllerPakTitleActor *arg0) {
+void initControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) {
     arg0->common.x = -0x68;
     arg0->common.y = 0x48;
     arg0->scale = 0x100;
@@ -478,7 +478,7 @@ void initControllerPakFileDeleteConfirmOptions(ControllerPakTitleActor *arg0) {
 }
 
 // drawControllerPakFileDeleteFreeSpaceInfo best match: 85.330% (nonmatchings/drawControllerPakFileDeleteFreeSpaceInfo-6182772958467082306/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_file_delete_ui/drawControllerPakFileDeleteFreeSpaceInfo.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/drawControllerPakFileDeleteFreeSpaceInfo.s")
 
 #ifdef NON_MATCHING
 void drawControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) {
@@ -540,7 +540,7 @@ void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
 }
 
 // drawControllerPakFileDeleteFileList best match: 90.458%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_file_delete_ui/drawControllerPakFileDeleteFileList.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/drawControllerPakFileDeleteFileList.s")
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -780,7 +780,7 @@ void drawControllerPakFileDeleteErrorPrompt(ControllerPakWindowActor *arg0) {
     func_8000F8AC((s16)(arg0->common.x + 0x40), arg0->common.y, func_80043040(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
     func_8000F8AC((s16)(arg0->common.x + 0x78), arg0->common.y, func_80043040(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
     func_8000F8AC((s16)(arg0->common.x + 0xB0), arg0->common.y, func_80043040(D_80112178), 2, 0x20, 0x20, 0, arg0->scale, 0);
-    func_80013154((s16)(arg0->common.x + 4), (s16)(arg0->common.y + 4), D_800B8090, 0, arg0->scale, 0);
+    func_80013154((s16)(arg0->common.x + 4), (s16)(arg0->common.y + 4), gControllerPakCouldNotEraseNoteText, 0, arg0->scale, 0);
     if (arg0->selectedOption == 1) {
         func_8000F030((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), func_80043040(D_80112178),
                       ((arg0->timer >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
@@ -788,7 +788,7 @@ void drawControllerPakFileDeleteErrorPrompt(ControllerPakWindowActor *arg0) {
 }
 
 // updateControllerPakFileDeleteErrorPromptUi best match: 84.757% (nonmatchings/updateControllerPakFileDeleteErrorPromptUi-4839787584499344943/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_file_delete_ui/updateControllerPakFileDeleteErrorPromptUi.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/updateControllerPakFileDeleteErrorPromptUi.s")
 
 #ifdef NON_MATCHING
 void updateControllerPakFileDeleteErrorPromptUi(ControllerPakDeletePromptActor *arg0) {
@@ -849,7 +849,7 @@ void initControllerPakFileDeleteErrorPrompt(ControllerPakDeletePromptActor *arg0
     func_80071824(arg0, updateControllerPakFileDeleteErrorPromptUi);
 }
 
-void drawControllerPakFileDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) {
+void drawControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) {
     s32 i;
     s32 j;
     s32 alpha;
@@ -887,7 +887,7 @@ loop_outer:
         goto loop_outer;
     }
 
-    func_80013154((s16)(arg0->common.x + 0x1C), (s16)(arg0->common.y + 4), D_800B8070, 1, 0x100, 0);
+    func_80013154((s16)(arg0->common.x + 0x1C), (s16)(arg0->common.y + 4), gControllerPakAreYouSureText, 1, 0x100, 0);
 
     alpha = (arg0->selectedOption == 0) ? 0x100 : 0x60;
 
@@ -903,7 +903,7 @@ loop_outer:
     func_8000F8AC((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x18), func_80043040(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
-void updateControllerPakFileDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) {
+void updateControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) {
     arg0->selectedOption = gControllerPakMenuState.confirmChoice;
     if (arg0->timer < 0x10) {
         arg0->scale -= 9;
@@ -914,15 +914,15 @@ void updateControllerPakFileDeleteConfirmPrompt(ControllerPakDeletePromptActor *
     if (gControllerPakMenuState.state != 3) {
         func_800716E4(arg0);
     } else {
-        func_800483FC(&D_80124868, drawControllerPakFileDeleteConfirmPrompt, (s32)arg0);
+        func_800483FC(&D_80124868, drawControllerPakDeleteConfirmPrompt, (s32)arg0);
     }
 }
 
-void initControllerPakFileDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) {
+void initControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) {
     arg0->common.x = -0x54;
     arg0->common.y = -0x20;
     arg0->scale = 0x100;
     arg0->selectedOption = 1;
     arg0->timer = 0;
-    func_80071824(arg0, updateControllerPakFileDeleteConfirmPrompt);
+    func_80071824(arg0, updateControllerPakDeleteConfirmPrompt);
 }

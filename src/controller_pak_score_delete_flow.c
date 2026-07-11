@@ -96,7 +96,7 @@ extern void func_80000C48(u16);
 extern void func_80000DB4(u16);
 extern void func_800012CC(u16, s32, ControllerPakScoreDeleteFlow *, s16);
 extern void func_80001538(u16);
-extern void initControllerPakFileDeleteConfirmPrompt(EffectTask *);
+extern void initControllerPakDeleteConfirmPrompt(EffectTask *);
 #endif
 
 // updateControllerPakScoreDeleteFlow best match: 95.751% (base_24.c)
@@ -123,7 +123,7 @@ void updateControllerPakScoreDeleteFlow(void)
     {
       gControllerPakMenuState.state = 3;
       gControllerPakMenuState.confirmChoice = 1;
-      func_80071408(initControllerPakFileDeleteConfirmPrompt, 0, 0x64);
+      func_80071408(initControllerPakDeleteConfirmPrompt, 0, 0x64);
       func_8009956C(updateControllerPakScoreDeleteConfirm, 0);
     }
   }
