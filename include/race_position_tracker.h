@@ -1,0 +1,13 @@
+#ifndef RACE_POSITION_TRACKER_H
+#define RACE_POSITION_TRACKER_H
+
+#include "common.h"
+
+struct RacePositionPlayer;
+
+void func_8007B250(void);
+void func_8007BB08(struct RacePositionPlayer *player);
+s32 func_8007BCFC(s32 playerIndex, s32 pathIndex, s32 rankSlot);
+s32 func_8007BDE4(s32 playerIndex, s32 pathIndex);
+
+#endif

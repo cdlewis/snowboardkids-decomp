@@ -14,6 +14,7 @@
 #include "race_item_effects.h"
 #include "race_item_triggers.h"
 #include "race_player_movement.h"
+#include "race_position_tracker.h"
 #include "race_player_state.h"
 
 #define MODEL_ANIM_STATE(player) ((ModelAnimState *)(player))
@@ -149,7 +150,6 @@ extern s16 D_80121B52;
 extern s16 D_801235B0;
 extern s32 D_801235B4;
 extern Unk8011228C D_8011228C[];
-extern void func_8007B250(void);
 extern RacePlayerSoundPosition D_80121D9C[];
 extern RacePlayerSoundPosition D_80121DA8[];
 extern void *D_801248C8;

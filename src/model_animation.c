@@ -2,6 +2,7 @@
 #include "memory_allocator.h"
 #include "fixed_point_matrix.h"
 #include "model_animation.h"
+#include "race_position_tracker.h"
 
 typedef struct ModelAnimCoord {
     s16 x;
@@ -131,7 +132,6 @@ extern u8 *D_800DE3A8[];
 extern u8 *D_800DE3C4[];
 extern ModelAnimCoord *D_800DE530[];
 
-extern s32 func_8007BDE4(s32, s32);
 extern void func_80081EF4(ModelAnimState *);
 
 void func_8007D190(void) {
@@ -892,7 +892,7 @@ void func_800815D4(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s32 *arg4, s32 arg5,
         coord = &D_80121B90[((ModelAnimKeyframe *)((s32)D_80121B98 + nextKeyframeOffset))->positionIndex];
         deltaZ = *arg4 - (coord->z << 0x11);
         deltaX = *arg3 - (coord->x << 0x11);
-        distance = func_8007BCFC(arg5, pathIndex, arg6, coord);
+        distance = func_8007BCFC(arg5, pathIndex, arg6);
         projected = ((s64)-D_80121B9C * deltaX + (s64)D_80121BA0 * deltaZ) / 0x1000;
 
         *arg3 = ((s64)D_80121BA0 * distance + (s64)-D_80121B9C * projected) / 0x1000;

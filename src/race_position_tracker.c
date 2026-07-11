@@ -1,12 +1,14 @@
 #include "common.h"
+#include "fixed_point_matrix.h"
 #include "model_animation.h"
+#include "race_position_tracker.h"
 
 // Race player records are 0x60C bytes apart. This view only names the fields
 // touched by this placement/progress tracking module.
 #define RACE_POSITION_PLAYER_COUNT 4
 #define RACE_POSITION_PLAYER_SIZE 0x60C
 
-typedef struct {
+typedef struct RacePositionPlayer {
     /* 0x00 */ s16 pathFrame;
     /* 0x02 */ s16 eventId;
 } RacePositionCheckpointEvent;
@@ -51,9 +53,6 @@ extern u8 D_800DE064[];
 extern u8 D_800EC9C2;
 extern u8 D_80121B55;
 extern s16 D_80121B50;
-
-extern s16 func_80097AE8(s16);
-extern s16 func_80097B48(s16);
 
 // func_8007B250 best match: 29.699% (nonmatchings/func_8007B250-8207005055717715604/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007B250.s")
