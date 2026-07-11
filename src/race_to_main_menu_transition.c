@@ -10,7 +10,7 @@
 #include "menu_transition_effects.h"
 #include "race_start_transition.h"
 #include "ending_credits_slash.h"
-#include "ending_credits_character_1.h"
+#include "ending_credits_nancy.h"
 #include "main_menu_scene_actor_2.h"
 #include "main_menu_scene_actor_3.h"
 #include "main_menu_scene_actor_4.h"
@@ -67,7 +67,7 @@ extern s8 gEndingActorHandshakeState;
 extern s8 gMenuTransitionRotationStep;
 extern s16 gMenuTransitionRotationAngle;
 extern MainMenuFlagByte gEndingCharacterEffectDone;
-extern s8 gEndingCharacter1EffectDone;
+extern s8 gEndingNancyEffectDone;
 extern s8 gEndingCharacter2EffectDone;
 extern s8 gEndingCharacter3EffectDone;
 extern s8 gEndingCharacter4EffectDone;
@@ -140,7 +140,7 @@ void func_8000D590(void) {
             setCurrentGameTaskCallback(func_8000D690, 0);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsPageTextActor, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsSlash, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback) initEndingCreditsCharacter1, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback) initEndingCreditsNancy, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80036FB4, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80039440, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_8003B264, 0, 0x64);
