@@ -16,13 +16,13 @@ extern void releaseMenuAssetHandles(void);
 extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakFileEntry gControllerPakFileEntries[];
 extern CharacterSelectFlowState *D_801235B8;
-extern s8 D_800DEED4;
+extern s8 gFramebufferSwapDelay;
 extern u8 D_800EC9D8;
 extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;
 extern s32 gPlayerInputPressed;
-extern u8 D_80123750;
-extern u8 D_80123751;
+extern u8 gPendingFramebufferSwapCount;
+extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
 extern s16 D_800EC9C8;
 extern s8 D_800EC8B0;
@@ -47,7 +47,7 @@ void initControllerPakFileDeleteFlow(void) {
     }
     func_800704F0();
     func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     D_801235B8->fade = 0;
     D_801235B8->timer = 0;
     D_801235B4 = 0;
@@ -237,15 +237,15 @@ void fadeOutControllerPakFileDeleteFlow(void) {
     if (D_801235B8->fade != 0xFF) {
         D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
-            D_80123751 = 1;
+            gFramebufferSwapHold = 1;
         } else {
             func_8007105C();
         }
     } else {
-        if (D_80123750 == 2) {
+        if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
-            D_80123751 = 0;
-            D_800DEED4 = 0;
+            gFramebufferSwapHold = 0;
+            gFramebufferSwapDelay = 0;
             func_80099658(0);
             func_8009954C(4);
         }

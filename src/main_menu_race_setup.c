@@ -54,9 +54,9 @@ typedef struct {
 } TransformScratch;
 
 extern void releaseMenuAssetHandles(void);
-extern s8 D_800DEED4;
-extern u8 D_80123750;
-extern u8 D_80123751;
+extern s8 gFramebufferSwapDelay;
+extern u8 gPendingFramebufferSwapCount;
+extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
 
 extern MainMenuRaceSetupState *D_801235B8;
@@ -273,7 +273,7 @@ void func_8003E514(void) {
     gMenuFadeAlpha += 4;
     if (gMenuFadeAlpha >= 0xFF) {
         D_801235B8->fade = 0xFF;
-        D_80123751 = 1;
+        gFramebufferSwapHold = 1;
         func_8009956C(func_8003E5A8, 0);
     }
     func_80071664(func_8005393C, 5, 0x64, 0);
@@ -283,10 +283,10 @@ void func_8003E514(void) {
 }
 
 void func_8003E5A8(void) {
-    if (D_80123750 == 2) {
+    if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
-        D_80123751 = 0;
-        D_800DEED4 = 0;
+        gFramebufferSwapHold = 0;
+        gFramebufferSwapDelay = 0;
         func_80099658(2);
         func_8009954C(4);
     }

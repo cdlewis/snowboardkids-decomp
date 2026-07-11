@@ -34,8 +34,8 @@ typedef struct ControllerInputState {
 } ControllerInputState;
 
 extern s8 D_800DEED8;
-extern u8 D_800DEED0;
-extern u8 D_800DEED4;
+extern u8 gFramebufferSwapDelayTimer;
+extern u8 gFramebufferSwapDelay;
 extern ControllerInputState D_800E4C18;
 extern s16 gFrameCounter;
 extern InputTask *D_801235B8;
@@ -44,8 +44,8 @@ extern u8 D_80123700;
 extern InputTaskScheduler D_80123708;
 extern InputTask *D_8012370C;
 extern InputTask *D_80123730[];
-extern u8 D_80123750;
-extern u8 D_80123751;
+extern u8 gPendingFramebufferSwapCount;
+extern u8 gFramebufferSwapHold;
 extern u8 D_80123752;
 extern s32 gPlayerInputHeld;
 extern s32 D_8012375C;
@@ -93,8 +93,8 @@ void func_80098D80(void) {
     freeTask = D_80123730; task = D_801235C0; do { *freeTask = task; task++; freeTask++; } while (task < &D_801235C0[INPUT_TASK_COUNT]);
     D_80123700 = 0;
     gFrameCounter = 0;
-    D_80123750 = 2;
-    D_80123751 = 0;
+    gPendingFramebufferSwapCount = 2;
+    gFramebufferSwapHold = 0;
     zero = 0;
     D_80123752 = zero;
     gPlayerInputHeld = zero;
@@ -298,14 +298,14 @@ void func_80098EAC(void) {
 s32 func_80099288(void) {
     u8 frameIndex;
 
-    if (D_800DEED0 == 0) {
-        if (D_80123751 == 0) {
+    if (gFramebufferSwapDelayTimer == 0) {
+        if (gFramebufferSwapHold == 0) {
             frameIndex = D_80123752;
             if (D_8012496E[frameIndex].status == 0) {
-                if ((s32) D_80123750 > 0) {
+                if ((s32) gPendingFramebufferSwapCount > 0) {
                     func_8009B704(frameIndex);
-                    D_800DEED0 = D_800DEED4;
-                    D_80123750--;
+                    gFramebufferSwapDelayTimer = gFramebufferSwapDelay;
+                    gPendingFramebufferSwapCount--;
                     if (D_80123752 != 0) {
                         D_80123752 = 0;
                     } else {
@@ -319,7 +319,7 @@ s32 func_80099288(void) {
         }
         goto return_one;
     }
-    D_800DEED0--;
+    gFramebufferSwapDelayTimer--;
 
 return_one:
     return 1;

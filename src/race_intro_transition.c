@@ -55,7 +55,7 @@ extern s16 D_80121B52;
 extern s16 D_80121B5C;
 extern u8 D_800DEF10;
 extern u8 D_800BB830;
-extern s8 D_800DEED4;
+extern s8 gFramebufferSwapDelay;
 extern s8 D_800EC8B0;
 extern u8 D_800EC9C2;
 extern u8 D_8011228C;
@@ -81,8 +81,8 @@ extern s8 D_80122FB8;
 extern s8 D_80122FB9;
 extern s8 D_80122FBA;
 extern s32 D_801235B4;
-extern u8 D_80123751;
-extern u8 D_80123750;
+extern u8 gFramebufferSwapHold;
+extern u8 gPendingFramebufferSwapCount;
 extern s32 gPlayerInputPressed;
 extern void releaseMenuAssetHandles(void);
 // func_8003E600 best match: 65.668% (nonmatchings/func_8003E600-731940616440357983/base_2.c)
@@ -167,7 +167,7 @@ void func_8003E600(void) {
     func_8006D5CC();
     func_800704F0();
     D_8011228C = one;
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     func_8008BEB0();
     if (D_800BB837[D_800BB830 * sizeof(RaceIntroCourseEntry)] == 0) {
         D_80121B55 = one;
@@ -176,7 +176,7 @@ void func_8003E600(void) {
     if (D_80121B55 == one) {
         func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         D_8011228C = one;
-        D_800DEED4 = 0;
+        gFramebufferSwapDelay = 0;
     } else {
         func_8007066C(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
         func_8007066C(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
@@ -186,7 +186,7 @@ void func_8003E600(void) {
         D_801121E0[1].active = one;
         D_801121E0[2].active = one;
         D_801121E0[3].active = one;
-        D_800DEED4 = one;
+        gFramebufferSwapDelay = one;
     }
     if (D_800EC9C2 == 0) {
         D_80121B55 = 4;
@@ -252,22 +252,22 @@ void func_8003EAF0(void) {
         gMenuFadeAlpha += state->fadeStep;
         if (!(gMenuFadeAlpha < 0xFF)) {
             gMenuFadeAlpha = 0xFF;
-            D_80123751 = 1;
+            gFramebufferSwapHold = 1;
             func_8009956C(func_8003EC6C, 0);
         }
     }
 }
 
 void func_8003EC6C(void) {
-    if (D_80123750 == 2) {
+    if (gPendingFramebufferSwapCount == 2) {
         if ((D_800BB830 = D_800BB830 + 1) >= 5) {
             D_800BB830 = 0;
         }
         D_800EC8B0 = 0;
         D_80121B58 = 0;
         releaseMenuAssetHandles();
-        D_80123751 = 0;
-        D_800DEED4 = 0;
+        gFramebufferSwapHold = 0;
+        gFramebufferSwapDelay = 0;
         func_80072260();
         D_801235B4 = 0;
         func_80099658(3);

@@ -81,7 +81,7 @@ extern ObjectA3E0 *D_800EC9C4;
 extern u16 D_800B34E0[];
 extern s16 gMenuFadeAlpha;
 extern s16 D_800EC9D0;
-extern s8 D_800DEED4;
+extern s8 gFramebufferSwapDelay;
 extern s8 D_800EC9C0;
 extern s8 D_800EC9C1;
 extern u8 D_800EC9E6;
@@ -152,8 +152,8 @@ extern u8 D_80121D88;
 extern CourseSelectSelection D_80121D80;
 extern CourseSelectMenuState *D_801235B8;
 extern s32 D_801235B4;
-extern u8 D_80123750;
-extern u8 D_80123751;
+extern u8 gPendingFramebufferSwapCount;
+extern u8 gFramebufferSwapHold;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
 extern void func_80009C48(void);
@@ -207,7 +207,7 @@ void func_800097E0(void) {
         otherCourse[-1] = 0;
     } while (otherCourse < D_8010AEAC + 4);
 
-    D_800DEED4 = 0;
+    gFramebufferSwapDelay = 0;
     D_801235B8->fade = 0xFF;
     loadCompressedRomAsset(D_5CBA80, D_5CCD40, 0x21);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
@@ -1378,14 +1378,14 @@ void func_8000C114(void) {
     if (D_801235B8->fade != 0xFF) {
         D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
-            D_80123751 = 1;
+            gFramebufferSwapHold = 1;
         } else {
             func_8007105C();
         }
-    } else if (D_80123750 == 2) {
+    } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
-        D_80123751 = 0;
-        do { D_800DEED4 = 0; D_801235B4 = 0; func_80099658(2); func_8009954C(4); count = 0; if (D_800ECA2F[0] == (-1)) { count = 1; } ptr = &D_800EC9F1; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
+        gFramebufferSwapHold = 0;
+        do { gFramebufferSwapDelay = 0; D_801235B4 = 0; func_80099658(2); func_8009954C(4); count = 0; if (D_800ECA2F[0] == (-1)) { count = 1; } ptr = &D_800EC9F1; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
         ptr += 4;
         if (ptr != (&D_800EC9F9)) {
             goto loop;
