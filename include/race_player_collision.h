@@ -20,9 +20,9 @@ s32 tryQueueRacePlayerHitCueItemSteal(RaceInputPlayer *player);
 s32 tryQueueRacePlayerHitCueGhostSlowdown(RaceInputPlayer *player);
 s32 tryQueueRacePlayerHitCueSpin(RaceInputPlayer *player);
 s32 tryQueueRacePlayerHitCueReverseSpin(RaceInputPlayer *player);
-s32 tryQueueRacePlayerTerrainFallCue(RaceInputPlayer *player);
-s32 tryQueueRacePlayerTerrainCrashCue(RaceInputPlayer *player);
-void resolveRacePlayerItemHitReactions(RaceInputPlayer *player);
+s32 tryQueueRacePlayerHitCueTerrainFall(RaceInputPlayer *player);
+s32 tryQueueRacePlayerHitCueTerrainCrash(RaceInputPlayer *player);
+void resolveRacePlayerHitReactions(RaceInputPlayer *player);
 s32 isRacePlayerRespawnSurfaceValid(RaceInputPlayer *player);
 void resolveRacePlayerCollisionVolumes(RaceInputPlayer *player);
 
