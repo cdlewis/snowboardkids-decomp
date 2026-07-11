@@ -37,11 +37,6 @@ extern u32 D_80123758[];
 extern s8 D_80123788[];
 extern s8 D_8012378C[];
 
-void func_80083D80(RaceInputPlayer *player);
-void func_8008409C(RaceInputPlayer *player);
-void func_8008431C(RaceInputPlayer *player);
-void func_80084510(RaceInputPlayer *player);
-
 void func_80083D80(RaceInputPlayer *player) {
     RaceInputReplayHistory *history;
     s16 frame;
