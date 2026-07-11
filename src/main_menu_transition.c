@@ -5,7 +5,7 @@
 #include "race_scene_loader.h"
 #include "race_input_history.h"
 #include "game_task_scheduler.h"
-#include "main_menu_training_ui.h"
+#include "training_course_ui.h"
 #include "main_menu_visual_effects.h"
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
@@ -481,8 +481,8 @@ void func_8004002C(void) {
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     gMainMenuSelectionResult = 0;
-    createCallbackTask(initMainMenuTrainingOpeningDialog, 0, 0x64);
-    createCallbackTask(initMainMenuTrainingTitlePanel, 0, 0x63);
+    createCallbackTask(initTrainingCourseOpeningDialog, 0, 0x64);
+    createCallbackTask(initTrainingCourseTitlePanel, 0, 0x63);
     createCallbackTask(initRaceSetupCornerPrompts, 0, 0x64);
     setCurrentGameTaskCallback(func_80040360, 0);
     requestMusicSequenceBank(7);
@@ -623,7 +623,7 @@ void func_800407AC(void) {
     gCurrentGameTask->transitionTimer += 0x10;
     temp_v1 = gCurrentGameTask->transitionTimer;
     if (temp_v1 == 0x80) {
-        createCallbackTask(initMainMenuTrainingActionMenu, 0, 0x64);
+        createCallbackTask(initTrainingCourseActionMenu, 0, 0x64);
         setCurrentGameTaskCallback(func_8004086C, 0);
     }
     temp_v1 = gCurrentGameTask->transitionTimer;
@@ -693,7 +693,7 @@ void func_80040A48(void) {
     gMenuFadeAlpha = 0xFF;
     resetAllViewports();
     initCallbackTaskScheduler(0);
-    createCallbackTask(&initMainMenuTrainingEndingDialog, 0, 0x64);
+    createCallbackTask(&initTrainingCourseEndingDialog, 0, 0x64);
     setCurrentGameTaskCallback(func_80040B04, 0);
 }
 
