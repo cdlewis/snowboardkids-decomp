@@ -19,6 +19,7 @@
 #include "player_select_menu.h"
 #include "race_camera.h"
 #include "race_course_effects.h"
+#include "race_flow.h"
 #include "title_menu.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
@@ -143,8 +144,6 @@ typedef struct {
     /* 0x08 */ s8 unk8;
 } Unk80043040;
 
-void func_800732C4(void);
-
 extern CourseGridEntry *D_800DC490[];
 extern u16 D_800DC5C0[];
 extern CourseSelectTableEntry D_800B9542[];
@@ -250,55 +249,11 @@ extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_80070A70(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_80070614(s32);
 extern void func_80072138(s32, s32);
-extern void func_800733E0(void);
-extern void func_800734A0(void);
-extern void func_80073308(void);
-extern void func_8007339C(void);
-extern void func_80073434(void);
-extern void func_800734E4(void);
-extern void func_800735B4(void);
-extern void func_800735F8(void);
-extern void func_80073650(void);
-extern void func_80073694(void);
-extern void func_800736E0(void);
-extern void func_80073738(void);
-extern void func_8007377C(void);
-extern void func_800737FC(void);
-extern void func_8007389C(void);
-extern void func_800738F4(void);
-extern void func_80073944(void);
-extern void func_80073988(void);
-extern void func_800740C0(void);
-extern void func_80074160(void);
-extern void func_800747E8(void);
-extern void func_80074960(void);
-extern void func_80074C5C(void);
-extern void func_80074F50(s32, s32, s32, s32, s32, s32, s32, f32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_80076054(void);
-extern void func_80077AD4(void);
-extern void func_80077B34(void);
 extern void func_80078430(void);
-extern void func_80077C4C(void);
-extern void func_80077400(void);
-extern void func_80077554(void);
-extern void func_80077C94(void);
-extern void func_80077CD4(void);
-extern void func_80077DA0(void);
-extern void func_80078078(void);
-extern void func_80078198(void);
-extern void func_800781FC(void);
 extern void func_8007AA50(void);
 extern void func_8008BEB0(void);
 extern void func_8008C704(void);
 extern void func_80096E3C(void);
-
-void func_80072C88(void);
-void func_80072D04(void);
-void func_80072D54(void);
-void func_80072D98(void);
-void func_80072DDC(void);
-void func_8007334C(void);
-s32 func_80077D14(void);
 
 void func_80072C30(void) {
     func_800437F0(D_2427D0, D_243270, 6);
