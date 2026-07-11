@@ -9,7 +9,7 @@
 #include "main_menu_panel_ui.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
-#include "main_menu_race_flow.h"
+#include "main_menu_race_mode_flow.h"
 #include "main_menu_ui.h"
 #include "race_camera.h"
 #include "race_flow.h"
@@ -1221,12 +1221,12 @@ void exitMainMenuModeSelect(void) {
         gFramebufferSwapDelay = 0;
         setCurrentGameTaskCallback(initMainMenu, 0);
         if (D_801235B4 == 0) {
-            createGameTask(4, startTrainingCourseRaceFlow, 0x64);
+            createGameTask(4, startTrainingCourseFlow, 0x64);
             suspendGameTask(3);
             return;
         }
         if (D_801235B4 == 1) {
-            createGameTask(4, startMainMenuRacePreviewModeSelectFlow, 0x64);
+            createGameTask(4, startMainMenuModePreviewFlow, 0x64);
             suspendGameTask(3);
         }
     }
