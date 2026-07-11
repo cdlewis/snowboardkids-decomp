@@ -750,7 +750,7 @@ void updateControllerPakFileDeleteIcon(s32 arg0) {
 }
 
 void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
-    func_80017168((DstStruct_80017168 *)&arg0->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
+    initMenuTilemapSprite((MenuTilemapSprite *)&arg0->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x10;
     arg0->common.x = arg0->startX;
@@ -767,7 +767,7 @@ void updateControllerPakMessageIcon(s32 arg0) {
 }
 
 void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
-    func_80017168((DstStruct_80017168 *)&arg0->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
+    initMenuTilemapSprite((MenuTilemapSprite *)&arg0->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x20;
     arg0->common.x = arg0->startX;
