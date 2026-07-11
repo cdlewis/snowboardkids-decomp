@@ -34,7 +34,7 @@ extern ALLink *D_8015C964;
 extern s32 func_8009FF80(s32, s32, void *);
 extern f32 sinf(f32);
 extern s32 D_800DF154;
-extern u16 D_800DF150;
+extern u16 gRetraceCounter;
 extern s32 D_800DF158;
 extern s32 D_800DF29C;
 extern s32 D_800DF298;
@@ -148,10 +148,10 @@ loop:
     osRecvMesg(queue, &msg, 1);
     switch ((s32)msg) {
         case 0x29A:
-            nextFrame = D_800DF150 + 1;
-            D_800DF150 = nextFrame;
-            D_800DF150 = nextFrame;
-            D_800DF150 = D_800DF150 & 0xFFF;
+            nextFrame = gRetraceCounter + 1;
+            gRetraceCounter = nextFrame;
+            gRetraceCounter = nextFrame;
+            gRetraceCounter = gRetraceCounter & 0xFFF;
             if ((started == 0) || (D_800DF15C < ((0, 0x16)))) {
                 func_8009C6DC(arg0);
                 pendingAudio = pendingAudio * 0;
@@ -288,12 +288,12 @@ void func_8009C8DC(SchedulerState *arg0) {
     framebuffer = task->framebuffer;
     retrace = task->retrace;
     osSendMesg(task->queue, task->msg, 1);
-    if (((D_800DF150 - retrace) & 0xFFF) >= 0x801) {
+    if (((gRetraceCounter - retrace) & 0xFFF) >= 0x801) {
         do {
             if ((retrace && retrace) && retrace) {
             }
             func_8009CC50(arg0);
-        } while (((D_800DF150 - retrace) & 0xFFF) >= 0x801);
+        } while (((gRetraceCounter - retrace) & 0xFFF) >= 0x801);
     }
     if (arg0->doAudio != 0) {
         osViBlack(0);

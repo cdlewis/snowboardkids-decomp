@@ -3,7 +3,7 @@
 #include "asset_manager.h"
 #include "race_scene_loader.h"
 #include "callback_task_scheduler.h"
-#include "game_boot.h"
+#include "system_boot.h"
 #include "model_animation.h"
 #include "race_course_effects.h"
 #include "race_course_preview.h"
@@ -109,7 +109,7 @@ void loadRaceCourseAssets(void) {
         size = D_EC9A0 - D_E35C0;
         D_80112140 = func_80042D58(size);
         func_80043060(D_80112140);
-        func_80099C44(D_E35C0, func_80043040(D_80112140), size);
+        dmaReadRom(D_E35C0, func_80043040(D_80112140), size);
         loadCompressedRomAsset(D_163410, D_171480, 9);
         loadCompressedRomAsset(D_21D9D0, D_222500, 0x1B);
         func_8007D190();
@@ -119,7 +119,7 @@ void loadRaceCourseAssets(void) {
         size = D_F6160 - D_EC9A0;
         D_80112140 = func_80042D58(size);
         func_80043060(D_80112140);
-        func_80099C44(D_EC9A0, func_80043040(D_80112140), size);
+        dmaReadRom(D_EC9A0, func_80043040(D_80112140), size);
         loadCompressedRomAsset(D_171480, D_17D220, 9);
         loadCompressedRomAsset(D_222500, D_2274A0, 0x1B);
         func_8007D190();
@@ -129,7 +129,7 @@ void loadRaceCourseAssets(void) {
         size = D_FEDA0 - D_F6160;
         D_80112140 = func_80042D58(size);
         func_80043060(D_80112140);
-        func_80099C44(D_F6160, func_80043040(D_80112140), size);
+        dmaReadRom(D_F6160, func_80043040(D_80112140), size);
         loadCompressedRomAsset(D_17D220, D_186910, 9);
         loadCompressedRomAsset(D_2274A0, D_22AE50, 0x1B);
         func_8007D190();
@@ -139,7 +139,7 @@ void loadRaceCourseAssets(void) {
         size = D_10AAB0 - D_FEDA0;
         D_80112130[8] = func_80042D58(size);
         func_80043060(D_80112130[8]);
-        func_80099C44(D_FEDA0, func_80043040(D_80112140), size);
+        dmaReadRom(D_FEDA0, func_80043040(D_80112140), size);
         loadCompressedRomAsset(D_186910, D_197490, 9);
         loadCompressedRomAsset(D_22AE50, D_2308E0, 0x1B);
         func_8007D190();
@@ -149,7 +149,7 @@ void loadRaceCourseAssets(void) {
         size = D_118670 - D_10AAB0;
         D_80112130[8] = func_80042D58(size);
         func_80043060(D_80112130[8]);
-        func_80099C44(D_10AAB0, func_80043040(D_80112140), size);
+        dmaReadRom(D_10AAB0, func_80043040(D_80112140), size);
         loadCompressedRomAsset(D_197490, D_1A5620, 9);
         loadCompressedRomAsset(D_2308E0, D_2349E0, 0x1B);
         func_8007D190();
@@ -159,7 +159,7 @@ void loadRaceCourseAssets(void) {
         size = D_125C90 - D_118670;
         D_80112130[8] = func_80042D58(size);
         func_80043060(D_80112130[8]);
-        func_80099C44(D_118670, func_80043040(D_80112140), size);
+        dmaReadRom(D_118670, func_80043040(D_80112140), size);
         loadCompressedRomAsset(D_1A5620, D_1B3160, 9);
         loadCompressedRomAsset(D_2349E0, D_23A7D0, 0x1B);
         func_8007D190();
@@ -169,7 +169,7 @@ void loadRaceCourseAssets(void) {
         size = D_131A90 - D_125C90;
         D_80112130[8] = func_80042D58(size);
         func_80043060(D_80112130[8]);
-        func_80099C44(D_125C90, func_80043040(D_80112140), size);
+        dmaReadRom(D_125C90, func_80043040(D_80112140), size);
         loadCompressedRomAsset(D_1B3160, D_1C24B0, 9);
         loadCompressedRomAsset(D_23A7D0, D_23E9D0, 0x1B);
         func_8007D190();
@@ -179,7 +179,7 @@ void loadRaceCourseAssets(void) {
         size = D_1384B0 - D_131A90;
         D_80112130[8] = func_80042D58(size);
         func_80043060(D_80112130[8]);
-        func_80099C44(D_131A90, func_80043040(D_80112140), size);
+        dmaReadRom(D_131A90, func_80043040(D_80112140), size);
         loadCompressedRomAsset(D_1C24B0, D_1C9630, 9);
         loadCompressedRomAsset(D_23E9D0, D_23FCC0, 0x1B);
         func_8007D190();
@@ -188,7 +188,7 @@ void loadRaceCourseAssets(void) {
         size = D_13F3B0 - D_1384B0;
         D_80112130[8] = func_80042D58(size);
         func_80043060(D_80112130[8]);
-        func_80099C44(D_1384B0, func_80043040(D_80112140), size);
+        dmaReadRom(D_1384B0, func_80043040(D_80112140), size);
         loadCompressedRomAsset(D_1C9630, D_1D3070, 9);
         loadCompressedRomAsset(D_23FCC0, D_241160, 0x1B);
         func_8007D190();
@@ -198,7 +198,7 @@ void loadRaceCourseAssets(void) {
         size = D_145380 - D_13F3B0;
         D_80112130[8] = func_80042D58(size);
         func_80043060(D_80112130[8]);
-        func_80099C44(D_13F3B0, func_80043040(D_80112140), size);
+        dmaReadRom(D_13F3B0, func_80043040(D_80112140), size);
         loadCompressedRomAsset(D_1D3070, D_1D82B0, 9);
         loadCompressedRomAsset(D_241160, D_2427D0, 0x1B);
         func_8007D190();
@@ -209,7 +209,7 @@ void loadRaceCourseAssets(void) {
     size = D_14B450 - D_147910;
     D_80112130[10] = func_80042D58(size);
     func_80043060(D_80112130[10]);
-    func_80099C44(D_147910, func_80043040(D_80112144), size);
+    dmaReadRom(D_147910, func_80043040(D_80112144), size);
     loadCompressedRomAsset(D_1D82B0, D_1DCED0, 0xB);
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     loadCompressedRomAsset(D_5DAF30, D_5DB9D0, 0x2A);
@@ -231,7 +231,7 @@ void loadRaceCharacterAssets(void) {
 
     size = D_1502A0 - D_14B450;
     D_80112130[0xC] = func_80042D58(size);
-    func_80099C44(D_14B450, func_80043040(D_80112130[0xC]), size);
+    dmaReadRom(D_14B450, func_80043040(D_80112130[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
 
     rawRanges = gCharacterRawAssetRanges;
@@ -242,7 +242,7 @@ void loadRaceCharacterAssets(void) {
         if (player->isActive != 0) {
             size = rawRanges[player->characterId].end - rawRanges[player->characterId].start;
             assetHandles[0xE] = func_80042D58(size);
-            func_80099C44(rawRanges[player->characterId].start, func_80043040(assetHandles[0xE]), size);
+            dmaReadRom(rawRanges[player->characterId].start, func_80043040(assetHandles[0xE]), size);
             loadCompressedRomAsset(textureRanges[player->characterId].start, textureRanges[player->characterId].end, i + 0x12);
             loadCompressedRomAsset(modelRanges[player->characterId].start, modelRanges[player->characterId].end, i + 0x16);
         }
@@ -310,7 +310,7 @@ void initRaceCourseEffects(void) {
 block_24:
             createCallbackTask(&func_8006AE00, 0, 0x64);
         }
-        func_8009B58C(0x80U, 0xC0U, 0xFFU);
+        setBootFadeColor(0x80U, 0xC0U, 0xFFU);
         break;
     case 1:
         createCallbackTask(&func_8006A798, 0, 0x64);
@@ -361,7 +361,7 @@ block_24:
                 createCallbackTask(&func_800666B0, 0, 1);
             }
         }
-        func_8009B58C(0xFFU, 0x80U, 0U);
+        setBootFadeColor(0xFFU, 0x80U, 0U);
         break;
     case 2:
         createCallbackTask(&func_8006A798, 0, 0x64);
@@ -388,7 +388,7 @@ block_24:
                 createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x59);
             }
         }
-        func_8009B58C(0U, 0U, 0x32U);
+        setBootFadeColor(0U, 0U, 0x32U);
         break;
     case 3:
         createCallbackTask(&func_8006A798, 0, 0x64);
@@ -424,7 +424,7 @@ block_24:
         if (D_80121B55 == 1) {
             createCallbackTask(&initRaceCoursePreviewCameraCutscene, 0, 0x64);
         }
-        func_8009B58C(0x82U, 0xAFU, 0xFFU);
+        setBootFadeColor(0x82U, 0xAFU, 0xFFU);
         break;
     case 4:
         createCallbackTask(&func_8006A798, 0, 0x64);
@@ -465,7 +465,7 @@ block_24:
         createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 7);
         createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 8);
         createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 9);
-        func_8009B58C(0U, 0U, 0x40U);
+        setBootFadeColor(0U, 0U, 0x40U);
         break;
     case 5:
         createCallbackTask(&func_8006A798, 0, 0x64);
@@ -497,7 +497,7 @@ block_24:
                 createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x66);
             }
         }
-        func_8009B58C(0xF0U, 0xE6U, 0xBEU);
+        setBootFadeColor(0xF0U, 0xE6U, 0xBEU);
         break;
     case 6:
         createCallbackTask(&func_8006A798, 0, 0x64);
@@ -531,14 +531,14 @@ block_24:
         if (D_80121B55 == 1) {
             createCallbackTask(&initRaceCoursePreviewCameraCutscene, 0, 0x64);
         }
-        func_8009B5C0(0xFFU, 0xFFU, 0xFFU);
+        setTitleFadeColor(0xFFU, 0xFFU, 0xFFU);
         break;
     case 7:
         createCallbackTask(&func_8006A798, 0, 0x64);
         createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 3);
         createCallbackTaskWithUserId(&func_8006D384, 0, 0x64, 1);
         createCallbackTask(&func_8006B108, 0, 0x64);
-        func_8009B58C(0xFFU, 0xFFU, 0xFFU);
+        setBootFadeColor(0xFFU, 0xFFU, 0xFFU);
         break;
     case 8:
         createCallbackTask(&func_8006A798, 0, 0x64);
@@ -558,7 +558,7 @@ block_24:
                 createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x4B);
             }
         }
-        func_8009B58C(0xFFU, 0xFFU, 0xFFU);
+        setBootFadeColor(0xFFU, 0xFFU, 0xFFU);
         break;
     case 9:
         createCallbackTask(&func_8006A798, 0, 0x64);
@@ -587,7 +587,7 @@ block_24:
                 createCallbackTask(&func_800666B0, 0, 1);
             }
         }
-        func_8009B58C(0x20U, 0x40U, 0x50U);
+        setBootFadeColor(0x20U, 0x40U, 0x50U);
         break;
     }
     createCallbackTask(&func_800508D0, 5, 0x6E);

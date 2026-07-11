@@ -2,7 +2,7 @@
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
-#include "game_boot.h"
+#include "system_boot.h"
 #include "input_task_scheduler.h"
 #include "main_menu.h"
 #include "main_menu_overlay_effects.h"
@@ -981,7 +981,7 @@ void func_80001C80(void) {
     createCallbackTask(&func_80032684, 0, 0x64);
     createCallbackTaskWithUserId(&func_80054714, 0, 0x64, 0);
     createCallbackTaskWithUserId(func_80055678, 0, 0x64, 0);
-    func_8009B58C(0x20, 0x40, 0x50);
+    setBootFadeColor(0x20, 0x40, 0x50);
     func_80041CF0();
     func_80041D20(0, 0);
     func_80041DD4(0, 0);
@@ -1154,7 +1154,7 @@ void func_800024A8(void) {
     D_801235B4 = 0;
     D_8010B1F0 = 0;
     createCallbackTaskWithUserId(&func_80052394, 0, 0x64, 0);
-    func_8009B58C(0x20, 0x40, 0x50);
+    setBootFadeColor(0x20, 0x40, 0x50);
     func_80041CF0();
     func_80041D20(4, 4);
     func_80041DD4(4, 5);
@@ -1249,7 +1249,7 @@ void func_800028B4(void) {
     D_8010B1F0 = 0;
     createCallbackTaskWithUserId(&func_80052E4C, 0, 0x64, 0);
     createCallbackTaskWithUserId(&func_80055678, 0, 0x64, 0);
-    func_8009B58C(0x20, 0x40, 0x50);
+    setBootFadeColor(0x20, 0x40, 0x50);
     setCurrentInputTaskCallback(&func_80002A1C, 0);
     requestMusicSequenceBank(7);
 }

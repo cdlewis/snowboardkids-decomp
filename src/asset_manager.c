@@ -1,7 +1,7 @@
 #include "asset_manager.h"
 #include "common.h"
 #include "memory_allocator.h"
-#include "game_boot.h"
+#include "system_boot.h"
 
 typedef struct {
     /* 0x0 */ s16 prev;
@@ -350,10 +350,10 @@ void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2) {
     s16 *sp28;
     s32 sp30;
 
-    func_80099C44((u32)arg0, &gCompressedAssetHeader, 8);
+    dmaReadRom((u32)arg0, &gCompressedAssetHeader, 8);
     D_80112130.assetHandles[arg2] = func_80042D58(gCompressedAssetHeader.compressedSize);
     D_80112130.compressedAssetHandle = func_80042D58((s32)arg1 - (s32)arg0);
-    func_80099C44((u32)arg0, (void *)func_80043040(D_80112130.compressedAssetHandle), (s32)arg1 - (s32)arg0);
+    dmaReadRom((u32)arg0, (void *)func_80043040(D_80112130.compressedAssetHandle), (s32)arg1 - (s32)arg0);
     sp30 = func_80043040(D_80112130.compressedAssetHandle) + 5;
     sp28 = &D_80112130.assetHandles[arg2];
     decompressHuffmanAssetPayload(gCompressedAssetHeader.flags, sp30, func_80043040(*sp28), gCompressedAssetHeader.compressedSize);
@@ -367,5 +367,5 @@ void loadRawRomAsset(void *arg0, void *arg1, s32 arg2) {
 
     temp_v1 = &D_80112130.assetHandles[arg2];
     *temp_v1 = func_80042D58(temp_a0);
-    func_80099C44((u32)arg0, (void *)func_80043040(*temp_v1), temp_a0);
+    dmaReadRom((u32)arg0, (void *)func_80043040(*temp_v1), temp_a0);
 }

@@ -3,7 +3,7 @@
 #include "fixed_point_math.h"
 #include "memory_allocator.h"
 #include "sound_manager.h"
-#include "game_boot.h"
+#include "system_boot.h"
 #include "player_commands.h"
 
 #define SOUND_MANAGER_FREE_HANDLE_COUNT 13
@@ -216,7 +216,7 @@ s32 loadMusicSequenceBank(s32 arg0) {
     if (gCurrentMusicSequenceHandle == 0) {
         range = (SoundRomRange *)((arg0 * 2) + (s32 *)gMusicSequenceRomRanges);
         size = range->words[1] - range->words[0];
-        func_80099C44(range->words[0], func_80043040(D_8011213A), size);
+        dmaReadRom(range->words[0], func_80043040(D_8011213A), size);
         if ((gCurrentMusicSequenceHandle = func_8009D8D8((PlayerCommandData *)func_80043040(D_8011213A))) != 0) {
             gCurrentMusicSequenceBank = arg0;
             if (range == gRaceMusicSequenceRomRanges) {
