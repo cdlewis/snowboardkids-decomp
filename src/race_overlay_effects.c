@@ -3,7 +3,7 @@
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
-#include "race_input_history.h"
+#include "race_player_input.h"
 #include "race_player_movement.h"
 #include "spatial_math.h"
 #include "fixed_point_math.h"

@@ -1,5 +1,5 @@
-#ifndef RACE_INPUT_HISTORY_H
-#define RACE_INPUT_HISTORY_H
+#ifndef RACE_PLAYER_INPUT_H
+#define RACE_PLAYER_INPUT_H
 
 #include "common.h"
 
@@ -234,11 +234,11 @@ extern RaceInputPlayer D_8012238C[];
 extern RaceInputPlayer D_80122998[];
 extern RaceInputPlayer D_80122FA4[];
 
-void func_80083D80(RaceInputPlayer *player);
-void func_8008409C(RaceInputPlayer *player);
-void func_8008431C(RaceInputPlayer *player);
-void func_80084510(RaceInputPlayer *player);
-void func_80084730(RaceInputPlayer *player);
-s32 func_80084958(RaceInputPlayer *player);
+void recordRaceReplayInputFrame(RaceInputPlayer *player);
+void playRaceReplayInputFrame(RaceInputPlayer *player);
+void recordRaceInputFrame(RaceInputPlayer *player);
+void playRaceInputFrame(RaceInputPlayer *player);
+void updateRacePlayerInput(RaceInputPlayer *player);
+s32 getRaceInputTimerDecrementBonus(RaceInputPlayer *player);
 
 #endif

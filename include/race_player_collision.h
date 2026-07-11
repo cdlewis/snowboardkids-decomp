@@ -1,7 +1,7 @@
 #ifndef RACE_PLAYER_COLLISION_H
 #define RACE_PLAYER_COLLISION_H
 
-#include "race_input_history.h"
+#include "race_player_input.h"
 
 s32 tryQueueRacePlayerHitCueSpinout(RaceInputPlayer *player);
 s32 tryQueueRacePlayerHitCueGhostSpinout(RaceInputPlayer *player);

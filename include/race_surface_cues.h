@@ -1,7 +1,7 @@
 #ifndef RACE_SURFACE_CUES_H
 #define RACE_SURFACE_CUES_H
 
-#include "race_input_history.h"
+#include "race_player_input.h"
 
 typedef struct {
     /* 0x0 */ s16 surfaceType;

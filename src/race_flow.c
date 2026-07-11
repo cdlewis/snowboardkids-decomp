@@ -175,8 +175,8 @@ extern s32 D_8012207C;
 extern s32 gPlayerInputPressed[];
 extern void *gMenuRenderCallbackList;
 extern s16 gAssetHandles[];
-extern s16 D_80112186;
-extern s16 D_80112188;
+extern s16 gRaceReplayInputBufferHandle;
+extern s16 gRaceReplayPlayerStateBufferHandle;
 extern s16 D_8011216E;
 extern s16 D_801124B8;
 extern SignedUnsignedShort gRaceCourseIndex;
@@ -311,7 +311,7 @@ loop:
         goto loop;
     }
     if (count != 0) {
-        D_80112188 = allocRelocatableHeapBlock(count * sizeof(RacePlayerState));
+        gRaceReplayPlayerStateBufferHandle = allocRelocatableHeapBlock(count * sizeof(RacePlayerState));
     }
 }
 
@@ -343,8 +343,8 @@ s32 loadNextRaceReplayCourseGridEntry(void) {
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
         if (entry->status != COURSE_GRID_ENTRY_FREE) {
-            D_80121D80[0] = ((RacePlayerState *)getRelocatableHeapBlockBase(D_80112188))[count];
-            *(s32 *)getRelocatableHeapBlockBase(D_80112186) = entry->status;
+            D_80121D80[0] = ((RacePlayerState *)getRelocatableHeapBlockBase(gRaceReplayPlayerStateBufferHandle))[count];
+            *(s32 *)getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle) = entry->status;
             entry->status = COURSE_GRID_ENTRY_FREE;
             gRaceCameraReplayStartX = entry->unk4;
             gRaceCameraReplayStartY = entry->unk8;
@@ -1479,7 +1479,7 @@ void fadeOutRaceResultsFlow(void) {
         gCurrentGameTask->fadeTimer -= 1;
         if (gCurrentGameTask->fadeTimer == 0) {
             stopSoundEffects();
-            if ((gRaceSplitscreenMode == 2) && (((Unk80043040 *)getRelocatableHeapBlockBase(D_80112186))->unk8 != 0) && (D_80121B61 != 0) &&
+            if ((gRaceSplitscreenMode == 2) && (((Unk80043040 *)getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle))->unk8 != 0) && (D_80121B61 != 0) &&
                 (saveRaceRecordReplayData() != 0)) {
                 D_80121B61 = -1;
             }

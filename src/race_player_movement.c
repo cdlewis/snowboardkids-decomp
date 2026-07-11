@@ -4,7 +4,7 @@
 #include "sound_manager.h"
 #include "race_motion.h"
 #include "race_course_effects.h"
-#include "race_input_history.h"
+#include "race_player_input.h"
 #include "race_player_movement.h"
 
 typedef struct {
