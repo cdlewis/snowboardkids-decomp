@@ -9,25 +9,25 @@
 #include "main_menu_visual_effects.h"
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
-#include "main_menu_transition.h"
+#include "main_menu_race_flow.h"
 #include "race_player_state.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
 
-#define MAIN_MENU_TRANSITION_FRAMES 0x10
+#define MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES 0x10
 
 typedef struct {
     /* 0x00 */ char pad[0x18];
     /* 0x18 */ s32 transitionTimer;
     /* 0x1C */ s32 unk1C;
-} MainMenuTransitionState;
+} MainMenuRaceFlowState;
 
 typedef struct {
     /* 0x0 */ u8 courseIndex;
     /* 0x1 */ u8 pad1[3];
     /* 0x4 */ u8 *romStart;
     /* 0x8 */ u8 *romEnd;
-} MainMenuCourseAsset;
+} MainMenuModePreviewRaceAsset;
 
 
 extern u8 D_1467B0[];
@@ -38,7 +38,7 @@ extern u8 D_1F1A90[];
 extern u8 D_1F2220[];
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
-extern MainMenuTransitionState *gCurrentGameTask;
+extern MainMenuRaceFlowState *gCurrentGameTask;
 extern u8 gMainMenuSelectionResult;
 extern u8 D_8011228C;
 extern s16 D_801124B8;
@@ -56,7 +56,7 @@ extern u8 gMainMenuModeSelection;
 extern s16 D_80121B5C;
 extern u8 D_80121B5E;
 extern u8 D_80121B5F;
-extern s16 D_800D3C90[];
+extern s16 gMainMenuModePreviewRaceDurations[];
 
 extern void releaseMenuAssetHandles(void);
 extern u8 gPendingFramebufferSwapCount;
@@ -76,20 +76,20 @@ extern u8 D_801229AE;
 extern u8 D_80122FB8;
 extern u8 D_80122FB9;
 extern u8 D_80122FBA;
-extern MainMenuCourseAsset D_800D3C00[];
-extern f32 D_800E10D4;
+extern MainMenuModePreviewRaceAsset gMainMenuModePreviewRaceAssets[];
+extern f32 gMainMenuModePreviewRaceInitialAspect;
 extern u8 D_593D10[];
 extern u8 D_598A70[];
 extern u8 D_60F1A0[];
 extern u8 D_60F990[];
 extern s16 D_80122282;
 
-void func_8003F520(void) {
+void startMainMenuModePreviewFlow(void) {
     gMainMenuModeSelection = 1;
-    setCurrentGameTaskCallback(func_8003F554, 0);
+    setCurrentGameTaskCallback(initMainMenuModePreviewMenu, 0);
 }
 
-void func_8003F554(void) {
+void initMainMenuModePreviewMenu(void) {
     loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
@@ -107,49 +107,49 @@ void func_8003F554(void) {
     func_8006D520(0, 0x1F);
     createCallbackTaskWithUserId(&initTitleMenuBoardModels, 0, 0x64, 0);
     createCallbackTask(&initMainMenuModeSelectGrid, 0, 0x64);
-    setCurrentGameTaskCallback(&func_8003F6C0, 0);
+    setCurrentGameTaskCallback(&fadeInMainMenuModePreviewMenu, 0);
     requestMusicSequenceBank(7);
 }
 
-void func_8003F6C0(void) {
+void fadeInMainMenuModePreviewMenu(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha <= 0) {
         gMenuFadeAlpha = 0;
-        setCurrentGameTaskCallback(&func_8003F718, 0);
+        setCurrentGameTaskCallback(&updateMainMenuModePreviewMenu, 0);
     }
     func_8006D780(0);
     updateCallbackTasks();
 }
 
-void func_8003F718(void) {
+void updateMainMenuModePreviewMenu(void) {
     if (gMainMenuSelectionResult != 0) {
         if (gMainMenuModeSelection == 0xC) {
             requestMusicSequenceStop(0x3C);
         }
-        setCurrentGameTaskCallback(&func_8003F778, 0);
+        setCurrentGameTaskCallback(&fadeOutMainMenuModePreviewMenu, 0);
     }
     func_8006D780(0);
     updateCallbackTasks();
 }
 
-void func_8003F778(void) {
+void fadeOutMainMenuModePreviewMenu(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(&func_8003F7E4, 0);
+        setCurrentGameTaskCallback(&exitMainMenuModePreviewMenu, 0);
     }
     func_8006D780(0);
     updateCallbackTasks();
 }
 
-void func_8003F7E4(void) {
+void exitMainMenuModePreviewMenu(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
         if (gMainMenuModeSelection != 0xC) {
-            setCurrentGameTaskCallback(&func_8003F864, 0);
+            setCurrentGameTaskCallback(&initMainMenuModePreviewRace, 0);
         } else {
             D_801235B4 = 0;
             resumeGameTask(3);
@@ -158,16 +158,16 @@ void func_8003F7E4(void) {
     }
 }
 
-// func_8003F864 best match: 94.795% (nonmatchings/func_8003F864-8662636370764828261/base_5.c)
+// initMainMenuModePreviewRace best match: 94.795% (nonmatchings/initMainMenuModePreviewRace-8662636370764828261/base_5.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_8003F864.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/initMainMenuModePreviewRace.s")
 
 #ifdef NON_MATCHING
-void func_8003F864(void) {
+void initMainMenuModePreviewRace(void) {
     RaceInputPlayer *players;
-    MainMenuCourseAsset *courseAsset;
+    MainMenuModePreviewRaceAsset *courseAsset;
 
-    D_80121B50 = D_800D3C00[gMainMenuModeSelection].courseIndex;
+    D_80121B50 = gMainMenuModePreviewRaceAssets[gMainMenuModeSelection].courseIndex;
     gRaceUpdatePaused = 0;
     D_80121B58 = 0;
     D_80121B5F = 0;
@@ -221,7 +221,7 @@ void func_8003F864(void) {
     players[3].soundDisabled = 0;
     players[3].replayInputSource = 5;
 
-    courseAsset = &D_800D3C00[gMainMenuModeSelection];
+    courseAsset = &gMainMenuModePreviewRaceAssets[gMainMenuModeSelection];
     loadCompressedRomAsset(courseAsset->romStart, courseAsset->romEnd, 0x2B);
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
@@ -232,7 +232,7 @@ void func_8003F864(void) {
     gPlayerCount = 1;
     func_80078430();
     gPlayerCount = 4;
-    configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, D_800E10D4);
+    configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, gMainMenuModePreviewRaceInitialAspect);
     D_8011228C = 1;
     gFramebufferSwapDelay = 0;
     initRaceCourseEffects();
@@ -244,16 +244,16 @@ void func_8003F864(void) {
     gMainMenuSelectionResult = 0;
     createCallbackTask(initMainMenuModeDescriptionPanel, 0, 0x64);
     createCallbackTask(initRaceSetupCornerPrompts, 0, 0x64);
-    setCurrentGameTaskCallback(func_8003FB70, 0);
+    setCurrentGameTaskCallback(fadeInMainMenuModePreviewRace, 0);
     requestMusicSequenceBank(7);
 }
 #endif
 
-void func_8003FB70(void) {
+void fadeInMainMenuModePreviewRace(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
-        setCurrentGameTaskCallback(&func_8003FBE8, 0);
+        setCurrentGameTaskCallback(&waitForMainMenuModePreviewRaceSelection, 0);
     }
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
@@ -263,7 +263,7 @@ void func_8003FB70(void) {
     D_801124B8 = 0x80;
 }
 
-void func_8003FBE8(void) {
+void waitForMainMenuModePreviewRaceSelection(void) {
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
@@ -272,23 +272,23 @@ void func_8003FBE8(void) {
     if (gMainMenuSelectionResult != 0) {
         gCurrentGameTask->transitionTimer = 0;
         requestMusicSequenceStop(0x20);
-        setCurrentGameTaskCallback(&func_8003FC60, 0);
+        setCurrentGameTaskCallback(&zoomMainMenuModePreviewRaceViewport, 0);
     }
     D_801124B8 = 0x80;
 }
 
-// func_8003FC60 best match: 75.250% (nonmatchings/func_8003FC60-1197934324348345530/base_3.c)
+// zoomMainMenuModePreviewRaceViewport best match: 75.250% (nonmatchings/zoomMainMenuModePreviewRaceViewport-1197934324348345530/base_3.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_8003FC60.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/zoomMainMenuModePreviewRaceViewport.s")
 
 #ifdef NON_MATCHING
-void func_8003FC60(void) {
+void zoomMainMenuModePreviewRaceViewport(void) {
     s32 timer;
     s32 x2;
     s32 x1;
     s32 y1;
     s32 y2;
-    f64 denominator = MAIN_MENU_TRANSITION_FRAMES;
+    f64 denominator = MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES;
     f32 aspect;
 
     gCurrentGameTask->transitionTimer += 1;
@@ -297,19 +297,19 @@ void func_8003FC60(void) {
     x2 = timer << 2;
     x2 -= timer;
     x2 <<= 3;
-    x2 = (s16) ((x2 / MAIN_MENU_TRANSITION_FRAMES) + 0x108);
+    x2 = (s16) ((x2 / MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES) + 0x108);
 
-    x1 = (s16) (((timer * 0x28) / MAIN_MENU_TRANSITION_FRAMES) + 0x50);
-    y1 = (s16) (((timer * 0x58) / MAIN_MENU_TRANSITION_FRAMES) + 0x78);
-    y2 = (s16) (((timer * 0x64) / MAIN_MENU_TRANSITION_FRAMES) + 0x8C);
+    x1 = (s16) (((timer * 0x28) / MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES) + 0x50);
+    y1 = (s16) (((timer * 0x58) / MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES) + 0x78);
+    y2 = (s16) (((timer * 0x64) / MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES) + 0x8C);
     aspect = (f32) ((((f64) timer * -0.9523809523809523) / denominator) + 2.2857142857142856);
 
     configureViewport(0, 0xA0, x1, x2 & 0xFFFF, y1, 0x140, y2, aspect);
-    if (gCurrentGameTask->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
+    if (gCurrentGameTask->transitionTimer == MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES) {
         requestMusicSequenceBank(0xF);
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         gCurrentGameTask->transitionTimer = 0;
-        setCurrentGameTaskCallback(func_8003FE54, 0);
+        setCurrentGameTaskCallback(runMainMenuModePreviewRace, 0);
     }
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
@@ -319,7 +319,7 @@ void func_8003FC60(void) {
 }
 #endif
 
-void func_8003FE54(void) {
+void runMainMenuModePreviewRace(void) {
     D_801235B4 = 0;
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
@@ -328,13 +328,13 @@ void func_8003FE54(void) {
     func_8006D700();
     func_8007AA50();
     gCurrentGameTask->transitionTimer += 1;
-    if (gCurrentGameTask->transitionTimer == D_800D3C90[gMainMenuModeSelection]) {
-        setCurrentGameTaskCallback(func_8003FEF4, 0);
+    if (gCurrentGameTask->transitionTimer == gMainMenuModePreviewRaceDurations[gMainMenuModeSelection]) {
+        setCurrentGameTaskCallback(fadeOutMainMenuModePreviewRace, 0);
         requestMusicSequenceStop(0x40);
     }
 }
 
-void func_8003FEF4(void) {
+void fadeOutMainMenuModePreviewRace(void) {
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
@@ -345,37 +345,37 @@ void func_8003FEF4(void) {
     if (gMenuFadeAlpha >= 0xFF) {
         gFramebufferSwapHold = 1;
         {
-            void (*func_ptr)(void) = func_8003FF78;
+            void (*func_ptr)(void) = returnToMainMenuModePreviewMenu;
             setCurrentGameTaskCallback(func_ptr, 0);
         }
     }
 }
 
-void func_8003FF78(void) {
+void returnToMainMenuModePreviewMenu(void) {
     if (gPendingFramebufferSwapCount == 2) {
         stopSoundEffects();
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        setCurrentGameTaskCallback(&func_8003F554, 0);
+        setCurrentGameTaskCallback(&initMainMenuModePreviewMenu, 0);
     }
 }
 
-void func_8003FFD0(void) {
+void startTrainingCourseFlow(void) {
     gMainMenuSelectedCourse = 1;
-    setCurrentGameTaskCallback(&func_80040004, 0);
+    setCurrentGameTaskCallback(&queueTrainingCourseRaceInit, 0);
 }
 
-void func_80040004(void) {
-    setCurrentGameTaskCallback(&func_8004002C, 0);
+void queueTrainingCourseRaceInit(void) {
+    setCurrentGameTaskCallback(&initTrainingCourseRace, 0);
 }
 
-// func_8004002C best match: 98.186% (nonmatchings/func_8004002C-6061209858023118177/base.c)
+// initTrainingCourseRace best match: 98.186% (nonmatchings/func_8004002C-6061209858023118177/base.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_8004002C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/initTrainingCourseRace.s")
 
 #ifdef NON_MATCHING
-void func_8004002C(void) {
+void initTrainingCourseRace(void) {
     u64 characterId;
 
     switch (gMainMenuSelectedCourse) {
@@ -484,16 +484,16 @@ void func_8004002C(void) {
     createCallbackTask(initTrainingCourseOpeningDialog, 0, 0x64);
     createCallbackTask(initTrainingCourseTitlePanel, 0, 0x63);
     createCallbackTask(initRaceSetupCornerPrompts, 0, 0x64);
-    setCurrentGameTaskCallback(func_80040360, 0);
+    setCurrentGameTaskCallback(fadeInTrainingCourseRace, 0);
     requestMusicSequenceBank(7);
 }
 #endif
 
-void func_80040360(void) {
+void fadeInTrainingCourseRace(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
-        setCurrentGameTaskCallback(func_800403D8, 0);
+        setCurrentGameTaskCallback(waitForTrainingCourseStartSelection, 0);
     }
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
@@ -503,7 +503,7 @@ void func_80040360(void) {
     D_801124B8 = 0x80;
 }
 
-void func_800403D8(void) {
+void waitForTrainingCourseStartSelection(void) {
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
@@ -512,23 +512,23 @@ void func_800403D8(void) {
     if (gMainMenuSelectionResult != 0) {
         gCurrentGameTask->transitionTimer = 0;
         requestMusicSequenceStop(0x20);
-        setCurrentGameTaskCallback(&func_80040450, 0);
+        setCurrentGameTaskCallback(&zoomTrainingCourseRaceViewport, 0);
     }
     D_801124B8 = 0x80;
 }
 
-// func_80040450 best match: 74.802% (nonmatchings/func_80040450-1197934324348345530/base_8.c)
+// zoomTrainingCourseRaceViewport best match: 74.802% (nonmatchings/zoomTrainingCourseRaceViewport-1197934324348345530/base_8.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_transition/func_80040450.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/zoomTrainingCourseRaceViewport.s")
 
 #ifdef NON_MATCHING
-void func_80040450(void) {
+void zoomTrainingCourseRaceViewport(void) {
     s32 timer;
     s32 x2;
     s32 x1;
     s32 y1;
     s32 y2;
-    f64 denominator = MAIN_MENU_TRANSITION_FRAMES;
+    f64 denominator = MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES;
     f32 aspect;
 
     gCurrentGameTask->transitionTimer += 1;
@@ -537,18 +537,18 @@ void func_80040450(void) {
     x2 = timer << 2;
     x2 -= timer;
     x2 <<= 3;
-    x2 = (s16) ((x2 / MAIN_MENU_TRANSITION_FRAMES) + 0x108);
+    x2 = (s16) ((x2 / MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES) + 0x108);
 
-    x1 = (s16) (((timer * 0x28) / MAIN_MENU_TRANSITION_FRAMES) + 0x50);
-    y1 = (s16) (((timer * 0x58) / MAIN_MENU_TRANSITION_FRAMES) + 0x78);
-    y2 = (s16) (((timer * 0x64) / MAIN_MENU_TRANSITION_FRAMES) + 0x8C);
+    x1 = (s16) (((timer * 0x28) / MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES) + 0x50);
+    y1 = (s16) (((timer * 0x58) / MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES) + 0x78);
+    y2 = (s16) (((timer * 0x64) / MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES) + 0x8C);
     aspect = (f32) ((((f64) timer * -0.9523809523809523) / denominator) + 2.2857142857142856);
 
     configureViewport(0, 0xA0, x1, x2 & 0xFFFF, y1, 0x140, y2, aspect);
-    if (gCurrentGameTask->transitionTimer == MAIN_MENU_TRANSITION_FRAMES) {
+    if (gCurrentGameTask->transitionTimer == MAIN_MENU_RACE_VIEWPORT_ZOOM_FRAMES) {
         requestMusicSequenceBank(0xF);
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        setCurrentGameTaskCallback(func_80040638, 0);
+        setCurrentGameTaskCallback(runTrainingCourseUntilPrompt, 0);
     }
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
@@ -558,7 +558,7 @@ void func_80040450(void) {
 }
 #endif
 
-void func_80040638(void) {
+void runTrainingCourseUntilPrompt(void) {
     D_801235B4 = 0;
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
@@ -570,7 +570,7 @@ void func_80040638(void) {
     switch (gMainMenuSelectedCourse) {
         case 1:
             if (D_80122282 == 0x50) {
-                setCurrentGameTaskCallback(func_800407AC, 0);
+                setCurrentGameTaskCallback(fadeInTrainingCourseActionMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
@@ -580,14 +580,14 @@ void func_80040638(void) {
         case 4:
         case 5:
             if (D_80122282 == 0x9C) {
-                setCurrentGameTaskCallback(func_800407AC, 0);
+                setCurrentGameTaskCallback(fadeInTrainingCourseActionMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 6:
             if (D_80122282 == 0xB4) {
-                setCurrentGameTaskCallback(func_800407AC, 0);
+                setCurrentGameTaskCallback(fadeInTrainingCourseActionMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
@@ -595,21 +595,21 @@ void func_80040638(void) {
         case 7:
         case 8:
             if (D_80122282 == 0x16) {
-                setCurrentGameTaskCallback(func_800407AC, 0);
+                setCurrentGameTaskCallback(fadeInTrainingCourseActionMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 9:
             if (D_80122282 == 0x36) {
-                setCurrentGameTaskCallback(func_800407AC, 0);
+                setCurrentGameTaskCallback(fadeInTrainingCourseActionMenu, 0);
                 requestMusicSequenceStop(0x40);
             }
             break;
     }
 }
 
-void func_800407AC(void) {
+void fadeInTrainingCourseActionMenu(void) {
     s32 temp_v1;
 
     gRaceUpdatePaused = 1;
@@ -624,13 +624,13 @@ void func_800407AC(void) {
     temp_v1 = gCurrentGameTask->transitionTimer;
     if (temp_v1 == 0x80) {
         createCallbackTask(initTrainingCourseActionMenu, 0, 0x64);
-        setCurrentGameTaskCallback(func_8004086C, 0);
+        setCurrentGameTaskCallback(waitForTrainingCourseActionMenuSelection, 0);
     }
     temp_v1 = gCurrentGameTask->transitionTimer;
     D_801124B8 = temp_v1;
 }
 
-void func_8004086C(void) {
+void waitForTrainingCourseActionMenuSelection(void) {
     gRaceUpdatePaused = 1;
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
@@ -640,11 +640,11 @@ void func_8004086C(void) {
     func_8007AA50();
     D_801124B8 = 0x80;
     if (gMainMenuSelectionResult != 0) {
-        setCurrentGameTaskCallback(&func_800408E4, 0);
+        setCurrentGameTaskCallback(&fadeOutTrainingCourseActionMenu, 0);
     }
 }
 
-void func_800408E4(void) {
+void fadeOutTrainingCourseActionMenu(void) {
     gRaceUpdatePaused = 1;
     func_8008C704();
     updateCallbackTasksWithMinPriority(0x63);
@@ -656,11 +656,11 @@ void func_800408E4(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(&func_8004097C, 0);
+        setCurrentGameTaskCallback(&handleTrainingCourseActionMenuExit, 0);
     }
 }
 
-void func_8004097C(void) {
+void handleTrainingCourseActionMenuExit(void) {
     if (gPendingFramebufferSwapCount == 2) {
         stopSoundEffects();
         releaseMenuAssetHandles();
@@ -670,20 +670,20 @@ void func_8004097C(void) {
             if (gMainMenuSelectedCourse < 9) {
                 gMainMenuSelectedCourse += 1;
             }
-            setCurrentGameTaskCallback(func_80040004, 0);
+            setCurrentGameTaskCallback(queueTrainingCourseRaceInit, 0);
         }
         if (gMainMenuSelectionResult == 2) {
-            setCurrentGameTaskCallback(func_8004002C, 0);
+            setCurrentGameTaskCallback(initTrainingCourseRace, 0);
         }
         if (gMainMenuSelectionResult == 3) {
-            setCurrentGameTaskCallback(func_80040A48, 0);
+            setCurrentGameTaskCallback(finishOrAdvanceTrainingCourse, 0);
         }
     }
 }
 
-void func_80040A48(void) {
+void finishOrAdvanceTrainingCourse(void) {
     if (gMainMenuSelectedCourse != 9) {
-        setCurrentGameTaskCallback(func_80040C44, 0);
+        setCurrentGameTaskCallback(returnFromMainMenuRaceFlow, 0);
         return;
     }
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
@@ -694,45 +694,45 @@ void func_80040A48(void) {
     resetAllViewports();
     initCallbackTaskScheduler(0);
     createCallbackTask(&initTrainingCourseEndingDialog, 0, 0x64);
-    setCurrentGameTaskCallback(func_80040B04, 0);
+    setCurrentGameTaskCallback(fadeInTrainingCourseEndingDialog, 0);
 }
 
-void func_80040B04(void) {
+void fadeInTrainingCourseEndingDialog(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha <= 0) {
         gMenuFadeAlpha = 0;
-        setCurrentGameTaskCallback(&func_80040B54, 0);
+        setCurrentGameTaskCallback(&waitForTrainingCourseEndingDialog, 0);
     }
     updateCallbackTasks();
 }
 
-void func_80040B54(void) {
+void waitForTrainingCourseEndingDialog(void) {
     if (gMainMenuSelectionResult != 0) {
-        setCurrentGameTaskCallback(&func_80040B90, 0);
+        setCurrentGameTaskCallback(&fadeOutTrainingCourseEndingDialog, 0);
     }
     updateCallbackTasks();
 }
 
-void func_80040B90(void) {
+void fadeOutTrainingCourseEndingDialog(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(&func_80040BF4, 0);
+        setCurrentGameTaskCallback(&exitTrainingCourseEndingDialog, 0);
     }
     updateCallbackTasks();
 }
 
-void func_80040BF4(void) {
+void exitTrainingCourseEndingDialog(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        setCurrentGameTaskCallback(&func_80040C44, 0);
+        setCurrentGameTaskCallback(&returnFromMainMenuRaceFlow, 0);
     }
 }
 
-void func_80040C44(void) {
+void returnFromMainMenuRaceFlow(void) {
     D_801235B4 = 0;
     resumeGameTask(3);
     removeGameTask(4);
