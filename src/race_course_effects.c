@@ -2,7 +2,7 @@
 #include "race_course_effects.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
 #include "model_animation.h"

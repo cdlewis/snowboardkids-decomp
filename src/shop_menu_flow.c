@@ -1,7 +1,7 @@
 #include "common.h"
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "character_select_flow.h"
 #include "controller_pak_menu_ui.h"
 #include "input_task_scheduler.h"
@@ -42,10 +42,10 @@ void func_8000C280(void) {
     D_801235B4 = 0;
     D_8010AF80.state = 0;
     D_8010AF80.x = 0x100;
-    func_800437F0(D_593D10, D_598A70, 0x22);
-    func_800437F0(D_598A70, D_59AAA0, 0x23);
-    func_800437F0(D_59AAA0, D_59DFE0, 0x24);
-    func_800437F0(D_60F1A0, D_60F990, 0x29);
+    loadCompressedAsset(D_593D10, D_598A70, 0x22);
+    loadCompressedAsset(D_598A70, D_59AAA0, 0x23);
+    loadCompressedAsset(D_59AAA0, D_59DFE0, 0x24);
+    loadCompressedAsset(D_60F1A0, D_60F990, 0x29);
     func_80070EC0(0);
     func_80071408(func_80030570, 0, 0x64);
     D_800DEF14 = D_801235B8->fade;

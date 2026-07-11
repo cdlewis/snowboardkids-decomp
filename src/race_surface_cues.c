@@ -1,5 +1,5 @@
 #include "common.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "race_surface_cues.h"
 
 extern RaceSurfaceCue D_800DE590[];

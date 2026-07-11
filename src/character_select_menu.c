@@ -1,6 +1,6 @@
 #include "common.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "character_select_menu.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
@@ -109,11 +109,11 @@ void func_80004960(void) {
         D_801235B8->fade = 0xFF;
         D_801235B8->timer = 0;
         D_800DEF14 = D_801235B8->fade;
-        func_800437F0(D_59AAA0, D_59DFE0, 0x21);
-        func_800437F0(D_245A80, D_24C8E0, 0x1F);
-        func_800437F0(D_593D10, D_598A70, 0x22);
-        func_800437F0(D_598A70, D_59AAA0, 0x23);
-        func_800437F0(D_60F1A0, D_60F990, 0x29);
+        loadCompressedAsset(D_59AAA0, D_59DFE0, 0x21);
+        loadCompressedAsset(D_245A80, D_24C8E0, 0x1F);
+        loadCompressedAsset(D_593D10, D_598A70, 0x22);
+        loadCompressedAsset(D_598A70, D_59AAA0, 0x23);
+        loadCompressedAsset(D_60F1A0, D_60F990, 0x29);
         func_80070EC0(0);
 
         playerCount = D_80121B55;

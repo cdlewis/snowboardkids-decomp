@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "course_preview_camera.h"
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"

@@ -2,7 +2,7 @@
 #include "race_overlay_effects.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "race_input_history.h"
 #include "race_player_movement.h"
 #include "fixed_point_math.h"

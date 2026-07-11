@@ -1,7 +1,7 @@
 #include "race_intro_transition.h"
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "course_asset_loader.h"
 #include "input_task_scheduler.h"
 #include "main_menu_overlay_effects.h"
@@ -160,7 +160,7 @@ void func_8003E600(void) {
     D_80122FB8 = 0;
     D_80122FBA = 5;
     courseEntry = &D_800BB834[D_800BB830];
-    func_800437F0(courseEntry->romStart, courseEntry->romEnd, 0x2B);
+    loadCompressedAsset(courseEntry->romStart, courseEntry->romEnd, 0x2B);
     func_80043950();
     func_800440F4();
     D_801235B4 = 0;

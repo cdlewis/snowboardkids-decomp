@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "player_select_ui.h"
 #include "shop_menu_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES

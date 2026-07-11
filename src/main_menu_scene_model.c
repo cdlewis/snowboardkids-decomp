@@ -1,6 +1,6 @@
 #include "main_menu_scene_model.h"
 #include "memory_allocator.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "fixed_point_matrix.h"
 
 /* Frame offsets are halfword-relative to the bank start; this form preserves target addu order. */
@@ -276,19 +276,19 @@ void func_80041A20(void) {
 #endif
 
 void func_80041CC0(void) {
-    func_800437F0(&D_5E34A0, &D_608560, 0x3F);
+    loadCompressedAsset(&D_5E34A0, &D_608560, 0x3F);
 }
 
 void func_80041CF0(void) {
-    func_800437F0(&D_215BE0, &D_21D9D0, 0x3F);
+    loadCompressedAsset(&D_215BE0, &D_21D9D0, 0x3F);
 }
 
 void func_80041D20(s32 actorIndex, s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    func_800438EC(MAIN_MENU_MODEL_ASSET_RANGE_START(D_800D4020, modelIndex),
+    loadRawAsset(MAIN_MENU_MODEL_ASSET_RANGE_START(D_800D4020, modelIndex),
                   MAIN_MENU_MODEL_ASSET_RANGE_END(D_800D4020, modelIndex), actorIndex + 0x33);
-    func_800437F0((void *)MAIN_MENU_MODEL_ASSET_RANGE_START(D_800D4050, modelIndex),
+    loadCompressedAsset((void *)MAIN_MENU_MODEL_ASSET_RANGE_START(D_800D4050, modelIndex),
                   (void *)MAIN_MENU_MODEL_ASSET_RANGE_END(D_800D4050, modelIndex), actorIndex + 0x39);
     D_80112130.modelInstanceHandles[actorIndex] = func_80042D58(sizeof(MainMenuSceneModel));
     model = (MainMenuSceneModel *)func_80043040(D_80112130.modelInstanceHandles[actorIndex]);

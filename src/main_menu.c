@@ -1,7 +1,7 @@
 #include "common.h"
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "game_boot.h"
 #include "input_task_scheduler.h"
 #include "main_menu.h"
@@ -962,11 +962,11 @@ void func_80001C80(void) {
     func_800704F0();
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     D_800DEED4 = 0;
-    func_800437F0(D_5DB9D0, D_5DCBE0, 0x21);
-    func_800437F0(D_5DCBE0, D_5DFDD0, 0x25);
-    func_800437F0(D_593D10, D_598A70, 0x22);
-    func_800438EC(D_1467B0, D_147910, 8);
-    func_800437F0(D_1DE360, D_1E0F70, 9);
+    loadCompressedAsset(D_5DB9D0, D_5DCBE0, 0x21);
+    loadCompressedAsset(D_5DCBE0, D_5DFDD0, 0x25);
+    loadCompressedAsset(D_593D10, D_598A70, 0x22);
+    loadRawAsset(D_1467B0, D_147910, 8);
+    loadCompressedAsset(D_1DE360, D_1E0F70, 9);
     D_801235B8->fade = 0xFF;
     D_801235B8->selection = 0;
     D_801235B8->delay = 0x32;
@@ -1144,9 +1144,9 @@ void func_800024A8(void) {
     D_801124B8 = 0x80;
     D_800DEED4 = 0;
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-    func_800438EC(D_1467B0, D_147910, 8);
-    func_800437F0(D_1DE360, D_1E0F70, 9);
-    func_800437F0(D_1F1A90, D_1F2220, 0x28);
+    loadRawAsset(D_1467B0, D_147910, 8);
+    loadCompressedAsset(D_1DE360, D_1E0F70, 9);
+    loadCompressedAsset(D_1F1A90, D_1F2220, 0x28);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
     func_80070EC0(0);
@@ -1237,11 +1237,11 @@ void func_800028B4(void) {
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     D_801124B8 = 0x80;
     D_800DEED4 = 0;
-    func_800437F0(D_593D10, D_598A70, 0x29);
-    func_800437F0(D_1F1A90, D_1F2220, 0x28);
-    func_800437F0(D_60F1A0, D_60F990, 0x2A);
-    func_800438EC(D_1467B0, D_147910, 8);
-    func_800437F0(D_1DE360, D_1E0F70, 9);
+    loadCompressedAsset(D_593D10, D_598A70, 0x29);
+    loadCompressedAsset(D_1F1A90, D_1F2220, 0x28);
+    loadCompressedAsset(D_60F1A0, D_60F990, 0x2A);
+    loadRawAsset(D_1467B0, D_147910, 8);
+    loadCompressedAsset(D_1DE360, D_1E0F70, 9);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
     func_80070EC0(0);

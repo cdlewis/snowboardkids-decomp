@@ -1,5 +1,5 @@
 #include "common.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "effect_task_scheduler.h"
 #include "controller_rumble.h"
 #include "game_audio.h"

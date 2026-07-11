@@ -1,5 +1,5 @@
 #include "common.h"
-#include "asset_decompression.h"
+#include "asset_manager.h"
 #include "fixed_point_matrix.h"
 #include "memory_allocator.h"
 #include "game_audio.h"
@@ -176,7 +176,7 @@ void func_80071830(void) {
     D_80121B30 = 0;
 
     D_80112136 = func_80042D58(0x80000);
-    func_800437F0(D_275A90, D_27E290, 4);
+    loadCompressedAsset(D_275A90, D_27E290, 4);
     D_80112130.unkA = func_80042D58(0x10000);
 
     init.count = 0x18;
