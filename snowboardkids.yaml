@@ -112,7 +112,7 @@ segments:
       - [0x44550, c, race_scene_loader]
       - [0x464E0, c, render_asset_utils]
       - [0x49C00, c, spatial_math]
-      - [0x4A040, c, race_item_projectiles]
+      - [0x4A040, c, race_item_weapons]
       - [0x4E760, c, race_item_visual_effects]
       - [0x51BF0, c, main_menu_panel_ui]
       - [0x54260, c, menu_screen_effects]
