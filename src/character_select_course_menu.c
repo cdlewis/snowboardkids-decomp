@@ -7,7 +7,7 @@
 #include "game_task_scheduler.h"
 #include "menu_renderer.h"
 #include "race_type_select_menu.h"
-#include "player_count_select_menu.h"
+#include "race_splitscreen_select_menu.h"
 #include "title_menu.h"
 #include "viewport_manager.h"
 
@@ -611,7 +611,7 @@ void handleCharacterSelectCourseSelection(void) {
             D_8010ADF8 = 1;
         } else {
             if (D_800EC9DD == 0) {
-                setCurrentGameTaskCallback(&returnToPlayerCountSelectMenu, 0);
+                setCurrentGameTaskCallback(&returnToRaceSplitscreenSelectMenu, 0);
             } else {
                 setCurrentGameTaskCallback(&returnToRaceTypeSelectMenu, 0);
             }
