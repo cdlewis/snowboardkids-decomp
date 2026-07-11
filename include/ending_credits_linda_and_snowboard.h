@@ -1,10 +1,10 @@
-#ifndef ENDING_CREDITS_LINDA_H
-#define ENDING_CREDITS_LINDA_H
+#ifndef ENDING_CREDITS_LINDA_AND_SNOWBOARD_H
+#define ENDING_CREDITS_LINDA_AND_SNOWBOARD_H
 
 #include "common.h"
 
 typedef struct EndingCreditsLinda EndingCreditsLinda;
-typedef struct EndingSnowboardTumbleEffect EndingSnowboardTumbleEffect;
+typedef struct EndingCreditsSnowboardTumbleEffect EndingCreditsSnowboardTumbleEffect;
 
 void updateEndingLindaFinalPose(s32 arg0);
 void updateEndingLindaStartFinalPose(EndingCreditsLinda *arg0);
@@ -56,11 +56,11 @@ void waitEndingLindaPhase15(EndingCreditsLinda *arg0);
 void updateEndingLindaSlideLeftSetPhase14(EndingCreditsLinda *arg0);
 void waitEndingLindaPhase13(EndingCreditsLinda *arg0);
 void initEndingCreditsLinda(EndingCreditsLinda *arg0);
-void spawnEndingSnowboardTumbleEffect(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u8 arg5);
-void drawEndingSnowboardTumbleEffect(EndingSnowboardTumbleEffect *arg0);
-void updateEndingSnowboardTumbleEffectWaitForRemove(EndingSnowboardTumbleEffect *arg0);
-void updateEndingSnowboardTumbleEffectBounce(EndingSnowboardTumbleEffect *arg0);
-void waitEndingSnowboardTumbleEffectPhase15(EndingSnowboardTumbleEffect *arg0);
-void updateEndingSnowboardTumbleEffectSlideIn(EndingSnowboardTumbleEffect *arg0);
+void spawnEndingCreditsSnowboardTumbleEffect(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u8 arg5);
+void drawEndingCreditsSnowboardTumbleEffect(EndingCreditsSnowboardTumbleEffect *arg0);
+void updateEndingCreditsSnowboardTumbleEffectWaitForRemove(EndingCreditsSnowboardTumbleEffect *arg0);
+void updateEndingCreditsSnowboardTumbleEffectBounce(EndingCreditsSnowboardTumbleEffect *arg0);
+void waitEndingCreditsSnowboardTumbleEffectPhase15(EndingCreditsSnowboardTumbleEffect *arg0);
+void updateEndingCreditsSnowboardTumbleEffectSlideIn(EndingCreditsSnowboardTumbleEffect *arg0);
 
 #endif

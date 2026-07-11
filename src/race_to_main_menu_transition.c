@@ -12,7 +12,7 @@
 #include "ending_credits_slash.h"
 #include "ending_credits_nancy.h"
 #include "ending_credits_jam.h"
-#include "ending_credits_linda.h"
+#include "ending_credits_linda_and_snowboard.h"
 #include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
 #include "viewport_manager.h"
