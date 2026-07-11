@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "fixed_point_math.h"
 #include "model_animation.h"
 #include "race_position_tracker.h"
@@ -138,7 +138,7 @@ void func_8007D190(void) {
     s32 ptr;
     s32 v1;
 
-    ptr = getMemoryBlockBase(D_80112166);
+    ptr = getRelocatableHeapBlockBase(D_80112166);
     D_80121B90 = (ModelAnimCoord *)(ptr + 2);
     v1 = (s32)D_80121B90 + *(u16 *)ptr * sizeof(ModelAnimCoord);
     D_80121B94 = (ModelAnimFace *)(v1 + 2);
@@ -970,7 +970,7 @@ void func_80081E40(ModelAnimState *state, s32 animIndex) {
     s32 temp_v0;
     ModelAnimState *temp_a2 = state;
 
-    temp_v0 = getMemoryBlockBase(D_8011215C[state->modelId]);
+    temp_v0 = getRelocatableHeapBlockBase(D_8011215C[state->modelId]);
     temp_a1 = (s16 *)(temp_v0 + (((u16 *)temp_v0)[animIndex] * 2));
     temp_v1 = *temp_a1;
     temp_a2->framesRemaining = temp_v1;
@@ -978,7 +978,7 @@ void func_80081E40(ModelAnimState *state, s32 animIndex) {
     temp_a2->frameCount = temp_v1;
     temp_a1 += 1;
     sp1C = temp_a1;
-    temp_v1_2 = (s32)temp_a1 - getMemoryBlockBase(D_8011215C[temp_a2->modelId]);
+    temp_v1_2 = (s32)temp_a1 - getRelocatableHeapBlockBase(D_8011215C[temp_a2->modelId]);
     temp_a2->animStartOffset = temp_v1_2;
     temp_a2->frameDataOffset = temp_v1_2;
     temp_a2->frameTimer = 0;
@@ -998,7 +998,7 @@ void func_80081EF4(ModelAnimState *state) {
     s16 value1;
     s16 angle;
 
-    base = getMemoryBlockBase(D_8011215C[state->modelId]);
+    base = getRelocatableHeapBlockBase(D_8011215C[state->modelId]);
     state->frameTimerReset = 1;
     frameData = (s16 *)(base + state->frameDataOffset);
     state->frameTimer = state->frameTimerReset;
@@ -1032,7 +1032,7 @@ void func_80081EF4(ModelAnimState *state) {
         cursor = (ModelAnimState *)((s32)cursor + sizeof(ModelAnimStateJoint));
     }
 
-    state->frameDataOffset = (s32)frameData - getMemoryBlockBase(D_8011215C[state->modelId]);
+    state->frameDataOffset = (s32)frameData - getRelocatableHeapBlockBase(D_8011215C[state->modelId]);
     angle = state->joints[0].unk6;
     state->unk43E = angle;
     state->unk42A = angle;
@@ -1052,7 +1052,7 @@ void func_80082070(ModelAnimState *state) {
     s32 one;
     s32 offset;
 
-    base = getMemoryBlockBase(D_8011215C[state->modelId]);
+    base = getRelocatableHeapBlockBase(D_8011215C[state->modelId]);
     data = (s16 *)(((one = base) + state->frameDataOffset) + 0x24);
     state->frameTimerReset = 1;
     offset = 0x78;
@@ -1082,7 +1082,7 @@ void func_80082070(ModelAnimState *state) {
         cursor = (ModelAnimFrameCursor *)((u8 *)cursor + 0x14);
     } while (offset != 0xF0);
 
-    state->frameDataOffset = (s32)data - getMemoryBlockBase(D_8011215C[state->modelId]);
+    state->frameDataOffset = (s32)data - getRelocatableHeapBlockBase(D_8011215C[state->modelId]);
 }
 
 // func_80082184 best match: 78.465% (base_9.c)
@@ -1113,7 +1113,7 @@ void func_80082184(ModelAnimState *state, s32 animIndex, s32 frameTimer, s32 fra
     s32 stride;
     s32 rotBase;
 
-    base = getMemoryBlockBase(D_8011215C[state->modelId]);
+    base = getRelocatableHeapBlockBase(D_8011215C[state->modelId]);
     data = (s16 *)(base + (((u16 *)base)[animIndex] * 2) + 2);
 
     stride = 0xC;
@@ -1247,7 +1247,7 @@ void func_80082664(ModelAnimState *state, s32 animIndex, s32 frameTimer, s32 fra
     s32 stride;
     s32 rotBase;
 
-    base = getMemoryBlockBase(D_8011215C[state->modelId]);
+    base = getRelocatableHeapBlockBase(D_8011215C[state->modelId]);
     data = (s16 *)(base + (((u16 *)base)[animIndex] * 2) + 2);
 
     stride = 0xC;
@@ -1385,7 +1385,7 @@ void func_80082B58(ModelAnimState *state, s32 animIndex, s32 timer, s32 duration
     s32 z;
     s32 delta;
 
-    frameBase = getMemoryBlockBase(D_8011215C[state->modelId]);
+    frameBase = getRelocatableHeapBlockBase(D_8011215C[state->modelId]);
     frameOffset = ((u16 *)frameBase)[animIndex];
     packed = (s16 *)(frameBase + (frameOffset * 2));
     packed++;

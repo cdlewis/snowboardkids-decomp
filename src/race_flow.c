@@ -1,7 +1,7 @@
 #include "common.h"
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
 #include "character_select_menu.h"
@@ -311,7 +311,7 @@ loop:
         goto loop;
     }
     if (count != 0) {
-        D_80112188 = allocMemoryBlock(count * sizeof(RacePlayerState));
+        D_80112188 = allocRelocatableHeapBlock(count * sizeof(RacePlayerState));
     }
 }
 
@@ -322,10 +322,10 @@ void func_80072E98(void) {
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
         if ((entry->status == COURSE_GRID_ENTRY_FREE) && (entry->courseId == D_80121D80[0].courseId)) {
-            s32 *status = (s32 *)getMemoryBlockBase(D_80112130[0x2B]);
+            s32 *status = (s32 *)getRelocatableHeapBlockBase(D_80112130[0x2B]);
             if (*status < 0x1194) {
                 entry->status = *status;
-                ((RacePlayerState *) getMemoryBlockBase(D_80112130[0x2C]))[i] = D_80121D80[0];
+                ((RacePlayerState *) getRelocatableHeapBlockBase(D_80112130[0x2C]))[i] = D_80121D80[0];
             }
         }
         entry++;
@@ -343,8 +343,8 @@ s32 func_80072FC4(void) {
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
         if (entry->status != COURSE_GRID_ENTRY_FREE) {
-            D_80121D80[0] = ((RacePlayerState *)getMemoryBlockBase(D_80112188))[count];
-            *(s32 *)getMemoryBlockBase(D_80112186) = entry->status;
+            D_80121D80[0] = ((RacePlayerState *)getRelocatableHeapBlockBase(D_80112188))[count];
+            *(s32 *)getRelocatableHeapBlockBase(D_80112186) = entry->status;
             entry->status = COURSE_GRID_ENTRY_FREE;
             D_80121B40 = entry->unk4;
             D_80121B44 = entry->unk8;
@@ -725,22 +725,22 @@ void func_800747E8(void) {
 void func_80074864(s32 arg0) {
     s32 color;
 
-    func_80045A78(-0x14, -0x10, getMemoryBlockBase(D_8011216E), 0x57);
+    func_80045A78(-0x14, -0x10, getRelocatableHeapBlockBase(D_8011216E), 0x57);
     color = 0x1A;
     if (D_80121B57 == 0) {
         color = 0x1B;
     }
-    func_80046D68(-0x1C, 0, getMemoryBlockBase(D_8011216E), 0x58, color);
+    func_80046D68(-0x1C, 0, getRelocatableHeapBlockBase(D_8011216E), 0x58, color);
     color = 0x1A;
     if (D_80121B57 == 1) {
         color = 0x1B;
     }
-    func_80046D68(-0x1C, 0xA, getMemoryBlockBase(D_8011216E), 0x59, color);
+    func_80046D68(-0x1C, 0xA, getRelocatableHeapBlockBase(D_8011216E), 0x59, color);
     color = 0x1A;
     if (D_80121B57 == 2) {
         color = 0x1B;
     }
-    func_80046D68(-0x1C, 0x14, getMemoryBlockBase(D_8011216E), 0x5A, color);
+    func_80046D68(-0x1C, 0x14, getRelocatableHeapBlockBase(D_8011216E), 0x5A, color);
 }
 
 void func_80074960(void) {
@@ -1479,7 +1479,7 @@ void func_80077400(void) {
         gCurrentGameTask->fadeTimer -= 1;
         if (gCurrentGameTask->fadeTimer == 0) {
             stopSoundEffects();
-            if ((gRaceSplitscreenMode == 2) && (((Unk80043040 *)getMemoryBlockBase(D_80112186))->unk8 != 0) && (D_80121B61 != 0) &&
+            if ((gRaceSplitscreenMode == 2) && (((Unk80043040 *)getRelocatableHeapBlockBase(D_80112186))->unk8 != 0) && (D_80121B61 != 0) &&
                 (saveRaceRecordReplayData() != 0)) {
                 D_80121B61 = -1;
             }
@@ -1504,7 +1504,7 @@ void func_80077554(void) {
     gRaceUpdatePaused = 0;
     D_80121B58 = 1;
     D_80121B5F = 0;
-    asset = getMemoryBlockBase(D_80112130[0x2B]);
+    asset = getRelocatableHeapBlockBase(D_80112130[0x2B]);
     if (((Unk80043040 *)asset)->unk8 == 0) {
         gFramebufferSwapHold = 1;
         setCurrentGameTaskCallback(func_80077B34, 0);
@@ -1517,31 +1517,31 @@ void func_80077554(void) {
     }
     ((Unk80043040 *)asset)->unk0 = 0;
     if (D_80112130[0x21] != -1) {
-        D_80112130[0x21] = freeMemoryBlock(D_80112130[0x21]);
+        D_80112130[0x21] = freeRelocatableHeapBlock(D_80112130[0x21]);
     }
     if (D_80112130[0x22] != -1) {
-        D_80112130[0x22] = freeMemoryBlock(D_80112130[0x22]);
+        D_80112130[0x22] = freeRelocatableHeapBlock(D_80112130[0x22]);
     }
     if (D_80112130[0x23] != -1) {
-        D_80112130[0x23] = freeMemoryBlock(D_80112130[0x23]);
+        D_80112130[0x23] = freeRelocatableHeapBlock(D_80112130[0x23]);
     }
     if (D_80112130[0x24] != -1) {
-        D_80112130[0x24] = freeMemoryBlock(D_80112130[0x24]);
+        D_80112130[0x24] = freeRelocatableHeapBlock(D_80112130[0x24]);
     }
     if (D_80112130[0x25] != -1) {
-        D_80112130[0x25] = freeMemoryBlock(D_80112130[0x25]);
+        D_80112130[0x25] = freeRelocatableHeapBlock(D_80112130[0x25]);
     }
     if (D_80112130[0x26] != -1) {
-        D_80112130[0x26] = freeMemoryBlock(D_80112130[0x26]);
+        D_80112130[0x26] = freeRelocatableHeapBlock(D_80112130[0x26]);
     }
     if (D_80112130[0x27] != -1) {
-        D_80112130[0x27] = freeMemoryBlock(D_80112130[0x27]);
+        D_80112130[0x27] = freeRelocatableHeapBlock(D_80112130[0x27]);
     }
     if (D_80112130[0x28] != -1) {
-        D_80112130[0x28] = freeMemoryBlock(D_80112130[0x28]);
+        D_80112130[0x28] = freeRelocatableHeapBlock(D_80112130[0x28]);
     }
     if (D_80112130[0x1F] != -1) {
-        D_80112130[0x1F] = freeMemoryBlock(D_80112130[0x1F]);
+        D_80112130[0x1F] = freeRelocatableHeapBlock(D_80112130[0x1F]);
     }
     ((Unk80043040 *)asset)->unk0 = 0;
     one = 1;
@@ -1586,7 +1586,7 @@ void func_80077554(void) {
     func_80078430();
     initRaceCourseEffects();
     gMenuFadeAlpha = 0xFF;
-    updateMemoryBlockAllocator();
+    updateRelocatableHeap();
     requestMusicSequenceBank(0);
     gCurrentGameTask->fadeTimer = 0;
     gCurrentGameTask->unk1C = 0;
@@ -1646,7 +1646,7 @@ void func_80077B34(void) {
     if (gPendingFramebufferSwapCount == 2) {
         gRaceRumbleEnabled = 0;
         D_80121B58 = 0;
-        updateMemoryBlockAllocator();
+        updateRelocatableHeap();
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;

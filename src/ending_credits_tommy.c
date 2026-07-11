@@ -5,7 +5,7 @@
 #include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 
 struct EndingCreditsTommy {
     /* 0x00 */ char pad0[0x18];
@@ -423,7 +423,7 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     gfx->words.w0 = 0x06000000;
     gfx->words.w1 = (u32)D_800D6270;
 
-    func_80045990(getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x31, &sp74, &sp70);
+    func_80045990(getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x31, &sp74, &sp70);
 
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;

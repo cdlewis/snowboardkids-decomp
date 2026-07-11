@@ -1,6 +1,6 @@
 #include "asset_manager.h"
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "system_boot.h"
 
 typedef struct {
@@ -351,14 +351,14 @@ void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2) {
     s32 sp30;
 
     dmaReadRom((u32)arg0, &gCompressedAssetHeader, 8);
-    D_80112130.assetHandles[arg2] = allocMemoryBlock(gCompressedAssetHeader.compressedSize);
-    D_80112130.compressedAssetHandle = allocMemoryBlock((s32)arg1 - (s32)arg0);
-    dmaReadRom((u32)arg0, (void *)getMemoryBlockBase(D_80112130.compressedAssetHandle), (s32)arg1 - (s32)arg0);
-    sp30 = getMemoryBlockBase(D_80112130.compressedAssetHandle) + 5;
+    D_80112130.assetHandles[arg2] = allocRelocatableHeapBlock(gCompressedAssetHeader.compressedSize);
+    D_80112130.compressedAssetHandle = allocRelocatableHeapBlock((s32)arg1 - (s32)arg0);
+    dmaReadRom((u32)arg0, (void *)getRelocatableHeapBlockBase(D_80112130.compressedAssetHandle), (s32)arg1 - (s32)arg0);
+    sp30 = getRelocatableHeapBlockBase(D_80112130.compressedAssetHandle) + 5;
     sp28 = &D_80112130.assetHandles[arg2];
-    decompressHuffmanAssetPayload(gCompressedAssetHeader.flags, sp30, getMemoryBlockBase(*sp28), gCompressedAssetHeader.compressedSize);
-    getMemoryBlockBase(*sp28);
-    D_80112130.compressedAssetHandle = freeMemoryBlock(D_80112130.compressedAssetHandle);
+    decompressHuffmanAssetPayload(gCompressedAssetHeader.flags, sp30, getRelocatableHeapBlockBase(*sp28), gCompressedAssetHeader.compressedSize);
+    getRelocatableHeapBlockBase(*sp28);
+    D_80112130.compressedAssetHandle = freeRelocatableHeapBlock(D_80112130.compressedAssetHandle);
 }
 
 void loadRawRomAsset(void *arg0, void *arg1, s32 arg2) {
@@ -366,6 +366,6 @@ void loadRawRomAsset(void *arg0, void *arg1, s32 arg2) {
     s16 *temp_v1;
 
     temp_v1 = &D_80112130.assetHandles[arg2];
-    *temp_v1 = allocMemoryBlock(temp_a0);
-    dmaReadRom((u32)arg0, (void *)getMemoryBlockBase(*temp_v1), temp_a0);
+    *temp_v1 = allocRelocatableHeapBlock(temp_a0);
+    dmaReadRom((u32)arg0, (void *)getRelocatableHeapBlockBase(*temp_v1), temp_a0);
 }

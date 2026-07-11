@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "character_select_course_menu.h"
 #include "controller_pak_menu.h"
@@ -51,26 +51,26 @@ void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     s32 j;
     s32 alpha;
 
-    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y - 4), getMemoryBlockBase(D_80112130[0x29]), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y - 4), getMemoryBlockBase(D_80112130[0x29]), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y - 4), getRelocatableHeapBlockBase(D_80112130[0x29]), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y - 4), getRelocatableHeapBlockBase(D_80112130[0x29]), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
-        drawMenuSprite((s16)(arg0->common.x + i), (s16)(arg0->common.y - 4), getMemoryBlockBase(D_80112130[0x29]), 3, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->common.x + i), (s16)(arg0->common.y + 0x24), getMemoryBlockBase(D_80112130[0x29]), 8, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + i), (s16)(arg0->common.y - 4), getRelocatableHeapBlockBase(D_80112130[0x29]), 3, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + i), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(D_80112130[0x29]), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0xE0);
 
-    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y + 0x24), getMemoryBlockBase(D_80112130[0x29]), 7, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), getMemoryBlockBase(D_80112130[0x29]), 9, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(D_80112130[0x29]), 7, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(D_80112130[0x29]), 9, 0x20, 0x20, 0, 0);
 
     i = 0;
 loop_outer:
-    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y + i), getMemoryBlockBase(D_80112130[0x29]), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + i), getMemoryBlockBase(D_80112130[0x29]), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y + i), getRelocatableHeapBlockBase(D_80112130[0x29]), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + i), getRelocatableHeapBlockBase(D_80112130[0x29]), 6, 0x20, 0x20, 0, 0);
     j = 0;
     do {
-        drawMenuSprite((s16)(arg0->common.x + j), (s16)(arg0->common.y + i), getMemoryBlockBase(D_80112130[0x29]), 0xB, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + j), (s16)(arg0->common.y + i), getRelocatableHeapBlockBase(D_80112130[0x29]), 0xB, 0x20, 0x20, 0, 0);
         j += 0x10;
     } while (j != 0xE0);
     i += 0x10;
@@ -85,7 +85,7 @@ loop_outer:
 
     alpha = (arg0->selectedOption == 0) ? 0x100 : 0x60;
 
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x10), getMemoryBlockBase(D_80112130[0x24]), 0x17, 0x20,
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x10), getRelocatableHeapBlockBase(D_80112130[0x24]), 0x17, 0x20,
                   0x20, 0, alpha, 0);
 
     if (alpha == 0x100) {
@@ -94,10 +94,10 @@ loop_outer:
         alpha = 0x100;
     }
 
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x20), getMemoryBlockBase(D_80112130[0x24]), 0x18, 0x20,
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x20), getRelocatableHeapBlockBase(D_80112130[0x24]), 0x18, 0x20,
                   0x20, 0, alpha, 0);
     drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x10),
-                  getMemoryBlockBase(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
+                  getRelocatableHeapBlockBase(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
 // updateControllerPakContinuePrompt best match: 92.821%
@@ -182,34 +182,34 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
         yAdjust = 0;
     }
 
-    drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y - yAdjust - 4), getMemoryBlockBase(D_80112130[0x29]), 2,
+    drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y - yAdjust - 4), getRelocatableHeapBlockBase(D_80112130[0x29]), 2,
                   0x20, 0x20, 0, actor->scale, 0);
-    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y - yAdjust - 4), getMemoryBlockBase(D_80112130[0x29]),
+    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y - yAdjust - 4), getRelocatableHeapBlockBase(D_80112130[0x29]),
                   4, 0x20, 0x20, 0, actor->scale, 0);
 
     i = 0;
     do {
-        drawMenuSpriteWithAlpha((s16)(actor->common.x + i), (s16)(actor->common.y - yAdjust - 4), getMemoryBlockBase(D_80112130[0x29]),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + i), (s16)(actor->common.y - yAdjust - 4), getRelocatableHeapBlockBase(D_80112130[0x29]),
                       3, 0x20, 0x20, 0, actor->scale, 0);
-        drawMenuSpriteWithAlpha((s16)(actor->common.x + i), (s16)(actor->common.y + yAdjust + 0x24), getMemoryBlockBase(D_80112130[0x29]),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + i), (s16)(actor->common.y + yAdjust + 0x24), getRelocatableHeapBlockBase(D_80112130[0x29]),
                       8, 0x20, 0x20, 0, actor->scale, 0);
         i += 0x10;
     } while (i < 0xE0);
 
-    drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y + yAdjust + 0x24), getMemoryBlockBase(D_80112130[0x29]),
+    drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y + yAdjust + 0x24), getRelocatableHeapBlockBase(D_80112130[0x29]),
                   7, 0x20, 0x20, 0, actor->scale, 0);
-    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + yAdjust + 0x24), getMemoryBlockBase(D_80112130[0x29]),
+    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + yAdjust + 0x24), getRelocatableHeapBlockBase(D_80112130[0x29]),
                   9, 0x20, 0x20, 0, actor->scale, 0);
 
     i = 0;
     do {
-        drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y + i), getMemoryBlockBase(D_80112130[0x29]), 5, 0x20,
+        drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y + i), getRelocatableHeapBlockBase(D_80112130[0x29]), 5, 0x20,
                       0x20, 0, actor->scale, 0);
-        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + i), getMemoryBlockBase(D_80112130[0x29]), 6, 0x20,
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + i), getRelocatableHeapBlockBase(D_80112130[0x29]), 6, 0x20,
                       0x20, 0, actor->scale, 0);
         j = 0;
         do {
-            drawMenuSpriteWithAlpha((s16)(actor->common.x + j), (s16)(actor->common.y + i), getMemoryBlockBase(D_80112130[0x29]), 0xB,
+            drawMenuSpriteWithAlpha((s16)(actor->common.x + j), (s16)(actor->common.y + i), getRelocatableHeapBlockBase(D_80112130[0x29]), 0xB,
                           0x20, 0x20, 0, actor->scale, 0);
             j += 0x10;
             // IDO register allocation nudge for matching codegen.
@@ -255,24 +255,24 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
         if (gControllerPakRumbleCheckPromptConfirmSelection == 0) {
             alpha = 0x100;
         }
-        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x10), getMemoryBlockBase(D_80112130[0x21]),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x10), getRelocatableHeapBlockBase(D_80112130[0x21]),
                       0x17, 0x20, 0x20, 0, alpha, 0);
         if (alpha == 0x100) {
             alpha = 0x60;
         } else {
             alpha = 0x100;
         }
-        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x20), getMemoryBlockBase(D_80112130[0x21]),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x20), getRelocatableHeapBlockBase(D_80112130[0x21]),
                       0x18, 0x20, 0x20, 0, alpha, 0);
         drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C),
                       (s16)(actor->common.y + (gControllerPakRumbleCheckPromptConfirmSelection * 0x10) + 0x10),
-                      getMemoryBlockBase(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, actor->optionScale, 0);
+                      getRelocatableHeapBlockBase(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, actor->optionScale, 0);
         if (1) {
         }
     }
 
     if ((actor->state == 1) || (actor->state == 3) || (actor->state == 8)) {
-        drawMenuSprite((s16)(actor->common.x + 0xD0), (s16)(actor->common.y + yAdjust + 0x20), getMemoryBlockBase(D_80112130[0x21]),
+        drawMenuSprite((s16)(actor->common.x + 0xD0), (s16)(actor->common.y + yAdjust + 0x20), getRelocatableHeapBlockBase(D_80112130[0x21]),
                       ((actor->timer >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
     }
 }
@@ -379,7 +379,7 @@ void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
     }
 
     drawAlpha = alpha;
-    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 1, 0x20, 0x20, 0, drawAlpha, 0);
+    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 1, 0x20, 0x20, 0, drawAlpha, 0);
 
     if (drawAlpha == 0x100) {
         alpha = 0x80;
@@ -387,9 +387,9 @@ void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
         alpha = 0x100;
     }
 
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x70), arg0->common.y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 2, 0x20, 0x20, 0,
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x70), arg0->common.y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 2, 0x20, 0x20, 0,
                   alpha, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + (gControllerPakMenuState.mainChoice * 0x70)), arg0->common.y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle),
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + (gControllerPakMenuState.mainChoice * 0x70)), arg0->common.y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
                   5, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
@@ -442,12 +442,12 @@ void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
         }
     }
 
-    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, alpha, 0);
-    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x70), actor->common.y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0,
+    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, alpha, 0);
+    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x70), actor->common.y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0,
                   otherAlpha, 0);
 
     if (gControllerPakMenuCursorState == 2) {
-        drawMenuSpriteWithAlpha((s16)(actor->common.x + (gControllerPakMenuConfirmChoice * 0x70)), actor->common.y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20,
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + (gControllerPakMenuConfirmChoice * 0x70)), actor->common.y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20,
                       0x20, 0, actor->scale, 0);
     }
 }
@@ -697,10 +697,10 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     } while (rowY != 0x50);
 
     if (gControllerPakMenuCursorState != 0) {
-        drawMenuSpriteWithAlpha(arg0->positions[5].x, (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)), getMemoryBlockBase(D_80112130[0x21]), 6,
+        drawMenuSpriteWithAlpha(arg0->positions[5].x, (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)), getRelocatableHeapBlockBase(D_80112130[0x21]), 6,
                       0x20, 0x20, 0, arg0->cursorScale, 0);
         drawMenuSpriteWithAlpha((s16)(arg0->positions[5].x + 0x80), (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)),
-                      getMemoryBlockBase(D_80112130[0x21]), 7, 0x20, 0x20, 0, arg0->cursorScale, 0);
+                      getRelocatableHeapBlockBase(D_80112130[0x21]), 7, 0x20, 0x20, 0, arg0->cursorScale, 0);
     }
 }
 #endif
@@ -750,7 +750,7 @@ void updateControllerPakFileDeleteIcon(s32 arg0) {
 }
 
 void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
-    func_80017168((DstStruct_80017168 *)&arg0->sprite, getMemoryBlockBase(D_8011217C));
+    func_80017168((DstStruct_80017168 *)&arg0->sprite, getRelocatableHeapBlockBase(D_8011217C));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x10;
     arg0->common.x = arg0->startX;
@@ -767,7 +767,7 @@ void updateControllerPakMessageIcon(s32 arg0) {
 }
 
 void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
-    func_80017168((DstStruct_80017168 *)&arg0->sprite, getMemoryBlockBase(D_8011217C));
+    func_80017168((DstStruct_80017168 *)&arg0->sprite, getRelocatableHeapBlockBase(D_8011217C));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x20;
     arg0->common.x = arg0->startX;
@@ -776,13 +776,13 @@ void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
 }
 
 void drawControllerPakFileDeleteErrorPrompt(ControllerPakWindowActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getMemoryBlockBase(D_80112178), 0, 0x20, 0x20, 0, arg0->scale, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x40), arg0->common.y, getMemoryBlockBase(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x78), arg0->common.y, getMemoryBlockBase(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0xB0), arg0->common.y, getMemoryBlockBase(D_80112178), 2, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getRelocatableHeapBlockBase(D_80112178), 0, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x40), arg0->common.y, getRelocatableHeapBlockBase(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x78), arg0->common.y, getRelocatableHeapBlockBase(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0xB0), arg0->common.y, getRelocatableHeapBlockBase(D_80112178), 2, 0x20, 0x20, 0, arg0->scale, 0);
     drawMenuGlyphScript((s16)(arg0->common.x + 4), (s16)(arg0->common.y + 4), gControllerPakCouldNotEraseNoteText, 0, arg0->scale, 0);
     if (arg0->selectedOption == 1) {
-        drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), getMemoryBlockBase(D_80112178),
+        drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(D_80112178),
                       ((arg0->timer >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
     }
 }
@@ -855,28 +855,28 @@ void drawControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) 
     s32 alpha;
     s32 limit;
 
-    drawMenuSprite(arg0->common.x, arg0->common.y, getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->common.x + 0x90), arg0->common.y, getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->common.x, arg0->common.y, getRelocatableHeapBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0x90), arg0->common.y, getRelocatableHeapBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
-        drawMenuSprite((s16)(arg0->common.x + i + 0x10), arg0->common.y, getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 3, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->common.x + i + 0x10), (s16)(arg0->common.y + 0x30), getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 8, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + i + 0x10), arg0->common.y, getRelocatableHeapBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 3, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + i + 0x10), (s16)(arg0->common.y + 0x30), getRelocatableHeapBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0x80);
 
-    drawMenuSprite(arg0->common.x, (s16)(arg0->common.y + 0x30), getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 7, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->common.x + 0x90), (s16)(arg0->common.y + 0x30), getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 9, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->common.x, (s16)(arg0->common.y + 0x30), getRelocatableHeapBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 7, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0x90), (s16)(arg0->common.y + 0x30), getRelocatableHeapBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 9, 0x20, 0x20, 0, 0);
 
     i = 0;
     limit = 0x80;
 loop_outer:
-    drawMenuSprite(arg0->common.x, (s16)(arg0->common.y + i + 0x10), getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->common.x + 0x90), (s16)(arg0->common.y + i + 0x10), getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->common.x, (s16)(arg0->common.y + i + 0x10), getRelocatableHeapBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0x90), (s16)(arg0->common.y + i + 0x10), getRelocatableHeapBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 6, 0x20, 0x20, 0, 0);
 
     j = 0;
     do {
-        drawMenuSprite((s16)(arg0->common.x + j + 0x10), (s16)(arg0->common.y + i + 0x10), getMemoryBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + j + 0x10), (s16)(arg0->common.y + i + 0x10), getRelocatableHeapBlockBase(CONTROLLER_PAK_DELETE_PANEL_HANDLE), 0xB, 0x20, 0x20, 0, 0);
         j += 0x10;
     } while (j != limit);
 
@@ -891,7 +891,7 @@ loop_outer:
 
     alpha = (arg0->selectedOption == 0) ? 0x100 : 0x60;
 
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x18), getMemoryBlockBase(D_80112130[0x24]), 0x17, 0x20, 0x20, 0, alpha, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x18), getRelocatableHeapBlockBase(D_80112130[0x24]), 0x17, 0x20, 0x20, 0, alpha, 0);
 
     if (alpha == 0x100) {
         alpha = 0x60;
@@ -899,8 +899,8 @@ loop_outer:
         alpha = 0x100;
     }
 
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x28), getMemoryBlockBase(D_80112130[0x24]), 0x18, 0x20, 0x20, 0, alpha, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x18), getMemoryBlockBase(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x28), getRelocatableHeapBlockBase(D_80112130[0x24]), 0x18, 0x20, 0x20, 0, alpha, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x18), getRelocatableHeapBlockBase(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
 void updateControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) {

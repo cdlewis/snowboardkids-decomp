@@ -1,6 +1,6 @@
 #include "common.h"
 #include "race_overlay_effects.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_input_history.h"
@@ -242,10 +242,10 @@ void func_80066760(RaceModelListActor *arg0) {
                     gDPPipeSync(gRegionAllocPtr++);
                     temp_s2 = gRegionAllocPtr++;
                     var_s7 = FALSE;
-                    gSPSegment(temp_s2, 0x02, getMemoryBlockBase(*(s16 *)&D_80112130[0x14]));
+                    gSPSegment(temp_s2, 0x02, getRelocatableHeapBlockBase(*(s16 *)&D_80112130[0x14]));
 
                     temp_s3 = gRegionAllocPtr++;
-                    gSPSegment(temp_s3, 0x03, getMemoryBlockBase(*(s16 *)&D_80112130[0x16]));
+                    gSPSegment(temp_s3, 0x03, getRelocatableHeapBlockBase(*(s16 *)&D_80112130[0x16]));
                 }
 
                 temp_s0 = gRegionAllocPtr++;
@@ -299,8 +299,8 @@ void func_800669A0(RaceModelListActor *arg0) {
     if (count != 0) {
         entry = base;
         size = count << 6;
-        *(s16 *)&D_80112130[0x46] = allocMemoryBlock(size);
-        arg0->modelBuffer = (void *)getMemoryBlockBase(*(s16 *)&D_80112130[0x46]);
+        *(s16 *)&D_80112130[0x46] = allocRelocatableHeapBlock(size);
+        arg0->modelBuffer = (void *)getRelocatableHeapBlockBase(*(s16 *)&D_80112130[0x46]);
 
         for (i = 0; i < count; i++) {
             makeFixedRotationY(&transform, entry->assetIndex);
@@ -336,7 +336,7 @@ void func_80066ABC(RaceModelListActor *arg0) {
             if ((entry->enabled != 0) && (isPositionNearCurrentViewport(&entry->transform) != 0)) {
                 if (modelIndex != entry->modelIndex + actor->modelIndexOffset) {
                     modelIndex = entry->modelIndex + actor->modelIndexOffset;
-                    func_80045990(getMemoryBlockBase(D_80112168), (modelIndex + 4) & 0xFFFF, &spA0, &sp9C);
+                    func_80045990(getRelocatableHeapBlockBase(D_80112168), (modelIndex + 4) & 0xFFFF, &spA0, &sp9C);
 
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, spA0, G_IM_FMT_CI, 16, 16, 0, G_TX_CLAMP,
                                            G_TX_CLAMP, 0, 0, 0, 0);
@@ -473,8 +473,8 @@ void func_8006713C(RaceModelListActor *arg0) {
         } while (var_v0->modelIndex != -1);
     }
     if (new_var->modelCount != 0) {
-        RACE_MODEL_BUFFER_HANDLE = allocMemoryBlock(new_var->modelCount << 6);
-        new_var->modelBuffer = (void *) getMemoryBlockBase(RACE_MODEL_BUFFER_HANDLE);
+        RACE_MODEL_BUFFER_HANDLE = allocRelocatableHeapBlock(new_var->modelCount << 6);
+        new_var->modelBuffer = (void *) getRelocatableHeapBlockBase(RACE_MODEL_BUFFER_HANDLE);
         func_80067034(new_var);
         setCallbackTaskCallback(new_var, func_80066E10);
     }
@@ -499,8 +499,8 @@ void func_800671F4(RaceOverlayTransformActor *arg0) {
 
         if (arg0->matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112144));
-            gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112146));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, D_800DA1F0);
         }
@@ -716,11 +716,11 @@ void func_80067830(RaceOverlayModelActor *arg0) {
             temp_v0 = gRegionAllocPtr++;
             temp_v0->words.w0 = 0xBC000806;
             sp10C = temp_v0;
-            sp10C->words.w1 = getMemoryBlockBase(D_80112144);
+            sp10C->words.w1 = getRelocatableHeapBlockBase(D_80112144);
             temp_v0 = gRegionAllocPtr++;
             temp_v0->words.w0 = 0xBC000C06;
             sp108 = temp_v0;
-            sp108->words.w1 = getMemoryBlockBase(D_80112146);
+            sp108->words.w1 = getRelocatableHeapBlockBase(D_80112146);
             gSPMatrix(gRegionAllocPtr++, arg0->scaleDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (arg0->variant == 0) {
                 gSPDisplayList(gRegionAllocPtr++, D_2003A38);
@@ -1054,13 +1054,13 @@ void func_800691C8(RaceOverlayModelActor *arg0) {
     arg0->spawnPos.x = arg0->pos.x;
     arg0->spawnPos.y = arg0->pos.y;
     arg0->spawnPos.z = arg0->pos.z;
-    func_80045990(getMemoryBlockBase(D_80112168), 0x1E, &arg0->image0, &arg0->palette0);
+    func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x1E, &arg0->image0, &arg0->palette0);
     if (arg0->variant == 0) {
-        func_80045990(getMemoryBlockBase(D_80112168), 0x20, &arg0->image1, &arg0->palette1);
+        func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x20, &arg0->image1, &arg0->palette1);
     } else {
-        func_80045990(getMemoryBlockBase(D_80112168), 0x21, &arg0->image1, &arg0->palette1);
+        func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x21, &arg0->image1, &arg0->palette1);
     }
-    func_80045990(getMemoryBlockBase(D_80112168), 0x22, &arg0->image2, &arg0->palette2);
+    func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x22, &arg0->image2, &arg0->palette2);
     setCallbackTaskCallback(arg0, assignPickupRandomEffect);
 }
 
@@ -1158,7 +1158,7 @@ void func_80069754(RaceParticleActor *arg0) {
     arg0->rotVelZ = randomNextMain() - 0x80;
     makeFixedRotationY(sp28, arg0->rotY);
     transformVec3iByFixedMatrix(sp28, &D_800D9BD8[arg0->spawnOffsetIndex], &arg0->velocity);
-    func_80045990(getMemoryBlockBase(D_80112168), 0x22, &arg0->palette, &arg0->image);
+    func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x22, &arg0->palette, &arg0->image);
     setCallbackTaskCallback(arg0, func_80069678);
 }
 

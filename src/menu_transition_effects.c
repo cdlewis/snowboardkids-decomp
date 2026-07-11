@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "menu_transition_effects.h"
 #include "main_menu_scene_model.h"
@@ -99,7 +99,7 @@ void updateEndingPhaseAdvanceSparkle(MainMenuEffectActor *arg0);
 void updateEndingDelayedSparkle(MainMenuEffectActor *arg0);
 
 void drawEndingCharacterVanishPoof(MainMenuEffectActor *arg0) {
-    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x32) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
+    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x32) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
 void updateEndingCharacterVanishPoof(MainMenuEffectActor *arg0) {
@@ -137,7 +137,7 @@ void spawnEndingCharacterVanishPoof(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
 }
 
 void drawEndingSpeedLine(MainMenuEffectActor *arg0) {
-    s32 temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    s32 temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     MainMenuEffectActor *linePosition =
         (MainMenuEffectActor *)((s32)arg0 + arg0->uFrameIndex * sizeof(arg0->linePositions[0]));
 
@@ -171,7 +171,7 @@ void initEndingSpeedLines(MainMenuEffectActor *arg0) {
 }
 
 void drawEndingCharacterLoopingSparkle(MainMenuEffectActor *arg0) {
-    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x10) & 0xFFFF, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x10) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
 void updateEndingCharacterLoopingSparkle(MainMenuEffectActor *arg0) {
@@ -219,7 +219,7 @@ void drawEndingBigBurst(MainMenuEffectActor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; do { w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; new_var = gfx; new_var->words.w0 = 0xFA000000; new_var->words.w1 = -0x60; } while (0); if (arg0->effectFrame != 0) { drawMenuSprite(arg0->offsetX, arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), (((0, arg0->effectFrame)) + 0x24) & 0xFFFF, 0x30, 0x20, 0, 0); } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; if (arg0->effectFrame < 0xC) { drawMenuSprite(arg0->offsetX, arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), (arg0->effectFrame + 0x25) & 0xFFFF, 0x30, 0x20, 0, 0); } drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x31, 0x20, 0x20, 0, 0); } while (0);
+    do { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; do { w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; new_var = gfx; new_var->words.w0 = 0xFA000000; new_var->words.w1 = -0x60; } while (0); if (arg0->effectFrame != 0) { drawMenuSprite(arg0->offsetX, arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), (((0, arg0->effectFrame)) + 0x24) & 0xFFFF, 0x30, 0x20, 0, 0); } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; if (arg0->effectFrame < 0xC) { drawMenuSprite(arg0->offsetX, arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), (arg0->effectFrame + 0x25) & 0xFFFF, 0x30, 0x20, 0, 0); } drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x31, 0x20, 0x20, 0, 0); } while (0);
 }
 #endif
 
@@ -271,7 +271,7 @@ void initEndingBigBurst(MainMenuEffectActor *arg0) {
 void drawEndingRisingStar(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 9) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -301,7 +301,7 @@ void initEndingRisingStar(MainMenuEffectActor *arg0) {
 }
 
 void drawEndingRunDust(MainMenuEffectActor *arg0) {
-    s32 temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    s32 temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x - 0xE, arg0->y - 0x50, temp, (u16)(gEndingCharacterRunDustFrameOffsets[arg0->animFrame] + 6), 0x20, 0x20, 0, 0);
 }
 
@@ -334,7 +334,7 @@ void initEndingRunDust(MainMenuEffectActor *arg0) {
 void drawEndingSmallBurst(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x14) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -367,7 +367,7 @@ void spawnEndingSmallBurst(s16 arg0, s16 arg1) {
 }
 
 void drawEndingCharacterAura(MainMenuEffectActor *arg0) {
-    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x20) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
+    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x20) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
 void updateEndingCharacterAura(MainMenuEffectActor *arg0) {
@@ -409,7 +409,7 @@ void spawnEndingCharacterAura(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
 void drawEndingIdleSparkle(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x20) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -440,7 +440,7 @@ void initEndingIdleSparkle(MainMenuEffectActor *arg0) {
 }
 
 void drawEndingPhaseAdvanceSparkle(MainMenuEffectActor *arg0) {
-    s32 temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    s32 temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, arg0->animFrame, 0x20, 0x20, 0, 0);
 }
 
@@ -480,7 +480,7 @@ void spawnEndingPhaseAdvanceSparkle(s16 arg0, s16 arg1) {
 void drawEndingDelayedSparkle(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x1C) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -533,7 +533,7 @@ void spawnEndingDelayedSparkle(s16 arg0, s16 arg1, u8 arg2) {
 void drawEndingSnowmanEntranceEffect(MainMenuEffectActor *arg0) {
     s32 temp;
 
-    temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
     drawMenuSprite(arg0->x, arg0->y, temp, (gEndingSnowmanEntranceFrameOffsets[arg0->animFrame] + 0x19) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -713,7 +713,7 @@ void updateRaceToMenuSnowboardIconWaitStart(MainMenuEffectActor *arg0) {
 }
 
 void initRaceToMenuSnowboardIcon(MainMenuEffectActor *arg0) {
-    func_80017168((DstStruct_80017168 *)arg0->spriteState, getMemoryBlockBase(D_8011217C));
+    func_80017168((DstStruct_80017168 *)arg0->spriteState, getRelocatableHeapBlockBase(D_8011217C));
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;
     arg0->y = arg0->startY;
@@ -758,7 +758,7 @@ void updateRaceToMenuSnowflakeIconIdle(MainMenuEffectActor *arg0) {
 }
 
 void initRaceToMenuSnowflakeIcon(MainMenuEffectActor *arg0) {
-    func_80017168((DstStruct_80017168 *)arg0->spriteState, getMemoryBlockBase(D_8011217C));
+    func_80017168((DstStruct_80017168 *)arg0->spriteState, getRelocatableHeapBlockBase(D_8011217C));
     arg0->angle = 0;
     arg0->angleVelocity = 0x1F0;
     arg0->x = 0x14;
@@ -818,7 +818,7 @@ void updateRaceToMenuLogoWipeOpen(MainMenuEffectActor *arg0) {
 }
 
 void initRaceToMenuLogoWipe(MainMenuEffectActor *arg0) {
-    func_80017168((DstStruct_80017168 *)arg0->spriteState, getMemoryBlockBase(D_8011217E));
+    func_80017168((DstStruct_80017168 *)arg0->spriteState, getRelocatableHeapBlockBase(D_8011217E));
     arg0->angle = 0;
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;

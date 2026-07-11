@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "title_screen_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
@@ -72,7 +72,7 @@ void updateTitleScreenLogo(TitleScreenLogoActor *arg0) {
 }
 
 void initTitleScreenLogo(TitleScreenLogoActor *arg0) {
-    func_80017168((DstStruct_80017168 *)&arg0->sprite, getMemoryBlockBase(TITLE_SCREEN_LOGO_SPRITE_HANDLE));
+    func_80017168((DstStruct_80017168 *)&arg0->sprite, getRelocatableHeapBlockBase(TITLE_SCREEN_LOGO_SPRITE_HANDLE));
     arg0->sprite.width = 0x10;
     arg0->sprite.height = 0x10;
     arg0->common.x = arg0->startX;
@@ -95,14 +95,14 @@ void drawTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0) {
                 palette = 3;
             }
             drawMenuSpriteWithAlpha(arg0->common.x, (s16)(arg0->labelY + (i * 0x10)),
-                          getMemoryBlockBase(TITLE_SCREEN_TEXTURE_HANDLE),
+                          getRelocatableHeapBlockBase(TITLE_SCREEN_TEXTURE_HANDLE),
                           tile & 0xFFFF, 0x20, 0x20, 0, 0x100, palette + 1);
         }
     }
 
-    drawMenuSprite(-0x48, 0x4F, getMemoryBlockBase(TITLE_SCREEN_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
+    drawMenuSprite(-0x48, 0x4F, getRelocatableHeapBlockBase(TITLE_SCREEN_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
     drawMenuAsciiText(0x68, -0x1A, "TM", 0, 0x100);
-    drawMenuSprite(-0x48, 0x5A, getMemoryBlockBase(TITLE_SCREEN_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+    drawMenuSprite(-0x48, 0x5A, getRelocatableHeapBlockBase(TITLE_SCREEN_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
 }
 
 void updateTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0) {
@@ -132,7 +132,7 @@ void initTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0) {
 }
 
 void drawTitleScreenMenuCursor(TitleScreenMenuCursorActor *arg0) {
-    s32 temp = getMemoryBlockBase(gMenuCommonSpritesAssetHandle);
+    s32 temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
 
     drawMenuSprite(arg0->common.x, arg0->common.y, temp, 3, 0x20, 0x20, 0, 0);
 }

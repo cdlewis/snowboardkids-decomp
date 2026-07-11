@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "fixed_point_math.h"
 #include "race_ui_effects.h"
 #include "snowboard_trail_effects.h"
@@ -76,8 +76,8 @@ void func_800837D0(SnowboardTrailState *trail) {
 
     if (trail->frontDisplayList != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112144));
-        gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112146));
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
         gSPMatrix(gRegionAllocPtr++, trail->frontDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_2002208);
         gSPMatrix(gRegionAllocPtr++, trail->backDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);

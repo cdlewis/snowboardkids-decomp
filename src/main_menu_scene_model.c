@@ -1,5 +1,5 @@
 #include "main_menu_scene_model.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "asset_manager.h"
 #include "fixed_point_math.h"
 
@@ -249,7 +249,7 @@ void loadCurrentRaceRecordReplayData(void) {
         }
     }
 
-    model = (u8 *)getMemoryBlockBase(D_8011213E);
+    model = (u8 *)getRelocatableHeapBlockBase(D_8011213E);
     *(s32 *)&model[0] = 0;
     *(s32 *)&model[4] = *(s16 *)&dst[0];
     model[8] = 1;
@@ -290,8 +290,8 @@ void initMainMenuSceneModel(s32 actorIndex, s32 modelIndex) {
                   MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterRawAssetRanges, modelIndex), actorIndex + 0x33);
     loadCompressedRomAsset((void *)MAIN_MENU_MODEL_ASSET_RANGE_START(gCharacterTextureAssetRanges, modelIndex),
                   (void *)MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterTextureAssetRanges, modelIndex), actorIndex + 0x39);
-    D_80112130.modelInstanceHandles[actorIndex] = allocMemoryBlock(sizeof(MainMenuSceneModel));
-    model = (MainMenuSceneModel *)getMemoryBlockBase(D_80112130.modelInstanceHandles[actorIndex]);
+    D_80112130.modelInstanceHandles[actorIndex] = allocRelocatableHeapBlock(sizeof(MainMenuSceneModel));
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(D_80112130.modelInstanceHandles[actorIndex]);
     model->actorIndex = actorIndex;
     model->modelIndex = modelIndex;
     initMainMenuSceneModelParts(model);
@@ -303,9 +303,9 @@ void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
     MainMenuSceneModel *model;
     s16 frameDuration;
 
-    animationBank = (MainMenuModelAnimationBank *)getMemoryBlockBase(D_801121AE);
+    animationBank = (MainMenuModelAnimationBank *)getRelocatableHeapBlockBase(D_801121AE);
     frameData = MAIN_MENU_ANIMATION_FRAME_DATA(animationBank, animationIndex);
-    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     frameDuration = *frameData++;
     model->framesRemaining = frameDuration;
     model->animationStart = frameData;
@@ -315,7 +315,7 @@ void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
 }
 
 MainMenuSceneModel *getMainMenuSceneModel(s32 modelIndex) {
-    return (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    return (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
 }
 
 void applyMainMenuSceneModelAnimationFrame(MainMenuSceneModel *model) {
@@ -351,7 +351,7 @@ s32 stepMainMenuSceneModelAnimation(s32 modelIndex) {
     MainMenuSceneModel *new_var;
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     if (model->framesRemaining == 1) {
         goto ret1_initial;
     }
@@ -377,7 +377,7 @@ ret0:
 void loopMainMenuSceneModelAnimation(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     model->framesRemaining--;
     if (model->framesRemaining <= 0) {
         model->framesRemaining = model->frameDuration;
@@ -389,7 +389,7 @@ void loopMainMenuSceneModelAnimation(s32 modelIndex) {
 void setMainMenuSceneModelPosition(s32 modelIndex, s32 x, s32 y, s32 z) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     model->pos.x = x;
     model->pos.y = y;
     model->pos.z = z;
@@ -398,7 +398,7 @@ void setMainMenuSceneModelPosition(s32 modelIndex, s32 x, s32 y, s32 z) {
 void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getMemoryBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
     model->rot.x = x;
     model->rot.y = y;
     model->rot.z = z;

@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "menu_rendering.h"
 #include "race_hud.h"
@@ -113,33 +113,33 @@ void func_800171F0(RaceHudBannerActor *arg0) {
 
     actor = arg0;
     if (actor->state != 3) {
-        drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y - 4), getMemoryBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE), 2, 0x20,
+        drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y - 4), getRelocatableHeapBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE), 2, 0x20,
                       0x20, 0, actor->alpha, 0);
-        drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y - 4), getMemoryBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE),
+        drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y - 4), getRelocatableHeapBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE),
                       4, 0x20, 0x20, 0, actor->alpha, 0);
         i = 0;
         do {
-            drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y - 4), getMemoryBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE),
+            drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y - 4), getRelocatableHeapBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE),
                           3, 0x20, 0x20, 0, actor->alpha, 0);
-            drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y + 0x24), getMemoryBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE),
+            drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y + 0x24), getRelocatableHeapBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE),
                           8, 0x20, 0x20, 0, actor->alpha, 0);
             i += 0x10;
         } while (i < 0xE0);
-        drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y + 0x24), getMemoryBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE),
+        drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y + 0x24), getRelocatableHeapBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE),
                       7, 0x20, 0x20, 0, actor->alpha, 0);
         drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y + 0x24),
-                      getMemoryBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, actor->alpha, 0);
+                      getRelocatableHeapBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, actor->alpha, 0);
         i = (actor->state == 4) * 0;
         limit = 0xE0;
         do {
-            drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y + i), getMemoryBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE),
+            drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y + i), getRelocatableHeapBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE),
                           5, 0x20, 0x20, 0, actor->alpha, 0);
-            drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y + i), getMemoryBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE),
+            drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y + i), getRelocatableHeapBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE),
                           6, 0x20, 0x20, 0, actor->alpha, 0);
             j = 0;
             do {
                 drawMenuSpriteWithAlpha((s16)(actor->x + j), (s16)(actor->y + i),
-                              getMemoryBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, actor->alpha, 0);
+                              getRelocatableHeapBlockBase(RACE_HUD_BANNER_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, actor->alpha, 0);
                 j += 0x10;
             } while (j != limit);
             i += 0x10;
@@ -161,7 +161,7 @@ void func_800171F0(RaceHudBannerActor *arg0) {
                 }
             }
             drawMenuSpriteWithAlpha((s16)(actor->x + 0x4C), (s16)(actor->y + 0x10),
-                          getMemoryBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE), 0x17, 0x20, 0x20, 0, alpha, 0);
+                          getRelocatableHeapBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE), 0x17, 0x20, 0x20, 0, alpha, 0);
             if (actor->alpha < 0x60) {
                 alpha = actor->alpha & 0xFFFF;
             } else {
@@ -172,7 +172,7 @@ void func_800171F0(RaceHudBannerActor *arg0) {
                 }
             }
             drawMenuSpriteWithAlpha((s16)(actor->x + 0x4C), (s16)(actor->y + 0x20),
-                          getMemoryBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE), 0x18, 0x20, 0x20, 0, alpha, 0);
+                          getRelocatableHeapBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE), 0x18, 0x20, 0x20, 0, alpha, 0);
             if (actor->alpha != 0x100) {
                 alpha = actor->alpha & 0xFFFF;
                 ;
@@ -180,11 +180,11 @@ void func_800171F0(RaceHudBannerActor *arg0) {
                 alpha = (u16)actor->unk1E;
             }
             drawMenuSpriteWithAlpha((s16)(actor->x + 0x4C), (s16)((actor->y + (actor->mode * 0x10)) + 0x10),
-                          getMemoryBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE), 0x12, 0x20, 0x20, 0, alpha, 0);
+                          getRelocatableHeapBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE), 0x12, 0x20, 0x20, 0, alpha, 0);
         }
         if (actor->state == 1) {
             drawMenuSprite((s16)(actor->x + 0xD0), (s16)(actor->y + 0x20),
-                          getMemoryBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE), ((actor->frame >= 8) + 5) & 0xFFFF, 0x20,
+                          getRelocatableHeapBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE), ((actor->frame >= 8) + 5) & 0xFFFF, 0x20,
                           0x20, 0, 0);
         }
     }
@@ -286,19 +286,19 @@ void func_80017A10(RaceHudPlayerFrameActor *arg0) {
             alpha = 0x100;
         }
 
-        texture = getMemoryBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE);
+        texture = getRelocatableHeapBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE);
         playerNumber = i + 1;
         flip = playerNumber & 0xFF;
         drawMenuSpriteWithAlpha(actor->x, actor->y, texture, 0x23, 0x20, 0x20, 0, alpha, flip);
-        texture = getMemoryBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE);
+        texture = getRelocatableHeapBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE);
         drawMenuSpriteWithAlpha((s16)(actor->x + 0x40), actor->y, texture, 0x24, 0x20, 0x20, 0, alpha, flip);
-        texture = getMemoryBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE);
+        texture = getRelocatableHeapBlockBase(RACE_HUD_PLAYER_FRAME_HANDLE);
         i = 2;
         drawMenuSpriteWithAlpha((s16)(actor->x + 0x80), actor->y, texture, 0xC, 0x20, 0x20, 0, alpha, flip);
         sprintf(sp6C, D_800E0AB0, playerNumber);
         drawMenuAsciiText((s16)(actor->x + 0x32), (s16)(actor->y + 2), sp6C, 0, alpha);
         if (alpha != 0x100) {
-            texture = getMemoryBlockBase(RACE_HUD_UNUSED_HANDLE);
+            texture = getRelocatableHeapBlockBase(RACE_HUD_UNUSED_HANDLE);
             drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y + 0x14), texture, 0x90, 0x20, 0x20, 0, 0xF0, 0);
         }
 
@@ -413,7 +413,7 @@ loop_4:
                 }
             }
             func_80011264((s16)(arg0->x + xOffset), arg0->y,
-                          getMemoryBlockBase(*(s16 *)&D_80112130[textureIndex * 2]), tile, 0, alpha);
+                          getRelocatableHeapBlockBase(*(s16 *)&D_80112130[textureIndex * 2]), tile, 0, alpha);
             i++;
             xOffset += 0x20;
         } while (i < 5);
@@ -445,7 +445,7 @@ loop_17:
                 }
             }
             func_80011264((s16)(arg0->x - 0x20), arg0->y,
-                          getMemoryBlockBase(*(s16 *)&D_80112130[textureIndex * 2]), tile, 0, alpha);
+                          getRelocatableHeapBlockBase(*(s16 *)&D_80112130[textureIndex * 2]), tile, 0, alpha);
         }
     }
 }
@@ -531,7 +531,7 @@ void func_80018134(RaceHudPlayerListActor *arg0) {
     RacePlayer *player;
     RaceHudPlayerListActor *actorX;
 
- do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = D_80121D80; tiles = D_800B5B30; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (RaceHudPlayerListActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
+ do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = D_80121D80; tiles = D_800B5B30; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (RaceHudPlayerListActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
 }
 
 // func_800182A4 best match: 99.740% (nonmatchings/func_800182A4-1315772375853892447/base_16.c)
@@ -673,9 +673,9 @@ void func_800184C8(RaceHudPanelActor *arg0) {
                 }
 
                 func_80011264((s16)(actor->x[0] + 6), (s16)(actor->y[0] + 0xD),
-                              getMemoryBlockBase(*(s16 *)&textureHandles[iconIndex * 2]), tile, 0, 0x100);
+                              getRelocatableHeapBlockBase(*(s16 *)&textureHandles[iconIndex * 2]), tile, 0, 0x100);
                 drawMenuSprite((s16)(actor->x[0] + 2), (s16)(actor->y[0] + 0x28),
-                              getMemoryBlockBase(*(s16 *)&textureHandles[0x3E]), (player->characterId + 0x91) & 0xFFFF,
+                              getRelocatableHeapBlockBase(*(s16 *)&textureHandles[0x3E]), (player->characterId + 0x91) & 0xFFFF,
                               0x20, 0x20, 0, 0);
 
                 if (player->characterId == 5) {
@@ -692,7 +692,7 @@ void func_800184C8(RaceHudPanelActor *arg0) {
                 if ((s32)stat / 2 > 0) {
                     do {
                         drawMenuSprite((s16)(actor->x[0] + xOffset + 0x5D), (s16)(actor->y[0] + 0x16),
-                                      getMemoryBlockBase(*(s16 *)&textureHandles[0x42]), 0x25, 0x20, 0x20, 0, 0);
+                                      getRelocatableHeapBlockBase(*(s16 *)&textureHandles[0x42]), 0x25, 0x20, 0x20, 0, 0);
                         j++;
                         xOffset += 0xC;
                         stats = &statsBase[player->characterId * stride];
@@ -702,7 +702,7 @@ void func_800184C8(RaceHudPanelActor *arg0) {
                 }
                 if (stat & 1) {
                     drawMenuSprite((s16)(actor->x[0] + xOffset + 0x5D), (s16)(actor->y[0] + 0x16),
-                                  getMemoryBlockBase(*(s16 *)&textureHandles[0x42]), 0x26, 0x20, 0x20, 0, 0);
+                                  getRelocatableHeapBlockBase(*(s16 *)&textureHandles[0x42]), 0x26, 0x20, 0x20, 0, 0);
                     stats = &statsBase[player->characterId * stride];
                 }
 
@@ -711,7 +711,7 @@ void func_800184C8(RaceHudPanelActor *arg0) {
                 if ((s32)stat / 2 > 0) {
                     do {
                         drawMenuSprite((s16)(actor->x[0] + xOffset + 0x5D), (s16)(actor->y[0] + 0x22),
-                                      getMemoryBlockBase(*(s16 *)&textureHandles[0x42]), 0x25, 0x20, 0x20, 0, 0);
+                                      getRelocatableHeapBlockBase(*(s16 *)&textureHandles[0x42]), 0x25, 0x20, 0x20, 0, 0);
                         j++;
                         xOffset += 0xC;
                         stats = &statsBase[player->characterId * stride];
@@ -721,7 +721,7 @@ void func_800184C8(RaceHudPanelActor *arg0) {
                 }
                 if (stat & 1) {
                     drawMenuSprite((s16)(actor->x[0] + xOffset + 0x5D), (s16)(actor->y[0] + 0x22),
-                                  getMemoryBlockBase(*(s16 *)&textureHandles[0x42]), 0x26, 0x20, 0x20, 0, 0);
+                                  getRelocatableHeapBlockBase(*(s16 *)&textureHandles[0x42]), 0x26, 0x20, 0x20, 0, 0);
                     stats = &statsBase[player->characterId * stride];
                 }
 
@@ -730,7 +730,7 @@ void func_800184C8(RaceHudPanelActor *arg0) {
                 if ((s32)stat / 2 > 0) {
                     do {
                         drawMenuSprite((s16)(actor->x[0] + xOffset + 0x5D), (s16)(actor->y[0] + 0x2E),
-                                      getMemoryBlockBase(*(s16 *)&textureHandles[0x42]), 0x25, 0x20, 0x20, 0, 0);
+                                      getRelocatableHeapBlockBase(*(s16 *)&textureHandles[0x42]), 0x25, 0x20, 0x20, 0, 0);
                         j++;
                         xOffset += 0xC;
                         stat = statsBase[(player->characterId * stride) + 2];
@@ -738,7 +738,7 @@ void func_800184C8(RaceHudPanelActor *arg0) {
                 }
                 if (stat & 1) {
                     drawMenuSprite((s16)(actor->x[0] + xOffset + 0x5D), (s16)(actor->y[0] + 0x2E),
-                                  getMemoryBlockBase(*(s16 *)&textureHandles[0x42]), 0x26, 0x20, 0x20, 0, 0);
+                                  getRelocatableHeapBlockBase(*(s16 *)&textureHandles[0x42]), 0x26, 0x20, 0x20, 0, 0);
                 }
 
                 i++;
@@ -798,7 +798,7 @@ void func_80018BC0(RaceHudPanelSlot *arg0) {
             if (player[8] != 0) {
                 new_var = i * 2;
                 temp_s0 = base + new_var;
-                color = getMemoryBlockBase(*(s16 *) &D_80112130[0x42]);
+                color = getRelocatableHeapBlockBase(*(s16 *) &D_80112130[0x42]);
                 temp_v1 = *(u16 *) (temp_s0 + 0x40);
                 drawMenuSprite(*(s16 *) (temp_s0 + 0x18), *(s16 *) (temp_s0 + 0x20), color, 0xD, temp_v1, temp_v1, 0, 0);
             }

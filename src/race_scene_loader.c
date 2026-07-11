@@ -1,5 +1,5 @@
 #include "common.h"
-#include "memory_block_allocator.h"
+#include "relocatable_heap.h"
 #include "asset_manager.h"
 #include "race_scene_loader.h"
 #include "callback_task_scheduler.h"
@@ -107,9 +107,9 @@ void loadRaceCourseAssets(void) {
     switch (gRaceCourseIndex) {
     case 0:
         size = D_EC9A0 - D_E35C0;
-        D_80112140 = allocMemoryBlock(size);
-        lockMemoryBlock(D_80112140);
-        dmaReadRom(D_E35C0, getMemoryBlockBase(D_80112140), size);
+        D_80112140 = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(D_80112140);
+        dmaReadRom(D_E35C0, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_163410, D_171480, 9);
         loadCompressedRomAsset(D_21D9D0, D_222500, 0x1B);
         func_8007D190();
@@ -117,9 +117,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 1:
         size = D_F6160 - D_EC9A0;
-        D_80112140 = allocMemoryBlock(size);
-        lockMemoryBlock(D_80112140);
-        dmaReadRom(D_EC9A0, getMemoryBlockBase(D_80112140), size);
+        D_80112140 = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(D_80112140);
+        dmaReadRom(D_EC9A0, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_171480, D_17D220, 9);
         loadCompressedRomAsset(D_222500, D_2274A0, 0x1B);
         func_8007D190();
@@ -127,9 +127,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 2:
         size = D_FEDA0 - D_F6160;
-        D_80112140 = allocMemoryBlock(size);
-        lockMemoryBlock(D_80112140);
-        dmaReadRom(D_F6160, getMemoryBlockBase(D_80112140), size);
+        D_80112140 = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(D_80112140);
+        dmaReadRom(D_F6160, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_17D220, D_186910, 9);
         loadCompressedRomAsset(D_2274A0, D_22AE50, 0x1B);
         func_8007D190();
@@ -137,9 +137,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 3:
         size = D_10AAB0 - D_FEDA0;
-        D_80112130[8] = allocMemoryBlock(size);
-        lockMemoryBlock(D_80112130[8]);
-        dmaReadRom(D_FEDA0, getMemoryBlockBase(D_80112140), size);
+        D_80112130[8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(D_80112130[8]);
+        dmaReadRom(D_FEDA0, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_186910, D_197490, 9);
         loadCompressedRomAsset(D_22AE50, D_2308E0, 0x1B);
         func_8007D190();
@@ -147,9 +147,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 4:
         size = D_118670 - D_10AAB0;
-        D_80112130[8] = allocMemoryBlock(size);
-        lockMemoryBlock(D_80112130[8]);
-        dmaReadRom(D_10AAB0, getMemoryBlockBase(D_80112140), size);
+        D_80112130[8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(D_80112130[8]);
+        dmaReadRom(D_10AAB0, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_197490, D_1A5620, 9);
         loadCompressedRomAsset(D_2308E0, D_2349E0, 0x1B);
         func_8007D190();
@@ -157,9 +157,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 5:
         size = D_125C90 - D_118670;
-        D_80112130[8] = allocMemoryBlock(size);
-        lockMemoryBlock(D_80112130[8]);
-        dmaReadRom(D_118670, getMemoryBlockBase(D_80112140), size);
+        D_80112130[8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(D_80112130[8]);
+        dmaReadRom(D_118670, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_1A5620, D_1B3160, 9);
         loadCompressedRomAsset(D_2349E0, D_23A7D0, 0x1B);
         func_8007D190();
@@ -167,9 +167,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 6:
         size = D_131A90 - D_125C90;
-        D_80112130[8] = allocMemoryBlock(size);
-        lockMemoryBlock(D_80112130[8]);
-        dmaReadRom(D_125C90, getMemoryBlockBase(D_80112140), size);
+        D_80112130[8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(D_80112130[8]);
+        dmaReadRom(D_125C90, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_1B3160, D_1C24B0, 9);
         loadCompressedRomAsset(D_23A7D0, D_23E9D0, 0x1B);
         func_8007D190();
@@ -177,18 +177,18 @@ void loadRaceCourseAssets(void) {
         break;
     case 7:
         size = D_1384B0 - D_131A90;
-        D_80112130[8] = allocMemoryBlock(size);
-        lockMemoryBlock(D_80112130[8]);
-        dmaReadRom(D_131A90, getMemoryBlockBase(D_80112140), size);
+        D_80112130[8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(D_80112130[8]);
+        dmaReadRom(D_131A90, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_1C24B0, D_1C9630, 9);
         loadCompressedRomAsset(D_23E9D0, D_23FCC0, 0x1B);
         func_8007D190();
         break;
     case 8:
         size = D_13F3B0 - D_1384B0;
-        D_80112130[8] = allocMemoryBlock(size);
-        lockMemoryBlock(D_80112130[8]);
-        dmaReadRom(D_1384B0, getMemoryBlockBase(D_80112140), size);
+        D_80112130[8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(D_80112130[8]);
+        dmaReadRom(D_1384B0, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_1C9630, D_1D3070, 9);
         loadCompressedRomAsset(D_23FCC0, D_241160, 0x1B);
         func_8007D190();
@@ -196,9 +196,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 9:
         size = D_145380 - D_13F3B0;
-        D_80112130[8] = allocMemoryBlock(size);
-        lockMemoryBlock(D_80112130[8]);
-        dmaReadRom(D_13F3B0, getMemoryBlockBase(D_80112140), size);
+        D_80112130[8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(D_80112130[8]);
+        dmaReadRom(D_13F3B0, getRelocatableHeapBlockBase(D_80112140), size);
         loadCompressedRomAsset(D_1D3070, D_1D82B0, 9);
         loadCompressedRomAsset(D_241160, D_2427D0, 0x1B);
         func_8007D190();
@@ -207,9 +207,9 @@ void loadRaceCourseAssets(void) {
     }
 
     size = D_14B450 - D_147910;
-    D_80112130[10] = allocMemoryBlock(size);
-    lockMemoryBlock(D_80112130[10]);
-    dmaReadRom(D_147910, getMemoryBlockBase(D_80112144), size);
+    D_80112130[10] = allocRelocatableHeapBlock(size);
+    lockRelocatableHeapBlock(D_80112130[10]);
+    dmaReadRom(D_147910, getRelocatableHeapBlockBase(D_80112144), size);
     loadCompressedRomAsset(D_1D82B0, D_1DCED0, 0xB);
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     loadCompressedRomAsset(D_5DAF30, D_5DB9D0, 0x2A);
@@ -230,8 +230,8 @@ void loadRaceCharacterAssets(void) {
     s32 size;
 
     size = D_1502A0 - D_14B450;
-    D_80112130[0xC] = allocMemoryBlock(size);
-    dmaReadRom(D_14B450, getMemoryBlockBase(D_80112130[0xC]), size);
+    D_80112130[0xC] = allocRelocatableHeapBlock(size);
+    dmaReadRom(D_14B450, getRelocatableHeapBlockBase(D_80112130[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
 
     rawRanges = gCharacterRawAssetRanges;
@@ -241,8 +241,8 @@ void loadRaceCharacterAssets(void) {
         assetHandles = &D_80112130[i];
         if (player->isActive != 0) {
             size = rawRanges[player->characterId].end - rawRanges[player->characterId].start;
-            assetHandles[0xE] = allocMemoryBlock(size);
-            dmaReadRom(rawRanges[player->characterId].start, getMemoryBlockBase(assetHandles[0xE]), size);
+            assetHandles[0xE] = allocRelocatableHeapBlock(size);
+            dmaReadRom(rawRanges[player->characterId].start, getRelocatableHeapBlockBase(assetHandles[0xE]), size);
             loadCompressedRomAsset(textureRanges[player->characterId].start, textureRanges[player->characterId].end, i + 0x12);
             loadCompressedRomAsset(modelRanges[player->characterId].start, modelRanges[player->characterId].end, i + 0x16);
         }
