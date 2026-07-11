@@ -236,8 +236,8 @@ extern RaceInputPlayer D_80122FA4[];
 
 void recordRaceReplayInputFrame(RaceInputPlayer *player);
 void playRaceReplayInputFrame(RaceInputPlayer *player);
-void recordRaceInputFrame(RaceInputPlayer *player);
-void playRaceInputFrame(RaceInputPlayer *player);
+void recordRaceInputHistoryFrame(RaceInputPlayer *player);
+void playRaceInputHistoryFrame(RaceInputPlayer *player);
 void updateRacePlayerInput(RaceInputPlayer *player);
 s32 getRaceInputTimerDecrementBonus(RaceInputPlayer *player);
 
