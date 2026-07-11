@@ -31,7 +31,6 @@ extern ControllerPakScoreFileContext D_80121D80;
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern s8 D_800DEED4;
-extern u8 D_8010AF92;
 extern u8 gControllerPakMenuCursorState;
 extern s32 D_801235B4;
 extern s32 gPlayerInputPressed;
@@ -97,7 +96,7 @@ extern void func_80000C48(u16);
 extern void func_80000DB4(u16);
 extern void func_800012CC(u16, s32, ControllerPakScoreDeleteFlow *, s16);
 extern void func_80001538(u16);
-extern void initControllerPakDeleteConfirmPrompt(EffectTask *);
+extern void initControllerPakFileDeleteConfirmPrompt(EffectTask *);
 #endif
 
 // updateControllerPakScoreDeleteFlow best match: 95.751% (base_24.c)
@@ -124,7 +123,7 @@ void updateControllerPakScoreDeleteFlow(void)
     {
       gControllerPakMenuState.state = 3;
       gControllerPakMenuState.confirmChoice = 1;
-      func_80071408(initControllerPakDeleteConfirmPrompt, 0, 0x64);
+      func_80071408(initControllerPakFileDeleteConfirmPrompt, 0, 0x64);
       func_8009956C(updateControllerPakScoreDeleteConfirm, 0);
     }
   }
@@ -445,7 +444,7 @@ void updateControllerPakScoreDeleteConfirm(void) {
     }
     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
         enqueueSoundEffect(0x18, 0x32);
-        if (D_8010AF92 == 0) {
+        if (gControllerPakMenuState.confirmChoice == 0) {
             gControllerPakMenuCursorState = 0;
             func_8009956C(updateControllerPakScoreDeleteFlow, 0);
         } else {

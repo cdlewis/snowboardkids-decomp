@@ -3,7 +3,7 @@
 #include "effect_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
-#include "controller_pak_menu_ui.h"
+#include "controller_pak_file_delete_ui.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
 #include "shop_menu_flow.h"
@@ -18,7 +18,7 @@ extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 
 extern CharacterSelectFlowState *D_801235B8;
-extern ShopMenuPromptTransition D_8010AF80;
+extern ShopMenuPromptTransition gControllerPakTitlePromptTransition;
 extern s8 D_800DEED4;
 extern s16 D_800DEF14;
 extern s32 D_801235B4;
@@ -40,14 +40,14 @@ void func_8000C280(void) {
     D_801235B8->fade = 0xFF;
     D_801235B8->timer = 0;
     D_801235B4 = 0;
-    D_8010AF80.state = 0;
-    D_8010AF80.x = 0x100;
+    gControllerPakTitlePromptTransition.state = 0;
+    gControllerPakTitlePromptTransition.x = 0x100;
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
     loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
     loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x29);
     func_80070EC0(0);
-    func_80071408(func_80030570, 0, 0x64);
+    func_80071408(initControllerPakTitlePrompt, 0, 0x64);
     D_800DEF14 = D_801235B8->fade;
     func_8009956C(func_8000C3C8, 0);
     func_8007105C();
@@ -60,7 +60,7 @@ void func_8000C52C(void) {
         D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
             D_80123751 = 1;
-            D_8010AF80.state = 3;
+            gControllerPakTitlePromptTransition.state = 3;
         } else {
             func_8007105C();
         }
