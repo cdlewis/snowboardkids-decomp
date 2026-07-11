@@ -5,6 +5,7 @@
 #include "game_audio.h"
 #include "fixed_point_math.h"
 #include "fixed_point_matrix.h"
+#include "race_item_effects.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
 #define RACE_ITEM_GFX_CMD(pkt, cmd0, cmd1) \
@@ -105,7 +106,7 @@ typedef union {
     } shorts;
 } RaceItemEffectWord34;
 
-typedef struct {
+struct RaceItemEffectActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[6];
@@ -127,9 +128,9 @@ typedef struct {
     /* 0x64 */ s16 unk64;
     /* 0x66 */ u8 pad66[2];
     /* 0x68 */ u8 *unk68;
-} RaceItemEffectActor;
+};
 
-typedef struct {
+struct RaceItemFollowActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[6];
@@ -141,7 +142,7 @@ typedef struct {
     /* 0x4C */ void *matrix2;
     /* 0x50 */ s8 dirty;
     /* 0x51 */ s8 timer;
-} RaceItemFollowActor;
+};
 
 typedef struct RaceItemDrawNode {
     /* 0x00 */ struct RaceItemDrawNode *next;
@@ -155,11 +156,11 @@ typedef struct {
     /* 0x00 */ RaceItemDrawNode *heads[4];
 } RaceItemDrawLists;
 
-typedef struct {
+struct RaceItemTextureActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ void *images[4];
     /* 0x28 */ void *palettes[4];
-} RaceItemTextureActor;
+};
 
 typedef struct {
     /* 0x000 */ Vec3i pos;
@@ -243,25 +244,10 @@ void func_80046D68(s16, s16, s32, s32, s32);
 void func_8004767C(s16, s16, s32, s32, s32, s32);
 void func_800483FC(void *, void *, void *);
 void *func_8004885C(RaceItemGfxCommandSource *);
-void func_8004DB8C(RaceItemEffectActor *);
-void func_8004E02C(RaceItemEffectActor *);
-void func_8004E438(RaceItemEffectActor *);
 /* Local 4-arg declaration; see note in effect_task_scheduler.h. */
 RaceItemEffectActor *func_800716A4(void *, s32, s32, s32);
-void func_8004E604(RaceItemEffectActor *);
-void func_8004E960(RaceItemEffectActor *);
-void func_8004EAA8(RaceItemEffectActor *);
-void func_8004FB44(RaceItemFollowActor *);
-void func_8004EFF8(RaceItemEffectActor *);
-void func_8004F68C(RaceItemEffectActor *);
-void func_8004F9CC(RaceItemEffectActor *);
-void func_8005019C(RaceItemEffectActor *);
-void func_80050340(RaceItemEffectActor *);
-void func_80050398(RaceItemEffectActor *);
-void func_80050888(RaceItemEffectActor *);
-void func_8005098C(RaceItemFollowActor *);
 
-u8 func_8004DB60(s32 arg0) {
+s32 func_8004DB60(s32 arg0) {
     u8 *p = D_800D46D0[D_80121B50];
     return p[arg0];
 }
@@ -327,7 +313,7 @@ void func_8004DC6C(RaceItemEffectActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004DCA0.s")
 
 #ifdef NON_MATCHING
-void func_8004DCA0(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *arg3, s16 arg4) {
+void func_8004DCA0(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *arg3, s32 arg4, s16 arg5) {
     LongLongParts total;
     s64 distY;
     s64 distX;
@@ -346,7 +332,7 @@ void func_8004DCA0(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *arg3, s16 arg4)
     u8 *cursor;
     s16 itemType;
 
-    itemType = func_8004DB60(arg4);
+    itemType = func_8004DB60(arg5);
     if (itemType != 4) {
         midAX = ((arg0->x - arg1->x) / 2) + arg1->x;
         midAY = ((arg0->y - arg1->y) / 2) + arg1->y;

@@ -1,6 +1,7 @@
 #include "common.h"
 #include "asset_decompression.h"
 #include "memory_allocator.h"
+#include "race_item_effects.h"
 
 typedef struct {
     /* 0x0 */ s8 minutes;
@@ -83,7 +84,6 @@ extern void func_80047E88(s32, s16, s32, s32);
 extern void func_80048278(s32, s32, char *, s32);
 extern void func_800483FC(void *, void *, s32);
 extern void func_8007A3D8(s32);
-extern void func_800503D0(s32, s32, s16, s16, s16);
 extern void func_80065144(void);
 extern void func_80071408(void *, s32, s32);
 extern void func_80087600(s32, s32 *, s32 *);

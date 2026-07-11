@@ -11,6 +11,7 @@
 #include "fixed_point_matrix.h"
 #undef func_8004940C
 #include "race_input_history.h"
+#include "race_item_effects.h"
 
 #define MODEL_ANIM_STATE(player) ((ModelAnimState *)(player))
 #define MODEL_ANIM_INIT_STATE(player) ((ModelAnimInitState *)(player))
@@ -103,20 +104,14 @@ extern void func_80097038(RaceInputPlayer *);
 extern void func_8008F1B4(RaceInputPlayer *);
 extern void func_8008F1CC(RaceInputPlayer *);
 extern s32 func_800832CC(RaceInputPlayer *);
-extern void func_8004F55C(s16, s16);
 extern void func_800483FC(void *, void (*)(void *), void *);
-extern void func_8004FA44(void *);
 extern void func_8005FB30(void *);
 extern void func_800617C8(void *);
-extern void func_80050030(void *);
-extern void func_8004DCA0(RaceVec3i *, RaceVec3i *, RaceVec3i *, RaceVec3i *, s32, s32);
 extern void *func_800716A4(void *, s32, s32, s32);
-extern void func_80050E80(void *);
 extern void func_80062530(void *);
 extern s16 func_80097AE8(s16);
 extern void func_800545D0(EffectTask *);
 extern void func_80057810(void *);
-extern s32 func_8004DB60(s8);
 extern void (*D_800DECD0[])(RaceInputPlayer *);
 extern void (*D_800DECD8[])(RaceInputPlayer *);
 extern void (*D_800DECE8[])(RaceInputPlayer *);
@@ -3541,8 +3536,6 @@ void func_800934EC(RaceInputPlayer *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800936D4.s")
 
 #ifdef NON_MATCHING
-extern void func_8004F55C(s16 playerIndex, s16 itemIndex);
-
 void func_800936D4(RaceInputPlayer *player) {
     s16 updateState;
     s16 updateTimer;
@@ -5344,11 +5337,13 @@ void func_80097038(RaceInputPlayer *player) {
     if (!(D_801235B4 & 1) && !(player->stateFlags & 0x41000) && (player->soundDisabled == 0)) {
         if (player->unk500 & 3) {
             random = func_800430D0();
-            func_8004DCA0(&player->unk4A0, &player->unk4AC, &player->unk4D0, &player->unk4DC, random, player->unk330);
+            func_8004DCA0((Vec3i *)&player->unk4A0, (Vec3i *)&player->unk4AC, (Vec3i *)&player->unk4D0,
+                          (Vec3i *)&player->unk4DC, random, player->unk330);
         }
         if (player->unk500 & 0xC) {
             random = func_800430D0();
-            func_8004DCA0(&player->unk4B8, &player->unk4C4, &player->unk4E8, &player->unk4F4, random, player->unk330);
+            func_8004DCA0((Vec3i *)&player->unk4B8, (Vec3i *)&player->unk4C4, (Vec3i *)&player->unk4E8,
+                          (Vec3i *)&player->unk4F4, random, player->unk330);
         }
     }
     func_80087E14(player);

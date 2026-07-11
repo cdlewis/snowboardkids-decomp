@@ -6,6 +6,7 @@
 #include "game_boot.h"
 #include "model_animation.h"
 #include "race_course_effects.h"
+#include "race_item_effects.h"
 
 #define COURSE_PLAYER_COUNT 4
 #define COURSE_PLAYER_STRIDE 0x60C
@@ -95,7 +96,6 @@ extern u8 D_80121B5E;
 extern u8 D_8012482B;
 extern u8 D_8012482C;
 
-extern void func_800508D0();
 extern void func_80055B34();
 extern void func_800560F4();
 extern void func_80056C44();
