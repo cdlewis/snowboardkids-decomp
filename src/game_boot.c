@@ -263,7 +263,7 @@ void func_80099790(void) {
     D_8010ADFA = 0;
 }
 
-// func_800998E4 best match: 87.864% at nonmatchings/func_800998E4-7273315160691878794/base_21.c.
+// func_800998E4 best match: 89.136% at nonmatchings/func_800998E4-731940616440357983/base_14.c.
 #ifdef NON_MATCHING
 void func_800998E4(void *arg0) {
     OSMesg msg;
@@ -273,7 +273,7 @@ void func_800998E4(void *arg0) {
     OSMesgQueue *queue18;
     OSMesgQueue *queue70;
     OSMesgQueue *queue50;
-    u8 *counter;
+    volatile u8 *counter;
 
     msg = NULL;
     initialized = 0;
