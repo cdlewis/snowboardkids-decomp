@@ -8,7 +8,7 @@
 #include "race_camera.h"
 #include "ending_credits_ui.h"
 #include "menu_transition_effects.h"
-#include "main_menu_race_setup.h"
+#include "race_start_transition.h"
 #include "main_menu_scene_actor_0.h"
 #include "main_menu_scene_actor_1.h"
 #include "main_menu_scene_actor_2.h"
@@ -32,7 +32,7 @@ typedef struct {
     /* 0x24 */ s32 depth;
     /* 0x28 */ u8 pad28[0x4];
     /* 0x2C */ void (*update)(void);
-} MainMenuRaceSetupObject;
+} MenuCameraObject;
 
 typedef struct {
     /* 0x00 */ s32 x;
@@ -71,10 +71,10 @@ extern s8 D_8010B1A9;
 extern s8 D_8010B1AA;
 extern s8 D_8010B1AB;
 extern s8 D_8010B1AC;
-extern Vec3i D_8010B1B0;
+extern Vec3i gMenuCameraTargetOffset;
 extern s16 D_80112130[];
-extern MainMenuRaceSetupObject D_801121E0;
-extern MainMenuRaceSetupObject *D_800EC9C4;
+extern MenuCameraObject D_801121E0;
+extern MenuCameraObject *gCurrentMenuCameraObject;
 extern RaceToMainMenuTransitionState *gCurrentGameTask;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
@@ -89,15 +89,15 @@ void func_8000D340(void) {
     RaceToMainMenuTransitionState *state;
 
     func_8006D5CC();
-    D_801121E0.update = func_8003DFB0;
+    D_801121E0.update = updateMenuCameraObjectFromTargetOffset;
     D_801121E0.depth = 0x5D24000;
     D_801121E0.yaw = 0xFC0;
     resetAllViewports();
     func_80070860(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, D_800E0A70, 0x14, 0xAF0);
     gFramebufferSwapDelay = 0;
-    D_8010B1B0.x = 0;
-    D_8010B1B0.y = 0xFFB60000;
-    D_8010B1B0.z = 0;
+    gMenuCameraTargetOffset.x = 0;
+    gMenuCameraTargetOffset.y = 0xFFB60000;
+    gMenuCameraTargetOffset.z = 0;
     D_8010B1A0 = 0;
     gEndingSequencePhase = 0;
     D_8010B1A4 = 0;
@@ -159,8 +159,8 @@ void func_8000D690(void) {
         }
     }
     updateCallbackTasks();
-    D_800EC9C4 = &D_801121E0;
-    D_800EC9C4->update();
+    gCurrentMenuCameraObject = &D_801121E0;
+    gCurrentMenuCameraObject->update();
 }
 
 void func_8000D724(void) {
