@@ -34,7 +34,7 @@ extern s8 D_800DEED4;
 extern u8 D_8010AF92;
 extern u8 D_8010AF93;
 extern s32 D_801235B4;
-extern s32 D_80123778;
+extern s32 gPlayerInputPressed;
 extern s16 D_800EC9C8;
 extern s16 D_800EC9D0;
 extern u8 D_800EC9D8;
@@ -232,7 +232,7 @@ void func_80008F2C(void)
           break;
 
         case 4:
-          if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000))
+          if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           sp1C = temp_t0;
           func_80072138(1, 0x32);
@@ -259,14 +259,14 @@ void func_80008F2C(void)
         case 6:
           if ((D_800EC9D0 == 3) || (D_800EC9D0 == 4))
         {
-          temp_v1 = D_80123778;
+          temp_v1 = gPlayerInputPressed;
           if (temp_v1 & 0x10800)
           {
             if (D_800EC9D0 != new_var)
             {
               D_800EC9D0 -= 1;
               func_80072138(0x19, 0x32);
-              temp_v1 = D_80123778;
+              temp_v1 = gPlayerInputPressed;
             }
           }
           var_t7 = temp_v1 & 0x8000;
@@ -276,7 +276,7 @@ void func_80008F2C(void)
             {
               D_800EC9D0 += 1;
               func_80072138(0x19, 0x32);
-              temp_v1 = D_80123778;
+              temp_v1 = gPlayerInputPressed;
             }
             var_t7 = temp_v1 & 0x8000;
           }
@@ -343,7 +343,7 @@ void func_80008F2C(void)
         case 13:
 
         case 17:
-          if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000))
+          if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           func_80072138(1, 0x32);
           D_800EC9D0 = D_800B31A5[D_800EC9C8];
@@ -351,7 +351,7 @@ void func_80008F2C(void)
           break;
 
         case 15:
-          if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000))
+          if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           func_80072138(1, 0x32);
           D_800EC9D0 = D_800B31A5[D_800EC9C8];
@@ -361,7 +361,7 @@ void func_80008F2C(void)
         case 14:
 
         case 16:
-          if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000))
+          if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           sp1C = temp_t0;
           func_80072138(1, 0x32);
@@ -392,7 +392,7 @@ void func_80008F2C(void)
           break;
 
         case 18:
-          if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000))
+          if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           func_80072138(1, 0x32);
           D_8010AF60.step = 3;
@@ -436,14 +436,14 @@ void func_800095DC(void) {
 }
 
 void func_80009690(void) {
-    if ((D_80123778 & 0x10800) && (D_8010AF90.confirmChoice != 0)) {
+    if ((gPlayerInputPressed & 0x10800) && (D_8010AF90.confirmChoice != 0)) {
         D_8010AF90.confirmChoice = 0;
         func_80072138(0x19, 0x32);
-    } else if ((D_80123778 & 0x20400) && (D_8010AF90.confirmChoice != 1)) {
+    } else if ((gPlayerInputPressed & 0x20400) && (D_8010AF90.confirmChoice != 1)) {
         D_8010AF90.confirmChoice = 1;
         func_80072138(0x19, 0x32);
     }
-    if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+    if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
         func_80072138(0x18, 0x32);
         if (D_8010AF92 == 0) {
             D_8010AF93 = 0;
@@ -452,7 +452,7 @@ void func_80009690(void) {
             D_801235B4 = 1;
             func_8009956C(func_800095DC, 0);
         }
-    } else if (D_80123778 & 0x4000) {
+    } else if (gPlayerInputPressed & 0x4000) {
         func_80072138(0x18, 0x32);
         D_801235B4 = 1;
         func_8009956C(func_800095DC, 0);

@@ -44,8 +44,8 @@ extern u8 D_80121B5E;
 extern u8 D_800EC9DD;
 extern s8 D_800DEED4;
 extern s32 D_801235B4;
-extern s32 D_80123758;
-extern s32 D_80123778;
+extern s32 gPlayerInputHeld;
+extern s32 gPlayerInputPressed;
 extern u8 D_80123750;
 extern u8 D_80123751;
 
@@ -130,7 +130,7 @@ void func_800088C8(void) {
             if (D_800EC9C1 == 0) {
                 if (D_8010AF52 == 1) {
                     selection = D_80121B5E;
-                    newInput = D_80123758;
+                    newInput = gPlayerInputHeld;
                     pressedUp = newInput & 0x10800;
                     sp18 = 3;
                     previousSelection = selection;
@@ -139,7 +139,7 @@ void func_800088C8(void) {
                         D_8010ADF0 = 0;
                     }
 
-                    heldInput = D_80123778;
+                    heldInput = gPlayerInputPressed;
                     if ((heldInput & 0x10800) ||
                         ((pressedUp != 0) && (D_8010ADF0 >= 9) && ((D_8010ADF0 % 3) == 0))) {
                         repeatTimer = D_8010ADF0;
@@ -176,7 +176,7 @@ void func_800088C8(void) {
 
                     if (selection != previousSelection) {
                         func_80072138(0x19, 0x32);
-                        heldInput = D_80123778;
+                        heldInput = gPlayerInputPressed;
                         D_80121B50 = 9;
                     }
 
@@ -200,7 +200,7 @@ void func_800088C8(void) {
             waitTimer = D_800EC9C1;
         }
 
-        if ((waitTimer == 0) && (D_80123778 & 0x4000) && (D_801235B4 == (sp18 + 1))) {
+        if ((waitTimer == 0) && (gPlayerInputPressed & 0x4000) && (D_801235B4 == (sp18 + 1))) {
             func_80072138(0x18, 0x32);
             D_8010AF50.state = 2;
             D_8010AF50.alpha = 0x100;

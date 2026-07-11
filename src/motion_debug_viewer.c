@@ -31,8 +31,8 @@ typedef struct {
 
 extern s16 D_801221D2;
 extern MotionDebugViewerState D_80121D80;
-extern s32 D_80123758;
-extern s32 D_80123778;
+extern s32 gPlayerInputHeld;
+extern s32 gPlayerInputPressed;
 extern void *D_80124858;
 extern void *D_80124898;
 extern void sprintf(char *, const char *, ...);
@@ -77,7 +77,7 @@ void func_800782FC(void) {
         func_80081E40((ModelAnimState *)&D_80121D80, D_80121D80.motionIndex);
         func_80082DD0((ModelAnimState *)&D_80121D80);
     } else {
-        buttons = D_80123778;
+        buttons = gPlayerInputPressed;
         if (buttons & 0x2000) {
             if (D_80121D80.renderMode != 0) {
                 D_80121D80.renderMode = 0;
@@ -93,9 +93,9 @@ void func_800782FC(void) {
             D_80121D80.initialized = 0;
             D_80121D80.motionIndex++;
         }
-        if (D_80123758 & 2) {
+        if (gPlayerInputHeld & 2) {
             func_80082DD0((ModelAnimState *)&D_80121D80);
-            buttons = D_80123778;
+            buttons = gPlayerInputPressed;
         }
         if (buttons & 1) {
             func_80082DD0((ModelAnimState *)&D_80121D80);

@@ -67,7 +67,7 @@ extern s8 D_8010AE55;
 extern s8 D_8010AE56;
 extern s8 D_8010AE64[];
 extern s32 D_801235B4;
-extern s32 D_80123778;
+extern s32 gPlayerInputPressed;
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
 extern u8 D_593D10[];
@@ -220,7 +220,7 @@ void func_80005290(void) {
 
     state = &D_8010AE50;
     if (state->fade == 0x100) {
-        buttons = D_80123778;
+        buttons = gPlayerInputPressed;
         selection = state->confirmSelection;
         oldSelection = selection;
 
@@ -236,7 +236,7 @@ void func_80005290(void) {
 
         if (selection != oldSelection) {
             func_80072138(0x19, 0x32);
-            buttons = D_80123778;
+            buttons = gPlayerInputPressed;
         }
 
         if ((buttons & 0x8000) || (buttons & 0x1000)) {

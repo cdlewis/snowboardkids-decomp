@@ -167,7 +167,7 @@ extern void *D_800EC8B8;
 extern s16 D_800EC9C8[];
 extern u8 D_800EC9E0[];
 extern SaveSlotBytes D_800EC9F0[];
-extern s32 D_80123758;
+extern s32 gPlayerInputHeld;
 extern s16 D_800DEF14;
 extern s16 D_801124B8;
 extern s16 D_800EC8A8[];
@@ -201,7 +201,7 @@ extern u8 D_8012482A;
 extern u8 D_8012482B;
 extern u8 D_8012482C;
 extern s32 D_801235B4;
-extern s32 D_80123778;
+extern s32 gPlayerInputPressed;
 extern u8 D_800B30F4[];
 extern u8 D_800B3104[];
 extern u8 D_800B3108[];
@@ -1035,19 +1035,19 @@ void func_80002024(void) {
                 func_800720E4(0);
             }
         }
-        temp_a0 = D_80123778;
+        temp_a0 = gPlayerInputPressed;
         if (temp_a0 & 0x10800) {
             if (D_801235B8->selection != 0) {
                 D_801235B8->selection -= 1;
                 func_80072138(0x19, 0x32);
-                temp_a0 = D_80123778;
+                temp_a0 = gPlayerInputPressed;
             }
         }
         if (temp_a0 & 0x20400) {
             if (D_801235B8->selection != 2) {
                 D_801235B8->selection += 1;
                 func_80072138(0x19, 0x32);
-                temp_a0 = D_80123778;
+                temp_a0 = gPlayerInputPressed;
             }
         }
         if ((temp_a0 & 0x1000) || (temp_a0 & 0x8000)) {
@@ -1170,22 +1170,22 @@ void func_8000262C(void) {
     D_800DEF14 -= 0x10;
     if (D_800DEF14 < 0) {
         D_800DEF14 = 0;
-        temp_v0 = D_80123778;
+        temp_v0 = gPlayerInputPressed;
         if (temp_v0 & 0x10800) {
             if (D_801235B4 != 0) {
                 func_80072138(0x19, 0x32);
                 D_801235B4 -= 1;
-                temp_v0 = D_80123778;
+                temp_v0 = gPlayerInputPressed;
             }
         }
         if ((temp_v0 & 0x20400) && (D_801235B4 != 2)) {
             func_80072138(0x19, 0x32);
             D_801235B4 += 1;
-            temp_v0 = D_80123778;
+            temp_v0 = gPlayerInputPressed;
         }
         if (temp_v0 & 0xD000) {
             func_80072138(0x18, 0x32);
-            if (D_80123778 & 0x4000) {
+            if (gPlayerInputPressed & 0x4000) {
                 D_801235B4 = 2;
             }
             D_8010B1F0 = 1;
@@ -1260,16 +1260,16 @@ void func_80002A1C(void) {
     D_800DEF14 -= 0x10;
     if (D_800DEF14 < 0) {
         D_800DEF14 = 0;
-        temp_v1 = D_80123778;
+        temp_v1 = gPlayerInputPressed;
         if ((temp_v1 & 0x10800) && (D_801235B4 != 0)) {
             D_801235B4 -= 1;
             func_80072138(0x19, 0x32);
-            temp_v1 = D_80123778;
+            temp_v1 = gPlayerInputPressed;
         }
         if ((temp_v1 & 0x20400) && (D_801235B4 != 3)) {
             D_801235B4 += 1;
             func_80072138(0x19, 0x32);
-            temp_v1 = D_80123778;
+            temp_v1 = gPlayerInputPressed;
         }
         if (temp_v1 & 0x4000) {
             D_801235B4 = 3;
@@ -1280,21 +1280,21 @@ void func_80002A1C(void) {
                 if (D_8012482A != 0) {
                     D_8012482A -= 1;
                     func_80072138(0x19, 0x32);
-                    temp_v1 = D_80123778;
+                    temp_v1 = gPlayerInputPressed;
                 }
                 break;
             case 1:
                 if (D_8012482B != 1) {
                     D_8012482B += 1;
                     func_80072138(0x19, 0x32);
-                    temp_v1 = D_80123778;
+                    temp_v1 = gPlayerInputPressed;
                 }
                 break;
             case 2:
                 if (D_8012482C != 1) {
                     D_8012482C += 1;
                     func_80072138(0x19, 0x32);
-                    temp_v1 = D_80123778;
+                    temp_v1 = gPlayerInputPressed;
                 }
                 break;
             }
@@ -1305,21 +1305,21 @@ void func_80002A1C(void) {
                 if (D_8012482A != 1) {
                     D_8012482A += 1;
                     func_80072138(0x19, 0x32);
-                    temp_v1 = D_80123778;
+                    temp_v1 = gPlayerInputPressed;
                 }
                 break;
             case 1:
                 if (D_8012482B != 0) {
                     D_8012482B -= 1;
                     func_80072138(0x19, 0x32);
-                    temp_v1 = D_80123778;
+                    temp_v1 = gPlayerInputPressed;
                 }
                 break;
             case 2:
                 if (D_8012482C != 0) {
                     D_8012482C -= 1;
                     func_80072138(0x19, 0x32);
-                    temp_v1 = D_80123778;
+                    temp_v1 = gPlayerInputPressed;
                 }
                 break;
             }
@@ -1357,13 +1357,13 @@ void func_80002D50(void) {
 s32 func_80002DA0(void) {
     switch (D_800B3194) {
     case 0:
-        if (D_80123758 == 0x20000) {
+        if (gPlayerInputHeld == 0x20000) {
             D_800B3194++;
         }
         goto end0;
     case 1:
-        if ((D_80123758 != 0x20000) && (D_80123758 != 0)) {
-            if (D_80123758 == 0x10000) {
+        if ((gPlayerInputHeld != 0x20000) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 0x10000) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1371,8 +1371,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 2:
-        if ((D_80123758 != 0x10000) && (D_80123758 != 0)) {
-            if (D_80123758 == 0x400) {
+        if ((gPlayerInputHeld != 0x10000) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 0x400) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1380,8 +1380,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 3:
-        if ((D_80123758 != 0x400) && (D_80123758 != 0)) {
-            if (D_80123758 == 0x800) {
+        if ((gPlayerInputHeld != 0x400) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 0x800) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1389,8 +1389,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 4:
-        if ((D_80123758 != 0x800) && (D_80123758 != 0)) {
-            if (D_80123758 == 4) {
+        if ((gPlayerInputHeld != 0x800) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 4) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1398,8 +1398,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 5:
-        if ((D_80123758 != 4) && (D_80123758 != 0)) {
-            if (D_80123758 == 8) {
+        if ((gPlayerInputHeld != 4) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 8) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1407,8 +1407,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 6:
-        if ((D_80123758 != 8) && (D_80123758 != 0)) {
-            if (D_80123758 == 0x20) {
+        if ((gPlayerInputHeld != 8) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 0x20) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1416,8 +1416,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 7:
-        if ((D_80123758 != 0x20) && (D_80123758 != 0)) {
-            if (D_80123758 == 0x10) {
+        if ((gPlayerInputHeld != 0x20) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 0x10) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1425,8 +1425,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 8:
-        if ((D_80123758 != 0x10) && (D_80123758 != 0)) {
-            if (D_80123758 == 0x2000) {
+        if ((gPlayerInputHeld != 0x10) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 0x2000) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1434,8 +1434,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 9:
-        if ((D_80123758 != 0x2000) && (D_80123758 != 0)) {
-            if (D_80123758 == 0x200) {
+        if ((gPlayerInputHeld != 0x2000) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 0x200) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1443,8 +1443,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 10:
-        if ((D_80123758 != 0x200) && (D_80123758 != 0)) {
-            if (D_80123758 == 1) {
+        if ((gPlayerInputHeld != 0x200) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 1) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1452,8 +1452,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 11:
-        if ((D_80123758 != 1) && (D_80123758 != 0)) {
-            if (D_80123758 == 0x10000) {
+        if ((gPlayerInputHeld != 1) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 0x10000) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1461,8 +1461,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 12:
-        if ((D_80123758 != 0x10000) && (D_80123758 != 0)) {
-            if (D_80123758 == 0x4000) {
+        if ((gPlayerInputHeld != 0x10000) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 0x4000) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1470,8 +1470,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 13:
-        if ((D_80123758 != 0x4000) && (D_80123758 != 0)) {
-            if (D_80123758 == 0x100) {
+        if ((gPlayerInputHeld != 0x4000) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 0x100) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1479,8 +1479,8 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 14:
-        if ((D_80123758 != 0x100) && (D_80123758 != 0)) {
-            if (D_80123758 == 2) {
+        if ((gPlayerInputHeld != 0x100) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == 2) {
                 D_800B3194++;
             } else {
                 D_800B3194 = -1;
@@ -1488,9 +1488,9 @@ s32 func_80002DA0(void) {
         }
         goto end0;
     case 15:
-        if (D_80123758 != 2) {
-            if (D_80123758 != 0) {
-                if (D_80123758 == 0x1000) {
+        if (gPlayerInputHeld != 2) {
+            if (gPlayerInputHeld != 0) {
+                if (gPlayerInputHeld == 0x1000) {
                     return 1;
                 }
                 D_800B3194 = -1;

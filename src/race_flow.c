@@ -168,9 +168,9 @@ extern s32 D_80121B40;
 extern s32 D_80121B44;
 extern s32 D_80121B48;
 extern s32 D_801235B4;
-extern s32 D_80123758;
+extern s32 gPlayerInputHeld;
 extern s32 D_8012207C;
-extern s32 D_80123778[];
+extern s32 gPlayerInputPressed[];
 extern void *D_80124868;
 extern s16 D_80112130[];
 extern s16 D_80112186;
@@ -276,7 +276,7 @@ void func_80072C88(void) {
 }
 
 void func_80072D04(void) {
-    if (D_80123758 & 0x1000) {
+    if (gPlayerInputHeld & 0x1000) {
         func_8009956C(&func_80072D54, 0);
     } else {
         func_8009956C(&func_80072D98, 0);
@@ -751,14 +751,14 @@ void func_80074960(void) {
     s32 selection;
     s32 valueTwo;
 
-    opened = 0; i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (D_80123778[i] & 0x1000)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; func_80072138(1, 0x32); func_80000A40(0); func_80000A40(1); func_80000A40(2); func_80000A40(3); } i++; player++; } while (i < D_80121B55); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = D_80123778[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; func_80072138(1, 0x32); input = D_80123778[i]; }
+    opened = 0; i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & 0x1000)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; func_80072138(1, 0x32); func_80000A40(0); func_80000A40(1); func_80000A40(2); func_80000A40(3); } i++; player++; } while (i < D_80121B55); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (D_80121B55 > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = gPlayerInputPressed[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; func_80072138(1, 0x32); input = gPlayerInputPressed[i]; }
                     }
                     if (input & 0x20400) {
                         selection = D_80121B57;
                         if (valueTwo != selection) {
                             D_80121B57 = selection + 1;
                             func_80072138(1, 0x32);
-                            input = D_80123778[i];
+                            input = gPlayerInputPressed[i];
                         }
                     }
                     if (input & 0x1000) {
@@ -1624,7 +1624,7 @@ void func_8007797C(void) {
         D_801235B8->fadeTimer++;
     }
     func_80077CD4();
-    if (D_80123778[0] & 0x1000) {
+    if (gPlayerInputPressed[0] & 0x1000) {
         sp18 = func_80077AD4;
         func_80072114(0x48);
         func_8009956C(sp18, 0);
@@ -1787,16 +1787,16 @@ void func_80078078(void) {
     D_800DEF14 -= 0x10;
     if (D_800DEF14 < 0) {
         D_800DEF14 = 0;
-        temp_v0 = D_80123778[0];
+        temp_v0 = gPlayerInputPressed[0];
         if ((temp_v0 & 0x20400) && (D_80121B52 != 9)) {
             func_80072138(0x19, 0x32);
             D_80121B52 += 1;
-            temp_v0 = D_80123778[0];
+            temp_v0 = gPlayerInputPressed[0];
         }
         if ((temp_v0 & 0x10800) && (D_80121B52 != 1)) {
             func_80072138(0x19, 0x32);
             D_80121B52 -= 1;
-            temp_v0 = D_80123778[0];
+            temp_v0 = gPlayerInputPressed[0];
         }
         if (temp_v0 & 0x9000) {
             D_801235B4 = 1;

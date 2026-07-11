@@ -63,8 +63,8 @@ extern s32 D_8010ADDC;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s32 D_801235B4;
-extern s32 D_80123758;
-extern s32 D_80123778;
+extern s32 gPlayerInputHeld;
+extern s32 gPlayerInputPressed;
 #ifndef NON_MATCHING
 extern u16 D_8010ADF0;
 #else
@@ -427,13 +427,13 @@ void updateCharacterSelectCourseMenu(void) {
                 if (gCharacterSelectCourseCursorState.fields.state == 1) {
                     selection = D_80121B50;
                     previousSelection = (s16) selection;
-                    temp_input = D_80123758;
+                    temp_input = gPlayerInputHeld;
                     pressed = temp_input & 0x10800;
                     if ((pressed == 0) && ((temp_input & 0x20400) == 0)) {
                         D_8010ADF0 = 0;
                     }
 
-                    heldInput = D_80123778;
+                    heldInput = gPlayerInputPressed;
                     repeatTimer = D_8010ADF0;
                     if ((heldInput & 0x10800) == 0) {
                         if (((pressed != 0) && (repeatTimer >= 0xB)) && ((repeatTimer % 3) == 0)) {
@@ -483,7 +483,7 @@ void updateCharacterSelectCourseMenu(void) {
                         func_80072138(0x19, 0x32);
                     }
 
-                    temp_input = D_80123778;
+                    temp_input = gPlayerInputPressed;
                     if (((temp_input & 0x1000) || (temp_input & 0x8000)) &&
                         (D_801235B4 == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         func_80072138(1, 0x32);
@@ -540,7 +540,7 @@ void updateCharacterSelectCourseSubmenu(void) {
     if (state < 3) {
         switch (gCharacterSelectCourseCursorState.fields.otherState) {
         case 2:
-            input = D_80123778;
+            input = gPlayerInputPressed;
             if (input & 0x4000) {
                 D_80121D80[8] = 3;
                 func_80072138(1, 0x32);
@@ -553,15 +553,15 @@ void updateCharacterSelectCourseSubmenu(void) {
             break;
         case 3:
             if (D_800EC9D0 >= 3) {
-                input = D_80123778;
+                input = gPlayerInputPressed;
                 if ((input & 0x10800) && (D_800EC9D0 != 3)) {
                     D_800EC9D0--;
                     func_80072138(0x19, 0x32);
-                    input = D_80123778;
+                    input = gPlayerInputPressed;
                 } else if ((input & 0x20400) && (D_800EC9D0 != 4)) {
                     D_800EC9D0++;
                     func_80072138(0x19, 0x32);
-                    input = D_80123778;
+                    input = gPlayerInputPressed;
                 }
 
                 if ((input & 0x8000) || (input & 0x1000)) {

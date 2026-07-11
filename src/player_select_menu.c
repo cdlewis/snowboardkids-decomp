@@ -124,7 +124,7 @@ void func_80005788(void) {
             if (D_800EC9C1 == 0) {
                 if (D_8010AE70.state == 1) {
                     selection = D_800EC9C2;
-                    newInputCopy = D_80123758;
+                    newInputCopy = gPlayerInputHeld;
                     newInput = newInputCopy;
                     pressedUp = newInput & 0x10800;
                     previousSelection = selection;
@@ -133,7 +133,7 @@ void func_80005788(void) {
                         D_8010ADF0 = 0;
                     }
 
-                    heldInput = D_80123778;
+                    heldInput = gPlayerInputPressed;
                     if ((heldInput & 0x10800) ||
                         ((pressedUp != 0) && (D_8010ADF0 >= 0xB) && ((D_8010ADF0 % 3) == 0))) {
                         repeatTimer = D_8010ADF0;
@@ -170,7 +170,7 @@ void func_80005788(void) {
 
                     if (selection != previousSelection) {
                         func_80072138(0x19, 0x32);
-                        heldInput = D_80123778;
+                        heldInput = gPlayerInputPressed;
                     }
 
                     if ((heldInput & 0x1000) || ((heldInput & 0x8000) && (D_801235B4 == 5))) {
@@ -193,7 +193,7 @@ void func_80005788(void) {
         }
 
         waitTimer = D_800EC9C1;
-        if ((D_80123778 & 0x4000) && (D_801235B4 == 5) && (waitTimer == 0)) {
+        if ((gPlayerInputPressed & 0x4000) && (D_801235B4 == 5) && (waitTimer == 0)) {
             func_80072138(1, 0x32);
             D_800EC9C1 = 1;
             D_8010AE70.state = 2;

@@ -44,8 +44,8 @@ typedef struct {
 extern u16 D_8010B1A2;
 extern s16 D_80112172;
 extern void *D_80124868;
-extern s32 D_80123758;
-extern s32 D_80123778[];
+extern s32 gPlayerInputHeld;
+extern s32 gPlayerInputPressed[];
 extern u16 D_800B8140[][0x5A];
 extern EndObjTextLayout D_800B92D4[];
 extern void func_800483FC(void *, void *, void *);
@@ -195,7 +195,7 @@ void func_8003BC9C(DebugObjectPositionTask *arg0) {
     s16 temp_a2;
     s16 oldY;
 
-    if (D_80123778[0] & 0x2000) {
+    if (gPlayerInputPressed[0] & 0x2000) {
         if (arg0->enabled == 1) {
             arg0->enabled = 0;
         } else {
@@ -206,38 +206,38 @@ void func_8003BC9C(DebugObjectPositionTask *arg0) {
         temp_a2 = arg0->y;
         temp_a1 = arg0->x;
         oldY = temp_a2;
-        if ((D_80123758 & 0x10800) && (temp_a2 >= -0x73)) {
+        if ((gPlayerInputHeld & 0x10800) && (temp_a2 >= -0x73)) {
             arg0->y = temp_a2 - 1;
         }
-        if (D_80123758 & 0x20400) {
+        if (gPlayerInputHeld & 0x20400) {
             temp_a2 = arg0->y;
             if (temp_a2 < 0x68) {
                 arg0->y = temp_a2 + 1;
             }
         }
-        if (D_80123758 & 0x80200) {
+        if (gPlayerInputHeld & 0x80200) {
             if (arg0->x >= -0x67) {
                 arg0->x = arg0->x - 1;
             }
         }
-        if (D_80123758 & 0x40100) {
+        if (gPlayerInputHeld & 0x40100) {
             if (arg0->x < 0x68) {
                 arg0->x = arg0->x + 1;
             }
         }
-        if (D_80123778[0] & 0x8000) {
+        if (gPlayerInputPressed[0] & 0x8000) {
             arg0->objectId += 1;
             if (arg0->objectId == 0x35) {
                 arg0->objectId = 0;
             }
         }
-        if (D_80123778[0] & 0x4000) {
+        if (gPlayerInputPressed[0] & 0x4000) {
             arg0->objectId = arg0->objectId - 1;
             if (arg0->objectId < 0) {
                 arg0->objectId = 0x34;
             }
         }
-        if (D_80123778[0] & 8) {
+        if (gPlayerInputPressed[0] & 8) {
             arg0->palette = (arg0->palette + 1) & 1;
         }
         temp_a2 = arg0->y;

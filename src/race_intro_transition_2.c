@@ -297,7 +297,7 @@ copy_player3:
         state->fadeDelay = temp - 1;
     }
 
-    if (D_80123778 & 0x1000) {
+    if (gPlayerInputPressed & 0x1000) {
         if (D_8010B1E1 == 0) {
             D_8010B1E1 = 0x10;
         }

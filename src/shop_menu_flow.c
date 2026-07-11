@@ -24,7 +24,7 @@ extern s16 D_800DEF14;
 extern s32 D_801235B4;
 extern u8 D_80123750;
 extern u8 D_80123751;
-extern s32 D_80123778;
+extern s32 gPlayerInputPressed;
 extern u8 D_593D10[];
 extern u8 D_598A70[];
 extern u8 D_59AAA0[];

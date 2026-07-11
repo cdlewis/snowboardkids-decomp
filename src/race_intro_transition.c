@@ -83,7 +83,7 @@ extern s8 D_80122FBA;
 extern s32 D_801235B4;
 extern u8 D_80123751;
 extern u8 D_80123750;
-extern s32 D_80123778;
+extern s32 gPlayerInputPressed;
 extern void func_80045914(void);
 // func_8003E600 best match: 65.668% (nonmatchings/func_8003E600-731940616440357983/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition/func_8003E600.s")
@@ -241,7 +241,7 @@ void func_8003EAF0(void) {
             fadeStep = state->fadeStep;
         }
     }
-    if ((D_80123778 & 0x1000) && (fadeStep == 0)) {
+    if ((gPlayerInputPressed & 0x1000) && (fadeStep == 0)) {
         state->fadeStep = 0x10;
         func_80072114(0x1E);
         state = D_801235B8;
