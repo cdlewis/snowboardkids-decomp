@@ -1,5 +1,5 @@
-#ifndef RACE_MOTION_H
-#define RACE_MOTION_H
+#ifndef RACE_COURSE_MOTION_H
+#define RACE_COURSE_MOTION_H
 
 #include "common.h"
 
@@ -9,11 +9,11 @@ typedef struct RaceMotionInitState RaceMotionInitState;
 void initRaceCourseSurfaceData(void);
 s32 findRaceCourseSurfaceFromPoint(s32 index, s32 x, s32 z);
 s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z);
-void pushRaceCourseBoundaryWithVelocity(s32 *arg0, s32 *arg1, s32 arg2);
+void pushRaceCourseSurfaceBoundaryWithVelocity(s32 *arg0, s32 *arg1, s32 arg2);
 void resolveRaceCourseSurfaceCollisionWithNormal(void);
 void resolveRaceCourseSurfaceCollisionWithVelocity(s16 arg0, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ, s32 *velocityX,
                   s32 *velocityZ);
-void pushRaceCourseBoundary(s32 arg0);
+void pushRaceCourseSurfaceBoundary(s32 arg0);
 void resolveRaceCourseSurfaceCollision(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5);
 s32 getRaceCourseSurfaceHeight(s32 arg0, s32 arg1, s32 arg2);
 s32 getRaceCourseSurfaceType(s32 arg0, s32 arg1, s32 arg2);
