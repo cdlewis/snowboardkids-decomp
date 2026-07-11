@@ -9,7 +9,7 @@
 #include "main_menu_visual_effects.h"
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
-#include "main_menu_mode_select_flow.h"
+#include "main_menu_mode_race_flow.h"
 #include "race_player_state.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
@@ -20,7 +20,7 @@ typedef struct {
     /* 0x00 */ char pad[0x18];
     /* 0x18 */ s32 transitionTimer;
     /* 0x1C */ s32 unk1C;
-} MainMenuModeSelectFlowState;
+} MainMenuModeRaceFlowState;
 
 typedef struct {
     /* 0x0 */ u8 courseIndex;
@@ -38,7 +38,7 @@ extern u8 D_1F1A90[];
 extern u8 D_1F2220[];
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
-extern MainMenuModeSelectFlowState *gCurrentGameTask;
+extern MainMenuModeRaceFlowState *gCurrentGameTask;
 extern u8 gMainMenuSelectionResult;
 extern u8 D_8011228C;
 extern s16 D_801124B8;
@@ -160,7 +160,7 @@ void exitMainMenuModeSelectMenu(void) {
 
 // initMainMenuModePreviewRace best match: 94.795% (nonmatchings/initMainMenuModePreviewRace-8662636370764828261/base_5.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_mode_select_flow/initMainMenuModePreviewRace.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_mode_race_flow/initMainMenuModePreviewRace.s")
 
 #ifdef NON_MATCHING
 void initMainMenuModePreviewRace(void) {
@@ -279,7 +279,7 @@ void waitForMainMenuModePreviewRaceSelection(void) {
 
 // zoomMainMenuModePreviewRaceViewport best match: 75.250% (nonmatchings/zoomMainMenuModePreviewRaceViewport-1197934324348345530/base_3.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_mode_select_flow/zoomMainMenuModePreviewRaceViewport.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_mode_race_flow/zoomMainMenuModePreviewRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomMainMenuModePreviewRaceViewport(void) {
@@ -372,7 +372,7 @@ void deferTrainingCourseRaceInit(void) {
 
 // initTrainingCourseRace best match: 98.186% (nonmatchings/func_8004002C-6061209858023118177/base.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_mode_select_flow/initTrainingCourseRace.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_mode_race_flow/initTrainingCourseRace.s")
 
 #ifdef NON_MATCHING
 void initTrainingCourseRace(void) {
@@ -519,7 +519,7 @@ void waitForTrainingCourseStartPrompt(void) {
 
 // zoomTrainingCourseRaceViewport best match: 74.802% (nonmatchings/zoomTrainingCourseRaceViewport-1197934324348345530/base_8.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_mode_select_flow/zoomTrainingCourseRaceViewport.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_mode_race_flow/zoomTrainingCourseRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomTrainingCourseRaceViewport(void) {
@@ -683,7 +683,7 @@ void applyTrainingCourseActionMenuSelection(void) {
 
 void finishTrainingCourseFlow(void) {
     if (gMainMenuSelectedCourse != 9) {
-        setCurrentGameTaskCallback(returnToMainMenuFromModeSelectFlow, 0);
+        setCurrentGameTaskCallback(returnToMainMenuFromModeRaceFlow, 0);
         return;
     }
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
@@ -728,11 +728,11 @@ void exitTrainingCourseEndingDialog(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        setCurrentGameTaskCallback(&returnToMainMenuFromModeSelectFlow, 0);
+        setCurrentGameTaskCallback(&returnToMainMenuFromModeRaceFlow, 0);
     }
 }
 
-void returnToMainMenuFromModeSelectFlow(void) {
+void returnToMainMenuFromModeRaceFlow(void) {
     D_801235B4 = 0;
     resumeGameTask(3);
     removeGameTask(4);
