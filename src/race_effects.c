@@ -117,7 +117,7 @@ extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx *gRegionAllocPtr;
 extern u8 gRaceUpdatePaused;
 extern u8 D_80156609;
-extern s16 D_80156612;
+extern s16 gUiBlinkTimer;
 extern Mtx *D_80156614;
 extern RacePlayerState D_80121D80[];
 extern RacePlayerHalfwordField gPlayerHitSource[];
@@ -1175,7 +1175,7 @@ void func_8004CBC4(RaceEffectActor *arg0) {
         arg0->matrixFlags.matrixDirty2 = 1;
     }
 
-    if ((arg0->spriteIndex < 0x1F) && !(D_80156612 & 1)) {
+    if ((arg0->spriteIndex < 0x1F) && !(gUiBlinkTimer & 1)) {
         return;
     }
 

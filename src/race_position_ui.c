@@ -56,7 +56,7 @@ extern s32 func_8004885C(void *source);
 extern void func_80045990(void *asset, u16 index, void **image, void **palette);
 
 extern u8 D_80156609;
-extern s16 D_80156612;
+extern s16 gUiBlinkTimer;
 extern s16 D_80112148;
 extern s16 D_8011214A;
 extern s16 D_80112130[];
@@ -271,7 +271,7 @@ void func_8007C5E8(RacePositionUiPlayer *player) {
         if (drawPlayer->blinkTimer < 0xA5 && drawPlayer->blinkTimer >= 0x10) {
             return;
         }
-        if ((D_80156612 & 1) != 0) {
+        if ((gUiBlinkTimer & 1) != 0) {
             return;
         }
     }
@@ -347,7 +347,7 @@ void func_8007CBC0(RacePositionUiPlayer *player) {
         return;
     }
 
-    alphaPulse = D_80156612 & 0x1F;
+    alphaPulse = gUiBlinkTimer & 0x1F;
     if (alphaPulse >= 0x10) {
         alphaPulse = 0x1F - alphaPulse;
     }

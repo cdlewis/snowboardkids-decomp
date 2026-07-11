@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "main_menu_panels_ui.h"
+#include "main_menu_panel_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
@@ -60,7 +60,7 @@ extern s16 courseRecordDigitTileOffsets[];
 extern u16 *mainMenuModeDescriptionTexts[];
 extern u16 *mainMenuModeDescriptionTitles[];
 extern MenuPanelAssetHandles D_80112130;
-extern u8 D_80121B5B;
+extern u8 gMainMenuModeSelection;
 extern s16 D_80121B50;
 extern s16 D_80121B52;
 extern s16 gMenuFadeAlpha;
@@ -69,10 +69,10 @@ extern s16 D_80112180;
 extern s32 gPlayerInputPressed;
 extern s32 D_801235B4;
 extern s16 gFrameCounter;
-extern u8 D_8012482A;
-extern u8 D_8012482B;
-extern u8 D_8012482C;
-extern s16 D_80156612;
+extern u8 gRaceRecordSettingsEnabled;
+extern u8 gRaceCourseModelEffectsDisabled;
+extern u8 gRaceCourseOverlayEffectsDisabled;
+extern s16 gUiBlinkTimer;
 
 extern void addRenderCallback(RenderCallbackNode **, RenderCallback, s32);
 extern void func_80045A78(s16, s16, s32, u16);
@@ -138,7 +138,7 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
     tile = mainMenuModeSelectTopRowIconTiles; i = 0; do {
         next = i + 1;
         alpha = 0;
-        if (next == D_80121B5B) {
+        if (next == gMainMenuModeSelection) {
             alpha = arg0->x;
         }
 
@@ -155,7 +155,7 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
     i = 0;
     do {
         alpha = 0;
-        if ((i + 6) == D_80121B5B) {
+        if ((i + 6) == gMainMenuModeSelection) {
             alpha = arg0->x;
         }
 
@@ -167,7 +167,7 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
         x += 0x2C;
     } while (i != 6);
 
-    if (D_80121B5B == 0xC) {
+    if (gMainMenuModeSelection == 0xC) {
         if (arg0->x != 0) {
             func_80045A78(-0x30, 0x4D, getMemoryBlockBase(D_80112130.cancelHandle), 2);
             func_80045E84(-0x30, 0x4D, getMemoryBlockBase(D_80112130.cancelHandle), 3);
@@ -182,7 +182,7 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
 }
 
 // updateMainMenuModeSelectGrid best match: 75.664%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panels_ui/updateMainMenuModeSelectGrid.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/updateMainMenuModeSelectGrid.s")
 
 #ifdef NON_MATCHING
 void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
@@ -197,30 +197,30 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     if ((gMenuFadeAlpha == 0) && (gMainMenuSelectionResult == 0)) {
         temp_v1 = gPlayerInputPressed;
         if (temp_v1 & 0x10800) {
-            temp_a2 = mainMenuModeSelectUpTargets[D_80121B5B];
-            if (D_80121B5B != temp_a2) {
-                D_80121B5B = temp_a2;
+            temp_a2 = mainMenuModeSelectUpTargets[gMainMenuModeSelection];
+            if (gMainMenuModeSelection != temp_a2) {
+                gMainMenuModeSelection = temp_a2;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_v1 = gPlayerInputPressed;
             }
         } else if (temp_v1 & 0x20400) {
-            temp_a2_2 = mainMenuModeSelectDownTargets[D_80121B5B];
-            if (D_80121B5B != temp_a2_2) {
-                D_80121B5B = temp_a2_2;
+            temp_a2_2 = mainMenuModeSelectDownTargets[gMainMenuModeSelection];
+            if (gMainMenuModeSelection != temp_a2_2) {
+                gMainMenuModeSelection = temp_a2_2;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_v1 = gPlayerInputPressed;
             }
         } else if (temp_v1 & 0x40100) {
-            temp_a2_3 = mainMenuModeSelectRightTargets[D_80121B5B];
-            if (D_80121B5B != temp_a2_3) {
-                D_80121B5B = temp_a2_3;
+            temp_a2_3 = mainMenuModeSelectRightTargets[gMainMenuModeSelection];
+            if (gMainMenuModeSelection != temp_a2_3) {
+                gMainMenuModeSelection = temp_a2_3;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_v1 = gPlayerInputPressed;
             }
         } else if (temp_v1 & 0x80200) {
-            temp_a2_4 = mainMenuModeSelectLeftTargets[D_80121B5B];
-            if (D_80121B5B != temp_a2_4) {
-                D_80121B5B = temp_a2_4;
+            temp_a2_4 = mainMenuModeSelectLeftTargets[gMainMenuModeSelection];
+            if (gMainMenuModeSelection != temp_a2_4) {
+                gMainMenuModeSelection = temp_a2_4;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_v1 = gPlayerInputPressed;
             }
@@ -229,7 +229,7 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
         if (temp_v1 & 0xD000) {
             gMainMenuSelectionResult = 1;
             if (temp_v1 & 0x4000) {
-                D_80121B5B = 0xC;
+                gMainMenuModeSelection = 0xC;
             }
             enqueueSoundEffect(0x18, 0x32);
         }
@@ -260,7 +260,7 @@ void initMainMenuModeSelectGrid(MenuPanelActor *arg0) {
 }
 
 // drawMainMenuModeDescriptionPanel best match: 90.948%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panels_ui/drawMainMenuModeDescriptionPanel.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/drawMainMenuModeDescriptionPanel.s")
 
 #ifdef NON_MATCHING
 void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
@@ -358,25 +358,25 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
         u16 *text;
 
         count = 0;
-        text = mainMenuModeDescriptionTitles[D_80121B5B];
-        if (mainMenuModeDescriptionTitles[D_80121B5B][0] != 0xFFFF) {
+        text = mainMenuModeDescriptionTitles[gMainMenuModeSelection];
+        if (mainMenuModeDescriptionTitles[gMainMenuModeSelection][0] != 0xFFFF) {
             do {
                 count++;
             } while (text[count] != 0xFFFF);
         }
 
         drawMenuColoredGlyphScript((s16)(-((count * 0x10) / 2)), (s16)((-0x48) - arg0->y),
-                      (u8 *)mainMenuModeDescriptionTitles[D_80121B5B], 0, 0x100, 4, 0x29);
+                      (u8 *)mainMenuModeDescriptionTitles[gMainMenuModeSelection], 0, 0x100, 4, 0x29);
     }
 
-    if (D_80121B5B < 6) {
+    if (gMainMenuModeSelection < 6) {
         func_80045A78(-0x10, (s16)((-0x30) - arg0->y), getMemoryBlockBase(D_80112130.fontHandle),
-                      (new_var = mainMenuModeSelectPrimaryIconTiles)[D_80121B5B]);
+                      (new_var = mainMenuModeSelectPrimaryIconTiles)[gMainMenuModeSelection]);
         return;
     }
 
     func_80045A78(-0x10, (s16)((-0x30) - arg0->y), getMemoryBlockBase(D_80112130.fontHandle),
-                  mainMenuModeSelectSecondaryIconTiles[D_80121B5B]);
+                  mainMenuModeSelectSecondaryIconTiles[gMainMenuModeSelection]);
 }
 #endif
 
@@ -431,7 +431,7 @@ void initMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     arg0->y = 4;
     arg0->selectionState = 0;
     arg0->inputRepeatTimer = 0;
-    arg0->tileList = mainMenuModeDescriptionTexts[D_80121B5B];
+    arg0->tileList = mainMenuModeDescriptionTexts[gMainMenuModeSelection];
     setCallbackTaskCallback(arg0, updateMainMenuModeDescriptionPanel);
 }
 
@@ -562,7 +562,7 @@ void drawMainMenuSettingsOptions(s32 arg0) {
     }
     func_80046D68(-0x78, -0x10, getMemoryBlockBase(D_80112130.cancelHandle), 4, sp28);
     sp28 = 1;
-    if (D_8012482A == 1) {
+    if (gRaceRecordSettingsEnabled == 1) {
         func_80046D68(0x10, -0x10, getMemoryBlockBase(D_80112130.cancelHandle), 7, 2);
         func_80046D68(0x48, -0x10, getMemoryBlockBase(D_80112130.cancelHandle), 8, 1);
         if (D_801235B4 == 0) {
@@ -584,7 +584,7 @@ void drawMainMenuSettingsOptions(s32 arg0) {
     }
     func_80046D68(-0x78, 8, getMemoryBlockBase(D_80112130.cancelHandle), 5, sp28);
     sp28 = 1;
-    if (D_8012482B == 0) {
+    if (gRaceCourseModelEffectsDisabled == 0) {
         func_80046D68(0x10, 8, getMemoryBlockBase(D_80112130.cancelHandle), 9, 2);
         func_80046D68(0x48, 8, getMemoryBlockBase(D_80112130.cancelHandle), 0xA, 1);
         if (D_801235B4 == 1) {
@@ -606,7 +606,7 @@ void drawMainMenuSettingsOptions(s32 arg0) {
     }
     func_80046D68(-0x78, 0x20, getMemoryBlockBase(D_80112130.cancelHandle), 6, sp28);
     sp28 = 1;
-    if (D_8012482C == 0) {
+    if (gRaceCourseOverlayEffectsDisabled == 0) {
         func_80046D68(0x10, 0x20, getMemoryBlockBase(D_80112130.cancelHandle), 9, 2);
         func_80046D68(0x48, 0x20, getMemoryBlockBase(D_80112130.cancelHandle), 0xA, 1);
         if (D_801235B4 == 2) {
@@ -639,7 +639,7 @@ void initMainMenuSettingsPanel(MenuPanelActor *arg0) {
 }
 
 // drawRaceRecordSettingsPanel best match: 98.939%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panels_ui/drawRaceRecordSettingsPanel.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/drawRaceRecordSettingsPanel.s")
 
 #ifdef NON_MATCHING
 void drawRaceRecordSettingsPanel(s32 arg0) {
@@ -697,15 +697,15 @@ void drawRaceRecordSettingsPanel(s32 arg0) {
     drawMenuSprite(0x30, 0, getMemoryBlockBase(MENU_PANEL_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
     if (D_801235B4 == 0) {
         if (D_80121B52 != 1) {
-            if (D_80156612 & 8) {
+            if (gUiBlinkTimer & 8) {
                 func_80045A78(-0x30, -0x2A, getMemoryBlockBase(D_80112130.cancelHandle), 0xC);
             }
         }
-        if ((D_80121B52 != 9) && (D_80156612 & 8)) {
+        if ((D_80121B52 != 9) && (gUiBlinkTimer & 8)) {
             func_80045A78(-0x30, -6, getMemoryBlockBase(D_80112130.cancelHandle), 0xD);
         }
     }
-    if ((D_801235B4 != 0) && (D_80156612 & 1)) {
+    if ((D_801235B4 != 0) && (gUiBlinkTimer & 1)) {
         drawMenuColoredGlyphScript(-0x30, -0x18, raceRecordLapCountTexts[D_80121B52], 0, 0x100, 0, 0x29);
     } else {
         drawMenuColoredGlyphScript(-0x30, -0x18, raceRecordLapCountTexts[D_80121B52], 0, 0x100, 5, 0x29);

@@ -54,7 +54,7 @@ extern u8 gRaceUpdatePaused;
 extern u8 D_80121B58;
 extern u8 D_80121B59;
 extern u8 gMainMenuSelectedCourse;
-extern u8 D_80121B5B;
+extern u8 gMainMenuModeSelection;
 extern s16 D_80121B5C;
 extern u8 D_80121B5F;
 extern RaceInputRecord D_8012238C[];
@@ -108,7 +108,7 @@ void func_8003ED00(void) {
     gPlayerCount = four;
     D_800EC9C2 = 0;
     gMainMenuSelectedCourse = 0;
-    D_80121B5B = 0;
+    gMainMenuModeSelection = 0;
 
     players = D_80121D80;
     players[0].unk4 = 0;

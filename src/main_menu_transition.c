@@ -7,7 +7,7 @@
 #include "game_task_scheduler.h"
 #include "main_menu_training_ui.h"
 #include "main_menu_visual_effects.h"
-#include "main_menu_panels_ui.h"
+#include "main_menu_panel_ui.h"
 #include "race_camera.h"
 #include "main_menu_transition.h"
 #include "race_player_state.h"
@@ -52,7 +52,7 @@ extern u8 gFramebufferSwapHold;
 extern s32 D_801235B4;
 extern u8 D_80121B58;
 extern u8 D_80121B59;
-extern u8 D_80121B5B;
+extern u8 gMainMenuModeSelection;
 extern s16 D_80121B5C;
 extern u8 D_80121B5E;
 extern u8 D_80121B5F;
@@ -85,7 +85,7 @@ extern u8 D_60F990[];
 extern s16 D_80122282;
 
 void func_8003F520(void) {
-    D_80121B5B = 1;
+    gMainMenuModeSelection = 1;
     setCurrentGameTaskCallback(func_8003F554, 0);
 }
 
@@ -123,7 +123,7 @@ void func_8003F6C0(void) {
 
 void func_8003F718(void) {
     if (gMainMenuSelectionResult != 0) {
-        if (D_80121B5B == 0xC) {
+        if (gMainMenuModeSelection == 0xC) {
             requestMusicSequenceStop(0x3C);
         }
         setCurrentGameTaskCallback(&func_8003F778, 0);
@@ -148,7 +148,7 @@ void func_8003F7E4(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        if (D_80121B5B != 0xC) {
+        if (gMainMenuModeSelection != 0xC) {
             setCurrentGameTaskCallback(&func_8003F864, 0);
         } else {
             D_801235B4 = 0;
@@ -167,7 +167,7 @@ void func_8003F864(void) {
     RaceInputPlayer *players;
     MainMenuCourseAsset *courseAsset;
 
-    D_80121B50 = D_800D3C00[D_80121B5B].courseIndex;
+    D_80121B50 = D_800D3C00[gMainMenuModeSelection].courseIndex;
     gRaceUpdatePaused = 0;
     D_80121B58 = 0;
     D_80121B5F = 0;
@@ -221,7 +221,7 @@ void func_8003F864(void) {
     players[3].soundDisabled = 0;
     players[3].replayInputSource = 5;
 
-    courseAsset = &D_800D3C00[D_80121B5B];
+    courseAsset = &D_800D3C00[gMainMenuModeSelection];
     loadCompressedRomAsset(courseAsset->romStart, courseAsset->romEnd, 0x2B);
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
@@ -328,7 +328,7 @@ void func_8003FE54(void) {
     func_8006D700();
     func_8007AA50();
     gCurrentGameTask->transitionTimer += 1;
-    if (gCurrentGameTask->transitionTimer == D_800D3C90[D_80121B5B]) {
+    if (gCurrentGameTask->transitionTimer == D_800D3C90[gMainMenuModeSelection]) {
         setCurrentGameTaskCallback(func_8003FEF4, 0);
         requestMusicSequenceStop(0x40);
     }
@@ -396,7 +396,7 @@ void func_8004002C(void) {
     D_80121B58 = 0;
     D_80121B5F = 0;
     D_80121B59 = 0;
-    D_80121B5B = 0;
+    gMainMenuModeSelection = 0;
     D_800EC9C2 = 0;
     D_80121B5E = 0;
 

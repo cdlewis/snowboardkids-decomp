@@ -94,10 +94,10 @@ extern u8 D_800EC9C2;
 extern u8 gPlayerCount;
 extern u8 D_80121B59;
 extern u8 gMainMenuSelectedCourse;
-extern u8 D_80121B5B;
+extern u8 gMainMenuModeSelection;
 extern u8 D_80121B5E;
-extern u8 D_8012482B;
-extern u8 D_8012482C;
+extern u8 gRaceCourseModelEffectsDisabled;
+extern u8 gRaceCourseOverlayEffectsDisabled;
 
 #ifdef NON_MATCHING
 // loadRaceCourseAssets best match: 63.023% at nonmatchings/loadRaceCourseAssets-2225551288923588688/base_4.c.
@@ -260,10 +260,10 @@ void initRaceCourseEffects(void) {
 
     sp28 = (sp2C = 1);
     if (gPlayerCount != 1) {
-        if (D_8012482B != 0) {
+        if (gRaceCourseModelEffectsDisabled != 0) {
             sp28 = 0;
         }
-        if (D_8012482C != 0) {
+        if (gRaceCourseOverlayEffectsDisabled != 0) {
             sp2C = 0;
         }
     }
@@ -275,7 +275,7 @@ void initRaceCourseEffects(void) {
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 0);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         createCallbackTaskWithUserId(&func_8006CBBC, 0, 0x64, 0);
-        if ((D_800EC9C2 == 0) && (D_80121B59 == 0) && (gMainMenuSelectedCourse == 0) && (D_80121B5B == 0)) {
+        if ((D_800EC9C2 == 0) && (D_80121B59 == 0) && (gMainMenuSelectedCourse == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -333,7 +333,7 @@ block_24:
         createCallbackTaskWithUserId(&func_800675AC, 0, 0x64, 0);
         createCallbackTaskWithUserId(&func_800675AC, 0, 0x64, 1);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
+        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -370,7 +370,7 @@ block_24:
         createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 2);
         createCallbackTaskWithUserId(&func_80063980, 0, 0x64, 0);
         createCallbackTaskWithUserId(&func_80063980, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
+        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -398,7 +398,7 @@ block_24:
         createCallbackTaskWithUserId(&func_8006CBBC, 0, 0x64, 2);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         createCallbackTask(&initRaceCoursePreviewModelMeshes, 0, 0x64);
-        if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
+        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -436,7 +436,7 @@ block_24:
         createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 4);
         createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 5);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
+        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -474,7 +474,7 @@ block_24:
         createCallbackTask(&func_8006B108, 0, 0x64);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         createCallbackTask(&func_8006C698, 0, 0x64);
-        if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
+        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -509,7 +509,7 @@ block_24:
         createCallbackTaskWithUserId(&initRaceCoursePreviewBillboard, 0, 0x64, 1);
         createCallbackTaskWithUserId(&initRaceCoursePreviewBillboard, 0, 0x64, 2);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
+        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -545,7 +545,7 @@ block_24:
         createCallbackTask(&func_8006B108, 0, 0x64);
         createCallbackTask(&func_8006C698, 0, 0x64);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (D_80121B5B == 0)) {
+        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }
@@ -566,7 +566,7 @@ block_24:
         createCallbackTask(&func_8006C698, 0, 0x64);
         createCallbackTask(&initRaceCoursePreviewAnimatedBillboards, 0, 0x64);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
-        if ((D_800EC9C2 == 0) && (D_80121B5B == 0) && ((gMainMenuSelectedCourse == 0) || (gMainMenuSelectedCourse == 7) || (gMainMenuSelectedCourse == 8))) {
+        if ((D_800EC9C2 == 0) && (gMainMenuModeSelection == 0) && ((gMainMenuSelectedCourse == 0) || (gMainMenuSelectedCourse == 7) || (gMainMenuSelectedCourse == 8))) {
             if (sp2C != 0) {
                 createCallbackTask(&func_8006713C, 0, 0x64);
             }

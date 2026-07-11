@@ -14,7 +14,7 @@
 #include "game_task_scheduler.h"
 #include "menu_system_flow.h"
 #include "main_menu_visual_effects.h"
-#include "main_menu_panels_ui.h"
+#include "main_menu_panel_ui.h"
 #include "player_count_select_menu.h"
 #include "player_select_menu.h"
 #include "race_camera.h"
@@ -218,7 +218,7 @@ extern u8 D_80121B60;
 extern s8 D_80121B61;
 extern RaceTime D_80121B74;
 extern u8 D_80121B81;
-extern u8 D_8012482A;
+extern u8 gRaceRecordSettingsEnabled;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s8 gFramebufferSwapDelay;
@@ -1733,7 +1733,7 @@ void func_80077DA0(void) {
         setCurrentGameTaskCallback(func_80073988, 0);
         return;
     }
-    if (D_8012482A == 0) {
+    if (gRaceRecordSettingsEnabled == 0) {
         setCurrentGameTaskCallback(func_80073988, 0);
         return;
     }
