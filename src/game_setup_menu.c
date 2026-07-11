@@ -39,7 +39,7 @@ extern s8 D_800EC9E5;
 extern s8 D_800EC9E6;
 extern EffectTask *D_8010ADDC;
 extern u16 D_8010ADF0;
-extern s8 D_8010ADF9;
+extern s8 gHighestUnlockedCourse;
 extern GameSetupMenuSubState D_8010AE00;
 extern s16 D_8010AE06;
 extern s16 D_8010AE08;
@@ -83,7 +83,7 @@ void func_80003140(void) {
     D_800EC9C1 = 0;
     D_800EC9E5 = 1;
     D_800EC9E6 = 0;
-    D_8010ADF9 = 0;
+    gHighestUnlockedCourse = 0;
     D_800EC8B0 = 0;
     D_80121B50 = 9;
     D_801235B4 = 0;
@@ -656,8 +656,8 @@ void func_80003798(void) {
                     u8 value = save->unk4C;
 
                     subState->unkE[0] = 3;
-                    if (D_8010ADF9 < value) {
-                        D_8010ADF9 = value;
+                    if (gHighestUnlockedCourse < value) {
+                        gHighestUnlockedCourse = value;
                     }
                     save++;
                     subState = (GameSetupSubState03798 *)((u8 *)subState + 1);

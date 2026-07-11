@@ -2,7 +2,7 @@
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "asset_manager.h"
-#include "character_select_flow.h"
+#include "character_select_course_menu.h"
 #include "controller_pak_menu_ui.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"

@@ -1,7 +1,7 @@
 #include "common.h"
 #include "asset_manager.h"
 #include "effect_task_scheduler.h"
-#include "character_select_flow.h"
+#include "character_select_course_menu.h"
 #include "character_select_transition.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"

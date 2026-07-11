@@ -3,7 +3,7 @@
 #include "effect_task_scheduler.h"
 #include "memory_allocator.h"
 #include "asset_manager.h"
-#include "character_select_flow.h"
+#include "character_select_course_menu.h"
 #include "character_select_menu.h"
 #include "character_select_transition.h"
 #include "controller_pak_delete_flow.h"
@@ -459,7 +459,7 @@ void func_8007334C(void) {
 
 void func_8007339C(void) {
     func_8009956C(&func_800733E0, 0);
-    func_800994F4(4, &func_800062F8, 0x64);
+    func_800994F4(4, &initCharacterSelectCourseMenuFromPlayerSelect, 0x64);
     func_80099614(2);
 }
 
@@ -478,7 +478,7 @@ void func_80073434(void) {
     } else {
         func_8009956C(&func_800734E4, 0);
     }
-    func_800994F4(4, &func_80005F18, 0x64);
+    func_800994F4(4, &initCharacterSelectCourseMenuFromRace, 0x64);
     func_80099614(2);
 }
 
