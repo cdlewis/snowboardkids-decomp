@@ -98,7 +98,7 @@ segments:
       - [0x35E20, c, ending_credits_nancy]
       - [0x36F80, c, ending_credits_tommy]
       - [0x37FE0, c, ending_credits_jam]
-      - [0x3A0E0, c, main_menu_scene_actor_3]
+      - [0x3A0E0, c, ending_credits_linda]
       - [0x3C3C0, c, ending_credits_ui]
       - [0x3CAF0, c, menu_transition_effects]
       - [0x3E9D0, c, race_start_transition]
