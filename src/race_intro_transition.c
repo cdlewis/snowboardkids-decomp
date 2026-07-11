@@ -50,8 +50,8 @@ extern RaceIntroPlayer D_80121D80[];
 extern RaceIntroCourseEntry D_800BB834[];
 extern u8 D_800BB837[];
 extern s16 gMenuFadeAlpha;
-extern s16 D_80121B50;
-extern s16 D_80121B52;
+extern s16 gRaceCourseIndex;
+extern s16 gRaceLapCount;
 extern s16 D_80121B5C;
 extern u8 D_800DEF10;
 extern u8 D_800BB830;
@@ -95,7 +95,7 @@ void func_8003E600(void) {
     register s32 one;
 
     courseEntry = &D_800BB834[D_800BB830];
-    D_80121B50 = courseEntry->courseIndex;
+    gRaceCourseIndex = courseEntry->courseIndex;
     gRaceUpdatePaused = 0;
     D_80121B58 = 0;
     D_80121B5F = 0;
@@ -140,7 +140,7 @@ void func_8003E600(void) {
         D_80121B54 = one;
         gPlayerCount = one;
     }
-    D_80121B52 = 2;
+    gRaceLapCount = 2;
     D_80121B5C = 0x64;
     if (D_800EC9C2 == 0) {
         initCallbackTaskScheduler(one);

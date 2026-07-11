@@ -52,7 +52,7 @@ extern u8 D_800DE060[];
 extern u8 D_800DE064[];
 extern u8 D_800EC9C2;
 extern u8 gPlayerCount;
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 
 // func_8007B250 best match: 30.134% (nonmatchings/func_8007B250-5752545231564691495/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007B250.s")
@@ -289,7 +289,7 @@ void func_8007BB08(RacePositionPlayer *player) {
     }
 
     player->checkpointHit = 0;
-    event = D_800DE030[D_80121B50];
+    event = D_800DE030[gRaceCourseIndex];
     eventIndex = 0;
 
     for (;;) {
@@ -332,7 +332,7 @@ s32 func_8007BCFC(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
     s32 pathIndexCopy;
     s8 *entry;
 
-    courseIndex = D_80121B50;
+    courseIndex = gRaceCourseIndex;
     entry = D_800DDE74[(courseIndex * RACE_POSITION_PLAYER_COUNT) + playerIndex];
     pathIndexCopy = pathIndex;
     if (courseIndex == 7) {
@@ -368,7 +368,7 @@ s32 func_8007BCFC(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
 s32 func_8007BDE4(s32 playerIndex, s32 pathIndex) {
     s8 *entry;
 
-    if (D_80121B50 == 7) {
+    if (gRaceCourseIndex == 7) {
         if (playerIndex == 0) {
             return 0xFFF40000;
         }
@@ -383,6 +383,6 @@ s32 func_8007BDE4(s32 playerIndex, s32 pathIndex) {
         }
     }
 
-    entry = D_800DDE74[(D_80121B50 * RACE_POSITION_PLAYER_COUNT) + playerIndex];
+    entry = D_800DDE74[(gRaceCourseIndex * RACE_POSITION_PLAYER_COUNT) + playerIndex];
     return entry[pathIndex] << 0x12;
 }

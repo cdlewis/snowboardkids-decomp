@@ -8,7 +8,7 @@
 #include "model_animation.h"
 #include "race_player_movement.h"
 
-#define COURSE_INDEX_RELOAD (*(volatile s16 *)&D_80121B50)
+#define COURSE_INDEX_RELOAD (*(volatile s16 *)&gRaceCourseIndex)
 
 typedef struct RaceCountdownEffect {
     char pad[0x18];
@@ -273,7 +273,7 @@ void func_8006B6C8(Struct6B760 *);
 void func_8006AF48(RaceCourseRenderEffect *);
 void func_8006BC68(RaceMovingEffect *);
 extern u8 gRaceUpdatePaused;
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 extern CourseAssetHandles D_80112130;
 extern s16 D_80112144;
 extern s16 D_80112146;
@@ -416,7 +416,7 @@ void func_80069BEC(void *arg0) {
 
     gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-    switch (*(u16 *)&D_80121B50) {
+    switch (*(u16 *)&gRaceCourseIndex) {
         case 0:
             gSPDisplayList(gRegionAllocPtr++, D_2008900);
             break;
@@ -496,7 +496,7 @@ void func_80069E50(RaceCourseBackdropEffect *arg0) {
 
     temp_s3->matrix = allocFixedTransformMatrix(&sp100);
     if (temp_s3->matrix != NULL) {
-        switch ((u16)D_80121B50) {
+        switch ((u16)gRaceCourseIndex) {
             case 0:
                 EMIT_COURSE_BACKDROP(D_20089E0);
                 gfx = gRegionAllocPtr++;
@@ -589,7 +589,7 @@ void func_8006A894(RaceCourseRenderEffect *arg0) {
 
     textureIndex = -1;
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
-    entry = D_800DA0B8[D_80121B50];
+    entry = D_800DA0B8[gRaceCourseIndex];
     i = 0;
     if (entry->type != -1) {
         do {
@@ -629,7 +629,7 @@ void func_8006ACE8(void *arg0) {
     CourseMarkerSpawnEntry *entry;
     s8 type;
 
-    entry = D_800DA0B8[D_80121B50];
+    entry = D_800DA0B8[gRaceCourseIndex];
     if (entry->type != -1) {
         do {
             switch (entry->type) {
@@ -655,7 +655,7 @@ void func_8006AE00(RaceCourseRenderEffect *arg0) {
     s32 allocSize;
     s32 i;
 
-    entry = D_800DA0B8[D_80121B50];
+    entry = D_800DA0B8[gRaceCourseIndex];
     count = 0;
     if (entry->type != -1) {
         do {
@@ -665,7 +665,7 @@ void func_8006AE00(RaceCourseRenderEffect *arg0) {
     }
 
     if (count != 0) {
-        entry = D_800DA0B8[D_80121B50];
+        entry = D_800DA0B8[gRaceCourseIndex];
         allocSize = count * sizeof(CourseRenderCommand);
         D_80112130.markerMatrixHandle = func_80042D58(allocSize);
         arg0->vertices = getMemoryBlockBase(D_80112130.markerMatrixHandle);
@@ -693,7 +693,7 @@ void func_8006AF48(RaceCourseRenderEffect *arg0) {
     Gfx *temp_s2;
     Gfx *temp_s3;
 
-    var_s4 = D_800DA73C[D_80121B50];
+    var_s4 = D_800DA73C[gRaceCourseIndex];
     var_s7 = TRUE;
     var_s5 = 0;
     if (var_s4->displayListIndex != -1) {
@@ -733,7 +733,7 @@ void func_8006B108(RaceCourseRenderEffect *arg0) {
     CourseEffectMatrixSource transform;
     s32 count;
 
-    base = D_800DA73C[D_80121B50];
+    base = D_800DA73C[gRaceCourseIndex];
     count = 0;
     entry = base;
     if (base->displayListIndex != -1) {
@@ -958,7 +958,7 @@ void func_8006B7E0(RaceMovingEffect *arg0) {
     volatile s32 pad[1];
 
     if (D_80156609 != 0) {
-        makeFixedRotationY(&transform, D_800B9556[D_80121B50].angle + 0x400);
+        makeFixedRotationY(&transform, D_800B9556[gRaceCourseIndex].angle + 0x400);
         transform.basePos.x = arg0->pos.x;
         transform.basePos.y = arg0->pos.y;
         transform.basePos.z = arg0->pos.z;
@@ -973,7 +973,7 @@ void func_8006B7E0(RaceMovingEffect *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112144));
             gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112146));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            if (D_80121B50 != 8) {
+            if (gRaceCourseIndex != 8) {
                 gSPDisplayList(gRegionAllocPtr++, D_2000910);
             } else {
                 gSPDisplayList(gRegionAllocPtr++, D_2003218);
@@ -1025,7 +1025,7 @@ void func_8006BA50(RaceMovingEffect *arg0) {
 
         if (arg0->timer == 0) {
             setCallbackTaskCallback(arg0, func_8006B988);
-            makeFixedRotationXY(mtx, 0x100, D_800B9556[D_80121B50].angle + 0x400);
+            makeFixedRotationXY(mtx, 0x100, D_800B9556[gRaceCourseIndex].angle + 0x400);
             arg0->timer = 0x64;
         }
     }
@@ -1039,7 +1039,7 @@ void func_8006BB50(RaceMovingEffect *arg0) {
     arg0->timer = 0x46;
     arg0->velocity.z = 0x680000;
     mtx = arg0->unk30;
-    makeFixedRotationY(mtx, D_800B9556[D_80121B50].angle + 0x400);
+    makeFixedRotationY(mtx, D_800B9556[gRaceCourseIndex].angle + 0x400);
     transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.z = 0xFFFE0000;
     arg0->pos.x += D_800B9540[COURSE_INDEX_RELOAD].pos.x;
@@ -1067,7 +1067,7 @@ void func_8006BC68(RaceMovingEffect *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getMemoryBlockBase(D_80112144));
             gSPSegment(gRegionAllocPtr++, 0x03, getMemoryBlockBase(D_80112146));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            if (D_80121B50 != 8) {
+            if (gRaceCourseIndex != 8) {
                 gSPDisplayList(gRegionAllocPtr++, D_2000910);
             } else {
                 gSPDisplayList(gRegionAllocPtr++, D_2003218);
@@ -1149,7 +1149,7 @@ void func_8006C088(RaceMovingEffect *arg0) {
     void *mtx;
 
     arg0->timer = 0x28;
-    arg0->unk52 = D_800B9554[D_80121B50].angle;
+    arg0->unk52 = D_800B9554[gRaceCourseIndex].angle;
     arg0->velocity.x = -0x200000;
     arg0->velocity.z = 0x400000;
     mtx = arg0->unk30;
@@ -1157,9 +1157,9 @@ void func_8006C088(RaceMovingEffect *arg0) {
     transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.x = 0;
     arg0->velocity.z = -0x20000;
-    arg0->pos.x += D_800B9540[D_80121B50].unk8.x;
-    arg0->pos.y += D_800B9540[D_80121B50].unk8.y + 0x40000;
-    arg0->pos.z += D_800B9540[D_80121B50].unk8.z;
+    arg0->pos.x += D_800B9540[gRaceCourseIndex].unk8.x;
+    arg0->pos.y += D_800B9540[gRaceCourseIndex].unk8.y + 0x40000;
+    arg0->pos.z += D_800B9540[gRaceCourseIndex].unk8.z;
     setCallbackTaskCallback(arg0, func_8006BFC0);
     func_8006BFC0(arg0);
 }
@@ -1181,7 +1181,7 @@ void func_8006C1B4(Struct6C51C *arg0) {
         arg0->pos2Matrix = NULL;
     }
 
-    if (isPositionNearCurrentViewport((Vec3i *) &D_800DA764[D_80121B50]) == 0) {
+    if (isPositionNearCurrentViewport((Vec3i *) &D_800DA764[gRaceCourseIndex]) == 0) {
         return;
     }
 
@@ -1207,7 +1207,7 @@ void func_8006C1B4(Struct6C51C *arg0) {
 
     matrix = arg0->pos1Matrix;
     if (matrix == NULL) {
-        makeFixedRotationZY(scratch.rotation, D_800DA770[D_80121B50].angle, arg0->unk50);
+        makeFixedRotationZY(scratch.rotation, D_800DA770[gRaceCourseIndex].angle, arg0->unk50);
         scratch.basePos.x = arg0->pos1.x;
         scratch.basePos.y = arg0->pos1.y;
         scratch.basePos.z = arg0->pos1.z;
@@ -1265,7 +1265,7 @@ void func_8006C51C(Struct6C51C *arg0) {
         }
         temp_s0->unk54--;
         if (temp_s0->unk54 == 0) {
-            enqueuePositionalSoundEffect(0x1C, &D_800DA764[D_80121B50], 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x1C, &D_800DA764[gRaceCourseIndex], 0x7F, 0x32);
             setCallbackTaskCallback(temp_s0, func_8006C4AC);
         }
     }
@@ -1278,8 +1278,8 @@ void func_8006C5C0(Struct6C51C *arg0) {
         D_801235B4 &= ~4;
         setCallbackTaskCallback(arg0, func_8006C51C);
         arg0->unk56 = 1;
-        enqueuePositionalSoundEffect(0x16, &D_800DA764[D_80121B50], 0x7F, 0x32);
-        enqueuePositionalSoundEffect(0x1B, &D_800DA764[D_80121B50], 0x7F, 0x32);
+        enqueuePositionalSoundEffect(0x16, &D_800DA764[gRaceCourseIndex], 0x7F, 0x32);
+        enqueuePositionalSoundEffect(0x1B, &D_800DA764[gRaceCourseIndex], 0x7F, 0x32);
     }
     addRenderCallback(&D_801248A4, func_8006C1B4, arg0);
 }
@@ -1289,10 +1289,10 @@ void func_8006C698(Struct6C51C *arg0) {
     Vec3i sp28;
 
     mtx = arg0->source.rotation;
-    makeFixedRotationY(mtx, D_800DA764[D_80121B50].angle);
-    arg0->source.basePos.x = D_800DA764[D_80121B50].x;
-    arg0->source.basePos.y = D_800DA764[D_80121B50].y;
-    arg0->source.basePos.z = D_800DA764[D_80121B50].z;
+    makeFixedRotationY(mtx, D_800DA764[gRaceCourseIndex].angle);
+    arg0->source.basePos.x = D_800DA764[gRaceCourseIndex].x;
+    arg0->source.basePos.y = D_800DA764[gRaceCourseIndex].y;
+    arg0->source.basePos.z = D_800DA764[gRaceCourseIndex].z;
     sp28.x = 0x18000;
     sp28.y = 0x120000;
     sp28.z = -0x80000;

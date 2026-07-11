@@ -38,7 +38,7 @@ extern s32 gActiveMenuTask;
 extern u8 D_8010ADF8;
 extern u16 D_8010ADF0;
 extern u8 D_8010AF52;
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 extern s16 gMenuFadeAlpha;
 extern u8 D_80121B5E;
 extern u8 D_800EC9DD;
@@ -58,8 +58,8 @@ void func_80008620(void) {
     gCurrentGameTask->timer = 0;
     D_8010ADF8 = 0;
     D_8010ADF0 = 0;
-    if (D_80121B50 == 7) {
-        D_80121B50 = 9;
+    if (gRaceCourseIndex == 7) {
+        gRaceCourseIndex = 9;
     }
     gMenuFadeAlpha = gCurrentGameTask->fade;
     if (D_80121B5E == 3) {
@@ -92,8 +92,8 @@ void func_800086EC(void) {
     gCurrentGameTask->timer = 0;
     D_8010ADF8 = 0;
     D_8010ADF0 = 0;
-    if (D_80121B50 == 7) {
-        D_80121B50 = 9;
+    if (gRaceCourseIndex == 7) {
+        gRaceCourseIndex = 9;
     }
     gMenuFadeAlpha = gCurrentGameTask->fade;
     if (D_80121B5E == 3) {
@@ -177,7 +177,7 @@ void func_800088C8(void) {
                     if (selection != previousSelection) {
                         enqueueSoundEffect(0x19, 0x32);
                         heldInput = gPlayerInputPressed;
-                        D_80121B50 = 9;
+                        gRaceCourseIndex = 9;
                     }
 
                     if ((heldInput & 0x1000) || ((heldInput & 0x8000) && (D_801235B4 == 4))) {

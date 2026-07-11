@@ -124,7 +124,7 @@ extern void func_80045A1C(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 
 extern s8 D_80122288;
 extern s16 D_80122282;
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern u32 D_80156614;
 
@@ -146,8 +146,8 @@ void drawRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
     s8 nextTextureIndex;
 
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
-    entry = gRaceCoursePreviewModelCommandsByCourse[D_80121B50];
-    vertices = gRaceCoursePreviewModelVerticesByCourse[D_80121B50];
+    entry = gRaceCoursePreviewModelCommandsByCourse[gRaceCourseIndex];
+    vertices = gRaceCoursePreviewModelVerticesByCourse[gRaceCourseIndex];
     textureIndex = -1;
     i = 0;
 
@@ -192,7 +192,7 @@ void initRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
     s32 allocSize;
     s32 i;
 
-    entry = gRaceCoursePreviewModelCommandsByCourse[D_80121B50];
+    entry = gRaceCoursePreviewModelCommandsByCourse[gRaceCourseIndex];
     count = 0;
     if (entry->textureIndex != -1) {
         do {
@@ -202,7 +202,7 @@ void initRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
     }
 
     if (count != 0) {
-        entry = gRaceCoursePreviewModelCommandsByCourse[D_80121B50];
+        entry = gRaceCoursePreviewModelCommandsByCourse[gRaceCourseIndex];
         allocSize = count * sizeof(GfxCommandDest);
         D_80112130.matrixHandle = func_80042D58(allocSize);
         arg0->matrices = getMemoryBlockBase(D_80112130.matrixHandle);
@@ -600,11 +600,11 @@ void initRaceCoursePreviewShortPan(RaceCoursePreviewCamera *arg0) {
 }
 
 void initRaceCoursePreviewCameraCutscene(RaceCoursePreviewCamera *arg0) {
-    s16 temp_v0 = D_80121B50;
+    s16 temp_v0 = gRaceCourseIndex;
 
     if (temp_v0 == 3) {
         setCallbackTaskCallback(arg0, initRaceCoursePreviewLongPan);
-        temp_v0 = D_80121B50;
+        temp_v0 = gRaceCourseIndex;
     }
     if (temp_v0 == 6) {
         setCallbackTaskCallback(arg0, initRaceCoursePreviewShortPan);
@@ -628,7 +628,7 @@ void drawRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
     s32 i;
 
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
-    entry = gRaceCoursePreviewAnimatedBillboardCommandsByCourse[D_80121B50];
+    entry = gRaceCoursePreviewAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
     loadedTextureIndex = -1;
     i = 0;
     if (entry->textureIndex != -1) {
@@ -668,7 +668,7 @@ void initRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
     s32 allocSize;
     s32 i;
 
-    entry = gRaceCoursePreviewAnimatedBillboardCommandsByCourse[D_80121B50];
+    entry = gRaceCoursePreviewAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
     count = 0;
     if (entry->textureIndex != -1) {
         do {
@@ -678,7 +678,7 @@ void initRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
     }
 
     if (count != 0) {
-        entry = gRaceCoursePreviewAnimatedBillboardCommandsByCourse[D_80121B50];
+        entry = gRaceCoursePreviewAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
         allocSize = count * sizeof(GfxCommandDest);
         D_80112130.matrixHandle2 = func_80042D58(allocSize);
         arg0->matrices = getMemoryBlockBase(D_80112130.matrixHandle2);

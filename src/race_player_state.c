@@ -125,7 +125,7 @@ extern u8 D_80121B59;
 extern u8 D_80121B58;
 extern u8 gMainMenuSelectedCourse;
 extern u8 gMainMenuModeSelection;
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 extern s32 D_801235B4;
 extern s16 D_80121B5C;
 extern s8 D_80121D93;
@@ -136,7 +136,7 @@ extern s8 D_801229AB;
 extern s32 D_80122C94;
 extern s8 D_80122FB7;
 extern s32 D_801232A0;
-extern s16 D_80121B52;
+extern s16 gRaceLapCount;
 extern s16 gFrameCounter;
 extern s32 D_801235B4;
 extern Unk8011228C D_8011228C[];
@@ -145,7 +145,7 @@ extern RacePlayerSoundPosition D_80121DA8[];
 extern void *D_801248C8;
 extern void *D_801248EC;
 extern Struct800955C0 D_800B9540[];
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 extern Unk801124B8 D_801124B8[];
 
 void func_8008BEB0(void) {
@@ -273,7 +273,7 @@ void func_8008C098(RaceInputPlayer *player) {
     if ((D_800EC9C2 == 1) && (D_80121B5E == 1)) {
         player->shieldEffectTimer = 0xA;
     }
-    if (D_80121B50 == 9) {
+    if (gRaceCourseIndex == 9) {
         player->posZ = -0xBD0000;
     }
     player->unk68 = 0xC0000;
@@ -608,7 +608,7 @@ void func_8008D09C(RaceInputPlayer *player) {
     }
 
     if (player->unk4 == 0) {
-        spawn = &D_800B9540[D_80121B50];
+        spawn = &D_800B9540[gRaceCourseIndex];
         if ((player->unk502 == spawn->unk0) && !(player->stateFlags & 0x40)) {
             surfaceCue = (s16)(((calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
@@ -979,7 +979,7 @@ void func_8008E008(RaceInputPlayer *player) {
     }
 
     if (player->unk4 == 0) {
-        spawn = &D_800B9540[D_80121B50];
+        spawn = &D_800B9540[gRaceCourseIndex];
         if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
             velocityY = (s16) (((calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
@@ -1081,7 +1081,7 @@ void func_8008E350(RaceInputPlayer *player) {
     s8 turnTimer;
 
     if (player->unk4 == 0) {
-        spawn = &D_800B9540[D_80121B50];
+        spawn = &D_800B9540[gRaceCourseIndex];
         if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
             surfaceCue = (s16)(((calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
@@ -3298,7 +3298,7 @@ void func_80092E58(RaceInputPlayer *player) {
     playerAlias->posY += player->unk40.y;
     playerAlias->posZ += playerAlias->unk40.z;
 
-    spawn = &D_800B9540[D_80121B50];
+    spawn = &D_800B9540[gRaceCourseIndex];
     if ((spawn->unk0 == playerAlias->unk502) && !(playerAlias->stateFlags & 0x40)) {
         angleDiff = calculateAngleBetweenXZPoints(playerAlias->posX, player->posZ, spawn->unk40, spawn->unk44);
         if (playerAlias->stateFlags & 0x400) {
@@ -3465,7 +3465,7 @@ void func_800934EC(RaceInputPlayer *player) {
         player->stateFlags &= ~0x200;
     }
 
-    spawn = &D_800B9540[D_80121B50];
+    spawn = &D_800B9540[gRaceCourseIndex];
     if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
         targetAngle = calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44);
         if (player->stateFlags & 0x400) {
@@ -4433,7 +4433,7 @@ void func_80095338(RaceInputPlayer *player) {
         player->updateTimer = updateTimer + 1;
         player->stateTimer = 0x14;
         player->unk80 = 0xA;
-        player->unk2FA = D_800B9556[D_80121B50].angle;
+        player->unk2FA = D_800B9556[gRaceCourseIndex].angle;
         if (player->stateFlags & 0x400) {
             player->unk2FA += 0x800;
         }
@@ -4458,15 +4458,15 @@ void func_80095338(RaceInputPlayer *player) {
         if (temp_a1) {
         }
         tempX = player->posX;
-        player->posX = tempX + ((D_800B9540[D_80121B50].unk18 - tempX) / temp_a1);
-        player->posZ = tempZ + ((D_800B9540[D_80121B50].unk1C - tempZ) / temp_a1);
+        player->posX = tempX + ((D_800B9540[gRaceCourseIndex].unk18 - tempX) / temp_a1);
+        player->posZ = tempZ + ((D_800B9540[gRaceCourseIndex].unk1C - tempZ) / temp_a1);
     }
 
     timer = player->stateTimer - 1;
     player->stateTimer = timer;
     if (timer == 0) {
-        player->posX = D_800B9540[D_80121B50].unk18;
-        player->posZ = D_800B9540[D_80121B50].unk1C;
+        player->posX = D_800B9540[gRaceCourseIndex].unk18;
+        player->posZ = D_800B9540[gRaceCourseIndex].unk1C;
         player->updateState++;
         player->updateTimer = 0;
         player->stateTimer = 0;
@@ -4481,8 +4481,8 @@ void func_800955C0(RaceInputPlayer *player) {
         player->updateState++;
         player->updateTimer = 0;
         player->facingAngle = player->unk2FA;
-        player->posX = D_800B9540[D_80121B50].unk18;
-        player->posZ = D_800B9540[D_80121B50].unk1C;
+        player->posX = D_800B9540[gRaceCourseIndex].unk18;
+        player->posZ = D_800B9540[gRaceCourseIndex].unk1C;
     }
 }
 
@@ -4710,27 +4710,27 @@ void func_80095BE4(RaceInputPlayer *player) {
         source.x = -0x200000;
         source.y = 0;
         source.z = 0x400000;
-        makeFixedRotationY(matrix, D_800B9554[D_80121B50].angle);
+        makeFixedRotationY(matrix, D_800B9554[gRaceCourseIndex].angle);
         pos = (Vec3i *) &player->posX;
         transformVec3iByFixedMatrix(matrix, &source, pos);
-        player->posX += D_800B9540[D_80121B50].unk8.x;
-        player->posY += D_800B9540[D_80121B50].unk8.y + 0x80000;
-        player->posZ += D_800B9540[D_80121B50].unk8.z;
+        player->posX += D_800B9540[gRaceCourseIndex].unk8.x;
+        player->posY += D_800B9540[gRaceCourseIndex].unk8.y + 0x80000;
+        player->posZ += D_800B9540[gRaceCourseIndex].unk8.z;
         player->unk508++;
-        player->unk502 = D_800B9540[D_80121B50].unk4;
+        player->unk502 = D_800B9540[gRaceCourseIndex].unk4;
         player->unk34.x = pos->x;
         player->unk34.y = pos->y;
         player->stateTimer = 0x28;
         player->unk34.z = pos->z;
         player->stateFlags &= 0xFBFFFBFF;
-        player->facingAngle = D_800B9540[D_80121B50].unk14;
+        player->facingAngle = D_800B9540[gRaceCourseIndex].unk14;
         player->unk504 = -func_800813F8(player->unk502, player->posX, player->posZ);
         func_8006D520(player->playerIndex, 1);
         D_801121E0[player->playerIndex].unk94 = player->posX;
         D_801121E0[player->playerIndex].unk98 = player->posY;
         D_801121E0[player->playerIndex].unk9C = player->posZ;
         createCallbackTask(func_8006C088, 0, 0x64);
-        if (player->unk508 >= (D_80121B52 - 1)) {
+        if (player->unk508 >= (gRaceLapCount - 1)) {
             createCallbackTaskWithUserIdPreservingArgs(waitForRaceSetupNamePlate, 0, 0x64, player->playerIndex);
         }
     }
@@ -4739,7 +4739,7 @@ void func_80095BE4(RaceInputPlayer *player) {
     source.x = 0;
     source.y = 0;
     source.z = -0x40000;
-    makeFixedRotationY(matrix, D_800B9554[D_80121B50].angle);
+    makeFixedRotationY(matrix, D_800B9554[gRaceCourseIndex].angle);
     transformVec3iByFixedMatrix(matrix, &source, &transformed);
     nextX = player->posX + transformed.x;
     player->posX = nextX;
@@ -4811,7 +4811,7 @@ s32 func_80095F90(s16 arg0) {
         return 0;
     }
 
-    temp_a1 = &D_800B9540[D_80121B50];
+    temp_a1 = &D_800B9540[gRaceCourseIndex];
     var_a0 = temp_v0->posX - temp_a1->unk18;
     if (var_a0 < 0) {
         var_a0 = -var_a0;

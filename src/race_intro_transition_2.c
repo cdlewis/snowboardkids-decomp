@@ -46,8 +46,8 @@ extern s8 gFramebufferSwapDelay;
 extern u8 D_8011228C;
 extern s8 D_8010B1E0;
 extern s8 D_8010B1E1;
-extern s16 D_80121B50;
-extern s16 D_80121B52;
+extern s16 gRaceCourseIndex;
+extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
 extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
@@ -100,7 +100,7 @@ void func_8003ED00(void) {
     s32 five2 = 5;
     s32 five3 = 5;
 
-    D_80121B50 = 0;
+    gRaceCourseIndex = 0;
     gRaceUpdatePaused = 0;
     D_80121B58 = 0;
     D_80121B5F = 0;
@@ -133,7 +133,7 @@ void func_8003ED00(void) {
     players[3].isActive = active;
 
     gRacePlayerCount = four;
-    D_80121B52 = two;
+    gRaceLapCount = two;
     D_80121B5C = 0x64;
     initCallbackTaskScheduler(1);
 

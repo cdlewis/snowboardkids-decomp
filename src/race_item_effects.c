@@ -225,7 +225,7 @@ extern RaceItemDrawLists D_801121E0;
 extern s16 D_80112168;
 extern s16 D_8011216C;
 extern s16 D_8011216E;
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 extern u8 gRaceUpdatePaused;
 extern RaceItemFollowPlayer D_80121D80[];
 extern RaceItemEffectPlayerState D_80121EE8[];
@@ -248,7 +248,7 @@ void *allocFixedTransformMatrix(RaceItemGfxCommandSource *);
 RaceItemEffectActor *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 
 s32 func_8004DB60(s32 arg0) {
-    u8 *p = D_800D46D0[D_80121B50];
+    u8 *p = D_800D46D0[gRaceCourseIndex];
     return p[arg0];
 }
 

@@ -30,7 +30,7 @@ typedef struct {
 extern s16 D_80112130[];
 extern s16 D_80112140;
 extern s16 D_80112144;
-extern u16 D_80121B50;
+extern u16 gRaceCourseIndex;
 extern RaceScenePlayer D_80121D80[];
 extern RomAssetRange gCharacterRawAssetRanges[];
 extern RomAssetRange gCharacterTextureAssetRanges[];
@@ -104,7 +104,7 @@ extern u8 gRaceCourseOverlayEffectsDisabled;
 void loadRaceCourseAssets(void) {
     s32 size;
 
-    switch (D_80121B50) {
+    switch (gRaceCourseIndex) {
     case 0:
         size = D_EC9A0 - D_E35C0;
         D_80112140 = func_80042D58(size);
@@ -267,7 +267,7 @@ void initRaceCourseEffects(void) {
             sp2C = 0;
         }
     }
-    switch ((u16) D_80121B50) {
+    switch ((u16) gRaceCourseIndex) {
     case 0:
         createCallbackTask(&func_8006A798, 0, 0x64);
         createCallbackTask(&func_8006B108, 0, 0x64);

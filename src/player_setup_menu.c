@@ -53,7 +53,7 @@ extern s16 D_8010AE12;
 extern s16 D_8010AE14;
 extern s16 D_8010AE16;
 extern s16 D_8010AE18;
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 extern u8 gPlayerCount;
 extern s8 D_80121D86;
 extern s8 D_80122392;
@@ -85,7 +85,7 @@ void initPlayerSetupMenu(void) {
     D_800EC9E6 = 0;
     gHighestUnlockedCourse = 0;
     gRaceRumbleEnabled = 0;
-    D_80121B50 = 9;
+    gRaceCourseIndex = 9;
     D_801235B4 = 0;
     D_8010ADF0 = 0;
     gPlayerCount = 1;

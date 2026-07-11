@@ -78,7 +78,7 @@ extern SoundAssetHandles D_80112130;
 extern s16 D_80112136;
 extern s16 D_80112138;
 extern s16 D_8011213A;
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 extern u8 D_80121B59;
 extern u8 D_275A90[];
 extern u8 D_27E290[];
@@ -647,7 +647,7 @@ void updateSingleLoopingPositionalSound(s16 soundId, SoundPosition *pos, s16 vol
 }
 
 void requestCourseMusicSequence(void) {
-    requestMusicSequenceBank(gCourseMusicSequenceBanks[D_80121B50]);
+    requestMusicSequenceBank(gCourseMusicSequenceBanks[gRaceCourseIndex]);
 }
 
 void countActiveAudioSequences(void) {

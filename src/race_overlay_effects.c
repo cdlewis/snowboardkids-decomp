@@ -206,7 +206,7 @@ extern GfxCommandDest gIdentityMatrix;
 extern FixedTransform gIdentityFixedTransform;
 extern Gfx *gRegionAllocPtr;
 extern void *D_80156614;
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern void func_80066E10(RaceModelListActor *);
 extern void func_80066ABC(RaceModelListActor *);
@@ -329,7 +329,7 @@ void func_80066ABC(RaceModelListActor *arg0) {
     actor = arg0;
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
 
-    entry = D_800D91E8[D_80121B50];
+    entry = D_800D91E8[gRaceCourseIndex];
     i = 0;
     if (entry->modelIndex != -1) {
         do {
@@ -367,7 +367,7 @@ void func_80066E10(RaceModelListActor *arg0) {
     register s32 ySize;
     register s32 sentinel;
 
-    entry = D_800D91E8[D_80121B50];
+    entry = D_800D91E8[gRaceCourseIndex];
     actor = arg0;
     ySize = 1;
     if (gFrameCounter & ySize) {
@@ -437,7 +437,7 @@ void func_80067034(RaceModelListActor *arg0) {
     register s32 offset;
     register s32 one;
 
-    script = D_800D91E8[D_80121B50];
+    script = D_800D91E8[gRaceCourseIndex];
     actor1 = arg0;
     actor2 = arg0;
     i = 0;
@@ -465,7 +465,7 @@ void func_8006713C(RaceModelListActor *arg0) {
 
     new_var = arg0;
     new_var->modelCount = 0;
-    var_v0 = D_800D91E8[D_80121B50];
+    var_v0 = D_800D91E8[gRaceCourseIndex];
     if (var_v0->modelIndex != -1) {
         do {
             new_var->modelCount += 1;
@@ -997,7 +997,7 @@ loop:
             if (gMainMenuSelectedCourse != 0) {
                 player->actionEffectType = 1;
             }
-            if ((D_80121B50 == 8) && (player->unk4 != 0) && (player->actionEffectType == maxPlayers)) {
+            if ((gRaceCourseIndex == 8) && (player->unk4 != 0) && (player->actionEffectType == maxPlayers)) {
                 if (randomNextMain() != 0) {
                     player->actionEffectType = 6;
                 }

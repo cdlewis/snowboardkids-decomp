@@ -63,8 +63,8 @@ extern u16 *mainMenuModeDescriptionTexts[];
 extern u16 *mainMenuModeDescriptionTitles[];
 extern MenuPanelAssetHandles D_80112130;
 extern u8 gMainMenuModeSelection;
-extern s16 D_80121B50;
-extern s16 D_80121B52;
+extern s16 gRaceCourseIndex;
+extern s16 gRaceLapCount;
 extern s16 gMenuFadeAlpha;
 extern s32 gPlayerInputPressed;
 extern s32 D_801235B4;
@@ -696,24 +696,24 @@ void drawRaceRecordSettingsPanel(s32 arg0) {
     drawMenuSprite(-0x40, 0, getMemoryBlockBase(MENU_PANEL_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
     drawMenuSprite(0x30, 0, getMemoryBlockBase(MENU_PANEL_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
     if (D_801235B4 == 0) {
-        if (D_80121B52 != 1) {
+        if (gRaceLapCount != 1) {
             if (gUiBlinkTimer & 8) {
                 func_80045A78(-0x30, -0x2A, getMemoryBlockBase(D_80112130.cancelHandle), 0xC);
             }
         }
-        if ((D_80121B52 != 9) && (gUiBlinkTimer & 8)) {
+        if ((gRaceLapCount != 9) && (gUiBlinkTimer & 8)) {
             func_80045A78(-0x30, -6, getMemoryBlockBase(D_80112130.cancelHandle), 0xD);
         }
     }
     if ((D_801235B4 != 0) && (gUiBlinkTimer & 1)) {
-        drawMenuColoredGlyphScript(-0x30, -0x18, raceRecordLapCountTexts[D_80121B52], 0, 0x100, 0, 0x29);
+        drawMenuColoredGlyphScript(-0x30, -0x18, raceRecordLapCountTexts[gRaceLapCount], 0, 0x100, 0, 0x29);
     } else {
-        drawMenuColoredGlyphScript(-0x30, -0x18, raceRecordLapCountTexts[D_80121B52], 0, 0x100, 5, 0x29);
+        drawMenuColoredGlyphScript(-0x30, -0x18, raceRecordLapCountTexts[gRaceLapCount], 0, 0x100, 5, 0x29);
     }
     func_80045A78(-0x54, -0x60, getMemoryBlockBase(D_80112130.courseRecordIconHandle), 0x5D);
     func_80045A78(4, -0x60, getMemoryBlockBase(D_80112130.courseRecordIconHandle), 0x5E);
-    func_80045A78(-0x4C, -0x5C, getMemoryBlockBase(D_80112130.courseRecordDigitHandle), courseRecordDigitTileOffsets[D_80121B50]);
-    func_80045A78(4, -0x5C, getMemoryBlockBase(D_80112130.courseRecordDigitHandle), courseRecordDigitTileOffsets[D_80121B50] + 1);
+    func_80045A78(-0x4C, -0x5C, getMemoryBlockBase(D_80112130.courseRecordDigitHandle), courseRecordDigitTileOffsets[gRaceCourseIndex]);
+    func_80045A78(4, -0x5C, getMemoryBlockBase(D_80112130.courseRecordDigitHandle), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1);
 }
 #endif
 

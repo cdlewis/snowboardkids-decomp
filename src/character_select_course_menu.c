@@ -57,7 +57,7 @@ extern u8 D_80121D80[];
 extern u8 D_80121D88;
 extern u8 gPlayerCount;
 extern u8 D_80121B5E;
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 extern s32 gActiveMenuTask;
 extern s32 D_8010ADE0;
@@ -130,24 +130,24 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
     if (D_800EC9DD == 1) {
         if (D_80121B5E < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
-            if ((D_80121B50 != 9) && (D_80121B50 != 0) && (D_80121B50 != 1)) {
-                D_80121B50 = 9;
+            if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
+                gRaceCourseIndex = 9;
             }
         } else {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
-            D_80121B50 = 7;
+            gRaceCourseIndex = 7;
         }
     } else {
         gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
-        if (D_80121B50 == -1) {
-            D_80121B50 = 9;
+        if (gRaceCourseIndex == -1) {
+            gRaceCourseIndex = 9;
         }
     }
 
     var_v0_2 = *gCharacterSelectActiveCourseOptions;
 loop_20:
-    if (D_80121B50 == *var_v0_2) {
-        D_80121B50 = var_v1;
+    if (gRaceCourseIndex == *var_v0_2) {
+        gRaceCourseIndex = var_v1;
     } else {
         var_v1 += 1;
         var_v0_2 += 1;
@@ -243,24 +243,24 @@ void initCharacterSelectCourseMenuFromRace(void) {
     if (D_800EC9DD == 1) {
         if (D_80121B5E < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
-            if ((D_80121B50 != 9) && (D_80121B50 != 0) && (D_80121B50 != 1)) {
-                D_80121B50 = 9;
+            if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
+                gRaceCourseIndex = 9;
             }
         } else {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
-            D_80121B50 = 7;
+            gRaceCourseIndex = 7;
         }
     } else {
         gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
-        if (D_80121B50 == -1) {
-            D_80121B50 = 9;
+        if (gRaceCourseIndex == -1) {
+            gRaceCourseIndex = 9;
         }
     }
 
     var_v0_2 = *gCharacterSelectActiveCourseOptions;
 loop_20:
-    if (D_80121B50 == *var_v0_2) {
-        D_80121B50 = var_v1;
+    if (gRaceCourseIndex == *var_v0_2) {
+        gRaceCourseIndex = var_v1;
     } else {
         var_v1 += 1;
         var_v0_2 += 1;
@@ -355,24 +355,24 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     if (D_800EC9DD == 1) {
         if (D_80121B5E < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
-            if ((D_80121B50 != 9) && (D_80121B50 != 0) && (D_80121B50 != 1)) {
-                D_80121B50 = 9;
+            if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
+                gRaceCourseIndex = 9;
             }
         } else {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
-            D_80121B50 = 7;
+            gRaceCourseIndex = 7;
         }
     } else {
         gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
-        if (D_80121B50 == -1) {
-            D_80121B50 = 9;
+        if (gRaceCourseIndex == -1) {
+            gRaceCourseIndex = 9;
         }
     }
 
     var_v0_2 = *gCharacterSelectActiveCourseOptions;
 loop_20:
-    if (D_80121B50 == *var_v0_2) {
-        D_80121B50 = var_v1;
+    if (gRaceCourseIndex == *var_v0_2) {
+        gRaceCourseIndex = var_v1;
     } else {
         var_v1 += 1;
         var_v0_2 += 1;
@@ -425,7 +425,7 @@ void updateCharacterSelectCourseMenu(void) {
         if (D_80121D88 == 0) {
             if (D_800EC9C1 == 0) {
                 if (gCharacterSelectCourseCursorState.fields.state == 1) {
-                    selection = D_80121B50;
+                    selection = gRaceCourseIndex;
                     previousSelection = (s16) selection;
                     temp_input = gPlayerInputHeld;
                     pressed = temp_input & 0x10800;
@@ -441,8 +441,8 @@ void updateCharacterSelectCourseMenu(void) {
                                 repeatTimer++;
                             }
                             if (selection > 0) {
-                                D_80121B50 = selection - 1;
-                                selection = D_80121B50;
+                                gRaceCourseIndex = selection - 1;
+                                selection = gRaceCourseIndex;
                             }
                             D_8010ADF0 = repeatTimer;
                         } else if (((heldInput & 0x20400) != 0) ||
@@ -453,8 +453,8 @@ void updateCharacterSelectCourseMenu(void) {
                                 D_8010ADF0 = repeatTimer + 1;
                             }
                             if ((*gCharacterSelectActiveCourseOptions)[selection] != -1) {
-                                D_80121B50 = selection + 1;
-                                selection = D_80121B50;
+                                gRaceCourseIndex = selection + 1;
+                                selection = gRaceCourseIndex;
                             }
                         } else {
                             D_8010ADF0 = repeatTimer;
@@ -464,8 +464,8 @@ void updateCharacterSelectCourseMenu(void) {
                             repeatTimer++;
                         }
                         if (selection > 0) {
-                            D_80121B50 = selection - 1;
-                            selection = D_80121B50;
+                            gRaceCourseIndex = selection - 1;
+                            selection = gRaceCourseIndex;
                         }
                         D_8010ADF0 = repeatTimer;
                     }
@@ -487,7 +487,7 @@ void updateCharacterSelectCourseMenu(void) {
                     if (((temp_input & 0x1000) || (temp_input & 0x8000)) &&
                         (D_801235B4 == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         enqueueSoundEffect(1, 0x32);
-                        if ((*gCharacterSelectActiveCourseOptions)[D_80121B50] != -1) {
+                        if ((*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex] != -1) {
                             D_800EC9C1 = 1;
                             gCharacterSelectCourseCursorState.fields.state = 2;
                             gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
@@ -512,7 +512,7 @@ void updateCharacterSelectCourseMenu(void) {
             }
 
             if (D_800EC9C1 == 8) {
-                if ((*gCharacterSelectActiveCourseOptions)[D_80121B50] == -1) {
+                if ((*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex] == -1) {
                     D_80121D88 = 2;
                     setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                     requestMusicSequenceStop(8);
@@ -615,7 +615,7 @@ void handleCharacterSelectCourseSelection(void) {
             } else {
                 setCurrentGameTaskCallback(&func_80008620, 0);
             }
-            D_80121B50 = (*gCharacterSelectActiveCourseOptions)[D_80121B50];
+            gRaceCourseIndex = (*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex];
             D_801235B4 = 0;
         }
     }
@@ -635,7 +635,7 @@ void fadeOutCharacterSelectCourseMenu(void) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
-            D_80121B50 = (*gCharacterSelectActiveCourseOptions)[D_80121B50];
+            gRaceCourseIndex = (*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex];
             resumeGameTask(2);
             removeGameTask(4);
         }

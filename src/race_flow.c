@@ -179,8 +179,8 @@ extern s16 D_80112186;
 extern s16 D_80112188;
 extern s16 D_8011216E;
 extern s16 D_801124B8;
-extern SignedUnsignedShort D_80121B50;
-extern s16 D_80121B52;
+extern SignedUnsignedShort gRaceCourseIndex;
+extern s16 gRaceLapCount;
 extern s32 D_80121B7C;
 extern s16 gMenuFadeAlpha;
 extern s8 D_800DEF10;
@@ -301,7 +301,7 @@ void func_80072DDC(void) {
 }
 
 void func_80072E10(void) {
-    CourseGridEntry *entry = D_800DC490[D_80121B50.s];
+    CourseGridEntry *entry = D_800DC490[gRaceCourseIndex.s];
     s32 count = 0;
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
@@ -316,7 +316,7 @@ loop:
 }
 
 void func_80072E98(void) {
-    CourseGridEntry *entry = D_800DC490[D_80121B50.s];
+    CourseGridEntry *entry = D_800DC490[gRaceCourseIndex.s];
     s32 i = 0;
 
 loop:
@@ -338,7 +338,7 @@ s32 func_80072FC4(void) {
     s32 count;
     CourseGridEntry *entry;
 
-    entry = D_800DC490[D_80121B50.s];
+    entry = D_800DC490[gRaceCourseIndex.s];
     count = 0;
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
@@ -360,7 +360,7 @@ loop:
 }
 
 s32 func_800730EC(void) {
-    CourseGridEntry *entry = D_800DC490[D_80121B50.s];
+    CourseGridEntry *entry = D_800DC490[gRaceCourseIndex.s];
 
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
@@ -431,7 +431,7 @@ void func_80073140(void) {
     D_80121D80[1].unk18 = 0;
     D_80121D80[2].unk18 = 0;
     D_80121D80[3].unk18 = 0;
-    D_80121B50.s = 0;
+    gRaceCourseIndex.s = 0;
     D_800EC9C2 = 0;
     D_80121B58 = 0;
     setCurrentGameTaskCallback(func_800732C4, 0);
@@ -641,7 +641,7 @@ void func_80074160(void) {
             createCallbackTask((void (*)(CallbackTask *))func_80065E90, 6, 0x64);
             switch (gPlayerCount & 0xFFFFFFFF) {
             case 1:
-                if (D_80121B50.s != 6) {
+                if (gRaceCourseIndex.s != 6) {
                     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
                 } else {
                     func_80070A70(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
@@ -650,7 +650,7 @@ void func_80074160(void) {
                 gFramebufferSwapDelay = 0;
                 break;
             case 2:
-                if (D_80121B50.s != 6) {
+                if (gRaceCourseIndex.s != 6) {
                     configureViewport(0, 0xA0, 0x43, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
                     configureViewport(1, 0xA0, 0xAD, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
                 } else {
@@ -662,7 +662,7 @@ void func_80074160(void) {
                 gFramebufferSwapDelay = 1;
                 break;
             case 3:
-                if (D_80121B50.s != 6) {
+                if (gRaceCourseIndex.s != 6) {
                     configureViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                     configureViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                     configureViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
@@ -677,7 +677,7 @@ void func_80074160(void) {
                 gFramebufferSwapDelay = 1;
                 break;
             case 4:
-                if (D_80121B50.s != 6) {
+                if (gRaceCourseIndex.s != 6) {
                     configureViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                     configureViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                     configureViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
@@ -900,7 +900,7 @@ void func_80074F50(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
     temp_t2 = (((arg12 - arg5) * temp_v0) / 15) + arg5;
     temp_fv0 = (((arg14 - arg7) * (f32) temp_v0) / 15.0f) + arg7;
     temp_t3 = (((arg13 - arg6) * temp_v0) / 15) + arg6;
-    if (D_80121B50.s != 6) {
+    if (gRaceCourseIndex.s != 6) {
         configureViewport(arg7, sp2C, sp28, temp_t0 & 0xFFFF, temp_t1, temp_t2, temp_t3, temp_fv0);
     } else {
         func_80070A70(arg7, sp2C, sp28, temp_t0 & 0xFFFF, temp_t1, temp_t2, temp_t3, temp_fv0);
@@ -1064,7 +1064,7 @@ void func_80076054(void) {
 
     case 2:
         currentTime = (D_80121B74.seconds * COURSE_TIME_SECOND) + D_80121B74.fraction + (D_80121B74.minutes * COURSE_TIME_MINUTE);
-        courseOffset = (D_80121B50.s << 2) + D_80121B50.s;
+        courseOffset = (gRaceCourseIndex.s << 2) + gRaceCourseIndex.s;
         courseOffset <<= 2;
         timeCourse = (TimeCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
         index = 0;
@@ -1093,7 +1093,7 @@ void func_80076054(void) {
             i = 0;
             if (D_80121B5E != 1) {
                 if (D_80121B5E == 2) {
-                    courseOffset = (D_80121B50.s << 2) + D_80121B50.s;
+                    courseOffset = (gRaceCourseIndex.s << 2) + gRaceCourseIndex.s;
                     courseOffset <<= 1;
                     trickCourse = (TrickCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
                     trickScore = trickCourse->values;
@@ -1115,7 +1115,7 @@ void func_80076054(void) {
                     }
                 }
             } else {
-                courseOffset = (D_80121B50.s << 2) + D_80121B50.s;
+                courseOffset = (gRaceCourseIndex.s << 2) + gRaceCourseIndex.s;
                 scoreCourse = (ScoreCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
                 scoreValue = scoreCourse->values;
                 do {
@@ -1137,7 +1137,7 @@ void func_80076054(void) {
             }
         } else {
             currentTime = (D_80121B74.seconds * COURSE_TIME_SECOND) + D_80121B74.fraction + (D_80121B74.minutes * COURSE_TIME_MINUTE);
-            courseOffset = (D_80121B50.s << 2) + D_80121B50.s;
+            courseOffset = (gRaceCourseIndex.s << 2) + gRaceCourseIndex.s;
             courseOffset <<= 2;
             timeCourse = (TimeCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
             i = 0;
@@ -1228,17 +1228,17 @@ void func_80076490(void) {
                 if (task != NULL) {
                     if (D_80121D80[0].result != 3) {
                         i = D_80121D80[0].result + 1;
-                        if (D_800EC9F0.pad34[D_80121B50.s] == 0) {
-                            D_800EC9F0.pad34[D_80121B50.s] = i;
-                        } else if (i < D_800EC9F0.pad34[D_80121B50.s]) {
-                            D_800EC9F0.pad34[D_80121B50.s] = i;
+                        if (D_800EC9F0.pad34[gRaceCourseIndex.s] == 0) {
+                            D_800EC9F0.pad34[gRaceCourseIndex.s] = i;
+                        } else if (i < D_800EC9F0.pad34[gRaceCourseIndex.s]) {
+                            D_800EC9F0.pad34[gRaceCourseIndex.s] = i;
                         }
-                        if (D_800EC9F0.unk4[D_80121B50.s + 1] < D_80121D80[0].unk56C) {
-                            D_800EC9F0.unk4[D_80121B50.s + 1] = D_80121D80[0].unk56C;
+                        if (D_800EC9F0.unk4[gRaceCourseIndex.s + 1] < D_80121D80[0].unk56C) {
+                            D_800EC9F0.unk4[gRaceCourseIndex.s + 1] = D_80121D80[0].unk56C;
                         }
                     }
                     if (D_80121D80[0].result == 0) {
-                        if (D_80121B50.s == 8) {
+                        if (gRaceCourseIndex.s == 8) {
                             D_800DC4C0 = 1;
                             D_800EC9F0.unk78D7 |= 1;
                             D_800EC9F0.pad34[0x17] |= 1;
@@ -1290,9 +1290,9 @@ void func_80076490(void) {
                 i = 0;
                 j = 0;
                 do {
-                    recordTime = (D_800EC9F0.unk4E[D_80121B50.s][i].unk0 * COURSE_TIME_MINUTE) +
-                                 (D_800EC9F0.unk4E[D_80121B50.s][i].unk1 * COURSE_TIME_SECOND) +
-                                 D_800EC9F0.unk4E[D_80121B50.s][i].unk2;
+                    recordTime = (D_800EC9F0.unk4E[gRaceCourseIndex.s][i].unk0 * COURSE_TIME_MINUTE) +
+                                 (D_800EC9F0.unk4E[gRaceCourseIndex.s][i].unk1 * COURSE_TIME_SECOND) +
+                                 D_800EC9F0.unk4E[gRaceCourseIndex.s][i].unk2;
                     if (currentTime < recordTime) {
                         break;
                     }
@@ -1302,14 +1302,14 @@ void func_80076490(void) {
                 task->unk10 = i;
                 if (i < 5) {
                     for (j = 3; j >= i; j--) {
-                        D_800EC9F0.unk4E[D_80121B50.s][j + 1] = D_800EC9F0.unk4E[D_80121B50.s][j];
-                        D_800EC9F0.unk77FB[D_80121B50.s][j + 1] = D_800EC9F0.unk77FB[D_80121B50.s][j];
+                        D_800EC9F0.unk4E[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk4E[gRaceCourseIndex.s][j];
+                        D_800EC9F0.unk77FB[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk77FB[gRaceCourseIndex.s][j];
                     }
-                    D_800EC9F0.unk4E[D_80121B50.s][i] = *(RaceFlowInitEntry *)&D_80121B74;
-                    D_800EC9F0.unk77FB[D_80121B50.s][i] =
+                    D_800EC9F0.unk4E[gRaceCourseIndex.s][i] = *(RaceFlowInitEntry *)&D_80121B74;
+                    D_800EC9F0.unk77FB[gRaceCourseIndex.s][i] =
                         (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
                     if (i == 0) {
-                        D_800EC9F0.unk12A[D_80121B50.s] = *(RaceFlowInitEntry *)&D_80121B7C;
+                        D_800EC9F0.unk12A[gRaceCourseIndex.s] = *(RaceFlowInitEntry *)&D_80121B7C;
                     }
                 }
                 if (i < 5) {
@@ -1330,7 +1330,7 @@ void func_80076490(void) {
                 if (task != NULL) {
                     i = 0;
                     do {
-                        if (D_800EC9F0.unk7756[D_80121B50.s][i] < D_80122040) {
+                        if (D_800EC9F0.unk7756[gRaceCourseIndex.s][i] < D_80122040) {
                             break;
                         }
                         i++;
@@ -1341,11 +1341,11 @@ void func_80076490(void) {
                     task->unk10 = i;
                     if (i < 5) {
                         for (j = 3; j >= i; j--) {
-                            D_800EC9F0.unk7756[D_80121B50.s][j + 1] = D_800EC9F0.unk7756[D_80121B50.s][j];
-                            D_800EC9F0.unk77C4[D_80121B50.s][j + 1] = D_800EC9F0.unk77C4[D_80121B50.s][j];
+                            D_800EC9F0.unk7756[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk7756[gRaceCourseIndex.s][j];
+                            D_800EC9F0.unk77C4[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk77C4[gRaceCourseIndex.s][j];
                         }
-                        D_800EC9F0.unk7756[D_80121B50.s][i] = D_80121D80[0].unk2C0;
-                        D_800EC9F0.unk77C4[D_80121B50.s][i] =
+                        D_800EC9F0.unk7756[gRaceCourseIndex.s][i] = D_80121D80[0].unk2C0;
+                        D_800EC9F0.unk77C4[gRaceCourseIndex.s][i] =
                             (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
                     }
                     if (D_80121D80[0].unk2C0 >= 0x7D0) {
@@ -1367,7 +1367,7 @@ void func_80076490(void) {
                 if (task != NULL) {
                     i = 0;
                     do {
-                        if (D_800EC9F0.unk7832[D_80121B50.s][i] < D_801222F4) {
+                        if (D_800EC9F0.unk7832[gRaceCourseIndex.s][i] < D_801222F4) {
                             break;
                         }
                         i++;
@@ -1378,11 +1378,11 @@ void func_80076490(void) {
                     task->unk10 = i;
                     if (i < 5) {
                         for (j = 3; j >= i; j--) {
-                            D_800EC9F0.unk7832[D_80121B50.s][j + 1] = D_800EC9F0.unk7832[D_80121B50.s][j];
-                            D_800EC9F0.unk7869[D_80121B50.s][j + 1] = D_800EC9F0.unk7869[D_80121B50.s][j];
+                            D_800EC9F0.unk7832[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk7832[gRaceCourseIndex.s][j];
+                            D_800EC9F0.unk7869[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk7869[gRaceCourseIndex.s][j];
                         }
-                        D_800EC9F0.unk7832[D_80121B50.s][i] = D_80121D80[0].unk574;
-                        D_800EC9F0.unk7869[D_80121B50.s][i] =
+                        D_800EC9F0.unk7832[gRaceCourseIndex.s][i] = D_80121D80[0].unk574;
+                        D_800EC9F0.unk7869[gRaceCourseIndex.s][i] =
                             (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
                     }
                     if (i < 5) {
@@ -1403,9 +1403,9 @@ void func_80076490(void) {
                                   (D_80121B74.minutes * COURSE_TIME_MINUTE);
                     i = 0;
                     do {
-                        recordTime = (D_800EC9F0.unk156[D_80121B50.s][i].unk0 * COURSE_TIME_MINUTE) +
-                                     (D_800EC9F0.unk156[D_80121B50.s][i].unk1 * COURSE_TIME_SECOND) +
-                                     D_800EC9F0.unk156[D_80121B50.s][i].unk2;
+                        recordTime = (D_800EC9F0.unk156[gRaceCourseIndex.s][i].unk0 * COURSE_TIME_MINUTE) +
+                                     (D_800EC9F0.unk156[gRaceCourseIndex.s][i].unk1 * COURSE_TIME_SECOND) +
+                                     D_800EC9F0.unk156[gRaceCourseIndex.s][i].unk2;
                         if (currentTime < recordTime) {
                             break;
                         }
@@ -1417,11 +1417,11 @@ void func_80076490(void) {
                     task->unk10 = i;
                     if (i < 5) {
                         for (j = 3; j >= i; j--) {
-                            D_800EC9F0.unk156[D_80121B50.s][j + 1] = D_800EC9F0.unk156[D_80121B50.s][j];
-                            D_800EC9F0.unk78A0[D_80121B50.s][j + 1] = D_800EC9F0.unk78A0[D_80121B50.s][j];
+                            D_800EC9F0.unk156[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk156[gRaceCourseIndex.s][j];
+                            D_800EC9F0.unk78A0[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk78A0[gRaceCourseIndex.s][j];
                         }
-                        D_800EC9F0.unk156[D_80121B50.s][i] = *(RaceFlowInitEntry *)&D_80121B74;
-                        D_800EC9F0.unk78A0[D_80121B50.s][i] =
+                        D_800EC9F0.unk156[gRaceCourseIndex.s][i] = *(RaceFlowInitEntry *)&D_80121B74;
+                        D_800EC9F0.unk78A0[gRaceCourseIndex.s][i] =
                             (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
                     }
                     if (i < 5) {
@@ -1554,7 +1554,7 @@ void func_80077554(void) {
     D_80121D80[2].unk13 = 0;
     D_80121D80[3].unk13 = 0;
     gRacePlayerCount = 1;
-    *(u16 *)&D_80121B52 = 1;
+    *(u16 *)&gRaceLapCount = 1;
     D_80121B5C = 0x64;
     initCallbackTaskScheduler(2);
     D_80121D95 = 0;
@@ -1573,7 +1573,7 @@ void func_80077554(void) {
     D_801235B4 = 0;
     func_8006D5CC();
     resetAllViewports();
-    if (D_80121B50.s != 6) {
+    if (gRaceCourseIndex.s != 6) {
         configureViewport(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, D_800E16CC);
     } else {
         func_80070A70(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, D_800E16D0);
@@ -1724,7 +1724,7 @@ loop:
 }
 
 void func_80077DA0(void) {
-    D_80121B52 = D_800B9542[D_80121B50.s].unk0;
+    gRaceLapCount = D_800B9542[gRaceCourseIndex.s].unk0;
     if (D_800EC9C2 != 0) {
         setCurrentGameTaskCallback(func_80073988, 0);
         return;
@@ -1743,7 +1743,7 @@ void func_80077DA0(void) {
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
     loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);
-    switch (D_80121B50.u) {
+    switch (gRaceCourseIndex.u) {
     case 0:
         loadCompressedRomAsset(D_1EC0F0, D_1EC4A0, 0x1D);
         break;
@@ -1788,14 +1788,14 @@ void func_80078078(void) {
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
         temp_v0 = gPlayerInputPressed[0];
-        if ((temp_v0 & 0x20400) && (D_80121B52 != 9)) {
+        if ((temp_v0 & 0x20400) && (gRaceLapCount != 9)) {
             enqueueSoundEffect(0x19, 0x32);
-            D_80121B52 += 1;
+            gRaceLapCount += 1;
             temp_v0 = gPlayerInputPressed[0];
         }
-        if ((temp_v0 & 0x10800) && (D_80121B52 != 1)) {
+        if ((temp_v0 & 0x10800) && (gRaceLapCount != 1)) {
             enqueueSoundEffect(0x19, 0x32);
-            D_80121B52 -= 1;
+            gRaceLapCount -= 1;
             temp_v0 = gPlayerInputPressed[0];
         }
         if (temp_v0 & 0x9000) {

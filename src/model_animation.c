@@ -124,7 +124,7 @@ extern s32 D_80121C48[];
 extern s32 D_80121D50;
 extern s16 D_8011215C[];
 extern s16 D_80112166;
-extern s16 D_80121B50;
+extern s16 gRaceCourseIndex;
 extern s16 D_800B957E;
 extern CourseSpawnEntry D_800B9540[];
 extern u8 D_800DE380[];
@@ -234,7 +234,7 @@ s32 func_8007D548(s32 x, s32 z) {
     s32 index;
 
     index = 0;
-    if (*(s16 *)((u8 *)&D_800B957E + D_80121B50 * sizeof(CourseSpawnEntry)) >= 0) {
+    if (*(s16 *)((u8 *)&D_800B957E + gRaceCourseIndex * sizeof(CourseSpawnEntry)) >= 0) {
         do {
             ModelAnimKeyframe *keyframe;
             ModelAnimCoord *coord0;
@@ -285,7 +285,7 @@ s32 func_8007D548(s32 x, s32 z) {
                 return index;
             }
             index++;
-        } while (index <= *(s16 *)((u8 *)&D_800B957E + D_80121B50 * sizeof(CourseSpawnEntry)));
+        } while (index <= *(s16 *)((u8 *)&D_800B957E + gRaceCourseIndex * sizeof(CourseSpawnEntry)));
     }
 
     return 0;
@@ -891,7 +891,7 @@ void func_800815D4(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s32 *arg4, s32 arg5,
     s32 nextKeyframeOffset;
     ModelAnimCoord *coord;
 
-    if (arg0 != D_800B9540[D_80121B50].pathIndex) {
+    if (arg0 != D_800B9540[gRaceCourseIndex].pathIndex) {
         keyframeOffset = arg0 * sizeof(ModelAnimKeyframe);
         D_80121B9C = fixedSine(((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->angle);
         D_80121BA0 = fixedCosine(((ModelAnimKeyframe *)((s32)D_80121B98 + keyframeOffset))->angle);
@@ -901,11 +901,11 @@ void func_800815D4(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s32 *arg4, s32 arg5,
         deltaZ = arg2 - (coord->z << 0x11);
         projected = ((s64)-D_80121B9C * deltaX + (s64)D_80121BA0 * deltaZ) / 0x1000;
 
-        if ((arg0 >= D_800B9540[D_80121B50].unk38) && (D_800B9540[D_80121B50].unk3A >= arg0)) {
+        if ((arg0 >= D_800B9540[gRaceCourseIndex].unk38) && (D_800B9540[gRaceCourseIndex].unk3A >= arg0)) {
             distance = projected + 0xC00000;
             *arg3 = ((s64)-D_80121B9C * distance) / 0x1000;
             *arg4 = ((s64)D_80121BA0 * distance) / 0x1000;
-        } else if ((D_80121B50 == 3) && ((arg0 == 0x11D) || (arg0 == 0x11E))) {
+        } else if ((gRaceCourseIndex == 3) && ((arg0 == 0x11D) || (arg0 == 0x11E))) {
             distance = projected + 0xC00000;
             *arg3 = ((s64)-D_80121B9C * distance) / 0x1000;
             *arg4 = ((s64)D_80121BA0 * distance) / 0x1000;
@@ -934,8 +934,8 @@ void func_800815D4(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s32 *arg4, s32 arg5,
         *arg3 += D_80121B90[((ModelAnimKeyframe *)((s32)D_80121B98 + nextKeyframeOffset))->positionIndex].x << 0x11;
         *arg4 += D_80121B90[((ModelAnimKeyframe *)((s32)D_80121B98 + nextKeyframeOffset))->positionIndex].z << 0x11;
     } else {
-        *arg3 = D_800B9540[D_80121B50].unk18;
-        *arg4 = D_800B9540[D_80121B50].unk1C;
+        *arg3 = D_800B9540[gRaceCourseIndex].unk18;
+        *arg4 = D_800B9540[gRaceCourseIndex].unk1C;
     }
 }
 #endif
@@ -944,7 +944,7 @@ void func_80081C44(s32 arg0, s32 *arg1, s32 *arg2, s32 arg3) {
     s32 unused[4];
     s32 temp_v0;
 
-    if (arg0 != D_800B9540[D_80121B50].pathIndex) {
+    if (arg0 != D_800B9540[gRaceCourseIndex].pathIndex) {
         D_80121B9C = fixedSine(D_80121B98[arg0].angle);
         D_80121BA0 = fixedCosine(D_80121B98[arg0].angle);
         temp_v0 = func_8007BDE4(arg3, arg0);
@@ -953,8 +953,8 @@ void func_80081C44(s32 arg0, s32 *arg1, s32 *arg2, s32 arg3) {
         *arg1 += D_80121B90[D_80121B98[arg0].positionIndex].x << 0x11;
         *arg2 += D_80121B90[D_80121B98[arg0].positionIndex].z << 0x11;
     } else {
-        *arg1 = D_800B9540[D_80121B50].unk40;
-        *arg2 = D_800B9540[D_80121B50].unk44;
+        *arg1 = D_800B9540[gRaceCourseIndex].unk40;
+        *arg2 = D_800B9540[gRaceCourseIndex].unk44;
     }
 }
 
