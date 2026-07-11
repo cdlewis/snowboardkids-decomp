@@ -3,11 +3,11 @@
 
 #include "common.h"
 
-void func_8006D520(u16 arg0, u16 arg1);
-void func_8006D580(u16 arg0, u16 arg1);
-void func_8006D5CC(void);
-void func_8006D700(void);
-void func_8006D780(s32 arg0);
+void setRaceCameraMode(u16 arg0, u16 arg1);
+void setRaceCameraModeForced(u16 arg0, u16 arg1);
+void resetRaceCameras(void);
+void updateRaceCameras(void);
+void updateRaceCamera(s32 arg0);
 void func_8006D7D4(void);
 void func_8006D8B4();
 void func_8006DDB4(void);

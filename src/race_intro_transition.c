@@ -85,11 +85,11 @@ extern u8 gFramebufferSwapHold;
 extern u8 gPendingFramebufferSwapCount;
 extern s32 gPlayerInputPressed;
 extern void releaseMenuAssetHandles(void);
-// func_8003E600 best match: 65.668% (nonmatchings/func_8003E600-731940616440357983/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition/func_8003E600.s")
+// initCourseDemoRaceIntro best match: 65.668% (nonmatchings/func_8003E600-731940616440357983/base_2.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_transition/initCourseDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
-void func_8003E600(void) {
+void initCourseDemoRaceIntro(void) {
     RaceIntroPlayer *players;
     RaceIntroCourseEntry *courseEntry;
     register s32 one;
@@ -164,7 +164,7 @@ void func_8003E600(void) {
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
     gMenuFlowState = 0;
-    func_8006D5CC();
+    resetRaceCameras();
     resetAllViewports();
     D_8011228C = one;
     gFramebufferSwapDelay = 0;
@@ -225,7 +225,7 @@ void func_8003EAF0(void) {
     updateCallbackTasksWithMinPriority(0x63);
     func_80096E3C();
     updateRemainingCallbackTasks();
-    func_8006D700();
+    updateRaceCameras();
     func_8007AA50();
     state = gCurrentGameTask;
     if (state->fadeDelay != 0) {

@@ -181,7 +181,7 @@ void initCourseSelectMenu(void) {
     s32 savedUnlocks;
 
     requestMusicSequenceBank(3);
-    func_8006D5CC();
+    resetRaceCameras();
     resetAllViewports();
     configureViewport(0, 0xE8, 0x78, 0x90, 0xD0, 0xA0, 0xF0, 0.6666666865f);
 

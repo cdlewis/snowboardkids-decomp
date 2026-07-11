@@ -952,7 +952,7 @@ block_32:
 void enterMainMenuFromRace(void) {
     gMainMenuReturnFromRace = 1;
     setCurrentGameTaskCallback(initMainMenu, 0);
-    createGameTask(4, func_8003ED00, 0x64);
+    createGameTask(4, initTitleDemoRaceIntro, 0x64);
     suspendGameTask(3);
 }
 
@@ -960,7 +960,7 @@ void initMainMenu(void) {
     gMainMenuSecretCodeUnlocked = 0;
     gMainMenuSecretCodeStep = 0;
     resetAllViewports();
-    func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     gFramebufferSwapDelay = 0;
     loadCompressedRomAsset(D_5DB9D0, D_5DCBE0, 0x21);
     loadCompressedRomAsset(D_5DCBE0, D_5DFDD0, 0x25);
@@ -1003,8 +1003,8 @@ void initMainMenu(void) {
     setMainMenuSceneModelAnimation(4, 5);
     setMainMenuSceneModelPosition(4, 0x6DB000, 0, 0x4E9000);
     setMainMenuSceneModelRotation(4, 0, 0xDD0, 0);
-    func_8006D5CC();
-    func_8006D520(0, 0x1F);
+    resetRaceCameras();
+    setRaceCameraMode(0, 0x1F);
     gMenuFadeAlpha = (s16) gCurrentGameTask->fade;
     gMenuFadeOverlayActive = 1;
     enqueueSoundEffect(0x4A, 0x32);
@@ -1065,7 +1065,7 @@ void updateMainMenu(void) {
             requestMusicSequenceStop(0xC);
         }
     }
-    func_8006D780(0);
+    updateRaceCamera(0);
     if (checkMainMenuSecretCode() != 0) {
         gMainMenuSecretCodeUnlocked = 1;
         enqueueSoundEffect(0x26, 0x32);
@@ -1101,7 +1101,7 @@ void fadeOutMainMenu(void) {
         if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
-            func_8006D780(0);
+            updateRaceCamera(0);
             loopMainMenuSceneModelAnimation(0);
             loopMainMenuSceneModelAnimation(1);
             loopMainMenuSceneModelAnimation(2);
@@ -1121,7 +1121,7 @@ void fadeOutMainMenu(void) {
         if (gCurrentGameTask->timer != 0) {
             temp_v1 = gCurrentGameTask->selection;
             if (temp_v1 == 0) {
-                createGameTask(2, func_80073140, 0x64);
+                createGameTask(2, initNewGameSaveData, 0x64);
                 removeGameTask(3);
             } else if (temp_v1 == 1) {
                 setCurrentGameTaskCallback(initMainMenuModeSelect, 0);
@@ -1133,7 +1133,7 @@ void fadeOutMainMenu(void) {
         } else {
             gMainMenuReturnFromRace = 0;
             setCurrentGameTaskCallback(initMainMenu, 0);
-            createGameTask(4, func_8003E600, 0x64);
+            createGameTask(4, initCourseDemoRaceIntro, 0x64);
             suspendGameTask(3);
         }
     }
@@ -1143,12 +1143,12 @@ void initMainMenuModeSelect(void) {
     resetAllViewports();
     D_801124B8 = 0x80;
     gFramebufferSwapDelay = 0;
-    func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     loadRawRomAsset(D_1467B0, D_147910, 8);
     loadCompressedRomAsset(D_1DE360, D_1E0F70, 9);
     loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);
-    func_8006D5CC();
-    func_8006D520(0, 0x1F);
+    resetRaceCameras();
+    setRaceCameraMode(0, 0x1F);
     initCallbackTaskScheduler(0);
     createCallbackTaskWithUserId(initMainMenuBoardModels, 0, 0x64, 0);
     gMenuFlowState = 0;
@@ -1195,7 +1195,7 @@ void updateMainMenuModeSelect(void) {
             setCurrentGameTaskCallback(fadeOutMainMenuModeSelect, 0);
         }
     }
-    func_8006D780(0);
+    updateRaceCamera(0);
     loopMainMenuSceneModelAnimation(4);
     addMainMenuSceneModelDrawCallback(4);
     updateCallbackTasks();
@@ -1208,7 +1208,7 @@ void fadeOutMainMenuModeSelect(void) {
         gFramebufferSwapHold = 1;
         setCurrentGameTaskCallback(exitMainMenuModeSelect, 0);
     }
-    func_8006D780(0);
+    updateRaceCamera(0);
     loopMainMenuSceneModelAnimation(4);
     addMainMenuSceneModelDrawCallback(4);
     updateCallbackTasks();
@@ -1234,7 +1234,7 @@ void exitMainMenuModeSelect(void) {
 
 void initMainMenuSettings(void) {
     resetAllViewports();
-    func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     D_801124B8 = 0x80;
     gFramebufferSwapDelay = 0;
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
@@ -1242,8 +1242,8 @@ void initMainMenuSettings(void) {
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     loadRawRomAsset(D_1467B0, D_147910, 8);
     loadCompressedRomAsset(D_1DE360, D_1E0F70, 9);
-    func_8006D5CC();
-    func_8006D520(0, 0x1F);
+    resetRaceCameras();
+    setRaceCameraMode(0, 0x1F);
     initCallbackTaskScheduler(0);
     gMenuFlowState = 0;
     gMainMenuSelectionResult = 0;
@@ -1330,7 +1330,7 @@ void updateMainMenuSettings(void) {
             setCurrentGameTaskCallback(fadeOutMainMenuSettings, 0);
         }
     }
-    func_8006D780(0);
+    updateRaceCamera(0);
     updateCallbackTasks();
 }
 
@@ -1341,7 +1341,7 @@ void fadeOutMainMenuSettings(void) {
         gFramebufferSwapHold = 1;
         setCurrentGameTaskCallback(exitMainMenuSettings, 0);
     }
-    func_8006D780(0);
+    updateRaceCamera(0);
     updateCallbackTasks();
 }
 

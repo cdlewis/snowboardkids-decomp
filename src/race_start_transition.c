@@ -205,10 +205,10 @@ void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
     loadRawRomAsset(D_13F3B0, D_145380, 0xE);
     loadCompressedRomAsset(D_1D3070, D_1D82B0, 0x12);
     initCallbackTaskScheduler(2);
-    func_8006D5CC();
-    func_8006D580(0, 0x1D);
-    func_8006D580(1, 0x1D);
-    func_8006D580(2, 0x1D);
+    resetRaceCameras();
+    setRaceCameraModeForced(0, 0x1D);
+    setRaceCameraModeForced(1, 0x1D);
+    setRaceCameraModeForced(2, 0x1D);
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
     configureViewport(1, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
@@ -237,9 +237,9 @@ void updateRaceStartTransitionIntroDelay(void) {
         setCurrentGameTaskCallback(updateRaceStartTransitionFadeIn, 0);
     }
     createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, 0);
-    func_8006D780(0);
-    func_8006D780(1);
-    func_8006D780(2);
+    updateRaceCamera(0);
+    updateRaceCamera(1);
+    updateRaceCamera(2);
     updateCallbackTasks();
 }
 
@@ -259,8 +259,8 @@ void updateRaceStartTransitionFadeIn(void) {
         setCurrentGameTaskCallback(updateRaceStartTransitionFadeOut, 0);
     }
     createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, 0);
-    func_8006D780(0);
-    func_8006D780(1);
+    updateRaceCamera(0);
+    updateRaceCamera(1);
     updateCallbackTasks();
 }
 
@@ -272,8 +272,8 @@ void updateRaceStartTransitionFadeOut(void) {
         setCurrentGameTaskCallback(finishRaceStartTransition, 0);
     }
     createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, 0);
-    func_8006D780(0);
-    func_8006D780(1);
+    updateRaceCamera(0);
+    updateRaceCamera(1);
     updateCallbackTasks();
 }
 
