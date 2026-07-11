@@ -5,6 +5,7 @@
 #include "fixed_point_math.h"
 #include "race_effects.h"
 #include "race_item_effects.h"
+#include "race_item_triggers.h"
 
 // func_800849E0 best match: 98.406% (nonmatchings/func_800849E0-7273315160691878794/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_triggers/func_800849E0.s")

@@ -12,6 +12,7 @@
 #undef func_8004940C
 #include "race_input_history.h"
 #include "race_item_effects.h"
+#include "race_item_triggers.h"
 
 #define MODEL_ANIM_STATE(player) ((ModelAnimState *)(player))
 #define MODEL_ANIM_INIT_STATE(player) ((ModelAnimInitState *)(player))
@@ -85,7 +86,6 @@ typedef struct {
 extern void func_8008C098(RaceInputPlayer *);
 extern void func_8008C7D0(RaceInputPlayer *);
 extern void func_80083298(RaceInputPlayer *);
-extern void func_800849E0(RaceInputPlayer *);
 extern s32 func_80095F90(s16);
 extern void func_8008BB20(RaceInputPlayer *, s32, s32, s32, s32);
 extern void func_8008BB5C(RaceInputPlayer *, s32);
