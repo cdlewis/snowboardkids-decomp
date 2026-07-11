@@ -55,7 +55,7 @@ extern void *allocMenuRenderScratch(s32 size);
 extern s32 allocFixedTransformMatrix(void *source);
 extern void getAssetTableImageAndPalette(void *asset, u16 index, void **image, void **palette);
 
-extern u8 D_80156609;
+extern u8 gRenderMatricesDirty;
 extern s16 gUiBlinkTimer;
 extern s16 D_80112148;
 extern s16 gShopMenuTextureAssetHandle;
@@ -146,7 +146,7 @@ void func_8007BE80(RacePositionUiPlayer *player) {
     u8 *point;
     RacePositionUiVtx *vtx;
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         player->flags &= ~RACE_POSITION_UI_FLAG_MARKER_READY;
         player->markerVtx = allocMenuRenderScratch(0x40);
         if (player->markerVtx == NULL) {
@@ -242,7 +242,7 @@ void func_8007C5E8(RacePositionUiPlayer *player) {
     s32 i;
 
     countPlayer = player;
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         player->flags |= RACE_POSITION_UI_FLAG_SHADOW;
         i = 0;
         if (player->partCount > 0) {
@@ -324,7 +324,7 @@ void func_8007CBC0(RacePositionUiPlayer *player) {
     Gfx *segmentGfx;
 
     countPlayer = player;
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         partCount = player->partCount;
         player->flags |= RACE_POSITION_UI_FLAG_SHADOW;
         i = 0;

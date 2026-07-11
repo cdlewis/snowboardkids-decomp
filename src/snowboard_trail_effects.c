@@ -59,12 +59,12 @@ extern u32 D_2002208[];
 extern u32 D_20023A8[];
 extern Gfx *gRegionAllocPtr;
 extern void *D_801248BC;
-extern u8 D_80156609;
+extern u8 gRenderMatricesDirty;
 
 void func_800837D0(SnowboardTrailState *trail) {
     Gfx *unused;
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         trail->displayListsDirty = 1;
     }
 

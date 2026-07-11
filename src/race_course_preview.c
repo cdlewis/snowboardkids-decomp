@@ -102,7 +102,7 @@ extern s16 D_80112146;
 extern s16 D_80112168;
 extern s16 D_8011216A;
 extern RaceCoursePreviewAssetHandles gAssetHandles;
-extern u8 D_80156609;
+extern u8 gRenderMatricesDirty;
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
@@ -126,7 +126,7 @@ extern s8 D_80122288;
 extern s16 gRacePlayerSurfaceAngleByPlayer;
 extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
-extern u32 D_80156614;
+extern u32 gViewportMatrix;
 
 // drawRaceCoursePreviewModelMeshes best match: 99.531% (nonmatchings/drawRaceCoursePreviewModelMeshes-6061209858023118177/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_preview/drawRaceCoursePreviewModelMeshes.s")
@@ -164,7 +164,7 @@ void drawRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
                 }
 
                 gSPMatrix(gRegionAllocPtr++, &arg0->matrices[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-                gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
                 gfx = gRegionAllocPtr++;
                 gfx->words.w0 = 0x0400103F;
                 gfx->words.w1 = (u32)&vertices[entry->textureIndex];
@@ -225,7 +225,7 @@ void initRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
 void drawRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
     FixedTransform sp70;
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         arg0->displayList0Valid = 1;
     }
 
@@ -254,7 +254,7 @@ void drawRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
             RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
             RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
             RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->displayList0);
-            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x01000040, D_80156614);
+            RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x01000040, gViewportMatrix);
             RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRaceCoursePreviewBillboardVertices);
             RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x00060200);
             RACE_COURSE_PREVIEW_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeCleanupDl);
@@ -309,7 +309,7 @@ void drawRaceCoursePreviewCameraModel(RaceCoursePreviewCamera *arg0) {
     FixedTransform sp44;
     volatile s32 pad1[1];
 
-    if (D_80156609 != 0) {
+    if (gRenderMatricesDirty != 0) {
         arg0->displayListValid = 0;
     }
 
@@ -644,7 +644,7 @@ void drawRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
                     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
                 }
                 gSPMatrix(gRegionAllocPtr++, &arg0->matrices[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-                gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
                 gfx = gRegionAllocPtr++;
                 gfx->words.w1 = (u32)gRaceCoursePreviewAnimatedBillboardVertices;
                 gfx->words.w0 = 0x0400103F;
