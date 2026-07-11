@@ -13,6 +13,7 @@
 #include "race_input_history.h"
 #include "race_item_effects.h"
 #include "race_item_triggers.h"
+#include "main_menu_visual_effects.h"
 #include "race_player_movement.h"
 #include "race_position_tracker.h"
 #include "race_position_ui.h"
@@ -95,7 +96,6 @@ extern s16 calculateAngleBetweenXZPoints(s32, s32, s32, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, SoundPosition *, s32, s32, f32, s16);
 extern void addRenderCallback(void *, void (*)(void *), void *);
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
-extern void func_800545D0(CallbackTask *);
 extern void (*D_800DECD0[])(RaceInputPlayer *);
 extern void (*D_800DECD8[])(RaceInputPlayer *);
 extern void (*D_800DECE8[])(RaceInputPlayer *);
@@ -417,7 +417,7 @@ void func_8008C098(RaceInputPlayer *player) {
     func_8006D520(player->playerIndexU16, 1);
     if (D_80121B59 == 0) {
         if (D_800EC9C2 == 0) {
-            createCallbackTaskWithUserId(func_800545D0, 0, 1, player->playerIndexU16);
+            createCallbackTaskWithUserId(waitForRaceStartPlayerEffect, 0, 1, player->playerIndexU16);
         }
     }
 }
@@ -4695,8 +4695,6 @@ void func_80095A88(RaceInputPlayer *player) {
 
 // func_80095BE4 best match: 84.515% (nonmatchings/func_80095BE4-7273315160691878794/base_1.c)
 #ifdef NON_MATCHING
-extern void func_80054B2C(CallbackTask *);
-
 void func_80095BE4(RaceInputPlayer *player) {
     FixedMatrix3s matrix;
     Vec3i transformed;
@@ -4733,7 +4731,7 @@ void func_80095BE4(RaceInputPlayer *player) {
         D_801121E0[player->playerIndex].unk9C = player->posZ;
         createCallbackTask(func_8006C088, 0, 0x64);
         if (player->unk508 >= (D_80121B52 - 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(func_80054B2C, 0, 0x64, player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(waitForRaceSetupNamePlate, 0, 0x64, player->playerIndex);
         }
     }
 

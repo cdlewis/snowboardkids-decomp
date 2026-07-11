@@ -9,6 +9,7 @@
 #include "race_player_state.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
+#include "main_menu_visual_effects.h"
 
 typedef struct {
     /* 0x000 */ s16 playerIndex;
@@ -79,7 +80,6 @@ extern void updateCallbackTasksWithMinPriority(s32);
 extern void updateRemainingCallbackTasks(void);
 extern void requestMusicSequenceStop(s32);
 extern void releaseMenuAssetHandles(void);
-extern void func_800540EC(void *);
 
 #define COURSE_REPLAY_OFFSET(course) ((((((((course) << 2) - (course)) << 5) + (course)) << 2) - (course)) << 2)
 
@@ -218,7 +218,7 @@ void func_8003F00C(void) {
         temp += 0x10;
         D_8010B1E0 = temp;
         if ((temp & 0xFF) == 0xB0) {
-            createCallbackTask(func_800540EC, 0, 0x64);
+            createCallbackTask(updateTitleStartPrompt, 0, 0x64);
         }
     }
 

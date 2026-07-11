@@ -6,7 +6,7 @@
 #include "race_input_history.h"
 #include "game_task_scheduler.h"
 #include "main_menu_training_ui.h"
-#include "main_menu_overlay_effects.h"
+#include "main_menu_visual_effects.h"
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
 #include "main_menu_transition.h"
@@ -105,7 +105,7 @@ void func_8003F554(void) {
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     func_8006D5CC();
     func_8006D520(0, 0x1F);
-    createCallbackTaskWithUserId(&func_80055678, 0, 0x64, 0);
+    createCallbackTaskWithUserId(&initTitleMenuBoardModels, 0, 0x64, 0);
     createCallbackTask(&func_80051854, 0, 0x64);
     setCurrentGameTaskCallback(&func_8003F6C0, 0);
     requestMusicSequenceBank(7);

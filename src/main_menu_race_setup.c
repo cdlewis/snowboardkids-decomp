@@ -4,7 +4,7 @@
 #include "callback_task_scheduler.h"
 #include "fixed_point_math.h"
 #include "game_task_scheduler.h"
-#include "main_menu_overlay_effects.h"
+#include "main_menu_visual_effects.h"
 #include "race_camera.h"
 #include "main_menu_race_setup.h"
 #include "viewport_manager.h"
@@ -116,11 +116,6 @@ void func_8003DFB0(void) {
 
 #ifdef NON_MATCHING
 extern void func_80041CF0();
-extern void func_80053DD8(CallbackTask *);
-extern void func_80053EBC(CallbackTask *);
-extern void func_80054044(s32, s32);
-extern void func_8005502C(CallbackTask *);
-extern void func_800553E0(CallbackTask *);
 extern void initCallbackTaskScheduler(s32);
 extern void *createCallbackTask(void (*)(), s32, s32);
 extern u8 D_13F3B0[];
@@ -222,14 +217,14 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     gMenuFadeAlpha = 0xFF;
     gCurrentGameTask->fade = 5;
     effectArg = transition - 1;
-    createCallbackTaskWithUserId(func_80053DD8, 0, 0x64, effectArg);
-    createCallbackTask(func_8005502C, 0, 0x64);
-    createCallbackTaskWithUserId(func_800553E0, 0, 0x64, effectArg);
-    createCallbackTaskWithUserId(func_80053EBC, 0, 0x64, D_80121D90);
-    func_80054044(1, D_800BB810[D_80121D90 * 4]);
-    func_80054044(2, D_800BB811[D_80121D90 * 4]);
-    func_80054044(3, D_800BB812[D_80121D90 * 4]);
-    func_80054044(4, D_800BB813[D_80121D90 * 4]);
+    createCallbackTaskWithUserId(initRaceSetupBackdrop, 0, 0x64, effectArg);
+    createCallbackTask(initSpinningBoardTransition, 0, 0x64);
+    createCallbackTaskWithUserId(initMainMenuModeLabelFadeIn, 0, 0x64, effectArg);
+    createCallbackTaskWithUserId(initRaceSetupCharacterFocus, 0, 0x64, D_80121D90);
+    createRaceSetupOpponentFocus(1, D_800BB810[D_80121D90 * 4]);
+    createRaceSetupOpponentFocus(2, D_800BB811[D_80121D90 * 4]);
+    createRaceSetupOpponentFocus(3, D_800BB812[D_80121D90 * 4]);
+    createRaceSetupOpponentFocus(4, D_800BB813[D_80121D90 * 4]);
     setCurrentGameTaskCallback(func_8003E3AC, 0);
 }
 #endif
@@ -241,7 +236,7 @@ void func_8003E3AC(void) {
         gCurrentGameTask->fade = 0x12C;
         setCurrentGameTaskCallback(func_8003E45C, 0);
     }
-    createCallbackTaskWithUserId(func_8005393C, 5, 0x64, 0);
+    createCallbackTaskWithUserId(initMenuSnowflakeEffect, 5, 0x64, 0);
     func_8006D780(0);
     func_8006D780(1);
     func_8006D780(2);
@@ -263,7 +258,7 @@ void func_8003E45C(void) {
         requestMusicSequenceStop(0x7E);
         setCurrentGameTaskCallback(func_8003E514, 0);
     }
-    createCallbackTaskWithUserId(func_8005393C, 5, 0x64, 0);
+    createCallbackTaskWithUserId(initMenuSnowflakeEffect, 5, 0x64, 0);
     func_8006D780(0);
     func_8006D780(1);
     updateCallbackTasks();
@@ -276,7 +271,7 @@ void func_8003E514(void) {
         gFramebufferSwapHold = 1;
         setCurrentGameTaskCallback(func_8003E5A8, 0);
     }
-    createCallbackTaskWithUserId(func_8005393C, 5, 0x64, 0);
+    createCallbackTaskWithUserId(initMenuSnowflakeEffect, 5, 0x64, 0);
     func_8006D780(0);
     func_8006D780(1);
     updateCallbackTasks();
