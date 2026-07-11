@@ -4,6 +4,7 @@
 #include "course_select_menu.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
+#include "shop_menu_ui.h"
 #include "title_menu.h"
 
 typedef struct {
@@ -159,9 +160,6 @@ extern void func_8000B7B8(void);
 extern void func_8000C010(void);
 extern void func_800257F0(EffectTask *);
 extern void func_80028194(EffectTask *);
-extern void func_8002C800(EffectTask *);
-extern void func_8002F854();
-extern void func_8002FEF8(void);
 extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern void func_800437F0(void *, void *, s32);
