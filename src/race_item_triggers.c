@@ -3,7 +3,7 @@
 #include "asset_manager.h"
 #include "race_player_input.h"
 #include "spatial_math.h"
-#include "race_item_projectiles.h"
+#include "race_item_weapons.h"
 #include "race_item_visual_effects.h"
 #include "race_item_triggers.h"
 #include "snowboard_trail_effects.h"
@@ -68,31 +68,31 @@ void updateItemUseTrigger(RaceInputPlayer *player) {
     if (trigger != 0) {
         if (player->itemEffectCount != 0) {
             if (player->itemEffectType == 1) {
-                if (createCallbackTaskWithUserIdPreservingArgs(initRaceItemProjectileType1, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(initWideHomingItemProjectile, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 2) {
-                if (createCallbackTaskWithUserIdPreservingArgs(initRaceItemProjectileType2, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(initLongRangeHomingItemProjectile, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 3) {
-                if (createCallbackTaskWithUserIdPreservingArgs(initRaceItemProjectileType3, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(initCloseRangeHomingItemProjectile, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 4) {
-                if (createCallbackTaskWithUserIdPreservingArgs(initRaceItemProjectileType4, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(initBouncingItemProjectile, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 5) {
-                if (createCallbackTaskWithUserIdPreservingArgs(initRaceItemProjectileType5, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(initAreaBlastItemProjectile, (u16) (player->playerIndexU + 1), 0x3C, player->playerIndexU) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndexU);
                     player->itemEffectCount--;
                 }

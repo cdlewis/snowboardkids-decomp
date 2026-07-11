@@ -9,7 +9,7 @@
 #include "spatial_math.h"
 #include "fixed_point_math.h"
 #include "race_motion.h"
-#include "race_item_projectiles.h"
+#include "race_item_weapons.h"
 #include "race_player_movement.h"
 #include "race_timer_ui.h"
 
@@ -4200,7 +4200,7 @@ void func_800621DC(void *arg0) {
     setCallbackTaskCallback(arg0, func_80061F38);
 }
 
-void func_8006224C(void *arg0, void *arg1, void *arg2) {
+void spawnRaceUiFadingImpact(void *arg0, void *arg1, void *arg2) {
     void *temp = createCallbackTaskWithUserIdPreservingArgs(func_800621DC, 0, 3);
     if (temp != NULL) {
         *(void **)((u8 *)temp + 0x38) = arg0;

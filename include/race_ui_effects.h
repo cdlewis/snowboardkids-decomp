@@ -198,7 +198,7 @@ void func_80061D90(void *arg0);
 void func_80061DE8(struct RaceUiFadingTrailActor *arg0);
 void func_80061F38(struct RaceUiFadingImpactActor *arg0);
 void func_800621DC(void *arg0);
-void func_8006224C(void *arg0, void *arg1, void *arg2);
+void spawnRaceUiFadingImpact(void *arg0, void *arg1, void *arg2);
 void func_800622B0(struct RaceUiTransitionRenderActor *arg0);
 void func_800623E8(void *arg0);
 void func_80062530(struct RaceUiTransitionActor *arg0);
