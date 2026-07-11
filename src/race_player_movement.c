@@ -5,6 +5,7 @@
 #include "model_animation.h"
 #include "race_course_effects.h"
 #include "race_input_history.h"
+#include "race_player_movement.h"
 
 typedef struct {
     RaceVec3i worldPos;
@@ -34,7 +35,6 @@ typedef struct {
     s32 speed;
 } MovementSpeedScratch;
 
-extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
 extern s32 func_8004940C(s32, s32, s32, s32);
 extern s16 func_8004908C(s32, s32);
 extern void func_80097BAC(Matrix4s, s16);
@@ -51,7 +51,6 @@ extern void func_80098590(Matrix4s, RaceVec3i *, RaceVec3i *);
 extern s16 func_80097AE8(s16);
 extern s16 func_80097B48(s16);
 extern s32 func_80098C30(s64);
-extern void func_80087600(s32, s32 *, s32 *);
 extern u8 D_800EC9C2;
 extern s8 D_80121B54;
 extern s8 D_80121D70[];
@@ -1001,7 +1000,7 @@ void func_8008A940(RaceInputPlayer *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008B408.s")
 
 #ifdef NON_MATCHING
-void func_8008B408(RaceInputPlayer *player, s32 arg1, s16 arg2) {
+s32 func_8008B408(RaceInputPlayer *player, s32 arg1, s16 arg2) {
     s16 temp_v0;
     s32 scale;
     s32 temp;
@@ -1040,6 +1039,7 @@ void func_8008B408(RaceInputPlayer *player, s32 arg1, s16 arg2) {
     arg1 = player->unk2EE;
     temp_v0 = arg2 * scale / 0x1F0;
     player->unk2EE = arg1 + ((temp_v0 - arg1) >> 2);
+    return temp_v0;
 }
 #endif
 

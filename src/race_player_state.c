@@ -13,6 +13,7 @@
 #include "race_input_history.h"
 #include "race_item_effects.h"
 #include "race_item_triggers.h"
+#include "race_player_movement.h"
 
 #define MODEL_ANIM_STATE(player) ((ModelAnimState *)(player))
 #define MODEL_ANIM_INIT_STATE(player) ((ModelAnimInitState *)(player))
@@ -87,9 +88,6 @@ extern void func_8008C098(RaceInputPlayer *);
 extern void func_8008C7D0(RaceInputPlayer *);
 extern void func_80083298(RaceInputPlayer *);
 extern s32 func_80095F90(s16);
-extern void func_8008BB20(RaceInputPlayer *, s32, s32, s32, s32);
-extern void func_8008BB5C(RaceInputPlayer *, s32);
-extern void func_8008B73C(RaceInputPlayer *, s32, s32, s32, s32, s32);
 extern s32 func_80072138(s32, s32);
 extern s16 func_8004940C(s32, s32, s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
@@ -157,8 +155,6 @@ extern s16 D_801235B0;
 extern s32 D_801235B4;
 extern Unk8011228C D_8011228C[];
 extern void func_8007B250(void);
-extern void func_80087AFC(void);
-extern void func_80087EFC(void);
 extern RacePlayerSoundPosition D_80121D9C[];
 extern RacePlayerSoundPosition D_80121DA8[];
 extern void *D_801248C8;
@@ -5350,8 +5346,6 @@ void func_80097038(RaceInputPlayer *player) {
     func_80086170(player);
     func_800830C0(player);
 }
-
-extern s32 func_80089374(void);
 
 void func_80097144(void) {
     func_80089374();
