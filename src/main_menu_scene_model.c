@@ -37,7 +37,7 @@ typedef struct MainMenuAnimationWritePart {
 
 extern RomAssetAddress gCharacterRawAssetRanges[];
 extern RomAssetAddress gCharacterTextureAssetRanges[];
-extern MainMenuModelAssetHandles D_80112130;
+extern MainMenuModelAssetHandles gAssetHandles;
 
 // compressRaceRecordReplayData best match: 98.116% (nonmatchings/func_80040C80-6113366811127043669/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/compressRaceRecordReplayData.s")
@@ -290,8 +290,8 @@ void initMainMenuSceneModel(s32 actorIndex, s32 modelIndex) {
                   MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterRawAssetRanges, modelIndex), actorIndex + 0x33);
     loadCompressedRomAsset((void *)MAIN_MENU_MODEL_ASSET_RANGE_START(gCharacterTextureAssetRanges, modelIndex),
                   (void *)MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterTextureAssetRanges, modelIndex), actorIndex + 0x39);
-    D_80112130.modelInstanceHandles[actorIndex] = allocRelocatableHeapBlock(sizeof(MainMenuSceneModel));
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(D_80112130.modelInstanceHandles[actorIndex]);
+    gAssetHandles.modelInstanceHandles[actorIndex] = allocRelocatableHeapBlock(sizeof(MainMenuSceneModel));
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gAssetHandles.modelInstanceHandles[actorIndex]);
     model->actorIndex = actorIndex;
     model->modelIndex = modelIndex;
     initMainMenuSceneModelParts(model);

@@ -219,7 +219,7 @@ extern u32 D_800D6270[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern RaceItemGfxCommandSource gIdentityFixedTransform;
-extern RaceItemEffectAssetHandles D_80112130;
+extern RaceItemEffectAssetHandles gAssetHandles;
 extern RaceItemDrawLists D_801121D0;
 extern RaceItemDrawLists D_801121E0;
 extern s16 D_80112168;
@@ -1079,7 +1079,7 @@ void func_800508D0(RaceItemEffectActor *arg0) {
     void (*new_var)(RaceItemEffectActor *);
     RaceItemEffectActor *var_s6;
 
-    var_s4 = &D_80112130;
+    var_s4 = &gAssetHandles;
     if (1 != 0) {
     }
     do { var_s0 = D_800D46F8; if (1) { } var_s6 = arg0; actor = var_s6; { } var_s1 = 0; var_s2 = &actor->payload.vec.x; var_s3 = &actor->unk28.word; if (1) { } arg0 = arg0; if (arg0 && arg0) { } var_s5 = 0x10; if (1) { } new_var = func_80050888; callbackActor = actor; do { getAssetTableImageAndPalette((0, getRelocatableHeapBlockBase((new_var2 = var_s4)->itemTextureHandle)), *var_s0, var_s2, var_s3); var_s1 += 4; var_s0++; var_s2++; var_s3++; } while (var_s1 != var_s5); } while (0);

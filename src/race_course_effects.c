@@ -274,7 +274,7 @@ void func_8006AF48(RaceCourseRenderEffect *);
 void func_8006BC68(RaceMovingEffect *);
 extern u8 gRaceUpdatePaused;
 extern s16 gRaceCourseIndex;
-extern CourseAssetHandles D_80112130;
+extern CourseAssetHandles gAssetHandles;
 extern s16 D_80112144;
 extern s16 D_80112146;
 extern RaceCamera D_801121E0[];
@@ -457,7 +457,7 @@ void func_80069BEC(void *arg0) {
 #define EMIT_COURSE_BACKDROP(list)                             \
     do {                                                       \
         Gfx **region = &gRegionAllocPtr;                       \
-        CourseAssetHandles *handles = &D_80112130;             \
+        CourseAssetHandles *handles = &gAssetHandles;             \
         gfx = *region;                                         \
         *region = gfx + 1;                                     \
         gfx->words.w0 = 0xE7000000;                            \
@@ -667,8 +667,8 @@ void func_8006AE00(RaceCourseRenderEffect *arg0) {
     if (count != 0) {
         entry = D_800DA0B8[gRaceCourseIndex];
         allocSize = count * sizeof(CourseRenderCommand);
-        D_80112130.markerMatrixHandle = allocRelocatableHeapBlock(allocSize);
-        arg0->vertices = getRelocatableHeapBlockBase(D_80112130.markerMatrixHandle);
+        gAssetHandles.markerMatrixHandle = allocRelocatableHeapBlock(allocSize);
+        arg0->vertices = getRelocatableHeapBlockBase(gAssetHandles.markerMatrixHandle);
 
         i = 0;
         if (count > 0) {
@@ -703,10 +703,10 @@ void func_8006AF48(RaceCourseRenderEffect *arg0) {
                     gDPPipeSync(gRegionAllocPtr++);
                     temp_s2 = gRegionAllocPtr++;
                     var_s7 = FALSE;
-                    gSPSegment(temp_s2, 0x02, getRelocatableHeapBlockBase(D_80112130.courseVtxHandle));
+                    gSPSegment(temp_s2, 0x02, getRelocatableHeapBlockBase(gAssetHandles.courseVtxHandle));
 
                     temp_s3 = gRegionAllocPtr++;
-                    gSPSegment(temp_s3, 0x03, getRelocatableHeapBlockBase(D_80112130.courseTextureHandle));
+                    gSPSegment(temp_s3, 0x03, getRelocatableHeapBlockBase(gAssetHandles.courseTextureHandle));
                 }
 
                 temp_s0 = gRegionAllocPtr++;
@@ -746,8 +746,8 @@ void func_8006B108(RaceCourseRenderEffect *arg0) {
     if (count != 0) {
         entry = base;
         size = count << 6;
-        D_80112130.courseRenderBufferHandle = allocRelocatableHeapBlock(size);
-        arg0->vertices = (void *)getRelocatableHeapBlockBase(D_80112130.courseRenderBufferHandle);
+        gAssetHandles.courseRenderBufferHandle = allocRelocatableHeapBlock(size);
+        arg0->vertices = (void *)getRelocatableHeapBlockBase(gAssetHandles.courseRenderBufferHandle);
 
         for (i = 0; i < count; i++) {
             makeFixedRotationY(&transform, entry->rotation);

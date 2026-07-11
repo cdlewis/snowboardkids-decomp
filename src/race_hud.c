@@ -6,9 +6,9 @@
 
 #define PLAYER_COUNT 4
 #define PLAYER_DATA_SIZE 0x60C
-#define RACE_HUD_UNUSED_HANDLE (*(s16 *)&D_80112130[0x3E])
-#define RACE_HUD_PLAYER_FRAME_HANDLE (*(s16 *)&D_80112130[0x42])
-#define RACE_HUD_BANNER_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x52])
+#define RACE_HUD_UNUSED_HANDLE (*(s16 *)&gAssetHandles[0x3E])
+#define RACE_HUD_PLAYER_FRAME_HANDLE (*(s16 *)&gAssetHandles[0x42])
+#define RACE_HUD_BANNER_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x52])
 
 typedef struct {
     u8 pad0[5];
@@ -91,7 +91,7 @@ extern u8 gPlayerCount;
 extern RacePlayer D_80121D80[];
 extern u8 D_80121D85[];
 extern s8 D_8010AE64[];
-extern u8 D_80112130[];
+extern u8 gAssetHandles[];
 extern u8 D_800B5A70[];
 extern u8 D_800B5B08[];
 extern u16 D_800B5B20[];
@@ -413,7 +413,7 @@ loop_4:
                 }
             }
             drawMenuSpriteTile((s16)(arg0->x + xOffset), arg0->y,
-                          getRelocatableHeapBlockBase(*(s16 *)&D_80112130[textureIndex * 2]), tile, 0, alpha);
+                          getRelocatableHeapBlockBase(*(s16 *)&gAssetHandles[textureIndex * 2]), tile, 0, alpha);
             i++;
             xOffset += 0x20;
         } while (i < 5);
@@ -445,7 +445,7 @@ loop_17:
                 }
             }
             drawMenuSpriteTile((s16)(arg0->x - 0x20), arg0->y,
-                          getRelocatableHeapBlockBase(*(s16 *)&D_80112130[textureIndex * 2]), tile, 0, alpha);
+                          getRelocatableHeapBlockBase(*(s16 *)&gAssetHandles[textureIndex * 2]), tile, 0, alpha);
         }
     }
 }
@@ -648,7 +648,7 @@ void func_800184C8(RaceHudPanelActor *arg0) {
         if ((s32)gPlayerCount > 0) {
             player = D_80121D80;
             statsBase = D_800B5B08;
-            textureHandles = D_80112130;
+            textureHandles = gAssetHandles;
             actor = arg0;
             stride = 3;
             do {
@@ -798,7 +798,7 @@ void func_80018BC0(RaceHudPanelSlot *arg0) {
             if (player[8] != 0) {
                 new_var = i * 2;
                 temp_s0 = base + new_var;
-                color = getRelocatableHeapBlockBase(*(s16 *) &D_80112130[0x42]);
+                color = getRelocatableHeapBlockBase(*(s16 *) &gAssetHandles[0x42]);
                 temp_v1 = *(u16 *) (temp_s0 + 0x40);
                 drawMenuSprite(*(s16 *) (temp_s0 + 0x18), *(s16 *) (temp_s0 + 0x20), color, 0xD, temp_v1, temp_v1, 0, 0);
             }

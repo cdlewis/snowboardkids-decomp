@@ -119,8 +119,7 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 co
 extern Gfx gMenuRenderModeResetDl[];
 extern RenderCallbackNode *gMenuRenderCallbackList;
 extern Gfx *gRegionAllocPtr;
-extern s16 D_80112130[];
-extern s16 D_80112132[];
+extern s16 gAssetHandles[];
 extern u32 gPlayerInputHeld;
 extern Gfx gMenuRenderModeResetDl[];
 extern s16 D_800B51F0[][2];
@@ -1332,10 +1331,10 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
     s32 line;
 
     if (palette == 0) {
-        font = (MenuFontAssetTable *)getRelocatableHeapBlockBase(D_80112130[(u16)fontBank]);
+        font = (MenuFontAssetTable *)getRelocatableHeapBlockBase(gAssetHandles[(u16)fontBank]);
         glyphWidth = 0x10;
     } else {
-        font = (MenuFontAssetTable *)getRelocatableHeapBlockBase(D_80112132[(u16)fontBank]);
+        font = (MenuFontAssetTable *)getRelocatableHeapBlockBase(gAssetHandles[(u16)fontBank + 1]);
         glyphWidth = 8;
     }
     paletteBase = (u16 *)(&font->entries[font->entryCount]);

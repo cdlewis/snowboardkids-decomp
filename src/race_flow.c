@@ -174,7 +174,7 @@ extern s32 gPlayerInputHeld;
 extern s32 D_8012207C;
 extern s32 gPlayerInputPressed[];
 extern void *gMenuRenderCallbackList;
-extern s16 D_80112130[];
+extern s16 gAssetHandles[];
 extern s16 D_80112186;
 extern s16 D_80112188;
 extern s16 D_8011216E;
@@ -322,10 +322,10 @@ void func_80072E98(void) {
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
         if ((entry->status == COURSE_GRID_ENTRY_FREE) && (entry->courseId == D_80121D80[0].courseId)) {
-            s32 *status = (s32 *)getRelocatableHeapBlockBase(D_80112130[0x2B]);
+            s32 *status = (s32 *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
             if (*status < 0x1194) {
                 entry->status = *status;
-                ((RacePlayerState *) getRelocatableHeapBlockBase(D_80112130[0x2C]))[i] = D_80121D80[0];
+                ((RacePlayerState *) getRelocatableHeapBlockBase(gAssetHandles[0x2C]))[i] = D_80121D80[0];
             }
         }
         entry++;
@@ -1504,7 +1504,7 @@ void func_80077554(void) {
     gRaceUpdatePaused = 0;
     D_80121B58 = 1;
     D_80121B5F = 0;
-    asset = getRelocatableHeapBlockBase(D_80112130[0x2B]);
+    asset = getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     if (((Unk80043040 *)asset)->unk8 == 0) {
         gFramebufferSwapHold = 1;
         setCurrentGameTaskCallback(func_80077B34, 0);
@@ -1516,32 +1516,32 @@ void func_80077554(void) {
         return;
     }
     ((Unk80043040 *)asset)->unk0 = 0;
-    if (D_80112130[0x21] != -1) {
-        D_80112130[0x21] = freeRelocatableHeapBlock(D_80112130[0x21]);
+    if (gAssetHandles[0x21] != -1) {
+        gAssetHandles[0x21] = freeRelocatableHeapBlock(gAssetHandles[0x21]);
     }
-    if (D_80112130[0x22] != -1) {
-        D_80112130[0x22] = freeRelocatableHeapBlock(D_80112130[0x22]);
+    if (gAssetHandles[0x22] != -1) {
+        gAssetHandles[0x22] = freeRelocatableHeapBlock(gAssetHandles[0x22]);
     }
-    if (D_80112130[0x23] != -1) {
-        D_80112130[0x23] = freeRelocatableHeapBlock(D_80112130[0x23]);
+    if (gAssetHandles[0x23] != -1) {
+        gAssetHandles[0x23] = freeRelocatableHeapBlock(gAssetHandles[0x23]);
     }
-    if (D_80112130[0x24] != -1) {
-        D_80112130[0x24] = freeRelocatableHeapBlock(D_80112130[0x24]);
+    if (gAssetHandles[0x24] != -1) {
+        gAssetHandles[0x24] = freeRelocatableHeapBlock(gAssetHandles[0x24]);
     }
-    if (D_80112130[0x25] != -1) {
-        D_80112130[0x25] = freeRelocatableHeapBlock(D_80112130[0x25]);
+    if (gAssetHandles[0x25] != -1) {
+        gAssetHandles[0x25] = freeRelocatableHeapBlock(gAssetHandles[0x25]);
     }
-    if (D_80112130[0x26] != -1) {
-        D_80112130[0x26] = freeRelocatableHeapBlock(D_80112130[0x26]);
+    if (gAssetHandles[0x26] != -1) {
+        gAssetHandles[0x26] = freeRelocatableHeapBlock(gAssetHandles[0x26]);
     }
-    if (D_80112130[0x27] != -1) {
-        D_80112130[0x27] = freeRelocatableHeapBlock(D_80112130[0x27]);
+    if (gAssetHandles[0x27] != -1) {
+        gAssetHandles[0x27] = freeRelocatableHeapBlock(gAssetHandles[0x27]);
     }
-    if (D_80112130[0x28] != -1) {
-        D_80112130[0x28] = freeRelocatableHeapBlock(D_80112130[0x28]);
+    if (gAssetHandles[0x28] != -1) {
+        gAssetHandles[0x28] = freeRelocatableHeapBlock(gAssetHandles[0x28]);
     }
-    if (D_80112130[0x1F] != -1) {
-        D_80112130[0x1F] = freeRelocatableHeapBlock(D_80112130[0x1F]);
+    if (gAssetHandles[0x1F] != -1) {
+        gAssetHandles[0x1F] = freeRelocatableHeapBlock(gAssetHandles[0x1F]);
     }
     ((Unk80043040 *)asset)->unk0 = 0;
     one = 1;

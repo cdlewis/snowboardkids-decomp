@@ -144,7 +144,7 @@ extern s8 D_8010AF72;
 extern s8 D_8010AF73;
 extern s16 D_8010AF76;
 extern s8 D_8010AF74;
-extern s16 D_80112130[];
+extern s16 gAssetHandles[];
 extern ObjectA3E0 D_801121E0[];
 extern ObjectA3E0 D_80112340;
 extern u8 gPlayerCount;
@@ -211,8 +211,8 @@ void initCourseSelectMenu(void) {
     loadCompressedRomAsset(D_5D4280, D_5DAF30, 0x27);
 
     size = D_1502A0 - D_14B450;
-    D_80112130[0xC] = allocRelocatableHeapBlock(size);
-    dmaReadRom((u32)D_14B450, (void *)getRelocatableHeapBlockBase(D_80112130[0xC]), size);
+    gAssetHandles[0xC] = allocRelocatableHeapBlock(size);
+    dmaReadRom((u32)D_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     nextCallback = updateCourseSelectModeMenu;

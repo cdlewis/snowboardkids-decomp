@@ -95,7 +95,7 @@ extern u8 D_8010AEF8[][4];
 extern s8 D_8010AEFB[];
 extern u8 D_8010AF08[][3];
 extern RaceCharacterSelectStatus gCourseSelectStatus;
-extern s16 D_80112130[];
+extern s16 gAssetHandles[];
 extern s32 D_80112204;
 extern void (*D_8011220C)(void);
 extern s32 D_801122B4;
@@ -181,8 +181,8 @@ void initRaceCharacterSelectMenu(void) {
     loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
 
     size = D_1502A0 - D_14B450;
-    D_80112130[0xC] = allocRelocatableHeapBlock(size);
-    dmaReadRom((u32)D_14B450, (void *)getRelocatableHeapBlockBase(D_80112130[0xC]), size);
+    gAssetHandles[0xC] = allocRelocatableHeapBlock(size);
+    dmaReadRom((u32)D_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
     initCallbackTaskScheduler(0);

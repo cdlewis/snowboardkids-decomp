@@ -9,7 +9,7 @@
 #include "fixed_point_math.h"
 #include "model_animation.h"
 
-#define RACE_MODEL_BUFFER_HANDLE (*(s16 *)&D_80112130[0x48])
+#define RACE_MODEL_BUFFER_HANDLE (*(s16 *)&gAssetHandles[0x48])
 
 typedef struct {
     /* 0x0 */ s16 enabled;
@@ -192,7 +192,7 @@ extern s32 D_801229BC;
 extern s8 D_80122FB7;
 extern s32 D_80122FC0;
 extern s32 D_80122FC8;
-extern u8 D_80112130[];
+extern u8 gAssetHandles[];
 extern RaceModelEntry *D_800D91E8[];
 extern u32 D_800D9210[];
 extern Vtx D_800D92D8[];
@@ -242,10 +242,10 @@ void func_80066760(RaceModelListActor *arg0) {
                     gDPPipeSync(gRegionAllocPtr++);
                     temp_s2 = gRegionAllocPtr++;
                     var_s7 = FALSE;
-                    gSPSegment(temp_s2, 0x02, getRelocatableHeapBlockBase(*(s16 *)&D_80112130[0x14]));
+                    gSPSegment(temp_s2, 0x02, getRelocatableHeapBlockBase(*(s16 *)&gAssetHandles[0x14]));
 
                     temp_s3 = gRegionAllocPtr++;
-                    gSPSegment(temp_s3, 0x03, getRelocatableHeapBlockBase(*(s16 *)&D_80112130[0x16]));
+                    gSPSegment(temp_s3, 0x03, getRelocatableHeapBlockBase(*(s16 *)&gAssetHandles[0x16]));
                 }
 
                 temp_s0 = gRegionAllocPtr++;
@@ -299,8 +299,8 @@ void func_800669A0(RaceModelListActor *arg0) {
     if (count != 0) {
         entry = base;
         size = count << 6;
-        *(s16 *)&D_80112130[0x46] = allocRelocatableHeapBlock(size);
-        arg0->modelBuffer = (void *)getRelocatableHeapBlockBase(*(s16 *)&D_80112130[0x46]);
+        *(s16 *)&gAssetHandles[0x46] = allocRelocatableHeapBlock(size);
+        arg0->modelBuffer = (void *)getRelocatableHeapBlockBase(*(s16 *)&gAssetHandles[0x46]);
 
         for (i = 0; i < count; i++) {
             makeFixedRotationY(&transform, entry->assetIndex);

@@ -74,10 +74,7 @@ typedef union SoundHalfArg {
     } half;
 } SoundHalfArg;
 
-extern SoundAssetHandles D_80112130;
-extern s16 D_80112136;
-extern s16 D_80112138;
-extern s16 D_8011213A;
+extern SoundAssetHandles gAssetHandles;
 extern s16 gRaceCourseIndex;
 extern u8 D_80121B59;
 extern u8 D_275A90[];
@@ -175,16 +172,16 @@ void initSoundManager(void) {
     gPlayerLoopingSoundId3 = 0;
     gSharedLoopingPositionalSoundHandle = 0;
 
-    D_80112136 = allocRelocatableHeapBlock(0x80000);
+    gAssetHandles.unk6 = allocRelocatableHeapBlock(0x80000);
     loadCompressedRomAsset(D_275A90, D_27E290, 4);
-    D_80112130.unkA = allocRelocatableHeapBlock(0x10000);
+    gAssetHandles.unkA = allocRelocatableHeapBlock(0x10000);
 
     init.count = 0x18;
     init.unk4 = D_801240A8;
     init.outputRate = 0x6E;
-    init.heapBase = (u8 *)getRelocatableHeapBlockBase(D_80112130.unk6);
+    init.heapBase = (u8 *)getRelocatableHeapBlockBase(gAssetHandles.unk6);
     init.heapLen = 0x80000;
-    init.unk14 = (PlayerCommandBank *)getRelocatableHeapBlockBase(D_80112138);
+    init.unk14 = (PlayerCommandBank *)getRelocatableHeapBlockBase(gAssetHandles.unk8);
     init.unk18 = D_27E290;
     init.unk1C = D_800DABB0;
     init.unk20 = D_800DACAC;
@@ -216,8 +213,8 @@ s32 loadMusicSequenceBank(s32 arg0) {
     if (gCurrentMusicSequenceHandle == 0) {
         range = (SoundRomRange *)((arg0 * 2) + (s32 *)gMusicSequenceRomRanges);
         size = range->words[1] - range->words[0];
-        dmaReadRom(range->words[0], getRelocatableHeapBlockBase(D_8011213A), size);
-        if ((gCurrentMusicSequenceHandle = func_8009D8D8((PlayerCommandData *)getRelocatableHeapBlockBase(D_8011213A))) != 0) {
+        dmaReadRom(range->words[0], getRelocatableHeapBlockBase(gAssetHandles.unkA), size);
+        if ((gCurrentMusicSequenceHandle = func_8009D8D8((PlayerCommandData *)getRelocatableHeapBlockBase(gAssetHandles.unkA))) != 0) {
             gCurrentMusicSequenceBank = arg0;
             if (range == gRaceMusicSequenceRomRanges) {
                 func_8009D8B0(2, 0x7FFF);

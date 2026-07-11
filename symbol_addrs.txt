@@ -1094,6 +1094,7 @@ D_8010AF40 = 0x8010AF40;
 gEndingSequencePhase = 0x8010B1A2; // size:0x2
 gMainMenuSelectionResult = 0x8010B1F0; // size:0x10
 gMenuAsciiFontAssetHandle = 0x8011213C;
+gAssetHandles = 0x80112130; // size:0xC
 gShopMenuTextureAssetHandle = 0x8011214A;
 gMenuCommonSpritesAssetHandle = 0x80112172;
 gMainMenuSceneModelHandles = 0x8011218A; // size:0x24

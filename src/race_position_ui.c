@@ -59,7 +59,7 @@ extern u8 D_80156609;
 extern s16 gUiBlinkTimer;
 extern s16 D_80112148;
 extern s16 gShopMenuTextureAssetHandle;
-extern s16 D_80112130[];
+extern s16 gAssetHandles[];
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_800DE070[];
 extern u32 D_800DEE90[];
@@ -129,8 +129,8 @@ static void racePositionUiDrawParts(RacePositionUiPlayer *player, u32 *textures[
     s32 i;
 
     racePositionUiAppendGfx(0xE7000000, 0);
-    racePositionUiAppendGfx(0xBC000806, (u32)getRelocatableHeapBlockBase(D_80112130[player->playerIndex + 0xE]));
-    racePositionUiAppendGfx(0xBC000C06, (u32)getRelocatableHeapBlockBase(D_80112130[player->playerIndex + 0x12]));
+    racePositionUiAppendGfx(0xBC000806, (u32)getRelocatableHeapBlockBase(gAssetHandles[player->playerIndex + 0xE]));
+    racePositionUiAppendGfx(0xBC000C06, (u32)getRelocatableHeapBlockBase(gAssetHandles[player->playerIndex + 0x12]));
 
     for (i = 0; i < RACE_POSITION_UI_PART_COUNT; i++) {
         racePositionUiAppendGfx(0x01020040, (u32)player->partVtx[i + 1]);
@@ -278,8 +278,8 @@ void func_8007C5E8(RacePositionUiPlayer *player) {
 
     if ((drawPlayer->flags & RACE_POSITION_UI_FLAG_HIDE_MESHES) == 0) {
         gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(D_80112130[drawPlayer->playerIndex + 0xE]));
-        gSPSegment(gRegionAllocPtr++, 3, getRelocatableHeapBlockBase(D_80112130[drawPlayer->playerIndex + 0x12]));
+        gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(gAssetHandles[drawPlayer->playerIndex + 0xE]));
+        gSPSegment(gRegionAllocPtr++, 3, getRelocatableHeapBlockBase(gAssetHandles[drawPlayer->playerIndex + 0x12]));
 
         gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_800DE110[drawPlayer->textureSet]);
@@ -358,9 +358,9 @@ void func_8007CBC0(RacePositionUiPlayer *player) {
 
     if ((player->flags & RACE_POSITION_UI_FLAG_HIDE_MESHES) == 0) {
         gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(D_80112130[player->playerIndex + 0xE]));
+        gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(gAssetHandles[player->playerIndex + 0xE]));
         segmentGfx = gRegionAllocPtr++;
-        gSPSegment(segmentGfx, 3, getRelocatableHeapBlockBase(D_80112130[player->playerIndex + 0x12]));
+        gSPSegment(segmentGfx, 3, getRelocatableHeapBlockBase(gAssetHandles[player->playerIndex + 0x12]));
         gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_800DE248[player->textureSet]);
         gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[2], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);

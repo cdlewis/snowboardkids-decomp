@@ -7,7 +7,7 @@
 #include "menu_renderer.h"
 #include "title_menu.h"
 
-#define CONTROLLER_PAK_DELETE_PANEL_HANDLE (D_80112130[0x29])
+#define CONTROLLER_PAK_DELETE_PANEL_HANDLE (gAssetHandles[0x29])
 
 typedef struct {
     u16 x;
@@ -31,7 +31,7 @@ extern CharacterSelectFlowState *gCurrentGameTask;
 extern ControllerPakPromptTransition gControllerPakContinuePromptTransition;
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern ControllerPakMenuState gControllerPakMenuState;
-extern s16 D_80112130[];
+extern s16 gAssetHandles[];
 extern u8 gControllerPakRumbleCheckPromptState;
 extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
 extern u8 gControllerPakMenuConfirmChoice;
@@ -51,26 +51,26 @@ void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     s32 j;
     s32 alpha;
 
-    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y - 4), getRelocatableHeapBlockBase(D_80112130[0x29]), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y - 4), getRelocatableHeapBlockBase(D_80112130[0x29]), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
-        drawMenuSprite((s16)(arg0->common.x + i), (s16)(arg0->common.y - 4), getRelocatableHeapBlockBase(D_80112130[0x29]), 3, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->common.x + i), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(D_80112130[0x29]), 8, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + i), (s16)(arg0->common.y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 3, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + i), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0xE0);
 
-    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(D_80112130[0x29]), 7, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(D_80112130[0x29]), 9, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 7, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 9, 0x20, 0x20, 0, 0);
 
     i = 0;
 loop_outer:
-    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y + i), getRelocatableHeapBlockBase(D_80112130[0x29]), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + i), getRelocatableHeapBlockBase(D_80112130[0x29]), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y + i), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + i), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 6, 0x20, 0x20, 0, 0);
     j = 0;
     do {
-        drawMenuSprite((s16)(arg0->common.x + j), (s16)(arg0->common.y + i), getRelocatableHeapBlockBase(D_80112130[0x29]), 0xB, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->common.x + j), (s16)(arg0->common.y + i), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 0xB, 0x20, 0x20, 0, 0);
         j += 0x10;
     } while (j != 0xE0);
     i += 0x10;
@@ -85,7 +85,7 @@ loop_outer:
 
     alpha = (arg0->selectedOption == 0) ? 0x100 : 0x60;
 
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x10), getRelocatableHeapBlockBase(D_80112130[0x24]), 0x17, 0x20,
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x10), getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x17, 0x20,
                   0x20, 0, alpha, 0);
 
     if (alpha == 0x100) {
@@ -94,10 +94,10 @@ loop_outer:
         alpha = 0x100;
     }
 
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x20), getRelocatableHeapBlockBase(D_80112130[0x24]), 0x18, 0x20,
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + 0x20), getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x18, 0x20,
                   0x20, 0, alpha, 0);
     drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x4C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x10),
-                  getRelocatableHeapBlockBase(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
+                  getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
 // updateControllerPakContinuePrompt best match: 92.821%
@@ -182,34 +182,34 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
         yAdjust = 0;
     }
 
-    drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y - yAdjust - 4), getRelocatableHeapBlockBase(D_80112130[0x29]), 2,
+    drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y - yAdjust - 4), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 2,
                   0x20, 0x20, 0, actor->scale, 0);
-    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y - yAdjust - 4), getRelocatableHeapBlockBase(D_80112130[0x29]),
+    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y - yAdjust - 4), getRelocatableHeapBlockBase(gAssetHandles[0x29]),
                   4, 0x20, 0x20, 0, actor->scale, 0);
 
     i = 0;
     do {
-        drawMenuSpriteWithAlpha((s16)(actor->common.x + i), (s16)(actor->common.y - yAdjust - 4), getRelocatableHeapBlockBase(D_80112130[0x29]),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + i), (s16)(actor->common.y - yAdjust - 4), getRelocatableHeapBlockBase(gAssetHandles[0x29]),
                       3, 0x20, 0x20, 0, actor->scale, 0);
-        drawMenuSpriteWithAlpha((s16)(actor->common.x + i), (s16)(actor->common.y + yAdjust + 0x24), getRelocatableHeapBlockBase(D_80112130[0x29]),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + i), (s16)(actor->common.y + yAdjust + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x29]),
                       8, 0x20, 0x20, 0, actor->scale, 0);
         i += 0x10;
     } while (i < 0xE0);
 
-    drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y + yAdjust + 0x24), getRelocatableHeapBlockBase(D_80112130[0x29]),
+    drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y + yAdjust + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x29]),
                   7, 0x20, 0x20, 0, actor->scale, 0);
-    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + yAdjust + 0x24), getRelocatableHeapBlockBase(D_80112130[0x29]),
+    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + yAdjust + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x29]),
                   9, 0x20, 0x20, 0, actor->scale, 0);
 
     i = 0;
     do {
-        drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y + i), getRelocatableHeapBlockBase(D_80112130[0x29]), 5, 0x20,
+        drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y + i), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 5, 0x20,
                       0x20, 0, actor->scale, 0);
-        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + i), getRelocatableHeapBlockBase(D_80112130[0x29]), 6, 0x20,
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + i), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 6, 0x20,
                       0x20, 0, actor->scale, 0);
         j = 0;
         do {
-            drawMenuSpriteWithAlpha((s16)(actor->common.x + j), (s16)(actor->common.y + i), getRelocatableHeapBlockBase(D_80112130[0x29]), 0xB,
+            drawMenuSpriteWithAlpha((s16)(actor->common.x + j), (s16)(actor->common.y + i), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 0xB,
                           0x20, 0x20, 0, actor->scale, 0);
             j += 0x10;
             // IDO register allocation nudge for matching codegen.
@@ -255,24 +255,24 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
         if (gControllerPakRumbleCheckPromptConfirmSelection == 0) {
             alpha = 0x100;
         }
-        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x10), getRelocatableHeapBlockBase(D_80112130[0x21]),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x10), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       0x17, 0x20, 0x20, 0, alpha, 0);
         if (alpha == 0x100) {
             alpha = 0x60;
         } else {
             alpha = 0x100;
         }
-        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x20), getRelocatableHeapBlockBase(D_80112130[0x21]),
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x20), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       0x18, 0x20, 0x20, 0, alpha, 0);
         drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C),
                       (s16)(actor->common.y + (gControllerPakRumbleCheckPromptConfirmSelection * 0x10) + 0x10),
-                      getRelocatableHeapBlockBase(D_80112130[0x21]), 0x12, 0x20, 0x20, 0, actor->optionScale, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x12, 0x20, 0x20, 0, actor->optionScale, 0);
         if (1) {
         }
     }
 
     if ((actor->state == 1) || (actor->state == 3) || (actor->state == 8)) {
-        drawMenuSprite((s16)(actor->common.x + 0xD0), (s16)(actor->common.y + yAdjust + 0x20), getRelocatableHeapBlockBase(D_80112130[0x21]),
+        drawMenuSprite((s16)(actor->common.x + 0xD0), (s16)(actor->common.y + yAdjust + 0x20), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       ((actor->timer >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
     }
 }
@@ -697,10 +697,10 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     } while (rowY != 0x50);
 
     if (gControllerPakMenuCursorState != 0) {
-        drawMenuSpriteWithAlpha(arg0->positions[5].x, (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)), getRelocatableHeapBlockBase(D_80112130[0x21]), 6,
+        drawMenuSpriteWithAlpha(arg0->positions[5].x, (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 6,
                       0x20, 0x20, 0, arg0->cursorScale, 0);
         drawMenuSpriteWithAlpha((s16)(arg0->positions[5].x + 0x80), (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)),
-                      getRelocatableHeapBlockBase(D_80112130[0x21]), 7, 0x20, 0x20, 0, arg0->cursorScale, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]), 7, 0x20, 0x20, 0, arg0->cursorScale, 0);
     }
 }
 #endif
@@ -891,7 +891,7 @@ loop_outer:
 
     alpha = (arg0->selectedOption == 0) ? 0x100 : 0x60;
 
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x18), getRelocatableHeapBlockBase(D_80112130[0x24]), 0x17, 0x20, 0x20, 0, alpha, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x18), getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x17, 0x20, 0x20, 0, alpha, 0);
 
     if (alpha == 0x100) {
         alpha = 0x60;
@@ -899,8 +899,8 @@ loop_outer:
         alpha = 0x100;
     }
 
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x28), getRelocatableHeapBlockBase(D_80112130[0x24]), 0x18, 0x20, 0x20, 0, alpha, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x18), getRelocatableHeapBlockBase(D_80112130[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + 0x28), getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x18, 0x20, 0x20, 0, alpha, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x2C), (s16)(arg0->common.y + (arg0->selectedOption * 0x10) + 0x18), getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
 void updateControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) {
