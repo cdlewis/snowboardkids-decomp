@@ -1,7 +1,7 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
 #include "fixed_point_math.h"
-#include "ending_sequence_effects.h"
+#include "ending_sequence_actors.h"
 #include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
@@ -192,7 +192,7 @@ void updateEndingTommyWaitBeforeBurstExit(EndingCreditsTommy *arg0) {
             var_v0 = arg0->timer;
         }
         if (var_v0 == 0x27) {
-            createCallbackTask(initEndingBigBurst, 0, 0x64);
+            createCallbackTask(initEndingTommyBigBurst, 0, 0x64);
             arg0->timer = 0;
         }
     }
@@ -365,7 +365,7 @@ void updateEndingTommyEnterToCenter(EndingCreditsTommy *arg0) {
 void waitEndingTommyPhase01(EndingCreditsTommy *arg0) {
     if (gEndingSequencePhase == 1) {
         setCallbackTaskCallback(arg0, updateEndingTommyEnterToCenter);
-        createCallbackTask(&initEndingSnowmanEntranceEffect, 0, 0x64);
+        createCallbackTask(&initEndingTommySnowmanEntrance, 0, 0x64);
     }
 }
 

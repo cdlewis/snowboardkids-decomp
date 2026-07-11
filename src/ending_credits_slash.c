@@ -1,6 +1,6 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
-#include "ending_sequence_effects.h"
+#include "ending_sequence_actors.h"
 #include "ending_credits_slash.h"
 #include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
@@ -22,7 +22,7 @@ extern MainMenuSceneActorShadow gEndingActorShadow;
 
 extern u16 gEndingSequencePhase;
 extern u8 gEndingActorHandshakeState;
-extern u8 gMenuTransitionRotationStep;
+extern u8 gEndingTransitionRotationStep;
 extern u8 gEndingCharacterEffectDoneFlags[];
 
 void noopEndingCreditsSlash(void) {
@@ -166,10 +166,10 @@ void updateEndingSlashSlowRotationWipe(EndingCreditsSlash *arg0) {
     loopMainMenuSceneModelAnimation(0);
     addMainMenuSceneModelDrawCallback(0);
     arg0->timer += 1;
-    if (gMenuTransitionRotationStep >= 3) {
+    if (gEndingTransitionRotationStep >= 3) {
         if (arg0->timer % 15 == 0) {
-            gMenuTransitionRotationStep--;
-            if (gMenuTransitionRotationStep == 2) {
+            gEndingTransitionRotationStep--;
+            if (gEndingTransitionRotationStep == 2) {
                 arg0->timer = 0;
             }
         }
@@ -759,10 +759,10 @@ void updateEndingSlashSlideLeftSlowRotation(EndingCreditsSlash *arg0) {
     arg0->posX += -0x20000;
     arg0->timer += 1;
     if ((arg0->timer % 13) == 0) {
-        gMenuTransitionRotationStep -= 1;
+        gEndingTransitionRotationStep -= 1;
     }
     if (arg0->posX < -0x9FFFFF) {
-        gMenuTransitionRotationStep = 2;
+        gEndingTransitionRotationStep = 2;
         arg0->timer = 0;
         arg0->posX = -0xA00000;
         setCallbackTaskCallback(arg0, waitEndingSlashRotationPhase14);
@@ -775,8 +775,8 @@ void updateEndingSlashSlideLeftSlowRotation(EndingCreditsSlash *arg0) {
 void updateEndingSlashWaitRotationStepTen(EndingCreditsSlash *arg0) {
     loopMainMenuSceneModelAnimation(0);
     addMainMenuSceneModelDrawCallback(0);
-    if (gMenuTransitionRotationStep != 0xA) {
-        gMenuTransitionRotationStep -= 2;
+    if (gEndingTransitionRotationStep != 0xA) {
+        gEndingTransitionRotationStep -= 2;
     } else {
         arg0->timer += 1;
         if (arg0->timer == 1) {
@@ -884,7 +884,7 @@ void updateEndingSlashWaitRisingStar(EndingCreditsSlash *arg0) {
         arg0->timer += 1;
         if (arg0->timer == 0x23) {
             arg0->timer = 0;
-            createCallbackTask(initEndingRisingStar, 0, 0x64);
+            createCallbackTask(initEndingSlashRisingStar, 0, 0x64);
         }
     }
     addMainMenuSceneModelDrawCallback(0);
