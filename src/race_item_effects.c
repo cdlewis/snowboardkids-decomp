@@ -252,7 +252,7 @@ s32 func_8004DB60(s32 arg0) {
     return p[arg0];
 }
 
-// func_8004DB8C best match: 70.982% (nonmatchings/func_8004DB8C-2225551288923588688/base_4.c)
+// func_8004DB8C best match: 77.625% (nonmatchings/func_8004DB8C-6113366811127043669/base_10.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_8004DB8C.s")
 
@@ -261,6 +261,7 @@ void func_8004DB8C(RaceItemEffectActor *arg0) {
     RaceItemDrawNode **drawList;
     u8 *cursor;
     RaceItemEffectPayload *payload;
+    void **node;
     s16 state;
     s32 i;
     u16 playerIndex;
@@ -275,6 +276,7 @@ void func_8004DB8C(RaceItemEffectActor *arg0) {
 
     state = arg0->unk64;
     i = 0;
+    drawList = D_801121D0.heads;
     if (state == 0) {
         arg0->unk64 = state + 1;
     }
@@ -285,12 +287,14 @@ void func_8004DB8C(RaceItemEffectActor *arg0) {
         playerIndex = 0;
     }
 
-    drawList = &D_801121D0.heads[playerIndex];
+    drawList = &drawList[playerIndex];
     payload = &arg0->payload;
+    node = (void **)(cursor + 0x3C);
 
 loop:
     *(RaceItemDrawNode **)(cursor + 0x3C) = *drawList;
-    *drawList = (RaceItemDrawNode *)(cursor + 0x3C);
+    *drawList = (RaceItemDrawNode *) node;
+    node += 5;
     *(RaceItemEffectPayload **)(cursor + 0x40) = payload;
     i++;
     payload += 1;
