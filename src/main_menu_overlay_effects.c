@@ -139,7 +139,7 @@ extern s16 D_80112184;
 extern s16 D_80121B50;
 extern s16 gFrameCounter;
 extern RacePlayerState D_80121D80[];
-extern u8 D_80156608;
+extern u8 gCurrentViewportIndex;
 extern u8 D_80156609;
 extern GfxCommandDest *D_80156614;
 extern u8 D_800E29C0;
@@ -182,7 +182,7 @@ void func_80055530(void *);
 void enqueueSoundEffect(s16, s32, void *);
 
 void func_80053660(MainMenuOverlayEffectActor *arg0) {
-    if (D_80156608 == arg0->index) {
+    if (gCurrentViewportIndex == arg0->index) {
         func_8000F030((s16)(arg0->unk18.half.hi >> 4), (s16)(arg0->unk18.half.lo >> 4), func_80043040(D_80112184), (arg0->unk1C.half.hi + 2) & 0xFFFF,
                       arg0->timer, arg0->timer, 0, arg0->unk2A + 2);
     }
@@ -250,7 +250,7 @@ void func_80053858(MainMenuOverlayEffectActor *arg0) {
 void func_80053B28(MainMenuOverlayEffectActor *arg0) {
     register MainMenuOverlayEffectActor *actor = arg0;
 
-    if (D_80156608 == 0) {
+    if (gCurrentViewportIndex == 0) {
         gDPPipeSync(gRegionAllocPtr++);
 
         gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));
@@ -272,7 +272,7 @@ void func_80053B28(MainMenuOverlayEffectActor *arg0) {
 
 // func_80053C90 best match: 99.677% at nonmatchings/func_80053C90-2/output-20-1/source.c
 void func_80053C90(void *arg0) {
-    if (D_80156608 == 0) {
+    if (gCurrentViewportIndex == 0) {
         gDPPipeSync(gRegionAllocPtr++);
 
         gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_8011214C));
@@ -507,7 +507,7 @@ void func_80054968(MainMenuOverlayEffectActor *arg0) {
 void func_8005499C(MainMenuOverlayEffectActor *arg0) {
     u8 *new_var;
 
-    new_var = &D_80156608;
+    new_var = &gCurrentViewportIndex;
     if (arg0->index == *new_var) {
         func_80045A78((s16)((arg0->unk18.word >> 1) - 0x38), -8, func_80043040(D_8011216E), 0x76);
     }
@@ -571,7 +571,7 @@ void func_80054B98(MainMenuOverlayEffectActor *arg0) {
     GfxCommandDest *matrix;
     Gfx *gfx;
 
-    if (D_80156608 == 2) {
+    if (gCurrentViewportIndex == 2) {
         func_80045990((void *) func_80043040(D_80112174), 0, &image, &palette);
         func_80097C84(transform.rotation, arg0->spriteIndex);
         transform.x = arg0->unk18.word;
@@ -700,7 +700,7 @@ void func_8005502C(MainMenuOverlayEffectActor *arg0) {
 }
 
 void func_80055074(MainMenuOverlayEffectActor *arg0) {
-    if (D_80156608 == 2) {
+    if (gCurrentViewportIndex == 2) {
         func_80046D68(-0x6C, -0x48, func_80043040(D_80112174), 0, D_800D5808[arg0->unk18.half.lo]);
     }
 }
@@ -788,7 +788,7 @@ void func_80055410(MainMenuOverlayEffectActor *arg0) {
     Func55410Scratch scratch;
     GfxCommandDest *matrix;
 
-    if (D_80156608 == 0) {
+    if (gCurrentViewportIndex == 0) {
         func_80097C18(scratch.source.rotation, arg0->unk18.half.hi);
         scratch.source.x = 0;
         scratch.source.y = 0;
@@ -808,7 +808,7 @@ void func_80055410(MainMenuOverlayEffectActor *arg0) {
 }
 
 void func_80055530(void *arg0) {
-    if (D_80156608 == 0) {
+    if (gCurrentViewportIndex == 0) {
         gDPPipeSync(gRegionAllocPtr++);
 
         gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112140));

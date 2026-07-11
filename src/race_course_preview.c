@@ -3,7 +3,7 @@
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_course_preview.h"
-#include "fixed_point_math.h"
+#include "spatial_math.h"
 #include "fixed_point_matrix.h"
 
 #define RACE_COURSE_PREVIEW_GFX_CMD(pkt, cmd0, cmd1) \
@@ -153,7 +153,7 @@ void drawRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
 
     if (entry->textureIndex != -1) {
         do {
-            if (func_80049000(entry->command) != 0) {
+            if (isPositionNearCurrentViewport(entry->command) != 0) {
                 if (textureIndex != entry->textureIndex) {
                     textureIndex = entry->textureIndex;
                     func_80045A1C((u8 *)func_80043040((s32)D_8011216A), (u16)textureIndex, &image, &palette,
@@ -229,7 +229,7 @@ void drawRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
         arg0->displayList0Valid = 1;
     }
 
-    if (func_80049000(&arg0->position) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->position) != 0) {
         if (arg0->displayList0Valid != 0) {
             sp70 = gIdentityFixedTransform;
             sp70.translation.x = arg0->position.x;
@@ -313,7 +313,7 @@ void drawRaceCoursePreviewCameraModel(RaceCoursePreviewCamera *arg0) {
         arg0->displayListValid = 0;
     }
 
-    if (func_80049000(&arg0->position) != 0) {
+    if (isPositionNearCurrentViewport(&arg0->position) != 0) {
         if (arg0->displayListValid == 0) {
             func_80097C18(sp84.rotation, arg0->spinVelocity);
             sp84.translation.x = 0;
@@ -633,7 +633,7 @@ void drawRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
     i = 0;
     if (entry->textureIndex != -1) {
         do {
-            if (func_80049000(entry->command) != 0) {
+            if (isPositionNearCurrentViewport(entry->command) != 0) {
                 textureIndex = gRaceCoursePreviewAnimatedBillboardTextureIds[entry->textureIndex] + ((s32)(gFrameCounter & 4) / 4);
                 if (textureIndex != loadedTextureIndex) {
                     loadedTextureIndex = textureIndex;

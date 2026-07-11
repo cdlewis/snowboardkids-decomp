@@ -2,7 +2,7 @@
 #define RACE_ITEM_EFFECTS_H
 
 #include "common.h"
-#include "fixed_point_math.h"
+#include "spatial_math.h"
 
 typedef struct RaceItemEffectActor RaceItemEffectActor;
 typedef struct RaceItemFollowActor RaceItemFollowActor;

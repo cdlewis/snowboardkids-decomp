@@ -7,9 +7,9 @@
 #include "race_camera.h"
 #include "race_course_effects.h"
 #include "race_actor_collision.h"
-#define func_8004940C func_8004940C_s32
+#define calculateAngleBetweenXZPoints calculateAngleBetweenXZPoints_s32
 #include "fixed_point_matrix.h"
-#undef func_8004940C
+#undef calculateAngleBetweenXZPoints
 #include "race_input_history.h"
 #include "race_item_effects.h"
 #include "race_item_triggers.h"
@@ -91,7 +91,7 @@ typedef struct {
 } CourseAngleEntry;
 
 extern s32 enqueueSoundEffect(s32, s32);
-extern s16 func_8004940C(s32, s32, s32, s32);
+extern s16 calculateAngleBetweenXZPoints(s32, s32, s32, s32);
 extern void func_80072A20(s32, SoundPosition *, s32, s32, f32, s16);
 extern void func_800483FC(void *, void (*)(void *), void *);
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
@@ -456,7 +456,7 @@ void func_8008CF10(RaceInputPlayer *player) {
 
     deltaX = player->posX - player->unk34.x;
     deltaZ = player->posZ - player->unk34.z;
-    angleDiff = (func_8004908C(deltaX, deltaZ) - player->facingAngle) & 0xFFF;
+    angleDiff = (calculateAngleFromDeltaXZ(deltaX, deltaZ) - player->facingAngle) & 0xFFF;
     if (angleDiff >= 0x801) {
         angleDiff = 0x1000 - angleDiff;
     }
@@ -555,7 +555,7 @@ void func_8008D09C(RaceInputPlayer *player) {
     if (player->unk4 != 0) {
         func_800815D4(player->unk502, player->posX, player->posZ, &targetX, &targetZ, (s8) player->unk17,
                       (u16) player->playerIndex);
-        turn = (func_8004940C(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
+        turn = (calculateAngleBetweenXZPoints(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
         if (turn >= 0x801) {
             turn -= 0x1000;
         }
@@ -611,7 +611,7 @@ void func_8008D09C(RaceInputPlayer *player) {
     if (player->unk4 == 0) {
         spawn = &D_800B9540[D_80121B50];
         if ((player->unk502 == spawn->unk0) && !(player->stateFlags & 0x40)) {
-            surfaceCue = (s16)(((func_8004940C(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
+            surfaceCue = (s16)(((calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
                                  0x400) &
                                 0xFFF);
@@ -714,7 +714,7 @@ void func_8008D09C(RaceInputPlayer *player) {
                     if (temp < -0x10000000LL) {
                         temp = -0x10000000LL;
                     }
-                    steerAngle = func_8004940C((s32) temp, 0, 0, speed);
+                    steerAngle = calculateAngleBetweenXZPoints((s32) temp, 0, 0, speed);
                     if (temp > 0) {
                         steerAngle -= 0x400;
                     }
@@ -871,7 +871,7 @@ void func_8008DC2C(RaceInputPlayer *player) {
         } else {
             func_800815D4(player->unk502, unused = player->posX, player->posZ, &targetX, &targetZ,
                           (s8) player->unk17, (u16) player->playerIndex);
-            angleDiff = (func_8004940C(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
+            angleDiff = (calculateAngleBetweenXZPoints(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
             }
@@ -928,7 +928,7 @@ void func_8008DE1C(RaceInputPlayer *player) {
         } else {
             func_800815D4(player->unk502, unused = player->posX, player->posZ, &targetX, &targetZ,
                           (s8) player->unk17, (u16) player->playerIndex);
-            angleDiff = (func_8004940C(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
+            angleDiff = (calculateAngleBetweenXZPoints(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
             }
@@ -982,7 +982,7 @@ void func_8008E008(RaceInputPlayer *player) {
     if (player->unk4 == 0) {
         spawn = &D_800B9540[D_80121B50];
         if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
-            velocityY = (s16) (((func_8004940C(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
+            velocityY = (s16) (((calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
                                  0x400) &
                                 0xFFF);
@@ -1084,7 +1084,7 @@ void func_8008E350(RaceInputPlayer *player) {
     if (player->unk4 == 0) {
         spawn = &D_800B9540[D_80121B50];
         if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
-            surfaceCue = (s16)(((func_8004940C(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
+            surfaceCue = (s16)(((calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
                                  0x400) &
                                 0xFFF);
@@ -3301,7 +3301,7 @@ void func_80092E58(RaceInputPlayer *player) {
 
     spawn = &D_800B9540[D_80121B50];
     if ((spawn->unk0 == playerAlias->unk502) && !(playerAlias->stateFlags & 0x40)) {
-        angleDiff = func_8004940C(playerAlias->posX, player->posZ, spawn->unk40, spawn->unk44);
+        angleDiff = calculateAngleBetweenXZPoints(playerAlias->posX, player->posZ, spawn->unk40, spawn->unk44);
         if (playerAlias->stateFlags & 0x400) {
             angleDiff += 0x800;
         }
@@ -3468,7 +3468,7 @@ void func_800934EC(RaceInputPlayer *player) {
 
     spawn = &D_800B9540[D_80121B50];
     if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
-        targetAngle = func_8004940C(player->posX, player->posZ, spawn->unk40, spawn->unk44);
+        targetAngle = calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44);
         if (player->stateFlags & 0x400) {
             targetAngle += 0x800;
         }
@@ -3882,7 +3882,7 @@ void func_80094288(RaceInputPlayer *player) {
     player->posX += velocityX;
     player->posY += yVel;
     player->posZ += player->velocity.z;
-    player->facingAngle = func_8004908C(velocityX, velocityZ);
+    player->facingAngle = calculateAngleFromDeltaXZ(velocityX, velocityZ);
     if (player->stateFlags & 0x400) {
         player->facingAngle += 0x800;
     }
@@ -4094,7 +4094,7 @@ void func_8009491C(RaceInputPlayer *player) {
     player->posY += player->velocity.y;
     velocityZ = player->velocity.z;
     player->posZ += velocityZ;
-    player->facingAngle = func_8004908C(velocityX, velocityZ);
+    player->facingAngle = calculateAngleFromDeltaXZ(velocityX, velocityZ);
     if (player->stateFlags & 0x400) {
         player->facingAngle += 0x800;
     }
@@ -4397,7 +4397,7 @@ void func_80095164(RaceInputPlayer *player) {
     player->posY += player->velocity.y;
     velocityZ = player->velocity.z;
     player->posZ += velocityZ;
-    player->facingAngle = func_8004908C(velocityX, velocityZ);
+    player->facingAngle = calculateAngleFromDeltaXZ(velocityX, velocityZ);
     if (player->stateFlags & 0x400) {
         player->facingAngle += 0x800;
     }
@@ -4868,7 +4868,7 @@ void func_800961DC(RaceInputPlayer *player) {
         func_8006D520(player->playerIndex, 5);
         if (player->unk29C >= 0x20001) {
             player->unk306 = 1;
-            player->unk31E = func_8004908C(player->unk40.x, player->unk40.z);
+            player->unk31E = calculateAngleFromDeltaXZ(player->unk40.x, player->unk40.z);
             tempFlags = player->stateFlags & 0x400;
             stateFlags = tempFlags;
             if (tempFlags != 0) {

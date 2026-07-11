@@ -110,7 +110,7 @@ extern u8 gRaceUpdatePaused;
 extern u8 D_80121B5A;
 extern u8 D_80121B5B;
 extern u8 D_80121B5E;
-extern u8 D_80156608;
+extern u8 gCurrentViewportIndex;
 extern s16 D_80156612;
 extern s32 D_80124868;
 extern s32 D_80124878;
@@ -700,17 +700,17 @@ void func_800799DC(s32 arg0) {
     char *end;
     RaceTimerUiPlayer *player;
 
-    if (D_80156608 == 0) {
+    if (gCurrentViewportIndex == 0) {
         y = -0x28;
     } else {
         y = 0x1A;
     }
 
-    sprintf(buffer, D_800E1814, D_801222E8[D_80156608].value);
+    sprintf(buffer, D_800E1814, D_801222E8[gCurrentViewportIndex].value);
     x = 0x50;
     ptr = buffer;
     end = &buffer[5];
-    if (D_801222E8[D_80156608].value < 0x64) {
+    if (D_801222E8[gCurrentViewportIndex].value < 0x64) {
         color = 0x10;
     } else {
         color = 0xE;
@@ -726,30 +726,30 @@ void func_800799DC(s32 arg0) {
 
     func_80045A78(0x78, y, func_80043040(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF);
 
-    if (D_80122293[D_80156608].value != 0) {
-        player = &D_80121D80[D_80156608];
+    if (D_80122293[gCurrentViewportIndex].value != 0) {
+        player = &D_80121D80[gCurrentViewportIndex];
         func_80047174(-0x88, -0x30, func_80043040(D_80112130.popupFontHandle),
                       (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF,
                       player->tensDigitPalette);
     } else {
-        player = &D_80121D80[D_80156608];
+        player = &D_80121D80[gCurrentViewportIndex];
         func_80045A78(-0x88, -0x30, func_80043040(D_80112130.popupFontHandle),
                       (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF);
     }
 
-    if (D_80122296[D_80156608].value != 0) {
-        player = &D_80121D80[D_80156608];
+    if (D_80122296[gCurrentViewportIndex].value != 0) {
+        player = &D_80121D80[gCurrentViewportIndex];
         func_80047174(-0x68, -0x30, func_80043040(D_80112130.popupFontHandle), D_800DC8F8[player->onesDigitTile],
                       player->onesDigitPalette);
     } else {
         func_80045A78(-0x68, -0x30, func_80043040(D_80112130.popupFontHandle),
-                      D_800DC8F8[D_80122295[D_80156608].value]);
+                      D_800DC8F8[D_80122295[gCurrentViewportIndex].value]);
     }
 
-    func_80045A78(-0x88, 0x12, func_80043040(D_80112130.popupFontHandle), D_80122289[D_80156608].value & 0xFFFF);
+    func_80045A78(-0x88, 0x12, func_80043040(D_80112130.popupFontHandle), D_80122289[gCurrentViewportIndex].value & 0xFFFF);
 
     finalY = 0x2A;
-    if (D_80156608 == 0) {
+    if (gCurrentViewportIndex == 0) {
         finalY = -0x30;
     }
     func_80045A78(0x58, finalY, func_80043040(D_80112130.popupFontHandle), 0x1A);
@@ -763,7 +763,7 @@ void func_80079E48(s32 arg0) {
     s32 temp_v0;
     s32 var_v1;
 
-    temp_v0 = D_80156608;
+    temp_v0 = gCurrentViewportIndex;
     if (0 == temp_v0) {
         var_v1 = -0x30;
     } else {
@@ -779,19 +779,19 @@ void func_80079F04(s32 arg0) {
     func_80047174(0x38, 0x24, func_80043040(D_80112130.mainFontHandle), ((D_80121B72 >> 1) + 4) & 0xFFFF, 1);
 
     texture = func_80043040(D_80112130.popupFontHandle);
-    player = &D_80121D80[D_80156608];
+    player = &D_80121D80[gCurrentViewportIndex];
     func_80047174(-0x18, -0x38, texture,
-                  (D_800DC8F0[D_80121D80[D_80156608].tensDigitTile] + D_80121D80[D_80156608].tensDigitOffset - 1) & 0xFFFF,
+                  (D_800DC8F0[D_80121D80[gCurrentViewportIndex].tensDigitTile] + D_80121D80[gCurrentViewportIndex].tensDigitOffset - 1) & 0xFFFF,
                   player->tensDigitPalette + 1);
 
     texture = func_80043040(D_80112130.popupFontHandle);
-    player = &D_80121D80[D_80156608];
+    player = &D_80121D80[gCurrentViewportIndex];
     func_80047174(-8, -0x38, texture, D_800DC8F8[player->onesDigitTile], player->onesDigitPalette + 1);
 
     texture = func_80043040(D_80112130.popupFontHandle);
-    func_80047174(-0x4C, 0x18, texture, D_80122289[D_80156608].value & 0xFFFF, 1);
+    func_80047174(-0x4C, 0x18, texture, D_80122289[gCurrentViewportIndex].value & 0xFFFF, 1);
 
-    if (D_80156608 < 2) {
+    if (gCurrentViewportIndex < 2) {
         func_80045A78(-0x44, -0x30, func_80043040(D_80112130.popupFontHandle), 0x1A);
         return;
     }
@@ -805,21 +805,21 @@ void func_8007A108(s32 arg0) {
     s32 palette;
     char buffer[0x20];
 
-    sprintf(buffer, D_800E181C, D_801222E8[D_80156608].value);
-    if (D_801222E8[D_80156608].value < 0x64) {
+    sprintf(buffer, D_800E181C, D_801222E8[gCurrentViewportIndex].value);
+    if (D_801222E8[gCurrentViewportIndex].value < 0x64) {
         palette = 1;
     } else {
         palette = 2;
     }
     func_80048278(0x14, 0x28, buffer, palette & 0xFFFF);
 
-    if (D_80156608 < 2) {
+    if (gCurrentViewportIndex < 2) {
         x = -0x2C;
     } else {
         x = 0x2C;
     }
 
-    func_80047E88((s16)x, -0x30, (((RaceTimerUiS8Stride *)D_80122288)[D_80156608].value + 0x31) & 0xFF, 2);
+    func_80047E88((s16)x, -0x30, (((RaceTimerUiS8Stride *)D_80122288)[gCurrentViewportIndex].value + 0x31) & 0xFF, 2);
     func_80047E88((s16)(x + 8), -0x30, 0x2F, 2);
     func_80047E88((s16)(x + 0x10), -0x30, (D_80121B52 + 0x30) & 0xFF, 2);
 }

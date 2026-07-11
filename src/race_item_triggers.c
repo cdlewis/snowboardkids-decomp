@@ -2,7 +2,7 @@
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_input_history.h"
-#include "fixed_point_math.h"
+#include "spatial_math.h"
 #include "race_effects.h"
 #include "race_item_effects.h"
 #include "race_item_triggers.h"
@@ -53,7 +53,7 @@ void updateItemUseTrigger(RaceInputPlayer *player) {
                     deltaZ = otherPlayer->posZ - player->posZ;
                     if ((deltaX < 0x6000000) && (deltaX >= -0x5FFFFFF) &&
                         (deltaZ < 0x6000000) && (deltaZ >= -0x5FFFFFF)) {
-                        angle = (s16) ((func_8004908C(deltaX, deltaZ) - player->facingAngle) & 0xFFF);
+                        angle = (s16) ((calculateAngleFromDeltaXZ(deltaX, deltaZ) - player->facingAngle) & 0xFFF);
                         if ((angle >= 0xE01) || (angle < 0x200)) {
                             trigger = 1;
                             player->itemTriggerCooldown = -0x3E;

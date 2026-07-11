@@ -1,7 +1,7 @@
 #ifndef FIXED_POINT_MATRIX_H
 #define FIXED_POINT_MATRIX_H
 
-#include "fixed_point_math.h"
+#include "spatial_math.h"
 
 /*
  * Fixed-point (4.12) 3x3 rotation matrix and transform helpers used by the
