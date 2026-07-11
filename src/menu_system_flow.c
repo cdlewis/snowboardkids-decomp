@@ -5,7 +5,7 @@
 #include "system_boot.h"
 #include "game_task_scheduler.h"
 #include "menu_system_flow.h"
-#include "main_menu_effects.h"
+#include "main_menu_screen_effects.h"
 #include "main_menu_panel_ui.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
