@@ -8,7 +8,7 @@
 #include "race_course_effects.h"
 #include "race_intro_effects.h"
 #include "race_item_effects.h"
-#include "race_overlay_effects.h"
+#include "race_pickup_effects.h"
 #include "race_ui_effects.h"
 
 #define COURSE_PLAYER_COUNT 4
@@ -277,21 +277,21 @@ void initRaceCourseEffects(void) {
         createCallbackTaskWithUserId(&initCourseBillboardMarker, 0, 0x64, 0);
         if ((gRaceSplitscreenMode == 0) && (D_80121B59 == 0) && (gTrainingCourseLesson == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
             }
             if (sp28 != 0) {
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 1);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 2);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 3);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 4);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 5);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x3F);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x4E);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x4F);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x50);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x51);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x52);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 1);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 2);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 3);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 4);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 5);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x3F);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x4E);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x4F);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x50);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x51);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x52);
             }
         }
         if (gRaceSplitscreenMode == 1) {
@@ -328,28 +328,28 @@ block_24:
         createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 6);
         createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 7);
         createCallbackTaskWithUserId(&initCourseTriggerVolume, 0, 0x64, 0);
-        createCallbackTaskWithUserId(&func_800669A0, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&initCourseSceneryDisplayListModels, 0, 0x64, 0);
         createCallbackTask(&initCourseGateObject, 0, 0x64);
-        createCallbackTaskWithUserId(&func_800675AC, 0, 0x64, 0);
-        createCallbackTaskWithUserId(&func_800675AC, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&updateThrownPickupSpawner, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&updateThrownPickupSpawner, 0, 0x64, 1);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
             }
             if (sp28 != 0) {
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 6);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 7);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 8);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 9);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0xA);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0xB);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0xC);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0xD);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x53);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x54);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x55);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x56);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 6);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 7);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 8);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 9);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0xA);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0xB);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0xC);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0xD);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x53);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x54);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x55);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x56);
             }
             func_80061AF4(0x59, (void *)0x2290CDA1, (void *)0xC5F82815, 0xAF0);
         }
@@ -372,20 +372,20 @@ block_24:
         createCallbackTaskWithUserId(&func_80063980, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
             }
             if (sp28 != 0) {
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0xE);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0xF);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x10);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x11);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x12);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x13);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x14);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x42);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x57);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x58);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x59);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0xE);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0xF);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x10);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x11);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x12);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x13);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x14);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x42);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x57);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x58);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x59);
             }
         }
         setBootFadeColor(0U, 0U, 0x32U);
@@ -400,25 +400,25 @@ block_24:
         createCallbackTask(&initRaceIntroModelMeshes, 0, 0x64);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
             }
             if (sp28 != 0) {
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x15);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x16);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x17);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x18);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x19);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x1A);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x1B);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x1C);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x1D);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x43);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x44);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x45);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5A);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5B);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5C);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5D);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x15);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x16);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x17);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x18);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x19);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x1A);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x1B);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x1C);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x1D);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x43);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x44);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x45);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x5A);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x5B);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x5C);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x5D);
             }
         }
         if (gPlayerCount == 1) {
@@ -438,21 +438,21 @@ block_24:
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
             }
             if (sp28 != 0) {
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x1E);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x1F);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x20);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x21);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x22);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x23);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x24);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x25);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x26);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5E);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x5F);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x60);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x1E);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x1F);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x20);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x21);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x22);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x23);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x24);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x25);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x26);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x5E);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x5F);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x60);
             }
         }
         createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 0);
@@ -476,25 +476,25 @@ block_24:
         createCallbackTask(&initCourseGateObject, 0, 0x64);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
             }
             if (sp28 != 0) {
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x27);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x28);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x29);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x2A);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x2B);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x2C);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x2D);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x2E);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x40);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x41);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x61);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x62);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x63);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x64);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x65);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x66);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x27);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x28);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x29);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x2A);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x2B);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x2C);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x2D);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x2E);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x40);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x41);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x61);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x62);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x63);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x64);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x65);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x66);
             }
         }
         setBootFadeColor(0xF0U, 0xE6U, 0xBEU);
@@ -511,21 +511,21 @@ block_24:
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
             }
             if (sp28 != 0) {
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x2F);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x30);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x31);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x32);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x33);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x34);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x35);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x36);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x67);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x68);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x69);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x6A);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x2F);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x30);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x31);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x32);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x33);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x34);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x35);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x36);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x67);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x68);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x69);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x6A);
             }
         }
         if (gPlayerCount == 1) {
@@ -547,15 +547,15 @@ block_24:
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
-                createCallbackTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
             }
             if (sp28 != 0) {
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x46);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x47);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x48);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x49);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x4A);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x4B);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x46);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x47);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x48);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x49);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x4A);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x4B);
             }
         }
         setBootFadeColor(0xFFU, 0xFFU, 0xFFU);
@@ -568,15 +568,15 @@ block_24:
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0) && ((gTrainingCourseLesson == 0) || (gTrainingCourseLesson == 7) || (gTrainingCourseLesson == 8))) {
             if (sp2C != 0) {
-                createCallbackTask(&func_8006713C, 0, 0x64);
+                createCallbackTask(&initCourseOverlaySprites, 0, 0x64);
             }
             if (sp28 != 0) {
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x37);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x38);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x39);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x3B);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x3C);
-                createCallbackTaskWithUserId(&func_800691C8, 0, 0x64, 0x3D);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x37);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x38);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x39);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x3B);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x3C);
+                createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x3D);
             }
         }
         if (gRaceSplitscreenMode == 1) {

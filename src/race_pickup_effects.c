@@ -1,5 +1,5 @@
 #include "common.h"
-#include "race_overlay_effects.h"
+#include "race_pickup_effects.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
@@ -15,7 +15,7 @@ typedef struct {
     /* 0x0 */ s16 enabled;
     /* 0x2 */ s16 modelIndex;
     /* 0x4 */ Vec3i transform;
-} RaceModelEntry;
+} CourseOverlaySpriteEntry;
 
 typedef struct {
     /* 0x00 */ s32 unk0;
@@ -52,7 +52,7 @@ typedef struct {
 typedef struct {
     /* 0x00 */ FixedTransform source;
     /* 0x20 */ s32 pad20;
-} RaceOverlayMatrixScratch;
+} RacePickupMatrixScratch;
 
 typedef struct {
     /* 0x00 */ s16 modelIndex;
@@ -60,15 +60,15 @@ typedef struct {
     /* 0x04 */ Vec3i pos;
     /* 0x10 */ s16 assetIndex;
     char pad12[2];
-} RaceOverlayModelEntry;
+} CourseSceneryDisplayListModelEntry;
 
 typedef struct {
     /* 0x00 */ Vec3i pos;
     /* 0x0C */ s16 rotation;
     /* 0x0E */ s16 variant;
-} RaceOverlayEffectSpawn;
+} PickupSpawnEntry;
 
-struct RaceOverlaySpawnActor {
+struct ThrownPickupSpawnerActor {
     char pad0[0x10];
     /* 0x10 */ u16 spawnIndex;
     char pad12[6];
@@ -76,7 +76,7 @@ struct RaceOverlaySpawnActor {
     /* 0x1A */ s8 lastVariant;
 };
 
-struct RaceModelListActor {
+struct CourseEffectModelListActor {
     char pad0[0x10];
     /* 0x10 */ u16 modelListIndex;
     char pad12[6];
@@ -85,7 +85,7 @@ struct RaceModelListActor {
     /* 0x1E */ s16 modelCount;
 };
 
-struct RaceOverlayTransformActor {
+struct ThrownPickupRenderActor {
     char pad0[0x18];
     /* 0x18 */ GfxCommandDest *matrix;
     /* 0x1C */ Vec3i pos;
@@ -95,7 +95,7 @@ struct RaceOverlayTransformActor {
     /* 0x2E */ s8 matrixDirty;
 };
 
-struct RaceThrownModelActor {
+struct ThrownPickupModelActor {
     char pad0[0x1C];
     /* 0x1C */ Vec3i pos;
     /* 0x28 */ s16 pitch;
@@ -108,7 +108,7 @@ struct RaceThrownModelActor {
     /* 0x4A */ s16 timer;
 };
 
-struct RaceOverlayModelActor {
+struct RacePickupActor {
     char pad0[0x10];
     /* 0x10 */ u16 spawnIndex;
     char pad12[6];
@@ -134,7 +134,7 @@ struct RaceOverlayModelActor {
     /* 0x86 */ s16 variant;
 };
 
-struct RaceParticleActor {
+struct PickupShardParticleActor {
     char pad0[0x10];
     /* 0x10 */ u16 spawnOffsetIndex;
     char pad12[6];
@@ -165,12 +165,12 @@ extern void addRenderCallback(void *, void *, void *);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern u8 gItemEffectRollTable[][0x10];
 extern u8 gActionEffectRollTable[][0x10];
-extern RaceOverlayEffectSpawn D_800D9518[];
-extern RaceOverlayEffectSpawn *D_800D92D0[];
-extern Vec3i D_800D9BD8[];
-extern RaceOverlayModelEntry *D_800D7754[];
+extern PickupSpawnEntry gRacePickupSpawnEntries[];
+extern PickupSpawnEntry *gThrownPickupSpawnLists[];
+extern Vec3i gPickupShardInitialVelocities[];
+extern CourseSceneryDisplayListModelEntry *gCourseSceneryDisplayListModelLists[];
 extern void *gRaceCourseSceneryDisplayLists[];
-extern Gfx *D_800DA1F0;
+extern Gfx *gThrownPickupModelDisplayList;
 extern s32 D_801248D4;
 extern s32 D_801248B0;
 extern s16 D_80112144;
@@ -193,10 +193,10 @@ extern s8 D_80122FB7;
 extern s32 D_80122FC0;
 extern s32 D_80122FC8;
 extern u8 gAssetHandles[];
-extern RaceModelEntry *D_800D91E8[];
-extern u32 D_800D9210[];
-extern Vtx D_800D92D8[];
-extern Vtx D_800D9358[];
+extern CourseOverlaySpriteEntry *gCourseOverlaySpriteListsByCourse[];
+extern u32 gCourseOverlaySpriteVertices[];
+extern Vtx gRacePickupBaseVertices[];
+extern Vtx gRacePickupTopVertices[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx D_2003A38[];
@@ -208,31 +208,20 @@ extern Gfx *gRegionAllocPtr;
 extern void *gViewportMatrix;
 extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
-extern void func_80066E10(RaceModelListActor *);
-extern void func_80066ABC(RaceModelListActor *);
-extern void func_80067034(RaceModelListActor *);
-extern void func_800674B4(RaceThrownModelActor *);
-extern void func_800681A4(RaceOverlayModelActor *);
-extern void func_80068CD4(RaceOverlayModelActor *);
-extern void func_800684E4(RaceOverlayModelActor *);
-extern void assignPickupRandomEffect(RaceOverlayModelActor *);
-extern void func_8006935C(RaceParticleActor *);
-extern void func_80069678(RaceParticleActor *);
-
 typedef struct Scratch674B4 {
     char scratch[0x28];
     s32 pad;
 } Scratch674B4;
 
-void func_80066760(RaceModelListActor *arg0) {
-    RaceOverlayModelEntry *var_s4;
+void renderCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0) {
+    CourseSceneryDisplayListModelEntry *var_s4;
     s32 var_s5;
     s32 var_s7;
     Gfx *temp_s0;
     Gfx *temp_s2;
     Gfx *temp_s3;
 
-    var_s4 = D_800D7754[arg0->modelListIndex];
+    var_s4 = gCourseSceneryDisplayListModelLists[arg0->modelListIndex];
     var_s7 = TRUE;
     var_s5 = 0;
     if (var_s4->modelIndex != -1) {
@@ -260,11 +249,11 @@ void func_80066760(RaceModelListActor *arg0) {
     }
 }
 
-void func_800668EC(RaceModelListActor *arg0) {
-    RaceOverlayModelEntry *entry;
+void updateCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0) {
+    CourseSceneryDisplayListModelEntry *entry;
     void *pos;
 
-    entry = D_800D7754[arg0->modelListIndex];
+    entry = gCourseSceneryDisplayListModelLists[arg0->modelListIndex];
     if (entry->modelIndex != -1) {
         pos = &entry->pos;
         do {
@@ -275,18 +264,18 @@ void func_800668EC(RaceModelListActor *arg0) {
             pos = &entry->pos;
         } while (entry->modelIndex != -1);
     }
-    addRenderCallback(&D_801248B0, func_80066760, arg0);
+    addRenderCallback(&D_801248B0, renderCourseSceneryDisplayListModels, arg0);
 }
 
-void func_800669A0(RaceModelListActor *arg0) {
+void initCourseSceneryDisplayListModels(CourseEffectModelListActor *arg0) {
     s32 size;
-    RaceOverlayModelEntry *base;
-    RaceOverlayModelEntry *entry;
+    CourseSceneryDisplayListModelEntry *base;
+    CourseSceneryDisplayListModelEntry *entry;
     s32 i;
     CourseEffectMatrixSource transform;
     s32 count;
 
-    base = D_800D7754[arg0->modelListIndex];
+    base = gCourseSceneryDisplayListModelLists[arg0->modelListIndex];
     count = 0;
     entry = base;
     if (base->modelIndex != -1) {
@@ -313,14 +302,14 @@ void func_800669A0(RaceModelListActor *arg0) {
 
         osWritebackDCache(arg0->modelBuffer, size);
     }
-    setCallbackTaskCallback(arg0, func_800668EC);
+    setCallbackTaskCallback(arg0, updateCourseSceneryDisplayListModels);
 }
 
-void func_80066ABC(RaceModelListActor *arg0) {
-    RaceModelEntry *entry;
+void renderCourseOverlaySprites(CourseEffectModelListActor *arg0) {
+    CourseOverlaySpriteEntry *entry;
     s16 modelIndex;
     s32 i;
-    RaceModelListActor *actor;
+    CourseEffectModelListActor *actor;
     u8 padding[0x1];
     void *spA0;
     void *sp9C;
@@ -329,7 +318,7 @@ void func_80066ABC(RaceModelListActor *arg0) {
     actor = arg0;
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
 
-    entry = D_800D91E8[gRaceCourseIndex];
+    entry = gCourseOverlaySpriteListsByCourse[gRaceCourseIndex];
     i = 0;
     if (entry->modelIndex != -1) {
         do {
@@ -346,7 +335,7 @@ void func_80066ABC(RaceModelListActor *arg0) {
                 gSPMatrix(gRegionAllocPtr++, &actor->modelBuffer[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
 
-                gSPVertex(gRegionAllocPtr++, (u32)D_800D9210, 4, 0);
+                gSPVertex(gRegionAllocPtr++, (u32)gCourseOverlaySpriteVertices, 4, 0);
 
                 gSP2Triangles(gRegionAllocPtr++, 3, 2, 1, 0, 3, 1, 0, 0);
             }
@@ -358,16 +347,16 @@ void func_80066ABC(RaceModelListActor *arg0) {
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
 }
 
-void func_80066E10(RaceModelListActor *arg0) {
-    RaceModelEntry *entry;
+void updateCourseOverlaySprites(CourseEffectModelListActor *arg0) {
+    CourseOverlaySpriteEntry *entry;
     Vec3i *pos;
-    RaceModelListActor *actor;
+    CourseEffectModelListActor *actor;
     register s32 one;
     register s32 xzSize;
     register s32 ySize;
     register s32 sentinel;
 
-    entry = D_800D91E8[gRaceCourseIndex];
+    entry = gCourseOverlaySpriteListsByCourse[gRaceCourseIndex];
     actor = arg0;
     ySize = 1;
     if (gFrameCounter & ySize) {
@@ -426,18 +415,18 @@ next:
     }
 
 done:
-    addRenderCallback(&D_801248D4, func_80066ABC, actor);
+    addRenderCallback(&D_801248D4, renderCourseOverlaySprites, actor);
 }
 
-void func_80067034(RaceModelListActor *arg0) {
-    register RaceModelListActor *actor1;
-    register RaceModelListActor *actor2;
-    register RaceModelEntry *script;
+void initCourseOverlaySpriteMatrices(CourseEffectModelListActor *arg0) {
+    register CourseEffectModelListActor *actor1;
+    register CourseEffectModelListActor *actor2;
+    register CourseOverlaySpriteEntry *script;
     register s32 i;
     register s32 offset;
     register s32 one;
 
-    script = D_800D91E8[gRaceCourseIndex];
+    script = gCourseOverlaySpriteListsByCourse[gRaceCourseIndex];
     actor1 = arg0;
     actor2 = arg0;
     i = 0;
@@ -459,13 +448,13 @@ void func_80067034(RaceModelListActor *arg0) {
     osWritebackDCache(actor1->modelBuffer, actor1->modelCount * sizeof(GfxCommandDest));
 }
 
-void func_8006713C(RaceModelListActor *arg0) {
-    RaceModelListActor *new_var;
-    RaceModelEntry *var_v0;
+void initCourseOverlaySprites(CourseEffectModelListActor *arg0) {
+    CourseEffectModelListActor *new_var;
+    CourseOverlaySpriteEntry *var_v0;
 
     new_var = arg0;
     new_var->modelCount = 0;
-    var_v0 = D_800D91E8[gRaceCourseIndex];
+    var_v0 = gCourseOverlaySpriteListsByCourse[gRaceCourseIndex];
     if (var_v0->modelIndex != -1) {
         do {
             new_var->modelCount += 1;
@@ -475,12 +464,12 @@ void func_8006713C(RaceModelListActor *arg0) {
     if (new_var->modelCount != 0) {
         RACE_MODEL_BUFFER_HANDLE = allocRelocatableHeapBlock(new_var->modelCount << 6);
         new_var->modelBuffer = (void *) getRelocatableHeapBlockBase(RACE_MODEL_BUFFER_HANDLE);
-        func_80067034(new_var);
-        setCallbackTaskCallback(new_var, func_80066E10);
+        initCourseOverlaySpriteMatrices(new_var);
+        setCallbackTaskCallback(new_var, updateCourseOverlaySprites);
     }
 }
 
-void func_800671F4(RaceOverlayTransformActor *arg0) {
+void renderThrownPickupModel(ThrownPickupRenderActor *arg0) {
     FixedMatrix3sScratch scratch;
 
     if (gRenderMatricesDirty != 0) {
@@ -502,12 +491,12 @@ void func_800671F4(RaceOverlayTransformActor *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112144));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112146));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(gRegionAllocPtr++, D_800DA1F0);
+            gSPDisplayList(gRegionAllocPtr++, gThrownPickupModelDisplayList);
         }
     }
 }
 
-void func_80067364(RaceThrownModelActor *arg0) {
+void updateThrownPickupModel(ThrownPickupModelActor *arg0) {
     Vec3i *pos;
     s32 groundY;
     s32 velocityY;
@@ -546,12 +535,12 @@ void func_80067364(RaceThrownModelActor *arg0) {
         return;
     }
 
-    addRenderCallback(&D_801248B0, func_800671F4, arg0);
+    addRenderCallback(&D_801248B0, renderThrownPickupModel, arg0);
 }
 
-void func_800674B4(RaceThrownModelActor *arg0) {
+void initThrownPickupModel(ThrownPickupModelActor *arg0) {
     Scratch674B4 sp1C;
-    RaceThrownModelActor *temp_a3 = arg0;
+    ThrownPickupModelActor *temp_a3 = arg0;
 
     if (gRaceUpdatePaused == 0) {
         makeFixedRotationY(sp1C.scratch, temp_a3->modelIndex);
@@ -560,12 +549,12 @@ void func_800674B4(RaceThrownModelActor *arg0) {
         temp_a3->velocity.y = 0xB0000;
         temp_a3->velocity.z = 0xFFF90000;
         transformVec3iByFixedMatrix(sp1C.scratch, &temp_a3->velocity, &temp_a3->transformedPos);
-        setCallbackTaskCallback(temp_a3, func_80067364);
+        setCallbackTaskCallback(temp_a3, updateThrownPickupModel);
     }
 }
 
-void func_8006752C(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
-    RaceThrownModelActor *temp = createCallbackTask(func_800674B4, 0, 0x64);
+void spawnThrownPickupModel(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
+    ThrownPickupModelActor *temp = createCallbackTask(initThrownPickupModel, 0, 0x64);
 
     if (temp != NULL) {
         temp->pos.x = arg0;
@@ -576,20 +565,20 @@ void func_8006752C(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
     }
 }
 
-// func_800675AC best match: 99.625% (nonmatchings/func_800675AC-731940616440357983/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800675AC.s")
+// updateThrownPickupSpawner best match: 99.625% (nonmatchings/updateThrownPickupSpawner-731940616440357983/base_15.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_effects/updateThrownPickupSpawner.s")
 
 #ifdef NON_MATCHING
 #define SPAWN_RANGE_MAX 0x14000000
 #define SPAWN_RANGE_MIN -0x13FFFFFF
 
-void func_800675AC(RaceOverlaySpawnActor *arg0) {
-    RaceThrownModelActor *savedSpawned;
+void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
+    ThrownPickupModelActor *savedSpawned;
     volatile s32 forceStack[6];
-    RaceOverlayEffectSpawn *savedEntry;
-    RaceOverlayEffectSpawn *newEntry;
-    RaceThrownModelActor *spawned;
-    RaceOverlayEffectSpawn *entry;
+    PickupSpawnEntry *savedEntry;
+    PickupSpawnEntry *newEntry;
+    ThrownPickupModelActor *spawned;
+    PickupSpawnEntry *entry;
     s32 found;
     s32 diffX;
     s32 diffZ;
@@ -599,7 +588,7 @@ void func_800675AC(RaceOverlaySpawnActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         if (arg0->timer == 0) {
             arg0->timer = 0x20;
-            newEntry = D_800D92D0[arg0->spawnIndex];
+            newEntry = gThrownPickupSpawnLists[arg0->spawnIndex];
             entry = newEntry;
             found = FALSE;
             if (gRaceSplitscreenMode != 2) {
@@ -641,7 +630,7 @@ void func_800675AC(RaceOverlaySpawnActor *arg0) {
             }
 
             if (found != 0) {
-                spawned = createCallbackTask(func_800674B4, 0, 0x64);
+                spawned = createCallbackTask(initThrownPickupModel, 0, 0x64);
                 if (spawned != NULL) {
                     savedSpawned = spawned;
                     entry = (savedEntry = entry);
@@ -670,11 +659,11 @@ void func_800675AC(RaceOverlaySpawnActor *arg0) {
 #undef SPAWN_RANGE_MIN
 #endif
 
-// func_80067830 best match: display-list command stream matched, remaining differences are stack/local layout.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_80067830.s")
+// renderRacePickupIdle best match: display-list command stream matched, remaining differences are stack/local layout.
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_effects/renderRacePickupIdle.s")
 
 #ifdef NON_MATCHING
-void func_80067830(RaceOverlayModelActor *arg0) {
+void renderRacePickupIdle(RacePickupActor *arg0) {
     GfxCommandSource spF4;
     Gfx *sp10C;
     Gfx *sp108;
@@ -733,7 +722,7 @@ void func_80067830(RaceOverlayModelActor *arg0) {
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette0);
             gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-            gDma1p(gRegionAllocPtr++, G_VTX, D_800D92D8, 0x103F, 0);
+            gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupBaseVertices, 0x103F, 0);
             temp_v0 = gRegionAllocPtr++;
             temp_v0->words.w1 = 0x60200;
             temp_v0->words.w0 = 0xB1060402;
@@ -744,7 +733,7 @@ void func_80067830(RaceOverlayModelActor *arg0) {
             sp8C = gRegionAllocPtr;
             gSPMatrix(gRegionAllocPtr++, arg0->rotationDisplayList,
                       G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gDma1p(gRegionAllocPtr++, G_VTX, D_800D9358, 0x513F, 0);
+            gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupTopVertices, 0x513F, 0);
             temp_t1 = gRegionAllocPtr++;
             temp_t1->words.w0 = 0xB1060402;
             temp_t1->words.w1 = 0x60200;
@@ -770,8 +759,8 @@ void func_80067830(RaceOverlayModelActor *arg0) {
 }
 #endif
 
-void func_800681A4(RaceOverlayModelActor *arg0) {
-    RaceOverlayMatrixScratch sp64;
+void renderRacePickupBase(RacePickupActor *arg0) {
+    RacePickupMatrixScratch sp64;
     Gfx *temp_v0;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -805,15 +794,15 @@ void func_800681A4(RaceOverlayModelActor *arg0) {
             sp64.source.translation.z = arg0->drawPos.z;
             arg0->displayList = allocFixedTransformMatrix(&sp64.source);
         }
-        do { if (arg0->displayList != NULL) { temp_v0 = gRegionAllocPtr++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) gEffectRenderModeSetupDl; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette0; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->displayList; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = (u32) gViewportMatrix; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400207F; temp_v0_17->words.w1 = (u32) D_800D92D8; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; temp_v0_19 = gRegionAllocPtr++; temp_v0_19->words.w0 = 0x06000000; temp_v0_19->words.w1 = (u32) gEffectRenderModeCleanupDl; } } while (0);
+        do { if (arg0->displayList != NULL) { temp_v0 = gRegionAllocPtr++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) gEffectRenderModeSetupDl; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette0; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->displayList; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = (u32) gViewportMatrix; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400207F; temp_v0_17->words.w1 = (u32) gRacePickupBaseVertices; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; temp_v0_19 = gRegionAllocPtr++; temp_v0_19->words.w0 = 0x06000000; temp_v0_19->words.w1 = (u32) gEffectRenderModeCleanupDl; } } while (0);
     }
 }
 
-// func_800684E4 best match: 99.579% (base_22.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/func_800684E4.s")
+// renderRacePickupRespawn best match: 99.579% (base_22.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_effects/renderRacePickupRespawn.s")
 
 #ifdef NON_MATCHING
-void func_800684E4(RaceOverlayModelActor *arg0) {
+void renderRacePickupRespawn(RacePickupActor *arg0) {
     Gfx *temp_v0;
     GfxCommandSource spF4;
     Gfx *temp_t1;
@@ -844,7 +833,7 @@ void func_800684E4(RaceOverlayModelActor *arg0) {
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette0);
                 gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-                gDma1p(gRegionAllocPtr++, G_VTX, D_800D92D8, 0x103F, 0);
+                gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupBaseVertices, 0x103F, 0);
                 temp_v0_18 = gRegionAllocPtr++;
                 temp_v0_18->words.w1 = 0x60200;
                 temp_v0_18->words.w0 = 0xB1060402;
@@ -853,7 +842,7 @@ void func_800684E4(RaceOverlayModelActor *arg0) {
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette1);
                 gSPMatrix(gRegionAllocPtr++, arg0->rotationDisplayList,
                           G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-                gDma1p(gRegionAllocPtr++, G_VTX, D_800D9358, 0x513F, 0);
+                gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupTopVertices, 0x513F, 0);
                 temp_t1 = gRegionAllocPtr++;
                 temp_t1->words.w0 = 0xB1060402;
                 temp_t1->words.w1 = 0x60200;
@@ -879,10 +868,10 @@ void func_800684E4(RaceOverlayModelActor *arg0) {
 }
 #endif
 
-void func_80068BF0(RaceOverlayModelActor *arg0) {
+void updateRacePickupRespawn(RacePickupActor *arg0) {
     s16 temp_v0;
     s32 temp_v1;
-    RaceOverlayModelActor *temp_s0 = arg0;
+    RacePickupActor *temp_s0 = arg0;
     void *temp_s1;
 
     if (gRaceUpdatePaused == 0) {
@@ -892,7 +881,7 @@ void func_80068BF0(RaceOverlayModelActor *arg0) {
         arg0->drawPos.y = temp_v1 + 0x140000;
         arg0->spawnPos.y = temp_v1;
         if (temp_v0 == 0) {
-            setCallbackTaskCallback(arg0, assignPickupRandomEffect);
+            setCallbackTaskCallback(arg0, updateRacePickupIdle);
         }
         temp_s1 = &temp_s0->pos;
         func_80088C80(temp_s1, 0xC0000, 0x180000, 0);
@@ -900,10 +889,10 @@ void func_80068BF0(RaceOverlayModelActor *arg0) {
         func_80088C80(temp_s1, 0xC0000, 0x180000, 2);
         func_80088C80(temp_s1, 0xC0000, 0x180000, 3);
     }
-    addRenderCallback(&D_801248D4, func_800684E4, temp_s0);
+    addRenderCallback(&D_801248D4, renderRacePickupRespawn, temp_s0);
 }
 
-void func_80068CD4(RaceOverlayModelActor *arg0) {
+void updateRacePickupBounce(RacePickupActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         arg0->drawPos.y += arg0->velY;
         arg0->velY += 0xFFFF0000;
@@ -911,7 +900,7 @@ void func_80068CD4(RaceOverlayModelActor *arg0) {
         if (arg0->drawPos.y < arg0->pos.y) {
             arg0->drawPos.y = arg0->pos.y;
             arg0->timer = 0x10;
-            setCallbackTaskCallback(arg0, func_80068BF0);
+            setCallbackTaskCallback(arg0, updateRacePickupRespawn);
         }
 
         func_80088C80(&arg0->pos, 0xC0000, 0x180000, 0);
@@ -919,10 +908,10 @@ void func_80068CD4(RaceOverlayModelActor *arg0) {
         func_80088C80(&arg0->pos, 0xC0000, 0x180000, 2);
         func_80088C80(&arg0->pos, 0xC0000, 0x180000, 3);
     }
-    addRenderCallback(&D_801248D4, func_800681A4, arg0);
+    addRenderCallback(&D_801248D4, renderRacePickupBase, arg0);
 }
 
-void func_80068DB4(RaceOverlayModelActor *arg0) {
+void updateRacePickupCollected(RacePickupActor *arg0) {
     s32 temp_a2;
     s32 temp_v0;
     s32 var_v1;
@@ -936,7 +925,7 @@ void func_80068DB4(RaceOverlayModelActor *arg0) {
         if (var_v1 < temp_a2) {
             arg0->drawPos.y = temp_a2;
             arg0->velY = 0x30000;
-            setCallbackTaskCallback(arg0, func_80068CD4);
+            setCallbackTaskCallback(arg0, updateRacePickupBounce);
             var_v1 = arg0->drawPos.y;
         }
         temp_s1 = &arg0->drawPos;
@@ -947,14 +936,14 @@ void func_80068DB4(RaceOverlayModelActor *arg0) {
             func_80088C80(temp_s1, 0xC0000, 0x180000, 3);
         }
     }
-    addRenderCallback(&D_801248D4, func_800681A4, arg0);
+    addRenderCallback(&D_801248D4, renderRacePickupBase, arg0);
 }
 
-// assignPickupRandomEffect best match: 99.901%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_overlay_effects/assignPickupRandomEffect.s")
+// updateRacePickupIdle best match: 99.901%
+#pragma GLOBAL_ASM("asm/nonmatchings/race_pickup_effects/updateRacePickupIdle.s")
 
 #ifdef NON_MATCHING
-void assignPickupRandomEffect(RaceOverlayModelActor *arg0) {
+void updateRacePickupIdle(RacePickupActor *arg0) {
     RaceInputPlayer *player;
     Vec3i *pos;
     s32 found;
@@ -1005,15 +994,15 @@ loop:
             player->pad516[0] = maxPlayers;
         }
 
-        setCallbackTaskCallback(arg0, func_80068DB4);
-        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 0);
-        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 1);
-        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 2);
-        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 3);
-        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 4);
-        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 5);
-        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 6);
-        func_80069808(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 7);
+        setCallbackTaskCallback(arg0, updateRacePickupCollected);
+        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 0);
+        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 1);
+        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 2);
+        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 3);
+        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 4);
+        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 5);
+        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 6);
+        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 7);
         enqueuePositionalSoundEffect(0x1F, pos, 0x7F, 0x32);
         goto done;
 
@@ -1028,12 +1017,12 @@ next:
     }
 
 done:
-    addRenderCallback(&D_801248D4, func_80067830, arg0);
+    addRenderCallback(&D_801248D4, renderRacePickupIdle, arg0);
 }
 #endif
 
-void func_800691C8(RaceOverlayModelActor *arg0) {
-    RaceOverlayEffectSpawn *entry = &D_800D9518[arg0->spawnIndex];
+void initRacePickup(RacePickupActor *arg0) {
+    PickupSpawnEntry *entry = &gRacePickupSpawnEntries[arg0->spawnIndex];
 
     arg0->pos.x = entry->pos.x;
     arg0->pos.y = entry->pos.y;
@@ -1061,10 +1050,10 @@ void func_800691C8(RaceOverlayModelActor *arg0) {
         getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x21, &arg0->image1, &arg0->palette1);
     }
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x22, &arg0->image2, &arg0->palette2);
-    setCallbackTaskCallback(arg0, assignPickupRandomEffect);
+    setCallbackTaskCallback(arg0, updateRacePickupIdle);
 }
 
-void func_8006935C(RaceParticleActor *arg0) {
+void renderPickupShardParticle(PickupShardParticleActor *arg0) {
     volatile s32 pad;
     CourseEffectMatrixSource transform;
     Gfx *temp_v0;
@@ -1104,7 +1093,7 @@ void func_8006935C(RaceParticleActor *arg0) {
             temp_v0 = gRegionAllocPtr++;
             temp_v0->words.w1 = (u32)gEffectRenderModeSetupDl;
             temp_v0->words.w0 = 0x06000000;
-            temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32)arg0->palette; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)arg0->image; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32)arg0->displayList; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x0400103F; temp_v0_16->words.w1 = (u32)&D_800D92D8[((((u16)arg0->spawnOffsetIndex) >> 1) * 4) + 8]; if (arg0->spawnOffsetIndex & 1) { temp_v0_17 = gRegionAllocPtr++;
+            temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32)arg0->palette; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)arg0->image; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32)arg0->displayList; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x0400103F; temp_v0_16->words.w1 = (u32)&gRacePickupBaseVertices[((((u16)arg0->spawnOffsetIndex) >> 1) * 4) + 8]; if (arg0->spawnOffsetIndex & 1) { temp_v0_17 = gRegionAllocPtr++;
                 temp_v0_17->words.w1 = 0x604;
                 temp_v0_17->words.w0 = 0xBF000000;
                 var_v0 = gRegionAllocPtr++;
@@ -1125,9 +1114,9 @@ void func_8006935C(RaceParticleActor *arg0) {
     }
 }
 
-void func_80069678(RaceParticleActor *arg0) {
+void updatePickupShardParticle(PickupShardParticleActor *arg0) {
     s32 temp_v0;
-    RaceParticleActor *temp_a2 = arg0;
+    PickupShardParticleActor *temp_a2 = arg0;
 
     if (gRaceUpdatePaused == 0) {
         arg0->timer--;
@@ -1143,13 +1132,13 @@ void func_80069678(RaceParticleActor *arg0) {
             temp_a2->rotY += temp_a2->rotVelY;
             temp_a2->rotZ += temp_a2->rotVelZ;
         }
-        addRenderCallback(&D_801248D4, func_8006935C, temp_a2);
+        addRenderCallback(&D_801248D4, renderPickupShardParticle, temp_a2);
         return;
     }
     removeCallbackTask(temp_a2);
 }
 
-void func_80069754(RaceParticleActor *arg0) {
+void initPickupShardParticle(PickupShardParticleActor *arg0) {
     char sp28[0x20];
 
     arg0->timer = 0xA;
@@ -1157,13 +1146,13 @@ void func_80069754(RaceParticleActor *arg0) {
     arg0->rotVelY = randomNextMain() - 0x80;
     arg0->rotVelZ = randomNextMain() - 0x80;
     makeFixedRotationY(sp28, arg0->rotY);
-    transformVec3iByFixedMatrix(sp28, &D_800D9BD8[arg0->spawnOffsetIndex], &arg0->velocity);
+    transformVec3iByFixedMatrix(sp28, &gPickupShardInitialVelocities[arg0->spawnOffsetIndex], &arg0->velocity);
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x22, &arg0->palette, &arg0->image);
-    setCallbackTaskCallback(arg0, func_80069678);
+    setCallbackTaskCallback(arg0, updatePickupShardParticle);
 }
 
-void func_80069808(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
-    RaceParticleActor *temp = createCallbackTaskPreservingArgs(func_80069754, 5, 0x3B);
+void spawnPickupShardParticle(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
+    PickupShardParticleActor *temp = createCallbackTaskPreservingArgs(initPickupShardParticle, 5, 0x3B);
 
     if (temp != NULL) {
         temp->spawnOffsetIndex = arg4;
