@@ -55,8 +55,8 @@ extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 
 void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0);
-void updateEndingTheEndTextFadeIn(EndingCreditsPageTextActor *arg0);
-void updateEndingCreditsPageTextFadeCycle(EndingCreditsPageTextActor *arg0);
+void updateEndingCreditsTheEndTextFadeIn(EndingCreditsPageTextActor *arg0);
+void updateEndingCreditsPageText(EndingCreditsPageTextActor *arg0);
 void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0);
 
 // drawEndingCreditsPageText best match: 93.371%
@@ -107,14 +107,14 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
 }
 #endif
 
-void drawEndingTheEndText(EndingCreditsPageTextActor *arg0) {
+void drawEndingCreditsTheEndText(EndingCreditsPageTextActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x35, 0x20, 0x20, 0,
                             arg0->alpha, 0);
     drawMenuSpriteWithAlpha((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x36, 0x20,
                             0x20, 0, arg0->alpha, 0);
 }
 
-void updateEndingTheEndTextFadeIn(EndingCreditsPageTextActor *arg0) {
+void updateEndingCreditsTheEndTextFadeIn(EndingCreditsPageTextActor *arg0) {
     s32 v1 = ENDING_CREDITS_TEXT_FADE_MAX;
     s32 v0;
 
@@ -126,11 +126,11 @@ void updateEndingTheEndTextFadeIn(EndingCreditsPageTextActor *arg0) {
                 arg0->alpha = v1;
             }
         }
-        addRenderCallback(&gMenuRenderCallbackList, drawEndingTheEndText, arg0);
+        addRenderCallback(&gMenuRenderCallbackList, drawEndingCreditsTheEndText, arg0);
     }
 }
 
-void updateEndingCreditsPageTextFadeCycle(EndingCreditsPageTextActor *arg0) {
+void updateEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
     switch (arg0->state) {
     case 0:
         arg0->alpha += ENDING_CREDITS_PAGE_FADE_STEP;
@@ -155,7 +155,7 @@ void updateEndingCreditsPageTextFadeCycle(EndingCreditsPageTextActor *arg0) {
             arg0->pageIndex = arg0->pageIndex + 1;
             if (arg0->pageIndex == ENDING_CREDITS_PAGE_COUNT) {
                 arg0->pageIndex = 0;
-                setCallbackTaskCallback(arg0, updateEndingTheEndTextFadeIn);
+                setCallbackTaskCallback(arg0, updateEndingCreditsTheEndTextFadeIn);
             }
             if (gEndingSequencePhase == 0) {
                 gEndingSequencePhase = 1;
@@ -179,7 +179,7 @@ void initEndingCreditsPageTextActor(EndingCreditsPageTextActor *arg0) {
     arg0->x = -0x40;
     arg0->y = 0x10;
     arg0->alpha = 0;
-    setCallbackTaskCallback(arg0, updateEndingCreditsPageTextFadeCycle);
+    setCallbackTaskCallback(arg0, updateEndingCreditsPageText);
 }
 
 void drawEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0) {
