@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "viewport_manager.h"
 #include "fixed_point_math.h"
-#include "main_menu_overlay_effects.h"
+#include "main_menu_visual_effects.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
 
@@ -48,7 +48,7 @@ typedef struct {
     /* 0x08 */ OverlayActorWord z;
 } OverlayActorTransform;
 
-struct MainMenuOverlayEffectActor {
+struct MainMenuVisualEffectActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
@@ -79,7 +79,7 @@ typedef struct {
 typedef struct {
     /* 0x00 */ GfxCommandSource source;
     /* 0x20 */ s32 pad20;
-} Func55410Scratch;
+} TitleMenuRotatingBoardScratch;
 
 typedef struct {
     /* 0x00 */ s32 unk0;
@@ -157,38 +157,38 @@ void func_80045990(void *, u16, void **, void **);
 void func_80048278(s32, s32, void *, s32);
 void addRenderCallback(void *, void *, s32);
 GfxCommandDest *func_8004885C(GfxCommandSource *);
-void func_80053B28(MainMenuOverlayEffectActor *);
-void func_80053C90(void *);
-void func_80053D8C(s32);
-void func_80053DFC(s32);
-void func_8005408C(MainMenuOverlayEffectActor *);
-void func_80054130(MainMenuOverlayEffectActor *);
-void func_80054460(MainMenuOverlayEffectActor *);
-void func_800545D0(MainMenuOverlayEffectActor *);
-void func_80054644(MainMenuOverlayEffectActor *);
-void func_8005475C(MainMenuOverlayEffectActor *);
-void func_800548F4(MainMenuOverlayEffectActor *);
-void func_8005499C(MainMenuOverlayEffectActor *);
-void func_80054A04(MainMenuOverlayEffectActor *);
-void func_80054A64(MainMenuOverlayEffectActor *);
-void func_80054AC0(MainMenuOverlayEffectActor *);
-void func_80054B98(MainMenuOverlayEffectActor *);
-void func_80054EC4(MainMenuOverlayEffectActor *);
-void func_800550E0(MainMenuOverlayEffectActor *);
-void func_80055148(MainMenuOverlayEffectActor *);
-void func_8005537C(MainMenuOverlayEffectActor *);
-void func_80055410(MainMenuOverlayEffectActor *);
-void func_80055530(void *);
+void drawRaceSetupBackdropModels(MainMenuVisualEffectActor *);
+void drawRaceSetupCourseBackdrop(void *);
+void renderRaceSetupBackdrop(s32);
+void stopRaceSetupCharacterFocus(s32);
+void drawTitleStartPrompt(MainMenuVisualEffectActor *);
+void drawRaceStartPlayerEffectSprite(MainMenuVisualEffectActor *);
+void updateRaceStartPlayerEffectActive(MainMenuVisualEffectActor *);
+void waitForRaceStartPlayerEffect(MainMenuVisualEffectActor *);
+void drawTitleMenuSparkle(MainMenuVisualEffectActor *);
+void drawCourseRecordBanner(MainMenuVisualEffectActor *);
+void updateCourseRecordBannerFadeOut(MainMenuVisualEffectActor *);
+void drawRaceSetupNamePlate(MainMenuVisualEffectActor *);
+void updateRaceSetupNamePlateSlideOut(MainMenuVisualEffectActor *);
+void holdRaceSetupNamePlate(MainMenuVisualEffectActor *);
+void updateRaceSetupNamePlateSlideIn(MainMenuVisualEffectActor *);
+void drawSpinningBoardTransition(MainMenuVisualEffectActor *);
+void updateSpinningBoardTransition(MainMenuVisualEffectActor *);
+void updateMainMenuModeIconFlash(MainMenuVisualEffectActor *);
+void drawMainMenuModeLabel(MainMenuVisualEffectActor *);
+void updateMainMenuModeLabelFadeIn(MainMenuVisualEffectActor *);
+void drawTitleMenuRotatingBoardModel(MainMenuVisualEffectActor *);
+void drawTitleMenuStaticBoardModel(void *);
 void enqueueSoundEffect(s16, s32, void *);
 
-void func_80053660(MainMenuOverlayEffectActor *arg0) {
+void drawMenuSnowflakeEffect(MainMenuVisualEffectActor *arg0) {
     if (gCurrentViewportIndex == arg0->index) {
         drawMenuSprite((s16)(arg0->unk18.half.hi >> 4), (s16)(arg0->unk18.half.lo >> 4), getMemoryBlockBase(D_80112184), (arg0->unk1C.half.hi + 2) & 0xFFFF,
                       arg0->timer, arg0->timer, 0, arg0->unk2A + 2);
     }
 }
 
-void func_800536F4(MainMenuOverlayEffectActor *arg0) {
+void updateMenuDriftingSnowflake(MainMenuVisualEffectActor *arg0) {
     s16 temp_v0;
     s16 temp_v0_2;
     u32 var_v1;
@@ -227,10 +227,10 @@ void func_800536F4(MainMenuOverlayEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(D_80124878, func_80053660, (s32)arg0);
+    addRenderCallback(D_80124878, drawMenuSnowflakeEffect, (s32)arg0);
 }
 
-void func_80053858(MainMenuOverlayEffectActor *arg0) {
+void updateMenuSwayingSnowflake(MainMenuVisualEffectActor *arg0) {
     arg0->unk1C.half.hi = (arg0->unk1C.half.hi + 1) & 3;
     arg0->unk18.half.lo += arg0->unk20.half.lo;
     arg0->unk24.half.hi = (arg0->unk24.half.hi + 0x20) & 0xFFF;
@@ -242,13 +242,13 @@ void func_80053858(MainMenuOverlayEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(D_80124878, func_80053660, (s32)arg0);
+    addRenderCallback(D_80124878, drawMenuSnowflakeEffect, (s32)arg0);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_8005393C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_visual_effects/initMenuSnowflakeEffect.s")
 
-void func_80053B28(MainMenuOverlayEffectActor *arg0) {
-    register MainMenuOverlayEffectActor *actor = arg0;
+void drawRaceSetupBackdropModels(MainMenuVisualEffectActor *arg0) {
+    register MainMenuVisualEffectActor *actor = arg0;
 
     if (gCurrentViewportIndex == 0) {
         gDPPipeSync(gRegionAllocPtr++);
@@ -270,8 +270,8 @@ void func_80053B28(MainMenuOverlayEffectActor *arg0) {
     }
 }
 
-// func_80053C90 best match: 99.677% at nonmatchings/func_80053C90-2/output-20-1/source.c
-void func_80053C90(void *arg0) {
+// drawRaceSetupCourseBackdrop best match: 99.677% at nonmatchings/drawRaceSetupCourseBackdrop-2/output-20-1/source.c
+void drawRaceSetupCourseBackdrop(void *arg0) {
     if (gCurrentViewportIndex == 0) {
         gDPPipeSync(gRegionAllocPtr++);
 
@@ -284,45 +284,45 @@ void func_80053C90(void *arg0) {
     }
 }
 
-void func_80053D8C(s32 arg0) {
-    addRenderCallback(D_801248F8, func_80053C90, arg0);
-    addRenderCallback(D_801248A4, func_80053B28, arg0);
+void renderRaceSetupBackdrop(s32 arg0) {
+    addRenderCallback(D_801248F8, drawRaceSetupCourseBackdrop, arg0);
+    addRenderCallback(D_801248A4, drawRaceSetupBackdropModels, arg0);
 }
 
-void func_80053DD8(void *arg0) {
-    setCallbackTaskCallback(arg0, func_80053D8C);
+void initRaceSetupBackdrop(MainMenuVisualEffectActor *arg0) {
+    setCallbackTaskCallback(arg0, renderRaceSetupBackdrop);
 }
 
-void func_80053DFC(s32 arg0) {
+void stopRaceSetupCharacterFocus(s32 arg0) {
     func_80042034(0);
     func_80042A00(0);
 }
 
-void func_80053E28(MainMenuOverlayEffectActor *arg0) {
+void updateRaceSetupCharacterFocus(MainMenuVisualEffectActor *arg0) {
     if (gMenuFadeAlpha == 0) {
         if (arg0->unk18.byte.b0 != 0) {
             enqueueSoundEffect(D_800D5738[arg0->index], 0x32, arg0);
             arg0->unk18.byte.b0 = 0;
         }
         func_80042034(0);
-        setCallbackTaskCallback(arg0, func_80053DFC);
+        setCallbackTaskCallback(arg0, stopRaceSetupCharacterFocus);
         func_80042A00(0);
         return;
     }
     func_800428C8(0);
 }
 
-void func_80053EBC(MainMenuOverlayEffectActor *arg0) {
+void initRaceSetupCharacterFocus(MainMenuVisualEffectActor *arg0) {
     arg0->unk18.byte.b0 = 1;
     func_80041D20(0, arg0->index);
     func_80041DD4(0, D_800D5730[arg0->index]);
     func_80042034(0);
     func_8004209C(0, 0, 0, 0);
     func_800420FC(0, 0, 0, 0);
-    setCallbackTaskCallback(arg0, func_80053E28);
+    setCallbackTaskCallback(arg0, updateRaceSetupCharacterFocus);
 }
 
-void func_80053F50(MainMenuOverlayEffectActor *arg0) {
+void updateRaceSetupOpponentFocus(MainMenuVisualEffectActor *arg0) {
     s16 temp = arg0->unk1C.half.hi;
 
     if (temp == 0) {
@@ -333,7 +333,7 @@ void func_80053F50(MainMenuOverlayEffectActor *arg0) {
     func_80042A58(arg0->unk18.word, 1);
 }
 
-void func_80053FA0(MainMenuOverlayEffectActor *arg0) {
+void initRaceSetupOpponentFocus(MainMenuVisualEffectActor *arg0) {
     s32 a = arg0->unk18.word;
     arg0->unk1C.half.hi = a * 0xF;
     func_80041D20(a, arg0->index);
@@ -344,17 +344,17 @@ void func_80053FA0(MainMenuOverlayEffectActor *arg0) {
         func_8004209C(b, D_800D5748[b], 0xFFB50000, 0xA00000);
     }
     func_800420FC(arg0->unk18.word, 0, 0x800, 0);
-    setCallbackTaskCallback(arg0, func_80053F50);
+    setCallbackTaskCallback(arg0, updateRaceSetupOpponentFocus);
 }
 
-void func_80054044(s32 arg0, s32 arg1) {
-    MainMenuOverlayEffectActor *p = createCallbackTaskWithUserId(func_80053FA0, 0, 0x64, arg1);
+void createRaceSetupOpponentFocus(s32 arg0, s32 arg1) {
+    MainMenuVisualEffectActor *p = createCallbackTaskWithUserId(initRaceSetupOpponentFocus, 0, 0x64, arg1);
     if (p != NULL) {
         p->unk18.word = arg0;
     }
 }
 
-void func_8005408C(MainMenuOverlayEffectActor *arg0) {
+void drawTitleStartPrompt(MainMenuVisualEffectActor *arg0) {
     if (gConnectedControllerCount != 0) {
         func_80048278(-0x44, 0x38, "Push Start Button", 0);
         return;
@@ -362,13 +362,13 @@ void func_8005408C(MainMenuOverlayEffectActor *arg0) {
     func_80048278(-0x5C, 0x38, "No Control Pad detected", 1);
 }
 
-void func_800540EC(void *arg0) {
+void updateTitleStartPrompt(void *arg0) {
     if (gFrameCounter & 8) {
-        addRenderCallback(D_80124858, func_8005408C, 0);
+        addRenderCallback(D_80124858, drawTitleStartPrompt, 0);
     }
 }
 
-void func_80054130(MainMenuOverlayEffectActor *arg0) {
+void drawRaceStartPlayerEffectSprite(MainMenuVisualEffectActor *arg0) {
     void *spA4;
     void *spA0;
     volatile u8 gap[0xC];
@@ -410,7 +410,7 @@ void func_80054130(MainMenuOverlayEffectActor *arg0) {
     }
 }
 
-void func_80054460(MainMenuOverlayEffectActor *arg0) {
+void updateRaceStartPlayerEffectActive(MainMenuVisualEffectActor *arg0) {
     FixedMatrix3sScratch sp38;
     Vec3i sp2C;
     RacePlayerState *player;
@@ -418,7 +418,7 @@ void func_80054460(MainMenuOverlayEffectActor *arg0) {
 
     player = &D_80121D80[arg0->index];
     if (player->flags & 0x2000) {
-        setCallbackTaskCallback(arg0, func_800545D0);
+        setCallbackTaskCallback(arg0, waitForRaceStartPlayerEffect);
         return;
     }
 
@@ -426,7 +426,7 @@ void func_80054460(MainMenuOverlayEffectActor *arg0) {
     if (temp != 5) {
         arg0->unk2E = temp + 1;
     } else if (player->unk51A == 0) {
-        setCallbackTaskCallback(arg0, func_800545D0);
+        setCallbackTaskCallback(arg0, waitForRaceStartPlayerEffect);
     }
 
     sp2C.x = 0x40000;
@@ -442,20 +442,20 @@ void func_80054460(MainMenuOverlayEffectActor *arg0) {
     arg0->unk1C.word += player->pos28.y;
     arg0->unk20.word += player->pos28.z;
 
-    addRenderCallback(&D_801248BC, func_80054130, (s32)arg0);
+    addRenderCallback(&D_801248BC, drawRaceStartPlayerEffectSprite, (s32)arg0);
 }
 
-void func_800545D0(MainMenuOverlayEffectActor *arg0) {
+void waitForRaceStartPlayerEffect(MainMenuVisualEffectActor *arg0) {
     RacePlayerState *player = &D_80121D80[arg0->index];
     if (!(player->flags & 0x2000)) {
         if (player->unk51A != 0) {
             arg0->unk2E = 0xFF;
-            setCallbackTaskCallback(arg0, func_80054460);
+            setCallbackTaskCallback(arg0, updateRaceStartPlayerEffectActive);
         }
     }
 }
 
-void func_80054644(MainMenuOverlayEffectActor *arg0) {
+void drawTitleMenuSparkle(MainMenuVisualEffectActor *arg0) {
     if ((gFrameCounter & 0x3E) >= 0x1F) {
         func_80045A78(arg0->unk18.half.hi, arg0->unk18.half.lo, getMemoryBlockBase(D_8011213C), 1);
     } else {
@@ -463,19 +463,19 @@ void func_80054644(MainMenuOverlayEffectActor *arg0) {
     }
 }
 
-void func_800546E4(s32 arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_80054644, arg0);
+void renderTitleMenuSparkle(s32 arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, drawTitleMenuSparkle, arg0);
 }
 
-void func_80054714(MainMenuOverlayEffectActor *arg0) {
+void initTitleMenuSparkle(MainMenuVisualEffectActor *arg0) {
     s16 *temp = &D_800D57B0[arg0->index * 2];
 
     arg0->unk18.half.hi = temp[0];
     arg0->unk18.half.lo = temp[1];
-    setCallbackTaskCallback(arg0, func_800546E4);
+    setCallbackTaskCallback(arg0, renderTitleMenuSparkle);
 }
 
-void func_8005475C(MainMenuOverlayEffectActor *arg0) {
+void drawCourseRecordBanner(MainMenuVisualEffectActor *arg0) {
     Gfx *gfx;
 
     gfx = gRegionAllocPtr;
@@ -484,7 +484,7 @@ void func_8005475C(MainMenuOverlayEffectActor *arg0) {
     do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, getMemoryBlockBase(D_80112168), 0x5D); func_80045A78(4, -0x10, getMemoryBlockBase(D_80112168), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, getMemoryBlockBase(D_8011216A), D_800D57B4[D_80121B50]); func_80045A78(4, -0xC, getMemoryBlockBase(D_8011216A), D_800D57B4[D_80121B50] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) D_800DEFF8; } while (0);
 }
 
-void func_800548F4(MainMenuOverlayEffectActor *arg0) {
+void updateCourseRecordBannerFadeOut(MainMenuVisualEffectActor *arg0) {
     s16 v = arg0->unk18.half.hi;
     if (v != 0) {
         arg0->unk18.half.hi = v - 1;
@@ -495,16 +495,16 @@ void func_800548F4(MainMenuOverlayEffectActor *arg0) {
             return;
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005475C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseRecordBanner, arg0);
 }
 
-void func_80054968(MainMenuOverlayEffectActor *arg0) {
+void initCourseRecordBannerFadeOut(MainMenuVisualEffectActor *arg0) {
     arg0->unk18.half.hi = 0x3E;
     arg0->unk18.half.lo = 0xFF;
-    setCallbackTaskCallback(arg0, func_800548F4);
+    setCallbackTaskCallback(arg0, updateCourseRecordBannerFadeOut);
 }
 
-void func_8005499C(MainMenuOverlayEffectActor *arg0) {
+void drawRaceSetupNamePlate(MainMenuVisualEffectActor *arg0) {
     u8 *new_var;
 
     new_var = &gCurrentViewportIndex;
@@ -513,7 +513,7 @@ void func_8005499C(MainMenuOverlayEffectActor *arg0) {
     }
 }
 
-void func_80054A04(MainMenuOverlayEffectActor *arg0) {
+void updateRaceSetupNamePlateSlideOut(MainMenuVisualEffectActor *arg0) {
     s32 temp_v0 = arg0->unk24.word;
     s32 temp_t8 = (unsigned long long)(temp_v0 + 4);
 
@@ -522,48 +522,48 @@ void func_80054A04(MainMenuOverlayEffectActor *arg0) {
     if (temp_t8 == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(D_80124878, func_8005499C, (s32)arg0);
+        addRenderCallback(D_80124878, drawRaceSetupNamePlate, (s32)arg0);
     }
 }
 
-void func_80054A64(MainMenuOverlayEffectActor *arg0) {
+void holdRaceSetupNamePlate(MainMenuVisualEffectActor *arg0) {
     u16 temp = (arg0->timer & 0xFFFFU) - 1;
 
     arg0->timer = temp;
     temp += 0;
     if (temp == 0) {
-        setCallbackTaskCallback(arg0, func_80054A04);
+        setCallbackTaskCallback(arg0, updateRaceSetupNamePlateSlideOut);
     }
     if (1) {
     }
-    addRenderCallback(D_80124878, func_8005499C, (s32)arg0);
+    addRenderCallback(D_80124878, drawRaceSetupNamePlate, (s32)arg0);
 }
 
-void func_80054AC0(MainMenuOverlayEffectActor *arg0) {
+void updateRaceSetupNamePlateSlideIn(MainMenuVisualEffectActor *arg0) {
     arg0->unk18.word += arg0->unk24.word;
     arg0->unk24.word -= 4;
     if (arg0->unk24.word == 0) {
         arg0->timer = 0x1E;
-        setCallbackTaskCallback(arg0, func_80054A64);
+        setCallbackTaskCallback(arg0, holdRaceSetupNamePlate);
     }
-    addRenderCallback(D_80124878, func_8005499C, (s32)arg0);
+    addRenderCallback(D_80124878, drawRaceSetupNamePlate, (s32)arg0);
 }
 
-void func_80054B2C(MainMenuOverlayEffectActor *arg0) {
+void waitForRaceSetupNamePlate(MainMenuVisualEffectActor *arg0) {
     if (D_801124B0[arg0->index].active != 0) {
         arg0->unk24.word = 0x38;
         arg0->unk18.word = -0x1A4;
-        setCallbackTaskCallback(arg0, func_80054AC0);
+        setCallbackTaskCallback(arg0, updateRaceSetupNamePlateSlideIn);
         return;
     }
     removeCallbackTask(arg0);
 }
 
-// func_80054B98 best match: 84.797% at nonmatchings/func_80054B98-4923837976568703863/base_11.c
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80054B98.s")
+// drawSpinningBoardTransition best match: 84.797% at nonmatchings/drawSpinningBoardTransition-4923837976568703863/base_11.c
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_visual_effects/drawSpinningBoardTransition.s")
 
 #ifdef NON_MATCHING
-void func_80054B98(MainMenuOverlayEffectActor *arg0) {
+void drawSpinningBoardTransition(MainMenuVisualEffectActor *arg0) {
     void *image;
     void *palette;
     GfxCommandSource transform;
@@ -660,52 +660,52 @@ void func_80054B98(MainMenuOverlayEffectActor *arg0) {
 }
 #endif
 
-void func_80054E70(MainMenuOverlayEffectActor *arg0) {
+void updateSpinningBoardAfterimage(MainMenuVisualEffectActor *arg0) {
     arg0->alpha -= 0x20;
     if (arg0->alpha == 0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(D_801248D4, func_80054B98, (s32)arg0);
+    addRenderCallback(D_801248D4, drawSpinningBoardTransition, (s32)arg0);
 }
 
-void func_80054EC4(MainMenuOverlayEffectActor *arg0) {
-    MainMenuOverlayEffectActor *actor;
+void updateSpinningBoardTransition(MainMenuVisualEffectActor *arg0) {
+    MainMenuVisualEffectActor *actor;
 
     arg0->unk1C.word = ((-0x400000LL * fixedSine((s16)(arg0->unk30.word + 0x400))) / 0x1000) + 0x700000;
     arg0->unk20.word = ((-0x9F0000LL * arg0->unk30.word) / 0x400) + 0xEC0000;
     arg0->spriteIndex = (0x5000LL * fixedSine(arg0->unk30.half.lo)) / 0x1000;
     if (arg0->unk30.word < 0x3F0) {
-        actor = createCallbackTask(func_80054E70, 0, 0x65);
+        actor = createCallbackTask(updateSpinningBoardAfterimage, 0, 0x65);
         *(OverlayActorTransform *)&actor->unk18 = *(OverlayActorTransform *)&arg0->unk18;
         actor->spriteIndex = arg0->spriteIndex;
         actor->alpha = 0xC0;
         arg0->unk30.word += 0x10;
     } else {
-        createCallbackTask(func_800550E0, 0, 0x63);
+        createCallbackTask(updateMainMenuModeIconFlash, 0, 0x63);
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(D_801248D4, func_80054B98, (s32)arg0);
+    addRenderCallback(D_801248D4, drawSpinningBoardTransition, (s32)arg0);
 }
 
-void func_8005502C(MainMenuOverlayEffectActor *arg0) {
+void initSpinningBoardTransition(MainMenuVisualEffectActor *arg0) {
     arg0->alpha = 0xFF;
     arg0->unk30.word = 0;
     arg0->unk18.word = 0;
     arg0->unk1C.word = 0x300000;
     arg0->unk20.word = 0xEC0000;
     arg0->spriteIndex = 0;
-    setCallbackTaskCallback(arg0, func_80054EC4);
+    setCallbackTaskCallback(arg0, updateSpinningBoardTransition);
 }
 
-void func_80055074(MainMenuOverlayEffectActor *arg0) {
+void drawMainMenuModeIconFlash(MainMenuVisualEffectActor *arg0) {
     if (gCurrentViewportIndex == 2) {
         func_80046D68(-0x6C, -0x48, getMemoryBlockBase(D_80112174), 0, D_800D5808[arg0->unk18.half.lo]);
     }
 }
 
-void func_800550E0(MainMenuOverlayEffectActor *arg0) {
+void updateMainMenuModeIconFlash(MainMenuVisualEffectActor *arg0) {
     s16 v;
     arg0->unk18.half.hi += 1;
     v = arg0->unk18.half.hi;
@@ -718,14 +718,14 @@ void func_800550E0(MainMenuOverlayEffectActor *arg0) {
     } else {
         arg0->unk18.half.lo = 0;
     }
-    addRenderCallback(D_80124878, func_80055074, arg0);
+    addRenderCallback(D_80124878, drawMainMenuModeIconFlash, arg0);
 }
 
-// func_80055148 best match: 99.220%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_overlay_effects/func_80055148.s")
+// drawMainMenuModeLabel best match: 99.220%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_visual_effects/drawMainMenuModeLabel.s")
 
 #ifdef NON_MATCHING
-void func_80055148(MainMenuOverlayEffectActor *arg0) {
+void drawMainMenuModeLabel(MainMenuVisualEffectActor *arg0) {
     Gfx *temp_v0;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -765,7 +765,7 @@ void func_80055148(MainMenuOverlayEffectActor *arg0) {
 }
 #endif
 
-void func_8005537C(MainMenuOverlayEffectActor *arg0) {
+void updateMainMenuModeLabelFadeIn(MainMenuVisualEffectActor *arg0) {
     s16 v = arg0->unk18.half.hi;
     if (v != 0) {
         arg0->unk18.half.hi = v - 1;
@@ -775,17 +775,17 @@ void func_8005537C(MainMenuOverlayEffectActor *arg0) {
     if (arg0->unk18.half.lo >= 0x100) {
         arg0->unk18.half.lo = 0xFF;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80055148, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeLabel, arg0);
 }
 
-void func_800553E0(MainMenuOverlayEffectActor *arg0) {
+void initMainMenuModeLabelFadeIn(MainMenuVisualEffectActor *arg0) {
     arg0->unk18.half.hi = 0x50;
     arg0->unk18.half.lo = 0;
-    setCallbackTaskCallback(arg0, func_8005537C);
+    setCallbackTaskCallback(arg0, updateMainMenuModeLabelFadeIn);
 }
 
-void func_80055410(MainMenuOverlayEffectActor *arg0) {
-    Func55410Scratch scratch;
+void drawTitleMenuRotatingBoardModel(MainMenuVisualEffectActor *arg0) {
+    TitleMenuRotatingBoardScratch scratch;
     GfxCommandDest *matrix;
 
     if (gCurrentViewportIndex == 0) {
@@ -807,7 +807,7 @@ void func_80055410(MainMenuOverlayEffectActor *arg0) {
     }
 }
 
-void func_80055530(void *arg0) {
+void drawTitleMenuStaticBoardModel(void *arg0) {
     if (gCurrentViewportIndex == 0) {
         gDPPipeSync(gRegionAllocPtr++);
 
@@ -820,12 +820,12 @@ void func_80055530(void *arg0) {
     }
 }
 
-void func_8005562C(s32 arg0) {
-    addRenderCallback(D_801248F8, func_80055530, arg0);
-    addRenderCallback(D_801248A4, func_80055410, arg0);
+void renderTitleMenuBoardModels(s32 arg0) {
+    addRenderCallback(D_801248F8, drawTitleMenuStaticBoardModel, arg0);
+    addRenderCallback(D_801248A4, drawTitleMenuRotatingBoardModel, arg0);
 }
 
-void func_80055678(MainMenuOverlayEffectActor *arg0) {
+void initTitleMenuBoardModels(MainMenuVisualEffectActor *arg0) {
     arg0->unk18.half.hi = 0x360;
-    setCallbackTaskCallback(arg0, func_8005562C);
+    setCallbackTaskCallback(arg0, renderTitleMenuBoardModels);
 }
