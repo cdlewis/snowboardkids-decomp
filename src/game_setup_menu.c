@@ -61,8 +61,8 @@ extern s8 D_8012299E;
 extern s8 D_80122FAA;
 extern GameSetupMenuState *D_801235B8;
 extern s32 D_801235B4;
-extern s32 D_80123758;
-extern s32 D_80123778;
+extern s32 gPlayerInputHeld;
+extern s32 gPlayerInputPressed;
 extern u8 D_245A80;
 extern u8 D_24C8E0;
 extern u8 D_593D10;
@@ -145,7 +145,7 @@ void func_8000337C(void) {
     s32 one;
 
     one = 1;
-    if ((D_8010AE00.state == one) && ((D_80123778 & 0x8000) || (D_80123778 & 0x1000))) {
+    if ((D_8010AE00.state == one) && ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))) {
         func_80072138((s16) (one & 0xFFFFFFFF), 0x32);
         D_8010AE00.state = 2;
         D_8010AE00.unk1 = 0;
@@ -154,9 +154,9 @@ void func_8000337C(void) {
     if (D_801235B8->timer == one) {
         temp_v1 = D_800EC9C1;
         if (temp_v1 == 0) {
-            temp_a3 = D_80123778;
-            temp_v0 = D_80123758 & 0x10800;
-            if ((temp_v0 == 0) && !(D_80123758 & 0x20400)) {
+            temp_a3 = gPlayerInputPressed;
+            temp_v0 = gPlayerInputHeld & 0x10800;
+            if ((temp_v0 == 0) && !(gPlayerInputHeld & 0x20400)) {
                 D_8010ADF0 = 0;
             }
             var_a2 = &D_8010ADF0;
@@ -170,7 +170,7 @@ void func_8000337C(void) {
                     func_80072138(0x19, 0x32, &D_8010ADF0, temp_a3);
                     goto block_25;
                 }
-            } else if ((temp_a3 & 0x20400) || ((D_80123758 & 0x20400) && (D_8010ADF0 >= 9) && ((D_8010ADF0 % 3) == 0))) {
+            } else if ((temp_a3 & 0x20400) || ((gPlayerInputHeld & 0x20400) && (D_8010ADF0 >= 9) && ((D_8010ADF0 % 3) == 0))) {
                 if (D_8010ADF0 == 0) {
                     D_8010ADF0 += 1;
                 }
@@ -362,7 +362,7 @@ extern GameSetupPlayerState03798 D_80121D80[];
 
 #define D_8010AE00_03798 (*(GameSetupSubState03798 *)&D_8010AE00)
 #define D_800EC8B4_03798 (&D_800EC8B4)
-#define D_80123778_03798 (&D_80123778)
+#define gPlayerInputPressedArray_03798 (&gPlayerInputPressed)
 
 void func_80003798(void) {
     s32 allReady = 0;
@@ -379,7 +379,7 @@ void func_80003798(void) {
     if ((task == NULL) || (D_8010AE00_03798.unk4 != 0)) {
         if ((D_8010AE00_03798.state >= 6) && (D_8010AE00_03798.state < 8)) {
             if (D_8010AE00_03798.state == 6) {
-                s32 input = D_80123778_03798[0];
+                s32 input = gPlayerInputPressedArray_03798[0];
                 if ((input & 0x8000) || (input & 0x1000)) {
                     func_80072138(1, 0x32);
                     D_8010AE00_03798.state = 7;
@@ -481,7 +481,7 @@ void func_80003798(void) {
                                 }
 
                                 case 4:
-                                    input = D_80123778_03798[i];
+                                    input = gPlayerInputPressedArray_03798[i];
                                     if ((input & 0x8000) || (input & 0x1000)) {
                                         func_80072138(1, 0x32);
                                         if (transitionTask != NULL) {
@@ -501,18 +501,18 @@ void func_80003798(void) {
 
                                 case 6:
                                     if ((choiceValue == 3) || (choiceValue == 4)) {
-                                        input = D_80123778_03798[i];
+                                        input = gPlayerInputPressedArray_03798[i];
                                         if ((input & 0x10800) && (choiceValue != 3)) {
                                             *choice = choiceValue - 1;
                                             func_80072138(0x19, 0x32);
-                                            input = D_80123778_03798[i];
+                                            input = gPlayerInputPressedArray_03798[i];
                                         }
                                         if (input & 0x20400) {
                                             choiceValue = *choice;
                                             if (choiceValue != 4) {
                                                 *choice = choiceValue + 1;
                                                 func_80072138(0x19, 0x32);
-                                                input = D_80123778_03798[i];
+                                                input = gPlayerInputPressedArray_03798[i];
                                             }
                                         }
                                         if ((input & 0x8000) || (input & 0x1000)) {
@@ -557,7 +557,7 @@ void func_80003798(void) {
                                 case 12:
                                 case 13:
                                 case 16:
-                                    input = D_80123778_03798[i];
+                                    input = gPlayerInputPressedArray_03798[i];
                                     if ((input & 0x8000) || (input & 0x1000)) {
                                         func_80072138(1, 0x32);
                                         *choice = D_800B3199[D_800EC9C8[i]];
@@ -566,7 +566,7 @@ void func_80003798(void) {
 
                                 case 14:
                                 case 15:
-                                    input = D_80123778_03798[i];
+                                    input = gPlayerInputPressedArray_03798[i];
                                     if ((input & 0x8000) || (input & 0x1000)) {
                                         func_80072138(1, 0x32);
                                         if (D_800EC9C8[i] == 0xE) {
@@ -586,7 +586,7 @@ void func_80003798(void) {
                                     break;
 
                                 case 17:
-                                    input = D_80123778_03798[i];
+                                    input = gPlayerInputPressedArray_03798[i];
                                     if ((input & 0x8000) || (input & 0x1000)) {
                                         func_80072138(1, 0x32);
                                         D_8010AE00_03798.unkE[i] = 2;
@@ -671,7 +671,7 @@ void func_80003798(void) {
 
 #undef D_8010AE00_03798
 #undef D_800EC8B4_03798
-#undef D_80123778_03798
+#undef gPlayerInputPressedArray_03798
 #endif
 
 void __dummy(void) {
@@ -704,7 +704,7 @@ void func_80004164(void) {
     state = D_8010ADD0.state;
     switch (state) {
         case 1:
-            if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+            if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 func_80072138(1, 0x32);
                 D_8010ADD0.state = 2;
                 D_8010ADD0.targetScale = 1;
@@ -731,7 +731,7 @@ void func_80004164(void) {
             state = 7;
             break;
         case 3:
-            if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+            if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 func_80072138(1, 0x32);
                 D_8010ADD0.state = 4;
                 state = 4;
@@ -773,7 +773,7 @@ void func_80004164(void) {
             }
             break;
         case 8:
-            if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+            if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 func_80072138(1, 0x32);
                 D_8010ADD0.state = 9;
                 D_8010ADD0.targetScale = 3;
@@ -782,16 +782,16 @@ void func_80004164(void) {
             }
             break;
         case 9:
-            if ((D_80123778 & 0x10800) && (D_8010ADD0.confirmSelection != 0)) {
+            if ((gPlayerInputPressed & 0x10800) && (D_8010ADD0.confirmSelection != 0)) {
                 D_8010ADD0.confirmSelection--;
                 func_80072138(0x19, 0x32);
-            } else if (D_80123778 & 0x20400) {
+            } else if (gPlayerInputPressed & 0x20400) {
                 if (D_8010ADD0.confirmSelection != 1) {
                     D_8010ADD0.confirmSelection++;
                     func_80072138(0x19, 0x32);
                 }
             }
-            if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+            if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 func_80072138(1, 0x32);
                 if (D_8010ADD9 == 1) {
                     D_8010ADD0.state = 1;

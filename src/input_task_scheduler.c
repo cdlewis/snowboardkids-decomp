@@ -47,7 +47,7 @@ extern InputTask *D_80123730[];
 extern u8 D_80123750;
 extern u8 D_80123751;
 extern u8 D_80123752;
-extern s32 D_80123758;
+extern s32 gPlayerInputHeld;
 extern s32 D_8012375C;
 extern s32 D_80123760;
 extern s32 D_80123764;
@@ -55,7 +55,7 @@ extern s32 D_80123768;
 extern s32 D_8012376C;
 extern s32 D_80123770;
 extern s32 D_80123774;
-extern s32 D_80123778;
+extern s32 gPlayerInputPressed;
 extern s32 D_8012377C;
 extern s32 D_80123780;
 extern s32 D_80123784;
@@ -97,9 +97,9 @@ void func_80098D80(void) {
     D_80123751 = 0;
     zero = 0;
     D_80123752 = zero;
-    D_80123758 = zero;
+    gPlayerInputHeld = zero;
     D_80123768 = zero;
-    D_80123778 = 0;
+    gPlayerInputPressed = 0;
     D_80123788 = zero;
     D_8012378C = 0;
     D_8012375C = 0;
@@ -150,11 +150,11 @@ void func_80098EAC(void) {
     clearPendingPositionalSoundRequests();
 
     previousInput = &D_80123768;
-    input = &D_80123758;
+    input = &gPlayerInputHeld;
     controller = &D_800E4C18;
     stickXOut = &D_80123788;
     stickYOut = &D_8012378C;
-    newInput = &D_80123778;
+    newInput = &gPlayerInputPressed;
     repeatTimer = &D_801237A0;
     repeatInput = &D_80123790;
 

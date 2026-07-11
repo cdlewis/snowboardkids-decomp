@@ -154,8 +154,8 @@ extern CourseSelectMenuState *D_801235B8;
 extern s32 D_801235B4;
 extern u8 D_80123750;
 extern u8 D_80123751;
-extern s32 D_80123758;
-extern s32 D_80123778;
+extern s32 gPlayerInputHeld;
+extern s32 gPlayerInputPressed;
 extern void func_80009C48(void);
 extern void func_8000B220(void);
 extern void func_8000B7B8(void);
@@ -344,12 +344,12 @@ void func_80009C48(void) {
             if ((D_80121D88 == 0) && (D_8010AF18.unk28 == 1)) {
                 selection = D_800EC9E6;
                 oldSelection = selection;
-                pressed = D_80123758;
+                pressed = gPlayerInputHeld;
                 leftPressed = pressed & 0x10800;
                 if ((leftPressed == 0) && !(pressed & 0x20400)) {
                     D_8010ADF0 = 0;
                 }
-                held = D_80123778;
+                held = gPlayerInputPressed;
                 if ((held & 0x10800) || ((leftPressed != 0) && ((repeat = D_8010ADF0) >= 0xB) && ((repeat % 3) == 0))) {
                     repeat = D_8010ADF0;
                     if (repeat == 0) {
@@ -389,7 +389,7 @@ void func_80009C48(void) {
                         D_8010AF71 = 0;
                     }
                 }
-                input = D_80123778;
+                input = gPlayerInputPressed;
                 if (((input & 0x1000) || (input & 0x8000)) && (D_801235B4 == 2)) {
                     D_800EC9C1 = 1;
                     D_8010AF18.unk28 = 2;
@@ -627,12 +627,12 @@ block_17:
                 if ((s32) D_80121B55 >= 2) {
                     var_t1 = (var_t1 - 1) & 0xFF;
                 }
-                temp_v0_2 = D_80123758 & 0x10800;
+                temp_v0_2 = gPlayerInputHeld & 0x10800;
                 sp31 = D_8010AE64;
-                if ((temp_v0_2 == 0) && !(D_80123758 & 0x20400)) {
+                if ((temp_v0_2 == 0) && !(gPlayerInputHeld & 0x20400)) {
                     D_8010ADF0 = 0;
                 }
-                if ((D_80123778 & 0x10800) || ((temp_v0_2 != 0) && ((s32) (u16) D_8010ADF0 >= 9))) {
+                if ((gPlayerInputPressed & 0x10800) || ((temp_v0_2 != 0) && ((s32) (u16) D_8010ADF0 >= 9))) {
                     if ((u16) D_8010ADF0 == 0) {
                         D_8010ADF0 = (u16) D_8010ADF0 + 1;
                     }
@@ -643,7 +643,7 @@ block_17:
                         func_80072138(0x19, 0x32);
                         var_a3_2 = 0;
                     }
-                } else if ((D_80123778 & 0x20400) || ((D_80123758 & 0x20400) && ((s32) (u16) D_8010ADF0 >= 9))) {
+                } else if ((gPlayerInputPressed & 0x20400) || ((gPlayerInputHeld & 0x20400) && ((s32) (u16) D_8010ADF0 >= 9))) {
                     if ((u16) D_8010ADF0 == 0) {
                         D_8010ADF0 = (u16) D_8010ADF0 + 1;
                     }
@@ -689,7 +689,7 @@ block_17:
                         D_80121D80.unk7 = (u8) temp_a0_2;
                     }
                 }
-                if ((D_8010AEE8[0] == 0) && ((D_80123778 & 0x1000) || (D_80123778 & 0x8000))) {
+                if ((D_8010AEE8[0] == 0) && ((gPlayerInputPressed & 0x1000) || (gPlayerInputPressed & 0x8000))) {
                     sp44 = 0;
                     sp33 = var_t1;
                     func_80072138(1, 0x32);
@@ -708,7 +708,7 @@ block_17:
                             var_a3_2 = 0;
                         }
                     }
-                } else if (D_80123778 & 0x4000) {
+                } else if (gPlayerInputPressed & 0x4000) {
                     sp44 = 0;
                     func_80072138(1, 0x32);
                     D_8010ADF0 = 0;
@@ -734,11 +734,11 @@ block_17:
                 D_8010AEA4 = 0;
             }
             if ((D_800EC9D0 >= 2) && (D_800EC9D0 < 5)) {
-                if (!(D_80123758 & 0x10800) && !(D_80123758 & 0x20400)) {
+                if (!(gPlayerInputHeld & 0x10800) && !(gPlayerInputHeld & 0x20400)) {
                     D_8010ADF0 = 0;
                 }
-                temp_t4 = D_80123778;
-                if ((temp_t4 & 0x10800) || ((D_80123758 & 0x10800) && ((s32) (u16) D_8010ADF0 >= 9) && ((u16) D_8010ADF0 & 1))) {
+                temp_t4 = gPlayerInputPressed;
+                if ((temp_t4 & 0x10800) || ((gPlayerInputHeld & 0x10800) && ((s32) (u16) D_8010ADF0 >= 9) && ((u16) D_8010ADF0 & 1))) {
                     var_v1_2 = (u16) D_8010ADF0;
                     if (var_v1_2 == 0) {
                         var_v1_2 = (var_v1_2 + 1) & 0xFFFF;
@@ -753,7 +753,7 @@ block_17:
                     }
                 } else {
                     var_v1_3 = (u16) D_8010ADF0;
-                    if ((temp_t4 & 0x20400) || ((D_80123758 & 0x20400) && ((s32) var_v1_3 >= 9) && (var_v1_3 & 1))) {
+                    if ((temp_t4 & 0x20400) || ((gPlayerInputHeld & 0x20400) && ((s32) var_v1_3 >= 9) && (var_v1_3 & 1))) {
                         if (var_v1_3 == 0) {
                             var_v1_3 = (var_v1_3 + 1) & 0xFFFF;
                         }
@@ -918,17 +918,17 @@ void func_8000AFE8(void) {
     u8 new_var;
 
     temp_v0 = D_801235B8->timer;
-    new_var2 = &D_80123778;
+    new_var2 = &gPlayerInputPressed;
     if (temp_v0 < 2) {
         temp_v1 = *new_var2;
         if ((temp_v1 & 0x10800) && (temp_v0 != 0)) {
             D_801235B8->timer = temp_v0 - 1;
             func_80072138(0x19, 0x32);
-            temp_v1 = D_80123778;
+            temp_v1 = gPlayerInputPressed;
         } else if ((temp_v1 & 0x20400) && (temp_v0 != 1)) {
             D_801235B8->timer = temp_v0 + 1;
             func_80072138(0x19, 0x32);
-            temp_v1 = D_80123778;
+            temp_v1 = gPlayerInputPressed;
         }
 
         if (temp_v1 & 0x8000) {
@@ -1008,13 +1008,13 @@ void func_8000B220(void) {
         goto outside_menu_rows;
     }
 
-    buttonsHeld = D_80123758;
+    buttonsHeld = gPlayerInputHeld;
     held10800 = buttonsHeld & 0x10800;
     if ((held10800 == 0) && ((buttonsHeld & 0x20400) == 0)) {
         D_8010ADF0 = 0;
     }
 
-    buttonsPressed = D_80123778;
+    buttonsPressed = gPlayerInputPressed;
     repeat = D_8010ADF0;
     if (buttonsPressed & 0x10800) {
         goto move_up;
@@ -1049,7 +1049,7 @@ move_down:
         D_800EC9D0 = state + 1;
         func_80072138(0x19, 0x32);
         state = D_800EC9D0;
-        buttonsPressed = D_80123778;
+        buttonsPressed = gPlayerInputPressed;
     }
     goto after_row_change;
 
@@ -1062,7 +1062,7 @@ move_up:
         D_800EC9D0 = state - 1;
         func_80072138(0x19, 0x32);
         state = D_800EC9D0;
-        buttonsPressed = D_80123778;
+        buttonsPressed = gPlayerInputPressed;
     }
 
 after_row_change:
@@ -1166,12 +1166,12 @@ void func_8000B7B8(void) {
 
     if ((s32) D_8010AF41 >= 2) {
         var_a1 = (u8) D_8010AF72;
-        temp_v0 = D_80123758 & 0x10800;
+        temp_v0 = gPlayerInputHeld & 0x10800;
         temp_t1 = var_a1;
-        if ((temp_v0 == 0) && !(D_80123758 & 0x20400)) {
+        if ((temp_v0 == 0) && !(gPlayerInputHeld & 0x20400)) {
             D_8010ADF0 = 0;
         }
-        temp_a2 = D_80123778;
+        temp_a2 = gPlayerInputPressed;
         if ((temp_a2 & 0x10800) ||
             ((temp_v0 != 0) && ((s32) (u16) D_8010ADF0 >= 0xB) && (((s32) (u16) D_8010ADF0 % 3) == 0))) {
             var_v1 = (u16) D_8010ADF0;
@@ -1188,7 +1188,7 @@ void func_8000B7B8(void) {
         } else {
             var_v1 = (u16) D_8010ADF0;
             if (!(temp_a2 & 0x20400)) {
-                if ((D_80123758 & 0x20400) && ((s32) var_v1 >= 0xB)) {
+                if ((gPlayerInputHeld & 0x20400) && ((s32) var_v1 >= 0xB)) {
                     if (((s32) var_v1 % 3) == 0) {
                         goto block_16;
                     }
@@ -1221,7 +1221,7 @@ block_16:
         }
         if (var_a1 != temp_t1) {
             func_80072138(0x19, 0x32);
-            temp_a2 = D_80123778;
+            temp_a2 = gPlayerInputPressed;
         }
         if (temp_a2 & 0x4000) {
             D_8010ADF8 = 2;

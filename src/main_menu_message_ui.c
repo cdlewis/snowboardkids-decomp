@@ -56,7 +56,7 @@ extern void func_800483FC(RenderCallbackNode **, RenderCallback, s32);
 extern RenderCallbackNode *D_80124868;
 extern MainMenuMessageAssetHandles D_80112130;
 extern u8 D_8010B1F0;
-extern s32 D_80123778;
+extern s32 gPlayerInputPressed;
 extern MainMenuMessageScript D_800B3500[][0x17C];
 extern MainMenuMessageScript D_800B4FB8[];
 extern MainMenuMessageScript D_800B5038[];
@@ -153,7 +153,7 @@ void func_8000DDA4(MainMenuMessageActor *arg0) {
 
     var_v0 = (u16)arg0->state.selectedChoice;
     temp_a1 = var_v0;
-    if (D_80123778 & 0x10800) {
+    if (gPlayerInputPressed & 0x10800) {
         if (D_80121B5A != 9) {
             temp_t8 = var_v0 - 1;
             if (var_v0 != 0) {
@@ -169,7 +169,7 @@ void func_8000DDA4(MainMenuMessageActor *arg0) {
         }
     }
     var_a0 = var_v0;
-    if (D_80123778 & 0x20400) {
+    if (gPlayerInputPressed & 0x20400) {
         temp_t1 = var_v0 + 1;
         if (var_v0 != 2) {
             arg0->state.selectedChoice = ((temp_t1 & 0xFFFFu) & 0xFFFFu) & 0xFFFFu;
@@ -187,7 +187,7 @@ void func_8000DDA4(MainMenuMessageActor *arg0) {
         arg0->highlightScale += 9;
     }
     arg0->highlightTimer = ((u16)arg0->highlightTimer + 1) & 0x1F;
-    if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+    if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
         func_80072138(1, 0x32, arg0);
         D_8010B1F0 = (u16)arg0->state.selectedChoice + 1;
         arg0->highlightScale = 0x100;
@@ -359,7 +359,7 @@ void func_8000E5A0(MainMenuMessageActor *arg0) {
     switch (arg0->scriptState) {
     case 0:
         keepScanning = 1;
-        if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+        if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
             scan = arg0->layout.script;
             arg0->state.script.visibleGlyphCount = 0;
             do {
@@ -390,7 +390,7 @@ void func_8000E5A0(MainMenuMessageActor *arg0) {
         break;
     case 1:
         arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
-        if ((0x8000 & D_80123778) || (D_80123778 & 0x1000)) {
+        if ((0x8000 & gPlayerInputPressed) || (gPlayerInputPressed & 0x1000)) {
             func_80072138(1, 0x32, arg0);
             arg0->confirmBlinkTimer = 0;
             D_8010B1F0 = 1;
@@ -403,7 +403,7 @@ void func_8000E5A0(MainMenuMessageActor *arg0) {
         break;
     case 2:
         arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
-        if ((D_80123778 & 0x8000) || (D_80123778 & 0x1000)) {
+        if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
             func_80072138(1, 0x32, arg0);
             script = arg0->layout.script;
             if (*script != 0xFFFB) {

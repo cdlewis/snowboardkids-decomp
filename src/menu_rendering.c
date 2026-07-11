@@ -121,7 +121,7 @@ extern RenderCallbackNode *D_80124868;
 extern Gfx *gRegionAllocPtr;
 extern s16 D_80112130[];
 extern s16 D_80112132[];
-extern u32 D_80123758;
+extern u32 gPlayerInputHeld;
 extern Gfx D_800DEFF8[];
 extern s16 D_800B51F0[][2];
 extern s16 D_800DEF14;
@@ -839,16 +839,16 @@ void func_80011C18(MenuRenderSpriteActor *arg0) {
 }
 
 void func_80011C3C(MenuRenderSpriteActor *actor) {
-    if (D_80123758 & 8) {
+    if (gPlayerInputHeld & 8) {
         actor->sprite.y++;
     }
-    if (D_80123758 & 4) {
+    if (gPlayerInputHeld & 4) {
         actor->sprite.y--;
     }
-    if (D_80123758 & 1) {
+    if (gPlayerInputHeld & 1) {
         actor->sprite.x++;
     }
-    if (D_80123758 & 2) {
+    if (gPlayerInputHeld & 2) {
         actor->sprite.x--;
     }
 

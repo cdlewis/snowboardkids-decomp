@@ -220,7 +220,7 @@ extern s32 D_801235B4;
 extern MainMenuState *D_801235B8;
 extern s16 D_800EC9D0;
 extern u8 D_800ECA2F[];
-extern s32 D_80123758;
+extern s32 gPlayerInputHeld;
 extern u8 D_80124868;
 
 const char D_800E0F60[] = "%6dG";
@@ -1149,7 +1149,7 @@ void func_8002E9E4(ShopMenuWidgetActor *arg0) {
             amount = price & 0xFFFF;
         } else {
             amount = 500;
-            if (D_80123758 & 0x8000) {
+            if (gPlayerInputHeld & 0x8000) {
                 if ((u32)price < 5000U) {
                     amount = price & 0xFFFF;
                 } else {

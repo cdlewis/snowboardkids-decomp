@@ -33,7 +33,7 @@ extern s16 D_80112186;
 
 extern u32 D_80121E04[][0x183];
 extern s32 D_801235B4;
-extern u32 D_80123758[];
+extern u32 gPlayerInputHeld[];
 extern s8 D_80123788[];
 extern s8 D_8012378C[];
 
@@ -292,7 +292,7 @@ void func_80084730(RaceInputPlayer *player) {
         player->disabledInputFlags = D_80121E04[index][0];
 
         if (player->replayInputSource == 0) {
-            player->inputFlags = D_80123758[index];
+            player->inputFlags = gPlayerInputHeld[index];
             player->stickX = D_80123788[index];
             player->stickY = D_8012378C[index];
             if (player->unk15 != 0) {
