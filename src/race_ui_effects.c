@@ -2773,7 +2773,7 @@ done2:
 }
 #endif
 
-// func_8005D1CC best match: 86.445% (nonmatchings/func_8005D1CC-6061209858023118177/base_10.c)
+// func_8005D1CC best match: 96.634% (nonmatchings/func_8005D1CC-6061209858023118177/base_18.c, permuter artifact)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D1CC.s")
 
 #ifdef NON_MATCHING
@@ -2800,7 +2800,7 @@ void func_8005D1CC(RaceUiCourseStatsActor *arg0) {
 loop1:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                func_80045A78(x, -0x47, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+                func_80045A78(x, -0x47, func_80043040(D_80112130.popupFontHandle), (u16)(*ptr - 5));
             }
             x += 8;
             ptr++;
@@ -2813,13 +2813,15 @@ loop1:
 
     if (visibleRows > 0) {
         x = 0x20;
+        ptr = 0;
         sprintf(buffer - 4, D_800E1448, arg0->pendingSecondValue);
         rowY = y.half.lo;
-        ptr = buffer - 4;
+        ptr = buffer;
+        ptr = ptr - 4;
 loop2:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                func_80045A78(x, rowY, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+                func_80045A78(x, rowY, func_80043040(D_80112130.popupFontHandle), (u16)(*ptr - 5));
             }
             x += 8;
             ptr++;
@@ -2832,13 +2834,14 @@ loop2:
 
     if (visibleRows >= 2) {
         x = 0x20;
-        sprintf(buffer - 4, D_800E144C, arg0->pendingThirdValue);
+        ptr = 0;
+        sprintf(buffer - 4, D_800E144C, rowY = arg0->pendingThirdValue);
         rowY = y.half.lo;
         ptr = buffer - 4;
 loop3:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                func_80045A78(x, rowY, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+                func_80045A78(x, rowY, func_80043040(D_80112130.popupFontHandle), (u16)(*ptr - 5));
             }
             x += 8;
             ptr++;
@@ -2851,13 +2854,14 @@ loop3:
 
     if (visibleRows >= 3) {
         x = 0x18;
+        ptr = 0;
         sprintf(buffer - 4, D_800E1450, D_80121D8C);
         rowY = y.half.lo;
         ptr = buffer - 4;
 loop4:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                func_80045A78(x, rowY, func_80043040(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+                func_80045A78(x, rowY, func_80043040(D_80112130.popupFontHandle), (u16)(*ptr - 5));
             }
             x += 8;
             ptr++;
