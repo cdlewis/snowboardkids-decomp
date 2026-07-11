@@ -2,7 +2,7 @@
 #include "asset_manager.h"
 #include "callback_task_scheduler.h"
 #include "character_select_course_menu.h"
-#include "race_course_select_menu.h"
+#include "multiplayer_course_select_menu.h"
 #include "game_task_scheduler.h"
 #include "relocatable_heap.h"
 #include "menu_renderer.h"
@@ -20,13 +20,13 @@ extern s8 gFramebufferSwapDelay;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-#define RACE_COURSE_SELECT_PLAYER_RECORD_COUNT 4
+#define MULTIPLAYER_COURSE_SELECT_PLAYER_RECORD_COUNT 4
 
 typedef struct {
     char pad0[0x3F];
     s8 characterState[12];
     char pad4B[0x78AD];
-} RaceCourseSelectSaveData;
+} MultiplayerCourseSelectSaveData;
 
 typedef struct {
     char pad0[5];
@@ -35,7 +35,7 @@ typedef struct {
     s8 unk7;
     u8 state;
     char pad9[0x603];
-} RaceCourseSelectPlayer;
+} MultiplayerCourseSelectPlayer;
 
 typedef struct {
     u8 unk0[4];
@@ -51,7 +51,7 @@ typedef struct {
     s16 unk2A;
     s16 unk2C;
     u8 unk2E;
-} RaceCourseSelectStatus;
+} MultiplayerCourseSelectStatus;
 
 extern void n_alSeqpDelete(void);
 extern void requestMusicSequenceBank(s32);
@@ -76,7 +76,7 @@ extern u8 gRaceSplitscreenMode;
 extern s16 D_800EC9D0[];
 extern s8 D_800EC9E5;
 extern s8 D_800EC9E6;
-extern RaceCourseSelectSaveData gGameSaveDataBuffer[];
+extern MultiplayerCourseSelectSaveData gGameSaveDataBuffer[];
 extern s32 gActiveMenuTask;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
@@ -96,7 +96,7 @@ extern s32 D_8010AEE8[];
 extern u8 D_8010AEF8[][4];
 extern s8 D_8010AEFB[];
 extern u8 D_8010AF08[][3];
-extern RaceCourseSelectStatus gCourseSelectStatus;
+extern MultiplayerCourseSelectStatus gCourseSelectStatus;
 extern s16 gAssetHandles[];
 extern s32 D_80112204;
 extern void (*D_8011220C)(void);
@@ -107,14 +107,14 @@ extern void (*D_8011236C)(void);
 extern s32 D_80112414;
 extern void (*D_8011241C)(void);
 extern u8 gPlayerCount;
-extern RaceCourseSelectPlayer D_80121D80[];
+extern MultiplayerCourseSelectPlayer D_80121D80[];
 extern s32 gMenuFlowState;
 
-// initRaceCourseSelectMenu best match: 78.174% (nonmatchings/initRaceCourseSelectMenu-7273315160691878794/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_select_menu/initRaceCourseSelectMenu.s")
+// initMultiplayerCourseSelectMenu best match: 78.174%
+#pragma GLOBAL_ASM("asm/nonmatchings/multiplayer_course_select_menu/initMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
-void initRaceCourseSelectMenu(void) {
+void initMultiplayerCourseSelectMenu(void) {
     s32 size;
     s32 i;
     s32 j;
@@ -198,9 +198,9 @@ void initRaceCourseSelectMenu(void) {
     D_800EC9E6 = 0;
     gCurrentGameTask->timer = 0;
     gCurrentGameTask->unk20 = 0;
-    setCurrentGameTaskCallback(updateRaceCourseSelectMenu, 0);
+    setCurrentGameTaskCallback(updateMultiplayerCourseSelectMenu, 0);
 
-    for (i = 0; i < RACE_COURSE_SELECT_PLAYER_RECORD_COUNT; i++) {
+    for (i = 0; i < MULTIPLAYER_COURSE_SELECT_PLAYER_RECORD_COUNT; i++) {
         D_80121D80[i].mode = 0;
     }
 
@@ -316,15 +316,15 @@ void initRaceCourseSelectMenu(void) {
 }
 #endif
 
-// updateRaceCourseSelectMenu best match: 57.412% (nonmatchings/updateRaceCourseSelectMenu-5752545231564691495/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_select_menu/updateRaceCourseSelectMenu.s")
+// updateMultiplayerCourseSelectMenu best match: 57.412%
+#pragma GLOBAL_ASM("asm/nonmatchings/multiplayer_course_select_menu/updateMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
-typedef struct RaceCourseSelectObject {
+typedef struct MultiplayerCourseSelectObject {
     /* 0x00 */ u8 pad0[0x2C];
     /* 0x2C */ void (*update)(void);
     /* 0x30 */ u8 pad30[0x80];
-} RaceCourseSelectObject;
+} MultiplayerCourseSelectObject;
 
 extern void initCourseSelectCourseIconList(CallbackTask *);
 extern void initCourseSelectExtraCourseIconList(CallbackTask *);
@@ -340,11 +340,11 @@ extern s8 D_800ECA2F[][0x78F8];
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
 extern s32 D_8010AEE8[];
-extern RaceCourseSelectObject *gCurrentMenuCameraObject;
-extern RaceCourseSelectObject D_801121E0[];
-extern RaceCourseSelectObject D_801124A0;
+extern MultiplayerCourseSelectObject *gCurrentMenuCameraObject;
+extern MultiplayerCourseSelectObject D_801121E0[];
+extern MultiplayerCourseSelectObject D_801124A0;
 
-void updateRaceCourseSelectMenu(void) {
+void updateMultiplayerCourseSelectMenu(void) {
     s32 readyCount;
     s32 blockingCount;
     s32 activeCount;
@@ -364,8 +364,8 @@ void updateRaceCourseSelectMenu(void) {
     s8 *rowLock;
     s32 *momentum;
     u8 *selections;
-    RaceCourseSelectPlayer *player;
-    RaceCourseSelectObject *obj;
+    MultiplayerCourseSelectPlayer *player;
+    MultiplayerCourseSelectObject *obj;
 
     readyCount = 0;
     if (gCurrentGameTask->fade != 0) {
@@ -632,7 +632,7 @@ void updateRaceCourseSelectMenu(void) {
     }
 
     if (D_800EC9C0 == 0x19) {
-        setCurrentGameTaskCallback(fadeOutRaceCourseSelectMenu, 0);
+        setCurrentGameTaskCallback(fadeOutMultiplayerCourseSelectMenu, 0);
         if (gMenuFlowState == 0) {
             requestMusicSequenceStop(8);
         }
@@ -649,7 +649,7 @@ void updateRaceCourseSelectMenu(void) {
 
 #endif
 
-void fadeOutRaceCourseSelectMenu(void) {
+void fadeOutMultiplayerCourseSelectMenu(void) {
     if (gCurrentGameTask->fade != 0xFF) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 1);
         if (gCurrentGameTask->fade == 0xFF) {
