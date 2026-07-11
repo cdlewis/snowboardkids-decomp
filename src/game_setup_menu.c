@@ -4,6 +4,7 @@
 #include "game_audio.h"
 #include "game_setup_menu.h"
 #include "input_task_scheduler.h"
+#include "title_menu.h"
 
 // func_80003140 best match: 98.611% (nonmatchings/func_80003140-5743805732885129799/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_80003140.s")
@@ -346,10 +347,6 @@ extern void func_80000C48();
 extern void func_80000DB4();
 extern void func_80001010();
 extern void func_80001538();
-extern void func_8001621C(EffectTask *);
-extern void func_800165F0(EffectTask *);
-extern void func_80016B54(EffectTask *);
-extern void func_80017014(EffectTask *);
 extern void func_80030EA8(EffectTask *);
 
 extern u8 D_800B3199[];
@@ -625,10 +622,10 @@ void func_80003798(void) {
                 u8 *end;
 
                 D_800EC9E4 = 0;
-                D_8010ADE8 = func_80071408(func_80016B54, 0, 0x63);
-                func_80071408(func_800165F0, 0, 0x63);
-                D_8010ADE0 = func_80071408(func_8001621C, 0, 0x63);
-                D_8010ADE4 = func_80071408(func_80017014, 0, 0x63);
+                D_8010ADE8 = func_80071408((void (*)(EffectTask *))func_80016B54, 0, 0x63);
+                func_80071408((void (*)(EffectTask *))func_800165F0, 0, 0x63);
+                D_8010ADE0 = func_80071408((void (*)(EffectTask *))func_8001621C, 0, 0x63);
+                D_8010ADE4 = func_80071408((void (*)(EffectTask *))func_80017014, 0, 0x63);
                 if (D_80121B55 > 0) {
                     ptr = D_800EC9E0;
                     end = &D_800EC9E0[D_80121B55];

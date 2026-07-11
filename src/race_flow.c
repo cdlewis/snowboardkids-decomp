@@ -15,6 +15,7 @@
 #include "main_menu.h"
 #include "main_menu_overlay_effects.h"
 #include "main_menu_panel_ui.h"
+#include "title_menu.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
 #define COURSE_GRID_ENTRY_END -2
@@ -232,7 +233,6 @@ extern void func_800055EC(void);
 extern void func_800086EC(void);
 extern void func_8000C280(void);
 extern void func_8000D340(void);
-extern void func_8001710C(void *);
 extern void func_8003DFD0(void);
 extern s32 func_80040D94(void);
 extern void func_80044294(void);
@@ -1557,7 +1557,7 @@ void func_80077DA0(void) {
     func_80070EC0(0);
     D_801235B4 = 0;
     func_80071664(func_80053634, 0, 0x64, 0);
-    func_80071408(func_8001710C, 0, 0x5E);
+    func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
     func_8009956C(func_80078078, 0);
     func_800720E4(7);
 }

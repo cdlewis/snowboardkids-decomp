@@ -1,6 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
+#include "title_menu.h"
 
 #define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x3E])
 #define TITLE_MENU_FRAME_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x42])
@@ -9,90 +10,9 @@
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ s16 y;
-    /* 0x1C */ s16 alpha;
-    /* 0x1E */ u8 state;
-    /* 0x1F */ u8 timer;
-    /* 0x20 */ struct MenuItemActor *child;
-} MenuIntroActor;
-
-typedef struct MenuItemActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ s16 y;
-    /* 0x1C */ u8 state;
-    /* 0x1D */ u8 pad1D[3];
-    /* 0x20 */ struct MenuItemActor *child;
-} MenuItemActor;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ s16 y;
-    /* 0x1C */ s16 alpha;
-} FadeItemActor;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s32 unk18;
     /* 0x1C */ s32 unk1C;
 } Struct801235B8;
-
-typedef struct {
-    /* 0x00 */ s16 x0;
-    /* 0x02 */ s16 y0;
-    /* 0x04 */ s16 x1;
-    /* 0x06 */ s16 y1;
-} Rect;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Rect rects[2];
-    /* 0x28 */ u16 stepLimit;
-    /* 0x2A */ u16 stepIncrement;
-    /* 0x2C */ u16 stepAccumulator;
-    /* 0x2E */ s16 unk2E;
-    /* 0x30 */ u8 frame;
-} RectListActor;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Rect rects[2];
-    /* 0x28 */ s16 iconOffsetX;
-    /* 0x2A */ s16 iconOffsetY;
-    /* 0x2C */ s16 badgeOffsetX;
-    /* 0x2E */ s16 badgeOffsetY;
-} TitleMenuIconStripActor;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 x[4];
-    /* 0x20 */ s16 y[4];
-    /* 0x28 */ s16 topY[4];
-    /* 0x30 */ s16 slideOffset[4];
-    /* 0x38 */ u16 selection[4];
-    /* 0x40 */ u16 alpha[4];
-    /* 0x48 */ s16 alphaTimer[4];
-} TitleMenuTransitionActor;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 x[4];
-    /* 0x20 */ s16 y[4];
-    /* 0x28 */ s16 alpha[4];
-    /* 0x30 */ u8 frame;
-    /* 0x31 */ u8 unk31[4];
-    /* 0x35 */ u8 pad35;
-    /* 0x36 */ u16 unk36[4];
-} TitleMenuWidgetActor;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ u8 pad1A[0x6];
-    /* 0x20 */ s16 y;
-} TitleMenuWidgetItemView;
 
 typedef struct {
     /* 0x00 */ u8 state;
@@ -115,26 +35,10 @@ extern s32 func_80011D74(void *, s32, s16, s16);
 extern void func_8000F8AC(s16, s16, s32, s32, s32, s32, s32, s32, s32);
 extern void func_80010074(s16, s16, s32, s32, s32);
 extern void func_800129DC(s16, s16, u16 *, s32, s32);
-extern void func_80017168(void *, s32);
 extern void func_80014EF0(MenuItemActor *);
 extern void func_80014CB8(void *);
-extern void func_80015054(void *);
-extern void func_8001508C(void *);
-extern void func_800152D0(MenuItemActor *);
-extern void func_80015680(MenuItemActor *);
-extern void func_800157B4(void *);
-extern void func_80015404(void *);
-extern void func_80015A30(void *);
-extern void func_80015B20(void *);
-extern void func_80015BD8(void *);
-extern void func_80015F4C(RectListActor *);
-extern void func_80016284(TitleMenuIconStripActor *);
-extern void func_80016948(TitleMenuWidgetActor *);
-extern void func_80016E40(TitleMenuTransitionActor *);
-extern void func_800170AC(void *);
 extern void func_800483FC(void *, void *, s32);
 extern s32 func_80072138(s32, s32);
-extern void func_80015C84(void *);
 extern void func_8000F030(s16, s16, s32, s32, s32, s32, s32, s32);
 extern void func_80013154(s16, s16, u8 *, s32, s32, s32);
 extern void func_80013D0C(s16, s16, u8 *, u16, u16);
@@ -181,43 +85,6 @@ extern s32 D_801235B4;
 extern Struct801235B8 *D_801235B8;
 extern s32 D_80124838;
 extern s32 D_80124868;
-
-typedef struct {
-    /* 0x00 */ u16 unk0;
-    /* 0x02 */ u16 unk2;
-    /* 0x04 */ u16 unk4;
-    /* 0x06 */ u16 unk6;
-    /* 0x08 */ u16 unk8;
-    /* 0x0A */ u16 unkA;
-    /* 0x0C */ u16 unkC;
-    /* 0x0E */ u16 unkE;
-    /* 0x10 */ u8 unk10[0x4];
-} SrcStruct_80017168;
-
-typedef struct {
-    /* 0x00 */ s16 unk0;
-    /* 0x02 */ s16 unk2;
-    /* 0x04 */ s16 unk4;
-    /* 0x06 */ s16 unk6;
-    /* 0x08 */ s16 unk8;
-    /* 0x0A */ s16 unkA;
-    /* 0x0C */ s16 unkC;
-    /* 0x0E */ s16 unkE;
-    /* 0x10 */ s16 unk10;
-    /* 0x12 */ s16 unk12;
-    /* 0x14 */ u8 *unk14;
-    /* 0x18 */ u8 *unk18;
-    /* 0x1C */ u8 *unk1C;
-    /* 0x20 */ u8 *unk20;
-    /* 0x24 */ s16 unk24;
-} DstStruct_80017168;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ s16 y;
-    /* 0x1C */ DstStruct_80017168 sprite;
-} SpriteActor;
 
 void func_80014600(MenuIntroActor *arg0) {
     s32 i;
@@ -458,7 +325,7 @@ void func_80014EF0(MenuItemActor *arg0) {
     func_800483FC(&D_80124868, func_80014CB8, (s32)arg0);
 }
 
-void func_80015054(void *arg0) {
+void func_80015054(MenuItemActor *arg0) {
     MenuItemActor *actor = arg0;
 
     actor->x = 0x90;
@@ -467,7 +334,7 @@ void func_80015054(void *arg0) {
     func_80071824(arg0, func_80014EF0);
 }
 
-void func_8001508C(void *arg0) {
+void func_8001508C(MenuItemActor *arg0) {
     MenuItemActor *actor = arg0;
     s16 unused;
     s16 width;
@@ -546,7 +413,7 @@ void func_800152D0(MenuItemActor *arg0) {
     func_800483FC(&D_80124868, func_8001508C, (s32)arg0);
 }
 
-void func_80015404(void *arg0) {
+void func_80015404(MenuItemActor *arg0) {
     MenuItemActor *actor = arg0;
 
     actor->x = 0x90;
@@ -634,7 +501,7 @@ void func_80015680(MenuItemActor *arg0) {
     func_800483FC(&D_80124868, func_8001543C, (s32)arg0);
 }
 
-void func_800157B4(void *arg0) {
+void func_800157B4(MenuItemActor *arg0) {
     MenuItemActor *actor = arg0;
 
     actor->x = 0x90;
@@ -686,7 +553,7 @@ void func_800157EC(void *arg0) {
     }
 }
 
-void func_80015A30(void *arg0) {
+void func_80015A30(MenuItemActor *arg0) {
     MenuItemActor *actor = arg0;
     s16 x;
 
@@ -719,7 +586,7 @@ void func_80015A30(void *arg0) {
     func_800483FC(&D_80124868, func_800157EC, (s32)actor);
 }
 
-void func_80015B20(void *arg0) {
+void func_80015B20(MenuItemActor *arg0) {
     MenuItemActor *actor = arg0;
 
     actor->x = 0x90;
@@ -743,7 +610,7 @@ void func_80015B58(void *arg0) {
         0);
 }
 
-void func_80015BD8(void *arg0) {
+void func_80015BD8(FadeItemActor *arg0) {
     FadeItemActor *actor = arg0;
     u16 temp_v0;
     s16 temp_t6;
@@ -768,7 +635,7 @@ void func_80015BD8(void *arg0) {
     }
 }
 
-void func_80015C84(void *arg0) {
+void func_80015C84(FadeItemActor *arg0) {
     FadeItemActor *actor = arg0;
 
     actor->x = -0x68;
@@ -938,7 +805,7 @@ void func_80015F4C(RectListActor *arg0) {
 }
 #endif
 
-void func_8001621C(void *arg0) {
+void func_8001621C(RectListActor *arg0) {
     RectListActor *actor = arg0;
 
     actor->rects[0].x0 = -0x114;
@@ -1064,7 +931,7 @@ void func_80016560(void *arg0) {
     func_800483FC(&D_80124868, func_80016284, (s32)temp_a2);
 }
 
-void func_800165F0(void *arg0) {
+void func_800165F0(RectListActor *arg0) {
     RectListActor *actor = arg0;
 
     actor->rects[0].x0 = -0x114;
@@ -1350,7 +1217,7 @@ void func_80016E40(TitleMenuTransitionActor *arg0) {
 }
 #endif
 
-void func_80017014(void *arg0) {
+void func_80017014(RectListActor *arg0) {
     RectListActor *actor = arg0;
 
     actor->rects[0].x0 = -0x70;
@@ -1374,7 +1241,7 @@ void func_80017078(void *arg0) {
     func_80011D74(&actor->sprite, 0, actor->x, actor->y);
 }
 
-void func_800170AC(void *arg0) {
+void func_800170AC(SpriteActor *arg0) {
     SpriteActor *temp_a2;
     DstStruct_80017168 *temp_v0;
     SpriteActor *actor = arg0;
@@ -1389,7 +1256,7 @@ void func_800170AC(void *arg0) {
     func_800483FC(&D_80124838, func_80017078, (s32)temp_a2);
 }
 
-void func_8001710C(void *arg0) {
+void func_8001710C(SpriteActor *arg0) {
     SpriteActor *temp_a2 = arg0;
 
     func_80017168(&temp_a2->sprite, func_80043040(D_8011217C));
@@ -1398,7 +1265,7 @@ void func_8001710C(void *arg0) {
     func_80071824(temp_a2, func_800170AC);
 }
 
-void func_80017168(void *arg0, s32 arg1) {
+void func_80017168(DstStruct_80017168 *arg0, s32 arg1) {
     DstStruct_80017168 *dst = arg0;
     SrcStruct_80017168 *src = (SrcStruct_80017168 *)arg1;
 

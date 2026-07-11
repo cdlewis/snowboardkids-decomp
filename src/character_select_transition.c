@@ -3,6 +3,7 @@
 #include "character_select_flow.h"
 #include "character_select_transition.h"
 #include "input_task_scheduler.h"
+#include "title_menu.h"
 
 extern s32 func_80013F88(s32, s32, s32);
 extern void func_80045914(void);
@@ -50,7 +51,6 @@ extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern void func_800720E4(s32);
 extern void func_80099C44(void *, void *, s32);
 extern void n_alSeqpDelete(void);
-extern void func_8001710C(EffectTask *);
 
 extern u8 D_14B450[];
 extern u8 D_1502A0[];
@@ -185,7 +185,7 @@ void func_80006F30(void) {
     func_800437F0(D_1EF530, D_1F1A90, 0xD);
     func_800437F0(D_245A80, D_24C8E0, 0x1F);
     func_80070EC0(0);
-    func_80071408(func_8001710C, 0, 0x63);
+    func_80071408((void (*)(EffectTask *))func_8001710C, 0, 0x63);
 
     D_800EC9C0 = 0;
     D_8010ADDC = 0;
