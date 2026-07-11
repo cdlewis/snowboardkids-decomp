@@ -6,6 +6,7 @@
 #include "race_effects.h"
 #include "race_item_effects.h"
 #include "race_item_triggers.h"
+#include "snowboard_trail_effects.h"
 #include "race_ui_effects.h"
 
 // func_800849E0 best match: 98.406% (nonmatchings/func_800849E0-7273315160691878794/base_6.c)
@@ -16,7 +17,6 @@ typedef void (*EffectCallback)(void *);
 extern void func_80072A74(s32 soundId, void *pos, s32 volume, s32 distance);
 
 extern void *func_800716A4(void *, s32, s32, s32);
-extern void func_80083CFC(RaceInputPlayer *player);
 extern RaceInputPlayer D_801235B0;
 
 #ifdef NON_MATCHING

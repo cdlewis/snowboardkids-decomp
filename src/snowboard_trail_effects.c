@@ -2,12 +2,13 @@
 #include "memory_allocator.h"
 #include "fixed_point_matrix.h"
 #include "race_ui_effects.h"
+#include "snowboard_trail_effects.h"
 
 #define SNOWBOARD_TRAIL_TIMER 0xF0
 #define SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD 0x400
 #define SNOWBOARD_TRAIL_FLAG_CANCEL 0x3040
 
-typedef struct {
+struct SnowboardTrailState {
     /* 0x00 */ s16 state;
     /* 0x02 */ u8 pad02[0x04 - 0x02];
     /* 0x04 */ Vec3i localOffset;
@@ -19,9 +20,11 @@ typedef struct {
     /* 0x48 */ s16 transform[16];
     /* 0x68 */ s16 modelYaw;
     /* 0x6A */ s16 spinYaw;
-    /* 0x6C */ u8 pad6C[0x74 - 0x6C];
+    /* 0x6C */ void *frontDisplayList;
+    /* 0x70 */ void *backDisplayList;
     /* 0x74 */ s16 scaleStep;
-} SnowboardTrailState;
+    /* 0x76 */ u8 displayListsDirty;
+};
 
 typedef struct {
     /* 0x000 */ u8 pad000[0x014 - 0x000];
@@ -46,7 +49,7 @@ typedef struct {
     /* 0x58C */ SnowboardTrailState trail;
 } SnowboardTrailPlayer;
 
-extern void func_800483FC(void *queue, void (*callback)(SnowboardTrailPlayer *), SnowboardTrailState *trail);
+extern void func_800483FC(void *queue, void (*callback)(SnowboardTrailState *), SnowboardTrailState *trail);
 extern void *func_8004885C(u8 *source);
 
 extern u8 D_80121B56;
@@ -58,26 +61,26 @@ extern Gfx *gRegionAllocPtr;
 extern void *D_801248BC;
 extern u8 D_80156609;
 
-void func_800837D0(SnowboardTrailPlayer *player) {
+void func_800837D0(SnowboardTrailState *trail) {
     Gfx *unused;
 
     if (D_80156609 != 0) {
-        player->trailDisplayListsDirty = 1;
+        trail->displayListsDirty = 1;
     }
 
-    if (player->trailDisplayListsDirty != 0) {
-        player->trailDisplayListsDirty = 0;
-        player->trailFrontDisplayList = func_8004885C(player->trailFrontSource);
-        player->trailBackDisplayList = func_8004885C(player->trailBackSource);
+    if (trail->displayListsDirty != 0) {
+        trail->displayListsDirty = 0;
+        trail->frontDisplayList = func_8004885C((u8 *)trail->rotation);
+        trail->backDisplayList = func_8004885C((u8 *)trail->transform);
     }
 
-    if (player->trailFrontDisplayList != NULL) {
+    if (trail->frontDisplayList != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02, func_80043040(D_80112144));
         gSPSegment(gRegionAllocPtr++, 0x03, func_80043040(D_80112146));
-        gSPMatrix(gRegionAllocPtr++, player->trailFrontDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, trail->frontDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_2002208);
-        gSPMatrix(gRegionAllocPtr++, player->trailBackDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, trail->backDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_20023A8);
     }
 }
@@ -86,8 +89,9 @@ void func_800837D0(SnowboardTrailPlayer *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/snowboard_trail_effects/func_8008393C.s")
 
 #ifdef NON_MATCHING
-void func_8008393C(SnowboardTrailPlayer *player) {
+void func_8008393C(struct RaceInputPlayer *input) {
     FixedTransform scratch;
+    SnowboardTrailPlayer *player = (SnowboardTrailPlayer *)input;
     SnowboardTrailState *trail;
     FixedMatrix3s *playerTransform;
     FixedMatrix3s *rotation;
@@ -173,7 +177,8 @@ void func_8008393C(SnowboardTrailPlayer *player) {
 }
 #endif
 
-void func_80083CFC(SnowboardTrailPlayer *player) {
+void func_80083CFC(struct RaceInputPlayer *input) {
+    SnowboardTrailPlayer *player = (SnowboardTrailPlayer *)input;
     SnowboardTrailState *trail = &player->trail;
 
     player->trailTimer = SNOWBOARD_TRAIL_TIMER;

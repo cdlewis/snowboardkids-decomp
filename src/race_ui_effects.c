@@ -1,5 +1,6 @@
 #include "common.h"
 #include "race_ui_effects.h"
+#include "snowboard_trail_effects.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
 #include "asset_decompression.h"
@@ -911,7 +912,6 @@ const char D_800E1250[0x4] = "%5d";
 
 extern s32 func_80048E60(Vec3i *);
 extern void func_800486BC(void *, void *);
-extern void func_80083CFC(RacePlayerState *);
 extern s16 D_80121B50;
 extern s16 D_801222F4;
 extern void *D_801248D4;
@@ -5236,7 +5236,7 @@ loop:
                 if (D_80121D80[0].unk2DA != 0) {
                     D_80121D80[0].unk2DA = 0xF0;
                 } else {
-                    func_80083CFC(D_80121D80);
+                    func_80083CFC((struct RaceInputPlayer *)D_80121D80);
                 }
                 if (D_80121D80[0].unk2DA) {
                 }
