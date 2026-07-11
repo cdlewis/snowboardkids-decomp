@@ -5,34 +5,34 @@
 #undef calculateAngleBetweenXZPoints
 #include "sound_manager.h"
 #include "race_motion.h"
-#include "race_actor_collision.h"
+#include "race_player_collision.h"
 #include "race_item_effects.h"
 #include "race_item_hit_flags.h"
 
-#define RACE_ACTOR_COLLISION_YAW_FLIPPED 0x400
-#define RACE_ACTOR_COLLISION_ACTIVE 0x800
-#define RACE_ACTOR_COLLISION_ALWAYS_VALID 0x400000
+#define RACE_PLAYER_COLLISION_YAW_FLIPPED 0x400
+#define RACE_PLAYER_COLLISION_ACTIVE 0x800
+#define RACE_PLAYER_COLLISION_ALWAYS_VALID 0x400000
 
-#define RACE_ACTOR_COLLISION_ANGLE_MASK 0xFFF
-#define RACE_ACTOR_COLLISION_HALF_TURN 0x800
+#define RACE_PLAYER_COLLISION_ANGLE_MASK 0xFFF
+#define RACE_PLAYER_COLLISION_HALF_TURN 0x800
 
 typedef struct {
     s8 active;
     char pad1[0xAF];
 } Unk8011228C;
 
-extern s32 gRaceSurfaceCueId;
-extern s32 D_80121D54;
-extern s32 D_80121D58;
-extern s16 D_80121D56;
-extern s32 D_80121D5C;
-extern s32 D_80121D60;
+extern s32 gRacePlayerHitCueId;
+extern s32 gRacePlayerHitAngle;
+extern s32 gRacePlayerHitDistance;
+extern s16 gRacePlayerHitEffectAngle;
+extern s32 gRacePlayerHitDeltaX;
+extern s32 gRacePlayerHitDeltaZ;
 extern Unk8011228C D_8011228C[];
 
 s32 enqueueSoundEffect(s16, s16);
-void func_8008BBB8(RaceInputPlayer *, s32);
+void enqueueRacePlayerVoiceSound(RaceInputPlayer *, s32);
 
-s32 func_80084F50(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueSpinout(RaceInputPlayer *arg0) {
     s32 temp_v0;
     s32 var_v1;
     s32 temp_t0;
@@ -41,27 +41,27 @@ s32 func_80084F50(RaceInputPlayer *arg0) {
     if (temp_v0 & 0x379000) {
         return 1;
     }
-    if (!(temp_v0 & RACE_ACTOR_COLLISION_ALWAYS_VALID)) {
-        var_v1 = D_80121D54 - arg0->facingAngle;
-        var_v1 += RACE_ACTOR_COLLISION_HALF_TURN;
-        temp_t0 = var_v1 & RACE_ACTOR_COLLISION_ANGLE_MASK;
+    if (!(temp_v0 & RACE_PLAYER_COLLISION_ALWAYS_VALID)) {
+        var_v1 = gRacePlayerHitAngle - arg0->facingAngle;
+        var_v1 += RACE_PLAYER_COLLISION_HALF_TURN;
+        temp_t0 = var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK;
         var_v1 = (s16) temp_t0;
-        if (temp_v0 & RACE_ACTOR_COLLISION_YAW_FLIPPED) {
-            var_v1 = (s16) (var_v1 + RACE_ACTOR_COLLISION_HALF_TURN);
+        if (temp_v0 & RACE_PLAYER_COLLISION_YAW_FLIPPED) {
+            var_v1 = (s16) (var_v1 + RACE_PLAYER_COLLISION_HALF_TURN);
         }
         var_v1 += 0x200;
-        var_v1 = (s16) (var_v1 & RACE_ACTOR_COLLISION_ANGLE_MASK);
-        if ((D_80121D58 < 0x30000) || (var_v1 >= 0x401)) {
+        var_v1 = (s16) (var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK);
+        if ((gRacePlayerHitDistance < 0x30000) || (var_v1 >= 0x401)) {
             return 1;
         }
     }
-    if (gRaceSurfaceCueId < 5) {
-        gRaceSurfaceCueId = 5;
+    if (gRacePlayerHitCueId < 5) {
+        gRacePlayerHitCueId = 5;
     }
     return 0;
 }
 
-s32 func_80085010(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueGhostSpinout(RaceInputPlayer *arg0) {
     s32 temp_v0;
     s32 var_v1;
     s32 temp_t0;
@@ -70,107 +70,107 @@ s32 func_80085010(RaceInputPlayer *arg0) {
     if (temp_v0 & 0x379000) {
         return 1;
     }
-    if (!(temp_v0 & RACE_ACTOR_COLLISION_ALWAYS_VALID)) {
-        var_v1 = D_80121D54 - arg0->facingAngle;
-        var_v1 += RACE_ACTOR_COLLISION_HALF_TURN;
-        temp_t0 = var_v1 & RACE_ACTOR_COLLISION_ANGLE_MASK;
+    if (!(temp_v0 & RACE_PLAYER_COLLISION_ALWAYS_VALID)) {
+        var_v1 = gRacePlayerHitAngle - arg0->facingAngle;
+        var_v1 += RACE_PLAYER_COLLISION_HALF_TURN;
+        temp_t0 = var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK;
         var_v1 = (s16) temp_t0;
-        if (temp_v0 & RACE_ACTOR_COLLISION_YAW_FLIPPED) {
-            var_v1 = (s16) (var_v1 + RACE_ACTOR_COLLISION_HALF_TURN);
+        if (temp_v0 & RACE_PLAYER_COLLISION_YAW_FLIPPED) {
+            var_v1 = (s16) (var_v1 + RACE_PLAYER_COLLISION_HALF_TURN);
         }
         var_v1 += 0x200;
-        var_v1 = (s16) (var_v1 & RACE_ACTOR_COLLISION_ANGLE_MASK);
-        if ((D_80121D58 < 0x30000) || (var_v1 >= 0x401)) {
+        var_v1 = (s16) (var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK);
+        if ((gRacePlayerHitDistance < 0x30000) || (var_v1 >= 0x401)) {
             return 1;
         }
     }
-    if (gRaceSurfaceCueId < 6) {
-        gRaceSurfaceCueId = 6;
+    if (gRacePlayerHitCueId < 6) {
+        gRacePlayerHitCueId = 6;
     }
     return 0;
 }
 
-s32 func_800850D0(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueLaunch(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x37D000) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 7) {
-        gRaceSurfaceCueId = 7;
+    if (gRacePlayerHitCueId < 7) {
+        gRacePlayerHitCueId = 7;
     }
     return 0;
 }
 
-s32 func_80085118(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueStun(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x77D000) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 0xB) {
-        gRaceSurfaceCueId = 0xB;
+    if (gRacePlayerHitCueId < 0xB) {
+        gRacePlayerHitCueId = 0xB;
     }
     return 0;
 }
 
-s32 func_80085160(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueTrip(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x77D000) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 0xA) {
-        gRaceSurfaceCueId = 0xA;
+    if (gRacePlayerHitCueId < 0xA) {
+        gRacePlayerHitCueId = 0xA;
     }
     return 0;
 }
 
-s32 func_800851A8(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueTumble(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x77D000) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 0xC) {
-        gRaceSurfaceCueId = 0xC;
+    if (gRacePlayerHitCueId < 0xC) {
+        gRacePlayerHitCueId = 0xC;
     }
     return 0;
 }
 
-s32 func_800851F0(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueSlide(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x77D000) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 0xD) {
-        gRaceSurfaceCueId = 0xD;
+    if (gRacePlayerHitCueId < 0xD) {
+        gRacePlayerHitCueId = 0xD;
     }
     return 0;
 }
 
-s32 func_80085238(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCuePushForward(RaceInputPlayer *arg0) {
     s32 temp_v0 = arg0->stateFlags;
 
     if (temp_v0 & 0x43000) {
         return 1;
     }
-    if (!(temp_v0 & RACE_ACTOR_COLLISION_ACTIVE)) {
+    if (!(temp_v0 & RACE_PLAYER_COLLISION_ACTIVE)) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 8) {
-        gRaceSurfaceCueId = 8;
+    if (gRacePlayerHitCueId < 8) {
+        gRacePlayerHitCueId = 8;
     }
     return 0;
 }
 
-s32 func_80085290(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCuePushBack(RaceInputPlayer *arg0) {
     s32 temp_v0 = arg0->stateFlags;
 
     if (temp_v0 & 0x43000) {
         return 1;
     }
-    if (!(temp_v0 & RACE_ACTOR_COLLISION_ACTIVE)) {
+    if (!(temp_v0 & RACE_PLAYER_COLLISION_ACTIVE)) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 9) {
-        gRaceSurfaceCueId = 9;
+    if (gRacePlayerHitCueId < 9) {
+        gRacePlayerHitCueId = 9;
     }
     return 0;
 }
 
-s32 func_800852E8(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueNudge(RaceInputPlayer *arg0) {
     s32 temp_v0;
     s32 var_v1;
     s32 temp_t9;
@@ -179,55 +179,55 @@ s32 func_800852E8(RaceInputPlayer *arg0) {
     if (temp_v0 & 0x43000) {
         return 1;
     }
-    var_v1 = D_80121D54 - arg0->facingAngle;
-    var_v1 += RACE_ACTOR_COLLISION_HALF_TURN;
-    temp_t9 = var_v1 & RACE_ACTOR_COLLISION_ANGLE_MASK;
+    var_v1 = gRacePlayerHitAngle - arg0->facingAngle;
+    var_v1 += RACE_PLAYER_COLLISION_HALF_TURN;
+    temp_t9 = var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK;
     var_v1 = (s16) temp_t9;
-    if (temp_v0 & RACE_ACTOR_COLLISION_YAW_FLIPPED) {
-        var_v1 = (s16) (var_v1 + RACE_ACTOR_COLLISION_HALF_TURN);
+    if (temp_v0 & RACE_PLAYER_COLLISION_YAW_FLIPPED) {
+        var_v1 = (s16) (var_v1 + RACE_PLAYER_COLLISION_HALF_TURN);
     }
     var_v1 += 0x400;
-    var_v1 = (s16) (var_v1 & RACE_ACTOR_COLLISION_ANGLE_MASK);
-    if ((D_80121D58 < 0x14000) || (var_v1 >= 0x801)) {
+    var_v1 = (s16) (var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK);
+    if ((gRacePlayerHitDistance < 0x14000) || (var_v1 >= 0x801)) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 2) {
-        gRaceSurfaceCueId = 2;
+    if (gRacePlayerHitCueId < 2) {
+        gRacePlayerHitCueId = 2;
     }
     return 0;
 }
 
-s32 func_800853A0(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueSlowdown(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x43000) {
         return 1;
     }
-    if (gRaceSurfaceCueId <= 0) {
-        gRaceSurfaceCueId = 1;
+    if (gRacePlayerHitCueId <= 0) {
+        gRacePlayerHitCueId = 1;
     }
     return 0;
 }
 
-s32 func_800853E4(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueObstacle(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x345001) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 0xE) {
-        gRaceSurfaceCueId = 0xE;
+    if (gRacePlayerHitCueId < 0xE) {
+        gRacePlayerHitCueId = 0xE;
     }
     return 0;
 }
 
-s32 func_8008542C(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueHeavyKnockdown(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x775000) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 0xF) {
-        gRaceSurfaceCueId = 0xF;
+    if (gRacePlayerHitCueId < 0xF) {
+        gRacePlayerHitCueId = 0xF;
     }
     return 0;
 }
 
-s32 func_80085474(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueItemSteal(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x375000) {
         return 1;
     }
@@ -237,70 +237,70 @@ s32 func_80085474(RaceInputPlayer *arg0) {
     if (arg0->actionSoundTimer != 0) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 0x10) {
-        gRaceSurfaceCueId = 0x10;
+    if (gRacePlayerHitCueId < 0x10) {
+        gRacePlayerHitCueId = 0x10;
     }
     return 0;
 }
 
-s32 func_800854E8(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueGhostSlowdown(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x375000) {
         return 1;
     }
     if (arg0->actionSoundTimer != 0) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 0x11) {
-        gRaceSurfaceCueId = 0x11;
+    if (gRacePlayerHitCueId < 0x11) {
+        gRacePlayerHitCueId = 0x11;
     }
     return 0;
 }
 
-s32 func_80085544(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueSpin(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x775000) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 3) {
-        gRaceSurfaceCueId = 3;
+    if (gRacePlayerHitCueId < 3) {
+        gRacePlayerHitCueId = 3;
     }
     return 0;
 }
 
-s32 func_8008558C(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueReverseSpin(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x775000) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 4) {
-        gRaceSurfaceCueId = 4;
+    if (gRacePlayerHitCueId < 4) {
+        gRacePlayerHitCueId = 4;
     }
     return 0;
 }
 
-s32 func_800855D4(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerTerrainFallCue(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x41001) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 0x12) {
-        gRaceSurfaceCueId = 0x12;
+    if (gRacePlayerHitCueId < 0x12) {
+        gRacePlayerHitCueId = 0x12;
     }
     return 0;
 }
 
-s32 func_8008561C(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerTerrainCrashCue(RaceInputPlayer *arg0) {
     if (arg0->stateFlags & 0x41001) {
         return 1;
     }
-    if (gRaceSurfaceCueId < 0x13) {
-        gRaceSurfaceCueId = 0x13;
+    if (gRacePlayerHitCueId < 0x13) {
+        gRacePlayerHitCueId = 0x13;
     }
     return 0;
 }
 
-// func_80085664 best match: 88.687% (nonmatchings/func_80085664-6113366811127043669/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_actor_collision/func_80085664.s")
+// resolveRacePlayerItemHitReactions best match: 88.687% (nonmatchings/resolveRacePlayerItemHitReactions-6113366811127043669/base_2.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_collision/resolveRacePlayerItemHitReactions.s")
 
 #ifdef NON_MATCHING
-void func_80085664(RaceInputPlayer *arg0) {
+void resolveRacePlayerItemHitReactions(RaceInputPlayer *arg0) {
     s32 var_t0;
     s32 var_t1;
     s32 var_t2;
@@ -313,108 +313,108 @@ void func_80085664(RaceInputPlayer *arg0) {
     s32 temp_a0_2;
     u16 temp_v0;
 
-    gRaceSurfaceCueId = 0;
+    gRacePlayerHitCueId = 0;
     temp_v0 = arg0->pendingItemHitFlags;
     if (temp_v0 != 0) {
         if ((temp_v0 & 0x200) && (arg0->unk5C < (getRaceCourseSurfaceHeight(arg0->unk502, arg0->posX, arg0->posZ) + 0xB0000))) {
             arg0->pendingItemHitFlags |= 1;
         }
-        D_80121D5C = arg0->unk2C8 - arg0->unk40_x;
-        D_80121D60 = arg0->unk2CC - arg0->unk48;
-        D_80121D58 = integerSquareRoot64((s64) D_80121D5C * D_80121D5C + (s64) D_80121D60 * D_80121D60) >> 1;
-        D_80121D54 = calculateAngleFromDeltaXZ(D_80121D5C, D_80121D60);
-        if ((arg0->pendingItemHitFlags & 1) && (func_80085238(arg0) != 0) && (func_80084F50(arg0) != 0) && (func_800852E8(arg0) != 0)) {
-            func_800853A0(arg0);
+        gRacePlayerHitDeltaX = arg0->unk2C8 - arg0->unk40_x;
+        gRacePlayerHitDeltaZ = arg0->unk2CC - arg0->unk48;
+        gRacePlayerHitDistance = integerSquareRoot64((s64) gRacePlayerHitDeltaX * gRacePlayerHitDeltaX + (s64) gRacePlayerHitDeltaZ * gRacePlayerHitDeltaZ) >> 1;
+        gRacePlayerHitAngle = calculateAngleFromDeltaXZ(gRacePlayerHitDeltaX, gRacePlayerHitDeltaZ);
+        if ((arg0->pendingItemHitFlags & 1) && (tryQueueRacePlayerHitCuePushForward(arg0) != 0) && (tryQueueRacePlayerHitCueSpinout(arg0) != 0) && (tryQueueRacePlayerHitCueNudge(arg0) != 0)) {
+            tryQueueRacePlayerHitCueSlowdown(arg0);
         }
-        if ((arg0->pendingItemHitFlags & 2) && (func_80085238(arg0) != 0)) {
-            func_80084F50(arg0);
+        if ((arg0->pendingItemHitFlags & 2) && (tryQueueRacePlayerHitCuePushForward(arg0) != 0)) {
+            tryQueueRacePlayerHitCueSpinout(arg0);
         }
         temp_a0 = arg0->pendingItemHitFlags;
         var_t4 = temp_a0 & 0x400;
         if (temp_a0 & 0x800) {
-            func_80085010(arg0);
+            tryQueueRacePlayerHitCueGhostSpinout(arg0);
             var_t4 = arg0->pendingItemHitFlags & 0x400;
         }
-        if ((var_t4 != 0) && (func_80085160(arg0) != 0)) {
-            func_80085160(arg0);
+        if ((var_t4 != 0) && (tryQueueRacePlayerHitCueTrip(arg0) != 0)) {
+            tryQueueRacePlayerHitCueTrip(arg0);
         }
-        if ((arg0->pendingItemHitFlags & 4) && (func_80085290(arg0) != 0)) {
-            func_800850D0(arg0);
+        if ((arg0->pendingItemHitFlags & 4) && (tryQueueRacePlayerHitCuePushBack(arg0) != 0)) {
+            tryQueueRacePlayerHitCueLaunch(arg0);
         }
         temp_a0_2 = arg0->pendingItemHitFlags;
         var_t3 = temp_a0_2 & 0x100;
         if (temp_a0_2 & 8) {
-            func_80085118(arg0);
+            tryQueueRacePlayerHitCueStun(arg0);
             var_t3 = arg0->pendingItemHitFlags & 0x100;
         }
         var_t8 = arg0->pendingItemHitFlags & 0x10;
         if (var_t3 != 0) {
-            func_800851F0(arg0);
+            tryQueueRacePlayerHitCueSlide(arg0);
             var_t8 = arg0->pendingItemHitFlags & 0x10;
         }
         var_t9 = arg0->pendingItemHitFlags & 0x20;
         if (var_t8 != 0) {
-            func_8008542C(arg0);
+            tryQueueRacePlayerHitCueHeavyKnockdown(arg0);
             var_t9 = arg0->pendingItemHitFlags & 0x20;
         }
         var_t0 = arg0->pendingItemHitFlags & PLAYER_HITFLAG_GHOST_SLOWDOWN;
         if (var_t9 != 0) {
-            func_80085474(arg0);
+            tryQueueRacePlayerHitCueItemSteal(arg0);
             var_t0 = arg0->pendingItemHitFlags & PLAYER_HITFLAG_GHOST_SLOWDOWN;
         }
         var_t1 = arg0->pendingItemHitFlags & 0x40;
         if (var_t0 != 0) {
-            func_800854E8(arg0);
+            tryQueueRacePlayerHitCueGhostSlowdown(arg0);
             var_t1 = arg0->pendingItemHitFlags & 0x40;
         }
         var_t2 = arg0->pendingItemHitFlags & 0x2000;
         if (var_t1 != 0) {
-            func_80085544(arg0);
+            tryQueueRacePlayerHitCueSpin(arg0);
             var_t2 = arg0->pendingItemHitFlags & 0x2000;
         }
         var_t4_2 = arg0->pendingItemHitFlags & 0x80;
         if (var_t2 != 0) {
-            func_8008558C(arg0);
+            tryQueueRacePlayerHitCueReverseSpin(arg0);
             var_t4_2 = arg0->pendingItemHitFlags & 0x80;
         }
         if (var_t4_2 != 0) {
-            func_800851A8(arg0);
+            tryQueueRacePlayerHitCueTumble(arg0);
         }
     }
     arg0->pendingItemHitFlags = 0;
     if (arg0->unk330 == 3) {
         if (arg0->pad331 == 3) {
-            func_800853E4(arg0);
+            tryQueueRacePlayerHitCueObstacle(arg0);
         }
     }
     if (arg0->unk330 == 8) {
-        func_800853E4(arg0);
+        tryQueueRacePlayerHitCueObstacle(arg0);
     }
     if ((arg0->unk330 == 6) || (arg0->unk330 == 0xC) || (arg0->unk330 == 0x10)) {
-        func_800855D4(arg0);
+        tryQueueRacePlayerTerrainFallCue(arg0);
     }
     if ((arg0->unk330 == 7) || (arg0->unk330 == 0xE) || (arg0->unk330 == 0xF)) {
-        func_8008561C(arg0);
+        tryQueueRacePlayerTerrainCrashCue(arg0);
     }
-    if (gRaceSurfaceCueId != 0) {
+    if (gRacePlayerHitCueId != 0) {
         if (arg0->stateFlags & 0x800) {
             arg0->unk2C3 = 0;
         }
         arg0->unk57A = 0;
-        switch (gRaceSurfaceCueId) {
+        switch (gRacePlayerHitCueId) {
         case 5:
         case 6:
-            if (gRaceSurfaceCueId == 6) {
+            if (gRacePlayerHitCueId == 6) {
                 if (D_8011228C[arg0->playerIndexU16].active != 0) {
                     enqueueSoundEffect(0x47, 0x32);
                 }
             } else {
-                func_8008BBB8(arg0, 2);
+                enqueueRacePlayerVoiceSound(arg0, 2);
             }
             arg0->mode = 4;
             arg0->updateState = 0;
             arg0->updateTimer = 0;
-            arg0->unk2DE = (s16) D_80121D54;
+            arg0->unk2DE = (s16) gRacePlayerHitAngle;
             arg0->unk2E0 = arg0->unk2C8;
             arg0->unk2E4 = arg0->unk2CC;
             if (arg0->soundDisabled == 0) {
@@ -423,30 +423,30 @@ void func_80085664(RaceInputPlayer *arg0) {
             }
             break;
         case 8:
-            func_8008BBB8(arg0, 2);
+            enqueueRacePlayerVoiceSound(arg0, 2);
             arg0->mode = 0xE;
             arg0->updateState = 0;
             arg0->updateTimer = 0;
             if (arg0->soundDisabled == 0) {
                 enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
-                func_8004E518((s16) arg0->playerIndexU16, D_80121D56, 0, arg0->unk284 / 2, arg0->unk280);
+                func_8004E518((s16) arg0->playerIndexU16, gRacePlayerHitEffectAngle, 0, arg0->unk284 / 2, arg0->unk280);
             }
             break;
         case 9:
-            func_8008BBB8(arg0, 2);
+            enqueueRacePlayerVoiceSound(arg0, 2);
             arg0->mode = 0xE;
             arg0->updateState = 0;
             arg0->updateTimer = 0;
-            arg0->unk2DE = (s16) D_80121D54;
+            arg0->unk2DE = (s16) gRacePlayerHitAngle;
             arg0->unk2E0 = arg0->unk2C8;
             arg0->unk2E4 = arg0->unk2CC;
             break;
         case 2:
-            func_8008BBB8(arg0, 2);
+            enqueueRacePlayerVoiceSound(arg0, 2);
             arg0->mode = 3;
             arg0->updateState = 0;
             arg0->updateTimer = 0;
-            arg0->unk2DE = (s16) D_80121D54;
+            arg0->unk2DE = (s16) gRacePlayerHitAngle;
             arg0->unk2E0 = arg0->unk2C8;
             arg0->unk2E4 = arg0->unk2CC;
             if (arg0->soundDisabled == 0) {
@@ -464,7 +464,7 @@ void func_80085664(RaceInputPlayer *arg0) {
             }
             /* fallthrough */
         case 10:
-            func_8008BBB8(arg0, 2);
+            enqueueRacePlayerVoiceSound(arg0, 2);
             arg0->mode = 0xB;
             arg0->updateState = 0;
 block_104:
@@ -473,9 +473,9 @@ block_104:
         case 11:
             D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
             if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
-                func_8008BBB8(arg0, 2);
+                enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
-                func_8008BBB8(arg0, 3);
+                enqueueRacePlayerVoiceSound(arg0, 3);
             }
             arg0->mode = 0x28;
             arg0->updateState = 0;
@@ -483,9 +483,9 @@ block_104:
         case 12:
             D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
             if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
-                func_8008BBB8(arg0, 2);
+                enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
-                func_8008BBB8(arg0, 3);
+                enqueueRacePlayerVoiceSound(arg0, 3);
             }
             arg0->mode = 0x1A;
             arg0->updateState = 0;
@@ -493,38 +493,38 @@ block_104:
         case 13:
             D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
             if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
-                func_8008BBB8(arg0, 2);
+                enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
-                func_8008BBB8(arg0, 3);
+                enqueueRacePlayerVoiceSound(arg0, 3);
             }
             arg0->mode = 0x1B;
             arg0->updateState = 0;
             goto block_104;
         case 14:
-            func_8008BBB8(arg0, 4);
+            enqueueRacePlayerVoiceSound(arg0, 4);
             arg0->mode = 0xA;
             arg0->updateState = 0;
             goto block_104;
         case 15:
             D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
             if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
-                func_8008BBB8(arg0, 2);
+                enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
-                func_8008BBB8(arg0, 3);
+                enqueueRacePlayerVoiceSound(arg0, 3);
             }
             arg0->mode = 0x17;
             arg0->updateState = 0;
             goto block_104;
         case 16:
         case 17:
-            if (gRaceSurfaceCueId == 0x11) {
+            if (gRacePlayerHitCueId == 0x11) {
                 if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
-                    func_8008BBB8(arg0, 2);
+                    enqueueRacePlayerVoiceSound(arg0, 2);
                 } else {
-                    func_8008BBB8(arg0, 3);
+                    enqueueRacePlayerVoiceSound(arg0, 3);
                 }
             } else {
-                func_8008BBB8(arg0, 2);
+                enqueueRacePlayerVoiceSound(arg0, 2);
             }
             if (arg0->soundDisabled == 0) {
                 func_8004E518((s16) arg0->playerIndexU16, 0, 3, arg0->unk284 / 2, 0);
@@ -535,15 +535,15 @@ block_104:
         case 3:
             D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
             if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
-                func_8008BBB8(arg0, 2);
+                enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
-                func_8008BBB8(arg0, 3);
+                enqueueRacePlayerVoiceSound(arg0, 3);
             }
             arg0->mode = 0x19;
             arg0->updateState = 0;
             goto block_104;
         case 4:
-            func_8008BBB8(arg0, 2);
+            enqueueRacePlayerVoiceSound(arg0, 2);
             arg0->mode = 0x19;
             arg0->updateState = 0;
             goto block_104;
@@ -564,7 +564,7 @@ block_104:
 }
 #endif
 
-s32 func_800860A0(RaceInputPlayer *arg0) {
+s32 isRacePlayerRespawnSurfaceValid(RaceInputPlayer *arg0) {
     s32 temp_v0;
 
     temp_v0 = getRaceCourseSurfaceType(arg0->unk502, arg0->posX, arg0->posZ);
@@ -595,8 +595,8 @@ s32 func_800860A0(RaceInputPlayer *arg0) {
     return 1;
 }
 
-// func_80086170 best match: 47.068% (nonmatchings/func_80086170-731940616440357983/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_actor_collision/func_80086170.s")
+// resolveRacePlayerCollisionVolumes best match: 47.068% (nonmatchings/resolveRacePlayerCollisionVolumes-731940616440357983/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_collision/resolveRacePlayerCollisionVolumes.s")
 
 #ifdef NON_MATCHING
 // The current best attempt is a cleaned m2c baseline in the matching workspace.

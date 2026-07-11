@@ -6,7 +6,7 @@
 #include "race_motion.h"
 #include "race_camera.h"
 #include "race_course_effects.h"
-#include "race_actor_collision.h"
+#include "race_player_collision.h"
 #define calculateAngleBetweenXZPoints calculateAngleBetweenXZPoints_s32
 #include "fixed_point_math.h"
 #undef calculateAngleBetweenXZPoints
@@ -529,7 +529,7 @@ void func_8008D09C(RaceInputPlayer *player) {
         player->unk528 = 0;
         player->unk258 = 0;
         if (player->unk57B != 0) {
-            func_8008BBB8(player, 7);
+            enqueueRacePlayerVoiceSound(player, 7);
             setRaceMotionAnimation(player, 0x22);
         }
     }
@@ -793,7 +793,7 @@ void func_8008D09C(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
     func_8008CF10(player);
     if (player->unk517 != 0) {
-        func_8008BBB8(player, 5);
+        enqueueRacePlayerVoiceSound(player, 5);
     }
 }
 #endif
@@ -836,7 +836,7 @@ void func_8008DAF0(RaceInputPlayer *player) {
     player->unk578 = 6;
     func_8008CF10(player);
     if (player->unk517 != 0) {
-        func_8008BBB8(player, 5);
+        enqueueRacePlayerVoiceSound(player, 5);
     }
 }
 
@@ -895,7 +895,7 @@ void func_8008DC2C(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
     if (player->unk517 != 0) {
-        func_8008BBB8(player, 5);
+        enqueueRacePlayerVoiceSound(player, 5);
     }
 }
 
@@ -950,7 +950,7 @@ void func_8008DE1C(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
     player->unk74 = yVel;
     if (player->unk517 != 0) {
-        func_8008BBB8(player, 5);
+        enqueueRacePlayerVoiceSound(player, 5);
     }
 }
 
@@ -1054,7 +1054,7 @@ void func_8008E008(RaceInputPlayer *player) {
     func_800832CC(player);
     func_8008CF10(player);
     if (player->unk517 != 0) {
-        func_8008BBB8(player, 5);
+        enqueueRacePlayerVoiceSound(player, 5);
     }
 }
 
@@ -1065,7 +1065,7 @@ void func_8008E008(RaceInputPlayer *player) {
 #define HANDLE_SURFACE_CUE(modeValue, effectValue, soundType)                         \
     if (player->soundDisabled == 0) {                                                 \
         enqueuePositionalSoundEffect(0x17, (SoundPosition *)&player->posX, 0x7F, 0x32);              \
-        func_8008BBB8(player, soundType);                                             \
+        enqueueRacePlayerVoiceSound(player, soundType);                                             \
     }                                                                                 \
     flags = player->stateFlags | 0x800;                                               \
     player->mode = modeValue;                                                         \
@@ -1170,7 +1170,7 @@ void func_8008E350(RaceInputPlayer *player) {
                 player->unk310 += 0x50000;
                 player->unk314 += 0x50000;
                 rotation += 0x50000;
-                func_8008BBB8(player, 0);
+                enqueueRacePlayerVoiceSound(player, 0);
             }
         } else {
             lean = -0x30000;
@@ -1181,7 +1181,7 @@ void func_8008E350(RaceInputPlayer *player) {
                 player->unk310 += 0x50000;
                 player->unk314 += 0x50000;
                 rotation -= 0x50000;
-                func_8008BBB8(player, 0);
+                enqueueRacePlayerVoiceSound(player, 0);
             }
         }
     }
@@ -1322,7 +1322,7 @@ void func_8008E350(RaceInputPlayer *player) {
     stepRaceMotionJointAnimationUntilEnd(player);
     func_8008CF10(player);
     if (player->unk517 != 0) {
-        func_8008BBB8(player, 5);
+        enqueueRacePlayerVoiceSound(player, 5);
     }
 }
 
@@ -3556,7 +3556,7 @@ void func_800936D4(RaceInputPlayer *player) {
             player->unk502 = player->unk2E8;
             do {
                 getRaceCourseSurfaceSpawnTransform(player->unk502, pos, &player->posY, &player->posZ, &player->facingAngle);
-                if (func_800860A0(player) == 0) {
+                if (isRacePlayerRespawnSurfaceValid(player) == 0) {
                     player->unk502--;
                 } else {
                     break;
@@ -3683,7 +3683,7 @@ void func_800939E0(RaceInputPlayer *player) {
                 sp2C = &player->facingAngle;
 loop:
                 getRaceCourseSurfaceSpawnTransform(player->unk502, sp38, sp34, sp30, sp2C);
-                if (func_800860A0(player) == 0) {
+                if (isRacePlayerRespawnSurfaceValid(player) == 0) {
                     player->unk502--;
                     goto loop;
                 }
@@ -5003,7 +5003,7 @@ void func_80096630(RaceInputPlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                func_8008BBB8(player, 6);
+                enqueueRacePlayerVoiceSound(player, 6);
                 player->updateTimer++;
             }
             player->stateTimer = 0x14;
@@ -5026,7 +5026,7 @@ void func_800966F4(RaceInputPlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                func_8008BBB8(player, 6);
+                enqueueRacePlayerVoiceSound(player, 6);
                 player->updateTimer++;
             }
             setRaceMotionAnimation(player, 0x25);
@@ -5048,7 +5048,7 @@ void func_800967B0(RaceInputPlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                func_8008BBB8(player, 6);
+                enqueueRacePlayerVoiceSound(player, 6);
                 player->updateTimer++;
             }
             player->stateTimer = 0x14;
@@ -5071,7 +5071,7 @@ void func_80096874(RaceInputPlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                func_8008BBB8(player, 6);
+                enqueueRacePlayerVoiceSound(player, 6);
                 player->updateTimer++;
             }
             player->stateTimer = 0;
@@ -5094,7 +5094,7 @@ void func_80096934(RaceInputPlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                func_8008BBB8(player, 6);
+                enqueueRacePlayerVoiceSound(player, 6);
                 player->updateTimer++;
             }
             player->stateTimer = 0x32;
@@ -5108,7 +5108,7 @@ void func_80096934(RaceInputPlayer *player) {
 void func_800969F8(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
-        func_8008BBB8(player, 6);
+        enqueueRacePlayerVoiceSound(player, 6);
         player->stateTimer = 0x1E;
         setRaceMotionAnimation(player, 0x23);
     }
@@ -5306,7 +5306,7 @@ void func_80097038(RaceInputPlayer *player) {
         }
     }
     func_80087E14(player);
-    func_80086170(player);
+    resolveRacePlayerCollisionVolumes(player);
     updateRaceRumble(player);
 }
 
@@ -5507,7 +5507,7 @@ void func_8009762C(RaceInputPlayer *player) {
             player->updateState = 0;
             player->updateTimer = 0;
             player->stateFlags = stateFlags & ~0x200;
-            func_8008BBB8(player, 2);
+            enqueueRacePlayerVoiceSound(player, 2);
         } else {
             player->stateFlags = stateFlags & ~0x200;
             if (func_80095F90(player->playerIndex) != 0) {
@@ -5547,7 +5547,7 @@ void func_80097744(RaceInputPlayer *player) {
             player->updateState = 0;
             player->updateTimer = 0;
             player->stateFlags = stateFlags & ~0x200;
-            func_8008BBB8(player, 2);
+            enqueueRacePlayerVoiceSound(player, 2);
         } else {
             player->stateFlags = stateFlags & ~0x200;
             if (func_80095F90(player->playerIndex) != 0) {

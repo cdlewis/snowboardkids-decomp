@@ -121,7 +121,7 @@ extern s32 gRaceCourseCollisionAdjustedX;
 extern s32 gRaceCourseCollisionAdjustedZ;
 extern RaceMotionRotation gRaceMotionJointFrameBuffer[];
 extern s32 gRaceMotionJointBlendBuffer[];
-extern s32 gRaceSurfaceCueId;
+extern s32 gRacePlayerHitCueId;
 extern s16 gRaceMotionAnimationAssetHandles[];
 extern s16 gRaceCourseSurfaceAssetHandle;
 extern s16 gRaceCourseIndex;
@@ -1057,7 +1057,7 @@ void loadRaceMotionJointAnimationFrame(RaceMotionState *state) {
 #ifdef NON_MATCHING
 extern s32 gRaceMotionRotationFrameBuffer[];
 extern s32 gRaceMotionJointFrameBuffer[];
-extern s32 gRaceSurfaceCueId;
+extern s32 gRacePlayerHitCueId;
 
 void interpolateRaceMotionAnimationFrame(RaceMotionState *state, s32 animIndex, s32 frameTimer, s32 frameTimerReset) {
     s16 *data;
@@ -1125,7 +1125,7 @@ loop_pos:
 
         posFrame += 0x2A;
         rotFrame += 6;
-    } while ((u32)posFrame < (u32)&gRaceSurfaceCueId);
+    } while ((u32)posFrame < (u32)&gRacePlayerHitCueId);
 
     pos = gRaceMotionJointFrameBuffer;
     count = 0;
@@ -1185,7 +1185,7 @@ loop_pos:
 #ifdef NON_MATCHING
 extern s32 gRaceMotionRotationFrameBuffer[];
 extern s32 gRaceMotionJointFrameBuffer[];
-extern s32 gRaceSurfaceCueId;
+extern s32 gRacePlayerHitCueId;
 
 void interpolateRaceMotionJointAnimationFrame(RaceMotionState *state, s32 animIndex, s32 frameTimer, s32 frameTimerReset) {
     s16 *data;
@@ -1261,7 +1261,7 @@ loop_skip:
 
         posFrame += 0x2A;
         rotFrame += 6;
-    } while ((u32)posFrame < (u32)&gRaceSurfaceCueId);
+    } while ((u32)posFrame < (u32)&gRacePlayerHitCueId);
 
     pos = gRaceMotionJointFrameBuffer;
     count = 0;
@@ -1348,7 +1348,7 @@ void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 ti
     packed = (s16 *)((u8 *)packed + 0x24);
 
     row = gRaceMotionJointFrameBuffer;
-    end = (RaceMotionRotation *)&gRaceSurfaceCueId;
+    end = (RaceMotionRotation *)&gRacePlayerHitCueId;
     do {
         i = 0x48;
         out = row + 6;
