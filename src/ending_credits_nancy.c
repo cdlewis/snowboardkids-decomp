@@ -17,7 +17,7 @@ struct EndingCreditsNancy {
 };
 
 extern u16 gEndingSequencePhase;
-extern s8 gEndingCharacterEffectDone;
+extern u8 gEndingCharacterEffectDoneFlags[];
 extern s8 gEndingNancyEffectDone;
 
 void updateEndingNancyFinalPose(EndingCreditsNancy *arg0) {
@@ -212,7 +212,7 @@ void waitEndingNancyPhase32Aura(EndingCreditsNancy *arg0) {
         setMainMenuSceneModelAnimation(1, 0x52);
         arg0->rotY = 0xC00;
         setMainMenuSceneModelRotation(1, arg0->rotX, arg0->rotY, arg0->rotZ);
-        gEndingCharacterEffectDone = 0;
+        gEndingCharacterEffectDoneFlags[0] = 0;
         spawnEndingCharacterAura(0x13, -0x3A, 1, 1);
     }
 }
