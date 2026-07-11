@@ -6,6 +6,7 @@
 #include "menu_rendering.h"
 #include "shop_menu_ui.h"
 #include "title_menu.h"
+#include "viewport_manager.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -164,10 +165,6 @@ extern s16 func_80042D58(s32);
 extern s32 func_80043040(s16);
 extern void func_800437F0(void *, void *, s32);
 extern void func_80045914(void);
-extern void func_800704F0(void);
-extern void func_80070614(s32);
-extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_80070E90(s32);
 extern void func_800720E4(s32);
 extern void func_80072114(s32);
 extern void func_80072138(s32, s32);

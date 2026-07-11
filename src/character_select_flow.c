@@ -9,6 +9,7 @@
 #include "player_count_select_menu.h"
 #include "player_select_menu.h"
 #include "title_menu.h"
+#include "viewport_manager.h"
 
 typedef s16 CharacterSelectOptionList[10];
 typedef s16 CharacterSelectCourseUnlockList[11];
@@ -33,8 +34,6 @@ typedef union {
 
 extern void func_80072138(s32, s32);
 extern void func_80045914(void);
-extern void func_800704F0(void);
-extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
 extern u8 D_245A80[];
 extern u8 D_24C8E0[];
 extern u8 D_593D10[];

@@ -5,6 +5,7 @@
 #include "game_setup_menu.h"
 #include "input_task_scheduler.h"
 #include "title_menu.h"
+#include "viewport_manager.h"
 
 // func_80003140 best match: 98.611% (nonmatchings/func_80003140-5743805732885129799/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/game_setup_menu/func_80003140.s")
@@ -23,8 +24,6 @@ typedef struct {
     /* 0x4 */ u8 unk4;
 } GameSetupMenuSubState;
 
-extern void func_800704F0(void);
-extern void func_8007066C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, f32 arg7);
 extern void func_80072138();
 extern f32 D_800E0900;
 extern u8 D_800E29C0;

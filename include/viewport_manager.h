@@ -41,4 +41,13 @@ typedef struct {
 extern ViewportState D_801124B0[];
 extern s16 D_801124B8;
 
+void func_800704F0(void);
+void func_80070614(s32 arg0);
+void func_8007066C(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7);
+void func_80070860(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7, s16 arg8, s32 arg9);
+void func_80070A70(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7);
+void func_80070C64(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7);
+void func_80070E58(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void func_80070E90(s32 arg0);
+
 #endif

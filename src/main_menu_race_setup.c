@@ -6,6 +6,7 @@
 #include "main_menu_overlay_effects.h"
 #include "race_camera.h"
 #include "main_menu_race_setup.h"
+#include "viewport_manager.h"
 
 typedef struct {
     s32 x;
@@ -121,9 +122,6 @@ extern void func_80053EBC(EffectTask *);
 extern void func_80054044(s32, s32);
 extern void func_8005502C(EffectTask *);
 extern void func_800553E0(EffectTask *);
-extern void func_800704F0(void);
-extern void func_8007066C(s32, s32, s32, s32, s32, s32, s32, f32);
-extern void func_80070E90(s32);
 extern void func_80070EC0(s32);
 extern void func_80071408(void (*)(EffectTask *), s32, s32);
 extern u8 D_13F3B0[];
