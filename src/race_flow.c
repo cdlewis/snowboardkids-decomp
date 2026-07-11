@@ -88,6 +88,7 @@ typedef struct {
     /* 0x7832 */ u8 unk7832[11][5];
     /* 0x7869 */ u8 unk7869[11][5];
     /* 0x78A0 */ u8 unk78A0[11][5];
+    /* 0x78D7 */ u8 unk78D7;
 } RaceFlowInitScratch;
 
 typedef struct {
@@ -115,20 +116,28 @@ typedef struct {
     /* 0x007 */ u8 unk7;
     /* 0x008 */ u8 pad8[0xC - 0x8];
     /* 0x00C */ s32 unkC;
-    /* 0x010 */ u8 pad10[0x13 - 0x10];
+    /* 0x010 */ u8 characterId;
+    /* 0x011 */ u8 characterVariant;
+    /* 0x012 */ u8 pad12[0x13 - 0x12];
     /* 0x013 */ u8 unk13;
     /* 0x014 */ s8 unk14;
     /* 0x015 */ u8 unk15;
     /* 0x016 */ u8 unk16;
     /* 0x017 */ u8 pad17[0x18 - 0x17];
     /* 0x018 */ s16 unk18;
-    /* 0x01A */ u8 pad1A[0x2FC - 0x1A];
+    /* 0x01A */ u8 pad1A[0x2C0 - 0x1A];
+    /* 0x2C0 */ s16 unk2C0;
+    /* 0x2C2 */ u8 pad2C2[0x2FC - 0x2C2];
     /* 0x2FC */ s32 flags;
     /* 0x300 */ u8 pad300[0x502 - 0x300];
     /* 0x502 */ s16 courseId;
     /* 0x504 */ u8 pad504[0x509 - 0x504];
     /* 0x509 */ s8 result;
-    /* 0x50A */ u8 pad50A[RACE_PLAYER_STATE_SIZE - 0x50A];
+    /* 0x50A */ u8 pad50A[0x56C - 0x50A];
+    /* 0x56C */ s32 unk56C;
+    /* 0x570 */ u8 pad570[0x574 - 0x570];
+    /* 0x574 */ s16 unk574;
+    /* 0x576 */ u8 pad576[RACE_PLAYER_STATE_SIZE - 0x576];
 } RacePlayerState;
 
 typedef struct {
@@ -170,6 +179,7 @@ extern s16 D_8011216E;
 extern s16 D_801124B8;
 extern SignedUnsignedShort D_80121B50;
 extern s16 D_80121B52;
+extern s32 D_80121B7C;
 extern s16 D_800DEF14;
 extern s8 D_800DEF10;
 extern s8 D_800EC8B0;
@@ -1166,8 +1176,275 @@ void func_80076054(void) {
 }
 #endif
 
-// func_80076490 best match: 88.124% at nonmatchings/func_80076490-7273315160691878794/base_6.c.
+// func_80076490 best match: 93.039% at nonmatchings/func_80076490-731940616440357983/base_1.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80076490.s")
+
+#ifdef NON_MATCHING
+void func_80076490(void) {
+    volatile u8 padding[8];
+    s32 allDone;
+    s32 i;
+    s32 j;
+    s32 currentTime;
+    s32 recordTime;
+    RacePlayerState *player;
+    EffectTask *task;
+
+    D_800DC4C0 = 0;
+    D_800DEED4 = 0;
+    allDone = 1;
+
+    if (D_80121B55 > 0) {
+        player = D_80121D80;
+        do {
+            if (!(player->flags & 0x08000000)) {
+                allDone = 0;
+            }
+            player++;
+        } while ((u32)player < (u32)&D_80121D80[D_80121B55]);
+    }
+
+    if (D_801235B8->unk1C != 0) {
+        D_801235B8->unk1C -= 1;
+    } else {
+        allDone = 1;
+    }
+
+    if ((D_80121B60 != 0) && (func_80072938() != 0)) {
+        allDone = 0;
+    }
+
+    if (allDone != 0) {
+        if (D_80121B60 == 0) {
+            func_80072114(4);
+        }
+
+        D_801235B4 |= 0x20;
+
+        switch (D_800EC9C2) {
+        case 0:
+            if (D_80121B55 == 1) {
+                task = func_80071408((void (*)(EffectTask *))func_80058BAC, 6, 0x64);
+                if (task != NULL) {
+                    if (D_80121D80[0].result != 3) {
+                        i = D_80121D80[0].result + 1;
+                        if (D_800EC9F0.pad34[D_80121B50.s] == 0) {
+                            D_800EC9F0.pad34[D_80121B50.s] = i;
+                        } else if (i < D_800EC9F0.pad34[D_80121B50.s]) {
+                            D_800EC9F0.pad34[D_80121B50.s] = i;
+                        }
+                        if (D_800EC9F0.unk4[D_80121B50.s + 1] < D_80121D80[0].unk56C) {
+                            D_800EC9F0.unk4[D_80121B50.s + 1] = D_80121D80[0].unk56C;
+                        }
+                    }
+                    if (D_80121D80[0].result == 0) {
+                        if (D_80121B50.s == 8) {
+                            D_800DC4C0 = 1;
+                            D_800EC9F0.unk78D7 |= 1;
+                            D_800EC9F0.pad34[0x17] |= 1;
+                        }
+                    } else {
+                        D_801235B4 |= 0x20;
+                    }
+                    D_801235B8->fadeTimer = 0xA;
+                    func_8009956C(func_80077324, 0);
+                }
+            } else {
+                task = func_80071408((void (*)(EffectTask *))func_800599DC, 6, 0x64);
+                if (task != NULL) {
+                    player = D_80121D80;
+                    do {
+                        if (player->result == 0) {
+                            player->unk18++;
+                            if (player->unk18 >= 0x64) {
+                                player->unk18 = 0x63;
+                            }
+                        }
+                        player++;
+                    } while ((u32)player < (u32)&D_80121D80[4]);
+
+                    j = 0;
+                    if (D_80121B55 > 0) {
+                        player = D_80121D80;
+                        do {
+                            if (player->result == 0) {
+                                j = 1;
+                            }
+                            player++;
+                        } while ((u32)player < (u32)&D_80121D80[D_80121B55]);
+                    }
+                    if (j == 0) {
+                        D_801235B4 |= 0x20;
+                    }
+                    D_801235B8->fadeTimer = 0xA;
+                    func_8009956C(func_80077324, 0);
+                }
+            }
+            break;
+
+        case 2:
+            task = func_80071408((void (*)(EffectTask *))func_8005A2F0, 6, 0x64);
+            if (task != NULL) {
+                currentTime = D_80121B74.fraction + (D_80121B74.seconds * COURSE_TIME_SECOND) +
+                              (D_80121B74.minutes * COURSE_TIME_MINUTE);
+                i = 0;
+                j = 0;
+                do {
+                    recordTime = (D_800EC9F0.unk4E[D_80121B50.s][i].unk0 * COURSE_TIME_MINUTE) +
+                                 (D_800EC9F0.unk4E[D_80121B50.s][i].unk1 * COURSE_TIME_SECOND) +
+                                 D_800EC9F0.unk4E[D_80121B50.s][i].unk2;
+                    if (currentTime < recordTime) {
+                        break;
+                    }
+                    i++;
+                    j += 4;
+                } while (i < 5);
+                task->unk10 = i;
+                if (i < 5) {
+                    for (j = 3; j >= i; j--) {
+                        D_800EC9F0.unk4E[D_80121B50.s][j + 1] = D_800EC9F0.unk4E[D_80121B50.s][j];
+                        D_800EC9F0.unk77FB[D_80121B50.s][j + 1] = D_800EC9F0.unk77FB[D_80121B50.s][j];
+                    }
+                    D_800EC9F0.unk4E[D_80121B50.s][i] = *(RaceFlowInitEntry *)&D_80121B74;
+                    D_800EC9F0.unk77FB[D_80121B50.s][i] =
+                        (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
+                    if (i == 0) {
+                        D_800EC9F0.unk12A[D_80121B50.s] = *(RaceFlowInitEntry *)&D_80121B7C;
+                    }
+                }
+                if (i < 5) {
+                    D_80121B5F = 1;
+                } else {
+                    D_80121B5F = 2;
+                    D_801235B4 |= 0x20;
+                }
+                D_801235B8->fadeTimer = 0xA;
+                func_8009956C(func_80077324, 0);
+            }
+            break;
+
+        case 1:
+            switch (D_80121B5E) {
+            case 2:
+                task = func_80071408((void (*)(EffectTask *))func_8005E534, 6, 0x64);
+                if (task != NULL) {
+                    i = 0;
+                    do {
+                        if (D_800EC9F0.unk7756[D_80121B50.s][i] < D_80122040) {
+                            break;
+                        }
+                        i++;
+                    } while (i < 5);
+                    if (D_80121B81 != 0) {
+                        i = 5;
+                    }
+                    task->unk10 = i;
+                    if (i < 5) {
+                        for (j = 3; j >= i; j--) {
+                            D_800EC9F0.unk7756[D_80121B50.s][j + 1] = D_800EC9F0.unk7756[D_80121B50.s][j];
+                            D_800EC9F0.unk77C4[D_80121B50.s][j + 1] = D_800EC9F0.unk77C4[D_80121B50.s][j];
+                        }
+                        D_800EC9F0.unk7756[D_80121B50.s][i] = D_80121D80[0].unk2C0;
+                        D_800EC9F0.unk77C4[D_80121B50.s][i] =
+                            (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
+                    }
+                    if (D_80121D80[0].unk2C0 >= 0x7D0) {
+                        D_800EC9F0.unk78D7 |= 2;
+                    }
+                    if (i < 5) {
+                        D_80121B5F = 1;
+                    } else {
+                        D_80121B5F = 2;
+                        D_801235B4 |= 0x20;
+                    }
+                    D_801235B8->fadeTimer = 0xA;
+                    func_8009956C(func_80077324, 0);
+                }
+                break;
+
+            case 1:
+                task = func_80071408((void (*)(EffectTask *))func_8005B834, 6, 0x64);
+                if (task != NULL) {
+                    i = 0;
+                    do {
+                        if (D_800EC9F0.unk7832[D_80121B50.s][i] < D_801222F4) {
+                            break;
+                        }
+                        i++;
+                    } while (i < 5);
+                    if (D_80121B81 != 0) {
+                        i = 5;
+                    }
+                    task->unk10 = i;
+                    if (i < 5) {
+                        for (j = 3; j >= i; j--) {
+                            D_800EC9F0.unk7832[D_80121B50.s][j + 1] = D_800EC9F0.unk7832[D_80121B50.s][j];
+                            D_800EC9F0.unk7869[D_80121B50.s][j + 1] = D_800EC9F0.unk7869[D_80121B50.s][j];
+                        }
+                        D_800EC9F0.unk7832[D_80121B50.s][i] = D_80121D80[0].unk574;
+                        D_800EC9F0.unk7869[D_80121B50.s][i] =
+                            (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
+                    }
+                    if (i < 5) {
+                        D_80121B5F = 1;
+                    } else {
+                        D_80121B5F = 2;
+                        D_801235B4 |= 0x20;
+                    }
+                    D_801235B8->fadeTimer = 0xA;
+                    func_8009956C(func_80077324, 0);
+                }
+                break;
+
+            case 0:
+                task = func_80071408((void (*)(EffectTask *))func_8005CE4C, 6, 0x64);
+                if (task != NULL) {
+                    currentTime = D_80121B74.fraction + (D_80121B74.seconds * COURSE_TIME_SECOND) +
+                                  (D_80121B74.minutes * COURSE_TIME_MINUTE);
+                    i = 0;
+                    do {
+                        recordTime = (D_800EC9F0.unk156[D_80121B50.s][i].unk0 * COURSE_TIME_MINUTE) +
+                                     (D_800EC9F0.unk156[D_80121B50.s][i].unk1 * COURSE_TIME_SECOND) +
+                                     D_800EC9F0.unk156[D_80121B50.s][i].unk2;
+                        if (currentTime < recordTime) {
+                            break;
+                        }
+                        i++;
+                    } while (i < 5);
+                    if (D_80121B81 != 0) {
+                        i = 5;
+                    }
+                    task->unk10 = i;
+                    if (i < 5) {
+                        for (j = 3; j >= i; j--) {
+                            D_800EC9F0.unk156[D_80121B50.s][j + 1] = D_800EC9F0.unk156[D_80121B50.s][j];
+                            D_800EC9F0.unk78A0[D_80121B50.s][j + 1] = D_800EC9F0.unk78A0[D_80121B50.s][j];
+                        }
+                        D_800EC9F0.unk156[D_80121B50.s][i] = *(RaceFlowInitEntry *)&D_80121B74;
+                        D_800EC9F0.unk78A0[D_80121B50.s][i] =
+                            (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
+                    }
+                    if (i < 5) {
+                        D_80121B5F = 1;
+                    } else {
+                        D_80121B5F = 2;
+                        D_801235B4 |= 0x20;
+                    }
+                    D_801235B8->fadeTimer = 0xA;
+                    func_8009956C(func_80077324, 0);
+                }
+                break;
+            }
+            break;
+        }
+    }
+
+    if (D_80121B60 != 0) {
+        func_80071664((void (*)(EffectTask *))func_8005393C, 5, 0x64, D_80121B60 - 1);
+    }
+    func_80077C94();
+}
+#endif
 
 void func_80077324(void) {
     if (func_80072938() == 0) {
