@@ -63,7 +63,7 @@ void func_8004270C(MainMenuSceneModel *arg0) {
 }
 #endif
 
-void func_800428C8(s32 modelIndex) {
+void addMainMenuSceneModelRenderCallback(s32 modelIndex) {
     MainMenuSceneModel *model;
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);

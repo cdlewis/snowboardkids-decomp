@@ -49,12 +49,12 @@ extern void *D_8010ADE0;
 
 void func_800394E0(s32 arg0) {
     stepMainMenuSceneModelAnimation(3);
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
 }
 
 void func_8003950C(MainMenuSceneActor3 *arg0) {
     stepMainMenuSceneModelAnimation(3);
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
     if (gEndingSequencePhase == 0x41) {
         setCallbackTaskCallback(arg0, func_800394E0);
         setMainMenuSceneModelAnimation(3, 0x5B);
@@ -70,7 +70,7 @@ void func_80039584(MainMenuSceneActor3 *arg0) {
     u16 temp_t8;
 
     sp18 = stepMainMenuSceneModelAnimation(3);
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
     if (sp18 == 1) {
         timerPtr = &arg0->timer;
         arg0->timer = temp_t8 = (*timerPtr & 0xFFFF) + 1;
@@ -91,7 +91,7 @@ void func_80039610(MainMenuSceneActor3 *arg0) {
     u16 temp_t8;
 
     sp18 = stepMainMenuSceneModelAnimation(3);
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
     if (sp18 == 1) {
         timerPtr = &arg0->timer;
         arg0->timer = temp_t8 = (*timerPtr & 0xFFFF) + 1;
@@ -120,7 +120,7 @@ void func_8003969C(MainMenuSceneActor3 *arg0) {
         arg0->z += 0x80000;
     }
     setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
 }
 
 void func_8003973C(MainMenuSceneActor3 *arg0) {
@@ -133,7 +133,7 @@ void func_8003973C(MainMenuSceneActor3 *arg0) {
         setCallbackTaskCallback(arg0, func_8003969C);
         setMainMenuSceneModelAnimation(3, 0x57);
     }
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
 }
 
 void func_800397C4(MainMenuSceneActor3 *arg0) {
@@ -152,7 +152,7 @@ void func_800397C4(MainMenuSceneActor3 *arg0) {
     arg0->z += 0xFFFA0000;
     arg0->timer = arg0->timer + 1;
     setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
     if (sp20 == 1) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_8003973C);
@@ -315,7 +315,7 @@ void func_80039E08(MainMenuSceneActor3 *arg0) {
         setCallbackTaskCallback(arg0, func_80039CEC);
         setMainMenuSceneModelAnimation(3, 0x4A);
     }
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
 }
 
 void func_80039E5C(MainMenuSceneActor3 *arg0) {
@@ -549,7 +549,7 @@ void func_8003A6A8(MainMenuSceneActor3 *arg0) {
 }
 
 void func_8003A70C(MainMenuSceneActor3 *arg0) {
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
     arg0->timer++;
     if (arg0->timer == 0x1E) {
         arg0->timer = 0;
@@ -566,7 +566,7 @@ void func_8003A77C(MainMenuSceneActor3 *arg0) {
         arg0->x = arg0->x + 0x40000;
         setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
     }
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
 }
 
 void func_8003A7EC(MainMenuSceneActor3 *arg0) {
@@ -588,7 +588,7 @@ void func_8003A7EC(MainMenuSceneActor3 *arg0) {
         setMainMenuSceneModelAnimation(3, 0x40);
     }
     setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
 }
 
 void func_8003A8A4(MainMenuSceneActor3 *arg0) {
@@ -598,7 +598,7 @@ void func_8003A8A4(MainMenuSceneActor3 *arg0) {
     arg0->x += 0x100000;
     setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
     sp20 = stepMainMenuSceneModelAnimation(3);
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
     arg0->y += 0x50000;
     if (sp20 == 1) {
         arg0->timer = 0;
@@ -629,7 +629,7 @@ void func_8003A944(MainMenuSceneActor3 *arg0) {
         sp20 = stepMainMenuSceneModelAnimation(3);
     }
 
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
     if (sp20 == 1) {
         gEndingActorHandshakeState++;
         setCallbackTaskCallback(arg0, func_8003AC00);
@@ -651,7 +651,7 @@ void func_8003A9E0(MainMenuSceneActor3 *arg0) {
     if (var_s4 > 0) {
         do {
             stepMainMenuSceneModelAnimation(3);
-            func_800428C8(3);
+            addMainMenuSceneModelRenderCallback(3);
             temp_t8 = (arg0->timer & 0xFFFF) + 1;
             arg0->timer = temp_t8;
             if ((temp_t8 & 0xFFFF) < 5) {
@@ -696,7 +696,7 @@ void func_8003A9E0(MainMenuSceneActor3 *arg0) {
 }
 
 void func_8003AC00(MainMenuSceneActor3 *arg0) {
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
     if ((gEndingActorHandshakeState == 1) || (gEndingActorHandshakeState == 3)) {
         setCallbackTaskCallback(arg0, func_8003A9E0);
         if (gEndingActorHandshakeState == 1) {
@@ -717,7 +717,7 @@ void func_8003AC00(MainMenuSceneActor3 *arg0) {
 }
 
 void func_8003ACD0(MainMenuSceneActor3 *arg0) {
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
     arg0->timer++;
     if (arg0->timer == 0xF) {
         gEndingSequencePhase = 0x19;
@@ -732,7 +732,7 @@ void func_8003AD40(MainMenuSceneActor3 *arg0) {
     u16 temp_t8;
 
     sp18 = stepMainMenuSceneModelAnimation(3);
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
     if (sp18 == 1) {
         temp_t8 = (arg0->timer & 0xFFFF) + 1;
         arg0->timer = temp_t8;
@@ -749,7 +749,7 @@ void func_8003ADC0(MainMenuSceneActor3 *arg0) {
     s32 var_a1;
 
     loopMainMenuSceneModelAnimation(3);
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
     var_a1 = arg0->x += (s32)0xFFFD0000;
     arg0->z = arg0->z + (s32)0xFFFF0000;
     if (var_a1 < 0x2D0001) {
@@ -771,7 +771,7 @@ void func_8003AE8C(MainMenuSceneActor3 *arg0) {
 
     sp20 = stepMainMenuSceneModelAnimation(3);
     if (arg0->animTimer == 0) {
-        func_800428C8(3);
+        addMainMenuSceneModelRenderCallback(3);
     } else {
         func_80042A00(3);
     }
@@ -799,7 +799,7 @@ void func_8003AF6C(MainMenuSceneActor3 *arg0) {
         setCallbackTaskCallback(arg0, func_8003AE8C);
         setMainMenuSceneModelAnimation(3, 0x37);
     }
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
 }
 
 void func_8003AFC0(MainMenuSceneActor3 *arg0) {
@@ -819,7 +819,7 @@ void func_8003AFC0(MainMenuSceneActor3 *arg0) {
         setCallbackTaskCallback(arg0, func_8003AF6C);
         setMainMenuSceneModelAnimation(3, 0x36);
     }
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
 }
 
 void func_8003B074(MainMenuSceneActor3 *arg0) {
@@ -827,7 +827,7 @@ void func_8003B074(MainMenuSceneActor3 *arg0) {
     s32 sp20;
 
     sp20 = stepMainMenuSceneModelAnimation(3);
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
     if (gEndingSequencePhase == 0x15) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, func_8003AFC0);
@@ -863,7 +863,7 @@ void func_8003B134(MainMenuSceneActor3 *arg0) {
         }
     }
     setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
-    func_800428C8(3);
+    addMainMenuSceneModelRenderCallback(3);
 }
 
 void func_8003B1F8(MainMenuSceneActor3 *arg0) {

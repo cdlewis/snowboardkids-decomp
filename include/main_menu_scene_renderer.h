@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-void func_800428C8(s32 modelIndex);
+void addMainMenuSceneModelRenderCallback(s32 modelIndex);
 void func_80042920(s32 modelIndex, s32 textureId, s32 paletteId);
 void func_8004298C(s32 modelIndex, s32 textureId, s32 paletteId, s32 arg3);
 void func_80042A00(s32 modelIndex);
