@@ -65,7 +65,7 @@ void func_80008620(void) {
     if (D_80121B5E == 3) {
         D_80121B5E = 0;
     }
-    func_8009956C(&func_800088C8, 0);
+    setCurrentInputTaskCallback(&func_800088C8, 0);
     updateEffectTasks();
     D_8010AF50.state = 0;
     D_8010AF50.alpha = 0;
@@ -99,7 +99,7 @@ void func_800086EC(void) {
     if (D_80121B5E == 3) {
         D_80121B5E = 0;
     }
-    func_8009956C(func_800088C8, 0);
+    setCurrentInputTaskCallback(func_800088C8, 0);
     updateEffectTasks();
     D_8010AF50.state = 0;
     D_8010AF50.alpha = 0;
@@ -209,7 +209,7 @@ void func_800088C8(void) {
         }
 
         if (D_80121D88 == 2) {
-            func_8009956C(func_80008C04, 0);
+            setCurrentInputTaskCallback(func_80008C04, 0);
             func_80072114(4);
         }
     }
@@ -220,10 +220,10 @@ void func_800088C8(void) {
 
 void func_80008C04(void) {
     if (D_80121B5E < 3 && D_8010ADF8 == 0) {
-        func_8009956C(&initCharacterSelectCourseMenuFromPlayerCount, 0);
+        setCurrentInputTaskCallback(&initCharacterSelectCourseMenuFromPlayerCount, 0);
         D_800EC9DD = 1;
     } else {
-        func_8009956C(&func_80008C84, 0);
+        setCurrentInputTaskCallback(&func_80008C84, 0);
         func_80072114(8);
         D_800EC9DD = 1;
     }
@@ -244,8 +244,8 @@ void func_80008C84(void) {
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
             D_801235B4 = 1;
-            func_80099658(2);
-            func_8009954C(4);
+            resumeInputTask(2);
+            removeInputTask(4);
         }
     }
 }

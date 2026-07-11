@@ -64,7 +64,7 @@ void func_80005540(void) {
     D_800EC9DD = 0;
     D_8010ADF0 = 0;
     gMenuFadeAlpha = D_801235B8->fade;
-    func_8009956C(func_80005788, 0);
+    setCurrentInputTaskCallback(func_80005788, 0);
     D_8010AE70.state = 0;
     D_8010AE70.nextState = 0;
     updateEffectTasks();
@@ -93,7 +93,7 @@ void func_800055EC(void) {
     D_8010ADF8 = 0;
     D_8010ADF0 = 0;
     gMenuFadeAlpha = D_801235B8->fade;
-    func_8009956C(func_80005788, 0);
+    setCurrentInputTaskCallback(func_80005788, 0);
     D_8010AE70.state = 0;
     D_8010AE70.nextState = 0;
     updateEffectTasks();
@@ -208,7 +208,7 @@ void func_80005788(void) {
         }
 
         if (D_80121D88 == 2) {
-            func_8009956C(func_80005B14, 0);
+            setCurrentInputTaskCallback(func_80005B14, 0);
             if (D_8010ADF8 == 0) {
                 func_80072114(4);
             }
@@ -224,10 +224,10 @@ void func_80005B14(void) {
 
     v0 = D_800EC9C2;
     if ((v0 == 0 || v0 == 2) && D_8010ADF8 == 0) {
-        func_8009956C(initCharacterSelectCourseMenuFromPlayerSelect, 0);
+        setCurrentInputTaskCallback(initCharacterSelectCourseMenuFromPlayerSelect, 0);
         D_801235B4 = 0;
     } else {
-        func_8009956C(func_80005B80, 0);
+        setCurrentInputTaskCallback(func_80005B80, 0);
     }
     updateEffectTasks();
 }
@@ -250,8 +250,8 @@ void func_80005B80(void) {
             } else {
                 D_801235B4 = 0;
             }
-            func_80099658(2);
-            func_8009954C(4);
+            resumeInputTask(2);
+            removeInputTask(4);
         }
     }
 }

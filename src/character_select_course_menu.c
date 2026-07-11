@@ -124,7 +124,7 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     sp1C = var_v1;
-    func_8009956C(updateCharacterSelectCourseMenu, 0);
+    setCurrentInputTaskCallback(updateCharacterSelectCourseMenu, 0);
     updateEffectTasks();
     var_v1 = sp1C;
     if (D_800EC9DD == 1) {
@@ -238,7 +238,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     sp2C = var_v1;
-    func_8009956C(updateCharacterSelectCourseMenu, 0);
+    setCurrentInputTaskCallback(updateCharacterSelectCourseMenu, 0);
     var_v1 = sp2C;
     if (D_800EC9DD == 1) {
         if (D_80121B5E < 2) {
@@ -350,7 +350,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     }
 
     sp2C = var_v1;
-    func_8009956C(updateCharacterSelectCourseMenu, 0);
+    setCurrentInputTaskCallback(updateCharacterSelectCourseMenu, 0);
     var_v1 = sp2C;
     if (D_800EC9DD == 1) {
         if (D_80121B5E < 2) {
@@ -495,7 +495,7 @@ void updateCharacterSelectCourseMenu(void) {
                             gCharacterSelectCourseCursorState.fields.state = 2;
                             gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
                             D_80121D88 = 7;
-                            func_8009956C(&handleCharacterSelectCourseSelection, 0);
+                            setCurrentInputTaskCallback(&handleCharacterSelectCourseSelection, 0);
                             func_80072114(8);
                         }
                     } else if ((temp_input & 0x4000) && (D_801235B4 == (gCharacterSelectCourseExitOptionIndex + 1))) {
@@ -503,7 +503,7 @@ void updateCharacterSelectCourseMenu(void) {
                         gCharacterSelectCourseCursorState.fields.state = 2;
                         gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
                         D_80121D88 = 7;
-                        func_8009956C(&handleCharacterSelectCourseSelection, 0);
+                        setCurrentInputTaskCallback(&handleCharacterSelectCourseSelection, 0);
                         func_80072114(8);
                     }
                 }
@@ -514,7 +514,7 @@ void updateCharacterSelectCourseMenu(void) {
             if (D_800EC9C1 == 8) {
                 if ((*gCharacterSelectActiveCourseOptions)[D_80121B50] == -1) {
                     D_80121D88 = 2;
-                    func_8009956C(&handleCharacterSelectCourseSelection, 0);
+                    setCurrentInputTaskCallback(&handleCharacterSelectCourseSelection, 0);
                     func_80072114(8);
                 } else {
                     D_80121D88 = 1;
@@ -523,7 +523,7 @@ void updateCharacterSelectCourseMenu(void) {
         }
 
         if (gCharacterSelectCourseSubmenuState >= 2) {
-            func_8009956C(&updateCharacterSelectCourseSubmenu, 0);
+            setCurrentInputTaskCallback(&updateCharacterSelectCourseSubmenu, 0);
         }
     }
 
@@ -590,14 +590,14 @@ void updateCharacterSelectCourseSubmenu(void) {
         if (state == 6) {
             D_80121D80[8] = 0;
             D_800EC9C1 = 0;
-            func_8009956C(updateCharacterSelectCourseMenu, 0);
+            setCurrentInputTaskCallback(updateCharacterSelectCourseMenu, 0);
             gCharacterSelectCourseCursorState.fields.state = 1;
             gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
             gCharacterSelectCourseCursorState.fields.timer = 0;
             state = D_80121D88;
         }
         if (state == 8) {
-            func_8009956C(fadeOutCharacterSelectCourseMenu, 0);
+            setCurrentInputTaskCallback(fadeOutCharacterSelectCourseMenu, 0);
         }
     }
     updateEffectTasks();
@@ -606,14 +606,14 @@ void updateCharacterSelectCourseSubmenu(void) {
 void handleCharacterSelectCourseSelection(void) {
     if (D_80121D88 == 8) {
         if (D_80121B55 >= 2) {
-            func_8009956C(&fadeOutCharacterSelectCourseMenu, 0);
+            setCurrentInputTaskCallback(&fadeOutCharacterSelectCourseMenu, 0);
             D_801235B4 = 1;
             D_8010ADF8 = 1;
         } else {
             if (D_800EC9DD == 0) {
-                func_8009956C(&func_80005540, 0);
+                setCurrentInputTaskCallback(&func_80005540, 0);
             } else {
-                func_8009956C(&func_80008620, 0);
+                setCurrentInputTaskCallback(&func_80008620, 0);
             }
             D_80121B50 = (*gCharacterSelectActiveCourseOptions)[D_80121B50];
             D_801235B4 = 0;
@@ -636,8 +636,8 @@ void fadeOutCharacterSelectCourseMenu(void) {
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
             D_80121B50 = (*gCharacterSelectActiveCourseOptions)[D_80121B50];
-            func_80099658(2);
-            func_8009954C(4);
+            resumeInputTask(2);
+            removeInputTask(4);
         }
     }
 }

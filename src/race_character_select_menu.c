@@ -197,7 +197,7 @@ void initRaceCharacterSelectMenu(void) {
     D_800EC9E6 = 0;
     D_801235B8->timer = 0;
     D_801235B8->unk20 = 0;
-    func_8009956C(updateRaceCharacterSelectMenu, 0);
+    setCurrentInputTaskCallback(updateRaceCharacterSelectMenu, 0);
 
     for (i = 0; &D_80121D80[i] < &gFrameCounter; i++) {
         D_80121D80[i].mode = 0;
@@ -332,8 +332,7 @@ extern void func_8002916C(EffectTask *);
 extern void *createEffectTask(void (*)(EffectTask *), s32, s32);
 extern void func_80072114(s32);
 extern void func_80072138();
-extern void func_8009956C(void (*)(void), s32);
-extern void func_8007105C(void);
+extern void setCurrentInputTaskCallback(void (*)(void), s32);
 
 extern void *D_8010ADE8;
 extern u8 D_8010AF06[];
@@ -634,7 +633,7 @@ void updateRaceCharacterSelectMenu(void) {
     }
 
     if (D_800EC9C0 == 0x19) {
-        func_8009956C(fadeOutRaceCharacterSelectMenu, 0);
+        setCurrentInputTaskCallback(fadeOutRaceCharacterSelectMenu, 0);
         if (D_801235B4 == 0) {
             func_80072114(8);
         }
@@ -664,8 +663,8 @@ void fadeOutRaceCharacterSelectMenu(void) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
-            func_80099658(2);
-            func_8009954C(4);
+            resumeInputTask(2);
+            removeInputTask(4);
         }
     }
 }

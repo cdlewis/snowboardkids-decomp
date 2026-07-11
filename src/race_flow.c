@@ -7,7 +7,7 @@
 #include "character_select_menu.h"
 #include "race_character_select_menu.h"
 #include "controller_pak_score_delete_flow.h"
-#include "controller_pak_replay_save_prompt_flow.h"
+#include "controller_pak_replay_save_message_flow.h"
 #include "controller_pak_file_delete_flow.h"
 #include "course_select_menu.h"
 #include "game_setup_menu.h"
@@ -261,7 +261,7 @@ void func_80072C30(void) {
     loadCompressedRomAsset(D_2427D0, D_243270, 6);
     func_80070EC0(0);
     D_801235B8->fadeTimer = 0xA;
-    func_8009956C(&func_80072C88, 0);
+    setCurrentInputTaskCallback(&func_80072C88, 0);
 }
 
 void func_80072C88(void) {
@@ -271,33 +271,33 @@ void func_80072C88(void) {
         func_80000A40(1);
         func_80000A40(2);
         func_80000A40(3);
-        func_8009956C(&func_80072D04, 0);
+        setCurrentInputTaskCallback(&func_80072D04, 0);
     }
 }
 
 void func_80072D04(void) {
     if (gPlayerInputHeld & 0x1000) {
-        func_8009956C(&func_80072D54, 0);
+        setCurrentInputTaskCallback(&func_80072D54, 0);
     } else {
-        func_8009956C(&func_80072D98, 0);
+        setCurrentInputTaskCallback(&func_80072D98, 0);
     }
 }
 
 void func_80072D54(void) {
-    func_8009956C(&func_80072D98, 0);
-    func_800994F4(4, &initControllerPakFileDeleteFlow, 0x64);
-    func_80099614(0);
+    setCurrentInputTaskCallback(&func_80072D98, 0);
+    createInputTask(4, &initControllerPakFileDeleteFlow, 0x64);
+    suspendInputTask(0);
 }
 
 void func_80072D98(void) {
-    func_8009956C(&func_80072DDC, 0);
-    func_800994F4(4, &initControllerPakReplaySavePromptFlow, 0x64);
-    func_80099614(0);
+    setCurrentInputTaskCallback(&func_80072DDC, 0);
+    createInputTask(4, &initControllerPakReplaySaveMessageFlow, 0x64);
+    suspendInputTask(0);
 }
 
 void func_80072DDC(void) {
-    func_800994F4(3, &func_80001C30, 0x64);
-    func_8009954C(0);
+    createInputTask(3, &func_80001C30, 0x64);
+    removeInputTask(0);
 }
 
 void func_80072E10(void) {
@@ -434,79 +434,79 @@ void func_80073140(void) {
     D_80121B50.s = 0;
     D_800EC9C2 = 0;
     D_80121B58 = 0;
-    func_8009956C(func_800732C4, 0);
+    setCurrentInputTaskCallback(func_800732C4, 0);
 }
 
 void func_800732C4(void) {
-    func_8009956C(&func_8007334C, 0);
-    func_800994F4(4, &func_80003140, 0x64);
-    func_80099614(2);
+    setCurrentInputTaskCallback(&func_8007334C, 0);
+    createInputTask(4, &func_80003140, 0x64);
+    suspendInputTask(2);
 }
 
 void func_80073308(void) {
-    func_8009956C(&func_8007334C, 0);
-    func_800994F4(4, &initCharacterSelectMenu, 0x64);
-    func_80099614(2);
+    setCurrentInputTaskCallback(&func_8007334C, 0);
+    createInputTask(4, &initCharacterSelectMenu, 0x64);
+    suspendInputTask(2);
 }
 
 void func_8007334C(void) {
     if (D_80121B55 >= 2) {
-        func_8009956C(&func_8007339C, 0);
+        setCurrentInputTaskCallback(&func_8007339C, 0);
     } else {
-        func_8009956C(&func_800734A0, 0);
+        setCurrentInputTaskCallback(&func_800734A0, 0);
     }
 }
 
 void func_8007339C(void) {
-    func_8009956C(&func_800733E0, 0);
-    func_800994F4(4, &initCharacterSelectCourseMenuFromPlayerSelect, 0x64);
-    func_80099614(2);
+    setCurrentInputTaskCallback(&func_800733E0, 0);
+    createInputTask(4, &initCharacterSelectCourseMenuFromPlayerSelect, 0x64);
+    suspendInputTask(2);
 }
 
 void func_800733E0(void) {
     if (D_801235B4 == 0) {
-        func_8009956C(&func_80073738, 0);
+        setCurrentInputTaskCallback(&func_80073738, 0);
     } else {
         D_801235B4 = 0;
-        func_8009956C(&func_80073308, 0);
+        setCurrentInputTaskCallback(&func_80073308, 0);
     }
 }
 
 void func_80073434(void) {
     if (D_800EC9C2 == 1) {
-        func_8009956C(&func_800735F8, 0);
+        setCurrentInputTaskCallback(&func_800735F8, 0);
     } else {
-        func_8009956C(&func_800734E4, 0);
+        setCurrentInputTaskCallback(&func_800734E4, 0);
     }
-    func_800994F4(4, &initCharacterSelectCourseMenuFromRace, 0x64);
-    func_80099614(2);
+    createInputTask(4, &initCharacterSelectCourseMenuFromRace, 0x64);
+    suspendInputTask(2);
 }
 
 void func_800734A0(void) {
-    func_8009956C(&func_800734E4, 0);
-    func_800994F4(4, &func_800055EC, 0x64);
-    func_80099614(2);
+    setCurrentInputTaskCallback(&func_800734E4, 0);
+    createInputTask(4, &func_800055EC, 0x64);
+    suspendInputTask(2);
 }
 
 void func_800734E4(void) {
     if (D_801235B4 == 1) {
         D_801235B4 = 0;
-        func_8009956C(&func_80073308, 0);
+        setCurrentInputTaskCallback(&func_80073308, 0);
         return;
     }
     switch (D_800EC9C2) {
     case 0:
     case 2:
-        func_8009956C(&func_80073738, 0);
+        setCurrentInputTaskCallback(&func_80073738, 0);
         return;
     case 1:
-        func_8009956C(&func_800735B4, 0);
+        setCurrentInputTaskCallback(&func_800735B4, 0);
         return;
     case 3:
-        func_8009956C(&func_80073650, 0);
+        setCurrentInputTaskCallback(&func_80073650, 0);
         return;
     case 4:
-        func_8009956C(&func_80073694, 0);
+        setCurrentInputTaskCallback(&func_80073694, 0);
         /* fallthrough */
     default:
         return;
@@ -514,58 +514,58 @@ void func_800734E4(void) {
 }
 
 void func_800735B4(void) {
-    func_8009956C(&func_800735F8, 0);
-    func_800994F4(4, &func_800086EC, 0x64);
-    func_80099614(2);
+    setCurrentInputTaskCallback(&func_800735F8, 0);
+    createInputTask(4, &func_800086EC, 0x64);
+    suspendInputTask(2);
 }
 
 void func_800735F8(void) {
     if (D_801235B4 == 1) {
         D_801235B4 = 0;
-        func_8009956C(&func_800734A0, 0);
+        setCurrentInputTaskCallback(&func_800734A0, 0);
     } else {
-        func_8009956C(&func_80073738, 0);
+        setCurrentInputTaskCallback(&func_80073738, 0);
     }
 }
 
 void func_80073650(void) {
-    func_8009956C(&func_800734A0, 0);
-    func_800994F4(4, &func_800097E0, 0x64);
-    func_80099614(2);
+    setCurrentInputTaskCallback(&func_800734A0, 0);
+    createInputTask(4, &func_800097E0, 0x64);
+    suspendInputTask(2);
 }
 
 void func_80073694(void) {
     D_8010ADFA = 0;
-    func_8009956C(&func_800736E0, 0);
-    func_800994F4(4, &initControllerPakScoreDeleteFlow, 0x64);
-    func_80099614(2);
+    setCurrentInputTaskCallback(&func_800736E0, 0);
+    createInputTask(4, &initControllerPakScoreDeleteFlow, 0x64);
+    suspendInputTask(2);
 }
 
 void func_800736E0(void) {
     if (D_801235B4 == 1) {
         D_801235B4 = 0;
-        func_8009956C(&func_800734A0, 0);
+        setCurrentInputTaskCallback(&func_800734A0, 0);
     } else {
-        func_8009956C(&func_800737FC, 0);
+        setCurrentInputTaskCallback(&func_800737FC, 0);
     }
 }
 
 void func_80073738(void) {
-    func_8009956C(&func_8007377C, 0);
-    func_800994F4(4, &initRaceCharacterSelectMenu, 0x64);
-    func_80099614(2);
+    setCurrentInputTaskCallback(&func_8007377C, 0);
+    createInputTask(4, &initRaceCharacterSelectMenu, 0x64);
+    suspendInputTask(2);
 }
 
 void func_8007377C(void) {
     if (D_801235B4 == 1) {
         D_801235B4 = 0;
         if (D_80121B55 >= 2) {
-            func_8009956C(&func_8007339C, 0);
+            setCurrentInputTaskCallback(&func_8007339C, 0);
         } else {
-            func_8009956C(&func_80073434, 0);
+            setCurrentInputTaskCallback(&func_80073434, 0);
         }
     } else {
-        func_8009956C(&func_80077DA0, 0);
+        setCurrentInputTaskCallback(&func_80077DA0, 0);
     }
 }
 
@@ -575,37 +575,37 @@ void func_800737FC(void) {
     func_80000A40(2);
     func_80000A40(3);
     func_80072114(0);
-    func_800994F4(3, &func_80001C30, 0x64);
-    func_8009954C(2);
+    createInputTask(3, &func_80001C30, 0x64);
+    removeInputTask(2);
 }
 
 void func_80073858(void) {
-    func_8009956C(&func_8007389C, 0);
-    func_800994F4(4, &func_8000C280, 0x64);
-    func_80099614(2);
+    setCurrentInputTaskCallback(&func_8007389C, 0);
+    createInputTask(4, &func_8000C280, 0x64);
+    suspendInputTask(2);
 }
 
 void func_8007389C(void) {
     if (D_801235B4 == 1) {
         D_801235B4 = 0;
-        func_8009956C(&func_800737FC, 0);
+        setCurrentInputTaskCallback(&func_800737FC, 0);
     } else {
-        func_8009956C(&func_80073308, 0);
+        setCurrentInputTaskCallback(&func_80073308, 0);
     }
 }
 
 void func_800738F4(void) {
-    func_8009956C(&func_800734A0, 0);
+    setCurrentInputTaskCallback(&func_800734A0, 0);
     if (D_800DC4C0 != 0) {
-        func_800994F4(4, &func_8000D340, 0x64);
-        func_80099614(2);
+        createInputTask(4, &func_8000D340, 0x64);
+        suspendInputTask(2);
     }
 }
 
 void func_80073944(void) {
-    func_8009956C(&func_800738F4, 0);
-    func_800994F4(4, &func_8003DFD0, 0x64);
-    func_80099614(2);
+    setCurrentInputTaskCallback(&func_800738F4, 0);
+    createInputTask(4, &func_8003DFD0, 0x64);
+    suspendInputTask(2);
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/func_80073988.s")
@@ -619,7 +619,7 @@ void func_800740C0(void) {
     if (D_801235B8->countdown == 0) {
         func_8006D520(0, 0x1E);
         func_800720E4(5);
-        func_8009956C(&func_80074160, 0);
+        setCurrentInputTaskCallback(&func_80074160, 0);
     }
     func_80077C94();
     D_801124B8 = 0xFF;
@@ -695,7 +695,7 @@ void func_80074160(void) {
                 gFramebufferSwapDelay = 1;
                 break;
             }
-            func_8009956C(func_800747E8, 0);
+            setCurrentInputTaskCallback(func_800747E8, 0);
         }
     } else {
         state->unk1C = temp_a0 + 1;
@@ -718,7 +718,7 @@ void func_800747E8(void) {
     if (!(D_801235B4 & 1)) {
         D_800DEF10 = 0;
         func_800728E0();
-        func_8009956C(func_80074960, 0);
+        setCurrentInputTaskCallback(func_80074960, 0);
     }
 }
 
@@ -773,7 +773,7 @@ void func_80074960(void) {
                             gRaceUpdatePaused = 0;
                             gFramebufferSwapHold = 1;
                             enqueueSoundEffect(1, 0x32);
-                            func_8009956C(func_80077B34, 0);
+                            setCurrentInputTaskCallback(func_80077B34, 0);
                             return;
                         }
                         if (valueTwo == input) {
@@ -781,7 +781,7 @@ void func_80074960(void) {
                             gRaceUpdatePaused = 0;
                             gFramebufferSwapHold = 1;
                             enqueueSoundEffect(1, 0x32);
-                            func_8009956C(func_80077B34, 0);
+                            setCurrentInputTaskCallback(func_80077B34, 0);
                             return;
                         }
                     }
@@ -800,7 +800,7 @@ void func_80074960(void) {
     if (func_80077D14() != 0) {
         D_801235B8->fadeTimer = 0x3C;
         D_800EC8B0 = 0;
-        func_8009956C(func_80074C5C, 0);
+        setCurrentInputTaskCallback(func_80074C5C, 0);
     }
 }
 
@@ -832,7 +832,7 @@ void func_80074C5C(void) {
                 bestPlayer = D_801235B8->unk1C;
             }
             D_801235B8->unk1C = bestPlayer + 2;
-            func_8009956C(func_800751C4, 0);
+            setCurrentInputTaskCallback(func_800751C4, 0);
             break;
         case 4:
             D_801235B8->unk1C = 0;
@@ -853,7 +853,7 @@ void func_80074C5C(void) {
                 bestPlayer = D_801235B8->unk1C;
             }
             D_801235B8->unk1C = bestPlayer + 5;
-            func_8009956C(func_800751C4, 0);
+            setCurrentInputTaskCallback(func_800751C4, 0);
             break;
         case 2:
             if (RACE_PLAYER_RESULT_VALUE(0) < RACE_PLAYER_RESULT_VALUE(1)) {
@@ -864,11 +864,11 @@ void func_80074C5C(void) {
                 D_8011228C = 0;
             }
             D_801235B8->fadeTimer = 0;
-            func_8009956C(func_800751C4, 0);
+            setCurrentInputTaskCallback(func_800751C4, 0);
             break;
         case 1:
             D_801235B8->fadeTimer = 0;
-            func_8009956C(func_80076054, 0);
+            setCurrentInputTaskCallback(func_80076054, 0);
             break;
         }
     }
@@ -1019,7 +1019,7 @@ void func_800751C4(void) {
     }
     func_80077C94();
     if (D_801235B8->fadeTimer == 0xF) {
-        func_8009956C(func_80076054, 0);
+        setCurrentInputTaskCallback(func_80076054, 0);
     }
 }
 
@@ -1164,7 +1164,7 @@ void func_80076054(void) {
     }
 
     D_801235B8->unk1C = 0x3C;
-    func_8009956C(func_80076490, 0);
+    setCurrentInputTaskCallback(func_80076490, 0);
     if (D_80121B60 != 0) {
         func_800720E4(6);
         if ((D_80121B55 == 1) && (D_800EC9C2 == 0)) {
@@ -1460,7 +1460,7 @@ void func_80077324(void) {
         D_801235B8->fadeTimer -= 1;
         if (D_801235B8->fadeTimer == 0) {
             D_801235B8->fadeTimer = 4;
-            func_8009956C(&func_80077400, 0);
+            setCurrentInputTaskCallback(&func_80077400, 0);
             func_80072114(0x14);
         }
     }
@@ -1484,10 +1484,10 @@ void func_80077400(void) {
                 D_80121B61 = -1;
             }
             if (D_800EC9C2 == 2) {
-                func_8009956C(&func_80077554, 0);
+                setCurrentInputTaskCallback(&func_80077554, 0);
             } else {
                 gFramebufferSwapHold = 1;
-                func_8009956C(func_80077B34, 0);
+                setCurrentInputTaskCallback(func_80077B34, 0);
             }
         }
     }
@@ -1507,12 +1507,12 @@ void func_80077554(void) {
     asset = func_80043040(D_80112130[0x2B]);
     if (((Unk80043040 *)asset)->unk8 == 0) {
         gFramebufferSwapHold = 1;
-        func_8009956C(func_80077B34, 0);
+        setCurrentInputTaskCallback(func_80077B34, 0);
         return;
     }
     if (func_800730EC() == 0) {
         gFramebufferSwapHold = 1;
-        func_8009956C(func_80077B34, 0);
+        setCurrentInputTaskCallback(func_80077B34, 0);
         return;
     }
     ((Unk80043040 *)asset)->unk0 = 0;
@@ -1594,7 +1594,7 @@ void func_80077554(void) {
     if (D_80121B61 == -1) {
         createEffectTask((void (*)(EffectTask *))func_80052520, 6, 0x64);
     }
-    func_8009956C(func_8007797C, 0);
+    setCurrentInputTaskCallback(func_8007797C, 0);
 }
 #endif
 
@@ -1610,11 +1610,11 @@ void func_8007797C(void) {
                 D_801124B8 = 0;
             } else {
                 func_80072114(0x48);
-                func_8009956C(func_80077AD4, 0);
+                setCurrentInputTaskCallback(func_80077AD4, 0);
             }
         } else {
             func_80072114(0x48);
-            func_8009956C(func_80077AD4, 0);
+            setCurrentInputTaskCallback(func_80077AD4, 0);
         }
     }
     if (D_801235B8->fadeTimer == 1) {
@@ -1627,7 +1627,7 @@ void func_8007797C(void) {
     if (gPlayerInputPressed[0] & 0x1000) {
         sp18 = func_80077AD4;
         func_80072114(0x48);
-        func_8009956C(sp18, 0);
+        setCurrentInputTaskCallback(sp18, 0);
     }
 }
 
@@ -1637,7 +1637,7 @@ void func_80077AD4(void) {
     gMenuFadeAlpha += 7;
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
-        func_8009956C(&func_80077B34, 0);
+        setCurrentInputTaskCallback(&func_80077B34, 0);
     }
 }
 
@@ -1657,15 +1657,15 @@ void func_80077B34(void) {
         func_80000A40(3);
         D_801235B4 = 0;
         if (D_80121B57 == 2) {
-            func_8009956C(func_80073988, 0);
+            setCurrentInputTaskCallback(func_80073988, 0);
         } else if (D_80121B55 == 1) {
             if (D_800EC9C2 == 1) {
-                func_8009956C(func_800735B4, 0);
+                setCurrentInputTaskCallback(func_800735B4, 0);
             } else {
-                func_8009956C(func_80073944, 0);
+                setCurrentInputTaskCallback(func_80073944, 0);
             }
         } else {
-            func_8009956C(func_80073858, 0);
+            setCurrentInputTaskCallback(func_80073858, 0);
         }
         func_80072114(0);
     }
@@ -1726,15 +1726,15 @@ loop:
 void func_80077DA0(void) {
     D_80121B52 = D_800B9542[D_80121B50.s].unk0;
     if (D_800EC9C2 != 0) {
-        func_8009956C(func_80073988, 0);
+        setCurrentInputTaskCallback(func_80073988, 0);
         return;
     }
     if (D_80121B55 == 1) {
-        func_8009956C(func_80073988, 0);
+        setCurrentInputTaskCallback(func_80073988, 0);
         return;
     }
     if (D_8012482A == 0) {
-        func_8009956C(func_80073988, 0);
+        setCurrentInputTaskCallback(func_80073988, 0);
         return;
     }
     func_800704F0();
@@ -1777,7 +1777,7 @@ void func_80077DA0(void) {
     D_801235B4 = 0;
     func_80071664(func_80053634, 0, 0x64, 0);
     createEffectTask((void (*)(EffectTask *))func_8001710C, 0, 0x5E);
-    func_8009956C(func_80078078, 0);
+    setCurrentInputTaskCallback(func_80078078, 0);
     func_800720E4(7);
 }
 
@@ -1802,7 +1802,7 @@ void func_80078078(void) {
             D_801235B4 = 1;
             enqueueSoundEffect(0x18, 0x32);
             func_80072114(0x3C);
-            func_8009956C(func_80078198, 0);
+            setCurrentInputTaskCallback(func_80078198, 0);
         }
     }
     updateEffectTasks();
@@ -1813,7 +1813,7 @@ void func_80078198(void) {
     if (gMenuFadeAlpha >= 0x100) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        func_8009956C(&func_800781FC, 0);
+        setCurrentInputTaskCallback(&func_800781FC, 0);
     }
     updateEffectTasks();
 }
@@ -1823,6 +1823,6 @@ void func_800781FC(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        func_8009956C(&func_80073988, 0);
+        setCurrentInputTaskCallback(&func_80073988, 0);
     }
 }

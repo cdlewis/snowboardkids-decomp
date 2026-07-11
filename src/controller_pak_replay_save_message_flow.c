@@ -2,7 +2,7 @@
 #include "effect_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
-#include "controller_pak_replay_save_prompt_flow.h"
+#include "controller_pak_replay_save_message_flow.h"
 #include "controller_pak_ui.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
@@ -15,26 +15,26 @@ extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern u8 gControllerPakReplaySavePromptSecondPageStart[];
-extern u8 gControllerPakReplaySavePromptFirstPageStart[];
+extern u8 gControllerPakReplaySaveMessageSecondPageStart[];
+extern u8 gControllerPakReplaySaveMessageFirstPageStart[];
 extern u8 gMainMenuSceneModelAssetStart[];
 
-void initControllerPakReplaySavePromptFlow(void) {
+void initControllerPakReplaySaveMessageFlow(void) {
     func_800704F0();
     func_8007066C(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferSwapDelay = 0;
     D_801235B8->fade = 0xFF;
     D_801235B8->timer = 0;
     gMenuFadeAlpha = D_801235B8->fade;
-    loadCompressedRomAsset(gControllerPakReplaySavePromptFirstPageStart,
+    loadCompressedRomAsset(gControllerPakReplaySaveMessageFirstPageStart,
                            gMainMenuSceneModelAssetStart, 0x26);
     func_80070EC0(0);
     createEffectTask(initControllerPakMessageIcon, 0, 0x5E);
-    func_8009956C(updateControllerPakReplaySavePromptFirstPageFadeIn, 0);
+    setCurrentInputTaskCallback(updateControllerPakReplaySaveMessageFirstPageFadeIn, 0);
     updateEffectTasks();
 }
 
-void updateControllerPakReplaySavePromptFirstPageFadeIn(void) {
+void updateControllerPakReplaySaveMessageFirstPageFadeIn(void) {
     if (D_801235B8->fade != 0) {
         D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0xF, 0);
     } else {
@@ -42,49 +42,49 @@ void updateControllerPakReplaySavePromptFirstPageFadeIn(void) {
     }
     if (D_801235B8->timer >= 0x50) {
         D_801235B8->timer = 0;
-        func_8009956C(updateControllerPakReplaySavePromptFirstPageFadeOut, 0);
+        setCurrentInputTaskCallback(updateControllerPakReplaySaveMessageFirstPageFadeOut, 0);
     }
     updateEffectTasks();
 }
 
-void updateControllerPakReplaySavePromptFirstPageFadeOut(void) {
+void updateControllerPakReplaySaveMessageFirstPageFadeOut(void) {
     if (D_801235B8->fade != 0xFF) {
         D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0xF, 1);
         if (D_801235B8->fade == 0xFF) {
             releaseMenuAssetHandles();
-            loadCompressedRomAsset(gControllerPakReplaySavePromptSecondPageStart,
-                                   gControllerPakReplaySavePromptFirstPageStart, 0x26);
+            loadCompressedRomAsset(gControllerPakReplaySaveMessageSecondPageStart,
+                                   gControllerPakReplaySaveMessageFirstPageStart, 0x26);
         }
     } else {
-        func_8009956C(waitForControllerPakReplaySavePromptSecondPage, 0);
+        setCurrentInputTaskCallback(waitForControllerPakReplaySaveMessageSecondPage, 0);
     }
     updateEffectTasks();
 }
 
-void waitForControllerPakReplaySavePromptSecondPage(void) {
+void waitForControllerPakReplaySaveMessageSecondPage(void) {
     D_801235B8->timer++;
     if (D_801235B8->timer >= 0x14) {
         D_801235B8->fade = 0xFF;
         gMenuFadeAlpha = D_801235B8->fade;
         D_801235B8->timer = 0;
-        func_8009956C(updateControllerPakReplaySavePromptSecondPageFadeIn, 0);
+        setCurrentInputTaskCallback(updateControllerPakReplaySaveMessageSecondPageFadeIn, 0);
     }
     updateEffectTasks();
 }
 
-void updateControllerPakReplaySavePromptSecondPageFadeIn(void) {
+void updateControllerPakReplaySaveMessageSecondPageFadeIn(void) {
     if (D_801235B8->fade != 0) {
         D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0xF, 0);
     } else {
         D_801235B8->timer++;
     }
     if (D_801235B8->timer >= 0x50) {
-        func_8009956C(fadeOutControllerPakReplaySavePromptFlow, 0);
+        setCurrentInputTaskCallback(fadeOutControllerPakReplaySaveMessageFlow, 0);
     }
     updateEffectTasks();
 }
 
-void fadeOutControllerPakReplaySavePromptFlow(void) {
+void fadeOutControllerPakReplaySaveMessageFlow(void) {
     if (D_801235B8->fade != 0xFF) {
         D_801235B8->fade = stepMenuFadeAlpha(D_801235B8->fade, 0xF, 1);
         if (D_801235B8->fade == 0xFF) {
@@ -97,8 +97,8 @@ void fadeOutControllerPakReplaySavePromptFlow(void) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
-            func_80099658(0);
-            func_8009954C(4);
+            resumeInputTask(0);
+            removeInputTask(4);
         }
     }
 }

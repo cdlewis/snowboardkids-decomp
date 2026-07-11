@@ -84,7 +84,7 @@ void initControllerPakScoreDeleteFlow(void) {
     gControllerPakScoreDeleteFlow.nextTimer = 0;
     gControllerPakMenuState.state = 0;
     gControllerPakMenuState.confirmChoice = 0;
-    func_8009956C(updateControllerPakScoreDeleteFlow, 0);
+    setCurrentInputTaskCallback(updateControllerPakScoreDeleteFlow, 0);
 }
 
 #ifdef NON_MATCHING
@@ -124,7 +124,7 @@ void updateControllerPakScoreDeleteFlow(void)
       gControllerPakMenuState.state = 3;
       gControllerPakMenuState.confirmChoice = 1;
       createEffectTask(initControllerPakDeleteConfirmPrompt, 0, 0x64);
-      func_8009956C(updateControllerPakScoreDeleteConfirm, 0);
+      setCurrentInputTaskCallback(updateControllerPakScoreDeleteConfirm, 0);
     }
   }
   else
@@ -411,7 +411,7 @@ void updateControllerPakScoreDeleteFlow(void)
   }
   if (sp24 != 0)
   {
- D_800EC9C1 = 1; } if (((u8) D_800EC9C1) == 0x23) { func_8009956C(fadeOutControllerPakScoreDeleteFlow, 0);
+ D_800EC9C1 = 1; } if (((u8) D_800EC9C1) == 0x23) { setCurrentInputTaskCallback(fadeOutControllerPakScoreDeleteFlow, 0);
   }
   updateEffectTasks();
 }
@@ -429,8 +429,8 @@ void fadeOutControllerPakScoreDeleteFlow(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        func_80099658(2);
-        func_8009954C(4);
+        resumeInputTask(2);
+        removeInputTask(4);
     }
 }
 
@@ -446,15 +446,15 @@ void updateControllerPakScoreDeleteConfirm(void) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
             gControllerPakMenuCursorState = 0;
-            func_8009956C(updateControllerPakScoreDeleteFlow, 0);
+            setCurrentInputTaskCallback(updateControllerPakScoreDeleteFlow, 0);
         } else {
             D_801235B4 = 1;
-            func_8009956C(fadeOutControllerPakScoreDeleteFlow, 0);
+            setCurrentInputTaskCallback(fadeOutControllerPakScoreDeleteFlow, 0);
         }
     } else if (gPlayerInputPressed & 0x4000) {
         enqueueSoundEffect(0x18, 0x32);
         D_801235B4 = 1;
-        func_8009956C(fadeOutControllerPakScoreDeleteFlow, 0);
+        setCurrentInputTaskCallback(fadeOutControllerPakScoreDeleteFlow, 0);
     }
     updateEffectTasks();
 }

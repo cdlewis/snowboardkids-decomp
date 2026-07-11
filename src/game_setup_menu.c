@@ -125,7 +125,7 @@ void func_80003140(void) {
     D_8010AE18 = 0;
     D_80122FAA = 0;
 
-    func_8009956C(func_8000337C, 0);
+    setCurrentInputTaskCallback(func_8000337C, 0);
 }
 #endif
 
@@ -199,7 +199,7 @@ block_25:
         }
     }
     if (D_8010AE00.state == 5) {
-        func_8009956C(func_800035F8, 0);
+        setCurrentInputTaskCallback(func_800035F8, 0);
         D_801235B8->fade = 0;
         D_800EC9C1 = 0;
     }
@@ -294,7 +294,7 @@ void func_800035F8(void) {
     D_8010AE3E = D_800B31C4;
     D_8010AE46 = D_800B31C6;
 
-    func_8009956C(func_80003798, 0);
+    setCurrentInputTaskCallback(func_80003798, 0);
     updateEffectTasks();
 }
 #endif
@@ -643,7 +643,7 @@ void func_80003798(void) {
             GameSetupSavePlayer03798 *save;
             GameSetupSavePlayer03798 *end;
 
-            func_8009956C(func_80004164, 0);
+            setCurrentInputTaskCallback(func_80004164, 0);
             createEffectTask(initControllerPakCheckPrompt, 0, 0x64);
             gControllerPakCheckPromptTransition.state = 6;
             gControllerPakCheckPromptTransition.selectedOption = 0;
@@ -818,7 +818,7 @@ void func_80004164(void) {
             break;
     }
     if (state == 5) {
-        func_8009956C(initCharacterSelectMenu, 0);
+        setCurrentInputTaskCallback(initCharacterSelectMenu, 0);
     }
     updateEffectTasks();
 }

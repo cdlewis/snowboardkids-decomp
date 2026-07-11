@@ -49,7 +49,7 @@ void func_8000C280(void) {
     func_80070EC0(0);
     createEffectTask(initControllerPakContinuePrompt, 0, 0x64);
     gMenuFadeAlpha = D_801235B8->fade;
-    func_8009956C(func_8000C3C8, 0);
+    setCurrentInputTaskCallback(func_8000C3C8, 0);
     updateEffectTasks();
 }
 
@@ -69,8 +69,8 @@ void func_8000C52C(void) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
             gFramebufferSwapDelay = 0;
-            func_80099658(2);
-            func_8009954C(4);
+            resumeInputTask(2);
+            removeInputTask(4);
         }
     }
 }
