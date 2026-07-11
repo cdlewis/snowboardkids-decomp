@@ -18,6 +18,7 @@
 #include "player_count_select_menu.h"
 #include "player_select_menu.h"
 #include "race_camera.h"
+#include "race_course_effects.h"
 #include "title_menu.h"
 
 #define COURSE_GRID_ENTRY_FREE -1
@@ -242,7 +243,6 @@ extern void func_80045A78(s32, s32, s32, s32);
 extern void func_80046D68(s32, s32, s32, s32, s32);
 extern void func_80057E60(EffectTask *);
 extern void func_80065E90(EffectTask *);
-extern void func_80069BC0(EffectTask *);
 extern void func_800483FC(void *, void (*)(s32), s32);
 extern void func_8005E68C(void *);
 extern void func_800704F0(void);
