@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "ending_credits_ui.h"
+#include "ending_sequence_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
@@ -35,35 +35,35 @@ typedef struct EndingObjectSpriteDebugViewerActor EndingObjectSpriteDebugViewerA
 typedef struct {
     /* 0x00 */ s16 x;
     /* 0x02 */ s16 y;
-} EndingCreditsPagePosition;
+} EndingCreditsPageTextPosition;
 
 typedef struct {
     /* 0x00 */ s16 count;
-    /* 0x02 */ EndingCreditsPagePosition positions[5];
+    /* 0x02 */ EndingCreditsPageTextPosition positions[5];
     /* 0x16 */ s16 pad;
-} EndingCreditsPageLayout;
+} EndingCreditsPageTextLineLayout;
 
 extern u16 gEndingSequencePhase;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern void *gMenuRenderCallbackList;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
-extern u16 gEndingCreditsPageGlyphScripts[][0x5A];
-extern EndingCreditsPageLayout gEndingCreditsPageLayouts[];
+extern u16 gEndingCreditsPageTextScripts[][0x5A];
+extern EndingCreditsPageTextLineLayout gEndingCreditsPageTextLineLayouts[];
 extern void addRenderCallback(void *, void *, void *);
 extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 
-void drawEndingCreditsPage(EndingCreditsTextActor *arg0);
+void drawEndingCreditsPageText(EndingCreditsTextActor *arg0);
 void updateEndingTheEndTextFadeIn(EndingCreditsTextActor *arg0);
-void updateEndingCreditsPageFadeCycle(EndingCreditsTextActor *arg0);
+void updateEndingCreditsTextPageFadeCycle(EndingCreditsTextActor *arg0);
 void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0);
 
-// drawEndingCreditsPage best match: 93.371%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_ui/drawEndingCreditsPage.s")
+// drawEndingCreditsPageText best match: 93.371%
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_ui/drawEndingCreditsPageText.s")
 
 #ifdef NON_MATCHING
-void drawEndingCreditsPage(EndingCreditsTextActor *arg0) {
+void drawEndingCreditsPageText(EndingCreditsTextActor *arg0) {
     register s32 count;
     s32 i;
     s32 scriptIndex;
@@ -75,27 +75,27 @@ void drawEndingCreditsPage(EndingCreditsTextActor *arg0) {
     u16 pad[12];
     volatile u16 colorMode;
     u16 glyph;
-    EndingCreditsPageLayout *layout;
+    EndingCreditsPageTextLineLayout *layout;
 
-    layout = &gEndingCreditsPageLayouts[arg0->pageIndex];
+    layout = &gEndingCreditsPageTextLineLayouts[arg0->pageIndex];
     count = layout->count;
     i = 0;
     if (layout->count > 0) {
         scriptIndex = 0;
         layoutOffset = 0;
         do {
-            layout = &gEndingCreditsPageLayouts[arg0->pageIndex];
-            glyph = gEndingCreditsPageGlyphScripts[arg0->pageIndex][scriptIndex];
+            layout = &gEndingCreditsPageTextLineLayouts[arg0->pageIndex];
+            glyph = gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex];
             x = *(s16 *)((u8 *)layout + layoutOffset + 2);
             y = *(s16 *)((u8 *)layout + layoutOffset + 4);
             lineLength = 0;
-            if (gEndingCreditsPageGlyphScripts[arg0->pageIndex][scriptIndex] != 0xFFFF) {
+            if (gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex] != 0xFFFF) {
                 do {
-                    text[lineLength] = gEndingCreditsPageGlyphScripts[arg0->pageIndex][scriptIndex];
+                    text[lineLength] = gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex];
                     scriptIndex++;
-                    glyph = gEndingCreditsPageGlyphScripts[arg0->pageIndex][scriptIndex];
+                    glyph = gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex];
                     lineLength++;
-                } while (gEndingCreditsPageGlyphScripts[arg0->pageIndex][scriptIndex] != 0xFFFF);
+                } while (gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex] != 0xFFFF);
             }
             text[lineLength] = 0xFFFF;
             scriptIndex++;
@@ -130,7 +130,7 @@ void updateEndingTheEndTextFadeIn(EndingCreditsTextActor *arg0) {
     }
 }
 
-void updateEndingCreditsPageFadeCycle(EndingCreditsTextActor *arg0) {
+void updateEndingCreditsTextPageFadeCycle(EndingCreditsTextActor *arg0) {
     switch (arg0->state) {
     case 0:
         arg0->alpha += ENDING_CREDITS_PAGE_FADE_STEP;
@@ -170,7 +170,7 @@ void updateEndingCreditsPageFadeCycle(EndingCreditsTextActor *arg0) {
         }
         break;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawEndingCreditsPage, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingCreditsPageText, arg0);
 }
 
 void initEndingCreditsTextActor(EndingCreditsTextActor *arg0) {
@@ -179,7 +179,7 @@ void initEndingCreditsTextActor(EndingCreditsTextActor *arg0) {
     arg0->x = -0x40;
     arg0->y = 0x10;
     arg0->alpha = 0;
-    setCallbackTaskCallback(arg0, updateEndingCreditsPageFadeCycle);
+    setCallbackTaskCallback(arg0, updateEndingCreditsTextPageFadeCycle);
 }
 
 void drawEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0) {
