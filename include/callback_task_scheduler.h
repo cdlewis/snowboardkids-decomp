@@ -20,7 +20,7 @@ void initCallbackTaskScheduler(s32 arg0);
 void updateCallbackTasks(void);
 void updateCallbackTasksWithMinPriority(s32 minPriority);
 void updateRemainingCallbackTasks(void);
-void noopCallbackTaskScheduler(void);
+void noopCallbackTask(void);
 void *createCallbackTaskPreservingArgs(void (*callback)(), s32 type, s32 priority);
 #ifdef NON_MATCHING
 void *createCallbackTask(void (*callback)(), u16 type, s32 priority);
