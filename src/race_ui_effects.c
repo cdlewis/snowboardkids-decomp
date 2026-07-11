@@ -893,7 +893,7 @@ extern const char D_800E1484[];
 extern const char D_800E1494[];
 extern const char D_800E14A8[];
 extern Gfx D_800D60A0[];
-extern Gfx D_800D60E0[];
+extern Gfx gTranslucentSpriteRenderModeDl[];
 extern Gfx D_800D6120[];
 extern Gfx D_800D6190[];
 extern u32 gMenuRenderModeResetDl[];
@@ -3239,7 +3239,7 @@ void func_8005E6D0(RaceUiSparkleActor *arg0) {
     }
 
     if (arg1->matrix != NULL) {
-        gSPDisplayList(gRegionAllocPtr++, D_800D60E0);
+        gSPDisplayList(gRegionAllocPtr++, gTranslucentSpriteRenderModeDl);
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg1->alpha);
         gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg1->images[arg1->frame], G_IM_FMT_CI, 0x20, 0x20,
                                0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, G_TX_NOLOD, G_TX_NOLOD);

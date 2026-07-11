@@ -1585,7 +1585,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         finishCourseSelectUiTask(6);
         return;
     }
-    addRenderCallback(&D_80124868, drawCourseSelectCourseDescription, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectCourseDescription, arg0);
 }
 
 void initCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {

@@ -58,6 +58,7 @@ void initCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0);
 void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0);
 void updateCourseSelectCourseStats(CourseSelectWidgetActor *arg0);
 void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0);
+void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0);
 void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0);
 void initCourseSelectCourseDescription(CourseSelectWidgetActor *arg0);
 void drawCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0);
