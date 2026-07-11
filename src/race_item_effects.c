@@ -1120,7 +1120,7 @@ void func_80050458(RaceItemTextureActor *arg0) {
 }
 #endif
 
-// func_80050888 best match: 66.842%
+// func_80050888 best match: 61.176%
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050888.s")
 
