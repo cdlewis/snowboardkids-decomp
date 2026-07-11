@@ -965,7 +965,7 @@ void func_800503D0(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     }
 }
 
-// func_80050458 best match: 93.825% (nonmatchings/func_80050458-7123131487808489545/base_7.c)
+// func_80050458 best match: 96.026% (nonmatchings/func_80050458-6061209858023118177/base_5.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/func_80050458.s")
 
