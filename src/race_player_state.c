@@ -138,7 +138,7 @@ extern s32 D_80122C94;
 extern s8 D_80122FB7;
 extern s32 D_801232A0;
 extern s16 D_80121B52;
-extern s16 D_801235B0;
+extern s16 gFrameCounter;
 extern s32 D_801235B4;
 extern Unk8011228C D_8011228C[];
 extern RacePlayerSoundPosition D_80121D9C[];
@@ -1508,7 +1508,7 @@ void func_8008F568(RaceInputPlayer *player) {
     player->stateFlags = stateFlags;
     if (stateTimer < 0x3D0) {
         player->stateFlags = stateFlags | 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -1560,7 +1560,7 @@ void func_8008F6C8(RaceInputPlayer *player) {
     player->stateFlags = stateFlags;
     if (stateTimer < 0x3D0) {
         player->stateFlags = stateFlags | 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -1604,7 +1604,7 @@ void func_8008F82C(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -1647,7 +1647,7 @@ void func_8008F9CC(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -1691,7 +1691,7 @@ void func_8008FB6C(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -1735,7 +1735,7 @@ void func_8008FD2C(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -1779,7 +1779,7 @@ void func_8008FEEC(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -1823,7 +1823,7 @@ void func_800900B0(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050030, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -1884,7 +1884,7 @@ void func_80090274(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -1925,7 +1925,7 @@ void func_80090470(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -1966,7 +1966,7 @@ void func_800905BC(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2033,7 +2033,7 @@ void func_80090708(RaceInputPlayer *player) {
     (*playerAlias).stateFlags |= 2;
     if (timer < 0x3D0) {
         playerAlias->stateFlags |= 0x800 & allBitsSet;
-        if ((playerAlias->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((playerAlias->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(soundFunc, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2066,7 +2066,7 @@ void func_80090898(RaceInputPlayer *player) {
 
     if (func_80082EC0(player) == 0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2115,7 +2115,7 @@ void func_80090998(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2172,7 +2172,7 @@ void func_80090B30(RaceInputPlayer *player) {
     player2->stateFlags = stateFlags;
     if (stateTimer < 0x3D0) {
         player2->stateFlags = stateFlags | 0x800;
-        if ((player2->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player2->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2232,7 +2232,7 @@ void func_80090CD0(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2295,7 +2295,7 @@ void func_80090ECC(RaceInputPlayer *player) {
     player->stateFlags = stateFlags;
     if (stateTimer < 0x3D0) {
         player->stateFlags = stateFlags | 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2347,7 +2347,7 @@ void func_8009107C(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2399,7 +2399,7 @@ void func_80091250(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (stateTimer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2450,7 +2450,7 @@ void func_80091400(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2511,7 +2511,7 @@ void func_800915C0(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2577,7 +2577,7 @@ void func_800917BC(RaceInputPlayer *player) {
     player->stateFlags = stateFlags;
     if (stateTimer < 0x3D0) {
         player->stateFlags = stateFlags | 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2618,7 +2618,7 @@ void func_800919A4(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2702,7 +2702,7 @@ void func_80091AF8(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2763,7 +2763,7 @@ void func_80091D40(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2849,7 +2849,7 @@ void func_80091F3C(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         playerAlias->stateFlags |= 0x800;
-        if ((playerAlias->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((playerAlias->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) playerAlias->playerIndex);
         }
     }
@@ -2901,7 +2901,7 @@ void func_80092194(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2933,7 +2933,7 @@ void func_80092368(RaceInputPlayer *player) {
 
     if (func_80082EC0(player) == 0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -2994,7 +2994,7 @@ void func_80092468(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -3026,7 +3026,7 @@ void func_80092674(RaceInputPlayer *player) {
 
     if (func_80082EC0(player) == 0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -3073,7 +3073,7 @@ void func_80092774(RaceInputPlayer *player) {
         }
 
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
         break;
@@ -3097,7 +3097,7 @@ void func_80092774(RaceInputPlayer *player) {
 
         if (player->stateTimer < 0x3D0) {
             player->stateFlags |= 0x800;
-            if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+            if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
                 func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
             }
         }
@@ -3146,7 +3146,7 @@ void func_800929E4(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -3190,7 +3190,7 @@ void func_80092B6C(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -3230,7 +3230,7 @@ void func_80092D04(RaceInputPlayer *player) {
     player->stateFlags |= 2;
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
-        if ((player->soundDisabled == 0) && (D_801235B0 & 1)) {
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             func_800716A4(func_80050E80, 5, 2, (u16) player->playerIndex);
         }
     }
@@ -4033,7 +4033,7 @@ void func_80094808(RaceInputPlayer *player) {
         player->stateTimer = 0x14;
     }
 
-    if (D_801235B0 & 1) {
+    if (gFrameCounter & 1) {
         func_800716A4(func_8004FA44, 5, 2, (u16) player->playerIndex);
     }
 

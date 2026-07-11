@@ -258,7 +258,7 @@ extern void func_800483FC(void *, void (*)(s32), s32);
 extern void func_80072138(s32, s32);
 
 void func_80072C30(void) {
-    loadCompressedAsset(D_2427D0, D_243270, 6);
+    loadCompressedRomAsset(D_2427D0, D_243270, 6);
     func_80070EC0(0);
     D_801235B8->fadeTimer = 0xA;
     func_8009956C(&func_80072C88, 0);
@@ -1578,7 +1578,7 @@ void func_80077554(void) {
     } else {
         func_80070A70(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, D_800E16D0);
     }
-    loadCompressedAsset(D_598A70, D_59AAA0, 0x29);
+    loadCompressedRomAsset(D_598A70, D_59AAA0, 0x29);
     D_8011228C = 1;
     D_800DEED4 = 0;
     resetSecondaryRng();
@@ -1739,40 +1739,40 @@ void func_80077DA0(void) {
     }
     func_800704F0();
     D_800DEED4 = 0;
-    loadCompressedAsset(D_593D10, D_598A70, 0x29);
-    loadCompressedAsset(D_60F1A0, D_60F990, 0x2A);
-    loadCompressedAsset(D_59DFE0, D_59E7F0, 0x26);
-    loadCompressedAsset(D_1F1A90, D_1F2220, 0x28);
+    loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
+    loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
+    loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
+    loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);
     switch (D_80121B50.u) {
     case 0:
-        loadCompressedAsset(D_1EC0F0, D_1EC4A0, 0x1D);
+        loadCompressedRomAsset(D_1EC0F0, D_1EC4A0, 0x1D);
         break;
     case 1:
-        loadCompressedAsset(D_1EC4A0, D_1EC810, 0x1D);
+        loadCompressedRomAsset(D_1EC4A0, D_1EC810, 0x1D);
         break;
     case 2:
-        loadCompressedAsset(D_1EC810, D_1ECD00, 0x1D);
+        loadCompressedRomAsset(D_1EC810, D_1ECD00, 0x1D);
         break;
     case 3:
-        loadCompressedAsset(D_1ECD00, D_1ED910, 0x1D);
+        loadCompressedRomAsset(D_1ECD00, D_1ED910, 0x1D);
         break;
     case 4:
-        loadCompressedAsset(D_1ED910, D_1EDC80, 0x1D);
+        loadCompressedRomAsset(D_1ED910, D_1EDC80, 0x1D);
         break;
     case 5:
-        loadCompressedAsset(D_1EDC80, D_1EE060, 0x1D);
+        loadCompressedRomAsset(D_1EDC80, D_1EE060, 0x1D);
         break;
     case 6:
-        loadCompressedAsset(D_1EE060, D_1EEEA0, 0x1D);
+        loadCompressedRomAsset(D_1EE060, D_1EEEA0, 0x1D);
         break;
     case 8:
-        loadCompressedAsset(D_1EEEA0, D_1EF1D0, 0x1D);
+        loadCompressedRomAsset(D_1EEEA0, D_1EF1D0, 0x1D);
         break;
     case 9:
-        loadCompressedAsset(D_1EF1D0, D_1EF530, 0x1D);
+        loadCompressedRomAsset(D_1EF1D0, D_1EF530, 0x1D);
         break;
     }
-    loadCompressedAsset(D_1E74E0, D_1EC0F0, 0x1C);
+    loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     func_80070EC0(0);
     D_801235B4 = 0;
     func_80071664(func_80053634, 0, 0x64, 0);

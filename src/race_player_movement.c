@@ -54,7 +54,7 @@ extern s32 func_80098C30(s64);
 extern u8 D_800EC9C2;
 extern s8 gRacePlayerCount;
 extern s8 gRaceOrderPlayerIds[];
-extern RaceInputPlayer D_801235B0;
+extern RaceInputPlayer gFrameCounter;
 extern s32 D_801235B4;
 extern RaceVec3i D_800DE7B0[];
 extern s16 D_800DE84C[];
@@ -488,7 +488,7 @@ void func_80088294(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
             }
         }
         player++;
-    } while (player != &D_801235B0);
+    } while (player != &gFrameCounter);
 }
 #endif
 
@@ -614,7 +614,7 @@ void func_80088A1C(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
             }
         }
         player++;
-    } while (player != &D_801235B0);
+    } while (player != &gFrameCounter);
 }
 
 // func_80088C80 best match: 99.776% (nonmatchings/func_80088C80-7273315160691878794/base_13.c)
@@ -734,7 +734,7 @@ void func_80089000(RaceVec3i *pos, s32 xzSize, s16 flag) {
     s32 dy;
     s32 dz;
 
-    end = &D_801235B0; player = D_80121D80;
+    end = &gFrameCounter; player = D_80121D80;
     do {
         if ((player->isActive & 0xFFFFFFFF) != 0) {
             dx = player->posX - pos->x;

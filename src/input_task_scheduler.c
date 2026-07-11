@@ -37,7 +37,7 @@ extern s8 D_800DEED8;
 extern u8 D_800DEED0;
 extern u8 D_800DEED4;
 extern ControllerInputState D_800E4C18;
-extern s16 D_801235B0;
+extern s16 gFrameCounter;
 extern InputTask *D_801235B8;
 extern InputTask D_801235C0[INPUT_TASK_COUNT];
 extern u8 D_80123700;
@@ -92,7 +92,7 @@ void func_80098D80(void) {
     D_80123708.unk14 = 0;
     freeTask = D_80123730; task = D_801235C0; do { *freeTask = task; task++; freeTask++; } while (task < &D_801235C0[INPUT_TASK_COUNT]);
     D_80123700 = 0;
-    D_801235B0 = 0;
+    gFrameCounter = 0;
     D_80123750 = 2;
     D_80123751 = 0;
     zero = 0;
@@ -144,7 +144,7 @@ void func_80098EAC(void) {
     s8 stickY;
     s32 timer;
 
-    D_801235B0 = (D_801235B0 + 1) & 0xFFF;
+    gFrameCounter = (gFrameCounter + 1) & 0xFFF;
     func_8004835C();
     func_8009B0E8();
     clearPendingPositionalSoundRequests();

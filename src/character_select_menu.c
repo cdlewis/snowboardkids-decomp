@@ -109,11 +109,11 @@ void func_80004960(void) {
         D_801235B8->fade = 0xFF;
         D_801235B8->timer = 0;
         D_800DEF14 = D_801235B8->fade;
-        loadCompressedAsset(D_59AAA0, D_59DFE0, 0x21);
-        loadCompressedAsset(D_245A80, D_24C8E0, 0x1F);
-        loadCompressedAsset(D_593D10, D_598A70, 0x22);
-        loadCompressedAsset(D_598A70, D_59AAA0, 0x23);
-        loadCompressedAsset(D_60F1A0, D_60F990, 0x29);
+        loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x21);
+        loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
+        loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
+        loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
+        loadCompressedRomAsset(D_60F1A0, D_60F990, 0x29);
         func_80070EC0(0);
 
         playerCount = D_80121B55;

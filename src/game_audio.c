@@ -176,7 +176,7 @@ void func_80071830(void) {
     D_80121B30 = 0;
 
     D_80112136 = func_80042D58(0x80000);
-    loadCompressedAsset(D_275A90, D_27E290, 4);
+    loadCompressedRomAsset(D_275A90, D_27E290, 4);
     D_80112130.unkA = func_80042D58(0x10000);
 
     init.count = 0x18;

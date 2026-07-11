@@ -137,7 +137,7 @@ extern s16 D_8011216E;
 extern s16 D_80112174;
 extern s16 D_80112184;
 extern s16 D_80121B50;
-extern s16 D_801235B0;
+extern s16 gFrameCounter;
 extern RacePlayerState D_80121D80[];
 extern u8 D_80156608;
 extern u8 D_80156609;
@@ -363,7 +363,7 @@ void func_8005408C(MainMenuOverlayEffectActor *arg0) {
 }
 
 void func_800540EC(void *arg0) {
-    if (D_801235B0 & 8) {
+    if (gFrameCounter & 8) {
         func_800483FC(D_80124858, func_8005408C, 0);
     }
 }
@@ -456,10 +456,10 @@ void func_800545D0(MainMenuOverlayEffectActor *arg0) {
 }
 
 void func_80054644(MainMenuOverlayEffectActor *arg0) {
-    if ((D_801235B0 & 0x3E) >= 0x1F) {
+    if ((gFrameCounter & 0x3E) >= 0x1F) {
         func_80045A78(arg0->unk18.half.hi, arg0->unk18.half.lo, func_80043040(D_8011213C), 1);
     } else {
-        func_80045A78(arg0->unk18.half.hi, arg0->unk18.half.lo, func_80043040(D_8011213C), D_800D57A0[(D_801235B0 & 0x1E) >> 1]);
+        func_80045A78(arg0->unk18.half.hi, arg0->unk18.half.lo, func_80043040(D_8011213C), D_800D57A0[(gFrameCounter & 0x1E) >> 1]);
     }
 }
 
@@ -751,15 +751,15 @@ void func_80055148(MainMenuOverlayEffectActor *arg0) {
     switch (temp_t0) {
     case 0:
         func_80045A78(-0x8C, 0x38, func_80043040(D_80112174), 1);
-        func_80046D68(-0x10, 0x38, func_80043040(D_80112174), 2, D_800D581C[D_801235B0 & 3]);
+        func_80046D68(-0x10, 0x38, func_80043040(D_80112174), 2, D_800D581C[gFrameCounter & 3]);
         break;
     case 1:
         func_80045A78(-0x89, 0x38, func_80043040(D_80112174), 1);
-        func_80046D68(-0xD, 0x38, func_80043040(D_80112174), 3, D_800D581C[D_801235B0 & 3]);
+        func_80046D68(-0xD, 0x38, func_80043040(D_80112174), 3, D_800D581C[gFrameCounter & 3]);
         break;
     case 2:
         func_80045A78(-0x7E, 0x38, func_80043040(D_80112174), 1);
-        func_80046D68(-2, 0x38, func_80043040(D_80112174), 4, D_800D581C[D_801235B0 & 3]);
+        func_80046D68(-2, 0x38, func_80043040(D_80112174), 4, D_800D581C[gFrameCounter & 3]);
         break;
     } temp_v0_5 = gRegionAllocPtr; gRegionAllocPtr = temp_v0_5 + 1; temp_v0_5->words.w0 = 0x06000000; temp_v0_5->words.w1 = (u32) D_800DEFF8;
 }

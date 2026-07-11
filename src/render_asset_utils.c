@@ -345,7 +345,7 @@ void func_80045A78(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
 #ifdef NON_MATCHING
 extern s32 gRegionAllocPtr;
 extern u32 D_800DEFF8[];
-extern s16 D_801235B0;
+extern s16 gFrameCounter;
 extern s16 D_8015660A;
 extern s16 D_8015660C;
 extern s16 D_8015660E;
@@ -408,7 +408,7 @@ void func_80045E84(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
                     if (sp14 >= temp_a0) {
                         sp14 = temp_a0;
                     }
-                    temp_t8_2 = D_801235B0 & 0x1F;
+                    temp_t8_2 = gFrameCounter & 0x1F;
                     var_a0 = temp_t8_2;
                     if (temp_t8_2 >= 0x11) {
                         var_a0 = 0x20 - temp_t8_2;

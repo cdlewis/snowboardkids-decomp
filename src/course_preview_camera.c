@@ -125,7 +125,7 @@ extern void func_80045A1C(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 extern s8 D_80122288;
 extern s16 D_80122282;
 extern s16 D_80121B50;
-extern s16 D_801235B0;
+extern s16 gFrameCounter;
 extern u32 D_80156614;
 
 // func_800556B0 best match: 99.531% (nonmatchings/func_800556B0-6061209858023118177/base_12.c)
@@ -630,7 +630,7 @@ void func_80056CA0(CoursePreviewGfxCommandActor *arg0) {
     if (entry->textureIndex != -1) {
         do {
             if (func_80049000(entry->command) != 0) {
-                textureIndex = D_800D5D30[entry->textureIndex] + ((s32)(D_801235B0 & 4) / 4);
+                textureIndex = D_800D5D30[entry->textureIndex] + ((s32)(gFrameCounter & 4) / 4);
                 if (textureIndex != loadedTextureIndex) {
                     loadedTextureIndex = textureIndex;
                     func_80045A1C((u8 *)func_80043040((s32)D_80112168), textureIndex & 0xFFFF, &image, &palette,
