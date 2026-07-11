@@ -43,7 +43,7 @@ typedef struct {
     /* 0x16 */ s16 pad;
 } EndingCreditsPageTextLineLayout;
 
-extern u16 gEndingSequencePhase;
+extern u16 gEndingCreditsSequencePhase;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern void *gMenuRenderCallbackList;
 extern s32 gPlayerInputHeld;
@@ -118,7 +118,7 @@ void updateEndingCreditsTheEndTextFadeIn(EndingCreditsPageTextActor *arg0) {
     s32 v1 = ENDING_CREDITS_TEXT_FADE_MAX;
     s32 v0;
 
-    if (gEndingSequencePhase == 0x43) {
+    if (gEndingCreditsSequencePhase == 0x43) {
         v0 = arg0->alpha;
         if (v1 != v0) {
             arg0->alpha = v0 + 0x10;
@@ -157,8 +157,8 @@ void updateEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
                 arg0->pageIndex = 0;
                 setCallbackTaskCallback(arg0, updateEndingCreditsTheEndTextFadeIn);
             }
-            if (gEndingSequencePhase == 0) {
-                gEndingSequencePhase = 1;
+            if (gEndingCreditsSequencePhase == 0) {
+                gEndingCreditsSequencePhase = 1;
             }
         }
         break;
