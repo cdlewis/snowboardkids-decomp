@@ -67,7 +67,7 @@ void addMainMenuSceneModelRenderCallback(s32 modelIndex) {
     MainMenuSceneModel *model;
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
-    func_8004215C(model);
+    updateMainMenuSceneModelTransforms(model);
     model->renderFrame = 0;
     addRenderCallback(&D_801248B0, func_80042574, model);
 }
@@ -76,7 +76,7 @@ void func_80042920(s32 modelIndex, s32 textureId, s32 paletteId) {
     MainMenuSceneModel *model;
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
-    func_8004215C(model);
+    updateMainMenuSceneModelTransforms(model);
     model->renderFrame = 0;
     model->textureId = (s16)textureId;
     model->paletteId = (s16)paletteId;
@@ -87,7 +87,7 @@ void func_8004298C(s32 modelIndex, s32 textureId, s32 paletteId, s32 arg3) {
     MainMenuSceneModel *model;
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
-    func_8004215C(model);
+    updateMainMenuSceneModelTransforms(model);
     model->renderFrame = 0;
     model->textureId = (s16)textureId;
     model->paletteId = (s16)paletteId;
@@ -98,7 +98,7 @@ void func_80042A00(s32 modelIndex) {
     MainMenuSceneModel *model;
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
-    func_8004215C(model);
+    updateMainMenuSceneModelTransforms(model);
     model->renderFrame = 0;
     addRenderCallback(&D_801248B0, func_80042574, model);
 }
@@ -107,13 +107,13 @@ void func_80042A58(s32 modelIndex, s32 renderFrame) {
     MainMenuSceneModel *model;
 
     model = (MainMenuSceneModel *)getMemoryBlockBase(D_8011218A[modelIndex]);
-    func_8004215C(model);
+    updateMainMenuSceneModelTransforms(model);
     model->renderFrame = (s16)renderFrame;
     addRenderCallback(&D_801248B0, func_80042574, model);
 }
 
-// func_80042AB4 best match: 99.077% at nonmatchings/func_80042AB4-2225551288923588688/base_10.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/func_80042AB4.s")
+// initMainMenuSceneModelParts best match: 99.077% at nonmatchings/func_80042AB4-2225551288923588688/base_10.c.
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_renderer/initMainMenuSceneModelParts.s")
 
 #ifdef NON_MATCHING
 typedef struct MainMenuInitPartPair {
@@ -135,7 +135,7 @@ typedef struct MainMenuInitPartPair {
 
 extern s16 *D_800D3EE4[];
 
-void func_80042AB4(MainMenuSceneModel *model) {
+void initMainMenuSceneModelParts(MainMenuSceneModel *model) {
     s16 *cursor;
     s32 i;
     s32 end;

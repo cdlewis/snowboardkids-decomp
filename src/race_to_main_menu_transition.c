@@ -117,7 +117,7 @@ void func_8000D340(void) {
     D_80112130[0xC] = func_80042D58(temp_v0);
     dmaReadRom(D_14B450, getMemoryBlockBase(D_80112130[0xC]), sp34);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
-    func_80041CC0();
+    loadMainMenuSceneModelAssets();
     initCallbackTaskScheduler(0);
     createCallbackTask(initRaceToMenuSnowboardIcon, 0, 0x64);
     createCallbackTask(initRaceToMenuLogoWipe, 0, 0x64);

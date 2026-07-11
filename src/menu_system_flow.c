@@ -982,7 +982,7 @@ void initMainMenu(void) {
     createCallbackTaskWithUserId(&initTitleMenuSparkle, 0, 0x64, 0);
     createCallbackTaskWithUserId(initTitleMenuBoardModels, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
-    func_80041CF0();
+    loadMainMenuSceneModelAnimationBank();
     initMainMenuSceneModel(0, 0);
     setMainMenuSceneModelAnimation(0, 0);
     setMainMenuSceneModelPosition(0, 0x83000, 0, -0x2BF000);
@@ -1155,7 +1155,7 @@ void initMainMenuModeSelect(void) {
     gMainMenuSelectionResult = 0;
     createCallbackTaskWithUserId(&initMainMenuModeSelectMenuOptions, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
-    func_80041CF0();
+    loadMainMenuSceneModelAnimationBank();
     initMainMenuSceneModel(4, 4);
     setMainMenuSceneModelAnimation(4, 5);
     setMainMenuSceneModelPosition(4, 0xFFE00000, 0, 0x509000);

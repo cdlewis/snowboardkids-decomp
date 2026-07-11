@@ -115,7 +115,7 @@ void updateMenuCameraObjectFromTargetOffset(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_start_transition/initRaceStartTransition.s")
 
 #ifdef NON_MATCHING
-extern void func_80041CF0();
+extern void loadMainMenuSceneModelAnimationBank();
 extern void initCallbackTaskScheduler(s32);
 extern void *createCallbackTask(void (*)(), s32, s32);
 extern u8 D_13F3B0[];
@@ -197,7 +197,7 @@ void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
         return;
     }
 
-    func_80041CF0(1, save, transition);
+    loadMainMenuSceneModelAnimationBank(1, save, transition);
     loadCompressedRomAsset(D_5DAF30, D_5DB9D0, 0x2A);
     loadCompressedRomAsset(D_1E0F70, D_1E19C0, 0x22);
     loadRawRomAsset(D_145380, D_1467B0, 8);
