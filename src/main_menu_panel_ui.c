@@ -121,7 +121,7 @@ void func_80050FF0(s32 arg0) {
         }
     }
 
-    func_8001303C(-0x68, -0x58, D_800D4A40, 0, 0x100, 5, 0x29);
+    drawMenuColoredGlyphScript(-0x68, -0x58, D_800D4A40, 0, 0x100, 5, 0x29);
 }
 
 void func_80051308(MenuPanelActor *arg0) {
@@ -338,7 +338,7 @@ void func_80051878(MenuPanelActor *arg0) {
                 break;
 
             default:
-                func_8001303C((s16)(arg0->x + lineX), (s16)((arg0->y + lineY) + 0x18), (u8 *)glyphText, 0,
+                drawMenuColoredGlyphScript((s16)(arg0->x + lineX), (s16)((arg0->y + lineY) + 0x18), (u8 *)glyphText, 0,
                               0x100, color, 0x29);
                 lineX = (lineX + 0x10) & 0xFFFF;
                 visibleIndex++;
@@ -365,7 +365,7 @@ void func_80051878(MenuPanelActor *arg0) {
             } while (text[count] != 0xFFFF);
         }
 
-        func_8001303C((s16)(-((count * 0x10) / 2)), (s16)((-0x48) - arg0->y),
+        drawMenuColoredGlyphScript((s16)(-((count * 0x10) / 2)), (s16)((-0x48) - arg0->y),
                       (u8 *)D_800D5568[D_80121B5B], 0, 0x100, 4, 0x29);
     }
 
@@ -502,7 +502,7 @@ void func_800524B0(MenuPanelActor *arg0) {
 }
 
 void func_800524D4(s32 arg0) {
-    func_8001303C(-0x78, -0x58, D_800D5598, 1, 0x100, 5, 0x28);
+    drawMenuColoredGlyphScript(-0x78, -0x58, D_800D5598, 1, 0x100, 5, 0x28);
 }
 
 void func_80052520(s32 arg0) {
@@ -547,7 +547,7 @@ void func_80052550(s32 arg0) {
             drawMenuSprite(edgeX, y, getMemoryBlockBase(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
         }
     }
-    func_8001303C(-0x76, -0x58, D_800D55E8, 0, 0x100, 5, 0x29);
+    drawMenuColoredGlyphScript(-0x76, -0x58, D_800D55E8, 0, 0x100, 5, 0x29);
 }
 
 void func_80052868(s32 arg0) {
@@ -673,7 +673,7 @@ void func_80052E70(s32 arg0) {
             drawMenuSprite((s16)x, (s16)y, getMemoryBlockBase(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
         }
     }
-    func_8001303C(-0x76, 0x28, D_800D5630, 0, 0x100, 7, 0x29);
+    drawMenuColoredGlyphScript(-0x76, 0x28, D_800D5630, 0, 0x100, 7, 0x29);
     drawMenuSprite(-0x40, -0x30, getMemoryBlockBase(MENU_PANEL_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
     drawMenuSprite(0x30, -0x30, getMemoryBlockBase(MENU_PANEL_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
     x2 = -0x30;
@@ -706,9 +706,9 @@ void func_80052E70(s32 arg0) {
         }
     }
     if ((D_801235B4 != 0) && (D_80156612 & 1)) {
-        func_8001303C(-0x30, -0x18, D_800D5704[D_80121B52], 0, 0x100, 0, 0x29);
+        drawMenuColoredGlyphScript(-0x30, -0x18, D_800D5704[D_80121B52], 0, 0x100, 0, 0x29);
     } else {
-        func_8001303C(-0x30, -0x18, D_800D5704[D_80121B52], 0, 0x100, 5, 0x29);
+        drawMenuColoredGlyphScript(-0x30, -0x18, D_800D5704[D_80121B52], 0, 0x100, 5, 0x29);
     }
     func_80045A78(-0x54, -0x60, getMemoryBlockBase(D_80112130.unk38), 0x5D);
     func_80045A78(4, -0x60, getMemoryBlockBase(D_80112130.unk38), 0x5E);

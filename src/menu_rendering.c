@@ -1200,7 +1200,7 @@ void func_800129DC(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80012AE4.s")
 
-void func_8001303C(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u16 red, u16 blue) {
+void drawMenuColoredGlyphScript(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u16 red, u16 blue) {
     u16 first;
     s32 code;
     u16 *ptr;
