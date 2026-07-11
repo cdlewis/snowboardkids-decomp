@@ -2,8 +2,8 @@
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "ending_credits_ui.h"
-#define MENU_RENDERING_BROAD_PROTOTYPES
-#include "menu_rendering.h"
+#define MENU_RENDERER_BROAD_PROTOTYPES
+#include "menu_renderer.h"
 
 #define ENDING_CREDITS_TEXT_FADE_MAX 0x100
 #define ENDING_CREDITS_PAGE_FADE_STEP 0xA

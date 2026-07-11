@@ -1,7 +1,7 @@
 #include "common.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
-#include "menu_rendering.h"
+#include "menu_renderer.h"
 #include "course_select_ui.h"
 #include "shop_menu_ui.h"
 #include "fixed_point_math.h"
@@ -770,7 +770,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                             }
                         }
 
-                        func_8000F0EC(position[0], position[20], getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
+                        drawMenuSpriteClipped(position[0], position[20], getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
                                       tileIndex & 0xFFFF, 0x20, 0x20, 0, alpha,
                                       new_var->clipLeft - clipOffset, arg0->clipTop, arg0->clipRight,
                                       new_var->clipBottom);
@@ -785,11 +785,11 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                         }
 
                         if (gRaceSplitscreenMode == 3) {
-                            func_8000F0EC(position[0], position[20], getRelocatableHeapBlockBase(D_8011217E), 5, 0x20,
+                            drawMenuSpriteClipped(position[0], position[20], getRelocatableHeapBlockBase(D_8011217E), 5, 0x20,
                                           0x20, 0, alpha, arg0->clipLeft - clipOffset, new_var->clipTop,
                                           new_var->clipRight, new_var->clipBottom);
                         } else {
-                            func_8000F0EC(position[0], position[20], getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20,
+                            drawMenuSpriteClipped(position[0], position[20], getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20,
                                           0x20, 0, alpha, arg0->clipLeft - clipOffset, arg0->clipTop,
                                           arg0->clipRight, new_var->clipBottom);
                         }
@@ -1694,7 +1694,7 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                             } else {
                                 alpha = 0x60;
                             }
-                            func_8000F970(slotActor->coordinates[0], slotActor->coordinates[0xC],
+                            drawMenuSpriteWithAlphaClipped(slotActor->coordinates[0], slotActor->coordinates[0xC],
                                           getRelocatableHeapBlockBase(D_80112130[0x21]), slotActor->coordinates[0x28],
                                           0x20, 0x20, 0, alpha, 0, arg0->coordinates[0x18] - rightSideOffset,
                                           arg0->coordinates[0x1A], arg0->coordinates[0x19],

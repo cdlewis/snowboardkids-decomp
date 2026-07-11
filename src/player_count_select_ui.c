@@ -4,7 +4,7 @@
 #include "player_count_select_ui.h"
 #include "player_select_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
-#include "menu_rendering.h"
+#include "menu_renderer.h"
 
 typedef u8 PlayerCountPortrait[0x8C];
 
@@ -215,7 +215,7 @@ void func_8002980C(PlayerCountSelectWidgetActor *arg0) {
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        func_80011264((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
+        drawMenuSpriteTile((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->widget.counter].center[tileOffset], 0, 0x100);
     }
@@ -226,11 +226,11 @@ void func_8002980C(PlayerCountSelectWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
+        drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
                       getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->widget.counter].right[tileOffset], 0, 0x100);
         i = 0x80;
-        func_80011264((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
+        drawMenuSpriteTile((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
                       getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->widget.counter].bottom[tileOffset], 0, 0x100);
         offset += 0x40;
@@ -239,7 +239,7 @@ void func_8002980C(PlayerCountSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
+    drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
                   D_800B70F0.frames[(u16)arg0->widget.counter].corner, 0, 0x100);
 
     drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(D_80112130.textureHandle), 0x33, 0x20,
@@ -363,7 +363,7 @@ void func_8002A008(PlayerCountSelectWidgetActor *arg0) {
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        func_800112F4((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
+        drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->sprite.spriteIndex].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
@@ -374,9 +374,9 @@ void func_8002A008(PlayerCountSelectWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
+        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->sprite.spriteIndex].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        func_800112F4((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
+        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.frames[(u16)arg0->sprite.spriteIndex].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -385,7 +385,7 @@ void func_8002A008(PlayerCountSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
+    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
                   D_800B70F0.frames[(u16)arg0->sprite.spriteIndex].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -468,7 +468,7 @@ void func_8002A49C(PlayerCountSelectWidgetActor *arg0) {
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5),
+        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5),
                       getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.entries[(u16)arg0->sprite.spriteIndex].center[tileOffset], 0, 0x100, 0xA0,
                       0x49);
@@ -480,11 +480,11 @@ void func_8002A49C(PlayerCountSelectWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_800112F4(arg0->x + 0x80, arg0->y + offset,
+        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset,
                       getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.entries[(u16)arg0->sprite.spriteIndex].right[tileOffset], 0, 0x100, 0xA0,
                       0x49);
-        func_800112F4(arg0->x + offset, arg0->y + 0x80,
+        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80,
                       getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
                       D_800B70F0.entries[(u16)arg0->sprite.spriteIndex].bottom[tileOffset], 0, 0x100, 0xA0,
                       0x49);
@@ -495,7 +495,7 @@ void func_8002A49C(PlayerCountSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4(arg0->x + 0x80, arg0->y + 0x80,
+    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80,
                   getRelocatableHeapBlockBase(D_80112130.frameTextureHandle),
                   D_800B70F0.entries[(u16)arg0->sprite.spriteIndex].corner, 0, 0x100, 0xA0, 0x49);
 }
@@ -579,16 +579,16 @@ void func_8002A930(PlayerCountSelectWidgetActor *arg0) {
     tileMap = (PlayerCountSelectPaddedFrameTileMapTable *)&D_800B70F0;
     tileOffset = 0;
     for (i = 0; i < 16; i++, tileOffset++) {
-        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(D_80112130.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       tileMap->selected.center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     tileMap = (PlayerCountSelectPaddedFrameTileMapTable *)&D_800B70F0;
     tileOffset = 0;
     offset = 0; i = 0x80; do {
-        func_800112F4(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(D_80112130.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       tileMap->selected.right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        func_800112F4(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(D_80112130.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(D_80112130.textureHandle),
                       tileMap->selected.bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -597,7 +597,7 @@ void func_8002A930(PlayerCountSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(D_80112130.textureHandle),
+    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(D_80112130.textureHandle),
                   D_800B7196, 0, 0x100, 0xA0, 0x49);
 }
 

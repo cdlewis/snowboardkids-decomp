@@ -239,12 +239,12 @@ extern void addRenderCallback(void *, void *, void *);
 extern void enqueueSoundEffect(s32, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void osWritebackDCache(void *, s32);
-extern void *func_80048594(s32);
+extern void *allocMenuRenderScratch(s32);
 extern void func_800486BC(void *, void *);
 extern void *allocFixedTransformMatrix(CourseEffectMatrixSource *);
 extern void func_80048C90(CourseRenderCommand *, Vec3i *);
 extern s32 func_80048E60(Vec3i *);
-extern void func_80045990(s32, s32, void *, void *);
+extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
 extern s32 func_8004597C(s32, s32);
 extern void func_80047174(s32, s32, s32, s32, s32);
 extern void func_80045A78(s32, s32, s32, s32);
@@ -1322,7 +1322,7 @@ void func_8006C7F4(RaceCourseMarkerEffect *arg0) {
     volatile s32 pad[4];
 
     if (D_80156609 != 0) {
-        arg0->vertices = func_80048594(arg0->vertexCount * sizeof(Vtx));
+        arg0->vertices = allocMenuRenderScratch(arg0->vertexCount * sizeof(Vtx));
         if (arg0->vertices != NULL) {
             i = 0;
             if (arg0->vertexCount > 0) {
@@ -1351,7 +1351,7 @@ void func_8006CB50(RaceCourseMarkerEffect *arg0) {
 }
 
 void func_8006CBBC(RaceCourseMarkerEffect *arg0) {
-    func_80045990(getRelocatableHeapBlockBase(D_80112168),
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168),
                   D_800DA814[arg0->entryIndex].textureIndex,
                   &arg0->texture, &arg0->palette);
     arg0->baseVertices =

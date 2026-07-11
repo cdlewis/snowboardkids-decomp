@@ -83,7 +83,7 @@ segments:
       - [0xDB70, c, controller_pak_replay_save_message_flow]
       - [0xDF40, c, race_to_main_menu_transition]
       - [0xE3F0, c, training_course_ui]
-      - [0xF680, c, menu_rendering]
+      - [0xF680, c, menu_renderer]
       - [0x15200, c, title_menu]
       - [0x17DF0, c, race_hud]
       - [0x19DD0, c, player_select_ui]

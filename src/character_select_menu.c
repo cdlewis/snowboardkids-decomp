@@ -3,7 +3,7 @@
 #include "asset_manager.h"
 #include "character_select_menu.h"
 #include "game_task_scheduler.h"
-#include "menu_rendering.h"
+#include "menu_renderer.h"
 #include "race_hud.h"
 #include "viewport_manager.h"
 

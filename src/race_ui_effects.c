@@ -863,7 +863,7 @@ extern void func_80048C90(RaceUiGfxCommandDest *, s32 *);
 extern void osWritebackDCache(void *, s32);
 extern void func_80045A78(s16, s16, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
-extern void func_80045990(s32, s32, void *, void *);
+extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
 extern int sprintf(char *, const char *, ...);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, void *, s32, s32, f32, s32);
@@ -896,7 +896,7 @@ extern Gfx D_800D60A0[];
 extern Gfx D_800D60E0[];
 extern Gfx D_800D6120[];
 extern Gfx D_800D6190[];
-extern u32 D_800DEFF8[];
+extern u32 gMenuRenderModeResetDl[];
 extern Gfx *gRegionAllocPtr;
 extern RaceUiAssetEntry D_800D5FF4[];
 extern Vec3i D_800D6110;
@@ -954,7 +954,7 @@ void func_80057548(RaceUiSlideActor *arg0) {
 
 void func_80057600(RaceUiSlideActor *arg0) {
     arg0->angle = 0;
-    func_80045990(getRelocatableHeapBlockBase(D_80112168), D_800D5FF4[arg0->index].assetId, &arg0->image, &arg0->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), D_800D5FF4[arg0->index].assetId, &arg0->image, &arg0->palette);
     arg0->displayList = (Gfx *) D_800D5FF0[arg0->index].word;
     arg0->velocity = D_800D5FF0[arg0->index].b6;
     arg0->soundIndex = D_800D5FF0[arg0->index].b7;
@@ -1140,7 +1140,7 @@ void func_80057E90(RaceUiAlpha18Actor *arg0) {
         func_80045A78(-0x22, 4, getRelocatableHeapBlockBase(D_8011216E), (D_80122289 + 0x48) & 0xFFFF);
         func_80045A78(-0x68, 6, getRelocatableHeapBlockBase(D_8011216E), (D_80121D90[0].placement + 0x91) & 0xFFFF);
         if (arg0->alpha != 0xFF) {
-            gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+            gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
         }
     }
 }
@@ -1230,7 +1230,7 @@ void func_80058360(RaceUiAlpha18Actor *arg0) {
     func_80048278(0, -0x18, &D_800E126C, 5);
     func_80048278(4, 0x18, &D_800E127C, 5);
     if (arg0->alpha != 0xFF) {
-        gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
 
@@ -1437,7 +1437,7 @@ void func_80058C00(RaceUiResultsBannerActor *arg0) {
     }
 
     if (arg0->alpha != 0xFF) {
-        gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
 
@@ -1523,7 +1523,7 @@ void func_8005905C(void *arg0) {
     }
 
     if (actor->alpha != 0xFF) {
-        gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
 #endif
@@ -1704,7 +1704,7 @@ void func_80059E5C(RaceUiAlpha1AActor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80059A04(&D_80121B74, -0x6C, -0x30, 0xC); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80059A04(&D_80121B74, -0x6C, -0x30, 0xC); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
 const char D_800E12D4[0xC] = "-Lap Time-";
@@ -1715,7 +1715,7 @@ void func_80059F6C(RaceUiAlpha18Actor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x74, -0x3C, D_800E12D4, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x74, -0x3C, D_800E12D4, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
 void func_8005A07C(void *arg0) {
@@ -1796,7 +1796,7 @@ void func_8005A31C(RaceUiAlpha18Actor *arg0) {
     func_80045A78(((SplitWord *)&x)->half.lo, -0x1C, getRelocatableHeapBlockBase(D_8011216E), (buffer[-7] - 5) & 0xFFFF);
 
     if (actor->alpha != 0xFF) {
-        gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
 
@@ -1963,7 +1963,7 @@ void func_8005AAE4(RaceUiAlpha18Actor *arg0) {
 
     /* IDO scheduling for this function depends on this block staying on one line. */
     do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); }
-    sprintf(&sp20[0x14], D_800E12F8, D_801222F6); func_80048278(-0x54, -0x14, D_800E12FC, 6); func_80048278(-0x3C, -0x14, &sp20[0x14], 6); if (D_80121B81 != 0) { func_80048278(-0x68, -4, D_800E1300, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    sprintf(&sp20[0x14], D_800E12F8, D_801222F6); func_80048278(-0x54, -0x14, D_800E12FC, 6); func_80048278(-0x3C, -0x14, &sp20[0x14], 6); if (D_80121B81 != 0) { func_80048278(-0x68, -4, D_800E1300, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
 const char D_800E130C[0x14] = "-Hit Prize(*1G)-";
@@ -2004,7 +2004,7 @@ void func_8005AC44(RaceUiCounterActor *arg0) {
     func_80048278(4, (s16)y, &D_800E1358, 5);
 
     if (arg0->alpha != 0xFF) {
-        gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
 
@@ -2233,7 +2233,7 @@ void func_8005B8E8(RaceUiAlphaActor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80059A04(&D_80121B74, -0x68, -0x37, 0xC); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80059A04(&D_80121B74, -0x68, -0x37, 0xC); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
 // func_8005B9F8 best match: 86.310% at nonmatchings/func_8005B9F8-6061209858023118177/base_8.c.
@@ -2396,7 +2396,7 @@ void func_8005C03C(RaceUiAlphaActor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x70, -0x40, D_800E1390, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x70, -0x40, D_800E1390, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
 // func_8005C14C best match: 93.873% (nonmatchings/func_8005C14C-4139837607000619032/base_13.c)
@@ -2462,7 +2462,7 @@ void func_8005C14C(RaceUiCourseRecordActor *arg0) {
         new_var = y;
         func_80048278(-0xC, new_var, &D_800E142C, 5);
         if (arg0->alpha != 0xFF) {
-            gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1;
+            gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1;
         }
     } while (0);
 }
@@ -2770,7 +2770,7 @@ body2:
 done2:
     if (gfxp == NULL) {
     }
-    if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; }
+    if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; }
 }
 #endif
 
@@ -2949,7 +2949,7 @@ void func_8005D860(RaceUiAlpha18Actor *arg0) {
     s32 new_var;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; if (!gfx) { } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x68, -0x40, new_var2 = &D_800E1458, 6); func_80048278(-0x64, -0x1C, &D_800E1460, 5); w0 = 8; if (D_80121B81 != 0) { new_var = w0; func_80048278(-0x6C, new_var, &D_800E1468, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; if (!gfx) { } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80048278(-0x68, -0x40, new_var2 = &D_800E1458, 6); func_80048278(-0x64, -0x1C, &D_800E1460, 5); w0 = 8; if (D_80121B81 != 0) { new_var = w0; func_80048278(-0x6C, new_var, &D_800E1468, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
 void func_8005D9B4(RaceUiAlpha18Actor *arg0) {
@@ -2984,7 +2984,7 @@ void func_8005D9B4(RaceUiAlpha18Actor *arg0) {
     func_80048278(-0xC, (s16)y, &D_800E14A8, 5);
 
     if ((*arg0p)->alpha != 0xFF) {
-        gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
     } while (0);
 }
@@ -3349,10 +3349,10 @@ void func_8005F174(RaceUiSparkleActor *arg0) {
     arg0->scale = 0x1000;
     arg0->unk28 = 0;
 
-    func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x23, &arg0->images[0], &arg0->palettes[0]);
-    func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x24, &arg0->images[1], &arg0->palettes[1]);
-    func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x25, &arg0->images[2], &arg0->palettes[2]);
-    func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x26, &arg0->images[3], &arg0->palettes[3]);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x23, &arg0->images[0], &arg0->palettes[0]);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x24, &arg0->images[1], &arg0->palettes[1]);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x25, &arg0->images[2], &arg0->palettes[2]);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x26, &arg0->images[3], &arg0->palettes[3]);
     enqueuePositionalSoundEffect(0x10, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, func_8005EFFC);
 }
@@ -3605,15 +3605,15 @@ void func_800602BC(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x54) = 0;
     *(Vec3i *)((u8 *)arg0 + 0x48) = D_800D61C0[*(u16 *)((u8 *)arg0 + 0x10)];
     if (*(u8 *)((u8 *)arg0 + 0x57) == 0) {
-        func_80045990(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x27, (u8 *)arg0 + 0x38, (u8 *)arg0 + 0x28);
-        func_80045990(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x28, (u8 *)arg0 + 0x3C, (u8 *)arg0 + 0x2C);
-        func_80045990(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x29, (u8 *)arg0 + 0x40, (u8 *)arg0 + 0x30);
-        func_80045990(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2A, (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x34);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x27, (u8 *)arg0 + 0x38, (u8 *)arg0 + 0x28);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x28, (u8 *)arg0 + 0x3C, (u8 *)arg0 + 0x2C);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x29, (u8 *)arg0 + 0x40, (u8 *)arg0 + 0x30);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2A, (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x34);
     } else {
-        func_80045990(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2B, (u8 *)arg0 + 0x38, (u8 *)arg0 + 0x28);
-        func_80045990(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2C, (u8 *)arg0 + 0x3C, (u8 *)arg0 + 0x2C);
-        func_80045990(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2D, (u8 *)arg0 + 0x40, (u8 *)arg0 + 0x30);
-        func_80045990(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2E, (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x34);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2B, (u8 *)arg0 + 0x38, (u8 *)arg0 + 0x28);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2C, (u8 *)arg0 + 0x3C, (u8 *)arg0 + 0x2C);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2D, (u8 *)arg0 + 0x40, (u8 *)arg0 + 0x30);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2E, (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x34);
     }
     func_800601F8(arg0);
     setCallbackTaskCallback(arg0, func_800601F8);
@@ -4306,7 +4306,7 @@ void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
 }
 
 void func_80062A10(void *arg0) {
-    func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x35, (u8 *)arg0 + 0x30, (u8 *)arg0 + 0x2C);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x35, (u8 *)arg0 + 0x30, (u8 *)arg0 + 0x2C);
     setCallbackTaskCallback(arg0, func_800628DC);
 }
 
@@ -4535,7 +4535,7 @@ void func_800634C8(RaceUiCourseSpriteActor *arg0) {
     if (isPositionNearCurrentViewport((Vec3i *)&arg0->x) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            arg0->vertices = func_80048594(0x40);
+            arg0->vertices = allocMenuRenderScratch(0x40);
             if (arg0->vertices != NULL) {
                 arg0->vertices[0] = D_800D6350[arg0->index][0];
                 arg0->vertices[0].v.tc[0] += arg0->angle << 5;
@@ -4597,14 +4597,14 @@ void func_80063980(RaceUiCourseSpriteActor *actor) {
     switch (actor->index) {
         case 0:
             func_80081508(0, &actor->x, &actor->y, &actor->z, &angle);
-            func_80045990(getRelocatableHeapBlockBase(D_8011216A), 0, &actor->images[0], &actor->palettes[0]);
+            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), 0, &actor->images[0], &actor->palettes[0]);
             actor->images[1] = actor->images[0];
             actor->palettes[1] = actor->palettes[0];
             break;
         case 1:
             func_80081508(D_800B9540[gRaceCourseIndex].pathIndex, &actor->x, &actor->y, &actor->z, &angle);
-            func_80045990(getRelocatableHeapBlockBase(D_8011216A), 1, &actor->images[0], &actor->palettes[0]);
-            func_80045990(getRelocatableHeapBlockBase(D_8011216A), 2, &actor->images[1], &actor->palettes[1]);
+            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), 1, &actor->images[0], &actor->palettes[0]);
+            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), 2, &actor->images[1], &actor->palettes[1]);
             break;
     }
     unused = 0;
@@ -4731,7 +4731,7 @@ void func_80063FC0(RaceUiEffectParticleActor *actor) {
         actor->count = 0x3C;
     }
 
-    func_80045990(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x42, &actor->unk20, &actor->unk1C);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x42, &actor->unk20, &actor->unk1C);
     D_80112130.pad4A = allocRelocatableHeapBlock(actor->count * sizeof(RaceUiEffectParticle));
     actor->particles = (RaceUiEffectParticle *)getRelocatableHeapBlockBase(D_80112130.pad4A);
 
@@ -4806,7 +4806,7 @@ void func_800643B4(void *arg0, u16 *arg1) {
     *(u16 **)((u8 *)arg0 + 0x30) = arg1;
     *(s16 *)((u8 *)arg0 + 0x34) = arg1[0];
     *(s16 *)((u8 *)arg0 + 0x36) = arg1[1];
-    func_80045990(getRelocatableHeapBlockBase(D_8011216C), arg1[2], (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x40);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216C), arg1[2], (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x40);
 }
 
 s32 func_80064414(void *arg0) {
@@ -5143,7 +5143,7 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
             if ((entry->active != 0) && (isPositionNearCurrentViewport(&entry->command) != 0)) {
                 if (textureIndex != entry->sentinel + actor->textureOffset) {
                     textureIndex = entry->sentinel + actor->textureOffset;
-                    func_80045990(getRelocatableHeapBlockBase(D_8011216E), 0x14, &spA0, &sp9C);
+                    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216E), 0x14, &spA0, &sp9C);
                     temp_v0_2 = gRegionAllocPtr++;
                     temp_v0_2->words.w0 = 0xFD500000;
                     temp_v0_2->words.w1 = (u32)spA0;
@@ -5392,7 +5392,7 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
         temp_a1 = temp_s0->assetTimer;
         temp_a1 = (temp_a1 >> 1) + 0x3B;
         temp_a1 = (u16)temp_a1;
-        func_80045990(temp_v0_3, temp_a1, &temp_s0->palette3B, &temp_s0->image3B);
+        getAssetTableImageAndPalette(temp_v0_3, temp_a1, &temp_s0->palette3B, &temp_s0->image3B);
         temp_s0->assetTimer++;
         if (temp_s0->assetTimer >= 0xB) {
             temp_s0->timer = 0x3C;
@@ -5436,8 +5436,8 @@ void func_80065E90(RaceUiOverlayActor *arg0) {
         arg0->timer++;
     }
 
-    func_80045990(getRelocatableHeapBlockBase(D_8011216E), 0x3A, &arg0->palette3A, &arg0->image3A);
-    func_80045990(getRelocatableHeapBlockBase(D_8011216E), 0x3B, &arg0->palette3B, &arg0->image3B);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216E), 0x3A, &arg0->palette3A, &arg0->image3A);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216E), 0x3B, &arg0->palette3B, &arg0->image3B);
     setCallbackTaskCallback(arg0, func_80065E0C);
 }
 

@@ -2,8 +2,8 @@
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "main_menu_panel_ui.h"
-#define MENU_RENDERING_BROAD_PROTOTYPES
-#include "menu_rendering.h"
+#define MENU_RENDERER_BROAD_PROTOTYPES
+#include "menu_renderer.h"
 
 #define MENU_PANEL_SCROLL_STEP 0x10
 #define MENU_PANEL_SCROLL_LIMIT 0x79

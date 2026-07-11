@@ -2,7 +2,7 @@
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "training_course_ui.h"
-#include "menu_rendering.h"
+#include "menu_renderer.h"
 
 #define TRAINING_COURSE_UI_TEXTURE_HANDLE (D_80112130.textureHandle)
 

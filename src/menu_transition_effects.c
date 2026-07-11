@@ -3,8 +3,8 @@
 #include "callback_task_scheduler.h"
 #include "menu_transition_effects.h"
 #include "main_menu_scene_model.h"
-#define MENU_RENDERING_BROAD_PROTOTYPES
-#include "menu_rendering.h"
+#define MENU_RENDERER_BROAD_PROTOTYPES
+#include "menu_renderer.h"
 #include "title_menu.h"
 
 struct MainMenuEffectActor {
@@ -60,7 +60,7 @@ extern void addRenderCallback(void *, void *, void *);
 extern Gfx *gRegionAllocPtr;
 extern s32 D_80124838;
 extern s32 gMenuRenderCallbackList;
-extern Gfx D_800DEFF8[];
+extern Gfx gMenuRenderModeResetDl[];
 extern s16 gMenuFadeAlpha;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 D_8011217C;
@@ -219,7 +219,7 @@ void drawEndingBigBurst(MainMenuEffectActor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; do { w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; new_var = gfx; new_var->words.w0 = 0xFA000000; new_var->words.w1 = -0x60; } while (0); if (arg0->effectFrame != 0) { drawMenuSprite(arg0->offsetX, arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), (((0, arg0->effectFrame)) + 0x24) & 0xFFFF, 0x30, 0x20, 0, 0); } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) D_800DEFF8; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; if (arg0->effectFrame < 0xC) { drawMenuSprite(arg0->offsetX, arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), (arg0->effectFrame + 0x25) & 0xFFFF, 0x30, 0x20, 0, 0); } drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x31, 0x20, 0x20, 0, 0); } while (0);
+    do { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; do { w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; new_var = gfx; new_var->words.w0 = 0xFA000000; new_var->words.w1 = -0x60; } while (0); if (arg0->effectFrame != 0) { drawMenuSprite(arg0->offsetX, arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), (((0, arg0->effectFrame)) + 0x24) & 0xFFFF, 0x30, 0x20, 0, 0); } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; if (arg0->effectFrame < 0xC) { drawMenuSprite(arg0->offsetX, arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), (arg0->effectFrame + 0x25) & 0xFFFF, 0x30, 0x20, 0, 0); } drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x31, 0x20, 0x20, 0, 0); } while (0);
 }
 #endif
 
@@ -564,7 +564,7 @@ void initEndingSnowmanEntranceEffect(MainMenuEffectActor *arg0) {
 }
 
 void drawRaceToMenuSnowboardIcon(MainMenuEffectActor *arg0) {
-    func_80011D74(&arg0->angle, 1, arg0->x, arg0->y);
+    drawMenuTilemapSprite(&arg0->angle, 1, arg0->x, arg0->y);
 }
 
 void updateRaceToMenuSnowboardIconIdle(MainMenuEffectActor *arg0) {
@@ -722,7 +722,7 @@ void initRaceToMenuSnowboardIcon(MainMenuEffectActor *arg0) {
 }
 
 void drawRaceToMenuSnowflakeIcon(MainMenuEffectActor *arg0) {
-    func_80011D74(&arg0->angle, 1, arg0->x, arg0->y);
+    drawMenuTilemapSprite(&arg0->angle, 1, arg0->x, arg0->y);
 }
 
 void updateRaceToMenuSnowflakeIconReverseSpin(MainMenuEffectActor *arg0) {
@@ -767,7 +767,7 @@ void initRaceToMenuSnowflakeIcon(MainMenuEffectActor *arg0) {
 }
 
 void drawRaceToMenuLogoWipe(MainMenuEffectActor *arg0) {
-    func_80011D74(&arg0->angle, 0, arg0->x, arg0->y);
+    drawMenuTilemapSprite(&arg0->angle, 0, arg0->x, arg0->y);
 }
 
 void updateRaceToMenuLogoWipeIdle(MainMenuEffectActor *arg0) {

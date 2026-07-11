@@ -2,8 +2,8 @@
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "title_screen_ui.h"
-#define MENU_RENDERING_BROAD_PROTOTYPES
-#include "menu_rendering.h"
+#define MENU_RENDERER_BROAD_PROTOTYPES
+#include "menu_renderer.h"
 #include "title_menu.h"
 
 #define TITLE_SCREEN_LOGO_SPRITE_HANDLE D_8011217A
@@ -64,7 +64,7 @@ extern u8 gConnectedControllerCount;
 extern void addRenderCallback(void *, void *, void *);
 
 void drawTitleScreenLogo(TitleScreenLogoActor *arg0) {
-    func_80011D74(&arg0->sprite, 1, arg0->common.x, arg0->common.y);
+    drawMenuTilemapSprite(&arg0->sprite, 1, arg0->common.x, arg0->common.y);
 }
 
 void updateTitleScreenLogo(TitleScreenLogoActor *arg0) {

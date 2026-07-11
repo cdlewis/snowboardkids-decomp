@@ -1,8 +1,8 @@
 #include "common.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
-#define MENU_RENDERING_BROAD_PROTOTYPES
-#include "menu_rendering.h"
+#define MENU_RENDERER_BROAD_PROTOTYPES
+#include "menu_renderer.h"
 #include "title_menu.h"
 
 #define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x3E])
@@ -268,9 +268,9 @@ void func_80014CB8(void *arg0) {
             temp = width & 0xFFFF;
             drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(D_8011216E), 0, temp, temp, 0, alpha, 0);
         } else {
-            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(D_8011216E), 0, alpha);
+            drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(D_8011216E), 0, alpha);
         }
-        func_800129DC((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5408, 1, alpha);
+        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5408, 1, alpha);
     }
 
     drawMenuSpriteWithAlpha((s16)(actor->x + 0x80), actor->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, alpha, 0);
@@ -360,9 +360,9 @@ void func_8001508C(MenuItemActor *arg0) {
             temp = width & 0xFFFF;
             drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 1, temp, temp, 0, alpha, 0);
         } else {
-            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 1, alpha);
+            drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 1, alpha);
         }
-        func_800129DC((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B541C, 1, alpha);
+        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B541C, 1, alpha);
     }
 
     for (i = 0; i != 0x28; i += 0x14) {
@@ -448,9 +448,9 @@ void func_8001543C(void *arg0) {
             temp = width & 0xFFFF;
             drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 2, temp, temp, 0, alpha, 0);
         } else {
-            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 2, alpha);
+            drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 2, alpha);
         }
-        func_800129DC((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5430, 1, alpha);
+        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5430, 1, alpha);
     }
 
     for (i = 0; i != 0x3C; i += 0x14) {
@@ -536,9 +536,9 @@ void func_800157EC(void *arg0) {
             temp = width & 0xFFFF;
             drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 3, temp, temp, 0, alpha, 0);
         } else {
-            func_80010074((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 3, alpha);
+            drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 3, alpha);
         }
-        func_800129DC((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5444, 1, alpha);
+        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5444, 1, alpha);
     }
 
     for (i = 0; i != 0x50; i += 0x14) {
@@ -1240,7 +1240,7 @@ void func_80017014(RectListActor *arg0) {
 void func_80017078(void *arg0) {
     SpriteActor *actor = arg0;
 
-    func_80011D74(&actor->sprite, 0, actor->x, actor->y);
+    drawMenuTilemapSprite(&actor->sprite, 0, actor->x, actor->y);
 }
 
 void func_800170AC(SpriteActor *arg0) {

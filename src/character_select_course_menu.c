@@ -5,7 +5,7 @@
 #include "character_select_course_menu.h"
 #include "character_select_course_ui.h"
 #include "game_task_scheduler.h"
-#include "menu_rendering.h"
+#include "menu_renderer.h"
 #include "player_count_select_menu.h"
 #include "player_select_menu.h"
 #include "title_menu.h"

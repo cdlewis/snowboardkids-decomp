@@ -16,8 +16,8 @@
 #include "race_intro_transition.h"
 #include "race_intro_transition_2.h"
 #include "viewport_manager.h"
-#define MENU_RENDERING_S16_STEP_PROTOTYPE
-#include "menu_rendering.h"
+#define MENU_RENDERER_S16_STEP_PROTOTYPE
+#include "menu_renderer.h"
 
 #define OS_MESG_BLOCK 1
 

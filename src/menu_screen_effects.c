@@ -124,8 +124,8 @@ extern u32 D_800D60E0[];
 extern GfxCommandSource gIdentityFixedTransform;
 extern u32 gIdentityMatrix[];
 extern s16 gMenuFadeAlpha;
-extern u32 D_800DEFF8[];
-extern s16 D_8011213C;
+extern u32 gMenuRenderModeResetDl[];
+extern s16 gMenuAsciiFontAssetHandle;
 extern s16 D_80112140;
 extern s16 D_80112142;
 extern s16 D_8011214C;
@@ -153,7 +153,7 @@ extern u32 D_20058A8[];
 void drawMenuSprite(s32, s32, s32, s32, s32, s32, s32, s32);
 void func_80045A78(s16, s16, s32, u16);
 void func_80046D68(s32, s32, s32, s32, s32);
-void func_80045990(void *, u16, void **, void **);
+void getAssetTableImageAndPalette(void *, u16, void **, void **);
 void func_80048278(s32, s32, void *, s32);
 void addRenderCallback(void *, void *, s32);
 GfxCommandDest *allocFixedTransformMatrix(GfxCommandSource *);
@@ -389,7 +389,7 @@ void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *arg0) {
 
     if (arg0->unk24.word != 0) {
         gSPDisplayList(gRegionAllocPtr++, D_800D6270);
-        func_80045990(getRelocatableHeapBlockBase(D_8011216C), (u16)(arg0->unk2E + 0x24), &spA4, &spA0);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216C), (u16)(arg0->unk2E + 0x24), &spA4, &spA0);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)spA4);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
@@ -457,9 +457,9 @@ void waitForRaceStartPlayerEffect(MenuScreenEffectActor *arg0) {
 
 void drawTitleMenuSparkle(MenuScreenEffectActor *arg0) {
     if ((gFrameCounter & 0x3E) >= 0x1F) {
-        func_80045A78(arg0->unk18.half.hi, arg0->unk18.half.lo, getRelocatableHeapBlockBase(D_8011213C), 1);
+        func_80045A78(arg0->unk18.half.hi, arg0->unk18.half.lo, getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle), 1);
     } else {
-        func_80045A78(arg0->unk18.half.hi, arg0->unk18.half.lo, getRelocatableHeapBlockBase(D_8011213C), titleMenuSparkleTileFrames[(gFrameCounter & 0x1E) >> 1]);
+        func_80045A78(arg0->unk18.half.hi, arg0->unk18.half.lo, getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle), titleMenuSparkleTileFrames[(gFrameCounter & 0x1E) >> 1]);
     }
 }
 
@@ -481,7 +481,7 @@ void drawCourseRecordBanner(MenuScreenEffectActor *arg0) {
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, getRelocatableHeapBlockBase(D_80112168), 0x5D); func_80045A78(4, -0x10, getRelocatableHeapBlockBase(D_80112168), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, getRelocatableHeapBlockBase(D_8011216A), courseRecordDigitTileOffsets[gRaceCourseIndex]); func_80045A78(4, -0xC, getRelocatableHeapBlockBase(D_8011216A), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) D_800DEFF8; } while (0);
+    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, getRelocatableHeapBlockBase(D_80112168), 0x5D); func_80045A78(4, -0x10, getRelocatableHeapBlockBase(D_80112168), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, getRelocatableHeapBlockBase(D_8011216A), courseRecordDigitTileOffsets[gRaceCourseIndex]); func_80045A78(4, -0xC, getRelocatableHeapBlockBase(D_8011216A), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gMenuRenderModeResetDl; } while (0);
 }
 
 void updateCourseRecordBannerFadeOut(MenuScreenEffectActor *arg0) {
@@ -572,7 +572,7 @@ void drawMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
     Gfx *gfx;
 
     if (gCurrentViewportIndex == 2) {
-        func_80045990((void *) getRelocatableHeapBlockBase(D_80112174), 0, &image, &palette);
+        getAssetTableImageAndPalette((void *) getRelocatableHeapBlockBase(D_80112174), 0, &image, &palette);
         makeFixedRotationZ(transform.rotation, arg0->spriteIndex);
         transform.x = arg0->unk18.word;
         transform.y = arg0->unk1C.word;
@@ -761,7 +761,7 @@ void drawMainMenuModeLabel(MenuScreenEffectActor *arg0) {
         func_80045A78(-0x7E, 0x38, getRelocatableHeapBlockBase(D_80112174), 1);
         func_80046D68(-2, 0x38, getRelocatableHeapBlockBase(D_80112174), 4, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
         break;
-    } temp_v0_5 = gRegionAllocPtr; gRegionAllocPtr = temp_v0_5 + 1; temp_v0_5->words.w0 = 0x06000000; temp_v0_5->words.w1 = (u32) D_800DEFF8;
+    } temp_v0_5 = gRegionAllocPtr; gRegionAllocPtr = temp_v0_5 + 1; temp_v0_5->words.w0 = 0x06000000; temp_v0_5->words.w1 = (u32) gMenuRenderModeResetDl;
 }
 #endif
 

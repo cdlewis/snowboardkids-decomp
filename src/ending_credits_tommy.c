@@ -26,7 +26,7 @@ typedef struct {
     /* 0x1C */ s32 z;
 } GfxCommandSource;
 
-extern void func_80045990(s32 arg0, s32 arg1, void **arg2, void **arg3);
+extern void getAssetTableImageAndPalette(s32 arg0, s32 arg1, void **arg2, void **arg3);
 extern Mtx *allocFixedTransformMatrix(GfxCommandSource *arg0);
 extern MainMenuSceneActorShadow gEndingActorShadow;
 extern u16 gEndingSequencePhase;
@@ -423,7 +423,7 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     gfx->words.w0 = 0x06000000;
     gfx->words.w1 = (u32)D_800D6270;
 
-    func_80045990(getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x31, &sp74, &sp70);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x31, &sp74, &sp70);
 
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;

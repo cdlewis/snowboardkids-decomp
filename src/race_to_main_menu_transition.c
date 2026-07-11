@@ -16,8 +16,8 @@
 #include "ending_credits_tommy.h"
 #include "main_menu_scene_model.h"
 #include "viewport_manager.h"
-#define MENU_RENDERING_S16_STEP_PROTOTYPE
-#include "menu_rendering.h"
+#define MENU_RENDERER_S16_STEP_PROTOTYPE
+#include "menu_renderer.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
