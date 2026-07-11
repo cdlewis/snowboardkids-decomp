@@ -153,9 +153,9 @@ extern u8 D_801240A8[0x778];
 extern SchedulerClient D_80124820;
 extern u16 D_80124828;
 extern Gfx *gRegionAllocPtr;
-extern s8 D_8012482A;
-extern s8 D_8012482B;
-extern s8 D_8012482C;
+extern s8 gRaceRecordSettingsEnabled;
+extern s8 gRaceCourseModelEffectsDisabled;
+extern s8 gRaceCourseOverlayEffectsDisabled;
 extern RenderCallbackNode *D_80124838;
 extern RenderCallbackNode *D_80124848;
 extern RenderCallbackNode *D_80124858;
@@ -254,9 +254,9 @@ void initGameSystems(void) {
     resetAllViewports();
     initSoundManager();
     createGameTask(0, func_80072C30, STARTUP_CALLBACK_PRIORITY);
-    D_8012482A = 0;
-    D_8012482B = 0;
-    D_8012482C = 0;
+    gRaceRecordSettingsEnabled = 0;
+    gRaceCourseModelEffectsDisabled = 0;
+    gRaceCourseOverlayEffectsDisabled = 0;
     gRaceRumbleEnabled = 0;
     gRumblePakConnectedMask = 0;
 }

@@ -1,5 +1,5 @@
-#ifndef MAIN_MENU_PANELS_UI_H
-#define MAIN_MENU_PANELS_UI_H
+#ifndef MAIN_MENU_PANEL_UI_H
+#define MAIN_MENU_PANEL_UI_H
 
 #include "common.h"
 

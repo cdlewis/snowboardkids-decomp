@@ -795,7 +795,7 @@ extern RacePlayerUnsignedPlacement D_80121D90[];
 extern s32 D_80121DA4;
 extern u8 gCurrentViewportIndex;
 extern u8 D_80156609;
-extern s16 D_80156612;
+extern s16 gUiBlinkTimer;
 extern s16 D_80112140;
 extern s16 D_80112142;
 extern s16 D_80112144;
@@ -963,7 +963,7 @@ void func_80057600(RaceUiSlideActor *arg0) {
 
 void func_80057694(RaceUiPromptActor *arg0) {
     if (gCurrentViewportIndex == arg0->index) {
-        if (D_80156612 & 1) {
+        if (gUiBlinkTimer & 1) {
             func_80048278(-0x34, arg0->y, &D_800E1220, 0);
             return;
         }
@@ -1113,7 +1113,7 @@ void func_80057DD4(RaceUiPopupActor *arg0) {
 }
 
 void func_80057E10(void *arg0) {
-    if (D_80156612 & 8) {
+    if (gUiBlinkTimer & 8) {
         func_80045A78(0x20, 0x4A, getMemoryBlockBase(D_8011216E), 0x5B);
     }
 }
@@ -1465,7 +1465,7 @@ void func_8005905C(void *arg0) {
     playerIndex = actor->player0;
     if (playerIndex != -1) {
         sprintf(text, D_800E128C, D_80121D98[playerIndex].value);
-        if (D_80156612 & 1) {
+        if (gUiBlinkTimer & 1) {
             func_80048278(-0x20, -0x38, text, 6);
         } else {
             func_80048278(-0x20, -0x38, text, 0);
@@ -1676,7 +1676,7 @@ void func_80059C34(RaceUiCourseStatsActor *arg0) {
     y = -0x50;
     for (row = 0, offset = 0; row != 5; row++, offset += 4, y += 0x20) {
         func_80045A78(-8, (s16)y, getMemoryBlockBase(D_80112130.popupFontHandle), (row + 0x77) & 0xFFFF);
-        if ((row == actor->index) && (D_80156612 & 1)) {
+        if ((row == actor->index) && (gUiBlinkTimer & 1)) {
             func_80059A04(((RaceUiCourseStatsNameData *)gGameSaveDataBuffer)->courseStatsNames[D_80121B50][row],
                           0x10, y, 0x10);
         } else if (row < 3) {
@@ -1919,7 +1919,7 @@ void func_8005A884(RaceUiPopupActor *arg0) {
     do {
         func_80045A78(-8, (s16)y, getMemoryBlockBase(D_80112130.popupFontHandle), (i + 0x77) & 0xFFFF);
 
-        if ((i == arg0->index) && (D_80156612 & 1)) {
+        if ((i == arg0->index) && (gUiBlinkTimer & 1)) {
             color = 0x10;
         } else if (i < 3) {
             color = 0xC;
@@ -2367,7 +2367,7 @@ void func_8005BE68(RaceUiPopupActor *arg0) {
     /* IDO scheduling for this function depends on this initialization staying on one line. */
     i = 0; offset = 0; while (1) {
         func_80045A78(-8, (s16)y, getMemoryBlockBase(D_80112130.popupFontHandle), (i + 0x77) & 0xFFFF);
-        if ((i == arg0->index) && (D_80156612 & 1)) {
+        if ((i == arg0->index) && (gUiBlinkTimer & 1)) {
             color = 0x10;
         } else if (i < 3) {
             color = 0xC;
@@ -2894,7 +2894,7 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
         char buffer[8];
 
         func_80045A78(-8, (s16)y, getMemoryBlockBase(D_80112130.popupFontHandle), (i + 0x77) & 0xFFFF);
-        if ((i == arg0->index) && (D_80156612 & 1)) {
+        if ((i == arg0->index) && (gUiBlinkTimer & 1)) {
             color = 0x10;
         } else if (i < 3) {
             color = 0xC;

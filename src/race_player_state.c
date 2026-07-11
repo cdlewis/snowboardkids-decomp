@@ -115,7 +115,7 @@ extern Struct800955C0 D_800B9540[];
 extern CourseAngleEntry D_800B9554[];
 extern CourseAngleEntry D_800B9556[];
 extern u8 D_80121B5F;
-extern u8 D_80121B5B;
+extern u8 gMainMenuModeSelection;
 extern u8 D_800EC9C2;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
@@ -124,7 +124,7 @@ extern u8 D_80121B5E;
 extern u8 D_80121B59;
 extern u8 D_80121B58;
 extern u8 gMainMenuSelectedCourse;
-extern u8 D_80121B5B;
+extern u8 gMainMenuModeSelection;
 extern s16 D_80121B50;
 extern s32 D_801235B4;
 extern s16 D_80121B5C;
@@ -182,7 +182,7 @@ void func_8008BF5C(RaceInputPlayer *arg0) {
 
     player = arg0;
     var_v0 = D_800DC6F0;
-    if ((D_80121B59 != 0) || (var_v1 = var_v0, D_80121B5B != 0)) {
+    if ((D_80121B59 != 0) || (var_v1 = var_v0, gMainMenuModeSelection != 0)) {
         var_v0 = D_800DC770;
         var_v1 = D_800DC880;
     } else {
@@ -348,7 +348,7 @@ void func_8008C098(RaceInputPlayer *player) {
         player->unk502 = 0xE;
         break;
     }
-    switch (D_80121B5B) {
+    switch (gMainMenuModeSelection) {
     case 1:
         player->itemEffectType = 1;
         player->itemEffectCount = 3;
@@ -396,8 +396,8 @@ void func_8008C098(RaceInputPlayer *player) {
         player->itemEffectCount = 3;
         break;
     }
-    if (D_80121B5B != 0) {
-        start = &D_800DE918[D_80121B5B - 1][player->playerIndexU16];
+    if (gMainMenuModeSelection != 0) {
+        start = &D_800DE918[gMainMenuModeSelection - 1][player->playerIndexU16];
         pos->x = start->x;
         pos->y = start->y;
         pos->z = start->z;
@@ -744,7 +744,7 @@ void func_8008D09C(RaceInputPlayer *player) {
                 rotation = 0x8000;
             }
         }
-        if ((D_80121B5B != 0) && (player->unk519 == 6)) {
+        if ((gMainMenuModeSelection != 0) && (player->unk519 == 6)) {
             rotation = -0x60000;
         }
         func_8008B73C(player, 0, rotation, player->unk274, player->unk278, player->unk27C);

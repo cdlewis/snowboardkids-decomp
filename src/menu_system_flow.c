@@ -6,7 +6,7 @@
 #include "game_task_scheduler.h"
 #include "menu_system_flow.h"
 #include "main_menu_visual_effects.h"
-#include "main_menu_panels_ui.h"
+#include "main_menu_panel_ui.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
 #include "main_menu_transition.h"
@@ -197,9 +197,9 @@ extern s32 gControllerPakFreeFileCount;
 extern OSMesgQueue D_80124070;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern u8 D_8012482A;
-extern u8 D_8012482B;
-extern u8 D_8012482C;
+extern u8 gRaceRecordSettingsEnabled;
+extern u8 gRaceCourseModelEffectsDisabled;
+extern u8 gRaceCourseOverlayEffectsDisabled;
 extern s32 D_801235B4;
 extern s32 gPlayerInputPressed;
 extern u8 D_800B30F4[];
@@ -1277,22 +1277,22 @@ void updateMainMenuSettings(void) {
         if (temp_v1 & 0x40100) {
             switch (D_801235B4) {
             case 0:
-                if (D_8012482A != 0) {
-                    D_8012482A -= 1;
+                if (gRaceRecordSettingsEnabled != 0) {
+                    gRaceRecordSettingsEnabled -= 1;
                     enqueueSoundEffect(0x19, 0x32);
                     temp_v1 = gPlayerInputPressed;
                 }
                 break;
             case 1:
-                if (D_8012482B != 1) {
-                    D_8012482B += 1;
+                if (gRaceCourseModelEffectsDisabled != 1) {
+                    gRaceCourseModelEffectsDisabled += 1;
                     enqueueSoundEffect(0x19, 0x32);
                     temp_v1 = gPlayerInputPressed;
                 }
                 break;
             case 2:
-                if (D_8012482C != 1) {
-                    D_8012482C += 1;
+                if (gRaceCourseOverlayEffectsDisabled != 1) {
+                    gRaceCourseOverlayEffectsDisabled += 1;
                     enqueueSoundEffect(0x19, 0x32);
                     temp_v1 = gPlayerInputPressed;
                 }
@@ -1302,22 +1302,22 @@ void updateMainMenuSettings(void) {
         if (temp_v1 & 0x80200) {
             switch (D_801235B4) {
             case 0:
-                if (D_8012482A != 1) {
-                    D_8012482A += 1;
+                if (gRaceRecordSettingsEnabled != 1) {
+                    gRaceRecordSettingsEnabled += 1;
                     enqueueSoundEffect(0x19, 0x32);
                     temp_v1 = gPlayerInputPressed;
                 }
                 break;
             case 1:
-                if (D_8012482B != 0) {
-                    D_8012482B -= 1;
+                if (gRaceCourseModelEffectsDisabled != 0) {
+                    gRaceCourseModelEffectsDisabled -= 1;
                     enqueueSoundEffect(0x19, 0x32);
                     temp_v1 = gPlayerInputPressed;
                 }
                 break;
             case 2:
-                if (D_8012482C != 0) {
-                    D_8012482C -= 1;
+                if (gRaceCourseOverlayEffectsDisabled != 0) {
+                    gRaceCourseOverlayEffectsDisabled -= 1;
                     enqueueSoundEffect(0x19, 0x32);
                     temp_v1 = gPlayerInputPressed;
                 }
