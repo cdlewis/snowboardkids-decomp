@@ -37,7 +37,7 @@ extern s16 gHuffmanQueueCount;
 extern s16 gFrameCounter;
 extern CompressedAssetHeader gCompressedAssetHeader;
 extern HuffmanNode gHuffmanNodes[];
-extern AssetHandleTable D_80112130;
+extern AssetHandleTable gAssetHandles;
 extern s32 gHuffmanNodeCount;
 
 s32 randomNextMain(void) {
@@ -351,21 +351,21 @@ void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2) {
     s32 sp30;
 
     dmaReadRom((u32)arg0, &gCompressedAssetHeader, 8);
-    D_80112130.assetHandles[arg2] = allocRelocatableHeapBlock(gCompressedAssetHeader.compressedSize);
-    D_80112130.compressedAssetHandle = allocRelocatableHeapBlock((s32)arg1 - (s32)arg0);
-    dmaReadRom((u32)arg0, (void *)getRelocatableHeapBlockBase(D_80112130.compressedAssetHandle), (s32)arg1 - (s32)arg0);
-    sp30 = getRelocatableHeapBlockBase(D_80112130.compressedAssetHandle) + 5;
-    sp28 = &D_80112130.assetHandles[arg2];
+    gAssetHandles.assetHandles[arg2] = allocRelocatableHeapBlock(gCompressedAssetHeader.compressedSize);
+    gAssetHandles.compressedAssetHandle = allocRelocatableHeapBlock((s32)arg1 - (s32)arg0);
+    dmaReadRom((u32)arg0, (void *)getRelocatableHeapBlockBase(gAssetHandles.compressedAssetHandle), (s32)arg1 - (s32)arg0);
+    sp30 = getRelocatableHeapBlockBase(gAssetHandles.compressedAssetHandle) + 5;
+    sp28 = &gAssetHandles.assetHandles[arg2];
     decompressHuffmanAssetPayload(gCompressedAssetHeader.flags, sp30, getRelocatableHeapBlockBase(*sp28), gCompressedAssetHeader.compressedSize);
     getRelocatableHeapBlockBase(*sp28);
-    D_80112130.compressedAssetHandle = freeRelocatableHeapBlock(D_80112130.compressedAssetHandle);
+    gAssetHandles.compressedAssetHandle = freeRelocatableHeapBlock(gAssetHandles.compressedAssetHandle);
 }
 
 void loadRawRomAsset(void *arg0, void *arg1, s32 arg2) {
     s32 temp_a0 = (s32)arg1 - (s32)arg0;
     s16 *temp_v1;
 
-    temp_v1 = &D_80112130.assetHandles[arg2];
+    temp_v1 = &gAssetHandles.assetHandles[arg2];
     *temp_v1 = allocRelocatableHeapBlock(temp_a0);
     dmaReadRom((u32)arg0, (void *)getRelocatableHeapBlockBase(*temp_v1), temp_a0);
 }

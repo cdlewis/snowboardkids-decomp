@@ -11,7 +11,7 @@
 #define MENU_PANEL_INPUT_REPEAT_FRAMES 4
 #define MENU_PANEL_ACCEPT_SOUND 0x18
 #define MENU_PANEL_SOUND_VOLUME 0x32
-#define MENU_PANEL_TEXTURE_HANDLE (D_80112130.textureHandle)
+#define MENU_PANEL_TEXTURE_HANDLE (gAssetHandles.textureHandle)
 
 typedef void (*MenuPanelActorCallback)(MenuPanelActor *);
 
@@ -61,7 +61,7 @@ extern u16 *raceRecordLapCountTexts[];
 extern s16 courseRecordDigitTileOffsets[];
 extern u16 *mainMenuModeDescriptionTexts[];
 extern u16 *mainMenuModeDescriptionTitles[];
-extern MenuPanelAssetHandles D_80112130;
+extern MenuPanelAssetHandles gAssetHandles;
 extern u8 gMainMenuModeSelection;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
@@ -144,7 +144,7 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
 
         func_80046748((s16)(x + 0xA), -0x16, 0x22, 0x22, 0x40, alpha / 4, 0);
         func_80046748((s16)(x + 4), -0x1C, 0x22, 0x22, 0xFF, alpha, 0);
-        func_80045A78((s16)(x + 5), -0x1B, getRelocatableHeapBlockBase(D_80112130.fontHandle), *tile);
+        func_80045A78((s16)(x + 5), -0x1B, getRelocatableHeapBlockBase(gAssetHandles.fontHandle), *tile);
         i = next;
         tile++;
         x += 0x2C;
@@ -161,7 +161,7 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
 
         func_80046748((s16)(x + 0xA), 0x1E, 0x22, 0x22, 0, alpha / 4, 0x40);
         func_80046748((s16)(x + 4), 0x18, 0x22, 0x22, arg0->x * 0, alpha, 0xFF);
-        func_80045A78((s16)(x + 5), 0x19, getRelocatableHeapBlockBase(D_80112130.fontHandle), *tile);
+        func_80045A78((s16)(x + 5), 0x19, getRelocatableHeapBlockBase(gAssetHandles.fontHandle), *tile);
         i++;
         tile++;
         x += 0x2C;
@@ -169,16 +169,16 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
 
     if (gMainMenuModeSelection == 0xC) {
         if (arg0->x != 0) {
-            func_80045A78(-0x30, 0x4D, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 2);
-            func_80045E84(-0x30, 0x4D, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 3);
+            func_80045A78(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2);
+            func_80045E84(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
             return;
         }
-        func_80046D68(-0x30, 0x4D, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 2, 1);
-        func_80045E84(-0x30, 0x4D, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 3);
+        func_80046D68(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
+        func_80045E84(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
         return;
     }
 
-    func_80046D68(-0x30, 0x4D, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 2, 1);
+    func_80046D68(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
 }
 
 // updateMainMenuModeSelectGrid best match: 75.664%
@@ -267,31 +267,31 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     s32 i;
     u8 *new_var;
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(D_80112130.textureHandle),
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                   2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(D_80112130.textureHandle),
+    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                   4, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
         drawMenuSprite((s16)((arg0->x + i) + 0xC), (s16)(arg0->y + 0x14),
-                      getRelocatableHeapBlockBase(D_80112130.textureHandle), 3, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 3, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)((arg0->x + i) + 0xC), (s16)(arg0->y + 0x4C),
-                      getRelocatableHeapBlockBase(D_80112130.textureHandle), 8, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0xF0);
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), getRelocatableHeapBlockBase(D_80112130.textureHandle),
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                   7, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), getRelocatableHeapBlockBase(D_80112130.textureHandle),
+    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                   9, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
         drawMenuSprite((s16)(arg0->x - 4), (s16)((arg0->y + i) + 0x24),
-                      getRelocatableHeapBlockBase(D_80112130.textureHandle), 5, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 5, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(arg0->x + 0xF8), (s16)((arg0->y + i) + 0x24),
-                      getRelocatableHeapBlockBase(D_80112130.textureHandle), 6, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 6, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0x30);
 
@@ -348,7 +348,7 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
 
         if ((arg0->selectionState != 0) && (gMainMenuSelectionResult == 0)) {
             drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48),
-                          getRelocatableHeapBlockBase(D_80112130.textureHandle), (gFrameCounter >> 4) & 1, 0x20, 0x20, 0,
+                          getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (gFrameCounter >> 4) & 1, 0x20, 0x20, 0,
                           0);
         }
     }
@@ -370,12 +370,12 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     }
 
     if (gMainMenuModeSelection < 6) {
-        func_80045A78(-0x10, (s16)((-0x30) - arg0->y), getRelocatableHeapBlockBase(D_80112130.fontHandle),
+        func_80045A78(-0x10, (s16)((-0x30) - arg0->y), getRelocatableHeapBlockBase(gAssetHandles.fontHandle),
                       (new_var = mainMenuModeSelectPrimaryIconTiles)[gMainMenuModeSelection]);
         return;
     }
 
-    func_80045A78(-0x10, (s16)((-0x30) - arg0->y), getRelocatableHeapBlockBase(D_80112130.fontHandle),
+    func_80045A78(-0x10, (s16)((-0x30) - arg0->y), getRelocatableHeapBlockBase(gAssetHandles.fontHandle),
                   mainMenuModeSelectSecondaryIconTiles[gMainMenuModeSelection]);
 }
 #endif
@@ -438,40 +438,40 @@ void initMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
 void drawMainMenuModeSelectMenuOptions(s32 arg0) {
     if (D_801235B4 == 0) {
         if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
-            func_80045A78(-0x30, -0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0);
-            func_80045E84(-0x30, -0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 3);
+            func_80045A78(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0);
+            func_80045E84(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
         } else {
-            func_80046D68(-0x30, -0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0, 1);
-            func_80045E84(-0x30, -0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 3);
+            func_80046D68(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0, 1);
+            func_80045E84(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
         }
     } else {
-        func_80046D68(-0x30, -0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0, 1);
+        func_80046D68(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0, 1);
     }
 
     if (D_801235B4 == 1) {
         if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
-            func_80045A78(-0x30, -8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 1);
-            func_80045E84(-0x30, -8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 3);
+            func_80045A78(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 1);
+            func_80045E84(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
         } else {
-            func_80046D68(-0x30, -8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 1, 1);
-            func_80045E84(-0x30, -8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 3);
+            func_80046D68(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 1, 1);
+            func_80045E84(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
         }
     } else {
-        func_80046D68(-0x30, -8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 1, 1);
+        func_80046D68(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 1, 1);
     }
 
     if (D_801235B4 == 2) {
         if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
-            func_80045A78(-0x30, 0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 2);
-            func_80045E84(-0x30, 0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 3);
+            func_80045A78(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2);
+            func_80045E84(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
             return;
         }
-        func_80046D68(-0x30, 0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 2, 1);
-        func_80045E84(-0x30, 0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 3);
+        func_80046D68(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
+        func_80045E84(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
         return;
     }
 
-    func_80046D68(-0x30, 0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 2, 1);
+    func_80046D68(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
 }
 
 void updateMainMenuModeSelectMenuOptions(MenuPanelActor *arg0) {
@@ -483,10 +483,10 @@ void initMainMenuModeSelectMenuOptions(MenuPanelActor *arg0) {
 }
 
 void drawRaceSetupCornerPrompts(s32 arg0) {
-    func_80046358(-0x84, -0x64, getRelocatableHeapBlockBase(D_80112130.raceSetupPromptHandle), 6);
-    func_80046358(0x74, -0x64, getRelocatableHeapBlockBase(D_80112130.raceSetupPromptHandle), 7);
-    func_80046358(-0x84, 4, getRelocatableHeapBlockBase(D_80112130.raceSetupPromptHandle), 8);
-    func_80046358(0x74, 4, getRelocatableHeapBlockBase(D_80112130.raceSetupPromptHandle), 9);
+    func_80046358(-0x84, -0x64, getRelocatableHeapBlockBase(gAssetHandles.raceSetupPromptHandle), 6);
+    func_80046358(0x74, -0x64, getRelocatableHeapBlockBase(gAssetHandles.raceSetupPromptHandle), 7);
+    func_80046358(-0x84, 4, getRelocatableHeapBlockBase(gAssetHandles.raceSetupPromptHandle), 8);
+    func_80046358(0x74, 4, getRelocatableHeapBlockBase(gAssetHandles.raceSetupPromptHandle), 9);
 }
 
 void updateRaceSetupCornerPrompts(MenuPanelActor *arg0) {
@@ -560,73 +560,73 @@ void drawMainMenuSettingsOptions(s32 arg0) {
         var_v0 = 2;
         sp28 = var_v0;
     }
-    func_80046D68(-0x78, -0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 4, sp28);
+    func_80046D68(-0x78, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 4, sp28);
     sp28 = 1;
     if (gRaceRecordSettingsEnabled == 1) {
-        func_80046D68(0x10, -0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 7, 2);
-        func_80046D68(0x48, -0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 8, 1);
+        func_80046D68(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 7, 2);
+        func_80046D68(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 8, 1);
         if (D_801235B4 == 0) {
-            func_80045E84(0x10, -0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xB);
+            func_80045E84(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         } else {
-            func_80045A78(0x10, -0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xB);
+            func_80045A78(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         }
     } else {
-        func_80046D68(0x10, -0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 7, 1);
-        func_80046D68(0x48, -0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 8, 2);
+        func_80046D68(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 7, 1);
+        func_80046D68(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 8, 2);
         if (D_801235B4 == 0) {
-            func_80045E84(0x48, -0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xB);
+            func_80045E84(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         } else {
-            func_80045A78(0x48, -0x10, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xB);
+            func_80045A78(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         }
     }
     if (D_801235B4 == 1) {
         sp28 = 2;
     }
-    func_80046D68(-0x78, 8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 5, sp28);
+    func_80046D68(-0x78, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 5, sp28);
     sp28 = 1;
     if (gRaceCourseModelEffectsDisabled == 0) {
-        func_80046D68(0x10, 8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 9, 2);
-        func_80046D68(0x48, 8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xA, 1);
+        func_80046D68(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 2);
+        func_80046D68(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 1);
         if (D_801235B4 == 1) {
-            func_80045E84(0x10, 8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xB);
+            func_80045E84(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         } else {
-            func_80045A78(0x10, 8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xB);
+            func_80045A78(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         }
     } else {
-        func_80046D68(0x10, 8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 9, 1);
-        func_80046D68(0x48, 8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xA, 2);
+        func_80046D68(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 1);
+        func_80046D68(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 2);
         if (D_801235B4 == 1) {
-            func_80045E84(0x48, 8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xB);
+            func_80045E84(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         } else {
-            func_80045A78(0x48, 8, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xB);
+            func_80045A78(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         }
     }
     if (D_801235B4 == 2) {
         sp28 = 2;
     }
-    func_80046D68(-0x78, 0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 6, sp28);
+    func_80046D68(-0x78, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 6, sp28);
     sp28 = 1;
     if (gRaceCourseOverlayEffectsDisabled == 0) {
-        func_80046D68(0x10, 0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 9, 2);
-        func_80046D68(0x48, 0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xA, 1);
+        func_80046D68(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 2);
+        func_80046D68(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 1);
         if (D_801235B4 == 2) {
-            func_80045E84(0x10, 0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xB);
+            func_80045E84(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         } else {
-            func_80045A78(0x10, 0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xB);
+            func_80045A78(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         }
     } else {
-        func_80046D68(0x10, 0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 9, 1);
-        func_80046D68(0x48, 0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xA, 2);
+        func_80046D68(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 1);
+        func_80046D68(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 2);
         if (D_801235B4 == 2) {
-            func_80045E84(0x48, 0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xB);
+            func_80045E84(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         } else {
-            func_80045A78(0x48, 0x20, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xB);
+            func_80045A78(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
         }
     }
     if (D_801235B4 == 3) {
         sp28 = 2;
     }
-    func_80046D68(-0x68, 0x48, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 2, sp28);
+    func_80046D68(-0x68, 0x48, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, sp28);
 }
 
 void updateMainMenuSettingsPanel(MenuPanelActor *arg0) {
@@ -698,11 +698,11 @@ void drawRaceRecordSettingsPanel(s32 arg0) {
     if (D_801235B4 == 0) {
         if (gRaceLapCount != 1) {
             if (gUiBlinkTimer & 8) {
-                func_80045A78(-0x30, -0x2A, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xC);
+                func_80045A78(-0x30, -0x2A, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xC);
             }
         }
         if ((gRaceLapCount != 9) && (gUiBlinkTimer & 8)) {
-            func_80045A78(-0x30, -6, getRelocatableHeapBlockBase(D_80112130.cancelHandle), 0xD);
+            func_80045A78(-0x30, -6, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xD);
         }
     }
     if ((D_801235B4 != 0) && (gUiBlinkTimer & 1)) {
@@ -710,10 +710,10 @@ void drawRaceRecordSettingsPanel(s32 arg0) {
     } else {
         drawMenuColoredGlyphScript(-0x30, -0x18, raceRecordLapCountTexts[gRaceLapCount], 0, 0x100, 5, 0x29);
     }
-    func_80045A78(-0x54, -0x60, getRelocatableHeapBlockBase(D_80112130.courseRecordIconHandle), 0x5D);
-    func_80045A78(4, -0x60, getRelocatableHeapBlockBase(D_80112130.courseRecordIconHandle), 0x5E);
-    func_80045A78(-0x4C, -0x5C, getRelocatableHeapBlockBase(D_80112130.courseRecordDigitHandle), courseRecordDigitTileOffsets[gRaceCourseIndex]);
-    func_80045A78(4, -0x5C, getRelocatableHeapBlockBase(D_80112130.courseRecordDigitHandle), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1);
+    func_80045A78(-0x54, -0x60, getRelocatableHeapBlockBase(gAssetHandles.courseRecordIconHandle), 0x5D);
+    func_80045A78(4, -0x60, getRelocatableHeapBlockBase(gAssetHandles.courseRecordIconHandle), 0x5E);
+    func_80045A78(-0x4C, -0x5C, getRelocatableHeapBlockBase(gAssetHandles.courseRecordDigitHandle), courseRecordDigitTileOffsets[gRaceCourseIndex]);
+    func_80045A78(4, -0x5C, getRelocatableHeapBlockBase(gAssetHandles.courseRecordDigitHandle), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1);
 }
 #endif
 

@@ -90,7 +90,7 @@ extern s32 D_80112358;
 extern s32 D_80112360;
 extern s32 D_80112408;
 extern s32 D_80112410;
-extern s16 D_80112130;
+extern s16 gAssetHandles[];
 extern s16 D_8011213E;
 extern s16 D_801121B0;
 extern s16 gMenuViewportWidth;
@@ -119,7 +119,7 @@ void func_800458E0(void)
     do {
         ;
         if (1) {
-            handle = &D_80112130;
+            handle = gAssetHandles;
         }
         end = (new_var2 = &D_801121B0);
         do {
@@ -1381,11 +1381,11 @@ void func_80048278(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
 extern s32 D_801121B8;
 
 void func_80048338(void) {
-    D_80112130 = allocRelocatableHeapBlock(0x4000);
+    gAssetHandles[0] = allocRelocatableHeapBlock(0x4000);
 }
 
 void resetRenderScratchAllocator(void) {
-    D_801121B8 = getRelocatableHeapBlockBase(D_80112130);
+    D_801121B8 = getRelocatableHeapBlockBase(gAssetHandles[0]);
 }
 
 void *func_80048388(s32 arg0) {
@@ -1396,7 +1396,7 @@ void *func_80048388(s32 arg0) {
     s32 temp_a0;
 
     sp1C = D_801121B8;
-    base = getRelocatableHeapBlockBase(D_80112130);
+    base = getRelocatableHeapBlockBase(gAssetHandles[0]);
     new_var2 = &temp_a0;
     temp_a0 = D_801121B8 + ((((u32)(arg0 + 3)) >> 2) * 4);
     new_var = (u32)(*new_var2 - base);
@@ -1435,12 +1435,9 @@ loop:
     }
 }
 
-extern s16 D_80112132;
-extern s16 D_80112134;
-
 void func_800484F0(void) {
-    D_80112132 = allocRelocatableHeapBlock(0x8000);
-    D_80112134 = allocRelocatableHeapBlock(0x8000);
+    gAssetHandles[1] = allocRelocatableHeapBlock(0x8000);
+    gAssetHandles[2] = allocRelocatableHeapBlock(0x8000);
 }
 
 extern u32 D_80123754;
@@ -1450,9 +1447,9 @@ extern u8 *D_801121BC;
 void func_80048524(s32 arg0) {
     D_80123754 = 0;
     if (arg0 == 0) {
-        D_801121BC = D_801121C0 = getRelocatableHeapBlockBase(D_80112132);
+        D_801121BC = D_801121C0 = getRelocatableHeapBlockBase(gAssetHandles[1]);
     } else {
-        D_801121BC = D_801121C0 = getRelocatableHeapBlockBase(D_80112134);
+        D_801121BC = D_801121C0 = getRelocatableHeapBlockBase(gAssetHandles[2]);
     }
 }
 
@@ -1482,9 +1479,9 @@ extern void osWritebackDCache(void *, s32);
 
 void func_800485E8(s32 arg0) {
     if (arg0 == 0) {
-        osWritebackDCache((void *)getRelocatableHeapBlockBase(D_80112132), D_80123754);
+        osWritebackDCache((void *)getRelocatableHeapBlockBase(gAssetHandles[1]), D_80123754);
     } else {
-        osWritebackDCache((void *)getRelocatableHeapBlockBase(D_80112134), D_80123754);
+        osWritebackDCache((void *)getRelocatableHeapBlockBase(gAssetHandles[2]), D_80123754);
     }
 }
 

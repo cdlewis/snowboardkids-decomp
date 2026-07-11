@@ -5,9 +5,9 @@
 #include "menu_renderer.h"
 #include "title_menu.h"
 
-#define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x3E])
-#define TITLE_MENU_FRAME_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x42])
-#define TITLE_MENU_BANNER_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x52])
+#define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x3E])
+#define TITLE_MENU_FRAME_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x42])
+#define TITLE_MENU_BANNER_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x52])
 #define RACE_PLAYER_STATE_SIZE 0x60C
 
 typedef struct {
@@ -66,7 +66,7 @@ extern u16 D_800B541C[];
 extern u16 D_800B5430[];
 extern u16 D_800B5444[];
 extern u8 D_800B5200[];
-extern u8 D_80112130[];
+extern u8 gAssetHandles[];
 extern s16 D_8011216E;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 D_8011217C;

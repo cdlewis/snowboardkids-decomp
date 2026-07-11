@@ -40,7 +40,7 @@ extern s16 D_800EC9D0;
 extern u8 D_800EC9C1;
 
 #ifdef NON_MATCHING
-#define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x42])
+#define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x42])
 
 typedef struct {
     char pad[0x34];
@@ -50,7 +50,7 @@ typedef struct {
 
 extern s16 gPlayerBadgeDisplayOrder[];
 extern ControllerPakRaceRecordSaveScoreView gGameSaveDataBuffer;
-extern u8 D_80112130[];
+extern u8 gAssetHandles[];
 extern s32 D_80121D8C;
 #endif
 

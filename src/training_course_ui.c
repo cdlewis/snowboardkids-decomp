@@ -4,7 +4,7 @@
 #include "training_course_ui.h"
 #include "menu_renderer.h"
 
-#define TRAINING_COURSE_UI_TEXTURE_HANDLE (D_80112130.textureHandle)
+#define TRAINING_COURSE_UI_TEXTURE_HANDLE (gAssetHandles.textureHandle)
 
 typedef MenuGlyphScript TrainingCourseUiScript;
 
@@ -54,7 +54,7 @@ typedef void (*RenderCallback)(s32);
 
 extern void addRenderCallback(RenderCallbackNode **, RenderCallback, s32);
 extern RenderCallbackNode *gMenuRenderCallbackList;
-extern TrainingCourseAssetHandles D_80112130;
+extern TrainingCourseAssetHandles gAssetHandles;
 extern u8 gMainMenuSelectionResult;
 extern s32 gPlayerInputPressed;
 extern TrainingCourseUiScript gTrainingCourseOpeningDialogScripts[][0x17C];

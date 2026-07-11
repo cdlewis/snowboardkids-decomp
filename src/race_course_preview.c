@@ -101,7 +101,7 @@ extern s16 D_80112144;
 extern s16 D_80112146;
 extern s16 D_80112168;
 extern s16 D_8011216A;
-extern RaceCoursePreviewAssetHandles D_80112130;
+extern RaceCoursePreviewAssetHandles gAssetHandles;
 extern u8 D_80156609;
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
@@ -204,8 +204,8 @@ void initRaceCoursePreviewModelMeshes(RaceCoursePreviewMeshActor *arg0) {
     if (count != 0) {
         entry = gRaceCoursePreviewModelCommandsByCourse[gRaceCourseIndex];
         allocSize = count * sizeof(GfxCommandDest);
-        D_80112130.matrixHandle = allocRelocatableHeapBlock(allocSize);
-        arg0->matrices = getRelocatableHeapBlockBase(D_80112130.matrixHandle);
+        gAssetHandles.matrixHandle = allocRelocatableHeapBlock(allocSize);
+        arg0->matrices = getRelocatableHeapBlockBase(gAssetHandles.matrixHandle);
 
         i = 0;
         if (count > 0) {
@@ -680,8 +680,8 @@ void initRaceCoursePreviewAnimatedBillboards(RaceCoursePreviewMeshActor *arg0) {
     if (count != 0) {
         entry = gRaceCoursePreviewAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
         allocSize = count * sizeof(GfxCommandDest);
-        D_80112130.matrixHandle2 = allocRelocatableHeapBlock(allocSize);
-        arg0->matrices = getRelocatableHeapBlockBase(D_80112130.matrixHandle2);
+        gAssetHandles.matrixHandle2 = allocRelocatableHeapBlock(allocSize);
+        arg0->matrices = getRelocatableHeapBlockBase(gAssetHandles.matrixHandle2);
 
         i = 0;
         if (count > 0) {

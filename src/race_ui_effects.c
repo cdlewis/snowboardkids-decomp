@@ -815,7 +815,7 @@ extern RacePlayerHalfwordField D_80123276[];
 extern RacePlayerByteField D_8012229A[];
 extern s16 gFrameCounter;
 extern s16 D_8011216C;
-extern RaceUiAssetHandles D_80112130;
+extern RaceUiAssetHandles gAssetHandles;
 extern s16 D_801222F6;
 extern s16 D_801222F2;
 extern s16 D_801222F0;
@@ -1002,26 +1002,26 @@ void func_80057854(RaceUiPopupActor *arg0) {
     s32 i;
 
     if (gCurrentViewportIndex == 0) {
-        func_80045A78((s16)(arg0->x - 0x3C), arg0->y.half.lo, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x8B);
-        func_80045A78((s16)(arg0->x + 0x14), arg0->y.half.lo, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x8E);
+        func_80045A78((s16)(arg0->x - 0x3C), arg0->y.half.lo, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x8B);
+        func_80045A78((s16)(arg0->x + 0x14), arg0->y.half.lo, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x8E);
         sprintf(buffer, D_800E1240, arg0->parent);
         for (i = 0; i < 2; i++) {
             if (buffer[i] != ' ') {
                 func_80046D68((s16)(arg0->x + (i * 8) + 4), arg0->y.half.lo,
-                              getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
+                              getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
             }
         }
 
         if (arg0->playerIndex != 0) {
             func_80045A78((s16)(arg0->x - 0x48), (s16)(arg0->y.word + 0x12),
-                          getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x8D);
+                          getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x8D);
             func_80045A78((s16)(arg0->x + 0x20), (s16)(arg0->y.word + 0x12),
-                          getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x8E);
+                          getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x8E);
             sprintf(buffer, D_800E1244, 0x12C);
             for (i = 0; i != 3; i++) {
                 if (buffer[i] != ' ') {
                     func_80046D68((s16)(arg0->x + (i * 8) + 8), (s16)(arg0->y.word + 0x12),
-                                  getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
+                                  getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
                 }
             }
         }
@@ -1155,7 +1155,7 @@ void func_8005804C(RaceUiAlpha18Actor *arg0) {
 
     sprintf(buffer + -8, D_800E1250, arg0->score);
     x = 0x20;
-    handles = &D_80112130;
+    handles = &gAssetHandles;
  ptr = (u8 *) (((s32) padding) - 0x10); if (!ptr) { } space = ' '; loop: if ((*ptr) != 0) {
         if (space != *ptr) {
             func_80045A78(x, -0x3F, getRelocatableHeapBlockBase(handles->popupFontHandle), (*ptr - 5) & 0xFFFF);
@@ -1182,7 +1182,7 @@ void func_8005812C(void *arg0) {
     RaceUiAssetHandles *assets;
 
     i = 0;
-    do { sprintf(&buffer[i], D_800E1254, D_801222E8); x = 0x20; if (D_80122289 == 3) { colorValue = 0xD; } else { colorValue = 0xC; } do { assets = (RaceUiAssetHandles *)((u8 *)&D_80112130 + (u8)i); space = ' '; color = colorValue; if (space) { }
+    do { sprintf(&buffer[i], D_800E1254, D_801222E8); x = 0x20; if (D_80122289 == 3) { colorValue = 0xD; } else { colorValue = 0xC; } do { assets = (RaceUiAssetHandles *)((u8 *)&gAssetHandles + (u8)i); space = ' '; color = colorValue; if (space) { }
 loop:
     if (buffer[i] != '\0') { if (buffer[i] != space) { func_80046D68((s16)x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), (buffer[i] - 5) & 0xFFFF, color); } x += 8; i++; goto loop; } } while (0); func_80046D68((s16)x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), 0x37, color); } while (0);
     if (D_80122289 == 3) {
@@ -1206,7 +1206,7 @@ void func_8005827C(void *arg0) {
 
     sprintf(buffer + -8, D_800E1258, D_80121D8C);
     x = 0x18;
-    handles = &D_80112130;
+    handles = &gAssetHandles;
  ptr = (u8 *) (((s32) padding) - 0x10); if (!ptr) { } space = ' '; loop: if ((*ptr) != 0) {
         if (space != *ptr) {
             func_80045A78(x, 0x21, getRelocatableHeapBlockBase(handles->popupFontHandle), (*ptr - 5) & 0xFFFF);
@@ -1405,35 +1405,35 @@ void func_80058C00(RaceUiResultsBannerActor *arg0) {
     }
 
     if (arg0->player0 != -1) {
-        func_80045A78(-0x88, -0x50, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0);
-        func_80045A78(-0x68, -0x40, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x48);
-        func_80046970(-0x54, -0x50, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+        func_80045A78(-0x88, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0);
+        func_80045A78(-0x68, -0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x48);
+        func_80046970(-0x54, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (D_80121D90[arg0->player0].placement + 0x41) & 0xFFFF);
-        func_80045A78(-0x30, -0x40, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x4C);
+        func_80045A78(-0x30, -0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4C);
     }
 
     if (arg0->player1 != -1) {
-        func_80045A78(8, -0x30, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 1);
-        func_80045A78(0x28, -0x20, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x49);
-        func_80046970(0x3C, -0x30, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+        func_80045A78(8, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 1);
+        func_80045A78(0x28, -0x20, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x49);
+        func_80046970(0x3C, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (D_80121D90[arg0->player1].placement + 0x41) & 0xFFFF);
-        func_80045A78(0x60, -0x20, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x4C);
+        func_80045A78(0x60, -0x20, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4C);
     }
 
     if (arg0->player2 != -1) {
-        func_80045A78(-0x88, -0x10, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 2);
-        func_80045A78(-0x68, 0, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x4A);
-        func_80046970(-0x54, -0x10, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+        func_80045A78(-0x88, -0x10, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 2);
+        func_80045A78(-0x68, 0, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4A);
+        func_80046970(-0x54, -0x10, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (D_80121D90[arg0->player2].placement + 0x41) & 0xFFFF);
-        func_80045A78(-0x30, 0, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x4C);
+        func_80045A78(-0x30, 0, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4C);
     }
 
     if (arg0->player3 != -1) {
-        func_80045A78(8, 0x10, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 3);
-        func_80045A78(0x28, 0x20, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x4B);
-        func_80046970(0x3C, 0x10, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+        func_80045A78(8, 0x10, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 3);
+        func_80045A78(0x28, 0x20, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4B);
+        func_80046970(0x3C, 0x10, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (D_80121D90[arg0->player3].placement + 0x41) & 0xFFFF);
-        func_80045A78(0x60, 0x20, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x4C);
+        func_80045A78(0x60, 0x20, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4C);
     }
 
     if (arg0->alpha != 0xFF) {
@@ -1635,29 +1635,29 @@ void func_80059A04(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
     y = arg2;
     color = arg3;
     end = &buffer[-0xE];
-    ptr = buffer - 0x10; do { func_80046D68((s16)x, y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+    ptr = buffer - 0x10; do { func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
         ptr++;
         x += 8;
     } while (ptr < end);
 
-    func_80046D68((s16)x, y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x36, color);
+    func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color);
     x += 8;
     sprintf(buffer - 0x10, D_800E12C4, record->second);
     ptr = buffer - 0x10;
     end = &buffer[-0xE];
     do {
-        func_80046D68((s16)x, y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+        func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
         ptr++;
         x += 8;
     } while (ptr < end);
 
-    func_80046D68((s16)x, y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x35, color);
+    func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, color);
     x += 8;
     sprintf(buffer - 0x10, D_800E12CC, record->third >> 8);
     ptr = buffer - 0x10;
     end = &buffer[-0xE];
     do {
-        func_80046D68((s16)x, y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+        func_80046D68((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
         do {
             ptr++;
             x += 8;
@@ -1675,7 +1675,7 @@ void func_80059C34(RaceUiCourseStatsActor *arg0) {
     actor = arg0;
     y = -0x50;
     for (row = 0, offset = 0; row != 5; row++, offset += 4, y += 0x20) {
-        func_80045A78(-8, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (row + 0x77) & 0xFFFF);
+        func_80045A78(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (row + 0x77) & 0xFFFF);
         if ((row == actor->index) && (gUiBlinkTimer & 1)) {
             func_80059A04(((RaceUiCourseStatsNameData *)gGameSaveDataBuffer)->courseStatsNames[gRaceCourseIndex][row],
                           0x10, y, 0x10);
@@ -1687,11 +1687,11 @@ void func_80059C34(RaceUiCourseStatsActor *arg0) {
                           0x10, y, 0xD);
         }
 
-        func_80045A78(0x58, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+        func_80045A78(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       ((((RaceUiCourseStatsIconData *)gGameSaveDataBuffer)->courseStatsIcons[gRaceCourseIndex][row] & 7) +
                        0x51) &
                           0xFFFF);
-        func_80045A78(0x6C, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+        func_80045A78(0x6C, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (((*((RaceUiCourseStatsIconData *)gGameSaveDataBuffer)).courseStatsIcons[gRaceCourseIndex][row] >> 3) +
                        0x7C) &
                           0xFFFF);
@@ -1831,13 +1831,13 @@ void func_8005A4BC(RaceUiCounterActor *arg0) {
 loop1:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+                func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*ptr - 5) & 0xFFFF);
             }
             x += 8;
             ptr++;
             goto loop1;
         }
-        func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+        func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x28;
         visibleRows = arg0->state;
     }
@@ -1851,13 +1851,13 @@ loop1:
 loop2:
             if (*ptr != 0) {
                 if (*ptr != ' ') {
-                    func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+                    func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*ptr - 5) & 0xFFFF);
                 }
                 x += 8;
                 ptr++;
                 goto loop2;
             }
-            func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+            func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
             y.word += 0x28;
             visibleRows = arg0->state;
         }
@@ -1871,13 +1871,13 @@ loop2:
 loop3:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+                func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*ptr - 5) & 0xFFFF);
             }
             x += 8;
             ptr++;
             goto loop3;
         }
-        func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+        func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x28;
         visibleRows = arg0->state;
     }
@@ -1890,13 +1890,13 @@ loop3:
 loop4:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+                func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*ptr - 5) & 0xFFFF);
             }
             x += 8;
             ptr++;
             goto loop4;
         }
-        func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+        func_80045A78((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
     }
 }
 #endif
@@ -1917,7 +1917,7 @@ void func_8005A884(RaceUiPopupActor *arg0) {
     i = 0;
     space = ' ';
     do {
-        func_80045A78(-8, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (i + 0x77) & 0xFFFF);
+        func_80045A78(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (i + 0x77) & 0xFFFF);
 
         if ((i == arg0->index) && (gUiBlinkTimer & 1)) {
             color = 0x10;
@@ -1930,18 +1930,18 @@ void func_8005A884(RaceUiPopupActor *arg0) {
         sprintf(buffer, D_800E12F4, ((RaceUiCourseValueData *)gGameSaveDataBuffer)->values[gRaceCourseIndex][i]);
 
         if ((u8)buffer[0] != space) {
-            func_80046D68(0x10, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+            func_80046D68(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[0] - 5) & 0xFFFF, color);
         }
 
         if ((u8)buffer[1] != space) {
-            func_80046D68(0x18, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+            func_80046D68(0x18, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[1] - 5) & 0xFFFF, color & 0xFFFF);
         }
 
-        func_80045A78(0x46, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+        func_80045A78(0x46, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       ((((RaceUiCourseValueData *)gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] & 7) + 0x51) & 0xFFFF);
-        func_80045A78(0x58, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+        func_80045A78(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       ((((RaceUiCourseValueData *)gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] >> 3) + 0x7C) & 0xFFFF);
 
         i++;
@@ -2264,13 +2264,13 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
                 break;
             }
             if (*ptr != ' ') {
-                func_80045A78((s16)x, -0x47, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+                func_80045A78((s16)x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                               (((u8)*ptr) - 5) & 0xFFFF);
             }
             x += 8;
             ptr++;
         }
-        func_80045A78((s16)x, -0x47, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+        func_80045A78((s16)x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word = -0x27;
     }
 
@@ -2284,13 +2284,13 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
                 break;
             }
             if (*ptr != ' ') {
-                func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+                func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                               (((u8)*ptr) - 5) & 0xFFFF);
             }
             x += 8;
             ptr++;
         }
-        func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+        func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x20;
     }
 
@@ -2305,13 +2305,13 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
                     break;
                 }
                 if (*ptr != ' ') {
-                    func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+                    func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                                   (((u8)*ptr) - 5) & 0xFFFF);
                 }
                 x += 8;
                 ptr++;
             }
-            func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+            func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
             y.word += 0x20;
         }
     }
@@ -2326,13 +2326,13 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
                 break;
             }
             if (*ptr != ' ') {
-                func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+                func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                               (((u8)*ptr) - 5) & 0xFFFF);
             }
             x += 8;
             ptr++;
         }
-        func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+        func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x20;
     }
 
@@ -2346,13 +2346,13 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
                 break;
             }
             if (*ptr != ' ') {
-                func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+                func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                               (((u8)*ptr) - 5) & 0xFFFF);
             }
             x += 8;
             ptr++;
         }
-        func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+        func_80045A78((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
     }
 }
 #endif
@@ -2366,7 +2366,7 @@ void func_8005BE68(RaceUiPopupActor *arg0) {
     y = -0x50;
     /* IDO scheduling for this function depends on this initialization staying on one line. */
     i = 0; offset = 0; while (1) {
-        func_80045A78(-8, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (i + 0x77) & 0xFFFF);
+        func_80045A78(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (i + 0x77) & 0xFFFF);
         if ((i == arg0->index) && (gUiBlinkTimer & 1)) {
             color = 0x10;
         } else if (i < 3) {
@@ -2375,9 +2375,9 @@ void func_8005BE68(RaceUiPopupActor *arg0) {
             color = 0xD;
         }
         func_80059A04(((RaceUiResultNameData *)gGameSaveDataBuffer)->resultNames[gRaceCourseIndex][i], 0x10, y, color);
-        func_80045A78(0x58, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+        func_80045A78(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       ((((RaceUiResultIconData *)gGameSaveDataBuffer)->resultIcons[gRaceCourseIndex][i] & 7) + 0x51) & 0xFFFF);
-        func_80045A78(0x6C, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+        func_80045A78(0x6C, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (((*((RaceUiResultIconData *)gGameSaveDataBuffer)).resultIcons[gRaceCourseIndex][i] >> 3) + 0x7C) & 0xFFFF);
         i++;
         offset += 4;
@@ -2739,7 +2739,7 @@ loop1:
 
 body1:
     if (*ptr != ' ') {
-        func_80045A78(x, -0x37, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (*ptr - 5) & 0xFFFF);
+        func_80045A78(x, -0x37, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*ptr - 5) & 0xFFFF);
     }
     ptr++;
     x += 8;
@@ -2761,7 +2761,7 @@ loop2:
 
 body2:
     if (*ptr2 != ' ') {
-        func_80046D68(x, -0x13, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (*ptr2 - 5) & 0xFFFF, 0xE);
+        func_80046D68(x, -0x13, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*ptr2 - 5) & 0xFFFF, 0xE);
     }
     ptr2++;
     x += 8;
@@ -2801,13 +2801,13 @@ void func_8005D1CC(RaceUiCourseStatsActor *arg0) {
 loop1:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                func_80045A78(x, -0x47, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (u16)(*ptr - 5));
+                func_80045A78(x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (u16)(*ptr - 5));
             }
             x += 8;
             ptr++;
             goto loop1;
         }
-        func_80045A78(x, -0x47, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+        func_80045A78(x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word = -0x1F;
         visibleRows = arg0->visibleRows;
     }
@@ -2822,13 +2822,13 @@ loop1:
 loop2:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                func_80045A78(x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (u16)(*ptr - 5));
+                func_80045A78(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (u16)(*ptr - 5));
             }
             x += 8;
             ptr++;
             goto loop2;
         }
-        func_80045A78(x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+        func_80045A78(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x28;
         visibleRows = arg0->visibleRows;
     }
@@ -2842,13 +2842,13 @@ loop2:
 loop3:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                func_80045A78(x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (u16)(*ptr - 5));
+                func_80045A78(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (u16)(*ptr - 5));
             }
             x += 8;
             ptr++;
             goto loop3;
         }
-        func_80045A78(x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+        func_80045A78(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x28;
         visibleRows = arg0->visibleRows;
     }
@@ -2862,13 +2862,13 @@ loop3:
 loop4:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                func_80045A78(x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (u16)(*ptr - 5));
+                func_80045A78(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (u16)(*ptr - 5));
             }
             x += 8;
             ptr++;
             goto loop4;
         }
-        func_80045A78(x, rowY, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37);
+        func_80045A78(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
     }
 }
 #endif
@@ -2893,7 +2893,7 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
     do {
         char buffer[8];
 
-        func_80045A78(-8, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (i + 0x77) & 0xFFFF);
+        func_80045A78(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (i + 0x77) & 0xFFFF);
         if ((i == arg0->index) && (gUiBlinkTimer & 1)) {
             color = 0x10;
         } else if (i < 3) {
@@ -2906,25 +2906,25 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
 
         new_var = buffer[0];
         if ((u8)new_var != space) {
-            func_80046D68(0x10, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+            func_80046D68(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[(color & 0xFFFF) * 0] - 5) & 0xFFFF, color);
         }
         if ((u8)buffer[1] != space) {
-            func_80046D68(0x18, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+            func_80046D68(0x18, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[1] - 5) & 0xFFFF, color & 0xFFFF);
         }
         if ((u8)buffer[2] != space) {
-            func_80046D68(0x20, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+            func_80046D68(0x20, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[2] - 5) & 0xFFFF, color & 0xFFFF);
         }
         if ((u8)buffer[3] != space) {
-            func_80046D68(0x28, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+            func_80046D68(0x28, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[3] - 5) & 0xFFFF, color & 0xFFFF);
         }
 
-        func_80045A78(0x40, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+        func_80045A78(0x40, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       ((((RaceUiTrickIconData *)gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] & 7) + 0x51) & 0xFFFF);
-        func_80045A78(0x54, (s16)y, getRelocatableHeapBlockBase(D_80112130.popupFontHandle),
+        func_80045A78(0x54, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       ((((RaceUiTrickIconData *)gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] >> 3) + 0x7C) & 0xFFFF);
 
         i++;
@@ -3605,15 +3605,15 @@ void func_800602BC(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x54) = 0;
     *(Vec3i *)((u8 *)arg0 + 0x48) = D_800D61C0[*(u16 *)((u8 *)arg0 + 0x10)];
     if (*(u8 *)((u8 *)arg0 + 0x57) == 0) {
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x27, (u8 *)arg0 + 0x38, (u8 *)arg0 + 0x28);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x28, (u8 *)arg0 + 0x3C, (u8 *)arg0 + 0x2C);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x29, (u8 *)arg0 + 0x40, (u8 *)arg0 + 0x30);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2A, (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x34);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x27, (u8 *)arg0 + 0x38, (u8 *)arg0 + 0x28);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x28, (u8 *)arg0 + 0x3C, (u8 *)arg0 + 0x2C);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x29, (u8 *)arg0 + 0x40, (u8 *)arg0 + 0x30);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2A, (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x34);
     } else {
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2B, (u8 *)arg0 + 0x38, (u8 *)arg0 + 0x28);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2C, (u8 *)arg0 + 0x3C, (u8 *)arg0 + 0x2C);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2D, (u8 *)arg0 + 0x40, (u8 *)arg0 + 0x30);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x2E, (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x34);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2B, (u8 *)arg0 + 0x38, (u8 *)arg0 + 0x28);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2C, (u8 *)arg0 + 0x3C, (u8 *)arg0 + 0x2C);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2D, (u8 *)arg0 + 0x40, (u8 *)arg0 + 0x30);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2E, (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x34);
     }
     func_800601F8(arg0);
     setCallbackTaskCallback(arg0, func_800601F8);
@@ -3804,16 +3804,16 @@ void func_80060D10(RaceUiPopupActor *arg0) {
     s32 i;
 
     if (gCurrentViewportIndex == arg0->playerIndex) {
-        func_80045A78((s16)(arg0->x - 0x34), (s16)(arg0->y.word - 8), getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x8B);
+        func_80045A78((s16)(arg0->x - 0x34), (s16)(arg0->y.word - 8), getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x8B);
         sprintf(buffer, D_800E14D0, arg0->parent);
         for (i = 0; i != 4; i++) {
             if (buffer[i] != ' ') {
                 func_80046D68((s16)(arg0->x + (i * 8) + 4), (s16)(arg0->y.word - 8),
-                              getRelocatableHeapBlockBase(D_80112130.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
+                              getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
             }
         }
         func_80046D68((s16)(arg0->x + (i * 8) + 4), (s16)(arg0->y.word - 8),
-                      getRelocatableHeapBlockBase(D_80112130.popupFontHandle), 0x37, 0xE);
+                      getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37, 0xE);
     }
 }
 
@@ -4731,9 +4731,9 @@ void func_80063FC0(RaceUiEffectParticleActor *actor) {
         actor->count = 0x3C;
     }
 
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112130.mainFontHandle), 0x42, &actor->unk20, &actor->unk1C);
-    D_80112130.pad4A = allocRelocatableHeapBlock(actor->count * sizeof(RaceUiEffectParticle));
-    actor->particles = (RaceUiEffectParticle *)getRelocatableHeapBlockBase(D_80112130.pad4A);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x42, &actor->unk20, &actor->unk1C);
+    gAssetHandles.pad4A = allocRelocatableHeapBlock(actor->count * sizeof(RaceUiEffectParticle));
+    actor->particles = (RaceUiEffectParticle *)getRelocatableHeapBlockBase(gAssetHandles.pad4A);
 
     for (i = 0; i < actor->count; i++) {
         actor->particles[i].unk0 = randomNextMain() << 0x10;
@@ -5297,8 +5297,8 @@ void func_80065764(void *arg0) {
     D_801222F2 = var_v1;
     *(s16 *)((u8 *)arg0 + 0x1E) = var_v1;
     if (var_v1 != 0) {
-        D_80112130.resultTextHandle = allocRelocatableHeapBlock(var_v1 << 6);
-        *(s32 *)((u8 *)arg0 + 0x18) = getRelocatableHeapBlockBase(D_80112130.resultTextHandle);
+        gAssetHandles.resultTextHandle = allocRelocatableHeapBlock(var_v1 << 6);
+        *(s32 *)((u8 *)arg0 + 0x18) = getRelocatableHeapBlockBase(gAssetHandles.resultTextHandle);
         func_8006565C(arg0);
         setCallbackTaskCallback(arg0, func_80065508);
     }
@@ -5460,10 +5460,10 @@ void func_80065FD8(RaceUiRankTextRenderActor *arg0) {
 
                     temp_s2 = gRegionAllocPtr++;
                     var_fp = FALSE;
-                    gSPSegment(temp_s2, 0x02, getRelocatableHeapBlockBase(D_80112130.modelVtxHandle));
+                    gSPSegment(temp_s2, 0x02, getRelocatableHeapBlockBase(gAssetHandles.modelVtxHandle));
 
                     temp_s3 = gRegionAllocPtr++;
-                    gSPSegment(temp_s3, 0x03, getRelocatableHeapBlockBase(D_80112130.modelTextureHandle));
+                    gSPSegment(temp_s3, 0x03, getRelocatableHeapBlockBase(gAssetHandles.modelTextureHandle));
                 }
 
                 temp_s0 = gRegionAllocPtr++;
@@ -5587,8 +5587,8 @@ void func_800666B0(RaceUiRankTextRenderActor *arg0) {
     D_801222F6 = var_v1;
     arg0->count = var_v1;
     if (var_v1 != 0) {
-        D_80112130.rankTextHandle = allocRelocatableHeapBlock(var_v1 << 6);
-        arg0->matrices = (void *)getRelocatableHeapBlockBase(D_80112130.rankTextHandle);
+        gAssetHandles.rankTextHandle = allocRelocatableHeapBlock(var_v1 << 6);
+        arg0->matrices = (void *)getRelocatableHeapBlockBase(gAssetHandles.rankTextHandle);
         func_800663C8(arg0);
         setCallbackTaskCallback(arg0, func_80066158);
     }
