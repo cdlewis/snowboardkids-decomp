@@ -1245,7 +1245,7 @@ void func_80017078(void *arg0) {
 
 void func_800170AC(SpriteActor *arg0) {
     SpriteActor *temp_a2;
-    DstStruct_80017168 *temp_v0;
+    MenuTilemapSprite *temp_v0;
     SpriteActor *actor = arg0;
 
     temp_a2 = actor;
@@ -1261,15 +1261,15 @@ void func_800170AC(SpriteActor *arg0) {
 void func_8001710C(SpriteActor *arg0) {
     SpriteActor *temp_a2 = arg0;
 
-    func_80017168(&temp_a2->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
+    initMenuTilemapSprite(&temp_a2->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
     temp_a2->x = temp_a2->sprite.unk8;
     temp_a2->y = temp_a2->sprite.unkA;
     setCallbackTaskCallback(temp_a2, func_800170AC);
 }
 
-void func_80017168(DstStruct_80017168 *arg0, s32 arg1) {
-    DstStruct_80017168 *dst = arg0;
-    SrcStruct_80017168 *src = (SrcStruct_80017168 *)arg1;
+void initMenuTilemapSprite(MenuTilemapSprite *arg0, s32 arg1) {
+    MenuTilemapSprite *dst = arg0;
+    MenuTilemapSpriteAsset *src = (MenuTilemapSpriteAsset *)arg1;
 
     dst->unk0 = 0;
     dst->unk2 = 0;

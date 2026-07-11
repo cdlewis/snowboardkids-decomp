@@ -94,7 +94,7 @@ typedef struct {
     /* 0x0C */ u16 unkC;
     /* 0x0E */ u16 unkE;
     /* 0x10 */ u8 unk10[0x4];
-} SrcStruct_80017168;
+} MenuTilemapSpriteAsset;
 
 typedef struct {
     /* 0x00 */ s16 unk0;
@@ -112,13 +112,13 @@ typedef struct {
     /* 0x1C */ u8 *unk1C;
     /* 0x20 */ u8 *unk20;
     /* 0x24 */ s16 unk24;
-} DstStruct_80017168;
+} MenuTilemapSprite;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
-    /* 0x1C */ DstStruct_80017168 sprite;
+    /* 0x1C */ MenuTilemapSprite sprite;
 } SpriteActor;
 
 void func_80014600(MenuIntroActor *arg0);
@@ -154,7 +154,7 @@ void func_80017014(RectListActor *arg0);
 void func_80017078(void *arg0);
 void func_800170AC(SpriteActor *arg0);
 void func_8001710C(SpriteActor *arg0);
-void func_80017168(DstStruct_80017168 *arg0, s32 arg1);
+void initMenuTilemapSprite(MenuTilemapSprite *arg0, s32 arg1);
 void n_alSynFreeFX(s32 arg0);
 
 #endif

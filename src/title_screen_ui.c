@@ -72,7 +72,7 @@ void updateTitleScreenLogo(TitleScreenLogoActor *arg0) {
 }
 
 void initTitleScreenLogo(TitleScreenLogoActor *arg0) {
-    func_80017168((DstStruct_80017168 *)&arg0->sprite, getRelocatableHeapBlockBase(TITLE_SCREEN_LOGO_SPRITE_HANDLE));
+    initMenuTilemapSprite((MenuTilemapSprite *)&arg0->sprite, getRelocatableHeapBlockBase(TITLE_SCREEN_LOGO_SPRITE_HANDLE));
     arg0->sprite.width = 0x10;
     arg0->sprite.height = 0x10;
     arg0->common.x = arg0->startX;
