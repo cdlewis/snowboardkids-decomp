@@ -499,7 +499,7 @@ void func_8008CF10(RaceInputPlayer *player) {
     }
 }
 
-// func_8008D09C best match: 95.508% (nonmatchings/func_8008D09C-8207005055717715604/base_1.c)
+// func_8008D09C best match: 96.779% (nonmatchings/func_8008D09C-5752545231564691495/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008D09C.s")
 
 #ifdef NON_MATCHING
@@ -513,7 +513,7 @@ void func_8008D09C(RaceInputPlayer *player) {
     Struct800955C0 *spawn;
     s32 surfaceCue;
     s32 turnTarget;
-    s32 turnDelta;
+    s16 turnDelta;
     s32 rotation;
     s32 bankRate;
     s32 interpolated;
@@ -700,8 +700,7 @@ void func_8008D09C(RaceInputPlayer *player) {
             bankRate = (-turn * 0x10 * player->unk268) / 0x100;
             interpolated = (((player->unk270 - player->unk26C) * (0x3F - player->unk2F8)) / 0x20) + player->unk26C;
             if (bankRate != 0) {
-                s64 temp = ((s64) interpolated * ((lean - 0xFF) / 0x100));
-                temp = (temp * ((lean - 0xFF) / 0x100)) / bankRate;
+                s64 temp = ((s64) interpolated * ((lean - 0xFF) / 0x100) * ((lean - 0xFF) / 0x100)) / bankRate;
                 if (temp != 0) {
                     if (temp > 0) {
                         temp += 0xC0000;
@@ -730,7 +729,8 @@ void func_8008D09C(RaceInputPlayer *player) {
                 if (steerAngle >= 0x81) {
                     steerAngle = 0x80;
                 }
-            } else if (steerAngle < 0xF80) {
+            }
+            if ((steerAngle >= 0x801) && (steerAngle < 0xF80)) {
                 steerAngle = 0xF80;
             }
             player->facingAngle += steerAngle;
