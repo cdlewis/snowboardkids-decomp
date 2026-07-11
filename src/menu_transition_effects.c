@@ -68,7 +68,7 @@ extern s16 D_8011217E;
 extern u16 gEndingSequencePhase;
 extern u8 gMenuTransitionRotationStep;
 extern s16 gMenuTransitionRotationAngle;
-extern u8 gEndingCharacterEffectDone[];
+extern u8 gEndingCharacterEffectDoneFlags[];
 extern u16 gMenuTransitionRotationFrameCount;
 extern u16 gEndingCharacterRunDustFrameOffsets[];
 extern u16 gEndingSnowmanEntranceFrameOffsets[];
@@ -384,7 +384,7 @@ void updateEndingCharacterAura(MainMenuEffectActor *arg0) {
             arg0->effectFrame = 0;
         }
     }
-    if (gEndingCharacterEffectDone[arg0->characterId] == 0) {
+    if (gEndingCharacterEffectDoneFlags[arg0->characterId] == 0) {
         addRenderCallback(&gMenuRenderCallbackList, drawEndingCharacterAura, arg0);
         return;
     }
