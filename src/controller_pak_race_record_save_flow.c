@@ -5,7 +5,7 @@
 #include "controller_pak_race_record_save_flow.h"
 #include "controller_pak_menu.h"
 #include "game_task_scheduler.h"
-#include "main_menu_score_ui.h"
+#include "controller_pak_race_record_save_ui.h"
 #include "menu_rendering.h"
 #include "viewport_manager.h"
 
@@ -76,8 +76,8 @@ void initControllerPakRaceRecordSaveFlow(void) {
     loadCompressedRomAsset(&D_598A70, &D_59AAA0, 0x23);
     loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
     initCallbackTaskScheduler(0);
-    gActiveMenuTask = createCallbackTask(&func_8002BA00, 0, 0x61);
-    D_8010ADE8 = createCallbackTask(&func_8002C318, 0, 0x60);
+    gActiveMenuTask = createCallbackTask(&initControllerPakRaceRecordSaveScorePanel, 0, 0x61);
+    D_8010ADE8 = createCallbackTask(&initControllerPakRaceRecordSaveChoicePrompt, 0, 0x60);
     gControllerPakRaceRecordSaveScoreUiState.step = 0;
     gControllerPakRaceRecordSaveScoreUiState.timer = 0;
     gControllerPakRaceRecordSaveScoreUiState.targetState = 0;

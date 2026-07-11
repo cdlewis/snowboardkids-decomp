@@ -1,0 +1,24 @@
+#ifndef CONTROLLER_PAK_RACE_RECORD_SAVE_UI_H
+#define CONTROLLER_PAK_RACE_RECORD_SAVE_UI_H
+
+#include "common.h"
+
+typedef struct ControllerPakRaceRecordSaveUiTask ControllerPakRaceRecordSaveUiTask;
+
+void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveUiTask *arg0);
+void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveUiTask *arg0);
+void initControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveUiTask *arg0);
+void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveUiTask *arg0);
+void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveUiTask *arg0);
+void initControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveUiTask *arg0);
+void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveUiTask *arg0);
+void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveUiTask *arg0);
+void initControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveUiTask *arg0);
+void drawControllerPakRaceRecordSaveChoicePrompt(ControllerPakRaceRecordSaveUiTask *arg0);
+void updateControllerPakRaceRecordSaveChoicePrompt(ControllerPakRaceRecordSaveUiTask *arg0);
+void initControllerPakRaceRecordSaveChoicePrompt(ControllerPakRaceRecordSaveUiTask *arg0);
+void drawControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveUiTask *arg0);
+void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveUiTask *arg0);
+void initControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveUiTask *arg0);
+
+#endif

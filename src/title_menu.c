@@ -46,7 +46,7 @@ extern MenuIntroActor *gActiveMenuTask;
 extern TitleMenuWidgetItemView *D_8010ADE0;
 extern s16 gControllerPakStatusCodes[];
 extern s16 D_800EC9D0[];
-extern s16 D_800B3462[];
+extern s16 gPlayerBadgeDisplayOrder[];
 extern TitleMenuPlayerView gGameSaveDataBuffer[];
 extern TitleIntroTransitionState D_8010AE00;
 extern s16 D_8010AE02;
@@ -879,7 +879,7 @@ void func_80016284(TitleMenuIconStripActor *arg0) {
 
                 if (count > 0) {
                     player2 = &gGameSaveDataBuffer[i];
-                    badgeIndex = D_800B3462;
+                    badgeIndex = gPlayerBadgeDisplayOrder;
                     xOffset = 0;
                     item = (TitleMenuIconStripActor *)((u8 *)arg0 + actorOffset);
                     do {

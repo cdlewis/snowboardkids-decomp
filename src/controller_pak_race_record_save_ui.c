@@ -1,7 +1,7 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "main_menu_score_ui.h"
+#include "controller_pak_race_record_save_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #define MENU_RENDERING_F8AC_U16_ALPHA_PROTOTYPE
 #include "menu_rendering.h"
@@ -11,7 +11,7 @@ typedef struct {
     u8 pad1;
     s16 scale;
     u16 slideOffset;
-} MainMenuScoreTransition;
+} ControllerPakRaceRecordSaveUiTransition;
 
 typedef struct {
     /* 0x0 */ u8 step;
@@ -22,10 +22,10 @@ typedef struct {
 } ControllerPakRaceRecordSaveScoreUiState;
 
 extern void addRenderCallback(void *, void *, void *);
-extern u8 D_800B73F0[][0x4C];
-extern u8 D_800B7986[];
-extern u8 D_800B7987[];
-extern u8 D_800B79AC[];
+extern u8 gControllerPakRaceRecordSaveStatusMessages[][0x4C];
+extern u8 gControllerPakRaceRecordSaveChoicePromptTopSprites[];
+extern u8 gControllerPakRaceRecordSaveChoicePromptBottomSprites[];
+extern u8 gControllerPakRaceRecordSaveExitMessage[];
 extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 gControllerPakRaceRecordSaveScoreUiStateTimer;
 extern ControllerPakRaceRecordSaveScoreUiState gControllerPakRaceRecordSaveScoreUiState;
@@ -40,21 +40,21 @@ extern s16 D_800EC9D0;
 extern u8 D_800EC9C1;
 
 #ifdef NON_MATCHING
-#define MAIN_MENU_SCORE_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x42])
+#define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (*(s16 *)&D_80112130[0x42])
 
 typedef struct {
     char pad[0x34];
     u8 badgeIds[0x18];
     u8 iconCount;
-} MainMenuScorePlayerView;
+} ControllerPakRaceRecordSaveScoreView;
 
-extern s16 D_800B3462[];
-extern MainMenuScorePlayerView gGameSaveDataBuffer;
+extern s16 gPlayerBadgeDisplayOrder[];
+extern ControllerPakRaceRecordSaveScoreView gGameSaveDataBuffer;
 extern u8 D_80112130[];
 extern s32 D_80121D8C;
 #endif
 
-struct MainMenuScoreTask {
+struct ControllerPakRaceRecordSaveUiTask {
     char pad[0x18];
     s16 x;
     s16 y;
@@ -86,13 +86,13 @@ struct MainMenuScoreTask {
     } state;
 };
 
-// func_8002B560 best match: 99.235% (nonmatchings/func_8002B560-6688367443449623229/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_score_ui/func_8002B560.s")
+// drawControllerPakRaceRecordSaveScorePanel best match: 99.235% (nonmatchings/drawControllerPakRaceRecordSaveScorePanel-6688367443449623229/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_race_record_save_ui/drawControllerPakRaceRecordSaveScorePanel.s")
 
 #ifdef NON_MATCHING
 const char D_800E0F30[] = "%6d";
 
-void func_8002B560(MainMenuScoreTask *arg0) {
+void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveUiTask *arg0) {
     s16 *new_var;
     s16 *badgeIndex;
     s32 xOffset;
@@ -103,10 +103,10 @@ void func_8002B560(MainMenuScoreTask *arg0) {
     s32 next;
     s32 count;
 
-    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0xB, 0x20,
+    drawMenuSprite(arg0->x, arg0->y, getMemoryBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0xB, 0x20,
                   0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x80), arg0->y, getMemoryBlockBase(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0xC, 0x20,
+    drawMenuSprite((s16)(arg0->x + 0x80), arg0->y, getMemoryBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0xC, 0x20,
                   0x20, 0, 0);
 
     text[0] = '1';
@@ -134,7 +134,7 @@ void func_8002B560(MainMenuScoreTask *arg0) {
             }
 
             drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x11),
-                          getMemoryBlockBase(MAIN_MENU_SCORE_TEXTURE_HANDLE), 0x19, 0x20, 0x20, 0, alpha, 9 - i);
+                          getMemoryBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0x19, 0x20, 0x20, 0, alpha, 9 - i);
             i = next;
             xOffset += 0x10;
         } while (next != count);
@@ -155,7 +155,7 @@ void func_8002B560(MainMenuScoreTask *arg0) {
 
     if (count > 0) {
         xOffset = 0;
-        new_var = D_800B3462;
+        new_var = gPlayerBadgeDisplayOrder;
         badgeIndex = new_var;
         do {
             tile = gGameSaveDataBuffer.badgeIds[*badgeIndex];
@@ -169,7 +169,7 @@ void func_8002B560(MainMenuScoreTask *arg0) {
                 }
             }
             drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x27),
-                          getMemoryBlockBase(MAIN_MENU_SCORE_TEXTURE_HANDLE), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0,
+                          getMemoryBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0,
                           alpha, tile);
             i++;
             xOffset += 0xE;
@@ -179,7 +179,7 @@ void func_8002B560(MainMenuScoreTask *arg0) {
 }
 #endif
 
-void func_8002B8B4(MainMenuScoreTask *arg0) {
+void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveUiTask *arg0) {
     u8 state = arg0->unk1C.state;
 
     switch (state) {
@@ -188,8 +188,8 @@ void func_8002B8B4(MainMenuScoreTask *arg0) {
         if (arg0->x < -0x43) {
             arg0->x = -0x44;
             arg0->unk1C.state = 1;
-            D_8010ADE0 = createCallbackTask(func_8002BC60, 0, 0x62);
-            createCallbackTask(func_8002C498, 0, 0x63);
+            D_8010ADE0 = createCallbackTask(initControllerPakRaceRecordSavePromptFrame, 0, 0x62);
+            createCallbackTask(initControllerPakRaceRecordSaveExitMessage, 0, 0x63);
         }
         state = arg0->unk1C.state;
         break;
@@ -215,17 +215,17 @@ void func_8002B8B4(MainMenuScoreTask *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002B560, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveScorePanel, arg0);
 }
 
-void func_8002BA00(MainMenuScoreTask *arg0) {
+void initControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveUiTask *arg0) {
     arg0->x = 0x90;
     arg0->y = -0x20;
     arg0->unk1C.state = 0;
-    setCallbackTaskCallback(arg0, func_8002B8B4);
+    setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSaveScorePanel);
 }
 
-void func_8002BA38(MainMenuScoreTask *arg0) {
+void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveUiTask *arg0) {
     s32 zero = 0;
     u16 alpha;
 
@@ -238,7 +238,7 @@ void func_8002BA38(MainMenuScoreTask *arg0) {
     }
 }
 
-void func_8002BB24(MainMenuScoreTask *arg0) {
+void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveUiTask *arg0) {
     u8 state = arg0->state.b.unk1F;
 
     switch (state) {
@@ -247,7 +247,7 @@ void func_8002BB24(MainMenuScoreTask *arg0) {
         if (arg0->unk1C.scale >= 0x100) {
             arg0->unk1C.scale = 0x100;
             arg0->state.b.unk1F = 1;
-            D_8010ADE4 = createCallbackTask(func_8002BF54, 0, 0x63);
+            D_8010ADE4 = createCallbackTask(initControllerPakRaceRecordSaveStatusMessage, 0, 0x63);
         }
         state = arg0->state.b.unk1F;
         break;
@@ -273,22 +273,22 @@ void func_8002BB24(MainMenuScoreTask *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002BA38, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSavePromptFrame, arg0);
 }
 
-void func_8002BC60(MainMenuScoreTask *arg0) {
+void initControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveUiTask *arg0) {
     arg0->x = -0x44;
     arg0->y = -0x1E;
     arg0->unk1C.scale = 0;
     arg0->state.b.unk1F = 0;
-    setCallbackTaskCallback(arg0, func_8002BB24);
+    setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSavePromptFrame);
 }
 
-void func_8002BC9C(MainMenuScoreTask *arg0) {
+void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveUiTask *arg0) {
     u8 *text;
 
     if (gControllerPakStatusCodes != 8) {
-        text = D_800B73F0[gControllerPakStatusCodes];
+        text = gControllerPakRaceRecordSaveStatusMessages[gControllerPakStatusCodes];
         drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->unk1C.scale, 0);
         if (((gControllerPakStatusCodes == 4) || (gControllerPakStatusCodes >= 7)) && (D_800EC9D0 == 0)) {
             if (arg0->unk1C.scale == 0x100) {
@@ -299,7 +299,7 @@ void func_8002BC9C(MainMenuScoreTask *arg0) {
     }
 }
 
-void func_8002BDAC(MainMenuScoreTask *arg0) {
+void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveUiTask *arg0) {
     u8 state;
     u8 globalState;
 
@@ -355,19 +355,19 @@ void func_8002BDAC(MainMenuScoreTask *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002BC9C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveStatusMessage, arg0);
 }
 
-void func_8002BF54(MainMenuScoreTask *arg0) {
+void initControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveUiTask *arg0) {
     arg0->x = -0x42;
     arg0->y = -0xE;
     arg0->unk1C.scale = 0x100;
     gControllerPakRaceRecordSaveScoreUiStateTimer = 0x100;
     arg0->state.b.unk20 = 0;
-    setCallbackTaskCallback(arg0, func_8002BDAC);
+    setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSaveStatusMessage);
 }
 
-void func_8002BF9C(MainMenuScoreTask *arg0) {
+void drawControllerPakRaceRecordSaveChoicePrompt(ControllerPakRaceRecordSaveUiTask *arg0) {
     u32 drawAlpha;
     int isEvenState;
     u16 alpha;
@@ -383,7 +383,7 @@ void func_8002BF9C(MainMenuScoreTask *arg0) {
         }
 
         drawAlpha = alpha;
-        drawMenuSpriteWithAlpha(arg0->x, arg0->unk1C.scale, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), D_800B7987[gControllerPakStatusCodes * 2], 0x20, 0x20,
+        drawMenuSpriteWithAlpha(arg0->x, arg0->unk1C.scale, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), gControllerPakRaceRecordSaveChoicePromptBottomSprites[gControllerPakStatusCodes * 2], 0x20, 0x20,
                       0, drawAlpha, 0);
 
         if (drawAlpha == 0x100) {
@@ -392,7 +392,7 @@ void func_8002BF9C(MainMenuScoreTask *arg0) {
             alpha = 0x100;
         }
 
-        drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), D_800B7986[gControllerPakStatusCodes * 2], 0x20, 0x20, 0, alpha,
+        drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), gControllerPakRaceRecordSaveChoicePromptTopSprites[gControllerPakStatusCodes * 2], 0x20, 0x20, 0, alpha,
                       0);
 
         state = D_800EC9D0;
@@ -414,7 +414,7 @@ void func_8002BF9C(MainMenuScoreTask *arg0) {
     }
 }
 
-void func_8002C18C(MainMenuScoreTask *arg0) {
+void updateControllerPakRaceRecordSaveChoicePrompt(ControllerPakRaceRecordSaveUiTask *arg0) {
     s32 temp_a0;
     s32 var_v1;
 
@@ -454,21 +454,21 @@ void func_8002C18C(MainMenuScoreTask *arg0) {
         }
         arg0->state.b.alphaTimer = (arg0->state.b.alphaTimer + 1) & 0x1F;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002BF9C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveChoicePrompt, arg0);
 }
 
-void func_8002C318(MainMenuScoreTask *arg0) {
+void initControllerPakRaceRecordSaveChoicePrompt(ControllerPakRaceRecordSaveUiTask *arg0) {
     arg0->x = -0x28;
     arg0->y = 0xC;
     arg0->unk1C.scale = 0xC;
-    setCallbackTaskCallback(arg0, func_8002C18C);
+    setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSaveChoicePrompt);
 }
 
-void func_8002C350(MainMenuScoreTask *arg0) {
-    func_800129DC(arg0->x, arg0->y, D_800B79AC, 1, arg0->unk1C.scale);
+void drawControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveUiTask *arg0) {
+    func_800129DC(arg0->x, arg0->y, gControllerPakRaceRecordSaveExitMessage, 1, arg0->unk1C.scale);
 }
 
-void func_8002C390(MainMenuScoreTask *arg0) {
+void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveUiTask *arg0) {
     u8 state = arg0->state.b.unk1E;
 
     switch (state) {
@@ -497,13 +497,13 @@ void func_8002C390(MainMenuScoreTask *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002C350, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveExitMessage, arg0);
 }
 
-void func_8002C498(MainMenuScoreTask *arg0) {
+void initControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveUiTask *arg0) {
     arg0->x = -0x24;
     arg0->y = -0x38;
     arg0->unk1C.scale = 0;
     arg0->state.b.unk1E = 0;
-    setCallbackTaskCallback(arg0, func_8002C390);
+    setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSaveExitMessage);
 }
