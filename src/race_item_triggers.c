@@ -4,6 +4,7 @@
 #include "race_input_history.h"
 #include "fixed_point_math.h"
 #include "race_effects.h"
+#include "race_item_effects.h"
 
 // func_800849E0 best match: 98.406% (nonmatchings/func_800849E0-7273315160691878794/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_triggers/func_800849E0.s")
@@ -12,7 +13,6 @@ typedef void (*EffectCallback)(void *);
 
 extern void func_80072A74(s32 soundId, void *pos, s32 volume, s32 distance);
 
-extern void func_8004EF24(void *);
 extern void func_8005F298(s16 playerIndex);
 extern void func_80060C4C(s16 playerIndex);
 extern void func_80064EAC(void *);

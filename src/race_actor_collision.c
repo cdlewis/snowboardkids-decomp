@@ -6,6 +6,7 @@
 #include "game_audio.h"
 #include "model_animation.h"
 #include "race_actor_collision.h"
+#include "race_item_effects.h"
 
 #define RACE_ACTOR_COLLISION_YAW_FLIPPED 0x400
 #define RACE_ACTOR_COLLISION_ACTIVE 0x800
@@ -26,9 +27,6 @@ extern s16 D_80121D56;
 extern s32 D_80121D5C;
 extern s32 D_80121D60;
 extern Unk8011228C D_8011228C[];
-
-s32 func_8004DB60(s8);
-void func_8004E518(s16, s16, s16, s32, s32);
 
 s32 func_80084F50(RaceInputPlayer *arg0) {
     s32 temp_v0;

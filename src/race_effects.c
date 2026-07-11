@@ -3,6 +3,7 @@
 #include "model_animation.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
+#include "race_item_effects.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
 
@@ -126,8 +127,6 @@ extern s32 D_801248A4;
 Mtx *func_8004885C(RaceEffectMatrixSource *);
 void func_800483FC(void *, void *, void *);
 void func_80045990(s32, s32, void **, void **);
-void func_8004E594(s32, s32, s32, s16);
-void func_8004EA34(s32, s32, s32, s16);
 void func_8006224C(s32, s32, s32, u16);
 void func_80072A74(s32, void *, s32, s32);
 s32 func_80098C30(s64);
