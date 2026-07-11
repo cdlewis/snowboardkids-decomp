@@ -298,7 +298,7 @@ void func_8007C5E8(RacePositionUiPlayer *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007C5E8.s")
 #endif
 
-// func_8007CBC0 best match: 96.065% (base_4.c, 1460 differences)
+// func_8007CBC0 best match: 99.003% (base_7.c, 370 differences)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007CBC0.s")
 
 #ifdef NON_MATCHING
@@ -308,12 +308,15 @@ void func_8007CBC0(RacePositionUiPlayer *player) {
     u8 (*partSource)[0x20];
     s32 i;
     s32 alphaPulse;
+    s16 partCount;
+    Gfx *segmentGfx;
 
     countPlayer = player;
     if (D_80156609 != 0) {
+        partCount = player->partCount;
         player->flags |= RACE_POSITION_UI_FLAG_SHADOW;
         i = 0;
-        if (player->partCount > 0) {
+        if (partCount > 0) {
             partVtxPlayer = player;
             partSource = player->partSources;
             do {
@@ -344,7 +347,8 @@ void func_8007CBC0(RacePositionUiPlayer *player) {
     if ((player->flags & RACE_POSITION_UI_FLAG_HIDE_MESHES) == 0) {
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 2, func_80043040(D_80112130[player->playerIndex + 0xE]));
-        gSPSegment(gRegionAllocPtr++, 3, func_80043040(D_80112130[player->playerIndex + 0x12]));
+        segmentGfx = gRegionAllocPtr++;
+        gSPSegment(segmentGfx, 3, func_80043040(D_80112130[player->playerIndex + 0x12]));
         gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_800DE248[player->textureSet]);
         gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[2], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
