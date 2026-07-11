@@ -147,7 +147,7 @@ extern u8 D_80121D88;
 extern s32 D_801235B4;
 extern CourseSelectState *gCurrentGameTask;
 extern s32 gMenuRenderCallbackList;
-extern s32 D_80124898;
+extern s32 gModelRenderCallbackList;
 extern u8 gCurrentViewportIndex;
 
 // drawCourseSelectPreviewModel best match: 97.975%
@@ -370,7 +370,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
         finishCourseSelectUiTask(1);
         D_8010ADE0 = 0;
     } else {
-        addRenderCallback(&D_80124898, (void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModel, actor);
+        addRenderCallback(&gModelRenderCallbackList, (void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModel, actor);
     }
 }
 #endif
@@ -497,7 +497,7 @@ extern s32 D_8010ADE4;
 extern u8 D_8010AECC[];
 extern s32 D_8010AEE8[];
 extern u8 D_8010AEFB[];
-extern s32 D_80124898;
+extern s32 gModelRenderCallbackList;
 
 void updateCourseSelectPreviewModelOut(void *arg0) {
     CourseSelectTempVec3i sp78;
@@ -654,7 +654,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
         finishCourseSelectUiTask(2);
         D_8010ADE4 = 0;
     } else {
-        addRenderCallback(&D_80124898, drawCourseSelectPreviewModelClose, actor);
+        addRenderCallback(&gModelRenderCallbackList, drawCourseSelectPreviewModelClose, actor);
     }
 }
 #endif

@@ -162,7 +162,7 @@ extern RenderCallbackNode *D_80124858;
 extern RenderCallbackNode *gMenuRenderCallbackList;
 extern RenderCallbackNode *D_80124878;
 extern RenderCallbackNode *D_80124888;
-extern RenderCallbackNode *D_80124898;
+extern RenderCallbackNode *gModelRenderCallbackList;
 extern RenderCallbackNode *D_801248F8;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferRenderTaskStatuses;
@@ -397,7 +397,7 @@ void resetRenderCallbackQueues(void) {
 
     D_80124858 = NULL;
     D_80124888 = NULL;
-    do { end = (u32)&D_801248F8; group = (CallbackQueueGroup *)&D_80124898; loop: group++; group[-1].entry0.next = NULL; group[-1].entry1.next = NULL; } while (0);
+    do { end = (u32)&D_801248F8; group = (CallbackQueueGroup *)&gModelRenderCallbackList; loop: group++; group[-1].entry0.next = NULL; group[-1].entry1.next = NULL; } while (0);
     group[-1].entry2.next = NULL;
     group[-1].entry3.next = NULL;
     if ((u32)group != end) {

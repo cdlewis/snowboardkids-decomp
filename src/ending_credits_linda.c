@@ -11,9 +11,9 @@ typedef s32 MatrixWordCopy[8];
 
 struct EndingCreditsLinda {
     char pad[0x18];
-    s32 x;
-    s32 y;
-    s32 z;
+    s32 posX;
+    s32 posY;
+    s32 posZ;
     s16 rotX;
     s16 rotY;
     s16 rotZ;
@@ -28,9 +28,9 @@ struct EndingCreditsTumblingSnowboard {
     u16 mode;
     char pad12[0x6];
     char displayObject[0x14];
-    s32 x;
-    s32 y;
-    s32 z;
+    s32 posX;
+    s32 posY;
+    s32 posZ;
     u16 textureId;
     u16 paletteId;
     u16 timer;
@@ -44,7 +44,7 @@ extern void multiplyFixedMatrix3s(void *, void *, void *);
 extern void makeFixedRotationYX(void *, s16, s16, void *);
 extern u16 gEndingSequencePhase;
 extern u8 gEndingActorHandshakeState;
-extern s32 D_80124898;
+extern s32 gModelRenderCallbackList;
 extern void *D_8010ADE0;
 
 void updateEndingLindaFinalPose(s32 arg0) {
@@ -117,16 +117,16 @@ void updateEndingLindaWaitPhase3FAnim(EndingCreditsLinda *arg0) {
             setMainMenuSceneModelAnimation(3, 0x58);
         }
     } else {
-        arg0->z += 0x80000;
+        arg0->posZ += 0x80000;
     }
-    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
     addMainMenuSceneModelRenderCallback(3);
 }
 
 void updateEndingLindaSpinUntilPhase3F(EndingCreditsLinda *arg0) {
     if (stepMainMenuSceneModelAnimation(3) == 0) {
-        arg0->x = arg0->x + 0x18000;
-        setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+        arg0->posX = arg0->posX + 0x18000;
+        setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
     }
     if (gEndingSequencePhase == 0x3F) {
         arg0->timer = 0;
@@ -147,11 +147,11 @@ void updateEndingLindaTumbleToPhase3C(EndingCreditsLinda *arg0) {
     } else {
         var_v0 = -1;
     }
-    arg0->x += 0x76000;
-    arg0->y += var_v0 << 19;
-    arg0->z += 0xFFFA0000;
+    arg0->posX += 0x76000;
+    arg0->posY += var_v0 << 19;
+    arg0->posZ += 0xFFFA0000;
     arg0->timer = arg0->timer + 1;
-    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
     addMainMenuSceneModelRenderCallback(3);
     if (sp20 == 1) {
         arg0->timer = 0;
@@ -162,7 +162,7 @@ void updateEndingLindaTumbleToPhase3C(EndingCreditsLinda *arg0) {
 
 void updateEndingLindaExitUntilPhase3C(EndingCreditsLinda *arg0) {
     loopMainMenuSceneModelAnimation(3);
-    arg0->x += 0xFFF58000;
+    arg0->posX += 0xFFF58000;
     if (gEndingSequencePhase == 0x3C) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, updateEndingLindaTumbleToPhase3C);
@@ -170,7 +170,7 @@ void updateEndingLindaExitUntilPhase3C(EndingCreditsLinda *arg0) {
         arg0->rotY = 0xC00;
         setMainMenuSceneModelRotation(3, arg0->rotX, arg0->rotY, arg0->rotZ);
     }
-    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -186,14 +186,14 @@ void updateEndingLindaSlideToCenter(EndingCreditsLinda *arg0) {
     s32 var_a1;
 
     loopMainMenuSceneModelAnimation(3);
-    var_a1 = (arg0->x & 0xFFFFFFFFFFFFFFFFu) + 0x24000;
-    arg0->x = var_a1;
+    var_a1 = (arg0->posX & 0xFFFFFFFFFFFFFFFFu) + 0x24000;
+    arg0->posX = var_a1;
     if (var_a1 >= 0xE00000) {
-        arg0->x = 0xE00000;
+        arg0->posX = 0xE00000;
         setCallbackTaskCallback(arg0, waitEndingLindaPhase3A);
-        var_a1 = arg0->x;
+        var_a1 = arg0->posX;
     }
-    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->posY, arg0->posZ);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -211,24 +211,24 @@ void updateEndingLindaSlideLeftSetPhase36(EndingCreditsLinda *arg0) {
 
     loopMainMenuSceneModelAnimation(3);
     new_var = arg0;
-    var_a1 = (new_var->x += 0xFFFB8000);
+    var_a1 = (new_var->posX += 0xFFFB8000);
     if (var_a1 < 0xA00001) {
-        new_var->x = 0xA00000;
+        new_var->posX = 0xA00000;
         setCallbackTaskCallback(new_var, waitEndingLindaPhase38);
-        var_a1 = arg0->x;
+        var_a1 = arg0->posX;
     } else if ((var_a1 < 0x1300001) && (gEndingSequencePhase == 0x35)) {
         gEndingSequencePhase = 0x36;
-        var_a1 = arg0->x;
+        var_a1 = arg0->posX;
     }
-    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->posY, arg0->posZ);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
 void waitEndingLindaPhase35(EndingCreditsLinda *arg0) {
     if (gEndingSequencePhase == 0x35) {
         setCallbackTaskCallback(arg0, updateEndingLindaSlideLeftSetPhase36);
-        arg0->x = 0x01900000;
-        arg0->z = 0xFFF80000;
+        arg0->posX = 0x01900000;
+        arg0->posZ = 0xFFF80000;
     }
 }
 
@@ -243,36 +243,36 @@ void updateEndingLindaSlideLeftFromFarRight(EndingCreditsLinda *arg0) {
     s32 temp_v0;
 
     loopMainMenuSceneModelAnimation(3);
-    temp_t7 = arg0->x + -0x48000;
-    arg0->x = temp_t7;
+    temp_t7 = arg0->posX + -0x48000;
+    arg0->posX = temp_t7;
     var_a1 = temp_t7;
     if ((temp_t7 < -0x400000) != 0) {
         goto block_1;
     }
     var_a1 = temp_t7;
-    arg0->z += -0x48000;
-    var_a1 = arg0->x;
+    arg0->posZ += -0x48000;
+    var_a1 = arg0->posX;
     goto block_2;
 
 block_1:
-    temp_v0 = arg0->z;
+    temp_v0 = arg0->posZ;
     if (temp_v0 < 0) {
-        var_a1 = arg0->x;
-        arg0->z = temp_v0 + 0x70000;
+        var_a1 = arg0->posX;
+        arg0->posZ = temp_v0 + 0x70000;
     }
 
 block_2:
     if (var_a1 < -0x1900000 + 1) {
-        arg0->x = -0x1900000;
+        arg0->posX = -0x1900000;
         setCallbackTaskCallback(arg0, waitEndingLindaPhase35);
-        var_a1 = arg0->x;
+        var_a1 = arg0->posX;
     }
     if ((var_a1 < -0xF00000 + 1) && (gEndingSequencePhase == 0x31)) {
         gEndingSequencePhase = 0x32;
-        var_a1 = arg0->x;
+        var_a1 = arg0->posX;
     }
     new_var = 0xB;
-    setMainMenuSceneModelPosition(3, var_a1, temp_t7 = arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, temp_t7 = arg0->posY, arg0->posZ);
     func_8004298C(3, arg0->textureId, arg0->paletteId, new_var);
 }
 #endif
@@ -292,7 +292,7 @@ void updateEndingLindaSlideLeftSetPhase2E(EndingCreditsLinda *arg0) {
 
     sp = stepMainMenuSceneModelAnimation(3);
     if (sp == 0) {
-        arg0->x += 0xFFFF6000;
+        arg0->posX += 0xFFFF6000;
     } else {
         temp = (arg0->timer += 1);
         if ((temp % 28) == 0) {
@@ -304,7 +304,7 @@ void updateEndingLindaSlideLeftSetPhase2E(EndingCreditsLinda *arg0) {
             }
         }
     }
-    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -322,15 +322,15 @@ void updateEndingLindaRunLeftSetPhase2D(EndingCreditsLinda *arg0) {
     s32 sp;
 
     sp = stepMainMenuSceneModelAnimation(3);
-    arg0->x += 0xFFFD8000;
-    if ((sp == 1) && (arg0->x < 0x800001)) {
+    arg0->posX += 0xFFFD8000;
+    if ((sp == 1) && (arg0->posX < 0x800001)) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, updateEndingLindaWaitBeforePhase2E);
         gEndingSequencePhase = 0x2D;
-    } else if ((sp == 1) && (arg0->x >= 0x800001)) {
+    } else if ((sp == 1) && (arg0->posX >= 0x800001)) {
         setMainMenuSceneModelAnimation(3, 0x4B);
     }
-    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -346,14 +346,14 @@ void updateEndingLindaSlideRightSetPhase28(EndingCreditsLinda *arg0) {
     s32 var_a1;
 
     loopMainMenuSceneModelAnimation(3);
-    var_a1 = arg0->x += 0x28000;
+    var_a1 = arg0->posX += 0x28000;
     if (var_a1 >= 0x1900000) {
-        arg0->x = 0x1900000;
+        arg0->posX = 0x1900000;
         setCallbackTaskCallback(arg0, waitEndingLindaPhase2C);
         gEndingSequencePhase = 0x28;
-        var_a1 = arg0->x;
+        var_a1 = arg0->posX;
     }
-    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->posY, arg0->posZ);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -371,13 +371,13 @@ void updateEndingLindaSlideLeftToPose(EndingCreditsLinda *arg0) {
     s32 var_a1;
 
     loopMainMenuSceneModelAnimation(3);
-    var_a1 = arg0->x += 0xFFFD8000;
+    var_a1 = arg0->posX += 0xFFFD8000;
     if (var_a1 < 0x800001) {
-        arg0->x = 0x800000;
+        arg0->posX = 0x800000;
         setCallbackTaskCallback(arg0, updateEndingLindaWaitBeforeSlideRight);
-        var_a1 = arg0->x;
+        var_a1 = arg0->posX;
     }
-    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->posY, arg0->posZ);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -386,8 +386,8 @@ void updateEndingLindaSlideRightAfterPause(EndingCreditsLinda *arg0) {
     u16 temp_t9;
 
     loopMainMenuSceneModelAnimation(3);
-    temp_a1 = arg0->x += 0x20000;
-    setMainMenuSceneModelPosition(3, temp_a1, arg0->y, arg0->z);
+    temp_a1 = arg0->posX += 0x20000;
+    setMainMenuSceneModelPosition(3, temp_a1, arg0->posY, arg0->posZ);
     temp_t9 = (arg0->timer & 0xFFFF) + 1;
     arg0->timer = temp_t9;
     if ((temp_t9 & 0xFFFF) == 0x28) {
@@ -402,8 +402,8 @@ void updateEndingLindaSlideLeftAfterPause(EndingCreditsLinda *arg0) {
     u16 temp_t9;
 
     loopMainMenuSceneModelAnimation(3);
-    temp_a1 = arg0->x += 0xFFFD8000;
-    setMainMenuSceneModelPosition(3, temp_a1, arg0->y, arg0->z);
+    temp_a1 = arg0->posX += 0xFFFD8000;
+    setMainMenuSceneModelPosition(3, temp_a1, arg0->posY, arg0->posZ);
     temp_t9 = (arg0->timer & 0xFFFF) + 1;
     arg0->timer = temp_t9;
     if ((temp_t9 & 0xFFFF) == 0x2D) {
@@ -418,8 +418,8 @@ void updateEndingLindaSlideRightToPhase23Wait(EndingCreditsLinda *arg0) {
     u16 temp_t9;
 
     loopMainMenuSceneModelAnimation(3);
-    temp_a1 = arg0->x += 0x28000;
-    setMainMenuSceneModelPosition(3, temp_a1, arg0->y, arg0->z);
+    temp_a1 = arg0->posX += 0x28000;
+    setMainMenuSceneModelPosition(3, temp_a1, arg0->posY, arg0->posZ);
     temp_t9 = (arg0->timer & 0xFFFF) + 1;
     arg0->timer = temp_t9;
     if ((temp_t9 & 0xFFFF) == 0x1E) {
@@ -445,18 +445,18 @@ void updateEndingLindaSlideRightSetPhase21(EndingCreditsLinda *arg0) {
     s32 var_a1;
 
     loopMainMenuSceneModelAnimation(3);
-    var_a1 = arg0->x += 0x28000;
+    var_a1 = arg0->posX += 0x28000;
     if (var_a1 >= 0x800000) {
         arg0->timer = 0;
-        arg0->x = 0x800000;
+        arg0->posX = 0x800000;
         setCallbackTaskCallback(arg0, waitEndingLindaPhase23);
-        var_a1 = arg0->x;
+        var_a1 = arg0->posX;
     }
     if ((var_a1 >= 0x200000) && (gEndingSequencePhase == 0x20)) {
         gEndingSequencePhase = 0x21;
-        var_a1 = arg0->x;
+        var_a1 = arg0->posX;
     }
-    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->posY, arg0->posZ);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -464,13 +464,13 @@ void updateEndingLindaSlideLeftToFarLeft(EndingCreditsLinda *arg0) {
     s32 var_a1;
 
     loopMainMenuSceneModelAnimation(3);
-    var_a1 = arg0->x += 0xFFFA0000;
+    var_a1 = arg0->posX += 0xFFFA0000;
     if (var_a1 < -0x9FFFFF) {
-        arg0->x = 0xFF600000;
+        arg0->posX = 0xFF600000;
         setCallbackTaskCallback(arg0, updateEndingLindaSlideRightSetPhase21);
-        var_a1 = arg0->x;
+        var_a1 = arg0->posX;
     }
-    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->posY, arg0->posZ);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -512,14 +512,14 @@ void updateEndingLindaSlideLeftSetPhase1C(EndingCreditsLinda *arg0) {
     s32 var_a1;
 
     loopMainMenuSceneModelAnimation(3);
-    var_a1 = arg0->x += 0xFFFE8000;
+    var_a1 = arg0->posX += 0xFFFE8000;
     if (var_a1 < 0xC80001) {
-        arg0->x = 0xC80000;
+        arg0->posX = 0xC80000;
         setCallbackTaskCallback(arg0, waitEndingLindaPhase1D);
         gEndingSequencePhase = 0x1C;
-        var_a1 = arg0->x;
+        var_a1 = arg0->posX;
     }
-    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->posY, arg0->posZ);
     func_8004298C(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -532,7 +532,7 @@ void updateEndingLindaAfterIntroAnim2(EndingCreditsLinda *arg0) {
     if (sp20 == 1) {
         setCallbackTaskCallback(arg0, updateEndingLindaSlideLeftSetPhase1C);
         setMainMenuSceneModelAnimation(3, 0x49);
-        arg0->x += 0xFFEC0000;
+        arg0->posX += 0xFFEC0000;
     }
 }
 
@@ -563,8 +563,8 @@ void updateEndingLindaHopRightToIdle(EndingCreditsLinda *arg0) {
     if (stepMainMenuSceneModelAnimation(3) == 1) {
         setCallbackTaskCallback(arg0, updateEndingLindaWaitBeforePhase1B);
     } else {
-        arg0->x = arg0->x + 0x40000;
-        setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+        arg0->posX = arg0->posX + 0x40000;
+        setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
     }
     addMainMenuSceneModelRenderCallback(3);
 }
@@ -576,18 +576,18 @@ void updateEndingLindaHopRightToPose(EndingCreditsLinda *arg0) {
     temp_v0 = stepMainMenuSceneModelAnimation(3);
     temp_t7 = (arg0->timer & 0xFFFF) + 1;
     arg0->timer = temp_t7;
-    arg0->x += 0x70000;
+    arg0->posX += 0x70000;
     if ((temp_t7 & 0xFFFF) < 5) {
-        arg0->y += 0x50000;
+        arg0->posY += 0x50000;
     } else {
-        arg0->y += 0xFFFB0000;
+        arg0->posY += 0xFFFB0000;
     }
     if (temp_v0 == 1) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, updateEndingLindaHopRightToIdle);
         setMainMenuSceneModelAnimation(3, 0x40);
     }
-    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
     addMainMenuSceneModelRenderCallback(3);
 }
 
@@ -595,11 +595,11 @@ void updateEndingLindaSlideRightSetPhase1A(EndingCreditsLinda *arg0) {
     s32 pad;
     s32 sp20;
 
-    arg0->x += 0x100000;
-    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+    arg0->posX += 0x100000;
+    setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
     sp20 = stepMainMenuSceneModelAnimation(3);
     addMainMenuSceneModelRenderCallback(3);
-    arg0->y += 0x50000;
+    arg0->posY += 0x50000;
     if (sp20 == 1) {
         arg0->timer = 0;
         gEndingSequencePhase = 0x1A;
@@ -656,16 +656,16 @@ void updateEndingLindaHandshakeLoop(EndingCreditsLinda *arg0) {
             arg0->timer = temp_t8;
             if ((temp_t8 & 0xFFFF) < 5) {
                 if ((gEndingActorHandshakeState == 1) || (gEndingActorHandshakeState == 5)) {
-                    arg0->x = (s32) (arg0->x + 0x100000);
+                    arg0->posX = (s32) (arg0->posX + 0x100000);
                 } else {
-                    arg0->x = (s32) (arg0->x + 0xFFF00000);
+                    arg0->posX = (s32) (arg0->posX + 0xFFF00000);
                 }
                 if ((s32) arg0->timer < 3) {
-                    arg0->y = (s32) (arg0->y + 0x90000);
+                    arg0->posY = (s32) (arg0->posY + 0x90000);
                 } else {
-                    arg0->y = (s32) (arg0->y + 0xFFF70000);
+                    arg0->posY = (s32) (arg0->posY + 0xFFF70000);
                 }
-                setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+                setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
                 var_s1 += 1;
                 if ((arg0->animTimer == 0xD) && (gEndingActorHandshakeState == 1) && (arg0->timer == 3)) {
                     gEndingActorHandshakeState = 5;
@@ -673,8 +673,8 @@ void updateEndingLindaHandshakeLoop(EndingCreditsLinda *arg0) {
                 continue;
             } else {
                 arg0->timer = 0U;
-                arg0->y = 0;
-                setMainMenuSceneModelPosition(3, arg0->x, 0, arg0->z);
+                arg0->posY = 0;
+                setMainMenuSceneModelPosition(3, arg0->posX, 0, arg0->posZ);
                 setCallbackTaskCallback(arg0, updateEndingLindaHandshakeAnimComplete);
                 if ((gEndingActorHandshakeState == 1) || (gEndingActorHandshakeState == 5)) {
                     setMainMenuSceneModelAnimation(3, 0x3A);
@@ -704,7 +704,7 @@ void startEndingLindaHandshakeLoop(EndingCreditsLinda *arg0) {
             if (arg0->timer == 0xF) {
                 setMainMenuSceneModelAnimation(3, 0x39);
                 arg0->timer = 2;
-                arg0->y = 0x120000;
+                arg0->posY = 0x120000;
             } else {
                 setMainMenuSceneModelAnimation(3, 0x3D);
             }
@@ -722,7 +722,7 @@ void waitEndingLindaPhase19(EndingCreditsLinda *arg0) {
     if (arg0->timer == 0xF) {
         gEndingSequencePhase = 0x19;
         setCallbackTaskCallback(arg0, startEndingLindaHandshakeLoop);
-        setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+        setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
     }
 }
 
@@ -750,19 +750,19 @@ void updateEndingLindaSlideLeftUntilPhase17(EndingCreditsLinda *arg0) {
 
     loopMainMenuSceneModelAnimation(3);
     addMainMenuSceneModelRenderCallback(3);
-    var_a1 = arg0->x += (s32)0xFFFD0000;
-    arg0->z = arg0->z + (s32)0xFFFF0000;
+    var_a1 = arg0->posX += (s32)0xFFFD0000;
+    arg0->posZ = arg0->posZ + (s32)0xFFFF0000;
     if (var_a1 < 0x2D0001) {
-        arg0->x = 0x2D0000;
-        arg0->z = (s32)0xFFFE0000;
+        arg0->posX = 0x2D0000;
+        arg0->posZ = (s32)0xFFFE0000;
         setCallbackTaskCallback(arg0, updateEndingLindaWaitThenSetPhase18);
         setMainMenuSceneModelAnimation(3, 0x38);
         gEndingSequencePhase = 0x17;
         arg0->rotY = 0x400;
         setMainMenuSceneModelRotation(3, arg0->rotX, arg0->rotY, arg0->rotZ);
-        var_a1 = arg0->x;
+        var_a1 = arg0->posX;
     }
-    setMainMenuSceneModelPosition(3, var_a1, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, var_a1, arg0->posY, arg0->posZ);
 }
 
 void updateEndingLindaBlinkThenSlideLeft(EndingCreditsLinda *arg0) {
@@ -806,8 +806,8 @@ void updateEndingLindaSlideRightUntilPhase16(EndingCreditsLinda *arg0) {
     u16 temp_t9;
 
     if (stepMainMenuSceneModelAnimation(3) == 0) {
-        arg0->x = arg0->x + 0x48000;
-        setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+        arg0->posX = arg0->posX + 0x48000;
+        setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
         temp_t9 = (arg0->timer & 0xFFFF) + 1;
         arg0->timer = temp_t9;
         if ((temp_t9 & 0xFFFF) == 2) {
@@ -849,9 +849,9 @@ void updateEndingLindaSlideLeftSetPhase14(EndingCreditsLinda *arg0) {
     u16 temp_t2;
 
     temp_v0 = stepMainMenuSceneModelAnimation(3);
-    arg0->x += 0xFFFB8000;
-    if (arg0->x < 0xE00001) {
-        arg0->x = 0xE00000;
+    arg0->posX += 0xFFFB8000;
+    if (arg0->posX < 0xE00001) {
+        arg0->posX = 0xE00000;
         setCallbackTaskCallback(arg0, waitEndingLindaPhase15);
         gEndingSequencePhase = 0x14;
     } else if (temp_v0 == 1) {
@@ -862,21 +862,21 @@ void updateEndingLindaSlideLeftSetPhase14(EndingCreditsLinda *arg0) {
             setMainMenuSceneModelAnimation(3, 0x27);
         }
     }
-    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
     addMainMenuSceneModelRenderCallback(3);
 }
 
 void waitEndingLindaPhase13(EndingCreditsLinda *arg0) {
     if (gEndingSequencePhase == 0x13) {
         setCallbackTaskCallback(arg0, updateEndingLindaSlideLeftSetPhase14);
-        spawnEndingCreditsTumblingSnowboard(arg0->x + 0x48000, 0x480000, 0xFFF70000, arg0->textureId, arg0->paletteId, 2);
+        spawnEndingCreditsTumblingSnowboard(arg0->posX + 0x48000, 0x480000, 0xFFF70000, arg0->textureId, arg0->paletteId, 2);
     }
 }
 
 void initEndingCreditsLinda(EndingCreditsLinda *arg0) {
-    arg0->x = 0x03B48000;
-    arg0->y = 0;
-    arg0->z = 0;
+    arg0->posX = 0x03B48000;
+    arg0->posY = 0;
+    arg0->posZ = 0;
     arg0->rotX = 0;
     arg0->rotY = 0;
     arg0->rotZ = 0;
@@ -886,7 +886,7 @@ void initEndingCreditsLinda(EndingCreditsLinda *arg0) {
     arg0->paletteId = 3;
     initMainMenuSceneModel(3, 3);
     setMainMenuSceneModelAnimation(3, 0x27);
-    setMainMenuSceneModelPosition(3, arg0->x, arg0->y, arg0->z);
+    setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
     setMainMenuSceneModelRotation(3, arg0->rotX, arg0->rotY, arg0->rotZ);
     setCallbackTaskCallback(arg0, waitEndingLindaPhase13);
 }
@@ -897,9 +897,9 @@ void spawnEndingCreditsTumblingSnowboard(s32 arg0, s32 arg1, s32 arg2, u16 arg3,
 
     temp_v0 = createCallbackTaskWithUserId((void (*)(void *))updateEndingCreditsTumblingSnowboardSlideIn, 0, 0x64, arg5);
     D_8010ADE0 = temp_v0;
-    temp_v0->x = arg0;
-    temp_v0->y = arg1;
-    temp_v0->z = arg2;
+    temp_v0->posX = arg0;
+    temp_v0->posY = arg1;
+    temp_v0->posZ = arg2;
     sp1C = temp_v0;
     makeFixedRotationYX(&temp_v0->displayObject, 0x400, 0x400, &D_8010ADE0);
     sp1C->textureId = arg3;
@@ -917,7 +917,7 @@ void updateEndingCreditsTumblingSnowboardWaitForRemove(EndingCreditsTumblingSnow
     if (gEndingSequencePhase == 0x1B) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&D_80124898, drawEndingCreditsTumblingSnowboard, arg0);
+        addRenderCallback(&gModelRenderCallbackList, drawEndingCreditsTumblingSnowboard, arg0);
     }
 }
 
@@ -938,19 +938,19 @@ void updateEndingCreditsTumblingSnowboardBounce(EndingCreditsTumblingSnowboard *
     if (arg0->mode == 1) {
         timer = temp_t7 & 0xFFFF;
         if (timer < 6) {
-            arg0->y = (arg0->y - (timer * 0x15000)) + 0x80000;
+            arg0->posY = (arg0->posY - (timer * 0x15000)) + 0x80000;
         } else {
-            arg0->y = (arg0->y - (timer * 0x15000)) + 0x124000;
+            arg0->posY = (arg0->posY - (timer * 0x15000)) + 0x124000;
         }
-        arg0->x += 0xC0000;
+        arg0->posX += 0xC0000;
     } else {
         timer2 = arg0->timer;
         if ((s32) timer2 < 5) {
-            arg0->y = (arg0->y - (timer2 << 0xF)) + 0x40000;
+            arg0->posY = (arg0->posY - (timer2 << 0xF)) + 0x40000;
         } else {
-            arg0->y = (arg0->y - (timer2 * 0x3800)) + 0xFFFE8800;
+            arg0->posY = (arg0->posY - (timer2 * 0x3800)) + 0xFFFE8800;
         }
-        arg0->x += 0x1D000;
+        arg0->posX += 0x1D000;
     }
 
     makeFixedRotationYX(sp48, 0x400, 0x400);
@@ -964,13 +964,13 @@ void updateEndingCreditsTumblingSnowboardBounce(EndingCreditsTumblingSnowboard *
     multiplyFixedMatrix3s(sp48, sp28, sp24[0]);
 
     if (arg0->mode == 1) {
-        if (arg0->x >= 0x1900000) {
+        if (arg0->posX >= 0x1900000) {
             arg0->timer = 0;
             setCallbackTaskCallback(arg0, updateEndingCreditsTumblingSnowboardWaitForRemove);
         }
     } else if (arg0->timer == 0x14) {
         arg0->timer = 0;
-        arg0->y = 0x8BD1E;
+        arg0->posY = 0x8BD1E;
         setCallbackTaskCallback(arg0, updateEndingCreditsTumblingSnowboardWaitForRemove);
         makeFixedRotationYX(sp48, 0x400, 0x400);
         makeFixedRotationZ(sp28, 0xC00);
@@ -987,7 +987,7 @@ void updateEndingCreditsTumblingSnowboardBounce(EndingCreditsTumblingSnowboard *
         multiplyFixedMatrix3s(sp28, sp48, sp24[0]);
     }
 
-    addRenderCallback(&D_80124898, drawEndingCreditsTumblingSnowboard, arg0);
+    addRenderCallback(&gModelRenderCallbackList, drawEndingCreditsTumblingSnowboard, arg0);
 }
 #endif
 
@@ -995,15 +995,15 @@ void waitEndingCreditsTumblingSnowboardPhase15(EndingCreditsTumblingSnowboard *a
     if (gEndingSequencePhase == 0x15) {
         setCallbackTaskCallback(arg0, updateEndingCreditsTumblingSnowboardBounce);
     }
-    addRenderCallback(&D_80124898, drawEndingCreditsTumblingSnowboard, arg0);
+    addRenderCallback(&gModelRenderCallbackList, drawEndingCreditsTumblingSnowboard, arg0);
 }
 
 void updateEndingCreditsTumblingSnowboardSlideIn(EndingCreditsTumblingSnowboard *arg0) {
-    arg0->x = arg0->x + 0xFFFB8000;
+    arg0->posX = arg0->posX + 0xFFFB8000;
     arg0->timer++;
     if (arg0->timer == 0xA2) {
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, waitEndingCreditsTumblingSnowboardPhase15);
     }
-    addRenderCallback(&D_80124898, (void *)drawEndingCreditsTumblingSnowboard, arg0);
+    addRenderCallback(&gModelRenderCallbackList, (void *)drawEndingCreditsTumblingSnowboard, arg0);
 }
