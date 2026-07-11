@@ -6,7 +6,7 @@
 #include "game_task_scheduler.h"
 #include "menu_system_flow.h"
 #include "main_menu_visual_effects.h"
-#include "main_menu_panel_ui.h"
+#include "main_menu_panels_ui.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
 #include "main_menu_transition.h"
@@ -1153,7 +1153,7 @@ void initMainMenuModeSelect(void) {
     createCallbackTaskWithUserId(initTitleMenuBoardModels, 0, 0x64, 0);
     D_801235B4 = 0;
     gMainMenuSelectionResult = 0;
-    createCallbackTaskWithUserId(&func_80052394, 0, 0x64, 0);
+    createCallbackTaskWithUserId(&initMainMenuModeSelectList, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
     func_80041CF0();
     func_80041D20(4, 4);
@@ -1247,7 +1247,7 @@ void initMainMenuSettings(void) {
     initCallbackTaskScheduler(0);
     D_801235B4 = 0;
     gMainMenuSelectionResult = 0;
-    createCallbackTaskWithUserId(&func_80052E4C, 0, 0x64, 0);
+    createCallbackTaskWithUserId(&initMainMenuSettingsPanel, 0, 0x64, 0);
     createCallbackTaskWithUserId(&initTitleMenuBoardModels, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
     setCurrentGameTaskCallback(&updateMainMenuSettings, 0);

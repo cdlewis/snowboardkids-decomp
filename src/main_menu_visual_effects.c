@@ -114,7 +114,7 @@ extern u8 D_800D5744[];
 extern s32 D_800D5748[];
 extern u8 D_800D57A0[];
 extern s16 D_800D57B0[];
-extern s16 D_800D57B4[];
+extern s16 courseRecordDigitTileOffsets[];
 extern u32 D_800D57C8[];
 extern s16 D_800D5808[];
 extern s16 D_800D581C[];
@@ -481,7 +481,7 @@ void drawCourseRecordBanner(MainMenuVisualEffectActor *arg0) {
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, getMemoryBlockBase(D_80112168), 0x5D); func_80045A78(4, -0x10, getMemoryBlockBase(D_80112168), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, getMemoryBlockBase(D_8011216A), D_800D57B4[D_80121B50]); func_80045A78(4, -0xC, getMemoryBlockBase(D_8011216A), D_800D57B4[D_80121B50] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) D_800DEFF8; } while (0);
+    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); func_80045A78(-0x54, -0x10, getMemoryBlockBase(D_80112168), 0x5D); func_80045A78(4, -0x10, getMemoryBlockBase(D_80112168), 0x5E); if (arg0) { } func_80045A78(-0x4C, -0xC, getMemoryBlockBase(D_8011216A), courseRecordDigitTileOffsets[D_80121B50]); func_80045A78(4, -0xC, getMemoryBlockBase(D_8011216A), courseRecordDigitTileOffsets[D_80121B50] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) D_800DEFF8; } while (0);
 }
 
 void updateCourseRecordBannerFadeOut(MainMenuVisualEffectActor *arg0) {

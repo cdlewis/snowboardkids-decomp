@@ -7,7 +7,7 @@
 #include "game_task_scheduler.h"
 #include "main_menu_training_ui.h"
 #include "main_menu_visual_effects.h"
-#include "main_menu_panel_ui.h"
+#include "main_menu_panels_ui.h"
 #include "race_camera.h"
 #include "main_menu_transition.h"
 #include "race_player_state.h"
@@ -106,7 +106,7 @@ void func_8003F554(void) {
     func_8006D5CC();
     func_8006D520(0, 0x1F);
     createCallbackTaskWithUserId(&initTitleMenuBoardModels, 0, 0x64, 0);
-    createCallbackTask(&func_80051854, 0, 0x64);
+    createCallbackTask(&initMainMenuModeSelectGrid, 0, 0x64);
     setCurrentGameTaskCallback(&func_8003F6C0, 0);
     requestMusicSequenceBank(7);
 }
@@ -242,8 +242,8 @@ void func_8003F864(void) {
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     gMainMenuSelectionResult = 0;
-    createCallbackTask(func_80051FDC, 0, 0x64);
-    createCallbackTask(func_800524B0, 0, 0x64);
+    createCallbackTask(initMainMenuModeDescriptionPanel, 0, 0x64);
+    createCallbackTask(initRaceSetupCornerPrompts, 0, 0x64);
     setCurrentGameTaskCallback(func_8003FB70, 0);
     requestMusicSequenceBank(7);
 }
@@ -483,7 +483,7 @@ void func_8004002C(void) {
     gMainMenuSelectionResult = 0;
     createCallbackTask(initMainMenuTrainingOpeningDialog, 0, 0x64);
     createCallbackTask(initMainMenuTrainingTitlePanel, 0, 0x63);
-    createCallbackTask(func_800524B0, 0, 0x64);
+    createCallbackTask(initRaceSetupCornerPrompts, 0, 0x64);
     setCurrentGameTaskCallback(func_80040360, 0);
     requestMusicSequenceBank(7);
 }
