@@ -1,20 +1,20 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "effect_task_scheduler.h"
-#include "character_select_ui.h"
+#include "character_select_course_ui.h"
 #include "player_select_ui.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
 #define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (D_80112130.textureHandle)
 
-typedef u8 CharacterSelectText[0x94];
+typedef u8 CharacterSelectCourseText[0x94];
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x18];
     /* 0x018 */ s16 value;
     /* 0x01A */ u8 pad1A[0x5F2];
-} CharacterSelectPlayerRecord;
+} CharacterSelectCoursePlayerRecord;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x3E];
@@ -23,19 +23,19 @@ typedef struct {
     /* 0x42 */ s16 textureHandle;
     /* 0x44 */ u8 pad44[4];
     /* 0x48 */ s16 iconTextureHandle;
-} CharacterSelectAssetHandles;
+} CharacterSelectCourseAssetHandles;
 
 typedef struct {
     /* 0x00 */ u16 center[16];
     /* 0x20 */ u16 right[2];
     /* 0x24 */ u16 bottom[2];
     /* 0x28 */ u16 corner;
-} CharacterSelectFrameTileMap;
+} CharacterSelectCourseFrameTileMap;
 
 typedef struct {
     /* 0x00 */ u16 corner;
     /* 0x02 */ u8 pad2[0x28];
-} CharacterSelectFrameCornerTileMap;
+} CharacterSelectCourseFrameCornerTileMap;
 
 typedef union {
     u8 bytes[8];
@@ -47,16 +47,16 @@ typedef union {
         /* 0x06 */ u8 timer;
         /* 0x07 */ u8 otherTimer;
     } fields;
-} CharacterSelectCursorState;
+} CharacterSelectCourseCursorState;
 
 extern void func_80046D68(s16, s16, s32, u16, s32);
 extern int sprintf(char *, const char *, ...);
-extern CharacterSelectAssetHandles D_80112130;
+extern CharacterSelectCourseAssetHandles D_80112130;
 extern s16 D_80112172;
 extern s16 D_80112178;
 extern s16 gCharacterSelectCourseOptionsByUnlock[][11];
-extern CharacterSelectFrameTileMap D_800B5FC0[];
-extern CharacterSelectFrameCornerTileMap D_800B5FE8[];
+extern CharacterSelectCourseFrameTileMap D_800B5FC0[];
+extern CharacterSelectCourseFrameCornerTileMap D_800B5FE8[];
 extern u16 D_800B618C;
 extern s16 gCharacterSelectShortCourseOptions[];
 extern s16 gCharacterSelectSingleCourseOption[];
@@ -64,7 +64,7 @@ extern u16 D_800B61AC[];
 extern u8 D_800B61C0[];
 extern u8 D_800B61CC[];
 extern u8 D_800B6B88[];
-extern CharacterSelectText D_800B6210[];
+extern CharacterSelectCourseText D_800B6210[];
 extern u8 D_800B67D8[][0x74];
 extern u8 D_800B6934[][0x60];
 extern u8 D_800B6A54[][0x70];
@@ -76,7 +76,7 @@ extern s32 D_8010ADDC;
 extern u16 gCharacterSelectCourseExitOptionIndex;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
-extern CharacterSelectCursorState gCharacterSelectCourseCursorState;
+extern CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
 extern u8 gCharacterSelectCourseCursorStateByte;
 extern u8 gCharacterSelectCourseSubmenuState;
 extern u8 D_8010AE8A;
@@ -92,15 +92,15 @@ extern void *D_80124868;
 extern void func_800483FC(void *, void *, void *);
 extern u8 D_80121B55;
 extern u8 D_80121D80[];
-extern CharacterSelectPlayerRecord gFrameCounter;
+extern CharacterSelectCoursePlayerRecord gFrameCounter;
 extern s32 D_801235B4;
 
-// func_8001BD70 best match: 95.048%
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001BD70.s")
+// drawCharacterSelectCourseListOptions best match: 95.048%
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/drawCharacterSelectCourseListOptions.s")
 
 #ifdef NON_MATCHING
-void func_8001BD70(CharacterSelectMenuFrameActor *arg0) {
-    CharacterSelectMenuFrameActor *base;
+void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
+    CharacterSelectCourseMenuFrameActor *base;
     s16 *characterIds;
     s16 *characterId;
     s16 *pos;
@@ -160,18 +160,18 @@ void func_8001BD70(CharacterSelectMenuFrameActor *arg0) {
 }
 #endif
 
-// func_8001C158 best match: 99.352% (nonmatchings/func_8001C158-4923837976568703863/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C158.s")
+// updateCharacterSelectUnlockedCourseList best match: 99.352% (nonmatchings/updateCharacterSelectUnlockedCourseList-4923837976568703863/base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/updateCharacterSelectUnlockedCourseList.s")
 
 #ifdef NON_MATCHING
-void func_8001C158(CharacterSelectMenuFrameActor *arg0) {
+void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
     s32 anyMoving;
     s32 i;
     s32 limit;
     s32 targetY;
     void (*finalCallback)(EffectTask *);
-    CharacterSelectMenuFrameActor *base;
-    CharacterSelectMenuFrameActor *ptr;
+    CharacterSelectCourseMenuFrameActor *base;
+    CharacterSelectCourseMenuFrameActor *ptr;
     s16 *x;
 
     base = arg0;
@@ -190,7 +190,7 @@ void func_8001C158(CharacterSelectMenuFrameActor *arg0) {
                     }
                 }
                 i++;
-                ptr = (CharacterSelectMenuFrameActor *)((s16 *)ptr + 1);
+                ptr = (CharacterSelectCourseMenuFrameActor *)((s16 *)ptr + 1);
             } while (i < base->itemCount);
         }
 
@@ -199,19 +199,19 @@ void func_8001C158(CharacterSelectMenuFrameActor *arg0) {
             if (arg0->itemCount < (gCharacterSelectCourseExitOptionIndex + 1)) {
                 arg0->itemCount++;
                 if (arg0->itemCount == (gCharacterSelectCourseExitOptionIndex + 1)) {
-                    D_8010ADE4 = func_80071408((void (*)(EffectTask *))func_8001DACC, 0, 0x58);
-                    func_80071408((void (*)(EffectTask *))func_8001DFA0, 0, 0x59);
-                    func_80071408((void (*)(EffectTask *))func_8001E468, 0, 0x5A);
-                    finalCallback = (void (*)(EffectTask *))func_80020AA0;
-                    func_80071408((void (*)(EffectTask *))func_8001E930, 0, 0x5B);
-                    func_80071408((void (*)(EffectTask *))func_8001EDF8, 0, 0x5C);
-                    func_80071408((void (*)(EffectTask *))func_8001F2C0, 0, 0x5D);
+                    D_8010ADE4 = func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel0, 0, 0x58);
+                    func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel1, 0, 0x59);
+                    func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel2, 0, 0x5A);
+                    finalCallback = (void (*)(EffectTask *))initCharacterSelectCourseExitPreviewPanel;
+                    func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel3, 0, 0x5B);
+                    func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel4, 0, 0x5C);
+                    func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel5, 0, 0x5D);
                     if (gHighestUnlockedCourse != 0) {
-                        func_80071408((void (*)(EffectTask *))func_8001F788, 0, 0x5E);
+                        func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel6, 0, 0x5E);
                         if (gHighestUnlockedCourse >= 2) {
-                            func_80071408((void (*)(EffectTask *))func_8001FC50, 0, 0x5F);
+                            func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel7, 0, 0x5F);
                             if (gHighestUnlockedCourse >= 3) {
-                                func_80071408((void (*)(EffectTask *))func_80020118, 0, 0x60);
+                                func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePreviewPanel8, 0, 0x60);
                             }
                         }
                     }
@@ -273,11 +273,11 @@ void func_8001C158(CharacterSelectMenuFrameActor *arg0) {
             arg0->y[D_80121B50] = -0x60;
             arg0->state = 4;
             if (D_800EC9C2 == 2) {
-                D_8010ADE0 = func_80071408((void (*)(EffectTask *))func_800235E0, 0, 0x62);
-                func_80071408((void (*)(EffectTask *))func_800232F4, 0, 0x63);
+                D_8010ADE0 = func_80071408((void (*)(EffectTask *))initCharacterSelectCourseExitPopup, 0, 0x62);
+                func_80071408((void (*)(EffectTask *))initCharacterSelectCourseRecordsPopup, 0, 0x63);
             } else {
-                func_80071408((void (*)(EffectTask *))func_8002186C, 0, 0x61);
-                func_80071408((void (*)(EffectTask *))func_80021B20, 0, 0x62);
+                func_80071408((void (*)(EffectTask *))initCharacterSelectCoursePlayerStatsPanel, 0, 0x61);
+                func_80071408((void (*)(EffectTask *))initCharacterSelectCourseSubmenuFrame, 0, 0x62);
             }
         }
         break;
@@ -327,7 +327,7 @@ void func_8001C158(CharacterSelectMenuFrameActor *arg0) {
             do {
                 i++;
                 ptr->x[0] -= 0x20;
-                ptr = (CharacterSelectMenuFrameActor *)((s16 *)ptr + 1);
+                ptr = (CharacterSelectCourseMenuFrameActor *)((s16 *)ptr + 1);
             } while (i < (gCharacterSelectCourseExitOptionIndex + 1));
         }
         break;
@@ -338,15 +338,15 @@ void func_8001C158(CharacterSelectMenuFrameActor *arg0) {
         return;
     }
 
-    func_800483FC(&D_80124868, func_8001BD70, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCourseListOptions, arg0);
 }
 #endif
 
-// func_8001C83C best match: 96.776% (nonmatchings/func_8001C83C-3836525038718587862/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C83C.s")
+// initCharacterSelectUnlockedCourseList best match: 96.776% (nonmatchings/initCharacterSelectUnlockedCourseList-3836525038718587862/base_9.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/initCharacterSelectUnlockedCourseList.s")
 
 #ifdef NON_MATCHING
-void func_8001C83C(CharacterSelectMenuFrameActor *arg0) {
+void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
     u8 spacing;
     s16 baseY;
     s32 i;
@@ -396,16 +396,16 @@ void func_8001C83C(CharacterSelectMenuFrameActor *arg0) {
     arg0->timer = 0;
     arg0->itemCount = 1;
     arg0->state = 0;
-    func_80071824(arg0, func_8001C158);
+    func_80071824(arg0, updateCharacterSelectUnlockedCourseList);
 }
 #endif
 
-// func_8001C96C best match: 99.556%
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C96C.s")
+// drawCharacterSelectLimitedCourseListOptions best match: 99.556%
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/drawCharacterSelectLimitedCourseListOptions.s")
 
 #ifdef NON_MATCHING
-void func_8001C96C(CharacterSelectMenuFrameActor *arg0) {
-    register CharacterSelectMenuFrameActor *actor;
+void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
+    register CharacterSelectCourseMenuFrameActor *actor;
     s32 arrowBase;
     s32 lastArrowIndex;
     s32 i;
@@ -457,11 +457,11 @@ tile_selected:
 }
 #endif
 
-// func_8001CC10 best match: 84.118% (nonmatchings/func_8001CC10-7273315160691878794/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001CC10.s")
+// updateCharacterSelectLimitedCourseList best match: 84.118% (nonmatchings/updateCharacterSelectLimitedCourseList-7273315160691878794/base_8.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/updateCharacterSelectLimitedCourseList.s")
 
 #ifdef NON_MATCHING
-void func_8001CC10(CharacterSelectMenuFrameActor *arg0) {
+void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
     s32 movedCount;
     s32 visibleCount;
     volatile s32 state6Count;
@@ -471,8 +471,8 @@ void func_8001CC10(CharacterSelectMenuFrameActor *arg0) {
     s32 modeOffset;
     s32 targetY;
     u8 nextItemCount;
-    CharacterSelectMenuFrameActor *actor;
-    CharacterSelectMenuFrameActor *actorCopy;
+    CharacterSelectCourseMenuFrameActor *actor;
+    CharacterSelectCourseMenuFrameActor *actorCopy;
 
     actorCopy = arg0;
 
@@ -497,7 +497,7 @@ void func_8001CC10(CharacterSelectMenuFrameActor *arg0) {
                     }
                 }
                 i++;
-                actor = (CharacterSelectMenuFrameActor *)((s16 *)actor + 1);
+                actor = (CharacterSelectCourseMenuFrameActor *)((s16 *)actor + 1);
             } while (i < actorCopy->itemCount);
         }
 
@@ -508,13 +508,13 @@ void func_8001CC10(CharacterSelectMenuFrameActor *arg0) {
                 nextItemCount = arg0->itemCount + 1;
                 arg0->itemCount = nextItemCount;
                 if (visibleCount == nextItemCount) {
-                    D_8010ADE4 = func_80071408(func_8001DACC, 0, 0x59);
+                    D_8010ADE4 = func_80071408(initCharacterSelectCoursePreviewPanel0, 0, 0x59);
                     if (D_80121B5E < 2) {
-                        func_80071408(func_8001DFA0, 0, 0x5A);
-                        func_80071408(func_8001E468, 0, 0x5B);
+                        func_80071408(initCharacterSelectCoursePreviewPanel1, 0, 0x5A);
+                        func_80071408(initCharacterSelectCoursePreviewPanel2, 0, 0x5B);
                     }
-                    func_80071408(func_80020AA0, 0, 0x5C);
-                    func_80071408(func_80021E70, 0, 0x62);
+                    func_80071408(initCharacterSelectCourseExitPreviewPanel, 0, 0x5C);
+                    func_80071408(initCharacterSelectCourseRecordsFrame, 0, 0x62);
                 }
             }
         }
@@ -558,8 +558,8 @@ void func_8001CC10(CharacterSelectMenuFrameActor *arg0) {
         if (arg0->y[D_80121B50] < -0x57) {
             arg0->y[D_80121B50] = -0x58;
             arg0->state = 4;
-            func_80071408(func_800232F4, 0, 0x62);
-            D_8010ADE0 = func_80071408(func_800235E0, 0, 0x63);
+            func_80071408(initCharacterSelectCourseRecordsPopup, 0, 0x62);
+            D_8010ADE0 = func_80071408(initCharacterSelectCourseExitPopup, 0, 0x63);
         }
         break;
 
@@ -637,7 +637,7 @@ state_6_done:
             do {
                 i++;
                 actor->x[0] -= 0x20;
-                actor = (CharacterSelectMenuFrameActor *)((s16 *)actor + 1);
+                actor = (CharacterSelectCourseMenuFrameActor *)((s16 *)actor + 1);
             } while (i < arg0->itemCount);
         }
         if (arg0->x[0] < -0x103) {
@@ -660,16 +660,16 @@ state_6_done:
     if (arg0->state == 9) {
         func_800716E4((EffectTask *)arg0);
     } else {
-        func_800483FC(&D_80124868, func_8001C96C, arg0);
+        func_800483FC(&D_80124868, drawCharacterSelectLimitedCourseListOptions, arg0);
     }
 }
 #endif
 
-// func_8001D254 best match: 52.632% (nonmatchings/func_8001D254-786318006044585456/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D254.s")
+// initCharacterSelectLimitedCourseList best match: 52.632% (nonmatchings/initCharacterSelectLimitedCourseList-786318006044585456/base_3.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/initCharacterSelectLimitedCourseList.s")
 
 #ifdef NON_MATCHING
-void func_8001D254(CharacterSelectMenuFrameActor *arg0) {
+void initCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
     s32 temp_t6;
     u8 temp_t7;
     s32 temp_t8;
@@ -711,25 +711,25 @@ void func_8001D254(CharacterSelectMenuFrameActor *arg0) {
     arg0->timer = 0;
     arg0->itemCount = temp_t3;
     arg0->state = 0;
-    func_80071824(arg0, func_8001CC10);
+    func_80071824(arg0, updateCharacterSelectLimitedCourseList);
 }
 #endif
 
-// func_8001D2F0 best match: 98.863% (nonmatchings/func_8001D2F0-3836525038718587862/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D2F0.s")
+// drawCharacterSelectCoursePreviewFrame best match: 98.863% (nonmatchings/drawCharacterSelectCoursePreviewFrame-3836525038718587862/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/drawCharacterSelectCoursePreviewFrame.s")
 
 #ifdef NON_MATCHING
-void func_8001D2F0(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg0) {
     volatile s32 padTop[2];
     volatile u16 frameIndex;
     volatile s32 padAfter[1];
-    CharacterSelectFrameTileMap *savedFrame;
+    CharacterSelectCourseFrameTileMap *savedFrame;
     volatile s32 padBefore[2];
     s32 yOffset;
-    register CharacterSelectFrameTileMap *tileMap;
+    register CharacterSelectCourseFrameTileMap *tileMap;
     register s32 i;
     register s32 offset;
-    register CharacterSelectWidgetActor *actor;
+    register CharacterSelectCourseWidgetActor *actor;
 
     actor = arg0;
     if ((D_800EC9C2 == 1) && (D_80121B5E == 2)) {
@@ -737,7 +737,7 @@ void func_8001D2F0(CharacterSelectWidgetActor *arg0) {
             frameIndex = 9;
         } while (0);
     } else {
- frameIndex = actor->sprite.unsignedIndex; } savedFrame = (tileMap = &D_800B5FC0[frameIndex]); i = (offset = 0); if (arg0 == 0) { } do { func_80011264((s16) (actor->x + ((i & 3) << 5)), (s16) (actor->y + ((i / 4) << 5)), func_80043040(D_80112130.textureHandle), tileMap->center[0], 0, 0x100); i += 1; tileMap = (CharacterSelectFrameTileMap *) (((u16 *) tileMap) + 1); } while (i < 0x10); tileMap = savedFrame; yOffset = offset; do { func_80011264((s16) (actor->x + 0x80), (s16) (actor->y + yOffset), func_80043040(D_80112130.textureHandle), tileMap->right[0], 0, 0x100); func_80011264((s16) (actor->x + offset), (s16) (actor->y + 0x80), func_80043040(D_80112130.textureHandle), tileMap->bottom[0], 0, 0x100); offset += 0x40; tileMap = (CharacterSelectFrameTileMap *) (((u16 *) tileMap) + 1); } while (offset < 0x80); func_80011264((s16) (actor->x + 0x80), (s16) (actor->y + 0x80), func_80043040(D_80112130.textureHandle), D_800B5FE8[frameIndex].corner, 0, 0x100);
+ frameIndex = actor->sprite.unsignedIndex; } savedFrame = (tileMap = &D_800B5FC0[frameIndex]); i = (offset = 0); if (arg0 == 0) { } do { func_80011264((s16) (actor->x + ((i & 3) << 5)), (s16) (actor->y + ((i / 4) << 5)), func_80043040(D_80112130.textureHandle), tileMap->center[0], 0, 0x100); i += 1; tileMap = (CharacterSelectCourseFrameTileMap *) (((u16 *) tileMap) + 1); } while (i < 0x10); tileMap = savedFrame; yOffset = offset; do { func_80011264((s16) (actor->x + 0x80), (s16) (actor->y + yOffset), func_80043040(D_80112130.textureHandle), tileMap->right[0], 0, 0x100); func_80011264((s16) (actor->x + offset), (s16) (actor->y + 0x80), func_80043040(D_80112130.textureHandle), tileMap->bottom[0], 0, 0x100); offset += 0x40; tileMap = (CharacterSelectCourseFrameTileMap *) (((u16 *) tileMap) + 1); } while (offset < 0x80); func_80011264((s16) (actor->x + 0x80), (s16) (actor->y + 0x80), func_80043040(D_80112130.textureHandle), D_800B5FE8[frameIndex].corner, 0, 0x100);
 
     func_8000F030((s16)(actor->x - 4), (s16)(actor->y - 4), func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x33,
                   0x20, 0x20, 0, 0);
@@ -763,11 +763,11 @@ void func_8001D2F0(CharacterSelectWidgetActor *arg0) {
 }
 #endif
 
-// func_8001D7B8 best match: 91.995%
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D7B8.s")
+// updateCharacterSelectCoursePreviewPanel0 best match: 91.995%
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/updateCharacterSelectCoursePreviewPanel0.s")
 
 #ifdef NON_MATCHING
-void func_8001D7B8(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCoursePreviewPanel0(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     int stateValue;
     u16 selectedSpriteIndex;
@@ -805,9 +805,9 @@ void func_8001D7B8(CharacterSelectWidgetActor *arg0) {
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->transition.bytes.state = 3;
-            D_8010ADDC = (s32)func_80071408(func_80020CEC, 0, 0x64);
-            func_80071408(func_80020F44, 0, 0x62);
-            func_80071408(func_800213D4, 0, 0x62);
+            D_8010ADDC = (s32)func_80071408(initCharacterSelectCourseListCursor, 0, 0x64);
+            func_80071408(initCharacterSelectCourseTitleCursor, 0, 0x62);
+            func_80071408(initCharacterSelectCourseStatsBadge, 0, 0x62);
         }
         state = arg0->transition.bytes.state;
         break;
@@ -870,20 +870,20 @@ void func_8001D7B8(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8001D2F0, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewFrame, arg0);
 }
 #endif
 
-void func_8001DACC(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCoursePreviewPanel0(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = 0x96;
     arg0->y = -0x48;
     arg0->sprite.index = 0;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001D7B8);
+    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel0);
 }
 
-void func_8001DB0C(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -920,7 +920,7 @@ void func_8001DB0C(CharacterSelectWidgetActor *arg0) {
                   D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8001DD80(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
@@ -986,19 +986,19 @@ void func_8001DD80(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8001DB0C, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel1, arg0);
 }
 
-void func_8001DFA0(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x8;
     arg0->y = -0x140;
     arg0->sprite.index = 0x1;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001DD80);
+    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel1);
 }
 
-void func_8001DFE4(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -1032,7 +1032,7 @@ void func_8001DFE4(CharacterSelectWidgetActor *arg0) {
                   D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8001E258(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
@@ -1095,19 +1095,19 @@ void func_8001E258(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8001DFE4, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel2, arg0);
 }
 
-void func_8001E468(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x8;
     arg0->y = -0x140;
     arg0->sprite.index = 0x2;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001E258);
+    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel2);
 }
 
-void func_8001E4AC(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *arg0) {
     s32 i;
     s32 tileOffset;
 
@@ -1130,7 +1130,7 @@ void func_8001E4AC(CharacterSelectWidgetActor *arg0) {
                   D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8001E720(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
@@ -1193,19 +1193,19 @@ void func_8001E720(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8001E4AC, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel3, arg0);
 }
 
-void func_8001E930(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x8;
     arg0->y = -0x140;
     arg0->sprite.index = 0x3;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001E720);
+    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel3);
 }
 
-void func_8001E974(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -1242,7 +1242,7 @@ void func_8001E974(CharacterSelectWidgetActor *arg0) {
                   D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8001EBE8(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
@@ -1305,19 +1305,19 @@ void func_8001EBE8(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8001E974, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel4, arg0);
 }
 
-void func_8001EDF8(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x8;
     arg0->y = -0x140;
     arg0->sprite.index = 0x4;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001EBE8);
+    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel4);
 }
 
-void func_8001EE3C(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -1351,7 +1351,7 @@ void func_8001EE3C(CharacterSelectWidgetActor *arg0) {
                   D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8001F0B0(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
@@ -1414,19 +1414,19 @@ void func_8001F0B0(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8001EE3C, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel5, arg0);
 }
 
-void func_8001F2C0(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x8;
     arg0->y = -0x140;
     arg0->sprite.index = 0x5;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001F0B0);
+    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel5);
 }
 
-void func_8001F304(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -1463,7 +1463,7 @@ void func_8001F304(CharacterSelectWidgetActor *arg0) {
                   D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8001F578(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
@@ -1526,19 +1526,19 @@ void func_8001F578(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8001F304, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel6, arg0);
 }
 
-void func_8001F788(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x8;
     arg0->y = -0x140;
     arg0->sprite.index = 0x6;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001F578);
+    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel6);
 }
 
-void func_8001F7CC(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -1572,7 +1572,7 @@ void func_8001F7CC(CharacterSelectWidgetActor *arg0) {
                   D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8001FA40(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
@@ -1635,19 +1635,19 @@ void func_8001FA40(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8001F7CC, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel7, arg0);
 }
 
-void func_8001FC50(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x8;
     arg0->y = -0x140;
     arg0->sprite.index = 0x7;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001FA40);
+    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel7);
 }
 
-void func_8001FC94(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileIndex;
@@ -1682,7 +1682,7 @@ void func_8001FC94(CharacterSelectWidgetActor *arg0) {
                   D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8001FF08(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
@@ -1745,19 +1745,19 @@ void func_8001FF08(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8001FC94, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel8, arg0);
 }
 
-void func_80020118(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x8;
     arg0->y = -0x140;
     arg0->sprite.index = 0x8;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8001FF08);
+    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel8);
 }
 
-void func_8002015C(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -1791,7 +1791,7 @@ void func_8002015C(CharacterSelectWidgetActor *arg0) {
                   D_800B5FC0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_800203D0(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
@@ -1854,19 +1854,19 @@ void func_800203D0(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_8002015C, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCoursePreviewPanel9, arg0);
 }
 
-void func_800205E0(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x8;
     arg0->y = -0x140;
     arg0->sprite.index = 0x9;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_800203D0);
+    func_80071824(arg0, updateCharacterSelectCoursePreviewPanel9);
 }
 
-void func_80020624(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor *arg0) {
     s32 i;
     s32 tileOffset;
     s32 offset;
@@ -1894,7 +1894,7 @@ void func_80020624(CharacterSelectWidgetActor *arg0) {
                   D_800B618C, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_80020818(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->row.bytes.subState;
 
@@ -1975,23 +1975,23 @@ void func_80020818(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_80020624, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCourseExitPreviewPanel, arg0);
 }
 
-void func_80020AA0(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x8;
     arg0->y = -0x140;
     arg0->sprite.index = 0;
     arg0->row.bytes.subTimer = 0;
     arg0->row.bytes.subState = 0;
-    func_80071824(arg0, func_80020818);
+    func_80071824(arg0, updateCharacterSelectCourseExitPreviewPanel);
 }
 
-void func_80020AE0(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0) {
     if (arg0->transition.bytes.state < 3) {
         func_8000F8AC(
             arg0->x,
-            (s16)(arg0->y + D_80121B50 * arg0->selection.bytes.selectedCharacterRow),
+            (s16)(arg0->y + D_80121B50 * arg0->selection.bytes.rowSpacing),
             func_80043040(D_80112172),
             0x12,
             0x20,
@@ -2002,7 +2002,7 @@ void func_80020AE0(CharacterSelectWidgetActor *arg0) {
     }
 }
 
-void func_80020B70(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0) {
     u8 state;
     u8 globalState;
 
@@ -2047,49 +2047,49 @@ void func_80020B70(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_80020AE0, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCourseListCursor, arg0);
 }
 
-void func_80020CEC(CharacterSelectWidgetActor *arg0) {
-    u8 selectedCharacterRow;
+void initCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0) {
+    u8 rowSpacing;
     s16 y;
     int mode;
 
     mode = gHighestUnlockedCourse;
     if (mode == 0) {
         if (1) {}
-        selectedCharacterRow = 0x18;
+        rowSpacing = 0x18;
         y = -0x50;
     } else if (mode == 1) {
         y = -0x54;
-        selectedCharacterRow = 0x16;
+        rowSpacing = 0x16;
     } else if (mode == 2) {
-        selectedCharacterRow = 0x16;
+        rowSpacing = 0x16;
         y = -0x60;
     } else {
         y = -0x60;
-        selectedCharacterRow = 0x13;
+        rowSpacing = 0x13;
     }
 
     if (D_800EC9DD != 0) {
         y = -0x58;
-        selectedCharacterRow = 0x18;
+        rowSpacing = 0x18;
     }
 
     arg0->x = -0x7C;
     arg0->y = y;
-    arg0->selection.bytes.selectedCharacterRow = selectedCharacterRow;
+    arg0->selection.bytes.rowSpacing = rowSpacing;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
     arg0->transition.bytes.timer = 0;
-    func_80071824(arg0, func_80020B70);
+    func_80071824(arg0, updateCharacterSelectCourseListCursor);
 }
 
-void func_80020D88(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0) {
     func_8000F8AC(arg0->x, arg0->y, func_80043040(D_80112172), 1, 0x20, 0x20, 0, arg0->sprite.index, 0);
 }
 
-void func_80020DEC(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0) {
     u8 state = arg0->transition.bytes.state;
 
     switch (state) {
@@ -2131,20 +2131,20 @@ void func_80020DEC(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_80020D88, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCourseTitleCursor, arg0);
 }
 
-void func_80020F44(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x8;
     arg0->y = -0x5C;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_80020DEC);
+    func_80071824(arg0, updateCharacterSelectCourseTitleCursor);
 }
 
-const char D_800E0B80[] = "%4d";
+const char gCharacterSelectCourseStatsScoreFormat[] = "%4d";
 
-void func_80020F80(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0) {
     char pad[8];
     char buf[4];
     s32 temp_v0;
@@ -2156,7 +2156,7 @@ void func_80020F80(CharacterSelectWidgetActor *arg0) {
         func_8001BA2C(arg0->x, arg0->y, 0x3800, 0x5800);
         func_8000F8AC((s16)(arg0->x + 4), (s16)(arg0->y + 4), func_80043040(D_80112130.textureHandle),
                       0x23, 0x20, 0x20, 0, arg0->sprite.index, 0);
-        sprintf(buf - 4, D_800E0B80, D_800B61AC[D_80121B50]);
+        sprintf(buf - 4, gCharacterSelectCourseStatsScoreFormat, D_800B61AC[D_80121B50]);
         func_80013D0C((s16)(arg0->x + 8), (s16)(arg0->y + 0xC), buf - 4, 0, arg0->sprite.index);
         func_8000F8AC((s16)(arg0->x + 0x28), (s16)(arg0->y + 0xC), func_80043040(D_80112130.textureHandle),
                       0x24, 0x20, 0x20, 0, arg0->sprite.index, 0);
@@ -2186,7 +2186,7 @@ void func_80020F80(CharacterSelectWidgetActor *arg0) {
     }
 }
 
-void func_8002127C(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0) {
     u8 state = arg0->transition.bytes.state;
 
     switch (state) {
@@ -2228,32 +2228,32 @@ void func_8002127C(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_80020F80, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCourseStatsBadge, arg0);
 }
 
-void func_800213D4(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = 0x48;
     arg0->y = 0x34;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_8002127C);
+    func_80071824(arg0, updateCharacterSelectCourseStatsBadge);
 }
 
-const char D_800E0B84[] = "%5d";
-const char D_800E0B88[] = "%5d";
-const char D_800E0B8C[] = "%2d";
+const char gCharacterSelectCourseBestScoreFormat[] = "%5d";
+const char gCharacterSelectCourseMedalScoreFormat[] = "%5d";
+const char gCharacterSelectCoursePlayerRankFormat[] = "%2d";
 
-void func_80021410(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
     char buf[4];
     s16 *characterIds;
     s32 yOffset;
     s32 valueOffset;
     s32 three;
-    CharacterSelectPlayerRecord *player;
-    do { characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse]; if (D_80121B55 == 1) { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x21, 0x20, 0x20, 0, 0); func_8000F030((s16)(arg0->x + 0x30), arg0->y, func_80043040(D_80112130.textureHandle), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, D_800E0B84, D_800EC9F8[characterIds[*(&D_80121B50)]]); func_80013D0C((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, D_800E0B88, *((u16 *)(&D_800B61CC[(((*(&D_80121B50)) * three) * 2) + valueOffset]))); func_80013D0C((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x26, 0x20, 0x20, 0, 0); func_8000F030(arg0->x, (s16)(arg0->y + 0x10), func_80043040(D_80112130.textureHandle), 0x27, 0x20, 0x20, 0, 0); player = (CharacterSelectPlayerRecord *)D_80121D80; yOffset = 0; do { sprintf(buf - 0x10, D_800E0B8C, player->value); func_80013D0C((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); player++; yOffset += 8; } while (player != &gFrameCounter); } } while (0);
+    CharacterSelectCoursePlayerRecord *player;
+    do { characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse]; if (D_80121B55 == 1) { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x21, 0x20, 0x20, 0, 0); func_8000F030((s16)(arg0->x + 0x30), arg0->y, func_80043040(D_80112130.textureHandle), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, gCharacterSelectCourseBestScoreFormat, D_800EC9F8[characterIds[*(&D_80121B50)]]); func_80013D0C((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, gCharacterSelectCourseMedalScoreFormat, *((u16 *)(&D_800B61CC[(((*(&D_80121B50)) * three) * 2) + valueOffset]))); func_80013D0C((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x26, 0x20, 0x20, 0, 0); func_8000F030(arg0->x, (s16)(arg0->y + 0x10), func_80043040(D_80112130.textureHandle), 0x27, 0x20, 0x20, 0, 0); player = (CharacterSelectCoursePlayerRecord *)D_80121D80; yOffset = 0; do { sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, player->value); func_80013D0C((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); player++; yOffset += 8; } while (player != &gFrameCounter); } } while (0);
 }
 
-void func_8002172C(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
     s16 target;
 
@@ -2292,18 +2292,18 @@ void func_8002172C(CharacterSelectWidgetActor *arg0) {
             D_80121D80[8] = 4;
         }
     } else {
-        func_800483FC(&D_80124868, func_80021410, arg0);
+        func_800483FC(&D_80124868, drawCharacterSelectCoursePlayerStatsPanel, arg0);
     }
 }
 
-void func_8002186C(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = -0x50;
     arg0->sprite.bytes.state = 0;
-    func_80071824(arg0, func_8002172C);
+    func_80071824(arg0, updateCharacterSelectCoursePlayerStatsPanel);
 }
 
-void func_800218A4(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *arg0) {
     func_8000F030(arg0->x, arg0->y, func_80043040(D_80112172), 3, 0x20, 0x20, 0, 0);
     func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(D_80112172), 4, 0x20, 0x20, 0, 0);
     func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(D_80112172), 5, 0x20, 0x20, 0, 0);
@@ -2311,7 +2311,7 @@ void func_800218A4(CharacterSelectWidgetActor *arg0) {
                   0x20, 0, 0);
 }
 
-void func_800219E4(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
 
     switch (state) {
@@ -2320,7 +2320,7 @@ void func_800219E4(CharacterSelectWidgetActor *arg0) {
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->sprite.bytes.state = 1;
-            D_8010ADE0 = func_80071408(func_8002215C, 0, 0x63);
+            D_8010ADE0 = func_80071408(initCharacterSelectCourseNamePopup, 0, 0x63);
         }
         state = arg0->sprite.bytes.state;
         break;
@@ -2345,24 +2345,24 @@ void func_800219E4(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_800218A4, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCourseSubmenuFrame, arg0);
 }
 
-void func_80021B20(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = -0x18;
     arg0->sprite.bytes.state = 0;
-    func_80071824(arg0, func_800219E4);
+    func_80071824(arg0, updateCharacterSelectCourseSubmenuFrame);
 }
 
-void func_80021B58(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *arg0) {
     func_8000F030(arg0->x, arg0->y, func_80043040(D_80112172), 3, 0x20, 0x20, 0, 0);
     func_8000F030((s16) (arg0->x + 0x40), arg0->y, func_80043040(D_80112172), 4, 0x20, 0x20, 0, 0);
     func_8000F030(arg0->x, (s16) (arg0->y + 0x40), func_80043040(D_80112172), 5, 0x20, 0x20, 0, 0);
     func_8000F030((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), func_80043040(D_80112172), 6, 0x20, 0x20, 0, 0);
 }
 
-void func_80021C98(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *arg0) {
     u32 state = arg0->sprite.bytes.state;
 
     switch (state) {
@@ -2371,7 +2371,7 @@ void func_80021C98(CharacterSelectWidgetActor *arg0) {
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->sprite.bytes.state = 1;
-            func_80071408(func_80022464, 0, 0x63);
+            func_80071408(initCharacterSelectCourseDescriptionPopup, 0, 0x63);
         }
         state = arg0->sprite.bytes.state;
         break;
@@ -2420,18 +2420,18 @@ void func_80021C98(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_80021B58, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCourseRecordsFrame, arg0);
 }
 
-void func_80021E70(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x128;
     arg0->y = 0x8;
     arg0->sprite.bytes.state = 0;
-    func_80071824(arg0, func_80021C98);
+    func_80071824(arg0, updateCharacterSelectCourseRecordsFrame);
 }
 
-void func_80021EA8(CharacterSelectWidgetActor *arg0) {
-    CharacterSelectText *texts;
+void drawCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) {
+    CharacterSelectCourseText *texts;
     u8 *text;
 
     texts = D_800B6210;
@@ -2450,7 +2450,7 @@ void func_80021EA8(CharacterSelectWidgetActor *arg0) {
     }
 }
 
-void func_80021F80(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) {
     u8 state;
     u8 globalState;
 
@@ -2516,18 +2516,18 @@ void func_80021F80(CharacterSelectWidgetActor *arg0) {
         gCharacterSelectCourseCursorState.bytes[7] = 0;
         return;
     }
-    func_800483FC(&D_80124868, func_80021EA8, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCourseNamePopup, arg0);
 }
 
-void func_8002215C(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x84;
     arg0->y = -0x14;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_80021F80);
+    func_80071824(arg0, updateCharacterSelectCourseNamePopup);
 }
 
-void func_80022198(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActor *arg0) {
     u8 *text;
     s32 threshold;
     u16 idx;
@@ -2552,7 +2552,7 @@ void func_80022198(CharacterSelectWidgetActor *arg0) {
     func_80013154(arg0->x, arg0->y, text, 1, arg0->sprite.index, 0);
 }
 
-void func_80022274(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActor *arg0) {
     u32 state = arg0->transition.bytes.state;
 
     switch (state) {
@@ -2616,18 +2616,18 @@ void func_80022274(CharacterSelectWidgetActor *arg0) {
         func_800716E4(arg0);
         return;
     }
-    func_800483FC(&D_80124868, func_80022198, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCourseDescriptionPopup, arg0);
 }
 
-void func_80022464(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x84;
     arg0->y = 0xC;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_80022274);
+    func_80071824(arg0, updateCharacterSelectCourseDescriptionPopup);
 }
 
-void func_800224A0(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *arg0) {
     u32 drawAlpha;
     int isEvenState;
     u16 alpha;
@@ -2665,7 +2665,7 @@ void func_800224A0(CharacterSelectWidgetActor *arg0) {
     }
 }
 
-void func_8002262C(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *arg0) {
     s32 step;
 
     if ((D_800EC9D0 != 0) && (D_800EC9D0 != 3) && (D_800EC9D0 != 4)) {
@@ -2700,18 +2700,18 @@ void func_8002262C(CharacterSelectWidgetActor *arg0) {
         arg0->row.value = ((u16)arg0->row.value + 1) & 0x1F;
     }
 
-    func_800483FC(&D_80124868, func_800224A0, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCourseConfirmCursor, arg0);
 }
 
-void func_800227A0(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x74;
     arg0->y = 0x2F;
     arg0->sprite.index = 0x2F;
-    func_80071824(arg0, func_8002262C);
+    func_80071824(arg0, updateCharacterSelectCourseConfirmCursor);
 }
 
-// func_800227D8 best match: 90.478% (nonmatchings/func_800227D8-2225551288923588688/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_800227D8.s")
+// drawCharacterSelectCourseRecordsPopup best match: 90.478% (nonmatchings/drawCharacterSelectCourseRecordsPopup-2225551288923588688/base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/drawCharacterSelectCourseRecordsPopup.s")
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -2735,7 +2735,7 @@ extern u8 D_800F4222[];
 extern u8 D_800F4259[];
 extern u8 D_800F4290[];
 
-void func_800227D8(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg0) {
     volatile u8 padding[0x40];
     s16 *courseIds;
     u16 sp72;
@@ -2779,7 +2779,7 @@ void func_800227D8(CharacterSelectWidgetActor *arg0) {
                     } else {
                         color = 0xD;
                     }
-                    func_80023618((CharacterSelectTime *)((CharacterSelectResultNameData *)D_800EC9F0)->resultNames[courseIds[D_80121B50]][var_s7],
+                    drawCharacterSelectCourseRecordTime((CharacterSelectCourseRecordTime *)((CharacterSelectResultNameData *)D_800EC9F0)->resultNames[courseIds[D_80121B50]][var_s7],
                                   arg0->x + 0x14, arg0->y + var_s5, color);
                     func_8000F030((s16)(arg0->x + 0x54), (s16)(arg0->y + var_s5),
                                   func_80043040(D_80112130.popupFontHandle),
@@ -2840,7 +2840,7 @@ void func_800227D8(CharacterSelectWidgetActor *arg0) {
                 } else {
                     color = 0xD;
                 }
-                func_80023618((CharacterSelectTime *)((CharacterSelectCourseStatsNameData *)D_800EC9F0)->courseStatsNames[courseIds[D_80121B50]][var_s7],
+                drawCharacterSelectCourseRecordTime((CharacterSelectCourseRecordTime *)((CharacterSelectCourseStatsNameData *)D_800EC9F0)->courseStatsNames[courseIds[D_80121B50]][var_s7],
                               arg0->x + 0x14, arg0->y + var_s5, color);
                 func_8000F030((s16)(arg0->x + 0x54), (s16)(arg0->y + var_s5), func_80043040(D_80112130.popupFontHandle),
                               ((D_800F41EB[(courseIds[D_80121B50] * 5) + var_s7] & 7) + 0x51) & 0xFFFF, 0x20, 0x20, 0, 0);
@@ -2854,7 +2854,7 @@ void func_800227D8(CharacterSelectWidgetActor *arg0) {
 }
 #endif
 
-void func_80023198(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
     u8 unk;
     s16 target;
@@ -2899,17 +2899,17 @@ void func_80023198(CharacterSelectWidgetActor *arg0) {
         D_80121D88 = 4;
         return;
     }
-    func_800483FC(&D_80124868, func_800227D8, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCourseRecordsPopup, arg0);
 }
 
-void func_800232F4(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0xF0;
     arg0->y = -0x40;
     arg0->sprite.bytes.state = 0;
-    func_80071824(arg0, func_80023198);
+    func_80071824(arg0, updateCharacterSelectCourseRecordsPopup);
 }
 
-void func_8002332C(CharacterSelectWidgetActor *arg0) {
+void drawCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) {
     func_8000F030(arg0->x, arg0->y, func_80043040(D_80112172), 0x28, 0x20, 0x20, 0, 0);
     if ((s32) arg0->transition.bytes.state > 0) {
         func_80013154((s16) (arg0->x + 4), (s16) (arg0->y + 4), D_800B6B88, 1, 0x100, 0);
@@ -2925,7 +2925,7 @@ void func_8002332C(CharacterSelectWidgetActor *arg0) {
     }
 }
 
-void func_80023434(CharacterSelectWidgetActor *arg0) {
+void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) {
     u8 state;
     u8 globalState;
 
@@ -2988,25 +2988,25 @@ void func_80023434(CharacterSelectWidgetActor *arg0) {
         gCharacterSelectCourseCursorState.bytes[7] = 0;
         return;
     }
-    func_800483FC(&D_80124868, func_8002332C, arg0);
+    func_800483FC(&D_80124868, drawCharacterSelectCourseExitPopup, arg0);
 }
 
-void func_800235E0(CharacterSelectWidgetActor *arg0) {
+void initCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 0x28;
     arg0->transition.bytes.state = 0;
-    func_80071824(arg0, func_80023434);
+    func_80071824(arg0, updateCharacterSelectCourseExitPopup);
 }
 
-// func_80023618 best match: 93.301% (nonmatchings/func_80023618-6061209858023118177/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_80023618.s")
+// drawCharacterSelectCourseRecordTime best match: 93.301% (nonmatchings/drawCharacterSelectCourseRecordTime-6061209858023118177/base_10.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/drawCharacterSelectCourseRecordTime.s")
 
 #ifdef NON_MATCHING
 extern char D_800E0B98[];
 extern char D_800E0BA0[];
 extern char D_800E0BA8[];
 
-void func_80023618(CharacterSelectTime *arg0, s32 x, s32 y, s32 alpha) {
+void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, s32 x, s32 y, s32 alpha) {
     char buffer[0x60];
     char *ptr;
     char *end;
