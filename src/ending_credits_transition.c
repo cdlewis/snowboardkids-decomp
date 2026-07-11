@@ -7,7 +7,7 @@
 #include "game_task_scheduler.h"
 #include "race_camera.h"
 #include "ending_credits_ui.h"
-#include "ending_credits_shared_effects.h"
+#include "ending_credits_effects.h"
 #include "race_start_transition.h"
 #include "ending_credits_slash.h"
 #include "ending_credits_nancy.h"
@@ -64,9 +64,9 @@ extern f32 D_800E0A70;
 extern s16 D_8010B1A0;
 extern u16 gEndingSequencePhase;
 extern s8 gEndingActorHandshakeState;
-extern u8 gEndingTransitionSnowboardIconSpinStep;
-extern s16 gEndingTransitionSnowboardIconAngle;
-extern MainMenuFlagByte gEndingCharacterEffectDoneFlags[];
+extern u8 gEndingCreditsTransitionSnowboardIconSpinStep;
+extern s16 gEndingCreditsTransitionSnowboardIconAngle;
+extern MainMenuFlagByte gEndingCreditsCharacterEffectDoneFlags[];
 extern s8 gEndingNancyEffectDone;
 extern s8 gEndingJamEffectDone;
 extern s8 gEndingLindaEffectDone;
@@ -101,13 +101,13 @@ void initEndingCreditsTransition(void) {
     D_8010B1A0 = 0;
     gEndingSequencePhase = 0;
     gEndingActorHandshakeState = 0;
-    gEndingTransitionSnowboardIconAngle = 0;
-    gEndingTransitionSnowboardIconSpinStep = 0;
-    gEndingCharacterEffectDoneFlags[0].value = 0;
-    gEndingCharacterEffectDoneFlags[2].value = 0;
-    gEndingCharacterEffectDoneFlags[3].value = 0;
-    gEndingCharacterEffectDoneFlags[4].value = 0;
-    gEndingCharacterEffectDoneFlags[1].value = 0;
+    gEndingCreditsTransitionSnowboardIconAngle = 0;
+    gEndingCreditsTransitionSnowboardIconSpinStep = 0;
+    gEndingCreditsCharacterEffectDoneFlags[0].value = 0;
+    gEndingCreditsCharacterEffectDoneFlags[2].value = 0;
+    gEndingCreditsCharacterEffectDoneFlags[3].value = 0;
+    gEndingCreditsCharacterEffectDoneFlags[4].value = 0;
+    gEndingCreditsCharacterEffectDoneFlags[1].value = 0;
     loadCompressedRomAsset(D_608560, D_609AA0, 0x21);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
     loadCompressedRomAsset(D_609AA0, D_60ECB0, 0x26);

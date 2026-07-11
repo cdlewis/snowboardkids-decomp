@@ -1,6 +1,6 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
-#include "ending_credits_shared_effects.h"
+#include "ending_credits_effects.h"
 #include "ending_credits_nancy.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
@@ -17,7 +17,7 @@ struct EndingCreditsNancy {
 };
 
 extern u16 gEndingSequencePhase;
-extern u8 gEndingCharacterEffectDoneFlags[];
+extern u8 gEndingCreditsCharacterEffectDoneFlags[];
 extern s8 gEndingNancyEffectDone;
 
 void updateEndingNancyFinalPose(EndingCreditsNancy *arg0) {
@@ -212,7 +212,7 @@ void waitEndingNancyPhase32Aura(EndingCreditsNancy *arg0) {
         setMainMenuSceneModelAnimation(1, 0x52);
         arg0->rotY = 0xC00;
         setMainMenuSceneModelRotation(1, arg0->rotX, arg0->rotY, arg0->rotZ);
-        gEndingCharacterEffectDoneFlags[0] = 0;
+        gEndingCreditsCharacterEffectDoneFlags[0] = 0;
         spawnEndingCreditsCharacterAura(0x13, -0x3A, 1, 1);
     }
 }
