@@ -2729,7 +2729,7 @@ typedef struct {
     /* 0x7756 */ u16 trickValues[10][5];
 } CharacterSelectStatsData;
 
-extern u8 D_800EC9F0[];
+extern u8 gGameSaveDataBuffer[];
 extern u8 D_800F41EB[];
 extern u8 D_800F4222[];
 extern u8 D_800F4259[];
@@ -2779,7 +2779,7 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                     } else {
                         color = 0xD;
                     }
-                    drawCharacterSelectCourseRecordTime((CharacterSelectCourseRecordTime *)((CharacterSelectResultNameData *)D_800EC9F0)->resultNames[courseIds[D_80121B50]][var_s7],
+                    drawCharacterSelectCourseRecordTime((CharacterSelectCourseRecordTime *)((CharacterSelectResultNameData *)gGameSaveDataBuffer)->resultNames[courseIds[D_80121B50]][var_s7],
                                   arg0->x + 0x14, arg0->y + var_s5, color);
                     func_8000F030((s16)(arg0->x + 0x54), (s16)(arg0->y + var_s5),
                                   func_80043040(D_80112130.popupFontHandle),
@@ -2813,13 +2813,13 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                                   func_80043040(D_80112130.popupFontHandle),
                                   ((D_800F4259[(courseIds[D_80121B50] * 5) + var_s7] >> 3) + 0x7C) & 0xFFFF, 0x20, 0x20, 0, 0);
                 } else {
-                    trickIcon = &D_800EC9F0[var_s7];
+                    trickIcon = &gGameSaveDataBuffer[var_s7];
                     if (var_s7 < 3) {
                         var_s4_2 = 0xC;
                     } else {
                         var_s4_2 = 0xD;
                     }
-                    var_s0 = ((CharacterSelectStatsData *)D_800EC9F0)->trickValues[0][var_s7];
+                    var_s0 = ((CharacterSelectStatsData *)gGameSaveDataBuffer)->trickValues[0][var_s7];
                     var_s1 = 0;
                     do {
                         func_8000F030((s16)((arg0->x - var_s1) + 0x38), (s16)(arg0->y + var_s5),
@@ -2840,7 +2840,7 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                 } else {
                     color = 0xD;
                 }
-                drawCharacterSelectCourseRecordTime((CharacterSelectCourseRecordTime *)((CharacterSelectCourseStatsNameData *)D_800EC9F0)->courseStatsNames[courseIds[D_80121B50]][var_s7],
+                drawCharacterSelectCourseRecordTime((CharacterSelectCourseRecordTime *)((CharacterSelectCourseStatsNameData *)gGameSaveDataBuffer)->courseStatsNames[courseIds[D_80121B50]][var_s7],
                               arg0->x + 0x14, arg0->y + var_s5, color);
                 func_8000F030((s16)(arg0->x + 0x54), (s16)(arg0->y + var_s5), func_80043040(D_80112130.popupFontHandle),
                               ((D_800F41EB[(courseIds[D_80121B50] * 5) + var_s7] & 7) + 0x51) & 0xFFFF, 0x20, 0x20, 0, 0);

@@ -44,10 +44,10 @@ extern s32 D_80121D8C;
 #endif
 extern MenuIntroActor *D_8010ADDC;
 extern TitleMenuWidgetItemView *D_8010ADE0;
-extern s16 D_800EC9C8[];
+extern s16 gControllerPakStatusCodes[];
 extern s16 D_800EC9D0[];
 extern s16 D_800B3462[];
-extern TitleMenuPlayerView D_800EC9F0[];
+extern TitleMenuPlayerView gGameSaveDataBuffer[];
 extern TitleIntroTransitionState D_8010AE00;
 extern s16 D_8010AE02;
 extern u16 D_8010AE06[];
@@ -838,11 +838,11 @@ void func_80016284(TitleMenuIconStripActor *arg0) {
 
     i = 0;
     if ((s32)gPlayerCount > 0) {
-        courseId = D_800EC9C8;
+        courseId = gControllerPakStatusCodes;
         actorOffset = 0;
         do {
             if (*courseId != 0x13) {
-                player = &D_800EC9F0[i];
+                player = &gGameSaveDataBuffer[i];
                 j = 0;
                 if (player->iconCount == 3) {
                     count = 3;
@@ -878,7 +878,7 @@ void func_80016284(TitleMenuIconStripActor *arg0) {
                 }
 
                 if (count > 0) {
-                    player2 = &D_800EC9F0[i];
+                    player2 = &gGameSaveDataBuffer[i];
                     badgeIndex = D_800B3462;
                     xOffset = 0;
                     item = (TitleMenuIconStripActor *)((u8 *)arg0 + actorOffset);
@@ -955,9 +955,9 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
     actor = arg0;
     intro = D_8010ADDC;
     for (i = 0; i < gPlayerCount; i++) {
-        state = D_800EC9C8[i];
-        if (D_800EC9C8[i] != 8) {
-            if (D_800EC9C8[i] == 5) {
+        state = gControllerPakStatusCodes[i];
+        if (gControllerPakStatusCodes[i] != 8) {
+            if (gControllerPakStatusCodes[i] == 5) {
                 alpha = (u16)actor->alpha[i];
             } else {
                 alpha = 0x100;
@@ -969,7 +969,7 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
             func_8000F8AC((s16)(actor->x[i] + 0x3E), (s16)(actor->y[i] + 0xC), func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE), 9,
                           0x20, 0x20, 0, alpha, 0);
 
-            state = D_800EC9C8[i];
+            state = gControllerPakStatusCodes[i];
             if (state == 0xA) {
                 func_80013D0C((s16)(actor->x[i] + 2), (s16)(actor->y[i] + 0x10), D_800B5A14, 7, actor->alpha[i]);
             } else {
@@ -979,7 +979,7 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
             }
 
             if ((actor->alpha[i] == 0x100) && (intro->state == 8)) {
-                state = D_800EC9C8[i];
+                state = gControllerPakStatusCodes[i];
                 if ((state == 4) || ((state >= 7) && (state != 0x12) && (D_800EC9D0[i] == 0))) {
                     func_8000F030((s16)(actor->x[i] + 0x70), (s16)(actor->y[i] + 0x20), func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE),
                                   (((s32)actor->frame >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
@@ -1031,7 +1031,7 @@ void func_80016948(TitleMenuWidgetActor *arg0) {
                 if (actor->alpha[i] <= 0) {
                     actor->alpha[i] = 0;
                     actor->unk31[i] = 1;
-                    D_800EC9C8[i] = actor->unk36[i];
+                    gControllerPakStatusCodes[i] = actor->unk36[i];
                 }
                 state = actor->unk31[i];
                 break;
@@ -1115,7 +1115,7 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
                 }
 
                 func_8000F8AC(arg0->x[i], arg0->topY[i], func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE),
-                              D_800B5A2F[D_800EC9C8[i] * 2], 0x20, 0x20, 0, alpha, 0);
+                              D_800B5A2F[gControllerPakStatusCodes[i] * 2], 0x20, 0x20, 0, alpha, 0);
 
                 if (alpha == 0x100) {
                     alpha = 0x60;
@@ -1125,7 +1125,7 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
 
                 new_var = arg0;
                 func_8000F8AC(arg0->x[i], new_var->y[i], func_80043040(TITLE_MENU_FRAME_TEXTURE_HANDLE),
-                              D_800B5A2E[D_800EC9C8[i] * 2], 0x20, 0x20, 0, alpha, 0);
+                              D_800B5A2E[gControllerPakStatusCodes[i] * 2], 0x20, 0x20, 0, alpha, 0);
 
                 if (new_var->alpha == 0) {
                 }

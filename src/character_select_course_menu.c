@@ -52,7 +52,7 @@ extern CharacterSelectFlowState *gCurrentGameTask;
 extern s8 gFramebufferSwapDelay;
 extern f32 D_800E09A4;
 extern s16 gMenuFadeAlpha;
-extern CharacterSelectSaveData D_800EC9F0[];
+extern CharacterSelectSaveData gGameSaveDataBuffer[];
 extern u8 D_80121D80[];
 extern u8 D_80121D88;
 extern u8 gPlayerCount;
@@ -108,8 +108,8 @@ void initCharacterSelectCourseMenuFromPlayerCount(void) {
     gMenuFadeAlpha = gCurrentGameTask->fade;
     var_v1 = 0;
     if (gPlayerCount > 0) {
-        var_v0 = D_800EC9F0;
-        temp_a0 = &D_800EC9F0[gPlayerCount];
+        var_v0 = gGameSaveDataBuffer;
+        temp_a0 = &gGameSaveDataBuffer[gPlayerCount];
         do {
             temp_v1 = var_v0->highestCourse;
             var_v0 += 1;
@@ -223,8 +223,8 @@ void initCharacterSelectCourseMenuFromRace(void) {
     gMenuFadeAlpha = gCurrentGameTask->fade;
     var_v1 = 0;
     if (gPlayerCount > 0) {
-        var_v0 = D_800EC9F0;
-        temp_a0 = &D_800EC9F0[gPlayerCount];
+        var_v0 = gGameSaveDataBuffer;
+        temp_a0 = &gGameSaveDataBuffer[gPlayerCount];
         do {
             temp_v1 = var_v0->highestCourse;
             var_v0 += 1;
@@ -338,8 +338,8 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     D_8010ADE4 = 0;
     var_v1 = 0;
     if (gPlayerCount > 0) {
-        var_v0 = D_800EC9F0;
-        temp_a0 = &D_800EC9F0[gPlayerCount];
+        var_v0 = gGameSaveDataBuffer;
+        temp_a0 = &gGameSaveDataBuffer[gPlayerCount];
         do {
             temp_v1 = var_v0->highestCourse;
             var_v0 += 1;

@@ -69,7 +69,7 @@ segments:
     subalign: 4
     bss_size: 0x7DAC0
     subsegments:
-      - [0x1050, c, main_menu]
+      - [0x1050, c, main_menu_flow]
       - [0x3D40, c, player_setup_menu]
       - [0x5560, c, character_select_menu]
       - [0x6140, c, player_select_menu]
@@ -293,7 +293,7 @@ segments:
       - [0xE0F40, .data, ultra/audio/env]
       - [0xE1080, .data, ultra/libc/xlitob]
       - [0xE10B0, data]
-      - [0xE11A0, .rodata, main_menu]
+      - [0xE11A0, .rodata, main_menu_flow]
       - [0xE1500, .rodata, player_setup_menu]
       - [0xE1580, .rodata, character_select_menu]
       - [0xE1590, .rodata, player_select_menu]

@@ -94,7 +94,7 @@ extern u8 D_800DC8F8[];
 extern u16 D_800DC954[];
 extern u16 D_800DC99C[];
 extern RaceUiCoursePosition D_800DC900[];
-extern CourseDataStride D_800EC9F0[];
+extern CourseDataStride gGameSaveDataBuffer[];
 extern RaceTimerUiAssetHandles D_80112130;
 extern s16 D_8011216E;
 extern s16 D_80121B52;
@@ -554,7 +554,7 @@ void func_80079394(s32 arg0) {
 
     func_80048278(0x48, 0x47, (char *)D_800E17D8, 5);
     func_80048278(0x48, -0x61, (char *)D_800E17E4, 7);
-    course = (CourseBestLapView *)&D_800EC9F0[D_80121B50];
+    course = (CourseBestLapView *)&gGameSaveDataBuffer[D_80121B50];
     sprintf(sp28, D_800E17F0, course->bestLapMinutes, course->bestLapSeconds, course->bestLapFraction >> 8);
     func_80048278(0x48, -0x58, sp28, 7);
 }

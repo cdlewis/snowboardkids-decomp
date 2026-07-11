@@ -76,7 +76,7 @@ extern u8 D_59AAA0[];
 extern u8 D_59DFE0[];
 extern u8 D_60F1A0[];
 extern u8 D_60F990[];
-extern u8 D_800B3190;
+extern u8 gMainMenuSecretCodeUnlocked;
 extern u8 D_800EC9E5;
 extern u8 D_8010ADF8;
 extern u8 D_8010AE68;
@@ -194,7 +194,7 @@ loop_1:
     D_8010AE55 = 0;
     D_8010AE56 = 0;
     D_8010AE68 = 0;
-    if (D_800B3190 != 0) {
+    if (gMainMenuSecretCodeUnlocked != 0) {
         D_8010AE68 = 1;
     }
     updateCallbackTasks();

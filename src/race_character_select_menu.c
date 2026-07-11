@@ -74,7 +74,7 @@ extern u8 D_800EC9C2;
 extern s16 D_800EC9D0[];
 extern s8 D_800EC9E5;
 extern s8 D_800EC9E6;
-extern RaceCharacterSelectSaveData D_800EC9F0[];
+extern RaceCharacterSelectSaveData gGameSaveDataBuffer[];
 extern s32 D_8010ADDC;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
@@ -215,14 +215,14 @@ void initRaceCharacterSelectMenu(void) {
         for (j = 0; j < 3; j++) {
             sum = 0;
             for (k = 0; k < 3; k++) {
-                sum += D_800EC9F0[i].characterState[j + k * 3];
+                sum += gGameSaveDataBuffer[i].characterState[j + k * 3];
             }
             D_8010AEB8[i][j] = (sum != -3);
         }
 
         sum = 0;
         for (j = 9; j < 12; j++) {
-            sum += D_800EC9F0[i].characterState[j];
+            sum += gGameSaveDataBuffer[i].characterState[j];
         }
         if (sum >= -2) {
             D_8010AEC8[i] = 4;
@@ -237,7 +237,7 @@ void initRaceCharacterSelectMenu(void) {
 
         if (D_8010AEA0[i] == 1) {
             for (j = 9; j < 12; j++) {
-                if (D_800EC9F0[i].characterState[j] != -1) {
+                if (gGameSaveDataBuffer[i].characterState[j] != -1) {
                     D_8010AEFB[i * 4] = j;
                     break;
                 }
@@ -246,7 +246,7 @@ void initRaceCharacterSelectMenu(void) {
             k = 0;
             for (j = 9; j < 12; j++) {
                 D_8010AF08[i][k] = 0;
-                if (D_800EC9F0[i].characterState[j] != -1) {
+                if (gGameSaveDataBuffer[i].characterState[j] != -1) {
                     D_8010AF08[i][k] = j;
                     k++;
                 }

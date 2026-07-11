@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "system_boot.h"
 #include "game_task_scheduler.h"
-#include "main_menu.h"
+#include "main_menu_flow.h"
 #include "main_menu_overlay_effects.h"
 #include "main_menu_panel_ui.h"
 #include "main_menu_scene_model.h"
@@ -114,10 +114,10 @@ extern s32 osPfsAllocateFile(OSPfs *, u16, u32, u8 *, u8 *, int, s32 *);
 extern s32 osPfsReadWriteFile(OSPfs *, s32, u8, int, int, u8 *);
 extern void releaseMenuAssetHandles(void);
 extern void enqueueSoundEffect(s32, s32);
-extern void func_80002A1C(void);
-extern void func_80002CE4(void);
-extern void func_8000262C(void);
-extern void func_80002024(void);
+extern void updateMainMenuSettings(void);
+extern void fadeOutMainMenuSettings(void);
+extern void updateMainMenuModeSelect(void);
+extern void updateMainMenu(void);
 extern OSThread D_800E29C8;
 extern OSMesgQueue D_800E4B78;
 extern OSMesg D_800E4B90[];
@@ -126,7 +126,7 @@ extern OSMesg D_800E4BC8[];
 extern OSMesgQueue D_800E4BD0;
 extern OSMesg D_800E4BE8[];
 extern s16 D_800E4BEC;
-extern OSContPad D_800E4C00[];
+extern OSContPad gControllerPads[];
 extern s32 D_800E4C30[];
 extern OSPfs D_800E4C40[];
 extern OSPfs D_800E4DE0[];
@@ -134,13 +134,13 @@ extern SaveFileIdentity D_800E4F80;
 extern u8 D_800E4F8A[];
 extern u8 D_800E4F8E[];
 extern MainMenuState *gCurrentGameTask;
-extern u8 D_800B30F0;
+extern u8 gConnectedControllerBitmask;
 extern u8 D_800B30F4[];
 extern u8 D_800B3104[];
 extern u8 D_800B3108[];
-extern u8 D_800B318C;
+extern u8 gMainMenuReturnFromRace;
 extern u8 gFramebufferSwapDelay;
-extern u8 D_800E4BEE;
+extern u8 gControllerReadPending;
 extern OSContStatus D_800E4BF0[];
 extern s16 gControllerInputState;
 extern u8 D_800E4C1A;
@@ -157,16 +157,16 @@ extern u8 D_800E4C2D;
 extern s32 D_800E4C30[];
 extern u8 D_800E4F8A[];
 extern u8 D_800E4F8E[];
-extern u8 D_800EC9D8;
-extern s32 D_800EC898;
+extern u8 gControllerPakRetryCounts;
+extern s32 gRumbleMotorStatuses;
 extern s32 D_800EC89C;
 extern s32 D_800EC8A0;
 extern s32 D_800EC8A4;
 extern u8 D_800EC8B4[];
 extern void *D_800EC8B8;
-extern s16 D_800EC9C8[];
-extern u8 D_800EC9E0[];
-extern SaveSlotBytes D_800EC9F0[];
+extern s16 gControllerPakStatusCodes[];
+extern u8 gControllerPakOperationCounts[];
+extern SaveSlotBytes gGameSaveDataBuffer[];
 extern s32 gPlayerInputHeld;
 extern s16 gMenuFadeAlpha;
 extern s16 D_801124B8;
@@ -184,8 +184,8 @@ extern u8 D_1E0F70[];
 extern u8 D_5DB9D0[];
 extern u8 D_5DCBE0[];
 extern u8 D_5DFDD0[];
-extern s8 D_800B3190;
-extern u8 D_800B3194;
+extern s8 gMainMenuSecretCodeUnlocked;
+extern u8 gMainMenuSecretCodeStep;
 extern s8 D_800DEF10;
 extern u8 gConnectedControllerCount;
 extern u8 gRaceRumbleEnabled;
@@ -206,25 +206,25 @@ extern u8 D_800B30F4[];
 extern u8 D_800B3104[];
 extern u8 D_800B3108[];
 
-// func_80000450 best match: 85.817%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000450.s")
+// initControllerSubsystem best match: 85.817%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/initControllerSubsystem.s")
 
 #ifdef NON_MATCHING
-void func_80000450(void) {
+void initControllerSubsystem(void) {
     s32 i;
 
     osCreateMesgQueue(&D_800E4BD0, D_800E4BE8, 1);
     osCreateMesgQueue(&D_800E4B78, D_800E4B90, 8);
     osCreateMesgQueue(&D_800E4BB0, D_800E4BC8, 1);
     osSetEventMesg(5, &D_800E4BD0, (OSMesg)1);
-    osContInit(&D_800E4BD0, &D_800B30F0, D_800E4BF0);
+    osContInit(&D_800E4BD0, &gConnectedControllerBitmask, D_800E4BF0);
 
     gConnectedControllerCount = 0;
-    D_800E4BEE = 0;
+    gControllerReadPending = 0;
 
     i = 0;
 loop:
-    if (((s32)D_800B30F0 >> i) & 1) {
+    if (((s32)gConnectedControllerBitmask >> i) & 1) {
         i++;
         gConnectedControllerCount++;
         if (i < 4) {
@@ -238,7 +238,7 @@ loop:
     gControllerInputState = 0;
     D_800E4C1A = 0;
     D_800E4C1B = 0;
-    D_800EC898 = 1;
+    gRumbleMotorStatuses = 1;
     D_800E4C1E = 0;
     D_800E4C20 = 0;
     D_800E4C21 = 0;
@@ -252,16 +252,16 @@ loop:
     D_800E4C2D = 0;
     D_800EC8A4 = 1;
 
-    osCreateThread(&D_800E29C8, 4, func_800005E4, D_800EC8B8, &D_800E4B78, 0x14);
+    osCreateThread(&D_800E29C8, 4, controllerSubsystemThreadMain, D_800EC8B8, &D_800E4B78, 0x14);
     osStartThread(&D_800E29C8);
 }
 #endif
 
-// func_800005E4 best match: 99.507%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_800005E4.s")
+// controllerSubsystemThreadMain best match: 99.507%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/controllerSubsystemThreadMain.s")
 
 #ifdef NON_MATCHING
-void func_800005E4(void *arg0) {
+void controllerSubsystemThreadMain(void *arg0) {
     OSMesg msg;
     s32 msgValue;
     s32 channel;
@@ -274,53 +274,53 @@ void func_800005E4(void *arg0) {
         case 0x10:
             osContStartReadData(&D_800E4BD0);
             osRecvMesg(&D_800E4BD0, ((OSMesg *)&arg0) - 2, OS_MESG_BLOCK);
-            osContGetReadData(D_800E4C00);
+            osContGetReadData(gControllerPads);
             osSendMesg(&D_80124070, &D_800E4BEC, 0);
             break;
         case 0x20:
-            func_80000C94(msgValue & 3);
+            probeControllerPak(msgValue & 3);
             osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
             break;
         case 0x30:
-            func_80000E00(msgValue & 3);
+            checkControllerPakSaveStatus(msgValue & 3);
             osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
             break;
         case 0x40:
-            func_8000105C(msgValue & 3);
+            readControllerPakSave(msgValue & 3);
             osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
             break;
         case 0x50:
-            func_80001318(msgValue & 3);
+            writeControllerPakSave(msgValue & 3);
             osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
             break;
         case 0x60:
-            func_80001584(msgValue & 3);
+            repairControllerPakId(msgValue & 3);
             osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
             break;
         case 0x70:
             channel = msgValue & 3;
-            (&D_800EC898)[channel] = osMotorInit(&D_800E4BD0, &D_800E4DE0[channel], channel);
+            (&gRumbleMotorStatuses)[channel] = osMotorInit(&D_800E4BD0, &D_800E4DE0[channel], channel);
             osSendMesg(&D_800E4BB0, &D_800E4BEC, 0);
             break;
         case 0xD0:
             channel = msgValue & 3;
-            (&D_800EC898)[channel] = osMotorInit(&D_800E4BD0, &D_800E4DE0[channel], channel);
+            (&gRumbleMotorStatuses)[channel] = osMotorInit(&D_800E4BD0, &D_800E4DE0[channel], channel);
             break;
         case 0x80:
-            if (((&D_800EC898)[msgValue & 3] != 1) && ((&D_800EC898)[msgValue & 3] != 11) &&
-                ((&D_800EC898)[msgValue & 3] != 4)) {
+            if (((&gRumbleMotorStatuses)[msgValue & 3] != 1) && ((&gRumbleMotorStatuses)[msgValue & 3] != 11) &&
+                ((&gRumbleMotorStatuses)[msgValue & 3] != 4)) {
                 channel = msgValue & 3;
                 if (osMotorStart(&D_800E4DE0[channel]) == 4) {
-                    (&D_800EC898)[channel] = 4;
+                    (&gRumbleMotorStatuses)[channel] = 4;
                 }
             }
             break;
         case 0x90:
-            if (((&D_800EC898)[msgValue & 3] != 1) && ((&D_800EC898)[msgValue & 3] != 11) &&
-                ((&D_800EC898)[msgValue & 3] != 4)) {
+            if (((&gRumbleMotorStatuses)[msgValue & 3] != 1) && ((&gRumbleMotorStatuses)[msgValue & 3] != 11) &&
+                ((&gRumbleMotorStatuses)[msgValue & 3] != 4)) {
                 channel = msgValue & 3;
                 if (osMotorStop(&D_800E4DE0[channel]) == 4) {
-                    (&D_800EC898)[channel] = 4;
+                    (&gRumbleMotorStatuses)[channel] = 4;
                 }
             }
             break;
@@ -341,16 +341,16 @@ void func_800005E4(void *arg0) {
 }
 #endif
 
-void func_80000960(void) {
-    if ((D_800E4BEE == 0) && (D_800B30F0 != 0)) {
+void requestControllerRead(void) {
+    if ((gControllerReadPending == 0) && (gConnectedControllerBitmask != 0)) {
         osSendMesg(&D_800E4B78, (OSMesg)0x10, OS_MESG_BLOCK);
-        D_800E4BEE = 1;
+        gControllerReadPending = 1;
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_800009B0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/updateControllerInputState.s")
 
-void func_80000A40(u16 arg0) {
+void requestRumbleMotorInit(u16 arg0) {
     OSMesg msg;
 
     msg = NULL;
@@ -359,7 +359,7 @@ void func_80000A40(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000A8C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/updateRumbleMotorRequest.s")
 
 void requestRumbleMotorStart(u16 arg0) {
     if (gRaceRumbleEnabled != 0) {
@@ -369,7 +369,7 @@ void requestRumbleMotorStart(u16 arg0) {
     }
 }
 
-void func_80000C48(u16 arg0) {
+void requestControllerPakProbe(u16 arg0) {
     OSMesg msg;
 
     msg = NULL;
@@ -378,11 +378,11 @@ void func_80000C48(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-// func_80000C94 best match: 94.507%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000C94.s")
+// probeControllerPak best match: 94.507%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/probeControllerPak.s")
 
 #ifdef NON_MATCHING
-void func_80000C94(u16 arg0) {
+void probeControllerPak(u16 arg0) {
     s32 ret;
 
     ret = osPfsInitPak(&D_800E4BD0, &D_800E4C40[arg0], arg0);
@@ -391,28 +391,28 @@ void func_80000C94(u16 arg0) {
     }
 
     if (ret == 0) {
-        D_800EC9C8[arg0] = ret + 1;
+        gControllerPakStatusCodes[arg0] = ret + 1;
     }
 
     if ((ret == 1) || (ret == 11)) {
-        D_800EC9C8[arg0] = 10;
+        gControllerPakStatusCodes[arg0] = 10;
     }
 
     if (ret == 10) {
         if (D_800EC8B4[arg0] == 1) {
-            D_800EC9C8[arg0] = 16;
+            gControllerPakStatusCodes[arg0] = 16;
         } else {
-            D_800EC9C8[arg0] = 7;
+            gControllerPakStatusCodes[arg0] = 7;
         }
     }
 
     if (ret != 0) {
-        D_800EC9E0[arg0]++;
+        gControllerPakOperationCounts[arg0]++;
     }
 }
 #endif
 
-void func_80000DB4(u16 arg0) {
+void requestControllerPakSaveStatus(u16 arg0) {
     OSMesg msg;
 
     msg = NULL;
@@ -421,11 +421,11 @@ void func_80000DB4(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-// func_80000E00 best match: 81.386%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80000E00.s")
+// checkControllerPakSaveStatus best match: 81.386%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/checkControllerPakSaveStatus.s")
 
 #ifdef NON_MATCHING
-void func_80000E00(u16 arg0) {
+void checkControllerPakSaveStatus(u16 arg0) {
     s32 ret;
     s32 maxFiles;
     s32 filesUsed;
@@ -471,28 +471,28 @@ void func_80000E00(u16 arg0) {
     ret = osPfsFindFile(pfs, D_800E4F80.company_code, D_800E4F80.game_code, D_800E4F8E, D_800E4F8A,
                         &D_800E4C30[arg0]);
     if (ret == 0) {
-        D_800EC9C8[arg0] = 2;
+        gControllerPakStatusCodes[arg0] = 2;
     } else {
         osPfsNumFiles(pfs, &maxFiles, &filesUsed);
         if (filesUsed == 0x10) {
-            D_800EC9C8[arg0] = 0xC;
+            gControllerPakStatusCodes[arg0] = 0xC;
         } else {
             osPfsFreeBlocks(pfs, &freeBytes);
             if ((freeBytes / 256) < 0x79) {
-                D_800EC9C8[arg0] = 0xB;
+                gControllerPakStatusCodes[arg0] = 0xB;
             } else if (ret == 5) {
-                D_800EC9C8[arg0] = 9;
+                gControllerPakStatusCodes[arg0] = 9;
             }
         }
     }
 
     if (ret != 0) {
-        D_800EC9E0[arg0]++;
+        gControllerPakOperationCounts[arg0]++;
     }
 }
 #endif
 
-void func_80001010(u16 arg0) {
+void requestControllerPakSaveRead(u16 arg0) {
     OSMesg msg;
 
     msg = NULL;
@@ -501,11 +501,11 @@ void func_80001010(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-// func_8000105C best match: 85.904%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_8000105C.s")
+// readControllerPakSave best match: 85.904%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/readControllerPakSave.s")
 
 #ifdef NON_MATCHING
-void func_8000105C(u16 arg0) {
+void readControllerPakSave(u16 arg0) {
     s32 ret;
     u16 badChecksum;
     OSPfs *pfs;
@@ -554,7 +554,7 @@ copy_name:
     fileNo = &D_800E4C30[channel];
     osPfsFindFile(pfs, D_800E4F80.companyCode, D_800E4F80.gameCode, D_800E4F8E, D_800E4F8A, fileNo);
 
-    save = &D_800EC9F0[channel];
+    save = &gGameSaveDataBuffer[channel];
     ret = osPfsReadWriteFile(pfs, *fileNo, 0, 0, 0x78E0, (u8 *)save);
     if (ret == 0) {
         checksum = 0;
@@ -575,26 +575,26 @@ checksum_loop:
         }
 
         if (badChecksum == 0) {
-            if (func_80001904(savedChannel) == 0) {
-                (&D_800EC9D8)[channel] = 0;
+            if (validateControllerPakSave(savedChannel) == 0) {
+                (&gControllerPakRetryCounts)[channel] = 0;
             }
         } else {
-            (&D_800EC9D8)[channel]++;
+            (&gControllerPakRetryCounts)[channel]++;
         }
     } else {
-        (&D_800EC9D8)[channel]++;
+        (&gControllerPakRetryCounts)[channel]++;
     }
 
-    if ((ret != 0) || ((&D_800EC9D8)[channel] != 0)) {
-        if ((&D_800EC9D8)[channel] != 3) {
+    if ((ret != 0) || ((&gControllerPakRetryCounts)[channel] != 0)) {
+        if ((&gControllerPakRetryCounts)[channel] != 3) {
             return;
         }
     }
-    D_800EC9E0[channel]++;
+    gControllerPakOperationCounts[channel]++;
 }
 #endif
 
-void func_800012CC(u16 arg0) {
+void requestControllerPakSaveWrite(u16 arg0) {
     OSMesg msg;
 
     msg = NULL;
@@ -603,11 +603,11 @@ void func_800012CC(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-// func_80001318 best match: 78.684%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80001318.s")
+// writeControllerPakSave best match: 78.684%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/writeControllerPakSave.s")
 
 #ifdef NON_MATCHING
-void func_80001318(u16 arg0) {
+void writeControllerPakSave(u16 arg0) {
     OSPfs * volatile pfs;
     s32 *fileNo;
     s32 channel;
@@ -654,7 +654,7 @@ copy_name:
         osPfsAllocateFile(pfs, D_800E4F80.companyCode, D_800E4F80.gameCode, D_800E4F8E, D_800E4F8A, 0x7900, fileNo);
     }
 
-    save = &D_800EC9F0[channel];
+    save = &gGameSaveDataBuffer[channel];
     checksum = 0;
     bytes = save->bytes;
     offset = 4;
@@ -671,14 +671,14 @@ checksum_loop:
 
     save->checksum = checksum;
     if (osPfsReadWriteFile(pfs, *fileNo, 1, 0, 0x78E0, (u8 *)save) == 0) {
-        (&D_800EC9D8)[channel] = 0;
+        (&gControllerPakRetryCounts)[channel] = 0;
         return;
     }
-    (&D_800EC9D8)[channel]++;
+    (&gControllerPakRetryCounts)[channel]++;
 }
 #endif
 
-void func_80001538(u16 arg0) {
+void requestControllerPakRepair(u16 arg0) {
     OSMesg msg;
 
     msg = NULL;
@@ -687,7 +687,7 @@ void func_80001538(u16 arg0) {
     osRecvMesg(&D_800E4BB0, &msg, OS_MESG_BLOCK);
 }
 
-void func_80001584(u16 arg0) {
+void repairControllerPakId(u16 arg0) {
     OSPfs **sp18;
     OSPfs *pfs;
     s32 ret;
@@ -697,7 +697,7 @@ void func_80001584(u16 arg0) {
     osPfsInitPak(&D_800E4BD0, *sp18, arg0);
     ret = osPfsRepairId(pfs);
     if ((ret == 4) || (ret == 0xA)) {
-        (&D_800EC9D8)[arg0] += 1;
+        (&gControllerPakRetryCounts)[arg0] += 1;
     }
 }
 
@@ -754,10 +754,10 @@ void deleteControllerPakFile(u16 arg0) {
 
     for (i = 0; i != 3; i++) {
         if (osPfsDeleteFile(pfs, companyCode, gameCode, gameName, extName) == 0) {
-            D_800EC9D8 = 0;
+            gControllerPakRetryCounts = 0;
             return;
         }
-        D_800EC9D8++;
+        gControllerPakRetryCounts++;
     }
 }
 
@@ -781,11 +781,11 @@ void updateControllerPakFreeSpaceInfo(void) {
     gControllerPakFreeFileCount = maxFiles - filesUsed;
 }
 
-// func_80001904 best match: 33.167%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu/func_80001904.s")
+// validateControllerPakSave best match: 33.167%
+#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_flow/validateControllerPakSave.s")
 
 #ifdef NON_MATCHING
-u16 func_80001904(s32 arg0) {
+u16 validateControllerPakSave(s32 arg0) {
     u8 *var_a3;
     u8 *var_a2;
     u8 *var_v1;
@@ -809,11 +809,11 @@ u16 func_80001904(s32 arg0) {
         var_v1 += 1;
     } while (var_a0 != 0xC);
 
-    return func_80001994(arg0);
+    return validateControllerPakSaveData(arg0);
 }
 #endif
 
-s32 func_80001994(s32 arg0) {
+s32 validateControllerPakSaveData(s32 arg0) {
     s32 pad;
     volatile s32 sp8;
     u8 *var_a0;
@@ -841,7 +841,7 @@ s32 func_80001994(s32 arg0) {
     s32 temp_s0_8;
     s32 temp_s0_9;
 
-    var_t2 = (u8 *)&D_800EC9F0[arg0];
+    var_t2 = (u8 *)&gGameSaveDataBuffer[arg0];
     var_v1 = 0;
     var_t3 = var_t2;
     var_t4 = var_t2;
@@ -949,16 +949,16 @@ block_32:
     return var_v1;
 }
 
-void func_80001C30(void) {
-    D_800B318C = 1;
-    setCurrentGameTaskCallback(func_80001C80, 0);
+void enterMainMenuFromRace(void) {
+    gMainMenuReturnFromRace = 1;
+    setCurrentGameTaskCallback(initMainMenu, 0);
     createGameTask(4, func_8003ED00, 0x64);
     suspendGameTask(3);
 }
 
-void func_80001C80(void) {
-    D_800B3190 = 0;
-    D_800B3194 = 0;
+void initMainMenu(void) {
+    gMainMenuSecretCodeUnlocked = 0;
+    gMainMenuSecretCodeStep = 0;
     resetAllViewports();
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     gFramebufferSwapDelay = 0;
@@ -1008,14 +1008,14 @@ void func_80001C80(void) {
     gMenuFadeAlpha = (s16) gCurrentGameTask->fade;
     D_800DEF10 = 1;
     enqueueSoundEffect(0x4A, 0x32);
-    setCurrentGameTaskCallback(&func_80002024, 0);
-    func_80000A40(0U);
-    func_80000A40(1U);
-    func_80000A40(2U);
-    func_80000A40(3U);
+    setCurrentGameTaskCallback(&updateMainMenu, 0);
+    requestRumbleMotorInit(0U);
+    requestRumbleMotorInit(1U);
+    requestRumbleMotorInit(2U);
+    requestRumbleMotorInit(3U);
 }
 
-void func_80002024(void) {
+void updateMainMenu(void) {
     s32 unused[2];
     s32 flag;
     s32 temp_v1;
@@ -1061,13 +1061,13 @@ void func_80002024(void) {
             }
         }
         if (flag != 0) {
-            setCurrentGameTaskCallback(func_800022B8, 0);
+            setCurrentGameTaskCallback(fadeOutMainMenu, 0);
             requestMusicSequenceStop(0xC);
         }
     }
     func_8006D780(0);
-    if (func_80002DA0() != 0) {
-        D_800B3190 = 1;
+    if (checkMainMenuSecretCode() != 0) {
+        gMainMenuSecretCodeUnlocked = 1;
         enqueueSoundEffect(0x26, 0x32);
     }
     func_80042034(0);
@@ -1091,7 +1091,7 @@ void func_80002024(void) {
     updateCallbackTasks();
 }
 
-void func_800022B8(void) {
+void fadeOutMainMenu(void) {
     s32 temp_v0;
     s32 temp_v1;
 
@@ -1124,22 +1124,22 @@ void func_800022B8(void) {
                 createGameTask(2, func_80073140, 0x64);
                 removeGameTask(3);
             } else if (temp_v1 == 1) {
-                setCurrentGameTaskCallback(func_800024A8, 0);
+                setCurrentGameTaskCallback(initMainMenuModeSelect, 0);
             } else {
-                setCurrentGameTaskCallback(func_800028B4, 0);
+                setCurrentGameTaskCallback(initMainMenuSettings, 0);
             }
-        } else if (D_800B318C == 0) {
-            setCurrentGameTaskCallback(func_80001C30, 0);
+        } else if (gMainMenuReturnFromRace == 0) {
+            setCurrentGameTaskCallback(enterMainMenuFromRace, 0);
         } else {
-            D_800B318C = 0;
-            setCurrentGameTaskCallback(func_80001C80, 0);
+            gMainMenuReturnFromRace = 0;
+            setCurrentGameTaskCallback(initMainMenu, 0);
             createGameTask(4, func_8003E600, 0x64);
             suspendGameTask(3);
         }
     }
 }
 
-void func_800024A8(void) {
+void initMainMenuModeSelect(void) {
     resetAllViewports();
     D_801124B8 = 0x80;
     gFramebufferSwapDelay = 0;
@@ -1160,11 +1160,11 @@ void func_800024A8(void) {
     func_80041DD4(4, 5);
     func_8004209C(4, 0xFFE00000, 0, 0x509000);
     func_800420FC(4, 0, 0x100, 0);
-    setCurrentGameTaskCallback(func_8000262C, 0);
+    setCurrentGameTaskCallback(updateMainMenuModeSelect, 0);
     requestMusicSequenceBank(7);
 }
 
-void func_8000262C(void) {
+void updateMainMenuModeSelect(void) {
     s32 temp_v0;
 
     gMenuFadeAlpha -= 0x10;
@@ -1192,7 +1192,7 @@ void func_8000262C(void) {
             if (D_801235B4 == 2) {
                 requestMusicSequenceStop(0x3C);
             }
-            setCurrentGameTaskCallback(func_80002794, 0);
+            setCurrentGameTaskCallback(fadeOutMainMenuModeSelect, 0);
         }
     }
     func_8006D780(0);
@@ -1201,12 +1201,12 @@ void func_8000262C(void) {
     updateCallbackTasks();
 }
 
-void func_80002794(void) {
+void fadeOutMainMenuModeSelect(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0x100) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(func_80002810, 0);
+        setCurrentGameTaskCallback(exitMainMenuModeSelect, 0);
     }
     func_8006D780(0);
     func_80042034(4);
@@ -1214,12 +1214,12 @@ void func_80002794(void) {
     updateCallbackTasks();
 }
 
-void func_80002810(void) {
+void exitMainMenuModeSelect(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        setCurrentGameTaskCallback(func_80001C80, 0);
+        setCurrentGameTaskCallback(initMainMenu, 0);
         if (D_801235B4 == 0) {
             createGameTask(4, func_8003FFD0, 0x64);
             suspendGameTask(3);
@@ -1232,7 +1232,7 @@ void func_80002810(void) {
     }
 }
 
-void func_800028B4(void) {
+void initMainMenuSettings(void) {
     resetAllViewports();
     func_80070C64(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     D_801124B8 = 0x80;
@@ -1250,11 +1250,11 @@ void func_800028B4(void) {
     createCallbackTaskWithUserId(&func_80052E4C, 0, 0x64, 0);
     createCallbackTaskWithUserId(&func_80055678, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
-    setCurrentGameTaskCallback(&func_80002A1C, 0);
+    setCurrentGameTaskCallback(&updateMainMenuSettings, 0);
     requestMusicSequenceBank(7);
 }
 
-void func_80002A1C(void) {
+void updateMainMenuSettings(void) {
     s32 temp_v1;
 
     gMenuFadeAlpha -= 0x10;
@@ -1327,163 +1327,163 @@ void func_80002A1C(void) {
         if ((temp_v1 & 0xD000) && (D_801235B4 == 3)) {
             requestMusicSequenceStop(0x3C);
             enqueueSoundEffect(0x18, 0x32);
-            setCurrentGameTaskCallback(func_80002CE4, 0);
+            setCurrentGameTaskCallback(fadeOutMainMenuSettings, 0);
         }
     }
     func_8006D780(0);
     updateCallbackTasks();
 }
 
-void func_80002CE4(void) {
+void fadeOutMainMenuSettings(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0x100) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(func_80002D50, 0);
+        setCurrentGameTaskCallback(exitMainMenuSettings, 0);
     }
     func_8006D780(0);
     updateCallbackTasks();
 }
 
-void func_80002D50(void) {
+void exitMainMenuSettings(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        setCurrentGameTaskCallback(func_80001C80, 0);
+        setCurrentGameTaskCallback(initMainMenu, 0);
     }
 }
 
-s32 func_80002DA0(void) {
-    switch (D_800B3194) {
+s32 checkMainMenuSecretCode(void) {
+    switch (gMainMenuSecretCodeStep) {
     case 0:
         if (gPlayerInputHeld == 0x20000) {
-            D_800B3194++;
+            gMainMenuSecretCodeStep++;
         }
         goto end0;
     case 1:
         if ((gPlayerInputHeld != 0x20000) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 0x10000) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 2:
         if ((gPlayerInputHeld != 0x10000) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 0x400) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 3:
         if ((gPlayerInputHeld != 0x400) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 0x800) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 4:
         if ((gPlayerInputHeld != 0x800) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 4) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 5:
         if ((gPlayerInputHeld != 4) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 8) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 6:
         if ((gPlayerInputHeld != 8) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 0x20) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 7:
         if ((gPlayerInputHeld != 0x20) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 0x10) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 8:
         if ((gPlayerInputHeld != 0x10) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 0x2000) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 9:
         if ((gPlayerInputHeld != 0x2000) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 0x200) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 10:
         if ((gPlayerInputHeld != 0x200) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 1) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 11:
         if ((gPlayerInputHeld != 1) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 0x10000) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 12:
         if ((gPlayerInputHeld != 0x10000) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 0x4000) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 13:
         if ((gPlayerInputHeld != 0x4000) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 0x100) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
     case 14:
         if ((gPlayerInputHeld != 0x100) && (gPlayerInputHeld != 0)) {
             if (gPlayerInputHeld == 2) {
-                D_800B3194++;
+                gMainMenuSecretCodeStep++;
             } else {
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
@@ -1493,7 +1493,7 @@ s32 func_80002DA0(void) {
                 if (gPlayerInputHeld == 0x1000) {
                     return 1;
                 }
-                D_800B3194 = -1;
+                gMainMenuSecretCodeStep = -1;
             }
         }
         goto end0;
