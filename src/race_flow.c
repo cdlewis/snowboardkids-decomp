@@ -22,6 +22,7 @@
 #include "race_flow.h"
 #include "race_player_state.h"
 #include "race_scene_loader.h"
+#include "race_start_transition.h"
 #include "race_timer_ui.h"
 #include "race_to_main_menu_transition.h"
 #include "race_ui_effects.h"
@@ -249,7 +250,6 @@ extern u8 D_60F990[];
 extern s16 D_80122040;
 extern s16 D_801222F4;
 
-extern void func_8003DFD0(void);
 extern s32 func_80040D94(void);
 extern void releaseMenuAssetHandles(void);
 extern void func_80045A78(s32, s32, s32, s32);
@@ -604,7 +604,7 @@ void func_800738F4(void) {
 
 void func_80073944(void) {
     setCurrentGameTaskCallback(&func_800738F4, 0);
-    createGameTask(4, &func_8003DFD0, 0x64);
+    createGameTask(4, &initRaceStartTransition, 0x64);
     suspendGameTask(2);
 }
 

@@ -6,6 +6,7 @@
 #include "game_task_scheduler.h"
 #include "menu_rendering.h"
 #include "race_camera.h"
+#include "race_start_transition.h"
 #include "sound_manager.h"
 #include "system_boot.h"
 #include "title_menu.h"
@@ -52,7 +53,7 @@ typedef struct {
 extern s16 func_80042D58(s32);
 extern s32 getMemoryBlockBase(s16);
 extern void n_alSeqpDelete(void);
-
+extern void requestMusicSequenceBank(s32);
 extern u8 D_14B450[];
 extern u8 D_1502A0[];
 extern u8 D_1EF530[];
@@ -150,19 +151,19 @@ void initRaceCharacterSelectMenu(void) {
         break;
     }
 
-    D_8011220C = n_alSeqpDelete;
+    D_8011220C = updateMenuCameraObject;
     D_80112204 = screenBase;
     D_8010AEA0[0] = 0;
     D_8010AEAC[0] = 0;
-    D_801122BC = n_alSeqpDelete;
+    D_801122BC = updateMenuCameraObject;
     D_801122B4 = screenBase;
     D_8010AEA0[1] = 0;
     D_8010AEAC[1] = 0;
-    D_8011236C = n_alSeqpDelete;
+    D_8011236C = updateMenuCameraObject;
     D_80112364 = screenBase;
     D_8010AEA0[2] = 0;
     D_8010AEAC[2] = 0;
-    D_8011241C = n_alSeqpDelete;
+    D_8011241C = updateMenuCameraObject;
     D_80112414 = screenBase;
     D_8010AEA0[3] = 0;
     D_8010AEAC[3] = 0;
@@ -338,7 +339,8 @@ extern s16 D_800B349C[];
 extern s8 D_800ECA2F[][0x78F8];
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
-extern RaceCharacterSelectObject *D_800EC9C4;
+extern s32 D_8010AEE8[];
+extern RaceCharacterSelectObject *gCurrentMenuCameraObject;
 extern RaceCharacterSelectObject D_801121E0[];
 extern RaceCharacterSelectObject D_801124A0;
 
@@ -638,7 +640,7 @@ void updateRaceCharacterSelectMenu(void) {
 
     obj = D_801121E0;
     do {
-        D_800EC9C4 = obj;
+        gCurrentMenuCameraObject = obj;
         obj->update();
         obj++;
     } while (obj != &D_801124A0);

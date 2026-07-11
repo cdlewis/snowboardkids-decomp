@@ -6,7 +6,7 @@
 #include "game_task_scheduler.h"
 #include "main_menu_visual_effects.h"
 #include "race_camera.h"
-#include "main_menu_race_setup.h"
+#include "race_start_transition.h"
 #include "viewport_manager.h"
 
 typedef struct {
@@ -19,7 +19,7 @@ typedef s16 Matrix4s[0x10];
 typedef struct {
     char pad[0x18];
     s32 fade;
-} MainMenuRaceSetupState;
+} RaceStartTransitionState;
 
 typedef struct {
     u8 pad0[0x35];
@@ -45,7 +45,7 @@ typedef struct {
     char pad28[0x8];
     char rotationMtx[0x14];
     Vec3i cameraDelta;
-} MainMenuRaceSetupObject;
+} MenuCameraObject;
 
 typedef struct {
     Matrix4s rotationMtx;
@@ -59,60 +59,60 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
 
-extern MainMenuRaceSetupState *gCurrentGameTask;
-extern MainMenuRaceSetupObject *D_800EC9C4;
-extern Vec2i D_8010B1B0;
+extern RaceStartTransitionState *gCurrentGameTask;
+extern MenuCameraObject *gCurrentMenuCameraObject;
+extern Vec2i gMenuCameraTargetOffset;
 
-void func_8003DDD0() {
+void updateMenuCameraObjectLookAtOrigin(void) {
     TransformScratch scratch;
-    MainMenuRaceSetupObject *obj;
+    MenuCameraObject *obj;
 
-    obj = D_800EC9C4;
+    obj = gCurrentMenuCameraObject;
     makeFixedRotationYX(obj->rotationMtx, -obj->pitch, -obj->yaw);
-    obj = D_800EC9C4;
+    obj = gCurrentMenuCameraObject;
     scratch.localPos.x = 0;
     scratch.localPos.y = 0;
     scratch.localPos.z = -obj->depth;
     makeFixedRotationXY(scratch.rotationMtx, obj->pitch, obj->yaw);
     transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.localPos.x, &scratch.worldPos.x);
-    obj = D_800EC9C4;
+    obj = gCurrentMenuCameraObject;
     obj->cameraDelta.x = scratch.worldPos.x - obj->pos.x;
-    obj = D_800EC9C4;
+    obj = gCurrentMenuCameraObject;
     obj->cameraDelta.y = scratch.worldPos.y - obj->pos.y;
-    obj = D_800EC9C4;
+    obj = gCurrentMenuCameraObject;
     obj->cameraDelta.z = scratch.worldPos.z - obj->pos.z;
 }
 
-void n_alSeqpDelete(struct ALSeqPlayer *seqp) {
-    func_8003DDD0(seqp);
+void updateMenuCameraObject(void) {
+    updateMenuCameraObjectLookAtOrigin();
 }
 
-void func_8003DEC8(void) {
+void updateMenuCameraObjectWithTargetOffset(void) {
     TransformScratch scratch;
-    MainMenuRaceSetupObject *obj;
+    MenuCameraObject *obj;
 
-    obj = D_800EC9C4;
+    obj = gCurrentMenuCameraObject;
     makeFixedRotationYX(obj->rotationMtx, -obj->pitch, -obj->yaw);
-    obj = D_800EC9C4;
-    scratch.localPos.x = D_8010B1B0.x;
-    scratch.localPos.y = D_8010B1B0.y;
+    obj = gCurrentMenuCameraObject;
+    scratch.localPos.x = gMenuCameraTargetOffset.x;
+    scratch.localPos.y = gMenuCameraTargetOffset.y;
     scratch.localPos.z = -obj->depth;
     makeFixedRotationXY(scratch.rotationMtx, obj->pitch, obj->yaw);
     transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.localPos.x, &scratch.worldPos.x);
-    obj = D_800EC9C4;
+    obj = gCurrentMenuCameraObject;
     obj->cameraDelta.x = scratch.worldPos.x - obj->pos.x;
-    obj = D_800EC9C4;
+    obj = gCurrentMenuCameraObject;
     obj->cameraDelta.y = scratch.worldPos.y - obj->pos.y;
-    obj = D_800EC9C4;
+    obj = gCurrentMenuCameraObject;
     obj->cameraDelta.z = scratch.worldPos.z - obj->pos.z;
 }
 
-void func_8003DFB0(void) {
-    func_8003DEC8();
+void updateMenuCameraObjectFromTargetOffset(void) {
+    updateMenuCameraObjectWithTargetOffset();
 }
 
-// func_8003DFD0 best match: 83.044% (nonmatchings/func_8003DFD0-4923837976568703863/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_setup/func_8003DFD0.s")
+// initRaceStartTransition best match: 83.044% (nonmatchings/initRaceStartTransition-4923837976568703863/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_start_transition/initRaceStartTransition.s")
 
 #ifdef NON_MATCHING
 extern void func_80041CF0();
@@ -140,7 +140,7 @@ extern u8 D_800ECA24;
 extern u8 gPlayerCount;
 extern u8 D_80121D90;
 
-void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
+void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
     RaceSetupSaveData *save;
     s32 transition;
     s32 effectArg;
@@ -225,16 +225,16 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
     createRaceSetupOpponentFocus(2, D_800BB811[D_80121D90 * 4]);
     createRaceSetupOpponentFocus(3, D_800BB812[D_80121D90 * 4]);
     createRaceSetupOpponentFocus(4, D_800BB813[D_80121D90 * 4]);
-    setCurrentGameTaskCallback(func_8003E3AC, 0);
+    setCurrentGameTaskCallback(updateRaceStartTransitionIntroDelay, 0);
 }
 #endif
 
-void func_8003E3AC(void) {
+void updateRaceStartTransitionIntroDelay(void) {
     gCurrentGameTask->fade--;
     if (gCurrentGameTask->fade == 0) {
         requestMusicSequenceBank(4);
         gCurrentGameTask->fade = 0x12C;
-        setCurrentGameTaskCallback(func_8003E45C, 0);
+        setCurrentGameTaskCallback(updateRaceStartTransitionFadeIn, 0);
     }
     createCallbackTaskWithUserId(initMenuSnowflakeEffect, 5, 0x64, 0);
     func_8006D780(0);
@@ -243,9 +243,9 @@ void func_8003E3AC(void) {
     updateCallbackTasks();
 }
 
-void func_8003E45C(void) {
-    MainMenuRaceSetupState **state;
-    MainMenuRaceSetupState *currentState;
+void updateRaceStartTransitionFadeIn(void) {
+    RaceStartTransitionState **state;
+    RaceStartTransitionState *currentState;
 
     gMenuFadeAlpha -= 8;
     if (gMenuFadeAlpha < 0) {
@@ -256,7 +256,7 @@ void func_8003E45C(void) {
     currentState->fade -= 1;
     if ((*state)->fade == 0) {
         requestMusicSequenceStop(0x7E);
-        setCurrentGameTaskCallback(func_8003E514, 0);
+        setCurrentGameTaskCallback(updateRaceStartTransitionFadeOut, 0);
     }
     createCallbackTaskWithUserId(initMenuSnowflakeEffect, 5, 0x64, 0);
     func_8006D780(0);
@@ -264,12 +264,12 @@ void func_8003E45C(void) {
     updateCallbackTasks();
 }
 
-void func_8003E514(void) {
+void updateRaceStartTransitionFadeOut(void) {
     gMenuFadeAlpha += 4;
     if (gMenuFadeAlpha >= 0xFF) {
         gCurrentGameTask->fade = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(func_8003E5A8, 0);
+        setCurrentGameTaskCallback(finishRaceStartTransition, 0);
     }
     createCallbackTaskWithUserId(initMenuSnowflakeEffect, 5, 0x64, 0);
     func_8006D780(0);
@@ -277,7 +277,7 @@ void func_8003E514(void) {
     updateCallbackTasks();
 }
 
-void func_8003E5A8(void) {
+void finishRaceStartTransition(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
