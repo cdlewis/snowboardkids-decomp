@@ -6,7 +6,7 @@
 #include "system_boot.h"
 #include "game_task_scheduler.h"
 #include "race_camera.h"
-#include "main_menu_debug_ui.h"
+#include "ending_object_ui.h"
 #include "main_menu_effects.h"
 #include "main_menu_race_setup.h"
 #include "main_menu_scene_actor_0.h"
@@ -138,7 +138,7 @@ void func_8000D590(void) {
             gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 0);
         } else {
             setCurrentGameTaskCallback(func_8000D690, 0);
-            createCallbackTask((CallbackTaskCallback) func_8003BBBC, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback) initEndingObjectSequenceTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80035184, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_800362E8, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80036FB4, 0, 0x64);
