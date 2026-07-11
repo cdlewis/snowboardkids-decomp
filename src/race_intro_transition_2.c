@@ -9,7 +9,7 @@
 #include "race_player_state.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
-#include "main_menu_visual_effects.h"
+#include "main_menu_effects.h"
 
 typedef struct {
     /* 0x000 */ s16 playerIndex;
@@ -218,7 +218,7 @@ void func_8003F00C(void) {
         temp += 0x10;
         D_8010B1E0 = temp;
         if ((temp & 0xFF) == 0xB0) {
-            createCallbackTask(updateTitleStartPrompt, 0, 0x64);
+            createCallbackTask(updateTitleScreenStartPrompt, 0, 0x64);
         }
     }
 

@@ -4,7 +4,7 @@
 #include "callback_task_scheduler.h"
 #include "fixed_point_math.h"
 #include "game_task_scheduler.h"
-#include "main_menu_visual_effects.h"
+#include "main_menu_effects.h"
 #include "race_camera.h"
 #include "race_start_transition.h"
 #include "viewport_manager.h"
@@ -218,7 +218,7 @@ void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
     gCurrentGameTask->fade = 5;
     effectArg = transition - 1;
     createCallbackTaskWithUserId(initRaceSetupBackdrop, 0, 0x64, effectArg);
-    createCallbackTask(initSpinningBoardTransition, 0, 0x64);
+    createCallbackTask(initMainMenuModeBoardTransition, 0, 0x64);
     createCallbackTaskWithUserId(initMainMenuModeLabelFadeIn, 0, 0x64, effectArg);
     createCallbackTaskWithUserId(initRaceSetupCharacterFocus, 0, 0x64, D_80121D90);
     createRaceSetupOpponentFocus(1, D_800BB810[D_80121D90 * 4]);

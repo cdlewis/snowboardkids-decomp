@@ -4,7 +4,7 @@
 #include "asset_manager.h"
 #include "race_scene_loader.h"
 #include "game_task_scheduler.h"
-#include "main_menu_visual_effects.h"
+#include "main_menu_effects.h"
 #include "race_camera.h"
 #include "race_player_state.h"
 #include "race_timer_ui.h"
@@ -206,7 +206,7 @@ void func_8003EA78(void) {
     gCurrentGameTask->startDelay--;
     if (gCurrentGameTask->startDelay == 0) {
         requestCourseMusicSequence();
-        createCallbackTask(updateTitleStartPrompt, 0, 0x64);
+        createCallbackTask(updateTitleScreenStartPrompt, 0, 0x64);
         setCurrentGameTaskCallback(func_8003EAF0, 0);
     }
 }
