@@ -29,6 +29,9 @@ extern s32 D_80121D5C;
 extern s32 D_80121D60;
 extern Unk8011228C D_8011228C[];
 
+s32 func_80072138(s32, s32);
+void func_8008BBB8(RaceInputPlayer *, s32);
+
 s32 func_80084F50(RaceInputPlayer *arg0) {
     s32 temp_v0;
     s32 var_v1;
@@ -293,7 +296,7 @@ s32 func_8008561C(RaceInputPlayer *arg0) {
     return 0;
 }
 
-// func_80085664 best match: 86.757% (nonmatchings/func_80085664-2225551288923588688/base_3.c)
+// func_80085664 best match: 88.687% (nonmatchings/func_80085664-6113366811127043669/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_actor_collision/func_80085664.s")
 
 #ifdef NON_MATCHING
@@ -306,8 +309,8 @@ void func_80085664(RaceInputPlayer *arg0) {
     s32 var_t4_2;
     s32 var_t8;
     s32 var_t9;
-    u16 temp_a0;
-    u16 temp_a0_2;
+    s32 temp_a0;
+    s32 temp_a0_2;
     u16 temp_v0;
 
     D_80121D50 = 0;
