@@ -19,7 +19,7 @@ typedef struct {
     /* 0x2 */ s16 timer;
     /* 0x4 */ u16 targetState;
     /* 0x6 */ s16 nextTimer;
-} ControllerPakScoreSaveUiState;
+} ControllerPakRecordSaveUiState;
 
 extern void func_800483FC(void *, void *, void *);
 extern u8 D_800B73F0[][0x4C];
@@ -27,11 +27,11 @@ extern u8 D_800B7986[];
 extern u8 D_800B7987[];
 extern u8 D_800B79AC[];
 extern s16 D_80112172;
-extern s16 gControllerPakScoreSaveUiStateTimer;
-extern ControllerPakScoreSaveUiState gControllerPakScoreSaveUiState;
-extern u16 gControllerPakScoreSaveUiStateTargetState;
-extern u16 gControllerPakScoreSaveUiStateNextTimer;
-extern u8 gControllerPakScoreSaveUiStateStep;
+extern s16 gControllerPakRecordSaveUiStateTimer;
+extern ControllerPakRecordSaveUiState gControllerPakRecordSaveUiState;
+extern u16 gControllerPakRecordSaveUiStateTargetState;
+extern u16 gControllerPakRecordSaveUiStateNextTimer;
+extern u8 gControllerPakRecordSaveUiStateStep;
 extern void *D_80124868;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
@@ -304,11 +304,11 @@ void func_8002BDAC(MainMenuScoreTask *arg0) {
     u8 globalState;
 
     state = arg0->state.b.unk20;
-    if (state != (globalState = gControllerPakScoreSaveUiState.step)) {
+    if (state != (globalState = gControllerPakRecordSaveUiState.step)) {
         arg0->state.b.unk20 = globalState;
         state = globalState;
-        arg0->unk1C.scale = gControllerPakScoreSaveUiState.timer;
-        arg0->state.wu.slideOffset = gControllerPakScoreSaveUiState.targetState;
+        arg0->unk1C.scale = gControllerPakRecordSaveUiState.timer;
+        arg0->state.wu.slideOffset = gControllerPakRecordSaveUiState.targetState;
     }
 
     switch (state) {
@@ -350,7 +350,7 @@ void func_8002BDAC(MainMenuScoreTask *arg0) {
     }
 
     arg0->state.b.frame = (arg0->state.b.frame + 1) & 0xF;
-    gControllerPakScoreSaveUiStateStep = state;
+    gControllerPakRecordSaveUiStateStep = state;
     if ((u8)arg0->state.b.unk20 == 5) {
         func_800716E4(arg0);
         return;
@@ -362,7 +362,7 @@ void func_8002BF54(MainMenuScoreTask *arg0) {
     arg0->x = -0x42;
     arg0->y = -0xE;
     arg0->unk1C.scale = 0x100;
-    gControllerPakScoreSaveUiStateTimer = 0x100;
+    gControllerPakRecordSaveUiStateTimer = 0x100;
     arg0->state.b.unk20 = 0;
     func_80071824(arg0, func_8002BDAC);
 }
@@ -403,12 +403,12 @@ void func_8002BF9C(MainMenuScoreTask *arg0) {
         }
     }
     if ((state >= 5) && (arg0->state.w.slideOffset == 0)) {
-        gControllerPakScoreSaveUiStateTargetState = arg0->state.w.selection;
-        gControllerPakScoreSaveUiState.step = 3;
+        gControllerPakRecordSaveUiStateTargetState = arg0->state.w.selection;
+        gControllerPakRecordSaveUiState.step = 3;
         D_800EC9D0 = 0;
         if (arg0->state.w.selection == 0) {
-            gControllerPakScoreSaveUiState.timer = 0x100;
-            gControllerPakScoreSaveUiState.step = 1;
+            gControllerPakRecordSaveUiState.timer = 0x100;
+            gControllerPakRecordSaveUiState.step = 1;
             D_800EC9C8 = arg0->state.w.selection;
         }
     }
@@ -418,8 +418,8 @@ void func_8002C18C(MainMenuScoreTask *arg0) {
     s32 temp_a0;
     s32 var_v1;
 
-    if (gControllerPakScoreSaveUiStateNextTimer != arg0->state.w.selection) {
-        arg0->state.w.selection = gControllerPakScoreSaveUiStateNextTimer;
+    if (gControllerPakRecordSaveUiStateNextTimer != arg0->state.w.selection) {
+        arg0->state.w.selection = gControllerPakRecordSaveUiStateNextTimer;
     }
     if ((D_800EC9D0 != 0) && (D_800EC9D0 != 3) && (D_800EC9D0 != 4)) {
         if (D_800EC9D0 < 5) {
