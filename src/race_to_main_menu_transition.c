@@ -1,6 +1,6 @@
 #include "race_to_main_menu_transition.h"
 #include "memory_allocator.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "game_boot.h"
@@ -144,7 +144,7 @@ void func_8000D590(void) {
             createCallbackTask((CallbackTaskCallback) func_80036FB4, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80039440, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_8003B264, 0, 0x64);
-            func_800720E4(0xA);
+            requestMusicSequenceBank(0xA);
         }
     }
     updateCallbackTasks();

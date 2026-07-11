@@ -1,5 +1,5 @@
 #include "common.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
@@ -33,7 +33,7 @@ extern u8 D_60F1A0[];
 extern u8 D_60F990[];
 
 void func_8000C280(void) {
-    func_800720E4(3);
+    requestMusicSequenceBank(3);
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferSwapDelay = 0;

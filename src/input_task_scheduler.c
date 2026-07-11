@@ -81,7 +81,7 @@ void func_8009B704(u8);
 void clearPendingPositionalSoundRequests(void);
 InputTask *func_80099384(s32);
 s32 func_80099288(void);
-void func_80072B24(void);
+void playPendingPositionalSoundRequests(void);
 
 void initInputTaskScheduler(void) {
     InputTask **freeTask;
@@ -291,7 +291,7 @@ void func_80098EAC(void) {
     }
 
     func_80099288();
-    func_80072B24();
+    playPendingPositionalSoundRequests();
 }
 #endif
 

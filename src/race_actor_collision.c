@@ -3,7 +3,7 @@
 #define calculateAngleBetweenXZPoints calculateAngleBetweenXZPoints_s32
 #include "fixed_point_math.h"
 #undef calculateAngleBetweenXZPoints
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "model_animation.h"
 #include "race_actor_collision.h"
 #include "race_item_effects.h"
@@ -29,7 +29,7 @@ extern s32 D_80121D5C;
 extern s32 D_80121D60;
 extern Unk8011228C D_8011228C[];
 
-s32 func_80072138(s32, s32);
+s32 enqueueSoundEffect(s16, s16);
 void func_8008BBB8(RaceInputPlayer *, s32);
 
 s32 func_80084F50(RaceInputPlayer *arg0) {
@@ -418,7 +418,7 @@ void func_80085664(RaceInputPlayer *arg0) {
             arg0->unk2E0 = arg0->unk2C8;
             arg0->unk2E4 = arg0->unk2CC;
             if (arg0->soundDisabled == 0) {
-                func_80072A74(0x14, &arg0->posX, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
                 func_8004E518((s16) arg0->playerIndexU16, arg0->unk2DE, 0, arg0->unk284 / 2, arg0->unk280);
             }
             break;
@@ -428,7 +428,7 @@ void func_80085664(RaceInputPlayer *arg0) {
             arg0->updateState = 0;
             arg0->updateTimer = 0;
             if (arg0->soundDisabled == 0) {
-                func_80072A74(0x14, &arg0->posX, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
                 func_8004E518((s16) arg0->playerIndexU16, D_80121D56, 0, arg0->unk284 / 2, arg0->unk280);
             }
             break;
@@ -450,7 +450,7 @@ void func_80085664(RaceInputPlayer *arg0) {
             arg0->unk2E0 = arg0->unk2C8;
             arg0->unk2E4 = arg0->unk2CC;
             if (arg0->soundDisabled == 0) {
-                func_80072A74(0x14, &arg0->posX, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
                 func_8004E518((s16) arg0->playerIndexU16, arg0->unk2DE, 1, arg0->unk284 / 2, arg0->unk280);
             }
             break;
@@ -459,7 +459,7 @@ void func_80085664(RaceInputPlayer *arg0) {
             break;
         case 7:
             if (arg0->soundDisabled == 0) {
-                func_80072A74(0x14, &arg0->posX, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
                 func_8004E518((s16) arg0->playerIndexU16, 0, 1, arg0->unk284 / 2, 0);
             }
             /* fallthrough */

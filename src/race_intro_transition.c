@@ -1,5 +1,5 @@
 #include "race_intro_transition.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_scene_loader.h"
@@ -205,7 +205,7 @@ void func_8003E600(void) {
 void func_8003EA78(void) {
     gCurrentInputTask->startDelay--;
     if (gCurrentInputTask->startDelay == 0) {
-        func_800728E0();
+        requestCourseMusicSequence();
         createCallbackTask(func_800540EC, 0, 0x64);
         setCurrentInputTaskCallback(func_8003EAF0, 0);
     }
@@ -236,14 +236,14 @@ void func_8003EAF0(void) {
         fadeStep = state->fadeStep;
         if (fadeStep == 0) {
             state->fadeStep = 4;
-            func_80072114(0x78);
+            requestMusicSequenceStop(0x78);
             state = gCurrentInputTask;
             fadeStep = state->fadeStep;
         }
     }
     if ((gPlayerInputPressed & 0x1000) && (fadeStep == 0)) {
         state->fadeStep = 0x10;
-        func_80072114(0x1E);
+        requestMusicSequenceStop(0x1E);
         state = gCurrentInputTask;
         fadeStep = state->fadeStep;
     }
@@ -268,7 +268,7 @@ void func_8003EC6C(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        func_80072260();
+        stopSoundEffects();
         D_801235B4 = 0;
         resumeInputTask(3);
         removeInputTask(4);

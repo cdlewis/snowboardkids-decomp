@@ -1,6 +1,6 @@
 #include "race_intro_transition.h"
 #include "race_intro_transition_2.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_scene_loader.h"
@@ -77,7 +77,7 @@ extern u8 D_24C8E0;
 extern u8 D_24DBE0;
 extern void updateCallbackTasksWithMinPriority(s32);
 extern void updateRemainingCallbackTasks(void);
-extern void func_80072114(s32);
+extern void requestMusicSequenceStop(s32);
 extern void releaseMenuAssetHandles(void);
 extern void func_800540EC(void *);
 
@@ -182,7 +182,7 @@ void func_8003EF7C(void) {
     if (gCurrentInputTask->startDelay == 0) {
         configureViewport(0, 0xA0, 0x78, 0x120, 0, 0x140, 0xF0, 1.333333373f);
         gMenuFadeAlpha = 0;
-        func_800720E4(0);
+        requestMusicSequenceBank(0);
         setCurrentInputTaskCallback(func_8003F00C, 0);
     }
 }
@@ -301,14 +301,14 @@ copy_player3:
         if (D_8010B1E1 == 0) {
             D_8010B1E1 = 0x10;
         }
-        func_80072114(0x20);
+        requestMusicSequenceStop(0x20);
     }
 
     if (gCurrentInputTask->fadeDelay < 0x41) {
         if (D_8010B1E1 == 0) {
             D_8010B1E1 = 4;
         }
-        func_80072114(0x82);
+        requestMusicSequenceStop(0x82);
     }
 
     temp = D_8010B1E1;
@@ -332,7 +332,7 @@ void func_8003F4B4(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        func_80072260();
+        stopSoundEffects();
         D_801235B4 = 0;
         resumeInputTask(3);
         removeInputTask(4);

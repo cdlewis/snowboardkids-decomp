@@ -1,6 +1,6 @@
 #include "common.h"
 #include "asset_manager.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "fixed_point_math.h"
 #include "input_task_scheduler.h"
@@ -237,7 +237,7 @@ void func_8003DFD0(s32 arg0, RaceSetupSaveData *unused) {
 void func_8003E3AC(void) {
     gCurrentInputTask->fade--;
     if (gCurrentInputTask->fade == 0) {
-        func_800720E4(4);
+        requestMusicSequenceBank(4);
         gCurrentInputTask->fade = 0x12C;
         setCurrentInputTaskCallback(func_8003E45C, 0);
     }
@@ -260,7 +260,7 @@ void func_8003E45C(void) {
     currentState = *state;
     currentState->fade -= 1;
     if ((*state)->fade == 0) {
-        func_80072114(0x7E);
+        requestMusicSequenceStop(0x7E);
         setCurrentInputTaskCallback(func_8003E514, 0);
     }
     createCallbackTaskWithUserId(func_8005393C, 5, 0x64, 0);

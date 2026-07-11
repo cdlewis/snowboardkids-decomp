@@ -1,5 +1,5 @@
 #include "common.h"
-#include "game_audio.h"
+#include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
@@ -54,7 +54,7 @@ extern u8 gFramebufferSwapHold;
 
 void func_80005540(void) {
     gCurrentInputTask->fade = 1;
-    func_800720E4(1);
+    requestMusicSequenceBank(1);
     D_800EC9C1 = 0;
     D_80121D88 = 0;
     D_8010ADDC = 0;
@@ -71,7 +71,7 @@ void func_80005540(void) {
 }
 
 void func_800055EC(void) {
-    func_800720E4(1);
+    requestMusicSequenceBank(1);
     D_800EC9DC = 0;
     D_800EC9DD = 0;
     resetAllViewports();
@@ -210,7 +210,7 @@ void func_80005788(void) {
         if (D_80121D88 == 2) {
             setCurrentInputTaskCallback(func_80005B14, 0);
             if (D_8010ADF8 == 0) {
-                func_80072114(4);
+                requestMusicSequenceStop(4);
             }
         }
     }

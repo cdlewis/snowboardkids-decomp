@@ -46,7 +46,7 @@ extern void releaseMenuAssetHandles(void);
 extern void enqueueSoundEffect(s32, s32);
 extern void updateCharacterSelectMenu(void);
 extern void fadeOutCharacterSelectMenu(void);
-extern void func_800720E4(s32);
+extern void requestMusicSequenceBank(s32);
 extern CharacterSelectMenuState *gCurrentInputTask;
 extern CharacterSelectState gCharacterSelectHudState;
 extern CharacterId gCharacterSelectIdOrder[];
@@ -100,7 +100,7 @@ void initCharacterSelectMenu(void) {
     s16 *timerEnd;
 
     if ((D_800EC9E5 == 0) || (D_8010ADF8 == 1)) {
-        func_800720E4(1);
+        requestMusicSequenceBank(1);
         resetAllViewports();
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gCharacterSelectViewportAspectRatio);
         gFramebufferSwapDelay = 0;

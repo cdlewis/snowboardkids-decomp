@@ -129,7 +129,7 @@ Mtx *func_8004885C(RaceEffectMatrixSource *);
 void func_800483FC(void *, void *, void *);
 void func_80045990(s32, s32, void **, void **);
 void func_8006224C(s32, s32, s32, u16);
-void func_80072A74(s32, void *, s32, s32);
+void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 s32 integerSquareRoot64(s64);
 s16 fixedSine(s16);
 s16 fixedCosine(s16);
@@ -302,7 +302,7 @@ void func_800499A4(RaceEffectActor *arg0) {
         }
 
         if (arg0->timer == 0) {
-            func_80072A74(0xA, pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
             func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask(arg0);
             return;
@@ -474,7 +474,7 @@ void func_8004A2F4(RaceEffectActor *arg0) {
 
         if (arg0->timer == 0) {
             if (hitPlayer == 0) {
-                func_80072A74(0xA, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
             }
             func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask(arg0);
@@ -632,7 +632,7 @@ void func_8004AC5C(RaceEffectActor *arg0) {
             arg0->pos.x += pushX;
             arg0->pos.z += pushZ;
             arg0->targetAngle = calculateAngleFromDeltaXZ(xOffset, zOffset);
-            func_80072A74(0x11, pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x11, pos, 0x7F, 0x32);
         }
 
         for (i = 0; i < 4; i++) {
@@ -644,7 +644,7 @@ void func_8004AC5C(RaceEffectActor *arg0) {
         }
 
         if (arg0->timer == 0) {
-            func_80072A74(0xA, pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
             func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask(arg0);
             return;
@@ -781,7 +781,7 @@ void func_8004B5F8(RaceEffectActor *arg0) {
 
         for (i = 0; i < 4; i++) {
             if (func_800891B8(pos, 0x30000, 0x2000, i)) {
-                func_80072A74(0xA, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
                 func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
                 arg0->timer = 0;
                 i = 4;
@@ -1097,7 +1097,7 @@ void func_8004C5B4(RaceEffectActor *arg0) {
         }
 
         if (arg0->timer == 0) {
-            func_80072A74(0xA, pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
             func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask(arg0);
             return;
@@ -1214,7 +1214,7 @@ void func_8004CF28(RaceEffectActor *arg0) {
     radius = 0x30000;
     do {
         if (func_800891B8(pos, radius, 0x400, i)) {
-            func_80072A74(0x14, pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x14, pos, 0x7F, 0x32);
             func_8004E594(arg0->pos.x, actor->pos.y, actor->pos.z, 1);
             removeCallbackTask(arg0);
             return;
@@ -1246,7 +1246,7 @@ void func_8004D018(RaceEffectActor *arg0) {
         for (i = 0; i != 4; i++) {
             pos = &arg0->pos;
             if ((i != arg0->playerIndex || arg0->timer == 0) && func_800891B8(pos, 0x30000, 0x400, i)) {
-                func_80072A74(0x14, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x14, pos, 0x7F, 0x32);
                 func_8004E594(arg0->pos.x, arg0->pos.y, arg0->pos.z, 1);
                 removeCallbackTask(arg0);
                 return;
@@ -1271,7 +1271,7 @@ void func_8004D184(RaceEffectActor *arg0) {
     arg0->pos.x = player->pos.x;
     arg0->pos.y = player->pos.y;
     arg0->pos.z = player->pos.z;
-    func_80072A74(0x6A, &arg0->pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x6A, &arg0->pos, 0x7F, 0x32);
     arg0->angle = D_80122282[arg0->playerIndex].surfaceAngle;
     func_80045990(func_80043040(D_80112168), 2, &arg0->image, &arg0->palette);
     func_8004D018(arg0);
@@ -1359,11 +1359,11 @@ void func_8004D5C0(RaceEffectActor *arg0) {
                 arg0->timer = 0;
                 arg0->pos.x += pushX;
                 arg0->pos.z += pushZ;
-                func_80072A74(0xA, &arg0->pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0xA, &arg0->pos, 0x7F, 0x32);
             }
         } else {
             arg0->timer = 0;
-            func_80072A74(0x11, &arg0->pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x11, &arg0->pos, 0x7F, 0x32);
         }
 
         if (arg0->timer == 0) {

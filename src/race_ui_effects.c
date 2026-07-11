@@ -865,8 +865,8 @@ extern void func_80045A78(s16, s16, s32, s32);
 extern void func_80046D68(s16, s16, s32, s32, s32);
 extern void func_80045990(s32, s32, void *, void *);
 extern int sprintf(char *, const char *, ...);
-extern void func_80072A74(s32, void *, s32, s32);
-extern void func_80072A20(s32, void *, s32, s32, f32, s32);
+extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
+extern void enqueuePlayerLoopingPositionalSoundRequest(s32, void *, s32, s32, f32, s32);
 extern RacePlayerState D_80121D80[];
 extern RacePlayerValue D_80121D98[];
 extern s16 D_8012206C[][0x306];
@@ -943,7 +943,7 @@ void func_80057548(RaceUiSlideActor *arg0) {
     arg0->angle = arg0->angle + 2;
     arg0->angle = arg0->angle & 0x3F;
     if (temp_v0 != 0) {
-        func_80072A20(0xE, &D_800D6030[temp_v0], 0x7F, 0x32, 0.0f, 0xA);
+        enqueuePlayerLoopingPositionalSoundRequest(0xE, &D_800D6030[temp_v0], 0x7F, 0x32, 0.0f, 0xA);
     }
     if (arg0->velocity != 0) {
         func_800483FC(&D_801248EC, func_800572A0, arg0);
@@ -3353,7 +3353,7 @@ void func_8005F174(RaceUiSparkleActor *arg0) {
     func_80045990(func_80043040(D_80112168), 0x24, &arg0->images[1], &arg0->palettes[1]);
     func_80045990(func_80043040(D_80112168), 0x25, &arg0->images[2], &arg0->palettes[2]);
     func_80045990(func_80043040(D_80112168), 0x26, &arg0->images[3], &arg0->palettes[3]);
-    func_80072A74(0x10, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x10, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, func_8005EFFC);
 }
 
@@ -3511,13 +3511,13 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
         func_80060454((void *)arg0->pos.x, (void *)arg0->pos.y, (void *)arg0->pos.z, i);
     }
 
-    func_80072A74(0x15, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x15, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
     removeCallbackTask(arg0);
 }
 
 void func_8005FB30(RaceUiRankTrailActor *arg0) {
     arg0->scale = 2;
-    func_80072A74(0xF, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0xF, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, func_8005F828);
 }
 
@@ -3690,7 +3690,7 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         height = arg0->height + arg0->velocity;
         arg0->height = height;
         if ((height < 0x200000) && ((arg0->playImpactSound & 0xFF) != 0)) {
-            func_80072A74(0xC, &D_80121D80[arg0->targetPlayerIndex].pos1C, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0xC, &D_80121D80[arg0->targetPlayerIndex].pos1C, 0x7F, 0x32);
             D_80121D80[arg0->targetPlayerIndex].pendingItemHitFlags |= PLAYER_HITFLAG_GHOST_SLOWDOWN;
             gPlayerHitSource[arg0->targetPlayerIndex].value = arg0->playerIndex;
             height = arg0->height;
@@ -3769,7 +3769,7 @@ void initGhostSlowdownActor(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x48) = 0;
     *(s32 *)((u8 *)arg0 + 0x4C) = 0;
     *(u8 *)((u8 *)arg0 + 0x59) = 1;
-    func_80072A74(0xD, &D_80121D80[*(s16 *)((u8 *)arg0 + 0x50)].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0xD, &D_80121D80[*(s16 *)((u8 *)arg0 + 0x50)].pos1C, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, updateGhostSlowdownRise);
 }
 
@@ -3966,7 +3966,7 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
         return;
     }
 
-    func_80072A74(0x11, &player->pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x11, &player->pos1C, 0x7F, 0x32);
 
     for (i = 0; i < 8; i++) {
         func_800604CC((void *)arg0->copyBlock.words[5], (void *)arg0->copyBlock.words[6], (void *)arg0->copyBlock.words[7], i);
@@ -4022,7 +4022,7 @@ void func_80061984(RaceUiThrownTrailActor *arg0) {
         if (func_80048E60(pos) != 0) {
             func_80088294(pos, 0x1A0000, 0x600000, 2);
             if (arg0->soundTimer == 0) {
-                func_80072A74(0xD, pos, 0x7F, 0x31);
+                enqueuePositionalSoundEffect(0xD, pos, 0x7F, 0x31);
                 func_8004B8B4(arg0->pos.x, arg0->pos.y + 0x700000, arg0->pos.z, arg0->surface, arg0->angle);
                 arg0->soundTimer = 0xF;
             } else {
@@ -4196,7 +4196,7 @@ void func_800621DC(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x2C) = *(s32 *)((u8 *)arg0 + 0x38);
     *(s32 *)((u8 *)arg0 + 0x30) = *(s32 *)((u8 *)arg0 + 0x3C);
     *(s32 *)((u8 *)arg0 + 0x34) = *(s32 *)((u8 *)arg0 + 0x40);
-    func_80072A74(0x13, (u8 *)arg0 + 0x38, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x13, (u8 *)arg0 + 0x38, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, func_80061F38);
 }
 
@@ -4242,7 +4242,7 @@ void func_80062530(RaceUiTransitionActor *arg0) {
     scaleFixedMatrix3sByQuarter(transform);
     arg0->unk6C = 1;
     arg0->unk6E = 0xF;
-    func_80072A74(0xB, &D_80121D80[arg0->index].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0xB, &D_80121D80[arg0->index].pos1C, 0x7F, 0x32);
     func_800623E8(arg0);
     setCallbackTaskCallback(arg0, func_800623E8);
 }
@@ -4375,22 +4375,22 @@ void func_80062D34(RaceUiScaledParticleActor *arg0) {
 
             if (func_80088E98(pos, 0x200000, 0xF0000, 0) != 0) {
                 actor->scale = 0x1800;
-                func_80072A74(0x67, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
                 func_80088C80(pos, 0x2C0000, 0xF0000, 0);
             }
             if (func_80088E98(pos, 0x200000, 0xF0000, 1) != 0) {
                 actor->scale = 0x1800;
-                func_80072A74(0x67, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
                 func_80088C80(pos, 0x2C0000, 0xF0000, 1);
             }
             if (func_80088E98(pos, 0x200000, 0xF0000, 2) != 0) {
                 actor->scale = 0x1800;
-                func_80072A74(0x67, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
                 func_80088C80(pos, 0x2C0000, 0xF0000, 2);
             }
             if (func_80088E98(pos, 0x200000, 0xF0000, 3) != 0) {
                 actor->scale = 0x1800;
-                func_80072A74(0x67, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
                 func_80088C80(pos, 0x2C0000, 0xF0000, 3);
             }
 
@@ -4941,14 +4941,14 @@ void func_80064914(RaceUiProjectileActor *arg0) {
         flags = arg0->flags;
         amount = flags & 1;
         if (flags & 8) {
-            func_80072A74(0x69, &D_80121D80[arg0->index].pos28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x69, &D_80121D80[arg0->index].pos28, 0x7F, 0x32);
             arg0->flags &= ~8;
             amount = (arg0->flags & 1) & 0xFFFF;
         }
         if (amount != 0) {
             arg0->verticalAcceleration = 0;
             arg0->verticalVelocity = 0;
-            func_80072A74(0x6A, &D_80121D80[arg0->index].pos28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x6A, &D_80121D80[arg0->index].pos28, 0x7F, 0x32);
             setCallbackTaskCallback(arg0, func_800647E0);
         }
     }
@@ -4980,7 +4980,7 @@ void func_80064B28(RaceUiProjectileActor *arg0) {
         actor->verticalVelocity += actor->verticalAcceleration;
         if (actor->verticalVelocity <= 0) {
             actor->verticalVelocity = 0;
-            func_80072A74(0x68, &player->pos28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x68, &player->pos28, 0x7F, 0x32);
             func_80064414(actor);
             setCallbackTaskCallback(actor, func_80064914);
         }
@@ -5045,7 +5045,7 @@ void func_80064EAC(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x50) = 0x300000;
     *(s32 *)((u8 *)arg0 + 0x54) = 0;
     func_800643B4(arg0, D_800D6520);
-    func_80072A74(0x66, &D_80121D80[*(u16 *)((u8 *)arg0 + 0x10)].pos28, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x66, &D_80121D80[*(u16 *)((u8 *)arg0 + 0x10)].pos28, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, func_80064D88);
 }
 
@@ -5229,7 +5229,7 @@ loop:
         if (func_80048E60(pos) != 0) {
             if (func_80088E98(pos, xzSize, ySize, 0) != 0) {
                 entry->active = 0;
-                func_80072A74(0x18, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x18, pos, 0x7F, 0x32);
                 D_80121D80[0].unk570++;
                 if (D_80121D80[0].unk2DA != 0) {
                     D_80121D80[0].unk2DA = 0xF0;
@@ -5386,7 +5386,7 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
     temp_s0 = arg0;
     if (temp_v0 == 0) {
         if (arg0->assetTimer == 0) {
-            func_80072A74(9, &temp_s0->x, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(9, &temp_s0->x, 0x7F, 0x32);
         }
         temp_v0_3 = func_80043040(D_8011216E);
         temp_a1 = temp_s0->assetTimer;
