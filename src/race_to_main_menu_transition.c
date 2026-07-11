@@ -9,7 +9,7 @@
 #include "ending_credits_ui.h"
 #include "menu_transition_effects.h"
 #include "race_start_transition.h"
-#include "main_menu_scene_actor_0.h"
+#include "ending_credits_actor_0.h"
 #include "main_menu_scene_actor_1.h"
 #include "main_menu_scene_actor_2.h"
 #include "main_menu_scene_actor_3.h"
@@ -63,7 +63,7 @@ extern s16 gMenuFadeAlpha;
 extern f32 D_800E0A70;
 extern s16 D_8010B1A0;
 extern u16 gEndingSequencePhase;
-extern s8 D_8010B1A4;
+extern s8 gEndingActorHandshakeState;
 extern s8 gMenuTransitionRotationStep;
 extern s16 gMenuTransitionRotationAngle;
 extern MainMenuFlagByte gEndingCharacterEffectDone;
@@ -100,7 +100,7 @@ void func_8000D340(void) {
     gMenuCameraTargetOffset.z = 0;
     D_8010B1A0 = 0;
     gEndingSequencePhase = 0;
-    D_8010B1A4 = 0;
+    gEndingActorHandshakeState = 0;
     gMenuTransitionRotationAngle = 0;
     gMenuTransitionRotationStep = 0;
     gEndingCharacterEffectDone.value = 0;
@@ -139,7 +139,7 @@ void func_8000D590(void) {
         } else {
             setCurrentGameTaskCallback(func_8000D690, 0);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsPageTextActor, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback) func_80035184, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback) initEndingCreditsActor0, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_800362E8, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80036FB4, 0, 0x64);
             createCallbackTask((CallbackTaskCallback) func_80039440, 0, 0x64);

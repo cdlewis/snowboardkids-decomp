@@ -1,12 +1,12 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
 #include "menu_transition_effects.h"
-#include "main_menu_scene_actor_0.h"
+#include "ending_credits_actor_0.h"
 #include "main_menu_scene_actor_4.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_renderer.h"
 
-struct MainMenuSceneActor {
+struct EndingCreditsActor0 {
     char pad0[0x18];
     /* 0x18 */ s32 unk18;
     /* 0x1C */ s32 unk1C;
@@ -18,18 +18,18 @@ struct MainMenuSceneActor {
     /* 0x2C */ s16 unk2C;
 };
 
-extern MainMenuSceneActorShadow D_8010B1C0;
+extern MainMenuSceneActorShadow gEndingActorShadow;
 
 extern u16 gEndingSequencePhase;
-extern u8 D_8010B1A4;
+extern u8 gEndingActorHandshakeState;
 extern u8 gMenuTransitionRotationStep;
 extern u8 gEndingCharacterEffectDone;
 
-void func_80032A80(void) {
+void noopEndingCreditsActor0(void) {
 }
 
-void func_80032A88(MainMenuSceneActor *arg0) {
-    MainMenuSceneActor *temp = arg0;
+void updateEndingActor0FinalPose(EndingCreditsActor0 *arg0) {
+    EndingCreditsActor0 *temp = arg0;
 
     func_80041FB4(0);
     func_800428C8(0);
@@ -41,7 +41,7 @@ void func_80032A88(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_80032AF0(MainMenuSceneActor *arg0) {
+void updateEndingActor0StartFinalPose(EndingCreditsActor0 *arg0) {
     struct {
         s32 ret;
         s32 pad;
@@ -53,7 +53,7 @@ void func_80032AF0(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x41) {
             arg0->unk2A = 0;
-            setCallbackTaskCallback(arg0, func_80032A88);
+            setCallbackTaskCallback(arg0, updateEndingActor0FinalPose);
             func_80041DD4(0, 0x56);
             gEndingSequencePhase = 0x41;
             arg0->unk26 = 0xC00;
@@ -62,24 +62,24 @@ void func_80032AF0(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_80032B94(MainMenuSceneActor *arg0) {
+void waitEndingActor0Phase40(EndingCreditsActor0 *arg0) {
     func_80041FB4(0);
     func_800428C8(0);
     if (gEndingSequencePhase == 0x40) {
         arg0->unk2A = 0;
-        setCallbackTaskCallback(arg0, func_80032AF0);
+        setCallbackTaskCallback(arg0, updateEndingActor0StartFinalPose);
         func_80041DD4(0, 0x55);
     }
 }
 
-void func_80032BF0(MainMenuSceneActor *arg0) {
-    MainMenuSceneActor *temp = arg0;
+void updateEndingActor0Phase40Prep(EndingCreditsActor0 *arg0) {
+    EndingCreditsActor0 *temp = arg0;
 
     if (func_80041FB4(0) == 1) {
         temp->unk2A += 1;
         if (temp->unk2A == 0x1E) {
             temp->unk2A = 0;
-            setCallbackTaskCallback(temp, func_80032B94);
+            setCallbackTaskCallback(temp, waitEndingActor0Phase40);
             func_80041DD4(0, 0x54);
             spawnEndingPhaseAdvanceSparkle(0xA, -0x64);
         }
@@ -87,7 +87,7 @@ void func_80032BF0(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_80032C74(MainMenuSceneActor *arg0) {
+void updateEndingActor0WaitPhase3FAnim(EndingCreditsActor0 *arg0) {
     struct { s32 ret; s32 pad; } l;
     l.ret = func_80041FB4(0);
     func_800428C8(0);
@@ -95,26 +95,26 @@ void func_80032C74(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x14) {
             arg0->unk2A = 0;
-            setCallbackTaskCallback(arg0, func_80032BF0);
+            setCallbackTaskCallback(arg0, updateEndingActor0Phase40Prep);
             func_80041DD4(0, 0x53);
         }
     }
 }
 
-void func_80032CF4(MainMenuSceneActor *arg0) {
+void updateEndingActor0SpinUntilPhase3F(EndingCreditsActor0 *arg0) {
     if (func_80041FB4(0) == 0) {
         arg0->unk18 += 0x18000;
         func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     }
     if (gEndingSequencePhase == 0x3F) {
         arg0->unk2A = 0;
-        setCallbackTaskCallback(arg0, func_80032C74);
+        setCallbackTaskCallback(arg0, updateEndingActor0WaitPhase3FAnim);
         func_80041DD4(0, 0x22);
     }
     func_800428C8(0);
 }
 
-void func_80032D7C(MainMenuSceneActor *arg0) {
+void updateEndingActor0TumbleToPhase3C(EndingCreditsActor0 *arg0) {
     s32 unused;
     s32 sp20;
     s32 var_v0;
@@ -135,16 +135,16 @@ void func_80032D7C(MainMenuSceneActor *arg0) {
     func_800428C8(0);
     if (sp20 == 1) {
         arg0->unk2A = 0;
-        setCallbackTaskCallback(arg0, func_80032CF4);
+        setCallbackTaskCallback(arg0, updateEndingActor0SpinUntilPhase3F);
         func_80041DD4(0, 0x21);
     }
 }
 
-void func_80032E48(MainMenuSceneActor *arg0) {
+void updateEndingActor0ExitUntilPhase3B(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFF70000;
     if (gEndingSequencePhase == 0x3B) {
-        setCallbackTaskCallback(arg0, func_80032D7C);
+        setCallbackTaskCallback(arg0, updateEndingActor0TumbleToPhase3C);
         func_80041DD4(0, 0x20);
         arg0->unk26 = 0xC00;
         func_800420FC(0, arg0->unk24, arg0->unk26, arg0->unk28);
@@ -154,15 +154,15 @@ void func_80032E48(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_80032EF0(s32 arg0) {
+void waitEndingActor0Phase3A(s32 arg0) {
     func_80042034(0);
     func_800428C8(0);
     if (gEndingSequencePhase == 0x3A) {
-        setCallbackTaskCallback(arg0, func_80032E48);
+        setCallbackTaskCallback(arg0, updateEndingActor0ExitUntilPhase3B);
     }
 }
 
-void func_80032F3C(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlowRotationWipe(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     func_800428C8(0);
     arg0->unk2A += 1;
@@ -175,47 +175,47 @@ void func_80032F3C(MainMenuSceneActor *arg0) {
         }
     } else if (arg0->unk2A == 0x10) {
         arg0->unk2A = 0;
-        setCallbackTaskCallback(arg0, func_80032EF0);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase3A);
         gEndingSequencePhase = 0x39;
     }
 }
 
-void func_80032FF0(MainMenuSceneActor *arg0) {
-    MainMenuSceneActor *temp = arg0;
+void updateEndingActor0SlideToCenter(EndingCreditsActor0 *arg0) {
+    EndingCreditsActor0 *temp = arg0;
 
     func_80042034(0);
     temp->unk18 += 0x24000;
     if (temp->unk18 >= 0x500000) {
         temp->unk18 = 0x500000;
-        setCallbackTaskCallback(temp, func_80032F3C);
+        setCallbackTaskCallback(temp, updateEndingActor0SlowRotationWipe);
     }
     func_8004209C(0, temp->unk18, temp->unk1C, temp->unk20);
     func_800428C8(0);
 }
 
-void func_8003306C(MainMenuSceneActor *arg0) {
+void waitEndingActor0Phase37(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     func_800428C8(0);
     if (gEndingSequencePhase == 0x37) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x1E) {
             arg0->unk2A = 0;
-            setCallbackTaskCallback(arg0, func_80032FF0);
+            setCallbackTaskCallback(arg0, updateEndingActor0SlideToCenter);
             gEndingSequencePhase = 0x38;
         }
     }
 }
 
-void func_800330EC(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideLeftFromFarRight(EndingCreditsActor0 *arg0) {
     s32 var_a1;
-    MainMenuSceneActor *new_var;
+    EndingCreditsActor0 *new_var;
 
     func_80042034(0);
     new_var = arg0;
     var_a1 = (new_var->unk18 += -0x48000);
     if (var_a1 < -0x1FFFFF) {
         new_var->unk18 = -0x200000;
-        setCallbackTaskCallback(new_var, func_8003306C);
+        setCallbackTaskCallback(new_var, waitEndingActor0Phase37);
         var_a1 = arg0->unk18;
     } else if ((var_a1 < 0xD00001) && (gEndingSequencePhase == 0x34)) {
         gEndingSequencePhase = 0x35;
@@ -225,9 +225,9 @@ void func_800330EC(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_800331A8(MainMenuSceneActor *arg0) {
+void waitEndingActor0Phase34(EndingCreditsActor0 *arg0) {
     if (gEndingSequencePhase == 0x34) {
-        setCallbackTaskCallback(arg0, func_800330EC);
+        setCallbackTaskCallback(arg0, updateEndingActor0SlideLeftFromFarRight);
         arg0->unk18 = 0x1900000;
         arg0->unk20 = 0;
         gEndingCharacterEffectDone = 0;
@@ -235,19 +235,19 @@ void func_800331A8(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_8003320C(MainMenuSceneActor *arg0) {
+void updateEndingActor0DashOffLeft(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFFB8000;
     if (arg0->unk18 < (s32)0xFE700001) {
         arg0->unk18 = 0xFE700000;
-        setCallbackTaskCallback(arg0, func_800331A8);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase34);
         gEndingCharacterEffectDone = 1;
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800428C8(0);
 }
 
-void func_8003329C(MainMenuSceneActor *arg0) {
+void updateEndingActor0VanishRetreat(EndingCreditsActor0 *arg0) {
     s32 unused;
     s32 sp20;
 
@@ -266,7 +266,7 @@ void func_8003329C(MainMenuSceneActor *arg0) {
     func_800428C8(0);
     if (sp20 == 1) {
         arg0->unk2A = 0;
-        setCallbackTaskCallback(arg0, func_8003320C);
+        setCallbackTaskCallback(arg0, updateEndingActor0DashOffLeft);
         arg0->unk1C = 0;
         func_8004209C(0, arg0->unk18, 0, arg0->unk20);
         func_80041DD4(0, 0x1B);
@@ -275,30 +275,30 @@ void func_8003329C(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_800333A8(void *arg0) {
+void waitEndingActor0Phase2F(void *arg0) {
     func_800428C8(0);
     if (gEndingSequencePhase == 0x2F) {
-        setCallbackTaskCallback(arg0, func_8003329C);
+        setCallbackTaskCallback(arg0, updateEndingActor0VanishRetreat);
         func_80041DD4(0, 0x4E);
         spawnEndingCharacterVanishPoof(8, -0x40, 0, 0);
     }
 }
 
-void func_8003340C(MainMenuSceneActor *arg0) {
+void updateEndingActor0DriftAfterPhase2D(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x2000;
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800428C8(0);
     if (gEndingSequencePhase == 0x2D) {
-        setCallbackTaskCallback(arg0, func_800333A8);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase2F);
     }
 }
 
-void func_80033478(MainMenuSceneActor *arg0) {
+void updateEndingActor0RunLeftThenPhase2B(EndingCreditsActor0 *arg0) {
     if (func_80041FB4(0) == 0) {
         arg0->unk18 += 0xFFF60000;
     } else {
-        setCallbackTaskCallback(arg0, func_8003340C);
+        setCallbackTaskCallback(arg0, updateEndingActor0DriftAfterPhase2D);
         func_80041DD4(0, 0x44);
         arg0->unk20 = 0xFFFF0000;
         gEndingSequencePhase = 0x2B;
@@ -307,12 +307,12 @@ void func_80033478(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_80033504(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideFarLeft(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFFC8000;
     if (arg0->unk18 < (s32)0xFFD00001) {
         arg0->unk18 = 0xFFA00000;
-        setCallbackTaskCallback(arg0, func_80033478);
+        setCallbackTaskCallback(arg0, updateEndingActor0RunLeftThenPhase2B);
         func_80041DD4(0, 0x43);
         arg0->unk2A = 0;
         gEndingCharacterEffectDone = 1;
@@ -321,22 +321,22 @@ void func_80033504(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_800335A4(s32 arg0) {
+void waitEndingActor0Phase2A(s32 arg0) {
     func_80042034(0);
     func_800428C8(0);
     if (gEndingSequencePhase == 0x2A) {
-        setCallbackTaskCallback(arg0, func_80033504);
+        setCallbackTaskCallback(arg0, updateEndingActor0SlideFarLeft);
     }
 }
 
-void func_800335F0(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideRightToPose(EndingCreditsActor0 *arg0) {
     s32 var_a1;
 
     func_80042034(0);
     var_a1 = (arg0->unk18 += 0x2D000);
     if (var_a1 >= 0x800000) {
         arg0->unk18 = 0x800000;
-        setCallbackTaskCallback(arg0, func_800335A4);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase2A);
         gEndingCharacterEffectDone = 1;
         spawnEndingCharacterLoopingSparkle(-0x10, -0x4A, 0);
         var_a1 = arg0->unk18;
@@ -345,116 +345,116 @@ void func_800335F0(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_80033688(s32 arg0) {
+void waitEndingActor0Phase28(s32 arg0) {
     func_80042034(0);
     func_800428C8(0);
     if (gEndingSequencePhase == 0x28) {
-        setCallbackTaskCallback(arg0, func_800335F0);
+        setCallbackTaskCallback(arg0, updateEndingActor0SlideRightToPose);
     }
 }
 
-void func_800336D4(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideLeftToMarker(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFFDA000;
     if (arg0->unk18 < (s32)0xFF700001) {
         arg0->unk18 = 0xFF700000;
-        setCallbackTaskCallback(arg0, func_80033688);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase28);
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800428C8(0);
 }
 
-void func_80033758(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideRightToMarker(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x1D000;
     if (arg0->unk18 >= (s32)0xFFCE0000) {
         arg0->unk18 = 0xFFCE0000;
-        setCallbackTaskCallback(arg0, func_800336D4);
+        setCallbackTaskCallback(arg0, updateEndingActor0SlideLeftToMarker);
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800428C8(0);
 }
 
-void func_800337D4(void *arg0) {
+void startEndingActor0Phase27Slide(void *arg0) {
     func_80042034(0);
     func_800428C8(0);
     if ((gEndingSequencePhase = 0x27) != 0) {
-        setCallbackTaskCallback(arg0, func_80033758);
+        setCallbackTaskCallback(arg0, updateEndingActor0SlideRightToMarker);
     }
 }
 
-void func_80033828(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideLeftSetPhase26(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFFD8000;
     if (arg0->unk18 < (s32)0xFF700001) {
         arg0->unk18 = 0xFF700000;
-        setCallbackTaskCallback(arg0, func_800337D4);
+        setCallbackTaskCallback(arg0, startEndingActor0Phase27Slide);
         gEndingSequencePhase = 0x26;
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800428C8(0);
 }
 
-void func_800338B8(void) {
+void noopEndingCreditsActor0Alt(void) {
 }
 
-void func_800338C0(MainMenuSceneActor *arg0) {
+void updateEndingActor0DiagonalSlideSetPhase24(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x28000;
     arg0->unk20 += 0xFFFE0000;
     if (arg0->unk18 >= (s32)0xFFC80000) {
         arg0->unk18 = 0xFFC80000;
-        setCallbackTaskCallback(arg0, func_80033828);
+        setCallbackTaskCallback(arg0, updateEndingActor0SlideLeftSetPhase26);
         gEndingSequencePhase = 0x24;
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800428C8(0);
 }
 
-void func_80033958(MainMenuSceneActor *arg0) {
+void waitEndingActor0BeforeDiagonalSlide(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     func_800428C8(0);
     arg0->unk2A += 1;
     if (arg0->unk2A == 0x32) {
         arg0->unk2A = 0;
-        setCallbackTaskCallback(arg0, func_800338C0);
+        setCallbackTaskCallback(arg0, updateEndingActor0DiagonalSlideSetPhase24);
     }
 }
 
-void func_800339B8(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideRightSetPhase23(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x28000;
     if (arg0->unk18 >= (s32)0xFF700000) {
         arg0->unk18 = 0xFF700000;
         arg0->unk2A = 0;
-        setCallbackTaskCallback(arg0, func_80033958);
+        setCallbackTaskCallback(arg0, waitEndingActor0BeforeDiagonalSlide);
         gEndingSequencePhase = 0x23;
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800428C8(0);
 }
 
-void func_80033A44(void *arg0) {
+void waitEndingActor0Phase22Aura(void *arg0) {
     if (gEndingSequencePhase == 0x22) {
-        setCallbackTaskCallback(arg0, func_800339B8);
+        setCallbackTaskCallback(arg0, updateEndingActor0SlideRightSetPhase23);
         gEndingCharacterEffectDone = 0;
         spawnEndingCharacterAura(0x1C, -0x30, 0, 1);
     }
 }
 
-void func_80033A94(MainMenuSceneActor *arg0) {
+void updateEndingActor0ExitLeftAfterPhase22(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0xFFFA0000;
     if (arg0->unk18 < (s32)0xFE700001) {
         arg0->unk18 = 0xFE700000;
-        setCallbackTaskCallback(arg0, func_80033A44);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase22Aura);
         gEndingCharacterEffectDone = 1;
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800428C8(0);
 }
 
-void func_80033B20(MainMenuSceneActor *arg0) {
+void updateEndingActor0AfterVanishWait(EndingCreditsActor0 *arg0) {
     struct {
         s32 ret;
         s32 pad;
@@ -466,7 +466,7 @@ void func_80033B20(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x14) {
             arg0->unk2A = 0;
-            setCallbackTaskCallback(arg0, func_80033A94);
+            setCallbackTaskCallback(arg0, updateEndingActor0ExitLeftAfterPhase22);
             func_80041DD4(0, 0x1B);
             arg0->unk26 = 0xC00;
             func_800420FC(0, arg0->unk24, arg0->unk26, arg0->unk28);
@@ -477,16 +477,16 @@ void func_80033B20(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_80033BE0(void *arg0) {
+void waitEndingActor0Phase1E(void *arg0) {
     func_800428C8(0);
     if (gEndingSequencePhase == 0x1E) {
-        setCallbackTaskCallback(arg0, func_80033B20);
+        setCallbackTaskCallback(arg0, updateEndingActor0AfterVanishWait);
         func_80041DD4(0, 0x2D);
         spawnEndingCharacterVanishPoof(8, -0x40, 0, 0);
     }
 }
 
-void func_80033C44(MainMenuSceneActor *arg0) {
+void updateEndingActor0RepeatAnimThenVanish(EndingCreditsActor0 *arg0) {
     s32 sp24;
     s32 sp20;
 
@@ -498,7 +498,7 @@ void func_80033C44(MainMenuSceneActor *arg0) {
             func_80041DD4(0, 0x2F);
             if ((arg0->unk2A / 20) == 3) {
                 arg0->unk2A = 0;
-                setCallbackTaskCallback(arg0, func_80033BE0);
+                setCallbackTaskCallback(arg0, waitEndingActor0Phase1E);
             }
         }
     } else {
@@ -507,7 +507,7 @@ void func_80033C44(MainMenuSceneActor *arg0) {
     }
 }
 
-void func_80033D0C(s32 arg0) {
+void startEndingActor0RepeatAnim(s32 arg0) {
     struct {
         s32 ret;
         s32 pad;
@@ -516,12 +516,12 @@ void func_80033D0C(s32 arg0) {
     locals.ret = func_80041FB4(0);
     func_800428C8(0);
     if (locals.ret == 1) {
-        setCallbackTaskCallback(arg0, func_80033C44);
+        setCallbackTaskCallback(arg0, updateEndingActor0RepeatAnimThenVanish);
         func_80041DD4(0, 0x2F);
     }
 }
 
-void func_80033D64(MainMenuSceneActor *arg0) {
+void updateEndingActor0WaitBeforeRepeatAnim(EndingCreditsActor0 *arg0) {
     struct {
         s32 ret;
         s32 pad;
@@ -533,42 +533,42 @@ void func_80033D64(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x1E) {
             arg0->unk2A = 0;
-            setCallbackTaskCallback(arg0, func_80033D0C);
+            setCallbackTaskCallback(arg0, startEndingActor0RepeatAnim);
             func_80041DD4(0, 0x2E);
         }
     }
 }
 
-void func_80033DE4(MainMenuSceneActor *arg0) {
+void waitEndingActor0Phase1B(EndingCreditsActor0 *arg0) {
     func_80041FB4(0);
     func_800428C8(0);
     if (gEndingSequencePhase == 0x1B) {
         arg0->unk2A = 0;
-        setCallbackTaskCallback(arg0, func_80033D64);
+        setCallbackTaskCallback(arg0, updateEndingActor0WaitBeforeRepeatAnim);
         func_80041DD4(0, 0x2D);
         spawnEndingCharacterVanishPoof(8, -0x40, 0, 0);
     }
 }
 
-void func_80033E54(void *arg0) {
+void waitEndingActor0Phase1A(void *arg0) {
     func_800428C8(0);
     if (gEndingSequencePhase == 0x1A) {
-        setCallbackTaskCallback(arg0, func_80033DE4);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase1B);
         func_80041DD4(0, 0x2C);
     }
 }
 
-void func_80033EA4(MainMenuSceneActor *arg0) {
-    if (D_8010B1A4 == 4) {
-        D_8010B1A4 = 0;
+void updateEndingActor0HandshakeLoopThird(EndingCreditsActor0 *arg0) {
+    if (gEndingActorHandshakeState == 4) {
+        gEndingActorHandshakeState = 0;
         func_80041DD4(0, 0x2B);
     }
-    if (D_8010B1A4 == 0) {
+    if (gEndingActorHandshakeState == 0) {
         func_80041FB4(0);
         if (func_80041FB4(0) == 1) {
-            D_8010B1A4 += 1;
+            gEndingActorHandshakeState += 1;
             if (++arg0->unk2A == 5) {
-                setCallbackTaskCallback(arg0, func_80033E54);
+                setCallbackTaskCallback(arg0, waitEndingActor0Phase1A);
                 arg0->unk2A = 0;
             }
         }
@@ -576,17 +576,17 @@ void func_80033EA4(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_80033F5C(MainMenuSceneActor *arg0) {
-    if (D_8010B1A4 == 4) {
-        D_8010B1A4 = 0;
+void updateEndingActor0HandshakeLoopSecond(EndingCreditsActor0 *arg0) {
+    if (gEndingActorHandshakeState == 4) {
+        gEndingActorHandshakeState = 0;
         func_80041DD4(0, 0x2B);
     }
-    if (D_8010B1A4 == 0) {
+    if (gEndingActorHandshakeState == 0) {
         func_80041FB4(0);
         if (func_80041FB4(0) == 1) {
-            D_8010B1A4 += 1;
+            gEndingActorHandshakeState += 1;
             if (++arg0->unk2A == 5) {
-                setCallbackTaskCallback(arg0, func_80033EA4);
+                setCallbackTaskCallback(arg0, updateEndingActor0HandshakeLoopThird);
                 arg0->unk2A = 0;
             }
         }
@@ -594,16 +594,16 @@ void func_80033F5C(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_80034014(MainMenuSceneActor *arg0) {
-    if (D_8010B1A4 == 4) {
-        D_8010B1A4 = 0;
+void updateEndingActor0HandshakeLoopFirst(EndingCreditsActor0 *arg0) {
+    if (gEndingActorHandshakeState == 4) {
+        gEndingActorHandshakeState = 0;
         func_80041DD4(0, 0x2B);
     }
-    if (D_8010B1A4 == 0) {
+    if (gEndingActorHandshakeState == 0) {
         if (func_80041FB4(0) == 1) {
-            D_8010B1A4 += 1;
+            gEndingActorHandshakeState += 1;
             if (++arg0->unk2A == 3) {
-                setCallbackTaskCallback(arg0, func_80033F5C);
+                setCallbackTaskCallback(arg0, updateEndingActor0HandshakeLoopSecond);
                 arg0->unk2A = 0;
             }
         }
@@ -611,7 +611,7 @@ void func_80034014(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_800340D8(MainMenuSceneActor *arg0) {
+void startEndingActor0HandshakeLoop(EndingCreditsActor0 *arg0) {
     struct {
         s32 ret;
         s32 pad;
@@ -620,87 +620,87 @@ void func_800340D8(MainMenuSceneActor *arg0) {
     locals.ret = func_80041FB4(0);
     func_800428C8(0);
     if (locals.ret == 1) {
-        D_8010B1A4++;
-        setCallbackTaskCallback(arg0, func_80034014);
+        gEndingActorHandshakeState++;
+        setCallbackTaskCallback(arg0, updateEndingActor0HandshakeLoopFirst);
     }
 }
 
-void func_80034138(void *arg0) {
+void waitEndingActor0Phase19(void *arg0) {
     func_800428C8(0);
     if (gEndingSequencePhase == 0x19) {
-        setCallbackTaskCallback(arg0, func_800340D8);
+        setCallbackTaskCallback(arg0, startEndingActor0HandshakeLoop);
         func_80041DD4(0, 0x2A);
     }
 }
 
-void func_80034188(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideLeftUntilPhase18(EndingCreditsActor0 *arg0) {
     func_80041FB4(0);
     func_800428C8(0);
     arg0->unk18 += 0xFFFD0000;
     if (gEndingSequencePhase == 0x18) {
-        setCallbackTaskCallback(arg0, func_80034138);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase19);
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
 }
 
-void func_800341FC(s32 arg0) {
+void waitEndingActor0Phase17(s32 arg0) {
     func_80042034(0);
     func_800428C8(0);
     if (gEndingSequencePhase == 0x17) {
-        setCallbackTaskCallback(arg0, func_80034188);
+        setCallbackTaskCallback(arg0, updateEndingActor0SlideLeftUntilPhase18);
         func_80041DD4(0, 0x29);
     }
 }
 
-void func_80034254(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideRightToIdle(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x30000;
     if (arg0->unk18 >= 0xD0000) {
         arg0->unk18 = 0xD0000;
-        setCallbackTaskCallback(arg0, func_800341FC);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase17);
         func_80041DD4(0, 0x24);
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800428C8(0);
 }
 
-void func_800342D8(s32 arg0) {
+void startEndingActor0IdleAfterAnim(s32 arg0) {
     if (func_80041FB4(0) == 1) {
-        setCallbackTaskCallback(arg0, func_80034254);
+        setCallbackTaskCallback(arg0, updateEndingActor0SlideRightToIdle);
         func_80041DD4(0, 0);
     }
     func_800428C8(0);
 }
 
-void func_80034328(MainMenuSceneActor *arg0) {
-    MainMenuSceneActor *temp = arg0;
+void updateEndingActor0WaitBeforeIdleAnim2(EndingCreditsActor0 *arg0) {
+    EndingCreditsActor0 *temp = arg0;
 
     if (func_80041FB4(0) == 1) {
         temp->unk2A += 1;
         if (temp->unk2A == 0xF) {
             temp->unk2A = 0;
-            setCallbackTaskCallback(temp, func_800342D8);
+            setCallbackTaskCallback(temp, startEndingActor0IdleAfterAnim);
             func_80041DD4(0, 0x23);
         }
     }
     func_800428C8(0);
 }
 
-void func_800343A0(MainMenuSceneActor *arg0) {
-    MainMenuSceneActor *temp = arg0;
+void updateEndingActor0WaitBeforeIdleAnim1(EndingCreditsActor0 *arg0) {
+    EndingCreditsActor0 *temp = arg0;
 
     if (func_80041FB4(0) == 1) {
         temp->unk2A += 1;
         if (temp->unk2A == 0xF) {
             temp->unk2A = 0;
-            setCallbackTaskCallback(temp, func_80034328);
+            setCallbackTaskCallback(temp, updateEndingActor0WaitBeforeIdleAnim2);
             func_80041DD4(0, 0x22);
         }
     }
     func_800428C8(0);
 }
 
-void func_80034418(MainMenuSceneActor *arg0) {
+void updateEndingActor0HopLeftAnim(EndingCreditsActor0 *arg0) {
     s32 unused;
     s32 sp20;
     s32 var_v0;
@@ -718,12 +718,12 @@ void func_80034418(MainMenuSceneActor *arg0) {
     func_800428C8(0);
     if (sp20 == 1) {
         arg0->unk2A = 0;
-        setCallbackTaskCallback(arg0, func_800343A0);
+        setCallbackTaskCallback(arg0, updateEndingActor0WaitBeforeIdleAnim1);
         func_80041DD4(0, 0x21);
     }
 }
 
-void func_800344CC(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideRightBurst(EndingCreditsActor0 *arg0) {
     s32 var_a1;
 
     func_80042034(0);
@@ -731,7 +731,7 @@ void func_800344CC(MainMenuSceneActor *arg0) {
     if (var_a1 >= 0x280000) {
         arg0->unk18 = 0x280000;
         func_80041DD4(0, 0x20);
-        setCallbackTaskCallback(arg0, func_80034418);
+        setCallbackTaskCallback(arg0, updateEndingActor0HopLeftAnim);
         gEndingSequencePhase = 0x15;
         gEndingCharacterEffectDone = 1;
         spawnEndingSmallBurst(0xB, -0x4C);
@@ -741,7 +741,7 @@ void func_800344CC(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_80034574(MainMenuSceneActor *arg0) {
+void waitEndingActor0RotationPhase14(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     func_800428C8(0);
     if (arg0->unk2A < 0x10) {
@@ -751,11 +751,11 @@ void func_80034574(MainMenuSceneActor *arg0) {
         }
     } else if (gEndingSequencePhase == 0x14) {
         arg0->unk2A = 0;
-        setCallbackTaskCallback(arg0, func_800344CC);
+        setCallbackTaskCallback(arg0, updateEndingActor0SlideRightBurst);
     }
 }
 
-void func_80034600(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideLeftSlowRotation(EndingCreditsActor0 *arg0) {
     arg0->unk18 += -0x20000;
     arg0->unk2A += 1;
     if ((arg0->unk2A % 13) == 0) {
@@ -765,14 +765,14 @@ void func_80034600(MainMenuSceneActor *arg0) {
         gMenuTransitionRotationStep = 2;
         arg0->unk2A = 0;
         arg0->unk18 = -0xA00000;
-        setCallbackTaskCallback(arg0, func_80034574);
+        setCallbackTaskCallback(arg0, waitEndingActor0RotationPhase14);
     }
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_80042034(0);
     func_800428C8(0);
 }
 
-void func_800346D4(MainMenuSceneActor *arg0) {
+void updateEndingActor0WaitRotationStepTen(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     func_800428C8(0);
     if (gMenuTransitionRotationStep != 0xA) {
@@ -781,13 +781,13 @@ void func_800346D4(MainMenuSceneActor *arg0) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 1) {
             arg0->unk2A = 0;
-            setCallbackTaskCallback(arg0, func_80034600);
+            setCallbackTaskCallback(arg0, updateEndingActor0SlideLeftSlowRotation);
         }
     }
 }
 
-void func_80034754(MainMenuSceneActor *arg0) {
-    MainMenuSceneActor *temp = arg0;
+void waitEndingActor0Phase12(EndingCreditsActor0 *arg0) {
+    EndingCreditsActor0 *temp = arg0;
 
     func_80042034(0);
     func_800428C8(0);
@@ -795,19 +795,19 @@ void func_80034754(MainMenuSceneActor *arg0) {
         temp->unk2A += 1;
         if (temp->unk2A == 0x1E) {
             temp->unk2A = 0;
-            setCallbackTaskCallback(temp, func_800346D4);
+            setCallbackTaskCallback(temp, updateEndingActor0WaitRotationStepTen);
         }
     }
 }
 
-void func_800347C8(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideRightSetPhase11(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x60000;
     arg0->unk2A += 1;
     if (arg0->unk18 >= 0x300000) {
         arg0->unk2A = 0;
         arg0->unk18 = 0x300000;
-        setCallbackTaskCallback(arg0, func_80034754);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase12);
     }
     if (arg0->unk2A == 0x18) {
         gEndingSequencePhase = 0x11;
@@ -816,27 +816,27 @@ void func_800347C8(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_80034864(MainMenuSceneActor *arg0) {
+void waitEndingActor0Phase10Aura(EndingCreditsActor0 *arg0) {
     if (gEndingSequencePhase == 0x10) {
         arg0->unk18 = 0xFE700000;
         arg0->unk26 = 0x400;
         func_8004209C(0, -0x1900000, arg0->unk1C, arg0->unk20);
         func_800420FC(0, arg0->unk24, arg0->unk26, arg0->unk28);
-        setCallbackTaskCallback(arg0, func_800347C8);
+        setCallbackTaskCallback(arg0, updateEndingActor0SlideRightSetPhase11);
         func_80041DD4(0, 0x1B);
         gEndingCharacterEffectDone = 0;
         spawnEndingCharacterAura(-0x32, -0x30, 0, 0);
     }
 }
 
-void func_80034900(MainMenuSceneActor *arg0) {
+void updateEndingActor0ExitRightSetPhase0E(EndingCreditsActor0 *arg0) {
     func_80042034(0);
     arg0->unk18 += 0x60000;
     arg0->unk2A += 1;
     if (arg0->unk18 >= 0x1900000) {
         arg0->unk2A = 0;
         arg0->unk18 = 0x1900000;
-        setCallbackTaskCallback(arg0, func_80034864);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase10Aura);
         gEndingCharacterEffectDone = 1;
     }
     if (arg0->unk2A == 1) {
@@ -846,14 +846,14 @@ void func_80034900(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_800349A8(MainMenuSceneActor *arg0) {
+void updateEndingActor0VanishBeforeExitRight(EndingCreditsActor0 *arg0) {
     u16 temp;
 
     if (func_80041FB4(0) == 1) {
         temp = ++arg0->unk2A;
         if ((u32) temp == 0x19) {
             arg0->unk2A = 0;
-            setCallbackTaskCallback(arg0, func_80034900);
+            setCallbackTaskCallback(arg0, updateEndingActor0ExitRightSetPhase0E);
             func_80041DD4(0, 0x1B);
             gEndingCharacterEffectDone = 0;
             spawnEndingCharacterAura(-0x32, -0x30, 0, 0);
@@ -864,20 +864,20 @@ void func_800349A8(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_80034A60(s32 arg0) {
+void startEndingActor0VanishBeforeExitRight(s32 arg0) {
     if (func_80041FB4(0) == 1) {
-        setCallbackTaskCallback(arg0, func_800349A8);
+        setCallbackTaskCallback(arg0, updateEndingActor0VanishBeforeExitRight);
         func_80041DD4(0, 0x1A);
     }
     func_800428C8(0);
 }
 
-void func_80034AB0(MainMenuSceneActor *arg0) {
+void updateEndingActor0WaitRisingStar(EndingCreditsActor0 *arg0) {
     if (func_80041FB4(0) == 1) {
         arg0->unk2A += 1;
         if (arg0->unk2A == 0x32) {
             arg0->unk2A = 0;
-            setCallbackTaskCallback(arg0, func_80034A60);
+            setCallbackTaskCallback(arg0, startEndingActor0VanishBeforeExitRight);
             func_80041DD4(0, 0x19);
         }
     } else {
@@ -890,53 +890,53 @@ void func_80034AB0(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_80034B60(MainMenuSceneActor *arg0) {
+void waitEndingActor0BeforeRisingStar(EndingCreditsActor0 *arg0) {
     func_800428C8(0);
     arg0->unk2A += 1;
     if (arg0->unk2A == 0x19) {
         arg0->unk2A = 0;
-        setCallbackTaskCallback(arg0, func_80034AB0);
+        setCallbackTaskCallback(arg0, updateEndingActor0WaitRisingStar);
         func_80041DD4(0, 0x18);
     }
 }
 
-void func_80034BC4(MainMenuSceneActor *arg0) {
+void updateEndingActor0RepeatAnim17(EndingCreditsActor0 *arg0) {
     if (func_80041FB4(0) == 1) {
         arg0->unk2A += 1;
         if (arg0->unk2A < 0xA) {
             func_80041DD4(0, 0x17);
         } else {
             arg0->unk2A = 0;
-            setCallbackTaskCallback(arg0, func_80034B60);
+            setCallbackTaskCallback(arg0, waitEndingActor0BeforeRisingStar);
         }
     }
     func_800428C8(0);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
 }
 
-void func_80034C50(s32 arg0) {
+void startEndingActor0RepeatAnim17(s32 arg0) {
     if (func_80041FB4(0) == 1) {
-        setCallbackTaskCallback(arg0, func_80034BC4);
+        setCallbackTaskCallback(arg0, updateEndingActor0RepeatAnim17);
         func_80041DD4(0, 0x17);
     }
     func_800428C8(0);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
 }
 
-void func_80034CAC(MainMenuSceneActor *arg0) {
+void waitEndingActor0Phase0D(EndingCreditsActor0 *arg0) {
     if (gEndingSequencePhase == 0xD) {
-        setCallbackTaskCallback(arg0, func_80034C50);
+        setCallbackTaskCallback(arg0, startEndingActor0RepeatAnim17);
         func_80041DD4(0, 0x16);
         arg0->unk2C = 0x16;
     }
     func_800428C8(0);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
 }
 
-void func_80034D10(MainMenuSceneActor *arg0) {
+void updateEndingActor0AfterPhase0DAnim(EndingCreditsActor0 *arg0) {
     if (func_80041FB4(0) == 1) {
         gEndingSequencePhase = 0xB;
-        setCallbackTaskCallback(arg0, func_80034CAC);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase0D);
     } else {
         arg0->unk2A += 1;
         if (arg0->unk2A == 3) {
@@ -944,11 +944,11 @@ void func_80034D10(MainMenuSceneActor *arg0) {
         }
     }
     func_800428C8(0);
-    func_800373AC(&D_8010B1C0);
+    func_800373AC(&gEndingActorShadow);
 }
 
-void func_80034DA0(MainMenuSceneActor *arg0) {
-    MainMenuSceneActor *temp_a2;
+void updateEndingActor0LongWaitSetShadow(EndingCreditsActor0 *arg0) {
+    EndingCreditsActor0 *temp_a2;
 
     temp_a2 = arg0;
     arg0->unk2A++;
@@ -957,12 +957,12 @@ void func_80034DA0(MainMenuSceneActor *arg0) {
     }
     if (arg0->unk2A == 0x64) {
         gEndingSequencePhase = 0xA;
-        setCallbackTaskCallback(temp_a2, func_80034D10);
+        setCallbackTaskCallback(temp_a2, updateEndingActor0AfterPhase0DAnim);
         func_80041DD4(0, 0xE);
         temp_a2->unk2A = 0;
-        D_8010B1C0.actorId = 0;
-        D_8010B1C0.unkC = 0xB;
-        D_8010B1C0.posY = (s32)0xFFE80000;
+        gEndingActorShadow.actorId = 0;
+        gEndingActorShadow.unkC = 0xB;
+        gEndingActorShadow.posY = (s32)0xFFE80000;
         gEndingCharacterEffectDone = 1;
     } else {
         func_80042034(0);
@@ -970,13 +970,13 @@ void func_80034DA0(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_80034E60(MainMenuSceneActor *arg0) {
+void updateEndingActor0SlideLeftToAura(EndingCreditsActor0 *arg0) {
     s32 temp_a1;
 
     temp_a1 = (arg0->unk18 += 0xFFFA0000);
     if (temp_a1 < 0x580001) {
         arg0->unk18 = 0x580000;
-        setCallbackTaskCallback(arg0, func_80034DA0);
+        setCallbackTaskCallback(arg0, updateEndingActor0LongWaitSetShadow);
         func_80041DD4(0, 0xD);
         arg0->unk26 = 0x400;
         func_800420FC(0, arg0->unk24, arg0->unk26, arg0->unk28);
@@ -991,7 +991,7 @@ void func_80034E60(MainMenuSceneActor *arg0) {
 }
 
 
-void func_80034F2C(MainMenuSceneActor *arg0) {
+void updateEndingActor0WaitPhase5To7(EndingCreditsActor0 *arg0) {
     if (func_80041FB4(0) == 1) {
         if (gEndingSequencePhase == 5) {
             arg0->unk2A += 1;
@@ -1001,27 +1001,27 @@ void func_80034F2C(MainMenuSceneActor *arg0) {
         }
         if (gEndingSequencePhase == 7) {
             arg0->unk2A = 0;
-            setCallbackTaskCallback(arg0, func_80034E60);
+            setCallbackTaskCallback(arg0, updateEndingActor0SlideLeftToAura);
             func_80041DD4(0, 0);
         }
     }
     func_800428C8(0);
 }
 
-void func_80034FC8(s32 arg0) {
+void waitEndingActor0Phase5(s32 arg0) {
     func_80041FB4(0);
     if (gEndingSequencePhase == 5) {
-        setCallbackTaskCallback(arg0, func_80034F2C);
+        setCallbackTaskCallback(arg0, updateEndingActor0WaitPhase5To7);
         func_80041DD4(0, 2);
         spawnEndingDelayedSparkle(0x55, -0x62, 0);
     }
     func_800428C8(0);
 }
 
-void func_80035030(MainMenuSceneActor *arg0) {
+void waitEndingActor0Phase3(EndingCreditsActor0 *arg0) {
     func_80041FB4(0);
     if (gEndingSequencePhase == 3) {
-        setCallbackTaskCallback(arg0, func_80034FC8);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase5);
         func_80041DD4(0, 2);
         spawnEndingDelayedSparkle(0x55, -0x62, 0);
         arg0->unk2A = 0;
@@ -1029,13 +1029,13 @@ void func_80035030(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_800350A4(MainMenuSceneActor *arg0) {
+void updateEndingActor0EnterFromRight(EndingCreditsActor0 *arg0) {
     s32 temp_a1;
 
     temp_a1 = (arg0->unk18 += 0xFFFD8FD8);
     if (temp_a1 < 0x900001) {
         arg0->unk18 = 0x900000;
-        setCallbackTaskCallback(arg0, func_80035030);
+        setCallbackTaskCallback(arg0, waitEndingActor0Phase3);
         func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
         func_80041DD4(0, 1);
         spawnEndingPhaseAdvanceSparkle(0x50, -0x68);
@@ -1048,13 +1048,13 @@ void func_800350A4(MainMenuSceneActor *arg0) {
     func_800428C8(0);
 }
 
-void func_80035150(void *arg0) {
+void waitEndingActor0Phase2(void *arg0) {
     if (gEndingSequencePhase == 2) {
-        setCallbackTaskCallback(arg0, func_800350A4);
+        setCallbackTaskCallback(arg0, updateEndingActor0EnterFromRight);
     }
 }
 
-void func_80035184(MainMenuSceneActor *arg0) {
+void initEndingCreditsActor0(EndingCreditsActor0 *arg0) {
     arg0->unk18 = 0x1900000;
     arg0->unk1C = 0;
     arg0->unk20 = 0;
@@ -1065,5 +1065,5 @@ void func_80035184(MainMenuSceneActor *arg0) {
     func_80041DD4(0, 0);
     func_8004209C(0, arg0->unk18, arg0->unk1C, arg0->unk20);
     func_800420FC(0, arg0->unk24, arg0->unk26, arg0->unk28);
-    setCallbackTaskCallback(arg0, func_80035150);
+    setCallbackTaskCallback(arg0, waitEndingActor0Phase2);
 }

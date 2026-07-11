@@ -17,7 +17,7 @@ struct MainMenuSceneActor2 {
     /* 0x2A */ u16 timer;
 };
 
-extern u8 D_8010B1A4;
+extern u8 gEndingActorHandshakeState;
 extern u16 gEndingSequencePhase;
 extern u8 D_8010B1AA;
 
@@ -687,7 +687,7 @@ void func_80038BBC(MainMenuSceneActor2 *arg0) {
 
 void func_80038C2C(MainMenuSceneActor2 *arg0) {
     func_800428C8(2);
-    if (D_8010B1A4 == 5) {
+    if (gEndingActorHandshakeState == 5) {
         setCallbackTaskCallback(arg0, func_80038BBC);
         func_80041DD4(2, 0x32);
         arg0->rotY = 0x400;
@@ -696,11 +696,11 @@ void func_80038C2C(MainMenuSceneActor2 *arg0) {
 }
 
 void func_80038C9C(MainMenuSceneActor2 *arg0) {
-    if (D_8010B1A4 == 2) {
+    if (gEndingActorHandshakeState == 2) {
         func_80041FB4(2);
         if (func_80041FB4(2) == 1) {
             u16 *p;
-            D_8010B1A4++;
+            gEndingActorHandshakeState++;
             func_80041DD4(2, 0x2B);
             p = &arg0->timer;
             (*p)++;
@@ -714,11 +714,11 @@ void func_80038C9C(MainMenuSceneActor2 *arg0) {
 }
 
 void func_80038D38(MainMenuSceneActor2 *arg0) {
-    if (D_8010B1A4 == 2) {
+    if (gEndingActorHandshakeState == 2) {
         func_80041FB4(2);
         if (func_80041FB4(2) == 1) {
             u16 *p;
-            D_8010B1A4++;
+            gEndingActorHandshakeState++;
             func_80041DD4(2, 0x2B);
             p = &arg0->timer;
             (*p)++;
@@ -732,14 +732,14 @@ void func_80038D38(MainMenuSceneActor2 *arg0) {
 }
 
 void func_80038DD4(MainMenuSceneActor2 *arg0) {
-    if (D_8010B1A4 == 2) {
+    if (gEndingActorHandshakeState == 2) {
         if (arg0->rotY == 0xC01) {
             arg0->rotY = 0xC00;
             func_800420FC(2, arg0->rotX, arg0->rotY, arg0->rotZ);
         }
         if (func_80041FB4(2) == 1) {
             u16 *p;
-            D_8010B1A4++;
+            gEndingActorHandshakeState++;
             func_80041DD4(2, 0x2B);
             p = &arg0->timer;
             (*p)++;
@@ -753,9 +753,9 @@ void func_80038DD4(MainMenuSceneActor2 *arg0) {
 }
 
 void func_80038E90(MainMenuSceneActor2 *arg0) {
-    if (D_8010B1A4 == 2) {
+    if (gEndingActorHandshakeState == 2) {
         if (func_80041FB4(2) == 1) {
-            D_8010B1A4++;
+            gEndingActorHandshakeState++;
             setCallbackTaskCallback(arg0, func_80038DD4);
             func_80041DD4(2, 0x2B);
             arg0->rotY = 0xC01;
