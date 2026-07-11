@@ -1,12 +1,12 @@
-#ifndef ENDING_SEQUENCE_UI_H
-#define ENDING_SEQUENCE_UI_H
+#ifndef ENDING_SEQUENCE_CAPTIONS_H
+#define ENDING_SEQUENCE_CAPTIONS_H
 
 #include "common.h"
 
-typedef struct EndingSequenceTextPageActor EndingSequenceTextPageActor;
+typedef struct EndingSequenceCaptionActor EndingSequenceCaptionActor;
 typedef struct EndingSequenceSpriteDebugViewerActor EndingSequenceSpriteDebugViewerActor;
 
-void initEndingSequenceTextPageActor(EndingSequenceTextPageActor *arg0);
+void initEndingSequenceCaptionActor(EndingSequenceCaptionActor *arg0);
 void initEndingSequenceSpriteDebugViewerActor(EndingSequenceSpriteDebugViewerActor *arg0);
 
 #endif
