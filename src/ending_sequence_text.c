@@ -1,17 +1,17 @@
 #include "common.h"
 #include "memory_allocator.h"
 #include "callback_task_scheduler.h"
-#include "ending_sequence_credits.h"
+#include "ending_sequence_text.h"
 #define MENU_RENDERING_BROAD_PROTOTYPES
 #include "menu_rendering.h"
 
 #define ENDING_SEQUENCE_FADE_MAX 0x100
-#define ENDING_SEQUENCE_CREDIT_PAGE_FADE_STEP 0xA
-#define ENDING_SEQUENCE_CREDIT_PAGE_RESET_DELAY 0x20
-#define ENDING_SEQUENCE_CREDIT_PAGE_VISIBLE_FRAMES 0x96
-#define ENDING_SEQUENCE_CREDIT_PAGE_COUNT 0x19
+#define ENDING_SEQUENCE_CREDITS_PAGE_FADE_STEP 0xA
+#define ENDING_SEQUENCE_CREDITS_PAGE_RESET_DELAY 0x20
+#define ENDING_SEQUENCE_CREDITS_PAGE_VISIBLE_FRAMES 0x96
+#define ENDING_SEQUENCE_CREDITS_PAGE_COUNT 0x19
 
-struct EndingSequenceCreditsActor {
+struct EndingSequenceTextActor {
     /* 0x00 */ char pad[0x1C];
     /* 0x1C */ s16 x;
     /* 0x1E */ s16 y;
@@ -35,35 +35,35 @@ typedef struct EndingSequenceObjectSpriteDebugViewerActor EndingSequenceObjectSp
 typedef struct {
     /* 0x00 */ s16 x;
     /* 0x02 */ s16 y;
-} EndingSequenceCreditPagePosition;
+} EndingSequenceCreditsPagePosition;
 
 typedef struct {
     /* 0x00 */ s16 count;
-    /* 0x02 */ EndingSequenceCreditPagePosition positions[5];
+    /* 0x02 */ EndingSequenceCreditsPagePosition positions[5];
     /* 0x16 */ s16 pad;
-} EndingSequenceCreditPageLayout;
+} EndingSequenceCreditsPageLayout;
 
 extern u16 gEndingSequencePhase;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern void *gMenuRenderCallbackList;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
-extern u16 gEndingSequenceCreditPageGlyphScripts[][0x5A];
-extern EndingSequenceCreditPageLayout gEndingSequenceCreditPageLayouts[];
+extern u16 gEndingSequenceCreditsPageGlyphScripts[][0x5A];
+extern EndingSequenceCreditsPageLayout gEndingSequenceCreditsPageLayouts[];
 extern void addRenderCallback(void *, void *, void *);
 extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 
-void drawEndingSequenceCreditPage(EndingSequenceCreditsActor *arg0);
-void updateEndingSequenceTheEndTextFadeIn(EndingSequenceCreditsActor *arg0);
-void updateEndingSequenceCreditsPageCycle(EndingSequenceCreditsActor *arg0);
+void drawEndingSequenceCreditsPage(EndingSequenceTextActor *arg0);
+void updateEndingSequenceTheEndTextFadeIn(EndingSequenceTextActor *arg0);
+void updateEndingSequenceCreditsPageFadeCycle(EndingSequenceTextActor *arg0);
 void updateEndingSequenceObjectSpriteDebugViewer(EndingSequenceObjectSpriteDebugViewerActor *arg0);
 
-// drawEndingSequenceCreditPage best match: 93.371%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_credits/drawEndingSequenceCreditPage.s")
+// drawEndingSequenceCreditsPage best match: 93.371%
+#pragma GLOBAL_ASM("asm/nonmatchings/ending_sequence_text/drawEndingSequenceCreditsPage.s")
 
 #ifdef NON_MATCHING
-void drawEndingSequenceCreditPage(EndingSequenceCreditsActor *arg0) {
+void drawEndingSequenceCreditsPage(EndingSequenceTextActor *arg0) {
     register s32 count;
     s32 i;
     s32 scriptIndex;
@@ -75,27 +75,27 @@ void drawEndingSequenceCreditPage(EndingSequenceCreditsActor *arg0) {
     u16 pad[12];
     volatile u16 colorMode;
     u16 glyph;
-    EndingSequenceCreditPageLayout *layout;
+    EndingSequenceCreditsPageLayout *layout;
 
-    layout = &gEndingSequenceCreditPageLayouts[arg0->pageIndex];
+    layout = &gEndingSequenceCreditsPageLayouts[arg0->pageIndex];
     count = layout->count;
     i = 0;
     if (layout->count > 0) {
         scriptIndex = 0;
         layoutOffset = 0;
         do {
-            layout = &gEndingSequenceCreditPageLayouts[arg0->pageIndex];
-            glyph = gEndingSequenceCreditPageGlyphScripts[arg0->pageIndex][scriptIndex];
+            layout = &gEndingSequenceCreditsPageLayouts[arg0->pageIndex];
+            glyph = gEndingSequenceCreditsPageGlyphScripts[arg0->pageIndex][scriptIndex];
             x = *(s16 *)((u8 *)layout + layoutOffset + 2);
             y = *(s16 *)((u8 *)layout + layoutOffset + 4);
             lineLength = 0;
-            if (gEndingSequenceCreditPageGlyphScripts[arg0->pageIndex][scriptIndex] != 0xFFFF) {
+            if (gEndingSequenceCreditsPageGlyphScripts[arg0->pageIndex][scriptIndex] != 0xFFFF) {
                 do {
-                    text[lineLength] = gEndingSequenceCreditPageGlyphScripts[arg0->pageIndex][scriptIndex];
+                    text[lineLength] = gEndingSequenceCreditsPageGlyphScripts[arg0->pageIndex][scriptIndex];
                     scriptIndex++;
-                    glyph = gEndingSequenceCreditPageGlyphScripts[arg0->pageIndex][scriptIndex];
+                    glyph = gEndingSequenceCreditsPageGlyphScripts[arg0->pageIndex][scriptIndex];
                     lineLength++;
-                } while (gEndingSequenceCreditPageGlyphScripts[arg0->pageIndex][scriptIndex] != 0xFFFF);
+                } while (gEndingSequenceCreditsPageGlyphScripts[arg0->pageIndex][scriptIndex] != 0xFFFF);
             }
             text[lineLength] = 0xFFFF;
             scriptIndex++;
@@ -107,14 +107,14 @@ void drawEndingSequenceCreditPage(EndingSequenceCreditsActor *arg0) {
 }
 #endif
 
-void drawEndingSequenceTheEndText(EndingSequenceCreditsActor *arg0) {
+void drawEndingSequenceTheEndText(EndingSequenceTextActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->x, arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x35, 0x20, 0x20, 0,
                             arg0->alpha, 0);
     drawMenuSpriteWithAlpha((s16)(arg0->x + 0x40), arg0->y, getMemoryBlockBase(gMenuCommonSpritesAssetHandle), 0x36, 0x20,
                             0x20, 0, arg0->alpha, 0);
 }
 
-void updateEndingSequenceTheEndTextFadeIn(EndingSequenceCreditsActor *arg0) {
+void updateEndingSequenceTheEndTextFadeIn(EndingSequenceTextActor *arg0) {
     s32 v1 = ENDING_SEQUENCE_FADE_MAX;
     s32 v0;
 
@@ -130,10 +130,10 @@ void updateEndingSequenceTheEndTextFadeIn(EndingSequenceCreditsActor *arg0) {
     }
 }
 
-void updateEndingSequenceCreditsPageCycle(EndingSequenceCreditsActor *arg0) {
+void updateEndingSequenceCreditsPageFadeCycle(EndingSequenceTextActor *arg0) {
     switch (arg0->state) {
     case 0:
-        arg0->alpha += ENDING_SEQUENCE_CREDIT_PAGE_FADE_STEP;
+        arg0->alpha += ENDING_SEQUENCE_CREDITS_PAGE_FADE_STEP;
         if (!(arg0->alpha < ENDING_SEQUENCE_FADE_MAX)) {
             arg0->alpha = ENDING_SEQUENCE_FADE_MAX;
             arg0->state = 1;
@@ -142,18 +142,18 @@ void updateEndingSequenceCreditsPageCycle(EndingSequenceCreditsActor *arg0) {
         break;
     case 1:
         arg0->timer = arg0->timer + 1;
-        if (arg0->timer == ENDING_SEQUENCE_CREDIT_PAGE_VISIBLE_FRAMES) {
+        if (arg0->timer == ENDING_SEQUENCE_CREDITS_PAGE_VISIBLE_FRAMES) {
             arg0->timer = 0;
             arg0->state = 2;
         }
         break;
     case 2:
-        arg0->alpha -= ENDING_SEQUENCE_CREDIT_PAGE_FADE_STEP;
+        arg0->alpha -= ENDING_SEQUENCE_CREDITS_PAGE_FADE_STEP;
         if (!(arg0->alpha > 0)) {
             arg0->alpha = 0;
             arg0->state = 3;
             arg0->pageIndex = arg0->pageIndex + 1;
-            if (arg0->pageIndex == ENDING_SEQUENCE_CREDIT_PAGE_COUNT) {
+            if (arg0->pageIndex == ENDING_SEQUENCE_CREDITS_PAGE_COUNT) {
                 arg0->pageIndex = 0;
                 setCallbackTaskCallback(arg0, updateEndingSequenceTheEndTextFadeIn);
             }
@@ -164,22 +164,22 @@ void updateEndingSequenceCreditsPageCycle(EndingSequenceCreditsActor *arg0) {
         break;
     case 3:
         arg0->timer = arg0->timer + 1;
-        if (!(arg0->timer < ENDING_SEQUENCE_CREDIT_PAGE_RESET_DELAY)) {
+        if (!(arg0->timer < ENDING_SEQUENCE_CREDITS_PAGE_RESET_DELAY)) {
             arg0->timer = 0;
             arg0->state = 0;
         }
         break;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceCreditPage, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawEndingSequenceCreditsPage, arg0);
 }
 
-void initEndingSequenceCreditsActor(EndingSequenceCreditsActor *arg0) {
+void initEndingSequenceTextActor(EndingSequenceTextActor *arg0) {
     arg0->state = 3;
     arg0->pageIndex = 0;
     arg0->x = -0x40;
     arg0->y = 0x10;
     arg0->alpha = 0;
-    setCallbackTaskCallback(arg0, updateEndingSequenceCreditsPageCycle);
+    setCallbackTaskCallback(arg0, updateEndingSequenceCreditsPageFadeCycle);
 }
 
 void drawEndingSequenceObjectSpriteDebugViewer(EndingSequenceObjectSpriteDebugViewerActor *arg0) {
