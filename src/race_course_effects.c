@@ -566,11 +566,11 @@ void func_8006A85C(void *arg0) {
     func_80071824(arg0, func_8006A80C);
 }
 
-// func_8006A894 best match: 99.693% (nonmatchings/func_8006A894-6061209858023118177/base_3.c)
+// func_8006A894 best match: 99.693% (nonmatchings/func_8006A894-7892263622508053986/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/func_8006A894.s")
 
 #ifdef NON_MATCHING
-extern void func_80045A1C(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
+extern void func_80045A1C(u8 *, u16, void **, void **, s16 *, s16 *);
 extern Vtx D_800D9C40[];
 extern Gfx D_800D9D00[];
 extern Gfx D_800D9D40[];
@@ -578,12 +578,11 @@ extern u32 D_80156614;
 
 void func_8006A894(RaceCourseRenderEffect *arg0) {
     volatile u8 pad[8];
-    u32 image;
-    u32 palette;
+    void *image;
+    void *palette;
     s16 width;
     s16 height;
     CourseMarkerSpawnEntry *entry;
-    Gfx *gfx;
     s16 textureIndex;
     s32 i;
     s8 nextType;
@@ -606,12 +605,16 @@ void func_8006A894(RaceCourseRenderEffect *arg0) {
                 }
                 gSPMatrix(gRegionAllocPtr++, &arg0->vertices[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, D_80156614, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-                gfx = gRegionAllocPtr++;
-                gfx->words.w0 = 0x0400103F;
-                gfx->words.w1 = (u32)&D_800D9C40[entry->type * 4];
-                gfx = gRegionAllocPtr++;
-                gfx->words.w1 = 0x60200;
-                gfx->words.w0 = 0xB1060402;
+                {
+                    Gfx *_g = gRegionAllocPtr++;
+                    _g->words.w0 = 0x0400103F;
+                    _g->words.w1 = (u32)&D_800D9C40[entry->type * 4];
+                }
+                {
+                    Gfx *_g = gRegionAllocPtr++;
+                    _g->words.w1 = 0x60200;
+                    _g->words.w0 = 0xB1060402;
+                }
             }
             nextType = entry[1].type;
             entry++;
