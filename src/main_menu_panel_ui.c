@@ -638,7 +638,7 @@ void func_80052E4C(MenuPanelActor *arg0) {
     func_80071824(arg0, func_80052E00);
 }
 
-// func_80052E70 best match: 98.918%
+// func_80052E70 best match: 98.939%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/func_80052E70.s")
 
 #ifdef NON_MATCHING
@@ -688,7 +688,7 @@ void func_80052E70(s32 arg0) {
         func_8000F030(0x30, (s16)y2, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
         y2 += 0x10;
     } while ((y2 - 0) < 0);
-    for (x2 = -0x30; (x2 & 0xFFFFFFFF) != 0x30; x2 += 0x10) {
+    for (x2 = -0x30; x2 != 0x30; x2 += 0x10) {
         for (y = -0x20; y != 0; y += 0x10) {
             func_8000F030((s16)x2, (s16)y, func_80043040(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
         }
