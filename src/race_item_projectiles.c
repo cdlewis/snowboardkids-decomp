@@ -1,5 +1,5 @@
 #include "common.h"
-#include "race_item_weapons.h"
+#include "race_item_projectiles.h"
 #include "race_motion.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
@@ -77,7 +77,7 @@ typedef struct {
     /* 0x01 */ u8 pad1[RACE_PLAYER_STATE_SIZE - 1];
 } RacePlayerByteField;
 
-struct RaceItemWeaponActor {
+struct RaceItemProjectileActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[6];
@@ -136,11 +136,11 @@ s16 fixedCosine(s16);
 void transformVec3iByFixedMatrix(s16 *, Vec3i *, void *);
 s64 __ll_mul(s64, s64);
 
-// findRaceItemWeaponTargetPlayer best match: 99.927% (nonmatchings/findRaceItemWeaponTargetPlayer-7273315160691878794/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_weapons/findRaceItemWeaponTargetPlayer.s")
+// findRaceItemProjectileTargetPlayer best match: 99.927% (nonmatchings/findRaceItemProjectileTargetPlayer-7273315160691878794/base_3.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_projectiles/findRaceItemProjectileTargetPlayer.s")
 
 #ifdef NON_MATCHING
-s32 findRaceItemWeaponTargetPlayer(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle) {
+s32 findRaceItemProjectileTargetPlayer(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle) {
     RacePlayerState *player;
     s32 closest;
     s32 dx;
@@ -192,7 +192,7 @@ s32 findRaceItemWeaponTargetPlayer(Vec3i *pos, s32 radius, s16 angle, s16 player
 }
 #endif
 
-void renderWideHomingItemProjectile(RaceItemWeaponActor *arg0) {
+void renderWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp6C;
     volatile u8 padding[8];
     Gfx *temp_v0_2;
@@ -229,7 +229,7 @@ void renderWideHomingItemProjectile(RaceItemWeaponActor *arg0) {
     }
 }
 
-void updateWideHomingItemProjectile(RaceItemWeaponActor *arg0) {
+void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
     s32 xOffset;
     s32 cos;
@@ -246,7 +246,7 @@ void updateWideHomingItemProjectile(RaceItemWeaponActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->spriteIndex = findRaceItemWeaponTargetPlayer(pos, 0x1600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->spriteIndex = findRaceItemProjectileTargetPlayer(pos, 0x1600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->spriteIndex != -1) {
             gRacePlayerItemTargetFlags[arg0->spriteIndex].value = 1;
@@ -294,7 +294,7 @@ void updateWideHomingItemProjectile(RaceItemWeaponActor *arg0) {
         }
 
         for (i = 0; i < 4; i++) {
-            if (i != arg0->playerIndex && func_800891B8(pos, 0x30000, 8, i)) {
+            if (i != arg0->playerIndex && tryApplyRacePlayerItemHit(pos, 0x30000, 8, i)) {
                 gPlayerHitSource[i].value = arg0->playerIndex;
                 arg0->timer = 0;
                 i = 4;
@@ -315,7 +315,7 @@ void updateWideHomingItemProjectile(RaceItemWeaponActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, renderWideHomingItemProjectile, arg0);
 }
 
-void initWideHomingItemProjectile(RaceItemWeaponActor *arg0) {
+void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i source;
     s32 sp54;
@@ -358,7 +358,7 @@ void initWideHomingItemProjectile(RaceItemWeaponActor *arg0) {
     setCallbackTaskCallback(arg0, updateWideHomingItemProjectile);
 }
 
-void renderCloseRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
+void renderCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     volatile u8 padding[8];
     Gfx *temp_v0_2;
@@ -395,7 +395,7 @@ void renderCloseRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
     }
 }
 
-void updateCloseRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
+void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
     s32 xOffset;
     s32 cos;
@@ -415,7 +415,7 @@ void updateCloseRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->spriteIndex = findRaceItemWeaponTargetPlayer(pos, 0xE00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->spriteIndex = findRaceItemProjectileTargetPlayer(pos, 0xE00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->spriteIndex != -1) {
             gRacePlayerItemTargetFlags[arg0->spriteIndex].value = 1;
@@ -464,7 +464,7 @@ void updateCloseRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
         }
 
         for (i = 0; i < 4; i++) {
-            if (i != arg0->playerIndex && func_800891B8(pos, 0x30000, 0x10, i)) {
+            if (i != arg0->playerIndex && tryApplyRacePlayerItemHit(pos, 0x30000, 0x10, i)) {
                 gPlayerHitSource[i].value = arg0->playerIndex;
                 hitPlayer = 1;
                 arg0->timer = 0;
@@ -488,7 +488,7 @@ void updateCloseRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, renderCloseRangeHomingItemProjectile, arg0);
 }
 
-void initCloseRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
+void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i source;
     s32 sp54;
@@ -531,7 +531,7 @@ void initCloseRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
     setCallbackTaskCallback(arg0, updateCloseRangeHomingItemProjectile);
 }
 
-void renderBouncingItemProjectile(RaceItemWeaponActor *arg0) {
+void renderBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -568,10 +568,10 @@ void renderBouncingItemProjectile(RaceItemWeaponActor *arg0) {
 }
 
 // updateBouncingItemProjectile best match: 99.823% (nonmatchings/updateBouncingItemProjectile-2/output-226-1/source.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_weapons/updateBouncingItemProjectile.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_projectiles/updateBouncingItemProjectile.s")
 
 #ifdef NON_MATCHING
-void updateBouncingItemProjectile(RaceItemWeaponActor *arg0) {
+void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
     s32 xOffset;
     s32 cos;
@@ -588,7 +588,7 @@ void updateBouncingItemProjectile(RaceItemWeaponActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->spriteIndex = findRaceItemWeaponTargetPlayer(pos, 0x600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->spriteIndex = findRaceItemProjectileTargetPlayer(pos, 0x600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->spriteIndex != -1) {
             gRacePlayerItemTargetFlags[arg0->spriteIndex].value = 1;
@@ -636,7 +636,7 @@ void updateBouncingItemProjectile(RaceItemWeaponActor *arg0) {
         }
 
         for (i = 0; i < 4; i++) {
-            if ((i != arg0->playerIndex || arg0->timer < 0x4B) && func_800891B8(pos, 0x30000, 0x40, i)) {
+            if ((i != arg0->playerIndex || arg0->timer < 0x4B) && tryApplyRacePlayerItemHit(pos, 0x30000, 0x40, i)) {
                 gPlayerHitSource[i].value = arg0->playerIndex;
                 arg0->timer = 0;
                 i = 4;
@@ -658,7 +658,7 @@ void updateBouncingItemProjectile(RaceItemWeaponActor *arg0) {
 }
 #endif
 
-void initBouncingItemProjectile(RaceItemWeaponActor *arg0) {
+void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i source;
     s32 sp54;
@@ -701,7 +701,7 @@ void initBouncingItemProjectile(RaceItemWeaponActor *arg0) {
     setCallbackTaskCallback(arg0, updateBouncingItemProjectile);
 }
 
-void renderThrownTrailImpactProjectile(RaceItemWeaponActor *arg0) {
+void renderThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -737,7 +737,7 @@ void renderThrownTrailImpactProjectile(RaceItemWeaponActor *arg0) {
     }
 }
 
-void updateThrownTrailImpactProjectile(RaceItemWeaponActor *arg0) {
+void updateThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
     s32 cos;
     s32 xOffset;
@@ -780,7 +780,7 @@ void updateThrownTrailImpactProjectile(RaceItemWeaponActor *arg0) {
         }
 
         for (i = 0; i < 4; i++) {
-            if (func_800891B8(pos, 0x30000, 0x2000, i)) {
+            if (tryApplyRacePlayerItemHit(pos, 0x30000, 0x2000, i)) {
                 enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
                 spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
                 arg0->timer = 0;
@@ -800,7 +800,7 @@ void updateThrownTrailImpactProjectile(RaceItemWeaponActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, renderThrownTrailImpactProjectile, arg0);
 }
 
-void initThrownTrailImpactProjectile(RaceItemWeaponActor *arg0) {
+void initThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
     arg0->timer = 0x3C;
     arg0->spriteIndex = -1;
     arg0->velocityY = 0xFFF00000;
@@ -811,7 +811,7 @@ void initThrownTrailImpactProjectile(RaceItemWeaponActor *arg0) {
 }
 
 void createThrownTrailImpactProjectile(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
-    RaceItemWeaponActor *obj = createCallbackTask(initThrownTrailImpactProjectile, 0, 0x1E);
+    RaceItemProjectileActor *obj = createCallbackTask(initThrownTrailImpactProjectile, 0, 0x1E);
 
     if (obj != NULL) {
         obj->pos.x = arg0;
@@ -822,7 +822,7 @@ void createThrownTrailImpactProjectile(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s
     }
 }
 
-void renderAreaBlastItemProjectile(RaceItemWeaponActor *arg0) {
+void renderAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -858,7 +858,7 @@ void renderAreaBlastItemProjectile(RaceItemWeaponActor *arg0) {
     }
 }
 
-void updateAreaBlastItemProjectile(RaceItemWeaponActor *arg0) {
+void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
     s32 xOffset;
     volatile s32 cos;
@@ -875,7 +875,7 @@ void updateAreaBlastItemProjectile(RaceItemWeaponActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->spriteIndex = findRaceItemWeaponTargetPlayer(pos, 0xA00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->spriteIndex = findRaceItemProjectileTargetPlayer(pos, 0xA00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->spriteIndex != -1) {
             gRacePlayerItemTargetFlags[arg0->spriteIndex].value = 1;
@@ -925,7 +925,7 @@ void updateAreaBlastItemProjectile(RaceItemWeaponActor *arg0) {
         }
 
         do {
-            if ((i != arg0->playerIndex) && func_800891B8(pos, 0x30000, 0x80, i)) {
+            if ((i != arg0->playerIndex) && tryApplyRacePlayerItemHit(pos, 0x30000, 0x80, i)) {
                 gPlayerHitSource[i].value = arg0->playerIndex;
                 arg0->timer = 0;
                 i = 4;
@@ -946,7 +946,7 @@ void updateAreaBlastItemProjectile(RaceItemWeaponActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, renderAreaBlastItemProjectile, arg0);
 }
 
-void initAreaBlastItemProjectile(RaceItemWeaponActor *arg0) {
+void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i sp58;
     s32 sp54;
@@ -954,7 +954,7 @@ void initAreaBlastItemProjectile(RaceItemWeaponActor *arg0) {
     s32 sp4C;
     s32 magnitude;
     s32 velocityY;
-    RaceItemWeaponActor *actor;
+    RaceItemProjectileActor *actor;
     s64 product;
 
     arg0->timer = 0x12C;
@@ -988,7 +988,7 @@ void initAreaBlastItemProjectile(RaceItemWeaponActor *arg0) {
     setCallbackTaskCallback(actor, updateAreaBlastItemProjectile);
 }
 
-void renderLongRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
+void renderLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -1024,7 +1024,7 @@ void renderLongRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
     }
 }
 
-void updateLongRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
+void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
     s32 xOffset;
     s32 cos;
@@ -1041,7 +1041,7 @@ void updateLongRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->spriteIndex = findRaceItemWeaponTargetPlayer(pos, 0x1200000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->spriteIndex = findRaceItemProjectileTargetPlayer(pos, 0x1200000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->spriteIndex != -1) {
             gRacePlayerItemTargetFlags[arg0->spriteIndex].value = 1;
@@ -1089,7 +1089,7 @@ void updateLongRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
         }
 
         for (i = 0; i < 4; i++) {
-            if ((i != arg0->playerIndex) && func_800891B8(pos, 0x30000, 0x100, i)) {
+            if ((i != arg0->playerIndex) && tryApplyRacePlayerItemHit(pos, 0x30000, 0x100, i)) {
                 gPlayerHitSource[i].value = arg0->playerIndex;
                 arg0->timer = 0;
                 i = 4;
@@ -1110,7 +1110,7 @@ void updateLongRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, renderLongRangeHomingItemProjectile, arg0);
 }
 
-void initLongRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
+void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     Vec3i *new_var;
     Vec3i sp58;
     s32 sp54;
@@ -1118,7 +1118,7 @@ void initLongRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
     s32 sp4C;
     s32 magnitude;
     s32 velocityY;
-    RaceItemWeaponActor *actor;
+    RaceItemProjectileActor *actor;
     s64 product;
 
     arg0->timer = 0x12C;
@@ -1153,7 +1153,7 @@ void initLongRangeHomingItemProjectile(RaceItemWeaponActor *arg0) {
     setCallbackTaskCallback(actor, updateLongRangeHomingItemProjectile);
 }
 
-void renderFallingActionProjectile(RaceItemWeaponActor *arg0) {
+void renderFallingActionProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -1193,9 +1193,9 @@ void renderFallingActionProjectile(RaceItemWeaponActor *arg0) {
     }
 }
 
-void updateFallingActionProjectileLanded(RaceItemWeaponActor *arg0) {
+void updateFallingActionProjectileLanded(RaceItemProjectileActor *arg0) {
     Vec3i *pos;
-    RaceItemWeaponActor *actor;
+    RaceItemProjectileActor *actor;
     s32 i;
     s32 radius;
     s16 spriteIndex;
@@ -1213,7 +1213,7 @@ void updateFallingActionProjectileLanded(RaceItemWeaponActor *arg0) {
     pos = &actor->pos;
     radius = 0x30000;
     do {
-        if (func_800891B8(pos, radius, 0x400, i)) {
+        if (tryApplyRacePlayerItemHit(pos, radius, 0x400, i)) {
             enqueuePositionalSoundEffect(0x14, pos, 0x7F, 0x32);
             spawnRaceItemImpactEffect(arg0->pos.x, actor->pos.y, actor->pos.z, 1);
             removeCallbackTask(arg0);
@@ -1225,7 +1225,7 @@ void updateFallingActionProjectileLanded(RaceItemWeaponActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, renderFallingActionProjectile, actor);
 }
 
-void updateFallingActionProjectile(RaceItemWeaponActor *arg0) {
+void updateFallingActionProjectile(RaceItemProjectileActor *arg0) {
     Vec3i *pos;
     s32 i;
     s32 accelerationY;
@@ -1245,7 +1245,7 @@ void updateFallingActionProjectile(RaceItemWeaponActor *arg0) {
 
         for (i = 0; i != 4; i++) {
             pos = &arg0->pos;
-            if ((i != arg0->playerIndex || arg0->timer == 0) && func_800891B8(pos, 0x30000, 0x400, i)) {
+            if ((i != arg0->playerIndex || arg0->timer == 0) && tryApplyRacePlayerItemHit(pos, 0x30000, 0x400, i)) {
                 enqueuePositionalSoundEffect(0x14, pos, 0x7F, 0x32);
                 spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 1);
                 removeCallbackTask(arg0);
@@ -1261,7 +1261,7 @@ void updateFallingActionProjectile(RaceItemWeaponActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, renderFallingActionProjectile, arg0);
 }
 
-void initFallingActionProjectile(RaceItemWeaponActor *arg0) {
+void initFallingActionProjectile(RaceItemProjectileActor *arg0) {
     RacePlayerState *player;
 
     arg0->timer = 0x3C;
@@ -1278,7 +1278,7 @@ void initFallingActionProjectile(RaceItemWeaponActor *arg0) {
     setCallbackTaskCallback(arg0, updateFallingActionProjectile);
 }
 
-void renderShieldProjectile(RaceItemWeaponActor *arg0) {
+void renderShieldProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     volatile u8 padding[8];
     Gfx *temp_v0_2;
@@ -1316,10 +1316,10 @@ void renderShieldProjectile(RaceItemWeaponActor *arg0) {
 }
 
 // updateShieldProjectile best match: 97.915% (nonmatchings/updateShieldProjectile-6688367443449623229/base_14.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_weapons/updateShieldProjectile.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_item_projectiles/updateShieldProjectile.s")
 
 #ifdef NON_MATCHING
-void updateShieldProjectile(RaceItemWeaponActor *arg0) {
+void updateShieldProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
     s32 cos;
     s32 xOffset;
@@ -1368,7 +1368,7 @@ void updateShieldProjectile(RaceItemWeaponActor *arg0) {
 
         if (arg0->timer == 0) {
             spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
-            removeCallbackTask((RaceItemWeaponActor *)arg0);
+            removeCallbackTask((RaceItemProjectileActor *)arg0);
             player = &D_80121D80[arg0->playerIndex];
             player->unk510++;
             return;
@@ -1388,7 +1388,7 @@ void updateShieldProjectile(RaceItemWeaponActor *arg0) {
 }
 #endif
 
-void initShieldProjectile(RaceItemWeaponActor *arg0) {
+void initShieldProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad;
     Vec3i source;
     s32 sp54;

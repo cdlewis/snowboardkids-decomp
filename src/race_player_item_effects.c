@@ -3,7 +3,7 @@
 #include "asset_manager.h"
 #include "race_player_input.h"
 #include "spatial_math.h"
-#include "race_item_weapons.h"
+#include "race_item_projectiles.h"
 #include "race_item_effects.h"
 #include "race_player_item_effects.h"
 #include "snowboard_trail_effects.h"

@@ -763,7 +763,7 @@ void func_80089000(RaceVec3i *pos, s32 xzSize, s16 flag) {
     } while (player != end);
 }
 
-s32 func_800891B8(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex) {
+s32 tryApplyRacePlayerItemHit(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex) {
     volatile u8 pad[8];
     s32 radius;
     s32 dx;

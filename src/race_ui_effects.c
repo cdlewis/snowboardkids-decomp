@@ -9,7 +9,7 @@
 #include "spatial_math.h"
 #include "fixed_point_math.h"
 #include "race_motion.h"
-#include "race_item_weapons.h"
+#include "race_item_projectiles.h"
 #include "race_player_movement.h"
 #include "race_timer_ui.h"
 
@@ -4167,16 +4167,16 @@ void func_80061F38(RaceUiFadingImpactActor *arg0) {
         if (arg0->alpha >= 0x71) {
             sp24 = &arg0->pos;
             sp2C = (new_var->scale * 0x480000) / 64;
-            if (func_800891B8(sp24, sp2C, 0x80, 0) != 0) {
+            if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 0) != 0) {
                 gPlayerHitSource[0].value = new_var->playerIndex;
             }
-            if (func_800891B8(sp24, sp2C, 0x80, 1) != 0) {
+            if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 1) != 0) {
                 D_8012265E[0].value = new_var->playerIndex;
             }
-            if (func_800891B8(sp24, sp2C, 0x80, 2) != 0) {
+            if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 2) != 0) {
                 D_80122C6A[0].value = arg0->playerIndex;
             }
-            if (func_800891B8(sp24, sp2C, 0x80, 3) != 0) {
+            if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 3) != 0) {
                 D_80123276[0].value = arg0->playerIndex;
             }
         }
