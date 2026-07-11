@@ -7,5 +7,5 @@ osAppNMIBuffer = 0x8000031C;
 
 D_8010AE70_state = D_8010AE70;
 D_8010AE52_state = D_8010AE52;
-D_8010AE88_state = D_8010AE88;
+gCharacterSelectCourseCursorStateByte = gCharacterSelectCourseCursorState;
 D_8010AF60_state = D_8010AF60;

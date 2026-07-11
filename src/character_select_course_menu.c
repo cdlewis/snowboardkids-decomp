@@ -2,7 +2,7 @@
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "asset_manager.h"
-#include "character_select_flow.h"
+#include "character_select_course_menu.h"
 #include "character_select_ui.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
@@ -45,9 +45,9 @@ extern u8 D_5A1ED0[];
 extern u8 D_5C5320[];
 extern u8 D_5CCD40[];
 extern u8 D_5D4280[];
-extern CharacterSelectCourseUnlockList D_800B3420[];
-extern s16 D_800B3478[];
-extern s16 D_800B3480[];
+extern CharacterSelectCourseUnlockList gCharacterSelectCourseOptionsByUnlock[];
+extern s16 gCharacterSelectShortCourseOptions[];
+extern s16 gCharacterSelectSingleCourseOption[];
 extern CharacterSelectFlowState *D_801235B8;
 extern s8 D_800DEED4;
 extern f32 D_800E09A4;
@@ -58,7 +58,7 @@ extern u8 D_80121D88;
 extern u8 D_80121B55;
 extern u8 D_80121B5E;
 extern s16 D_80121B50;
-extern CharacterSelectOptionList *D_8010AE90;
+extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 extern s32 D_8010ADDC;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
@@ -70,11 +70,11 @@ extern u16 D_8010ADF0;
 #else
 extern volatile u16 D_8010ADF0;
 #endif
-extern u16 D_8010AE80;
-extern CharacterSelectCursorState D_8010AE88;
-extern u8 D_8010AE89;
+extern u16 gCharacterSelectCourseExitOptionIndex;
+extern CharacterSelectCursorState gCharacterSelectCourseCursorState;
+extern u8 gCharacterSelectCourseSubmenuState;
 extern u8 D_8010ADF8;
-extern u8 D_8010ADF9;
+extern u8 gHighestUnlockedCourse;
 extern u8 D_800EC9C1;
 extern u8 D_800EC9C2;
 extern s16 D_800EC9D0;
@@ -82,11 +82,11 @@ extern u8 D_800EC9DD;
 extern u8 D_80123750;
 extern u8 D_80123751;
 
-// func_80005C70 best match: 79.600% (nonmatchings/func_80005C70-8207005055717715604/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_flow/func_80005C70.s")
+// initCharacterSelectCourseMenuFromPlayerCount best match: 79.600% (nonmatchings/initCharacterSelectCourseMenuFromPlayerCount-8207005055717715604/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/initCharacterSelectCourseMenuFromPlayerCount.s")
 
 #ifdef NON_MATCHING
-void func_80005C70(void) {
+void initCharacterSelectCourseMenuFromPlayerCount(void) {
     s32 sp1C;
     s16 *var_v0_2;
     s16 *var_v1_2;
@@ -113,8 +113,8 @@ void func_80005C70(void) {
         do {
             temp_v1 = var_v0->highestCourse;
             var_v0 += 1;
-            if (D_8010ADF9 < temp_v1) {
-                D_8010ADF9 = temp_v1;
+            if (gHighestUnlockedCourse < temp_v1) {
+                gHighestUnlockedCourse = temp_v1;
             }
         } while (var_v0 < temp_a0);
         var_v1 = 0;
@@ -124,27 +124,27 @@ void func_80005C70(void) {
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     sp1C = var_v1;
-    func_8009956C(func_800066CC, 0);
+    func_8009956C(updateCharacterSelectCourseMenu, 0);
     func_8007105C();
     var_v1 = sp1C;
     if (D_800EC9DD == 1) {
         if (D_80121B5E < 2) {
-            D_8010AE90 = (CharacterSelectOptionList *) D_800B3478;
+            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
             if ((D_80121B50 != 9) && (D_80121B50 != 0) && (D_80121B50 != 1)) {
                 D_80121B50 = 9;
             }
         } else {
-            D_8010AE90 = (CharacterSelectOptionList *) D_800B3480;
+            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
             D_80121B50 = 7;
         }
     } else {
-        D_8010AE90 = (CharacterSelectOptionList *) D_800B3420[D_8010ADF9];
+        gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
         if (D_80121B50 == -1) {
             D_80121B50 = 9;
         }
     }
 
-    var_v0_2 = *D_8010AE90;
+    var_v0_2 = *gCharacterSelectActiveCourseOptions;
 loop_20:
     if (D_80121B50 == *var_v0_2) {
         D_80121B50 = var_v1;
@@ -156,33 +156,33 @@ loop_20:
         }
     }
 
-    D_8010AE80 = 0;
+    gCharacterSelectCourseExitOptionIndex = 0;
     var_v0_3 = 0;
-    var_v1_2 = *D_8010AE90;
+    var_v1_2 = *gCharacterSelectActiveCourseOptions;
 loop_24:
     var_v0_3 += 2;
     if (*var_v1_2 != -1) {
         var_v1_2 += 1;
-        D_8010AE80 += 1;
+        gCharacterSelectCourseExitOptionIndex += 1;
         if (var_v0_3 != 0x14) {
             goto loop_24;
         }
     }
 
-    D_8010AE88.bytes[0] = 0;
-    D_8010AE88.bytes[1] = 0;
-    D_8010AE88.bytes[2] = 0;
-    D_8010AE88.fields.spriteIndex = 0;
-    D_8010AE88.bytes[6] = 0;
-    D_8010AE88.bytes[7] = 0;
+    gCharacterSelectCourseCursorState.bytes[0] = 0;
+    gCharacterSelectCourseCursorState.bytes[1] = 0;
+    gCharacterSelectCourseCursorState.bytes[2] = 0;
+    gCharacterSelectCourseCursorState.fields.spriteIndex = 0;
+    gCharacterSelectCourseCursorState.bytes[6] = 0;
+    gCharacterSelectCourseCursorState.bytes[7] = 0;
 }
 #endif
 
-// func_80005F18 best match: 84.441% (nonmatchings/func_80005F18-8207005055717715604/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_flow/func_80005F18.s")
+// initCharacterSelectCourseMenuFromRace best match: 84.441% (nonmatchings/initCharacterSelectCourseMenuFromRace-8207005055717715604/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/initCharacterSelectCourseMenuFromRace.s")
 
 #ifdef NON_MATCHING
-void func_80005F18(void) {
+void initCharacterSelectCourseMenuFromRace(void) {
     s32 sp2C;
     s16 *var_v0_2;
     s16 *var_v1_2;
@@ -228,8 +228,8 @@ void func_80005F18(void) {
         do {
             temp_v1 = var_v0->highestCourse;
             var_v0 += 1;
-            if (D_8010ADF9 < temp_v1) {
-                D_8010ADF9 = temp_v1;
+            if (gHighestUnlockedCourse < temp_v1) {
+                gHighestUnlockedCourse = temp_v1;
             }
         } while (var_v0 < temp_a0);
     }
@@ -238,26 +238,26 @@ void func_80005F18(void) {
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     sp2C = var_v1;
-    func_8009956C(func_800066CC, 0);
+    func_8009956C(updateCharacterSelectCourseMenu, 0);
     var_v1 = sp2C;
     if (D_800EC9DD == 1) {
         if (D_80121B5E < 2) {
-            D_8010AE90 = (CharacterSelectOptionList *) D_800B3478;
+            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
             if ((D_80121B50 != 9) && (D_80121B50 != 0) && (D_80121B50 != 1)) {
                 D_80121B50 = 9;
             }
         } else {
-            D_8010AE90 = (CharacterSelectOptionList *) D_800B3480;
+            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
             D_80121B50 = 7;
         }
     } else {
-        D_8010AE90 = (CharacterSelectOptionList *) D_800B3420[D_8010ADF9];
+        gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
         if (D_80121B50 == -1) {
             D_80121B50 = 9;
         }
     }
 
-    var_v0_2 = *D_8010AE90;
+    var_v0_2 = *gCharacterSelectActiveCourseOptions;
 loop_20:
     if (D_80121B50 == *var_v0_2) {
         D_80121B50 = var_v1;
@@ -269,34 +269,34 @@ loop_20:
         }
     }
 
-    D_8010AE80 = 0;
+    gCharacterSelectCourseExitOptionIndex = 0;
     var_v0_3 = 0;
-    var_v1_2 = *D_8010AE90;
+    var_v1_2 = *gCharacterSelectActiveCourseOptions;
 loop_24:
     var_v0_3 += 2;
     if (*var_v1_2 != -1) {
         var_v1_2 += 1;
-        D_8010AE80 += 1;
+        gCharacterSelectCourseExitOptionIndex += 1;
         if (var_v0_3 != 0x14) {
             goto loop_24;
         }
     }
 
-    D_8010AE88.bytes[0] = 0;
-    D_8010AE88.bytes[1] = 0;
-    D_8010AE88.bytes[2] = 0;
-    D_8010AE88.fields.spriteIndex = 0;
-    D_8010AE88.bytes[6] = 0;
-    D_8010AE88.bytes[7] = 0;
+    gCharacterSelectCourseCursorState.bytes[0] = 0;
+    gCharacterSelectCourseCursorState.bytes[1] = 0;
+    gCharacterSelectCourseCursorState.bytes[2] = 0;
+    gCharacterSelectCourseCursorState.fields.spriteIndex = 0;
+    gCharacterSelectCourseCursorState.bytes[6] = 0;
+    gCharacterSelectCourseCursorState.bytes[7] = 0;
     func_8007105C();
 }
 #endif
 
-// func_800062F8 best match: 83.266% (nonmatchings/func_800062F8-2127290767680699791/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_flow/func_800062F8.s")
+// initCharacterSelectCourseMenuFromPlayerSelect best match: 83.266% (nonmatchings/initCharacterSelectCourseMenuFromPlayerSelect-2127290767680699791/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/initCharacterSelectCourseMenuFromPlayerSelect.s")
 
 #ifdef NON_MATCHING
-void func_800062F8(void) {
+void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     s32 sp2C;
     s16 *var_v0_2;
     s16 *var_v1_2;
@@ -343,33 +343,33 @@ void func_800062F8(void) {
         do {
             temp_v1 = var_v0->highestCourse;
             var_v0 += 1;
-            if (D_8010ADF9 < temp_v1) {
-                D_8010ADF9 = temp_v1;
+            if (gHighestUnlockedCourse < temp_v1) {
+                gHighestUnlockedCourse = temp_v1;
             }
         } while (var_v0 < temp_a0);
     }
 
     sp2C = var_v1;
-    func_8009956C(func_800066CC, 0);
+    func_8009956C(updateCharacterSelectCourseMenu, 0);
     var_v1 = sp2C;
     if (D_800EC9DD == 1) {
         if (D_80121B5E < 2) {
-            D_8010AE90 = (CharacterSelectOptionList *) D_800B3478;
+            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
             if ((D_80121B50 != 9) && (D_80121B50 != 0) && (D_80121B50 != 1)) {
                 D_80121B50 = 9;
             }
         } else {
-            D_8010AE90 = (CharacterSelectOptionList *) D_800B3480;
+            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
             D_80121B50 = 7;
         }
     } else {
-        D_8010AE90 = (CharacterSelectOptionList *) D_800B3420[D_8010ADF9];
+        gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
         if (D_80121B50 == -1) {
             D_80121B50 = 9;
         }
     }
 
-    var_v0_2 = *D_8010AE90;
+    var_v0_2 = *gCharacterSelectActiveCourseOptions;
 loop_20:
     if (D_80121B50 == *var_v0_2) {
         D_80121B50 = var_v1;
@@ -381,34 +381,34 @@ loop_20:
         }
     }
 
-    D_8010AE80 = 0;
+    gCharacterSelectCourseExitOptionIndex = 0;
     var_v0_3 = 0;
-    var_v1_2 = *D_8010AE90;
+    var_v1_2 = *gCharacterSelectActiveCourseOptions;
 loop_24:
     var_v0_3 += 2;
     if (*var_v1_2 != -1) {
         var_v1_2 += 1;
-        D_8010AE80 += 1;
+        gCharacterSelectCourseExitOptionIndex += 1;
         if (var_v0_3 != 0x14) {
             goto loop_24;
         }
     }
 
-    D_8010AE88.bytes[0] = 0;
-    D_8010AE88.bytes[1] = 0;
-    D_8010AE88.bytes[2] = 0;
-    D_8010AE88.fields.spriteIndex = 0;
-    D_8010AE88.bytes[6] = 0;
-    D_8010AE88.bytes[7] = 0;
+    gCharacterSelectCourseCursorState.bytes[0] = 0;
+    gCharacterSelectCourseCursorState.bytes[1] = 0;
+    gCharacterSelectCourseCursorState.bytes[2] = 0;
+    gCharacterSelectCourseCursorState.fields.spriteIndex = 0;
+    gCharacterSelectCourseCursorState.bytes[6] = 0;
+    gCharacterSelectCourseCursorState.bytes[7] = 0;
     func_8007105C();
 }
 #endif
 
-// func_800066CC best match: 72.688% (nonmatchings/func_800066CC-2785870559185086986/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_flow/func_800066CC.s")
+// updateCharacterSelectCourseMenu best match: 72.688% (nonmatchings/updateCharacterSelectCourseMenu-2785870559185086986/base_8.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/updateCharacterSelectCourseMenu.s")
 
 #ifdef NON_MATCHING
-void func_800066CC(void) {
+void updateCharacterSelectCourseMenu(void) {
     s32 temp_input;
     s32 pressed;
     s32 previousSelection;
@@ -424,7 +424,7 @@ void func_800066CC(void) {
     } else {
         if (D_80121D88 == 0) {
             if (D_800EC9C1 == 0) {
-                if (D_8010AE88.fields.state == 1) {
+                if (gCharacterSelectCourseCursorState.fields.state == 1) {
                     selection = D_80121B50;
                     previousSelection = (s16) selection;
                     temp_input = D_80123758;
@@ -452,7 +452,7 @@ void func_800066CC(void) {
                             if (repeatTimer == 0) {
                                 D_8010ADF0 = repeatTimer + 1;
                             }
-                            if ((*D_8010AE90)[selection] != -1) {
+                            if ((*gCharacterSelectActiveCourseOptions)[selection] != -1) {
                                 D_80121B50 = selection + 1;
                                 selection = D_80121B50;
                             }
@@ -485,25 +485,25 @@ void func_800066CC(void) {
 
                     temp_input = D_80123778;
                     if (((temp_input & 0x1000) || (temp_input & 0x8000)) &&
-                        (D_801235B4 == (D_8010AE80 + 1))) {
+                        (D_801235B4 == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         func_80072138(1, 0x32);
-                        if ((*D_8010AE90)[D_80121B50] != -1) {
+                        if ((*gCharacterSelectActiveCourseOptions)[D_80121B50] != -1) {
                             D_800EC9C1 = 1;
-                            D_8010AE88.fields.state = 2;
-                            D_8010AE88.fields.spriteIndex = 0x100;
+                            gCharacterSelectCourseCursorState.fields.state = 2;
+                            gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
                         } else {
-                            D_8010AE88.fields.state = 2;
-                            D_8010AE88.fields.spriteIndex = 0x100;
+                            gCharacterSelectCourseCursorState.fields.state = 2;
+                            gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
                             D_80121D88 = 7;
-                            func_8009956C(&func_80006D70, 0);
+                            func_8009956C(&handleCharacterSelectCourseSelection, 0);
                             func_80072114(8);
                         }
-                    } else if ((temp_input & 0x4000) && (D_801235B4 == (D_8010AE80 + 1))) {
+                    } else if ((temp_input & 0x4000) && (D_801235B4 == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         func_80072138(1, 0x32);
-                        D_8010AE88.fields.state = 2;
-                        D_8010AE88.fields.spriteIndex = 0x100;
+                        gCharacterSelectCourseCursorState.fields.state = 2;
+                        gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
                         D_80121D88 = 7;
-                        func_8009956C(&func_80006D70, 0);
+                        func_8009956C(&handleCharacterSelectCourseSelection, 0);
                         func_80072114(8);
                     }
                 }
@@ -512,9 +512,9 @@ void func_800066CC(void) {
             }
 
             if (D_800EC9C1 == 8) {
-                if ((*D_8010AE90)[D_80121B50] == -1) {
+                if ((*gCharacterSelectActiveCourseOptions)[D_80121B50] == -1) {
                     D_80121D88 = 2;
-                    func_8009956C(&func_80006D70, 0);
+                    func_8009956C(&handleCharacterSelectCourseSelection, 0);
                     func_80072114(8);
                 } else {
                     D_80121D88 = 1;
@@ -522,8 +522,8 @@ void func_800066CC(void) {
             }
         }
 
-        if (D_8010AE89 >= 2) {
-            func_8009956C(&func_80006AE8, 0);
+        if (gCharacterSelectCourseSubmenuState >= 2) {
+            func_8009956C(&updateCharacterSelectCourseSubmenu, 0);
         }
     }
 
@@ -532,13 +532,13 @@ void func_800066CC(void) {
 }
 #endif
 
-void func_80006AE8(void) {
+void updateCharacterSelectCourseSubmenu(void) {
     s32 input;
     int state;
 
     state = D_80121D80[8];
     if (state < 3) {
-        switch (D_8010AE88.fields.otherState) {
+        switch (gCharacterSelectCourseCursorState.fields.otherState) {
         case 2:
             input = D_80123778;
             if (input & 0x4000) {
@@ -547,7 +547,7 @@ void func_80006AE8(void) {
             } else if ((input & 0x8000) || (input & 0x1000)) {
                 func_80072138(1, 0x32);
                 D_800EC9D0 = 1;
-                D_8010AE88.fields.otherState = 3;
+                gCharacterSelectCourseCursorState.fields.otherState = 3;
                 func_80071408(func_800227A0, 0, 0x61);
             }
             break;
@@ -567,16 +567,16 @@ void func_80006AE8(void) {
                 if ((input & 0x8000) || (input & 0x1000)) {
                     func_80072138(0x18, 0x32);
                     D_800EC9D0 += 2;
-                    D_8010AE88.fields.otherState = 4;
+                    gCharacterSelectCourseCursorState.fields.otherState = 4;
                 } else if (input & 0x4000) {
                     func_80072138(1, 0x32);
                     D_800EC9D0 = 6;
-                    D_8010AE88.fields.otherState = 4;
+                    gCharacterSelectCourseCursorState.fields.otherState = 4;
                 }
             }
             break;
         case 4:
-            if (D_8010AE88.fields.otherTimer == 4) {
+            if (gCharacterSelectCourseCursorState.fields.otherTimer == 4) {
                 if (D_800EC9D0 == 6) {
                     D_80121D80[8] = 3;
                 } else {
@@ -590,23 +590,23 @@ void func_80006AE8(void) {
         if (state == 6) {
             D_80121D80[8] = 0;
             D_800EC9C1 = 0;
-            func_8009956C(func_800066CC, 0);
-            D_8010AE88.fields.state = 1;
-            D_8010AE88.fields.spriteIndex = 0x100;
-            D_8010AE88.fields.timer = 0;
+            func_8009956C(updateCharacterSelectCourseMenu, 0);
+            gCharacterSelectCourseCursorState.fields.state = 1;
+            gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
+            gCharacterSelectCourseCursorState.fields.timer = 0;
             state = D_80121D88;
         }
         if (state == 8) {
-            func_8009956C(func_80006E3C, 0);
+            func_8009956C(fadeOutCharacterSelectCourseMenu, 0);
         }
     }
     func_8007105C();
 }
 
-void func_80006D70(void) {
+void handleCharacterSelectCourseSelection(void) {
     if (D_80121D88 == 8) {
         if (D_80121B55 >= 2) {
-            func_8009956C(&func_80006E3C, 0);
+            func_8009956C(&fadeOutCharacterSelectCourseMenu, 0);
             D_801235B4 = 1;
             D_8010ADF8 = 1;
         } else {
@@ -615,14 +615,14 @@ void func_80006D70(void) {
             } else {
                 func_8009956C(&func_80008620, 0);
             }
-            D_80121B50 = (*D_8010AE90)[D_80121B50];
+            D_80121B50 = (*gCharacterSelectActiveCourseOptions)[D_80121B50];
             D_801235B4 = 0;
         }
     }
     func_8007105C();
 }
 
-void func_80006E3C(void) {
+void fadeOutCharacterSelectCourseMenu(void) {
     if (D_801235B8->fade != 0xFF) {
         D_801235B8->fade = func_80013F88((s16) D_801235B8->fade, 0x24, 1);
         if (D_801235B8->fade == 0xFF) {
@@ -635,7 +635,7 @@ void func_80006E3C(void) {
             func_80045914();
             D_80123751 = 0;
             D_800DEED4 = 0;
-            D_80121B50 = (*D_8010AE90)[D_80121B50];
+            D_80121B50 = (*gCharacterSelectActiveCourseOptions)[D_80121B50];
             func_80099658(2);
             func_8009954C(4);
         }

@@ -2,7 +2,7 @@
 #include "game_audio.h"
 #include "effect_task_scheduler.h"
 #include "asset_manager.h"
-#include "character_select_flow.h"
+#include "character_select_course_menu.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
 #include "player_count_select_menu.h"
@@ -220,7 +220,7 @@ void func_800088C8(void) {
 
 void func_80008C04(void) {
     if (D_80121B5E < 3 && D_8010ADF8 == 0) {
-        func_8009956C(&func_80005C70, 0);
+        func_8009956C(&initCharacterSelectCourseMenuFromPlayerCount, 0);
         D_800EC9DD = 1;
     } else {
         func_8009956C(&func_80008C84, 0);

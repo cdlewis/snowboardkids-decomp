@@ -54,12 +54,12 @@ extern int sprintf(char *, const char *, ...);
 extern CharacterSelectAssetHandles D_80112130;
 extern s16 D_80112172;
 extern s16 D_80112178;
-extern s16 D_800B3420[][11];
+extern s16 gCharacterSelectCourseOptionsByUnlock[][11];
 extern CharacterSelectFrameTileMap D_800B5FC0[];
 extern CharacterSelectFrameCornerTileMap D_800B5FE8[];
 extern u16 D_800B618C;
-extern s16 D_800B3478[];
-extern s16 D_800B3480[];
+extern s16 gCharacterSelectShortCourseOptions[];
+extern s16 gCharacterSelectSingleCourseOption[];
 extern u16 D_800B61AC[];
 extern u8 D_800B61C0[];
 extern u8 D_800B61CC[];
@@ -73,15 +73,15 @@ extern u8 D_800ECA24[];
 extern s32 D_800EC9F8[];
 extern s16 D_80121B50;
 extern s32 D_8010ADDC;
-extern u16 D_8010AE80;
+extern u16 gCharacterSelectCourseExitOptionIndex;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
-extern CharacterSelectCursorState D_8010AE88;
-extern u8 D_8010AE88_state;
-extern u8 D_8010AE89;
+extern CharacterSelectCursorState gCharacterSelectCourseCursorState;
+extern u8 gCharacterSelectCourseCursorStateByte;
+extern u8 gCharacterSelectCourseSubmenuState;
 extern u8 D_8010AE8A;
 extern u8 D_8010AE8F;
-extern u8 D_8010ADF9;
+extern u8 gHighestUnlockedCourse;
 extern u8 D_80121D88;
 extern u8 D_800EC9C1;
 extern s16 D_800EC9D0;
@@ -110,11 +110,11 @@ void func_8001BD70(CharacterSelectMenuFrameActor *arg0) {
 
     base = arg0;
     if ((D_800EC9C2 == 0) || (D_800EC9C2 == 2)) {
-        characterIds = D_800B3420[D_8010ADF9];
+        characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
     } else if (D_80121B5E >= 3) {
-        characterIds = D_800B3478;
+        characterIds = gCharacterSelectShortCourseOptions;
     } else {
-        characterIds = D_800B3480;
+        characterIds = gCharacterSelectSingleCourseOption;
     }
 
     i = 0;
@@ -128,8 +128,8 @@ void func_8001BD70(CharacterSelectMenuFrameActor *arg0) {
                     alpha = 0xFF;
                 }
                 func_8000F030(pos[12], pos[23], func_80043040(D_80112130.textureHandle), 0x1C, 0x20, 0x20, 0, alpha);
-            } else if (i == D_8010AE80) {
-                if ((D_8010AE80 == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+            } else if (i == gCharacterSelectCourseExitOptionIndex) {
+                if ((gCharacterSelectCourseExitOptionIndex == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
                     alpha = 0xFF;
                 }
                 if ((D_80121B55 - 1) == 0) {
@@ -144,7 +144,7 @@ void func_8001BD70(CharacterSelectMenuFrameActor *arg0) {
                 func_8000F030(pos[12], pos[23], func_80043040(D_80112130.textureHandle), (i + 0x12) & 0xFFFF, 0x20, 0x20, 0, alpha);
             }
 
-            if (i != D_8010AE80) {
+            if (i != gCharacterSelectCourseExitOptionIndex) {
                 characterId = (s16 *)((u8 *)characterIds + characterIdOffset);
                 if (((D_80121B55 - 1) == 0) && (D_800ECA24[*characterId] != 0)) {
                     func_8000F030((s16)(pos[12] - 0x10), pos[23], func_80043040(D_80112130.iconTextureHandle), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0, D_800ECA24[*characterId] + 6);
@@ -196,9 +196,9 @@ void func_8001C158(CharacterSelectMenuFrameActor *arg0) {
 
         arg0->timer++;
         if (!(arg0->timer & 1)) {
-            if (arg0->itemCount < (D_8010AE80 + 1)) {
+            if (arg0->itemCount < (gCharacterSelectCourseExitOptionIndex + 1)) {
                 arg0->itemCount++;
-                if (arg0->itemCount == (D_8010AE80 + 1)) {
+                if (arg0->itemCount == (gCharacterSelectCourseExitOptionIndex + 1)) {
                     D_8010ADE4 = func_80071408((void (*)(EffectTask *))func_8001DACC, 0, 0x58);
                     func_80071408((void (*)(EffectTask *))func_8001DFA0, 0, 0x59);
                     func_80071408((void (*)(EffectTask *))func_8001E468, 0, 0x5A);
@@ -206,11 +206,11 @@ void func_8001C158(CharacterSelectMenuFrameActor *arg0) {
                     func_80071408((void (*)(EffectTask *))func_8001E930, 0, 0x5B);
                     func_80071408((void (*)(EffectTask *))func_8001EDF8, 0, 0x5C);
                     func_80071408((void (*)(EffectTask *))func_8001F2C0, 0, 0x5D);
-                    if (D_8010ADF9 != 0) {
+                    if (gHighestUnlockedCourse != 0) {
                         func_80071408((void (*)(EffectTask *))func_8001F788, 0, 0x5E);
-                        if (D_8010ADF9 >= 2) {
+                        if (gHighestUnlockedCourse >= 2) {
                             func_80071408((void (*)(EffectTask *))func_8001FC50, 0, 0x5F);
-                            if (D_8010ADF9 >= 3) {
+                            if (gHighestUnlockedCourse >= 3) {
                                 func_80071408((void (*)(EffectTask *))func_80020118, 0, 0x60);
                             }
                         }
@@ -298,16 +298,16 @@ void func_8001C158(CharacterSelectMenuFrameActor *arg0) {
         }
         break;
     case 6:
-        limit = D_8010AE80 + 1;
+        limit = gCharacterSelectCourseExitOptionIndex + 1;
         i = 0;
         if (limit > 0) {
             do {
                 if (i != D_80121B50) {
                     arg0->x[i] += 0x20;
-                    limit = D_8010AE80 + 1;
+                    limit = gCharacterSelectCourseExitOptionIndex + 1;
                 }
                 i++;
-            } while (i < (D_8010AE80 + 1));
+            } while (i < (gCharacterSelectCourseExitOptionIndex + 1));
         }
         if (D_80121B50 != 0) {
             if (arg0->x[0] >= -0x7C) {
@@ -322,13 +322,13 @@ void func_8001C158(CharacterSelectMenuFrameActor *arg0) {
         break;
     case 7:
         i = 0;
-        if ((D_8010AE80 + 1) > 0) {
+        if ((gCharacterSelectCourseExitOptionIndex + 1) > 0) {
             ptr = arg0;
             do {
                 i++;
                 ptr->x[0] -= 0x20;
                 ptr = (CharacterSelectMenuFrameActor *)((s16 *)ptr + 1);
-            } while (i < (D_8010AE80 + 1));
+            } while (i < (gCharacterSelectCourseExitOptionIndex + 1));
         }
         break;
     }
@@ -353,7 +353,7 @@ void func_8001C83C(CharacterSelectMenuFrameActor *arg0) {
     int mode;
     unsigned int limit;
 
-    mode = D_8010ADF9;
+    mode = gHighestUnlockedCourse;
     if (mode == 0) {
         if (1) {}
         spacing = 0x18;
@@ -1898,11 +1898,11 @@ void func_80020818(CharacterSelectWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->row.bytes.subState;
 
-    if ((D_80121B50 == D_8010AE80) && (arg0->y != -0x48) && ((s32) arg0->row.bytes.subState < 6)) {
+    if ((D_80121B50 == gCharacterSelectCourseExitOptionIndex) && (arg0->y != -0x48) && ((s32) arg0->row.bytes.subState < 6)) {
         state = arg0->row.bytes.subState = 2;
     } else {
         state = (s32) arg0->row.bytes.subState;
-        if ((D_80121B50 != D_8010AE80) && (arg0->y != -0x140) && (state < 6)) {
+        if ((D_80121B50 != gCharacterSelectCourseExitOptionIndex) && (arg0->y != -0x140) && (state < 6)) {
             state = arg0->row.bytes.subState = 1;
         } else {
             state = arg0->row.bytes.subState;
@@ -2007,11 +2007,11 @@ void func_80020B70(CharacterSelectWidgetActor *arg0) {
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = D_8010AE88.fields.state)) {
+    if (state != (globalState = gCharacterSelectCourseCursorState.fields.state)) {
         arg0->transition.bytes.state = globalState;
         state = globalState;
-        arg0->sprite.index = D_8010AE88.fields.spriteIndex;
-        arg0->transition.bytes.timer = D_8010AE88.fields.timer;
+        arg0->sprite.index = gCharacterSelectCourseCursorState.fields.spriteIndex;
+        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.fields.timer;
     }
 
     /* Preserve IDO's state selector register allocation. */
@@ -2042,7 +2042,7 @@ void func_80020B70(CharacterSelectWidgetActor *arg0) {
         break;
     }
 
-    D_8010AE88_state = state;
+    gCharacterSelectCourseCursorStateByte = state;
     if (D_80121D88 == 7) {
         func_800716E4(arg0);
         return;
@@ -2055,7 +2055,7 @@ void func_80020CEC(CharacterSelectWidgetActor *arg0) {
     s16 y;
     int mode;
 
-    mode = D_8010ADF9;
+    mode = gHighestUnlockedCourse;
     if (mode == 0) {
         if (1) {}
         selectedCharacterRow = 0x18;
@@ -2152,7 +2152,7 @@ void func_80020F80(CharacterSelectWidgetActor *arg0) {
     s32 i;
     s32 var_t8;
 
-    if (D_80121B50 != D_8010AE80) {
+    if (D_80121B50 != gCharacterSelectCourseExitOptionIndex) {
         func_8001BA2C(arg0->x, arg0->y, 0x3800, 0x5800);
         func_8000F8AC((s16)(arg0->x + 4), (s16)(arg0->y + 4), func_80043040(D_80112130.textureHandle),
                       0x23, 0x20, 0x20, 0, arg0->sprite.index, 0);
@@ -2250,7 +2250,7 @@ void func_80021410(CharacterSelectWidgetActor *arg0) {
     s32 valueOffset;
     s32 three;
     CharacterSelectPlayerRecord *player;
-    do { characterIds = D_800B3420[D_8010ADF9]; if (D_80121B55 == 1) { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x21, 0x20, 0x20, 0, 0); func_8000F030((s16)(arg0->x + 0x30), arg0->y, func_80043040(D_80112130.textureHandle), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, D_800E0B84, D_800EC9F8[characterIds[*(&D_80121B50)]]); func_80013D0C((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, D_800E0B88, *((u16 *)(&D_800B61CC[(((*(&D_80121B50)) * three) * 2) + valueOffset]))); func_80013D0C((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x26, 0x20, 0x20, 0, 0); func_8000F030(arg0->x, (s16)(arg0->y + 0x10), func_80043040(D_80112130.textureHandle), 0x27, 0x20, 0x20, 0, 0); player = (CharacterSelectPlayerRecord *)D_80121D80; yOffset = 0; do { sprintf(buf - 0x10, D_800E0B8C, player->value); func_80013D0C((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); player++; yOffset += 8; } while (player != &gFrameCounter); } } while (0);
+    do { characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse]; if (D_80121B55 == 1) { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x21, 0x20, 0x20, 0, 0); func_8000F030((s16)(arg0->x + 0x30), arg0->y, func_80043040(D_80112130.textureHandle), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, D_800E0B84, D_800EC9F8[characterIds[*(&D_80121B50)]]); func_80013D0C((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, D_800E0B88, *((u16 *)(&D_800B61CC[(((*(&D_80121B50)) * three) * 2) + valueOffset]))); func_80013D0C((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { func_8000F030(arg0->x, arg0->y, func_80043040(D_80112130.textureHandle), 0x26, 0x20, 0x20, 0, 0); func_8000F030(arg0->x, (s16)(arg0->y + 0x10), func_80043040(D_80112130.textureHandle), 0x27, 0x20, 0x20, 0, 0); player = (CharacterSelectPlayerRecord *)D_80121D80; yOffset = 0; do { sprintf(buf - 0x10, D_800E0B8C, player->value); func_80013D0C((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); player++; yOffset += 8; } while (player != &gFrameCounter); } } while (0);
 }
 
 void func_8002172C(CharacterSelectWidgetActor *arg0) {
@@ -2455,10 +2455,10 @@ void func_80021F80(CharacterSelectWidgetActor *arg0) {
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = D_8010AE88.bytes[1])) {
+    if (state != (globalState = gCharacterSelectCourseCursorState.bytes[1])) {
         arg0->transition.bytes.state = globalState;
         state = globalState;
-        arg0->transition.bytes.timer = D_8010AE88.bytes[7];
+        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.bytes[7];
     }
 
     switch (state) {
@@ -2506,14 +2506,14 @@ void func_80021F80(CharacterSelectWidgetActor *arg0) {
         break;
     }
 
-    D_8010AE89 = state;
+    gCharacterSelectCourseSubmenuState = state;
     D_8010AE8F = arg0->transition.bytes.timer;
 
     if (arg0->transition.bytes.state == 6) {
         func_800716E4(arg0);
         D_8010ADE0 = NULL;
-        D_8010AE88.bytes[1] = 0;
-        D_8010AE88.bytes[7] = 0;
+        gCharacterSelectCourseCursorState.bytes[1] = 0;
+        gCharacterSelectCourseCursorState.bytes[7] = 0;
         return;
     }
     func_800483FC(&D_80124868, func_80021EA8, arg0);
@@ -2752,11 +2752,11 @@ void func_800227D8(CharacterSelectWidgetActor *arg0) {
     u16 var_s0;
 
     if (D_800EC9C2 == 2) {
-        courseIds = D_800B3420[D_8010ADF9];
+        courseIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
     } else if ((s32)D_80121B5E < 2) {
-        courseIds = D_800B3478;
+        courseIds = gCharacterSelectShortCourseOptions;
     } else {
-        courseIds = D_800B3480;
+        courseIds = gCharacterSelectSingleCourseOption;
     }
 
     var_s7 = 0;
@@ -2930,7 +2930,7 @@ void func_80023434(CharacterSelectWidgetActor *arg0) {
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = D_8010AE88.bytes[1])) {
+    if (state != (globalState = gCharacterSelectCourseCursorState.bytes[1])) {
         arg0->transition.bytes.state = globalState;
         /* Preserve IDO's state/globalState register allocation. */
         if (1) {}
@@ -2939,7 +2939,7 @@ void func_80023434(CharacterSelectWidgetActor *arg0) {
         if (1) {}
         if (1) {}
         state = globalState;
-        arg0->transition.bytes.timer = D_8010AE88.bytes[7];
+        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.bytes[7];
     }
 
     switch (state) {
@@ -2978,14 +2978,14 @@ void func_80023434(CharacterSelectWidgetActor *arg0) {
         break;
     }
 
-    D_8010AE89 = state;
+    gCharacterSelectCourseSubmenuState = state;
     D_8010AE8F = arg0->transition.bytes.timer;
 
     if (arg0->transition.bytes.state == 6) {
         func_800716E4(arg0);
         D_8010ADE0 = NULL;
-        D_8010AE88.bytes[1] = 0;
-        D_8010AE88.bytes[7] = 0;
+        gCharacterSelectCourseCursorState.bytes[1] = 0;
+        gCharacterSelectCourseCursorState.bytes[7] = 0;
         return;
     }
     func_800483FC(&D_80124868, func_8002332C, arg0);
