@@ -4,7 +4,7 @@
 #include "callback_task_scheduler.h"
 #include "course_select_menu.h"
 #include "game_task_scheduler.h"
-#include "menu_rendering.h"
+#include "menu_renderer.h"
 #include "race_start_transition.h"
 #include "shop_menu_ui.h"
 #include "system_boot.h"

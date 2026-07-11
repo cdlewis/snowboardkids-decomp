@@ -1,7 +1,7 @@
 #include "common.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
-#include "menu_rendering.h"
+#include "menu_renderer.h"
 #include "race_hud.h"
 
 #define PLAYER_COUNT 4
@@ -412,7 +412,7 @@ loop_4:
                     tile = (i + 0x3D) & 0xFFFF;
                 }
             }
-            func_80011264((s16)(arg0->x + xOffset), arg0->y,
+            drawMenuSpriteTile((s16)(arg0->x + xOffset), arg0->y,
                           getRelocatableHeapBlockBase(*(s16 *)&D_80112130[textureIndex * 2]), tile, 0, alpha);
             i++;
             xOffset += 0x20;
@@ -444,7 +444,7 @@ loop_17:
                     tile = 0x42;
                 }
             }
-            func_80011264((s16)(arg0->x - 0x20), arg0->y,
+            drawMenuSpriteTile((s16)(arg0->x - 0x20), arg0->y,
                           getRelocatableHeapBlockBase(*(s16 *)&D_80112130[textureIndex * 2]), tile, 0, alpha);
         }
     }
@@ -672,7 +672,7 @@ void func_800184C8(RaceHudPanelActor *arg0) {
                     tile = (player->characterId + 0x41) & 0xFFFF;
                 }
 
-                func_80011264((s16)(actor->x[0] + 6), (s16)(actor->y[0] + 0xD),
+                drawMenuSpriteTile((s16)(actor->x[0] + 6), (s16)(actor->y[0] + 0xD),
                               getRelocatableHeapBlockBase(*(s16 *)&textureHandles[iconIndex * 2]), tile, 0, 0x100);
                 drawMenuSprite((s16)(actor->x[0] + 2), (s16)(actor->y[0] + 0x28),
                               getRelocatableHeapBlockBase(*(s16 *)&textureHandles[0x3E]), (player->characterId + 0x91) & 0xFFFF,

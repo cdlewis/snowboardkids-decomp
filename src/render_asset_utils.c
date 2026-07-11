@@ -93,10 +93,10 @@ extern s32 D_80112410;
 extern s16 D_80112130;
 extern s16 D_8011213E;
 extern s16 D_801121B0;
-extern s16 D_8015660A;
-extern s16 D_8015660C;
-extern s16 D_8015660E;
-extern s16 D_80156610;
+extern s16 gMenuViewportWidth;
+extern s16 gMenuViewportHeight;
+extern s16 gMenuViewportCenterX;
+extern s16 gMenuViewportCenterY;
 extern s32 gRegionAllocPtr;
 extern s8 D_801124B0;
 extern s8 D_80112560;
@@ -147,7 +147,7 @@ void *func_8004597C(void *arg0, u32 arg1) {
     return (void *)((u8 *)arg0 + (arg1 & 0xFFFFFF));
 }
 
-void func_80045990(u8 *arg0, u16 arg1, void **arg2, void **arg3) {
+void getAssetTableImageAndPalette(u8 *arg0, u16 arg1, void **arg2, void **arg3) {
     AssetTableEntry *temp_v1;
     u8 *temp_v0;
     short idx;
@@ -208,19 +208,19 @@ void func_80045A78(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
 
     textureBase = (((u8 *)arg2) + (arg2->entryCount * sizeof(AssetTableEntry))) + sizeof(AssetTableEntry);
     rawEntry = (AssetTableEntry *)(((u8 *)arg2) + (arg3 * sizeof(AssetTableEntry)));
-    x0 = arg0 + D_8015660E;
-    y0 = arg1 + D_80156610;
+    x0 = arg0 + gMenuViewportCenterX;
+    y0 = arg1 + gMenuViewportCenterY;
     ;
     clipU = 0;
     clipV = 0;
     x1 = rawEntry[1].width + x0;
     y1 = rawEntry[1].height + y0;
-    rightClip = D_8015660E + (D_8015660A / 2);
+    rightClip = gMenuViewportCenterX + (gMenuViewportWidth / 2);
     if (x0 < rightClip) {
-        leftClip = D_8015660E - (D_8015660A / 2);
-        bottomClip = D_80156610 + (D_8015660C / 2);
+        leftClip = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+        bottomClip = gMenuViewportCenterY + (gMenuViewportHeight / 2);
         if (y0 < bottomClip) {
-            topClip = D_80156610 - (D_8015660C / 2);
+            topClip = gMenuViewportCenterY - (gMenuViewportHeight / 2);
             if ((x1 >= leftClip) && (y1 >= topClip)) {
                 if (x0 < leftClip) {
                     clipU = leftClip - x0;
@@ -344,12 +344,12 @@ void func_80045A78(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
 
 #ifdef NON_MATCHING
 extern s32 gRegionAllocPtr;
-extern u32 D_800DEFF8[];
+extern u32 gMenuRenderModeResetDl[];
 extern s16 gFrameCounter;
-extern s16 D_8015660A;
-extern s16 D_8015660C;
-extern s16 D_8015660E;
-extern s16 D_80156610;
+extern s16 gMenuViewportWidth;
+extern s16 gMenuViewportHeight;
+extern s16 gMenuViewportCenterX;
+extern s16 gMenuViewportCenterY;
 
 void func_80045E84(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
     volatile u8 pad[0x18];
@@ -376,23 +376,23 @@ void func_80045E84(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
 
     temp_t4 = (AssetTableEntry *)((u8 *)arg2 + ((arg3 & 0xFFFF) * sizeof(AssetTableEntry)));
     sp24 = (u8 *)arg2 + (arg2->entryCount * sizeof(AssetTableEntry)) + sizeof(AssetTableEntry);
-    var_t5 = arg0 + D_8015660E;
-    var_s0 = arg1 + D_80156610;
+    var_t5 = arg0 + gMenuViewportCenterX;
+    var_s0 = arg1 + gMenuViewportCenterY;
     temp_t4_2 = temp_t4 + 1;
     sp14 = temp_t4_2->height + var_s0;
     sp10 = 0;
     spC = 0;
     temp_t2 = temp_t4_2->width + var_t5;
-    temp_t7 = D_8015660A / 2;
-    temp_t1 = D_8015660E + temp_t7;
+    temp_t7 = gMenuViewportWidth / 2;
+    temp_t1 = gMenuViewportCenterX + temp_t7;
     if (var_t5 < temp_t1) {
-        temp_a3 = D_8015660E - temp_t7;
-        temp_t8 = D_8015660C / 2;
-        temp_a0 = D_80156610 + temp_t8;
+        temp_a3 = gMenuViewportCenterX - temp_t7;
+        temp_t8 = gMenuViewportHeight / 2;
+        temp_a0 = gMenuViewportCenterY + temp_t8;
         if (var_s0 < temp_a0) {
             sp18 = temp_t2;
             if (temp_t2 >= temp_a3) {
-                s32 temp_v0 = D_80156610 - temp_t8;
+                s32 temp_v0 = gMenuViewportCenterY - temp_t8;
                 if (sp14 >= temp_v0) {
                     if (var_t5 < temp_a3) {
                         sp10 = temp_a3 - var_t5;
@@ -497,7 +497,7 @@ void func_80045E84(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
                     temp_gfx = (Gfx *)gRegionAllocPtr;
                     gRegionAllocPtr = (s32)(temp_gfx + 1);
                     temp_gfx->words.w0 = 0x06000000;
-                    temp_gfx->words.w1 = (u32)D_800DEFF8;
+                    temp_gfx->words.w1 = (u32)gMenuRenderModeResetDl;
                 }
             }
         }
@@ -527,18 +527,18 @@ void func_80046358(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
     AssetTableEntry *rawEntry;
 
     rawEntry = (AssetTableEntry *)(arg2 + (arg3 * sizeof(AssetTableEntry)));
-    x0 = arg0 + D_8015660E;
-    y0 = arg1 + D_80156610;
+    x0 = arg0 + gMenuViewportCenterX;
+    y0 = arg1 + gMenuViewportCenterY;
     clipU = 0;
     clipV = 0;
     x1 = rawEntry[1].width + x0;
     y1 = rawEntry[1].height + y0;
-    rightClip = D_8015660E + (D_8015660A / 2);
+    rightClip = gMenuViewportCenterX + (gMenuViewportWidth / 2);
     if (x0 < rightClip) {
-        leftClip = D_8015660E - (D_8015660A / 2);
-        bottomClip = D_80156610 + (D_8015660C / 2);
+        leftClip = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+        bottomClip = gMenuViewportCenterY + (gMenuViewportHeight / 2);
         if (y0 < bottomClip) {
-            topClip = D_80156610 - (D_8015660C / 2);
+            topClip = gMenuViewportCenterY - (gMenuViewportHeight / 2);
             if ((x1 >= leftClip) && (y1 >= topClip)) {
                 if (x0 < leftClip) {
                     clipU = leftClip - x0;
@@ -645,7 +645,7 @@ void func_80046358(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
 #pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80046748.s")
 
 #ifdef NON_MATCHING
-extern Gfx D_800DEFF8[];
+extern Gfx gMenuRenderModeResetDl[];
 
 void func_80046748(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green, u8 blue) {
     s32 rightClip;
@@ -660,19 +660,19 @@ void func_80046748(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green, u8 blu
     s32 halfHeight;
     s32 color;
 
-    x0 = x + D_8015660E;
-    y0 = y + D_80156610;
+    x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
     x1 = width + x0;
     y1 = height + y0;
 
-    halfWidth = D_8015660A / 2;
-    rightClip = D_8015660E + halfWidth;
+    halfWidth = gMenuViewportWidth / 2;
+    rightClip = gMenuViewportCenterX + halfWidth;
     if (x0 < rightClip) {
-        halfHeight = D_8015660C / 2;
-        bottomClip = D_80156610 + halfHeight;
-        leftClip = D_8015660E - halfWidth;
+        halfHeight = gMenuViewportHeight / 2;
+        bottomClip = gMenuViewportCenterY + halfHeight;
+        leftClip = gMenuViewportCenterX - halfWidth;
         if (y0 < bottomClip) {
-            topClip = D_80156610 - halfHeight;
+            topClip = gMenuViewportCenterY - halfHeight;
             if ((x1 >= leftClip) && (y1 >= topClip)) {
                 if (x0 < leftClip) {
                     x0 = leftClip;
@@ -694,7 +694,7 @@ void func_80046748(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green, u8 blu
                 gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
                 gDPSetFillColor(gRegionAllocPtr++, (color << 16) | color);
                 gDPFillRectangle(gRegionAllocPtr++, x0, y0, x1 - 1, y1 - 1);
-                gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+                gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
             }
         }
     }
@@ -740,21 +740,21 @@ void func_80046970(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
 
     sp2C = (u8 *)arg2 + (arg2->entryCount * sizeof(AssetTableEntry)) + 8;
     temp_t2 = (AssetTableEntry *)((u8 *)arg2 + ((arg3 & 0xFFFF) * sizeof(AssetTableEntry)));
-    var_t5 = arg0 + D_8015660E;
-    var_s0 = arg1 + D_80156610;
+    var_t5 = arg0 + gMenuViewportCenterX;
+    var_s0 = arg1 + gMenuViewportCenterY;
     temp_t2_2 = temp_t2 + 1;
     sp18 = 0;
     sp14 = 0;
     var_s1 = temp_t2_2->width + var_t5;
     var_s2 = temp_t2_2->height + var_s0;
-    temp_t6 = D_8015660A / 2;
-    temp_t1 = D_8015660E + temp_t6;
+    temp_t6 = gMenuViewportWidth / 2;
+    temp_t1 = gMenuViewportCenterX + temp_t6;
     if (var_t5 < temp_t1) {
-        temp_a3 = D_8015660E - temp_t6;
-        temp_t7 = D_8015660C / 2;
-        temp_a1 = D_80156610 + temp_t7;
+        temp_a3 = gMenuViewportCenterX - temp_t6;
+        temp_t7 = gMenuViewportHeight / 2;
+        temp_a1 = gMenuViewportCenterY + temp_t7;
         if (var_s0 < temp_a1) {
-            temp_v0_2 = (Gfx *)(D_80156610 - temp_t7);
+            temp_v0_2 = (Gfx *)(gMenuViewportCenterY - temp_t7);
             if ((var_s1 >= temp_a3) && (var_s2 >= (s32)temp_v0_2)) {
                 if (var_t5 < temp_a3) {
                     sp18 = temp_a3 - var_t5;
@@ -882,21 +882,21 @@ void func_80046D68(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3, u16 arg4) {
 
     sp2C = ((u8 *)arg2 + (arg2->entryCount * sizeof(AssetTableEntry))) + 8;
     temp_t2 = (AssetTableEntry *)((u8 *)arg2 + ((arg3 & 0xFFFF) * sizeof(AssetTableEntry)));
-    var_t5 = arg0 + D_8015660E;
-    var_s0 = arg1 + D_80156610;
+    var_t5 = arg0 + gMenuViewportCenterX;
+    var_s0 = arg1 + gMenuViewportCenterY;
     sp18 = 0;
     sp14 = 0;
     var_s1 = temp_t2[1].width + var_t5;
     var_s2 = temp_t2[1].height + var_s0;
     temp_t2_2 = temp_t2 + 1;
-    temp_t6 = D_8015660A / 2;
-    temp_t1 = D_8015660E + temp_t6;
+    temp_t6 = gMenuViewportWidth / 2;
+    temp_t1 = gMenuViewportCenterX + temp_t6;
     if (var_t5 < temp_t1) {
-        temp_a3 = D_8015660E - temp_t6;
-        temp_t7 = D_8015660C / 2;
-        temp_a1 = D_80156610 + temp_t7;
+        temp_a3 = gMenuViewportCenterX - temp_t6;
+        temp_t7 = gMenuViewportHeight / 2;
+        temp_a1 = gMenuViewportCenterY + temp_t7;
         if (var_s0 < temp_a1) {
-            temp_v0_2 = (Gfx *)(D_80156610 - temp_t7);
+            temp_v0_2 = (Gfx *)(gMenuViewportCenterY - temp_t7);
             if ((var_s1 >= temp_a3) && (var_s2 >= (s32)temp_v0_2)) {
                 if (var_t5 < temp_a3) {
                     sp18 = temp_a3 - var_t5;
@@ -1005,22 +1005,22 @@ void func_80047174(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4)
         entry = (AssetTableEntry *)((u8 *)arg2 + (arg3 * sizeof(AssetTableEntry))) + 1;
         scaledWidth = entry->width >> arg4;
         scaledHeight = entry->height >> arg4;
-        x = arg0 + D_8015660E + ((entry->width - scaledWidth) / 2);
-        y = arg1 + D_80156610 + ((entry->height - scaledHeight) / 2);
+        x = arg0 + gMenuViewportCenterX + ((entry->width - scaledWidth) / 2);
+        y = arg1 + gMenuViewportCenterY + ((entry->height - scaledHeight) / 2);
         right = scaledWidth + x;
         bottom = scaledHeight + y;
         s = 0;
         t = 0;
 
-        halfWidth = D_8015660A / 2;
-        clipRight = D_8015660E + halfWidth;
+        halfWidth = gMenuViewportWidth / 2;
+        clipRight = gMenuViewportCenterX + halfWidth;
         if (x < clipRight) {
-            halfHeight = D_8015660C / 2;
-            clipBottom = D_80156610 + halfHeight;
+            halfHeight = gMenuViewportHeight / 2;
+            clipBottom = gMenuViewportCenterY + halfHeight;
             if (y < clipBottom) {
-                clipLeft = D_8015660E - halfWidth;
+                clipLeft = gMenuViewportCenterX - halfWidth;
                 if (right >= clipLeft) {
-                    clipTop = D_80156610 - halfHeight;
+                    clipTop = gMenuViewportCenterY - halfHeight;
                     if (bottom >= clipTop) {
                         if (x < clipLeft) {
                             s = clipLeft - x;
@@ -1113,22 +1113,22 @@ void func_8004767C(s16 x, s16 y, AssetTable *asset, u16 entryIndex, u16 paletteI
         drawWidth = width >> scale;
         drawHeight = height >> scale;
 
-        x0 = x + D_8015660E + ((width - drawWidth) / 2);
-        y0 = y + D_80156610 + ((height - drawHeight) / 2);
+        x0 = x + gMenuViewportCenterX + ((width - drawWidth) / 2);
+        y0 = y + gMenuViewportCenterY + ((height - drawHeight) / 2);
         x1 = x0 + drawWidth;
         y1 = y0 + drawHeight;
         clipS = 0;
         clipT = 0;
 
-        viewHalfWidth = D_8015660A / 2;
-        maxX = D_8015660E + viewHalfWidth;
+        viewHalfWidth = gMenuViewportWidth / 2;
+        maxX = gMenuViewportCenterX + viewHalfWidth;
         if (x0 < maxX) {
-            viewHalfHeight = D_8015660C / 2;
-            maxY = D_80156610 + viewHalfHeight;
+            viewHalfHeight = gMenuViewportHeight / 2;
+            maxY = gMenuViewportCenterY + viewHalfHeight;
             if (y0 < maxY) {
-                minX = D_8015660E - viewHalfWidth;
+                minX = gMenuViewportCenterX - viewHalfWidth;
                 if (x1 >= minX) {
-                    minY = D_80156610 - viewHalfHeight;
+                    minY = gMenuViewportCenterY - viewHalfHeight;
                     if (y1 >= minY) {
                         if (x0 < minX) {
                             clipS = minX - x0;
@@ -1205,21 +1205,21 @@ void func_80047B84(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
     s32 viewHalfWidth;
     s32 viewHalfHeight;
 
-    x0 = x + D_8015660E;
-    y0 = y + D_80156610;
+    x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
     x1 = x0 + 8;
     y1 = y0 + 8;
     clipS = 0;
     clipT = 0;
 
-    viewHalfWidth = D_8015660A / 2;
-    maxX = D_8015660E + viewHalfWidth;
+    viewHalfWidth = gMenuViewportWidth / 2;
+    maxX = gMenuViewportCenterX + viewHalfWidth;
     if (x0 < maxX) {
-        minX = D_8015660E - viewHalfWidth;
-        viewHalfHeight = D_8015660C / 2;
-        maxY = D_80156610 + viewHalfHeight;
+        minX = gMenuViewportCenterX - viewHalfWidth;
+        viewHalfHeight = gMenuViewportHeight / 2;
+        maxY = gMenuViewportCenterY + viewHalfHeight;
         if (y0 < maxY) {
-            minY = D_80156610 - viewHalfHeight;
+            minY = gMenuViewportCenterY - viewHalfHeight;
             if ((x1 >= minX) && (y1 >= minY)) {
                 if (x0 < minX) {
                     clipS = minX - x0;
@@ -1259,11 +1259,11 @@ void func_80047B84(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
 }
 #endif
 
-extern s16 D_8011213C;
+extern s16 gMenuAsciiFontAssetHandle;
 extern s16 D_801121B2;
 
 void func_80047E38(void) {
-    s32 v0 = getRelocatableHeapBlockBase(D_8011213C);
+    s32 v0 = getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
     AssetTable *assetTable = (AssetTable *)v0;
 
     D_801121B4 = (void *)((assetTable->entryCount * sizeof(AssetTableEntry)) + (u8 *)assetTable + sizeof(AssetTableEntry));
@@ -1288,7 +1288,7 @@ void func_80047E88(s16 x, s16 y, s32 ch, u16 arg3) {
         tile = chByte - 0x40;
 
         if (D_801121B2 != 0) {
-            font = (FontTexture *)getRelocatableHeapBlockBase(D_8011213C);
+            font = (FontTexture *)getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
 
             FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
                          (u32)(font->imageOffset + (u8 *)font));
@@ -1314,7 +1314,7 @@ void func_80047E88(s16 x, s16 y, s32 ch, u16 arg3) {
 
     tile = chByte - 0x20;
     if (D_801121B2 != 0) {
-        font = (FontTexture *)getRelocatableHeapBlockBase(D_8011213C);
+        font = (FontTexture *)getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
 
         FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
                      (u32)(font->imageOffset + (u8 *)font));
@@ -1456,7 +1456,7 @@ void func_80048524(s32 arg0) {
     }
 }
 
-void *func_80048594(s32 size) {
+void *allocMenuRenderScratch(s32 size) {
     u8 *oldPtr = D_801121BC;
     u8 *newPtr = ((0, oldPtr)) + ((((u32)(size + 3)) >> 2) * 4);
     s32 new_var2;
@@ -1488,10 +1488,10 @@ void func_800485E8(s32 arg0) {
     }
 }
 
-extern void *func_80048594(s32);
+extern void *allocMenuRenderScratch(s32);
 
 void *func_8004864C(GfxCommandBlock *arg0) {
-    GfxCommandBlock *p = func_80048594(sizeof(GfxCommandBlock));
+    GfxCommandBlock *p = allocMenuRenderScratch(sizeof(GfxCommandBlock));
     if (p == NULL) {
         return NULL;
     }
@@ -1522,7 +1522,7 @@ void func_800486BC(void *arg0, void *arg1) {
 }
 
 GfxCommandDest *allocFixedTransformMatrix(GfxCommandSource *arg0) {
-    GfxCommandDest *dst = func_80048594(sizeof(GfxCommandDest));
+    GfxCommandDest *dst = allocMenuRenderScratch(sizeof(GfxCommandDest));
 
     if (dst == NULL) {
         return NULL;
@@ -1548,7 +1548,7 @@ GfxCommandDest *allocFixedTransformMatrix(GfxCommandSource *arg0) {
 }
 
 GfxCommandDest *func_80048A38(GfxCommandSource *arg0) {
-    GfxCommandDest *dst = func_80048594(sizeof(GfxCommandDest));
+    GfxCommandDest *dst = allocMenuRenderScratch(sizeof(GfxCommandDest));
 
     if (dst == NULL) {
         return NULL;
@@ -1574,7 +1574,7 @@ GfxCommandDest *func_80048A38(GfxCommandSource *arg0) {
 }
 
 GfxCommandDest *func_80048BBC(GfxCommandDest *arg0) {
-    GfxCommandDest *dst = func_80048594(sizeof(GfxCommandDest));
+    GfxCommandDest *dst = allocMenuRenderScratch(sizeof(GfxCommandDest));
 
     if (dst == NULL) {
         return NULL;

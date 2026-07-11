@@ -2,7 +2,7 @@
 #include "callback_task_scheduler.h"
 #include "relocatable_heap.h"
 #define MENU_RENDERING_C
-#include "menu_rendering.h"
+#include "menu_renderer.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
 { \
@@ -107,34 +107,34 @@ typedef void (*MenuRenderSpriteActorCallback)(MenuRenderSpriteActor *);
 typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
 extern void addRenderCallback(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
-extern void *func_80048594(s32 size);
-s32 func_80011D74(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
-void func_800112F4(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, s16 arg6, s16 arg7);
-void func_8000F0EC(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7, s32 arg8, s32 arg9,
+extern void *allocMenuRenderScratch(s32 size);
+s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
+void drawMenuSpriteTileClipped(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, s16 arg6, s16 arg7);
+void drawMenuSpriteClipped(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7, s32 arg8, s32 arg9,
                    s32 argA, s32 argB);
-void func_8000F970(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8,
+void drawMenuSpriteWithAlphaClipped(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8,
                    s32 arg9, s32 argA, s32 argB, s32 argC);
-void func_80012AE4(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 arg5);
-void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
-extern Gfx D_800DEFF8[];
+void drawMenuGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 arg5);
+void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
+extern Gfx gMenuRenderModeResetDl[];
 extern RenderCallbackNode *gMenuRenderCallbackList;
 extern Gfx *gRegionAllocPtr;
 extern s16 D_80112130[];
 extern s16 D_80112132[];
 extern u32 gPlayerInputHeld;
-extern Gfx D_800DEFF8[];
+extern Gfx gMenuRenderModeResetDl[];
 extern s16 D_800B51F0[][2];
 extern s16 gMenuFadeAlpha;
 extern s16 D_8011213C;
-extern s16 D_8015660A;
-extern s16 D_8015660C;
-extern s16 D_8015660E;
-extern s16 D_80156610;
+extern s16 gMenuViewportWidth;
+extern s16 gMenuViewportHeight;
+extern s16 gMenuViewportCenterX;
+extern s16 gMenuViewportCenterY;
 extern u16 D_800B51D0[];
 extern s16 D_800B51F0[][2];
 
 // func_8000EA80 best match: 78.118% (nonmatchings/func_8000EA80-4923837976568703863/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000EA80.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_8000EA80.s")
 
 #ifdef NON_MATCHING
 #define MENU_RENDER_EMIT_GFX(cmd0, cmd1) \
@@ -144,8 +144,8 @@ extern s16 D_800B51F0[][2];
     gfx->words.w1 = (cmd1)
 
 extern Gfx *gRegionAllocPtr;
-extern s16 D_8015660E;
-extern s16 D_80156610;
+extern s16 gMenuViewportCenterX;
+extern s16 gMenuViewportCenterY;
 
 void func_8000EA80(s16 x, s16 y, MenuRenderAssetTableHeader *table, u16 entryIndex, u16 scaleX, u16 scaleY,
                    u8 startS, u8 startT, u8 width, u8 height) {
@@ -167,17 +167,17 @@ void func_8000EA80(s16 x, s16 y, MenuRenderAssetTableHeader *table, u16 entryInd
 
     tableBase = table;
     paletteBase = (u8 *)tableBase + 8 + (tableBase->entryCount * sizeof(MenuRenderAssetTableEntry));
-    x0 = (x + D_8015660E) * 4;
-    y0 = (y + D_80156610) * 4;
+    x0 = (x + gMenuViewportCenterX) * 4;
+    y0 = (y + gMenuViewportCenterY) * 4;
     x1 = x0 + (((width * scaleX) * 4) >> 5);
     y1 = y0 + (((height * scaleY) * 4) >> 5);
     s = startS << 5;
     t = startT << 5;
 
-    clipTop = (D_80156610 - (D_8015660C / 2)) * 4;
-    clipBottom = (D_80156610 + (D_8015660C / 2)) * 4;
-    clipLeft = (D_8015660E - (D_8015660A / 2)) * 4;
-    clipRight = (D_8015660E + (D_8015660A / 2)) * 4;
+    clipTop = (gMenuViewportCenterY - (gMenuViewportHeight / 2)) * 4;
+    clipBottom = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) * 4;
+    clipLeft = (gMenuViewportCenterX - (gMenuViewportWidth / 2)) * 4;
+    clipRight = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) * 4;
 
     if ((x0 < clipRight) && (y0 < clipBottom) && (x1 >= clipLeft) && (y1 >= clipTop)) {
         if (x0 < clipLeft) {
@@ -228,15 +228,15 @@ void drawMenuSprite(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, 
     s32 temp_v0;
     s32 temp_v1;
 
-    func_8000F0EC(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                  temp_v0 = (s16)(D_8015660A / 2), temp_v1 = (s16)(D_8015660C / 2), temp_v0, temp_v1);
+    drawMenuSpriteClipped(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                  temp_v0 = (s16)(gMenuViewportWidth / 2), temp_v1 = (s16)(gMenuViewportHeight / 2), temp_v0, temp_v1);
 }
 
-// func_8000F0EC best match: 57.528% (nonmatchings/func_8000F0EC-7273315160691878794/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000F0EC.s")
+// drawMenuSpriteClipped best match: 57.528% (nonmatchings/drawMenuSpriteClipped-7273315160691878794/base_3.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSpriteClipped.s")
 
 #ifdef NON_MATCHING
-void func_8000F0EC(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 width, u16 height, u8 flip, u8 paletteIndex,
+void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 width, u16 height, u8 flip, u8 paletteIndex,
                    s32 left, s32 top, s32 right, s32 bottom) {
     MenuFontAssetEntry *entry;
     s32 x0;
@@ -270,8 +270,8 @@ void func_8000F0EC(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 
     flipT = D_800B51F0[flip & 3][1];
     entry = &table->entries[imageIndex];
 
-    x0 = (x + D_8015660E) << 2;
-    y0 = (y + D_80156610) << 2;
+    x0 = (x + gMenuViewportCenterX) << 2;
+    y0 = (y + gMenuViewportCenterY) << 2;
     x1 = x0 + ((width * entry->width) << 2 >> 5);
     y1 = y0 + ((height * entry->height) << 2 >> 5);
     dsdx = 0;
@@ -284,22 +284,22 @@ void func_8000F0EC(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 
         dtdy = (entry->height - 1) << 5;
     }
 
-    minY = D_80156610 - (s16)top;
-    minX = D_8015660E - (s16)left;
-    maxY = D_80156610 + (s16)bottom;
-    maxX = D_8015660E + (s16)right;
+    minY = gMenuViewportCenterY - (s16)top;
+    minX = gMenuViewportCenterX - (s16)left;
+    maxY = gMenuViewportCenterY + (s16)bottom;
+    maxX = gMenuViewportCenterX + (s16)right;
 
-    if (minX < D_8015660E - (D_8015660A / 2)) {
-        minX = D_8015660E - (D_8015660A / 2);
+    if (minX < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
+        minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
     }
-    if (maxX > D_8015660E + (D_8015660A / 2)) {
-        maxX = D_8015660E + (D_8015660A / 2);
+    if (maxX > gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
+        maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
     }
-    if (minY < D_80156610 - (D_8015660C / 2)) {
-        minY = D_80156610 - (D_8015660C / 2);
+    if (minY < gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
+        minY = gMenuViewportCenterY - (gMenuViewportHeight / 2);
     }
-    if (maxY > D_80156610 + (D_8015660C / 2)) {
-        maxY = D_80156610 + (D_8015660C / 2);
+    if (maxY > gMenuViewportCenterY + (gMenuViewportHeight / 2)) {
+        maxY = gMenuViewportCenterY + (gMenuViewportHeight / 2);
     }
 
     drawX0 = minX << 2;
@@ -373,15 +373,15 @@ void drawMenuSpriteWithAlpha(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u
     s32 temp_v0;
     s32 temp_v1;
 
-    func_8000F970(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, temp_v0 = (s16)(D_8015660A / 2),
-                  temp_v1 = (s16)(D_8015660C / 2), temp_v0, temp_v1);
+    drawMenuSpriteWithAlphaClipped(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, temp_v0 = (s16)(gMenuViewportWidth / 2),
+                  temp_v1 = (s16)(gMenuViewportHeight / 2), temp_v0, temp_v1);
 }
 
-// func_8000F970 best match: 82.673% (nonmatchings/func_8000F970-6113366811127043669/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8000F970.s")
+// drawMenuSpriteWithAlphaClipped best match: 82.673% (nonmatchings/drawMenuSpriteWithAlphaClipped-6113366811127043669/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
 
 #ifdef NON_MATCHING
-void func_8000F970(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flipMode, u16 alpha,
+void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flipMode, u16 alpha,
                    u8 paletteArg, s16 clipLeft, s16 clipTop, s16 clipRight, s16 clipBottom) {
     FontTexture *texture;
     u8 *textureBase;
@@ -427,8 +427,8 @@ void func_8000F970(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u1
         texHeight = textureBase[0xF];
         texture = (FontTexture *)(textureBase + 8);
 
-        left = (x + D_8015660E) << 2;
-        top = (y + D_80156610) << 2;
+        left = (x + gMenuViewportCenterX) << 2;
+        top = (y + gMenuViewportCenterY) << 2;
         right = (((scaleX * texWidth) << 2) >> 5) + left;
         bottom = (((scaleY * texHeight) << 2) >> 5) + top;
         texS = 0;
@@ -440,10 +440,10 @@ void func_8000F970(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u1
             texT = (texHeight - 1) << 5;
         }
 
-        minY = (s16)((D_80156610 - clipTop) << 2);
-        maxY = (s16)((D_80156610 + clipBottom) << 2);
-        minX = (s16)((D_8015660E - clipLeft) << 2);
-        maxX = (s16)((D_8015660E + clipRight) << 2);
+        minY = (s16)((gMenuViewportCenterY - clipTop) << 2);
+        maxY = (s16)((gMenuViewportCenterY + clipBottom) << 2);
+        minX = (s16)((gMenuViewportCenterX - clipLeft) << 2);
+        maxX = (s16)((gMenuViewportCenterX + clipRight) << 2);
 
         scaleYValue = scaleY;
         scaleXValue = scaleX;
@@ -489,7 +489,7 @@ void func_8000F970(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u1
             gSPTextureRectangle(gRegionAllocPtr++, left, top, right, bottom, 0, texS, texT,
                                 (u16)((0x8000 / scaleXValue) * flipS), (u16)((0x8000 / scaleYValue) * flipT));
             if (alpha != 0x100) {
-                gSPDisplayList(gRegionAllocPtr++, D_800DEFF8);
+                gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
             }
         }
     }
@@ -497,7 +497,7 @@ void func_8000F970(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u1
 #endif
 
 // func_80010074 best match: 76.801% (nonmatchings/func_80010074-2225551288923588688/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80010074.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_80010074.s")
 
 #ifdef NON_MATCHING
 void func_80010074(s16 x, s16 y, FontAsset *asset, u16 index, s32 alpha) {
@@ -523,18 +523,18 @@ void func_80010074(s16 x, s16 y, FontAsset *asset, u16 index, s32 alpha) {
 
     texture = &asset->textures[index];
     paletteBase = (u8 *)asset + 8 + (asset->header.entryCount * sizeof(FontTexture));
-    left = x + D_8015660E;
-    top = y + D_80156610;
+    left = x + gMenuViewportCenterX;
+    top = y + gMenuViewportCenterY;
     right = left + (texture->width >> 1);
     bottom = top + (texture->height >> 1);
     srcX = 0;
     srcY = 0;
 
-    maxX = D_8015660E + (D_8015660A / 2);
-    minX = D_8015660E - (D_8015660A / 2);
+    maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+    minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
     if (left < maxX) {
-        maxY = D_80156610 + (D_8015660C / 2);
-        minY = D_80156610 - (D_8015660C / 2);
+        maxY = gMenuViewportCenterY + (gMenuViewportHeight / 2);
+        minY = gMenuViewportCenterY - (gMenuViewportHeight / 2);
         if ((top < maxY) && (right >= minX) && (bottom >= minY)) {
             if (left < minX) {
                 srcX = minX - left;
@@ -555,7 +555,7 @@ void func_80010074(s16 x, s16 y, FontAsset *asset, u16 index, s32 alpha) {
             FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0x3000);
 
             srcPalette = (u16 *)(paletteBase + (texture->paletteIndex * 0x20));
-            palette = func_80048594(0x20);
+            palette = allocMenuRenderScratch(0x20);
             for (i = 0; i != 0x10; i++) {
                 color = srcPalette[i];
                 palette[i] = color;
@@ -582,7 +582,7 @@ void func_80010074(s16 x, s16 y, FontAsset *asset, u16 index, s32 alpha) {
 #endif
 
 // func_8001061C best match: 82.830% (nonmatchings/func_8001061C-2225551288923588688/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8001061C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_8001061C.s")
 
 #ifdef NON_MATCHING
 void func_8001061C(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u8 srcY, u8 width, u8 height, u16 scaleX,
@@ -604,19 +604,19 @@ void func_8001061C(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u8 srcY, 
 
     texture = &asset->textures[index];
     paletteBase = (u8 *)asset + (asset->header.entryCount * sizeof(FontTexture)) + 8;
-    left = (x + D_8015660E) << 2;
-    top = (y + D_80156610) << 2;
+    left = (x + gMenuViewportCenterX) << 2;
+    top = (y + gMenuViewportCenterY) << 2;
     right = (((width * scaleX) << 2) >> 5) + left;
     bottom = (((height * scaleY) << 2) >> 5) + top;
     texS = srcX << 5;
     texT = srcY << 5;
 
-    halfY = D_8015660C / 2;
-    minY = (s16)((D_80156610 - halfY) << 2);
-    maxY = (D_80156610 + halfY) << 2;
-    halfX = D_8015660A / 2;
-    minX = (s16)((D_8015660E - halfX) << 2);
-    maxX = (D_8015660E + halfX) << 2;
+    halfY = gMenuViewportHeight / 2;
+    minY = (s16)((gMenuViewportCenterY - halfY) << 2);
+    maxY = (gMenuViewportCenterY + halfY) << 2;
+    halfX = gMenuViewportWidth / 2;
+    minX = (s16)((gMenuViewportCenterX - halfX) << 2);
+    maxX = (gMenuViewportCenterX + halfX) << 2;
 
     if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
         if (left < minX) {
@@ -645,17 +645,17 @@ void func_8001061C(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u8 srcY, 
 }
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80010BCC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_80010BCC.s")
 
-void func_80011264(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5) {
-    func_800112F4(arg0, arg1, arg2, arg3, arg4, arg5, D_8015660A / 2, D_8015660C / 2);
+void drawMenuSpriteTile(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5) {
+    drawMenuSpriteTileClipped(arg0, arg1, arg2, arg3, arg4, arg5, gMenuViewportWidth / 2, gMenuViewportHeight / 2);
 }
 
-// func_800112F4 best match: 80.680% (nonmatchings/func_800112F4-6061209858023118177/base_13.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_800112F4.s")
+// drawMenuSpriteTileClipped best match: 80.680% (nonmatchings/drawMenuSpriteTileClipped-6061209858023118177/base_13.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSpriteTileClipped.s")
 
 #ifdef NON_MATCHING
-void func_800112F4(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 unused, u16 alpha, s16 clipRight,
+void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 unused, u16 alpha, s16 clipRight,
                    s16 clipBottom) {
     MenuFontAssetEntry *entry;
     u8 *paletteBase;
@@ -674,30 +674,30 @@ void func_800112F4(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 
 
     entry = &table->entries[entryIndex];
     paletteBase = (u8 *)&table->entries[table->entryCount];
-    x0 = x + D_8015660E;
-    y0 = y + D_80156610;
+    x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
     x1 = x0 + entry->width;
     y1 = y0 + entry->height;
-    minX = D_8015660E - clipRight;
-    minY = D_80156610 - clipBottom;
-    maxX = D_8015660E + clipRight;
-    maxY = D_80156610 + clipBottom;
+    minX = gMenuViewportCenterX - clipRight;
+    minY = gMenuViewportCenterY - clipBottom;
+    maxX = gMenuViewportCenterX + clipRight;
+    maxY = gMenuViewportCenterY + clipBottom;
     clipS = 0;
     clipT = 0;
 
-    halfWidth = D_8015660A / 2;
-    if (minX < D_8015660E - halfWidth) {
-        minX = D_8015660E - halfWidth;
+    halfWidth = gMenuViewportWidth / 2;
+    if (minX < gMenuViewportCenterX - halfWidth) {
+        minX = gMenuViewportCenterX - halfWidth;
     }
-    if (D_8015660E + halfWidth < maxX) {
-        maxX = D_8015660E + halfWidth;
+    if (gMenuViewportCenterX + halfWidth < maxX) {
+        maxX = gMenuViewportCenterX + halfWidth;
     }
-    halfHeight = D_8015660C / 2;
-    if (minY < D_80156610 - halfHeight) {
-        minY = D_80156610 - halfHeight;
+    halfHeight = gMenuViewportHeight / 2;
+    if (minY < gMenuViewportCenterY - halfHeight) {
+        minY = gMenuViewportCenterY - halfHeight;
     }
-    if (D_80156610 + halfHeight < maxY) {
-        maxY = D_80156610 + halfHeight;
+    if (gMenuViewportCenterY + halfHeight < maxY) {
+        maxY = gMenuViewportCenterY + halfHeight;
     }
 
     if ((x0 < maxX) && (y0 < maxY) && (x1 >= minX) && (y1 >= minY)) {
@@ -743,7 +743,7 @@ void func_800112F4(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 
         FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, ((clipS << 21) & 0xFFFF0000) | ((clipT << 5) & 0xFFFF));
         FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
         if (alpha != 0x100) {
-            FONT_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)D_800DEFF8);
+            FONT_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gMenuRenderModeResetDl);
         }
     }
 }
@@ -752,15 +752,15 @@ void func_800112F4(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 
 void func_80011854(void) {
 }
 
-// func_8001185C best match: 99.328% (nonmatchings/func_8001185C-6061209858023118177/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_8001185C.s")
+// drawMenuTextureByAssetId best match: 99.328% (nonmatchings/drawMenuTextureByAssetId-6061209858023118177/base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuTextureByAssetId.s")
 
 #ifdef NON_MATCHING
 extern s16 D_8011214A;
 extern Gfx *gRegionAllocPtr;
-extern void func_80045990(void *arg0, u16 arg1, void **arg2, void **arg3);
+extern void getAssetTableImageAndPalette(void *arg0, u16 arg1, void **arg2, void **arg3);
 
-void func_8001185C(s16 x, s16 y, s32 arg2, u16 assetId, u16 width, u16 height)
+void drawMenuTextureByAssetId(s16 x, s16 y, s32 arg2, u16 assetId, u16 width, u16 height)
 {
     s32 x0;
     s32 y0;
@@ -775,14 +775,14 @@ void func_8001185C(s16 x, s16 y, s32 arg2, u16 assetId, u16 width, u16 height)
     void *palette;
     if ((((width < 0x201) && (width > 0)) && (height < 0x201)) && (height > 0))
     {
-        x0 = (x + D_8015660E) * 4;
-        y0 = (y + D_80156610) * 4;
+        x0 = (x + gMenuViewportCenterX) * 4;
+        y0 = (y + gMenuViewportCenterY) * 4;
         x1 = (((width * 64) << 2) >> 5) + x0;
         y1 = (((height * 64) << 2) >> 5) + y0;
-        clipY0 = (D_80156610 - (D_8015660C / 2)) * 4;
-        clipY1 = (D_80156610 + (D_8015660C / 2)) * 4;
-        clipX0 = (D_8015660E - (D_8015660A / 2)) * 4;
-        clipX1 = (D_8015660E + (D_8015660A / 2)) * 4;
+        clipY0 = (gMenuViewportCenterY - (gMenuViewportHeight / 2)) * 4;
+        clipY1 = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) * 4;
+        clipX0 = (gMenuViewportCenterX - (gMenuViewportWidth / 2)) * 4;
+        clipX1 = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) * 4;
         if ((((x0 < clipX1) && (y0 < clipY1)) && (x1 >= clipX0)) && (y1 >= clipY0))
         {
             if (x0 < clipX0)
@@ -791,7 +791,7 @@ void func_8001185C(s16 x, s16 y, s32 arg2, u16 assetId, u16 width, u16 height)
             }
             if (y0 < clipY0)
             {
- y0 = clipY0; } if (x1 >= clipX1) { x1 = clipX1 - 4; } if (y1 >= clipY1) { y1 = clipY1 - 4; } func_80045990(getRelocatableHeapBlockBase(D_8011214A), assetId, &image, &palette); { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) (&image); if (((!_g) && (!_g)) && (!_g)) { } } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf3) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) MIN((((64 * 64) + 3) >> 2) - 1, 2047)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((((1 << 11) + MAX(1, 64 / 16)) - 1) / MAX(1, 64 / 16))) & ((0x01 << 12) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (((64 >> 1) + 7) >> 3)) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf2) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((64 - 1) << 2)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((64 - 1) << 2)) & ((0x01 << 12) - 1)) << 0)); } } ; { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) palette; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe8) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) (256 + ((0 & 0xf) * 16))) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0;
+ y0 = clipY0; } if (x1 >= clipX1) { x1 = clipX1 - 4; } if (y1 >= clipY1) { y1 = clipY1 - 4; } getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011214A), assetId, &image, &palette); { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) (&image); if (((!_g) && (!_g)) && (!_g)) { } } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf3) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) MIN((((64 * 64) + 3) >> 2) - 1, 2047)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((((1 << 11) + MAX(1, 64 / 16)) - 1) / MAX(1, 64 / 16))) & ((0x01 << 12) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (((64 >> 1) + 7) >> 3)) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf2) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((64 - 1) << 2)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((64 - 1) << 2)) & ((0x01 << 12) - 1)) << 0)); } } ; { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) palette; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe8) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) (256 + ((0 & 0xf) * 16))) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0;
                 }
                 ;
                 {
@@ -868,14 +868,14 @@ void func_80011C3C(MenuRenderSpriteActor *actor) {
 }
 
 void func_80011D44(MenuRenderSprite *arg0) {
-    func_80011D74(arg0, 0, 0, 0);
+    drawMenuTilemapSprite(arg0, 0, 0, 0);
 }
 
 void func_80011D6C(void) {
 }
 
-// func_80011D74 best match: 74.828% (nonmatchings/func_80011D74-7123131487808489545/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80011D74.s")
+// drawMenuTilemapSprite best match: 74.828% (nonmatchings/drawMenuTilemapSprite-7123131487808489545/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuTilemapSprite.s")
 
 #ifdef NON_MATCHING
 #define MENU_RENDER_SPRITE_EMIT_GFX(cmd0, cmd1) \
@@ -885,7 +885,7 @@ void func_80011D6C(void) {
     _g->words.w1 = (cmd1); \
 }
 
-s32 func_80011D74(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivisor, s16 yDivisor) {
+s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivisor, s16 yDivisor) {
     s16 minX;
     s16 minY;
     s16 maxX;
@@ -926,7 +926,7 @@ s32 func_80011D74(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivisor, s16
     s16 screenY;
     Gfx *gfx;
 
-    minX = -D_8015660A / 2;
+    minX = -gMenuViewportWidth / 2;
     x = sprite->x;
     clipX = sprite->clipX;
     if (clipX < minX) {
@@ -934,7 +934,7 @@ s32 func_80011D74(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivisor, s16
         clipX = minX;
     }
 
-    minY = -D_8015660C / 2;
+    minY = -gMenuViewportHeight / 2;
     y = sprite->y;
     clipY = sprite->clipY;
     if (clipY < minY) {
@@ -943,19 +943,19 @@ s32 func_80011D74(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivisor, s16
     }
 
     maxX = sprite->clipX + sprite->width;
-    if ((D_8015660A / 2) < maxX) {
-        maxX = D_8015660A / 2;
+    if ((gMenuViewportWidth / 2) < maxX) {
+        maxX = gMenuViewportWidth / 2;
     }
 
     maxY = sprite->clipY + sprite->height;
-    if ((D_8015660C / 2) < maxY) {
-        maxY = D_8015660C / 2;
+    if ((gMenuViewportHeight / 2) < maxY) {
+        maxY = gMenuViewportHeight / 2;
     }
 
-    clipX += D_8015660E;
-    maxX += D_8015660E;
-    clipY += D_80156610;
-    maxY += D_80156610;
+    clipX += gMenuViewportCenterX;
+    maxX += gMenuViewportCenterX;
+    clipY += gMenuViewportCenterY;
+    maxY += gMenuViewportCenterY;
 
     tileMask = sprite->tileSize - 1;
     if (sprite->tileSize == 0x10) {
@@ -1145,7 +1145,7 @@ void func_800128C8(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u
             } else {
                 advance = xStep;
                 if ((code & 0xFFFF) != 0xFFFE) {
-                    func_80012AE4(xPos, yPos, code & 0xFFFF, ((u8 *)&palette)[3], scaleValue, arg5Value);
+                    drawMenuGlyph(xPos, yPos, code & 0xFFFF, ((u8 *)&palette)[3], scaleValue, arg5Value);
                 }
                 xPos += advance;
             }
@@ -1187,7 +1187,7 @@ void func_800129DC(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale) {
             } else {
                 advance = xStep;
                 if (skip != (code & 0xFFFF)) {
-                    func_80012AE4(xPos, yPos, code & 0xFFFF, ((u8 *)&palette)[3], scaleValue, 0x22);
+                    drawMenuGlyph(xPos, yPos, code & 0xFFFF, ((u8 *)&palette)[3], scaleValue, 0x22);
                 }
                 xPos += advance;
             }
@@ -1197,7 +1197,7 @@ void func_800129DC(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80012AE4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuGlyph.s")
 
 void drawMenuColoredGlyphScript(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u16 red, u16 blue) {
     u16 first;
@@ -1235,7 +1235,7 @@ void drawMenuColoredGlyphScript(volatile s16 x, s16 y, u16 *script, s32 palette,
             } else {
                 advance = xStep;
                 if (skip != (code & 0xFFFF)) {
-                    func_80013284(xPos, yPos, code & 0xFFFF, ((u8 *)&palette)[3], scaleValue, redValue, blueValue);
+                    drawMenuColoredGlyph(xPos, yPos, code & 0xFFFF, ((u8 *)&palette)[3], scaleValue, redValue, blueValue);
                 }
                 xPos += advance;
             }
@@ -1246,7 +1246,7 @@ void drawMenuColoredGlyphScript(volatile s16 x, s16 y, u16 *script, s32 palette,
 }
 
 // drawMenuGlyphScript best match: 99.737%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/drawMenuGlyphScript.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuGlyphScript.s")
 
 #ifdef NON_MATCHING
 void drawMenuGlyphScript(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, volatile u16 colorMode) {
@@ -1286,7 +1286,7 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, u16 *script, s32 palette, u16 sc
                 colorModeValue = ptr[1];
                 ptr++;
             } else {
-                func_80013284(xPos, yPos, code & 0xFFFF, ((u8 *)&palette)[3], scaleValue, colorModeValue, 0x22);
+                drawMenuColoredGlyph(xPos, yPos, code & 0xFFFF, ((u8 *)&palette)[3], scaleValue, colorModeValue, 0x22);
                 xPos += (advance = xStep);
             }
             code = ptr[1];
@@ -1297,11 +1297,11 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, u16 *script, s32 palette, u16 sc
 }
 #endif
 
-// func_80013284 best match: 79.241% (nonmatchings/func_80013284-731940616440357983/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013284.s")
+// drawMenuColoredGlyph best match: 79.241% (nonmatchings/func_80013284-731940616440357983/base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuColoredGlyph.s")
 
 #ifdef NON_MATCHING
-void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale, u16 paletteIndex, s32 fontBank) {
+void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale, u16 paletteIndex, s32 fontBank) {
     MenuFontAssetTable *font;
     s32 glyphWidth;
     s32 x0;
@@ -1340,21 +1340,21 @@ void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale, u16 pa
     }
     paletteBase = (u16 *)(&font->entries[font->entryCount]);
 
-    x0 = x + D_8015660E;
-    y0 = y + D_80156610;
+    x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
     x1 = x0 + glyphWidth;
     y1 = y0 + 0x10;
     clipS = 0;
     clipT = 0;
 
-    viewHalfWidth = D_8015660A / 2;
-    maxX = D_8015660E + viewHalfWidth;
+    viewHalfWidth = gMenuViewportWidth / 2;
+    maxX = gMenuViewportCenterX + viewHalfWidth;
     if (x0 < maxX) {
-        minX = D_8015660E - viewHalfWidth;
-        viewHalfHeight = D_8015660C / 2;
-        maxY = D_80156610 + viewHalfHeight;
+        minX = gMenuViewportCenterX - viewHalfWidth;
+        viewHalfHeight = gMenuViewportHeight / 2;
+        maxY = gMenuViewportCenterY + viewHalfHeight;
         if ((y0 < maxY) && (x1 >= minX)) {
-            minY = D_80156610 - viewHalfHeight;
+            minY = gMenuViewportCenterY - viewHalfHeight;
             if (y1 >= minY) {
                 if (x0 < minX) {
                     clipS = minX - x0;
@@ -1375,7 +1375,7 @@ void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale, u16 pa
                 drawX1 = x1;
                 drawY1 = y1;
 
-                dstPalette = func_80048594(0x20);
+                dstPalette = allocMenuRenderScratch(0x20);
                 srcPalette = paletteBase + ((u16)paletteIndex * 0x10);
                 for (i = 0; i != 0x10; i++) {
                     color = srcPalette[i];
@@ -1418,7 +1418,7 @@ void func_80013284(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale, u16 pa
 #endif
 
 // func_800137C8 best match: 73.956% (nonmatchings/func_800137C8-2225551288923588688/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_800137C8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_800137C8.s")
 
 #ifdef NON_MATCHING
 void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale) {
@@ -1450,22 +1450,22 @@ void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale) {
     asset = (FontAsset *)getRelocatableHeapBlockBase(D_8011213C);
     paletteBase = (u16 *)&asset->textures[asset->header.entryCount];
     font = &asset->textures[0];
-    x0 = x + D_8015660E;
-    y0 = y + D_80156610;
+    x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
     x1 = x0 + 8;
     y1 = y0 + 8;
     clipS = 0;
     clipT = 0;
     paletteValue = *(s16 *)((u8 *)asset + 0xC);
 
-    halfW = D_8015660A / 2;
-    right = D_8015660E + halfW;
+    halfW = gMenuViewportWidth / 2;
+    right = gMenuViewportCenterX + halfW;
     if (x0 < right) {
-        left = D_8015660E - halfW;
-        halfH = D_8015660C / 2;
-        bottom = D_80156610 + halfH;
+        left = gMenuViewportCenterX - halfW;
+        halfH = gMenuViewportHeight / 2;
+        bottom = gMenuViewportCenterY + halfH;
         if (y0 < bottom && x1 >= left) {
-            top = D_80156610 - halfH;
+            top = gMenuViewportCenterY - halfH;
             if (y1 >= top) {
                 if (x0 < left) {
                     clipS = left - x0;
@@ -1488,7 +1488,7 @@ void func_800137C8(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale) {
                     paletteValue = palette;
                 }
 
-                dst = func_80048594(0x20);
+                dst = allocMenuRenderScratch(0x20);
                 palettePtr = &paletteBase[paletteValue * 16];
                 scaleValue = scale;
                 offset = 0;
@@ -1577,13 +1577,13 @@ void drawMenuAsciiText(s16 arg0, s16 arg1, u8 *arg2, u16 arg3, u16 arg4) {
 }
 
 // func_80013DFC best match: 70.220%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013DFC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_80013DFC.s")
 
 #ifdef NON_MATCHING
 void func_80013DFC(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b) {
     Gfx *gfx;
     s32 color;
-    extern u32 D_800DEFF8[];
+    extern u32 gMenuRenderModeResetDl[];
 
     if (x0 >= 0 && x0 < 321 && x1 >= 0 && x1 < 321 && y0 >= 0 && y0 < 241 && y1 >= 0 && y1 < 241) {
         gfx = gRegionAllocPtr++;
@@ -1609,7 +1609,7 @@ void func_80013DFC(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b) {
 
         gfx = gRegionAllocPtr++;
         gfx->words.w0 = 0x06000000;
-        gfx->words.w1 = (u32)D_800DEFF8;
+        gfx->words.w1 = (u32)gMenuRenderModeResetDl;
     }
 }
 #endif
@@ -1638,7 +1638,7 @@ u8 increase;
 }
 
 // func_80013FEC best match: 82.448% (nonmatchings/func_80013FEC-7273315160691878794/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_rendering/func_80013FEC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/func_80013FEC.s")
 
 #ifdef NON_MATCHING
 void func_80013FEC(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex0, u16 imageIndex1, u8 alpha) {
@@ -1666,22 +1666,22 @@ void func_80013FEC(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex0, u16
     entry1 = &table->entries[imageIndex1];
     paletteBase = (u8 *)&table->entries[table->entryCount];
 
-    x0 = x + D_8015660E;
-    y0 = y + D_80156610;
+    x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
     x1 = x0 + entry0->width;
     y1 = y0 + entry0->height;
 
     clipS = 0;
     clipT = 0;
-    halfWidth = D_8015660A / 2;
-    maxX = D_8015660E + halfWidth;
+    halfWidth = gMenuViewportWidth / 2;
+    maxX = gMenuViewportCenterX + halfWidth;
     if (x0 < maxX) {
-        halfHeight = D_8015660C / 2;
-        maxY = D_80156610 + halfHeight;
+        halfHeight = gMenuViewportHeight / 2;
+        maxY = gMenuViewportCenterY + halfHeight;
         if (y0 < maxY) {
-            minX = D_8015660E - halfWidth;
+            minX = gMenuViewportCenterX - halfWidth;
             if (x1 >= minX) {
-                minY = D_80156610 - halfHeight;
+                minY = gMenuViewportCenterY - halfHeight;
                 if (y1 >= minY) {
                     if (x0 < minX) {
                         clipS = minX - x0;
@@ -1748,7 +1748,7 @@ void func_80013FEC(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex0, u16
                     FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000,
                                  ((clipS << 21) & 0xFFFF0000) | ((clipT << 5) & 0xFFFF));
                     FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)D_800DEFF8);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gMenuRenderModeResetDl);
                 }
             }
         }

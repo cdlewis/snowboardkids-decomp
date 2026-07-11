@@ -155,7 +155,7 @@ struct RaceParticleActor {
     /* 0x4C */ void *palette;
 };
 
-extern void func_80045990(s32, s32, void *, void *);
+extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
 extern void func_800486BC(CourseEffectMatrixSource *, void *);
 extern GfxCommandDest *allocFixedTransformMatrix(void *);
 extern void func_80048C90(GfxCommandDest *, Vec3i *);
@@ -336,7 +336,7 @@ void func_80066ABC(RaceModelListActor *arg0) {
             if ((entry->enabled != 0) && (isPositionNearCurrentViewport(&entry->transform) != 0)) {
                 if (modelIndex != entry->modelIndex + actor->modelIndexOffset) {
                     modelIndex = entry->modelIndex + actor->modelIndexOffset;
-                    func_80045990(getRelocatableHeapBlockBase(D_80112168), (modelIndex + 4) & 0xFFFF, &spA0, &sp9C);
+                    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), (modelIndex + 4) & 0xFFFF, &spA0, &sp9C);
 
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, spA0, G_IM_FMT_CI, 16, 16, 0, G_TX_CLAMP,
                                            G_TX_CLAMP, 0, 0, 0, 0);
@@ -1054,13 +1054,13 @@ void func_800691C8(RaceOverlayModelActor *arg0) {
     arg0->spawnPos.x = arg0->pos.x;
     arg0->spawnPos.y = arg0->pos.y;
     arg0->spawnPos.z = arg0->pos.z;
-    func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x1E, &arg0->image0, &arg0->palette0);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x1E, &arg0->image0, &arg0->palette0);
     if (arg0->variant == 0) {
-        func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x20, &arg0->image1, &arg0->palette1);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x20, &arg0->image1, &arg0->palette1);
     } else {
-        func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x21, &arg0->image1, &arg0->palette1);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x21, &arg0->image1, &arg0->palette1);
     }
-    func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x22, &arg0->image2, &arg0->palette2);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x22, &arg0->image2, &arg0->palette2);
     setCallbackTaskCallback(arg0, assignPickupRandomEffect);
 }
 
@@ -1158,7 +1158,7 @@ void func_80069754(RaceParticleActor *arg0) {
     arg0->rotVelZ = randomNextMain() - 0x80;
     makeFixedRotationY(sp28, arg0->rotY);
     transformVec3iByFixedMatrix(sp28, &D_800D9BD8[arg0->spawnOffsetIndex], &arg0->velocity);
-    func_80045990(getRelocatableHeapBlockBase(D_80112168), 0x22, &arg0->palette, &arg0->image);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112168), 0x22, &arg0->palette, &arg0->image);
     setCallbackTaskCallback(arg0, func_80069678);
 }
 

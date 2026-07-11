@@ -6,7 +6,7 @@
 #include "controller_pak_menu.h"
 #include "game_task_scheduler.h"
 #include "controller_pak_race_record_save_ui.h"
-#include "menu_rendering.h"
+#include "menu_renderer.h"
 #include "viewport_manager.h"
 
 typedef struct {

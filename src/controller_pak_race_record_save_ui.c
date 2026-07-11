@@ -2,9 +2,9 @@
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "controller_pak_race_record_save_ui.h"
-#define MENU_RENDERING_BROAD_PROTOTYPES
-#define MENU_RENDERING_F8AC_U16_ALPHA_PROTOTYPE
-#include "menu_rendering.h"
+#define MENU_RENDERER_BROAD_PROTOTYPES
+#define MENU_RENDERER_F8AC_U16_ALPHA_PROTOTYPE
+#include "menu_renderer.h"
 
 typedef struct {
     u8 state;
@@ -465,7 +465,7 @@ void initControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
 }
 
 void drawControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0) {
-    func_800129DC(arg0->x, arg0->y, gControllerPakRaceRecordSaveExitMessage, 1, arg0->unk1C.scale);
+    drawMenuGlyphScriptDefaultFont(arg0->x, arg0->y, gControllerPakRaceRecordSaveExitMessage, 1, arg0->unk1C.scale);
 }
 
 void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0) {

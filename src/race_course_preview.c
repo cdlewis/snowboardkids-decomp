@@ -107,7 +107,7 @@ extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
 extern Gfx *allocFixedTransformMatrix(FixedTransform *arg0);
-extern void func_80045990(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);
+extern void getAssetTableImageAndPalette(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);
 extern Vec3i gRaceCoursePreviewBillboardPositions[];
 extern GfxCommandDest *gRaceCoursePreviewModelVerticesByCourse[];
 extern RaceCoursePreviewRenderCommandEntry *gRaceCoursePreviewModelCommandsByCourse[];
@@ -298,7 +298,7 @@ void waitRaceCoursePreviewBillboardSpawn(RaceCoursePreviewCamera *arg0) {
 
 void initRaceCoursePreviewBillboard(RaceCoursePreviewCamera *arg0) {
     arg0->timer = (arg0->index * 0x1E) + 0x1E;
-    func_80045990(getRelocatableHeapBlockBase(D_8011216A), (arg0->index + 3) & 0xFFFF, &arg0->scale, &arg0->pitchVelocity);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011216A), (arg0->index + 3) & 0xFFFF, &arg0->scale, &arg0->pitchVelocity);
     setCallbackTaskCallback(arg0, waitRaceCoursePreviewBillboardSpawn);
 }
 

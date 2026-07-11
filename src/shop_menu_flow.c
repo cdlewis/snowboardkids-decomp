@@ -5,7 +5,7 @@
 #include "character_select_course_menu.h"
 #include "controller_pak_ui.h"
 #include "game_task_scheduler.h"
-#include "menu_rendering.h"
+#include "menu_renderer.h"
 #include "shop_menu_flow.h"
 #include "viewport_manager.h"
 

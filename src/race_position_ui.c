@@ -51,14 +51,14 @@ struct RacePositionUiPlayer {
     /* 0x530 */ void *partVtx[RACE_POSITION_UI_PLAYER_PART_CAPACITY];
 };
 
-extern void *func_80048594(s32 size);
+extern void *allocMenuRenderScratch(s32 size);
 extern s32 allocFixedTransformMatrix(void *source);
-extern void func_80045990(void *asset, u16 index, void **image, void **palette);
+extern void getAssetTableImageAndPalette(void *asset, u16 index, void **image, void **palette);
 
 extern u8 D_80156609;
 extern s16 gUiBlinkTimer;
 extern s16 D_80112148;
-extern s16 D_8011214A;
+extern s16 gShopMenuTextureAssetHandle;
 extern s16 D_80112130[];
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_800DE070[];
@@ -108,7 +108,7 @@ static void racePositionUiLoadAssetTexture(void *asset, u16 textureIndex, u32 se
     racePositionUiAppendGfx(0xE7000000, 0);
     racePositionUiAppendGfx(0xBC000806, (u32)getRelocatableHeapBlockBase(D_80112148));
     racePositionUiAppendGfx(0x01020040, (u32)asset);
-    func_80045990((void *)getRelocatableHeapBlockBase(D_8011214A), textureIndex, &image, &palette);
+    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), textureIndex, &image, &palette);
     racePositionUiAppendGfx(0xFD500000, (u32)image);
     racePositionUiAppendGfx(0xF5500000, 0x07080200);
     racePositionUiAppendGfx(0xE6000000, 0);
@@ -148,7 +148,7 @@ void func_8007BE80(RacePositionUiPlayer *player) {
 
     if (D_80156609 != 0) {
         player->flags &= ~RACE_POSITION_UI_FLAG_MARKER_READY;
-        player->markerVtx = func_80048594(0x40);
+        player->markerVtx = allocMenuRenderScratch(0x40);
         if (player->markerVtx == NULL) {
             return;
         }
@@ -176,7 +176,7 @@ void func_8007BE80(RacePositionUiPlayer *player) {
             vtx->a = 0x30;
         } while (posOffset != endOffset);
 
-        player->markerMtx = func_80048594(0x100);
+        player->markerMtx = allocMenuRenderScratch(0x100);
         if (player->markerMtx == NULL) {
             return;
         }
@@ -213,7 +213,7 @@ void func_8007C130(void *asset, s16 dlIndex, s16 textureIndex) {
     gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(D_80112148));
     gSPMatrix(gRegionAllocPtr++, (Mtx *)asset, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-    func_80045990((void *)getRelocatableHeapBlockBase(D_8011214A), textureIndex, &image, &palette);
+    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), textureIndex, &image, &palette);
 
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
@@ -227,7 +227,7 @@ void func_8007C38C(void *asset, s16 dlIndex, s16 textureIndex) {
     gDPPipeSync(gRegionAllocPtr++);
     gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(D_80112148));
     gSPMatrix(gRegionAllocPtr++, (Mtx *)asset, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    func_80045990((void *)getRelocatableHeapBlockBase(D_8011214A), textureIndex, &image, &palette);
+    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), textureIndex, &image, &palette);
 
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);

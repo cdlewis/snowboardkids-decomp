@@ -4,8 +4,8 @@
 #include "asset_manager.h"
 #include "player_select_ui.h"
 #include "shop_menu_ui.h"
-#define MENU_RENDERING_BROAD_PROTOTYPES
-#include "menu_rendering.h"
+#define MENU_RENDERER_BROAD_PROTOTYPES
+#include "menu_renderer.h"
 
 typedef struct {
     char pad[0x1C];
@@ -204,7 +204,7 @@ extern u8 D_80121D86;
 extern u8 D_80121D88;
 extern u8 D_80121D85;
 extern s16 D_8011217E;
-extern s16 D_8011214A;
+extern s16 gShopMenuTextureAssetHandle;
 extern CourseSelectStatus gCourseSelectStatus;
 extern s32 gActiveMenuTask;
 extern u8 D_8010AF40;
@@ -364,7 +364,7 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        func_80011264((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
+        drawMenuSpriteTile((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
                       getRelocatableHeapBlockBase(D_80112130[0x27]), D_800B79C0[(u16)arg0->item.counter].center[tileOffset], 0, 0x100);
     }
 
@@ -376,10 +376,10 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(D_80112130[0x27]),
+        drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(D_80112130[0x27]),
                       D_800B79C0[(u16)arg0->item.counter].right[tileOffset], 0, 0x100);
         i = 0x80;
-        func_80011264((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130[0x27]),
+        drawMenuSpriteTile((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130[0x27]),
                       D_800B79C0[(u16)arg0->item.counter].bottom[tileOffset], 0, 0x100);
         offset += 0x40;
         tileOffset++;
@@ -387,7 +387,7 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
     i++;
     i--;
 
-    func_80011264((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130[0x27]),
+    drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(D_80112130[0x27]),
                   D_800B79C0[(u16)arg0->item.counter].corner, 0, 0x100);
 
     drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(D_80112130[0x25]), 0x33, 0x20, 0x20, 0, 0);
@@ -503,7 +503,7 @@ void func_8002D2E4(ShopMenuWidgetActor *arg0) {
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(D_80112130[0x25]),
+        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(D_80112130[0x25]),
                       D_800B79C0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -513,9 +513,9 @@ void func_8002D2E4(ShopMenuWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_800112F4(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(D_80112130[0x25]),
+        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(D_80112130[0x25]),
                       D_800B79C0[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        func_800112F4(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(D_80112130[0x25]),
+        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(D_80112130[0x25]),
                       D_800B79C0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -524,7 +524,7 @@ void func_8002D2E4(ShopMenuWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(D_80112130[0x25]),
+    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(D_80112130[0x25]),
                   D_800B79C0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -607,7 +607,7 @@ void func_8002D778(ShopMenuWidgetActor *arg0) {
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        func_800112F4(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(D_80112130[0x25]),
+        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(D_80112130[0x25]),
                       D_800B79C0[(u16)arg0->sprite.index - 1].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -617,9 +617,9 @@ void func_8002D778(ShopMenuWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        func_800112F4(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(D_80112130[0x25]),
+        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(D_80112130[0x25]),
                       D_800B79C0[(u16)arg0->sprite.index - 1].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        func_800112F4(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(D_80112130[0x25]),
+        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(D_80112130[0x25]),
                       D_800B79C0[(u16)arg0->sprite.index - 1].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -628,7 +628,7 @@ void func_8002D778(ShopMenuWidgetActor *arg0) {
     i++;
     i--;
 
-    func_800112F4(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(D_80112130[0x25]),
+    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(D_80112130[0x25]),
                   D_800B79C0[(u16)arg0->sprite.index - 1].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -1018,7 +1018,7 @@ void func_8002E5A4(ShopMenuWidgetActor *arg0) {
             tile = actor->sparkle.tileBase + i;
             entry = offset;
             y = randomValues[1];
-            func_80011264((s16)(entry->x + randomValues[0]), (s16)(y + entry->y), texture, tile & 0xFFFF, 0,
+            drawMenuSpriteTile((s16)(entry->x + randomValues[0]), (s16)(y + entry->y), texture, tile & 0xFFFF, 0,
                           alpha & 0xFFFFFFFFFFFFFFFF);
             tileOffset++;
             i++;
@@ -1299,7 +1299,7 @@ void func_8002EFFC(ShopMenuWidgetActor *arg0) {
         }
         script[2] = -1;
         script[1] = value % 10;
-        func_800129DC((s16)(cursor[12] - 0x12), (s16)(arg0->targetY + yOffset), script, 1, 0x100);
+        drawMenuGlyphScriptDefaultFont((s16)(cursor[12] - 0x12), (s16)(arg0->targetY + yOffset), script, 1, 0x100);
 
         yOffset += 0x13;
         tiles++;
@@ -1555,8 +1555,8 @@ void func_8002F8DC(ShopMenuWidgetActor *arg0) {
         tileIndex = D_800B34EC[D_8010AF73 * 7];
     }
 
-    func_8001061C(arg0->x, arg0->y, getRelocatableHeapBlockBase(D_8011214A), tileIndex, 0, 0, 0x40, 0x1C, 0x20, 0x20);
-    func_8001061C((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(D_8011214A), tileIndex, 0, 0x1C, 0x40, 0x1C, 0x20,
+    drawMenuSpriteSubrect(arg0->x, arg0->y, getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), tileIndex, 0, 0, 0x40, 0x1C, 0x20, 0x20);
+    drawMenuSpriteSubrect((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), tileIndex, 0, 0x1C, 0x40, 0x1C, 0x20,
                   0x20);
     drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 1), getRelocatableHeapBlockBase(D_8011217E), 0xA, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0x3C), (s16)(arg0->y - 1), getRelocatableHeapBlockBase(D_8011217E), 0xB, 0x20, 0x20, 1, 0);

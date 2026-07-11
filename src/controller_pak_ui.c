@@ -4,7 +4,7 @@
 #include "character_select_course_menu.h"
 #include "controller_pak_menu.h"
 #include "controller_pak_ui.h"
-#include "menu_rendering.h"
+#include "menu_renderer.h"
 #include "title_menu.h"
 
 #define CONTROLLER_PAK_DELETE_PANEL_HANDLE (D_80112130[0x29])
@@ -742,7 +742,7 @@ void initControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
 }
 
 void drawControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
-    func_80011D74((MenuRenderSprite *)&arg0->sprite, 0, arg0->common.x, arg0->common.y);
+    drawMenuTilemapSprite((MenuRenderSprite *)&arg0->sprite, 0, arg0->common.x, arg0->common.y);
 }
 
 void updateControllerPakFileDeleteIcon(s32 arg0) {
@@ -759,7 +759,7 @@ void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
 }
 
 void drawControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
-    func_80011D74((MenuRenderSprite *)&arg0->sprite, 1, arg0->common.x, arg0->common.y);
+    drawMenuTilemapSprite((MenuRenderSprite *)&arg0->sprite, 1, arg0->common.x, arg0->common.y);
 }
 
 void updateControllerPakMessageIcon(s32 arg0) {
