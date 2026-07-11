@@ -3,7 +3,7 @@
 #include "asset_manager.h"
 #include "character_select_course_menu.h"
 #include "controller_pak_message_flow.h"
-#include "controller_pak_menu_ui.h"
+#include "controller_pak_file_delete_ui.h"
 #include "input_task_scheduler.h"
 #include "menu_rendering.h"
 #include "viewport_manager.h"
@@ -28,7 +28,7 @@ void func_8000CF70(void) {
     D_800DEF14 = D_801235B8->fade;
     loadCompressedRomAsset(D_5E26E0, D_5E34A0, 0x26);
     func_80070EC0(0);
-    func_80071408(func_80031CD0, 0, 0x5E);
+    func_80071408(initControllerPakMessageIcon, 0, 0x5E);
     func_8009956C(func_8000D048, 0);
     func_8007105C();
 }

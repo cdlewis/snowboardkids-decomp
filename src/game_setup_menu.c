@@ -345,7 +345,7 @@ extern void func_80000C48();
 extern void func_80000DB4();
 extern void func_80001010();
 extern void func_80001538();
-extern void func_80030EA8(EffectTask *);
+extern void initControllerPakCheckPrompt(EffectTask *);
 
 extern u8 D_800B3199[];
 extern s16 D_800EC9C8[];
@@ -354,7 +354,7 @@ extern u8 D_800EC9D8[];
 extern u8 D_800EC9E0[];
 extern u8 D_800EC9E4;
 extern GameSetupSavePlayer03798 D_800EC9F0[];
-extern ControllerPakConfirmTransition03798 D_8010ADD0;
+extern ControllerPakConfirmTransition03798 gControllerPakCheckPromptTransition;
 extern EffectTask *D_8010ADE0;
 extern EffectTask *D_8010ADE4;
 extern EffectTask *D_8010ADE8;
@@ -644,10 +644,10 @@ void func_80003798(void) {
             GameSetupSavePlayer03798 *end;
 
             func_8009956C(func_80004164, 0);
-            func_80071408(func_80030EA8, 0, 0x64);
-            D_8010ADD0.state = 6;
-            D_8010ADD0.selectedOption = 0;
-            D_8010ADD0.targetScale = 2;
+            func_80071408(initControllerPakCheckPrompt, 0, 0x64);
+            gControllerPakCheckPromptTransition.state = 6;
+            gControllerPakCheckPromptTransition.selectedOption = 0;
+            gControllerPakCheckPromptTransition.targetScale = 2;
             if (D_80121B55 > 0) {
                 subState = &D_8010AE00_03798;
                 save = D_800EC9F0;
@@ -691,8 +691,7 @@ typedef struct {
     /* 0x9 */ u8 confirmSelection;
 } ControllerPakConfirmTransition;
 
-extern ControllerPakConfirmTransition D_8010ADD0;
-extern u8 D_8010ADD9;
+extern ControllerPakConfirmTransition gControllerPakCheckPromptTransition;
 extern void func_80000A40(u16 arg0);
 extern void initCharacterSelectMenu(void);
 
@@ -701,13 +700,13 @@ void func_80004164(void) {
     s32 i;
     u8 state;
 
-    state = D_8010ADD0.state;
+    state = gControllerPakCheckPromptTransition.state;
     switch (state) {
         case 1:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                D_8010ADD0.state = 2;
-                D_8010ADD0.targetScale = 1;
+                gControllerPakCheckPromptTransition.state = 2;
+                gControllerPakCheckPromptTransition.targetScale = 1;
                 state = 2;
             }
             break;
@@ -726,14 +725,14 @@ void func_80004164(void) {
                     i++;
                 } while (i < (s32)D_80121B55);
             }
-            D_8010ADD0.state = 7;
-            D_8010ADD0.timer = 0x11;
+            gControllerPakCheckPromptTransition.state = 7;
+            gControllerPakCheckPromptTransition.timer = 0x11;
             state = 7;
             break;
         case 3:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                D_8010ADD0.state = 4;
+                gControllerPakCheckPromptTransition.state = 4;
                 state = 4;
             }
             break;
@@ -755,47 +754,47 @@ void func_80004164(void) {
                 } while (i < (s32)D_80121B55);
             }
             if (connectedCount == D_80121B55) {
-                D_8010ADD0.selectedOption = 1;
-                D_8010ADD0.targetScale = 2;
+                gControllerPakCheckPromptTransition.selectedOption = 1;
+                gControllerPakCheckPromptTransition.targetScale = 2;
             } else {
-                D_8010ADD0.selectedOption = 0;
-                D_8010ADD0.targetScale = 0;
+                gControllerPakCheckPromptTransition.selectedOption = 0;
+                gControllerPakCheckPromptTransition.targetScale = 0;
             }
-            D_8010ADD0.state = 0;
+            gControllerPakCheckPromptTransition.state = 0;
             state = 0;
             break;
         case 7:
-            D_8010ADD0.timer--;
-            if (D_8010ADD0.timer == 0) {
-                D_8010ADD0.state = 8;
-                D_8010ADD0.targetScale = 2;
+            gControllerPakCheckPromptTransition.timer--;
+            if (gControllerPakCheckPromptTransition.timer == 0) {
+                gControllerPakCheckPromptTransition.state = 8;
+                gControllerPakCheckPromptTransition.targetScale = 2;
                 state = 8;
             }
             break;
         case 8:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                D_8010ADD0.state = 9;
-                D_8010ADD0.targetScale = 3;
-                D_8010ADD0.confirmSelection = 1;
+                gControllerPakCheckPromptTransition.state = 9;
+                gControllerPakCheckPromptTransition.targetScale = 3;
+                gControllerPakCheckPromptTransition.confirmSelection = 1;
                 state = 9;
             }
             break;
         case 9:
-            if ((gPlayerInputPressed & 0x10800) && (D_8010ADD0.confirmSelection != 0)) {
-                D_8010ADD0.confirmSelection--;
+            if ((gPlayerInputPressed & 0x10800) && (gControllerPakCheckPromptTransition.confirmSelection != 0)) {
+                gControllerPakCheckPromptTransition.confirmSelection--;
                 enqueueSoundEffect(0x19, 0x32);
             } else if (gPlayerInputPressed & 0x20400) {
-                if (D_8010ADD0.confirmSelection != 1) {
-                    D_8010ADD0.confirmSelection++;
+                if (gControllerPakCheckPromptTransition.confirmSelection != 1) {
+                    gControllerPakCheckPromptTransition.confirmSelection++;
                     enqueueSoundEffect(0x19, 0x32);
                 }
             }
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                if (D_8010ADD9 == 1) {
-                    D_8010ADD0.state = 1;
-                    D_8010ADD0.targetScale = 0;
+                if (gControllerPakCheckPromptTransition.confirmSelection == 1) {
+                    gControllerPakCheckPromptTransition.state = 1;
+                    gControllerPakCheckPromptTransition.targetScale = 0;
                 } else {
                     connectedCount = 0;
                     i = 0;
@@ -808,14 +807,14 @@ void func_80004164(void) {
                         } while (i < (s32)D_80121B55);
                     }
                     if (connectedCount > 0) {
-                        D_8010ADD0.state = 3;
-                        D_8010ADD0.targetScale = 2;
+                        gControllerPakCheckPromptTransition.state = 3;
+                        gControllerPakCheckPromptTransition.targetScale = 2;
                     } else {
-                        D_8010ADD0.state = 4;
+                        gControllerPakCheckPromptTransition.state = 4;
                     }
                 }
             }
-            state = D_8010ADD0.state;
+            state = gControllerPakCheckPromptTransition.state;
             break;
     }
     if (state == 5) {

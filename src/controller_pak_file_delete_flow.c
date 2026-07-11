@@ -4,7 +4,7 @@
 #include "character_select_course_menu.h"
 #include "controller_pak_file_delete_flow.h"
 #include "controller_pak_menu.h"
-#include "controller_pak_menu_ui.h"
+#include "controller_pak_file_delete_ui.h"
 #include "input_task_scheduler.h"
 #include "main_menu.h"
 #include "menu_rendering.h"
@@ -65,8 +65,8 @@ void initControllerPakFileDeleteFlow(void) {
     func_80070EC0(0);
     func_80071408(&initControllerPakFileDeleteMainOptions, 0, 0x63);
     func_80071408(&initControllerPakFileDeleteConfirmOptions, 0, 0x63);
-    func_80071408(&initControllerPakFreeSpaceInfo, 0, 0x63);
-    func_80071408(&initControllerPakFileList, 0, 0x63);
+    func_80071408(&initControllerPakFileDeleteFreeSpaceInfo, 0, 0x63);
+    func_80071408(&initControllerPakFileDeleteFileList, 0, 0x63);
     func_80071408(&initControllerPakFileDeleteIcon, 0, 0x5E);
     gControllerPakMenuState.mainChoice = 0;
     gControllerPakMenuState.fileIndex = 0;
@@ -160,7 +160,7 @@ void updateControllerPakFileDeleteConfirm(void) {
     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
-            func_80071408(&initControllerPakDeleteConfirmPrompt, 0, 0x64);
+            func_80071408(&initControllerPakFileDeleteConfirmPrompt, 0, 0x64);
             func_8009956C(updateControllerPakFileDeletePrompt, 0);
             gControllerPakMenuState.state = 3;
             gControllerPakMenuState.confirmChoice = 1;
@@ -195,7 +195,7 @@ void updateControllerPakFileDeletePrompt(void) {
                 func_8009956C(updateControllerPakFileDeleteFileList, 0);
                 gControllerPakMenuState.state = 1;
             } else {
-                func_80071408(initControllerPakDeleteErrorPrompt, 0, 0x64);
+                func_80071408(initControllerPakFileDeleteErrorPrompt, 0, 0x64);
                 gControllerPakMenuState.unk6 = 0;
                 gControllerPakMenuState.state = 4;
                 func_8009956C(updateControllerPakFileDeleteErrorPrompt, 0);
