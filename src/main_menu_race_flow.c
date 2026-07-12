@@ -10,7 +10,7 @@
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
 #include "main_menu_race_flow.h"
-#include "race_player_state.h"
+#include "race_player_update.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
 
