@@ -477,23 +477,23 @@ void initControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
     setCallbackTaskCallback(arg0, updateControllerPakFileDeleteConfirmOptionsUi);
 }
 
-// drawControllerPakFileDeleteFreeSpaceInfo best match: 85.330% (nonmatchings/drawControllerPakFileDeleteFreeSpaceInfo-6182772958467082306/base_6.c)
+// drawControllerPakFileDeleteFreeSpaceInfo best match: 95.220% (nonmatchings/drawControllerPakFileDeleteFreeSpaceInfo-5802343343535905907/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/drawControllerPakFileDeleteFreeSpaceInfo.s")
 
 #ifdef NON_MATCHING
 void drawControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) {
     char before[4];
     u16 text[4];
-    char after[8];
     s32 value;
+    u16 *fill;
     u16 *digit;
     s32 remainder;
 
-    digit = text;
+    fill = text - 1;
     do {
-        digit++;
-        digit[-1] = 0xFFFE;
-    } while (digit < text + 4);
+        fill++;
+        *fill = 0xFFFE;
+    } while (fill < text + 3);
 
     value = gControllerPakFreeFileCount;
     digit = &text[1];
@@ -506,11 +506,11 @@ void drawControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
     text[2] = 0xFFFF;
     drawMenuGlyphScript(arg0->common.x, arg0->common.y, (u8 *)text, 1, 0x100, 8);
 
-    digit = text;
+    fill = text - 1;
     do {
-        digit++;
-        digit[-1] = 0xFFFE;
-    } while (digit < text + 4);
+        fill++;
+        *fill = 0xFFFE;
+    } while (fill < text + 3);
 
     value = gControllerPakFreeBytes / 0x100;
     digit = &text[2];
