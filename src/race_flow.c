@@ -216,8 +216,8 @@ extern u8 gRaceCameraModeChangeDisabled;
 extern u8 gRaceTypeSelection;
 extern u8 D_80121B60;
 extern s8 D_80121B61;
-extern RaceTime D_80121B74;
-extern u8 D_80121B81;
+extern RaceTime gRaceElapsedTimer;
+extern u8 gRaceChallengeFailed;
 extern u8 gRaceRecordSettingsEnabled;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
@@ -246,8 +246,8 @@ extern u8 D_59DFE0[];
 extern u8 D_59E7F0[];
 extern u8 D_60F1A0[];
 extern u8 D_60F990[];
-extern s16 D_80122040;
-extern s16 D_801222F4;
+extern s16 gRaceTrickAttackPointTotal;
+extern s16 gRaceScoreAttackPointTotal;
 
 extern s32 saveRaceRecordReplayData(void);
 extern void releaseMenuAssetHandles(void);
@@ -1062,7 +1062,7 @@ void prepareRaceResultsFlow(void) {
         break;
 
     case 2:
-        currentTime = (D_80121B74.seconds * COURSE_TIME_SECOND) + D_80121B74.fraction + (D_80121B74.minutes * COURSE_TIME_MINUTE);
+        currentTime = (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) + gRaceElapsedTimer.fraction + (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
         courseOffset = (gRaceCourseIndex.s << 2) + gRaceCourseIndex.s;
         courseOffset <<= 2;
         timeCourse = (TimeCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
@@ -1097,13 +1097,13 @@ void prepareRaceResultsFlow(void) {
                     trickCourse = (TrickCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
                     trickScore = trickCourse->values;
                     do {
-                        if (*trickScore < D_80122040) {
+                        if (*trickScore < gRaceTrickAttackPointTotal) {
                             break;
                         }
                         i++;
                         trickScore++;
                     } while (i < 5);
-                    if (D_80121B81 != 0) {
+                    if (gRaceChallengeFailed != 0) {
                         i = 5;
                     }
                     if (i < 5) {
@@ -1118,13 +1118,13 @@ void prepareRaceResultsFlow(void) {
                 scoreCourse = (ScoreCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
                 scoreValue = scoreCourse->values;
                 do {
-                    if (*scoreValue < D_801222F4) {
+                    if (*scoreValue < gRaceScoreAttackPointTotal) {
                         break;
                     }
                     i++;
                     scoreValue++;
                 } while (i < 5);
-                if (D_80121B81 != 0) {
+                if (gRaceChallengeFailed != 0) {
                     i = 5;
                 }
                 if (i < 5) {
@@ -1135,7 +1135,7 @@ void prepareRaceResultsFlow(void) {
                 }
             }
         } else {
-            currentTime = (D_80121B74.seconds * COURSE_TIME_SECOND) + D_80121B74.fraction + (D_80121B74.minutes * COURSE_TIME_MINUTE);
+            currentTime = (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) + gRaceElapsedTimer.fraction + (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
             courseOffset = (gRaceCourseIndex.s << 2) + gRaceCourseIndex.s;
             courseOffset <<= 2;
             timeCourse = (TimeCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
@@ -1149,7 +1149,7 @@ void prepareRaceResultsFlow(void) {
                 i++;
                 time++;
             } while (i < 5);
-            if (D_80121B81 != 0) {
+            if (gRaceChallengeFailed != 0) {
                 i = 5;
             }
             if (i < 5) {
@@ -1284,8 +1284,8 @@ void updateRaceResultsFlow(void) {
         case 2:
             task = func_80071408((void (*)(EffectTask *))func_8005A2F0, 6, 0x64);
             if (task != NULL) {
-                currentTime = D_80121B74.fraction + (D_80121B74.seconds * COURSE_TIME_SECOND) +
-                              (D_80121B74.minutes * COURSE_TIME_MINUTE);
+                currentTime = gRaceElapsedTimer.fraction + (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) +
+                              (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
                 i = 0;
                 j = 0;
                 do {
@@ -1304,7 +1304,7 @@ void updateRaceResultsFlow(void) {
                         D_800EC9F0.unk4E[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk4E[gRaceCourseIndex.s][j];
                         D_800EC9F0.unk77FB[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk77FB[gRaceCourseIndex.s][j];
                     }
-                    D_800EC9F0.unk4E[gRaceCourseIndex.s][i] = *(RaceFlowInitEntry *)&D_80121B74;
+                    D_800EC9F0.unk4E[gRaceCourseIndex.s][i] = *(RaceFlowInitEntry *)&gRaceElapsedTimer;
                     D_800EC9F0.unk77FB[gRaceCourseIndex.s][i] =
                         (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
                     if (i == 0) {
@@ -1329,12 +1329,12 @@ void updateRaceResultsFlow(void) {
                 if (task != NULL) {
                     i = 0;
                     do {
-                        if (D_800EC9F0.unk7756[gRaceCourseIndex.s][i] < D_80122040) {
+                        if (D_800EC9F0.unk7756[gRaceCourseIndex.s][i] < gRaceTrickAttackPointTotal) {
                             break;
                         }
                         i++;
                     } while (i < 5);
-                    if (D_80121B81 != 0) {
+                    if (gRaceChallengeFailed != 0) {
                         i = 5;
                     }
                     task->unk10 = i;
@@ -1366,12 +1366,12 @@ void updateRaceResultsFlow(void) {
                 if (task != NULL) {
                     i = 0;
                     do {
-                        if (D_800EC9F0.unk7832[gRaceCourseIndex.s][i] < D_801222F4) {
+                        if (D_800EC9F0.unk7832[gRaceCourseIndex.s][i] < gRaceScoreAttackPointTotal) {
                             break;
                         }
                         i++;
                     } while (i < 5);
-                    if (D_80121B81 != 0) {
+                    if (gRaceChallengeFailed != 0) {
                         i = 5;
                     }
                     task->unk10 = i;
@@ -1398,8 +1398,8 @@ void updateRaceResultsFlow(void) {
             case 0:
                 task = func_80071408((void (*)(EffectTask *))func_8005CE4C, 6, 0x64);
                 if (task != NULL) {
-                    currentTime = D_80121B74.fraction + (D_80121B74.seconds * COURSE_TIME_SECOND) +
-                                  (D_80121B74.minutes * COURSE_TIME_MINUTE);
+                    currentTime = gRaceElapsedTimer.fraction + (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) +
+                                  (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
                     i = 0;
                     do {
                         recordTime = (D_800EC9F0.unk156[gRaceCourseIndex.s][i].unk0 * COURSE_TIME_MINUTE) +
@@ -1410,7 +1410,7 @@ void updateRaceResultsFlow(void) {
                         }
                         i++;
                     } while (i < 5);
-                    if (D_80121B81 != 0) {
+                    if (gRaceChallengeFailed != 0) {
                         i = 5;
                     }
                     task->unk10 = i;
@@ -1419,7 +1419,7 @@ void updateRaceResultsFlow(void) {
                             D_800EC9F0.unk156[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk156[gRaceCourseIndex.s][j];
                             D_800EC9F0.unk78A0[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk78A0[gRaceCourseIndex.s][j];
                         }
-                        D_800EC9F0.unk156[gRaceCourseIndex.s][i] = *(RaceFlowInitEntry *)&D_80121B74;
+                        D_800EC9F0.unk156[gRaceCourseIndex.s][i] = *(RaceFlowInitEntry *)&gRaceElapsedTimer;
                         D_800EC9F0.unk78A0[gRaceCourseIndex.s][i] =
                             (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
                     }
@@ -1582,7 +1582,7 @@ void initRaceGhostReplayFlow(void) {
     gFramebufferSwapDelay = 0;
     resetSecondaryRng();
     initRacePlayers();
-    func_80078430();
+    initRaceHud();
     initRaceCourseSceneTasks();
     gMenuFadeAlpha = 0xFF;
     updateRelocatableHeap();
@@ -1676,7 +1676,7 @@ void updateRaceFlowFrameWithCourseEffects(void) {
     updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
-    func_8007AA50();
+    updateRaceHud();
 }
 
 void updateRaceFlowFrame(void) {
