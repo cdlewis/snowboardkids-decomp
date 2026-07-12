@@ -1318,15 +1318,15 @@ void renderShieldProjectile(RaceItemProjectileActor *arg0) {
     }
 }
 
-// updateShieldProjectile best match: 97.915% (nonmatchings/updateShieldProjectile-6688367443449623229/base_14.c)
+// updateShieldProjectile best match: 99.943% (nonmatchings/updateShieldProjectile-3357475854818838508/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_projectiles/updateShieldProjectile.s")
 
 #ifdef NON_MATCHING
 void updateShieldProjectile(RaceItemProjectileActor *arg0) {
+    s32 zOffset;
     s32 sin;
     s32 cos;
     s32 xOffset;
-    s32 zOffset;
     s32 pushX;
     s32 pushZ;
     s32 prevY;
@@ -1335,6 +1335,7 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
     s32 groundY;
     Vec3i *pos;
     RacePlayerState *player;
+    s16 startAngle;
 
     if (gRaceUpdatePaused == 0) {
         if (arg0->unk54 == 0) {
@@ -1345,7 +1346,7 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
             y = arg0->pos.y;
             prevY = y;
             arg0->pos.x += xOffset;
-            arg0->pos.y = y + arg0->accelerationY;
+            arg0->pos.y = (0, y) + arg0->accelerationY;
             arg0->pos.z += zOffset;
 
             arg0->startAngle = findRaceCourseSurfaceFromHint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
@@ -1357,7 +1358,7 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
             }
             arg0->accelerationY = (y - prevY) - 0x20000;
 
-            resolveRaceCourseSurfaceCollision(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
+            resolveRaceCourseSurfaceCollision(startAngle = arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
             if (pushX != 0 || pushZ != 0) {
                 arg0->timer = 0;
                 arg0->pos.x += pushX;
@@ -1372,8 +1373,7 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
         if (arg0->timer == 0) {
             spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask((RaceItemProjectileActor *)arg0);
-            player = &D_80121D80[arg0->playerIndex];
-            player->unk510++;
+            D_80121D80[arg0->playerIndex].unk510++;
             return;
         }
 
