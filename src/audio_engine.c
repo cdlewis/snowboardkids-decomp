@@ -29,6 +29,7 @@ extern u32 osAiGetLength(void);
 extern u32 osVirtualToPhysical(void *);
 extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
 extern void alSynSetPan(ALSynth *, ALVoice *, s32);
+extern void rmonPrintf(const char *, ...);
 extern AudioDmaState gAudioDmaState;
 extern ALLink *gAudioDmaBufferPool;
 extern s32 audioDmaCallback(s32, s32, void *);
@@ -917,188 +918,77 @@ void setSoundPlayerMasterVolume(s32 arg0, s32 arg1) {
     }
 }
 
-// startMusicSequence best match: 72.150% (nonmatchings/startMusicSequence-4923837976568703863/base_5.c)
+// startMusicSequence best match: 95.662% (nonmatchings/startMusicSequence-2694253543240320626/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/startMusicSequence.s")
 
 #ifdef NON_MATCHING
 s32 startMusicSequence(PlayerCommandData *arg0) {
-    s32 id;
-    s32 saved;
-    s32 count;
     s32 i;
-    s32 step;
+    s32 trackCount;
     s32 needed;
     s32 free;
-    s32 index;
     s32 value;
+    s32 index;
+    s32 handle;
     s32 *ptr;
     PlayerCommandState *state;
-    s32 trackCount;
 
     trackCount = arg0->trackCount;
-    if ((u32)arg0->sequenceOffsets >= 0x400U) {
-        goto relocate_done;
-    }
-    count = (trackCount * 3) + 5;
-    i = 0;
-    if (count <= 0) {
-        goto relocate_done;
-    }
-    step = count & 3;
-    if (step == 0) {
-        goto relocate_four;
-    }
-    ptr = (s32 *)&arg0->sequenceOffsets;
-relocate_small:
-    value = *ptr;
-    i++;
-    if (value != 0) {
-        *ptr = value + (s32)arg0;
-    }
-    ptr++;
-    if (step != i) {
-        goto relocate_small;
-    }
-    if (i == count) {
-        goto relocate_done;
-    }
-relocate_four:
-    step = i * 4;
-    ptr = (s32 *)((s32)&arg0->sequenceOffsets + step);
-    count *= 4;
-relocate_loop:
-    value = ptr[0];
-    step += 0x10;
-    if (value != 0) {
-        ptr[0] = value + (s32)arg0;
-    }
-    value = ptr[1];
-    if (value != 0) {
-        ptr[1] = value + (s32)arg0;
-    }
-    value = ptr[2];
-    if (value != 0) {
-        ptr[2] = value + (s32)arg0;
-    }
-    value = ptr[3];
-    if (value != 0) {
-        ptr[3] = value + (s32)arg0;
-    }
-    ptr += 4;
-    if (step != count) {
-        goto relocate_loop;
+    if ((u32)arg0->sequenceOffsets < 0x400U) {
+        ptr = (s32 *)&arg0->sequenceOffsets;
+        for (i = 0; i < (trackCount * 3) + 5; i++) {
+            value = ptr[i];
+            if (value != 0) {
+                ptr[i] = value + (s32)arg0;
+            }
+        }
     }
 
-relocate_done:
     needed = 0;
-    i = 0;
-    if (trackCount <= 0) {
-        goto free_count;
+    for (i = 0; i < trackCount; i++) {
+        if (arg0->sequenceOffsets[i] != 0) {
+            needed++;
+        }
     }
-    step = trackCount & 3;
-    if (step == 0) {
-        goto count_four;
-    }
-    ptr = arg0->sequenceOffsets;
-count_small:
-    value = *ptr;
-    i++;
-    if (value != 0) {
-        needed++;
-    }
-    ptr++;
-    if (step != i) {
-        goto count_small;
-    }
-    if (i == trackCount) {
-        goto counted;
-    }
-count_four:
-    step = i * 4;
-    ptr = (s32 *)((s32)arg0->sequenceOffsets + step);
-    count = trackCount * 4;
-count_loop:
-    value = ptr[0];
-    step += 0x10;
-    if (value != 0) {
-        needed++;
-    }
-    value = ptr[1];
-    if (value != 0) {
-        needed++;
-    }
-    value = ptr[2];
-    if (value != 0) {
-        needed++;
-    }
-    value = ptr[3];
-    if (value != 0) {
-        needed++;
-    }
-    ptr += 4;
-    if (step != count) {
-        goto count_loop;
-    }
-counted:
-    i = 0;
 
-free_count:
-    state = gSoundPlayerStates;
     free = 0;
-    if (gSoundPlayerCount <= 0) {
-        goto enough_check;
-    }
-free_loop:
-    i++;
-    if (state->sequencePos == 0) {
-        free++;
-    }
-    state++;
-    if (i < gSoundPlayerCount) {
-        goto free_loop;
+    state = gSoundPlayerStates;
+    for (i = 0; i < gSoundPlayerCount; i++) {
+        if (state->sequencePos == 0) {
+            free++;
+        }
+        state++;
     }
 
-enough_check:
     if (free < needed) {
         return 0;
     }
 
-    id = gNextSoundPlayerHandle;
-    i = 0;
-    gNextSoundPlayerHandle = id + 1;
-    saved = id;
-    if (trackCount <= 0) {
-        return saved;
+    handle = gNextSoundPlayerHandle;
+    gNextSoundPlayerHandle = handle + 1;
+    for (i = 0; i < trackCount; i++) {
+        if (arg0->sequenceOffsets[i] != 0) {
+            index = findFreeSoundPlayerIndex((s32)arg0, i);
+            if (index == -1) {
+                rmonPrintf("NG Channel\n");
+            }
+            state = &gSoundPlayerStates[index];
+            resetSoundPlayerState(state);
+            state->data = arg0;
+            value = arg0->unk8[i];
+            state->unk64 = value;
+            state->unk60 = value;
+            value = arg0->unkC[i];
+            state->unk6C = value;
+            state->unk68 = value;
+            value = arg0->sequenceOffsets[i];
+            state->restartPos = value;
+            state->sequencePos = value;
+            state->id = handle;
+        }
     }
-    step = 0;
-start_loop:
-    if (*(s32 *)((s32)arg0->sequenceOffsets + step) == 0) {
-        goto next_track;
-    }
-    index = findFreeSoundPlayerIndex((s32)arg0, i);
-    if (index == -1) {
-        rmonPrintf("NG Channel\n");
-    }
-    state = &gSoundPlayerStates[index];
-    resetSoundPlayerState(state);
-    state->data = arg0;
-    value = *(s32 *)((s32)arg0->unk8 + step);
-    state->unk64 = value;
-    state->unk60 = value;
-    value = *(s32 *)((s32)arg0->unkC + step);
-    state->unk6C = value;
-    state->unk68 = value;
-    value = *(s32 *)((s32)arg0->sequenceOffsets + step);
-    state->restartPos = value;
-    state->sequencePos = value;
-    state->id = saved;
-next_track:
-    i++;
-    step += 4;
-    if (i != trackCount) {
-        goto start_loop;
-    }
-    return saved;
+
+    return handle;
 }
 #endif
 
