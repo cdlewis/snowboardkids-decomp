@@ -608,25 +608,23 @@ void updateEndingLindaSlideRightSetPhase1A(EndingCreditsLinda *arg0) {
     }
 }
 
-// updateEndingLindaHandshakeAnimComplete best match: 97.333%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_linda/updateEndingLindaHandshakeAnimComplete.s")
-
-#ifdef NON_MATCHING
 void updateEndingLindaHandshakeAnimComplete(EndingCreditsLinda *arg0) {
     s32 pad;
     s32 sp20;
     s32 i;
     s32 count;
 
-    count = 1;
-    if (arg0->animTimer < 3) {
-        count = count;
-    } else {
+    if (arg0->animTimer >= 3) {
         count = 2;
+    } else {
+        count = 1;
     }
-
-    for (i = 0; i < count; i++) {
-        sp20 = stepMainMenuSceneModelAnimation(3);
+    i = 0;
+    if (count > 0) {
+        do {
+            sp20 = stepMainMenuSceneModelAnimation(3);
+            i++;
+        } while (i != count);
     }
 
     addMainMenuSceneModelDrawCallback(3);
@@ -635,7 +633,6 @@ void updateEndingLindaHandshakeAnimComplete(EndingCreditsLinda *arg0) {
         setCallbackTaskCallback(arg0, startEndingLindaHandshakeLoop);
     }
 }
-#endif
 
 void updateEndingLindaHandshakeLoop(EndingCreditsLinda *arg0) {
     s32 var_s1;
