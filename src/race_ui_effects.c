@@ -2237,7 +2237,7 @@ void func_8005B8E8(RaceUiAlphaActor *arg0) {
     do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80059A04(&gRaceElapsedTimer, -0x68, -0x37, 0xC); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
-// func_8005B9F8 best match: 86.310% at nonmatchings/func_8005B9F8-6061209858023118177/base_8.c.
+// func_8005B9F8 best match: 98.570% at nonmatchings/func_8005B9F8-5802343343535905907/base_13.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005B9F8.s")
 
 #ifdef NON_MATCHING
@@ -2277,7 +2277,8 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
 
     if (arg0->state > 0) {
         x = 0x20;
-        sprintf(buf - 4, D_800E1380, arg0->rightValue);
+        ptr = 0;
+        sprintf(buf - 4, D_800E1380, arg0->rightValue, 0);
         tempY = y.half.lo;
         ptr = buf - 4;
         while (1) {
@@ -2298,7 +2299,8 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
     if (arg0->state >= 2) {
         x = 0x20;
         if (arg0->flag != 0) {
-            sprintf(buf - 4, D_800E1384, arg0->bonus);
+            ptr = 0;
+            sprintf(buf - 4, D_800E1384, arg0->bonus, 0);
             tempY = y.half.lo;
             ptr = buf - 4;
             while (1) {
@@ -2319,7 +2321,8 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
 
     if (arg0->state >= 3) {
         x = 0x20;
-        sprintf(buf - 4, D_800E1388, arg0->leftTarget);
+        ptr = 0;
+        sprintf(buf - 4, D_800E1388, arg0->leftTarget, 0);
         tempY = y.half.lo;
         ptr = buf - 4;
         while (1) {
@@ -2339,7 +2342,8 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
 
     if (arg0->state >= 4) {
         x = 0x18;
-        sprintf(buf - 4, D_800E138C, gPlayer1Money);
+        ptr = 0;
+        sprintf(buf - 4, D_800E138C, gPlayer1Money, 0);
         tempY = y.half.lo;
         ptr = buf - 4;
         while (1) {
