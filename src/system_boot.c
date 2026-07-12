@@ -149,7 +149,7 @@ extern OSMesgQueue gControllerInputUpdateQueue;
 extern OSMesg gControllerInputUpdateMessages[8];
 extern OSMesgQueue D_80124018;
 extern OSMesg D_80124030[8];
-extern u8 D_801240A8[0x778];
+extern SchedulerState gSchedulerState;
 extern SchedulerClient D_80124820;
 extern u16 D_80124828;
 extern Gfx *gRegionAllocPtr;
@@ -239,11 +239,11 @@ void initGameSystems(void) {
     osCreateMesgQueue(&gControllerInputUpdateQueue, gControllerInputUpdateMessages, 8);
     osCreateMesgQueue(&D_80124018, D_80124030, 8);
     if (osTvType == OS_TV_NTSC) {
-        initScheduler((SchedulerState *)D_801240A8, RETRACE_COUNT_NTSC, RETRACE_COUNT_MODE);
+        initScheduler(&gSchedulerState, RETRACE_COUNT_NTSC, RETRACE_COUNT_MODE);
     } else {
-        initScheduler((SchedulerState *)D_801240A8, RETRACE_COUNT_PAL, RETRACE_COUNT_MODE);
+        initScheduler(&gSchedulerState, RETRACE_COUNT_PAL, RETRACE_COUNT_MODE);
     }
-    addSchedulerClient((SchedulerState *)D_801240A8, &D_80124820, &D_80124050);
+    addSchedulerClient(&gSchedulerState, &D_80124820, &D_80124050);
     initRelocatableHeap();
     initMenuAssetHandles();
     allocRenderCallbackScratchBuffer();
@@ -604,7 +604,7 @@ void submitFramebufferRenderTask(u8 arg0) {
     task->unkC = task->unk60;
     task->unk58 = (D_80124828 + 3) & 0xFFF;
     task->unk66 |= 1;
-    osSendMesg(getSchedulerGraphicsTaskQueue((s32)D_801240A8), task, 1);
+    osSendMesg(getSchedulerGraphicsTaskQueue((s32)&gSchedulerState), task, 1);
 
     nextColorIndex = D_80124834 + 1;
     nextBufferIndex = (bufferIndex + 1) & 1;
@@ -655,7 +655,7 @@ void submitFramebufferRenderTask(u8 arg0) {
     nextTask->unk50 = &D_80124018;
     nextTask->unk54 = 0;
     nextTask->unk3C = dramStack;
-    osSendMesg(getSchedulerGraphicsTaskQueue((s32)D_801240A8), nextTask, 1);
+    osSendMesg(getSchedulerGraphicsTaskQueue((s32)&gSchedulerState), nextTask, 1);
 }
 
 #else
