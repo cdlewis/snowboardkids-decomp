@@ -83,6 +83,6 @@ src/race_player_input.c
 src/race_player_movement.c
 src/race_player_update.c
 src/race_player_update.c
-src/race_progress.c
-include/race_progress.h
+src/race_position.c
+include/race_position.h
 src/race_player_model_renderer.c

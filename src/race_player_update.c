@@ -15,7 +15,7 @@
 #include "race_player_pickup_effects.h"
 #include "menu_screen_effects.h"
 #include "race_player_movement.h"
-#include "race_progress.h"
+#include "race_position.h"
 #include "race_player_model_renderer.h"
 #include "race_player_update.h"
 #include "race_surface_cues.h"
@@ -430,7 +430,7 @@ void updateRacePlayers(void) {
         updateRacePlayerInput(D_8012238C);
         updateRacePlayerInput(D_80122998);
         updateRacePlayerInput(D_80122FA4);
-        updateRacePositionTracker();
+        updateRacePlayerRankDisplay();
         for (i = 0; i < gRacePlayerCount; i++) {
             updateRacePlayer(&D_80121D80[i]);
         }

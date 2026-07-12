@@ -2,7 +2,7 @@
 #include "relocatable_heap.h"
 #include "fixed_point_math.h"
 #include "race_motion.h"
-#include "race_progress.h"
+#include "race_position.h"
 
 typedef struct RaceMotionCoord {
     s16 x;
