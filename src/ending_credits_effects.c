@@ -483,17 +483,14 @@ void drawEndingCreditsDelayedSparkle(EndingCreditsEffectActor *arg0) {
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x1C) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
-// updateEndingCreditsDelayedSparkle best match: 97.653%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_effects/updateEndingCreditsDelayedSparkle.s")
-
-#ifdef NON_MATCHING
 void updateEndingCreditsDelayedSparkle(EndingCreditsEffectActor *arg0) {
     s32 var_v1;
     EndingCreditsEffectActor *temp_a2 = arg0;
 
-    var_v1 = 0xB4;
     if ((u16) arg0->delay == 0) {
         var_v1 = 0x12;
+    } else {
+        var_v1 = 0xB4;
     }
     if (arg0->animFrame < 3) {
         arg0->animTimer++;
@@ -513,7 +510,6 @@ void updateEndingCreditsDelayedSparkle(EndingCreditsEffectActor *arg0) {
     }
     removeCallbackTask(temp_a2);
 }
-#endif
 
 void initEndingCreditsDelayedSparkle(EndingCreditsEffectActor *arg0) {
     arg0->animFrame = 0;
