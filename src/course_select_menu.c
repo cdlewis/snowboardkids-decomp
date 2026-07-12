@@ -1124,12 +1124,11 @@ void initCourseSelectCourseDetailsMenu(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectCourseDetailsMenu best match: 68.617% (nonmatchings/updateCourseSelectCourseDetailsMenu-2127290767680699791/base_3.c)
+// updateCourseSelectCourseDetailsMenu best match: 73.434% (nonmatchings/updateCourseSelectCourseDetailsMenu-2694253543240320626/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/updateCourseSelectCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectCourseDetailsMenu(void) {
-    s32 sp24;
     ObjectA3E0 *var_s0;
     s32 temp_t2;
     s32 temp_t3_2;
@@ -1230,17 +1229,7 @@ block_16:
             }
         }
     }
-    var_v0 = 0;
-    if ((s32) gPlayerCount > 0) {
-        var_s0 = D_801121E0;
-        do {
-            gCurrentMenuCameraObject = var_s0;
-            sp24 = var_v0;
-            var_s0->unk2C();
-            var_v0 = sp24 + 1;
-            var_s0 += 1;
-        } while (var_v0 < (s32) gPlayerCount);
-    }
+    do { var_v0 = 0; if ((s32) gPlayerCount > 0) { var_s0 = D_801121E0; do { ; (gCurrentMenuCameraObject = var_s0)->unk2C(); var_v0 += 1; var_s0 += 1; } while (var_v0 < (s32) gPlayerCount); } } while (0);
     updateCallbackTasks();
 }
 #endif
