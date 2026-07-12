@@ -122,14 +122,14 @@ extern u8 gCurrentQueuedSoundPan;
 extern u8 gCurrentQueuedSoundPriority;
 extern u8 gCurrentQueuedSoundAux;
 extern SchedulerThread gAudioThread;
-extern u8 D_801240A8[];
+extern SchedulerState gSchedulerState;
 
 void osStartThread(void *);
 void osStopThread(void *);
 void *allocRenderCallbackScratch(s32 arg0);
 void requestMusicSequenceBank(s32 arg0);
-s32 reserveSoundQueueWriteSlot(void);
-s32 startQueuedSoundEffect(void);
+s32 reserveSoundEffectQueueWriteIndex(void);
+s32 startCurrentQueuedSoundEffect(void);
 s32 calculatePositionalSoundVolume(SoundPosition *pos, s32 volume);
 #ifdef NON_MATCHING
 void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 pitch);
@@ -177,7 +177,7 @@ void initSoundManager(void) {
     gAssetHandles.unkA = allocRelocatableHeapBlock(0x10000);
 
     init.count = 0x18;
-    init.unk4 = D_801240A8;
+    init.unk4 = &gSchedulerState;
     init.outputRate = 0x6E;
     init.heapBase = (u8 *)getRelocatableHeapBlockBase(gAssetHandles.unk6);
     init.heapLen = 0x80000;
@@ -230,7 +230,7 @@ s32 loadMusicSequenceBank(s32 arg0) {
     return 1;
 }
 
-s32 reserveSoundQueueWriteSlot(void) {
+s32 reserveSoundEffectQueueWriteIndex(void) {
     u32 ret;
     s32 temp_v1;
 
@@ -244,7 +244,7 @@ s32 reserveSoundQueueWriteSlot(void) {
     return temp_v1;
 }
 
-s32 reserveSoundQueueReadSlot(void) {
+s32 reserveSoundEffectQueueReadIndex(void) {
     u32 ret;
     s32 temp_v1;
 
@@ -257,7 +257,7 @@ s32 reserveSoundQueueReadSlot(void) {
     return temp_v1;
 }
 
-void releaseSoundHandleNode(SoundHandleNode *arg0) {
+void releaseSoundEffectHandleNode(SoundHandleNode *arg0) {
     SoundHandleNode *temp_v0;
     SoundHandleNode *temp_v1;
 
@@ -283,7 +283,7 @@ void releaseSoundHandleNode(SoundHandleNode *arg0) {
     gFreeSoundHandleCount++;
 }
 
-SoundHandleNode *acquireSoundHandleNode(void) {
+SoundHandleNode *acquireSoundEffectHandleNode(void) {
     s32 count;
 
     count = gFreeSoundHandleCount;
@@ -294,17 +294,17 @@ SoundHandleNode *acquireSoundHandleNode(void) {
     return gFreeSoundHandleStack[gFreeSoundHandleCount];
 }
 
-// startQueuedSoundEffect best match: 98.108%
-#pragma GLOBAL_ASM("asm/nonmatchings/sound_manager/startQueuedSoundEffect.s")
+// startCurrentQueuedSoundEffect best match: 98.108%
+#pragma GLOBAL_ASM("asm/nonmatchings/sound_manager/startCurrentQueuedSoundEffect.s")
 
 #ifdef NON_MATCHING
-s32 startQueuedSoundEffect(void) {
+s32 startCurrentQueuedSoundEffect(void) {
     SoundHandleNode *temp_v0;
     SoundHandleNode *temp_v0_2;
     SoundHandleNode *var_v1;
     s32 var_a0;
 
-    temp_v0 = acquireSoundHandleNode();
+    temp_v0 = acquireSoundEffectHandleNode();
     if (temp_v0 == NULL) {
         if (gCurrentQueuedSoundPriority < gActiveSoundHandleListTail->priority) {
             return 1;
@@ -373,11 +373,11 @@ void updateSoundManager(void) {
     node = gActiveSoundHandleListHead;
     while (node != NULL) {
         if (node->handle == 0) {
-            releaseSoundHandleNode(node);
+            releaseSoundEffectHandleNode(node);
             goto next_node;
         } else {
             if (countSoundPlayersByHandle(node->handle) == 0) {
-                releaseSoundHandleNode(node);
+                releaseSoundEffectHandleNode(node);
             }
         }
     next_node:
@@ -400,7 +400,7 @@ void updateSoundManager(void) {
     }
 
     if (gCurrentQueuedSoundType == 0) {
-        index = reserveSoundQueueReadSlot();
+        index = reserveSoundEffectQueueReadIndex();
         if (index != -1) {
             entry = &gSoundQueue[index];
             gCurrentQueuedSoundType = entry->type;
@@ -412,7 +412,7 @@ void updateSoundManager(void) {
         }
     }
 
-    if ((gCurrentQueuedSoundType == 1) && (startQueuedSoundEffect() != 0)) {
+    if ((gCurrentQueuedSoundType == 1) && (startCurrentQueuedSoundEffect() != 0)) {
         gCurrentQueuedSoundType = 0;
     }
 
@@ -448,7 +448,7 @@ void requestMusicSequenceStop(s32 arg0) {
 }
 
 s32 enqueueSoundEffect(s16 arg0, s16 arg1) {
-    s32 temp_v0 = reserveSoundQueueWriteSlot();
+    s32 temp_v0 = reserveSoundEffectQueueWriteIndex();
     SoundQueueEntry *temp_v1;
 
     if (temp_v0 == -1) {
@@ -471,7 +471,7 @@ s32 enqueueSoundEffectWithVolume(s16 arg0, s16 arg1, s16 arg2) {
     if (arg1 <= 0) {
         return 0;
     }
-    temp_v0 = reserveSoundQueueWriteSlot();
+    temp_v0 = reserveSoundEffectQueueWriteIndex();
     if (temp_v0 == -1) {
         return 1;
     }
@@ -647,7 +647,7 @@ void requestCourseMusicSequence(void) {
     requestMusicSequenceBank(gCourseMusicSequenceBanks[gRaceCourseIndex]);
 }
 
-void countActiveAudioSequences(void) {
+void countActiveSoundPlayers(void) {
     countActiveSoundPlayersByType(3);
 }
 
