@@ -550,7 +550,7 @@ void requestControllerPakSaveRead(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// readControllerPakSave best match: 85.904%
+// readControllerPakSave best match: 90.898%
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/readControllerPakSave.s")
 
 #ifdef NON_MATCHING
@@ -596,7 +596,7 @@ copy_name:
     dst[14] = *src;
     src++;
     dst++;
-    if (src < end) {
+    if ((src + 1) < (end + 1)) {
         goto copy_name;
     }
 
