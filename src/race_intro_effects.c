@@ -611,10 +611,6 @@ void initRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
     }
 }
 
-// drawRaceIntroAnimatedBillboards best match: 99.373% (nonmatchings/drawRaceIntroAnimatedBillboards-6061209858023118177/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_intro_effects/drawRaceIntroAnimatedBillboards.s")
-
-#ifdef NON_MATCHING
 void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
     volatile u8 pad[0xC];
     u32 image;
@@ -656,7 +652,6 @@ void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
     }
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
 }
-#endif
 
 void enqueueDrawRaceIntroAnimatedBillboards(s32 arg0) {
     addRenderCallback(&gEffectRenderCallbackList, drawRaceIntroAnimatedBillboards, arg0);
