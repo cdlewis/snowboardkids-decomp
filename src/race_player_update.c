@@ -157,7 +157,7 @@ void initRacePlayers(void) {
     }
 }
 
-// applyRacePlayerTuning best match: 99.241%
+// applyRacePlayerTuning best match: 99.747% (base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/applyRacePlayerTuning.s")
 
 #ifdef NON_MATCHING
@@ -184,8 +184,8 @@ void applyRacePlayerTuning(RaceInputPlayer *arg0) {
         temp_t5 = ((temp_a1->unk0 + temp_a2->unk0) << 3) << 5;
         player->unk25C = temp_t5;
         player->unk314 = temp_t5;
-        player->unk260 = (temp_a1->unk2 + temp_a2->unk2) << 4;
         player->unk264 = (new_var = (((temp_a1->unk4 + temp_a2->unk4) << 2) << 1) << 1);
+        player->unk260 = (temp_a1->unk2 + temp_a2->unk2) << 4;
         player->unk268 = temp_a1->unk6 + temp_a2->unk6;
     }
     player->unk274 = (temp_a1->unk8 + temp_a2->unk8) << 4;
