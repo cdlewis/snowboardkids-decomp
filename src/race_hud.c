@@ -989,31 +989,21 @@ sort_next:
 }
 #endif
 
-// updateRaceCourseProgressMeter best match: 98.539% at nonmatchings/updateRaceCourseProgressMeter-6061209858023118177/base_9.c.
+// updateRaceCourseProgressMeter best match: 98.652% at nonmatchings/updateRaceCourseProgressMeter-5802343343535905907/base_17.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/updateRaceCourseProgressMeter.s")
 
 #ifdef NON_MATCHING
 void updateRaceCourseProgressMeter(void) {
-    s32 sp4C;
-    s16 new_var;
+    s32 slots[3];
     RaceTimerUiPlayer *player;
-    s32 shiftedProgress;
-    s16 pathIndex;
-    s32 sp50;
     s32 i;
-    int new_var2;
     s32 progress;
 
-    player = D_80121D80; i = 0; do { getRacePlayerRankingProgress(i, &sp50, &sp4C); progress = sp50; i++; if (progress < 0) {
+    player = D_80121D80; if (0) { } i = 0; do { getRacePlayerRankingProgress(i, &slots[1], &slots[0]); slots[1] = (progress = slots[1]); i++; if (progress < 0) {
             progress = 0;
         }
-        shiftedProgress = progress << 7;
-        new_var = gRaceCourseStartEntries[gRaceCourseIndex].pathIndex;
-        pathIndex = new_var;
-        sp50 = progress;
-        player->raceProgress = shiftedProgress / (pathIndex * 8);
-        if (player->raceProgress > (new_var2 = 0x81 - 1))
-        {
+        player->raceProgress = (progress << 7) / (gRaceCourseStartEntries[gRaceCourseIndex].pathIndex * 8);
+        if (player->raceProgress >= 0x81) {
             player->raceProgress = 0x80;
         }
         player++;
