@@ -85,14 +85,19 @@ extern u8 gFramebufferSwapHold;
 extern u8 gPendingFramebufferSwapCount;
 extern s32 gPlayerInputPressed;
 extern void releaseMenuAssetHandles(void);
-// initMainMenuDemoRaceIntro best match: 65.668% (nonmatchings/func_8003E600-731940616440357983/base_2.c)
+// initMainMenuDemoRaceIntro best match: 68.393% (nonmatchings/initMainMenuDemoRaceIntro-8331816093655448999/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_demo_race_intro/initMainMenuDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
 void initMainMenuDemoRaceIntro(void) {
     RaceIntroPlayer *players;
     MainMenuDemoRaceIntroEntry *demoEntry;
-    register s32 one;
+    volatile register s32 one;
+    s32 character0;
+    s32 character1;
+    s32 character2;
+    s32 character3;
+    s32 splitscreenMode;
 
     demoEntry = &gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex];
     gRaceCourseIndex = demoEntry->courseIndex;
@@ -111,6 +116,10 @@ void initMainMenuDemoRaceIntro(void) {
     players[2].unk4 = 0;
     players[3].unk4 = 0;
     demoEntry = &gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex];
+    character0 = demoEntry->player0Character;
+    character1 = demoEntry->player1Character;
+    character2 = demoEntry->player2Character;
+    character3 = demoEntry->player3Character;
     players[0].unk11 = 6;
     players[1].unk11 = 6;
     players[2].unk11 = 6;
@@ -119,12 +128,13 @@ void initMainMenuDemoRaceIntro(void) {
     players[1].unk12 = 2;
     players[2].unk12 = 3;
     players[3].unk12 = 4;
-    players[0].characterId = demoEntry->player0Character;
-    players[1].characterId = demoEntry->player1Character;
-    players[2].characterId = demoEntry->player2Character;
-    players[3].characterId = demoEntry->player3Character;
+    players[0].characterId = character0;
+    players[1].characterId = character1;
+    players[2].characterId = character2;
+    players[3].characterId = character3;
+    splitscreenMode = gRaceSplitscreenMode;
     one = 1;
-    if (gRaceSplitscreenMode == 0) {
+    if (splitscreenMode == 0) {
         players[0].isActive = one;
         players[1].isActive = one;
         players[2].isActive = one;
@@ -142,7 +152,7 @@ void initMainMenuDemoRaceIntro(void) {
     }
     gRaceLapCount = 2;
     gRacePlayerAttackStartTimer = 0x64;
-    if (gRaceSplitscreenMode == 0) {
+    if (splitscreenMode == 0) {
         initCallbackTaskScheduler(one);
     } else {
         initCallbackTaskScheduler(2);
