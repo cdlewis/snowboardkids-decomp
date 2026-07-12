@@ -804,7 +804,7 @@ extern s16 gRaceCourseSpriteAssetHandle;
 extern s16 gRaceUiSpriteAssetHandle;
 extern s16 gRaceCommonSpriteAssetHandle;
 extern s16 gRaceLapCount;
-extern s32 D_80121D8C;
+extern s32 gPlayer1Money;
 extern RacePlayerPlacement D_80122288[];
 extern s8 D_80122289;
 extern RacePlayerByteField D_80121D94[];
@@ -1204,7 +1204,7 @@ void func_8005827C(void *arg0) {
     volatile RaceUiAssetHandles *handles;
     s32 space;
 
-    sprintf(buffer + -8, D_800E1258, D_80121D8C);
+    sprintf(buffer + -8, D_800E1258, gPlayer1Money);
     x = 0x18;
     handles = &gAssetHandles;
  ptr = (u8 *) (((s32) padding) - 0x10); if (!ptr) { } space = ' '; loop: if ((*ptr) != 0) {
@@ -1271,7 +1271,7 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
         player->unk00C += 8;
         arg0->score -= 8;
     } else {
-        D_80121D8C = player->unk00C + value;
+        gPlayer1Money = player->unk00C + value;
         arg0->score = 0;
     }
 
@@ -1290,7 +1290,7 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
     }
 
     if (gPlayerInputPressed & 0x8000) {
-        D_80121D8C = player->unk00C + arg0->score;
+        gPlayer1Money = player->unk00C + arg0->score;
         if (player->mode != 3) {
             player->unk00C += player->unk568;
             player->unk568 = 0;
@@ -1884,7 +1884,7 @@ loop3:
 
     if (visibleRows >= 3) {
         x = 0x18;
-        sprintf(buffer, D_800E12F0, D_80121D8C);
+        sprintf(buffer, D_800E12F0, gPlayer1Money);
         rowY = y.half.lo;
         ptr = buffer;
 loop4:
@@ -2338,7 +2338,7 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
 
     if (arg0->state >= 4) {
         x = 0x18;
-        sprintf(buf - 4, D_800E138C, D_80121D8C);
+        sprintf(buf - 4, D_800E138C, gPlayer1Money);
         tempY = y.half.lo;
         ptr = buf - 4;
         while (1) {
@@ -2856,7 +2856,7 @@ loop3:
     if (visibleRows >= 3) {
         x = 0x18;
         ptr = 0;
-        sprintf(buffer - 4, D_800E1450, D_80121D8C);
+        sprintf(buffer - 4, D_800E1450, gPlayer1Money);
         rowY = y.half.lo;
         ptr = buffer - 4;
 loop4:

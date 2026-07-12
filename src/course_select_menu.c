@@ -152,6 +152,7 @@ extern u8 D_80121D86;
 extern s8 D_80121D87;
 extern u8 gMenuTransitionState;
 extern CourseSelectSelection D_80121D80;
+extern s32 gPlayer1Money;
 extern CourseSelectMenuState *gCurrentGameTask;
 extern s32 gMenuFlowState;
 extern u8 gPendingFramebufferSwapCount;
@@ -783,7 +784,7 @@ block_17:
                     D_800EC9D0 += 3;
                 } else if ((temp_t4 & 0x8000) || (temp_t4 & 0x1000)) {
                     if (D_800ECA2F[D_80121D86] == -1) {
-                        if ((u32) D_80121D8C >= (u32) gCourseUnlockPrices[D_80121D86]) {
+                        if ((u32) gPlayer1Money >= (u32) gCourseUnlockPrices[D_80121D86]) {
                             sp44 = 0;
                             enqueueSoundEffect(0x49, 0x32);
                             var_a3_2 = 0;

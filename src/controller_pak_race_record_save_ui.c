@@ -51,7 +51,7 @@ typedef struct {
 extern s16 gPlayerBadgeDisplayOrder[];
 extern ControllerPakRaceRecordSaveScoreView gGameSaveDataBuffer;
 extern u8 gAssetHandles[];
-extern s32 D_80121D8C;
+extern s32 gPlayer1Money;
 #endif
 
 struct ControllerPakRaceRecordSaveActor {
@@ -113,7 +113,7 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
     text[1] = 0;
     drawMenuAsciiText((s16)(arg0->x + 0x32), (s16)((unsigned long)(arg0->y + 2)), text, 0, 0x100);
 
-    sprintf(text, D_800E0F30, D_80121D8C);
+    sprintf(text, D_800E0F30, gPlayer1Money);
     drawMenuAsciiText((s16)(arg0->x + 0x44), (s16)(arg0->y + 0x1B), text, 0, 0x100);
 
     if (gGameSaveDataBuffer.iconCount == 3) {
