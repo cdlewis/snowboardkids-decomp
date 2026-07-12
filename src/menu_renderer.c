@@ -584,12 +584,12 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s
 }
 #endif
 
-// drawMenuSpriteSubrect best match: 82.830% (nonmatchings/func_8001061C-2225551288923588688/base_3.c)
+// drawMenuSpriteSubrect best match: 87.440% (nonmatchings/drawMenuSpriteSubrect-5802343343535905907/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSpriteSubrect.s")
 
 #ifdef NON_MATCHING
-void drawMenuSpriteSubrect(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u8 srcY, u8 width, u8 height, u16 scaleX,
-                   u16 scaleY) {
+void drawMenuSpriteSubrect(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u8 srcY, u8 width, u8 height, s32 scaleX,
+                   s32 scaleY) {
     FontTexture *texture;
     u8 *paletteBase;
     s32 left;
@@ -637,13 +637,29 @@ void drawMenuSpriteSubrect(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u
             bottom = maxY - 4;
         }
 
-        gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)((u32)asset + texture->imageOffset + 0x80000000), G_IM_FMT_CI,
-                              texture->width, texture->height, 0, 0, texture->width, texture->height, 0, G_TX_WRAP,
-                              G_TX_WRAP, 0, 0, 0, 0);
-        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
-                          (u8 *)((u32)paletteBase + (texture->paletteIndex * 0x20) + 0x80000000));
-        gSPTextureRectangle(gRegionAllocPtr++, left, top, right, bottom, 0, texS, texT, 0x8000 / scaleX,
-                            0x8000 / scaleY);
+        FONT_GFX_CMD(gRegionAllocPtr++, (((texture->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                     (u8 *)asset + texture->imageOffset + 0x80000000);
+        FONT_GFX_CMD(gRegionAllocPtr++, (((((texture->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5480000,
+                     0x07080200);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                     0x07000000 | (((texture->width << 1) & 0xFFF) << 12) | ((texture->height << 2) & 0xFFF));
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+        FONT_GFX_CMD(gRegionAllocPtr++, (((((texture->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5400000,
+                     0x00080200);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                     (((texture->width << 2) & 0xFFF) << 12) | ((texture->height << 2) & 0xFFF));
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000,
+                     paletteBase + (texture->paletteIndex * 0x20) + 0x80000000);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+        FONT_GFX_CMD(gRegionAllocPtr++, (((right) & 0xFFF) << 12) | 0xE4000000 | ((bottom) & 0xFFF),
+                     (((left) & 0xFFF) << 12) | ((top) & 0xFFF));
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, (texS << 16) | (texT & 0xFFFF));
+        FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, ((0x8000 / scaleX) << 16) | ((0x8000 / scaleY) & 0xFFFF));
     }
 }
 #endif

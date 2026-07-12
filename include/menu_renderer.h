@@ -17,8 +17,8 @@ void drawMenuSpriteWithAlpha(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width
 void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height, u8 palette, u16 alpha, u8 flip,
                    s32 clipLeft, s32 clipTop, s32 clipRight, s32 clipBottom);
 void drawMenuSpriteWithPaletteScale(s16 x, s16 y, s32 texture, u16 tileIndex, s32 alpha);
-void drawMenuSpriteSubrect(s16 x, s16 y, s32 texture, u16 tileIndex, u8 srcX, u8 srcY, u8 width, u8 height, u16 scaleX,
-                   u16 scaleY);
+void drawMenuSpriteSubrect(s16 x, s16 y, s32 texture, u16 tileIndex, u8 srcX, u8 srcY, u8 width, u8 height, s32 scaleX,
+                   s32 scaleY);
 void drawMenuSpriteFixedScale(s16 x, s16 y, s32 texture, u16 tileIndex, u16 scaleX, u16 scaleY, u8 palette, u8 flip);
 void drawMenuSpriteTile(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height);
 void drawMenuSpriteTileClipped(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height, s32 clipRight, s32 clipBottom);
