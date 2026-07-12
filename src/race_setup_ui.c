@@ -815,19 +815,19 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceSetupSavePanelFrame);
 }
 
-// drawRaceSetupSavePanelIcons best match: 90.000% (nonmatchings/drawRaceSetupSavePanelIcons-180949888360117632/base_10.c)
+// drawRaceSetupSavePanelIcons best match: 93.449% (nonmatchings/drawRaceSetupSavePanelIcons-5802343343535905907/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_setup_ui/drawRaceSetupSavePanelIcons.s")
 
 #ifdef NON_MATCHING
 void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
     volatile s32 unused;
     s32 pad[6];
-    s32 i;
+    volatile s32 i;
     s32 actorOffset;
     s16 *courseId;
     register TitleMenuPlayerView *player;
     register TitleMenuIconStripActor *item;
-    register s32 xOffset;
+    register s32 iconXOffset;
     register s32 alpha;
     register s32 nextJ;
     register s16 *badgeIndex;
@@ -850,7 +850,7 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
                     count = player->iconCount + 1;
                 }
                 if (count > 0) {
-                    xOffset = 0;
+                    iconXOffset = 0;
                     item = (TitleMenuIconStripActor *)((u8 *)arg0 + actorOffset);
                     do {
                         nextJ = j + 1;
@@ -859,11 +859,11 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
                         } else {
                             alpha = 0x100;
                         }
-                        drawMenuSpriteWithAlpha((s16)(item->rects[0].x0 + arg0->iconOffsetX + xOffset),
+                        drawMenuSpriteWithAlpha((s16)(item->rects[0].x0 + arg0->iconOffsetX + iconXOffset),
                                       (s16)(item->rects[1].x0 + arg0->iconOffsetY), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x19,
                                       0x20, 0x20, 0, alpha, 9 - j);
                         j = nextJ;
-                        xOffset += 0x10;
+                        iconXOffset += 0x10;
                     } while (nextJ != count);
                     j = 0;
                 }
@@ -880,7 +880,7 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
                 if (count > 0) {
                     player2 = &gGameSaveDataBuffer[i];
                     badgeIndex = gPlayerBadgeDisplayOrder;
-                    xOffset = 0;
+                    nextJ = 0;
                     item = (TitleMenuIconStripActor *)((u8 *)arg0 + actorOffset);
                     do {
                         tile = player2->badgeIds[*badgeIndex];
@@ -891,11 +891,11 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
                         } else {
                             tile = 9;
                         }
-                        drawMenuSpriteWithAlpha((s16)(item->rects[0].x0 + arg0->badgeOffsetX + xOffset),
+                        drawMenuSpriteWithAlpha((s16)(item->rects[0].x0 + arg0->badgeOffsetX + nextJ),
                                       (s16)(item->rects[1].x0 + arg0->badgeOffsetY), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
                                       (j + 0x1A) & 0xFFFF, 0x20, 0x20, 0, alpha, tile);
                         j++;
-                        xOffset += 0xE;
+                        nextJ += 0xE;
                         badgeIndex++;
                     } while (j != count);
                 }
