@@ -1611,19 +1611,18 @@ void soundPlayerApplyVolumeAndPan(PlayerCommandState *arg0, s32 arg1) {
     }
 }
 
-// soundPlayerApplyPitch best match: 95.714%
+// soundPlayerApplyPitch best match: 97.107% (nonmatchings/soundPlayerApplyPitch-3357475854818838508/base_22.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerApplyPitch.s")
 
 #ifdef NON_MATCHING
-extern void alSynSetPitch(void *, void *, f32);
-
 void soundPlayerApplyPitch(PlayerCommandState *arg0, s32 arg1) {
     register f32 pitch;
     f32 basePitch;
     f32 slidePitch;
     f32 pitchRatio;
     f32 flagPitch;
+    f64 finePitchScale;
     s32 bend;
     u8 slideTime;
 
@@ -1637,16 +1636,19 @@ void soundPlayerApplyPitch(PlayerCommandState *arg0, s32 arg1) {
     slideTime = arg0->unkEA;
     if ((slideTime != (0, 0)) && (slideTime >= arg0->unkC6)) {
         basePitch = arg0->unk3C;
-        slidePitch = (pitch - basePitch) / (f32)slideTime;
-        slidePitch *= arg0->unk40;
-        pitch = slidePitch + basePitch;
+        if (1) {
+            slidePitch = (pitch - basePitch) / (f32)slideTime;
+            slidePitch *= arg0->unk40;
+            pitch = slidePitch + basePitch;
+        }
     }
 
     flagPitch = (f32)arg0->unk118 * (f32)(1 - arg0->flagE7);
     arg0->unk4C = pitch;
     arg0->flagE7 = 0;
-    pitch += arg0->unk48 + flagPitch + arg0->unk2C + (f32)arg0->unk11A + ((f32 *)gSoundPlayerPitchOffsets)[arg0->unkCC];
-    pitch = (f32)((f64)pitch + ((f64)(f32)arg0->unkF1 * 0.015625 * ((f64)(f32)arg0->unkF0 - 64.0)));
+    pitch += arg0->unk48 + flagPitch + arg0->unk2C + (f32)arg0->unk11A;
+    pitch += ((f32 *)gSoundPlayerPitchOffsets)[arg0->unkCC];
+    pitch = (f32)((f64)pitch + ((finePitchScale = (f64)(f32)arg0->unkF1 * 0.015625) * ((f64)(f32)arg0->unkF0 - 64.0)));
     if (1) {}
     if (1) {}
     if (1) {}
@@ -1663,7 +1665,7 @@ void soundPlayerApplyPitch(PlayerCommandState *arg0, s32 arg1) {
             pitchRatio = 2.0f;
             arg0->unk108 = 0;
         }
-        alSynSetPitch(&gAudioSynthesizer, gSoundPlayerVoices + (arg1 * 0x1C), pitchRatio);
+        alSynSetPitch(&gAudioSynthesizer, (ALVoice *)(gSoundPlayerVoices + (arg1 * 0x1C)), pitchRatio);
     }
 }
 #endif
