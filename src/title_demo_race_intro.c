@@ -6,7 +6,7 @@
 #include "race_scene_loader.h"
 #include "game_task_scheduler.h"
 #include "race_camera.h"
-#include "race_player_update.h"
+#include "race_player_state.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
 #include "menu_screen_effects.h"
@@ -52,11 +52,11 @@ extern s8 gRacePlayerCount;
 extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gRaceCameraModeChangeDisabled;
-extern u8 D_80121B59;
+extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
-extern s16 D_80121B5C;
-extern u8 D_80121B5F;
+extern s16 gRacePlayerAttackStartTimer;
+extern u8 gRaceResultState;
 extern RaceInputRecord D_8012238C[];
 extern s8 D_80121D94;
 extern s8 D_80121D95;
@@ -103,8 +103,8 @@ void initTitleDemoRaceIntro(void) {
     gRaceCourseIndex = 0;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
-    D_80121B5F = 0;
-    D_80121B59 = one;
+    gRaceResultState = 0;
+    gRaceDemoPlaybackEnabled = one;
     gPlayerCount = four;
     gRaceSplitscreenMode = 0;
     gTrainingCourseLesson = 0;
@@ -134,7 +134,7 @@ void initTitleDemoRaceIntro(void) {
 
     gRacePlayerCount = four;
     gRaceLapCount = two;
-    D_80121B5C = 0x64;
+    gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(1);
 
     D_80121D95 = 0;

@@ -20,7 +20,7 @@
 #include "race_camera.h"
 #include "race_course_effects.h"
 #include "race_flow.h"
-#include "race_player_update.h"
+#include "race_player_state.h"
 #include "race_scene_loader.h"
 #include "race_start_transition.h"
 #include "race_timer_ui.h"
@@ -193,8 +193,8 @@ extern u8 D_8011233C;
 extern f32 D_800E16CC;
 extern f32 D_800E16D0;
 extern u8 D_59AAA0[];
-extern s16 D_80121B5C;
-extern u8 D_80121B5F;
+extern s16 gRacePlayerAttackStartTimer;
+extern u8 gRaceResultState;
 extern u8 D_80121D94;
 extern u8 D_80121D95;
 extern u8 D_80121D96;
@@ -214,7 +214,6 @@ extern u8 gPlayerCount;
 extern u8 D_80121B57;
 extern u8 gRaceCameraModeChangeDisabled;
 extern u8 gRaceTypeSelection;
-extern s8 D_80121B5F;
 extern u8 D_80121B60;
 extern s8 D_80121B61;
 extern RaceTime D_80121B74;
@@ -1048,7 +1047,7 @@ void prepareRaceResultsFlow(void) {
 
     switch (gRaceSplitscreenMode) {
     case 0:
-        D_80121B5F = 1;
+        gRaceResultState = 1;
         i = 0;
         if (gPlayerCount > 0) {
             player = D_80121D80;
@@ -1078,13 +1077,13 @@ void prepareRaceResultsFlow(void) {
             time++;
         } while (index != 0x14);
         if (index < 0x14) {
-            D_80121B5F = 1;
+            gRaceResultState = 1;
             D_80121B60 = 1;
             if (index == 0) {
                 D_80121B61 = 1;
             }
         } else {
-            D_80121B5F = 2;
+            gRaceResultState = 2;
         }
         break;
 
@@ -1108,10 +1107,10 @@ void prepareRaceResultsFlow(void) {
                         i = 5;
                     }
                     if (i < 5) {
-                        D_80121B5F = 1;
+                        gRaceResultState = 1;
                         D_80121B60 = 1;
                     } else {
-                        D_80121B5F = 2;
+                        gRaceResultState = 2;
                     }
                 }
             } else {
@@ -1129,10 +1128,10 @@ void prepareRaceResultsFlow(void) {
                     i = 5;
                 }
                 if (i < 5) {
-                    D_80121B5F = 1;
+                    gRaceResultState = 1;
                     D_80121B60 = 1;
                 } else {
-                    D_80121B5F = 2;
+                    gRaceResultState = 2;
                 }
             }
         } else {
@@ -1154,10 +1153,10 @@ void prepareRaceResultsFlow(void) {
                 i = 5;
             }
             if (i < 5) {
-                D_80121B5F = 1;
+                gRaceResultState = 1;
                 D_80121B60 = 1;
             } else {
-                D_80121B5F = 2;
+                gRaceResultState = 2;
             }
         }
         break;
@@ -1313,9 +1312,9 @@ void updateRaceResultsFlow(void) {
                     }
                 }
                 if (i < 5) {
-                    D_80121B5F = 1;
+                    gRaceResultState = 1;
                 } else {
-                    D_80121B5F = 2;
+                    gRaceResultState = 2;
                     D_801235B4 |= 0x20;
                 }
                 D_801235B8->fadeTimer = 0xA;
@@ -1352,9 +1351,9 @@ void updateRaceResultsFlow(void) {
                         D_800EC9F0.unk78D7 |= 2;
                     }
                     if (i < 5) {
-                        D_80121B5F = 1;
+                        gRaceResultState = 1;
                     } else {
-                        D_80121B5F = 2;
+                        gRaceResultState = 2;
                         D_801235B4 |= 0x20;
                     }
                     D_801235B8->fadeTimer = 0xA;
@@ -1386,9 +1385,9 @@ void updateRaceResultsFlow(void) {
                             (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
                     }
                     if (i < 5) {
-                        D_80121B5F = 1;
+                        gRaceResultState = 1;
                     } else {
-                        D_80121B5F = 2;
+                        gRaceResultState = 2;
                         D_801235B4 |= 0x20;
                     }
                     D_801235B8->fadeTimer = 0xA;
@@ -1425,9 +1424,9 @@ void updateRaceResultsFlow(void) {
                             (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
                     }
                     if (i < 5) {
-                        D_80121B5F = 1;
+                        gRaceResultState = 1;
                     } else {
-                        D_80121B5F = 2;
+                        gRaceResultState = 2;
                         D_801235B4 |= 0x20;
                     }
                     D_801235B8->fadeTimer = 0xA;
@@ -1503,7 +1502,7 @@ void initRaceGhostReplayFlow(void) {
 
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 1;
-    D_80121B5F = 0;
+    gRaceResultState = 0;
     asset = getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     if (((Unk80043040 *)asset)->unk8 == 0) {
         gFramebufferSwapHold = 1;
@@ -1555,7 +1554,7 @@ void initRaceGhostReplayFlow(void) {
     D_80121D80[3].unk13 = 0;
     gRacePlayerCount = 1;
     *(u16 *)&gRaceLapCount = 1;
-    D_80121B5C = 0x64;
+    gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(2);
     D_80121D95 = 0;
     D_80121D96 = 0;

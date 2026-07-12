@@ -76,7 +76,7 @@ typedef union SoundHalfArg {
 
 extern SoundAssetHandles gAssetHandles;
 extern s16 gRaceCourseIndex;
-extern u8 D_80121B59;
+extern u8 gRaceDemoPlaybackEnabled;
 extern u8 D_275A90[];
 extern u8 D_27E290[];
 extern s32 D_800DABB0[];
@@ -580,7 +580,7 @@ void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 p
     if (D_801121E0[3].initialized != 0) {
         activeCameras += 1;
     }
-    if (D_80121B59 != 0) {
+    if (gRaceDemoPlaybackEnabled != 0) {
         activeCameras = 4;
     }
 

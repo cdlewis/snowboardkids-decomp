@@ -6,7 +6,7 @@
 #include "game_task_scheduler.h"
 #include "menu_screen_effects.h"
 #include "race_camera.h"
-#include "race_player_update.h"
+#include "race_player_state.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
 
@@ -52,7 +52,7 @@ extern u8 gMainMenuDemoRaceIntroLoadCourseAssetsFlags[];
 extern s16 gMenuFadeAlpha;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
-extern s16 D_80121B5C;
+extern s16 gRacePlayerAttackStartTimer;
 extern s8 gRacePlayerCount;
 extern u8 gMenuFadeOverlayActive;
 extern u8 gMainMenuDemoRaceIntroIndex;
@@ -63,11 +63,11 @@ extern u8 gRacePlayerHudStatuses;
 extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gRaceCameraModeChangeDisabled;
-extern u8 D_80121B59;
+extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern u8 gRaceTypeSelection;
-extern u8 D_80121B5F;
+extern u8 gRaceResultState;
 extern s8 D_80121D94;
 extern s8 D_80121D95;
 extern s8 D_80121D96;
@@ -98,8 +98,8 @@ void initMainMenuDemoRaceIntro(void) {
     gRaceCourseIndex = demoEntry->courseIndex;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
-    D_80121B5F = 0;
-    D_80121B59 = 0;
+    gRaceResultState = 0;
+    gRaceDemoPlaybackEnabled = 0;
     gTrainingCourseLesson = 0;
     gMainMenuModeSelection = 0;
     gRaceSplitscreenMode = demoEntry->splitscreen;
@@ -141,7 +141,7 @@ void initMainMenuDemoRaceIntro(void) {
         gPlayerCount = one;
     }
     gRaceLapCount = 2;
-    D_80121B5C = 0x64;
+    gRacePlayerAttackStartTimer = 0x64;
     if (gRaceSplitscreenMode == 0) {
         initCallbackTaskScheduler(one);
     } else {

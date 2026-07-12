@@ -17,7 +17,7 @@
 #include "race_player_movement.h"
 #include "race_position_tracker.h"
 #include "race_position_ui.h"
-#include "race_player_update.h"
+#include "race_player_state.h"
 #include "race_surface_cues.h"
 #include "race_ui_effects.h"
 #include "snowboard_trail_effects.h"
@@ -114,20 +114,18 @@ extern PlayerTuningRow gRacePlayerDemoCharacterTuningRows[];
 extern Struct800955C0 gRaceCourseStartEntries[];
 extern CourseAngleEntry gSpiralCourseObjectAngles[];
 extern CourseAngleEntry gLaunchRampCourseObjectAngles[];
-extern u8 D_80121B5F;
+extern u8 gRaceResultState;
 extern u8 gMainMenuModeSelection;
 extern u8 gRaceSplitscreenMode;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
-extern u8 D_80121B59;
+extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gRaceTypeSelection;
-extern u8 D_80121B59;
 extern u8 gRaceCameraModeChangeDisabled;
 extern u8 gTrainingCourseLesson;
-extern u8 gMainMenuModeSelection;
 extern s16 gRaceCourseIndex;
 extern s32 gMenuFlowState;
-extern s16 D_80121B5C;
+extern s16 gRacePlayerAttackStartTimer;
 extern s8 D_80121D93;
 extern s32 D_8012207C;
 extern s8 D_8012239F;
@@ -138,14 +136,11 @@ extern s8 D_80122FB7;
 extern s32 D_801232A0;
 extern s16 gRaceLapCount;
 extern s16 gFrameCounter;
-extern s32 gMenuFlowState;
 extern Unk8011228C gRacePlayerHudStatuses[];
 extern RacePlayerSoundPosition D_80121D9C[];
 extern RacePlayerSoundPosition D_80121DA8[];
 extern void *D_801248C8;
 extern void *D_801248EC;
-extern Struct800955C0 gRaceCourseStartEntries[];
-extern s16 gRaceCourseIndex;
 extern Unk801124B8 D_801124B8[];
 
 void initRacePlayers(void) {
@@ -168,7 +163,7 @@ void initRacePlayers(void) {
 }
 
 // applyRacePlayerTuning best match: 99.241%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/applyRacePlayerTuning.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/applyRacePlayerTuning.s")
 
 #ifdef NON_MATCHING
 void applyRacePlayerTuning(RaceInputPlayer *arg0) {
@@ -182,7 +177,7 @@ void applyRacePlayerTuning(RaceInputPlayer *arg0) {
 
     player = arg0;
     var_v0 = gRacePlayerCharacterTuningRows;
-    if ((D_80121B59 != 0) || (var_v1 = var_v0, gMainMenuModeSelection != 0)) {
+    if ((gRaceDemoPlaybackEnabled != 0) || (var_v1 = var_v0, gMainMenuModeSelection != 0)) {
         var_v0 = gRacePlayerDemoBoardTuningRows;
         var_v1 = gRacePlayerDemoCharacterTuningRows;
     } else {
@@ -207,7 +202,7 @@ void applyRacePlayerTuning(RaceInputPlayer *arg0) {
 #endif
 
 // initRacePlayer best match: 82.068% (base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/initRacePlayer.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/initRacePlayer.s")
 
 #ifdef NON_MATCHING
 void initRacePlayer(RaceInputPlayer *player) {
@@ -281,7 +276,7 @@ void initRacePlayer(RaceInputPlayer *player) {
         (player->unk27C != player->unk278)) {
         createCallbackTaskWithUserIdPreservingArgs(func_80057810, 0, 0x64, player->playerIndexU16);
     }
-    if (D_80121B59 == 1) {
+    if (gRaceDemoPlaybackEnabled == 1) {
         if (player->playerIndexU16 == 0) {
             player->itemEffectType = 3;
         } else {
@@ -407,7 +402,7 @@ void initRacePlayer(RaceInputPlayer *player) {
     player->unk502 = findRaceCourseSurfaceFromHint(player->unk502, player->posX, player->posZ);
     groundY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
     player->posY = groundY;
-    if (D_80121B59 == 0) {
+    if (gRaceDemoPlaybackEnabled == 0) {
         player->posY = groundY + 0x40000;
     }
     unk34->x = pos->x;
@@ -415,7 +410,7 @@ void initRacePlayer(RaceInputPlayer *player) {
     unk34->z = pos->z;
     player->randomIndex = randomNextMain();
     setRaceCameraMode(player->playerIndexU16, 1);
-    if (D_80121B59 == 0) {
+    if (gRaceDemoPlaybackEnabled == 0) {
         if (gRaceSplitscreenMode == 0) {
             createCallbackTaskWithUserId(waitForRaceStartPlayerEffect, 0, 1, player->playerIndexU16);
         }
@@ -445,7 +440,7 @@ void updateRacePlayers(void) {
 }
 
 // updateRacePlayer best match: 91.734% (nonmatchings/updateRacePlayer-7273315160691878794/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayer.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayer.s")
 
 void updateRacePlayerMotionFeedback(RaceInputPlayer *player) {
     s16 angleDiff;
@@ -499,7 +494,7 @@ void updateRacePlayerMotionFeedback(RaceInputPlayer *player) {
 }
 
 // updateRacePlayerMode00Grounded best match: 96.779% (nonmatchings/updateRacePlayerMode00Grounded-5752545231564691495/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode00Grounded.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode00Grounded.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode00Grounded(RaceInputPlayer *player) {
@@ -971,7 +966,7 @@ void updateRacePlayerAirborneLaunch(RaceInputPlayer *player) {
         player->stateTimer = 0x40000;
         player->stateFlags |= 0x10;
         setRaceMotionAnimation(player, 5);
-        func_80083298(player);
+        resetRacePlayerSurfaceCueState(player);
         player->unk60 = 0x40000;
         player->unk2A6 = 0;
         player->unk93 = 0;
@@ -1051,7 +1046,7 @@ void updateRacePlayerAirborneLaunch(RaceInputPlayer *player) {
     player->posX += player->unk40.x;
     player->posY += player->unk40.y;
     player->posZ += player->unk40.z;
-    func_800832CC(player);
+    getRacePlayerSurfaceCue(player);
     updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
         enqueueRacePlayerVoiceSound(player, 5);
@@ -1059,7 +1054,7 @@ void updateRacePlayerAirborneLaunch(RaceInputPlayer *player) {
 }
 
 // updateRacePlayerAirborneCruise best match: 97.952% (nonmatchings/updateRacePlayerAirborneCruise-4/output-1781-1/source.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerAirborneCruise.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerAirborneCruise.s")
 
 #ifdef NON_MATCHING
 #define HANDLE_SURFACE_CUE(modeValue, effectValue, soundType)                         \
@@ -1112,7 +1107,7 @@ void updateRacePlayerAirborneCruise(RaceInputPlayer *player) {
             }
         }
 
-        if (D_80121B59 == 0) {
+        if (gRaceDemoPlaybackEnabled == 0) {
             if (player->unk336 < 0x5A) {
                 player->unk336++;
             }
@@ -1187,7 +1182,7 @@ void updateRacePlayerAirborneCruise(RaceInputPlayer *player) {
     }
 
     updateRacePlayerLocalVelocity(player, lean, rotation, player->unk274, player->unk278, player->unk27C);
-    surfaceCue = func_800832CC(player);
+    surfaceCue = getRacePlayerSurfaceCue(player);
     if (!(player->stateFlags & 0x10)) {
         if (player->stateTimer < 0x46000) {
             surfaceCue = 0;
@@ -1313,7 +1308,7 @@ void updateRacePlayerAirborneCruise(RaceInputPlayer *player) {
         player->updateTimer = 0;
         setRaceMotionAnimation(player, 4);
     } else {
-        func_800832CC(player);
+        getRacePlayerSurfaceCue(player);
     }
 
     player->posX += player->unk40.x;
@@ -1460,7 +1455,7 @@ void updateRacePlayerTrickSubstateNoop(s32 arg0) {
 }
 
 // updateRacePlayerMode13AerialTrick best match: 99.716%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode13AerialTrick.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode13AerialTrick.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode13AerialTrick(RaceInputPlayer *player) {
@@ -1516,7 +1511,7 @@ void updateRacePlayerMode13AerialTrick(RaceInputPlayer *player) {
 
 // updateRacePlayerMode15AerialTrick best match: 99.607% (nonmatchings/updateRacePlayerMode15AerialTrick-6688367443449623229/base_13.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode15AerialTrick.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode15AerialTrick.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode15AerialTrick(RaceInputPlayer *player) {
@@ -1973,7 +1968,7 @@ void updateRacePlayerMode42AerialTrick(RaceInputPlayer *player) {
 
 // updateRacePlayerMode43AerialTrick best match: 99.900%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode43AerialTrick.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode43AerialTrick.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode43AerialTrick(RaceInputPlayer *player) {
@@ -2122,7 +2117,7 @@ void updateRacePlayerMode33AerialTrick(RaceInputPlayer *player) {
 
 // updateRacePlayerMode34AerialTrick best match: 99.760% (nonmatchings/updateRacePlayerMode34AerialTrick-3426750233777855594/base_17.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode34AerialTrick.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode34AerialTrick.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode34AerialTrick(RaceInputPlayer *player) {
@@ -2239,7 +2234,7 @@ void updateRacePlayerMode44AerialTrick(RaceInputPlayer *player) {
 
 // updateRacePlayerMode45AerialTrick best match: 99.769% (nonmatchings/updateRacePlayerMode45AerialTrick-6688367443449623229/base_23.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode45AerialTrick.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode45AerialTrick.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode45AerialTrick(RaceInputPlayer *player) {
@@ -2517,7 +2512,7 @@ void updateRacePlayerMode47AerialTrick(RaceInputPlayer *player) {
 }
 
 // updateRacePlayerMode48AerialTrick best match: 99.795%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode48AerialTrick.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode48AerialTrick.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode48AerialTrick(RaceInputPlayer *player) {
@@ -3032,7 +3027,7 @@ void updateRacePlayerMode54AerialTrick(RaceInputPlayer *player) {
 }
 
 // updateRacePlayerMode39AerialTrick best match: 98.910% (nonmatchings/updateRacePlayerMode39AerialTrick-2127290767680699791/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode39AerialTrick.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode39AerialTrick.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode39AerialTrick(RaceInputPlayer *player) {
@@ -3235,7 +3230,7 @@ void updateRacePlayerMode57AerialTrick(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode03(RaceInputPlayer *player) {
+void updateRacePlayerMode03Nudge(RaceInputPlayer *player) {
     RaceInputPlayer *playerAlias;
     Struct800955C0 *spawn;
     s16 updateState;
@@ -3336,7 +3331,7 @@ void updateRacePlayerMode03(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode04(RaceInputPlayer *player) {
+void updateRacePlayerMode04Spinout(RaceInputPlayer *player) {
     s16 updateState;
     s32 tempX;
     s32 tempZ;
@@ -3380,7 +3375,7 @@ void updateRacePlayerMode04(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode05(RaceInputPlayer *player) {
+void updateRacePlayerMode05SpinoutStun(RaceInputPlayer *player) {
     s16 updateState;
     s32 stateTimer;
 
@@ -3439,7 +3434,7 @@ void updateRacePlayerMode05(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode08(RaceInputPlayer *player) {
+void updateRacePlayerMode08SpinoutRecover(RaceInputPlayer *player) {
     Struct800955C0 *spawn;
     s16 updateState;
     s16 targetAngle;
@@ -3498,12 +3493,12 @@ void updateRacePlayerMode08(RaceInputPlayer *player) {
     }
 }
 
-// updateRacePlayerMode06CourseObject best match: 91.015% (base_3.c)
+// updateRacePlayerMode06TerrainFall best match: 91.015% (base_3.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode06CourseObject.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode06TerrainFall.s")
 
 #ifdef NON_MATCHING
-void updateRacePlayerMode06CourseObject(RaceInputPlayer *player) {
+void updateRacePlayerMode06TerrainFall(RaceInputPlayer *player) {
     s16 updateState;
     s16 updateTimer;
     s32 *pos;
@@ -3596,12 +3591,12 @@ void updateRacePlayerMode06CourseObject(RaceInputPlayer *player) {
 }
 #endif
 
-// updateRacePlayerMode28CourseObject best match: 91.209% (nonmatchings/updateRacePlayerMode28CourseObject-7273315160691878794/base_7.c)
+// updateRacePlayerMode28TerrainFallWithItemEffect best match: 91.209% (nonmatchings/updateRacePlayerMode28TerrainFallWithItemEffect-7273315160691878794/base_7.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode28CourseObject.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode28TerrainFallWithItemEffect.s")
 
 #ifdef NON_MATCHING
-void updateRacePlayerMode28CourseObject(RaceInputPlayer *player) {
+void updateRacePlayerMode28TerrainFallWithItemEffect(RaceInputPlayer *player) {
     s32 *sp38;
     s32 *sp34;
     s32 *sp30;
@@ -3717,12 +3712,12 @@ loop:
 }
 #endif
 
-// updateRacePlayerMode09CourseObject best match: 93.871% (base_3.c)
+// updateRacePlayerMode09TerrainCrash best match: 93.871% (base_3.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode09CourseObject.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode09TerrainCrash.s")
 
 #ifdef NON_MATCHING
-void updateRacePlayerMode09CourseObject(RaceInputPlayer *player) {
+void updateRacePlayerMode09TerrainCrash(RaceInputPlayer *player) {
     s16 sine;
     s16 cosine;
     s16 updateState;
@@ -3830,12 +3825,12 @@ void updateRacePlayerMode09CourseObject(RaceInputPlayer *player) {
 }
 #endif
 
-// updateRacePlayerMode10CourseObject best match: 99.683% (nonmatchings/updateRacePlayerMode10CourseObject-7273315160691878794/base_7.c)
+// updateRacePlayerMode10TerrainCrashSlide best match: 99.683% (nonmatchings/updateRacePlayerMode10TerrainCrashSlide-7273315160691878794/base_7.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode10CourseObject.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode10TerrainCrashSlide.s")
 
 #ifdef NON_MATCHING
-void updateRacePlayerMode10CourseObject(RaceInputPlayer *player) {
+void updateRacePlayerMode10TerrainCrashSlide(RaceInputPlayer *player) {
     s16 updateState;
     s32 yVel;
     s32 velocityX;
@@ -3909,7 +3904,7 @@ void updateRacePlayerMode10CourseObject(RaceInputPlayer *player) {
 }
 #endif
 
-void updateRacePlayerMode12(RaceInputPlayer *player) {
+void updateRacePlayerMode12LaunchRecover(RaceInputPlayer *player) {
     s16 updateState;
     u32 stateFlags;
     s32 grounded;
@@ -3974,7 +3969,7 @@ void updateRacePlayerMode12(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode11(RaceInputPlayer *player) {
+void updateRacePlayerMode11LaunchHit(RaceInputPlayer *player) {
     s16 updateState;
     s32 tempX;
     s32 tempZ;
@@ -4015,7 +4010,7 @@ void updateRacePlayerMode11(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode26(RaceInputPlayer *player) {
+void updateRacePlayerMode26Tumble(RaceInputPlayer *player) {
     s16 updateState;
     s32 timer;
 
@@ -4057,7 +4052,7 @@ void updateRacePlayerMode26(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode14(RaceInputPlayer *player) {
+void updateRacePlayerMode14PushHit(RaceInputPlayer *player) {
     s16 updateState;
     s32 velocityX;
     s32 velocityZ;
@@ -4106,12 +4101,12 @@ void updateRacePlayerMode14(RaceInputPlayer *player) {
     player->actionEffectFrame = 2;
 }
 
-// updateRacePlayerMode23 best match: 99.884%
+// updateRacePlayerMode23ItemSteal best match: 99.884%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode23.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode23ItemSteal.s")
 
 #ifdef NON_MATCHING
-void updateRacePlayerMode23(RaceInputPlayer *player) {
+void updateRacePlayerMode23ItemSteal(RaceInputPlayer *player) {
     s16 updateState;
     s16 nextState;
     s32 timer;
@@ -4163,7 +4158,7 @@ void updateRacePlayerMode23(RaceInputPlayer *player) {
 }
 #endif
 
-void updateRacePlayerMode24(RaceInputPlayer *player) {
+void updateRacePlayerMode24HeavyKnockdown(RaceInputPlayer *player) {
     s16 temp_v1_2;
     s16 temp_v0;
     s16 temp_2d6;
@@ -4244,7 +4239,7 @@ void updateRacePlayerMode24(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode25(RaceInputPlayer *player) {
+void updateRacePlayerMode25SpinHit(RaceInputPlayer *player) {
     s16 updateState;
     s32 stateTimer;
     u32 stateFlags;
@@ -4308,7 +4303,7 @@ void updateRacePlayerMode25(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode27(RaceInputPlayer *player) {
+void updateRacePlayerMode27Slide(RaceInputPlayer *player) {
     s16 updateState;
     s16 updateTimer;
     u32 stateFlags;
@@ -4358,7 +4353,7 @@ void updateRacePlayerMode27(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode40(RaceInputPlayer *player) {
+void updateRacePlayerMode40Stun(RaceInputPlayer *player) {
     s16 updateState;
     s32 velocityX;
     s32 velocityZ;
@@ -4409,16 +4404,16 @@ void updateRacePlayerMode40(RaceInputPlayer *player) {
     player->actionEffectFrame = 2;
 }
 
-void dispatchRacePlayerMode07(RaceInputPlayer *player) {
+void dispatchRacePlayerMode07CourseObject(RaceInputPlayer *player) {
     gRacePlayerMode07StateHandlers[player->updateState](player);
 }
 
-// updateRacePlayerMode07State0 best match: 95.401% (nonmatchings/updateRacePlayerMode07State0-731940616440357983/base_26.c)
+// updateRacePlayerMode07AlignToLaunchRamp best match: 95.401% (nonmatchings/updateRacePlayerMode07AlignToLaunchRamp-731940616440357983/base_26.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode07State0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode07AlignToLaunchRamp.s")
 
 #ifdef NON_MATCHING
-void updateRacePlayerMode07State0(RaceInputPlayer *player) {
+void updateRacePlayerMode07AlignToLaunchRamp(RaceInputPlayer *player) {
     s16 savedAngle;
     s16 angleDelta;
     s16 angleStep;
@@ -4476,7 +4471,7 @@ void updateRacePlayerMode07State0(RaceInputPlayer *player) {
 }
 #endif
 
-void updateRacePlayerMode07State1(RaceInputPlayer *player) {
+void updateRacePlayerMode07StartLaunchRamp(RaceInputPlayer *player) {
     if (stepRaceMotionAnimationUntilEnd(player) != 0) {
         player->updateState++;
         player->updateTimer = 0;
@@ -4486,7 +4481,7 @@ void updateRacePlayerMode07State1(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode07State2(RaceInputPlayer *player) {
+void updateRacePlayerMode07LaunchRampTakeoff(RaceInputPlayer *player) {
     s16 updateTimer;
     s32 unused;
     s32 scratch[14];
@@ -4541,7 +4536,7 @@ void updateRacePlayerMode07State2(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode07State3(RaceInputPlayer *player) {
+void updateRacePlayerMode07LaunchRampSpin(RaceInputPlayer *player) {
     s32 scratch[15];
 
     player->facingAngle += 0x10;
@@ -4582,7 +4577,7 @@ void updateRacePlayerMode07State3(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode07State4(RaceInputPlayer *player) {
+void updateRacePlayerMode07LaunchRampPose(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         setRaceMotionAnimation(player, 0x1D);
@@ -4596,7 +4591,7 @@ void updateRacePlayerMode07State4(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerMode07State5(RaceInputPlayer *player) {
+void updateRacePlayerMode07LaunchRampDrift(RaceInputPlayer *player) {
     s16 updateTimer;
     s32 scratch[14];
 
@@ -4649,7 +4644,7 @@ typedef struct {
 
 extern Unk801121E0 D_801121E0[];
 
-void updateRacePlayerMode07State6(RaceInputPlayer *player) {
+void updateRacePlayerMode07LaunchRampClimb(RaceInputPlayer *player) {
     PlayerTransformScratch80095A88 scratch;
 
     if (player->updateTimer == 0) {
@@ -4691,11 +4686,11 @@ void updateRacePlayerMode07State6(RaceInputPlayer *player) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode07State7.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode07SpiralExit.s")
 
-// updateRacePlayerMode07State7 best match: 84.515% (nonmatchings/updateRacePlayerMode07State7-7273315160691878794/base_1.c)
+// updateRacePlayerMode07SpiralExit best match: 84.515% (nonmatchings/updateRacePlayerMode07SpiralExit-7273315160691878794/base_1.c)
 #ifdef NON_MATCHING
-void updateRacePlayerMode07State7(RaceInputPlayer *player) {
+void updateRacePlayerMode07SpiralExit(RaceInputPlayer *player) {
     FixedMatrix3s matrix;
     Vec3i transformed;
     Vec3i source;
@@ -4779,7 +4774,7 @@ void updateRacePlayerMode07State7(RaceInputPlayer *player) {
 
 // isRacePlayerAttackingPlayer best match: 99.836% (nonmatchings/isRacePlayerAttackingPlayer-2225551288923588688/base_16.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/isRacePlayerAttackingPlayer.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/isRacePlayerAttackingPlayer.s")
 
 #ifdef NON_MATCHING
 s32 isRacePlayerAttackingPlayer(s16 arg0) {
@@ -4828,29 +4823,29 @@ s32 isRacePlayerAttackingPlayer(s16 arg0) {
         return 0;
     }
 
-    var_a0_2 = D_80121B5C;
+    var_a0_2 = gRacePlayerAttackStartTimer;
     var_a0 = 0x04001020;
     temp_v0->stateFlags = temp_v1 | var_a0;
     (&D_80121D80[arg0])->unk57C = var_a0_2;
     if (var_a0_2 != 0) {
-        D_80121B5C = var_a0_2 - 1;
+        gRacePlayerAttackStartTimer = var_a0_2 - 1;
     }
     return 1;
 }
 #endif
 
-void dispatchRacePlayerMode30(RaceInputPlayer *player) {
+void dispatchRacePlayerMode30Attack(RaceInputPlayer *player) {
     gRacePlayerMode30StateHandlers[player->updateState](player);
     if (player->unk280 < 0xF0000) {
         player->unk280 += 0x8000;
     }
 }
 
-// updateRacePlayerMode30State0 best match: 97.991% (nonmatchings/updateRacePlayerMode30State0-6113366811127043669/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode30State0.s")
+// updateRacePlayerMode30AttackApproach best match: 97.991% (nonmatchings/updateRacePlayerMode30AttackApproach-6113366811127043669/base_8.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerMode30AttackApproach.s")
 
 #ifdef NON_MATCHING
-void updateRacePlayerMode30State0(RaceInputPlayer *player) {
+void updateRacePlayerMode30AttackApproach(RaceInputPlayer *player) {
     s16 updateTimer;
     s16 facingAngle;
     s16 angleDiff;
@@ -4961,8 +4956,8 @@ void updateRacePlayerMode30State0(RaceInputPlayer *player) {
 }
 #endif
 
-void updateRacePlayerMode30State1(RaceInputPlayer *player) {
-    if (D_80121B5F != 0) {
+void updateRacePlayerMode30AttackResolve(RaceInputPlayer *player) {
+    if (gRaceResultState != 0) {
         player->stateTimer = 0;
     }
     if (player->stateTimer == 0) {
@@ -4974,7 +4969,7 @@ void updateRacePlayerMode30State1(RaceInputPlayer *player) {
                 player->updateState = 3;
                 player->updateTimer = 0;
             }
-        } else if (D_80121B5F == 1) {
+        } else if (gRaceResultState == 1) {
             player->updateState = 2;
             player->updateTimer = 0;
         } else {
@@ -5236,7 +5231,7 @@ void updateRacePlayerMode35Character5(RaceInputPlayer *player) {
 }
 
 // updateRacePlayersPostUpdate best match: 99.055% (nonmatchings/updateRacePlayersPostUpdate-6182772958467082306/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayersPostUpdate.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayersPostUpdate.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayersPostUpdate(void) {
@@ -5314,7 +5309,7 @@ void updateRacePlayerPostUpdateNoop(void) {
     updateRacePlayerSurfaceContact();
 }
 
-void updateRacePlayerPostUpdateMode07(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdateCourseObject(RaceInputPlayer *player) {
     if (player->updateState < 7) {
         updateRacePlayerGroundAlignment(player);
     } else {
@@ -5339,7 +5334,7 @@ void updateRacePlayerPostUpdateMode00(RaceInputPlayer *player) {
 }
 
 // updateRacePlayerVoiceSounds best match: 74.373%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerVoiceSounds.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/updateRacePlayerVoiceSounds.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerVoiceSounds(RaceInputPlayer *arg0) {
@@ -5397,7 +5392,7 @@ void updateRacePlayerVoiceSounds(RaceInputPlayer *arg0) {
         }
         var_a3 = var_a3_2 + arg0->unk2A4;
     }
-    if ((var_a3 != 0) && (gRaceSplitscreenMode == 0) && (D_80121B59 == 0)) {
+    if ((var_a3 != 0) && (gRaceSplitscreenMode == 0) && (gRaceDemoPlaybackEnabled == 0)) {
         sp24 = (s32)var_a3;
         addRacePlayerScore(arg0, (s32)var_a3);
         temp_v0_2 = (u16)arg0->playerIndex;
@@ -5568,7 +5563,7 @@ void updateRacePlayerPostUpdateAirborneTrick(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerPostUpdateMode02(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdateAirborneLaunch(RaceInputPlayer *player) {
     if (updateRacePlayerSurfaceContact()) {
         player->mode = 0x16;
         player->updateState = 0;
@@ -5582,7 +5577,7 @@ void updateRacePlayerPostUpdateMode02(RaceInputPlayer *player) {
     interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
 }
 
-void updateRacePlayerPostUpdateMode03(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdateNudge(RaceInputPlayer *player) {
     if (updateRacePlayerSurfaceContact()) {
         player->stateFlags |= 0x200;
     } else {
@@ -5617,7 +5612,7 @@ void updateRacePlayerPostUpdateMode29(RaceInputPlayer *player) {
     }
 }
 
-void updateRacePlayerPostUpdateMode30(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdateAttack(RaceInputPlayer *player) {
     updateRacePlayerSurfaceContact();
     if (player->updateState < 2) {
         interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
