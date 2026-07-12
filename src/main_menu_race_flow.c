@@ -10,7 +10,7 @@
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
 #include "main_menu_race_flow.h"
-#include "race_player_state.h"
+#include "race_player_update.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
 
@@ -228,7 +228,7 @@ void initMainMenuModePreviewRace(void) {
     resetRaceCameras();
     resetAllViewports();
     gFramebufferSwapDelay = 0;
-    func_8008BEB0();
+    initRacePlayers();
     gPlayerCount = 1;
     func_80078430();
     gPlayerCount = 4;
@@ -255,18 +255,18 @@ void fadeInMainMenuModePreviewRace(void) {
         gMenuFadeAlpha = 0;
         setCurrentGameTaskCallback(&waitForMainMenuModePreviewRaceStart, 0);
     }
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
     D_801124B8 = 0x80;
 }
 
 void waitForMainMenuModePreviewRaceStart(void) {
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
     if (gMainMenuSelectionResult != 0) {
@@ -311,9 +311,9 @@ void zoomMainMenuModePreviewRaceViewport(void) {
         gCurrentGameTask->transitionTimer = 0;
         setCurrentGameTaskCallback(runMainMenuModePreviewRace, 0);
     }
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
 }
@@ -321,9 +321,9 @@ void zoomMainMenuModePreviewRaceViewport(void) {
 
 void runMainMenuModePreviewRace(void) {
     gMenuFlowState = 0;
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
     func_8007AA50();
@@ -335,9 +335,9 @@ void runMainMenuModePreviewRace(void) {
 }
 
 void fadeOutMainMenuModePreviewRace(void) {
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
     func_8007AA50();
@@ -469,7 +469,7 @@ void initTrainingCourseRace(void) {
     resetAllViewports();
     gRacePlayerHudStatuses = 1;
     gFramebufferSwapDelay = 0;
-    func_8008BEB0();
+    initRacePlayers();
     func_80078430();
     configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
     gRacePlayerHudStatuses = 1;
@@ -495,18 +495,18 @@ void fadeInTrainingCourseRace(void) {
         gMenuFadeAlpha = 0;
         setCurrentGameTaskCallback(waitForTrainingCourseStartSelection, 0);
     }
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
     D_801124B8 = 0x80;
 }
 
 void waitForTrainingCourseStartSelection(void) {
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
     if (gMainMenuSelectionResult != 0) {
@@ -550,9 +550,9 @@ void zoomTrainingCourseRaceViewport(void) {
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         setCurrentGameTaskCallback(runTrainingCourseUntilActionPrompt, 0);
     }
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
 }
@@ -560,9 +560,9 @@ void zoomTrainingCourseRaceViewport(void) {
 
 void runTrainingCourseUntilActionPrompt(void) {
     gMenuFlowState = 0;
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
     func_8007AA50();
@@ -614,9 +614,9 @@ void fadeInTrainingCourseActionMenu(void) {
 
     gRaceUpdatePaused = 1;
     gMainMenuSelectionResult = 0;
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
     func_8007AA50();
@@ -632,9 +632,9 @@ void fadeInTrainingCourseActionMenu(void) {
 
 void waitForTrainingCourseActionMenuSelection(void) {
     gRaceUpdatePaused = 1;
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
     func_8007AA50();
@@ -646,9 +646,9 @@ void waitForTrainingCourseActionMenuSelection(void) {
 
 void fadeOutTrainingCourseActionMenu(void) {
     gRaceUpdatePaused = 1;
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
     func_8007AA50();

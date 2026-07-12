@@ -17,7 +17,7 @@
 #include "race_player_movement.h"
 #include "race_position_tracker.h"
 #include "race_position_ui.h"
-#include "race_player_state.h"
+#include "race_player_update.h"
 #include "race_surface_cues.h"
 #include "race_ui_effects.h"
 #include "snowboard_trail_effects.h"
@@ -96,21 +96,21 @@ extern s16 calculateAngleBetweenXZPoints(s32, s32, s32, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, SoundPosition *, s32, s32, f32, s16);
 extern void addRenderCallback(void *, void (*)(void *), void *);
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
-extern void (*D_800DECD0[])(RaceInputPlayer *);
-extern void (*D_800DECD8[])(RaceInputPlayer *);
-extern void (*D_800DECE8[])(RaceInputPlayer *);
-extern void (*D_800DED08[])(RaceInputPlayer *);
-extern void (*D_800DED18[])(RaceInputPlayer *);
-extern void (*D_800DED30[])(RaceInputPlayer *);
-extern void (*D_800DED48[])(RaceInputPlayer *);
-extern CourseStartPosition D_800DE918[][4];
-extern u16 D_800DE8D0;
-extern u16 D_800DE8F0;
-extern u16 D_800DE904;
-extern PlayerTuningRow D_800DC5E0[];
-extern PlayerTuningRow D_800DC6F0[];
-extern PlayerTuningRow D_800DC770[];
-extern PlayerTuningRow D_800DC880[];
+extern void (*gRacePlayerAirborneUpdateHandlers[])(RaceInputPlayer *);
+extern void (*gRacePlayerTrickSubstateHandlers[])(RaceInputPlayer *);
+extern void (*gRacePlayerMode07StateHandlers[])(RaceInputPlayer *);
+extern void (*gRacePlayerMode30StateHandlers[])(RaceInputPlayer *);
+extern void (*gRacePlayerMode32CharacterHandlers[])(RaceInputPlayer *);
+extern void (*gRacePlayerMode35CharacterHandlers[])(RaceInputPlayer *);
+extern void (*gRacePlayerModePostUpdateHandlers[])(RaceInputPlayer *);
+extern CourseStartPosition gRacePlayerPreviewStartPositions[][4];
+extern u16 gRacePlayerVoiceBaseSoundIds;
+extern u16 gRacePlayerVoiceLeadSoundOffsets;
+extern u16 gRacePlayerVoiceSplitSoundOffsets;
+extern PlayerTuningRow gRacePlayerBoardTuningRows[];
+extern PlayerTuningRow gRacePlayerCharacterTuningRows[];
+extern PlayerTuningRow gRacePlayerDemoBoardTuningRows[];
+extern PlayerTuningRow gRacePlayerDemoCharacterTuningRows[];
 extern Struct800955C0 gRaceCourseStartEntries[];
 extern CourseAngleEntry gSpiralCourseObjectAngles[];
 extern CourseAngleEntry gLaunchRampCourseObjectAngles[];
@@ -148,30 +148,30 @@ extern Struct800955C0 gRaceCourseStartEntries[];
 extern s16 gRaceCourseIndex;
 extern Unk801124B8 D_801124B8[];
 
-void func_8008BEB0(void) {
+void initRacePlayers(void) {
     D_80121D80[0].playerIndex = 0;
     D_80121D80[1].playerIndex = 1;
     D_80121D80[2].playerIndex = 2;
     D_80121D80[3].playerIndex = 3;
     if (D_80121D80[0].isActive != 0) {
-        func_8008C098(D_80121D80);
+        initRacePlayer(D_80121D80);
     }
     if (D_80121D80[1].isActive != 0) {
-        func_8008C098(D_8012238C);
+        initRacePlayer(D_8012238C);
     }
     if (D_80121D80[2].isActive != 0) {
-        func_8008C098(D_80122998);
+        initRacePlayer(D_80122998);
     }
     if (D_80121D80[3].isActive != 0) {
-        func_8008C098(D_80122FA4);
+        initRacePlayer(D_80122FA4);
     }
 }
 
-// func_8008BF5C best match: 99.241%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008BF5C.s")
+// applyRacePlayerTuning best match: 99.241%
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/applyRacePlayerTuning.s")
 
 #ifdef NON_MATCHING
-void func_8008BF5C(RaceInputPlayer *arg0) {
+void applyRacePlayerTuning(RaceInputPlayer *arg0) {
     RaceInputPlayer *player;
     PlayerTuningRow *var_v0;
     s32 new_var;
@@ -181,12 +181,12 @@ void func_8008BF5C(RaceInputPlayer *arg0) {
     s32 temp_t5;
 
     player = arg0;
-    var_v0 = D_800DC6F0;
+    var_v0 = gRacePlayerCharacterTuningRows;
     if ((D_80121B59 != 0) || (var_v1 = var_v0, gMainMenuModeSelection != 0)) {
-        var_v0 = D_800DC770;
-        var_v1 = D_800DC880;
+        var_v0 = gRacePlayerDemoBoardTuningRows;
+        var_v1 = gRacePlayerDemoCharacterTuningRows;
     } else {
-        var_v0 = D_800DC5E0;
+        var_v0 = gRacePlayerBoardTuningRows;
     }
     temp_a1 = (PlayerTuningRow *)((u8 *)var_v1 + (player->characterId * sizeof(PlayerTuningRow)));
     temp_a2 = (PlayerTuningRow *)((u8 *)var_v0 + (player->unk11 * sizeof(PlayerTuningRow)));
@@ -206,11 +206,11 @@ void func_8008BF5C(RaceInputPlayer *arg0) {
 }
 #endif
 
-// func_8008C098 best match: 82.068% (base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008C098.s")
+// initRacePlayer best match: 82.068% (base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/initRacePlayer.s")
 
 #ifdef NON_MATCHING
-void func_8008C098(RaceInputPlayer *player) {
+void initRacePlayer(RaceInputPlayer *player) {
     RaceVec3i *pos;
     RaceVec3i *unk34;
     CourseStartPosition *start;
@@ -257,7 +257,7 @@ void func_8008C098(RaceInputPlayer *player) {
     player->unk60 = 0x40000;
     player->unk280 = 0x80000;
     player->unk284 = 0xE0000;
-    func_8008BF5C(player);
+    applyRacePlayerTuning(player);
     if (player->unk4 != 0) {
         player->unk274 = 0x10000;
     }
@@ -397,7 +397,7 @@ void func_8008C098(RaceInputPlayer *player) {
         break;
     }
     if (gMainMenuModeSelection != 0) {
-        start = &D_800DE918[gMainMenuModeSelection - 1][player->playerIndexU16];
+        start = &gRacePlayerPreviewStartPositions[gMainMenuModeSelection - 1][player->playerIndexU16];
         pos->x = start->x;
         pos->y = start->y;
         pos->z = start->z;
@@ -423,7 +423,7 @@ void func_8008C098(RaceInputPlayer *player) {
 }
 #endif
 
-void func_8008C704(void) {
+void updateRacePlayers(void) {
     s32 i;
 
     D_80121D80[0].unk582 = 0;
@@ -437,17 +437,17 @@ void func_8008C704(void) {
         updateRacePlayerInput(D_80122FA4);
         func_8007B250();
         for (i = 0; i < gRacePlayerCount; i++) {
-            func_8008C7D0(&D_80121D80[i]);
+            updateRacePlayer(&D_80121D80[i]);
         }
         resolveRacePlayerBodyCollisions();
         updateRacePlayerRankings();
     }
 }
 
-// func_8008C7D0 best match: 91.734% (nonmatchings/func_8008C7D0-7273315160691878794/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008C7D0.s")
+// updateRacePlayer best match: 91.734% (nonmatchings/updateRacePlayer-7273315160691878794/base_3.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayer.s")
 
-void func_8008CF10(RaceInputPlayer *player) {
+void updateRacePlayerMotionFeedback(RaceInputPlayer *player) {
     s16 angleDiff;
     s32 itemType;
     s32 deltaX;
@@ -498,11 +498,11 @@ void func_8008CF10(RaceInputPlayer *player) {
     }
 }
 
-// func_8008D09C best match: 96.779% (nonmatchings/func_8008D09C-5752545231564691495/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008D09C.s")
+// updateRacePlayerMode00Grounded best match: 96.779% (nonmatchings/updateRacePlayerMode00Grounded-5752545231564691495/base_8.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode00Grounded.s")
 
 #ifdef NON_MATCHING
-void func_8008D09C(RaceInputPlayer *player) {
+void updateRacePlayerMode00Grounded(RaceInputPlayer *player) {
     s32 targetX;
     s32 targetZ;
     s32 speed;
@@ -791,14 +791,14 @@ void func_8008D09C(RaceInputPlayer *player) {
     player->posX += player->unk40.x;
     player->posY += player->unk40.y;
     player->posZ += player->unk40.z;
-    func_8008CF10(player);
+    updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
         enqueueRacePlayerVoiceSound(player, 5);
     }
 }
 #endif
 
-void func_8008DAF0(RaceInputPlayer *player) {
+void updateRacePlayerMode29Crash(RaceInputPlayer *player) {
     s16 updateState;
 
     updateState = player->updateState;
@@ -834,13 +834,13 @@ void func_8008DAF0(RaceInputPlayer *player) {
     }
 
     player->unk578 = 6;
-    func_8008CF10(player);
+    updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
         enqueueRacePlayerVoiceSound(player, 5);
     }
 }
 
-void func_8008DC2C(RaceInputPlayer *player) {
+void updateRacePlayerMode01JumpStart(RaceInputPlayer *player) {
     s32 unused;
     s32 targetX;
     s32 targetZ;
@@ -854,7 +854,7 @@ void func_8008DC2C(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->unk60 = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->unk2A6 = 0;
     }
 
@@ -885,7 +885,7 @@ void func_8008DC2C(RaceInputPlayer *player) {
         stepRaceMotionAnimationUntilEnd(player);
     }
 
-    func_8008F1CC(player);
+    updateRacePlayerTrickSubstate(player);
     updateRacePlayerLeanAngle(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     clampRacePlayerVectorXZSpeed(&player->unk40, player);
@@ -899,7 +899,7 @@ void func_8008DC2C(RaceInputPlayer *player) {
     }
 }
 
-void func_8008DE1C(RaceInputPlayer *player) {
+void updateRacePlayerMode22Airborne(RaceInputPlayer *player) {
     s32 unused;
     s32 targetX;
     s32 targetZ;
@@ -911,7 +911,7 @@ void func_8008DE1C(RaceInputPlayer *player) {
         player->stateFlags |= 0x208;
         player->unk60 = 0;
         player->unk80 = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->unk2A6 = 0;
     }
 
@@ -941,7 +941,7 @@ void func_8008DE1C(RaceInputPlayer *player) {
         }
     }
 
-    func_8008F1CC(player);
+    updateRacePlayerTrickSubstate(player);
     player->unk40.y -= player->unk264;
     clampRacePlayerVectorXZSpeed(&player->unk40, player);
     yVel = player->unk40.y;
@@ -954,11 +954,11 @@ void func_8008DE1C(RaceInputPlayer *player) {
     }
 }
 
-void func_8008DFD0(RaceInputPlayer *player) {
-    D_800DECD0[player->updateState](player);
+void dispatchRacePlayerAirborneMode(RaceInputPlayer *player) {
+    gRacePlayerAirborneUpdateHandlers[player->updateState](player);
 }
 
-void func_8008E008(RaceInputPlayer *player) {
+void updateRacePlayerAirborneLaunch(RaceInputPlayer *player) {
     Struct800955C0 *spawn;
     s16 updateTimer;
     s32 velocityY;
@@ -1052,14 +1052,14 @@ void func_8008E008(RaceInputPlayer *player) {
     player->posY += player->unk40.y;
     player->posZ += player->unk40.z;
     func_800832CC(player);
-    func_8008CF10(player);
+    updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
         enqueueRacePlayerVoiceSound(player, 5);
     }
 }
 
-// func_8008E350 best match: 97.952% (nonmatchings/func_8008E350-4/output-1781-1/source.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008E350.s")
+// updateRacePlayerAirborneCruise best match: 97.952% (nonmatchings/updateRacePlayerAirborneCruise-4/output-1781-1/source.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerAirborneCruise.s")
 
 #ifdef NON_MATCHING
 #define HANDLE_SURFACE_CUE(modeValue, effectValue, soundType)                         \
@@ -1072,7 +1072,7 @@ void func_8008E008(RaceInputPlayer *player) {
     player->unk2A6 = effectValue;                                                     \
     player->stateFlags = flags
 
-void func_8008E350(RaceInputPlayer *player) {
+void updateRacePlayerAirborneCruise(RaceInputPlayer *player) {
     s32 lean = 0;
     s32 rotation;
     Struct800955C0 *spawn;
@@ -1320,7 +1320,7 @@ void func_8008E350(RaceInputPlayer *player) {
     player->posY += player->unk40.y;
     player->posZ += player->unk40.z;
     stepRaceMotionJointAnimationUntilEnd(player);
-    func_8008CF10(player);
+    updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
         enqueueRacePlayerVoiceSound(player, 5);
     }
@@ -1329,7 +1329,7 @@ void func_8008E350(RaceInputPlayer *player) {
 #undef HANDLE_SURFACE_CUE
 #endif
 
-void func_8008F1B4(RaceInputPlayer *player) {
+void resetRacePlayerTrickSubstate(RaceInputPlayer *player) {
     player->subState = 0;
     player->subStateTimer = 0;
     player->subStateStep = 0;
@@ -1337,11 +1337,11 @@ void func_8008F1B4(RaceInputPlayer *player) {
     player->unk2A0 = 0;
 }
 
-void func_8008F1CC(RaceInputPlayer *player) {
-    D_800DECD8[player->subState](player);
+void updateRacePlayerTrickSubstate(RaceInputPlayer *player) {
+    gRacePlayerTrickSubstateHandlers[player->subState](player);
 }
 
-void func_8008F204(RaceInputPlayer *player) {
+void updateRacePlayerTrickSubstateStart(RaceInputPlayer *player) {
     s16 inputMask;
 
     player->subStateTimer = 0;
@@ -1404,7 +1404,7 @@ void func_8008F204(RaceInputPlayer *player) {
     }
 }
 
-void func_8008F3C8(RaceInputPlayer *player) {
+void updateRacePlayerTrickSubstateHold(RaceInputPlayer *player) {
     s16 inputMask;
 
     if (!(player->inputFlags & player->subStateTimer)) {
@@ -1448,22 +1448,22 @@ void func_8008F3C8(RaceInputPlayer *player) {
     player->stateFlags |= 0x800;
 }
 
-void func_8008F514(RaceInputPlayer *player) {
+void updateRacePlayerTrickSubstateFinish(RaceInputPlayer *player) {
     if (stepRaceMotionAnimationUntilEnd(player) != 0) {
         player->subState++;
     }
     player->stateFlags |= 0x800;
 }
 
-void func_8008F560(s32 arg0) {
+void updateRacePlayerTrickSubstateNoop(s32 arg0) {
 
 }
 
-// func_8008F568 best match: 99.716%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008F568.s")
+// updateRacePlayerMode13AerialTrick best match: 99.716%
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode13AerialTrick.s")
 
 #ifdef NON_MATCHING
-void func_8008F568(RaceInputPlayer *player) {
+void updateRacePlayerMode13AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 sine;
     s32 stateTimer;
@@ -1475,14 +1475,14 @@ void func_8008F568(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
 
     if (player->subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
 
-    func_8008F1CC(player);
+    updateRacePlayerTrickSubstate(player);
     updateRacePlayerLeanAngle(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     clampRacePlayerVectorXZSpeed(&player->unk40, player);
@@ -1514,12 +1514,12 @@ void func_8008F568(RaceInputPlayer *player) {
 }
 #endif
 
-// func_8008F6C8 best match: 99.607% (nonmatchings/func_8008F6C8-6688367443449623229/base_13.c)
+// updateRacePlayerMode15AerialTrick best match: 99.607% (nonmatchings/updateRacePlayerMode15AerialTrick-6688367443449623229/base_13.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8008F6C8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode15AerialTrick.s")
 
 #ifdef NON_MATCHING
-void func_8008F6C8(RaceInputPlayer *player) {
+void updateRacePlayerMode15AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 stateTimer;
     u32 stateFlags;
@@ -1529,14 +1529,14 @@ void func_8008F6C8(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
 
     if (player->subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
 
-    func_8008F1CC(player);
+    updateRacePlayerTrickSubstate(player);
     updateRacePlayerLeanAngle(player, player->unk254, 0);
     stateTimer = 0x400;
     player->velocity.y -= player->unk264;
@@ -1566,7 +1566,7 @@ void func_8008F6C8(RaceInputPlayer *player) {
 }
 #endif
 
-void func_8008F82C(RaceInputPlayer *player) {
+void updateRacePlayerMode16AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -1575,12 +1575,12 @@ void func_8008F82C(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
     if (player->subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
-    func_8008F1CC(player);
+    updateRacePlayerTrickSubstate(player);
     updateRacePlayerLeanAngle(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     clampRacePlayerVectorXZSpeed(&player->unk40, player);
@@ -1609,7 +1609,7 @@ void func_8008F82C(RaceInputPlayer *player) {
     }
 }
 
-void func_8008F9CC(RaceInputPlayer *player) {
+void updateRacePlayerMode17AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -1618,12 +1618,12 @@ void func_8008F9CC(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
     if (player->subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
-    func_8008F1CC(player);
+    updateRacePlayerTrickSubstate(player);
     updateRacePlayerLeanAngle(player, player->unk254, 0);
     player->velocity.y -= player->unk264;
     clampRacePlayerVectorXZSpeed(&player->velocity, player);
@@ -1652,7 +1652,7 @@ void func_8008F9CC(RaceInputPlayer *player) {
     }
 }
 
-void func_8008FB6C(RaceInputPlayer *player) {
+void updateRacePlayerMode18AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -1661,12 +1661,12 @@ void func_8008FB6C(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
     if (player->subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
-    func_8008F1CC(player);
+    updateRacePlayerTrickSubstate(player);
     updateRacePlayerLeanAngle(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     clampRacePlayerVectorXZSpeed(&player->unk40, player);
@@ -1696,7 +1696,7 @@ void func_8008FB6C(RaceInputPlayer *player) {
     }
 }
 
-void func_8008FD2C(RaceInputPlayer *player) {
+void updateRacePlayerMode19AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -1705,12 +1705,12 @@ void func_8008FD2C(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
     if (player->subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
-    func_8008F1CC(player);
+    updateRacePlayerTrickSubstate(player);
     updateRacePlayerLeanAngle(player, player->unk254, 0);
     player->velocity.y -= player->unk264;
     clampRacePlayerVectorXZSpeed(&player->velocity, player);
@@ -1740,7 +1740,7 @@ void func_8008FD2C(RaceInputPlayer *player) {
     }
 }
 
-void func_8008FEEC(RaceInputPlayer *player) {
+void updateRacePlayerMode20AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -1749,12 +1749,12 @@ void func_8008FEEC(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
     if (player->subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
-    func_8008F1CC(player);
+    updateRacePlayerTrickSubstate(player);
     updateRacePlayerLeanAngle(player, player->unk254, 0);
     player->velocity.y -= player->unk264;
     clampRacePlayerVectorXZSpeed(&player->velocity, player);
@@ -1784,7 +1784,7 @@ void func_8008FEEC(RaceInputPlayer *player) {
     }
 }
 
-void func_800900B0(RaceInputPlayer *player) {
+void updateRacePlayerMode21AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -1793,12 +1793,12 @@ void func_800900B0(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
     if (player->subState == 0) {
         stepRaceMotionAnimationUntilEnd(player);
     }
-    func_8008F1CC(player);
+    updateRacePlayerTrickSubstate(player);
     updateRacePlayerLeanAngle(player, player->unk254, 0);
     player->unk40.y -= player->unk264;
     clampRacePlayerVectorXZSpeed(&player->unk40, player);
@@ -1828,7 +1828,7 @@ void func_800900B0(RaceInputPlayer *player) {
     }
 }
 
-void func_80090274(RaceInputPlayer *player) {
+void updateRacePlayerMode31AerialTrick(RaceInputPlayer *player) {
     s16 updateTimer;
     s32 yVel;
     s32 timer;
@@ -1838,7 +1838,7 @@ void func_80090274(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x15);
         player->updateTimer = 0;
     }
@@ -1889,7 +1889,7 @@ void func_80090274(RaceInputPlayer *player) {
     }
 }
 
-void func_80090470(RaceInputPlayer *player) {
+void updateRacePlayerMode41AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -1898,7 +1898,7 @@ void func_80090470(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->updateTimer = 0;
     }
 
@@ -1930,7 +1930,7 @@ void func_80090470(RaceInputPlayer *player) {
     }
 }
 
-void func_800905BC(RaceInputPlayer *player) {
+void updateRacePlayerMode42AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -1939,7 +1939,7 @@ void func_800905BC(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->updateTimer = 0;
     }
 
@@ -1971,12 +1971,12 @@ void func_800905BC(RaceInputPlayer *player) {
     }
 }
 
-// func_80090708 best match: 99.900%
+// updateRacePlayerMode43AerialTrick best match: 99.900%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090708.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode43AerialTrick.s")
 
 #ifdef NON_MATCHING
-void func_80090708(RaceInputPlayer *player) {
+void updateRacePlayerMode43AerialTrick(RaceInputPlayer *player) {
     s16 updateTimer;
     RaceInputPlayer *playerAlias;
     s32 allBitsSet;
@@ -1990,7 +1990,7 @@ void func_80090708(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->updateTimer = 0;
     }
 
@@ -2039,7 +2039,7 @@ void func_80090708(RaceInputPlayer *player) {
 }
 #endif
 
-void func_80090898(RaceInputPlayer *player) {
+void updateRacePlayerMode32AerialTrick(RaceInputPlayer *player) {
     s16 updateState;
     s32 yVel;
 
@@ -2049,7 +2049,7 @@ void func_80090898(RaceInputPlayer *player) {
         setRaceMotionAnimation(player, 0x28);
         player->stateTimer = 0;
         player->stateFlags |= 0x200;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->updateTimer = 0;
     }
 
@@ -2071,7 +2071,7 @@ void func_80090898(RaceInputPlayer *player) {
     }
 }
 
-void func_80090998(RaceInputPlayer *player) {
+void updateRacePlayerMode33AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -2080,7 +2080,7 @@ void func_80090998(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->updateTimer = 0;
     }
 
@@ -2120,12 +2120,12 @@ void func_80090998(RaceInputPlayer *player) {
     }
 }
 
-// func_80090B30 best match: 99.760% (nonmatchings/func_80090B30-3426750233777855594/base_17.c)
+// updateRacePlayerMode34AerialTrick best match: 99.760% (nonmatchings/updateRacePlayerMode34AerialTrick-3426750233777855594/base_17.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090B30.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode34AerialTrick.s")
 
 #ifdef NON_MATCHING
-void func_80090B30(RaceInputPlayer *player) {
+void updateRacePlayerMode34AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     RaceInputPlayer *player2;
     s32 stateTimer;
@@ -2136,7 +2136,7 @@ void func_80090B30(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->updateTimer = 0;
     }
 
@@ -2178,7 +2178,7 @@ void func_80090B30(RaceInputPlayer *player) {
 }
 #endif
 
-void func_80090CD0(RaceInputPlayer *player) {
+void updateRacePlayerMode44AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -2187,7 +2187,7 @@ void func_80090CD0(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x17);
         player->updateTimer = 0;
     }
@@ -2237,12 +2237,12 @@ void func_80090CD0(RaceInputPlayer *player) {
     }
 }
 
-// func_80090ECC best match: 99.769% (nonmatchings/func_80090ECC-6688367443449623229/base_23.c)
+// updateRacePlayerMode45AerialTrick best match: 99.769% (nonmatchings/updateRacePlayerMode45AerialTrick-6688367443449623229/base_23.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80090ECC.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode45AerialTrick.s")
 
 #ifdef NON_MATCHING
-void func_80090ECC(RaceInputPlayer *player) {
+void updateRacePlayerMode45AerialTrick(RaceInputPlayer *player) {
     s16 updateTimer;
     unsigned long long timerConstant;
     s32 yVel;
@@ -2254,7 +2254,7 @@ void func_80090ECC(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
 
     stepRaceMotionAnimationUntilEnd(player);
@@ -2301,7 +2301,7 @@ void func_80090ECC(RaceInputPlayer *player) {
 }
 #endif
 
-void func_8009107C(RaceInputPlayer *player) {
+void updateRacePlayerMode46AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -2310,7 +2310,7 @@ void func_8009107C(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x1B);
         player->updateTimer = 0;
     }
@@ -2352,7 +2352,7 @@ void func_8009107C(RaceInputPlayer *player) {
     }
 }
 
-void func_80091250(RaceInputPlayer *player) {
+void updateRacePlayerMode35AerialTrick(RaceInputPlayer *player) {
     s16 updateState;
     s32 yVel;
     s32 stateTimer;
@@ -2362,7 +2362,7 @@ void func_80091250(RaceInputPlayer *player) {
         player->updateState = updateState + 1;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x15);
         player->updateTimer = 0;
     }
@@ -2404,7 +2404,7 @@ void func_80091250(RaceInputPlayer *player) {
     }
 }
 
-void func_80091400(RaceInputPlayer *player) {
+void updateRacePlayerMode36AerialTrick(RaceInputPlayer *player) {
     s16 updateState;
     s32 yVel;
     s32 timer;
@@ -2414,7 +2414,7 @@ void func_80091400(RaceInputPlayer *player) {
         player->updateState = updateState + 1;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x15);
         player->updateTimer = 0;
     }
@@ -2455,7 +2455,7 @@ void func_80091400(RaceInputPlayer *player) {
     }
 }
 
-void func_800915C0(RaceInputPlayer *player) {
+void updateRacePlayerMode47AerialTrick(RaceInputPlayer *player) {
     s16 updateTimer;
     s32 yVel;
     s32 timer;
@@ -2465,7 +2465,7 @@ void func_800915C0(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x19);
         player->updateTimer = 0;
     }
@@ -2516,11 +2516,11 @@ void func_800915C0(RaceInputPlayer *player) {
     }
 }
 
-// func_800917BC best match: 99.795%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800917BC.s")
+// updateRacePlayerMode48AerialTrick best match: 99.795%
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode48AerialTrick.s")
 
 #ifdef NON_MATCHING
-void func_800917BC(RaceInputPlayer *player) {
+void updateRacePlayerMode48AerialTrick(RaceInputPlayer *player) {
     s16 updateState;
     s32 yVel;
     s32 stateTimer;
@@ -2532,7 +2532,7 @@ void func_800917BC(RaceInputPlayer *player) {
         player->updateState = updateState + 1;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x15);
         player->updateTimer = 0;
     }
@@ -2583,7 +2583,7 @@ void func_800917BC(RaceInputPlayer *player) {
 }
 #endif
 
-void func_800919A4(RaceInputPlayer *player) {
+void updateRacePlayerMode49AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -2592,7 +2592,7 @@ void func_800919A4(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
 
     stepRaceMotionAnimationUntilEnd(player);
@@ -2623,7 +2623,7 @@ void func_800919A4(RaceInputPlayer *player) {
     }
 }
 
-void func_80091AF8(RaceInputPlayer *player) {
+void updateRacePlayerMode37AerialTrick(RaceInputPlayer *player) {
     s16 updateState;
     s16 updateTimer;
     s16 tilt;
@@ -2637,7 +2637,7 @@ void func_80091AF8(RaceInputPlayer *player) {
         setRaceMotionAnimation(player, 0x23);
         player->stateTimer = 0;
         player->stateFlags |= 0x200;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->updateTimer = 0;
         player->unk306 = 0;
     }
@@ -2707,7 +2707,7 @@ void func_80091AF8(RaceInputPlayer *player) {
     }
 }
 
-void func_80091D40(RaceInputPlayer *player) {
+void updateRacePlayerMode50AerialTrick(RaceInputPlayer *player) {
     s16 updateTimer;
     s32 yVel;
     s32 timer;
@@ -2717,7 +2717,7 @@ void func_80091D40(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x19);
         player->updateTimer = 0;
     }
@@ -2768,7 +2768,7 @@ void func_80091D40(RaceInputPlayer *player) {
     }
 }
 
-void func_80091F3C(RaceInputPlayer *player) {
+void updateRacePlayerMode51AerialTrick(RaceInputPlayer *player) {
     s16 updateState;
     s16 updateTimer;
     RaceInputPlayer *playerAlias;
@@ -2782,7 +2782,7 @@ void func_80091F3C(RaceInputPlayer *player) {
         setRaceMotionAnimation(player, 0x23);
         player->stateTimer = 0;
         player->stateFlags |= 0x200;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->updateTimer = 0;
         player->unk306 = 0;
     }
@@ -2854,7 +2854,7 @@ void func_80091F3C(RaceInputPlayer *player) {
     }
 }
 
-void func_80092194(RaceInputPlayer *player) {
+void updateRacePlayerMode52AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 stateTimer;
     s32 timer;
@@ -2864,7 +2864,7 @@ void func_80092194(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x1B);
         player->updateTimer = 0;
     }
@@ -2906,7 +2906,7 @@ void func_80092194(RaceInputPlayer *player) {
     }
 }
 
-void func_80092368(RaceInputPlayer *player) {
+void updateRacePlayerMode38AerialTrick(RaceInputPlayer *player) {
     s16 updateState;
     s32 yVel;
 
@@ -2916,7 +2916,7 @@ void func_80092368(RaceInputPlayer *player) {
         setRaceMotionAnimation(player, 0x23);
         player->stateTimer = 0;
         player->stateFlags |= 0x200;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->updateTimer = 0;
     }
 
@@ -2938,7 +2938,7 @@ void func_80092368(RaceInputPlayer *player) {
     }
 }
 
-void func_80092468(RaceInputPlayer *player) {
+void updateRacePlayerMode53AerialTrick(RaceInputPlayer *player) {
     s16 updateTimer;
     s32 yVel;
     s32 timer;
@@ -2948,7 +2948,7 @@ void func_80092468(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         setRaceMotionAnimation(player, 0x19);
         player->updateTimer = 0;
     }
@@ -2999,7 +2999,7 @@ void func_80092468(RaceInputPlayer *player) {
     }
 }
 
-void func_80092674(RaceInputPlayer *player) {
+void updateRacePlayerMode54AerialTrick(RaceInputPlayer *player) {
     s16 updateState;
     s32 yVel;
 
@@ -3009,7 +3009,7 @@ void func_80092674(RaceInputPlayer *player) {
         setRaceMotionAnimation(player, 0x28);
         player->stateTimer = 0;
         player->stateFlags |= 0x200;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->updateTimer = 0;
     }
 
@@ -3031,11 +3031,11 @@ void func_80092674(RaceInputPlayer *player) {
     }
 }
 
-// func_80092774 best match: 98.910% (nonmatchings/func_80092774-2127290767680699791/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80092774.s")
+// updateRacePlayerMode39AerialTrick best match: 98.910% (nonmatchings/updateRacePlayerMode39AerialTrick-2127290767680699791/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode39AerialTrick.s")
 
 #ifdef NON_MATCHING
-void func_80092774(RaceInputPlayer *player) {
+void updateRacePlayerMode39AerialTrick(RaceInputPlayer *player) {
     s16 updateTimer;
     s32 yVel;
     s32 timer;
@@ -3045,7 +3045,7 @@ void func_80092774(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
         player->updateTimer = 0;
     }
 
@@ -3107,7 +3107,7 @@ void func_80092774(RaceInputPlayer *player) {
 }
 #endif
 
-void func_800929E4(RaceInputPlayer *player) {
+void updateRacePlayerMode55AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -3116,7 +3116,7 @@ void func_800929E4(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
 
     stepRaceMotionAnimationUntilEnd(player);
@@ -3151,7 +3151,7 @@ void func_800929E4(RaceInputPlayer *player) {
     }
 }
 
-void func_80092B6C(RaceInputPlayer *player) {
+void updateRacePlayerMode56AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -3160,7 +3160,7 @@ void func_80092B6C(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
 
     stepRaceMotionAnimationUntilEnd(player);
@@ -3195,7 +3195,7 @@ void func_80092B6C(RaceInputPlayer *player) {
     }
 }
 
-void func_80092D04(RaceInputPlayer *player) {
+void updateRacePlayerMode57AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
     s32 timer;
 
@@ -3204,7 +3204,7 @@ void func_80092D04(RaceInputPlayer *player) {
         player->updateState++;
         player->stateFlags |= 0x200;
         player->stateTimer = 0;
-        func_8008F1B4(player);
+        resetRacePlayerTrickSubstate(player);
     }
 
     stepRaceMotionAnimationUntilEnd(player);
@@ -3235,7 +3235,7 @@ void func_80092D04(RaceInputPlayer *player) {
     }
 }
 
-void func_80092E58(RaceInputPlayer *player) {
+void updateRacePlayerMode03(RaceInputPlayer *player) {
     RaceInputPlayer *playerAlias;
     Struct800955C0 *spawn;
     s16 updateState;
@@ -3319,7 +3319,7 @@ void func_80092E58(RaceInputPlayer *player) {
     }
 
     if (!(player->stateFlags & 1)) {
-        func_8008CF10(player);
+        updateRacePlayerMotionFeedback(player);
     }
 
     if (stepRaceMotionAnimationUntilEnd(player) != 0) {
@@ -3336,7 +3336,7 @@ void func_80092E58(RaceInputPlayer *player) {
     }
 }
 
-void func_80093144(RaceInputPlayer *player) {
+void updateRacePlayerMode04(RaceInputPlayer *player) {
     s16 updateState;
     s32 tempX;
     s32 tempZ;
@@ -3380,7 +3380,7 @@ void func_80093144(RaceInputPlayer *player) {
     }
 }
 
-void func_80093304(RaceInputPlayer *player) {
+void updateRacePlayerMode05(RaceInputPlayer *player) {
     s16 updateState;
     s32 stateTimer;
 
@@ -3439,7 +3439,7 @@ void func_80093304(RaceInputPlayer *player) {
     }
 }
 
-void func_800934EC(RaceInputPlayer *player) {
+void updateRacePlayerMode08(RaceInputPlayer *player) {
     Struct800955C0 *spawn;
     s16 updateState;
     s16 targetAngle;
@@ -3498,12 +3498,12 @@ void func_800934EC(RaceInputPlayer *player) {
     }
 }
 
-// func_800936D4 best match: 91.015% (base_3.c)
+// updateRacePlayerMode06CourseObject best match: 91.015% (base_3.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800936D4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode06CourseObject.s")
 
 #ifdef NON_MATCHING
-void func_800936D4(RaceInputPlayer *player) {
+void updateRacePlayerMode06CourseObject(RaceInputPlayer *player) {
     s16 updateState;
     s16 updateTimer;
     s32 *pos;
@@ -3596,12 +3596,12 @@ void func_800936D4(RaceInputPlayer *player) {
 }
 #endif
 
-// func_800939E0 best match: 91.209% (nonmatchings/func_800939E0-7273315160691878794/base_7.c)
+// updateRacePlayerMode28CourseObject best match: 91.209% (nonmatchings/updateRacePlayerMode28CourseObject-7273315160691878794/base_7.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800939E0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode28CourseObject.s")
 
 #ifdef NON_MATCHING
-void func_800939E0(RaceInputPlayer *player) {
+void updateRacePlayerMode28CourseObject(RaceInputPlayer *player) {
     s32 *sp38;
     s32 *sp34;
     s32 *sp30;
@@ -3717,12 +3717,12 @@ loop:
 }
 #endif
 
-// func_80093E0C best match: 93.871% (base_3.c)
+// updateRacePlayerMode09CourseObject best match: 93.871% (base_3.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80093E0C.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode09CourseObject.s")
 
 #ifdef NON_MATCHING
-void func_80093E0C(RaceInputPlayer *player) {
+void updateRacePlayerMode09CourseObject(RaceInputPlayer *player) {
     s16 sine;
     s16 cosine;
     s16 updateState;
@@ -3830,12 +3830,12 @@ void func_80093E0C(RaceInputPlayer *player) {
 }
 #endif
 
-// func_80094288 best match: 99.683% (nonmatchings/func_80094288-7273315160691878794/base_7.c)
+// updateRacePlayerMode10CourseObject best match: 99.683% (nonmatchings/updateRacePlayerMode10CourseObject-7273315160691878794/base_7.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094288.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode10CourseObject.s")
 
 #ifdef NON_MATCHING
-void func_80094288(RaceInputPlayer *player) {
+void updateRacePlayerMode10CourseObject(RaceInputPlayer *player) {
     s16 updateState;
     s32 yVel;
     s32 velocityX;
@@ -3909,7 +3909,7 @@ void func_80094288(RaceInputPlayer *player) {
 }
 #endif
 
-void func_80094480(RaceInputPlayer *player) {
+void updateRacePlayerMode12(RaceInputPlayer *player) {
     s16 updateState;
     u32 stateFlags;
     s32 grounded;
@@ -3941,7 +3941,7 @@ void func_80094480(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
 
     if (grounded == 0) {
-        func_8008CF10(player);
+        updateRacePlayerMotionFeedback(player);
         if ((player->unk584 != 6) && (player->unk584 != 0x1E)) {
             player->unk588 = -6.0f;
         }
@@ -3974,7 +3974,7 @@ void func_80094480(RaceInputPlayer *player) {
     }
 }
 
-void func_8009469C(RaceInputPlayer *player) {
+void updateRacePlayerMode11(RaceInputPlayer *player) {
     s16 updateState;
     s32 tempX;
     s32 tempZ;
@@ -4015,7 +4015,7 @@ void func_8009469C(RaceInputPlayer *player) {
     }
 }
 
-void func_80094808(RaceInputPlayer *player) {
+void updateRacePlayerMode26(RaceInputPlayer *player) {
     s16 updateState;
     s32 timer;
 
@@ -4057,7 +4057,7 @@ void func_80094808(RaceInputPlayer *player) {
     }
 }
 
-void func_8009491C(RaceInputPlayer *player) {
+void updateRacePlayerMode14(RaceInputPlayer *player) {
     s16 updateState;
     s32 velocityX;
     s32 velocityZ;
@@ -4106,12 +4106,12 @@ void func_8009491C(RaceInputPlayer *player) {
     player->actionEffectFrame = 2;
 }
 
-// func_80094A94 best match: 99.884%
+// updateRacePlayerMode23 best match: 99.884%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80094A94.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode23.s")
 
 #ifdef NON_MATCHING
-void func_80094A94(RaceInputPlayer *player) {
+void updateRacePlayerMode23(RaceInputPlayer *player) {
     s16 updateState;
     s16 nextState;
     s32 timer;
@@ -4163,7 +4163,7 @@ void func_80094A94(RaceInputPlayer *player) {
 }
 #endif
 
-void func_80094BEC(RaceInputPlayer *player) {
+void updateRacePlayerMode24(RaceInputPlayer *player) {
     s16 temp_v1_2;
     s16 temp_v0;
     s16 temp_2d6;
@@ -4244,7 +4244,7 @@ void func_80094BEC(RaceInputPlayer *player) {
     }
 }
 
-void func_80094DF8(RaceInputPlayer *player) {
+void updateRacePlayerMode25(RaceInputPlayer *player) {
     s16 updateState;
     s32 stateTimer;
     u32 stateFlags;
@@ -4304,11 +4304,11 @@ void func_80094DF8(RaceInputPlayer *player) {
     player->posZ += player->unk40.z;
 
     if (!(player->stateFlags & 1)) {
-        func_8008CF10(player);
+        updateRacePlayerMotionFeedback(player);
     }
 }
 
-void func_80094FF4(RaceInputPlayer *player) {
+void updateRacePlayerMode27(RaceInputPlayer *player) {
     s16 updateState;
     s16 updateTimer;
     u32 stateFlags;
@@ -4358,7 +4358,7 @@ void func_80094FF4(RaceInputPlayer *player) {
     }
 }
 
-void func_80095164(RaceInputPlayer *player) {
+void updateRacePlayerMode40(RaceInputPlayer *player) {
     s16 updateState;
     s32 velocityX;
     s32 velocityZ;
@@ -4409,16 +4409,16 @@ void func_80095164(RaceInputPlayer *player) {
     player->actionEffectFrame = 2;
 }
 
-void func_80095300(RaceInputPlayer *player) {
-    D_800DECE8[player->updateState](player);
+void dispatchRacePlayerMode07(RaceInputPlayer *player) {
+    gRacePlayerMode07StateHandlers[player->updateState](player);
 }
 
-// func_80095338 best match: 95.401% (nonmatchings/func_80095338-731940616440357983/base_26.c)
+// updateRacePlayerMode07State0 best match: 95.401% (nonmatchings/updateRacePlayerMode07State0-731940616440357983/base_26.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095338.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode07State0.s")
 
 #ifdef NON_MATCHING
-void func_80095338(RaceInputPlayer *player) {
+void updateRacePlayerMode07State0(RaceInputPlayer *player) {
     s16 savedAngle;
     s16 angleDelta;
     s16 angleStep;
@@ -4476,7 +4476,7 @@ void func_80095338(RaceInputPlayer *player) {
 }
 #endif
 
-void func_800955C0(RaceInputPlayer *player) {
+void updateRacePlayerMode07State1(RaceInputPlayer *player) {
     if (stepRaceMotionAnimationUntilEnd(player) != 0) {
         player->updateState++;
         player->updateTimer = 0;
@@ -4486,7 +4486,7 @@ void func_800955C0(RaceInputPlayer *player) {
     }
 }
 
-void func_80095650(RaceInputPlayer *player) {
+void updateRacePlayerMode07State2(RaceInputPlayer *player) {
     s16 updateTimer;
     s32 unused;
     s32 scratch[14];
@@ -4527,7 +4527,7 @@ void func_80095650(RaceInputPlayer *player) {
             setRaceMotionAnimation(player, 1);
         }
         stepRaceMotionLoopingAnimation(player);
-        func_8008CF10(player);
+        updateRacePlayerMotionFeedback(player);
     } else {
         stepRaceMotionAnimationUntilEnd(player);
     }
@@ -4541,7 +4541,7 @@ void func_80095650(RaceInputPlayer *player) {
     }
 }
 
-void func_80095804(RaceInputPlayer *player) {
+void updateRacePlayerMode07State3(RaceInputPlayer *player) {
     s32 scratch[15];
 
     player->facingAngle += 0x10;
@@ -4575,14 +4575,14 @@ void func_80095804(RaceInputPlayer *player) {
     player->posZ += scratch[11];
 
     stepRaceMotionAnimationUntilEnd(player);
-    func_8008CF10(player);
+    updateRacePlayerMotionFeedback(player);
     if (--player->stateTimer == 0) {
         player->updateTimer = 0;
         player->updateState++;
     }
 }
 
-void func_80095940(RaceInputPlayer *player) {
+void updateRacePlayerMode07State4(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         setRaceMotionAnimation(player, 0x1D);
@@ -4596,7 +4596,7 @@ void func_80095940(RaceInputPlayer *player) {
     }
 }
 
-void func_800959B4(RaceInputPlayer *player) {
+void updateRacePlayerMode07State5(RaceInputPlayer *player) {
     s16 updateTimer;
     s32 scratch[14];
 
@@ -4649,7 +4649,7 @@ typedef struct {
 
 extern Unk801121E0 D_801121E0[];
 
-void func_80095A88(RaceInputPlayer *player) {
+void updateRacePlayerMode07State6(RaceInputPlayer *player) {
     PlayerTransformScratch80095A88 scratch;
 
     if (player->updateTimer == 0) {
@@ -4691,11 +4691,11 @@ void func_80095A88(RaceInputPlayer *player) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095BE4.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode07State7.s")
 
-// func_80095BE4 best match: 84.515% (nonmatchings/func_80095BE4-7273315160691878794/base_1.c)
+// updateRacePlayerMode07State7 best match: 84.515% (nonmatchings/updateRacePlayerMode07State7-7273315160691878794/base_1.c)
 #ifdef NON_MATCHING
-void func_80095BE4(RaceInputPlayer *player) {
+void updateRacePlayerMode07State7(RaceInputPlayer *player) {
     FixedMatrix3s matrix;
     Vec3i transformed;
     Vec3i source;
@@ -4777,12 +4777,12 @@ void func_80095BE4(RaceInputPlayer *player) {
 }
 #endif
 
-// func_80095F90 best match: 99.836% (nonmatchings/func_80095F90-2225551288923588688/base_16.c)
+// isRacePlayerAttackingPlayer best match: 99.836% (nonmatchings/isRacePlayerAttackingPlayer-2225551288923588688/base_16.c)
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80095F90.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/isRacePlayerAttackingPlayer.s")
 
 #ifdef NON_MATCHING
-s32 func_80095F90(s16 arg0) {
+s32 isRacePlayerAttackingPlayer(s16 arg0) {
     RaceInputPlayer *temp_v0;
     Struct800955C0 *temp_a1;
     s32 var_a0;
@@ -4839,18 +4839,18 @@ s32 func_80095F90(s16 arg0) {
 }
 #endif
 
-void func_8009617C(RaceInputPlayer *player) {
-    D_800DED08[player->updateState](player);
+void dispatchRacePlayerMode30(RaceInputPlayer *player) {
+    gRacePlayerMode30StateHandlers[player->updateState](player);
     if (player->unk280 < 0xF0000) {
         player->unk280 += 0x8000;
     }
 }
 
-// func_800961DC best match: 97.991% (nonmatchings/func_800961DC-6113366811127043669/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_800961DC.s")
+// updateRacePlayerMode30State0 best match: 97.991% (nonmatchings/updateRacePlayerMode30State0-6113366811127043669/base_8.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode30State0.s")
 
 #ifdef NON_MATCHING
-void func_800961DC(RaceInputPlayer *player) {
+void updateRacePlayerMode30State0(RaceInputPlayer *player) {
     s16 updateTimer;
     s16 facingAngle;
     s16 angleDiff;
@@ -4947,7 +4947,7 @@ void func_800961DC(RaceInputPlayer *player) {
     player->posX += player->unk40.x;
     player->posY += player->unk40.y;
     player->posZ += player->unk40.z;
-    func_8008CF10(player);
+    updateRacePlayerMotionFeedback(player);
 
     if ((player->unk40.x == 0) && (player->unk40.z == 0) && !(player->stateFlags & 1)) {
         if (player->soundDisabled == 0) {
@@ -4961,7 +4961,7 @@ void func_800961DC(RaceInputPlayer *player) {
 }
 #endif
 
-void func_8009652C(RaceInputPlayer *player) {
+void updateRacePlayerMode30State1(RaceInputPlayer *player) {
     if (D_80121B5F != 0) {
         player->stateTimer = 0;
     }
@@ -4986,12 +4986,12 @@ void func_8009652C(RaceInputPlayer *player) {
     stepRaceMotionLoopingJointAnimation(player);
 }
 
-void func_800965E0(RaceInputPlayer *player) {
+void dispatchRacePlayerMode32Character(RaceInputPlayer *player) {
     updateRacePlayerLeanAngle(player, 0, 0);
-    D_800DED18[player->characterId](player);
+    gRacePlayerMode32CharacterHandlers[player->characterId](player);
 }
 
-void func_80096630(RaceInputPlayer *player) {
+void updateRacePlayerMode32Character0(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
@@ -5014,7 +5014,7 @@ void func_80096630(RaceInputPlayer *player) {
     }
 }
 
-void func_800966F4(RaceInputPlayer *player) {
+void updateRacePlayerMode32Character1(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
@@ -5036,7 +5036,7 @@ void func_800966F4(RaceInputPlayer *player) {
     }
 }
 
-void func_800967B0(RaceInputPlayer *player) {
+void updateRacePlayerMode32Character2(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
@@ -5059,7 +5059,7 @@ void func_800967B0(RaceInputPlayer *player) {
     }
 }
 
-void func_80096874(RaceInputPlayer *player) {
+void updateRacePlayerMode32Character3(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
@@ -5082,7 +5082,7 @@ void func_80096874(RaceInputPlayer *player) {
     }
 }
 
-void func_80096934(RaceInputPlayer *player) {
+void updateRacePlayerMode32Character4(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
@@ -5105,7 +5105,7 @@ void func_80096934(RaceInputPlayer *player) {
     }
 }
 
-void func_800969F8(RaceInputPlayer *player) {
+void updateRacePlayerMode32Character5(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         enqueueRacePlayerVoiceSound(player, 6);
@@ -5123,12 +5123,12 @@ void func_800969F8(RaceInputPlayer *player) {
     }
 }
 
-void func_80096A8C(RaceInputPlayer *player) {
+void dispatchRacePlayerMode35Character(RaceInputPlayer *player) {
     updateRacePlayerLeanAngle(player, 0, 0);
-    D_800DED30[player->characterId](player);
+    gRacePlayerMode35CharacterHandlers[player->characterId](player);
 }
 
-void func_80096ADC(RaceInputPlayer *player) {
+void updateRacePlayerMode35Character0(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
@@ -5145,7 +5145,7 @@ void func_80096ADC(RaceInputPlayer *player) {
     }
 }
 
-void func_80096B68(RaceInputPlayer *player) {
+void updateRacePlayerMode35Character1(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
@@ -5162,7 +5162,7 @@ void func_80096B68(RaceInputPlayer *player) {
     }
 }
 
-void func_80096BF4(RaceInputPlayer *player) {
+void updateRacePlayerMode35Character2(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
@@ -5179,7 +5179,7 @@ void func_80096BF4(RaceInputPlayer *player) {
     }
 }
 
-void func_80096C7C(RaceInputPlayer *player) {
+void updateRacePlayerMode35Character3(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
@@ -5196,7 +5196,7 @@ void func_80096C7C(RaceInputPlayer *player) {
     }
 }
 
-void func_80096D04(RaceInputPlayer *player) {
+void updateRacePlayerMode35Character4(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
@@ -5213,7 +5213,7 @@ void func_80096D04(RaceInputPlayer *player) {
     }
 }
 
-void func_80096D8C(RaceInputPlayer *player) {
+void updateRacePlayerMode35Character5(RaceInputPlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->stateTimer = 0;
@@ -5235,11 +5235,11 @@ void func_80096D8C(RaceInputPlayer *player) {
     }
 }
 
-// func_80096E3C best match: 99.055% (nonmatchings/func_80096E3C-6182772958467082306/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_80096E3C.s")
+// updateRacePlayersPostUpdate best match: 99.055% (nonmatchings/updateRacePlayersPostUpdate-6182772958467082306/base_12.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayersPostUpdate.s")
 
 #ifdef NON_MATCHING
-void func_80096E3C(void) {
+void updateRacePlayersPostUpdate(void) {
     RaceInputPlayer *player;
     RacePlayerSoundPosition *soundPos;
     RacePlayerSoundPosition *nextSoundPos;
@@ -5250,7 +5250,7 @@ void func_80096E3C(void) {
         if (gRacePlayerCount > 0) {
             do {
                 do {
-                    func_80097038(&D_80121D80[i]);
+                    updateRacePlayerPostUpdate(&D_80121D80[i]);
                 } while (0);
                 i++;
             } while (i < gRacePlayerCount);
@@ -5291,10 +5291,10 @@ void func_80096E3C(void) {
 }
 #endif
 
-void func_80097038(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdate(RaceInputPlayer *player) {
     unsigned long long random;
 
-    D_800DED48[player->mode](player);
+    gRacePlayerModePostUpdateHandlers[player->mode](player);
     if (!(gMenuFlowState & 1) && !(player->stateFlags & 0x41000) && (player->soundDisabled == 0)) {
         if (player->unk500 & 3) {
             random = randomNextMain();
@@ -5310,11 +5310,11 @@ void func_80097038(RaceInputPlayer *player) {
     updateRaceRumble(player);
 }
 
-void func_80097144(void) {
+void updateRacePlayerPostUpdateNoop(void) {
     updateRacePlayerSurfaceContact();
 }
 
-void func_80097164(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdateMode07(RaceInputPlayer *player) {
     if (player->updateState < 7) {
         updateRacePlayerGroundAlignment(player);
     } else {
@@ -5324,13 +5324,13 @@ void func_80097164(RaceInputPlayer *player) {
     }
 }
 
-void func_800971B8(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdateMode00(RaceInputPlayer *player) {
     if (updateRacePlayerSurfaceContact()) {
         player->mode = 0x16;
         player->updateState = 0;
         player->updateTimer = 0;
         player->stateFlags |= 0x200;
-    } else if (func_80095F90(player->playerIndex)) {
+    } else if (isRacePlayerAttackingPlayer(player->playerIndex)) {
         player->mode = 7;
         player->updateState = 0;
         player->updateTimer = 0;
@@ -5338,11 +5338,11 @@ void func_800971B8(RaceInputPlayer *player) {
     interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
 }
 
-// func_8009724C best match: 74.373%
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_state/func_8009724C.s")
+// updateRacePlayerVoiceSounds best match: 74.373%
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerVoiceSounds.s")
 
 #ifdef NON_MATCHING
-void func_8009724C(RaceInputPlayer *arg0) {
+void updateRacePlayerVoiceSounds(RaceInputPlayer *arg0) {
     s32 sp2C;
     s32 sp24;
     s16 temp_v0;
@@ -5371,7 +5371,7 @@ void func_8009724C(RaceInputPlayer *arg0) {
         arg0->unk57B = 1;
     }
     if (var_v0 != 0) {
-        var_a3 = *(&D_800DE8D0 + var_v0);
+        var_a3 = *(&gRacePlayerVoiceBaseSoundIds + var_v0);
         var_s0 = 0x28;
         if (var_v0 < 9) {
             var_s0 = 0xA;
@@ -5385,7 +5385,7 @@ void func_8009724C(RaceInputPlayer *arg0) {
     temp_v0 = arg0->unk2A2;
     if (temp_v0 != 0) {
         if (arg0->unk2A6 != 0) {
-            var_a3_2 = var_a3 + *(&D_800DE904 + temp_v0);
+            var_a3_2 = var_a3 + *(&gRacePlayerVoiceSplitSoundOffsets + temp_v0);
             if (temp_v0 & 1) {
                 var_s0 += 5;
             } else {
@@ -5393,7 +5393,7 @@ void func_8009724C(RaceInputPlayer *arg0) {
             }
         } else {
             var_s0 += 1;
-            var_a3_2 = var_a3 + *(&D_800DE8F0 + temp_v0);
+            var_a3_2 = var_a3 + *(&gRacePlayerVoiceLeadSoundOffsets + temp_v0);
         }
         var_a3 = var_a3_2 + arg0->unk2A4;
     }
@@ -5474,7 +5474,7 @@ void func_8009724C(RaceInputPlayer *arg0) {
 }
 #endif
 
-void func_8009759C(RaceInputPlayer *player) {
+void updateRacePlayerLoopingSound(RaceInputPlayer *player) {
     s32 v0 = -player->unk44 >> 13;
     if (v0 >= 0x80) {
         v0 = 0x7F;
@@ -5494,7 +5494,7 @@ void func_8009759C(RaceInputPlayer *player) {
     }
 }
 
-void func_8009762C(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdateMode22(RaceInputPlayer *player) {
     u32 stateFlags;
 
     if (updateRacePlayerSurfaceContact() == 0) {
@@ -5510,31 +5510,31 @@ void func_8009762C(RaceInputPlayer *player) {
             enqueueRacePlayerVoiceSound(player, 2);
         } else {
             player->stateFlags = stateFlags & ~0x200;
-            if (func_80095F90(player->playerIndex) != 0) {
+            if (isRacePlayerAttackingPlayer(player->playerIndex) != 0) {
                 player->mode = 7;
                 player->updateState = 0;
                 player->updateTimer = 0;
-                func_8009724C(player);
-                func_8009759C(player);
+                updateRacePlayerVoiceSounds(player);
+                updateRacePlayerLoopingSound(player);
             } else if (player->subState == 0) {
                 player->mode = 0;
                 player->updateState = 1;
                 player->updateTimer = 0;
                 player->unk57A = 2;
-                func_8009759C(player);
+                updateRacePlayerLoopingSound(player);
             } else {
                 player->mode = 0;
                 player->updateState = 0;
                 player->updateTimer = 0;
                 player->unk57A = 2;
-                func_8009724C(player);
-                func_8009759C(player);
+                updateRacePlayerVoiceSounds(player);
+                updateRacePlayerLoopingSound(player);
             }
         }
     }
 }
 
-void func_80097744(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdateAirborneTrick(RaceInputPlayer *player) {
     u32 stateFlags;
 
     if (updateRacePlayerSurfaceContact() == 0) {
@@ -5550,31 +5550,31 @@ void func_80097744(RaceInputPlayer *player) {
             enqueueRacePlayerVoiceSound(player, 2);
         } else {
             player->stateFlags = stateFlags & ~0x200;
-            if (func_80095F90(player->playerIndex) != 0) {
+            if (isRacePlayerAttackingPlayer(player->playerIndex) != 0) {
                 player->mode = 7;
                 player->updateState = 0;
                 player->updateTimer = 0;
-                func_8009724C(player);
-                func_8009759C(player);
+                updateRacePlayerVoiceSounds(player);
+                updateRacePlayerLoopingSound(player);
             } else {
                 player->mode = 0;
                 player->updateState = 0;
                 player->updateTimer = 0;
                 player->unk57A = 2;
-                func_8009724C(player);
-                func_8009759C(player);
+                updateRacePlayerVoiceSounds(player);
+                updateRacePlayerLoopingSound(player);
             }
         }
     }
 }
 
-void func_8009782C(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdateMode02(RaceInputPlayer *player) {
     if (updateRacePlayerSurfaceContact()) {
         player->mode = 0x16;
         player->updateState = 0;
         player->updateTimer = 0;
         player->stateFlags |= 0x200;
-    } else if (func_80095F90(player->playerIndex)) {
+    } else if (isRacePlayerAttackingPlayer(player->playerIndex)) {
         player->mode = 7;
         player->updateState = 0;
         player->updateTimer = 0;
@@ -5582,7 +5582,7 @@ void func_8009782C(RaceInputPlayer *player) {
     interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
 }
 
-void func_800978C0(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdateMode03(RaceInputPlayer *player) {
     if (updateRacePlayerSurfaceContact()) {
         player->stateFlags |= 0x200;
     } else {
@@ -5590,7 +5590,7 @@ void func_800978C0(RaceInputPlayer *player) {
     }
 }
 
-void func_80097910(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdateMode29(RaceInputPlayer *player) {
     u16 playerIndex;
 
     updateRacePlayerSurfaceContact();
@@ -5617,7 +5617,7 @@ void func_80097910(RaceInputPlayer *player) {
     }
 }
 
-void func_80097A14(RaceInputPlayer *player) {
+void updateRacePlayerPostUpdateMode30(RaceInputPlayer *player) {
     updateRacePlayerSurfaceContact();
     if (player->updateState < 2) {
         interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
