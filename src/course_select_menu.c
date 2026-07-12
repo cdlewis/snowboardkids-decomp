@@ -6,9 +6,9 @@
 #include "game_task_scheduler.h"
 #include "menu_renderer.h"
 #include "race_start_transition.h"
-#include "shop_menu_ui.h"
-#include "system_boot.h"
-#include "title_menu.h"
+#include "course_select_shop_ui.h"
+#include "system_runtime.h"
+#include "race_setup_ui.h"
 #include "viewport_manager.h"
 
 typedef struct {

@@ -11,7 +11,7 @@
 #include "race_motion.h"
 #include "race_item_projectiles.h"
 #include "race_player_movement.h"
-#include "race_timer_ui.h"
+#include "race_hud.h"
 
 /* Local 3-arg declaration; see note in callback_task_scheduler.h. */
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);

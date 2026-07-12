@@ -3,7 +3,7 @@
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
-#include "system_boot.h"
+#include "system_runtime.h"
 #include "game_task_scheduler.h"
 #include "race_camera.h"
 #include "ending_credits_ui.h"

@@ -1,7 +1,7 @@
 #include "asset_manager.h"
 #include "common.h"
 #include "relocatable_heap.h"
-#include "system_boot.h"
+#include "system_runtime.h"
 
 typedef struct {
     /* 0x0 */ s16 prev;

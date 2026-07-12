@@ -3,7 +3,7 @@
 #include "fixed_point_math.h"
 #include "relocatable_heap.h"
 #include "sound_manager.h"
-#include "system_boot.h"
+#include "system_runtime.h"
 #include "audio_engine.h"
 
 #define SOUND_MANAGER_FREE_HANDLE_COUNT 13

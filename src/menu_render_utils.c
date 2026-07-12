@@ -102,7 +102,7 @@ extern s32 gRegionAllocPtr;
 extern void *gMenuAsciiFontPaletteBase;
 
 // initMenuAssetHandles best match: 97.917%
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/initMenuAssetHandles.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/initMenuAssetHandles.s")
 
 #ifdef NON_MATCHING
 void initMenuAssetHandles(void)
@@ -184,7 +184,7 @@ void getAssetTableImagePaletteAndSize(u8 *arg0, u16 arg1, void **arg2, void **ar
 }
 
 // drawAssetTableSprite best match: 96.718% (nonmatchings/drawAssetTableSprite-8207005055717715604/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawAssetTableSprite.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawAssetTableSprite.s")
 
 #ifdef NON_MATCHING
 void drawAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
@@ -337,7 +337,7 @@ void drawAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
 #endif
 
 // drawPulsingAssetTableSprite best match: 76.854% (nonmatchings/drawPulsingAssetTableSprite-2225551288923588688/base.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawPulsingAssetTableSprite.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawPulsingAssetTableSprite.s")
 
 #ifdef NON_MATCHING
 extern s32 gRegionAllocPtr;
@@ -503,7 +503,7 @@ void drawPulsingAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3)
 #endif
 
 // drawAssetTableSpriteWithDefaultPalette best match: 88.099% (nonmatchings/drawAssetTableSpriteWithDefaultPalette-8207005055717715604/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawAssetTableSpriteWithDefaultPalette.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawAssetTableSpriteWithDefaultPalette.s")
 
 #ifdef NON_MATCHING
 extern Gfx *gRegionAllocPtr;
@@ -639,7 +639,7 @@ void drawAssetTableSpriteWithDefaultPalette(s16 arg0, s16 arg1, u8 *arg2, u16 ar
 #endif
 
 // drawMenuFillRectangle best match: 89.835% (nonmatchings/drawMenuFillRectangle-8207005055717715604/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawMenuFillRectangle.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawMenuFillRectangle.s")
 
 #ifdef NON_MATCHING
 extern Gfx gMenuRenderModeResetDl[];
@@ -699,7 +699,7 @@ void drawMenuFillRectangle(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green
 #endif
 
 // drawAssetTableSprite8bpp best match: 74.764% (nonmatchings/drawAssetTableSprite8bpp-4923837976568703863/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawAssetTableSprite8bpp.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawAssetTableSprite8bpp.s")
 
 #ifdef NON_MATCHING
 void drawAssetTableSprite8bpp(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
@@ -840,7 +840,7 @@ void drawAssetTableSprite8bpp(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
 #endif
 
 // drawAssetTableSpriteWithExplicitPalette best match: 80.448% (nonmatchings/drawAssetTableSpriteWithExplicitPalette-4923837976568703863/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawAssetTableSpriteWithExplicitPalette.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawAssetTableSpriteWithExplicitPalette.s")
 
 #ifdef NON_MATCHING
 void drawAssetTableSpriteWithExplicitPalette(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3, u16 arg4) {
@@ -966,7 +966,7 @@ void drawAssetTableSpriteWithExplicitPalette(s16 arg0, s16 arg1, AssetTable *arg
 #endif
 
 // drawScaledAssetTableSprite best match: 73.385% (nonmatchings/drawScaledAssetTableSprite-4923837976568703863/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawScaledAssetTableSprite.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawScaledAssetTableSprite.s")
 
 #ifdef NON_MATCHING
 #define RENDER_EMIT_GFX(cmd0, cmd1)       \
@@ -1075,7 +1075,7 @@ void drawScaledAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, 
 #endif
 
 // drawScaledAssetTableSpriteWithExplicitPalette best match: 74.481% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-7273315160691878794/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawScaledAssetTableSpriteWithExplicitPalette.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawScaledAssetTableSpriteWithExplicitPalette.s")
 
 #ifdef NON_MATCHING
 void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *asset, u16 entryIndex, u16 paletteIndex, u16 scale) {
@@ -1184,7 +1184,7 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
 #endif
 
 // drawMenuAsciiFontTile best match: 87.572% (nonmatchings/drawMenuAsciiFontTile-7273315160691878794/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawMenuAsciiFontTile.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawMenuAsciiFontTile.s")
 
 #ifdef NON_MATCHING
 void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
@@ -1269,7 +1269,7 @@ void initMenuAsciiFontTexture(void) {
 }
 
 // drawMenuAsciiChar best match: 97.351% (nonmatchings/drawMenuAsciiChar-2785870559185086986/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawMenuAsciiChar.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawMenuAsciiChar.s")
 
 #ifdef NON_MATCHING
 void drawMenuAsciiChar(s16 x, s16 y, s32 ch, u16 arg3) {
@@ -1627,7 +1627,7 @@ void noopFourArgs(void *arg0, void *arg1, void *arg2, void *arg3) {
 
 // isPositionNearAnyRaceViewportFocus best match: 99.126%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/isPositionNearAnyRaceViewportFocus.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/isPositionNearAnyRaceViewportFocus.s")
 
 #ifdef NON_MATCHING
 s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {

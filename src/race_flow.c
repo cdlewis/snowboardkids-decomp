@@ -21,13 +21,13 @@
 #include "race_course_effects.h"
 #include "race_flow.h"
 #include "race_player_update.h"
-#include "race_scene_loader.h"
+#include "race_scene_setup.h"
 #include "race_start_transition.h"
-#include "race_timer_ui.h"
+#include "race_hud.h"
 #include "ending_credits_flow.h"
 #include "race_ui_effects.h"
-#include "shop_menu_flow.h"
-#include "title_menu.h"
+#include "controller_pak_continue_prompt_flow.h"
+#include "race_setup_ui.h"
 #include "viewport_manager.h"
 
 #define COURSE_GRID_ENTRY_FREE -1

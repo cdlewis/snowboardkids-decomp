@@ -1,5 +1,5 @@
-#ifndef RACE_TIMER_UI_H
-#define RACE_TIMER_UI_H
+#ifndef RACE_HUD_H
+#define RACE_HUD_H
 
 #include "common.h"
 

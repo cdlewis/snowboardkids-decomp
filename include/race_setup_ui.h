@@ -1,5 +1,5 @@
-#ifndef TITLE_MENU_H
-#define TITLE_MENU_H
+#ifndef RACE_SETUP_UI_H
+#define RACE_SETUP_UI_H
 
 #include "common.h"
 

@@ -8,7 +8,7 @@
 #include "menu_renderer.h"
 #include "race_type_select_menu.h"
 #include "race_splitscreen_select_menu.h"
-#include "title_menu.h"
+#include "race_setup_ui.h"
 #include "viewport_manager.h"
 
 typedef s16 CharacterSelectOptionList[10];

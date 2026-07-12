@@ -1,5 +1,5 @@
-#ifndef TITLE_SCREEN_UI_H
-#define TITLE_SCREEN_UI_H
+#ifndef MAIN_MENU_TITLE_UI_H
+#define MAIN_MENU_TITLE_UI_H
 
 #include "common.h"
 

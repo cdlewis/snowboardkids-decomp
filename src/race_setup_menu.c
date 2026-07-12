@@ -4,7 +4,7 @@
 #include "sound_manager.h"
 #include "race_setup_menu.h"
 #include "game_task_scheduler.h"
-#include "title_menu.h"
+#include "race_setup_ui.h"
 #include "viewport_manager.h"
 
 // initRaceSetupMenu best match: 98.611% (nonmatchings/initRaceSetupMenu-5743805732885129799/base_4.c)

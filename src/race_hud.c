@@ -3,7 +3,7 @@
 #include "relocatable_heap.h"
 #include "race_item_effects.h"
 #include "race_player_movement.h"
-#include "race_timer_ui.h"
+#include "race_hud.h"
 #include "race_ui_effects.h"
 
 typedef struct {
@@ -169,7 +169,7 @@ void initRaceHud(void) {
 }
 
 // drawTrickAttackChallengeHud best match: 98.869% at nonmatchings/drawTrickAttackChallengeHud-2225551288923588688/base_17.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/drawTrickAttackChallengeHud.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawTrickAttackChallengeHud.s")
 
 #ifdef NON_MATCHING
 const char D_800E1710[] = "%2.2d";
@@ -287,7 +287,7 @@ void drawTrickAttackChallengeLabels(s32 arg0) {
 }
 
 // drawScoreAttackChallengeHud best match: 92.076% at nonmatchings/drawScoreAttackChallengeHud-2225551288923588688/base_14.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/drawScoreAttackChallengeHud.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawScoreAttackChallengeHud.s")
 
 #ifdef NON_MATCHING
 const char D_800E1744[] = "%2.2d";
@@ -396,7 +396,7 @@ void drawScoreAttackChallengeLabels(s32 arg0) {
 }
 
 // drawTargetTimeChallengeHud best match: 94.116% at nonmatchings/drawTargetTimeChallengeHud-2127290767680699791/base_3.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/drawTargetTimeChallengeHud.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawTargetTimeChallengeHud.s")
 
 #ifdef NON_MATCHING
 const char D_800E1770[] = "%2.2d";
@@ -556,7 +556,7 @@ void drawTimeTrialLabels(s32 arg0) {
 }
 
 // drawSinglePlayerRaceHud best match: 95.528% at nonmatchings/drawSinglePlayerRaceHud-3236181511606361864/base_5.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/drawSinglePlayerRaceHud.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawSinglePlayerRaceHud.s")
 
 #ifdef NON_MATCHING
 const char D_800E1804[] = "%5ld";
@@ -621,7 +621,7 @@ void noopRaceHudCallback(s32 arg0) {
 }
 
 // drawTrainingRaceHud best match: 99.255% at nonmatchings/drawTrainingRaceHud-3836525038718587862/base_11.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/drawTrainingRaceHud.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawTrainingRaceHud.s")
 
 #ifdef NON_MATCHING
 const char D_800E180C[] = "%5ld";
@@ -681,7 +681,7 @@ void drawTrainingRaceHud(s32 arg0) {
 #endif
 
 // drawTwoPlayerRaceHud best match: 84.859% (nonmatchings/drawTwoPlayerRaceHud-4033633224288138541/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/drawTwoPlayerRaceHud.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawTwoPlayerRaceHud.s")
 
 #ifdef NON_MATCHING
 const char D_800E1814[] = "%5ld";
@@ -863,7 +863,7 @@ void decrementRaceChallengeTimeLimit(void) {
 }
 
 // drawRaceCourseProgressMeter best match: 50.818% at nonmatchings/drawRaceCourseProgressMeter-2225551288923588688/base_3.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/drawRaceCourseProgressMeter.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawRaceCourseProgressMeter.s")
 
 #ifdef NON_MATCHING
 void drawRaceCourseProgressMeter(s32 arg0) {
@@ -992,7 +992,7 @@ sort_next:
 #endif
 
 // updateRaceCourseProgressMeter best match: 98.539% at nonmatchings/updateRaceCourseProgressMeter-6061209858023118177/base_9.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/updateRaceCourseProgressMeter.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/updateRaceCourseProgressMeter.s")
 
 #ifdef NON_MATCHING
 void updateRaceCourseProgressMeter(void) {
@@ -1031,7 +1031,7 @@ void updateRaceCourseProgressMeter(void) {
 #endif
 
 // updateRaceHud best match: 93.254% at nonmatchings/updateRaceHud-7273315160691878794/base_17.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_timer_ui/updateRaceHud.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/updateRaceHud.s")
 
 #ifdef NON_MATCHING
 void updateRaceHud(void) {

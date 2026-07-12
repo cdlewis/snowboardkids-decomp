@@ -3,7 +3,7 @@
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
 #include "race_splitscreen_select_ui.h"
-#include "shop_menu_ui.h"
+#include "course_select_shop_ui.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "menu_renderer.h"
 
@@ -352,7 +352,7 @@ void initShopMenuSidePanel(ShopMenuWidgetActor *arg0) {
 }
 
 // drawShopMenuSelectedModePanel best match: 98.548% (nonmatchings/drawShopMenuSelectedModePanel-6061209858023118177/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/drawShopMenuSelectedModePanel.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/drawShopMenuSelectedModePanel.s")
 
 #ifdef NON_MATCHING
 void drawShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
@@ -991,7 +991,7 @@ void initShopMenuMoneyPanelForCourseSelectReturn(ShopMenuWidgetActor *arg0) {
 }
 
 // drawShopMenuSparkles best match: 97.125% (nonmatchings/drawShopMenuSparkles-3/output-230-1/source.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/drawShopMenuSparkles.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/drawShopMenuSparkles.s")
 
 #ifdef NON_MATCHING
 void drawShopMenuSparkles(ShopMenuWidgetActor *arg0) {
@@ -1058,7 +1058,7 @@ void updateShopMenuSparkles(ShopMenuWidgetActor *arg0) {
 }
 
 // initShopMenuSparkles best match: 95.172% (nonmatchings/initShopMenuSparkles-786318006044585456/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/initShopMenuSparkles.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/initShopMenuSparkles.s")
 
 #ifdef NON_MATCHING
 void initShopMenuSparkles(ShopMenuWidgetActor *arg0) {
@@ -1122,7 +1122,7 @@ void drawCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
 }
 
 // updateCourseUnlockPricePanel best match: 94.119% (nonmatchings/updateCourseUnlockPricePanel-1404502880690620360/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/updateCourseUnlockPricePanel.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/updateCourseUnlockPricePanel.s")
 
 #ifdef NON_MATCHING
 void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
@@ -1202,7 +1202,7 @@ void initCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
 }
 
 // drawCourseUnlockPurchasePrompt best match: 98.264% (nonmatchings/drawCourseUnlockPurchasePrompt-6061209858023118177/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/drawCourseUnlockPurchasePrompt.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/drawCourseUnlockPurchasePrompt.s")
 
 #ifdef NON_MATCHING
 void drawCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
@@ -1272,7 +1272,7 @@ void initCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
 }
 
 // drawCourseDetailsMenu best match: 86.994% (nonmatchings/drawCourseDetailsMenu-5635509610426229442/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/drawCourseDetailsMenu.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/drawCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
 void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
@@ -1329,7 +1329,7 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
 #endif
 
 // updateCourseDetailsMenu best match: 79.777% (nonmatchings/updateCourseDetailsMenu-7273315160691878794/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/updateCourseDetailsMenu.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/updateCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
 void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {

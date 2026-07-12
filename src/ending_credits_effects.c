@@ -5,7 +5,7 @@
 #include "main_menu_scene_model.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "menu_renderer.h"
-#include "title_menu.h"
+#include "race_setup_ui.h"
 
 struct EndingCreditsEffectActor {
     char pad0[0x10];

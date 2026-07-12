@@ -6,7 +6,7 @@
 #include "controller_pak_ui.h"
 #include "game_task_scheduler.h"
 #include "menu_renderer.h"
-#include "shop_menu_flow.h"
+#include "controller_pak_continue_prompt_flow.h"
 #include "viewport_manager.h"
 
 typedef struct {
@@ -53,7 +53,7 @@ void initControllerPakContinuePromptFlow(void) {
     updateCallbackTasks();
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_flow/updateControllerPakContinuePromptFlow.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_continue_prompt_flow/updateControllerPakContinuePromptFlow.s")
 
 void closeControllerPakContinuePromptFlow(void) {
     if (gCurrentGameTask->fade != 0xFF) {

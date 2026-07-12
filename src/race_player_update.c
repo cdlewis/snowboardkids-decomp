@@ -1,7 +1,7 @@
 #include "common.h"
 #include "asset_manager.h"
 #include "callback_task_scheduler.h"
-#include "race_rumble.h"
+#include "race_player_rumble.h"
 #include "sound_manager.h"
 #include "race_motion.h"
 #include "race_camera.h"
