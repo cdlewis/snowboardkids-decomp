@@ -153,12 +153,13 @@ void configureViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg
 }
 #endif
 
-// configureViewportWithFovAndFarClip best match: 90.168%
+// configureViewportWithFovAndFarClip best match: 90.244% (nonmatchings/configureViewportWithFovAndFarClip-8331816093655448999/base_3.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/configureViewportWithFovAndFarClip.s")
 
 #ifdef NON_MATCHING
 extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
+extern f32 gCustomViewportOverlayFarClip;
 
 void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
                                         f32 aspect, s16 fovY, s32 farClip) {
@@ -213,7 +214,8 @@ void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 cent
 
     fovy = (f32) fovY;
     guPerspective(&viewport->projection, &viewport->perspectiveNorm, fovy, aspect, 10.0f, (f32) farClip, 0.5f);
-    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, fovy, aspect, 10.0f, 15000.0f, 0.5f);
+    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, fovy, aspect, 10.0f, gCustomViewportOverlayFarClip,
+                  0.5f);
 }
 #endif
 
