@@ -1095,11 +1095,12 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, u16 entryIndex,
 }
 #endif
 
-// drawScaledAssetTableSpriteWithExplicitPalette best match: 74.481% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-7273315160691878794/base_1.c)
+// drawScaledAssetTableSpriteWithExplicitPalette best match: 74.637% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-8331816093655448999/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawScaledAssetTableSpriteWithExplicitPalette.s")
 
 #ifdef NON_MATCHING
 void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *asset, u16 entryIndex, u16 paletteIndex, u16 scale) {
+    volatile char pad[0x50];
     u8 *paletteBase;
     AssetTableEntry *entry;
     AssetTableEntry *entry2;
