@@ -296,7 +296,7 @@ s32 tryQueueRacePlayerHitCueTerrainCrash(RaceInputPlayer *arg0) {
     return 0;
 }
 
-// resolveRacePlayerHitReactions best match: 88.687% (nonmatchings/resolveRacePlayerHitReactions-6113366811127043669/base_2.c)
+// resolveRacePlayerHitReactions best match: 88.687% (nonmatchings/resolveRacePlayerHitReactions-2694253543240320626/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_collision/resolveRacePlayerHitReactions.s")
 
 #ifdef NON_MATCHING
@@ -321,7 +321,7 @@ void resolveRacePlayerHitReactions(RaceInputPlayer *arg0) {
         }
         gRacePlayerHitDeltaX = arg0->unk2C8 - arg0->unk40_x;
         gRacePlayerHitDeltaZ = arg0->unk2CC - arg0->unk48;
-        gRacePlayerHitDistance = integerSquareRoot64((s64) gRacePlayerHitDeltaX * gRacePlayerHitDeltaX + (s64) gRacePlayerHitDeltaZ * gRacePlayerHitDeltaZ) >> 1;
+        gRacePlayerHitDistance = (u32)integerSquareRoot64((s64) gRacePlayerHitDeltaX * gRacePlayerHitDeltaX + (s64) gRacePlayerHitDeltaZ * gRacePlayerHitDeltaZ) >> 1;
         gRacePlayerHitAngle = calculateFixedAngleFromDeltaXZ(gRacePlayerHitDeltaX, gRacePlayerHitDeltaZ);
         if ((arg0->pendingItemHitFlags & 1) && (tryQueueRacePlayerHitCuePushForward(arg0) != 0) && (tryQueueRacePlayerHitCueSpinout(arg0) != 0) && (tryQueueRacePlayerHitCueNudge(arg0) != 0)) {
             tryQueueRacePlayerHitCueSlowdown(arg0);
@@ -383,7 +383,7 @@ void resolveRacePlayerHitReactions(RaceInputPlayer *arg0) {
     }
     arg0->pendingItemHitFlags = 0;
     if (arg0->unk330 == 3) {
-        if (arg0->pad331 == 3) {
+        if (arg0->unk331 == 3) {
             tryQueueRacePlayerHitCueObstacle(arg0);
         }
     }

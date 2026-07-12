@@ -115,7 +115,8 @@ typedef struct RaceInputPlayer {
     /* 0x2C6 */ u16 pendingItemHitFlags;
     /* 0x2C8 */ s32 unk2C8;
     /* 0x2CC */ s32 unk2CC;
-    /* 0x2D0 */ char pad2D0[4];
+    /* 0x2D0 */ char pad2D0[2];
+    /* 0x2D2 */ s16 unk2D2;
     /* 0x2D4 */ s16 unk2D4;
     /* 0x2D6 */ s16 unk2D6;
     /* 0x2D8 */ s16 unk2D8;
@@ -152,7 +153,7 @@ typedef struct RaceInputPlayer {
     /* 0x320 */ s16 actionSoundTimer;
     /* 0x322 */ char pad322[0xE];
     /* 0x330 */ s8 unk330;
-    /* 0x331 */ char pad331[1];
+    /* 0x331 */ s8 unk331;
     /* 0x332 */ s16 unk332;
     /* 0x334 */ s16 unk334;
     /* 0x336 */ s16 unk336;
