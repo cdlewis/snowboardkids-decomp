@@ -308,7 +308,7 @@ void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor
 }
 #endif
 
-// updateCharacterSelectPlayerPanelFrames best match: 97.500% (nonmatchings/updateCharacterSelectPlayerPanelFrames-6061209858023118177/base_10.c)
+// updateCharacterSelectPlayerPanelFrames best match: 97.692% (nonmatchings/updateCharacterSelectPlayerPanelFrames-8331816093655448999/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/updateCharacterSelectPlayerPanelFrames.s")
 
 #ifdef NON_MATCHING
@@ -321,9 +321,8 @@ void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
 
     owner = D_8010ADE0;
     actor = arg0;
-    var_v0 = actor->targetY.mode;
+    var_v0 = (var_v1 = actor->targetY.mode);
     desired = gCharacterSelectHudState.exitMode;
-    var_v1 = var_v0;
     if (desired != var_v0) {
         actor->targetY.mode = desired;
         var_v0 = desired & 0xFF;
