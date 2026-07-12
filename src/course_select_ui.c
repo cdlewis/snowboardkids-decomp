@@ -205,7 +205,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             temp_v0_4 = allocFixedTransformMatrix(&sp30);
             arg0->matrix = temp_v0_4;
             if (temp_v0_4 != 0) {
-                drawRacePlayerModelBaseDisplayList((void *)(temp_v0_4 ^ 0), (s16) sp2F, (s16) sp2E);
+                drawRacePlayerModelRootPart((void *)(temp_v0_4 ^ 0), (s16) sp2F, (s16) sp2E);
             }
         }
     }
@@ -482,7 +482,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             temp_v0_4 = allocFixedTransformMatrix(&sp30);
             arg0->matrix = temp_v0_4;
             if (temp_v0_4 != 0) {
-                drawRacePlayerModelBaseDisplayList((void *)temp_v0_4, (s16) sp2F, (s16) sp2E);
+                drawRacePlayerModelRootPart((void *)temp_v0_4, (s16) sp2F, (s16) sp2E);
             }
         }
     }
