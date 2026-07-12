@@ -901,7 +901,7 @@ block_17:
 
 #endif
 
-// updateCourseSelectPurchasePrompt best match: 99.401% (nonmatchings/updateCourseSelectPurchasePrompt-6061209858023118177/base_22.c)
+// updateCourseSelectPurchasePrompt best match: 99.930% (nonmatchings/updateCourseSelectPurchasePrompt-8331816093655448999/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/updateCourseSelectPurchasePrompt.s")
 
 #ifdef NON_MATCHING
@@ -911,7 +911,6 @@ void updateCourseSelectPurchasePrompt(void) {
     s32 temp_v1;
     s32 var_s0;
     s32 *new_var2;
-    u8 new_var;
 
     temp_v0 = gCurrentGameTask->timer;
     new_var2 = &gPlayerInputPressed;
@@ -958,16 +957,7 @@ void updateCourseSelectPurchasePrompt(void) {
     }
 
     var_s0 = 0;
-    if (gPlayerCount > 0) {
-        var_s1 = D_801121E0;
-        do {
-            gCurrentMenuCameraObject = var_s1;
-            var_s1->unk2C();
-            var_s0++;
-            var_s0--;
-            var_s0 += 1;
-            var_s1 += 1;
-        } while (var_s0 < (s32) (new_var = gPlayerCount));
+ if (gPlayerCount > 0) { var_s1 = D_801121E0; do { (gCurrentMenuCameraObject = var_s1)->unk2C(); var_s0++; var_s0--; var_s0 += 1; var_s1 += 1; } while (var_s0 < ((s32) gPlayerCount));
     }
     updateCallbackTasks();
 }
