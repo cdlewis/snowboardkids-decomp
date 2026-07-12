@@ -791,7 +791,7 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
 }
 #endif
 
-// updatePatrolCourseObject best match: 97.016% at nonmatchings/updatePatrolCourseObject-3836525038718587862/base_6.c.
+// updatePatrolCourseObject best match: 98.763% at nonmatchings/updatePatrolCourseObject-2694253543240320626/base_16.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/updatePatrolCourseObject.s")
 
 #ifdef NON_MATCHING
@@ -804,6 +804,8 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
     s32 targetAngle;
     s32 var_v1;
     s32 dx;
+    s32 new_var;
+    s32 targetDz;
     s32 dz;
 
     if (gRaceUpdatePaused == 0) {
@@ -815,7 +817,7 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
                 targetAngle = calculateFixedAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->unk30, arg0->unk38);
             }
             temp_a1 = arg0->unk3E;
-            temp_t2 = (targetAngle - temp_a1) & 0xFFF;
+            temp_t2 = ((targetAngle & 0xFFFFu) - temp_a1) & 0xFFF;
             var_v1 = temp_t2;
             if (temp_t2 >= 0x801) {
                 var_v1 = (s16)(temp_t2 - 0x1000);
@@ -827,43 +829,44 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             if (var_v1 < -temp_v0) {
                 var_v1 = (s16)-temp_v0;
             }
-            arg0->unk3E = temp_a1 + var_v1;
+            arg0->unk3E = (u64)(temp_a1 + var_v1);
             arg0->pos.x += fixedSine(arg0->unk3E) * ((s32)-arg0->unk50 / 4096);
-            dz = arg0->pos.z + (fixedCosine(arg0->unk3E) * ((s32)-arg0->unk50 / 4096));
-            arg0->pos.z = dz;
-            arg0->unk3C = findRaceCourseSurfaceFromHint(arg0->unk3C, arg0->pos.x, dz);
+            dz = (arg0->pos.z += fixedCosine(arg0->unk3E) * ((s32)-arg0->unk50 / 4096));
+            new_var = dz;
+            arg0->unk3C = findRaceCourseSurfaceFromHint(arg0->unk3C, arg0->pos.x, new_var);
             arg0->pos.y = getRaceCourseSurfaceHeight(arg0->unk3C, arg0->pos.x, arg0->pos.z);
             if (arg0->pad42 != 0) {
                 dx = arg0->pos.x - arg0->unk24;
-                dz = arg0->pos.z - arg0->unk2C;
+                targetDz = arg0->pos.z - arg0->unk2C;
                 if (dx < 0) {
                     dx = -dx;
                 }
-                if (dz < 0) {
-                    dz = -dz;
+                if (targetDz < 0) {
+                    targetDz = -targetDz;
                 }
                 if (dx < 0x30000) {
-                    if (dz < 0x30000) {
+                    if (targetDz < 0x30000) {
                         arg0->pad42 = 0;
                     }
                 }
             } else {
                 dx = arg0->pos.x - arg0->unk30;
-                dz = arg0->pos.z - arg0->unk38;
+                targetDz = arg0->pos.z - arg0->unk38;
                 if (dx < 0) {
                     dx = -dx;
                 }
-                if (dz < 0) {
-                    dz = -dz;
+                if (targetDz < 0) {
+                    targetDz = -targetDz;
                 }
-                if ((dx < 0x30000) && (dz < 0x30000)) {
+                if ((dx < 0x30000) && (targetDz < 0x30000)) {
                     arg0->pad42 = 1;
                 }
             }
             pushRacePlayersOutOfCylinderOrApplyItemHit(pos, 0x40000, 0x50000, 0x30000, 4);
             arg0->unk40 += arg0->unk4E;
             if (arg0->unk40 == 0) {
-                rand = randomNextSecondary() & 3;
+                rand = randomNextSecondary();
+                rand = rand & 3;
                 if (rand == 1) {
                     arg0->unk50 = 0x10000;
                     arg0->unk4E = 0x80;
