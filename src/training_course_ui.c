@@ -38,7 +38,7 @@ struct TrainingCourseUiActor {
         } script;
     } state;
     /* 0x26 */ s16 glyphPalette;
-    /* 0x28 */ s16 glyphTimer;
+    /* 0x28 */ u16 glyphTimer;
     /* 0x2A */ u8 scriptState;
     /* 0x2B */ u8 confirmBlinkTimer;
     /* 0x2C */ u8 keepVisibleAfterConfirm;
@@ -214,13 +214,13 @@ void initTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     setCallbackTaskCallback(arg0, updateTrainingCourseLessonEndMenu);
 }
 
-// drawTrainingCourseDialog best match: 95.343%
+// drawTrainingCourseDialog best match: 95.893%
 #pragma GLOBAL_ASM("asm/nonmatchings/training_course_ui/drawTrainingCourseDialog.s")
 
 #ifdef NON_MATCHING
 void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     unsigned int new_var;
-    TrainingCourseUiScript glyph;
+    TrainingCourseUiScript glyph[2];
     TrainingCourseUiScript *script;
     u16 xOffset;
     s32 i;
@@ -254,7 +254,7 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     } while (i < 0x30);
 
     arg0->glyphPalette = 7;
-    glyph = 0xFFFF;
+    glyph[1] = 0xFFFF;
     stopped = 0;
     xOffset = 0;
     glyphIndex = new_var;
@@ -308,11 +308,11 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
             }
 
             if (stopped == 1) {
-                glyph = 0xFFFE;
+                glyph[0] = 0xFFFE;
             } else {
-                glyph = *((TrainingCourseUiScript *)((u8 *)arg0->layout.script + scriptOffset));
+                glyph[0] = *((TrainingCourseUiScript *)((u8 *)arg0->layout.script + scriptOffset));
             }
-            drawMenuColoredGlyphScript((s16)(arg0->x + xOffset), (s16)(arg0->y + lineOffset + 0x18), &glyph, 0, 0x100, (u16)arg0->glyphPalette, 0x29);
+            drawMenuColoredGlyphScript((s16)(arg0->x + xOffset), (s16)(arg0->y + lineOffset + 0x18), glyph, 0, 0x100, (u16)arg0->glyphPalette, 0x29);
             if (stopped != 1) {
                 scriptOffset += 2;
                 xOffset = xOffset + 0x10;
