@@ -3340,14 +3340,9 @@ void updateRacePlayerMode54AerialTrick(RaceInputPlayer *player) {
     }
 }
 
-// updateRacePlayerMode39AerialTrick best match: 98.910% (nonmatchings/updateRacePlayerMode39AerialTrick-2127290767680699791/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode39AerialTrick.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerMode39AerialTrick(RaceInputPlayer *player) {
     s16 updateTimer;
     s32 yVel;
-    s32 timer;
 
     if (player->updateState == 0) {
         setRaceMotionAnimation(player, 4);
@@ -3392,10 +3387,9 @@ void updateRacePlayerMode39AerialTrick(RaceInputPlayer *player) {
             player->unk6E = (s16) ((s32) (fixedSine(player->stateTimerLow) << 13) / 4096);
         }
 
-        timer = player->stateTimer + 0x20;
         player->unk6C = -player->unk306;
-        player->stateTimer = timer;
-        if (timer >= 0x401) {
+        player->stateTimer += 0x20;
+        if (player->stateTimer >= 0x401) {
             player->stateTimer = 0x400;
         }
 
@@ -3414,7 +3408,6 @@ void updateRacePlayerMode39AerialTrick(RaceInputPlayer *player) {
 
     player->stateFlags |= 2;
 }
-#endif
 
 void updateRacePlayerMode55AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
