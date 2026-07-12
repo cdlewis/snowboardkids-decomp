@@ -160,14 +160,14 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
 }
 #endif
 
-// updateCharacterSelectUnlockedCourseList best match: 99.352% (nonmatchings/updateCharacterSelectUnlockedCourseList-4923837976568703863/base_6.c)
+// updateCharacterSelectUnlockedCourseList best match: 99.807% (nonmatchings/updateCharacterSelectUnlockedCourseList-3357475854818838508/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/updateCharacterSelectUnlockedCourseList.s")
 
 #ifdef NON_MATCHING
 void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
-    s32 anyMoving;
     s32 i;
     s32 limit;
+    s32 anyMoving;
     s32 targetY;
     void (*finalCallback)(CallbackTask *);
     CharacterSelectCourseMenuFrameActor *base;
@@ -197,6 +197,8 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
         arg0->timer++;
         if (!(arg0->timer & 1)) {
             if (arg0->itemCount < (gCharacterSelectCourseExitOptionIndex + 1)) {
+                if (1) {
+                }
                 arg0->itemCount++;
                 if (arg0->itemCount == (gCharacterSelectCourseExitOptionIndex + 1)) {
                     D_8010ADE4 = createCallbackTask((void (*)(CallbackTask *))initCharacterSelectCoursePreviewFrame, 0, 0x58);
@@ -270,6 +272,8 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
     case 3:
         arg0->y[gRaceCourseIndex] -= arg0->itemSpacing;
         if (arg0->y[gRaceCourseIndex] < -0x5F) {
+            do {
+            } while (0);
             arg0->y[gRaceCourseIndex] = -0x60;
             arg0->state = 4;
             if (gRaceSplitscreenMode == 2) {
@@ -294,32 +298,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
         targetY = (gRaceCourseIndex * arg0->itemSpacing) + arg0->baseY;
         if (arg0->y[gRaceCourseIndex] >= targetY) {
             arg0->y[gRaceCourseIndex] = targetY;
-            arg0->state = 6;
-        }
-        break;
-    case 6:
-        limit = gCharacterSelectCourseExitOptionIndex + 1;
-        i = 0;
-        if (limit > 0) {
-            do {
-                if (i != gRaceCourseIndex) {
-                    arg0->x[i] += 0x20;
-                    limit = gCharacterSelectCourseExitOptionIndex + 1;
-                }
-                i++;
-            } while (i < (gCharacterSelectCourseExitOptionIndex + 1));
-        }
-        if (gRaceCourseIndex != 0) {
-            if (arg0->x[0] >= -0x7C) {
-                arg0->state = 1;
-            }
-        } else if (arg0->x[1] >= -0x7C) {
-            arg0->state = 1;
-        }
-        if (arg0->state == 1) {
-            gMenuTransitionState = 5;
-        }
-        break;
+            arg0->state = 6; } break; case 6: limit = gCharacterSelectCourseExitOptionIndex + 1; i = 0; if (limit > 0) { do { if (i != gRaceCourseIndex) { arg0->x[i] += 0x20; limit = gCharacterSelectCourseExitOptionIndex + 1; } i++; } while (i < (gCharacterSelectCourseExitOptionIndex + 1)); } if (gRaceCourseIndex != 0) { if (arg0->x[0] >= -0x7C) { arg0->state = 1; } } else if (arg0->x[1] >= -0x7C) { arg0->state = 1; } if (arg0->state == 1) { gMenuTransitionState = 5; } break;
     case 7:
         i = 0;
         if ((gCharacterSelectCourseExitOptionIndex + 1) > 0) {
