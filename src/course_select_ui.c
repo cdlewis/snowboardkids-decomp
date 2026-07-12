@@ -2031,7 +2031,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
 }
 #endif
 
-// updateCourseSelectPlayerPanels best match: 82.540% (nonmatchings/updateCourseSelectPlayerPanels-8207005055717715604/base_15.c)
+// updateCourseSelectPlayerPanels best match: 82.590% (nonmatchings/updateCourseSelectPlayerPanels-8331816093655448999/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
@@ -2057,6 +2057,7 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
     s32 next;
     s32 step;
     u8 *statePtr;
+    u8 *savedStatePtr;
     u8 *modePtr;
 
     actor = (CourseSelectWidgetTransitionActor *)arg0;
@@ -2088,9 +2089,11 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
                         if (actor->x[i] == actor->targetX[i]) {
                             statePtr[0] = 1;
                             if (count == next) {
+                                savedStatePtr = statePtr;
                                 D_8010ADE0 = createCallbackTask((void (*)(CallbackTask *))initCourseSelectPreviewModelIn, 0, 0x62);
                                 D_8010ADE4 = createCallbackTask((void (*)(CallbackTask *))initCourseSelectPreviewModelOut, 0, 0x62);
                                 createCallbackTask(initCourseSelectCourseIconList, 0, 0x62);
+                                statePtr = savedStatePtr;
                             }
                             break;
                         }
