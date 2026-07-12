@@ -584,144 +584,87 @@ void drawMenuFillRectangle(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green
 }
 #endif
 
-// drawAssetTableSprite8bpp best match: 74.764% (nonmatchings/drawAssetTableSprite8bpp-4923837976568703863/base_7.c)
+// drawAssetTableSprite8bpp best match: 97.189% (nonmatchings/drawAssetTableSprite8bpp-2694253543240320626/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawAssetTableSprite8bpp.s")
 
 #ifdef NON_MATCHING
-void drawAssetTableSprite8bpp(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
-    u8 *sp2C;
-    s32 sp18;
-    s32 sp14;
-    s32 temp_a1;
-    s32 temp_a3;
-    s32 temp_t1;
-    s32 temp_t6;
-    s32 temp_t7;
-    Gfx *temp_v0_2;
-    Gfx *temp_v0_3;
-    Gfx *temp_v0_4;
-    Gfx *temp_v0_5;
-    Gfx *temp_v0_6;
-    Gfx *temp_v0_7;
-    Gfx *temp_v0_8;
-    Gfx *temp_v0_9;
-    Gfx *temp_v0_10;
-    Gfx *temp_v0_11;
-    Gfx *temp_v0_12;
-    Gfx *temp_v0_13;
-    Gfx *temp_v0_14;
-    Gfx *temp_v0_15;
-    Gfx *temp_v0_16;
-    Gfx *temp_v0_17;
-    s32 var_at;
-    s32 var_s0;
-    s32 var_s1;
-    s32 var_s2;
-    s32 var_t5;
-    AssetTableEntry *temp_t2;
-    AssetTableEntry *temp_t2_2;
+void drawAssetTableSprite8bpp(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3)
+{
+    volatile char pad[0x18];
+    u8 *textureBase;
+    s32 clipU;
+    s32 clipV;
+    s32 rightClip;
+    s32 bottomClip;
+    s32 leftClip;
+    s32 topClip;
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    AssetTableEntry *rawEntry;
 
-    sp2C = (u8 *)arg2 + (arg2->entryCount * sizeof(AssetTableEntry)) + 8;
-    temp_t2 = (AssetTableEntry *)((u8 *)arg2 + ((arg3 & 0xFFFF) * sizeof(AssetTableEntry)));
-    var_t5 = arg0 + gMenuViewportCenterX;
-    var_s0 = arg1 + gMenuViewportCenterY;
-    temp_t2_2 = temp_t2 + 1;
-    sp18 = 0;
-    sp14 = 0;
-    var_s1 = temp_t2_2->width + var_t5;
-    var_s2 = temp_t2_2->height + var_s0;
-    temp_t6 = gMenuViewportWidth / 2;
-    temp_t1 = gMenuViewportCenterX + temp_t6;
-    if (var_t5 < temp_t1) {
-        temp_a3 = gMenuViewportCenterX - temp_t6;
-        temp_t7 = gMenuViewportHeight / 2;
-        temp_a1 = gMenuViewportCenterY + temp_t7;
-        if (var_s0 < temp_a1) {
-            temp_v0_2 = (Gfx *)(gMenuViewportCenterY - temp_t7);
-            if ((var_s1 >= temp_a3) && (var_s2 >= (s32)temp_v0_2)) {
-                if (var_t5 < temp_a3) {
-                    sp18 = temp_a3 - var_t5;
-                    var_t5 = temp_a3;
+    textureBase = (((u8 *)arg2) + (arg2->entryCount * sizeof(AssetTableEntry))) + sizeof(AssetTableEntry);
+    rawEntry = (AssetTableEntry *)(((u8 *)arg2) + (arg3 * sizeof(AssetTableEntry)));
+    x0 = arg0 + gMenuViewportCenterX;
+    y0 = arg1 + gMenuViewportCenterY;
+    x1 = rawEntry[1].width + x0;
+    do {
+        y1 = rawEntry[1].height + y0;
+        rawEntry++;
+        clipU = 0;
+        clipV = 0;
+        rightClip = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+        if (x0 < rightClip) {
+            leftClip = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+            bottomClip = gMenuViewportCenterY + (gMenuViewportHeight / 2);
+            if (y0 < bottomClip) {
+                topClip = gMenuViewportCenterY - (gMenuViewportHeight / 2);
+                if ((x1 >= leftClip) && (y1 >= topClip)) {
+                    if (x0 < leftClip) {
+                        clipU = leftClip - x0;
+                        x0 = leftClip;
+                    }
+                    do {
+                        if (y0 < topClip) {
+                            clipV = topClip - y0;
+                            y0 = topClip;
+                        }
+                        if (rightClip <= x1) {
+                            x1 = rightClip;
+                        }
+                        if (y1 >= bottomClip) {
+                            y1 = bottomClip;
+                        }
+                        FONT_GFX_CMD(gRegionAllocPtr++, ((rawEntry->width - 1) & 0xFFF) | 0xFD480000,
+                                     (u32)(((u8 *)arg2) + rawEntry->imageOffset));
+                        FONT_GFX_CMD(gRegionAllocPtr++, ((((rawEntry->width + 8) >> 3) & 0x1FF) << 9) | 0xF5480000,
+                                     0x07080200);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                                     ((((rawEntry->width * 4) & 0xFFF) << 12) | 0x07000000) |
+                                         ((rawEntry->height * 4) & 0xFFF));
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, ((((rawEntry->width + 8) >> 3) & 0x1FF) << 9) | 0xF5480000,
+                                     0x00080200);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                                     (((rawEntry->width * 4) & 0xFFF) << 12) | ((rawEntry->height * 4) & 0xFFF));
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(textureBase + (rawEntry->textureIndex << 5)));
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x073FC000);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, ((((x1 * 4) & 0xFFF) << 12) | 0xE4000000) |
+                                                         ((y1 * 4) & 0xFFF),
+                                     (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF));
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, (clipU << 21) | ((clipV << 5) & 0xFFFF));
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
+                    } while (0);
                 }
-                if (var_s0 < (s32)temp_v0_2) {
-                    sp14 = (s32)temp_v0_2 - var_s0;
-                    var_s0 = (s32)temp_v0_2;
-                }
-                var_at = var_s2 < temp_a1;
-                if (var_s1 >= temp_t1) {
-                    var_s1 = temp_t1;
-                    var_at = var_s2 < temp_a1;
-                }
-                if (var_at == 0) {
-                    var_s2 = temp_a1;
-                }
-                temp_v0_2 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_2 + 1);
-                temp_v0_2->words.w0 = ((temp_t2_2->width - 1) & 0xFFF) | 0xFD480000;
-                temp_v0_2->words.w1 = temp_t2_2->imageOffset + (s32)arg2;
-                temp_v0_3 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_3 + 1);
-                temp_v0_3->words.w0 = ((((s32)(temp_t2_2->width + 8) >> 3) & 0x1FF) << 9) | 0xF5480000;
-                temp_v0_3->words.w1 = 0x07080200;
-                temp_v0_4 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_4 + 1);
-                temp_v0_4->words.w1 = 0;
-                temp_v0_4->words.w0 = 0xE6000000;
-                temp_v0_5 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_5 + 1);
-                temp_v0_5->words.w0 = 0xF4000000;
-                temp_v0_5->words.w1 = (((temp_t2_2->width * 4) & 0xFFF) << 12) | 0x07000000 | ((temp_t2_2->height * 4) & 0xFFF);
-                temp_v0_6 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_6 + 1);
-                temp_v0_6->words.w1 = 0;
-                temp_v0_6->words.w0 = 0xE7000000;
-                temp_v0_7 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_7 + 1);
-                temp_v0_7->words.w0 = ((((s32)(temp_t2_2->width + 8) >> 3) & 0x1FF) << 9) | 0xF5480000;
-                temp_v0_7->words.w1 = 0x80200;
-                temp_v0_8 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_8 + 1);
-                temp_v0_8->words.w0 = 0xF2000000;
-                temp_v0_8->words.w1 = (((temp_t2_2->width * 4) & 0xFFF) << 12) | ((temp_t2_2->height * 4) & 0xFFF);
-                temp_v0_9 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_9 + 1);
-                temp_v0_9->words.w0 = 0xFD100000;
-                temp_v0_9->words.w1 = (temp_t2_2->textureIndex << 5) + (s32)sp2C;
-                temp_v0_10 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_10 + 1);
-                temp_v0_10->words.w1 = 0;
-                temp_v0_10->words.w0 = 0xE8000000;
-                temp_v0_11 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_11 + 1);
-                temp_v0_11->words.w1 = 0x07000000;
-                temp_v0_11->words.w0 = 0xF5000100;
-                temp_v0_12 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_12 + 1);
-                temp_v0_12->words.w1 = 0;
-                temp_v0_12->words.w0 = 0xE6000000;
-                temp_v0_13 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_13 + 1);
-                temp_v0_13->words.w0 = 0xF0000000;
-                temp_v0_13->words.w1 = 0x073FC000;
-                temp_v0_14 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_14 + 1);
-                temp_v0_14->words.w1 = 0;
-                temp_v0_14->words.w0 = 0xE7000000;
-                temp_v0_15 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_15 + 1);
-                temp_v0_15->words.w0 = (((var_s1 * 4) & 0xFFF) << 12) | 0xE4000000 | ((var_s2 * 4) & 0xFFF);
-                temp_v0_15->words.w1 = (((var_t5 * 4) & 0xFFF) << 12) | ((var_s0 * 4) & 0xFFF);
-                temp_v0_16 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_16 + 1);
-                temp_v0_16->words.w0 = 0xB4000000;
-                temp_v0_16->words.w1 = (sp18 << 21) | ((sp14 << 5) & 0xFFFF);
-                temp_v0_17 = (Gfx *)gRegionAllocPtr;
-                gRegionAllocPtr = (s32)(temp_v0_17 + 1);
-                temp_v0_17->words.w0 = 0xB3000000;
-                temp_v0_17->words.w1 = 0x04000400;
             }
         }
-    }
+    } while (0);
 }
 #endif
 
