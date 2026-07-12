@@ -129,7 +129,7 @@ void initRaceSetupMenu(void) {
 }
 #endif
 
-// updateRaceSetupPlayerCountMenu best match: 88.068% (nonmatchings/updateRaceSetupPlayerCountMenu-6276316234415602851/base_5.c)
+// updateRaceSetupPlayerCountMenu best match: 88.677% (nonmatchings/updateRaceSetupPlayerCountMenu-5802343343535905907/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/updateRaceSetupPlayerCountMenu.s")
 
 #ifdef NON_MATCHING
@@ -138,7 +138,7 @@ void updateRaceSetupPlayerCountMenu(void) {
     s32 sp18;
     s32 temp_a3;
     s32 temp_v0;
-    register u16 *var_a2;
+    register volatile u16 *var_a2;
     u16 temp_t6;
     u16 temp_v0_2;
     u8 temp_v1;
