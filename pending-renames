@@ -4,3 +4,4 @@ src/race_scene_loader.c -> src/race_scene_setup.c
 include/race_scene_loader.h -> include/race_scene_setup.h
 src/race_timer_ui.c -> src/race_hud.c
 include/race_timer_ui.h -> include/race_hud.h
+src/render_asset_utils.c -> src/menu_render_utils.c

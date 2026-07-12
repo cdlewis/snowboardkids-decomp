@@ -126,7 +126,7 @@ extern u8 D_801240A8[];
 
 void osStartThread(void *);
 void osStopThread(void *);
-void *func_80048388(s32 arg0);
+void *allocRenderCallbackScratch(s32 arg0);
 void requestMusicSequenceBank(s32 arg0);
 s32 reserveSoundQueueWriteSlot(void);
 s32 startQueuedSoundEffect(void);
@@ -666,7 +666,7 @@ void enqueuePositionalSoundRequest(s32 soundId, SoundPosition *pos, s32 volume, 
                                    s32 minVolume) {
     PositionalSoundRequest *node;
 
-    node = func_80048388(sizeof(PositionalSoundRequest));
+    node = allocRenderCallbackScratch(sizeof(PositionalSoundRequest));
     if (node != NULL) {
         node->next = gPendingPositionalSoundRequests;
         node->pos = *pos;

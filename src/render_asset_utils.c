@@ -1,6 +1,7 @@
 #include "common.h"
 #include "relocatable_heap.h"
 #include "fixed_point_math.h"
+#include "viewport_manager.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
 { \
@@ -92,39 +93,35 @@ extern s32 D_80112408;
 extern s32 D_80112410;
 extern s16 gAssetHandles[];
 extern s16 gCurrentRaceRecordReplayHandle;
-extern s16 D_801121B0;
+extern s16 gMenuAsciiFontPaletteIndex;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern s32 gRegionAllocPtr;
-extern s8 D_801124B0;
-extern s8 D_80112560;
-extern s8 D_80112610;
-extern s8 D_801126C0;
-extern void *D_801121B4;
+extern void *gMenuAsciiFontPaletteBase;
 
-// func_800458E0 best match: 97.917%
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_800458E0.s")
+// initMenuAssetHandles best match: 97.917%
+#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/initMenuAssetHandles.s")
 
 #ifdef NON_MATCHING
-void func_800458E0(void)
+void initMenuAssetHandles(void)
 {
     s16 **new_var;
     s16 *end;
     s16 *handle;
     s16 *new_var2;
 
-    end = &D_801121B0;
+    end = &gMenuAsciiFontPaletteIndex;
     do {
         ;
         if (1) {
             handle = gAssetHandles;
         }
-        end = (new_var2 = &D_801121B0);
+        end = (new_var2 = &gMenuAsciiFontPaletteIndex);
         do {
             *handle++ = -1;
-            new_var2 = &D_801121B0;
+            new_var2 = &gMenuAsciiFontPaletteIndex;
             *handle++ = -((0, 1));
             *handle++ = -1;
             if (!end) {
@@ -140,7 +137,7 @@ dummy_label_220868:
 
 void releaseMenuAssetHandles(void)
 {
- do { s16 *handle = &gCurrentRaceRecordReplayHandle; do { if ((*handle) != (-1)) { *handle = freeRelocatableHeapBlock(*handle); } handle++; } while (handle != (&D_801121B0)); } while (0);
+ do { s16 *handle = &gCurrentRaceRecordReplayHandle; do { if ((*handle) != (-1)) { *handle = freeRelocatableHeapBlock(*handle); } handle++; } while (handle != (&gMenuAsciiFontPaletteIndex)); } while (0);
 }
 
 void *resolveAssetTableRelativePointer(void *arg0, u32 arg1) {
@@ -186,11 +183,11 @@ void getAssetTableImagePaletteAndSize(u8 *arg0, u16 arg1, void **arg2, void **ar
     *arg5 = temp_v1[idx].height;
 }
 
-// func_80045A78 best match: 96.718% (nonmatchings/func_80045A78-8207005055717715604/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80045A78.s")
+// drawAssetTableSprite best match: 96.718% (nonmatchings/drawAssetTableSprite-8207005055717715604/base_8.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawAssetTableSprite.s")
 
 #ifdef NON_MATCHING
-void func_80045A78(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
+void drawAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
     volatile char pad[0x18];
     u8 *textureBase;
     s32 clipU;
@@ -339,8 +336,8 @@ void func_80045A78(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
 }
 #endif
 
-// func_80045E84 best match: 76.854% (nonmatchings/func_80045E84-2225551288923588688/base.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80045E84.s")
+// drawPulsingAssetTableSprite best match: 76.854% (nonmatchings/drawPulsingAssetTableSprite-2225551288923588688/base.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawPulsingAssetTableSprite.s")
 
 #ifdef NON_MATCHING
 extern s32 gRegionAllocPtr;
@@ -351,7 +348,7 @@ extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 
-void func_80045E84(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
+void drawPulsingAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
     volatile u8 pad[0x18];
     u8 *volatile sp24;
     volatile s32 sp18;
@@ -505,14 +502,14 @@ void func_80045E84(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
 }
 #endif
 
-// func_80046358 best match: 88.099% (nonmatchings/func_80046358-8207005055717715604/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80046358.s")
+// drawAssetTableSpriteWithDefaultPalette best match: 88.099% (nonmatchings/drawAssetTableSpriteWithDefaultPalette-8207005055717715604/base_4.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawAssetTableSpriteWithDefaultPalette.s")
 
 #ifdef NON_MATCHING
 extern Gfx *gRegionAllocPtr;
 extern u16 D_800D40B0[];
 
-void func_80046358(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
+void drawAssetTableSpriteWithDefaultPalette(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
     volatile char pad[0x20];
     s32 clipU;
     s32 clipV;
@@ -641,13 +638,13 @@ void func_80046358(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
 }
 #endif
 
-// func_80046748 best match: 89.835% (nonmatchings/func_80046748-8207005055717715604/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80046748.s")
+// drawMenuFillRectangle best match: 89.835% (nonmatchings/drawMenuFillRectangle-8207005055717715604/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawMenuFillRectangle.s")
 
 #ifdef NON_MATCHING
 extern Gfx gMenuRenderModeResetDl[];
 
-void func_80046748(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green, u8 blue) {
+void drawMenuFillRectangle(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green, u8 blue) {
     s32 rightClip;
     s32 bottomClip;
     s32 leftClip;
@@ -701,11 +698,11 @@ void func_80046748(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green, u8 blu
 }
 #endif
 
-// func_80046970 best match: 74.764% (nonmatchings/func_80046970-4923837976568703863/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80046970.s")
+// drawAssetTableSprite8bpp best match: 74.764% (nonmatchings/drawAssetTableSprite8bpp-4923837976568703863/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawAssetTableSprite8bpp.s")
 
 #ifdef NON_MATCHING
-void func_80046970(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
+void drawAssetTableSprite8bpp(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
     u8 *sp2C;
     s32 sp18;
     s32 sp14;
@@ -968,8 +965,8 @@ void drawAssetTableSpriteWithExplicitPalette(s16 arg0, s16 arg1, AssetTable *arg
 }
 #endif
 
-// func_80047174 best match: 73.385% (nonmatchings/func_80047174-4923837976568703863/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80047174.s")
+// drawScaledAssetTableSprite best match: 73.385% (nonmatchings/drawScaledAssetTableSprite-4923837976568703863/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawScaledAssetTableSprite.s")
 
 #ifdef NON_MATCHING
 #define RENDER_EMIT_GFX(cmd0, cmd1)       \
@@ -980,7 +977,7 @@ void drawAssetTableSpriteWithExplicitPalette(s16 arg0, s16 arg1, AssetTable *arg
         gfx->words.w1 = (cmd1);           \
     } while (0)
 
-void func_80047174(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4)
+void drawScaledAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4)
 {
     u8 *paletteBase;
     s32 right;
@@ -1186,11 +1183,11 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
 }
 #endif
 
-// func_80047B84 best match: 87.572% (nonmatchings/func_80047B84-7273315160691878794/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80047B84.s")
+// drawMenuAsciiFontTile best match: 87.572% (nonmatchings/drawMenuAsciiFontTile-7273315160691878794/base_11.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawMenuAsciiFontTile.s")
 
 #ifdef NON_MATCHING
-void func_80047B84(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
+void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
     s32 x0;
     s32 y0;
     s32 x1;
@@ -1238,9 +1235,9 @@ void func_80047B84(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
                 clipS += s;
                 clipT += t;
 
-                if (paletteIndex != D_801121B0) {
-                    D_801121B0 = paletteIndex;
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)D_801121B4 + (paletteIndex << 5));
+                if (paletteIndex != gMenuAsciiFontPaletteIndex) {
+                    gMenuAsciiFontPaletteIndex = paletteIndex;
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)gMenuAsciiFontPaletteBase + (paletteIndex << 5));
                     FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
                     FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
                     FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
@@ -1260,22 +1257,22 @@ void func_80047B84(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
 #endif
 
 extern s16 gMenuAsciiFontAssetHandle;
-extern s16 D_801121B2;
+extern s16 gMenuAsciiFontTextureNeedsLoad;
 
-void func_80047E38(void) {
+void initMenuAsciiFontTexture(void) {
     s32 v0 = getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
     AssetTable *assetTable = (AssetTable *)v0;
 
-    D_801121B4 = (void *)((assetTable->entryCount * sizeof(AssetTableEntry)) + (u8 *)assetTable + sizeof(AssetTableEntry));
-    D_801121B2 = -1;
-    D_801121B0 = -1;
+    gMenuAsciiFontPaletteBase = (void *)((assetTable->entryCount * sizeof(AssetTableEntry)) + (u8 *)assetTable + sizeof(AssetTableEntry));
+    gMenuAsciiFontTextureNeedsLoad = -1;
+    gMenuAsciiFontPaletteIndex = -1;
 }
 
-// func_80047E88 best match: 97.351% (nonmatchings/func_80047E88-2785870559185086986/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/func_80047E88.s")
+// drawMenuAsciiChar best match: 97.351% (nonmatchings/drawMenuAsciiChar-2785870559185086986/base_11.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/render_asset_utils/drawMenuAsciiChar.s")
 
 #ifdef NON_MATCHING
-void func_80047E88(s16 x, s16 y, s32 ch, u16 arg3) {
+void drawMenuAsciiChar(s16 x, s16 y, s32 ch, u16 arg3) {
     volatile char pad[0x48];
     volatile s32 *chPtr;
     s32 chByte;
@@ -1287,7 +1284,7 @@ void func_80047E88(s16 x, s16 y, s32 ch, u16 arg3) {
     if ((chByte >= 'a') && (chByte < '{')) {
         tile = chByte - 0x40;
 
-        if (D_801121B2 != 0) {
+        if (gMenuAsciiFontTextureNeedsLoad != 0) {
             font = (FontTexture *)getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
 
             FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
@@ -1303,17 +1300,17 @@ void func_80047E88(s16 x, s16 y, s32 ch, u16 arg3) {
             FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
                          (((font->width * 4) & 0xFFF) << 12) | ((font->height * 4) & 0xFFF));
 
-            D_801121B2 = 0;
-            D_801121B0 = -1;
+            gMenuAsciiFontTextureNeedsLoad = 0;
+            gMenuAsciiFontPaletteIndex = -1;
             tile = chByte - 0x40;
         }
 
-        func_80047B84(x, y, ((tile & 7) * 8) & 0xFFFF, tile & 0x38, arg3);
+        drawMenuAsciiFontTile(x, y, ((tile & 7) * 8) & 0xFFFF, tile & 0x38, arg3);
         return;
     }
 
     tile = chByte - 0x20;
-    if (D_801121B2 != 0) {
+    if (gMenuAsciiFontTextureNeedsLoad != 0) {
         font = (FontTexture *)getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
 
         FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
@@ -1329,19 +1326,19 @@ void func_80047E88(s16 x, s16 y, s32 ch, u16 arg3) {
         FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
                      (((font->width * 4) & 0xFFF) << 12) | ((font->height * 4) & 0xFFF));
 
-        D_801121B2 = 0;
-        D_801121B0 = -1;
+        gMenuAsciiFontTextureNeedsLoad = 0;
+        gMenuAsciiFontPaletteIndex = -1;
         tile = chByte - 0x20;
     }
 
     if ((u32)tile < 0x40) {
-        func_80047B84(x, y, ((tile & 7) * 8) & 0xFFFF, tile & 0x38, arg3);
+        drawMenuAsciiFontTile(x, y, ((tile & 7) * 8) & 0xFFFF, tile & 0x38, arg3);
     }
 }
 #endif
 
 #ifndef NON_MATCHING
-extern void func_80047E88(s16 x, s16 y, volatile s32 ch, u16 arg3);
+extern void drawMenuAsciiChar(s16 x, s16 y, volatile s32 ch, u16 arg3);
 #endif
 
 void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
@@ -1369,7 +1366,7 @@ void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
                 var_s0 = temp_s4;
                 var_s2 += 8;
             } else {
-                func_80047E88(var_s0, var_s2, var_a2, arg3);
+                drawMenuAsciiChar(var_s0, var_s2, var_a2, arg3);
                 var_s0 += 8;
             }
             var_a2 = var_s1[1];
@@ -1378,37 +1375,37 @@ void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
     }
 }
 
-extern s32 D_801121B8;
+extern s32 gRenderCallbackScratchPtr;
 
-void func_80048338(void) {
+void allocRenderCallbackScratchBuffer(void) {
     gAssetHandles[0] = allocRelocatableHeapBlock(0x4000);
 }
 
 void resetRenderScratchAllocator(void) {
-    D_801121B8 = getRelocatableHeapBlockBase(gAssetHandles[0]);
+    gRenderCallbackScratchPtr = getRelocatableHeapBlockBase(gAssetHandles[0]);
 }
 
-void *func_80048388(s32 arg0) {
+void *allocRenderCallbackScratch(s32 arg0) {
     s32 *new_var2;
     u32 new_var;
     s32 sp1C;
     s32 base;
     s32 temp_a0;
 
-    sp1C = D_801121B8;
+    sp1C = gRenderCallbackScratchPtr;
     base = getRelocatableHeapBlockBase(gAssetHandles[0]);
     new_var2 = &temp_a0;
-    temp_a0 = D_801121B8 + ((((u32)(arg0 + 3)) >> 2) * 4);
+    temp_a0 = gRenderCallbackScratchPtr + ((((u32)(arg0 + 3)) >> 2) * 4);
     new_var = (u32)(*new_var2 - base);
     if (new_var >= 0x4001U) {
         return NULL;
     }
-    D_801121B8 = *new_var2;
+    gRenderCallbackScratchPtr = *new_var2;
     return (void *)sp1C;
 }
 
 void addRenderCallback(RenderCallbackNode **arg0, void (*arg1)(s32), s32 arg2) {
-    RenderCallbackNode *temp_v0 = func_80048388(sizeof(RenderCallbackNode));
+    RenderCallbackNode *temp_v0 = allocRenderCallbackScratch(sizeof(RenderCallbackNode));
 
     if (temp_v0 != NULL) {
         temp_v0->next = *arg0;
@@ -1419,13 +1416,13 @@ void addRenderCallback(RenderCallbackNode **arg0, void (*arg1)(s32), s32 arg2) {
 }
 
 extern s32 gRegionAllocPtr;
-extern s32 D_80124904;
+extern s32 gCurrentTaskDisplayListStart;
 
-void func_8004845C(RenderCallbackNode **arg0) {
+void runRenderCallbacks(RenderCallbackNode **arg0) {
     RenderCallbackNode *s0 = *arg0;
     if (s0 != NULL) {
 loop:
-        if ((u32)((gRegionAllocPtr - D_80124904) - 0x5B8) < 0x14181U) {
+        if ((u32)((gRegionAllocPtr - gCurrentTaskDisplayListStart) - 0x5B8) < 0x14181U) {
             s0->callback(s0->arg);
             s0 = s0->next;
             if (s0 != NULL) {
@@ -1435,59 +1432,59 @@ loop:
     }
 }
 
-void func_800484F0(void) {
+void allocMenuRenderScratchBuffers(void) {
     gAssetHandles[1] = allocRelocatableHeapBlock(0x8000);
     gAssetHandles[2] = allocRelocatableHeapBlock(0x8000);
 }
 
-extern u32 D_80123754;
-extern u8 *D_801121C0;
-extern u8 *D_801121BC;
+extern u32 gMenuRenderScratchUsedSize;
+extern u8 *gMenuRenderScratchStart;
+extern u8 *gMenuRenderScratchPtr;
 
-void func_80048524(s32 arg0) {
-    D_80123754 = 0;
+void selectMenuRenderScratchBuffer(s32 arg0) {
+    gMenuRenderScratchUsedSize = 0;
     if (arg0 == 0) {
-        D_801121BC = D_801121C0 = getRelocatableHeapBlockBase(gAssetHandles[1]);
+        gMenuRenderScratchPtr = gMenuRenderScratchStart = getRelocatableHeapBlockBase(gAssetHandles[1]);
     } else {
-        D_801121BC = D_801121C0 = getRelocatableHeapBlockBase(gAssetHandles[2]);
+        gMenuRenderScratchPtr = gMenuRenderScratchStart = getRelocatableHeapBlockBase(gAssetHandles[2]);
     }
 }
 
 void *allocMenuRenderScratch(s32 size) {
-    u8 *oldPtr = D_801121BC;
+    u8 *oldPtr = gMenuRenderScratchPtr;
     u8 *newPtr = ((0, oldPtr)) + ((((u32)(size + 3)) >> 2) * 4);
     s32 new_var2;
 
-    new_var2 = newPtr - D_801121C0;
+    new_var2 = newPtr - gMenuRenderScratchStart;
     newPtr++;
     newPtr--;
 
-    if (D_801121BC) {
+    if (gMenuRenderScratchPtr) {
     }
 
-    if ((u32)(newPtr - D_801121C0) >= 0x8000) {
+    if ((u32)(newPtr - gMenuRenderScratchStart) >= 0x8000) {
         return 0;
     }
 
-    D_801121BC = newPtr;
-    D_80123754 = new_var2;
+    gMenuRenderScratchPtr = newPtr;
+    gMenuRenderScratchUsedSize = new_var2;
 
     return oldPtr;
 }
 
 extern void osWritebackDCache(void *, s32);
 
-void func_800485E8(s32 arg0) {
+void writebackMenuRenderScratchBuffer(s32 arg0) {
     if (arg0 == 0) {
-        osWritebackDCache((void *)getRelocatableHeapBlockBase(gAssetHandles[1]), D_80123754);
+        osWritebackDCache((void *)getRelocatableHeapBlockBase(gAssetHandles[1]), gMenuRenderScratchUsedSize);
     } else {
-        osWritebackDCache((void *)getRelocatableHeapBlockBase(gAssetHandles[2]), D_80123754);
+        osWritebackDCache((void *)getRelocatableHeapBlockBase(gAssetHandles[2]), gMenuRenderScratchUsedSize);
     }
 }
 
 extern void *allocMenuRenderScratch(s32);
 
-void *func_8004864C(GfxCommandBlock *arg0) {
+void *copyGfxCommandBlockToScratch(GfxCommandBlock *arg0) {
     GfxCommandBlock *p = allocMenuRenderScratch(sizeof(GfxCommandBlock));
     if (p == NULL) {
         return NULL;
@@ -1544,7 +1541,7 @@ GfxCommandDest *allocFixedTransformMatrix(GfxCommandSource *arg0) {
     return dst;
 }
 
-GfxCommandDest *func_80048A38(GfxCommandSource *arg0) {
+GfxCommandDest *allocFixedRotationMatrix(GfxCommandSource *arg0) {
     GfxCommandDest *dst = allocMenuRenderScratch(sizeof(GfxCommandDest));
 
     if (dst == NULL) {
@@ -1570,7 +1567,7 @@ GfxCommandDest *func_80048A38(GfxCommandSource *arg0) {
     return dst;
 }
 
-GfxCommandDest *func_80048BBC(GfxCommandDest *arg0) {
+GfxCommandDest *allocTranslationOnlyFixedMatrix(GfxCommandDest *arg0) {
     GfxCommandDest *dst = allocMenuRenderScratch(sizeof(GfxCommandDest));
 
     if (dst == NULL) {
@@ -1603,7 +1600,7 @@ void setPackedMatrixTranslation(GfxCommandDest *arg0, GfxCommandTriple *arg1) {
     arg0->unk3C = (s32) ((arg1->unk8 << 0x10) & 0xFFFF0000);
 }
 
-void func_80048CF8(GfxCommandBlock *arg0, GfxCommandBlock *arg1) {
+void copyPackedMatrixTranslation(GfxCommandBlock *arg0, GfxCommandBlock *arg1) {
     arg1->words[6] = (arg0->words[5] & 0xFFFF0000) | ((arg0->words[6] >> 0x10) & 0xFFFF);
     arg1->words[7] = (arg0->words[7] & 0xFFFF0000) | 1;
     arg1->words[14] = ((arg0->words[5] << 0x10) & 0xFFFF0000) | (arg0->words[6] & 0xFFFF);
@@ -1622,10 +1619,10 @@ void scaleFixedMatrix3sByQuarter(FixedMatrix3s arg0) {
     arg0[8] = arg0[8] / 4;
 }
 
-void func_80048E3C(void *arg0, void *arg1, void *arg2) {
+void noopThreeArgs(void *arg0, void *arg1, void *arg2) {
 }
 
-void func_80048E4C(void *arg0, void *arg1, void *arg2, void *arg3) {
+void noopFourArgs(void *arg0, void *arg1, void *arg2, void *arg3) {
 }
 
 // isPositionNearAnyRaceViewportFocus best match: 99.126%
@@ -1647,7 +1644,7 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
         return 1;
     }
 
-    if (D_801124B0 != 0) {
+    if (D_801124B0[0].active != 0) {
         diffX = D_801121F8;
         diffX = diffX - pos->x;
         if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001)) {
@@ -1661,7 +1658,7 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
     }
 
     posAlias = pos;
-    if (D_80112560 != 0) {
+    if (D_801124B0[1].active != 0) {
         diffX = D_801122A8 - pos->x;
         temp = D_801122B0;
         diffZ = temp - posAlias->z;
@@ -1671,7 +1668,7 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
         }
     }
 
-    if (D_80112610 != 0) {
+    if (D_801124B0[2].active != 0) {
         diffX = D_80112358 - posAlias->x;
         diffZ = D_80112360 - pos->z;
         if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001) && (diffZ < 0x6000000) && (diffZ >= (s32)0xFA000001)) {
@@ -1679,7 +1676,7 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
         }
     }
 
-    if (D_801126C0 != 0) {
+    if (D_801124B0[3].active != 0) {
         diffX = D_80112408 - posAlias->x;
         diffZ = D_80112410 - posAlias->z;
         lower = 0xFA000001;
