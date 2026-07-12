@@ -4,9 +4,9 @@
 #include "common.h"
 
 void updateMenuCameraObjectLookAtOrigin(void);
-void updateMenuCameraObject(void);
+void updateMenuCameraObjectLookAtOriginCallback(void);
 void updateMenuCameraObjectWithTargetOffset(void);
-void updateMenuCameraObjectFromTargetOffset(void);
+void updateMenuCameraObjectWithTargetOffsetCallback(void);
 void initRaceStartTransition(void);
 void updateRaceStartTransitionIntroDelay(void);
 void updateRaceStartTransitionFadeIn(void);
