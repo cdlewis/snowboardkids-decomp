@@ -160,17 +160,17 @@ void updateRemainingCallbackTasks(void) {
 void noopCallbackTask(void) {
 }
 
-// createCallbackTaskPreservingArgs best match: 92.071%
+// createCallbackTaskPreservingArgs best match: 97.525%
 #pragma GLOBAL_ASM("asm/nonmatchings/callback_task_scheduler/createCallbackTaskPreservingArgs.s")
 
 #ifdef NON_MATCHING
-void *createCallbackTaskPreservingArgs(void (*callback)(), s32 type, s32 priority) {
+void *createCallbackTaskPreservingArgs(void (*callback)(), u16 type, s32 priority) {
     CallbackTask *task;
     CallbackTask *prev;
     CallbackTask *next;
+    CallbackTask *sentinel;
     s32 index;
 
-    type &= 0xFFFF;
     switch (type & 0xFF) {
     case 0:
         if (gFreeCallbackTaskType0Count == 0) {
@@ -218,16 +218,16 @@ void *createCallbackTaskPreservingArgs(void (*callback)(), s32 type, s32 priorit
         return NULL;
     }
 
-    if (gFreeCallbackTaskCount == 0) {
+    if ((gFreeCallbackTaskCount & 0xFFFFu) == 0) {
         return NULL;
     }
     index = gFreeCallbackTaskCount - 1;
+    sentinel = &gCallbackTaskActiveListSentinel;
+    prev = sentinel;
     gFreeCallbackTaskCount = index;
-
-    task = gFreeCallbackTaskPool[index];
-    prev = &gCallbackTaskActiveListSentinel;
-    if (gCallbackTaskActiveListSentinel.next != NULL) {
-        next = gCallbackTaskActiveListSentinel.next;
+    task = gFreeCallbackTaskPool[index & 0xFFFF];
+    if (prev->next != NULL) {
+        next = sentinel->next;
         do {
             if ((u16)next->priority < priority) {
                 break;

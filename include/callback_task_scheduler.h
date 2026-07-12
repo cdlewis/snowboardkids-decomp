@@ -21,7 +21,11 @@ void updateCallbackTasks(void);
 void updateCallbackTasksWithMinPriority(s32 minPriority);
 void updateRemainingCallbackTasks(void);
 void noopCallbackTask(void);
+#ifdef NON_MATCHING
+void *createCallbackTaskPreservingArgs(void (*callback)(), u16 type, s32 priority);
+#else
 void *createCallbackTaskPreservingArgs(void (*callback)(), s32 type, s32 priority);
+#endif
 #ifdef NON_MATCHING
 void *createCallbackTask(void (*callback)(), u16 type, s32 priority);
 #else
