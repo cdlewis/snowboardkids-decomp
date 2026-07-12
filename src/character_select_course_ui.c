@@ -84,7 +84,7 @@ extern u8 D_8010AE8F;
 extern u8 gHighestUnlockedCourse;
 extern u8 gMenuTransitionState;
 extern u8 gMenuSelectionConfirmTimer;
-extern s16 D_800EC9D0;
+extern s16 gMenuChoicePromptState;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gRaceSplitscreenMode;
 extern u8 gRaceTypeSelection;
@@ -2633,7 +2633,7 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
     u16 alpha;
     s16 state;
 
-    state = D_800EC9D0;
+    state = gMenuChoicePromptState;
     if (state != 0) {
         isEvenState = !(state & 1);
         if (isEvenState) {
@@ -2653,11 +2653,11 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
 
         drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(D_80112178), 0x17, 0x20, 0x20, 0, alpha, 0);
 
-        state = D_800EC9D0;
+        state = gMenuChoicePromptState;
         if ((state == 3) || (state == 4)) {
-            drawMenuSpriteWithAlpha(arg0->x, (s16)(((D_800EC9D0 * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(D_80112178), 0x12,
+            drawMenuSpriteWithAlpha(arg0->x, (s16)(((gMenuChoicePromptState * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(D_80112178), 0x12,
                           0x20, 0x20, 0, (u16)arg0->selection.counter, 0);
-            state = D_800EC9D0;
+            state = gMenuChoicePromptState;
         }
     }
     if ((state >= 5) && (((s16)arg0->transition.alpha) == 0)) {
@@ -2668,12 +2668,12 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
 void updateCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *arg0) {
     s32 step;
 
-    if ((D_800EC9D0 != 0) && (D_800EC9D0 != 3) && (D_800EC9D0 != 4)) {
-        step = ((D_800EC9D0 < 5) ? 1 : -1) * 8;
+    if ((gMenuChoicePromptState != 0) && (gMenuChoicePromptState != 3) && (gMenuChoicePromptState != 4)) {
+        step = ((gMenuChoicePromptState < 5) ? 1 : -1) * 8;
         arg0->transition.signedAlpha += step;
 
         if (arg0->transition.signedAlpha == 0x20) {
-            D_800EC9D0 += 2;
+            gMenuChoicePromptState += 2;
             arg0->row.value = 0;
             arg0->selection.counter = 0x100;
         }
@@ -2691,7 +2691,7 @@ void updateCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *
         }
     }
 
-    if ((D_800EC9D0 == 3) || (D_800EC9D0 == 4)) {
+    if ((gMenuChoicePromptState == 3) || (gMenuChoicePromptState == 4)) {
         if ((u16)arg0->row.value < 0x10) {
             arg0->selection.counter = (u16)arg0->selection.counter - 9;
         } else {

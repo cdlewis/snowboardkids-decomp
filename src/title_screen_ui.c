@@ -6,7 +6,7 @@
 #include "menu_renderer.h"
 #include "title_menu.h"
 
-#define TITLE_SCREEN_LOGO_SPRITE_HANDLE D_8011217A
+#define TITLE_SCREEN_LOGO_SPRITE_HANDLE gMenuUiSpritesAssetHandle
 #define TITLE_SCREEN_TEXTURE_HANDLE (gAssetHandles.titleTextureHandle)
 
 typedef struct {
@@ -57,7 +57,7 @@ typedef struct {
 extern MainMenuState *gCurrentGameTask;
 extern s32 gMenuRenderCallbackList;
 extern TitleScreenAssetHandles gAssetHandles;
-extern s16 D_8011217A;
+extern s16 gMenuUiSpritesAssetHandle;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern u8 gConnectedControllerCount;
 

@@ -30,7 +30,7 @@ extern RaceSplitscreenSelectFrameTiles gRaceSplitscreenSelectFrameTiles[];
 extern RaceSplitscreenSelectPortrait gRaceSplitscreenSelectPortraitScripts[];
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gRaceSplitscreenMode;
-extern u8 D_80121D85;
+extern u8 gMenuSelectionVariant;
 extern u8 gMenuTransitionState;
 extern void *gMenuRenderCallbackList;
 extern RaceSplitscreenSelectAssetHandles gAssetHandles;
@@ -845,7 +845,7 @@ void drawRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
 
     if (gRaceSplitscreenMode == 3) {
         portraitIndex = gRaceSplitscreenMode & 0xFF;
-        if (D_80121D85 == 5) {
+        if (gMenuSelectionVariant == 5) {
             portraitIndex = 5;
         }
     } else {

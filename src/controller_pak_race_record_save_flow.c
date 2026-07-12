@@ -35,7 +35,7 @@ extern u8 gControllerPakMenuCursorState;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputPressed;
 extern s16 gControllerPakStatusCodes;
-extern s16 D_800EC9D0;
+extern s16 gMenuChoicePromptState;
 extern u8 gControllerPakRetryCounts;
 extern s8 gMenuSelectionConfirmTimer;
 extern s32 gActiveMenuTask;
@@ -59,7 +59,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     gFramebufferSwapDelay = 0;
     gControllerPakStatusCodes = 0;
-    D_800EC9D0 = 0;
+    gMenuChoicePromptState = 0;
     gControllerPakRetryCounts = 0;
     D_80121D80.status = 0;
     gMenuSelectionConfirmTimer = 0;
@@ -133,7 +133,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
     new_var = 3;
     if (((u8) gControllerPakRaceRecordSaveStatusTransition.step) == 1)
     {
-      if (D_800EC9D0 != 0)
+      if (gMenuChoicePromptState != 0)
       {
         var_v0 = 6;
       }
@@ -166,7 +166,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           if ((gControllerPakStatusCodes == 9) || (gControllerPakStatusCodes == 2))
         {
           gControllerPakStatusCodes = 8;
-          D_800EC9D0 = 1;
+          gMenuChoicePromptState = 1;
         }
           break;
 
@@ -174,7 +174,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           if (((u8) gControllerPakRaceRecordSaveStatusTransition.step) != new_var)
         {
           sp1C = temp_t0;
-          requestControllerPakSaveWrite(0, new_var, &gControllerPakRaceRecordSaveStatusTransition, D_800EC9D0);
+          requestControllerPakSaveWrite(0, new_var, &gControllerPakRaceRecordSaveStatusTransition, gMenuChoicePromptState);
           if (gControllerPakRetryCounts == 0)
           {
             gControllerPakRaceRecordSaveStatusTransition.targetStatus = 5;
@@ -256,14 +256,14 @@ void updateControllerPakRaceRecordSaveFlow(void)
           break;
 
         case 6:
-          if ((D_800EC9D0 == 3) || (D_800EC9D0 == 4))
+          if ((gMenuChoicePromptState == 3) || (gMenuChoicePromptState == 4))
         {
           temp_v1 = gPlayerInputPressed;
           if (temp_v1 & 0x10800)
           {
-            if (D_800EC9D0 != new_var)
+            if (gMenuChoicePromptState != new_var)
             {
-              D_800EC9D0 -= 1;
+              gMenuChoicePromptState -= 1;
               enqueueSoundEffect(0x19, 0x32);
               temp_v1 = gPlayerInputPressed;
             }
@@ -271,9 +271,9 @@ void updateControllerPakRaceRecordSaveFlow(void)
           var_t7 = temp_v1 & 0x8000;
           if (temp_v1 & 0x20400)
           {
-            if (D_800EC9D0 != 4)
+            if (gMenuChoicePromptState != 4)
             {
-              D_800EC9D0 += 1;
+              gMenuChoicePromptState += 1;
               enqueueSoundEffect(0x19, 0x32);
               temp_v1 = gPlayerInputPressed;
             }
@@ -282,7 +282,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           if ((var_t7 != 0) || (temp_v1 & 0x1000))
           {
             enqueueSoundEffect(1, 0x32);
-            if (D_800EC9D0 == 4)
+            if (gMenuChoicePromptState == 4)
             {
               if (gControllerPakStatusCodes == 8)
               {
@@ -322,7 +322,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
             {
               gControllerPakRaceRecordSaveStatusTransition.nextStatus = 5;
             }
-            D_800EC9D0 += 2;
+            gMenuChoicePromptState += 2;
           }
         }
           break;
@@ -345,7 +345,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           enqueueSoundEffect(1, 0x32);
-          D_800EC9D0 = gControllerPakRaceRecordSaveStatusChoicePromptStates[gControllerPakStatusCodes];
+          gMenuChoicePromptState = gControllerPakRaceRecordSaveStatusChoicePromptStates[gControllerPakStatusCodes];
         }
           break;
 
@@ -353,7 +353,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))
         {
           enqueueSoundEffect(1, 0x32);
-          D_800EC9D0 = gControllerPakRaceRecordSaveStatusChoicePromptStates[gControllerPakStatusCodes];
+          gMenuChoicePromptState = gControllerPakRaceRecordSaveStatusChoicePromptStates[gControllerPakStatusCodes];
         }
           break;
 

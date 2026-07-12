@@ -77,7 +77,7 @@ extern u8 gMenuExitSelection;
 extern u8 gHighestUnlockedCourse;
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gRaceSplitscreenMode;
-extern s16 D_800EC9D0;
+extern s16 gMenuChoicePromptState;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
@@ -104,7 +104,7 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     gMenuExitSelection = 0;
     gMenuTransitionState = 0;
     gMenuInputRepeatTimers = 0;
-    D_800EC9D0 = 0;
+    gMenuChoicePromptState = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
     var_v1 = 0;
     if (gPlayerCount > 0) {
@@ -219,7 +219,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
     gMenuFlowState = 0;
     gMenuTransitionState = 0;
     gMenuInputRepeatTimers = 0;
-    D_800EC9D0 = 0;
+    gMenuChoicePromptState = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
     var_v1 = 0;
     if (gPlayerCount > 0) {
@@ -331,7 +331,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     gMenuFlowState = 0;
     gMenuTransitionState = 0;
     gMenuInputRepeatTimers = 0;
-    D_800EC9D0 = 0;
+    gMenuChoicePromptState = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
     gActiveMenuTask = 0;
     D_8010ADE0 = 0;
@@ -546,43 +546,43 @@ void updateCharacterSelectCourseSubmenu(void) {
                 enqueueSoundEffect(1, 0x32);
             } else if ((input & 0x8000) || (input & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                D_800EC9D0 = 1;
+                gMenuChoicePromptState = 1;
                 gCharacterSelectCourseCursorState.fields.otherState = 3;
                 createCallbackTask(initCharacterSelectCourseConfirmCursor, 0, 0x61);
             }
             break;
         case 3:
-            if (D_800EC9D0 >= 3) {
+            if (gMenuChoicePromptState >= 3) {
                 input = gPlayerInputPressed;
-                if ((input & 0x10800) && (D_800EC9D0 != 3)) {
-                    D_800EC9D0--;
+                if ((input & 0x10800) && (gMenuChoicePromptState != 3)) {
+                    gMenuChoicePromptState--;
                     enqueueSoundEffect(0x19, 0x32);
                     input = gPlayerInputPressed;
-                } else if ((input & 0x20400) && (D_800EC9D0 != 4)) {
-                    D_800EC9D0++;
+                } else if ((input & 0x20400) && (gMenuChoicePromptState != 4)) {
+                    gMenuChoicePromptState++;
                     enqueueSoundEffect(0x19, 0x32);
                     input = gPlayerInputPressed;
                 }
 
                 if ((input & 0x8000) || (input & 0x1000)) {
                     enqueueSoundEffect(0x18, 0x32);
-                    D_800EC9D0 += 2;
+                    gMenuChoicePromptState += 2;
                     gCharacterSelectCourseCursorState.fields.otherState = 4;
                 } else if (input & 0x4000) {
                     enqueueSoundEffect(1, 0x32);
-                    D_800EC9D0 = 6;
+                    gMenuChoicePromptState = 6;
                     gCharacterSelectCourseCursorState.fields.otherState = 4;
                 }
             }
             break;
         case 4:
             if (gCharacterSelectCourseCursorState.fields.otherTimer == 4) {
-                if (D_800EC9D0 == 6) {
+                if (gMenuChoicePromptState == 6) {
                     D_80121D80[8] = 3;
                 } else {
                     D_80121D80[8] = 7;
                 }
-                D_800EC9D0 = 0;
+                gMenuChoicePromptState = 0;
             }
             break;
         }

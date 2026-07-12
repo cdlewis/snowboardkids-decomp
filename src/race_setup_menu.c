@@ -36,7 +36,7 @@ extern s8 D_800EC8B6;
 extern s8 D_800EC8B7;
 extern u8 gMenuSelectionConfirmTimer;
 extern s8 D_800EC9E5;
-extern s8 D_800EC9E6;
+extern s8 gCourseSelectModeSelection;
 extern CallbackTask *gActiveMenuTask;
 extern u16 gMenuInputRepeatTimers;
 extern s8 gHighestUnlockedCourse;
@@ -55,7 +55,7 @@ extern s16 D_8010AE16;
 extern s16 D_8010AE18;
 extern s16 gRaceCourseIndex;
 extern u8 gPlayerCount;
-extern s8 D_80121D86;
+extern s8 gCourseSelectSelectedCourseId;
 extern s8 D_80122392;
 extern s8 D_8012299E;
 extern s8 D_80122FAA;
@@ -82,7 +82,7 @@ void initRaceSetupMenu(void) {
     gCurrentGameTask->timer = 0;
     gMenuSelectionConfirmTimer = 0;
     D_800EC9E5 = 1;
-    D_800EC9E6 = 0;
+    gCourseSelectModeSelection = 0;
     gHighestUnlockedCourse = 0;
     gRaceRumbleEnabled = 0;
     gRaceCourseIndex = 9;
@@ -108,7 +108,7 @@ void initRaceSetupMenu(void) {
     D_8010AE06 = 0;
     D_8010AE0E = 0;
     D_8010AE12 = 0;
-    D_80121D86 = 0;
+    gCourseSelectSelectedCourseId = 0;
     D_800EC8B5 = 0;
     D_8010AE08 = 0;
     D_8010AE0F = 0;
@@ -220,7 +220,7 @@ extern s16 D_800B31C2;
 extern s16 D_800B31C4;
 extern s16 D_800B31C6;
 extern s16 gControllerPakStatusCodes;
-extern s16 D_800EC9D0;
+extern s16 gMenuChoicePromptState;
 extern u8 gControllerPakRetryCounts;
 extern u8 gControllerPakOperationCounts;
 extern u8 D_800EC9E4;
@@ -248,7 +248,7 @@ void initRaceSetupSaveMenu(void) {
 
     var_v0 = &gControllerPakOperationCounts;
     var_a1 = &gControllerPakRetryCounts;
-    var_a0 = &D_800EC9D0;
+    var_a0 = &gMenuChoicePromptState;
     var_v1 = &gControllerPakStatusCodes;
     do {
         var_v0++;
@@ -349,7 +349,7 @@ extern void initControllerPakRumbleCheckPrompt(CallbackTask *);
 
 extern u8 D_800B3199[];
 extern s16 gControllerPakStatusCodes[];
-extern s16 D_800EC9D0[];
+extern s16 gMenuChoicePromptState[];
 extern u8 gControllerPakRetryCounts[];
 extern u8 gControllerPakOperationCounts[];
 extern u8 D_800EC9E4;
@@ -405,7 +405,7 @@ void updateRaceSetupSaveMenu(void) {
 
                         if ((transitionTask == NULL) || (D_8010AE00_03798.unkE[i] == 0)) {
                             stateIndex = i * 2;
-                            choice = &D_800EC9D0[i];
+                            choice = &gMenuChoicePromptState[i];
                             choiceValue = *choice;
                             if (choiceValue != 0) {
                                 stateIndex = 6;

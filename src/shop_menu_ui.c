@@ -155,11 +155,11 @@ struct ShopMenuWidgetActor {
 
 extern void addRenderCallback(void *, void *, void *);
 extern s16 gAssetHandles[];
-extern u8 D_800EC9E6;
+extern u8 gCourseSelectModeSelection;
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gMenuExitSelection;
 
-void func_8002C4E0(ShopMenuRowActor *arg0) {
+void drawShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
     ShopMenuRowActor *sp54;
     ShopMenuRowActor *var_s3;
     s32 var_s0;
@@ -171,7 +171,7 @@ void func_8002C4E0(ShopMenuRowActor *arg0) {
     do {
         if (arg0->unk26 > 0) {
             var_s2 = 0; var_s3 = arg0; do { var_s1 = 0;
-                if ((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuExitSelection == 0) && (var_s0 == D_800EC9E6) &&
+                if ((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuExitSelection == 0) && (var_s0 == gCourseSelectModeSelection) &&
                     (gMenuSelectionConfirmTimer & 1)) {
                     var_s1 = 0xFF;
                 }
@@ -189,46 +189,46 @@ void func_8002C4E0(ShopMenuRowActor *arg0) {
 
 extern int sprintf(char *, const char *, ...);
 extern s32 gCourseUnlockPrices[];
-extern u16 D_800B34E0[];
-extern u16 D_800B34EC[];
-extern ShopMenuFrameTileMap D_800B79C0[];
-extern ShopMenuCursorIconInit D_800B7E20[];
-extern ShopMenuSparkleOffset D_800B7E40[];
-extern ShopMenuSparkleOffset D_800B7E58[];
-extern ShopMenuSparkleOffset D_800B7E70[];
-extern ShopMenuSparklePattern D_800B7D1C[];
-extern ShopDescriptionText D_800B7A14[];
-extern u8 D_800B7CD0;
-extern u16 D_800B7D00[];
-extern u8 D_80121D86;
+extern u16 gCourseDetailsPreviewCourseTiles[];
+extern u16 gCourseDetailsPreviewExtraTiles[];
+extern ShopMenuFrameTileMap gShopMenuPanelFrameTilemaps[];
+extern ShopMenuCursorIconInit gShopMenuSparkleInitTable[];
+extern ShopMenuSparkleOffset gCoursePreviewCloseSparkleOffsets[];
+extern ShopMenuSparkleOffset gCoursePreviewCloseSparkleMirrorStart[];
+extern ShopMenuSparkleOffset gCoursePreviewCloseSparkleOffsetsEnd[];
+extern ShopMenuSparklePattern gShopMenuSparklePatterns[];
+extern ShopDescriptionText gShopMenuModeDescriptionText[];
+extern u8 gCourseUnlockPurchasePromptText;
+extern u16 gCourseDetailsMenuEntryTiles[];
+extern u8 gCourseSelectSelectedCourseId;
 extern u8 gMenuTransitionState;
-extern u8 D_80121D85;
+extern u8 gMenuSelectionVariant;
 extern s16 gMenuPanelTilemapAssetHandle;
 extern s16 gShopMenuTextureAssetHandle;
 extern CourseSelectStatus gCourseSelectStatus;
 extern s32 gActiveMenuTask;
-extern u8 D_8010AF40;
-extern u8 D_8010AF70;
-extern u8 D_8010AF71;
-extern u8 D_8010AF72;
-extern u8 D_8010AF73;
-extern s16 D_8010AF76;
-extern s16 D_8011217A;
+extern u8 gShopMenuModeCursorState;
+extern u8 gShopMenuDescriptionSeen;
+extern u8 gShopMenuShowNewCoursesMessage;
+extern u8 gCourseDetailsMenuSelection;
+extern u8 gCourseDetailsPreviewPage;
+extern s16 gCoursePreviewViewportHeight;
+extern s16 gMenuUiSpritesAssetHandle;
 extern ShopMenuState D_80121D80;
 extern s32 gPlayer1Money;
 extern s32 gMenuFlowState;
 extern MainMenuState *gCurrentGameTask;
-extern s16 D_800EC9D0;
-extern u8 D_800ECA2F[];
+extern s16 gMenuChoicePromptState;
+extern u8 gCourseUnlockSaveSlots[];
 extern s32 gPlayerInputHeld;
 extern u8 gMenuRenderCallbackList;
 
-const char D_800E0F60[] = "%6dG";
-const char D_800E0F68[] = "%6dG";
-const char D_800E0F70[] = "%5dG";
-const char D_800E0F78[] = "%4dG";
+const char gShopMenuMoneyFormat[] = "%6dG";
+const char gCourseUnlockPriceFormat6[] = "%6dG";
+const char gCourseUnlockPriceFormat5[] = "%5dG";
+const char gCourseUnlockPriceFormat4[] = "%4dG";
 
-void func_8002C624(ShopMenuRowActor *arg0) {
+void updateShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
     s32 i;
     s32 moved;
     ShopMenuRowActor *spawnRow;
@@ -262,8 +262,8 @@ void func_8002C624(ShopMenuRowActor *arg0) {
         }
         if (moved == 0) {
             spawnRow->unk24 = 1;
-            createCallbackTask(func_8002D294, 0, 0x5F);
-            createCallbackTask(func_8002DC14, 0, 0x61);
+            createCallbackTask(initShopMenuSelectedModePanel, 0, 0x5F);
+            createCallbackTask(initShopMenuCourseListPanel, 0, 0x61);
         }
         state = arg0->unk24;
         break;
@@ -288,10 +288,10 @@ void func_8002C624(ShopMenuRowActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002C4E0, actor);
+    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuModeChoiceRows, actor);
 }
 
-void func_8002C800(ShopMenuRowActor *arg0) {
+void initShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
     s32 i;
 
     for (i = 0; i < 5; i++) { arg0->unk18[i] = -0x104; }
@@ -301,17 +301,17 @@ void func_8002C800(ShopMenuRowActor *arg0) {
     arg0->unk26 = 1;
     arg0->unk24 = 0;
 
-    setCallbackTaskCallback(arg0, func_8002C624);
+    setCallbackTaskCallback(arg0, updateShopMenuModeChoiceRows);
 }
 
-void func_8002C860(ShopMenuWidgetActor *arg0) {
-    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(D_8011217A), 3, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(D_8011217A), 4, 0x20, 0x20, 0, 0);
-    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(D_8011217A), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(D_8011217A), 6, 0x20, 0x20, 0, 0);
+void drawShopMenuSidePanel(ShopMenuWidgetActor *arg0) {
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
 }
 
-void func_8002C9A0(ShopMenuWidgetActor *arg0) {
+void updateShopMenuSidePanel(ShopMenuWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
 
     switch (state) {
@@ -342,20 +342,20 @@ void func_8002C9A0(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002C860, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuSidePanel, arg0);
 }
 
-void func_8002CAA0(ShopMenuWidgetActor *arg0) {
+void initShopMenuSidePanel(ShopMenuWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
-    setCallbackTaskCallback(arg0, func_8002C9A0);
+    setCallbackTaskCallback(arg0, updateShopMenuSidePanel);
 }
 
-// func_8002CAD4 best match: 98.548% (nonmatchings/func_8002CAD4-6061209858023118177/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002CAD4.s")
+// drawShopMenuSelectedModePanel best match: 98.548% (nonmatchings/drawShopMenuSelectedModePanel-6061209858023118177/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/drawShopMenuSelectedModePanel.s")
 
 #ifdef NON_MATCHING
-void func_8002CAD4(ShopMenuWidgetActor *arg0) {
+void drawShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -365,7 +365,7 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTile((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x27]), D_800B79C0[(u16)arg0->item.counter].center[tileOffset], 0, 0x100);
+                      getRelocatableHeapBlockBase(gAssetHandles[0x27]), gShopMenuPanelFrameTilemaps[(u16)arg0->item.counter].center[tileOffset], 0, 0x100);
     }
 
     if (shouldDraw) {
@@ -377,10 +377,10 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
     offset = 0;
     do {
         drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles[0x27]),
-                      D_800B79C0[(u16)arg0->item.counter].right[tileOffset], 0, 0x100);
+                      gShopMenuPanelFrameTilemaps[(u16)arg0->item.counter].right[tileOffset], 0, 0x100);
         i = 0x80;
         drawMenuSpriteTile((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x27]),
-                      D_800B79C0[(u16)arg0->item.counter].bottom[tileOffset], 0, 0x100);
+                      gShopMenuPanelFrameTilemaps[(u16)arg0->item.counter].bottom[tileOffset], 0, 0x100);
         offset += 0x40;
         tileOffset++;
     } while (offset != i);
@@ -388,7 +388,7 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
     i--;
 
     drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x27]),
-                  D_800B79C0[(u16)arg0->item.counter].corner, 0, 0x100);
+                  gShopMenuPanelFrameTilemaps[(u16)arg0->item.counter].corner, 0, 0x100);
 
     drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x33, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x38, 0x20, 0x20, 0, 0);
@@ -405,14 +405,14 @@ void func_8002CAD4(ShopMenuWidgetActor *arg0) {
 }
 #endif
 
-void func_8002CFAC(ShopMenuWidgetActor *arg0) {
+void updateShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
     int state;
 
-    if ((D_800EC9E6 >= (u16) arg0->item.counter) && (arg0->item.bytes.subState != 0) && (arg0->y != -0x48)) {
+    if ((gCourseSelectModeSelection >= (u16) arg0->item.counter) && (arg0->item.bytes.subState != 0) && (arg0->y != -0x48)) {
         state = arg0->item.bytes.subState = 2;
     } else {
         state = arg0->item.bytes.subState;
-        if ((D_800EC9E6 < (u16) arg0->item.counter) && (state != 0) && (arg0->y != -0x140)) {
+        if ((gCourseSelectModeSelection < (u16) arg0->item.counter) && (state != 0) && (arg0->y != -0x140)) {
             state = arg0->item.bytes.subState = 1;
         } else {
             state = arg0->item.bytes.subState;
@@ -426,17 +426,17 @@ void func_8002CFAC(ShopMenuWidgetActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->item.bytes.subTimer == 0) {
-            createCallbackTask(func_8002CAA0, 0, 0x63);
+            createCallbackTask(initShopMenuSidePanel, 0, 0x63);
         }
         arg0->item.bytes.subTimer++;
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->item.bytes.subState = 3;
-            createCallbackTask(func_8002E074, 0, 0x64);
-            gActiveMenuTask = (s32) createCallbackTask(func_8002DE6C, 0, 0x64);
-            createCallbackTask(func_8002E214, 0, 0x64);
-            createCallbackTask(func_8002E798, 0, 0x60);
-            createCallbackTask(func_8002E42C, 0, 0x64);
+            createCallbackTask(initShopMenuDescriptionText, 0, 0x64);
+            gActiveMenuTask = (s32) createCallbackTask(initShopMenuModeCursor, 0, 0x64);
+            createCallbackTask(initShopMenuPromptPanel, 0, 0x64);
+            createCallbackTask(initShopMenuSparkles, 0, 0x60);
+            createCallbackTask(initShopMenuMoneyPanel, 0, 0x64);
         }
         state = arg0->item.bytes.subState;
         break;
@@ -480,10 +480,10 @@ void func_8002CFAC(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002CAD4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuSelectedModePanel, arg0);
 }
 
-void func_8002D294(ShopMenuWidgetActor *arg0) {
+void initShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x94;
     arg0->y = -0x48;
     arg0->sprite.index = -8;
@@ -491,10 +491,10 @@ void func_8002D294(ShopMenuWidgetActor *arg0) {
     arg0->item.counter = 0;
     arg0->item.bytes.subTimer = 0;
     arg0->item.bytes.subState = 0;
-    setCallbackTaskCallback(arg0, func_8002CFAC);
+    setCallbackTaskCallback(arg0, updateShopMenuSelectedModePanel);
 }
 
-void func_8002D2E4(ShopMenuWidgetActor *arg0) {
+void drawShopMenuUnselectedModePanel(ShopMenuWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -504,7 +504,7 @@ void func_8002D2E4(ShopMenuWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-                      D_800B79C0[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -514,9 +514,9 @@ void func_8002D2E4(ShopMenuWidgetActor *arg0) {
     offset = 0;
     do {
         drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-                      D_800B79C0[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-                      D_800B79C0[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -525,15 +525,15 @@ void func_8002D2E4(ShopMenuWidgetActor *arg0) {
     i--;
 
     drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-                  D_800B79C0[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+                  gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8002D558(ShopMenuWidgetActor *arg0) {
+void updateShopMenuUnselectedModePanel(ShopMenuWidgetActor *arg0) {
     int state;
 
-    if ((D_800EC9E6 >= (u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gCourseSelectModeSelection >= (u16) arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->item.bytes.state = 2;
-    } else if ((D_800EC9E6 < (u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gCourseSelectModeSelection < (u16) arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->item.bytes.state = 1;
     } else {
         state = arg0->item.bytes.state;
@@ -586,19 +586,19 @@ void func_8002D558(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002D2E4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuUnselectedModePanel, arg0);
 }
 
-void func_8002D734(ShopMenuWidgetActor *arg0) {
+void initShopMenuUnselectedModePanel(ShopMenuWidgetActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
     arg0->sprite.index = 1;
     arg0->item.bytes.timer = 0;
     arg0->item.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8002D558);
+    setCallbackTaskCallback(arg0, updateShopMenuUnselectedModePanel);
 }
 
-void func_8002D778(ShopMenuWidgetActor *arg0) {
+void drawShopMenuCourseListPanel(ShopMenuWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -608,7 +608,7 @@ void func_8002D778(ShopMenuWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-                      D_800B79C0[(u16)arg0->sprite.index - 1].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index - 1].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     if (shouldDraw) {
@@ -618,9 +618,9 @@ void func_8002D778(ShopMenuWidgetActor *arg0) {
     offset = 0;
     do {
         drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-                      D_800B79C0[(u16)arg0->sprite.index - 1].right[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index - 1].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-                      D_800B79C0[(u16)arg0->sprite.index - 1].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index - 1].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -629,20 +629,20 @@ void func_8002D778(ShopMenuWidgetActor *arg0) {
     i--;
 
     drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-                  D_800B79C0[(u16)arg0->sprite.index - 1].corner, 0, 0x100, 0xA0, 0x49);
+                  gShopMenuPanelFrameTilemaps[(u16)arg0->sprite.index - 1].corner, 0, 0x100, 0xA0, 0x49);
 }
 
-void func_8002D9EC(ShopMenuWidgetActor *arg0) {
+void updateShopMenuCourseListPanel(ShopMenuWidgetActor *arg0) {
     u8 *stateField;
     int state;
 
     stateField = &arg0->item.bytes.state;
 
-    if ((D_800EC9E6 == 2) && (arg0->y != -0x48) && (arg0->item.bytes.state < 6)) {
+    if ((gCourseSelectModeSelection == 2) && (arg0->y != -0x48) && (arg0->item.bytes.state < 6)) {
         state = arg0->item.bytes.state = 2;
     } else {
         state = arg0->item.bytes.state;
-        if ((D_800EC9E6 != 2) && (arg0->y != -0x140) && (state < 6)) {
+        if ((gCourseSelectModeSelection != 2) && (arg0->y != -0x140) && (state < 6)) {
             state = arg0->item.bytes.state = 1;
         } else if (state < 4) {
             state = arg0->item.bytes.state = 3;
@@ -702,25 +702,25 @@ void func_8002D9EC(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002D778, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuCourseListPanel, arg0);
 }
 
-void func_8002DC14(ShopMenuWidgetActor *arg0) {
+void initShopMenuCourseListPanel(ShopMenuWidgetActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
     arg0->sprite.index = 2;
     arg0->item.bytes.timer = 0;
     arg0->item.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8002D9EC);
+    setCallbackTaskCallback(arg0, updateShopMenuCourseListPanel);
 }
 
-void func_8002DC58(ShopMenuWidgetActor *arg0) {
+void drawShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
     if (arg0->transition.bytes.state != 5) {
-        drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (D_800EC9E6 * 0x1C)), getRelocatableHeapBlockBase(D_8011217A), 7, 0x20, 0x20, 0, arg0->sprite.index, 0);
+        drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (gCourseSelectModeSelection * 0x1C)), getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.index, 0);
     }
 }
 
-void func_8002DCE8(ShopMenuWidgetActor *arg0) {
+void updateShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
     u8 state;
     u8 globalState;
 
@@ -773,37 +773,37 @@ void func_8002DCE8(ShopMenuWidgetActor *arg0) {
         break;
     }
 
-    D_8010AF40 = state;
+    gShopMenuModeCursorState = state;
     if (arg0->transition.bytes.state == 4) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002DC58, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuModeCursor, arg0);
 }
 
-void func_8002DE6C(ShopMenuWidgetActor *arg0) {
+void initShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
     arg0->x = -0x7C;
     arg0->y = -0x50;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
     arg0->transition.bytes.timer = 0;
-    setCallbackTaskCallback(arg0, func_8002DCE8);
+    setCallbackTaskCallback(arg0, updateShopMenuModeCursor);
 }
 
-void func_8002DEAC(ShopMenuWidgetActor *arg0) {
+void drawShopMenuDescriptionText(ShopMenuWidgetActor *arg0) {
     u8 var_v0;
 
-    if (D_8010AF70 == 0) {
+    if (gShopMenuDescriptionSeen == 0) {
         var_v0 = 3;
-    } else if (D_8010AF71 == 1) {
+    } else if (gShopMenuShowNewCoursesMessage == 1) {
         var_v0 = 4;
     } else {
-        var_v0 = D_800EC9E6;
+        var_v0 = gCourseSelectModeSelection;
     }
-    drawMenuGlyphScript(arg0->x, arg0->y, D_800B7A14[var_v0], 1, arg0->sprite.index, 0);
+    drawMenuGlyphScript(arg0->x, arg0->y, gShopMenuModeDescriptionText[var_v0], 1, arg0->sprite.index, 0);
 }
 
-void func_8002DF40(ShopMenuWidgetActor *arg0) {
+void updateShopMenuDescriptionText(ShopMenuWidgetActor *arg0) {
     u8 state = arg0->transition.bytes.state;
 
     switch (state) {
@@ -832,30 +832,30 @@ void func_8002DF40(ShopMenuWidgetActor *arg0) {
     }
     if ((unsigned int)state == 3) {
         removeCallbackTask(arg0);
-        if (D_8010AF70 == 0) {
-            D_8010AF70 = 1;
+        if (gShopMenuDescriptionSeen == 0) {
+            gShopMenuDescriptionSeen = 1;
         }
-        if (D_8010AF71 == 1) {
-            D_8010AF71 = 0;
+        if (gShopMenuShowNewCoursesMessage == 1) {
+            gShopMenuShowNewCoursesMessage = 0;
         }
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002DEAC, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuDescriptionText, arg0);
 }
 
-void func_8002E074(ShopMenuWidgetActor *arg0) {
+void initShopMenuDescriptionText(ShopMenuWidgetActor *arg0) {
     arg0->x = -0x84;
     arg0->y = 0xC;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8002DF40);
+    setCallbackTaskCallback(arg0, updateShopMenuDescriptionText);
 }
 
-void func_8002E0B0(ShopMenuWidgetActor *arg0) {
+void drawShopMenuPromptPanel(ShopMenuWidgetActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 0, 0x20, 0x20, 0, arg0->sprite.index, 0);
 }
 
-void func_8002E114(ShopMenuWidgetActor *arg0) {
+void updateShopMenuPromptPanel(ShopMenuWidgetActor *arg0) {
     u8 state = arg0->transition.bytes.state;
 
     switch (state) {
@@ -886,27 +886,27 @@ void func_8002E114(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002E0B0, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuPromptPanel, arg0);
 }
 
-void func_8002E214(ShopMenuWidgetActor *arg0) {
+void initShopMenuPromptPanel(ShopMenuWidgetActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x5C;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8002E114);
+    setCallbackTaskCallback(arg0, updateShopMenuPromptPanel);
 }
 
-void func_8002E250(ShopMenuWidgetActor *arg0) {
+void drawShopMenuMoneyPanel(ShopMenuWidgetActor *arg0) {
     char sp40[0x18];
 
     drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
-    drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(D_8011217A), 0x11, 0x20, 0x20, 0, arg0->sprite.index, 0);
-    sprintf(sp40, D_800E0F60, gPlayer1Money);
+    drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.index, 0);
+    sprintf(sp40, gShopMenuMoneyFormat, gPlayer1Money);
     drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.index);
 }
 
-void func_8002E32C(ShopMenuWidgetActor *arg0) {
+void updateShopMenuMoneyPanel(ShopMenuWidgetActor *arg0) {
     u8 state = arg0->transition.bytes.state;
 
     switch (state) {
@@ -937,18 +937,18 @@ void func_8002E32C(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002E250, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuMoneyPanel, arg0);
 }
 
-void func_8002E42C(ShopMenuWidgetActor *arg0) {
+void initShopMenuMoneyPanel(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x30;
     arg0->y = 0x40;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8002E32C);
+    setCallbackTaskCallback(arg0, updateShopMenuMoneyPanel);
 }
 
-void func_8002E468(ShopMenuWidgetActor *arg0) {
+void updateShopMenuMoneyPanelForCourseSelectReturn(ShopMenuWidgetActor *arg0) {
     u8 state = arg0->transition.bytes.state;
 
     switch (state) {
@@ -979,22 +979,22 @@ void func_8002E468(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002E250, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuMoneyPanel, arg0);
 }
 
-void func_8002E568(ShopMenuWidgetActor *arg0) {
+void initShopMenuMoneyPanelForCourseSelectReturn(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x30;
     arg0->y = 0x40;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8002E468);
+    setCallbackTaskCallback(arg0, updateShopMenuMoneyPanelForCourseSelectReturn);
 }
 
-// func_8002E5A4 best match: 97.125% (nonmatchings/func_8002E5A4-3/output-230-1/source.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002E5A4.s")
+// drawShopMenuSparkles best match: 97.125% (nonmatchings/drawShopMenuSparkles-3/output-230-1/source.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/drawShopMenuSparkles.s")
 
 #ifdef NON_MATCHING
-void func_8002E5A4(ShopMenuWidgetActor *arg0) {
+void drawShopMenuSparkles(ShopMenuWidgetActor *arg0) {
     s32 tileOffset;
     s16 y;
     s16 alpha;
@@ -1008,13 +1008,13 @@ void func_8002E5A4(ShopMenuWidgetActor *arg0) {
 
     actor = arg0;
     i = 0;
-    if (D_800B7D1C[actor->sparkle.patternIndex][0].x != -1) {
+    if (gShopMenuSparklePatterns[actor->sparkle.patternIndex][0].x != -1) {
         tileOffset = 0;
         do {
             texture = getRelocatableHeapBlockBase(gAssetHandles[0x27]);
             randomValues = actor->randomValues;
             alpha = actor->sparkle.alpha;
-            offset = &D_800B7D1C[actor->sparkle.patternIndex][tileOffset];
+            offset = &gShopMenuSparklePatterns[actor->sparkle.patternIndex][tileOffset];
             tile = actor->sparkle.tileBase + i;
             entry = offset;
             y = randomValues[1];
@@ -1022,12 +1022,12 @@ void func_8002E5A4(ShopMenuWidgetActor *arg0) {
                           alpha & 0xFFFFFFFFFFFFFFFF);
             tileOffset++;
             i++;
-        } while (D_800B7D1C[actor->sparkle.patternIndex][tileOffset].x != -1);
+        } while (gShopMenuSparklePatterns[actor->sparkle.patternIndex][tileOffset].x != -1);
     }
 }
 #endif
 
-void func_8002E6E4(ShopMenuWidgetActor *arg0) {
+void updateShopMenuSparkles(ShopMenuWidgetActor *arg0) {
     s16 temp_v0;
     u8 var_v0;
 
@@ -1054,19 +1054,19 @@ void func_8002E6E4(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002E5A4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuSparkles, arg0);
 }
 
-// func_8002E798 best match: 95.172% (nonmatchings/func_8002E798-786318006044585456/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002E798.s")
+// initShopMenuSparkles best match: 95.172% (nonmatchings/initShopMenuSparkles-786318006044585456/base_8.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/initShopMenuSparkles.s")
 
 #ifdef NON_MATCHING
-void func_8002E798(ShopMenuWidgetActor *arg0) {
+void initShopMenuSparkles(ShopMenuWidgetActor *arg0) {
     s32 index;
     ShopMenuCursorIconInit *entry;
 
-    index = D_80121D85;
-    entry = &D_800B7E20[index & 0xFFFF];
+    index = gMenuSelectionVariant;
+    entry = &gShopMenuSparkleInitTable[index & 0xFFFF];
     arg0->sparkle.patternIndex = index;
     arg0->sprite.index = entry->x;
     arg0->x = 0x94;
@@ -1074,11 +1074,11 @@ void func_8002E798(ShopMenuWidgetActor *arg0) {
     arg0->sparkle.tileBase = entry->tileBase;
     arg0->sparkle.alpha = 0x100;
     arg0->slide.slideState = 0;
-    setCallbackTaskCallback(arg0, func_8002E6E4);
+    setCallbackTaskCallback(arg0, updateShopMenuSparkles);
 }
 #endif
 
-void func_8002E810(ShopMenuWidgetActor *arg0) {
+void drawCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     s16 new_var;
     s32 temp;
     char sp4C[4];
@@ -1086,26 +1086,26 @@ void func_8002E810(ShopMenuWidgetActor *arg0) {
     u16 sp48;
     s32 palette;
 
-    if ((s8)D_800ECA2F[D_80121D86] == -1) {
+    if ((s8)gCourseUnlockSaveSlots[gCourseSelectSelectedCourseId] == -1) {
         new_var = 0x3000;
-        temp = gCourseUnlockPrices[D_80121D86];
+        temp = gCourseUnlockPrices[gCourseSelectSelectedCourseId];
         if ((u32)temp >= 0x186A0U) {
             sp4A = 0x4000;
             sp48 = 0;
-            sprintf(sp4C, D_800E0F68, arg0->item.price);
+            sprintf(sp4C, gCourseUnlockPriceFormat6, arg0->item.price);
         } else if ((u32)temp >= 0x2710U) {
             sp4A = 0x3800;
             sp48 = 4;
-            sprintf(sp4C, D_800E0F70, arg0->item.price);
+            sprintf(sp4C, gCourseUnlockPriceFormat5, arg0->item.price);
         } else {
             sp4A = new_var;
             sp48 = 8;
-            sprintf(sp4C, D_800E0F78, arg0->item.price);
+            sprintf(sp4C, gCourseUnlockPriceFormat4, arg0->item.price);
         }
 
         drawMenuPanelBackdrop((s16)(arg0->x + sp48), arg0->y, sp4A, 0x2000);
 
-        if ((u32)gPlayer1Money < (u32)gCourseUnlockPrices[D_80121D86]) {
+        if ((u32)gPlayer1Money < (u32)gCourseUnlockPrices[gCourseSelectSelectedCourseId]) {
             palette = 1;
         } else {
             palette = 0;
@@ -1121,11 +1121,11 @@ void func_8002E810(ShopMenuWidgetActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 6, 0x20, 0x20, 0, arg0->sprite.index, 0);
 }
 
-// func_8002E9E4 best match: 94.119% (nonmatchings/func_8002E9E4-1404502880690620360/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002E9E4.s")
+// updateCourseUnlockPricePanel best match: 94.119% (nonmatchings/updateCourseUnlockPricePanel-1404502880690620360/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/updateCourseUnlockPricePanel.s")
 
 #ifdef NON_MATCHING
-void func_8002E9E4(ShopMenuWidgetActor *arg0) {
+void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     s32 amount;
     s32 price;
 
@@ -1161,7 +1161,7 @@ void func_8002E9E4(ShopMenuWidgetActor *arg0) {
         D_80121D80.money -= amount;
         if (arg0->item.price == 0) {
             arg0->slide.bytes.state = 3;
-            D_800ECA2F[D_80121D80.selectedShopItem] = 9;
+            gCourseUnlockSaveSlots[D_80121D80.selectedShopItem] = 9;
         }
         break;
     case 3:
@@ -1184,28 +1184,28 @@ void func_8002E9E4(ShopMenuWidgetActor *arg0) {
         }
         break;
     }
-    if (((D_800EC9D0 >= 5) && (D_800EC9D0 != 9)) || (arg0->slide.bytes.state == 6)) {
+    if (((gMenuChoicePromptState >= 5) && (gMenuChoicePromptState != 9)) || (arg0->slide.bytes.state == 6)) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002E810, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseUnlockPricePanel, arg0);
 }
 #endif
 
-void func_8002EC04(ShopMenuWidgetActor *arg0) {
+void initCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x20;
     arg0->y = -8;
-    arg0->item.price = gCourseUnlockPrices[D_80121D86];
+    arg0->item.price = gCourseUnlockPrices[gCourseSelectSelectedCourseId];
     arg0->sprite.index = 0;
     arg0->slide.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8002E9E4);
+    setCallbackTaskCallback(arg0, updateCourseUnlockPricePanel);
 }
 
-// func_8002EC5C best match: 98.264% (nonmatchings/func_8002EC5C-6061209858023118177/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002EC5C.s")
+// drawCourseUnlockPurchasePrompt best match: 98.264% (nonmatchings/drawCourseUnlockPurchasePrompt-6061209858023118177/base_15.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/drawCourseUnlockPurchasePrompt.s")
 
 #ifdef NON_MATCHING
-void func_8002EC5C(ShopMenuWidgetActor *arg0) {
+void drawCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
     s32 size;
     volatile u16 drawAlpha;
     s32 zero;
@@ -1215,7 +1215,7 @@ void func_8002EC5C(ShopMenuWidgetActor *arg0) {
     drawMenuSprite((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 1, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0x78), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 1, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0xB0), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 2, 0x20, 0x20, 0, 0);
-    drawMenuGlyphScript((s16)(arg0->x + 0x30), (s16)(arg0->y + 4), &D_800B7CD0, 0, 0x100, 0);
+    drawMenuGlyphScript((s16)(arg0->x + 0x30), (s16)(arg0->y + 4), &gCourseUnlockPurchasePromptText, 0, 0x100, 0);
 
     alpha = 0x60;
     if (arg0->item.price == 0) {
@@ -1243,7 +1243,7 @@ void func_8002EC5C(ShopMenuWidgetActor *arg0) {
 }
 #endif
 
-void func_8002EF14(ShopMenuWidgetActor *arg0) {
+void updateCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
     ShopMenuWidgetActor *temp_a2;
 
     arg0->item.price = gCurrentGameTask->shopItemPrice;
@@ -1258,24 +1258,24 @@ void func_8002EF14(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(temp_a2);
         gMenuFlowState = 0;
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, func_8002EC5C, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, drawCourseUnlockPurchasePrompt, temp_a2);
     }
 }
 
-void func_8002EFB8(ShopMenuWidgetActor *arg0) {
+void initCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
     arg0->x = -0x76;
     arg0->y = -0x40;
     arg0->item.price = 0;
     arg0->sprite.index = 0x100;
     arg0->transition.counter = 0;
-    setCallbackTaskCallback(arg0, func_8002EF14);
+    setCallbackTaskCallback(arg0, updateCourseUnlockPurchasePrompt);
 }
 
-// func_8002EFFC best match: 86.994% (nonmatchings/func_8002EFFC-5635509610426229442/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002EFFC.s")
+// drawCourseDetailsMenu best match: 86.994% (nonmatchings/drawCourseDetailsMenu-5635509610426229442/base_2.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/drawCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
-void func_8002EFFC(ShopMenuWidgetActor *arg0) {
+void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     volatile s32 unused;
     u16 script[3];
     u16 *tiles;
@@ -1285,14 +1285,14 @@ void func_8002EFFC(ShopMenuWidgetActor *arg0) {
     s32 value;
     s16 cursorX;
 
-    tiles = D_800B7D00;
+    tiles = gCourseDetailsMenuEntryTiles;
     cursor = (s16 *)arg0;
     yOffset = 0;
     for (i = 0; i < 7; i++) {
         drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x27]),
-                      tiles[D_8010AF73 * 7], 0x20, 0x20, 0, 0);
+                      tiles[gCourseDetailsPreviewPage * 7], 0x20, 0x20, 0, 0);
 
-        value = (D_8010AF73 * 7) + i + 1;
+        value = (gCourseDetailsPreviewPage * 7) + i + 1;
         script[0] = value / 10;
         if (script[0] == 0) {
             script[0] = -2;
@@ -1316,23 +1316,23 @@ void func_8002EFFC(ShopMenuWidgetActor *arg0) {
         cursor++;
     }
 
-    if ((arg0->state != 0) && (D_8010AF74 == 0)) {
+    if ((arg0->state != 0) && (gCourseDetailsCloseFromBack == 0)) {
         if (arg0->state < 5) {
             cursorX = arg0->targetX;
         } else {
             cursorX = arg0->cursorPositions[0];
         }
-        drawMenuSpriteWithAlpha(cursorX, (s16)(arg0->targetY + (D_8010AF72 * 0x13)), getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+        drawMenuSpriteWithAlpha(cursorX, (s16)(arg0->targetY + (gCourseDetailsMenuSelection * 0x13)), getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                       0x12, 0x20, 0x20, 0, arg0->prompt.bytes.pulseAlpha, 0);
     }
 }
 #endif
 
-// func_8002F2C8 best match: 79.777% (nonmatchings/func_8002F2C8-7273315160691878794/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/func_8002F2C8.s")
+// updateCourseDetailsMenu best match: 79.777% (nonmatchings/updateCourseDetailsMenu-7273315160691878794/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/shop_menu_ui/updateCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
-void func_8002F2C8(ShopMenuWidgetActor *arg0) {
+void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     s32 i;
     s32 moved;
     u8 globalState;
@@ -1345,7 +1345,7 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
     u16 count;
 
     actor = arg0;
-    globalState = D_8010AF41;
+    globalState = gCourseDetailsMenuState;
     nextState = arg0->state;
     state = nextState;
     if (nextState != globalState) {
@@ -1379,7 +1379,7 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
             if ((s32)count < 10) {
                 arg0->visibleCount = count + 1;
                 if ((u16)arg0->visibleCount == 10) {
-                    createCallbackTask(func_8002FBC8, 0, 0x63);
+                    createCallbackTask(initCourseDetailsPreviewTile, 0, 0x63);
                 }
             }
         }
@@ -1430,7 +1430,7 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
         }
         if (arg0->randomValues[0] == -0x118) {
             arg0->state = 4;
-            D_8010AF73 = (D_8010AF73 + 1) % 2;
+            gCourseDetailsPreviewPage = (gCourseDetailsPreviewPage + 1) % 2;
         }
         nextState = arg0->state;
         state = nextState;
@@ -1519,16 +1519,16 @@ void func_8002F2C8(ShopMenuWidgetActor *arg0) {
         state = nextState;
     }
 
-    D_8010AF41 = nextState;
+    gCourseDetailsMenuState = nextState;
     if (arg0->state == 7) {
         removeCallbackTask((CallbackTask *)arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002EFFC, actor);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseDetailsMenu, actor);
 }
 #endif
 
-void func_8002F854(ShopMenuWidgetActor *arg0) {
+void initCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     s32 i;
 
     for (i = 0; i < 10; i++) {
@@ -1542,17 +1542,17 @@ void func_8002F854(ShopMenuWidgetActor *arg0) {
     arg0->visibleCount = 1;
     arg0->prompt.bytes.pulseAlpha = 0;
     arg0->state = 0;
-    setCallbackTaskCallback(arg0, func_8002F2C8);
+    setCallbackTaskCallback(arg0, updateCourseDetailsMenu);
 }
 
-void func_8002F8DC(ShopMenuWidgetActor *arg0) {
+void drawCourseDetailsPreviewTile(ShopMenuWidgetActor *arg0) {
     s32 unused;
     u16 tileIndex;
 
-    if (D_8010AF72 < 7) {
-        tileIndex = D_800B34E0[D_8010AF73 * 7 + D_8010AF72];
+    if (gCourseDetailsMenuSelection < 7) {
+        tileIndex = gCourseDetailsPreviewCourseTiles[gCourseDetailsPreviewPage * 7 + gCourseDetailsMenuSelection];
     } else {
-        tileIndex = D_800B34EC[D_8010AF73 * 7];
+        tileIndex = gCourseDetailsPreviewExtraTiles[gCourseDetailsPreviewPage * 7];
     }
 
     drawMenuSpriteSubrect(arg0->x, arg0->y, getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), tileIndex, 0, 0, 0x40, 0x1C, 0x20, 0x20);
@@ -1562,7 +1562,7 @@ void func_8002F8DC(ShopMenuWidgetActor *arg0) {
     drawMenuSprite((s16)(arg0->x + 0x3C), (s16)(arg0->y - 1), getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 0xB, 0x20, 0x20, 1, 0);
 }
 
-void func_8002FAB8(ShopMenuWidgetActor *arg0) {
+void updateCourseDetailsPreviewTile(ShopMenuWidgetActor *arg0) {
     u8 state;
 
     if ((gCurrentGameTask->unk20 == 3) || (gCurrentGameTask->unk20 == 9)) {
@@ -1595,23 +1595,23 @@ void func_8002FAB8(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002F8DC, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseDetailsPreviewTile, arg0);
 }
 
-void func_8002FBC8(ShopMenuWidgetActor *arg0) {
+void initCourseDetailsPreviewTile(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x90;
     arg0->y = 0x44;
     arg0->sprite.bytes.state = 0;
-    setCallbackTaskCallback(arg0, func_8002FAB8);
+    setCallbackTaskCallback(arg0, updateCourseDetailsPreviewTile);
 }
 
-void func_8002FC00(ShopMenuWidgetActor *arg0) {
+void drawCoursePreviewCloseSparkles(ShopMenuWidgetActor *arg0) {
     ShopMenuSparkleOffset *offset;
     ShopMenuWidgetActor *actor;
     ShopMenuWidgetActor *counterActor;
 
-    actor = arg0; offset = D_800B7E40; counterActor = arg0; do {
-        if (offset < D_800B7E58) {
+    actor = arg0; offset = gCoursePreviewCloseSparkleOffsets; counterActor = arg0; do {
+        if (offset < gCoursePreviewCloseSparkleMirrorStart) {
             drawMenuSprite((s16)(offset->x + actor->x), (s16)(offset->y + actor->sprite.index - 8),
                           getRelocatableHeapBlockBase(gAssetHandles[0x1C]), (counterActor->transition.counter + 0x39) & 0xFFFF,
                           0x20, 0x20, 0, 0);
@@ -1622,13 +1622,13 @@ void func_8002FC00(ShopMenuWidgetActor *arg0) {
         }
         offset++;
         counterActor = (ShopMenuWidgetActor *)&counterActor->pad0[2];
-    } while (offset != D_800B7E70);
+    } while (offset != gCoursePreviewCloseSparkleOffsetsEnd);
 }
 
-void func_8002FD70(ShopMenuWidgetActor *arg0) {
+void updateCoursePreviewCloseSparkles(ShopMenuWidgetActor *arg0) {
     s32 i;
 
-    arg0->sprite.index = D_8010AF76 / 2;
+    arg0->sprite.index = gCoursePreviewViewportHeight / 2;
     arg0->x++;
     arg0->y--;
 
@@ -1643,21 +1643,21 @@ void func_8002FD70(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8002FC00, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawCoursePreviewCloseSparkles, arg0);
 }
 
-void func_8002FEF8(ShopMenuWidgetActor *arg0) {
+void initCoursePreviewCloseSparkles(ShopMenuWidgetActor *arg0) {
     ShopMenuWidgetActor *new_var;
     s32 i;
 
     arg0->x = 5;
     arg0->y = 0x48;
     new_var = arg0;
-    new_var->sprite.index = D_8010AF76 / 2;
+    new_var->sprite.index = gCoursePreviewViewportHeight / 2;
 
     for (i = 0; i < 12; i++) {
         new_var->randomValues[i + 3] = randomNextMain() % 6;
     }
 
-    setCallbackTaskCallback(new_var, func_8002FD70);
+    setCallbackTaskCallback(new_var, updateCoursePreviewCloseSparkles);
 }
