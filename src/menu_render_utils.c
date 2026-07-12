@@ -1202,7 +1202,7 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
 }
 #endif
 
-// drawMenuAsciiFontTile best match: 87.572% (nonmatchings/drawMenuAsciiFontTile-7273315160691878794/base_11.c)
+// drawMenuAsciiFontTile best match: 89.942% (nonmatchings/drawMenuAsciiFontTile-3357475854818838508/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawMenuAsciiFontTile.s")
 
 #ifdef NON_MATCHING
@@ -1264,11 +1264,8 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
                     FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
                 }
 
-                FONT_GFX_CMD(gRegionAllocPtr++, (((x1 * 4) & 0xFFF) << 12) | 0xE4000000 | ((y1 * 4) & 0xFFF),
-                             (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF));
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000,
-                             (clipS << 21) | ((clipT << 5) & 0xFFFF));
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
+                gSPTextureRectangle(gRegionAllocPtr++, x0 * 4, y0 * 4, x1 * 4, y1 * 4, 0,
+                                    clipS << 5, clipT << 5, 0x400, 0x400);
             }
         }
     }
