@@ -1338,12 +1338,12 @@ loop_6:
 }
 #endif
 
-// soundPlayerReadNextNote best match: 88.397%
+// soundPlayerReadNextNote best match: 93.328% (nonmatchings/soundPlayerReadNextNote-2694253543240320626/base_11.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerReadNextNote.s")
 
 #ifdef NON_MATCHING
-typedef u8 *(*PlayerCommandHandler)(PlayerCommandState *, u8 *, u8);
+typedef u8 *(*PlayerCommandHandler)(PlayerCommandState *, u8 *, s32);
 
 extern PlayerCommandHandler gSoundPlayerCommandHandlers[];
 extern u8 gSoundPlayerDefaultVelocities[];
@@ -1352,7 +1352,9 @@ extern s32 gSoundBankEntryCount;
 
 void soundPlayerReadNextNote(PlayerCommandState *arg0, s32 arg1) {
     u8 *seq;
+    u8 *durationPos;
     u8 cmd;
+    u8 fxMix;
     u32 duration;
     s32 soundIndex;
 
@@ -1371,17 +1373,20 @@ void soundPlayerReadNextNote(PlayerCommandState *arg0, s32 arg1) {
 
     if (seq != NULL) {
         arg0->unk3C = arg0->unk4C;
-        arg0->sequencePos = (s32)(seq + 1);
-        arg0->unkFE = *seq;
+        cmd = *seq;
+        seq++;
+        arg0->sequencePos = (s32)seq;
+        arg0->unkFE = cmd;
 
         if (arg0->unkED != 0) {
-            arg0->unk108 = gSoundPlayerDefaultVelocities[((u8 *)arg0->sequencePos)[0]];
-            arg0->sequencePos++;
+            arg0->unk108 = gSoundPlayerDefaultVelocities[*seq];
+            seq++;
+            arg0->sequencePos = (s32)seq;
         } else {
             arg0->unk108 = gSoundPlayerDefaultVelocities[arg0->unkEE];
         }
 
-        duration = arg0->unkC0;
+        duration = (u16)arg0->unkC0;
         if (duration != 0) {
             arg0->unkBC = duration;
             arg0->unk28 = (f32)(duration & 0xFFFF);
@@ -1389,18 +1394,20 @@ void soundPlayerReadNextNote(PlayerCommandState *arg0, s32 arg1) {
 
         if ((arg0->flagE6 != 0) || (duration == 0)) {
             arg0->flagE6 = 0;
-            cmd = *(u8 *)arg0->sequencePos;
-            arg0->sequencePos++;
+            durationPos = (u8 *)arg0->sequencePos;
+            cmd = *durationPos;
+            durationPos++;
+            arg0->sequencePos = (s32)durationPos;
             if (cmd < 0x80) {
                 arg0->unkBC = cmd;
                 arg0->unk28 = (f32)cmd;
             } else {
                 duration = (cmd & 0x7F) << 8;
                 arg0->unkBC = duration;
-                duration += *(u8 *)arg0->sequencePos;
-                arg0->sequencePos++;
+                duration += *durationPos;
                 arg0->unkBC = duration;
                 arg0->unk28 = (f32)(duration & 0xFFFF);
+                arg0->sequencePos = (s32)(durationPos + 1);
             }
         }
 
@@ -1419,7 +1426,7 @@ void soundPlayerReadNextNote(PlayerCommandState *arg0, s32 arg1) {
                 arg0->unkCC = entry[-0x30];
                 arg0->unkF2 = entry[-0x2E] / 2;
                 soundPlayerLoadEnvelope(arg0, arg0->data->commands + (entry[-0x2F] * 7));
-                arg0->unkFE = entry[-0x2D];
+                arg0->unkFE = ((u8 *)arg0->jumpTarget + (arg0->unkFE * 4))[-0x2D];
             }
 
             soundIndex = arg0->unkCC;
@@ -1446,10 +1453,10 @@ void soundPlayerReadNextNote(PlayerCommandState *arg0, s32 arg1) {
             }
             soundPlayerApplyPitch(arg0, arg1);
             soundPlayerApplyVolumeAndPan(arg0, arg1);
-            cmd = arg0->unkF3;
-            if (arg0->unkE2 != cmd) {
-                arg0->unkE2 = cmd;
-                alSynSetFXMix(&gAudioSynthesizer, (ALVoice *)(gSoundPlayerVoices + (arg1 * 0x1C)), cmd);
+            fxMix = arg0->unkF3;
+            if (arg0->unkE2 != fxMix) {
+                arg0->unkE2 = fxMix;
+                alSynSetFXMix(&gAudioSynthesizer, (ALVoice *)(gSoundPlayerVoices + (arg1 * 0x1C)), fxMix);
             }
         } else if (arg0->padF4[4] < 4) {
             arg0->padF4[4] = 4;
