@@ -1326,10 +1326,10 @@ void func_80077554(void) {
     }
     ((Unk80043040 *)asset)->unk0 = 0;
     one = 1;
-    D_80121D80[0].unk4 = 0;
-    D_80121D80[1].unk4 = one;
-    D_80121D80[2].unk4 = one;
-    D_80121D80[3].unk4 = one;
+    D_80121D80[0].isCpu = 0;
+    D_80121D80[1].isCpu = one;
+    D_80121D80[2].isCpu = one;
+    D_80121D80[3].isCpu = one;
     D_80121D80[0].unk13 = one;
     D_80121D80[1].unk13 = 0;
     D_80121D80[2].unk13 = 0;

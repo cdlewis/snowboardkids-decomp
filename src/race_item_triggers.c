@@ -35,7 +35,7 @@ void func_800849E0(RaceInputPlayer *player) {
     s32 angle;
 
     trigger = 0;
-    if (player->unk4 == 0) {
+    if (player->isCpu == 0) {
         if (player->currentInputFlags & 0x2000) {
             trigger = 1;
         }
@@ -53,7 +53,7 @@ void func_800849E0(RaceInputPlayer *player) {
             trigger = 0;
             otherPlayer = D_80121D80;
             do {
-                if (otherPlayer->unk4 == 0) {
+                if (otherPlayer->isCpu == 0) {
                     deltaX = otherPlayer->posX - player->posX;
                     deltaZ = otherPlayer->posZ - player->posZ;
                     if ((deltaX < 0x6000000) && (deltaX >= -0x5FFFFFF) &&
@@ -122,7 +122,7 @@ void func_80084D74(RaceInputPlayer *player) {
     s32 type;
 
     trigger = 0;
-    if (player->unk4 == 0) {
+    if (player->isCpu == 0) {
         if (player->currentInputFlags & 0x4000) {
             trigger = 1;
         }
@@ -174,7 +174,7 @@ void func_80084D74(RaceInputPlayer *player) {
             }
 
             if (type == 5) {
-                if (player->unk4 == 0) {
+                if (player->isCpu == 0) {
                     func_800716A4(func_80064EAC, 0, 3, (u16) player->playerIndex);
                 }
                 player->actionEffectType = 0;

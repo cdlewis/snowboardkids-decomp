@@ -250,7 +250,7 @@ void func_80087AFC(void) {
                         left = orderI[0];
                         player = &base[right];
                         player2 = &base[left];
-                        if (player->unk509 < player2->unk509) {
+                        if (player->racePosition < player2->racePosition) {
                             orderI[0] = right;
                             orderJ[0] = left;
                         }
@@ -309,7 +309,7 @@ void func_80087AFC(void) {
                 orderI++;
                 rankPtr++;
                 player = &base[right];
-                player->unk509 = i;
+                player->racePosition = i;
                 i++;
                 rankPtr[-1] = player->playerIndex;
             } while (i < playerCount);

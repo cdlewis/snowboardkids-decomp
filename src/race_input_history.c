@@ -350,7 +350,7 @@ s32 func_80084958(RaceInputPlayer *player) {
     s32 temp_v0;
 
     var_v1 = 0;
-    if (player->unk4 != 0) {
+    if (player->isCpu != 0) {
         sp18 = 0;
         var_v1 = sp18;
         if (!(func_800430D0() & 3)) {

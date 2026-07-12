@@ -369,3 +369,5 @@ __osViIntrCount = 0x8015F2BC;
 __osTimerCounter = 0x8015F2C0;
 __osThreadSave = 0x8015F2D0;
 leoDiskStack = 0x8015F480;
+sItemEffectTierTable = 0x800D9498; // rom:0xDA098 size:0x40
+sActionEffectTierTable = 0x800D94D8; // rom:0xDA0D8 size:0x40

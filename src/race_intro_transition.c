@@ -114,10 +114,10 @@ void func_8003E600(void) {
     D_80121B5E = courseEntry->unk2;
     func_80043184();
     players = D_80121D80;
-    players[0].unk4 = 0;
-    players[1].unk4 = 0;
-    players[2].unk4 = 0;
-    players[3].unk4 = 0;
+    players[0].isCpu = 0;
+    players[1].isCpu = 0;
+    players[2].isCpu = 0;
+    players[3].isCpu = 0;
     courseEntry = &D_800BB834[D_800BB830];
     players[0].unk11 = 6;
     players[1].unk11 = 6;

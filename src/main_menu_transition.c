@@ -186,10 +186,10 @@ void func_8003F864(void) {
     func_80043184();
 
     players = D_80121D80;
-    players[0].unk4 = 0;
-    players[1].unk4 = 0;
-    players[2].unk4 = 0;
-    players[3].unk4 = 0;
+    players[0].isCpu = 0;
+    players[1].isCpu = 0;
+    players[2].isCpu = 0;
+    players[3].isCpu = 0;
     players[0].characterId = 0;
     players[1].characterId = 1;
     players[2].characterId = 2;
@@ -407,10 +407,10 @@ void func_8004002C(void) {
     D_800EC9C2 = 0;
     D_80121B5E = 0;
 
-    D_80121D80[0].unk4 = 0;
-    D_80121D80[1].unk4 = 1;
-    D_80121D80[2].unk4 = 1;
-    D_80121D80[3].unk4 = 1;
+    D_80121D80[0].isCpu = 0;
+    D_80121D80[1].isCpu = 1;
+    D_80121D80[2].isCpu = 1;
+    D_80121D80[3].isCpu = 1;
     D_80121D80[0].characterId = (D_80121D80[0].unk11 = 0);
     D_80121D80[1].characterId = 1;
     D_80121D80[2].characterId = 2;

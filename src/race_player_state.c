@@ -279,16 +279,16 @@ void func_8008C098(RaceInputPlayer *player) {
     player->unk280 = 0x80000;
     player->unk284 = 0xE0000;
     func_8008BF5C(player);
-    if (player->unk4 != 0) {
+    if (player->isCpu != 0) {
         player->unk274 = 0x10000;
     }
-    if ((player->unk4 != 0) && (player->characterId == 5)) {
+    if ((player->isCpu != 0) && (player->characterId == 5)) {
         player->unk274 = 0xC0000;
     }
     if (D_800EC9C2 == 2) {
         player->actionEffectType = 1;
     }
-    if (player->unk4 == 0) {
+    if (player->isCpu == 0) {
         player->unk519 = 6;
     }
     if ((D_800EC9C2 == 1) && (D_80121B5E == 1)) {
@@ -298,7 +298,7 @@ void func_8008C098(RaceInputPlayer *player) {
         player->posZ = -0xBD0000;
     }
     player->unk68 = 0xC0000;
-    if ((player->unk4 == 0) && (player->soundDisabled == 0) && (D_80121B58 == 0) &&
+    if ((player->isCpu == 0) && (player->soundDisabled == 0) && (D_80121B58 == 0) &&
         (player->unk27C != player->unk278)) {
         func_800716A4(func_80057810, 0, 0x64, player->playerIndexU16);
     }
@@ -572,7 +572,7 @@ void func_8008D09C(RaceInputPlayer *player) {
         speed = -0x4000;
     }
 
-    if (player->unk4 != 0) {
+    if (player->isCpu != 0) {
         func_800815D4(player->unk502, player->posX, player->posZ, &targetX, &targetZ, (s8) player->unk17,
                       (u16) player->playerIndex);
         turn = (func_8004940C(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
@@ -628,7 +628,7 @@ void func_8008D09C(RaceInputPlayer *player) {
         turn = -turn;
     }
 
-    if (player->unk4 == 0) {
+    if (player->isCpu == 0) {
         spawn = &D_800B9540[D_80121B50];
         if ((player->unk502 == spawn->unk0) && !(player->stateFlags & 0x40)) {
             surfaceCue = (s16)(((func_8004940C(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
@@ -715,7 +715,7 @@ void func_8008D09C(RaceInputPlayer *player) {
             func_80082F44(player);
         }
 
-        if (player->unk4 == 0) {
+        if (player->isCpu == 0) {
             steerAngle = 0;
             bankRate = (-turn * 0x10 * player->unk268) / 0x100;
             interpolated = (((player->unk270 - player->unk26C) * (0x3F - player->unk2F8)) / 0x20) + player->unk26C;
@@ -771,7 +771,7 @@ void func_8008D09C(RaceInputPlayer *player) {
         func_8008B73C(player, 0, rotation, player->unk274, player->unk278, player->unk27C);
 
         if (player->unk57A == 0) {
-            if (player->unk4 == 0) {
+            if (player->isCpu == 0) {
                 if (player->inputFlags & 0x8000) {
                     player->mode = 2;
                     player->updateState = 0;
@@ -881,7 +881,7 @@ void func_8008DC2C(RaceInputPlayer *player) {
 
     if (player->subState == 0) {
         func_800849E0(player);
-        if (player->unk4 == 0) {
+        if (player->isCpu == 0) {
             if (player->stickX > 0) {
                 player->facingAngle -= 0x18;
             }
@@ -938,7 +938,7 @@ void func_8008DE1C(RaceInputPlayer *player) {
 
     if (player->subState == 0) {
         func_800849E0(player);
-        if (player->unk4 == 0) {
+        if (player->isCpu == 0) {
             if (player->stickX > 0) {
                 player->facingAngle -= 0x18;
             }
@@ -999,7 +999,7 @@ void func_8008E008(RaceInputPlayer *player) {
         player->unk336 = 0;
     }
 
-    if (player->unk4 == 0) {
+    if (player->isCpu == 0) {
         spawn = &D_800B9540[D_80121B50];
         if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
             velocityY = (s16) (((func_8004940C(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
@@ -1053,7 +1053,7 @@ void func_8008E008(RaceInputPlayer *player) {
         player->updateState++;
     }
 
-    if ((player->unk4 == 0) && !(player->inputFlags & 0x8000)) {
+    if ((player->isCpu == 0) && !(player->inputFlags & 0x8000)) {
         player->stateFlags &= ~0x10;
     }
 
@@ -1101,7 +1101,7 @@ void func_8008E350(RaceInputPlayer *player) {
     u32 flags;
     s8 turnTimer;
 
-    if (player->unk4 == 0) {
+    if (player->isCpu == 0) {
         spawn = &D_800B9540[D_80121B50];
         if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
             surfaceCue = (s16)(((func_8004940C(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
@@ -1150,7 +1150,7 @@ void func_8008E350(RaceInputPlayer *player) {
     }
 
     if (player->stateFlags & 0x10) {
-        if (player->unk4 == 0) {
+        if (player->isCpu == 0) {
             if (!(player->inputFlags & 0x8000)) {
                 player->stateFlags &= ~0x10;
             }
@@ -1368,7 +1368,7 @@ void func_8008F204(RaceInputPlayer *player) {
     player->subStateStep = 0;
     player->unk2A2 = 0;
     player->unk2A4 = 0;
-    if (player->unk4 == 0) {
+    if (player->isCpu == 0) {
         if (player->currentInputFlags & 1) {
             player->subStateTimer = 1;
             player->unk2A2 = 1;
@@ -3429,7 +3429,7 @@ void func_80093304(RaceInputPlayer *player) {
         player->stateFlags |= 0x1012000;
         player->unk60 = 0;
         player->stateTimer = stateTimer;
-        player->stateTimer = stateTimer - ((player->stateTimer * player->unk509) / 8);
+        player->stateTimer = stateTimer - ((player->stateTimer * player->racePosition) / 8);
         player->actionEffectLevel = 1;
         player->actionEffectFrame = 0;
     }
@@ -3569,7 +3569,7 @@ void func_800936D4(RaceInputPlayer *player) {
         timer = player->stateTimer;
         player->actionEffectLevel = 2;
         player->actionEffectFrame = 0;
-        player->stateTimer = timer - ((timer * player->unk509) / 8);
+        player->stateTimer = timer - ((timer * player->racePosition) / 8);
         func_80081E40(player, 0x20);
     }
 
@@ -3691,7 +3691,7 @@ void func_800939E0(RaceInputPlayer *player) {
         case 2:
             if (func_80082EC0(player) != 0) {
                 player->updateState++;
-                player->stateTimer = 0x3C - ((player->unk509 * 0x3C) / 8);
+                player->stateTimer = 0x3C - ((player->racePosition * 0x3C) / 8);
                 func_80081E40(player, 0x20);
             }
             func_8008B408(player, player->unk254, 0);
@@ -3806,7 +3806,7 @@ void func_80093E0C(RaceInputPlayer *player) {
     case 2:
         if (func_80082EC0(player) != 0) {
             player->updateState++;
-            player->stateTimer = 0x3C - ((player->unk509 * 0x3C) / 8);
+            player->stateTimer = 0x3C - ((player->racePosition * 0x3C) / 8);
             func_80081E40(player, 0x20);
         }
         func_8008B408(player, player->unk254, 0);
@@ -3964,7 +3964,7 @@ void func_80094480(RaceInputPlayer *player) {
         player->stateFlags |= 0x1022000;
         player->unk60 = 0;
         player->unk80 = 0;
-        player->stateTimer = 0x1E - ((player->unk509 * 0x1E) / 8);
+        player->stateTimer = 0x1E - ((player->racePosition * 0x1E) / 8);
         player->actionEffectLevel = 1;
         player->actionEffectFrame = 0;
     }
@@ -4171,7 +4171,7 @@ void func_80094A94(RaceInputPlayer *player) {
         player->unk40.y = 0;
         func_800716A4(func_8005FB30, 0, 0x64, (u16) player->playerIndex);
         timer = player->stateTimer;
-        player->stateTimer = timer - ((player->stateTimer * player->unk509) / 8);
+        player->stateTimer = timer - ((player->stateTimer * player->racePosition) / 8);
         player->actionEffectLevel = 4;
         player->actionEffectFrame = 0;
     }
@@ -4245,7 +4245,7 @@ void func_80094BEC(RaceInputPlayer *player) {
         player->unk40.y = 0;
         player->actionEffectLevel = 6;
         player->actionEffectFrame = 0;
-        player->stateTimer = timer - ((timer * player->unk509) / 8);
+        player->stateTimer = timer - ((timer * player->racePosition) / 8);
         /* fallthrough */
     case 1:
         temp_2d6 = player->unk2D6;
@@ -4309,7 +4309,7 @@ void func_80094DF8(RaceInputPlayer *player) {
         func_800716A4(func_800617C8, 0, 0x3C, (u16) player->playerIndex);
         stateTimer = player->stateTimer;
         player->stateTimer = stateTimer;
-        player->stateTimer = player->stateTimer - ((stateTimer * player->unk509) / 8);
+        player->stateTimer = player->stateTimer - ((stateTimer * player->racePosition) / 8);
         player->actionEffectLevel = 4;
         player->actionEffectFrame = 0;
     }
@@ -4805,12 +4805,12 @@ void func_80095BE4(RaceInputPlayer *player) {
         player->updateTimer = 0;
         player->stateFlags = 0;
 
-        if (player->unk509 == 1) {
+        if (player->racePosition == 1) {
             player->posX = nextX + player->unk40.x;
             player->posZ = nextZ + player->unk40.z;
         }
 
-        slideLevel = player->unk509;
+        slideLevel = player->racePosition;
         if (slideLevel == 2) {
             player->posX += player->unk40.x * 2;
             player->posZ += player->unk40.z * 2;
@@ -5018,7 +5018,7 @@ void func_8009652C(RaceInputPlayer *player) {
     }
     if (player->stateTimer == 0) {
         if (D_800EC9C2 == 0) {
-            if (player->unk509 == 0) {
+            if (player->racePosition == 0) {
                 player->updateState = 2;
                 player->updateTimer = 0;
             } else {

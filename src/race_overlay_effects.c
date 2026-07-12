@@ -167,8 +167,8 @@ extern void func_80072A74(s32, void *, s32, s32);
 extern s16 func_8007D200(s16, s32, s32);
 extern s32 func_80080CC4(s16, s32, s32);
 extern void func_80089000(void *, s32, s32);
-extern u8 D_800D9498[][0x10];
-extern u8 D_800D94D8[][0x10];
+extern u8 sItemEffectTierTable[][0x10];
+extern u8 sActionEffectTierTable[][0x10];
 extern RaceOverlayEffectSpawn D_800D9518[];
 extern RaceOverlayEffectSpawn *D_800D92D0[];
 extern Vec3i D_800D9BD8[];
@@ -974,7 +974,7 @@ loop:
 
         player = &D_80121D80[i];
         found = 1;
-        if ((player->unk568 < 0x64) && (player->unk4 == 0)) {
+        if ((player->unk568 < 0x64) && (player->isCpu == 0)) {
             goto next;
         }
 
@@ -985,19 +985,37 @@ loop:
             player->unk568 = 0;
         }
 
+        // arg0->variant distinguishes the two item box colors: one branch resolves a held
+        // item (itemEffectType), the other an immediate action/ability (actionEffectType).
+        // Both tables are indexed by [racePosition][rollIndex], where rollIndex comes from
+        // func_80043160 walking a per-player counter through the shared byte table
+        // D_800D3F00 (see asset_decompression.c) - each player advances their own counter
+        // independently by 1 every time they draw an item/action, regardless of box color.
+        // Empirically (see race_input_history.h racePosition/isCpu), lower racePosition
+        // (closer to 1st) skews toward the more common/weaker tier values, while higher
+        // racePosition (further back) skews toward the rarer/stronger tiers - classic
+        // rubber-banding. The tier values (currently 1-6) are not yet mapped to concrete
+        // named items/actions.
         if (arg0->variant == 0) {
-            player->itemEffectType = D_800D9498[player->unk509][func_80043160((RandomStateObject *)player) & 0xF];
+            player->itemEffectType = sItemEffectTierTable[player->racePosition][func_80043160((RandomStateObject *)player) & 0xF];
             if (D_80121B5A != 0) {
                 player->itemEffectType = 1;
             }
             player->itemEffectCount = 3;
             player->pad513[0] = maxPlayers;
         } else {
-            player->actionEffectType = D_800D94D8[player->unk509][func_80043160((RandomStateObject *)player) & 0xF];
+            player->actionEffectType = sActionEffectTierTable[player->racePosition][func_80043160((RandomStateObject *)player) & 0xF];
             if (D_80121B5A != 0) {
                 player->actionEffectType = 1;
             }
-            if ((D_80121B50 == 8) && (player->unk4 != 0) && (player->actionEffectType == maxPlayers)) {
+            // Course index 8 special case, CPU opponents only (isCpu != 0; the human
+            // player at index 0 is always isCpu == 0 - see race_flow.c/main_menu_transition.c
+            // player init). When a CPU's action roll lands on the common tier-4 result,
+            // there is a near-certain (255/256) chance to upgrade it to the rarer tier 6.
+            // This course is also special-cased purely cosmetically elsewhere (see the
+            // D_80121B50 != 8 model swap in race_course_effects.c), suggesting it is a
+            // distinct/final course with its own catch-up tuning for AI opponents.
+            if ((D_80121B50 == 8) && (player->isCpu != 0) && (player->actionEffectType == maxPlayers)) {
                 if (func_800430D0() != 0) {
                     player->actionEffectType = 6;
                 }

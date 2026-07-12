@@ -20,7 +20,7 @@ typedef struct {
         u16 playerIndexU;
     };
     /* 0x002 */ char pad2[2];
-    /* 0x004 */ u8 unk4;
+    /* 0x004 */ u8 isCpu;
     /* 0x005 */ char pad5[0xB];
     /* 0x010 */ u8 characterId;
     /* 0x011 */ u8 unk11;
@@ -180,7 +180,7 @@ typedef struct {
     /* 0x502 */ s16 unk502;
     /* 0x504 */ s32 unk504;
     /* 0x508 */ s8 unk508;
-    /* 0x509 */ s8 unk509;
+    /* 0x509 */ s8 racePosition;
     /* 0x50A */ char pad50A[6];
     /* 0x510 */ s16 shieldEffectTimer;
     /* 0x512 */ s8 itemEffectType;

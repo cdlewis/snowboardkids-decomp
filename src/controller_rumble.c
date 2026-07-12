@@ -17,7 +17,7 @@ void func_800830C0(RaceInputPlayer *arg0) {
     s32 fastPatternId;
     u8 *pattern;
 
-    if (arg0->unk4 != 0) {
+    if (arg0->isCpu != 0) {
         return;
     }
     if (arg0->soundDisabled != 0) {

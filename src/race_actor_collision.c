@@ -527,7 +527,7 @@ block_104:
             break;
         case 11:
             D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
-            if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
+            if (D_80121D80[arg0->unk2D2 & 3].isCpu != 0) {
                 func_8008BBB8(arg0, 2);
             } else {
                 func_8008BBB8(arg0, 3);
@@ -537,7 +537,7 @@ block_104:
             goto block_104;
         case 12:
             D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
-            if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
+            if (D_80121D80[arg0->unk2D2 & 3].isCpu != 0) {
                 func_8008BBB8(arg0, 2);
             } else {
                 func_8008BBB8(arg0, 3);
@@ -547,7 +547,7 @@ block_104:
             goto block_104;
         case 13:
             D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
-            if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
+            if (D_80121D80[arg0->unk2D2 & 3].isCpu != 0) {
                 func_8008BBB8(arg0, 2);
             } else {
                 func_8008BBB8(arg0, 3);
@@ -562,7 +562,7 @@ block_104:
             goto block_104;
         case 15:
             D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
-            if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
+            if (D_80121D80[arg0->unk2D2 & 3].isCpu != 0) {
                 func_8008BBB8(arg0, 2);
             } else {
                 func_8008BBB8(arg0, 3);
@@ -573,7 +573,7 @@ block_104:
         case 16:
         case 17:
             if (D_80121D50 == 0x11) {
-                if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
+                if (D_80121D80[arg0->unk2D2 & 3].isCpu != 0) {
                     func_8008BBB8(arg0, 2);
                 } else {
                     func_8008BBB8(arg0, 3);
@@ -589,7 +589,7 @@ block_104:
             goto block_104;
         case 3:
             D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
-            if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
+            if (D_80121D80[arg0->unk2D2 & 3].isCpu != 0) {
                 func_8008BBB8(arg0, 2);
             } else {
                 func_8008BBB8(arg0, 3);

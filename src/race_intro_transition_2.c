@@ -115,10 +115,10 @@ void func_8003ED00(void) {
     D_80121B5B = 0;
 
     players = D_80121D80;
-    players[0].unk4 = 0;
-    players[1].unk4 = 0;
-    players[2].unk4 = 0;
-    players[3].unk4 = 0;
+    players[0].isCpu = 0;
+    players[1].isCpu = 0;
+    players[2].isCpu = 0;
+    players[3].isCpu = 0;
     players[0].characterId = 0;
     players[1].characterId = one;
     players[2].characterId = two;
