@@ -272,8 +272,8 @@ void initRaceCourseSceneTasks(void) {
         createCallbackTask(&initRaceCourseModelRenderTask, 0, 0x64);
         createCallbackTask(&initRaceCourseSceneryObjects, 0, 0x64);
         createCallbackTask(&initCourseGateObject, 0, 0x64);
-        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 0);
-        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initRaceCourseRankModel, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&initRaceCourseRankModel, 0, 0x64, 1);
         createCallbackTaskWithUserId(&initCourseBillboardMarker, 0, 0x64, 0);
         if ((gRaceSplitscreenMode == 0) && (gRaceDemoPlaybackEnabled == 0) && (gTrainingCourseLesson == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
@@ -296,10 +296,10 @@ void initRaceCourseSceneTasks(void) {
         }
         if (gRaceSplitscreenMode == 1) {
             if (gRaceTypeSelection == 0) {
-                createCallbackTask(&func_80065764, 0, 0x64);
+                createCallbackTask(&initRaceCourseCoinMarkers, 0, 0x64);
             }
             if (gRaceTypeSelection == 1) {
-                createCallbackTask(&func_800666B0, 0, 1);
+                createCallbackTask(&initRaceScoreAttackRings, 0, 1);
             }
         }
         if (gRaceSplitscreenMode == 1) {
@@ -325,14 +325,14 @@ block_24:
         spawnPatrolCourseObject(0x17, 0xF3EFF851, 0xE8BCCFE0, 0xF5650CCB, 0xE9A4FC34);
         spawnPatrolCourseObject(0x17, 0xF6BEB9D1, 0xEA69C4DE, 0xF6F1B095, 0xEBF8B05E);
         createCallbackTask(&initRaceCourseSceneryObjects, 0, 0x64);
-        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 6);
-        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 7);
+        createCallbackTaskWithUserId(&initRaceCourseSlideSprite, 0, 0x64, 6);
+        createCallbackTaskWithUserId(&initRaceCourseSlideSprite, 0, 0x64, 7);
         createCallbackTaskWithUserId(&initCourseTriggerVolume, 0, 0x64, 0);
         createCallbackTaskWithUserId(&initRaceCoursePropModels, 0, 0x64, 0);
         createCallbackTask(&initCourseGateObject, 0, 0x64);
         createCallbackTaskWithUserId(&updateThrownPickupSpawner, 0, 0x64, 0);
         createCallbackTaskWithUserId(&updateThrownPickupSpawner, 0, 0x64, 1);
-        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initRaceCourseRankModel, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
@@ -355,10 +355,10 @@ block_24:
         }
         if (gRaceSplitscreenMode == 1) {
             if (gRaceTypeSelection == 0) {
-                createCallbackTask(&func_80065764, 0, 0x64);
+                createCallbackTask(&initRaceCourseCoinMarkers, 0, 0x64);
             }
             if (gRaceTypeSelection == 1) {
-                createCallbackTask(&func_800666B0, 0, 1);
+                createCallbackTask(&initRaceScoreAttackRings, 0, 1);
             }
         }
         setBootFadeColor(0xFFU, 0x80U, 0U);
@@ -367,9 +367,9 @@ block_24:
         createCallbackTask(&initRaceCourseModelRenderTask, 0, 0x64);
         createCallbackTask(&initRaceCourseSceneryObjects, 0, 0x64);
         createCallbackTask(&initCourseGateObject, 0, 0x64);
-        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 2);
-        createCallbackTaskWithUserId(&func_80063980, 0, 0x64, 0);
-        createCallbackTaskWithUserId(&func_80063980, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initRaceCourseSlideSprite, 0, 0x64, 2);
+        createCallbackTaskWithUserId(&initCourseStartFinishSprite, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&initCourseStartFinishSprite, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
@@ -396,7 +396,7 @@ block_24:
         createCallbackTask(&initCourseGateObject, 0, 0x64);
         createCallbackTaskWithUserId(&initCourseBillboardMarker, 0, 0x64, 1);
         createCallbackTaskWithUserId(&initCourseBillboardMarker, 0, 0x64, 2);
-        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initRaceCourseRankModel, 0, 0x64, 1);
         createCallbackTask(&initRaceIntroModelMeshes, 0, 0x64);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
@@ -433,9 +433,9 @@ block_24:
         createCallbackTaskWithUserId(&func_80061428, 0, 0x64, 0);
         createCallbackTaskWithUserId(&func_800631B0, 0, 0x64, 0);
         createCallbackTaskWithUserId(&func_80063470, 0, 0x64, 0);
-        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 4);
-        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 5);
-        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initRaceCourseSlideSprite, 0, 0x64, 4);
+        createCallbackTaskWithUserId(&initRaceCourseSlideSprite, 0, 0x64, 5);
+        createCallbackTaskWithUserId(&initRaceCourseRankModel, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
@@ -455,24 +455,24 @@ block_24:
                 createCallbackTaskWithUserId(&initRacePickup, 0, 0x64, 0x60);
             }
         }
-        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 0);
-        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 1);
-        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 2);
-        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 3);
-        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 4);
-        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 5);
-        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 6);
-        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 7);
-        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 8);
-        createCallbackTaskWithUserId(&func_80062ED4, 0, 0x64, 9);
+        createCallbackTaskWithUserId(&initIceCourseBumper, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&initIceCourseBumper, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initIceCourseBumper, 0, 0x64, 2);
+        createCallbackTaskWithUserId(&initIceCourseBumper, 0, 0x64, 3);
+        createCallbackTaskWithUserId(&initIceCourseBumper, 0, 0x64, 4);
+        createCallbackTaskWithUserId(&initIceCourseBumper, 0, 0x64, 5);
+        createCallbackTaskWithUserId(&initIceCourseBumper, 0, 0x64, 6);
+        createCallbackTaskWithUserId(&initIceCourseBumper, 0, 0x64, 7);
+        createCallbackTaskWithUserId(&initIceCourseBumper, 0, 0x64, 8);
+        createCallbackTaskWithUserId(&initIceCourseBumper, 0, 0x64, 9);
         setBootFadeColor(0U, 0U, 0x40U);
         break;
     case 5:
         createCallbackTask(&initRaceCourseModelRenderTask, 0, 0x64);
-        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 0);
-        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initRaceCourseSlideSprite, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&initRaceCourseSlideSprite, 0, 0x64, 1);
         createCallbackTask(&initRaceCourseSceneryObjects, 0, 0x64);
-        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initRaceCourseRankModel, 0, 0x64, 1);
         createCallbackTask(&initCourseGateObject, 0, 0x64);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
@@ -508,7 +508,7 @@ block_24:
         createCallbackTaskWithUserId(&initRaceIntroBillboard, 0, 0x64, 0);
         createCallbackTaskWithUserId(&initRaceIntroBillboard, 0, 0x64, 1);
         createCallbackTaskWithUserId(&initRaceIntroBillboard, 0, 0x64, 2);
-        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initRaceCourseRankModel, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
@@ -535,7 +535,7 @@ block_24:
         break;
     case 7:
         createCallbackTask(&initRaceCourseModelRenderTask, 0, 0x64);
-        createCallbackTaskWithUserId(&func_80057600, 0, 0x64, 3);
+        createCallbackTaskWithUserId(&initRaceCourseSlideSprite, 0, 0x64, 3);
         createCallbackTaskWithUserId(&initCourseTriggerVolume, 0, 0x64, 1);
         createCallbackTask(&initRaceCourseSceneryObjects, 0, 0x64);
         setBootFadeColor(0xFFU, 0xFFU, 0xFFU);
@@ -544,7 +544,7 @@ block_24:
         createCallbackTask(&initRaceCourseModelRenderTask, 0, 0x64);
         createCallbackTask(&initRaceCourseSceneryObjects, 0, 0x64);
         createCallbackTask(&initCourseGateObject, 0, 0x64);
-        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initRaceCourseRankModel, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
@@ -565,7 +565,7 @@ block_24:
         createCallbackTask(&initRaceCourseSceneryObjects, 0, 0x64);
         createCallbackTask(&initCourseGateObject, 0, 0x64);
         createCallbackTask(&initRaceIntroAnimatedBillboards, 0, 0x64);
-        createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
+        createCallbackTaskWithUserId(&initRaceCourseRankModel, 0, 0x64, 1);
         if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0) && ((gTrainingCourseLesson == 0) || (gTrainingCourseLesson == 7) || (gTrainingCourseLesson == 8))) {
             if (sp2C != 0) {
                 createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
@@ -581,10 +581,10 @@ block_24:
         }
         if (gRaceSplitscreenMode == 1) {
             if (gRaceTypeSelection == 0) {
-                createCallbackTask(&func_80065764, 0, 0x64);
+                createCallbackTask(&initRaceCourseCoinMarkers, 0, 0x64);
             }
             if (gRaceTypeSelection == 1) {
-                createCallbackTask(&func_800666B0, 0, 1);
+                createCallbackTask(&initRaceScoreAttackRings, 0, 1);
             }
         }
         setBootFadeColor(0x20U, 0x40U, 0x50U);
