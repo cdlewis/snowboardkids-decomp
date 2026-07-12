@@ -296,7 +296,7 @@ loop_24:
 }
 #endif
 
-// initCharacterSelectCourseMenuFromPlayerSelect best match: 83.266% (nonmatchings/initCharacterSelectCourseMenuFromPlayerSelect-2127290767680699791/base_5.c)
+// initCharacterSelectCourseMenuFromPlayerSelect best match: 92.119% (nonmatchings/initCharacterSelectCourseMenuFromPlayerSelect-8331816093655448999/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/initCharacterSelectCourseMenuFromPlayerSelect.s")
 
 #ifdef NON_MATCHING
@@ -304,6 +304,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     s32 sp2C;
     s16 *var_v0_2;
     s16 *var_v1_2;
+    s16 *activeOptions;
     s32 var_v1;
     s32 var_v0_3;
     u8 temp_v1;
@@ -359,21 +360,24 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
+            activeOptions = gCharacterSelectShortCourseOptions;
             if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
                 gRaceCourseIndex = 9;
             }
         } else {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
+            activeOptions = gCharacterSelectSingleCourseOption;
             gRaceCourseIndex = 7;
         }
     } else {
         gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
+        activeOptions = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
         if (gRaceCourseIndex == -1) {
             gRaceCourseIndex = 9;
         }
     }
 
-    var_v0_2 = *gCharacterSelectActiveCourseOptions;
+    var_v0_2 = activeOptions;
 loop_20:
     if (gRaceCourseIndex == *var_v0_2) {
         gRaceCourseIndex = var_v1;
@@ -387,7 +391,7 @@ loop_20:
 
     gCharacterSelectCourseExitOptionIndex = 0;
     var_v0_3 = 0;
-    var_v1_2 = *gCharacterSelectActiveCourseOptions;
+    var_v1_2 = activeOptions;
 loop_24:
     var_v0_3 += 2;
     if (*var_v1_2 != -1) {
