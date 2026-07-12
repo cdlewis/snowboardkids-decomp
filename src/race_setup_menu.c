@@ -7,7 +7,7 @@
 #include "race_setup_ui.h"
 #include "viewport_manager.h"
 
-// initRaceSetupMenu best match: 98.611% (nonmatchings/initRaceSetupMenu-5743805732885129799/base_4.c)
+// initRaceSetupMenu best match: 98.403% (nonmatchings/initRaceSetupMenu-8331816093655448999/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/initRaceSetupMenu.s")
 
 #ifdef NON_MATCHING
@@ -35,7 +35,7 @@ extern s8 D_800EC8B5;
 extern s8 D_800EC8B6;
 extern s8 D_800EC8B7;
 extern u8 gMenuSelectionConfirmTimer;
-extern s8 D_800EC9E5;
+extern char D_800EC9E5;
 extern s8 gCourseSelectModeSelection;
 extern CallbackTask *gActiveMenuTask;
 extern u16 gMenuInputRepeatTimers;
