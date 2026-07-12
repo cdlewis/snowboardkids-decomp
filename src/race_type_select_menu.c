@@ -32,7 +32,7 @@ extern u8 D_5D4280;
 
 extern CharacterSelectFlowState *gCurrentGameTask;
 extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
-extern s8 gMenuSelectionConfirmTimer;
+extern u8 gMenuSelectionConfirmTimer;
 extern u8 gMenuTransitionState;
 extern s32 gActiveMenuTask;
 extern u8 gMenuExitSelection;
@@ -105,7 +105,7 @@ void initRaceTypeSelectMenu(void) {
     gRaceTypeSelectCursorTarget.alpha = 0;
 }
 
-// updateRaceTypeSelectMenu best match: 90.782% (nonmatchings/updateRaceTypeSelectMenu-7273315160691878794/base_12.c)
+// updateRaceTypeSelectMenu best match: 92.820% (nonmatchings/updateRaceTypeSelectMenu-3357475854818838508/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_type_select_menu/updateRaceTypeSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -119,6 +119,7 @@ void updateRaceTypeSelectMenu(void) {
     s32 previousSelection;
     s32 tempSelection;
     u8 waitTimer;
+    volatile RaceTypeSelectCursorState *cursorTarget;
 
     if (gCurrentGameTask->fade != 0) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
@@ -150,7 +151,7 @@ void updateRaceTypeSelectMenu(void) {
                         }
                         if (selection > 0) {
                             gRaceTypeSelection = tempSelection;
-                            selection = tempSelection;
+                            selection = (u8) tempSelection;
                         }
                     } else {
                         repeatTimer = gMenuInputRepeatTimers;
@@ -162,7 +163,7 @@ void updateRaceTypeSelectMenu(void) {
                             }
                             if (selection < 3) {
                                 gRaceTypeSelection = selection + 1;
-                                selection = selection + 1;
+                                selection = (u8) (selection + 1);
                             }
                         }
                     }
@@ -183,8 +184,9 @@ void updateRaceTypeSelectMenu(void) {
                     if ((heldInput & 0x1000) || ((heldInput & 0x8000) && (gMenuFlowState == 4))) {
                         enqueueSoundEffect(0x18, 0x32);
                         gMenuSelectionConfirmTimer = 1;
-                        gRaceTypeSelectCursorTarget.state = 2;
-                        gRaceTypeSelectCursorTarget.alpha = 0x100;
+                        cursorTarget = &gRaceTypeSelectCursorTarget;
+                        cursorTarget->state = 2;
+                        cursorTarget->alpha = 0x100;
                         gMenuExitSelection = 0;
                     }
                 }
@@ -202,8 +204,9 @@ void updateRaceTypeSelectMenu(void) {
 
         if ((waitTimer == 0) && (gPlayerInputPressed & 0x4000) && (gMenuFlowState == (sp18 + 1))) {
             enqueueSoundEffect(0x18, 0x32);
-            gRaceTypeSelectCursorTarget.state = 2;
-            gRaceTypeSelectCursorTarget.alpha = 0x100;
+            cursorTarget = &gRaceTypeSelectCursorTarget;
+            cursorTarget->state = 2;
+            cursorTarget->alpha = 0x100;
             gMenuSelectionConfirmTimer = 1;
             gMenuExitSelection = 1;
         }
