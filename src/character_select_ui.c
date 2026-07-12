@@ -370,41 +370,40 @@ void initCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
     setCallbackTaskCallback(arg0, updateCharacterSelectPlayerPanelFrames);
 }
 
-// drawCharacterSelectRosterIcons best match: 84.174% (nonmatchings/drawCharacterSelectRosterIcons-7273315160691878794/base.c)
+// drawCharacterSelectRosterIcons best match: 92.225% (nonmatchings/drawCharacterSelectRosterIcons-5802343343535905907/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/drawCharacterSelectRosterIcons.s")
 
 #ifdef NON_MATCHING
 void drawCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
-    RacePlayer *player;
+    s16 *assetHandles;
     s32 i;
     s32 j;
     s32 xOffset;
+    u8 textureIndex;
     u16 tile;
     s32 alpha;
-    u8 textureIndex;
+    s32 selectedAlpha;
 
     i = 0;
     if (arg0->state != 0) {
+        assetHandles = (s16 *)gAssetHandles;
         xOffset = 0;
+        selectedAlpha = 0x60;
         do {
             alpha = 0x100;
             j = 0;
             if (gPlayerCount > 0) {
-                player = D_80121D80;
-loop_4:
-                j++;
-                if ((i == player->playerIndex) && (player->isActive != 0)) {
-                    tile = (i + 0x41) & 0xFFFF;
-                    alpha = 0x60;
-                    textureIndex = 0x1F;
-                } else {
-                    player++;
-                    if (j < gPlayerCount) {
-                        goto loop_4;
+                do {
+                    if ((i == D_80121D80[j].playerIndex) && (D_80121D80[j].isActive != 0)) {
+                        tile = (i + 0x41) & 0xFFFF;
+                        alpha = 0x60;
+                        textureIndex = 0x1F;
+                        break;
                     }
-                }
+                    j++;
+                } while (j < gPlayerCount);
             }
-            if (alpha != 0x60) {
+            if (selectedAlpha != alpha) {
                 textureIndex = 0x21;
                 if (arg0->timer < 0xA) {
                     tile = (i + 0x37) & 0xFFFF;
@@ -413,7 +412,7 @@ loop_4:
                 }
             }
             drawMenuSpriteTile((s16)(arg0->x + xOffset), arg0->y,
-                          getRelocatableHeapBlockBase(*(s16 *)&gAssetHandles[textureIndex * 2]), tile, 0, alpha);
+                          getRelocatableHeapBlockBase(assetHandles[textureIndex]), tile, 0, alpha);
             i++;
             xOffset += 0x20;
         } while (i < 5);
@@ -422,21 +421,17 @@ loop_4:
             alpha = 0x100;
             j = 0;
             if (gPlayerCount > 0) {
-                player = D_80121D80;
-loop_17:
-                j++;
-                if ((player->playerIndex == 5) && (player->isActive != 0)) {
-                    alpha = 0x60;
-                    tile = 0x46;
-                    textureIndex = 0x1F;
-                } else {
-                    player++;
-                    if (j < gPlayerCount) {
-                        goto loop_17;
+                do {
+                    if ((D_80121D80[j].playerIndex == 5) && (D_80121D80[j].isActive != 0)) {
+                        alpha = 0x60;
+                        tile = 0x46;
+                        textureIndex = 0x1F;
+                        break;
                     }
-                }
+                    j++;
+                } while (j < gPlayerCount);
             }
-            if (alpha != 0x60) {
+            if (selectedAlpha != alpha) {
                 textureIndex = 0x21;
                 if (arg0->timer < 0xA) {
                     tile = 0x3C;
@@ -445,7 +440,7 @@ loop_17:
                 }
             }
             drawMenuSpriteTile((s16)(arg0->x - 0x20), arg0->y,
-                          getRelocatableHeapBlockBase(*(s16 *)&gAssetHandles[textureIndex * 2]), tile, 0, alpha);
+                          getRelocatableHeapBlockBase(assetHandles[textureIndex]), tile, 0, alpha);
         }
     }
 }
