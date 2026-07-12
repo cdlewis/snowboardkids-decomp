@@ -112,7 +112,7 @@ void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 viewportIn
     addRenderCallback(&gSceneModelRenderCallbackList, drawMainMenuSceneModel, model);
 }
 
-// initMainMenuSceneModelParts best match: 99.077% at nonmatchings/func_80042AB4-2225551288923588688/base_10.c.
+// initMainMenuSceneModelParts best match: 99.077% at nonmatchings/initMainMenuSceneModelParts-5802343343535905907/base_4.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model_renderer/initMainMenuSceneModelParts.s")
 
 #ifdef NON_MATCHING
@@ -157,26 +157,28 @@ void initMainMenuSceneModelParts(MainMenuSceneModel *model) {
     model->parts[12].displayObjectIndex = 3;
     model->parts[13].displayObjectIndex = 5;
 
-    cursor = gMainMenuSceneModelPartInitDataByModel[model->modelIndex];
-    end = 14; i = 0; writePart = (MainMenuInitPartPair *)model; loop: writePart->half22 = 0;
-    zero = writePart->half22;
-    i += 2;
-    writePart->half20 = zero;
-    writePart->half1E = zero;
-    writePart->word24 = cursor[0] << 16;
-    cursor += 6;
-    writePart++;
-    writePart->word0 = cursor[-5] << 16;
-    writePart->halfE = 0;
-    zero = writePart->halfE;
-    writePart->word4 = cursor[-4] << 16;
-    writePart->halfC = zero;
-    writePart->halfA = zero;
-    writePart->word10 = cursor[-3] << 16;
-    writePart->word14 = cursor[-2] << 16;
-    writePart->word18 = cursor[-1] << 16;
-    if (i != end) {
-        goto loop;
+    cursor = gMainMenuSceneModelPartInitDataByModel[(u16)model->modelIndex];
+    for (end = 14, i = 0, writePart = (MainMenuInitPartPair *)model;;) {
+        writePart->half22 = 0;
+        zero = writePart->half22;
+        i += 2;
+        writePart->half20 = zero;
+        writePart->half1E = zero;
+        writePart->word24 = cursor[0] << 16;
+        cursor += 6;
+        writePart++;
+        writePart->word0 = cursor[-5] << 16;
+        writePart->halfE = 0;
+        zero = writePart->halfE;
+        writePart->word4 = cursor[-4] << 16;
+        writePart->halfC = zero;
+        writePart->halfA = zero;
+        writePart->word10 = cursor[-3] << 16;
+        writePart->word14 = cursor[-2] << 16;
+        writePart->word18 = cursor[-1] << 16;
+        if (i == end) {
+            break;
+        }
     }
 }
 #endif
