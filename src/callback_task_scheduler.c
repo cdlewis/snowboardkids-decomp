@@ -1,6 +1,10 @@
 #include "common.h"
 #include "callback_task_scheduler.h"
 
+typedef struct CallbackTaskGroup {
+    CallbackTask tasks[4];
+} CallbackTaskGroup;
+
 extern CallbackTask *gCurrentCallbackTask;
 extern CallbackTask *gFreeCallbackTaskPool[];
 extern u16 gFreeCallbackTaskCount;
@@ -14,7 +18,78 @@ extern u16 gFreeCallbackTaskType4Count;
 extern CallbackTask gCallbackTaskActiveListSentinel;
 extern CallbackTask *gCallbackTaskActiveListHead;
 
+// initCallbackTaskScheduler best match: 99.412%
 #pragma GLOBAL_ASM("asm/nonmatchings/callback_task_scheduler/initCallbackTaskScheduler.s")
+
+#ifdef NON_MATCHING
+extern CallbackTaskGroup D_80112898;
+extern CallbackTaskGroup D_801129B0;
+extern CallbackTaskGroup D_80112AC8;
+extern CallbackTaskGroup D_80112BE0;
+extern CallbackTaskGroup D_80121820;
+extern void resetRenderCallbackQueues(void);
+
+void initCallbackTaskScheduler(s32 arg0) {
+    CallbackTask **pool;
+    CallbackTaskGroup *task0;
+    CallbackTaskGroup *task1;
+    CallbackTaskGroup *task2;
+    CallbackTaskGroup *task3;
+    CallbackTaskGroup *end;
+
+    gCallbackTaskActiveListHead = NULL;
+    resetRenderCallbackQueues();
+ pool = gFreeCallbackTaskPool; task0 = &D_80112898; task1 = &D_801129B0; task2 = &D_80112AC8; task3 = &D_80112BE0; end = &D_80121820; loop: pool[3] = &task3->tasks[0]; task3++; pool[1] = &task1->tasks[0];
+    pool[2] = &task2->tasks[0];
+    pool[0] = &task0->tasks[0];
+    task0++;
+    task2++;
+    task1++;
+    task0[-1].tasks[1].isActive = 0;
+    task0[-1].tasks[1].callbackTimer = 0;
+    task0[-1].tasks[2].isActive = 0;
+    task0[-1].tasks[2].callbackTimer = 0;
+    task0[-1].tasks[3].isActive = 0;
+    task0[-1].tasks[3].callbackTimer = 0;
+    pool += 4;
+    task0[-1].tasks[0].isActive = 0;
+    task0[-1].tasks[0].callbackTimer = 0;
+    if (task3 != end) {
+        goto loop;
+    }
+
+    gFreeCallbackTaskCount = 0xD8;
+    switch (arg0) {
+    case 0:
+        gFreeCallbackTaskType1Count = 0;
+        gFreeCallbackTaskType2Count = 0;
+        gFreeCallbackTaskType3Count = 0;
+        gFreeCallbackTaskType4Count = 0;
+        gFreeCallbackTaskType5Count = 0;
+        gFreeCallbackTaskType6Count = 0;
+        gFreeCallbackTaskType0Count = 0xD8;
+        break;
+    case 1:
+        gFreeCallbackTaskType1Count = 6;
+        gFreeCallbackTaskType2Count = 6;
+        gFreeCallbackTaskType3Count = 6;
+        gFreeCallbackTaskType4Count = 6;
+        gFreeCallbackTaskType0Count = 0x64;
+        gFreeCallbackTaskType5Count = 0x4C;
+        gFreeCallbackTaskType6Count = 0x10;
+        break;
+    case 2:
+        gFreeCallbackTaskType1Count = 0x18;
+        gFreeCallbackTaskType2Count = 0;
+        gFreeCallbackTaskType3Count = 0;
+        gFreeCallbackTaskType4Count = 0;
+        gFreeCallbackTaskType0Count = 0x64;
+        gFreeCallbackTaskType5Count = 0x4C;
+        gFreeCallbackTaskType6Count = 0x10;
+        break;
+    }
+}
+#endif
 
 // Mirrors the linked list head gCallbackTaskActiveListHead into the global cursor gCurrentCallbackTask,
 // then for each node clears callbackTimer and invokes its callback with a
