@@ -100,7 +100,7 @@ extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
 
 #ifdef NON_MATCHING
-// loadRaceCourseAssets best match: 63.023% at nonmatchings/loadRaceCourseAssets-2225551288923588688/base_4.c.
+// loadRaceCourseAssets best match: 99.693% at nonmatchings/loadRaceCourseAssets-2694253543240320626/base_perm_140.c.
 void loadRaceCourseAssets(void) {
     s32 size;
 
@@ -207,6 +207,8 @@ void loadRaceCourseAssets(void) {
     }
 
     size = D_14B450 - D_147910;
+    if (gRaceCourseModelAssetHandle) {
+    }
     gAssetHandles[10] = allocRelocatableHeapBlock(size);
     lockRelocatableHeapBlock(gAssetHandles[10]);
     dmaReadRom(D_147910, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle), size);
