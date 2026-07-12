@@ -49,7 +49,7 @@ typedef union {
     } fields;
 } CharacterSelectCourseCursorState;
 
-extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, u16, s32);
+extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern CharacterSelectCourseAssetHandles gAssetHandles;
 extern s16 gMenuCommonSpritesAssetHandle;
@@ -2940,7 +2940,7 @@ void initCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) 
     setCallbackTaskCallback(arg0, updateCharacterSelectCourseExitPopup);
 }
 
-// drawCharacterSelectCourseRecordTime best match: 93.301% (nonmatchings/drawCharacterSelectCourseRecordTime-6061209858023118177/base_10.c)
+// drawCharacterSelectCourseRecordTime best match: 93.497% (nonmatchings/drawCharacterSelectCourseRecordTime-2694253543240320626/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/drawCharacterSelectCourseRecordTime.s")
 
 #ifdef NON_MATCHING
@@ -2949,9 +2949,9 @@ extern char D_800E0BA0[];
 extern char D_800E0BA8[];
 
 void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, s32 x, s32 y, s32 alpha) {
-    char buffer[0x60];
     char *ptr;
     char *end;
+    char buffer[0x60];
 
     sprintf(buffer, D_800E0B98, arg0->minutes);
     y = (s16)y;
