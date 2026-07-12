@@ -50,6 +50,7 @@ extern s16 gCharacterSelectShortCourseOptions[];
 extern s16 gCharacterSelectSingleCourseOption[];
 extern CharacterSelectFlowState *gCurrentGameTask;
 extern s8 gFramebufferSwapDelay;
+extern f32 D_800E09A0;
 extern f32 D_800E09A4;
 extern s16 gMenuFadeAlpha;
 extern CharacterSelectSaveData gGameSaveDataBuffer[];
@@ -182,7 +183,7 @@ loop_24:
 }
 #endif
 
-// initCharacterSelectCourseMenuFromRace best match: 84.441% (nonmatchings/initCharacterSelectCourseMenuFromRace-8207005055717715604/base_1.c)
+// initCharacterSelectCourseMenuFromRace best match: 84.482% (nonmatchings/initCharacterSelectCourseMenuFromRace-2694253543240320626/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/initCharacterSelectCourseMenuFromRace.s")
 
 #ifdef NON_MATCHING
@@ -198,7 +199,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
 
     requestMusicSequenceBank(2);
     resetAllViewports();
-    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E09A0);
     gFramebufferSwapDelay = 0;
     loadCompressedRomAsset(D_5A1ED0, D_5C5320, 0x21);
     loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
