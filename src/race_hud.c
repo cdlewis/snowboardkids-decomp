@@ -561,7 +561,7 @@ void drawTimeTrialLabels(s32 arg0) {
     drawMenuAsciiTextDefaultScale(0x48, -0x58, sp28, 7);
 }
 
-// drawSinglePlayerRaceHud best match: 95.528% at nonmatchings/drawSinglePlayerRaceHud-3236181511606361864/base_5.c.
+// drawSinglePlayerRaceHud best match: 99.268% at nonmatchings/drawSinglePlayerRaceHud/output-145-1/source.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawSinglePlayerRaceHud.s")
 
 #ifdef NON_MATCHING
@@ -614,8 +614,11 @@ void drawSinglePlayerRaceHud(s32 arg0) {
         drawAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile]);
     }
 
-    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), player->iconTile & 0xFFFF);
+    x = 0x88;
+    drawAssetTableSprite(-x, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), player->iconTile & 0xFFFF);
     drawAssetTableSprite(-0x88, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x39);
+    if (buffer) {
+    }
     drawAssetTableSpriteWithExplicitPalette(-0x68, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (player->lapDigit + 0x2C) & 0xFFFF, 0xE);
     drawAssetTableSprite(-0x5C, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x38);
     drawAssetTableSpriteWithExplicitPalette(-0x50, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (gRaceLapCount + 0x2B) & 0xFFFF, 0xE);
