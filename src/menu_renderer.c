@@ -242,11 +242,11 @@ void drawMenuSprite(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, 
                   temp_v0 = (s16)(gMenuViewportWidth / 2), temp_v1 = (s16)(gMenuViewportHeight / 2), temp_v0, temp_v1);
 }
 
-// drawMenuSpriteClipped best match: 57.528% (nonmatchings/drawMenuSpriteClipped-7273315160691878794/base_3.c)
+// drawMenuSpriteClipped best match: 58.587% (nonmatchings/drawMenuSpriteClipped-5802343343535905907/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSpriteClipped.s")
 
 #ifdef NON_MATCHING
-void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 width, u16 height, u8 flip, u8 paletteIndex,
+void drawMenuSpriteClipped(s32 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 width, u16 height, u8 flip, u8 paletteIndex,
                    s32 left, s32 top, s32 right, s32 bottom) {
     MenuFontAssetEntry *entry;
     s32 x0;
