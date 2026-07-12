@@ -12,13 +12,13 @@
 typedef struct {
     /* 0x0 */ s16 x;
     /* 0x2 */ u8 state;
-} ShopMenuPromptTransition;
+} ControllerPakContinuePromptTransition;
 
 extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 
 extern CharacterSelectFlowState *gCurrentGameTask;
-extern ShopMenuPromptTransition gControllerPakContinuePromptTransition;
+extern ControllerPakContinuePromptTransition gControllerPakContinuePromptTransition;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;
