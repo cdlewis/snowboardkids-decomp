@@ -112,7 +112,8 @@ extern u8 gRaceTypeSelection;
 extern u8 gCurrentViewportIndex;
 extern s16 gUiBlinkTimer;
 extern s32 gMenuRenderCallbackList;
-extern s32 D_80124878;
+extern s32 gRaceOverlayRenderCallbackList;
+extern s32 gRaceForegroundRenderCallbackList;
 extern RaceTimer gRaceElapsedTimer;
 extern RaceTimer gRaceChallengeTimeLimit;
 extern u8 gRaceTimeTrialFinishRecorded;
@@ -1022,7 +1023,7 @@ void updateRaceCourseProgressMeter(void) {
     while (i != 4);
 
     if (gRaceHudMode == 0) {
-        addRenderCallback(&D_80124878, drawRaceCourseProgressMeter, 0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceCourseProgressMeter, 0);
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, drawRaceCourseProgressMeter, 0);
@@ -1060,8 +1061,8 @@ void updateRaceHud(void) {
             }
             player->onesDigitPalette--;
         }
-        addRenderCallback(&D_80124878, drawSinglePlayerRaceHud, 0);
-        addRenderCallback(&D_80124888, noopRaceHudCallback, 0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawSinglePlayerRaceHud, 0);
+        addRenderCallback(&gRaceForegroundRenderCallbackList, noopRaceHudCallback, 0);
         updateRaceCourseProgressMeter();
         return;
     case 1:
@@ -1083,8 +1084,8 @@ void updateRaceHud(void) {
             i++;
             player++;
         } while (i != 2);
-        addRenderCallback(&D_80124878, drawTwoPlayerRaceHud, 0);
-        addRenderCallback(&D_80124888, drawTwoPlayerLapCounter, 0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawTwoPlayerRaceHud, 0);
+        addRenderCallback(&gRaceForegroundRenderCallbackList, drawTwoPlayerLapCounter, 0);
         updateRaceCourseProgressMeter();
         return;
     case 3:
@@ -1120,8 +1121,8 @@ void updateRaceHud(void) {
             i++;
             player++;
         } while (i != 3);
-        addRenderCallback(&D_80124878, drawMultiplayerRaceHud, 0);
-        addRenderCallback(&D_80124888, drawMultiplayerLapCounter, 0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawMultiplayerRaceHud, 0);
+        addRenderCallback(&gRaceForegroundRenderCallbackList, drawMultiplayerLapCounter, 0);
         updateRaceCourseProgressMeter();
         if ((s16)gRaceHudMode == 2) {
             addRenderCallback(&gMenuRenderCallbackList, drawThreePlayerHudDivider, 0);
@@ -1139,8 +1140,8 @@ void updateRaceHud(void) {
                 }
             }
         }
-        addRenderCallback(&D_80124878, drawTimeTrialHud, 0);
-        addRenderCallback(&D_80124888, drawTimeTrialLabels, 0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawTimeTrialHud, 0);
+        addRenderCallback(&gRaceForegroundRenderCallbackList, drawTimeTrialLabels, 0);
         return;
     case 5:
         if (!(gMenuFlowState & 3)) {
@@ -1149,8 +1150,8 @@ void updateRaceHud(void) {
         if (calculateRaceTimerDelta((RaceTimer *)&gRaceCourseTargetTimes[gRaceCourseIndex], &gRaceElapsedTimer, &sp38) != 0) {
             gRaceChallengeFailed = 1;
         }
-        addRenderCallback(&D_80124878, drawTargetTimeChallengeHud, 0);
-        addRenderCallback(&D_80124888, drawTargetTimeChallengeLabels, 0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawTargetTimeChallengeHud, 0);
+        addRenderCallback(&gRaceForegroundRenderCallbackList, drawTargetTimeChallengeLabels, 0);
         return;
     case 6:
         if (!(gMenuFlowState & 3)) {
@@ -1159,8 +1160,8 @@ void updateRaceHud(void) {
         if ((gRaceChallengeTimeLimit.minutes == 0) && (gRaceChallengeTimeLimit.seconds == 0) && (gRaceChallengeTimeLimit.fraction == 0)) {
             gRaceChallengeFailed = 1;
         }
-        addRenderCallback(&D_80124878, drawScoreAttackChallengeHud, 0);
-        addRenderCallback(&D_80124888, drawScoreAttackChallengeLabels, 0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawScoreAttackChallengeHud, 0);
+        addRenderCallback(&gRaceForegroundRenderCallbackList, drawScoreAttackChallengeLabels, 0);
         return;
     case 7:
         if (!(gMenuFlowState & 3)) {
@@ -1169,8 +1170,8 @@ void updateRaceHud(void) {
         if ((gRaceChallengeTimeLimit.minutes == 0) && (gRaceChallengeTimeLimit.seconds == 0) && (gRaceChallengeTimeLimit.fraction == 0)) {
             gRaceChallengeFailed = 1;
         }
-        addRenderCallback(&D_80124878, drawTrickAttackChallengeHud, 0);
-        addRenderCallback(&D_80124888, drawTrickAttackChallengeLabels, 0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawTrickAttackChallengeHud, 0);
+        addRenderCallback(&gRaceForegroundRenderCallbackList, drawTrickAttackChallengeLabels, 0);
         return;
     case 8:
         player = D_80121D80;
@@ -1186,7 +1187,7 @@ void updateRaceHud(void) {
             }
             player->onesDigitPalette--;
         }
-        addRenderCallback(&D_80124878, drawTrainingRaceHud, 0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawTrainingRaceHud, 0);
         return;
     }
 }

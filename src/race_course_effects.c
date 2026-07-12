@@ -297,12 +297,12 @@ extern CourseEffectPlayer D_80122998[];
 extern CourseEffectPlayer D_80122FA4[];
 extern CourseRenderCommand gIdentityMatrix[];
 extern s32 gMenuRenderCallbackList;
-extern s32 D_80124878;
+extern s32 gRaceOverlayRenderCallbackList;
 extern s32 gEffectRenderCallbackList;
 extern s32 D_801248EC;
 extern s32 gSceneModelRenderCallbackList;
 extern s32 gRaceObjectRenderCallbackList;
-extern s32 D_801248F8;
+extern s32 gBackdropRenderCallbackList;
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_2001678[];
 extern Gfx D_2001730[];
@@ -539,7 +539,7 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
 
 void updateRaceCourseModelRenderTask(void *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, renderRaceCourseModel, arg0);
-    addRenderCallback(&D_801248F8, renderRaceCourseBackdrop, arg0);
+    addRenderCallback(&gBackdropRenderCallbackList, renderRaceCourseBackdrop, arg0);
 }
 
 void initRaceCourseModelRenderTask(void *arg0) {
@@ -557,7 +557,7 @@ void updateFinalLapPrompt(void *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&D_80124878, drawFinalLapPromptForViewport, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, drawFinalLapPromptForViewport, arg0);
 }
 
 void initFinalLapPrompt(void *arg0) {

@@ -783,7 +783,7 @@ extern s32 gRaceCourseTargetTimes[];
 
 extern void *gMenuRenderCallbackList;
 extern void *gMenuForegroundRenderCallbackList;
-extern void *D_80124888;
+extern void *gRaceForegroundRenderCallbackList;
 extern void *gSceneModelRenderCallbackList;
 extern void *gRaceModelEffectRenderCallbackList;
 extern void *D_801248C8;
@@ -820,7 +820,7 @@ extern s16 gRaceScoreAttackPointTarget;
 extern s16 D_801222F2;
 extern s16 D_801222F0;
 extern RaceUiRankTrigger *D_8012228C;
-extern void *D_80124878;
+extern void *gRaceOverlayRenderCallbackList;
 extern void *gRaceObjectRenderCallbackList;
 extern void *D_801248EC;
 extern s16 D_800D6050[];
@@ -984,7 +984,7 @@ void updateRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
         arg0->timer = 0;
     }
     if (arg0->timer >= 0x1E) {
-        addRenderCallback(&D_80124888, drawRaceUiBoardReversePrompt, (s32) arg0);
+        addRenderCallback(&gRaceForegroundRenderCallbackList, drawRaceUiBoardReversePrompt, (s32) arg0);
     }
 }
 
@@ -1035,7 +1035,7 @@ void updateRaceUiTrickScorePopupSlideOut(RaceUiPopupActor *arg0) {
     if (arg0->velocity == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&D_80124878, drawRaceUiTrickScorePopup, arg0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiTrickScorePopup, arg0);
     }
 }
 
@@ -1044,7 +1044,7 @@ void updateRaceUiTrickScorePopupHold(RaceUiPopupActor *arg0) {
     if (arg0->timer == 0) {
         setCallbackTaskCallback(arg0, updateRaceUiTrickScorePopupSlideOut);
     }
-    addRenderCallback(&D_80124878, drawRaceUiTrickScorePopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiTrickScorePopup, arg0);
 }
 
 void updateRaceUiTrickScorePopupSlideIn(RaceUiPopupActor *arg0) {
@@ -1054,7 +1054,7 @@ void updateRaceUiTrickScorePopupSlideIn(RaceUiPopupActor *arg0) {
         arg0->timer = 0x2D;
         setCallbackTaskCallback(arg0, updateRaceUiTrickScorePopupHold);
     }
-    addRenderCallback(&D_80124878, drawRaceUiTrickScorePopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiTrickScorePopup, arg0);
 }
 
 void initRaceUiTrickScorePopup(RaceUiPopupActor *arg0) {
@@ -1084,7 +1084,7 @@ void updateRaceUiCrashScorePopupSlideOut(RaceUiPopupActor *arg0) {
     if (arg0->velocity == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&D_80124878, drawRaceUiCrashScorePopup, arg0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiCrashScorePopup, arg0);
     }
 }
 
@@ -1093,7 +1093,7 @@ void updateRaceUiCrashScorePopupHold(RaceUiPopupActor *arg0) {
     if (arg0->timer == 0) {
         setCallbackTaskCallback(arg0, updateRaceUiCrashScorePopupSlideOut);
     }
-    addRenderCallback(&D_80124878, drawRaceUiCrashScorePopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiCrashScorePopup, arg0);
 }
 
 void updateRaceUiCrashScorePopupSlideIn(RaceUiPopupActor *arg0) {
@@ -1103,7 +1103,7 @@ void updateRaceUiCrashScorePopupSlideIn(RaceUiPopupActor *arg0) {
         arg0->timer = 0x2D;
         setCallbackTaskCallback(arg0, updateRaceUiCrashScorePopupHold);
     }
-    addRenderCallback(&D_80124878, drawRaceUiCrashScorePopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiCrashScorePopup, arg0);
 }
 
 void initRaceUiCrashScorePopup(RaceUiPopupActor *arg0) {
@@ -3824,7 +3824,7 @@ void updateRaceUiScorePopupSlideOut(void *arg0) {
     if (*(s32 *)((u8 *)arg0 + 0x28) == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&D_80124878, drawRaceUiScorePopup, arg0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiScorePopup, arg0);
     }
 }
 
@@ -3833,7 +3833,7 @@ void updateRaceUiScorePopupHold(void *arg0) {
     if (*(u16 *)((u8 *)arg0 + 0x18) == 0) {
         setCallbackTaskCallback(arg0, updateRaceUiScorePopupSlideOut);
     }
-    addRenderCallback(&D_80124878, drawRaceUiScorePopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiScorePopup, arg0);
 }
 
 void updateRaceUiScorePopupSlideIn(void *arg0) {
@@ -3843,7 +3843,7 @@ void updateRaceUiScorePopupSlideIn(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x18) = 0x2D;
         setCallbackTaskCallback(arg0, updateRaceUiScorePopupHold);
     }
-    addRenderCallback(&D_80124878, drawRaceUiScorePopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiScorePopup, arg0);
 }
 
 void initRaceUiScorePopup(void *arg0) {
@@ -5071,7 +5071,7 @@ void updateTimeTrialRecordDeltaPopupSlideOut(void *arg0) {
     if (*(s32 *)((u8 *)arg0 + 0x28) == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&D_80124878, drawTimeTrialRecordDeltaPopup, arg0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, drawTimeTrialRecordDeltaPopup, arg0);
     }
 }
 
@@ -5080,7 +5080,7 @@ void updateTimeTrialRecordDeltaPopupHold(void *arg0) {
     if (*(u16 *)((u8 *)arg0 + 0x18) == 0) {
         setCallbackTaskCallback(arg0, updateTimeTrialRecordDeltaPopupSlideOut);
     }
-    addRenderCallback(&D_80124878, drawTimeTrialRecordDeltaPopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, drawTimeTrialRecordDeltaPopup, arg0);
 }
 
 void updateTimeTrialRecordDeltaPopupSlideIn(void *arg0) {
@@ -5090,7 +5090,7 @@ void updateTimeTrialRecordDeltaPopupSlideIn(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x18) = 0x5A;
         setCallbackTaskCallback(arg0, updateTimeTrialRecordDeltaPopupHold);
     }
-    addRenderCallback(&D_80124878, drawTimeTrialRecordDeltaPopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, drawTimeTrialRecordDeltaPopup, arg0);
 }
 
 void initTimeTrialRecordDeltaPopup(void *arg0) {
