@@ -204,7 +204,7 @@ void func_80061F38(struct RaceUiFadingImpactActor *arg0);
 void func_800621DC(void *arg0);
 void spawnRaceUiFadingImpact(void *arg0, void *arg1, void *arg2);
 void func_800622B0(struct RaceUiTransitionRenderActor *arg0);
-void func_800623E8(void *arg0);
+void func_800623E8(struct RaceUiTransitionActor *arg0);
 void initRaceUiSpinHitTransitionEffect(struct RaceUiTransitionActor *arg0);
 void func_800625D8(struct RaceUiOrbitingSpriteActor *arg0);
 void func_800628DC(struct RaceUiOrbitingSpriteActor *arg0);
