@@ -261,7 +261,7 @@ void initGameSystems(void) {
     gRumblePakConnectedMask = 0;
 }
 
-// gameThreadMain best match: 89.136% at nonmatchings/func_800998E4-731940616440357983/base_14.c.
+// gameThreadMain best match: 90.409% at nonmatchings/gameThreadMain-5802343343535905907/base_8.c.
 #ifdef NON_MATCHING
 void gameThreadMain(void *arg0) {
     OSMesg msg;
@@ -270,20 +270,21 @@ void gameThreadMain(void *arg0) {
     s32 finalType;
     OSMesgQueue *queue18;
     OSMesgQueue *queue70;
+    u32 zero;
     OSMesgQueue *queue50;
     volatile u8 *counter;
 
     msg = NULL;
-    initialized = 0;
+    zero = 0;
+    initialized = (done = 0);
     initGameSystems();
-    done = 0;
     queue18 = &gFramebufferRenderDoneQueue;
     queue70 = &gControllerInputUpdateQueue;
     queue50 = &gSchedulerClientQueue;
     counter = &gPendingFramebufferSwapCount;
 loop_1:
     do {
-        if ((osRecvMesg(queue18, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue70, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue50, &msg, OS_MESG_NOBLOCK) != 0)) {
+        if ((osRecvMesg(queue18, &msg, zero) != zero) && (osRecvMesg(queue70, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue50, &msg, OS_MESG_NOBLOCK) != 0)) {
             goto loop_1;
         }
         switch (*(s16 *)msg) {
@@ -347,14 +348,15 @@ loop_1:
     finalType = 1;
 loop_16:
     do {
+        zero = 0;
 loop_17:
-        if ((osRecvMesg(queue18, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue70, &msg, OS_MESG_NOBLOCK) != 0)) {
+        if ((osRecvMesg(queue18, &msg, zero) != zero) && (osRecvMesg(queue70, &msg, OS_MESG_NOBLOCK) != 0)) {
             if (osRecvMesg(queue50, &msg, OS_MESG_NOBLOCK) != 0) {
                 goto loop_17;
             }
         }
     } while (*(s16 *)msg != finalType);
-    requestRumbleMotorInit(0);
+    requestRumbleMotorInit(zero);
     requestRumbleMotorInit(1);
     requestRumbleMotorInit(2);
     requestRumbleMotorInit(3);
