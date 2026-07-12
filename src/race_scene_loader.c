@@ -92,7 +92,7 @@ extern u8 D_5DB9D0[];
 
 extern u8 gRaceSplitscreenMode;
 extern u8 gPlayerCount;
-extern u8 D_80121B59;
+extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern u8 gRaceTypeSelection;
@@ -275,7 +275,7 @@ void initRaceCourseEffects(void) {
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 0);
         createCallbackTaskWithUserId(&func_8006429C, 0, 0x64, 1);
         createCallbackTaskWithUserId(&initCourseBillboardMarker, 0, 0x64, 0);
-        if ((gRaceSplitscreenMode == 0) && (D_80121B59 == 0) && (gTrainingCourseLesson == 0) && (gMainMenuModeSelection == 0)) {
+        if ((gRaceSplitscreenMode == 0) && (gRaceDemoPlaybackEnabled == 0) && (gTrainingCourseLesson == 0) && (gMainMenuModeSelection == 0)) {
             if (sp2C != 0) {
                 createCallbackTask(&initCourseCollectibleSprites, 0, 0x64);
             }

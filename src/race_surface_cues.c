@@ -29,11 +29,11 @@ extern RaceSurfaceCue D_800DE718[];
 extern RaceSurfaceCue D_800DE724[];
 extern RaceSurfaceCue D_800DE768[];
 
-// func_800831C0 best match: 81.509% (base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_surface_cues/func_800831C0.s")
+// matchRaceSurfaceCueSequence best match: 81.509% (base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_surface_cues/matchRaceSurfaceCueSequence.s")
 
 #ifdef NON_MATCHING
-s32 func_800831C0(RaceSurfaceCue *cues, RaceInputPlayer *player, s16 cueIndex) {
+s32 matchRaceSurfaceCueSequence(RaceSurfaceCue *cues, RaceInputPlayer *player, s16 cueIndex) {
     s16 state;
     s16 step;
     u32 surfaceType;
@@ -67,7 +67,7 @@ s32 func_800831C0(RaceSurfaceCue *cues, RaceInputPlayer *player, s16 cueIndex) {
 }
 #endif
 
-void func_80083298(RaceInputPlayer *player) {
+void resetRacePlayerSurfaceCueState(RaceInputPlayer *player) {
     player->surfaceCueState[0] = 0;
     player->surfaceCueState[1] = 0;
     player->surfaceCueState[2] = 0;
@@ -82,7 +82,7 @@ void func_80083298(RaceInputPlayer *player) {
     player->surfaceCueStep[5] = 0;
 }
 
-s32 func_800832CC(RaceInputPlayer *player) {
+s32 getRacePlayerSurfaceCue(RaceInputPlayer *player) {
     s32 value;
     s32 cue;
     s8 stickY;
@@ -125,117 +125,117 @@ s32 func_800832CC(RaceInputPlayer *player) {
 
     switch (player->characterId) {
     case 0:
-        value = func_800831C0(D_800DE590, player, 0);
+        value = matchRaceSurfaceCueSequence(D_800DE590, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5A0, player, 1);
+        value = matchRaceSurfaceCueSequence(D_800DE5A0, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5AC, player, 2);
+        value = matchRaceSurfaceCueSequence(D_800DE5AC, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5B4, player, 3);
+        value = matchRaceSurfaceCueSequence(D_800DE5B4, player, 3);
         if (value != 0) {
             cue = value;
         }
         break;
     case 1:
-        value = func_800831C0(D_800DE5EC, player, 3);
+        value = matchRaceSurfaceCueSequence(D_800DE5EC, player, 3);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5C0, player, 0);
+        value = matchRaceSurfaceCueSequence(D_800DE5C0, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5D0, player, 1);
+        value = matchRaceSurfaceCueSequence(D_800DE5D0, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5DC, player, 2);
+        value = matchRaceSurfaceCueSequence(D_800DE5DC, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5F4, player, 4);
+        value = matchRaceSurfaceCueSequence(D_800DE5F4, player, 4);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE5FC, player, 5);
+        value = matchRaceSurfaceCueSequence(D_800DE5FC, player, 5);
         if (value != 0) {
             cue = value;
         }
         break;
     case 2:
-        value = func_800831C0(D_800DE628, player, 2);
+        value = matchRaceSurfaceCueSequence(D_800DE628, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE60C, player, 0);
+        value = matchRaceSurfaceCueSequence(D_800DE60C, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE61C, player, 1);
+        value = matchRaceSurfaceCueSequence(D_800DE61C, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE630, player, 3);
+        value = matchRaceSurfaceCueSequence(D_800DE630, player, 3);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE640, player, 4);
+        value = matchRaceSurfaceCueSequence(D_800DE640, player, 4);
         if (value != 0) {
             cue = value;
         }
         break;
     case 3:
-        value = func_800831C0(D_800DE684, player, 0);
+        value = matchRaceSurfaceCueSequence(D_800DE684, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE698, player, 1);
+        value = matchRaceSurfaceCueSequence(D_800DE698, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE6A0, player, 2);
+        value = matchRaceSurfaceCueSequence(D_800DE6A0, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE6B0, player, 3);
+        value = matchRaceSurfaceCueSequence(D_800DE6B0, player, 3);
         if (value != 0) {
             cue = value;
         }
         break;
     case 4:
-        value = func_800831C0(D_800DE6C8, player, 0);
+        value = matchRaceSurfaceCueSequence(D_800DE6C8, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE6EC, player, 1);
+        value = matchRaceSurfaceCueSequence(D_800DE6EC, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE6F8, player, 2);
+        value = matchRaceSurfaceCueSequence(D_800DE6F8, player, 2);
         if (value != 0) {
             cue = value;
         }
         break;
     case 5:
-        value = func_800831C0(D_800DE708, player, 0);
+        value = matchRaceSurfaceCueSequence(D_800DE708, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE718, player, 1);
+        value = matchRaceSurfaceCueSequence(D_800DE718, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE724, player, 2);
+        value = matchRaceSurfaceCueSequence(D_800DE724, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = func_800831C0(D_800DE768, player, 3);
+        value = matchRaceSurfaceCueSequence(D_800DE768, player, 3);
         if (value != 0) {
             cue = value;
         }

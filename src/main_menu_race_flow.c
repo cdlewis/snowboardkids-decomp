@@ -10,7 +10,7 @@
 #include "main_menu_panel_ui.h"
 #include "race_camera.h"
 #include "main_menu_race_flow.h"
-#include "race_player_update.h"
+#include "race_player_state.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
 
@@ -51,11 +51,11 @@ extern s16 gMenuFadeAlpha;
 extern u8 gFramebufferSwapHold;
 extern s32 gMenuFlowState;
 extern u8 gRaceCameraModeChangeDisabled;
-extern u8 D_80121B59;
+extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gMainMenuModeSelection;
-extern s16 D_80121B5C;
+extern s16 gRacePlayerAttackStartTimer;
 extern u8 gRaceTypeSelection;
-extern u8 D_80121B5F;
+extern u8 gRaceResultState;
 extern s16 gMainMenuModePreviewRaceDurationBySelection[];
 
 extern void releaseMenuAssetHandles(void);
@@ -170,8 +170,8 @@ void initMainMenuModePreviewRace(void) {
     gRaceCourseIndex = gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection].courseIndex;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
-    D_80121B5F = 0;
-    D_80121B59 = 0;
+    gRaceResultState = 0;
+    gRaceDemoPlaybackEnabled = 0;
     gTrainingCourseLesson = 0;
     gRaceSplitscreenMode = 0;
     gRaceTypeSelection = 0;
@@ -205,7 +205,7 @@ void initMainMenuModePreviewRace(void) {
     players[3].isActive = 1;
     gRacePlayerCount = 4;
     gRaceLapCount = 5;
-    D_80121B5C = 0x64;
+    gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(1);
 
     players[0].unk15 = 0;
@@ -394,8 +394,8 @@ void initTrainingCourseRace(void) {
 
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
-    D_80121B5F = 0;
-    D_80121B59 = 0;
+    gRaceResultState = 0;
+    gRaceDemoPlaybackEnabled = 0;
     gMainMenuModeSelection = 0;
     gRaceSplitscreenMode = 0;
     gRaceTypeSelection = 0;
@@ -449,7 +449,7 @@ void initTrainingCourseRace(void) {
     }
 
     gRaceLapCount = 5;
-    D_80121B5C = 0x64;
+    gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(1);
     D_80121D95 = 0;
     D_80121D96 = 0;

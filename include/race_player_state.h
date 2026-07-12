@@ -1,5 +1,5 @@
-#ifndef RACE_PLAYER_UPDATE_H
-#define RACE_PLAYER_UPDATE_H
+#ifndef RACE_PLAYER_STATE_H
+#define RACE_PLAYER_STATE_H
 
 #include "common.h"
 struct RaceInputPlayer;
@@ -57,36 +57,36 @@ void updateRacePlayerMode39AerialTrick(struct RaceInputPlayer *player);
 void updateRacePlayerMode55AerialTrick(struct RaceInputPlayer *player);
 void updateRacePlayerMode56AerialTrick(struct RaceInputPlayer *player);
 void updateRacePlayerMode57AerialTrick(struct RaceInputPlayer *player);
-void updateRacePlayerMode03(struct RaceInputPlayer *player);
-void updateRacePlayerMode04(struct RaceInputPlayer *player);
-void updateRacePlayerMode05(struct RaceInputPlayer *player);
-void updateRacePlayerMode08(struct RaceInputPlayer *player);
-void updateRacePlayerMode06CourseObject(struct RaceInputPlayer *player);
-void updateRacePlayerMode28CourseObject(struct RaceInputPlayer *player);
-void updateRacePlayerMode09CourseObject(struct RaceInputPlayer *player);
-void updateRacePlayerMode10CourseObject(struct RaceInputPlayer *player);
-void updateRacePlayerMode12(struct RaceInputPlayer *player);
-void updateRacePlayerMode11(struct RaceInputPlayer *player);
-void updateRacePlayerMode26(struct RaceInputPlayer *player);
-void updateRacePlayerMode14(struct RaceInputPlayer *player);
-void updateRacePlayerMode23(struct RaceInputPlayer *player);
-void updateRacePlayerMode24(struct RaceInputPlayer *player);
-void updateRacePlayerMode25(struct RaceInputPlayer *player);
-void updateRacePlayerMode27(struct RaceInputPlayer *player);
-void updateRacePlayerMode40(struct RaceInputPlayer *player);
-void dispatchRacePlayerMode07(struct RaceInputPlayer *player);
-void updateRacePlayerMode07State0(struct RaceInputPlayer *player);
-void updateRacePlayerMode07State1(struct RaceInputPlayer *player);
-void updateRacePlayerMode07State2(struct RaceInputPlayer *player);
-void updateRacePlayerMode07State3(struct RaceInputPlayer *player);
-void updateRacePlayerMode07State4(struct RaceInputPlayer *player);
-void updateRacePlayerMode07State5(struct RaceInputPlayer *player);
-void updateRacePlayerMode07State6(struct RaceInputPlayer *player);
-void updateRacePlayerMode07State7(struct RaceInputPlayer *player);
+void updateRacePlayerMode03Nudge(struct RaceInputPlayer *player);
+void updateRacePlayerMode04Spinout(struct RaceInputPlayer *player);
+void updateRacePlayerMode05SpinoutStun(struct RaceInputPlayer *player);
+void updateRacePlayerMode08SpinoutRecover(struct RaceInputPlayer *player);
+void updateRacePlayerMode06TerrainFall(struct RaceInputPlayer *player);
+void updateRacePlayerMode28TerrainFallWithItemEffect(struct RaceInputPlayer *player);
+void updateRacePlayerMode09TerrainCrash(struct RaceInputPlayer *player);
+void updateRacePlayerMode10TerrainCrashSlide(struct RaceInputPlayer *player);
+void updateRacePlayerMode12LaunchRecover(struct RaceInputPlayer *player);
+void updateRacePlayerMode11LaunchHit(struct RaceInputPlayer *player);
+void updateRacePlayerMode26Tumble(struct RaceInputPlayer *player);
+void updateRacePlayerMode14PushHit(struct RaceInputPlayer *player);
+void updateRacePlayerMode23ItemSteal(struct RaceInputPlayer *player);
+void updateRacePlayerMode24HeavyKnockdown(struct RaceInputPlayer *player);
+void updateRacePlayerMode25SpinHit(struct RaceInputPlayer *player);
+void updateRacePlayerMode27Slide(struct RaceInputPlayer *player);
+void updateRacePlayerMode40Stun(struct RaceInputPlayer *player);
+void dispatchRacePlayerMode07CourseObject(struct RaceInputPlayer *player);
+void updateRacePlayerMode07AlignToLaunchRamp(struct RaceInputPlayer *player);
+void updateRacePlayerMode07StartLaunchRamp(struct RaceInputPlayer *player);
+void updateRacePlayerMode07LaunchRampTakeoff(struct RaceInputPlayer *player);
+void updateRacePlayerMode07LaunchRampSpin(struct RaceInputPlayer *player);
+void updateRacePlayerMode07LaunchRampPose(struct RaceInputPlayer *player);
+void updateRacePlayerMode07LaunchRampDrift(struct RaceInputPlayer *player);
+void updateRacePlayerMode07LaunchRampClimb(struct RaceInputPlayer *player);
+void updateRacePlayerMode07SpiralExit(struct RaceInputPlayer *player);
 s32 isRacePlayerAttackingPlayer(s16 arg0);
-void dispatchRacePlayerMode30(struct RaceInputPlayer *player);
-void updateRacePlayerMode30State0(struct RaceInputPlayer *player);
-void updateRacePlayerMode30State1(struct RaceInputPlayer *player);
+void dispatchRacePlayerMode30Attack(struct RaceInputPlayer *player);
+void updateRacePlayerMode30AttackApproach(struct RaceInputPlayer *player);
+void updateRacePlayerMode30AttackResolve(struct RaceInputPlayer *player);
 void dispatchRacePlayerMode32Character(struct RaceInputPlayer *player);
 void updateRacePlayerMode32Character0(struct RaceInputPlayer *player);
 void updateRacePlayerMode32Character1(struct RaceInputPlayer *player);
@@ -104,15 +104,15 @@ void updateRacePlayerMode35Character5(struct RaceInputPlayer *player);
 void updateRacePlayersPostUpdate(void);
 void updateRacePlayerPostUpdate(struct RaceInputPlayer *player);
 void updateRacePlayerPostUpdateNoop(void);
-void updateRacePlayerPostUpdateMode07(struct RaceInputPlayer *player);
+void updateRacePlayerPostUpdateCourseObject(struct RaceInputPlayer *player);
 void updateRacePlayerPostUpdateMode00(struct RaceInputPlayer *player);
 void updateRacePlayerVoiceSounds(struct RaceInputPlayer *player);
 void updateRacePlayerLoopingSound(struct RaceInputPlayer *player);
 void updateRacePlayerPostUpdateMode22(struct RaceInputPlayer *player);
 void updateRacePlayerPostUpdateAirborneTrick(struct RaceInputPlayer *player);
-void updateRacePlayerPostUpdateMode02(struct RaceInputPlayer *player);
-void updateRacePlayerPostUpdateMode03(struct RaceInputPlayer *player);
+void updateRacePlayerPostUpdateAirborneLaunch(struct RaceInputPlayer *player);
+void updateRacePlayerPostUpdateNudge(struct RaceInputPlayer *player);
 void updateRacePlayerPostUpdateMode29(struct RaceInputPlayer *player);
-void updateRacePlayerPostUpdateMode30(struct RaceInputPlayer *player);
+void updateRacePlayerPostUpdateAttack(struct RaceInputPlayer *player);
 
 #endif
