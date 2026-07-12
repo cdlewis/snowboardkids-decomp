@@ -29,28 +29,26 @@ extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence1[];
 extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence2[];
 extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence3[];
 
-// advanceRaceSurfaceCueSequence best match: 81.509% (base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_surface_cues/advanceRaceSurfaceCueSequence.s")
-
-#ifdef NON_MATCHING
 s32 advanceRaceSurfaceCueSequence(RaceSurfaceCue *cues, RaceInputPlayer *player, s16 cueIndex) {
-    s16 state;
+    RaceSurfaceCue *cue;
     s16 step;
+    s16 cueValue;
     u32 surfaceType;
 
-    state = player->surfaceCueState[cueIndex];
     surfaceType = (player->inputFlags & 0xF0000) >> 0x10;
-    switch (state) {
+    switch (player->surfaceCueState[cueIndex]) {
     case 0:
-        step = player->surfaceCueStep[cueIndex];
-        if (surfaceType != cues[step].surfaceType) {
+        cue = cues;
+        cue += player->surfaceCueStep[cueIndex];
+        if (surfaceType != cue->surfaceType) {
             player->surfaceCueStep[cueIndex] = 0;
             return 0;
         }
-        if (cues[step].cueValue != 0) {
-            return cues[step].cueValue;
+        cueValue = cue->cueValue;
+        if (cueValue != 0) {
+            return cueValue;
         }
-        player->surfaceCueState[cueIndex] = state + 1;
+        player->surfaceCueState[cueIndex] = player->surfaceCueState[cueIndex] + 1;
     case 1:
         step = player->surfaceCueStep[cueIndex];
         if (surfaceType == cues[step].surfaceType) {
@@ -65,7 +63,6 @@ s32 advanceRaceSurfaceCueSequence(RaceSurfaceCue *cues, RaceInputPlayer *player,
         return 0;
     }
 }
-#endif
 
 void resetRacePlayerSurfaceCueState(RaceInputPlayer *player) {
     player->surfaceCueState[0] = 0;
