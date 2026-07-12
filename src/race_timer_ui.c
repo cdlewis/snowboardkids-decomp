@@ -1135,7 +1135,7 @@ void updateRaceHud(void) {
                 if ((gRaceCourseStartEntries[gRaceCourseIndex].finishLinePathIndex * 8) < sp40) {
                     D_80121B7C = *(s32 *)&gRaceElapsedTimer;
                     gRaceTimeTrialFinishRecorded = 1;
-                    createCallbackTask(func_80065144, 0, 0);
+                    createCallbackTask(initTimeTrialRecordDeltaPopup, 0, 0);
                 }
             }
         }
