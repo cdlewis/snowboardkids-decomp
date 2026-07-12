@@ -86,11 +86,12 @@ void resetViewport(s32 arg0) {
     viewport->unk1E = 0;
 }
 
-// configureViewport best match: 88.911%
+// configureViewport best match: 90.016% (nonmatchings/configureViewport-3357475854818838508/base_1.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/configureViewport.s")
 
 #ifdef NON_MATCHING
+extern f32 gDefaultViewportOverlayFarClip;
 extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
 
 void configureViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
@@ -148,7 +149,7 @@ void configureViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg
 
     fovy = 70.0f;
     guPerspective(&viewport->projection, &viewport->perspectiveNorm, fovy, arg7, 10.0f, 2800.0f, 0.5f);
-    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, fovy, arg7, 10.0f, 15000.0f, 0.5f);
+    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, fovy, arg7, 10.0f, gDefaultViewportOverlayFarClip, 0.5f);
 }
 #endif
 
