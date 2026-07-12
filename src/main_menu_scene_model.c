@@ -334,7 +334,7 @@ s32 saveRaceRecordReplayData(void) {
 #undef RACE_INPUT_HISTORY_LENGTH
 #endif
 
-// loadCurrentRaceRecordReplayData best match: 48.898% (nonmatchings/func_80041A20-3236181511606361864/base_1.c)
+// loadCurrentRaceRecordReplayData best match: 80.022% (nonmatchings/loadCurrentRaceRecordReplayData-3357475854818838508/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/loadCurrentRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
@@ -353,18 +353,25 @@ extern s16 gCurrentRaceRecordReplayHandle;
 extern u16 gRaceCourseIndex;
 
 void loadCurrentRaceRecordReplayData(void) {
-    u16 *srcBase = &D_800ECC46;
-    u16 *src = srcBase;
+    u16 *srcBase;
+    u16 *src;
     u8 *dst;
     u8 *model;
-    s32 outPos = 0;
+    s32 outPos;
     s32 count;
     s32 copied;
     u16 code;
     s32 length;
     s32 offset;
     s32 remainder;
+    u8 *copy;
+    s32 i;
+    u8 *read;
+    u8 *write;
 
+    srcBase = &D_800ECC46;
+    outPos = 0;
+    src = srcBase;
     switch (gRaceCourseIndex) {
     case 0:
         src = (u16 *)((u8 *)srcBase + (D_800ECC24 * 2));
@@ -396,52 +403,67 @@ void loadCurrentRaceRecordReplayData(void) {
     }
 
     dst = D_8010B200;
-    count = *src++;
-    while (outPos < count) {
-        copied = 0;
-        code = *src;
-        length = (code >> 10) & 0x3F;
-        if (length == 0) {
-            dst[outPos] = code;
-            outPos++;
-            src++;
-        } else {
-            offset = outPos - (code & 0x3FF);
-            if (length > 0) {
-                remainder = length & 3;
-                if (remainder != 0) {
-                    u8 *copy = offset + dst;
-                    do {
-                        dst[outPos] = copy[0];
-                        copied++;
-                        outPos++;
-                        copy++;
-                    } while (remainder != copied);
-                    if (copied == length) {
-                        src++;
-                        continue;
-                    }
-                }
-                {
-                    u8 *copy = offset + copied + dst;
-                    do {
-                        dst[outPos] = copy[0];
-                        outPos++;
-                        dst[outPos] = copy[1];
-                        outPos++;
-                        dst[outPos] = copy[2];
-                        outPos++;
-                        dst[outPos] = copy[3];
-                        copied += 4;
-                        outPos++;
-                        copy += 4;
-                    } while (copied != length);
-                }
-            }
-            src++;
-        }
+    count = *src;
+    src++;
+
+loop:
+    copied = 0;
+    if (outPos >= count) {
+        goto done;
+    }
+    code = *src;
+    length = (code >> 10) & 0x3F;
+    if (length != 0) {
+        goto compressed;
+    }
+    dst[outPos] = code;
+    outPos++;
+    src++;
+    goto loop;
+
+compressed:
+    offset = outPos - (code & 0x3FF);
+    if (length <= 0) {
+        goto next;
+    }
+    remainder = length & 3;
+    if (remainder == 0) {
+        goto copy4;
+    }
+    copy = offset + dst;
+copy1:
+    dst[outPos] = *copy;
+    copied++;
+    outPos++;
+    copy++;
+    if (remainder != copied) {
+        goto copy1;
+    }
+    if (copied == length) {
+        goto next;
     }
 
+copy4:
+    copy = offset + copied + dst;
+copy4_loop:
+    dst[outPos] = copy[0];
+    outPos++;
+    dst[outPos] = copy[1];
+    outPos++;
+    dst[outPos] = copy[2];
+    outPos++;
+    dst[outPos] = copy[3];
+    copied += 4;
+    outPos++;
+    copy += 4;
+    if (copied != length) {
+        goto copy4_loop;
+    }
+next:
+    src++;
+    goto loop;
+
+done:
     model = (u8 *)getRelocatableHeapBlockBase(gCurrentRaceRecordReplayHandle);
     *(s32 *)&model[0] = 0;
     *(s32 *)&model[4] = *(s16 *)&dst[0];
@@ -451,19 +473,21 @@ void loadCurrentRaceRecordReplayData(void) {
     model[12] = 0;
     model[11] = *(s8 *)&dst[3];
 
-    if (*(s16 *)&dst[0] > 0) {
-        s32 i = 0;
-        u8 *read = D_8010B200;
-        u8 *write = model;
-
-        do {
-            i++;
-            write[0xD] = *(s8 *)&read[4];
-            write[0x11A1] = *(s8 *)&read[5];
-            read += 3;
-            write++;
-            write[0x2334] = read[3];
-        } while (i < *(s32 *)&model[4]);
+    i = 0;
+    if (*(s16 *)&dst[0] <= 0) {
+        return;
+    }
+    read = D_8010B200;
+    write = model;
+write_loop:
+    i++;
+    write[0xD] = *(s8 *)&read[4];
+    write[0x11A1] = *(s8 *)&read[5];
+    read += 3;
+    write++;
+    write[0x2334] = read[3];
+    if (i < *(s32 *)&model[4]) {
+        goto write_loop;
     }
 }
 #endif
