@@ -163,7 +163,7 @@ extern s32 D_800EC89C;
 extern s32 D_800EC8A0;
 extern s32 D_800EC8A4;
 extern u8 gRumblePakConnectedByController[];
-extern void *D_800EC8B8;
+extern void *gControllerSubsystemThreadStack;
 extern s16 gControllerPakStatusCodes[];
 extern u8 gControllerPakOperationCounts[];
 extern SaveSlotBytes gGameSaveDataBuffer[];
@@ -205,12 +205,21 @@ extern u8 gControllerPakSaveGameNameBytes[];
 extern u8 gControllerPakSaveExtNameBytes[];
 extern u8 gControllerPakSaveExtNameBytesEnd[];
 
-// initControllerSubsystem best match: 85.817%
+// initControllerSubsystem best match: 93.458%
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/initControllerSubsystem.s")
 
 #ifdef NON_MATCHING
 void initControllerSubsystem(void) {
     s32 i;
+    s32 one1;
+    s32 one2;
+    s32 one3;
+    s32 one4;
+
+    one1 = 1;
+    one2 = 1;
+    one3 = 1;
+    one4 = 1;
 
     osCreateMesgQueue(&gControllerEventQueue, gControllerEventMessages, 1);
     osCreateMesgQueue(&gControllerSubsystemRequestQueue, gControllerSubsystemRequestMessages, 8);
@@ -237,21 +246,21 @@ loop:
     gControllerInputState = 0;
     D_800E4C1A = 0;
     D_800E4C1B = 0;
-    gRumbleMotorStatuses = 1;
+    gRumbleMotorStatuses = one1;
     D_800E4C1E = 0;
     D_800E4C20 = 0;
     D_800E4C21 = 0;
-    D_800EC89C = 1;
+    D_800EC89C = one2;
     D_800E4C24 = 0;
     D_800E4C26 = 0;
     D_800E4C27 = 0;
-    D_800EC8A0 = 1;
+    D_800EC8A0 = one3;
     D_800E4C2A = 0;
     D_800E4C2C = 0;
     D_800E4C2D = 0;
-    D_800EC8A4 = 1;
+    D_800EC8A4 = one4;
 
-    osCreateThread(&gControllerSubsystemThread, 4, controllerSubsystemThreadMain, D_800EC8B8, &gControllerSubsystemRequestQueue, 0x14);
+    osCreateThread(&gControllerSubsystemThread, 4, controllerSubsystemThreadMain, gControllerSubsystemThreadStack, &gControllerSubsystemRequestQueue, 0x14);
     osStartThread(&gControllerSubsystemThread);
 }
 #endif
