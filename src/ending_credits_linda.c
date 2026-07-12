@@ -918,7 +918,7 @@ void updateEndingCreditsTumblingSnowboardWaitForRemove(EndingCreditsTumblingSnow
     }
 }
 
-// updateEndingCreditsTumblingSnowboardBounce best match: 91.989% (base_4.c)
+// updateEndingCreditsTumblingSnowboardBounce best match: 95.784% (base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_linda/updateEndingCreditsTumblingSnowboardBounce.s")
 
 #ifdef NON_MATCHING
@@ -926,14 +926,11 @@ void updateEndingCreditsTumblingSnowboardBounce(EndingCreditsTumblingSnowboard *
     FixedMatrix3sScratch sp48;
     FixedMatrix3sScratch sp28;
     void *sp24[1];
-    s16 temp_t7;
     s32 timer;
-    u16 timer2;
 
-    temp_t7 = arg0->timer + 1;
-    arg0->timer = temp_t7;
+    arg0->timer += 1;
     if (arg0->mode == 1) {
-        timer = temp_t7 & 0xFFFF;
+        timer = arg0->timer;
         if (timer < 6) {
             arg0->posY = (arg0->posY - (timer * 0x15000)) + 0x80000;
         } else {
@@ -941,11 +938,11 @@ void updateEndingCreditsTumblingSnowboardBounce(EndingCreditsTumblingSnowboard *
         }
         arg0->posX += 0xC0000;
     } else {
-        timer2 = arg0->timer;
-        if ((s32) timer2 < 5) {
-            arg0->posY = (arg0->posY - (timer2 << 0xF)) + 0x40000;
+        timer = arg0->timer;
+        if (timer < 5) {
+            arg0->posY = (arg0->posY - (timer << 0xF)) + 0x40000;
         } else {
-            arg0->posY = (arg0->posY - (timer2 * 0x3800)) + 0xFFFE8800;
+            arg0->posY = (arg0->posY - (timer * 0x3800)) + 0xFFFE8800;
         }
         arg0->posX += 0x1D000;
     }
