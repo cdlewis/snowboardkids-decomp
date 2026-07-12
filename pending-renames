@@ -1,0 +1,2 @@
+src/race_rumble.c -> src/race_player_rumble.c
+include/race_rumble.h -> include/race_player_rumble.h
