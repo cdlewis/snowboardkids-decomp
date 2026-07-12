@@ -422,12 +422,8 @@ void requestControllerPakProbe(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// probeControllerPak best match: 94.507%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/probeControllerPak.s")
-
-#ifdef NON_MATCHING
 void probeControllerPak(u16 arg0) {
-    s32 ret;
+    u32 ret;
 
     ret = osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[arg0], arg0);
     if (ret == 2) {
@@ -435,7 +431,7 @@ void probeControllerPak(u16 arg0) {
     }
 
     if (ret == 0) {
-        gControllerPakStatusCodes[arg0] = ret + 1;
+        gControllerPakStatusCodes[arg0] = 1;
     }
 
     if ((ret == 1) || (ret == 11)) {
@@ -454,7 +450,6 @@ void probeControllerPak(u16 arg0) {
         gControllerPakOperationCounts[arg0]++;
     }
 }
-#endif
 
 void requestControllerPakSaveStatus(u16 arg0) {
     OSMesg msg;
