@@ -1,5 +1,5 @@
-#ifndef RACE_PLAYER_STATE_H
-#define RACE_PLAYER_STATE_H
+#ifndef RACE_PLAYER_UPDATE_H
+#define RACE_PLAYER_UPDATE_H
 
 #include "common.h"
 struct RaceInputPlayer;
@@ -83,7 +83,7 @@ void updateRacePlayerMode07LaunchRampPose(struct RaceInputPlayer *player);
 void updateRacePlayerMode07LaunchRampDrift(struct RaceInputPlayer *player);
 void updateRacePlayerMode07LaunchRampClimb(struct RaceInputPlayer *player);
 void updateRacePlayerMode07SpiralExit(struct RaceInputPlayer *player);
-s32 isRacePlayerAttackingPlayer(s16 arg0);
+s32 tryStartRacePlayerCourseObjectMode(s16 arg0);
 void dispatchRacePlayerMode30Attack(struct RaceInputPlayer *player);
 void updateRacePlayerMode30AttackApproach(struct RaceInputPlayer *player);
 void updateRacePlayerMode30AttackResolve(struct RaceInputPlayer *player);

@@ -20,7 +20,7 @@
 #include "race_camera.h"
 #include "race_course_effects.h"
 #include "race_flow.h"
-#include "race_player_state.h"
+#include "race_player_update.h"
 #include "race_scene_loader.h"
 #include "race_start_transition.h"
 #include "race_timer_ui.h"
