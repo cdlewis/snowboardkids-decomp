@@ -886,25 +886,27 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
 }
 #endif
 
-// initPatrolCourseObject best match: 98.684% at nonmatchings/initPatrolCourseObject-5821324921387846781/base.c.
+// initPatrolCourseObject best match: 99.474% at nonmatchings/initPatrolCourseObject-3357475854818838508/base_16.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/initPatrolCourseObject.s")
 
 #ifdef NON_MATCHING
 void initPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
-    s32 temp24;
+    volatile s32 *posX;
     s32 temp28;
-    s32 temp2C;
+    int temp2C;
     s16 angle;
     s16 temp4C;
     s32 temp50;
     s16 temp4E;
 
+    posX = (volatile s32 *)&arg0->pos.x;
     if (gRaceUpdatePaused == 0) {
         angle = calculateFixedAngleBetweenXZPoints(arg0->unk24, arg0->unk2C, arg0->unk30, arg0->unk38);
-        temp24 = arg0->unk24;
+        arg0->pos.x = arg0->unk24;
         temp28 = arg0->unk28;
+        do {
+        } while (0);
         temp2C = arg0->unk2C;
-        arg0->pos.x = temp24;
         temp4C = 0x10;
         temp50 = 0x10000;
         temp4E = 0x80;
@@ -914,7 +916,7 @@ void initPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
         arg0->unk4E = temp4E;
         arg0->pos.y = temp28;
         arg0->pos.z = temp2C;
-        arg0->pos.y = getRaceCourseSurfaceHeight(arg0->unk3C, arg0->pos.x, arg0->pos.z);
+        arg0->pos.y = getRaceCourseSurfaceHeight(arg0->unk3C, *posX, temp2C);
         setCallbackTaskCallback(arg0, updatePatrolCourseObject);
     }
 }
