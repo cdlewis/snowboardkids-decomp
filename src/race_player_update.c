@@ -1048,275 +1048,591 @@ void updateRacePlayerAirborneLaunch(RaceInputPlayer *player) {
     }
 }
 
-// updateRacePlayerAirborneCruise best match: 97.952% (nonmatchings/updateRacePlayerAirborneCruise-4/output-1781-1/source.c)
+// updateRacePlayerAirborneCruise best match: 98.560% (nonmatchings/updateRacePlayerAirborneCruise-3357475854818838508/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerAirborneCruise.s")
 
 #ifdef NON_MATCHING
-#define HANDLE_SURFACE_CUE(modeValue, effectValue, soundType)                         \
-    if (player->soundDisabled == 0) {                                                 \
-        enqueuePositionalSoundEffect(0x17, (SoundPosition *)&player->posX, 0x7F, 0x32);              \
-        enqueueRacePlayerVoiceSound(player, soundType);                                             \
-    }                                                                                 \
-    flags = player->stateFlags | 0x800;                                               \
-    player->mode = modeValue;                                                         \
-    player->unk2A6 = effectValue;                                                     \
-    player->stateFlags = flags
-
-void updateRacePlayerAirborneCruise(RaceInputPlayer *player) {
-    s32 lean = 0;
-    s32 rotation;
-    Struct800955C0 *spawn;
-    s32 surfaceCue;
-    u32 flags;
-    s8 turnTimer;
-
-    if (player->unk4 == 0) {
-        spawn = &gRaceCourseStartEntries[gRaceCourseIndex];
-        if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
-            surfaceCue = (s16)(((calculateFixedAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
-                                  player->facingAngle) +
-                                 0x400) &
-                                0xFFF);
-            if (surfaceCue < 0x800) {
-                if (player->stateFlags & 0x400) {
-                    player->stateFlags &= ~0x400;
-                    player->unk93 = 6 - player->unk93;
-                }
-            } else if (!(player->stateFlags & 0x400)) {
-                turnTimer = 6 - player->unk93;
-                player->stateFlags |= 0x400;
-                player->unk93 = turnTimer;
-            }
-        } else {
-            if (player->unk254 < -0x8000) {
-                if (player->stateFlags & 0x400) {
-                    player->stateFlags &= ~0x400;
-                    player->unk93 = 6 - player->unk93;
-                }
-            }
-            if (player->unk254 >= 0x8001) {
-                if (!(player->stateFlags & 0x400)) {
-                    player->stateFlags |= 0x400;
-                    player->unk93 = 6 - player->unk93;
-                }
-            }
+void updateRacePlayerAirborneCruise(RaceInputPlayer *player)
+{
+  Struct800955C0 *temp_v0;
+  s16 temp_v0_6;
+  s32 temp_t4;
+  s32 temp_v0_9;
+  s32 sp2C;
+  s32 var_a2;
+  s32 var_v1;
+  s8 temp_v0_7;
+  s32 var_t7;
+  u32 temp_v0_10;
+  u32 temp_v0_2;
+  u32 temp_v0_3;
+  u32 temp_v0_4;
+  u32 temp_v0_5;
+  u32 temp_v0_8;
+  sp2C = 0;
+  if (player->unk4 == 0)
+  {
+    temp_v0 = &gRaceCourseStartEntries[gRaceCourseIndex];
+    if ((player->unk502 == temp_v0->unk0) && (!(player->stateFlags & 0x40)))
+    {
+      if (((s16) (((calculateFixedAngleBetweenXZPoints(player->pos.x, player->pos.z, temp_v0->unk40, temp_v0->unk44) - player->facingAngle) + 0x400) & 0xFFF)) < 0x800)
+      {
+        temp_v0_2 = player->stateFlags;
+        if (temp_v0_2 & 0x400)
+        {
+          player->unk93 = 6 - player->unk93;
         }
-
-        if (gRaceDemoPlaybackEnabled == 0) {
-            if (player->unk336 < 0x5A) {
-                player->unk336++;
-            }
+        player->stateFlags = temp_v0_2 & (~0x400);
+      }
+      else
+      {
+        temp_v0_3 = player->stateFlags;
+        if (!(temp_v0_3 & 0x400))
+        {
+          var_t7 = 6 - player->unk93;
+          player->stateFlags = temp_v0_3 | 0x400;
+          goto block_15;
         }
+      }
+    }
+    else
+    {
+      if (player->unk254 < (-0x8000))
+      {
+        temp_v0_4 = player->stateFlags;
+        if (temp_v0_4 & 0x400)
+        {
+          player->stateFlags = temp_v0_4 & (~0x400);
+          player->unk93 = 6 - player->unk93;
+        }
+      }
+      if (player->unk254 >= 0x8001)
+      {
+        temp_v0_5 = player->stateFlags;
+        if (!(temp_v0_5 & 0x400))
+        {
+          player->stateFlags = temp_v0_5 | 0x400;
+          var_t7 = 6 - player->unk93;
+          block_15:
+          player->unk93 = var_t7;
+
+        }
+      }
+    }
+    if (gRaceDemoPlaybackEnabled == 0)
+    {
+      temp_v0_6 = player->unk336;
+      if (temp_v0_6 < 0x5A)
+      {
+        player->unk336 = temp_v0_6 + 1;
+      }
+    }
+  }
+  temp_v0_7 = player->unk93;
+  if (temp_v0_7 != 0)
+  {
+    player->unk93 = temp_v0_7 - 1;
+    setRaceMotionAnimation((RaceMotionState *) ((RaceMotionState *) player), player->unk93 + 8);
+  }
+  else
+    if (player->animationId != 5)
+  {
+    setRaceMotionAnimation((RaceMotionState *) ((RaceMotionState *) player), 5);
+  }
+  temp_v0_8 = player->stateFlags;
+  if (temp_v0_8 & 0x10)
+  {
+    if (player->unk4 == 0)
+    {
+      if (!(player->inputFlags & 0x8000))
+      {
+        player->stateFlags = temp_v0_8 & (~0x10);
+      }
+    }
+    else
+    {
+      player->stateFlags = temp_v0_8 & (~0x10);
+      if (player->unk525 != 0)
+      {
+        player->stateTimer = 0x46000;
+      }
+    }
+    if (player->stateFlags & 0x10)
+    {
+      temp_v0_9 = player->stateTimer;
+      if (temp_v0_9 < 0x46000)
+      {
+        player->stateTimer = temp_v0_9 + 0x2000;
+      }
+    }
+  }
+  updateRacePlayerItemEffectUse(player);
+  updateRacePlayerLeanAngle(player, player->unk254, 0);
+  player->unk40.y -= player->unk260;
+  var_a2 = 0;
+  if (player->trailEffectTimer)
+  {
+    var_a2 = -0x8000;
+    if (player->unk2DC != 0)
+    {
+      var_a2 = 0x8000;
+    }
+  }
+  temp_v0_10 = player->stateFlags;
+  if (!(temp_v0_10 & 0x10))
+  {
+    if (temp_v0_10 & 0x400)
+    {
+      sp2C = 0x30000;
+      if (((u8) player->unk519) != 0)
+      {
+        var_a2 = 0x100000;
+      }
+      if (player->unk336 >= 0x3C)
+      {
+        player->unk310 += 0x50000;
+        player->unk314 += 0x50000;
+        var_a2 += 0x50000;
+        enqueueRacePlayerVoiceSound(player, 0);
+      }
+    }
+    else
+    {
+      sp2C = -0x30000;
+      if (((u8) player->unk519) != 0)
+      {
+        var_a2 = -0x100000;
+      }
+      if (player->unk336 >= 0x3C)
+      {
+        player->unk310 += 0x50000;
+        player->unk314 += 0x50000;
+        var_a2 += 0xFFFB0000;
+        enqueueRacePlayerVoiceSound(player, 0);
+      }
+    }
+  }
+  updateRacePlayerLocalVelocity(player, sp2C, var_a2, player->unk274, player->unk278, player->unk27C);
+  var_v1 = updateRacePlayerSurfaceCue(player);
+  if (!(player->stateFlags & 0x10))
+  {
+    if (player->stateTimer < 0x46000)
+    {
+      var_v1 = 0;
+    }
+    if (var_v1 >= 9)
+    {
+      player->stateTimer = 0x50000;
+    }
+    player->unk2A2 = 0;
+    switch (var_v1)
+    {
+      case 1:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 0);
+      }
+        player->mode = 0xD;
+        player->unk2A6 = 1;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 2:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 0);
+      }
+        player->mode = 0xF;
+        player->unk2A6 = 2;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 3:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 0);
+      }
+        player->mode = 0x10;
+        player->unk2A6 = 3;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 4:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 0);
+      }
+        player->mode = 0x11;
+        player->unk2A6 = 4;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 5:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x12;
+        player->unk2A6 = 5;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 6:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x13;
+        player->unk2A6 = 6;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 7:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x14;
+        player->unk2A6 = 7;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 8:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x15;
+        player->unk2A6 = 8;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 9:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x1F;
+        player->unk2A6 = 0xB;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 10:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x20;
+        player->unk2A6 = 0xB;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 11:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x21;
+        player->unk2A6 = 0xC;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 12:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x22;
+        player->unk2A6 = 0xD;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 13:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x23;
+        player->unk2A6 = 0xA;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 14:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x24;
+        player->unk2A6 = 0xC;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 15:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x25;
+        player->unk2A6 = 0xB;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 16:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x26;
+        player->unk2A6 = 0xD;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 17:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x27;
+        player->unk2A6 = 0xE;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 18:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x29;
+        player->unk2A6 = 9;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 19:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x2A;
+        player->unk2A6 = 0xA;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 20:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x2B;
+        player->unk2A6 = 0xC;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 21:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x2C;
+        player->unk2A6 = 9;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 22:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x2D;
+        player->unk2A6 = 0xA;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 23:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x2E;
+        player->unk2A6 = 0xE;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 24:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x2F;
+        player->unk2A6 = 9;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 25:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x30;
+        player->unk2A6 = 0xB;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 26:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x31;
+        player->unk2A6 = 0xD;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 27:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x32;
+        player->unk2A6 = 9;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 28:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x33;
+        player->unk2A6 = 0xA;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 29:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x34;
+        player->unk2A6 = 0xC;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 30:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x35;
+        player->unk2A6 = 0xA;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 31:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x36;
+        player->unk2A6 = 0xC;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 32:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x37;
+        player->unk2A6 = 9;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 33:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x38;
+        player->unk2A6 = 0xA;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 34:
+        if (player->soundDisabled == 0)
+      {
+        enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
+        enqueueRacePlayerVoiceSound(player, 1);
+      }
+        player->mode = 0x39;
+        player->unk2A6 = 0xD;
+        player->stateFlags |= 0x800;
+        break;
+
+      case 0:
+
+      default:
+        player->mode = 1;
+        player->unk2A6 = 0;
+        break;
+
     }
 
-    turnTimer = player->unk93;
-    if (turnTimer != 0) {
-        player->unk93 = turnTimer - 1;
-        setRaceMotionAnimation(player, player->unk93 + 8);
-    } else {
-        if (player->animationId != 5) {
-            setRaceMotionAnimation(player, 5);
-        }
-    }
-
-    if (player->stateFlags & 0x10) {
-        if (player->unk4 == 0) {
-            if (!(player->inputFlags & 0x8000)) {
-                player->stateFlags &= ~0x10;
-            }
-        } else {
-            player->stateFlags &= ~0x10;
-            if (player->unk525 != 0) {
-                player->stateTimer = 0x46000;
-            }
-        }
-
-        if (player->stateFlags & 0x10) {
-            if (player->stateTimer < 0x46000) {
-                player->stateTimer += 0x2000;
-            }
-        }
-    }
-
-    updateRacePlayerItemEffectUse(player);
-    updateRacePlayerLeanAngle(player, player->unk254, 0);
-    player->unk40.y -= player->unk260;
-
-    rotation = 0;
-    if (player->trailEffectTimer != 0) {
-        rotation = -0x8000;
-        if (player->unk2DC != 0) {
-            rotation = 0x8000;
-        }
-    }
-
-    if (!(player->stateFlags & 0x10)) {
-        if (player->stateFlags & 0x400) {
-            lean = 0x30000;
-            if (player->unk519 != 0) {
-                rotation = 0x100000;
-            }
-            if (player->unk336 >= 0x3C) {
-                player->unk310 += 0x50000;
-                player->unk314 += 0x50000;
-                rotation += 0x50000;
-                enqueueRacePlayerVoiceSound(player, 0);
-            }
-        } else {
-            lean = -0x30000;
-            if (player->unk519 != 0) {
-                rotation = -0x100000;
-            }
-            if (player->unk336 >= 0x3C) {
-                player->unk310 += 0x50000;
-                player->unk314 += 0x50000;
-                rotation -= 0x50000;
-                enqueueRacePlayerVoiceSound(player, 0);
-            }
-        }
-    }
-
-    updateRacePlayerLocalVelocity(player, lean, rotation, player->unk274, player->unk278, player->unk27C);
-    surfaceCue = updateRacePlayerSurfaceCue(player);
-    if (!(player->stateFlags & 0x10)) {
-        if (player->stateTimer < 0x46000) {
-            surfaceCue = 0;
-        }
-        if (surfaceCue >= 9) {
-            player->stateTimer = 0x50000;
-        }
-        player->unk2A2 = 0;
-        switch (surfaceCue) {
-            case 1:
-                HANDLE_SURFACE_CUE(0xD, 1, 0);
-                break;
-            case 2:
-                HANDLE_SURFACE_CUE(0xF, 2, 0);
-                break;
-            case 3:
-                HANDLE_SURFACE_CUE(0x10, 3, 0);
-                break;
-            case 4:
-                HANDLE_SURFACE_CUE(0x11, 4, 0);
-                break;
-            case 5:
-                HANDLE_SURFACE_CUE(0x12, 5, 1);
-                break;
-            case 6:
-                HANDLE_SURFACE_CUE(0x13, 6, 1);
-                break;
-            case 7:
-                HANDLE_SURFACE_CUE(0x14, 7, 1);
-                break;
-            case 8:
-                HANDLE_SURFACE_CUE(0x15, 8, 1);
-                break;
-            case 9:
-                HANDLE_SURFACE_CUE(0x1F, 0xB, 1);
-                break;
-            case 10:
-                HANDLE_SURFACE_CUE(0x20, 0xB, 1);
-                break;
-            case 11:
-                HANDLE_SURFACE_CUE(0x21, 0xC, 1);
-                break;
-            case 12:
-                HANDLE_SURFACE_CUE(0x22, 0xD, 1);
-                break;
-            case 13:
-                HANDLE_SURFACE_CUE(0x23, 0xA, 1);
-                break;
-            case 14:
-                HANDLE_SURFACE_CUE(0x24, 0xC, 1);
-                break;
-            case 15:
-                HANDLE_SURFACE_CUE(0x25, 0xB, 1);
-                break;
-            case 16:
-                HANDLE_SURFACE_CUE(0x26, 0xD, 1);
-                break;
-            case 17:
-                HANDLE_SURFACE_CUE(0x27, 0xE, 1);
-                break;
-            case 18:
-                HANDLE_SURFACE_CUE(0x29, 9, 1);
-                break;
-            case 19:
-                HANDLE_SURFACE_CUE(0x2A, 0xA, 1);
-                break;
-            case 20:
-                HANDLE_SURFACE_CUE(0x2B, 0xC, 1);
-                break;
-            case 21:
-                HANDLE_SURFACE_CUE(0x2C, 9, 1);
-                break;
-            case 22:
-                HANDLE_SURFACE_CUE(0x2D, 0xA, 1);
-                break;
-            case 23:
-                HANDLE_SURFACE_CUE(0x2E, 0xE, 1);
-                break;
-            case 24:
-                HANDLE_SURFACE_CUE(0x2F, 9, 1);
-                break;
-            case 25:
-                HANDLE_SURFACE_CUE(0x30, 0xB, 1);
-                break;
-            case 26:
-                HANDLE_SURFACE_CUE(0x31, 0xD, 1);
-                break;
-            case 27:
-                HANDLE_SURFACE_CUE(0x32, 9, 1);
-                break;
-            case 28:
-                HANDLE_SURFACE_CUE(0x33, 0xA, 1);
-                break;
-            case 29:
-                HANDLE_SURFACE_CUE(0x34, 0xC, 1);
-                break;
-            case 30:
-                HANDLE_SURFACE_CUE(0x35, 0xA, 1);
-                break;
-            case 31:
-                HANDLE_SURFACE_CUE(0x36, 0xC, 1);
-                break;
-            case 32:
-                HANDLE_SURFACE_CUE(0x37, 9, 1);
-                break;
-            case 33:
-                HANDLE_SURFACE_CUE(0x38, 0xA, 1);
-                break;
-            case 34:
-                HANDLE_SURFACE_CUE(0x39, 0xD, 1);
-                break;
-            default:
-                player->mode = 1;
-                player->unk2A6 = 0;
-                break;
-        }
-
-        player->unk40.y += player->stateTimer;
-        player->posY += 0x60000;
-        player->unk74 = player->unk40.y;
-        player->stateFlags |= 0x208;
-        player->updateState = 0;
-        player->updateTimer = 0;
-        setRaceMotionAnimation(player, 4);
-    } else {
-        updateRacePlayerSurfaceCue(player);
-    }
-
-    player->posX += player->unk40.x;
-    player->posY += player->unk40.y;
-    player->posZ += player->unk40.z;
-    stepRaceMotionJointAnimationUntilEnd(player);
-    updateRacePlayerMotionFeedback(player);
-    if (player->unk517 != 0) {
-        enqueueRacePlayerVoiceSound(player, 5);
-    }
+    temp_t4 = player->unk40.y + player->stateTimer;
+    player->updateState = 0;
+    player->updateTimer = 0;
+    player->unk40.y = temp_t4;
+    player->pos.y += 0x60000;
+    player->unk74 = temp_t4;
+    player->stateFlags |= 0x208;
+    setRaceMotionAnimation((RaceMotionState *) ((RaceMotionState *) player), 4);
+  }
+  else
+  {
+    updateRacePlayerSurfaceCue(player);
+  }
+  player->pos.x += player->unk40.x;
+  player->pos.y += player->unk40.y;
+  player->pos.z += player->unk40.z;
+  stepRaceMotionJointAnimationUntilEnd((RaceMotionState *) ((RaceMotionState *) player));
+  updateRacePlayerMotionFeedback(player);
+  if (player->unk517 != 0)
+  {
+    enqueueRacePlayerVoiceSound(player, 5);
+  }
 }
-
-#undef HANDLE_SURFACE_CUE
 #endif
 
 void resetRacePlayerTrickSubstate(RaceInputPlayer *player) {
