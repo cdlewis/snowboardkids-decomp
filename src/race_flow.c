@@ -38,6 +38,7 @@
 #define RACE_PLAYER_READY_FLAG 0x40
 #ifdef NON_MATCHING
 #define RACE_PLAYER_RESULT_VALUE(index) (*(s8 *)((u8 *)D_80121D80 + ((((((((index) << 2) - (index)) << 5) + (index)) << 2) - (index)) << 2) + 0x509))
+#define CURRENT_RACE_FLOW_TASK ((volatile RaceFlowState *)gCurrentGameTask)
 #endif
 
 typedef struct {
@@ -802,7 +803,7 @@ void updateRaceGameplayFlow(void) {
     }
 }
 
-// waitRaceFinishResultsFlow best match: 88.931% (nonmatchings/waitRaceFinishResultsFlow-3236181511606361864/base_4.c)
+// waitRaceFinishResultsFlow best match: 89.250% (nonmatchings/waitRaceFinishResultsFlow-8331816093655448999/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/waitRaceFinishResultsFlow.s")
 
 #ifdef NON_MATCHING
@@ -812,60 +813,60 @@ void waitRaceFinishResultsFlow(void) {
 
     D_80121B57 = 0;
     updateRaceFlowFrameWithCourseEffects();
-    gCurrentGameTask->fadeTimer--;
-    if (gCurrentGameTask->fadeTimer == 0) {
+    CURRENT_RACE_FLOW_TASK->fadeTimer--;
+    if (CURRENT_RACE_FLOW_TASK->fadeTimer == 0) {
         gMenuFlowState |= 8;
         switch (gPlayerCount) {
         case 3:
-            gCurrentGameTask->unk1C = 0;
-            bestPlayer = gCurrentGameTask->unk1C;
+            CURRENT_RACE_FLOW_TASK->unk1C = 0;
+            bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
             value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
             if (RACE_PLAYER_RESULT_VALUE(1) < value) {
-                gCurrentGameTask->unk1C = 1;
-                bestPlayer = gCurrentGameTask->unk1C;
+                CURRENT_RACE_FLOW_TASK->unk1C = 1;
+                bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
                 value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
             }
             if (RACE_PLAYER_RESULT_VALUE(2) < value) {
-                gCurrentGameTask->unk1C = 2;
-                bestPlayer = gCurrentGameTask->unk1C;
+                CURRENT_RACE_FLOW_TASK->unk1C = 2;
+                bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
             }
-            gCurrentGameTask->unk1C = bestPlayer + 2;
+            CURRENT_RACE_FLOW_TASK->unk1C = bestPlayer + 2;
             setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
             break;
         case 4:
-            gCurrentGameTask->unk1C = 0;
-            bestPlayer = gCurrentGameTask->unk1C;
+            CURRENT_RACE_FLOW_TASK->unk1C = 0;
+            bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
             value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
             if (RACE_PLAYER_RESULT_VALUE(1) < value) {
-                gCurrentGameTask->unk1C = 1;
-                bestPlayer = gCurrentGameTask->unk1C;
+                CURRENT_RACE_FLOW_TASK->unk1C = 1;
+                bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
                 value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
             }
             if (RACE_PLAYER_RESULT_VALUE(2) < value) {
-                gCurrentGameTask->unk1C = 2;
-                bestPlayer = gCurrentGameTask->unk1C;
+                CURRENT_RACE_FLOW_TASK->unk1C = 2;
+                bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
                 value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
             }
             if (RACE_PLAYER_RESULT_VALUE(3) < value) {
-                gCurrentGameTask->unk1C = 3;
-                bestPlayer = gCurrentGameTask->unk1C;
+                CURRENT_RACE_FLOW_TASK->unk1C = 3;
+                bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
             }
-            gCurrentGameTask->unk1C = bestPlayer + 5;
+            CURRENT_RACE_FLOW_TASK->unk1C = bestPlayer + 5;
             setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
             break;
         case 2:
             if (RACE_PLAYER_RESULT_VALUE(0) < RACE_PLAYER_RESULT_VALUE(1)) {
-                gCurrentGameTask->unk1C = 0;
+                CURRENT_RACE_FLOW_TASK->unk1C = 0;
                 D_8011233C = 0;
             } else {
-                gCurrentGameTask->unk1C = 1;
+                CURRENT_RACE_FLOW_TASK->unk1C = 1;
                 gRacePlayerHudStatuses = 0;
             }
-            gCurrentGameTask->fadeTimer = 0;
+            CURRENT_RACE_FLOW_TASK->fadeTimer = 0;
             setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
             break;
         case 1:
-            gCurrentGameTask->fadeTimer = 0;
+            CURRENT_RACE_FLOW_TASK->fadeTimer = 0;
             setCurrentGameTaskCallback(prepareRaceResultsFlow, 0);
             break;
         }
