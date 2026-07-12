@@ -630,10 +630,6 @@ void initMainMenuSettingsPanel(MenuPanelActor *arg0) {
     setCallbackTaskCallback(arg0, updateMainMenuSettingsPanel);
 }
 
-// drawRaceRecordSettingsPanel best match: 98.939%
-#pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/drawRaceRecordSettingsPanel.s")
-
-#ifdef NON_MATCHING
 void drawRaceRecordSettingsPanel(s32 arg0) {
     s32 x;
     s32 x2;
@@ -658,7 +654,7 @@ void drawRaceRecordSettingsPanel(s32 arg0) {
     do {
         drawMenuSprite(-0x84, (s16)y1, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
         drawMenuSprite(0x78, (s16)y1, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
-        y1 = (((((((s16)(y1 + 0x10)) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu;
+        y1 = (y1 + 0x10) * 1;
     } while (y1 < 0x5C);
     for (x = -0x74; x < 0x7C; x += 0x10) {
         for (y = 0x2C; y != 0x5C; y += 0x10) {
@@ -672,7 +668,7 @@ void drawRaceRecordSettingsPanel(s32 arg0) {
     do {
         drawMenuSprite((s16)x2, -0x30, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)x2, 0, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
-        x2 = (s16)(x2 + 0x10);
+        x2 = (x2 + 0x10) * 1;
     } while (x2 < 0x30);
     y2 = -0x20;
     do {
@@ -707,7 +703,6 @@ void drawRaceRecordSettingsPanel(s32 arg0) {
     drawAssetTableSprite(-0x4C, -0x5C, getRelocatableHeapBlockBase(gAssetHandles.courseRecordDigitHandle), courseRecordDigitTileOffsets[gRaceCourseIndex]);
     drawAssetTableSprite(4, -0x5C, getRelocatableHeapBlockBase(gAssetHandles.courseRecordDigitHandle), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1);
 }
-#endif
 
 void updateRaceRecordSettingsPanel(MenuPanelActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawRaceRecordSettingsPanel, (s32) arg0);
