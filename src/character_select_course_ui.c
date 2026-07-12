@@ -342,7 +342,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
 }
 #endif
 
-// initCharacterSelectUnlockedCourseList best match: 96.776% (nonmatchings/initCharacterSelectUnlockedCourseList-3836525038718587862/base_9.c)
+// initCharacterSelectUnlockedCourseList best match: 97.039% (nonmatchings/initCharacterSelectUnlockedCourseList-5802343343535905907/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/initCharacterSelectUnlockedCourseList.s")
 
 #ifdef NON_MATCHING
@@ -359,8 +359,8 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
         spacing = 0x18;
         baseY = -0x50;
     } else if (mode == 1) {
-        baseY = -0x54;
         spacing = 0x16;
+        baseY = -0x54;
     } else if (mode == 2) {
         spacing = 0x16;
         baseY = -0x60;
