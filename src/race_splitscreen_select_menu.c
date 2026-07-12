@@ -85,7 +85,7 @@ void initRaceSplitscreenSelectMenu(void) {
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
     loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
     initCallbackTaskScheduler(0);
-    createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
+    createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
     gMenuSelectionConfirmTimer = 0;
     gMenuTransitionState = 0;
     gActiveMenuTask = 0;

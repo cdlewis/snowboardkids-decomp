@@ -218,7 +218,7 @@ void initCourseSelectMenu(void) {
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     nextCallback = updateCourseSelectModeMenu;
     initCallbackTaskScheduler(0);
-    createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
+    createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
 
     gMenuSelectionConfirmTimer = 0;
     D_800EC9C0 = 0;

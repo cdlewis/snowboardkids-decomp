@@ -35,8 +35,8 @@ typedef struct {
 
 extern void addRenderCallback(void *, void *, s32);
 extern s32 enqueueSoundEffect(s32, s32);
-extern u8 D_800B5458[][0x4C];
-extern u8 D_800B5A14[];
+extern u8 gRaceSetupSaveStatusMessages[][0x4C];
+extern u8 gRaceSetupNoControllerPakMessage[];
 #ifdef NON_MATCHING
 extern u8 D_800E0A80[];
 extern u8 D_800E0A84[];
@@ -48,38 +48,38 @@ extern s16 gControllerPakStatusCodes[];
 extern s16 gMenuChoicePromptState[];
 extern s16 gPlayerBadgeDisplayOrder[];
 extern TitleMenuPlayerView gGameSaveDataBuffer[];
-extern TitleIntroTransitionState D_8010AE00;
-extern s16 D_8010AE02;
-extern u16 D_8010AE06[];
-extern u8 D_8010AE0E[];
-extern u16 D_8010AE12[];
-extern s16 D_8010AE38;
-extern s16 D_8010AE3A;
-extern s16 D_8010AE3C;
-extern s16 D_8010AE3E;
-extern s16 D_8010AE40;
-extern s16 D_8010AE42;
-extern s16 D_8010AE44;
-extern s16 D_8010AE46;
-extern u16 D_800B5408[];
-extern u16 D_800B541C[];
-extern u16 D_800B5430[];
-extern u16 D_800B5444[];
-extern u8 D_800B5200[];
+extern TitleIntroTransitionState gRaceSetupMenuSubState;
+extern s16 gRaceSetupPlayerCountPromptAlpha;
+extern u16 gRaceSetupSaveStatusSelections[];
+extern u8 gRaceSetupSaveStatusTransitionStates[];
+extern u16 gRaceSetupSaveStatusNextSelections[];
+extern s16 gRaceSetupSavePanelRect0X0;
+extern s16 gRaceSetupSavePanelRect0Y0;
+extern s16 gRaceSetupSavePanelRect0X1;
+extern s16 gRaceSetupSavePanelRect0Y1;
+extern s16 gRaceSetupSavePanelRect1X0;
+extern s16 gRaceSetupSavePanelRect1Y0;
+extern s16 gRaceSetupSavePanelRect1X1;
+extern s16 gRaceSetupSavePanelRect1Y1;
+extern u16 gRaceSetupOnePlayerOptionText[];
+extern u16 gRaceSetupTwoPlayerOptionText[];
+extern u16 gRaceSetupThreePlayerOptionText[];
+extern u16 gRaceSetupFourPlayerOptionText[];
+extern u8 gRaceSetupPlayerCountPromptText[];
 extern u8 gAssetHandles[];
 extern s16 gRaceUiSpriteAssetHandle;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 gMenuIconTilemapAssetHandle;
 extern u8 gPlayerCount;
-extern u8 D_800B5A2E[];
-extern u8 D_800B5A2F[];
+extern u8 gRaceSetupSaveChoicePromptBottomSprites[];
+extern u8 gRaceSetupSaveChoicePromptTopSprites[];
 extern u8 gMenuSelectionConfirmTimer;
 extern s32 gMenuFlowState;
 extern Struct801235B8 *gCurrentGameTask;
 extern s32 gMenuOverlayRenderCallbackList;
 extern s32 gMenuRenderCallbackList;
 
-void func_80014600(MenuIntroActor *arg0) {
+void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     s32 i;
     s32 j;
     s32 selected;
@@ -133,7 +133,7 @@ void func_80014600(MenuIntroActor *arg0) {
             selected = 4;
         }
     }
-    drawMenuGlyphScript(actor->x, actor->y, &D_800B5200[selected * 0x68], 0, actor->alpha, 0);
+    drawMenuGlyphScript(actor->x, actor->y, &gRaceSetupPlayerCountPromptText[selected * 0x68], 0, actor->alpha, 0);
 
     if ((actor->state == 1) || (actor->state == 6)) {
         drawMenuSprite((s16)(actor->x + 0xD0), (s16)(actor->y + 0x20),
@@ -142,7 +142,7 @@ void func_80014600(MenuIntroActor *arg0) {
     }
 }
 
-void func_80014AA4(MenuIntroActor *arg0) {
+void updateRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     TitleIntroTransitionState *global;
     MenuIntroActor *actor;
     s32 globalState;
@@ -151,7 +151,7 @@ void func_80014AA4(MenuIntroActor *arg0) {
     s32 step;
     u32 stateCopy;
 
-    global = &D_8010AE00;
+    global = &gRaceSetupMenuSubState;
     state = arg0->state;
     globalState = global->state;
     actor = arg0;
@@ -159,7 +159,7 @@ void func_80014AA4(MenuIntroActor *arg0) {
     if ((u32)stateCopy != globalState) {
         arg0->state = globalState;
         state = globalState;
-        arg0->alpha = D_8010AE00.alpha;
+        arg0->alpha = gRaceSetupMenuSubState.alpha;
     }
     step = 0x10;
 
@@ -190,7 +190,7 @@ void func_80014AA4(MenuIntroActor *arg0) {
         case 2:
             actor->y -= 0x10;
             if (actor->y == -0x5C) {
-                actor->child = createCallbackTask(func_80015054, 0, 0x63);
+                actor->child = createCallbackTask(initRaceSetupOnePlayerOption, 0, 0x63);
                 enqueueSoundEffect(1, 0x32);
                 actor->state = 3;
             }
@@ -219,10 +219,10 @@ void func_80014AA4(MenuIntroActor *arg0) {
     if (alpha == 0) {
         actor->state = 8;
     }
-    D_8010AE00.state = actor->state;
-    D_8010AE02 = actor->alpha;
+    gRaceSetupMenuSubState.state = actor->state;
+    gRaceSetupPlayerCountPromptAlpha = actor->alpha;
     if (actor->state != 8) {
-        addRenderCallback(&gMenuRenderCallbackList, func_80014600, (s32)actor);
+        addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupPlayerCountPrompt, (s32)actor);
     }
 }
 
@@ -233,10 +233,10 @@ void initRaceSetupPlayerCountPrompt(void *arg0) {
     actor->y = -0x1C;
     actor->alpha = 0;
     actor->state = 0;
-    setCallbackTaskCallback(arg0, func_80014AA4);
+    setCallbackTaskCallback(arg0, updateRaceSetupPlayerCountPrompt);
 }
 
-void func_80014CB8(void *arg0) {
+void drawRaceSetupOnePlayerOption(void *arg0) {
     MenuItemActor *actor = arg0;
     s16 unused;
     s16 width;
@@ -270,20 +270,20 @@ void func_80014CB8(void *arg0) {
         } else {
             drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0, alpha);
         }
-        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5408, 1, alpha);
+        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), gRaceSetupOnePlayerOptionText, 1, alpha);
     }
 
     drawMenuSpriteWithAlpha((s16)(actor->x + 0x80), actor->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, alpha, 0);
 }
 
-void func_80014EF0(MenuItemActor *arg0) {
+void updateRaceSetupOnePlayerOption(MenuItemActor *arg0) {
     MenuItemActor *child;
 
     switch (arg0->state) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->x == 0x70) {
-            arg0->child = createCallbackTask(func_80015404, 0, 0x63);
+            arg0->child = createCallbackTask(initRaceSetupTwoPlayerOption, 0, 0x63);
             enqueueSoundEffect(1, 0x32);
         }
         if (arg0->x == -0x50) {
@@ -315,19 +315,19 @@ void func_80014EF0(MenuItemActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80014CB8, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupOnePlayerOption, (s32)arg0);
 }
 
-void func_80015054(MenuItemActor *arg0) {
+void initRaceSetupOnePlayerOption(MenuItemActor *arg0) {
     MenuItemActor *actor = arg0;
 
     actor->x = 0x90;
     actor->y = -0x18;
     actor->state = 0;
-    setCallbackTaskCallback(arg0, func_80014EF0);
+    setCallbackTaskCallback(arg0, updateRaceSetupOnePlayerOption);
 }
 
-void func_8001508C(MenuItemActor *arg0) {
+void drawRaceSetupTwoPlayerOption(MenuItemActor *arg0) {
     MenuItemActor *actor = arg0;
     s16 unused;
     s16 width;
@@ -362,7 +362,7 @@ void func_8001508C(MenuItemActor *arg0) {
         } else {
             drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 1, alpha);
         }
-        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B541C, 1, alpha);
+        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), gRaceSetupTwoPlayerOptionText, 1, alpha);
     }
 
     for (i = 0; i != 0x28; i += 0x14) {
@@ -370,14 +370,14 @@ void func_8001508C(MenuItemActor *arg0) {
     }
 }
 
-void func_800152D0(MenuItemActor *arg0) {
+void updateRaceSetupTwoPlayerOption(MenuItemActor *arg0) {
     MenuItemActor *child;
 
     switch (arg0->state) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->x == 0x70) {
-            arg0->child = createCallbackTask(func_800157B4, 0, 0x63);
+            arg0->child = createCallbackTask(initRaceSetupThreePlayerOption, 0, 0x63);
             enqueueSoundEffect(1, 0x32);
         }
         if (arg0->x == -0x50) {
@@ -403,19 +403,19 @@ void func_800152D0(MenuItemActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8001508C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupTwoPlayerOption, (s32)arg0);
 }
 
-void func_80015404(MenuItemActor *arg0) {
+void initRaceSetupTwoPlayerOption(MenuItemActor *arg0) {
     MenuItemActor *actor = arg0;
 
     actor->x = 0x90;
     actor->y = 8;
     actor->state = 0;
-    setCallbackTaskCallback(arg0, func_800152D0);
+    setCallbackTaskCallback(arg0, updateRaceSetupTwoPlayerOption);
 }
 
-void func_8001543C(void *arg0) {
+void drawRaceSetupThreePlayerOption(void *arg0) {
     MenuItemActor *actor = arg0;
     s16 unused;
     s16 width;
@@ -450,7 +450,7 @@ void func_8001543C(void *arg0) {
         } else {
             drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 2, alpha);
         }
-        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5430, 1, alpha);
+        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), gRaceSetupThreePlayerOptionText, 1, alpha);
     }
 
     for (i = 0; i != 0x3C; i += 0x14) {
@@ -458,14 +458,14 @@ void func_8001543C(void *arg0) {
     }
 }
 
-void func_80015680(MenuItemActor *arg0) {
+void updateRaceSetupThreePlayerOption(MenuItemActor *arg0) {
     MenuItemActor *child;
 
     switch (arg0->state) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->x == 0x70) {
-            arg0->child = createCallbackTask(func_80015B20, 0, 0x63);
+            arg0->child = createCallbackTask(initRaceSetupFourPlayerOption, 0, 0x63);
             enqueueSoundEffect(1, 0x32);
         }
         if (arg0->x == -0x50) {
@@ -491,19 +491,19 @@ void func_80015680(MenuItemActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8001543C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupThreePlayerOption, (s32)arg0);
 }
 
-void func_800157B4(MenuItemActor *arg0) {
+void initRaceSetupThreePlayerOption(MenuItemActor *arg0) {
     MenuItemActor *actor = arg0;
 
     actor->x = 0x90;
     actor->y = 0x28;
     actor->state = 0;
-    setCallbackTaskCallback(arg0, func_80015680);
+    setCallbackTaskCallback(arg0, updateRaceSetupThreePlayerOption);
 }
 
-void func_800157EC(void *arg0) {
+void drawRaceSetupFourPlayerOption(void *arg0) {
     MenuItemActor *actor = arg0;
     s16 unused;
     s16 width;
@@ -538,7 +538,7 @@ void func_800157EC(void *arg0) {
         } else {
             drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 3, alpha);
         }
-        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), D_800B5444, 1, alpha);
+        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), gRaceSetupFourPlayerOptionText, 1, alpha);
     }
 
     for (i = 0; i != 0x50; i += 0x14) {
@@ -546,7 +546,7 @@ void func_800157EC(void *arg0) {
     }
 }
 
-void func_80015A30(MenuItemActor *arg0) {
+void updateRaceSetupFourPlayerOption(MenuItemActor *arg0) {
     MenuItemActor *actor = arg0;
     s16 x;
 
@@ -556,7 +556,7 @@ void func_80015A30(MenuItemActor *arg0) {
         x = actor->x;
         if (x == -0x50) {
             actor->state = 1;
-            createCallbackTask(func_80015C84, 0, 0x63);
+            createCallbackTask(initRaceSetupPlayerCountCursor, 0, 0x63);
             x = actor->x;
         }
         break;
@@ -576,19 +576,19 @@ void func_80015A30(MenuItemActor *arg0) {
         gCurrentGameTask->unk1C = 2;
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_800157EC, (s32)actor);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupFourPlayerOption, (s32)actor);
 }
 
-void func_80015B20(MenuItemActor *arg0) {
+void initRaceSetupFourPlayerOption(MenuItemActor *arg0) {
     MenuItemActor *actor = arg0;
 
     actor->x = 0x90;
     actor->y = 0x48;
     actor->state = 0;
-    setCallbackTaskCallback(arg0, func_80015A30);
+    setCallbackTaskCallback(arg0, updateRaceSetupFourPlayerOption);
 }
 
-void func_80015B58(void *arg0) {
+void drawRaceSetupPlayerCountCursor(void *arg0) {
     FadeItemActor *actor = arg0;
 
     drawMenuSpriteWithAlpha(
@@ -603,7 +603,7 @@ void func_80015B58(void *arg0) {
         0);
 }
 
-void func_80015BD8(FadeItemActor *arg0) {
+void updateRaceSetupPlayerCountCursor(FadeItemActor *arg0) {
     FadeItemActor *actor = arg0;
     u16 temp_v0;
     s16 temp_t6;
@@ -624,24 +624,24 @@ void func_80015BD8(FadeItemActor *arg0) {
     if (temp_a2->x < -0x90) {
         removeCallbackTask(temp_a2);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, func_80015B58, (s32)temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupPlayerCountCursor, (s32)temp_a2);
     }
 }
 
-void func_80015C84(FadeItemActor *arg0) {
+void initRaceSetupPlayerCountCursor(FadeItemActor *arg0) {
     FadeItemActor *actor = arg0;
 
     actor->x = -0x68;
     actor->y = -0x14;
     actor->alpha = 0;
-    setCallbackTaskCallback(arg0, func_80015BD8);
+    setCallbackTaskCallback(arg0, updateRaceSetupPlayerCountCursor);
 }
 
-// func_80015CBC best match: 97.244% (nonmatchings/func_80015CBC-6276316234415602851/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80015CBC.s")
+// drawRaceSetupSavePlayerPanels best match: 97.244% (nonmatchings/drawRaceSetupSavePlayerPanels-6276316234415602851/base_8.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/drawRaceSetupSavePlayerPanels.s")
 
 #ifdef NON_MATCHING
-void func_80015CBC(TitleMenuWidgetItemView *arg0) {
+void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *arg0) {
     char buf[0xC];
     s32 alpha;
     s32 next;
@@ -680,11 +680,11 @@ void func_80015CBC(TitleMenuWidgetItemView *arg0) {
 }
 #endif
 
-// func_80015F4C best match: 99.888% (nonmatchings/func_80015F4C-8662636370764828261/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80015F4C.s")
+// updateRaceSetupSavePanelFrame best match: 99.888% (nonmatchings/updateRaceSetupSavePanelFrame-8662636370764828261/base_12.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/updateRaceSetupSavePanelFrame.s")
 
 #ifdef NON_MATCHING
-void func_80015F4C(RectListActor *arg0) {
+void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
     u8 state;
     s32 outer;
     s32 i;
@@ -692,9 +692,9 @@ void func_80015F4C(RectListActor *arg0) {
     s16 delta1;
     s16 *coords;
 
-    outer = D_8010AE04;
+    outer = gRaceSetupSavePanelFrameState;
     state = arg0->frame;
-    if (D_8010AE04 != state) {
+    if (gRaceSetupSavePanelFrameState != state) {
         state = outer;
         arg0->frame = outer;
     }
@@ -778,15 +778,15 @@ void func_80015F4C(RectListActor *arg0) {
         break;
     }
 
-    D_8010AE04 = state;
-    D_8010AE38 = arg0->rects[0].x0;
-    D_8010AE40 = arg0->rects[1].x0;
-    D_8010AE3A = arg0->rects[0].y0;
-    D_8010AE42 = arg0->rects[1].y0;
-    D_8010AE3C = arg0->rects[0].x1;
-    D_8010AE44 = arg0->rects[1].x1;
-    D_8010AE3E = arg0->rects[0].y1;
-    D_8010AE46 = arg0->rects[1].y1;
+    gRaceSetupSavePanelFrameState = state;
+    gRaceSetupSavePanelRect0X0 = arg0->rects[0].x0;
+    gRaceSetupSavePanelRect1X0 = arg0->rects[1].x0;
+    gRaceSetupSavePanelRect0Y0 = arg0->rects[0].y0;
+    gRaceSetupSavePanelRect1Y0 = arg0->rects[1].y0;
+    gRaceSetupSavePanelRect0X1 = arg0->rects[0].x1;
+    gRaceSetupSavePanelRect1X1 = arg0->rects[1].x1;
+    gRaceSetupSavePanelRect0Y1 = arg0->rects[0].y1;
+    gRaceSetupSavePanelRect1Y1 = arg0->rects[1].y1;
 
     if (gMenuFlowState == 0x63) {
         removeCallbackTask(arg0);
@@ -794,7 +794,7 @@ void func_80015F4C(RectListActor *arg0) {
         return;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, func_80015CBC, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupSavePlayerPanels, (s32)arg0);
 }
 #endif
 
@@ -812,14 +812,14 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     actor->stepLimit = 0x8C;
     actor->stepIncrement = 0x44;
     actor->frame = 0;
-    setCallbackTaskCallback(arg0, func_80015F4C);
+    setCallbackTaskCallback(arg0, updateRaceSetupSavePanelFrame);
 }
 
-// func_80016284 best match: 90.000% (nonmatchings/func_80016284-180949888360117632/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016284.s")
+// drawRaceSetupSavePanelIcons best match: 90.000% (nonmatchings/drawRaceSetupSavePanelIcons-180949888360117632/base_10.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/drawRaceSetupSavePanelIcons.s")
 
 #ifdef NON_MATCHING
-void func_80016284(TitleMenuIconStripActor *arg0) {
+void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
     volatile s32 unused;
     s32 pad[6];
     s32 i;
@@ -908,20 +908,20 @@ void func_80016284(TitleMenuIconStripActor *arg0) {
 }
 #endif
 
-void func_80016560(void *arg0) {
+void updateRaceSetupSavePanelIcons(void *arg0) {
     RectListActor *temp_a2;
     RectListActor *actor = arg0;
 
-    actor->rects[0].x0 = D_8010AE38;
-    actor->rects[1].x0 = D_8010AE40;
-    actor->rects[0].y0 = D_8010AE3A;
-    actor->rects[1].y0 = D_8010AE42;
-    actor->rects[0].x1 = D_8010AE3C;
-    actor->rects[1].x1 = D_8010AE44;
-    actor->rects[0].y1 = D_8010AE3E;
+    actor->rects[0].x0 = gRaceSetupSavePanelRect0X0;
+    actor->rects[1].x0 = gRaceSetupSavePanelRect1X0;
+    actor->rects[0].y0 = gRaceSetupSavePanelRect0Y0;
+    actor->rects[1].y0 = gRaceSetupSavePanelRect1Y0;
+    actor->rects[0].x1 = gRaceSetupSavePanelRect0X1;
+    actor->rects[1].x1 = gRaceSetupSavePanelRect1X1;
+    actor->rects[0].y1 = gRaceSetupSavePanelRect0Y1;
     temp_a2 = actor;
-    actor->rects[1].y1 = D_8010AE46;
-    addRenderCallback(&gMenuRenderCallbackList, func_80016284, (s32)temp_a2);
+    actor->rects[1].y1 = gRaceSetupSavePanelRect1Y1;
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupSavePanelIcons, (s32)temp_a2);
 }
 
 void initRaceSetupSavePanelIcons(RectListActor *arg0) {
@@ -939,10 +939,10 @@ void initRaceSetupSavePanelIcons(RectListActor *arg0) {
     actor->stepIncrement = 0x11;
     actor->stepAccumulator = 2;
     actor->unk2E = 0x27;
-    setCallbackTaskCallback(arg0, func_80016560);
+    setCallbackTaskCallback(arg0, updateRaceSetupSavePanelIcons);
 }
 
-void func_80016664(TitleMenuWidgetActor *arg0) {
+void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     volatile s32 unused;
     MenuIntroActor *intro;
     register TitleMenuWidgetActor *actor;
@@ -971,9 +971,9 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
 
             state = gControllerPakStatusCodes[i];
             if (state == 0xA) {
-                drawMenuAsciiText((s16)(actor->x[i] + 2), (s16)(actor->y[i] + 0x10), D_800B5A14, 7, actor->alpha[i]);
+                drawMenuAsciiText((s16)(actor->x[i] + 2), (s16)(actor->y[i] + 0x10), gRaceSetupNoControllerPakMessage, 7, actor->alpha[i]);
             } else {
-                text = D_800B5458[state];
+                text = gRaceSetupSaveStatusMessages[state];
                 state = 2;
                 drawMenuGlyphScript((s16)(actor->x[i] + state), (s16)(actor->y[i] + 0x10), text, 1, actor->alpha[i], 0);
             }
@@ -989,11 +989,11 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
     }
 }
 
-// func_80016948 best match: 90.557% (nonmatchings/func_80016948-6688367443449623229/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016948.s")
+// updateRaceSetupSaveStatusWidgets best match: 90.557% (nonmatchings/updateRaceSetupSaveStatusWidgets-6688367443449623229/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/updateRaceSetupSaveStatusWidgets.s")
 
 #ifdef NON_MATCHING
-void func_80016948(TitleMenuWidgetActor *arg0) {
+void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     register TitleMenuWidgetActor *actor;
     s32 i;
     s32 sum;
@@ -1005,7 +1005,7 @@ void func_80016948(TitleMenuWidgetActor *arg0) {
     actor = arg0;
     i = 0;
     if ((s32) gPlayerCount > 0) {
-        global = &D_8010AE00;
+        global = &gRaceSetupMenuSubState;
         do {
             actor->x[i] = view->x;
             actor->y[i] = view->y;
@@ -1059,7 +1059,7 @@ void func_80016948(TitleMenuWidgetActor *arg0) {
     if (sum == (gPlayerCount * 3)) {
         removeCallbackTask((CallbackTask *) actor);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, func_80016664, (s32) actor);
+        addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupSaveStatusWidgets, (s32) actor);
     }
 }
 #endif
@@ -1083,14 +1083,14 @@ void initRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
         new_var->unk31[i] = 0;
     }
 
-    setCallbackTaskCallback(new_var, func_80016948);
+    setCallbackTaskCallback(new_var, updateRaceSetupSaveStatusWidgets);
 }
 
-// func_80016BE8 best match: 99.233% (nonmatchings/func_80016BE8-6061209858023118177/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016BE8.s")
+// drawRaceSetupSaveChoicePrompts best match: 99.233% (nonmatchings/drawRaceSetupSaveChoicePrompts-6061209858023118177/base_12.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/drawRaceSetupSaveChoicePrompts.s")
 
 #ifdef NON_MATCHING
-void func_80016BE8(TitleMenuTransitionActor *arg0) {
+void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
     MenuIntroActor *intro;
     TitleMenuTransitionActor *new_var;
     TitleMenuTransitionActor *new_var2;
@@ -1102,8 +1102,8 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
     new_var2 = arg0;
     if (intro->state == 8) {
         for (i = 0; i < gPlayerCount; i++) {
-            if (D_8010AE00.selection[i] != arg0->selection[i]) {
-                arg0->selection[i] = D_8010AE00.selection[i];
+            if (gRaceSetupMenuSubState.selection[i] != arg0->selection[i]) {
+                arg0->selection[i] = gRaceSetupMenuSubState.selection[i];
             }
 
             state = gMenuChoicePromptState[i];
@@ -1115,7 +1115,7 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
                 }
 
                 drawMenuSpriteWithAlpha(arg0->x[i], arg0->topY[i], getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
-                              D_800B5A2F[gControllerPakStatusCodes[i] * 2], 0x20, 0x20, 0, alpha, 0);
+                              gRaceSetupSaveChoicePromptTopSprites[gControllerPakStatusCodes[i] * 2], 0x20, 0x20, 0, alpha, 0);
 
                 if (alpha == 0x100) {
                     alpha = 0x60;
@@ -1125,7 +1125,7 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
 
                 new_var = arg0;
                 drawMenuSpriteWithAlpha(arg0->x[i], new_var->y[i], getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
-                              D_800B5A2E[gControllerPakStatusCodes[i] * 2], 0x20, 0x20, 0, alpha, 0);
+                              gRaceSetupSaveChoicePromptBottomSprites[gControllerPakStatusCodes[i] * 2], 0x20, 0x20, 0, alpha, 0);
 
                 if (new_var->alpha == 0) {
                 }
@@ -1140,8 +1140,8 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
             }
 
             if ((state >= 5) && (new_var2->slideOffset[i] == 0)) {
-                D_8010AE00.nextSelection[i] = arg0->selection[i];
-                D_8010AE0E[i] = 2;
+                gRaceSetupMenuSubState.nextSelection[i] = arg0->selection[i];
+                gRaceSetupSaveStatusTransitionStates[i] = 2;
                 gMenuChoicePromptState[i] = 0;
             }
         }
@@ -1149,11 +1149,11 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
 }
 #endif
 
-// func_80016E40 best match: 97.350% (nonmatchings/func_80016E40-6061209858023118177/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/func_80016E40.s")
+// updateRaceSetupSaveChoicePrompts best match: 97.350% (nonmatchings/updateRaceSetupSaveChoicePrompts-6061209858023118177/base_10.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/updateRaceSetupSaveChoicePrompts.s")
 
 #ifdef NON_MATCHING
-void func_80016E40(TitleMenuTransitionActor *arg0) {
+void updateRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
     TitleMenuTransitionActor *actor;
     u8 *count;
     s32 i;
@@ -1166,8 +1166,8 @@ void func_80016E40(TitleMenuTransitionActor *arg0) {
     i = 0;
     if (*count > 0) {
         do {
-            if (D_8010AE00.selection[i] != actor->selection[i]) {
-                actor->selection[i] = D_8010AE00.selection[i];
+            if (gRaceSetupMenuSubState.selection[i] != actor->selection[i]) {
+                actor->selection[i] = gRaceSetupMenuSubState.selection[i];
             }
 
             state = gMenuChoicePromptState[i];
@@ -1215,7 +1215,7 @@ void func_80016E40(TitleMenuTransitionActor *arg0) {
         } while (i < *count);
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, func_80016BE8, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupSaveChoicePrompts, (s32)arg0);
 }
 #endif
 
@@ -1234,16 +1234,16 @@ void initRaceSetupSaveChoicePrompts(RectListActor *arg0) {
     actor->rects[0].y1 = 0x1C;
     actor->rects[1].y1 = 0x30;
     actor->rects[2].y1 = 0x30;
-    setCallbackTaskCallback(arg0, func_80016E40);
+    setCallbackTaskCallback(arg0, updateRaceSetupSaveChoicePrompts);
 }
 
-void func_80017078(void *arg0) {
+void drawMenuIconTilemapSpriteActor(void *arg0) {
     SpriteActor *actor = arg0;
 
     drawMenuTilemapSprite(&actor->sprite, 0, actor->x, actor->y);
 }
 
-void func_800170AC(SpriteActor *arg0) {
+void updateMenuIconTilemapSpriteActor(SpriteActor *arg0) {
     SpriteActor *temp_a2;
     MenuTilemapSprite *temp_v0;
     SpriteActor *actor = arg0;
@@ -1255,16 +1255,16 @@ void func_800170AC(SpriteActor *arg0) {
         actor->sprite.unk0 = 0x2FF;
     }
     temp_v0->unk2 = (temp_v0->unk2 + 1) & 0x1FF;
-    addRenderCallback(&gMenuOverlayRenderCallbackList, func_80017078, (s32)temp_a2);
+    addRenderCallback(&gMenuOverlayRenderCallbackList, drawMenuIconTilemapSpriteActor, (s32)temp_a2);
 }
 
-void func_8001710C(SpriteActor *arg0) {
+void initMenuIconTilemapSpriteActor(SpriteActor *arg0) {
     SpriteActor *temp_a2 = arg0;
 
     initMenuTilemapSprite(&temp_a2->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
     temp_a2->x = temp_a2->sprite.unk8;
     temp_a2->y = temp_a2->sprite.unkA;
-    setCallbackTaskCallback(temp_a2, func_800170AC);
+    setCallbackTaskCallback(temp_a2, updateMenuIconTilemapSpriteActor);
 }
 
 void initMenuTilemapSprite(MenuTilemapSprite *arg0, s32 arg1) {

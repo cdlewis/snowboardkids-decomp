@@ -187,7 +187,7 @@ void initMultiplayerCourseSelectMenu(void) {
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
     initCallbackTaskScheduler(0);
-    createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x63);
+    createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x63);
 
     D_800EC9C0 = 0;
     gActiveMenuTask = 0;

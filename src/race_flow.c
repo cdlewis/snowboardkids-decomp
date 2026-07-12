@@ -1775,7 +1775,7 @@ void initRaceRecordSettingsFlow(void) {
     initCallbackTaskScheduler(0);
     gMenuFlowState = 0;
     createCallbackTaskWithUserId(initRaceRecordSettingsPanel, 0, 0x64, 0);
-    createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
+    createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
     setCurrentGameTaskCallback(updateRaceRecordSettingsFlow, 0);
     requestMusicSequenceBank(7);
 }
