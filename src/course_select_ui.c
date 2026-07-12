@@ -884,7 +884,7 @@ void initCourseSelectCourseIconList(u8 *arg0) {
 }
 #endif
 
-// drawCourseSelectCourseCursors best match: 98.481% (nonmatchings/drawCourseSelectCourseCursors-6061209858023118177/base_5.c)
+// drawCourseSelectCourseCursors best match: 98.861% (nonmatchings/drawCourseSelectCourseCursors-2694253543240320626/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectCourseCursors.s")
 
 #ifdef NON_MATCHING
@@ -895,7 +895,6 @@ void drawCourseSelectCourseCursors(u8 *arg0) {
     s16 *posPtr;
     s8 *directionPtr;
     s16 *handles;
-    s8 direction;
     s32 tileIndex;
     s32 handleIndex;
     s32 one;
@@ -921,9 +920,9 @@ void drawCourseSelectCourseCursors(u8 *arg0) {
                         handleIndex = 0x21;
                     }
                     drawMenuSpriteWithAlpha(posPtr[0xC],
-                                  (s16)(posPtr[0x10] + ((statePtr[0x38] * (direction = *directionPtr)) & 0xFFFF)),
+                                  (s16)(posPtr[0x10] + ((*directionPtr) * statePtr[0x38])),
                                   getRelocatableHeapBlockBase(handles[handleIndex]), tileIndex & 0xFFFF, 0x20, 0x20, 0,
-                                  posPtr[0x14], 0);
+                                  posPtr[0x14], (short)0);
                 }
                 i++;
                 statePtr++;
