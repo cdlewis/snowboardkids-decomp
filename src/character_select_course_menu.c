@@ -82,7 +82,7 @@ extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initCharacterSelectCourseMenuFromRaceTypeSelect best match: 79.600% (nonmatchings/initCharacterSelectCourseMenuFromRaceTypeSelect-8207005055717715604/base_1.c)
+// initCharacterSelectCourseMenuFromRaceTypeSelect best match: 89.571% (nonmatchings/initCharacterSelectCourseMenuFromRaceTypeSelect-8331816093655448999/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/initCharacterSelectCourseMenuFromRaceTypeSelect.s")
 
 #ifdef NON_MATCHING
@@ -90,6 +90,7 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     s32 sp1C;
     s16 *var_v0_2;
     s16 *var_v1_2;
+    s16 *activeOptions;
     s32 var_v1;
     s32 var_v0_3;
     u8 temp_v1;
@@ -130,21 +131,24 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
+            activeOptions = gCharacterSelectShortCourseOptions;
             if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
                 gRaceCourseIndex = 9;
             }
         } else {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
+            activeOptions = gCharacterSelectSingleCourseOption;
             gRaceCourseIndex = 7;
         }
     } else {
         gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
+        activeOptions = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
         if (gRaceCourseIndex == -1) {
             gRaceCourseIndex = 9;
         }
     }
 
-    var_v0_2 = *gCharacterSelectActiveCourseOptions;
+    var_v0_2 = activeOptions;
 loop_20:
     if (gRaceCourseIndex == *var_v0_2) {
         gRaceCourseIndex = var_v1;
@@ -158,7 +162,7 @@ loop_20:
 
     gCharacterSelectCourseExitOptionIndex = 0;
     var_v0_3 = 0;
-    var_v1_2 = *gCharacterSelectActiveCourseOptions;
+    var_v1_2 = activeOptions;
 loop_24:
     var_v0_3 += 2;
     if (*var_v1_2 != -1) {
