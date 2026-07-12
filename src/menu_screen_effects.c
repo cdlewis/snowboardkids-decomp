@@ -607,106 +607,42 @@ void waitForRaceSetupNamePlate(MenuScreenEffectActor *arg0) {
     removeCallbackTask(arg0);
 }
 
-// drawMainMenuModeBoardTransition best match: 84.797% at nonmatchings/drawMainMenuModeBoardTransition-4923837976568703863/base_11.c
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_screen_effects/drawMainMenuModeBoardTransition.s")
-
-#ifdef NON_MATCHING
 void drawMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
     void *image;
     void *palette;
     GfxCommandSource transform;
-    volatile u8 pad[0x48];
     GfxCommandDest *matrix;
-    Gfx *gfx;
 
     if (gCurrentViewportIndex == 2) {
-        getAssetTableImageAndPalette((void *) getRelocatableHeapBlockBase(D_80112174), 0, &image, &palette);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112174), 0, &image, &palette);
         makeFixedRotationZ(transform.rotation, arg0->spriteIndex);
         transform.x = arg0->unk18.word;
         transform.y = arg0->unk1C.word;
         transform.z = arg0->unk20.word;
         matrix = allocFixedTransformMatrix(&transform);
         if (matrix != NULL) {
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0x06000000;
-            gfx->words.w1 = (u32) gTranslucentSpriteRenderModeDl;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xFA000000;
-            gfx->words.w1 = (arg0->alpha & 0xFF) | ~0xFF;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xFD48006B;
-            gfx->words.w1 = (u32) image;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF5481C00;
-            gfx->words.w1 = 0x07080200;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE6000000;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF4000000;
-            gfx->words.w1 = 0x071B0040;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE7000000;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF5401C00;
-            gfx->words.w1 = 0x00080200;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF2000000;
-            gfx->words.w1 = 0x00360040;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xFD100000;
-            gfx->words.w1 = (u32) palette;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE8000000;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF5000100;
-            gfx->words.w1 = 0x07000000;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE6000000;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xF0000000;
-            gfx->words.w1 = 0x0703C000;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w1 = 0;
-            gfx->words.w0 = 0xE7000000;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0x01020040;
-            gfx->words.w1 = (u32) matrix;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0x01000040;
-            gfx->words.w1 = (u32) gViewportMatrix;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0x0400103F;
-            gfx->words.w1 = (u32) mainMenuModeBoardTransitionVertices;
-            gfx = gRegionAllocPtr;
-            gRegionAllocPtr = gfx + 1;
-            gfx->words.w0 = 0xB1060402;
-            gfx->words.w1 = 0x00060200;
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32) gTranslucentSpriteRenderModeDl);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xFA000000, (arg0->alpha & 0xFF) | ~0xFF);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xFD48006B, (u32) image);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xF5481C00, 0x07080200);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xF4000000, 0x071B0040);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xF5401C00, 0x00080200);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x00360040);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32) palette);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32) matrix);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32) gViewportMatrix);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32) mainMenuModeBoardTransitionVertices);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x00060200);
         }
     }
 }
-#endif
 
 void updateMainMenuModeBoardAfterimage(MenuScreenEffectActor *arg0) {
     arg0->alpha -= 0x20;
