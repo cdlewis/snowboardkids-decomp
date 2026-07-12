@@ -46,6 +46,13 @@ typedef struct OSContPad {
     u8 errno;
 } OSContPad;
 
+typedef struct ControllerInputState {
+    u16 buttons;
+    s8 stickX;
+    s8 stickY;
+    u8 pad4[2];
+} ControllerInputState;
+
 typedef struct OSPfs {
     s32 status;
     OSMesgQueue *queue;
@@ -142,7 +149,7 @@ extern u8 gMainMenuReturnFromRace;
 extern u8 gFramebufferSwapDelay;
 extern u8 gControllerReadPending;
 extern OSContStatus gControllerStatuses[];
-extern s16 gControllerInputState;
+extern ControllerInputState gControllerInputState[];
 extern u8 D_800E4C1A;
 extern u8 D_800E4C1B;
 extern s16 D_800E4C1E;
@@ -356,7 +363,10 @@ void requestControllerRead(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/updateControllerInputState.s")
+void updateControllerInputState(void) {
+    u16 i;
+ do { i = 0; do { if ((((s32) gConnectedControllerBitmask) >> i) & 1) { if (gControllerPads[i].errno == 0) { gControllerInputState[i] = *((ControllerInputState *) (&gControllerPads[i])); } } i++; } while (i < 4); gControllerReadPending = 0; } while (0);
+}
 
 void requestRumbleMotorInit(u16 arg0) {
     OSMesg msg;
