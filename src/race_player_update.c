@@ -21,6 +21,7 @@
 #include "race_surface_cues.h"
 #include "race_ui_effects.h"
 #include "snowboard_trail_effects.h"
+#include "viewport_manager.h"
 
 #define RACE_MOTION_STATE(player) ((RaceMotionState *)(player))
 #define RACE_MOTION_INIT_STATE(player) ((RaceMotionInitState *)(player))
@@ -81,11 +82,6 @@ typedef struct {
 } CourseStartPosition;
 
 typedef struct {
-    /* 0x00 */ s16 unk0;
-    /* 0x02 */ char pad2[0xAE];
-} Unk801124B8;
-
-typedef struct {
     s16 angle;
     s16 unk2;
     char pad4[0x44];
@@ -141,7 +137,6 @@ extern RacePlayerSoundPosition D_80121D9C[];
 extern RacePlayerSoundPosition D_80121DA8[];
 extern void *D_801248C8;
 extern void *D_801248EC;
-extern Unk801124B8 D_801124B8[];
 
 void initRacePlayers(void) {
     D_80121D80[0].playerIndex = 0;
@@ -3545,7 +3540,7 @@ void updateRacePlayerMode06TerrainFall(RaceInputPlayer *player) {
         }
         player->stateFlags |= 0x80000;
         pos = &player->posX;
-        if (D_801124B8[(u16) player->playerIndex].unk0 == 0xFF) {
+        if (gViewportStates[(u16) player->playerIndex].overlayAlpha == 0xFF) {
             player->updateTimer++;
             player->unk74 = 0;
             player->unk502 = player->unk2E8;
@@ -3575,7 +3570,7 @@ void updateRacePlayerMode06TerrainFall(RaceInputPlayer *player) {
         break;
     case 2:
         player->stateFlags &= 0xFFF7FFFF;
-        if (D_801124B8[(u16) player->playerIndex].unk0 == 0) {
+        if (gViewportStates[(u16) player->playerIndex].overlayAlpha == 0) {
             player->mode = 0;
             player->updateState = 0;
             player->updateTimer = 0;
@@ -3669,7 +3664,7 @@ void updateRacePlayerMode28TerrainFallWithItemEffect(RaceInputPlayer *player) {
                 setRaceMotionAnimation(player, 0x21);
             }
             player->stateFlags |= 0x80000;
-            if (D_801124B8[(u16) player->playerIndex].unk0 == 0xFF) {
+            if (gViewportStates[(u16) player->playerIndex].overlayAlpha == 0xFF) {
                 player->updateState++;
                 player->unk502 = player->unk2E8;
                 sp38 = &player->posX;
@@ -3700,7 +3695,7 @@ loop:
             break;
         case 5:
             player->stateFlags &= 0xFFF7FFFF;
-            if (D_801124B8[(u16) player->playerIndex].unk0 == 0) {
+            if (gViewportStates[(u16) player->playerIndex].overlayAlpha == 0) {
                 player->mode = 0;
                 player->updateState = 0;
                 player->updateTimer = 0;
@@ -3785,7 +3780,7 @@ void updateRacePlayerMode09TerrainCrash(RaceInputPlayer *player) {
         }
         player->stateFlags |= 0x80000;
         posX = &player->posX;
-        if (D_801124B8[(u16)player->playerIndex * 0x58] == 0xFF) {
+        if (gViewportStates[(u16)player->playerIndex].overlayAlpha == 0xFF) {
             player->updateState++;
             player->unk502 = player->unk2E8;
             posZ = &player->posZ;
@@ -3813,7 +3808,7 @@ void updateRacePlayerMode09TerrainCrash(RaceInputPlayer *player) {
         break;
     case 5:
         player->stateFlags &= 0xFFF7FFFF;
-        if (D_801124B8[(u16)player->playerIndex * 0x58] == 0) {
+        if (gViewportStates[(u16)player->playerIndex].overlayAlpha == 0) {
             player->mode = 0;
             player->updateState = 0;
             player->updateTimer = 0;

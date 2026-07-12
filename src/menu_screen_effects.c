@@ -550,7 +550,7 @@ void updateRaceSetupNamePlateSlideIn(MenuScreenEffectActor *arg0) {
 }
 
 void waitForRaceSetupNamePlate(MenuScreenEffectActor *arg0) {
-    if (D_801124B0[arg0->index].active != 0) {
+    if (gViewportStates[arg0->index].active != 0) {
         arg0->unk24.word = 0x38;
         arg0->unk18.word = -0x1A4;
         setCallbackTaskCallback(arg0, updateRaceSetupNamePlateSlideIn);

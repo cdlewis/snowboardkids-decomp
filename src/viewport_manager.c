@@ -6,11 +6,11 @@
 
 #ifdef NON_MATCHING
 void resetAllViewports(void) {
-    volatile ViewportState *viewport = &D_801124B0[0];
+    volatile ViewportState *viewport = &gViewportStates[0];
 
     viewport->active = 0;
     viewport->screenBoundsValid = 0;
-    viewport->unk2 = 0;
+    viewport->clearFramebuffer = 0;
     viewport->overlayActive = 0;
     viewport->overlayR = 0;
     viewport->overlayG = 0;
@@ -21,10 +21,10 @@ void resetAllViewports(void) {
     viewport->unk1C = 0x1FF;
     viewport->unk1E = 0;
 
-    viewport = &D_801124B0[1];
+    viewport = &gViewportStates[1];
     viewport->active = 0;
     viewport->screenBoundsValid = 0;
-    viewport->unk2 = 0;
+    viewport->clearFramebuffer = 0;
     viewport->overlayActive = 0;
     viewport->overlayR = 0;
     viewport->overlayG = 0;
@@ -35,10 +35,10 @@ void resetAllViewports(void) {
     viewport->unk1C = 0x1FF;
     viewport->unk1E = 0;
 
-    viewport = &D_801124B0[2];
+    viewport = &gViewportStates[2];
     viewport->active = 0;
     viewport->screenBoundsValid = 0;
-    viewport->unk2 = 0;
+    viewport->clearFramebuffer = 0;
     viewport->overlayActive = 0;
     viewport->overlayR = 0;
     viewport->overlayG = 0;
@@ -49,10 +49,10 @@ void resetAllViewports(void) {
     viewport->unk1C = 0x1FF;
     viewport->unk1E = 0;
 
-    viewport = &D_801124B0[3];
+    viewport = &gViewportStates[3];
     viewport->active = 0;
     viewport->screenBoundsValid = 0;
-    viewport->unk2 = 0;
+    viewport->clearFramebuffer = 0;
     viewport->overlayActive = 0;
     viewport->overlayR = 0;
     viewport->overlayG = 0;
@@ -65,12 +65,12 @@ void resetAllViewports(void) {
 }
 #endif
 
-void func_80070614(s32 arg0) {
-    ViewportState *viewport = &D_801124B0[arg0];
+void resetViewport(s32 arg0) {
+    ViewportState *viewport = &gViewportStates[arg0];
 
     viewport->active = 0;
     viewport->screenBoundsValid = 0;
-    viewport->unk2 = 0;
+    viewport->clearFramebuffer = 0;
     viewport->overlayActive = 0;
     viewport->overlayR = 0;
     viewport->overlayG = 0;
@@ -96,7 +96,7 @@ void configureViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg
     f32 fovy;
     u16 *arg3Ptr;
 
-    viewport = &D_801124B0[arg0];
+    viewport = &gViewportStates[arg0];
     viewport->viewportTranslateX = arg1 * 4;
     viewport->active = 1;
     viewport->viewportTranslateY = arg2 * 4;
@@ -162,7 +162,7 @@ void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 cent
     s32 halfWidth;
     f32 fovy;
 
-    viewport = &D_801124B0[viewportIndex];
+    viewport = &gViewportStates[viewportIndex];
     viewport->viewportTranslateX = centerX * 4;
     viewport->active = 1;
     viewport->viewportTranslateY = centerY * 4;
@@ -212,21 +212,21 @@ void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 cent
 }
 #endif
 
-// func_80070A70 best match: 88.992%
+// configureRaceViewport best match: 88.992%
 
-#pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/func_80070A70.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/configureRaceViewport.s")
 
 #ifdef NON_MATCHING
-extern f32 D_800E1538;
+extern f32 gRaceViewportOverlayFarClip;
 
-void func_80070A70(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
+void configureRaceViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
     ViewportState *viewport;
     s32 halfHeight;
     s32 halfWidth;
     f32 fovy;
     u16 *arg3Ptr;
 
-    viewport = &D_801124B0[arg0];
+    viewport = &gViewportStates[arg0];
     viewport->viewportTranslateX = arg1 * 4;
     viewport->active = 1;
     viewport->viewportTranslateY = arg2 * 4;
@@ -274,7 +274,7 @@ void func_80070A70(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
 
     fovy = 70.0f;
     guPerspective(&viewport->projection, &viewport->perspectiveNorm, fovy, arg7, 10.0f, 1000.0f, 0.5f);
-    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, fovy, arg7, 10.0f, D_800E1538, 0.5f);
+    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, fovy, arg7, 10.0f, gRaceViewportOverlayFarClip, 0.5f);
 }
 #endif
 
@@ -283,8 +283,8 @@ void func_80070A70(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/configureMenuViewport.s")
 
 #ifdef NON_MATCHING
-extern f32 D_800E153C;
-extern f32 D_800E1540;
+extern f32 gMenuViewportFarClip;
+extern f32 gMenuViewportOverlayFarClip;
 
 void configureMenuViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
     ViewportState *viewport;
@@ -292,7 +292,7 @@ void configureMenuViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16
     s32 halfHeight;
     s32 halfWidth;
 
-    viewport = &D_801124B0[arg0];
+    viewport = &gViewportStates[arg0];
     viewport->viewportTranslateX = arg1 * 4;
     viewport->active = 1;
     viewport->viewportTranslateY = arg2 * 4;
@@ -337,13 +337,14 @@ void configureMenuViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16
     }
 
     savedViewport = viewport;
-    guPerspective(&viewport->projection, &viewport->perspectiveNorm, 70.0f, arg7, 10.0f, D_800E153C, 0.5f);
-    guPerspective(&savedViewport->overlayProjection, &savedViewport->overlayPerspectiveNorm, 70.0f, arg7, 10.0f, D_800E1540, 0.5f);
+    guPerspective(&viewport->projection, &viewport->perspectiveNorm, 70.0f, arg7, 10.0f, gMenuViewportFarClip, 0.5f);
+    guPerspective(&savedViewport->overlayProjection, &savedViewport->overlayPerspectiveNorm, 70.0f, arg7, 10.0f, gMenuViewportOverlayFarClip,
+                  0.5f);
 }
 #endif
 
-void func_80070E58(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    ViewportState *viewport = &D_801124B0[arg0];
+void setViewportOverlayColor(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    ViewportState *viewport = &gViewportStates[arg0];
 
     viewport->overlayActive = 1;
     viewport->overlayR = arg1;
@@ -351,6 +352,6 @@ void func_80070E58(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     viewport->overlayB = arg3;
 }
 
-void func_80070E90(s32 arg0) {
-    D_801124B0[arg0].unk2 = 1;
+void enableViewportClear(s32 arg0) {
+    gViewportStates[arg0].clearFramebuffer = 1;
 }

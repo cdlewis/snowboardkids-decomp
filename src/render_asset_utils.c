@@ -1644,7 +1644,7 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
         return 1;
     }
 
-    if (D_801124B0[0].active != 0) {
+    if (gViewportStates[0].active != 0) {
         diffX = D_801121F8;
         diffX = diffX - pos->x;
         if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001)) {
@@ -1658,7 +1658,7 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
     }
 
     posAlias = pos;
-    if (D_801124B0[1].active != 0) {
+    if (gViewportStates[1].active != 0) {
         diffX = D_801122A8 - pos->x;
         temp = D_801122B0;
         diffZ = temp - posAlias->z;
@@ -1668,7 +1668,7 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
         }
     }
 
-    if (D_801124B0[2].active != 0) {
+    if (gViewportStates[2].active != 0) {
         diffX = D_80112358 - posAlias->x;
         diffZ = D_80112360 - pos->z;
         if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001) && (diffZ < 0x6000000) && (diffZ >= (s32)0xFA000001)) {
@@ -1676,7 +1676,7 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
         }
     }
 
-    if (D_801124B0[3].active != 0) {
+    if (gViewportStates[3].active != 0) {
         diffX = D_80112408 - posAlias->x;
         diffZ = D_80112410 - posAlias->z;
         lower = 0xFA000001;

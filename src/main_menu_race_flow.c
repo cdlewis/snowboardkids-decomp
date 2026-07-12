@@ -41,7 +41,6 @@ extern u8 D_24C8E0[];
 extern MainMenuRaceFlowTask *gCurrentGameTask;
 extern u8 gMainMenuSelectionResult;
 extern u8 gRacePlayerHudStatuses;
-extern s16 D_801124B8;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
@@ -100,7 +99,7 @@ void initMainMenuModePreviewRaceSelectionMenu(void) {
     gFramebufferSwapDelay = 0;
     gMenuFadeAlpha = 0xFF;
     resetAllViewports();
-    D_801124B8 = 0x80;
+    gViewportStates[0].overlayAlpha = 0x80;
     initCallbackTaskScheduler(0);
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     resetRaceCameras();
@@ -260,7 +259,7 @@ void fadeInMainMenuModePreviewRace(void) {
     updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
-    D_801124B8 = 0x80;
+    gViewportStates[0].overlayAlpha = 0x80;
 }
 
 void waitForMainMenuModePreviewRaceStart(void) {
@@ -274,7 +273,7 @@ void waitForMainMenuModePreviewRaceStart(void) {
         requestMusicSequenceStop(0x20);
         setCurrentGameTaskCallback(&zoomMainMenuModePreviewRaceViewport, 0);
     }
-    D_801124B8 = 0x80;
+    gViewportStates[0].overlayAlpha = 0x80;
 }
 
 // zoomMainMenuModePreviewRaceViewport best match: 75.250% (nonmatchings/zoomMainMenuModePreviewRaceViewport-1197934324348345530/base_3.c)
@@ -500,7 +499,7 @@ void fadeInTrainingCourseRace(void) {
     updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
-    D_801124B8 = 0x80;
+    gViewportStates[0].overlayAlpha = 0x80;
 }
 
 void waitForTrainingCourseStartSelection(void) {
@@ -514,7 +513,7 @@ void waitForTrainingCourseStartSelection(void) {
         requestMusicSequenceStop(0x20);
         setCurrentGameTaskCallback(&zoomTrainingCourseRaceViewport, 0);
     }
-    D_801124B8 = 0x80;
+    gViewportStates[0].overlayAlpha = 0x80;
 }
 
 // zoomTrainingCourseRaceViewport best match: 74.802% (nonmatchings/zoomTrainingCourseRaceViewport-1197934324348345530/base_8.c)
@@ -627,7 +626,7 @@ void fadeInTrainingCourseLessonEndMenu(void) {
         setCurrentGameTaskCallback(waitForTrainingCourseLessonEndMenuSelection, 0);
     }
     temp_v1 = gCurrentGameTask->transitionTimer;
-    D_801124B8 = temp_v1;
+    gViewportStates[0].overlayAlpha = temp_v1;
 }
 
 void waitForTrainingCourseLessonEndMenuSelection(void) {
@@ -638,7 +637,7 @@ void waitForTrainingCourseLessonEndMenuSelection(void) {
     updateRemainingCallbackTasks();
     updateRaceCameras();
     updateRaceHud();
-    D_801124B8 = 0x80;
+    gViewportStates[0].overlayAlpha = 0x80;
     if (gMainMenuSelectionResult != 0) {
         setCurrentGameTaskCallback(&fadeOutTrainingCourseLessonEndMenu, 0);
     }
@@ -652,7 +651,7 @@ void fadeOutTrainingCourseLessonEndMenu(void) {
     updateRemainingCallbackTasks();
     updateRaceCameras();
     updateRaceHud();
-    D_801124B8 = 0x80;
+    gViewportStates[0].overlayAlpha = 0x80;
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gFramebufferSwapHold = 1;
