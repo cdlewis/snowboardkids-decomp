@@ -4,7 +4,7 @@
 #include "ending_credits_linda.h"
 #include "main_menu_scene_model.h"
 #include "main_menu_scene_model_renderer.h"
-#include "race_position_ui.h"
+#include "race_player_model_renderer.h"
 
 typedef s16 FixedMatrix3sScratch[0x10];
 typedef s32 MatrixWordCopy[8];
@@ -909,7 +909,7 @@ void spawnEndingCreditsTumblingSnowboard(s32 arg0, s32 arg1, s32 arg2, u16 arg3,
 void drawEndingCreditsTumblingSnowboard(EndingCreditsTumblingSnowboard *arg0) {
     s32 temp = allocFixedTransformMatrix(&arg0->displayObject);
     if (temp != 0) {
-        func_8007C130((void *)temp, arg0->textureId, arg0->paletteId);
+        drawRacePlayerModelBaseDisplayList((void *)temp, arg0->textureId, arg0->paletteId);
     }
 }
 

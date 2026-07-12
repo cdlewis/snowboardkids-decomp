@@ -5,7 +5,7 @@
 #include "course_select_ui.h"
 #include "shop_menu_ui.h"
 #include "fixed_point_math.h"
-#include "race_position_ui.h"
+#include "race_player_model_renderer.h"
 
 typedef struct {
     u8 pad0[0x20];
@@ -205,7 +205,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             temp_v0_4 = allocFixedTransformMatrix(&sp30);
             arg0->matrix = temp_v0_4;
             if (temp_v0_4 != 0) {
-                func_8007C130((void *)(temp_v0_4 ^ 0), (s16) sp2F, (s16) sp2E);
+                drawRacePlayerModelBaseDisplayList((void *)(temp_v0_4 ^ 0), (s16) sp2F, (s16) sp2E);
             }
         }
     }
@@ -482,7 +482,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             temp_v0_4 = allocFixedTransformMatrix(&sp30);
             arg0->matrix = temp_v0_4;
             if (temp_v0_4 != 0) {
-                func_8007C130((void *)temp_v0_4, (s16) sp2F, (s16) sp2E);
+                drawRacePlayerModelBaseDisplayList((void *)temp_v0_4, (s16) sp2F, (s16) sp2E);
             }
         }
     }

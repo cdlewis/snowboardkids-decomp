@@ -2,7 +2,7 @@
 #include "race_camera.h"
 #include "race_motion_animation_debug_viewer.h"
 #include "race_motion.h"
-#include "race_position_ui.h"
+#include "race_player_model_renderer.h"
 
 typedef struct {
     /* 0x0 */ s32 x;
@@ -104,8 +104,8 @@ void updateRaceMotionAnimationDebugViewer(void) {
             stepRaceMotionLoopingAnimation((RaceMotionState *)&gRaceMotionAnimationDebugViewerState);
         }
     }
-    addRenderCallback(&gModelRenderCallbackList, drawRacePositionUiPlayerModel,
-                      (RacePositionUiPlayer *)&gRaceMotionAnimationDebugViewerState);
+    addRenderCallback(&gModelRenderCallbackList, drawRacePlayerModel,
+                      (RacePlayerModelRenderState *)&gRaceMotionAnimationDebugViewerState);
     addRenderCallback(&gMenuForegroundRenderCallbackList,
                       drawRaceMotionAnimationDebugViewerMotionNumber, NULL);
 }
