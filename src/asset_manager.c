@@ -70,10 +70,6 @@ void resetGameplayRng(void) {
     resetSecondaryRng();
 }
 
-// insertHuffmanQueueNode best match: 99.389%
-#pragma GLOBAL_ASM("asm/nonmatchings/asset_manager/insertHuffmanQueueNode.s")
-
-#ifdef NON_MATCHING
 void insertHuffmanQueueNode(s16 arg0) {
     HuffmanNode *iterNode;
     HuffmanNode *node;
@@ -83,8 +79,9 @@ void insertHuffmanQueueNode(s16 arg0) {
     s16 oldHead;
     s16 next;
     s16 *count;
+    s16 newWeight;
     s16 tailCopy;
-    s32 end = -1;
+    unsigned int end = -1;
 
     count = &gHuffmanQueueCount;
     oldHead = 1;
@@ -101,11 +98,13 @@ void insertHuffmanQueueNode(s16 arg0) {
         return;
     }
 
+    head = arg0;
     if (cur >= 0) {
         do {
             curNode = &gHuffmanNodes[cur];
+            newWeight = gHuffmanNodes[arg0].weight;
             iterNode = curNode;
-            if (iterNode->weight < gHuffmanNodes[arg0].weight) {
+            if (iterNode->weight < newWeight) {
                 break;
             }
             cur = iterNode->prev;
@@ -115,7 +114,7 @@ void insertHuffmanQueueNode(s16 arg0) {
     node = &gHuffmanNodes[arg0];
     if (cur == end) {
         next = (tailCopy = gHuffmanQueueTail);
-        gHuffmanNodes[next].prev = arg0;
+        gHuffmanNodes[next].prev = head;
         node->prev = end;
         gHuffmanQueueTail = arg0;
         node->next = next;
@@ -133,7 +132,6 @@ void insertHuffmanQueueNode(s16 arg0) {
     }
     gHuffmanNodes[next].prev = arg0;
 }
-#endif
 
 void removeHuffmanQueueNode(s16 arg0) {
     HuffmanNode *node;
