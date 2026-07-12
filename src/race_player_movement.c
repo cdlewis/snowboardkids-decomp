@@ -35,8 +35,8 @@ typedef struct {
     s32 speed;
 } MovementSpeedScratch;
 
-extern s32 calculateAngleBetweenXZPoints(s32, s32, s32, s32);
-extern s16 calculateAngleFromDeltaXZ(s32, s32);
+extern s32 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
+extern s16 calculateFixedAngleFromDeltaXZ(s32, s32);
 extern void makeFixedRotationX(Matrix4s, s16);
 extern void makeFixedRotationY(Matrix4s, s16);
 extern void makeFixedRotationZ(Matrix4s, s16);
@@ -389,7 +389,7 @@ void resolveRacePlayerBodyCollisions(void) {
                                     ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                                            (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < radius)) {
                                     temp = ((radius - temp) * -1) / 2;
-                                    angle = calculateAngleBetweenXZPoints(playerA->posX, playerA->posZ,
+                                    angle = calculateFixedAngleBetweenXZPoints(playerA->posX, playerA->posZ,
                                                           playerB->posX, playerB->posZ);
                                     sine = fixedSine(angle);
                                     cosine = fixedCosine(angle);
@@ -466,7 +466,7 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32
                     if ((temp < xzLimit) &&
                         ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                                (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
-                        angle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
+                        angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                         sine = fixedSine(angle);
                         cosine = fixedCosine(angle);
                         temp = xzLimit - temp;
@@ -535,7 +535,7 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 
                 if ((temp < xzLimit) &&
                     ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                            (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
-                    angle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
+                    angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                     sine = fixedSine(angle);
                     cosine = fixedCosine(angle);
                     temp = xzLimit - temp;
@@ -598,7 +598,7 @@ void pushRacePlayersOutOfCylinderOrApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 
                         ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                                (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
                         if (player->unk29C < arg3) {
-                            angle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
+                            angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                             sine = fixedSine(angle);
                             cosine = fixedCosine(angle);
                             temp = xzLimit - temp;
@@ -659,7 +659,7 @@ void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 play
                 if ((temp < xzLimit) &&
                     ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                            (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
-                    angle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
+                    angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                     sine = fixedSine(angle);
                     cosine = fixedCosine(angle);
                     temp = xzLimit - temp;
@@ -891,26 +891,26 @@ void updateRacePlayerGroundAlignment(RaceInputPlayer *player) {
     if ((frontHeightDiff >= 0) && (heightDiffs[2] >= 0)) {
         heightDiffs[0] = frontHeightDiff;
         if (!(temp_s2->stateFlags & 4)) {
-            temp_s2->pitchAngle = calculateAngleFromDeltaXZ(-(groundHeights[0] - groundHeights[2]), -rollSpan * 2);
+            temp_s2->pitchAngle = calculateFixedAngleFromDeltaXZ(-(groundHeights[0] - groundHeights[2]), -rollSpan * 2);
         }
         baseY = (s64)(groundHeights[2] + groundHeights[0]) / 2;
     } else {
         heightDiffs[0] = frontHeightDiff;
         if (frontHeightDiff >= 0) {
             if (!(temp_s2->stateFlags & 4)) {
-                temp_s2->pitchAngle = calculateAngleFromDeltaXZ(-(groundHeights[0] - groundHeights[4]), -rollSpan);
+                temp_s2->pitchAngle = calculateFixedAngleFromDeltaXZ(-(groundHeights[0] - groundHeights[4]), -rollSpan);
             }
             baseY = groundHeights[4];
         } else if (heightDiffs[2] >= 0) {
             if (!(temp_s2->stateFlags & 4)) {
-                temp_s2->pitchAngle = calculateAngleFromDeltaXZ(-(groundHeights[4] - groundHeights[2]), -rollSpan);
+                temp_s2->pitchAngle = calculateFixedAngleFromDeltaXZ(-(groundHeights[4] - groundHeights[2]), -rollSpan);
             }
             baseY = groundHeights[4];
         }
     }
 
-    temp_s2->unk2F0 = calculateAngleFromDeltaXZ(-(points[0].y - points[2].y), -rollSpan * 2);
-    temp_s2->unk2F4 = calculateAngleFromDeltaXZ(-(frontMidGround - backMidGround), -pitchSpan * 2);
+    temp_s2->unk2F0 = calculateFixedAngleFromDeltaXZ(-(points[0].y - points[2].y), -rollSpan * 2);
+    temp_s2->unk2F4 = calculateFixedAngleFromDeltaXZ(-(frontMidGround - backMidGround), -pitchSpan * 2);
     temp_s2->unk64 = 0;
 
     makeFixedRotationZXY(mtx, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2->unk2EE);

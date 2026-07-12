@@ -1,8 +1,8 @@
 #include "common.h"
 #include "spatial_math.h"
-#define calculateAngleBetweenXZPoints calculateAngleBetweenXZPoints_s32
+#define calculateFixedAngleBetweenXZPoints calculateFixedAngleBetweenXZPoints_s32
 #include "fixed_point_math.h"
-#undef calculateAngleBetweenXZPoints
+#undef calculateFixedAngleBetweenXZPoints
 #include "sound_manager.h"
 #include "race_motion.h"
 #include "race_player_collision.h"
@@ -322,7 +322,7 @@ void resolveRacePlayerHitReactions(RaceInputPlayer *arg0) {
         gRacePlayerHitDeltaX = arg0->unk2C8 - arg0->unk40_x;
         gRacePlayerHitDeltaZ = arg0->unk2CC - arg0->unk48;
         gRacePlayerHitDistance = integerSquareRoot64((s64) gRacePlayerHitDeltaX * gRacePlayerHitDeltaX + (s64) gRacePlayerHitDeltaZ * gRacePlayerHitDeltaZ) >> 1;
-        gRacePlayerHitAngle = calculateAngleFromDeltaXZ(gRacePlayerHitDeltaX, gRacePlayerHitDeltaZ);
+        gRacePlayerHitAngle = calculateFixedAngleFromDeltaXZ(gRacePlayerHitDeltaX, gRacePlayerHitDeltaZ);
         if ((arg0->pendingItemHitFlags & 1) && (tryQueueRacePlayerHitCuePushForward(arg0) != 0) && (tryQueueRacePlayerHitCueSpinout(arg0) != 0) && (tryQueueRacePlayerHitCueNudge(arg0) != 0)) {
             tryQueueRacePlayerHitCueSlowdown(arg0);
         }

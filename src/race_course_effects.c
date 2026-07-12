@@ -592,7 +592,7 @@ void renderCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
     i = 0;
     if (entry->type != -1) {
         do {
-            if (isPositionNearCurrentViewport(&entry->pos) != 0) {
+            if (isPositionNearCurrentRaceViewportCamera(&entry->pos) != 0) {
                 if (entry->type != textureIndex) {
                     textureIndex = entry->type;
                     getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)gRaceCommonSpriteAssetHandle), textureIndex & 0xFFFF,
@@ -697,7 +697,7 @@ void renderRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
     var_s5 = 0;
     if (var_s4->displayListIndex != -1) {
         do {
-            if (isPositionNearCurrentViewport(&var_s4->position) != 0) {
+            if (isPositionNearCurrentRaceViewportCamera(&var_s4->position) != 0) {
                 if (var_s7 != 0) {
                     gDPPipeSync(gRegionAllocPtr++);
                     temp_s2 = gRegionAllocPtr++;
@@ -776,7 +776,7 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
         arg0->displayListValid = 0;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->displayListValid == 0) {
             arg0->displayListValid = 1;
             sine = fixedSine(arg0->unk40);
@@ -830,9 +830,9 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
         pos = &arg0->pos;
         if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
             if (arg0->pad42 != 0) {
-                targetAngle = calculateAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->unk24, arg0->unk2C);
+                targetAngle = calculateFixedAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->unk24, arg0->unk2C);
             } else {
-                targetAngle = calculateAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->unk30, arg0->unk38);
+                targetAngle = calculateFixedAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->unk30, arg0->unk38);
             }
             temp_a1 = arg0->unk3E;
             temp_t2 = (targetAngle - temp_a1) & 0xFFF;
@@ -920,7 +920,7 @@ void initPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
     s16 temp4E;
 
     if (gRaceUpdatePaused == 0) {
-        angle = calculateAngleBetweenXZPoints(arg0->unk24, arg0->unk2C, arg0->unk30, arg0->unk38);
+        angle = calculateFixedAngleBetweenXZPoints(arg0->unk24, arg0->unk2C, arg0->unk30, arg0->unk38);
         temp24 = arg0->unk24;
         temp28 = arg0->unk28;
         temp2C = arg0->unk2C;
@@ -965,7 +965,7 @@ void renderLaunchRampCourseObject(RaceMovingEffect *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-        if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+        if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
             Gfx *_g;
 
             gDPPipeSync(gRegionAllocPtr++);
@@ -1060,7 +1060,7 @@ void renderSpiralCourseObject(RaceMovingEffect *arg0) {
         arg0->matrix = allocFixedTransformMatrix(&transform);
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
@@ -1180,7 +1180,7 @@ void renderCourseGateObject(CourseGateObjectEffect *arg0) {
         arg0->pos2Matrix = NULL;
     }
 
-    if (isPositionNearCurrentViewport((Vec3i *) &gCourseGateSoundParams[gRaceCourseIndex]) == 0) {
+    if (isPositionNearCurrentRaceViewportCamera((Vec3i *) &gCourseGateSoundParams[gRaceCourseIndex]) == 0) {
         return;
     }
 

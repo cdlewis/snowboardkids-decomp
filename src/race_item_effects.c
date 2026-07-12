@@ -392,7 +392,7 @@ void renderRacePlayerHitEffect(RaceItemEffectActor *arg0) {
     void *sp80;
     s32 frame;
 
- do { if (gRenderMatricesDirty) { sp88 = gIdentityFixedTransform; sp88.x = arg0->payload.vec.x; sp88.y = arg0->payload.vec.y; sp88.z = arg0->payload.vec.z; arg0->unk30.matrix = allocFixedTransformMatrix(&sp88); } if (arg0->unk30.matrix != NULL) { if (isPositionNearCurrentViewport(&arg0->payload.vec) != 0) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xBB000001; _g->words.w1 = 0xFFFFFFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFC121824; _g->words.w1 = 0xFF33FFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB900031D; _g->words.w1 = 0x005049D8; } ; getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), (frame = gRacePlayerHitEffectSpriteOffsets[arg0->playerIndex] + (arg0->unk24.timer >> 1), 0xFFFF & frame), &sp84, &sp80); { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = (u32) sp84; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = gRacePlayerHitEffectSpriteOffsets[arg0->playerIndex] * 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x070FF400; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400400; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x7C07C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = (u32) sp80; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01020040; _g->words.w1 = (u32) arg0->unk30.matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01000040; _g->words.w1 = (u32) gViewportMatrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x0400103F; _g->words.w1 = (u32) gRacePlayerHitEffectQuadVertices; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB1060402; _g->words.w1 = 0x60200; } ; } } } while (0);
+ do { if (gRenderMatricesDirty) { sp88 = gIdentityFixedTransform; sp88.x = arg0->payload.vec.x; sp88.y = arg0->payload.vec.y; sp88.z = arg0->payload.vec.z; arg0->unk30.matrix = allocFixedTransformMatrix(&sp88); } if (arg0->unk30.matrix != NULL) { if (isPositionNearCurrentRaceViewportCamera(&arg0->payload.vec) != 0) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xBB000001; _g->words.w1 = 0xFFFFFFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFC121824; _g->words.w1 = 0xFF33FFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB900031D; _g->words.w1 = 0x005049D8; } ; getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), (frame = gRacePlayerHitEffectSpriteOffsets[arg0->playerIndex] + (arg0->unk24.timer >> 1), 0xFFFF & frame), &sp84, &sp80); { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = (u32) sp84; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = gRacePlayerHitEffectSpriteOffsets[arg0->playerIndex] * 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x070FF400; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400400; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x7C07C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = (u32) sp80; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01020040; _g->words.w1 = (u32) arg0->unk30.matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01000040; _g->words.w1 = (u32) gViewportMatrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x0400103F; _g->words.w1 = (u32) gRacePlayerHitEffectQuadVertices; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB1060402; _g->words.w1 = 0x60200; } ; } } } while (0);
 }
 
 void updateRacePlayerHitEffect(RaceItemEffectActor *arg0) {
@@ -545,7 +545,7 @@ void renderRacePlayerShockEffect(RaceItemEffectActor *arg0) {
         arg0->unk34.shorts.state.bytes.matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->payload.vec) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->payload.vec) != 0) {
         if (arg0->unk34.shorts.state.bytes.matrixDirty != 0) {
             arg0->unk34.shorts.state.bytes.matrixDirty = 0;
             sp80 = gIdentityFixedTransform;
@@ -648,7 +648,7 @@ void renderRaceItemBreakParticle(RaceItemEffectActor *arg0) {
         arg0->pad4E = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->payload.vec) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->payload.vec) != 0) {
         if (arg0->pad4E != 0) {
             arg0->pad4E = 0;
             sp74 = gIdentityFixedTransform;
@@ -758,7 +758,7 @@ void renderRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
         arg0->unk28.bytes.unk28 = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->payload.vec) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->payload.vec) != 0) {
         if (arg0->unk28.bytes.unk28 != 0) {
             arg0->unk28.bytes.unk28 = 0;
             sp78 = gIdentityFixedTransform;
@@ -827,7 +827,7 @@ void renderRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
     if (gRenderMatricesDirty != 0) {
         arg0->dirty = 1;
     }
-    if (isPositionNearCurrentViewport(&arg0->pos1) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos1) != 0) {
         if (arg0->dirty != 0) {
             arg0->dirty = 0;
             sp90 = gIdentityFixedTransform;
@@ -1013,7 +1013,7 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
         }
         if (node != NULL) {
             do {
-                if (isPositionNearCurrentViewport(node->pos) != 0) {
+                if (isPositionNearCurrentRaceViewportCamera(node->pos) != 0) {
                     if (node->matrixDirty != 0) {
                         node->matrixDirty = 0;
                         sp94.x = node->pos->x;
@@ -1097,7 +1097,7 @@ void renderRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
     if (gRenderMatricesDirty != 0) {
         arg0->dirty = 1;
     }
-    if (isPositionNearCurrentViewport(&arg0->pos1) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos1) != 0) {
         if (arg0->dirty != 0) {
             arg0->dirty = 0;
             sp98 = gIdentityFixedTransform;

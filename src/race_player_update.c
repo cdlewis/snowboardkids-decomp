@@ -7,9 +7,9 @@
 #include "race_camera.h"
 #include "race_course_effects.h"
 #include "race_player_collision.h"
-#define calculateAngleBetweenXZPoints calculateAngleBetweenXZPoints_s32
+#define calculateFixedAngleBetweenXZPoints calculateFixedAngleBetweenXZPoints_s32
 #include "fixed_point_math.h"
-#undef calculateAngleBetweenXZPoints
+#undef calculateFixedAngleBetweenXZPoints
 #include "race_player_input.h"
 #include "race_item_effects.h"
 #include "race_player_pickup_effects.h"
@@ -92,7 +92,7 @@ typedef struct {
 } CourseAngleEntry;
 
 extern s32 enqueueSoundEffect(s32, s32);
-extern s16 calculateAngleBetweenXZPoints(s32, s32, s32, s32);
+extern s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, SoundPosition *, s32, s32, f32, s16);
 extern void addRenderCallback(void *, void (*)(void *), void *);
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
@@ -450,7 +450,7 @@ void updateRacePlayerMotionFeedback(RaceInputPlayer *player) {
 
     deltaX = player->posX - player->unk34.x;
     deltaZ = player->posZ - player->unk34.z;
-    angleDiff = (calculateAngleFromDeltaXZ(deltaX, deltaZ) - player->facingAngle) & 0xFFF;
+    angleDiff = (calculateFixedAngleFromDeltaXZ(deltaX, deltaZ) - player->facingAngle) & 0xFFF;
     if (angleDiff >= 0x801) {
         angleDiff = 0x1000 - angleDiff;
     }
@@ -549,7 +549,7 @@ void updateRacePlayerMode00Grounded(RaceInputPlayer *player) {
     if (player->unk4 != 0) {
         getRaceCourseTargetPositionAhead(player->unk502, player->posX, player->posZ, &targetX, &targetZ, (s8) player->unk17,
                       (u16) player->playerIndex);
-        turn = (calculateAngleBetweenXZPoints(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
+        turn = (calculateFixedAngleBetweenXZPoints(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
         if (turn >= 0x801) {
             turn -= 0x1000;
         }
@@ -605,7 +605,7 @@ void updateRacePlayerMode00Grounded(RaceInputPlayer *player) {
     if (player->unk4 == 0) {
         spawn = &gRaceCourseStartEntries[gRaceCourseIndex];
         if ((player->unk502 == spawn->unk0) && !(player->stateFlags & 0x40)) {
-            surfaceCue = (s16)(((calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
+            surfaceCue = (s16)(((calculateFixedAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
                                  0x400) &
                                 0xFFF);
@@ -708,7 +708,7 @@ void updateRacePlayerMode00Grounded(RaceInputPlayer *player) {
                     if (temp < -0x10000000LL) {
                         temp = -0x10000000LL;
                     }
-                    steerAngle = calculateAngleBetweenXZPoints((s32) temp, 0, 0, speed);
+                    steerAngle = calculateFixedAngleBetweenXZPoints((s32) temp, 0, 0, speed);
                     if (temp > 0) {
                         steerAngle -= 0x400;
                     }
@@ -865,7 +865,7 @@ void updateRacePlayerMode01JumpStart(RaceInputPlayer *player) {
         } else {
             getRaceCourseTargetPositionAhead(player->unk502, unused = player->posX, player->posZ, &targetX, &targetZ,
                           (s8) player->unk17, (u16) player->playerIndex);
-            angleDiff = (calculateAngleBetweenXZPoints(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
+            angleDiff = (calculateFixedAngleBetweenXZPoints(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
             }
@@ -922,7 +922,7 @@ void updateRacePlayerMode22Airborne(RaceInputPlayer *player) {
         } else {
             getRaceCourseTargetPositionAhead(player->unk502, unused = player->posX, player->posZ, &targetX, &targetZ,
                           (s8) player->unk17, (u16) player->playerIndex);
-            angleDiff = (calculateAngleBetweenXZPoints(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
+            angleDiff = (calculateFixedAngleBetweenXZPoints(player->posX, player->posZ, targetX, targetZ) - player->facingAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
             }
@@ -976,7 +976,7 @@ void updateRacePlayerAirborneLaunch(RaceInputPlayer *player) {
     if (player->unk4 == 0) {
         spawn = &gRaceCourseStartEntries[gRaceCourseIndex];
         if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
-            velocityY = (s16) (((calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
+            velocityY = (s16) (((calculateFixedAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
                                  0x400) &
                                 0xFFF);
@@ -1078,7 +1078,7 @@ void updateRacePlayerAirborneCruise(RaceInputPlayer *player) {
     if (player->unk4 == 0) {
         spawn = &gRaceCourseStartEntries[gRaceCourseIndex];
         if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
-            surfaceCue = (s16)(((calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
+            surfaceCue = (s16)(((calculateFixedAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
                                  0x400) &
                                 0xFFF);
@@ -3295,7 +3295,7 @@ void updateRacePlayerMode03Nudge(RaceInputPlayer *player) {
 
     spawn = &gRaceCourseStartEntries[gRaceCourseIndex];
     if ((spawn->unk0 == playerAlias->unk502) && !(playerAlias->stateFlags & 0x40)) {
-        angleDiff = calculateAngleBetweenXZPoints(playerAlias->posX, player->posZ, spawn->unk40, spawn->unk44);
+        angleDiff = calculateFixedAngleBetweenXZPoints(playerAlias->posX, player->posZ, spawn->unk40, spawn->unk44);
         if (playerAlias->stateFlags & 0x400) {
             angleDiff += 0x800;
         }
@@ -3462,7 +3462,7 @@ void updateRacePlayerMode08SpinoutRecover(RaceInputPlayer *player) {
 
     spawn = &gRaceCourseStartEntries[gRaceCourseIndex];
     if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
-        targetAngle = calculateAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44);
+        targetAngle = calculateFixedAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44);
         if (player->stateFlags & 0x400) {
             targetAngle += 0x800;
         }
@@ -3876,7 +3876,7 @@ void updateRacePlayerMode10TerrainCrashSlide(RaceInputPlayer *player) {
     player->posX += velocityX;
     player->posY += yVel;
     player->posZ += player->velocity.z;
-    player->facingAngle = calculateAngleFromDeltaXZ(velocityX, velocityZ);
+    player->facingAngle = calculateFixedAngleFromDeltaXZ(velocityX, velocityZ);
     if (player->stateFlags & 0x400) {
         player->facingAngle += 0x800;
     }
@@ -4088,7 +4088,7 @@ void updateRacePlayerMode14PushHit(RaceInputPlayer *player) {
     player->posY += player->velocity.y;
     velocityZ = player->velocity.z;
     player->posZ += velocityZ;
-    player->facingAngle = calculateAngleFromDeltaXZ(velocityX, velocityZ);
+    player->facingAngle = calculateFixedAngleFromDeltaXZ(velocityX, velocityZ);
     if (player->stateFlags & 0x400) {
         player->facingAngle += 0x800;
     }
@@ -4391,7 +4391,7 @@ void updateRacePlayerMode40Stun(RaceInputPlayer *player) {
     player->posY += player->velocity.y;
     velocityZ = player->velocity.z;
     player->posZ += velocityZ;
-    player->facingAngle = calculateAngleFromDeltaXZ(velocityX, velocityZ);
+    player->facingAngle = calculateFixedAngleFromDeltaXZ(velocityX, velocityZ);
     if (player->stateFlags & 0x400) {
         player->facingAngle += 0x800;
     }
@@ -4860,7 +4860,7 @@ void updateRacePlayerMode30AttackApproach(RaceInputPlayer *player) {
         setRaceCameraMode(player->playerIndex, 5);
         if (player->unk29C >= 0x20001) {
             player->unk306 = 1;
-            player->unk31E = calculateAngleFromDeltaXZ(player->unk40.x, player->unk40.z);
+            player->unk31E = calculateFixedAngleFromDeltaXZ(player->unk40.x, player->unk40.z);
             tempFlags = player->stateFlags & 0x400;
             stateFlags = tempFlags;
             if (tempFlags != 0) {

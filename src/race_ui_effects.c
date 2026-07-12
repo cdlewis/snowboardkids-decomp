@@ -3880,7 +3880,7 @@ void func_80061088(RaceUiTripleParticleActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             makeFixedRotationY(spAC.halfwords, arg0->rotY);
@@ -3990,7 +3990,7 @@ void func_800617EC(RaceUiRisingTrailActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sine = fixedSine(arg0->sineAngle);
@@ -4337,7 +4337,7 @@ void renderIceCourseBumper(RaceUiScaledParticleActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             makeFixedRotationY(scratch, arg0->rotY);
@@ -4424,7 +4424,7 @@ void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             makeFixedRotationY(scratch, arg0->rotY);
@@ -4477,7 +4477,7 @@ void func_80063220(RaceUiSpinningParticleActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) == 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) == 0) {
         return;
     }
 
@@ -4533,7 +4533,7 @@ void renderCourseStartFinishSprite(RaceUiCourseSpriteActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport((Vec3i *)&arg0->x) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera((Vec3i *)&arg0->x) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             arg0->vertices = allocMenuRenderScratch(0x40);
@@ -4753,7 +4753,7 @@ void renderRaceCourseRankModel(RaceUiRankParticleActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
@@ -5141,7 +5141,7 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
     i = 0;
     if (entry->sentinel != -1) {
         do {
-            if ((entry->active != 0) && (isPositionNearCurrentViewport(&entry->command) != 0)) {
+            if ((entry->active != 0) && (isPositionNearCurrentRaceViewportCamera(&entry->command) != 0)) {
                 if (textureIndex != entry->sentinel + actor->textureOffset) {
                     textureIndex = entry->sentinel + actor->textureOffset;
                     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x14, &spA0, &sp9C);
@@ -5455,7 +5455,7 @@ void renderRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
     var_s6 = 0;
     if (var_s4->active != -1) {
         do {
-            if ((var_s4->active != 0) && (isPositionNearCurrentViewport(&var_s4->position) != 0)) {
+            if ((var_s4->active != 0) && (isPositionNearCurrentRaceViewportCamera(&var_s4->position) != 0)) {
                 if (var_fp != 0) {
                     gDPPipeSync(gRegionAllocPtr++);
 

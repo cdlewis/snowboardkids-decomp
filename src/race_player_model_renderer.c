@@ -192,7 +192,7 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
         player->flags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
     }
 
-    if (isPositionNearCurrentViewport(player->shadowPoints) != 0 && (player->flags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(player->shadowPoints) != 0 && (player->flags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY) != 0) {
         racePlayerModelAppendGfx(0x06000000, (u32)gRacePlayerShadowRenderSetupDisplayList);
         racePlayerModelAppendGfx(0x01020040, (u32)player->shadowMtx);
         racePlayerModelAppendGfx(0x0400103F, (u32)player->shadowVtx);
