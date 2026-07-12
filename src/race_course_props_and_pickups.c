@@ -553,7 +553,7 @@ void spawnThrownPickupModel(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
     }
 }
 
-// updateThrownPickupSpawner best match: 99.625% (nonmatchings/updateThrownPickupSpawner-731940616440357983/base_15.c)
+// updateThrownPickupSpawner best match: 99.938% (nonmatchings/updateThrownPickupSpawner-3357475854818838508/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_props_and_pickups/updateThrownPickupSpawner.s")
 
 #ifdef NON_MATCHING
@@ -580,39 +580,41 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
             entry = newEntry;
             found = FALSE;
             if (gRaceSplitscreenMode != 2) {
-                if (D_80121D80[0].isActive != 0) {
-                    diffZ = D_80121D80[0].posX - entry->pos.x;
-                    if ((diffZ < SPAWN_RANGE_MAX) && (diffZ >= SPAWN_RANGE_MIN)) {
-                        diffX = D_80121D80[0].posZ - entry->pos.z;
-                        if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) {
+                do {
+                    if (D_80121D80[0].isActive != 0) {
+                        diffZ = D_80121D80[0].posX - entry->pos.x;
+                        if ((diffZ < SPAWN_RANGE_MAX) && (diffZ >= SPAWN_RANGE_MIN)) {
+                            diffX = D_80121D80[0].posZ - entry->pos.z;
+                            if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) {
+                                found = TRUE;
+                            }
+                        }
+                    }
+                    if (D_80121D80[1].isActive != 0) {
+                        diffX = D_80121D80[1].posX - entry->pos.x;
+                        diffZ = D_80121D80[1].posZ - entry->pos.z;
+                        if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
+                            (diffZ >= SPAWN_RANGE_MIN)) {
                             found = TRUE;
                         }
                     }
-                }
-                if (D_80121D80[1].isActive != 0) {
-                    diffX = D_80121D80[1].posX - entry->pos.x;
-                    diffZ = D_80121D80[1].posZ - entry->pos.z;
-                    if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
-                        (diffZ >= SPAWN_RANGE_MIN)) {
-                        found = TRUE;
+                    if (D_80121D80[2].isActive != 0) {
+                        diffX = D_80121D80[2].posX - entry->pos.x;
+                        diffZ = D_80121D80[2].posZ - entry->pos.z;
+                        if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
+                            (diffZ >= SPAWN_RANGE_MIN)) {
+                            found = TRUE;
+                        }
                     }
-                }
-                if (D_80121D80[2].isActive != 0) {
-                    diffX = D_80121D80[2].posX - entry->pos.x;
-                    diffZ = D_80121D80[2].posZ - entry->pos.z;
-                    if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
-                        (diffZ >= SPAWN_RANGE_MIN)) {
-                        found = TRUE;
+                    if (D_80121D80[3].isActive != 0) {
+                        diffX = D_80121D80[3].posX - entry->pos.x;
+                        diffZ = D_80121D80[3].posZ - entry->pos.z;
+                        if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
+                            (diffZ >= SPAWN_RANGE_MIN)) {
+                            found = TRUE;
+                        }
                     }
-                }
-                if (D_80121D80[3].isActive != 0) {
-                    diffX = D_80121D80[3].posX - entry->pos.x;
-                    diffZ = D_80121D80[3].posZ - entry->pos.z;
-                    if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
-                        (diffZ >= SPAWN_RANGE_MIN)) {
-                        found = TRUE;
-                    }
-                }
+                } while (0);
             } else {
                 found = TRUE;
             }
@@ -622,14 +624,15 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
                 if (spawned != NULL) {
                     savedSpawned = spawned;
                     entry = (savedEntry = entry);
-                    rand = func_80043120() & 3;
+                    rand = randomNextSecondary() & 3;
                     spawned = savedSpawned;
                     prev = arg0->lastVariant;
-                    if (rand == prev) {
+                    if (rand != prev) {
+                    } else {
                         rand = (prev + 1) & 3;
                     }
                     arg0->lastVariant = rand;
-                    entry = &entry[rand];
+                    entry = (PickupSpawnEntry *)((u32)entry + (rand << 4));
                     spawned->pos.x = entry->pos.x;
                     spawned->pos.y = entry->pos.y;
                     spawned->pos.z = entry->pos.z;
