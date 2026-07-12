@@ -796,4 +796,208 @@ void updateRaceSetupRumblePrompt(void) {
 }
 #endif
 
+// initRaceSetupPlayerSaveData best match: 51.210% (nonmatchings/initRaceSetupPlayerSaveData-8331816093655448999/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/initRaceSetupPlayerSaveData.s")
+
+#ifdef NON_MATCHING
+typedef struct {
+    s8 unk0;
+    s8 unk1;
+    s8 unk2;
+} RaceSetupSaveTriplet045D8;
+
+extern RaceSetupSaveTriplet045D8 D_800B31C8[];
+extern RaceSetupSaveTriplet045D8 D_800B3270[];
+extern RaceSetupSaveTriplet045D8 D_800B3294[];
+extern RaceSetupSaveTriplet045D8 D_800B32A4[];
+extern u8 D_800B32C4[];
+extern u16 D_800B32D0[];
+extern s8 D_800B3490[];
+extern s8 gCourseSelectColumnSoundEffects[];
+extern u8 gMainMenuSecretCodeUnlocked;
+
+#define RACE_SETUP_SAVE_WORD_045D8(ptr, offset) (*(s32 *)((ptr) + (offset)))
+#define RACE_SETUP_SAVE_HALF_045D8(ptr, offset) (*(s16 *)((ptr) + (offset)))
+#define RACE_SETUP_SAVE_BYTE_045D8(ptr, offset) (*((u8 *)(ptr) + (offset)))
+
+void initRaceSetupPlayerSaveData(s32 arg0) {
+    u8 *sp30;
+    s32 i;
+    s32 course;
+    s32 recordOffset;
+    u8 *save = (u8 *)&gGameSaveDataBuffer[arg0];
+    u8 *base = (u8 *)&gGameSaveDataBuffer[arg0];
+    u8 *wordCursor;
+    u8 *byteCursor;
+    u8 *courseCursor0;
+    u8 *courseCursor1;
+    u8 *courseCursor2;
+    u8 *courseCursor3;
+    u8 *courseCursor4;
+    RaceSetupSaveTriplet045D8 *courseTimes;
+    RaceSetupSaveTriplet045D8 *courseRows;
+    RaceSetupSaveTriplet045D8 *specialRecords;
+    RaceSetupSaveTriplet045D8 *records;
+
+    RACE_SETUP_SAVE_WORD_045D8(save, 0) = 0;
+    RACE_SETUP_SAVE_WORD_045D8(save, 4) = 0;
+
+    wordCursor = base;
+    byteCursor = base;
+    i = 0;
+    do {
+        i++;
+        RACE_SETUP_SAVE_WORD_045D8(wordCursor, 8) = 0;
+        wordCursor += 4;
+        byteCursor++;
+        RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x33) = 0;
+    } while (i < 0xB);
+
+    i = 0;
+    byteCursor = base;
+    do {
+        RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x3F) = i;
+        i++;
+        byteCursor++;
+    } while (i < 3);
+
+    RACE_SETUP_SAVE_BYTE_045D8(base, 0x42) = -1;
+
+    i = 4;
+    byteCursor = base + 4;
+    do {
+        i += 4;
+        RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x40) = -1;
+        RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x41) = -1;
+        RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x42) = -1;
+        byteCursor += 4;
+        RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x3B) = -1;
+    } while (i != 0xC);
+
+    RACE_SETUP_SAVE_BYTE_045D8(save, 0x4B) = 0;
+    RACE_SETUP_SAVE_BYTE_045D8(save, 0x4C) = 0;
+    RACE_SETUP_SAVE_BYTE_045D8(save, 0x78D7) = 0;
+
+    courseRows = D_800B3270;
+    courseTimes = D_800B31C8;
+    specialRecords = D_800B3294;
+    records = D_800B32A4;
+    course = 0;
+    courseCursor0 = base;
+    courseCursor1 = base;
+    courseCursor2 = base;
+    courseCursor3 = base;
+    sp30 = base;
+    courseCursor4 = base;
+
+    do {
+        u8 *rankIcons = D_800B32C4;
+        u16 *recordText = D_800B32D0;
+
+        i = 0;
+        byteCursor = courseCursor0;
+        recordOffset = 0;
+        wordCursor = (u8 *)courseTimes;
+        base = courseCursor1;
+        save = courseCursor2;
+        courseCursor4 = courseCursor3;
+        do {
+            RaceSetupSaveTriplet045D8 *record;
+
+            RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x4F) = ((RaceSetupSaveTriplet045D8 *)wordCursor)->unk1;
+            RACE_SETUP_SAVE_HALF_045D8(byteCursor, 0x50) = ((RaceSetupSaveTriplet045D8 *)wordCursor)->unk2 << 8;
+            RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x4E) = ((RaceSetupSaveTriplet045D8 *)wordCursor)->unk0;
+            RACE_SETUP_SAVE_BYTE_045D8(base, 0x77FB) = 0x10;
+            RACE_SETUP_SAVE_BYTE_045D8(base, 0x77FB) = i + 0x10;
+            if (course == 9) {
+                record = (RaceSetupSaveTriplet045D8 *)((u8 *)specialRecords + recordOffset);
+            } else {
+                record = (RaceSetupSaveTriplet045D8 *)((u8 *)records + recordOffset + ((course & 1) * 0xF));
+            }
+            RACE_SETUP_SAVE_HALF_045D8(byteCursor, 0x158) = record->unk2 << 8;
+            RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x156) = record->unk0;
+            RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x157) = record->unk1;
+            RACE_SETUP_SAVE_BYTE_045D8(base, 0x78A0) = 0x10;
+            RACE_SETUP_SAVE_BYTE_045D8(base, 0x78A0) = i + 0x10;
+            if (course == 9) {
+                RACE_SETUP_SAVE_BYTE_045D8(base, 0x7832) = rankIcons[0];
+            } else {
+                RACE_SETUP_SAVE_BYTE_045D8(base, 0x7832) = rankIcons[5];
+            }
+            RACE_SETUP_SAVE_BYTE_045D8(base, 0x7869) = i;
+            RACE_SETUP_SAVE_HALF_045D8(save, 0x7756) = *recordText;
+            RACE_SETUP_SAVE_BYTE_045D8(base, 0x77C4) = i;
+            i++;
+            byteCursor += 4;
+            recordOffset += 3;
+            wordCursor += 3;
+            base++;
+            rankIcons++;
+            save += 2;
+            recordText++;
+        } while (i < 5);
+
+        RACE_SETUP_SAVE_BYTE_045D8(courseCursor4, 0x126) = courseRows->unk0;
+        RACE_SETUP_SAVE_BYTE_045D8(courseCursor4, 0x127) = courseRows->unk1;
+        RACE_SETUP_SAVE_HALF_045D8(courseCursor4, 0x128) = courseRows->unk2;
+        course++;
+        courseCursor0 += 0x14;
+        courseTimes += 5;
+        courseCursor1 += 5;
+        courseCursor2 += 0xA;
+        courseCursor3 += 4;
+        courseRows++;
+    } while (course < 0xB);
+
+    RACE_SETUP_SAVE_HALF_045D8(save, 0x232) = 0;
+    RACE_SETUP_SAVE_HALF_045D8(save, 0x236) = 0;
+    RACE_SETUP_SAVE_HALF_045D8(save, 0x23A) = 0;
+    RACE_SETUP_SAVE_HALF_045D8(save, 0x23E) = 0;
+    RACE_SETUP_SAVE_HALF_045D8(save, 0x242) = 0;
+    RACE_SETUP_SAVE_HALF_045D8(save, 0x246) = 0;
+    RACE_SETUP_SAVE_HALF_045D8(save, 0x24A) = 0;
+    RACE_SETUP_SAVE_HALF_045D8(save, 0x24E) = 0;
+    RACE_SETUP_SAVE_HALF_045D8(save, 0x252) = 0;
+
+    i = 0;
+    byteCursor = sp30;
+    do {
+        i++;
+        byteCursor++;
+        RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x78D7) = 0;
+    } while (i < 0x20);
+
+    i = 0;
+    if (gMainMenuSecretCodeUnlocked == 1) {
+        byteCursor = sp30;
+        do {
+            i++;
+            RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x34) = 1;
+            byteCursor++;
+        } while (i < 0xB);
+
+        byteCursor = sp30;
+        for (wordCursor = (u8 *)D_800B3490; wordCursor != (u8 *)gCourseSelectColumnSoundEffects;) {
+            s8 temp0 = wordCursor[0];
+            s8 temp1 = wordCursor[1];
+            s8 temp2 = wordCursor[2];
+            s8 temp3 = wordCursor[3];
+
+            wordCursor += 4;
+            byteCursor += 4;
+            RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x3B) = temp0;
+            RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x3C) = temp1;
+            RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x3D) = temp2;
+            RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x3E) = temp3;
+        }
+
+        RACE_SETUP_SAVE_BYTE_045D8(save, 0x4B) = 1;
+        RACE_SETUP_SAVE_BYTE_045D8(save, 0x4C) = 3;
+        RACE_SETUP_SAVE_BYTE_045D8(save, 0x78D7) = 0x3F;
+    }
+}
+
+#undef RACE_SETUP_SAVE_WORD_045D8
+#undef RACE_SETUP_SAVE_HALF_045D8
+#undef RACE_SETUP_SAVE_BYTE_045D8
+#endif
