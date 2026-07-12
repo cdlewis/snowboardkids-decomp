@@ -194,7 +194,7 @@ void updateRaceCameraTransformFromAngles(void) {
     packFixedTransformMatrix(stack.sp28, D_801124A0->transform);
 }
 
-// updateRaceCameraLookAtTransform best match: 98.219% (nonmatchings/updateRaceCameraLookAtTransform-6061209858023118177/base_14.c)
+// updateRaceCameraLookAtTransform best match: 98.250% (nonmatchings/updateRaceCameraLookAtTransform-2694253543240320626/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/updateRaceCameraLookAtTransform.s")
 
 #ifdef NON_MATCHING
@@ -247,9 +247,9 @@ void updateRaceCameraLookAtTransform(void) {
     for (i = 0; i + 1 <= 3; i++) {
         for (j = 0; j < 3; j++) {
             D_801124A0->rotationMatrix[(i * 3) + j] =
-                FIXED_MUL(pitchMtx.rotation[j], yawMtx.rotation[i * 3]) +
-                FIXED_MUL(pitchMtx.rotation[j + 3], yawMtx.rotation[(i * 3) + 1]) +
-                FIXED_MUL(pitchMtx.rotation[j + 6], yawMtx.rotation[(i * 3) + 2]);
+                FIXED_MUL(pitchMtx.rotation[j + 6], yawMtx.rotation[(i * 3) + 2]) +
+                FIXED_MUL(yawMtx.rotation[i * 3], pitchMtx.rotation[j]) +
+                FIXED_MUL(yawMtx.rotation[(i * 3) + 1], pitchMtx.rotation[j + 3]);
         }
     }
 
