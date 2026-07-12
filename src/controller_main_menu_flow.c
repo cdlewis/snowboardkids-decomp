@@ -200,7 +200,7 @@ extern s8 gMainMenuSelectionResult;
 extern OSPfsState gControllerPakFileStates[];
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
-extern OSMesgQueue D_80124070;
+extern OSMesgQueue gControllerInputUpdateQueue;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gRaceRecordSettingsEnabled;
@@ -272,7 +272,7 @@ loop:
 }
 #endif
 
-// controllerSubsystemThreadMain best match: 99.507%
+// controllerSubsystemThreadMain best match: 99.507% at nonmatchings/controllerSubsystemThreadMain-2694253543240320626/base_2.c
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/controllerSubsystemThreadMain.s")
 
 #ifdef NON_MATCHING
@@ -290,7 +290,7 @@ void controllerSubsystemThreadMain(void *arg0) {
             osContStartReadData(&gControllerEventQueue);
             osRecvMesg(&gControllerEventQueue, ((OSMesg *)&arg0) - 2, OS_MESG_BLOCK);
             osContGetReadData(gControllerPads);
-            osSendMesg(&D_80124070, &gControllerEventMessage, 0);
+            osSendMesg(&gControllerInputUpdateQueue, &gControllerEventMessage, 0);
             break;
         case 0x20:
             probeControllerPak(msgValue & 3);
