@@ -784,25 +784,22 @@ void drawControllerPakFileDeleteErrorPrompt(ControllerPakWindowActor *arg0) {
     }
 }
 
-// updateControllerPakFileDeleteErrorPromptUi best match: 84.757% (nonmatchings/updateControllerPakFileDeleteErrorPromptUi-4839787584499344943/base_7.c)
+// updateControllerPakFileDeleteErrorPromptUi best match: 86.471% (nonmatchings/updateControllerPakFileDeleteErrorPromptUi-2694253543240320626/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/updateControllerPakFileDeleteErrorPromptUi.s")
 
 #ifdef NON_MATCHING
 void updateControllerPakFileDeleteErrorPromptUi(ControllerPakDeletePromptActor *arg0) {
     u8 globalState;
     u8 state;
-    u8 switchState;
 
     globalState = gControllerPakDeletePromptState;
     state = arg0->timer;
-    switchState = state;
     if (state != globalState) {
         state = globalState;
-        switchState = globalState;
         arg0->timer = globalState;
     }
 
-    switch (switchState) {
+    switch (state) {
     case 0:
         arg0->scale = (s16)arg0->scale + 0x28;
         if ((s16)arg0->scale >= 0x100) {
