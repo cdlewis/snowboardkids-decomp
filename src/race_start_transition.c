@@ -111,13 +111,11 @@ void updateMenuCameraObjectWithTargetOffsetCallback(void) {
     updateMenuCameraObjectWithTargetOffset();
 }
 
-// initRaceStartTransition best match: 83.044% (nonmatchings/initRaceStartTransition-4923837976568703863/base_4.c)
+// initRaceStartTransition best match: 97.431% (nonmatchings/initRaceStartTransition-8331816093655448999/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_start_transition/initRaceStartTransition.s")
 
 #ifdef NON_MATCHING
 extern void loadMainMenuSceneModelAnimationBank();
-extern void initCallbackTaskScheduler(s32);
-extern void *createCallbackTask(void (*)(), s32, s32);
 extern u8 D_13F3B0[];
 extern u8 D_145380[];
 extern u8 D_1467B0[];
@@ -137,8 +135,12 @@ extern u8 D_800ECA24;
 extern u8 gPlayerCount;
 extern u8 D_80121D90;
 
-void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
-    RaceSetupSaveData *save;
+const f32 D_800E1090 = 1.333333373f;
+const f32 D_800E1094 = 1.333333373f;
+const f32 D_800E1098 = 1.333333373f;
+
+void initRaceStartTransition(void) {
+    volatile RaceSetupSaveData *save;
     s32 transition;
     s32 effectArg;
     s32 allReady;
@@ -146,42 +148,41 @@ void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
 
     transition = 0;
     if (gRaceSplitscreenMode == 0) {
-        arg0 = 1;
         if (gPlayerCount == 1) {
             save = &gGameSaveDataBuffer;
             state = save->unk4C;
-            if ((state == 2) && (save->unk3A == 1)) {
-                save->unk4C = 3;
+            if ((state == 2) && (gGameSaveDataBuffer.unk3A == 1)) {
+                gGameSaveDataBuffer.unk4C = 3;
                 gPendingEndingCreditsFlow = 1;
                 state = save->unk4C;
                 transition = 3;
             }
             if ((state == 1) && (save->unk39 == 1)) {
                 transition = 2;
-                save->unk4C = 2;
-                state = 2;
+                gGameSaveDataBuffer.unk4C = 2;
+                state = 2 & 0xFF;
             }
             if (state == 0) {
-                if (save->unk3D == 1) {
+                if (gGameSaveDataBuffer.unk3D == 1) {
                     allReady = 1;
                     if (D_800ECA24 != 1) {
                         allReady = 0;
                     }
-                    if (save->unk35 != 1) {
+                    if (gGameSaveDataBuffer.unk35 != 1) {
                         allReady = 0;
                     }
-                    if (save->unk36 != 1) {
+                    if (gGameSaveDataBuffer.unk36 != 1) {
                         allReady = 0;
                     }
-                    if (save->unk37 != 1) {
+                    if (gGameSaveDataBuffer.unk37 != 1) {
                         allReady = 0;
                     }
-                    if (save->unk38 != 1) {
+                    if (gGameSaveDataBuffer.unk38 != 1) {
                         allReady = 0;
                     }
                     if (allReady != 0) {
                         transition = 1;
-                        save->unk4C = 1;
+                        gGameSaveDataBuffer.unk4C = 1;
                     }
                 }
             }
@@ -194,7 +195,7 @@ void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
         return;
     }
 
-    loadMainMenuSceneModelAnimationBank(1, save, transition);
+    loadMainMenuSceneModelAnimationBank();
     loadCompressedRomAsset(D_5DAF30, D_5DB9D0, 0x2A);
     loadCompressedRomAsset(D_1E0F70, D_1E19C0, 0x22);
     loadRawRomAsset(D_145380, D_1467B0, 8);
@@ -207,9 +208,9 @@ void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
     setRaceCameraModeForced(1, 0x1D);
     setRaceCameraModeForced(2, 0x1D);
     resetAllViewports();
-    configureViewport(0, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
-    configureViewport(1, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
-    configureViewport(2, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, D_800E1090);
+    configureViewport(1, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, D_800E1094);
+    configureViewport(2, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, D_800E1098);
     enableViewportClear(2);
     gMenuFadeAlpha = 0xFF;
     gCurrentGameTask->fade = 5;
@@ -220,7 +221,8 @@ void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
     createCallbackTaskWithUserId(initRaceSetupCharacterFocus, 0, 0x64, D_80121D90);
     createRaceSetupOpponentFocus(1, gRaceSetupOpponentFocusCharacterIds[D_80121D90][0]);
     createRaceSetupOpponentFocus(2, gRaceSetupOpponentFocusCharacterIds[D_80121D90][1]);
-    createRaceSetupOpponentFocus(3, gRaceSetupOpponentFocusCharacterIds[D_80121D90][2]);
+    allReady = gRaceSetupOpponentFocusCharacterIds[D_80121D90][2];
+    createRaceSetupOpponentFocus(3, allReady);
     createRaceSetupOpponentFocus(4, gRaceSetupOpponentFocusCharacterIds[D_80121D90][3]);
     setCurrentGameTaskCallback(updateRaceStartTransitionIntroDelay, 0);
 }
