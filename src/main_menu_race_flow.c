@@ -513,39 +513,27 @@ void waitForTrainingCourseStartSelection(void) {
     gViewportStates[0].overlayAlpha = 0x80;
 }
 
-// zoomTrainingCourseRaceViewport best match: 74.802% (nonmatchings/zoomTrainingCourseRaceViewport-1197934324348345530/base_8.c)
+// zoomTrainingCourseRaceViewport best match: 85.471% (nonmatchings/zoomTrainingCourseRaceViewport-2694253543240320626/base_8.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/zoomTrainingCourseRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomTrainingCourseRaceViewport(void) {
-    s32 timer;
-    s32 x2;
-    s32 x1;
-    s32 y1;
-    s32 y2;
-    f64 denominator = MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES;
-    f32 aspect;
+    s32 temp_v0;
 
     gCurrentGameTask->transitionTimer += 1;
-    timer = gCurrentGameTask->transitionTimer;
-
-    x2 = timer << 2;
-    x2 -= timer;
-    x2 <<= 3;
-    x2 = (s16) ((x2 / MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES) + 0x108);
-
-    x1 = (s16) (((timer * 0x28) / MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES) + 0x50);
-    y1 = (s16) (((timer * 0x58) / MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES) + 0x78);
-    y2 = (s16) (((timer * 0x64) / MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES) + 0x8C);
-    aspect = (f32) ((((f64) timer * -0.9523809523809523) / denominator) + 2.2857142857142856);
-
-    configureViewport(0, 0xA0, x1, x2 & 0xFFFF, y1, 0x140, y2, aspect);
-    if (gCurrentGameTask->transitionTimer == MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES) {
+    temp_v0 = gCurrentGameTask->transitionTimer;
+    configureViewport(0, 0xA0, (s32) ((s16) ((((s32) (temp_v0 * 0x28)) / 16) + 0x50)),
+                      (s16) ((((s32) (temp_v0 * 0x18)) / 16) + 0x108),
+                      (u16) ((s32) ((s16) ((((s32) (temp_v0 * 0x58)) / 16) + 0x78))), 0x140U,
+                      (u16) ((s32) ((s16) ((((s32) (temp_v0 * 0x64)) / 16) + 0x8C))),
+                      (f32) (((((f64) temp_v0) * (-0.9523809523809523)) / 0x10) + 2.2857142857142856));
+    if (gCurrentGameTask->transitionTimer == 0x10) {
         requestMusicSequenceBank(0xF);
-        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
+        configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, 1.3333334f);
         setCurrentGameTaskCallback(runTrainingCourseUntilLessonEnd, 0);
     }
+    if (temp_v0 && temp_v0) {}
     updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
     updateRacePlayersPostUpdate();
