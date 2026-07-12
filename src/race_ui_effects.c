@@ -785,7 +785,7 @@ extern void *gMenuRenderCallbackList;
 extern void *gMenuForegroundRenderCallbackList;
 extern void *D_80124888;
 extern void *gSceneModelRenderCallbackList;
-extern void *D_801248BC;
+extern void *gRaceModelEffectRenderCallbackList;
 extern void *D_801248C8;
 extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
@@ -842,8 +842,8 @@ extern u32 D_800D69A8[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern u32 D_20019C0[];
-extern u32 D_2002208[];
-extern u32 D_20023A8[];
+extern u32 gSnowboardTrailFrontDisplayList[];
+extern u32 gSnowboardTrailBackDisplayList[];
 extern u32 D_2002660[];
 extern u32 D_2002490[];
 extern u32 D_2003870[];
@@ -3365,7 +3365,7 @@ void spawnRacePlayerSparkleEffect(s16 arg0) {
     }
 }
 
-void func_8005F2DC(RaceUiSnowboardTrailActor *arg0) {
+void renderRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
     volatile u8 pad[0x20];
     RaceUiDisplayCommand *unused;
 
@@ -3384,13 +3384,13 @@ void func_8005F2DC(RaceUiSnowboardTrailActor *arg0) {
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2002208);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSnowboardTrailFrontDisplayList);
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_20023A8);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSnowboardTrailBackDisplayList);
     }
 }
 
-void func_8005F448(RaceUiSnowboardTrailActor *arg0) {
+void updateRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
     FixedTransform sp30;
     volatile u8 pad[0x10];
     RaceUiSnowboardTrailActor *actor;
@@ -3419,23 +3419,23 @@ void func_8005F448(RaceUiSnowboardTrailActor *arg0) {
     }
 
     if (D_80121D94[actor->playerIndex].value == 0) {
-        addRenderCallback(&gSceneModelRenderCallbackList, func_8005F2DC, arg0);
+        addRenderCallback(&gSceneModelRenderCallbackList, renderRaceUiSnowboardTrailEffect, arg0);
     }
 }
 
-void func_8005F56C(void *arg0) {
+void initRaceUiSnowboardTrailEffect(void *arg0) {
     *(s16 *)((u8 *)arg0 + 0x90) = 1;
     *(s32 *)((u8 *)arg0 + 0x24) = 0xF0000;
     *(s32 *)((u8 *)arg0 + 0x28) = 0x230000;
     *(s32 *)((u8 *)arg0 + 0x2C) = 0;
     *(s16 *)((u8 *)arg0 + 0x92) = 0xF;
     *(s32 *)((u8 *)arg0 + 0x3C) = 0x20000;
-    func_8005F448(arg0);
-    setCallbackTaskCallback(arg0, func_8005F448);
+    updateRaceUiSnowboardTrailEffect(arg0);
+    setCallbackTaskCallback(arg0, updateRaceUiSnowboardTrailEffect);
 }
 
-void func_8005F5C8(RaceUiSnowboardTrailPlayer *player) {
-    RaceUiSnowboardTrailActor *actor = createCallbackTaskPreservingArgs(func_8005F56C, 0, 0x62);
+void spawnRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailPlayer *player) {
+    RaceUiSnowboardTrailActor *actor = createCallbackTaskPreservingArgs(initRaceUiSnowboardTrailEffect, 0, 0x62);
 
     if (actor != NULL) {
         actor->playerIndex = player->playerIndex;
@@ -3712,7 +3712,7 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
     }
 
     gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
-    addRenderCallback(&D_801248BC, func_80060544, arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80060544, arg0);
 }
 
 // updateGhostSlowdownRise best match: 83.297% (nonmatchings/updateGhostSlowdownRise-8662636370764828261/base_15.c)
@@ -3758,7 +3758,7 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
             }
         }
         gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
-        addRenderCallback(&D_801248BC, func_80060544, (s32)arg0);
+        addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80060544, (s32)arg0);
     } else if (gRaceUpdatePaused == 0) {
         arg0->timer--;
     }
@@ -3963,7 +3963,7 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
 
     player = &D_80121D80[arg0->playerIndex];
     if (player->flags & 0x400000) {
-        addRenderCallback(&D_801248BC, func_80061484, (s32)arg0);
+        addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80061484, (s32)arg0);
         return;
     }
 
@@ -4098,7 +4098,7 @@ void func_80061CA8(RaceUiSingleTrailActor *arg0) {
         return;
     }
 
-    addRenderCallback(&D_801248BC, func_80061B70, (s32)arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80061B70, (s32)arg0);
 }
 
 void func_80061D90(void *arg0) {
@@ -4401,7 +4401,7 @@ void updateIceCourseBumper(RaceUiScaledParticleActor *arg0) {
             }
         }
     }
-    addRenderCallback(&D_801248BC, renderIceCourseBumper, actor);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, renderIceCourseBumper, actor);
 }
 
 void initIceCourseBumper(RaceUiScaledParticleActor *arg0) {
@@ -4457,7 +4457,7 @@ void func_80063164(void *arg0) {
     if (gRaceUpdatePaused == 0) {
         *(s16 *)((u8 *)arg0 + 0x2E) = *(s16 *)((u8 *)arg0 + 0x2E) + 8;
     }
-    addRenderCallback(&D_801248BC, func_80062F6C, (s32)arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80062F6C, (s32)arg0);
 }
 
 void func_800631B0(void *arg0) {
@@ -4513,7 +4513,7 @@ void func_80063410(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x30) = *(s16 *)((u8 *)arg0 + 0x30) + 0x10;
         *(s16 *)((u8 *)arg0 + 0x32) = *(s16 *)((u8 *)arg0 + 0x32) + 4;
     }
-    addRenderCallback(&D_801248BC, func_80063220, arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80063220, arg0);
 }
 
 void func_80063470(void *arg0) {
@@ -5373,7 +5373,7 @@ void func_80065CB8(void *arg0) {
         removeCallbackTask(temp_a2);
         return;
     }
-    addRenderCallback(&D_801248BC, func_80065808, temp_a2);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80065808, temp_a2);
 }
 
 void func_80065D24(RaceUiOverlayActor *arg0) {
@@ -5406,7 +5406,7 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
     temp_v0_2 = temp_s0->velocity;
     temp_s0->y += temp_v0_2;
     temp_s0->velocity = temp_v0_2 + 0xC00;
-    addRenderCallback(&D_801248BC, func_80065808, temp_s0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80065808, temp_s0);
 }
 
 void func_80065E0C(void *arg0) {
@@ -5420,7 +5420,7 @@ void func_80065E0C(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x32) = 0;
         setCallbackTaskCallback(arg0, func_80065D24);
     }
-    addRenderCallback(&D_801248BC, func_80065808, arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80065808, arg0);
 }
 
 void func_80065E90(RaceUiOverlayActor *arg0) {

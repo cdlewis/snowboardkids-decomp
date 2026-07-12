@@ -68,13 +68,13 @@ extern void composeFixedTransforms(FixedTransform *scratch, FixedTransform *sour
 extern u8 gRaceUpdatePaused;
 extern s16 gRaceRspSegment2AssetHandle;
 extern s16 gRaceRspSegment3AssetHandle;
-extern u32 D_2002208[];
-extern u32 D_20023A8[];
+extern u32 gSnowboardTrailFrontDisplayList[];
+extern u32 gSnowboardTrailBackDisplayList[];
 extern Gfx *gRegionAllocPtr;
-extern void *D_801248BC;
+extern void *gRaceModelEffectRenderCallbackList;
 extern u8 gRenderMatricesDirty;
 
-void func_800837D0(SnowboardTrailState *trail) {
+void renderSnowboardTrailEffect(SnowboardTrailState *trail) {
     Gfx *unused;
 
     if (gRenderMatricesDirty != 0) {
@@ -92,9 +92,9 @@ void func_800837D0(SnowboardTrailState *trail) {
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
         gSPMatrix(gRegionAllocPtr++, trail->frontDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, D_2002208);
+        gSPDisplayList(gRegionAllocPtr++, gSnowboardTrailFrontDisplayList);
         gSPMatrix(gRegionAllocPtr++, trail->backDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, D_20023A8);
+        gSPDisplayList(gRegionAllocPtr++, gSnowboardTrailBackDisplayList);
     }
 }
 
@@ -138,7 +138,7 @@ void func_8008393C(SnowboardTrailPlayer *player) {
             trail->state = 2;
         }
         if (player->disabled == 0) {
-            addRenderCallback(&D_801248BC, func_800837D0, trail);
+            addRenderCallback(&gRaceModelEffectRenderCallbackList, renderSnowboardTrailEffect, trail);
         }
         return;
     case 2:
@@ -167,11 +167,11 @@ void func_8008393C(SnowboardTrailPlayer *player) {
         }
         if (player->trailTimer == 0) {
             trail->state = 0;
-            func_8005F5C8((struct RaceUiSnowboardTrailPlayer *)player);
+            spawnRaceUiSnowboardTrailEffect((struct RaceUiSnowboardTrailPlayer *)player);
             return;
         }
         if (player->disabled == 0) {
-            addRenderCallback(&D_801248BC, func_800837D0, trail);
+            addRenderCallback(&gRaceModelEffectRenderCallbackList, renderSnowboardTrailEffect, trail);
         }
         return;
     default:
