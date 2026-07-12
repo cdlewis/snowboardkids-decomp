@@ -621,7 +621,7 @@ void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
     model->rot.z = z;
 }
 
-// updateMainMenuSceneModelTransforms best match: 83.677% (nonmatchings/func_8004215C-7273315160691878794/base_6.c)
+// updateMainMenuSceneModelTransforms best match: 84.572% (nonmatchings/updateMainMenuSceneModelTransforms-2694253543240320626/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/updateMainMenuSceneModelTransforms.s")
 
 #ifdef NON_MATCHING
@@ -649,8 +649,8 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
     s32 rowOffset;
     s32 localIndex;
     s16 *localAxis;
-    s16 *combinedAxis;
     s16 *rootAxis;
+    MainMenuModelDisplayObject *displayObject;
     s32 dot;
 
     partCursor = (u8 *)model;
@@ -710,25 +710,26 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
     part = model->parts;
     partCursor = (u8 *)model;
     combinedMatrixBase = &model->unk146;
+    displayObject = model->displayObjects;
     localIndex = 0;
     do {
         rootAxis = &rootMatrix[10];
         localAxis = rootMatrix;
-        combinedAxis = combinedMatrixBase;
         do {
             dot = (((s64)localAxis[3] * *(s32 *)(partCursor + 0x28)) +
                    ((s64)localAxis[0] * *(s32 *)(partCursor + 0x24)) +
                    ((s64)localAxis[6] * *(s32 *)(partCursor + 0x2C))) / FIXED_MATRIX_ONE;
-            *(s32 *)&combinedAxis[11] = dot;
-            *(s32 *)&combinedAxis[11] += *(s32 *)rootAxis;
+            displayObject->screenX = dot;
+            displayObject->screenX += *(s32 *)rootAxis;
             rootAxis += 2;
             localAxis++;
-            combinedAxis += 2;
+            displayObject = (MainMenuModelDisplayObject *)((u8 *)displayObject + 4);
         } while (rootAxis != &rootMatrix[16]);
         localIndex += 0x14;
         combinedMatrixBase += 0x10;
         partCursor += 0x14;
         part++;
+        displayObject = (MainMenuModelDisplayObject *)((u8 *)displayObject + 0x14);
     } while (localIndex != 0x118);
 }
 #endif
