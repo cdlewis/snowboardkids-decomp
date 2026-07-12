@@ -989,7 +989,7 @@ void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     }
 }
 
-// updateRaceSetupSaveStatusWidgets best match: 90.557% (nonmatchings/updateRaceSetupSaveStatusWidgets-6688367443449623229/base_7.c)
+// updateRaceSetupSaveStatusWidgets best match: 94.542% (nonmatchings/updateRaceSetupSaveStatusWidgets-2694253543240320626/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_setup_ui/updateRaceSetupSaveStatusWidgets.s")
 
 #ifdef NON_MATCHING
@@ -1000,6 +1000,7 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     TitleIntroTransitionState *global;
     TitleMenuWidgetItemView *view;
     u8 state;
+    u8 oldState;
 
     view = D_8010ADE0;
     actor = arg0;
@@ -1010,13 +1011,15 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
             actor->x[i] = view->x;
             actor->y[i] = view->y;
 
+            oldState = actor->unk31[i];
             state = global->padE[i];
-            if (state != actor->unk31[i]) {
+            if (state != oldState) {
                 actor->unk31[i] = state;
                 actor->unk36[i] = global->nextSelection[i];
+                oldState = actor->unk31[i];
             }
 
-            state = actor->unk31[i];
+            state = oldState;
             switch (state) {
             case 1:
                 actor->alpha[i] += 0x26;
