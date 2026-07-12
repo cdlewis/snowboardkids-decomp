@@ -207,10 +207,20 @@ block_25:
 }
 #endif
 
-// initRaceSetupSaveMenu best match: 90.019% (nonmatchings/initRaceSetupSaveMenu-2225551288923588688/base_4.c)
+// initRaceSetupSaveMenu best match: 99.808% (nonmatchings/initRaceSetupSaveMenu-5802343343535905907/base_22.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/initRaceSetupSaveMenu.s")
 
 #ifdef NON_MATCHING
+typedef struct {
+    u8 pad0[0x8];
+    u8 unk8;
+    u8 pad9[0x3];
+    s32 unkC;
+    u8 pad10[0x558];
+    s32 unk568;
+    u8 pad56C[0xA0];
+} RaceSetupPlayerState03798;
+
 extern s16 D_800B31B8;
 extern s16 D_800B31BA;
 extern s16 D_800B31BC;
@@ -219,10 +229,10 @@ extern s16 D_800B31C0;
 extern s16 D_800B31C2;
 extern s16 D_800B31C4;
 extern s16 D_800B31C6;
-extern s16 gControllerPakStatusCodes;
-extern s16 gMenuChoicePromptState;
-extern u8 gControllerPakRetryCounts;
-extern u8 gControllerPakOperationCounts;
+extern s16 gControllerPakStatusCodes[];
+extern s16 gMenuChoicePromptState[];
+extern u8 gControllerPakRetryCounts[];
+extern u8 gControllerPakOperationCounts[];
 extern u8 D_800EC9E4;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
@@ -235,66 +245,33 @@ extern s16 gRaceSetupSavePanelRect1X0;
 extern s16 gRaceSetupSavePanelRect1Y0;
 extern s16 gRaceSetupSavePanelRect1X1;
 extern s16 gRaceSetupSavePanelRect1Y1;
-extern u8 D_80121D80;
+extern RaceSetupPlayerState03798 D_80121D80[];
 
 void initRaceSetupSaveMenu(void) {
-    s16 *var_v1;
-    s16 *var_a0;
-    u8 *var_a1;
-    u8 *var_v0;
-    u8 *player;
+    RaceSetupPlayerState03798 *player;
     s32 i;
     u8 count;
+    int zero;
 
-    var_v0 = &gControllerPakOperationCounts;
-    var_a1 = &gControllerPakRetryCounts;
-    var_a0 = &gMenuChoicePromptState;
-    var_v1 = &gControllerPakStatusCodes;
+    i = 0;
     do {
-        var_v0++;
-        var_v1++;
-        var_a0++;
-        var_a1++;
-        var_v1[-1] = 0;
-        var_a0[-1] = 0;
-        var_a1[-1] = 0;
-        var_v0[-1] = 0;
-    } while (var_v0 < &D_800EC9E4);
+        i++;
+        gControllerPakStatusCodes[i - 1] = 0;
+        zero = 0;
+        gMenuChoicePromptState[i - 1] = 0;
+        gControllerPakRetryCounts[i - 1] = zero;
+        gControllerPakOperationCounts[i - 1] = 0;
+    } while (&gControllerPakOperationCounts[i] < &D_800EC9E4);
 
     count = gConnectedControllerCount;
-    D_800EC9E4 = 0;
-    i = 0;
-    if (count > 0) {
-        player = &D_80121D80;
-        do {
-            player += 0x60C;
-            player[-0x604] = 0;
-        } while (player < (&D_80121D80 + (count * 0x60C)));
-        i = 0;
-    }
-
-    do {
-        initRaceSetupPlayerSaveData(i);
-        i++;
-    } while (i < 4);
-
-    D_8010ADE0 = 0;
-    D_8010ADE4 = 0;
-    D_8010ADE8 = 0;
-    gMenuSelectionConfirmTimer = 0;
-    gMenuFlowState = 0;
-    gRaceRumbleEnabled = 0;
-
-    gRaceSetupSavePanelRect0X0 = D_800B31B8;
-    gRaceSetupSavePanelRect1X0 = D_800B31BA;
-    gRaceSetupSavePanelRect0Y0 = D_800B31BC;
+    do { D_800EC9E4 = zero; i = zero; if (count > zero) { player = D_80121D80; do { player++; player[-1].unk8 = 0; i++; } while (player < (&D_80121D80[count])); i = 0; } do { initRaceSetupPlayerSaveData(i); i++; } while (i < 4); D_8010ADE0 = 0; D_8010ADE4 = zero; D_8010ADE8 = 0; gMenuSelectionConfirmTimer = 0; gMenuFlowState = zero; gRaceRumbleEnabled = 0; gRaceSetupSavePanelRect0X0 = D_800B31B8; gRaceSetupSavePanelRect1X0 = D_800B31BA; gRaceSetupSavePanelRect0Y0 = D_800B31BC; } while (0);
     gRaceSetupSavePanelRect1Y0 = D_800B31BE;
     gRaceSetupSavePanelRect0X1 = D_800B31C0;
     gRaceSetupSavePanelRect1X1 = D_800B31C2;
     gRaceSetupSavePanelRect0Y1 = D_800B31C4;
     gRaceSetupSavePanelRect1Y1 = D_800B31C6;
 
-    setCurrentGameTaskCallback(updateRaceSetupSaveMenu, 0);
+    setCurrentGameTaskCallback(updateRaceSetupSaveMenu, zero);
     updateCallbackTasks();
 }
 #endif
@@ -313,16 +290,6 @@ typedef struct {
     u8 unkE[4];
     s16 unk12[4];
 } RaceSetupSubState03798;
-
-typedef struct {
-    u8 pad0[0x8];
-    u8 unk8;
-    u8 pad9[0x3];
-    s32 unkC;
-    u8 pad10[0x558];
-    s32 unk568;
-    u8 pad56C[0xA0];
-} RaceSetupPlayerState03798;
 
 typedef struct {
     u8 pad0[0x4];
