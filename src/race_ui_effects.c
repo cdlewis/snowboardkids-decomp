@@ -5049,7 +5049,7 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
     addRenderCallback(&D_801248C8, func_80064470, actor);
 }
 
-// func_80064914 best match: 96.414% (nonmatchings/func_80064914-5272447827802519043/base_13.c)
+// func_80064914 best match: 96.549% (nonmatchings/func_80064914-2694253543240320626/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80064914.s")
 
 #ifdef NON_MATCHING
@@ -5072,14 +5072,11 @@ void func_80064914(RaceUiProjectileActor *arg0) {
         arg0->pos.z += player->pos28.z;
         func_80064414(arg0);
 
-        otherPlayer = D_80121D80;
+        otherPlayer = (RacePlayerState *)(s32)D_80121D80;
         do {
             if ((otherPlayer->isActive != 0) && (otherPlayer->playerIndex != arg0->index)) {
                 value = otherPlayer->unk568;
-                amount = value;
-                if (value >= 0xA6) {
-                    amount = 0xA6;
-                }
+                amount = (value >= 0xA6) ? 0xA6 : value;
                 otherPlayer->unk568 = value - amount;
                 addRacePlayerScore((struct RaceInputPlayer *)&D_80121D80[arg0->index], amount);
             }
