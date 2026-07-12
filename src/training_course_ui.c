@@ -344,7 +344,7 @@ void updateTrainingCourseDialogScrollOut(TrainingCourseUiActor *arg0) {
     }
 }
 
-// updateTrainingCourseDialog best match: 99.775%
+// updateTrainingCourseDialog best match: 99.819% (nonmatchings/updateTrainingCourseDialog-5802343343535905907/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/training_course_ui/updateTrainingCourseDialog.s")
 
 #ifdef NON_MATCHING
@@ -414,6 +414,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
                     marker = (*script) & 0xFFFF;
                     script++;
                     script--;
+                    script = arg0->layout.script;
                 } while (marker != 0xFFFB);
             }
             arg0->layout.script = script + 1;
