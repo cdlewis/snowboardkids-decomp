@@ -494,17 +494,10 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
 }
 #endif
 
-// updateCourseSelectPreviewModelOut best match: 83.285% (nonmatchings/updateCourseSelectPreviewModelOut-2225551288923588688/base_6.c)
+// updateCourseSelectPreviewModelOut best match: 91.879% (nonmatchings/updateCourseSelectPreviewModelOut-8331816093655448999/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectPreviewModelOut.s")
 
 #ifdef NON_MATCHING
-extern u8 D_800EC9C0;
-extern s32 D_8010ADE4;
-extern u8 D_8010AECC[];
-extern s32 D_8010AEE8[];
-extern u8 D_8010AEFB[];
-extern s32 gModelRenderCallbackList;
-
 void updateCourseSelectPreviewModelOut(void *arg0) {
     CourseSelectTempVec3i sp78;
     CourseSelectAnimatedActor *actor;
@@ -519,9 +512,9 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
     if ((s32)gPlayerCount > 0) {
         offset = 0;
         do {
-            state = gCourseSelectStatus[8 + i];
-            if (state != actor->state[i]) {
-                actor->state[i] = state;
+            state = actor->state[i];
+            if (gCourseSelectStatus[8 + i] != state) {
+                actor->state[i] = gCourseSelectStatus[8 + i];
                 actor->timer[i] = gCourseSelectStatus[0x10 + i];
                 actor->angle[i] = *(u16 *)&gCourseSelectStatus[offset + 0x1C];
                 gCourseSelectStatus[0x10 + i] = 0;
@@ -559,7 +552,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                     if (actor->targetCourse[i] == 8) {
                         actor->targetCourse[i] = 2;
                     }
-                    if (D_8010AECC[i] == 1) {
+                    if (D_8010AECC[i] < 2) {
                         actor->vecs[i].y = -D_8010AEE8[i];
                     }
                     actor->state[i] = 2;
@@ -591,7 +584,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                 if (actor->timer[i] == 0xF) {
                     actor->timer[i] = 0;
                     actor->state[i] = 4;
-                    if (gPlayerCount == 1) {
+                    if (gPlayerCount < 2) {
                         ((u8 *)&D_80121D80[0])[8] = 3;
                         D_800EC9C0 = 0x10;
                     }
@@ -640,9 +633,8 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
             }
 
             if ((s32)state < 3) {
-                u16 angle = actor->angle[i] + 0x20;
-                actor->angle[i] = angle;
-                actor->angle[i] = angle & 0xFFF;
+                actor->angle[i] += 0x20;
+                actor->angle[i] &= 0xFFF;
             }
             makeFixedRotationY(&actor->matrix[i * 0x10], (s16)actor->angle[i]);
             transformVec3iByFixedMatrix(&actor->matrix[i * 0x10], &actor->vecs[i], &sp78);
