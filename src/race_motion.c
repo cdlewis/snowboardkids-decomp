@@ -149,11 +149,11 @@ void initRaceCourseSurfaceData(void) {
     gRaceCourseSurfaces = (RaceMotionSurface *)(v1 + 2);
 }
 
-// findRaceCourseSurfaceFromHint best match: 87.524% (base_6.c)
+// findRaceCourseSurfaceFromHint best match: 93.071% (nonmatchings/findRaceCourseSurfaceFromHint-2694253543240320626/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_motion/findRaceCourseSurfaceFromHint.s")
 
 #ifdef NON_MATCHING
-s32 findRaceCourseSurfaceFromHint(s32 index, s32 x, s32 z) {
+s32 findRaceCourseSurfaceFromHint(s32 surfaceIndex, s32 x, s32 z) {
     RaceMotionSurface *keyframes;
     RaceMotionSurface *keyframe;
     RaceMotionCoord *coords;
@@ -170,14 +170,16 @@ s32 findRaceCourseSurfaceFromHint(s32 index, s32 x, s32 z) {
     s32 z1;
     s32 z2;
     s32 z3;
+    s32 index;
     s16 next;
 
     keyframes = gRaceCourseSurfaces;
+    index = surfaceIndex;
 
 loop:
     offset = index * sizeof(RaceMotionSurface);
-    keyframe = (RaceMotionSurface *)((s32)keyframes + offset);
     coords = gRaceCourseSurfaceCoords;
+    keyframe = (RaceMotionSurface *)((s32)keyframes + offset);
     coord0 = (RaceMotionCoord *)((s32)coords + keyframe->coordIndices[0] * sizeof(RaceMotionCoord));
     coord1 = (RaceMotionCoord *)((s32)coords + keyframe->coordIndices[1] * sizeof(RaceMotionCoord));
     coord2 = (RaceMotionCoord *)((s32)coords + keyframe->coordIndices[2] * sizeof(RaceMotionCoord));
@@ -186,10 +188,10 @@ loop:
     x0 = coord0->x << 0x11;
     x1 = coord1->x << 0x11;
     z0 = coord0->z << 0x11;
-    z1 = coord1->z << 0x11;
     x2 = coord2->x << 0x11;
-    z2 = coord2->z << 0x11;
     x3 = coord3->x << 0x11;
+    z1 = coord1->z << 0x11;
+    z2 = coord2->z << 0x11;
     z3 = coord3->z << 0x11;
 
     if ((s64)(x0 - x1) * (z - z1) - (s64)(z0 - z1) * (x - x1) < 0) {
