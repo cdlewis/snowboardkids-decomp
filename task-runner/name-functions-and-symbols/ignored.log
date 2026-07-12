@@ -82,3 +82,5 @@ include/race_course_props_and_pickups.h
 src/race_player_input.c
 src/race_player_movement.c
 src/race_player_update.c
+src/race_progress.c
+include/race_progress.h
