@@ -83,9 +83,15 @@ extern s32 D_8010ADE4;
 extern u16 gMenuInputRepeatTimers[];
 extern s8 D_8010AE64[];
 extern u8 D_8010AEA0[];
+extern s8 D_8010AEA1;
+extern s8 D_8010AEA2;
+extern s8 D_8010AEA3;
 extern s8 D_8010AEA4[];
 extern s8 D_8010AEA8;
 extern s8 D_8010AEAC[];
+extern s8 D_8010AEAD;
+extern s8 D_8010AEAE;
+extern s8 D_8010AEAF;
 extern s8 D_8010AEB0;
 extern s8 D_8010AEB8[][3];
 extern u8 D_8010AEC8[];
@@ -110,7 +116,7 @@ extern u8 gPlayerCount;
 extern MultiplayerCourseSelectPlayer D_80121D80[];
 extern s32 gMenuFlowState;
 
-// initMultiplayerCourseSelectMenu best match: 78.174%
+// initMultiplayerCourseSelectMenu best match: 83.031% (nonmatchings/initMultiplayerCourseSelectMenu-3357475854818838508/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/multiplayer_course_select_menu/initMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -157,16 +163,16 @@ void initMultiplayerCourseSelectMenu(void) {
     D_8010AEAC[0] = 0;
     D_801122BC = updateMenuCameraObjectLookAtOriginCallback;
     D_801122B4 = screenBase;
-    D_8010AEA0[1] = 0;
-    D_8010AEAC[1] = 0;
+    D_8010AEA1 = 0;
+    D_8010AEAD = 0;
     D_8011236C = updateMenuCameraObjectLookAtOriginCallback;
     D_80112364 = screenBase;
-    D_8010AEA0[2] = 0;
-    D_8010AEAC[2] = 0;
+    D_8010AEA2 = 0;
+    D_8010AEAE = 0;
     D_8011241C = updateMenuCameraObjectLookAtOriginCallback;
     D_80112414 = screenBase;
-    D_8010AEA0[3] = 0;
-    D_8010AEAC[3] = 0;
+    D_8010AEA3 = 0;
+    D_8010AEAF = 0;
     gFramebufferSwapDelay = 0;
     D_800EC9E5 = 0;
     D_8010AEA8 = 0;
@@ -201,7 +207,7 @@ void initMultiplayerCourseSelectMenu(void) {
     setCurrentGameTaskCallback(updateMultiplayerCourseSelectMenu, 0);
 
     for (i = 0; i < MULTIPLAYER_COURSE_SELECT_PLAYER_RECORD_COUNT; i++) {
-        D_80121D80[i].mode = 0;
+        D_80121D80[i].state = 0;
     }
 
     for (i = 0; i < gPlayerCount; i++) {
