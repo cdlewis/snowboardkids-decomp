@@ -336,11 +336,11 @@ void drawAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
 }
 #endif
 
-// drawPulsingAssetTableSprite best match: 76.854% (nonmatchings/drawPulsingAssetTableSprite-2225551288923588688/base.c)
+// drawPulsingAssetTableSprite best match: 79.880% (nonmatchings/drawPulsingAssetTableSprite-3357475854818838508/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawPulsingAssetTableSprite.s")
 
 #ifdef NON_MATCHING
-extern s32 gRegionAllocPtr;
+extern Gfx *gRegionAllocPtr;
 extern u32 gMenuRenderModeResetDl[];
 extern s16 gFrameCounter;
 extern s16 gMenuViewportWidth;
@@ -348,153 +348,161 @@ extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 
-void drawPulsingAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, s32 arg3) {
-    volatile u8 pad[0x18];
-    u8 *volatile sp24;
-    volatile s32 sp18;
-    volatile s32 sp14;
-    volatile s32 sp10;
-    volatile s32 spC;
-    s32 temp_a0;
-    s32 temp_a3;
-    s32 temp_t1;
-    s32 temp_t2;
-    s32 temp_t6;
-    s32 temp_t7;
-    s32 temp_t8;
-    s32 temp_t8_2;
-    Gfx *temp_gfx;
-    s32 var_a0;
-    s32 var_a0_2;
-    register s32 var_s0;
-    s32 var_t5;
-    AssetTableEntry *temp_t4;
-    AssetTableEntry *temp_t4_2;
+void drawPulsingAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
+    volatile char pad[0x18];
+    u8 *textureBase;
+    s32 clipU;
+    s32 clipV;
+    s32 rightClip;
+    s32 bottomClip;
+    s32 leftClip;
+    s32 topClip;
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 pulse;
+    s32 alpha;
+    AssetTableEntry *rawEntry;
+    AssetTableEntry *entry;
 
-    temp_t4 = (AssetTableEntry *)((u8 *)arg2 + ((arg3 & 0xFFFF) * sizeof(AssetTableEntry)));
-    sp24 = (u8 *)arg2 + (arg2->entryCount * sizeof(AssetTableEntry)) + sizeof(AssetTableEntry);
-    var_t5 = arg0 + gMenuViewportCenterX;
-    var_s0 = arg1 + gMenuViewportCenterY;
-    temp_t4_2 = temp_t4 + 1;
-    sp14 = temp_t4_2->height + var_s0;
-    sp10 = 0;
-    spC = 0;
-    temp_t2 = temp_t4_2->width + var_t5;
-    temp_t7 = gMenuViewportWidth / 2;
-    temp_t1 = gMenuViewportCenterX + temp_t7;
-    if (var_t5 < temp_t1) {
-        temp_a3 = gMenuViewportCenterX - temp_t7;
-        temp_t8 = gMenuViewportHeight / 2;
-        temp_a0 = gMenuViewportCenterY + temp_t8;
-        if (var_s0 < temp_a0) {
-            sp18 = temp_t2;
-            if (temp_t2 >= temp_a3) {
-                s32 temp_v0 = gMenuViewportCenterY - temp_t8;
-                if (sp14 >= temp_v0) {
-                    if (var_t5 < temp_a3) {
-                        sp10 = temp_a3 - var_t5;
-                        var_t5 = temp_a3;
-                    }
-                    if (var_s0 < temp_v0) {
-                        spC = temp_v0 - var_s0;
-                        var_s0 = temp_v0;
-                    }
-                    if (sp18 >= temp_t1) {
-                        sp18 = temp_t1;
-                    }
-                    if (sp14 >= temp_a0) {
-                        sp14 = temp_a0;
-                    }
-                    temp_t8_2 = gFrameCounter & 0x1F;
-                    var_a0 = temp_t8_2;
-                    if (temp_t8_2 >= 0x11) {
-                        var_a0 = 0x20 - temp_t8_2;
-                    }
-                    temp_t6 = var_a0 * 0x10;
-                    var_a0_2 = temp_t6;
-                    if (temp_t6 >= 0x100) {
-                        var_a0_2 = 0xFF;
-                    }
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w1 = 0;
-                    temp_gfx->words.w0 = 0xE7000000;
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w1 = 0xFF2FFFFF;
-                    temp_gfx->words.w0 = 0xFC119623;
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w0 = 0xFA000000;
-                    temp_gfx->words.w1 = (((var_a0_2 & 0xFF) << 8) | 0xFFFF0000 | 0xFF);
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w0 = ((((s32)temp_t4_2->width >> 1) - 1) & 0xFFF) | 0xFD480000;
-                    temp_gfx->words.w1 = (u32)((u8 *)arg2 + temp_t4_2->imageOffset);
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w0 = (((((s32)(((s32)(temp_t4_2->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5480000);
-                    temp_gfx->words.w1 = 0x07080200;
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w1 = 0;
-                    temp_gfx->words.w0 = 0xE6000000;
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w0 = 0xF4000000;
-                    temp_gfx->words.w1 = (((temp_t4_2->width * 2) & 0xFFF) << 12) | 0x07000000 | ((temp_t4_2->height * 4) & 0xFFF);
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w1 = 0;
-                    temp_gfx->words.w0 = 0xE7000000;
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w0 = (((((s32)(((s32)(temp_t4_2->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000);
-                    temp_gfx->words.w1 = 0x00080200;
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w0 = 0xF2000000;
-                    temp_gfx->words.w1 = (((temp_t4_2->width * 4) & 0xFFF) << 12) | ((temp_t4_2->height * 4) & 0xFFF);
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w0 = 0xFD100000;
-                    temp_gfx->words.w1 = (u32)((temp_t4_2->textureIndex << 5) + sp24);
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w1 = 0;
-                    temp_gfx->words.w0 = 0xE8000000;
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w1 = 0x07000000;
-                    temp_gfx->words.w0 = 0xF5000100;
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w1 = 0;
-                    temp_gfx->words.w0 = 0xE6000000;
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w0 = 0xF0000000;
-                    temp_gfx->words.w1 = 0x0703C000;
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w1 = 0;
-                    temp_gfx->words.w0 = 0xE7000000;
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w0 = (((sp18 * 4) & 0xFFF) << 12) | 0xE4000000 | ((sp14 * 4) & 0xFFF);
-                    temp_gfx->words.w1 = (((var_t5 * 4) & 0xFFF) << 12) | ((var_s0 * 4) & 0xFFF);
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w0 = 0xB4000000;
-                    temp_gfx->words.w1 = (sp10 << 21) | ((spC << 5) & 0xFFFF);
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w0 = 0xB3000000;
-                    temp_gfx->words.w1 = 0x04000400;
-                    temp_gfx = (Gfx *)gRegionAllocPtr;
-                    gRegionAllocPtr = (s32)(temp_gfx + 1);
-                    temp_gfx->words.w0 = 0x06000000;
-                    temp_gfx->words.w1 = (u32)gMenuRenderModeResetDl;
+    textureBase = (((u8 *)arg2) + (arg2->entryCount * sizeof(AssetTableEntry))) + sizeof(AssetTableEntry);
+    rawEntry = (AssetTableEntry *)(((u8 *)arg2) + (arg3 * sizeof(AssetTableEntry)));
+    x0 = arg0 + gMenuViewportCenterX;
+    y0 = arg1 + gMenuViewportCenterY;
+    entry = rawEntry + 1;
+    y1 = entry->height + y0;
+    clipU = 0;
+    clipV = 0;
+    x1 = entry->width + x0;
+    rightClip = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+    if (x0 < rightClip) {
+        leftClip = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+        bottomClip = gMenuViewportCenterY + (gMenuViewportHeight / 2);
+        if (y0 < bottomClip) {
+            topClip = gMenuViewportCenterY - (gMenuViewportHeight / 2);
+            if ((x1 >= leftClip) && (y1 >= topClip)) {
+                if (x0 < leftClip) {
+                    clipU = leftClip - x0;
+                    x0 = leftClip;
+                }
+                if (y0 < topClip) {
+                    clipV = topClip - y0;
+                    y0 = topClip;
+                }
+                if (x1 >= rightClip) {
+                    x1 = rightClip;
+                }
+                if (y1 >= bottomClip) {
+                    y1 = bottomClip;
+                }
+                pulse = gFrameCounter & 0x1F;
+                if (pulse >= 0x11) {
+                    pulse = 0x20 - pulse;
+                }
+                alpha = pulse * 0x10;
+                if (alpha >= 0x100) {
+                    alpha = 0xFF;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w1 = 0;
+                    _g->words.w0 = 0xE7000000;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w1 = 0xFF2FFFFF;
+                    _g->words.w0 = 0xFC119623;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w0 = 0xFA000000;
+                    _g->words.w1 = (((alpha & 0xFF) << 8) | 0xFFFF0000 | 0xFF);
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w0 = ((((entry->width >> 1) - 1) & 0xFFF) | 0xFD480000);
+                    _g->words.w1 = (u32)(((u8 *)arg2) + entry->imageOffset);
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w0 = (((((((entry->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5480000);
+                    _g->words.w1 = 0x07080200;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w1 = 0;
+                    _g->words.w0 = 0xE6000000;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w0 = 0xF4000000;
+                    _g->words.w1 = (((entry->width * 2) & 0xFFF) << 12) | 0x07000000 | ((entry->height * 4) & 0xFFF);
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w1 = 0;
+                    _g->words.w0 = 0xE7000000;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w0 = (((((((entry->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000);
+                    _g->words.w1 = 0x00080200;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w0 = 0xF2000000;
+                    _g->words.w1 = (((entry->width * 4) & 0xFFF) << 12) | ((entry->height * 4) & 0xFFF);
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w0 = 0xFD100000;
+                    _g->words.w1 = (u32)(textureBase + (entry->textureIndex << 5));
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w1 = 0;
+                    _g->words.w0 = 0xE8000000;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w1 = 0x07000000;
+                    _g->words.w0 = 0xF5000100;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w1 = 0;
+                    _g->words.w0 = 0xE6000000;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w0 = 0xF0000000;
+                    _g->words.w1 = 0x0703C000;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w1 = 0;
+                    _g->words.w0 = 0xE7000000;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w0 = (((x1 * 4) & 0xFFF) << 12) | 0xE4000000 | ((y1 * 4) & 0xFFF);
+                    _g->words.w1 = (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF);
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w0 = 0xB4000000;
+                    _g->words.w1 = (clipU << 21) | ((clipV << 5) & 0xFFFF);
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w0 = 0xB3000000;
+                    _g->words.w1 = 0x04000400;
+                }
+                {
+                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
+                    _g->words.w0 = 0x06000000;
+                    _g->words.w1 = (u32)gMenuRenderModeResetDl;
                 }
             }
         }
