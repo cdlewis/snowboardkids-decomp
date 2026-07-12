@@ -1261,78 +1261,80 @@ s32 setSoundPlayerTempoByHandle(s32 arg0, s32 arg1) {
     return matches;
 }
 
-// soundPlayerUpdate best match: 91.170%
+// soundPlayerUpdate best match: 96.963% (nonmatchings/soundPlayerUpdate-2694253543240320626/base_4.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerUpdate.s")
 
 #ifdef NON_MATCHING
 ALMicroTime soundPlayerUpdate(void *arg0) {
-    PlayerCommandState *entry;
-    u8 **voiceBasePtr;
-    s32 count;
-    s32 i;
-    s32 fadeTarget;
-    u32 temp;
+    PlayerCommandState *var_s0;
+    s32 temp_t0;
+    s32 temp_v0;
+    s32 var_s1;
+    u32 temp_t9;
+    u32 temp_t9_2;
 
-    i = 0;
-    count = gSoundPlayerCount;
-    entry = gSoundPlayerStates;
-    if (count > 0) {
-        voiceBasePtr = &gSoundPlayerVoices;
+    var_s0 = gSoundPlayerStates;
+    var_s1 = 0;
+    if (gSoundPlayerCount > 0) {
         do {
-            if (entry->sequencePos != 0) {
-                entry->unk0 += (u16)entry->unkB8;
+            if (var_s0->sequencePos != 0) {
+                temp_t9 = var_s0->unk0 + (u16)var_s0->unkB8;
+                var_s0->unk0 = temp_t9;
 
-                if ((entry->unkBC != 0x7FFF) && (entry->unkC < entry->unk0) && (entry->sequencePos != 0)) {
-                    do {
-                        soundPlayerReadNextNote(entry, i);
-                    } while ((entry->unkC < entry->unk0) && (entry->sequencePos != 0));
+                if ((var_s0->unkBC != 0x7FFF) && ((u32)var_s0->unkC < temp_t9) && (var_s0->sequencePos != 0)) {
+loop_6:
+                    soundPlayerReadNextNote(var_s0, var_s1);
+                    if ((u32)var_s0->unkC < (u32)var_s0->unk0) {
+                        if (var_s0->sequencePos != 0) {
+                            goto loop_6;
+                        }
+                    }
                 }
 
-                if (entry->sequencePos != 0) {
-                    if (entry->unk60 != 0) {
-                        soundPlayerUpdateVolumeTrack(entry);
+                if (var_s0->sequencePos == 0) {
+
+                } else {
+                    if (var_s0->unk60 != 0) {
+                        soundPlayerUpdateVolumeTrack(var_s0);
                     }
-                    if (entry->unk68 != 0) {
-                        soundPlayerUpdatePanTrack(entry);
+                    if (var_s0->unk68 != 0) {
+                        soundPlayerUpdatePanTrack(var_s0);
                     }
 
-                    fadeTarget = entry->fadeTarget;
-                    if (fadeTarget != -1) {
-                        fadeTarget--;
-                        entry->fadeTarget = fadeTarget;
-                        if (fadeTarget == -1) {
-                            entry->sequencePos = soundPlayerCommandEndTrack(entry, 0);
-                            if (entry->unkE4 != 0) {
-                                entry->unkE4 = 0;
-                                alSynStopVoice(&gAudioSynthesizer, (ALVoice *)((i * 0x1C) + *voiceBasePtr));
+                    temp_v0 = var_s0->fadeTarget;
+                    temp_t0 = temp_v0 - 1;
+                    if (temp_v0 != -1) {
+                        var_s0->fadeTarget = temp_t0;
+                        if (temp_t0 == -1) {
+                            var_s0->sequencePos = soundPlayerCommandEndTrack(var_s0, 0);
+                            if (var_s0->unkE4 != 0) {
+                                var_s0->unkE4 = 0;
+                                alSynStopVoice(&gAudioSynthesizer, (ALVoice *)(gSoundPlayerVoices + (var_s1 * 0x1C)));
                             }
                         }
                     }
 
-                    if (entry->unkE4 != 0) {
-                        soundPlayerUpdateEnvelope(entry);
-                        soundPlayerUpdateVibrato(entry);
-                        soundPlayerUpdateTremolo(entry);
-                        soundPlayerApplyPitch(entry, i);
-                        soundPlayerApplyVolumeAndPan(entry, i);
+                    if (var_s0->unkE4 != 0) {
+                        soundPlayerUpdateEnvelope(var_s0);
+                        soundPlayerUpdateVibrato(var_s0);
+                        soundPlayerUpdateTremolo(var_s0);
+                        soundPlayerApplyPitch(var_s0, var_s1);
+                        soundPlayerApplyVolumeAndPan(var_s0, var_s1);
                     }
 
-                    temp = (entry->unk0 - entry->unk10) >> 8;
-                    entry->unkC6 = temp;
-                    entry->unk40 = (f32)(temp & 0xFFFF);
-                    count = gSoundPlayerCount;
-                } else {
-                    count = gSoundPlayerCount;
+                    temp_t9_2 = (u32)(var_s0->unk0 - var_s0->unk10) >> 8;
+                    var_s0->unkC6 = (u16)temp_t9_2;
+                    var_s0->unk40 = (f32)(temp_t9_2 & 0xFFFF);
                 }
             }
-            i++;
-            entry++;
-        } while (i < count);
+            var_s1 += 1;
+            var_s0 += 1;
+        } while (var_s1 < gSoundPlayerCount);
     }
 
-    gSoundPlayerUpdateCounter++;
-    return 0xF4240 / gAudioTicksPerSecond;
+    gSoundPlayerUpdateCounter += 1;
+    return 0xF4240 / (s32)gAudioTicksPerSecond;
 }
 #endif
 
