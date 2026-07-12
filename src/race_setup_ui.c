@@ -1155,29 +1155,25 @@ void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
 }
 #endif
 
-// updateRaceSetupSaveChoicePrompts best match: 97.350% (nonmatchings/updateRaceSetupSaveChoicePrompts-6061209858023118177/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_ui/updateRaceSetupSaveChoicePrompts.s")
-
-#ifdef NON_MATCHING
 void updateRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
     TitleMenuTransitionActor *actor;
-    u8 *count;
     s32 i;
     s32 step;
     s32 stepAmount;
+    u32 new_var;
     s16 state;
 
-    count = &gPlayerCount;
     actor = arg0;
     i = 0;
-    if (*count > 0) {
+    if (gPlayerCount > 0) {
         do {
             if (gRaceSetupMenuSubState.selection[i] != actor->selection[i]) {
                 actor->selection[i] = gRaceSetupMenuSubState.selection[i];
             }
 
             state = gMenuChoicePromptState[i];
-            if ((state != 0) && (state != 3) && (state != 4)) {
+            new_var = 4;
+            if ((state != 0) && ((state ^ 0) != 3) && (state != new_var)) {
                 if (state < 5) {
                     step = 1;
                 } else {
@@ -1187,7 +1183,8 @@ void updateRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
                 stepAmount = step * 8;
                 actor->slideOffset[i] += stepAmount;
                 state = actor->slideOffset[i];
-                if (state == 0x20) {
+                new_var = 0x20;
+                if (state == new_var) {
                     gMenuChoicePromptState[i] += 2;
                     actor->alphaTimer[i] = 0;
                     actor->alpha[i] = 0x100;
@@ -1209,21 +1206,24 @@ void updateRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
                 }
             }
 
-            if ((state == 3) || (state == 4)) {
+            new_var = 4;
+            if (((state ^ 0) == 3) || (state == new_var)) {
                 if ((s32)(u16)actor->alphaTimer[i] < 0x10) {
                     actor->alpha[i] -= 9;
                 } else {
                     actor->alpha[i] += 9;
                 }
-                actor->alphaTimer[i] = ((u16)actor->alphaTimer[i] + 1) & 0x1F;
+                actor->alphaTimer[i] = ((u16)(*actor).alphaTimer[i] + 1) & 0x1F;
             }
             i++;
-        } while (i < *count);
+        } while (i < gPlayerCount);
+
+        if (((!state) && (!state)) && (!state)) {
+        }
     }
 
     addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupSaveChoicePrompts, (s32)arg0);
 }
-#endif
 
 void initRaceSetupSaveChoicePrompts(RectListActor *arg0) {
     RectListActor *actor = arg0;
