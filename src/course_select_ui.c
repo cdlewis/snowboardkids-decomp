@@ -156,19 +156,17 @@ extern s32 gMenuRenderCallbackList;
 extern s32 gModelRenderCallbackList;
 extern u8 gCurrentViewportIndex;
 
-// drawCourseSelectPreviewModel best match: 97.975%
+// drawCourseSelectPreviewModel best match: 99.298% (nonmatchings/drawCourseSelectPreviewModel-8331816093655448999/base_23.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectPreviewModel.s")
 
 #ifdef NON_MATCHING
 void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
-    FixedTransform sp30;
     u8 sp2F;
     unsigned char sp2E;
-    CourseSelectRacePlayer *temp_v0_3;
-    s32 temp_v0_4;
     s8 temp_v0_2;
+    CourseSelectRacePlayer *temp_v0_3;
+    FixedTransform sp30;
     int temp_v0;
-    u8 temp_v1;
     u8 var_a3;
     u8 var_t0;
     u8 var_v1;
@@ -178,7 +176,6 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
     } else {
         var_t0 = gCurrentViewportIndex;
     }
-    temp_v1 = D_8010AECC[var_t0];
     if ((D_8010AECC[var_t0] == 0) || (D_8010AECC[var_t0] & 1)) {
         temp_v0 = arg0->playerFlags[var_t0];
         if ((temp_v0 == 0) || (temp_v0 & 1)) {
@@ -191,15 +188,16 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             if (temp_v0_2 == -1) {
                 var_v1 = 9;
             } else {
-                var_v1 = temp_v0_2 & ((unsigned long long) 0xFF);
+                var_v1 = temp_v0_2;
+                var_v1 = var_v1 & ((unsigned long long) 0xFF);
             }
             if ((D_8010AED0 != 0) && (gCurrentViewportIndex == 1)) {
                 var_v1 = D_8010AED0 - 1;
             }
             temp_v0_3 = &D_80121D80[(long long) gCurrentViewportIndex];
             if (temp_v0_3->state == 5) {
-                var_v1 = 0;
-                var_a3 = ((var_a3 % 3) + 0xC) & 0xFF;
+                var_v1 = (short) 0;
+                var_a3 = (var_a3 % 3) + 0xC;
             }
             if (temp_v0_3->courseIndex >= 9) {
                 var_v1 = 0;
@@ -207,10 +205,9 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             sp2E = var_v1;
             sp2F = var_a3;
             composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
-            temp_v0_4 = allocFixedTransformMatrix(&sp30);
-            arg0->matrix = temp_v0_4;
-            if (temp_v0_4 != 0) {
-                drawRacePlayerModelRootPart((void *)(temp_v0_4 ^ 0), (s16) sp2F, (s16) sp2E);
+            arg0->matrix = allocFixedTransformMatrix(&sp30);
+            if (arg0->matrix != 0) {
+                drawRacePlayerModelRootPart((void *)(arg0->matrix ^ 0), (s16) sp2F, (s16) sp2E);
             }
         }
     }
