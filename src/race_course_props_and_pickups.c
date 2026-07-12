@@ -10,6 +10,12 @@
 #include "race_motion.h"
 
 #define RACE_MODEL_BUFFER_HANDLE (*(s16 *)&gAssetHandles[0x48])
+#define RACE_PICKUP_G_TRI2 0xB1
+#define racePickupTriangleWord(v0, v1, v2, flag) \
+    (_SHIFTL((flag), 24, 8) | _SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
+#define gRacePickupQuadrangle(pkt, v0, v1, v2, v3, flag) \
+    (pkt)->words.w0 = (_SHIFTL(RACE_PICKUP_G_TRI2, 24, 8) | racePickupTriangleWord(v0, v1, v2, flag)); \
+    (pkt)->words.w1 = racePickupTriangleWord(v0, v2, v3, flag)
 
 typedef struct {
     /* 0x0 */ s16 enabled;
@@ -789,7 +795,7 @@ void renderRacePickupBase(RacePickupActor *arg0) {
     }
 }
 
-// renderRacePickupRespawn best match: 99.579% (base_22.c)
+// renderRacePickupRespawn best match: 99.978% (base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_props_and_pickups/renderRacePickupRespawn.s")
 
 #ifdef NON_MATCHING
@@ -826,8 +832,7 @@ void renderRacePickupRespawn(RacePickupActor *arg0) {
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
                 gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupBaseVertices, 0x103F, 0);
                 temp_v0_18 = gRegionAllocPtr++;
-                temp_v0_18->words.w1 = 0x60200;
-                temp_v0_18->words.w0 = 0xB1060402;
+                gRacePickupQuadrangle(temp_v0_18, 3, 2, 1, 0, 0);
                 gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image1, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
                                         G_TX_CLAMP, 0, 0, 0, 0);
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette1);
@@ -835,23 +840,18 @@ void renderRacePickupRespawn(RacePickupActor *arg0) {
                           G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupTopVertices, 0x513F, 0);
                 temp_t1 = gRegionAllocPtr++;
-                temp_t1->words.w0 = 0xB1060402;
-                temp_t1->words.w1 = 0x60200;
+                gRacePickupQuadrangle(temp_t1, 3, 2, 1, 0, 0);
                 temp_v0_34 = gRegionAllocPtr++;
-                temp_v0_34->words.w1 = 0xE0A08;
-                temp_v0_34->words.w0 = 0xB10E0C0A;
+                gRacePickupQuadrangle(temp_v0_34, 7, 6, 5, 4, 0);
                 temp_v0_35 = gRegionAllocPtr++;
-                temp_v0_35->words.w1 = 0x161210;
-                temp_v0_35->words.w0 = 0xB1161412;
+                gRacePickupQuadrangle(temp_v0_35, 11, 10, 9, 8, 0);
                 temp_v0_36 = gRegionAllocPtr++;
-                temp_v0_36->words.w1 = 0x1E1A18;
-                temp_v0_36->words.w0 = 0xB11E1C1A;
+                gRacePickupQuadrangle(temp_v0_36, 15, 14, 13, 12, 0);
                 gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image2, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
                                         G_TX_CLAMP, 0, 0, 0, 0);
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette2);
                 temp_v0_50 = gRegionAllocPtr++;
-                temp_v0_50->words.w1 = 0x262220;
-                temp_v0_50->words.w0 = 0xB1262422;
+                gRacePickupQuadrangle(temp_v0_50, 19, 18, 17, 16, 0);
                 gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
             }
         }
