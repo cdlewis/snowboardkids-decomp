@@ -369,6 +369,10 @@ and control flow already match and only register *names* differ.
   collapse the override into fall-through. Rewriting as `if (cond) override;
   else default;` can preserve the target's explicit branch and delay-slot
   assignment without changing semantics.
+- **Cast an operand, not the sum, for 64-bit signed addition.** For expressions
+  like averaging two `s32`s, `(s64)(a + b) / 2` lets the 32-bit add overflow
+  before widening. `((s64)a + b) / 2` emits the carry/sign-extension sequence
+  before `__ll_div`.
 - **After a successful match, check the whole modified file, not just the
   matched function** — functions accessing the same structs can break when a
   struct layout changes. Run `./tools/build-and-verify.sh`; if the checksum
