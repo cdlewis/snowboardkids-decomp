@@ -3911,16 +3911,12 @@ void updateRacePlayerMode06TerrainFall(RaceInputPlayer *player) {
 }
 #endif
 
-// updateRacePlayerMode28TerrainFallWithItemEffect best match: 91.209% (nonmatchings/updateRacePlayerMode28TerrainFallWithItemEffect-7273315160691878794/base_7.c)
+// updateRacePlayerMode28TerrainFallWithItemEffect best match: 94.697% (nonmatchings/updateRacePlayerMode28TerrainFallWithItemEffect-2694253543240320626/base_7.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode28TerrainFallWithItemEffect.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode28TerrainFallWithItemEffect(RaceInputPlayer *player) {
-    s32 *sp38;
-    s32 *sp34;
-    s32 *sp30;
-    s16 *sp2C;
     s16 updateState;
     s32 yVel;
     u32 stateFlags;
@@ -3992,20 +3988,14 @@ void updateRacePlayerMode28TerrainFallWithItemEffect(RaceInputPlayer *player) {
             if (gViewportStates[(u16) player->playerIndex].overlayAlpha == 0xFF) {
                 player->updateState++;
                 player->unk502 = player->unk2E8;
-                sp38 = &player->posX;
-                sp34 = &player->posY;
-                sp30 = &player->posZ;
-                sp2C = &player->facingAngle;
 loop:
-                getRaceCourseSurfaceSpawnTransform(player->unk502, sp38, sp34, sp30, sp2C);
+                getRaceCourseSurfaceSpawnTransform(player->unk502, &player->posX, &player->posY, &player->posZ, &player->facingAngle);
                 if (isRacePlayerRespawnSurfaceValid(player) == 0) {
                     player->unk502--;
                     goto loop;
                 }
                 player->posY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
-                player->unk34.x = sp38[0];
-                player->unk34.y = sp38[1];
-                player->unk34.z = sp38[2];
+                player->unk34 = player->pos;
                 player->unk40.x = 0;
                 player->unk40.y = 0;
                 player->unk40.z = 0;
