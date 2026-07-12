@@ -54,7 +54,7 @@ extern u8 gRaceSplitscreenMode;
 extern u8 gPlayerCount;
 extern s16 gRaceCourseIndex;
 
-// func_8007B250 best match: 30.134% (nonmatchings/func_8007B250-5752545231564691495/base_6.c)
+// updateRacePositionTracker best match: 30.134% (nonmatchings/updateRacePositionTracker-5752545231564691495/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007B250.s")
 
 #ifdef NON_MATCHING
@@ -87,7 +87,7 @@ extern s16 gRaceCourseIndex;
         player->displayRank = (pattern)[rankIndex]; \
     }
 
-void func_8007B250(void) {
+void updateRacePositionTracker(void) {
     s32 order[4];
     s32 i;
     s32 temp;

@@ -274,7 +274,7 @@ void initRacePlayer(RaceInputPlayer *player) {
     player->unk68 = 0xC0000;
     if ((player->unk4 == 0) && (player->soundDisabled == 0) && (gRaceCameraModeChangeDisabled == 0) &&
         (player->unk27C != player->unk278)) {
-        createCallbackTaskWithUserIdPreservingArgs(func_80057810, 0, 0x64, player->playerIndexU16);
+        createCallbackTaskWithUserIdPreservingArgs(initRaceUiBoardReversePrompt, 0, 0x64, player->playerIndexU16);
     }
     if (gRaceDemoPlaybackEnabled == 1) {
         if (player->playerIndexU16 == 0) {
@@ -430,7 +430,7 @@ void updateRacePlayers(void) {
         updateRacePlayerInput(D_8012238C);
         updateRacePlayerInput(D_80122998);
         updateRacePlayerInput(D_80122FA4);
-        func_8007B250();
+        updateRacePositionTracker();
         for (i = 0; i < gRacePlayerCount; i++) {
             updateRacePlayer(&D_80121D80[i]);
         }
@@ -3385,7 +3385,7 @@ void updateRacePlayerMode05SpinoutStun(RaceInputPlayer *player) {
         player->stateTimer = 0x1E;
         if (player->stateFlags & 0x800000) {
             player->stateTimer = 0x5A;
-            func_80062A64(player->playerIndex);
+            spawnRaceUiStunOrbitingIcons(player->playerIndex);
         }
         setRaceMotionAnimation(player, 0xF);
         stateTimer = player->stateTimer;
@@ -4123,7 +4123,7 @@ void updateRacePlayerMode23ItemSteal(RaceInputPlayer *player) {
         player->unk60 = 0;
         stepRaceMotionLoopingAnimation(player);
         player->unk40.y = 0;
-        createCallbackTaskWithUserIdPreservingArgs(func_8005FB30, 0, 0x64, (u16) player->playerIndex);
+        createCallbackTaskWithUserIdPreservingArgs(initRaceUiItemStealTrailEffect, 0, 0x64, (u16) player->playerIndex);
         timer = player->stateTimer;
         player->stateTimer = timer - ((player->stateTimer * player->rankIndex) / 8);
         player->actionEffectLevel = 4;
@@ -4254,7 +4254,7 @@ void updateRacePlayerMode25SpinHit(RaceInputPlayer *player) {
         player->stateTimer = 0xF0;
         setRaceMotionAnimation(player, 1);
         stepRaceMotionLoopingAnimation(player);
-        createCallbackTaskWithUserIdPreservingArgs(func_800617C8, 0, 0x3C, (u16) player->playerIndex);
+        createCallbackTaskWithUserIdPreservingArgs(initRaceUiHeavyKnockdownTrailEffect, 0, 0x3C, (u16) player->playerIndex);
         stateTimer = player->stateTimer;
         player->stateTimer = stateTimer;
         player->stateTimer = player->stateTimer - ((stateTimer * player->rankIndex) / 8);
@@ -4329,7 +4329,7 @@ void updateRacePlayerMode27Slide(RaceInputPlayer *player) {
         updateTimer = player->updateTimer;
         if (updateTimer == 0) {
             player->updateTimer = updateTimer + 1;
-            createCallbackTaskWithUserIdPreservingArgs(func_80062530, 0, 3, (u16) player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRaceUiSpinHitTransitionEffect, 0, 3, (u16) player->playerIndex);
         }
         player->facingAngle += 0x40;
         player->unk40.y -= 0x800;
@@ -5255,7 +5255,7 @@ void updateRacePlayersPostUpdate(void) {
     i = 0;
     if (gRacePlayerCount > 0) {
         do {
-            func_8008393C(&D_80121D80[i]);
+            updateSnowboardTrailEffect(&D_80121D80[i]);
             i++;
         } while (i < gRacePlayerCount);
         i = 0;
@@ -5273,9 +5273,9 @@ void updateRacePlayersPostUpdate(void) {
             player->unk2C = player->unk64 + player->unk2C - player->unk58 + 0xA000;
             if (player->soundDisabled == 0) {
                 addRenderCallback(&D_801248C8, (void (*)(void *))drawRacePositionUiPlayerModel, (RacePositionUiPlayer *)player);
-                addRenderCallback(&D_801248EC, (void (*)(void *))func_8007BE80, (RacePositionUiPlayer *)player);
+                addRenderCallback(&D_801248EC, (void (*)(void *))drawRacePositionUiPlayerMarker, (RacePositionUiPlayer *)player);
             } else {
-                addRenderCallback(&D_801248EC, (void (*)(void *))func_8007CBC0, (RacePositionUiPlayer *)player);
+                addRenderCallback(&D_801248EC, (void (*)(void *))drawRacePositionUiPlayerGhostModel, (RacePositionUiPlayer *)player);
             }
             i++;
             player++;
@@ -5398,7 +5398,7 @@ void updateRacePlayerVoiceSounds(RaceInputPlayer *arg0) {
         temp_v0_2 = (u16)arg0->playerIndex;
         if (gRacePlayerHudStatuses[temp_v0_2].active != 0) {
             sp24 = (s32)var_a3;
-            func_80061034((void *)var_a3, (s16)temp_v0_2);
+            spawnRaceUiScorePopup((void *)var_a3, (s16)temp_v0_2);
             var_v1_2 = 0x4D;
             if ((s32)var_a3 >= 0x64) {
                 var_v1_2 = 0x4E;
@@ -5451,11 +5451,11 @@ void updateRacePlayerVoiceSounds(RaceInputPlayer *arg0) {
                     arg0->unk2C4 = 0x3FF;
                     arg0->unk2C0 += 0x12C;
                     sp2C = 0x51;
-                    func_80057C08((void *)var_s0, 1);
+                    spawnRaceUiTrickScorePopup((void *)var_s0, 1);
                     var_v1_4 = 0x51;
                 } else {
                     sp2C = var_v1_3;
-                    func_80057C08((void *)var_s0, 0);
+                    spawnRaceUiTrickScorePopup((void *)var_s0, 0);
                     var_v1_4 = var_v1_3;
                 }
                 arg0 = arg0;
@@ -5598,14 +5598,14 @@ void updateRacePlayerPostUpdateMode29(RaceInputPlayer *player) {
             if (player->unk2C0 >= 0x2710) {
                 player->unk2C0 = 0x270F;
             }
-            createCallbackTaskPreservingArgs(func_80057DD4, 0, 0x64);
+            createCallbackTaskPreservingArgs(initRaceUiCrashScorePopup, 0, 0x64);
             enqueueSoundEffect(0x51, 0x32);
         }
         if (gRaceSplitscreenMode == 0) {
             addRacePlayerScore(player, 0x12C);
             playerIndex = player->playerIndex;
             if (gRacePlayerHudStatuses[playerIndex].active != 0) {
-                func_80061034(0x12C, (s16)playerIndex);
+                spawnRaceUiScorePopup(0x12C, (s16)playerIndex);
                 enqueueSoundEffect(0x51, 0x32);
             }
         }
