@@ -1,68 +1,72 @@
 #include "viewport_manager.h"
 
-// resetAllViewports best match: 50.342%
+// resetAllViewports best match: 53.082% (nonmatchings/resetAllViewports-3357475854818838508/base_7.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/resetAllViewports.s")
 
 #ifdef NON_MATCHING
+#define RESET_VIEWPORT_FIELD(index, field, value)     \
+    do {                                              \
+        volatile ViewportState *viewport;             \
+        viewport = &gViewportStates[index];           \
+        viewport->field = value;                      \
+    } while (0)
+
 void resetAllViewports(void) {
-    volatile ViewportState *viewport = &gViewportStates[0];
+    RESET_VIEWPORT_FIELD(0, active, 0);
+    RESET_VIEWPORT_FIELD(0, screenBoundsValid, 0);
+    RESET_VIEWPORT_FIELD(0, clearFramebuffer, 0);
+    RESET_VIEWPORT_FIELD(0, overlayActive, 0);
+    RESET_VIEWPORT_FIELD(0, overlayR, 0);
+    RESET_VIEWPORT_FIELD(0, overlayG, 0);
+    RESET_VIEWPORT_FIELD(0, overlayB, 0);
+    RESET_VIEWPORT_FIELD(0, overlayAlpha, 0);
+    RESET_VIEWPORT_FIELD(0, unk14, 0x1FF);
+    RESET_VIEWPORT_FIELD(0, unk16, 0);
+    RESET_VIEWPORT_FIELD(0, unk1C, 0x1FF);
+    RESET_VIEWPORT_FIELD(0, unk1E, 0);
 
-    viewport->active = 0;
-    viewport->screenBoundsValid = 0;
-    viewport->clearFramebuffer = 0;
-    viewport->overlayActive = 0;
-    viewport->overlayR = 0;
-    viewport->overlayG = 0;
-    viewport->overlayB = 0;
-    viewport->overlayAlpha = 0;
-    viewport->unk14 = 0x1FF;
-    viewport->unk16 = 0;
-    viewport->unk1C = 0x1FF;
-    viewport->unk1E = 0;
+    RESET_VIEWPORT_FIELD(1, active, 0);
+    RESET_VIEWPORT_FIELD(1, screenBoundsValid, 0);
+    RESET_VIEWPORT_FIELD(1, clearFramebuffer, 0);
+    RESET_VIEWPORT_FIELD(1, overlayActive, 0);
+    RESET_VIEWPORT_FIELD(1, overlayR, 0);
+    RESET_VIEWPORT_FIELD(1, overlayG, 0);
+    RESET_VIEWPORT_FIELD(1, overlayB, 0);
+    RESET_VIEWPORT_FIELD(1, overlayAlpha, 0);
+    RESET_VIEWPORT_FIELD(1, unk14, 0x1FF);
+    RESET_VIEWPORT_FIELD(1, unk16, 0);
+    RESET_VIEWPORT_FIELD(1, unk1C, 0x1FF);
+    RESET_VIEWPORT_FIELD(1, unk1E, 0);
 
-    viewport = &gViewportStates[1];
-    viewport->active = 0;
-    viewport->screenBoundsValid = 0;
-    viewport->clearFramebuffer = 0;
-    viewport->overlayActive = 0;
-    viewport->overlayR = 0;
-    viewport->overlayG = 0;
-    viewport->overlayB = 0;
-    viewport->overlayAlpha = 0;
-    viewport->unk14 = 0x1FF;
-    viewport->unk16 = 0;
-    viewport->unk1C = 0x1FF;
-    viewport->unk1E = 0;
+    RESET_VIEWPORT_FIELD(2, active, 0);
+    RESET_VIEWPORT_FIELD(2, screenBoundsValid, 0);
+    RESET_VIEWPORT_FIELD(2, clearFramebuffer, 0);
+    RESET_VIEWPORT_FIELD(2, overlayActive, 0);
+    RESET_VIEWPORT_FIELD(2, overlayR, 0);
+    RESET_VIEWPORT_FIELD(2, overlayG, 0);
+    RESET_VIEWPORT_FIELD(2, overlayB, 0);
+    RESET_VIEWPORT_FIELD(2, overlayAlpha, 0);
+    RESET_VIEWPORT_FIELD(2, unk14, 0x1FF);
+    RESET_VIEWPORT_FIELD(2, unk16, 0);
+    RESET_VIEWPORT_FIELD(2, unk1C, 0x1FF);
+    RESET_VIEWPORT_FIELD(2, unk1E, 0);
 
-    viewport = &gViewportStates[2];
-    viewport->active = 0;
-    viewport->screenBoundsValid = 0;
-    viewport->clearFramebuffer = 0;
-    viewport->overlayActive = 0;
-    viewport->overlayR = 0;
-    viewport->overlayG = 0;
-    viewport->overlayB = 0;
-    viewport->overlayAlpha = 0;
-    viewport->unk14 = 0x1FF;
-    viewport->unk16 = 0;
-    viewport->unk1C = 0x1FF;
-    viewport->unk1E = 0;
-
-    viewport = &gViewportStates[3];
-    viewport->active = 0;
-    viewport->screenBoundsValid = 0;
-    viewport->clearFramebuffer = 0;
-    viewport->overlayActive = 0;
-    viewport->overlayR = 0;
-    viewport->overlayG = 0;
-    viewport->overlayB = 0;
-    viewport->overlayAlpha = 0;
-    viewport->unk14 = 0x1FF;
-    viewport->unk16 = 0;
-    viewport->unk1C = 0x1FF;
-    viewport->unk1E = 0;
+    RESET_VIEWPORT_FIELD(3, active, 0);
+    RESET_VIEWPORT_FIELD(3, screenBoundsValid, 0);
+    RESET_VIEWPORT_FIELD(3, clearFramebuffer, 0);
+    RESET_VIEWPORT_FIELD(3, overlayActive, 0);
+    RESET_VIEWPORT_FIELD(3, overlayR, 0);
+    RESET_VIEWPORT_FIELD(3, overlayG, 0);
+    RESET_VIEWPORT_FIELD(3, overlayB, 0);
+    RESET_VIEWPORT_FIELD(3, overlayAlpha, 0);
+    RESET_VIEWPORT_FIELD(3, unk14, 0x1FF);
+    RESET_VIEWPORT_FIELD(3, unk16, 0);
+    RESET_VIEWPORT_FIELD(3, unk1C, 0x1FF);
+    RESET_VIEWPORT_FIELD(3, unk1E, 0);
 }
+
+#undef RESET_VIEWPORT_FIELD
 #endif
 
 void resetViewport(s32 arg0) {
