@@ -123,23 +123,24 @@ s32 getSchedulerGraphicsTaskQueue(s32 arg0) {
     return arg0 + 0x5C;
 }
 
-// schedulerThreadMain best match: 98.072% (nonmatchings/schedulerThreadMain-2127290767680699791/base_9.c)
+// schedulerThreadMain best match: 98.133% (nonmatchings/schedulerThreadMain-2694253543240320626/base_14.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/schedulerThreadMain.s")
 
 #ifdef NON_MATCHING
 void schedulerThreadMain(SchedulerState *arg0) {
+    s32 zero;
     OSMesgQueue *queue;
     s32 started;
     s32 delayedStart;
     s32 pendingAudio;
-    short nextFrame;
     OSMesg msg;
 
-    started = 0;
-    delayedStart = 0;
-    pendingAudio = 0;
-    msg = NULL;
+    zero = 0;
+    started = zero;
+    delayedStart = zero;
+    pendingAudio = zero;
+    msg = (OSMesg)zero;
     gSchedulerStartupRetraceCount = 0;
     queue = &arg0->retraceQueue;
 
@@ -147,9 +148,7 @@ loop:
     osRecvMesg(queue, &msg, 1);
     switch ((s32)msg) {
         case 0x29A:
-            nextFrame = gRetraceCounter + 1;
-            gRetraceCounter = nextFrame;
-            gRetraceCounter = nextFrame;
+            gRetraceCounter = gRetraceCounter + 1;
             gRetraceCounter = gRetraceCounter & 0xFFF;
             if ((started == 0) || (gSchedulerStartupRetraceCount < ((0, 0x16)))) {
                 tryStartPendingRdpTask(arg0);
@@ -205,7 +204,7 @@ loop:
 
         case 0x29D:
             started = 1;
-            notifySchedulerClients(arg0, (s32)((u8 *)arg0 + 2));
+            notifySchedulerClients(arg0, (s32)&arg0->unk2);
             break;
     }
     goto loop;
