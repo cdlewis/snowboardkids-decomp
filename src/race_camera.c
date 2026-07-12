@@ -594,7 +594,7 @@ void initRaceCameraChase(void) {
     D_801124A0->update();
 }
 
-// updateRaceCameraChase best match: 79.490% (nonmatchings/updateRaceCameraChase-6113366811127043669/base_6.c)
+// updateRaceCameraChase best match: 84.185% (nonmatchings/updateRaceCameraChase-2694253543240320626/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/updateRaceCameraChase.s")
 
 #ifdef NON_MATCHING
@@ -648,9 +648,7 @@ void updateRaceCameraChase(void) {
 
                     if (distSq < 0xE1000000000LL) {
                         if (distSq < 0xE0F00000000LL) {
-                            blockedAngles |= 1 << (s16)((((calculateFixedAngleFromDeltaXZ(dx, dz) + 0x800) - targetYaw) + 0x100) & 0xFFF) >> 9;
-                        } else {
-                            break;
+                            blockedAngles |= 1 << (s16)(((((calculateFixedAngleFromDeltaXZ(dx, dz) + 0x800) - targetYaw) + 0x100) & 0xFFF) >> 9);
                         }
                     }
                 }
@@ -660,13 +658,16 @@ void updateRaceCameraChase(void) {
         }
 
         angleOrder = gRaceCameraChaseYawPreferenceOrder;
-        while ((blockedAngles & (1 << *angleOrder)) != 0) {
+loop_11:
+        if ((blockedAngles & (1 << *angleOrder)) != 0) {
             i++;
             angleOrder++;
             if (i == 8) {
-                break;
+                goto loop_11_done;
             }
+            goto loop_11;
         }
+loop_11_done:
 
         yaw = targetYaw + gRaceCameraChaseYawOffsets[i];
         yaw = (s16)yaw;
