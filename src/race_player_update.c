@@ -16,7 +16,7 @@
 #include "menu_screen_effects.h"
 #include "race_player_movement.h"
 #include "race_progress.h"
-#include "race_position_ui.h"
+#include "race_player_model_renderer.h"
 #include "race_player_update.h"
 #include "race_surface_cues.h"
 #include "race_ui_effects.h"
@@ -5272,10 +5272,10 @@ void updateRacePlayersPostUpdate(void) {
             nextSoundPos->pos = soundPos->pos;
             player->unk2C = player->unk64 + player->unk2C - player->unk58 + 0xA000;
             if (player->soundDisabled == 0) {
-                addRenderCallback(&D_801248C8, (void (*)(void *))drawRacePositionUiPlayerModel, (RacePositionUiPlayer *)player);
-                addRenderCallback(&D_801248EC, (void (*)(void *))drawRacePositionUiPlayerMarker, (RacePositionUiPlayer *)player);
+                addRenderCallback(&D_801248C8, (void (*)(void *))drawRacePlayerModel, (RacePlayerModelRenderState *)player);
+                addRenderCallback(&D_801248EC, (void (*)(void *))drawRacePlayerGroundShadow, (RacePlayerModelRenderState *)player);
             } else {
-                addRenderCallback(&D_801248EC, (void (*)(void *))drawRacePositionUiPlayerGhostModel, (RacePositionUiPlayer *)player);
+                addRenderCallback(&D_801248EC, (void (*)(void *))drawRaceGhostPlayerModel, (RacePlayerModelRenderState *)player);
             }
             i++;
             player++;

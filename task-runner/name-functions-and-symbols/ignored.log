@@ -85,3 +85,4 @@ src/race_player_update.c
 src/race_player_update.c
 src/race_progress.c
 include/race_progress.h
+src/race_player_model_renderer.c
