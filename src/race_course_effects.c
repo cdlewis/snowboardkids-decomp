@@ -455,44 +455,33 @@ void renderRaceCourseModel(void *arg0) {
     }
 }
 
-// renderRaceCourseBackdrop best match: 52.371% (base_6.c)
+// renderRaceCourseBackdrop best match: 82.651% (base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/renderRaceCourseBackdrop.s")
 
 #ifdef NON_MATCHING
-#define EMIT_COURSE_BACKDROP(list)                             \
-    do {                                                       \
-        Gfx **region = &gRegionAllocPtr;                       \
-        CourseAssetHandles *handles = &gAssetHandles;             \
-        gfx = *region;                                         \
-        *region = gfx + 1;                                     \
-        gfx->words.w0 = 0xE7000000;                            \
-        gfx->words.w1 = 0;                                     \
-        gfx = *region;                                         \
-        *region = gfx + 1;                                     \
-        gfx->words.w0 = 0xBC000806;                            \
-        gfx->words.w1 = (u32)getRelocatableHeapBlockBase(handles->courseVtxHandle);    \
-        gfx = *region;                                         \
-        *region = gfx + 1;                                     \
-        gfx->words.w0 = 0xBC000C06;                            \
-        gfx->words.w1 = (u32)getRelocatableHeapBlockBase(handles->courseTextureHandle); \
-        gfx = *region;                                         \
-        *region = gfx + 1;                                     \
-        gfx->words.w0 = 0x01020040;                            \
-        gfx->words.w1 = (u32)temp_s3->matrix;                  \
-        gfx = *region;                                         \
-        *region = gfx + 1;                                     \
-        gfx->words.w1 = (u32)(list);                           \
-        gfx->words.w0 = 0x06000000;                            \
+typedef struct {
+    char pad0[0x10];
+    s16 courseVtxHandle;
+    s16 courseTextureHandle;
+} CourseBackdropAssetHandles;
+
+#define EMIT_COURSE_BACKDROP(list)                                                                            \
+    do {                                                                                                      \
+        gDPPipeSync(gRegionAllocPtr++);                                                                       \
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(handles->courseVtxHandle));           \
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(handles->courseTextureHandle));       \
+        gSPMatrix(gRegionAllocPtr++, temp_s3->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);           \
+        gSPDisplayList(gRegionAllocPtr++, list);                                                              \
     } while (0)
 
 void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
     CourseEffectMatrixSource sp100;
     RaceCamera *camera;
     RaceCourseBackdropEffect *temp_s3;
-    Gfx *gfx;
-    volatile u8 pad[0xD0];
+    CourseBackdropAssetHandles *handles;
 
     temp_s3 = arg0;
+    handles = (CourseBackdropAssetHandles *)&gAssetHandles;
     sp100 = gIdentityFixedTransform;
     camera = &D_801121E0[gCurrentViewportIndex];
     sp100.basePos.x = -camera->transformOffset.x;
@@ -501,12 +490,10 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
 
     temp_s3->matrix = allocFixedTransformMatrix(&sp100);
     if (temp_s3->matrix != NULL) {
-        switch ((u16)gRaceCourseIndex) {
+        switch (*(u16 *)&gRaceCourseIndex) {
             case 0:
                 EMIT_COURSE_BACKDROP(D_20089E0);
-                gfx = gRegionAllocPtr++;
-                gfx->words.w1 = (u32)D_2008D50;
-                gfx->words.w0 = 0x06000000;
+                gSPDisplayList(gRegionAllocPtr++, D_2008D50);
                 break;
             case 1:
                 EMIT_COURSE_BACKDROP(D_2008F80);
@@ -522,9 +509,7 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
                 break;
             case 5:
                 EMIT_COURSE_BACKDROP(D_200C238);
-                gfx = gRegionAllocPtr++;
-                gfx->words.w1 = (u32)D_200C7A8;
-                gfx->words.w0 = 0x06000000;
+                gSPDisplayList(gRegionAllocPtr++, D_200C7A8);
                 break;
             case 6:
                 EMIT_COURSE_BACKDROP(D_200B8C8);
