@@ -457,17 +457,14 @@ tile_selected:
 }
 #endif
 
-// updateCharacterSelectLimitedCourseList best match: 84.118% (nonmatchings/updateCharacterSelectLimitedCourseList-7273315160691878794/base_8.c)
+// updateCharacterSelectLimitedCourseList best match: 84.270% (nonmatchings/updateCharacterSelectLimitedCourseList-5802343343535905907/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/updateCharacterSelectLimitedCourseList.s")
 
 #ifdef NON_MATCHING
 void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
     s32 movedCount;
     s32 visibleCount;
-    volatile s32 state6Count;
     s32 i;
-    s32 remainder;
-    s32 selected;
     s32 modeOffset;
     s32 targetY;
     u8 nextItemCount;
@@ -582,42 +579,16 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         break;
 
     case 6:
-        state6Count = modeOffset + 2;
+        visibleCount = modeOffset + 2;
         i = 0;
-        if (state6Count > 0) {
-            remainder = state6Count & 3;
-            if (remainder != 0) {
-                do {
-                    if (i != gRaceCourseIndex) {
-                        arg0->x[i] += 0x20;
-                    }
-                    i++;
-                } while (remainder != i);
-                if (i == state6Count) {
-                    goto state_6_done;
-                }
-            }
+        if (visibleCount > 0) {
             do {
-                selected = gRaceCourseIndex;
-                if (i != selected) {
+                if (i != gRaceCourseIndex) {
                     arg0->x[i] += 0x20;
-                    selected = gRaceCourseIndex;
                 }
-                if (i + 1 != selected) {
-                    arg0->x[i + 1] += 0x20;
-                    selected = gRaceCourseIndex;
-                }
-                if (i + 2 != selected) {
-                    arg0->x[i + 2] += 0x20;
-                    selected = gRaceCourseIndex;
-                }
-                if (i + 3 != selected) {
-                    arg0->x[i + 3] += 0x20;
-                }
-                i += 4;
-            } while (i != state6Count);
+                i++;
+            } while (i < visibleCount);
         }
-state_6_done:
         if (gRaceCourseIndex != 0) {
             if (arg0->x[0] >= -0x7C) {
                 arg0->state = 1;
