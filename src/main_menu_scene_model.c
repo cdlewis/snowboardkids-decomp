@@ -39,7 +39,7 @@ extern RomAssetAddress gCharacterRawAssetRanges[];
 extern RomAssetAddress gCharacterTextureAssetRanges[];
 extern MainMenuModelAssetHandles gAssetHandles;
 
-// compressRaceRecordReplayData best match: 98.116% (nonmatchings/func_80040C80-6113366811127043669/base_5.c)
+// compressRaceRecordReplayData best match: 98.696% (nonmatchings/compressRaceRecordReplayData-5802343343535905907/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/compressRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
@@ -115,13 +115,13 @@ search_done:
     distance = 1;
     if (bestLength <= 0) {
         *out = src[srcPos];
-        out += 1;
         outCount += 1;
+        out += 1;
         srcPos += 1;
     } else {
         *out = (bestLength << 10) | bestDistance;
-        out += 1;
         outCount += 1;
+        out += 1;
         srcPos += bestLength;
     }
 
