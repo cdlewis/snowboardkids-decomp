@@ -1529,44 +1529,52 @@ void func_8005905C(void *arg0) {
 }
 #endif
 
-// func_80059518 best match: 89.968% (nonmatchings/func_80059518-2225551288923588688/base_1.c)
+// func_80059518 best match: 90.644% (nonmatchings/func_80059518-3357475854818838508/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059518.s")
 
 #ifdef NON_MATCHING
 void func_80059518(void *arg0) {
-    RaceUiResultsBannerActor *actor;
-    s8 *players;
+    s8 *actor;
     s32 i;
     s32 j;
+    s32 next;
     s8 temp;
 
     actor = arg0;
-    players = &actor->player0;
-    for (i = 0; i < 4; i++) {
-        players[i] = i;
-    }
+    i = 0;
+    do {
+        actor[i + 0x1C] = i;
+        i++;
+    } while (i < 4);
 
-    for (i = 0; i < 3; i++) {
-        for (j = i + 1; j < 4; j++) {
-            if (D_80121D80[players[j]].mode < D_80121D80[players[i]].mode) {
-                temp = players[j];
-                players[j] = players[i];
-                players[i] = temp;
-            }
+    i = 0;
+    do {
+        next = i + 1;
+        j = next;
+        if (next < 4) {
+            do {
+                if (D_80121D80[actor[j + 0x1C]].mode < D_80121D80[actor[i + 0x1C]].mode) {
+                    temp = actor[j + 0x1C];
+                    actor[j + 0x1C] = actor[i + 0x1C];
+                    actor[i + 0x1C] = temp;
+                }
+                j++;
+            } while (j < 4);
         }
-    }
+        i = next;
+    } while (next < 3);
 
-    if (!(D_80121D80[players[0]].flags & 0x40)) {
-        players[0] = -1;
+    if (!(D_80121D80[actor[0x1C]].flags & 0x40)) {
+        actor[0x1C] = -1;
     }
-    if (!(D_80121D80[players[1]].flags & 0x40)) {
-        players[1] = -1;
+    if (!(D_80121D80[actor[0x1D]].flags & 0x40)) {
+        actor[0x1D] = -1;
     }
-    if (!(D_80121D80[players[2]].flags & 0x40)) {
-        players[2] = -1;
+    if (!(D_80121D80[actor[0x1E]].flags & 0x40)) {
+        actor[0x1E] = -1;
     }
-    if (!(D_80121D80[players[3]].flags & 0x40)) {
-        players[3] = -1;
+    if (!(D_80121D80[actor[0x1F]].flags & 0x40)) {
+        actor[0x1F] = -1;
     }
 }
 #endif
