@@ -312,7 +312,7 @@ void initRaceItemSparkBurst(RaceItemEffectActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceItemSparkBurst);
 }
 
-// spawnRaceItemTrackSparkBurst best match: 86.674% (nonmatchings/spawnRaceItemTrackSparkBurst-2225551288923588688/base_6.c)
+// spawnRaceItemTrackSparkBurst best match: 87.203% (nonmatchings/spawnRaceItemTrackSparkBurst-5802343343535905907/base_3.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/spawnRaceItemTrackSparkBurst.s")
 
@@ -333,7 +333,7 @@ void spawnRaceItemTrackSparkBurst(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *
     s32 i;
     s32 random;
     RaceItemEffectActor *actor;
-    u8 *cursor;
+    Vec3i *sparkPositions;
     s16 itemType;
 
     itemType = getRaceItemEffectType(arg5);
@@ -372,13 +372,12 @@ void spawnRaceItemTrackSparkBurst(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *
                     }
                 }
 
-                cursor = (u8 *) actor;
+                sparkPositions = (Vec3i *) &actor->payload;
                 for (i = 0; i != 2; i++) {
                     random = randomNextMain() & 0xF;
-                    cursor += 0xC;
-                    *(s32 *)(cursor + 0xC) = (((arg0->x - arg1->x) * random) / 15) + arg1->x;
-                    *(s32 *)(cursor + 0x10) = (((arg0->y - arg1->y) * random) / 15) + arg1->y;
-                    *(s32 *)(cursor + 0x14) = (((arg0->z - arg1->z) * random) / 15) + arg1->z;
+                    sparkPositions[i].x = (((arg0->x - arg1->x) * random) / 15) + arg1->x;
+                    sparkPositions[i].y = (((arg0->y - arg1->y) * random) / 15) + arg1->y;
+                    sparkPositions[i].z = (((arg0->z - arg1->z) * random) / 15) + arg1->z;
                 }
             }
         }
