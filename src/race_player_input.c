@@ -81,7 +81,7 @@ void recordRaceReplayInputFrame(RaceInputPlayer *player) {
     }
 }
 
-// playRaceReplayInputFrame best match: 90.346% (base_6.c)
+// playRaceReplayInputFrame best match: 92.736% (base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_input/playRaceReplayInputFrame.s")
 
 #ifdef NON_MATCHING
@@ -96,15 +96,17 @@ void playRaceReplayInputFrame(RaceInputPlayer *player) {
     s16 replayFrame;
     u8 buttons;
     s32 replayOffset;
+    s8 stickY;
 
     history = (RaceReplayInputHistoryPlayer *) getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle);
     replayFrame = player->replayFrame;
     if (replayFrame < 0x960) {
         replayOffset = (replayFrame * 4) - replayFrame;
-        player->stickX = history[player->playerIndex].bytes[replayOffset + 1];
+        player->stickX = history[(u16) player->playerIndex].bytes[replayOffset + 1];
+        stickY = history[(u16) player->playerIndex].bytes[replayOffset + 2];
         player->inputFlags = 0;
-        player->stickY = history[player->playerIndex].bytes[replayOffset + 2];
-        buttons = (u8) history[player->playerIndex].bytes[replayOffset];
+        player->stickY = stickY;
+        buttons = (u8) history[(u16) player->playerIndex].bytes[replayOffset];
         if (buttons & 1) {
             player->inputFlags = 8;
             replayFrame = player->replayFrame;
