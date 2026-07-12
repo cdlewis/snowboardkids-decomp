@@ -9,6 +9,12 @@
 #include "race_player_movement.h"
 
 #define COURSE_INDEX_RELOAD (*(volatile s16 *)&gRaceCourseIndex)
+#define RACE_COURSE_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = (cmd0); \
+    _g->words.w1 = (cmd1); \
+}
 
 typedef struct RaceCountdownEffect {
     char pad[0x18];
@@ -565,11 +571,7 @@ void initFinalLapPrompt(void *arg0) {
     setCallbackTaskCallback(arg0, updateFinalLapPrompt);
 }
 
-// renderCourseTextureMarkers best match: 99.693% (nonmatchings/renderCourseTextureMarkers-7892263622508053986/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/renderCourseTextureMarkers.s")
-
-#ifdef NON_MATCHING
-extern void getAssetTableImagePaletteAndSize(u8 *, u16, void **, void **, s16 *, s16 *);
+extern void getAssetTableImagePaletteAndSize(u8 *, s32, void **, void **, s16 *, s16 *);
 extern Vtx D_800D9C40[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
@@ -584,7 +586,6 @@ void renderCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
     CourseMarkerSpawnEntry *entry;
     s16 textureIndex;
     s32 i;
-    s8 nextType;
 
     textureIndex = -1;
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
@@ -609,20 +610,14 @@ void renderCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
                     _g->words.w0 = 0x0400103F;
                     _g->words.w1 = (u32)&D_800D9C40[entry->type * 4];
                 }
-                {
-                    Gfx *_g = gRegionAllocPtr++;
-                    _g->words.w1 = 0x60200;
-                    _g->words.w0 = 0xB1060402;
-                }
+                RACE_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
             }
-            nextType = entry[1].type;
             entry++;
             i++;
-        } while (-1 != nextType);
+        } while (-1 != entry->type);
     }
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
 }
-#endif
 
 void updateCourseTextureMarkers(void *arg0) {
     CourseMarkerSpawnEntry *entry;
