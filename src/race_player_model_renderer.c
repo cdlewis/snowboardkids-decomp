@@ -138,6 +138,9 @@ static void racePlayerModelDrawParts(RacePlayerModelRenderState *player, u32 *te
     }
 }
 
+#define racePlayerModelAppendGfx(cmd0, cmd1) \
+    (gfx = gRegionAllocPtr, gRegionAllocPtr = gfx + 1, gfx->words.w0 = (cmd0), gfx->words.w1 = (cmd1))
+
 void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
     s32 posOffset;
     u8 vtxOffset;
@@ -145,6 +148,7 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
     s32 endOffset;
     u8 *point;
     RacePlayerShadowVtx *vtx;
+    Gfx *gfx;
 
     if (gRenderMatricesDirty != 0) {
         player->flags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
@@ -155,23 +159,23 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
 
         vtxOffset = 0;
         posOffset = 0;
-        point = (u8 *) player;
+        point = (u8 *)player;
         endOffset = 0x30;
         do {
-            ((RacePlayerShadowVtx *) ((u8 *) player->shadowVtx + vtxOffset))->x =
-                (((RacePlayerModelRenderState *) point)->shadowPoints[0].x - player->shadowPoints[0].x) >> 14;
-            ((RacePlayerShadowVtx *) ((u8 *) player->shadowVtx + vtxOffset))->y =
-                (((RacePlayerModelRenderState *) point)->shadowPoints[0].y - player->shadowPoints[0].y) >> 14;
-            ((RacePlayerShadowVtx *) ((u8 *) player->shadowVtx + vtxOffset))->z =
-                (((RacePlayerModelRenderState *) point)->shadowPoints[0].z - player->shadowPoints[0].z) >> 14;
+            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->x =
+                (((RacePlayerModelRenderState *)point)->shadowPoints[0].x - player->shadowPoints[0].x) >> 14;
+            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->y =
+                (((RacePlayerModelRenderState *)point)->shadowPoints[0].y - player->shadowPoints[0].y) >> 14;
+            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->z =
+                (((RacePlayerModelRenderState *)point)->shadowPoints[0].z - player->shadowPoints[0].z) >> 14;
             posOffset += sizeof(Vec3i);
             vtxFlagOffset = vtxOffset;
-            ((RacePlayerShadowVtx *) ((u8 *) player->shadowVtx + vtxFlagOffset))->flag = 0;
+            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxFlagOffset))->flag = 0;
             point += sizeof(Vec3i);
-            ((RacePlayerShadowVtx *) ((u8 *) player->shadowVtx + vtxOffset))->r = 0;
-            ((RacePlayerShadowVtx *) ((u8 *) player->shadowVtx + vtxOffset))->g = 0;
-            ((RacePlayerShadowVtx *) ((u8 *) player->shadowVtx + vtxOffset))->b = 0;
-            vtx = (RacePlayerShadowVtx *) ((u8 *) player->shadowVtx + vtxOffset);
+            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->r = 0;
+            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->g = 0;
+            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->b = 0;
+            vtx = (RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset);
             vtxOffset += sizeof(RacePlayerShadowVtx);
             vtx->a = 0x30;
         } while (posOffset != endOffset);
@@ -181,7 +185,7 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
             return;
         }
 
-        *player->shadowMtx = *(RacePlayerShadowMtx *) gRacePlayerShadowMatrixTemplate;
+        *player->shadowMtx = *(RacePlayerShadowMtx *)gRacePlayerShadowMatrixTemplate;
 
         player->shadowMtx->words[6] = (player->shadowPoints[0].x & 0xFFFF0000)
             | (((player->shadowPoints[0].y + 0xA000) >> 16) & 0xFFFF);
@@ -192,7 +196,8 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
         player->flags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
     }
 
-    if (isPositionNearCurrentRaceViewportCamera(player->shadowPoints) != 0 && (player->flags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(player->shadowPoints) != 0
+        && (player->flags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY) != 0) {
         racePlayerModelAppendGfx(0x06000000, (u32)gRacePlayerShadowRenderSetupDisplayList);
         racePlayerModelAppendGfx(0x01020040, (u32)player->shadowMtx);
         racePlayerModelAppendGfx(0x0400103F, (u32)player->shadowVtx);
@@ -200,8 +205,9 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
         racePlayerModelAppendGfx(0xB1040602, 0x00040200);
     }
 }
+#undef racePlayerModelAppendGfx
 #else
-// drawRacePlayerGroundShadow best match: 97.84% (base_8.c, 376 differences)
+// drawRacePlayerGroundShadow best match: 98.529% (base_6.c, 256 differences)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_model_renderer/drawRacePlayerGroundShadow.s")
 #endif
 
