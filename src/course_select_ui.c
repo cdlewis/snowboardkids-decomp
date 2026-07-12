@@ -1827,11 +1827,12 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
 // updateCourseSelectExtraCourseIconList best match: 90.349% (nonmatchings/updateCourseSelectExtraCourseIconList-7273315160691878794/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectExtraCourseIconList.s")
 
-// initCourseSelectExtraCourseIconList best match: 83.366% (nonmatchings/initCourseSelectExtraCourseIconList-2225551288923588688/base_5.c)
+// initCourseSelectExtraCourseIconList best match: 96.786% (nonmatchings/initCourseSelectExtraCourseIconList-5802343343535905907/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/initCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
 void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
+    s32 new_var3;
     s32 var_a0;
     s32 var_t0;
     s32 var_t5;
@@ -1844,6 +1845,7 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     s16 *temp_ra;
     s32 temp_s6;
     s32 temp_s4;
+    unsigned int new_var2;
     s32 temp_s3;
     s32 temp_s2;
     s32 temp_a3;
@@ -1852,55 +1854,62 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
         var_t5 = gPlayerCount - 1;
     } else {
         var_t5 = 2;
+        do {
+        } while (0);
     }
     var_t0 = 0;
-    if ((s32)gPlayerCount > 0) {
-        temp_ra = gCourseSelectIconListXLayout[var_t5];
-        temp_s1 = gCourseSelectIconListYLayout[var_t5];
-        var_t1 = (u8 *)arg0;
-        var_t2 = (u8 *)arg0;
-        var_t3 = (u8 *)arg0;
-        temp_s6 = 0xC;
-        temp_s4 = 1;
-        temp_s3 = 0x100;
-        temp_s2 = 0xC;
-        temp_a3 = 3;
-        do {
-            var_v1 = 0;
-            if ((s32)gPlayerCount >= 3) {
-                var_t1[0x50] = temp_s2;
-            } else {
-                var_t1[0x50] = *(s16 *)((u8 *)gCourseSelectIconListYLayout + (var_t5 * temp_s6));
-            }
-            var_t1[0x5C] = 0;
-            *(s16 *)(var_t3 + 0x60) = temp_s3;
-            if (gPlayerCount == temp_s4) {
-                var_a0 = 8;
-            } else {
-                var_a0 = 4;
-            }
-            var_v0 = var_t2;
+    do {
+        if ((s32)gPlayerCount > 0) {
+            new_var2 = var_t5;
+            temp_ra = gCourseSelectIconListXLayout[new_var2];
+            temp_s1 = gCourseSelectIconListYLayout[new_var2];
+            var_t1 = (u8 *)arg0;
+            var_t2 = (u8 *)arg0;
+            var_t3 = (u8 *)arg0;
+            temp_s6 = 0xC;
+            temp_s4 = 1;
+            temp_s3 = 0x100;
+            temp_s2 = 0xC;
+            new_var3 = new_var2 * temp_s6;
+            temp_a3 = 3;
+            do {
+                var_v1 = 0;
+                if ((s32)gPlayerCount >= 3) {
+                    var_t1[0x50] = temp_s2;
+                } else {
+                    var_t1[0x50] = *(s16 *)((u8 *)gCourseSelectIconListYLayout + new_var3);
+                    if (((arg0 && arg0) && arg0) != 0) {
+                    }
+                }
+                var_t1[0x5C] = 0;
+                *(s16 *)(var_t3 + 0x60) = temp_s3;
+                if (gPlayerCount == temp_s4) {
+                    var_a0 = 8;
+                } else {
+                    var_a0 = 4;
+                }
+                var_v0 = var_t2;
 loop:
-            var_v1 += 1;
-            *(s16 *)(var_v0 + 0x18) = temp_ra[((var_t0 >= 2) * 2) + 1] + var_a0;
-            var_v0 += 2;
-            *(s16 *)(var_v0 + 0x2E) = temp_s1[((var_t0 & 1) * 2) + 2];
-            if (var_v1 != temp_a3) {
-                goto loop;
-            }
-            var_t0 += 1;
-            var_t1 += 1;
-            var_t2 += 6;
-            var_t3 += 2;
-        } while (var_t0 < (s32)gPlayerCount);
-    }
-
-    *(s16 *)((u8 *)arg0 + 0x4A) = 0xA0;
+                var_v1 += 1;
+                *(s16 *)(var_v0 + 0x18) = temp_ra[((var_t0 >= 2) * 2) + 1] + var_a0;
+                var_v0 += 2;
+                *(s16 *)(var_v0 + 0x2E) = temp_s1[((var_t0 & 1) * 2) + 2];
+                if (var_v1 != temp_a3) {
+                    goto loop;
+                }
+                var_t0 = var_t0 + 1;
+                var_t1 += 1;
+                var_t2 = var_t2 + 6;
+                var_t3 += 2;
+            } while (var_t0 < (s32)gPlayerCount);
+        }
+        *(s16 *)((u8 *)arg0 + 0x4A) = 0xA0;
+    } while (0);
     *(s16 *)((u8 *)arg0 + 0x4C) = 0x78;
     *(s16 *)((u8 *)arg0 + 0x4E) = 0x78;
     if (gPlayerCount == 1) {
         *(s16 *)((u8 *)arg0 + 0x48) = 0xA0;
-    } else if (gPlayerCount == 2) {
+    } else if (gPlayerCount == (u32)2) {
         *(s16 *)((u8 *)arg0 + 0x48) = 0x7E;
     } else {
         *(s16 *)((u8 *)arg0 + 0x48) = 0x88;
