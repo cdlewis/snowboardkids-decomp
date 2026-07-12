@@ -131,11 +131,7 @@ void requestMusicSequenceBank(s32 arg0);
 s32 reserveSoundEffectQueueWriteIndex(void);
 s32 startCurrentQueuedSoundEffect(void);
 s32 calculatePositionalSoundVolume(SoundPosition *pos, s32 volume);
-#ifdef NON_MATCHING
 void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 pitch);
-#else
-void updatePlayerLoopingPositionalSound(s16 soundId, s32 mode, s16 volume, f32 pitch);
-#endif
 
 void initSoundManager(void) {
     PlayerCommandInit init;
@@ -549,13 +545,8 @@ s32 calculatePositionalSoundVolume(SoundPosition *pos, s32 volume) {
     return adjustedVolume;
 }
 
-// updatePlayerLoopingPositionalSound best match: 99.291% (nonmatchings/updatePlayerLoopingPositionalSound-7273315160691878794/base_14.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/sound_manager/updatePlayerLoopingPositionalSound.s")
-
-#ifdef NON_MATCHING
 void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 pitch) {
     s32 adjustedVolume;
-    s32 *handle;
     s32 activeCameras;
 
     if ((f64)pitch > 6.0) {
@@ -584,32 +575,29 @@ void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 p
         activeCameras = 4;
     }
 
-    handle = (&gPlayerLoopingSoundHandle0) + mode;
     adjustedVolume = adjustedVolume - ((((activeCameras * 10) - 1) * adjustedVolume) / 100);
 
     if (adjustedVolume == 0) {
-        handle = (&gPlayerLoopingSoundHandle0) + mode;
-        if (*handle != 0) {
-            stopSoundPlayerByHandle(*handle, 0);
-            *handle = 0;
+        if (*(&gPlayerLoopingSoundHandle0 + mode) != 0) {
+            stopSoundPlayerByHandle(*(&gPlayerLoopingSoundHandle0 + mode), 0);
+            *(&gPlayerLoopingSoundHandle0 + mode) = 0;
         }
     } else {
-        if ((*handle != 0) && (soundId != *(&gPlayerLoopingSoundId0 + mode))) {
-            stopSoundPlayerByHandle(*handle, 0);
-            *handle = 0;
+        if ((*(&gPlayerLoopingSoundHandle0 + mode) != 0) && (soundId != *(&gPlayerLoopingSoundId0 + mode))) {
+            stopSoundPlayerByHandle(*(&gPlayerLoopingSoundHandle0 + mode), 0);
+            *(&gPlayerLoopingSoundHandle0 + mode) = 0;
         }
 
-        if (*handle == 0) {
+        if (*(&gPlayerLoopingSoundHandle0 + mode) == 0) {
             *(&gPlayerLoopingSoundId0 + mode) = soundId;
-            *handle = startSoundEffect(soundId, adjustedVolume, 0x80, 0, 0x46);
-            setSoundPlayerPitchOffsetByHandle(*handle, pitch);
+            *(&gPlayerLoopingSoundHandle0 + mode) = startSoundEffect(soundId, adjustedVolume, 0x80, 0, 0x46);
+            setSoundPlayerPitchOffsetByHandle(*(&gPlayerLoopingSoundHandle0 + mode), pitch);
         } else {
-            setSoundPlayerVolumeByHandle(*handle, adjustedVolume);
-            setSoundPlayerPitchOffsetByHandle(*handle, pitch);
+            setSoundPlayerVolumeByHandle(*(&gPlayerLoopingSoundHandle0 + mode), adjustedVolume);
+            setSoundPlayerPitchOffsetByHandle(*(&gPlayerLoopingSoundHandle0 + mode), pitch);
         }
     }
 }
-#endif
 
 void playPlayerPositionalSound(s32 soundId, s32 playerIndex, s32 volume, s32 minVolume) {
     s32 adjustedVolume;
