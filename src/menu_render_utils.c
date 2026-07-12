@@ -183,7 +183,7 @@ void getAssetTableImagePaletteAndSize(u8 *arg0, u16 arg1, void **arg2, void **ar
     *arg5 = temp_v1[idx].height;
 }
 
-// drawAssetTableSprite best match: 96.718% (nonmatchings/drawAssetTableSprite-8207005055717715604/base_8.c)
+// drawAssetTableSprite best match: 97.050% (nonmatchings/drawAssetTableSprite/output-775-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawAssetTableSprite.s")
 
 #ifdef NON_MATCHING
@@ -201,138 +201,13 @@ void drawAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
     s32 x1;
     s32 y1;
     AssetTableEntry *rawEntry;
-    AssetTableEntry *entry;
 
     textureBase = (((u8 *)arg2) + (arg2->entryCount * sizeof(AssetTableEntry))) + sizeof(AssetTableEntry);
     rawEntry = (AssetTableEntry *)(((u8 *)arg2) + (arg3 * sizeof(AssetTableEntry)));
     x0 = arg0 + gMenuViewportCenterX;
     y0 = arg1 + gMenuViewportCenterY;
-    ;
-    clipU = 0;
-    clipV = 0;
     x1 = rawEntry[1].width + x0;
-    y1 = rawEntry[1].height + y0;
-    rightClip = gMenuViewportCenterX + (gMenuViewportWidth / 2);
-    if (x0 < rightClip) {
-        leftClip = gMenuViewportCenterX - (gMenuViewportWidth / 2);
-        bottomClip = gMenuViewportCenterY + (gMenuViewportHeight / 2);
-        if (y0 < bottomClip) {
-            topClip = gMenuViewportCenterY - (gMenuViewportHeight / 2);
-            if ((x1 >= leftClip) && (y1 >= topClip)) {
-                if (x0 < leftClip) {
-                    clipU = leftClip - x0;
-                    x0 = leftClip;
-                }
-                if (y0 < topClip) {
-                    clipV = topClip - y0;
-                    y0 = topClip;
-                }
-                if (x1 >= rightClip) {
-                    x1 = rightClip;
-                }
-                if (y1 >= bottomClip) {
-                    y1 = bottomClip;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = ((((rawEntry + 1)->width >> 1) - 1) & 0xFFF) | 0xFD480000;
-                    _g->words.w1 = (u32)(((u8 *)arg2) + (rawEntry + 1)->imageOffset);
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = (((((((rawEntry + 1)->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5480000;
-                    _g->words.w1 = 0x07080200;
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xE6000000;
-                    _g->words.w1 = 0;
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xF4000000;
-                    _g->words.w1 = (((((rawEntry + 1)->width * 2) & 0xFFF) << 12) | 0x07000000) | (((rawEntry + 1)->height * 4) & 0xFFF);
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xE7000000;
-                    _g->words.w1 = 0;
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = (((((((rawEntry + 1)->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000;
-                    _g->words.w1 = 0x00080200;
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xF2000000;
-                    _g->words.w1 = ((((rawEntry + 1)->width * 4) & 0xFFF) << 12) | (((rawEntry + 1)->height * 4) & 0xFFF);
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xFD100000;
-                    _g->words.w1 = (u32)(textureBase + ((rawEntry + 1)->textureIndex << 5));
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xE8000000;
-                    _g->words.w1 = 0;
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xF5000100;
-                    _g->words.w1 = 0x07000000;
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xE6000000;
-                    _g->words.w1 = 0;
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xF0000000;
-                    _g->words.w1 = 0x0703C000;
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xE7000000;
-                    _g->words.w1 = 0;
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = ((((x1 * 4) & 0xFFF) << 12) | 0xE4000000) | ((y1 * 4) & 0xFFF);
-                    _g->words.w1 = (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF);
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xB4000000;
-                    leftClip = clipU;
-                    _g->words.w1 = (leftClip << 21) | ((clipV << 5) & 0xFFFF);
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xB3000000;
-                    _g->words.w1 = 0x04000400;
-                }
-                ;
-            }
-        }
-    }
+    do { y1 = rawEntry[1].height + y0; rawEntry++; clipU = 0; clipV = 0; rightClip = gMenuViewportCenterX + (gMenuViewportWidth / 2); if (x0 < rightClip) { leftClip = gMenuViewportCenterX - (gMenuViewportWidth / 2); bottomClip = gMenuViewportCenterY + (gMenuViewportHeight / 2); if (y0 < bottomClip) { topClip = gMenuViewportCenterY - (gMenuViewportHeight / 2); if ((x1 >= leftClip) && (y1 >= topClip)) { if (x0 < leftClip) { clipU = leftClip - x0; x0 = leftClip; } if (y0 < topClip) { clipV = topClip - y0; y0 = topClip; } if (rightClip <= x1) { x1 = rightClip; } if (y1 >= bottomClip) { y1 = bottomClip; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = (((rawEntry->width >> 1) - 1) & 0xFFF) | 0xFD480000; _g->words.w1 = (u32)(((u8 *)arg2) + rawEntry->imageOffset); } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = ((((((rawEntry->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5480000; _g->words.w1 = 0x07080200; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xF4000000; _g->words.w1 = ((((rawEntry->width * 2) & 0xFFF) << 12) | 0x07000000) | ((rawEntry->height * 4) & 0xFFF); } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = ((((((rawEntry->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000; _g->words.w1 = 0x00080200; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); do { _g->words.w0 = 0xF2000000; } while (0); _g->words.w1 = (((rawEntry->width * 4) & 0xFFF) << 12) | ((rawEntry->height * 4) & 0xFFF); } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = (u32)(textureBase + (rawEntry->textureIndex << 5)); } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = ((((x1 * 4) & 0xFFF) << 12) | 0xE4000000) | ((y1 * 4) & 0xFFF); _g->words.w1 = (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF); } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xB4000000; leftClip = clipU; _g->words.w1 = (leftClip << 21) | ((clipV << 5) & 0xFFFF); } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xB3000000; _g->words.w1 = 0x04000400; } } } } } while (0);
 }
 #endif
 
