@@ -31,6 +31,11 @@ typedef struct {
 } RaceTimerCourseSpawnEntry;
 
 typedef struct {
+    /* 0x00 */ s16 finishLinePathIndex;
+    /* 0x02 */ u8 pad2[0x48 - 0x02];
+} RaceFinishLinePathIndexEntry;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x38];
     /* 0x38 */ s16 mainFontHandle;
     /* 0x3A */ u8 pad3A[0x3E - 0x3A];
@@ -88,6 +93,7 @@ extern RaceTimer D_800DC928[];
 extern RaceTimer D_800DC950;
 extern u8 gRaceSplitscreenMode;
 extern RaceTimerCourseSpawnEntry gRaceCourseStartEntries[];
+extern RaceFinishLinePathIndexEntry D_800B957C[];
 extern u8 gRaceTimerTensDigitTileOffsets[];
 extern u8 gRaceTimerOnesDigitTileIds[];
 extern u16 gRaceProgressMeterIconTiles[];
@@ -1021,7 +1027,7 @@ void updateRaceCourseProgressMeter(void) {
 }
 #endif
 
-// updateRaceHud best match: 93.254% at nonmatchings/updateRaceHud-7273315160691878794/base_17.c.
+// updateRaceHud best match: 95.208% at nonmatchings/updateRaceHud-3357475854818838508/base_14.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/updateRaceHud.s")
 
 #ifdef NON_MATCHING
@@ -1030,7 +1036,8 @@ void updateRaceHud(void) {
     s32 sp40;
     s32 sp3C;
     RaceTimerUiPlayer *player;
-    s16 i;
+    s32 i;
+    s8 palette;
 
     gRaceHudSpinnerFrame++;
     if (gRaceHudSpinnerFrame >= 12) {
@@ -1040,17 +1047,21 @@ void updateRaceHud(void) {
     switch ((u16)gRaceHudMode) {
     case 0:
         player = D_80121D80;
-        if (player->tensDigitPalette != 0) {
-            if (player->tensDigitPalette == 4) {
+        palette = player->tensDigitPalette;
+        if (palette != 0) {
+            if (palette == 4) {
                 spawnRaceUiSparkle(-0x20, -0x60, 0, 0, 0);
+                palette = player->tensDigitPalette;
             }
-            player->tensDigitPalette--;
+            player->tensDigitPalette = palette - 1;
         }
-        if (player->onesDigitPalette != 0) {
-            if (player->onesDigitPalette == 4) {
+        palette = player->onesDigitPalette;
+        if (palette != 0) {
+            if (palette == 4) {
                 spawnRaceUiSparkle(0, -0x60, 0, 0, 1);
+                palette = player->onesDigitPalette;
             }
-            player->onesDigitPalette--;
+            player->onesDigitPalette = palette - 1;
         }
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawSinglePlayerRaceHud, 0);
         addRenderCallback(&gRaceForegroundRenderCallbackList, noopRaceHudCallback, 0);
@@ -1081,17 +1092,21 @@ void updateRaceHud(void) {
         return;
     case 3:
         player = D_80121D80;
-        if (player[3].tensDigitPalette != 0) {
-            if (player[3].tensDigitPalette == 4) {
+        palette = player[3].tensDigitPalette;
+        if (palette != 0) {
+            if (palette == 4) {
                 spawnRaceUiSparkle(-0x10, -0x30, 3, 1, 0);
+                palette = player[3].tensDigitPalette;
             }
-            player[3].tensDigitPalette--;
+            player[3].tensDigitPalette = palette - 1;
         }
-        if (player[3].onesDigitPalette != 0) {
-            if (player[3].onesDigitPalette == 4) {
+        palette = player[3].onesDigitPalette;
+        if (palette != 0) {
+            if (palette == 4) {
                 spawnRaceUiSparkle(0, -0x30, 3, 1, 1);
+                palette = player[3].onesDigitPalette;
             }
-            player[3].onesDigitPalette--;
+            player[3].onesDigitPalette = palette - 1;
         }
     case 2:
         player = D_80121D80;
@@ -1124,7 +1139,7 @@ void updateRaceHud(void) {
             incrementRaceElapsedTimer();
             if (gRaceTimeTrialFinishRecorded == 0) {
                 getRacePlayerRankingProgress(0, &sp40, &sp3C);
-                if ((gRaceCourseStartEntries[gRaceCourseIndex].finishLinePathIndex * 8) < sp40) {
+                if ((D_800B957C[gRaceCourseIndex].finishLinePathIndex * 8) < sp40) {
                     D_80121B7C = *(s32 *)&gRaceElapsedTimer;
                     gRaceTimeTrialFinishRecorded = 1;
                     createCallbackTask(initTimeTrialRecordDeltaPopup, 0, 0);
@@ -1166,17 +1181,21 @@ void updateRaceHud(void) {
         return;
     case 8:
         player = D_80121D80;
-        if (player->tensDigitPalette != 0) {
-            if (player->tensDigitPalette == 4) {
+        palette = player->tensDigitPalette;
+        if (palette != 0) {
+            if (palette == 4) {
                 spawnRaceUiSparkle(-0x20, -0x60, 0, 0, 0);
+                palette = player->tensDigitPalette;
             }
-            player->tensDigitPalette--;
+            player->tensDigitPalette = palette - 1;
         }
-        if (player->onesDigitPalette != 0) {
-            if (player->onesDigitPalette == 4) {
+        palette = player->onesDigitPalette;
+        if (palette != 0) {
+            if (palette == 4) {
                 spawnRaceUiSparkle(0, -0x60, 0, 0, 1);
+                palette = player->onesDigitPalette;
             }
-            player->onesDigitPalette--;
+            player->onesDigitPalette = palette - 1;
         }
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawTrainingRaceHud, 0);
         return;
