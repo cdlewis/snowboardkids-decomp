@@ -904,7 +904,7 @@ void func_80011D44(MenuRenderSprite *arg0) {
 void func_80011D6C(void) {
 }
 
-// drawMenuTilemapSprite best match: 74.828% (nonmatchings/drawMenuTilemapSprite-7123131487808489545/base_4.c)
+// drawMenuTilemapSprite best match: 76.761% (nonmatchings/drawMenuTilemapSprite-5802343343535905907/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuTilemapSprite.s")
 
 #ifdef NON_MATCHING
@@ -944,17 +944,21 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
     s16 drawY1;
     s16 texS;
     s16 texT;
-    s16 sScale;
-    s16 tScale;
+    s32 sScale;
+    s32 tScale;
     s16 tileIndex;
-    s16 imageIndex;
-    s16 paletteIndex;
-    s16 flip;
-    s16 tileWidth;
-    s16 tileHeight;
+    s32 imageIndex;
+    s32 paletteIndex;
+    s32 flip;
     s16 screenX;
     s16 screenY;
-    Gfx *gfx;
+    u16 *tilemap;
+    MenuRenderTileInfo *tileInfo;
+    u16 *palette;
+
+    tilemap = sprite->tilemap;
+    tileInfo = (MenuRenderTileInfo *)sprite->tileInfo;
+    palette = sprite->palette;
 
     minX = -gMenuViewportWidth / 2;
     x = sprite->x;
@@ -1021,11 +1025,11 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
             tilemapX = xRemainder;
             if (cols > 0) {
                 do {
-                    tileIndex = sprite->tilemap[tilemapX + (tilemapY * sprite->tileYStep)];
-                    imageIndex = ((MenuRenderTileInfo *)sprite->tileInfo)[tileIndex].imageIndex;
-                    paletteIndex = ((MenuRenderTileInfo *)sprite->tileInfo)[tileIndex].paletteIndex;
+                    tileIndex = tilemap[tilemapX + (tilemapY * sprite->tileYStep)];
+                    imageIndex = tileInfo[tileIndex].imageIndex;
+                    paletteIndex = tileInfo[tileIndex].paletteIndex;
                     if (tileIndex != 0) {
-                        flip = ((MenuRenderTileInfo *)sprite->tileInfo)[tileIndex].flip;
+                        flip = tileInfo[tileIndex].flip;
                         sScale = D_800B51F0[flip][0];
                         tScale = D_800B51F0[flip][1];
                         drawX0 = screenX;
@@ -1063,7 +1067,7 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
                             }
 
                             if (useLargeTiles == 0) {
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xFD100000, (u32)(sprite->palette + (paletteIndex << 4)));
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xFD100000, (u32)(palette + (paletteIndex << 4)));
                                 MENU_RENDER_SPRITE_EMIT_GFX(0xE8000000, 0);
                                 MENU_RENDER_SPRITE_EMIT_GFX(0xF5000000 | ((((paletteIndex & 0xF) << 4) + 0x100) & 0x1FF),
                                                             0x07000000);
@@ -1093,7 +1097,7 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
                                                             (((sprite->tileSize * 4) & 0xFFF) << 12) |
                                                                 ((sprite->tileXStep * 4) & 0xFFF));
                             } else {
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xFD100000, (u32)(sprite->palette + (paletteIndex << 4)));
+                                MENU_RENDER_SPRITE_EMIT_GFX(0xFD100000, (u32)(palette + (paletteIndex << 4)));
                                 MENU_RENDER_SPRITE_EMIT_GFX(0xE8000000, 0);
                                 MENU_RENDER_SPRITE_EMIT_GFX(0xF5000100, 0x07000000);
                                 MENU_RENDER_SPRITE_EMIT_GFX(0xE6000000, 0);
