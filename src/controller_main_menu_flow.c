@@ -973,12 +973,12 @@ void initMainMenu(void) {
     gCurrentGameTask->timer = 0x4B0;
     initCallbackTaskScheduler(0);
     if (gConnectedControllerCount != 0) {
-        createCallbackTask(&initTitleScreenMenuCursor, 0, 0x64);
+        createCallbackTask(&initMainMenuTitleCursor, 0, 0x64);
     } else {
         createCallbackTask(&updateTitleScreenStartPrompt, 0, 0x64);
     }
-    createCallbackTask(&initTitleScreenMenuOptions, 0, 0x64);
-    createCallbackTask(&initTitleScreenLogo, 0, 0x64);
+    createCallbackTask(&initMainMenuTitleOptions, 0, 0x64);
+    createCallbackTask(&initMainMenuTitleLogo, 0, 0x64);
     createCallbackTaskWithUserId(&initTitleMenuSparkle, 0, 0x64, 0);
     createCallbackTaskWithUserId(initMainMenuBoardModels, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);

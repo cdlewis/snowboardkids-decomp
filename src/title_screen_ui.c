@@ -13,32 +13,32 @@ typedef struct {
     char pad0[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
-} TitleScreenActor;
+} MainMenuTitleActor;
 
 typedef struct {
     s16 width;
     s16 height;
-} TitleScreenSprite;
+} MainMenuTitleSprite;
 
-struct TitleScreenLogoActor {
-    TitleScreenActor common;
-    /* 0x1C */ TitleScreenSprite sprite;
+struct MainMenuTitleLogoActor {
+    MainMenuTitleActor common;
+    /* 0x1C */ MainMenuTitleSprite sprite;
     /* 0x20 */ char pad20[4];
     /* 0x24 */ s16 startX;
     /* 0x26 */ s16 startY;
 };
 
-struct TitleScreenMenuOptionsActor {
-    TitleScreenActor common;
+struct MainMenuTitleOptionsActor {
+    MainMenuTitleActor common;
     /* 0x1C */ s16 labelY;
     /* 0x1E */ s16 unused1E;
     /* 0x20 */ u16 selectedOption;
-    /* 0x22 */ u16 pulseTimer;
-    /* 0x24 */ s16 pulseScale;
+    /* 0x22 */ u16 blinkTimer;
+    /* 0x24 */ s16 blinkAlpha;
 };
 
-struct TitleScreenMenuCursorActor {
-    TitleScreenActor common;
+struct MainMenuTitleCursorActor {
+    MainMenuTitleActor common;
 };
 
 typedef struct {
@@ -52,35 +52,35 @@ typedef struct {
 typedef struct {
     char pad0[0x42];
     /* 0x42 */ s16 titleTextureHandle;
-} TitleScreenAssetHandles;
+} MainMenuTitleAssetHandles;
 
 extern MainMenuState *gCurrentGameTask;
 extern s32 gMenuRenderCallbackList;
-extern TitleScreenAssetHandles gAssetHandles;
+extern MainMenuTitleAssetHandles gAssetHandles;
 extern s16 gMenuUiSpritesAssetHandle;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern u8 gConnectedControllerCount;
 
 extern void addRenderCallback(void *, void *, void *);
 
-void drawTitleScreenLogo(TitleScreenLogoActor *arg0) {
+void drawMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
     drawMenuTilemapSprite(&arg0->sprite, 1, arg0->common.x, arg0->common.y);
 }
 
-void updateTitleScreenLogo(TitleScreenLogoActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, drawTitleScreenLogo, arg0);
+void updateMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuTitleLogo, arg0);
 }
 
-void initTitleScreenLogo(TitleScreenLogoActor *arg0) {
+void initMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
     initMenuTilemapSprite((MenuTilemapSprite *)&arg0->sprite, getRelocatableHeapBlockBase(TITLE_SCREEN_LOGO_SPRITE_HANDLE));
     arg0->sprite.width = 0x10;
     arg0->sprite.height = 0x10;
     arg0->common.x = arg0->startX;
     arg0->common.y = arg0->startY;
-    setCallbackTaskCallback(arg0, updateTitleScreenLogo);
+    setCallbackTaskCallback(arg0, updateMainMenuTitleLogo);
 }
 
-void drawTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0) {
+void drawMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
     s32 i;
     s32 tile;
     u16 palette;
@@ -105,49 +105,49 @@ void drawTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0) {
     drawMenuSprite(-0x48, 0x5A, getRelocatableHeapBlockBase(TITLE_SCREEN_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
 }
 
-void updateTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0) {
+void updateMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
     if (gCurrentGameTask->selection != (u16)(0, arg0->selectedOption)) {
-        arg0->pulseScale = 0x100;
-        arg0->pulseTimer = 0;
+        arg0->blinkAlpha = 0x100;
+        arg0->blinkTimer = 0;
         arg0->selectedOption = gCurrentGameTask->selection;
     }
-    if ((s32)(u16)arg0->pulseTimer < 0x10) {
-        arg0->pulseScale -= 9;
+    if ((s32)(u16)arg0->blinkTimer < 0x10) {
+        arg0->blinkAlpha -= 9;
     } else {
-        arg0->pulseScale += 9;
+        arg0->blinkAlpha += 9;
     }
-    arg0->pulseTimer = ((u16)arg0->pulseTimer + 1) & 0x1F;
-    addRenderCallback(&gMenuRenderCallbackList, drawTitleScreenMenuOptions, arg0);
+    arg0->blinkTimer = ((u16)arg0->blinkTimer + 1) & 0x1F;
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuTitleOptions, arg0);
 }
 
-void initTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0) {
+void initMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
     arg0->common.x = -0x2C;
     arg0->common.y = -0x2C;
     arg0->labelY = 0x20;
     arg0->unused1E = 0x30;
     arg0->selectedOption = 0;
-    arg0->pulseTimer = 0;
-    arg0->pulseScale = 0x100;
-    setCallbackTaskCallback(arg0, updateTitleScreenMenuOptions);
+    arg0->blinkTimer = 0;
+    arg0->blinkAlpha = 0x100;
+    setCallbackTaskCallback(arg0, updateMainMenuTitleOptions);
 }
 
-void drawTitleScreenMenuCursor(TitleScreenMenuCursorActor *arg0) {
+void drawMainMenuTitleCursor(MainMenuTitleCursorActor *arg0) {
     s32 temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
 
     drawMenuSprite(arg0->common.x, arg0->common.y, temp, 3, 0x20, 0x20, 0, 0);
 }
 
-void updateTitleScreenMenuCursor(TitleScreenMenuCursorActor *arg0) {
+void updateMainMenuTitleCursor(MainMenuTitleCursorActor *arg0) {
     if (gCurrentGameTask->selection != 1) {
         arg0->common.x = -0x34;
     } else {
         arg0->common.x = -0x3C;
     }
     arg0->common.y = (gCurrentGameTask->selection << 4) + 0x20;
-    addRenderCallback(&gMenuRenderCallbackList, drawTitleScreenMenuCursor, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuTitleCursor, arg0);
 }
 
-void initTitleScreenMenuCursor(TitleScreenMenuCursorActor *arg0) {
+void initMainMenuTitleCursor(MainMenuTitleCursorActor *arg0) {
     arg0->common.y = 0x20;
-    setCallbackTaskCallback(arg0, updateTitleScreenMenuCursor);
+    setCallbackTaskCallback(arg0, updateMainMenuTitleCursor);
 }

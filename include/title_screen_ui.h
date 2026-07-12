@@ -3,18 +3,18 @@
 
 #include "common.h"
 
-typedef struct TitleScreenLogoActor TitleScreenLogoActor;
-typedef struct TitleScreenMenuOptionsActor TitleScreenMenuOptionsActor;
-typedef struct TitleScreenMenuCursorActor TitleScreenMenuCursorActor;
+typedef struct MainMenuTitleLogoActor MainMenuTitleLogoActor;
+typedef struct MainMenuTitleOptionsActor MainMenuTitleOptionsActor;
+typedef struct MainMenuTitleCursorActor MainMenuTitleCursorActor;
 
-void drawTitleScreenLogo(TitleScreenLogoActor *arg0);
-void updateTitleScreenLogo(TitleScreenLogoActor *arg0);
-void initTitleScreenLogo(TitleScreenLogoActor *arg0);
-void drawTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0);
-void updateTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0);
-void initTitleScreenMenuOptions(TitleScreenMenuOptionsActor *arg0);
-void drawTitleScreenMenuCursor(TitleScreenMenuCursorActor *arg0);
-void updateTitleScreenMenuCursor(TitleScreenMenuCursorActor *arg0);
-void initTitleScreenMenuCursor(TitleScreenMenuCursorActor *arg0);
+void drawMainMenuTitleLogo(MainMenuTitleLogoActor *arg0);
+void updateMainMenuTitleLogo(MainMenuTitleLogoActor *arg0);
+void initMainMenuTitleLogo(MainMenuTitleLogoActor *arg0);
+void drawMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0);
+void updateMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0);
+void initMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0);
+void drawMainMenuTitleCursor(MainMenuTitleCursorActor *arg0);
+void updateMainMenuTitleCursor(MainMenuTitleCursorActor *arg0);
+void initMainMenuTitleCursor(MainMenuTitleCursorActor *arg0);
 
 #endif
