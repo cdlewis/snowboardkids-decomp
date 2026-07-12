@@ -251,7 +251,7 @@ extern s16 gRaceScoreAttackPointTotal;
 
 extern s32 saveRaceRecordReplayData(void);
 extern void releaseMenuAssetHandles(void);
-extern void func_80045A78(s32, s32, s32, s32);
+extern void drawAssetTableSprite(s32, s32, s32, s32);
 extern void drawAssetTableSpriteWithExplicitPalette(s32, s32, s32, s32, s32);
 extern void addRenderCallback(void *, void (*)(s32), s32);
 extern void enqueueSoundEffect(s32, s32);
@@ -724,7 +724,7 @@ void startRaceGameplayFlow(void) {
 void drawRacePauseMenu(s32 arg0) {
     s32 color;
 
-    func_80045A78(-0x14, -0x10, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x57);
+    drawAssetTableSprite(-0x14, -0x10, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x57);
     color = 0x1A;
     if (D_80121B57 == 0) {
         color = 0x1B;

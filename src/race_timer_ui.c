@@ -74,10 +74,10 @@ typedef struct {
     /* 0x004 */ u8 pad4[0x60C - 0x004];
 } RaceTimerUiS32Stride;
 
-extern void func_80045A78(s32, s32, s32, s32);
+extern void drawAssetTableSprite(s32, s32, s32, s32);
 extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
-extern void func_80047174(s32, s32, s32, s32, s32);
-extern void func_80047E88(s32, s16, s32, s32);
+extern void drawScaledAssetTableSprite(s32, s32, s32, s32, s32);
+extern void drawMenuAsciiChar(s32, s16, s32, s32);
 extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
 extern void addRenderCallback(void *, void *, s32);
 extern void *createCallbackTask(void (*)(), s32, s32);
@@ -237,13 +237,13 @@ void drawTrickAttackChallengeHud(s32 arg0) {
         i = 0;
         if (D_80122043 > 0) {
             do {
-                func_80047174((s16)x, -0x68, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x26, 1);
+                drawScaledAssetTableSprite((s16)x, -0x68, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x26, 1);
                 i++;
                 x += 8;
             } while (i < D_80122043);
         }
     } else {
-        func_80045A78(-0x84, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x26);
+        drawAssetTableSprite(-0x84, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x26);
     }
 
     {
@@ -255,7 +255,7 @@ void drawTrickAttackChallengeHud(s32 arg0) {
         end = &buffer[4];
         do {
             if ((u8)*digit != ' ') {
-                func_80045A78((s16)x, -0x58, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSprite((s16)x, -0x58, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                               ((u8)*digit - 5) & 0xFFFF);
             }
             digit++;
@@ -263,16 +263,16 @@ void drawTrickAttackChallengeHud(s32 arg0) {
         } while (digit != end);
     }
 
-    func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x27);
-    func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x28);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x27);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x28);
     if (gRaceChallengeFailed != 0) {
-        func_80045A78(0x40, 0x54, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4F);
+        drawAssetTableSprite(0x40, 0x54, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4F);
     }
 
     if (D_80122043 >= 10) {
         sprintf(buffer, D_800E172C, D_80122043);
-        func_80045A78(-0x64, -0x59, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
-        func_80045A78(-0x5C, -0x59, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
+        drawAssetTableSprite(-0x64, -0x59, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
+        drawAssetTableSprite(-0x5C, -0x59, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
     }
 }
 #endif
@@ -346,7 +346,7 @@ void drawScoreAttackChallengeHud(s32 arg0) {
         drawAssetTableSpriteWithExplicitPalette(0x68, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, palette & 0xFFFF);
     }
 
-    func_80045A78(0x68, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x20);
+    drawAssetTableSprite(0x68, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x20);
 
     {
         char *end;
@@ -357,7 +357,7 @@ void drawScoreAttackChallengeHud(s32 arg0) {
         end = &buffer[2];
         do {
             if ((u8)*digit != ' ') {
-                func_80045A78((s16)(x + 0x60), -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSprite((s16)(x + 0x60), -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                               ((u8)*digit - 5) & 0xFFFF);
             }
             digit++;
@@ -369,16 +369,16 @@ void drawScoreAttackChallengeHud(s32 arg0) {
     i = 0;
     if (D_80122290 > 0) {
         do {
-            func_80045A78((s16)(x - 0x88), -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x21);
+            drawAssetTableSprite((s16)(x - 0x88), -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x21);
             i++;
             x += 8;
         } while (i < D_80122290);
     }
 
-    func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x22);
-    func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x23);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x22);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x23);
     if (gRaceChallengeFailed != 0) {
-        func_80045A78(0x40, 0x54, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4F);
+        drawAssetTableSprite(0x40, 0x54, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4F);
     }
 }
 #endif
@@ -417,7 +417,7 @@ void drawTargetTimeChallengeHud(s32 arg0) {
     end = &buffer[2];
     digit = buffer;
     do {
-        func_80045A78((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
     } while ((u32)digit < (u32)end);
@@ -428,7 +428,7 @@ void drawTargetTimeChallengeHud(s32 arg0) {
     end = &buffer[2];
     endValue = (u32)end;
     do {
-        func_80045A78((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
     } while ((u32)digit < endValue);
@@ -438,26 +438,26 @@ void drawTargetTimeChallengeHud(s32 arg0) {
     digit = end;
     end = &buffer[2];
     do {
-        func_80045A78((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
     } while (digit != end);
 
-    func_80045A78(0x58, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36);
-    func_80045A78(0x70, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35);
+    drawAssetTableSprite(0x58, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36);
+    drawAssetTableSprite(0x70, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35);
 
     if (gRaceChallengeFailed != 0) {
-        func_80045A78(0x48, 0x54, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4F);
+        drawAssetTableSprite(0x48, 0x54, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4F);
     }
 
-    func_80045A78(-0x88, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[1]);
-    func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
-    func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x25);
+    drawAssetTableSprite(-0x88, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[1]);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x25);
 
     sprintf(buffer, D_800E1788, D_801222F0);
-    func_80045A78(-0x60, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
+    drawAssetTableSprite(-0x60, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
     if (buffer[1] != 0) {
-        func_80045A78(-0x58, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
+        drawAssetTableSprite(-0x58, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
     }
 }
 #endif
@@ -502,7 +502,7 @@ void drawTimeTrialHud(s32 arg0) {
     digit = buffer;
     end = &buffer[2];
     do {
-        func_80045A78((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
     } while ((u32)digit < (u32)end);
@@ -513,7 +513,7 @@ void drawTimeTrialHud(s32 arg0) {
     end = &buffer[2];
     endValue = (u32)end;
     do {
-        func_80045A78((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
     } while ((u32)digit < endValue);
@@ -523,20 +523,20 @@ void drawTimeTrialHud(s32 arg0) {
     digit = end;
     end = &buffer[2];
     do {
-        func_80045A78((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
     } while (digit != end);
 
-    func_80045A78(0x58, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36);
-    func_80045A78(0x70, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35);
+    drawAssetTableSprite(0x58, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36);
+    drawAssetTableSprite(0x70, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35);
 
     if (D_80121D80[0].onesDigitTile != 0) {
-        func_80045A78(-0x10, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[D_80121D80[0].onesDigitTile]);
+        drawAssetTableSprite(-0x10, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[D_80121D80[0].onesDigitTile]);
     }
 
-    func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
-    func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x2A);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x2A);
 }
 
 const char D_800E17D8[] = "Lap Time";
@@ -589,28 +589,28 @@ void drawSinglePlayerRaceHud(s32 arg0) {
         x += 8;
     } while (digit != &end);
 
-    func_80045A78(0x78, 0x50, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
+    drawAssetTableSprite(0x78, 0x50, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
 
     if (player->tensDigitPalette != 0) {
-        func_80047174(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+        drawScaledAssetTableSprite(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF,
                       player->tensDigitPalette);
     } else {
-        func_80045A78(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+        drawAssetTableSprite(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF);
     }
 
     if (player->onesDigitPalette != 0) {
-        func_80047174(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile],
+        drawScaledAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile],
                       player->onesDigitPalette);
     } else {
-        func_80045A78(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile]);
+        drawAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile]);
     }
 
-    func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), player->iconTile & 0xFFFF);
-    func_80045A78(-0x88, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x39);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), player->iconTile & 0xFFFF);
+    drawAssetTableSprite(-0x88, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x39);
     drawAssetTableSpriteWithExplicitPalette(-0x68, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (player->lapDigit + 0x2C) & 0xFFFF, 0xE);
-    func_80045A78(-0x5C, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x38);
+    drawAssetTableSprite(-0x5C, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x38);
     drawAssetTableSpriteWithExplicitPalette(-0x50, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (gRaceLapCount + 0x2B) & 0xFFFF, 0xE);
 }
 #endif
@@ -654,28 +654,28 @@ void drawTrainingRaceHud(s32 arg0) {
         x += 8;
     } while (digit != &end);
 
-    func_80045A78(0x78, 0x50, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
+    drawAssetTableSprite(0x78, 0x50, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
     if (((!buffer) && (!buffer)) && (!buffer)) {
     }
 
     if (player->tensDigitPalette != 0) {
-        func_80047174(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+        drawScaledAssetTableSprite(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF,
                       player->tensDigitPalette);
     } else {
-        func_80045A78(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+        drawAssetTableSprite(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF);
     }
 
     if (player->onesDigitPalette != 0) {
-        func_80047174(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile],
+        drawScaledAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile],
                       player->onesDigitPalette);
     } else {
-        func_80045A78(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile]);
+        drawAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile]);
     }
 
-    func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
-    func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x29);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x29);
 }
 #endif
 
@@ -719,35 +719,35 @@ void drawTwoPlayerRaceHud(s32 arg0) {
         x += 8;
     } while (ptr != end);
 
-    func_80045A78(0x78, y, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
+    drawAssetTableSprite(0x78, y, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
 
     if (D_80122293[gCurrentViewportIndex].value != 0) {
         player = &D_80121D80[gCurrentViewportIndex];
-        func_80047174(-0x88, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+        drawScaledAssetTableSprite(-0x88, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF,
                       player->tensDigitPalette);
     } else {
         player = &D_80121D80[gCurrentViewportIndex];
-        func_80045A78(-0x88, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+        drawAssetTableSprite(-0x88, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF);
     }
 
     if (D_80122296[gCurrentViewportIndex].value != 0) {
         player = &D_80121D80[gCurrentViewportIndex];
-        func_80047174(-0x68, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile],
+        drawScaledAssetTableSprite(-0x68, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile],
                       player->onesDigitPalette);
     } else {
-        func_80045A78(-0x68, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+        drawAssetTableSprite(-0x68, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       gRaceTimerOnesDigitTileIds[D_80122295[gCurrentViewportIndex].value]);
     }
 
-    func_80045A78(-0x88, 0x12, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_80122289[gCurrentViewportIndex].value & 0xFFFF);
+    drawAssetTableSprite(-0x88, 0x12, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_80122289[gCurrentViewportIndex].value & 0xFFFF);
 
     finalY = 0x2A;
     if (gCurrentViewportIndex == 0) {
         finalY = -0x30;
     }
-    func_80045A78(0x58, finalY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x1A);
+    drawAssetTableSprite(0x58, finalY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x1A);
 }
 #endif
 
@@ -763,34 +763,34 @@ void drawTwoPlayerLapCounter(s32 arg0) {
         var_v1 = -0x30;
     } else {
         var_v1 = 0x2A;
-    } sp1C = (s16)var_v1; new_var = 0xFF; func_80047E88(0x70, (s16)var_v1, (D_80122288[new_var2 = temp_v0 * 0x60C] + 0x31) & new_var, 2); func_80047E88(0x78, *(s16 *)((u8 *)&sp1C + 2), 0x2F, 2);
-    func_80047E88(0x80, *(s16 *)((u8 *)&sp1C + 2), (gRaceLapCount + 0x30) & new_var, 2);
+    } sp1C = (s16)var_v1; new_var = 0xFF; drawMenuAsciiChar(0x70, (s16)var_v1, (D_80122288[new_var2 = temp_v0 * 0x60C] + 0x31) & new_var, 2); drawMenuAsciiChar(0x78, *(s16 *)((u8 *)&sp1C + 2), 0x2F, 2);
+    drawMenuAsciiChar(0x80, *(s16 *)((u8 *)&sp1C + 2), (gRaceLapCount + 0x30) & new_var, 2);
 }
 
 void drawMultiplayerRaceHud(s32 arg0) {
     RaceTimerUiPlayer *player;
     s32 texture;
 
-    func_80047174(0x38, 0x24, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF, 1);
+    drawScaledAssetTableSprite(0x38, 0x24, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF, 1);
 
     texture = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
     player = &D_80121D80[gCurrentViewportIndex];
-    func_80047174(-0x18, -0x38, texture,
+    drawScaledAssetTableSprite(-0x18, -0x38, texture,
                   (gRaceTimerTensDigitTileOffsets[D_80121D80[gCurrentViewportIndex].tensDigitTile] + D_80121D80[gCurrentViewportIndex].tensDigitOffset - 1) & 0xFFFF,
                   player->tensDigitPalette + 1);
 
     texture = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
     player = &D_80121D80[gCurrentViewportIndex];
-    func_80047174(-8, -0x38, texture, gRaceTimerOnesDigitTileIds[player->onesDigitTile], player->onesDigitPalette + 1);
+    drawScaledAssetTableSprite(-8, -0x38, texture, gRaceTimerOnesDigitTileIds[player->onesDigitTile], player->onesDigitPalette + 1);
 
     texture = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-    func_80047174(-0x4C, 0x18, texture, D_80122289[gCurrentViewportIndex].value & 0xFFFF, 1);
+    drawScaledAssetTableSprite(-0x4C, 0x18, texture, D_80122289[gCurrentViewportIndex].value & 0xFFFF, 1);
 
     if (gCurrentViewportIndex < 2) {
-        func_80045A78(-0x44, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x1A);
+        drawAssetTableSprite(-0x44, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x1A);
         return;
     }
-    func_80045A78(0x14, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x1A);
+    drawAssetTableSprite(0x14, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x1A);
 }
 
 const char D_800E181C[] = "%5ld";
@@ -814,13 +814,13 @@ void drawMultiplayerLapCounter(s32 arg0) {
         x = 0x2C;
     }
 
-    func_80047E88((s16)x, -0x30, (((RaceTimerUiS8Stride *)D_80122288)[gCurrentViewportIndex].value + 0x31) & 0xFF, 2);
-    func_80047E88((s16)(x + 8), -0x30, 0x2F, 2);
-    func_80047E88((s16)(x + 0x10), -0x30, (gRaceLapCount + 0x30) & 0xFF, 2);
+    drawMenuAsciiChar((s16)x, -0x30, (((RaceTimerUiS8Stride *)D_80122288)[gCurrentViewportIndex].value + 0x31) & 0xFF, 2);
+    drawMenuAsciiChar((s16)(x + 8), -0x30, 0x2F, 2);
+    drawMenuAsciiChar((s16)(x + 0x10), -0x30, (gRaceLapCount + 0x30) & 0xFF, 2);
 }
 
 void drawThreePlayerHudDivider(s32 arg0) {
-    func_80045A78(0xC, 0x2C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x90);
+    drawAssetTableSprite(0xC, 0x2C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x90);
 }
 
 void incrementRaceElapsedTimer(void) {
@@ -938,7 +938,7 @@ sort_next:
         yBase = -0x48;
     }
 
-    func_80045A78((s16)(xBase + 4), (s16)(yBase + 4), getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x50);
+    drawAssetTableSprite((s16)(xBase + 4), (s16)(yBase + 4), getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x50);
 
     slot = &order[3];
     do {
@@ -967,7 +967,7 @@ sort_next:
                               gRaceProgressMeterIconPalettes[iconGroup]);
             } else {
                 player = &D_80121D80[*slot];
-                func_80045A78(x, (s16)(player->raceProgress + yBase),
+                drawAssetTableSprite(x, (s16)(player->raceProgress + yBase),
                               getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                               gRaceProgressMeterIconTiles[player->flashFrame + (player->iconGroup * 6)]);
             }
@@ -980,7 +980,7 @@ sort_next:
                           gRaceProgressMeterIconPalettes[iconGroup]);
         } else {
             player = &D_80121D80[*slot];
-            func_80045A78(xBase, (s16)(player->raceProgress + yBase),
+            drawAssetTableSprite(xBase, (s16)(player->raceProgress + yBase),
                           getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           gRaceProgressMeterIconTiles[player->flashFrame + (player->iconGroup * 6)]);
         }

@@ -246,8 +246,8 @@ extern void setPackedMatrixTranslation(CourseRenderCommand *, Vec3i *);
 extern s32 isPositionNearAnyRaceViewportFocus(Vec3i *);
 extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
 extern void *resolveAssetTableRelativePointer(void *, u32);
-extern void func_80047174(s32, s32, s32, s32, s32);
-extern void func_80045A78(s32, s32, s32, s32);
+extern void drawScaledAssetTableSprite(s32, s32, s32, s32, s32);
+extern void drawAssetTableSprite(s32, s32, s32, s32);
 extern void osWritebackDCache(void *, s32);
 extern s16 gRaceCommonSpriteAssetHandle;
 extern s16 gRaceCourseModelAssetHandle;
@@ -333,17 +333,17 @@ extern Gfx D_2006880[];
 extern Gfx D_20058A8[];
 void drawRaceCountdownReadyPrompt(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
-        func_80047174(-0x34, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x3F, arg0->step);
+        drawScaledAssetTableSprite(-0x34, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x3F, arg0->step);
     } else {
-        func_80045A78(-0x34, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x3F);
+        drawAssetTableSprite(-0x34, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x3F);
     }
 }
 
 void drawRaceCountdownGoPrompt(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
-        func_80047174(-0x20, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x40, arg0->step);
+        drawScaledAssetTableSprite(-0x20, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x40, arg0->step);
     } else {
-        func_80045A78(-0x20, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x40);
+        drawAssetTableSprite(-0x20, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x40);
     }
 }
 
@@ -548,7 +548,7 @@ void initRaceCourseModelRenderTask(void *arg0) {
 
 void drawFinalLapPromptForViewport(RacePlayerEffect *arg0) {
     if (gCurrentViewportIndex == arg0->playerIndex) {
-        func_80045A78(-0x30, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x41);
+        drawAssetTableSprite(-0x30, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x41);
     }
 }
 

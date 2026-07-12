@@ -171,7 +171,7 @@ extern u8 gRumblePakConnectedMask;
 extern u8 gFramebufferRenderTaskStatus1;
 extern s32 gClearFramebufferOnNextTask;
 extern s8 gMenuFadeOverlayActive;
-extern Gfx *D_80124904;
+extern Gfx *gCurrentTaskDisplayListStart;
 extern u8 D_80124834;
 extern BootTaskHeader D_80124908;
 extern u8 D_80155548[];
@@ -207,10 +207,10 @@ extern GfxCommandDest D_8013D388;
 extern GfxCommandDest D_8013D3C8;
 extern GfxCommandDest D_8013D408;
 
-extern void func_800458E0(void);
-extern void func_80048338(void);
-extern void func_800484F0(void);
-extern void func_80048524(s32);
+extern void initMenuAssetHandles(void);
+extern void allocRenderCallbackScratchBuffer(void);
+extern void allocMenuRenderScratchBuffers(void);
+extern void selectMenuRenderScratchBuffer(s32);
 extern void appendViewportDisplayLists(u8);
 extern s32 osSendMesg(void *, void *, s32);
 extern void updateGameTaskScheduler(void);
@@ -245,9 +245,9 @@ void initGameSystems(void) {
     }
     addSchedulerClient((SchedulerState *)D_801240A8, &D_80124820, &D_80124050);
     initRelocatableHeap();
-    func_800458E0();
-    func_80048338();
-    func_800484F0();
+    initMenuAssetHandles();
+    allocRenderCallbackScratchBuffer();
+    allocMenuRenderScratchBuffers();
     initGameTaskScheduler();
     initVideoTaskState();
     initControllerSubsystem();
@@ -516,10 +516,10 @@ void submitFramebufferRenderTask(u8 arg0) {
     allBits = 0xFFFF;
     task = (BootSchedulerTask *)((u8 *)&D_80124908 + bufferIndex * 0x18620);
     task->unk60 = D_8038E800 + colorIndex * 0x25800;
-    func_80048524(bufferIndex);
+    selectMenuRenderScratchBuffer(bufferIndex);
 
     gRegionAllocPtr = (Gfx *)((u8 *)task + 0x620);
-    D_80124904 = task->dlStart;
+    gCurrentTaskDisplayListStart = task->dlStart;
 
     BOOT_GFX_CMD(0xBC000006, 0);
     BOOT_GFX_CMD(0xED000000, 0x5003C0);
@@ -580,8 +580,8 @@ void submitFramebufferRenderTask(u8 arg0) {
     BOOT_GFX_CMD(0xE9000000, 0);
     BOOT_GFX_CMD(0xB8000000, 0);
 
-    task->unk40 = (u8 *)D_80124904 + 0x5B8;
-    task->unk44 = ((((u8 *)gRegionAllocPtr - (u8 *)D_80124904) - 0x5B8) >> 3) * 8;
+    task->unk40 = (u8 *)gCurrentTaskDisplayListStart + 0x5B8;
+    task->unk44 = ((((u8 *)gRegionAllocPtr - (u8 *)gCurrentTaskDisplayListStart) - 0x5B8) >> 3) * 8;
     task->unk20 = D_800B1CC0;
     task->unk10 = 1;
     textSize = aspMainTextStart - rspbootTextStart;
