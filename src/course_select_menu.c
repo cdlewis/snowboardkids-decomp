@@ -518,7 +518,7 @@ loop_6:
 }
 #endif
 
-// updateCourseSelectCourseList best match: 54.533% (nonmatchings/updateCourseSelectCourseList-7123131487808489545/base_1.c)
+// updateCourseSelectCourseList best match: 57.099% (nonmatchings/updateCourseSelectCourseList-2694253543240320626/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/updateCourseSelectCourseList.s")
 
 #ifdef NON_MATCHING
