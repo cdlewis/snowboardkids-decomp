@@ -834,22 +834,23 @@ void updateControllerPakFreeSpaceInfo(void) {
     gControllerPakFreeFileCount = maxFiles - filesUsed;
 }
 
-// validateControllerPakSave best match: 33.167%
+// validateControllerPakSave best match: 72.861% at nonmatchings/validateControllerPakSave-2694253543240320626/base_5.c
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/validateControllerPakSave.s")
 
 #ifdef NON_MATCHING
-u16 validateControllerPakSave(s32 arg0) {
+u16 validateControllerPakSave(volatile s32 arg0) {
     u8 *var_a3;
     u8 *var_a2;
     u8 *var_v1;
     s32 var_a1;
     s32 var_a0;
 
-    var_a3 = (u8 *)&D_800EC9F0[arg0];
+    var_a3 = (u8 *)&gGameSaveDataBuffer[arg0];
     var_a2 = var_a3;
     var_v1 = var_a3;
     var_a1 = 0;
     do {
+        var_a1 = var_a2 - var_a3;
         var_a1 += 4;
         var_a2 += 4;
         var_v1 += 1;
@@ -858,6 +859,7 @@ u16 validateControllerPakSave(s32 arg0) {
     var_a0 = 0;
     var_v1 = var_a3;
     do {
+        var_a0 = var_v1 - var_a3;
         var_a0 += 1;
         var_v1 += 1;
     } while (var_a0 != 0xC);
