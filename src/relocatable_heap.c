@@ -222,7 +222,48 @@ s32 freeRelocatableHeapBlock(s32 handle) {
     return -1;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/relocatable_heap/compactRelocatableHeap.s")
+void compactRelocatableHeap(void) {
+    RelocatableHeapBlock *block;
+    s32 size;
+    u32 count;
+    u8 *dest;
+    u8 *nextFree;
+    u8 *src;
+    u32 blockStart;
+
+    block = gFirstAllocatedRelocatableHeapBlock;
+    nextFree = &gRelocatableHeapStart;
+    if (block != NULL) {
+        do {
+            blockStart = (u32) block->start;
+            src = (u8 *) blockStart;
+            count = blockStart - (u32) nextFree;
+            blockStart = (u32) nextFree;
+            if ((block->status != RELOCATABLE_HEAP_BLOCK_LOCKED) && (count != 0)) {
+                count = 0;
+                dest = nextFree;
+                if (block->size != 0) {
+                    do {
+                        *dest = *src;
+                        count++;
+                        src++;
+                        dest++;
+                    } while (count < (u32) block->size);
+                }
+                block->start = (u8 *) blockStart;
+                src = nextFree;
+                if ((!dest) && (!dest)) {
+                }
+            }
+            size = block->size & 0xFFFFFFFFFFFFFFFF;
+            block = block->next;
+            nextFree = src + size;
+            if ((!blockStart) && (!blockStart)) {
+            }
+        } while (block != NULL);
+    }
+    updateRelocatableHeapNextFreeAddress();
+}
 
 s32 getRelocatableHeapBlockBase(s32 handle) {
     return (s32) gRelocatableHeapBlockStartAliases[handle].start;
