@@ -1055,7 +1055,7 @@ void loadRaceMotionJointAnimationFrame(RaceMotionState *state) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_motion/interpolateRaceMotionAnimationFrame.s")
 
 #ifdef NON_MATCHING
-extern s32 gRaceMotionRotationFrameBuffer[];
+extern volatile s32 gRaceMotionRotationFrameBuffer[];
 extern s32 gRaceMotionJointFrameBuffer[];
 extern s32 gRacePlayerHitCueId;
 
@@ -1179,11 +1179,11 @@ loop_pos:
 }
 #endif
 
-// interpolateRaceMotionJointAnimationFrame best match: 78.710% (base_2.c)
+// interpolateRaceMotionJointAnimationFrame best match: 81.286% (base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_motion/interpolateRaceMotionJointAnimationFrame.s")
 
 #ifdef NON_MATCHING
-extern s32 gRaceMotionRotationFrameBuffer[];
+extern volatile s32 gRaceMotionRotationFrameBuffer[];
 extern s32 gRaceMotionJointFrameBuffer[];
 extern s32 gRacePlayerHitCueId;
 
@@ -1192,10 +1192,10 @@ void interpolateRaceMotionJointAnimationFrame(RaceMotionState *state, s32 animIn
     s32 base;
     s32 count;
     s32 offset;
-    s32 *rotFrame;
-    s32 *rot;
-    s32 *posFrame;
-    s32 *pos;
+    volatile RaceMotionRotation *rotFrame;
+    volatile RaceMotionRotation *rot;
+    RaceMotionRotation *posFrame;
+    RaceMotionRotation *pos;
     RaceMotionState *cursor;
     s32 start;
     s32 delta;
@@ -1208,17 +1208,17 @@ void interpolateRaceMotionJointAnimationFrame(RaceMotionState *state, s32 animIn
     base = getRelocatableHeapBlockBase(gRaceMotionAnimationAssetHandles[state->modelId]);
     data = (s16 *)(base + (((u16 *)base)[animIndex] * 2) + 2);
 
-    rotFrame = gRaceMotionRotationFrameBuffer;
-    posFrame = gRaceMotionJointFrameBuffer;
+    rotFrame = (RaceMotionRotation *)gRaceMotionRotationFrameBuffer;
+    posFrame = (RaceMotionRotation *)gRaceMotionJointFrameBuffer;
     do {
         count = 0;
         rot = rotFrame;
 loop_rot:
-        rot[0] = data[0] << 14;
-        rot[1] = data[1] << 14;
-        rot[2] = data[2] << 14;
+        rot->x = data[0] << 14;
+        rot->y = data[1] << 14;
+        rot->z = data[2] << 14;
         count++;
-        rot += 3;
+        rot++;
         data += 3;
         if (count < 2) {
             goto loop_rot;
@@ -1233,20 +1233,20 @@ loop_pos:
         y = (packed0 << 4) & 0xFF0;
         z = (packed1 >> 4) & 0xFF0;
         data += 2;
-        pos[0] = x;
-        pos[1] = y;
-        pos[2] = z;
+        pos->x = x;
+        pos->y = y;
+        pos->z = z;
         if (packed1 & 1) {
-            pos[0] = x + 8;
+            pos->x = x + 8;
         }
         if (packed1 & 2) {
-            pos[1] += 8;
+            pos->y += 8;
         }
         offset += 0xC;
         if (packed1 & 4) {
-            pos[2] += 8;
+            pos->z += 8;
         }
-        pos += 3;
+        pos++;
         if (offset < 0x3C) {
             goto loop_pos;
         }
@@ -1259,35 +1259,35 @@ loop_skip:
             goto loop_skip;
         }
 
-        posFrame += 0x2A;
-        rotFrame += 6;
+        posFrame += 14;
+        rotFrame += 2;
     } while ((u32)posFrame < (u32)&gRacePlayerHitCueId);
 
-    pos = gRaceMotionJointFrameBuffer;
+    pos = (RaceMotionRotation *)gRaceMotionJointFrameBuffer;
     count = 0;
     cursor = state;
 loop_interp:
-    start = pos[0];
-    delta = (pos[0x2A] - start) & 0xFFF;
+    start = pos->x;
+    delta = (pos[14].x - start) & 0xFFF;
     if (delta >= 0x801) {
         delta -= 0x1000;
     }
     *(s16 *)((u8 *)cursor + 0x33A) = start + ((delta * frameTimer) / frameTimerReset);
 
-    start = pos[1];
-    delta = (pos[0x2B] - start) & 0xFFF;
+    start = pos->y;
+    delta = (pos[14].y - start) & 0xFFF;
     if (delta >= 0x801) {
         delta -= 0x1000;
     }
     *(s16 *)((u8 *)cursor + 0x33C) = start + ((delta * frameTimer) / frameTimerReset);
 
-    start = pos[2];
-    delta = (pos[0x2C] - start) & 0xFFF;
+    start = pos->z;
+    delta = (pos[14].z - start) & 0xFFF;
     if (delta >= 0x801) {
         delta -= 0x1000;
     }
     count++;
-    pos += 3;
+    pos++;
     cursor = (RaceMotionState *)((u8 *)cursor + 0x14);
     *(s16 *)((u8 *)cursor + 0x32A) = start + ((delta * frameTimer) / frameTimerReset);
     if (count != 5) {
