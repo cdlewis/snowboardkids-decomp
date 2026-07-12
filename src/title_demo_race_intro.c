@@ -43,7 +43,7 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gRaceRumbleEnabled;
 extern s8 gRaceSplitscreenMode;
 extern s8 gFramebufferSwapDelay;
-extern u8 D_8011228C;
+extern u8 gRacePlayerHudStatuses;
 extern s8 gTitleDemoRaceIntroViewportHeight;
 extern s8 gTitleDemoRaceIntroFadeStep;
 extern s16 gRaceCourseIndex;
@@ -160,7 +160,7 @@ void initTitleDemoRaceIntro(void) {
     resetRaceCameras();
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xB0, 0x140, 0xF0, D_800E10C0);
-    D_8011228C = 1;
+    gRacePlayerHudStatuses = 1;
     gFramebufferSwapDelay = 0;
     func_8008BEB0();
     func_80078430();

@@ -1010,7 +1010,7 @@ void func_8007A8EC(void) {
     int new_var2;
     s32 progress;
 
-    player = D_80121D80; i = 0; do { func_80087600(i, &sp50, &sp4C); progress = sp50; i++; if (progress < 0) {
+    player = D_80121D80; i = 0; do { getRacePlayerRankingProgress(i, &sp50, &sp4C); progress = sp50; i++; if (progress < 0) {
             progress = 0;
         }
         shiftedProgress = progress << 7;
@@ -1136,7 +1136,7 @@ void func_8007AA50(void) {
         if (!(gMenuFlowState & 3)) {
             func_8007A2B8();
             if (D_80121B80 == 0) {
-                func_80087600(0, &sp40, &sp3C);
+                getRacePlayerRankingProgress(0, &sp40, &sp3C);
                 if ((gRaceCourseStartEntries[gRaceCourseIndex].finishLinePathIndex * 8) < sp40) {
                     D_80121B7C = *(s32 *)&D_80121B74;
                     D_80121B80 = 1;
