@@ -21,7 +21,9 @@ extern u8 D_21D9D0;
 typedef s32 RomAssetAddress;
 
 typedef struct MainMenuModelAssetHandles {
-    u8 pad0[0x5A];
+    u8 pad0[0x40];
+    /* 0x40 */ s16 raceRecordReplaySaveBufferHandle;
+    u8 pad42[0x5A - 0x42];
     /* 0x5A */ s16 modelInstanceHandles[6];
     /* 0x66 */ s16 modelAssetSlots[6];
     /* 0x72 */ s16 animationAssetSlots[6];
@@ -139,7 +141,198 @@ search_done:
 }
 #endif
 
+// saveRaceRecordReplayData best match: 46.979% (nonmatchings/saveRaceRecordReplayData-5802343343535905907/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/saveRaceRecordReplayData.s")
+
+#ifdef NON_MATCHING
+#define RACE_INPUT_HISTORY_LENGTH 0x1194
+#define REPLAY_SAVE_MAX_NORMAL 0x580
+#define REPLAY_SAVE_MIN_NORMAL 0x581
+#define REPLAY_SAVE_MAX_EXTRA 0x300
+#define REPLAY_SAVE_MIN_EXTRA 0x301
+
+typedef struct {
+    /* 0x0000 */ s32 writeIndex;
+    /* 0x0004 */ s32 lastWriteIndex;
+    /* 0x0008 */ s8 enabled;
+    /* 0x0009 */ s8 pad9[4];
+    /* 0x000D */ s8 stickX[RACE_INPUT_HISTORY_LENGTH];
+    /* 0x11A1 */ s8 stickY[RACE_INPUT_HISTORY_LENGTH];
+    /* 0x2335 */ u8 buttons[RACE_INPUT_HISTORY_LENGTH];
+} RaceInputHistoryBuffer;
+
+typedef struct {
+    /* 0x00 */ u16 length;
+    /* 0x02 */ u16 offset;
+} RaceRecordReplaySlot;
+
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x232];
+    /* 0x0232 */ RaceRecordReplaySlot slots[9];
+    /* 0x0256 */ u16 data[0x3D55];
+} RaceRecordReplaySave;
+
+extern RaceRecordReplaySave gGameSaveDataBuffer;
+extern s16 gRaceReplayInputBufferHandle;
+extern s16 gRaceCourseIndex;
+extern u8 D_8010B200[];
+extern u16 D_8010E180[];
+extern u8 D_800F3EF0[];
+
+extern s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, u16 *dst);
+
+#define ACCUM_SLOT(courseIndex, slotIndex, maxSize, minSize) \
+    if (gRaceCourseIndex != (courseIndex)) {          \
+        slotLength = save->slots[(slotIndex)].length; \
+        if (slotLength != 0) {                        \
+            if (slotLength >= (minSize)) {            \
+                totalLength += slotLength;            \
+            } else {                                  \
+                totalLength += (maxSize);             \
+            }                                         \
+        } else {                                      \
+            totalLength += (maxSize);                 \
+        }                                             \
+    }
+
+#define COPY_OLD_SLOT(courseIndex, slotIndex)                                   \
+    if (gRaceCourseIndex != (courseIndex)) {                                    \
+        count = save->slots[(slotIndex)].length;                                \
+        if (count != 0) {                                                       \
+            oldOffset = save->slots[(slotIndex)].offset;                        \
+            save->slots[(slotIndex)].offset = writeIndex;                       \
+            if (count > 0) {                                                    \
+                src = &oldData[oldOffset];                                      \
+                dst = &save->data[writeIndex];                                 \
+                copied = 0;                                                     \
+                do {                                                            \
+                    copied++;                                                   \
+                    *dst = *src;                                                \
+                    src++;                                                      \
+                    writeIndex++;                                               \
+                    dst++;                                                      \
+                } while (copied < save->slots[(slotIndex)].length);             \
+            }                                                                   \
+        }                                                                       \
+    } else {                                                                    \
+        save->slots[(slotIndex)].offset = writeIndex;                           \
+        save->slots[(slotIndex)].length = compressedLength;                     \
+        copied = 0;                                                             \
+        if (compressedLength > 0) {                                             \
+            src = D_8010E180;                                                   \
+            dst = &save->data[writeIndex];                                      \
+            do {                                                                \
+                copied++;                                                       \
+                *dst = *src;                                                    \
+                src++;                                                          \
+                writeIndex++;                                                   \
+                dst++;                                                          \
+            } while (copied < compressedLength);                                \
+        }                                                                       \
+    }                                                                           \
+done_##slotIndex:
+
+s32 saveRaceRecordReplayData(void) {
+    RaceInputHistoryBuffer *history;
+    RaceRecordReplaySave *save;
+    u16 *oldData;
+    u16 *src;
+    u16 *dst;
+    u8 *packed;
+    s32 i;
+    s32 totalLength;
+    s32 compressedLength;
+    s32 writeIndex;
+    s32 slotLength;
+    s32 oldOffset;
+    s32 copied;
+    s32 count;
+    u8 buttons;
+
+    history = getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle);
+    if (history->lastWriteIndex >= 0xFD5) {
+        return 1;
+    }
+
+    packed = D_8010B200;
+    *(s16 *)packed = history->lastWriteIndex;
+    packed[2] = history->pad9[1];
+    packed[3] = history->pad9[2];
+
+    i = 0;
+    if (history->lastWriteIndex > 0) {
+        do {
+            packed[4 + (i * 3)] = history->stickX[i];
+            packed[5 + (i * 3)] = history->stickY[i];
+            buttons = history->buttons[i];
+            ((volatile u8 *)packed)[6 + (i * 3)] = buttons;
+            packed[6 + (i * 3)] = buttons & ~0x40;
+            i++;
+        } while (i < history->lastWriteIndex);
+    }
+
+    compressedLength = compressRaceRecordReplayData(D_8010B200, (history->lastWriteIndex * 3) + 4, D_8010E180);
+    if (compressedLength < 0) {
+        return 1;
+    }
+
+    save = &gGameSaveDataBuffer;
+    totalLength = 0;
+    ACCUM_SLOT(0, 0, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
+    ACCUM_SLOT(1, 1, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
+    ACCUM_SLOT(2, 2, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
+    ACCUM_SLOT(3, 3, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
+    ACCUM_SLOT(4, 4, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
+    ACCUM_SLOT(5, 5, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
+    ACCUM_SLOT(6, 6, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
+    ACCUM_SLOT(8, 7, REPLAY_SAVE_MAX_EXTRA, REPLAY_SAVE_MIN_EXTRA);
+    ACCUM_SLOT(9, 8, REPLAY_SAVE_MAX_EXTRA, REPLAY_SAVE_MIN_EXTRA);
+
+    if (compressedLength >= REPLAY_SAVE_MIN_NORMAL) {
+        totalLength += compressedLength;
+    } else if ((gRaceCourseIndex == 9) || (gRaceCourseIndex == 8)) {
+        totalLength += REPLAY_SAVE_MAX_EXTRA;
+    } else {
+        totalLength += REPLAY_SAVE_MAX_NORMAL;
+    }
+
+    if (totalLength >= 0x3A81) {
+        return 1;
+    }
+
+    gAssetHandles.raceRecordReplaySaveBufferHandle = allocRelocatableHeapBlock(0x7500);
+    oldData = getRelocatableHeapBlockBase(gAssetHandles.raceRecordReplaySaveBufferHandle);
+    src = save->data;
+    dst = oldData;
+    do {
+        *dst = *src;
+        src++;
+        dst++;
+    } while ((u32)src < (u32)D_800F3EF0);
+
+    writeIndex = 0;
+    COPY_OLD_SLOT(0, 0);
+    COPY_OLD_SLOT(1, 1);
+    COPY_OLD_SLOT(2, 2);
+    COPY_OLD_SLOT(3, 3);
+    COPY_OLD_SLOT(4, 4);
+    COPY_OLD_SLOT(5, 5);
+    COPY_OLD_SLOT(6, 6);
+    COPY_OLD_SLOT(8, 7);
+    COPY_OLD_SLOT(9, 8);
+
+    freeRelocatableHeapBlock(gAssetHandles.raceRecordReplaySaveBufferHandle);
+    return 0;
+}
+
+#undef COPY_OLD_SLOT
+#undef ACCUM_SLOT
+#undef REPLAY_SAVE_MIN_EXTRA
+#undef REPLAY_SAVE_MAX_EXTRA
+#undef REPLAY_SAVE_MIN_NORMAL
+#undef REPLAY_SAVE_MAX_NORMAL
+#undef RACE_INPUT_HISTORY_LENGTH
+#endif
 
 // loadCurrentRaceRecordReplayData best match: 48.898% (nonmatchings/func_80041A20-3236181511606361864/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model/loadCurrentRaceRecordReplayData.s")
