@@ -177,7 +177,7 @@ void *createCallbackTaskPreservingArgs(void (*callback)(), s32 type, s32 priorit
 }
 #endif
 
-// createCallbackTask best match: 96.233%
+// createCallbackTask best match: 97.533%
 #pragma GLOBAL_ASM("asm/nonmatchings/callback_task_scheduler/createCallbackTask.s")
 
 #ifdef NON_MATCHING
@@ -269,11 +269,7 @@ void *createCallbackTask(void (*callback)(), u16 type, s32 priority) {
 
     i = 0;
     do {
-        task->args[i] = NULL;
-        i = (i + 1) & 0xFFFF;
-    } while (i < 0x40U);
-
-    return task;
+        task->args[i] = NULL; i = (i + 1) & 0xFFFF; } while (i < 0x40U); return task;
 }
 #endif
 
