@@ -59,7 +59,7 @@ void updateEndingCreditsTheEndTextFadeIn(EndingCreditsPageTextActor *arg0);
 void updateEndingCreditsPageText(EndingCreditsPageTextActor *arg0);
 void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0);
 
-// drawEndingCreditsPageText best match: 93.371%
+// drawEndingCreditsPageText best match: 93.796%
 #pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_ui/drawEndingCreditsPageText.s")
 
 #ifdef NON_MATCHING
@@ -71,8 +71,8 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
     s32 layoutOffset;
     register s32 x;
     s32 y;
-    u16 text[0x1A];
-    u16 pad[12];
+    u16 text[0x1C];
+    u16 pad[10];
     volatile u16 colorMode;
     u16 glyph;
     EndingCreditsPageTextLineLayout *layout;
@@ -80,14 +80,14 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
     layout = &gEndingCreditsPageTextLineLayouts[arg0->pageIndex];
     count = layout->count;
     i = 0;
-    if (layout->count > 0) {
+    if (count > 0) {
         scriptIndex = 0;
         layoutOffset = 0;
         do {
             layout = &gEndingCreditsPageTextLineLayouts[arg0->pageIndex];
             glyph = gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex];
-            x = *(s16 *)((u8 *)layout + layoutOffset + 2);
             y = *(s16 *)((u8 *)layout + layoutOffset + 4);
+            x = *(s16 *)((u8 *)layout + layoutOffset + 2);
             lineLength = 0;
             if (gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex] != 0xFFFF) {
                 do {
@@ -98,11 +98,13 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
                 } while (gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex] != 0xFFFF);
             }
             text[lineLength] = 0xFFFF;
+            if (0) {
+            }
             scriptIndex++;
-            drawMenuGlyphScript((s16)x, y, (u8 *)text, 0, lineLength = arg0->alpha, colorMode);
+            drawMenuGlyphScript((s16)x, y, (u8 *)text, 0, arg0->alpha, colorMode);
             i++;
             layoutOffset += 4;
-        } while (i != layout->count);
+        } while (i != count);
     }
 }
 #endif
