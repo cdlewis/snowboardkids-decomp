@@ -54,7 +54,7 @@ extern s16 gRaceCourseIndex;
 
 #define gRacePlayerProgressStates D_80121D80
 
-// updateRacePlayerRankDisplay best match: 30.134% (nonmatchings/updateRacePlayerRankDisplay-5752545231564691495/base_6.c)
+// updateRacePlayerRankDisplay best match: 55.500% (nonmatchings/updateRacePlayerRankDisplay-3357475854818838508/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_progress/updateRacePlayerRankDisplay.s")
 
 #ifdef NON_MATCHING
@@ -155,15 +155,99 @@ sort_next:
         rank = gRacePlayerProgressStates[0].raceRank;
         if (rank == 0) {
             ASSIGN_DISPLAY_RANKS(gSinglePlayerRankDisplayPatternFirst);
+            rank = gRacePlayerProgressStates[0].raceRank;
+            rankIndex = 0;
         }
         if (rank == 1) {
-            ASSIGN_DISPLAY_RANKS(gSinglePlayerRankDisplayPatternSecond);
+            RacePlayerProgressState *player2;
+            RacePlayerProgressState *player3;
+
+            rankIndex = 0;
+            player2 = &gRacePlayerProgressStates[order[2]];
+            player3 = &gRacePlayerProgressStates[order[3]];
+            player = &gRacePlayerProgressStates[order[0]];
+            other = &gRacePlayerProgressStates[order[1]];
+            if (player->isActive != 0) {
+                player->rankChangeTimer = 0;
+                player->displayRank = gSinglePlayerRankDisplayPatternSecond[rankIndex];
+                rankIndex++;
+            }
+            if (other->isActive != 0) {
+                other->rankChangeTimer = 0;
+                other->displayRank = gSinglePlayerRankDisplayPatternSecond[rankIndex];
+                rankIndex++;
+            }
+            if (player2->isActive != 0) {
+                player2->rankChangeTimer = 0;
+                player2->displayRank = gSinglePlayerRankDisplayPatternSecond[rankIndex];
+                rankIndex++;
+            }
+            if (player3->isActive != 0) {
+                player3->rankChangeTimer = 0;
+                player3->displayRank = gSinglePlayerRankDisplayPatternSecond[rankIndex];
+            }
+            rank = gRacePlayerProgressStates[0].raceRank;
+            rankIndex = 0;
         }
         if (rank == 2) {
-            ASSIGN_DISPLAY_RANKS(gSinglePlayerRankDisplayPatternThird);
+            RacePlayerProgressState *player2;
+            RacePlayerProgressState *player3;
+
+            rankIndex = 0;
+            player2 = &gRacePlayerProgressStates[order[2]];
+            player3 = &gRacePlayerProgressStates[order[3]];
+            player = &gRacePlayerProgressStates[order[0]];
+            other = &gRacePlayerProgressStates[order[1]];
+            if (player->isActive != 0) {
+                player->rankChangeTimer = 0;
+                player->displayRank = gSinglePlayerRankDisplayPatternThird[rankIndex];
+                rankIndex++;
+            }
+            if (other->isActive != 0) {
+                other->rankChangeTimer = 0;
+                other->displayRank = gSinglePlayerRankDisplayPatternThird[rankIndex];
+                rankIndex++;
+            }
+            if (player2->isActive != 0) {
+                player2->rankChangeTimer = 0;
+                player2->displayRank = gSinglePlayerRankDisplayPatternThird[rankIndex];
+                rankIndex++;
+            }
+            if (player3->isActive != 0) {
+                player3->rankChangeTimer = 0;
+                player3->displayRank = gSinglePlayerRankDisplayPatternThird[rankIndex];
+            }
+            rank = gRacePlayerProgressStates[0].raceRank;
+            rankIndex = 0;
         }
         if (rank == 3) {
-            ASSIGN_DISPLAY_RANKS(gSinglePlayerRankDisplayPatternFourth);
+            RacePlayerProgressState *player2;
+            RacePlayerProgressState *player3;
+
+            rankIndex = 0;
+            player2 = &gRacePlayerProgressStates[order[2]];
+            player3 = &gRacePlayerProgressStates[order[3]];
+            player = &gRacePlayerProgressStates[order[0]];
+            other = &gRacePlayerProgressStates[order[1]];
+            if (player->isActive != 0) {
+                player->rankChangeTimer = 0;
+                player->displayRank = gSinglePlayerRankDisplayPatternFourth[rankIndex];
+                rankIndex++;
+            }
+            if (other->isActive != 0) {
+                other->rankChangeTimer = 0;
+                other->displayRank = gSinglePlayerRankDisplayPatternFourth[rankIndex];
+                rankIndex++;
+            }
+            if (player2->isActive != 0) {
+                player2->rankChangeTimer = 0;
+                player2->displayRank = gSinglePlayerRankDisplayPatternFourth[rankIndex];
+                rankIndex++;
+            }
+            if (player3->isActive != 0) {
+                player3->rankChangeTimer = 0;
+                player3->displayRank = gSinglePlayerRankDisplayPatternFourth[rankIndex];
+            }
         }
         break;
     case 2:
