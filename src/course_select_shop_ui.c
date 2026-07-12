@@ -1061,18 +1061,20 @@ void updateShopMenuSparkles(ShopMenuWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawShopMenuSparkles, arg0);
 }
 
-// initShopMenuSparkles best match: 95.172% (nonmatchings/initShopMenuSparkles-786318006044585456/base_8.c)
+// initShopMenuSparkles best match: 98.621% (nonmatchings/initShopMenuSparkles-8331816093655448999/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/initShopMenuSparkles.s")
 
 #ifdef NON_MATCHING
 void initShopMenuSparkles(ShopMenuWidgetActor *arg0) {
     s32 index;
     ShopMenuCursorIconInit *entry;
+    s16 new_var;
 
     index = gMenuSelectionVariant;
-    entry = &gShopMenuSparkleInitTable[index & 0xFFFF];
+    entry = &gShopMenuSparkleInitTable[0xFFFF & (u16)index];
     arg0->sparkle.patternIndex = index;
-    arg0->sprite.index = entry->x;
+    new_var = entry->x ^ 0;
+    arg0->sprite.index = new_var;
     arg0->x = 0x94;
     arg0->y = entry->y;
     arg0->sparkle.tileBase = entry->tileBase;
