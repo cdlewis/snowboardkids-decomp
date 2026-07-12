@@ -20,7 +20,7 @@
 #include "race_camera.h"
 #include "race_course_effects.h"
 #include "race_flow.h"
-#include "race_player_state.h"
+#include "race_player_update.h"
 #include "race_scene_loader.h"
 #include "race_start_transition.h"
 #include "race_timer_ui.h"
@@ -1582,7 +1582,7 @@ void initRaceGhostReplayFlow(void) {
     gRacePlayerHudStatuses = 1;
     gFramebufferSwapDelay = 0;
     resetSecondaryRng();
-    func_8008BEB0();
+    initRacePlayers();
     func_80078430();
     initRaceCourseEffects();
     gMenuFadeAlpha = 0xFF;
@@ -1672,26 +1672,26 @@ void finalizeRaceExitFlow(void) {
 }
 
 void updateRaceFlowFrameWithCourseEffects(void) {
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
     func_8007AA50();
 }
 
 void updateRaceFlowFrame(void) {
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
 }
 
 void updateRaceReplayFrame(void) {
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
 }

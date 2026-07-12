@@ -6,7 +6,7 @@
 #include "race_scene_loader.h"
 #include "game_task_scheduler.h"
 #include "race_camera.h"
-#include "race_player_state.h"
+#include "race_player_update.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
 #include "menu_screen_effects.h"
@@ -162,7 +162,7 @@ void initTitleDemoRaceIntro(void) {
     configureViewport(0, 0xA0, 0x78, 0x120, 0xB0, 0x140, 0xF0, D_800E10C0);
     gRacePlayerHudStatuses = 1;
     gFramebufferSwapDelay = 0;
-    func_8008BEB0();
+    initRacePlayers();
     func_80078430();
     initRaceCourseEffects();
     setCurrentGameTaskCallback(waitForTitleDemoRaceIntroStart, 0);
@@ -283,9 +283,9 @@ copy_player3:
         gRaceUpdatePaused = 1;
     }
 
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     gRaceUpdatePaused = prevOpen;
     updateRaceCameras();

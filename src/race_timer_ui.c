@@ -86,11 +86,10 @@ extern u8 D_245A80[];
 extern u8 D_24C8E0[];
 extern RaceTimer D_800DC928[];
 extern RaceTimer D_800DC950;
-extern u8 D_800DC8F9;
 extern u8 gRaceSplitscreenMode;
 extern RaceTimerCourseSpawnEntry gRaceCourseStartEntries[];
-extern u8 D_800DC8F0[];
-extern u8 D_800DC8F8[];
+extern u8 gRaceTimerTensDigitTileOffsets[];
+extern u8 gRaceTimerOnesDigitTileIds[];
 extern u16 D_800DC954[];
 extern u16 D_800DC99C[];
 extern RaceUiCoursePosition D_800DC900[];
@@ -455,7 +454,7 @@ void func_80078D9C(s32 arg0) {
         func_80045A78(0x48, 0x54, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x4F);
     }
 
-    func_80045A78(-0x88, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_800DC8F9);
+    func_80045A78(-0x88, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[1]);
     func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
     func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x25);
 
@@ -537,7 +536,7 @@ void func_80079154(s32 arg0) {
     func_80045A78(0x70, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35);
 
     if (D_80121D80[0].onesDigitTile != 0) {
-        func_80045A78(-0x10, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_800DC8F8[D_80121D80[0].onesDigitTile]);
+        func_80045A78(-0x10, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[D_80121D80[0].onesDigitTile]);
     }
 
     func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
@@ -598,18 +597,18 @@ void func_80079438(s32 arg0) {
 
     if (player->tensDigitPalette != 0) {
         func_80047174(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF,
+                      (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF,
                       player->tensDigitPalette);
     } else {
         func_80045A78(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF);
+                      (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF);
     }
 
     if (player->onesDigitPalette != 0) {
-        func_80047174(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_800DC8F8[player->onesDigitTile],
+        func_80047174(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile],
                       player->onesDigitPalette);
     } else {
-        func_80045A78(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_800DC8F8[player->onesDigitTile]);
+        func_80045A78(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile]);
     }
 
     func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), player->iconTile & 0xFFFF);
@@ -665,18 +664,18 @@ void func_80079758(s32 arg0) {
 
     if (player->tensDigitPalette != 0) {
         func_80047174(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF,
+                      (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF,
                       player->tensDigitPalette);
     } else {
         func_80045A78(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF);
+                      (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF);
     }
 
     if (player->onesDigitPalette != 0) {
-        func_80047174(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_800DC8F8[player->onesDigitTile],
+        func_80047174(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile],
                       player->onesDigitPalette);
     } else {
-        func_80045A78(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_800DC8F8[player->onesDigitTile]);
+        func_80045A78(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile]);
     }
 
     func_80045A78(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
@@ -729,21 +728,21 @@ void func_800799DC(s32 arg0) {
     if (D_80122293[gCurrentViewportIndex].value != 0) {
         player = &D_80121D80[gCurrentViewportIndex];
         func_80047174(-0x88, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF,
+                      (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF,
                       player->tensDigitPalette);
     } else {
         player = &D_80121D80[gCurrentViewportIndex];
         func_80045A78(-0x88, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (player->tensDigitOffset + D_800DC8F0[player->tensDigitTile] - 1) & 0xFFFF);
+                      (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF);
     }
 
     if (D_80122296[gCurrentViewportIndex].value != 0) {
         player = &D_80121D80[gCurrentViewportIndex];
-        func_80047174(-0x68, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_800DC8F8[player->onesDigitTile],
+        func_80047174(-0x68, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile],
                       player->onesDigitPalette);
     } else {
         func_80045A78(-0x68, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      D_800DC8F8[D_80122295[gCurrentViewportIndex].value]);
+                      gRaceTimerOnesDigitTileIds[D_80122295[gCurrentViewportIndex].value]);
     }
 
     func_80045A78(-0x88, 0x12, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_80122289[gCurrentViewportIndex].value & 0xFFFF);
@@ -781,12 +780,12 @@ void func_80079F04(s32 arg0) {
     texture = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
     player = &D_80121D80[gCurrentViewportIndex];
     func_80047174(-0x18, -0x38, texture,
-                  (D_800DC8F0[D_80121D80[gCurrentViewportIndex].tensDigitTile] + D_80121D80[gCurrentViewportIndex].tensDigitOffset - 1) & 0xFFFF,
+                  (gRaceTimerTensDigitTileOffsets[D_80121D80[gCurrentViewportIndex].tensDigitTile] + D_80121D80[gCurrentViewportIndex].tensDigitOffset - 1) & 0xFFFF,
                   player->tensDigitPalette + 1);
 
     texture = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
     player = &D_80121D80[gCurrentViewportIndex];
-    func_80047174(-8, -0x38, texture, D_800DC8F8[player->onesDigitTile], player->onesDigitPalette + 1);
+    func_80047174(-8, -0x38, texture, gRaceTimerOnesDigitTileIds[player->onesDigitTile], player->onesDigitPalette + 1);
 
     texture = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
     func_80047174(-0x4C, 0x18, texture, D_80122289[gCurrentViewportIndex].value & 0xFFFF, 1);

@@ -6,7 +6,7 @@
 #include "game_task_scheduler.h"
 #include "menu_screen_effects.h"
 #include "race_camera.h"
-#include "race_player_state.h"
+#include "race_player_update.h"
 #include "race_timer_ui.h"
 #include "viewport_manager.h"
 
@@ -168,7 +168,7 @@ void initMainMenuDemoRaceIntro(void) {
     resetAllViewports();
     gRacePlayerHudStatuses = one;
     gFramebufferSwapDelay = 0;
-    func_8008BEB0();
+    initRacePlayers();
     if (gMainMenuDemoRaceIntroLoadCourseAssetsFlags[gMainMenuDemoRaceIntroIndex * sizeof(MainMenuDemoRaceIntroEntry)] == 0) {
         gPlayerCount = one;
     }
@@ -221,9 +221,9 @@ void updateMainMenuDemoRaceIntro(void) {
             gMenuFadeAlpha = 0;
         }
     }
-    func_8008C704();
+    updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
-    func_80096E3C();
+    updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
     func_8007AA50();
