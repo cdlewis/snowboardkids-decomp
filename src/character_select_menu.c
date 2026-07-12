@@ -84,13 +84,12 @@ extern u8 gPlayerCount;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initCharacterSelectMenu best match: 90.714%
+// initCharacterSelectMenu best match: 92.434% (nonmatchings/initCharacterSelectMenu-5802343343535905907/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_menu/initCharacterSelectMenu.s")
 
 #ifdef NON_MATCHING
 void initCharacterSelectMenu(void) {
     CharacterSelectPlayer *player;
-    CharacterId *character;
     CharacterSelectState *state;
     s32 i;
     s32 j;
@@ -121,14 +120,12 @@ void initCharacterSelectMenu(void) {
         if (playerCount > 0) {
             player = D_80121D80;
             do {
-                character = gCharacterSelectIdOrder;
                 j = 0;
 loop_1:
-                if (player->characterId == character->characterId) {
+                if (player->characterId == gCharacterSelectIdOrder[j].characterId) {
                     D_8010AE64[i] = j;
                 } else {
                     j++;
-                    character++;
                     if (j != 6) {
                         goto loop_1;
                     }
