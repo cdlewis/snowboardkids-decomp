@@ -23,7 +23,9 @@ typedef struct {
     /* 0x2EC */ s16 yaw;
     /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
     /* 0x2FC */ u32 flags2FC;
-    /* 0x300 */ u8 pad300[RACE_PLAYER_STATE_SIZE - 0x300];
+    /* 0x300 */ u8 pad300[0x502 - 0x300];
+    /* 0x502 */ s16 surfaceHint;
+    /* 0x504 */ u8 pad504[RACE_PLAYER_STATE_SIZE - 0x504];
 } RacePlayerState;
 
 typedef union {
@@ -81,6 +83,11 @@ typedef struct {
     /* 0x22 */ s16 endYaw;
 } RaceCameraRotationTransition;
 
+typedef struct {
+    /* 0x000 */ s32 value;
+    /* 0x004 */ u8 pad4[RACE_PLAYER_STATE_SIZE - 4];
+} RacePlayerCameraComponentAlias;
+
 typedef struct StackD7D4 {
     char sp28[0x20];
     s32 sp48;
@@ -97,6 +104,9 @@ extern RaceCamera *D_801124A0;
 extern RacePlayerSlot D_80121D80[];
 extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern u8 gRaceCameraRotationTransitions[];
+extern RacePlayerCameraComponentAlias D_80122010[];
+extern RacePlayerCameraComponentAlias D_80122014[];
+extern RacePlayerCameraComponentAlias D_80122018[];
 extern s16 gRaceCameraChaseYawOffsets[];
 extern u8 gRaceCameraChaseYawPreferenceOrder[];
 extern RaceCameraTransition gRaceCameraPositionTransitions[];
@@ -386,7 +396,124 @@ void initRaceCameraFollowPlayer(void) {
     D_801124A0->update();
 }
 
+// updateRaceCameraFollowPlayer best match: 83.320% (nonmatchings/updateRaceCameraFollowPlayer-5802343343535905907/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/updateRaceCameraFollowPlayer.s")
+
+#ifdef NON_MATCHING
+void updateRaceCameraFollowPlayer(void) {
+    RacePlayerSlot *player;
+    s32 x;
+    s32 y;
+    s32 z;
+    s32 dx;
+    s32 dy;
+    s32 dz;
+    s32 xzDist;
+    s32 dist;
+    s32 targetDistance;
+    s32 target;
+    s32 diff;
+    s32 groundY;
+    s32 old;
+
+    if (gRaceUpdatePaused == 0) {
+        D_801124A0->focus.x += (D_80122010[D_801124A0->playerIndex].value - D_801124A0->focus.x) >> 1;
+        D_801124A0->focus.y += (D_80122014[D_801124A0->playerIndex].value - D_801124A0->focus.y) >> 1;
+        D_801124A0->focus.z += (D_80122018[D_801124A0->playerIndex].value - D_801124A0->focus.z) >> 1;
+
+        x = D_801124A0->pos.x;
+        y = D_801124A0->pos.y;
+        z = D_801124A0->pos.z;
+
+        dx = D_801124A0->focus.x - x;
+        dy = D_801124A0->focus.y - y;
+        dz = D_801124A0->focus.z - z;
+
+        xzDist = integerSquareRoot64((s64) dx * dx + (s64) dz * dz);
+        if (xzDist == 0) {
+            xzDist = 1;
+            dz = 1;
+        }
+
+        if (xzDist < 0x400000) {
+            dx = ((s64) dx * 0x400000) / xzDist;
+            dz = ((s64) dz * 0x400000) / xzDist;
+            x = D_801124A0->focus.x - dx;
+            z = D_801124A0->focus.z - dz;
+        }
+
+        dist = integerSquareRoot64((s64) dy * dy + (s64) dx * dx + (s64) dz * dz);
+
+        targetDistance = 0x460000 - D_801124A0->distance;
+        if (targetDistance < dist) {
+            dx = ((s64) dx * targetDistance) / dist;
+            dy = ((s64) dy * targetDistance) / dist;
+            dz = ((s64) dz * targetDistance) / dist;
+            x = D_801124A0->focus.x - dx;
+            y = D_801124A0->focus.y - dy;
+            z = D_801124A0->focus.z - dz;
+        } else {
+            targetDistance = 0x458000 - D_801124A0->distance;
+            if (dist < targetDistance) {
+                dx = ((s64) dx * targetDistance) / dist;
+                dy = ((s64) dy * targetDistance) / dist;
+                dz = ((s64) dz * targetDistance) / dist;
+                x = D_801124A0->focus.x - dx;
+                y = D_801124A0->focus.y - dy;
+                z = D_801124A0->focus.z - dz;
+            }
+        }
+
+        player = &D_80121D80[D_801124A0->playerIndex];
+        if (!(player->state.flags2FC & 0x1000)) {
+            groundY =
+                getRaceCourseSurfaceHeight((s16) findRaceCourseSurfaceFromHint(player->state.surfaceHint, x, z), x, z) -
+                0x40000;
+            if (y < groundY) {
+                y = groundY;
+            }
+        }
+
+        old = D_801124A0->pos.x;
+        D_801124A0->pos.x = (old + x) - old;
+        old = D_801124A0->pos.y;
+        D_801124A0->pos.y = (old + y) - old;
+        old = D_801124A0->pos.z;
+        D_801124A0->pos.z = (old + z) - old;
+
+        target = 0x12C0000;
+        if (D_80121D80[D_801124A0->playerIndex].state.flags2FC & 0x800) {
+            target = 0;
+        }
+        diff = target - D_801124A0->unk28;
+        if (diff >= 0x96001) {
+            diff = 0x96000;
+        }
+        if (diff < 0) {
+            diff /= 6;
+        }
+        D_801124A0->unk28 += diff;
+
+        target = 0;
+        if (D_80121D80[D_801124A0->playerIndex].state.flags2FC & 0x800) {
+            target = 0x280000;
+        }
+        diff = target - D_801124A0->distance;
+        if (diff < -0x14000) {
+            diff = -0x14000;
+        }
+        if (diff > 0) {
+            diff /= 6;
+        }
+        D_801124A0->distance += diff;
+    }
+
+    D_801124A0->prevPos.x = D_80121D80[D_801124A0->playerIndex].state.pos.x;
+    D_801124A0->prevPos.y = D_80121D80[D_801124A0->playerIndex].state.pos.y;
+    D_801124A0->prevPos.z = D_80121D80[D_801124A0->playerIndex].state.pos.z;
+    updateRaceCameraAlternateLookAtTransform();
+}
+#endif
 
 void noopRaceCameraDebugUpdate(void) {
 }
