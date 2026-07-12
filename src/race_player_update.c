@@ -1046,7 +1046,7 @@ void updateRacePlayerAirborneLaunch(RaceInputPlayer *player) {
     player->posX += player->unk40.x;
     player->posY += player->unk40.y;
     player->posZ += player->unk40.z;
-    getRacePlayerSurfaceCue(player);
+    updateRacePlayerSurfaceCue(player);
     updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
         enqueueRacePlayerVoiceSound(player, 5);
@@ -1182,7 +1182,7 @@ void updateRacePlayerAirborneCruise(RaceInputPlayer *player) {
     }
 
     updateRacePlayerLocalVelocity(player, lean, rotation, player->unk274, player->unk278, player->unk27C);
-    surfaceCue = getRacePlayerSurfaceCue(player);
+    surfaceCue = updateRacePlayerSurfaceCue(player);
     if (!(player->stateFlags & 0x10)) {
         if (player->stateTimer < 0x46000) {
             surfaceCue = 0;
@@ -1308,7 +1308,7 @@ void updateRacePlayerAirborneCruise(RaceInputPlayer *player) {
         player->updateTimer = 0;
         setRaceMotionAnimation(player, 4);
     } else {
-        getRacePlayerSurfaceCue(player);
+        updateRacePlayerSurfaceCue(player);
     }
 
     player->posX += player->unk40.x;

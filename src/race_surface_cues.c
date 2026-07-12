@@ -2,38 +2,38 @@
 #include "asset_manager.h"
 #include "race_surface_cues.h"
 
-extern RaceSurfaceCue D_800DE590[];
-extern RaceSurfaceCue D_800DE5A0[];
-extern RaceSurfaceCue D_800DE5AC[];
-extern RaceSurfaceCue D_800DE5B4[];
-extern RaceSurfaceCue D_800DE5C0[];
-extern RaceSurfaceCue D_800DE5D0[];
-extern RaceSurfaceCue D_800DE5DC[];
-extern RaceSurfaceCue D_800DE5EC[];
-extern RaceSurfaceCue D_800DE5F4[];
-extern RaceSurfaceCue D_800DE5FC[];
-extern RaceSurfaceCue D_800DE60C[];
-extern RaceSurfaceCue D_800DE61C[];
-extern RaceSurfaceCue D_800DE628[];
-extern RaceSurfaceCue D_800DE630[];
-extern RaceSurfaceCue D_800DE640[];
-extern RaceSurfaceCue D_800DE684[];
-extern RaceSurfaceCue D_800DE698[];
-extern RaceSurfaceCue D_800DE6A0[];
-extern RaceSurfaceCue D_800DE6B0[];
-extern RaceSurfaceCue D_800DE6C8[];
-extern RaceSurfaceCue D_800DE6EC[];
-extern RaceSurfaceCue D_800DE6F8[];
-extern RaceSurfaceCue D_800DE708[];
-extern RaceSurfaceCue D_800DE718[];
-extern RaceSurfaceCue D_800DE724[];
-extern RaceSurfaceCue D_800DE768[];
+extern RaceSurfaceCue gRaceSurfaceCueSlashSequence0[];
+extern RaceSurfaceCue gRaceSurfaceCueSlashSequence1[];
+extern RaceSurfaceCue gRaceSurfaceCueSlashSequence2[];
+extern RaceSurfaceCue gRaceSurfaceCueSlashSequence3[];
+extern RaceSurfaceCue gRaceSurfaceCueNancySequence0[];
+extern RaceSurfaceCue gRaceSurfaceCueNancySequence1[];
+extern RaceSurfaceCue gRaceSurfaceCueNancySequence2[];
+extern RaceSurfaceCue gRaceSurfaceCueNancySequence3[];
+extern RaceSurfaceCue gRaceSurfaceCueNancySequence4[];
+extern RaceSurfaceCue gRaceSurfaceCueNancySequence5[];
+extern RaceSurfaceCue gRaceSurfaceCueJamSequence0[];
+extern RaceSurfaceCue gRaceSurfaceCueJamSequence1[];
+extern RaceSurfaceCue gRaceSurfaceCueJamSequence2[];
+extern RaceSurfaceCue gRaceSurfaceCueJamSequence3[];
+extern RaceSurfaceCue gRaceSurfaceCueJamSequence4[];
+extern RaceSurfaceCue gRaceSurfaceCueLindaSequence0[];
+extern RaceSurfaceCue gRaceSurfaceCueLindaSequence1[];
+extern RaceSurfaceCue gRaceSurfaceCueLindaSequence2[];
+extern RaceSurfaceCue gRaceSurfaceCueLindaSequence3[];
+extern RaceSurfaceCue gRaceSurfaceCueTommySequence0[];
+extern RaceSurfaceCue gRaceSurfaceCueTommySequence1[];
+extern RaceSurfaceCue gRaceSurfaceCueTommySequence2[];
+extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence0[];
+extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence1[];
+extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence2[];
+extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence3[];
 
-// matchRaceSurfaceCueSequence best match: 81.509% (base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_surface_cues/matchRaceSurfaceCueSequence.s")
+// advanceRaceSurfaceCueSequence best match: 81.509% (base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_surface_cues/advanceRaceSurfaceCueSequence.s")
 
 #ifdef NON_MATCHING
-s32 matchRaceSurfaceCueSequence(RaceSurfaceCue *cues, RaceInputPlayer *player, s16 cueIndex) {
+s32 advanceRaceSurfaceCueSequence(RaceSurfaceCue *cues, RaceInputPlayer *player, s16 cueIndex) {
     s16 state;
     s16 step;
     u32 surfaceType;
@@ -82,7 +82,7 @@ void resetRacePlayerSurfaceCueState(RaceInputPlayer *player) {
     player->surfaceCueStep[5] = 0;
 }
 
-s32 getRacePlayerSurfaceCue(RaceInputPlayer *player) {
+s32 updateRacePlayerSurfaceCue(RaceInputPlayer *player) {
     s32 value;
     s32 cue;
     s8 stickY;
@@ -125,117 +125,117 @@ s32 getRacePlayerSurfaceCue(RaceInputPlayer *player) {
 
     switch (player->characterId) {
     case 0:
-        value = matchRaceSurfaceCueSequence(D_800DE590, player, 0);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueSlashSequence0, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE5A0, player, 1);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueSlashSequence1, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE5AC, player, 2);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueSlashSequence2, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE5B4, player, 3);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueSlashSequence3, player, 3);
         if (value != 0) {
             cue = value;
         }
         break;
     case 1:
-        value = matchRaceSurfaceCueSequence(D_800DE5EC, player, 3);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueNancySequence3, player, 3);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE5C0, player, 0);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueNancySequence0, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE5D0, player, 1);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueNancySequence1, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE5DC, player, 2);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueNancySequence2, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE5F4, player, 4);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueNancySequence4, player, 4);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE5FC, player, 5);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueNancySequence5, player, 5);
         if (value != 0) {
             cue = value;
         }
         break;
     case 2:
-        value = matchRaceSurfaceCueSequence(D_800DE628, player, 2);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueJamSequence2, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE60C, player, 0);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueJamSequence0, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE61C, player, 1);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueJamSequence1, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE630, player, 3);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueJamSequence3, player, 3);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE640, player, 4);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueJamSequence4, player, 4);
         if (value != 0) {
             cue = value;
         }
         break;
     case 3:
-        value = matchRaceSurfaceCueSequence(D_800DE684, player, 0);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueLindaSequence0, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE698, player, 1);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueLindaSequence1, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE6A0, player, 2);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueLindaSequence2, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE6B0, player, 3);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueLindaSequence3, player, 3);
         if (value != 0) {
             cue = value;
         }
         break;
     case 4:
-        value = matchRaceSurfaceCueSequence(D_800DE6C8, player, 0);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueTommySequence0, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE6EC, player, 1);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueTommySequence1, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE6F8, player, 2);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueTommySequence2, player, 2);
         if (value != 0) {
             cue = value;
         }
         break;
     case 5:
-        value = matchRaceSurfaceCueSequence(D_800DE708, player, 0);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueShinobinSequence0, player, 0);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE718, player, 1);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueShinobinSequence1, player, 1);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE724, player, 2);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueShinobinSequence2, player, 2);
         if (value != 0) {
             cue = value;
         }
-        value = matchRaceSurfaceCueSequence(D_800DE768, player, 3);
+        value = advanceRaceSurfaceCueSequence(gRaceSurfaceCueShinobinSequence3, player, 3);
         if (value != 0) {
             cue = value;
         }
