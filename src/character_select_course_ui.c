@@ -95,7 +95,7 @@ extern u8 D_80121D80[];
 extern CharacterSelectCoursePlayerRecord gFrameCounter;
 extern s32 gMenuFlowState;
 
-// drawCharacterSelectCourseListOptions best match: 95.048%
+// drawCharacterSelectCourseListOptions best match: 95.227% (nonmatchings/drawCharacterSelectCourseListOptions-2694253543240320626/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/drawCharacterSelectCourseListOptions.s")
 
 #ifdef NON_MATCHING
@@ -126,6 +126,8 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
             if (i == 0) {
                 if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
+                    do {
+                    } while (0);
                 }
                 drawMenuSprite(pos[12], pos[23], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x1C, 0x20, 0x20, 0, alpha);
             } else if (i == gCharacterSelectCourseExitOptionIndex) {
