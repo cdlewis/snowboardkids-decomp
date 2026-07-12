@@ -203,7 +203,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
     loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
     initCallbackTaskScheduler(0);
-    createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
+    createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
 
     if (gRaceSplitscreenMode == 1) {
         loadCompressedRomAsset(D_5CCD40, D_5D4280, 0x25);
@@ -318,7 +318,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
         loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
         loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
         initCallbackTaskScheduler(0);
-        createCallbackTask((void (*)(CallbackTask *))func_8001710C, 0, 0x5E);
+        createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
         gCurrentGameTask->fade = 0xFF;
     } else {
         gCurrentGameTask->fade = 0;

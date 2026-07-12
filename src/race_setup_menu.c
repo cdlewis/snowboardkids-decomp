@@ -40,16 +40,16 @@ extern s8 gCourseSelectModeSelection;
 extern CallbackTask *gActiveMenuTask;
 extern u16 gMenuInputRepeatTimers;
 extern s8 gHighestUnlockedCourse;
-extern RaceSetupMenuSubState D_8010AE00;
-extern s16 D_8010AE06;
+extern RaceSetupMenuSubState gRaceSetupMenuSubState;
+extern s16 gRaceSetupSaveStatusSelections;
 extern s16 D_8010AE08;
 extern s16 D_8010AE0A;
 extern s16 D_8010AE0C;
-extern s8 D_8010AE0E;
+extern s8 gRaceSetupSaveStatusTransitionStates;
 extern s8 D_8010AE0F;
 extern s8 D_8010AE10;
 extern s8 D_8010AE11;
-extern s16 D_8010AE12;
+extern s16 gRaceSetupSaveStatusNextSelections;
 extern s16 D_8010AE14;
 extern s16 D_8010AE16;
 extern s16 D_8010AE18;
@@ -100,14 +100,14 @@ void initRaceSetupMenu(void) {
     initCallbackTaskScheduler(0);
     gActiveMenuTask = createCallbackTask(initRaceSetupPlayerCountPrompt, 0, 0x64);
 
-    D_8010AE00.state = 0;
-    D_8010AE00.unk1 = 0;
-    D_8010AE00.unk2 = 0;
-    D_8010AE00.unk4 = 0;
+    gRaceSetupMenuSubState.state = 0;
+    gRaceSetupMenuSubState.unk1 = 0;
+    gRaceSetupMenuSubState.unk2 = 0;
+    gRaceSetupMenuSubState.unk4 = 0;
     gRumblePakConnectedByController = 0;
-    D_8010AE06 = 0;
-    D_8010AE0E = 0;
-    D_8010AE12 = 0;
+    gRaceSetupSaveStatusSelections = 0;
+    gRaceSetupSaveStatusTransitionStates = 0;
+    gRaceSetupSaveStatusNextSelections = 0;
     gCourseSelectSelectedCourseId = 0;
     D_800EC8B5 = 0;
     D_8010AE08 = 0;
@@ -145,10 +145,10 @@ void updateRaceSetupPlayerCountMenu(void) {
     s32 one;
 
     one = 1;
-    if ((D_8010AE00.state == one) && ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))) {
+    if ((gRaceSetupMenuSubState.state == one) && ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))) {
         enqueueSoundEffect((s16) (one & 0xFFFFFFFF), 0x32);
-        D_8010AE00.state = 2;
-        D_8010AE00.unk1 = 0;
+        gRaceSetupMenuSubState.state = 2;
+        gRaceSetupMenuSubState.unk1 = 0;
         one = 1;
     }
     if (gCurrentGameTask->timer == one) {
@@ -198,7 +198,7 @@ block_25:
             gMenuSelectionConfirmTimer = temp_v1 + 1;
         }
     }
-    if (D_8010AE00.state == 5) {
+    if (gRaceSetupMenuSubState.state == 5) {
         setCurrentGameTaskCallback(initRaceSetupSaveMenu, 0);
         gCurrentGameTask->fade = 0;
         gMenuSelectionConfirmTimer = 0;
@@ -227,14 +227,14 @@ extern u8 D_800EC9E4;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s32 D_8010ADE8;
-extern s16 D_8010AE38;
-extern s16 D_8010AE3A;
-extern s16 D_8010AE3C;
-extern s16 D_8010AE3E;
-extern s16 D_8010AE40;
-extern s16 D_8010AE42;
-extern s16 D_8010AE44;
-extern s16 D_8010AE46;
+extern s16 gRaceSetupSavePanelRect0X0;
+extern s16 gRaceSetupSavePanelRect0Y0;
+extern s16 gRaceSetupSavePanelRect0X1;
+extern s16 gRaceSetupSavePanelRect0Y1;
+extern s16 gRaceSetupSavePanelRect1X0;
+extern s16 gRaceSetupSavePanelRect1Y0;
+extern s16 gRaceSetupSavePanelRect1X1;
+extern s16 gRaceSetupSavePanelRect1Y1;
 extern u8 D_80121D80;
 
 void initRaceSetupSaveMenu(void) {
@@ -285,14 +285,14 @@ void initRaceSetupSaveMenu(void) {
     gMenuFlowState = 0;
     gRaceRumbleEnabled = 0;
 
-    D_8010AE38 = D_800B31B8;
-    D_8010AE40 = D_800B31BA;
-    D_8010AE3A = D_800B31BC;
-    D_8010AE42 = D_800B31BE;
-    D_8010AE3C = D_800B31C0;
-    D_8010AE44 = D_800B31C2;
-    D_8010AE3E = D_800B31C4;
-    D_8010AE46 = D_800B31C6;
+    gRaceSetupSavePanelRect0X0 = D_800B31B8;
+    gRaceSetupSavePanelRect1X0 = D_800B31BA;
+    gRaceSetupSavePanelRect0Y0 = D_800B31BC;
+    gRaceSetupSavePanelRect1Y0 = D_800B31BE;
+    gRaceSetupSavePanelRect0X1 = D_800B31C0;
+    gRaceSetupSavePanelRect1X1 = D_800B31C2;
+    gRaceSetupSavePanelRect0Y1 = D_800B31C4;
+    gRaceSetupSavePanelRect1Y1 = D_800B31C6;
 
     setCurrentGameTaskCallback(updateRaceSetupSaveMenu, 0);
     updateCallbackTasks();
@@ -360,7 +360,7 @@ extern CallbackTask *D_8010ADE4;
 extern CallbackTask *D_8010ADE8;
 extern RaceSetupPlayerState03798 D_80121D80[];
 
-#define D_8010AE00_03798 (*(RaceSetupSubState03798 *)&D_8010AE00)
+#define gRaceSetupSaveSubState (*(RaceSetupSubState03798 *)&gRaceSetupMenuSubState)
 #define gRumblePakConnectedByControllerArray_03798 (&gRumblePakConnectedByController)
 #define gPlayerInputPressedArray_03798 (&gPlayerInputPressed)
 
@@ -372,19 +372,19 @@ void updateRaceSetupSaveMenu(void) {
     s32 i;
     u8 *present;
 
-    if ((D_8010AE00_03798.unk4 == 1) && (D_8010AE00_03798.state == 5)) {
-        D_8010AE00_03798.state = 6;
+    if ((gRaceSetupSaveSubState.unk4 == 1) && (gRaceSetupSaveSubState.state == 5)) {
+        gRaceSetupSaveSubState.state = 6;
     }
 
-    if ((task == NULL) || (D_8010AE00_03798.unk4 != 0)) {
-        if ((D_8010AE00_03798.state >= 6) && (D_8010AE00_03798.state < 8)) {
-            if (D_8010AE00_03798.state == 6) {
+    if ((task == NULL) || (gRaceSetupSaveSubState.unk4 != 0)) {
+        if ((gRaceSetupSaveSubState.state >= 6) && (gRaceSetupSaveSubState.state < 8)) {
+            if (gRaceSetupSaveSubState.state == 6) {
                 s32 input = gPlayerInputPressedArray_03798[0];
                 if ((input & 0x8000) || (input & 0x1000)) {
                     enqueueSoundEffect(1, 0x32);
-                    D_8010AE00_03798.state = 7;
-                    D_8010AE00_03798.unk2 = 0xFF;
-                    D_8010AE00_03798.unk1 = 0;
+                    gRaceSetupSaveSubState.state = 7;
+                    gRaceSetupSaveSubState.unk2 = 0xFF;
+                    gRaceSetupSaveSubState.unk1 = 0;
                 }
             }
         } else {
@@ -403,7 +403,7 @@ void updateRaceSetupSaveMenu(void) {
                         s16 choiceValue;
                         s32 input;
 
-                        if ((transitionTask == NULL) || (D_8010AE00_03798.unkE[i] == 0)) {
+                        if ((transitionTask == NULL) || (gRaceSetupSaveSubState.unkE[i] == 0)) {
                             stateIndex = i * 2;
                             choice = &gMenuChoicePromptState[i];
                             choiceValue = *choice;
@@ -446,8 +446,8 @@ void updateRaceSetupSaveMenu(void) {
                                         *choice = 1;
                                     } else if (result == 3) {
                                         if (transitionTask != NULL) {
-                                            D_8010AE00_03798.unkE[i] = 2;
-                                            D_8010AE00_03798.unk12[i] = 0xD;
+                                            gRaceSetupSaveSubState.unkE[i] = 2;
+                                            gRaceSetupSaveSubState.unk12[i] = 0xD;
                                         } else {
                                             gControllerPakStatusCodes[i] = 0xD;
                                         }
@@ -463,15 +463,15 @@ void updateRaceSetupSaveMenu(void) {
                                     result = gControllerPakRetryCounts[i];
                                     if (result == 0) {
                                         if (transitionTask != NULL) {
-                                            D_8010AE00_03798.unkE[i] = 2;
-                                            D_8010AE00_03798.unk12[i] = 0xF;
+                                            gRaceSetupSaveSubState.unkE[i] = 2;
+                                            gRaceSetupSaveSubState.unk12[i] = 0xF;
                                         } else {
                                             gControllerPakStatusCodes[i] = 0xF;
                                         }
                                     } else if (result == 3) {
                                         if (transitionTask != NULL) {
-                                            D_8010AE00_03798.unkE[i] = 2;
-                                            D_8010AE00_03798.unk12[i] = 0xE;
+                                            gRaceSetupSaveSubState.unkE[i] = 2;
+                                            gRaceSetupSaveSubState.unk12[i] = 0xE;
                                         } else {
                                             gControllerPakStatusCodes[i] = 0xE;
                                         }
@@ -485,8 +485,8 @@ void updateRaceSetupSaveMenu(void) {
                                     if ((input & 0x8000) || (input & 0x1000)) {
                                         enqueueSoundEffect(1, 0x32);
                                         if (transitionTask != NULL) {
-                                            D_8010AE00_03798.unkE[i] = 2;
-                                            D_8010AE00_03798.unk12[i] = 0;
+                                            gRaceSetupSaveSubState.unkE[i] = 2;
+                                            gRaceSetupSaveSubState.unk12[i] = 0;
                                         } else {
                                             gControllerPakStatusCodes[i] = 0;
                                         }
@@ -524,22 +524,22 @@ void updateRaceSetupSaveMenu(void) {
                                                     RaceSetupSavePlayer03798 *save = &gGameSaveDataBuffer[i];
 
                                                     initRaceSetupPlayerSaveData(i);
-                                                    D_8010AE00_03798.unk6[i] = 5;
+                                                    gRaceSetupSaveSubState.unk6[i] = 5;
                                                     player->unkC = save->unk4;
                                                 } else if (state == 7) {
-                                                    D_8010AE00_03798.unk6[i] = 3;
+                                                    gRaceSetupSaveSubState.unk6[i] = 3;
                                                 } else {
-                                                    D_8010AE00_03798.unk6[i] = 4;
+                                                    gRaceSetupSaveSubState.unk6[i] = 4;
                                                 }
                                             } else {
                                                 if (state == 8) {
-                                                    D_8010AE00_03798.unk6[i] = 0x12;
+                                                    gRaceSetupSaveSubState.unk6[i] = 0x12;
                                                 } else if (state == 7) {
-                                                    D_8010AE00_03798.unk6[i] = 4;
+                                                    gRaceSetupSaveSubState.unk6[i] = 4;
                                                 } else {
                                                     RaceSetupSavePlayer03798 *save = &gGameSaveDataBuffer[i];
 
-                                                    D_8010AE00_03798.unk6[i] = 5;
+                                                    gRaceSetupSaveSubState.unk6[i] = 5;
                                                     initRaceSetupPlayerSaveData(i);
                                                     player->unkC = save->unk4;
                                                 }
@@ -571,14 +571,14 @@ void updateRaceSetupSaveMenu(void) {
                                         enqueueSoundEffect(1, 0x32);
                                         if (gControllerPakStatusCodes[i] == 0xE) {
                                             if (transitionTask != NULL) {
-                                                D_8010AE00_03798.unkE[i] = 2;
-                                                D_8010AE00_03798.unk12[i] = 0x11;
+                                                gRaceSetupSaveSubState.unkE[i] = 2;
+                                                gRaceSetupSaveSubState.unk12[i] = 0x11;
                                             } else {
                                                 gControllerPakStatusCodes[i] = 7;
                                             }
                                         } else if (transitionTask != NULL) {
-                                            D_8010AE00_03798.unkE[i] = 2;
-                                            D_8010AE00_03798.unk12[i] = 0;
+                                            gRaceSetupSaveSubState.unkE[i] = 2;
+                                            gRaceSetupSaveSubState.unk12[i] = 0;
                                         } else {
                                             gControllerPakStatusCodes[i] = 0;
                                         }
@@ -589,8 +589,8 @@ void updateRaceSetupSaveMenu(void) {
                                     input = gPlayerInputPressedArray_03798[i];
                                     if ((input & 0x8000) || (input & 0x1000)) {
                                         enqueueSoundEffect(1, 0x32);
-                                        D_8010AE00_03798.unkE[i] = 2;
-                                        D_8010AE00_03798.unk12[i] = 0;
+                                        gRaceSetupSaveSubState.unkE[i] = 2;
+                                        gRaceSetupSaveSubState.unk12[i] = 0;
                                     }
                                     break;
 
@@ -649,7 +649,7 @@ void updateRaceSetupSaveMenu(void) {
             gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
             gControllerPakRumbleCheckPromptTransition.targetScale = 2;
             if (gPlayerCount > 0) {
-                subState = &D_8010AE00_03798;
+                subState = &gRaceSetupSaveSubState;
                 save = gGameSaveDataBuffer;
                 end = &gGameSaveDataBuffer[gPlayerCount];
                 do {
@@ -669,7 +669,7 @@ void updateRaceSetupSaveMenu(void) {
     updateCallbackTasks();
 }
 
-#undef D_8010AE00_03798
+#undef gRaceSetupSaveSubState
 #undef gRumblePakConnectedByControllerArray_03798
 #undef gPlayerInputPressedArray_03798
 #endif
