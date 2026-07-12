@@ -235,7 +235,7 @@ void initMainMenuModePreviewRace(void) {
     configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, gMainMenuModePreviewRaceAspectRatio);
     gRacePlayerHudStatuses = 1;
     gFramebufferSwapDelay = 0;
-    initRaceCourseEffects();
+    initRaceCourseSceneTasks();
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
     gMenuFlowState = 1;
@@ -474,7 +474,7 @@ void initTrainingCourseRace(void) {
     configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
     gRacePlayerHudStatuses = 1;
     gFramebufferSwapDelay = 0;
-    initRaceCourseEffects();
+    initRaceCourseSceneTasks();
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
     gMenuFlowState = 1;

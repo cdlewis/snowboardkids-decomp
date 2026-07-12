@@ -3,6 +3,6 @@
 
 void loadRaceCourseAssets(void);
 void loadRaceCharacterAssets(void);
-void initRaceCourseEffects(void);
+void initRaceCourseSceneTasks(void);
 
 #endif

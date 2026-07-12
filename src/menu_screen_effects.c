@@ -126,8 +126,8 @@ extern u32 gIdentityMatrix[];
 extern s16 gMenuFadeAlpha;
 extern u32 gMenuRenderModeResetDl[];
 extern s16 gMenuAsciiFontAssetHandle;
-extern s16 D_80112140;
-extern s16 D_80112142;
+extern s16 gRaceCourseModelAssetHandle;
+extern s16 gRaceCourseTextureAssetHandle;
 extern s16 D_8011214C;
 extern s16 D_80112154;
 extern s16 gRaceCommonSpriteAssetHandle;
@@ -253,8 +253,8 @@ void drawRaceSetupBackdropModels(MenuScreenEffectActor *arg0) {
     if (gCurrentViewportIndex == 0) {
         gDPPipeSync(gRegionAllocPtr++);
 
-        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112140));
-        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112142));
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
 
         gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
@@ -797,8 +797,8 @@ void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *arg0) {
         if (matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
 
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112140));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112142));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
 
             gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
@@ -811,8 +811,8 @@ void drawMainMenuStaticBoardModel(void *arg0) {
     if (gCurrentViewportIndex == 0) {
         gDPPipeSync(gRegionAllocPtr++);
 
-        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112140));
-        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112142));
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
 
         gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 

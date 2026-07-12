@@ -164,7 +164,7 @@ void initTitleDemoRaceIntro(void) {
     gFramebufferSwapDelay = 0;
     initRacePlayers();
     func_80078430();
-    initRaceCourseEffects();
+    initRaceCourseSceneTasks();
     setCurrentGameTaskCallback(waitForTitleDemoRaceIntroStart, 0);
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;

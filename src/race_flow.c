@@ -1583,7 +1583,7 @@ void initRaceGhostReplayFlow(void) {
     resetSecondaryRng();
     initRacePlayers();
     func_80078430();
-    initRaceCourseEffects();
+    initRaceCourseSceneTasks();
     gMenuFadeAlpha = 0xFF;
     updateRelocatableHeap();
     requestMusicSequenceBank(0);

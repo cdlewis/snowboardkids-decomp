@@ -191,7 +191,7 @@ void initMainMenuDemoRaceIntro(void) {
     if (gRaceSplitscreenMode == 0) {
         gPlayerCount = 4;
     }
-    initRaceCourseEffects();
+    initRaceCourseSceneTasks();
     setCurrentGameTaskCallback(waitForMainMenuDemoRaceIntroStart, 0);
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
