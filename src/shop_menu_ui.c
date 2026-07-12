@@ -215,7 +215,7 @@ extern u8 D_8010AF73;
 extern s16 D_8010AF76;
 extern s16 D_8011217A;
 extern ShopMenuState D_80121D80;
-extern s32 D_80121D8C;
+extern s32 gPlayer1Money;
 extern s32 gMenuFlowState;
 extern MainMenuState *gCurrentGameTask;
 extern s16 D_800EC9D0;
@@ -902,7 +902,7 @@ void func_8002E250(ShopMenuWidgetActor *arg0) {
 
     drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
     drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(D_8011217A), 0x11, 0x20, 0x20, 0, arg0->sprite.index, 0);
-    sprintf(sp40, D_800E0F60, D_80121D8C);
+    sprintf(sp40, D_800E0F60, gPlayer1Money);
     drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.index);
 }
 
@@ -1105,7 +1105,7 @@ void func_8002E810(ShopMenuWidgetActor *arg0) {
 
         drawMenuPanelBackdrop((s16)(arg0->x + sp48), arg0->y, sp4A, 0x2000);
 
-        if ((u32)D_80121D8C < (u32)gCourseUnlockPrices[D_80121D86]) {
+        if ((u32)gPlayer1Money < (u32)gCourseUnlockPrices[D_80121D86]) {
             palette = 1;
         } else {
             palette = 0;

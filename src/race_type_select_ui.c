@@ -55,7 +55,7 @@ extern s32 gActiveMenuTask;
 extern u8 gMenuExitSelection;
 extern u8 gRaceTypeSelection;
 extern u8 gMenuTransitionState;
-extern s32 D_80121D8C;
+extern s32 gPlayer1Money;
 extern s32 gMenuFlowState;
 extern void *gMenuRenderCallbackList;
 
@@ -860,7 +860,7 @@ void drawRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
     if (gRaceTypeSelection != 3) {
         drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
         drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
-        sprintf(sp40, gRaceTypeSelectEntryFeeFormat, D_80121D8C);
+        sprintf(sp40, gRaceTypeSelectEntryFeeFormat, gPlayer1Money);
         drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
     }
 }

@@ -1815,6 +1815,7 @@ gTrainingCourseLesson = 0x80121B5A; // size:0x1
 gMainMenuModeSelection = 0x80121B5B; // size:0x1
 gRaceTypeSelection = 0x80121B5E; // size:0x1
 gMenuTransitionState = 0x80121D88; // size:0x4
+gPlayer1Money = 0x80121D8C; // size:0x4
 gNextFramebufferRenderTaskIndex = 0x80123752; // type:u8
 gFramebufferRenderTaskStatuses = 0x8012496E; // size:0x2BA
 gFramebufferRenderTaskStatus1 = 0x8013CF8E; // size:0x2BA

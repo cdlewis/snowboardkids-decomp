@@ -40,7 +40,7 @@ extern u8 D_800B5A14[];
 #ifdef NON_MATCHING
 extern u8 D_800E0A80[];
 extern u8 D_800E0A84[];
-extern s32 D_80121D8C;
+extern s32 gPlayer1Money;
 #endif
 extern MenuIntroActor *gActiveMenuTask;
 extern TitleMenuWidgetItemView *D_8010ADE0;
@@ -669,7 +669,7 @@ void func_80015CBC(TitleMenuWidgetItemView *arg0) {
         sprintf(text, D_800E0A80, next);
         drawMenuAsciiText((s16)(item->x + 0x32), (s16)(item->y + 2), text, 0, alpha);
         if (alpha == 0x100) {
-            sprintf(text, D_800E0A84, *(s32 *)((u8 *)&D_80121D8C + (i * RACE_PLAYER_STATE_SIZE)));
+            sprintf(text, D_800E0A84, *(s32 *)((u8 *)&gPlayer1Money + (i * RACE_PLAYER_STATE_SIZE)));
             drawMenuAsciiText((s16)(item->x + 0x44), (s16)(item->y + 0x1B), text, 0, alpha);
         } else {
             drawMenuSpriteWithAlpha((s16)(item->x + 2), (s16)(item->y + 0x14), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 0x90, 0x20, 0x20, 0, 0xF0, 0);
