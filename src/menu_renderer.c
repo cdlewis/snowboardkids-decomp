@@ -495,16 +495,18 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
 }
 #endif
 
-// drawMenuSpriteWithPaletteScale best match: 76.801% (nonmatchings/func_80010074-2225551288923588688/base_7.c)
+// drawMenuSpriteWithPaletteScale best match: 77.583% (nonmatchings/drawMenuSpriteWithPaletteScale-5802343343535905907/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSpriteWithPaletteScale.s")
 
 #ifdef NON_MATCHING
 void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s32 alpha) {
     FontTexture *texture;
+    u8 *textureBase;
     u8 *paletteBase;
     u16 *srcPalette;
     u16 *palette;
     u16 color;
+    u16 alphaScale;
     s32 i;
     s32 left;
     s32 top;
@@ -520,7 +522,9 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s
     s32 green;
     s32 blue;
 
-    texture = &asset->textures[index];
+    textureBase = (u8 *)asset + (index * sizeof(FontTexture));
+    texture = (FontTexture *)(textureBase + 8);
+    alphaScale = alpha;
     paletteBase = (u8 *)asset + 8 + (asset->header.entryCount * sizeof(FontTexture));
     left = x + gMenuViewportCenterX;
     top = y + gMenuViewportCenterY;
@@ -559,10 +563,10 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s
                 color = srcPalette[i];
                 palette[i] = color;
                 if (color & 1) {
-                    red = ((color >> 11) & 0x1F) * (u16)alpha;
-                    green = ((color >> 6) & 0x1F) * (u16)alpha;
-                    blue = ((color >> 1) & 0x1F) * (u16)alpha;
-                    palette[i] = ((red >> 8) << 11) | ((green >> 8) << 6) | ((blue >> 8) << 1) | 1;
+                    red = (((color >> 11) & 0x1F) * alphaScale) / 256;
+                    green = (((color >> 6) & 0x1F) * alphaScale) / 256;
+                    blue = (((color >> 1) & 0x1F) * alphaScale) / 256;
+                    palette[i] = (red << 11) | (green << 6) | (blue << 1) | 1;
                 }
             }
 
