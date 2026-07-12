@@ -86,7 +86,7 @@ struct ControllerPakRaceRecordSaveActor {
     } state;
 };
 
-// drawControllerPakRaceRecordSaveScorePanel best match: 99.235% (nonmatchings/drawControllerPakRaceRecordSaveScorePanel-6688367443449623229/base_5.c)
+// drawControllerPakRaceRecordSaveScorePanel best match: 99.423% (nonmatchings/drawControllerPakRaceRecordSaveScorePanel-8331816093655448999/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_race_record_save_ui/drawControllerPakRaceRecordSaveScorePanel.s")
 
 #ifdef NON_MATCHING
@@ -126,18 +126,18 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
     if (count > 0) {
         xOffset = 0;
         do {
-            next = 1;
-            next = i + next;
+            xOffset = 1;
+            xOffset = i + xOffset;
             alpha = 0x100;
-            if (gGameSaveDataBuffer.iconCount < next) {
+            if (gGameSaveDataBuffer.iconCount < xOffset) {
                 alpha = 0x70;
             }
 
-            drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x11),
+            drawMenuSpriteWithAlpha((s16)(arg0->x + next + 4), (s16)(arg0->y + 0x11),
                           getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0x19, 0x20, 0x20, 0, alpha, 9 - i);
-            i = next;
-            xOffset += 0x10;
-        } while (next != count);
+            i = xOffset;
+            next += 0x10;
+        } while (xOffset != count);
         i = 0;
     }
 
