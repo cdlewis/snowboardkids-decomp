@@ -323,7 +323,7 @@ void updateRacePlayerFinalLapStatus(RaceInputPlayer *player) {
     }
 }
 
-// resolveRacePlayerBodyCollisions best match: 96.174% (nonmatchings/resolveRacePlayerBodyCollisions-2225551288923588688/base_5.c)
+// resolveRacePlayerBodyCollisions best match: 99.913% (nonmatchings/resolveRacePlayerBodyCollisions-8331816093655448999/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/resolveRacePlayerBodyCollisions.s")
 
 #ifdef NON_MATCHING
@@ -332,7 +332,6 @@ void resolveRacePlayerBodyCollisions(void) {
     RaceInputPlayer *playerB;
     s32 i;
     s32 j;
-    s32 nextI;
     s32 temp;
     s32 xDiff;
     s32 yLimit;
@@ -343,10 +342,8 @@ void resolveRacePlayerBodyCollisions(void) {
     s32 pushX;
     s32 pushZ;
 
-    i = 0;
-    do {
+    for (i = 0; i != 3; i++) {
         j = i + 1;
-        nextI = j;
         if (j < 4) {
             playerA = &D_80121D80[i];
             do {
@@ -364,8 +361,8 @@ void resolveRacePlayerBodyCollisions(void) {
                         }
 
                         if (temp <= yLimit) {
-                            xDiff = playerA->posX - playerB->posX;
                             radius = playerB->unk280 + playerA->unk280;
+                            xDiff = playerA->posX - playerB->posX;
                             if (xDiff < 0) {
                                 xDiff = -xDiff;
                             }
@@ -406,8 +403,7 @@ void resolveRacePlayerBodyCollisions(void) {
                 j++;
             } while (j != 4);
         }
-        i = nextI;
-    } while (i != 3);
+    }
 }
 #endif
 
