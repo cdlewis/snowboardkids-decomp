@@ -2113,7 +2113,7 @@ s32 startSoundPlayerState(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3
     return arg0->id;
 }
 
-// initAudioSynthesizer best match: 82.529% (nonmatchings/initAudioSynthesizer-4061930211835852828/base_5.c)
+// initAudioSynthesizer best match: 84.741% (nonmatchings/initAudioSynthesizer-2694253543240320626/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/initAudioSynthesizer.s")
 
 #ifdef NON_MATCHING
@@ -2134,7 +2134,7 @@ void initAudioSynthesizer(void *arg0, ALSynConfig *arg1, s32 arg2, s32 *arg3, s3
     temp_fv0 = ((f32)(u32)arg3[1] * (f32)arg1->outputRate) / (f32)arg6;
     arg6 = (s32)temp_fv0;
     gTargetAudioTaskOutputLen = arg6;
-    if ((f32)arg6 < temp_fv0) {
+    if ((f32)(u32)arg6 < temp_fv0) {
         arg6++;
         gTargetAudioTaskOutputLen = arg6;
     }
