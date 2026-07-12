@@ -1,6 +1,6 @@
 #include "common.h"
 #include "race_camera.h"
-#include "race_motion_debug_viewer.h"
+#include "race_motion_animation_viewer.h"
 #include "race_motion.h"
 #include "race_position_ui.h"
 
@@ -27,9 +27,9 @@ typedef struct {
     /* 0x300 */ s16 animationLoaded;
     /* 0x302 */ u8 pad302[0x150];
     /* 0x452 */ s16 animationIndex;
-} RaceMotionDebugViewerState;
+} RaceMotionAnimationViewerState;
 
-extern RaceMotionDebugViewerState D_80121D80;
+extern RaceMotionAnimationViewerState D_80121D80;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
 extern void *gMenuForegroundRenderCallbackList;
@@ -38,16 +38,16 @@ extern void sprintf(char *, const char *, ...);
 extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
 extern void addRenderCallback(void *, void *, void *);
 
-#define gRaceMotionDebugViewerState D_80121D80
+#define gRaceMotionAnimationViewerState D_80121D80
 
-const char gRaceMotionDebugViewerMotionNumberFormat[] = "MOTION NO %3.3i";
+const char gRaceMotionAnimationViewerMotionNumberFormat[] = "MOTION NO %3.3i";
 
-void initRaceMotionDebugViewer(void) {
-    RaceMotionDebugViewerState *state;
+void initRaceMotionAnimationViewer(void) {
+    RaceMotionAnimationViewerState *state;
     s16 temp_v0;
 
     setRaceCameraMode(0, 2);
-    state = &gRaceMotionDebugViewerState;
+    state = &gRaceMotionAnimationViewerState;
     state->frame = 0;
     temp_v0 = state->frame;
     state->pos.x = 0;
@@ -63,47 +63,47 @@ void initRaceMotionDebugViewer(void) {
     initRaceMotionModelParts((RaceMotionInitState *)state);
 }
 
-void drawRaceMotionDebugViewerMotionNumber(s32 arg0) {
+void drawRaceMotionAnimationViewerMotionNumber(s32 arg0) {
     char buf[0x64];
 
-    sprintf(buf, gRaceMotionDebugViewerMotionNumberFormat, gRaceMotionDebugViewerState.animationIndex);
+    sprintf(buf, gRaceMotionAnimationViewerMotionNumberFormat, gRaceMotionAnimationViewerState.animationIndex);
     drawMenuAsciiTextDefaultScale(0x28, 0x28, buf, 1);
 }
 
-void updateRaceMotionDebugViewer(void) {
+void updateRaceMotionAnimationViewer(void) {
     s32 buttons;
 
-    if (gRaceMotionDebugViewerState.animationLoaded == 0) {
-        gRaceMotionDebugViewerState.animationLoaded = 1;
-        setRaceMotionAnimation((RaceMotionState *)&gRaceMotionDebugViewerState,
-                               gRaceMotionDebugViewerState.animationIndex);
-        stepRaceMotionLoopingAnimation((RaceMotionState *)&gRaceMotionDebugViewerState);
+    if (gRaceMotionAnimationViewerState.animationLoaded == 0) {
+        gRaceMotionAnimationViewerState.animationLoaded = 1;
+        setRaceMotionAnimation((RaceMotionState *)&gRaceMotionAnimationViewerState,
+                               gRaceMotionAnimationViewerState.animationIndex);
+        stepRaceMotionLoopingAnimation((RaceMotionState *)&gRaceMotionAnimationViewerState);
     } else {
         buttons = gPlayerInputPressed;
         if (buttons & 0x2000) {
-            if (gRaceMotionDebugViewerState.modelFlags != 0) {
-                gRaceMotionDebugViewerState.modelFlags = 0;
+            if (gRaceMotionAnimationViewerState.modelFlags != 0) {
+                gRaceMotionAnimationViewerState.modelFlags = 0;
             } else {
-                gRaceMotionDebugViewerState.modelFlags = 0x400;
+                gRaceMotionAnimationViewerState.modelFlags = 0x400;
             }
         }
-        if ((buttons & 8) && (gRaceMotionDebugViewerState.animationIndex != 0)) {
-            gRaceMotionDebugViewerState.animationIndex--;
-            gRaceMotionDebugViewerState.animationLoaded = 0;
+        if ((buttons & 8) && (gRaceMotionAnimationViewerState.animationIndex != 0)) {
+            gRaceMotionAnimationViewerState.animationIndex--;
+            gRaceMotionAnimationViewerState.animationLoaded = 0;
         }
         if (buttons & 4) {
-            gRaceMotionDebugViewerState.animationLoaded = 0;
-            gRaceMotionDebugViewerState.animationIndex++;
+            gRaceMotionAnimationViewerState.animationLoaded = 0;
+            gRaceMotionAnimationViewerState.animationIndex++;
         }
         if (gPlayerInputHeld & 2) {
-            stepRaceMotionLoopingAnimation((RaceMotionState *)&gRaceMotionDebugViewerState);
+            stepRaceMotionLoopingAnimation((RaceMotionState *)&gRaceMotionAnimationViewerState);
             buttons = gPlayerInputPressed;
         }
         if (buttons & 1) {
-            stepRaceMotionLoopingAnimation((RaceMotionState *)&gRaceMotionDebugViewerState);
+            stepRaceMotionLoopingAnimation((RaceMotionState *)&gRaceMotionAnimationViewerState);
         }
     }
     addRenderCallback(&gModelRenderCallbackList, drawRacePositionUiPlayerModel,
-                      (RacePositionUiPlayer *)&gRaceMotionDebugViewerState);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, drawRaceMotionDebugViewerMotionNumber, NULL);
+                      (RacePositionUiPlayer *)&gRaceMotionAnimationViewerState);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, drawRaceMotionAnimationViewerMotionNumber, NULL);
 }
