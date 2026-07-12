@@ -196,7 +196,7 @@ void applyRacePlayerTuning(RaceInputPlayer *arg0) {
 }
 #endif
 
-// initRacePlayer best match: 82.068% (base_1.c)
+// initRacePlayer best match: 83.754% (nonmatchings/initRacePlayer-2694253543240320626/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/initRacePlayer.s")
 
 #ifdef NON_MATCHING
@@ -209,7 +209,7 @@ void initRacePlayer(RaceInputPlayer *player) {
     char *clearPtr;
     s32 groundY;
 
-    size = ((s32)player * 0) + 0x5F0;
+    size = ((s32)player - (s32)player) + 0x5F0;
     i = 0;
     pos = &player->pos;
     if (size != 0) {
@@ -241,9 +241,7 @@ void initRacePlayer(RaceInputPlayer *player) {
     }
     player->posZ = -0x200000;
     unk34 = &player->unk34;
-    unk34->x = pos->x;
-    unk34->y = pos->y;
-    unk34->z = pos->z;
+    *unk34 = *pos;
     player->unk60 = 0x40000;
     player->unk280 = 0x80000;
     player->unk284 = 0xE0000;
@@ -400,9 +398,7 @@ void initRacePlayer(RaceInputPlayer *player) {
     if (gRaceDemoPlaybackEnabled == 0) {
         player->posY = groundY + 0x40000;
     }
-    unk34->x = pos->x;
-    unk34->y = pos->y;
-    unk34->z = pos->z;
+    *unk34 = *pos;
     player->randomIndex = randomNextMain();
     setRaceCameraMode(player->playerIndexU16, 1);
     if (gRaceDemoPlaybackEnabled == 0) {
