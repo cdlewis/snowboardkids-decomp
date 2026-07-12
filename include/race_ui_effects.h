@@ -156,10 +156,14 @@ void func_8005ECA8(struct RaceUiSparkleActor *arg0);
 void func_8005EFFC(struct RaceUiSparkleActor *arg0);
 void func_8005F174(struct RaceUiSparkleActor *arg0);
 void spawnRacePlayerSparkleEffect(s16 arg0);
-void func_8005F2DC(struct RaceUiSnowboardTrailActor *arg0);
-void func_8005F448(struct RaceUiSnowboardTrailActor *arg0);
-void func_8005F56C(void *arg0);
-void func_8005F5C8(struct RaceUiSnowboardTrailPlayer *player);
+#define renderRaceUiSnowboardTrailEffect func_8005F2DC
+#define updateRaceUiSnowboardTrailEffect func_8005F448
+#define initRaceUiSnowboardTrailEffect func_8005F56C
+#define spawnRaceUiSnowboardTrailEffect func_8005F5C8
+void renderRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailActor *arg0);
+void updateRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailActor *arg0);
+void initRaceUiSnowboardTrailEffect(void *arg0);
+void spawnRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailPlayer *player);
 void func_8005F6A4(struct RaceUiRankTrailActor *arg0);
 void func_8005F828(struct RaceUiRankTrailActor *arg0);
 void initRaceUiItemStealTrailEffect(struct RaceUiRankTrailActor *arg0);

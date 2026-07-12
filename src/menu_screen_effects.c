@@ -105,7 +105,7 @@ extern void *gMenuRenderCallbackList;
 extern u8 gMenuForegroundRenderCallbackList[];
 extern u8 D_80124878[];
 extern u8 gRaceObjectRenderCallbackList[];
-extern u8 D_801248BC;
+extern u8 gRaceModelEffectRenderCallbackList;
 extern u8 gEffectRenderCallbackList[];
 extern u8 D_801248F8[];
 extern s16 raceSetupCharacterFocusSoundIds[];
@@ -442,7 +442,7 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     arg0->unk1C.word += player->pos28.y;
     arg0->unk20.word += player->pos28.z;
 
-    addRenderCallback(&D_801248BC, drawRaceStartPlayerEffectSprite, (s32)arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, drawRaceStartPlayerEffectSprite, (s32)arg0);
 }
 
 void waitForRaceStartPlayerEffect(MenuScreenEffectActor *arg0) {
