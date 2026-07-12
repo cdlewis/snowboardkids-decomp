@@ -255,7 +255,7 @@ void initMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     setCallbackTaskCallback(arg0, updateMainMenuModeSelectGrid);
 }
 
-// drawMainMenuModeDescriptionPanel best match: 90.948%
+// drawMainMenuModeDescriptionPanel best match: 91.534%
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/drawMainMenuModeDescriptionPanel.s")
 
 #ifdef NON_MATCHING
@@ -299,10 +299,11 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
         s32 lineX;
         u16 lineY;
         s32 color;
+        u16 *text;
 
         glyphText[1] = 0xFFFF;
-        visibleIndex = 0;
         streamIndex = 0;
+        visibleIndex = 0;
         lineX = 0;
         i = 7;
         lineY = 0;
@@ -341,27 +342,22 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
                 break;
             }
         }
+        visibleIndex = 0;
 
         if ((arg0->selectionState != 0) && (gMainMenuSelectionResult == 0)) {
             drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48),
                           getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (gFrameCounter >> 4) & 1, 0x20, 0x20, 0,
                           0);
         }
-    }
 
-    {
-        s32 count;
-        u16 *text;
-
-        count = 0;
         text = mainMenuModeDescriptionTitles[gMainMenuModeSelection];
         if (mainMenuModeDescriptionTitles[gMainMenuModeSelection][0] != 0xFFFF) {
             do {
-                count++;
-            } while (text[count] != 0xFFFF);
+                visibleIndex++;
+            } while (text[visibleIndex] != 0xFFFF);
         }
 
-        drawMenuColoredGlyphScript((s16)(-((count * 0x10) / 2)), (s16)((-0x48) - arg0->y),
+        drawMenuColoredGlyphScript((s16)(-((visibleIndex * 0x10) / 2)), (s16)((-0x48) - arg0->y),
                       (u8 *)mainMenuModeDescriptionTitles[gMainMenuModeSelection], 0, 0x100, 4, 0x29);
     }
 
