@@ -814,7 +814,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
 // updateCourseSelectCourseIconList best match: 78.897% (nonmatchings/updateCourseSelectCourseIconList-7273315160691878794/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectCourseIconList.s")
 
-// initCourseSelectCourseIconList best match: 62.914% (nonmatchings/initCourseSelectCourseIconList-7273315160691878794/base_1.c)
+// initCourseSelectCourseIconList best match: 65.621% (nonmatchings/initCourseSelectCourseIconList-3357475854818838508/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/initCourseSelectCourseIconList.s")
 
 #ifdef NON_MATCHING
