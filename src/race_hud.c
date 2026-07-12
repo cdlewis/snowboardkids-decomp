@@ -860,7 +860,7 @@ void decrementRaceChallengeTimeLimit(void) {
     }
 }
 
-// drawRaceCourseProgressMeter best match: 50.818% at nonmatchings/drawRaceCourseProgressMeter-2225551288923588688/base_3.c.
+// drawRaceCourseProgressMeter best match: 78.938% at nonmatchings/drawRaceCourseProgressMeter-5802343343535905907/base_4.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawRaceCourseProgressMeter.s")
 
 #ifdef NON_MATCHING
@@ -877,6 +877,7 @@ void drawRaceCourseProgressMeter(s32 arg0) {
     RaceTimerUiPlayer *player;
     s16 x;
     u8 iconGroup;
+    s32 spriteBase;
 
     order[0] = 0;
     order[1] = 1;
@@ -939,8 +940,8 @@ sort_next:
 
     drawAssetTableSprite((s16)(xBase + 4), (s16)(yBase + 4), getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x50);
 
-    slot = &order[3];
-    do {
+    for (index = 3; index >= 0; index--) {
+        slot = &order[index];
         player = &D_80121D80[*slot];
         x = xBase - 8;
 
@@ -958,34 +959,36 @@ sort_next:
 
         if (player->flashFrame != 0) {
             if (player->unk2D8 != 0) {
+                spriteBase = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
                 player = &D_80121D80[*slot];
                 iconGroup = player->iconGroup;
                 drawAssetTableSpriteWithExplicitPalette(x, (s16)(player->raceProgress + yBase),
-                              getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                              spriteBase,
                               gRaceProgressMeterIconTiles[player->flashFrame + (iconGroup * 6)],
                               gRaceProgressMeterIconPalettes[iconGroup]);
             } else {
+                spriteBase = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
                 player = &D_80121D80[*slot];
                 drawAssetTableSprite(x, (s16)(player->raceProgress + yBase),
-                              getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                              spriteBase,
                               gRaceProgressMeterIconTiles[player->flashFrame + (player->iconGroup * 6)]);
             }
         } else if (player->unk2D8 != 0) {
+            spriteBase = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
             player = &D_80121D80[*slot];
             iconGroup = player->iconGroup;
             drawAssetTableSpriteWithExplicitPalette(xBase, (s16)(player->raceProgress + yBase),
-                          getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                          spriteBase,
                           gRaceProgressMeterIconTiles[player->flashFrame + (iconGroup * 6)],
                           gRaceProgressMeterIconPalettes[iconGroup]);
         } else {
+            spriteBase = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
             player = &D_80121D80[*slot];
             drawAssetTableSprite(xBase, (s16)(player->raceProgress + yBase),
-                          getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                          spriteBase,
                           gRaceProgressMeterIconTiles[player->flashFrame + (player->iconGroup * 6)]);
         }
-
-        slot--;
-    } while ((u32)slot >= (u32)&order[0]);
+    }
 }
 #endif
 
