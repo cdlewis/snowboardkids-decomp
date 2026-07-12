@@ -245,7 +245,55 @@ void updateFallingMenuSnowflakeSway(MenuScreenEffectActor *arg0) {
     addRenderCallback(gRaceOverlayRenderCallbackList, drawFallingMenuSnowflake, (s32)arg0);
 }
 
+// initFallingMenuSnowflake best match: 97.480% at nonmatchings/initFallingMenuSnowflake-5802343343535905907/base_1.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_screen_effects/initFallingMenuSnowflake.s")
+
+#ifdef NON_MATCHING
+void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
+    s32 temp_v1;
+
+    temp_v1 = randomNextMain() & 1;
+    switch (temp_v1) {
+    case 0:
+        arg0->unk18.half.hi = (randomNextMain() - 0x80) << 4;
+        arg0->unk18.half.lo = -0x780;
+        arg0->unk1C.half.lo = randomNextMain() & 0xF;
+        arg0->unk24.half.hi = randomNextMain() * 0x10;
+        if (randomNextMain() & 1) {
+            arg0->timer = 0x20;
+            arg0->unk20.half.lo = (randomNextMain() & 7) + 0x40;
+        } else {
+            arg0->timer = 0x1B;
+            arg0->unk20.half.lo = (randomNextMain() & 7) + 0x20;
+        }
+        arg0->unk2A = randomNextMain() % 5;
+        setCallbackTaskCallback(arg0, updateFallingMenuSnowflakeSway);
+        return;
+    case 1:
+        arg0->unk18.half.hi = (randomNextMain() - 0x80) << 4;
+        arg0->unk18.half.lo = -0x780;
+        arg0->unk1C.half.lo = (randomNextMain() & 0x1F) - 0xF;
+        arg0->unk24.half.hi = randomNextMain() * 0x10;
+        if (randomNextMain() & 1) {
+            arg0->timer = 0x20;
+            arg0->unk20.half.lo = (randomNextMain() & 7) + 0x3C;
+        } else {
+            arg0->timer = 0x1B;
+            arg0->unk20.half.lo = (randomNextMain() & 7) + 0x22;
+        }
+        arg0->unk2A = randomNextMain() % 5;
+        arg0->unk24.half.hi = (randomNextMain() & 1) - 1;
+        if (arg0->unk24.half.hi > 0) {
+            arg0->unk20.half.hi = (randomNextMain() * 8) & 0xF;
+        } else {
+            arg0->unk20.half.hi = (randomNextMain() * -8) & 0xF;
+        }
+        arg0->unk24.half.lo = randomNextMain() & 0xF;
+        setCallbackTaskCallback(arg0, updateFallingMenuSnowflakeDrift);
+        return;
+    }
+}
+#endif
 
 void drawRaceSetupBackdropModels(MenuScreenEffectActor *arg0) {
     register MenuScreenEffectActor *actor = arg0;
