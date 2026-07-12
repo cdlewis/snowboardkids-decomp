@@ -5302,7 +5302,7 @@ void updateRacePlayerPostUpdate(RaceInputPlayer *player) {
     }
     updateRacePlayerFinalLapStatus(player);
     resolveRacePlayerCollisionVolumes(player);
-    updateRaceRumble(player);
+    updateRacePlayerRumble(player);
 }
 
 void updateRacePlayerPostUpdateNoop(void) {
