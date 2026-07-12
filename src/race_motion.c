@@ -2,7 +2,7 @@
 #include "relocatable_heap.h"
 #include "fixed_point_math.h"
 #include "race_motion.h"
-#include "race_position.h"
+#include "race_player_position.h"
 
 typedef struct RaceMotionCoord {
     s16 x;
@@ -892,7 +892,7 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
         coord = &gRaceCourseSurfaceCoords[((RaceMotionSurface *)((s32)gRaceCourseSurfaces + nextKeyframeOffset))->positionIndex];
         deltaZ = *arg4 - (coord->z << 0x11);
         deltaX = *arg3 - (coord->x << 0x11);
-        distance = getSmoothedRacePlayerPathOffset(arg5, pathIndex, arg6);
+        distance = updateRacePlayerSmoothedPathOffset(arg5, pathIndex, arg6);
         projected = ((s64)-gRaceCourseSurfaceAngleSin * deltaX + (s64)gRaceCourseSurfaceAngleCos * deltaZ) / 0x1000;
 
         *arg3 = ((s64)gRaceCourseSurfaceAngleCos * distance + (s64)-gRaceCourseSurfaceAngleSin * projected) / 0x1000;
