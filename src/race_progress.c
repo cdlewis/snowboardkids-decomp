@@ -1,19 +1,19 @@
 #include "common.h"
 #include "fixed_point_math.h"
 #include "race_motion.h"
-#include "race_position_tracker.h"
+#include "race_progress.h"
 
 // Race player records are 0x60C bytes apart. This view only names the fields
-// touched by this placement/progress tracking module.
-#define RACE_POSITION_PLAYER_COUNT 4
-#define RACE_POSITION_PLAYER_SIZE 0x60C
+// touched by this race progress module.
+#define RACE_PROGRESS_PLAYER_COUNT 4
+#define RACE_PROGRESS_PLAYER_SIZE 0x60C
 
-typedef struct RacePositionPlayer {
+typedef struct RaceProgressCheckpointEvent {
     /* 0x00 */ s16 pathFrame;
     /* 0x02 */ s16 eventId;
-} RacePositionCheckpointEvent;
+} RaceProgressCheckpointEvent;
 
-typedef struct {
+typedef struct RaceProgressPlayer {
     /* 0x000 */ s16 playerIndex;
     /* 0x002 */ u8 pad2[2];
     /* 0x004 */ u8 isActive;
@@ -39,23 +39,23 @@ typedef struct {
     /* 0x529 */ u8 displayRank;
     /* 0x52A */ u8 rankArrow;
     /* 0x52B */ u8 rankChangeTimer;
-    /* 0x52C */ u8 pad52C[RACE_POSITION_PLAYER_SIZE - 0x52C];
-} RacePositionPlayer;
+    /* 0x52C */ u8 pad52C[RACE_PROGRESS_PLAYER_SIZE - 0x52C];
+} RaceProgressPlayer;
 
-extern RacePositionPlayer D_80121D80[RACE_POSITION_PLAYER_COUNT];
-extern RacePositionPlayer gFrameCounter;
-extern RacePositionCheckpointEvent *D_800DE030[];
-extern s8 *D_800DDE74[];
-extern u8 D_800DE058[];
-extern u8 D_800DE05C[];
-extern u8 D_800DE060[];
-extern u8 D_800DE064[];
+extern RaceProgressPlayer D_80121D80[RACE_PROGRESS_PLAYER_COUNT];
+extern RaceProgressPlayer gFrameCounter;
+extern RaceProgressCheckpointEvent *gRaceCourseCheckpointEventLists[];
+extern s8 *gRaceCoursePlayerPathOffsetTables[];
+extern u8 gSinglePlayerRankDisplayPatternFirst[];
+extern u8 gSinglePlayerRankDisplayPatternSecond[];
+extern u8 gSinglePlayerRankDisplayPatternThird[];
+extern u8 gSinglePlayerRankDisplayPatternFourth[];
 extern u8 gRaceSplitscreenMode;
 extern u8 gPlayerCount;
 extern s16 gRaceCourseIndex;
 
 // updateRacePositionTracker best match: 30.134% (nonmatchings/updateRacePositionTracker-5752545231564691495/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007B250.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_progress/updateRacePositionTracker.s")
 
 #ifdef NON_MATCHING
 #define RANK_NEAR_LIMIT 0x3800000
@@ -96,8 +96,8 @@ void updateRacePositionTracker(void) {
     s32 *scan;
     s32 rankIndex;
     s32 mode;
-    RacePositionPlayer *player;
-    RacePositionPlayer *other;
+    RaceProgressPlayer *player;
+    RaceProgressPlayer *other;
     s32 dx;
     s32 dz;
     s8 rank;
@@ -119,7 +119,7 @@ void updateRacePositionTracker(void) {
             if ((4 - i) & 1) {
                 temp = *rankSlot;
                 candidate = i + 1;
-                if (((volatile RacePositionPlayer *)D_80121D80)[temp].raceRank < D_80121D80[temp].raceRank) {
+                if (((volatile RaceProgressPlayer *)D_80121D80)[temp].raceRank < D_80121D80[temp].raceRank) {
                     *((volatile s32 *)rankSlot) = temp;
                     *((volatile s32 *)rankSlot) = temp;
                 }
@@ -154,16 +154,16 @@ sort_next:
     case 1:
         rank = D_80121D80[0].raceRank;
         if (rank == 0) {
-            ASSIGN_DISPLAY_RANKS(D_800DE058);
+            ASSIGN_DISPLAY_RANKS(gSinglePlayerRankDisplayPatternFirst);
         }
         if (rank == 1) {
-            ASSIGN_DISPLAY_RANKS(D_800DE05C);
+            ASSIGN_DISPLAY_RANKS(gSinglePlayerRankDisplayPatternSecond);
         }
         if (rank == 2) {
-            ASSIGN_DISPLAY_RANKS(D_800DE060);
+            ASSIGN_DISPLAY_RANKS(gSinglePlayerRankDisplayPatternThird);
         }
         if (rank == 3) {
-            ASSIGN_DISPLAY_RANKS(D_800DE064);
+            ASSIGN_DISPLAY_RANKS(gSinglePlayerRankDisplayPatternFourth);
         }
         break;
     case 2:
@@ -267,17 +267,17 @@ sort_next:
 #undef RANK_NEAR_LIMIT
 #endif
 
-// func_8007BB08 best match: 99.480% (nonmatchings/func_8007BB08-7273315160691878794/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_position_tracker/func_8007BB08.s")
+// updateRacePlayerCheckpointEvent best match: 99.480% (nonmatchings/updateRacePlayerCheckpointEvent-7273315160691878794/base_9.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_progress/updateRacePlayerCheckpointEvent.s")
 
 #ifdef NON_MATCHING
-void func_8007BB08(RacePositionPlayer *player) {
+void updateRacePlayerCheckpointEvent(RaceProgressPlayer *player) {
     s64 product;
     s32 x;
     s32 y;
     s32 z;
     s16 angle;
-    RacePositionCheckpointEvent *event;
+    RaceProgressCheckpointEvent *event;
     s32 eventIndex;
     s16 pathFrame;
     s32 eventMask;
@@ -289,7 +289,7 @@ void func_8007BB08(RacePositionPlayer *player) {
     }
 
     player->checkpointHit = 0;
-    event = D_800DE030[gRaceCourseIndex];
+    event = gRaceCourseCheckpointEventLists[gRaceCourseIndex];
     eventIndex = 0;
 
     for (;;) {
@@ -333,7 +333,7 @@ s32 getSmoothedRacePlayerPathOffset(s32 playerIndex, s32 pathIndex, s32 rankSlot
     s8 *entry;
 
     courseIndex = gRaceCourseIndex;
-    entry = D_800DDE74[(courseIndex * RACE_POSITION_PLAYER_COUNT) + playerIndex];
+    entry = gRaceCoursePlayerPathOffsetTables[(courseIndex * RACE_PROGRESS_PLAYER_COUNT) + playerIndex];
     pathIndexCopy = pathIndex;
     if (courseIndex == 7) {
         if (playerIndex == 0) {
@@ -350,7 +350,7 @@ s32 getSmoothedRacePlayerPathOffset(s32 playerIndex, s32 pathIndex, s32 rankSlot
         }
     }
 
-    entry = D_800DDE74[(courseIndex * RACE_POSITION_PLAYER_COUNT) + playerIndex];
+    entry = gRaceCoursePlayerPathOffsetTables[(courseIndex * RACE_PROGRESS_PLAYER_COUNT) + playerIndex];
     pathIndex = entry[pathIndexCopy] << 0x12;
     pathIndex -= D_80121D80[rankSlot].smoothedPathOffset;
 
@@ -383,6 +383,6 @@ s32 getRacePlayerPathOffset(s32 playerIndex, s32 pathIndex) {
         }
     }
 
-    entry = D_800DDE74[(gRaceCourseIndex * RACE_POSITION_PLAYER_COUNT) + playerIndex];
+    entry = gRaceCoursePlayerPathOffsetTables[(gRaceCourseIndex * RACE_PROGRESS_PLAYER_COUNT) + playerIndex];
     return entry[pathIndex] << 0x12;
 }
