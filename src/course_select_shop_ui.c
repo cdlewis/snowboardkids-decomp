@@ -1127,10 +1127,6 @@ void drawCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 6, 0x20, 0x20, 0, arg0->sprite.index, 0);
 }
 
-// updateCourseUnlockPricePanel best match: 94.119% (nonmatchings/updateCourseUnlockPricePanel-1404502880690620360/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/updateCourseUnlockPricePanel.s")
-
-#ifdef NON_MATCHING
 void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     s32 amount;
     s32 price;
@@ -1152,19 +1148,24 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     case 2:
         price = arg0->item.price;
         if ((u32)price < 100U) {
-            amount = price & 0xFFFF;
+            amount = 0xFFFF;
+            amount = price & amount;
         } else {
-            amount = 500;
             if (gPlayerInputHeld & 0x8000) {
                 if ((u32)price < 5000U) {
                     amount = price & 0xFFFF;
                 } else {
                     amount = 5000;
                 }
+            } else {
+                amount = 500;
             }
         }
         arg0->item.price = price - amount;
         D_80121D80.money -= amount;
+        /* Required for IDO register allocation. */
+        if (gCurrentGameTask && gCurrentGameTask) {
+        }
         if (arg0->item.price == 0) {
             arg0->slide.bytes.state = 3;
             gCourseUnlockSaveSlots[D_80121D80.selectedShopItem] = 9;
@@ -1175,7 +1176,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
         if (arg0->slide.bytes.timer >= 0x14) {
             arg0->slide.bytes.timer = 0;
             arg0->slide.bytes.state = 4;
-            gCurrentGameTask->shopItemPrice += 2;
+            gCurrentGameTask->shopItemPrice = gCurrentGameTask->shopItemPrice + 2;
         }
         break;
     case 4:
@@ -1196,7 +1197,6 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, drawCourseUnlockPricePanel, arg0);
 }
-#endif
 
 void initCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x20;
