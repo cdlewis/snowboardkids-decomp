@@ -276,7 +276,7 @@ void initRaceSetupSaveMenu(void) {
 }
 #endif
 
-// updateRaceSetupSaveMenu best match: 72.707% (nonmatchings/updateRaceSetupSaveMenu-7273315160691878794/base_4.c)
+// updateRaceSetupSaveMenu best match: 73.013% (nonmatchings/updateRaceSetupSaveMenu-5802343343535905907/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/updateRaceSetupSaveMenu.s")
 
 #ifdef NON_MATCHING
@@ -571,9 +571,9 @@ void updateRaceSetupSaveMenu(void) {
                         allReady &= player->unk8;
                     }
 
+                    allPresent &= presentValue;
                     i++;
                     present++;
-                    allPresent &= presentValue;
                 } while (i < gPlayerCount);
             }
         }
