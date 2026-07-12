@@ -2,3 +2,5 @@ src/race_rumble.c -> src/race_player_rumble.c
 include/race_rumble.h -> include/race_player_rumble.h
 src/race_scene_loader.c -> src/race_scene_setup.c
 include/race_scene_loader.h -> include/race_scene_setup.h
+src/race_timer_ui.c -> src/race_hud.c
+include/race_timer_ui.h -> include/race_hud.h

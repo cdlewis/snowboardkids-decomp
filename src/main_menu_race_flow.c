@@ -230,7 +230,7 @@ void initMainMenuModePreviewRace(void) {
     gFramebufferSwapDelay = 0;
     initRacePlayers();
     gPlayerCount = 1;
-    func_80078430();
+    initRaceHud();
     gPlayerCount = 4;
     configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, gMainMenuModePreviewRaceAspectRatio);
     gRacePlayerHudStatuses = 1;
@@ -326,7 +326,7 @@ void runMainMenuModePreviewRace(void) {
     updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
-    func_8007AA50();
+    updateRaceHud();
     gCurrentGameTask->transitionTimer += 1;
     if (gCurrentGameTask->transitionTimer == gMainMenuModePreviewRaceDurationBySelection[gMainMenuModeSelection]) {
         setCurrentGameTaskCallback(fadeOutMainMenuModePreviewRace, 0);
@@ -340,7 +340,7 @@ void fadeOutMainMenuModePreviewRace(void) {
     updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
-    func_8007AA50();
+    updateRaceHud();
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gFramebufferSwapHold = 1;
@@ -470,7 +470,7 @@ void initTrainingCourseRace(void) {
     gRacePlayerHudStatuses = 1;
     gFramebufferSwapDelay = 0;
     initRacePlayers();
-    func_80078430();
+    initRaceHud();
     configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
     gRacePlayerHudStatuses = 1;
     gFramebufferSwapDelay = 0;
@@ -565,7 +565,7 @@ void runTrainingCourseUntilActionPrompt(void) {
     updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
-    func_8007AA50();
+    updateRaceHud();
     gCurrentGameTask->transitionTimer = 0;
     switch (gTrainingCourseLesson) {
         case 1:
@@ -619,7 +619,7 @@ void fadeInTrainingCourseActionMenu(void) {
     updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
-    func_8007AA50();
+    updateRaceHud();
     gCurrentGameTask->transitionTimer += 0x10;
     temp_v1 = gCurrentGameTask->transitionTimer;
     if (temp_v1 == 0x80) {
@@ -637,7 +637,7 @@ void waitForTrainingCourseActionMenuSelection(void) {
     updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
-    func_8007AA50();
+    updateRaceHud();
     D_801124B8 = 0x80;
     if (gMainMenuSelectionResult != 0) {
         setCurrentGameTaskCallback(&fadeOutTrainingCourseActionMenu, 0);
@@ -651,7 +651,7 @@ void fadeOutTrainingCourseActionMenu(void) {
     updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
-    func_8007AA50();
+    updateRaceHud();
     D_801124B8 = 0x80;
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {

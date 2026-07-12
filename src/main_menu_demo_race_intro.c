@@ -172,7 +172,7 @@ void initMainMenuDemoRaceIntro(void) {
     if (gMainMenuDemoRaceIntroLoadCourseAssetsFlags[gMainMenuDemoRaceIntroIndex * sizeof(MainMenuDemoRaceIntroEntry)] == 0) {
         gPlayerCount = one;
     }
-    func_80078430();
+    initRaceHud();
     if (gPlayerCount == one) {
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         gRacePlayerHudStatuses = one;
@@ -226,7 +226,7 @@ void updateMainMenuDemoRaceIntro(void) {
     updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
     updateRaceCameras();
-    func_8007AA50();
+    updateRaceHud();
     state = gCurrentGameTask;
     if (state->fadeDelay != 0) {
         state->fadeDelay--;
