@@ -626,7 +626,7 @@ void noopRaceHudCallback(s32 arg0) {
 
 }
 
-// drawTrainingRaceHud best match: 99.255% at nonmatchings/drawTrainingRaceHud-3836525038718587862/base_11.c.
+// drawTrainingRaceHud best match: 99.348% at nonmatchings/drawTrainingRaceHud-2694253543240320626/base_11.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawTrainingRaceHud.s")
 
 #ifdef NON_MATCHING
@@ -667,7 +667,7 @@ void drawTrainingRaceHud(s32 arg0) {
 
     if (player->tensDigitPalette != 0) {
         drawScaledAssetTableSprite(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF,
+                      (player->tensDigitOffset + (((((((((gRaceTimerTensDigitTileOffsets[player->tensDigitTile] & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) - 1) & 0xFFFF,
                       player->tensDigitPalette);
     } else {
         drawAssetTableSprite(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
