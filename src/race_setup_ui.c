@@ -1086,7 +1086,7 @@ void initRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     setCallbackTaskCallback(new_var, updateRaceSetupSaveStatusWidgets);
 }
 
-// drawRaceSetupSaveChoicePrompts best match: 99.233% (nonmatchings/drawRaceSetupSaveChoicePrompts-6061209858023118177/base_12.c)
+// drawRaceSetupSaveChoicePrompts best match: 99.867% (nonmatchings/drawRaceSetupSaveChoicePrompts-8331816093655448999/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_setup_ui/drawRaceSetupSaveChoicePrompts.s")
 
 #ifdef NON_MATCHING
@@ -1094,8 +1094,10 @@ void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
     MenuIntroActor *intro;
     TitleMenuTransitionActor *new_var;
     TitleMenuTransitionActor *new_var2;
+    s32 new_var3;
     s32 i;
     s32 alpha;
+    TitleMenuTransitionActor *new_var4;
     s16 state;
 
     intro = gActiveMenuTask;
@@ -1108,13 +1110,14 @@ void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
 
             state = gMenuChoicePromptState[i];
             if (state != 0) {
+                new_var4 = arg0;
                 if (!(state & 1)) {
                     alpha = 0x100;
                 } else {
                     alpha = 0x60;
                 }
 
-                drawMenuSpriteWithAlpha(arg0->x[i], arg0->topY[i], getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                drawMenuSpriteWithAlpha(new_var4->x[i], arg0->topY[i], getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
                               gRaceSetupSaveChoicePromptTopSprites[gControllerPakStatusCodes[i] * 2], 0x20, 0x20, 0, alpha, 0);
 
                 if (alpha == 0x100) {
@@ -1130,9 +1133,12 @@ void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
                 if (new_var->alpha == 0) {
                 }
 
+                if (!arg0) {
+                }
+
                 state = gMenuChoicePromptState[i];
                 if ((state == 3) || (state == 4)) {
-                    drawMenuSpriteWithAlpha(new_var2->x[i], (s16)(((gMenuChoicePromptState[i] * 0x10) + new_var->y[i]) - 0x30),
+                    drawMenuSpriteWithAlpha(new_var2->x[i], (s16)(((gMenuChoicePromptState[i] * 0x10) + new_var->y[i]) - (new_var3 = 0x30)),
                                   getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0x12, 0x20, 0x20, 0, new_var->alpha[i],
                                   i + 7);
                     state = gMenuChoicePromptState[i];
