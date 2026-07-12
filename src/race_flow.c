@@ -1023,18 +1023,14 @@ void zoomRaceWinnerViewport(void) {
     }
 }
 
-// prepareRaceResultsFlow best match: 81.749% (nonmatchings/prepareRaceResultsFlow-7273315160691878794/base_5.c)
+// prepareRaceResultsFlow best match: 92.744% (nonmatchings/prepareRaceResultsFlow-3357475854818838508/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/prepareRaceResultsFlow.s")
 
 #ifdef NON_MATCHING
 void prepareRaceResultsFlow(void) {
     RacePlayerState *player;
     TimeCourseView *timeCourse;
-    TrickCourseView *trickCourse;
-    ScoreCourseView *scoreCourse;
-    RaceTime *time;
-    u16 *trickScore;
-    u8 *scoreValue;
+    u8 *saveCursor;
     s32 i;
     s32 index;
     s32 currentTime;
@@ -1066,16 +1062,18 @@ void prepareRaceResultsFlow(void) {
         currentTime = (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) + gRaceElapsedTimer.fraction + (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
         courseOffset = (gRaceCourseIndex.s << 2) + gRaceCourseIndex.s;
         courseOffset <<= 2;
-        timeCourse = (TimeCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
+        saveCursor = (u8 *)&gGameSaveDataBuffer + courseOffset;
         index = 0;
-        time = timeCourse->timeTrial;
         do {
-            recordTime = (time->minutes * COURSE_TIME_MINUTE) + time->fraction + (time->seconds * COURSE_TIME_SECOND);
+            timeCourse = (TimeCourseView *)saveCursor;
+            recordTime = timeCourse->timeTrial[0].minutes * COURSE_TIME_MINUTE;
+            recordTime += timeCourse->timeTrial[0].fraction;
+            recordTime += timeCourse->timeTrial[0].seconds * COURSE_TIME_SECOND;
             if (currentTime < recordTime) {
                 break;
             }
             index += 4;
-            time++;
+            saveCursor += 4;
         } while (index != 0x14);
         if (index < 0x14) {
             gRaceResultState = 1;
@@ -1095,14 +1093,13 @@ void prepareRaceResultsFlow(void) {
                 if (gRaceTypeSelection == 2) {
                     courseOffset = (gRaceCourseIndex.s << 2) + gRaceCourseIndex.s;
                     courseOffset <<= 1;
-                    trickCourse = (TrickCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
-                    trickScore = trickCourse->values;
+                    saveCursor = (u8 *)&gGameSaveDataBuffer + courseOffset;
                     do {
-                        if (*trickScore < gRaceTrickAttackPointTotal) {
+                        if (((TrickCourseView *)saveCursor)->values[0] < gRaceTrickAttackPointTotal) {
                             break;
                         }
                         i++;
-                        trickScore++;
+                        saveCursor += 2;
                     } while (i < 5);
                     if (gRaceChallengeFailed != 0) {
                         i = 5;
@@ -1116,14 +1113,13 @@ void prepareRaceResultsFlow(void) {
                 }
             } else {
                 courseOffset = (gRaceCourseIndex.s << 2) + gRaceCourseIndex.s;
-                scoreCourse = (ScoreCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
-                scoreValue = scoreCourse->values;
+                saveCursor = (u8 *)&gGameSaveDataBuffer + courseOffset;
                 do {
-                    if (*scoreValue < gRaceScoreAttackPointTotal) {
+                    if (((ScoreCourseView *)saveCursor)->values[0] < gRaceScoreAttackPointTotal) {
                         break;
                     }
                     i++;
-                    scoreValue++;
+                    saveCursor++;
                 } while (i < 5);
                 if (gRaceChallengeFailed != 0) {
                     i = 5;
@@ -1139,16 +1135,18 @@ void prepareRaceResultsFlow(void) {
             currentTime = (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) + gRaceElapsedTimer.fraction + (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
             courseOffset = (gRaceCourseIndex.s << 2) + gRaceCourseIndex.s;
             courseOffset <<= 2;
-            timeCourse = (TimeCourseView *)((u8 *)&gGameSaveDataBuffer + courseOffset);
+            saveCursor = (u8 *)&gGameSaveDataBuffer + courseOffset;
             i = 0;
-            time = timeCourse->raceTimes;
             do {
-                recordTime = (time->minutes * COURSE_TIME_MINUTE) + time->fraction + (time->seconds * COURSE_TIME_SECOND);
+                timeCourse = (TimeCourseView *)saveCursor;
+                recordTime = timeCourse->raceTimes[0].minutes * COURSE_TIME_MINUTE;
+                recordTime += timeCourse->raceTimes[0].fraction;
+                recordTime += timeCourse->raceTimes[0].seconds * COURSE_TIME_SECOND;
                 if (currentTime < recordTime) {
                     break;
                 }
                 i++;
-                time++;
+                saveCursor += 4;
             } while (i < 5);
             if (gRaceChallengeFailed != 0) {
                 i = 5;
