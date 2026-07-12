@@ -389,14 +389,13 @@ void drawMenuSpriteWithAlpha(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u
                   temp_v1 = (s16)(gMenuViewportHeight / 2), temp_v0, temp_v1);
 }
 
-// drawMenuSpriteWithAlphaClipped best match: 82.673% (nonmatchings/drawMenuSpriteWithAlphaClipped-6113366811127043669/base_7.c)
+// drawMenuSpriteWithAlphaClipped best match: 82.706% (nonmatchings/drawMenuSpriteWithAlphaClipped-8331816093655448999/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
 
 #ifdef NON_MATCHING
 void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flipMode, u16 alpha,
                    u8 paletteArg, s16 clipLeft, s16 clipTop, s16 clipRight, s16 clipBottom) {
     FontTexture *texture;
-    u8 *textureBase;
     u8 *paletteBase;
     s16 flipS;
     s16 flipT;
@@ -434,10 +433,9 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
     {
         flipS = D_800B51F0[flipMode & 3][0];
         flipT = D_800B51F0[flipMode & 3][1];
-        textureBase = (u8 *)asset + (tileIndex * sizeof(FontTexture));
-        texWidth = textureBase[0xE];
-        texHeight = textureBase[0xF];
-        texture = (FontTexture *)(textureBase + 8);
+        texture = &asset->textures[tileIndex];
+        texWidth = texture->width;
+        texHeight = texture->height;
 
         left = (x + gMenuViewportCenterX) << 2;
         top = (y + gMenuViewportCenterY) << 2;
