@@ -1469,7 +1469,7 @@ loop_interp:
 }
 #endif
 
-// blendRaceMotionJointAnimation best match: 98.133% (base_12.c)
+// blendRaceMotionJointAnimation best match: 98.785% (base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_motion/blendRaceMotionJointAnimation.s")
 
 #ifdef NON_MATCHING
@@ -1497,6 +1497,8 @@ void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 ti
     frameOffset = ((u16 *)frameBase)[animIndex];
     packed = (s16 *)(frameBase + (frameOffset * 2));
     packed++;
+    state++;
+    state--;
     packed = (s16 *)((u8 *)packed + 0x24);
 
     row = gRaceMotionJointFrameBuffer;
