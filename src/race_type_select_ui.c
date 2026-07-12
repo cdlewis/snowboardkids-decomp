@@ -202,7 +202,7 @@ void initRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceTypeSelectCornerSprites);
 }
 
-// drawRaceTypeSelectOption0Frame best match: 98.565% (nonmatchings/func_8002980C-6061209858023118177/base_4.c)
+// drawRaceTypeSelectOption0Frame best match: 99.113% (nonmatchings/drawRaceTypeSelectOption0Frame-8331816093655448999/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_type_select_ui/drawRaceTypeSelectOption0Frame.s")
 
 #ifdef NON_MATCHING
@@ -235,7 +235,7 @@ void drawRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
                       gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->widget.counter].bottom[tileOffset], 0, 0x100);
         offset += 0x40;
         tileOffset++;
-    } while (offset != i);
+    } while (offset < 0x80);
     i++;
     i--;
 
