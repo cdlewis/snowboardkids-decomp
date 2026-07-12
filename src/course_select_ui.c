@@ -428,7 +428,7 @@ void initCourseSelectPreviewModelIn(void *arg0) {
     setCallbackTaskCallback(actor, updateCourseSelectPreviewModelIn);
 }
 
-// drawCourseSelectPreviewModelClose best match: 94.265% (nonmatchings/drawCourseSelectPreviewModelClose-7273315160691878794/base_4.c)
+// drawCourseSelectPreviewModelClose best match: 97.744% (nonmatchings/drawCourseSelectPreviewModelClose-5802343343535905907/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectPreviewModelClose.s")
 
 #ifdef NON_MATCHING
@@ -438,7 +438,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
     u8 sp2E;
     CourseSelectRacePlayer *temp_v0_3;
     s32 temp_v0_4;
-    s8 temp_v0_2;
+    s32 temp_v0_2;
     int temp_v0;
     u8 temp_v1;
     u8 var_a3;
@@ -463,7 +463,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             if (temp_v0_2 == -1) {
                 var_v1 = 9;
             } else {
-                var_v1 = temp_v0_2 & 0xFF;
+                var_v1 = temp_v0_2;
             }
             if ((D_8010AED0 != 0) && (gCurrentViewportIndex == 1)) {
                 var_v1 = D_8010AED0 - 1;
@@ -471,7 +471,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             temp_v0_3 = &D_80121D80[gCurrentViewportIndex];
             if (temp_v0_3->state == 5) {
                 var_v1 = 0;
-                var_a3 = ((var_a3 % 3) + 0xC) & 0xFF;
+                var_a3 = (var_a3 % 3) + 0xC;
             }
             if (temp_v0_3->courseIndex >= 9) {
                 var_v1 = 0;
