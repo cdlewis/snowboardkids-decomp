@@ -23,21 +23,21 @@ typedef struct RelocatableHeapBlockStartAlias {
     u8 pad[0x10];
 } RelocatableHeapBlockStartAlias; // size = 0x14
 
-extern RelocatableHeapBlockStartAlias gRelocatableHeapBlockStartFields[];
-extern RelocatableHeapBlock *gFreeRelocatableHeapBlocks[];
-extern u16 gAllocatedRelocatableHeapBlockCount;
+extern RelocatableHeapBlockStartAlias gRelocatableHeapBlockStartAliases[];
+extern RelocatableHeapBlock *gRelocatableHeapFreeBlockStack[];
+extern u16 gRelocatableHeapUsedBlockCount;
 extern u8 gRelocatableHeapStart;
 
-extern RelocatableHeapBlock gRelocatableHeapBlocks[];
-extern RelocatableHeapBlock *gFirstRelocatableHeapBlock;
-extern u8 *gRelocatableHeapEnd;
+extern RelocatableHeapBlock gRelocatableHeapBlockPool[];
+extern RelocatableHeapBlock *gFirstAllocatedRelocatableHeapBlock;
+extern u8 *gRelocatableHeapNextFreeAddress;
 
-void updateRelocatableHeapEnd(void) {
-    RelocatableHeapBlock *node = gFirstRelocatableHeapBlock;
+void updateRelocatableHeapNextFreeAddress(void) {
+    RelocatableHeapBlock *node = gFirstAllocatedRelocatableHeapBlock;
     RelocatableHeapBlock *next;
 
     if (node == NULL) {
-        gRelocatableHeapEnd = &gRelocatableHeapStart;
+        gRelocatableHeapNextFreeAddress = &gRelocatableHeapStart;
         return;
     }
     next = node->next;
@@ -47,7 +47,7 @@ void updateRelocatableHeapEnd(void) {
             next = next->next;
         } while (next != NULL);
     }
-    gRelocatableHeapEnd = node->start + node->size;
+    gRelocatableHeapNextFreeAddress = node->start + node->size;
 }
 
 void updateRelocatableHeap(void) {
@@ -57,16 +57,16 @@ void updateRelocatableHeap(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/relocatable_heap/initRelocatableHeap.s")
 
 #ifdef NON_MATCHING
-extern RelocatableHeapBlock gRelocatableHeapBlocks1[];
-extern RelocatableHeapBlock gRelocatableHeapBlocks2[];
-extern RelocatableHeapBlock gRelocatableHeapBlocks3[];
+extern RelocatableHeapBlock gRelocatableHeapBlockPoolSlot1[];
+extern RelocatableHeapBlock gRelocatableHeapBlockPoolSlot2[];
+extern RelocatableHeapBlock gRelocatableHeapBlockPoolSlot3[];
 
 void initRelocatableHeap(void) {
-    RelocatableHeapBlock **freeList = gFreeRelocatableHeapBlocks;
-    RelocatableHeapBlock *block0 = gRelocatableHeapBlocks;
-    RelocatableHeapBlock *block1 = gRelocatableHeapBlocks1;
-    RelocatableHeapBlock *block2 = gRelocatableHeapBlocks2;
-    RelocatableHeapBlock *block3 = gRelocatableHeapBlocks3;
+    RelocatableHeapBlock **freeList = gRelocatableHeapFreeBlockStack;
+    RelocatableHeapBlock *block0 = gRelocatableHeapBlockPool;
+    RelocatableHeapBlock *block1 = gRelocatableHeapBlockPoolSlot1;
+    RelocatableHeapBlock *block2 = gRelocatableHeapBlockPoolSlot2;
+    RelocatableHeapBlock *block3 = gRelocatableHeapBlockPoolSlot3;
     s32 i = 0;
     s32 next1;
     s32 next2;
@@ -98,31 +98,31 @@ void initRelocatableHeap(void) {
         block0[-4].status = RELOCATABLE_HEAP_BLOCK_FREE;
     } while (i != RELOCATABLE_HEAP_BLOCK_COUNT);
 
-    gAllocatedRelocatableHeapBlockCount = 0;
-    gFirstRelocatableHeapBlock = NULL;
-    updateRelocatableHeapEnd();
+    gRelocatableHeapUsedBlockCount = 0;
+    gFirstAllocatedRelocatableHeapBlock = NULL;
+    updateRelocatableHeapNextFreeAddress();
 }
 #endif
 
-void *popFreeRelocatableHeapBlock(void) {
+void *acquireRelocatableHeapBlockMetadata(void) {
     RelocatableHeapBlock *block;
 
-    if (gAllocatedRelocatableHeapBlockCount >= RELOCATABLE_HEAP_BLOCK_COUNT) {
+    if (gRelocatableHeapUsedBlockCount >= RELOCATABLE_HEAP_BLOCK_COUNT) {
         return NULL;
     }
-    block = gFreeRelocatableHeapBlocks[gAllocatedRelocatableHeapBlockCount];
+    block = gRelocatableHeapFreeBlockStack[gRelocatableHeapUsedBlockCount];
     block->status = RELOCATABLE_HEAP_BLOCK_USED;
-    gAllocatedRelocatableHeapBlockCount++;
+    gRelocatableHeapUsedBlockCount++;
     return block;
 }
 
-void pushFreeRelocatableHeapBlock(RelocatableHeapBlock *block) {
-    gAllocatedRelocatableHeapBlockCount = gAllocatedRelocatableHeapBlockCount - 1;
-    gFreeRelocatableHeapBlocks[gAllocatedRelocatableHeapBlockCount] = block;
+void releaseRelocatableHeapBlockMetadata(RelocatableHeapBlock *block) {
+    gRelocatableHeapUsedBlockCount = gRelocatableHeapUsedBlockCount - 1;
+    gRelocatableHeapFreeBlockStack[gRelocatableHeapUsedBlockCount] = block;
     block->status = RELOCATABLE_HEAP_BLOCK_FREE;
 }
 
-extern RelocatableHeapBlock gRelocatableHeapListHead;
+extern RelocatableHeapBlock gRelocatableHeapBlockListHead;
 
 s16 allocRelocatableHeapBlock(s32 size) {
     RelocatableHeapBlock *node;
@@ -134,9 +134,9 @@ s16 allocRelocatableHeapBlock(s32 size) {
 
     /*
      * First try to allocate inside a gap between two existing blocks.
-     * gRelocatableHeapListHead is the sentinel/list head.
+     * gRelocatableHeapBlockListHead is the sentinel/list head.
      */
-    node = gRelocatableHeapListHead.next;
+    node = gRelocatableHeapBlockListHead.next;
     while (node != NULL) {
         if (node->next == NULL) {
             break;
@@ -144,7 +144,7 @@ s16 allocRelocatableHeapBlock(s32 size) {
 
         available = (node->next->start - node->start) - node->size;
         if (available >= alignedSize) {
-            newBlock = popFreeRelocatableHeapBlock();
+            newBlock = acquireRelocatableHeapBlockMetadata();
             if (newBlock == NULL) {
                 return -1;
             }
@@ -166,16 +166,16 @@ s16 allocRelocatableHeapBlock(s32 size) {
     }
 
     /* No suitable gap was found, so append at the current heap end. */
-    available = (gRelocatableHeapEnd + alignedSize) - &gRelocatableHeapStart;
+    available = (gRelocatableHeapNextFreeAddress + alignedSize) - &gRelocatableHeapStart;
     if (available > 0x1C0000) {
         return -1;
     }
 
     if (node == NULL) {
-        node = &gRelocatableHeapListHead;
+        node = &gRelocatableHeapBlockListHead;
     }
 
-    newBlock = popFreeRelocatableHeapBlock();
+    newBlock = acquireRelocatableHeapBlockMetadata();
     if (newBlock == NULL) {
         return -1;
     }
@@ -189,10 +189,10 @@ s16 allocRelocatableHeapBlock(s32 size) {
 
     node->next = newBlock;
 
-    newBlock->start = gRelocatableHeapEnd;
+    newBlock->start = gRelocatableHeapNextFreeAddress;
     newBlock->size = alignedSize;
 
-    updateRelocatableHeapEnd();
+    updateRelocatableHeapNextFreeAddress();
 
     return newBlock->index;
 }
@@ -204,11 +204,11 @@ s32 freeRelocatableHeapBlock(s32 handle) {
     if (handle == -1) {
         return -1;
     }
-    block = &gRelocatableHeapBlocks[handle];
+    block = &gRelocatableHeapBlockPool[handle];
     if (block->status != RELOCATABLE_HEAP_BLOCK_FREE) {
         next = block->next;
         if (next == NULL) {
-            gRelocatableHeapEnd -= block->size;
+            gRelocatableHeapNextFreeAddress -= block->size;
             next = block->next;
         }
         block->prev->next = next;
@@ -216,8 +216,8 @@ s32 freeRelocatableHeapBlock(s32 handle) {
         if (next != NULL) {
             next->prev = block->prev;
         }
-        pushFreeRelocatableHeapBlock(block);
-        updateRelocatableHeapEnd();
+        releaseRelocatableHeapBlockMetadata(block);
+        updateRelocatableHeapNextFreeAddress();
     }
     return -1;
 }
@@ -225,11 +225,11 @@ s32 freeRelocatableHeapBlock(s32 handle) {
 #pragma GLOBAL_ASM("asm/nonmatchings/relocatable_heap/compactRelocatableHeap.s")
 
 s32 getRelocatableHeapBlockBase(s32 handle) {
-    return (s32) gRelocatableHeapBlockStartFields[handle].start;
+    return (s32) gRelocatableHeapBlockStartAliases[handle].start;
 }
 
 void lockRelocatableHeapBlock(s32 handle) {
-    RelocatableHeapBlock *block = &gRelocatableHeapBlocks[handle];
+    RelocatableHeapBlock *block = &gRelocatableHeapBlockPool[handle];
 
     if (block->status != RELOCATABLE_HEAP_BLOCK_FREE) {
         block->status = RELOCATABLE_HEAP_BLOCK_LOCKED;
@@ -237,7 +237,7 @@ void lockRelocatableHeapBlock(s32 handle) {
 }
 
 void unlockRelocatableHeapBlock(s32 handle) {
-    RelocatableHeapBlock *block = &gRelocatableHeapBlocks[handle];
+    RelocatableHeapBlock *block = &gRelocatableHeapBlockPool[handle];
 
     if (block->status != RELOCATABLE_HEAP_BLOCK_FREE) {
         block->status = RELOCATABLE_HEAP_BLOCK_USED;
