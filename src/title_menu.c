@@ -73,7 +73,7 @@ extern s16 gMenuIconTilemapAssetHandle;
 extern u8 gPlayerCount;
 extern u8 D_800B5A2E[];
 extern u8 D_800B5A2F[];
-extern u8 D_800EC9C1;
+extern u8 gMenuSelectionConfirmTimer;
 extern s32 gMenuFlowState;
 extern Struct801235B8 *gCurrentGameTask;
 extern s32 gMenuOverlayRenderCallbackList;
@@ -262,7 +262,7 @@ void func_80014CB8(void *arg0) {
         yOffset = -4;
     }
 
-    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 1)) {
+    if ((gMenuSelectionConfirmTimer == 0) || (gMenuSelectionConfirmTimer & 1) || (gPlayerCount != 1)) {
         drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, alpha, 0);
         if (width == 0x20) {
             temp = width & 0xFFFF;
@@ -291,7 +291,7 @@ void func_80014EF0(MenuItemActor *arg0) {
         }
         break;
     case 1:
-        if (D_800EC9C1 == 0x13) {
+        if (gMenuSelectionConfirmTimer == 0x13) {
             arg0->state = 2;
             if (gPlayerCount == 1) {
                 gMenuFlowState = 1;
@@ -354,7 +354,7 @@ void func_8001508C(MenuItemActor *arg0) {
         yOffset = -4;
     }
 
-    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 2)) {
+    if ((gMenuSelectionConfirmTimer == 0) || (gMenuSelectionConfirmTimer & 1) || (gPlayerCount != 2)) {
         drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 2);
         if (width == 0x20) {
             temp = width & 0xFFFF;
@@ -442,7 +442,7 @@ void func_8001543C(void *arg0) {
         yOffset = -4;
     }
 
-    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 3)) {
+    if ((gMenuSelectionConfirmTimer == 0) || (gMenuSelectionConfirmTimer & 1) || (gPlayerCount != 3)) {
         drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 3);
         if (width == 0x20) {
             temp = width & 0xFFFF;
@@ -530,7 +530,7 @@ void func_800157EC(void *arg0) {
         yOffset = -4;
     }
 
-    if ((D_800EC9C1 == 0) || (D_800EC9C1 & 1) || (gPlayerCount != 4)) {
+    if ((gMenuSelectionConfirmTimer == 0) || (gMenuSelectionConfirmTimer & 1) || (gPlayerCount != 4)) {
         drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 4);
         if (width == 0x20) {
             temp = width & 0xFFFF;

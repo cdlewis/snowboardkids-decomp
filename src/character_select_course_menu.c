@@ -54,7 +54,7 @@ extern f32 D_800E09A4;
 extern s16 gMenuFadeAlpha;
 extern CharacterSelectSaveData gGameSaveDataBuffer[];
 extern u8 D_80121D80[];
-extern u8 D_80121D88;
+extern u8 gMenuTransitionState;
 extern u8 gPlayerCount;
 extern u8 gRaceTypeSelection;
 extern s16 gRaceCourseIndex;
@@ -66,19 +66,19 @@ extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
 #ifndef NON_MATCHING
-extern u16 D_8010ADF0;
+extern u16 gMenuInputRepeatTimers;
 #else
-extern volatile u16 D_8010ADF0;
+extern volatile u16 gMenuInputRepeatTimers;
 #endif
 extern u16 gCharacterSelectCourseExitOptionIndex;
 extern CharacterSelectCursorState gCharacterSelectCourseCursorState;
 extern u8 gCharacterSelectCourseSubmenuState;
-extern u8 D_8010ADF8;
+extern u8 gMenuExitSelection;
 extern u8 gHighestUnlockedCourse;
-extern u8 D_800EC9C1;
+extern u8 gMenuSelectionConfirmTimer;
 extern u8 gRaceSplitscreenMode;
 extern s16 D_800EC9D0;
-extern u8 D_800EC9DD;
+extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
@@ -100,10 +100,10 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     requestMusicSequenceBank(2);
     createCallbackTask((void (*)(CallbackTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
     gCurrentGameTask->timer = 0;
-    D_800EC9C1 = 0;
-    D_8010ADF8 = 0;
-    D_80121D88 = 0;
-    D_8010ADF0 = 0;
+    gMenuSelectionConfirmTimer = 0;
+    gMenuExitSelection = 0;
+    gMenuTransitionState = 0;
+    gMenuInputRepeatTimers = 0;
     D_800EC9D0 = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
     var_v1 = 0;
@@ -127,7 +127,7 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
     updateCallbackTasks();
     var_v1 = sp1C;
-    if (D_800EC9DD == 1) {
+    if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
             if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
@@ -214,11 +214,11 @@ void initCharacterSelectCourseMenuFromRace(void) {
     }
 
     gCurrentGameTask->timer = 0;
-    D_800EC9C1 = 0;
-    D_8010ADF8 = 0;
+    gMenuSelectionConfirmTimer = 0;
+    gMenuExitSelection = 0;
     gMenuFlowState = 0;
-    D_80121D88 = 0;
-    D_8010ADF0 = 0;
+    gMenuTransitionState = 0;
+    gMenuInputRepeatTimers = 0;
     D_800EC9D0 = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
     var_v1 = 0;
@@ -240,7 +240,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
     sp2C = var_v1;
     setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
     var_v1 = sp2C;
-    if (D_800EC9DD == 1) {
+    if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
             if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
@@ -326,11 +326,11 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     }
 
     gCurrentGameTask->timer = 0;
-    D_800EC9C1 = 0;
-    D_8010ADF8 = 0;
+    gMenuSelectionConfirmTimer = 0;
+    gMenuExitSelection = 0;
     gMenuFlowState = 0;
-    D_80121D88 = 0;
-    D_8010ADF0 = 0;
+    gMenuTransitionState = 0;
+    gMenuInputRepeatTimers = 0;
     D_800EC9D0 = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
     gActiveMenuTask = 0;
@@ -352,7 +352,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     sp2C = var_v1;
     setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
     var_v1 = sp2C;
-    if (D_800EC9DD == 1) {
+    if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
             if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
@@ -422,19 +422,19 @@ void updateCharacterSelectCourseMenu(void) {
             createCallbackTask(&initCharacterSelectUnlockedCourseList, 0, 0x63);
         }
     } else {
-        if (D_80121D88 == 0) {
-            if (D_800EC9C1 == 0) {
+        if (gMenuTransitionState == 0) {
+            if (gMenuSelectionConfirmTimer == 0) {
                 if (gCharacterSelectCourseCursorState.fields.state == 1) {
                     selection = gRaceCourseIndex;
                     previousSelection = (s16) selection;
                     temp_input = gPlayerInputHeld;
                     pressed = temp_input & 0x10800;
                     if ((pressed == 0) && ((temp_input & 0x20400) == 0)) {
-                        D_8010ADF0 = 0;
+                        gMenuInputRepeatTimers = 0;
                     }
 
                     heldInput = gPlayerInputPressed;
-                    repeatTimer = D_8010ADF0;
+                    repeatTimer = gMenuInputRepeatTimers;
                     if ((heldInput & 0x10800) == 0) {
                         if (((pressed != 0) && (repeatTimer >= 0xB)) && ((repeatTimer % 3) == 0)) {
                             if (repeatTimer == 0) {
@@ -444,20 +444,20 @@ void updateCharacterSelectCourseMenu(void) {
                                 gRaceCourseIndex = selection - 1;
                                 selection = gRaceCourseIndex;
                             }
-                            D_8010ADF0 = repeatTimer;
+                            gMenuInputRepeatTimers = repeatTimer;
                         } else if (((heldInput & 0x20400) != 0) ||
                                    ((((temp_input & 0x20400) != 0) && (repeatTimer >= 0xB)) &&
                                     ((repeatTimer % 3) == 0))) {
-                            D_8010ADF0 = repeatTimer;
+                            gMenuInputRepeatTimers = repeatTimer;
                             if (repeatTimer == 0) {
-                                D_8010ADF0 = repeatTimer + 1;
+                                gMenuInputRepeatTimers = repeatTimer + 1;
                             }
                             if ((*gCharacterSelectActiveCourseOptions)[selection] != -1) {
                                 gRaceCourseIndex = selection + 1;
                                 selection = gRaceCourseIndex;
                             }
                         } else {
-                            D_8010ADF0 = repeatTimer;
+                            gMenuInputRepeatTimers = repeatTimer;
                         }
                     } else {
                         if (repeatTimer == 0) {
@@ -467,15 +467,15 @@ void updateCharacterSelectCourseMenu(void) {
                             gRaceCourseIndex = selection - 1;
                             selection = gRaceCourseIndex;
                         }
-                        D_8010ADF0 = repeatTimer;
+                        gMenuInputRepeatTimers = repeatTimer;
                     }
 
-                    repeatTimer = D_8010ADF0;
+                    repeatTimer = gMenuInputRepeatTimers;
                     if (repeatTimer != 0) {
                         repeatTimer++;
-                        D_8010ADF0 = repeatTimer;
+                        gMenuInputRepeatTimers = repeatTimer;
                         if (repeatTimer == 0xFFFF) {
-                            D_8010ADF0 = 0xC;
+                            gMenuInputRepeatTimers = 0xC;
                         }
                     }
 
@@ -488,13 +488,13 @@ void updateCharacterSelectCourseMenu(void) {
                         (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         enqueueSoundEffect(1, 0x32);
                         if ((*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex] != -1) {
-                            D_800EC9C1 = 1;
+                            gMenuSelectionConfirmTimer = 1;
                             gCharacterSelectCourseCursorState.fields.state = 2;
                             gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
                         } else {
                             gCharacterSelectCourseCursorState.fields.state = 2;
                             gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
-                            D_80121D88 = 7;
+                            gMenuTransitionState = 7;
                             setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                             requestMusicSequenceStop(8);
                         }
@@ -502,22 +502,22 @@ void updateCharacterSelectCourseMenu(void) {
                         enqueueSoundEffect(1, 0x32);
                         gCharacterSelectCourseCursorState.fields.state = 2;
                         gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
-                        D_80121D88 = 7;
+                        gMenuTransitionState = 7;
                         setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                         requestMusicSequenceStop(8);
                     }
                 }
             } else {
-                D_800EC9C1++;
+                gMenuSelectionConfirmTimer++;
             }
 
-            if (D_800EC9C1 == 8) {
+            if (gMenuSelectionConfirmTimer == 8) {
                 if ((*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex] == -1) {
-                    D_80121D88 = 2;
+                    gMenuTransitionState = 2;
                     setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                     requestMusicSequenceStop(8);
                 } else {
-                    D_80121D88 = 1;
+                    gMenuTransitionState = 1;
                 }
             }
         }
@@ -589,12 +589,12 @@ void updateCharacterSelectCourseSubmenu(void) {
     } else {
         if (state == 6) {
             D_80121D80[8] = 0;
-            D_800EC9C1 = 0;
+            gMenuSelectionConfirmTimer = 0;
             setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
             gCharacterSelectCourseCursorState.fields.state = 1;
             gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
             gCharacterSelectCourseCursorState.fields.timer = 0;
-            state = D_80121D88;
+            state = gMenuTransitionState;
         }
         if (state == 8) {
             setCurrentGameTaskCallback(fadeOutCharacterSelectCourseMenu, 0);
@@ -604,13 +604,13 @@ void updateCharacterSelectCourseSubmenu(void) {
 }
 
 void handleCharacterSelectCourseSelection(void) {
-    if (D_80121D88 == 8) {
+    if (gMenuTransitionState == 8) {
         if (gPlayerCount >= 2) {
             setCurrentGameTaskCallback(&fadeOutCharacterSelectCourseMenu, 0);
             gMenuFlowState = 1;
-            D_8010ADF8 = 1;
+            gMenuExitSelection = 1;
         } else {
-            if (D_800EC9DD == 0) {
+            if (gCourseSelectFromRaceTypeMenu == 0) {
                 setCurrentGameTaskCallback(&returnToRaceSplitscreenSelectMenu, 0);
             } else {
                 setCurrentGameTaskCallback(&returnToRaceTypeSelectMenu, 0);

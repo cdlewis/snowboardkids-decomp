@@ -58,9 +58,9 @@ extern CallbackTask *D_8010ADE8;
 extern CallbackTask *D_8010ADEC;
 extern f32 gCharacterSelectViewportAspectRatio;
 extern s16 gMenuFadeAlpha;
-extern s16 D_8010ADF0[];
+extern s16 gMenuInputRepeatTimers[];
 extern s8 gFramebufferSwapDelay;
-extern s8 D_800EC9C1;
+extern s8 gMenuSelectionConfirmTimer;
 extern s8 D_8010AE53;
 extern s8 D_8010AE54;
 extern s8 D_8010AE55;
@@ -78,7 +78,7 @@ extern u8 D_60F1A0[];
 extern u8 D_60F990[];
 extern u8 gMainMenuSecretCodeUnlocked;
 extern u8 D_800EC9E5;
-extern u8 D_8010ADF8;
+extern u8 gMenuExitSelection;
 extern u8 D_8010AE68;
 extern u8 gPlayerCount;
 extern u8 gPendingFramebufferSwapCount;
@@ -99,13 +99,13 @@ void initCharacterSelectMenu(void) {
     s16 *timerPtr;
     s16 *timerEnd;
 
-    if ((D_800EC9E5 == 0) || (D_8010ADF8 == 1)) {
+    if ((D_800EC9E5 == 0) || (gMenuExitSelection == 1)) {
         requestMusicSequenceBank(1);
         resetAllViewports();
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gCharacterSelectViewportAspectRatio);
         gFramebufferSwapDelay = 0;
-        D_800EC9C1 = 0;
-        D_8010ADF8 = 0;
+        gMenuSelectionConfirmTimer = 0;
+        gMenuExitSelection = 0;
         gCurrentGameTask->fade = 0xFF;
         gCurrentGameTask->timer = 0;
         gMenuFadeAlpha = gCurrentGameTask->fade;
@@ -166,7 +166,7 @@ loop_1:
 
     playerCount = gPlayerCount;
     if (playerCount > 0) {
-        timerPtr = D_8010ADF0;
+        timerPtr = gMenuInputRepeatTimers;
         timerEnd = timerPtr + playerCount;
         player = D_80121D80;
         do {

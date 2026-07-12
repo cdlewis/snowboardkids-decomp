@@ -156,8 +156,8 @@ struct ShopMenuWidgetActor {
 extern void addRenderCallback(void *, void *, void *);
 extern s16 gAssetHandles[];
 extern u8 D_800EC9E6;
-extern u8 D_800EC9C1;
-extern u8 D_8010ADF8;
+extern u8 gMenuSelectionConfirmTimer;
+extern u8 gMenuExitSelection;
 
 void func_8002C4E0(ShopMenuRowActor *arg0) {
     ShopMenuRowActor *sp54;
@@ -171,8 +171,8 @@ void func_8002C4E0(ShopMenuRowActor *arg0) {
     do {
         if (arg0->unk26 > 0) {
             var_s2 = 0; var_s3 = arg0; do { var_s1 = 0;
-                if ((D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_8010ADF8 == 0) && (var_s0 == D_800EC9E6) &&
-                    (D_800EC9C1 & 1)) {
+                if ((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuExitSelection == 0) && (var_s0 == D_800EC9E6) &&
+                    (gMenuSelectionConfirmTimer & 1)) {
                     var_s1 = 0xFF;
                 }
                 drawMenuSprite(var_s3->unk18[0], (s16)(arg0->unk22 + var_s2), getRelocatableHeapBlockBase(gAssetHandles[0x27]),
@@ -201,7 +201,7 @@ extern ShopDescriptionText D_800B7A14[];
 extern u8 D_800B7CD0;
 extern u16 D_800B7D00[];
 extern u8 D_80121D86;
-extern u8 D_80121D88;
+extern u8 gMenuTransitionState;
 extern u8 D_80121D85;
 extern s16 gMenuPanelTilemapAssetHandle;
 extern s16 gShopMenuTextureAssetHandle;
@@ -268,7 +268,7 @@ void func_8002C624(ShopMenuRowActor *arg0) {
         state = arg0->unk24;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = (u8) (arg0->unk24 = 2);
         }
         break;
@@ -324,7 +324,7 @@ void func_8002C9A0(ShopMenuWidgetActor *arg0) {
         state = arg0->sprite.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->sprite.bytes.state = 2;
         }
         break;
@@ -458,7 +458,7 @@ void func_8002CFAC(ShopMenuWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->item.bytes.subState = 4;
         }
         state = arg0->item.bytes.subState;
@@ -471,12 +471,12 @@ void func_8002CFAC(ShopMenuWidgetActor *arg0) {
         state = arg0->item.bytes.subState;
         break;
     case 5:
-        D_80121D88 = 2;
+        gMenuTransitionState = 2;
         state = arg0->item.bytes.subState;
         break;
     }
 
-    if ((state == 5) && (D_80121D88 == 2)) {
+    if ((state == 5) && (gMenuTransitionState == 2)) {
         removeCallbackTask(arg0);
         return;
     }
@@ -564,7 +564,7 @@ void func_8002D558(ShopMenuWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             if (arg0->y == -0x140) {
                 arg0->item.bytes.state = 5;
             } else {
@@ -672,7 +672,7 @@ void func_8002D9EC(ShopMenuWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->item.bytes.state = 5;
         }
         state = arg0->item.bytes.state;
@@ -757,7 +757,7 @@ void func_8002DCE8(ShopMenuWidgetActor *arg0) {
         arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
         break;
     case 2:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->transition.bytes.state = 3;
         }
         break;
@@ -816,7 +816,7 @@ void func_8002DF40(ShopMenuWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -868,7 +868,7 @@ void func_8002E114(ShopMenuWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -919,7 +919,7 @@ void func_8002E32C(ShopMenuWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -961,7 +961,7 @@ void func_8002E468(ShopMenuWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 3) {
+        if (gMenuTransitionState == 3) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -1043,7 +1043,7 @@ void func_8002E6E4(ShopMenuWidgetActor *arg0) {
         var_v0 = arg0->slide.slideState;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->slide.slideState = 2U;
             var_v0 = 2 & 0xFF;
         }

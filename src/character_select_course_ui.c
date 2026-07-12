@@ -82,10 +82,10 @@ extern u8 gCharacterSelectCourseSubmenuState;
 extern u8 D_8010AE8A;
 extern u8 D_8010AE8F;
 extern u8 gHighestUnlockedCourse;
-extern u8 D_80121D88;
-extern u8 D_800EC9C1;
+extern u8 gMenuTransitionState;
+extern u8 gMenuSelectionConfirmTimer;
 extern s16 D_800EC9D0;
-extern u8 D_800EC9DD;
+extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gRaceSplitscreenMode;
 extern u8 gRaceTypeSelection;
 extern void *gMenuRenderCallbackList;
@@ -124,12 +124,12 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
         do {
             alpha = 0;
             if (i == 0) {
-                if ((i == gRaceCourseIndex) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+                if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 drawMenuSprite(pos[12], pos[23], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x1C, 0x20, 0x20, 0, alpha);
             } else if (i == gCharacterSelectCourseExitOptionIndex) {
-                if ((gCharacterSelectCourseExitOptionIndex == gRaceCourseIndex) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+                if ((gCharacterSelectCourseExitOptionIndex == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 if ((gPlayerCount - 1) == 0) {
@@ -138,7 +138,7 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
                     drawMenuSprite(pos[12], pos[23], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x1E, 0x20, 0x20, 0, alpha);
                 }
             } else {
-                if ((i == gRaceCourseIndex) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+                if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 drawMenuSprite(pos[12], pos[23], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (i + 0x12) & 0xFFFF, 0x20, 0x20, 0, alpha);
@@ -224,10 +224,10 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
         }
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->state = 2;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->state = 7;
         }
         break;
@@ -282,10 +282,10 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
         }
         break;
     case 4:
-        if (D_80121D88 == 4) {
+        if (gMenuTransitionState == 4) {
             arg0->state = 5;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->state = 7;
         }
         break;
@@ -317,7 +317,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
             arg0->state = 1;
         }
         if (arg0->state == 1) {
-            D_80121D88 = 5;
+            gMenuTransitionState = 5;
         }
         break;
     case 7:
@@ -432,17 +432,17 @@ void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameA
 use_alt_tile:
                 tile = 0x1D;
 tile_selected:
-                if ((i == gRaceCourseIndex) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+                if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), tile, 0x20, 0x20, 0, alpha);
             } else if (i == lastArrowIndex) {
-                if ((i == gRaceCourseIndex) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+                if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x20, 0x20, 0x20, 0, alpha);
             } else {
-                if ((i == gRaceCourseIndex) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
+                if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), (i + 0x12) & 0xFFFF, 0x20, 0x20, 0, alpha);
@@ -525,10 +525,10 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         break;
 
     case 1:
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->state = 7;
         }
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->state = 2;
         }
         break;
@@ -564,10 +564,10 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         break;
 
     case 4:
-        if (D_80121D88 == 4) {
+        if (gMenuTransitionState == 4) {
             arg0->state = 5;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->state = 10;
         }
         break;
@@ -626,7 +626,7 @@ state_6_done:
             arg0->state = 1;
         }
         if (arg0->state == 1) {
-            D_80121D88 = 5;
+            gMenuTransitionState = 5;
         }
         break;
 
@@ -832,7 +832,7 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
         state = D_80121D80[8];
         if (state == 1) {
             arg0->transition.bytes.state = 4;
-            state = D_80121D88;
+            state = gMenuTransitionState;
         }
         if (state == 7) {
             arg0->transition.bytes.state = 5;
@@ -956,19 +956,19 @@ void updateCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->transition.bytes.state = 4;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
         break;
     case 4:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             arg0->transition.bytes.state = 3;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -1068,19 +1068,19 @@ void updateCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->transition.bytes.state = 4;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
         break;
     case 4:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             arg0->transition.bytes.state = 3;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -1166,19 +1166,19 @@ void updateCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->transition.bytes.state = 4;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
         break;
     case 4:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             arg0->transition.bytes.state = 3;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -1278,19 +1278,19 @@ void updateCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->transition.bytes.state = 4;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
         break;
     case 4:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             arg0->transition.bytes.state = 3;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -1387,19 +1387,19 @@ void updateCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->transition.bytes.state = 4;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
         break;
     case 4:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             arg0->transition.bytes.state = 3;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -1499,19 +1499,19 @@ void updateCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->transition.bytes.state = 4;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
         break;
     case 4:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             arg0->transition.bytes.state = 3;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -1608,19 +1608,19 @@ void updateCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->transition.bytes.state = 4;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
         break;
     case 4:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             arg0->transition.bytes.state = 3;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -1718,19 +1718,19 @@ void updateCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->transition.bytes.state = 4;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
         break;
     case 4:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             arg0->transition.bytes.state = 3;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -1827,19 +1827,19 @@ void updateCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->transition.bytes.state = 4;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
         break;
     case 4:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             arg0->transition.bytes.state = 3;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -1934,19 +1934,19 @@ void updateCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActo
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->row.bytes.subState = 4;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->row.bytes.subState = 5;
         }
         state = arg0->row.bytes.subState;
         break;
     case 4:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             arg0->row.bytes.subState = 3;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->row.bytes.subState = 5;
         }
         state = arg0->row.bytes.subState;
@@ -2034,7 +2034,7 @@ void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg
         arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
         break;
     case 2:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->transition.bytes.state = 3;
         }
         break;
@@ -2043,7 +2043,7 @@ void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg
     }
 
     gCharacterSelectCourseCursorStateByte = state;
-    if (D_80121D88 == 7) {
+    if (gMenuTransitionState == 7) {
         removeCallbackTask(arg0);
         return;
     }
@@ -2071,7 +2071,7 @@ void initCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0)
         rowSpacing = 0x13;
     }
 
-    if (D_800EC9DD != 0) {
+    if (gCourseSelectFromRaceTypeMenu != 0) {
         y = -0x58;
         rowSpacing = 0x18;
     }
@@ -2102,19 +2102,19 @@ void updateCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *ar
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->transition.bytes.state = 2;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 3;
         }
         state = arg0->transition.bytes.state;
         break;
     case 2:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             arg0->transition.bytes.state = 1;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 3;
         }
         state = arg0->transition.bytes.state;
@@ -2199,19 +2199,19 @@ void updateCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->transition.bytes.state = 2;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 3;
         }
         state = arg0->transition.bytes.state;
         break;
     case 2:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             arg0->transition.bytes.state = 1;
         }
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 3;
         }
         state = arg0->transition.bytes.state;
@@ -2272,7 +2272,7 @@ void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActo
         state = arg0->sprite.bytes.state;
         break;
     case 1:
-        if ((D_80121D88 == 3) || (D_80121D88 == 7)) {
+        if ((gMenuTransitionState == 3) || (gMenuTransitionState == 7)) {
             state = arg0->sprite.bytes.state = 2;
         }
         break;
@@ -2325,7 +2325,7 @@ void updateCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *a
         state = arg0->sprite.bytes.state;
         break;
     case 1:
-        if ((D_80121D88 == 3) || (D_80121D88 == 7)) {
+        if ((gMenuTransitionState == 3) || (gMenuTransitionState == 7)) {
             state = arg0->sprite.bytes.state = 2;
         }
         break;
@@ -2376,10 +2376,10 @@ void updateCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *a
         state = arg0->sprite.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->sprite.bytes.state = 5;
         }
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->sprite.bytes.state = 2;
         }
         state = arg0->sprite.bytes.state;
@@ -2393,7 +2393,7 @@ void updateCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *a
         state = arg0->sprite.bytes.state;
         break;
     case 3:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             state = arg0->sprite.bytes.state = 4;
         }
         break;
@@ -2479,7 +2479,7 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
         break;
     case 2:
         arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0xF;
-        if (D_80121D88 == 3) {
+        if (gMenuTransitionState == 3) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -2490,7 +2490,7 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
         break;
     case 4:
         arg0->transition.bytes.timer++;
-        if ((D_80121D88 == 3) || (D_80121D88 == 7)) {
+        if ((gMenuTransitionState == 3) || (gMenuTransitionState == 7)) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -2572,14 +2572,14 @@ void updateCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActo
         state = arg0->transition.bytes.state;
         break;
     case 2:
-        if ((D_80121D88 == 7) || (D_80121D88 == 1)) {
+        if ((gMenuTransitionState == 7) || (gMenuTransitionState == 1)) {
             state = arg0->transition.bytes.state = 3;
         }
         break;
     case 3:
         arg0->x -= 0x20;
         if (arg0->x < -0x11F) {
-            if (D_80121D88 == 7) {
+            if (gMenuTransitionState == 7) {
                 arg0->transition.bytes.state = 7;
             } else {
                 arg0->transition.bytes.state = 4;
@@ -2588,7 +2588,7 @@ void updateCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActo
         state = arg0->transition.bytes.state;
         break;
     case 4:
-        if (D_80121D88 == 5) {
+        if (gMenuTransitionState == 5) {
             state = arg0->transition.bytes.state = 5;
         }
         break;
@@ -2600,10 +2600,10 @@ void updateCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActo
         state = arg0->transition.bytes.state;
         break;
     case 6:
-        if (D_80121D88 == 7) {
+        if (gMenuTransitionState == 7) {
             arg0->transition.bytes.state = 3;
         }
-        if (D_80121D88 == 0) {
+        if (gMenuTransitionState == 0) {
             arg0->transition.bytes.state = 2;
         }
         state = arg0->transition.bytes.state;
@@ -2875,7 +2875,7 @@ void updateCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *a
         state = arg0->sprite.bytes.state;
         break;
     case 1:
-        if ((D_80121D88 == 3) || (D_80121D88 == 7)) {
+        if ((gMenuTransitionState == 3) || (gMenuTransitionState == 7)) {
             state = arg0->sprite.bytes.state = 2;
         }
         break;
@@ -2896,7 +2896,7 @@ void updateCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *a
     state = arg0->sprite.bytes.state;
     if (state == 4) {
         removeCallbackTask(arg0);
-        D_80121D88 = 4;
+        gMenuTransitionState = 4;
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseRecordsPopup, arg0);
@@ -2953,7 +2953,7 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
         break;
     case 2:
         arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0xF;
-        if (D_80121D88 == 3) {
+        if (gMenuTransitionState == 3) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -2964,7 +2964,7 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
         break;
     case 4:
         arg0->transition.bytes.timer++;
-        if ((D_80121D88 == 3) || (D_80121D88 == 7)) {
+        if ((gMenuTransitionState == 3) || (gMenuTransitionState == 7)) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;

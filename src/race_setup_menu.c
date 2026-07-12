@@ -34,11 +34,11 @@ extern s8 gRumblePakConnectedByController;
 extern s8 D_800EC8B5;
 extern s8 D_800EC8B6;
 extern s8 D_800EC8B7;
-extern u8 D_800EC9C1;
+extern u8 gMenuSelectionConfirmTimer;
 extern s8 D_800EC9E5;
 extern s8 D_800EC9E6;
 extern CallbackTask *gActiveMenuTask;
-extern u16 D_8010ADF0;
+extern u16 gMenuInputRepeatTimers;
 extern s8 gHighestUnlockedCourse;
 extern RaceSetupMenuSubState D_8010AE00;
 extern s16 D_8010AE06;
@@ -80,14 +80,14 @@ void initRaceSetupMenu(void) {
     gFramebufferSwapDelay = 0;
     gCurrentGameTask->fade = 0;
     gCurrentGameTask->timer = 0;
-    D_800EC9C1 = 0;
+    gMenuSelectionConfirmTimer = 0;
     D_800EC9E5 = 1;
     D_800EC9E6 = 0;
     gHighestUnlockedCourse = 0;
     gRaceRumbleEnabled = 0;
     gRaceCourseIndex = 9;
     gMenuFlowState = 0;
-    D_8010ADF0 = 0;
+    gMenuInputRepeatTimers = 0;
     gPlayerCount = 1;
     gMenuFadeAlpha = gCurrentGameTask->fade;
 
@@ -152,34 +152,34 @@ void updateRaceSetupPlayerCountMenu(void) {
         one = 1;
     }
     if (gCurrentGameTask->timer == one) {
-        temp_v1 = D_800EC9C1;
+        temp_v1 = gMenuSelectionConfirmTimer;
         if (temp_v1 == 0) {
             temp_a3 = gPlayerInputPressed;
             temp_v0 = gPlayerInputHeld & 0x10800;
             if ((temp_v0 == 0) && !(gPlayerInputHeld & 0x20400)) {
-                D_8010ADF0 = 0;
+                gMenuInputRepeatTimers = 0;
             }
-            var_a2 = &D_8010ADF0;
-            if ((temp_a3 & 0x10800) || ((temp_v0 != 0) && (D_8010ADF0 >= 9) && ((D_8010ADF0 % 3) == 0))) {
-                if (D_8010ADF0 == 0) {
-                    D_8010ADF0 += 1;
+            var_a2 = &gMenuInputRepeatTimers;
+            if ((temp_a3 & 0x10800) || ((temp_v0 != 0) && (gMenuInputRepeatTimers >= 9) && ((gMenuInputRepeatTimers % 3) == 0))) {
+                if (gMenuInputRepeatTimers == 0) {
+                    gMenuInputRepeatTimers += 1;
                 }
                 if (gPlayerCount != one) {
                     gPlayerCount -= 1;
                     sp18 = temp_a3;
-                    enqueueSoundEffect(0x19, 0x32, &D_8010ADF0, temp_a3);
+                    enqueueSoundEffect(0x19, 0x32, &gMenuInputRepeatTimers, temp_a3);
                     goto block_25;
                 }
-            } else if ((temp_a3 & 0x20400) || ((gPlayerInputHeld & 0x20400) && (D_8010ADF0 >= 9) && ((D_8010ADF0 % 3) == 0))) {
-                if (D_8010ADF0 == 0) {
-                    D_8010ADF0 += 1;
+            } else if ((temp_a3 & 0x20400) || ((gPlayerInputHeld & 0x20400) && (gMenuInputRepeatTimers >= 9) && ((gMenuInputRepeatTimers % 3) == 0))) {
+                if (gMenuInputRepeatTimers == 0) {
+                    gMenuInputRepeatTimers += 1;
                 }
                 if (gConnectedControllerCount != gPlayerCount) {
                     gPlayerCount += 1;
                     sp18 = temp_a3;
-                    enqueueSoundEffect(0x19, 0x32, &D_8010ADF0, temp_a3);
+                    enqueueSoundEffect(0x19, 0x32, &gMenuInputRepeatTimers, temp_a3);
 block_25:
-                    var_a2 = &D_8010ADF0;
+                    var_a2 = &gMenuInputRepeatTimers;
                 }
             }
             temp_v0_2 = *var_a2;
@@ -191,17 +191,17 @@ block_25:
                 }
             }
             if ((temp_a3 & 0x8000) || (temp_a3 & 0x1000)) {
-                D_800EC9C1 = 1;
+                gMenuSelectionConfirmTimer = 1;
                 enqueueSoundEffect(0x18, 0x32, var_a2, temp_a3);
             }
         } else if (temp_v1 < 0x13) {
-            D_800EC9C1 = temp_v1 + 1;
+            gMenuSelectionConfirmTimer = temp_v1 + 1;
         }
     }
     if (D_8010AE00.state == 5) {
         setCurrentGameTaskCallback(initRaceSetupSaveMenu, 0);
         gCurrentGameTask->fade = 0;
-        D_800EC9C1 = 0;
+        gMenuSelectionConfirmTimer = 0;
     }
     updateCallbackTasks();
 }
@@ -281,7 +281,7 @@ void initRaceSetupSaveMenu(void) {
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     D_8010ADE8 = 0;
-    D_800EC9C1 = 0;
+    gMenuSelectionConfirmTimer = 0;
     gMenuFlowState = 0;
     gRaceRumbleEnabled = 0;
 
@@ -637,8 +637,8 @@ void updateRaceSetupSaveMenu(void) {
     }
 
     if (allReady != 0) {
-        D_800EC9C1++;
-        if (D_800EC9C1 == 0xF) {
+        gMenuSelectionConfirmTimer++;
+        if (gMenuSelectionConfirmTimer == 0xF) {
             RaceSetupSubState03798 *subState;
             RaceSetupSavePlayer03798 *save;
             RaceSetupSavePlayer03798 *end;

@@ -37,7 +37,7 @@ extern s32 gPlayerInputPressed;
 extern s16 gControllerPakStatusCodes;
 extern s16 D_800EC9D0;
 extern u8 gControllerPakRetryCounts;
-extern s8 D_800EC9C1;
+extern s8 gMenuSelectionConfirmTimer;
 extern s32 gActiveMenuTask;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
@@ -62,7 +62,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     D_800EC9D0 = 0;
     gControllerPakRetryCounts = 0;
     D_80121D80.status = 0;
-    D_800EC9C1 = 0;
+    gMenuSelectionConfirmTimer = 0;
     gCurrentGameTask->fade = 0xFF;
     gActiveMenuTask = 0;
     D_8010ADE0 = 0;
@@ -128,7 +128,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
     }
   }
   else
-    if (((u8) D_800EC9C1) == 0)
+    if (((u8) gMenuSelectionConfirmTimer) == 0)
   {
     new_var = 3;
     if (((u8) gControllerPakRaceRecordSaveStatusTransition.step) == 1)
@@ -407,11 +407,11 @@ void updateControllerPakRaceRecordSaveFlow(void)
   }
   else
   {
-    D_800EC9C1 = ((u8) D_800EC9C1) + 1;
+    gMenuSelectionConfirmTimer = ((u8) gMenuSelectionConfirmTimer) + 1;
   }
   if (sp24 != 0)
   {
- D_800EC9C1 = 1; } if (((u8) D_800EC9C1) == 0x23) { setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
+ gMenuSelectionConfirmTimer = 1; } if (((u8) gMenuSelectionConfirmTimer) == 0x23) { setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
   }
   updateCallbackTasks();
 }

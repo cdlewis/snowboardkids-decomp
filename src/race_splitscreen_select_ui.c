@@ -28,10 +28,10 @@ extern void addRenderCallback(void *, void *, void *);
 extern int sprintf(char *, const char *, ...);
 extern RaceSplitscreenSelectFrameTiles gRaceSplitscreenSelectFrameTiles[];
 extern RaceSplitscreenSelectPortrait gRaceSplitscreenSelectPortraitScripts[];
-extern u8 D_800EC9C1;
+extern u8 gMenuSelectionConfirmTimer;
 extern u8 gRaceSplitscreenMode;
 extern u8 D_80121D85;
-extern u8 D_80121D88;
+extern u8 gMenuTransitionState;
 extern void *gMenuRenderCallbackList;
 extern RaceSplitscreenSelectAssetHandles gAssetHandles;
 extern RaceSplitscreenSelectCursorState gRaceSplitscreenSelectCursorTarget;
@@ -40,7 +40,7 @@ extern s16 gRaceSplitscreenSelectPortraitAlpha;
 extern u32 gMenuPanelBackdropTexture[];
 extern Gfx gMenuRenderModeResetDl[];
 extern s32 gActiveMenuTask;
-extern u8 D_8010ADF8;
+extern u8 gMenuExitSelection;
 extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
@@ -59,7 +59,7 @@ void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *ar
     sp54 = arg0;
     var_s0 = 0;
     if ((s32)arg0->playerCount > 0) {
-        do { var_s2 = 0; var_s3 = arg0; do { var_s1 = 0; if (((((D_800EC9C1 != 0) && (((s32)D_800EC9C1) < 8)) && (D_8010ADF8 == 0)) && (var_s0 == gRaceSplitscreenMode)) && (D_800EC9C1 & 1)) { var_s1 = 0xFF; } drawMenuSprite(var_s3->iconX[0], (s16)(arg0->iconY + var_s2), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (var_s0 + 8) & 0xFFFF, 0x20, 0x20, 0, var_s1); var_s0 += 1; var_s2 += 0x14; var_s3 = (RaceSplitscreenSelectRowActor *)((u8 *)var_s3 + 2); if (arg0->playerCount) {} } while (var_s0 < ((s32)sp54->playerCount)); } while (0);
+        do { var_s2 = 0; var_s3 = arg0; do { var_s1 = 0; if (((((gMenuSelectionConfirmTimer != 0) && (((s32)gMenuSelectionConfirmTimer) < 8)) && (gMenuExitSelection == 0)) && (var_s0 == gRaceSplitscreenMode)) && (gMenuSelectionConfirmTimer & 1)) { var_s1 = 0xFF; } drawMenuSprite(var_s3->iconX[0], (s16)(arg0->iconY + var_s2), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (var_s0 + 8) & 0xFFFF, 0x20, 0x20, 0, var_s1); var_s0 += 1; var_s2 += 0x14; var_s3 = (RaceSplitscreenSelectRowActor *)((u8 *)var_s3 + 2); if (arg0->playerCount) {} } while (var_s0 < ((s32)sp54->playerCount)); } while (0);
     }
 }
 
@@ -110,7 +110,7 @@ void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *
         state = arg0->state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = (u8) (arg0->state = 2);
         }
         break;
@@ -166,7 +166,7 @@ void updateRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *
         state = arg0->sprite.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->sprite.bytes.state = 2;
         }
         break;
@@ -308,7 +308,7 @@ void updateRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *a
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->row.bytes.subState = 4;
         }
         state = arg0->row.bytes.subState;
@@ -321,12 +321,12 @@ void updateRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *a
         state = arg0->row.bytes.subState;
         break;
     case 5:
-        D_80121D88 = 2;
+        gMenuTransitionState = 2;
         state = arg0->row.bytes.subState;
         break;
     }
 
-    if ((state == 5) && (D_80121D88 == 2)) {
+    if ((state == 5) && (gMenuTransitionState == 2)) {
         removeCallbackTask(arg0);
         return;
     }
@@ -417,7 +417,7 @@ void updateRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *a
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
             } else {
@@ -522,7 +522,7 @@ void updateRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *a
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
             } else {
@@ -629,7 +629,7 @@ void updateRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *a
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
             } else {
@@ -735,7 +735,7 @@ void updateRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *a
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
             } else {
@@ -808,7 +808,7 @@ void updateRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
         arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
         break;
     case 2:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->transition.bytes.state = 3;
         }
         break;
@@ -866,7 +866,7 @@ void updateRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0)
         }
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->transition.bytes.state = 2;
         }
         break;
@@ -912,7 +912,7 @@ void updateRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *ar
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -963,7 +963,7 @@ void updateRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0)
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
