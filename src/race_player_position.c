@@ -1,19 +1,17 @@
 #include "common.h"
 #include "fixed_point_math.h"
 #include "race_motion.h"
-#include "race_position.h"
+#include "race_player_position.h"
 
-// Race player records are 0x60C bytes apart. This view only names the fields
-// touched by this race position module.
-#define RACE_POSITION_PLAYER_COUNT 4
-#define RACE_POSITION_PLAYER_SIZE 0x60C
+#define RACE_PLAYER_POSITION_COUNT 4
+#define RACE_PLAYER_POSITION_STATE_SIZE 0x60C
 
-typedef struct RacePositionCheckpointEvent {
+typedef struct RacePlayerCheckpointEvent {
     /* 0x00 */ s16 pathFrame;
     /* 0x02 */ s16 eventId;
-} RacePositionCheckpointEvent;
+} RacePlayerCheckpointEvent;
 
-typedef struct RacePositionPlayer {
+typedef struct RacePlayerPositionState {
     /* 0x000 */ s16 playerIndex;
     /* 0x002 */ u8 pad2[2];
     /* 0x004 */ u8 isActive;
@@ -39,12 +37,12 @@ typedef struct RacePositionPlayer {
     /* 0x529 */ u8 displayRank;
     /* 0x52A */ u8 rankArrow;
     /* 0x52B */ u8 rankChangeTimer;
-    /* 0x52C */ u8 pad52C[RACE_POSITION_PLAYER_SIZE - 0x52C];
-} RacePositionPlayer;
+    /* 0x52C */ u8 pad52C[RACE_PLAYER_POSITION_STATE_SIZE - 0x52C];
+} RacePlayerPositionState;
 
-extern RacePositionPlayer D_80121D80[RACE_POSITION_PLAYER_COUNT];
-extern RacePositionPlayer gFrameCounter;
-extern RacePositionCheckpointEvent *gRaceCourseCheckpointEventLists[];
+extern RacePlayerPositionState D_80121D80[RACE_PLAYER_POSITION_COUNT];
+extern RacePlayerPositionState gFrameCounter;
+extern RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[];
 extern s8 *gRaceCoursePlayerPathOffsetTables[];
 extern u8 gSinglePlayerRankDisplayPatternFirst[];
 extern u8 gSinglePlayerRankDisplayPatternSecond[];
@@ -54,8 +52,10 @@ extern u8 gRaceSplitscreenMode;
 extern u8 gPlayerCount;
 extern s16 gRaceCourseIndex;
 
-// updateRacePlayerRankDisplay best match: 30.134% (nonmatchings/updateRacePositionTracker-5752545231564691495/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_position/updateRacePlayerRankDisplay.s")
+#define gRacePlayerPositionStates D_80121D80
+
+// updateRacePlayerRankDisplay best match: 30.134% (nonmatchings/updateRacePlayerRankDisplay-5752545231564691495/base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_position/updateRacePlayerRankDisplay.s")
 
 #ifdef NON_MATCHING
 #define RANK_NEAR_LIMIT 0x3800000
@@ -63,25 +63,25 @@ extern s16 gRaceCourseIndex;
 
 #define ASSIGN_DISPLAY_RANKS(pattern) \
     rankIndex = 0; \
-    player = &D_80121D80[order[0]]; \
+    player = &gRacePlayerPositionStates[order[0]]; \
     if (player->isActive != 0) { \
         player->rankChangeTimer = 0; \
         player->displayRank = (pattern)[rankIndex]; \
         rankIndex++; \
     } \
-    player = &D_80121D80[order[1]]; \
+    player = &gRacePlayerPositionStates[order[1]]; \
     if (player->isActive != 0) { \
         player->rankChangeTimer = 0; \
         player->displayRank = (pattern)[rankIndex]; \
         rankIndex++; \
     } \
-    player = &D_80121D80[order[2]]; \
+    player = &gRacePlayerPositionStates[order[2]]; \
     if (player->isActive != 0) { \
         player->rankChangeTimer = 0; \
         player->displayRank = (pattern)[rankIndex]; \
         rankIndex++; \
     } \
-    player = &D_80121D80[order[3]]; \
+    player = &gRacePlayerPositionStates[order[3]]; \
     if (player->isActive != 0) { \
         player->rankChangeTimer = 0; \
         player->displayRank = (pattern)[rankIndex]; \
@@ -96,8 +96,8 @@ void updateRacePlayerRankDisplay(void) {
     s32 *scan;
     s32 rankIndex;
     s32 mode;
-    RacePositionPlayer *player;
-    RacePositionPlayer *other;
+    RacePlayerPositionState *player;
+    RacePlayerPositionState *other;
     s32 dx;
     s32 dz;
     s8 rank;
@@ -119,7 +119,7 @@ void updateRacePlayerRankDisplay(void) {
             if ((4 - i) & 1) {
                 temp = *rankSlot;
                 candidate = i + 1;
-                if (((volatile RacePositionPlayer *)D_80121D80)[temp].raceRank < D_80121D80[temp].raceRank) {
+                if (((volatile RacePlayerPositionState *)gRacePlayerPositionStates)[temp].raceRank < gRacePlayerPositionStates[temp].raceRank) {
                     *((volatile s32 *)rankSlot) = temp;
                     *((volatile s32 *)rankSlot) = temp;
                 }
@@ -131,13 +131,13 @@ void updateRacePlayerRankDisplay(void) {
             do {
                 temp = *rankSlot;
                 candidate = *scan;
-                if (D_80121D80[candidate].raceRank < D_80121D80[temp].raceRank) {
+                if (gRacePlayerPositionStates[candidate].raceRank < gRacePlayerPositionStates[temp].raceRank) {
                     *rankSlot = candidate;
                     *scan = temp;
                     temp = *rankSlot;
                 }
                 candidate = scan[1];
-                if (D_80121D80[candidate].raceRank < D_80121D80[temp].raceRank) {
+                if (gRacePlayerPositionStates[candidate].raceRank < gRacePlayerPositionStates[temp].raceRank) {
                     *rankSlot = candidate;
                     scan[1] = temp;
                 }
@@ -152,7 +152,7 @@ sort_next:
 
     switch (mode) {
     case 1:
-        rank = D_80121D80[0].raceRank;
+        rank = gRacePlayerPositionStates[0].raceRank;
         if (rank == 0) {
             ASSIGN_DISPLAY_RANKS(gSinglePlayerRankDisplayPatternFirst);
         }
@@ -167,59 +167,59 @@ sort_next:
         }
         break;
     case 2:
-        if (!(D_80121D80[1].raceRank < D_80121D80[0].raceRank)) {
-            if (D_80121D80[1].raceRank == 3) {
-                if (D_80121D80[3].raceRank >= D_80121D80[2].raceRank) {
-                    D_80121D80[2].displayRank = 2;
-                    D_80121D80[3].displayRank = 1;
+        if (!(gRacePlayerPositionStates[1].raceRank < gRacePlayerPositionStates[0].raceRank)) {
+            if (gRacePlayerPositionStates[1].raceRank == 3) {
+                if (gRacePlayerPositionStates[3].raceRank >= gRacePlayerPositionStates[2].raceRank) {
+                    gRacePlayerPositionStates[2].displayRank = 2;
+                    gRacePlayerPositionStates[3].displayRank = 1;
                 } else {
-                    D_80121D80[2].displayRank = 1;
-                    D_80121D80[3].displayRank = 2;
+                    gRacePlayerPositionStates[2].displayRank = 1;
+                    gRacePlayerPositionStates[3].displayRank = 2;
                 }
-            } else if (D_80121D80[3].raceRank >= D_80121D80[2].raceRank) {
-                D_80121D80[2].displayRank = 1;
-                D_80121D80[3].displayRank = 2;
+            } else if (gRacePlayerPositionStates[3].raceRank >= gRacePlayerPositionStates[2].raceRank) {
+                gRacePlayerPositionStates[2].displayRank = 1;
+                gRacePlayerPositionStates[3].displayRank = 2;
             } else {
-                D_80121D80[2].displayRank = 2;
-                D_80121D80[3].displayRank = 1;
+                gRacePlayerPositionStates[2].displayRank = 2;
+                gRacePlayerPositionStates[3].displayRank = 1;
             }
-            D_80121D80[2].rankChangeTimer = 1;
-            D_80121D80[3].rankChangeTimer = 1;
+            gRacePlayerPositionStates[2].rankChangeTimer = 1;
+            gRacePlayerPositionStates[3].rankChangeTimer = 1;
         } else {
-            if (D_80121D80[0].raceRank == 3) {
-                if (D_80121D80[3].raceRank >= D_80121D80[2].raceRank) {
-                    D_80121D80[2].displayRank = 2;
-                    D_80121D80[3].displayRank = 1;
+            if (gRacePlayerPositionStates[0].raceRank == 3) {
+                if (gRacePlayerPositionStates[3].raceRank >= gRacePlayerPositionStates[2].raceRank) {
+                    gRacePlayerPositionStates[2].displayRank = 2;
+                    gRacePlayerPositionStates[3].displayRank = 1;
                 } else {
-                    D_80121D80[2].displayRank = 1;
-                    D_80121D80[3].displayRank = 2;
+                    gRacePlayerPositionStates[2].displayRank = 1;
+                    gRacePlayerPositionStates[3].displayRank = 2;
                 }
-            } else if (D_80121D80[3].raceRank >= D_80121D80[2].raceRank) {
-                D_80121D80[2].displayRank = 1;
-                D_80121D80[3].displayRank = 2;
+            } else if (gRacePlayerPositionStates[3].raceRank >= gRacePlayerPositionStates[2].raceRank) {
+                gRacePlayerPositionStates[2].displayRank = 1;
+                gRacePlayerPositionStates[3].displayRank = 2;
             } else {
-                D_80121D80[2].displayRank = 2;
-                D_80121D80[3].displayRank = 1;
+                gRacePlayerPositionStates[2].displayRank = 2;
+                gRacePlayerPositionStates[3].displayRank = 1;
             }
-            D_80121D80[2].rankChangeTimer = 0;
-            D_80121D80[3].rankChangeTimer = 0;
+            gRacePlayerPositionStates[2].rankChangeTimer = 0;
+            gRacePlayerPositionStates[3].rankChangeTimer = 0;
         }
         break;
     case 3:
-        D_80121D80[3].rankChangeTimer = 0;
-        D_80121D80[3].displayRank = 1;
-        rank = D_80121D80[(s8)D_80121D80[3].rankChangeTimer].raceRank;
-        if (rank < D_80121D80[1].raceRank) {
-            D_80121D80[3].rankChangeTimer = 1;
-            rank = D_80121D80[(s8)D_80121D80[3].rankChangeTimer].raceRank;
+        gRacePlayerPositionStates[3].rankChangeTimer = 0;
+        gRacePlayerPositionStates[3].displayRank = 1;
+        rank = gRacePlayerPositionStates[(s8)gRacePlayerPositionStates[3].rankChangeTimer].raceRank;
+        if (rank < gRacePlayerPositionStates[1].raceRank) {
+            gRacePlayerPositionStates[3].rankChangeTimer = 1;
+            rank = gRacePlayerPositionStates[(s8)gRacePlayerPositionStates[3].rankChangeTimer].raceRank;
         }
-        if (rank < D_80121D80[2].raceRank) {
-            D_80121D80[3].rankChangeTimer = 2;
+        if (rank < gRacePlayerPositionStates[2].raceRank) {
+            gRacePlayerPositionStates[3].rankChangeTimer = 2;
         }
         break;
     }
 
-    player = D_80121D80;
+    player = gRacePlayerPositionStates;
     do {
         if (player->isActive != 0) {
             rank = player->displayRank;
@@ -229,7 +229,7 @@ sort_next:
                 break;
             case 1:
                 player->rankArrow = 0;
-                other = &D_80121D80[(s8)player->rankChangeTimer];
+                other = &gRacePlayerPositionStates[(s8)player->rankChangeTimer];
                 dx = other->posX - player->posX;
                 dz = other->posZ - player->posZ;
                 if ((dx >= RANK_NEAR_LIMIT) || (dx < RANK_NEAR_NEG_LIMIT) || (dz >= RANK_NEAR_LIMIT) ||
@@ -243,7 +243,7 @@ sort_next:
                 break;
             case 2:
                 if (mode == 1) {
-                    if (D_80121D80[0].raceRank < player->raceRank) {
+                    if (gRacePlayerPositionStates[0].raceRank < player->raceRank) {
                         player->rankArrow = 0;
                     } else {
                         player->rankArrow = 3;
@@ -268,16 +268,16 @@ sort_next:
 #endif
 
 // updateRacePlayerCheckpointEventState best match: 99.480% (nonmatchings/updateRacePlayerCheckpointEvent-7273315160691878794/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_position/updateRacePlayerCheckpointEventState.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_position/updateRacePlayerCheckpointEventState.s")
 
 #ifdef NON_MATCHING
-void updateRacePlayerCheckpointEventState(RacePositionPlayer *player) {
+void updateRacePlayerCheckpointEventState(RacePlayerPositionState *player) {
     s64 product;
     s32 x;
     s32 y;
     s32 z;
     s16 angle;
-    RacePositionCheckpointEvent *event;
+    RacePlayerCheckpointEvent *event;
     s32 eventIndex;
     s16 pathFrame;
     s32 eventMask;
@@ -327,13 +327,13 @@ void updateRacePlayerCheckpointEventState(RacePositionPlayer *player) {
 }
 #endif
 
-s32 getSmoothedRacePlayerPathOffset(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
+s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
     s32 courseIndex;
     s32 pathIndexCopy;
     s8 *entry;
 
     courseIndex = gRaceCourseIndex;
-    entry = gRaceCoursePlayerPathOffsetTables[(courseIndex * RACE_POSITION_PLAYER_COUNT) + playerIndex];
+    entry = gRaceCoursePlayerPathOffsetTables[(courseIndex * RACE_PLAYER_POSITION_COUNT) + playerIndex];
     pathIndexCopy = pathIndex;
     if (courseIndex == 7) {
         if (playerIndex == 0) {
@@ -350,9 +350,9 @@ s32 getSmoothedRacePlayerPathOffset(s32 playerIndex, s32 pathIndex, s32 rankSlot
         }
     }
 
-    entry = gRaceCoursePlayerPathOffsetTables[(courseIndex * RACE_POSITION_PLAYER_COUNT) + playerIndex];
+    entry = gRaceCoursePlayerPathOffsetTables[(courseIndex * RACE_PLAYER_POSITION_COUNT) + playerIndex];
     pathIndex = entry[pathIndexCopy] << 0x12;
-    pathIndex -= D_80121D80[rankSlot].smoothedPathOffset;
+    pathIndex -= gRacePlayerPositionStates[rankSlot].smoothedPathOffset;
 
     if (pathIndex > 0x60000) {
         pathIndex = 0x60000;
@@ -361,8 +361,8 @@ s32 getSmoothedRacePlayerPathOffset(s32 playerIndex, s32 pathIndex, s32 rankSlot
         pathIndex = -0x60000;
     }
 
-    D_80121D80[rankSlot].smoothedPathOffset += pathIndex;
-    return D_80121D80[rankSlot].smoothedPathOffset;
+    gRacePlayerPositionStates[rankSlot].smoothedPathOffset += pathIndex;
+    return gRacePlayerPositionStates[rankSlot].smoothedPathOffset;
 }
 
 s32 getRacePlayerPathOffset(s32 playerIndex, s32 pathIndex) {
@@ -383,6 +383,6 @@ s32 getRacePlayerPathOffset(s32 playerIndex, s32 pathIndex) {
         }
     }
 
-    entry = gRaceCoursePlayerPathOffsetTables[(gRaceCourseIndex * RACE_POSITION_PLAYER_COUNT) + playerIndex];
+    entry = gRaceCoursePlayerPathOffsetTables[(gRaceCourseIndex * RACE_PLAYER_POSITION_COUNT) + playerIndex];
     return entry[pathIndex] << 0x12;
 }

@@ -15,7 +15,7 @@
 #include "race_player_pickup_effects.h"
 #include "menu_screen_effects.h"
 #include "race_player_movement.h"
-#include "race_position.h"
+#include "race_player_position.h"
 #include "race_player_model_renderer.h"
 #include "race_player_update.h"
 #include "race_surface_cues.h"
