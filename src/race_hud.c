@@ -174,7 +174,7 @@ void initRaceHud(void) {
     gRaceChallengeFailed = 0;
 }
 
-// drawTrickAttackChallengeHud best match: 98.869% at nonmatchings/drawTrickAttackChallengeHud-2225551288923588688/base_17.c.
+// drawTrickAttackChallengeHud best match: 99.768% at nonmatchings/drawTrickAttackChallengeHud-8331816093655448999/base_12.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawTrickAttackChallengeHud.s")
 
 #ifdef NON_MATCHING
@@ -185,9 +185,9 @@ const char D_800E1728[] = "%4d";
 const char D_800E172C[] = "%2d";
 
 void drawTrickAttackChallengeHud(s32 arg0) {
-    char buffer[4];
     s32 x;
     char *digit;
+    char buffer[4];
     s32 palette;
     s32 finalPalette;
     s32 i;
@@ -256,8 +256,8 @@ void drawTrickAttackChallengeHud(s32 arg0) {
     {
         char *end;
 
-        sprintf(buffer, D_800E1728, gRaceTrickAttackPointTotal);
         x = 0x64;
+        sprintf(buffer, D_800E1728, gRaceTrickAttackPointTotal);
         digit = buffer;
         end = &buffer[4];
         do {
