@@ -83,7 +83,7 @@ void updateMenuCameraObjectLookAtOrigin(void) {
     obj->cameraDelta.z = scratch.worldPos.z - obj->pos.z;
 }
 
-void updateMenuCameraObject(void) {
+void updateMenuCameraObjectLookAtOriginCallback(void) {
     updateMenuCameraObjectLookAtOrigin();
 }
 
@@ -107,7 +107,7 @@ void updateMenuCameraObjectWithTargetOffset(void) {
     obj->cameraDelta.z = scratch.worldPos.z - obj->pos.z;
 }
 
-void updateMenuCameraObjectFromTargetOffset(void) {
+void updateMenuCameraObjectWithTargetOffsetCallback(void) {
     updateMenuCameraObjectWithTargetOffset();
 }
 
@@ -129,11 +129,8 @@ extern u8 D_1E0F70[];
 extern u8 D_1E19C0[];
 extern u8 D_5DAF30[];
 extern u8 D_5DB9D0[];
-extern u8 D_800BB810[];
-extern u8 D_800BB811[];
-extern u8 D_800BB812[];
-extern u8 D_800BB813[];
-extern s8 D_800DC4C0;
+extern u8 gRaceSetupOpponentFocusCharacterIds[][4];
+extern u8 gPendingEndingCreditsFlow;
 extern u8 gRaceSplitscreenMode;
 extern RaceSetupSaveData gGameSaveDataBuffer;
 extern u8 D_800ECA24;
@@ -155,7 +152,7 @@ void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
             state = save->unk4C;
             if ((state == 2) && (save->unk3A == 1)) {
                 save->unk4C = 3;
-                D_800DC4C0 = 1;
+                gPendingEndingCreditsFlow = 1;
                 state = save->unk4C;
                 transition = 3;
             }
@@ -221,10 +218,10 @@ void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
     createCallbackTask(initMainMenuModeBoardTransition, 0, 0x64);
     createCallbackTaskWithUserId(initMainMenuModeLabelFadeIn, 0, 0x64, effectArg);
     createCallbackTaskWithUserId(initRaceSetupCharacterFocus, 0, 0x64, D_80121D90);
-    createRaceSetupOpponentFocus(1, D_800BB810[D_80121D90 * 4]);
-    createRaceSetupOpponentFocus(2, D_800BB811[D_80121D90 * 4]);
-    createRaceSetupOpponentFocus(3, D_800BB812[D_80121D90 * 4]);
-    createRaceSetupOpponentFocus(4, D_800BB813[D_80121D90 * 4]);
+    createRaceSetupOpponentFocus(1, gRaceSetupOpponentFocusCharacterIds[D_80121D90][0]);
+    createRaceSetupOpponentFocus(2, gRaceSetupOpponentFocusCharacterIds[D_80121D90][1]);
+    createRaceSetupOpponentFocus(3, gRaceSetupOpponentFocusCharacterIds[D_80121D90][2]);
+    createRaceSetupOpponentFocus(4, gRaceSetupOpponentFocusCharacterIds[D_80121D90][3]);
     setCurrentGameTaskCallback(updateRaceStartTransitionIntroDelay, 0);
 }
 #endif

@@ -224,7 +224,7 @@ extern u8 gFramebufferSwapHold;
 extern s8 gFramebufferSwapDelay;
 extern u8 gRaceSplitscreenMode;
 extern u8 gRumblePakConnectedMask;
-extern u8 D_800DC4C0;
+extern u8 gPendingEndingCreditsFlow;
 extern u8 gRaceUpdatePaused;
 extern ViewportSlot D_801121E0[];
 extern u8 D_1E74E0[];
@@ -595,7 +595,7 @@ void handleControllerPakContinuePromptFlow(void) {
 
 void openEndingCreditsIfUnlockedFlow(void) {
     setCurrentGameTaskCallback(&openRaceSplitscreenSelectFlow, 0);
-    if (D_800DC4C0 != 0) {
+    if (gPendingEndingCreditsFlow != 0) {
         createGameTask(4, &initEndingCreditsFlow, 0x64);
         suspendGameTask(2);
     }
@@ -1040,7 +1040,7 @@ void prepareRaceResultsFlow(void) {
     s32 recordTime;
     s32 courseOffset;
 
-    D_800DC4C0 = 0;
+    gPendingEndingCreditsFlow = 0;
     gFramebufferSwapDelay = 0;
     D_80121B60 = 0;
     D_80121B61 = 0;
@@ -1189,7 +1189,7 @@ void updateRaceResultsFlow(void) {
     RacePlayerState *player;
     EffectTask *task;
 
-    D_800DC4C0 = 0;
+    gPendingEndingCreditsFlow = 0;
     D_800DEED4 = 0;
     allDone = 1;
 
@@ -1238,7 +1238,7 @@ void updateRaceResultsFlow(void) {
                     }
                     if (D_80121D80[0].result == 0) {
                         if (gRaceCourseIndex.s == 8) {
-                            D_800DC4C0 = 1;
+                            gPendingEndingCreditsFlow = 1;
                             D_800EC9F0.unk78D7 |= 1;
                             D_800EC9F0.pad34[0x17] |= 1;
                         }

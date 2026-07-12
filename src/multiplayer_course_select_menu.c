@@ -151,19 +151,19 @@ void initMultiplayerCourseSelectMenu(void) {
         break;
     }
 
-    D_8011220C = updateMenuCameraObject;
+    D_8011220C = updateMenuCameraObjectLookAtOriginCallback;
     D_80112204 = screenBase;
     D_8010AEA0[0] = 0;
     D_8010AEAC[0] = 0;
-    D_801122BC = updateMenuCameraObject;
+    D_801122BC = updateMenuCameraObjectLookAtOriginCallback;
     D_801122B4 = screenBase;
     D_8010AEA0[1] = 0;
     D_8010AEAC[1] = 0;
-    D_8011236C = updateMenuCameraObject;
+    D_8011236C = updateMenuCameraObjectLookAtOriginCallback;
     D_80112364 = screenBase;
     D_8010AEA0[2] = 0;
     D_8010AEAC[2] = 0;
-    D_8011241C = updateMenuCameraObject;
+    D_8011241C = updateMenuCameraObjectLookAtOriginCallback;
     D_80112414 = screenBase;
     D_8010AEA0[3] = 0;
     D_8010AEAC[3] = 0;

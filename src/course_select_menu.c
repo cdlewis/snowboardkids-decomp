@@ -192,7 +192,7 @@ void initCourseSelectMenu(void) {
         otherCourse++;
         obj++;
         unlockedCourse++;
-        obj[-1].unk2C = updateMenuCameraObject;
+        obj[-1].unk2C = updateMenuCameraObjectLookAtOriginCallback;
         obj[-1].unk24 = 0xA40000;
         if ((D_5C5320 && D_5C5320) && D_5C5320) {
         }

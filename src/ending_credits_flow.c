@@ -80,7 +80,7 @@ void initEndingCreditsFlow(void) {
     EndingCreditsFlowState *state;
 
     resetRaceCameras();
-    D_801121E0.update = updateMenuCameraObjectFromTargetOffset;
+    D_801121E0.update = updateMenuCameraObjectWithTargetOffsetCallback;
     D_801121E0.depth = 0x5D24000;
     D_801121E0.yaw = 0xFC0;
     resetAllViewports();
