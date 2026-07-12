@@ -985,113 +985,112 @@ void drawAssetTableSpriteWithExplicitPalette(s16 arg0, s16 arg1, AssetTable *arg
 }
 #endif
 
-// drawScaledAssetTableSprite best match: 73.385% (nonmatchings/drawScaledAssetTableSprite-4923837976568703863/base_1.c)
+// drawScaledAssetTableSprite best match: 74.481% (nonmatchings/drawScaledAssetTableSprite-8331816093655448999/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawScaledAssetTableSprite.s")
 
 #ifdef NON_MATCHING
-#define RENDER_EMIT_GFX(cmd0, cmd1)       \
-    do {                                  \
-        Gfx *gfx = (Gfx *)gRegionAllocPtr; \
-        gRegionAllocPtr = (s32)(gfx + 1); \
-        gfx->words.w0 = (cmd0);           \
-        gfx->words.w1 = (cmd1);           \
-    } while (0)
-
-void drawScaledAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4)
-{
+void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, u16 entryIndex, u16 scale) {
     u8 *paletteBase;
-    s32 right;
-    s32 bottom;
-    s32 s;
-    s32 t;
-    s32 halfWidth;
-    s32 halfHeight;
-    s32 clipRight;
-    s32 clipBottom;
-    s32 clipLeft;
-    s32 clipTop;
-    s32 scaledWidth;
-    s32 scaledHeight;
-    s32 x;
-    s32 y;
-    s32 value;
     AssetTableEntry *entry;
+    AssetTableEntry *entry2;
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 clipS;
+    s32 clipT;
+    s32 viewHalfWidth;
+    s32 viewHalfHeight;
+    s32 maxX;
+    s32 maxY;
+    s32 minX;
+    s32 minY;
+    s32 width;
+    s32 height;
+    s32 drawWidth;
+    s32 drawHeight;
+    s32 dsdx;
+    Gfx *gfx;
 
-    if ((s32)arg4 >= 0) {
-        paletteBase = (u8 *)arg2 + (arg2->entryCount * sizeof(AssetTableEntry)) + 8;
-        entry = (AssetTableEntry *)((u8 *)arg2 + (arg3 * sizeof(AssetTableEntry))) + 1;
-        scaledWidth = entry->width >> arg4;
-        scaledHeight = entry->height >> arg4;
-        x = arg0 + gMenuViewportCenterX + ((entry->width - scaledWidth) / 2);
-        y = arg1 + gMenuViewportCenterY + ((entry->height - scaledHeight) / 2);
-        right = scaledWidth + x;
-        bottom = scaledHeight + y;
-        s = 0;
-        t = 0;
+    if ((s32)scale >= 0) {
+        paletteBase = (u8 *)asset + (asset->entryCount * sizeof(AssetTableEntry)) + sizeof(AssetTableEntry);
+        entry = (AssetTableEntry *)((u8 *)asset + (entryIndex * sizeof(AssetTableEntry)));
+        entry2 = entry + 1;
+        width = entry2->width;
+        height = entry2->height;
+        drawWidth = width >> scale;
+        drawHeight = height >> scale;
 
-        halfWidth = gMenuViewportWidth / 2;
-        clipRight = gMenuViewportCenterX + halfWidth;
-        if (x < clipRight) {
-            halfHeight = gMenuViewportHeight / 2;
-            clipBottom = gMenuViewportCenterY + halfHeight;
-            if (y < clipBottom) {
-                clipLeft = gMenuViewportCenterX - halfWidth;
-                if (right >= clipLeft) {
-                    clipTop = gMenuViewportCenterY - halfHeight;
-                    if (bottom >= clipTop) {
-                        if (x < clipLeft) {
-                            s = clipLeft - x;
-                            x = clipLeft;
+        x0 = x + gMenuViewportCenterX + ((width - drawWidth) / 2);
+        y0 = y + gMenuViewportCenterY + ((height - drawHeight) / 2);
+        x1 = x0 + drawWidth;
+        y1 = y0 + drawHeight;
+        clipS = 0;
+        clipT = 0;
+
+        viewHalfWidth = gMenuViewportWidth / 2;
+        maxX = gMenuViewportCenterX + viewHalfWidth;
+        if (x0 < maxX) {
+            viewHalfHeight = gMenuViewportHeight / 2;
+            maxY = gMenuViewportCenterY + viewHalfHeight;
+            if (y0 < maxY) {
+                minX = gMenuViewportCenterX - viewHalfWidth;
+                if (x1 >= minX) {
+                    minY = gMenuViewportCenterY - viewHalfHeight;
+                    if (y1 >= minY) {
+                        if (x0 < minX) {
+                            clipS = minX - x0;
+                            x0 = minX;
                         }
-                        if (y < clipTop) {
-                            t = clipTop - y;
-                            y = clipTop;
+                        if (y0 < minY) {
+                            clipT = minY - y0;
+                            y0 = minY;
                         }
-                        if (right >= clipRight) {
-                            right = clipRight;
+                        if (x1 >= maxX) {
+                            x1 = maxX;
                         }
-                        if (bottom >= clipBottom) {
-                            bottom = clipBottom;
+                        if (y1 >= maxY) {
+                            y1 = maxY;
                         }
 
-                        RENDER_EMIT_GFX(0xE7000000, 0);
-                        RENDER_EMIT_GFX(0xBA000C02, 0x3000);
-                        RENDER_EMIT_GFX((((entry->width >> 1) - 1) & 0xFFF) | 0xFD480000,
-                                        entry->imageOffset + (s32)arg2);
-                        RENDER_EMIT_GFX(((((entry->width + 1) >> 1) + 7) >> 3 & 0x1FF) << 9 | 0xF5480000,
-                                        0x07080200);
-                        RENDER_EMIT_GFX(0xE6000000, 0);
-                        RENDER_EMIT_GFX(0xF4000000,
-                                        (((entry->width * 2) & 0xFFF) << 12) | 0x07000000 |
-                                            ((entry->height * 4) & 0xFFF));
-                        RENDER_EMIT_GFX(0xE7000000, 0);
-                        RENDER_EMIT_GFX(((((entry->width + 1) >> 1) + 7) >> 3 & 0x1FF) << 9 | 0xF5400000,
-                                        0x00080200);
-                        RENDER_EMIT_GFX(0xF2000000,
-                                        (((entry->width * 4) & 0xFFF) << 12) | ((entry->height * 4) & 0xFFF));
-                        RENDER_EMIT_GFX(0xFD100000, (entry->textureIndex << 5) + (s32)paletteBase);
-                        RENDER_EMIT_GFX(0xE8000000, 0);
-                        RENDER_EMIT_GFX(0xF5000100, 0x07000000);
-                        RENDER_EMIT_GFX(0xE6000000, 0);
-                        RENDER_EMIT_GFX(0xF0000000, 0x0703C000);
-                        RENDER_EMIT_GFX(0xE7000000, 0);
-                        RENDER_EMIT_GFX((((right * 4) & 0xFFF) << 12) | 0xE4000000 | ((bottom * 4) & 0xFFF),
-                                        (((x * 4) & 0xFFF) << 12) | ((y * 4) & 0xFFF));
-                        RENDER_EMIT_GFX(0xB4000000,
-                                        (((s << 5) + 0x10) << 16) | (((t << 5) + 0x10) & 0xFFFF));
-                        value = (1 << (arg4 + 10)) & 0xFFFF;
-                        RENDER_EMIT_GFX(0xB3000000, (value << 16) | value);
-                        RENDER_EMIT_GFX(0xE7000000, 0);
-                        RENDER_EMIT_GFX(0xBA000C02, 0);
-                        RENDER_EMIT_GFX(0xE7000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0x3000);
+                        FONT_GFX_CMD(gRegionAllocPtr++, (((entry2->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                                     (u32)((u8 *)asset + entry2->imageOffset));
+                        FONT_GFX_CMD(gRegionAllocPtr++, (((((entry2->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5480000,
+                                     0x07080200);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                                     (((entry2->width * 2) & 0xFFF) << 12) | 0x07000000 | ((entry2->height * 4) & 0xFFF));
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, (((((entry2->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5400000,
+                                     0x00080200);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                                     (((entry2->width * 4) & 0xFFF) << 12) | ((entry2->height * 4) & 0xFFF));
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(paletteBase + (entry2->textureIndex << 5)));
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+                        gfx = gRegionAllocPtr++;
+                        gfx->words.w0 = 0xE7000000;
+                        gfx->words.w1 = 0;
+
+                        FONT_GFX_CMD(gRegionAllocPtr++, (((x1 * 4) & 0xFFF) << 12) | 0xE4000000 | ((y1 * 4) & 0xFFF),
+                                     (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF));
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000,
+                                     (((clipS << 5) + 0x10) << 16) | (((clipT << 5) + 0x10) & 0xFFFF));
+                        dsdx = (1 << (scale + 10)) & 0xFFFF;
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, (dsdx << 16) | dsdx);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0);
+                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
                     }
                 }
             }
         }
     }
 }
-
-#undef RENDER_EMIT_GFX
 #endif
 
 // drawScaledAssetTableSpriteWithExplicitPalette best match: 74.481% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-7273315160691878794/base_1.c)
