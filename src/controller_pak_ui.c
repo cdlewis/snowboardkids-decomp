@@ -152,7 +152,7 @@ void initControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     setCallbackTaskCallback(arg0, updateControllerPakContinuePrompt);
 }
 
-// drawControllerPakRumbleCheckPrompt best match: 99.732% (nonmatchings/drawControllerPakRumbleCheckPrompt-5272447827802519043/base_2.c)
+// drawControllerPakRumbleCheckPrompt best match: 99.978% (nonmatchings/drawControllerPakRumbleCheckPrompt-8331816093655448999/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/drawControllerPakRumbleCheckPrompt.s")
 
 #ifdef NON_MATCHING
@@ -247,14 +247,11 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
             playerY = playerY + 0x10;
         } while (playerIndex != 4);
     } else {
-        drawMenuGlyphScript(actor->common.x, actor->common.y, &gControllerPakRumbleCheckPromptText[actor->targetScale * 0x68], 0, actor->scale, 0);
+        drawMenuGlyphScript(actor->common.x, actor->common.y, &gControllerPakRumbleCheckPromptText[(u16)actor->targetScale * 0x68], 0, actor->scale, 0);
     }
 
     if (actor->state == 9) {
-        alpha = 0x60;
-        if (gControllerPakRumbleCheckPromptConfirmSelection == 0) {
-            alpha = 0x100;
-        }
+        alpha = (gControllerPakRumbleCheckPromptTransition.confirmSelection == 0) ? 0x100 : 0x60;
         drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x10), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       0x17, 0x20, 0x20, 0, alpha, 0);
         if (alpha == 0x100) {
@@ -265,7 +262,7 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
         drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C), (s16)(actor->common.y + 0x20), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       0x18, 0x20, 0x20, 0, alpha, 0);
         drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C),
-                      (s16)(actor->common.y + (gControllerPakRumbleCheckPromptConfirmSelection * 0x10) + 0x10),
+                      (s16)(actor->common.y + (gControllerPakRumbleCheckPromptTransition.confirmSelection * 0x10) + 0x10),
                       getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x12, 0x20, 0x20, 0, actor->optionScale, 0);
         if (1) {
         }
