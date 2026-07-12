@@ -277,7 +277,7 @@ void updateRaceCameraLookAtTransform(void) {
 }
 #endif
 
-// updateRaceCameraAlternateLookAtTransform best match: 92.325% (base_2.c)
+// updateRaceCameraAlternateLookAtTransform best match: 98.141% (nonmatchings/updateRaceCameraAlternateLookAtTransform-2694253543240320626/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/updateRaceCameraAlternateLookAtTransform.s")
 
 #ifdef NON_MATCHING
@@ -285,56 +285,54 @@ void updateRaceCameraAlternateLookAtTransform(void) {
     s32 dx;
     s32 dy;
     s32 dz;
-    s32 xzLen;
-    s32 fullLen;
-    s32 sinPitch;
-    s32 cosPitch;
-    s32 sinYaw;
-    s32 cosYaw;
-    s32 padBefore[4];
+    s32 xzDist;
+    s32 dist;
+    s32 sine;
+    s32 cosine;
     FixedTransform pitchMtx;
     FixedTransform yawMtx;
-    FixedMatrix3s transformMtx;
-    s32 padAfter[4];
-    s32 row;
-    s32 col;
+    s32 pad[3];
+    FixedMatrix3s resultMtx;
+    s32 i;
+    s32 j;
 
     initFixedTransform(&pitchMtx);
     initFixedTransform(&yawMtx);
+    dx = D_801124A0->pos.x - D_801124A0->focus.x;
+    pad[0] = pad[0];
 
     dy = (D_801124A0->pos.y - D_801124A0->focus.y) + 0x40000;
-    dx = D_801124A0->pos.x - D_801124A0->focus.x;
     dz = D_801124A0->pos.z - D_801124A0->focus.z;
 
-    xzLen = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
-    fullLen = integerSquareRoot64((s64)xzLen * xzLen + (s64)dy * dy);
+    xzDist = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
+    dist = integerSquareRoot64((s64)xzDist * xzDist + (s64)dy * dy);
 
-    D_801124A0->pitch = calculateFixedAngleBetweenXZPoints(0, 0, xzLen, -dy);
-    if (fullLen != 0) {
-        sinPitch = ((s64)dy * RACE_CAMERA_FP_ONE) / fullLen;
-        cosPitch = ((s64)xzLen * RACE_CAMERA_FP_ONE) / fullLen;
-        pitchMtx.rotation[MTX_YY] = cosPitch;
-        pitchMtx.rotation[MTX_ZY] = -sinPitch;
-        pitchMtx.rotation[MTX_ZZ] = cosPitch;
-        pitchMtx.rotation[MTX_YZ] = sinPitch;
+    D_801124A0->pitch = calculateFixedAngleBetweenXZPoints(0, 0, xzDist, -dy);
+    if (dist != 0) {
+        sine = ((s64)dy * 0x1000) / dist;
+        cosine = ((s64)xzDist * 0x1000) / dist;
+        pitchMtx.rotation[MTX_YY] = cosine;
+        pitchMtx.rotation[MTX_ZY] = -sine;
+        pitchMtx.rotation[MTX_ZZ] = cosine;
+        pitchMtx.rotation[MTX_YZ] = sine;
     }
 
     D_801124A0->yaw = -calculateFixedAngleBetweenXZPoints(0, 0, dx, dz);
-    if (xzLen != 0) {
-        sinYaw = ((s64)dx * RACE_CAMERA_FP_ONE) / xzLen;
-        cosYaw = ((s64)dz * RACE_CAMERA_FP_ONE) / xzLen;
-        yawMtx.rotation[MTX_XX] = cosYaw;
-        yawMtx.rotation[MTX_ZX] = -sinYaw;
-        yawMtx.rotation[MTX_ZZ] = cosYaw;
-        yawMtx.rotation[MTX_XZ] = sinYaw;
+    if (xzDist != 0) {
+        sine = ((s64)dx * 0x1000) / xzDist;
+        cosine = ((s64)dz * 0x1000) / xzDist;
+        yawMtx.rotation[MTX_XX] = cosine;
+        yawMtx.rotation[MTX_XZ] = sine;
+        yawMtx.rotation[MTX_ZX] = -sine;
+        yawMtx.rotation[MTX_ZZ] = cosine;
     }
 
-    for (row = 0; row < 3; row++) {
-        for (col = 0; col < 3; col++) {
-            D_801124A0->rotationMatrix[row * 3 + col] =
-                RACE_CAMERA_FP_DOT(yawMtx.rotation[row * 3 + 0], pitchMtx.rotation[col + 0],
-                                   yawMtx.rotation[row * 3 + 1], pitchMtx.rotation[col + 3],
-                                   yawMtx.rotation[row * 3 + 2], pitchMtx.rotation[col + 6]);
+    for (i = 0; i + 1 <= 3; i++) {
+        for (j = 0; j < 3; j++) {
+            D_801124A0->rotationMatrix[(i * 3) + j] =
+                FIXED_MUL(pitchMtx.rotation[j], yawMtx.rotation[i * 3]) +
+                FIXED_MUL(pitchMtx.rotation[j + 3], yawMtx.rotation[(i * 3) + 1]) +
+                FIXED_MUL(pitchMtx.rotation[j + 6], yawMtx.rotation[(i * 3) + 2]);
         }
     }
 
@@ -343,19 +341,22 @@ void updateRaceCameraAlternateLookAtTransform(void) {
     yawMtx.rotation[MTX_XZ] *= -1;
     yawMtx.rotation[MTX_ZX] *= -1;
 
-    for (row = 0; row < 3; row++) {
-        for (col = 0; col < 3; col++) {
-            transformMtx[row * 3 + col] =
-                RACE_CAMERA_FP_DOT(pitchMtx.rotation[row * 3 + 0], yawMtx.rotation[col + 0],
-                                   pitchMtx.rotation[row * 3 + 1], yawMtx.rotation[col + 3],
-                                   pitchMtx.rotation[row * 3 + 2], yawMtx.rotation[col + 6]);
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            resultMtx[(i * 3) + j] =
+                FIXED_MUL(yawMtx.rotation[j], pitchMtx.rotation[i * 3]) +
+                FIXED_MUL(yawMtx.rotation[j + 3], pitchMtx.rotation[(i * 3) + 1]) +
+                FIXED_MUL(yawMtx.rotation[j + 6], pitchMtx.rotation[(i * 3) + 2]);
         }
     }
 
-    D_801124A0->transformOffset.x = -((((s64)transformMtx[MTX_XZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
-    D_801124A0->transformOffset.y = -((((s64)transformMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
-    D_801124A0->transformOffset.z = -((((s64)transformMtx[MTX_ZZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
-    packFixedTransformMatrix(transformMtx, D_801124A0->transform);
+    D_801124A0->transformOffset.x =
+        -((((s64)resultMtx[MTX_XZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
+    D_801124A0->transformOffset.y =
+        -((((s64)resultMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
+    D_801124A0->transformOffset.z =
+        -((((s64)resultMtx[MTX_ZZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
+    packFixedTransformMatrix(resultMtx, D_801124A0->transform);
 }
 #endif
 
