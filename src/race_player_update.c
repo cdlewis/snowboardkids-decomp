@@ -484,11 +484,12 @@ void updateRacePlayerMotionFeedback(RaceInputPlayer *player) {
     }
 }
 
-// updateRacePlayerMode00Grounded best match: 96.779% (nonmatchings/updateRacePlayerMode00Grounded-5752545231564691495/base_8.c)
+// updateRacePlayerMode00Grounded best match: 97.707% (nonmatchings/updateRacePlayerMode00Grounded-2694253543240320626/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode00Grounded.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode00Grounded(RaceInputPlayer *player) {
+    volatile s32 pad[26];
     s32 targetX;
     s32 targetZ;
     s32 speed;
@@ -685,7 +686,10 @@ void updateRacePlayerMode00Grounded(RaceInputPlayer *player) {
             bankRate = (-turn * 0x10 * player->unk268) / 0x100;
             interpolated = (((player->unk270 - player->unk26C) * (0x3F - player->unk2F8)) / 0x20) + player->unk26C;
             if (bankRate != 0) {
-                s64 temp = ((s64) interpolated * ((lean - 0xFF) / 0x100) * ((lean - 0xFF) / 0x100)) / bankRate;
+                s64 temp;
+
+                lean = (lean - 0xFF) / 0x100;
+                temp = ((s64) interpolated * lean * lean) / bankRate;
                 if (temp != 0) {
                     if (temp > 0) {
                         temp += 0xC0000;
@@ -730,7 +734,7 @@ void updateRacePlayerMode00Grounded(RaceInputPlayer *player) {
                 rotation = 0x8000;
             }
         }
-        if ((gMainMenuModeSelection != 0) && (player->unk519 == 6)) {
+        if ((gMainMenuModeSelection != 0) && ((u8) player->unk519 == 6)) {
             rotation = -0x60000;
         }
         updateRacePlayerLocalVelocity(player, 0, rotation, player->unk274, player->unk278, player->unk27C);
