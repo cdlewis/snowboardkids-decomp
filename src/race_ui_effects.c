@@ -796,8 +796,8 @@ extern s32 D_80121DA4;
 extern u8 gCurrentViewportIndex;
 extern u8 gRenderMatricesDirty;
 extern s16 gUiBlinkTimer;
-extern s16 D_80112140;
-extern s16 D_80112142;
+extern s16 gRaceCourseModelAssetHandle;
+extern s16 gRaceCourseTextureAssetHandle;
 extern s16 gRaceRspSegment2AssetHandle;
 extern s16 gRaceRspSegment3AssetHandle;
 extern s16 gRaceCourseSpriteAssetHandle;
@@ -922,8 +922,8 @@ void func_800572A0(RaceUiSlideActor *arg0) {
     Gfx *gfx;
 
     gDPPipeSync(gRegionAllocPtr++);
-    gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112140));
-    gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112142));
+    gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
+    gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
     gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image, G_IM_FMT_CI, 0x20, 0x40, 0, G_TX_WRAP, G_TX_WRAP,
                            5, 6, G_TX_NOLOD, G_TX_NOLOD);
@@ -3900,8 +3900,8 @@ void func_80061088(RaceUiTripleParticleActor *arg0) {
 
         if ((arg0->matrix0 != NULL) && (arg0->matrix1 != NULL) && (arg0->matrix2 != NULL)) {
             gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(D_80112140));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(D_80112142));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200C1C8);
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -4354,8 +4354,8 @@ void func_80062AF0(RaceUiScaledParticleActor *arg0) {
 
         if (arg0->matrix != NULL) {
             gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(D_80112140));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(D_80112142));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200C910);
         }
@@ -4442,8 +4442,8 @@ void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
 
         if (arg0->matrix1 != NULL) {
             gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(D_80112140));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(D_80112142));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200CE48);
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -4497,8 +4497,8 @@ void func_80063220(RaceUiSpinningParticleActor *arg0) {
 
     if (arg0->matrix1 != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_80112140));
-        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112142));
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
         gSPMatrix(gRegionAllocPtr++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_200D3A8);
         gSPMatrix(gRegionAllocPtr++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -4765,8 +4765,8 @@ void func_800640D8(RaceUiRankParticleActor *arg0) {
             }
 
             gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(D_80112140));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(D_80112142));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->displayLists[displayListIndex]);
         }
