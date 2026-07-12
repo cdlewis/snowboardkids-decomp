@@ -292,7 +292,7 @@ void drawTrickAttackChallengeLabels(s32 arg0) {
     drawMenuAsciiTextDefaultScale(0x38, 0x47, (char *)D_800E1738, 5);
 }
 
-// drawScoreAttackChallengeHud best match: 92.076% at nonmatchings/drawScoreAttackChallengeHud-2225551288923588688/base_14.c.
+// drawScoreAttackChallengeHud best match: 97.570% at nonmatchings/drawScoreAttackChallengeHud-8331816093655448999/base_1.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawScoreAttackChallengeHud.s")
 
 #ifdef NON_MATCHING
@@ -302,10 +302,11 @@ const char D_800E1754[] = "%2.2d";
 const char D_800E175C[] = "%2d";
 
 void drawScoreAttackChallengeHud(s32 arg0) {
-    char buffer[0xC];
+    char buffer[4];
     s32 x;
     char *digit;
     s32 palette;
+    s32 finalPalette;
     s32 i;
 
     palette = 0xC;
@@ -317,12 +318,13 @@ void drawScoreAttackChallengeHud(s32 arg0) {
         char *end;
 
         sprintf(buffer, D_800E1744, gRaceChallengeTimeLimit.minutes);
+        finalPalette = palette & 0xFFFF;
         x = 0x40;
         digit = buffer;
         end = &buffer[2];
         do {
             drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
-                          palette & 0xFFFF);
+                          finalPalette);
             digit++;
             x += 8;
         } while ((u32)digit < (u32)end);
@@ -333,7 +335,7 @@ void drawScoreAttackChallengeHud(s32 arg0) {
         end = &buffer[2];
         do {
             drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
-                          palette & 0xFFFF);
+                          finalPalette);
             digit++;
             x += 8;
         } while ((u32)digit < (u32)end);
@@ -344,13 +346,13 @@ void drawScoreAttackChallengeHud(s32 arg0) {
         end = &buffer[2];
         do {
             drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
-                          palette & 0xFFFF);
+                          finalPalette);
             digit++;
             x += 8;
         } while ((u32)digit < (u32)end);
 
-        drawAssetTableSpriteWithExplicitPalette(0x50, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, palette & 0xFFFF);
-        drawAssetTableSpriteWithExplicitPalette(0x68, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, palette & 0xFFFF);
+        drawAssetTableSpriteWithExplicitPalette(0x50, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, finalPalette);
+        drawAssetTableSpriteWithExplicitPalette(0x68, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, finalPalette);
     }
 
     drawAssetTableSprite(0x68, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x20);
