@@ -53,7 +53,45 @@ void initControllerPakContinuePromptFlow(void) {
     updateCallbackTasks();
 }
 
+// updateControllerPakContinuePromptFlow best match: 90.000% (nonmatchings/updateControllerPakContinuePromptFlow-5802343343535905907/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_continue_prompt_flow/updateControllerPakContinuePromptFlow.s")
+
+#ifdef NON_MATCHING
+void updateControllerPakContinuePromptFlow(void) {
+    s32 temp_a1;
+    s32 temp_v0;
+    s32 var_v0;
+
+    temp_v0 = gCurrentGameTask->fade;
+    if (temp_v0 != 0) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s32) (s16) temp_v0, 0x24, 0);
+        if (gCurrentGameTask->fade == 0) {
+            gControllerPakContinuePromptTransition.state = 1;
+        }
+    } else {
+        var_v0 = gCurrentGameTask->timer;
+        temp_a1 = var_v0;
+        if ((gPlayerInputPressed & 0x10800) && (var_v0 != 0)) {
+            gCurrentGameTask->timer = var_v0 - 1;
+            var_v0 = gCurrentGameTask->timer;
+        } else if ((gPlayerInputPressed & 0x20400) && (var_v0 != 1)) {
+            gCurrentGameTask->timer = var_v0 + 1;
+            var_v0 = gCurrentGameTask->timer;
+        }
+        if (temp_a1 != var_v0) {
+            enqueueSoundEffect(0x19, 0x32);
+        }
+        if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
+            enqueueSoundEffect(0x18, 0x32);
+            gMenuFlowState = gCurrentGameTask->timer;
+            gControllerPakContinuePromptTransition.state = 2;
+            gControllerPakContinuePromptTransition.x = 0x100;
+            setCurrentGameTaskCallback(closeControllerPakContinuePromptFlow, 0);
+        }
+    }
+    updateCallbackTasks();
+}
+#endif
 
 void closeControllerPakContinuePromptFlow(void) {
     if (gCurrentGameTask->fade != 0xFF) {
