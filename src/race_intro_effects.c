@@ -153,7 +153,7 @@ void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
 
     if (entry->textureIndex != -1) {
         do {
-            if (isPositionNearCurrentViewport(entry->command) != 0) {
+            if (isPositionNearCurrentRaceViewportCamera(entry->command) != 0) {
                 if (textureIndex != entry->textureIndex) {
                     textureIndex = entry->textureIndex;
                     getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)gRaceCourseSpriteAssetHandle), (u16)textureIndex, &image, &palette,
@@ -229,7 +229,7 @@ void drawRaceIntroBillboard(RaceIntroEffectActor *arg0) {
         arg0->displayList0Valid = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->position) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->position) != 0) {
         if (arg0->displayList0Valid != 0) {
             sp70 = gIdentityFixedTransform;
             sp70.translation.x = arg0->position.x;
@@ -313,7 +313,7 @@ void drawRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
         arg0->displayListValid = 0;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->position) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->position) != 0) {
         if (arg0->displayListValid == 0) {
             makeFixedRotationY(sp84.rotation, arg0->spinVelocity);
             sp84.translation.x = 0;
@@ -629,7 +629,7 @@ void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
     i = 0;
     if (entry->textureIndex != -1) {
         do {
-            if (isPositionNearCurrentViewport(entry->command) != 0) {
+            if (isPositionNearCurrentRaceViewportCamera(entry->command) != 0) {
                 textureIndex = gRaceIntroAnimatedBillboardTextureIds[entry->textureIndex] + ((s32)(gFrameCounter & 4) / 4);
                 if (textureIndex != loadedTextureIndex) {
                     loadedTextureIndex = textureIndex;

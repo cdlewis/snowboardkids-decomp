@@ -56,7 +56,7 @@ void updateRacePlayerItemEffectUse(RaceInputPlayer *player) {
                     deltaZ = otherPlayer->posZ - player->posZ;
                     if ((deltaX < 0x6000000) && (deltaX >= -0x5FFFFFF) &&
                         (deltaZ < 0x6000000) && (deltaZ >= -0x5FFFFFF)) {
-                        angle = (s16) ((calculateAngleFromDeltaXZ(deltaX, deltaZ) - player->facingAngle) & 0xFFF);
+                        angle = (s16) ((calculateFixedAngleFromDeltaXZ(deltaX, deltaZ) - player->facingAngle) & 0xFFF);
                         if ((angle >= 0xE01) || (angle < 0x200)) {
                             trigger = 1;
                             player->itemTriggerCooldown = -0x3E;

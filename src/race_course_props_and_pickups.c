@@ -214,7 +214,7 @@ void renderRaceCoursePropModels(CourseEffectModelListActor *arg0) {
     var_s5 = 0;
     if (var_s4->modelIndex != -1) {
         do {
-            if (isPositionNearCurrentViewport(&var_s4->pos) != 0) {
+            if (isPositionNearCurrentRaceViewportCamera(&var_s4->pos) != 0) {
                 if (var_s7 != 0) {
                     gDPPipeSync(gRegionAllocPtr++);
                     temp_s2 = gRegionAllocPtr++;
@@ -310,7 +310,7 @@ void renderCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
     i = 0;
     if (entry->modelIndex != -1) {
         do {
-            if ((entry->enabled != 0) && (isPositionNearCurrentViewport(&entry->transform) != 0)) {
+            if ((entry->enabled != 0) && (isPositionNearCurrentRaceViewportCamera(&entry->transform) != 0)) {
                 if (modelIndex != entry->modelIndex + actor->modelIndexOffset) {
                     modelIndex = entry->modelIndex + actor->modelIndexOffset;
                     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), (modelIndex + 4) & 0xFFFF, &spA0, &sp9C);
@@ -464,7 +464,7 @@ void renderThrownPickupModel(ThrownPickupRenderActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             makeFixedRotationXY(scratch, arg0->pitch, arg0->yaw);
             ((GfxCommandSource *)scratch)->words[5] = arg0->pos.x;
@@ -665,7 +665,7 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             spF4 = *(GfxCommandSource *)&gIdentityFixedTransform;
@@ -773,7 +773,7 @@ void renderRacePickupBase(RacePickupActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp64.source = gIdentityFixedTransform;
@@ -803,7 +803,7 @@ void renderRacePickupRespawn(RacePickupActor *arg0) {
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
     }
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             spF4 = *(GfxCommandSource *)&gIdentityFixedTransform;
@@ -1068,7 +1068,7 @@ void renderPickupShardParticle(PickupShardParticleActor *arg0) {
     if (gRenderMatricesDirty != 0) {
         arg0->transformDirty = 1;
     }
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->transformDirty != 0) {
             arg0->transformDirty = 0;
             makeFixedRotationXYZ(transform.rotation, arg0->rotX, arg0->rotY, arg0->rotZ);

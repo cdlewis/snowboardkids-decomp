@@ -175,7 +175,7 @@ s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 pl
                             dz = -dz;
                         }
                         if (dz < radius) {
-                            playerAngle = calculateAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
+                            playerAngle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                             if ((s16)((playerAngle - angle + 0x380) & 0xFFF) < 0x700) {
                                 dist = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
                                 if ((dist < radius) && (dist < closest)) {
@@ -218,7 +218,7 @@ void renderWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp6C.source = gIdentityFixedTransform;
@@ -384,7 +384,7 @@ void renderCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp64.source = gIdentityFixedTransform;
@@ -556,7 +556,7 @@ void renderBouncingItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp64.source = gIdentityFixedTransform;
@@ -634,7 +634,7 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
             arg0->accelerationY = 0;
             arg0->pos.x += pushX;
             arg0->pos.z += pushZ;
-            arg0->targetAngle = calculateAngleFromDeltaXZ(xOffset, zOffset);
+            arg0->targetAngle = calculateFixedAngleFromDeltaXZ(xOffset, zOffset);
             enqueuePositionalSoundEffect(0x11, pos, 0x7F, 0x32);
         }
 
@@ -726,7 +726,7 @@ void renderThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp64.source = gIdentityFixedTransform;
@@ -847,7 +847,7 @@ void renderAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp64.source = gIdentityFixedTransform;
@@ -1013,7 +1013,7 @@ void renderLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp64.source = gIdentityFixedTransform;
@@ -1182,7 +1182,7 @@ void renderFallingActionProjectile(RaceItemProjectileActor *arg0) {
         return;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixFlags.matrixDirty2 != 0) {
             arg0->matrixFlags.matrixDirty2 = 0;
             sp64.source = gIdentityFixedTransform;
@@ -1304,7 +1304,7 @@ void renderShieldProjectile(RaceItemProjectileActor *arg0) {
         arg0->matrixDirty2 = 1;
     }
 
-    if (isPositionNearCurrentViewport(&arg0->pos) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty2 != 0) {
             arg0->matrixDirty2 = 0;
             sp64.source = gIdentityFixedTransform;
