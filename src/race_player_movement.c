@@ -42,7 +42,7 @@ extern void makeFixedRotationY(Matrix4s, s16);
 extern void makeFixedRotationZ(Matrix4s, s16);
 extern void multiplyFixedMatrix3s(Matrix4s, Matrix4s, Matrix4s);
 extern void makeFixedRotationXYZ(Matrix4s, s16, s16, s16);
-extern void makeFixedRotationXY(Matrix4s, s16, s16, RaceInputPlayer *);
+extern void makeFixedRotationXY(Matrix4s, s16, s16);
 extern void makeFixedRotationZX(Matrix4s, s16, s16);
 extern void makeFixedRotationXZ(Matrix4s, s16, s16);
 extern void makeFixedRotationZXY(Matrix4s, s16, s16, s16);
@@ -793,25 +793,25 @@ s32 tryApplyRacePlayerItemHit(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIn
 // updateRacePlayerSurfaceContact best match: 63.781% (nonmatchings/updateRacePlayerSurfaceContact-731940616440357983/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/updateRacePlayerSurfaceContact.s")
 
-// updateRacePlayerGroundAlignment best match: 76.717% (nonmatchings/updateRacePlayerGroundAlignment-5752545231564691495/base_9.c)
+// updateRacePlayerGroundAlignment best match: 84.154% (nonmatchings/updateRacePlayerGroundAlignment-8331816093655448999/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/updateRacePlayerGroundAlignment.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerGroundAlignment(RaceInputPlayer *player) {
-    volatile u8 pad[16];
     Matrix4s mtx;
     Matrix4s tiltMtx;
     Matrix4s baseMtx;
     Matrix4s effectMtx;
     RaceVec3i points[6];
+    volatile u8 pad[24];
     s32 heightDiffs[6];
     s32 groundHeights[6];
     s32 transformedX;
     s32 transformedY;
     s32 transformedZ;
-    s32 frontMidGround;
-    s32 backMidGround;
-    s32 baseY;
+    volatile s32 frontMidGround;
+    volatile s32 backMidGround;
+    volatile s32 baseY;
     s32 pitchSpan;
     s32 rollSpan;
     s32 frontHeightDiff;
@@ -822,7 +822,6 @@ void updateRacePlayerGroundAlignment(RaceInputPlayer *player) {
     s32 stateFlags;
     RaceInputPlayer *temp_s2;
     RaceVec3i *point;
-    volatile s32 extraPad[6];
 
     temp_s2 = player;
     temp_s2->unk500 = 0;
@@ -837,7 +836,7 @@ void updateRacePlayerGroundAlignment(RaceInputPlayer *player) {
     rollSpan = points[0].z;
 
     baseY = temp_s2->posY - 0x30000;
-    makeFixedRotationXY(mtx, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2);
+    makeFixedRotationXY(mtx, temp_s2->pitchAngle, temp_s2->facingAngle);
 
     i = 0;
     do {
@@ -854,8 +853,8 @@ void updateRacePlayerGroundAlignment(RaceInputPlayer *player) {
         i++;
     } while (i < 6);
 
-    frontMidGround = (s64)(groundHeights[0] + groundHeights[2]) / 2;
-    backMidGround = (s64)(groundHeights[1] + groundHeights[3]) / 2;
+    frontMidGround = ((s64)groundHeights[0] + groundHeights[2]) / 2;
+    backMidGround = ((s64)groundHeights[1] + groundHeights[3]) / 2;
 
     frontHeightDiff = heightDiffs[0];
     if (frontHeightDiff < heightDiffs[1]) {
@@ -878,7 +877,7 @@ void updateRacePlayerGroundAlignment(RaceInputPlayer *player) {
         if (!(temp_s2->stateFlags & 4)) {
             temp_s2->pitchAngle = calculateFixedAngleFromDeltaXZ(-(groundHeights[0] - groundHeights[2]), -rollSpan * 2);
         }
-        baseY = (s64)(groundHeights[2] + groundHeights[0]) / 2;
+        baseY = ((s64)groundHeights[2] + groundHeights[0]) / 2;
     } else {
         heightDiffs[0] = frontHeightDiff;
         if (frontHeightDiff >= 0) {
@@ -1205,7 +1204,7 @@ void enqueueRacePlayerVoiceSound(RaceInputPlayer *player, s16 soundType) {
 void updateRacePlayerProjectedPosition(RaceInputPlayer *arg0) {
     TransformScratch scratch;
 
-    makeFixedRotationXY(scratch.rotationMtx, arg0->pitchAngle, arg0->facingAngle, arg0);
+    makeFixedRotationXY(scratch.rotationMtx, arg0->pitchAngle, arg0->facingAngle);
     scratch.localPos.x = 0;
     scratch.localPos.y = 0xC0000;
     scratch.localPos.z = 0;
