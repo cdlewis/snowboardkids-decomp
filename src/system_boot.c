@@ -137,21 +137,21 @@ extern u8 gFadeColorBlue;
 extern s16 gFadeTimer;
 extern u16 gRetraceCounter;
 
-extern OSThread D_801237B0;
-extern OSMesgQueue D_80123CC0;
-extern OSMesg D_80123CD8[];
-extern OSThread D_80123960;
-extern OSMesgQueue D_80123FF8;
-extern OSMesg D_80124010[1];
-extern OSMesgQueue D_80124050;
-extern OSMesg D_80124068[2];
+extern OSThread gBootThread;
+extern OSMesgQueue gPiManagerQueue;
+extern OSMesg gPiManagerMessages[];
+extern OSThread gGameThread;
+extern OSMesgQueue gRomDmaQueue;
+extern OSMesg gRomDmaMessages[1];
+extern OSMesgQueue gSchedulerClientQueue;
+extern OSMesg gSchedulerClientMessages[2];
 extern OSMesgQueue gControllerInputUpdateQueue;
 extern OSMesg gControllerInputUpdateMessages[8];
-extern OSMesgQueue D_80124018;
-extern OSMesg D_80124030[8];
+extern OSMesgQueue gFramebufferRenderDoneQueue;
+extern OSMesg gFramebufferRenderDoneMessages[8];
 extern SchedulerState gSchedulerState;
-extern SchedulerClient D_80124820;
-extern u16 D_80124828;
+extern SchedulerClient gMainSchedulerClient;
+extern u16 gLastSchedulerRetraceCounter;
 extern Gfx *gRegionAllocPtr;
 extern s8 gRaceRecordSettingsEnabled;
 extern s8 gRaceCourseModelEffectsDisabled;
@@ -160,20 +160,20 @@ extern RenderCallbackNode *gMenuOverlayRenderCallbackList;
 extern RenderCallbackNode *D_80124848;
 extern RenderCallbackNode *gMenuForegroundRenderCallbackList;
 extern RenderCallbackNode *gMenuRenderCallbackList;
-extern RenderCallbackNode *D_80124878;
-extern RenderCallbackNode *D_80124888;
+extern RenderCallbackNode *gRaceOverlayRenderCallbackList;
+extern RenderCallbackNode *gRaceForegroundRenderCallbackList;
 extern RenderCallbackNode *gModelRenderCallbackList;
-extern RenderCallbackNode *D_801248F8;
+extern RenderCallbackNode *gBackdropRenderCallbackList;
 extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferRenderTaskStatuses;
+extern u8 gFramebufferRenderTask0Statuses;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
-extern u8 gFramebufferRenderTaskStatus1;
+extern u8 gFramebufferRenderTask1Statuses;
 extern s32 gClearFramebufferOnNextTask;
 extern s8 gMenuFadeOverlayActive;
 extern Gfx *gCurrentTaskDisplayListStart;
-extern u8 D_80124834;
-extern BootTaskHeader D_80124908;
+extern u8 gFramebufferColorBufferIndex;
+extern BootTaskHeader gFramebufferRenderTask0;
 extern u8 D_80155548[];
 extern u8 D_369000[];
 extern u8 D_800B1CC0[];
@@ -188,7 +188,7 @@ extern u8 aspMainTextStart[];
 extern u8 rspbootTextStart[];
 extern u8 D_80324480[];
 extern u8 D_80328480[];
-extern BootTaskHeader2 D_8013C908;
+extern BootTaskHeader2 gFramebufferRenderTask1;
 extern GfxCommandDest gIdentityMatrix;
 extern GfxCommandDest D_80124C28;
 extern GfxCommandDest D_80124C68;
@@ -215,18 +215,18 @@ extern void appendViewportDisplayLists(u8);
 extern s32 osSendMesg(void *, void *, s32);
 extern void updateGameTaskScheduler(void);
 extern void gameThreadMain(void *);
-extern void initVideoTaskState(void);
+extern void initFramebufferRenderTaskState(void);
 
 void main(void *arg) {
     osInitialize();
-    osCreateThread(&D_801237B0, BOOT_THREAD_ID, bootThreadMain, arg, D_80324480, THREAD_PRIORITY);
-    osStartThread(&D_801237B0);
+    osCreateThread(&gBootThread, BOOT_THREAD_ID, bootThreadMain, arg, D_80324480, THREAD_PRIORITY);
+    osStartThread(&gBootThread);
 }
 
 void bootThreadMain(void *arg) {
-    osCreatePiManager(PI_MANAGER_PRIORITY, &D_80123CC0, D_80123CD8, PI_MANAGER_MSG_COUNT);
-    osCreateThread(&D_80123960, MAIN_THREAD_ID, gameThreadMain, arg, D_80328480, THREAD_PRIORITY);
-    osStartThread(&D_80123960);
+    osCreatePiManager(PI_MANAGER_PRIORITY, &gPiManagerQueue, gPiManagerMessages, PI_MANAGER_MSG_COUNT);
+    osCreateThread(&gGameThread, MAIN_THREAD_ID, gameThreadMain, arg, D_80328480, THREAD_PRIORITY);
+    osStartThread(&gGameThread);
     osSetThreadPri(NULL, 0);
     while (1) {
         ;
@@ -234,22 +234,22 @@ void bootThreadMain(void *arg) {
 }
 
 void initGameSystems(void) {
-    osCreateMesgQueue(&D_80123FF8, D_80124010, 1);
-    osCreateMesgQueue(&D_80124050, D_80124068, 2);
+    osCreateMesgQueue(&gRomDmaQueue, gRomDmaMessages, 1);
+    osCreateMesgQueue(&gSchedulerClientQueue, gSchedulerClientMessages, 2);
     osCreateMesgQueue(&gControllerInputUpdateQueue, gControllerInputUpdateMessages, 8);
-    osCreateMesgQueue(&D_80124018, D_80124030, 8);
+    osCreateMesgQueue(&gFramebufferRenderDoneQueue, gFramebufferRenderDoneMessages, 8);
     if (osTvType == OS_TV_NTSC) {
         initScheduler(&gSchedulerState, RETRACE_COUNT_NTSC, RETRACE_COUNT_MODE);
     } else {
         initScheduler(&gSchedulerState, RETRACE_COUNT_PAL, RETRACE_COUNT_MODE);
     }
-    addSchedulerClient(&gSchedulerState, &D_80124820, &D_80124050);
+    addSchedulerClient(&gSchedulerState, &gMainSchedulerClient, &gSchedulerClientQueue);
     initRelocatableHeap();
     initMenuAssetHandles();
     allocRenderCallbackScratchBuffer();
     allocMenuRenderScratchBuffers();
     initGameTaskScheduler();
-    initVideoTaskState();
+    initFramebufferRenderTaskState();
     initControllerSubsystem();
     resetAllViewports();
     initSoundManager();
@@ -277,9 +277,9 @@ void gameThreadMain(void *arg0) {
     initialized = 0;
     initGameSystems();
     done = 0;
-    queue18 = &D_80124018;
+    queue18 = &gFramebufferRenderDoneQueue;
     queue70 = &gControllerInputUpdateQueue;
-    queue50 = &D_80124050;
+    queue50 = &gSchedulerClientQueue;
     counter = &gPendingFramebufferSwapCount;
 loop_1:
     do {
@@ -288,7 +288,7 @@ loop_1:
         }
         switch (*(s16 *)msg) {
         case 1:
-            D_80124828 = gRetraceCounter;
+            gLastSchedulerRetraceCounter = gRetraceCounter;
             if (initialized == 0) {
                 initialized = 1;
                 updateGameTaskScheduler();
@@ -304,11 +304,11 @@ loop_1:
             break;
         case 5:
             *counter += 1;
-            gFramebufferRenderTaskStatuses &= 0xFFFE;
+            gFramebufferRenderTask0Statuses &= 0xFFFE;
             break;
         case 6:
             *counter += 1;
-            gFramebufferRenderTaskStatus1 &= 0xFFFE;
+            gFramebufferRenderTask1Statuses &= 0xFFFE;
             break;
         case 3:
             *(volatile s32 *)&done = 1;
@@ -380,8 +380,8 @@ void dmaReadRom(u32 devAddr, void *dramAddr, s32 size) {
             chunk = size;
         }
         osInvalDCache(dramAddr, chunk);
-        osPiStartDma(&mb, 0, OS_READ, devAddr, dramAddr, chunk, &D_80123FF8);
-        osRecvMesg(&D_80123FF8, &msg, OS_MESG_BLOCK);
+        osPiStartDma(&mb, 0, OS_READ, devAddr, dramAddr, chunk, &gRomDmaQueue);
+        osRecvMesg(&gRomDmaQueue, &msg, OS_MESG_BLOCK);
         size -= chunk;
         devAddr += chunk;
         dramAddr = (void *)((u8 *)dramAddr + chunk);
@@ -396,31 +396,31 @@ void resetRenderCallbackQueues(void) {
     CallbackQueueGroup *group;
 
     gMenuForegroundRenderCallbackList = NULL;
-    D_80124888 = NULL;
-    do { end = (u32)&D_801248F8; group = (CallbackQueueGroup *)&gModelRenderCallbackList; loop: group++; group[-1].entry0.next = NULL; group[-1].entry1.next = NULL; } while (0);
+    gRaceForegroundRenderCallbackList = NULL;
+    do { end = (u32)&gBackdropRenderCallbackList; group = (CallbackQueueGroup *)&gModelRenderCallbackList; loop: group++; group[-1].entry0.next = NULL; group[-1].entry1.next = NULL; } while (0);
     group[-1].entry2.next = NULL;
     group[-1].entry3.next = NULL;
     if ((u32)group != end) {
         goto loop;
     }
-    D_801248F8 = NULL;
+    gBackdropRenderCallbackList = NULL;
     gMenuOverlayRenderCallbackList = NULL;
     D_80124848 = NULL;
-    D_80124878 = NULL;
+    gRaceOverlayRenderCallbackList = NULL;
     gMenuRenderCallbackList = NULL;
 }
 
-void initVideoTaskState(void) {
-    D_80124908.msgType = 5;
-    D_80124908.framebuffer = D_8038E800;
-    D_8013C908.msgType = 6;
+void initFramebufferRenderTaskState(void) {
+    gFramebufferRenderTask0.msgType = 5;
+    gFramebufferRenderTask0.framebuffer = D_8038E800;
+    gFramebufferRenderTask1.msgType = 6;
     if (1) {
-        D_8013C908.framebuffer = D_803B4000;
+        gFramebufferRenderTask1.framebuffer = D_803B4000;
     }
     osViSetSpecialFeatures(0x6A);
-    gFramebufferRenderTaskStatuses = 0;
-    gFramebufferRenderTaskStatus1 = 0;
-    D_80124834 = 0;
+    gFramebufferRenderTask0Statuses = 0;
+    gFramebufferRenderTask1Statuses = 0;
+    gFramebufferColorBufferIndex = 0;
     D_80124C28 = gIdentityMatrix;
     D_80124C68 = gIdentityMatrix;
     D_80124CA8 = gIdentityMatrix;
@@ -503,18 +503,18 @@ void submitFramebufferRenderTask(u8 arg0) {
     s32 one;
     s32 allBits;
 
-    colorIndex = D_80124834 + 1;
+    colorIndex = gFramebufferColorBufferIndex + 1;
     colorIndex &= 0xFF;
     bufferIndex = arg0 & 0xFF;
-    D_80124834 = colorIndex;
+    gFramebufferColorBufferIndex = colorIndex;
     if (colorIndex >= 3) {
-        D_80124834 = 0;
+        gFramebufferColorBufferIndex = 0;
         colorIndex = 0;
     }
 
     one = 1;
     allBits = 0xFFFF;
-    task = (BootSchedulerTask *)((u8 *)&D_80124908 + bufferIndex * 0x18620);
+    task = (BootSchedulerTask *)((u8 *)&gFramebufferRenderTask0 + bufferIndex * 0x18620);
     task->unk60 = D_8038E800 + colorIndex * 0x25800;
     selectMenuRenderScratchBuffer(bufferIndex);
 
@@ -599,14 +599,14 @@ void submitFramebufferRenderTask(u8 arg0) {
     task->unk1C = textSize;
     task->unk38 = D_80360000;
     task->unk0 = 0;
-    task->unk50 = &D_80124018;
+    task->unk50 = &gFramebufferRenderDoneQueue;
     task->unk54 = task->msg;
     task->unkC = task->unk60;
-    task->unk58 = (D_80124828 + 3) & 0xFFF;
+    task->unk58 = (gLastSchedulerRetraceCounter + 3) & 0xFFF;
     task->unk66 |= 1;
     osSendMesg(getSchedulerGraphicsTaskQueue((s32)&gSchedulerState), task, 1);
 
-    nextColorIndex = D_80124834 + 1;
+    nextColorIndex = gFramebufferColorBufferIndex + 1;
     nextBufferIndex = (bufferIndex + 1) & 1;
     if (nextColorIndex >= 3) {
         nextColorIndex = 0;
@@ -652,7 +652,7 @@ void submitFramebufferRenderTask(u8 arg0) {
     nextTask->unk4C = 0xC00;
     nextTask->unk0 = 0;
     nextTask->unk8 = 0;
-    nextTask->unk50 = &D_80124018;
+    nextTask->unk50 = &gFramebufferRenderDoneQueue;
     nextTask->unk54 = 0;
     nextTask->unk3C = dramStack;
     osSendMesg(getSchedulerGraphicsTaskQueue((s32)&gSchedulerState), nextTask, 1);

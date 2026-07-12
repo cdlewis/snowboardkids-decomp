@@ -9,3 +9,5 @@ src/shop_menu_flow.c -> src/controller_pak_continue_prompt_flow.c
 include/shop_menu_flow.h -> include/controller_pak_continue_prompt_flow.h
 src/shop_menu_ui.c -> src/course_select_shop_ui.c
 include/shop_menu_ui.h -> include/course_select_shop_ui.h
+src/system_boot.c -> src/system_runtime.c
+include/system_boot.h -> include/system_runtime.h

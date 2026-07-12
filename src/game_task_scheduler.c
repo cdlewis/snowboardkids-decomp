@@ -70,7 +70,7 @@ extern s8 gPlayer3StickY;
 extern s8 gPlayer4StickY;
 extern s32 gPlayerInputRepeat;
 extern u8 gPlayerInputRepeatTimer;
-extern FramebufferState gFramebufferRenderTaskStatuses[];
+extern FramebufferState gFramebufferRenderTask0Statuses[];
 
 #ifdef NON_MATCHING
 void resetRenderScratchAllocator();
@@ -300,7 +300,7 @@ s32 updateFramebufferRenderScheduler(void) {
     if (gFramebufferSwapDelayTimer == 0) {
         if (gFramebufferSwapHold == 0) {
             frameIndex = gNextFramebufferRenderTaskIndex;
-            if (gFramebufferRenderTaskStatuses[frameIndex].status == 0) {
+            if (gFramebufferRenderTask0Statuses[frameIndex].status == 0) {
                 if ((s32) gPendingFramebufferSwapCount > 0) {
                     submitFramebufferRenderTask(frameIndex);
                     gFramebufferSwapDelayTimer = gFramebufferSwapDelay;

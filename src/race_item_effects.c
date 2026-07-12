@@ -229,7 +229,7 @@ extern s16 gRaceCourseIndex;
 extern u8 gRaceUpdatePaused;
 extern RaceItemFollowPlayer D_80121D80[];
 extern RaceItemEffectPlayerState D_80121EE8[];
-extern s32 D_80124878;
+extern s32 gRaceOverlayRenderCallbackList;
 extern s32 D_801248C8;
 extern s32 D_801248E0;
 extern s32 D_801248EC;
@@ -946,7 +946,7 @@ void updateRaceUiSparkle(RaceItemEffectActor *arg0) {
     if ((((arg0->payload.sprite.frame) + 1) - 1) >= 0x10) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&D_80124878, renderRaceUiSparkle, arg0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, renderRaceUiSparkle, arg0);
     }
 }
 

@@ -103,11 +103,11 @@ typedef struct {
 extern Gfx *gRegionAllocPtr;
 extern void *gMenuRenderCallbackList;
 extern u8 gMenuForegroundRenderCallbackList[];
-extern u8 D_80124878[];
+extern u8 gRaceOverlayRenderCallbackList[];
 extern u8 gRaceObjectRenderCallbackList[];
 extern u8 gRaceModelEffectRenderCallbackList;
 extern u8 gEffectRenderCallbackList[];
-extern u8 D_801248F8[];
+extern u8 gBackdropRenderCallbackList[];
 extern s16 raceSetupCharacterFocusSoundIds[];
 extern u8 raceSetupCharacterFocusAnimationIds[];
 extern u8 raceSetupOpponentFocusAnimationIds[];
@@ -227,7 +227,7 @@ void updateFallingMenuSnowflakeDrift(MenuScreenEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(D_80124878, drawFallingMenuSnowflake, (s32)arg0);
+    addRenderCallback(gRaceOverlayRenderCallbackList, drawFallingMenuSnowflake, (s32)arg0);
 }
 
 void updateFallingMenuSnowflakeSway(MenuScreenEffectActor *arg0) {
@@ -242,7 +242,7 @@ void updateFallingMenuSnowflakeSway(MenuScreenEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(D_80124878, drawFallingMenuSnowflake, (s32)arg0);
+    addRenderCallback(gRaceOverlayRenderCallbackList, drawFallingMenuSnowflake, (s32)arg0);
 }
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_screen_effects/initFallingMenuSnowflake.s")
@@ -285,7 +285,7 @@ void drawRaceSetupCourseBackdrop(void *arg0) {
 }
 
 void renderRaceSetupBackdrop(s32 arg0) {
-    addRenderCallback(D_801248F8, drawRaceSetupCourseBackdrop, arg0);
+    addRenderCallback(gBackdropRenderCallbackList, drawRaceSetupCourseBackdrop, arg0);
     addRenderCallback(gRaceObjectRenderCallbackList, drawRaceSetupBackdropModels, arg0);
 }
 
@@ -522,7 +522,7 @@ void updateRaceSetupNamePlateSlideOut(MenuScreenEffectActor *arg0) {
     if (temp_t8 == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(D_80124878, drawRaceSetupNamePlate, (s32)arg0);
+        addRenderCallback(gRaceOverlayRenderCallbackList, drawRaceSetupNamePlate, (s32)arg0);
     }
 }
 
@@ -536,7 +536,7 @@ void holdRaceSetupNamePlate(MenuScreenEffectActor *arg0) {
     }
     if (1) {
     }
-    addRenderCallback(D_80124878, drawRaceSetupNamePlate, (s32)arg0);
+    addRenderCallback(gRaceOverlayRenderCallbackList, drawRaceSetupNamePlate, (s32)arg0);
 }
 
 void updateRaceSetupNamePlateSlideIn(MenuScreenEffectActor *arg0) {
@@ -546,7 +546,7 @@ void updateRaceSetupNamePlateSlideIn(MenuScreenEffectActor *arg0) {
         arg0->timer = 0x1E;
         setCallbackTaskCallback(arg0, holdRaceSetupNamePlate);
     }
-    addRenderCallback(D_80124878, drawRaceSetupNamePlate, (s32)arg0);
+    addRenderCallback(gRaceOverlayRenderCallbackList, drawRaceSetupNamePlate, (s32)arg0);
 }
 
 void waitForRaceSetupNamePlate(MenuScreenEffectActor *arg0) {
@@ -718,7 +718,7 @@ void updateMainMenuModeIconFlash(MenuScreenEffectActor *arg0) {
     } else {
         arg0->unk18.half.lo = 0;
     }
-    addRenderCallback(D_80124878, drawMainMenuModeIconFlash, arg0);
+    addRenderCallback(gRaceOverlayRenderCallbackList, drawMainMenuModeIconFlash, arg0);
 }
 
 // drawMainMenuModeLabel best match: 99.220%
@@ -821,7 +821,7 @@ void drawMainMenuStaticBoardModel(void *arg0) {
 }
 
 void renderMainMenuBoardModels(s32 arg0) {
-    addRenderCallback(D_801248F8, drawMainMenuStaticBoardModel, arg0);
+    addRenderCallback(gBackdropRenderCallbackList, drawMainMenuStaticBoardModel, arg0);
     addRenderCallback(gRaceObjectRenderCallbackList, drawMainMenuRotatingBoardModel, arg0);
 }
 
