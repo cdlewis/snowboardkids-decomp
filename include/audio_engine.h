@@ -53,7 +53,7 @@ typedef struct PlayerCommandClearBlock {
 typedef struct PlayerCommandState {
     u32 unk0;
     u32 unk4;
-    u8 pad8[0x4];
+    u32 unk8;
     u32 unkC;
     u32 unk10;
     s32 id;
