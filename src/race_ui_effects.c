@@ -988,7 +988,7 @@ void func_80057710(RaceUiPromptActor *arg0) {
 }
 
 
-void func_80057810(RaceUiPromptActor *arg0) {
+void initRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
     arg0->y = -0x10;
     if (gPlayerCount != 1) {
         arg0->y = -8;
@@ -1063,7 +1063,7 @@ void func_80057BCC(RaceUiPopupActor *arg0) {
     setCallbackTaskCallback(arg0, func_80057B60);
 }
 
-void func_80057C08(void *arg0, s16 arg1) {
+void spawnRaceUiTrickScorePopup(void *arg0, s16 arg1) {
     RaceUiPopupActor *temp = createCallbackTask(func_80057BCC, 0, 0x64);
     if (temp != NULL) {
         temp->parent = arg0;
@@ -1105,7 +1105,7 @@ void func_80057D68(RaceUiPopupActor *arg0) {
     addRenderCallback(&D_80124878, func_80057C5C, arg0);
 }
 
-void func_80057DD4(RaceUiPopupActor *arg0) {
+void initRaceUiCrashScorePopup(RaceUiPopupActor *arg0) {
     arg0->y.word = 0xC;
     arg0->velocity = 0x38;
     arg0->x = 0x1A4;
@@ -3515,7 +3515,7 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
     removeCallbackTask(arg0);
 }
 
-void func_8005FB30(RaceUiRankTrailActor *arg0) {
+void initRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     arg0->scale = 2;
     enqueuePositionalSoundEffect(0xF, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, func_8005F828);
@@ -3860,7 +3860,7 @@ void func_80060FA4(void *arg0) {
     }
 }
 
-void func_80061034(void *arg0, s16 arg1) {
+void spawnRaceUiScorePopup(void *arg0, s16 arg1) {
     void *temp = createCallbackTask(func_80060FA4, 0, 0x64);
     if (temp != NULL) {
         *(void **)((u8 *)temp + 0x2C) = arg0;
@@ -3975,7 +3975,7 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
     removeCallbackTask(arg0);
 }
 
-void func_800617C8(void *arg0) {
+void initRaceUiHeavyKnockdownTrailEffect(void *arg0) {
     setCallbackTaskCallback(arg0, func_800615BC);
 }
 
@@ -4233,7 +4233,7 @@ void func_800622B0(RaceUiTransitionRenderActor *arg0) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_800623E8.s")
 
-void func_80062530(RaceUiTransitionActor *arg0) {
+void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     s16 *transform = arg0->transformSource.source.halfwords;
     volatile u8 padding[0x20];
 
@@ -4310,7 +4310,7 @@ void func_80062A10(void *arg0) {
     setCallbackTaskCallback(arg0, func_800628DC);
 }
 
-void func_80062A64(s16 arg0) {
+void spawnRaceUiStunOrbitingIcons(s16 arg0) {
     void *temp;
     temp = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
     if (temp != NULL) {

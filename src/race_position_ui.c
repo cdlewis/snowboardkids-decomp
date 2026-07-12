@@ -138,7 +138,7 @@ static void racePositionUiDrawParts(RacePositionUiPlayer *player, u32 *textures[
     }
 }
 
-void func_8007BE80(RacePositionUiPlayer *player) {
+void drawRacePositionUiPlayerMarker(RacePositionUiPlayer *player) {
     s32 posOffset;
     u8 vtxOffset;
     s32 vtxFlagOffset;
@@ -201,7 +201,7 @@ void func_8007BE80(RacePositionUiPlayer *player) {
     }
 }
 #else
-// func_8007BE80 best match: 97.84% (base_8.c, 376 differences)
+// drawRacePositionUiPlayerMarker best match: 97.84% (base_8.c, 376 differences)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007BE80.s")
 #endif
 
@@ -310,11 +310,11 @@ void drawRacePositionUiPlayerModel(RacePositionUiPlayer *player) {
     }
 }
 
-// func_8007CBC0 best match: 99.003% (base_7.c, 370 differences)
+// drawRacePositionUiPlayerGhostModel best match: 99.003% (base_7.c, 370 differences)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_position_ui/func_8007CBC0.s")
 
 #ifdef NON_MATCHING
-void func_8007CBC0(RacePositionUiPlayer *player) {
+void drawRacePositionUiPlayerGhostModel(RacePositionUiPlayer *player) {
     RacePositionUiPlayer *countPlayer;
     RacePositionUiPlayer *partVtxPlayer;
     u8 (*partSource)[0x20];

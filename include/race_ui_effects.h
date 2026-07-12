@@ -41,23 +41,32 @@ struct RaceUiTransitionActor;
 struct RaceUiTransitionRenderActor;
 struct RaceUiTripleParticleActor;
 
+#define initRaceUiBoardReversePrompt func_80057810
+#define spawnRaceUiTrickScorePopup func_80057C08
+#define initRaceUiCrashScorePopup func_80057DD4
+#define initRaceUiItemStealTrailEffect func_8005FB30
+#define spawnRaceUiScorePopup func_80061034
+#define initRaceUiHeavyKnockdownTrailEffect func_800617C8
+#define initRaceUiSpinHitTransitionEffect func_80062530
+#define spawnRaceUiStunOrbitingIcons func_80062A64
+
 void func_800572A0(struct RaceUiSlideActor *arg0);
 void func_80057548(struct RaceUiSlideActor *arg0);
 void func_80057600(struct RaceUiSlideActor *arg0);
 void func_80057694(struct RaceUiPromptActor *arg0);
 void func_80057710(struct RaceUiPromptActor *arg0);
-void func_80057810(struct RaceUiPromptActor *arg0);
+void initRaceUiBoardReversePrompt(struct RaceUiPromptActor *arg0);
 void func_80057854(struct RaceUiPopupActor *arg0);
 void func_80057AA4(struct RaceUiPopupActor *arg0);
 void func_80057B04(struct RaceUiPopupActor *arg0);
 void func_80057B60(struct RaceUiPopupActor *arg0);
 void func_80057BCC(struct RaceUiPopupActor *arg0);
-void func_80057C08(void *arg0, s16 arg1);
+void spawnRaceUiTrickScorePopup(void *arg0, s16 arg1);
 void func_80057C5C(struct RaceUiPopupActor *arg0);
 void func_80057CAC(struct RaceUiPopupActor *arg0);
 void func_80057D0C(struct RaceUiPopupActor *arg0);
 void func_80057D68(struct RaceUiPopupActor *arg0);
-void func_80057DD4(struct RaceUiPopupActor *arg0);
+void initRaceUiCrashScorePopup(struct RaceUiPopupActor *arg0);
 void func_80057E10(void *arg0);
 void func_80057E60(s32 arg0);
 void func_80057E90(struct RaceUiAlpha18Actor *arg0);
@@ -162,7 +171,7 @@ void func_8005F56C(void *arg0);
 void func_8005F5C8(struct RaceUiSnowboardTrailPlayer *player);
 void func_8005F6A4(struct RaceUiRankTrailActor *arg0);
 void func_8005F828(struct RaceUiRankTrailActor *arg0);
-void func_8005FB30(struct RaceUiRankTrailActor *arg0);
+void initRaceUiItemStealTrailEffect(struct RaceUiRankTrailActor *arg0);
 void func_8005FBA8(struct RaceUiAnimatedTextActor *arg0);
 void func_8005FED0(struct RaceUiTextParticleActor *arg0);
 void func_800601F8(void *arg0);
@@ -181,13 +190,13 @@ void func_80060E7C(void *arg0);
 void func_80060EDC(void *arg0);
 void func_80060F38(void *arg0);
 void func_80060FA4(void *arg0);
-void func_80061034(void *arg0, s16 arg1);
+void spawnRaceUiScorePopup(void *arg0, s16 arg1);
 void func_80061088(struct RaceUiTripleParticleActor *arg0);
 void func_800613EC(void *arg0);
 void func_80061428(void *arg0);
 void func_80061484(struct RaceUiRankTrailActor *arg0);
 void func_800615BC(struct RaceUiRankTrailActor *arg0);
-void func_800617C8(void *arg0);
+void initRaceUiHeavyKnockdownTrailEffect(void *arg0);
 void func_800617EC(struct RaceUiRisingTrailActor *arg0);
 void func_80061984(struct RaceUiThrownTrailActor *arg0);
 void func_80061A98(struct RaceUiThrownTrailActor *arg0);
@@ -201,11 +210,11 @@ void func_800621DC(void *arg0);
 void spawnRaceUiFadingImpact(void *arg0, void *arg1, void *arg2);
 void func_800622B0(struct RaceUiTransitionRenderActor *arg0);
 void func_800623E8(void *arg0);
-void func_80062530(struct RaceUiTransitionActor *arg0);
+void initRaceUiSpinHitTransitionEffect(struct RaceUiTransitionActor *arg0);
 void func_800625D8(struct RaceUiOrbitingSpriteActor *arg0);
 void func_800628DC(struct RaceUiOrbitingSpriteActor *arg0);
 void func_80062A10(void *arg0);
-void func_80062A64(s16 arg0);
+void spawnRaceUiStunOrbitingIcons(s16 arg0);
 void func_80062AF0(struct RaceUiScaledParticleActor *arg0);
 void func_80062D34(struct RaceUiScaledParticleActor *arg0);
 void func_80062ED4(struct RaceUiScaledParticleActor *arg0);

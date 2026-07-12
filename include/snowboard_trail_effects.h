@@ -4,8 +4,10 @@
 struct RaceInputPlayer;
 typedef struct SnowboardTrailState SnowboardTrailState;
 
+#define updateSnowboardTrailEffect func_8008393C
+
 void func_800837D0(SnowboardTrailState *trail);
-void func_8008393C(struct RaceInputPlayer *player);
+void updateSnowboardTrailEffect(struct RaceInputPlayer *player);
 void startSnowboardTrailEffect(struct RaceInputPlayer *player);
 
 #endif
