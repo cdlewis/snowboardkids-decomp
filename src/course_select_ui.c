@@ -1143,15 +1143,19 @@ void initCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateCourseSelectCourseListBackdrop);
 }
 
-// drawCourseSelectCourseStats best match: 98.209% (nonmatchings/drawCourseSelectCourseStats-4139837607000619032/base_8.c)
+// drawCourseSelectCourseStats best match: 98.450% (nonmatchings/drawCourseSelectCourseStats-8331816093655448999/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectCourseStats.s")
 
 #ifdef NON_MATCHING
 extern int sprintf(u8 *, u8 *, ...);
+extern u8 D_800E0DA0[];
+extern u8 D_800E0DA4[];
+extern u8 D_800E0DA8[];
+extern u8 D_800E0DAC[];
+extern u8 D_800E0DB0[];
+extern u8 D_800E0DB4[];
 
 void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
-    volatile u16 frameTile;
-    u8 text[2];
     s32 playerCount;
     s32 i;
     s32 courseId;
@@ -1160,6 +1164,8 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     s32 xOffset;
     s32 positionColumn;
     s32 bottomRow;
+    volatile u16 frameTile;
+    u8 text[2];
     u8 *ratings;
     CourseSelectWidgetActor *playerWidget;
 
@@ -1192,7 +1198,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     selectedCourseId = xOffset;
                     if (selectedCourseId >= 9) {
                         drawMenuAsciiText((s16)(playerWidget->coordinates[0] + 0x38), playerWidget->coordinates[4],
-                                      "?", 0, arg0->coordinates[8]);
+                                      D_800E0DA0, 0, arg0->coordinates[8]);
                     } else {
                         ratings = &gCourseSelectCourseSpeedRatings[selectedCourseId * 3];
                         j = 0;
@@ -1211,7 +1217,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 
                     if (selectedCourseId >= 9) {
                         drawMenuAsciiText((s16)(playerWidget->coordinates[0] + 0x38),
-                                      (s16)(playerWidget->coordinates[4] + 0xC), "?", 0, arg0->coordinates[8]);
+                                      (s16)(playerWidget->coordinates[4] + 0xC), D_800E0DA4, 0, arg0->coordinates[8]);
                     } else {
                         ratings = &gCourseSelectCourseSpeedRatings[selectedCourseId * 3];
                         if (1) {
@@ -1234,7 +1240,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 
                     if (selectedCourseId >= 9) {
                         drawMenuAsciiText((s16)(playerWidget->coordinates[0] + 0x38),
-                                      (s16)(playerWidget->coordinates[4] + 0x18), "?", 0, arg0->coordinates[8]);
+                                      (s16)(playerWidget->coordinates[4] + 0x18), D_800E0DA8, 0, arg0->coordinates[8]);
                     } else {
                         ratings = &gCourseSelectCourseSpeedRatings[selectedCourseId * 3];
                         j = 0;
@@ -1260,7 +1266,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     xOffset--;
                     if (selectedCourseId < 9) {
                         playerWidget = playerWidget;
-                        sprintf(text, "%d", gCourseSelectCourseSpeedRatings[selectedCourseId * 3]);
+                        sprintf(text, D_800E0DAC, gCourseSelectCourseSpeedRatings[selectedCourseId * 3]);
                         do {
                         } while (0);
                     }
@@ -1268,13 +1274,13 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                   arg0->coordinates[8]);
 
                     if (selectedCourseId < 9) {
-                        sprintf(text, "%d", gCourseSelectCourseHandlingRatings[selectedCourseId * 3]);
+                        sprintf(text, D_800E0DB0, gCourseSelectCourseHandlingRatings[selectedCourseId * 3]);
                     }
                     drawMenuAsciiText((s16)(playerWidget->coordinates[0] + 0x34),
                                   (s16)(playerWidget->coordinates[4] + 8), text, 0, arg0->coordinates[8]);
 
                     if (9 > selectedCourseId) {
-                        sprintf(text, "%d", gCourseSelectCourseTrickRatings[selectedCourseId * 3]);
+                        sprintf(text, D_800E0DB4, gCourseSelectCourseTrickRatings[selectedCourseId * 3]);
                     }
                     drawMenuAsciiText((s16)(playerWidget->coordinates[0] + 0x34),
                                   (s16)(playerWidget->coordinates[4] + 0x10), text, 0, arg0->coordinates[8]);
