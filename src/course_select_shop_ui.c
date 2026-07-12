@@ -130,11 +130,11 @@ struct ShopMenuWidgetActor {
             union {
                 struct {
                     /* 0x30 */ s16 pulseAlpha;
-                    /* 0x32 */ s16 pulseTimer;
+                    /* 0x32 */ u16 pulseTimer;
                 } bytes;
                 /* 0x30 */ s32 pulse;
             } prompt;
-            /* 0x34 */ s16 spawnTimer;
+            /* 0x34 */ u16 spawnTimer;
             /* 0x36 */ s16 visibleCount;
             /* 0x38 */ u8 state;
         };
@@ -1323,7 +1323,7 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
 }
 #endif
 
-// updateCourseDetailsMenu best match: 79.777% (nonmatchings/updateCourseDetailsMenu-7273315160691878794/base_7.c)
+// updateCourseDetailsMenu best match: 85.277% (nonmatchings/updateCourseDetailsMenu-3357475854818838508/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/updateCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
@@ -1332,7 +1332,6 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     s32 moved;
     u8 globalState;
     u8 state;
-    u8 nextState;
     ShopMenuWidgetActor *actor;
     ShopMenuWidgetActor *shifted;
     s16 target;
@@ -1340,19 +1339,17 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     u16 count;
 
     actor = arg0;
+    shifted = arg0;
     globalState = gCourseDetailsMenuState;
-    nextState = arg0->state;
-    state = nextState;
-    if (nextState != globalState) {
-        nextState = globalState & 0xFF;
-        state = nextState;
+    state = arg0->state;
+    if (state != globalState) {
+        state = globalState & 0xFF;
         arg0->state = globalState;
     }
 
     if (((gCurrentGameTask->unk20 == 3) || (gCurrentGameTask->unk20 == 9)) && (state < 5)) {
         arg0->state = 5;
-        nextState = 5 & 0xFF;
-        state = nextState;
+        state = 5 & 0xFF;
         arg0->prompt.bytes.pulseAlpha = 0x100;
     }
 
@@ -1370,7 +1367,7 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         }
         arg0->spawnTimer++;
         if (!(arg0->spawnTimer & 1)) {
-            count = arg0->visibleCount;
+            count = shifted->visibleCount;
             if ((s32)count < 10) {
                 arg0->visibleCount = count + 1;
                 if ((u16)arg0->visibleCount == 10) {
@@ -1381,8 +1378,7 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         if (moved == 0) {
             arg0->state = 1;
         }
-        nextState = arg0->state;
-        state = nextState;
+        state = arg0->state;
         break;
     case 1:
         arg0->prompt.bytes.pulseAlpha += 0x26;
@@ -1390,22 +1386,23 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
             arg0->prompt.bytes.pulseAlpha = 0x100;
             arg0->state = 2;
         }
-        nextState = arg0->state;
-        state = nextState;
+        state = arg0->state;
         break;
     case 3:
-        arg0->randomValues[0] -= 0x20;
-        if (arg0->randomValues[0] < -0x117) {
-            arg0->randomValues[0] = -0x118;
+        actor = arg0;
+        i = 3;
+        actor->randomValues[0] -= 0x20;
+        if (actor->randomValues[0] < -0x117) {
+            actor->randomValues[0] = -0x118;
         }
-        arg0->randomValues[1] -= 0x20;
-        shifted = (ShopMenuWidgetActor *)((s16 *)arg0 + 3);
-        if (arg0->randomValues[1] < -0x117) {
-            arg0->randomValues[1] = -0x118;
+        actor->randomValues[1] -= 0x20;
+        shifted = (ShopMenuWidgetActor *)((s16 *)arg0 + i);
+        if (actor->randomValues[1] < -0x117) {
+            actor->randomValues[1] = -0x118;
         }
-        arg0->randomValues[2] -= 0x20;
-        if (arg0->randomValues[2] < -0x117) {
-            arg0->randomValues[2] = -0x118;
+        actor->randomValues[2] -= 0x20;
+        if (actor->randomValues[2] < -0x117) {
+            actor->randomValues[2] = -0x118;
         }
         shifted->randomValues[0] -= 0x20;
         if (shifted->randomValues[0] < -0x117) {
@@ -1423,29 +1420,30 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         if (shifted->randomValues[3] < -0x117) {
             shifted->randomValues[3] = -0x118;
         }
-        if (arg0->randomValues[0] == -0x118) {
+        if (actor->randomValues[0] == -0x118) {
             arg0->state = 4;
             gCourseDetailsPreviewPage = (gCourseDetailsPreviewPage + 1) % 2;
         }
-        nextState = arg0->state;
-        state = nextState;
+        state = arg0->state;
         break;
     case 4:
+        actor = arg0;
+        i = 3;
         target = arg0->targetX;
-        arg0->randomValues[0] += 0x20;
-        if (arg0->randomValues[0] >= target) {
-            arg0->randomValues[0] = target;
+        actor->randomValues[0] += 0x20;
+        if (actor->randomValues[0] >= target) {
+            actor->randomValues[0] = target;
         }
-        arg0->randomValues[1] += 0x20;
+        actor->randomValues[1] += 0x20;
         target = arg0->targetX;
-        shifted = (ShopMenuWidgetActor *)((s16 *)arg0 + 3);
-        if (arg0->randomValues[1] >= target) {
-            arg0->randomValues[1] = target;
+        shifted = (ShopMenuWidgetActor *)((s16 *)arg0 + i);
+        if (actor->randomValues[1] >= target) {
+            actor->randomValues[1] = target;
         }
-        arg0->randomValues[2] += 0x20;
+        actor->randomValues[2] += 0x20;
         target = arg0->targetX;
-        if (arg0->randomValues[2] >= target) {
-            arg0->randomValues[2] = target;
+        if (actor->randomValues[2] >= target) {
+            actor->randomValues[2] = target;
         }
         shifted->randomValues[0] += 0x20;
         target = arg0->targetX;
@@ -1467,22 +1465,22 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         if (shifted->randomValues[3] >= target) {
             shifted->randomValues[3] = target;
         }
-        if (arg0->targetX == arg0->randomValues[0]) {
+        if (arg0->targetX == actor->randomValues[0]) {
             arg0->state = 2;
         }
-        nextState = arg0->state;
-        state = nextState;
+        state = arg0->state;
         break;
     case 5:
+        temp = arg0->randomValues[0] - 0x20;
         arg0->randomValues[1] -= 0x20;
-        arg0->randomValues[0] -= 0x20;
+        arg0->randomValues[0] = temp;
         shifted = (ShopMenuWidgetActor *)((char *)arg0 + 4);
         i = 2;
         do {
-            temp = shifted->randomValues[0] - 0x20;
             shifted->randomValues[3] -= 0x20;
             shifted->randomValues[2] -= 0x20;
             shifted->randomValues[1] -= 0x20;
+            temp = shifted->randomValues[0] - 0x20;
             i += 4;
             shifted = (ShopMenuWidgetActor *)((char *)shifted + 8);
             shifted->randomValues[-4] = temp;
@@ -1490,14 +1488,12 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         if (arg0->randomValues[0] < -0x117) {
             arg0->state = 7;
         }
-        nextState = arg0->state;
-        state = nextState;
+        state = arg0->state;
         break;
     case 6:
         arg0->prompt.bytes.pulseAlpha = 0x100;
         arg0->prompt.bytes.pulseTimer = 0;
-        nextState = arg0->state;
-        state = nextState;
+        state = arg0->state;
         break;
     case 7:
         break;
@@ -1510,11 +1506,10 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
             arg0->prompt.bytes.pulseAlpha += 9;
         }
         arg0->prompt.bytes.pulseTimer = (arg0->prompt.bytes.pulseTimer + 1) & 0x1F;
-        nextState = arg0->state;
-        state = nextState;
+        state = arg0->state;
     }
 
-    gCourseDetailsMenuState = nextState;
+    gCourseDetailsMenuState = state;
     if (arg0->state == 7) {
         removeCallbackTask((CallbackTask *)arg0);
         return;
