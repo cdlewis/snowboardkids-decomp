@@ -1670,16 +1670,8 @@ void soundPlayerApplyPitch(PlayerCommandState *arg0, s32 arg1) {
 }
 #endif
 
-// soundPlayerStartEnvelope best match: 89.464%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerStartEnvelope.s")
-
-#ifdef NON_MATCHING
 void soundPlayerStartEnvelope(PlayerCommandState *arg0) {
-    s32 max = 0x7FFFFFFF;
     u16 temp_v0;
-    u8 temp_f5;
-    u8 temp_f4;
 
     if (arg0->unkBC != 0x7FFF) {
         temp_v0 = arg0->unkC2;
@@ -1689,16 +1681,13 @@ void soundPlayerStartEnvelope(PlayerCommandState *arg0) {
             arg0->unk100 = arg0->unkC - (arg0->unkC4 << 8);
         }
     } else {
-        arg0->unk100 = max;
+        arg0->unk100 = 0x7FFFFFFF;
     }
 
-    temp_f5 = arg0->unkF5;
-    temp_f4 = arg0->unkF4;
+    arg0->unkF9 = arg0->unkF5;
+    arg0->unkFA = arg0->unkF4;
     arg0->unkF8 = 1;
-    arg0->unkF9 = temp_f5;
-    arg0->unkFA = temp_f4;
 }
-#endif
 
 // soundPlayerUpdateEnvelope best match: 93.258% (nonmatchings/func_8009EBDC-6113366811127043669/base_10.c)
 
