@@ -602,12 +602,13 @@ void requestControllerPakSaveWrite(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// writeControllerPakSave best match: 78.684%
+// writeControllerPakSave best match: 83.978%
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/writeControllerPakSave.s")
 
 #ifdef NON_MATCHING
 void writeControllerPakSave(u16 arg0) {
-    OSPfs * volatile pfs;
+    OSPfs *pfs;
+    OSPfs **pfsPtr;
     s32 *fileNo;
     s32 channel;
     u8 *src;
@@ -646,11 +647,14 @@ copy_name:
     }
 
     pfs = &gControllerPakHandles[channel];
-    osPfsInitPak(&gControllerEventQueue, pfs, channel);
+    pfsPtr = &pfs;
+    osPfsInitPak(&gControllerEventQueue, *pfsPtr, channel);
 
     fileNo = &gControllerPakFileNos[channel];
-    if (osPfsFindFile(pfs, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName, gControllerPakGameName, fileNo) == 5) {
-        osPfsAllocateFile(pfs, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName, gControllerPakGameName, 0x7900, fileNo);
+    if (osPfsFindFile(*pfsPtr, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode,
+                      gControllerPakExtName, gControllerPakGameName, fileNo) == 5) {
+        osPfsAllocateFile(*pfsPtr, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode,
+                          gControllerPakExtName, gControllerPakGameName, 0x7900, fileNo);
     }
 
     save = &gGameSaveDataBuffer[channel];
@@ -669,7 +673,7 @@ checksum_loop:
     }
 
     save->checksum = checksum;
-    if (osPfsReadWriteFile(pfs, *fileNo, 1, 0, 0x78E0, (u8 *)save) == 0) {
+    if (osPfsReadWriteFile(*pfsPtr, *fileNo, 1, 0, 0x78E0, (u8 *)save) == 0) {
         (&gControllerPakRetryCounts)[channel] = 0;
         return;
     }
