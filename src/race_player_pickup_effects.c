@@ -9,7 +9,7 @@
 #include "snowboard_trail_effects.h"
 #include "race_ui_effects.h"
 
-// updateRacePlayerItemEffectUse best match: 98.537% (nonmatchings/func_800849E0-731940616440357983/base_13.c)
+// updateRacePlayerItemEffectUse best match: 99.869% (nonmatchings/updateRacePlayerItemEffectUse-3357475854818838508/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_pickup_effects/updateRacePlayerItemEffectUse.s")
 
 typedef void (*EffectCallback)(void *);
@@ -30,6 +30,7 @@ void updateRacePlayerItemEffectUse(RaceInputPlayer *player) {
     RaceInputPlayer *otherPlayer;
     s32 deltaX;
     s32 deltaZ;
+    s32 mask;
     s32 angle;
 
     trigger = 0;
@@ -53,11 +54,12 @@ void updateRacePlayerItemEffectUse(RaceInputPlayer *player) {
             do {
                 if (otherPlayer->unk4 == 0) {
                     deltaX = otherPlayer->posX - player->posX;
-                    deltaZ = otherPlayer->posZ - player->posZ;
+                    deltaZ = otherPlayer->posZ;
+                    deltaZ = deltaZ - player->posZ;
                     if ((deltaX < 0x6000000) && (deltaX >= -0x5FFFFFF) &&
                         (deltaZ < 0x6000000) && (deltaZ >= -0x5FFFFFF)) {
-                        angle = (s16) ((calculateFixedAngleFromDeltaXZ(deltaX, deltaZ) - player->facingAngle) & 0xFFF);
-                        if ((angle >= 0xE01) || (angle < 0x200)) {
+                        angle = (s16) ((((((calculateFixedAngleFromDeltaXZ(deltaX, deltaZ) - player->facingAngle) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & (mask = 0xFFF));
+                        if ((angle >= 0xE01) || (angle < (((((((((((0x200 & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF))) {
                             trigger = 1;
                             player->itemTriggerCooldown = -0x3E;
                         }
