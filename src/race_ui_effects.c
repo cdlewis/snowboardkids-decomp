@@ -1915,22 +1915,24 @@ loop4:
 }
 #endif
 
-// func_8005A884 best match: 87.770% (nonmatchings/func_8005A884-4139837607000619032/base_11.c)
+// func_8005A884 best match: 94.830% (nonmatchings/func_8005A884-2694253543240320626/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005A884.s")
 
 #ifdef NON_MATCHING
 void func_8005A884(RaceUiPopupActor *arg0) {
-    volatile u8 padding[0x20];
-    char buffer[8];
+    volatile u8 padding[0x18];
+    char new_var;
     s32 i;
-    s32 color;
+    u16 color;
     s32 y;
     s32 space;
 
-    y = -0x50;
     i = 0;
+    y = -0x50;
     space = ' ';
     do {
+        char buffer[8];
+
         drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (i + 0x77) & 0xFFFF);
 
         if ((i == arg0->index) && (gUiBlinkTimer & 1)) {
