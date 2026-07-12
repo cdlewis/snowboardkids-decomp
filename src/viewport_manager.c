@@ -216,19 +216,19 @@ void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 cent
 }
 #endif
 
-// configureRaceViewport best match: 88.992%
+// configureRaceViewport best match: 90.016% (nonmatchings/configureRaceViewport-3357475854818838508/base_2.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/configureRaceViewport.s")
 
 #ifdef NON_MATCHING
 extern f32 gRaceViewportOverlayFarClip;
+extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
 
 void configureRaceViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
     ViewportState *viewport;
     s32 halfHeight;
     s32 halfWidth;
     f32 fovy;
-    u16 *arg3Ptr;
 
     viewport = &gViewportStates[arg0];
     viewport->viewportTranslateX = arg1 * 4;
@@ -237,8 +237,6 @@ void configureRaceViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16
     viewport->viewportScaleX = arg5 * 2;
     viewport->viewportScaleY = arg6 * 2;
 
-    arg3Ptr = &arg3;
-    arg3 = *arg3Ptr & 0xFFFF;
     halfWidth = arg3 / 2;
     viewport->right = halfWidth + arg1;
     viewport->left = arg1 - halfWidth;
