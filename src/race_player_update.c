@@ -5008,7 +5008,7 @@ void updateRacePlayerMode07LaunchRampClimb(RaceInputPlayer *player) {
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode07SpiralExit.s")
 
-// updateRacePlayerMode07SpiralExit best match: 84.515% (nonmatchings/updateRacePlayerMode07SpiralExit-7273315160691878794/base_1.c)
+// updateRacePlayerMode07SpiralExit best match: 93.957% (nonmatchings/updateRacePlayerMode07SpiralExit-8331816093655448999/base_14.c)
 #ifdef NON_MATCHING
 void updateRacePlayerMode07SpiralExit(RaceInputPlayer *player) {
     FixedMatrix3s matrix;
@@ -5033,20 +5033,18 @@ void updateRacePlayerMode07SpiralExit(RaceInputPlayer *player) {
         player->posZ += gRaceCourseStartEntries[gRaceCourseIndex].unk8.z;
         player->unk508++;
         player->unk502 = gRaceCourseStartEntries[gRaceCourseIndex].unk4;
-        player->unk34.x = pos->x;
-        player->unk34.y = pos->y;
+        player->unk34 = *(RaceVec3i *) pos;
         player->stateTimer = 0x28;
-        player->unk34.z = pos->z;
         player->stateFlags &= 0xFBFFFBFF;
         player->facingAngle = gRaceCourseStartEntries[gRaceCourseIndex].unk14;
         player->unk504 = -projectRaceCourseSurfaceProgress(player->unk502, player->posX, player->posZ);
         setRaceCameraMode(player->playerIndex, 1);
-        D_801121E0[player->playerIndex].unk94 = player->posX;
-        D_801121E0[player->playerIndex].unk98 = player->posY;
-        D_801121E0[player->playerIndex].unk9C = player->posZ;
+        D_801121E0[player->playerIndexU16].unk94 = player->posX;
+        D_801121E0[player->playerIndexU16].unk98 = player->posY;
+        D_801121E0[player->playerIndexU16].unk9C = player->posZ;
         createCallbackTask(initSpiralCourseObject, 0, 0x64);
         if (player->unk508 >= (gRaceLapCount - 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(waitForRaceSetupNamePlate, 0, 0x64, player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(waitForRaceSetupNamePlate, 0, 0x64, player->playerIndexU16);
         }
     }
 
@@ -5074,19 +5072,18 @@ void updateRacePlayerMode07SpiralExit(RaceInputPlayer *player) {
             player->posZ = nextZ + player->unk40.z;
         }
 
-        slideLevel = player->rankIndex;
-        if (slideLevel == 2) {
+        if (player->rankIndex == 2) {
             player->posX += player->unk40.x * 2;
             player->posZ += player->unk40.z * 2;
         }
 
-        if (slideLevel == 3) {
+        if (player->rankIndex == 3) {
             player->posX += player->unk40.x * 4;
             player->posZ += player->unk40.z * 4;
         }
 
-        if (D_801121E0[player->playerIndex].active != 0) {
-            D_801121E0[player->playerIndex].active = 1;
+        if (D_801121E0[player->playerIndexU16].active != 0) {
+            D_801121E0[player->playerIndexU16].active = 1;
         }
     }
 }
