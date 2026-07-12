@@ -1644,11 +1644,15 @@ void noopThreeArgs(void *arg0, void *arg1, void *arg2) {
 void noopFourArgs(void *arg0, void *arg1, void *arg2, void *arg3) {
 }
 
-// isPositionNearAnyRaceViewportFocus best match: 99.126%
+// isPositionNearAnyRaceViewportFocus best match: 99.175% at nonmatchings/isPositionNearAnyRaceViewportFocus-8331816093655448999/base_9.c.
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/isPositionNearAnyRaceViewportFocus.s")
 
 #ifdef NON_MATCHING
+extern s8 gViewportStatesViewport1Active;
+extern s8 gViewportStatesViewport2Active;
+extern s8 gViewportStatesViewport3Active;
+
 s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
     Vec3i *posAlias;
     s32 tempZ;
@@ -1665,9 +1669,10 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
 
     if (gViewportStates[0].active != 0) {
         diffX = D_801121F8;
-        diffX = diffX - pos->x;
-        if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001)) {
+        if (((diffX - pos->x) < 0x6000000) && ((diffX - pos->x) >= (s32)0xFA000001)) {
             zPtr = &pos->z;
+            if (D_801121F8 && D_801121F8) {
+            }
             tempZ = D_80112200;
             diffZ = tempZ - *zPtr;
             if ((diffZ < 0x6000000) && (diffZ >= (s32)0xFA000001)) {
@@ -1677,7 +1682,7 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
     }
 
     posAlias = pos;
-    if (gViewportStates[1].active != 0) {
+    if (gViewportStatesViewport1Active != 0) {
         diffX = D_801122A8 - pos->x;
         temp = D_801122B0;
         diffZ = temp - posAlias->z;
@@ -1687,7 +1692,7 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
         }
     }
 
-    if (gViewportStates[2].active != 0) {
+    if (gViewportStatesViewport2Active != 0) {
         diffX = D_80112358 - posAlias->x;
         diffZ = D_80112360 - pos->z;
         if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001) && (diffZ < 0x6000000) && (diffZ >= (s32)0xFA000001)) {
@@ -1695,7 +1700,7 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
         }
     }
 
-    if (gViewportStates[3].active != 0) {
+    if (gViewportStatesViewport3Active != 0) {
         diffX = D_80112408 - posAlias->x;
         diffZ = D_80112410 - posAlias->z;
         lower = 0xFA000001;
