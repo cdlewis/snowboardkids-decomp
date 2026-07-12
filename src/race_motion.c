@@ -810,7 +810,7 @@ void resolveRaceCourseSurfaceCollision(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s
 }
 #endif
 
-// getRaceCourseSurfaceHeight best match: 82.954% (base_10.c)
+// getRaceCourseSurfaceHeight best match: 82.989% (nonmatchings/getRaceCourseSurfaceHeight-3357475854818838508/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_motion/getRaceCourseSurfaceHeight.s")
 
 #ifdef NON_MATCHING
@@ -821,21 +821,9 @@ s32 getRaceCourseSurfaceHeight(s32 arg0, s32 arg1, s32 arg2) {
     RaceMotionFace *face;
     RaceMotionCoord *coord0;
     RaceMotionCoord *coord1;
-    RaceMotionCoord *coord2;
     RaceMotionCoord *coords;
     s64 lhs;
     s64 rhs;
-    s16 x20;
-    s16 z20;
-    s16 y20;
-    s16 x10;
-    s16 z10;
-    s16 y10;
-    s32 xDelta;
-    s32 zDelta;
-    s32 numeratorA;
-    s32 numeratorB;
-    s32 denominator;
 
     keyframeOffset = arg0 * sizeof(RaceMotionSurface);
     faceIndex = ((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->unk14[0];
@@ -874,6 +862,19 @@ s32 getRaceCourseSurfaceHeight(s32 arg0, s32 arg1, s32 arg2) {
                 (arg1 - (coord1->x << 0x11));
 
             if (lhs - rhs >= 0) {
+                RaceMotionCoord *coord2;
+                s16 x20;
+                s16 z20;
+                s16 y20;
+                s16 x10;
+                s16 z10;
+                s16 y10;
+                s32 xDelta;
+                s32 zDelta;
+                s32 numeratorA;
+                s32 numeratorB;
+                s32 denominator;
+
                 face = (RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset);
                 coords = gRaceCourseSurfaceCoords;
                 coord2 = (RaceMotionCoord *)((s32)coords + face->coord2 * sizeof(RaceMotionCoord));
