@@ -2775,7 +2775,7 @@ done2:
 }
 #endif
 
-// func_8005D1CC best match: 96.634% (nonmatchings/func_8005D1CC-6061209858023118177/base_18.c, permuter artifact)
+// func_8005D1CC best match: 97.441% (nonmatchings/func_8005D1CC-5802343343535905907/base_8.c, permuter artifact)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005D1CC.s")
 
 #ifdef NON_MATCHING
@@ -2798,12 +2798,8 @@ void func_8005D1CC(RaceUiCourseStatsActor *arg0) {
     x = 0x20;
     if (visibleRows >= 0) {
         sprintf(buffer - 4, D_800E1444, arg0->pendingFirstValue);
-        ptr = buffer - 4;
-loop1:
-        if (*ptr != 0) {
-            if (*ptr != ' ') {
-                drawAssetTableSprite(x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (u16)(*ptr - 5));
-            }
+ ptr = buffer - 4; loop1: if (*ptr != 0) { if (*ptr != ' ') { drawAssetTableSprite(x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (u16)(*ptr - 5));
+        }
             x += 8;
             ptr++;
             goto loop1;
@@ -2816,7 +2812,7 @@ loop1:
     if (visibleRows > 0) {
         x = 0x20;
         ptr = 0;
-        sprintf(buffer - 4, D_800E1448, arg0->pendingSecondValue);
+        sprintf(buffer - 4, D_800E1448, rowY = arg0->pendingSecondValue);
         rowY = y.half.lo;
         ptr = buffer;
         ptr = ptr - 4;
