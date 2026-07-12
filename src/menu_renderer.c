@@ -1728,41 +1728,48 @@ void drawMenuAsciiText(s16 arg0, s16 arg1, u8 *arg2, u16 arg3, u16 arg4) {
     }
 }
 
-// drawMenuSolidRect best match: 70.220%
+// drawMenuSolidRect best match: 79.204% (nonmatchings/drawMenuSolidRect-5802343343535905907/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuSolidRect.s")
 
 #ifdef NON_MATCHING
-void drawMenuSolidRect(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b) {
+void drawMenuSolidRect(s16 x0, s16 y0, s16 x1, s16 y1, volatile short r, s16 g, s16 b) {
     Gfx *gfx;
+    Gfx *new_var;
+    long long new_var3;
     s32 color;
+    long long new_var2;
     extern u32 gMenuRenderModeResetDl[];
 
-    if (x0 >= 0 && x0 < 321 && x1 >= 0 && x1 < 321 && y0 >= 0 && y0 < 241 && y1 >= 0 && y1 < 241) {
-        gfx = gRegionAllocPtr++;
-        gfx->words.w0 = 0xE7000000;
-        gfx->words.w1 = 0;
-
-        gfx = gRegionAllocPtr++;
-        gfx->words.w0 = 0xBA001402;
-        gfx->words.w1 = 0x00300000;
-
-        gfx = gRegionAllocPtr++;
-        gfx->words.w0 = 0xB900031D;
-        gfx->words.w1 = 0;
-
-        gfx = gRegionAllocPtr++;
-        gfx->words.w0 = 0xF7000000;
-        color = (((r << 8) & 0xF800) | ((g << 3) & 0x7C0) | ((b >> 2) & 0x3E)) | 1;
-        gfx->words.w1 = (color << 16) | color;
-
-        gfx = gRegionAllocPtr++;
-        gfx->words.w0 = 0xF6000000 | ((x1 & 0x3FF) << 14) | ((y1 & 0x3FF) << 2);
-        gfx->words.w1 = ((x0 & 0x3FF) << 14) | ((y0 & 0x3FF) << 2);
-
-        gfx = gRegionAllocPtr++;
-        gfx->words.w0 = 0x06000000;
-        gfx->words.w1 = (u32)gMenuRenderModeResetDl;
-    }
+    do {
+        if ((x1 && x1) && x1) {
+        }
+        if ((((0, (((((x0 >= 0) && (x0 < 321)) && (x1 >= 0)) && (x1 < 321)) && (y0 >= 0)) && (y0 < 241))) && (y1 >= 0)) && (y1 < 241)) {
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xE7000000;
+            gfx->words.w1 = 0;
+            gfx = (new_var = gRegionAllocPtr++);
+            new_var2 = b >> 2;
+            gfx->words.w0 = 0xBA001402;
+            gfx->words.w1 = 0x00300000;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xB900031D;
+            if (1) {
+                gfx->words.w1 = 0;
+            }
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = 0xF7000000;
+            color = (0, ((((r << 8) & 0xF800) | ((g << 3) & 0x7C0)) | (new_var2 & 0x3E)) | 1);
+            new_var3 = (long long)0xF6000000;
+            gfx->words.w1 = color;
+            gfx->words.w1 = (gfx->words.w1 << 16) | color;
+            gfx = gRegionAllocPtr++;
+            gfx->words.w0 = (new_var3 | ((x1 & 0x3FF) << 14)) | ((y1 & 0x3FF) << 2);
+            gfx->words.w1 = ((x0 & 0x3FF) << 14) | ((y0 & 0x3FF) << 2);
+            gfx = gRegionAllocPtr++;
+            (*gfx).words.w0 = 0x06000000;
+            gfx->words.w1 = (u32)gMenuRenderModeResetDl;
+        }
+    } while (0);
 }
 #endif
 
