@@ -79,6 +79,7 @@ extern u8 D_5CBA80[];
 extern u8 D_5CCD40[];
 extern u8 D_5D4280[];
 extern u8 D_5DAF30[];
+extern f32 D_800E0A30;
 extern ObjectA3E0 *gCurrentMenuCameraObject;
 extern u16 gCourseDetailsPreviewCourseTiles[];
 extern s16 gMenuFadeAlpha;
@@ -165,7 +166,7 @@ extern void releaseMenuAssetHandles(void);
 extern void requestMusicSequenceBank(s32);
 extern void requestMusicSequenceStop(s32);
 extern void enqueueSoundEffect(s32, s32);
-// initCourseSelectMenu best match: 98.706%
+// initCourseSelectMenu best match: 98.752% (nonmatchings/initCourseSelectMenu-8331816093655448999/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/initCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -174,17 +175,15 @@ void initCourseSelectMenu(void) {
     s32 i;
     s32 zero;
     s32 mask;
-    s32 shiftedMask;
     u8 *unlockedCourse;
     u8 *otherCourse;
     ObjectA3E0 *obj;
-    void (*nextCallback)(void);
     s32 savedUnlocks;
 
     requestMusicSequenceBank(3);
     resetRaceCameras();
     resetAllViewports();
-    configureViewport(0, 0xE8, 0x78, 0x90, 0xD0, 0xA0, 0xF0, 0.6666666865f);
+    configureViewport(0, 0xE8, 0x78, 0x90, 0xD0, 0xA0, 0xF0, D_800E0A30);
 
     obj = D_801121E0;
     unlockedCourse = D_8010AEA0;
@@ -216,7 +215,6 @@ void initCourseSelectMenu(void) {
     dmaReadRom((u32)D_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
-    nextCallback = updateCourseSelectModeMenu;
     initCallbackTaskScheduler(0);
     createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
 
@@ -249,14 +247,10 @@ void initCourseSelectMenu(void) {
         savedUnlocks = gGameSaveDataBuffer[0x78D7];
         i++;
         if (savedUnlocks & mask) {
-            shiftedMask = mask;
-            if (1) {
-                shiftedMask = shiftedMask << 3;
-                if (!(savedUnlocks & shiftedMask)) {
-                    gShopMenuShowNewCoursesMessage = 1;
-                    gShopMenuDescriptionSeen = 1;
-                    gGameSaveDataBuffer[0x78D7] = savedUnlocks | shiftedMask;
-                }
+            if (!(savedUnlocks & (mask << 3))) {
+                gShopMenuShowNewCoursesMessage = 1;
+                gShopMenuDescriptionSeen = 1;
+                gGameSaveDataBuffer[0x78D7] = savedUnlocks | (mask << 3);
             }
         }
         mask <<= 1;
@@ -266,7 +260,7 @@ void initCourseSelectMenu(void) {
         gCourseSelectModeSelection = 0;
     }
 
-    setCurrentGameTaskCallback(nextCallback, 0);
+    setCurrentGameTaskCallback(updateCourseSelectModeMenu, 0);
     updateCallbackTasks();
 
     gCourseSelectStatus.unk0Array[zero] = zero;
