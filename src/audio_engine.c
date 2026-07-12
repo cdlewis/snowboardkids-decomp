@@ -1587,7 +1587,7 @@ void soundPlayerStartEnvelope(PlayerCommandState *arg0) {
     arg0->unkF8 = 1;
 }
 
-// soundPlayerUpdateEnvelope best match: 93.258% (nonmatchings/func_8009EBDC-6113366811127043669/base_10.c)
+// soundPlayerUpdateEnvelope best match: 93.258% (nonmatchings/soundPlayerUpdateEnvelope-2694253543240320626/base_9.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerUpdateEnvelope.s")
 
@@ -1641,7 +1641,7 @@ void soundPlayerUpdateEnvelope(PlayerCommandState *arg0) {
                 return;
             case 4:
                 step = ((u32)(arg0->unk0 - arg0->unk100) >> 8) / rate;
-                if (step < arg0->unkFD) {
+                if (step < (u8)arg0->unkFD) {
                     value = arg0->unk104;
                     temp = value;
                     arg0->unkF9 = (s32)(temp - (temp * arg0->unk38 * (f32)step));
