@@ -105,6 +105,11 @@ typedef struct {
     /* 0x100 */ u8 state[4];
 } CourseSelectAnimatedActor;
 
+typedef struct {
+    /* 0x000 */ u8 pad0[0x100];
+    /* 0x100 */ u8 playerStates[4];
+} CourseSelectCompletePanelSource;
+
 extern void addRenderCallback(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *);
 extern s32 allocFixedTransformMatrix(FixedTransform *);
@@ -2254,7 +2259,63 @@ void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
     }
 }
 
+// updateCourseSelectCompletePanels best match: 89.835% (nonmatchings/updateCourseSelectCompletePanels-5802343343535905907/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectCompletePanels.s")
+
+#ifdef NON_MATCHING
+void updateCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
+    CourseSelectRacePlayer *player;
+    CourseSelectRacePlayer *end;
+    CourseSelectWidgetActor *base;
+    CourseSelectWidgetActor *actor;
+    CourseSelectCompletePanelSource *source0;
+    CourseSelectCompletePanelSource *source1;
+    s32 i;
+    u16 alpha;
+
+    actor = arg0;
+    base = actor;
+    i = 0;
+    source0 = (CourseSelectCompletePanelSource *)D_8010ADE0;
+    source1 = (CourseSelectCompletePanelSource *)D_8010ADE4;
+    if ((s32)gPlayerCount > 0) {
+        do {
+            alpha = actor->alpha;
+            if (alpha == 0) {
+                if ((source0 != NULL) && ((source0->playerStates[i] == 4) || (source1->playerStates[i] == 4))) {
+                    actor->alpha = 1;
+                }
+            } else {
+                if (alpha != 0x100) {
+                    actor->alpha = alpha + 0x30;
+                    if ((u16)(alpha + 0x30) >= 0x100) {
+                        actor->alpha = 0x100;
+                    }
+                }
+                if (D_80121D80[i].pad6[2] == 1) {
+                    actor->alpha = 0;
+                }
+            }
+            i++;
+            actor = (CourseSelectWidgetActor *)((u8 *)actor + sizeof(s16));
+        } while (i < (s32)gPlayerCount);
+    }
+
+    if (D_800EC9C0 == 0x10) {
+        removeCallbackTask(base);
+        player = D_80121D80;
+        if ((s32)gPlayerCount > 0) {
+            end = &D_80121D80[gPlayerCount];
+            do {
+                player->pad6[2] = 3;
+                player++;
+            } while ((u32)player < (u32)end);
+        }
+    } else {
+        addRenderCallback(&gMenuRenderCallbackList, (void (*)(CourseSelectWidgetActor *))drawCourseSelectCompletePanels, base);
+    }
+}
+#endif
 
 void initCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
     s32 var_v0;
