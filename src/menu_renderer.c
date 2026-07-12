@@ -15,6 +15,7 @@ typedef struct MenuRenderTask MenuRenderTask;
 typedef struct RenderCallbackNode RenderCallbackNode;
 typedef struct MenuRenderAssetTableHeader MenuRenderAssetTableHeader;
 typedef struct MenuRenderAssetTableEntry MenuRenderAssetTableEntry;
+typedef struct MenuRenderAssetTableEntryCursor MenuRenderAssetTableEntryCursor;
 typedef struct FontAssetHeader FontAssetHeader;
 typedef struct FontTexture FontTexture;
 typedef struct FontAsset FontAsset;
@@ -71,6 +72,14 @@ struct MenuRenderAssetTableEntry {
     /* 0x4 */ u16 textureIndex;
     /* 0x6 */ u8 width;
     /* 0x7 */ u8 height;
+};
+
+struct MenuRenderAssetTableEntryCursor {
+    /* 0x0 */ u8 pad0[8];
+    /* 0x8 */ s32 imageOffset;
+    /* 0xC */ u16 textureIndex;
+    /* 0xE */ u8 width;
+    /* 0xF */ u8 height;
 };
 
 struct MenuFontAssetEntry {
@@ -132,7 +141,7 @@ extern s16 gMenuViewportCenterY;
 extern u16 D_800B51D0[];
 extern s16 D_800B51F0[][2];
 
-// drawMenuAssetRegion best match: 78.118% (nonmatchings/func_8000EA80-4923837976568703863/base_9.c)
+// drawMenuAssetRegion best match: 78.146% (nonmatchings/drawMenuAssetRegion-5802343343535905907/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuAssetRegion.s")
 
 #ifdef NON_MATCHING
@@ -150,6 +159,7 @@ void drawMenuAssetRegion(s16 x, s16 y, MenuRenderAssetTableHeader *table, u16 en
                    u8 startS, u8 startT, u8 width, u8 height) {
     MenuRenderAssetTableEntry *entry;
     MenuRenderAssetTableHeader *tableBase;
+    MenuRenderAssetTableEntryCursor *entryCursor;
     u8 *paletteBase;
     Gfx *gfx;
     s32 x0;
@@ -194,12 +204,13 @@ void drawMenuAssetRegion(s16 x, s16 y, MenuRenderAssetTableHeader *table, u16 en
             y1 = clipBottom - 4;
         }
 
-        entry = (MenuRenderAssetTableEntry *)((u8 *)tableBase + 8 + (entryIndex * sizeof(MenuRenderAssetTableEntry)));
+        entryCursor = (MenuRenderAssetTableEntryCursor *)((u8 *)tableBase + (entryIndex * sizeof(MenuRenderAssetTableEntry)));
 
-        MENU_RENDER_EMIT_GFX((((entry->width >> 1) - 1) & 0xFFF) | 0xFD480000,
-                             entry->imageOffset + (u8 *)tableBase + 0x80000000);
-        MENU_RENDER_EMIT_GFX(((((entry->width + 1) >> 1) + 7) >> 3 & 0x1FF) << 9 | 0xF5480000,
+        MENU_RENDER_EMIT_GFX(((((s32)entryCursor->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                             entryCursor->imageOffset + (u8 *)tableBase + 0x80000000);
+        MENU_RENDER_EMIT_GFX((((((s32)(entryCursor->width + 1) >> 1) + 7) >> 3 & 0x1FF) << 9) | 0xF5480000,
                              0x07080200);
+        entry = (MenuRenderAssetTableEntry *)&entryCursor->imageOffset;
         MENU_RENDER_EMIT_GFX(0xE6000000, 0);
         MENU_RENDER_EMIT_GFX(0xF4000000,
                              (((entry->width * 2) & 0xFFF) << 12) | 0x07000000 | ((entry->height * 4) & 0xFFF));
