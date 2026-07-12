@@ -40,29 +40,29 @@ extern u8 D_245A80[];
 extern u8 D_24C8E0[];
 extern MainMenuRaceFlowTask *gCurrentGameTask;
 extern u8 gMainMenuSelectionResult;
-extern u8 gRacePlayerHudStatuses;
+extern s8 gRacePlayerHudStatuses;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
-extern u8 gPlayerCount;
+extern s8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern s16 gMenuFadeAlpha;
 extern u8 gFramebufferSwapHold;
 extern s32 gMenuFlowState;
-extern u8 gRaceCameraModeChangeDisabled;
-extern u8 gRaceDemoPlaybackEnabled;
+extern s8 gRaceCameraModeChangeDisabled;
+extern s8 gRaceDemoPlaybackEnabled;
 extern u8 gMainMenuModeSelection;
 extern s16 gRacePlayerAttackStartTimer;
-extern u8 gRaceTypeSelection;
-extern u8 gRaceResultState;
+extern s8 gRaceTypeSelection;
+extern s8 gRaceResultState;
 extern s16 gMainMenuModePreviewRaceDurationBySelection[];
 
 extern void releaseMenuAssetHandles(void);
 extern u8 gPendingFramebufferSwapCount;
 extern s8 gFramebufferSwapDelay;
 extern u8 gTrainingCourseLesson;
-extern u8 gRaceRumbleEnabled;
-extern u8 gRaceSplitscreenMode;
+extern s8 gRaceRumbleEnabled;
+extern s8 gRaceSplitscreenMode;
 extern u8 D_80121D94;
 extern u8 D_80121D95;
 extern u8 D_80121D96;
@@ -157,7 +157,7 @@ void exitMainMenuModePreviewRaceSelectionMenu(void) {
     }
 }
 
-// initMainMenuModePreviewRace best match: 94.795% (nonmatchings/initMainMenuModePreviewRace-8662636370764828261/base_5.c)
+// initMainMenuModePreviewRace best match: 95.410% (nonmatchings/initMainMenuModePreviewRace-3357475854818838508/base_11.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/initMainMenuModePreviewRace.s")
 
@@ -165,6 +165,10 @@ void exitMainMenuModePreviewRaceSelectionMenu(void) {
 void initMainMenuModePreviewRace(void) {
     RaceInputPlayer *players;
     MainMenuModePreviewRaceCourseAsset *courseAsset;
+    s32 five0;
+    s32 five1;
+    s32 five2;
+    s32 five3;
 
     gRaceCourseIndex = gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection].courseIndex;
     gRaceUpdatePaused = 0;
@@ -177,6 +181,10 @@ void initMainMenuModePreviewRace(void) {
     resetGameplayRng();
 
     players = D_80121D80;
+    five0 = 5;
+    five1 = 5;
+    five2 = 5;
+    five3 = 5;
     players[0].unk4 = 0;
     players[1].unk4 = 0;
     players[2].unk4 = 0;
@@ -207,18 +215,18 @@ void initMainMenuModePreviewRace(void) {
     gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(1);
 
-    players[0].unk15 = 0;
-    players[0].soundDisabled = 0;
-    players[0].replayInputSource = 5;
-    players[1].unk15 = 0;
-    players[1].soundDisabled = 0;
-    players[1].replayInputSource = 5;
-    players[2].unk15 = 0;
-    players[2].soundDisabled = 0;
-    players[2].replayInputSource = 5;
-    players[3].unk15 = 0;
-    players[3].soundDisabled = 0;
-    players[3].replayInputSource = 5;
+    D_80121D95 = 0;
+    D_80121D94 = 0;
+    D_80121D96 = five0;
+    D_801223A1 = 0;
+    D_801223A0 = 0;
+    D_801223A2 = five1;
+    D_801229AD = 0;
+    D_801229AC = 0;
+    D_801229AE = five2;
+    D_80122FB9 = 0;
+    D_80122FB8 = 0;
+    D_80122FBA = five3;
 
     courseAsset = &gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection];
     loadCompressedRomAsset(courseAsset->romStart, courseAsset->romEnd, 0x2B);
