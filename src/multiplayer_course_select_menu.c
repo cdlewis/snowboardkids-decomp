@@ -71,7 +71,7 @@ extern u8 D_5C5320[];
 extern u8 D_5CBA80[];
 extern u8 D_5CCD40[];
 extern s16 gMenuFadeAlpha;
-extern s8 D_800EC9C0;
+extern u8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
 extern s16 gMenuChoicePromptState[];
 extern s8 D_800EC9E5;
@@ -80,7 +80,7 @@ extern MultiplayerCourseSelectSaveData gGameSaveDataBuffer[];
 extern s32 gActiveMenuTask;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
-extern s16 gMenuInputRepeatTimers[];
+extern u16 gMenuInputRepeatTimers[];
 extern s8 D_8010AE64[];
 extern u8 D_8010AEA0[];
 extern s8 D_8010AEA4[];
@@ -316,7 +316,7 @@ void initMultiplayerCourseSelectMenu(void) {
 }
 #endif
 
-// updateMultiplayerCourseSelectMenu best match: 57.412%
+// updateMultiplayerCourseSelectMenu best match: 67.818% (nonmatchings/updateMultiplayerCourseSelectMenu-5802343343535905907/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/multiplayer_course_select_menu/updateMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -357,10 +357,10 @@ void updateMultiplayerCourseSelectMenu(void) {
     s32 held;
     s32 pressed;
     s32 heldHorizontal;
-    s16 *repeatTimer;
+    u16 *repeatTimer;
     s8 *column;
     s8 *confirmHold;
-    s8 *unlockColumn;
+    u8 *unlockColumn;
     s8 *rowLock;
     s32 *momentum;
     u8 *selections;
@@ -382,10 +382,14 @@ void updateMultiplayerCourseSelectMenu(void) {
     } else {
         playerCount = gPlayerCount;
         readyCount = 0;
-        for (i = 0; i < playerCount; i++) {
-            if (D_80121D80[i].state == 9) {
-                readyCount = (readyCount + 1) & 0xFF;
-            }
+        if (playerCount > 0) {
+            player = D_80121D80;
+            do {
+                if (player->state == 9) {
+                    readyCount = (readyCount + 1) & 0xFF;
+                }
+                player++;
+            } while (player < &D_80121D80[playerCount]);
         }
 
         if (playerCount == readyCount) {
