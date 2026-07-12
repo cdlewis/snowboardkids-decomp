@@ -5,9 +5,9 @@
 
 typedef struct TrainingCourseUiActor TrainingCourseUiActor;
 
-void initTrainingCourseActionMenu(TrainingCourseUiActor *arg0);
+void initTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0);
 void initTrainingCourseOpeningDialog(TrainingCourseUiActor *arg0);
 void initTrainingCourseEndingDialog(TrainingCourseUiActor *arg0);
-void initTrainingCourseTitlePanel(TrainingCourseUiActor *arg0);
+void initTrainingCourseLessonTitlePanel(TrainingCourseUiActor *arg0);
 
 #endif
