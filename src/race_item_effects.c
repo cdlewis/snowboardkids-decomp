@@ -457,7 +457,7 @@ void spawnRaceItemImpactEffect(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
     }
 }
 
-// renderRaceItemProjectileTrailEffect best match: 99.089% (nonmatchings/renderRaceItemProjectileTrailEffect-6061209858023118177/base_9.c)
+// renderRaceItemProjectileTrailEffect best match: 99.813% (nonmatchings/renderRaceItemProjectileTrailEffect-8331816093655448999/base_11.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/renderRaceItemProjectileTrailEffect.s")
 
