@@ -125,7 +125,7 @@ segments:
       - [0x71AC0, c, callback_task_scheduler]
       - [0x72430, c, sound_manager] # high-level sound and music manager
       - [0x73830, c, race_flow]
-      - [0x78E50, c, race_motion_animation_viewer]
+      - [0x78E50, c, race_motion_animation_debug_viewer]
       - [0x79030, c, race_timer_ui]
       - [0x7BE50, c, race_position_tracker]
       - [0x7CA80, c, race_position_ui]
@@ -330,7 +330,7 @@ segments:
       - [0xE2150, .rodata, callback_task_scheduler]
       - [0xE21B0, .rodata, sound_manager]
       - [0xE21E0, .rodata, race_flow]
-      - [0xE2300, .rodata, race_motion_animation_viewer]
+      - [0xE2300, .rodata, race_motion_animation_debug_viewer]
       - [0xE2310, .rodata, race_timer_ui]
       - [0xE2450, .rodata, race_surface_cues]
       - [0xE2470, .rodata, race_player_collision]
