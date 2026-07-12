@@ -6,8 +6,8 @@
 typedef struct RacePlayerModelRenderState RacePlayerModelRenderState;
 
 void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player);
-void drawRacePlayerModelBaseDisplayList(void *asset, s16 dlIndex, s16 textureIndex);
-void drawRaceGhostPlayerModelBaseDisplayList(void *asset, s16 dlIndex, s16 textureIndex);
+void drawRacePlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex);
+void drawRaceGhostPlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex);
 void drawRacePlayerModel(RacePlayerModelRenderState *player);
 void drawRaceGhostPlayerModel(RacePlayerModelRenderState *player);
 

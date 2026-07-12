@@ -909,7 +909,7 @@ void spawnEndingCreditsTumblingSnowboard(s32 arg0, s32 arg1, s32 arg2, u16 arg3,
 void drawEndingCreditsTumblingSnowboard(EndingCreditsTumblingSnowboard *arg0) {
     s32 temp = allocFixedTransformMatrix(&arg0->displayObject);
     if (temp != 0) {
-        drawRacePlayerModelBaseDisplayList((void *)temp, arg0->textureId, arg0->paletteId);
+        drawRacePlayerModelRootPart((void *)temp, arg0->textureId, arg0->paletteId);
     }
 }
 

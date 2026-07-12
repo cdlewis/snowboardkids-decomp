@@ -63,8 +63,8 @@ extern s16 gAssetHandles[];
 extern Gfx *gRegionAllocPtr;
 extern Gfx gRacePlayerShadowRenderSetupDisplayList[];
 extern u32 gRacePlayerShadowMatrixTemplate[];
-extern u32 gRacePlayerModelBaseDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2];
-extern u32 gRaceGhostPlayerModelBaseDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2];
+extern u32 gRacePlayerModelRootPartDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2];
+extern u32 gRaceGhostPlayerModelRootPartDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2];
 extern u32 gRacePlayerModelPart0DisplayLists[RACE_PLAYER_MODEL_RENDERER_TEXTURE_VARIANTS];
 extern u32 gRacePlayerModelPart1DisplayLists[RACE_PLAYER_MODEL_RENDERER_TEXTURE_VARIANTS];
 extern u32 gRacePlayerModelPart2DisplayLists[RACE_PLAYER_MODEL_RENDERER_TEXTURE_VARIANTS];
@@ -205,7 +205,7 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_model_renderer/drawRacePlayerGroundShadow.s")
 #endif
 
-void drawRacePlayerModelBaseDisplayList(void *asset, s16 dlIndex, s16 textureIndex) {
+void drawRacePlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex) {
     void *image;
     void *palette;
 
@@ -217,10 +217,10 @@ void drawRacePlayerModelBaseDisplayList(void *asset, s16 dlIndex, s16 textureInd
 
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
-    gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelBaseDisplayLists[dlIndex]);
+    gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelRootPartDisplayLists[dlIndex]);
 }
 
-void drawRaceGhostPlayerModelBaseDisplayList(void *asset, s16 dlIndex, s16 textureIndex) {
+void drawRaceGhostPlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex) {
     void *image;
     void *palette;
 
@@ -231,7 +231,7 @@ void drawRaceGhostPlayerModelBaseDisplayList(void *asset, s16 dlIndex, s16 textu
 
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
-    gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelBaseDisplayLists[dlIndex]);
+    gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelRootPartDisplayLists[dlIndex]);
 }
 
 void drawRacePlayerModel(RacePlayerModelRenderState *player) {
@@ -265,7 +265,7 @@ void drawRacePlayerModel(RacePlayerModelRenderState *player) {
         return;
     }
 
-    drawRacePlayerModelBaseDisplayList(drawPlayer->partVtx[0], drawPlayer->texHeaderIndex, drawPlayer->textureVariant);
+    drawRacePlayerModelRootPart(drawPlayer->partVtx[0], drawPlayer->texHeaderIndex, drawPlayer->textureVariant);
 
     if (drawPlayer->blinkTimer != 0) {
         if (drawPlayer->blinkTimer < 0xA5 && drawPlayer->blinkTimer >= 0x10) {
@@ -354,7 +354,7 @@ void drawRaceGhostPlayerModel(RacePlayerModelRenderState *player) {
     alphaPulse = (alphaPulse * 4) + 0x26;
     gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, alphaPulse & 0xFF);
 
-    drawRaceGhostPlayerModelBaseDisplayList(player->partVtx[0], player->texHeaderIndex, player->textureVariant);
+    drawRaceGhostPlayerModelRootPart(player->partVtx[0], player->texHeaderIndex, player->textureVariant);
 
     if ((player->flags & RACE_PLAYER_MODEL_RENDERER_FLAG_HIDE_MESHES) == 0) {
         gDPPipeSync(gRegionAllocPtr++);
