@@ -56,21 +56,21 @@ extern s8 gRacePlayerCount;
 extern s8 gRaceOrderPlayerIds[];
 extern RaceInputPlayer gFrameCounter;
 extern s32 gMenuFlowState;
-extern RaceVec3i D_800DE7B0[];
-extern s16 D_800DE84C[];
-extern s16 D_800DE864[];
-extern s16 D_800DE87C[];
-extern s16 D_800DE894[];
-extern s16 D_800DE8A0[];
-extern s16 D_800DE8AC[];
-extern s16 D_800DE8B8[];
+extern RaceVec3i gRacePlayerGroundProbeOffsets[];
+extern s16 gRacePlayerVoiceSoundIds0[];
+extern s16 gRacePlayerVoiceSoundIds1[];
+extern s16 gRacePlayerVoiceSoundIds2[];
+extern s16 gRacePlayerVoiceSoundIds4[];
+extern s16 gRacePlayerVoiceSoundIds5[];
+extern s16 gRacePlayerVoiceSoundIds6[];
+extern s16 gRacePlayerVoiceSoundIds7[];
 extern RaceCourseStartEntry gRaceCourseStartEntries[];
-extern Unk8011228C D_8011228C[];
+extern Unk8011228C gRacePlayerHudStatuses[];
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern u8 gRaceCameraModeChangeDisabled;
 
-void func_80087600(s32 arg0, s32 *arg1, s32 *arg2) {
+void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
     RaceInputPlayer *player;
     s32 temp;
 
@@ -185,11 +185,11 @@ void func_80087600(s32 arg0, s32 *arg1, s32 *arg2) {
     }
 }
 
-// func_80087AFC best match: 82.773% (nonmatchings/func_80087AFC-4923837976568703863/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80087AFC.s")
+// updateRacePlayerRankings best match: 82.773% (nonmatchings/updateRacePlayerRankings-4923837976568703863/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/updateRacePlayerRankings.s")
 
 #ifdef NON_MATCHING
-void func_80087AFC(void) {
+void updateRacePlayerRankings(void) {
     PlayerOrder order;
     s32 primary[4];
     s32 secondary[4];
@@ -225,7 +225,7 @@ void func_80087AFC(void) {
         if (playerCount > 0) {
             player = D_80121D80;
             do {
-                func_80087600(i, &primary[i], &secondary[i]);
+                getRacePlayerRankingProgress(i, &primary[i], &secondary[i]);
                 i++;
                 if ((s32)(player->stateFlags << 5) < 0) {
                     primary[i - 1] += player->unk57C;
@@ -317,7 +317,7 @@ void func_80087AFC(void) {
 }
 #endif
 
-void func_80087E14(RaceInputPlayer *player) {
+void updateRacePlayerFinalLapStatus(RaceInputPlayer *player) {
     CallbackTask *task;
     u32 flags;
 
@@ -325,7 +325,7 @@ void func_80087E14(RaceInputPlayer *player) {
     if (!(flags & 0x40) && (player->unk508 >= (gRaceLapCount - 1)) &&
             (player->unk502 == gRaceCourseStartEntries[gRaceCourseIndex].unk0) && !(flags & 0x1000)) {
         player->stateFlags = flags | 0x40;
-        if ((gRaceCameraModeChangeDisabled == 0) && (D_8011228C[player->playerIndexU16].active != 0)) {
+        if ((gRaceCameraModeChangeDisabled == 0) && (gRacePlayerHudStatuses[player->playerIndexU16].active != 0)) {
             task = createCallbackTask(initFinalLapPrompt, 6, 0x64);
             if (task != NULL) {
                 task->userId = player->playerIndexU16;
@@ -334,11 +334,11 @@ void func_80087E14(RaceInputPlayer *player) {
     }
 }
 
-// func_80087EFC best match: 96.174% (nonmatchings/func_80087EFC-2225551288923588688/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80087EFC.s")
+// resolveRacePlayerBodyCollisions best match: 96.174% (nonmatchings/resolveRacePlayerBodyCollisions-2225551288923588688/base_5.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/resolveRacePlayerBodyCollisions.s")
 
 #ifdef NON_MATCHING
-void func_80087EFC(void) {
+void resolveRacePlayerBodyCollisions(void) {
     RaceInputPlayer *playerA;
     RaceInputPlayer *playerB;
     s32 i;
@@ -805,14 +805,14 @@ s32 tryApplyRacePlayerItemHit(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIn
     return 0;
 }
 
-// func_80089374 best match: 63.781% (nonmatchings/func_80089374-731940616440357983/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_80089374.s")
+// updateRacePlayerSurfaceContact best match: 63.781% (nonmatchings/updateRacePlayerSurfaceContact-731940616440357983/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/updateRacePlayerSurfaceContact.s")
 
-// func_8008A940 best match: 76.717% (nonmatchings/func_8008A940-5752545231564691495/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008A940.s")
+// updateRacePlayerGroundAlignment best match: 76.717% (nonmatchings/updateRacePlayerGroundAlignment-5752545231564691495/base_9.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/updateRacePlayerGroundAlignment.s")
 
 #ifdef NON_MATCHING
-void func_8008A940(RaceInputPlayer *player) {
+void updateRacePlayerGroundAlignment(RaceInputPlayer *player) {
     volatile u8 pad[16];
     Matrix4s mtx;
     Matrix4s tiltMtx;
@@ -857,7 +857,7 @@ void func_8008A940(RaceInputPlayer *player) {
     i = 0;
     do {
         point = &points[i];
-        transformVec3iByFixedMatrix(mtx, &D_800DE7B0[i + 2], point);
+        transformVec3iByFixedMatrix(mtx, &gRacePlayerGroundProbeOffsets[i + 2], point);
         point->x += temp_s2->posX;
         point->y += baseY;
         point->z += temp_s2->posZ;
@@ -917,7 +917,7 @@ void func_8008A940(RaceInputPlayer *player) {
     i = 0;
     do {
         point = &points[i];
-        transformVec3iByFixedMatrix(mtx, &D_800DE7B0[i + 2], point);
+        transformVec3iByFixedMatrix(mtx, &gRacePlayerGroundProbeOffsets[i + 2], point);
         point->x += temp_s2->posX;
         point->z += temp_s2->posZ;
         point->y += baseY + temp_s2->unk64;
@@ -981,7 +981,7 @@ void func_8008A940(RaceInputPlayer *player) {
 
     i = 0;
     do {
-        transformVec3iByFixedMatrix(mtx, &D_800DE7B0[i + 9], &temp_s2->markerPoints[i]);
+        transformVec3iByFixedMatrix(mtx, &gRacePlayerGroundProbeOffsets[i + 9], &temp_s2->markerPoints[i]);
         temp_s2->markerPoints[i].x += sideHeightDiff;
         temp_s2->markerPoints[i].z += backHeightDiff;
         temp_s2->markerPoints[i].y =
@@ -989,7 +989,7 @@ void func_8008A940(RaceInputPlayer *player) {
         i++;
     } while (i < 4);
 
-    func_8008BE1C(temp_s2);
+    updateRacePlayerProjectedPosition(temp_s2);
     if (temp_s2->unk58 == 0x30000) {
         temp_s2->stateFlags |= 1;
         return;
@@ -998,11 +998,11 @@ void func_8008A940(RaceInputPlayer *player) {
 }
 #endif
 
-// func_8008B408 best match: 95.985% (nonmatchings/func_8008B408-4/output-255-1/source.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008B408.s")
+// updateRacePlayerLeanAngle best match: 95.985% (nonmatchings/updateRacePlayerLeanAngle-4/output-255-1/source.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/updateRacePlayerLeanAngle.s")
 
 #ifdef NON_MATCHING
-s32 func_8008B408(RaceInputPlayer *player, s32 arg1, s16 arg2) {
+s32 updateRacePlayerLeanAngle(RaceInputPlayer *player, s32 arg1, s16 arg2) {
     s16 temp_v0;
     s32 threshold;
     s32 scale;
@@ -1048,7 +1048,7 @@ s32 func_8008B408(RaceInputPlayer *player, s32 arg1, s16 arg2) {
 }
 #endif
 
-void func_8008B508(RaceVec3i *vec, RaceInputPlayer *player) {
+void clampRacePlayerVectorXZSpeed(RaceVec3i *vec, RaceInputPlayer *player) {
     s32 magnitude;
 
     magnitude = integerSquareRoot64((s64)vec->x * vec->x + (s64)vec->z * vec->z);
@@ -1058,7 +1058,7 @@ void func_8008B508(RaceVec3i *vec, RaceInputPlayer *player) {
     }
 }
 
-void func_8008B60C(RaceVec3i *vec, RaceInputPlayer *player) {
+void clampRacePlayerVectorXZHalfSpeed(RaceVec3i *vec, RaceInputPlayer *player) {
     s32 magnitude;
 
     magnitude = integerSquareRoot64((s64)vec->x * vec->x + (s64)vec->z * vec->z);
@@ -1068,11 +1068,11 @@ void func_8008B60C(RaceVec3i *vec, RaceInputPlayer *player) {
     }
 }
 
-// func_8008B73C best match: 99.739% (nonmatchings/func_8008B73C-2225551288923588688/base_16.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/func_8008B73C.s")
+// updateRacePlayerLocalVelocity best match: 99.739% (nonmatchings/updateRacePlayerLocalVelocity-2225551288923588688/base_16.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/updateRacePlayerLocalVelocity.s")
 
 #ifdef NON_MATCHING
-void func_8008B73C(RaceInputPlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+void updateRacePlayerLocalVelocity(RaceInputPlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
     volatile s32 pad[8];
     TransformScratch scratch;
     MovementSpeedScratch speedScratch;
@@ -1114,9 +1114,9 @@ void func_8008B73C(RaceInputPlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 ar
     }
 
     if (useHalfLimit != 0) {
-        func_8008B60C(&scratch.worldPos, player);
+        clampRacePlayerVectorXZHalfSpeed(&scratch.worldPos, player);
     } else {
-        func_8008B508(&scratch.worldPos, player);
+        clampRacePlayerVectorXZSpeed(&scratch.worldPos, player);
     }
 
     if (scratch.worldPos.z >= 0) {
@@ -1161,8 +1161,8 @@ void func_8008B73C(RaceInputPlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 ar
 }
 #endif
 
-void func_8008BB20(RaceInputPlayer *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
-    func_8008B73C(arg0, arg1, 0, arg2, arg3, arg4);
+void updateRacePlayerLocalVelocityNoVerticalOffset(RaceInputPlayer *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    updateRacePlayerLocalVelocity(arg0, arg1, 0, arg2, arg3, arg4);
 }
 
 void addRacePlayerScore(RaceInputPlayer *arg0, s32 arg1) {
@@ -1182,42 +1182,42 @@ void enqueueRacePlayerVoiceSound(RaceInputPlayer *player, s16 soundType) {
     if (player->soundDisabled == 0) {
         switch (soundType) {
         case 0:
-            enqueuePlayerPositionalSoundEffect(D_800DE84C[(randomNextMain() & 1) + (player->characterId * 2)],
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds0[(randomNextMain() & 1) + (player->characterId * 2)],
                           (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
             return;
         case 1:
-            enqueuePlayerPositionalSoundEffect(D_800DE864[(randomNextMain() & 1) + (player->characterId * 2)],
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds1[(randomNextMain() & 1) + (player->characterId * 2)],
                           (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
             return;
         case 2:
-            enqueuePlayerPositionalSoundEffect(D_800DE87C[(randomNextMain() & 1) + (player->characterId * 2)],
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds2[(randomNextMain() & 1) + (player->characterId * 2)],
                           (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
             return;
         case 3:
-            enqueuePlayerPositionalSoundEffect(D_800DE87C[(randomNextMain() & 1) + (player->characterId * 2)],
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds2[(randomNextMain() & 1) + (player->characterId * 2)],
                           (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0x60);
             return;
         case 4:
-            enqueuePlayerPositionalSoundEffect(D_800DE894[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds4[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
                           (u16)player->playerIndex, 0);
             return;
         case 5:
-            enqueuePlayerPositionalSoundEffect(D_800DE8A0[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds5[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
                           (u16)player->playerIndex, 0);
             return;
         case 6:
-            enqueuePlayerPositionalSoundEffect(D_800DE8AC[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds6[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
                           (u16)player->playerIndex, 0);
             return;
         case 7:
-            enqueuePlayerPositionalSoundEffect(D_800DE8B8[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds7[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
                           (u16)player->playerIndex, 0);
             break;
         }
     }
 }
 
-void func_8008BE1C(RaceInputPlayer *arg0) {
+void updateRacePlayerProjectedPosition(RaceInputPlayer *arg0) {
     TransformScratch scratch;
 
     makeFixedRotationXY(scratch.rotationMtx, arg0->pitchAngle, arg0->facingAngle, arg0);

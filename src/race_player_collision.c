@@ -27,7 +27,7 @@ extern s32 gRacePlayerHitDistance;
 extern s16 gRacePlayerHitEffectAngle;
 extern s32 gRacePlayerHitDeltaX;
 extern s32 gRacePlayerHitDeltaZ;
-extern Unk8011228C D_8011228C[];
+extern Unk8011228C gRacePlayerHudStatuses[];
 
 s32 enqueueSoundEffect(s16, s16);
 void enqueueRacePlayerVoiceSound(RaceInputPlayer *, s32);
@@ -405,7 +405,7 @@ void resolveRacePlayerHitReactions(RaceInputPlayer *arg0) {
         case 5:
         case 6:
             if (gRacePlayerHitCueId == 6) {
-                if (D_8011228C[arg0->playerIndexU16].active != 0) {
+                if (gRacePlayerHudStatuses[arg0->playerIndexU16].active != 0) {
                     enqueueSoundEffect(0x47, 0x32);
                 }
             } else {

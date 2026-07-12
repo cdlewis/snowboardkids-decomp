@@ -188,7 +188,7 @@ extern u8 gRaceRumbleEnabled;
 extern RaceFlowInitScratch gGameSaveDataBuffer;
 extern u8 gRaceTypeSelection;
 #ifdef NON_MATCHING
-extern u8 D_8011228C;
+extern u8 gRacePlayerHudStatuses;
 extern u8 D_8011233C;
 extern f32 D_800E16CC;
 extern f32 D_800E16D0;
@@ -861,7 +861,7 @@ void waitRaceFinishResultsFlow(void) {
                 D_8011233C = 0;
             } else {
                 gCurrentGameTask->unk1C = 1;
-                D_8011228C = 0;
+                gRacePlayerHudStatuses = 0;
             }
             gCurrentGameTask->fadeTimer = 0;
             setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
@@ -1579,7 +1579,7 @@ void initRaceGhostReplayFlow(void) {
         func_80070A70(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, D_800E16D0);
     }
     loadCompressedRomAsset(D_598A70, D_59AAA0, 0x29);
-    D_8011228C = 1;
+    gRacePlayerHudStatuses = 1;
     gFramebufferSwapDelay = 0;
     resetSecondaryRng();
     func_8008BEB0();

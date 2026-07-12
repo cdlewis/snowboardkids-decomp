@@ -59,7 +59,7 @@ extern u8 gMainMenuDemoRaceIntroIndex;
 extern s8 gFramebufferSwapDelay;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRaceSplitscreenMode;
-extern u8 D_8011228C;
+extern u8 gRacePlayerHudStatuses;
 extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gRaceCameraModeChangeDisabled;
@@ -166,7 +166,7 @@ void initMainMenuDemoRaceIntro(void) {
     gMenuFlowState = 0;
     resetRaceCameras();
     resetAllViewports();
-    D_8011228C = one;
+    gRacePlayerHudStatuses = one;
     gFramebufferSwapDelay = 0;
     func_8008BEB0();
     if (gMainMenuDemoRaceIntroLoadCourseAssetsFlags[gMainMenuDemoRaceIntroIndex * sizeof(MainMenuDemoRaceIntroEntry)] == 0) {
@@ -175,7 +175,7 @@ void initMainMenuDemoRaceIntro(void) {
     func_80078430();
     if (gPlayerCount == one) {
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        D_8011228C = one;
+        gRacePlayerHudStatuses = one;
         gFramebufferSwapDelay = 0;
     } else {
         configureViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
