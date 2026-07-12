@@ -1271,7 +1271,7 @@ void initCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateCourseUnlockPurchasePrompt);
 }
 
-// drawCourseDetailsMenu best match: 86.994% (nonmatchings/drawCourseDetailsMenu-5635509610426229442/base_2.c)
+// drawCourseDetailsMenu best match: 99.749% (nonmatchings/drawCourseDetailsMenu-5802343343535905907/base_22.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/drawCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
@@ -1283,19 +1283,12 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     s32 yOffset;
     s16 *cursor;
     s32 value;
+    s32 tens;
     s16 cursorX;
 
-    tiles = gCourseDetailsMenuEntryTiles;
-    cursor = (s16 *)arg0;
-    yOffset = 0;
-    for (i = 0; i < 7; i++) {
-        drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x27]),
-                      tiles[gCourseDetailsPreviewPage * 7], 0x20, 0x20, 0, 0);
-
-        value = (gCourseDetailsPreviewPage * 7) + i + 1;
-        script[0] = value / 10;
-        if (script[0] == 0) {
-            script[0] = -2;
+ tiles = gCourseDetailsMenuEntryTiles; yOffset = 0; cursor = (s16 *) arg0; for (i = 0; i < 7; i++) { drawMenuSprite(cursor[12], (s16) (arg0->targetY + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x27]), tiles[gCourseDetailsPreviewPage * 7], 0x20, 0x20, 0, 0); value = ((gCourseDetailsPreviewPage * 7) + i) + 1; if (arg0 && arg0) { } tens = value / 10; if (tens == 0) { script[0] = -2;
+        } else {
+            script[0] = tens;
         }
         script[2] = -1;
         script[1] = value % 10;
@@ -1306,15 +1299,17 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         cursor++;
     }
 
-    cursor = &((s16 *)arg0)[7];
+    i = 7;
     yOffset = 0x85;
-    for (i = 7; i != 10; i++) {
-        drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x27]), i, 0x20,
+    cursor = &((s16 *)arg0)[7];
+    do {
+        drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x27]), (u16)i, 0x20,
                       0x20, 0, 0);
 
+        i++;
         yOffset += 0x13;
         cursor++;
-    }
+    } while (i != 10);
 
     if ((arg0->state != 0) && (gCourseDetailsCloseFromBack == 0)) {
         if (arg0->state < 5) {
