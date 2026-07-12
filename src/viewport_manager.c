@@ -283,7 +283,7 @@ void configureRaceViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16
 }
 #endif
 
-// configureMenuViewport best match: 90.016%
+// configureMenuViewport best match: 90.258%
 
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/configureMenuViewport.s")
 
@@ -293,9 +293,6 @@ extern f32 gMenuViewportOverlayFarClip;
 
 void configureMenuViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
     ViewportState *viewport;
-    ViewportState *savedViewport;
-    s32 halfHeight;
-    s32 halfWidth;
 
     viewport = &gViewportStates[arg0];
     viewport->viewportTranslateX = arg1 * 4;
@@ -304,12 +301,10 @@ void configureMenuViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16
     viewport->viewportScaleX = arg5 * 2;
     viewport->viewportScaleY = arg6 * 2;
 
-    halfWidth = arg3 / 2;
-    viewport->right = halfWidth + arg1;
-    viewport->left = arg1 - halfWidth;
-    halfHeight = arg4 / 2;
-    viewport->top = arg2 - halfHeight;
-    viewport->bottom = halfHeight + arg2;
+    viewport->right = (arg3 / 2) + arg1;
+    viewport->left = arg1 - (arg3 / 2);
+    viewport->top = arg2 - (arg4 / 2);
+    viewport->bottom = (arg4 / 2) + arg2;
     viewport->right = viewport->right;
     viewport->screenBoundsValid = 1;
     viewport->left = viewport->left;
@@ -341,9 +336,8 @@ void configureMenuViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16
         viewport->bottom = 0xEF;
     }
 
-    savedViewport = viewport;
     guPerspective(&viewport->projection, &viewport->perspectiveNorm, 70.0f, arg7, 10.0f, gMenuViewportFarClip, 0.5f);
-    guPerspective(&savedViewport->overlayProjection, &savedViewport->overlayPerspectiveNorm, 70.0f, arg7, 10.0f, gMenuViewportOverlayFarClip,
+    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, 70.0f, arg7, 10.0f, gMenuViewportOverlayFarClip,
                   0.5f);
 }
 #endif
