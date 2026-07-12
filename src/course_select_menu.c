@@ -85,7 +85,7 @@ extern s16 gMenuFadeAlpha;
 extern s16 gMenuChoicePromptState;
 extern s8 gFramebufferSwapDelay;
 extern s8 D_800EC9C0;
-extern s8 gMenuSelectionConfirmTimer;
+extern u8 gMenuSelectionConfirmTimer;
 extern u8 gCourseSelectModeSelection;
 extern u8 gGameSaveDataBuffer[];
 extern s8 D_800EC9F1;
@@ -103,7 +103,7 @@ extern u8 D_8010AEFB[];
 extern u8 D_8010AF08[];
 extern s16 D_8010AED0;
 extern s16 gMenuInputRepeatTimers;
-extern s8 gMenuExitSelection;
+extern u8 gMenuExitSelection;
 extern u8 D_8010AECC;
 extern CourseSelectStatus gCourseSelectStatus;
 extern u8 D_8010AF19;
@@ -138,8 +138,8 @@ extern u8 D_8010AF3D;
 extern u8 D_8010AF3E;
 extern u8 D_8010AF3F;
 extern u8 gCourseSelectExtraCourseColumnState;
-extern s8 gShopMenuDescriptionSeen;
-extern s8 gShopMenuShowNewCoursesMessage;
+extern u8 gShopMenuDescriptionSeen;
+extern u8 gShopMenuShowNewCoursesMessage;
 extern s8 gCourseDetailsMenuSelection;
 extern s8 gCourseDetailsPreviewPage;
 extern s16 gCoursePreviewViewportHeight;
@@ -310,7 +310,7 @@ void initCourseSelectMenu(void) {
 }
 #endif
 
-// updateCourseSelectModeMenu best match: 76.508% (nonmatchings/updateCourseSelectModeMenu-7273315160691878794/base_1.c)
+// updateCourseSelectModeMenu best match: 82.145% (nonmatchings/updateCourseSelectModeMenu-8331816093655448999/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/updateCourseSelectModeMenu.s")
 
 #ifdef NON_MATCHING
@@ -320,8 +320,9 @@ void updateCourseSelectModeMenu(void) {
     s32 leftPressed;
     s32 held;
     u16 repeat;
-    u8 selection;
-    u8 oldSelection;
+    s32 selection;
+    s32 oldSelection;
+    s32 tempSelection;
     u8 transition;
 
     if (gCurrentGameTask->fade != 0) {
@@ -346,23 +347,24 @@ void updateCourseSelectModeMenu(void) {
                 held = gPlayerInputPressed;
                 if ((held & 0x10800) || ((leftPressed != 0) && ((repeat = gMenuInputRepeatTimers) >= 0xB) && ((repeat % 3) == 0))) {
                     repeat = gMenuInputRepeatTimers;
+                    tempSelection = selection - 1;
                     if (repeat == 0) {
-                        repeat += 1;
-                        gMenuInputRepeatTimers = repeat;
+                        gMenuInputRepeatTimers = repeat + 1;
+                        repeat = gMenuInputRepeatTimers;
                     }
-                    if ((s32) selection > 0) {
-                        selection -= 1;
+                    if (selection > 0) {
+                        selection = tempSelection;
                         gCourseSelectModeSelection = selection;
                     }
                 } else {
                     repeat = gMenuInputRepeatTimers;
                     if ((held & 0x20400) || ((pressed & 0x20400) && ((s32) repeat >= 0xB) && ((repeat % 3) == 0))) {
                         if (repeat == 0) {
-                            repeat += 1;
-                            gMenuInputRepeatTimers = repeat;
+                            gMenuInputRepeatTimers = repeat + 1;
+                            repeat = gMenuInputRepeatTimers;
                         }
-                        if ((s32) selection < 2) {
-                            selection += 1;
+                        if (selection < 2) {
+                            selection = selection + 1;
                             gCourseSelectModeSelection = selection;
                         }
                     }
