@@ -117,6 +117,7 @@ typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
 extern void addRenderCallback(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
 extern void *allocMenuRenderScratch(s32 size);
+void getAssetTableImageAndPalette(void *asset, u16 index, void **image, void **palette);
 s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
 void drawMenuSpriteTileClipped(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, s32 arg6, s32 arg7);
 void drawMenuSpriteClipped(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7, s32 arg8, s32 arg9,
@@ -134,6 +135,7 @@ extern Gfx gMenuRenderModeResetDl[];
 extern s16 D_800B51F0[][2];
 extern s16 gMenuFadeAlpha;
 extern s16 D_8011213C;
+extern s16 gShopMenuTextureAssetHandle;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
@@ -782,16 +784,7 @@ void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entr
 void func_80011854(void) {
 }
 
-// drawMenuTextureByAssetId best match: 99.328% (nonmatchings/drawMenuTextureByAssetId-6061209858023118177/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuTextureByAssetId.s")
-
-#ifdef NON_MATCHING
-extern s16 D_8011214A;
-extern Gfx *gRegionAllocPtr;
-extern void getAssetTableImageAndPalette(void *arg0, u16 arg1, void **arg2, void **arg3);
-
-void drawMenuTextureByAssetId(s16 x, s16 y, s32 arg2, u16 assetId, u16 width, u16 height)
-{
+void drawMenuTextureByAssetId(s16 x, s16 y, s32 texture, u16 assetId, u16 width, u16 height) {
     s32 x0;
     s32 y0;
     s32 x1;
@@ -803,62 +796,66 @@ void drawMenuTextureByAssetId(s16 x, s16 y, s32 arg2, u16 assetId, u16 width, u1
     s16 clipY1;
     void *image;
     void *palette;
-    if ((((width < 0x201) && (width > 0)) && (height < 0x201)) && (height > 0))
-    {
-        x0 = (x + gMenuViewportCenterX) * 4;
-        y0 = (y + gMenuViewportCenterY) * 4;
-        x1 = (((width * 64) << 2) >> 5) + x0;
-        y1 = (((height * 64) << 2) >> 5) + y0;
-        clipY0 = (gMenuViewportCenterY - (gMenuViewportHeight / 2)) * 4;
-        clipY1 = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) * 4;
-        clipX0 = (gMenuViewportCenterX - (gMenuViewportWidth / 2)) * 4;
-        clipX1 = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) * 4;
-        if ((((x0 < clipX1) && (y0 < clipY1)) && (x1 >= clipX0)) && (y1 >= clipY0))
-        {
-            if (x0 < clipX0)
-            {
-                x0 = clipX0;
-            }
-            if (y0 < clipY0)
-            {
- y0 = clipY0; } if (x1 >= clipX1) { x1 = clipX1 - 4; } if (y1 >= clipY1) { y1 = clipY1 - 4; } getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_8011214A), assetId, &image, &palette); { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) (&image); if (((!_g) && (!_g)) && (!_g)) { } } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf3) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) MIN((((64 * 64) + 3) >> 2) - 1, 2047)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((((1 << 11) + MAX(1, 64 / 16)) - 1) / MAX(1, 64 / 16))) & ((0x01 << 12) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (((64 >> 1) + 7) >> 3)) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0x2) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((unsigned int) ((((unsigned int) 0xf2) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) ((64 - 1) << 2)) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) ((64 - 1) << 2)) & ((0x01 << 12) - 1)) << 0)); } } ; { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = ((((unsigned int) ((((unsigned int) 0xfd) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 2) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) (1 - 1)) & ((0x01 << 12) - 1)) << 0)); _g->words.w1 = (unsigned int) palette; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe8) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((((unsigned int) ((((unsigned int) 0xf5) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 21))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 19))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 9) - 1)) << 9))) | ((unsigned int) ((((unsigned int) (256 + ((0 & 0xf) * 16))) & ((0x01 << 9) - 1)) << 0)); _g->words.w1 = ((((((((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 20))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 18))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 14))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 10))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 2) - 1)) << 8))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 4))) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 4) - 1)) << 0)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (unsigned int) ((((unsigned int) 0xe6) & ((0x01 << 8) - 1)) << 24); _g->words.w1 = 0;
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *) (gRegionAllocPtr++);
-                    _g->words.w0 = (unsigned int) ((((unsigned int) 0xf0) & ((0x01 << 8) - 1)) << 24);
-                    _g->words.w1 = ((unsigned int) ((((unsigned int) 7) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) 15) & ((0x01 << 10) - 1)) << 14));
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *) (gRegionAllocPtr++);
-                    _g->words.w0 = (unsigned int) ((((unsigned int) 0xe7) & ((0x01 << 8) - 1)) << 24);
-                    _g->words.w1 = 0;
-                }
-            }
-            ;
-            {
-                Gfx *_g = (Gfx *) (gRegionAllocPtr++);
-                _g->words.w0 = (((unsigned int) ((((unsigned int) 0xe4) & ((0x01 << 8) - 1)) << 24)) | ((unsigned int) ((((unsigned int) x1) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) y1) & ((0x01 << 12) - 1)) << 0));
-                _g->words.w1 = (((unsigned int) ((((unsigned int) 0) & ((0x01 << 3) - 1)) << 24)) | ((unsigned int) ((((unsigned int) x0) & ((0x01 << 12) - 1)) << 12))) | ((unsigned int) ((((unsigned int) y0) & ((0x01 << 12) - 1)) << 0));
-                {
-                    Gfx *_g = (Gfx *) (gRegionAllocPtr++);
-                    _g->words.w0 = (unsigned int) ((((unsigned int) ((-65) - 11)) & ((0x01 << 8) - 1)) << 24);
-                    _g->words.w1 = (unsigned int) (((unsigned int) ((((unsigned int) 0) & ((0x01 << 16) - 1)) << 16)) | ((unsigned int) ((((unsigned int) 0) & ((0x01 << 16) - 1)) << 0)));
-                }
-                ;
-                {
-                    Gfx *_g = (Gfx *) (gRegionAllocPtr++);
-                    _g->words.w0 = (unsigned int) ((((unsigned int) ((-65) - 12)) & ((0x01 << 8) - 1)) << 24);
-                    _g->words.w1 = (unsigned int) (((unsigned int) ((((unsigned int) 0x400) & ((0x01 << 16) - 1)) << 16)) | ((unsigned int) ((((unsigned int) 0x400) & ((0x01 << 16) - 1)) << 0)));
-                }
-                ;
-            }
-            ;
-        }
+
+    if (width >= 0x201) {
+        return;
     }
+    if (width <= 0) {
+        return;
+    }
+    if (height >= 0x201) {
+        return;
+    }
+    if (height <= 0) {
+        return;
+    }
+
+    x0 = (x + gMenuViewportCenterX) << 2;
+    y0 = (y + gMenuViewportCenterY) << 2;
+    x1 = x0 + (((width * 64) << 2) >> 5);
+    y1 = y0 + (((height * 64) << 2) >> 5);
+
+    clipY0 = (gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2;
+    clipY1 = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2;
+    clipX0 = (gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2;
+    clipX1 = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) << 2;
+
+    if ((x0 >= clipX1) || (y0 >= clipY1) || (x1 < clipX0) || (y1 < clipY0)) {
+        return;
+    }
+    if (x0 < clipX0) {
+        x0 = clipX0;
+    }
+    if (y0 < clipY0) {
+        y0 = clipY0;
+    }
+    if (x1 >= clipX1) {
+        x1 = clipX1 - 4;
+    }
+    if (y1 >= clipY1) {
+        y1 = clipY1 - 4;
+    }
+
+    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), assetId, &image, &palette);
+
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)&image);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x073FF200);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xF5400800, 0x00080200);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x000FC0FC);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)palette);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xE4000000 | ((x1 & 0xFFF) << 12) | (y1 & 0xFFF),
+                 ((x0 & 0xFFF) << 12) | (y0 & 0xFFF));
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, 0);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
 }
-#endif
 
 void func_80011C3C(MenuRenderSpriteActor *actor);
 void func_80011D44(MenuRenderSprite *sprite);
