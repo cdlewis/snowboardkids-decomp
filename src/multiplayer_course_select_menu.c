@@ -80,7 +80,7 @@ extern MultiplayerCourseSelectSaveData gGameSaveDataBuffer[];
 extern s32 gActiveMenuTask;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
-extern s16 D_8010ADF0[];
+extern s16 gMenuInputRepeatTimers[];
 extern s8 D_8010AE64[];
 extern u8 D_8010AEA0[];
 extern s8 D_8010AEA4[];
@@ -209,7 +209,7 @@ void initMultiplayerCourseSelectMenu(void) {
         D_8010AEC8[i] = 0;
         D_8010AECC[i] = 0;
         D_800EC9D0[i] = 0;
-        D_8010ADF0[i] = 0;
+        gMenuInputRepeatTimers[i] = 0;
         D_8010AED8[i] = 0;
         D_8010AEE8[i] = 0;
 
@@ -420,7 +420,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 column = &D_8010AE64[i];
                                 momentum = &D_8010AEE8[i];
                                 selections = D_8010AEF8[i];
-                                repeatTimer = &D_8010ADF0[i];
+                                repeatTimer = &gMenuInputRepeatTimers[i];
                                 maxColumn = 4;
                                 if ((player->mode == 5) || (D_8010AEA0[i] == 0)) {
                                     maxColumn = 3;
@@ -531,7 +531,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                             held = gPlayerInputHeld[i];
                             heldHorizontal = held & 0x10800;
                             unlockColumn = &D_8010AEA0[i];
-                            repeatTimer = &D_8010ADF0[i];
+                            repeatTimer = &gMenuInputRepeatTimers[i];
                             if ((heldHorizontal == 0) && !(held & 0x20400)) {
                                 *repeatTimer = 0;
                             }
@@ -609,7 +609,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                         player->state = 9;
                     } else if (gPlayerInputPressed[i] & 0x4000) {
                         enqueueSoundEffect(0x18, 0x32);
-                        D_8010ADF0[i] = 0;
+                        gMenuInputRepeatTimers[i] = 0;
                         D_8010AEA8 = 0;
                         player->state = 1;
                         D_800EC9D0[i] -= 3;

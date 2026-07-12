@@ -43,7 +43,7 @@ typedef struct {
 
 extern void addRenderCallback(void *, void *, void *);
 extern int sprintf(char *, const char *, ...);
-extern u8 D_800EC9C1;
+extern u8 gMenuSelectionConfirmTimer;
 extern RaceTypeSelectFrameTileMapTable gRaceTypeSelectFrameTileMaps;
 extern u16 gRaceTypeSelectSpecialFrameCornerTile;
 extern RaceTypeSelectPortrait gRaceTypeSelectPortraitScripts[];
@@ -52,9 +52,9 @@ extern s16 gMenuCommonSpritesAssetHandle;
 extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
 extern u8 gRaceTypeSelectCursorAnimState;
 extern s32 gActiveMenuTask;
-extern u8 D_8010ADF8;
+extern u8 gMenuExitSelection;
 extern u8 gRaceTypeSelection;
-extern u8 D_80121D88;
+extern u8 gMenuTransitionState;
 extern s32 D_80121D8C;
 extern s32 gMenuFlowState;
 extern void *gMenuRenderCallbackList;
@@ -69,7 +69,7 @@ void drawRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
     RaceTypeSelectRowActor *row;
 
     savedArg = arg0;
- do { i = 0; if (arg0->playerCount > 0) { yOffset = 0; row = arg0; do { alpha = 0; if (((((D_800EC9C1 > 0) && (D_800EC9C1 < 8)) && (D_8010ADF8 == 0)) && (i == gRaceTypeSelection)) && (D_800EC9C1 & 1)) { if ((!savedArg->playerCount) && (!savedArg->playerCount)) { } alpha = 0xFF; } drawMenuSprite(row->iconX[0], (s16) (arg0->iconY + yOffset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (i + 0xD) & 0xFFFF, 0x20, 0x20, 0, alpha); i++; yOffset += 0x18; row = (RaceTypeSelectRowActor *) (((u8 *) row) + 2); } while (i < savedArg->playerCount); } } while (0);
+ do { i = 0; if (arg0->playerCount > 0) { yOffset = 0; row = arg0; do { alpha = 0; if (((((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8)) && (gMenuExitSelection == 0)) && (i == gRaceTypeSelection)) && (gMenuSelectionConfirmTimer & 1)) { if ((!savedArg->playerCount) && (!savedArg->playerCount)) { } alpha = 0xFF; } drawMenuSprite(row->iconX[0], (s16) (arg0->iconY + yOffset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (i + 0xD) & 0xFFFF, 0x20, 0x20, 0, alpha); i++; yOffset += 0x18; row = (RaceTypeSelectRowActor *) (((u8 *) row) + 2); } while (i < savedArg->playerCount); } } while (0);
 }
 
 void updateRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
@@ -114,7 +114,7 @@ void updateRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
         state = arg0->state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = (u8) (arg0->state = 2);
         }
         break;
@@ -175,7 +175,7 @@ void updateRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
         state = arg0->sprite.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->sprite.bytes.state = 2;
         }
         break;
@@ -318,7 +318,7 @@ void updateRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             arg0->row.bytes.subState = 4;
         }
         state = arg0->row.bytes.subState;
@@ -331,12 +331,12 @@ void updateRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
         state = arg0->row.bytes.subState;
         break;
     case 5:
-        D_80121D88 = 2;
+        gMenuTransitionState = 2;
         state = arg0->row.bytes.subState;
         break;
     }
 
-    if ((state == 5) && (D_80121D88 == 2)) {
+    if ((state == 5) && (gMenuTransitionState == 2)) {
         removeCallbackTask(arg0);
         return;
     }
@@ -425,7 +425,7 @@ void updateRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
             } else {
@@ -536,7 +536,7 @@ void updateRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
             } else {
@@ -640,7 +640,7 @@ void updateRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             if (arg0->y == -0x140) {
                 arg0->widget.bytes.state = 5;
             } else {
@@ -728,7 +728,7 @@ void updateRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
         arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
         break;
     case 2:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->transition.bytes.state = 3;
         }
         break;
@@ -779,7 +779,7 @@ void updateRaceTypeSelectPortrait(RaceTypeSelectWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -825,7 +825,7 @@ void updateRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -878,7 +878,7 @@ void updateRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (D_80121D88 == 1) {
+        if (gMenuTransitionState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;

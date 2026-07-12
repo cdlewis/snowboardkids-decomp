@@ -144,7 +144,7 @@ extern s16 gMenuPanelTilemapAssetHandle;
 extern u8 gPlayerCount;
 extern CourseSelectRacePlayer D_80121D80[];
 extern u8 D_80121D86[][sizeof(CourseSelectRacePlayer)];
-extern u8 D_80121D88;
+extern u8 gMenuTransitionState;
 extern s32 gMenuFlowState;
 extern CourseSelectState *gCurrentGameTask;
 extern s32 gMenuRenderCallbackList;
@@ -1095,7 +1095,7 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
         }
         break;
     case 1:
-        if (D_80121D88 == 3) {
+        if (gMenuTransitionState == 3) {
             arg0->pad18[4] = 2;
         }
         break;
@@ -1316,7 +1316,7 @@ void updateCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
         state = arg0->transitionState;
         break;
     case 1:
-        if (D_80121D88 == 3) {
+        if (gMenuTransitionState == 3) {
             arg0->transitionState = 2;
         }
         if (gCurrentGameTask->screenState == 9) {
@@ -1543,7 +1543,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         }
         break;
     case 1:
-        if (D_80121D88 == temp_a0) {
+        if (gMenuTransitionState == temp_a0) {
             arg0->pad18_2[6] = 2;
         }
         break;
@@ -1576,7 +1576,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         break;
     }
 
-    if (D_80121D88 == 0) {
+    if (gMenuTransitionState == 0) {
         arg0->pad18_2[8] = 0;
     }
 
@@ -1632,7 +1632,7 @@ void updateCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
         state = arg0->state;
         break;
     case 1:
-        if ((D_80121D88 == 3) || (gCurrentGameTask->screenState == 9)) {
+        if ((gMenuTransitionState == 3) || (gCurrentGameTask->screenState == 9)) {
             state = (arg0->state = 2);
         }
         break;
@@ -2094,7 +2094,7 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
                     } while (step != 0x18);
                     break;
                 case 1:
-                    if (*(&D_80121D88 + (i * sizeof(CourseSelectRacePlayer))) == 4) {
+                    if (*(&gMenuTransitionState + (i * sizeof(CourseSelectRacePlayer))) == 4) {
                         statePtr[0] = 2;
                         actor->timer[i] = 0;
                     }

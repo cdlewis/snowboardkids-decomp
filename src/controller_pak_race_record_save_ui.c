@@ -37,7 +37,7 @@ extern void *D_8010ADE0;
 extern void *D_8010ADE4;
 extern s16 gControllerPakStatusCodes;
 extern s16 D_800EC9D0;
-extern u8 D_800EC9C1;
+extern u8 gMenuSelectionConfirmTimer;
 
 #ifdef NON_MATCHING
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x42])
@@ -195,7 +195,7 @@ void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActo
         break;
     case 1:
         if (gControllerPakStatusCodes != 0) {
-            if (D_800EC9C1 == 0x14) {
+            if (gMenuSelectionConfirmTimer == 0x14) {
                 state = arg0->unk1C.state = 2;
             }
         }
@@ -255,7 +255,7 @@ void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveAct
         state = arg0->state.b.unk1F = 2;
         break;
     case 2:
-        if ((gControllerPakStatusCodes == 5) && (D_800EC9C1 == 0x14)) {
+        if ((gControllerPakStatusCodes == 5) && (gMenuSelectionConfirmTimer == 0x14)) {
             state = arg0->state.b.unk1F = 3;
         }
         break;
@@ -317,7 +317,7 @@ void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveA
         state = arg0->state.b.unk20;
         break;
     case 1:
-        if ((gControllerPakStatusCodes == 5) && (D_800EC9C1 == 0x14)) {
+        if ((gControllerPakStatusCodes == 5) && (gMenuSelectionConfirmTimer == 0x14)) {
             arg0->state.b.unk20 = 4;
             state = arg0->state.b.unk20;
         }
@@ -481,7 +481,7 @@ void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveAct
         state = arg0->state.b.unk1E;
         break;
     case 1:
-        if ((gControllerPakStatusCodes == 5) && (D_800EC9C1 == 0x14)) {
+        if ((gControllerPakStatusCodes == 5) && (gMenuSelectionConfirmTimer == 0x14)) {
             state = arg0->state.b.unk1E = 2;
         }
         break;
