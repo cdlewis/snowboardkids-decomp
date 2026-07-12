@@ -3807,7 +3807,7 @@ void updateRacePlayerMode08SpinoutRecover(RaceInputPlayer *player) {
     }
 }
 
-// updateRacePlayerMode06TerrainFall best match: 91.015% (base_3.c)
+// updateRacePlayerMode06TerrainFall best match: 91.118% (nonmatchings/updateRacePlayerMode06TerrainFall-8331816093655448999/base_4.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode06TerrainFall.s")
 
@@ -3815,7 +3815,10 @@ void updateRacePlayerMode08SpinoutRecover(RaceInputPlayer *player) {
 void updateRacePlayerMode06TerrainFall(RaceInputPlayer *player) {
     s16 updateState;
     s16 updateTimer;
-    s32 *pos;
+    s32 *posX;
+    s32 *posY;
+    s32 *posZ;
+    s16 *angle;
     s32 yVel;
     s32 timer;
     u32 stateFlags;
@@ -3858,13 +3861,16 @@ void updateRacePlayerMode06TerrainFall(RaceInputPlayer *player) {
             setRaceMotionAnimation(player, 0x21);
         }
         player->stateFlags |= 0x80000;
-        pos = &player->posX;
         if (gViewportStates[(u16) player->playerIndex].overlayAlpha == 0xFF) {
             player->updateTimer++;
             player->unk74 = 0;
             player->unk502 = player->unk2E8;
+            posX = &player->posX;
+            posY = &player->posY;
+            posZ = &player->posZ;
+            angle = &player->facingAngle;
             do {
-                getRaceCourseSurfaceSpawnTransform(player->unk502, pos, &player->posY, &player->posZ, &player->facingAngle);
+                getRaceCourseSurfaceSpawnTransform(player->unk502, posX, posY, posZ, angle);
                 if (isRacePlayerRespawnSurfaceValid(player) == 0) {
                     player->unk502--;
                 } else {
@@ -3872,9 +3878,9 @@ void updateRacePlayerMode06TerrainFall(RaceInputPlayer *player) {
                 }
             } while (1);
             player->posY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
-            player->unk34.x = pos[0];
-            player->unk34.y = pos[1];
-            player->unk34.z = pos[2];
+            player->unk34.x = posX[0];
+            player->unk34.y = posX[1];
+            player->unk34.z = posX[2];
             player->velocity.x = 0;
             player->velocity.y = 0;
             player->velocity.z = 0;
