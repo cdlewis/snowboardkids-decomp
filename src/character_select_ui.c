@@ -89,7 +89,7 @@ extern s32 gMenuFlowState;
 extern void *gMenuRenderCallbackList;
 extern u8 gPlayerCount;
 extern RacePlayer D_80121D80[];
-extern u8 D_80121D85[];
+extern u8 gMenuSelectionVariant[];
 extern s8 D_8010AE64[];
 extern u8 gAssetHandles[];
 extern u8 gCharacterSelectConfirmationBannerText[];
@@ -846,7 +846,7 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiPanelActor *a
             case 0:
                 break;
             case 1:
-                state = D_80121D85[i * CHARACTER_SELECT_PLAYER_DATA_SIZE];
+                state = gMenuSelectionVariant[i * CHARACTER_SELECT_PLAYER_DATA_SIZE];
                 if ((s32)state < 5) {
                     offsetX = (state * 0x20) - 0x40;
                 } else if (state == 5) {

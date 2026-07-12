@@ -109,10 +109,10 @@ extern void addRenderCallback(void *, void (*)(CourseSelectWidgetActor *), Cours
 extern void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *);
 extern s32 allocFixedTransformMatrix(FixedTransform *);
 extern void drawCourseSelectCourseCursors(CourseSelectWidgetActor *);
-extern s8 D_800ECA2F[][0x78F8];
+extern s8 gCourseUnlockSaveSlots[][0x78F8];
 extern s8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
-extern u8 D_800EC9E6;
+extern u8 gCourseSelectModeSelection;
 extern s32 gActiveMenuTask;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
@@ -128,7 +128,7 @@ extern u8 D_8010AEA0[];
 extern u8 gCourseSelectExtraCourseColumnState;
 extern u8 gCourseSelectStatus[];
 extern u8 D_8010AF1C;
-extern s16 D_800EC9D0[];
+extern s16 gMenuChoicePromptState[];
 extern u8 gCourseSelectCompleteText[];
 extern u8 gCourseSelectCourseSpeedRatings[];
 extern u8 gCourseSelectCourseHandlingRatings[];
@@ -139,11 +139,11 @@ extern s16 gCourseSelectStatsPanelLayout[][4];
 extern s16 gCourseSelectStatsPlayerMarkerLayout[][2];
 extern s16 gAssetHandles[];
 extern s16 gMenuCommonSpritesAssetHandle;
-extern s16 D_8011217A;
+extern s16 gMenuUiSpritesAssetHandle;
 extern s16 gMenuPanelTilemapAssetHandle;
 extern u8 gPlayerCount;
 extern CourseSelectRacePlayer D_80121D80[];
-extern u8 D_80121D86[][sizeof(CourseSelectRacePlayer)];
+extern u8 gCourseSelectSelectedCourseId[][sizeof(CourseSelectRacePlayer)];
 extern u8 gMenuTransitionState;
 extern s32 gMenuFlowState;
 extern CourseSelectState *gCurrentGameTask;
@@ -180,9 +180,9 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             if (D_8010AECC[var_t0] == 1) {
                 var_a3 = arg0->playerSlots[var_t0].courseIndex;
             } else {
-                var_a3 = D_80121D86[var_t0][0];
+                var_a3 = gCourseSelectSelectedCourseId[var_t0][0];
             }
-            temp_v0_2 = D_800ECA2F[var_t0][var_a3];
+            temp_v0_2 = gCourseUnlockSaveSlots[var_t0][var_a3];
             if (temp_v0_2 == -1) {
                 var_v1 = 9;
             } else {
@@ -457,9 +457,9 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             if (D_8010AECC[var_t0] == 3) {
                 var_a3 = arg0->playerSlots[var_t0].courseIndex;
             } else {
-                var_a3 = D_80121D86[var_t0][0];
+                var_a3 = gCourseSelectSelectedCourseId[var_t0][0];
             }
-            temp_v0_2 = D_800ECA2F[var_t0][var_a3];
+            temp_v0_2 = gCourseUnlockSaveSlots[var_t0][var_a3];
             if (temp_v0_2 == -1) {
                 var_v1 = 9;
             } else {
@@ -1059,10 +1059,10 @@ void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
 #endif
 
 void drawCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
-    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(D_8011217A), 3, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(D_8011217A), 4, 0x20, 0x20, 0, 0);
-    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(D_8011217A), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(D_8011217A), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
 }
 
 void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
@@ -1089,8 +1089,8 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
             createCallbackTask(initCourseSelectExtraCourseBadge, 0, 0x63);
             createCallbackTask(initCourseSelectCourseDescription, 0, 0x61);
             createCallbackTask(initCourseSelectCourseStats, 0, 0x64);
-            if ((gRaceSplitscreenMode == 3) && (D_800EC9E6 == 0)) {
-                createCallbackTask(func_8002E568, 0, 0x63);
+            if ((gRaceSplitscreenMode == 3) && (gCourseSelectModeSelection == 0)) {
+                createCallbackTask(initShopMenuMoneyPanelForCourseSelectReturn, 0, 0x63);
             }
         }
         break;
@@ -1431,13 +1431,13 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             }
             text = gCourseSelectModeDescriptionText + (value * 0x46);
         } else {
-            if ((D_800EC9D0[0] < 2) || (D_800EC9D0[0] == 9)) {
+            if ((gMenuChoicePromptState[0] < 2) || (gMenuChoicePromptState[0] == 9)) {
                 selectedIndex = 1;
-            } else if (D_800EC9D0[0] < 5) {
-                selectedIndex = D_800EC9D0[0] - 1;
+            } else if (gMenuChoicePromptState[0] < 5) {
+                selectedIndex = gMenuChoicePromptState[0] - 1;
             }
 
-            if ((D_800EC9D0[0] >= 5) && (D_800EC9D0[0] != 9)) {
+            if ((gMenuChoicePromptState[0] >= 5) && (gMenuChoicePromptState[0] != 9)) {
                 arg0->subState = 1;
             }
 
@@ -1467,7 +1467,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 drawMenuGlyphScript((s16)(arg0->x + 0x48), (s16)(arg0->y + 0x10), (u8 *)buffer, 1, arg0->spriteIndex, 0);
             }
 
-            if (D_800EC9E6 == 0) {
+            if (gCourseSelectModeSelection == 0) {
                 buffer[0] = -4;
                 buffer[1] = 6;
                 if ((selectedIndex >= 2) || (selection->courseId >= 9)) {
@@ -1605,7 +1605,7 @@ void drawCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     u16 tileIndex;
     u32 promotedTileIndex;
 
-    if (D_800EC9E6 == 1) {
+    if (gCourseSelectModeSelection == 1) {
         tileIndex = 1;
         handleIndex = 0x27;
     } else {
@@ -1674,7 +1674,7 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
 
     playerIndex = 0;
     if ((s32)gPlayerCount > 0) {
-        state = D_800EC9D0;
+        state = gMenuChoicePromptState;
         playerOffset = 0;
         do {
             if (*state != 0) {

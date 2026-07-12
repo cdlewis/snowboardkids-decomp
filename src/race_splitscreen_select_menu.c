@@ -174,7 +174,7 @@ void updateRaceSplitscreenSelectMenu(void) {
                     }
 
                     if ((heldInput & 0x1000) || ((heldInput & 0x8000) && (gMenuFlowState == 5))) {
-                        if ((gRaceSplitscreenMode == 3) && (D_80121D85 == 5)) {
+                        if ((gRaceSplitscreenMode == 3) && (gMenuSelectionVariant == 5)) {
                             enqueueSoundEffect(0x46, 0x32);
                         } else {
                             enqueueSoundEffect(0x18, 0x32);

@@ -36,7 +36,7 @@ extern void *gMenuRenderCallbackList;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
 extern s16 gControllerPakStatusCodes;
-extern s16 D_800EC9D0;
+extern s16 gMenuChoicePromptState;
 extern u8 gMenuSelectionConfirmTimer;
 
 #ifdef NON_MATCHING
@@ -290,7 +290,7 @@ void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveAct
     if (gControllerPakStatusCodes != 8) {
         text = gControllerPakRaceRecordSaveStatusMessages[gControllerPakStatusCodes];
         drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->unk1C.scale, 0);
-        if (((gControllerPakStatusCodes == 4) || (gControllerPakStatusCodes >= 7)) && (D_800EC9D0 == 0)) {
+        if (((gControllerPakStatusCodes == 4) || (gControllerPakStatusCodes >= 7)) && (gMenuChoicePromptState == 0)) {
             if (arg0->unk1C.scale == 0x100) {
                 drawMenuSprite((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
                               (((s32)arg0->state.b.frame >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
@@ -335,7 +335,7 @@ void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveA
         if (arg0->unk1C.scale <= (state * 0)) {
             arg0->unk1C.scale = 0;
             arg0->state.b.unk20 = 2;
-            D_800EC9D0 = 0;
+            gMenuChoicePromptState = 0;
             gControllerPakStatusCodes = arg0->state.wu.slideOffset;
         }
         state = arg0->state.b.unk20;
@@ -373,7 +373,7 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
     u16 alpha;
     s16 state;
 
-    state = D_800EC9D0;
+    state = gMenuChoicePromptState;
     if (state != 0) {
         isEvenState = !(state & 1);
         if (isEvenState) {
@@ -395,17 +395,17 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
         drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), gControllerPakRaceRecordSaveChoicePromptTopSprites[gControllerPakStatusCodes * 2], 0x20, 0x20, 0, alpha,
                       0);
 
-        state = D_800EC9D0;
+        state = gMenuChoicePromptState;
         if ((state == 3) || (state == 4)) {
-            drawMenuSpriteWithAlpha(arg0->x, (s16)(((D_800EC9D0 * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x12,
+            drawMenuSpriteWithAlpha(arg0->x, (s16)(((gMenuChoicePromptState * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x12,
                           0x20, 0x20, 0, (u16)arg0->state.w.alpha, 7);
-            state = D_800EC9D0;
+            state = gMenuChoicePromptState;
         }
     }
     if ((state >= 5) && (arg0->state.w.slideOffset == 0)) {
         gControllerPakRaceRecordSaveStatusTransitionTargetStatus = arg0->state.w.selection;
         gControllerPakRaceRecordSaveStatusTransition.step = 3;
-        D_800EC9D0 = 0;
+        gMenuChoicePromptState = 0;
         if (arg0->state.w.selection == 0) {
             gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
             gControllerPakRaceRecordSaveStatusTransition.step = 1;
@@ -421,8 +421,8 @@ void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecord
     if (gControllerPakRaceRecordSaveStatusTransitionNextStatus != arg0->state.w.selection) {
         arg0->state.w.selection = gControllerPakRaceRecordSaveStatusTransitionNextStatus;
     }
-    if ((D_800EC9D0 != 0) && (D_800EC9D0 != 3) && (D_800EC9D0 != 4)) {
-        if (D_800EC9D0 < 5) {
+    if ((gMenuChoicePromptState != 0) && (gMenuChoicePromptState != 3) && (gMenuChoicePromptState != 4)) {
+        if (gMenuChoicePromptState < 5) {
             var_v1 = 1;
         } else {
             var_v1 = -1;
@@ -430,7 +430,7 @@ void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecord
         temp_a0 = var_v1 * 8;
         arg0->state.w.slideOffset += temp_a0;
         if (arg0->state.w.slideOffset == 0x20) {
-            D_800EC9D0 += 2;
+            gMenuChoicePromptState += 2;
             arg0->state.b.alphaTimer = 0;
             arg0->state.b.alpha = 0x100;
         }
@@ -446,7 +446,7 @@ void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecord
             arg0->unk1C.scale -= 8;
         }
     }
-    if ((D_800EC9D0 == 3) || (D_800EC9D0 == 4)) {
+    if ((gMenuChoicePromptState == 3) || (gMenuChoicePromptState == 4)) {
         if ((s32)arg0->state.b.alphaTimer < 0x10) {
             arg0->state.b.alpha -= 9;
         } else {

@@ -45,7 +45,7 @@ extern s32 gPlayer1Money;
 extern MenuIntroActor *gActiveMenuTask;
 extern TitleMenuWidgetItemView *D_8010ADE0;
 extern s16 gControllerPakStatusCodes[];
-extern s16 D_800EC9D0[];
+extern s16 gMenuChoicePromptState[];
 extern s16 gPlayerBadgeDisplayOrder[];
 extern TitleMenuPlayerView gGameSaveDataBuffer[];
 extern TitleIntroTransitionState D_8010AE00;
@@ -980,7 +980,7 @@ void func_80016664(TitleMenuWidgetActor *arg0) {
 
             if ((actor->alpha[i] == 0x100) && (intro->state == 8)) {
                 state = gControllerPakStatusCodes[i];
-                if ((state == 4) || ((state >= 7) && (state != 0x12) && (D_800EC9D0[i] == 0))) {
+                if ((state == 4) || ((state >= 7) && (state != 0x12) && (gMenuChoicePromptState[i] == 0))) {
                     drawMenuSprite((s16)(actor->x[i] + 0x70), (s16)(actor->y[i] + 0x20), getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
                                   (((s32)actor->frame >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
                 }
@@ -1106,7 +1106,7 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
                 arg0->selection[i] = D_8010AE00.selection[i];
             }
 
-            state = D_800EC9D0[i];
+            state = gMenuChoicePromptState[i];
             if (state != 0) {
                 if (!(state & 1)) {
                     alpha = 0x100;
@@ -1130,19 +1130,19 @@ void func_80016BE8(TitleMenuTransitionActor *arg0) {
                 if (new_var->alpha == 0) {
                 }
 
-                state = D_800EC9D0[i];
+                state = gMenuChoicePromptState[i];
                 if ((state == 3) || (state == 4)) {
-                    drawMenuSpriteWithAlpha(new_var2->x[i], (s16)(((D_800EC9D0[i] * 0x10) + new_var->y[i]) - 0x30),
+                    drawMenuSpriteWithAlpha(new_var2->x[i], (s16)(((gMenuChoicePromptState[i] * 0x10) + new_var->y[i]) - 0x30),
                                   getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0x12, 0x20, 0x20, 0, new_var->alpha[i],
                                   i + 7);
-                    state = D_800EC9D0[i];
+                    state = gMenuChoicePromptState[i];
                 }
             }
 
             if ((state >= 5) && (new_var2->slideOffset[i] == 0)) {
                 D_8010AE00.nextSelection[i] = arg0->selection[i];
                 D_8010AE0E[i] = 2;
-                D_800EC9D0[i] = 0;
+                gMenuChoicePromptState[i] = 0;
             }
         }
     }
@@ -1170,7 +1170,7 @@ void func_80016E40(TitleMenuTransitionActor *arg0) {
                 actor->selection[i] = D_8010AE00.selection[i];
             }
 
-            state = D_800EC9D0[i];
+            state = gMenuChoicePromptState[i];
             if ((state != 0) && (state != 3) && (state != 4)) {
                 if (state < 5) {
                     step = 1;
@@ -1182,7 +1182,7 @@ void func_80016E40(TitleMenuTransitionActor *arg0) {
                 actor->slideOffset[i] += stepAmount;
                 state = actor->slideOffset[i];
                 if (state == 0x20) {
-                    D_800EC9D0[i] += 2;
+                    gMenuChoicePromptState[i] += 2;
                     actor->alphaTimer[i] = 0;
                     actor->alpha[i] = 0x100;
                     state = actor->slideOffset[i];
@@ -1193,13 +1193,13 @@ void func_80016E40(TitleMenuTransitionActor *arg0) {
                         actor->y[i] += 8;
                     }
                     actor->topY[i] += 8;
-                    state = D_800EC9D0[i];
+                    state = gMenuChoicePromptState[i];
                 } else {
                     if (state < 0x10) {
                         actor->y[i] -= 8;
                     }
                     actor->topY[i] -= 8;
-                    state = D_800EC9D0[i];
+                    state = gMenuChoicePromptState[i];
                 }
             }
 
