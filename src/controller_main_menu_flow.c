@@ -358,7 +358,43 @@ void requestRumbleMotorInit(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
+// serviceRumbleMotorRequest best match: 96.181% (nonmatchings/serviceRumbleMotorRequest-5802343343535905907/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/serviceRumbleMotorRequest.s")
+
+#ifdef NON_MATCHING
+void serviceRumbleMotorRequest(u16 arg0) {
+    u16 channel;
+    s16 *requestState;
+    s32 status;
+
+    channel = arg0;
+    status = (&gRumbleMotorStatuses)[channel];
+    if (status == 1) {
+        gRumbleMotorRequestStates[channel] = 0;
+        if (gRumblePakConnectedMask & (1 << channel)) {
+            osSendMesg(&gControllerSubsystemRequestQueue, channel + 0xD0, OS_MESG_BLOCK);
+        }
+    } else if (status == 0xB) {
+        gRumbleMotorRequestStates[channel] = 0;
+        if (gRumblePakConnectedMask & (1 << channel)) {
+            osSendMesg(&gControllerSubsystemRequestQueue, channel + 0xD0, OS_MESG_BLOCK);
+        }
+    } else if (status == 4) {
+        gRumbleMotorRequestStates[channel] = 0;
+        if (gRumblePakConnectedMask & (1 << channel)) {
+            osSendMesg(&gControllerSubsystemRequestQueue, channel + 0xD0, OS_MESG_BLOCK);
+        }
+    } else {
+        requestState = &gRumbleMotorRequestStates[channel];
+        if (*requestState == 0) {
+            osSendMesg(&gControllerSubsystemRequestQueue, channel + 0x90, OS_MESG_BLOCK);
+        } else {
+            osSendMesg(&gControllerSubsystemRequestQueue, channel + 0x80, OS_MESG_BLOCK);
+        }
+        *requestState = 0;
+    }
+}
+#endif
 
 void requestRumbleMotorStart(u16 arg0) {
     if (gRaceRumbleEnabled != 0) {
