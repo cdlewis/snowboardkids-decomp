@@ -2654,7 +2654,7 @@ void initCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
     setCallbackTaskCallback(arg0, updateCharacterSelectCourseConfirmCursor);
 }
 
-// drawCharacterSelectCourseRecordsPopup best match: 90.478% (nonmatchings/drawCharacterSelectCourseRecordsPopup-2225551288923588688/base_6.c)
+// drawCharacterSelectCourseRecordsPopup best match: 92.099% (nonmatchings/drawCharacterSelectCourseRecordsPopup-2694253543240320626/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/drawCharacterSelectCourseRecordsPopup.s")
 
 #ifdef NON_MATCHING
@@ -2680,10 +2680,11 @@ extern u8 D_800F4259[];
 extern u8 D_800F4290[];
 
 void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg0) {
-    volatile u8 padding[0x40];
+    volatile u8 padding[0x20];
     s16 *courseIds;
-    u16 sp72;
-    u16 sp70;
+    volatile u8 padSlots[0x20];
+    volatile u16 sp72;
+    volatile u16 sp70;
     volatile u8 color;
     u8 *trickIcon;
     s16 *selectedCoursePtr;
