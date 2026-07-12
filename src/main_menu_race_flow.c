@@ -482,7 +482,7 @@ void initTrainingCourseRace(void) {
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     gMainMenuSelectionResult = 0;
     createCallbackTask(initTrainingCourseOpeningDialog, 0, 0x64);
-    createCallbackTask(initTrainingCourseTitlePanel, 0, 0x63);
+    createCallbackTask(initTrainingCourseLessonTitlePanel, 0, 0x63);
     createCallbackTask(initRaceSetupCornerPrompts, 0, 0x64);
     setCurrentGameTaskCallback(fadeInTrainingCourseRace, 0);
     requestMusicSequenceBank(7);
@@ -548,7 +548,7 @@ void zoomTrainingCourseRaceViewport(void) {
     if (gCurrentGameTask->transitionTimer == MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES) {
         requestMusicSequenceBank(0xF);
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-        setCurrentGameTaskCallback(runTrainingCourseUntilActionPrompt, 0);
+        setCurrentGameTaskCallback(runTrainingCourseUntilLessonEnd, 0);
     }
     updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
@@ -558,7 +558,7 @@ void zoomTrainingCourseRaceViewport(void) {
 }
 #endif
 
-void runTrainingCourseUntilActionPrompt(void) {
+void runTrainingCourseUntilLessonEnd(void) {
     gMenuFlowState = 0;
     updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
@@ -570,7 +570,7 @@ void runTrainingCourseUntilActionPrompt(void) {
     switch (gTrainingCourseLesson) {
         case 1:
             if (gRacePlayerSurfaceAngleByPlayer == 0x50) {
-                setCurrentGameTaskCallback(fadeInTrainingCourseActionMenu, 0);
+                setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
@@ -580,14 +580,14 @@ void runTrainingCourseUntilActionPrompt(void) {
         case 4:
         case 5:
             if (gRacePlayerSurfaceAngleByPlayer == 0x9C) {
-                setCurrentGameTaskCallback(fadeInTrainingCourseActionMenu, 0);
+                setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 6:
             if (gRacePlayerSurfaceAngleByPlayer == 0xB4) {
-                setCurrentGameTaskCallback(fadeInTrainingCourseActionMenu, 0);
+                setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
@@ -595,21 +595,21 @@ void runTrainingCourseUntilActionPrompt(void) {
         case 7:
         case 8:
             if (gRacePlayerSurfaceAngleByPlayer == 0x16) {
-                setCurrentGameTaskCallback(fadeInTrainingCourseActionMenu, 0);
+                setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 9:
             if (gRacePlayerSurfaceAngleByPlayer == 0x36) {
-                setCurrentGameTaskCallback(fadeInTrainingCourseActionMenu, 0);
+                setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
             }
             break;
     }
 }
 
-void fadeInTrainingCourseActionMenu(void) {
+void fadeInTrainingCourseLessonEndMenu(void) {
     s32 temp_v1;
 
     gRaceUpdatePaused = 1;
@@ -623,14 +623,14 @@ void fadeInTrainingCourseActionMenu(void) {
     gCurrentGameTask->transitionTimer += 0x10;
     temp_v1 = gCurrentGameTask->transitionTimer;
     if (temp_v1 == 0x80) {
-        createCallbackTask(initTrainingCourseActionMenu, 0, 0x64);
-        setCurrentGameTaskCallback(waitForTrainingCourseActionMenuSelection, 0);
+        createCallbackTask(initTrainingCourseLessonEndMenu, 0, 0x64);
+        setCurrentGameTaskCallback(waitForTrainingCourseLessonEndMenuSelection, 0);
     }
     temp_v1 = gCurrentGameTask->transitionTimer;
     D_801124B8 = temp_v1;
 }
 
-void waitForTrainingCourseActionMenuSelection(void) {
+void waitForTrainingCourseLessonEndMenuSelection(void) {
     gRaceUpdatePaused = 1;
     updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
@@ -640,11 +640,11 @@ void waitForTrainingCourseActionMenuSelection(void) {
     updateRaceHud();
     D_801124B8 = 0x80;
     if (gMainMenuSelectionResult != 0) {
-        setCurrentGameTaskCallback(&fadeOutTrainingCourseActionMenu, 0);
+        setCurrentGameTaskCallback(&fadeOutTrainingCourseLessonEndMenu, 0);
     }
 }
 
-void fadeOutTrainingCourseActionMenu(void) {
+void fadeOutTrainingCourseLessonEndMenu(void) {
     gRaceUpdatePaused = 1;
     updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
@@ -656,11 +656,11 @@ void fadeOutTrainingCourseActionMenu(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(&handleTrainingCourseActionMenuSelection, 0);
+        setCurrentGameTaskCallback(&handleTrainingCourseLessonEndMenuSelection, 0);
     }
 }
 
-void handleTrainingCourseActionMenuSelection(void) {
+void handleTrainingCourseLessonEndMenuSelection(void) {
     if (gPendingFramebufferSwapCount == 2) {
         stopSoundEffects();
         releaseMenuAssetHandles();

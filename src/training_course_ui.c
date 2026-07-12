@@ -59,19 +59,19 @@ extern u8 gMainMenuSelectionResult;
 extern s32 gPlayerInputPressed;
 extern TrainingCourseUiScript gTrainingCourseOpeningDialogScripts[][0x17C];
 extern TrainingCourseUiScript gTrainingCourseEndingDialogScript[];
-extern TrainingCourseUiScript gTrainingCourseTitleLabelTemplate[];
-extern TrainingCourseUiScript gTrainingCourseTitleText[][0x14];
-extern s16 gTrainingCourseTitleXPositions[];
+extern TrainingCourseUiScript gTrainingCourseLessonTitleLabelTemplate[];
+extern TrainingCourseUiScript gTrainingCourseLessonTitleText[][0x14];
+extern s16 gTrainingCourseLessonTitleXPositions[];
 extern u8 gTrainingCourseLesson;
 extern void enqueueSoundEffect(s32, s32, TrainingCourseUiActor *);
 void drawTrainingCourseDialog(TrainingCourseUiActor *);
 void updateTrainingCourseDialog(TrainingCourseUiActor *);
-void drawTrainingCourseTitlePanel(TrainingCourseUiActor *);
-void updateTrainingCourseTitlePanelScrollOut(TrainingCourseUiActor *);
-void updateTrainingCourseTitlePanel(TrainingCourseUiActor *);
-void updateTrainingCourseActionMenu(TrainingCourseUiActor *);
+void drawTrainingCourseLessonTitlePanel(TrainingCourseUiActor *);
+void updateTrainingCourseLessonTitlePanelScrollOut(TrainingCourseUiActor *);
+void updateTrainingCourseLessonTitlePanel(TrainingCourseUiActor *);
+void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *);
 
-void drawTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
+void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     s32 i;
     s32 j;
     s32 alpha;
@@ -135,15 +135,15 @@ void drawTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->layout.textOffset.x, (s16)(arg0->layout.textOffset.y + (selected * 0x10)), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, arg0->highlightScale, 0);
 }
 
-void redrawTrainingCourseActionMenu(s32 arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)redrawTrainingCourseActionMenu, arg0);
+void redrawTrainingCourseLessonEndMenu(s32 arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)redrawTrainingCourseLessonEndMenu, arg0);
 }
 
-// updateTrainingCourseActionMenu best match: 99.562%
-#pragma GLOBAL_ASM("asm/nonmatchings/training_course_ui/updateTrainingCourseActionMenu.s")
+// updateTrainingCourseLessonEndMenu best match: 99.562%
+#pragma GLOBAL_ASM("asm/nonmatchings/training_course_ui/updateTrainingCourseLessonEndMenu.s")
 
 #ifdef NON_MATCHING
-void updateTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
+void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     s32 temp_t1;
     s32 temp_t8;
     s32 temp_t9;
@@ -192,13 +192,13 @@ void updateTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
         gMainMenuSelectionResult = (u16)arg0->state.selectedAction + 1;
         arg0->highlightScale = 0x100;
         arg0->highlightTimer = 0;
-        setCallbackTaskCallback(arg0, redrawTrainingCourseActionMenu);
+        setCallbackTaskCallback(arg0, redrawTrainingCourseLessonEndMenu);
     }
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseActionMenu, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseLessonEndMenu, (s32)arg0);
 }
 #endif
 
-void initTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
+void initTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     arg0->x = -0x30;
     arg0->y = -0x30;
     arg0->layout.textOffset.x = -0x2C;
@@ -211,7 +211,7 @@ void initTrainingCourseActionMenu(TrainingCourseUiActor *arg0) {
     }
     arg0->highlightScale = 0x100;
     arg0->highlightTimer = 0;
-    setCallbackTaskCallback(arg0, updateTrainingCourseActionMenu);
+    setCallbackTaskCallback(arg0, updateTrainingCourseLessonEndMenu);
 }
 
 // drawTrainingCourseDialog best match: 95.343%
@@ -455,31 +455,31 @@ void initTrainingCourseEndingDialog(TrainingCourseUiActor *arg0) {
     setCallbackTaskCallback(arg0, updateTrainingCourseDialog);
 }
 
-void drawTrainingCourseTitlePanel(TrainingCourseUiActor *arg0) {
-    gTrainingCourseTitleLabelTemplate[9] = gTrainingCourseLesson;
-    drawMenuColoredGlyphScript((s16)(arg0->x - 0x10), arg0->y, gTrainingCourseTitleLabelTemplate, 0, 0x100, 5, 0x29);
-    drawMenuColoredGlyphScript(gTrainingCourseTitleXPositions[gTrainingCourseLesson], (s16)(arg0->y + 0x18), gTrainingCourseTitleText[gTrainingCourseLesson - 1], 0, 0x100, 4, 0x29);
+void drawTrainingCourseLessonTitlePanel(TrainingCourseUiActor *arg0) {
+    gTrainingCourseLessonTitleLabelTemplate[9] = gTrainingCourseLesson;
+    drawMenuColoredGlyphScript((s16)(arg0->x - 0x10), arg0->y, gTrainingCourseLessonTitleLabelTemplate, 0, 0x100, 5, 0x29);
+    drawMenuColoredGlyphScript(gTrainingCourseLessonTitleXPositions[gTrainingCourseLesson], (s16)(arg0->y + 0x18), gTrainingCourseLessonTitleText[gTrainingCourseLesson - 1], 0, 0x100, 4, 0x29);
 }
 
-void updateTrainingCourseTitlePanelScrollOut(TrainingCourseUiActor *arg0) {
+void updateTrainingCourseLessonTitlePanelScrollOut(TrainingCourseUiActor *arg0) {
     arg0->y -= 0xA;
     if (arg0->y < -0xC7) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseTitlePanel, (s32)arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseLessonTitlePanel, (s32)arg0);
     }
 }
 
-void updateTrainingCourseTitlePanel(TrainingCourseUiActor *arg0) {
+void updateTrainingCourseLessonTitlePanel(TrainingCourseUiActor *arg0) {
     if (gMainMenuSelectionResult == 1) {
-        setCallbackTaskCallback(arg0, updateTrainingCourseTitlePanelScrollOut);
+        setCallbackTaskCallback(arg0, updateTrainingCourseLessonTitlePanelScrollOut);
     }
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseTitlePanel, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseLessonTitlePanel, (s32)arg0);
 }
 
-void initTrainingCourseTitlePanel(TrainingCourseUiActor *arg0) {
+void initTrainingCourseLessonTitlePanel(TrainingCourseUiActor *arg0) {
     arg0->x = -0x48;
     arg0->y = -0x48;
     arg0->layout.panelHeight = 0x78;
-    setCallbackTaskCallback(arg0, updateTrainingCourseTitlePanel);
+    setCallbackTaskCallback(arg0, updateTrainingCourseLessonTitlePanel);
 }
