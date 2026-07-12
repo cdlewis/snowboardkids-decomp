@@ -656,7 +656,7 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
 #undef SPAWN_RANGE_MIN
 #endif
 
-// renderRacePickupIdle best match: display-list command stream matched, remaining differences are stack/local layout.
+// renderRacePickupIdle best match: 96.574% (base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_props_and_pickups/renderRacePickupIdle.s")
 
 #ifdef NON_MATCHING
@@ -719,7 +719,7 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette0);
             gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-            gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupBaseVertices, 0x103F, 0);
+            gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupBaseVertices, 0x207F, 0);
             temp_v0 = gRegionAllocPtr++;
             temp_v0->words.w1 = 0x60200;
             temp_v0->words.w0 = 0xB1060402;
