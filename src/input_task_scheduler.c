@@ -121,7 +121,7 @@ void func_80098D80(void) {
     func_8009B0E8();
 }
 
-// func_80098EAC best match: 92.403% (nonmatchings/func_80098EAC-7273315160691878794/base_11.c)
+// func_80098EAC best match: 95.344% (nonmatchings/func_80098EAC/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/input_task_scheduler/func_80098EAC.s")
 
 #ifdef NON_MATCHING
@@ -137,8 +137,11 @@ void func_80098EAC(void) {
     InputTask *task;
     InputTask *nextTask;
     InputTaskCallback callback;
+    InputTaskCallback *callbackArray;
     s32 oldInput;
     s32 currentInput;
+    s32 newInputValue;
+    s32 stickHighThreshold;
     s32 stickXTooHigh;
     s8 stickX;
     s8 stickY;
@@ -153,6 +156,8 @@ void func_80098EAC(void) {
     input = &D_80123758;
     controller = &D_800E4C18;
     stickXOut = &D_80123788;
+    if (D_8012370C) {
+    }
     stickYOut = &D_8012378C;
     newInput = &D_80123778;
     repeatTimer = &D_801237A0;
@@ -160,11 +165,14 @@ void func_80098EAC(void) {
 
     do {
         stickXTooHigh = controller->stickX >= 0x2E;
+        stickHighThreshold = 0x2E;
         oldInput = *input;
         currentInput = oldInput & 0xFFFF0000;
         *input = currentInput;
         *input = currentInput | controller->buttons;
         *previousInput = oldInput;
+        do {
+        } while (0);
 
         if (stickXTooHigh) {
             controller->stickX = 0x2D;
@@ -174,7 +182,7 @@ void func_80098EAC(void) {
         }
 
         stickY = controller->stickY;
-        if (stickY >= 0x2E) {
+        if (stickY >= stickHighThreshold) {
             controller->stickY = 0x2D;
             stickY = controller->stickY;
         }
@@ -186,6 +194,8 @@ void func_80098EAC(void) {
         stickX = controller->stickX;
         controller++;
         if (stickX >= 0) {
+            goto positiveStickX;
+        positiveStickX:
             *stickXOut = *(&D_800DEED8 + stickX);
         } else {
             *stickXOut = -*(&D_800DEED8 - stickX);
@@ -199,7 +209,7 @@ void func_80098EAC(void) {
 
         stickX = *stickXOut;
         stickXOut++;
-        if (stickX >= 0x1B) {
+        if (stickX > 0x1B - 1) {
             *input |= 0x40000;
         }
         if (stickX < -0x1A) {
@@ -237,8 +247,9 @@ void func_80098EAC(void) {
             if (timer >= 9) {
                 *repeatInput = currentInput;
             } else {
+                newInputValue = *newInput;
                 *repeatTimer = timer + 1;
-                *repeatInput = *newInput;
+                *repeatInput = newInputValue;
             }
         }
 
@@ -278,7 +289,8 @@ void func_80098EAC(void) {
                     callback();
                     task = D_801235B8;
                 }
-                callback = task->callbacks[2];
+                callbackArray = task->callbacks;
+                callback = callbackArray[2];
                 if (callback != NULL) {
                     callback();
                     task = D_801235B8;
