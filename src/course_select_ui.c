@@ -999,7 +999,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     }
 }
 
-// initCourseSelectCourseCursors best match: 85.650% (nonmatchings/initCourseSelectCourseCursors-1315772375853892447/base_12.c)
+// initCourseSelectCourseCursors best match: 89.025% (nonmatchings/initCourseSelectCourseCursors-8331816093655448999/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/initCourseSelectCourseCursors.s")
 
 #ifdef NON_MATCHING
@@ -1040,8 +1040,8 @@ void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
             }
             bytePtr[0x38] = (*xyTable)[idx];
             posPtr[0x10] = (*xyTable)[((i & 1) * 2) + idx + 2];
-            posPtr[0x14] = 0;
             posPtr[0xC] = (*xTable)[((i >= 2) * 2) + 1];
+            posPtr[0x14] = 0;
             bytePtr[0x30] = 0;
             bytePtr[0x34] = 0;
             i++;
