@@ -210,7 +210,7 @@ void initRaceStartTransition(s32 arg0, RaceSetupSaveData *unused) {
     configureViewport(0, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
     configureViewport(1, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
     configureViewport(2, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
-    func_80070E90(2);
+    enableViewportClear(2);
     gMenuFadeAlpha = 0xFF;
     gCurrentGameTask->fade = 5;
     effectArg = transition - 1;

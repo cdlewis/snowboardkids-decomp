@@ -3847,7 +3847,7 @@ void updateRaceUiScorePopupSlideIn(void *arg0) {
 }
 
 void initRaceUiScorePopup(void *arg0) {
-    if (D_801124B0[*(s8 *)((u8 *)arg0 + 0x30)].active != 0) {
+    if (gViewportStates[*(s8 *)((u8 *)arg0 + 0x30)].active != 0) {
         if (gPlayerCount == 1) {
             *(s32 *)((u8 *)arg0 + 0x20) = -0x24;
         } else {

@@ -169,7 +169,6 @@ extern u8 gControllerPakOperationCounts[];
 extern SaveSlotBytes gGameSaveDataBuffer[];
 extern s32 gPlayerInputHeld;
 extern s16 gMenuFadeAlpha;
-extern s16 D_801124B8;
 extern s16 gRumbleMotorRequestStates[];
 extern u8 D_593D10[];
 extern u8 D_598A70[];
@@ -1141,7 +1140,7 @@ void fadeOutMainMenu(void) {
 
 void initMainMenuModeSelect(void) {
     resetAllViewports();
-    D_801124B8 = 0x80;
+    gViewportStates[0].overlayAlpha = 0x80;
     gFramebufferSwapDelay = 0;
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     loadRawRomAsset(D_1467B0, D_147910, 8);
@@ -1235,7 +1234,7 @@ void exitMainMenuModeSelect(void) {
 void initMainMenuSettings(void) {
     resetAllViewports();
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-    D_801124B8 = 0x80;
+    gViewportStates[0].overlayAlpha = 0x80;
     gFramebufferSwapDelay = 0;
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);

@@ -1337,7 +1337,7 @@ void initCourseSelectPreview(void) {
 
     gCoursePreviewViewportHeight = 0x78;
     configureViewport(1, 0xE8, 0x78, 0x90, gCoursePreviewViewportHeight, 0xA0, 0xF0, 0.6666666865f);
-    func_80070E90(1);
+    enableViewportClear(1);
     temp = (s8 *) &gGameSaveDataBuffer[gCourseSelectSelectedCourseId];
     D_8010AED0 = temp[0x3F] + 1;
     temp[0x3F] = gCourseDetailsPreviewCourseTiles[(u8) gCourseDetailsPreviewPage * 7 + (u8) gCourseDetailsMenuSelection];
@@ -1359,7 +1359,7 @@ void updateCourseSelectPreviewClose(void) {
     }
     configureViewport(1, 0xE8, 0x78, 0x90, gCoursePreviewViewportHeight, 0xA0, 0xF0, 0.6666666865f);
     if (gCoursePreviewViewportHeight == 0) {
-        func_80070614(1);
+        resetViewport(1);
         setCurrentGameTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
         gCourseSelectStatus.transitionState = 2;
  D_8010AED0 = 0; } var_s0 = D_801121E0; do { (gCurrentMenuCameraObject = var_s0)->unk2C(); var_s0 += 1; } while (var_s0 != (&D_80112340)); updateCallbackTasks();
