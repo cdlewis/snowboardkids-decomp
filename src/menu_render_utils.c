@@ -1105,7 +1105,7 @@ void initMenuAsciiFontTexture(void) {
     gMenuAsciiFontPaletteIndex = -1;
 }
 
-// drawMenuAsciiChar best match: 97.351% (nonmatchings/drawMenuAsciiChar-2785870559185086986/base_11.c)
+// drawMenuAsciiChar best match: 99.920% (nonmatchings/drawMenuAsciiChar-2694253543240320626/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawMenuAsciiChar.s")
 
 #ifdef NON_MATCHING
@@ -1114,6 +1114,7 @@ void drawMenuAsciiChar(s16 x, s16 y, s32 ch, u16 arg3) {
     volatile s32 *chPtr;
     s32 chByte;
     s32 tile;
+    s32 s;
     FontTexture *font;
 
     chByte = ch & 0xFF;
@@ -1142,7 +1143,10 @@ void drawMenuAsciiChar(s16 x, s16 y, s32 ch, u16 arg3) {
             tile = chByte - 0x40;
         }
 
-        drawMenuAsciiFontTile(x, y, ((tile & 7) * 8) & 0xFFFF, tile & 0x38, arg3);
+        s = ((tile & 7) * 8) & 0xFFFF;
+        if ((s && s) && s) {
+        }
+        drawMenuAsciiFontTile(x, y, s, tile & 0x38, arg3);
         return;
     }
 
@@ -1169,7 +1173,10 @@ void drawMenuAsciiChar(s16 x, s16 y, s32 ch, u16 arg3) {
     }
 
     if ((u32)tile < 0x40) {
-        drawMenuAsciiFontTile(x, y, ((tile & 7) * 8) & 0xFFFF, tile & 0x38, arg3);
+        s = ((tile & 7) * 8) & 0xFFFF;
+        if ((s && s) && s) {
+        }
+        drawMenuAsciiFontTile(x, y, s, tile & 0x38, arg3);
     }
 }
 #endif
