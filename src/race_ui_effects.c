@@ -3313,7 +3313,99 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
     addRenderCallback(&D_801248EC, func_8005E6D0, (s32) arg0);
 }
 
+// func_8005ECA8 best match: 77.014% (nonmatchings/func_8005ECA8-3357475854818838508/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005ECA8.s")
+
+#ifdef NON_MATCHING
+void func_8005ECA8(RaceUiSparkleActor *arg0) {
+    RaceUiSparkleTransformScratch stack;
+    RacePlayerState *player;
+    s16 timer;
+    s32 random;
+    s32 selected;
+    s32 playerCount;
+    s32 orderedPlayer;
+    u8 selectedMasked;
+
+    if (gRaceUpdatePaused == 0) {
+        if (gFrameCounter & 1) {
+            arg0->frame = (arg0->frame + 1) & 3;
+        }
+
+        stack.vec.x = 0;
+        stack.vec.y = arg0->zOffset;
+        stack.vec.z = 0;
+        player = &D_80121D80[arg0->playerIndex];
+        makeFixedRotationXY(stack.matrix, player->pitch, player->yaw);
+        transformVec3iByFixedMatrix(stack.matrix, &stack.vec, &arg0->pos);
+
+        player = &D_80121D80[arg0->playerIndex];
+        arg0->pos.x += player->pos28.x;
+        arg0->pos.y += player->pos28.y;
+        arg0->pos.z += player->pos28.z;
+
+        timer = arg0->timer;
+        if (timer == 0) {
+            arg0->scale -= 0x200;
+            arg0->alpha += arg0->alphaStep;
+            if (arg0->scale < 0) {
+                arg0->scale = 0;
+            }
+            if (arg0->alpha < 0) {
+                arg0->alpha = 0;
+                arg0->alphaStep = 0x10;
+                random = randomNextMain();
+                if (random > 0) {
+                    playerCount = gRacePlayerCount;
+                    selected = 0;
+                    if (playerCount >= 4) {
+                        orderedPlayer = gRaceOrderPlayerIds[3];
+                        if ((arg0->playerIndex != orderedPlayer) && (random > 0)) {
+                            selected = orderedPlayer;
+                        }
+                    }
+                    if (playerCount >= 3) {
+                        orderedPlayer = gRaceOrderPlayerIds[2];
+                        if ((arg0->playerIndex != orderedPlayer) && (random >= 2) &&
+                            !(D_80121D80[orderedPlayer].flags & 0x40)) {
+                            selected = orderedPlayer;
+                        }
+                    }
+                    if (playerCount >= 2) {
+                        orderedPlayer = gRaceOrderPlayerIds[1];
+                        if ((arg0->playerIndex != orderedPlayer) && (random >= 3) &&
+                            !(D_80121D80[orderedPlayer].flags & 0x40)) {
+                            selected = orderedPlayer;
+                        }
+                    }
+                    selectedMasked = selected & 3;
+                    if (playerCount > 0) {
+                        orderedPlayer = gRaceOrderPlayerIds[0];
+                        if ((arg0->playerIndex != orderedPlayer) && (random >= 4) &&
+                            !(D_80121D80[orderedPlayer].flags & 0x40)) {
+                            selectedMasked = orderedPlayer & 3;
+                        }
+                    }
+                    arg0->playerIndex = selectedMasked;
+                }
+
+                player = &D_80121D80[arg0->playerIndex];
+                player->unk2D8++;
+                if (gRacePlayerHudStatuses[arg0->playerIndex].active != 0) {
+                    enqueueSoundEffect(0x53, 0x5A);
+                }
+                enqueuePositionalSoundEffect(0x10, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
+                arg0->timer = 0x12C;
+                setCallbackTaskCallback(arg0, func_8005EA4C);
+            }
+        } else {
+            arg0->timer = timer - 1;
+        }
+    }
+
+    addRenderCallback(&D_801248EC, func_8005E6D0, (s32) arg0);
+}
+#endif
 
 void func_8005EFFC(RaceUiSparkleActor *arg0) {
     s16 sp38[0x10];
