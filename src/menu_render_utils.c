@@ -510,14 +510,14 @@ void drawPulsingAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3)
 }
 #endif
 
-// drawAssetTableSpriteWithDefaultPalette best match: 88.099% (nonmatchings/drawAssetTableSpriteWithDefaultPalette-8207005055717715604/base_4.c)
+// drawAssetTableSpriteWithDefaultPalette best match: 88.254% (nonmatchings/drawAssetTableSpriteWithDefaultPalette-8331816093655448999/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawAssetTableSpriteWithDefaultPalette.s")
 
 #ifdef NON_MATCHING
 extern Gfx *gRegionAllocPtr;
 extern u16 D_800D40B0[];
 
-void drawAssetTableSpriteWithDefaultPalette(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
+void drawAssetTableSpriteWithDefaultPalette(s32 arg0, s32 arg1, u8 *arg2, s32 arg3) {
     volatile char pad[0x20];
     s32 clipU;
     s32 clipV;
@@ -531,7 +531,9 @@ void drawAssetTableSpriteWithDefaultPalette(s16 arg0, s16 arg1, u8 *arg2, u16 ar
     s32 y1;
     AssetTableEntry *rawEntry;
 
-    rawEntry = (AssetTableEntry *)(arg2 + (arg3 * sizeof(AssetTableEntry)));
+    arg0 = (s16)arg0;
+    arg1 = (s16)arg1;
+    rawEntry = (AssetTableEntry *)(arg2 + ((arg3 & 0xFFFF) * sizeof(AssetTableEntry)));
     x0 = arg0 + gMenuViewportCenterX;
     y0 = arg1 + gMenuViewportCenterY;
     clipU = 0;
