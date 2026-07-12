@@ -665,52 +665,44 @@ state_6_done:
 }
 #endif
 
-// initCharacterSelectLimitedCourseList best match: 52.632% (nonmatchings/initCharacterSelectLimitedCourseList-786318006044585456/base_3.c)
+// initCharacterSelectLimitedCourseList best match: 60.000% (nonmatchings/initCharacterSelectLimitedCourseList-5802343343535905907/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/initCharacterSelectLimitedCourseList.s")
 
 #ifdef NON_MATCHING
 void initCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
-    s32 temp_t6;
-    u8 temp_t7;
-    s32 temp_t8;
-    s32 temp_t9;
-    s32 temp_t0;
-    s32 temp_t3;
-    s32 temp_t2;
-    s32 temp_t4;
-    s32 temp_t5;
-    s32 temp_v1;
+    volatile CharacterSelectCourseMenuFrameActor *actor = arg0;
+    s32 spacing0;
+    s32 spacing1;
+    s32 spacing2;
+    s32 base0;
+    s32 base1;
+    s32 base2;
+    s32 base3;
+    s32 x;
+    s32 one;
 
-    temp_t6 = -0x58;
-    temp_t7 = 0x18;
-    arg0->baseY = temp_t6;
-    temp_t8 = arg0->baseY;
-    temp_t9 = arg0->baseY;
-    arg0->itemSpacing = temp_t7;
-    temp_t0 = temp_t7;
-    temp_t3 = temp_t7;
-    temp_t7 = temp_t7;
-    arg0->y[0] = temp_t8;
-    temp_t2 = arg0->baseY;
-    temp_t6 = arg0->baseY;
-    temp_t8 = temp_t7 << 2;
-    temp_v1 = -0x104;
-    temp_t0 = temp_t9 + temp_t0;
-    temp_t8 -= temp_t7;
-    temp_t4 = temp_t3 << 1;
-    temp_t3 = 1;
-    temp_t5 = temp_t2 + temp_t4;
-    temp_t9 = temp_t6 + temp_t8;
-    arg0->y[3] = temp_t9;
-    arg0->y[2] = temp_t5;
-    arg0->y[1] = temp_t0;
-    arg0->x[1] = temp_v1;
-    arg0->x[2] = temp_v1;
-    arg0->x[3] = temp_v1;
-    arg0->x[0] = temp_v1;
-    arg0->timer = 0;
-    arg0->itemCount = temp_t3;
-    arg0->state = 0;
+    actor->baseY = -0x58;
+    actor->itemSpacing = 0x18;
+    base0 = actor->baseY;
+    base1 = actor->baseY;
+    spacing0 = actor->itemSpacing;
+    spacing1 = actor->itemSpacing;
+    spacing2 = actor->itemSpacing;
+    actor->y[0] = base0;
+    base2 = actor->baseY;
+    base3 = actor->baseY;
+    x = -0x104;
+    one = 1;
+    actor->y[3] = base3 + ((spacing2 << 2) - spacing2);
+    actor->y[2] = base2 + (spacing1 << 1);
+    actor->y[1] = base1 + spacing0;
+    actor->x[1] = x;
+    actor->x[2] = x;
+    actor->x[3] = x;
+    actor->x[0] = x;
+    actor->timer = 0;
+    actor->itemCount = one;
+    actor->state = 0;
     setCallbackTaskCallback(arg0, updateCharacterSelectLimitedCourseList);
 }
 #endif
