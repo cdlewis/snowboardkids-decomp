@@ -7,6 +7,13 @@
 #include "main_menu_scene_model_renderer.h"
 #include "relocatable_heap.h"
 
+#define ENDING_GFX_CMD(pkt, cmd0, cmd1) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = (cmd0); \
+    _g->words.w1 = (cmd1); \
+}
+
 struct EndingCreditsTommy {
     /* 0x00 */ char pad0[0x18];
     /* 0x18 */ s32 posX;
@@ -25,6 +32,16 @@ typedef struct {
     /* 0x18 */ s32 y;
     /* 0x1C */ s32 z;
 } GfxCommandSource;
+
+typedef struct {
+    /* 0x00 */ MainMenuSceneModel *model;
+    /* 0x04 */ void *palette;
+    /* 0x08 */ void *image;
+    /* 0x0C */ Vec3i transformed;
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ s32 pad90;
+    /* 0x28 */ GfxCommandSource transform;
+} EndingShadowStack;
 
 extern void getAssetTableImageAndPalette(s32 arg0, s32 arg1, void **arg2, void **arg3);
 extern Mtx *allocFixedTransformMatrix(GfxCommandSource *arg0);
@@ -388,112 +405,46 @@ void initEndingCreditsTommy(EndingCreditsTommy *arg0) {
     setCallbackTaskCallback(arg0, waitEndingTommyPhase01);
 }
 
-// drawEndingActorShadow best match: 74.234% at nonmatchings/drawEndingActorShadow-4061930211835852828/base_4.c.
+// drawEndingActorShadow best match: 86.405% at nonmatchings/drawEndingActorShadow-8331816093655448999/base_10.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_tommy/drawEndingActorShadow.s")
 
 #ifdef NON_MATCHING
 void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
-    void *spB0;
-    s32 spAC;
-    s32 spA8;
-    GfxCommandSource sp94;
-    Vec3i sp84;
-    Vec3i sp78;
-    void *sp74;
-    void *sp70;
-    MainMenuSceneModel *sp6C;
+    EndingShadowStack stack;
     MainMenuSceneModel *model;
-    Gfx *gfx;
-    volatile u8 pad[0x38];
 
-    model = getMainMenuSceneModel(arg0->actorId);
-    sp84.x = arg0->posX;
-    sp84.y = arg0->posY;
-    sp84.z = arg0->posZ;
-    transformVec3iByFixedMatrix(model->displayObjects[arg0->unkC].pad0, &sp84, &sp78);
-    sp6C = model;
-    sp94 = gIdentityFixedTransform;
-    spA8 = sp6C->displayObjects[arg0->unkC].screenX + sp78.x;
-    spAC = sp6C->displayObjects[arg0->unkC].screenY + sp78.y;
-    spB0 = (void *)sp6C->displayObjects[arg0->unkC].screenZ;
+    model = getMainMenuSceneModel((u8)arg0->actorId);
+    stack.pos.x = arg0->posX;
+    stack.pos.y = arg0->posY;
+    stack.pos.z = arg0->posZ;
+    stack.model = model;
+    transformVec3iByFixedMatrix(model->displayObjects[(u8)arg0->unkC].pad0, &stack.pos, &stack.transformed);
+    stack.transform = gIdentityFixedTransform;
+    stack.transform.x = stack.model->displayObjects[(u8)arg0->unkC].screenX + stack.transformed.x;
+    stack.transform.y = stack.model->displayObjects[(u8)arg0->unkC].screenY + stack.transformed.y;
+    stack.transform.z = stack.model->displayObjects[(u8)arg0->unkC].screenZ;
 
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w0 = 0x06000000;
-    gfx->words.w1 = (u32)gAlphaSpriteRenderModeDl;
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
 
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x31, &sp74, &sp70);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x31, &stack.image,
+                                 &stack.palette);
 
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w0 = 0xFD100000;
-    gfx->words.w1 = (u32)sp70;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w1 = 0;
-    gfx->words.w0 = 0xE8000000;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w1 = 0x07000000;
-    gfx->words.w0 = 0xF5000100;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w1 = 0;
-    gfx->words.w0 = 0xE6000000;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w0 = 0xF0000000;
-    gfx->words.w1 = 0x0703C000;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w1 = 0;
-    gfx->words.w0 = 0xE7000000;
-
-    sp94.x = spA8;
-    sp94.y = spAC;
-    sp94.z = (s32)spB0;
-
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w0 = 0x01020040;
-    gfx->words.w1 = (u32)allocFixedTransformMatrix(&sp94);
-
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w0 = 0xFD500000;
-    gfx->words.w1 = (u32)sp74;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w0 = 0xF5500000;
-    gfx->words.w1 = 0x07080200;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w1 = 0;
-    gfx->words.w0 = 0xE6000000;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w0 = 0xF3000000;
-    gfx->words.w1 = 0x0703F800;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w1 = 0;
-    gfx->words.w0 = 0xE7000000;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w1 = 0x80200;
-    gfx->words.w0 = 0xF5400200;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w0 = 0xF2000000;
-    gfx->words.w1 = 0x3C03C;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w1 = (u32)D_800B8100;
-    gfx->words.w0 = 0x0400103F;
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w1 = 0x60200;
-    gfx->words.w0 = 0xB1060402;
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)stack.palette);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)allocFixedTransformMatrix(&stack.transform));
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)stack.image);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x0703F800);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xF5400200, 0x80200);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x3C03C);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)D_800B8100);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
 }
 #endif
 
