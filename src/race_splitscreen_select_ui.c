@@ -996,7 +996,7 @@ void initRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectEntryFee);
 }
 
-// drawMenuPanelBackdrop best match: 95.638% at nonmatchings/drawMenuPanelBackdrop-5752545231564691495/base_8.c.
+// drawMenuPanelBackdrop best match: 98.594% at nonmatchings/drawMenuPanelBackdrop-8331816093655448999/base_8.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_splitscreen_select_ui/drawMenuPanelBackdrop.s")
 
 #ifdef NON_MATCHING
@@ -1005,7 +1005,8 @@ void drawMenuPanelBackdrop(s32 x, s32 y, s32 width, s32 height) {
     Gfx *volatile unused1;
     Gfx *volatile unused2;
     Gfx *volatile unused3;
-    Gfx *volatile unused4;
+    register s32 widthU;
+    register s32 heightU;
     s32 ulx;
     s32 uly;
 
@@ -1018,12 +1019,14 @@ void drawMenuPanelBackdrop(s32 x, s32 y, s32 width, s32 height) {
                           G_TX_NOLOD, G_TX_NOLOD);
     gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, 0x64);
 
+    widthU = (u16)width;
+    heightU = (u16)height;
     ulx = ((s16)x + gMenuViewportCenterX) << 2;
     uly = ((s16)y + gMenuViewportCenterY) << 2;
 
-    gSPTextureRectangle(gRegionAllocPtr++, ulx, uly, ulx + (((u16)width * 0x40) / 0x1000),
-                        uly + (((u16)height * 0x20) / 0x1000), G_TX_RENDERTILE, 0, 0,
-                        0x400000 / (s32)(u16)width, 0x400000 / (s32)(u16)height);
+    gSPTextureRectangle(gRegionAllocPtr++, ulx, uly, ulx + (((widthU << 4) << 2) / 0x1000),
+                        uly + (((heightU << 3) << 2) / 0x1000), G_TX_RENDERTILE, 0, 0,
+                        0x400000 / widthU, 0x400000 / heightU);
     gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
 }
 #endif
