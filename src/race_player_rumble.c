@@ -1,4 +1,4 @@
-#include "race_rumble.h"
+#include "race_player_rumble.h"
 #include "controller_main_menu_flow.h"
 
 #define RUMBLE_PATTERN_WRAP_MASK 0xF

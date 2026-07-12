@@ -3,7 +3,7 @@
 #include "callback_task_scheduler.h"
 #include "menu_renderer.h"
 #include "course_select_ui.h"
-#include "shop_menu_ui.h"
+#include "course_select_shop_ui.h"
 #include "fixed_point_math.h"
 #include "race_player_model_renderer.h"
 

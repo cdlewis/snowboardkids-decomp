@@ -3,7 +3,7 @@
 #include "callback_task_scheduler.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "menu_renderer.h"
-#include "title_menu.h"
+#include "race_setup_ui.h"
 
 #define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x3E])
 #define TITLE_MENU_FRAME_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x42])
@@ -638,7 +638,7 @@ void initRaceSetupPlayerCountCursor(FadeItemActor *arg0) {
 }
 
 // drawRaceSetupSavePlayerPanels best match: 97.244% (nonmatchings/drawRaceSetupSavePlayerPanels-6276316234415602851/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/drawRaceSetupSavePlayerPanels.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_ui/drawRaceSetupSavePlayerPanels.s")
 
 #ifdef NON_MATCHING
 void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *arg0) {
@@ -681,7 +681,7 @@ void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *arg0) {
 #endif
 
 // updateRaceSetupSavePanelFrame best match: 99.888% (nonmatchings/updateRaceSetupSavePanelFrame-8662636370764828261/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/updateRaceSetupSavePanelFrame.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_ui/updateRaceSetupSavePanelFrame.s")
 
 #ifdef NON_MATCHING
 void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
@@ -816,7 +816,7 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
 }
 
 // drawRaceSetupSavePanelIcons best match: 90.000% (nonmatchings/drawRaceSetupSavePanelIcons-180949888360117632/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/drawRaceSetupSavePanelIcons.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_ui/drawRaceSetupSavePanelIcons.s")
 
 #ifdef NON_MATCHING
 void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
@@ -990,7 +990,7 @@ void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
 }
 
 // updateRaceSetupSaveStatusWidgets best match: 90.557% (nonmatchings/updateRaceSetupSaveStatusWidgets-6688367443449623229/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/updateRaceSetupSaveStatusWidgets.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_ui/updateRaceSetupSaveStatusWidgets.s")
 
 #ifdef NON_MATCHING
 void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
@@ -1087,7 +1087,7 @@ void initRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
 }
 
 // drawRaceSetupSaveChoicePrompts best match: 99.233% (nonmatchings/drawRaceSetupSaveChoicePrompts-6061209858023118177/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/drawRaceSetupSaveChoicePrompts.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_ui/drawRaceSetupSaveChoicePrompts.s")
 
 #ifdef NON_MATCHING
 void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
@@ -1150,7 +1150,7 @@ void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
 #endif
 
 // updateRaceSetupSaveChoicePrompts best match: 97.350% (nonmatchings/updateRaceSetupSaveChoicePrompts-6061209858023118177/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/title_menu/updateRaceSetupSaveChoicePrompts.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_setup_ui/updateRaceSetupSaveChoicePrompts.s")
 
 #ifdef NON_MATCHING
 void updateRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {

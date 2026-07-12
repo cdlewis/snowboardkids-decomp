@@ -2,7 +2,7 @@
 #include "sound_manager.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
-#include "race_scene_loader.h"
+#include "race_scene_setup.h"
 #include "race_player_input.h"
 #include "game_task_scheduler.h"
 #include "training_course_ui.h"
@@ -11,7 +11,7 @@
 #include "race_camera.h"
 #include "main_menu_race_flow.h"
 #include "race_player_update.h"
-#include "race_timer_ui.h"
+#include "race_hud.h"
 #include "viewport_manager.h"
 
 #define MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES 0x10

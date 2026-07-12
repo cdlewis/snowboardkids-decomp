@@ -1,5 +1,5 @@
-#ifndef SHOP_MENU_UI_H
-#define SHOP_MENU_UI_H
+#ifndef COURSE_SELECT_SHOP_UI_H
+#define COURSE_SELECT_SHOP_UI_H
 
 #include "common.h"
 

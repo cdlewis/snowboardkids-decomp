@@ -1,9 +1,9 @@
 #include "common.h"
 #include "relocatable_heap.h"
 #include "asset_manager.h"
-#include "race_scene_loader.h"
+#include "race_scene_setup.h"
 #include "callback_task_scheduler.h"
-#include "system_boot.h"
+#include "system_runtime.h"
 #include "race_motion.h"
 #include "race_course_effects.h"
 #include "race_intro_effects.h"
@@ -215,7 +215,7 @@ void loadRaceCourseAssets(void) {
     loadCompressedRomAsset(D_5DAF30, D_5DB9D0, 0x2A);
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/race_scene_loader/loadRaceCourseAssets.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_scene_setup/loadRaceCourseAssets.s")
 #endif
 
 // loadRaceCharacterAssets best match: 98.654% at nonmatchings/loadRaceCharacterAssets-5635509610426229442/base_6.c.
@@ -251,7 +251,7 @@ void loadRaceCharacterAssets(void) {
     loadCompressedRomAsset(D_243270, D_245A80, 0x1E);
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/race_scene_loader/loadRaceCharacterAssets.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/race_scene_setup/loadRaceCharacterAssets.s")
 #endif
 
 void initRaceCourseSceneTasks(void) {

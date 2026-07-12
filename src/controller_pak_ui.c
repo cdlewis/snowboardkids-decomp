@@ -5,7 +5,7 @@
 #include "controller_pak_menu.h"
 #include "controller_pak_ui.h"
 #include "menu_renderer.h"
-#include "title_menu.h"
+#include "race_setup_ui.h"
 
 #define CONTROLLER_PAK_DELETE_PANEL_HANDLE (gAssetHandles[0x29])
 

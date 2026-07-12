@@ -1,6 +1,6 @@
 #include "common.h"
 #include "sound_manager.h"
-#include "system_boot.h"
+#include "system_runtime.h"
 #include "game_task_scheduler.h"
 #include "controller_main_menu_flow.h"
 #include "relocatable_heap.h"
@@ -365,7 +365,7 @@ loop_17:
     goto loop_16;
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/system_boot/gameThreadMain.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/system_runtime/gameThreadMain.s")
 #endif
 
 void dmaReadRom(u32 devAddr, void *dramAddr, s32 size) {
@@ -389,7 +389,7 @@ void dmaReadRom(u32 devAddr, void *dramAddr, s32 size) {
 }
 
 // appendViewportDisplayLists best match: 11.115% (nonmatchings/appendViewportDisplayLists-8207005055717715604/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/system_boot/appendViewportDisplayLists.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/system_runtime/appendViewportDisplayLists.s")
 
 void resetRenderCallbackQueues(void) {
     u32 end;
@@ -486,7 +486,7 @@ Gfx *appendFadeOverlayDisplayList(void) {
     return ret;
 }
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/system_boot/appendFadeOverlayDisplayList.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/system_runtime/appendFadeOverlayDisplayList.s")
 #endif
 
 // submitFramebufferRenderTask best match: 80.089% at nonmatchings/submitFramebufferRenderTask-8207005055717715604/base_5.c.
@@ -659,5 +659,5 @@ void submitFramebufferRenderTask(u8 arg0) {
 }
 
 #else
-#pragma GLOBAL_ASM("asm/nonmatchings/system_boot/submitFramebufferRenderTask.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/system_runtime/submitFramebufferRenderTask.s")
 #endif

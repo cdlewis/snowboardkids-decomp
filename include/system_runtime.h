@@ -1,5 +1,5 @@
-#ifndef SYSTEM_BOOT_H
-#define SYSTEM_BOOT_H
+#ifndef SYSTEM_RUNTIME_H
+#define SYSTEM_RUNTIME_H
 
 #include "common.h"
 

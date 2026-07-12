@@ -1,6 +1,6 @@
 #include "common.h"
 #include "game_task_scheduler.h"
-#include "system_boot.h"
+#include "system_runtime.h"
 
 #define GAME_TASK_CALLBACK_COUNT 3
 #define GAME_TASK_COUNT 8

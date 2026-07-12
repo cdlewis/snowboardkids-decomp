@@ -9,8 +9,8 @@
 #include "race_camera.h"
 #include "race_start_transition.h"
 #include "sound_manager.h"
-#include "system_boot.h"
-#include "title_menu.h"
+#include "system_runtime.h"
+#include "race_setup_ui.h"
 #include "viewport_manager.h"
 
 extern void releaseMenuAssetHandles(void);

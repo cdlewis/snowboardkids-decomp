@@ -1,10 +1,10 @@
 #include "common.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
-#include "title_screen_ui.h"
+#include "main_menu_title_ui.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "menu_renderer.h"
-#include "title_menu.h"
+#include "race_setup_ui.h"
 
 #define TITLE_SCREEN_LOGO_SPRITE_HANDLE gMenuUiSpritesAssetHandle
 #define TITLE_SCREEN_TEXTURE_HANDLE (gAssetHandles.titleTextureHandle)
