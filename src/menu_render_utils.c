@@ -646,13 +646,14 @@ void drawAssetTableSpriteWithDefaultPalette(s16 arg0, s16 arg1, u8 *arg2, u16 ar
 }
 #endif
 
-// drawMenuFillRectangle best match: 89.835% (nonmatchings/drawMenuFillRectangle-8207005055717715604/base_7.c)
+// drawMenuFillRectangle best match: 90.158% (nonmatchings/drawMenuFillRectangle-3357475854818838508/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawMenuFillRectangle.s")
 
 #ifdef NON_MATCHING
 extern Gfx gMenuRenderModeResetDl[];
 
 void drawMenuFillRectangle(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green, u8 blue) {
+    volatile char pad[0x18];
     s32 rightClip;
     s32 bottomClip;
     s32 leftClip;
