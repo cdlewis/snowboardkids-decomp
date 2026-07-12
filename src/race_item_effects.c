@@ -969,7 +969,7 @@ void spawnRaceUiSparkle(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     }
 }
 
-// renderRaceItemTextureEffects best match: 96.026% (nonmatchings/renderRaceItemTextureEffects-6061209858023118177/base_5.c)
+// renderRaceItemTextureEffects best match: 97.183% (nonmatchings/renderRaceItemTextureEffects-5802343343535905907/base_4.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/renderRaceItemTextureEffects.s")
 
@@ -978,7 +978,7 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
     volatile u8 pad[0xC];
     RaceItemGfxCommandSource sp94;
     volatile u8 pad2[0x10];
-    s32 i;
+    s32 textureOffset;
     RaceItemDrawNode **head;
     RaceItemDrawNode *node;
     Gfx *gfx;
@@ -1002,14 +1002,23 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
     gfx->words.w0 = 0x06000000;
 
     head = gRaceItemTextureEffectDrawLists.heads;
-    i = 0;
+    textureOffset = 0;
     do {
         node = *head;
         if (node != NULL) {
-            gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->images[i], G_IM_FMT_CI, 16, 16, 0,
-                                   G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 0, 0,
-                                   G_TX_NOLOD, G_TX_NOLOD);
-            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palettes[i]);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD500000, *(u32 *)((u8 *)arg0 + textureOffset + 0x18));
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x0703F800);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5400200, 0x80200);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x3C03C);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD100000, *(u32 *)((u8 *)arg0 + textureOffset + 0x28));
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
         }
         if (node != NULL) {
             do {
@@ -1042,7 +1051,7 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
             } while (node != NULL);
         }
         head++;
-        i++;
+        textureOffset += 4;
     } while (head != D_801121E0.heads);
 
     gfx = gRegionAllocPtr++;
