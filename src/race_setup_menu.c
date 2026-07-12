@@ -30,7 +30,7 @@ extern u8 gConnectedControllerCount;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern u8 gRaceRumbleEnabled;
-extern s8 gRumblePakConnectedByController;
+extern u8 gRumblePakConnectedByController[];
 extern s8 D_800EC8B5;
 extern s8 D_800EC8B6;
 extern s8 D_800EC8B7;
@@ -104,7 +104,7 @@ void initRaceSetupMenu(void) {
     gRaceSetupMenuSubState.unk1 = 0;
     gRaceSetupMenuSubState.unk2 = 0;
     gRaceSetupMenuSubState.unk4 = 0;
-    gRumblePakConnectedByController = 0;
+    gRumblePakConnectedByController[0] = 0;
     gRaceSetupSaveStatusSelections = 0;
     gRaceSetupSaveStatusTransitionStates = 0;
     gRaceSetupSaveStatusNextSelections = 0;
@@ -328,7 +328,7 @@ extern CallbackTask *D_8010ADE8;
 extern RaceSetupPlayerState03798 D_80121D80[];
 
 #define gRaceSetupSaveSubState (*(RaceSetupSubState03798 *)&gRaceSetupMenuSubState)
-#define gRumblePakConnectedByControllerArray_03798 (&gRumblePakConnectedByController)
+#define gRumblePakConnectedByControllerArray_03798 gRumblePakConnectedByController
 #define gPlayerInputPressedArray_03798 (&gPlayerInputPressed)
 
 void updateRaceSetupSaveMenu(void) {
@@ -644,7 +644,7 @@ void updateRaceSetupSaveMenu(void) {
 void raceSetupMenuNoop(void) {
 }
 
-// updateRaceSetupRumblePrompt best match: 87.420% (nonmatchings/updateRaceSetupRumblePrompt-3236181511606361864/base_1.c)
+// updateRaceSetupRumblePrompt best match: 92.414% (nonmatchings/updateRaceSetupRumblePrompt-5802343343535905907/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/updateRaceSetupRumblePrompt.s")
 
 #ifdef NON_MATCHING
@@ -659,8 +659,13 @@ typedef struct {
 } ControllerPakRumbleCheckPromptTransition;
 
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
+extern u8 gControllerPakRumbleCheckPromptState;
+extern u16 D_8010ADD4;
+extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
+extern void enqueueSoundEffect(s16 arg0, s32 arg1);
 extern void requestRumbleMotorInit(u16 arg0);
 extern void initCharacterSelectMenu(void);
+extern s32 gRumbleMotorStatuses[];
 
 void updateRaceSetupRumblePrompt(void) {
     s32 connectedCount;
@@ -672,8 +677,8 @@ void updateRaceSetupRumblePrompt(void) {
         case 1:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                gControllerPakRumbleCheckPromptTransition.state = 2;
-                gControllerPakRumbleCheckPromptTransition.targetScale = 1;
+                gControllerPakRumbleCheckPromptState = 2;
+                D_8010ADD4 = 1;
                 state = 2;
             }
             break;
@@ -683,11 +688,11 @@ void updateRaceSetupRumblePrompt(void) {
             if ((s32)gPlayerCount > 0) {
                 do {
                     requestRumbleMotorInit(i);
-                    if (((&gRumbleMotorStatuses)[i] != 1) && ((&gRumbleMotorStatuses)[i] != 0xB) && ((&gRumbleMotorStatuses)[i] != 4)) {
-                        (&gRumblePakConnectedByController)[i] = 1;
+                    if ((gRumbleMotorStatuses[i] != 1) && (gRumbleMotorStatuses[i] != 0xB) && (gRumbleMotorStatuses[i] != 4)) {
+                        gRumblePakConnectedByController[i] = 1;
                         gRumblePakConnectedMask |= 1 << i;
                     } else {
-                        (&gRumblePakConnectedByController)[i] = 0;
+                        gRumblePakConnectedByController[i] = 0;
                     }
                     i++;
                 } while (i < (s32)gPlayerCount);
@@ -699,7 +704,7 @@ void updateRaceSetupRumblePrompt(void) {
         case 3:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                gControllerPakRumbleCheckPromptTransition.state = 4;
+                gControllerPakRumbleCheckPromptState = 4;
                 state = 4;
             }
             break;
@@ -710,12 +715,12 @@ void updateRaceSetupRumblePrompt(void) {
             if ((s32)gPlayerCount > 0) {
                 do {
                     requestRumbleMotorInit(i);
-                    if (((&gRumbleMotorStatuses)[i] != 1) && ((&gRumbleMotorStatuses)[i] != 0xB) && ((&gRumbleMotorStatuses)[i] != 4)) {
+                    if ((gRumbleMotorStatuses[i] != 1) && (gRumbleMotorStatuses[i] != 0xB) && (gRumbleMotorStatuses[i] != 4)) {
                         gRumblePakConnectedMask |= 1 << i;
-                        (&gRumblePakConnectedByController)[i] = 1;
+                        gRumblePakConnectedByController[i] = 1;
                         connectedCount++;
                     } else {
-                        (&gRumblePakConnectedByController)[i] = 0;
+                        gRumblePakConnectedByController[i] = 0;
                     }
                     i++;
                 } while (i < (s32)gPlayerCount);
@@ -741,9 +746,9 @@ void updateRaceSetupRumblePrompt(void) {
         case 8:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                gControllerPakRumbleCheckPromptTransition.state = 9;
-                gControllerPakRumbleCheckPromptTransition.targetScale = 3;
-                gControllerPakRumbleCheckPromptTransition.confirmSelection = 1;
+                gControllerPakRumbleCheckPromptState = 9;
+                D_8010ADD4 = 3;
+                gControllerPakRumbleCheckPromptConfirmSelection = 1;
                 state = 9;
             }
             break;
@@ -759,29 +764,29 @@ void updateRaceSetupRumblePrompt(void) {
             }
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
-                if (gControllerPakRumbleCheckPromptTransition.confirmSelection == 1) {
-                    gControllerPakRumbleCheckPromptTransition.state = 1;
-                    gControllerPakRumbleCheckPromptTransition.targetScale = 0;
+                if (gControllerPakRumbleCheckPromptConfirmSelection == 1) {
+                    gControllerPakRumbleCheckPromptState = 1;
+                    D_8010ADD4 = 0;
                 } else {
                     connectedCount = 0;
                     i = 0;
                     if ((s32)gPlayerCount > 0) {
                         do {
-                            if ((&gRumblePakConnectedByController)[i] == 1) {
+                            if (gRumblePakConnectedByController[i] == 1) {
                                 connectedCount++;
                             }
                             i++;
                         } while (i < (s32)gPlayerCount);
                     }
                     if (connectedCount > 0) {
-                        gControllerPakRumbleCheckPromptTransition.state = 3;
-                        gControllerPakRumbleCheckPromptTransition.targetScale = 2;
+                        gControllerPakRumbleCheckPromptState = 3;
+                        D_8010ADD4 = 2;
                     } else {
-                        gControllerPakRumbleCheckPromptTransition.state = 4;
+                        gControllerPakRumbleCheckPromptState = 4;
                     }
                 }
             }
-            state = gControllerPakRumbleCheckPromptTransition.state;
+            state = gControllerPakRumbleCheckPromptState;
             break;
     }
     if (state == 5) {
