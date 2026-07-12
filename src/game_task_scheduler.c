@@ -120,7 +120,7 @@ void initGameTaskScheduler(void) {
     resetRenderCallbackQueues();
 }
 
-// updateGameTaskScheduler best match: 92.403% (nonmatchings/updateGameTaskScheduler-7273315160691878794/base_11.c)
+// updateGameTaskScheduler best match: 92.786% (nonmatchings/updateGameTaskScheduler-5802343343535905907/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/game_task_scheduler/updateGameTaskScheduler.s")
 
 #ifdef NON_MATCHING
@@ -133,6 +133,7 @@ void updateGameTaskScheduler(void) {
     s32 *newInput;
     u8 *repeatTimer;
     s32 *repeatInput;
+    s8 *responseCurve;
     GameTask *task;
     GameTask *nextTask;
     GameTaskCallback callback;
@@ -148,14 +149,15 @@ void updateGameTaskScheduler(void) {
     resetRenderCallbackQueues();
     clearPendingPositionalSoundRequests();
 
-    previousInput = &gPlayerInputPrevious;
-    input = &gPlayerInputHeld;
-    controller = &gControllerInputState;
-    stickXOut = &gPlayerStickX;
-    stickYOut = &gPlayerStickY;
-    newInput = &gPlayerInputPressed;
-    repeatTimer = &gPlayerInputRepeatTimer;
+    responseCurve = &gAnalogStickResponseCurve;
     repeatInput = &gPlayerInputRepeat;
+    repeatTimer = &gPlayerInputRepeatTimer;
+    newInput = &gPlayerInputPressed;
+    stickYOut = &gPlayerStickY;
+    stickXOut = &gPlayerStickX;
+    controller = &gControllerInputState;
+    input = &gPlayerInputHeld;
+    previousInput = &gPlayerInputPrevious;
 
     do {
         stickXTooHigh = controller->stickX >= 0x2E;
@@ -185,15 +187,15 @@ void updateGameTaskScheduler(void) {
         stickX = controller->stickX;
         controller++;
         if (stickX >= 0) {
-            *stickXOut = *(&gAnalogStickResponseCurve + stickX);
+            *stickXOut = responseCurve[stickX];
         } else {
-            *stickXOut = -*(&gAnalogStickResponseCurve - stickX);
+            *stickXOut = -responseCurve[-stickX];
         }
 
         if (stickY >= 0) {
-            *stickYOut = *(&gAnalogStickResponseCurve + stickY);
+            *stickYOut = responseCurve[stickY];
         } else {
-            *stickYOut = -*(&gAnalogStickResponseCurve - stickY);
+            *stickYOut = -responseCurve[-stickY];
         }
 
         stickX = *stickXOut;
