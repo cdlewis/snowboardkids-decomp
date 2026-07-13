@@ -106,17 +106,13 @@ loop_outer:
                   getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x12, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
-// updateControllerPakContinuePrompt best match: 92.821%
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/updateControllerPakContinuePrompt.s")
-
-#ifdef NON_MATCHING
 void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     s32 temp_v0;
     s32 state;
     ControllerPakOptionsActor *temp_a2 = arg0;
 
-    temp_v0 = gControllerPakContinuePromptTransition.state;
     state = arg0->blinkState;
+    temp_v0 = gControllerPakContinuePromptTransition.state;
     if (state != temp_v0) {
         arg0->blinkState = temp_v0;
         state = temp_v0 & 0xFF;
@@ -124,7 +120,7 @@ void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     }
 
     temp_v0 = state;
-    switch (temp_v0) {
+    switch (temp_v0 ^ 0) {
         case 1:
             temp_a2->selectedOption = gCurrentGameTask->timer;
             if (temp_a2->timer < 0x10) {
@@ -146,7 +142,6 @@ void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, drawControllerPakContinuePrompt, (s32)temp_a2);
 }
-#endif
 
 void initControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     arg0->common.x = -0x70;
