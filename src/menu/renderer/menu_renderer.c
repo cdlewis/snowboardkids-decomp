@@ -13,6 +13,7 @@
 
 #define MENU_GLYPH_SCRIPT_NEWLINE 0xFFFD
 #define MENU_GLYPH_SCRIPT_SPACE 0xFFFE
+#define MENU_GLYPH_SCRIPT_COLOR 0xFFFC
 #define MENU_GLYPH_SCRIPT_END 0xFFFF
 #define MENU_GLYPH_WIDE_ADVANCE 0x10
 #define MENU_GLYPH_NARROW_ADVANCE 8
@@ -1505,49 +1506,50 @@ void drawMenuColoredGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuGlyphScript.s")
 
 #ifdef NON_MATCHING
-void drawMenuGlyphScript(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, volatile u16 colorMode) {
-    u16 first;
-    s32 code;
-    u16 *ptr;
-    s32 xPos;
-    s32 yPos;
-    s32 skip;
+void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, volatile u16 colorMode) {
+    u16 firstGlyph;
+    s32 glyphCode;
+    MenuGlyphScript *scriptCursor;
+    s32 drawX;
+    s32 drawY;
+    s32 spaceGlyph;
     register s32 advance;
-    u16 xStep;
+    u16 glyphAdvance;
     u16 scaleValue;
     u16 colorModeValue;
 
-    xPos = x;
-    yPos = y;
+    drawX = x;
+    drawY = y;
     if (((u8 *)&palette)[3] == 0) {
-        xStep = 0x10;
+        glyphAdvance = MENU_GLYPH_WIDE_ADVANCE;
     } else {
-        xStep = 8;
+        glyphAdvance = MENU_GLYPH_NARROW_ADVANCE;
     }
 
-    first = *script ^ 0;
-    if (0xFFFF != first) {
-        ptr = script;
+    firstGlyph = *script ^ 0;
+    if (MENU_GLYPH_SCRIPT_END != firstGlyph) {
+        scriptCursor = script;
         scaleValue = scale;
-        code = first;
+        glyphCode = firstGlyph;
         colorModeValue = colorMode;
         do {
-            skip = 0xFFFE;
-            if (0xFFFD == (code & 0xFFFF)) {
-                xPos = x;
-                yPos += 0x10;
-            } else if (skip == (code & 0xFFFF)) {
-                xPos += xStep;
-            } else if ((code & 0xFFFF) == 0xFFFC) {
-                colorModeValue = ptr[1];
-                ptr++;
+            spaceGlyph = MENU_GLYPH_SCRIPT_SPACE;
+            if (MENU_GLYPH_SCRIPT_NEWLINE == (glyphCode & 0xFFFF)) {
+                drawX = x;
+                drawY += MENU_GLYPH_LINE_HEIGHT;
+            } else if (spaceGlyph == (glyphCode & 0xFFFF)) {
+                drawX += glyphAdvance;
+            } else if ((glyphCode & 0xFFFF) == MENU_GLYPH_SCRIPT_COLOR) {
+                colorModeValue = scriptCursor[1];
+                scriptCursor++;
             } else {
-                drawMenuColoredGlyph(xPos, yPos, code & 0xFFFF, ((u8 *)&palette)[3], scaleValue, colorModeValue, 0x22);
-                xPos += (advance = xStep);
+                drawMenuColoredGlyph(drawX, drawY, glyphCode & 0xFFFF, ((u8 *)&palette)[3], scaleValue, colorModeValue,
+                                     MENU_GLYPH_DEFAULT_FONT_BANK);
+                drawX += (advance = glyphAdvance);
             }
-            code = ptr[1];
-            ptr++;
-        } while (0xFFFF != (code & 0xFFFF));
+            glyphCode = scriptCursor[1];
+            scriptCursor++;
+        } while (MENU_GLYPH_SCRIPT_END != (glyphCode & 0xFFFF));
         colorMode = colorModeValue;
     }
 }
