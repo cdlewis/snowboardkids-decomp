@@ -17,6 +17,11 @@
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
+#define RACE_UI_SNOWBOARD_TRAIL_SCALE_X 0xF0000
+#define RACE_UI_SNOWBOARD_TRAIL_SCALE_Y 0x230000
+#define RACE_UI_SNOWBOARD_TRAIL_SCALE_Z 0
+#define RACE_UI_SNOWBOARD_TRAIL_TIMER 0xF
+#define RACE_UI_SNOWBOARD_TRAIL_INITIAL_VELOCITY_Y 0x20000
 #define SCALE_MATRIX_COMPONENT(value, scale) ((value * scale) / 0x1000)
 #define RACE_UI_SP_TRIANGLE_WORD(v0, v1, v2) (_SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
 #define RACE_UI_SP_QUADRANGLE_WORD0(v0, v1, v2, v3, flag) \
@@ -296,18 +301,18 @@ typedef struct RaceUiSnowboardTrailPlayer {
 
 typedef struct RaceUiSnowboardTrailActor {
     /* 0x00 */ u8 pad0[0x24];
-    /* 0x24 */ Vec3i sourcePos;
+    /* 0x24 */ Vec3i scale;
     /* 0x30 */ Vec3i worldPos;
     /* 0x3C */ s32 velocityY;
-    /* 0x40 */ RaceUiTrailCopyBlock copyBlock;
-    /* 0x60 */ RaceUiTrailCopyBlock transformedCopyBlock;
+    /* 0x40 */ RaceUiTrailCopyBlock frontTransform;
+    /* 0x60 */ RaceUiTrailCopyBlock backTransform;
     /* 0x80 */ s16 playerIndex;
     /* 0x82 */ u8 pad82[2];
     /* 0x84 */ s16 spinYaw;
     /* 0x86 */ u8 pad86[2];
-    /* 0x88 */ RaceUiGfxCommandDest *matrix0;
-    /* 0x8C */ RaceUiGfxCommandDest *matrix1;
-    /* 0x90 */ s16 unk90;
+    /* 0x88 */ RaceUiGfxCommandDest *frontMatrix;
+    /* 0x8C */ RaceUiGfxCommandDest *backMatrix;
+    /* 0x90 */ s16 scaleStep;
     /* 0x92 */ s16 timer;
     /* 0x94 */ u8 matrixDirty;
 } RaceUiSnowboardTrailActor;
@@ -3480,17 +3485,17 @@ void renderRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        arg0->matrix0 = allocFixedTransformMatrix(&arg0->copyBlock);
-        arg0->matrix1 = allocFixedTransformMatrix(&arg0->transformedCopyBlock);
+        arg0->frontMatrix = allocFixedTransformMatrix(&arg0->frontTransform);
+        arg0->backMatrix = allocFixedTransformMatrix(&arg0->backTransform);
     }
 
-    if (arg0->matrix0 != NULL) {
+    if (arg0->frontMatrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->frontMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSnowboardTrailFrontDisplayList);
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->backMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSnowboardTrailBackDisplayList);
     }
 }
@@ -3507,15 +3512,15 @@ void updateRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
         actor->velocityY -= 0x8000;
     }
 
-    actor->copyBlock.transform.translation.x = actor->worldPos.x;
-    actor->copyBlock.transform.translation.y = actor->worldPos.y;
-    actor->copyBlock.transform.translation.z = actor->worldPos.z;
+    actor->frontTransform.transform.translation.x = actor->worldPos.x;
+    actor->frontTransform.transform.translation.y = actor->worldPos.y;
+    actor->frontTransform.transform.translation.z = actor->worldPos.z;
 
     makeFixedRotationX(sp30.rotation, actor->spinYaw);
-    sp30.translation.x = actor->sourcePos.x;
-    sp30.translation.y = actor->sourcePos.y;
-    sp30.translation.z = actor->sourcePos.z;
-    composeFixedTransforms(&sp30, &actor->copyBlock.transform, &actor->transformedCopyBlock.transform);
+    sp30.translation.x = actor->scale.x;
+    sp30.translation.y = actor->scale.y;
+    sp30.translation.z = actor->scale.z;
+    composeFixedTransforms(&sp30, &actor->frontTransform.transform, &actor->backTransform.transform);
 
     actor->timer--;
     if (actor->timer == 0) {
@@ -3528,15 +3533,15 @@ void updateRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
     }
 }
 
-void initRaceUiSnowboardTrailEffect(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x90) = 1;
-    *(s32 *)((u8 *)arg0 + 0x24) = 0xF0000;
-    *(s32 *)((u8 *)arg0 + 0x28) = 0x230000;
-    *(s32 *)((u8 *)arg0 + 0x2C) = 0;
-    *(s16 *)((u8 *)arg0 + 0x92) = 0xF;
-    *(s32 *)((u8 *)arg0 + 0x3C) = 0x20000;
-    updateRaceUiSnowboardTrailEffect(arg0);
-    setCallbackTaskCallback(arg0, updateRaceUiSnowboardTrailEffect);
+void initRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *actor) {
+    actor->scaleStep = 1;
+    actor->scale.x = RACE_UI_SNOWBOARD_TRAIL_SCALE_X;
+    actor->scale.y = RACE_UI_SNOWBOARD_TRAIL_SCALE_Y;
+    actor->scale.z = RACE_UI_SNOWBOARD_TRAIL_SCALE_Z;
+    actor->timer = RACE_UI_SNOWBOARD_TRAIL_TIMER;
+    actor->velocityY = RACE_UI_SNOWBOARD_TRAIL_INITIAL_VELOCITY_Y;
+    updateRaceUiSnowboardTrailEffect(actor);
+    setCallbackTaskCallback(actor, updateRaceUiSnowboardTrailEffect);
 }
 
 void spawnRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailPlayer *player) {
@@ -3545,7 +3550,7 @@ void spawnRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailPlayer *player) {
     if (actor != NULL) {
         actor->playerIndex = player->playerIndex;
         actor->worldPos = player->trail.worldPos;
-        actor->copyBlock = player->trail.copyBlock;
+        actor->frontTransform = player->trail.copyBlock;
         actor->spinYaw = player->trail.spinYaw;
     }
 }
