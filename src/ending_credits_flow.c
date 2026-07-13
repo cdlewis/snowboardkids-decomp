@@ -70,7 +70,7 @@ extern EndingCreditsFlowState *gCurrentGameTask;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initEndingCreditsFlow best match: 93.231% at nonmatchings/initEndingCreditsFlow-1197934324348345530/base_6.c.
+// initEndingCreditsFlow best match: 99.898% at nonmatchings/initEndingCreditsFlow-1384449139331208173/base_22.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_flow/initEndingCreditsFlow.s")
 
 #ifdef NON_MATCHING
@@ -87,33 +87,39 @@ void initEndingCreditsFlow(void) {
     configureViewportWithFovAndFarClip(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, gEndingCreditsViewportAspectRatio, 0x14, 0xAF0);
     gFramebufferSwapDelay = 0;
     gMenuCameraTargetOffset.x = 0;
-    gMenuCameraTargetOffset.y = 0xFFB60000;
-    gMenuCameraTargetOffset.z = 0;
-    gEndingCreditsUnusedValue = 0;
-    gEndingCreditsSequencePhase = 0;
-    gEndingCreditsHandshakeState = 0;
-    gEndingCreditsTransitionSnowboardIconAngle = 0;
-    gEndingCreditsTransitionSnowboardIconSpinStep = 0;
-    gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_SLASH] = 0;
-    gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_JAM] = 0;
-    gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_LINDA] = 0;
-    gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_TOMMY] = 0;
-    gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_NANCY] = 0;
-    loadCompressedRomAsset(D_608560, D_609AA0, 0x21);
-    loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
-    loadCompressedRomAsset(D_609AA0, D_60ECB0, 0x26);
-    loadCompressedRomAsset(D_60ECB0, D_60F1A0, 0x27);
-    temp_v0 = D_1502A0 - D_14B450;
-    sp34 = temp_v0;
-    gAssetHandles[0xC] = allocRelocatableHeapBlock(temp_v0);
-    dmaReadRom(D_14B450, getRelocatableHeapBlockBase(gAssetHandles[0xC]), sp34);
-    loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
-    loadMainMenuSceneModelAssets();
-    initCallbackTaskScheduler(0);
-    createCallbackTask(initEndingCreditsTransitionSnowboardIcon, 0, 0x64);
-    createCallbackTask(initEndingCreditsTransitionLogoWipe, 0, 0x64);
-    createCallbackTask(initEndingCreditsTransitionSnowflakeIcon, 0, 0x64);
-    gCurrentGameTask->fade = 0xFF;
+    if (1) {
+        gMenuCameraTargetOffset.y = 0xFFB60000;
+        gMenuCameraTargetOffset.z = 0;
+        gEndingCreditsUnusedValue = 0;
+        gEndingCreditsSequencePhase = 0;
+        temp_v0 = 0;
+        gEndingCreditsHandshakeState = 0;
+        gEndingCreditsTransitionSnowboardIconAngle = 0;
+        if (1) {
+            gEndingCreditsTransitionSnowboardIconSpinStep = 0;
+            gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_SLASH] = temp_v0;
+            temp_v0++;
+            gEndingCreditsCharacterAuraDoneFlags[temp_v0 + 1] = 0;
+            gEndingCreditsCharacterAuraDoneFlags[temp_v0 + 2] = 0;
+            gEndingCreditsCharacterAuraDoneFlags[temp_v0 + 3] = 0;
+            gEndingCreditsCharacterAuraDoneFlags[temp_v0] = 0;
+            loadCompressedRomAsset(D_608560, D_609AA0, 0x21);
+            loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
+            loadCompressedRomAsset(D_609AA0, D_60ECB0, 0x26);
+            loadCompressedRomAsset(D_60ECB0, D_60F1A0, 0x27);
+            temp_v0 = D_1502A0 - D_14B450;
+            sp34 = temp_v0;
+            gAssetHandles[0xC] = allocRelocatableHeapBlock((unsigned long) temp_v0);
+            dmaReadRom(D_14B450, getRelocatableHeapBlockBase(gAssetHandles[0xC]), sp34);
+            loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
+            loadMainMenuSceneModelAssets();
+            initCallbackTaskScheduler(0);
+            createCallbackTask(initEndingCreditsTransitionSnowboardIcon, 0, 0x64);
+            createCallbackTask(initEndingCreditsTransitionLogoWipe, 0, 0x64);
+            createCallbackTask(initEndingCreditsTransitionSnowflakeIcon, 0, 0x64);
+        }
+        gCurrentGameTask->fade = 0xFF;
+    }
     state = gCurrentGameTask;
     gMenuFadeAlpha = state->fade;
     gCurrentGameTask->timer = 5;
