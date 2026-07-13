@@ -219,7 +219,7 @@ void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 cent
 }
 #endif
 
-// configureRaceViewport best match: 90.016% (nonmatchings/configureRaceViewport-3357475854818838508/base_2.c)
+// configureRaceViewport best match: 97.137% (nonmatchings/configureRaceViewport-2870645799593382959/base_10.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/viewport_manager/configureRaceViewport.s")
 
@@ -229,9 +229,7 @@ extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
 
 void configureRaceViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7) {
     ViewportState *viewport;
-    s32 halfHeight;
-    s32 halfWidth;
-    f32 fovy;
+    s64 boundsValid;
 
     viewport = &gViewportStates[arg0];
     viewport->viewportTranslateX = arg1 * 4;
@@ -240,17 +238,16 @@ void configureRaceViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16
     viewport->viewportScaleX = arg5 * 2;
     viewport->viewportScaleY = arg6 * 2;
 
-    halfWidth = arg3 / 2;
-    viewport->right = halfWidth + arg1;
-    viewport->left = arg1 - halfWidth;
-    halfHeight = arg4 / 2;
-    viewport->top = arg2 - halfHeight;
-    viewport->bottom = halfHeight + arg2;
+    viewport->right = (arg3 / 2) + arg1;
+    viewport->left = (0, arg1 - (arg3 / 2));
+    viewport->top = arg2 - (arg4 / 2);
+    viewport->bottom = (arg4 / 2) + arg2;
+    boundsValid = 1;
     viewport->right = viewport->right;
-    viewport->screenBoundsValid = 1;
     viewport->left = viewport->left;
     viewport->top = viewport->top;
     viewport->bottom = viewport->bottom;
+    viewport->screenBoundsValid = boundsValid;
 
     if (viewport->right < 0) {
         viewport->screenBoundsValid = 0;
@@ -277,9 +274,9 @@ void configureRaceViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16
         viewport->bottom = 0xEF;
     }
 
-    fovy = 70.0f;
-    guPerspective(&viewport->projection, &viewport->perspectiveNorm, fovy, arg7, 10.0f, 1000.0f, 0.5f);
-    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, fovy, arg7, 10.0f, gRaceViewportOverlayFarClip, 0.5f);
+    guPerspective(&viewport->projection, &viewport->perspectiveNorm, 70.0f, arg7, 10.0f, 1000.0f, 0.5f);
+    guPerspective(&viewport->overlayProjection, &viewport->overlayPerspectiveNorm, 70.0f, arg7, 10.0f,
+                  gRaceViewportOverlayFarClip, 0.5f);
 }
 #endif
 
