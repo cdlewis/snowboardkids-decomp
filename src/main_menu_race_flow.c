@@ -513,19 +513,21 @@ void waitForTrainingCourseStartSelection(void) {
     gViewportStates[0].overlayAlpha = 0x80;
 }
 
-// zoomTrainingCourseRaceViewport best match: 85.471% (nonmatchings/zoomTrainingCourseRaceViewport-2694253543240320626/base_8.c)
+// zoomTrainingCourseRaceViewport best match: 92.813% (nonmatchings/zoomTrainingCourseRaceViewport-3242520251544044307/base_10.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/zoomTrainingCourseRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomTrainingCourseRaceViewport(void) {
+    volatile u32 new_var;
     s32 temp_v0;
 
     gCurrentGameTask->transitionTimer += 1;
     temp_v0 = gCurrentGameTask->transitionTimer;
-    configureViewport(0, 0xA0, (s32) ((s16) ((((s32) (temp_v0 * 0x28)) / 16) + 0x50)),
+    configureViewport(((s16) ((((s32) (temp_v0 * 0x18)) / 16) - -0x108)) * 0, 0xA0,
+                      (s32) ((s16) ((((s32) (temp_v0 * 0x28)) / 16) + 0x50)),
                       (s16) ((((s32) (temp_v0 * 0x18)) / 16) + 0x108),
-                      (u16) ((s32) ((s16) ((((s32) (temp_v0 * 0x58)) / 16) + 0x78))), 0x140U,
+                      (u16) ((s32) (new_var = (s16) ((((s32) (temp_v0 * 0x58)) / 16) + 0x78))), 0x140U,
                       (u16) ((s32) ((s16) ((((s32) (temp_v0 * 0x64)) / 16) + 0x8C))),
                       (f32) (((((f64) temp_v0) * (-0.9523809523809523)) / 0x10) + 2.2857142857142856));
     if (gCurrentGameTask->transitionTimer == 0x10) {
