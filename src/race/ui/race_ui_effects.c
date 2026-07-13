@@ -5556,17 +5556,19 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
     addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80065808, temp_s0);
 }
 
-void func_80065E0C(void *arg0) {
-    s16 v1 = *(s16 *)((u8 *)arg0 + 0x30);
-    if (v1 != 0) {
-        *(s32 *)((u8 *)arg0 + 0x1C) -= *(s32 *)((u8 *)arg0 + 0x28);
-        *(s32 *)((u8 *)arg0 + 0x28) -= 0x2000;
-        *(s16 *)((u8 *)arg0 + 0x30) = v1 - 1;
+void func_80065E0C(RaceUiOverlayActor *arg0) {
+    s16 timer = arg0->timer;
+
+    if (timer != 0) {
+        arg0->y -= arg0->velocity;
+        arg0->velocity -= 0x2000;
+        arg0->timer = timer - 1;
     } else {
-        *(s16 *)((u8 *)arg0 + 0x30) = 0x14;
-        *(s16 *)((u8 *)arg0 + 0x32) = 0;
+        arg0->timer = 0x14;
+        arg0->assetTimer = 0;
         setCallbackTaskCallback(arg0, func_80065D24);
     }
+
     addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80065808, arg0);
 }
 
