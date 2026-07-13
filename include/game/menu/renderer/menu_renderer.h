@@ -19,7 +19,7 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, s32 texture, u16 tileIndex, u1
 void drawMenuSpriteWithPaletteScale(s16 x, s16 y, s32 texture, u16 tileIndex, s32 alpha);
 void drawMenuSpriteSubrect(s16 x, s16 y, s32 texture, u16 tileIndex, u8 srcX, u8 srcY, u8 width, u8 height, s32 scaleX,
                    s32 scaleY);
-void drawMenuSpriteFixedScale(s16 x, s16 y, s32 texture, u16 tileIndex, u16 scaleX, u16 scaleY, u8 palette, u8 flip);
+void drawMenuSpriteFixedScale(s16 x, s16 y, s32 texture, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flip, u8 unusedPalette);
 void drawMenuSpriteTile(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height);
 void drawMenuSpriteTileClipped(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height, s32 clipRight, s32 clipBottom);
 void noopMenuRenderCallback(void);
@@ -56,7 +56,7 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, s32 texture, u16 tileIndex, u1
 void drawMenuSpriteWithPaletteScale(s16 x, s16 y, s32 texture, s32 tileIndex, s32 alpha);
 void drawMenuSpriteSubrect(s16 x, s16 y, s32 texture, u16 tileIndex, s32 srcX, s32 srcY, s32 width, s32 height, s32 scaleX,
                    s32 scaleY);
-void drawMenuSpriteFixedScale(s16 x, s16 y, s32 texture, s32 tileIndex, s32 scaleX, s32 scaleY, s32 palette, s32 flip);
+void drawMenuSpriteFixedScale(s16 x, s16 y, s32 texture, s32 tileIndex, s32 scaleX, s32 scaleY, s32 flip, s32 unusedPalette);
 void drawMenuSpriteTile(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height);
 void drawMenuSpriteTileClipped(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height, s32 clipRight, s32 clipBottom);
 void noopMenuRenderCallback(void);
@@ -93,7 +93,7 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, s32 texture, u16 tileIndex, u1
 void drawMenuSpriteWithPaletteScale(s16 x, s16 y, s32 texture, u16 tileIndex, s32 alpha);
 void drawMenuSpriteSubrect(s16 x, s16 y, s32 texture, u16 tileIndex, u8 srcX, u8 srcY, u8 width, u8 height, u16 scaleX,
                    u16 scaleY);
-void drawMenuSpriteFixedScale(s16 x, s16 y, s32 texture, u16 tileIndex, u16 scaleX, u16 scaleY, u8 palette, u8 flip);
+void drawMenuSpriteFixedScale(s16 x, s16 y, s32 texture, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flip, u8 unusedPalette);
 void drawMenuSpriteTile(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height);
 void drawMenuSpriteTileClipped(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height, s32 clipRight, s32 clipBottom);
 void noopMenuRenderCallback(void);
