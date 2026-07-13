@@ -1103,7 +1103,7 @@ void setRaceMotionAnimation(RaceMotionState *state, s32 animIndex) {
     temp_a2->animIndex = animIndex;
 }
 
-// loadRaceMotionAnimationFrame best match: 99.309% (base_7.c)
+// loadRaceMotionAnimationFrame best match: 99.787% (nonmatchings/loadRaceMotionAnimationFrame-2870645799593382959/base_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_motion/loadRaceMotionAnimationFrame.s")
 
 #ifdef NON_MATCHING
@@ -1111,27 +1111,30 @@ void loadRaceMotionAnimationFrame(RaceMotionState *state) {
     s16 *frameData;
     RaceMotionState *cursor;
     s32 i;
+    s32 dataAddress;
     s32 base;
     s16 value0;
     s16 value1;
     s16 angle;
 
     base = getRelocatableHeapBlockBase(gRaceMotionAnimationAssetHandles[state->modelId]);
+    dataAddress = (base & 0xFFFFFFFFu) + state->frameDataOffset;
     state->frameTimerReset = 1;
-    frameData = (s16 *)(base + state->frameDataOffset);
+    frameData = (s16 *)dataAddress;
     state->frameTimer = state->frameTimerReset;
 
     cursor = state;
     for (i = 0; i < 2; i++) {
         cursor->joints[0].unkC = frameData[0] << 14;
         cursor->joints[0].unk10 = frameData[1] << 14;
-        cursor = (RaceMotionState *)((s32)cursor + sizeof(RaceMotionStateJoint));
+        cursor = (RaceMotionState *)((s32)cursor + 0x14);
         cursor->joints[0].unk0 = frameData[2] << 14;
         frameData += 3;
     }
 
+    i = 0;
     cursor = state;
-    for (i = 0; i != sizeof(RaceMotionStateJoint) * 12; i += sizeof(RaceMotionStateJoint)) {
+    do {
         value0 = frameData[0];
         value1 = frameData[1];
         frameData += 2;
@@ -1147,8 +1150,9 @@ void loadRaceMotionAnimationFrame(RaceMotionState *state) {
         if (value1 & 4) {
             cursor->joints[0].unkA += 8;
         }
-        cursor = (RaceMotionState *)((s32)cursor + sizeof(RaceMotionStateJoint));
-    }
+        cursor = (RaceMotionState *)((s32)cursor + 0x14);
+        i += 0x14;
+    } while (i != 0xF0);
 
     state->frameDataOffset = (s32)frameData - getRelocatableHeapBlockBase(gRaceMotionAnimationAssetHandles[state->modelId]);
     angle = state->joints[0].unk6;
