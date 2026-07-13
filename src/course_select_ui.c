@@ -2238,7 +2238,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
 }
 #endif
 
-// updateCourseSelectPlayerPanels best match: 82.590% (nonmatchings/updateCourseSelectPlayerPanels-8331816093655448999/base_9.c)
+// updateCourseSelectPlayerPanels best match: 83.090% (nonmatchings/updateCourseSelectPlayerPanels-6866765942504228165/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
@@ -2337,8 +2337,10 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
                                 break;
                             }
                         }
-                    } while (step != 0x18);
-                    break;
+                } while (step != 0x18);
+                break;
+            case 3:
+                break;
             }
             i = next;
             statePtr++;
