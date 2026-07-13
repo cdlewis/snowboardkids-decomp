@@ -4276,23 +4276,23 @@ void func_80061F38(RaceUiFadingImpactActor *arg0) {
     }
 }
 
-void func_800621DC(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x4C) = 4;
-    *(s16 *)((u8 *)arg0 + 0x4A) = 0xFF;
-    *(s16 *)((u8 *)arg0 + 0x48) = 0;
-    *(s32 *)((u8 *)arg0 + 0x2C) = *(s32 *)((u8 *)arg0 + 0x38);
-    *(s32 *)((u8 *)arg0 + 0x30) = *(s32 *)((u8 *)arg0 + 0x3C);
-    *(s32 *)((u8 *)arg0 + 0x34) = *(s32 *)((u8 *)arg0 + 0x40);
-    enqueuePositionalSoundEffect(0x13, (u8 *)arg0 + 0x38, 0x7F, 0x32);
-    setCallbackTaskCallback(arg0, func_80061F38);
+void initRaceUiFadingImpact(RaceUiFadingImpactActor *actor) {
+    actor->scale = 4;
+    actor->alpha = 0xFF;
+    actor->angle = 0;
+    actor->copyBlock.words[5] = actor->pos.x;
+    actor->copyBlock.words[6] = actor->pos.y;
+    actor->copyBlock.words[7] = actor->pos.z;
+    enqueuePositionalSoundEffect(0x13, &actor->pos, 0x7F, 0x32);
+    setCallbackTaskCallback(actor, func_80061F38);
 }
 
-void spawnRaceUiFadingImpact(void *arg0, void *arg1, void *arg2) {
-    void *temp = createCallbackTaskWithUserIdPreservingArgs(func_800621DC, 0, 3);
-    if (temp != NULL) {
-        *(void **)((u8 *)temp + 0x38) = arg0;
-        *(void **)((u8 *)temp + 0x3C) = arg1;
-        *(void **)((u8 *)temp + 0x40) = arg2;
+void spawnRaceUiFadingImpact(void *x, void *y, void *z) {
+    RaceUiFadingImpactActor *actor = createCallbackTaskWithUserIdPreservingArgs(initRaceUiFadingImpact, 0, 3);
+    if (actor != NULL) {
+        actor->pos.x = (s32)x;
+        actor->pos.y = (s32)y;
+        actor->pos.z = (s32)z;
     }
 }
 
