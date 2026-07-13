@@ -5039,7 +5039,7 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
     addRenderCallback(&D_801248C8, func_80064470, actor);
 }
 
-// func_80064914 best match: 96.549% (nonmatchings/func_80064914-2694253543240320626/base_4.c)
+// func_80064914 best match: 99.887% (nonmatchings/func_80064914-3242520251544044307/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80064914.s")
 
 #ifdef NON_MATCHING
@@ -5049,6 +5049,7 @@ void func_80064914(RaceUiProjectileActor *arg0) {
     RacePlayerState *otherPlayer;
     s32 value;
     s32 amount;
+    s32 i;
     s16 flags;
 
     if (gRaceUpdatePaused == 0) {
@@ -5062,25 +5063,27 @@ void func_80064914(RaceUiProjectileActor *arg0) {
         arg0->pos.z += player->pos28.z;
         func_80064414(arg0);
 
-        otherPlayer = (RacePlayerState *)(s32)D_80121D80;
+        i = 0;
         do {
+            otherPlayer = &D_80121D80[i];
             if ((otherPlayer->isActive != 0) && (otherPlayer->playerIndex != arg0->index)) {
                 value = otherPlayer->unk568;
                 amount = (value >= 0xA6) ? 0xA6 : value;
                 otherPlayer->unk568 = value - amount;
-                addRacePlayerScore((struct RaceInputPlayer *)&D_80121D80[arg0->index], amount);
+                addRacePlayerScore(&D_80121D80[arg0->index], amount);
             }
-            otherPlayer++;
-        } while (otherPlayer != &gFrameCounter);
+            i++;
+        } while ((RacePlayerState *)&gFrameCounter != &D_80121D80[i]);
 
         flags = arg0->flags;
         amount = flags & 1;
         if (flags & 8) {
             enqueuePositionalSoundEffect(0x69, &D_80121D80[arg0->index].pos28, 0x7F, 0x32);
             arg0->flags &= ~8;
-            amount = (arg0->flags & 1) & 0xFFFF;
+            amount = 1;
+            amount = (flags = arg0->flags) & amount;
         }
-        if (amount != 0) {
+        if (amount) {
             arg0->verticalAcceleration = 0;
             arg0->verticalVelocity = 0;
             enqueuePositionalSoundEffect(0x6A, &D_80121D80[arg0->index].pos28, 0x7F, 0x32);
