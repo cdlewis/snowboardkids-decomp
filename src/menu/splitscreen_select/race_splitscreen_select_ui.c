@@ -49,17 +49,17 @@ extern s32 gMenuFlowState;
 
 const char gRaceSplitscreenSelectEntryFeeFormat[] = "%6dG";
 
-void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *arg0) {
-    RaceSplitscreenSelectRowActor *sp54;
-    RaceSplitscreenSelectRowActor *var_s3;
-    s32 var_s0;
-    s32 var_s1;
-    s32 var_s2;
+void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *icons) {
+    RaceSplitscreenSelectRowActor *row;
+    RaceSplitscreenSelectRowActor *iconCursor;
+    s32 iconIndex;
+    s32 blinkAlpha;
+    s32 yOffset;
 
-    sp54 = arg0;
-    var_s0 = 0;
-    if ((s32)arg0->playerCount > 0) {
-        do { var_s2 = 0; var_s3 = arg0; do { var_s1 = 0; if (((((gMenuSelectionConfirmTimer != 0) && (((s32)gMenuSelectionConfirmTimer) < 8)) && (gMenuExitSelection == 0)) && (var_s0 == gRaceSplitscreenMode)) && (gMenuSelectionConfirmTimer & 1)) { var_s1 = 0xFF; } drawMenuSprite(var_s3->iconX[0], (s16)(arg0->iconY + var_s2), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (var_s0 + 8) & 0xFFFF, 0x20, 0x20, 0, var_s1); var_s0 += 1; var_s2 += 0x14; var_s3 = (RaceSplitscreenSelectRowActor *)((u8 *)var_s3 + 2); if (arg0->playerCount) {} } while (var_s0 < ((s32)sp54->playerCount)); } while (0);
+    row = icons;
+    iconIndex = 0;
+    if ((s32) icons->playerCount > 0) {
+        do { yOffset = 0; iconCursor = icons; do { blinkAlpha = 0; if (((((gMenuSelectionConfirmTimer != 0) && (((s32)gMenuSelectionConfirmTimer) < 8)) && (gMenuExitSelection == 0)) && (iconIndex == gRaceSplitscreenMode)) && (gMenuSelectionConfirmTimer & 1)) { blinkAlpha = 0xFF; } drawMenuSprite(iconCursor->iconX[0], (s16)(icons->iconY + yOffset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (iconIndex + 8) & 0xFFFF, 0x20, 0x20, 0, blinkAlpha); iconIndex += 1; yOffset += 0x14; iconCursor = (RaceSplitscreenSelectRowActor *)((u8 *)iconCursor + 2); if (icons->playerCount) {} } while (iconIndex < ((s32)row->playerCount)); } while (0);
     }
 }
 
