@@ -1383,7 +1383,7 @@ void initCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateCourseSelectCourseListBackdrop);
 }
 
-// drawCourseSelectCourseStats best match: 98.450% (nonmatchings/drawCourseSelectCourseStats-8331816093655448999/base_6.c)
+// drawCourseSelectCourseStats best match: 98.594% (nonmatchings/drawCourseSelectCourseStats-6866765942504228165/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectCourseStats.s")
 
 #ifdef NON_MATCHING
@@ -1536,10 +1536,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     drawMenuSpriteWithAlpha((s16)(gCourseSelectStatsPlayerMarkerLayout[positionColumn * 2 + (i & 1)][0] + (bottomRow * 0x8C)),
                                   gCourseSelectStatsPlayerMarkerLayout[positionColumn * 2 + (i & 1)][1],
                                   getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x12, 0x20, 0x20, 0, arg0->coordinates[8], 0);
-                    playerCount = gPlayerCount;
-                }
-            }
-            i++;
+ playerCount = gPlayerCount; } } i++;
         } while (i < playerCount);
     }
 }
