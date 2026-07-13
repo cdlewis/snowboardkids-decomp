@@ -10,6 +10,7 @@
 #define RACE_CAMERA_ROTATION_TRANSITION_STRIDE 0x24
 #define RACE_CAMERA_ROTATION_TRANSITION ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16)D_801124A0->mode * stride)))
 #define RACE_PLAYER_STATE_SIZE 0x60C
+#define RACE_PLAYER_STATE(index, stride) ((RacePlayerState *)((u8 *)gRacePlayers + (index) * (stride)))
 #define FIXED_MUL(a, b) (((a) * (b)) / 0x1000)
 #define RACE_CAMERA_FP_DOT(a, b, c, d, e, f) \
     (((a) * (b)) / RACE_CAMERA_FP_ONE + ((c) * (d)) / RACE_CAMERA_FP_ONE + ((e) * (f)) / RACE_CAMERA_FP_ONE)
@@ -769,9 +770,9 @@ void initRaceCameraReplayPosition(void) {
 void updateRaceCameraReplayPosition(void) {
     s32 stride = RACE_PLAYER_STATE_SIZE;
 
-    D_801124A0->focus.x = ((RacePlayerState *)((u8 *)gRacePlayers + D_801124A0->playerIndex * stride))->cameraPos.x;
-    D_801124A0->focus.y = ((RacePlayerState *)((u8 *)gRacePlayers + D_801124A0->playerIndex * stride))->cameraPos.y;
-    D_801124A0->focus.z = ((RacePlayerState *)((u8 *)gRacePlayers + D_801124A0->playerIndex * stride))->cameraPos.z;
+    D_801124A0->focus.x = RACE_PLAYER_STATE(D_801124A0->playerIndex, stride)->cameraPos.x;
+    D_801124A0->focus.y = RACE_PLAYER_STATE(D_801124A0->playerIndex, stride)->cameraPos.y;
+    D_801124A0->focus.z = RACE_PLAYER_STATE(D_801124A0->playerIndex, stride)->cameraPos.z;
     updateRaceCameraLookAtTransform(gRacePlayers, stride);
 }
 
