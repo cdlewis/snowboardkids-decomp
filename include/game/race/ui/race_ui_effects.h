@@ -129,7 +129,7 @@ void func_8005CAB4(void *arg0);
 void func_8005CB74(void *arg0);
 void func_8005CC54(void *arg0);
 void func_8005CD10(void *arg0);
-void func_8005CDB0(void *arg0);
+void func_8005CDB0(struct RaceUiDualCounterActor *arg0);
 void func_8005CE4C(struct RaceUiDualCounterActor *arg0);
 void func_8005CF60(struct RaceUiDualCounterActor *arg0);
 void func_8005D1CC(struct RaceUiCourseStatsActor *arg0);
