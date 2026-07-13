@@ -167,7 +167,7 @@ extern void releaseMenuAssetHandles(void);
 extern void requestMusicSequenceBank(s32);
 extern void requestMusicSequenceStop(s32);
 extern void enqueueSoundEffect(s32, s32);
-// initCourseSelectMenu best match: 98.752% (nonmatchings/initCourseSelectMenu-8331816093655448999/base_4.c)
+// initCourseSelectMenu best match: 99.060% (nonmatchings/initCourseSelectMenu-3/output-265-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/initCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -179,7 +179,7 @@ void initCourseSelectMenu(void) {
     u8 *unlockedCourse;
     u8 *otherCourse;
     ObjectA3E0 *obj;
-    s32 savedUnlocks;
+    char savedUnlocks;
 
     requestMusicSequenceBank(3);
     resetRaceCameras();
@@ -243,14 +243,7 @@ void initCourseSelectMenu(void) {
 
     gMenuFadeAlpha = gCurrentGameTask->fade;
     mask = 1;
-    i = 0;
-    do {
-        savedUnlocks = gGameSaveDataBuffer[0x78D7];
-        i++;
-        if (savedUnlocks & mask) {
-            if (!(savedUnlocks & (mask << 3))) {
-                gShopMenuShowNewCoursesMessage = 1;
-                gShopMenuDescriptionSeen = 1;
+ i = 0; do { savedUnlocks = gGameSaveDataBuffer[0x78D7]; i++; if (savedUnlocks & mask) { if (!(savedUnlocks & (mask << 3))) { gShopMenuShowNewCoursesMessage = 1; gShopMenuDescriptionSeen = 1;
                 gGameSaveDataBuffer[0x78D7] = savedUnlocks | (mask << 3);
             }
         }
