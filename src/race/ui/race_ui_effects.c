@@ -2197,11 +2197,11 @@ void func_8005B344(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
-void func_8005B3EC(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1C) = 3;
-    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
-    if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0xA;
+void updateRaceUiHitPrizeRevealTotalMoney(RaceUiCounterActor *arg0) {
+    arg0->state = 3;
+    arg0->timer--;
+    if (arg0->timer == 0) {
+        arg0->timer = 0xA;
         setCallbackTaskCallback(arg0, func_8005B344);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
@@ -2216,7 +2216,7 @@ void func_8005B49C(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        setCallbackTaskCallback(arg0, func_8005B3EC);
+        setCallbackTaskCallback(arg0, updateRaceUiHitPrizeRevealTotalMoney);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
