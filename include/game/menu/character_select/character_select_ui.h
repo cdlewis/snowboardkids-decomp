@@ -71,11 +71,10 @@ typedef struct {
 
 typedef struct {
     u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    u8 pad1A[6];
-    /* 0x20 */ s16 y;
-    u8 pad22[0x1E];
-    /* 0x40 */ u16 tileSize;
+    /* 0x18 */ s16 x[4];
+    /* 0x20 */ s16 y[4];
+    u8 pad28[0x18];
+    /* 0x40 */ u16 tileSize[4];
 } CharacterSelectUiSelectedCharacterTokenActor;
 
 typedef struct {
