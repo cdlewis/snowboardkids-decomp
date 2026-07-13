@@ -4971,33 +4971,23 @@ void updateRacePlayerMode07LaunchRampClimb(RaceInputPlayer *player) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode07SpiralExit.s")
-
-// updateRacePlayerMode07SpiralExit best match: 93.957% (nonmatchings/updateRacePlayerMode07SpiralExit-8331816093655448999/base_14.c)
-#ifdef NON_MATCHING
 void updateRacePlayerMode07SpiralExit(RaceInputPlayer *player) {
-    FixedMatrix3s matrix;
-    Vec3i transformed;
-    Vec3i source;
+    s32 scratch[13];
     Vec3i *pos;
-    s32 nextX;
-    s32 nextZ;
-    s32 timer;
-    s8 slideLevel;
 
     if (player->updateTimer == 0) {
         player->updateTimer++;
-        source.x = -0x200000;
-        source.y = 0;
-        source.z = 0x400000;
-        makeFixedRotationY(matrix, gSpiralCourseObjectAngles[gRaceCourseIndex].angle);
+        scratch[10] = -0x200000;
+        scratch[11] = 0;
+        scratch[12] = 0x400000;
+        makeFixedRotationY((s16 *)&scratch[-1], gSpiralCourseObjectAngles[gRaceCourseIndex].angle);
         pos = (Vec3i *) &player->posX;
-        transformVec3iByFixedMatrix(matrix, &source, pos);
+        transformVec3iByFixedMatrix((s16 *)&scratch[-1], (Vec3i *)&scratch[10], pos);
         player->posX += gRaceCourseStartEntries[gRaceCourseIndex].unk8.x;
         player->posY += gRaceCourseStartEntries[gRaceCourseIndex].unk8.y + 0x80000;
         player->posZ += gRaceCourseStartEntries[gRaceCourseIndex].unk8.z;
-        player->unk508++;
         player->unk502 = gRaceCourseStartEntries[gRaceCourseIndex].unk4;
+        player->unk508++;
         player->unk34 = *(RaceVec3i *) pos;
         player->stateTimer = 0x28;
         player->stateFlags &= 0xFBFFFBFF;
@@ -5014,27 +5004,24 @@ void updateRacePlayerMode07SpiralExit(RaceInputPlayer *player) {
     }
 
     player->stateFlags &= ~0x80000;
-    source.x = 0;
-    source.y = 0;
-    source.z = -0x40000;
-    makeFixedRotationY(matrix, gSpiralCourseObjectAngles[gRaceCourseIndex].angle);
-    transformVec3iByFixedMatrix(matrix, &source, &transformed);
-    nextX = player->posX + transformed.x;
-    player->posX = nextX;
-    nextZ = player->posZ + transformed.z;
-    timer = player->stateTimer - 1;
-    player->posZ = nextZ;
-    player->stateTimer = timer;
+    scratch[10] = 0;
+    scratch[11] = 0;
+    scratch[12] = -0x40000;
+    makeFixedRotationY((s16 *)&scratch[-1], gSpiralCourseObjectAngles[gRaceCourseIndex].angle);
+    transformVec3iByFixedMatrix((s16 *)&scratch[-1], (Vec3i *)&scratch[10], (Vec3i *)&scratch[7]);
+    player->posX += scratch[7];
+    player->posZ += scratch[9];
+    player->stateTimer--;
 
-    if (timer == 0) {
+    if (player->stateTimer == 0) {
         player->mode = 1;
         player->updateState = 0;
         player->updateTimer = 0;
         player->stateFlags = 0;
 
         if (player->rankIndex == 1) {
-            player->posX = nextX + player->unk40.x;
-            player->posZ = nextZ + player->unk40.z;
+            player->posX += player->unk40.x;
+            player->posZ += player->unk40.z;
         }
 
         if (player->rankIndex == 2) {
@@ -5052,7 +5039,6 @@ void updateRacePlayerMode07SpiralExit(RaceInputPlayer *player) {
         }
     }
 }
-#endif
 
 // tryStartRacePlayerCourseObjectMode best match: 99.836% (nonmatchings/tryStartRacePlayerCourseObjectMode-2225551288923588688/base_16.c)
 
