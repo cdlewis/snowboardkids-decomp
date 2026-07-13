@@ -75,14 +75,12 @@ typedef struct CourseEffectPlayer {
 typedef struct PatrolCourseObjectEffect {
     char pad[0x18];
     Vec3i pos;
-    s32 unk24;
-    s32 unk28;
-    s32 unk2C;
-    s32 unk30;
+    Vec3i startPos;
+    s32 endX;
     char pad34[4];
-    s32 unk38;
-    s16 unk3C;
-    s16 unk3E;
+    s32 endZ;
+    s16 surfaceIndex;
+    s16 angle;
     s16 unk40;
     s16 pad42;
     s16 displayListValid;
@@ -762,7 +760,7 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             sine = fixedSine(arg0->unk40);
             if (1) {
                 doubleSine = fixedSine((s16)(arg0->unk40 * 2));
-                makeFixedRotationY(transform.rotation, (sine >> 4) + (0x800 + arg0->unk3E));
+                makeFixedRotationY(transform.rotation, (sine >> 4) + (0x800 + arg0->angle));
                 transform.basePos.x = arg0->pos.x;
                 transform.basePos.y = (arg0->pos.y + ((doubleSine + 0x1000) << 4)) + 0xA4000;
             }
@@ -812,11 +810,11 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
         pos = &arg0->pos;
         if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
             if (arg0->pad42 != 0) {
-                targetAngle = calculateFixedAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->unk24, arg0->unk2C);
+                targetAngle = calculateFixedAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->startPos.x, arg0->startPos.z);
             } else {
-                targetAngle = calculateFixedAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->unk30, arg0->unk38);
+                targetAngle = calculateFixedAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->endX, arg0->endZ);
             }
-            temp_a1 = arg0->unk3E;
+            temp_a1 = arg0->angle;
             temp_t2 = ((targetAngle & 0xFFFFu) - temp_a1) & 0xFFF;
             var_v1 = temp_t2;
             if (temp_t2 >= 0x801) {
@@ -829,15 +827,15 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             if (var_v1 < -temp_v0) {
                 var_v1 = (s16)-temp_v0;
             }
-            arg0->unk3E = (u64)(temp_a1 + var_v1);
-            arg0->pos.x += fixedSine(arg0->unk3E) * ((s32)-arg0->unk50 / 4096);
-            dz = (arg0->pos.z += fixedCosine(arg0->unk3E) * ((s32)-arg0->unk50 / 4096));
+            arg0->angle = (u64)(temp_a1 + var_v1);
+            arg0->pos.x += fixedSine(arg0->angle) * ((s32)-arg0->unk50 / 4096);
+            dz = (arg0->pos.z += fixedCosine(arg0->angle) * ((s32)-arg0->unk50 / 4096));
             new_var = dz;
-            arg0->unk3C = findRaceCourseSurfaceFromHint(arg0->unk3C, arg0->pos.x, new_var);
-            arg0->pos.y = getRaceCourseSurfaceHeight(arg0->unk3C, arg0->pos.x, arg0->pos.z);
+            arg0->surfaceIndex = findRaceCourseSurfaceFromHint(arg0->surfaceIndex, arg0->pos.x, new_var);
+            arg0->pos.y = getRaceCourseSurfaceHeight(arg0->surfaceIndex, arg0->pos.x, arg0->pos.z);
             if (arg0->pad42 != 0) {
-                dx = arg0->pos.x - arg0->unk24;
-                targetDz = arg0->pos.z - arg0->unk2C;
+                dx = arg0->pos.x - arg0->startPos.x;
+                targetDz = arg0->pos.z - arg0->startPos.z;
                 if (dx < 0) {
                     dx = -dx;
                 }
@@ -850,8 +848,8 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
                     }
                 }
             } else {
-                dx = arg0->pos.x - arg0->unk30;
-                targetDz = arg0->pos.z - arg0->unk38;
+                dx = arg0->pos.x - arg0->endX;
+                targetDz = arg0->pos.z - arg0->endZ;
                 if (dx < 0) {
                     dx = -dx;
                 }
@@ -889,50 +887,35 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
 }
 #endif
 
-// initPatrolCourseObject best match: 99.474% at nonmatchings/initPatrolCourseObject-3357475854818838508/base_16.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/initPatrolCourseObject.s")
-
-#ifdef NON_MATCHING
 void initPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
-    volatile s32 *posX;
-    s32 temp28;
-    int temp2C;
     s16 angle;
     s16 temp4C;
     s32 temp50;
     s16 temp4E;
 
-    posX = (volatile s32 *)&arg0->pos.x;
     if (gRaceUpdatePaused == 0) {
-        angle = calculateFixedAngleBetweenXZPoints(arg0->unk24, arg0->unk2C, arg0->unk30, arg0->unk38);
-        arg0->pos.x = arg0->unk24;
-        temp28 = arg0->unk28;
-        do {
-        } while (0);
-        temp2C = arg0->unk2C;
+        angle = calculateFixedAngleBetweenXZPoints(arg0->startPos.x, arg0->startPos.z, arg0->endX, arg0->endZ);
+        arg0->pos = arg0->startPos;
         temp4C = 0x10;
         temp50 = 0x10000;
         temp4E = 0x80;
-        arg0->unk3E = angle;
+        arg0->angle = angle;
         arg0->unk4C = temp4C;
         arg0->unk50 = temp50;
         arg0->unk4E = temp4E;
-        arg0->pos.y = temp28;
-        arg0->pos.z = temp2C;
-        arg0->pos.y = getRaceCourseSurfaceHeight(arg0->unk3C, *posX, temp2C);
+        arg0->pos.y = getRaceCourseSurfaceHeight(arg0->surfaceIndex, arg0->pos.x, arg0->pos.z);
         setCallbackTaskCallback(arg0, updatePatrolCourseObject);
     }
 }
-#endif
 
 void spawnPatrolCourseObject(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     PatrolCourseObjectEffect *p = createCallbackTask(initPatrolCourseObject, 0, 0x64);
     if (p != 0) {
-        p->unk24 = arg1;
-        p->unk2C = arg2;
-        p->unk30 = arg3;
-        p->unk38 = arg4;
-        p->unk3C = arg0;
+        p->startPos.x = arg1;
+        p->startPos.z = arg2;
+        p->endX = arg3;
+        p->endZ = arg4;
+        p->surfaceIndex = arg0;
     }
 }
 
