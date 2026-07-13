@@ -106,7 +106,7 @@ void func_8005AFEC(void *arg0);
 void func_8005B068(void *arg0);
 void func_8005B14C(struct RaceUiCounterActor *arg0);
 void func_8005B344(void *arg0);
-void func_8005B3EC(void *arg0);
+void updateRaceUiHitPrizeRevealTotalMoney(struct RaceUiCounterActor *arg0);
 void func_8005B49C(void *arg0);
 void func_8005B55C(void *arg0);
 void func_8005B61C(void *arg0);
