@@ -14,7 +14,7 @@ typedef struct {
     /* 0x2 */ u8 state;
 } ControllerPakContinuePromptTransition;
 
-extern void enqueueSoundEffect(s32, s32);
+extern u64 enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 
 extern CharacterSelectFlowState *gCurrentGameTask;
@@ -53,10 +53,6 @@ void initControllerPakContinuePromptFlow(void) {
     updateCallbackTasks();
 }
 
-// updateControllerPakContinuePromptFlow best match: 90.000% (nonmatchings/updateControllerPakContinuePromptFlow-5802343343535905907/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_continue_prompt_flow/updateControllerPakContinuePromptFlow.s")
-
-#ifdef NON_MATCHING
 void updateControllerPakContinuePromptFlow(void) {
     s32 temp_a1;
     s32 temp_v0;
@@ -90,8 +86,9 @@ void updateControllerPakContinuePromptFlow(void) {
         }
     }
     updateCallbackTasks();
+    if (gCurrentGameTask) {
+    }
 }
-#endif
 
 void closeControllerPakContinuePromptFlow(void) {
     if (gCurrentGameTask->fade != 0xFF) {
