@@ -212,6 +212,7 @@ extern u8 gShopMenuDescriptionSeen;
 extern u8 gShopMenuShowNewCoursesMessage;
 extern u8 gCourseDetailsMenuSelection;
 extern u8 gCourseDetailsPreviewPage;
+extern u8 gCourseDetailsCloseFromBack;
 extern s16 gCoursePreviewViewportHeight;
 extern s16 gMenuUiSpritesAssetHandle;
 extern ShopMenuState D_80121D80;
@@ -1277,16 +1278,12 @@ void initCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateCourseUnlockPurchasePrompt);
 }
 
-// drawCourseDetailsMenu best match: 99.749% (nonmatchings/drawCourseDetailsMenu-5802343343535905907/base_22.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/drawCourseDetailsMenu.s")
-
-#ifdef NON_MATCHING
 void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     volatile s32 unused;
-    u16 script[3];
     u16 *tiles;
     s32 i;
     s32 yOffset;
+    u16 script[3];
     s16 *cursor;
     s32 value;
     s32 tens;
@@ -1296,8 +1293,8 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         } else {
             script[0] = tens;
         }
-        script[2] = -1;
         script[1] = value % 10;
+        script[2] = -1;
         drawMenuGlyphScriptDefaultFont((s16)(cursor[12] - 0x12), (s16)(arg0->targetY + yOffset), script, 1, 0x100);
 
         yOffset += 0x13;
@@ -1323,11 +1320,10 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         } else {
             cursorX = arg0->cursorPositions[0];
         }
-        drawMenuSpriteWithAlpha(cursorX, (s16)(arg0->targetY + (gCourseDetailsMenuSelection * 0x13)), getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+        drawMenuSpriteWithAlpha((cursorX << 0x10) >> 0x10, (s16)(arg0->targetY + (gCourseDetailsMenuSelection * 0x13)), getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                       0x12, 0x20, 0x20, 0, arg0->prompt.bytes.pulseAlpha, 0);
     }
 }
-#endif
 
 // updateCourseDetailsMenu best match: 85.277% (nonmatchings/updateCourseDetailsMenu-3357475854818838508/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/updateCourseDetailsMenu.s")
