@@ -11,6 +11,13 @@
     _g->words.w1 = (cmd1); \
 }
 
+#define MENU_GLYPH_SCRIPT_NEWLINE 0xFFFD
+#define MENU_GLYPH_SCRIPT_SPACE 0xFFFE
+#define MENU_GLYPH_SCRIPT_END 0xFFFF
+#define MENU_GLYPH_WIDE_ADVANCE 0x10
+#define MENU_GLYPH_NARROW_ADVANCE 8
+#define MENU_GLYPH_LINE_HEIGHT 0x10
+
 typedef struct MenuRenderTask MenuRenderTask;
 typedef struct RenderCallbackNode RenderCallbackNode;
 typedef struct MenuRenderAssetTableHeader MenuRenderAssetTableHeader;
@@ -1237,45 +1244,45 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
 #undef MENU_RENDER_SPRITE_EMIT_GFX
 #endif
 
-void drawMenuGlyphScriptWithFontBank(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u16 arg5) {
-    u16 first;
-    s32 code;
-    u16 *ptr;
-    s32 xPos;
-    u16 xStep;
-    s32 yPos;
+void drawMenuGlyphScriptWithFontBank(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, u16 fontBank) {
+    u16 firstGlyph;
+    s32 glyphCode;
+    MenuGlyphScript *scriptCursor;
+    s32 drawX;
+    u16 glyphAdvance;
+    s32 drawY;
     u16 scaleValue;
     register s32 advance;
-    u16 arg5Value;
+    u16 fontBankValue;
 
-    xPos = x;
-    yPos = y;
+    drawX = x;
+    drawY = y;
     if (((u8 *)&palette)[3] == 0) {
-        xStep = 0x10;
+        glyphAdvance = MENU_GLYPH_WIDE_ADVANCE;
     } else {
-        xStep = 8;
+        glyphAdvance = MENU_GLYPH_NARROW_ADVANCE;
     }
 
-    first = *script ^ 0;
-    if (first != 0xFFFF) {
-        ptr = script;
+    firstGlyph = *script ^ 0;
+    if (firstGlyph != MENU_GLYPH_SCRIPT_END) {
+        scriptCursor = script;
         scaleValue = scale;
-        arg5Value = arg5;
-        code = first;
+        fontBankValue = fontBank;
+        glyphCode = firstGlyph;
         do {
-            if ((code & 0xFFFF) == 0xFFFD) {
-                xPos = x;
-                yPos += 0x10;
+            if ((glyphCode & 0xFFFF) == MENU_GLYPH_SCRIPT_NEWLINE) {
+                drawX = x;
+                drawY += MENU_GLYPH_LINE_HEIGHT;
             } else {
-                advance = xStep;
-                if ((code & 0xFFFF) != 0xFFFE) {
-                    drawMenuGlyph(xPos, yPos, code & 0xFFFF, ((u8 *)&palette)[3], scaleValue, arg5Value);
+                advance = glyphAdvance;
+                if ((glyphCode & 0xFFFF) != MENU_GLYPH_SCRIPT_SPACE) {
+                    drawMenuGlyph(drawX, drawY, glyphCode & 0xFFFF, ((u8 *)&palette)[3], scaleValue, fontBankValue);
                 }
-                xPos += advance;
+                drawX += advance;
             }
-            code = ptr[1];
-            ptr++;
-        } while ((code & 0xFFFF) != 0xFFFF);
+            glyphCode = scriptCursor[1];
+            scriptCursor++;
+        } while ((glyphCode & 0xFFFF) != MENU_GLYPH_SCRIPT_END);
     }
 }
 
