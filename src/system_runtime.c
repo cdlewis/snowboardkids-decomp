@@ -261,13 +261,15 @@ void initGameSystems(void) {
     gRumblePakConnectedMask = 0;
 }
 
-// gameThreadMain best match: 90.409% at nonmatchings/gameThreadMain-5802343343535905907/base_8.c.
+// gameThreadMain best match: 91.364% at nonmatchings/gameThreadMain-2663524570355072948/base_13.c.
 #ifdef NON_MATCHING
 void gameThreadMain(void *arg0) {
     OSMesg msg;
     s32 done;
     s32 initialized;
     s32 finalType;
+    u16 *retraceCounter;
+    s32 statusMask;
     OSMesgQueue *queue18;
     OSMesgQueue *queue70;
     u32 zero;
@@ -277,6 +279,7 @@ void gameThreadMain(void *arg0) {
     msg = NULL;
     zero = 0;
     initialized = (done = 0);
+    retraceCounter = &gRetraceCounter;
     initGameSystems();
     queue18 = &gFramebufferRenderDoneQueue;
     queue70 = &gControllerInputUpdateQueue;
@@ -284,12 +287,13 @@ void gameThreadMain(void *arg0) {
     counter = &gPendingFramebufferSwapCount;
 loop_1:
     do {
+        statusMask = 0xFFFE;
         if ((osRecvMesg(queue18, &msg, zero) != zero) && (osRecvMesg(queue70, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue50, &msg, OS_MESG_NOBLOCK) != 0)) {
             goto loop_1;
         }
         switch (*(s16 *)msg) {
         case 1:
-            gLastSchedulerRetraceCounter = gRetraceCounter;
+            gLastSchedulerRetraceCounter = *retraceCounter;
             if (initialized == 0) {
                 initialized = 1;
                 updateGameTaskScheduler();
@@ -305,7 +309,7 @@ loop_1:
             break;
         case 5:
             *counter += 1;
-            gFramebufferRenderTask0Statuses &= 0xFFFE;
+            gFramebufferRenderTask0Statuses &= statusMask;
             break;
         case 6:
             *counter += 1;
