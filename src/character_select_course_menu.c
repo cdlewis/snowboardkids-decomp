@@ -297,7 +297,7 @@ loop_24:
 }
 #endif
 
-// initCharacterSelectCourseMenuFromPlayerSelect best match: 92.119% (nonmatchings/initCharacterSelectCourseMenuFromPlayerSelect-8331816093655448999/base_5.c)
+// initCharacterSelectCourseMenuFromPlayerSelect best match: 94.066% (nonmatchings/initCharacterSelectCourseMenuFromPlayerSelect-6866765942504228165/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/initCharacterSelectCourseMenuFromPlayerSelect.s")
 
 #ifdef NON_MATCHING
@@ -317,6 +317,8 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
         resetAllViewports();
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E09A4);
         gFramebufferSwapDelay = 0;
+        if (gCharacterSelectShortCourseOptions) {
+        }
         loadCompressedRomAsset(D_5A1ED0, D_5C5320, 0x21);
         loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
         loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
