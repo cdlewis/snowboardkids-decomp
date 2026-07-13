@@ -1093,15 +1093,12 @@ void initCourseSelectCourseDetailsMenu(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectCourseDetailsMenu best match: 73.434% (nonmatchings/updateCourseSelectCourseDetailsMenu-2694253543240320626/base_5.c)
+// updateCourseSelectCourseDetailsMenu best match: 73.924% (nonmatchings/updateCourseSelectCourseDetailsMenu-3242520251544044307/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/updateCourseSelectCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectCourseDetailsMenu(void) {
     ObjectA3E0 *var_s0;
-    s32 temp_t2;
-    s32 temp_t3_2;
-    s32 temp_t7;
     s32 temp_a2;
     s32 temp_v0;
     s32 var_v0;
@@ -1124,10 +1121,9 @@ void updateCourseSelectCourseDetailsMenu(void) {
             ((temp_v0 != 0) && ((s32) (u16) gMenuInputRepeatTimers >= 0xB) && (((s32) (u16) gMenuInputRepeatTimers % 3) == 0))) {
             var_v1 = (u16) gMenuInputRepeatTimers;
             temp_t3 = var_a1 - 1;
-            temp_t2 = var_v1 + 1;
             if (var_v1 == 0) {
-                gMenuInputRepeatTimers = temp_t2;
-                var_v1 = temp_t2 & 0xFFFF;
+                gMenuInputRepeatTimers = var_v1 + 1;
+                var_v1 = (var_v1 + 1) & 0xFFFF;
             }
             if ((s32) var_a1 > 0) {
                 gCourseDetailsMenuSelection = temp_t3;
@@ -1149,9 +1145,8 @@ block_21:
             } else {
 block_16:
                 if (var_v1 == 0) {
-                    temp_t7 = var_v1 + 1;
-                    gMenuInputRepeatTimers = temp_t7;
-                    var_v1 = temp_t7 & 0xFFFF;
+                    gMenuInputRepeatTimers = var_v1 + 1;
+                    var_v1 = (var_v1 + 1) & 0xFFFF;
                 }
                 temp_t8 = var_a1 + 1;
                 if ((s32) var_a1 < 9) {
@@ -1161,15 +1156,13 @@ block_16:
             }
         }
         if (var_v1 != 0) {
-            temp_t3_2 = var_v1 + 1;
-            gMenuInputRepeatTimers = temp_t3_2;
-            if ((temp_t3_2 & 0xFFFF) == 0xFFFF) {
+            gMenuInputRepeatTimers = var_v1 + 1;
+            if (((var_v1 + 1) & 0xFFFF) == 0xFFFF) {
                 gMenuInputRepeatTimers = 0xC;
             }
         }
         if (var_a1 != temp_t1) {
             enqueueSoundEffect(0x19, 0x32);
-            temp_a2 = gPlayerInputPressed;
         }
         if (temp_a2 & 0x4000) {
             gMenuExitSelection = 2;
