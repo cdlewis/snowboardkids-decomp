@@ -22,7 +22,9 @@ typedef struct {
     char pad0[5];
     u8 mode;
     u8 selection;
-    char pad7[0x605];
+    char pad7[1];
+    u8 state;
+    char pad9[0x603];
 } CharacterSelectTransitionPlayer;
 
 typedef struct {
@@ -318,15 +320,6 @@ void func_80006F30(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_transition/func_80007840.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    /* 0x00 */ u8 pad0[5];
-    /* 0x05 */ u8 unk5;
-    /* 0x06 */ u8 unk6;
-    /* 0x07 */ s8 unk7;
-    /* 0x08 */ u8 state;
-    /* 0x09 */ u8 pad9[0x603];
-} CharacterSelectTransitionEntry;
-
 typedef struct CharacterSelectTransitionObject {
     /* 0x00 */ u8 pad0[0x2C];
     /* 0x2C */ void (*update)(void);
@@ -337,23 +330,17 @@ extern void func_800257F0(EffectTask *);
 extern void func_80028194(EffectTask *);
 extern void func_80028B0C(EffectTask *);
 extern void func_8002916C(EffectTask *);
-extern void *func_80071408(void (*)(EffectTask *), s32, s32);
 extern void func_80072114(s32);
 extern void func_8009956C(void (*)(void), s32);
 
 extern void *D_8010ADE8;
-extern s32 D_8010AEE8[];
 extern CharacterSelectTransitionObject *D_800EC9C4;
 extern CharacterSelectTransitionObject D_801121E0[];
 extern CharacterSelectTransitionObject D_801124A0;
-extern s16 D_800EC9D0[];
-extern u8 D_800EC9C0;
-extern CharacterSelectTransitionEntry D_80121D80[];
-extern s32 D_801235B4;
 
 void func_80007840(void) {
     CharacterSelectTransitionObject *obj;
-    CharacterSelectTransitionEntry *entry;
+    CharacterSelectTransitionPlayer *entry;
     s32 i;
     s32 count;
     s32 ready;
