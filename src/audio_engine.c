@@ -1696,14 +1696,16 @@ void soundPlayerUpdateVibrato(PlayerCommandState *arg0) {
     }
 }
 
-// soundPlayerUpdateVolumeTrack best match: 98.137%
+// soundPlayerUpdateVolumeTrack best match: 99.020% (nonmatchings/soundPlayerUpdateVolumeTrack-3242520251544044307/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/soundPlayerUpdateVolumeTrack.s")
 
 #ifdef NON_MATCHING
 void soundPlayerUpdateVolumeTrack(PlayerCommandState *arg0) {
+    short high_mask;
     u16 temp_c8;
     s32 one = 1;
     register u8 *temp_v1;
+    int new_var;
     register u8 temp_v0;
     register u8 *temp_t1;
     short temp_s16;
@@ -1730,15 +1732,15 @@ void soundPlayerUpdateVolumeTrack(PlayerCommandState *arg0) {
                     temp_v0_2 = *temp_t1;
                     do {
                         ;
-                        temp_t3 = temp_t1 + one;
+                        temp_t3 = (temp_t1 = temp_t1 + one);
                         arg0->unk60 = (s32)temp_t3;
                     } while (0);
+                    high_mask = temp_v0_2 & 0x7F;
                     temp_t0 = one;
                     if ((s32)temp_v0_2 >= 0x80) {
-                        temp_s16 = (temp_v0_2 & 0x7F) << 8;
-                        temp_t6 = temp_s16;
+                        temp_s16 = (temp_t6 = high_mask << 8);
                         arg0->unkC8 = temp_t6;
-                        arg0->unkC8 = temp_t6 + *temp_t3 + 2;
+                        arg0->unkC8 = temp_t6 + *temp_t3 + (new_var = 2);
                         arg0->unk60 = (s32)(temp_t3 + temp_t0);
                     } else {
                         arg0->unkC8 = temp_v0_2 + 2;
