@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COMMON_H
+#define COMMON_H
 
 #include "include_asm.h"
 
@@ -15,3 +16,5 @@
 #define STICK_LEFT 0x80000
 #define STICK_UP 0x10000
 #define STICK_DOWN 0x20000
+
+#endif
