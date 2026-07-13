@@ -32,7 +32,6 @@ extern void alSynSetPan(ALSynth *, ALVoice *, s32);
 extern void rmonPrintf(const char *, ...);
 extern AudioDmaState gAudioDmaState;
 extern ALLink *gAudioDmaBufferPool;
-extern s32 audioDmaCallback(s32, s32, void *);
 extern f32 sinf(f32);
 extern s32 gSchedulerYieldResult;
 extern u16 gRetraceCounter;
@@ -2188,71 +2187,71 @@ void updateAudioUnderrunState(s32 arg0) {
     }
 }
 
-// audioDmaCallback best match: 86.936%
-#pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/audioDmaCallback.s")
-
-#ifdef NON_MATCHING
 s32 audioDmaCallback(s32 addr, s32 len, void *state) {
-    register ALLink *first;
-    register ALLink *node;
-    ALLink *last;
-    AudioDmaBuffer *dmaNode;
-    u32 aligned;
-    u32 offset;
-    void *buffer;
+    void *foundBuffer;
+    s32 delta;
+    s32 addrEnd;
+    s32 buffEnd;
+    AudioDmaBuffer *dmaPtr;
+    AudioDmaBuffer *lastDmaPtr;
+    ALLink *first;
+    s32 dmaLen;
 
-    last = NULL;
+    lastDmaPtr = NULL;
     first = gAudioDmaState.activeList;
-    node = first;
-    if (node != NULL) {
-        s32 dmaLen = gAudioDmaBufferSize;
+    dmaPtr = (AudioDmaBuffer *)first;
+    if (dmaPtr != NULL) {
+        dmaLen = gAudioDmaBufferSize;
         do {
-            dmaNode = (AudioDmaBuffer *)node;
-            if ((u32)addr < (u32)dmaNode->addr) {
+            if ((u32)addr < (u32)dmaPtr->addr) {
                 break;
             }
-            last = node;
-            if ((dmaNode->addr + dmaLen) >= (addr + len)) {
-                dmaNode->counter = gAudioFrameCounter;
-                return osVirtualToPhysical((u8 *)dmaNode->buffer + addr - dmaNode->addr);
+            lastDmaPtr = dmaPtr;
+            addrEnd = addr + len;
+            delta = dmaLen;
+            buffEnd = dmaPtr->addr + delta;
+            if (addrEnd <= buffEnd) {
+                dmaPtr->counter = gAudioFrameCounter;
+                buffEnd = dmaPtr->addr;
+                foundBuffer = (u8 *)dmaPtr->buffer + addr - buffEnd;
+                return osVirtualToPhysical(foundBuffer);
             }
-            node = node->next;
-        } while (node != NULL);
+            dmaPtr = (AudioDmaBuffer *)dmaPtr->node.next;
+        } while (dmaPtr != NULL);
     }
 
-    node = gAudioDmaState.readyList;
-    if (node == NULL) {
+    dmaPtr = (AudioDmaBuffer *)gAudioDmaState.readyList;
+    if (dmaPtr == NULL) {
         return osVirtualToPhysical(first);
     }
 
-    gAudioDmaState.readyList = node->next;
-    alUnlink(node);
-    if (last != NULL) {
-        alLink(node, last);
+    gAudioDmaState.readyList = dmaPtr->node.next;
+    alUnlink((ALLink *)dmaPtr);
+    if (lastDmaPtr != NULL) {
+        alLink((ALLink *)dmaPtr, (ALLink *)lastDmaPtr);
     } else {
         first = gAudioDmaState.activeList;
         if (first != NULL) {
-            gAudioDmaState.activeList = node;
-            node->next = first;
-            node->prev = NULL;
-            first->prev = node;
+            gAudioDmaState.activeList = (ALLink *)dmaPtr;
+            dmaPtr->node.next = first;
+            dmaPtr->node.prev = NULL;
+            first->prev = (ALLink *)dmaPtr;
         } else {
-            gAudioDmaState.activeList = node;
-            node->next = NULL;
-            node->prev = NULL;
+            gAudioDmaState.activeList = (ALLink *)dmaPtr;
+            dmaPtr->node.next = NULL;
+            dmaPtr->node.prev = NULL;
         }
     }
 
-    offset = addr & 1;
-    aligned = addr - offset;
-    dmaNode = (AudioDmaBuffer *)node;
-    dmaNode->addr = aligned;
-    dmaNode->counter = gAudioFrameCounter;
-    buffer = dmaNode->buffer;
-    osPiStartDma(&gAudioDmaMessages[gPendingAudioDmaCount++], 0, 0, aligned, buffer, gAudioDmaBufferSize, &gAudioDmaQueue);
-    return osVirtualToPhysical(buffer) + offset;
+    delta = addr & 1;
+    addr -= delta;
+    dmaPtr->addr = addr;
+    dmaPtr->counter = gAudioFrameCounter;
+    foundBuffer = dmaPtr->buffer;
+    osPiStartDma(&gAudioDmaMessages[gPendingAudioDmaCount++], 0, 0, addr, foundBuffer, gAudioDmaBufferSize,
+                 &gAudioDmaQueue);
+    return osVirtualToPhysical(foundBuffer) + delta;
 }
-#endif
 
 ALDMAproc initAudioDmaCallback(AudioDmaState **arg0) {
     if (gAudioDmaState.initialized == 0) {
