@@ -1803,10 +1803,10 @@ void func_8005A1FC(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
 }
 
-void func_8005A288(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x18) = *(s16 *)((u8 *)arg0 + 0x18) + 0x10;
-    if (*(s16 *)((u8 *)arg0 + 0x18) >= 0x100) {
-        *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
+void func_8005A288(RaceUiAlpha18Actor *arg0) {
+    arg0->alpha += 0x10;
+    if (arg0->alpha >= 0x100) {
+        arg0->alpha = 0xFF;
         setCallbackTaskCallback(arg0, func_8005A1FC);
     }
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
