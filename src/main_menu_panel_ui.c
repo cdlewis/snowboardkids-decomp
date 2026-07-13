@@ -181,7 +181,7 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
     drawAssetTableSpriteWithExplicitPalette(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
 }
 
-// updateMainMenuModeSelectGrid best match: 76.224% (nonmatchings/updateMainMenuModeSelectGrid-5802343343535905907/base_8.c)
+// updateMainMenuModeSelectGrid best match: 99.211% (nonmatchings/updateMainMenuModeSelectGrid-2663524570355072948/base_17.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_panel_ui/updateMainMenuModeSelectGrid.s")
 
 #ifdef NON_MATCHING
@@ -194,45 +194,16 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     u8 temp_a2_3;
     u8 temp_a2_4;
 
+    if (arg0) {
+    }
+
     if ((gMenuFadeAlpha == 0) && (gMainMenuSelectionResult == 0)) {
         temp_v1 = gPlayerInputPressed;
-        if (temp_v1 & 0x10800) {
-            temp_a2 = mainMenuModeSelectUpTargets[gMainMenuModeSelection];
-            if (temp_a2 != gMainMenuModeSelection) {
-                gMainMenuModeSelection = temp_a2;
-                enqueueSoundEffect(0x19, 0x32);
-            }
-        } else if (temp_v1 & 0x20400) {
-            temp_a2_2 = mainMenuModeSelectDownTargets[gMainMenuModeSelection];
-            if (temp_a2_2 != gMainMenuModeSelection) {
-                gMainMenuModeSelection = temp_a2_2;
-                enqueueSoundEffect(0x19, 0x32);
-            }
-        } else if (temp_v1 & 0x40100) {
-            temp_a2_3 = mainMenuModeSelectRightTargets[gMainMenuModeSelection];
-            if (temp_a2_3 != gMainMenuModeSelection) {
-                gMainMenuModeSelection = temp_a2_3;
-                enqueueSoundEffect(0x19, 0x32);
-            }
-        } else if (temp_v1 & 0x80200) {
-            temp_a2_4 = mainMenuModeSelectLeftTargets[gMainMenuModeSelection];
-            if (temp_a2_4 != gMainMenuModeSelection) {
-                gMainMenuModeSelection = temp_a2_4;
-                enqueueSoundEffect(0x19, 0x32);
-            }
-        }
-
-        if (temp_v1 & 0xD000) {
-            gMainMenuSelectionResult = 1;
-            if (temp_v1 & 0x4000) {
-                gMainMenuModeSelection = 0xC;
-            }
-            enqueueSoundEffect(0x18, 0x32);
-        }
+ do { if (temp_v1 & 0x10800) { temp_a2 = mainMenuModeSelectUpTargets[gMainMenuModeSelection]; if (temp_a2 != gMainMenuModeSelection) { gMainMenuModeSelection = temp_a2; enqueueSoundEffect(0x19, 0x32); temp_v1 = gPlayerInputPressed; } } else if (temp_v1 & 0x20400) { var_v0 = gMainMenuModeSelection; temp_a2_2 = mainMenuModeSelectDownTargets[var_v0]; if (temp_a2_2 != var_v0) { gMainMenuModeSelection = temp_a2_2; enqueueSoundEffect(0x19, 0x32); temp_v1 = gPlayerInputPressed; } } else if (temp_v1 & 0x40100) { temp_a2_3 = mainMenuModeSelectRightTargets[gMainMenuModeSelection]; if (temp_a2_3 != gMainMenuModeSelection) { gMainMenuModeSelection = temp_a2_3; enqueueSoundEffect(0x19, 0x32); temp_v1 = gPlayerInputPressed; } } else if (temp_v1 & 0x80200) { temp_a2_4 = mainMenuModeSelectLeftTargets[gMainMenuModeSelection]; if (temp_a2_4 != gMainMenuModeSelection) { gMainMenuModeSelection = temp_a2_4; enqueueSoundEffect(0x19, 0x32); temp_v1 = gPlayerInputPressed; } } if (temp_v1 & 0xD000) { gMainMenuSelectionResult = 1; if (temp_v1 & 0x4000) { gMainMenuModeSelection = 0xC; } enqueueSoundEffect(0x18, 0x32); } } while (0);
     }
 
     if (gMainMenuSelectionResult == 0) {
-        temp_t8 = gFrameCounter & 0xF;
+        temp_t8 = (gFrameCounter & 0xFFFFu) & 0xF;
         arg0->x = temp_t8;
         var_v0 = temp_t8;
         if (temp_t8 >= 9) {
