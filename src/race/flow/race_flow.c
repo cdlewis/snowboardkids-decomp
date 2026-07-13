@@ -1653,7 +1653,7 @@ void updateRaceResultsFlow(void) {
                 break;
 
             case 1:
-                task = func_80071408((void (*)(EffectTask *))func_8005B834, 6, 0x64);
+                task = func_80071408((void (*)(EffectTask *))initRaceUiHitPrizePayout, 6, 0x64);
                 if (task != NULL) {
                     i = 0;
                     do {
