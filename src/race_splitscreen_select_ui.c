@@ -245,7 +245,7 @@ void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg
     drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x3A, 0x20,
                   0x20, 0, 0);
 
-    for (offset = 0; offset != 0x80; offset += 0x10) {
+    for (offset = 0; (offset ^ 0) != 0x80; offset += 0x10) {
         drawMenuSprite((s16)((arg0->x + offset) + 0xC), (s16)(arg0->y - 4),
                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x34, 0x20, 0x20, 0, 0);
         do {
