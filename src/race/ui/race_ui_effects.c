@@ -387,7 +387,9 @@ typedef struct RaceUiAnimatedTextActor {
 } RaceUiAnimatedTextActor;
 
 typedef struct RaceUiTrailingParticleActor {
-    /* 0x00 */ u8 pad0[0x18];
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ RaceUiGfxCommandDest *matrix0;
     /* 0x28 */ RaceUiGfxCommandDest *matrix1;
@@ -4577,16 +4579,16 @@ void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
     }
 }
 
-void func_80063164(void *arg0) {
+void func_80063164(RaceUiTrailingParticleActor *arg0) {
     if (gRaceUpdatePaused == 0) {
-        *(s16 *)((u8 *)arg0 + 0x2E) = *(s16 *)((u8 *)arg0 + 0x2E) + 8;
+        arg0->rotX += 8;
     }
     addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80062F6C, (s32)arg0);
 }
 
-void func_800631B0(void *arg0) {
-    *(Vec3i *)((u8 *)arg0 + 0x18) = D_800D6330[*(u16 *)((u8 *)arg0 + 0x10)];
-    *(s16 *)((u8 *)arg0 + 0x2C) = D_800D633C[*(u16 *)((u8 *)arg0 + 0x10)];
+void func_800631B0(RaceUiTrailingParticleActor *arg0) {
+    arg0->pos = D_800D6330[arg0->index];
+    arg0->rotY = D_800D633C[arg0->index];
     setCallbackTaskCallback(arg0, func_80063164);
 }
 
