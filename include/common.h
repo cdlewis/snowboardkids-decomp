@@ -1,5 +1,4 @@
-#ifndef COMMON_H
-#define COMMON_H
+#pragma once
 
 #include "include_asm.h"
 
@@ -12,4 +11,7 @@
  */
 #include <PR/mbi.h>
 
-#endif
+#define STICK_RIGHT 0x40000
+#define STICK_LEFT 0x80000
+#define STICK_UP 0x10000
+#define STICK_DOWN 0x20000
