@@ -1616,7 +1616,7 @@ void updateRaceResultsFlow(void) {
         case 1:
             switch (D_80121B5E) {
             case 2:
-                task = func_80071408((void (*)(EffectTask *))func_8005E534, 6, 0x64);
+                task = func_80071408((void (*)(EffectTask *))initRaceUiTrickPrizePayout, 6, 0x64);
                 if (task != NULL) {
                     i = 0;
                     do {
