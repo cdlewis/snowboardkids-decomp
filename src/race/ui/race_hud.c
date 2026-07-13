@@ -49,6 +49,11 @@ typedef struct {
 } RaceTimerUiS8Stride;
 
 typedef struct {
+    /* 0x000 */ s8 currentLap;
+    /* 0x001 */ u8 pad1[0x60C - 0x001];
+} RacePlayerLapCounterState;
+
+typedef struct {
     /* 0x000 */ s32 value;
     /* 0x004 */ u8 pad4[0x60C - 0x004];
 } RaceTimerUiS32Stride;
@@ -98,7 +103,7 @@ extern RaceTimer gRaceElapsedTimer;
 extern RaceTimer gRaceChallengeTimeLimit;
 extern u8 gRaceTimeTrialFinishRecorded;
 extern u8 gRaceChallengeFailed;
-extern s8 D_80122288[];
+extern RacePlayerLapCounterState D_80122288[];
 extern RaceTimerUiS8Stride D_80122289[];
 extern RaceTimerUiS8Stride D_80122293[];
 extern RaceTimerUiS8Stride D_80122295[];
@@ -731,19 +736,19 @@ void drawTwoPlayerRaceHud(s32 arg0) {
 #endif
 
 void drawTwoPlayerLapCounter(s32 arg0) {
-    int new_var2;
-    int new_var;
-    s32 sp1C;
-    s32 temp_v0;
-    s32 var_v1;
+    s32 y;
+    s32 viewportIndex;
 
-    temp_v0 = gCurrentViewportIndex;
-    if (0 == temp_v0) {
-        var_v1 = -0x30;
+    viewportIndex = gCurrentViewportIndex;
+    if (viewportIndex == 0) {
+        y = -0x30;
     } else {
-        var_v1 = 0x2A;
-    } sp1C = (s16)var_v1; new_var = 0xFF; drawMenuAsciiChar(0x70, (s16)var_v1, (D_80122288[new_var2 = temp_v0 * 0x60C] + 0x31) & new_var, 2); drawMenuAsciiChar(0x78, *(s16 *)((u8 *)&sp1C + 2), 0x2F, 2);
-    drawMenuAsciiChar(0x80, *(s16 *)((u8 *)&sp1C + 2), (gRaceLapCount + 0x30) & new_var, 2);
+        y = 0x2A;
+    }
+
+    drawMenuAsciiChar(0x70, (s16)y, (D_80122288[viewportIndex].currentLap + '1') & 0xFF, 2);
+    drawMenuAsciiChar(0x78, (s16)y, '/', 2);
+    drawMenuAsciiChar(0x80, (s16)y, (gRaceLapCount + '0') & 0xFF, 2);
 }
 
 void drawMultiplayerRaceHud(s32 arg0) {
@@ -793,7 +798,7 @@ void drawMultiplayerLapCounter(s32 arg0) {
         x = 0x2C;
     }
 
-    drawMenuAsciiChar((s16)x, -0x30, (((RaceTimerUiS8Stride *)D_80122288)[gCurrentViewportIndex].value + 0x31) & 0xFF, 2);
+    drawMenuAsciiChar((s16)x, -0x30, (D_80122288[gCurrentViewportIndex].currentLap + '1') & 0xFF, 2);
     drawMenuAsciiChar((s16)(x + 8), -0x30, 0x2F, 2);
     drawMenuAsciiChar((s16)(x + 0x10), -0x30, (gRaceLapCount + 0x30) & 0xFF, 2);
 }
