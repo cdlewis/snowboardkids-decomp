@@ -4944,7 +4944,7 @@ void updateRacePlayerMode07LaunchRampClimb(RacePlayer *player) {
 
 void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
     s32 scratch[13];
-    Vec3i *pos;
+    Vec3i *playerPos;
 
     if (player->updateTimer == 0) {
         player->updateTimer++;
@@ -4952,14 +4952,14 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
         scratch[11] = 0;
         scratch[12] = 0x400000;
         makeFixedRotationY((s16 *)&scratch[-1], gSpiralCourseObjectAngles[gRaceCourseIndex].angle);
-        pos = (Vec3i *) &player->posX;
-        transformVec3iByFixedMatrix((s16 *)&scratch[-1], (Vec3i *)&scratch[10], pos);
+        playerPos = (Vec3i *) &player->posX;
+        transformVec3iByFixedMatrix((s16 *)&scratch[-1], (Vec3i *)&scratch[10], playerPos);
         player->posX += gRaceCourseStartEntries[gRaceCourseIndex].unk8.x;
         player->posY += gRaceCourseStartEntries[gRaceCourseIndex].unk8.y + 0x80000;
         player->posZ += gRaceCourseStartEntries[gRaceCourseIndex].unk8.z;
         player->unk502 = gRaceCourseStartEntries[gRaceCourseIndex].unk4;
         player->unk508++;
-        player->unk34 = *(RaceVec3i *) pos;
+        player->unk34 = *(RaceVec3i *) playerPos;
         player->stateTimer = 0x28;
         player->stateFlags &= 0xFBFFFBFF;
         player->facingAngle = gRaceCourseStartEntries[gRaceCourseIndex].unk14;
