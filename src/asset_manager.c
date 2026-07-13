@@ -159,7 +159,7 @@ void removeHuffmanQueueNode(s16 arg0) {
     }
 }
 
-// decompressHuffmanAssetPayload best match: 73.790% (nonmatchings/decompressHuffmanAssetPayload-8331816093655448999/base_15.c)
+// decompressHuffmanAssetPayload best match: 78.507% (nonmatchings/decompressHuffmanAssetPayload-6866765942504228165/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/asset_manager/decompressHuffmanAssetPayload.s")
 
 #ifdef NON_MATCHING
@@ -181,6 +181,7 @@ void decompressHuffmanAssetPayload(u8 arg0, s32 arg1, s32 arg2, s32 arg3) {
     s32 temp_a2;
     s32 temp_a2_2;
     s32 temp_at;
+    s32 nodeIndex;
     s32 var_a0;
     u8 *var_a1;
     u8 *var_s1;
@@ -221,15 +222,16 @@ block_3:
     if (temp_at == 0) {
         temp_s3 = temp_s6 + 1;
         do {
+            nodeIndex = gHuffmanNodeCount;
             temp_t7 = *var_s1;
             var_s2 += 1;
             var_s1 += 1;
-            temp_v0 = &gHuffmanNodes[gHuffmanNodeCount];
+            temp_v0 = &gHuffmanNodes[nodeIndex];
             temp_v0->left = -1;
             temp_v0->right = -1;
             temp_v0->value = (s16) var_s0;
             temp_v0->weight = (s16) temp_t7;
-            insertHuffmanQueueNode((s16) gHuffmanNodeCount);
+            insertHuffmanQueueNode((s16) nodeIndex);
             var_s0 += 1;
             gHuffmanNodeCount += 1;
         } while (temp_s3 != var_s0);
@@ -241,12 +243,13 @@ loop_7:
         removeHuffmanQueueNode(temp_s3_2);
         temp_s6_2 = gHuffmanQueueTail;
         removeHuffmanQueueNode(temp_s6_2);
-        temp_v0_2 = &gHuffmanNodes[gHuffmanNodeCount];
+        nodeIndex = gHuffmanNodeCount;
+        temp_v0_2 = &gHuffmanNodes[nodeIndex];
         temp_v0_2->weight = gHuffmanNodes[temp_s3_2].weight + gHuffmanNodes[temp_s6_2].weight;
         temp_v0_2->left = temp_s6_2;
         temp_v0_2->right = temp_s3_2;
         temp_v0_2->value = -1;
-        insertHuffmanQueueNode((s16) gHuffmanNodeCount);
+        insertHuffmanQueueNode((s16) nodeIndex);
         gHuffmanNodeCount += 1;
         goto loop_7;
     }
