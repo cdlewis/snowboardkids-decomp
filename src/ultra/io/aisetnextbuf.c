@@ -2,27 +2,30 @@
 #include "PR/rcp.h"
 #include "PRinternal/osint.h"
 
-s32 osAiSetNextBuffer(void *bufPtr, u32 size) {
-    static u8 hdwrBugFlag = FALSE;
-    char *bptr;
+#define AI_DMA_BOUNDARY_MASK 0x3FFF
+#define AI_DMA_CLICK_OFFSET 0x2000
 
-    bptr = bufPtr;
+s32 osAiSetNextBuffer(void *buffer, u32 size) {
+    static u8 needsDmaAddressWorkaround = FALSE;
+    u8 *dmaStart;
 
-    if (hdwrBugFlag) {
-        bptr = (u8 *)bufPtr - 0x2000;
+    dmaStart = buffer;
+
+    if (needsDmaAddressWorkaround) {
+        dmaStart = (u8 *)buffer - AI_DMA_CLICK_OFFSET;
     }
 
-    if ((((u32)bufPtr + size) & 0x3fff) == 0x2000) {
-        hdwrBugFlag = TRUE;
+    if ((((u32)buffer + size) & AI_DMA_BOUNDARY_MASK) == AI_DMA_CLICK_OFFSET) {
+        needsDmaAddressWorkaround = TRUE;
     } else {
-        hdwrBugFlag = FALSE;
+        needsDmaAddressWorkaround = FALSE;
     }
 
     if (__osAiDeviceBusy()) {
         return -1;
     }
 
-    IO_WRITE(AI_DRAM_ADDR_REG, osVirtualToPhysical(bptr));
+    IO_WRITE(AI_DRAM_ADDR_REG, osVirtualToPhysical(dmaStart));
     IO_WRITE(AI_LEN_REG, size);
     return 0;
 }
