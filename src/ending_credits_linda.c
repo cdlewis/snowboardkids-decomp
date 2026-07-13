@@ -7,7 +7,9 @@
 #include "race_player_model_renderer.h"
 
 typedef s16 FixedMatrix3sScratch[0x10];
-typedef s32 MatrixWordCopy[8];
+typedef struct MatrixWordCopy {
+    s32 words[8];
+} MatrixWordCopy;
 
 struct EndingCreditsLinda {
     char pad[0x18];
@@ -41,7 +43,7 @@ extern s32 allocFixedTransformMatrix(void *);
 extern void makeFixedRotationX(void *, s16);
 extern void makeFixedRotationZ(void *, s16);
 extern void multiplyFixedMatrix3s(void *, void *, void *);
-extern void makeFixedRotationYX(void *, s16, s16, void *);
+extern void makeFixedRotationYX(void *, s16, s16, ...);
 extern u16 gEndingCreditsSequencePhase;
 extern u8 gEndingCreditsHandshakeState;
 extern s32 gModelRenderCallbackList;
@@ -918,11 +920,8 @@ void updateEndingCreditsTumblingSnowboardWaitForRemove(EndingCreditsTumblingSnow
     }
 }
 
-// updateEndingCreditsTumblingSnowboardBounce best match: 95.784% (base_13.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_linda/updateEndingCreditsTumblingSnowboardBounce.s")
-
-#ifdef NON_MATCHING
 void updateEndingCreditsTumblingSnowboardBounce(EndingCreditsTumblingSnowboard *arg0) {
+    volatile s32 pad[2];
     FixedMatrix3sScratch sp48;
     FixedMatrix3sScratch sp28;
     void *sp24[1];
@@ -970,20 +969,12 @@ void updateEndingCreditsTumblingSnowboardBounce(EndingCreditsTumblingSnowboard *
         makeFixedRotationZ(sp28, 0xC00);
         multiplyFixedMatrix3s(sp48, sp28, sp24[0]);
         makeFixedRotationX(sp48, 0x300);
-        ((MatrixWordCopy *) sp28)[0][0] = ((MatrixWordCopy *) sp24[0])[0][0];
-        ((MatrixWordCopy *) sp28)[0][1] = ((MatrixWordCopy *) sp24[0])[0][1];
-        ((MatrixWordCopy *) sp28)[0][2] = ((MatrixWordCopy *) sp24[0])[0][2];
-        ((MatrixWordCopy *) sp28)[0][3] = ((MatrixWordCopy *) sp24[0])[0][3];
-        ((MatrixWordCopy *) sp28)[0][4] = ((MatrixWordCopy *) sp24[0])[0][4];
-        ((MatrixWordCopy *) sp28)[0][5] = ((MatrixWordCopy *) sp24[0])[0][5];
-        ((MatrixWordCopy *) sp28)[0][6] = ((MatrixWordCopy *) sp24[0])[0][6];
-        ((MatrixWordCopy *) sp28)[0][7] = ((MatrixWordCopy *) sp24[0])[0][7];
+        *(MatrixWordCopy *) sp28 = *(MatrixWordCopy *) sp24[0];
         multiplyFixedMatrix3s(sp28, sp48, sp24[0]);
     }
 
     addRenderCallback(&gModelRenderCallbackList, drawEndingCreditsTumblingSnowboard, arg0);
 }
-#endif
 
 void waitEndingCreditsTumblingSnowboardPhase15(EndingCreditsTumblingSnowboard *arg0) {
     if (gEndingCreditsSequencePhase == 0x15) {
