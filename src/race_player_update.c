@@ -3789,7 +3789,7 @@ void updateRacePlayerMode08SpinoutRecover(RaceInputPlayer *player) {
     }
 }
 
-// updateRacePlayerMode06TerrainFall best match: 91.118% (nonmatchings/updateRacePlayerMode06TerrainFall-8331816093655448999/base_4.c)
+// updateRacePlayerMode06TerrainFall best match: 96.974% (nonmatchings/updateRacePlayerMode06TerrainFall-6866765942504228165/base_12.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode06TerrainFall.s")
 
@@ -3807,9 +3807,10 @@ void updateRacePlayerMode06TerrainFall(RaceInputPlayer *player) {
 
     updateState = player->updateState;
     if (updateState == 0) {
+        updateState++;
         stateFlags = player->stateFlags & 0xFE0C1FFB;
-        player->stateFlags = stateFlags;
-        player->updateState = updateState + 1;
+        *(volatile u32 *)&player->stateFlags = stateFlags;
+        player->updateState = updateState;
         player->stateTimer = 0x3C;
         player->stateFlags = stateFlags | 0x42000;
         player->updateTimer = 0;
@@ -3829,7 +3830,7 @@ void updateRacePlayerMode06TerrainFall(RaceInputPlayer *player) {
     updateTimer = player->updateTimer;
     switch (updateTimer) {
     case 0:
-        yVel = player->stateTimer - 1;
+        yVel = (player->stateTimer - 1) & 0xFFFFFFFFFFFFFFFFu;
         player->stateTimer = yVel;
         if (yVel == 0) {
             player->updateTimer++;
@@ -3860,9 +3861,7 @@ void updateRacePlayerMode06TerrainFall(RaceInputPlayer *player) {
                 }
             } while (1);
             player->posY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
-            player->unk34.x = posX[0];
-            player->unk34.y = posX[1];
-            player->unk34.z = posX[2];
+            player->unk34 = player->pos;
             player->velocity.x = 0;
             player->velocity.y = 0;
             player->velocity.z = 0;
