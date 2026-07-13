@@ -452,7 +452,7 @@ void renderRaceCourseModel(void *arg0) {
     }
 }
 
-// renderRaceCourseBackdrop best match: 82.651% (base_6.c)
+// renderRaceCourseBackdrop best match: 83.627% (base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/renderRaceCourseBackdrop.s")
 
 #ifdef NON_MATCHING
@@ -476,14 +476,20 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
     RaceCamera *camera;
     RaceCourseBackdropEffect *temp_s3;
     CourseBackdropAssetHandles *handles;
+    s32 x;
+    s32 y;
+    s32 z;
 
     temp_s3 = arg0;
     handles = (CourseBackdropAssetHandles *)&gAssetHandles;
     sp100 = gIdentityFixedTransform;
     camera = &D_801121E0[gCurrentViewportIndex];
-    sp100.basePos.x = -camera->transformOffset.x;
-    sp100.basePos.y = -camera->transformOffset.y;
-    sp100.basePos.z = -camera->transformOffset.z;
+    x = camera->transformOffset.x;
+    y = camera->transformOffset.y;
+    z = camera->transformOffset.z;
+    sp100.basePos.x = -x;
+    sp100.basePos.y = -y;
+    sp100.basePos.z = -z;
 
     temp_s3->matrix = allocFixedTransformMatrix(&sp100);
     if (temp_s3->matrix != NULL) {
