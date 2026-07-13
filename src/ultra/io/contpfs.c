@@ -179,47 +179,47 @@ s32 __osGetId(OSPfs* pfs) {
 #endif
     u16 sum;
     u16 isum;
-    u8 temp[BLOCKSIZE];
-    __OSPackId newid;
+    __OSPackId packId;
+    __OSPackId repairedId;
     s32 ret;
-    __OSPackId* id;
+    __OSPackId* validId;
 
     SET_ACTIVEBANK_TO_ZERO();
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, (u8*)temp));
-    __osIdCheckSum((u16*)temp, &sum, &isum);
-    id = (__OSPackId*)temp;
+    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, (u8*)&packId));
+    __osIdCheckSum((u16*)&packId, &sum, &isum);
+    validId = &packId;
 
-    if (id->checksum != sum || id->inverted_checksum != isum) {
-        ret = __osCheckPackId(pfs, id);
+    if (validId->checksum != sum || validId->inverted_checksum != isum) {
+        ret = __osCheckPackId(pfs, validId);
 
         if (ret == PFS_ERR_ID_FATAL) {
-            ERRCK(__osRepairPackId(pfs, id, &newid));
-            id = &newid;
+            ERRCK(__osRepairPackId(pfs, validId, &repairedId));
+            validId = &repairedId;
         } else if (ret != 0) {
             return ret;
         }
     }
 
-    if ((id->deviceid & 1) == 0) {
-        ERRCK(__osRepairPackId(pfs, id, &newid));
-        id = &newid;
+    if ((validId->deviceid & 1) == 0) {
+        ERRCK(__osRepairPackId(pfs, validId, &repairedId));
+        validId = &repairedId;
 
-        if ((id->deviceid & 1) == 0) {
+        if ((validId->deviceid & 1) == 0) {
             return PFS_ERR_DEVICE;
         }
     }
 
 #if BUILD_VERSION >= VERSION_J
-    bcopy(id, pfs->id, BLOCKSIZE);
+    bcopy(validId, pfs->id, BLOCKSIZE);
 #else
     for (k = 0; k < ARRLEN(pfs->id); k++) {
-        pfs->id[k] = ((u8 *)id)[k];
+        pfs->id[k] = ((u8 *)validId)[k];
     }
 #endif
-    pfs->version = id->version;
-    pfs->banks = id->banks;
+    pfs->version = validId->version;
+    pfs->banks = validId->banks;
     pfs->inode_start_page = 1 + DEF_DIR_PAGES + (2 * pfs->banks);
-    pfs->dir_size = 16;
+    pfs->dir_size = DEF_DIR_PAGES * PFS_ONE_PAGE;
     pfs->inode_table = PFS_ONE_PAGE;
     pfs->minode_table = (1 + pfs->banks) * PFS_ONE_PAGE;
     pfs->dir_table = pfs->minode_table + pfs->banks * PFS_ONE_PAGE;
