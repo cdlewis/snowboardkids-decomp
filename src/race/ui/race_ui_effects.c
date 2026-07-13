@@ -3609,7 +3609,7 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
     }
 
     for (i = 0; i < 8; i++) {
-        func_80060454((void *)arg0->pos.x, (void *)arg0->pos.y, (void *)arg0->pos.z, i);
+        spawnRaceUiBurstTextParticle((void *)arg0->pos.x, (void *)arg0->pos.y, (void *)arg0->pos.z, i);
     }
 
     enqueuePositionalSoundEffect(0x15, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
@@ -3680,65 +3680,65 @@ void func_8005FED0(RaceUiTextParticleActor *arg0) {
     }
 }
 
-void func_800601F8(void *arg0) {
-    s32 temp;
+void updateRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
+    s32 velocityY;
 
     if (gRaceUpdatePaused == 0) {
-        temp = *(s32 *)((u8 *)arg0 + 0x4C);
-        *(s32 *)((u8 *)arg0 + 0x18) += *(s32 *)((u8 *)arg0 + 0x48);
-        *(s32 *)((u8 *)arg0 + 0x1C) += temp;
-        *(s32 *)((u8 *)arg0 + 0x20) += *(s32 *)((u8 *)arg0 + 0x50);
-        *(s32 *)((u8 *)arg0 + 0x4C) = temp - 0x8000;
-        *(s16 *)((u8 *)arg0 + 0x54) = *(s16 *)((u8 *)arg0 + 0x54) + 1;
-        if (*(s16 *)((u8 *)arg0 + 0x54) >= 0x10) {
+        velocityY = arg0->velocity.y;
+        arg0->pos.x += arg0->velocity.x;
+        arg0->pos.y += velocityY;
+        arg0->pos.z += arg0->velocity.z;
+        arg0->velocity.y = velocityY - 0x8000;
+        arg0->timer++;
+        if (arg0->timer >= 0x10) {
             removeCallbackTask(arg0);
             return;
         }
     }
-    if (*(u8 *)((u8 *)arg0 + 0x57) == 0) {
+    if (arg0->useAltTextures == 0) {
         addRenderCallback(&D_801248EC, func_8005FBA8, arg0);
         return;
     }
     addRenderCallback(&gSceneModelRenderCallbackList, func_8005FED0, arg0);
 }
 
-void func_800602BC(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x54) = 0;
-    *(Vec3i *)((u8 *)arg0 + 0x48) = D_800D61C0[*(u16 *)((u8 *)arg0 + 0x10)];
-    if (*(u8 *)((u8 *)arg0 + 0x57) == 0) {
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x27, (u8 *)arg0 + 0x38, (u8 *)arg0 + 0x28);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x28, (u8 *)arg0 + 0x3C, (u8 *)arg0 + 0x2C);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x29, (u8 *)arg0 + 0x40, (u8 *)arg0 + 0x30);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2A, (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x34);
+void initRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
+    arg0->timer = 0;
+    arg0->velocity = D_800D61C0[arg0->index];
+    if (arg0->useAltTextures == 0) {
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x27, &arg0->images[0], &arg0->palettes[0]);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x28, &arg0->images[1], &arg0->palettes[1]);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x29, &arg0->images[2], &arg0->palettes[2]);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2A, &arg0->images[3], &arg0->palettes[3]);
     } else {
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2B, (u8 *)arg0 + 0x38, (u8 *)arg0 + 0x28);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2C, (u8 *)arg0 + 0x3C, (u8 *)arg0 + 0x2C);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2D, (u8 *)arg0 + 0x40, (u8 *)arg0 + 0x30);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2E, (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x34);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2B, &arg0->images[0], &arg0->palettes[0]);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2C, &arg0->images[1], &arg0->palettes[1]);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2D, &arg0->images[2], &arg0->palettes[2]);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2E, &arg0->images[3], &arg0->palettes[3]);
     }
-    func_800601F8(arg0);
-    setCallbackTaskCallback(arg0, func_800601F8);
+    updateRaceUiBurstTextParticle(arg0);
+    setCallbackTaskCallback(arg0, updateRaceUiBurstTextParticle);
 }
 
-void func_80060454(void *arg0, void *arg1, void *arg2, s16 arg3) {
-    void *temp = createCallbackTaskPreservingArgs(func_800602BC, 5, 0x1E);
-    if (temp != NULL) {
-        *(s8 *)((u8 *)temp + 0x57) = 0;
-        *(s16 *)((u8 *)temp + 0x10) = arg3;
-        *(void **)((u8 *)temp + 0x18) = arg0;
-        *(void **)((u8 *)temp + 0x1C) = arg1;
-        *(void **)((u8 *)temp + 0x20) = arg2;
+void spawnRaceUiBurstTextParticle(void *arg0, void *arg1, void *arg2, s16 arg3) {
+    RaceUiTextParticleActor *actor = createCallbackTaskPreservingArgs(initRaceUiBurstTextParticle, 5, 0x1E);
+    if (actor != NULL) {
+        actor->useAltTextures = 0;
+        actor->index = arg3;
+        actor->pos.x = (s32)arg0;
+        actor->pos.y = (s32)arg1;
+        actor->pos.z = (s32)arg2;
     }
 }
 
-void func_800604CC(void *arg0, void *arg1, void *arg2, s16 arg3) {
-    void *temp = createCallbackTaskPreservingArgs(func_800602BC, 5, 0x1E);
-    if (temp != NULL) {
-        *(s8 *)((u8 *)temp + 0x57) = 1;
-        *(s16 *)((u8 *)temp + 0x10) = arg3;
-        *(void **)((u8 *)temp + 0x18) = arg0;
-        *(void **)((u8 *)temp + 0x1C) = arg1;
-        *(void **)((u8 *)temp + 0x20) = arg2;
+void spawnRaceUiAltBurstTextParticle(void *arg0, void *arg1, void *arg2, s16 arg3) {
+    RaceUiTextParticleActor *actor = createCallbackTaskPreservingArgs(initRaceUiBurstTextParticle, 5, 0x1E);
+    if (actor != NULL) {
+        actor->useAltTextures = 1;
+        actor->index = arg3;
+        actor->pos.x = (s32)arg0;
+        actor->pos.y = (s32)arg1;
+        actor->pos.z = (s32)arg2;
     }
 }
 
@@ -4072,7 +4072,8 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
     enqueuePositionalSoundEffect(0x11, &player->pos1C, 0x7F, 0x32);
 
     for (i = 0; i < 8; i++) {
-        func_800604CC((void *)arg0->copyBlock.words[5], (void *)arg0->copyBlock.words[6], (void *)arg0->copyBlock.words[7], i);
+        spawnRaceUiAltBurstTextParticle((void *)arg0->copyBlock.words[5], (void *)arg0->copyBlock.words[6],
+                                        (void *)arg0->copyBlock.words[7], i);
     }
 
     removeCallbackTask(arg0);
@@ -5639,8 +5640,9 @@ void updateRaceScoreAttackRings(void *arg0) {
                                         trigger->triggered = 1;
                                         i = 0;
                                         do {
-                                            func_800604CC((void *)entry->position.x, (void *)(entry->position.y + 0x70000),
-                                                          (void *)entry->position.z, i);
+                                            spawnRaceUiAltBurstTextParticle((void *)entry->position.x,
+                                                                           (void *)(entry->position.y + 0x70000),
+                                                                           (void *)entry->position.z, i);
                                             i++;
                                         } while (i != 8);
                                         entry->active = 0;
