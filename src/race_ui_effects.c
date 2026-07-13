@@ -1630,7 +1630,7 @@ void func_800599DC(void *arg0) {
     setCallbackTaskCallback(arg0, func_80059950);
 }
 
-// func_80059A04 best match: 96.300% (nonmatchings/func_80059A04-5272447827802519043/base_5.c)
+// func_80059A04 best match: 96.586% (nonmatchings/func_80059A04-3242520251544044307/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059A04.s")
 
 #ifdef NON_MATCHING
@@ -1649,29 +1649,32 @@ void func_80059A04(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
     y = arg2;
     color = arg3;
     end = &buffer[-0xE];
-    ptr = buffer - 0x10; do { drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+    ptr = buffer - 0x10; do { drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
         ptr++;
         x += 8;
     } while (ptr < end);
 
-    drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color);
+    drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color);
     x += 8;
     sprintf(buffer - 0x10, D_800E12C4, record->second);
     ptr = buffer - 0x10;
     end = &buffer[-0xE];
     do {
-        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+        if (1) {
+            drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+        }
         ptr++;
         x += 8;
     } while (ptr < end);
 
-    drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, color);
+    drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, color);
     x += 8;
-    sprintf(buffer - 0x10, D_800E12CC, record->third >> 8);
-    ptr = buffer - 0x10;
+    end = buffer;
+    sprintf(end - 0x10, D_800E12CC, record->third >> 8);
+    ptr = end - 0x10;
     end = &buffer[-0xE];
     do {
-        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
+        drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, color);
         do {
             ptr++;
             x += 8;
