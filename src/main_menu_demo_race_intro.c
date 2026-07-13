@@ -9,6 +9,7 @@
 #include "race_player_update.h"
 #include "race_hud.h"
 #include "viewport_manager.h"
+#include "race_player_input.h"
 
 typedef struct {
     /* 0x00 */ u8 courseIndex;
@@ -24,21 +25,6 @@ typedef struct {
 } MainMenuDemoRaceIntroEntry;
 
 typedef struct {
-    /* 0x000 */ s16 playerIndex;
-    /* 0x002 */ char pad2[2];
-    /* 0x004 */ u8 unk4;
-    /* 0x005 */ char pad5[0xB];
-    /* 0x010 */ u8 characterId;
-    /* 0x011 */ u8 unk11;
-    /* 0x012 */ u8 unk12;
-    /* 0x013 */ s8 isActive;
-    /* 0x014 */ s8 soundDisabled;
-    /* 0x015 */ s8 unk15;
-    /* 0x016 */ s8 replayInputSource;
-    /* 0x017 */ char pad17[0x5F5];
-} RaceIntroPlayer;
-
-typedef struct {
     /* 0x00 */ char pad0[0xAC];
     /* 0xAC */ s8 active;
     /* 0xAD */ char padAD[3];
@@ -46,7 +32,6 @@ typedef struct {
 
 extern RaceIntroTransitionState *gCurrentGameTask;
 extern RaceIntroCamera D_801121E0[];
-extern RaceIntroPlayer gRacePlayers[];
 extern MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[];
 extern u8 gMainMenuDemoRaceIntroLoadCourseAssetsFlags[];
 extern s16 gMenuFadeAlpha;
@@ -78,7 +63,7 @@ extern void releaseMenuAssetHandles(void);
 
 #ifdef NON_MATCHING
 void initMainMenuDemoRaceIntro(void) {
-    RaceIntroPlayer *players;
+    RacePlayer *players;
     MainMenuDemoRaceIntroEntry *demoEntry;
     volatile register s32 one;
     s32 character0;

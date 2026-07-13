@@ -5,6 +5,7 @@
 #include "sound_manager.h"
 #include "system_runtime.h"
 #include "audio_engine.h"
+#include "race_player_input.h"
 
 #define SOUND_MANAGER_FREE_HANDLE_COUNT 13
 #define SOUND_MANAGER_QUEUE_CAPACITY 64
@@ -38,12 +39,6 @@ typedef struct PositionalSoundRequest {
     s16 mode;
     f32 pitch;
 } PositionalSoundRequest;
-
-typedef struct RacePlayerSoundView {
-    u8 pad0[0x1C];
-    SoundPosition pos;
-    u8 pad28[0x60C - 0x28];
-} RacePlayerSoundView;
 
 typedef struct AudioCamera {
     u8 pad0[0x94];
@@ -114,7 +109,6 @@ extern u16 gCourseMusicSequenceBanks[];
 extern AudioCamera D_801121E0[];
 extern AudioCamera D_801124A0[];
 extern s32 gPlayerPositionalSoundHandle0[];
-extern RacePlayerSoundView gRacePlayers[];
 extern u8 gCurrentQueuedSoundType;
 extern u8 gCurrentQueuedSoundId;
 extern u8 gCurrentQueuedSoundVolume;

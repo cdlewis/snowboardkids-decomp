@@ -6,6 +6,7 @@
 #include "menu_renderer.h"
 #include "character_select_ui.h"
 #include "viewport_manager.h"
+#include "race_player_input.h"
 
 typedef struct {
     char pad[0x18];
@@ -34,14 +35,6 @@ typedef struct {
     u16 characterId;
 } CharacterId;
 
-typedef struct {
-    char pad0[5];
-    u8 characterId;
-    char pad6[2];
-    u8 isCpu;
-    char pad9[0x603];
-} CharacterSelectPlayer;
-
 extern void releaseMenuAssetHandles(void);
 extern void enqueueSoundEffect(s32, s32);
 extern void updateCharacterSelectMenu(void);
@@ -50,7 +43,6 @@ extern void requestMusicSequenceBank(s32);
 extern CharacterSelectMenuState *gCurrentGameTask;
 extern CharacterSelectState gCharacterSelectHudState;
 extern CharacterId gCharacterSelectIdOrder[];
-extern CharacterSelectPlayer gRacePlayers[];
 extern CallbackTask *gActiveMenuTask;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
@@ -89,7 +81,7 @@ extern u8 gFramebufferSwapHold;
 
 #ifdef NON_MATCHING
 void initCharacterSelectMenu(void) {
-    CharacterSelectPlayer *player;
+    RacePlayer *player;
     CharacterSelectState *state;
     s32 i;
     s32 j;
@@ -123,7 +115,7 @@ void initCharacterSelectMenu(void) {
             do {
                 j = 0;
 loop_1:
-                if (player->characterId == gCharacterSelectIdOrder[j].characterId) {
+                if (player->selectedCharacterId == gCharacterSelectIdOrder[j].characterId) {
                     D_8010AE64[i] = j;
                 } else {
                     j++;
@@ -146,7 +138,7 @@ loop_1:
             do {
                 j = i + 1;
                 keepGoing = j < playerCount;
-                player->characterId = i;
+                player->selectedCharacterId = i;
                 i = j;
                 player++;
                 selectionPtr++;
@@ -171,7 +163,7 @@ loop_1:
         do {
             timerPtr++;
             player++;
-            player[-1].isCpu = 0;
+            player[-1].menuState = 0;
             timerPtr[-1] = 0;
         } while ((u32) timerPtr < (u32) timerEnd);
     }
@@ -209,7 +201,7 @@ loop_1:
 #ifdef NON_MATCHING
 void updateCharacterSelectConfirmationMenu(void) {
     CharacterSelectState *state;
-    CharacterSelectPlayer *player;
+    RacePlayer *player;
     u8 *readyPtr;
     u8 *readyEnd;
     s32 oldSelection;
@@ -256,7 +248,7 @@ void updateCharacterSelectConfirmationMenu(void) {
                     do {
                         readyPtr++;
                         player++;
-                        player[-1].isCpu = 0;
+                        player[-1].menuState = 0;
                         readyPtr[2] = 0;
                     } while ((u32) readyPtr < (u32) readyEnd);
                 }
@@ -275,7 +267,7 @@ void updateCharacterSelectConfirmationMenu(void) {
                 do {
                     readyPtr++;
                     player++;
-                    player[-1].isCpu = 0;
+                    player[-1].menuState = 0;
                     readyPtr[2] = 0;
                 } while ((u32) readyPtr < (u32) readyEnd);
             }

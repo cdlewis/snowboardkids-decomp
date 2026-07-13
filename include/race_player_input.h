@@ -19,9 +19,16 @@ typedef struct RacePlayer {
         u16 playerIndexU16;
         u16 playerIndexU;
     };
-    /* 0x002 */ char pad2[2];
+    /* 0x002 */ s16 unk2;
     /* 0x004 */ u8 unk4;
-    /* 0x005 */ char pad5[0xB];
+    /* 0x005 */ u8 selectedCharacterId;
+    /* 0x006 */ u8 menuSelection;
+    /* 0x007 */ u8 selectionUnlockState;
+    /* 0x008 */ u8 menuState;
+    /* 0x009 */ u8 unk9;
+    /* 0x00A */ u8 unkA;
+    /* 0x00B */ u8 unkB;
+    /* 0x00C */ s32 unkC;
     /* 0x010 */ u8 characterId;
     /* 0x011 */ u8 unk11;
     /* 0x012 */ u8 unk12;
@@ -30,7 +37,7 @@ typedef struct RacePlayer {
     /* 0x015 */ s8 unk15;
     /* 0x016 */ s8 replayInputSource;
     /* 0x017 */ u8 unk17;
-    /* 0x018 */ char pad18[2];
+    /* 0x018 */ s16 unk18;
     /* 0x01A */ u8 actionTriggerChance;
     /* 0x01B */ u8 itemTriggerChance;
     /* 0x01C */ union {
@@ -41,9 +48,7 @@ typedef struct RacePlayer {
             s32 posZ;
         };
     };
-    /* 0x028 */ char pad28[4];
-    /* 0x02C */ s32 unk2C;
-    /* 0x030 */ char pad30[4];
+    /* 0x028 */ RaceVec3i unk28;
     /* 0x034 */ RaceVec3i unk34;
     /* 0x040 */ union {
         RaceVec3i unk40;
@@ -186,10 +191,10 @@ typedef struct RacePlayer {
     /* 0x50A */ char pad50A[6];
     /* 0x510 */ s16 shieldEffectTimer;
     /* 0x512 */ s8 itemEffectType;
-    /* 0x513 */ char pad513[1];
+    /* 0x513 */ s8 itemEffectPalette;
     /* 0x514 */ s8 itemEffectCount;
     /* 0x515 */ s8 actionEffectType;
-    /* 0x516 */ char pad516[1];
+    /* 0x516 */ s8 actionEffectPalette;
     /* 0x517 */ s8 unk517;
     /* 0x518 */ s8 randomIndex;
     /* 0x519 */ s8 unk519;
@@ -206,12 +211,17 @@ typedef struct RacePlayer {
     /* 0x52E */ char pad52E[0x3A];
     /* 0x568 */ s32 unk568;
     /* 0x56C */ s32 unk56C;
-    /* 0x570 */ char pad570[8];
+    /* 0x570 */ s16 unk570;
+    /* 0x572 */ s16 unk572;
+    /* 0x574 */ s16 unk574;
+    /* 0x576 */ s16 unk576;
     /* 0x578 */ s16 unk578;
     /* 0x57A */ s8 unk57A;
     /* 0x57B */ s8 unk57B;
     /* 0x57C */ s16 unk57C;
-    /* 0x57E */ char pad57E[4];
+    /* 0x57E */ s16 unk57E;
+    /* 0x580 */ s8 unk580;
+    /* 0x581 */ s8 unk581;
     /* 0x582 */ s16 unk582;
     /* 0x584 */ s16 unk584;
     /* 0x586 */ char pad586[2];
