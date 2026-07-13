@@ -21,7 +21,7 @@ typedef union MainMenuModelAnimationBank {
 } MainMenuModelAnimationBank;
 
 typedef struct MainMenuModelPart {
-    s32 unk0;
+    s32 previousPartOffsetZ;
     s8 displayObjectIndex;
     char pad5[0x1];
     MainMenuModelVec3s rot;
@@ -48,7 +48,7 @@ typedef struct MainMenuSceneModel {
     s16 framesRemaining;
     s16 frameDuration;
     MainMenuModelPart parts[14];
-    char pad130[0x4];
+    s32 lastPartOffsetZ;
     MainMenuModelVec3i pos;
     MainMenuModelVec3s rot;
     s16 unk146;
