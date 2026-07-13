@@ -72,6 +72,19 @@ extern s8 D_8010AE53;
 extern s8 D_8010AE54;
 extern s8 D_8010AE55;
 extern s8 D_8010AE56;
+// Per-player "currently highlighted" index, reused across CharacterSelectState.phase.
+// Confirmed live via RAM watch/poke (BizHawk), not derivable from source alone:
+//   phase 0 (character roster, this file): index into the D_800B3400 lookup
+//     table, NOT the same value as CharacterSelectPlayer.characterId (see
+//     func_80004960 above, which matches player->characterId against
+//     D_800B3400[j] and stores j here). Observed: 1 = Slash, 2 = Nancy,
+//     3 = Jam, 4 = Linda, 5 = Tommy. 0 or 6 = Shinobin (ambiguous - not
+//     unlocked in the test savegame, so which one couldn't be confirmed).
+//   phase 3 (board type, driven by the still-unmatched func_80004CC8 below):
+//     0 = Free Style, 1 = All Around, 2 = Alpine. 3 highlights the "back"
+//     button. 4 and 5 block confirming but still allow navigating back to
+//     0-2 - likely locked/unowned special boards; exact meaning of 4 vs 5
+//     (and whether there are more) not yet confirmed.
 extern s8 D_8010AE64[];
 extern s32 D_801235B4;
 extern s32 D_80123778;
@@ -209,6 +222,9 @@ loop_1:
 #endif
 
 // func_80004CC8 best match: 52.734% (nonmatchings/func_80004CC8-7273315160691878794/base_4.c)
+// This is the per-frame driver for both the character roster (phase 0) and,
+// once CharacterSelectState.phase reaches 3, the board-type picker. See the
+// D_8010AE64 comment above for the live-observed value mapping for both.
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_menu/func_80004CC8.s")
 
 // func_80005290 best match: 85.264%
