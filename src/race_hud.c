@@ -1025,14 +1025,11 @@ void updateRaceCourseProgressMeter(void) {
 }
 #endif
 
-// updateRaceHud best match: 95.208% at nonmatchings/updateRaceHud-3357475854818838508/base_14.c.
+// updateRaceHud best match: 95.252% at nonmatchings/updateRaceHud-2870645799593382959/base_11.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/updateRaceHud.s")
 
 #ifdef NON_MATCHING
 void updateRaceHud(void) {
-    RaceTimer sp38;
-    s32 sp40;
-    s32 sp3C;
     RaceTimerUiPlayer *player;
     s32 i;
     s8 palette;
@@ -1071,13 +1068,13 @@ void updateRaceHud(void) {
         do {
             if (player->tensDigitPalette != 0) {
                 if (player->tensDigitPalette == 4) {
-                    spawnRaceUiSparkle(-0x88, -0x30, i, 0, 0);
+                    spawnRaceUiSparkle(-0x88, -0x30, (s16)i, 0, 0);
                 }
                 player->tensDigitPalette--;
             }
             if (player->onesDigitPalette != 0) {
                 if (player->onesDigitPalette == 4) {
-                    spawnRaceUiSparkle(-0x68, -0x30, i, 0, 1);
+                    spawnRaceUiSparkle(-0x68, -0x30, (s16)i, 0, 1);
                 }
                 player->onesDigitPalette--;
             }
@@ -1112,13 +1109,13 @@ void updateRaceHud(void) {
         do {
             if (player->tensDigitPalette != 0) {
                 if (player->tensDigitPalette == 4) {
-                    spawnRaceUiSparkle(-0x10, -0x30, i, 1, 0);
+                    spawnRaceUiSparkle(-0x10, -0x30, (s16)i, 1, 0);
                 }
                 player->tensDigitPalette--;
             }
             if (player->onesDigitPalette != 0) {
                 if (player->onesDigitPalette == 4) {
-                    spawnRaceUiSparkle(0, -0x30, i, 1, 1);
+                    spawnRaceUiSparkle(0, -0x30, (s16)i, 1, 1);
                 }
                 player->onesDigitPalette--;
             }
@@ -1133,6 +1130,10 @@ void updateRaceHud(void) {
         }
         return;
     case 4:
+    {
+        s32 sp40;
+        s32 sp3C;
+
         if (!(gMenuFlowState & 3)) {
             incrementRaceElapsedTimer();
             if (gRaceTimeTrialFinishRecorded == 0) {
@@ -1147,7 +1148,11 @@ void updateRaceHud(void) {
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawTimeTrialHud, 0);
         addRenderCallback(&gRaceForegroundRenderCallbackList, drawTimeTrialLabels, 0);
         return;
+    }
     case 5:
+    {
+        RaceTimer sp38;
+
         if (!(gMenuFlowState & 3)) {
             incrementRaceElapsedTimer();
         }
@@ -1157,6 +1162,7 @@ void updateRaceHud(void) {
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawTargetTimeChallengeHud, 0);
         addRenderCallback(&gRaceForegroundRenderCallbackList, drawTargetTimeChallengeLabels, 0);
         return;
+    }
     case 6:
         if (!(gMenuFlowState & 3)) {
             decrementRaceChallengeTimeLimit();
