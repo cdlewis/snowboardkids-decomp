@@ -982,7 +982,7 @@ void updateRacePlayerGroundAlignment(RaceInputPlayer *player) {
 }
 #endif
 
-// updateRacePlayerLeanAngle best match: 95.985% (nonmatchings/updateRacePlayerLeanAngle-4/output-255-1/source.c)
+// updateRacePlayerLeanAngle best match: 96.138% (nonmatchings/updateRacePlayerLeanAngle-2663524570355072948/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/updateRacePlayerLeanAngle.s")
 
 #ifdef NON_MATCHING
@@ -1006,7 +1006,7 @@ s32 updateRacePlayerLeanAngle(RaceInputPlayer *player, s32 arg1, s16 arg2) {
     if (arg2 < -0x80) {
         arg2 = -0x80;
     }
-    player->unk2F6 = (unsigned long long)(temp_v0 + arg2);
+    player->unk2F6 = temp_v0 + arg2;
 
     arg2 = player->unk2F6 * player->unk2F8 / 0x3F;
     scale <<= 2;
@@ -1026,7 +1026,7 @@ s32 updateRacePlayerLeanAngle(RaceInputPlayer *player, s32 arg1, s16 arg2) {
     }
 
     arg1 = player->unk2EE;
-    temp_v0 = arg2 * scale / 0x1F0;
+    temp_v0 = ((arg2 * scale) / 0x1F0) & 0xFFFFFFFFFFFFFFFFu;
     player->unk2EE = player->unk2EE + ((temp_v0 - arg1) >> 2);
     return temp_v0;
 }
