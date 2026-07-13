@@ -81,26 +81,26 @@ void updateRaceMotionAnimationDebugViewer(void) {
         stepRaceMotionLoopingAnimation((RaceMotionState *)&gRaceMotionAnimationDebugViewerState);
     } else {
         buttons = gPlayerInputPressed;
-        if (buttons & 0x2000) {
+        if (buttons & Z_TRIG) {
             if (gRaceMotionAnimationDebugViewerState.modelFlags != 0) {
                 gRaceMotionAnimationDebugViewerState.modelFlags = 0;
             } else {
                 gRaceMotionAnimationDebugViewerState.modelFlags = 0x400;
             }
         }
-        if ((buttons & 8) && (gRaceMotionAnimationDebugViewerState.animationIndex != 0)) {
+        if ((buttons & U_CBUTTONS) && (gRaceMotionAnimationDebugViewerState.animationIndex != 0)) {
             gRaceMotionAnimationDebugViewerState.animationIndex--;
             gRaceMotionAnimationDebugViewerState.animationLoaded = 0;
         }
-        if (buttons & 4) {
+        if (buttons & D_CBUTTONS) {
             gRaceMotionAnimationDebugViewerState.animationLoaded = 0;
             gRaceMotionAnimationDebugViewerState.animationIndex++;
         }
-        if (gPlayerInputHeld & 2) {
+        if (gPlayerInputHeld & L_CBUTTONS) {
             stepRaceMotionLoopingAnimation((RaceMotionState *)&gRaceMotionAnimationDebugViewerState);
             buttons = gPlayerInputPressed;
         }
-        if (buttons & 1) {
+        if (buttons & R_CBUTTONS) {
             stepRaceMotionLoopingAnimation((RaceMotionState *)&gRaceMotionAnimationDebugViewerState);
         }
     }

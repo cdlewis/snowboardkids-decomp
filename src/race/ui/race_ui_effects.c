@@ -1246,7 +1246,7 @@ void func_800584A0(void *arg0) {
 }
 
 void func_80058538(void *arg0) {
-    if (gPlayerInputPressed & 0x8000) {
+    if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, func_800584A0);
@@ -1292,7 +1292,7 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
         }
     }
 
-    if (gPlayerInputPressed & 0x8000) {
+    if (gPlayerInputPressed & A_BUTTON) {
         gPlayer1Money = player->unk00C + arg0->score;
         if (player->mode != 3) {
             player->unk00C += player->unk568;
@@ -1599,7 +1599,7 @@ void func_80059854(void *arg0) {
     i = 0;
     if ((s32)gPlayerCount > 0) {
         input = &gPlayerInputPressed; do {
-            if ((*input & 0x8000) && !(gMenuFlowState & 0x10)) {
+            if ((*input & A_BUTTON) && !(gMenuFlowState & 0x10)) {
                 gMenuFlowState |= 0x10;
                 enqueueSoundEffect(0x18, 0x32);
                 setCallbackTaskCallback(actor, func_80059804);
@@ -1742,7 +1742,7 @@ void func_8005A07C(void *arg0) {
 }
 
 void func_8005A0E0(void *arg0) {
-    if (gPlayerInputPressed & 0x8000) {
+    if (gPlayerInputPressed & A_BUTTON) {
         gMenuFlowState |= 0x10;
         enqueueSoundEffect(0x18, 0x32);
         setCallbackTaskCallback(arg0, func_8005A07C);
@@ -2037,7 +2037,7 @@ void func_8005AEB0(void *arg0) {
 }
 
 void func_8005AF2C(void *arg0) {
-    if (gPlayerInputPressed & 0x8000) {
+    if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, func_8005AEB0);
@@ -2056,7 +2056,7 @@ void func_8005AFEC(void *arg0) {
 }
 
 void func_8005B068(void *arg0) {
-    if (gPlayerInputPressed & 0x8000) {
+    if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
             setCallbackTaskCallback(arg0, func_8005AF2C);
@@ -2082,7 +2082,7 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
     }
 
     value = arg0->value;
-    if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
+    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
@@ -2090,14 +2090,14 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
     arg0->value -= value;
 
     value = arg0->bonus;
-    if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
+    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unk00C += value;
     arg0->bonus -= value;
 
     value = arg0->target;
-    if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
+    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unk00C += value;
@@ -2486,7 +2486,7 @@ void func_8005C3E4(void *arg0) {
 }
 
 void func_8005C448(void *arg0) {
-    if (gPlayerInputPressed & 0x8000) {
+    if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, func_8005C3E4);
@@ -2504,7 +2504,7 @@ void func_8005C4EC(void *arg0) {
 }
 
 void func_8005C568(void *arg0) {
-    if (gPlayerInputPressed & 0x8000) {
+    if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
             setCallbackTaskCallback(arg0, func_8005C448);
@@ -2530,7 +2530,7 @@ void func_8005C64C(RaceUiDualCounterActor *arg0) {
     }
 
     value = arg0->leftValue;
-    if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
+    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
@@ -2538,21 +2538,21 @@ void func_8005C64C(RaceUiDualCounterActor *arg0) {
     arg0->leftValue -= value;
 
     value = arg0->rightValue;
-    if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
+    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unk00C += value;
     arg0->rightValue -= value;
 
     value = arg0->bonus;
-    if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
+    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unk00C += value;
     arg0->bonus -= value;
 
     value = arg0->leftTarget;
-    if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
+    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unk00C += value;
@@ -3018,7 +3018,7 @@ void func_8005DBD0(void *arg0) {
 }
 
 void func_8005DC4C(void *arg0) {
-    if (gPlayerInputPressed & 0x8000) {
+    if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, func_8005DBD0);
@@ -3037,7 +3037,7 @@ void func_8005DD0C(void *arg0) {
 }
 
 void func_8005DD88(void *arg0) {
-    if (gPlayerInputPressed & 0x8000) {
+    if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
             setCallbackTaskCallback(arg0, func_8005DC4C);
@@ -3063,7 +3063,7 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
     }
 
     value = arg0->pendingFirstValue;
-    if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
+    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
@@ -3071,14 +3071,14 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
     arg0->pendingFirstValue -= value;
 
     value = arg0->pendingSecondValue;
-    if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
+    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unk00C += value;
     arg0->pendingSecondValue -= value;
 
     value = arg0->pendingThirdValue;
-    if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
+    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unk00C += value;

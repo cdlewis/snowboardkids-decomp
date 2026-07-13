@@ -444,14 +444,14 @@ void updateCharacterSelectCourseMenu(void) {
                     selection = gRaceCourseIndex;
                     previousSelection = (s16) selection;
                     temp_input = gPlayerInputHeld;
-                    pressed = temp_input & 0x10800;
-                    if ((pressed == 0) && ((temp_input & 0x20400) == 0)) {
+                    pressed = temp_input & (STICK_UP | U_JPAD);
+                    if ((pressed == 0) && ((temp_input & (STICK_DOWN | D_JPAD)) == 0)) {
                         gMenuInputRepeatTimers = 0;
                     }
 
                     heldInput = gPlayerInputPressed;
                     repeatTimer = gMenuInputRepeatTimers;
-                    if ((heldInput & 0x10800) == 0) {
+                    if ((heldInput & (STICK_UP | U_JPAD)) == 0) {
                         if (((pressed != 0) && (repeatTimer >= 0xB)) && ((repeatTimer % 3) == 0)) {
                             if (repeatTimer == 0) {
                                 repeatTimer++;
@@ -461,8 +461,8 @@ void updateCharacterSelectCourseMenu(void) {
                                 selection = gRaceCourseIndex;
                             }
                             gMenuInputRepeatTimers = repeatTimer;
-                        } else if (((heldInput & 0x20400) != 0) ||
-                                   ((((temp_input & 0x20400) != 0) && (repeatTimer >= 0xB)) &&
+                        } else if (((heldInput & (STICK_DOWN | D_JPAD)) != 0) ||
+                                   ((((temp_input & (STICK_DOWN | D_JPAD)) != 0) && (repeatTimer >= 0xB)) &&
                                     ((repeatTimer % 3) == 0))) {
                             gMenuInputRepeatTimers = repeatTimer;
                             if (repeatTimer == 0) {
@@ -500,7 +500,7 @@ void updateCharacterSelectCourseMenu(void) {
                     }
 
                     temp_input = gPlayerInputPressed;
-                    if (((temp_input & 0x1000) || (temp_input & 0x8000)) &&
+                    if (((temp_input & START_BUTTON) || (temp_input & A_BUTTON)) &&
                         (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         enqueueSoundEffect(1, 0x32);
                         if ((*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex] != -1) {
@@ -514,7 +514,7 @@ void updateCharacterSelectCourseMenu(void) {
                             setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                             requestMusicSequenceStop(8);
                         }
-                    } else if ((temp_input & 0x4000) && (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
+                    } else if ((temp_input & B_BUTTON) && (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         enqueueSoundEffect(1, 0x32);
                         gCharacterSelectCourseCursorState.fields.state = 2;
                         gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
@@ -557,10 +557,10 @@ void updateCharacterSelectCourseSubmenu(void) {
         switch (gCharacterSelectCourseCursorState.fields.otherState) {
         case 2:
             input = gPlayerInputPressed;
-            if (input & 0x4000) {
+            if (input & B_BUTTON) {
                 gRacePlayers[8] = 3;
                 enqueueSoundEffect(1, 0x32);
-            } else if ((input & 0x8000) || (input & 0x1000)) {
+            } else if ((input & A_BUTTON) || (input & START_BUTTON)) {
                 enqueueSoundEffect(1, 0x32);
                 gMenuChoicePromptState = 1;
                 gCharacterSelectCourseCursorState.fields.otherState = 3;
@@ -570,21 +570,21 @@ void updateCharacterSelectCourseSubmenu(void) {
         case 3:
             if (gMenuChoicePromptState >= 3) {
                 input = gPlayerInputPressed;
-                if ((input & 0x10800) && (gMenuChoicePromptState != 3)) {
+                if ((input & (STICK_UP | U_JPAD)) && (gMenuChoicePromptState != 3)) {
                     gMenuChoicePromptState--;
                     enqueueSoundEffect(0x19, 0x32);
                     input = gPlayerInputPressed;
-                } else if ((input & 0x20400) && (gMenuChoicePromptState != 4)) {
+                } else if ((input & (STICK_DOWN | D_JPAD)) && (gMenuChoicePromptState != 4)) {
                     gMenuChoicePromptState++;
                     enqueueSoundEffect(0x19, 0x32);
                     input = gPlayerInputPressed;
                 }
 
-                if ((input & 0x8000) || (input & 0x1000)) {
+                if ((input & A_BUTTON) || (input & START_BUTTON)) {
                     enqueueSoundEffect(0x18, 0x32);
                     gMenuChoicePromptState += 2;
                     gCharacterSelectCourseCursorState.fields.otherState = 4;
-                } else if (input & 0x4000) {
+                } else if (input & B_BUTTON) {
                     enqueueSoundEffect(1, 0x32);
                     gMenuChoicePromptState = 6;
                     gCharacterSelectCourseCursorState.fields.otherState = 4;

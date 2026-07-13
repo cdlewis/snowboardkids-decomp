@@ -132,16 +132,16 @@ void updateRaceTypeSelectMenu(void) {
                 if (gRaceTypeSelectCursorAnimState == 1) {
                     selection = gRaceTypeSelection;
                     newInput = gPlayerInputHeld;
-                    pressedUp = newInput & 0x10800;
+                    pressedUp = newInput & (STICK_UP | U_JPAD);
                     sp18 = 3;
                     previousSelection = selection;
 
-                    if ((pressedUp == 0) && ((newInput & 0x20400) == 0)) {
+                    if ((pressedUp == 0) && ((newInput & (STICK_DOWN | D_JPAD)) == 0)) {
                         gMenuInputRepeatTimers = 0;
                     }
 
                     heldInput = gPlayerInputPressed;
-                    if ((heldInput & 0x10800) ||
+                    if ((heldInput & (STICK_UP | U_JPAD)) ||
                         ((pressedUp != 0) && (gMenuInputRepeatTimers >= 9) && ((gMenuInputRepeatTimers % 3) == 0))) {
                         repeatTimer = gMenuInputRepeatTimers;
                         tempSelection = selection - 1;
@@ -155,8 +155,8 @@ void updateRaceTypeSelectMenu(void) {
                         }
                     } else {
                         repeatTimer = gMenuInputRepeatTimers;
-                        if ((heldInput & 0x20400) ||
-                            ((newInput & 0x20400) && (repeatTimer >= 9) && ((repeatTimer % 3) == 0))) {
+                        if ((heldInput & (STICK_DOWN | D_JPAD)) ||
+                            ((newInput & (STICK_DOWN | D_JPAD)) && (repeatTimer >= 9) && ((repeatTimer % 3) == 0))) {
                             if (repeatTimer == 0) {
                                 gMenuInputRepeatTimers = repeatTimer + 1;
                                 repeatTimer = gMenuInputRepeatTimers;
@@ -181,7 +181,7 @@ void updateRaceTypeSelectMenu(void) {
                         gRaceCourseIndex = 9;
                     }
 
-                    if ((heldInput & 0x1000) || ((heldInput & 0x8000) && (gMenuFlowState == 4))) {
+                    if ((heldInput & START_BUTTON) || ((heldInput & A_BUTTON) && (gMenuFlowState == 4))) {
                         enqueueSoundEffect(0x18, 0x32);
                         gMenuSelectionConfirmTimer = 1;
                         cursorTarget = &gRaceTypeSelectCursorTarget;
@@ -202,7 +202,7 @@ void updateRaceTypeSelectMenu(void) {
             waitTimer = gMenuSelectionConfirmTimer;
         }
 
-        if ((waitTimer == 0) && (gPlayerInputPressed & 0x4000) && (gMenuFlowState == (sp18 + 1))) {
+        if ((waitTimer == 0) && (gPlayerInputPressed & B_BUTTON) && (gMenuFlowState == (sp18 + 1))) {
             enqueueSoundEffect(0x18, 0x32);
             cursorTarget = &gRaceTypeSelectCursorTarget;
             cursorTarget->state = 2;

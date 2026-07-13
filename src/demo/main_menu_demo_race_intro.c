@@ -224,7 +224,7 @@ void updateMainMenuDemoRaceIntro(void) {
             fadeStep = state->fadeStep;
         }
     }
-    if ((gPlayerInputPressed & 0x1000) && (fadeStep == 0)) {
+    if ((gPlayerInputPressed & START_BUTTON) && (fadeStep == 0)) {
         state->fadeStep = 0x10;
         requestMusicSequenceStop(0x1E);
         state = gCurrentGameTask;

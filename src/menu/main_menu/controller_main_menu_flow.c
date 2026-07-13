@@ -1095,21 +1095,21 @@ void updateMainMenu(void) {
             }
         }
         temp_a0 = gPlayerInputPressed;
-        if (temp_a0 & 0x10800) {
+        if (temp_a0 & (STICK_UP | U_JPAD)) {
             if (gCurrentGameTask->selection != 0) {
                 gCurrentGameTask->selection -= 1;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_a0 = gPlayerInputPressed;
             }
         }
-        if (temp_a0 & 0x20400) {
+        if (temp_a0 & (STICK_DOWN | D_JPAD)) {
             if (gCurrentGameTask->selection != 2) {
                 gCurrentGameTask->selection += 1;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_a0 = gPlayerInputPressed;
             }
         }
-        if ((temp_a0 & 0x1000) || (temp_a0 & 0x8000)) {
+        if ((temp_a0 & START_BUTTON) || (temp_a0 & A_BUTTON)) {
             flag = 1;
             enqueueSoundEffect(1, 0x32);
         }
@@ -1230,21 +1230,21 @@ void updateMainMenuModeSelect(void) {
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
         temp_v0 = gPlayerInputPressed;
-        if (temp_v0 & 0x10800) {
+        if (temp_v0 & (STICK_UP | U_JPAD)) {
             if (gMenuFlowState != 0) {
                 enqueueSoundEffect(0x19, 0x32);
                 gMenuFlowState -= 1;
                 temp_v0 = gPlayerInputPressed;
             }
         }
-        if ((temp_v0 & 0x20400) && (gMenuFlowState != 2)) {
+        if ((temp_v0 & (STICK_DOWN | D_JPAD)) && (gMenuFlowState != 2)) {
             enqueueSoundEffect(0x19, 0x32);
             gMenuFlowState += 1;
             temp_v0 = gPlayerInputPressed;
         }
-        if (temp_v0 & 0xD000) {
+        if (temp_v0 & (A_BUTTON | B_BUTTON | START_BUTTON)) {
             enqueueSoundEffect(0x18, 0x32);
-            if (gPlayerInputPressed & 0x4000) {
+            if (gPlayerInputPressed & B_BUTTON) {
                 gMenuFlowState = 2;
             }
             gMainMenuSelectionResult = 1;
@@ -1320,20 +1320,20 @@ void updateMainMenuSettings(void) {
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
         temp_v1 = gPlayerInputPressed;
-        if ((temp_v1 & 0x10800) && (gMenuFlowState != 0)) {
+        if ((temp_v1 & (STICK_UP | U_JPAD)) && (gMenuFlowState != 0)) {
             gMenuFlowState -= 1;
             enqueueSoundEffect(0x19, 0x32);
             temp_v1 = gPlayerInputPressed;
         }
-        if ((temp_v1 & 0x20400) && (gMenuFlowState != 3)) {
+        if ((temp_v1 & (STICK_DOWN | D_JPAD)) && (gMenuFlowState != 3)) {
             gMenuFlowState += 1;
             enqueueSoundEffect(0x19, 0x32);
             temp_v1 = gPlayerInputPressed;
         }
-        if (temp_v1 & 0x4000) {
+        if (temp_v1 & B_BUTTON) {
             gMenuFlowState = 3;
         }
-        if (temp_v1 & 0x40100) {
+        if (temp_v1 & (STICK_RIGHT | R_JPAD)) {
             switch (gMenuFlowState) {
             case 0:
                 if (gRaceRecordSettingsEnabled != 0) {
@@ -1358,7 +1358,7 @@ void updateMainMenuSettings(void) {
                 break;
             }
         }
-        if (temp_v1 & 0x80200) {
+        if (temp_v1 & (STICK_LEFT | L_JPAD)) {
             switch (gMenuFlowState) {
             case 0:
                 if (gRaceRecordSettingsEnabled != 1) {
@@ -1383,7 +1383,7 @@ void updateMainMenuSettings(void) {
                 break;
             }
         }
-        if ((temp_v1 & 0xD000) && (gMenuFlowState == 3)) {
+        if ((temp_v1 & (A_BUTTON | B_BUTTON | START_BUTTON)) && (gMenuFlowState == 3)) {
             requestMusicSequenceStop(0x3C);
             enqueueSoundEffect(0x18, 0x32);
             setCurrentGameTaskCallback(fadeOutMainMenuSettings, 0);
@@ -1416,13 +1416,13 @@ void exitMainMenuSettings(void) {
 s32 checkMainMenuSecretCode(void) {
     switch (gMainMenuSecretCodeStep) {
     case 0:
-        if (gPlayerInputHeld == 0x20000) {
+        if (gPlayerInputHeld == STICK_DOWN) {
             gMainMenuSecretCodeStep++;
         }
         goto end0;
     case 1:
-        if ((gPlayerInputHeld != 0x20000) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 0x10000) {
+        if ((gPlayerInputHeld != STICK_DOWN) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == STICK_UP) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1430,8 +1430,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 2:
-        if ((gPlayerInputHeld != 0x10000) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 0x400) {
+        if ((gPlayerInputHeld != STICK_UP) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == D_JPAD) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1439,8 +1439,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 3:
-        if ((gPlayerInputHeld != 0x400) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 0x800) {
+        if ((gPlayerInputHeld != D_JPAD) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == U_JPAD) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1448,8 +1448,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 4:
-        if ((gPlayerInputHeld != 0x800) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 4) {
+        if ((gPlayerInputHeld != U_JPAD) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == D_CBUTTONS) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1457,8 +1457,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 5:
-        if ((gPlayerInputHeld != 4) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 8) {
+        if ((gPlayerInputHeld != D_CBUTTONS) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == U_CBUTTONS) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1466,8 +1466,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 6:
-        if ((gPlayerInputHeld != 8) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 0x20) {
+        if ((gPlayerInputHeld != U_CBUTTONS) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == L_TRIG) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1475,8 +1475,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 7:
-        if ((gPlayerInputHeld != 0x20) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 0x10) {
+        if ((gPlayerInputHeld != L_TRIG) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == R_TRIG) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1484,8 +1484,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 8:
-        if ((gPlayerInputHeld != 0x10) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 0x2000) {
+        if ((gPlayerInputHeld != R_TRIG) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == Z_TRIG) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1493,8 +1493,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 9:
-        if ((gPlayerInputHeld != 0x2000) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 0x200) {
+        if ((gPlayerInputHeld != Z_TRIG) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == L_JPAD) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1502,8 +1502,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 10:
-        if ((gPlayerInputHeld != 0x200) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 1) {
+        if ((gPlayerInputHeld != L_JPAD) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == R_CBUTTONS) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1511,8 +1511,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 11:
-        if ((gPlayerInputHeld != 1) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 0x10000) {
+        if ((gPlayerInputHeld != R_CBUTTONS) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == STICK_UP) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1520,8 +1520,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 12:
-        if ((gPlayerInputHeld != 0x10000) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 0x4000) {
+        if ((gPlayerInputHeld != STICK_UP) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == B_BUTTON) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1529,8 +1529,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 13:
-        if ((gPlayerInputHeld != 0x4000) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 0x100) {
+        if ((gPlayerInputHeld != B_BUTTON) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == R_JPAD) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1538,8 +1538,8 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 14:
-        if ((gPlayerInputHeld != 0x100) && (gPlayerInputHeld != 0)) {
-            if (gPlayerInputHeld == 2) {
+        if ((gPlayerInputHeld != R_JPAD) && (gPlayerInputHeld != 0)) {
+            if (gPlayerInputHeld == L_CBUTTONS) {
                 gMainMenuSecretCodeStep++;
             } else {
                 gMainMenuSecretCodeStep = -1;
@@ -1547,9 +1547,9 @@ s32 checkMainMenuSecretCode(void) {
         }
         goto end0;
     case 15:
-        if (gPlayerInputHeld != 2) {
+        if (gPlayerInputHeld != L_CBUTTONS) {
             if (gPlayerInputHeld != 0) {
-                if (gPlayerInputHeld == 0x1000) {
+                if (gPlayerInputHeld == START_BUTTON) {
                     return 1;
                 }
                 gMainMenuSecretCodeStep = -1;

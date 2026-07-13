@@ -312,7 +312,7 @@ void waitStartupRumbleInit(void) {
 }
 
 void routeStartupControllerPakFlow(void) {
-    if (gPlayerInputHeld & 0x1000) {
+    if (gPlayerInputHeld & START_BUTTON) {
         setCurrentGameTaskCallback(&openStartupControllerPakFileDeleteFlow, 0);
     } else {
         setCurrentGameTaskCallback(&openStartupReplaySaveMessageFlow, 0);
@@ -1037,9 +1037,9 @@ void updateRaceGameplayFlow(void) {
     s32 selection;
     s32 valueTwo;
 
-    opened = 0; i = 0; if (gPlayerCount > 0) { player = gRacePlayers; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & 0x1000)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; enqueueSoundEffect(1, 0x32); requestRumbleMotorInit(0); requestRumbleMotorInit(1); requestRumbleMotorInit(2); requestRumbleMotorInit(3); } i++; player++; } while (i < gPlayerCount); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (gPlayerCount > 0) { player = gRacePlayers; do { if (player->unk14 == 0) { input = gPlayerInputPressed[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; enqueueSoundEffect(1, 0x32); input = gPlayerInputPressed[i]; }
+    opened = 0; i = 0; if (gPlayerCount > 0) { player = gRacePlayers; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & START_BUTTON)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; enqueueSoundEffect(1, 0x32); requestRumbleMotorInit(0); requestRumbleMotorInit(1); requestRumbleMotorInit(2); requestRumbleMotorInit(3); } i++; player++; } while (i < gPlayerCount); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (gPlayerCount > 0) { player = gRacePlayers; do { if (player->unk14 == 0) { input = gPlayerInputPressed[i]; if (input & (STICK_UP | U_JPAD)) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; enqueueSoundEffect(1, 0x32); input = gPlayerInputPressed[i]; }
                     }
-                    if (input & 0x20400) {
+                    if (input & (STICK_DOWN | D_JPAD)) {
                         selection = D_80121B57;
                         if (valueTwo != selection) {
                             D_80121B57 = selection + 1;
@@ -1047,7 +1047,7 @@ void updateRaceGameplayFlow(void) {
                             input = gPlayerInputPressed[i];
                         }
                     }
-                    if (input & 0x1000) {
+                    if (input & START_BUTTON) {
                         input = D_80121B57;
                         if (input == 0) {
                             gRaceUpdatePaused = 0;
@@ -1914,7 +1914,7 @@ void updateRaceGhostReplayFlow(void) {
         gCurrentGameTask->fadeTimer++;
     }
     updateRaceReplayFrame();
-    if (gPlayerInputPressed[0] & 0x1000) {
+    if (gPlayerInputPressed[0] & START_BUTTON) {
         sp18 = fadeOutRaceGhostReplayFlow;
         requestMusicSequenceStop(0x48);
         setCurrentGameTaskCallback(sp18, 0);
@@ -2078,17 +2078,17 @@ void updateRaceRecordSettingsFlow(void) {
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
         temp_v0 = gPlayerInputPressed[0];
-        if ((temp_v0 & 0x20400) && (gRaceLapCount != 9)) {
+        if ((temp_v0 & (STICK_DOWN | D_JPAD)) && (gRaceLapCount != 9)) {
             enqueueSoundEffect(0x19, 0x32);
             gRaceLapCount += 1;
             temp_v0 = gPlayerInputPressed[0];
         }
-        if ((temp_v0 & 0x10800) && (gRaceLapCount != 1)) {
+        if ((temp_v0 & (STICK_UP | U_JPAD)) && (gRaceLapCount != 1)) {
             enqueueSoundEffect(0x19, 0x32);
             gRaceLapCount -= 1;
             temp_v0 = gPlayerInputPressed[0];
         }
-        if (temp_v0 & 0x9000) {
+        if (temp_v0 & (A_BUTTON | START_BUTTON)) {
             gMenuFlowState = 1;
             enqueueSoundEffect(0x18, 0x32);
             requestMusicSequenceStop(0x3C);

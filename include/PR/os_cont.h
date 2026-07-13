@@ -137,6 +137,7 @@ typedef struct {
 
 /* Nintendo's official button names */
 
+#ifndef A_BUTTON
 #define A_BUTTON	CONT_A
 #define B_BUTTON	CONT_B
 #define L_TRIG		CONT_L
@@ -151,6 +152,7 @@ typedef struct {
 #define L_CBUTTONS	CONT_C
 #define R_CBUTTONS	CONT_F
 #define D_CBUTTONS	CONT_D
+#endif
 
 /* Controller error number */
 
