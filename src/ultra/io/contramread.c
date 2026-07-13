@@ -5,6 +5,8 @@
 #include "PRinternal/siint.h"
 
 #define READFORMAT(ptr) ((__OSContRamReadFormat *)(ptr))
+#define PFS_PIF_RAM_WORDS 16
+#define PFS_ADDRESS_SHIFT 5
 
 static void __osPackRamReadData(int channel, u16 address);
 
@@ -62,33 +64,33 @@ s32 __osContRamRead(OSMesgQueue *mq, int channel, u16 address, u8 *buffer) {
 }
 
 static void __osPackRamReadData(int channel, u16 address) {
-    u8 *ptr;
-    __OSContRamReadFormat ramreadformat;
+    u8 *cmdBufPtr;
+    __OSContRamReadFormat readFormat;
     int i;
 
-    ptr = (u8 *)__osPfsPifRam.ramarray;
-    for (i = 0; i < 16; i++) {
+    cmdBufPtr = (u8 *)__osPfsPifRam.ramarray;
+    for (i = 0; i < PFS_PIF_RAM_WORDS; i++) {
         ((u32 *)&__osPfsPifRam)[i] = 0;
     }
     __osPfsPifRam.pifstatus = CONT_CMD_EXE;
-    ramreadformat.dummy = CONT_CMD_NOP;
-    ramreadformat.txsize = CONT_CMD_READ_PAK_TX;
-    ramreadformat.rxsize = CONT_CMD_READ_PAK_RX;
-    ramreadformat.cmd = CONT_CMD_READ_PAK;
-    ramreadformat.address = (address << 0x5) | __osContAddressCrc(address);
-    ramreadformat.datacrc = CONT_CMD_NOP;
+    readFormat.dummy = CONT_CMD_NOP;
+    readFormat.txsize = CONT_CMD_READ_PAK_TX;
+    readFormat.rxsize = CONT_CMD_READ_PAK_RX;
+    readFormat.cmd = CONT_CMD_READ_PAK;
+    readFormat.address = (address << PFS_ADDRESS_SHIFT) | __osContAddressCrc(address);
+    readFormat.datacrc = CONT_CMD_NOP;
 
-    for (i = 0; i < ARRLEN(ramreadformat.data); i++) {
-        ramreadformat.data[i] = CONT_CMD_NOP;
+    for (i = 0; i < ARRLEN(readFormat.data); i++) {
+        readFormat.data[i] = CONT_CMD_NOP;
     }
 
     if (channel != 0) {
         for (i = 0; i < channel; i++) {
-            *ptr++ = CONT_CMD_REQUEST_STATUS;
+            *cmdBufPtr++ = CONT_CMD_REQUEST_STATUS;
         }
     }
 
-    *(__OSContRamReadFormat *)ptr = ramreadformat;
-    ptr += sizeof(__OSContRamReadFormat);
-    ptr[0] = CONT_CMD_END;
+    *(__OSContRamReadFormat *)cmdBufPtr = readFormat;
+    cmdBufPtr += sizeof(__OSContRamReadFormat);
+    cmdBufPtr[0] = CONT_CMD_END;
 }
