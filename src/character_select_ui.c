@@ -616,7 +616,7 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     setCallbackTaskCallback(arg0, updateCharacterSelectPlayerCursorMarkers);
 }
 
-// drawCharacterSelectPlayerStatsPanels best match: 86.336% (nonmatchings/drawCharacterSelectPlayerStatsPanels-4923837976568703863/base_4.c)
+// drawCharacterSelectPlayerStatsPanels best match: 86.570% (nonmatchings/drawCharacterSelectPlayerStatsPanels-2870645799593382959/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/drawCharacterSelectPlayerStatsPanels.s")
 
 #ifdef NON_MATCHING
@@ -635,9 +635,11 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
     u8 *statsBase;
     u8 *textureHandles;
     s32 stride;
+    CharacterSelectUiPanelController *controller;
 
+    controller = D_8010ADE8;
     base = arg0;
-    if (D_8010ADE8->unk26 != 0) {
+    if (controller->unk26 != 0) {
         i = 0;
         if ((s32)gPlayerCount > 0) {
             player = D_80121D80;
