@@ -5026,14 +5026,10 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
     addRenderCallback(&D_801248C8, func_80064470, actor);
 }
 
-// func_80064914 best match: 99.887% (nonmatchings/func_80064914-3242520251544044307/base_20.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80064914.s")
-
-#ifdef NON_MATCHING
 void func_80064914(RaceUiProjectileActor *arg0) {
-    FixedMatrix3sScratch sp44;
     RacePlayerState *player;
     RacePlayerState *otherPlayer;
+    s16 sp44[0xE];
     s32 value;
     s32 amount;
     s32 i;
@@ -5041,7 +5037,7 @@ void func_80064914(RaceUiProjectileActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         player = &D_80121D80[arg0->index];
-        makeFixedRotationXY(sp44, D_80121D80[arg0->index].pitch, D_80121D80[arg0->index].yaw);
+        makeFixedRotationXY(sp44, D_80121D80[arg0->index].pitch, player->yaw);
         transformVec3iByFixedMatrix(sp44, &arg0->velocity, &arg0->pos);
 
         player = &D_80121D80[arg0->index];
@@ -5080,7 +5076,6 @@ void func_80064914(RaceUiProjectileActor *arg0) {
 
     addRenderCallback(&D_801248C8, func_80064470, arg0);
 }
-#endif
 
 void func_80064B28(RaceUiProjectileActor *arg0) {
     FixedMatrix3sScratch sp2C;
