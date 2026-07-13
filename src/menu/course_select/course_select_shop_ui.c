@@ -1291,7 +1291,7 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     s16 *cursor;
     s32 value;
     s32 tens;
-    s16 cursorX;
+    s16 selectedCursorX;
 
  tiles = gCourseDetailsMenuEntryTiles; yOffset = 0; cursor = (s16 *) arg0; for (i = 0; i < 7; i++) { drawMenuSprite(cursor[12], (s16) (arg0->targetY + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x27]), tiles[gCourseDetailsPreviewPage * 7], 0x20, 0x20, 0, 0); value = ((gCourseDetailsPreviewPage * 7) + i) + 1; if (arg0 && arg0) { } tens = value / 10; if (tens == 0) { script[0] = -2;
         } else {
@@ -1310,8 +1310,8 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     yOffset = 0x85;
     cursor = &((s16 *)arg0)[7];
     do {
-        drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x27]), (u16)i, 0x20,
-                      0x20, 0, 0);
+        drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x27]), (u16)i,
+                       0x20, 0x20, 0, 0);
 
         i++;
         yOffset += 0x13;
@@ -1320,12 +1320,13 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
 
     if ((arg0->state != 0) && (gCourseDetailsCloseFromBack == 0)) {
         if (arg0->state < 5) {
-            cursorX = arg0->targetX;
+            selectedCursorX = arg0->targetX;
         } else {
-            cursorX = arg0->cursorPositions[0];
+            selectedCursorX = arg0->cursorPositions[0];
         }
-        drawMenuSpriteWithAlpha((cursorX << 0x10) >> 0x10, (s16)(arg0->targetY + (gCourseDetailsMenuSelection * 0x13)), getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-                      0x12, 0x20, 0x20, 0, arg0->prompt.bytes.pulseAlpha, 0);
+        drawMenuSpriteWithAlpha((selectedCursorX << 0x10) >> 0x10, (s16)(arg0->targetY + (gCourseDetailsMenuSelection * 0x13)),
+                                getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x12, 0x20, 0x20, 0,
+                                arg0->prompt.bytes.pulseAlpha, 0);
     }
 }
 
