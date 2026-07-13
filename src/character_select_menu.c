@@ -84,7 +84,7 @@ extern u8 gPlayerCount;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initCharacterSelectMenu best match: 92.434% (nonmatchings/initCharacterSelectMenu-5802343343535905907/base_12.c)
+// initCharacterSelectMenu best match: 92.662% (nonmatchings/initCharacterSelectMenu-2663524570355072948/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_menu/initCharacterSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -93,6 +93,7 @@ void initCharacterSelectMenu(void) {
     CharacterSelectState *state;
     s32 i;
     s32 j;
+    s32 keepGoing;
     s32 playerCount;
     u8 *selectionPtr;
     s16 *timerPtr;
@@ -144,12 +145,13 @@ loop_1:
             player = D_80121D80;
             do {
                 j = i + 1;
+                keepGoing = j < playerCount;
                 player->characterId = i;
                 i = j;
                 player++;
                 selectionPtr++;
                 selectionPtr[-1] = j;
-            } while (j < playerCount);
+            } while (keepGoing);
         }
     }
 
