@@ -404,38 +404,28 @@ void func_8001C83C(CharacterSelectMenuFrameActor *arg0) {
 }
 #endif
 
-// func_8001C96C best match: 99.556%
+// func_8001C96C best match: 99.941% (not yet matching)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001C96C.s")
 
 #ifdef NON_MATCHING
 void func_8001C96C(CharacterSelectMenuFrameActor *arg0) {
     register CharacterSelectMenuFrameActor *actor;
+    s32 arrowTexture;
+    u16 tile;
     s32 arrowBase;
     s32 lastArrowIndex;
     s32 i;
     s32 alpha;
-    u16 tile;
 
     actor = arg0;
-    if (D_80121B5E < 2) {
-        arrowBase = 2;
-    } else {
-        arrowBase = 0;
-    }
+    arrowBase = (D_80121B5E < 2) ? 2 : 0;
     i = 0;
     lastArrowIndex = arrowBase + 1;
     if (actor->itemCount > 0) {
         do {
             alpha = 0;
             if (i == 0) {
-                if (D_80121B5E == 2) {
-                    goto use_alt_tile;
-                }
-                tile = 0x1C;
-                goto tile_selected;
-use_alt_tile:
-                tile = 0x1D;
-tile_selected:
+                tile = (D_80121B5E == 2) ? 0x1D : 0x1C;
                 if ((i == D_80121B50) && (D_800EC9C1 > 0) && (D_800EC9C1 < 8) && (D_800EC9C1 & 1)) {
                     alpha = 0xFF;
                 }
@@ -453,7 +443,8 @@ tile_selected:
             }
 
             if (i != lastArrowIndex) {
-                func_8000F030((s16)(actor->x[i] - 0x10), actor->y[i], func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
+                arrowTexture = func_80043040(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE);
+                func_8000F030((s16)(actor->x[i] - 0x10), actor->y[i], arrowTexture, (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
             }
             i++;
         } while (i < actor->itemCount);
