@@ -4003,7 +4003,7 @@ loop:
 }
 #endif
 
-// updateRacePlayerMode09TerrainCrash best match: 93.871% (base_3.c)
+// updateRacePlayerMode09TerrainCrash best match: 99.164% (nonmatchings/updateRacePlayerMode09TerrainCrash-2870645799593382959/base_9.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode09TerrainCrash.s")
 
@@ -4012,12 +4012,10 @@ void updateRacePlayerMode09TerrainCrash(RaceInputPlayer *player) {
     s16 sine;
     s16 cosine;
     s16 updateState;
-    s32 *posX;
-    s32 *posZ;
 
-    updateState = player->updateState;
     player->unk40.y -= player->unk260;
     player->posY += player->unk40.y;
+    updateState = player->updateState;
 
     switch (updateState) {
     case 0:
@@ -4032,9 +4030,9 @@ void updateRacePlayerMode09TerrainCrash(RaceInputPlayer *player) {
         if (player->soundDisabled == 0) {
             spawnRaceItemBreakParticles(player->playerIndex, player->unk330);
         }
+        player->unk2E8 = player->unk502;
         player->actionEffectLevel = 2;
         player->actionEffectFrame = 0;
-        player->unk2E8 = player->unk502;
         /* fallthrough */
     case 1:
         if (stepRaceMotionAnimationUntilEnd(player) != 0) {
@@ -4075,21 +4073,17 @@ void updateRacePlayerMode09TerrainCrash(RaceInputPlayer *player) {
             setRaceMotionAnimation(player, 0x21);
         }
         player->stateFlags |= 0x80000;
-        posX = &player->posX;
         if (gViewportStates[(u16)player->playerIndex].overlayAlpha == 0xFF) {
             player->updateState++;
             player->unk502 = player->unk2E8;
-            posZ = &player->posZ;
-            getRaceCourseSurfaceSpawnTransform(player->unk80, posX, &player->posY, posZ, &player->facingAngle);
+            getRaceCourseSurfaceSpawnTransform(player->unk80, &player->posX, &player->posY, &player->posZ, &player->facingAngle);
             player->posY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
             sine = fixedSine(player->facingAngle);
             cosine = fixedCosine(player->facingAngle);
-            *posX += ((s64)sine * -0x240000) / 0x1000;
-            *posZ += ((s64)cosine * -0x240000) / 0x1000;
-            player->unk34.x = posX[0];
-            player->unk34.y = posX[1];
+            player->posX += ((s64)sine * -0x240000) / 0x1000;
+            player->posZ += ((s64)cosine * -0x240000) / 0x1000;
+            player->unk34 = player->pos;
             player->unk40.x = 0;
-            player->unk34.z = posX[2];
             player->unk40.y = 0;
             player->unk40.z = 0;
             player->unk74 = 0;
