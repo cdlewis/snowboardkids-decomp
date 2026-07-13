@@ -1514,7 +1514,7 @@ void updateRaceResultsFlow(void) {
         switch (gRaceSplitscreenMode) {
         case 0:
             if (D_80121B55 == 1) {
-                task = func_80071408((void (*)(EffectTask *))func_80058BAC, 6, 0x64);
+                task = func_80071408((void (*)(EffectTask *))initRaceUiPrizePayout, 6, 0x64);
                 if (task != NULL) {
                     if (gRacePlayers[0].result != 3) {
                         i = gRacePlayers[0].result + 1;

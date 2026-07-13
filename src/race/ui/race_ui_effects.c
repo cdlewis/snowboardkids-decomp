@@ -698,6 +698,13 @@ typedef struct RaceUiAlpha18Actor {
     /* 0x1C */ s16 score;
 } RaceUiAlpha18Actor;
 
+typedef struct RaceUiPrizePayoutActor {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 alpha;
+    /* 0x1A */ s16 timer;
+    /* 0x1C */ s16 prizeAmount;
+} RaceUiPrizePayoutActor;
+
 typedef struct RaceUiResultsBannerActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 alpha;
@@ -856,7 +863,7 @@ extern RaceUiRankTrigger *D_8012228C;
 extern void *gRaceOverlayRenderCallbackList;
 extern void *gRaceObjectRenderCallbackList;
 extern void *D_801248EC;
-extern s16 D_800D6050[];
+extern s16 gRacePrizeAmountsByCourseAndRank[][4];
 extern Vec3i D_800D6030[];
 extern u32 *D_800D6400[];
 extern RaceUiRankTextRenderEntry *D_800D761C[];
@@ -1402,10 +1409,10 @@ void func_800589F4(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
 }
 
-void func_80058A98(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
-    if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
+void updateRaceUiPrizePayoutShowRankPrize(RaceUiPrizePayoutActor *arg0) {
+    arg0->timer--;
+    if (arg0->timer == 0) {
+        arg0->timer = 0x14;
         enqueueSoundEffect(0x1A, 0x32);
         setCallbackTaskCallback(arg0, func_800589F4);
     }
@@ -1413,21 +1420,21 @@ void func_80058A98(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
 }
 
-void func_80058B20(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x18) = *(s16 *)((u8 *)arg0 + 0x18) + 0x10;
-    if (*(s16 *)((u8 *)arg0 + 0x18) >= 0x100) {
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
-        setCallbackTaskCallback(arg0, func_80058A98);
+void updateRaceUiPrizePayoutFadeIn(RaceUiPrizePayoutActor *arg0) {
+    arg0->alpha += 0x10;
+    if (arg0->alpha >= 0x100) {
+        arg0->timer = 0x14;
+        arg0->alpha = 0xFF;
+        setCallbackTaskCallback(arg0, updateRaceUiPrizePayoutShowRankPrize);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
 }
 
-void func_80058BAC(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x18) = 0;
-    *(s16 *)((u8 *)arg0 + 0x1C) = D_800D6050[D_80122289 + gRaceCourseIndex * 4];
-    setCallbackTaskCallback(arg0, func_80058B20);
+void initRaceUiPrizePayout(RaceUiPrizePayoutActor *arg0) {
+    arg0->alpha = 0;
+    arg0->prizeAmount = gRacePrizeAmountsByCourseAndRank[0][D_80122289 + gRaceCourseIndex * 4];
+    setCallbackTaskCallback(arg0, updateRaceUiPrizePayoutFadeIn);
 }
 
 void func_80058C00(RaceUiResultsBannerActor *arg0) {

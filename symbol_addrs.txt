@@ -2805,6 +2805,7 @@ gCourseBillboardMarkerEntries = 0x800DA804; // rom:0xDB404 size:0x8
 gCourseBillboardMarkerVertexResources = 0x800DA80C; // rom:0xDB40C size:0x8
 gCourseBillboardMarkerTextureResources = 0x800DA814; // rom:0xDB414 size:0x2C
 gCourseTriggerEntries = 0x800DA840; // rom:0xDB440 size:0x16
+gRacePrizeAmountsByCourseAndRank = 0x800D6050; // rom:0xD6C50 size:0x28
 
 // Generated from build/snowboardkids.elf to keep every function address discoverable.
 func_80011854 = 0x80011854; // type:func rom:0x12454
@@ -2828,9 +2829,9 @@ func_80058610 = 0x80058610; // type:func rom:0x59210
 func_80058880 = 0x80058880; // type:func rom:0x59480
 func_8005893C = 0x8005893C; // type:func rom:0x5953C
 func_800589F4 = 0x800589F4; // type:func rom:0x595F4
-func_80058A98 = 0x80058A98; // type:func rom:0x59698
-func_80058B20 = 0x80058B20; // type:func rom:0x59720
-func_80058BAC = 0x80058BAC; // type:func rom:0x597AC
+updateRaceUiPrizePayoutShowRankPrize = 0x80058A98; // type:func rom:0x59698
+updateRaceUiPrizePayoutFadeIn = 0x80058B20; // type:func rom:0x59720
+initRaceUiPrizePayout = 0x80058BAC; // type:func rom:0x597AC
 func_80058C00 = 0x80058C00; // type:func rom:0x59800
 func_8005905C = 0x8005905C; // type:func rom:0x59C5C
 func_80059518 = 0x80059518; // type:func rom:0x5A118
