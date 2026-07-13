@@ -195,6 +195,12 @@ typedef struct AudioDmaBuffer {
     void *buffer;
 } AudioDmaBuffer;
 
+typedef struct AudioSynthInitConfig {
+    s32 outputRate;
+    s32 frameRate;
+    s32 commandListSize;
+} AudioSynthInitConfig;
+
 typedef struct OSIoMesg {
     u8 pad[0x18];
 } OSIoMesg;
@@ -234,18 +240,6 @@ typedef struct PlayerCommandInit {
     s32 unk3C;
     s32 unk40;
 } PlayerCommandInit;
-
-typedef struct PlayerCommandSynConfig {
-    s32 maxVVoices;
-    s32 maxPVoices;
-    s32 maxUpdates;
-    s32 padC;
-    s32 dmaproc;
-    ALHeap *heap;
-    s32 outputRate;
-    u8 fxType;
-    u8 pad1D[4];
-} PlayerCommandSynConfig;
 
 typedef struct AudioInfo {
     void *buf;
@@ -372,7 +366,9 @@ void resetSoundPlayerState(PlayerCommandState *arg0);
 s32 findFreeSoundPlayerIndex(s32 arg0, s32 arg1);
 void audioMemset(u8 *p, unsigned char c, s32 n);
 s32 startSoundPlayerState(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void initAudioSynthesizer(void *arg0, ALSynConfig *arg1, s32 arg2, s32 *arg3, s32 arg4, s32 arg5, s32 arg6);
+void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 threadPriority,
+                          AudioSynthInitConfig *initConfig, s32 dmaBufferCount, s32 dmaBufferSize,
+                          s32 retraceRate);
 void audioThreadMain(s32 arg0);
 s32 buildAudioTask(AudioTask *task, AudioInfo *info);
 void updateAudioUnderrunState(s32 arg0);
