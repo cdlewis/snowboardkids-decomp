@@ -184,7 +184,7 @@ loop_24:
 }
 #endif
 
-// initCharacterSelectCourseMenuFromRace best match: 84.482% (nonmatchings/initCharacterSelectCourseMenuFromRace-2694253543240320626/base_4.c)
+// initCharacterSelectCourseMenuFromRace best match: 92.559% (nonmatchings/initCharacterSelectCourseMenuFromRace-3242520251544044307/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/initCharacterSelectCourseMenuFromRace.s")
 
 #ifdef NON_MATCHING
@@ -192,6 +192,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
     s32 sp2C;
     s16 *var_v0_2;
     s16 *var_v1_2;
+    s16 *activeOptions;
     s32 var_v1;
     s32 var_v0_3;
     u8 temp_v1;
@@ -249,21 +250,24 @@ void initCharacterSelectCourseMenuFromRace(void) {
     if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
+            activeOptions = gCharacterSelectShortCourseOptions;
             if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
                 gRaceCourseIndex = 9;
             }
         } else {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
+            activeOptions = gCharacterSelectSingleCourseOption;
             gRaceCourseIndex = 7;
         }
     } else {
         gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
+        activeOptions = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
         if (gRaceCourseIndex == -1) {
             gRaceCourseIndex = 9;
         }
     }
 
-    var_v0_2 = *gCharacterSelectActiveCourseOptions;
+    var_v0_2 = activeOptions;
 loop_20:
     if (gRaceCourseIndex == *var_v0_2) {
         gRaceCourseIndex = var_v1;
@@ -277,7 +281,7 @@ loop_20:
 
     gCharacterSelectCourseExitOptionIndex = 0;
     var_v0_3 = 0;
-    var_v1_2 = *gCharacterSelectActiveCourseOptions;
+    var_v1_2 = activeOptions;
 loop_24:
     var_v0_3 += 2;
     if (*var_v1_2 != -1) {
