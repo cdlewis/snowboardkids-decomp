@@ -1817,7 +1817,7 @@ void func_8005A31C(RaceUiAlpha18Actor *arg0) {
     }
 }
 
-// func_8005A4BC best match: 87.219% (nonmatchings/func_8005A4BC-2694253543240320626/base_11.c)
+// func_8005A4BC best match: 96.736% (nonmatchings/func_8005A4BC-3242520251544044307/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005A4BC.s")
 
 #ifdef NON_MATCHING
@@ -1838,17 +1838,7 @@ void func_8005A4BC(RaceUiCounterActor *arg0) {
     y.word = -0x47;
     if (arg0->flag == 0) {
         y.word = -0x33;
-    }
-    visibleRows = arg0->state;
-    if (visibleRows >= 0) {
-        x = 0x20;
-        sprintf(buffer - 4, D_800E12E4, arg0->value, arg0);
-        rowY = y.half.lo;
-        ptr = buffer - 4;
-loop1:
-        if (*ptr != 0) {
-            if (*ptr != ' ') {
-                drawAssetTableSprite((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF);
+    } visibleRows = arg0->state; if (visibleRows >= 0) { x = 0x20; sprintf(buffer - 4, D_800E12E4, arg0->value, arg0); rowY = y.half.lo; ptr = buffer - 4; loop1: if (*ptr != 0) { if (*ptr != ' ') { drawAssetTableSprite((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (u16)(*ptr - 5));
             }
             x += 8;
             ptr++;
@@ -1869,7 +1859,7 @@ loop1:
 loop2:
             if (*ptr != 0) {
                 if (*ptr != ' ') {
-                    drawAssetTableSprite((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF);
+                    drawAssetTableSprite((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (u16)(*ptr - 5));
                 }
                 x += 8;
                 ptr++;
@@ -1890,12 +1880,9 @@ loop2:
 loop3:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                drawAssetTableSprite((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF);
+                drawAssetTableSprite((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (u16)(*ptr - 5));
             }
-            x += 8;
-            ptr++;
-            goto loop3;
-        }
+            x += 8; ptr++; goto loop3; }
         drawAssetTableSprite((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x28;
         visibleRows = arg0->state;
@@ -1910,7 +1897,7 @@ loop3:
 loop4:
         if (*ptr != 0) {
             if (*ptr != ' ') {
-                drawAssetTableSprite((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF);
+                drawAssetTableSprite((s16)x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (u16)(*ptr - 5));
             }
             x += 8;
             ptr++;
