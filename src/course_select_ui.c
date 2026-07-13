@@ -2499,7 +2499,7 @@ void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
     }
 }
 
-// updateCourseSelectCompletePanels best match: 89.835% (nonmatchings/updateCourseSelectCompletePanels-5802343343535905907/base_5.c)
+// updateCourseSelectCompletePanels best match: 90.448% (nonmatchings/updateCourseSelectCompletePanels-2663524570355072948/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectCompletePanels.s")
 
 #ifdef NON_MATCHING
@@ -2507,37 +2507,37 @@ void updateCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
     CourseSelectRacePlayer *player;
     CourseSelectRacePlayer *end;
     CourseSelectWidgetActor *base;
-    CourseSelectWidgetActor *actor;
     CourseSelectCompletePanelSource *source0;
     CourseSelectCompletePanelSource *source1;
     s32 i;
     u16 alpha;
+    s16 nextAlpha;
 
-    actor = arg0;
-    base = actor;
+    base = arg0;
     i = 0;
     source0 = (CourseSelectCompletePanelSource *)D_8010ADE0;
     source1 = (CourseSelectCompletePanelSource *)D_8010ADE4;
     if ((s32)gPlayerCount > 0) {
         do {
-            alpha = actor->alpha;
+            alpha = arg0->alpha;
             if (alpha == 0) {
                 if ((source0 != NULL) && ((source0->playerStates[i] == 4) || (source1->playerStates[i] == 4))) {
-                    actor->alpha = 1;
+                    arg0->alpha = 1;
                 }
             } else {
                 if (alpha != 0x100) {
-                    actor->alpha = alpha + 0x30;
-                    if ((u16)(alpha + 0x30) >= 0x100) {
-                        actor->alpha = 0x100;
+                    nextAlpha = alpha + 0x30;
+                    arg0->alpha = nextAlpha;
+                    if ((u16)nextAlpha >= 0x100) {
+                        arg0->alpha = 0x100;
                     }
                 }
                 if (D_80121D80[i].pad6[2] == 1) {
-                    actor->alpha = 0;
+                    arg0->alpha = 0;
                 }
             }
             i++;
-            actor = (CourseSelectWidgetActor *)((u8 *)actor + sizeof(s16));
+            arg0 = (CourseSelectWidgetActor *)((u8 *)arg0 + sizeof(s16));
         } while (i < (s32)gPlayerCount);
     }
 
