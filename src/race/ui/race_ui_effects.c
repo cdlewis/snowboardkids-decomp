@@ -2652,17 +2652,17 @@ void func_8005C89C(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
 }
 
-void func_8005C944(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x20) = 4;
-    *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)((u8 *)arg0 + 0x1E) - 1;
-    if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
-        *(s16 *)((u8 *)arg0 + 0x1E) = 0xA;
-        setCallbackTaskCallback(arg0, func_8005C89C);
+void updateRaceUiCourseRecordHoldFinalMoney(RaceUiDualCounterActor *actor) {
+    actor->state = 4;
+    actor->timer--;
+    if (actor->timer == 0) {
+        actor->timer = 0xA;
+        setCallbackTaskCallback(actor, func_8005C89C);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, actor);
 }
 
 void func_8005C9F4(void *arg0) {
@@ -2671,7 +2671,7 @@ void func_8005C9F4(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
-        setCallbackTaskCallback(arg0, func_8005C944);
+        setCallbackTaskCallback(arg0, updateRaceUiCourseRecordHoldFinalMoney);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
