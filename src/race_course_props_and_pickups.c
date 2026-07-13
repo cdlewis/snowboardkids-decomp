@@ -189,6 +189,18 @@ extern u8 gRenderMatricesDirty;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gRaceSplitscreenMode;
+extern s8 D_80121D93;
+extern s32 D_80121D9C;
+extern s32 D_80121DA4;
+extern s8 D_8012239F;
+extern s32 D_801223A8;
+extern s32 D_801223B0;
+extern s8 D_801229AB;
+extern s32 D_801229B4;
+extern s32 D_801229BC;
+extern s8 D_80122FB7;
+extern s32 D_80122FC0;
+extern s32 D_80122FC8;
 extern u8 gAssetHandles[];
 extern CourseCollectibleSpriteEntry *gCourseCollectibleSpriteListsByCourse[];
 extern u32 gCourseCollectibleSpriteVertices[];
@@ -562,91 +574,33 @@ void spawnThrownPickupModel(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
     }
 }
 
-// updateThrownPickupSpawner best match: 99.938% (nonmatchings/updateThrownPickupSpawner-3357475854818838508/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_props_and_pickups/updateThrownPickupSpawner.s")
-
-#ifdef NON_MATCHING
 #define SPAWN_RANGE_MAX 0x14000000
 #define SPAWN_RANGE_MIN -0x13FFFFFF
 
 void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
     ThrownPickupModelActor *savedSpawned;
     volatile s32 forceStack[6];
-    PickupSpawnEntry *savedEntry;
-    PickupSpawnEntry *newEntry;
     ThrownPickupModelActor *spawned;
     PickupSpawnEntry *entry;
     s32 found;
     s32 diffX;
     s32 diffZ;
     s32 rand;
-    s32 prev;
 
     if (gRaceUpdatePaused == 0) {
         if (arg0->timer == 0) {
-            arg0->timer = 0x20;
-            newEntry = gThrownPickupSpawnLists[arg0->spawnIndex];
-            entry = newEntry;
-            found = FALSE;
-            if (gRaceSplitscreenMode != 2) {
-                do {
-                    if (D_80121D80[0].isActive != 0) {
-                        diffZ = D_80121D80[0].posX - entry->pos.x;
-                        if ((diffZ < SPAWN_RANGE_MAX) && (diffZ >= SPAWN_RANGE_MIN)) {
-                            diffX = D_80121D80[0].posZ - entry->pos.z;
-                            if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) {
-                                found = TRUE;
-                            }
-                        }
-                    }
-                    if (D_80121D80[1].isActive != 0) {
-                        diffX = D_80121D80[1].posX - entry->pos.x;
-                        diffZ = D_80121D80[1].posZ - entry->pos.z;
-                        if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
-                            (diffZ >= SPAWN_RANGE_MIN)) {
-                            found = TRUE;
-                        }
-                    }
-                    if (D_80121D80[2].isActive != 0) {
-                        diffX = D_80121D80[2].posX - entry->pos.x;
-                        diffZ = D_80121D80[2].posZ - entry->pos.z;
-                        if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
-                            (diffZ >= SPAWN_RANGE_MIN)) {
-                            found = TRUE;
-                        }
-                    }
-                    if (D_80121D80[3].isActive != 0) {
-                        diffX = D_80121D80[3].posX - entry->pos.x;
-                        diffZ = D_80121D80[3].posZ - entry->pos.z;
-                        if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN) && (diffZ < SPAWN_RANGE_MAX) &&
-                            (diffZ >= SPAWN_RANGE_MIN)) {
-                            found = TRUE;
-                        }
-                    }
-                } while (0);
-            } else {
-                found = TRUE;
-            }
-
-            if (found != 0) {
-                spawned = createCallbackTask(initThrownPickupModel, 0, 0x64);
-                if (spawned != NULL) {
-                    savedSpawned = spawned;
-                    entry = (savedEntry = entry);
-                    rand = randomNextSecondary() & 3;
+            arg0->timer = 0x20; entry = gThrownPickupSpawnLists[arg0->spawnIndex]; found = FALSE; if (gRaceSplitscreenMode != 2) { if (D_80121D93 != 0) { diffZ = D_80121D9C - entry->pos.x; if ((diffZ < SPAWN_RANGE_MAX) && (diffZ >= SPAWN_RANGE_MIN)) { diffX = D_80121DA4 - entry->pos.z; if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) { found = TRUE; } } } if (D_8012239F != 0) { diffX = D_801223A8 - entry->pos.x; diffZ = D_801223B0 - entry->pos.z; if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) { found = TRUE; } } if (D_801229AB != 0) { diffX = D_801229B4 - entry->pos.x; diffZ = D_801229BC - entry->pos.z; if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) { found = TRUE; } } if (D_80122FB7 != 0) { diffX = D_80122FC0 - entry->pos.x; diffZ = D_80122FC8 - entry->pos.z; if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) { found = TRUE; } } } else { found = TRUE; } if (found != 0) { spawned = createCallbackTask(initThrownPickupModel, 0, 0x64); if (spawned != NULL) { savedSpawned = spawned; rand = randomNextSecondary() & 3;
                     spawned = savedSpawned;
-                    prev = arg0->lastVariant;
-                    if (rand != prev) {
+                    if (rand != arg0->lastVariant) {
                     } else {
-                        rand = (prev + 1) & 3;
+                        rand = (arg0->lastVariant + 1) & 3;
                     }
                     arg0->lastVariant = rand;
-                    entry = (PickupSpawnEntry *)((u32)entry + (rand << 4));
-                    spawned->pos.x = entry->pos.x;
-                    spawned->pos.y = entry->pos.y;
-                    spawned->pos.z = entry->pos.z;
-                    spawned->modelIndex = entry->rotation;
-                    spawned->unk2C = entry->variant;
+                    savedSpawned->pos.x = (&entry[rand])->pos.x;
+                    savedSpawned->pos.y = (&entry[rand])->pos.y;
+                    savedSpawned->pos.z = (&entry[rand])->pos.z;
+                    savedSpawned->modelIndex = (&entry[rand])->rotation;
+                    savedSpawned->unk2C = (&entry[rand])->variant;
                 }
             }
         } else {
@@ -657,7 +611,6 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
 
 #undef SPAWN_RANGE_MAX
 #undef SPAWN_RANGE_MIN
-#endif
 
 // renderRacePickupIdle best match: 96.574% (base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_props_and_pickups/renderRacePickupIdle.s")
