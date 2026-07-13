@@ -1662,116 +1662,99 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuAsciiGlyph.s")
 
 #ifdef NON_MATCHING
-void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale) {
+void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 paletteIndex, u16 paletteScale) {
     FontAsset *asset;
-    FontTexture *font;
+    FontTexture *atlasTexture;
     u16 *paletteBase;
-    u16 *palettePtr;
-    u16 *dst;
-    u16 *dstStart;
+    u16 *srcPalette;
+    u16 *scaledPalette;
+    u16 *scaledPaletteColor;
     s32 x0;
     s32 y0;
     s32 x1;
     s32 y1;
-    s32 left;
-    s32 top;
-    s32 right;
-    s32 bottom;
-    s32 halfW;
-    s32 halfH;
+    s32 minX;
+    s32 minY;
+    s32 maxX;
+    s32 maxY;
+    s32 viewHalfWidth;
+    s32 viewHalfHeight;
     s32 clipS;
     s32 clipT;
-    s32 offset;
+    s32 paletteByteOffset;
     u16 color;
     s32 red;
     s32 green;
     s32 blue;
-    s32 scaleValue;
-    s16 paletteValue;
+    s32 paletteScaleValue;
+    s16 selectedPalette;
 
     asset = (FontAsset *)getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
     paletteBase = (u16 *)&asset->textures[asset->header.entryCount];
-    font = &asset->textures[0];
+    atlasTexture = &asset->textures[0];
     x0 = x + gMenuViewportCenterX;
     y0 = y + gMenuViewportCenterY;
     x1 = x0 + 8;
     y1 = y0 + 8;
     clipS = 0;
     clipT = 0;
-    paletteValue = *(s16 *)((u8 *)asset + 0xC);
+    selectedPalette = atlasTexture->paletteIndex;
 
-    halfW = gMenuViewportWidth / 2;
-    right = gMenuViewportCenterX + halfW;
-    if (x0 < right) {
-        left = gMenuViewportCenterX - halfW;
-        halfH = gMenuViewportHeight / 2;
-        bottom = gMenuViewportCenterY + halfH;
-        if (y0 < bottom && x1 >= left) {
-            top = gMenuViewportCenterY - halfH;
-            if (y1 >= top) {
-                if (x0 < left) {
-                    clipS = left - x0;
-                    x0 = left;
+    viewHalfWidth = gMenuViewportWidth / 2;
+    maxX = gMenuViewportCenterX + viewHalfWidth;
+    if (x0 < maxX) {
+        minX = gMenuViewportCenterX - viewHalfWidth;
+        viewHalfHeight = gMenuViewportHeight / 2;
+        maxY = gMenuViewportCenterY + viewHalfHeight;
+        if (y0 < maxY && x1 >= minX) {
+            minY = gMenuViewportCenterY - viewHalfHeight;
+            if (y1 >= minY) {
+                if (x0 < minX) {
+                    clipS = minX - x0;
+                    x0 = minX;
                 }
-                if (y0 < top) {
-                    clipT = top - y0;
-                    y0 = top;
+                if (y0 < minY) {
+                    clipT = minY - y0;
+                    y0 = minY;
                 }
-                if (x1 >= right) {
-                    x1 = right - 1;
+                if (x1 >= maxX) {
+                    x1 = maxX - 1;
                 }
-                if (y1 >= bottom) {
-                    y1 = bottom - 1;
-                }
-
-                clipS += tileX;
-                clipT += (u16)tileY;
-                if (paletteValue != palette) {
-                    paletteValue = palette;
+                if (y1 >= maxY) {
+                    y1 = maxY - 1;
                 }
 
-                dstStart = allocMenuRenderScratch(0x20);
-                dst = dstStart;
-                palettePtr = &paletteBase[paletteValue * 16];
-                scaleValue = scale;
-                offset = 0;
+                clipS += tileS;
+                clipT += (u16)tileT;
+                if (selectedPalette != paletteIndex) {
+                    selectedPalette = paletteIndex;
+                }
+
+                scaledPalette = allocMenuRenderScratch(0x20);
+                scaledPaletteColor = scaledPalette;
+                srcPalette = &paletteBase[selectedPalette * 16];
+                paletteScaleValue = paletteScale;
+                paletteByteOffset = 0;
                 do {
-                    color = *(u16 *)((u8 *)palettePtr + offset);
-                    offset += 2;
-                    *dst = color;
+                    color = *(u16 *)((u8 *)srcPalette + paletteByteOffset);
+                    paletteByteOffset += 2;
+                    *scaledPaletteColor = color;
                     if (color & 1) {
-                        red = (((color >> 11) & 0x1F) * scaleValue) / 256;
-                        green = (((color >> 6) & 0x1F) * scaleValue) / 256;
-                        blue = (((color >> 1) & 0x1F) * scaleValue) / 256;
-                        *dst = (red << 11) | (green << 6) | (blue << 1) | 1;
+                        red = (((color >> 11) & 0x1F) * paletteScaleValue) / 256;
+                        green = (((color >> 6) & 0x1F) * paletteScaleValue) / 256;
+                        blue = (((color >> 1) & 0x1F) * paletteScaleValue) / 256;
+                        *scaledPaletteColor = (red << 11) | (green << 6) | (blue << 1) | 1;
                     }
-                    dst++;
-                } while (offset != 0x20);
+                    scaledPaletteColor++;
+                } while (paletteByteOffset != 0x20);
 
-                FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
-                             (u32)(font->imageOffset + (u8 *)asset));
-                FONT_GFX_CMD(gRegionAllocPtr++,
-                             ((((((s32)(font->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5480000,
-                             0x07080200);
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
-                             (((font->width * 2) & 0xFFF) << 12) | 0x07000000 | ((font->height * 4) & 0xFFF));
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                FONT_GFX_CMD(gRegionAllocPtr++,
-                             ((((((s32)(font->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000,
-                             0x00080200);
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
-                             (((font->width * 4) & 0xFFF) << 12) | ((font->height * 4) & 0xFFF));
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)dstStart);
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                FONT_GFX_CMD(gRegionAllocPtr++, (((x1 * 4) & 0xFFF) << 12) | 0xE4000000 | ((y1 * 4) & 0xFFF),
-                             (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF));
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, (clipS << 21) | ((clipT << 5) & 0xFFFF));
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
+                gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)asset + atlasTexture->imageOffset, G_IM_FMT_CI,
+                                      atlasTexture->width, atlasTexture->height, 0, 0, atlasTexture->width,
+                                      atlasTexture->height, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, G_TX_NOLOD,
+                                      G_TX_NOLOD);
+                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scaledPalette);
+                gSPTextureRectangle(gRegionAllocPtr++, x0 * 4, y0 * 4, x1 * 4, y1 * 4, 0, clipS << 5, clipT << 5,
+                                    0x0400, 0x0400);
             }
         }
     }
