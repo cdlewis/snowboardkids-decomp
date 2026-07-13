@@ -10,6 +10,24 @@ typedef struct {
     s32 timer;
 } CharacterSelectMenuState;
 
+// exitMode/readyCount are misnomers kept for continuity with earlier
+// GLOBAL_ASM comments - they are not "reason for exit" or "players ready".
+// Both are driven by the race_hud.c actor tasks func_80004960 schedules for
+// this scene's UI widgets (banner/panel/message actors), not by player
+// input state:
+//   exitMode: a panel/UI display-mode stepper. func_800177F8 (fully
+//     matched) sets it to 1 when the "select your character" banner
+//     finishes fading out; func_80017C34 (fully matched, see PR matching
+//     it) reads it to drive the player-panel's slide-in Y position. Later,
+//     func_80005290 separately reuses the same field with value 3 to mean
+//     "confirmed, exiting the scene" - that's just its most visible use,
+//     not its only one.
+//   readyCount: set to a hardcoded 1 by func_80017F94 (fully matched) once
+//     a sliding message-banner actor finishes moving into position - a
+//     UI-animation-complete flag, not a per-player ready count. Confirmed
+//     live via BizHawk: freezing this at 0 during character select blocks
+//     the player-selection panel from ever appearing/updating, while
+//     character-sprite animation (driven separately) keeps running.
 typedef struct {
     u8 phase;
     u8 exitMode;
