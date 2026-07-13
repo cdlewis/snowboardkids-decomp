@@ -1,0 +1,1217 @@
+#include "common.h"
+#include "game/engine/asset_manager.h"
+#include "game/engine/callback_task_scheduler.h"
+#include "game/audio/sound_manager.h"
+#include "game/race/motion/race_motion.h"
+#include "game/race/course/race_course_effects.h"
+#include "game/race/player/race_player_input.h"
+#include "game/race/player/race_player_movement.h"
+
+typedef struct {
+    RaceVec3i worldPos;
+    RaceVec3i localPos;
+    Matrix4s rotationMtx;
+} TransformScratch;
+
+typedef struct {
+    s16 unk0;
+    char pad2[0x46];
+} RaceCourseStartEntry;
+
+typedef struct {
+    s8 active;
+    char pad1[0xAF];
+} Unk8011228C;
+
+typedef struct {
+    s8 order0;
+    s8 order1;
+    s8 order2;
+    s8 order3;
+} PlayerOrder;
+
+typedef struct {
+    s32 pad[3];
+    s32 speed;
+} MovementSpeedScratch;
+
+extern s32 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
+extern s16 calculateFixedAngleFromDeltaXZ(s32, s32);
+extern void makeFixedRotationX(Matrix4s, s16);
+extern void makeFixedRotationY(Matrix4s, s16);
+extern void makeFixedRotationZ(Matrix4s, s16);
+extern void multiplyFixedMatrix3s(Matrix4s, Matrix4s, Matrix4s);
+extern void makeFixedRotationXYZ(Matrix4s, s16, s16, s16);
+extern void makeFixedRotationXY(Matrix4s, s16, s16);
+extern void makeFixedRotationZX(Matrix4s, s16, s16);
+extern void makeFixedRotationXZ(Matrix4s, s16, s16);
+extern void makeFixedRotationZXY(Matrix4s, s16, s16, s16);
+extern void makeFixedRotationZYX(Matrix4s, s16, s16, s16);
+extern void transformVec3iByFixedMatrix(Matrix4s, RaceVec3i *, RaceVec3i *);
+extern s16 fixedSine(s16);
+extern s16 fixedCosine(s16);
+extern s32 integerSquareRoot64(s64);
+extern u8 gRaceSplitscreenMode;
+extern s8 gRacePlayerCount;
+extern s8 gRaceOrderPlayerIds[];
+extern RacePlayer gFrameCounter;
+extern s32 gMenuFlowState;
+extern RaceVec3i gRacePlayerGroundProbeOffsets[];
+extern s16 gRacePlayerVoiceSoundIds0[];
+extern s16 gRacePlayerVoiceSoundIds1[];
+extern s16 gRacePlayerVoiceSoundIds2[];
+extern s16 gRacePlayerVoiceSoundIds4[];
+extern s16 gRacePlayerVoiceSoundIds5[];
+extern s16 gRacePlayerVoiceSoundIds6[];
+extern s16 gRacePlayerVoiceSoundIds7[];
+extern RaceCourseStartEntry gRaceCourseStartEntries[];
+extern Unk8011228C gRacePlayerHudStatuses[];
+extern s16 gRaceCourseIndex;
+extern s16 gRaceLapCount;
+extern u8 gRaceCameraModeChangeDisabled;
+
+void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
+    RacePlayer *player;
+    s32 temp;
+
+    player = &gRacePlayers[arg0];
+    *arg1 = player->unk502 * 8;
+    *arg2 = player->unk504;
+
+    switch (gRaceCourseIndex) {
+    case 0:
+        temp = *arg1;
+        if (temp >= 0x580) {
+            *arg1 = 0x598 - temp;
+            *arg2 = -*arg2;
+            return;
+        }
+        break;
+    case 1:
+        temp = *arg1;
+        if (temp >= 0x4A8) {
+            *arg1 = 0x4A8 - temp;
+            *arg2 = -*arg2;
+            return;
+        }
+        break;
+    case 2:
+        temp = *arg1;
+        if ((temp >= 0x490) && (temp < 0x4B9)) {
+            *arg1 = 0x490 - temp;
+            *arg2 = -*arg2;
+            return;
+        }
+        if ((temp >= 0x4C0) && (temp < 0x4D1)) {
+            *arg1 = ((temp * 0x38) - 0x10A00) / 0x10 + 0x80;
+            return;
+        }
+        if ((temp >= 0x4D8) && (temp < 0x5C1)) {
+            *arg1 = ((temp * 0x120) - 0x57300) / 0xE8 + 0x188;
+            return;
+        }
+        if ((temp >= 0x5C8) && (temp < 0x621)) {
+            *arg1 = ((temp * 0x58) - 0x1FCC0) / 0x58 + 0x290;
+            return;
+        }
+        break;
+    case 3:
+        temp = *arg1;
+        if ((temp >= 0x628) && (temp < 0x649)) {
+            *arg1 = 0x628 - temp;
+            *arg2 = -*arg2;
+            return;
+        }
+        if ((temp >= 0x650) && (temp < 0x7D1)) {
+            *arg1 = ((temp * 0x138) - 0x7B180) / 0x180 + 0x60;
+            return;
+        }
+        if ((temp >= 0x7D8) && (temp < 0x8E1)) {
+            *arg1 = ((temp * 0xB8) - 0x5A340) / 0x108 + 0x2F0;
+            return;
+        }
+        if ((temp >= 0x8E8) && (temp < 0x921)) {
+            *arg1 = ((temp * 0x68) - 0x39E40) / 0x38 + 0x520;
+            return;
+        }
+        break;
+    case 4:
+        temp = *arg1;
+        if ((temp >= 0x618) && (temp < 0x641)) {
+            *arg1 = 0x618 - temp;
+            *arg2 = -*arg2;
+            temp = *arg1;
+        }
+        if ((temp >= 0x648) && (temp < 0x699)) {
+            *arg1 = ((temp * 0x70) - 0x2BF80) / 0x50 + 0x380;
+            return;
+        }
+        break;
+    case 5:
+        temp = *arg1;
+        if ((temp >= 0x6D0) && (temp < 0x6F9)) {
+            *arg1 = 0x6F8 - temp;
+            *arg2 = -*arg2;
+            temp = *arg1;
+        }
+        if ((temp >= 0x700) && (temp < 0x7E9)) {
+            *arg1 = ((temp * 0xD0) - 0x5B000) / 0xE8 + 0x1A0;
+            return;
+        }
+        if ((temp >= 0x7F0) && (temp < 0xA01)) {
+            *arg1 = ((temp * 0x280) - 0x13D800) / 0x210 + 0x2C8;
+            return;
+        }
+        if ((temp >= 0xA08) && (temp < 0xA39)) {
+            *arg1 = ((temp * 0x48) - 0x2D240) / 0x30 + 0x550;
+            return;
+        }
+        break;
+    case 6:
+        temp = *arg1;
+        if ((temp >= 0x7B8) && (temp < 0x7E1)) {
+            *arg1 = 0x7F8 - temp;
+            *arg2 = -*arg2;
+            return;
+        }
+        break;
+    case 8:
+        temp = *arg1;
+        if ((temp >= 0x1F0) && (temp < 0x219)) {
+            *arg1 = 0x1F0 - temp;
+            *arg2 = -*arg2;
+        }
+        break;
+    }
+}
+
+// updateRacePlayerRankings best match: 84.263% (nonmatchings/updateRacePlayerRankings-8331816093655448999/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerRankings.s")
+
+#ifdef NON_MATCHING
+void updateRacePlayerRankings(void) {
+    PlayerOrder order;
+    s32 primary[4];
+    s32 secondary[4];
+    RacePlayer *player;
+    s8 *orderI;
+    s8 *orderJ;
+    s32 playerCount;
+    s32 lastPair;
+    s32 i;
+    s32 j;
+    s8 right;
+    s8 left;
+
+    if (gRaceSplitscreenMode != 2) {
+        if (gMenuFlowState & 1) {
+            gRaceOrderPlayerIds[0] = 0;
+            gRaceOrderPlayerIds[1] = 1;
+            gRaceOrderPlayerIds[2] = 2;
+            gRaceOrderPlayerIds[3] = 3;
+            return;
+        }
+
+        playerCount = gRacePlayerCount;
+        order.order0 = 0;
+        order.order1 = 1;
+        order.order2 = 2;
+        order.order3 = 3;
+        i = 0;
+        if (playerCount > 0) {
+            player = gRacePlayers;
+            do {
+                getRacePlayerRankingProgress(i, &primary[i], &secondary[i]);
+                i++;
+                if ((s32)(player->stateFlags << 5) < 0) {
+                    primary[i - 1] += player->unk57C;
+                }
+                player++;
+            } while (i < gRacePlayerCount);
+            i = 0;
+        }
+
+        lastPair = playerCount - 1;
+        if (lastPair > 0) {
+            do {
+                j = i + 1;
+                if (j < playerCount) {
+                    orderJ = &(&order.order0)[j];
+                    orderI = &(&order.order0)[i];
+                    do {
+                        right = orderJ[0];
+                        left = orderI[0];
+                        if (gRacePlayers[right].rankIndex < gRacePlayers[left].rankIndex) {
+                            orderI[0] = right;
+                            orderJ[0] = left;
+                        }
+                        orderJ++;
+                    } while (orderJ < &(&order.order0)[playerCount]);
+                }
+                j = i + 1;
+                i = j;
+            } while (j < lastPair);
+            i = 0;
+        }
+
+        if (lastPair > 0) {
+            do {
+                j = i + 1;
+                if (j < playerCount) {
+                    orderI = &(&order.order0)[i];
+                    do {
+                        left = orderI[0];
+                        orderJ = &(&order.order0)[j];
+                        if (!(gRacePlayers[left].stateFlags & 0x40)) {
+                            right = orderJ[0];
+                            if (!(gRacePlayers[right].stateFlags & 0x40)) {
+                                if (gRacePlayers[left].unk508 < gRacePlayers[right].unk508) {
+                                    orderI[0] = right;
+                                    orderJ[0] = left;
+                                } else if (gRacePlayers[left].unk508 == gRacePlayers[right].unk508) {
+                                    if (primary[left] < primary[right]) {
+                                        orderI[0] = right;
+                                        orderJ[0] = left;
+                                    } else if ((primary[left] == primary[right]) &&
+                                            (secondary[left] < secondary[right])) {
+                                        orderI[0] = right;
+                                        orderJ[0] = left;
+                                    }
+                                }
+                            }
+                        }
+                        j++;
+                    } while (j < playerCount);
+                }
+                j = i + 1;
+                i = j;
+            } while (j < lastPair);
+            i = 0;
+        }
+
+        if (playerCount > 0) {
+            orderI = &order.order0;
+            orderJ = gRaceOrderPlayerIds;
+            do {
+                right = orderI[0];
+                orderI++;
+                orderJ++;
+                player = &gRacePlayers[right];
+                player->rankIndex = i;
+                i++;
+                orderJ[-1] = player->playerIndexU16;
+            } while (i < playerCount);
+        }
+    }
+}
+#endif
+
+void updateRacePlayerFinalLapStatus(RacePlayer *player) {
+    CallbackTask *task;
+    u32 flags;
+
+    flags = player->stateFlags;
+    if (!(flags & 0x40) && (player->unk508 >= (gRaceLapCount - 1)) &&
+            (player->unk502 == gRaceCourseStartEntries[gRaceCourseIndex].unk0) && !(flags & 0x1000)) {
+        player->stateFlags = flags | 0x40;
+        if ((gRaceCameraModeChangeDisabled == 0) && (gRacePlayerHudStatuses[player->playerIndexU16].active != 0)) {
+            task = createCallbackTask(initFinalLapPrompt, 6, 0x64);
+            if (task != NULL) {
+                task->userId = player->playerIndexU16;
+            }
+        }
+    }
+}
+
+// resolveRacePlayerBodyCollisions best match: 99.957% (nonmatchings/resolveRacePlayerBodyCollisions-6866765942504228165/base_3.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/resolveRacePlayerBodyCollisions.s")
+
+#ifdef NON_MATCHING
+void resolveRacePlayerBodyCollisions(void) {
+    RacePlayer *playerA;
+    RacePlayer *playerB;
+    s32 i;
+    s32 j;
+    s32 temp;
+    s32 xDiff;
+    s32 yLimit;
+    s32 radius;
+    s64 xDiff64;
+    s16 angle;
+    s32 sine;
+    s32 cosine;
+    s32 pushX;
+    s32 pushZ;
+
+    for (i = 0; i != 3; i++) {
+        j = i + 1;
+        if (j < 4) {
+            playerA = &gRacePlayers[i];
+            do {
+                if (playerA->isActive != 0) {
+                    playerB = &gRacePlayers[j];
+                    if ((playerB->isActive != 0) && (playerA->soundDisabled == 0) &&
+                        (playerB->soundDisabled == 0) && !(playerA->stateFlags & 0x200000) &&
+                        !(playerB->stateFlags & 0x200000)) {
+                        temp = playerA->unk5C - playerB->unk5C;
+                        if (temp < 0) {
+                            yLimit = playerA->unk284;
+                            temp = -temp;
+                        } else {
+                            yLimit = playerB->unk284;
+                        }
+
+                        if (temp <= yLimit) {
+                            radius = playerB->unk280 + playerA->unk280;
+                            xDiff = playerA->posX - playerB->posX;
+                            if (xDiff < 0) {
+                                xDiff = -xDiff;
+                            }
+                            if (xDiff < radius) {
+                                temp = playerA->posZ - playerB->posZ;
+                                if (temp < 0) {
+                                    temp *= -1;
+                                }
+                                xDiff64 = (s64)((0, xDiff));
+                                if ((temp < radius) &&
+                                    ((temp = integerSquareRoot64((xDiff64 * xDiff) +
+                                                           (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < radius)) {
+                                    temp = ((radius - temp) * -1) / 2;
+                                    angle = calculateFixedAngleBetweenXZPoints(playerA->posX, playerA->posZ,
+                                                          playerB->posX, playerB->posZ);
+                                    sine = fixedSine(angle);
+                                    cosine = fixedCosine(angle);
+                                    pushX = (s64)-sine * temp / 0x1000;
+                                    pushZ = (s64)cosine * temp / 0x1000;
+                                    if (playerA->stateFlags & 0x1000) {
+                                        if (!(playerB->stateFlags & 0x1000)) {
+                                            playerB->posX -= pushX * 2;
+                                            playerB->posZ += pushZ * 2;
+                                        }
+                                    } else if (playerB->stateFlags & 0x1000) {
+                                        playerA->posX += pushX * 2;
+                                        playerA->posZ -= pushZ * 2;
+                                    } else {
+                                        playerA->posX += pushX;
+                                        playerA->posZ -= pushZ;
+                                        playerB->posX -= pushX;
+                                        playerB->posZ += pushZ;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                j++;
+            } while (j != 4);
+        }
+    }
+}
+#endif
+
+// pushRacePlayersOutOfCylinderAndApplyItemHit best match: 97.612% (nonmatchings/pushRacePlayersOutOfCylinderAndApplyItemHit-2694253543240320626/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayersOutOfCylinderAndApplyItemHit.s")
+
+#ifdef NON_MATCHING
+void pushRacePlayersOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
+    volatile u8 pad[8];
+    RacePlayer *player;
+    s32 temp;
+    s32 xDiff;
+    s32 yLimit;
+    s32 xzLimit;
+    s32 pushX;
+    s32 pushZ;
+    s32 localX;
+    s32 localZ;
+    s16 angle;
+    s32 sine;
+    s32 cosine;
+
+    player = gRacePlayers;
+    do {
+        if (player->isActive != 0) {
+            yLimit = ySize;
+            temp = pos->y - player->unk5C;
+            if (temp < 0) {
+                temp = -temp;
+            } else {
+                yLimit = player->unk284;
+            }
+
+            if (temp <= yLimit) {
+                xzLimit = player->unk280 + xzSize;
+                xDiff = pos->x - player->posX;
+                if (xDiff < 0) {
+                    xDiff = -xDiff;
+                }
+                if (xDiff < xzLimit) {
+                    temp = pos->z - player->posZ;
+                    if (temp < 0) {
+                        temp = -temp;
+                    }
+                    if ((temp < xzLimit) &&
+                        ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
+                                               (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
+                        angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
+                        sine = fixedSine(angle);
+                        cosine = fixedCosine(angle);
+                        temp = xzLimit - temp;
+                        pushX = (s64)-sine * -temp / 0x1000;
+                        pushZ = (s64)cosine * -temp / 0x1000;
+                        player->posX -= pushX;
+                        player->posZ += pushZ;
+
+                        localX = ((s64)cosine * player->unk2C8 - (s64)sine * player->unk2CC) / 0x1000;
+                        localZ = ((s64)sine * player->unk2C8 + (s64)cosine * player->unk2CC) / 0x1000;
+                        if (localZ > 0) {
+                            localZ = -localZ;
+                        }
+                        player->unk2C8 = ((s64)cosine * localX + (s64)sine * localZ) / 0x1000;
+                        player->unk2CC = ((s64)-sine * localX + (s64)cosine * localZ) / 0x1000;
+                        player->pendingItemHitFlags |= flag;
+                    }
+                }
+            }
+        }
+        player++;
+    } while (player != &gFrameCounter);
+}
+#endif
+
+// pushRacePlayerOutOfCylinderAndApplyItemHit best match: 99.643% (nonmatchings/pushRacePlayerOutOfCylinderAndApplyItemHit-6113366811127043669/base_order_18.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayerOutOfCylinderAndApplyItemHit.s")
+
+#ifdef NON_MATCHING
+void pushRacePlayerOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIndex) {
+    volatile u8 pad[8];
+    RacePlayer *player;
+    s32 temp;
+    s32 xDiff;
+    s32 yLimit;
+    s32 sine;
+    s32 xzLimit;
+    s32 pushX;
+    s32 pushZ;
+    s16 angle;
+    s32 localX;
+    s32 localZ;
+    s32 cosine;
+
+    player = &gRacePlayers[playerIndex];
+    if (player->isActive != 0) {
+        yLimit = ySize;
+        temp = pos->y - player->unk5C;
+        if (temp < 0) {
+            temp = -temp;
+        } else {
+            yLimit = player->unk284;
+        }
+
+        if (temp <= yLimit) {
+            xzLimit = player->unk280 + xzSize;
+            xDiff = pos->x - player->posX;
+            if (xDiff < 0) {
+                xDiff = -xDiff;
+            }
+            if (xDiff < xzLimit) {
+                temp = pos->z - player->posZ;
+                if (temp < 0) {
+                    temp = -temp;
+                }
+                if ((temp < xzLimit) &&
+                    ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
+                                           (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
+                    angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
+                    sine = fixedSine(angle);
+                    cosine = fixedCosine(angle);
+                    temp = xzLimit - temp;
+                    pushX = (s64)-sine * -temp / 0x1000;
+                    pushZ = (s64)cosine * -temp / 0x1000;
+                    player->posX -= pushX;
+                    player->posZ += pushZ;
+
+                    localX = ((s64)cosine * player->unk2C8 - (s64)sine * player->unk2CC) / 0x1000;
+                    localZ = ((s64)sine * player->unk2C8 + (s64)cosine * player->unk2CC) / 0x1000;
+                    if (localZ > 0) {
+                        localZ = -localZ;
+                    }
+                    player->unk2C8 = ((s64)cosine * localX + (s64)sine * localZ) / 0x1000;
+                    player->unk2CC = ((s64)-sine * localX + (s64)cosine * localZ) / 0x1000;
+                    player->pendingItemHitFlags |= flag;
+                }
+            }
+        }
+    }
+}
+#endif
+
+void pushRacePlayersOutOfCylinderOrApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
+    volatile u8 pad[16];
+    RacePlayer *player;
+    s32 temp;
+    s32 xDiff;
+    s32 yLimit;
+    s32 xzLimit;
+    s16 angle;
+    s32 sine;
+    s32 cosine;
+    s32 pushX;
+    s32 pushZ;
+
+    player = gRacePlayers;
+    do {
+        if (player->isActive != 0) {
+            yLimit = ySize;
+            temp = pos->y - player->unk5C;
+            if (temp < 0) {
+                temp = -temp;
+            } else {
+                yLimit = player->unk284;
+            }
+
+            if (temp <= yLimit) {
+                xzLimit = player->unk280 + xzSize;
+                xDiff = pos->x - player->posX;
+                if (xDiff < 0) {
+                    xDiff = -xDiff;
+                }
+                if (xDiff < xzLimit) {
+                    temp = pos->z - player->posZ;
+                    if (temp < 0) {
+                        temp = -temp;
+                    }
+                    if ((temp < xzLimit) &&
+                        ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
+                                               (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
+                        if (player->unk29C < arg3) {
+                            angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
+                            sine = fixedSine(angle);
+                            cosine = fixedCosine(angle);
+                            temp = xzLimit - temp;
+                            pushX = (s64)-sine * -temp / 0x1000;
+                            pushZ = (s64)cosine * -temp / 0x1000;
+                            player->posX -= pushX;
+                            player->posZ += pushZ;
+                        } else {
+                            player->pendingItemHitFlags |= arg4;
+                        }
+                    }
+                }
+            }
+        }
+        player++;
+    } while (player != &gFrameCounter);
+}
+
+// pushRacePlayerOutOfCylinder best match: 99.776% (nonmatchings/pushRacePlayerOutOfCylinder-7273315160691878794/base_13.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayerOutOfCylinder.s")
+
+#ifdef NON_MATCHING
+void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
+    RacePlayer *player;
+    s32 temp;
+    s32 xzLimit;
+    s32 xDiff;
+    s32 yLimit;
+    s32 sine;
+    s32 cosine;
+    s32 pushX;
+    s32 pushZ;
+
+    player = &gRacePlayers[playerIndex];
+    if (player->isActive != 0) {
+        s16 angle;
+
+        yLimit = ySize;
+        temp = pos->y - player->unk5C;
+        if (temp < 0) {
+            temp = -temp;
+        } else {
+            yLimit = player->unk284;
+        }
+
+        if (temp <= yLimit) {
+            xzLimit = player->unk280 + xzSize;
+            xDiff = pos->x - player->posX;
+            if (xDiff < 0) {
+                xDiff = -xDiff;
+            }
+            if (xDiff < xzLimit) {
+                volatile u8 pad[8];
+                temp = pos->z - player->posZ;
+                if (temp < 0) {
+                    temp = -temp;
+                }
+                if ((temp < xzLimit) &&
+                    ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
+                                           (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
+                    angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
+                    sine = fixedSine(angle);
+                    cosine = fixedCosine(angle);
+                    temp = xzLimit - temp;
+                    pushX = (s64)-sine * -temp / 0x1000;
+                    pushZ = (s64)cosine * -temp / 0x1000;
+                    player->posX -= pushX;
+                    (&gRacePlayers[playerIndex])->posZ += pushZ;
+                }
+            }
+        }
+    }
+}
+#endif
+
+// isRacePlayerInsideCylinder best match: 99.719% (nonmatchings/isRacePlayerInsideCylinder-6688367443449623229/base_7.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/isRacePlayerInsideCylinder.s")
+
+#ifdef NON_MATCHING
+s32 isRacePlayerInsideCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
+    RacePlayer *player;
+    s32 yDiff;
+    s32 newLimit;
+    s32 yLimit;
+    s32 zDiff;
+    s32 xDiff;
+    s32 xzLimit;
+    s16 result;
+    volatile s32 stackPad[4];
+
+    player = &gRacePlayers[playerIndex];
+    result = 0;
+    if (player->isActive == 0) {
+        return 0;
+    }
+
+    yDiff = pos->y - player->unk5C;
+    yLimit = ySize;
+    if (yDiff < 0) {
+        yDiff = -yDiff;
+    } else {
+        yLimit = player->unk284;
+    }
+
+    if (yDiff < yLimit) {
+        newLimit = player->unk280 + xzSize;
+        xDiff = pos->x - player->posX;
+        xzLimit = newLimit;
+        if (xDiff <= -1) {
+            xDiff = -xDiff;
+        }
+        if (xDiff < xzLimit) {
+            zDiff = pos->z - player->posZ;
+            if (zDiff < 0) {
+                zDiff = -zDiff;
+            }
+            if ((zDiff < xzLimit) && (integerSquareRoot64((s64)xDiff * xDiff + (s64)zDiff * zDiff) < xzLimit)) {
+                result = 1;
+            }
+        }
+    }
+
+    return result;
+}
+#endif
+
+void applyItemHitToRacePlayersInsideSphere(RaceVec3i *pos, s32 xzSize, s16 flag) {
+    volatile u8 pad[16];
+    RacePlayer *player;
+    RacePlayer *end;
+    s32 radius;
+    s32 dx;
+    s32 dy;
+    s32 dz;
+
+    end = &gFrameCounter; player = gRacePlayers;
+    do {
+        if ((player->isActive & 0xFFFFFFFF) != 0) {
+            dx = player->posX - pos->x;
+            radius = player->unk280 + xzSize;
+            if (dx < 0) {
+                dx = -dx;
+            }
+            if (dx < radius) {
+                dy = (player->unk280 + player->unk5C) - pos->y;
+                if (dy < 0) {
+                    dy = -dy;
+                }
+                if (dy < radius) {
+                    dz = player->posZ - pos->z;
+                    if (dz < 0) {
+                        dz = -dz;
+                    }
+                    if ((dz < radius) &&
+                        (integerSquareRoot64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
+                        player->pendingItemHitFlags |= flag;
+                    }
+                }
+            }
+        }
+        player++;
+    } while (player != end);
+}
+
+s32 tryApplyRacePlayerItemHit(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex) {
+    volatile u8 pad[8];
+    s32 radius;
+    s32 dx;
+    s32 dy;
+    s32 dz;
+    RacePlayer *player;
+
+    player = &gRacePlayers[playerIndex];
+    if (player->isActive == 0) {
+        return 0;
+    }
+    if (player->actionSoundTimer != 0) {
+        return 0;
+    }
+
+    dx = player->posX - pos->x;
+    radius = player->unk280 + xzSize;
+    if (dx < 0) {
+        dx = -dx;
+    }
+    if (dx < radius) {
+        dy = (player->unk280 + player->unk5C) - pos->y;
+        if (dy < 0) {
+            dy = -dy;
+        }
+        if (dy < radius) {
+            dz = player->posZ - pos->z;
+            if (dz < 0) {
+                dz = -dz;
+            }
+            if ((dz < radius) &&
+                (integerSquareRoot64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
+                player->pendingItemHitFlags |= flag;
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+// updateRacePlayerSurfaceContact best match: 70.558% (nonmatchings/updateRacePlayerSurfaceContact-2870645799593382959/base_1.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerSurfaceContact.s")
+
+// updateRacePlayerGroundAlignment best match: 84.154% (nonmatchings/updateRacePlayerGroundAlignment-8331816093655448999/base_9.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerGroundAlignment.s")
+
+#ifdef NON_MATCHING
+void updateRacePlayerGroundAlignment(RacePlayer *player) {
+    Matrix4s mtx;
+    Matrix4s tiltMtx;
+    Matrix4s baseMtx;
+    Matrix4s effectMtx;
+    RaceVec3i points[6];
+    volatile u8 pad[24];
+    s32 heightDiffs[6];
+    s32 groundHeights[6];
+    s32 transformedX;
+    s32 transformedY;
+    s32 transformedZ;
+    volatile s32 frontMidGround;
+    volatile s32 backMidGround;
+    volatile s32 baseY;
+    s32 pitchSpan;
+    s32 rollSpan;
+    s32 frontHeightDiff;
+    s32 backHeightDiff;
+    s32 sideHeightDiff;
+    s16 i;
+    s32 terrainId;
+    s32 stateFlags;
+    RacePlayer *temp_s2;
+    RaceVec3i *point;
+
+    temp_s2 = player;
+    temp_s2->unk500 = 0;
+    terrainId = temp_s2->unk502;
+
+    makeFixedRotationZ(mtx, temp_s2->unk2EE);
+    transformVec3iByFixedMatrix(mtx, &D_800DE7F8, points);
+    pitchSpan = points[0].x;
+
+    makeFixedRotationX(mtx, temp_s2->pitchAngle);
+    transformVec3iByFixedMatrix(mtx, &D_800DE810, points);
+    rollSpan = points[0].z;
+
+    baseY = temp_s2->posY - 0x30000;
+    makeFixedRotationXY(mtx, temp_s2->pitchAngle, temp_s2->facingAngle);
+
+    i = 0;
+    do {
+        point = &points[i];
+        transformVec3iByFixedMatrix(mtx, &gRacePlayerGroundProbeOffsets[i + 2], point);
+        point->x += temp_s2->posX;
+        point->y += baseY;
+        point->z += temp_s2->posZ;
+        groundHeights[i] = getRaceCourseSurfaceHeight(terrainId, point->x, point->z);
+        heightDiffs[i] = groundHeights[i] - point->y;
+        if (heightDiffs[i] < 0) {
+            groundHeights[i] = point->y;
+        }
+        i++;
+    } while (i < 6);
+
+    frontMidGround = ((s64)groundHeights[0] + groundHeights[2]) / 2;
+    backMidGround = ((s64)groundHeights[1] + groundHeights[3]) / 2;
+
+    frontHeightDiff = heightDiffs[0];
+    if (frontHeightDiff < heightDiffs[1]) {
+        frontHeightDiff = heightDiffs[1];
+        groundHeights[0] = groundHeights[1];
+        points[0].y = points[1].y;
+    }
+    if (heightDiffs[2] < heightDiffs[3]) {
+        heightDiffs[2] = heightDiffs[3];
+        groundHeights[2] = groundHeights[3];
+        points[2].y = points[3].y;
+    }
+    if (heightDiffs[4] < heightDiffs[5]) {
+        heightDiffs[4] = heightDiffs[5];
+        groundHeights[4] = groundHeights[5];
+    }
+
+    if ((frontHeightDiff >= 0) && (heightDiffs[2] >= 0)) {
+        heightDiffs[0] = frontHeightDiff;
+        if (!(temp_s2->stateFlags & 4)) {
+            temp_s2->pitchAngle = calculateFixedAngleFromDeltaXZ(-(groundHeights[0] - groundHeights[2]), -rollSpan * 2);
+        }
+        baseY = ((s64)groundHeights[2] + groundHeights[0]) / 2;
+    } else {
+        heightDiffs[0] = frontHeightDiff;
+        if (frontHeightDiff >= 0) {
+            if (!(temp_s2->stateFlags & 4)) {
+                temp_s2->pitchAngle = calculateFixedAngleFromDeltaXZ(-(groundHeights[0] - groundHeights[4]), -rollSpan);
+            }
+            baseY = groundHeights[4];
+        } else if (heightDiffs[2] >= 0) {
+            if (!(temp_s2->stateFlags & 4)) {
+                temp_s2->pitchAngle = calculateFixedAngleFromDeltaXZ(-(groundHeights[4] - groundHeights[2]), -rollSpan);
+            }
+            baseY = groundHeights[4];
+        }
+    }
+
+    temp_s2->unk2F0 = calculateFixedAngleFromDeltaXZ(-(points[0].y - points[2].y), -rollSpan * 2);
+    temp_s2->unk2F4 = calculateFixedAngleFromDeltaXZ(-(frontMidGround - backMidGround), -pitchSpan * 2);
+    temp_s2->unk64 = 0;
+
+    makeFixedRotationZXY(mtx, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2->unk2EE);
+    i = 0;
+    do {
+        point = &points[i];
+        transformVec3iByFixedMatrix(mtx, &gRacePlayerGroundProbeOffsets[i + 2], point);
+        point->x += temp_s2->posX;
+        point->z += temp_s2->posZ;
+        point->y += baseY + temp_s2->unk64;
+        groundHeights[i] = getRaceCourseSurfaceHeight(terrainId, point->x, point->z);
+        if (point->y < groundHeights[i]) {
+            temp_s2->unk64 += groundHeights[i] - point->y;
+        }
+        i++;
+    } while (i < 4);
+
+    if (temp_s2->posY < baseY + 0x30000) {
+        temp_s2->posY = baseY + 0x2FFFF;
+        temp_s2->unk58 = 0x2FFFF;
+    } else {
+        temp_s2->posY = baseY + 0x30000;
+        temp_s2->unk58 = 0x30000;
+    }
+
+    transformedX = (s64)mtx[3] * temp_s2->unk68 / 0x1000;
+    transformedY = (s64)mtx[4] * temp_s2->unk68 / 0x1000;
+    transformedZ = (s64)mtx[5] * temp_s2->unk68 / 0x1000;
+
+    if (temp_s2->stateFlags & 0x400) {
+        makeFixedRotationZYX(effectMtx, temp_s2->unk6C, -temp_s2->unk6E, -temp_s2->unk70);
+        multiplyFixedMatrix3s(effectMtx, mtx, baseMtx);
+    } else {
+        makeFixedRotationZYX(effectMtx, temp_s2->unk6C, temp_s2->unk6E, temp_s2->unk70);
+        makeFixedRotationY(baseMtx, 0x800);
+        multiplyFixedMatrix3s(baseMtx, mtx, tiltMtx);
+        multiplyFixedMatrix3s(effectMtx, tiltMtx, baseMtx);
+    }
+
+    stateFlags = temp_s2->stateFlags;
+    if (stateFlags & 0x400) {
+        sideHeightDiff = ((s64)baseMtx[3] * (temp_s2->unk344 - temp_s2->unk68) +
+                          (s64)-baseMtx[0] * temp_s2->unk340 + (s64)baseMtx[6] * temp_s2->unk348) /
+                         0x1000;
+        ((s64)baseMtx[4] * (temp_s2->unk344 - temp_s2->unk68) + (s64)-baseMtx[1] * temp_s2->unk340 +
+         (s64)baseMtx[7] * temp_s2->unk348) /
+            0x1000;
+        backHeightDiff = ((s64)baseMtx[5] * (temp_s2->unk344 - temp_s2->unk68) +
+                          (s64)-baseMtx[2] * temp_s2->unk340 + (s64)baseMtx[8] * temp_s2->unk348) /
+                         0x1000;
+        makeFixedRotationXYZ(tiltMtx, temp_s2->unk33A, -temp_s2->unk33C, -temp_s2->unk33E);
+    } else {
+        sideHeightDiff = ((s64)baseMtx[3] * (temp_s2->unk344 - temp_s2->unk68) +
+                          (s64)baseMtx[0] * temp_s2->unk340 + (s64)baseMtx[6] * temp_s2->unk348) /
+                         0x1000;
+        ((s64)baseMtx[4] * (temp_s2->unk344 - temp_s2->unk68) + (s64)baseMtx[1] * temp_s2->unk340 +
+         (s64)baseMtx[7] * temp_s2->unk348) /
+            0x1000;
+        backHeightDiff = ((s64)baseMtx[5] * (temp_s2->unk344 - temp_s2->unk68) +
+                          (s64)baseMtx[2] * temp_s2->unk340 + (s64)baseMtx[8] * temp_s2->unk348) /
+                         0x1000;
+        makeFixedRotationXYZ(tiltMtx, temp_s2->unk33A, temp_s2->unk33C, temp_s2->unk33E);
+    }
+
+    sideHeightDiff += temp_s2->posX + transformedX;
+    backHeightDiff += temp_s2->posZ + transformedZ;
+    multiplyFixedMatrix3s(tiltMtx, baseMtx, mtx);
+
+    i = 0;
+    do {
+        transformVec3iByFixedMatrix(mtx, &gRacePlayerGroundProbeOffsets[i + 9], &temp_s2->markerPoints[i]);
+        temp_s2->markerPoints[i].x += sideHeightDiff;
+        temp_s2->markerPoints[i].z += backHeightDiff;
+        temp_s2->markerPoints[i].y =
+            getRaceCourseSurfaceHeight(terrainId, temp_s2->markerPoints[i].x, temp_s2->markerPoints[i].z);
+        i++;
+    } while (i < 4);
+
+    updateRacePlayerProjectedPosition(temp_s2);
+    if (temp_s2->unk58 == 0x30000) {
+        temp_s2->stateFlags |= 1;
+        return;
+    }
+    temp_s2->stateFlags &= ~1;
+}
+#endif
+
+// updateRacePlayerLeanAngle best match: 96.138% (nonmatchings/updateRacePlayerLeanAngle-2663524570355072948/base_6.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerLeanAngle.s")
+
+#ifdef NON_MATCHING
+s32 updateRacePlayerLeanAngle(RacePlayer *player, s32 arg1, s16 arg2) {
+    s16 temp_v0;
+    s32 threshold;
+    s32 scale;
+    s32 temp;
+
+    if (arg1 < 0) {
+        arg1 = -arg1;
+    }
+
+    temp_v0 = player->unk2F6;
+    arg2 = (arg2 * 0x10) - temp_v0;
+    scale = (arg1 << 2) << 1;
+    if (arg2 >= 0x81) {
+        arg2 = 0x80;
+    }
+    scale += arg1;
+    if (arg2 < -0x80) {
+        arg2 = -0x80;
+    }
+    player->unk2F6 = temp_v0 + arg2;
+
+    arg2 = player->unk2F6 * player->unk2F8 / 0x3F;
+    scale <<= 2;
+    scale -= arg1;
+    scale <<= 3;
+    scale -= arg1;
+    if (arg1 >= (threshold = 0x40001)) {
+        scale = 0x117;
+    } else {
+        temp = scale >> 18;
+        if (scale <= -1) {
+            scale++;
+            scale--;
+            temp = (unsigned long long)((scale + 0x3FFFF) >> 18);
+        }
+        scale = (s16)((unsigned long long)temp);
+    }
+
+    arg1 = player->unk2EE;
+    temp_v0 = ((arg2 * scale) / 0x1F0) & 0xFFFFFFFFFFFFFFFFu;
+    player->unk2EE = player->unk2EE + ((temp_v0 - arg1) >> 2);
+    return temp_v0;
+}
+#endif
+
+void clampRacePlayerVectorXZSpeed(RaceVec3i *vec, RacePlayer *player) {
+    s32 magnitude;
+
+    magnitude = integerSquareRoot64((s64)vec->x * vec->x + (s64)vec->z * vec->z);
+    if (player->unk314 < magnitude) {
+        vec->x = (s64)vec->x * player->unk314 / magnitude;
+        vec->z = (s64)vec->z * player->unk314 / magnitude;
+    }
+}
+
+void clampRacePlayerVectorXZHalfSpeed(RaceVec3i *vec, RacePlayer *player) {
+    s32 magnitude;
+
+    magnitude = integerSquareRoot64((s64)vec->x * vec->x + (s64)vec->z * vec->z);
+    if ((player->unk314 / 2) < magnitude) {
+        vec->x = (s64)vec->x * (player->unk314 / 2) / magnitude;
+        vec->z = (s64)vec->z * (player->unk314 / 2) / magnitude;
+    }
+}
+
+// updateRacePlayerLocalVelocity best match: 99.739% (nonmatchings/updateRacePlayerLocalVelocity-2225551288923588688/base_16.c)
+#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerLocalVelocity.s")
+
+#ifdef NON_MATCHING
+void updateRacePlayerLocalVelocity(RacePlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+    volatile s32 pad[8];
+    TransformScratch scratch;
+    MovementSpeedScratch speedScratch;
+    s32 sin;
+    s32 cos;
+    s32 useHalfLimit;
+
+    sin = fixedSine(-player->facingAngle);
+    cos = fixedCosine(-player->facingAngle);
+
+    scratch.localPos.x = ((s64)player->unk40.x * cos + (s64)player->unk40.z * sin) / 0x1000;
+    scratch.localPos.z = ((s64)player->unk40.x * -sin + (s64)player->unk40.z * cos) / 0x1000;
+    scratch.localPos.y = player->unk40.y;
+
+    makeFixedRotationXZ(scratch.rotationMtx, -player->unk2F0, -player->unk2F4);
+    transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.localPos, &scratch.worldPos);
+
+    if (arg1 > 0) {
+        if (scratch.worldPos.z < 0x30000) {
+            scratch.worldPos.z += arg1;
+        }
+    } else if (scratch.worldPos.z >= -0x2FFFF) {
+        scratch.worldPos.z += arg1;
+    }
+
+    scratch.worldPos.z += arg2;
+    useHalfLimit = 0;
+    if (scratch.worldPos.y < 0) {
+        scratch.worldPos.y = 0;
+    }
+
+    if (scratch.worldPos.z < 0) {
+        speedScratch.speed = arg4;
+    } else {
+        speedScratch.speed = arg5;
+        if (arg4 != speedScratch.speed) {
+            useHalfLimit = 1;
+        }
+    }
+
+    if (useHalfLimit != 0) {
+        clampRacePlayerVectorXZHalfSpeed(&scratch.worldPos, player);
+    } else {
+        clampRacePlayerVectorXZSpeed(&scratch.worldPos, player);
+    }
+
+    if (scratch.worldPos.z >= 0) {
+        if (speedScratch.speed < scratch.worldPos.z) {
+            scratch.worldPos.z -= speedScratch.speed;
+        } else {
+            scratch.worldPos.z = 0;
+        }
+    } else if (scratch.worldPos.z < -speedScratch.speed) {
+        scratch.worldPos.z += speedScratch.speed;
+    } else {
+        scratch.worldPos.z = 0;
+    }
+
+    if (scratch.worldPos.x >= 0) {
+        if (arg3 < scratch.worldPos.x) {
+            scratch.worldPos.x -= arg3;
+        } else {
+            scratch.worldPos.x = 0;
+        }
+    } else if (scratch.worldPos.x < -arg3) {
+        scratch.worldPos.x += arg3;
+    } else {
+        scratch.worldPos.x = 0;
+    }
+
+    player->unk258 = scratch.worldPos.x;
+    player->unk254 = scratch.worldPos.z;
+
+    makeFixedRotationZX(scratch.rotationMtx, player->unk2F0, player->unk2F4);
+    transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.worldPos, &scratch.localPos);
+
+    player->unk74 = scratch.localPos.y + 0x1000;
+    scratch.localPos.y = (scratch.localPos.y + player->unk40.y) - scratch.localPos.y;
+
+    sin = fixedSine(player->facingAngle);
+    cos = fixedCosine(player->facingAngle);
+
+    player->unk40.x = ((s64)scratch.localPos.x * cos + (s64)scratch.localPos.z * sin) / 0x1000;
+    player->unk40.z = ((s64)scratch.localPos.x * -sin + (s64)scratch.localPos.z * cos) / 0x1000;
+    player->unk40.y = scratch.localPos.y;
+}
+#endif
+
+void updateRacePlayerLocalVelocityNoVerticalOffset(RacePlayer *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    updateRacePlayerLocalVelocity(arg0, arg1, 0, arg2, arg3, arg4);
+}
+
+void addRacePlayerScore(RacePlayer *arg0, s32 arg1) {
+    if (arg0->isActive != 0) {
+        arg0->unk568 += arg1;
+        if (arg0->unk568 >= 0x186A0) {
+            arg0->unk568 = 0x1869F;
+        }
+        arg0->unk56C += arg1;
+        if (arg0->unk56C >= 0x186A0) {
+            arg0->unk56C = 0x1869F;
+        }
+    }
+}
+
+void enqueueRacePlayerVoiceSound(RacePlayer *player, s16 soundType) {
+    if (player->soundDisabled == 0) {
+        switch (soundType) {
+        case 0:
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds0[(randomNextMain() & 1) + (player->characterId * 2)],
+                          (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
+            return;
+        case 1:
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds1[(randomNextMain() & 1) + (player->characterId * 2)],
+                          (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
+            return;
+        case 2:
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds2[(randomNextMain() & 1) + (player->characterId * 2)],
+                          (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
+            return;
+        case 3:
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds2[(randomNextMain() & 1) + (player->characterId * 2)],
+                          (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0x60);
+            return;
+        case 4:
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds4[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+                          (u16)player->playerIndex, 0);
+            return;
+        case 5:
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds5[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+                          (u16)player->playerIndex, 0);
+            return;
+        case 6:
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds6[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+                          (u16)player->playerIndex, 0);
+            return;
+        case 7:
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds7[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+                          (u16)player->playerIndex, 0);
+            break;
+        }
+    }
+}
+
+void updateRacePlayerProjectedPosition(RacePlayer *arg0) {
+    TransformScratch scratch;
+
+    makeFixedRotationXY(scratch.rotationMtx, arg0->pitchAngle, arg0->facingAngle);
+    scratch.localPos.x = 0;
+    scratch.localPos.y = 0xC0000;
+    scratch.localPos.z = 0;
+    transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.localPos, &scratch.worldPos);
+    arg0->projectedPos.x = scratch.worldPos.x + arg0->posX;
+    arg0->projectedPos.y = scratch.worldPos.y + arg0->posY;
+    arg0->projectedPos.z = scratch.worldPos.z + arg0->posZ;
+}
