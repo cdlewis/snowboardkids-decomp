@@ -815,7 +815,7 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceSetupSavePanelFrame);
 }
 
-// drawRaceSetupSavePanelIcons best match: 95.071% (nonmatchings/drawRaceSetupSavePanelIcons-2663524570355072948/base_6.c)
+// drawRaceSetupSavePanelIcons best match: 95.696% (nonmatchings/drawRaceSetupSavePanelIcons-2663524570355072948/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_setup_ui/drawRaceSetupSavePanelIcons.s")
 
 #ifdef NON_MATCHING
@@ -841,6 +841,7 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
         courseId = gControllerPakStatusCodes;
         actorOffset = 0;
         do {
+            (void)i;
             if (*courseId != 0x13) {
                 player = &gGameSaveDataBuffer[i];
                 j = 0;
