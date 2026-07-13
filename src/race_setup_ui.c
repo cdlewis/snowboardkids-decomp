@@ -815,14 +815,14 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceSetupSavePanelFrame);
 }
 
-// drawRaceSetupSavePanelIcons best match: 93.449% (nonmatchings/drawRaceSetupSavePanelIcons-5802343343535905907/base_10.c)
+// drawRaceSetupSavePanelIcons best match: 95.071% (nonmatchings/drawRaceSetupSavePanelIcons-2663524570355072948/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_setup_ui/drawRaceSetupSavePanelIcons.s")
 
 #ifdef NON_MATCHING
 void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
     volatile s32 unused;
-    s32 pad[6];
     volatile s32 i;
+    s32 pad[6];
     s32 actorOffset;
     s16 *courseId;
     register TitleMenuPlayerView *player;
@@ -900,10 +900,9 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
                     } while (j != count);
                 }
             }
-            i++;
             actorOffset += 2;
             courseId++;
-        } while (i < (s32)gPlayerCount);
+        } while (++i < (s32)gPlayerCount);
     }
 }
 #endif
