@@ -3245,11 +3245,11 @@ void func_8005E3F8(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
 }
 
-void func_8005E498(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x18) = *(s16 *)((u8 *)arg0 + 0x18) + 0x10;
-    if (*(s16 *)((u8 *)arg0 + 0x18) >= 0x100) {
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
+void updateRaceUiTrickPrizePayoutFadeIn(RaceUiCourseStatsActor *arg0) {
+    arg0->titleAlpha += 0x10;
+    if (arg0->titleAlpha >= 0x100) {
+        arg0->timer = 0x14;
+        arg0->titleAlpha = 0xFF;
         setCallbackTaskCallback(arg0, func_8005E3F8);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
@@ -3268,7 +3268,7 @@ void initRaceUiTrickPrizePayout(RaceUiCourseStatsActor *arg0) {
         arg0->pendingTrickPrize = gRacePlayers[0].unk2C0 * 3;
         arg0->pendingMakeBonus = gRacePlayers[0].unk2C3 * 10;
     }
-    setCallbackTaskCallback(arg0, func_8005E498);
+    setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutFadeIn);
 }
 
 void func_8005E5B4(void *arg0) {
