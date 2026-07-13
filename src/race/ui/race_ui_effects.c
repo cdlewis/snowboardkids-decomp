@@ -30,6 +30,7 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 #define RACE_UI_RESULTS_FADE_STEP 0x10
 #define RACE_UI_RESULTS_FULL_ALPHA 0xFF
 #define RACE_UI_RESULTS_REVEAL_TIMER 0x14
+#define RACE_UI_COURSE_RECORD_REVEAL_PERFECT_GET_STATE 2
 #define RACE_UI_COURSE_RECORD_FINAL_MONEY_STATE 3
 #define RACE_UI_COURSE_RECORD_HOLD_FINAL_MONEY_STATE 4
 #define RACE_UI_HIT_PRIZE_SCORE_RATE 0x12C
@@ -2684,18 +2685,18 @@ void updateRaceUiCourseRecordRevealFinalMoney(RaceUiDualCounterActor *actor) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, actor);
 }
 
-void func_8005CAB4(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x20) = 2;
-    *(s16 *)((u8 *)arg0 + 0x1E) = *(s16 *)((u8 *)arg0 + 0x1E) - 1;
-    if (*(s16 *)((u8 *)arg0 + 0x1E) == 0) {
+void updateRaceUiCourseRecordRevealPerfectGet(RaceUiDualCounterActor *actor) {
+    actor->state = RACE_UI_COURSE_RECORD_REVEAL_PERFECT_GET_STATE;
+    actor->timer--;
+    if (actor->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
-        *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
-        setCallbackTaskCallback(arg0, updateRaceUiCourseRecordRevealFinalMoney);
+        actor->timer = RACE_UI_RESULTS_REVEAL_TIMER;
+        setCallbackTaskCallback(actor, updateRaceUiCourseRecordRevealFinalMoney);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, actor);
 }
 
 void func_8005CB74(void *arg0) {
@@ -2705,7 +2706,7 @@ void func_8005CB74(void *arg0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
         if (*(s16 *)((u8 *)arg0 + 0x2A) != 0) {
-            setCallbackTaskCallback(arg0, func_8005CAB4);
+            setCallbackTaskCallback(arg0, updateRaceUiCourseRecordRevealPerfectGet);
         } else {
             setCallbackTaskCallback(arg0, updateRaceUiCourseRecordRevealFinalMoney);
         }
