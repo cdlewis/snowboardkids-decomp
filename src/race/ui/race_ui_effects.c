@@ -409,7 +409,9 @@ typedef struct RaceUiTripleParticleActor {
 } RaceUiTripleParticleActor;
 
 typedef struct RaceUiSpinningParticleActor {
-    /* 0x00 */ u8 pad0[0x18];
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ RaceUiGfxCommandDest *matrix0;
     /* 0x28 */ RaceUiGfxCommandDest *matrix1;
@@ -4592,7 +4594,7 @@ void func_800631B0(RaceUiTrailingParticleActor *arg0) {
     setCallbackTaskCallback(arg0, func_80063164);
 }
 
-void func_80063220(RaceUiSpinningParticleActor *arg0) {
+void renderRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
     FixedMatrix3sScratch scratch;
     s32 temp2;
     s32 pad;
@@ -4633,18 +4635,18 @@ void func_80063220(RaceUiSpinningParticleActor *arg0) {
     }
 }
 
-void func_80063410(void *arg0) {
+void updateRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
     if (gRaceUpdatePaused == 0) {
-        *(s16 *)((u8 *)arg0 + 0x2E) = *(s16 *)((u8 *)arg0 + 0x2E) + 0x60;
-        *(s16 *)((u8 *)arg0 + 0x30) = *(s16 *)((u8 *)arg0 + 0x30) + 0x10;
-        *(s16 *)((u8 *)arg0 + 0x32) = *(s16 *)((u8 *)arg0 + 0x32) + 4;
+        arg0->rotZ += 0x60;
+        arg0->rotX += 0x10;
+        arg0->rotX2 += 4;
     }
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80063220, arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, renderRaceCourseSpinningObject, arg0);
 }
 
-void func_80063470(void *arg0) {
-    *(Vec3i *)((u8 *)arg0 + 0x18) = D_800D6340[*(u16 *)((u8 *)arg0 + 0x10)];
-    setCallbackTaskCallback(arg0, func_80063410);
+void initRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
+    arg0->pos = D_800D6340[arg0->index];
+    setCallbackTaskCallback(arg0, updateRaceCourseSpinningObject);
 }
 
 // renderCourseStartFinishSprite best match: 99.268% (nonmatchings/func_800634C8-7273315160691878794/base_9.c)

@@ -425,7 +425,7 @@ block_24:
         createCallbackTask(&initCourseGateObject, 0, 0x64);
         createCallbackTaskWithUserId(&func_80061428, 0, 0x64, 0);
         createCallbackTaskWithUserId(&func_800631B0, 0, 0x64, 0);
-        createCallbackTaskWithUserId(&func_80063470, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&initRaceCourseSpinningObject, 0, 0x64, 0);
         createCallbackTaskWithUserId(&initRaceCourseSlideSprite, 0, 0x64, 4);
         createCallbackTaskWithUserId(&initRaceCourseSlideSprite, 0, 0x64, 5);
         createCallbackTaskWithUserId(&initRaceCourseRankModel, 0, 0x64, 1);
