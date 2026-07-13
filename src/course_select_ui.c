@@ -1127,34 +1127,35 @@ void initCourseSelectCourseIconList(u8 *arg0) {
 }
 #endif
 
-// drawCourseSelectCourseCursors best match: 98.861% (nonmatchings/drawCourseSelectCourseCursors-2694253543240320626/base_5.c)
+// drawCourseSelectCourseCursors best match: 99.494% (nonmatchings/drawCourseSelectCourseCursors-3242520251544044307/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/drawCourseSelectCourseCursors.s")
 
 #ifdef NON_MATCHING
-void drawCourseSelectCourseCursors(u8 *arg0) {
+void drawCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     u8 *actor;
     s32 i;
     u8 *statePtr;
     s16 *posPtr;
     s8 *directionPtr;
     s16 *handles;
+    u8 *new_var;
     s32 tileIndex;
     s32 handleIndex;
     s32 one;
     s32 playerCount;
 
-    actor = arg0;
+    actor = (u8 *) arg0;
     if (D_8010AEB0 == 0) {
         playerCount = gPlayerCount;
         i = 0;
-        if (playerCount > 0) {
-            statePtr = arg0;
+        if ((playerCount - 1) >= 0) {
+            statePtr = (u8 *) arg0;
             handles = gAssetHandles;
             one = 1;
             do {
                 directionPtr = &D_8010AE64[i];
                 if (statePtr[0x30] < 2) {
-                    posPtr = (s16 *)(actor + (i * 2));
+                    posPtr = (s16 *) ((new_var = actor) + (i * 2));
                     if (one == gPlayerCount) {
                         tileIndex = 7;
                         handleIndex = 0x25;
