@@ -3,6 +3,7 @@
 
 #include "common.h"
 
+struct CallbackTask;
 struct RaceUiAlpha18Actor;
 struct RaceUiAlpha1AActor;
 struct RaceUiAlphaActor;
@@ -150,8 +151,8 @@ void func_8005E33C(void *arg0);
 void func_8005E3F8(void *arg0);
 void updateRaceUiTrickPrizePayoutFadeIn(struct RaceUiCourseStatsActor *arg0);
 void initRaceUiTrickPrizePayout(struct RaceUiCourseStatsActor *arg0);
-void func_8005E5B4(void *arg0);
-void func_8005E68C(void *arg0);
+void drawRaceUiResultAwardBadge(struct CallbackTask *task);
+void updateRaceUiResultAwardBadgeDelay(struct CallbackTask *task);
 void func_8005E6D0(struct RaceUiSparkleActor *arg0);
 void func_8005EA4C(struct RaceUiSparkleActor *arg0);
 void func_8005ECA8(struct RaceUiSparkleActor *arg0);

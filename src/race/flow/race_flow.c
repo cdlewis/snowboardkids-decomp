@@ -1458,7 +1458,7 @@ loop_race_time:
     if (D_80121B60 != 0) {
         requestMusicSequenceBank(6);
         if ((gPlayerCount == 1) && (gRaceSplitscreenMode == 0)) {
-            createCallbackTaskWithUserId((void (*)(CallbackTask *))func_8005E68C, 6, 0x64, 0xA9);
+            createCallbackTaskWithUserId((void (*)(CallbackTask *))updateRaceUiResultAwardBadgeDelay, 6, 0x64, 0xA9);
         }
         createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
     }
