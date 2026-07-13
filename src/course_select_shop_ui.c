@@ -1324,7 +1324,7 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     }
 }
 
-// updateCourseDetailsMenu best match: 85.277% (nonmatchings/updateCourseDetailsMenu-3357475854818838508/base_7.c)
+// updateCourseDetailsMenu best match: 87.486% (nonmatchings/updateCourseDetailsMenu-2870645799593382959/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/updateCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
@@ -1335,22 +1335,22 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     u8 state;
     ShopMenuWidgetActor *actor;
     ShopMenuWidgetActor *shifted;
-    s16 target;
-    s16 temp;
+    s32 target;
+    s32 temp;
     u16 count;
 
     actor = arg0;
     shifted = arg0;
     globalState = gCourseDetailsMenuState;
     state = arg0->state;
-    if (state != globalState) {
-        state = globalState & 0xFF;
+    if (globalState != state) {
+        state = globalState;
         arg0->state = globalState;
     }
 
     if (((gCurrentGameTask->unk20 == 3) || (gCurrentGameTask->unk20 == 9)) && (state < 5)) {
         arg0->state = 5;
-        state = 5 & 0xFF;
+        state = 5;
         arg0->prompt.bytes.pulseAlpha = 0x100;
     }
 
