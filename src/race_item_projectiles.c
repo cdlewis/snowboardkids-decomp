@@ -1318,23 +1318,19 @@ void renderShieldProjectile(RaceItemProjectileActor *arg0) {
     }
 }
 
-// updateShieldProjectile best match: 99.943% (nonmatchings/updateShieldProjectile-3357475854818838508/base_16.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_projectiles/updateShieldProjectile.s")
-
-#ifdef NON_MATCHING
 void updateShieldProjectile(RaceItemProjectileActor *arg0) {
     s32 zOffset;
     s32 sin;
     s32 cos;
-    s32 xOffset;
+    Vec3i *pos;
     s32 pushX;
     s32 pushZ;
     s32 prevY;
-    volatile u8 padding[8];
+    u8 padding[8];
     s32 y;
     s32 groundY;
-    Vec3i *pos;
     RacePlayerState *player;
+    s32 xOffset;
     s16 startAngle;
 
     if (gRaceUpdatePaused == 0) {
@@ -1378,9 +1374,8 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
         }
 
         arg0->timer--;
-        pos = &arg0->pos;
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 5);
-        arg0->prevPos = *pos;
+        arg0->prevPos = arg0->pos;
         arg0->radius = 0x30000;
         player = &D_80121D80[arg0->playerIndex];
         arg0->anglePtr = player->unk50C;
@@ -1389,7 +1384,6 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
 
     addRenderCallback(&gRaceObjectRenderCallbackList, renderShieldProjectile, arg0);
 }
-#endif
 
 void initShieldProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad;
