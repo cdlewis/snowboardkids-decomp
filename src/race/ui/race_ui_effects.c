@@ -399,7 +399,9 @@ typedef struct RaceUiTrailingParticleActor {
 } RaceUiTrailingParticleActor;
 
 typedef struct RaceUiTripleParticleActor {
-    /* 0x00 */ u8 pad0[0x18];
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ RaceUiGfxCommandDest *matrix0;
     /* 0x28 */ RaceUiGfxCommandDest *matrix1;
@@ -3971,7 +3973,7 @@ void spawnRaceUiScorePopup(void *arg0, s16 arg1) {
     }
 }
 
-void func_80061088(RaceUiTripleParticleActor *arg0) {
+void renderRaceCourseTripleParticle(RaceUiTripleParticleActor *arg0) {
     s16 unused;
     RaceUiTrailCopyBlock spAC;
     RaceUiTrailCopyBlock sp8C;
@@ -4015,15 +4017,15 @@ void func_80061088(RaceUiTripleParticleActor *arg0) {
     }
 }
 
-void func_800613EC(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x30) = *(s16 *)((u8 *)arg0 + 0x30) + 4;
-    addRenderCallback(&gSceneModelRenderCallbackList, func_80061088, (s32)arg0);
+void updateRaceCourseTripleParticle(RaceUiTripleParticleActor *actor) {
+    actor->rotY += 4;
+    addRenderCallback(&gSceneModelRenderCallbackList, renderRaceCourseTripleParticle, (s32)actor);
 }
 
-void func_80061428(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x30) = 0;
-    *(Vec3i *)((u8 *)arg0 + 0x18) = D_800D6220[*(u16 *)((u8 *)arg0 + 0x10)];
-    setCallbackTaskCallback(arg0, func_800613EC);
+void initRaceCourseTripleParticle(RaceUiTripleParticleActor *actor) {
+    actor->rotY = 0;
+    actor->pos = D_800D6220[actor->index];
+    setCallbackTaskCallback(actor, updateRaceCourseTripleParticle);
 }
 
 void func_80061484(RaceUiRankTrailActor *arg0) {

@@ -423,7 +423,7 @@ block_24:
         createCallbackTask(&initRaceCourseModelRenderTask, 0, 0x64);
         createCallbackTask(&initRaceCourseSceneryObjects, 0, 0x64);
         createCallbackTask(&initCourseGateObject, 0, 0x64);
-        createCallbackTaskWithUserId(&func_80061428, 0, 0x64, 0);
+        createCallbackTaskWithUserId(&initRaceCourseTripleParticle, 0, 0x64, 0);
         createCallbackTaskWithUserId(&func_800631B0, 0, 0x64, 0);
         createCallbackTaskWithUserId(&initRaceCourseSpinningObject, 0, 0x64, 0);
         createCallbackTaskWithUserId(&initRaceCourseSlideSprite, 0, 0x64, 4);
