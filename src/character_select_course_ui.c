@@ -323,7 +323,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
 }
 #endif
 
-// initCharacterSelectUnlockedCourseList best match: 97.039% (nonmatchings/initCharacterSelectUnlockedCourseList-5802343343535905907/base_8.c)
+// initCharacterSelectUnlockedCourseList best match: 99.211% (nonmatchings/initCharacterSelectUnlockedCourseList-2663524570355072948/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/initCharacterSelectUnlockedCourseList.s")
 
 #ifdef NON_MATCHING
@@ -342,37 +342,41 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
     } else if (mode == 1) {
         spacing = 0x16;
         baseY = -0x54;
-    } else if (mode == 2) {
-        spacing = 0x16;
-        baseY = -0x60;
     } else {
-        baseY = -0x60;
         spacing = 0x13;
+        if (mode == 2) {
+            spacing = 0x16;
+            baseY = -0x60;
+        } else {
+            baseY = -0x60;
+        }
     }
 
     arg0->baseY = baseY;
     arg0->itemSpacing = spacing;
-    arg0->y[1] = baseY + spacing;
-    arg0->y[2] = baseY + (spacing * 2);
-    arg0->x[0] = -0x104;
-    arg0->x[1] = -0x104;
-    arg0->x[2] = -0x104;
-    arg0->x[2] = -0x104;
-    limit = 0xB;
-    arg0->y[0] = baseY;
-
-    i = 3;
     do {
-        arg0->x[i + 1] = -0x104;
-        arg0->x[i + 2] = -0x104;
-        arg0->x[i + 3] = -0x104;
-        arg0->x[i] = -0x104;
-        arg0->y[i] = baseY + (i * spacing);
-        arg0->y[i + 1] = baseY + ((i + 1) * spacing);
-        arg0->y[i + 2] = baseY + ((i + 2) * spacing);
-        arg0->y[i + 3] = baseY + ((i + 3) * spacing);
-        i += 4;
-    } while (i != limit);
+        arg0->y[1] = baseY + spacing;
+        arg0->y[2] = baseY + (spacing * 2);
+        arg0->x[0] = -0x104;
+        arg0->x[1] = -0x104;
+        arg0->x[2] = -0x104;
+        arg0->x[2] = -0x104;
+        limit = 0xB;
+        arg0->y[0] = baseY;
+
+        i = 3;
+        do {
+            arg0->x[i + 1] = -0x104;
+            arg0->x[i + 2] = -0x104;
+            arg0->x[i + 3] = -0x104;
+            arg0->y[i] = baseY + (i * spacing);
+            arg0->y[i + 1] = baseY + ((i + 1) * spacing);
+            arg0->y[i + 2] = baseY + ((i + 2) * spacing);
+            arg0->y[i + 3] = baseY + ((i + 3) * spacing);
+            i += 4;
+            arg0->x[i - 4] = -0x104;
+        } while (i != limit);
+    } while (0);
 
     arg0->timer = 0;
     arg0->itemCount = 1;
