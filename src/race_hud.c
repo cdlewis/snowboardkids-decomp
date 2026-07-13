@@ -292,7 +292,7 @@ void drawTrickAttackChallengeLabels(s32 arg0) {
     drawMenuAsciiTextDefaultScale(0x38, 0x47, (char *)D_800E1738, 5);
 }
 
-// drawScoreAttackChallengeHud best match: 97.570% at nonmatchings/drawScoreAttackChallengeHud-8331816093655448999/base_1.c.
+// drawScoreAttackChallengeHud best match: 99.664% at nonmatchings/drawScoreAttackChallengeHud-6866765942504228165/base_5.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawScoreAttackChallengeHud.s")
 
 #ifdef NON_MATCHING
@@ -302,26 +302,31 @@ const char D_800E1754[] = "%2.2d";
 const char D_800E175C[] = "%2d";
 
 void drawScoreAttackChallengeHud(s32 arg0) {
-    char buffer[4];
+    char *new_var;
     s32 x;
+    char buffer[4];
     char *digit;
     s32 palette;
     s32 finalPalette;
     s32 i;
+    char *new_var2;
 
+    new_var2 = buffer;
     palette = 0xC;
     if ((gRaceChallengeTimeLimit.minutes == 0) && (gRaceChallengeTimeLimit.seconds < 10) && (gUiBlinkTimer & 1)) {
         palette = 0x10;
+        if (!D_80122290) {
+        }
     }
 
     {
         char *end;
 
-        sprintf(buffer, D_800E1744, gRaceChallengeTimeLimit.minutes);
+        sprintf(new_var2 - 8, D_800E1744, gRaceChallengeTimeLimit.minutes);
         finalPalette = palette & 0xFFFF;
         x = 0x40;
-        digit = buffer;
-        end = &buffer[2];
+        digit = new_var2 - 8;
+        end = new_var2 - 6;
         do {
             drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
                           finalPalette);
@@ -330,20 +335,21 @@ void drawScoreAttackChallengeHud(s32 arg0) {
         } while ((u32)digit < (u32)end);
 
         x += 8;
-        sprintf(buffer, D_800E174C, gRaceChallengeTimeLimit.seconds);
-        digit = buffer;
-        end = &buffer[2];
+        sprintf(buffer - 8, D_800E174C, gRaceChallengeTimeLimit.seconds);
+        digit = buffer - 8;
+        end = new_var2 - 6;
+        new_var = end;
         do {
             drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
                           finalPalette);
             digit++;
             x += 8;
-        } while ((u32)digit < (u32)end);
+        } while ((u32)digit < (u32)new_var);
 
         x += 8;
-        sprintf(buffer, D_800E1754, gRaceChallengeTimeLimit.fraction >> 8);
-        digit = buffer;
-        end = &buffer[2];
+        sprintf(new_var2 - 8, D_800E1754, gRaceChallengeTimeLimit.fraction >> 8);
+        digit = new_var2 - 8;
+        end = buffer - 6;
         do {
             drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF,
                           finalPalette);
@@ -360,10 +366,10 @@ void drawScoreAttackChallengeHud(s32 arg0) {
     {
         char *end;
 
-        sprintf(buffer, D_800E175C, gRaceScoreAttackPointTotal);
+        sprintf(new_var2 - 8, D_800E175C, gRaceScoreAttackPointTotal);
         x = 0;
-        digit = buffer;
-        end = &buffer[2];
+        digit = buffer - 8;
+        end = buffer - 6;
         do {
             if ((u8)*digit != ' ') {
                 drawAssetTableSprite((s16)(x + 0x60), -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
