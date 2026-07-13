@@ -687,21 +687,20 @@ void drawTrainingRaceHud(s32 arg0) {
 }
 #endif
 
-// drawTwoPlayerRaceHud best match: 84.859% (nonmatchings/drawTwoPlayerRaceHud-4033633224288138541/base_3.c)
+// drawTwoPlayerRaceHud best match: 88.406% at nonmatchings/drawTwoPlayerRaceHud-2663524570355072948/base_17.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawTwoPlayerRaceHud.s")
 
 #ifdef NON_MATCHING
 const char D_800E1814[] = "%5ld";
 
 void drawTwoPlayerRaceHud(s32 arg0) {
-    char buffer[8];
+    volatile u8 padding[0x20];
+    char end;
+    char buffer[5];
     s16 y;
-    s16 finalY;
-    s16 x;
+    s32 x;
     s32 color;
     char *ptr;
-    char *end;
-    RaceTimerUiPlayer *player;
 
     if (gCurrentViewportIndex == 0) {
         y = -0x28;
@@ -712,7 +711,6 @@ void drawTwoPlayerRaceHud(s32 arg0) {
     sprintf(buffer, D_800E1814, D_801222E8[gCurrentViewportIndex].value);
     x = 0x50;
     ptr = buffer;
-    end = &buffer[5];
     if (D_801222E8[gCurrentViewportIndex].value < 0x64) {
         color = 0x10;
     } else {
@@ -725,25 +723,22 @@ void drawTwoPlayerRaceHud(s32 arg0) {
         }
         ptr++;
         x += 8;
-    } while (ptr != end);
+    } while (ptr != &end);
 
     drawAssetTableSprite(0x78, y, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
 
     if (D_80122293[gCurrentViewportIndex].value != 0) {
-        player = &D_80121D80[gCurrentViewportIndex];
         drawScaledAssetTableSprite(-0x88, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF,
-                      player->tensDigitPalette);
+                      (D_80121D80[gCurrentViewportIndex].tensDigitOffset + gRaceTimerTensDigitTileOffsets[D_80121D80[gCurrentViewportIndex].tensDigitTile] - 1) & 0xFFFF,
+                      D_80121D80[gCurrentViewportIndex].tensDigitPalette);
     } else {
-        player = &D_80121D80[gCurrentViewportIndex];
         drawAssetTableSprite(-0x88, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (player->tensDigitOffset + gRaceTimerTensDigitTileOffsets[player->tensDigitTile] - 1) & 0xFFFF);
+                      (D_80121D80[gCurrentViewportIndex].tensDigitOffset + gRaceTimerTensDigitTileOffsets[D_80121D80[gCurrentViewportIndex].tensDigitTile] - 1) & 0xFFFF);
     }
 
     if (D_80122296[gCurrentViewportIndex].value != 0) {
-        player = &D_80121D80[gCurrentViewportIndex];
-        drawScaledAssetTableSprite(-0x68, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->onesDigitTile],
-                      player->onesDigitPalette);
+        drawScaledAssetTableSprite(-0x68, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[D_80121D80[gCurrentViewportIndex].onesDigitTile],
+                      D_80121D80[gCurrentViewportIndex].onesDigitPalette);
     } else {
         drawAssetTableSprite(-0x68, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       gRaceTimerOnesDigitTileIds[D_80122295[gCurrentViewportIndex].value]);
@@ -751,11 +746,11 @@ void drawTwoPlayerRaceHud(s32 arg0) {
 
     drawAssetTableSprite(-0x88, 0x12, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_80122289[gCurrentViewportIndex].value & 0xFFFF);
 
-    finalY = 0x2A;
+    y = 0x2A;
     if (gCurrentViewportIndex == 0) {
-        finalY = -0x30;
+        y = -0x30;
     }
-    drawAssetTableSprite(0x58, finalY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x1A);
+    drawAssetTableSprite(0x58, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x1A);
 }
 #endif
 
