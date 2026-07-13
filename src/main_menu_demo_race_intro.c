@@ -46,7 +46,7 @@ typedef struct {
 
 extern RaceIntroTransitionState *gCurrentGameTask;
 extern RaceIntroCamera D_801121E0[];
-extern RaceIntroPlayer D_80121D80[];
+extern RaceIntroPlayer gRacePlayers[];
 extern MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[];
 extern u8 gMainMenuDemoRaceIntroLoadCourseAssetsFlags[];
 extern s16 gMenuFadeAlpha;
@@ -68,18 +68,6 @@ extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern u8 gRaceTypeSelection;
 extern u8 gRaceResultState;
-extern s8 D_80121D94;
-extern s8 D_80121D95;
-extern s8 D_80121D96;
-extern s8 D_801223A0;
-extern s8 D_801223A1;
-extern s8 D_801223A2;
-extern s8 D_801229AC;
-extern s8 D_801229AD;
-extern s8 D_801229AE;
-extern s8 D_80122FB8;
-extern s8 D_80122FB9;
-extern s8 D_80122FBA;
 extern s32 gMenuFlowState;
 extern u8 gFramebufferSwapHold;
 extern u8 gPendingFramebufferSwapCount;
@@ -110,7 +98,7 @@ void initMainMenuDemoRaceIntro(void) {
     gRaceSplitscreenMode = demoEntry->splitscreen;
     gRaceTypeSelection = demoEntry->raceType;
     resetGameplayRng();
-    players = D_80121D80;
+    players = gRacePlayers;
     players[0].unk4 = 0;
     players[1].unk4 = 0;
     players[2].unk4 = 0;
@@ -157,18 +145,18 @@ void initMainMenuDemoRaceIntro(void) {
     } else {
         initCallbackTaskScheduler(2);
     }
-    D_80121D95 = 0;
-    D_80121D94 = 0;
-    D_80121D96 = 5;
-    D_801223A1 = 0;
-    D_801223A0 = 0;
-    D_801223A2 = 5;
-    D_801229AD = 0;
-    D_801229AC = 0;
-    D_801229AE = 5;
-    D_80122FB9 = 0;
-    D_80122FB8 = 0;
-    D_80122FBA = 5;
+    players[0].unk15 = 0;
+    players[0].soundDisabled = 0;
+    players[0].replayInputSource = 5;
+    players[1].unk15 = 0;
+    players[1].soundDisabled = 0;
+    players[1].replayInputSource = 5;
+    players[2].unk15 = 0;
+    players[2].soundDisabled = 0;
+    players[2].replayInputSource = 5;
+    players[3].unk15 = 0;
+    players[3].soundDisabled = 0;
+    players[3].replayInputSource = 5;
     demoEntry = &gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex];
     loadCompressedRomAsset(demoEntry->romStart, demoEntry->romEnd, 0x2B);
     loadRaceCourseAssets();

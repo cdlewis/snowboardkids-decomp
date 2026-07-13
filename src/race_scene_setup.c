@@ -31,7 +31,7 @@ extern s16 gAssetHandles[];
 extern s16 gRaceCourseModelAssetHandle;
 extern s16 gRaceRspSegment2AssetHandle;
 extern u16 gRaceCourseIndex;
-extern RaceScenePlayer D_80121D80[];
+extern RaceScenePlayer gRacePlayers[];
 extern RomAssetRange gCharacterRawAssetRanges[];
 extern RomAssetRange gCharacterTextureAssetRanges[];
 extern RomAssetRange gCharacterModelAssetRanges[];
@@ -240,7 +240,7 @@ void loadRaceCharacterAssets(void) {
     rawRanges = gCharacterRawAssetRanges;
     textureRanges = gCharacterTextureAssetRanges;
     modelRanges = gCharacterModelAssetRanges;
-    for (player = D_80121D80, i = 0; i != COURSE_PLAYER_COUNT; i++, player++) {
+    for (player = gRacePlayers, i = 0; i != COURSE_PLAYER_COUNT; i++, player++) {
         assetHandles = &gAssetHandles[i];
         if (player->isActive != 0) {
             size = rawRanges[player->characterId].end - rawRanges[player->characterId].start;

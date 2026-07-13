@@ -37,7 +37,7 @@
 #define RACE_PLAYER_STATE_SIZE 0x60C
 #define RACE_PLAYER_READY_FLAG 0x40
 #ifdef NON_MATCHING
-#define RACE_PLAYER_RESULT_VALUE(index) (*(s8 *)((u8 *)D_80121D80 + ((((((((index) << 2) - (index)) << 5) + (index)) << 2) - (index)) << 2) + 0x509))
+#define RACE_PLAYER_RESULT_VALUE(index) (*(s8 *)((u8 *)gRacePlayers + ((((((((index) << 2) - (index)) << 5) + (index)) << 2) - (index)) << 2) + 0x509))
 #define CURRENT_RACE_FLOW_TASK ((volatile RaceFlowState *)gCurrentGameTask)
 #define RACE_PLAYER_OFFSET(index) (((((((((index) << 2) - (index)) << 5) + (index)) << 2) - (index)) << 2))
 #define RACE_INPUT_HISTORY_LENGTH 0x1194
@@ -190,7 +190,7 @@ extern CourseGridEntry *D_800DC490[];
 extern u16 D_800DC5C0[];
 extern CourseSelectTableEntry D_800B9542[];
 extern RaceFlowState *gCurrentGameTask;
-extern RacePlayerState D_80121D80[];
+extern RacePlayerState gRacePlayers[];
 extern s32 gRaceCameraReplayStartX;
 extern s32 gRaceCameraReplayStartY;
 extern s32 gRaceCameraReplayStartZ;
@@ -219,18 +219,6 @@ extern f32 D_800E16D0;
 extern u8 D_59AAA0[];
 extern s16 gRacePlayerAttackStartTimer;
 extern u8 gRaceResultState;
-extern u8 D_80121D94;
-extern u8 D_80121D95;
-extern u8 D_80121D96;
-extern u8 D_801223A0;
-extern u8 D_801223A1;
-extern u8 D_801223A2;
-extern u8 D_801229AC;
-extern u8 D_801229AD;
-extern u8 D_801229AE;
-extern u8 D_80122FB8;
-extern u8 D_80122FB9;
-extern u8 D_80122FBA;
 extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
@@ -369,11 +357,11 @@ void saveRaceReplayCourseGridEntry(void) {
 
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
-        if ((entry->status == COURSE_GRID_ENTRY_FREE) && (entry->courseId == D_80121D80[0].courseId)) {
+        if ((entry->status == COURSE_GRID_ENTRY_FREE) && (entry->courseId == gRacePlayers[0].courseId)) {
             s32 *status = (s32 *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
             if (*status < 0x1194) {
                 entry->status = *status;
-                ((RacePlayerState *) getRelocatableHeapBlockBase(gAssetHandles[0x2C]))[i] = D_80121D80[0];
+                ((RacePlayerState *) getRelocatableHeapBlockBase(gAssetHandles[0x2C]))[i] = gRacePlayers[0];
             }
         }
         entry++;
@@ -391,7 +379,7 @@ s32 loadNextRaceReplayCourseGridEntry(void) {
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
         if (entry->status != COURSE_GRID_ENTRY_FREE) {
-            D_80121D80[0] = ((RacePlayerState *)getRelocatableHeapBlockBase(gRaceReplayPlayerStateBufferHandle))[count];
+            gRacePlayers[0] = ((RacePlayerState *)getRelocatableHeapBlockBase(gRaceReplayPlayerStateBufferHandle))[count];
             *(s32 *)getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle) = entry->status;
             entry->status = COURSE_GRID_ENTRY_FREE;
             gRaceCameraReplayStartX = entry->unk4;
@@ -459,26 +447,26 @@ void initNewGameSaveData(void) {
     gGameSaveDataBuffer.unk232[8].unk0 = 0;
     gPlayerCount = 1;
     gRaceTypeSelection = 0;
-    D_80121D80[0].unk5 = 0;
-    D_80121D80[1].unk5 = 0;
-    D_80121D80[2].unk5 = 0;
-    D_80121D80[3].unk5 = 0;
-    D_80121D80[0].unk6 = 0;
-    D_80121D80[1].unk6 = 0;
-    D_80121D80[2].unk6 = 0;
-    D_80121D80[3].unk6 = 0;
-    D_80121D80[0].unk7 = 0;
-    D_80121D80[1].unk7 = 0;
-    D_80121D80[2].unk7 = 0;
-    D_80121D80[3].unk7 = 0;
-    D_80121D80[0].unkC = 0;
-    D_80121D80[1].unkC = 0;
-    D_80121D80[2].unkC = 0;
-    D_80121D80[3].unkC = 0;
-    D_80121D80[0].unk18 = 0;
-    D_80121D80[1].unk18 = 0;
-    D_80121D80[2].unk18 = 0;
-    D_80121D80[3].unk18 = 0;
+    gRacePlayers[0].unk5 = 0;
+    gRacePlayers[1].unk5 = 0;
+    gRacePlayers[2].unk5 = 0;
+    gRacePlayers[3].unk5 = 0;
+    gRacePlayers[0].unk6 = 0;
+    gRacePlayers[1].unk6 = 0;
+    gRacePlayers[2].unk6 = 0;
+    gRacePlayers[3].unk6 = 0;
+    gRacePlayers[0].unk7 = 0;
+    gRacePlayers[1].unk7 = 0;
+    gRacePlayers[2].unk7 = 0;
+    gRacePlayers[3].unk7 = 0;
+    gRacePlayers[0].unkC = 0;
+    gRacePlayers[1].unkC = 0;
+    gRacePlayers[2].unkC = 0;
+    gRacePlayers[3].unkC = 0;
+    gRacePlayers[0].unk18 = 0;
+    gRacePlayers[1].unk18 = 0;
+    gRacePlayers[2].unk18 = 0;
+    gRacePlayers[3].unk18 = 0;
     gRaceCourseIndex.s = 0;
     gRaceSplitscreenMode = 0;
     gRaceCameraModeChangeDisabled = 0;
@@ -684,61 +672,61 @@ void initRaceSceneFlow(void) {
     stopSoundEffects();
     requestMusicSequenceStop(0);
 
-    D_80121D80[0].unk4 = 1;
-    D_80121D80[1].unk4 = 1;
-    D_80121D80[2].unk4 = 1;
-    D_80121D80[3].unk4 = 1;
+    gRacePlayers[0].unk4 = 1;
+    gRacePlayers[1].unk4 = 1;
+    gRacePlayers[2].unk4 = 1;
+    gRacePlayers[3].unk4 = 1;
 
     characterId = D_800DC5B4[gRaceCourseIndex.s];
-    D_80121D80[0].pad1A[0] = characterId;
-    D_80121D80[1].pad1A[0] = characterId;
-    D_80121D80[2].pad1A[0] = characterId;
-    D_80121D80[3].pad1A[0] = characterId;
-    D_80121D80[0].pad1A[1] = characterId;
-    D_80121D80[1].pad1A[1] = characterId;
-    D_80121D80[2].pad1A[1] = characterId;
-    D_80121D80[3].pad1A[1] = characterId;
+    gRacePlayers[0].pad1A[0] = characterId;
+    gRacePlayers[1].pad1A[0] = characterId;
+    gRacePlayers[2].pad1A[0] = characterId;
+    gRacePlayers[3].pad1A[0] = characterId;
+    gRacePlayers[0].pad1A[1] = characterId;
+    gRacePlayers[1].pad1A[1] = characterId;
+    gRacePlayers[2].pad1A[1] = characterId;
+    gRacePlayers[3].pad1A[1] = characterId;
     playerCount = gPlayerCount;
     if (playerCount != 1) {
-        D_80121D80[0].pad1A[0] = 0;
-        D_80121D80[1].pad1A[0] = 0;
-        D_80121D80[2].pad1A[0] = 0;
-        D_80121D80[3].pad1A[0] = 0;
-        D_80121D80[0].pad1A[1] = 0;
-        D_80121D80[1].pad1A[1] = 0;
-        D_80121D80[2].pad1A[1] = 0;
-        D_80121D80[3].pad1A[1] = 0;
+        gRacePlayers[0].pad1A[0] = 0;
+        gRacePlayers[1].pad1A[0] = 0;
+        gRacePlayers[2].pad1A[0] = 0;
+        gRacePlayers[3].pad1A[0] = 0;
+        gRacePlayers[0].pad1A[1] = 0;
+        gRacePlayers[1].pad1A[1] = 0;
+        gRacePlayers[2].pad1A[1] = 0;
+        gRacePlayers[3].pad1A[1] = 0;
     }
 
-    D_80121D80[0].pad17[0] = 0;
-    D_80121D80[1].pad17[0] = 1;
-    D_80121D80[2].pad17[0] = 2;
-    D_80121D80[3].pad17[0] = 3;
+    gRacePlayers[0].pad17[0] = 0;
+    gRacePlayers[1].pad17[0] = 1;
+    gRacePlayers[2].pad17[0] = 2;
+    gRacePlayers[3].pad17[0] = 3;
 
     if (playerCount > 0) {
-        player = D_80121D80;
-        end = (RacePlayerState *)((u8 *)D_80121D80 + RACE_PLAYER_OFFSET(playerCount));
+        player = gRacePlayers;
+        end = (RacePlayerState *)((u8 *)gRacePlayers + RACE_PLAYER_OFFSET(playerCount));
         do {
             player->unk4 = 0;
             player++;
         } while (player < end);
     }
 
-    D_80121D80[0].characterId = D_80121D80[0].unk5;
-    D_80121D80[1].characterId = D_80121D80[1].unk5;
-    D_80121D80[2].characterId = D_80121D80[2].unk5;
-    D_80121D80[3].characterId = D_80121D80[3].unk5;
-    D_80121D80[0].characterVariant = D_80121D80[0].unk6;
-    D_80121D80[1].characterVariant = D_80121D80[1].unk6;
-    D_80121D80[2].characterVariant = D_80121D80[2].unk6;
-    D_80121D80[3].characterVariant = D_80121D80[3].unk6;
-    D_80121D80[0].pad12[0] = D_80121D80[0].unk7;
-    D_80121D80[1].pad12[0] = D_80121D80[1].unk7;
-    D_80121D80[2].pad12[0] = D_80121D80[2].unk7;
-    D_80121D80[3].pad12[0] = D_80121D80[3].unk7;
+    gRacePlayers[0].characterId = gRacePlayers[0].unk5;
+    gRacePlayers[1].characterId = gRacePlayers[1].unk5;
+    gRacePlayers[2].characterId = gRacePlayers[2].unk5;
+    gRacePlayers[3].characterId = gRacePlayers[3].unk5;
+    gRacePlayers[0].characterVariant = gRacePlayers[0].unk6;
+    gRacePlayers[1].characterVariant = gRacePlayers[1].unk6;
+    gRacePlayers[2].characterVariant = gRacePlayers[2].unk6;
+    gRacePlayers[3].characterVariant = gRacePlayers[3].unk6;
+    gRacePlayers[0].pad12[0] = gRacePlayers[0].unk7;
+    gRacePlayers[1].pad12[0] = gRacePlayers[1].unk7;
+    gRacePlayers[2].pad12[0] = gRacePlayers[2].unk7;
+    gRacePlayers[3].pad12[0] = gRacePlayers[3].unk7;
 
     if (playerCount < 4) {
-        player = (RacePlayerState *)((u8 *)D_80121D80 + RACE_PLAYER_OFFSET(playerCount));
+        player = (RacePlayerState *)((u8 *)gRacePlayers + RACE_PLAYER_OFFSET(playerCount));
         courseCharacters = D_800DC58C[gRaceCourseIndex.s];
         courseCharacterIds = D_800DC4C4[gRaceCourseIndex.s];
         do {
@@ -747,8 +735,8 @@ void initRaceSceneFlow(void) {
                 characterId = *courseCharacterIds++;
                 player->characterId = characterId;
                 if (playerCount > 0) {
-                    other = D_80121D80;
-                    end = (RacePlayerState *)((u8 *)D_80121D80 + RACE_PLAYER_OFFSET(playerCount));
+                    other = gRacePlayers;
+                    end = (RacePlayerState *)((u8 *)gRacePlayers + RACE_PLAYER_OFFSET(playerCount));
                     do {
                         if (characterId == other->characterId) {
                             duplicate = 0;
@@ -764,25 +752,25 @@ void initRaceSceneFlow(void) {
     }
 
     if (gRaceSplitscreenMode == 0) {
-        D_80121D80[0].unk13 = 1;
-        D_80121D80[1].unk13 = 1;
-        D_80121D80[2].unk13 = 1;
-        D_80121D80[3].unk13 = 1;
+        gRacePlayers[0].unk13 = 1;
+        gRacePlayers[1].unk13 = 1;
+        gRacePlayers[2].unk13 = 1;
+        gRacePlayers[3].unk13 = 1;
         gRacePlayerCount = 4;
         gRacePlayerAttackStartTimer = 0x64;
         initCallbackTaskScheduler(1);
     } else {
-        D_80121D80[0].unk13 = 1;
-        D_80121D80[1].unk13 = 0;
-        D_80121D80[2].unk13 = 0;
-        D_80121D80[3].unk13 = 0;
+        gRacePlayers[0].unk13 = 1;
+        gRacePlayers[1].unk13 = 0;
+        gRacePlayers[2].unk13 = 0;
+        gRacePlayers[3].unk13 = 0;
         gRacePlayerCount = 1;
         gRaceLapCount = 1;
         gRacePlayerAttackStartTimer = 0x64;
         initCallbackTaskScheduler(2);
     }
 
-    player = D_80121D80;
+    player = gRacePlayers;
     do {
         player->unk15 = 0;
         player->unk16 = 0;
@@ -792,15 +780,15 @@ void initRaceSceneFlow(void) {
 
     if (gRaceSplitscreenMode == 2) {
         clearRaceReplayCourseGrid();
-        D_80121D80[0].unk15 = 1;
+        gRacePlayers[0].unk15 = 1;
         gAssetHandles[0x2B] = allocRelocatableHeapBlock(0x34CC);
         history = getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
         history->writeIndex = 0;
         history->enabled = 1;
         history->courseId = gRaceCourseIndex.s;
-        history->characterId = D_80121D80[0].characterId;
-        history->characterVariant = D_80121D80[0].characterVariant;
-        history->replayInputSource = D_80121D80[0].pad12[0];
+        history->characterId = gRacePlayers[0].characterId;
+        history->characterVariant = gRacePlayers[0].characterVariant;
+        history->replayInputSource = gRacePlayers[0].pad12[0];
         i = 0;
         do {
             history->stickX[i] = 0;
@@ -853,10 +841,10 @@ void initRaceSceneFlow(void) {
             history = getRelocatableHeapBlockBase(gCurrentRaceRecordReplayHandle);
             if (history->enabled != 0) {
                 history->writeIndex = 0;
-                D_80121D80[1].unk13 = 1;
-                D_80121D80[1].unk4 = 0;
-                D_80121D80[1].unk14 = 1;
-                D_80121D80[1].unk16 = 1;
+                gRacePlayers[1].unk13 = 1;
+                gRacePlayers[1].unk4 = 0;
+                gRacePlayers[1].unk14 = 1;
+                gRacePlayers[1].unk16 = 1;
                 D_8012239C = history->characterId;
                 D_8012239D = history->characterVariant;
                 D_8012239E = history->replayInputSource;
@@ -1049,7 +1037,7 @@ void updateRaceGameplayFlow(void) {
     s32 selection;
     s32 valueTwo;
 
-    opened = 0; i = 0; if (gPlayerCount > 0) { player = D_80121D80; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & 0x1000)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; enqueueSoundEffect(1, 0x32); requestRumbleMotorInit(0); requestRumbleMotorInit(1); requestRumbleMotorInit(2); requestRumbleMotorInit(3); } i++; player++; } while (i < gPlayerCount); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (gPlayerCount > 0) { player = D_80121D80; do { if (player->unk14 == 0) { input = gPlayerInputPressed[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; enqueueSoundEffect(1, 0x32); input = gPlayerInputPressed[i]; }
+    opened = 0; i = 0; if (gPlayerCount > 0) { player = gRacePlayers; do { if (((player->unk14 == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & 0x1000)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; enqueueSoundEffect(1, 0x32); requestRumbleMotorInit(0); requestRumbleMotorInit(1); requestRumbleMotorInit(2); requestRumbleMotorInit(3); } i++; player++; } while (i < gPlayerCount); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (gPlayerCount > 0) { player = gRacePlayers; do { if (player->unk14 == 0) { input = gPlayerInputPressed[i]; if (input & 0x10800) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; enqueueSoundEffect(1, 0x32); input = gPlayerInputPressed[i]; }
                     }
                     if (input & 0x20400) {
                         selection = D_80121B57;
@@ -1346,7 +1334,7 @@ void prepareRaceResultsFlow(void) {
         gRaceResultState = 1;
         i = 0;
         if (gPlayerCount > 0) {
-            player = D_80121D80;
+            player = gRacePlayers;
             do {
                 if (player->result == 0) {
                     D_80121B60 = i + 1;
@@ -1497,13 +1485,13 @@ void updateRaceResultsFlow(void) {
     allDone = 1;
 
     if (D_80121B55 > 0) {
-        player = D_80121D80;
+        player = gRacePlayers;
         do {
             if (!(player->flags & 0x08000000)) {
                 allDone = 0;
             }
             player++;
-        } while ((u32)player < (u32)&D_80121D80[D_80121B55]);
+        } while ((u32)player < (u32)&gRacePlayers[D_80121B55]);
     }
 
     if (D_801235B8->unk1C != 0) {
@@ -1528,18 +1516,18 @@ void updateRaceResultsFlow(void) {
             if (D_80121B55 == 1) {
                 task = func_80071408((void (*)(EffectTask *))func_80058BAC, 6, 0x64);
                 if (task != NULL) {
-                    if (D_80121D80[0].result != 3) {
-                        i = D_80121D80[0].result + 1;
+                    if (gRacePlayers[0].result != 3) {
+                        i = gRacePlayers[0].result + 1;
                         if (D_800EC9F0.pad34[gRaceCourseIndex.s] == 0) {
                             D_800EC9F0.pad34[gRaceCourseIndex.s] = i;
                         } else if (i < D_800EC9F0.pad34[gRaceCourseIndex.s]) {
                             D_800EC9F0.pad34[gRaceCourseIndex.s] = i;
                         }
-                        if (D_800EC9F0.unk4[gRaceCourseIndex.s + 1] < D_80121D80[0].unk56C) {
-                            D_800EC9F0.unk4[gRaceCourseIndex.s + 1] = D_80121D80[0].unk56C;
+                        if (D_800EC9F0.unk4[gRaceCourseIndex.s + 1] < gRacePlayers[0].unk56C) {
+                            D_800EC9F0.unk4[gRaceCourseIndex.s + 1] = gRacePlayers[0].unk56C;
                         }
                     }
-                    if (D_80121D80[0].result == 0) {
+                    if (gRacePlayers[0].result == 0) {
                         if (gRaceCourseIndex.s == 8) {
                             gPendingEndingCreditsFlow = 1;
                             D_800EC9F0.unk78D7 |= 1;
@@ -1554,7 +1542,7 @@ void updateRaceResultsFlow(void) {
             } else {
                 task = func_80071408((void (*)(EffectTask *))func_800599DC, 6, 0x64);
                 if (task != NULL) {
-                    player = D_80121D80;
+                    player = gRacePlayers;
                     do {
                         if (player->result == 0) {
                             player->unk18++;
@@ -1563,17 +1551,17 @@ void updateRaceResultsFlow(void) {
                             }
                         }
                         player++;
-                    } while ((u32)player < (u32)&D_80121D80[4]);
+                    } while ((u32)player < (u32)&gRacePlayers[4]);
 
                     j = 0;
                     if (D_80121B55 > 0) {
-                        player = D_80121D80;
+                        player = gRacePlayers;
                         do {
                             if (player->result == 0) {
                                 j = 1;
                             }
                             player++;
-                        } while ((u32)player < (u32)&D_80121D80[D_80121B55]);
+                        } while ((u32)player < (u32)&gRacePlayers[D_80121B55]);
                     }
                     if (j == 0) {
                         D_801235B4 |= 0x20;
@@ -1609,7 +1597,7 @@ void updateRaceResultsFlow(void) {
                     }
                     D_800EC9F0.unk4E[gRaceCourseIndex.s][i] = *(RaceFlowInitEntry *)&gRaceElapsedTimer;
                     D_800EC9F0.unk77FB[gRaceCourseIndex.s][i] =
-                        (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
+                        (gRacePlayers[0].characterVariant * 8) + gRacePlayers[0].characterId;
                     if (i == 0) {
                         D_800EC9F0.unk12A[gRaceCourseIndex.s] = *(RaceFlowInitEntry *)&D_80121B7C;
                     }
@@ -1646,11 +1634,11 @@ void updateRaceResultsFlow(void) {
                             D_800EC9F0.unk7756[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk7756[gRaceCourseIndex.s][j];
                             D_800EC9F0.unk77C4[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk77C4[gRaceCourseIndex.s][j];
                         }
-                        D_800EC9F0.unk7756[gRaceCourseIndex.s][i] = D_80121D80[0].unk2C0;
+                        D_800EC9F0.unk7756[gRaceCourseIndex.s][i] = gRacePlayers[0].unk2C0;
                         D_800EC9F0.unk77C4[gRaceCourseIndex.s][i] =
-                            (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
+                            (gRacePlayers[0].characterVariant * 8) + gRacePlayers[0].characterId;
                     }
-                    if (D_80121D80[0].unk2C0 >= 0x7D0) {
+                    if (gRacePlayers[0].unk2C0 >= 0x7D0) {
                         D_800EC9F0.unk78D7 |= 2;
                     }
                     if (i < 5) {
@@ -1683,9 +1671,9 @@ void updateRaceResultsFlow(void) {
                             D_800EC9F0.unk7832[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk7832[gRaceCourseIndex.s][j];
                             D_800EC9F0.unk7869[gRaceCourseIndex.s][j + 1] = D_800EC9F0.unk7869[gRaceCourseIndex.s][j];
                         }
-                        D_800EC9F0.unk7832[gRaceCourseIndex.s][i] = D_80121D80[0].unk574;
+                        D_800EC9F0.unk7832[gRaceCourseIndex.s][i] = gRacePlayers[0].unk574;
                         D_800EC9F0.unk7869[gRaceCourseIndex.s][i] =
-                            (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
+                            (gRacePlayers[0].characterVariant * 8) + gRacePlayers[0].characterId;
                     }
                     if (i < 5) {
                         gRaceResultState = 1;
@@ -1724,7 +1712,7 @@ void updateRaceResultsFlow(void) {
                         }
                         D_800EC9F0.unk156[gRaceCourseIndex.s][i] = *(RaceFlowInitEntry *)&gRaceElapsedTimer;
                         D_800EC9F0.unk78A0[gRaceCourseIndex.s][i] =
-                            (D_80121D80[0].characterVariant * 8) + D_80121D80[0].characterId;
+                            (gRacePlayers[0].characterVariant * 8) + gRacePlayers[0].characterId;
                     }
                     if (i < 5) {
                         gRaceResultState = 1;
@@ -1847,31 +1835,31 @@ void initRaceGhostReplayFlow(void) {
     }
     ((Unk80043040 *)asset)->unk0 = 0;
     one = 1;
-    D_80121D80[0].unk4 = 0;
-    D_80121D80[1].unk4 = one;
-    D_80121D80[2].unk4 = one;
-    D_80121D80[3].unk4 = one;
-    D_80121D80[0].unk13 = one;
-    D_80121D80[1].unk13 = 0;
-    D_80121D80[2].unk13 = 0;
-    D_80121D80[3].unk13 = 0;
+    gRacePlayers[0].unk4 = 0;
+    gRacePlayers[1].unk4 = one;
+    gRacePlayers[2].unk4 = one;
+    gRacePlayers[3].unk4 = one;
+    gRacePlayers[0].unk13 = one;
+    gRacePlayers[1].unk13 = 0;
+    gRacePlayers[2].unk13 = 0;
+    gRacePlayers[3].unk13 = 0;
     gRacePlayerCount = 1;
     *(u16 *)&gRaceLapCount = 1;
     gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(2);
-    D_80121D95 = 0;
-    D_80121D96 = 0;
-    D_80121D94 = 0;
-    D_801223A1 = 0;
-    D_801223A2 = 0;
-    D_801223A0 = 0;
-    D_801229AD = 0;
-    D_801229AE = 0;
-    D_801229AC = 0;
-    D_80122FB9 = 0;
-    D_80122FBA = 0;
-    D_80122FB8 = 0;
-    D_80121D80[0].unk16 = 2;
+    gRacePlayers[0].unk15 = 0;
+    gRacePlayers[0].unk16 = 0;
+    gRacePlayers[0].unk14 = 0;
+    gRacePlayers[1].unk15 = 0;
+    gRacePlayers[1].unk16 = 0;
+    gRacePlayers[1].unk14 = 0;
+    gRacePlayers[2].unk15 = 0;
+    gRacePlayers[2].unk16 = 0;
+    gRacePlayers[2].unk14 = 0;
+    gRacePlayers[3].unk15 = 0;
+    gRacePlayers[3].unk16 = 0;
+    gRacePlayers[3].unk14 = 0;
+    gRacePlayers[0].unk16 = 2;
     gMenuFlowState = 0;
     resetRaceCameras();
     resetAllViewports();
@@ -1907,8 +1895,8 @@ void updateRaceGhostReplayFlow(void) {
         if (loadNextRaceReplayCourseGridEntry() != 0) {
             if (gCurrentGameTask->unk1C != 0xB) {
                 gCurrentGameTask->unk1C++;
-                D_80121D80[0].unk16 = 2;
-                D_80121D80[0].unk15 = 0;
+                gRacePlayers[0].unk16 = 2;
+                gRacePlayers[0].unk15 = 0;
                 gViewportStates[0].overlayAlpha = 0;
             } else {
                 requestMusicSequenceStop(0x48);
@@ -2009,7 +1997,7 @@ s32 areRacePlayersFinished(void) {
     } else {
         var_v0 = 0;
         if ((s32)gPlayerCount > 0) {
-            player = D_80121D80;
+            player = gRacePlayers;
 loop:
             if (!(player->flags & RACE_PLAYER_READY_FLAG)) {
                 return 0;

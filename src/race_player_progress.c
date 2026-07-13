@@ -40,7 +40,7 @@ typedef struct RacePlayerProgressState {
     /* 0x52C */ u8 pad52C[RACE_PLAYER_PROGRESS_STATE_SIZE - 0x52C];
 } RacePlayerProgressState;
 
-extern RacePlayerProgressState D_80121D80[RACE_PLAYER_PROGRESS_COUNT];
+extern RacePlayerProgressState gRacePlayers[RACE_PLAYER_PROGRESS_COUNT];
 extern RacePlayerProgressState gFrameCounter;
 extern RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[];
 extern s8 *gRaceCoursePlayerPathOffsetTables[];
@@ -52,7 +52,7 @@ extern u8 gRaceSplitscreenMode;
 extern u8 gPlayerCount;
 extern s16 gRaceCourseIndex;
 
-#define gRacePlayerProgressStates D_80121D80
+#define gRacePlayerProgressStates gRacePlayers
 
 // updateRacePlayerRankDisplay best match: 55.500% (nonmatchings/updateRacePlayerRankDisplay-3357475854818838508/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_progress/updateRacePlayerRankDisplay.s")

@@ -29,7 +29,7 @@ typedef struct {
     /* 0x452 */ s16 animationIndex;
 } RaceMotionAnimationDebugViewerState;
 
-extern RaceMotionAnimationDebugViewerState D_80121D80;
+extern RaceMotionAnimationDebugViewerState gRacePlayers;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
 extern void *gMenuForegroundRenderCallbackList;
@@ -38,7 +38,7 @@ extern void sprintf(char *, const char *, ...);
 extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
 extern void addRenderCallback(void *, void *, void *);
 
-#define gRaceMotionAnimationDebugViewerState D_80121D80
+#define gRaceMotionAnimationDebugViewerState gRacePlayers
 
 const char gRaceMotionAnimationDebugViewerMotionNumberFormat[] = "MOTION NO %3.3i";
 

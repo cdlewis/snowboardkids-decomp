@@ -50,7 +50,7 @@ extern void requestMusicSequenceBank(s32);
 extern CharacterSelectMenuState *gCurrentGameTask;
 extern CharacterSelectState gCharacterSelectHudState;
 extern CharacterId gCharacterSelectIdOrder[];
-extern CharacterSelectPlayer D_80121D80[];
+extern CharacterSelectPlayer gRacePlayers[];
 extern CallbackTask *gActiveMenuTask;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
@@ -119,7 +119,7 @@ void initCharacterSelectMenu(void) {
         playerCount = gPlayerCount;
         i = 0;
         if (playerCount > 0) {
-            player = D_80121D80;
+            player = gRacePlayers;
             do {
                 j = 0;
 loop_1:
@@ -142,7 +142,7 @@ loop_1:
         i = 0;
         if (playerCount > 0) {
             selectionPtr = (u8 *) D_8010AE64;
-            player = D_80121D80;
+            player = gRacePlayers;
             do {
                 j = i + 1;
                 keepGoing = j < playerCount;
@@ -167,7 +167,7 @@ loop_1:
     if (playerCount > 0) {
         timerPtr = gMenuInputRepeatTimers;
         timerEnd = timerPtr + playerCount;
-        player = D_80121D80;
+        player = gRacePlayers;
         do {
             timerPtr++;
             player++;
@@ -249,7 +249,7 @@ void updateCharacterSelectConfirmationMenu(void) {
                 state->exitMode = 3;
             } else {
                 playerCount = gPlayerCount;
-                player = D_80121D80;
+                player = gRacePlayers;
                 if ((s32) playerCount > 0) {
                     readyPtr = (u8 *) &gCharacterSelectHudState;
                     readyEnd = playerCount + readyPtr;
@@ -268,7 +268,7 @@ void updateCharacterSelectConfirmationMenu(void) {
         } else if (buttons & 0x4000) {
             enqueueSoundEffect(0x18, 0x32);
             playerCount = gPlayerCount;
-            player = D_80121D80;
+            player = gRacePlayers;
             if ((s32) playerCount > 0) {
                 readyPtr = (u8 *) &gCharacterSelectHudState;
                 readyEnd = playerCount + readyPtr;

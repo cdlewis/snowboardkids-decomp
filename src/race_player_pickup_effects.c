@@ -17,17 +17,13 @@ typedef void (*EffectCallback)(void *);
 extern void enqueuePositionalSoundEffect(s32 soundId, void *pos, s32 volume, s32 distance);
 
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
-extern s32 gFrameCounter;
-
-#define gRaceInputPlayers D_80121D80
-#define gRaceInputPlayersEnd ((RaceInputPlayer *)&gFrameCounter)
 
 #ifdef NON_MATCHING
-void updateRacePlayerItemEffectUse(RaceInputPlayer *player) {
+void updateRacePlayerItemEffectUse(RacePlayer *player) {
     struct TriggerSlot { s32 pad0; s32 pad1; s32 pad2; s32 trigger; } triggerSlot;
     volatile s32 dummy;
 #define trigger triggerSlot.trigger
-    RaceInputPlayer *otherPlayer;
+    RacePlayer *otherPlayer;
     s32 deltaX;
     s32 deltaZ;
     s32 mask;
@@ -50,7 +46,7 @@ void updateRacePlayerItemEffectUse(RaceInputPlayer *player) {
 
         if ((trigger != 0) && (player->itemEffectCount != 0)) {
             trigger = 0;
-            otherPlayer = gRaceInputPlayers;
+            otherPlayer = gRacePlayers;
             do {
                 if (otherPlayer->unk4 == 0) {
                     deltaX = otherPlayer->posX - player->posX;
@@ -66,7 +62,7 @@ void updateRacePlayerItemEffectUse(RaceInputPlayer *player) {
                     }
                 }
                 otherPlayer++;
-            } while (otherPlayer != gRaceInputPlayersEnd);
+            } while (otherPlayer != gRacePlayersEnd);
         }
     }
 
@@ -118,7 +114,7 @@ void updateRacePlayerItemEffectUse(RaceInputPlayer *player) {
 }
 #endif
 
-void updateRacePlayerActionEffectUse(RaceInputPlayer *player) {
+void updateRacePlayerActionEffectUse(RacePlayer *player) {
     s32 trigger;
     s32 type;
 

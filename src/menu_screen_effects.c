@@ -138,7 +138,7 @@ extern s16 D_80112174;
 extern s16 D_80112184;
 extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
-extern RacePlayerState D_80121D80[];
+extern RacePlayerState gRacePlayers[];
 extern u8 gCurrentViewportIndex;
 extern u8 gRenderMatricesDirty;
 extern GfxCommandDest *gViewportMatrix;
@@ -464,7 +464,7 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     RacePlayerState *player;
     u8 temp;
 
-    player = &D_80121D80[arg0->index];
+    player = &gRacePlayers[arg0->index];
     if (player->flags & 0x2000) {
         setCallbackTaskCallback(arg0, waitForRaceStartPlayerEffect);
         return;
@@ -481,11 +481,11 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     sp2C.y = 0x180000;
     sp2C.z = 0;
 
-    player = &D_80121D80[arg0->index];
+    player = &gRacePlayers[arg0->index];
     makeFixedRotationXY(sp38, player->pitch, player->yaw);
     transformVec3iByFixedMatrix(sp38, &sp2C, (Vec3i *) &arg0->unk18);
 
-    player = &D_80121D80[arg0->index];
+    player = &gRacePlayers[arg0->index];
     arg0->unk18.word += player->pos28.x;
     arg0->unk1C.word += player->pos28.y;
     arg0->unk20.word += player->pos28.z;
@@ -494,7 +494,7 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
 }
 
 void waitForRaceStartPlayerEffect(MenuScreenEffectActor *arg0) {
-    RacePlayerState *player = &D_80121D80[arg0->index];
+    RacePlayerState *player = &gRacePlayers[arg0->index];
     if (!(player->flags & 0x2000)) {
         if (player->unk51A != 0) {
             arg0->unk2E = 0xFF;

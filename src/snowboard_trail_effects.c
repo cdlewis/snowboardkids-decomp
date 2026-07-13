@@ -7,7 +7,7 @@
 #define SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD 0x400
 #define SNOWBOARD_TRAIL_FLAG_CANCEL 0x3040
 
-struct RaceInputPlayer;
+struct RacePlayer;
 
 typedef s16 FixedMatrix3s[10];
 
@@ -179,7 +179,7 @@ void func_8008393C(SnowboardTrailPlayer *player) {
     }
 }
 
-void startSnowboardTrailEffect(struct RaceInputPlayer *input) {
+void startSnowboardTrailEffect(struct RacePlayer *input) {
     SnowboardTrailPlayer *player = (SnowboardTrailPlayer *)input;
     SnowboardTrailState *trail = &player->trail;
 

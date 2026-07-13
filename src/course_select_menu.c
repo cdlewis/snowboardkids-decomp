@@ -153,7 +153,7 @@ extern u8 gPlayerCount;
 extern u8 gCourseSelectSelectedCourseId;
 extern s8 gCourseSelectSelectedCourseSavedSlot;
 extern u8 gMenuTransitionState;
-extern CourseSelectSelection D_80121D80;
+extern CourseSelectSelection gRacePlayers;
 extern s32 gPlayer1Money;
 extern CourseSelectMenuState *gCurrentGameTask;
 extern s32 gMenuFlowState;
@@ -222,8 +222,8 @@ void initCourseSelectMenu(void) {
     gMenuSelectionConfirmTimer = 0;
     D_800EC9C0 = 0;
     gCourseDetailsCloseFromBack = 0;
-    D_80121D80.unk8 = 0;
-    D_80121D80.unk6 = 0;
+    gRacePlayers.unk8 = 0;
+    gRacePlayers.unk6 = 0;
     D_8010AE64 = 0;
     gActiveMenuTask = 0;
     gCurrentGameTask->timer = 0;
@@ -477,7 +477,7 @@ void initCourseSelectCourseList(void) {
         D_8010AEFB[0] = 0;
     }
 
-    if (((s32) D_80121D80.unk6 >= 9) && ((s32) D_80121D80.unk6 < 0xC)) {
+    if (((s32) gRacePlayers.unk6 >= 9) && ((s32) gRacePlayers.unk6 < 0xC)) {
         selected = gCourseSelectExtraCourseColumnState;
         column = 3;
     } else {
@@ -486,7 +486,7 @@ void initCourseSelectCourseList(void) {
         if (selected == one) {
             selected = (gCourseSelectStatus.unk2E = 0);
         } else {
-            column = (s32) D_80121D80.unk6 % 3;
+            column = (s32) gRacePlayers.unk6 % 3;
         }
     }
 
@@ -495,7 +495,7 @@ void initCourseSelectCourseList(void) {
         column--;
     }
 
-    D_80121D80.unk6 = D_8010AEF8[column];
+    gRacePlayers.unk6 = D_8010AEF8[column];
     setCurrentGameTaskCallback(updateCourseSelectCourseList, 0);
     updateCallbackTasks();
 }
@@ -561,7 +561,7 @@ void updateCourseSelectCourseList(void) {
             if ((s32) var_a1 > 0) {
                 temp_v1 = var_a1 & 3;
                 if (temp_v1 != 0) {
-                    var_v0 = &D_80121D80;
+                    var_v0 = &gRacePlayers;
                     do {
                         var_a3 += 1;
                         var_v0->unk8 = 3;
@@ -572,7 +572,7 @@ void updateCourseSelectCourseList(void) {
                     }
                 } else {
 block_17:
-                    var_v0_2 = &D_80121D80 + var_a3;
+                    var_v0_2 = &gRacePlayers + var_a3;
                     do {
                         var_a3 += 4;
                         var_v0_2->unk8 = 3;
@@ -652,14 +652,14 @@ block_17:
                     gCourseSelectExtraCourseColumnState = 0;
                 }
                 gCourseSelectSelectedCourseId = var_v0_4;
-                if ((s32) D_80121D80.unk6 >= 9) {
-                    D_80121D80.unk7 = 0;
+                if ((s32) gRacePlayers.unk6 >= 9) {
+                    gRacePlayers.unk7 = 0;
                 } else {
-                    temp_a0_2 = gCourseUnlockSaveSlots[D_80121D80.unk6];
+                    temp_a0_2 = gCourseUnlockSaveSlots[gRacePlayers.unk6];
                     if (temp_a0_2 == -1) {
-                        D_80121D80.unk7 = (u8) ((s32) D_80121D80.unk6 % 3);
+                        gRacePlayers.unk7 = (u8) ((s32) gRacePlayers.unk6 % 3);
                     } else {
-                        D_80121D80.unk7 = (u8) temp_a0_2;
+                        gRacePlayers.unk7 = (u8) temp_a0_2;
                     }
                 }
                 if ((D_8010AEE8[0] == 0) && ((gPlayerInputPressed & 0x1000) || (gPlayerInputPressed & 0x8000))) {
@@ -687,11 +687,11 @@ block_17:
                     gMenuInputRepeatTimers = 0;
                     var_a3_2 = 0;
                     if ((s32) gPlayerCount > 0) {
-                        var_v0_5 = &D_80121D80;
+                        var_v0_5 = &gRacePlayers;
                         do {
                             var_v0_5->unk8 = 9;
                             var_v0_5 += 1;
-                        } while ((u32) var_v0_5 < (u32) (&D_80121D80 + gPlayerCount));
+                        } while ((u32) var_v0_5 < (u32) (&gRacePlayers + gPlayerCount));
                     }
                 }
             }
@@ -810,7 +810,7 @@ block_17:
         }
     }
     if (var_v0_3 == 0x1B) {
-        temp_v0_3 = &D_80121D80 + sp44;
+        temp_v0_3 = &gRacePlayers + sp44;
         gCurrentGameTask->fade = 1;
         gMenuTransitionState = 0;
         sp18 = temp_v0_3;
@@ -1240,8 +1240,8 @@ void returnToCourseSelectModeMenu(void) {
         gCurrentGameTask->fade = 1;
         gCurrentGameTask->timer = 0;
         gCurrentGameTask->screenState = 0;
-        D_80121D80.unk8 = 0;
-        D_80121D80.unk6 = D_80121D80.unk6 % 3;
+        gRacePlayers.unk8 = 0;
+        gRacePlayers.unk6 = gRacePlayers.unk6 % 3;
         gMenuChoicePromptState = 0;
         D_8010AECC = 0;
         gMenuInputRepeatTimers = 0;

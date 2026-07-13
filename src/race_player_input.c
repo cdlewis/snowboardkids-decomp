@@ -36,7 +36,7 @@ extern u32 gPlayerInputHeld[];
 extern s8 gPlayerStickX[];
 extern s8 gPlayerStickY[];
 
-void recordRaceReplayInputFrame(RaceInputPlayer *player) {
+void recordRaceReplayInputFrame(RacePlayer *player) {
     RaceInputReplayHistory *history;
     s16 frame;
     u32 inputFlags;
@@ -91,7 +91,7 @@ typedef struct {
 
 #define PLAYER_INDEX(player) (*(volatile u16 *)&(player)->playerIndex)
 
-void playRaceReplayInputFrame(RaceInputPlayer *player) {
+void playRaceReplayInputFrame(RacePlayer *player) {
     RaceReplayInputHistoryPlayer *history;
     s16 replayFrame;
     u8 buttons;
@@ -165,7 +165,7 @@ void playRaceReplayInputFrame(RaceInputPlayer *player) {
 #undef PLAYER_INDEX
 #endif
 
-void recordRaceInputHistoryFrame(RaceInputPlayer *player) {
+void recordRaceInputHistoryFrame(RacePlayer *player) {
     RaceInputHistoryBuffer *history;
     s32 index;
     u32 inputFlags;
@@ -224,7 +224,7 @@ void recordRaceInputHistoryFrame(RaceInputPlayer *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_input/playRaceInputHistoryFrame.s")
 
 #ifdef NON_MATCHING
-void playRaceInputHistoryFrame(RaceInputPlayer *player) {
+void playRaceInputHistoryFrame(RacePlayer *player) {
     RaceInputHistoryBuffer *history;
     s32 index;
     s8 replayInputSource;
@@ -293,12 +293,12 @@ dummy_label:
 }
 #endif
 
-void updateRacePlayerInput(RaceInputPlayer *player) {
+void updateRacePlayerInput(RacePlayer *player) {
     u16 index;
 
     if (!(gMenuFlowState & 1) && !(player->stateFlags & 0x40)) {
         index = player->playerIndex;
-        player->disabledInputFlags = D_80121D80[index].inputFlags;
+        player->disabledInputFlags = gRacePlayers[index].inputFlags;
 
         if (player->replayInputSource == 0) {
             player->inputFlags = gPlayerInputHeld[index];
@@ -348,7 +348,7 @@ void updateRacePlayerInput(RaceInputPlayer *player) {
     player->stickY = 0;
 }
 
-s32 getRaceInputTimerDecrementBonus(RaceInputPlayer *player) {
+s32 getRaceInputTimerDecrementBonus(RacePlayer *player) {
     s32 sp18;
     s32 var_v1;
     s32 temp_v0;

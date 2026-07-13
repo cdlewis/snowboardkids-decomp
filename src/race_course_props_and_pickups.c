@@ -189,6 +189,7 @@ extern u8 gRenderMatricesDirty;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gRaceSplitscreenMode;
+/* updateThrownPickupSpawner needs these interior labels to preserve matching codegen. */
 extern s8 D_80121D93;
 extern s32 D_80121D9C;
 extern s32 D_80121DA4;
@@ -388,25 +389,25 @@ loop:
     if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
         if (entry->enabled != 0) {
             if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 0) != 0) {
-                addRacePlayerScore(D_80121D80, 0x64);
+                addRacePlayerScore(&gRacePlayers[0], 0x64);
                 entry->enabled = 0;
                 enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
                 goto next;
             }
             if (isRacePlayerInsideCylinder(pos, xzSize, ySize, one) != 0) {
-                addRacePlayerScore(D_8012238C, 0x64);
+                addRacePlayerScore(&gRacePlayers[1], 0x64);
                 entry->enabled = 0;
                 enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
                 goto next;
             }
             if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 2) != 0) {
-                addRacePlayerScore(D_80122998, 0x64);
+                addRacePlayerScore(&gRacePlayers[2], 0x64);
                 entry->enabled = 0;
                 enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
                 goto next;
             }
             if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 3) != 0) {
-                addRacePlayerScore(D_80122FA4, 0x64);
+                addRacePlayerScore(&gRacePlayers[3], 0x64);
                 entry->enabled = 0;
                 enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
                 goto next;
@@ -873,7 +874,7 @@ void updateRacePickupCollected(RacePickupActor *arg0) {
 
 #ifdef NON_MATCHING
 void updateRacePickupIdle(RacePickupActor *arg0) {
-    RaceInputPlayer *player;
+    RacePlayer *player;
     Vec3i *pos;
     s32 i;
     s32 maxPlayers;
@@ -890,7 +891,7 @@ loop:
             goto next;
         }
 
-        player = &D_80121D80[i];
+        player = &gRacePlayers[i];
         found = 1;
         if ((player->unk568 < 0x64) && (player->unk4 == 0)) {
             goto next;

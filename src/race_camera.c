@@ -101,7 +101,7 @@ typedef struct StackD7D4 {
 extern void packFixedTransformMatrix(void *, void *);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
-extern RacePlayerSlot D_80121D80[];
+extern RacePlayerSlot gRacePlayers[];
 extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern u8 gRaceCameraRotationTransitions[];
 extern RacePlayerCameraComponentAlias D_80122010[];
@@ -375,22 +375,22 @@ void initRaceCameraFollowPlayer(void) {
     offset.y = 0;
     offset.x = 0;
     offset.z = 0x400000;
-    player = &D_80121D80[D_801124A0->playerIndex];
+    player = &gRacePlayers[D_801124A0->playerIndex];
     if (player->state.flags2FC & 0x400) {
         offset.z = 0xFFC00000;
-        player = (RacePlayerSlot *) ((u8 *) D_80121D80 + (D_801124A0->playerIndex * RACE_PLAYER_STATE_SIZE));
+        player = (RacePlayerSlot *) ((u8 *) gRacePlayers + (D_801124A0->playerIndex * RACE_PLAYER_STATE_SIZE));
     }
     makeFixedRotationY(matrix, player->state.yaw);
     transformVec3iByFixedMatrix(matrix, &offset, &transformedOffset);
-    D_801124A0->focus.x = D_80121D80[D_801124A0->playerIndex].state.cameraPos.x;
-    D_801124A0->focus.y = D_80121D80[D_801124A0->playerIndex].state.cameraPos.y;
-    D_801124A0->focus.z = D_80121D80[D_801124A0->playerIndex].state.cameraPos.z;
-    D_801124A0->pos.x = D_80121D80[D_801124A0->playerIndex].state.cameraPos.x + transformedOffset.x;
-    D_801124A0->pos.y = D_80121D80[D_801124A0->playerIndex].state.cameraPos.y + transformedOffset.y;
-    D_801124A0->pos.z = D_80121D80[D_801124A0->playerIndex].state.cameraPos.z + transformedOffset.z;
-    D_801124A0->prevPos.x = D_80121D80[D_801124A0->playerIndex].state.pos.x;
-    D_801124A0->prevPos.y = D_80121D80[D_801124A0->playerIndex].state.pos.y;
-    D_801124A0->prevPos.z = D_80121D80[D_801124A0->playerIndex].state.pos.z;
+    D_801124A0->focus.x = gRacePlayers[D_801124A0->playerIndex].state.cameraPos.x;
+    D_801124A0->focus.y = gRacePlayers[D_801124A0->playerIndex].state.cameraPos.y;
+    D_801124A0->focus.z = gRacePlayers[D_801124A0->playerIndex].state.cameraPos.z;
+    D_801124A0->pos.x = gRacePlayers[D_801124A0->playerIndex].state.cameraPos.x + transformedOffset.x;
+    D_801124A0->pos.y = gRacePlayers[D_801124A0->playerIndex].state.cameraPos.y + transformedOffset.y;
+    D_801124A0->pos.z = gRacePlayers[D_801124A0->playerIndex].state.cameraPos.z + transformedOffset.z;
+    D_801124A0->prevPos.x = gRacePlayers[D_801124A0->playerIndex].state.pos.x;
+    D_801124A0->prevPos.y = gRacePlayers[D_801124A0->playerIndex].state.pos.y;
+    D_801124A0->prevPos.z = gRacePlayers[D_801124A0->playerIndex].state.pos.z;
     D_801124A0->distance = 0;
     D_801124A0->unk28 = 0x012C0000;
     D_801124A0->update = updateRaceCameraFollowPlayer;
@@ -464,7 +464,7 @@ void updateRaceCameraFollowPlayer(void) {
             }
         }
 
-        player = &D_80121D80[D_801124A0->playerIndex];
+        player = &gRacePlayers[D_801124A0->playerIndex];
         if (!(player->state.flags2FC & 0x1000)) {
             groundY =
                 getRaceCourseSurfaceHeight((s16) findRaceCourseSurfaceFromHint(player->state.surfaceHint, x, z), x, z) -
@@ -482,7 +482,7 @@ void updateRaceCameraFollowPlayer(void) {
         D_801124A0->pos.z = (old + z) - old;
 
         diff = 0x12C0000;
-        if (D_80121D80[D_801124A0->playerIndex].state.flags2FC & 0x800) {
+        if (gRacePlayers[D_801124A0->playerIndex].state.flags2FC & 0x800) {
             diff = 0;
         }
         diff -= D_801124A0->unk28;
@@ -495,7 +495,7 @@ void updateRaceCameraFollowPlayer(void) {
         D_801124A0->unk28 += diff;
 
         diff = 0;
-        if (D_80121D80[D_801124A0->playerIndex].state.flags2FC & 0x800) {
+        if (gRacePlayers[D_801124A0->playerIndex].state.flags2FC & 0x800) {
             diff = 0x280000;
         }
         diff -= D_801124A0->distance;
@@ -508,9 +508,9 @@ void updateRaceCameraFollowPlayer(void) {
         D_801124A0->distance += diff;
     }
 
-    D_801124A0->prevPos.x = D_80121D80[D_801124A0->playerIndex].state.pos.x;
-    D_801124A0->prevPos.y = D_80121D80[D_801124A0->playerIndex].state.pos.y;
-    D_801124A0->prevPos.z = D_80121D80[D_801124A0->playerIndex].state.pos.z;
+    D_801124A0->prevPos.x = gRacePlayers[D_801124A0->playerIndex].state.pos.x;
+    D_801124A0->prevPos.y = gRacePlayers[D_801124A0->playerIndex].state.pos.y;
+    D_801124A0->prevPos.z = gRacePlayers[D_801124A0->playerIndex].state.pos.z;
     updateRaceCameraAlternateLookAtTransform();
 }
 #endif
@@ -530,9 +530,9 @@ void updateRaceCameraCourseStart(void) {
     s32 diff;
 
     if (gRaceUpdatePaused == 0) {
-        D_801124A0->focus.x += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
-        D_801124A0->focus.y += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
-        D_801124A0->focus.z += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
+        D_801124A0->focus.x += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
+        D_801124A0->focus.y += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
+        D_801124A0->focus.z += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
 
         diff = 0x640000 - D_801124A0->unk28;
         if (diff >= 0x10001) {
@@ -580,9 +580,9 @@ void initRaceCameraFixedPositionFollow(void) {
 
 void updateRaceCameraFixedPositionFollow(void) {
     if (gRaceUpdatePaused == 0) {
-        D_801124A0->focus.x += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
-        D_801124A0->focus.y += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
-        D_801124A0->focus.z += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
+        D_801124A0->focus.x += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
+        D_801124A0->focus.y += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
+        D_801124A0->focus.z += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
     }
     updateRaceCameraLookAtTransform();
 }
@@ -620,7 +620,7 @@ void updateRaceCameraChase(void) {
 
     if (gRaceUpdatePaused == 0) {
         stride = RACE_PLAYER_STATE_SIZE;
-        players = D_80121D80;
+        players = gRacePlayers;
         playerCount = &gRacePlayerCount;
         player = (RacePlayerSlot *)((u8 *)players + (D_801124A0->playerIndex * stride));
 
@@ -705,9 +705,9 @@ loop_11_done:
         }
     }
 
-    D_801124A0->prevPos.x = D_80121D80[D_801124A0->playerIndex].state.pos.x;
-    D_801124A0->prevPos.y = D_80121D80[D_801124A0->playerIndex].state.pos.y;
-    D_801124A0->prevPos.z = D_80121D80[D_801124A0->playerIndex].state.pos.z;
+    D_801124A0->prevPos.x = gRacePlayers[D_801124A0->playerIndex].state.pos.x;
+    D_801124A0->prevPos.y = gRacePlayers[D_801124A0->playerIndex].state.pos.y;
+    D_801124A0->prevPos.z = gRacePlayers[D_801124A0->playerIndex].state.pos.z;
     updateRaceCameraLookAtTransform();
 }
 #endif
@@ -722,9 +722,9 @@ void updateRaceCameraFinishOrbit(void) {
     s32 dx;
 
     if (gRaceUpdatePaused == 0) {
-        D_801124A0->focus.x += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
-        D_801124A0->focus.y += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
-        D_801124A0->focus.z += (D_80121D80[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
+        D_801124A0->focus.x += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
+        D_801124A0->focus.y += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
+        D_801124A0->focus.z += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
 
         dx = D_801124A0->pos.x - D_801124A0->focus.x;
         dz = D_801124A0->pos.z - D_801124A0->focus.z;
@@ -741,9 +741,9 @@ void updateRaceCameraFinishOrbit(void) {
         D_801124A0->unk28 += (0x960000 - D_801124A0->unk28) >> 1;
     }
 
-    D_801124A0->prevPos.x = D_80121D80[D_801124A0->playerIndex].state.pos.x;
-    D_801124A0->prevPos.y = D_80121D80[D_801124A0->playerIndex].state.pos.y;
-    D_801124A0->prevPos.z = D_80121D80[D_801124A0->playerIndex].state.pos.z;
+    D_801124A0->prevPos.x = gRacePlayers[D_801124A0->playerIndex].state.pos.x;
+    D_801124A0->prevPos.y = gRacePlayers[D_801124A0->playerIndex].state.pos.y;
+    D_801124A0->prevPos.z = gRacePlayers[D_801124A0->playerIndex].state.pos.z;
     updateRaceCameraLookAtTransform();
 }
 
@@ -769,10 +769,10 @@ void initRaceCameraReplayPosition(void) {
 void updateRaceCameraReplayPosition(void) {
     s32 stride = RACE_PLAYER_STATE_SIZE;
 
-    D_801124A0->focus.x = ((RacePlayerState *)((u8 *)D_80121D80 + D_801124A0->playerIndex * stride))->cameraPos.x;
-    D_801124A0->focus.y = ((RacePlayerState *)((u8 *)D_80121D80 + D_801124A0->playerIndex * stride))->cameraPos.y;
-    D_801124A0->focus.z = ((RacePlayerState *)((u8 *)D_80121D80 + D_801124A0->playerIndex * stride))->cameraPos.z;
-    updateRaceCameraLookAtTransform(D_80121D80, stride);
+    D_801124A0->focus.x = ((RacePlayerState *)((u8 *)gRacePlayers + D_801124A0->playerIndex * stride))->cameraPos.x;
+    D_801124A0->focus.y = ((RacePlayerState *)((u8 *)gRacePlayers + D_801124A0->playerIndex * stride))->cameraPos.y;
+    D_801124A0->focus.z = ((RacePlayerState *)((u8 *)gRacePlayers + D_801124A0->playerIndex * stride))->cameraPos.z;
+    updateRaceCameraLookAtTransform(gRacePlayers, stride);
 }
 
 void updateRaceCameraRotationTransition(void) {
@@ -842,9 +842,9 @@ void updateRaceCameraPositionTransition(void) {
     D_801124A0->pos.y = (((s64)(gRaceCameraPositionTransitions[D_801124A0->mode - 16].endPos.y - gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.y) * timer) / gRaceCameraPositionTransitions[D_801124A0->mode - 16].duration) + gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.y;
     D_801124A0->pos.z = (((s64)(gRaceCameraPositionTransitions[D_801124A0->mode - 16].endPos.z - gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.z) * timer) / gRaceCameraPositionTransitions[D_801124A0->mode - 16].duration) + gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.z;
 
-    D_801124A0->focus.x = D_80121D80[gRaceCameraPositionTransitions[D_801124A0->mode - 16].playerIndex].state.cameraPos.x;
-    D_801124A0->focus.y = D_80121D80[gRaceCameraPositionTransitions[D_801124A0->mode - 16].playerIndex].state.cameraPos.y;
-    D_801124A0->focus.z = D_80121D80[gRaceCameraPositionTransitions[D_801124A0->mode - 16].playerIndex].state.cameraPos.z;
+    D_801124A0->focus.x = gRacePlayers[gRaceCameraPositionTransitions[D_801124A0->mode - 16].playerIndex].state.cameraPos.x;
+    D_801124A0->focus.y = gRacePlayers[gRaceCameraPositionTransitions[D_801124A0->mode - 16].playerIndex].state.cameraPos.y;
+    D_801124A0->focus.z = gRacePlayers[gRaceCameraPositionTransitions[D_801124A0->mode - 16].playerIndex].state.cameraPos.z;
     D_801124A0->prevPos.x = D_801124A0->pos.x;
     D_801124A0->prevPos.y = D_801124A0->pos.y;
     D_801124A0->prevPos.z = D_801124A0->pos.z;
@@ -869,7 +869,7 @@ void updateRaceCameraStaticFollow(void) {
 }
 
 void initRaceCameraIntroPan(void) {
-    RacePlayerState *player = &D_80121D80[0].state;
+    RacePlayerState *player = &gRacePlayers[0].state;
 
     D_801124A0->pos.x = 0;
     D_801124A0->pos.y = 0;

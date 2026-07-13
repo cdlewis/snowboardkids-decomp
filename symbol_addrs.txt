@@ -2535,6 +2535,7 @@ gRaceChallengeTimeLimit = 0x80121B78; // size:0x4
 gRaceTimeTrialFinishRecorded = 0x80121B80; // size:0x1
 gRaceChallengeFailed = 0x80121B81; // size:0x1
 gRaceOrderPlayerIds = 0x80121D70; // size:0x10
+gRacePlayers = 0x80121D80;
 gRaceTrickAttackPointTotal = 0x80122040; // size:0x2
 gPlayerHitSource = 0x80122052; // size:0x1A
 gRaceScoreAttackPointTotal = 0x801222F4; // size:0x2

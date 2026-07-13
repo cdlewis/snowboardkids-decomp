@@ -245,7 +245,7 @@ extern s16 gRaceSetupSavePanelRect1X0;
 extern s16 gRaceSetupSavePanelRect1Y0;
 extern s16 gRaceSetupSavePanelRect1X1;
 extern s16 gRaceSetupSavePanelRect1Y1;
-extern RaceSetupPlayerState03798 D_80121D80[];
+extern RaceSetupPlayerState03798 gRacePlayers[];
 
 void initRaceSetupSaveMenu(void) {
     RaceSetupPlayerState03798 *player;
@@ -264,7 +264,7 @@ void initRaceSetupSaveMenu(void) {
     } while (&gControllerPakOperationCounts[i] < &D_800EC9E4);
 
     count = gConnectedControllerCount;
-    do { D_800EC9E4 = zero; i = zero; if (count > zero) { player = D_80121D80; do { player++; player[-1].unk8 = 0; i++; } while (player < (&D_80121D80[count])); i = 0; } do { initRaceSetupPlayerSaveData(i); i++; } while (i < 4); D_8010ADE0 = 0; D_8010ADE4 = zero; D_8010ADE8 = 0; gMenuSelectionConfirmTimer = 0; gMenuFlowState = zero; gRaceRumbleEnabled = 0; gRaceSetupSavePanelRect0X0 = D_800B31B8; gRaceSetupSavePanelRect1X0 = D_800B31BA; gRaceSetupSavePanelRect0Y0 = D_800B31BC; } while (0);
+    do { D_800EC9E4 = zero; i = zero; if (count > zero) { player = gRacePlayers; do { player++; player[-1].unk8 = 0; i++; } while (player < (&gRacePlayers[count])); i = 0; } do { initRaceSetupPlayerSaveData(i); i++; } while (i < 4); D_8010ADE0 = 0; D_8010ADE4 = zero; D_8010ADE8 = 0; gMenuSelectionConfirmTimer = 0; gMenuFlowState = zero; gRaceRumbleEnabled = 0; gRaceSetupSavePanelRect0X0 = D_800B31B8; gRaceSetupSavePanelRect1X0 = D_800B31BA; gRaceSetupSavePanelRect0Y0 = D_800B31BC; } while (0);
     gRaceSetupSavePanelRect1Y0 = D_800B31BE;
     gRaceSetupSavePanelRect0X1 = D_800B31C0;
     gRaceSetupSavePanelRect1X1 = D_800B31C2;
@@ -325,7 +325,7 @@ extern ControllerPakRumbleCheckPromptTransition03798 gControllerPakRumbleCheckPr
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern CallbackTask *D_8010ADE8;
-extern RaceSetupPlayerState03798 D_80121D80[];
+extern RaceSetupPlayerState03798 gRacePlayers[];
 
 #define gRaceSetupSaveSubState (*(RaceSetupSubState03798 *)&gRaceSetupMenuSubState)
 #define gRumblePakConnectedByControllerArray_03798 gRumblePakConnectedByController
@@ -364,7 +364,7 @@ void updateRaceSetupSaveMenu(void) {
                     u8 presentValue = *present;
 
                     if (presentValue != 1) {
-                        RaceSetupPlayerState03798 *player = &D_80121D80[i];
+                        RaceSetupPlayerState03798 *player = &gRacePlayers[i];
                         s32 stateIndex;
                         s16 *choice;
                         s16 choiceValue;

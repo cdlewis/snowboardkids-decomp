@@ -12,7 +12,7 @@ extern ControllerRumblePattern gRacePlayerRumblePatternSlowPulse;
 extern ControllerRumblePattern gRacePlayerRumblePatternFastPulse;
 extern ControllerRumblePattern gRacePlayerRumblePatternAlternatingPulse;
 
-void updateRacePlayerRumble(RaceInputPlayer *player) {
+void updateRacePlayerRumble(RacePlayer *player) {
     s32 patternId;
     s32 fastPatternId;
     u8 *pattern;

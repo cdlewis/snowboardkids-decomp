@@ -26,12 +26,8 @@ typedef struct {
     /* 0x017 */ char pad17[0x5F5];
 } RaceIntroPlayer;
 
-typedef struct {
-    u8 bytes[0x60C];
-} RaceInputRecord;
-
 extern RaceIntroTransitionState *gCurrentGameTask;
-extern RaceIntroPlayer D_80121D80[];
+extern RaceIntroPlayer gRacePlayers[];
 extern s16 gMenuFadeAlpha;
 extern s8 gMenuFadeOverlayActive;
 extern f32 D_800E10C8;
@@ -57,21 +53,6 @@ extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern s16 gRacePlayerAttackStartTimer;
 extern u8 gRaceResultState;
-extern RaceInputRecord D_8012238C[];
-extern s8 D_80121D94;
-extern s8 D_80121D95;
-extern s8 D_80121D96;
-extern RaceInputRecord D_80122998[];
-extern s8 D_801223A0;
-extern s8 D_801223A1;
-extern s8 D_801223A2;
-extern RaceInputRecord D_80122FA4[];
-extern s8 D_801229AC;
-extern s8 D_801229AD;
-extern s8 D_801229AE;
-extern s8 D_80122FB8;
-extern s8 D_80122FB9;
-extern s8 D_80122FBA;
 extern u8 gFramebufferSwapHold;
 extern s32 gMenuFlowState;
 extern u8 D_24C8E0;
@@ -110,7 +91,7 @@ void initTitleDemoRaceIntro(void) {
     gTrainingCourseLesson = 0;
     gMainMenuModeSelection = 0;
 
-    players = D_80121D80;
+    players = gRacePlayers;
     players[0].unk4 = 0;
     players[1].unk4 = 0;
     players[2].unk4 = 0;
@@ -137,19 +118,19 @@ void initTitleDemoRaceIntro(void) {
     gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(1);
 
-    D_80121D95 = 0;
-    D_80121D94 = 0;
-    D_80121D96 = five0;
-    D_801223A1 = 0;
-    D_801223A0 = 0;
-    D_801223A2 = five1;
-    D_801229AD = 0;
-    D_801229AC = 0;
-    D_801229AE = five2;
-    D_80122FB9 = 0;
-    D_80122FB8 = 0;
-    players = D_80121D80;
-    D_80122FBA = five3;
+    players[0].unk15 = 0;
+    players[0].soundDisabled = 0;
+    players[0].replayInputSource = five0;
+    players[1].unk15 = 0;
+    players[1].soundDisabled = 0;
+    players[1].replayInputSource = five1;
+    players[2].unk15 = 0;
+    players[2].soundDisabled = 0;
+    players[2].replayInputSource = five2;
+    players[3].unk15 = 0;
+    players[3].soundDisabled = 0;
+    players = gRacePlayers;
+    players[3].replayInputSource = five3;
 
     if (players[0].replayInputSource == 5) {
         loadCompressedRomAsset(&D_24C8E0, &D_24DBE0, 0x2B);
@@ -227,7 +208,7 @@ void updateTitleDemoRaceIntro(void) {
     if (fadeStep == gTitleDemoReplaySegmentFrames[state->courseSegment]) {
         i = 0;
         do {
-            dst = (u8 *)D_80121D80 + i;
+            dst = (u8 *)gRacePlayers + i;
             offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
             src = gTitleDemoReplayInputs + offset + i;
             value = *src;
@@ -237,7 +218,7 @@ void updateTitleDemoRaceIntro(void) {
 
         i = 0;
         do {
-            dst = (u8 *)D_8012238C + i;
+            dst = (u8 *)&gRacePlayers[1] + i;
             offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
             src = gTitleDemoReplayInputs + offset + 0x60C0 + i;
             value = *src;
@@ -247,7 +228,7 @@ void updateTitleDemoRaceIntro(void) {
 
         i = 0;
         do {
-            dst = (u8 *)D_80122998 + i;
+            dst = (u8 *)&gRacePlayers[2] + i;
             offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
             src = gTitleDemoReplayInputs + offset + 0xC180 + i;
             value = *src;
@@ -257,7 +238,7 @@ void updateTitleDemoRaceIntro(void) {
 
         i = 0;
 copy_player3:
-        fourDst = (FourBytes *)((u8 *)D_80122FA4 + i);
+        fourDst = (FourBytes *)((u8 *)&gRacePlayers[3] + i);
         offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
         fourDst->b0 = gTitleDemoReplayInputs[offset + 0x12240 + i];
         offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
