@@ -290,7 +290,7 @@ SoundHandleNode *acquireSoundEffectHandleNode(void) {
     return gFreeSoundHandleStack[gFreeSoundHandleCount];
 }
 
-// startCurrentQueuedSoundEffect best match: 98.108%
+// startCurrentQueuedSoundEffect best match: 99.910%
 #pragma GLOBAL_ASM("asm/nonmatchings/sound_manager/startCurrentQueuedSoundEffect.s")
 
 #ifdef NON_MATCHING
@@ -314,8 +314,7 @@ s32 startCurrentQueuedSoundEffect(void) {
 
     var_a0 = gCurrentQueuedSoundId;
     if ((var_a0 >= 0x70) || (var_a0 < 0)) {
-        gCurrentQueuedSoundId = 0;
-        var_a0 = 0 & 0xFF;
+        var_a0 = (gCurrentQueuedSoundId = 0);
     }
 
     temp_v0->handle = startSoundEffect(var_a0, gCurrentQueuedSoundVolume, gCurrentQueuedSoundPan, 0, gCurrentQueuedSoundPriority);
