@@ -102,6 +102,7 @@ extern s8 D_8010AEB0;
 extern u8 D_8010AEF8[];
 extern u8 D_8010AEFB[];
 extern u8 D_8010AF08[];
+extern u8 gCourseSelectExtraCourseIds[];
 extern s16 D_8010AED0;
 extern s16 gMenuInputRepeatTimers;
 extern u8 gMenuExitSelection;
@@ -429,21 +430,19 @@ void updateCourseSelectModeMenu(void) {
 }
 #endif
 
-// initCourseSelectCourseList best match: 86.471%
+// initCourseSelectCourseList best match: 97.763% (nonmatchings/initCourseSelectCourseList-2663524570355072948/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/initCourseSelectCourseList.s")
 
 #ifdef NON_MATCHING
 void initCourseSelectCourseList(void) {
     u8 courseFlags;
-    s32 var_a0;
-    s32 var_a2;
-    s32 var_a2_2;
-    u8 *var_v1;
-    u8 *var_v1_2;
-    s8 var_v0;
-    s8 var_v0_2;
-    s8 var_v0_3;
-    u8 var_v0_4;
+    s32 i;
+    s32 mask;
+    s32 listMask;
+    s32 one;
+    s32 column;
+    u8 *extraCourse;
+    u8 selected;
 
     gMenuTransitionState = 0;
     D_8010AEA0[0] = 0;
@@ -456,63 +455,54 @@ void initCourseSelectCourseList(void) {
         D_8010AEA0[0] = 1;
     }
 
-    var_v1 = D_8010AEF8;
-    var_v0 = 0;
-    do {
-        *var_v1 = var_v0;
-        var_v0 += 1;
-        var_v1 += 1;
-    } while (var_v0 < 3);
+    for (i = 0; i < 3; i++) {
+        D_8010AEF8[i] = i;
+    }
 
-    if (D_8010AEA0[0] == 1) {
-        var_a2 = 1;
-        var_v0_2 = 9;
-loop_6:
-        if (courseFlags & var_a2) {
-            D_8010AEFB[0] = var_v0_2;
-        } else {
-            var_v0_2 += 1;
-            var_a2 *= 2;
-            if (var_v0_2 < 0xC) {
-                goto loop_6;
+    one = 1;
+    if (D_8010AEA0[0] == one) {
+        mask = one;
+        for (i = 9; i < 0xC; i++) {
+            if (courseFlags & mask) {
+                D_8010AEFB[0] = i;
+                break;
             }
+            mask *= 2;
         }
-        var_v0_3 = 9;
-        var_a0 = 1;
-        var_v1_2 = D_8010AF08;
-        do {
-            *var_v1_2 = 0;
-            if (courseFlags & var_a0) {
-                *var_v1_2 = var_v0_3;
-                var_v1_2 += 1;
+
+        listMask = one;
+        extraCourse = gCourseSelectExtraCourseIds + 1;
+        for (i = 9; i != 0xC; i++) {
+            *extraCourse = 0;
+            if (courseFlags & listMask) {
+                *extraCourse = i;
+                extraCourse++;
             }
-            var_v0_3 += 1;
-            var_a0 *= 2;
-        } while (var_v0_3 != 0xC);
+            listMask *= 2;
+        }
     } else {
         D_8010AEFB[0] = 0;
     }
 
     if (((s32) D_80121D80.unk6 >= 9) && ((s32) D_80121D80.unk6 < 0xC)) {
-        var_v0_4 = gCourseSelectExtraCourseColumnState;
-        var_a2_2 = 3;
+        selected = gCourseSelectExtraCourseColumnState;
+        column = 3;
     } else {
-        var_v0_4 = gCourseSelectStatus.unk2E;
-        var_a2_2 = 0;
-        if (var_v0_4 == 1) {
-            gCourseSelectStatus.unk2E = 0;
-            var_v0_4 = 0;
+        selected = gCourseSelectStatus.unk2E;
+        column = 0;
+        if (selected == one) {
+            selected = (gCourseSelectStatus.unk2E = 0);
         } else {
-            var_a2_2 = (s32) D_80121D80.unk6 % 3;
+            column = (s32) D_80121D80.unk6 % 3;
         }
     }
 
-    D_8010AE64 = var_a2_2;
-    if (var_v0_4 == 1) {
-        var_a2_2--;
+    D_8010AE64 = column;
+    if (selected == one) {
+        column--;
     }
 
-    D_80121D80.unk6 = D_8010AEF8[var_a2_2];
+    D_80121D80.unk6 = D_8010AEF8[column];
     setCurrentGameTaskCallback(updateCourseSelectCourseList, 0);
     updateCallbackTasks();
 }
