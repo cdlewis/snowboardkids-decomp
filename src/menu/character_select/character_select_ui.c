@@ -557,8 +557,8 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
 
 void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
     RacePlayerState *player;
-    s8 *playerLayout;
-    CharacterSelectUiPlayerCursorActor *actor;
+    s8 *playerMarkerLayout;
+    CharacterSelectUiPlayerCursorActor *markerCursor;
     s32 i;
     s32 playerFlags;
 
@@ -579,13 +579,13 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     }
 
     if ((s32)gPlayerCount > 0) {
-        playerLayout = D_8010AE64;
-        actor = arg0;
+        playerMarkerLayout = D_8010AE64;
+        markerCursor = arg0;
         do {
-            actor->x[0] = (*playerLayout * 0x20) + arg0->baseX;
+            markerCursor->x[0] = (*playerMarkerLayout * 0x20) + arg0->baseX;
             i++;
-            playerLayout++;
-            actor = (CharacterSelectUiPlayerCursorActor *)((u8 *)actor + 2);
+            playerMarkerLayout++;
+            markerCursor = (CharacterSelectUiPlayerCursorActor *)((u8 *)markerCursor + 2);
         } while (i < (s32)gPlayerCount);
     }
 
