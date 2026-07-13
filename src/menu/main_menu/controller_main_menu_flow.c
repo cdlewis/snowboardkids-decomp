@@ -89,6 +89,34 @@ typedef struct SaveSlotBytes {
     u8 tail[0x18];
 } SaveSlotBytes;
 
+typedef struct ControllerPakRecordTime {
+    /* 0x0 */ s8 minutes;
+    /* 0x1 */ s8 seconds;
+    /* 0x2 */ s16 fraction;
+} ControllerPakRecordTime;
+
+typedef struct ControllerPakSaveData {
+    /* 0x0000 */ s32 checksum;
+    /* 0x0004 */ u8 pad4[0x4E - 0x4];
+    /* 0x004E */ ControllerPakRecordTime timeTrialRecords[11][5];
+    /* 0x012A */ ControllerPakRecordTime courseTargetTimes[11];
+    /* 0x0156 */ ControllerPakRecordTime raceRecords[11][5];
+    /* 0x0232 */ u8 pad232[0x7756 - 0x232];
+    /* 0x7756 */ u16 trickAttackScores[11][5];
+    /* 0x77C4 */ u8 trickAttackCharacters[11][5];
+    /* 0x77FB */ u8 timeTrialCharacters[11][5];
+    /* 0x7832 */ u8 scoreAttackScores[11][5];
+    /* 0x7869 */ u8 scoreAttackCharacters[11][5];
+    /* 0x78A0 */ u8 raceCharacters[11][5];
+    /* 0x78D7 */ u8 unlockFlags;
+} ControllerPakSaveData;
+
+#define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32)&(((ControllerPakSaveData *)0)->field))
+#define CONTROLLER_PAK_RECORD_AT(cursor, field) \
+    (*(ControllerPakRecordTime *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
+#define CONTROLLER_PAK_U8_AT(cursor, field) (*(u8 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
+#define CONTROLLER_PAK_U16_AT(cursor, field) (*(u16 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
+
 typedef struct MainMenuState {
     char pad[0x18];
     s32 fade;
@@ -872,140 +900,140 @@ u16 validateControllerPakSave(volatile s32 arg0) {
 }
 #endif
 
-s32 validateControllerPakSaveData(s32 arg0) {
+s32 validateControllerPakSaveData(s32 channel) {
     s32 pad;
-    volatile s32 sp8;
-    u8 *var_a0;
-    u8 *var_a2;
-    u8 *var_t2;
-    u8 *var_t3;
-    u8 *var_t4;
-    u8 *var_t5;
-    u8 *var_v0;
-    s16 temp_s0_3;
-    s16 temp_s0_7;
-    s16 temp_v0_3;
-    s32 var_a1;
-    s32 var_a3;
-    s32 var_v1;
-    s8 temp_s0;
-    s8 temp_s0_2;
-    s8 temp_s0_5;
-    s8 temp_s0_6;
-    s8 temp_v0;
-    s8 temp_v0_2;
-    s32 temp_t7;
-    s32 temp_s0_10;
-    s32 temp_s0_4;
-    s32 temp_s0_8;
-    s32 temp_s0_9;
+    volatile s32 unusedInvalidCourse;
+    u8 *scoreAndCharacterCursor;
+    u8 *trickScoreCursor;
+    u8 *saveStart;
+    u8 *timeTrialCourseCursor;
+    u8 *scoreCourseCursor;
+    u8 *raceCourseCursor;
+    u8 *recordCursor;
+    s16 fraction;
+    s16 raceFraction;
+    s16 targetFraction;
+    s32 playerCounter;
+    s32 courseOffset;
+    s32 invalidSave;
+    s8 minutes;
+    s8 seconds;
+    s8 raceMinutes;
+    s8 raceSeconds;
+    s8 targetMinutes;
+    s8 targetSeconds;
+    s32 trickScore;
+    s32 trickCharacter;
+    s32 timeTrialCharacter;
+    s32 raceCharacter;
+    s32 scoreCharacter;
 
-    var_t2 = (u8 *)&gGameSaveDataBuffer[arg0];
-    var_v1 = 0;
-    var_t3 = var_t2;
-    var_t4 = var_t2;
-    var_t5 = var_t2;
-    var_a3 = 0;
-    var_t2 += 0;
+    saveStart = (u8 *)&gGameSaveDataBuffer[channel];
+    invalidSave = 0;
+    timeTrialCourseCursor = saveStart;
+    scoreCourseCursor = saveStart;
+    raceCourseCursor = saveStart;
+    courseOffset = 0;
+    saveStart += 0;
 
     do {
-        sp8 = 0;
-        var_v0 = var_t3;
-        var_a0 = var_t4;
-        var_a1 = 0;
-        var_a2 = var_t5;
-loop_2:
-        temp_s0 = *(s8 *)(var_v0 + 0x4E);
-        var_a1 += 2;
-        if ((temp_s0 < 0) || (temp_s0 >= 0x64)) {
-            var_v1 = 1;
+        unusedInvalidCourse = 0;
+        recordCursor = timeTrialCourseCursor;
+        scoreAndCharacterCursor = scoreCourseCursor;
+        playerCounter = 0;
+        trickScoreCursor = raceCourseCursor;
+loop_player:
+        minutes = CONTROLLER_PAK_RECORD_AT(recordCursor, timeTrialRecords).minutes;
+        playerCounter += 2;
+        if ((minutes < 0) || (minutes >= 100)) {
+            invalidSave = 1;
         }
-        temp_s0_2 = *(s8 *)(var_v0 + 0x4F);
-        if ((temp_s0_2 < 0) || (temp_s0_2 >= 0x3C)) {
-            var_v1 = 1;
+        seconds = CONTROLLER_PAK_RECORD_AT(recordCursor, timeTrialRecords).seconds;
+        if ((seconds < 0) || (seconds >= 60)) {
+            invalidSave = 1;
         }
-        temp_s0_3 = *(s16 *)(var_v0 + 0x50);
-        if ((temp_s0_3 < 0) || (temp_s0_3 >= 0x6301)) {
-            var_v1 = 1;
+        fraction = CONTROLLER_PAK_RECORD_AT(recordCursor, timeTrialRecords).fraction;
+        if ((fraction < 0) || (fraction >= 0x6301)) {
+            invalidSave = 1;
         }
-        temp_s0_4 = *(u8 *)(var_a0 + 0x77FB);
-        if ((temp_s0_4 & 7) >= 6) {
-            var_v1 = 1;
+        timeTrialCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, timeTrialCharacters);
+        if ((timeTrialCharacter & 7) >= 6) {
+            invalidSave = 1;
         }
-        if ((((s32)temp_s0_4 >> 3) & 0xF) >= 0xF) {
-            var_v1 = 1;
+        if ((((s32)timeTrialCharacter >> 3) & 0xF) >= 0xF) {
+            invalidSave = 1;
         }
-        temp_s0_5 = *(s8 *)(var_v0 + 0x156);
-        if ((temp_s0_5 < 0) || (temp_s0_5 >= 0x64)) {
-            var_v1 = 1;
+        raceMinutes = CONTROLLER_PAK_RECORD_AT(recordCursor, raceRecords).minutes;
+        if ((raceMinutes < 0) || (raceMinutes >= 100)) {
+            invalidSave = 1;
         }
-        temp_s0_6 = *(s8 *)(var_v0 + 0x157);
-        if ((temp_s0_6 < 0) || (temp_s0_6 >= 0x3C)) {
-            var_v1 = 1;
+        raceSeconds = CONTROLLER_PAK_RECORD_AT(recordCursor, raceRecords).seconds;
+        if ((raceSeconds < 0) || (raceSeconds >= 60)) {
+            invalidSave = 1;
         }
-        temp_s0_7 = *(s16 *)(var_v0 + 0x158);
-        var_v0 += 4;
-        if ((temp_s0_7 < 0) || (temp_s0_7 >= 0x6301)) {
-            var_v1 = 1;
+        raceFraction = CONTROLLER_PAK_RECORD_AT(recordCursor, raceRecords).fraction;
+        recordCursor += sizeof(ControllerPakRecordTime);
+        if ((raceFraction < 0) || (raceFraction >= 0x6301)) {
+            invalidSave = 1;
         }
-        temp_s0_8 = *(u8 *)(var_a0 + 0x78A0);
-        if ((temp_s0_8 & 7) >= 6) {
-            var_v1 = 1;
+        raceCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, raceCharacters);
+        if ((raceCharacter & 7) >= 6) {
+            invalidSave = 1;
         }
-        if ((((s32)temp_s0_8 >> 3) & 0xF) >= 0xF) {
-            var_v1 = 1;
+        if ((((s32)raceCharacter >> 3) & 0xF) >= 0xF) {
+            invalidSave = 1;
         }
-        if (var_a3 == 0x24) {
-            if (*(u8 *)(var_a0 + 0x7832) >= 0x1F) {
+        if (courseOffset == 0x24) {
+            if (CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, scoreAttackScores) >= 0x1F) {
                 goto block_32;
             }
-        } else if (*(u8 *)(var_a0 + 0x7832) >= 0x3D) {
+        } else if (CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, scoreAttackScores) >= 0x3D) {
 block_32:
-            var_v1 = 1;
+            invalidSave = 1;
         }
-        temp_s0_9 = *(u8 *)(var_a0 + 0x7869);
-        if ((temp_s0_9 & 7) >= 6) {
-            var_v1 = 1;
+        scoreCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, scoreAttackCharacters);
+        if ((scoreCharacter & 7) >= 6) {
+            invalidSave = 1;
         }
-        if ((((s32)temp_s0_9 >> 3) & 0xF) >= 0xF) {
-            var_v1 = 1;
+        if ((((s32)scoreCharacter >> 3) & 0xF) >= 0xF) {
+            invalidSave = 1;
         }
-        temp_t7 = (*(u16 *)(var_a2 + 0x7756)) & 0xFFFFu;
-        var_a2 += 2;
-        if ((s32)temp_t7 >= 0x2710) {
-            var_v1 = 1;
+        trickScore = (CONTROLLER_PAK_U16_AT(trickScoreCursor, trickAttackScores)) & 0xFFFFu;
+        trickScoreCursor += sizeof(u16);
+        if ((s32)trickScore >= 0x2710) {
+            invalidSave = 1;
         }
-        temp_s0_10 = *(u8 *)(var_a0 + 0x77C4);
-        if ((temp_s0_10 & 7) >= 6) {
-            var_v1 = 1;
+        trickCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, trickAttackCharacters);
+        if ((trickCharacter & 7) >= 6) {
+            invalidSave = 1;
         }
-        if ((((s32)temp_s0_10 >> 3) & 0xF) >= 0xF) {
-            var_v1 = 1;
+        if ((((s32)trickCharacter >> 3) & 0xF) >= 0xF) {
+            invalidSave = 1;
         }
-        var_a0 += 1;
-        if (var_a1 != 0xA) {
-            goto loop_2;
+        scoreAndCharacterCursor += 1;
+        if (playerCounter != 0xA) {
+            goto loop_player;
         }
-        temp_v0 = *(s8 *)(var_t2 + 0x12A);
-        var_t3 += 0x14;
-        var_t4 += 5;
-        if ((temp_v0 < 0) || (temp_v0 >= 0x64)) {
-            var_v1 = 1;
+        targetMinutes = CONTROLLER_PAK_RECORD_AT(saveStart, courseTargetTimes).minutes;
+        timeTrialCourseCursor += sizeof(ControllerPakRecordTime) * 5;
+        scoreCourseCursor += 5;
+        if ((targetMinutes < 0) || (targetMinutes >= 100)) {
+            invalidSave = 1;
         }
-        temp_v0_2 = *(s8 *)(var_t2 + 0x12B);
-        var_t5 += 0xA;
-        var_a3 += 4;
-        if ((temp_v0_2 < 0) || (temp_v0_2 >= 0x3C)) {
-            var_v1 = 1;
+        targetSeconds = CONTROLLER_PAK_RECORD_AT(saveStart, courseTargetTimes).seconds;
+        raceCourseCursor += sizeof(u16) * 5;
+        courseOffset += 4;
+        if ((targetSeconds < 0) || (targetSeconds >= 60)) {
+            invalidSave = 1;
         }
-        temp_v0_3 = *(s16 *)(var_t2 + 0x12C);
-        if ((temp_v0_3 < 0) || (temp_v0_3 >= 0x6301)) {
-            var_v1 = 1;
+        targetFraction = CONTROLLER_PAK_RECORD_AT(saveStart, courseTargetTimes).fraction;
+        if ((targetFraction < 0) || (targetFraction >= 0x6301)) {
+            invalidSave = 1;
         }
-        var_t2 += 4;
-    } while (var_a3 != 0x2C);
+        saveStart += sizeof(ControllerPakRecordTime);
+    } while (courseOffset != 0x2C);
 
-    return var_v1;
+    return invalidSave;
 }
 
 void enterMainMenuFromRace(void) {
