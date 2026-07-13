@@ -1531,16 +1531,17 @@ void func_8005905C(void *arg0) {
 }
 #endif
 
-// func_80059518 best match: 90.644% (nonmatchings/func_80059518-3357475854818838508/base_7.c)
+// func_80059518 best match: 97.278% (nonmatchings/func_80059518-2870645799593382959/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_80059518.s")
 
 #ifdef NON_MATCHING
 void func_80059518(void *arg0) {
     s8 *actor;
     s32 i;
+    s32 flags;
     s32 j;
     s32 next;
-    s8 temp;
+    s32 temp;
 
     actor = arg0;
     i = 0;
@@ -1563,6 +1564,7 @@ void func_80059518(void *arg0) {
                 j++;
             } while (j < 4);
         }
+        next = i + 1;
         i = next;
     } while (next < 3);
 
@@ -1575,7 +1577,8 @@ void func_80059518(void *arg0) {
     if (!(D_80121D80[actor[0x1E]].flags & 0x40)) {
         actor[0x1E] = -1;
     }
-    if (!(D_80121D80[actor[0x1F]].flags & 0x40)) {
+    flags = D_80121D80[actor[0x1F]].flags;
+    if (!(flags & 0x40)) {
         actor[0x1F] = -1;
     }
 }
