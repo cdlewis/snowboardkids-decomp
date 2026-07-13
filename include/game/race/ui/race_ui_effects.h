@@ -90,7 +90,7 @@ void func_8005A07C(void *arg0);
 void func_8005A0E0(void *arg0);
 void func_8005A184(void *arg0);
 void func_8005A1FC(void *arg0);
-void func_8005A288(void *arg0);
+void func_8005A288(struct RaceUiAlpha18Actor *arg0);
 void func_8005A2F0(void *arg0);
 void func_8005A31C(struct RaceUiAlpha18Actor *arg0);
 void func_8005A4BC(struct RaceUiCounterActor *arg0);
