@@ -115,8 +115,9 @@ extern void (*D_8011241C)(void);
 extern u8 gPlayerCount;
 extern MultiplayerCourseSelectPlayer D_80121D80[];
 extern s32 gMenuFlowState;
+extern u8 gFrameCounter;
 
-// initMultiplayerCourseSelectMenu best match: 83.031% (nonmatchings/initMultiplayerCourseSelectMenu-3357475854818838508/base_6.c)
+// initMultiplayerCourseSelectMenu best match: 83.066% (nonmatchings/initMultiplayerCourseSelectMenu-2870645799593382959/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/multiplayer_course_select_menu/initMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -128,6 +129,7 @@ void initMultiplayerCourseSelectMenu(void) {
     s32 sum;
     s32 selected;
     s32 screenBase;
+    MultiplayerCourseSelectPlayer *player;
 
     if (gRaceSplitscreenMode == 1) {
         requestMusicSequenceBank(2);
@@ -206,9 +208,11 @@ void initMultiplayerCourseSelectMenu(void) {
     gCurrentGameTask->unk20 = 0;
     setCurrentGameTaskCallback(updateMultiplayerCourseSelectMenu, 0);
 
-    for (i = 0; i < MULTIPLAYER_COURSE_SELECT_PLAYER_RECORD_COUNT; i++) {
-        D_80121D80[i].state = 0;
-    }
+    player = D_80121D80;
+    do {
+        player++;
+        player[-1].state = 0;
+    } while ((u32) player < (u32) &gFrameCounter);
 
     for (i = 0; i < gPlayerCount; i++) {
         D_8010AEA4[i] = 0;
