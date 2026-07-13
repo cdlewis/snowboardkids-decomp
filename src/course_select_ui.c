@@ -2071,7 +2071,7 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
 // updateCourseSelectExtraCourseIconList best match: 90.349% (nonmatchings/updateCourseSelectExtraCourseIconList-7273315160691878794/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectExtraCourseIconList.s")
 
-// initCourseSelectExtraCourseIconList best match: 96.786% (nonmatchings/initCourseSelectExtraCourseIconList-5802343343535905907/base_10.c)
+// initCourseSelectExtraCourseIconList best match: 98.393% (nonmatchings/initCourseSelectExtraCourseIconList-2663524570355072948/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/initCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
@@ -2089,76 +2089,15 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     s16 *temp_ra;
     s32 temp_s6;
     s32 temp_s4;
+    CourseSelectWidgetActor *new_var;
     unsigned int new_var2;
     s32 temp_s3;
     s32 temp_s2;
     s32 temp_a3;
 
-    if ((s32)gPlayerCount < 3) {
-        var_t5 = gPlayerCount - 1;
-    } else {
-        var_t5 = 2;
-        do {
-        } while (0);
-    }
-    var_t0 = 0;
     do {
-        if ((s32)gPlayerCount > 0) {
-            new_var2 = var_t5;
-            temp_ra = gCourseSelectIconListXLayout[new_var2];
-            temp_s1 = gCourseSelectIconListYLayout[new_var2];
-            var_t1 = (u8 *)arg0;
-            var_t2 = (u8 *)arg0;
-            var_t3 = (u8 *)arg0;
-            temp_s6 = 0xC;
-            temp_s4 = 1;
-            temp_s3 = 0x100;
-            temp_s2 = 0xC;
-            new_var3 = new_var2 * temp_s6;
-            temp_a3 = 3;
-            do {
-                var_v1 = 0;
-                if ((s32)gPlayerCount >= 3) {
-                    var_t1[0x50] = temp_s2;
-                } else {
-                    var_t1[0x50] = *(s16 *)((u8 *)gCourseSelectIconListYLayout + new_var3);
-                    if (((arg0 && arg0) && arg0) != 0) {
-                    }
-                }
-                var_t1[0x5C] = 0;
-                *(s16 *)(var_t3 + 0x60) = temp_s3;
-                if (gPlayerCount == temp_s4) {
-                    var_a0 = 8;
-                } else {
-                    var_a0 = 4;
-                }
-                var_v0 = var_t2;
-loop:
-                var_v1 += 1;
-                *(s16 *)(var_v0 + 0x18) = temp_ra[((var_t0 >= 2) * 2) + 1] + var_a0;
-                var_v0 += 2;
-                *(s16 *)(var_v0 + 0x2E) = temp_s1[((var_t0 & 1) * 2) + 2];
-                if (var_v1 != temp_a3) {
-                    goto loop;
-                }
-                var_t0 = var_t0 + 1;
-                var_t1 += 1;
-                var_t2 = var_t2 + 6;
-                var_t3 += 2;
-            } while (var_t0 < (s32)gPlayerCount);
-        }
-        *(s16 *)((u8 *)arg0 + 0x4A) = 0xA0;
+        if ((s32)gPlayerCount < 3) { var_t5 = gPlayerCount - 1; } else { var_t5 = 2; do { } while (0); } var_t0 = 0; do { if ((s32)gPlayerCount > 0) { new_var2 = var_t5; temp_ra = gCourseSelectIconListXLayout[new_var2]; temp_s1 = gCourseSelectIconListYLayout[new_var2]; var_t3 = (var_t2 = (var_t1 = (u8 *)arg0)); temp_s6 = 0xC; temp_s4 = 1; temp_s3 = 0x100; temp_s2 = 0xC; new_var3 = new_var2 * temp_s6; temp_a3 = 3; do { var_v1 = 0; if ((s32)gPlayerCount >= 3) { var_t1[0x50] = temp_s2; } else { var_t1[0x50] = *(s16 *)((u8 *)gCourseSelectIconListYLayout + new_var3); if (((arg0 && arg0) && arg0) != 0) { } } var_t1[0x5C] = 0; *(s16 *)(var_t3 + 0x60) = temp_s3; if (gPlayerCount == temp_s4) { var_a0 = 8; } else { var_a0 = 4; } var_v0 = var_t2; loop: var_v1 += 1; *(s16 *)(var_v0 + 0x18) = temp_ra[((var_t0 >= 2) * 2) + 1] + var_a0; var_v0 += 2; *(s16 *)(var_v0 + 0x2E) = temp_s1[((var_t0 & 1) * 2) + 2]; if (var_v1 != temp_a3) { goto loop; } var_t0 = var_t0 + 1; var_t1 += 1; var_t2 += 6; var_t3 += 2; } while (var_t0 < (s32)gPlayerCount); } } while (0); new_var = arg0; new_var->coordinates[0x19] = 0xA0; arg0->coordinates[0x1A] = 0x78; arg0->coordinates[0x1B] = 0x78; if (gPlayerCount == 1) { arg0->coordinates[0x18] = 0xA0; } else if (gPlayerCount == 2) { arg0->coordinates[0x18] = 0x7E; } else { arg0->coordinates[0x18] = 0x88; } setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseIconList);
     } while (0);
-    *(s16 *)((u8 *)arg0 + 0x4C) = 0x78;
-    *(s16 *)((u8 *)arg0 + 0x4E) = 0x78;
-    if (gPlayerCount == 1) {
-        *(s16 *)((u8 *)arg0 + 0x48) = 0xA0;
-    } else if (gPlayerCount == (u32)2) {
-        *(s16 *)((u8 *)arg0 + 0x48) = 0x7E;
-    } else {
-        *(s16 *)((u8 *)arg0 + 0x48) = 0x88;
-    }
-    setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseIconList);
 }
 #endif
 
