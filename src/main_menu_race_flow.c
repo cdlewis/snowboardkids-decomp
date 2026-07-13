@@ -44,7 +44,7 @@ extern s8 gRacePlayerHudStatuses;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
-extern s8 gPlayerCount;
+extern char gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern s16 gMenuFadeAlpha;
 extern u8 gFramebufferSwapHold;
@@ -157,7 +157,7 @@ void exitMainMenuModePreviewRaceSelectionMenu(void) {
     }
 }
 
-// initMainMenuModePreviewRace best match: 95.410% (nonmatchings/initMainMenuModePreviewRace-3357475854818838508/base_11.c)
+// initMainMenuModePreviewRace best match: 97.462% (nonmatchings/initMainMenuModePreviewRace-2870645799593382959/base_10.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_race_flow/initMainMenuModePreviewRace.s")
 
@@ -170,7 +170,7 @@ void initMainMenuModePreviewRace(void) {
     s32 five2;
     s32 five3;
 
-    gRaceCourseIndex = gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection].courseIndex;
+    gRaceCourseIndex = (((gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection].courseIndex & 0xFF) & 0xFF) & 0xFF) & 0xFF;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
     gRaceResultState = 0;
