@@ -126,7 +126,7 @@ void func_8005C64C(struct RaceUiDualCounterActor *arg0);
 void func_8005C89C(void *arg0);
 void updateRaceUiCourseRecordHoldFinalMoney(struct RaceUiDualCounterActor *arg0);
 void updateRaceUiCourseRecordRevealFinalMoney(struct RaceUiDualCounterActor *arg0);
-void func_8005CAB4(void *arg0);
+void updateRaceUiCourseRecordRevealPerfectGet(struct RaceUiDualCounterActor *arg0);
 void func_8005CB74(void *arg0);
 void func_8005CC54(void *arg0);
 void func_8005CD10(void *arg0);
