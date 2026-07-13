@@ -154,8 +154,16 @@ typedef struct {
     /* 0x26 */ u8 unk26;
 } RaceHudPanelController;
 
+typedef struct {
+    u8 pad0[0x18];
+    /* 0x18 */ s16 x;
+    u8 pad1A[6];
+    /* 0x20 */ s16 y;
+} RaceHudPlayerFrameActor;
+
 extern void func_80018C80(RaceHudPanelActor *);
 extern void func_800177F8(RaceHudBannerActor *);
+extern void func_80017A10(RaceHudPlayerFrameActor *);
 extern void func_80017C34(RaceHudPanelActor *);
 extern void func_800184C8(void);
 extern void func_80018AA0(RaceHudPanelActor *);
@@ -353,13 +361,6 @@ void func_800179D4(RaceHudBannerActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80017A10.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    u8 pad1A[6];
-    /* 0x20 */ s16 y;
-} RaceHudPlayerFrameActor;
-
 void func_80017A10(RaceHudPlayerFrameActor *arg0) {
     char buf[0x10];
     u8 *sp6C;
@@ -400,10 +401,6 @@ void func_80017A10(RaceHudPlayerFrameActor *arg0) {
 }
 #endif
 
-// func_80017C34 best match: 92.981% (nonmatchings/func_80017C34-5635509610426229442/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_hud/func_80017C34.s")
-
-#ifdef NON_MATCHING
 void func_80017C34(RaceHudPanelActor *arg0) {
     u8 var_v0;
     u8 desired;
@@ -420,14 +417,15 @@ void func_80017C34(RaceHudPanelActor *arg0) {
         actor->targetY.mode = desired;
         var_v0 = desired & 0xFF;
         actor->targetX.target[0] = D_8010AE50.cursorX;
+        var_v0 = actor->targetY.mode;
         var_v1 = var_v0;
         actor->targetX.target[1] = D_8010AE50.cursorY;
     }
 
     switch (var_v1) {
     case 1:
-        actor->y[3] += 8;
         actor->y[1] += 8;
+        actor->y[3] += 8;
         if (actor->y[3] == 0x24) {
             actor->targetY.mode = 2;
             owner->playerFrameReady = 1;
@@ -444,7 +442,6 @@ void func_80017C34(RaceHudPanelActor *arg0) {
     D_8010AE51 = var_v0;
     func_800483FC(&D_80124868, func_80017A10, actor);
 }
-#endif
 
 void func_80017D08(RaceHudPanelActor *arg0) {
     arg0->x[0] = -0x88;
