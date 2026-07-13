@@ -211,7 +211,7 @@ void drawAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
 }
 #endif
 
-// drawPulsingAssetTableSprite best match: 79.880% (nonmatchings/drawPulsingAssetTableSprite-3357475854818838508/base_6.c)
+// drawPulsingAssetTableSprite best match: 82.650% (nonmatchings/drawPulsingAssetTableSprite-2870645799593382959/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_render_utils/drawPulsingAssetTableSprite.s")
 
 #ifdef NON_MATCHING
@@ -224,7 +224,6 @@ extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 
 void drawPulsingAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
-    volatile char pad[0x18];
     u8 *textureBase;
     s32 clipU;
     s32 clipV;
@@ -237,151 +236,14 @@ void drawPulsingAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3)
     s32 x1;
     s32 y1;
     s32 pulse;
-    s32 alpha;
     AssetTableEntry *rawEntry;
-    AssetTableEntry *entry;
 
     textureBase = (((u8 *)arg2) + (arg2->entryCount * sizeof(AssetTableEntry))) + sizeof(AssetTableEntry);
     rawEntry = (AssetTableEntry *)(((u8 *)arg2) + (arg3 * sizeof(AssetTableEntry)));
     x0 = arg0 + gMenuViewportCenterX;
     y0 = arg1 + gMenuViewportCenterY;
-    entry = rawEntry + 1;
-    y1 = entry->height + y0;
-    clipU = 0;
-    clipV = 0;
-    x1 = entry->width + x0;
-    rightClip = gMenuViewportCenterX + (gMenuViewportWidth / 2);
-    if (x0 < rightClip) {
-        leftClip = gMenuViewportCenterX - (gMenuViewportWidth / 2);
-        bottomClip = gMenuViewportCenterY + (gMenuViewportHeight / 2);
-        if (y0 < bottomClip) {
-            topClip = gMenuViewportCenterY - (gMenuViewportHeight / 2);
-            if ((x1 >= leftClip) && (y1 >= topClip)) {
-                if (x0 < leftClip) {
-                    clipU = leftClip - x0;
-                    x0 = leftClip;
-                }
-                if (y0 < topClip) {
-                    clipV = topClip - y0;
-                    y0 = topClip;
-                }
-                if (x1 >= rightClip) {
-                    x1 = rightClip;
-                }
-                if (y1 >= bottomClip) {
-                    y1 = bottomClip;
-                }
-                pulse = gFrameCounter & 0x1F;
-                if (pulse >= 0x11) {
-                    pulse = 0x20 - pulse;
-                }
-                alpha = pulse * 0x10;
-                if (alpha >= 0x100) {
-                    alpha = 0xFF;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w1 = 0;
-                    _g->words.w0 = 0xE7000000;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w1 = 0xFF2FFFFF;
-                    _g->words.w0 = 0xFC119623;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xFA000000;
-                    _g->words.w1 = (((alpha & 0xFF) << 8) | 0xFFFF0000 | 0xFF);
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = ((((entry->width >> 1) - 1) & 0xFFF) | 0xFD480000);
-                    _g->words.w1 = (u32)(((u8 *)arg2) + entry->imageOffset);
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = (((((((entry->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5480000);
-                    _g->words.w1 = 0x07080200;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w1 = 0;
-                    _g->words.w0 = 0xE6000000;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xF4000000;
-                    _g->words.w1 = (((entry->width * 2) & 0xFFF) << 12) | 0x07000000 | ((entry->height * 4) & 0xFFF);
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w1 = 0;
-                    _g->words.w0 = 0xE7000000;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = (((((((entry->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000);
-                    _g->words.w1 = 0x00080200;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xF2000000;
-                    _g->words.w1 = (((entry->width * 4) & 0xFFF) << 12) | ((entry->height * 4) & 0xFFF);
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xFD100000;
-                    _g->words.w1 = (u32)(textureBase + (entry->textureIndex << 5));
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w1 = 0;
-                    _g->words.w0 = 0xE8000000;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w1 = 0x07000000;
-                    _g->words.w0 = 0xF5000100;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w1 = 0;
-                    _g->words.w0 = 0xE6000000;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xF0000000;
-                    _g->words.w1 = 0x0703C000;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w1 = 0;
-                    _g->words.w0 = 0xE7000000;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = (((x1 * 4) & 0xFFF) << 12) | 0xE4000000 | ((y1 * 4) & 0xFFF);
-                    _g->words.w1 = (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF);
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xB4000000;
-                    _g->words.w1 = (clipU << 21) | ((clipV << 5) & 0xFFFF);
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0xB3000000;
-                    _g->words.w1 = 0x04000400;
-                }
-                {
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                    _g->words.w0 = 0x06000000;
-                    _g->words.w1 = (u32)gMenuRenderModeResetDl;
-                }
-            }
-        }
-    }
+    x1 = rawEntry[1].width + x0;
+    do { y1 = rawEntry[1].height + y0; rawEntry++; clipU = 0; clipV = 0; rightClip = gMenuViewportCenterX + (gMenuViewportWidth / 2); if (x0 < rightClip) { leftClip = gMenuViewportCenterX - (gMenuViewportWidth / 2); bottomClip = gMenuViewportCenterY + (gMenuViewportHeight / 2); if (y0 < bottomClip) { topClip = gMenuViewportCenterY - (gMenuViewportHeight / 2); if ((x1 >= leftClip) && (y1 >= topClip)) { if (x0 < leftClip) { clipU = leftClip - x0; x0 = leftClip; } if (y0 < topClip) { clipV = topClip - y0; y0 = topClip; } if (rightClip <= x1) { x1 = rightClip; } if (y1 >= bottomClip) { y1 = bottomClip; } pulse = gFrameCounter & 0x1F; if (pulse >= 0x11) { pulse = 0x20 - pulse; } pulse *= 0x10; if (pulse >= 0x100) { pulse = 0xFF; } FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0); FONT_GFX_CMD(gRegionAllocPtr++, 0xFC119623, 0xFF2FFFFF); FONT_GFX_CMD(gRegionAllocPtr++, 0xFA000000, ((pulse & 0xFF) << 8) | 0xFFFF00FF); FONT_GFX_CMD(gRegionAllocPtr++, (((rawEntry->width >> 1) - 1) & 0xFFF) | 0xFD480000, (u32)(((u8 *)arg2) + rawEntry->imageOffset)); FONT_GFX_CMD(gRegionAllocPtr++, ((((((rawEntry->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5480000, 0x07080200); FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0); FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000, ((((rawEntry->width * 2) & 0xFFF) << 12) | 0x07000000) | ((rawEntry->height * 4) & 0xFFF)); FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0); FONT_GFX_CMD(gRegionAllocPtr++, ((((((rawEntry->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000, 0x00080200); FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000, (((rawEntry->width * 4) & 0xFFF) << 12) | ((rawEntry->height * 4) & 0xFFF)); FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(textureBase + (rawEntry->textureIndex << 5))); FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0); FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000); FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0); FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000); FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0); FONT_GFX_CMD(gRegionAllocPtr++, ((((x1 * 4) & 0xFFF) << 12) | 0xE4000000) | ((y1 * 4) & 0xFFF), (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF)); FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, (clipU << 21) | ((clipV << 5) & 0xFFFF)); FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400); FONT_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gMenuRenderModeResetDl); } } } } while (0);
 }
 #endif
 
