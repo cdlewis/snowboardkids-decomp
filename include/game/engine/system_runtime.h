@@ -6,7 +6,7 @@
 void main(void *arg);
 void bootThreadMain(void *arg);
 void initGameSystems(void);
-void dmaReadRom(u32 devAddr, void *dramAddr, s32 size);
+void dmaReadRom(u32 romOffset, void *ramAddress, s32 size);
 void resetRenderCallbackQueues(void);
 void submitFramebufferRenderTask(u8 frameIndex);
 void setBootFadeColor(u8 a0, u8 a1, u8 a2);
