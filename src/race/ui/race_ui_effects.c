@@ -3872,35 +3872,35 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
 }
 #endif
 
-void initGhostSlowdownActor(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x54) = 1;
-    *(s32 *)((u8 *)arg0 + 0x48) = 0;
-    *(s32 *)((u8 *)arg0 + 0x4C) = 0;
-    *(u8 *)((u8 *)arg0 + 0x59) = 1;
-    enqueuePositionalSoundEffect(0xD, &gRacePlayers[*(s16 *)((u8 *)arg0 + 0x50)].pos1C, 0x7F, 0x32);
+void initGhostSlowdownActor(RaceUiPodiumTrailActor *arg0) {
+    arg0->state = 1;
+    arg0->height = 0;
+    arg0->velocity = 0;
+    arg0->playImpactSound = 1;
+    enqueuePositionalSoundEffect(0xD, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, updateGhostSlowdownRise);
 }
 
 void spawnGhostSlowdownTargets(s16 arg0) {
-    s32 var_s1;
-    s32 var_s0;
-    void *temp_v0;
+    s32 spawnIndex;
+    s32 playerIndex;
+    RaceUiPodiumTrailActor *actor;
 
-    var_s1 = 0;
-    var_s0 = 0;
+    spawnIndex = 0;
+    playerIndex = 0;
     if (gRacePlayerCount > 0) {
         do {
-            if (arg0 != var_s0) {
-                temp_v0 = createCallbackTaskPreservingArgs(initGhostSlowdownActor, 0, 0x1E);
-                if (temp_v0 != NULL) {
-                    *(s16 *)((u8 *)temp_v0 + 0x50) = arg0;
-                    *(s16 *)((u8 *)temp_v0 + 0x52) = var_s0;
-                    *(s16 *)((u8 *)temp_v0 + 0x56) = var_s1 * 3;
-                    var_s1 += 1;
+            if (arg0 != playerIndex) {
+                actor = createCallbackTaskPreservingArgs(initGhostSlowdownActor, 0, 0x1E);
+                if (actor != NULL) {
+                    actor->playerIndex = arg0;
+                    actor->targetPlayerIndex = playerIndex;
+                    actor->timer = spawnIndex * 3;
+                    spawnIndex += 1;
                 }
             }
-            var_s0 += 1;
-        } while (var_s0 < gRacePlayerCount);
+            playerIndex += 1;
+        } while (playerIndex < gRacePlayerCount);
     }
 }
 
