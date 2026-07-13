@@ -397,7 +397,7 @@ void initRaceCameraFollowPlayer(void) {
     D_801124A0->update();
 }
 
-// updateRaceCameraFollowPlayer best match: 83.320% (nonmatchings/updateRaceCameraFollowPlayer-5802343343535905907/base_4.c)
+// updateRaceCameraFollowPlayer best match: 94.298% (nonmatchings/updateRaceCameraFollowPlayer-2663524570355072948/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_camera/updateRaceCameraFollowPlayer.s")
 
 #ifdef NON_MATCHING
@@ -412,7 +412,6 @@ void updateRaceCameraFollowPlayer(void) {
     s32 xzDist;
     s32 dist;
     s32 targetDistance;
-    s32 target;
     s32 diff;
     s32 groundY;
     s32 old;
@@ -448,8 +447,8 @@ void updateRaceCameraFollowPlayer(void) {
         targetDistance = 0x460000 - D_801124A0->distance;
         if (targetDistance < dist) {
             dx = ((s64) dx * targetDistance) / dist;
-            dy = ((s64) dy * targetDistance) / dist;
-            dz = ((s64) dz * targetDistance) / dist;
+            dy = ((s64) dy * (0x460000 - D_801124A0->distance)) / dist;
+            dz = ((s64) dz * (0x460000 - D_801124A0->distance)) / dist;
             x = D_801124A0->focus.x - dx;
             y = D_801124A0->focus.y - dy;
             z = D_801124A0->focus.z - dz;
@@ -457,8 +456,8 @@ void updateRaceCameraFollowPlayer(void) {
             targetDistance = 0x458000 - D_801124A0->distance;
             if (dist < targetDistance) {
                 dx = ((s64) dx * targetDistance) / dist;
-                dy = ((s64) dy * targetDistance) / dist;
-                dz = ((s64) dz * targetDistance) / dist;
+                dy = ((s64) dy * (0x458000 - D_801124A0->distance)) / dist;
+                dz = ((s64) dz * (0x458000 - D_801124A0->distance)) / dist;
                 x = D_801124A0->focus.x - dx;
                 y = D_801124A0->focus.y - dy;
                 z = D_801124A0->focus.z - dz;
@@ -482,11 +481,11 @@ void updateRaceCameraFollowPlayer(void) {
         old = D_801124A0->pos.z;
         D_801124A0->pos.z = (old + z) - old;
 
-        target = 0x12C0000;
+        diff = 0x12C0000;
         if (D_80121D80[D_801124A0->playerIndex].state.flags2FC & 0x800) {
-            target = 0;
+            diff = 0;
         }
-        diff = target - D_801124A0->unk28;
+        diff -= D_801124A0->unk28;
         if (diff >= 0x96001) {
             diff = 0x96000;
         }
@@ -495,11 +494,11 @@ void updateRaceCameraFollowPlayer(void) {
         }
         D_801124A0->unk28 += diff;
 
-        target = 0;
+        diff = 0;
         if (D_80121D80[D_801124A0->playerIndex].state.flags2FC & 0x800) {
-            target = 0x280000;
+            diff = 0x280000;
         }
-        diff = target - D_801124A0->distance;
+        diff -= D_801124A0->distance;
         if (diff < -0x14000) {
             diff = -0x14000;
         }
