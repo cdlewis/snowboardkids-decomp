@@ -79,6 +79,7 @@ typedef struct {
 
 extern void addRenderCallback(void *, void *, void *);
 extern s8 D_8010AE52;
+extern u8 D_8010AE52_state;
 extern u8 D_8010AE51;
 extern CharacterSelectUiCharacterSelectState gCharacterSelectHudState;
 extern CharacterSelectUiPlayerPanelFrameController *D_8010ADE0;
@@ -528,15 +529,11 @@ void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
  do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = D_80121D80; tiles = gCharacterSelectPlayerMarkerTiles; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (CharacterSelectUiPlayerCursorActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
 }
 
-// updateCharacterSelectPlayerCursorMarkers best match: 99.740% (nonmatchings/updateCharacterSelectPlayerCursorMarkers-1315772375853892447/base_16.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/updateCharacterSelectPlayerCursorMarkers.s")
-
-#ifdef NON_MATCHING
 void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
     s32 i;
     u8 mode;
     u8 globalMode;
-    u8 *player;
+    RacePlayer *player;
     s8 *layout;
 
     globalMode = D_8010AE52;
@@ -547,18 +544,14 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
     }
 
     if (mode != 0) {
-        i = 0;
-        if ((s32)gPlayerCount > 0) {
-            layout = D_8010AE64;
-            player = D_80121D80;
-            do {
-                if (player[5] < 5) {
+ i = 0; if ((s32)gPlayerCount > 0) { layout = D_8010AE64; player = D_80121D80; do {
+                if (player->characterId < 5) {
                     arg0->x[i] = (layout[i] * 0x20) + arg0->baseX;
-                } else if (player[5] == 5) {
+                } else if (player->characterId == 5) {
                     arg0->x[i] = arg0->baseX;
                 }
                 i++;
-                player += 0x60C;
+                player++;
             } while (i < (s32)gPlayerCount);
         }
 
@@ -571,10 +564,9 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
         mode = (((((((((arg0->mode & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF;
     }
 
-    *(u8 *)0x8010AE52 = mode;
+    D_8010AE52_state = mode;
     addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectPlayerCursorMarkers, arg0);
 }
-#endif
 
 void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
     RacePlayerState *player;
