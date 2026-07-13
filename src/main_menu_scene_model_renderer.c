@@ -9,11 +9,14 @@ extern s32 gSceneModelRenderCallbackList;
 extern void drawMainMenuSceneModel(MainMenuSceneModel *);
 extern void drawTexturedMainMenuSceneModel(MainMenuSceneModel *);
 
-// initMainMenuSceneModelRenderer best match: 25.000% at nonmatchings/initMainMenuSceneModelRenderer-4839787584499344943/base_1.c.
+// initMainMenuSceneModelRenderer best match: 75.000% at nonmatchings/initMainMenuSceneModelRenderer-4104915701176831593/base_1.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/main_menu_scene_model_renderer/initMainMenuSceneModelRenderer.s")
 
 #ifdef NON_MATCHING
 void initMainMenuSceneModelRenderer(void) {
+}
+
+void initMainMenuSceneModelRenderer_pad(void) {
 }
 #endif
 
