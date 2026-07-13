@@ -885,32 +885,19 @@ block_17:
 
 #endif
 
-// updateCourseSelectPurchasePrompt best match: 99.930% (nonmatchings/updateCourseSelectPurchasePrompt-8331816093655448999/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/updateCourseSelectPurchasePrompt.s")
-
-#ifdef NON_MATCHING
 void updateCourseSelectPurchasePrompt(void) {
-    ObjectA3E0 *var_s1;
-    s32 temp_v0;
-    s32 temp_v1;
-    s32 var_s0;
-    s32 *new_var2;
+    s32 i;
 
-    temp_v0 = gCurrentGameTask->timer;
-    new_var2 = &gPlayerInputPressed;
-    if (temp_v0 < 2) {
-        temp_v1 = *new_var2;
-        if ((temp_v1 & 0x10800) && (temp_v0 != 0)) {
-            gCurrentGameTask->timer = temp_v0 - 1;
+    if (gCurrentGameTask->timer < 2) {
+        if ((gPlayerInputPressed & 0x10800) && (gCurrentGameTask->timer != 0)) {
+            gCurrentGameTask->timer--;
             enqueueSoundEffect(0x19, 0x32);
-            temp_v1 = gPlayerInputPressed;
-        } else if ((temp_v1 & 0x20400) && (temp_v0 != 1)) {
-            gCurrentGameTask->timer = temp_v0 + 1;
+        } else if ((gPlayerInputPressed & 0x20400) && (gCurrentGameTask->timer != 1)) {
+            gCurrentGameTask->timer++;
             enqueueSoundEffect(0x19, 0x32);
-            temp_v1 = gPlayerInputPressed;
         }
 
-        if (temp_v1 & 0x8000) {
+        if (gPlayerInputPressed & 0x8000) {
             gMenuFlowState = 1;
             if (gCurrentGameTask->timer == 1) {
                 enqueueSoundEffect(0x18, 0x32);
@@ -924,7 +911,7 @@ void updateCourseSelectPurchasePrompt(void) {
                 enqueueSoundEffect(0x45, 0x32);
                 gCurrentGameTask->timer += 2;
             }
-        } else if (temp_v1 & 0x4000) {
+        } else if (gPlayerInputPressed & 0x4000) {
             gMenuFlowState = 1;
             enqueueSoundEffect(0x18, 0x32);
             if (D_8010AECC == 0) {
@@ -934,18 +921,17 @@ void updateCourseSelectPurchasePrompt(void) {
             }
             setCurrentGameTaskCallback(updateCourseSelectCourseList, 0);
         }
-    } else if (temp_v0 > (4 - 1)) {
+    } else if (gCurrentGameTask->timer >= 4) {
         gCurrentGameTask->timer = 0;
         gMenuTransitionState = 9;
         setCurrentGameTaskCallback(updateCourseSelectCourseList, 0);
     }
 
-    var_s0 = 0;
- if (gPlayerCount > 0) { var_s1 = D_801121E0; do { (gCurrentMenuCameraObject = var_s1)->unk2C(); var_s0++; var_s0--; var_s0 += 1; var_s1 += 1; } while (var_s0 < ((s32) gPlayerCount));
+    for (i = 0; i < gPlayerCount; i++) {
+        (gCurrentMenuCameraObject = &D_801121E0[i])->unk2C();
     }
     updateCallbackTasks();
 }
-#endif
 
 // updateCourseSelectUnlockCourseList best match: 56.849% (nonmatchings/updateCourseSelectUnlockCourseList-7273315160691878794/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_menu/updateCourseSelectUnlockCourseList.s")
