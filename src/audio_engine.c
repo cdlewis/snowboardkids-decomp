@@ -916,20 +916,20 @@ void setSoundPlayerMasterVolume(s32 arg0, s32 arg1) {
     }
 }
 
-// startMusicSequence best match: 95.662% (nonmatchings/startMusicSequence-2694253543240320626/base_4.c)
+// startMusicSequence best match: 99.194% (nonmatchings/startMusicSequence-3242520251544044307/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/startMusicSequence.s")
 
 #ifdef NON_MATCHING
 s32 startMusicSequence(PlayerCommandData *arg0) {
     s32 i;
-    s32 trackCount;
+    s32 handle;
     s32 needed;
     s32 free;
     s32 value;
     s32 index;
-    s32 handle;
     s32 *ptr;
     PlayerCommandState *state;
+    s32 trackCount;
 
     trackCount = arg0->trackCount;
     if ((u32)arg0->sequenceOffsets < 0x400U) {
@@ -937,11 +937,14 @@ s32 startMusicSequence(PlayerCommandData *arg0) {
         for (i = 0; i < (trackCount * 3) + 5; i++) {
             value = ptr[i];
             if (value != 0) {
-                ptr[i] = value + (s32)arg0;
+                ptr[i] = value;
+                ptr[i] = ptr[i] + (s32)arg0;
             }
         }
     }
 
+    arg0++;
+    arg0--;
     needed = 0;
     for (i = 0; i < trackCount; i++) {
         if (arg0->sequenceOffsets[i] != 0) {
@@ -962,11 +965,13 @@ s32 startMusicSequence(PlayerCommandData *arg0) {
         return 0;
     }
 
-    handle = gNextSoundPlayerHandle;
+    value = gNextSoundPlayerHandle;
+    handle = value;
     gNextSoundPlayerHandle = handle + 1;
     for (i = 0; i < trackCount; i++) {
+        value = (s32)arg0;
         if (arg0->sequenceOffsets[i] != 0) {
-            index = findFreeSoundPlayerIndex((s32)arg0, i);
+            index = findFreeSoundPlayerIndex(value, i);
             if (index == -1) {
                 rmonPrintf("NG Channel\n");
             }
