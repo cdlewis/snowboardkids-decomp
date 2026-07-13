@@ -457,17 +457,10 @@ void spawnRaceItemImpactEffect(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
     }
 }
 
-// renderRaceItemProjectileTrailEffect best match: 99.813% (nonmatchings/renderRaceItemProjectileTrailEffect-8331816093655448999/base_11.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/renderRaceItemProjectileTrailEffect.s")
-
-#ifdef NON_MATCHING
 void renderRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
     volatile u8 padding[4];
     RaceItemGfxCommandSource sp64;
-    Gfx *temp_v0;
     Gfx *temp_v0_2;
-    Gfx *temp_v0_3;
 
     if (gRenderMatricesDirty != 0) {
         arg0->unk34.shorts.state.bytes.matrixDirty = 1;
@@ -497,12 +490,9 @@ void renderRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
                   G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
         gSPVertex(gRegionAllocPtr++, (Vtx *)gRaceItemProjectileQuadVertices, 4, 0);
-        temp_v0_3 = gRegionAllocPtr++;
-        temp_v0_3->words.w1 = 0x00060200;
-        temp_v0_3->words.w0 = 0xB1060402;
+        gSP1Quadrangle(gRegionAllocPtr++, 2, 1, 0, 3, 3);
     }
 }
-#endif
 
 void updateRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
     if (gRaceUpdatePaused == 0) {
