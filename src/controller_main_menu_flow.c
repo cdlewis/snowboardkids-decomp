@@ -553,7 +553,7 @@ void requestControllerPakSaveRead(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// readControllerPakSave best match: 90.898%
+// readControllerPakSave best match: 93.459%
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/readControllerPakSave.s")
 
 #ifdef NON_MATCHING
@@ -562,7 +562,7 @@ void readControllerPakSave(u16 arg0) {
     u16 badChecksum;
     OSPfs *pfs;
     s32 channel;
-    s32 savedChannel;
+    volatile s32 savedChannel;
     s32 *fileNo;
     SaveSlotBytes *save;
     u8 *src;
@@ -582,12 +582,11 @@ void readControllerPakSave(u16 arg0) {
     gControllerPakSaveFileIdentity.companyCode = 'EB';
 
     src = gControllerPakSaveExtNameBytes;
-    dst = (u8 *)&gControllerPakSaveFileIdentity;
+    dst = (u8 *)&gControllerPakSaveFileIdentity + 9;
     end = gControllerPakSaveExtNameBytesEnd;
 copy_ext:
-    dst[10] = *src;
+    *++dst = *src;
     src++;
-    dst++;
     if (src < end) {
         goto copy_ext;
     }
