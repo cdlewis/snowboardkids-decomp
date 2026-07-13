@@ -436,12 +436,12 @@ void updateMultiplayerCourseSelectMenu(void) {
 
                                 held = gPlayerInputHeld[i];
                                 oldColumn = *column;
-                                heldHorizontal = held & 0x10800;
-                                if ((heldHorizontal == 0) && !(held & 0x20400)) {
+                                heldHorizontal = held & (STICK_UP | U_JPAD);
+                                if ((heldHorizontal == 0) && !(held & (STICK_DOWN | D_JPAD))) {
                                     *repeatTimer = 0;
                                 }
                                 pressed = gPlayerInputPressed[i];
-                                if ((pressed & 0x10800) || ((heldHorizontal != 0) && (*repeatTimer >= 9))) {
+                                if ((pressed & (STICK_UP | U_JPAD)) || ((heldHorizontal != 0) && (*repeatTimer >= 9))) {
                                     if (*repeatTimer == 0) {
                                         *repeatTimer = *repeatTimer + 1;
                                     }
@@ -452,7 +452,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                         oldColumn = *column;
                                         pressed = gPlayerInputPressed[i];
                                     }
-                                } else if ((pressed & 0x20400) || ((held & 0x20400) && (*repeatTimer >= 9))) {
+                                } else if ((pressed & (STICK_DOWN | D_JPAD)) || ((held & (STICK_DOWN | D_JPAD)) && (*repeatTimer >= 9))) {
                                     if (*repeatTimer == 0) {
                                         *repeatTimer = *repeatTimer + 1;
                                     }
@@ -488,7 +488,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 }
 
                                 if (*momentum == 0) {
-                                    if ((pressed & 0x1000) || (pressed & 0x8000)) {
+                                    if ((pressed & START_BUTTON) || (pressed & A_BUTTON)) {
                                         if ((gPlayerCount == 1) && (maxColumn == D_8010AE64[0])) {
                                             enqueueSoundEffect(0x18, 0x32);
                                             gRacePlayers[0].menuState = 9;
@@ -507,12 +507,12 @@ void updateMultiplayerCourseSelectMenu(void) {
                                             *rowLock = 1;
                                             *repeatTimer = 0;
                                         }
-                                    } else if (pressed & 0x4000) {
+                                    } else if (pressed & B_BUTTON) {
                                         enqueueSoundEffect(0x18, 0x32);
                                         player->menuState = 9;
                                         D_8010AEB0 = 1;
                                     }
-                                } else if (pressed & 0x4000) {
+                                } else if (pressed & B_BUTTON) {
                                     enqueueSoundEffect(0x18, 0x32);
                                     player->menuState = 9;
                                     D_8010AEB0 = 1;
@@ -533,14 +533,14 @@ void updateMultiplayerCourseSelectMenu(void) {
                             player->menuState = 9;
                         } else {
                             held = gPlayerInputHeld[i];
-                            heldHorizontal = held & 0x10800;
+                            heldHorizontal = held & (STICK_UP | U_JPAD);
                             unlockColumn = &D_8010AEA0[i];
                             repeatTimer = &gMenuInputRepeatTimers[i];
-                            if ((heldHorizontal == 0) && !(held & 0x20400)) {
+                            if ((heldHorizontal == 0) && !(held & (STICK_DOWN | D_JPAD))) {
                                 *repeatTimer = 0;
                             }
                             pressed = gPlayerInputPressed[i];
-                            if ((pressed & 0x10800) || ((heldHorizontal != 0) && (*repeatTimer >= 9) && (*repeatTimer & 1))) {
+                            if ((pressed & (STICK_UP | U_JPAD)) || ((heldHorizontal != 0) && (*repeatTimer >= 9) && (*repeatTimer & 1))) {
                                 if (*repeatTimer == 0) {
                                     *repeatTimer = *repeatTimer + 1;
                                 }
@@ -550,7 +550,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                     row = gMenuChoicePromptState[i];
                                     pressed = gPlayerInputPressed[i];
                                 }
-                            } else if ((pressed & 0x20400) || ((held & 0x20400) && (*repeatTimer >= 9) && (*repeatTimer & 1))) {
+                            } else if ((pressed & (STICK_DOWN | D_JPAD)) || ((held & (STICK_DOWN | D_JPAD)) && (*repeatTimer >= 9) && (*repeatTimer & 1))) {
                                 if (*repeatTimer == 0) {
                                     *repeatTimer = *repeatTimer + 1;
                                 }
@@ -574,7 +574,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 player->menuSelection = (row * 3) + (player->menuSelection % 3) - 6;
                             }
 
-                            if ((pressed & 0x8000) || (pressed & 0x1000)) {
+                            if ((pressed & A_BUTTON) || (pressed & START_BUTTON)) {
                                 enqueueSoundEffect(0x18, 0x32);
                                 player->menuState = 2;
                                 D_8010AEA8 = 1;
@@ -598,7 +598,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                     gCourseSelectStatus.unk1C[i] = 0;
                                     gCourseSelectStatus.unk8[i] = 3;
                                 }
-                            } else if (pressed & 0x4000) {
+                            } else if (pressed & B_BUTTON) {
                                 enqueueSoundEffect(0x18, 0x32);
                                 *repeatTimer = 0;
                                 gMenuChoicePromptState[i] += 3;
@@ -611,7 +611,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                 if (player->menuState == 2) {
                     if (D_8010AEB0 == 1) {
                         player->menuState = 9;
-                    } else if (gPlayerInputPressed[i] & 0x4000) {
+                    } else if (gPlayerInputPressed[i] & B_BUTTON) {
                         enqueueSoundEffect(0x18, 0x32);
                         gMenuInputRepeatTimers[i] = 0;
                         D_8010AEA8 = 0;

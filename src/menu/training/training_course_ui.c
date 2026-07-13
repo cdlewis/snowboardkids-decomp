@@ -153,7 +153,7 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
 
     var_v0 = (u16)arg0->state.selectedAction;
     temp_a1 = var_v0;
-    if (gPlayerInputPressed & 0x10800) {
+    if (gPlayerInputPressed & (STICK_UP | U_JPAD)) {
         if (gTrainingCourseLesson != 9) {
             temp_t8 = var_v0 - 1;
             if (var_v0 != 0) {
@@ -169,7 +169,7 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
         }
     }
     var_a0 = var_v0;
-    if (gPlayerInputPressed & 0x20400) {
+    if (gPlayerInputPressed & (STICK_DOWN | D_JPAD)) {
         temp_t1 = var_v0 + 1;
         if (var_v0 != 2) {
             arg0->state.selectedAction = ((temp_t1 & 0xFFFFu) & 0xFFFFu) & 0xFFFFu;
@@ -187,7 +187,7 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
         arg0->highlightScale += 9;
     }
     arg0->highlightTimer = ((u16)arg0->highlightTimer + 1) & 0x1F;
-    if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
+    if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
         enqueueSoundEffect(1, 0x32, arg0);
         gMainMenuSelectionResult = (u16)arg0->state.selectedAction + 1;
         arg0->highlightScale = 0x100;
@@ -359,7 +359,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     switch (arg0->scriptState) {
     case 0:
         keepScanning = 1;
-        if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
+        if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
             scan = arg0->layout.script;
             arg0->state.script.visibleGlyphCount = 0;
             do {
@@ -390,7 +390,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         break;
     case 1:
         arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
-        if ((0x8000 & gPlayerInputPressed) || (gPlayerInputPressed & 0x1000)) {
+        if ((A_BUTTON & gPlayerInputPressed) || (gPlayerInputPressed & START_BUTTON)) {
             enqueueSoundEffect(1, 0x32, arg0);
             arg0->confirmBlinkTimer = 0;
             gMainMenuSelectionResult = 1;
@@ -403,7 +403,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         break;
     case 2:
         arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
-        if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
+        if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
             enqueueSoundEffect(1, 0x32, arg0);
             script = arg0->layout.script;
             if (*script != 0xFFFB) {

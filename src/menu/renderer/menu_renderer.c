@@ -958,16 +958,16 @@ void func_80011C18(MenuRenderSpriteActor *arg0) {
 }
 
 void func_80011C3C(MenuRenderSpriteActor *actor) {
-    if (gPlayerInputHeld & 8) {
+    if (gPlayerInputHeld & U_CBUTTONS) {
         actor->sprite.y++;
     }
-    if (gPlayerInputHeld & 4) {
+    if (gPlayerInputHeld & D_CBUTTONS) {
         actor->sprite.y--;
     }
-    if (gPlayerInputHeld & 1) {
+    if (gPlayerInputHeld & R_CBUTTONS) {
         actor->sprite.x++;
     }
-    if (gPlayerInputHeld & 2) {
+    if (gPlayerInputHeld & L_CBUTTONS) {
         actor->sprite.x--;
     }
 

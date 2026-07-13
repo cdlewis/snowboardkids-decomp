@@ -67,17 +67,17 @@ void updateControllerPakContinuePromptFlow(void) {
     } else {
         var_v0 = gCurrentGameTask->timer;
         temp_a1 = var_v0;
-        if ((gPlayerInputPressed & 0x10800) && (var_v0 != 0)) {
+        if ((gPlayerInputPressed & (STICK_UP | U_JPAD)) && (var_v0 != 0)) {
             gCurrentGameTask->timer = var_v0 - 1;
             var_v0 = gCurrentGameTask->timer;
-        } else if ((gPlayerInputPressed & 0x20400) && (var_v0 != 1)) {
+        } else if ((gPlayerInputPressed & (STICK_DOWN | D_JPAD)) && (var_v0 != 1)) {
             gCurrentGameTask->timer = var_v0 + 1;
             var_v0 = gCurrentGameTask->timer;
         }
         if (temp_a1 != var_v0) {
             enqueueSoundEffect(0x19, 0x32);
         }
-        if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
+        if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
             enqueueSoundEffect(0x18, 0x32);
             gMenuFlowState = gCurrentGameTask->timer;
             gControllerPakContinuePromptTransition.state = 2;

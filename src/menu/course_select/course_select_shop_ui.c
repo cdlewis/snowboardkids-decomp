@@ -1151,7 +1151,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
             amount = 0xFFFF;
             amount = price & amount;
         } else {
-            if (gPlayerInputHeld & 0x8000) {
+            if (gPlayerInputHeld & A_BUTTON) {
                 if ((u32)price < 5000U) {
                     amount = price & 0xFFFF;
                 } else {

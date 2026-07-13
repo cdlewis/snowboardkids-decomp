@@ -145,7 +145,7 @@ void updateRaceSetupPlayerCountMenu(void) {
     s32 one;
 
     one = 1;
-    if ((gRaceSetupMenuSubState.state == one) && ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000))) {
+    if ((gRaceSetupMenuSubState.state == one) && ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON))) {
         enqueueSoundEffect((s16) (one & 0xFFFFFFFF), 0x32);
         gRaceSetupMenuSubState.state = 2;
         gRaceSetupMenuSubState.unk1 = 0;
@@ -155,12 +155,12 @@ void updateRaceSetupPlayerCountMenu(void) {
         temp_v1 = gMenuSelectionConfirmTimer;
         if (temp_v1 == 0) {
             temp_a3 = gPlayerInputPressed;
-            temp_v0 = gPlayerInputHeld & 0x10800;
-            if ((temp_v0 == 0) && !(gPlayerInputHeld & 0x20400)) {
+            temp_v0 = gPlayerInputHeld & (STICK_UP | U_JPAD);
+            if ((temp_v0 == 0) && !(gPlayerInputHeld & (STICK_DOWN | D_JPAD))) {
                 gMenuInputRepeatTimers = 0;
             }
             var_a2 = &gMenuInputRepeatTimers;
-            if ((temp_a3 & 0x10800) || ((temp_v0 != 0) && (gMenuInputRepeatTimers >= 9) && ((gMenuInputRepeatTimers % 3) == 0))) {
+            if ((temp_a3 & (STICK_UP | U_JPAD)) || ((temp_v0 != 0) && (gMenuInputRepeatTimers >= 9) && ((gMenuInputRepeatTimers % 3) == 0))) {
                 if (gMenuInputRepeatTimers == 0) {
                     gMenuInputRepeatTimers += 1;
                 }
@@ -170,7 +170,7 @@ void updateRaceSetupPlayerCountMenu(void) {
                     enqueueSoundEffect(0x19, 0x32, &gMenuInputRepeatTimers, temp_a3);
                     goto block_25;
                 }
-            } else if ((temp_a3 & 0x20400) || ((gPlayerInputHeld & 0x20400) && (gMenuInputRepeatTimers >= 9) && ((gMenuInputRepeatTimers % 3) == 0))) {
+            } else if ((temp_a3 & (STICK_DOWN | D_JPAD)) || ((gPlayerInputHeld & (STICK_DOWN | D_JPAD)) && (gMenuInputRepeatTimers >= 9) && ((gMenuInputRepeatTimers % 3) == 0))) {
                 if (gMenuInputRepeatTimers == 0) {
                     gMenuInputRepeatTimers += 1;
                 }
@@ -190,7 +190,7 @@ block_25:
                     *var_a2 = 0xA;
                 }
             }
-            if ((temp_a3 & 0x8000) || (temp_a3 & 0x1000)) {
+            if ((temp_a3 & A_BUTTON) || (temp_a3 & START_BUTTON)) {
                 gMenuSelectionConfirmTimer = 1;
                 enqueueSoundEffect(0x18, 0x32, var_a2, temp_a3);
             }
@@ -347,7 +347,7 @@ void updateRaceSetupSaveMenu(void) {
         if ((gRaceSetupSaveSubState.state >= 6) && (gRaceSetupSaveSubState.state < 8)) {
             if (gRaceSetupSaveSubState.state == 6) {
                 s32 input = gPlayerInputPressedArray_03798[0];
-                if ((input & 0x8000) || (input & 0x1000)) {
+                if ((input & A_BUTTON) || (input & START_BUTTON)) {
                     enqueueSoundEffect(1, 0x32);
                     gRaceSetupSaveSubState.state = 7;
                     gRaceSetupSaveSubState.unk2 = 0xFF;
@@ -449,7 +449,7 @@ void updateRaceSetupSaveMenu(void) {
 
                                 case 4:
                                     input = gPlayerInputPressedArray_03798[i];
-                                    if ((input & 0x8000) || (input & 0x1000)) {
+                                    if ((input & A_BUTTON) || (input & START_BUTTON)) {
                                         enqueueSoundEffect(1, 0x32);
                                         if (transitionTask != NULL) {
                                             gRaceSetupSaveSubState.unkE[i] = 2;
@@ -469,12 +469,12 @@ void updateRaceSetupSaveMenu(void) {
                                 case 6:
                                     if ((choiceValue == 3) || (choiceValue == 4)) {
                                         input = gPlayerInputPressedArray_03798[i];
-                                        if ((input & 0x10800) && (choiceValue != 3)) {
+                                        if ((input & (STICK_UP | U_JPAD)) && (choiceValue != 3)) {
                                             *choice = choiceValue - 1;
                                             enqueueSoundEffect(0x19, 0x32);
                                             input = gPlayerInputPressedArray_03798[i];
                                         }
-                                        if (input & 0x20400) {
+                                        if (input & (STICK_DOWN | D_JPAD)) {
                                             choiceValue = *choice;
                                             if (choiceValue != 4) {
                                                 *choice = choiceValue + 1;
@@ -482,7 +482,7 @@ void updateRaceSetupSaveMenu(void) {
                                                 input = gPlayerInputPressedArray_03798[i];
                                             }
                                         }
-                                        if ((input & 0x8000) || (input & 0x1000)) {
+                                        if ((input & A_BUTTON) || (input & START_BUTTON)) {
                                             s16 state = gControllerPakStatusCodes[i];
 
                                             enqueueSoundEffect(1, 0x32);
@@ -525,7 +525,7 @@ void updateRaceSetupSaveMenu(void) {
                                 case 13:
                                 case 16:
                                     input = gPlayerInputPressedArray_03798[i];
-                                    if ((input & 0x8000) || (input & 0x1000)) {
+                                    if ((input & A_BUTTON) || (input & START_BUTTON)) {
                                         enqueueSoundEffect(1, 0x32);
                                         *choice = D_800B3199[gControllerPakStatusCodes[i]];
                                     }
@@ -534,7 +534,7 @@ void updateRaceSetupSaveMenu(void) {
                                 case 14:
                                 case 15:
                                     input = gPlayerInputPressedArray_03798[i];
-                                    if ((input & 0x8000) || (input & 0x1000)) {
+                                    if ((input & A_BUTTON) || (input & START_BUTTON)) {
                                         enqueueSoundEffect(1, 0x32);
                                         if (gControllerPakStatusCodes[i] == 0xE) {
                                             if (transitionTask != NULL) {
@@ -554,7 +554,7 @@ void updateRaceSetupSaveMenu(void) {
 
                                 case 17:
                                     input = gPlayerInputPressedArray_03798[i];
-                                    if ((input & 0x8000) || (input & 0x1000)) {
+                                    if ((input & A_BUTTON) || (input & START_BUTTON)) {
                                         enqueueSoundEffect(1, 0x32);
                                         gRaceSetupSaveSubState.unkE[i] = 2;
                                         gRaceSetupSaveSubState.unk12[i] = 0;
@@ -680,7 +680,7 @@ void updateRaceSetupRumblePrompt(void) {
         case 5:
             break;
         case 1:
-            if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
+            if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
                 enqueueSoundEffect(1, 0x32);
                 gControllerPakRumbleCheckPromptState = 2;
                 D_8010ADD4 = 1;
@@ -707,7 +707,7 @@ void updateRaceSetupRumblePrompt(void) {
             state = 7;
             break;
         case 3:
-            if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
+            if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
                 enqueueSoundEffect(1, 0x32);
                 gControllerPakRumbleCheckPromptState = 4;
                 state = 4;
@@ -749,7 +749,7 @@ void updateRaceSetupRumblePrompt(void) {
             }
             break;
         case 8:
-            if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
+            if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
                 enqueueSoundEffect(1, 0x32);
                 gControllerPakRumbleCheckPromptState = 9;
                 D_8010ADD4 = 3;
@@ -758,16 +758,16 @@ void updateRaceSetupRumblePrompt(void) {
             }
             break;
         case 9:
-            if ((gPlayerInputPressed & 0x10800) && (gControllerPakRumbleCheckPromptTransition.confirmSelection != 0)) {
+            if ((gPlayerInputPressed & (STICK_UP | U_JPAD)) && (gControllerPakRumbleCheckPromptTransition.confirmSelection != 0)) {
                 gControllerPakRumbleCheckPromptTransition.confirmSelection--;
                 enqueueSoundEffect(0x19, 0x32);
-            } else if (gPlayerInputPressed & 0x20400) {
+            } else if (gPlayerInputPressed & (STICK_DOWN | D_JPAD)) {
                 if (gControllerPakRumbleCheckPromptTransition.confirmSelection != 1) {
                     gControllerPakRumbleCheckPromptTransition.confirmSelection++;
                     enqueueSoundEffect(0x19, 0x32);
                 }
             }
-            if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
+            if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
                 enqueueSoundEffect(1, 0x32);
                 if (gControllerPakRumbleCheckPromptConfirmSelection == 1) {
                     gControllerPakRumbleCheckPromptState = 1;

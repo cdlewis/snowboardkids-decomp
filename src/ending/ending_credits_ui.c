@@ -200,7 +200,7 @@ void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg
     s16 temp_a2;
     s16 oldY;
 
-    if (gPlayerInputPressed[0] & 0x2000) {
+    if (gPlayerInputPressed[0] & Z_TRIG) {
         if (arg0->enabled == 1) {
             arg0->enabled = 0;
         } else {
@@ -211,38 +211,38 @@ void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg
         temp_a2 = arg0->y;
         temp_a1 = arg0->x;
         oldY = temp_a2;
-        if ((gPlayerInputHeld & 0x10800) && (temp_a2 >= -0x73)) {
+        if ((gPlayerInputHeld & (STICK_UP | U_JPAD)) && (temp_a2 >= -0x73)) {
             arg0->y = temp_a2 - 1;
         }
-        if (gPlayerInputHeld & 0x20400) {
+        if (gPlayerInputHeld & (STICK_DOWN | D_JPAD)) {
             temp_a2 = arg0->y;
             if (temp_a2 < 0x68) {
                 arg0->y = temp_a2 + 1;
             }
         }
-        if (gPlayerInputHeld & 0x80200) {
+        if (gPlayerInputHeld & (STICK_LEFT | L_JPAD)) {
             if (arg0->x >= -0x67) {
                 arg0->x = arg0->x - 1;
             }
         }
-        if (gPlayerInputHeld & 0x40100) {
+        if (gPlayerInputHeld & (STICK_RIGHT | R_JPAD)) {
             if (arg0->x < 0x68) {
                 arg0->x = arg0->x + 1;
             }
         }
-        if (gPlayerInputPressed[0] & 0x8000) {
+        if (gPlayerInputPressed[0] & A_BUTTON) {
             arg0->spriteId += 1;
             if (arg0->spriteId == 0x35) {
                 arg0->spriteId = 0;
             }
         }
-        if (gPlayerInputPressed[0] & 0x4000) {
+        if (gPlayerInputPressed[0] & B_BUTTON) {
             arg0->spriteId = arg0->spriteId - 1;
             if (arg0->spriteId < 0) {
                 arg0->spriteId = 0x34;
             }
         }
-        if (gPlayerInputPressed[0] & 8) {
+        if (gPlayerInputPressed[0] & U_CBUTTONS) {
             arg0->palette = (arg0->palette + 1) & 1;
         }
         temp_a2 = arg0->y;

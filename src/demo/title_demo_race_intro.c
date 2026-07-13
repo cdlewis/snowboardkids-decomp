@@ -263,7 +263,7 @@ copy_player3:
         state->fadeDelay = temp - 1;
     }
 
-    if (gPlayerInputPressed & 0x1000) {
+    if (gPlayerInputPressed & START_BUTTON) {
         if (gTitleDemoRaceIntroFadeStep == 0) {
             gTitleDemoRaceIntroFadeStep = 0x10;
         }

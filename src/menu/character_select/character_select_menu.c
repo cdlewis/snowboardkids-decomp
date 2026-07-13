@@ -215,10 +215,10 @@ void updateCharacterSelectConfirmationMenu(void) {
         selection = state->confirmSelection;
         oldSelection = selection;
 
-        if ((buttons & 0x10800) && (selection != 0)) {
+        if ((buttons & (STICK_UP | U_JPAD)) && (selection != 0)) {
             state->confirmSelection = selection - 1;
             selection = (u8) (selection - 1);
-        } else if (buttons & 0x20400) {
+        } else if (buttons & (STICK_DOWN | D_JPAD)) {
             if (selection == 0) {
                 state->confirmSelection = selection + 1;
                 selection = (u8) (selection + 1);
@@ -230,7 +230,7 @@ void updateCharacterSelectConfirmationMenu(void) {
             buttons = gPlayerInputPressed;
         }
 
-        if ((buttons & 0x8000) || (buttons & 0x1000)) {
+        if ((buttons & A_BUTTON) || (buttons & START_BUTTON)) {
             enqueueSoundEffect(0x18, 0x32);
             state = &gCharacterSelectHudState;
             if (state->confirmSelection == 0) {
@@ -257,7 +257,7 @@ void updateCharacterSelectConfirmationMenu(void) {
                 state->phase = 3;
                 state->fade = 0;
             }
-        } else if (buttons & 0x4000) {
+        } else if (buttons & B_BUTTON) {
             enqueueSoundEffect(0x18, 0x32);
             playerCount = gPlayerCount;
             player = gRacePlayers;
