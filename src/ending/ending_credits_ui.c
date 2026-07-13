@@ -64,47 +64,46 @@ void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg
 
 #ifdef NON_MATCHING
 void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
-    register s32 count;
-    s32 i;
+    register s32 lineCount;
+    s32 lineIndex;
     s32 scriptIndex;
     s32 lineLength;
-    s32 layoutOffset;
+    s32 positionIndex;
     register s32 x;
     s32 y;
-    u16 text[0x1C];
+    u16 lineText[0x1C];
     u16 pad[10];
     volatile u16 colorMode;
     u16 glyph;
     EndingCreditsPageTextLineLayout *layout;
+    EndingCreditsPageTextPosition *position;
 
-    layout = &gEndingCreditsPageTextLineLayouts[arg0->pageIndex];
-    count = layout->count;
-    i = 0;
-    if (count > 0) {
+    lineCount = gEndingCreditsPageTextLineLayouts[arg0->pageIndex].count;
+    lineIndex = 0;
+    if (lineCount > 0) {
         scriptIndex = 0;
-        layoutOffset = 0;
+        positionIndex = 0;
         do {
             layout = &gEndingCreditsPageTextLineLayouts[arg0->pageIndex];
+            position = &layout->positions[positionIndex];
             glyph = gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex];
-            y = *(s16 *)((u8 *)layout + layoutOffset + 4);
-            x = *(s16 *)((u8 *)layout + layoutOffset + 2);
+            y = position->y;
+            x = position->x;
             lineLength = 0;
-            if (gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex] != 0xFFFF) {
+            if (glyph != 0xFFFF) {
                 do {
-                    text[lineLength] = gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex];
+                    lineText[lineLength] = glyph;
                     scriptIndex++;
                     glyph = gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex];
                     lineLength++;
-                } while (gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex] != 0xFFFF);
+                } while (glyph != 0xFFFF);
             }
-            text[lineLength] = 0xFFFF;
-            if (0) {
-            }
+            lineText[lineLength] = 0xFFFF;
             scriptIndex++;
-            drawMenuGlyphScript((s16)x, y, (u8 *)text, 0, arg0->alpha, colorMode);
-            i++;
-            layoutOffset += 4;
-        } while (i != count);
+            drawMenuGlyphScript((s16)x, y, (u8 *)lineText, 0, arg0->alpha, colorMode);
+            lineIndex++;
+            positionIndex++;
+        } while (lineIndex != lineCount);
     }
 }
 #endif
