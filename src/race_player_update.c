@@ -1048,7 +1048,7 @@ void updateRacePlayerAirborneLaunch(RaceInputPlayer *player) {
     }
 }
 
-// updateRacePlayerAirborneCruise best match: 98.560% (nonmatchings/updateRacePlayerAirborneCruise-3357475854818838508/base_16.c)
+// updateRacePlayerAirborneCruise best match: 98.609% (nonmatchings/updateRacePlayerAirborneCruise-2870645799593382959/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerAirborneCruise.s")
 
 #ifdef NON_MATCHING
@@ -1073,7 +1073,7 @@ void updateRacePlayerAirborneCruise(RaceInputPlayer *player)
   if (player->unk4 == 0)
   {
     temp_v0 = &gRaceCourseStartEntries[gRaceCourseIndex];
-    if ((player->unk502 == temp_v0->unk0) && (!(player->stateFlags & 0x40)))
+    if ((player->unk502 == (*temp_v0).unk0) && (!(player->stateFlags & 0x40)))
     {
       if (((s16) (((calculateFixedAngleBetweenXZPoints(player->pos.x, player->pos.z, temp_v0->unk40, temp_v0->unk44) - player->facingAngle) + 0x400) & 0xFFF)) < 0x800)
       {
@@ -1106,7 +1106,7 @@ void updateRacePlayerAirborneCruise(RaceInputPlayer *player)
           player->unk93 = 6 - player->unk93;
         }
       }
-      if (player->unk254 >= 0x8001)
+      if ((temp_t4 = player->unk254) >= 0x8001)
       {
         temp_v0_5 = player->stateFlags;
         if (!(temp_v0_5 & 0x400))
@@ -1255,7 +1255,8 @@ void updateRacePlayerAirborneCruise(RaceInputPlayer *player)
         enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
         enqueueRacePlayerVoiceSound(player, 0);
       }
-        player->mode = 0x10;
+        temp_v0_2 = 0x10;
+        player->mode = temp_v0_2;
         player->unk2A6 = 3;
         player->stateFlags |= 0x800;
         break;
