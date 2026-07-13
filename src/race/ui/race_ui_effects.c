@@ -3935,43 +3935,43 @@ void drawRaceUiScorePopup(RaceUiPopupActor *arg0) {
     }
 }
 
-void updateRaceUiScorePopupSlideOut(void *arg0) {
-    *(s32 *)((u8 *)arg0 + 0x1C) += *(s32 *)((u8 *)arg0 + 0x28);
-    *(s32 *)((u8 *)arg0 + 0x28) += 4;
-    if (*(s32 *)((u8 *)arg0 + 0x28) == 0x38) {
+void updateRaceUiScorePopupSlideOut(RaceUiPopupActor *arg0) {
+    arg0->x += arg0->velocity;
+    arg0->velocity += 4;
+    if (arg0->velocity == 0x38) {
         removeCallbackTask(arg0);
     } else {
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiScorePopup, arg0);
     }
 }
 
-void updateRaceUiScorePopupHold(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x18) = *(u16 *)((u8 *)arg0 + 0x18) - 1;
-    if (*(u16 *)((u8 *)arg0 + 0x18) == 0) {
+void updateRaceUiScorePopupHold(RaceUiPopupActor *arg0) {
+    arg0->timer--;
+    if (arg0->timer == 0) {
         setCallbackTaskCallback(arg0, updateRaceUiScorePopupSlideOut);
     }
     addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiScorePopup, arg0);
 }
 
-void updateRaceUiScorePopupSlideIn(void *arg0) {
-    *(s32 *)((u8 *)arg0 + 0x1C) -= *(s32 *)((u8 *)arg0 + 0x28);
-    *(s32 *)((u8 *)arg0 + 0x28) -= 4;
-    if (*(s32 *)((u8 *)arg0 + 0x28) == 0) {
-        *(s16 *)((u8 *)arg0 + 0x18) = 0x2D;
+void updateRaceUiScorePopupSlideIn(RaceUiPopupActor *arg0) {
+    arg0->x -= arg0->velocity;
+    arg0->velocity -= 4;
+    if (arg0->velocity == 0) {
+        arg0->timer = 0x2D;
         setCallbackTaskCallback(arg0, updateRaceUiScorePopupHold);
     }
     addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiScorePopup, arg0);
 }
 
-void initRaceUiScorePopup(void *arg0) {
-    if (gViewportStates[*(s8 *)((u8 *)arg0 + 0x30)].active != 0) {
+void initRaceUiScorePopup(RaceUiPopupActor *arg0) {
+    if (gViewportStates[arg0->playerIndex].active != 0) {
         if (gPlayerCount == 1) {
-            *(s32 *)((u8 *)arg0 + 0x20) = -0x24;
+            arg0->y.word = -0x24;
         } else {
-            *(s32 *)((u8 *)arg0 + 0x20) = -0x16;
+            arg0->y.word = -0x16;
         }
-        *(s32 *)((u8 *)arg0 + 0x28) = 0x38;
-        *(s32 *)((u8 *)arg0 + 0x1C) = 0x1A4;
+        arg0->velocity = 0x38;
+        arg0->x = 0x1A4;
         setCallbackTaskCallback(arg0, updateRaceUiScorePopupSlideIn);
     } else {
         removeCallbackTask(arg0);
@@ -3979,10 +3979,10 @@ void initRaceUiScorePopup(void *arg0) {
 }
 
 void spawnRaceUiScorePopup(void *arg0, s16 arg1) {
-    void *temp = createCallbackTask(initRaceUiScorePopup, 0, 0x64);
+    RaceUiPopupActor *temp = createCallbackTask(initRaceUiScorePopup, 0, 0x64);
     if (temp != NULL) {
-        *(void **)((u8 *)temp + 0x2C) = arg0;
-        *(s8 *)((u8 *)temp + 0x30) = arg1;
+        temp->parent = arg0;
+        temp->playerIndex = arg1;
     }
 }
 
