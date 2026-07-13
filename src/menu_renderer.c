@@ -134,7 +134,7 @@ extern u32 gPlayerInputHeld;
 extern Gfx gMenuRenderModeResetDl[];
 extern s16 D_800B51F0[][2];
 extern s16 gMenuFadeAlpha;
-extern s16 D_8011213C;
+extern s16 gMenuAsciiFontAssetHandle;
 extern s16 gShopMenuTextureAssetHandle;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
@@ -1663,7 +1663,7 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
 }
 #endif
 
-// drawMenuAsciiGlyph best match: 73.956% (nonmatchings/func_800137C8-2225551288923588688/base_2.c)
+// drawMenuAsciiGlyph best match: 76.776% (nonmatchings/drawMenuAsciiGlyph-2870645799593382959/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu_renderer/drawMenuAsciiGlyph.s")
 
 #ifdef NON_MATCHING
@@ -1673,6 +1673,7 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 sca
     u16 *paletteBase;
     u16 *palettePtr;
     u16 *dst;
+    u16 *dstStart;
     s32 x0;
     s32 y0;
     s32 x1;
@@ -1693,7 +1694,7 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 sca
     s32 scaleValue;
     s16 paletteValue;
 
-    asset = (FontAsset *)getRelocatableHeapBlockBase(D_8011213C);
+    asset = (FontAsset *)getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
     paletteBase = (u16 *)&asset->textures[asset->header.entryCount];
     font = &asset->textures[0];
     x0 = x + gMenuViewportCenterX;
@@ -1734,7 +1735,8 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 sca
                     paletteValue = palette;
                 }
 
-                dst = allocMenuRenderScratch(0x20);
+                dstStart = allocMenuRenderScratch(0x20);
+                dst = dstStart;
                 palettePtr = &paletteBase[paletteValue * 16];
                 scaleValue = scale;
                 offset = 0;
@@ -1765,7 +1767,7 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 sca
                              0x00080200);
                 FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
                              (((font->width * 4) & 0xFFF) << 12) | ((font->height * 4) & 0xFFF));
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(dst - 16));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)dstStart);
                 FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
                 FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
                 FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
