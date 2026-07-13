@@ -403,7 +403,7 @@ void drawScoreAttackChallengeLabels(s32 arg0) {
     drawMenuAsciiTextDefaultScale(0x70, -0x48, sp18, 6);
 }
 
-// drawTargetTimeChallengeHud best match: 94.567% at nonmatchings/drawTargetTimeChallengeHud-5802343343535905907/base_7.c.
+// drawTargetTimeChallengeHud best match: 94.594% at nonmatchings/drawTargetTimeChallengeHud-2663524570355072948/base_5.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawTargetTimeChallengeHud.s")
 
 #ifdef NON_MATCHING
@@ -420,8 +420,6 @@ void drawTargetTimeChallengeHud(s32 arg0) {
 
     sprintf(buffer, D_800E1770, gRaceElapsedTimer.minutes);
     x = 0x48;
-    if (x && gAssetHandles.popupFontHandle) {
-    }
     digit = buffer;
     do {
         drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
