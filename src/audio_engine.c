@@ -260,34 +260,33 @@ void finishCurrentRdpTask(SchedulerState *arg0) {
     gSchedulerRdpTaskActive = 0;
 }
 
-// schedulerSwapBufferThreadMain best match: 95.000% (nonmatchings/schedulerSwapBufferThreadMain-4061930211835852828/base_9.c)
+// schedulerSwapBufferThreadMain best match: 95.100% (nonmatchings/schedulerSwapBufferThreadMain-2663524570355072948/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/schedulerSwapBufferThreadMain.s")
 
 #ifdef NON_MATCHING
 typedef struct SchedulerSwapLocals {
     OSMesgQueue *queue1A4;
-    u8 pad4[0x1C];
+    u8 pad4[4];
     OSMesg msg;
 } SchedulerSwapLocals;
 
 void schedulerSwapBufferThreadMain(SchedulerState *arg0) {
+    s16 retrace;
     SchedulerSwapLocals locals;
     SchedulerTask *task;
-    s16 retrace;
     void *framebuffer;
 
     locals.msg = NULL;
-    locals.queue1A4 = &arg0->queue1A4; loop: do { osRecvMesg(&arg0->eventQueue, (OSMesg *) (&arg0->curRSPTask), 1); waitForFramebufferAvailable(arg0, arg0->curRSPTask);
+    locals.queue1A4 = &arg0->queue1A4; loop: do { osRecvMesg(&arg0->eventQueue, (OSMesg *)(&arg0->curRSPTask), 1); waitForFramebufferAvailable(arg0, arg0->curRSPTask);
         osSendMesg(&arg0->retraceQueue, (OSMesg)1, 1);
         osRecvMesg(&arg0->queue14C, &locals.msg, 1);
         osRecvMesg(locals.queue1A4, &locals.msg, 1);
-        task = arg0->curRSPTask;
-    } while (!(task->flags & 0x40));
+        task = arg0->curRSPTask; } while (!(task->flags & 0x40));
 
     framebuffer = task->framebuffer;
     retrace = task->retrace;
     osSendMesg(task->queue, task->msg, 1);
-    if (((gRetraceCounter - retrace) & 0xFFF) >= 0x801) {
+    if ((0xFFF & (gRetraceCounter - retrace)) >= 0x801) {
         do {
             if ((retrace && retrace) && retrace) {
             }
