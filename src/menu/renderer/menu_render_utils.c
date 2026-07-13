@@ -776,104 +776,99 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, u16 entryIndex,
 
 #ifdef NON_MATCHING
 void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *asset, u16 entryIndex, u16 paletteIndex, u16 scale) {
-    volatile char pad[0x50];
     u8 *paletteBase;
-    AssetTableEntry *entry;
-    AssetTableEntry *entry2;
-    s32 x0;
-    s32 y0;
-    s32 x1;
-    s32 y1;
-    s32 clipS;
-    s32 clipT;
+    AssetTableEntry *sprite;
+    s32 screenLeft;
+    s32 screenTop;
+    s32 screenRight;
+    s32 screenBottom;
+    s32 srcS;
+    s32 srcT;
     s32 viewHalfWidth;
     s32 viewHalfHeight;
-    s32 maxX;
-    s32 maxY;
-    s32 minX;
-    s32 minY;
-    s32 width;
-    s32 height;
-    s32 drawWidth;
-    s32 drawHeight;
-    s32 dsdx;
+    s32 viewportRight;
+    s32 viewportBottom;
+    s32 viewportLeft;
+    s32 viewportTop;
+    s32 spriteWidth;
+    s32 spriteHeight;
+    s32 scaledWidth;
+    s32 scaledHeight;
+    s32 textureStep;
     Gfx *gfx;
 
-    if ((s32)scale >= 0) {
-        paletteBase = (u8 *)asset + (asset->entryCount * sizeof(AssetTableEntry)) + sizeof(AssetTableEntry);
-        entry = (AssetTableEntry *)((u8 *)asset + (entryIndex * sizeof(AssetTableEntry)));
-        entry2 = entry + 1;
-        width = entry2->width;
-        height = entry2->height;
-        drawWidth = width >> scale;
-        drawHeight = height >> scale;
+    paletteBase = (u8 *)&asset->entries[asset->entryCount];
+    sprite = &asset->entries[entryIndex];
+    spriteWidth = sprite->width;
+    spriteHeight = sprite->height;
+    scaledWidth = spriteWidth >> scale;
+    scaledHeight = spriteHeight >> scale;
 
-        x0 = x + gMenuViewportCenterX + ((width - drawWidth) / 2);
-        y0 = y + gMenuViewportCenterY + ((height - drawHeight) / 2);
-        x1 = x0 + drawWidth;
-        y1 = y0 + drawHeight;
-        clipS = 0;
-        clipT = 0;
+    screenLeft = x + gMenuViewportCenterX + ((spriteWidth - scaledWidth) / 2);
+    screenTop = y + gMenuViewportCenterY + ((spriteHeight - scaledHeight) / 2);
+    screenRight = screenLeft + scaledWidth;
+    screenBottom = screenTop + scaledHeight;
+    srcS = 0;
+    srcT = 0;
 
-        viewHalfWidth = gMenuViewportWidth / 2;
-        maxX = gMenuViewportCenterX + viewHalfWidth;
-        if (x0 < maxX) {
-            viewHalfHeight = gMenuViewportHeight / 2;
-            maxY = gMenuViewportCenterY + viewHalfHeight;
-            if (y0 < maxY) {
-                minX = gMenuViewportCenterX - viewHalfWidth;
-                if (x1 >= minX) {
-                    minY = gMenuViewportCenterY - viewHalfHeight;
-                    if (y1 >= minY) {
-                        if (x0 < minX) {
-                            clipS = minX - x0;
-                            x0 = minX;
-                        }
-                        if (y0 < minY) {
-                            clipT = minY - y0;
-                            y0 = minY;
-                        }
-                        if (x1 >= maxX) {
-                            x1 = maxX;
-                        }
-                        if (y1 >= maxY) {
-                            y1 = maxY;
-                        }
-
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0x3000);
-                        FONT_GFX_CMD(gRegionAllocPtr++, (((entry2->width >> 1) - 1) & 0xFFF) | 0xFD480000,
-                                     (u32)((u8 *)asset + entry2->imageOffset));
-                        FONT_GFX_CMD(gRegionAllocPtr++, (((((entry2->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5480000,
-                                     0x07080200);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
-                                     (((entry2->width * 2) & 0xFFF) << 12) | 0x07000000 | ((entry2->height * 4) & 0xFFF));
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                        FONT_GFX_CMD(gRegionAllocPtr++, (((((entry2->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5400000,
-                                     0x00080200);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
-                                     (((entry2->width * 4) & 0xFFF) << 12) | ((entry2->height * 4) & 0xFFF));
-
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(paletteBase + (paletteIndex << 5)));
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
-                        gfx = gRegionAllocPtr++;
-                        gfx->words.w0 = 0xE7000000;
-                        gfx->words.w1 = 0;
-
-                        FONT_GFX_CMD(gRegionAllocPtr++, (((x1 * 4) & 0xFFF) << 12) | 0xE4000000 | ((y1 * 4) & 0xFFF),
-                                     (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF));
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000,
-                                     (((clipS << 5) + 0x10) << 16) | (((clipT << 5) + 0x10) & 0xFFFF));
-                        dsdx = (1 << (scale + 10)) & 0xFFFF;
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, (dsdx << 16) | dsdx);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+    viewHalfWidth = gMenuViewportWidth / 2;
+    viewportRight = gMenuViewportCenterX + viewHalfWidth;
+    if (screenLeft < viewportRight) {
+        viewHalfHeight = gMenuViewportHeight / 2;
+        viewportBottom = gMenuViewportCenterY + viewHalfHeight;
+        if (screenTop < viewportBottom) {
+            viewportLeft = gMenuViewportCenterX - viewHalfWidth;
+            if (screenRight >= viewportLeft) {
+                viewportTop = gMenuViewportCenterY - viewHalfHeight;
+                if (screenBottom >= viewportTop) {
+                    if (screenLeft < viewportLeft) {
+                        srcS = viewportLeft - screenLeft;
+                        screenLeft = viewportLeft;
                     }
+                    if (screenTop < viewportTop) {
+                        srcT = viewportTop - screenTop;
+                        screenTop = viewportTop;
+                    }
+                    if (screenRight >= viewportRight) {
+                        screenRight = viewportRight;
+                    }
+                    if (screenBottom >= viewportBottom) {
+                        screenBottom = viewportBottom;
+                    }
+
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0x3000);
+                    FONT_GFX_CMD(gRegionAllocPtr++, (((sprite->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                                 (u32)((u8 *)asset + sprite->imageOffset));
+                    FONT_GFX_CMD(gRegionAllocPtr++, (((((sprite->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5480000,
+                                 0x07080200);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                                 (((sprite->width * 2) & 0xFFF) << 12) | 0x07000000 | ((sprite->height * 4) & 0xFFF));
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, (((((sprite->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5400000,
+                                 0x00080200);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                                 (((sprite->width * 4) & 0xFFF) << 12) | ((sprite->height * 4) & 0xFFF));
+
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(paletteBase + (paletteIndex << 5)));
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+                    gfx = gRegionAllocPtr++;
+                    gfx->words.w0 = 0xE7000000;
+                    gfx->words.w1 = 0;
+
+                    FONT_GFX_CMD(gRegionAllocPtr++, (((screenRight * 4) & 0xFFF) << 12) | 0xE4000000 | ((screenBottom * 4) & 0xFFF),
+                                 (((screenLeft * 4) & 0xFFF) << 12) | ((screenTop * 4) & 0xFFF));
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000,
+                                 (((srcS << 5) + 0x10) << 16) | (((srcT << 5) + 0x10) & 0xFFFF));
+                    textureStep = (1 << (scale + 10)) & 0xFFFF;
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, (textureStep << 16) | textureStep);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
                 }
             }
         }
