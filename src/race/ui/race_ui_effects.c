@@ -22,6 +22,11 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 #define RACE_UI_SNOWBOARD_TRAIL_SCALE_Z 0
 #define RACE_UI_SNOWBOARD_TRAIL_TIMER 0xF
 #define RACE_UI_SNOWBOARD_TRAIL_INITIAL_VELOCITY_Y 0x20000
+#define RACE_UI_SINGLE_TRAIL_TIMER 0x3C
+#define RACE_UI_SINGLE_TRAIL_LOCAL_ROT_Y 0x800
+#define RACE_UI_SINGLE_TRAIL_LOCAL_X 0
+#define RACE_UI_SINGLE_TRAIL_LOCAL_Y 0x100000
+#define RACE_UI_SINGLE_TRAIL_LOCAL_Z -0x200000
 #define SCALE_MATRIX_COMPONENT(value, scale) ((value * scale) / 0x1000)
 #define RACE_UI_SP_TRIANGLE_WORD(v0, v1, v2) (_SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
 #define RACE_UI_SP_QUADRANGLE_WORD0(v0, v1, v2, v3, flag) \
@@ -473,7 +478,7 @@ typedef struct RaceUiSingleTrailActor {
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[0x24 - 0x12];
     /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
-    /* 0x44 */ FixedTransform sourceTransform;
+    /* 0x44 */ FixedTransform localTransform;
     /* 0x64 */ RaceUiGfxCommandDest *matrix;
     /* 0x68 */ s16 timer;
     /* 0x6A */ u8 matrixDirty;
@@ -4174,7 +4179,7 @@ void func_80061AF4(s16 arg0, void *arg1, void *arg2, s16 arg3) {
     }
 }
 
-void func_80061B70(RaceUiSingleTrailActor *arg0) {
+void renderRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
     volatile u8 pad[0x20];
     RaceUiDisplayCommand *unused;
 
@@ -4196,8 +4201,8 @@ void func_80061B70(RaceUiSingleTrailActor *arg0) {
     }
 }
 
-void func_80061CA8(RaceUiSingleTrailActor *arg0) {
-    composeFixedTransforms(&arg0->sourceTransform, &gRacePlayers[arg0->playerIndex].transform, &arg0->copyBlock.transform);
+void updateRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
+    composeFixedTransforms(&arg0->localTransform, &gRacePlayers[arg0->playerIndex].transform, &arg0->copyBlock.transform);
 
     if (gRaceUpdatePaused == 0) {
         arg0->timer--;
@@ -4211,16 +4216,16 @@ void func_80061CA8(RaceUiSingleTrailActor *arg0) {
         return;
     }
 
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80061B70, (s32)arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, renderRaceUiSingleTrailEffect, (s32)arg0);
 }
 
-void func_80061D90(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x68) = 0x3C;
-    makeFixedRotationY((u8 *)arg0 + 0x44, 0x800);
-    *(s32 *)((u8 *)arg0 + 0x58) = 0;
-    *(s32 *)((u8 *)arg0 + 0x5C) = 0x100000;
-    *(s32 *)((u8 *)arg0 + 0x60) = 0xFFE00000;
-    setCallbackTaskCallback(arg0, func_80061CA8);
+void initRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
+    arg0->timer = RACE_UI_SINGLE_TRAIL_TIMER;
+    makeFixedRotationY(arg0->localTransform.rotation, RACE_UI_SINGLE_TRAIL_LOCAL_ROT_Y);
+    arg0->localTransform.translation.x = RACE_UI_SINGLE_TRAIL_LOCAL_X;
+    arg0->localTransform.translation.y = RACE_UI_SINGLE_TRAIL_LOCAL_Y;
+    arg0->localTransform.translation.z = RACE_UI_SINGLE_TRAIL_LOCAL_Z;
+    setCallbackTaskCallback(arg0, updateRaceUiSingleTrailEffect);
 }
 
 void func_80061DE8(RaceUiFadingTrailActor *arg0) {
