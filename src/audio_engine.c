@@ -916,19 +916,19 @@ void setSoundPlayerMasterVolume(s32 arg0, s32 arg1) {
     }
 }
 
-// startMusicSequence best match: 99.194% (nonmatchings/startMusicSequence-3242520251544044307/base_8.c)
+// startMusicSequence best match: 99.321% (nonmatchings/startMusicSequence-3242520251544044307/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/audio_engine/startMusicSequence.s")
 
 #ifdef NON_MATCHING
 s32 startMusicSequence(PlayerCommandData *arg0) {
     s32 i;
-    s32 handle;
+    int handle;
     s32 needed;
-    s32 free;
     s32 value;
     s32 index;
     s32 *ptr;
     PlayerCommandState *state;
+    s32 free;
     s32 trackCount;
 
     trackCount = arg0->trackCount;
@@ -944,8 +944,8 @@ s32 startMusicSequence(PlayerCommandData *arg0) {
     }
 
     arg0++;
-    arg0--;
     needed = 0;
+    arg0--;
     for (i = 0; i < trackCount; i++) {
         if (arg0->sequenceOffsets[i] != 0) {
             needed++;
