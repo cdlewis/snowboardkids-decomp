@@ -14,8 +14,11 @@
 #define racePickupTriangleWord(v0, v1, v2, flag) \
     (_SHIFTL((flag), 24, 8) | _SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
 #define gRacePickupQuadrangle(pkt, v0, v1, v2, v3, flag) \
-    (pkt)->words.w0 = (_SHIFTL(RACE_PICKUP_G_TRI2, 24, 8) | racePickupTriangleWord(v0, v1, v2, flag)); \
-    (pkt)->words.w1 = racePickupTriangleWord(v0, v2, v3, flag)
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = (_SHIFTL(RACE_PICKUP_G_TRI2, 24, 8) | racePickupTriangleWord(v0, v1, v2, flag)); \
+    _g->words.w1 = racePickupTriangleWord(v0, v2, v3, flag); \
+}
 
 typedef struct {
     /* 0x0 */ s16 enabled;
@@ -795,19 +798,8 @@ void renderRacePickupBase(RacePickupActor *arg0) {
     }
 }
 
-// renderRacePickupRespawn best match: 99.978% (base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race_course_props_and_pickups/renderRacePickupRespawn.s")
-
-#ifdef NON_MATCHING
 void renderRacePickupRespawn(RacePickupActor *arg0) {
-    Gfx *temp_v0;
-    GfxCommandSource spF4;
-    Gfx *temp_t1;
-    Gfx *temp_v0_18;
-    Gfx *temp_v0_34;
-    Gfx *temp_v0_35;
-    Gfx *temp_v0_36;
-    Gfx *temp_v0_50;
+    RacePickupMatrixScratch spF4;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -815,11 +807,11 @@ void renderRacePickupRespawn(RacePickupActor *arg0) {
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            spF4 = *(GfxCommandSource *)&gIdentityFixedTransform;
-            spF4.words[5] = arg0->drawPos.x;
-            spF4.words[6] = arg0->drawPos.y;
-            spF4.words[7] = arg0->drawPos.z;
-            arg0->displayList = allocFixedTransformMatrix(&spF4);
+            spF4.source = gIdentityFixedTransform;
+            spF4.source.translation.x = arg0->drawPos.x;
+            spF4.source.translation.y = arg0->drawPos.y;
+            spF4.source.translation.z = arg0->drawPos.z;
+            arg0->displayList = allocFixedTransformMatrix(&spF4.source);
             arg0->rotationDisplayList = allocFixedTransformMatrix((GfxCommandSource *) arg0->rotationMatrix);
         }
         if (arg0->displayList != NULL) {
@@ -831,33 +823,26 @@ void renderRacePickupRespawn(RacePickupActor *arg0) {
                 gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
                 gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupBaseVertices, 0x103F, 0);
-                temp_v0_18 = gRegionAllocPtr++;
-                gRacePickupQuadrangle(temp_v0_18, 3, 2, 1, 0, 0);
+                gRacePickupQuadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
                 gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image1, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
                                         G_TX_CLAMP, 0, 0, 0, 0);
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette1);
                 gSPMatrix(gRegionAllocPtr++, arg0->rotationDisplayList,
                           G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupTopVertices, 0x513F, 0);
-                temp_t1 = gRegionAllocPtr++;
-                gRacePickupQuadrangle(temp_t1, 3, 2, 1, 0, 0);
-                temp_v0_34 = gRegionAllocPtr++;
-                gRacePickupQuadrangle(temp_v0_34, 7, 6, 5, 4, 0);
-                temp_v0_35 = gRegionAllocPtr++;
-                gRacePickupQuadrangle(temp_v0_35, 11, 10, 9, 8, 0);
-                temp_v0_36 = gRegionAllocPtr++;
-                gRacePickupQuadrangle(temp_v0_36, 15, 14, 13, 12, 0);
+                gRacePickupQuadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
+                gRacePickupQuadrangle(gRegionAllocPtr++, 7, 6, 5, 4, 0);
+                gRacePickupQuadrangle(gRegionAllocPtr++, 11, 10, 9, 8, 0);
+                gRacePickupQuadrangle(gRegionAllocPtr++, 15, 14, 13, 12, 0);
                 gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image2, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
                                         G_TX_CLAMP, 0, 0, 0, 0);
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette2);
-                temp_v0_50 = gRegionAllocPtr++;
-                gRacePickupQuadrangle(temp_v0_50, 19, 18, 17, 16, 0);
+                gRacePickupQuadrangle(gRegionAllocPtr++, 19, 18, 17, 16, 0);
                 gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
             }
         }
     }
 }
-#endif
 
 void updateRacePickupRespawn(RacePickupActor *arg0) {
     s16 temp_v0;
