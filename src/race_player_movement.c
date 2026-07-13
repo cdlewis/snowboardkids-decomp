@@ -323,7 +323,7 @@ void updateRacePlayerFinalLapStatus(RaceInputPlayer *player) {
     }
 }
 
-// resolveRacePlayerBodyCollisions best match: 99.913% (nonmatchings/resolveRacePlayerBodyCollisions-8331816093655448999/base_14.c)
+// resolveRacePlayerBodyCollisions best match: 99.957% (nonmatchings/resolveRacePlayerBodyCollisions-6866765942504228165/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/resolveRacePlayerBodyCollisions.s")
 
 #ifdef NON_MATCHING
@@ -336,6 +336,7 @@ void resolveRacePlayerBodyCollisions(void) {
     s32 xDiff;
     s32 yLimit;
     s32 radius;
+    s64 xDiff64;
     s16 angle;
     s32 sine;
     s32 cosine;
@@ -371,8 +372,9 @@ void resolveRacePlayerBodyCollisions(void) {
                                 if (temp < 0) {
                                     temp *= -1;
                                 }
+                                xDiff64 = (s64)((0, xDiff));
                                 if ((temp < radius) &&
-                                    ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
+                                    ((temp = integerSquareRoot64((xDiff64 * xDiff) +
                                                            (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < radius)) {
                                     temp = ((radius - temp) * -1) / 2;
                                     angle = calculateFixedAngleBetweenXZPoints(playerA->posX, playerA->posZ,
