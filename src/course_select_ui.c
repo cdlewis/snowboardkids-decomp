@@ -227,7 +227,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
 }
 #endif
 
-// updateCourseSelectPreviewModelIn best match: 92.299% (nonmatchings/updateCourseSelectPreviewModelIn-6061209858023118177/base_10.c)
+// updateCourseSelectPreviewModelIn best match: 92.392% (nonmatchings/updateCourseSelectPreviewModelIn-2663524570355072948/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectPreviewModelIn.s")
 
 #ifdef NON_MATCHING
@@ -237,15 +237,17 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
     CourseSelectRacePlayer *player;
     s32 i;
     s32 move;
+    u8 statusState;
     u8 state;
 
     actor = arg0;
     i = 0;
     if ((s32)gPlayerCount > 0) {
         do {
+            statusState = gCourseSelectStatus[4 + i];
             state = actor->state[i];
-            if (gCourseSelectStatus[4 + i] != state) {
-                actor->state[i] = gCourseSelectStatus[4 + i];
+            if (statusState != state) {
+                actor->state[i] = statusState;
                 actor->timer[i] = gCourseSelectStatus[0xC + i];
                 actor->angle[i] = *(u16 *)&gCourseSelectStatus[(i * 2) + 0x14];
                 gCourseSelectStatus[0xC + i] = 0;
